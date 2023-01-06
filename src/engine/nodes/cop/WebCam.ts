@@ -66,9 +66,7 @@ export class WebCamCopNode extends TypedCopNode<WebCamCopParamsConfig> {
 	private _cancelWebcamRequest() {
 		try {
 			if (this._stream) {
-				this._stream.getTracks().forEach(function (track) {
-					track.stop();
-				});
+				this._stream.getTracks().forEach((track) => track.stop());
 			}
 		} catch (err) {
 			console.error(err);

@@ -17,6 +17,8 @@ export enum ActorType {
 	ON_POINTERDOWN = 'onPointerdown',
 	ON_POINTERUP = 'onPointerup',
 	ON_VIDEO_EVENT = 'onVideoEvent',
+	ON_XR_CONTROLLER_EVENT = 'onXRControllerEvent',
 	RAY_FROM_CURSOR = 'rayFromCursor',
+	RAY_FROM_CAMERA = 'rayFromCamera',
 	// SET_OBJECT_HOVERED_STATE = 'setObjectHoveredState',
 }

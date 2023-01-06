@@ -22,6 +22,8 @@ import {PostType} from './../../poly/registers/nodes/types/Post';
 
 import defaultFragmentShader from './gl/builder.glsl';
 import {NodeContext} from '../../poly/NodeContext';
+import {GlAssemblerController} from '../gl/code/Controller';
+import {ShaderAssemblerPost} from '../gl/code/assemblers/post/Post';
 
 class BuilderPostParamsConfig extends NodeParamsConfig {
 	/** @param effect amount */
@@ -41,8 +43,9 @@ export class BuilderPostNode extends TypedPostProcessNode<EffectPass, BuilderPos
 	public override usedAssembler(): Readonly<AssemblerName.GL_POST> {
 		return AssemblerName.GL_POST;
 	}
-	protected _createAssemblerController() {
-		const assemblerController = Poly.assemblersRegister.assembler(this, this.usedAssembler());
+	protected _createAssemblerController(): GlAssemblerController<ShaderAssemblerPost> | undefined {
+		const assemblerController: GlAssemblerController<ShaderAssemblerPost> | undefined =
+			Poly.assemblersRegister.assembler(this, this.usedAssembler());
 		if (assemblerController) {
 			const globalsHandler = new GlobalsGeometryHandler();
 			assemblerController.setAssemblerGlobalsHandler(globalsHandler);

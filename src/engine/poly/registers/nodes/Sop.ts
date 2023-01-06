@@ -131,6 +131,7 @@ import {RaySopNode} from '../../../nodes/sop/Ray';
 import {ReflectorSopNode} from '../../../nodes/sop/Reflector';
 import {ResampleSopNode} from '../../../nodes/sop/Resample';
 import {RestAttributesSopNode} from '../../../nodes/sop/RestAttributes';
+import {RingSopNode} from '../../../nodes/sop/Ring';
 import {RoundedBoxSopNode} from '../../../nodes/sop/RoundedBox';
 import {ScatterSopNode} from '../../../nodes/sop/Scatter';
 import {SetChildrenSopNode} from '../../../nodes/sop/SetChildren';
@@ -302,6 +303,7 @@ export interface GeoNodeChildrenMap {
 	reflector: ReflectorSopNode;
 	resample: ResampleSopNode;
 	restAttributes: RestAttributesSopNode;
+	ring: RingSopNode;
 	roundedBox: RoundedBoxSopNode;
 	scatter: ScatterSopNode;
 	setChildren: SetChildrenSopNode;
@@ -428,6 +430,7 @@ import {PointLightSopOperation} from '../../../operations/sop/PointLight';
 import {RaySopOperation} from '../../../operations/sop/Ray';
 import {ReflectorSopOperation} from '../../../operations/sop/Reflector';
 import {RestAttributesSopOperation} from '../../../operations/sop/RestAttributes';
+import {RingSopOperation} from '../../../operations/sop/Ring';
 import {RoundedBoxSopOperation} from '../../../operations/sop/RoundedBox';
 import {ScatterSopOperation} from '../../../operations/sop/Scatter';
 import {SetChildrenSopOperation} from '../../../operations/sop/SetChildren';
@@ -491,7 +494,6 @@ export class SopRegister {
 		poly.registerOperation(DecalSopOperation);
 		poly.registerOperation(DirectionalLightSopOperation);
 		poly.registerOperation(EmptyObjectSopOperation);
-		// poly.registerOperation(FileSopOperation);
 		poly.registerOperation(FileDRCSopOperation);
 		poly.registerOperation(FileFBXSopOperation);
 		poly.registerOperation(FileGLTFSopOperation);
@@ -531,6 +533,7 @@ export class SopRegister {
 		poly.registerOperation(RaySopOperation);
 		poly.registerOperation(ReflectorSopOperation);
 		poly.registerOperation(RestAttributesSopOperation);
+		poly.registerOperation(RingSopOperation);
 		poly.registerOperation(RoundedBoxSopOperation);
 		poly.registerOperation(ScatterSopOperation);
 		poly.registerOperation(SetChildrenSopOperation);
@@ -686,6 +689,7 @@ export class SopRegister {
 		poly.registerNode(ReflectorSopNode, CATEGORY_SOP.RENDER);
 		poly.registerNode(ResampleSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(RestAttributesSopNode, CATEGORY_SOP.ATTRIBUTE);
+		poly.registerNode(RingSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.registerNode(RoundedBoxSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.registerNode(ScatterSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(SetChildrenSopNode, CATEGORY_SOP.MODIFIER);

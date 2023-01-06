@@ -25,6 +25,7 @@ import {AdvancedFolderParamConfig} from './utils/AdvancedFolder';
 import {LineBasicMaterial} from 'three';
 import {CustomMaterialName} from '../../../core/geometry/Material';
 import {Material} from 'three';
+import {GlAssemblerController} from '../gl/code/Controller';
 // import {
 // 	CustomMaterialLineParamConfig,
 // 	materialLineAssemblerCustomMaterialRequested,
@@ -65,7 +66,7 @@ export class LineBasicBuilderMatNode extends TypedBuilderMatNode<
 	public override usedAssembler(): Readonly<AssemblerName.GL_LINE> {
 		return AssemblerName.GL_LINE;
 	}
-	protected _createAssemblerController() {
+	protected _createAssemblerController(): GlAssemblerController<ShaderAssemblerLine> | undefined {
 		return Poly.assemblersRegister.assembler(this, this.usedAssembler());
 	}
 	// public override customMaterialRequested(customName: CustomMaterialName): boolean {

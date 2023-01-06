@@ -11,7 +11,7 @@ import {NodeContext} from '../../poly/NodeContext';
 import {CopType} from '../../poly/registers/nodes/types/Cop';
 import {VideoCopNode} from '../cop/Video';
 import {ActorType} from '../../poly/registers/nodes/types/Actor';
-import {PolyScene} from '../../index_all';
+import type {PolyScene} from '../../scene/PolyScene';
 import {objectsForActorNode} from '../../scene/utils/actors/ActorsManagerUtils';
 import {Object3D} from 'three';
 import {VideoEvent, VIDEO_EVENTS, VIDEO_EVENT_INDICES} from '../../../core/Video';
@@ -20,6 +20,7 @@ type Listener = () => void;
 type Listeners = Record<VideoEvent, Listener>;
 
 class OnVideoEventActorParamsConfig extends NodeParamsConfig {
+	/** @param video node */
 	node = ParamConfig.NODE_PATH('', {
 		nodeSelection: {
 			context: NodeContext.COP,
@@ -49,50 +50,52 @@ export class OnVideoEventActorNode extends TypedActorNode<OnVideoEventActorParam
 			node._addEventListenersToObjects();
 		}
 	}
-	private _videoNode: VideoCopNode | undefined;
 	private async _addEventListenersToObjects() {
 		if (this.p.node.isDirty()) {
 			await this.p.node.compute();
 		}
 		const foundNode = this.pv.node.nodeWithContext(NodeContext.COP);
 		this._removeVideoNodeEventListener();
-		this._videoNode = undefined;
+		let videoNode = undefined;
 		// let videoNode: VideoCopNode | undefined;
 		if (foundNode && foundNode.type() == CopType.VIDEO) {
-			this._videoNode = foundNode as VideoCopNode;
+			videoNode = foundNode as VideoCopNode;
 		}
-		if (!this._videoNode) {
+		if (!videoNode) {
 			console.warn('no video node found');
 			return;
 		}
 
 		const objects = objectsForActorNode(this);
 		for (let object of objects) {
-			this._createEventListener(this._videoNode, object);
+			this._createEventListener(videoNode, object);
 		}
 	}
-	private _listenerByObject: Map<Object3D, Listeners> = new Map();
+	private _listenerByObjectByVideoNode: Map<VideoCopNode, Map<Object3D, Listeners>> = new Map();
 	private _createEventListener(videoNode: VideoCopNode, Object3D: Object3D) {
-		let listeners = this._listenerByObject.get(Object3D);
-		if (!listeners) {
-			listeners = {
-				play: () => {
-					this.runTrigger({Object3D}, VIDEO_EVENT_INDICES.get(VideoEvent.PLAY));
-				},
-				pause: () => {
-					this.runTrigger({Object3D}, VIDEO_EVENT_INDICES.get(VideoEvent.PAUSE));
-				},
-				timeupdate: () => {
-					this.runTrigger({Object3D}, VIDEO_EVENT_INDICES.get(VideoEvent.TIME_UPDATE));
-				},
-				volumechange: () => {
-					this.runTrigger({Object3D}, VIDEO_EVENT_INDICES.get(VideoEvent.VOLUME_CHANGE));
-				},
-			};
-			this._listenerByObject.set(Object3D, listeners);
+		let listenerByObject = this._listenerByObjectByVideoNode.get(videoNode);
+		if (!listenerByObject) {
+			listenerByObject = new Map();
+			this._listenerByObjectByVideoNode.set(videoNode, listenerByObject);
 		}
-		for (let eventName of VIDEO_EVENTS) {
-			videoNode.addEventListener(eventName, listeners[eventName]);
+		let listeners = listenerByObject.get(Object3D);
+		if (!listeners) {
+			const createListener = (eventName: VideoEvent) => {
+				const listener = () => {
+					this.runTrigger({Object3D}, VIDEO_EVENT_INDICES.get(eventName));
+				};
+				return listener;
+			};
+			listeners = {
+				[VideoEvent.PLAY]: createListener(VideoEvent.PLAY),
+				[VideoEvent.PAUSE]: createListener(VideoEvent.PAUSE),
+				[VideoEvent.TIME_UPDATE]: createListener(VideoEvent.TIME_UPDATE),
+				[VideoEvent.VOLUME_CHANGE]: createListener(VideoEvent.VOLUME_CHANGE),
+			};
+			listenerByObject.set(Object3D, listeners);
+			for (let eventName of VIDEO_EVENTS) {
+				videoNode.addEventListener(eventName, listeners[eventName]);
+			}
 		}
 	}
 	override dispose(): void {
@@ -100,14 +103,12 @@ export class OnVideoEventActorNode extends TypedActorNode<OnVideoEventActorParam
 		super.dispose();
 	}
 	private _removeVideoNodeEventListener() {
-		if (!this._videoNode) {
-			return;
-		}
-		const videoNode = this._videoNode;
-		this._listenerByObject.forEach((listeners, Object3D) => {
-			for (let eventName of VIDEO_EVENTS) {
-				videoNode.removeEventListener(eventName, listeners[eventName]);
-			}
+		this._listenerByObjectByVideoNode.forEach((listenerByObject, videoNode) => {
+			listenerByObject.forEach((listeners, Object3D) => {
+				for (let eventName of VIDEO_EVENTS) {
+					videoNode.removeEventListener(eventName, listeners[eventName]);
+				}
+			});
 		});
 	}
 }

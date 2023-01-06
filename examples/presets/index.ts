@@ -5,6 +5,7 @@ import {getObjectAttributeActorPresetRegister} from './actor/GetObjectAttribute'
 import {getChildrenAttributesActorPresetRegister} from './actor/GetChildrenAttributes';
 import {onChildAttributeUpdateActorPresetRegister} from './actor/OnEventChildAttributeUpdated';
 import {onObjectAttributeUpdateActorPresetRegister} from './actor/OnEventObjectAttributeUpdated';
+import {rayFromCameraActorPresetRegister} from './actor/RayFromCamera';
 // anim
 import {propertyNameAnimPresetRegister} from './anim/PropertyName';
 // audio
@@ -66,6 +67,7 @@ class PresetLibraryClass {
 		this._registerPreset(getChildrenAttributesActorPresetRegister);
 		this._registerPreset(onChildAttributeUpdateActorPresetRegister);
 		this._registerPreset(onObjectAttributeUpdateActorPresetRegister);
+		this._registerPreset(rayFromCameraActorPresetRegister);
 		// anim
 		this._registerPreset(propertyNameAnimPresetRegister);
 		// audio

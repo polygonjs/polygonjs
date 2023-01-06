@@ -1,4 +1,4 @@
-import {Camera, Vector2, WebGLRendererParameters} from 'three';
+import {Camera, Vector2, WebGLRenderer, WebGLRendererParameters} from 'three';
 import {PolyScene} from '../../engine/scene/PolyScene';
 import {Poly} from '../../engine/Poly';
 import {
@@ -6,7 +6,6 @@ import {
 	DEFAULT_SHADOW_MAP_TYPE,
 	DEFAULT_TONE_MAPPING,
 } from '../../engine/nodes/rop/WebGLRenderer';
-import type {WebGLRendererRopNode} from '../../engine/nodes/rop/WebGLRenderer';
 import {defaultPixelRatio} from './defaultPixelRatio';
 import {CoreObject} from '../geometry/Object';
 import {CameraAttribute} from './CoreCamera';
@@ -14,9 +13,11 @@ import {CoreType} from '../Type';
 import {RopType} from '../../engine/poly/registers/nodes/types/Rop';
 import {NodeContext} from '../../engine/poly/NodeContext';
 import {TypedNode} from '../../engine/nodes/_Base';
-import {PathTracingRendererRopNode} from '../../engine/nodes/rop/PathTracingRenderer';
 import {AbstractRenderer} from '../../engine/viewers/Common';
-
+import type {PathTracingRendererRopNode} from '../../engine/nodes/rop/PathTracingRenderer';
+import type {WebGLRendererRopNode} from '../../engine/nodes/rop/WebGLRenderer';
+// @ts-ignore
+import {PathTracingRenderer} from 'three-gpu-pathtracer';
 interface CreateRendererOptions {
 	camera: Camera;
 	scene: PolyScene;
@@ -24,6 +25,22 @@ interface CreateRendererOptions {
 	// size: Vector2;
 	// rendererROP?: WebGLRendererRopNode;
 }
+// type AvailableRopNode = WebGLRendererRopNode | PathTracingRendererRopNode;
+// type AvailableRenderer = WebGLRenderer | PathTracingRenderer;
+
+// export interface RendererConfig<A extends AvailableRenderer> {
+// 	renderer: A;
+// 	rendererNode?: AvailableRopNode;
+// }
+interface RendererConfigWebGL {
+	renderer: WebGLRenderer;
+	rendererNode?: WebGLRendererRopNode;
+}
+interface RendererConfigPathtracing {
+	renderer: PathTracingRenderer;
+	rendererNode?: PathTracingRendererRopNode;
+}
+export type AvailableRenderConfig = RendererConfigWebGL | RendererConfigPathtracing;
 
 export class CoreCameraRendererController {
 	// private static _resolutionByCanvas: Map<HTMLCanvasElement, Vector2> = new Map();
@@ -38,7 +55,7 @@ export class CoreCameraRendererController {
 		return this._renderersByCanvas.get(canvas);
 	}
 
-	static createRenderer(options: CreateRendererOptions): AbstractRenderer | undefined {
+	static rendererConfig<A extends AvailableRenderConfig>(options: CreateRendererOptions): A | undefined {
 		const {camera, canvas, scene} = options;
 		const gl = Poly.renderersController.getRenderingContext(canvas);
 		if (!gl) {
@@ -46,7 +63,8 @@ export class CoreCameraRendererController {
 			return;
 		}
 
-		let renderer: AbstractRenderer | undefined;
+		let renderer: A['renderer'] | undefined;
+		let rendererNode: A['rendererNode'] | undefined;
 		// if (isBooleanTrue(this.node.pv.setRenderer)) {
 		// await this._updateRenderer();
 
@@ -58,9 +76,13 @@ export class CoreCameraRendererController {
 				switch (type) {
 					case RopType.WEBGL: {
 						renderer = (rendererROP as WebGLRendererRopNode).createRenderer(canvas, gl);
+						rendererNode = rendererROP as WebGLRendererRopNode;
+						break;
 					}
 					case RopType.PATH_TRACING: {
 						renderer = (rendererROP as PathTracingRendererRopNode).createRenderer(canvas, gl);
+						rendererNode = rendererROP as PathTracingRendererRopNode;
+						break;
 					}
 				}
 			}
@@ -96,7 +118,14 @@ export class CoreCameraRendererController {
 		// UPDATE: favor using devicePixelRatio
 		// to have nice subsampling feel, without needing antialias
 
-		return renderer;
+		if (!renderer) {
+			return;
+		}
+		const renderConfig: A = {
+			renderer,
+			rendererNode,
+		} as A;
+		return renderConfig;
 	}
 	static setRendererSize(canvas: HTMLCanvasElement, size: Vector2) {
 		const renderer = this.renderer(canvas);

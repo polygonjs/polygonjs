@@ -17,10 +17,10 @@ class BoxLinesSopParamsConfig extends NodeParamsConfig {
 	size = ParamConfig.FLOAT(DEFAULT.size);
 	/** @param sizes on each axis */
 	sizes = ParamConfig.VECTOR3(DEFAULT.sizes);
+	/** @param divisions on each axis */
+	divisions = ParamConfig.VECTOR3(DEFAULT.divisions);
 	/** @param center of the geometry */
 	center = ParamConfig.VECTOR3(DEFAULT.center);
-	/** @param merge lines or keep them as separate objects */
-	mergeLines = ParamConfig.BOOLEAN(DEFAULT.mergeLines);
 }
 const ParamsConfig = new BoxLinesSopParamsConfig();
 

@@ -1,14 +1,16 @@
-import {Camera} from 'three';
+import {Camera, WebGLRenderer} from 'three';
 import {TypedViewer, TypedViewerOptions} from './_Base';
 import {Poly} from '../Poly';
 import {ViewerLogoController} from './utils/logo/ViewerLogoController';
-import {CoreCameraRendererController} from '../../core/camera/CoreCameraRendererController';
+import {AvailableRenderConfig, CoreCameraRendererController} from '../../core/camera/CoreCameraRendererController';
 import {CoreCameraPostProcessController} from '../../core/camera/CoreCameraPostProcessController';
 import {CoreCameraCSSRendererController, CSSRendererConfig} from '../../core/camera/CoreCameraCSSRendererController';
 import {CoreCameraControlsController} from '../../core/camera/CoreCameraControlsController';
 import {CoreCameraRenderSceneController} from '../../core/camera/CoreCameraRenderSceneController';
 import type {EffectComposer} from 'postprocessing';
 import {AbstractRenderer} from './Common';
+import {WebGLRendererRopNode} from '../nodes/rop/WebGLRenderer';
+import {BaseCoreXRController} from '../../core/xr/_BaseCoreXRController';
 const CSS_CLASS = 'CoreThreejsViewer';
 
 declare global {
@@ -38,14 +40,15 @@ type RenderFunc = () => void;
 export class ThreejsViewer<C extends Camera> extends TypedViewer<C> {
 	private _requestAnimationFrameId: number | undefined;
 
+	private _xrController: BaseCoreXRController | undefined;
 	private _renderer: AbstractRenderer | undefined;
+	private _rendererConfig: AvailableRenderConfig | undefined;
 	private _renderFunc: RenderFuncWithDelta | undefined;
 	private _renderCSSFunc: RenderFunc | undefined;
 	private _cssRendererConfig: CSSRendererConfig | undefined;
 
 	private _effectComposer: EffectComposer | undefined;
 
-	private _animateMethod: () => void = this.animate.bind(this);
 	static override _canvasIdPrefix() {
 		return 'ThreejsViewer';
 	}
@@ -60,17 +63,28 @@ export class ThreejsViewer<C extends Camera> extends TypedViewer<C> {
 		const canvas = this.canvas();
 		const threejsScene = scene.threejsScene();
 
-		this._renderer =
-			options.renderer ||
-			CoreCameraRendererController.createRenderer({
+		// WebGLRenderer
+		this._renderer = options.renderer;
+		if (!this._renderer) {
+			this._rendererConfig = CoreCameraRendererController.rendererConfig({
 				camera,
 				scene,
 				canvas,
 			});
+			if (this._rendererConfig) {
+				this._renderer = this._rendererConfig.renderer;
+			}
+		}
+
 		const renderer = this._renderer;
+		if (!renderer) {
+			console.error('no renderer');
+		}
 		if (renderer) {
+			// scene
 			const rendererScene = CoreCameraRenderSceneController.renderScene({camera, scene});
 			const renderScene = rendererScene || threejsScene;
+			// post
 			this._effectComposer = CoreCameraPostProcessController.createComposer({
 				camera,
 				scene,
@@ -78,12 +92,14 @@ export class ThreejsViewer<C extends Camera> extends TypedViewer<C> {
 				renderer,
 				viewer: this,
 			});
+			const effectComposer = this._effectComposer;
+			// CSSRender
 			this._cssRendererConfig = CoreCameraCSSRendererController.cssRendererConfig({scene, camera, canvas});
-			this._controlsNode = CoreCameraControlsController.controlsNode({camera, scene});
 			const cssRenderer = this._cssRendererConfig?.cssRenderer;
 			this._renderCSSFunc = cssRenderer ? () => cssRenderer.render(renderScene, camera) : undefined;
-
-			const effectComposer = this._effectComposer;
+			// controls
+			this._controlsNode = CoreCameraControlsController.controlsNode({camera, scene});
+			// renderFunc
 			if (effectComposer) {
 				this._renderFunc = (delta) => effectComposer.render(delta);
 			} else {
@@ -101,12 +117,21 @@ export class ThreejsViewer<C extends Camera> extends TypedViewer<C> {
 	 */
 	override mount(element: HTMLElement) {
 		super.mount(element);
-		this._domElement?.appendChild(this.canvas());
+		const canvas = this.canvas();
+		this._domElement?.appendChild(canvas);
 		this._domElement?.classList.add(CSS_CLASS);
 
 		const cssRendererNode = this._cssRendererConfig?.cssRendererNode;
 		if (cssRendererNode) {
-			cssRendererNode.mountRenderer(this.canvas());
+			cssRendererNode.mountRenderer(canvas);
+		}
+		const rendererConfig = this._rendererConfig;
+		if (rendererConfig) {
+			const renderer = this._renderer;
+			if (renderer instanceof WebGLRenderer && rendererConfig.rendererNode) {
+				this._xrController = this._createXRController();
+				this._xrController?.mount();
+			}
 		}
 
 		this._build();
@@ -121,6 +146,22 @@ export class ThreejsViewer<C extends Camera> extends TypedViewer<C> {
 	// override controlsController(): ViewerControlsController {
 	// 	return (this._controlsController = this._controlsController || new ViewerControlsController(this));
 	// }
+	private _createXRController() {
+		const rendererConfig = this._rendererConfig;
+		if (!rendererConfig) {
+			return;
+		}
+		const renderer = this._renderer;
+		if (!(renderer instanceof WebGLRenderer && rendererConfig.rendererNode)) {
+			return;
+		}
+		const canvas = this.canvas();
+		if (!canvas) {
+			return;
+		}
+		const WebGLRendererNode = rendererConfig.rendererNode as WebGLRendererRopNode;
+		return WebGLRendererNode.XRController(renderer, canvas);
+	}
 
 	public _build() {
 		this._initDisplay();
@@ -133,12 +174,15 @@ export class ThreejsViewer<C extends Camera> extends TypedViewer<C> {
 	 *
 	 */
 	override dispose() {
+		const canvas = this.canvas();
 		// dispose cssRenderer
 		const cssRendererNode = this._cssRendererConfig?.cssRendererNode;
 		if (cssRendererNode) {
-			cssRendererNode.unmountRenderer(this.canvas());
+			cssRendererNode.unmountRenderer(canvas);
 		}
 		this._cssRendererConfig = undefined;
+		// dispose XR
+		this._xrController?.unmount();
 
 		// dispose effectComposer
 		this._effectComposer = undefined;
@@ -198,7 +242,7 @@ export class ThreejsViewer<C extends Camera> extends TypedViewer<C> {
 		const pixelRatio = this._renderer.getPixelRatio();
 		this.camerasController().computeSizeAndAspect(pixelRatio);
 		this.audioController().update();
-		this.animate();
+		this._startAnimate();
 	}
 
 	/**
@@ -212,27 +256,69 @@ export class ThreejsViewer<C extends Camera> extends TypedViewer<C> {
 		// calling this a second time would start another requestAnimationFrame
 		// and we would therefore render at twice the rate
 		if (this._doRender && this._requestAnimationFrameId == null) {
-			this.animate();
+			this._startAnimate();
 		}
 		if (!this._doRender) {
 			this._cancelAnimate();
 		}
 	}
 
-	animate() {
-		if (this._doRender) {
-			const delta = this._scene.timeController.updateClockDelta();
-			this._requestAnimationFrameId = requestAnimationFrame(this._animateMethod);
-			this._runOnBeforeTickCallbacks(delta);
-			// this._scene.eventsDispatcher.connectionTriggerDispatcher.reset();
-			this.scene().update(delta);
-			this._runOnAfterTickCallbacks(delta);
-			this.render(delta);
-			// this.controlsController()?.update(delta);
+	isXR(): boolean {
+		if (!this._renderer) {
+			return false;
+		}
+		return this._renderer instanceof WebGLRenderer && this._renderer.xr.enabled;
+	}
+	private _startAnimate() {
+		if (this.isXR()) {
+			const renderer = this._renderer as WebGLRenderer;
+			if (!renderer) {
+				return;
+			}
+			this._xrController = this._xrController || this._createXRController();
+			const xrController = this._xrController;
+			if (!xrController) {
+				return;
+			}
+
+			const xrCallback: XRFrameRequestCallback = (timestamp, frame) => {
+				xrController.process(frame);
+
+				this._animateWebXR();
+			};
+			renderer.setAnimationLoop(xrCallback);
+		} else {
+			this._animateWeb();
+		}
+	}
+	private _cancelAnimate() {
+		if (this.isXR()) {
+			(this._renderer as WebGLRenderer)?.setAnimationLoop(null);
+		} else {
+			this._cancelAnimateCommon();
 		}
 	}
 
-	private _cancelAnimate() {
+	private _animateWebBound: () => void = this._animateWeb.bind(this);
+	private _animateWeb() {
+		if (!this._doRender) {
+			return;
+		}
+		this._requestAnimationFrameId = requestAnimationFrame(this._animateWebBound);
+		this.__animateCommon__();
+	}
+	private _animateWebXR() {
+		this.__animateCommon__();
+	}
+	private __animateCommon__() {
+		const delta = this._scene.timeController.updateClockDelta();
+		this._runOnBeforeTickCallbacks(delta);
+		this.scene().update(delta);
+		this._runOnAfterTickCallbacks(delta);
+		this.render(delta);
+	}
+
+	private _cancelAnimateCommon() {
 		this._doRender = false;
 		if (this._requestAnimationFrameId != null) {
 			cancelAnimationFrame(this._requestAnimationFrameId);

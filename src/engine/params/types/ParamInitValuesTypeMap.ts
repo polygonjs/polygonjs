@@ -1,8 +1,5 @@
 import {StringOrNumber, StringOrNumber2, StringOrNumber3, StringOrNumber4} from '../../../types/GlobalTypes';
-import {Vector2} from 'three';
-import {Vector3} from 'three';
-import {Vector4} from 'three';
-import {Color} from 'three';
+import type {Vector2, Vector3, Vector4, Color} from 'three';
 import {RampValue, RampValueJson} from '../ramp/RampValue';
 import {ParamType} from '../../poly/ParamType';
 

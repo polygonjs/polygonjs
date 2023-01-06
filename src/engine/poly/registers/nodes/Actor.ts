@@ -41,6 +41,7 @@ import {FloatToVec2ActorNode} from '../../../nodes/actor/FloatToVec2';
 import {FloatToVec3ActorNode} from '../../../nodes/actor/FloatToVec3';
 import {FloatToVec4ActorNode} from '../../../nodes/actor/FloatToVec4';
 import {FloorActorNode} from '../../../nodes/actor/Floor';
+import {GetARSessionPropertyActorNode} from '../../../nodes/actor/GetARSessionProperty';
 import {GetBox3PropertyActorNode} from '../../../nodes/actor/GetBox3Property';
 import {GetChildrenAttributesActorNode} from '../../../nodes/actor/GetChildrenAttributes';
 import {GetIntersectionPropertyActorNode} from '../../../nodes/actor/GetIntersectionProperty';
@@ -57,6 +58,7 @@ import {GetPlanePropertyActorNode} from '../../../nodes/actor/GetPlaneProperty';
 import {GetRayPropertyActorNode} from '../../../nodes/actor/GetRayProperty';
 import {GetSpherePropertyActorNode} from '../../../nodes/actor/GetSphereProperty';
 import {GetVideoPropertyActorNode} from '../../../nodes/actor/GetVideoProperty';
+import {GetXRControllerPropertyActorNode} from '../../../nodes/actor/GetXRControllerProperty';
 import {IntToFloatActorNode} from '../../../nodes/actor/IntToFloat';
 import {IntToBoolActorNode} from '../../../nodes/actor/IntToBool';
 import {KeyframesActorNode} from '../../../nodes/actor/Keyframes';
@@ -97,6 +99,7 @@ import {OnScenePlayStateActorNode} from '../../../nodes/actor/OnScenePlayState';
 import {OnSceneResetActorNode} from '../../../nodes/actor/OnSceneReset';
 import {OnTickActorNode} from '../../../nodes/actor/OnTick';
 import {OnVideoEventActorNode} from '../../../nodes/actor/OnVideoEvent';
+import {OnXRControllerEventActorNode} from '../../../nodes/actor/OnXRControllerEvent';
 import {OrActorNode} from '../../../nodes/actor/Or';
 import {ParamButtonPressActorNode} from '../../../nodes/actor/ParamButtonPress';
 import {PauseAudioSourceActorNode} from '../../../nodes/actor/PauseAudioSource';
@@ -121,6 +124,7 @@ import {RandActorNode} from '../../../nodes/actor/Rand';
 import {RandomActorNode} from '../../../nodes/actor/Random';
 import {RayActorNode} from '../../../nodes/actor/Ray';
 import {RayDistanceToPlaneActorNode} from '../../../nodes/actor/RayDistanceToPlane';
+import {RayFromCameraActorNode} from '../../../nodes/actor/RayFromCamera';
 import {RayFromCursorActorNode} from '../../../nodes/actor/RayFromCursor';
 import {RayIntersectBoxActorNode} from '../../../nodes/actor/RayIntersectBox';
 import {RayIntersectObjectActorNode} from '../../../nodes/actor/RayIntersectObject';
@@ -141,6 +145,7 @@ import {SetObjectFrustumCulledActorNode} from '../../../nodes/actor/SetObjectFru
 import {SetObjectLookAtActorNode} from '../../../nodes/actor/SetObjectLookAt';
 import {SetObjectMaterialColorActorNode} from '../../../nodes/actor/SetObjectMaterialColor';
 import {SetObjectMaterialActorNode} from '../../../nodes/actor/SetObjectMaterial';
+import {SetObjectMatrixActorNode} from '../../../nodes/actor/SetObjectMatrix';
 import {SetObjectMatrixAutoUpdateActorNode} from '../../../nodes/actor/SetObjectMatrixAutoUpdate';
 import {SetObjectPolarTransformActorNode} from '../../../nodes/actor/SetObjectPolarTransform';
 import {SetObjectPositionActorNode} from '../../../nodes/actor/SetObjectPosition';
@@ -156,6 +161,7 @@ import {SetPerspectiveCameraFovActorNode} from '../../../nodes/actor/SetPerspect
 import {SetPerspectiveCameraNearFarActorNode} from '../../../nodes/actor/SetPerspectiveCameraNearFar';
 import {SetSpotLightIntensityActorNode} from '../../../nodes/actor/SetSpotLightIntensity';
 import {SetViewerActorNode} from '../../../nodes/actor/SetViewer';
+// import {SetVRPositionActorNode} from '../../../nodes/actor/SetVRPosition';
 import {SignActorNode} from '../../../nodes/actor/Sign';
 import {SinActorNode} from '../../../nodes/actor/Sin';
 import {SmoothstepActorNode} from '../../../nodes/actor/Smoothstep';
@@ -238,6 +244,7 @@ export interface ActorNodeChildrenMap {
 	floatToVec3: FloatToVec3ActorNode;
 	floatToVec4: FloatToVec4ActorNode;
 	floor: FloorActorNode;
+	getARSessionProperty: GetARSessionPropertyActorNode;
 	getBox3Property: GetBox3PropertyActorNode;
 	getChildrenAttributes: GetChildrenAttributesActorNode;
 	getObjectChild: GetObjectChildActorNode;
@@ -254,6 +261,7 @@ export interface ActorNodeChildrenMap {
 	getSphereProperty: GetSpherePropertyActorNode;
 	getObjectWorldPosition: GetObjectWorldPositionActorNode;
 	getVideoProperty: GetVideoPropertyActorNode;
+	getXRControllerProperty: GetXRControllerPropertyActorNode;
 	intToBool: IntToBoolActorNode;
 	intToFloat: IntToFloatActorNode;
 	keyframes: KeyframesActorNode;
@@ -294,6 +302,7 @@ export interface ActorNodeChildrenMap {
 	onSceneReset: OnSceneResetActorNode;
 	onTick: OnTickActorNode;
 	onVideoEvent: OnVideoEventActorNode;
+	onXRControllerEvent: OnXRControllerEventActorNode;
 	or: OrActorNode;
 	paramButtonPress: ParamButtonPressActorNode;
 	pauseAudioSource: PauseAudioSourceActorNode;
@@ -318,6 +327,7 @@ export interface ActorNodeChildrenMap {
 	random: RandomActorNode;
 	ray: RayActorNode;
 	rayDistanceToPlaneActorNode: RayDistanceToPlaneActorNode;
+	rayFromCamera: RayFromCameraActorNode;
 	rayFromCursor: RayFromCursorActorNode;
 	rayIntersectBox: RayIntersectBoxActorNode;
 	rayIntersectObject: RayIntersectObjectActorNode;
@@ -335,6 +345,7 @@ export interface ActorNodeChildrenMap {
 	setObjectAttribute: SetObjectAttributeActorNode;
 	setObjectCastShadow: SetObjectCastShadowActorNode;
 	setObjectFrustumCulled: SetObjectFrustumCulledActorNode;
+	setObjectMatrix: SetObjectMatrixActorNode;
 	setObjectMatrixAutoUpdate: SetObjectMatrixAutoUpdateActorNode;
 	setObjectLookAt: SetObjectLookAtActorNode;
 	setObjectReceiveShadow: SetObjectReceiveShadowActorNode;
@@ -353,6 +364,7 @@ export interface ActorNodeChildrenMap {
 	setPerspectiveCameraNearFar: SetPerspectiveCameraNearFarActorNode;
 	setSpotLightIntensity: SetSpotLightIntensityActorNode;
 	setViewer: SetViewerActorNode;
+	// setVRPosition: SetVRPositionActorNode;
 	sign: SignActorNode;
 	sin: SinActorNode;
 	smoothstep: SmoothstepActorNode;
@@ -441,6 +453,7 @@ export class ActorRegister {
 		poly.registerNode(FloatToVec3ActorNode, CATEGORY_ACTOR.CONVERSION);
 		poly.registerNode(FloatToVec4ActorNode, CATEGORY_ACTOR.CONVERSION);
 		poly.registerNode(FloorActorNode, CATEGORY_ACTOR.MATH);
+		poly.registerNode(GetARSessionPropertyActorNode, CATEGORY_ACTOR.XR);
 		poly.registerNode(GetBox3PropertyActorNode, CATEGORY_ACTOR.GET);
 		poly.registerNode(GetChildrenAttributesActorNode, CATEGORY_ACTOR.GET);
 		poly.registerNode(GetObjectChildActorNode, CATEGORY_ACTOR.GET);
@@ -457,6 +470,7 @@ export class ActorRegister {
 		poly.registerNode(GetSpherePropertyActorNode, CATEGORY_ACTOR.GET);
 		poly.registerNode(GetObjectWorldPositionActorNode, CATEGORY_ACTOR.GET);
 		poly.registerNode(GetVideoPropertyActorNode, CATEGORY_ACTOR.GET);
+		poly.registerNode(GetXRControllerPropertyActorNode, CATEGORY_ACTOR.XR);
 		poly.registerNode(IntToBoolActorNode, CATEGORY_ACTOR.GET);
 		poly.registerNode(IntToFloatActorNode, CATEGORY_ACTOR.GET);
 		poly.registerNode(KeyframesActorNode, CATEGORY_ACTOR.ANIMATION);
@@ -497,6 +511,7 @@ export class ActorRegister {
 		poly.registerNode(OnSceneResetActorNode, CATEGORY_ACTOR.EVENTS);
 		poly.registerNode(OnTickActorNode, CATEGORY_ACTOR.EVENTS);
 		poly.registerNode(OnVideoEventActorNode, CATEGORY_ACTOR.EVENTS);
+		poly.registerNode(OnXRControllerEventActorNode, CATEGORY_ACTOR.XR);
 		poly.registerNode(OrActorNode, CATEGORY_ACTOR.LOGIC);
 		poly.registerNode(ParamButtonPressActorNode, CATEGORY_ACTOR.ACTION);
 		poly.registerNode(PauseAudioSourceActorNode, CATEGORY_ACTOR.PHYSICS);
@@ -521,6 +536,7 @@ export class ActorRegister {
 		poly.registerNode(RandActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(RandomActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(RayActorNode, CATEGORY_ACTOR.MATH);
+		poly.registerNode(RayFromCameraActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(RayFromCursorActorNode, CATEGORY_ACTOR.INPUTS);
 		poly.registerNode(RayIntersectBoxActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(RayIntersectObjectActorNode, CATEGORY_ACTOR.MATH);
@@ -542,6 +558,7 @@ export class ActorRegister {
 		poly.registerNode(SetObjectLookAtActorNode, CATEGORY_ACTOR.ACTION);
 		poly.registerNode(SetObjectMaterialActorNode, CATEGORY_ACTOR.ACTION);
 		poly.registerNode(SetObjectMaterialColorActorNode, CATEGORY_ACTOR.ACTION);
+		poly.registerNode(SetObjectMatrixActorNode, CATEGORY_ACTOR.ACTION);
 		poly.registerNode(SetObjectMatrixAutoUpdateActorNode, CATEGORY_ACTOR.ACTION);
 		poly.registerNode(SetObjectPolarTransformActorNode, CATEGORY_ACTOR.ACTION);
 		poly.registerNode(SetObjectPositionActorNode, CATEGORY_ACTOR.ACTION);
@@ -557,6 +574,7 @@ export class ActorRegister {
 		poly.registerNode(SetPerspectiveCameraNearFarActorNode, CATEGORY_ACTOR.ACTION);
 		poly.registerNode(SetSpotLightIntensityActorNode, CATEGORY_ACTOR.ACTION);
 		poly.registerNode(SetViewerActorNode, CATEGORY_ACTOR.MISC);
+		// poly.registerNode(SetVRPositionActorNode, CATEGORY_ACTOR.XR);
 		poly.registerNode(SignActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(SinActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(SmoothstepActorNode, CATEGORY_ACTOR.MATH);

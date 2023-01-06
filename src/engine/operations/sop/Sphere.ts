@@ -46,7 +46,7 @@ export class SphereSopOperation extends BaseSopOperation {
 		center: new Vector3(0, 0, 0),
 		asLines: false,
 	};
-	static override readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
+	static override readonly INPUT_CLONED_STATE = InputCloneMode.NEVER;
 	static override type(): Readonly<'sphere'> {
 		return 'sphere';
 	}
@@ -65,8 +65,8 @@ export class SphereSopOperation extends BaseSopOperation {
 		const object = this._createSphereObject(geometry, params);
 		return object;
 	}
-	private _cookWithInput(core_group: CoreGroup, params: SphereSopParams) {
-		const bbox = core_group.boundingBox();
+	private _cookWithInput(coreGroup: CoreGroup, params: SphereSopParams) {
+		const bbox = coreGroup.boundingBox();
 		const size = bbox.max.clone().sub(bbox.min);
 		const center = bbox.max.clone().add(bbox.min).multiplyScalar(0.5);
 

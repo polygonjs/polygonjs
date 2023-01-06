@@ -15,6 +15,7 @@ export const CATEGORY_ACTOR = {
 	NETWORK,
 	MISC: 'misc',
 	PHYSICS: 'physics',
+	XR: 'XR',
 };
 
 export const CATEGORY_ANIM = {

@@ -82,7 +82,6 @@ export class RootManagerNode extends TypedBaseManagerNode<ObjectsManagerParamsCo
 	protected override _childrenControllerContext = NodeContext.OBJ;
 	override initializeNode() {
 		// this.children_controller?.init({dependent: false});
-		this._object.matrixAutoUpdate = false;
 
 		this.lifecycle.onChildAdd(this._onChildAdd.bind(this));
 		this.lifecycle.onChildRemove(this._onChildRemove.bind(this));
@@ -91,7 +90,10 @@ export class RootManagerNode extends TypedBaseManagerNode<ObjectsManagerParamsCo
 	private _createScene() {
 		const scene = new Scene();
 		scene.name = ROOT_NAME;
-		scene.matrixAutoUpdate = false;
+		// DO NOT set matrixAutoUpdate to false
+		// on the scene, as this has too many side effects
+		// and is probably an over optimisation anyway
+		scene.matrixAutoUpdate = true;
 		return scene;
 	}
 

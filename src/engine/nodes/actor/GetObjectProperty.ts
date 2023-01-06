@@ -19,6 +19,7 @@ enum GetObjectPropertyActorNodeInputName {
 	position = 'position',
 	quaternion = 'quaternion',
 	scale = 'scale',
+	matrix = 'matrix',
 	visible = 'visible',
 	castShadow = 'castShadow',
 	receiveShadow = 'receiveShadow',
@@ -36,6 +37,7 @@ const OBJECT_PROPERTIES: GetObjectPropertyActorNodeInputName[] = [
 	GetObjectPropertyActorNodeInputName.position,
 	GetObjectPropertyActorNodeInputName.quaternion,
 	GetObjectPropertyActorNodeInputName.scale,
+	GetObjectPropertyActorNodeInputName.matrix,
 	GetObjectPropertyActorNodeInputName.visible,
 	GetObjectPropertyActorNodeInputName.castShadow,
 	GetObjectPropertyActorNodeInputName.receiveShadow,
@@ -66,7 +68,12 @@ export class GetObjectPropertyActorNode extends ParamlessTypedActorNode {
 
 		this.io.outputs.setNamedOutputConnectionPoints([
 			new ActorConnectionPoint(GetObjectPropertyActorNodeInputName.position, ActorConnectionPointType.VECTOR3),
+			new ActorConnectionPoint(
+				GetObjectPropertyActorNodeInputName.quaternion,
+				ActorConnectionPointType.QUATERNION
+			),
 			new ActorConnectionPoint(GetObjectPropertyActorNodeInputName.scale, ActorConnectionPointType.VECTOR3),
+			new ActorConnectionPoint(GetObjectPropertyActorNodeInputName.matrix, ActorConnectionPointType.MATRIX4),
 			new ActorConnectionPoint(GetObjectPropertyActorNodeInputName.up, ActorConnectionPointType.VECTOR3),
 			new ActorConnectionPoint(GetObjectPropertyActorNodeInputName.visible, ActorConnectionPointType.BOOLEAN),
 			new ActorConnectionPoint(

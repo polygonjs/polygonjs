@@ -35,6 +35,7 @@ import {CoreString} from '../../core/String';
 import {SceneRenderersRegister, RegisterRendererOptions} from './utils/SceneRenderersRegister';
 import {Poly} from '../Poly';
 import {NodeCreateOptions} from '../nodes/utils/hierarchy/ChildrenController';
+import {SceneXRController} from './utils/XREventsController';
 
 interface PolySceneCreateOptions {
 	root: NodeCreateOptions;
@@ -120,13 +121,17 @@ export class PolyScene {
 		return await this.cookController.waitForCooksCompleted();
 	}
 
-	private _dispatch_controller: DispatchController | undefined;
+	private _dispatchController: DispatchController | undefined;
 	get dispatchController() {
-		return (this._dispatch_controller = this._dispatch_controller || new DispatchController(this));
+		return (this._dispatchController = this._dispatchController || new DispatchController(this));
 	}
-	private _events_dispatcher: SceneEventsDispatcher | undefined;
+	private _eventsDispatcher: SceneEventsDispatcher | undefined;
 	get eventsDispatcher() {
-		return (this._events_dispatcher = this._events_dispatcher || new SceneEventsDispatcher(this));
+		return (this._eventsDispatcher = this._eventsDispatcher || new SceneEventsDispatcher(this));
+	}
+	private _xrController: SceneXRController | undefined;
+	get xr() {
+		return (this._xrController = this._xrController || new SceneXRController(this));
 	}
 	/**
 	 * When using Polygonjs viewers, a raycaster is created to use mouse events

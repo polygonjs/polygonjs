@@ -49,6 +49,7 @@ import {
 	CustomMaterialMeshParamConfig,
 	materialMeshAssemblerCustomMaterialRequested,
 } from './utils/customMaterials/CustomMaterialMesh';
+import {GlAssemblerController} from '../gl/code/Controller';
 interface MeshBasicBuilderControllers
 	extends AdvancedCommonControllers,
 		UniformFogControllers,
@@ -106,7 +107,7 @@ export class MeshBasicBuilderMatNode extends TypedBuilderMatNode<
 	public override usedAssembler(): Readonly<AssemblerName.GL_MESH_BASIC> {
 		return AssemblerName.GL_MESH_BASIC;
 	}
-	protected _createAssemblerController() {
+	protected _createAssemblerController(): GlAssemblerController<ShaderAssemblerBasic> | undefined {
 		return Poly.assemblersRegister.assembler(this, this.usedAssembler());
 	}
 	public override customMaterialRequested(customName: CustomMaterialName): boolean {

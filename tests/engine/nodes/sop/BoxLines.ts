@@ -7,7 +7,7 @@ QUnit.test('boxLines simple', async (assert) => {
 	let container = await boxLines1.compute();
 	const core_group = container.coreContent();
 	const geometry = core_group?.objectsWithGeo()[0].geometry;
-	assert.equal(geometry?.getAttribute('position').array.length, 72);
+	assert.equal(geometry?.getAttribute('position').array.length, 144);
 	assert.equal(container.boundingBox().min.y, -0.5);
 	assert.notOk(boxLines1.isDirty(), 'box is dirty');
 
@@ -43,7 +43,7 @@ QUnit.test('boxLines with input', async (assert) => {
 	const group = container.coreContent()!;
 	const {geometry} = group.objectsWithGeo()[0];
 
-	assert.equal(geometry.getAttribute('position').array.length, 72);
+	assert.equal(geometry.getAttribute('position').array.length, 144);
 	assert.equal(container.boundingBox().min.y, -1.5);
 });
 

@@ -63,7 +63,7 @@ export class NodesJsonImporter<T extends BaseNodeTypeWithIO> {
 			if (node) {
 				nonOptimizedNodes.push(node);
 			} else {
-				const message = `failed to create node with type '${nodeType}'`;
+				const message = `failed to create node with type '${nodeType}' (in '${this._node.path()}')`;
 				sceneImporter.report.addWarning(message);
 				Poly.warn(message);
 			}

@@ -37,6 +37,8 @@ import {ParticlesPersistedConfig} from '../gl/code/assemblers/particles/Particle
 import {TimeController} from '../../scene/utils/TimeController';
 import {NodeCreateOptions} from '../utils/hierarchy/ChildrenController';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
+import {GlAssemblerController} from '../gl/code/Controller';
+import {ShaderAssemblerParticles} from '../gl/code/assemblers/particles/Particles';
 
 class ParticlesSystemGpuSopParamsConfig extends NodeParamsConfig {
 	/** @param frame the particles simulation starts */
@@ -105,7 +107,7 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 		return AssemblerName.GL_PARTICLES;
 	}
 	protected _assemblerController = this._createAssemblerController();
-	private _createAssemblerController() {
+	private _createAssemblerController(): GlAssemblerController<ShaderAssemblerParticles> | undefined {
 		return Poly.assemblersRegister.assembler(this, this.usedAssembler());
 	}
 	public override readonly persisted_config: ParticlesPersistedConfig = new ParticlesPersistedConfig(this);

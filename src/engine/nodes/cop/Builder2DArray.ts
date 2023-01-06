@@ -42,6 +42,8 @@ import {isBooleanTrue} from '../../../core/Type';
 import FRAGMENT_SHADER from '../gl/code/templates/textures/Default.frag.glsl';
 import VERTEX_SHADER from '../gl/code/templates/textures/Default.vert.glsl';
 import {handleCopBuilderDependencies} from './utils/BuilderUtils';
+import {GlAssemblerController} from '../gl/code/Controller';
+import {ShaderAssemblerTexture2DArray} from '../gl/code/assemblers/textures/Texture2DArray';
 
 const RESOLUTION_DEFAULT: Number2 = [128, 128];
 
@@ -85,8 +87,9 @@ export class Builder2DArrayCopNode extends TypedCopNode<Builder2DArrayCopParamsC
 	public override usedAssembler(): Readonly<AssemblerName.GL_TEXTURE_2D_ARRAY> {
 		return AssemblerName.GL_TEXTURE_2D_ARRAY;
 	}
-	protected _createAssemblerController() {
-		const assemblerController = Poly.assemblersRegister.assembler(this, this.usedAssembler());
+	protected _createAssemblerController(): GlAssemblerController<ShaderAssemblerTexture2DArray> | undefined {
+		const assemblerController: GlAssemblerController<ShaderAssemblerTexture2DArray> | undefined =
+			Poly.assemblersRegister.assembler(this, this.usedAssembler());
 		if (assemblerController) {
 			const globalsHandler = new GlobalsGeometryHandler();
 			assemblerController.setAssemblerGlobalsHandler(globalsHandler);

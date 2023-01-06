@@ -27,11 +27,15 @@ import {
 	PCFSoftShadowMap,
 	VSMShadowMap,
 } from 'three';
+
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CoreType} from '../../../core/Type';
 import {Poly} from '../../Poly';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {defaultPixelRatio} from '../../../core/camera/defaultPixelRatio';
+import {TypeAssert} from '../../poly/Assert';
+import {CoreARController} from '../../../core/xr/CoreARController';
+import {CoreVRController} from '../../../core/xr/CoreVRController';
 
 enum EncodingName {
 	Linear = 'Linear',
@@ -154,7 +158,124 @@ export const DEFAULT_PARAMS: WebGLRendererParameters = {
 	logarithmicDepthBuffer: false,
 };
 
+enum XRType {
+	AR = 'AR (Augmented Reality)',
+	VR = 'VR (Virtual Reality)',
+}
+const XR_TYPES: XRType[] = [XRType.AR, XRType.VR];
+
+const XR_REFERENCE_SPACE_TYPES: XRReferenceSpaceType[] = [
+	'viewer',
+	'local',
+	'local-floor',
+	'bounded-floor',
+	'unbounded',
+];
+const DEFAULT_XR_REFERENCE_SPACE_TYPE: XRReferenceSpaceType = 'local-floor';
+
 class WebGLRendererRopParamsConfig extends NodeParamsConfig {
+	//
+	//
+	//
+	//
+	//
+	common = ParamConfig.FOLDER();
+	/** @param toggle on to have antialias on (change requires page reload) */
+	antialias = ParamConfig.BOOLEAN(1);
+	/** @param tone mapping */
+	toneMapping = ParamConfig.INTEGER(DEFAULT_TONE_MAPPING, {
+		menu: {
+			entries: TONE_MAPPING_MENU_ENTRIES,
+		},
+	});
+	/** @param tone mapping exposure */
+	toneMappingExposure = ParamConfig.FLOAT(1, {
+		range: [0, 2],
+	});
+	/** @param output encoding */
+	outputEncoding = ParamConfig.INTEGER(DEFAULT_OUTPUT_ENCODING, {
+		menu: {
+			entries: ENCODING_NAMES.map((name, i) => {
+				return {
+					name: name,
+					value: ENCODING_VALUES[i],
+				};
+			}),
+		},
+	});
+
+	//
+	//
+	//
+	//
+	//
+	XR = ParamConfig.FOLDER();
+	/** @param use XR */
+	useXR = ParamConfig.BOOLEAN(0);
+	/** @param type of XR (AR or VR) */
+	xrType = ParamConfig.INTEGER(XR_TYPES.indexOf(XRType.AR), {
+		menu: {
+			entries: XR_TYPES.map((name, value) => ({name, value})),
+		},
+		visibleIf: {useXR: 1},
+	});
+	/** @param overrides referenceSpaceType */
+	overrideReferenceSpaceType = ParamConfig.BOOLEAN(0);
+	/** @param set referenceSpaceType ( see doc: https://immersive-web.github.io/webxr/#xrreferencespace-interface ) */
+	referenceSpaceType = ParamConfig.INTEGER(XR_REFERENCE_SPACE_TYPES.indexOf(DEFAULT_XR_REFERENCE_SPACE_TYPE), {
+		menu: {
+			entries: XR_REFERENCE_SPACE_TYPES.map((name, value) => ({name, value})),
+		},
+		visibleIf: {
+			useXR: 1,
+			xrType: XR_TYPES.indexOf(XRType.VR),
+			overrideReferenceSpaceType: 1,
+		},
+	});
+
+	//
+	//
+	//
+	//
+	//
+	shadow = ParamConfig.FOLDER();
+	/** @param toggle on to have shadow maps */
+	tshadowMap = ParamConfig.BOOLEAN(1);
+	/** @param toggle on to recompute the shadow maps on every frame. If all objects are static, you may want to turn this off */
+	shadowMapAutoUpdate = ParamConfig.BOOLEAN(1, {visibleIf: {tshadowMap: 1}});
+	/** @param toggle on to trigger shadows update */
+	shadowMapNeedsUpdate = ParamConfig.BOOLEAN(0, {visibleIf: {tshadowMap: 1}});
+	/** @param shadows type */
+	shadowMapType = ParamConfig.INTEGER(DEFAULT_SHADOW_MAP_TYPE, {
+		visibleIf: {tshadowMap: 1},
+		menu: {
+			entries: SHADOW_MAP_TYPE_NAMES.map((name, i) => {
+				return {
+					name: name,
+					value: SHADOW_MAP_TYPE_VALUES[i],
+				};
+			}),
+		},
+	});
+
+	//
+	//
+	//
+	//
+	//
+	advanced = ParamConfig.FOLDER();
+	/** @param toggle on to have alpha on (change requires page reload) */
+	alpha = ParamConfig.BOOLEAN(1);
+	/** @param premultipliedAlpha */
+	premultipliedAlpha = ParamConfig.BOOLEAN(1);
+	/** @param stencil */
+	stencil = ParamConfig.BOOLEAN(1);
+	/** @param depth */
+	depth = ParamConfig.BOOLEAN(1);
+	/** @param logarithmicDepthBuffer */
+	logarithmicDepthBuffer = ParamConfig.BOOLEAN(0);
+	/** @param preserveDrawingBuffer */
+	preserveDrawingBuffer = ParamConfig.BOOLEAN(0);
 	/** @param toggle on to set the precision */
 	tprecision = ParamConfig.BOOLEAN(0);
 	/** @param set the precision */
@@ -177,41 +298,7 @@ class WebGLRendererRopParamsConfig extends NodeParamsConfig {
 			}),
 		},
 	});
-	/** @param toggle on to have alpha on (change requires page reload) */
-	alpha = ParamConfig.BOOLEAN(1);
-	/** @param premultipliedAlpha */
-	premultipliedAlpha = ParamConfig.BOOLEAN(1);
-	/** @param toggle on to have antialias on (change requires page reload) */
-	antialias = ParamConfig.BOOLEAN(1);
-	/** @param stencil */
-	stencil = ParamConfig.BOOLEAN(1);
-	/** @param depth */
-	depth = ParamConfig.BOOLEAN(1);
-	/** @param logarithmicDepthBuffer */
-	logarithmicDepthBuffer = ParamConfig.BOOLEAN(0);
-	/** @param preserveDrawingBuffer */
-	preserveDrawingBuffer = ParamConfig.BOOLEAN(0);
-	/** @param tone mapping */
-	toneMapping = ParamConfig.INTEGER(DEFAULT_TONE_MAPPING, {
-		menu: {
-			entries: TONE_MAPPING_MENU_ENTRIES,
-		},
-	});
-	/** @param tone mapping exposure */
-	toneMappingExposure = ParamConfig.FLOAT(1, {
-		range: [0, 2],
-	});
-	/** @param output encoding */
-	outputEncoding = ParamConfig.INTEGER(DEFAULT_OUTPUT_ENCODING, {
-		menu: {
-			entries: ENCODING_NAMES.map((name, i) => {
-				return {
-					name: name,
-					value: ENCODING_VALUES[i],
-				};
-			}),
-		},
-	});
+
 	/** @param physically correct lights */
 	physicallyCorrectLights = ParamConfig.BOOLEAN(1);
 	/** @param sort objects, which can be necessary when rendering transparent objects */
@@ -223,24 +310,6 @@ class WebGLRendererRopParamsConfig extends NodeParamsConfig {
 		visibleIf: {tpixelRatio: true},
 		range: [1, 4],
 		rangeLocked: [true, false],
-	});
-	/** @param toggle on to have shadow maps */
-	tshadowMap = ParamConfig.BOOLEAN(1);
-	/** @param toggle on to recompute the shadow maps on every frame. If all objects are static, you may want to turn this off */
-	shadowMapAutoUpdate = ParamConfig.BOOLEAN(1, {visibleIf: {tshadowMap: 1}});
-	/** @param toggle on to trigger shadows update */
-	shadowMapNeedsUpdate = ParamConfig.BOOLEAN(0, {visibleIf: {tshadowMap: 1}});
-	/** @param shadows type */
-	shadowMapType = ParamConfig.INTEGER(DEFAULT_SHADOW_MAP_TYPE, {
-		visibleIf: {tshadowMap: 1},
-		menu: {
-			entries: SHADOW_MAP_TYPE_NAMES.map((name, i) => {
-				return {
-					name: name,
-					value: SHADOW_MAP_TYPE_VALUES[i],
-				};
-			}),
-		},
 	});
 
 	// preserve_drawing_buffer = ParamConfig.BOOLEAN(0);
@@ -306,6 +375,14 @@ export class WebGLRendererRopNode extends TypedRopNode<WebGLRendererRopParamsCon
 		renderer.toneMapping = this.pv.toneMapping;
 		renderer.toneMappingExposure = this.pv.toneMappingExposure;
 
+		// xr
+		renderer.xr.enabled = isBooleanTrue(this.pv.useXR);
+		if (isBooleanTrue(this.pv.overrideReferenceSpaceType)) {
+			renderer.xr.setReferenceSpaceType(XR_REFERENCE_SPACE_TYPES[this.pv.referenceSpaceType]);
+		} else {
+			renderer.xr.setReferenceSpaceType(DEFAULT_XR_REFERENCE_SPACE_TYPE);
+		}
+
 		// shadows
 		renderer.shadowMap.enabled = this.pv.tshadowMap;
 		renderer.shadowMap.autoUpdate = this.pv.shadowMapAutoUpdate;
@@ -342,4 +419,67 @@ export class WebGLRendererRopNode extends TypedRopNode<WebGLRendererRopParamsCon
 				}
 			});
 	}
+
+	/**
+	 *
+	 * XR
+	 *
+	 */
+
+	setXRType(type: XRType) {
+		this.p.xrType.set(XR_TYPES.indexOf(type));
+	}
+	XRType() {
+		return XR_TYPES[this.pv.xrType];
+	}
+	XRController(renderer: WebGLRenderer, canvas: HTMLCanvasElement) {
+		const type = this.XRType();
+		switch (type) {
+			case XRType.AR: {
+				return new CoreARController(this.scene(), renderer, canvas);
+			}
+			case XRType.VR: {
+				return new CoreVRController(this.scene(), renderer, canvas);
+			}
+		}
+		TypeAssert.unreachable(type);
+	}
+	// private XRButton() {
+	// 	const type = this.XRType();
+	// 	switch (type) {
+	// 		case XRType.AR: {
+	// 			return ARButton;
+	// 		}
+	// 		case XRType.VR: {
+	// 			return VRButton;
+	// 		}
+	// 	}
+	// 	TypeAssert.unreachable(type)
+	// }
+	// mountXRButton(canvas: HTMLCanvasElement, renderer: WebGLRenderer) {
+	// 	if (!renderer.xr.enabled) {
+	// 		return;
+	// 	}
+	// 	const parent = canvas.parentElement;
+	// 	if (parent) {
+	// 		const buttonClass = this.XRButton();
+	// 		const button = buttonClass.createButton(renderer, {requiredFeatures: ['hit-test']});
+	// 		parent.prepend(button);
+	// 		this._buttonByCanvasId.set(canvas.id, button);
+
+	// 		const controller0 = renderer.xr.getController(0);
+	// 		const controller1 = renderer.xr.getController(1);
+	// 		this.scene().threejsScene().add(controller0);
+	// 		this.scene().threejsScene().add(controller1);
+	// 	} else {
+	// 		console.warn('canvas has no parent');
+	// 	}
+	// }
+	// unmountXRButton(canvas: HTMLCanvasElement) {
+	// 	const button = this._buttonByCanvasId.get(canvas.id);
+	// 	if (!button) {
+	// 		return;
+	// 	}
+	// 	button.parentElement?.removeChild(button);
+	// }
 }

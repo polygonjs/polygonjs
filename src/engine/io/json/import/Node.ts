@@ -178,23 +178,24 @@ export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 		}
 	}
 
-	private setInputs(inputs_data?: InputData[]) {
-		if (!inputs_data) {
+	private setInputs(inputsData?: InputData[]) {
+		if (!inputsData) {
 			return;
 		}
 
-		let input_data: InputData;
-		for (let i = 0; i < inputs_data.length; i++) {
-			input_data = inputs_data[i];
-			if (input_data && this._node.parent()) {
-				if (CoreType.isString(input_data)) {
-					const input_node_name = input_data;
-					const input_node = this._node.nodeSibling(input_node_name);
-					this._node.setInput(i, input_node);
+		let inputData: InputData;
+		for (let i = 0; i < inputsData.length; i++) {
+			inputData = inputsData[i];
+			if (inputData && this._node.parent()) {
+				if (CoreType.isString(inputData)) {
+					const inputNodeName = inputData;
+					const inputNode = this._node.nodeSibling(inputNodeName);
+					this._node.setInput(i, inputNode);
 				} else {
-					const input_node = this._node.nodeSibling(input_data['node']);
-					let inputIndex = input_data['index'];
-					const inputName = input_data['inputName'];
+					const inputNode = this._node.nodeSibling(inputData['node']);
+					let inputIndex = inputData['index'];
+					const inputName = inputData['inputName'];
+					let outputName = inputData['output'];
 					if (inputName != null) {
 						// If we have inputName, try and find the input index matching it.
 						// If we find nothing, we use inputIndex
@@ -206,8 +207,20 @@ export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 							inputIndex = connectionPointIndex;
 						}
 					}
+					if (inputNode != null && outputName != null) {
+						// If we have outtputName, try and find the input index matching it.
+
+						const connectionPoints = inputNode.io.outputs.namedOutputConnectionPoints();
+						for (let connectionPoint of connectionPoints) {
+							if (connectionPoint) {
+								if (connectionPoint.name().toLowerCase() == outputName.toLowerCase()) {
+									outputName = connectionPoint.name();
+								}
+							}
+						}
+					}
 					if (inputIndex != null) {
-						this._node.setInput(inputIndex, input_node, input_data['output']);
+						this._node.setInput(inputIndex, inputNode, outputName);
 					}
 				}
 			}

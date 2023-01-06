@@ -23,6 +23,7 @@ export enum GetIntersectionPropertyActorNodeOutputName {
 	uv = 'uv',
 	// uv2 = 'uv2',
 }
+const NORMAL_OUTPUT = 'normal';
 const INTERSECTION_PROPERTIES: GetIntersectionPropertyActorNodeOutputName[] = [
 	GetIntersectionPropertyActorNodeOutputName.distance,
 	GetIntersectionPropertyActorNodeOutputName.object,
@@ -60,6 +61,7 @@ export class GetIntersectionPropertyActorNode extends ParamlessTypedActorNode {
 				GetIntersectionPropertyActorNodeOutputName.point,
 				ActorConnectionPointType.VECTOR3
 			),
+			new ActorConnectionPoint(NORMAL_OUTPUT, ActorConnectionPointType.VECTOR3),
 			new ActorConnectionPoint(GetIntersectionPropertyActorNodeOutputName.uv, ActorConnectionPointType.VECTOR2),
 		]);
 	}
@@ -72,35 +74,44 @@ export class GetIntersectionPropertyActorNode extends ParamlessTypedActorNode {
 			ActorConnectionPointType.INTERSECTION,
 			context
 		);
-		if (
-			intersection &&
-			INTERSECTION_PROPERTIES.includes(outputName as GetIntersectionPropertyActorNodeOutputName)
-		) {
-			const propValue = intersection[outputName as GetIntersectionPropertyActorNodeOutputName];
-			if (propValue instanceof Vector2) {
-				return tmpV2.copy(propValue);
+		if (outputName == NORMAL_OUTPUT) {
+			if (intersection) {
+				const face = intersection.face;
+				if (face && face.normal) {
+					tmpV3.copy(face.normal);
+				} else {
+					tmpV3.set(0, 1, 0);
+				}
+				return tmpV3;
 			}
-			if (propValue instanceof Vector3) {
-				return tmpV3.copy(propValue);
-			}
-			return propValue;
-		} else {
-			const propName: GetIntersectionPropertyActorNodeOutputName =
-				outputName as GetIntersectionPropertyActorNodeOutputName;
+		}
+		if (INTERSECTION_PROPERTIES.includes(outputName as GetIntersectionPropertyActorNodeOutputName)) {
+			const propName = outputName as GetIntersectionPropertyActorNodeOutputName;
 			switch (propName) {
 				case GetIntersectionPropertyActorNodeOutputName.distance: {
-					return 0;
+					return intersection?.distance || 0;
 				}
 				case GetIntersectionPropertyActorNodeOutputName.object: {
-					return context.Object3D;
+					return intersection?.object || context.Object3D;
 				}
 				case GetIntersectionPropertyActorNodeOutputName.point: {
+					if (intersection) {
+						tmpV3.copy(intersection.point);
+					} else {
+						tmpV3.set(0, 0, 0);
+					}
 					return tmpV3;
 				}
 				case GetIntersectionPropertyActorNodeOutputName.uv: {
+					if (intersection && intersection.uv) {
+						tmpV2.copy(intersection.uv);
+					} else {
+						tmpV2.set(0, 0);
+					}
 					return tmpV2;
 				}
 			}
+
 			TypeAssert.unreachable(propName);
 		}
 	}

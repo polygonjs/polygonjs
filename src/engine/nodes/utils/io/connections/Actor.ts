@@ -6,19 +6,26 @@
 import {ParamInitValuesTypeMap} from '../../../../params/types/ParamInitValuesTypeMap';
 import {ParamType} from '../../../../poly/ParamType';
 import {BaseConnectionPoint} from './_Base';
-import {Camera, CatmullRomCurve3, Intersection, Object3D} from 'three';
-import {Color} from 'three';
-import {Vector2} from 'three';
-import {Vector3} from 'three';
-import {Vector4} from 'three';
-import {Material} from 'three';
+import {
+	Camera,
+	CatmullRomCurve3,
+	Intersection,
+	Matrix4,
+	Object3D,
+	Quaternion,
+	Color,
+	Vector2,
+	Vector3,
+	Vector4,
+	Material,
+	AnimationAction,
+	AnimationMixer,
+	Plane,
+	Ray,
+	Box3,
+	Sphere,
+} from 'three';
 import {CoreType} from '../../../../../core/Type';
-import {AnimationAction} from 'three';
-import {AnimationMixer} from 'three';
-import {Plane} from 'three';
-import {Ray} from 'three';
-import {Box3} from 'three';
-import {Sphere} from 'three';
 
 export enum ActorConnectionPointType {
 	ANIMATION_MIXER = 'AnimationMixer',
@@ -39,8 +46,12 @@ export enum ActorConnectionPointType {
 	INTERSECTION = 'Intersection',
 	INTERSECTION_ARRAY = 'Intersection[]',
 	MATERIAL = 'Material',
+	MATRIX4 = 'Matrix4',
+	MATRIX4_ARRAY = 'Matrix4[]',
 	OBJECT_3D = 'Object3D',
 	PLANE = 'Plane',
+	QUATERNION = 'Quaternion',
+	QUATERNION_ARRAY = 'Quaternion[]',
 	RAY = 'Ray',
 	SPHERE = 'Sphere',
 	STRING = 'string',
@@ -88,8 +99,12 @@ export const ACTOR_CONNECTION_POINT_TYPES: Array<ActorConnectionPointType> = [
 	ActorConnectionPointType.INTERSECTION,
 	ActorConnectionPointType.INTERSECTION_ARRAY,
 	ActorConnectionPointType.MATERIAL,
+	ActorConnectionPointType.MATRIX4,
+	ActorConnectionPointType.MATRIX4_ARRAY,
 	ActorConnectionPointType.OBJECT_3D,
 	ActorConnectionPointType.PLANE,
+	ActorConnectionPointType.QUATERNION,
+	ActorConnectionPointType.QUATERNION_ARRAY,
 	ActorConnectionPointType.RAY,
 	ActorConnectionPointType.SPHERE,
 	ActorConnectionPointType.STRING,
@@ -138,8 +153,12 @@ export interface ActorIConnectionPointTypeToParamTypeMap extends ActorConnection
 	[ActorConnectionPointType.INTERSECTION]: ParamType.BUTTON;
 	[ActorConnectionPointType.INTERSECTION_ARRAY]: ParamType.BUTTON;
 	[ActorConnectionPointType.MATERIAL]: ParamType.BUTTON; //
+	[ActorConnectionPointType.MATRIX4]: ParamType.BUTTON; //
+	[ActorConnectionPointType.MATRIX4_ARRAY]: ParamType.BUTTON; //
 	[ActorConnectionPointType.OBJECT_3D]: ParamType.BUTTON; //
 	[ActorConnectionPointType.PLANE]: ParamType.BUTTON; //
+	[ActorConnectionPointType.QUATERNION]: ParamType.BUTTON; //
+	[ActorConnectionPointType.QUATERNION_ARRAY]: ParamType.BUTTON; //
 	[ActorConnectionPointType.RAY]: ParamType.BUTTON; //
 	[ActorConnectionPointType.SPHERE]: ParamType.BUTTON; //
 	[ActorConnectionPointType.STRING]: ParamType.STRING;
@@ -169,8 +188,12 @@ export const ActorConnectionPointTypeToParamTypeMap: ActorIConnectionPointTypeTo
 	[ActorConnectionPointType.INTERSECTION]: ParamType.BUTTON,
 	[ActorConnectionPointType.INTERSECTION_ARRAY]: ParamType.BUTTON,
 	[ActorConnectionPointType.MATERIAL]: ParamType.BUTTON,
+	[ActorConnectionPointType.MATRIX4]: ParamType.BUTTON,
+	[ActorConnectionPointType.MATRIX4_ARRAY]: ParamType.BUTTON,
 	[ActorConnectionPointType.OBJECT_3D]: ParamType.BUTTON, // to reconsider
 	[ActorConnectionPointType.PLANE]: ParamType.BUTTON, //
+	[ActorConnectionPointType.QUATERNION]: ParamType.BUTTON, //
+	[ActorConnectionPointType.QUATERNION_ARRAY]: ParamType.BUTTON, //
 	[ActorConnectionPointType.RAY]: ParamType.BUTTON, //
 	[ActorConnectionPointType.SPHERE]: ParamType.BUTTON, //
 	[ActorConnectionPointType.STRING]: ParamType.STRING,
@@ -207,8 +230,12 @@ export interface ActorIConnectionPointTypeToArrayTypeMap extends ActorConnection
 	[ActorConnectionPointType.INTERSECTION]: ActorConnectionPointType.INTERSECTION_ARRAY;
 	[ActorConnectionPointType.INTERSECTION_ARRAY]: ActorConnectionPointType.INTERSECTION_ARRAY;
 	[ActorConnectionPointType.MATERIAL]: ActorConnectionPointType.MATERIAL; //
+	[ActorConnectionPointType.MATRIX4]: ActorConnectionPointType.MATRIX4_ARRAY; //
+	[ActorConnectionPointType.MATRIX4_ARRAY]: ActorConnectionPointType.MATRIX4_ARRAY; //
 	[ActorConnectionPointType.OBJECT_3D]: ActorConnectionPointType.OBJECT_3D; //
 	[ActorConnectionPointType.PLANE]: ActorConnectionPointType.PLANE; //
+	[ActorConnectionPointType.QUATERNION]: ActorConnectionPointType.QUATERNION_ARRAY; //
+	[ActorConnectionPointType.QUATERNION_ARRAY]: ActorConnectionPointType.QUATERNION_ARRAY; //
 	[ActorConnectionPointType.RAY]: ActorConnectionPointType.RAY; //
 	[ActorConnectionPointType.SPHERE]: ActorConnectionPointType.SPHERE; //
 	[ActorConnectionPointType.STRING]: ActorConnectionPointType.STRING_ARRAY;
@@ -238,8 +265,12 @@ export const ActorConnectionPointTypeToArrayTypeMap: ActorIConnectionPointTypeTo
 	[ActorConnectionPointType.INTERSECTION]: ActorConnectionPointType.INTERSECTION_ARRAY,
 	[ActorConnectionPointType.INTERSECTION_ARRAY]: ActorConnectionPointType.INTERSECTION_ARRAY,
 	[ActorConnectionPointType.MATERIAL]: ActorConnectionPointType.MATERIAL,
+	[ActorConnectionPointType.MATRIX4]: ActorConnectionPointType.MATRIX4_ARRAY,
+	[ActorConnectionPointType.MATRIX4_ARRAY]: ActorConnectionPointType.MATRIX4_ARRAY,
 	[ActorConnectionPointType.OBJECT_3D]: ActorConnectionPointType.OBJECT_3D,
 	[ActorConnectionPointType.PLANE]: ActorConnectionPointType.PLANE,
+	[ActorConnectionPointType.QUATERNION]: ActorConnectionPointType.QUATERNION_ARRAY,
+	[ActorConnectionPointType.QUATERNION_ARRAY]: ActorConnectionPointType.QUATERNION_ARRAY,
 	[ActorConnectionPointType.RAY]: ActorConnectionPointType.RAY,
 	[ActorConnectionPointType.SPHERE]: ActorConnectionPointType.SPHERE, //
 	[ActorConnectionPointType.STRING]: ActorConnectionPointType.STRING_ARRAY,
@@ -259,6 +290,8 @@ export type ArrayabeonnectionPointType =
 	| ActorConnectionPointType.FLOAT
 	| ActorConnectionPointType.INTEGER
 	| ActorConnectionPointType.INTERSECTION
+	| ActorConnectionPointType.MATRIX4
+	| ActorConnectionPointType.QUATERNION
 	| ActorConnectionPointType.STRING
 	| ActorConnectionPointType.VECTOR2
 	| ActorConnectionPointType.VECTOR3
@@ -269,6 +302,8 @@ export const ARRAYABLE_CONNECTION_TYPES: Set<ArrayabeonnectionPointType> = new S
 	ActorConnectionPointType.FLOAT,
 	ActorConnectionPointType.INTEGER,
 	ActorConnectionPointType.INTERSECTION,
+	ActorConnectionPointType.MATRIX4,
+	ActorConnectionPointType.QUATERNION,
 	ActorConnectionPointType.STRING,
 	ActorConnectionPointType.VECTOR2,
 	ActorConnectionPointType.VECTOR3,
@@ -280,6 +315,8 @@ type ArrayConnectionPointTypeArray =
 	| ActorConnectionPointType.FLOAT_ARRAY
 	| ActorConnectionPointType.INTEGER_ARRAY
 	| ActorConnectionPointType.INTERSECTION_ARRAY
+	| ActorConnectionPointType.MATRIX4_ARRAY
+	| ActorConnectionPointType.QUATERNION_ARRAY
 	| ActorConnectionPointType.STRING_ARRAY
 	| ActorConnectionPointType.VECTOR2_ARRAY
 	| ActorConnectionPointType.VECTOR3_ARRAY
@@ -290,6 +327,8 @@ const ARRAY_CONNECTION_TYPES: Set<ArrayConnectionPointTypeArray> = new Set([
 	ActorConnectionPointType.FLOAT_ARRAY,
 	ActorConnectionPointType.INTEGER_ARRAY,
 	ActorConnectionPointType.INTERSECTION_ARRAY,
+	ActorConnectionPointType.MATRIX4_ARRAY,
+	ActorConnectionPointType.QUATERNION_ARRAY,
 	ActorConnectionPointType.STRING_ARRAY,
 	ActorConnectionPointType.VECTOR2_ARRAY,
 	ActorConnectionPointType.VECTOR3_ARRAY,
@@ -358,8 +397,12 @@ export const ActorConnectionPointInitValueMap: ActorConnectionPointInitValueMapG
 	[ActorConnectionPointType.INTERSECTION]: null,
 	[ActorConnectionPointType.INTERSECTION_ARRAY]: null,
 	[ActorConnectionPointType.MATERIAL]: null,
+	[ActorConnectionPointType.MATRIX4]: null,
+	[ActorConnectionPointType.MATRIX4_ARRAY]: null,
 	[ActorConnectionPointType.OBJECT_3D]: null,
 	[ActorConnectionPointType.PLANE]: null,
+	[ActorConnectionPointType.QUATERNION]: null,
+	[ActorConnectionPointType.QUATERNION_ARRAY]: null,
 	[ActorConnectionPointType.RAY]: null,
 	[ActorConnectionPointType.SPHERE]: null,
 	[ActorConnectionPointType.STRING]: '',
@@ -398,8 +441,12 @@ export const ActorConnectionPointComponentsCountMap: ConnectionPointComponentsCo
 	[ActorConnectionPointType.INTERSECTION]: 1,
 	[ActorConnectionPointType.INTERSECTION_ARRAY]: 1,
 	[ActorConnectionPointType.MATERIAL]: 1,
+	[ActorConnectionPointType.MATRIX4]: 16,
+	[ActorConnectionPointType.MATRIX4_ARRAY]: 1,
 	[ActorConnectionPointType.OBJECT_3D]: 1, // to reconsider
 	[ActorConnectionPointType.PLANE]: 1, //
+	[ActorConnectionPointType.QUATERNION]: 4, //
+	[ActorConnectionPointType.QUATERNION_ARRAY]: 1, //
 	[ActorConnectionPointType.RAY]: 1, //
 	[ActorConnectionPointType.SPHERE]: 1, //
 	[ActorConnectionPointType.STRING]: 1,
@@ -436,8 +483,12 @@ export type ReturnValueTypeByActorConnectionPointType = {
 	[ActorConnectionPointType.INTERSECTION]: Intersection;
 	[ActorConnectionPointType.INTERSECTION_ARRAY]: Intersection[];
 	[ActorConnectionPointType.MATERIAL]: Material;
+	[ActorConnectionPointType.MATRIX4]: Matrix4;
+	[ActorConnectionPointType.MATRIX4_ARRAY]: Matrix4[];
 	[ActorConnectionPointType.OBJECT_3D]: Object3D;
 	[ActorConnectionPointType.PLANE]: Plane;
+	[ActorConnectionPointType.QUATERNION]: Quaternion;
+	[ActorConnectionPointType.QUATERNION_ARRAY]: Quaternion[];
 	[ActorConnectionPointType.RAY]: Ray;
 	[ActorConnectionPointType.SPHERE]: Sphere;
 	[ActorConnectionPointType.STRING]: string;
@@ -476,8 +527,12 @@ export interface ActorIConnectionPointTypeToSubTypeMap extends ActorConnectionPo
 	[ActorConnectionPointType.INTERSECTION]: null;
 	[ActorConnectionPointType.INTERSECTION_ARRAY]: null;
 	[ActorConnectionPointType.MATERIAL]: null;
+	[ActorConnectionPointType.MATRIX4]: null;
+	[ActorConnectionPointType.MATRIX4_ARRAY]: null;
 	[ActorConnectionPointType.OBJECT_3D]: Set<ActorConnectionPointType>;
 	[ActorConnectionPointType.PLANE]: null;
+	[ActorConnectionPointType.QUATERNION]: null;
+	[ActorConnectionPointType.QUATERNION_ARRAY]: null;
 	[ActorConnectionPointType.RAY]: null;
 	[ActorConnectionPointType.SPHERE]: null;
 	[ActorConnectionPointType.STRING]: null;
@@ -507,8 +562,12 @@ export const ActorConnectionPointTypeToSubTypeMap: ActorIConnectionPointTypeToSu
 	[ActorConnectionPointType.INTERSECTION]: null,
 	[ActorConnectionPointType.INTERSECTION_ARRAY]: null,
 	[ActorConnectionPointType.MATERIAL]: null,
+	[ActorConnectionPointType.MATRIX4]: null,
+	[ActorConnectionPointType.MATRIX4_ARRAY]: null,
 	[ActorConnectionPointType.OBJECT_3D]: new Set([ActorConnectionPointType.CAMERA]),
 	[ActorConnectionPointType.PLANE]: null,
+	[ActorConnectionPointType.QUATERNION]: null,
+	[ActorConnectionPointType.QUATERNION_ARRAY]: null,
 	[ActorConnectionPointType.RAY]: null,
 	[ActorConnectionPointType.SPHERE]: null,
 	[ActorConnectionPointType.STRING]: null,

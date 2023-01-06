@@ -13,7 +13,6 @@ import {ActorType} from '../../poly/registers/nodes/types/Actor';
 import {BaseUserInputActorNode} from './_BaseUserInput';
 import {CoreEventEmitter, EVENT_EMITTERS, EVENT_EMITTER_PARAM_MENU_OPTIONS} from '../../../core/event/CoreEventEmitter';
 
-const OUTPUT_NAME = 'ray';
 class RayFromCursorActorParamsConfig extends NodeParamsConfig {
 	/** @param set which element triggers the event */
 	element = ParamConfig.INTEGER(EVENT_EMITTERS.indexOf(CoreEventEmitter.CANVAS), {
@@ -37,7 +36,7 @@ export class RayFromCursorActorNode extends BaseUserInputActorNode<RayFromCursor
 
 		this.io.connection_points.initializeNode();
 		// this.io.connection_points.set_input_name_function(this._expectedInputName.bind(this));
-		this.io.connection_points.set_output_name_function((index: number) => OUTPUT_NAME);
+		this.io.connection_points.set_output_name_function((index: number) => ActorConnectionPointType.RAY);
 		this.io.connection_points.set_expected_input_types_function(() => []);
 		this.io.connection_points.set_expected_output_types_function(() => [ActorConnectionPointType.RAY]);
 	}
