@@ -16,6 +16,14 @@ export enum CameraAttribute {
 	POST_PROCESS_NODE_ID = '_Camera_postProcessNodeId',
 	RENDER_SCENE_NODE_ID = '_Camera_renderSceneNodeId',
 	RENDERER_NODE_ID = '_Camera_rendererNodeId',
+	WEBXR_AR = '_Camera_WebXR_AR',
+	WEBXR_VR = '_Camera_WebXR_VR',
+	WEBXR_AR_FEATURES_OPTIONAL = '_Camera_WebXR_AR_Features_Optional',
+	WEBXR_AR_FEATURES_REQUIRED = '_Camera_WebXR_AR_Features_Required',
+	WEBXR_VR_FEATURES_OPTIONAL = '_Camera_WebXR_VR_Features_Optional',
+	WEBXR_VR_FEATURES_REQUIRED = '_Camera_WebXR_VR_Features_Required',
+	WEBXR_VR_OVERRIDE_REFERENCE_SPACE_TYPE = '_Camera_WebXR_VR_overrideReferenceSpaceType',
+	WEBXR_VR_REFERENCE_SPACE_TYPE = '_Camera_WebXR_VR_referenceSpaceType',
 }
 export const CAMERA_ATTRIBUTES: CameraAttribute[] = [
 	CameraAttribute.NODE_ID,
@@ -26,6 +34,14 @@ export const CAMERA_ATTRIBUTES: CameraAttribute[] = [
 	CameraAttribute.POST_PROCESS_NODE_ID,
 	CameraAttribute.RENDER_SCENE_NODE_ID,
 	CameraAttribute.RENDERER_NODE_ID,
+	CameraAttribute.WEBXR_AR,
+	CameraAttribute.WEBXR_VR,
+	CameraAttribute.WEBXR_AR_FEATURES_OPTIONAL,
+	CameraAttribute.WEBXR_AR_FEATURES_REQUIRED,
+	CameraAttribute.WEBXR_VR_FEATURES_OPTIONAL,
+	CameraAttribute.WEBXR_VR_FEATURES_REQUIRED,
+	CameraAttribute.WEBXR_VR_OVERRIDE_REFERENCE_SPACE_TYPE,
+	CameraAttribute.WEBXR_VR_REFERENCE_SPACE_TYPE,
 ];
 export enum PerspectiveCameraAttribute {
 	FOV = '_PerspectiveCamera_fov',

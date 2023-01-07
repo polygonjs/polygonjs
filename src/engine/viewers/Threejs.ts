@@ -9,8 +9,7 @@ import {CoreCameraControlsController} from '../../core/camera/CoreCameraControls
 import {CoreCameraRenderSceneController} from '../../core/camera/CoreCameraRenderSceneController';
 import type {EffectComposer} from 'postprocessing';
 import {AbstractRenderer} from './Common';
-import {WebGLRendererRopNode} from '../nodes/rop/WebGLRenderer';
-import {BaseCoreXRController} from '../../core/xr/_BaseCoreXRController';
+import {CoreCameraWebXRController, CoreCameraWebXRControllerConfig} from '../../core/camera/webXR/CoreCameraWebXR';
 const CSS_CLASS = 'CoreThreejsViewer';
 
 declare global {
@@ -40,7 +39,7 @@ type RenderFunc = () => void;
 export class ThreejsViewer<C extends Camera> extends TypedViewer<C> {
 	private _requestAnimationFrameId: number | undefined;
 
-	private _xrController: BaseCoreXRController | undefined;
+	private _webXRConfig: CoreCameraWebXRControllerConfig | undefined;
 	private _renderer: AbstractRenderer | undefined;
 	private _rendererConfig: AvailableRenderConfig | undefined;
 	private _renderFunc: RenderFuncWithDelta | undefined;
@@ -93,6 +92,15 @@ export class ThreejsViewer<C extends Camera> extends TypedViewer<C> {
 				viewer: this,
 			});
 			const effectComposer = this._effectComposer;
+			// webXR
+			if (renderer instanceof WebGLRenderer) {
+				this._webXRConfig = CoreCameraWebXRController.process({
+					camera,
+					scene,
+					renderer,
+					canvas: this.canvas(),
+				});
+			}
 			// CSSRender
 			this._cssRendererConfig = CoreCameraCSSRendererController.cssRendererConfig({scene, camera, canvas});
 			const cssRenderer = this._cssRendererConfig?.cssRenderer;
@@ -121,18 +129,13 @@ export class ThreejsViewer<C extends Camera> extends TypedViewer<C> {
 		this._domElement?.appendChild(canvas);
 		this._domElement?.classList.add(CSS_CLASS);
 
+		// mount CSSRenderer
 		const cssRendererNode = this._cssRendererConfig?.cssRendererNode;
 		if (cssRendererNode) {
 			cssRendererNode.mountRenderer(canvas);
 		}
-		const rendererConfig = this._rendererConfig;
-		if (rendererConfig) {
-			const renderer = this._renderer;
-			if (renderer instanceof WebGLRenderer && rendererConfig.rendererNode) {
-				this._xrController = this._createXRController();
-				this._xrController?.mount();
-			}
-		}
+		// mount webXR
+		this._webXRConfig?.mountFunction();
 
 		this._build();
 		this._setEvents();
@@ -141,26 +144,6 @@ export class ThreejsViewer<C extends Camera> extends TypedViewer<C> {
 		if (Poly.logo.displayed()) {
 			new ViewerLogoController(this);
 		}
-	}
-
-	// override controlsController(): ViewerControlsController {
-	// 	return (this._controlsController = this._controlsController || new ViewerControlsController(this));
-	// }
-	private _createXRController() {
-		const rendererConfig = this._rendererConfig;
-		if (!rendererConfig) {
-			return;
-		}
-		const renderer = this._renderer;
-		if (!(renderer instanceof WebGLRenderer && rendererConfig.rendererNode)) {
-			return;
-		}
-		const canvas = this.canvas();
-		if (!canvas) {
-			return;
-		}
-		const WebGLRendererNode = rendererConfig.rendererNode as WebGLRendererRopNode;
-		return WebGLRendererNode.XRController(renderer, canvas);
 	}
 
 	public _build() {
@@ -181,8 +164,8 @@ export class ThreejsViewer<C extends Camera> extends TypedViewer<C> {
 			cssRendererNode.unmountRenderer(canvas);
 		}
 		this._cssRendererConfig = undefined;
-		// dispose XR
-		this._xrController?.unmount();
+		// dispose webXR
+		this._webXRConfig?.unmountFunction();
 
 		// dispose effectComposer
 		this._effectComposer = undefined;
@@ -275,14 +258,10 @@ export class ThreejsViewer<C extends Camera> extends TypedViewer<C> {
 			if (!renderer) {
 				return;
 			}
-			this._xrController = this._xrController || this._createXRController();
-			const xrController = this._xrController;
-			if (!xrController) {
-				return;
-			}
 
+			const webXRController = this.scene().webXR;
 			const xrCallback: XRFrameRequestCallback = (timestamp, frame) => {
-				xrController.process(frame);
+				webXRController.activeXRController()?.process(frame);
 
 				this._animateWebXR();
 			};

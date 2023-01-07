@@ -1,26 +1,48 @@
-import {Vector3, Matrix4, Quaternion} from 'three';
-import {ARButton} from 'three/examples/jsm/webxr/ARButton';
-import {BaseCoreXRController} from './_BaseCoreXRController';
+import {Vector3, Matrix4, Quaternion, WebGLRenderer, Camera} from 'three';
+import {PolyScene} from '../../engine/scene/PolyScene';
+import {CoreARButton} from './buttons/CoreARButton';
+import {CoreWebXRARControllerOptions} from './CommonAR';
+import {BaseCoreWebXRController} from './_BaseCoreWebXRController';
 
 const s = new Vector3();
 
-export class CoreARController extends BaseCoreXRController {
+export class CoreWebXRARController extends BaseCoreWebXRController {
 	private hitTestSource: XRHitTestSource | null = null;
 	private hitTestSourceRequested = false;
 	private _hitDetected = false;
 	private _hitMatrix = new Matrix4();
 	private _hitPosition = new Vector3();
 	private _hitQuaternion = new Quaternion();
+	constructor(
+		scene: PolyScene,
+		renderer: WebGLRenderer,
+		camera: Camera,
+		canvas: HTMLCanvasElement,
+		protected options: CoreWebXRARControllerOptions
+	) {
+		super(scene, renderer, camera, canvas);
+	}
 
 	createButton(): HTMLElement {
-		return ARButton.createButton(this.renderer, {requiredFeatures: ['hit-test']});
+		return CoreARButton.createButton(
+			{
+				renderer: this.renderer,
+			},
+			{
+				optionalFeatures: this.options.optionalFeatures,
+				requiredFeatures: this.options.requiredFeatures,
+			}
+		);
 	}
-	override mount() {
-		super.mount();
-		this.scene.xr.setARController(this);
+	protected override _onSessionStart() {
+		// set active before super._onSessionStart
+		// so that actor nodes can listen to the active xr manager
+		this.scene.webXR.setActiveARController(this);
+		super._onSessionStart();
 	}
-	protected controllerName(controllerIndex: number): string {
-		return `AR-Controller-${controllerIndex}`;
+	protected override _onSessionEnd() {
+		this.scene.webXR.setActiveARController(null);
+		super._onSessionEnd();
 	}
 
 	hitMatrix(target: Matrix4) {

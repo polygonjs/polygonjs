@@ -15,7 +15,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {ParamType} from '../../poly/ParamType';
 import {TypeAssert} from '../../poly/Assert';
 
-enum GetXRControllerPropertyActorNodeInputName {
+enum GetWebXRControllerPropertyActorNodeInputName {
 	Object3D = 'Object3D',
 	Ray = 'Ray',
 	hasLinearVelocity = 'hasLinearVelocity',
@@ -27,19 +27,19 @@ enum GetXRControllerPropertyActorNodeInputName {
 const tmpRay = new Ray();
 const tmpV3 = new Vector3();
 
-class GetXRControllerPropertyActorParamsConfig extends NodeParamsConfig {
+class GetWebXRControllerPropertyActorParamsConfig extends NodeParamsConfig {
 	/** @param  controller index */
 	controllerIndex = ParamConfig.INTEGER(0, {
 		range: [0, 1],
 		rangeLocked: [true, true],
 	});
 }
-const ParamsConfig = new GetXRControllerPropertyActorParamsConfig();
+const ParamsConfig = new GetWebXRControllerPropertyActorParamsConfig();
 
-export class GetXRControllerPropertyActorNode extends TypedActorNode<GetXRControllerPropertyActorParamsConfig> {
+export class GetWebXRControllerPropertyActorNode extends TypedActorNode<GetWebXRControllerPropertyActorParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'getXRControllerProperty';
+		return 'getWebXRControllerProperty';
 	}
 
 	override initializeNode() {
@@ -47,24 +47,24 @@ export class GetXRControllerPropertyActorNode extends TypedActorNode<GetXRContro
 
 		this.io.outputs.setNamedOutputConnectionPoints([
 			new ActorConnectionPoint(
-				GetXRControllerPropertyActorNodeInputName.Object3D,
+				GetWebXRControllerPropertyActorNodeInputName.Object3D,
 				ActorConnectionPointType.OBJECT_3D
 			),
-			new ActorConnectionPoint(GetXRControllerPropertyActorNodeInputName.Ray, ActorConnectionPointType.RAY),
+			new ActorConnectionPoint(GetWebXRControllerPropertyActorNodeInputName.Ray, ActorConnectionPointType.RAY),
 			new ActorConnectionPoint(
-				GetXRControllerPropertyActorNodeInputName.hasLinearVelocity,
+				GetWebXRControllerPropertyActorNodeInputName.hasLinearVelocity,
 				ActorConnectionPointType.BOOLEAN
 			),
 			new ActorConnectionPoint(
-				GetXRControllerPropertyActorNodeInputName.linearVelocity,
+				GetWebXRControllerPropertyActorNodeInputName.linearVelocity,
 				ActorConnectionPointType.VECTOR3
 			),
 			new ActorConnectionPoint(
-				GetXRControllerPropertyActorNodeInputName.hasAngularVelocity,
+				GetWebXRControllerPropertyActorNodeInputName.hasAngularVelocity,
 				ActorConnectionPointType.BOOLEAN
 			),
 			new ActorConnectionPoint(
-				GetXRControllerPropertyActorNodeInputName.angularVelocity,
+				GetWebXRControllerPropertyActorNodeInputName.angularVelocity,
 				ActorConnectionPointType.VECTOR3
 			),
 		]);
@@ -72,16 +72,16 @@ export class GetXRControllerPropertyActorNode extends TypedActorNode<GetXRContro
 
 	public override outputValue(
 		context: ActorNodeTriggerContext,
-		outputName: GetXRControllerPropertyActorNodeInputName
+		outputName: GetWebXRControllerPropertyActorNodeInputName
 	): ReturnValueTypeByActorConnectionPointType[ActorConnectionPointType] | undefined {
 		const controllerIndex = this._inputValueFromParam<ParamType.INTEGER>(this.p.controllerIndex, context) || 0;
-		const xrController = this.scene().xr.XRController();
+		const xrController = this.scene().webXR.activeXRController();
 
 		switch (outputName) {
-			case GetXRControllerPropertyActorNodeInputName.Object3D: {
+			case GetWebXRControllerPropertyActorNodeInputName.Object3D: {
 				return xrController?.getController(controllerIndex).controller || context.Object3D;
 			}
-			case GetXRControllerPropertyActorNodeInputName.Ray: {
+			case GetWebXRControllerPropertyActorNodeInputName.Ray: {
 				const ray = xrController?.getController(controllerIndex).ray;
 				if (ray) {
 					tmpRay.copy(ray);
@@ -89,10 +89,10 @@ export class GetXRControllerPropertyActorNode extends TypedActorNode<GetXRContro
 
 				return tmpRay;
 			}
-			case GetXRControllerPropertyActorNodeInputName.hasLinearVelocity: {
+			case GetWebXRControllerPropertyActorNodeInputName.hasLinearVelocity: {
 				return xrController?.getController(controllerIndex).controller.hasLinearVelocity || false;
 			}
-			case GetXRControllerPropertyActorNodeInputName.linearVelocity: {
+			case GetWebXRControllerPropertyActorNodeInputName.linearVelocity: {
 				const linearVelocity = xrController?.getController(controllerIndex).controller.linearVelocity;
 				if (linearVelocity) {
 					tmpV3.copy(linearVelocity);
@@ -100,10 +100,10 @@ export class GetXRControllerPropertyActorNode extends TypedActorNode<GetXRContro
 
 				return tmpRay;
 			}
-			case GetXRControllerPropertyActorNodeInputName.hasAngularVelocity: {
+			case GetWebXRControllerPropertyActorNodeInputName.hasAngularVelocity: {
 				return xrController?.getController(controllerIndex).controller.hasAngularVelocity || false;
 			}
-			case GetXRControllerPropertyActorNodeInputName.angularVelocity: {
+			case GetWebXRControllerPropertyActorNodeInputName.angularVelocity: {
 				const angularVelocity = xrController?.getController(controllerIndex).controller.angularVelocity;
 				if (angularVelocity) {
 					tmpV3.copy(angularVelocity);

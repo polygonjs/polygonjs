@@ -87,6 +87,8 @@ export enum CameraSopNodeType {
 	POST_PROCESS = 'cameraPostProcess',
 	RENDER_SCENE = 'cameraRenderScene',
 	RENDERER = 'cameraRenderer',
+	WEBXR_AR = 'cameraWebXRAR',
+	WEBXR_VR = 'cameraWebXRVR',
 }
 export const CAMERA_TYPES = [CameraNodeType.ORTHOGRAPHIC, CameraNodeType.PERSPECTIVE];
 

@@ -26,13 +26,13 @@ const tmpMat4 = new Matrix4();
 const tmpV3 = new Vector3();
 const tmpQuaternion = new Quaternion();
 
-class GetARSessionPropertyActorParamsConfig extends NodeParamsConfig {}
-const ParamsConfig = new GetARSessionPropertyActorParamsConfig();
+class GetWebXRARSessionPropertyActorParamsConfig extends NodeParamsConfig {}
+const ParamsConfig = new GetWebXRARSessionPropertyActorParamsConfig();
 
-export class GetARSessionPropertyActorNode extends TypedActorNode<GetARSessionPropertyActorParamsConfig> {
+export class GetWebXRARSessionPropertyActorNode extends TypedActorNode<GetWebXRARSessionPropertyActorParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'getARSessionProperty';
+		return 'getWebXRARSessionProperty';
 	}
 
 	override initializeNode() {
@@ -62,7 +62,7 @@ export class GetARSessionPropertyActorNode extends TypedActorNode<GetARSessionPr
 		context: ActorNodeTriggerContext,
 		outputName: GetARSessionPropertyActorNodeOutputName
 	): ReturnValueTypeByActorConnectionPointType[ActorConnectionPointType] | undefined {
-		const arController = this.scene().xr.ARController();
+		const arController = this.scene().webXR.activeARController();
 		switch (outputName) {
 			case GetARSessionPropertyActorNodeOutputName.hitDetected: {
 				return arController?.hitDetected() || false;

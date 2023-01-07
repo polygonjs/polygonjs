@@ -15,7 +15,7 @@ export const CATEGORY_ACTOR = {
 	NETWORK,
 	MISC: 'misc',
 	PHYSICS: 'physics',
-	XR: 'XR',
+	WEBXR: 'webXR',
 };
 
 export const CATEGORY_ANIM = {
@@ -135,6 +135,7 @@ export const CATEGORY_SOP = {
 	PRIMITIVES: 'primitives',
 	RENDER: 'render',
 	SUBNET: 'subnet',
+	WEBXR: 'webXR',
 };
 export const CATEGORY_POST = {
 	ADVANCED: 'advanced',

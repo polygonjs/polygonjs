@@ -1,6 +1,5 @@
 import {
 	WebGLRenderer,
-	Ray,
 	BufferGeometry,
 	Float32BufferAttribute,
 	AdditiveBlending,
@@ -10,11 +9,15 @@ import {
 	MeshBasicMaterial,
 	Mesh,
 	Object3D,
+	Camera,
 } from 'three';
-import {VRButton} from 'three/examples/jsm/webxr/VRButton';
 import {PolyScene} from '../../engine/scene/PolyScene';
-import {CoreXRControllerContainer} from './CoreXRControllerContainer';
-import {BaseCoreXRController} from './_BaseCoreXRController';
+import {isBooleanTrue} from '../Type';
+import {CoreVRButton} from './buttons/CoreVRButton';
+import {DEFAULT_WEBXR_VR_REFERENCE_SPACE_TYPE} from './Common';
+import {CoreWebXRVRControllerOptions} from './CommonVR';
+import {CoreWebXRControllerContainer} from './CoreWebXRControllerContainer';
+import {BaseCoreWebXRController} from './_BaseCoreWebXRController';
 
 // from three
 // examples/webxr_vr_ballshooter.html
@@ -39,28 +42,40 @@ function buildController(data: XRInputSource) {
 	}
 }
 
-export class CoreVRController extends BaseCoreXRController {
-	// private hitTestSource: XRHitTestSource | null = null;
-	// private hitTestSourceRequested = false;
-	protected ray0: Ray;
-	protected ray1: Ray;
-	protected rays: Ray[];
+export class CoreWebXRVRController extends BaseCoreWebXRController {
 	private _baseReferenceSpace: XRReferenceSpace | null = null;
-	constructor(scene: PolyScene, renderer: WebGLRenderer, canvas: HTMLCanvasElement) {
-		super(scene, renderer, canvas);
-		this.ray0 = new Ray();
-		this.ray1 = new Ray();
-		this.rays = [this.ray0, this.ray1];
+	constructor(
+		scene: PolyScene,
+		renderer: WebGLRenderer,
+		camera: Camera,
+		canvas: HTMLCanvasElement,
+		protected options: CoreWebXRVRControllerOptions
+	) {
+		super(scene, renderer, camera, canvas);
+
+		if (isBooleanTrue(options.overrideReferenceSpaceType) && options.referenceSpaceType) {
+			renderer.xr.setReferenceSpaceType(options.referenceSpaceType);
+		} else {
+			renderer.xr.setReferenceSpaceType(DEFAULT_WEBXR_VR_REFERENCE_SPACE_TYPE);
+		}
 	}
 	override mount() {
 		super.mount();
-		this.scene.xr.setVRController(this);
+		// this.scene.webXR.setVRController(this);
 
 		const xr = this.renderer.xr;
 		xr.addEventListener('sessionstart', () => (this._baseReferenceSpace = xr.getReferenceSpace()));
 	}
-	protected controllerName(controllerIndex: number): string {
-		return `VR-Controller-${controllerIndex}`;
+
+	protected override _onSessionStart() {
+		// set active before super._onSessionStart
+		// so that actor nodes can listen to the active xr manager
+		this.scene.webXR.setActiveVRController(this);
+		super._onSessionStart();
+	}
+	protected override _onSessionEnd() {
+		this.scene.webXR.setActiveVRController(null);
+		super._onSessionEnd();
 	}
 	baseReferenceSpace() {
 		return this._baseReferenceSpace;
@@ -70,7 +85,7 @@ export class CoreVRController extends BaseCoreXRController {
 	}
 
 	protected override _addControllerEvents(
-		controllerContainer: CoreXRControllerContainer,
+		controllerContainer: CoreWebXRControllerContainer,
 		controllerIndex: number
 	): void {
 		let controllerChild: Object3D | undefined;
@@ -92,6 +107,14 @@ export class CoreVRController extends BaseCoreXRController {
 	}
 
 	createButton() {
-		return VRButton.createButton(this.renderer);
+		return CoreVRButton.createButton(
+			{
+				renderer: this.renderer,
+			},
+			{
+				optionalFeatures: this.options.optionalFeatures,
+				requiredFeatures: this.options.requiredFeatures,
+			}
+		);
 	}
 }

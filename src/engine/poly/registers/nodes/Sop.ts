@@ -43,6 +43,8 @@ import {CameraPostProcessSopNode} from '../../../nodes/sop/CameraPostProcess';
 import {CameraProjectSopNode} from '../../../nodes/sop/CameraProject';
 import {CameraRenderSceneSopNode} from '../../../nodes/sop/CameraRenderScene';
 import {CameraRendererSopNode} from '../../../nodes/sop/CameraRenderer';
+import {CameraWebXRARSopNode} from '../../../nodes/sop/CameraWebXRAR';
+import {CameraWebXRVRSopNode} from '../../../nodes/sop/CameraWebXRVR';
 import {CapsuleSopNode} from '../../../nodes/sop/Capsule';
 import {CenterSopNode} from '../../../nodes/sop/Center';
 import {CircleSopNode} from '../../../nodes/sop/Circle';
@@ -165,6 +167,7 @@ import {UvLayoutSopNode} from '../../../nodes/sop/UvLayout';
 import {UvProjectSopNode} from '../../../nodes/sop/UvProject';
 import {UvTransformSopNode} from '../../../nodes/sop/UvTransform';
 import {UvUnwrapSopNode} from '../../../nodes/sop/UvUnwrap';
+// import {WebXRControllerSopNode} from '../../../nodes/sop/WebXRController';
 // networks
 import {ActorsNetworkSopNode} from '../../../nodes/sop/ActorsNetwork';
 import {AnimationsNetworkSopNode} from '../../../nodes/sop/AnimationsNetwork';
@@ -215,6 +218,8 @@ export interface GeoNodeChildrenMap {
 	cameraProject: CameraProjectSopNode;
 	cameraRenderer: CameraRendererSopNode;
 	cameraRenderScene: CameraRenderSceneSopNode;
+	CameraWebXRAR: CameraWebXRARSopNode;
+	CameraWebXRVR: CameraWebXRVRSopNode;
 	capsule: CapsuleSopNode;
 	center: CenterSopNode;
 	circle: CircleSopNode;
@@ -337,6 +342,7 @@ export interface GeoNodeChildrenMap {
 	uvProject: UvProjectSopNode;
 	uvTransform: UvTransformSopNode;
 	uvUnwrap: UvUnwrapSopNode;
+	// webXRController: WebXRControllerSopNode;
 
 	// networks
 	actorsNetwork: ActorsNetworkSopNode;
@@ -378,6 +384,8 @@ import {CameraPostProcessSopOperation} from '../../../operations/sop/CameraPostP
 import {CameraProjectSopOperation} from '../../../operations/sop/CameraProject';
 import {CameraRendererSopOperation} from '../../../operations/sop/CameraRenderer';
 import {CameraRenderSceneSopOperation} from '../../../operations/sop/CameraRenderScene';
+import {CameraWebXRARSopOperation} from '../../../operations/sop/CameraWebXRAR';
+import {CameraWebXRVRSopOperation} from '../../../operations/sop/CameraWebXRVR';
 import {CapsuleSopOperation} from '../../../operations/sop/Capsule';
 import {CenterSopOperation} from '../../../operations/sop/Center';
 import {CircleSopOperation} from '../../../operations/sop/Circle';
@@ -450,6 +458,7 @@ import {TransformResetSopOperation} from '../../../operations/sop/TransformReset
 import {UvLayoutSopOperation} from '../../../operations/sop/UvLayout';
 import {UvTransformSopOperation} from '../../../operations/sop/UvTransform';
 import {UvUnwrapSopOperation} from '../../../operations/sop/UvUnwrap';
+// import {WebXRControllerSopOperation} from '../../../operations/sop/WebXRController';
 
 import {PolyEngine} from '../../../Poly';
 export class SopRegister {
@@ -482,6 +491,8 @@ export class SopRegister {
 		poly.registerOperation(CameraProjectSopOperation);
 		poly.registerOperation(CameraRendererSopOperation);
 		poly.registerOperation(CameraRenderSceneSopOperation);
+		poly.registerOperation(CameraWebXRARSopOperation);
+		poly.registerOperation(CameraWebXRVRSopOperation);
 		poly.registerOperation(CapsuleSopOperation);
 		poly.registerOperation(CenterSopOperation);
 		poly.registerOperation(CircleSopOperation);
@@ -553,6 +564,7 @@ export class SopRegister {
 		poly.registerOperation(UvLayoutSopOperation);
 		poly.registerOperation(UvTransformSopOperation);
 		poly.registerOperation(UvUnwrapSopOperation);
+		// poly.registerOperation(WebXRControllerSopOperation);
 
 		poly.registerNode(ActorSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(AddSopNode, CATEGORY_SOP.INPUT);
@@ -594,6 +606,8 @@ export class SopRegister {
 		poly.registerNode(CameraProjectSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(CameraRendererSopNode, CATEGORY_SOP.RENDER);
 		poly.registerNode(CameraRenderSceneSopNode, CATEGORY_SOP.RENDER);
+		poly.registerNode(CameraWebXRARSopNode, CATEGORY_SOP.WEBXR);
+		poly.registerNode(CameraWebXRVRSopNode, CATEGORY_SOP.WEBXR);
 		poly.registerNode(CapsuleSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.registerNode(CenterSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.registerNode(CircleSopNode, CATEGORY_SOP.PRIMITIVES);
@@ -734,6 +748,7 @@ export class SopRegister {
 		poly.registerNode(UvProjectSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(UvTransformSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(UvUnwrapSopNode, CATEGORY_SOP.MODIFIER);
+		// poly.registerNode(WebXRControllerSopNode, CATEGORY_SOP.WEBXR);
 		// networks
 		poly.registerNode(ActorsNetworkSopNode, CATEGORY_SOP.NETWORK);
 		poly.registerNode(AnimationsNetworkSopNode, CATEGORY_SOP.NETWORK);

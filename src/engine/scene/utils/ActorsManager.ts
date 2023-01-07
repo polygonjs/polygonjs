@@ -17,7 +17,7 @@ import {AttributeProxy} from '../../../core/geometry/attribute/_Base';
 import {OnObjectDispatchEventActorNode} from '../../nodes/actor/OnObjectDispatchEvent';
 import {OnScenePlayStateActorNode} from '../../nodes/actor/OnScenePlayState';
 import {OnVideoEventActorNode} from '../../nodes/actor/OnVideoEvent';
-import {OnXRControllerEventActorNode} from '../../nodes/actor/OnXRControllerEvent';
+import {OnWebXRControllerEventActorNode} from '../../nodes/actor/OnWebXRControllerEvent';
 
 const ACTOR_BUILDER_NODE_IDS_KEY = 'actorBuilderNodeIds';
 
@@ -117,7 +117,7 @@ export class ActorsManager {
 		// any caching goes here
 		OnObjectDispatchEventActorNode.addEventListeners(this.scene);
 		OnVideoEventActorNode.addEventListeners(this.scene);
-		OnXRControllerEventActorNode.addEventListeners(this.scene);
+		OnWebXRControllerEventActorNode.addEventListeners(this.scene);
 		this._makeRequiredObjectAttributesReactive();
 	}
 	runOnEventScenePause() {

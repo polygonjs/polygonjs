@@ -33,9 +33,6 @@ import {CoreType} from '../../../core/Type';
 import {Poly} from '../../Poly';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {defaultPixelRatio} from '../../../core/camera/defaultPixelRatio';
-import {TypeAssert} from '../../poly/Assert';
-import {CoreARController} from '../../../core/xr/CoreARController';
-import {CoreVRController} from '../../../core/xr/CoreVRController';
 
 enum EncodingName {
 	Linear = 'Linear',
@@ -158,21 +155,6 @@ export const DEFAULT_PARAMS: WebGLRendererParameters = {
 	logarithmicDepthBuffer: false,
 };
 
-enum XRType {
-	AR = 'AR (Augmented Reality)',
-	VR = 'VR (Virtual Reality)',
-}
-const XR_TYPES: XRType[] = [XRType.AR, XRType.VR];
-
-const XR_REFERENCE_SPACE_TYPES: XRReferenceSpaceType[] = [
-	'viewer',
-	'local',
-	'local-floor',
-	'bounded-floor',
-	'unbounded',
-];
-const DEFAULT_XR_REFERENCE_SPACE_TYPE: XRReferenceSpaceType = 'local-floor';
-
 class WebGLRendererRopParamsConfig extends NodeParamsConfig {
 	//
 	//
@@ -201,35 +183,6 @@ class WebGLRendererRopParamsConfig extends NodeParamsConfig {
 					value: ENCODING_VALUES[i],
 				};
 			}),
-		},
-	});
-
-	//
-	//
-	//
-	//
-	//
-	XR = ParamConfig.FOLDER();
-	/** @param use XR */
-	useXR = ParamConfig.BOOLEAN(0);
-	/** @param type of XR (AR or VR) */
-	xrType = ParamConfig.INTEGER(XR_TYPES.indexOf(XRType.AR), {
-		menu: {
-			entries: XR_TYPES.map((name, value) => ({name, value})),
-		},
-		visibleIf: {useXR: 1},
-	});
-	/** @param overrides referenceSpaceType */
-	overrideReferenceSpaceType = ParamConfig.BOOLEAN(0);
-	/** @param set referenceSpaceType ( see doc: https://immersive-web.github.io/webxr/#xrreferencespace-interface ) */
-	referenceSpaceType = ParamConfig.INTEGER(XR_REFERENCE_SPACE_TYPES.indexOf(DEFAULT_XR_REFERENCE_SPACE_TYPE), {
-		menu: {
-			entries: XR_REFERENCE_SPACE_TYPES.map((name, value) => ({name, value})),
-		},
-		visibleIf: {
-			useXR: 1,
-			xrType: XR_TYPES.indexOf(XRType.VR),
-			overrideReferenceSpaceType: 1,
 		},
 	});
 
@@ -375,14 +328,6 @@ export class WebGLRendererRopNode extends TypedRopNode<WebGLRendererRopParamsCon
 		renderer.toneMapping = this.pv.toneMapping;
 		renderer.toneMappingExposure = this.pv.toneMappingExposure;
 
-		// xr
-		renderer.xr.enabled = isBooleanTrue(this.pv.useXR);
-		if (isBooleanTrue(this.pv.overrideReferenceSpaceType)) {
-			renderer.xr.setReferenceSpaceType(XR_REFERENCE_SPACE_TYPES[this.pv.referenceSpaceType]);
-		} else {
-			renderer.xr.setReferenceSpaceType(DEFAULT_XR_REFERENCE_SPACE_TYPE);
-		}
-
 		// shadows
 		renderer.shadowMap.enabled = this.pv.tshadowMap;
 		renderer.shadowMap.autoUpdate = this.pv.shadowMapAutoUpdate;
@@ -419,67 +364,4 @@ export class WebGLRendererRopNode extends TypedRopNode<WebGLRendererRopParamsCon
 				}
 			});
 	}
-
-	/**
-	 *
-	 * XR
-	 *
-	 */
-
-	setXRType(type: XRType) {
-		this.p.xrType.set(XR_TYPES.indexOf(type));
-	}
-	XRType() {
-		return XR_TYPES[this.pv.xrType];
-	}
-	XRController(renderer: WebGLRenderer, canvas: HTMLCanvasElement) {
-		const type = this.XRType();
-		switch (type) {
-			case XRType.AR: {
-				return new CoreARController(this.scene(), renderer, canvas);
-			}
-			case XRType.VR: {
-				return new CoreVRController(this.scene(), renderer, canvas);
-			}
-		}
-		TypeAssert.unreachable(type);
-	}
-	// private XRButton() {
-	// 	const type = this.XRType();
-	// 	switch (type) {
-	// 		case XRType.AR: {
-	// 			return ARButton;
-	// 		}
-	// 		case XRType.VR: {
-	// 			return VRButton;
-	// 		}
-	// 	}
-	// 	TypeAssert.unreachable(type)
-	// }
-	// mountXRButton(canvas: HTMLCanvasElement, renderer: WebGLRenderer) {
-	// 	if (!renderer.xr.enabled) {
-	// 		return;
-	// 	}
-	// 	const parent = canvas.parentElement;
-	// 	if (parent) {
-	// 		const buttonClass = this.XRButton();
-	// 		const button = buttonClass.createButton(renderer, {requiredFeatures: ['hit-test']});
-	// 		parent.prepend(button);
-	// 		this._buttonByCanvasId.set(canvas.id, button);
-
-	// 		const controller0 = renderer.xr.getController(0);
-	// 		const controller1 = renderer.xr.getController(1);
-	// 		this.scene().threejsScene().add(controller0);
-	// 		this.scene().threejsScene().add(controller1);
-	// 	} else {
-	// 		console.warn('canvas has no parent');
-	// 	}
-	// }
-	// unmountXRButton(canvas: HTMLCanvasElement) {
-	// 	const button = this._buttonByCanvasId.get(canvas.id);
-	// 	if (!button) {
-	// 		return;
-	// 	}
-	// 	button.parentElement?.removeChild(button);
-	// }
 }

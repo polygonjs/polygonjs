@@ -22,15 +22,20 @@ import {CORE_CAMERA_DEFAULT} from '../../../core/camera/CoreCamera';
 import {CoreCameraFrameParamConfig} from '../../../core/camera/CoreCameraFrameMode';
 import {PerspectiveCameraSopOperation} from '../../operations/sop/PerspectiveCamera';
 import {OnNodeRegisterCallback} from '../../poly/registers/nodes/NodesRegister';
+import {CameraWebXRParamConfig} from './utils/cameras/WebXRParamOptions';
+import {CameraWebXRARSopOperation} from '../../operations/sop/CameraWebXRAR';
+import {CameraWebXRVRSopOperation} from '../../operations/sop/CameraWebXRVR';
 
-class PerspectiveCameraObjParamConfig extends CameraPostProcessParamConfig(
-	CameraRenderParamConfig(
-		LayerParamConfig(
-			CameraMainCameraParamConfig(
-				CoreCameraFrameParamConfig(
-					PerspectiveCameraParamConfigMixin(
-						ThreejsCameraTransformParamConfig(
-							TransformedParamConfig(NodeParamsConfig, {matrixAutoUpdate: true})
+class PerspectiveCameraObjParamConfig extends CameraWebXRParamConfig(
+	CameraPostProcessParamConfig(
+		CameraRenderParamConfig(
+			LayerParamConfig(
+				CameraMainCameraParamConfig(
+					CoreCameraFrameParamConfig(
+						PerspectiveCameraParamConfigMixin(
+							ThreejsCameraTransformParamConfig(
+								TransformedParamConfig(NodeParamsConfig, {matrixAutoUpdate: true})
+							)
 						)
 					)
 				)
@@ -59,6 +64,7 @@ export class PerspectiveCameraObjNode extends TypedThreejsCameraObjNode<
 			this
 		);
 		PerspectiveCameraSopOperation.setCameraAttributes(camera, {fov: PERSPECTIVE_CAMERA_DEFAULT.fov});
+
 		return camera;
 	}
 
@@ -68,6 +74,22 @@ export class PerspectiveCameraObjNode extends TypedThreejsCameraObjNode<
 			PerspectiveCameraSopOperation.setCameraAttributes(this._object, this.pv);
 			this._object.updateProjectionMatrix();
 		}
+
+		const objects = [this._object];
+
+		// webXR is only for perspectiveCamera for now, not for orthographic
+		CameraWebXRARSopOperation.updateObject({
+			scene: this.scene(),
+			objects,
+			params: CameraWebXRARSopOperation.DEFAULT_PARAMS,
+			active: this.pv.useWebXR && this.pv.useAR,
+		});
+		CameraWebXRVRSopOperation.updateObject({
+			scene: this.scene(),
+			objects,
+			params: CameraWebXRVRSopOperation.DEFAULT_PARAMS,
+			active: this.pv.useWebXR && this.pv.useVR,
+		});
 	}
 
 	// protected override _updateForAspectRatio() {

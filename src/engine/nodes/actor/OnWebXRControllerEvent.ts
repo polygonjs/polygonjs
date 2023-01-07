@@ -12,25 +12,25 @@ import {ActorType} from '../../poly/registers/nodes/types/Actor';
 import type {PolyScene} from '../../scene/PolyScene';
 import {objectsForActorNode} from '../../scene/utils/actors/ActorsManagerUtils';
 import {Object3D} from 'three';
-import {BASE_XR_EVENT_INDICES, BASE_XR_SESSION_EVENT_NAMES, BaseXRSessionEventName} from '../../../core/xr/Common';
-import {BaseCoreXRControllerEvent} from '../../../core/xr/CoreXRControllerContainer';
+import {BASE_XR_EVENT_INDICES, BASE_XR_SESSION_EVENT_NAMES, BaseXRSessionEventName} from '../../../core/webXR/Common';
+import {BaseCoreXRControllerEvent} from '../../../core/webXR/CoreWebXRControllerContainer';
 
 type Listener = (event: BaseCoreXRControllerEvent) => void;
 type Listeners = Record<BaseXRSessionEventName, Listener>;
 
-class OnXRControllerEventActorParamsConfig extends NodeParamsConfig {
+class OnWebXRControllerEventActorParamsConfig extends NodeParamsConfig {
 	/** @param  controller index */
 	controllerIndex = ParamConfig.INTEGER(0, {
 		range: [0, 1],
 		rangeLocked: [true, true],
 	});
 }
-const ParamsConfig = new OnXRControllerEventActorParamsConfig();
+const ParamsConfig = new OnWebXRControllerEventActorParamsConfig();
 
-export class OnXRControllerEventActorNode extends TypedActorNode<OnXRControllerEventActorParamsConfig> {
+export class OnWebXRControllerEventActorNode extends TypedActorNode<OnWebXRControllerEventActorParamsConfig> {
 	override readonly paramsConfig = ParamsConfig;
-	static override type(): ActorType.ON_XR_CONTROLLER_EVENT {
-		return ActorType.ON_XR_CONTROLLER_EVENT;
+	static override type(): ActorType.ON_WEBXR_CONTROLLER_EVENT {
+		return ActorType.ON_WEBXR_CONTROLLER_EVENT;
 	}
 
 	override initializeNode() {
@@ -58,7 +58,7 @@ export class OnXRControllerEventActorNode extends TypedActorNode<OnXRControllerE
 	}
 	private _listenerByObjectByControllerIndex: Map<number, Map<Object3D, Listeners>> = new Map();
 	private _createEventListener(Object3D: Object3D) {
-		const xrController = this.scene().xr.XRController();
+		const xrController = this.scene().webXR.activeXRController();
 		if (!xrController) {
 			return;
 		}
@@ -95,11 +95,11 @@ export class OnXRControllerEventActorNode extends TypedActorNode<OnXRControllerE
 		}
 	}
 	override dispose(): void {
-		this._removeVideoNodeEventListener();
+		this._removeWebXREventListener();
 		super.dispose();
 	}
-	private _removeVideoNodeEventListener() {
-		const xrController = this.scene().xr.XRController();
+	private _removeWebXREventListener() {
+		const xrController = this.scene().webXR.activeXRController();
 		if (!xrController) {
 			return;
 		}

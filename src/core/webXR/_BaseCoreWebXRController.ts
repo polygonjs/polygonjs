@@ -1,11 +1,19 @@
-import {Matrix4, WebGLRenderer} from 'three';
+import {Camera, Matrix4, WebGLRenderer} from 'three';
 import type {PolyScene} from '../../engine/scene/PolyScene';
-import {CoreXRControllerContainer} from './CoreXRControllerContainer';
+import {CoreWebXRControllerContainer} from './CoreWebXRControllerContainer';
 const tempMatrix = new Matrix4();
+const webXRButtonsContainerClass = 'polygonjs-webxr-buttons-container';
 
-export abstract class BaseCoreXRController {
-	protected controllerContainers: CoreXRControllerContainer[] = [];
-	constructor(protected scene: PolyScene, protected renderer: WebGLRenderer, private canvas: HTMLCanvasElement) {}
+export abstract class BaseCoreWebXRController {
+	protected controllerContainers: CoreWebXRControllerContainer[] = [];
+	constructor(
+		protected scene: PolyScene,
+		protected renderer: WebGLRenderer,
+		protected camera: Camera,
+		private canvas: HTMLCanvasElement
+	) {
+		renderer.xr.enabled = true;
+	}
 	getController(controllerIndex: number) {
 		return this.controllerContainers[controllerIndex] || this._createController(controllerIndex);
 	}
@@ -21,19 +29,14 @@ export abstract class BaseCoreXRController {
 		this._unmountButton();
 	}
 
-	private _createController(controllerIndex: number): CoreXRControllerContainer {
-		const controllerContainer = new CoreXRControllerContainer(
-			this.scene,
-			this.renderer,
-			controllerIndex,
-			this.controllerName(controllerIndex)
-		);
+	private _createController(controllerIndex: number): CoreWebXRControllerContainer {
+		const controllerContainer = new CoreWebXRControllerContainer(this.renderer, controllerIndex);
+		controllerContainer.initialize(this.camera);
 		this.controllerContainers.push(controllerContainer);
 		this._addControllerEvents(controllerContainer, controllerIndex);
 		return controllerContainer;
 	}
-	protected _addControllerEvents(controllerContainer: CoreXRControllerContainer, controllerIndex: number): void {}
-	protected abstract controllerName(controllerIndex: number): string;
+	protected _addControllerEvents(controllerContainer: CoreWebXRControllerContainer, controllerIndex: number): void {}
 	process(frame?: XRFrame) {
 		for (let controllerContainer of this.controllerContainers) {
 			tempMatrix.identity().extractRotation(controllerContainer.controller.matrixWorld);
@@ -44,10 +47,16 @@ export abstract class BaseCoreXRController {
 
 	private _onSessionStartBound = this._onSessionStart.bind(this);
 	private _onSessionEndBound = this._onSessionEnd.bind(this);
-	private _onSessionStart() {
+	protected _onSessionStart() {
+		for (let controllerContainer of this.controllerContainers) {
+			controllerContainer.initialize(this.camera);
+		}
 		this.scene.play();
 	}
-	private _onSessionEnd() {
+	protected _onSessionEnd() {
+		for (let controllerContainer of this.controllerContainers) {
+			controllerContainer.initialize(null);
+		}
 		this.scene.pause();
 	}
 
@@ -61,12 +70,23 @@ export abstract class BaseCoreXRController {
 
 	private _mountButton() {
 		if (!this.renderer.xr.enabled) {
+			console.warn('renderer.xr is not enabled, not mounting webXR button');
 			return;
 		}
 		const parent = this.canvas.parentElement;
 		if (parent) {
+			let buttonsContainer: HTMLElement | null = parent.querySelector(`.${webXRButtonsContainerClass}`);
+			if (!buttonsContainer) {
+				buttonsContainer = document.createElement('div');
+				buttonsContainer.classList.add(webXRButtonsContainerClass);
+				parent.prepend(buttonsContainer);
+				buttonsContainer.style.position = 'absolute';
+				buttonsContainer.style.bottom = '20px';
+				buttonsContainer.style.textAlign = 'center';
+				buttonsContainer.style.width = '100%';
+			}
 			const button = this.createButton();
-			parent.prepend(button);
+			buttonsContainer.prepend(button);
 			this._buttonByCanvasId.set(this.canvas.id, button);
 		} else {
 			console.warn('canvas has no parent');
