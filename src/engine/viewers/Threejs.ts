@@ -10,6 +10,8 @@ import {CoreCameraRenderSceneController} from '../../core/camera/CoreCameraRende
 import type {EffectComposer} from 'postprocessing';
 import {AbstractRenderer} from './Common';
 import {CoreCameraWebXRController, CoreCameraWebXRControllerConfig} from '../../core/camera/webXR/CoreCameraWebXR';
+import {CoreCameraARjsControllerConfig} from '../../core/webXR/arjs/Common';
+import {CoreCameraTrackMarkerController} from '../../core/camera/CoreCameraTrackMarker';
 const CSS_CLASS = 'CoreThreejsViewer';
 
 declare global {
@@ -40,6 +42,7 @@ export class ThreejsViewer<C extends Camera> extends TypedViewer<C> {
 	private _requestAnimationFrameId: number | undefined;
 
 	private _webXRConfig: CoreCameraWebXRControllerConfig | undefined;
+	private _ARjsConfig: CoreCameraARjsControllerConfig | undefined;
 	private _renderer: AbstractRenderer | undefined;
 	private _rendererConfig: AvailableRenderConfig | undefined;
 	private _renderFunc: RenderFuncWithDelta | undefined;
@@ -100,6 +103,11 @@ export class ThreejsViewer<C extends Camera> extends TypedViewer<C> {
 					renderer,
 					canvas: this.canvas(),
 				});
+				this._ARjsConfig = CoreCameraTrackMarkerController.process({
+					camera,
+					polyScene: scene,
+					scene: scene.threejsScene(),
+				});
 			}
 			// CSSRender
 			this._cssRendererConfig = CoreCameraCSSRendererController.cssRendererConfig({scene, camera, canvas});
@@ -111,9 +119,7 @@ export class ThreejsViewer<C extends Camera> extends TypedViewer<C> {
 			if (effectComposer) {
 				this._renderFunc = (delta) => effectComposer.render(delta);
 			} else {
-				this._renderFunc = () => {
-					renderer.render(renderScene, camera);
-				};
+				this._renderFunc = () => renderer.render(renderScene, camera);
 			}
 		}
 	}
@@ -136,6 +142,7 @@ export class ThreejsViewer<C extends Camera> extends TypedViewer<C> {
 		}
 		// mount webXR
 		this._webXRConfig?.mountFunction();
+		this._ARjsConfig?.mountFunction();
 
 		this._build();
 		this._setEvents();
@@ -166,6 +173,7 @@ export class ThreejsViewer<C extends Camera> extends TypedViewer<C> {
 		this._cssRendererConfig = undefined;
 		// dispose webXR
 		this._webXRConfig?.unmountFunction();
+		this._ARjsConfig?.unmountFunction();
 
 		// dispose effectComposer
 		this._effectComposer = undefined;
@@ -294,6 +302,7 @@ export class ThreejsViewer<C extends Camera> extends TypedViewer<C> {
 		this._runOnBeforeTickCallbacks(delta);
 		this.scene().update(delta);
 		this._runOnAfterTickCallbacks(delta);
+		this._ARjsConfig?.renderFunction();
 		this.render(delta);
 	}
 

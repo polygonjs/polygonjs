@@ -16,6 +16,7 @@ export enum CameraAttribute {
 	POST_PROCESS_NODE_ID = '_Camera_postProcessNodeId',
 	RENDER_SCENE_NODE_ID = '_Camera_renderSceneNodeId',
 	RENDERER_NODE_ID = '_Camera_rendererNodeId',
+	// webXR
 	WEBXR_AR = '_Camera_WebXR_AR',
 	WEBXR_VR = '_Camera_WebXR_VR',
 	WEBXR_AR_FEATURES_OPTIONAL = '_Camera_WebXR_AR_Features_Optional',
@@ -24,6 +25,9 @@ export enum CameraAttribute {
 	WEBXR_VR_FEATURES_REQUIRED = '_Camera_WebXR_VR_Features_Required',
 	WEBXR_VR_OVERRIDE_REFERENCE_SPACE_TYPE = '_Camera_WebXR_VR_overrideReferenceSpaceType',
 	WEBXR_VR_REFERENCE_SPACE_TYPE = '_Camera_WebXR_VR_referenceSpaceType',
+	// ARjs
+	ARJS_TRACK_MARKER = '_Camera_WebXR_AR_trackMarker',
+	ARJS_TRACK_MARKER_MARKER_URL = '_Camera_WebXR_AR_trackMarker_markerURL',
 }
 export const CAMERA_ATTRIBUTES: CameraAttribute[] = [
 	CameraAttribute.NODE_ID,
