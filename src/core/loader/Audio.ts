@@ -54,7 +54,7 @@ class AudioLoader extends Loader {
 	}
 }
 
-export class CoreLoaderAudio extends CoreBaseLoader {
+export class CoreLoaderAudio extends CoreBaseLoader<string> {
 	async load(): Promise<AudioBuffer> {
 		const audioLoader = new AudioLoader(this.loadingManager);
 		const url = await this._urlToLoad();

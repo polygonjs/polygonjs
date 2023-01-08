@@ -1,8 +1,9 @@
 import {Vector3, Matrix4, Quaternion, WebGLRenderer, Camera} from 'three';
-import {PolyScene} from '../../engine/scene/PolyScene';
-import {CoreARButton} from './buttons/CoreARButton';
+import {PolyScene} from '../../../engine/scene/PolyScene';
+import {CoreARButton} from '../buttons/CoreARButton';
 import {CoreWebXRARControllerOptions} from './CommonAR';
-import {BaseCoreWebXRController} from './_BaseCoreWebXRController';
+import {CoreWebXRAREstimatedLightController} from './CoreWebXRAREstimatedLightController';
+import {BaseCoreWebXRController, OnWebXRSessionStartedCallback} from '../_BaseCoreWebXRController';
 
 const s = new Vector3();
 
@@ -27,6 +28,7 @@ export class CoreWebXRARController extends BaseCoreWebXRController {
 		return CoreARButton.createButton(
 			{
 				renderer: this.renderer,
+				controller: this,
 			},
 			{
 				optionalFeatures: this.options.optionalFeatures,
@@ -34,6 +36,12 @@ export class CoreWebXRARController extends BaseCoreWebXRController {
 			}
 		);
 	}
+	async requestSession(sessionInit: XRSessionInit, onSessionStarted: OnWebXRSessionStartedCallback) {
+		this._estimatedLightController = new CoreWebXRAREstimatedLightController();
+		this._estimatedLightController.initialize(this.scene, this.renderer);
+		return navigator.xr?.requestSession('immersive-ar', sessionInit).then(onSessionStarted);
+	}
+	private _estimatedLightController: CoreWebXRAREstimatedLightController | undefined;
 	protected override _onSessionStart() {
 		// set active before super._onSessionStart
 		// so that actor nodes can listen to the active xr manager
@@ -42,6 +50,7 @@ export class CoreWebXRARController extends BaseCoreWebXRController {
 	}
 	protected override _onSessionEnd() {
 		this.scene.webXR.setActiveARController(null);
+		this._estimatedLightController?.dispose();
 		super._onSessionEnd();
 	}
 

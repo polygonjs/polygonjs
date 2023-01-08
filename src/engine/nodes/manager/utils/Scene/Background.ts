@@ -15,7 +15,7 @@ export enum BackgroundMode {
 export const BACKGROUND_MODES: BackgroundMode[] = [BackgroundMode.NONE, BackgroundMode.COLOR, BackgroundMode.TEXTURE];
 
 const CallbackOptions = {
-	// computeOnDirty: false,
+	cook: false,
 	callback: (node: BaseNodeType) => {
 		SceneBackgroundController.update(node as RootManagerNode);
 	},
@@ -46,20 +46,30 @@ export function SceneBackgroundParamConfig<TBase extends Constructor>(Base: TBas
 			nodeSelection: {
 				context: NodeContext.COP,
 			},
-			dependentOnFoundNode: false,
+			// dependentOnFoundNode: false,
 			...CallbackOptions,
 		});
 	};
 }
 
+const CALLBACK_NAME = 'SceneBackgroundController';
 export class SceneBackgroundController {
 	constructor(protected node: RootManagerNode) {}
+	addHooks() {
+		const p = this.node.p;
+		const params = [p.backgroundMode, p.bgColor, p.bgTexture];
+		for (let param of params) {
+			param.addPostDirtyHook(CALLBACK_NAME, this._updateBound);
+		}
+	}
+
 	setMode(mode: BackgroundMode) {
 		this.node.p.backgroundMode.set(BACKGROUND_MODES.indexOf(mode));
 	}
 	backgroundMode(): BackgroundMode {
 		return BACKGROUND_MODES[this.node.pv.backgroundMode];
 	}
+	private _updateBound = this.update.bind(this);
 	async update() {
 		const backgroundMode = this.backgroundMode();
 		switch (backgroundMode) {

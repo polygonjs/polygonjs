@@ -3,6 +3,7 @@ export enum LightType {
 	DIRECTIONAL = 'directionalLight',
 	HEMISPHERE = 'hemisphereLight',
 	POINT = 'pointLight',
+	PROBE = 'lightProbe',
 	SPOT = 'spotLight',
 }
 export enum THREELightType {

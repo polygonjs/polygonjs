@@ -2,6 +2,7 @@ import {LoadingManager, Texture} from 'three';
 import {BaseNodeType} from '../../engine/nodes/_Base';
 import {Poly} from '../../engine/Poly';
 import {BlobsControllerFetchNodeOptions, FetchBlobResponse} from '../../engine/poly/BlobsController';
+import {isArray} from '../Type';
 import {sanitizeUrl} from '../UrlHelper';
 import {BaseGeoLoaderOutput} from './geometry/_BaseLoaderHandler';
 
@@ -43,13 +44,20 @@ interface MultipleDependenciesLoadOptions {
 
 type OnAssetLoadedCallback = (url: string, asset?: BaseGeoLoaderOutput | Texture) => void;
 
-export class CoreBaseLoader {
+export class CoreBaseLoader<U extends string | Array<string>> {
 	static readonly loadingManager = LOADING_MANAGER; // static
 	public readonly loadingManager = LOADING_MANAGER; // not static
 
-	protected _url: string;
-	constructor(url: string, protected _node?: BaseNodeType, public blobOptions: BlobsControllerFetchNodeOptions = {}) {
-		this._url = sanitizeUrl(url);
+	constructor(
+		protected _url: U,
+		protected _node?: BaseNodeType,
+		public blobOptions: BlobsControllerFetchNodeOptions = {}
+	) {
+		if (isArray(this._url)) {
+			this._url = this._url.map(sanitizeUrl) as U;
+		} else {
+			this._url = sanitizeUrl(this._url) as U;
+		}
 	}
 
 	static extension(url: string) {
@@ -75,24 +83,31 @@ export class CoreBaseLoader {
 	}
 
 	extension() {
-		return CoreBaseLoader.extension(this._url);
+		return isArray(this._url) ? CoreBaseLoader.extension(this._url[0]) : CoreBaseLoader.extension(this._url);
 	}
 
-	protected async _urlToLoad(): Promise<string> {
-		let fullUrl = this._url;
-		if (this._node) {
-			const assetsRoot = this._node.scene().assets.root();
-			if (!fullUrl.startsWith('http')) {
-				fullUrl = assetsRoot ? `${assetsRoot}/${fullUrl}` : fullUrl;
+	protected async _urlToLoad(): Promise<U> {
+		const blobOrFullUrl = async (fullUrl: string) => {
+			if (this._node) {
+				const assetsRoot = this._node.scene().assets.root();
+				if (!fullUrl.startsWith('http')) {
+					fullUrl = assetsRoot ? `${assetsRoot}/${fullUrl}` : fullUrl;
+				}
+				await Poly.blobs.fetchBlobForNode({
+					fullUrl,
+					node: this._node,
+					multiAssetsForNode: this.blobOptions.multiAssetsForNode,
+				});
 			}
-			await Poly.blobs.fetchBlobForNode({
-				fullUrl,
-				node: this._node,
-				multiAssetsForNode: this.blobOptions.multiAssetsForNode,
-			});
+			const blobUrl = Poly.blobs.blobUrl(fullUrl);
+			return blobUrl || fullUrl;
+		};
+
+		if (isArray(this._url)) {
+			return (await Promise.all(this._url.map(blobOrFullUrl))) as U;
+		} else {
+			return (await blobOrFullUrl(this._url)) as U;
 		}
-		const blobUrl = Poly.blobs.blobUrl(fullUrl);
-		return blobUrl || fullUrl;
 	}
 
 	protected static async _loadMultipleBlobGlobal(options: MultipleDependenciesLoadOptions) {

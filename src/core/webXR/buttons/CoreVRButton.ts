@@ -1,9 +1,11 @@
 import {WebGLRenderer} from 'three';
+import {CoreWebXRVRController} from '../webXRVR/CoreWebXRVRController';
 
 interface SessionInitOptions extends XRSessionInit {}
 
 interface CoreVRButtonOptions {
 	renderer: WebGLRenderer;
+	controller: CoreWebXRVRController;
 }
 
 // adapted from threejs ARButton
@@ -20,7 +22,7 @@ interface CoreVRButtonOptions {
 
 export class CoreVRButton {
 	static createButton(options: CoreVRButtonOptions, sessionInit: SessionInitOptions = {}) {
-		const {renderer} = options;
+		const {renderer, controller} = options;
 
 		this.registerSessionGrantedListener();
 
@@ -74,7 +76,8 @@ export class CoreVRButton {
 					// be requested separately.)
 
 					// const sessionInit = {optionalFeatures: ['local-floor', 'bounded-floor', 'hand-tracking', 'layers']};
-					navigator.xr?.requestSession('immersive-vr', sessionInit).then(onSessionStarted);
+					// navigator.xr?.requestSession('immersive-vr', sessionInit).then(onSessionStarted);
+					controller.requestSession(sessionInit, onSessionStarted);
 				} else {
 					currentSession.end();
 				}

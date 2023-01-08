@@ -12,7 +12,7 @@ import {CoreBaseLoader} from '../_Base';
 type CsvValue = string | number | number[];
 const POSITION = 'position';
 
-export class CsvLoader extends CoreBaseLoader {
+export class CsvLoader extends CoreBaseLoader<string> {
 	static SEPARATOR = ',';
 	static VECTOR_SEPARATOR = ',';
 

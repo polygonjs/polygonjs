@@ -3,9 +3,9 @@ import {PolyScene} from '../../../engine/scene/PolyScene';
 import {CoreObject} from '../../geometry/Object';
 import {CameraAttribute} from '../CoreCamera';
 import {WebXRControllerMountFunction, WebXRControllerUnmountFunction} from '../../webXR/Common';
-import {WebXRVRFeature, WEBXR_VR_FEATURES, XR_REFERENCE_SPACE_TYPES} from '../../webXR/CommonVR';
+import {WebXRVRFeature, WEBXR_VR_FEATURES, XR_REFERENCE_SPACE_TYPES} from '../../webXR/webXRVR/CommonVR';
 import {BaseCoreWebXRController} from '../../webXR/_BaseCoreWebXRController';
-import {WebXRARFeature, WEBXR_AR_FEATURES} from '../../webXR/CommonAR';
+import {WebXRARFeature, WEBXR_AR_FEATURES} from '../../webXR/webXRAR/CommonAR';
 
 interface WebXRControllerOptions {
 	camera: Camera;

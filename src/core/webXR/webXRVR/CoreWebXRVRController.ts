@@ -11,13 +11,13 @@ import {
 	Object3D,
 	Camera,
 } from 'three';
-import {PolyScene} from '../../engine/scene/PolyScene';
-import {isBooleanTrue} from '../Type';
-import {CoreVRButton} from './buttons/CoreVRButton';
-import {DEFAULT_WEBXR_VR_REFERENCE_SPACE_TYPE} from './Common';
+import {PolyScene} from '../../../engine/scene/PolyScene';
+import {isBooleanTrue} from '../../Type';
+import {CoreVRButton} from '../buttons/CoreVRButton';
+import {DEFAULT_WEBXR_VR_REFERENCE_SPACE_TYPE} from '../Common';
 import {CoreWebXRVRControllerOptions} from './CommonVR';
-import {CoreWebXRControllerContainer} from './CoreWebXRControllerContainer';
-import {BaseCoreWebXRController} from './_BaseCoreWebXRController';
+import {CoreWebXRControllerContainer} from '../CoreWebXRControllerContainer';
+import {BaseCoreWebXRController, OnWebXRSessionStartedCallback} from '../_BaseCoreWebXRController';
 
 // from three
 // examples/webxr_vr_ballshooter.html
@@ -66,7 +66,9 @@ export class CoreWebXRVRController extends BaseCoreWebXRController {
 		const xr = this.renderer.xr;
 		xr.addEventListener('sessionstart', () => (this._baseReferenceSpace = xr.getReferenceSpace()));
 	}
-
+	async requestSession(sessionInit: XRSessionInit, onSessionStarted: OnWebXRSessionStartedCallback) {
+		return navigator.xr?.requestSession('immersive-vr', sessionInit).then(onSessionStarted);
+	}
 	protected override _onSessionStart() {
 		// set active before super._onSessionStart
 		// so that actor nodes can listen to the active xr manager
@@ -110,6 +112,7 @@ export class CoreWebXRVRController extends BaseCoreWebXRController {
 		return CoreVRButton.createButton(
 			{
 				renderer: this.renderer,
+				controller: this,
 			},
 			{
 				optionalFeatures: this.options.optionalFeatures,

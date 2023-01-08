@@ -83,6 +83,11 @@ export class RootManagerNode extends TypedBaseManagerNode<ObjectsManagerParamsCo
 	override initializeNode() {
 		// this.children_controller?.init({dependent: false});
 
+		this.params.onParamsCreated('init controllers', () => {
+			this.sceneEnvController.addHooks();
+			this.sceneBackgroundController.addHooks();
+		});
+
 		this.lifecycle.onChildAdd(this._onChildAdd.bind(this));
 		this.lifecycle.onChildRemove(this._onChildRemove.bind(this));
 	}

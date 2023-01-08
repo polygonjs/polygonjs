@@ -14,7 +14,7 @@ export abstract class BaseGeoLoader<O extends BaseGeoLoaderOutput> {
 	abstract load: (url: string, onSuccess: OnSuccess<O>, onProgress?: OnProgress, onError?: OnError) => void;
 }
 
-export abstract class BaseGeoLoaderHandler<O extends BaseGeoLoaderOutput> extends CoreBaseLoader {
+export abstract class BaseGeoLoaderHandler<O extends BaseGeoLoaderOutput> extends CoreBaseLoader<string> {
 	protected _loader: BaseGeoLoader<O> | undefined;
 
 	reset() {

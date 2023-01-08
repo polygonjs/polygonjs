@@ -5,6 +5,7 @@ import {BuilderCopNode} from '../../../nodes/cop/Builder';
 import {Builder2DArrayCopNode} from '../../../nodes/cop/Builder2DArray';
 import {CanvasCopNode} from '../../../nodes/cop/Canvas';
 import {ColorCopNode} from '../../../nodes/cop/Color';
+import {CubeCopNode} from '../../../nodes/cop/Cube';
 import {CubeCameraCopNode} from '../../../nodes/cop/CubeCamera';
 import {EnvMapCopNode} from '../../../nodes/cop/EnvMap';
 import {GifCopNode} from '../../../nodes/cop/Gif';
@@ -45,6 +46,7 @@ export interface CopNodeChildrenMap {
 	builder2DArray: Builder2DArrayCopNode;
 	canvas: CanvasCopNode;
 	color: ColorCopNode;
+	cube: CubeCopNode;
 	cubeCamera: CubeCameraCopNode;
 	envMap: EnvMapCopNode;
 	gif: GifCopNode;
@@ -88,6 +90,7 @@ export class CopRegister {
 		poly.registerNode(Builder2DArrayCopNode, CATEGORY_COP.ADVANCED);
 		poly.registerNode(CanvasCopNode, CATEGORY_COP.INPUT);
 		poly.registerNode(ColorCopNode, CATEGORY_COP.INPUT);
+		poly.registerNode(CubeCopNode, CATEGORY_COP.INPUT);
 		poly.registerNode(CubeCameraCopNode, CATEGORY_COP.INPUT);
 		poly.registerNode(EnvMapCopNode, CATEGORY_COP.INPUT);
 		poly.registerNode(GifCopNode, CATEGORY_COP.INPUT);

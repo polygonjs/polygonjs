@@ -1,5 +1,8 @@
 import {Euler, Vector2, Vector3, Vector4, Quaternion, Color} from 'three';
 
+export function isArray(value: any): value is any[] {
+	return Array.isArray(value);
+}
 export class CoreType {
 	static isNumber(value: any): value is number {
 		return typeof value == 'number';
@@ -25,9 +28,7 @@ export class CoreType {
 	static isNaN(value: any): boolean {
 		return isNaN(value);
 	}
-	static isArray(value: any): value is any[] {
-		return Array.isArray(value);
-	}
+	static isArray = isArray;
 	static isObject(value: any): value is object {
 		var type = typeof value;
 		return value != null && (type == 'object' || type == 'function');

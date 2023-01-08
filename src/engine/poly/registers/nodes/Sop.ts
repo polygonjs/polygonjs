@@ -97,6 +97,7 @@ import {JitterSopNode} from '../../../nodes/sop/Jitter';
 // import {JsPointSopNode} from '../../../nodes/sop/JsPoint';
 import {LayerSopNode} from '../../../nodes/sop/Layer';
 import {LightMixerSopNode} from '../../../nodes/sop/LightMixer';
+import {LightProbeSopNode} from '../../../nodes/sop/LightProbe';
 import {LineSopNode} from '../../../nodes/sop/Line';
 import {LodSopNode} from '../../../nodes/sop/Lod';
 import {LookAtSopNode} from '../../../nodes/sop/LookAt';
@@ -167,7 +168,7 @@ import {UvLayoutSopNode} from '../../../nodes/sop/UvLayout';
 import {UvProjectSopNode} from '../../../nodes/sop/UvProject';
 import {UvTransformSopNode} from '../../../nodes/sop/UvTransform';
 import {UvUnwrapSopNode} from '../../../nodes/sop/UvUnwrap';
-// import {WebXRControllerSopNode} from '../../../nodes/sop/WebXRController';
+import {WebXRAREstimatedLightSopNode} from '../../../nodes/sop/WebXRAREstimatedLight';
 // networks
 import {ActorsNetworkSopNode} from '../../../nodes/sop/ActorsNetwork';
 import {AnimationsNetworkSopNode} from '../../../nodes/sop/AnimationsNetwork';
@@ -272,6 +273,7 @@ export interface GeoNodeChildrenMap {
 	// jsPoint: JsPointSopNode;
 	layer: LayerSopNode;
 	lightMixer: LightMixerSopNode;
+	lightProbe: LightProbeSopNode;
 	line: LineSopNode;
 	lod: LodSopNode;
 	lookAt: LookAtSopNode;
@@ -342,7 +344,7 @@ export interface GeoNodeChildrenMap {
 	uvProject: UvProjectSopNode;
 	uvTransform: UvTransformSopNode;
 	uvUnwrap: UvUnwrapSopNode;
-	// webXRController: WebXRControllerSopNode;
+	webXRAREstimatedLight: WebXRAREstimatedLightSopNode;
 
 	// networks
 	actorsNetwork: ActorsNetworkSopNode;
@@ -416,6 +418,7 @@ import {IcosahedronSopOperation} from '../../../operations/sop/Icosahedron';
 import {InstanceSopOperation} from '../../../operations/sop/Instance';
 import {InstanceUpdateSopOperation} from '../../../operations/sop/InstanceUpdate';
 import {JitterSopOperation} from '../../../operations/sop/Jitter';
+import {LightProbeSopOperation} from '../../../operations/sop/LightProbe';
 import {LookAtSopOperation} from '../../../operations/sop/LookAt';
 import {MergeSopOperation} from '../../../operations/sop/Merge';
 import {MetaballSopOperation} from '../../../operations/sop/Metaball';
@@ -522,6 +525,7 @@ export class SopRegister {
 		poly.registerOperation(InstanceSopOperation);
 		poly.registerOperation(InstanceUpdateSopOperation);
 		poly.registerOperation(JitterSopOperation);
+		poly.registerOperation(LightProbeSopOperation);
 		poly.registerOperation(LookAtSopOperation);
 		poly.registerOperation(MergeSopOperation);
 		poly.registerOperation(MetaballSopOperation);
@@ -663,7 +667,8 @@ export class SopRegister {
 		// 	poly.registerNode(JsPointSopNode, CATEGORY_SOP.ADVANCED);
 		// }
 		poly.registerNode(LayerSopNode, CATEGORY_SOP.MODIFIER);
-		poly.registerNode(LightMixerSopNode, CATEGORY_SOP.RENDER);
+		poly.registerNode(LightMixerSopNode, CATEGORY_SOP.LIGHTS);
+		poly.registerNode(LightProbeSopNode, CATEGORY_SOP.LIGHTS);
 		poly.registerNode(LineSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.registerNode(LodSopNode, CATEGORY_SOP.ADVANCED);
 		poly.registerNode(LookAtSopNode, CATEGORY_SOP.MODIFIER);
@@ -748,7 +753,7 @@ export class SopRegister {
 		poly.registerNode(UvProjectSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(UvTransformSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(UvUnwrapSopNode, CATEGORY_SOP.MODIFIER);
-		// poly.registerNode(WebXRControllerSopNode, CATEGORY_SOP.WEBXR);
+		poly.registerNode(WebXRAREstimatedLightSopNode, CATEGORY_SOP.WEBXR);
 		// networks
 		poly.registerNode(ActorsNetworkSopNode, CATEGORY_SOP.NETWORK);
 		poly.registerNode(AnimationsNetworkSopNode, CATEGORY_SOP.NETWORK);

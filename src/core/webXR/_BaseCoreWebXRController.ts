@@ -4,6 +4,7 @@ import {CoreWebXRControllerContainer} from './CoreWebXRControllerContainer';
 const tempMatrix = new Matrix4();
 const webXRButtonsContainerClass = 'polygonjs-webxr-buttons-container';
 
+export type OnWebXRSessionStartedCallback = (session: XRSession) => Promise<void>;
 export abstract class BaseCoreWebXRController {
 	protected controllerContainers: CoreWebXRControllerContainer[] = [];
 	constructor(
@@ -12,6 +13,7 @@ export abstract class BaseCoreWebXRController {
 		protected camera: Camera,
 		private canvas: HTMLCanvasElement
 	) {
+		console.log('RENDERER:');
 		renderer.xr.enabled = true;
 	}
 	getController(controllerIndex: number) {
@@ -28,6 +30,7 @@ export abstract class BaseCoreWebXRController {
 		this.renderer.xr.removeEventListener('sessionend', this._onSessionEndBound);
 		this._unmountButton();
 	}
+	abstract requestSession(sessionInit: XRSessionInit, callback: OnWebXRSessionStartedCallback): void;
 
 	private _createController(controllerIndex: number): CoreWebXRControllerContainer {
 		const controllerContainer = new CoreWebXRControllerContainer(this.renderer, controllerIndex);

@@ -1,4 +1,5 @@
 import {WebGLRenderer} from 'three';
+import {CoreWebXRARController} from '../webXRAR/CoreWebXRARController';
 
 interface SessionInitOptions extends XRSessionInit {
 	domOverlay?: {root: HTMLElement};
@@ -6,6 +7,7 @@ interface SessionInitOptions extends XRSessionInit {
 
 interface CoreARButtonOptions {
 	renderer: WebGLRenderer;
+	controller: CoreWebXRARController;
 }
 
 // adapted from threejs ARButton
@@ -15,12 +17,12 @@ interface CoreARButtonOptions {
 // - update element.style.background, element.style.opacity
 // - remove element.style.position and element.style.bottom
 // - add element.style.margin
-//
+// - controller requests the session to have more controls over what should be initialized just before
 //
 
 export class CoreARButton {
 	static createButton(options: CoreARButtonOptions, sessionInit: SessionInitOptions = {}) {
-		const {renderer} = options;
+		const {renderer, controller} = options;
 		const button = document.createElement('button');
 
 		function showStartAR(/*device*/) {
@@ -109,7 +111,7 @@ export class CoreARButton {
 
 			button.onclick = function () {
 				if (currentSession === null) {
-					navigator.xr?.requestSession('immersive-ar', sessionInit).then(onSessionStarted);
+					controller.requestSession(sessionInit, onSessionStarted);
 				} else {
 					currentSession.end();
 				}

@@ -15,7 +15,6 @@ export class AmbientLightSopOperation extends BaseSopOperation {
 		light.name = params.name;
 
 		this.updateLightParams(light, params);
-		this.updateLightParams(light, params);
 		return this.createCoreGroupFromObjects([light]);
 	}
 

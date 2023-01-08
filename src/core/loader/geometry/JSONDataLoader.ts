@@ -11,7 +11,7 @@ export interface JsonDataLoaderOptions {
 	convertToNumeric?: string;
 }
 
-export class JsonDataLoader extends CoreBaseLoader {
+export class JsonDataLoader extends CoreBaseLoader<string> {
 	private _parser: JSONDataParser;
 
 	constructor(url: string, options: JsonDataLoaderOptions = {}, protected override _node?: BaseNodeType) {

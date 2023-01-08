@@ -14,7 +14,7 @@ interface CoreLoaderGeometryOptions {
 	url: string;
 	format: GeometryFormat;
 }
-export class CoreLoaderGeometry extends CoreBaseLoader {
+export class CoreLoaderGeometry extends CoreBaseLoader<string> {
 	constructor(protected _options: CoreLoaderGeometryOptions, protected override _node: BaseNodeType) {
 		super(_options.url, _node);
 	}

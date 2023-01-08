@@ -4,6 +4,7 @@ import {AmbientLightObjNode} from '../../../nodes/obj/AmbientLight';
 import {AreaLightObjNode} from '../../../nodes/obj/AreaLight';
 import {DirectionalLightObjNode} from '../../../nodes/obj/DirectionalLight';
 import {HemisphereLightObjNode} from '../../../nodes/obj/HemisphereLight';
+import {LightProbeObjNode} from '../../../nodes/obj/LightProbe';
 import {PointLightObjNode} from '../../../nodes/obj/PointLight';
 import {SpotLightObjNode} from '../../../nodes/obj/SpotLight';
 
@@ -41,6 +42,7 @@ export interface ObjNodeChildrenMap {
 	directionalLight: DirectionalLightObjNode;
 	geo: GeoObjNode;
 	hemisphereLight: HemisphereLightObjNode;
+	lightProbe: LightProbeObjNode;
 	null: NullObjNode;
 	orthographicCamera: OrthographicCameraObjNode;
 	perspectiveCamera: PerspectiveCameraObjNode;
@@ -69,6 +71,7 @@ export class ObjRegister {
 		poly.registerNode(AreaLightObjNode, CATEGORY_OBJ.LIGHT);
 		poly.registerNode(DirectionalLightObjNode, CATEGORY_OBJ.LIGHT);
 		poly.registerNode(HemisphereLightObjNode, CATEGORY_OBJ.LIGHT);
+		poly.registerNode(LightProbeObjNode, CATEGORY_OBJ.LIGHT);
 		poly.registerNode(PointLightObjNode, CATEGORY_OBJ.LIGHT);
 		poly.registerNode(SpotLightObjNode, CATEGORY_OBJ.LIGHT);
 

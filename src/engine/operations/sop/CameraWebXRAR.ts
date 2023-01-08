@@ -7,8 +7,8 @@ import {CameraAttribute} from '../../../core/camera/CoreCamera';
 import {CameraSopNodeType} from '../../poly/NodeContext';
 import {Camera, Object3D, WebGLRenderer} from 'three';
 import {PolyScene} from '../../scene/PolyScene';
-import {CoreWebXRARController} from '../../../core/webXR/CoreWebXRARController';
-import {CoreWebXRARControllerOptions, WebXRARFeature} from '../../../core/webXR/CommonAR';
+import {CoreWebXRARController} from '../../../core/webXR/webXRAR/CoreWebXRARController';
+import {CoreWebXRARControllerOptions, WebXRARFeature} from '../../../core/webXR/webXRAR/CommonAR';
 import {
 	WebXRFeatureStatus,
 	WEBXR_FEATURE_STATUSES,

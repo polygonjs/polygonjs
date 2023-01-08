@@ -15,7 +15,7 @@ const FILE_FONT_FORMATS: string[] = [FileFontFormat.JSON, FileFontFormat.TTF];
 export function isExtFont(ext: string) {
 	return FILE_FONT_FORMATS.includes(ext);
 }
-export class CoreLoaderFont extends CoreBaseLoader {
+export class CoreLoaderFont extends CoreBaseLoader<string> {
 	private _fontLoader: FontLoader;
 
 	constructor(url: string, _node?: BaseNodeType) {

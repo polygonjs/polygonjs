@@ -3,7 +3,6 @@ import {Constructor} from '../../../../../types/GlobalTypes';
 import {Texture} from 'three';
 import {TypedCopNode} from './../../_Base';
 import {BaseNodeType} from '../../../_Base';
-import {BaseParamType} from '../../../../params/_Base';
 import {NodeParamsConfig, ParamConfig} from '../../../utils/params/ParamsConfig';
 import {TextureParamsController, TextureParamConfig} from './../../utils/TextureParamsController';
 import {isUrlStaticImage} from '../../../../../core/FileTypeController';
@@ -51,8 +50,8 @@ export function copImageNodeFactoryFactory(
 			});
 			/** @param reload the image */
 			reload = ParamConfig.BUTTON(null, {
-				callback: (node: BaseNodeType, param: BaseParamType) => {
-					BaseImageCopNode.PARAM_CALLBACK_reload(node as BaseImageCopNode, param);
+				callback: (node: BaseNodeType) => {
+					BaseImageCopNode.PARAM_CALLBACK_reload(node as BaseImageCopNode);
 				},
 			});
 		};
@@ -109,7 +108,7 @@ export function copImageNodeFactoryFactory(
 		// UTILS
 		//
 		//
-		static PARAM_CALLBACK_reload(node: BaseImageCopNode, param: BaseParamType) {
+		static PARAM_CALLBACK_reload(node: BaseImageCopNode) {
 			node.paramCallbackReload();
 		}
 		private paramCallbackReload() {

@@ -1,8 +1,8 @@
 import {Camera, WebGLRenderer} from 'three';
-import {CoreWebXRARControllerOptions} from '../../../core/webXR/CommonAR';
-import {CoreWebXRVRControllerOptions} from '../../../core/webXR/CommonVR';
-import type {CoreWebXRARController} from '../../../core/webXR/CoreWebXRARController';
-import type {CoreWebXRVRController} from '../../../core/webXR/CoreWebXRVRController';
+import {CoreWebXRARControllerOptions} from '../../../core/webXR/webXRAR/CommonAR';
+import {CoreWebXRVRControllerOptions} from '../../../core/webXR/webXRVR/CommonVR';
+import type {CoreWebXRARController} from '../../../core/webXR/webXRAR/CoreWebXRARController';
+import type {CoreWebXRVRController} from '../../../core/webXR/webXRVR/CoreWebXRVRController';
 import type {BaseCoreWebXRController} from '../../../core/webXR/_BaseCoreWebXRController';
 import type {PolyScene} from '../PolyScene';
 

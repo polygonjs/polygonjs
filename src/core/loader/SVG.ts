@@ -41,7 +41,7 @@ interface SVGPathUserData {
 	style: StrokeStyleExtended;
 }
 
-export class CoreSVGLoader extends CoreBaseLoader {
+export class CoreSVGLoader extends CoreBaseLoader<string> {
 	constructor(url: string, _node?: BaseNodeType) {
 		super(url, _node);
 	}

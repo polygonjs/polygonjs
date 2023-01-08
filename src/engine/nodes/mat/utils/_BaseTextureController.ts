@@ -62,21 +62,18 @@ type TextureRemoveCallback<O extends Object> = (
 ) => void;
 
 type BaseTextureControllerCurrentMaterial = Material;
-
+const CALLBACK_NAME = 'TextureController';
 export abstract class BaseTextureMapController extends BaseController {
 	constructor(protected override node: BaseMatNodeType) {
 		super(node);
 	}
 
 	protected add_hooks(use_map_param: BooleanParam, path_param: NodePathParam) {
-		use_map_param.addPostDirtyHook('TextureController', () => {
-			this.update();
-		});
-		path_param.addPostDirtyHook('TextureController', () => {
-			this.update();
-		});
+		use_map_param.addPostDirtyHook(CALLBACK_NAME, this.updateBound);
+		path_param.addPostDirtyHook(CALLBACK_NAME, this.updateBound);
 	}
 	static async update(node: BaseNodeType) {}
+	private updateBound = this.update.bind(this);
 	async update() {}
 
 	async _update<M extends BaseTextureControllerCurrentMaterial>(

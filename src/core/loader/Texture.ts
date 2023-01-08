@@ -5,7 +5,7 @@ import {CoreBaseLoader} from './_Base';
 
 type MaxConcurrentLoadsCountMethod = () => number;
 
-export class CoreLoaderTexture extends CoreBaseLoader {
+export class CoreLoaderTexture extends CoreBaseLoader<string> {
 	constructor(_url: string, protected override _node: BaseNodeType) {
 		super(_url, _node);
 	}

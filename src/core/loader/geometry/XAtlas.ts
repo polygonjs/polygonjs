@@ -50,7 +50,7 @@ export const AddMeshStatus = {
 	InvalidIndexCount: 3,
 };
 
-export class XAtlasLoaderHandler extends CoreBaseLoader {
+export class XAtlasLoaderHandler extends CoreBaseLoader<string> {
 	private static _module: XAtlasContainer | undefined;
 	private static _wasmUrl: string | undefined;
 

@@ -12,9 +12,9 @@ import {
 	DEFAULT_XR_REFERENCE_SPACE_TYPE,
 	WebXRVRFeature,
 	XR_REFERENCE_SPACE_TYPES,
-} from '../../../core/webXR/CommonVR';
+} from '../../../core/webXR/webXRVR/CommonVR';
 import type {PolyScene} from '../../scene/PolyScene';
-import {CoreWebXRVRController} from '../../../core/webXR/CoreWebXRVRController';
+import {CoreWebXRVRController} from '../../../core/webXR/webXRVR/CoreWebXRVRController';
 import {
 	WebXRFeatureStatus,
 	WEBXR_FEATURE_STATUSES,

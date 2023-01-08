@@ -5,7 +5,7 @@ import {CoreUserAgent} from '../../UserAgent';
 
 export interface SDFLoaderOptions {}
 
-export class SDFLoader extends CoreBaseLoader {
+export class SDFLoader extends CoreBaseLoader<string> {
 	constructor(url: string, protected override _node?: BaseNodeType) {
 		super(url, _node);
 	}
