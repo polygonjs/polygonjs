@@ -14,10 +14,19 @@ import {Poly} from '../../Poly';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {DEFAULT_PARAMS} from './WebGLRenderer';
 import {FullScreenQuad} from 'three/examples/jsm/postprocessing/Pass';
-// @ts-ignore
-import {PathTracingRenderer, PhysicalPathTracingMaterial, PhysicalCamera} from 'three-gpu-pathtracer';
+import {
+	PathTracingRenderer,
+	PhysicalPathTracingMaterial,
+	PhysicalCamera,
+	ShapedAreaLight,
+	PhysicalSpotLight,
+	IESLoader,
+	// @ts-ignore
+} from 'three-gpu-pathtracer';
 import {PathTracingRendererContainer} from './utils/pathTracing/PathTracingRendererContainer';
 import {BaseNodeType} from '../_Base';
+import {CoreSceneObjectsFactory} from '../../../core/CoreSceneObjectsFactory';
+import {IES_PROFILE_LM_63_1995} from '../../../core/lights/spotlight/ies/lm_63_1995';
 
 class PathTracingRendererRopParamsConfig extends NodeParamsConfig {
 	/** @param samples */
@@ -81,6 +90,20 @@ export class PathTracingRendererRopNode extends TypedRopNode<PathTracingRenderer
 	}
 
 	private _lastRenderer: PathTracingRendererContainer | undefined;
+
+	protected override initializeNode(): void {
+		super.initializeNode();
+
+		CoreSceneObjectsFactory.generators.perspectiveCamera = (fov, aspect, near, far) =>
+			new PhysicalCamera(fov, aspect, near, far);
+		CoreSceneObjectsFactory.generators.areaLight = (color, intensity, width, height) =>
+			new ShapedAreaLight(color, intensity, width, height);
+		CoreSceneObjectsFactory.generators.spotLight = () => new PhysicalSpotLight();
+		CoreSceneObjectsFactory.generators.spotLightUpdate = (spotLight: PhysicalSpotLight, textureName: string) => {
+			spotLight.iesTexture = new IESLoader().parse(IES_PROFILE_LM_63_1995);
+		};
+	}
+
 	createRenderer(canvas: HTMLCanvasElement, gl: WebGLRenderingContext): PathTracingRendererContainer {
 		const params: WebGLRendererParameters = {};
 		const keys: Array<keyof WebGLRendererParameters> = Object.keys(DEFAULT_PARAMS) as Array<

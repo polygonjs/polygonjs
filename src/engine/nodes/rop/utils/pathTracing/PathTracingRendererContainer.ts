@@ -3,7 +3,7 @@ import {Scene, Camera, MeshBasicMaterial} from 'three';
 import {FullScreenQuad} from 'three/examples/jsm/postprocessing/Pass';
 import {AbstractRenderer} from '../../../../viewers/Common';
 // @ts-ignore
-import {PathTracingRenderer} from 'three-gpu-pathtracer';
+import type {PathTracingRenderer} from 'three-gpu-pathtracer';
 // @ts-ignore
 import {PathTracingSceneWorker} from 'three-gpu-pathtracer/src/workers/PathTracingSceneWorker.js';
 
@@ -13,6 +13,7 @@ export class PathTracingRendererContainer implements AbstractRenderer {
 	public domElement: HTMLCanvasElement;
 	private _generated = false;
 	private _generating = false;
+	public readonly isPathTracingRendererContainer = true;
 	constructor(
 		public webGLRenderer: WebGLRenderer,
 		public pathTracingRenderer: PathTracingRenderer,
