@@ -59,6 +59,7 @@ import {GetRayPropertyActorNode} from '../../../nodes/actor/GetRayProperty';
 import {GetSpherePropertyActorNode} from '../../../nodes/actor/GetSphereProperty';
 import {GetVideoPropertyActorNode} from '../../../nodes/actor/GetVideoProperty';
 import {GetWebXRControllerPropertyActorNode} from '../../../nodes/actor/GetWebXRControllerProperty';
+import {GetWebXRTrackedMarkerPropertyActorNode} from '../../../nodes/actor/GetWebXRTrackedMarkerProperty';
 import {IntToFloatActorNode} from '../../../nodes/actor/IntToFloat';
 import {IntToBoolActorNode} from '../../../nodes/actor/IntToBool';
 import {KeyframesActorNode} from '../../../nodes/actor/Keyframes';
@@ -262,6 +263,7 @@ export interface ActorNodeChildrenMap {
 	getObjectWorldPosition: GetObjectWorldPositionActorNode;
 	getVideoProperty: GetVideoPropertyActorNode;
 	getWebXRControllerProperty: GetWebXRControllerPropertyActorNode;
+	getWebXRTrackedMarkerProperty: GetWebXRTrackedMarkerPropertyActorNode;
 	intToBool: IntToBoolActorNode;
 	intToFloat: IntToFloatActorNode;
 	keyframes: KeyframesActorNode;
@@ -471,6 +473,7 @@ export class ActorRegister {
 		poly.registerNode(GetObjectWorldPositionActorNode, CATEGORY_ACTOR.GET);
 		poly.registerNode(GetVideoPropertyActorNode, CATEGORY_ACTOR.GET);
 		poly.registerNode(GetWebXRControllerPropertyActorNode, CATEGORY_ACTOR.WEBXR);
+		poly.registerNode(GetWebXRTrackedMarkerPropertyActorNode, CATEGORY_ACTOR.WEBXR);
 		poly.registerNode(IntToBoolActorNode, CATEGORY_ACTOR.GET);
 		poly.registerNode(IntToFloatActorNode, CATEGORY_ACTOR.GET);
 		poly.registerNode(KeyframesActorNode, CATEGORY_ACTOR.ANIMATION);

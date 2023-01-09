@@ -89,7 +89,7 @@ export enum CameraSopNodeType {
 	RENDERER = 'cameraRenderer',
 	WEBXR_AR = 'cameraWebXRAR',
 	WEBXR_VR = 'cameraWebXRVR',
-	TRACK_MARKER = 'cameraTrackMarker',
+	WEBXR_AR_TRACK_MARKER = 'cameraWebXRARTrackMarker',
 }
 export const CAMERA_TYPES = [CameraNodeType.ORTHOGRAPHIC, CameraNodeType.PERSPECTIVE];
 

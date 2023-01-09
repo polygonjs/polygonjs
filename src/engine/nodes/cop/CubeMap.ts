@@ -32,7 +32,7 @@ export function cubeMapUrlExpression(urlKey: CubeMapUrlKey, urlAxis: CubeMapUrlA
 	return `\`ch('prefix')\`${urlKey}${urlAxis}\`ch('suffix')\``;
 }
 
-function CubeCopParamConfig<TBase extends Constructor>(Base: TBase) {
+function CubeMapCopParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		/** @param url prefix */
 		prefix = ParamConfig.STRING('', {
@@ -45,7 +45,7 @@ function CubeCopParamConfig<TBase extends Constructor>(Base: TBase) {
 		/** @param reload the image */
 		reload = ParamConfig.BUTTON(null, {
 			callback: (node: BaseNodeType) => {
-				CubeCopNode.PARAM_CALLBACK_reload(node as CubeCopNode);
+				CubeMapCopNode.PARAM_CALLBACK_reload(node as CubeMapCopNode);
 			},
 		});
 		/** @param px url */
@@ -63,12 +63,12 @@ function CubeCopParamConfig<TBase extends Constructor>(Base: TBase) {
 	};
 }
 
-class CubeCopParamsConfig extends TextureParamConfig(CubeCopParamConfig(NodeParamsConfig)) {}
-const ParamsConfig = new CubeCopParamsConfig();
-export class CubeCopNode extends TypedCopNode<CubeCopParamsConfig> {
+class CubeMapCopParamsConfig extends TextureParamConfig(CubeMapCopParamConfig(NodeParamsConfig)) {}
+const ParamsConfig = new CubeMapCopParamsConfig();
+export class CubeMapCopNode extends TypedCopNode<CubeMapCopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return CopType.CUBE;
+		return CopType.CUBE_MAP;
 	}
 
 	public readonly textureParamsController: TextureParamsController = new TextureParamsController(this);
@@ -118,7 +118,7 @@ export class CubeCopNode extends TypedCopNode<CubeCopParamsConfig> {
 		return texture;
 	}
 
-	static PARAM_CALLBACK_reload(node: CubeCopNode) {
+	static PARAM_CALLBACK_reload(node: CubeMapCopNode) {
 		node.paramCallbackReload();
 	}
 	private paramCallbackReload() {

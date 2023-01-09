@@ -120,4 +120,7 @@ export class CoreWebXRVRController extends BaseCoreWebXRController {
 			}
 		);
 	}
+	attachButton(parentElement: HTMLElement, buttonElement: HTMLElement) {
+		parentElement.append(buttonElement);
+	}
 }

@@ -1,5 +1,6 @@
 import {WebGLRenderer} from 'three';
 import {CoreWebXRVRController} from '../webXRVR/CoreWebXRVRController';
+import {setErrorStyle} from './Common';
 
 interface SessionInitOptions extends XRSessionInit {}
 
@@ -101,6 +102,7 @@ export class CoreVRButton {
 			disableButton();
 
 			button.textContent = 'VR NOT SUPPORTED';
+			setErrorStyle(button);
 		}
 
 		function showVRNotAllowed(exception: any) {
@@ -109,6 +111,7 @@ export class CoreVRButton {
 			console.warn('Exception when trying to call xr.isSessionSupported', exception);
 
 			button.textContent = 'VR NOT ALLOWED';
+			setErrorStyle(button);
 		}
 
 		function stylizeElement(element: HTMLElement) {
@@ -116,7 +119,7 @@ export class CoreVRButton {
 			element.style.padding = '12px 6px';
 			element.style.border = '1px solid #fff';
 			element.style.borderRadius = '4px';
-			element.style.background = 'rgba(0.1,0.1,0.1,0.95)';
+			element.style.background = 'rgb(16 27 44 / 95%)';
 			element.style.color = '#fff';
 			element.style.font = 'normal 13px sans-serif';
 			element.style.textAlign = 'center';
@@ -159,6 +162,7 @@ export class CoreVRButton {
 			message.style.textDecoration = 'none';
 
 			stylizeElement(message);
+			setErrorStyle(message);
 
 			return message;
 		}

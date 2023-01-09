@@ -36,7 +36,9 @@ export function EnvMapSimpleParamConfig<TBase extends Constructor>(Base: TBase) 
 		/** @param specify the environment map COP node. Note that this only works with CubeCamera */
 		envMap = ParamConfig.NODE_PATH(
 			'',
-			NodePathOptions(TextureEnvMapSimpleController, 'useEnvMap', {types: [CopType.CUBE, CopType.CUBE_CAMERA]})
+			NodePathOptions(TextureEnvMapSimpleController, 'useEnvMap', {
+				types: [CopType.CUBE_MAP, CopType.CUBE_MAP_FROM_SCENE, CopType.CUBE_CAMERA],
+			})
 		);
 		/** @param defines how the env map is combined with the color */
 		combine = ParamConfig.INTEGER(0, {

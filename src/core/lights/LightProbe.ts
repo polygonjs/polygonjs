@@ -24,7 +24,7 @@ export function LightProbeParamConfig<TBase extends Constructor>(Base: TBase) {
 		cubeMap = ParamConfig.NODE_PATH('', {
 			nodeSelection: {
 				context: NodeContext.COP,
-				types: [CopType.CUBE],
+				types: [CopType.CUBE_MAP],
 			},
 		});
 		/** @param light intensity */

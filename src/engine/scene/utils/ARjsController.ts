@@ -12,12 +12,16 @@ export class SceneARjsController {
 	setControllerCreationFunction(func: CoreARjsControllerCreateFunc) {
 		this._controllerCreateFunction = func;
 	}
-	controllerCreateFunction() {
-		return this._controllerCreateFunction;
-	}
-	setController(controller: CoreARjsController | null) {
+
+	createController(options: CoreARjsControllerOptions) {
+		if (!this._controllerCreateFunction) {
+			return;
+		}
+		const controller = this._controllerCreateFunction(options);
 		this._controller = controller;
+		return controller;
 	}
+
 	controller() {
 		return this._controller;
 	}

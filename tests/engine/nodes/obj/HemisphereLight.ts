@@ -1,6 +1,6 @@
 import {Color} from 'three';
 
-QUnit.test('hemisphere light simple', async (assert) => {
+QUnit.test('objhemisphereLight simple', async (assert) => {
 	const scene = window.scene;
 	const main_group = scene.threejsScene();
 	assert.equal(main_group.name, '/');

@@ -17,7 +17,7 @@ import {AbstractRenderer} from '../../engine/viewers/Common';
 import type {PathTracingRendererRopNode} from '../../engine/nodes/rop/PathTracingRenderer';
 import type {WebGLRendererRopNode} from '../../engine/nodes/rop/WebGLRenderer';
 // @ts-ignore
-import {PathTracingRenderer} from 'three-gpu-pathtracer';
+import type {PathTracingRenderer} from 'three-gpu-pathtracer';
 interface CreateRendererOptions {
 	camera: Camera;
 	scene: PolyScene;

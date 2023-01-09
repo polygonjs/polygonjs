@@ -43,7 +43,7 @@ import {CameraPostProcessSopNode} from '../../../nodes/sop/CameraPostProcess';
 import {CameraProjectSopNode} from '../../../nodes/sop/CameraProject';
 import {CameraRenderSceneSopNode} from '../../../nodes/sop/CameraRenderScene';
 import {CameraRendererSopNode} from '../../../nodes/sop/CameraRenderer';
-import {CameraTrackMarkerSopNode} from '../../../nodes/sop/CameraTrackMarker';
+import {CameraWebXRARTrackMarkerSopNode} from '../../../nodes/sop/CameraWebXRARTrackMarker';
 import {CameraWebXRARSopNode} from '../../../nodes/sop/CameraWebXRAR';
 import {CameraWebXRVRSopNode} from '../../../nodes/sop/CameraWebXRVR';
 import {CapsuleSopNode} from '../../../nodes/sop/Capsule';
@@ -220,9 +220,9 @@ export interface GeoNodeChildrenMap {
 	cameraProject: CameraProjectSopNode;
 	cameraRenderer: CameraRendererSopNode;
 	cameraRenderScene: CameraRenderSceneSopNode;
-	cameraTrackMarker: CameraTrackMarkerSopNode;
-	CameraWebXRAR: CameraWebXRARSopNode;
-	CameraWebXRVR: CameraWebXRVRSopNode;
+	cameraWebXRAR: CameraWebXRARSopNode;
+	cameraWebXRARTrackMarker: CameraWebXRARTrackMarkerSopNode;
+	cameraWebXRVR: CameraWebXRVRSopNode;
 	capsule: CapsuleSopNode;
 	center: CenterSopNode;
 	circle: CircleSopNode;
@@ -388,7 +388,7 @@ import {CameraPostProcessSopOperation} from '../../../operations/sop/CameraPostP
 import {CameraProjectSopOperation} from '../../../operations/sop/CameraProject';
 import {CameraRendererSopOperation} from '../../../operations/sop/CameraRenderer';
 import {CameraRenderSceneSopOperation} from '../../../operations/sop/CameraRenderScene';
-import {CameraTrackMarkerSopOperation} from '../../../operations/sop/CameraTrackMarker';
+import {CameraWebXRARTrackMarkerSopOperation} from '../../../operations/sop/CameraWebXRARTrackMarker';
 import {CameraWebXRARSopOperation} from '../../../operations/sop/CameraWebXRAR';
 import {CameraWebXRVRSopOperation} from '../../../operations/sop/CameraWebXRVR';
 import {CapsuleSopOperation} from '../../../operations/sop/Capsule';
@@ -497,7 +497,7 @@ export class SopRegister {
 		poly.registerOperation(CameraProjectSopOperation);
 		poly.registerOperation(CameraRendererSopOperation);
 		poly.registerOperation(CameraRenderSceneSopOperation);
-		poly.registerOperation(CameraTrackMarkerSopOperation);
+		poly.registerOperation(CameraWebXRARTrackMarkerSopOperation);
 		poly.registerOperation(CameraWebXRARSopOperation);
 		poly.registerOperation(CameraWebXRVRSopOperation);
 		poly.registerOperation(CapsuleSopOperation);
@@ -614,7 +614,7 @@ export class SopRegister {
 		poly.registerNode(CameraProjectSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(CameraRendererSopNode, CATEGORY_SOP.RENDER);
 		poly.registerNode(CameraRenderSceneSopNode, CATEGORY_SOP.RENDER);
-		poly.registerNode(CameraTrackMarkerSopNode, CATEGORY_SOP.RENDER);
+		poly.registerNode(CameraWebXRARTrackMarkerSopNode, CATEGORY_SOP.WEBXR);
 		poly.registerNode(CameraWebXRARSopNode, CATEGORY_SOP.WEBXR);
 		poly.registerNode(CameraWebXRVRSopNode, CATEGORY_SOP.WEBXR);
 		poly.registerNode(CapsuleSopNode, CATEGORY_SOP.PRIMITIVES);

@@ -11,7 +11,7 @@ import type {EffectComposer} from 'postprocessing';
 import {AbstractRenderer} from './Common';
 import {CoreCameraWebXRController, CoreCameraWebXRControllerConfig} from '../../core/camera/webXR/CoreCameraWebXR';
 import {CoreCameraARjsControllerConfig} from '../../core/webXR/arjs/Common';
-import {CoreCameraTrackMarkerController} from '../../core/camera/CoreCameraTrackMarker';
+import {CoreCameraTrackMarkerController} from '../../core/camera/webXR/CoreCameraTrackMarker';
 const CSS_CLASS = 'CoreThreejsViewer';
 
 declare global {
@@ -104,9 +104,9 @@ export class ThreejsViewer<C extends Camera> extends TypedViewer<C> {
 					canvas: this.canvas(),
 				});
 				this._ARjsConfig = CoreCameraTrackMarkerController.process({
+					canvas,
 					camera,
-					polyScene: scene,
-					scene: scene.threejsScene(),
+					scene,
 				});
 			}
 			// CSSRender

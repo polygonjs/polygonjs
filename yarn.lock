@@ -2,7 +2,7 @@
 # yarn lockfile v1
 
 
-"@ar-js-org/ar.js@^3.4.3":
+"@ar-js-org/ar.js@3.4.3":
   version "3.4.3"
   resolved "https://registry.yarnpkg.com/@ar-js-org/ar.js/-/ar.js-3.4.3.tgz#e9dd39f65ca0177df8a80c02d396623b4109c147"
   integrity sha512-I8vsemm22a7xpyDnCIcckgsaRzIXGLTes8NpFs877SMVjow7vEVHaMOirwTNkpf/Sk/o/MubX/vt4x6g3f5YHg==
@@ -1330,7 +1330,7 @@ debug@^4.1.0, debug@^4.1.1, debug@^4.3.2, debug@^4.3.4:
   dependencies:
     ms "2.1.2"
 
-"debug@github:ngokevin/debug#noTimestamp":
+debug@ngokevin/debug#noTimestamp:
   version "2.2.0"
   resolved "https://codeload.github.com/ngokevin/debug/tar.gz/ef5f8e66d49ce8bc64c6f282c15f8b7164409e3a"
 
@@ -3947,7 +3947,7 @@ text-table@^0.2.0:
   resolved "https://registry.yarnpkg.com/text-table/-/text-table-0.2.0.tgz#7f5ee823ae805207c00af2df4a84ec3fcfa570b4"
   integrity sha1-f17oI66AUgfACvLfSoTsP8+lcLQ=
 
-"three-bmfont-text@github:dmarcos/three-bmfont-text#21d017046216e318362c48abd1a48bddfb6e0733":
+three-bmfont-text@dmarcos/three-bmfont-text#21d017046216e318362c48abd1a48bddfb6e0733:
   version "2.4.0"
   resolved "https://codeload.github.com/dmarcos/three-bmfont-text/tar.gz/21d017046216e318362c48abd1a48bddfb6e0733"
   dependencies:

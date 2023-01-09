@@ -2,13 +2,11 @@ import {ParamConfig} from '../../engine/nodes/utils/params/ParamsConfig';
 import {Constructor, Number2, Number3} from '../../types/GlobalTypes';
 import {ColorConversion} from '../Color';
 import {DefaultOperationParams} from '../operations/_Base';
-import {Object3D, Group, Vector2, Color} from 'three';
+import {Object3D, Group, Vector2, Color, SpotLight} from 'three';
 import {VolumetricSpotLight} from './spotlight/VolumetricSpotLight';
 import {isBooleanTrue} from '../Type';
 import {CoreSpotLightHelper, CoreSpotLightHelperParams} from './spotlight/CoreSpotLightHelper';
-import {IES_PROFILE_LM_63_1995} from './spotlight/ies/lm_63_1995';
-// @ts-ignore
-import {PhysicalSpotLight, IESLoader} from 'three-gpu-pathtracer';
+import {CoreSceneObjectsFactory} from '../CoreSceneObjectsFactory';
 
 export interface SpotLightParams extends DefaultOperationParams {
 	color: Color;
@@ -171,7 +169,7 @@ export interface SpotLightContainerParams extends CoreSpotLightHelperParams {
 }
 
 export class SpotLightContainer extends Group {
-	private _light: PhysicalSpotLight;
+	private _light: SpotLight;
 	private _target: Object3D = new Object3D();
 	public override matrixAutoUpdate = false;
 	public params: SpotLightContainerParams = {
@@ -196,8 +194,8 @@ export class SpotLightContainer extends Group {
 		if (params.volAttenuation != null) {
 			this.params.volAttenuation = params.volAttenuation;
 		}
-		this._light = new PhysicalSpotLight();
-		this._light.iesTexture = new IESLoader().parse(IES_PROFILE_LM_63_1995);
+		this._light = CoreSceneObjectsFactory.generators.spotLight();
+		CoreSceneObjectsFactory.generators.spotLightUpdate(this._light, 'IES_PROFILE_LM_63_1995');
 		this._target.copy(this._light.target, false);
 		this._light.target = this._target;
 

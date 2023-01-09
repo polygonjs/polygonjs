@@ -93,11 +93,11 @@ export class WebCamCopNode extends TypedCopNode<WebCamCopParamsConfig> {
 		return element;
 	}
 
-	override async cook(input_contents: Texture[]) {
+	override async cook(inputContents: Texture[]) {
 		this._video = this._createHTMLVideoElement();
 
 		const texture = new VideoTexture(this._video);
-		const inputTexture = input_contents[0];
+		const inputTexture = inputContents[0];
 		if (inputTexture) {
 			TextureParamsController.copyTextureAttributes(texture, inputTexture);
 		}
