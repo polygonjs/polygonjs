@@ -1,8 +1,16 @@
 import {WebGLRenderer} from 'three';
 import {CoreWebXRARController} from '../webXRAR/CoreWebXRARController';
+import {setErrorStyle} from './Common';
 
 interface SessionInitOptions extends XRSessionInit {
 	domOverlay?: {root: HTMLElement};
+	// draft spec: https://github.com/immersive-web/marker-tracking/blob/main/explainer.md
+	// trackedImages: [
+	// 	{
+	// 		image: ImageBitmap;
+	// 		widthInMeters: number;
+	// 	}
+	// ];
 }
 
 interface CoreARButtonOptions {
@@ -21,7 +29,7 @@ interface CoreARButtonOptions {
 //
 
 export class CoreARButton {
-	static createButton(options: CoreARButtonOptions, sessionInit: SessionInitOptions = {}) {
+	static createButton(options: CoreARButtonOptions, sessionInit: SessionInitOptions) {
 		const {renderer, controller} = options;
 		const button = document.createElement('button');
 
@@ -135,6 +143,7 @@ export class CoreARButton {
 			disableButton();
 
 			button.textContent = 'AR NOT SUPPORTED';
+			setErrorStyle(button);
 		}
 
 		function showARNotAllowed(exception: any) {
@@ -143,6 +152,7 @@ export class CoreARButton {
 			console.warn('Exception when trying to call xr.isSessionSupported', exception);
 
 			button.textContent = 'AR NOT ALLOWED';
+			setErrorStyle(button);
 		}
 
 		function stylizeElement(element: HTMLElement) {
@@ -150,7 +160,7 @@ export class CoreARButton {
 			element.style.padding = '12px 6px';
 			element.style.border = '1px solid #fff';
 			element.style.borderRadius = '4px';
-			element.style.background = 'rgba(0.1,0.1,0.1,0.95)';
+			element.style.background = 'rgb(20 61 24 / 95%)';
 			element.style.color = '#fff';
 			element.style.font = 'normal 13px sans-serif';
 			element.style.textAlign = 'center';
@@ -189,6 +199,7 @@ export class CoreARButton {
 			message.style.textDecoration = 'none';
 
 			stylizeElement(message);
+			setErrorStyle(message);
 
 			return message;
 		}

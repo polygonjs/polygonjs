@@ -1,4 +1,4 @@
-import {Vector3, Matrix4, Quaternion, WebGLRenderer, Camera} from 'three';
+import {Vector3, Matrix4, Quaternion, WebGLRenderer, Camera, Color, Texture} from 'three';
 import {PolyScene} from '../../../engine/scene/PolyScene';
 import {CoreARButton} from '../buttons/CoreARButton';
 import {CoreWebXRARControllerOptions} from './CommonAR';
@@ -33,24 +33,39 @@ export class CoreWebXRARController extends BaseCoreWebXRController {
 			{
 				optionalFeatures: this.options.optionalFeatures,
 				requiredFeatures: this.options.requiredFeatures,
+				// trackedImages: [
+				// 	{
+				// 		image: ,
+				// 		widthInMeters: 0.2,
+				// 	},
+				// ],
 			}
 		);
 	}
+	attachButton(parentElement: HTMLElement, buttonElement: HTMLElement) {
+		parentElement.prepend(buttonElement);
+	}
+
 	async requestSession(sessionInit: XRSessionInit, onSessionStarted: OnWebXRSessionStartedCallback) {
 		this._estimatedLightController = new CoreWebXRAREstimatedLightController();
 		this._estimatedLightController.initialize(this.scene, this.renderer);
 		return navigator.xr?.requestSession('immersive-ar', sessionInit).then(onSessionStarted);
 	}
 	private _estimatedLightController: CoreWebXRAREstimatedLightController | undefined;
+	private _previousSceneBackground: Color | Texture | null = null;
 	protected override _onSessionStart() {
 		// set active before super._onSessionStart
 		// so that actor nodes can listen to the active xr manager
 		this.scene.webXR.setActiveARController(this);
+		this._previousSceneBackground = this.scene.threejsScene().background;
+		this.scene.threejsScene().background = null;
+
 		super._onSessionStart();
 	}
 	protected override _onSessionEnd() {
 		this.scene.webXR.setActiveARController(null);
 		this._estimatedLightController?.dispose();
+		this.scene.threejsScene().background = this._previousSceneBackground;
 		super._onSessionEnd();
 	}
 

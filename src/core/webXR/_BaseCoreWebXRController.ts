@@ -13,7 +13,6 @@ export abstract class BaseCoreWebXRController {
 		protected camera: Camera,
 		private canvas: HTMLCanvasElement
 	) {
-		console.log('RENDERER:');
 		renderer.xr.enabled = true;
 	}
 	getController(controllerIndex: number) {
@@ -89,12 +88,13 @@ export abstract class BaseCoreWebXRController {
 				buttonsContainer.style.width = '100%';
 			}
 			const button = this.createButton();
-			buttonsContainer.prepend(button);
+			this.attachButton(buttonsContainer, button);
 			this._buttonByCanvasId.set(this.canvas.id, button);
 		} else {
 			console.warn('canvas has no parent');
 		}
 	}
+	abstract attachButton(parentElement: HTMLElement, buttonElement: HTMLElement): void;
 	private _unmountButton() {
 		const button = this._buttonByCanvasId.get(this.canvas.id);
 		if (!button) {

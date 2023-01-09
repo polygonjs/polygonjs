@@ -5,6 +5,8 @@ import {CubeTexture, LightProbe} from 'three';
 import {LightProbeParams, DEFAULT_LIGHT_PROBE_PARAMS} from '../../../core/lights/LightProbe';
 import {NodeContext} from '../../poly/NodeContext';
 import {LightProbeGenerator} from 'three/examples/jsm/lights/LightProbeGenerator';
+// import { CopType } from '../../poly/registers/nodes/types/Cop';
+// import { CubeMapFromSceneCopNode } from '../../nodes/cop/CubeMapFromScene';
 
 export class LightProbeSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: LightProbeParams = DEFAULT_LIGHT_PROBE_PARAMS;
@@ -39,7 +41,11 @@ export class LightProbeSopOperation extends BaseSopOperation {
 					light.copy(lightProbe);
 					light.sh.scale(params.intensity);
 				} else {
-					this.states?.error.set(`texture node is not a cube map`);
+					// if(copNode.type() == CopType.CUBE_MAP_FROM_SCENE){
+					// 	const renderTarget = (copNode as CubeMapFromSceneCopNode).lastGeneratedRenderTarget()
+					// 	const lightProbe = LightProbeGenerator.fromCubeRenderTarget(renderTarget);
+					// }
+					this.states?.error.set(`texture node is not a cubeMap`);
 				}
 			} else {
 				this.states?.error.set(`texture node invalid`);

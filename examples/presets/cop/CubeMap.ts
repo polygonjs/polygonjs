@@ -1,9 +1,14 @@
 import {sRGBEncoding} from 'three';
 import {DEMO_ASSETS_ROOT_URL} from '../../../src/core/Assets';
-import {CubeCopNode, CubeMapUrlAxis, cubeMapUrlExpression, CubeMapUrlKey} from '../../../src/engine/nodes/cop/Cube';
+import {
+	CubeMapCopNode,
+	CubeMapUrlAxis,
+	cubeMapUrlExpression,
+	CubeMapUrlKey,
+} from '../../../src/engine/nodes/cop/CubeMap';
 import {BasePreset, NodePresetsCollection, PresetRegister, PresetsCollectionFactory} from '../BasePreset';
 
-const cubeCopNodePresetsCollectionFactory: PresetsCollectionFactory<CubeCopNode> = (node: CubeCopNode) => {
+const cubeMapCopNodePresetsCollectionFactory: PresetsCollectionFactory<CubeMapCopNode> = (node: CubeMapCopNode) => {
 	const collection = new NodePresetsCollection();
 
 	function defaultUrls(preset: BasePreset) {
@@ -54,7 +59,7 @@ const cubeCopNodePresetsCollectionFactory: PresetsCollectionFactory<CubeCopNode>
 
 	return collection;
 };
-export const cubeCopPresetRegister: PresetRegister<typeof CubeCopNode, CubeCopNode> = {
-	nodeClass: CubeCopNode,
-	setupFunc: cubeCopNodePresetsCollectionFactory,
+export const cubeMapCopPresetRegister: PresetRegister<typeof CubeMapCopNode, CubeMapCopNode> = {
+	nodeClass: CubeMapCopNode,
+	setupFunc: cubeMapCopNodePresetsCollectionFactory,
 };

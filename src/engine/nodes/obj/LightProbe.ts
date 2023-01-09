@@ -27,7 +27,7 @@ export class LightProbeObjNode extends TypedLightObjNode<LightProbe, LightProbeO
 		return this._operation().createLight();
 	}
 
-	protected override updateLightParams() {
-		this._operation().updateLightParams(this.light, this.pv);
+	protected override async updateLightParams() {
+		await this._operation().updateLightParams(this.light, this.pv);
 	}
 }

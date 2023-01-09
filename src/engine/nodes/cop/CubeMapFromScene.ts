@@ -14,30 +14,51 @@ import {NodeCreateOptions} from '../utils/hierarchy/ChildrenController';
 import {BaseNodeType} from '../_Base';
 import {CopType} from '../../poly/registers/nodes/types/Cop';
 import {DisplayNodeController} from '../utils/DisplayNodeController';
-import {PMREMGenerator, Scene, Texture, WebGLRenderer} from 'three';
+import {PMREMGenerator, Scene, Texture, WebGLRenderer, WebGLRenderTarget} from 'three';
 import {BaseSopNodeType} from '../sop/_Base';
 import {CopRendererController} from './utils/RendererController';
 
-function CubeFromSceneCopParamConfig<TBase extends Constructor>(Base: TBase) {
+function CubeMapFromSceneCopParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		/** @param force Render */
+		blur = ParamConfig.FLOAT(0, {
+			range: [0, 0.1],
+			step: 0.0001,
+			rangeLocked: [true, false],
+		});
+		/** @param camera near */
+		near = ParamConfig.FLOAT(0.1, {
+			range: [0.0001, 1],
+			step: 0.0001,
+			rangeLocked: [true, false],
+		});
+		/** @param camera far */
+		far = ParamConfig.FLOAT(100, {
+			range: [0, 100],
+			rangeLocked: [true, false],
+		});
+		/** @param force Render */
 		render = ParamConfig.BUTTON(null, {
-			callback: (node: BaseNodeType) => {
-				CubeFromSceneCopNode.PARAM_CALLBACK_render(node as CubeFromSceneCopNode);
+			callback: async (node: BaseNodeType) => {
+				await CubeMapFromSceneCopNode.PARAM_CALLBACK_render(node as CubeMapFromSceneCopNode);
 			},
 		});
 	};
 }
-class CubeFromSceneCopParamsConfig extends CubeFromSceneCopParamConfig(NodeParamsConfig) {}
+class CubeMapFromSceneCopParamsConfig extends CubeMapFromSceneCopParamConfig(NodeParamsConfig) {}
 
-const ParamsConfig = new CubeFromSceneCopParamsConfig();
+const ParamsConfig = new CubeMapFromSceneCopParamsConfig();
 
-export class CubeFromSceneCopNode extends TypedCopNode<CubeFromSceneCopParamsConfig> {
+export class CubeMapFromSceneCopNode extends TypedCopNode<CubeMapFromSceneCopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return CopType.CUBE_FROM_SCENE;
+		return CopType.CUBE_MAP_FROM_SCENE;
 	}
 	private _rendererController: CopRendererController | undefined;
+	private _lastGeneratedRenderTarget: WebGLRenderTarget | undefined;
+	lastGeneratedRenderTarget() {
+		return this._lastGeneratedRenderTarget;
+	}
 
 	// display_node and children_display controllers
 	// private _renderCubeMapBound = this._renderCubeMap.bind(this);
@@ -90,9 +111,7 @@ export class CubeFromSceneCopNode extends TypedCopNode<CubeFromSceneCopParamsCon
 
 	override async cook() {
 		const texture = await this._renderCubeMap();
-		if (texture) {
-			this.setTexture(texture);
-		} else {
+		if (!texture) {
 			this.cookController.endCook();
 		}
 	}
@@ -131,7 +150,7 @@ export class CubeFromSceneCopNode extends TypedCopNode<CubeFromSceneCopParamsCon
 			this.states.error.set('found renderer is not a WebGLRenderer');
 			return;
 		}
-		const pmremGenerator = new PMREMGenerator(renderer);
+
 		const currentChildren = [...this._renderScene.children];
 		for (const child of currentChildren) {
 			this._renderScene.remove(child);
@@ -140,9 +159,16 @@ export class CubeFromSceneCopNode extends TypedCopNode<CubeFromSceneCopParamsCon
 		for (const object of objects) {
 			this._renderScene.add(object);
 		}
-		const texture = pmremGenerator.fromScene(this._renderScene).texture;
-
-		return texture;
+		const pmremGenerator = new PMREMGenerator(renderer);
+		this._lastGeneratedRenderTarget = pmremGenerator.fromScene(
+			this._renderScene,
+			this.pv.blur,
+			this.pv.near,
+			this.pv.far
+		);
+		pmremGenerator.dispose();
+		this.setTexture(this._lastGeneratedRenderTarget.texture);
+		return this._lastGeneratedRenderTarget.texture;
 	}
 
 	/*
@@ -150,7 +176,7 @@ export class CubeFromSceneCopNode extends TypedCopNode<CubeFromSceneCopParamsCon
 	 * CALLBACK
 	 *
 	 */
-	static PARAM_CALLBACK_render(node: CubeFromSceneCopNode) {
-		node._renderCubeMap();
+	static async PARAM_CALLBACK_render(node: CubeMapFromSceneCopNode) {
+		await node._renderCubeMap();
 	}
 }

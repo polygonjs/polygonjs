@@ -219,8 +219,8 @@ export interface GeoNodeChildrenMap {
 	cameraProject: CameraProjectSopNode;
 	cameraRenderer: CameraRendererSopNode;
 	cameraRenderScene: CameraRenderSceneSopNode;
-	CameraWebXRAR: CameraWebXRARSopNode;
-	CameraWebXRVR: CameraWebXRVRSopNode;
+	cameraWebXRAR: CameraWebXRARSopNode;
+	cameraWebXRVR: CameraWebXRVRSopNode;
 	capsule: CapsuleSopNode;
 	center: CenterSopNode;
 	circle: CircleSopNode;
