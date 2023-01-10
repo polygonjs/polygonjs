@@ -19,7 +19,6 @@ export class PolyMarkerTrackingController {
 	private _config: MarkerTrackingConfig | undefined;
 	private _controller: CoreMarkerTrackingController | null = null;
 	setConfig(config: MarkerTrackingConfig) {
-		console.warn('setConfig', config);
 		this._config = config;
 	}
 	barCodeUrl(type: string, value: number): string | void {
