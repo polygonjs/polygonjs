@@ -1,4 +1,4 @@
-QUnit.test('box simple', async (assert) => {
+QUnit.test('sop/box simple', async (assert) => {
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false); // cancels geo node displayNodeController
 
@@ -18,7 +18,7 @@ QUnit.test('box simple', async (assert) => {
 	assert.equal(container.boundingBox().min.y, -1.0);
 });
 
-QUnit.test('box with input', async (assert) => {
+QUnit.test('sop/box with input', async (assert) => {
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false); // cancels geo node displayNodeController
 
@@ -47,7 +47,7 @@ QUnit.test('box with input', async (assert) => {
 	assert.equal(container.boundingBox().min.y, -1.5);
 });
 
-QUnit.test('box with expression', async (assert) => {
+QUnit.test('sop/box with expression', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false); // cancels geo node displayNodeController

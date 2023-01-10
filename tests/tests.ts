@@ -247,6 +247,9 @@ import './engine/nodes/cop/SDFFromUrl';
 import './engine/nodes/cop/Switch';
 import './engine/nodes/cop/Video';
 
+QUnit.module('csg');
+import './engine/nodes/csg/Cube';
+
 QUnit.module('event');
 import './engine/nodes/event/Audio';
 import './engine/nodes/event/Code';
