@@ -10,8 +10,8 @@ import {CoreCameraRenderSceneController} from '../../core/camera/CoreCameraRende
 import type {EffectComposer} from 'postprocessing';
 import {AbstractRenderer} from './Common';
 import {CoreCameraWebXRController, CoreCameraWebXRControllerConfig} from '../../core/camera/webXR/CoreCameraWebXR';
-import {CoreCameraARjsControllerConfig} from '../../core/webXR/arjs/Common';
-import {CoreCameraTrackMarkerController} from '../../core/camera/webXR/CoreCameraTrackMarker';
+import {MarkerTrackingControllerConfig} from '../../core/webXR/markerTracking/Common';
+import {CoreCameraMarkerTrackingController} from '../../core/camera/webXR/CoreCameraMarkerTracking';
 const CSS_CLASS = 'CoreThreejsViewer';
 
 declare global {
@@ -42,7 +42,7 @@ export class ThreejsViewer<C extends Camera> extends TypedViewer<C> {
 	private _requestAnimationFrameId: number | undefined;
 
 	private _webXRConfig: CoreCameraWebXRControllerConfig | undefined;
-	private _ARjsConfig: CoreCameraARjsControllerConfig | undefined;
+	private _markerTrackingConfig: MarkerTrackingControllerConfig | undefined;
 	private _renderer: AbstractRenderer | undefined;
 	private _rendererConfig: AvailableRenderConfig | undefined;
 	private _renderFunc: RenderFuncWithDelta | undefined;
@@ -103,7 +103,7 @@ export class ThreejsViewer<C extends Camera> extends TypedViewer<C> {
 					renderer,
 					canvas: this.canvas(),
 				});
-				this._ARjsConfig = CoreCameraTrackMarkerController.process({
+				this._markerTrackingConfig = CoreCameraMarkerTrackingController.process({
 					canvas,
 					camera,
 					scene,
@@ -142,7 +142,7 @@ export class ThreejsViewer<C extends Camera> extends TypedViewer<C> {
 		}
 		// mount webXR
 		this._webXRConfig?.mountFunction();
-		this._ARjsConfig?.mountFunction();
+		this._markerTrackingConfig?.mountFunction();
 
 		this._build();
 		this._setEvents();
@@ -173,7 +173,7 @@ export class ThreejsViewer<C extends Camera> extends TypedViewer<C> {
 		this._cssRendererConfig = undefined;
 		// dispose webXR
 		this._webXRConfig?.unmountFunction();
-		this._ARjsConfig?.unmountFunction();
+		this._markerTrackingConfig?.unmountFunction();
 
 		// dispose effectComposer
 		this._effectComposer = undefined;
@@ -302,7 +302,7 @@ export class ThreejsViewer<C extends Camera> extends TypedViewer<C> {
 		this._runOnBeforeTickCallbacks(delta);
 		this.scene().update(delta);
 		this._runOnAfterTickCallbacks(delta);
-		this._ARjsConfig?.renderFunction();
+		this._markerTrackingConfig?.renderFunction();
 		this.render(delta);
 	}
 

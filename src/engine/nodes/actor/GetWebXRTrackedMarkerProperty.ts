@@ -13,6 +13,7 @@ import {
 import {Matrix4} from 'three';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {TypeAssert} from '../../poly/Assert';
+import {Poly} from '../../Poly';
 
 enum GetWebXRTrackedMarkerActorNodeInputName {
 	matrix = 'matrix',
@@ -41,11 +42,12 @@ export class GetWebXRTrackedMarkerPropertyActorNode extends TypedActorNode<GetWe
 		context: ActorNodeTriggerContext,
 		outputName: GetWebXRTrackedMarkerActorNodeInputName
 	): ReturnValueTypeByActorConnectionPointType[ActorConnectionPointType] | undefined {
-		const controller = this.scene().arjs.controller();
+		const controller = Poly.markerTracking.controller();
 
 		switch (outputName) {
 			case GetWebXRTrackedMarkerActorNodeInputName.matrix: {
-				return controller?.matrix(tmpMatrix) || tmpMatrix;
+				controller?.trackedMatrix(tmpMatrix);
+				return tmpMatrix;
 			}
 		}
 		TypeAssert.unreachable(outputName);

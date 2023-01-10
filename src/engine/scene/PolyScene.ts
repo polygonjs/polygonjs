@@ -36,7 +36,6 @@ import {SceneRenderersRegister, RegisterRendererOptions} from './utils/SceneRend
 import {Poly} from '../Poly';
 import {NodeCreateOptions} from '../nodes/utils/hierarchy/ChildrenController';
 import {SceneWebXRController} from './utils/WebXREventsController';
-import {SceneARjsController} from './utils/ARjsController';
 
 interface PolySceneCreateOptions {
 	root: NodeCreateOptions;
@@ -133,10 +132,6 @@ export class PolyScene {
 	private _webXRController: SceneWebXRController | undefined;
 	get webXR() {
 		return (this._webXRController = this._webXRController || new SceneWebXRController(this));
-	}
-	private _arjsController: SceneARjsController | undefined;
-	get arjs() {
-		return (this._arjsController = this._arjsController || new SceneARjsController(this));
 	}
 	/**
 	 * When using Polygonjs viewers, a raycaster is created to use mouse events

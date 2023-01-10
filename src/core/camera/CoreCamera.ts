@@ -26,10 +26,10 @@ export enum CameraAttribute {
 	WEBXR_VR_OVERRIDE_REFERENCE_SPACE_TYPE = '_Camera_WebXR_VR_overrideReferenceSpaceType',
 	WEBXR_VR_REFERENCE_SPACE_TYPE = '_Camera_WebXR_VR_referenceSpaceType',
 	// webXR + marker tracking
-	WEBXR_AR_TRACK_MARKER = '_Camera_WebXR_AR_trackMarker',
-	WEBXR_AR_TRACK_MARKER_BAR_CODE_TYPE = '_Camera_WebXR_AR_trackMarker_barCodeType',
-	WEBXR_AR_TRACK_MARKER_BAR_CODE_VALUE = '_Camera_WebXR_AR_trackMarker_barCodeValue',
-	WEBXR_AR_TRACK_MARKER_TRANSFORM_MODE = '_Camera_WebXR_AR_trackMarker_transformMode',
+	WEBXR_AR_MARKER_TRACKING = '_Camera_WebXR_AR_markerTracking',
+	WEBXR_AR_MARKER_TRACKING_BAR_CODE_TYPE = '_Camera_WebXR_AR_markerTracking_barCodeType',
+	WEBXR_AR_MARKER_TRACKING_BAR_CODE_VALUE = '_Camera_WebXR_AR_markerTracking_barCodeValue',
+	WEBXR_AR_MARKER_TRACKING_TRANSFORM_MODE = '_Camera_WebXR_AR_markerTracking_transformMode',
 }
 export const CAMERA_ATTRIBUTES: CameraAttribute[] = [
 	CameraAttribute.NODE_ID,
