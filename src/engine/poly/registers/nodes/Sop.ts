@@ -614,7 +614,9 @@ export class SopRegister {
 		poly.registerNode(CameraProjectSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(CameraRendererSopNode, CATEGORY_SOP.RENDER);
 		poly.registerNode(CameraRenderSceneSopNode, CATEGORY_SOP.RENDER);
-		poly.registerNode(CameraWebXRARMarkerTrackingSopNode, CATEGORY_SOP.WEBXR);
+		if (process.env.NODE_ENV == 'development') {
+			poly.registerNode(CameraWebXRARMarkerTrackingSopNode, CATEGORY_SOP.WEBXR);
+		}
 		poly.registerNode(CameraWebXRARSopNode, CATEGORY_SOP.WEBXR);
 		poly.registerNode(CameraWebXRVRSopNode, CATEGORY_SOP.WEBXR);
 		poly.registerNode(CapsuleSopNode, CATEGORY_SOP.PRIMITIVES);
