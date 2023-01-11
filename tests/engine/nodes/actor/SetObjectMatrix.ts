@@ -40,7 +40,6 @@ QUnit.test('actor/setObjectMatrix', async (assert) => {
 	getObject1.p.mask.set('*/matrixSource');
 
 	const container = await merge2.compute();
-	console.log(container.coreContent()!.objects());
 	const object = container.coreContent()!.objects()[0] as Mesh;
 
 	// wait to make sure objects are mounted to the scene

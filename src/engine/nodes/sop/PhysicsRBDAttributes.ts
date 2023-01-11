@@ -26,6 +26,9 @@ import {isBooleanTrue} from '../../../core/Type';
 import {BooleanParam} from '../../params/Boolean';
 const DEFAULT = PhysicsRBDAttributesSopOperation.DEFAULT_PARAMS;
 
+type Vector3Component = 'x' | 'y' | 'z';
+const VECTOR3_COMPONENT_NAMES: Array<Vector3Component> = ['x', 'y', 'z'];
+
 const VISIBLE_OPTIONS = {
 	CAPSULE: {
 		colliderType: PHYSICS_RBD_COLLIDER_TYPES.indexOf(PhysicsRBDColliderType.CAPSULE),
@@ -259,7 +262,7 @@ export class PhysicsRBDAttributesSopNode extends TypedSopNode<PhysicsRBDAttribut
 		coreObjects: CoreObject[],
 		applyMethod: (object: Object3D, value: string) => void
 	) {
-		if (param.expressionController) {
+		if (param.expressionController && param.expressionController.entitiesDependent()) {
 			await param.expressionController.computeExpressionForObjects(coreObjects, (coreObject, value: string) => {
 				applyMethod(coreObject.object(), value);
 			});
@@ -270,27 +273,71 @@ export class PhysicsRBDAttributesSopNode extends TypedSopNode<PhysicsRBDAttribut
 		}
 	}
 	protected async _computeVector3Param(
-		param: Vector3Param,
+		vectorParam: Vector3Param,
 		coreObjects: CoreObject[],
 		applyMethod: (object: Object3D, value: Vector3) => void
 	) {
-		if (param.expressionController) {
-			await param.expressionController.computeExpressionForObjects(coreObjects, (coreObject, value) => {
-				applyMethod(coreObject.object(), value);
-			});
-		} else {
-			for (let coreObject of coreObjects) {
-				applyMethod(coreObject.object(), param.value);
+		// if (param.expressionController && param.expressionController.entitiesDependent()) {
+		// 	await param.expressionController.computeExpressionForObjects(coreObjects, (coreObject, value) => {
+		// 		applyMethod(coreObject.object(), value);
+		// 	});
+		// } else {
+		// 	for (let coreObject of coreObjects) {
+		// 		applyMethod(coreObject.object(), param.value);
+		// 	}
+		// }
+		const components = vectorParam.components;
+		const valuesByCoreObjectIndex: Map<number, Vector3> = new Map();
+		// for (let component_param of components) {
+		// values.push(component_param.value);
+		// }
+		// const initVector = this._vectorByAttribSize(this.pv.size);
+		// if (initVector) {
+		for (let coreObject of coreObjects) {
+			valuesByCoreObjectIndex.set(coreObject.index(), new Vector3());
+		}
+		for (let componentIndex = 0; componentIndex < components.length; componentIndex++) {
+			const component_param = components[componentIndex];
+			const component_name = VECTOR3_COMPONENT_NAMES[componentIndex];
+			if (
+				component_param.hasExpression() &&
+				component_param.expressionController &&
+				component_param.expressionController.entitiesDependent()
+			) {
+				await component_param.expressionController.computeExpressionForObjects(
+					coreObjects,
+					(coreObject, value) => {
+						const vector = valuesByCoreObjectIndex.get(coreObject.index());
+						if (vector) {
+							vector[component_name] = value;
+						}
+					}
+				);
+			} else {
+				for (let coreObject of coreObjects) {
+					const vector = valuesByCoreObjectIndex.get(coreObject.index());
+					if (vector) {
+						vector[component_name] = component_param.value;
+					}
+				}
 			}
 		}
+		for (let i = 0; i < coreObjects.length; i++) {
+			const coreObject = coreObjects[i];
+			const value = valuesByCoreObjectIndex.get(coreObject.index());
+			if (value != null) {
+				// coreObject.setAttribValue(attribName, value);
+				applyMethod(coreObject.object(), value);
+			}
+		}
+		// }
 	}
 	protected async _computeFloatParam(
 		param: FloatParam,
 		coreObjects: CoreObject[],
 		applyMethod: (object: Object3D, value: number) => void
 	) {
-		console.log('float compute', param.name(), param.expressionController);
-		if (param.expressionController) {
+		if (param.expressionController && param.expressionController.entitiesDependent()) {
 			await param.expressionController.computeExpressionForObjects(coreObjects, (coreObject, value) => {
 				applyMethod(coreObject.object(), value);
 			});
@@ -305,7 +352,7 @@ export class PhysicsRBDAttributesSopNode extends TypedSopNode<PhysicsRBDAttribut
 		coreObjects: CoreObject[],
 		applyMethod: (object: Object3D, value: boolean) => void
 	) {
-		if (param.expressionController) {
+		if (param.expressionController && param.expressionController.entitiesDependent()) {
 			await param.expressionController.computeExpressionForObjects(coreObjects, (coreObject, value) => {
 				applyMethod(coreObject.object(), value);
 			});

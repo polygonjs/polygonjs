@@ -166,7 +166,7 @@ export class PointSopNode extends TypedSopNode<PointSopParamsConfig> {
 
 		let tmpArray = this._initArrayIfRequired(geometry, arrays_by_geometry_uuid, points.length, offset);
 		if (do_update.value) {
-			if (param.hasExpression() && param.expressionController) {
+			if (param.hasExpression() && param.expressionController && param.expressionController.entitiesDependent()) {
 				await param.expressionController.computeExpressionForPoints(points, (point, value) => {
 					tmpArray[point.index()] = value;
 				});

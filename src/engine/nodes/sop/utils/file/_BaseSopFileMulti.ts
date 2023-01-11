@@ -10,6 +10,7 @@ import {CoreInstancer} from '../../../../../core/geometry/Instancer';
 import {Matrix4} from 'three';
 import {Poly} from '../../../../Poly';
 import {BaseGeoLoaderHandler, BaseGeoLoaderOutput} from '../../../../../core/loader/geometry/_BaseLoaderHandler';
+import {CorePoint} from '../../../../../core/geometry/Point';
 // import { Constructor } from 'vue/types/options';
 
 // interface FileMultSopNodeParamConfigOptions {
@@ -90,7 +91,7 @@ export abstract class BaseFileMultiSopNode<
 		// gather all unique urls
 		if (param.hasExpression() && param.expressionController) {
 			const uniqueUrls: Set<string> = new Set();
-			await param.expressionController.computeExpressionForPoints(points, (point, url) => {
+			const _applyUrlToPoint = (point: CorePoint, url: string) => {
 				// check that this index was not already set
 				const index = point.index();
 				if (urlByIndex.has(index)) {
@@ -100,7 +101,14 @@ export abstract class BaseFileMultiSopNode<
 					uniqueUrls.add(url);
 					BaseFileMultiSopNode._incrementUrlUsageCount(url, urlUsageCount);
 				}
-			});
+			};
+			if (param.expressionController.entitiesDependent()) {
+				await param.expressionController.computeExpressionForPoints(points, _applyUrlToPoint);
+			} else {
+				for (const point of points) {
+					_applyUrlToPoint(point, param.value);
+				}
+			}
 			uniqueUrls.forEach((url) => {
 				urls.push(url);
 			});

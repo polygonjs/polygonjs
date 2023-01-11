@@ -298,7 +298,6 @@ export class FunctionGenerator extends BaseTraverser {
 			if (this.function_main_string) {
 				try {
 					const body = this._functionBody();
-					console.log(body);
 					this.function = new Function(
 						'CorePoint',
 						'Core',
@@ -340,7 +339,6 @@ export class FunctionGenerator extends BaseTraverser {
 	private _functionBody() {
 		// const entitiesDependent = this.param.options.isExpressionForEntities()
 		const entitiesDependent = this._entitiesDependent;
-		console.log('entitiesDependent', entitiesDependent);
 		if (entitiesDependent) {
 			return `
 			const entities = param.expressionController.entities();

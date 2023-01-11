@@ -49,7 +49,6 @@ export abstract class TypedNumericParam<T extends ParamType> extends TypedParam<
 		}
 	}
 	protected override async processComputation(): Promise<void> {
-		console.log('this.expressionController.entitiesDependent()', this.expressionController?.entitiesDependent());
 		if (this.expressionController?.active() && !this.expressionController.entitiesDependent()) {
 			const expression_result = await this.expressionController.computeExpression();
 			if (this.expressionController.is_errored()) {

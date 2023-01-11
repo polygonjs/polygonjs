@@ -11,6 +11,10 @@ import {ObjectPropertiesSopOperation} from '../../operations/sop/ObjectPropertie
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {isBooleanTrue} from '../../../core/Type';
+import {StringParam} from '../../params/String';
+import {BooleanParam} from '../../params/Boolean';
+import {IntegerParam} from '../../params/Integer';
+import {FloatParam} from '../../params/Float';
 const DEFAULT = ObjectPropertiesSopOperation.DEFAULT_PARAMS;
 class ObjectPropertiesSopParamsConfig extends NodeParamsConfig {
 	/** @param toggle on to apply recursively to children */
@@ -126,97 +130,73 @@ export class ObjectPropertiesSopNode extends TypedSopNode<ObjectPropertiesSopPar
 	}
 	private async _cookWithExpressionsForCoreGroup(coreGroup: CoreGroup) {
 		const entities = coreGroup.coreObjects();
-		const pv = this.pv;
-		// name
-		if (isBooleanTrue(pv.tname)) {
-			if (this.p.name.expressionController) {
-				await this.p.name.expressionController.computeExpressionForObjects(
-					entities,
-					(entity, value: string) => {
-						entity.object().name = value;
+		const p = this.p;
+
+		async function applyStringParam(booleanParam: BooleanParam, valueParam: StringParam, property: 'name') {
+			if (isBooleanTrue(booleanParam.value)) {
+				if (valueParam.expressionController && valueParam.expressionController.entitiesDependent()) {
+					await valueParam.expressionController.computeExpressionForObjects(
+						entities,
+						(entity, value: string) => {
+							entity.object()[property] = value;
+						}
+					);
+				} else {
+					for (const entity of entities) {
+						entity.object()[property] = valueParam.value;
 					}
-				);
-			} else {
-				entities.forEach((e) => (e.object().name = pv.name));
+				}
 			}
 		}
-		// renderOrder
-		if (isBooleanTrue(pv.trenderOrder)) {
-			if (this.p.renderOrder.expressionController) {
-				await this.p.renderOrder.expressionController.computeExpressionForObjects(
-					entities,
-					(entity, value: number) => {
-						entity.object().renderOrder = value;
+		async function applyNumberParam(
+			booleanParam: BooleanParam,
+			valueParam: IntegerParam | FloatParam,
+			property: 'renderOrder'
+		) {
+			if (isBooleanTrue(booleanParam.value)) {
+				if (valueParam.expressionController && valueParam.expressionController.entitiesDependent()) {
+					await valueParam.expressionController.computeExpressionForObjects(
+						entities,
+						(entity, value: number) => {
+							entity.object()[property] = value;
+						}
+					);
+				} else {
+					for (const entity of entities) {
+						entity.object()[property] = valueParam.value;
 					}
-				);
-			} else {
-				entities.forEach((e) => (e.object().renderOrder = pv.renderOrder));
+				}
 			}
 		}
-		// frustumCulled
-		if (isBooleanTrue(pv.tfrustumCulled)) {
-			if (this.p.frustumCulled.expressionController) {
-				await this.p.frustumCulled.expressionController.computeExpressionForObjects(
-					entities,
-					(entity, value: boolean) => {
-						entity.object().frustumCulled = value;
+		async function applyBooleanParam(
+			booleanParam: BooleanParam,
+			valueParam: BooleanParam,
+			property: 'frustumCulled' | 'matrixAutoUpdate' | 'visible' | 'castShadow' | 'receiveShadow'
+		) {
+			if (isBooleanTrue(booleanParam.value)) {
+				if (valueParam.expressionController && valueParam.expressionController.entitiesDependent()) {
+					await valueParam.expressionController.computeExpressionForObjects(
+						entities,
+						(entity, value: boolean) => {
+							entity.object()[property] = value;
+						}
+					);
+				} else {
+					for (const entity of entities) {
+						entity.object()[property] = valueParam.value;
 					}
-				);
-			} else {
-				entities.forEach((e) => (e.object().frustumCulled = pv.frustumCulled));
+				}
 			}
 		}
-		// matrixAutoUpdate
-		if (isBooleanTrue(pv.tmatrixAutoUpdate)) {
-			if (this.p.matrixAutoUpdate.expressionController) {
-				await this.p.matrixAutoUpdate.expressionController.computeExpressionForObjects(
-					entities,
-					(entity, value: boolean) => {
-						entity.object().matrixAutoUpdate = value;
-					}
-				);
-			} else {
-				entities.forEach((e) => (e.object().matrixAutoUpdate = pv.matrixAutoUpdate));
-			}
-		}
-		// visible
-		if (isBooleanTrue(pv.tvisible)) {
-			if (this.p.visible.expressionController) {
-				await this.p.visible.expressionController.computeExpressionForObjects(
-					entities,
-					(entity, value: boolean) => {
-						entity.object().visible = value;
-					}
-				);
-			} else {
-				entities.forEach((e) => (e.object().visible = pv.visible));
-			}
-		}
-		// castShadow
-		if (isBooleanTrue(pv.tcastShadow)) {
-			if (this.p.castShadow.expressionController) {
-				await this.p.castShadow.expressionController.computeExpressionForObjects(
-					entities,
-					(entity, value: boolean) => {
-						entity.object().castShadow = value;
-					}
-				);
-			} else {
-				entities.forEach((e) => (e.object().castShadow = pv.castShadow));
-			}
-		}
-		// receiveShadow
-		if (isBooleanTrue(pv.treceiveShadow)) {
-			if (this.p.receiveShadow.expressionController) {
-				await this.p.receiveShadow.expressionController.computeExpressionForObjects(
-					entities,
-					(entity, value: boolean) => {
-						entity.object().receiveShadow = value;
-					}
-				);
-			} else {
-				entities.forEach((e) => (e.object().receiveShadow = pv.receiveShadow));
-			}
-		}
+
+		await Promise.all([
+			applyStringParam(p.tname, p.name, 'name'),
+			applyNumberParam(p.trenderOrder, p.renderOrder, 'renderOrder'),
+			applyBooleanParam(p.tfrustumCulled, p.frustumCulled, 'frustumCulled'),
+			applyBooleanParam(p.tmatrixAutoUpdate, p.matrixAutoUpdate, 'matrixAutoUpdate'),
+			applyBooleanParam(p.tvisible, p.visible, 'visible'),
+			applyBooleanParam(p.tcastShadow, p.castShadow, 'castShadow'),
+			applyBooleanParam(p.treceiveShadow, p.receiveShadow, 'receiveShadow'),
+		]);
 	}
 }

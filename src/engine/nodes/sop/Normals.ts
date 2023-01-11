@@ -108,43 +108,46 @@ export class NormalsSopNode extends TypedSopNode<NormalsSopParamsConfig> {
 
 		// x
 		if (isBooleanTrue(this.pv.updateX)) {
-			if (this.p.x.hasExpression() && this.p.x.expressionController) {
-				await this.p.x.expressionController.computeExpressionForPoints(points, (point, value) => {
+			const param = this.p.x;
+			if (param.hasExpression() && param.expressionController && param.expressionController.entitiesDependent()) {
+				await param.expressionController.computeExpressionForPoints(points, (point, value) => {
 					array[point.index() * 3 + 0] = value;
 				});
 			} else {
 				let point;
 				for (let i = 0; i < points.length; i++) {
 					point = points[i];
-					array[point.index() * 3 + 0] = this.pv.x;
+					array[point.index() * 3 + 0] = param.value;
 				}
 			}
 		}
 		// y
 		if (isBooleanTrue(this.pv.updateY)) {
-			if (this.p.y.hasExpression() && this.p.y.expressionController) {
-				await this.p.y.expressionController.computeExpressionForPoints(points, (point, value) => {
+			const param = this.p.y;
+			if (param.hasExpression() && param.expressionController && param.expressionController.entitiesDependent()) {
+				await param.expressionController.computeExpressionForPoints(points, (point, value) => {
 					array[point.index() * 3 + 1] = value;
 				});
 			} else {
 				let point;
 				for (let i = 0; i < points.length; i++) {
 					point = points[i];
-					array[point.index() * 3 + 1] = this.pv.y;
+					array[point.index() * 3 + 1] = param.value;
 				}
 			}
 		}
 		// z
 		if (isBooleanTrue(this.pv.updateZ)) {
-			if (this.p.z.hasExpression() && this.p.z.expressionController) {
-				await this.p.z.expressionController.computeExpressionForPoints(points, (point, value) => {
+			const param = this.p.z;
+			if (param.hasExpression() && param.expressionController && param.expressionController.entitiesDependent()) {
+				await param.expressionController.computeExpressionForPoints(points, (point, value) => {
 					array[point.index() * 3 + 2] = value;
 				});
 			} else {
 				let point;
 				for (let i = 0; i < points.length; i++) {
 					point = points[i];
-					array[point.index() * 3 + 2] = this.pv.z;
+					array[point.index() * 3 + 2] = param.value;
 				}
 			}
 		}

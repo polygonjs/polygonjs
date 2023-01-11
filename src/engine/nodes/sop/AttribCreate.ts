@@ -223,10 +223,17 @@ export class AttribCreateSopNode extends TypedSopNode<AttribCreateSopParamsConfi
 			attrib.needsUpdate = true;
 			const array = attrib.array as number[];
 			if (this.pv.size == 1) {
-				if (this.p.value1.expressionController) {
-					await this.p.value1.expressionController.computeExpressionForPoints(points, (point, value) => {
-						array[point.index() * this.pv.size + 0] = value;
-					});
+				const paramN = this.p.value1;
+				if (paramN.expressionController) {
+					if (paramN.expressionController.entitiesDependent()) {
+						await paramN.expressionController.computeExpressionForPoints(points, (point, value: number) => {
+							array[point.index() * this.pv.size + 0] = value;
+						});
+					} else {
+						for (const point of points) {
+							array[point.index() * this.pv.size + 0] = paramN.value;
+						}
+					}
 				}
 			} else {
 				const vparam = [this.p.value2, this.p.value3, this.p.value4][this.pv.size - 2];
@@ -244,10 +251,19 @@ export class AttribCreateSopNode extends TypedSopNode<AttribCreateSopParamsConfi
 					const componentParam = params[i];
 					if (componentParam.hasExpression() && componentParam.expressionController) {
 						tmpArrays[i] = this._initArrayIfRequired(geometry, arraysByGeometryUuid[i], points.length);
-						await componentParam.expressionController.computeExpressionForPoints(points, (point, value) => {
-							// array[point.index()*this.pv.size+i] = value
-							tmpArrays[i][point.index()] = value;
-						});
+						if (componentParam.expressionController.entitiesDependent()) {
+							await componentParam.expressionController.computeExpressionForPoints(
+								points,
+								(point, value: number) => {
+									// array[point.index()*this.pv.size+i] = value
+									tmpArrays[i][point.index()] = value;
+								}
+							);
+						} else {
+							for (const point of points) {
+								tmpArrays[i][point.index()] = componentParam.value;
+							}
+						}
 					} else {
 						const value = componentParam.value;
 						for (let point of points) {
@@ -278,18 +294,24 @@ export class AttribCreateSopNode extends TypedSopNode<AttribCreateSopParamsConfi
 		const attribName = this.pv.name;
 		if (param.hasExpression()) {
 			if (this.pv.size == 1) {
-				if (this.p.value1.expressionController) {
-					await this.p.value1.expressionController.computeExpressionForObjects(
-						coreObjects,
-						(coreObject, value) => {
-							coreObject.setAttribValue(attribName, value);
+				if (param.expressionController) {
+					if (param.expressionController?.entitiesDependent()) {
+						await param.expressionController.computeExpressionForObjects(
+							coreObjects,
+							(coreObject, value) => {
+								coreObject.setAttribValue(attribName, value);
+							}
+						);
+					} else {
+						for (const coreObject of coreObjects) {
+							coreObject.setAttribValue(attribName, param.value);
 						}
-					);
+					}
 				}
 			} else {
 				const vparam = [this.p.value2, this.p.value3, this.p.value4][this.pv.size - 2];
-				let params = vparam.components;
-				let valuesByCoreObjectIndex: Map<number, Vector2 | Vector3 | Vector4> = new Map();
+				const components = vparam.components;
+				const valuesByCoreObjectIndex: Map<number, Vector2 | Vector3 | Vector4> = new Map();
 				// for (let component_param of params) {
 				// 	values.push(component_param.value);
 				// }
@@ -298,10 +320,14 @@ export class AttribCreateSopNode extends TypedSopNode<AttribCreateSopParamsConfi
 					for (let coreObject of coreObjects) {
 						valuesByCoreObjectIndex.set(coreObject.index(), initVector.clone());
 					}
-					for (let componentIndex = 0; componentIndex < params.length; componentIndex++) {
-						const component_param = params[componentIndex];
+					for (let componentIndex = 0; componentIndex < components.length; componentIndex++) {
+						const component_param = components[componentIndex];
 						const component_name = COMPONENT_NAMES[componentIndex];
-						if (component_param.hasExpression() && component_param.expressionController) {
+						if (
+							component_param.hasExpression() &&
+							component_param.expressionController &&
+							component_param.expressionController.entitiesDependent()
+						) {
 							await component_param.expressionController.computeExpressionForObjects(
 								coreObjects,
 								(coreObject, value) => {
@@ -334,13 +360,17 @@ export class AttribCreateSopNode extends TypedSopNode<AttribCreateSopParamsConfi
 		const attribName = this.pv.name;
 		if (param.hasExpression()) {
 			if (this.pv.size == 1) {
-				if (this.p.value1.expressionController) {
-					await this.p.value1.expressionController.computeExpressionForCoreGroup(
-						coreGroup,
-						(coreGroup, value) => {
-							coreGroup.setAttribValue(attribName, value);
-						}
-					);
+				if (param.expressionController) {
+					if (param.expressionController.entitiesDependent()) {
+						await param.expressionController.computeExpressionForCoreGroup(
+							coreGroup,
+							(coreGroup, value) => {
+								coreGroup.setAttribValue(attribName, value);
+							}
+						);
+					} else {
+						coreGroup.setAttribValue(attribName, param.value);
+					}
 				}
 			} else {
 				const vparam = [this.p.value2, this.p.value3, this.p.value4][this.pv.size - 2];
@@ -357,7 +387,11 @@ export class AttribCreateSopNode extends TypedSopNode<AttribCreateSopParamsConfi
 					for (let componentIndex = 0; componentIndex < params.length; componentIndex++) {
 						const component_param = params[componentIndex];
 						const component_name = COMPONENT_NAMES[componentIndex];
-						if (component_param.hasExpression() && component_param.expressionController) {
+						if (
+							component_param.hasExpression() &&
+							component_param.expressionController &&
+							component_param.expressionController.entitiesDependent()
+						) {
 							await component_param.expressionController.computeExpressionForCoreGroup(
 								coreGroup,
 								(coreGroup, value) => {
@@ -415,10 +449,15 @@ export class AttribCreateSopNode extends TypedSopNode<AttribCreateSopParamsConfi
 					stringValues[point.index()] = currentValue;
 				}
 			}
-
-			await param.expressionController.computeExpressionForPoints(points, (point, value) => {
-				stringValues[point.index()] = value;
-			});
+			if (param.expressionController.entitiesDependent()) {
+				await param.expressionController.computeExpressionForPoints(points, (point, value) => {
+					stringValues[point.index()] = value;
+				});
+			} else {
+				for (const point of points) {
+					stringValues[point.index()] = param.value;
+				}
+			}
 		} else {
 			// no need to do work here, as this will be done in the operation
 		}
@@ -434,9 +473,15 @@ export class AttribCreateSopNode extends TypedSopNode<AttribCreateSopParamsConfi
 		const param = this.p.string;
 		const attribName = this.pv.name;
 		if (param.hasExpression() && param.expressionController) {
-			await param.expressionController.computeExpressionForObjects(coreObjects, (coreObject, value) => {
-				coreObject.setAttribValue(attribName, value);
-			});
+			if (param.expressionController.entitiesDependent()) {
+				await param.expressionController.computeExpressionForObjects(coreObjects, (coreObject, value) => {
+					coreObject.setAttribValue(attribName, value);
+				});
+			} else {
+				for (const coreObject of coreObjects) {
+					coreObject.setAttribValue(attribName, param.value);
+				}
+			}
 		} else {
 			// no need to do work here, as this will be done in the operation
 		}
@@ -445,9 +490,13 @@ export class AttribCreateSopNode extends TypedSopNode<AttribCreateSopParamsConfi
 		const param = this.p.string;
 		const attribName = this.pv.name;
 		if (param.hasExpression() && param.expressionController) {
-			await param.expressionController.computeExpressionForCoreGroup(coreGroup, (coreGroup, value) => {
-				coreGroup.setAttribValue(attribName, value);
-			});
+			if (param.expressionController.entitiesDependent()) {
+				await param.expressionController.computeExpressionForCoreGroup(coreGroup, (coreGroup, value) => {
+					coreGroup.setAttribValue(attribName, value);
+				});
+			} else {
+				coreGroup.setAttribValue(attribName, param.value);
+			}
 		} else {
 			// no need to do work here, as this will be done in the operation
 		}

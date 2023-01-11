@@ -8,7 +8,7 @@ import {
 import {CorePoint} from '../../../../src/core/geometry/Point';
 import {TransformTargetType} from '../../../../src/core/Transform';
 
-QUnit.test('SOP delete: (class=points) simple plane', async (assert) => {
+QUnit.test('sop/delete: (class=points) simple plane', async (assert) => {
 	const geo1 = window.geo1;
 
 	const plane1 = geo1.createNode('plane');
@@ -30,7 +30,7 @@ QUnit.test('SOP delete: (class=points) simple plane', async (assert) => {
 	assert.equal(container.pointsCount(), 0);
 });
 
-QUnit.test('SOP delete: (class=points) simple box', async (assert) => {
+QUnit.test('sop/delete: (class=points) simple box', async (assert) => {
 	const geo1 = window.geo1;
 
 	const box1 = geo1.createNode('box');
@@ -50,7 +50,52 @@ QUnit.test('SOP delete: (class=points) simple box', async (assert) => {
 	assert.equal(container.pointsCount(), 6, 'after expression delete');
 });
 
-QUnit.test('SOP delete: (class=object) simple box', async (assert) => {
+QUnit.test('sop/delete: (class=points) simple box byExpression with and without expression', async (assert) => {
+	const geo1 = window.geo1;
+
+	const add1 = geo1.createNode('add');
+	const copy1 = geo1.createNode('copy');
+	const merge1 = geo1.createNode('merge');
+	copy1.setInput(0, add1);
+	merge1.setInput(0, copy1);
+	copy1.p.count.set(10);
+	merge1.setCompactMode(true);
+	const delete1 = geo1.createNode('delete');
+	delete1.setInput(0, merge1);
+	delete1.p.byExpression.set(1);
+
+	let container = await merge1.compute();
+	assert.equal(container.pointsCount(), 10, '10');
+
+	container = await delete1.compute();
+	assert.equal(container.pointsCount(), 9, 'after first delete'); // mm, I'd expect 21 instead. I could probably optimize the geometry creation from the kept points
+
+	// only the top points remain
+	delete1.p.expression.set(1);
+	container = await delete1.compute();
+	assert.equal(container.pointsCount(), 0, 'after expression delete');
+
+	// non entity dependent
+	const sphere1 = geo1.createNode('sphere');
+	sphere1.p.radius.set(1);
+	delete1.p.expression.set(`ch('../${sphere1.name()}/radius')>0.5`);
+	container = await delete1.compute();
+	assert.equal(container.pointsCount(), 0, 'radius 1');
+	sphere1.p.radius.set(0.4);
+	container = await delete1.compute();
+	assert.equal(container.pointsCount(), 10, 'radius 0.4');
+
+	// entity dependent
+	delete1.p.expression.set(`ch('../${sphere1.name()}/radius')>(0.1*@ptnum)`);
+	container = await delete1.compute();
+	assert.equal(container.pointsCount(), 6, 'radius and @ptnum dependent');
+	sphere1.p.radius.set(0.8);
+	delete1.p.expression.set(`ch('../${sphere1.name()}/radius')<(0.1*@ptnum)`);
+	container = await delete1.compute();
+	assert.equal(container.pointsCount(), 9, 'radius and @ptnum dependent');
+});
+
+QUnit.test('sop/delete: (class=object) simple box', async (assert) => {
 	const geo1 = window.geo1;
 	const box1 = geo1.createNode('box');
 	const box2 = geo1.createNode('box');
@@ -90,7 +135,7 @@ QUnit.test('SOP delete: (class=object) simple box', async (assert) => {
 	assert.equal(objectTypeFromConstructor(core_object.coreObjects()[0].object().constructor), ObjectType.MESH);
 });
 
-QUnit.test('SOP delete: (class=point) string attrib', async (assert) => {
+QUnit.test('sop/delete: (class=point) string attrib', async (assert) => {
 	const geo1 = window.geo1;
 	const add1 = geo1.createNode('add');
 	const add2 = geo1.createNode('add');
@@ -146,7 +191,7 @@ QUnit.test('SOP delete: (class=point) string attrib', async (assert) => {
 	);
 });
 
-QUnit.test('SOP delete byBoundingObject 1', async (assert) => {
+QUnit.test('sop/delete byBoundingObject 1', async (assert) => {
 	const geo1 = window.geo1;
 
 	const sphere = geo1.createNode('sphere');
@@ -165,7 +210,7 @@ QUnit.test('SOP delete byBoundingObject 1', async (assert) => {
 	assert.equal(container.pointsCount(), 719);
 });
 
-QUnit.test('SOP delete byBoundingObject 2', async (assert) => {
+QUnit.test('sop/delete byBoundingObject 2', async (assert) => {
 	const geo1 = window.geo1;
 
 	const icosahedron1 = geo1.createNode('icosahedron');
