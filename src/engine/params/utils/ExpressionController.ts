@@ -73,8 +73,9 @@ export class ExpressionController<T extends ParamType> {
 		}
 		return null;
 	}
-	requires_entities() {
-		return this.param.options.isExpressionForEntities();
+	entitiesDependent(): boolean {
+		const managerEntitiesDependent: boolean = this._manager?.generatedFunctionEntitiesDependent() || false;
+		return this.param.options.isExpressionForEntities() && managerEntitiesDependent;
 	}
 	// private reset() {
 	// 	this._manager?.clear_error();

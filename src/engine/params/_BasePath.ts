@@ -33,7 +33,7 @@ export abstract class TypedPathParam<T extends ParamType.NODE_PATH | ParamType.P
 		}
 	}
 	protected override async processComputation(): Promise<void> {
-		if (this.expressionController?.active() && !this.expressionController.requires_entities()) {
+		if (this.expressionController?.active() && !this.expressionController.entitiesDependent()) {
 			await super.processComputation();
 		} else {
 			this._findTarget();

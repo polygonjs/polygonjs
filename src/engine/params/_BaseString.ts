@@ -30,7 +30,7 @@ export abstract class TypedStringParam<
 	protected abstract processRawInputWithoutExpression(): void;
 
 	protected override async processComputation(): Promise<void> {
-		if (this.expressionController?.active() && !this.expressionController.requires_entities()) {
+		if (this.expressionController?.active() && !this.expressionController.entitiesDependent()) {
 			const expressionResult = await this.expressionController.computeExpression();
 			if (this.expressionController.is_errored()) {
 				this.states.error.set(

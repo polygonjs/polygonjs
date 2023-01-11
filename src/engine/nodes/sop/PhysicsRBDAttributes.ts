@@ -289,6 +289,7 @@ export class PhysicsRBDAttributesSopNode extends TypedSopNode<PhysicsRBDAttribut
 		coreObjects: CoreObject[],
 		applyMethod: (object: Object3D, value: number) => void
 	) {
+		console.log('float compute', param.name(), param.expressionController);
 		if (param.expressionController) {
 			await param.expressionController.computeExpressionForObjects(coreObjects, (coreObject, value) => {
 				applyMethod(coreObject.object(), value);

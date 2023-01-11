@@ -252,6 +252,7 @@ const Core = {
 };
 
 export class FunctionGenerator extends BaseTraverser {
+	private _entitiesDependent: boolean = false;
 	private function: Function | undefined;
 	private _attribute_requirements_controller = new AttributeRequirementsController();
 	private function_main_string: string | undefined;
@@ -267,6 +268,10 @@ export class FunctionGenerator extends BaseTraverser {
 
 	constructor(public override param: BaseParamType) {
 		super(param);
+	}
+
+	entitiesDependent() {
+		return this._entitiesDependent;
 	}
 
 	public parseTree(parsedTree: ParsedTree) {
@@ -293,6 +298,7 @@ export class FunctionGenerator extends BaseTraverser {
 			if (this.function_main_string) {
 				try {
 					const body = this._functionBody();
+					console.log(body);
 					this.function = new Function(
 						'CorePoint',
 						'Core',
@@ -326,12 +332,16 @@ export class FunctionGenerator extends BaseTraverser {
 		this.methods = [];
 		this.method_index = -1;
 		this.function = undefined;
+		this._entitiesDependent = false;
 		this.methodDependencies = [];
 		this.immutableDependencies = [];
 	}
 
 	private _functionBody() {
-		if (this.param.options.isExpressionForEntities()) {
+		// const entitiesDependent = this.param.options.isExpressionForEntities()
+		const entitiesDependent = this._entitiesDependent;
+		console.log('entitiesDependent', entitiesDependent);
+		if (entitiesDependent) {
 			return `
 			const entities = param.expressionController.entities();
 			function getEntitiesAttribute(entities, attribName){
@@ -491,6 +501,7 @@ export class FunctionGenerator extends BaseTraverser {
 	// }
 	protected traverse_UnaryExpression(node: jsep.UnaryExpression): string {
 		if (node.operator === ATTRIBUTE_PREFIX) {
+			this._entitiesDependent = true;
 			let argument = node.argument;
 			let attributeName: string | undefined;
 			let property;

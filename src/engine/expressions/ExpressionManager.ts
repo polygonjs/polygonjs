@@ -18,6 +18,9 @@ export class ExpressionManager {
 		this._functionGenerator = new FunctionGenerator(this.param);
 		this.dependenciesController = new DependenciesController(this.param);
 	}
+	generatedFunctionEntitiesDependent() {
+		return this._functionGenerator.entitiesDependent();
+	}
 
 	parseExpression(expression: string) {
 		if (this._parseStarted) {
