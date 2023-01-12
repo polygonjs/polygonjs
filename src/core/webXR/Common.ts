@@ -1,9 +1,3 @@
-// import type {WebGLRenderer} from 'three';
-// import type {ARButtonSessionInit} from 'three/examples/jsm/webxr/ARButton';
-// export interface BaseXRButton {
-// 	createButton: (renderer: WebGLRenderer, sessionInit?: Partial<ARButtonSessionInit>) => HTMLElement;
-// }
-
 export enum BaseXRSessionEventName {
 	CONNECTED = 'connected',
 	DISCONNECTED = 'disconnected',
