@@ -13,7 +13,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {Poly} from '../../Poly';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {DEFAULT_PARAMS} from './WebGLRenderer';
-import {FullScreenQuad} from 'three/examples/jsm/postprocessing/Pass';
+import {FullScreenQuad} from '../../../modules/three/examples/jsm/postprocessing/Pass';
 import {
 	PathTracingRenderer,
 	PhysicalPathTracingMaterial,

@@ -3,7 +3,7 @@ import {CoreGroup} from '../../../core/geometry/Group';
 import {Vector3} from 'three';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
-import {BoxLineGeometry} from 'three/examples/jsm/geometries/BoxLineGeometry';
+import {BoxLineGeometry} from '../../../modules/three/examples/jsm/geometries/BoxLineGeometry';
 import {ObjectType} from '../../../core/geometry/Constant';
 
 interface BoxLinesSopParams extends DefaultOperationParams {

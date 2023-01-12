@@ -1,5 +1,5 @@
 import {DirectionalLight, LightProbe, Object3D, Texture, WebGLRenderer} from 'three';
-import {XREstimatedLight} from 'three/examples/jsm/webxr/XREstimatedLight';
+import {XREstimatedLight} from '../../../modules/three/examples/jsm/webxr/XREstimatedLight';
 import {BaseCopNodeType} from '../../../engine/nodes/cop/_Base';
 import {TypedNode} from '../../../engine/nodes/_Base';
 import {NodeContext} from '../../../engine/poly/NodeContext';

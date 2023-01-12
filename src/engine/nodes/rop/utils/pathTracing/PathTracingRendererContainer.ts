@@ -1,6 +1,6 @@
 import {WebGLCapabilities, WebGLMultipleRenderTargets, WebGLRenderer, WebGLRenderTarget} from 'three';
 import {Scene, Camera, MeshBasicMaterial} from 'three';
-import {FullScreenQuad} from 'three/examples/jsm/postprocessing/Pass';
+import {FullScreenQuad} from '../../../../../modules/three/examples/jsm/postprocessing/Pass';
 import {AbstractRenderer} from '../../../../viewers/Common';
 // @ts-ignore
 import type {PathTracingRenderer} from 'three-gpu-pathtracer';
