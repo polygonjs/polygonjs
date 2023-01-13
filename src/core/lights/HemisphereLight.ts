@@ -16,7 +16,7 @@ export const DEFAULT_HEMISPHERE_LIGHT_PARAMS: HemisphereLightParams = {
 	skyColor: new Color(1, 1, 1),
 	groundColor: new Color(0, 0, 0),
 	intensity: 1,
-	position: new Vector3(0, 0, 0),
+	position: new Vector3(0, 1, 0),
 	name: 'hemisphereLight',
 };
 const DEFAULT = DEFAULT_HEMISPHERE_LIGHT_PARAMS;

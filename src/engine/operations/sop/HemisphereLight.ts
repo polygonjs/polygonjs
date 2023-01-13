@@ -32,5 +32,7 @@ export class HemisphereLightSopOperation extends BaseSopOperation {
 		light.color.copy(params.skyColor);
 		light.groundColor.copy(params.groundColor);
 		light.intensity = params.intensity;
+		light.position.copy(params.position);
+		light.updateMatrix();
 	}
 }
