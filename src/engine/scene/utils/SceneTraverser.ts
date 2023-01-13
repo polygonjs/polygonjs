@@ -21,12 +21,12 @@ import {
 	DirectionalLightRayMarchingUniform,
 	_createDirectionalLightUniform,
 } from './raymarching/DirectionalLight';
-import {
-	_resetHemisphereLightIndex,
-	_updateUniformsWithHemisphereLight,
-	HemisphereLightRayMarchingUniform,
-	_createHemisphereLightUniform,
-} from './raymarching/HemisphereLight';
+// import {
+// 	_resetHemisphereLightIndex,
+// 	_updateUniformsWithHemisphereLight,
+// 	HemisphereLightRayMarchingUniform,
+// 	_createHemisphereLightUniform,
+// } from './raymarching/HemisphereLight';
 import {
 	_resetPointLightIndex,
 	_updateUniformsWithPointLight,
@@ -45,9 +45,9 @@ function _updateUniformsFunctionForLight<L extends AvailableLight>(
 		case LightType.DIRECTIONAL: {
 			return _updateUniformsWithDirectionalLight as UniformsUpdateFunction<AvailableLight>;
 		}
-		case LightType.HEMISPHERE: {
-			return _updateUniformsWithHemisphereLight as UniformsUpdateFunction<AvailableLight>;
-		}
+		// case LightType.HEMISPHERE: {
+		// 	return _updateUniformsWithHemisphereLight as UniformsUpdateFunction<AvailableLight>;
+		// }
 		case LightType.POINT: {
 			return _updateUniformsWithPointLight as UniformsUpdateFunction<AvailableLight>;
 		}
@@ -60,9 +60,9 @@ export class SceneTraverserController {
 	private _directionalLightsRayMarching: DirectionalLightRayMarchingUniform = {
 		value: [],
 	};
-	private _hemisphereLightsRayMarching: HemisphereLightRayMarchingUniform = {
-		value: [],
-	};
+	// private _hemisphereLightsRayMarching: HemisphereLightRayMarchingUniform = {
+	// 	value: [],
+	// };
 	private _pointLightsRayMarching: PointLightRayMarchingUniform = {
 		value: [],
 	};
@@ -80,7 +80,7 @@ export class SceneTraverserController {
 	traverseScene(scene?: Scene) {
 		_resetSpotLightIndex();
 		_resetDirectionalLightIndex();
-		_resetHemisphereLightIndex();
+		// _resetHemisphereLightIndex();
 		_resetPointLightIndex();
 		scene = scene || this.scene.threejsScene();
 		scene.traverse(this._onObjectTraverseBound);
@@ -111,54 +111,6 @@ export class SceneTraverserController {
 			return;
 		}
 		updateFunction(object as AvailableLight, uniforms);
-
-		// if ((object as Light).isLight) {
-		// 	const lightType = _lightType(object as Light)
-		// 	switch(lightType){
-		// 		case LightType.SPOT:{
-		// 			updateWorldPos(object, this._spotLightsRayMarching, spotLightIndex, _createSpotLightUniform);
-		// 			updateDirectionFromTarget(object, this._spotLightsRayMarching, spotLightIndex, _createSpotLightUniform);
-		// 			updateSpotLightPenumbra(
-		// 				object as SpotLight,
-		// 				this._spotLightsRayMarching,
-		// 				spotLightIndex,
-		// 				_createSpotLightUniform
-		// 			);
-		// 			spotLightIndex++;
-		// 			return
-		// 		}
-		// 		case LightType.DIRECTIONAL:{
-
-		// 			return
-		// 		}
-		// 		case LightType.HEMISPHERE:{
-		// 			updateDirectionFromMatrix(
-		// 				object,
-		// 				this._hemisphereLightsRayMarching,
-		// 				hemisphereLightIndex,
-		// 				_createHemisphereLightUniform
-		// 			);
-		// 			hemisphereLightIndex++;
-		// 			return
-		// 		}
-		// 		case LightType.POINT:{
-		// 			updateWorldPos(object, this._pointLightsRayMarching, pointLightIndex, _createPointLightUniform);
-		// 			updateUserDataPenumbra(
-		// 				object as PointLight,
-		// 				this._pointLightsRayMarching,
-		// 				pointLightIndex,
-		// 				_createPointLightUniform
-		// 			);
-		// 			pointLightIndex++;
-		// 			return
-		// 		}
-		// 	}
-
-		// 	// if ((object as RectAreaLight).isRectAreaLight) {
-		// 	// 	updateWorldPos(object, this._areaLightsRayMarching, areaLightIndex, _createAreaLightUniform);
-		// 	// 	pointLightIndex++;
-		// 	// }
-		// }
 	}
 	private _updateUniformsForLight<L extends Light>(object: L) {
 		const lightType = getLightType(object as Light);
@@ -169,9 +121,9 @@ export class SceneTraverserController {
 			case LightType.DIRECTIONAL: {
 				return this._directionalLightsRayMarching;
 			}
-			case LightType.HEMISPHERE: {
-				return this._hemisphereLightsRayMarching;
-			}
+			// case LightType.HEMISPHERE: {
+			// 	return this._hemisphereLightsRayMarching;
+			// }
 			case LightType.POINT: {
 				return this._pointLightsRayMarching;
 			}
@@ -181,14 +133,14 @@ export class SceneTraverserController {
 	addLightsRayMarchingUniform(uniforms: IUniforms) {
 		uniforms[UniformName.SPOTLIGHTS_RAYMARCHING] = this._spotLightsRayMarching;
 		uniforms[UniformName.DIRECTIONALLIGHTS_RAYMARCHING] = this._directionalLightsRayMarching;
-		uniforms[UniformName.HEMISPHERELIGHTS_RAYMARCHING] = this._hemisphereLightsRayMarching;
+		// uniforms[UniformName.HEMISPHERELIGHTS_RAYMARCHING] = this._hemisphereLightsRayMarching;
 		uniforms[UniformName.POINTLIGHTS_RAYMARCHING] = this._pointLightsRayMarching;
 		// uniforms[UniformName.AREALIGHTS_RAYMARCHING] = this._areaLightsRayMarching;
 	}
 	removeLightsRayMarchingUniform(uniforms: IUniforms) {
 		delete uniforms[UniformName.SPOTLIGHTS_RAYMARCHING];
 		delete uniforms[UniformName.DIRECTIONALLIGHTS_RAYMARCHING];
-		delete uniforms[UniformName.HEMISPHERELIGHTS_RAYMARCHING];
+		// delete uniforms[UniformName.HEMISPHERELIGHTS_RAYMARCHING];
 		delete uniforms[UniformName.POINTLIGHTS_RAYMARCHING];
 		// uniforms[UniformName.AREALIGHTS_RAYMARCHING] = this._areaLightsRayMarching;
 	}

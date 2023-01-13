@@ -11,7 +11,7 @@ export enum UniformName {
 	RESOLUTION = 'resolution',
 	SPOTLIGHTS_RAYMARCHING = 'spotLightsRayMarching',
 	DIRECTIONALLIGHTS_RAYMARCHING = 'directionalLightsRayMarching',
-	HEMISPHERELIGHTS_RAYMARCHING = 'hemisphereLightsRayMarching',
+	// HEMISPHERELIGHTS_RAYMARCHING = 'hemisphereLightsRayMarching',
 	POINTLIGHTS_RAYMARCHING = 'pointLightsRayMarching',
 	// AREALIGHTS_RAYMARCHING = 'areaLightsRayMarching',
 }

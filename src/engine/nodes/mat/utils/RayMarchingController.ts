@@ -76,8 +76,6 @@ export function RayMarchingMainParamConfig<TBase extends Constructor>(Base: TBas
 			rangeLocked: [true, false],
 			step: 0.0000001,
 		});
-		/** @param center */
-		center = ParamConfig.VECTOR3(RAYMARCHING_UNIFORMS.CENTER.value.toArray());
 	};
 }
 
@@ -187,7 +185,6 @@ export class RayMarchingController {
 		uniforms.MAX_DIST.value = pv.maxDist;
 		uniforms.SURF_DIST.value = pv.surfDist;
 		uniforms.NORMALS_BIAS.value = pv.normalsBias;
-		uniforms.CENTER.value.copy(pv.center);
 
 		uniforms.shadowDepthMin.value = pv.shadowDepthMin;
 		uniforms.shadowDepthMax.value = pv.shadowDepthMax;

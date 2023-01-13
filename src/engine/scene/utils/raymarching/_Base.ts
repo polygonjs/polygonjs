@@ -1,4 +1,4 @@
-import {Vector3, IUniform, Light, SpotLight, DirectionalLight, HemisphereLight, PointLight, Object3D} from 'three';
+import {Vector3, IUniform, Light, SpotLight, DirectionalLight, HemisphereLight, PointLight} from 'three';
 import {LIGHT_USER_DATA_RAYMARCHING_PENUMBRA} from './../../../../core/lights/Common';
 export interface WorldPosUniformElement {
 	worldPos: Vector3;
@@ -51,50 +51,56 @@ export function getLightType(object: Light): LightType | undefined {
 	}
 }
 // update functions
-const worldPos = new Vector3();
-const direction = new Vector3();
-const tmpV = new Vector3();
-export function updateWorldPos(
-	object: Object3D,
-	uniforms: UniformsWithWorldPos,
-	index: number,
-	defaultUniformCreate: () => WorldPosUniformElement
-) {
-	object.updateMatrixWorld(true);
-	object.updateMatrix();
-	object.getWorldPosition(worldPos);
-	uniforms.value[index] = uniforms.value[index] || defaultUniformCreate();
-	uniforms.value[index].worldPos.copy(worldPos);
-	uniforms.value.needsUpdate = true;
-}
-export function updateDirectionFromTarget(
-	object: Object3D,
-	uniforms: UniformsWithDirection,
-	index: number,
-	defaultUniformCreate: () => DirectionUniformElement
-) {
-	(object as DirectionalLight).target.updateMatrixWorld(true);
-	(object as DirectionalLight).target.updateMatrix();
-	direction.setFromMatrixPosition(object.matrixWorld);
-	tmpV.setFromMatrixPosition((object as DirectionalLight).target.matrixWorld);
-	direction.sub(tmpV);
+// const worldPos = new Vector3();
+// const direction = new Vector3();
+// const tmpV = new Vector3();
+// export function updateWorldPos(
+// 	object: Object3D,
+// 	uniforms: UniformsWithWorldPos,
+// 	index: number,
+// 	defaultUniformCreate: () => WorldPosUniformElement
+// ) {
+// 	object.updateMatrixWorld(true);
+// 	object.updateMatrix();
+// 	object.getWorldPosition(worldPos);
+// 	uniforms.value[index] = uniforms.value[index] || defaultUniformCreate();
+// 	if(!uniforms.value[index].worldPos.equals(direction)){
+// 		uniforms.value[index].worldPos.copy(worldPos);
+// 		uniforms.value.needsUpdate = true;
+// 	}
+// }
+// export function updateDirectionFromTarget(
+// 	object: Object3D,
+// 	uniforms: UniformsWithDirection,
+// 	index: number,
+// 	defaultUniformCreate: () => DirectionUniformElement
+// ) {
+// 	(object as DirectionalLight).target.updateMatrixWorld(true);
+// 	(object as DirectionalLight).target.updateMatrix();
+// 	direction.setFromMatrixPosition(object.matrixWorld);
+// 	tmpV.setFromMatrixPosition((object as DirectionalLight).target.matrixWorld);
+// 	direction.sub(tmpV);
 
-	uniforms.value[index] = uniforms.value[index] || defaultUniformCreate();
-	uniforms.value[index].direction.copy(direction);
-	uniforms.value.needsUpdate = true;
-}
-export function updateDirectionFromMatrix(
-	object: Object3D,
-	uniforms: UniformsWithDirection,
-	index: number,
-	defaultUniformCreate: () => DirectionUniformElement
-) {
-	direction.setFromMatrixPosition(object.matrixWorld);
+// 	uniforms.value[index] = uniforms.value[index] || defaultUniformCreate();
+// 	if(!uniforms.value[index].direction.equals(direction)){
+// 		uniforms.value[index].direction.copy(direction);
+// 		uniforms.value.needsUpdate = true;
+// 	}
+// }
+// export function updateDirectionFromMatrix(
+// 	object: Object3D,
+// 	uniforms: UniformsWithDirection,
+// 	index: number,
+// 	defaultUniformCreate: () => DirectionUniformElement
+// ) {
+// 	direction.setFromMatrixPosition(object.matrixWorld);
 
-	uniforms.value[index] = uniforms.value[index] || defaultUniformCreate();
-	uniforms.value[index].direction.copy(direction);
-	uniforms.value.needsUpdate = true;
-}
+// 	uniforms.value[index] = uniforms.value[index] || defaultUniformCreate();
+// 	if(!uniforms.value[index].direction.equals(direction)){
+// 		uniforms.value[index].direction.copy(direction);
+// 		uniforms.value.needsUpdate = true;
+// 	}
+// }
 
 export function updateUserDataPenumbra(
 	object: PointLight | DirectionalLight,
@@ -103,8 +109,10 @@ export function updateUserDataPenumbra(
 	defaultUniformCreate: () => PenumbraUniformElement
 ) {
 	uniforms.value[index] = uniforms.value[index] || defaultUniformCreate();
-	uniforms.value[index].penumbra = object.userData[LIGHT_USER_DATA_RAYMARCHING_PENUMBRA];
-	uniforms.value.needsUpdate = true;
+	if (uniforms.value[index].penumbra != object.userData[LIGHT_USER_DATA_RAYMARCHING_PENUMBRA]) {
+		uniforms.value[index].penumbra = object.userData[LIGHT_USER_DATA_RAYMARCHING_PENUMBRA];
+		uniforms.value.needsUpdate = true;
+	}
 }
 
 export type AvailableLight = SpotLight | DirectionalLight | HemisphereLight | PointLight;

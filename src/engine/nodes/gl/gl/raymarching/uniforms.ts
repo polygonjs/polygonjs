@@ -1,12 +1,10 @@
-import {Vector3} from 'three';
-import {IUniformN, IUniformV3} from '../../../utils/code/gl/Uniforms';
+import {IUniformN} from '../../../utils/code/gl/Uniforms';
 
 export interface RayMarchingUniforms {
 	MAX_STEPS: IUniformN;
 	MAX_DIST: IUniformN;
 	SURF_DIST: IUniformN;
 	NORMALS_BIAS: IUniformN;
-	CENTER: IUniformV3;
 	debugMinSteps: IUniformN;
 	debugMaxSteps: IUniformN;
 	debugMinDepth: IUniformN;
@@ -31,9 +29,6 @@ export const RAYMARCHING_UNIFORMS: RayMarchingUniforms = {
 	},
 	NORMALS_BIAS: {
 		value: 0.01,
-	},
-	CENTER: {
-		value: new Vector3(0, 0, 0),
 	},
 	debugMinSteps: {
 		value: 0,

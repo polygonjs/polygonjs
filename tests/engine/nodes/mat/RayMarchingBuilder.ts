@@ -1,5 +1,5 @@
 import {PointLightObjNode} from './../../../../src/engine/nodes/obj/PointLight';
-import {SpotLightRayMarchingUniformElement} from './../../../../src/engine/scene/utils/raymarching/SpotLight';
+import {PointLightRayMarchingUniformElement} from './../../../../src/engine/scene/utils/raymarching/PointLight';
 import {UniformName} from './../../../../src/engine/scene/utils/UniformsController';
 import {Vector3} from 'three';
 import {CoreSleep} from './../../../../src/core/Sleep';
@@ -49,7 +49,6 @@ const ALL_UNIFORMS_WITHOUT_ENV = [
 	...Object.keys(RAYMARCHING_UNIFORMS).concat([
 		'spotLightsRayMarching',
 		'directionalLightsRayMarching',
-		'hemisphereLightsRayMarching',
 		'pointLightsRayMarching',
 	]),
 	'alphaMap',
@@ -513,9 +512,10 @@ QUnit.test('mat/rayMarchingBuilder multiple objects share the same spotLightRayM
 		material1.p.material.setNode(materialNode);
 		material1.flags.display.set(true);
 	}
-	function getMaterialSpotLightRayMarchingUniform(material: ShaderMaterialWithCustomMaterials) {
-		const uniform = material.uniforms[UniformName.SPOTLIGHTS_RAYMARCHING];
-		return uniform.value.map((u: SpotLightRayMarchingUniformElement) => u.worldPos.toArray());
+	function getMaterialPointLightRayMarchingUniform(material: ShaderMaterialWithCustomMaterials) {
+		const uniform = material.uniforms[UniformName.POINTLIGHTS_RAYMARCHING];
+		const penumbras: number[] = uniform.value.map((u: PointLightRayMarchingUniformElement) => u.penumbra);
+		return penumbras;
 	}
 	createBox(rayMarchingBuilder1, new Vector3(0, 0, 0));
 	createBox(rayMarchingBuilder2, new Vector3(2, 0, 0));
@@ -523,41 +523,27 @@ QUnit.test('mat/rayMarchingBuilder multiple objects share the same spotLightRayM
 	await RendererUtils.withViewer({cameraNode: perspective_camera1}, async (args) => {
 		scene.play();
 		await CoreSleep.sleep(50);
-		assert.deepEqual(getMaterialSpotLightRayMarchingUniform(material1), []);
-		assert.deepEqual(getMaterialSpotLightRayMarchingUniform(material2), []);
+		assert.deepEqual(getMaterialPointLightRayMarchingUniform(material1), []);
+		assert.deepEqual(getMaterialPointLightRayMarchingUniform(material2), []);
 
-		const spotLight1 = scene.root().createNode('spotLight');
-		spotLight1.p.t.set([2, 0, 0]);
-		spotLight1.p.color.set([1, 0, 0]);
+		const pointLight1 = scene.root().createNode('pointLight');
+		pointLight1.p.raymarchingPenumbra.set(0.5);
 		await CoreSleep.sleep(50);
-		assert.deepEqual(getMaterialSpotLightRayMarchingUniform(material1), [[2, 0, 0.01]]);
-		assert.deepEqual(getMaterialSpotLightRayMarchingUniform(material2), [[2, 0, 0.01]]);
+		assert.deepEqual(getMaterialPointLightRayMarchingUniform(material1), [0.5]);
+		assert.deepEqual(getMaterialPointLightRayMarchingUniform(material2), [0.5]);
 
-		const spotLight2 = scene.root().createNode('spotLight');
-		spotLight2.p.t.set([0, 4, 0]);
-		spotLight2.p.color.set([0, 0, 1]);
+		const pointLight2 = scene.root().createNode('pointLight');
+		pointLight2.p.raymarchingPenumbra.set(0.25);
 		await CoreSleep.sleep(50);
-		assert.deepEqual(getMaterialSpotLightRayMarchingUniform(material1), [
-			[2, 0, 0.01],
-			[0, 4, 0.01],
-		]);
-		assert.deepEqual(getMaterialSpotLightRayMarchingUniform(material2), [
-			[2, 0, 0.01],
-			[0, 4, 0.01],
-		]);
+		assert.deepEqual(getMaterialPointLightRayMarchingUniform(material1), [0.5, 0.25]);
+		assert.deepEqual(getMaterialPointLightRayMarchingUniform(material2), [0.5, 0.25]);
 
-		scene.root().removeNode(spotLight1);
+		scene.root().removeNode(pointLight1);
 		await CoreSleep.sleep(50);
 		// it's probably ok that the uniforms do not get resized down,
 		// since threejs still sets the number of spotlights to iterate
-		assert.deepEqual(getMaterialSpotLightRayMarchingUniform(material1), [
-			[0, 4, 0.01],
-			[0, 4, 0.01],
-		]);
-		assert.deepEqual(getMaterialSpotLightRayMarchingUniform(material2), [
-			[0, 4, 0.01],
-			[0, 4, 0.01],
-		]);
+		assert.deepEqual(getMaterialPointLightRayMarchingUniform(material1), [0.25, 0.25]);
+		assert.deepEqual(getMaterialPointLightRayMarchingUniform(material2), [0.25, 0.25]);
 	});
 });
 

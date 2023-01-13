@@ -39,6 +39,8 @@ export interface SpotLightParams extends DefaultOperationParams {
 	tvolumetric: boolean;
 	volAttenuation: number;
 	volAnglePower: number;
+	//
+	raymarchingPenumbra: number;
 }
 
 export const DEFAULT_SPOT_LIGHT_PARAMS: SpotLightParams = {
@@ -67,6 +69,8 @@ export const DEFAULT_SPOT_LIGHT_PARAMS: SpotLightParams = {
 	tvolumetric: false,
 	volAttenuation: 5,
 	volAnglePower: 10,
+	//
+	raymarchingPenumbra: 0,
 };
 const DEFAULT = DEFAULT_SPOT_LIGHT_PARAMS;
 
@@ -158,6 +162,11 @@ export function SpotLightParamConfig<TBase extends Constructor>(Base: TBase) {
 			range: [0, 20],
 			rangeLocked: [true, false],
 		});
+
+		// raymarching
+		raymarching = ParamConfig.FOLDER();
+		/** @param this affects the shadows cast inside raymarchingBuilder materials */
+		raymarchingPenumbra = ParamConfig.FLOAT(DEFAULT.raymarchingPenumbra);
 	};
 }
 

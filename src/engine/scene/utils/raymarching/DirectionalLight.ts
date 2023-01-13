@@ -1,13 +1,7 @@
-import {Vector3, IUniform, DirectionalLight} from 'three';
-import {
-	DirectionUniformElement,
-	PenumbraUniformElement,
-	updateUserDataPenumbra,
-	UniformsUpdateFunction,
-	updateDirectionFromTarget,
-} from './_Base';
+import {IUniform, DirectionalLight} from 'three';
+import {PenumbraUniformElement, updateUserDataPenumbra, UniformsUpdateFunction} from './_Base';
 
-export interface DirectionalLightRayMarchingUniformElement extends DirectionUniformElement, PenumbraUniformElement {}
+export interface DirectionalLightRayMarchingUniformElement extends PenumbraUniformElement {}
 interface DirectionalLightRayMarchingUniforms extends Array<DirectionalLightRayMarchingUniformElement> {
 	needsUpdate?: boolean;
 }
@@ -16,7 +10,6 @@ export interface DirectionalLightRayMarchingUniform extends IUniform {
 }
 export function _createDirectionalLightUniform(): DirectionalLightRayMarchingUniformElement {
 	return {
-		direction: new Vector3(),
 		penumbra: 0,
 	};
 }
@@ -26,12 +19,6 @@ export const _updateUniformsWithDirectionalLight: UniformsUpdateFunction<Directi
 	object: DirectionalLight,
 	directionalLightsRayMarching: DirectionalLightRayMarchingUniform
 ) => {
-	updateDirectionFromTarget(
-		object,
-		directionalLightsRayMarching,
-		directionalLightIndex,
-		_createDirectionalLightUniform
-	);
 	updateUserDataPenumbra(
 		object as DirectionalLight,
 		directionalLightsRayMarching,
