@@ -1,15 +1,15 @@
 import {DirectionalLight, LightProbe, Object3D, Texture, WebGLRenderer} from 'three';
 import {XREstimatedLight} from '../../../modules/three/examples/jsm/webxr/XREstimatedLight';
-import {BaseCopNodeType} from '../../../engine/nodes/cop/_Base';
-import {TypedNode} from '../../../engine/nodes/_Base';
-import {NodeContext} from '../../../engine/poly/NodeContext';
+// import {BaseCopNodeType} from '../../../engine/nodes/cop/_Base';
+// import {TypedNode} from '../../../engine/nodes/_Base';
+// import {NodeContext} from '../../../engine/poly/NodeContext';
 import {PolyScene} from '../../../engine/scene/PolyScene';
 import {CoreObject} from '../../geometry/Object';
 
 const ATTRIB_NAME = {
 	IS_ESTIMATED_LIGHT: 'CoreWebXRAREstimatedLight_isEstimatedLight',
 	IS_DEFAULT_LIGHTS_PARENT: 'CoreWebXRAREstimatedLight_defaultLightsParent',
-	DEFAULT_ENVIRONMENT_COP_NODE_ID: 'CoreWebXRAREstimatedLight_defaultEnvCopNodeId',
+	// DEFAULT_ENVIRONMENT_COP_NODE_ID: 'CoreWebXRAREstimatedLight_defaultEnvCopNodeId',
 	APPLY_ENV: 'CoreWebXRAREstimatedLight_applyEnv',
 	APPLY_LIGHT_PROBE: 'CoreWebXRAREstimatedLight_applyLightProbe',
 	APPLY_DIR_LIGHT: 'CoreWebXRAREstimatedLight_applyDirLight',
@@ -33,6 +33,7 @@ export class CoreWebXRAREstimatedLightController {
 	}
 	private _estimatedLightSourceObject: Object3D | undefined;
 	private _estimatedLight: XREstimatedLight | undefined;
+	// const estimatedLight = new XREstimatedLight(renderer);
 	private async _initEstimatedLight(scene: PolyScene, renderer: WebGLRenderer) {
 		if (!this._estimatedLightSourceObject) {
 			return;
@@ -45,21 +46,21 @@ export class CoreWebXRAREstimatedLightController {
 		);
 
 		// default envs
-		const defaultEnvNodeId = CoreObject.attribValue(
-			this._estimatedLightSourceObject,
-			ATTRIB_NAME.DEFAULT_ENVIRONMENT_COP_NODE_ID
-		) as number | null;
-		const defaultEnvGraphNode = defaultEnvNodeId ? scene.graph.nodeFromId(defaultEnvNodeId) : undefined;
-		let defaultEnvTexture: Texture | undefined;
-		if (
-			defaultEnvGraphNode != null &&
-			defaultEnvGraphNode instanceof TypedNode &&
-			defaultEnvGraphNode.context() == NodeContext.COP
-		) {
-			const defaultEnvNode = defaultEnvGraphNode as BaseCopNodeType;
-			const container = await defaultEnvNode.compute();
-			defaultEnvTexture = container.texture();
-		}
+		// const defaultEnvNodeId = CoreObject.attribValue(
+		// 	this._estimatedLightSourceObject,
+		// 	ATTRIB_NAME.DEFAULT_ENVIRONMENT_COP_NODE_ID
+		// ) as number | null;
+		// const defaultEnvGraphNode = defaultEnvNodeId ? scene.graph.nodeFromId(defaultEnvNodeId) : undefined;
+		// let defaultEnvTexture: Texture | undefined;
+		// if (
+		// 	defaultEnvGraphNode != null &&
+		// 	defaultEnvGraphNode instanceof TypedNode &&
+		// 	defaultEnvGraphNode.context() == NodeContext.COP
+		// ) {
+		// 	const defaultEnvNode = defaultEnvGraphNode as BaseCopNodeType;
+		// 	const container = await defaultEnvNode.compute();
+		// 	defaultEnvTexture = container.texture();
+		// }
 
 		// lights customisation
 		const applyEnv =
@@ -74,12 +75,17 @@ export class CoreWebXRAREstimatedLightController {
 		// 	(CoreObject.attribValue(estimatedLightSourceObject, ATTRIB_NAME.DIR_LIGHT_INTENSITY) as number | null) || 1;
 
 		// estimation init
-		const estimatedLight = new XREstimatedLight(renderer);
-		this._estimatedLight = estimatedLight;
-		this._estimatedLightSourceObject.add(estimatedLight);
+		if (this._estimatedLight) {
+			this._estimatedLightSourceObject.remove(this._estimatedLight);
+		}
+		// estimation init
+		this._estimatedLight = new XREstimatedLight(renderer);
+		this._estimatedLightSourceObject.add(this._estimatedLight);
 		const threejsScene = scene.threejsScene();
 
-		estimatedLight.addEventListener('estimationstart', () => {
+		let previousEnv: Texture | null = null;
+		const estimatedLight = this._estimatedLight;
+		this._estimatedLight.addEventListener('estimationstart', () => {
 			// Swap the default light out for the estimated one one we start getting some estimated values.
 			estimatedLightSourceObject.add(estimatedLight);
 			if (defaultLightsParent) {
@@ -102,6 +108,7 @@ export class CoreWebXRAREstimatedLightController {
 
 			// The estimated lighting also provides an environment cubemap, which we can apply here.
 			if (applyEnv && estimatedLight.environment) {
+				previousEnv = threejsScene.environment;
 				threejsScene.environment = estimatedLight.environment;
 			}
 		});
@@ -114,9 +121,7 @@ export class CoreWebXRAREstimatedLightController {
 			estimatedLightSourceObject.remove(estimatedLight);
 
 			// Revert back to the default environment.
-			if (defaultEnvTexture) {
-				threejsScene.environment = defaultEnvTexture;
-			}
+			threejsScene.environment = previousEnv;
 
 			// estimatedLight.dispose()
 		});
@@ -125,6 +130,7 @@ export class CoreWebXRAREstimatedLightController {
 	dispose() {
 		if (this._estimatedLight) {
 			this._estimatedLightSourceObject?.remove(this._estimatedLight);
+			this._estimatedLight = undefined;
 		}
 	}
 }

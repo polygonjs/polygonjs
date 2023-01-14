@@ -7,7 +7,7 @@ import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {NodeContext} from '../../poly/NodeContext';
+// import {NodeContext} from '../../poly/NodeContext';
 import {Group} from 'three';
 import {CoreObject} from '../../../core/geometry/Object';
 import {CoreWebXRAREstimatedLightController} from '../../../core/webXR/webXRAR/CoreWebXRAREstimatedLightController';
@@ -17,11 +17,11 @@ const INPUT_NAME = 'default lights';
 
 class WebXRAREstimatedLightSopParamsConfig extends NodeParamsConfig {
 	/** @param default environment map */
-	defaultEnvironment = ParamConfig.NODE_PATH('', {
-		nodeSelection: {
-			context: NodeContext.COP,
-		},
-	});
+	// defaultEnvironment = ParamConfig.NODE_PATH('', {
+	// 	nodeSelection: {
+	// 		context: NodeContext.COP,
+	// 	},
+	// });
 	/** @param apply computed environment */
 	applyEnv = ParamConfig.BOOLEAN(1);
 	/** @param apply computed light Probe */
@@ -75,12 +75,12 @@ export class WebXRAREstimatedLightSopNode extends TypedSopNode<WebXRAREstimatedL
 		CoreObject.addAttribute(group, ATTRIB_NAME.APPLY_DIR_LIGHT, this.pv.applyDirectionalLight);
 		// CoreObject.addAttribute(group, ATTRIB_NAME.DIR_LIGHT_INTENSITY, this.pv.directionalLightIntensity);
 
-		const node = this.pv.defaultEnvironment.nodeWithContext(NodeContext.COP);
-		if (node) {
-			CoreObject.addAttribute(group, ATTRIB_NAME.DEFAULT_ENVIRONMENT_COP_NODE_ID, node.graphNodeId());
-		} else {
-			this.states.error.set('default environment node not found');
-		}
+		// const node = this.pv.defaultEnvironment.nodeWithContext(NodeContext.COP);
+		// if (node) {
+		// 	CoreObject.addAttribute(group, ATTRIB_NAME.DEFAULT_ENVIRONMENT_COP_NODE_ID, node.graphNodeId());
+		// } else {
+		// 	this.states.error.set('default environment node not found');
+		// }
 
 		this.setObject(group);
 	}
