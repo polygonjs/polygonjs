@@ -92,6 +92,9 @@ export class MaterialPersistedConfig extends BasePersistedConfig {
 		// custom materials
 		const customMaterialsData: PolyDictionary<PersistedConfigBaseMaterialData> = {};
 		const material = await this.node.material();
+		if (!material) {
+			return;
+		}
 		const customMaterials = material.customMaterials;
 		if (customMaterials) {
 			assembler.traverseCustomAssemblers((customAssembler, customMaterialName) => {
