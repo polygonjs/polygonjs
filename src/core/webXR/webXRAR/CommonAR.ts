@@ -9,3 +9,14 @@ export interface CoreWebXRARControllerOptions {
 	optionalFeatures: WebXRARFeature[];
 	requiredFeatures: WebXRARFeature[];
 }
+
+export interface ExtentedXRViewCamera {
+	width: number;
+	height: number;
+}
+export interface ExtentedXRView extends XRView {
+	camera?: ExtentedXRViewCamera;
+}
+export abstract class ExtendedXRWebGLBinding extends XRWebGLBinding {
+	abstract getCameraImage(camera: ExtentedXRViewCamera): any;
+}

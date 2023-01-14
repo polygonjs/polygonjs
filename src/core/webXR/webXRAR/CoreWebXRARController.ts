@@ -1,7 +1,7 @@
 import {Vector3, Matrix4, Quaternion, WebGLRenderer, Camera, Color, Texture} from 'three';
 import {PolyScene} from '../../../engine/scene/PolyScene';
 import {CoreARButton} from '../buttons/CoreARButton';
-import {CoreWebXRARControllerOptions} from './CommonAR';
+import {CoreWebXRARControllerOptions, ExtentedXRView, ExtentedXRViewCamera, ExtendedXRWebGLBinding} from './CommonAR';
 import {CoreWebXRAREstimatedLightController} from './CoreWebXRAREstimatedLightController';
 import {BaseCoreWebXRController, OnWebXRSessionStartedCallback} from '../_BaseCoreWebXRController';
 
@@ -49,7 +49,12 @@ export class CoreWebXRARController extends BaseCoreWebXRController {
 	async requestSession(sessionInit: XRSessionInit, onSessionStarted: OnWebXRSessionStartedCallback) {
 		this._estimatedLightController = new CoreWebXRAREstimatedLightController();
 		this._estimatedLightController.initialize(this.scene, this.renderer);
-		return navigator.xr?.requestSession('immersive-ar', sessionInit).then(onSessionStarted);
+
+		return navigator.xr?.requestSession('immersive-ar', sessionInit).then(async (session) => {
+			await this._initForCapture(session);
+
+			onSessionStarted(session);
+		});
 	}
 	private _estimatedLightController: CoreWebXRAREstimatedLightController | undefined;
 	private _previousSceneBackground: Color | Texture | null = null;
@@ -84,15 +89,126 @@ export class CoreWebXRARController extends BaseCoreWebXRController {
 
 	override process(frame?: XRFrame) {
 		super.process(frame);
-		this._resolveHit(frame);
-	}
-	private _resolveHit(frame?: XRFrame) {
 		if (!frame) {
 			return;
 		}
 		const referenceSpace = this.renderer.xr.getReferenceSpace();
 		const session = this.renderer.xr.getSession();
 		if (!(session && referenceSpace)) {
+			return;
+		}
+		this._resolveHit(frame, session, referenceSpace);
+		this._resolveCapture(frame, session, referenceSpace);
+	}
+	private _captureLocalReferenceSpace: XRReferenceSpace | XRBoundedReferenceSpace | undefined;
+	private _captureNext: boolean = false;
+	private _captureGlBinding: ExtendedXRWebGLBinding | undefined;
+	private _captureGlContext: WebGLRenderingContext | WebGL2RenderingContext | undefined;
+	private async _initForCapture(session: XRSession) {
+		this._captureGlContext = this.renderer.getContext();
+		await this._captureGlContext.makeXRCompatible();
+		// could lead to race condition
+		// initCameraCaptureScene(gl);
+		this._captureGlBinding = new XRWebGLBinding(session, this._captureGlContext) as ExtendedXRWebGLBinding;
+		session.requestReferenceSpace('local').then((refSpace) => {
+			this._captureLocalReferenceSpace = refSpace;
+		});
+		setTimeout(() => {
+			console.log('set true');
+			this._captureNext = true;
+		}, 1000);
+	}
+	private _resolveCapture(frame: XRFrame, session: XRSession, referenceSpace: XRReferenceSpace) {
+		// session.requestReferenceSpace('local').then((referenceSpace) => {
+		// 	if (!session.requestHitTestSource) {
+		// 		return;
+		// 	}
+		// 	session.requestHitTestSource({space: referenceSpace})?.then((source) => {
+		// 		this.hitTestSource = source;
+		// 	});
+		// });
+		// session.requestReferenceSpace("local").then((refSpace) => {
+		// 	this._captureLocalReferenceSpace = refSpace;
+		//   });
+
+		if (!(this._captureLocalReferenceSpace && this._captureGlContext && this._captureGlBinding)) {
+			return;
+		}
+		const pose = frame.getViewerPose(this._captureLocalReferenceSpace);
+		if (!pose) {
+			return;
+		}
+		const baseLayer = session.renderState.baseLayer;
+		if (!baseLayer) {
+			return;
+		}
+		const views = pose.views as ExtentedXRView[];
+		console.log(views);
+		let dcamera: ExtentedXRViewCamera | undefined;
+		for (const view of views) {
+			const viewport = baseLayer.getViewport(view);
+			if (viewport) {
+				this._captureGlContext.viewport(viewport.x, viewport.y, viewport.width, viewport.height);
+				if (view.camera && this._captureNext) {
+					this._captureNext = false;
+					dcamera = view.camera;
+					const camBinding = this._captureGlBinding.getCameraImage(dcamera);
+					console.log(camBinding);
+					// texture1 = drawCameraCaptureScene(
+					// 	this._captureGlContext,
+					//   camBinding,
+					//   dcamera.width,
+					//   dcamera.height
+					// );
+
+					// whratio = viewport.width / viewport.height;
+					// scaleGeo = 2 * Math.tan((2 * Math.PI * camera.fov) / (2 * 360));
+					// const geometry = new THREE.PlaneGeometry(
+					//   scaleGeo,
+					//   scaleGeo * whratio,
+					//   1,
+					//   1
+					// );
+					// const vertices = geometry.attributes.position.array;
+
+					// const mesh = new THREE.Mesh(geometry, new THREE.ShaderMaterial());
+					// mesh.material = new THREE.ShaderMaterial({
+					//   uniforms: {
+					//     uSampler: {
+					//       value: new THREE.DataTexture(
+					//         texture1,
+					//         dcamera.width,
+					//         dcamera.height
+					//       )
+					//     },
+					//     coordTrans: {
+					//       value: {
+					//         x: 1 / viewport.width,
+					//         y: 1 / viewport.height
+					//       }
+					//     }
+					//   },
+					//   vertexShader: document.getElementById("vertexShader").textContent,
+					//   fragmentShader: document.getElementById("fragmentShader").textContent
+					// });
+
+					// mesh.quaternion.copy(camera.quaternion);
+					// mesh.position.copy(camera.position);
+					// mesh.position.add(
+					//   new THREE.Vector3(0, 0, -0.4).applyQuaternion(camera.quaternion)
+					// );
+					// mesh.rotateZ((3 * Math.PI) / 2);
+					// // mesh.material.wireframe = true
+					// scene.add(mesh);
+				} else {
+					console.log('unavailable');
+				}
+			}
+		}
+	}
+
+	private _resolveHit(frame: XRFrame, session: XRSession, referenceSpace: XRReferenceSpace) {
+		if (!frame) {
 			return;
 		}
 
