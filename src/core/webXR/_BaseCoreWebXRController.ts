@@ -1,5 +1,7 @@
 import {Camera, Matrix4, WebGLRenderer} from 'three';
 import type {PolyScene} from '../../engine/scene/PolyScene';
+import {isBooleanTrue} from '../Type';
+import {CoreWebXRControllerOptions, DEFAULT_WEBXR_REFERENCE_SPACE_TYPE} from './Common';
 import {CoreWebXRControllerContainer} from './CoreWebXRControllerContainer';
 const tempMatrix = new Matrix4();
 const webXRButtonsContainerClass = 'polygonjs-webxr-buttons-container';
@@ -11,9 +13,18 @@ export abstract class BaseCoreWebXRController {
 		protected scene: PolyScene,
 		protected renderer: WebGLRenderer,
 		protected camera: Camera,
-		private canvas: HTMLCanvasElement
+		private canvas: HTMLCanvasElement,
+		protected options: CoreWebXRControllerOptions
 	) {
 		renderer.xr.enabled = true;
+
+		if (isBooleanTrue(options.overrideReferenceSpaceType) && options.referenceSpaceType) {
+			console.log('A:ref', options.referenceSpaceType);
+			renderer.xr.setReferenceSpaceType(options.referenceSpaceType);
+		} else {
+			console.log('B:ref', DEFAULT_WEBXR_REFERENCE_SPACE_TYPE);
+			renderer.xr.setReferenceSpaceType(DEFAULT_WEBXR_REFERENCE_SPACE_TYPE);
+		}
 	}
 	getController(controllerIndex: number) {
 		return this.controllerContainers[controllerIndex] || this._createController(controllerIndex);

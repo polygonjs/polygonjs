@@ -24,6 +24,7 @@ import {
 	Ray,
 	Box3,
 	Sphere,
+	Texture,
 } from 'three';
 import {CoreType} from '../../../../../core/Type';
 
@@ -56,6 +57,8 @@ export enum ActorConnectionPointType {
 	SPHERE = 'Sphere',
 	STRING = 'string',
 	STRING_ARRAY = 'string[]',
+	TEXTURE = 'Texture',
+	TEXTURE_ARRAY = 'Texture[',
 	TRIGGER = 'trigger',
 	VECTOR2 = 'Vector2',
 	VECTOR2_ARRAY = 'Vector2[]',
@@ -109,6 +112,8 @@ export const ACTOR_CONNECTION_POINT_TYPES: Array<ActorConnectionPointType> = [
 	ActorConnectionPointType.SPHERE,
 	ActorConnectionPointType.STRING,
 	ActorConnectionPointType.STRING_ARRAY,
+	ActorConnectionPointType.TEXTURE,
+	ActorConnectionPointType.TEXTURE_ARRAY,
 	ActorConnectionPointType.TRIGGER,
 	ActorConnectionPointType.VECTOR2,
 	ActorConnectionPointType.VECTOR2_ARRAY,
@@ -163,6 +168,8 @@ export interface ActorIConnectionPointTypeToParamTypeMap extends ActorConnection
 	[ActorConnectionPointType.SPHERE]: ParamType.BUTTON; //
 	[ActorConnectionPointType.STRING]: ParamType.STRING;
 	[ActorConnectionPointType.STRING_ARRAY]: ParamType.BUTTON;
+	[ActorConnectionPointType.TEXTURE]: ParamType.BUTTON;
+	[ActorConnectionPointType.TEXTURE_ARRAY]: ParamType.BUTTON;
 	[ActorConnectionPointType.TRIGGER]: ParamType.BUTTON;
 	[ActorConnectionPointType.VECTOR2]: ParamType.VECTOR2;
 	[ActorConnectionPointType.VECTOR2_ARRAY]: ParamType.BUTTON;
@@ -198,6 +205,8 @@ export const ActorConnectionPointTypeToParamTypeMap: ActorIConnectionPointTypeTo
 	[ActorConnectionPointType.SPHERE]: ParamType.BUTTON, //
 	[ActorConnectionPointType.STRING]: ParamType.STRING,
 	[ActorConnectionPointType.STRING_ARRAY]: ParamType.BUTTON,
+	[ActorConnectionPointType.TEXTURE]: ParamType.BUTTON,
+	[ActorConnectionPointType.TEXTURE_ARRAY]: ParamType.BUTTON,
 	[ActorConnectionPointType.TRIGGER]: ParamType.BUTTON,
 	[ActorConnectionPointType.VECTOR2]: ParamType.VECTOR2,
 	[ActorConnectionPointType.VECTOR2_ARRAY]: ParamType.BUTTON,
@@ -240,6 +249,8 @@ export interface ActorIConnectionPointTypeToArrayTypeMap extends ActorConnection
 	[ActorConnectionPointType.SPHERE]: ActorConnectionPointType.SPHERE; //
 	[ActorConnectionPointType.STRING]: ActorConnectionPointType.STRING_ARRAY;
 	[ActorConnectionPointType.STRING_ARRAY]: ActorConnectionPointType.STRING_ARRAY;
+	[ActorConnectionPointType.TEXTURE]: ActorConnectionPointType.TEXTURE_ARRAY;
+	[ActorConnectionPointType.TEXTURE_ARRAY]: ActorConnectionPointType.TEXTURE_ARRAY;
 	[ActorConnectionPointType.TRIGGER]: ActorConnectionPointType.TRIGGER;
 	[ActorConnectionPointType.VECTOR2]: ActorConnectionPointType.VECTOR2_ARRAY;
 	[ActorConnectionPointType.VECTOR2_ARRAY]: ActorConnectionPointType.VECTOR2_ARRAY;
@@ -275,6 +286,8 @@ export const ActorConnectionPointTypeToArrayTypeMap: ActorIConnectionPointTypeTo
 	[ActorConnectionPointType.SPHERE]: ActorConnectionPointType.SPHERE, //
 	[ActorConnectionPointType.STRING]: ActorConnectionPointType.STRING_ARRAY,
 	[ActorConnectionPointType.STRING_ARRAY]: ActorConnectionPointType.STRING_ARRAY,
+	[ActorConnectionPointType.TEXTURE]: ActorConnectionPointType.TEXTURE_ARRAY,
+	[ActorConnectionPointType.TEXTURE_ARRAY]: ActorConnectionPointType.TEXTURE_ARRAY,
 	[ActorConnectionPointType.TRIGGER]: ActorConnectionPointType.TRIGGER,
 	[ActorConnectionPointType.VECTOR2]: ActorConnectionPointType.VECTOR2_ARRAY,
 	[ActorConnectionPointType.VECTOR2_ARRAY]: ActorConnectionPointType.VECTOR2_ARRAY,
@@ -293,6 +306,7 @@ export type ArrayabeonnectionPointType =
 	| ActorConnectionPointType.MATRIX4
 	| ActorConnectionPointType.QUATERNION
 	| ActorConnectionPointType.STRING
+	| ActorConnectionPointType.TEXTURE
 	| ActorConnectionPointType.VECTOR2
 	| ActorConnectionPointType.VECTOR3
 	| ActorConnectionPointType.VECTOR4;
@@ -305,6 +319,7 @@ export const ARRAYABLE_CONNECTION_TYPES: Set<ArrayabeonnectionPointType> = new S
 	ActorConnectionPointType.MATRIX4,
 	ActorConnectionPointType.QUATERNION,
 	ActorConnectionPointType.STRING,
+	ActorConnectionPointType.TEXTURE,
 	ActorConnectionPointType.VECTOR2,
 	ActorConnectionPointType.VECTOR3,
 	ActorConnectionPointType.VECTOR4,
@@ -318,6 +333,7 @@ type ArrayConnectionPointTypeArray =
 	| ActorConnectionPointType.MATRIX4_ARRAY
 	| ActorConnectionPointType.QUATERNION_ARRAY
 	| ActorConnectionPointType.STRING_ARRAY
+	| ActorConnectionPointType.TEXTURE_ARRAY
 	| ActorConnectionPointType.VECTOR2_ARRAY
 	| ActorConnectionPointType.VECTOR3_ARRAY
 	| ActorConnectionPointType.VECTOR4_ARRAY;
@@ -330,6 +346,7 @@ const ARRAY_CONNECTION_TYPES: Set<ArrayConnectionPointTypeArray> = new Set([
 	ActorConnectionPointType.MATRIX4_ARRAY,
 	ActorConnectionPointType.QUATERNION_ARRAY,
 	ActorConnectionPointType.STRING_ARRAY,
+	ActorConnectionPointType.TEXTURE_ARRAY,
 	ActorConnectionPointType.VECTOR2_ARRAY,
 	ActorConnectionPointType.VECTOR3_ARRAY,
 	ActorConnectionPointType.VECTOR4_ARRAY,
@@ -407,6 +424,8 @@ export const ActorConnectionPointInitValueMap: ActorConnectionPointInitValueMapG
 	[ActorConnectionPointType.SPHERE]: null,
 	[ActorConnectionPointType.STRING]: '',
 	[ActorConnectionPointType.STRING_ARRAY]: null,
+	[ActorConnectionPointType.TEXTURE]: null,
+	[ActorConnectionPointType.TEXTURE_ARRAY]: null,
 	[ActorConnectionPointType.TRIGGER]: null,
 	[ActorConnectionPointType.VECTOR2]: new Vector2(),
 	[ActorConnectionPointType.VECTOR2_ARRAY]: null,
@@ -451,6 +470,8 @@ export const ActorConnectionPointComponentsCountMap: ConnectionPointComponentsCo
 	[ActorConnectionPointType.SPHERE]: 1, //
 	[ActorConnectionPointType.STRING]: 1,
 	[ActorConnectionPointType.STRING_ARRAY]: 1,
+	[ActorConnectionPointType.TEXTURE]: 1,
+	[ActorConnectionPointType.TEXTURE_ARRAY]: 1,
 	[ActorConnectionPointType.TRIGGER]: 1,
 	[ActorConnectionPointType.VECTOR2]: 2,
 	[ActorConnectionPointType.VECTOR2_ARRAY]: 2,
@@ -493,6 +514,8 @@ export type ReturnValueTypeByActorConnectionPointType = {
 	[ActorConnectionPointType.SPHERE]: Sphere;
 	[ActorConnectionPointType.STRING]: string;
 	[ActorConnectionPointType.STRING_ARRAY]: string[];
+	[ActorConnectionPointType.TEXTURE]: Texture;
+	[ActorConnectionPointType.TEXTURE_ARRAY]: Texture[];
 	[ActorConnectionPointType.TRIGGER]: null;
 	[ActorConnectionPointType.VECTOR2]: Vector2;
 	[ActorConnectionPointType.VECTOR2_ARRAY]: Vector2[];
@@ -537,6 +560,8 @@ export interface ActorIConnectionPointTypeToSubTypeMap extends ActorConnectionPo
 	[ActorConnectionPointType.SPHERE]: null;
 	[ActorConnectionPointType.STRING]: null;
 	[ActorConnectionPointType.STRING_ARRAY]: null;
+	[ActorConnectionPointType.TEXTURE]: null;
+	[ActorConnectionPointType.TEXTURE_ARRAY]: null;
 	[ActorConnectionPointType.TRIGGER]: null;
 	[ActorConnectionPointType.VECTOR2]: null;
 	[ActorConnectionPointType.VECTOR2_ARRAY]: null;
@@ -572,6 +597,8 @@ export const ActorConnectionPointTypeToSubTypeMap: ActorIConnectionPointTypeToSu
 	[ActorConnectionPointType.SPHERE]: null,
 	[ActorConnectionPointType.STRING]: null,
 	[ActorConnectionPointType.STRING_ARRAY]: null,
+	[ActorConnectionPointType.TEXTURE]: null,
+	[ActorConnectionPointType.TEXTURE_ARRAY]: null,
 	[ActorConnectionPointType.TRIGGER]: null,
 	[ActorConnectionPointType.VECTOR2]: null,
 	[ActorConnectionPointType.VECTOR2_ARRAY]: null,

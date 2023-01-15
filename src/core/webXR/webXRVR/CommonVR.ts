@@ -1,3 +1,5 @@
+import {CoreWebXRControllerOptions} from '../Common';
+
 export enum WebXRVRFeature {
 	LOCAL_FLOOR = 'local-floor',
 	BOUNDED_FLOOR = 'bounded-floor',
@@ -12,18 +14,7 @@ export const WEBXR_VR_FEATURES: WebXRVRFeature[] = [
 	WebXRVRFeature.LAYERS,
 ];
 
-export const XR_REFERENCE_SPACE_TYPES: XRReferenceSpaceType[] = [
-	'viewer',
-	'local',
-	'local-floor',
-	'bounded-floor',
-	'unbounded',
-];
-export const DEFAULT_XR_REFERENCE_SPACE_TYPE: XRReferenceSpaceType = 'local-floor';
-
-export interface CoreWebXRVRControllerOptions {
-	overrideReferenceSpaceType: boolean;
-	referenceSpaceType?: XRReferenceSpaceType;
+export interface CoreWebXRVRControllerOptions extends CoreWebXRControllerOptions {
 	requiredFeatures: WebXRVRFeature[];
 	optionalFeatures: WebXRVRFeature[];
 }

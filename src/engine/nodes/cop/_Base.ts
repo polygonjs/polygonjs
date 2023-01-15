@@ -35,7 +35,13 @@ export class TypedCopNode<K extends NodeParamsConfig> extends TypedNode<NodeCont
 		this.io.outputs.setHasOneOutput();
 	}
 
+	private ___textureSync: Texture | undefined;
+	__textureSync__(): Texture | undefined {
+		return this.___textureSync;
+	}
+
 	setTexture(texture: Texture) {
+		this.___textureSync = texture;
 		texture.name = this.path();
 
 		// the behavior below was an attempt at copying all properties

@@ -105,6 +105,8 @@ import {LookAtSopNode} from '../../../nodes/sop/LookAt';
 import {MaterialSopNode} from '../../../nodes/sop/Material';
 import {MaterialPropertiesSopNode} from '../../../nodes/sop/MaterialProperties';
 // import {MaterialPropertiesMeshStandardSopNode} from '../../../nodes/sop/MaterialPropertiesMeshStandard';
+import {MediapipeFaceMeshSopNode} from '../../../nodes/sop/MediapipeFaceMesh';
+import {MediapipeHandsSopNode} from '../../../nodes/sop/MediapipeHands';
 import {MergeSopNode} from '../../../nodes/sop/Merge';
 import {MetaballSopNode} from '../../../nodes/sop/Metaball';
 import {NoiseSopNode} from '../../../nodes/sop/Noise';
@@ -281,6 +283,8 @@ export interface GeoNodeChildrenMap {
 	lookAt: LookAtSopNode;
 	material: MaterialSopNode;
 	materialProperties: MaterialPropertiesSopNode;
+	mediapipeFaceMesh: MediapipeFaceMeshSopNode;
+	mediapipeHands: MediapipeHandsSopNode;
 	// materialPropertiesMeshStandard: MaterialPropertiesMeshStandardSopNode;
 	merge: MergeSopNode;
 	metaball: MetaballSopNode;
@@ -531,10 +535,10 @@ export class SopRegister {
 		poly.registerOperation(JitterSopOperation);
 		poly.registerOperation(LightProbeSopOperation);
 		poly.registerOperation(LookAtSopOperation);
-		poly.registerOperation(MergeSopOperation);
-		poly.registerOperation(MetaballSopOperation);
 		poly.registerOperation(MaterialSopOperation);
 		poly.registerOperation(MaterialPropertiesSopOperation);
+		poly.registerOperation(MergeSopOperation);
+		poly.registerOperation(MetaballSopOperation);
 		// poly.registerOperation(MaterialPropertiesMeshStandardSopOperation);
 		poly.registerOperation(NullSopOperation);
 		poly.registerOperation(ObjectPropertiesSopOperation);
@@ -682,8 +686,9 @@ export class SopRegister {
 		poly.registerNode(MaterialSopNode, CATEGORY_SOP.RENDER);
 		poly.registerNode(MaterialPropertiesSopNode, CATEGORY_SOP.RENDER);
 		// poly.registerNode(MaterialPropertiesMeshStandardSopNode, CATEGORY_SOP.RENDER);
+		poly.registerNode(MediapipeFaceMeshSopNode, CATEGORY_SOP.MEDIAPIPE);
+		poly.registerNode(MediapipeHandsSopNode, CATEGORY_SOP.MEDIAPIPE);
 		poly.registerNode(MergeSopNode, CATEGORY_SOP.FLOW);
-
 		poly.registerNode(MetaballSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.registerNode(NoiseSopNode, CATEGORY_SOP.MISC);
 		poly.registerNode(NormalsSopNode, CATEGORY_SOP.MODIFIER);

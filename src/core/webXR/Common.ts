@@ -24,14 +24,14 @@ function _buildEventIndices() {
 }
 export const BASE_XR_EVENT_INDICES = _buildEventIndices();
 
-export const WEBXR_VR_REFERENCE_SPACE_TYPES: XRReferenceSpaceType[] = [
+export const WEBXR_REFERENCE_SPACE_TYPES: XRReferenceSpaceType[] = [
 	'viewer',
 	'local',
 	'local-floor',
 	'bounded-floor',
 	'unbounded',
 ];
-export const DEFAULT_WEBXR_VR_REFERENCE_SPACE_TYPE: XRReferenceSpaceType = 'local-floor';
+export const DEFAULT_WEBXR_REFERENCE_SPACE_TYPE: XRReferenceSpaceType = 'local-floor';
 
 export type WebXRRenderFunction = () => void;
 export type WebXRControllerMountFunction = () => void;
@@ -53,3 +53,8 @@ export const WEBXR_FEATURE_PARAM_OPTIONS = {
 		entries: WEBXR_FEATURE_STATUSES.map((name, value) => ({name, value})),
 	},
 };
+
+export interface CoreWebXRControllerOptions {
+	overrideReferenceSpaceType: boolean;
+	referenceSpaceType?: XRReferenceSpaceType;
+}
