@@ -93,3 +93,7 @@ QUnit.test('sop/physicsWorld with actor/setPhysicsWorldGravity', async (assert) 
 		}
 	});
 });
+
+QUnit.test('sop/physicsWorld can be cloned', async (assert) => {
+	assert.equal(1, 2);
+});

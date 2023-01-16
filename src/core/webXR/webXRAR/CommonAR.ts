@@ -3,13 +3,13 @@ import {CoreWebXRControllerOptions} from '../Common';
 export enum WebXRARFeature {
 	HIT_TEST = 'hit-test',
 	LIGHT_ESTIMATION = 'light-estimation',
-	CAMERA_ACCESS = 'camera-access',
+	// CAMERA_ACCESS = 'camera-access',
 }
 
 export const WEBXR_AR_FEATURES: WebXRARFeature[] = [
 	WebXRARFeature.HIT_TEST,
 	WebXRARFeature.LIGHT_ESTIMATION,
-	WebXRARFeature.CAMERA_ACCESS,
+	// WebXRARFeature.CAMERA_ACCESS,
 ];
 
 export interface CoreWebXRARControllerOptions extends CoreWebXRControllerOptions {

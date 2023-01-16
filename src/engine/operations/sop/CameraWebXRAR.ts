@@ -87,7 +87,7 @@ export class CameraWebXRARSopOperation extends BaseSopOperation {
 		}
 		assignFeatureByStatus(WebXRARFeature.HIT_TEST, params.hitTest);
 		assignFeatureByStatus(WebXRARFeature.LIGHT_ESTIMATION, params.lightEstimation);
-		assignFeatureByStatus(WebXRARFeature.CAMERA_ACCESS, params.cameraAccess);
+		// assignFeatureByStatus(WebXRARFeature.CAMERA_ACCESS, params.cameraAccess);
 
 		const optionalFeaturesStr = optionalFeatures.join(' ');
 		const requiredFeaturesStr = requiredFeatures.join(' ');

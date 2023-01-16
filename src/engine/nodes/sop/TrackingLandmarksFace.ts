@@ -5,18 +5,23 @@
 
 import {TypedSopNode} from './_Base';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
-import {DEFAULT_POSITION} from '../../../core/mediapipe/FaceMesh';
+import {DEFAULT_POSITION} from '../../../core/computerVision/face/Data';
 import {BufferGeometry, BufferAttribute, Vector2} from 'three';
 import {Attribute} from '../../../core/geometry/Attribute';
 import {FACEMESH_TESSELATION} from '@mediapipe/face_mesh';
+import {
+	CoreComputerVisionFace,
+	CoreComputerVisionFaceParamConfig,
+} from '../../../core/computerVision/face/CoreComputerVisionFace';
+import {ObjectType} from '../../../core/geometry/Constant';
 
-class MediapipeFacemeshSopParamsConfig extends NodeParamsConfig {}
-const ParamsConfig = new MediapipeFacemeshSopParamsConfig();
+class TrackingLandmarksFaceSopParamsConfig extends CoreComputerVisionFaceParamConfig(NodeParamsConfig) {}
+const ParamsConfig = new TrackingLandmarksFaceSopParamsConfig();
 
-export class MediapipeFaceMeshSopNode extends TypedSopNode<MediapipeFacemeshSopParamsConfig> {
+export class TrackingLandmarksFaceSopNode extends TypedSopNode<TrackingLandmarksFaceSopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'mediapipeFaceMesh';
+		return 'trackingLandmarksFace';
 	}
 
 	private _uv = new Vector2();
@@ -47,6 +52,8 @@ export class MediapipeFaceMeshSopNode extends TypedSopNode<MediapipeFacemeshSopP
 		geometry.setIndex(indices);
 		geometry.computeVertexNormals();
 
-		this.setGeometry(geometry);
+		const object = this.createObject(geometry, ObjectType.MESH);
+		CoreComputerVisionFace.setAttributes(object, this.pv);
+		this.setObject(object);
 	}
 }

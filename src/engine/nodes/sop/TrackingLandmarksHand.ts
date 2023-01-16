@@ -1,23 +1,27 @@
 /**
- * Creates a default face mesh to be used with SOP/mediapipeHands
+ * Creates a default hand to be used with SOP/HandTrackingLandmarks
  *
  */
 
 import {TypedSopNode} from './_Base';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
-import {DEFAULT_POSITION} from '../../../core/mediapipe/Hands';
+import {DEFAULT_POSITION} from '../../../core/computerVision/hand/Data';
 import {BufferGeometry, BufferAttribute} from 'three';
 import {Attribute} from '../../../core/geometry/Attribute';
 import {HAND_CONNECTIONS} from '@mediapipe/hands';
 import {ObjectType} from '../../../core/geometry/Constant';
+import {
+	CoreComputerVisionHand,
+	CoreComputerVisionHandParamConfig,
+} from '../../../core/computerVision/hand/CoreComputerVisionHand';
 
-class MediapipeHandsSopParamsConfig extends NodeParamsConfig {}
-const ParamsConfig = new MediapipeHandsSopParamsConfig();
+class TrackingLandmarksHandSopParamsConfig extends CoreComputerVisionHandParamConfig(NodeParamsConfig) {}
+const ParamsConfig = new TrackingLandmarksHandSopParamsConfig();
 
-export class MediapipeHandsSopNode extends TypedSopNode<MediapipeHandsSopParamsConfig> {
+export class TrackingLandmarksHandSopNode extends TypedSopNode<TrackingLandmarksHandSopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'mediapipeHands';
+		return 'trackingLandmarksHand';
 	}
 
 	override async cook() {
@@ -37,6 +41,8 @@ export class MediapipeHandsSopNode extends TypedSopNode<MediapipeHandsSopParamsC
 		geometry.setIndex(indices);
 		geometry.computeVertexNormals();
 
-		this.setGeometry(geometry, ObjectType.LINE_SEGMENTS);
+		const object = this.createObject(geometry, ObjectType.LINE_SEGMENTS);
+		CoreComputerVisionHand.setAttributes(object, this.pv);
+		this.setObject(object);
 	}
 }

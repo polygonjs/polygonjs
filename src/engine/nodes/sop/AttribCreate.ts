@@ -26,10 +26,7 @@ import {CoreAttribute} from '../../../core/geometry/Attribute';
 import {CoreObject} from '../../../core/geometry/Object';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {TypeAssert} from '../../poly/Assert';
-import {BufferGeometry} from 'three';
-import {Vector2} from 'three';
-import {Vector3} from 'three';
-import {Vector4} from 'three';
+import {BufferGeometry, Vector2, Vector3, Vector4} from 'three';
 
 type VectorComponent = 'x' | 'y' | 'z' | 'w';
 const COMPONENT_NAMES: Array<VectorComponent> = ['x', 'y', 'z', 'w'];

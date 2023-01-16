@@ -58,7 +58,8 @@ export enum ActorConnectionPointType {
 	STRING = 'string',
 	STRING_ARRAY = 'string[]',
 	TEXTURE = 'Texture',
-	TEXTURE_ARRAY = 'Texture[',
+	TEXTURE_ARRAY = 'Texture[]',
+	// TRACKING_RESULT_HAND = 'TrackingResultHand',
 	TRIGGER = 'trigger',
 	VECTOR2 = 'Vector2',
 	VECTOR2_ARRAY = 'Vector2[]',
@@ -114,6 +115,7 @@ export const ACTOR_CONNECTION_POINT_TYPES: Array<ActorConnectionPointType> = [
 	ActorConnectionPointType.STRING_ARRAY,
 	ActorConnectionPointType.TEXTURE,
 	ActorConnectionPointType.TEXTURE_ARRAY,
+	// ActorConnectionPointType.TRACKING_RESULT_HAND,
 	ActorConnectionPointType.TRIGGER,
 	ActorConnectionPointType.VECTOR2,
 	ActorConnectionPointType.VECTOR2_ARRAY,
@@ -170,6 +172,7 @@ export interface ActorIConnectionPointTypeToParamTypeMap extends ActorConnection
 	[ActorConnectionPointType.STRING_ARRAY]: ParamType.BUTTON;
 	[ActorConnectionPointType.TEXTURE]: ParamType.BUTTON;
 	[ActorConnectionPointType.TEXTURE_ARRAY]: ParamType.BUTTON;
+	// [ActorConnectionPointType.TRACKING_RESULT_HAND]: ParamType.BUTTON;
 	[ActorConnectionPointType.TRIGGER]: ParamType.BUTTON;
 	[ActorConnectionPointType.VECTOR2]: ParamType.VECTOR2;
 	[ActorConnectionPointType.VECTOR2_ARRAY]: ParamType.BUTTON;
@@ -207,6 +210,7 @@ export const ActorConnectionPointTypeToParamTypeMap: ActorIConnectionPointTypeTo
 	[ActorConnectionPointType.STRING_ARRAY]: ParamType.BUTTON,
 	[ActorConnectionPointType.TEXTURE]: ParamType.BUTTON,
 	[ActorConnectionPointType.TEXTURE_ARRAY]: ParamType.BUTTON,
+	// [ActorConnectionPointType.TRACKING_RESULT_HAND]: ParamType.BUTTON,
 	[ActorConnectionPointType.TRIGGER]: ParamType.BUTTON,
 	[ActorConnectionPointType.VECTOR2]: ParamType.VECTOR2,
 	[ActorConnectionPointType.VECTOR2_ARRAY]: ParamType.BUTTON,
@@ -251,6 +255,7 @@ export interface ActorIConnectionPointTypeToArrayTypeMap extends ActorConnection
 	[ActorConnectionPointType.STRING_ARRAY]: ActorConnectionPointType.STRING_ARRAY;
 	[ActorConnectionPointType.TEXTURE]: ActorConnectionPointType.TEXTURE_ARRAY;
 	[ActorConnectionPointType.TEXTURE_ARRAY]: ActorConnectionPointType.TEXTURE_ARRAY;
+	// [ActorConnectionPointType.TRACKING_RESULT_HAND]: ActorConnectionPointType.TRACKING_RESULT_HAND;
 	[ActorConnectionPointType.TRIGGER]: ActorConnectionPointType.TRIGGER;
 	[ActorConnectionPointType.VECTOR2]: ActorConnectionPointType.VECTOR2_ARRAY;
 	[ActorConnectionPointType.VECTOR2_ARRAY]: ActorConnectionPointType.VECTOR2_ARRAY;
@@ -288,6 +293,7 @@ export const ActorConnectionPointTypeToArrayTypeMap: ActorIConnectionPointTypeTo
 	[ActorConnectionPointType.STRING_ARRAY]: ActorConnectionPointType.STRING_ARRAY,
 	[ActorConnectionPointType.TEXTURE]: ActorConnectionPointType.TEXTURE_ARRAY,
 	[ActorConnectionPointType.TEXTURE_ARRAY]: ActorConnectionPointType.TEXTURE_ARRAY,
+	// [ActorConnectionPointType.TRACKING_RESULT_HAND]: ActorConnectionPointType.TRACKING_RESULT_HAND,
 	[ActorConnectionPointType.TRIGGER]: ActorConnectionPointType.TRIGGER,
 	[ActorConnectionPointType.VECTOR2]: ActorConnectionPointType.VECTOR2_ARRAY,
 	[ActorConnectionPointType.VECTOR2_ARRAY]: ActorConnectionPointType.VECTOR2_ARRAY,
@@ -426,6 +432,7 @@ export const ActorConnectionPointInitValueMap: ActorConnectionPointInitValueMapG
 	[ActorConnectionPointType.STRING_ARRAY]: null,
 	[ActorConnectionPointType.TEXTURE]: null,
 	[ActorConnectionPointType.TEXTURE_ARRAY]: null,
+	// [ActorConnectionPointType.TRACKING_RESULT_HAND]: null,
 	[ActorConnectionPointType.TRIGGER]: null,
 	[ActorConnectionPointType.VECTOR2]: new Vector2(),
 	[ActorConnectionPointType.VECTOR2_ARRAY]: null,
@@ -472,6 +479,7 @@ export const ActorConnectionPointComponentsCountMap: ConnectionPointComponentsCo
 	[ActorConnectionPointType.STRING_ARRAY]: 1,
 	[ActorConnectionPointType.TEXTURE]: 1,
 	[ActorConnectionPointType.TEXTURE_ARRAY]: 1,
+	// [ActorConnectionPointType.TRACKING_RESULT_HAND]: 1,
 	[ActorConnectionPointType.TRIGGER]: 1,
 	[ActorConnectionPointType.VECTOR2]: 2,
 	[ActorConnectionPointType.VECTOR2_ARRAY]: 2,
@@ -516,6 +524,7 @@ export type ReturnValueTypeByActorConnectionPointType = {
 	[ActorConnectionPointType.STRING_ARRAY]: string[];
 	[ActorConnectionPointType.TEXTURE]: Texture;
 	[ActorConnectionPointType.TEXTURE_ARRAY]: Texture[];
+	// [ActorConnectionPointType.TRACKING_RESULT_HAND]: TrackingResultHand;
 	[ActorConnectionPointType.TRIGGER]: null;
 	[ActorConnectionPointType.VECTOR2]: Vector2;
 	[ActorConnectionPointType.VECTOR2_ARRAY]: Vector2[];
@@ -562,6 +571,7 @@ export interface ActorIConnectionPointTypeToSubTypeMap extends ActorConnectionPo
 	[ActorConnectionPointType.STRING_ARRAY]: null;
 	[ActorConnectionPointType.TEXTURE]: null;
 	[ActorConnectionPointType.TEXTURE_ARRAY]: null;
+	// [ActorConnectionPointType.TRACKING_RESULT_HAND]: null;
 	[ActorConnectionPointType.TRIGGER]: null;
 	[ActorConnectionPointType.VECTOR2]: null;
 	[ActorConnectionPointType.VECTOR2_ARRAY]: null;
@@ -599,6 +609,7 @@ export const ActorConnectionPointTypeToSubTypeMap: ActorIConnectionPointTypeToSu
 	[ActorConnectionPointType.STRING_ARRAY]: null,
 	[ActorConnectionPointType.TEXTURE]: null,
 	[ActorConnectionPointType.TEXTURE_ARRAY]: null,
+	// [ActorConnectionPointType.TRACKING_RESULT_HAND]: null,
 	[ActorConnectionPointType.TRIGGER]: null,
 	[ActorConnectionPointType.VECTOR2]: null,
 	[ActorConnectionPointType.VECTOR2_ARRAY]: null,

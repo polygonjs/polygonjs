@@ -4,7 +4,7 @@ import {CoreARButton} from '../buttons/CoreARButton';
 import {CoreWebXRARControllerOptions} from './CommonAR';
 import {CoreWebXRAREstimatedLightController} from './CoreWebXRAREstimatedLightController';
 import {BaseCoreWebXRController, OnWebXRSessionStartedCallback} from '../_BaseCoreWebXRController';
-import {CoreWebXRARCaptureController} from './CoreWebXRARCapture';
+// import {CoreWebXRARCaptureController} from './CoreWebXRARCapture';
 
 const s = new Vector3();
 
@@ -15,7 +15,7 @@ export class CoreWebXRARController extends BaseCoreWebXRController {
 	private _hitMatrix = new Matrix4();
 	private _hitPosition = new Vector3();
 	private _hitQuaternion = new Quaternion();
-	public readonly capture: CoreWebXRARCaptureController;
+	// public readonly capture: CoreWebXRARCaptureController;
 	constructor(
 		scene: PolyScene,
 		renderer: WebGLRenderer,
@@ -24,7 +24,7 @@ export class CoreWebXRARController extends BaseCoreWebXRController {
 		protected override options: CoreWebXRARControllerOptions
 	) {
 		super(scene, renderer, camera, canvas, options);
-		this.capture = new CoreWebXRARCaptureController(renderer);
+		// this.capture = new CoreWebXRARCaptureController(renderer);
 	}
 
 	createButton(): HTMLElement {
@@ -54,7 +54,7 @@ export class CoreWebXRARController extends BaseCoreWebXRController {
 		this._estimatedLightController.initialize(this.scene, this.renderer);
 
 		return navigator.xr?.requestSession('immersive-ar', sessionInit).then(async (session) => {
-			await this.capture.init(session);
+			// await this.capture.init(session);
 
 			onSessionStarted(session);
 		});
@@ -101,7 +101,7 @@ export class CoreWebXRARController extends BaseCoreWebXRController {
 			return;
 		}
 		this._resolveHit(frame, session, referenceSpace);
-		this.capture.process(frame, referenceSpace);
+		// this.capture.process(frame, referenceSpace);
 	}
 
 	private _resolveHit(frame: XRFrame, session: XRSession, referenceSpace: XRReferenceSpace) {
