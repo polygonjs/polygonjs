@@ -49,7 +49,6 @@ export class SnapshotCopNode extends TypedCopNode<SnapshotCopParamsConfig> {
 			const texture = this._videoSnapshotCanvas(inputTexture);
 			if (texture) {
 				TextureParamsController.copyTextureAttributes(texture, inputTexture);
-				console.log('set', texture);
 				this.setTexture(texture);
 				return;
 			}
@@ -80,44 +79,9 @@ export class SnapshotCopNode extends TypedCopNode<SnapshotCopParamsConfig> {
 		this._canvas.height = inputTexture.image.videoHeight;
 		const canvasCtx = this._canvas.getContext('2d')!;
 		canvasCtx.drawImage(inputTexture.image, 0, 0, this._canvas.width, this._canvas.height);
-		console.log('draw');
 		this._canvasTexture.needsUpdate = true;
 		return this._canvasTexture;
 	}
 	private _canvas: HTMLCanvasElement | undefined;
 	private _canvasTexture: CanvasTexture | undefined;
-	// private _canvasToTexture(inputTexture: VideoTexture): Promise<Texture> | void {
-	// 	const prevCanvas = this._canvas;
-	// 	let newTextureRequired = true;
-	// 	const newCanvas = this._videoSnapshotCanvas(inputTexture);
-	// 	if (!newCanvas) {
-	// 		return;
-	// 	}
-	// 	if (prevCanvas) {
-	// 		if (newCanvas.width == prevCanvas.width && newCanvas.height == prevCanvas.height) {
-	// 			newTextureRequired = false;
-	// 		}
-	// 	}
-	// 	this._canvas = newCanvas;
-	// 	return new Promise((resolve) => {
-	// 		if (!this._canvas) {
-	// 			return;
-	// 		}
-	// 		const imgDataURL = this._canvas.toDataURL('image/png');
-	// 		const image = new Image();
-	// 		image.onload = () => {
-	// 			let newTexture: Texture | undefined;
-	// 			if (newTextureRequired) {
-	// 				newTexture = new Texture(image);
-	// 				newTexture.encoding = inputTexture.encoding;
-	// 			} else {
-	// 				newTexture = this.containerController.container().coreContent();
-	// 				newTexture.copy(inputTexture);
-	// 			}
-	// 			newTexture.needsUpdate = true;
-	// 			resolve(newTexture);
-	// 		};
-	// 		image.src = imgDataURL;
-	// 	});
-	// }
 }
