@@ -1,11 +1,15 @@
 import {Texture, VideoTexture, CanvasTexture} from 'three';
+import {CoreDomUtils} from '../DomUtils';
 
 export type ComputerVisionValidSource = HTMLVideoElement | HTMLCanvasElement | HTMLImageElement;
 
 export function computerVisionValidSource(texture: Texture): ComputerVisionValidSource | undefined {
 	if (texture instanceof VideoTexture) {
 		if (texture.image instanceof HTMLVideoElement) {
-			if (texture.image.paused == false) {
+			if (
+				CoreDomUtils.isHTMLVideoElementLoaded(texture.image) &&
+				!CoreDomUtils.isHTMLVideoPaused(texture.image)
+			) {
 				return texture.image;
 			}
 		}
