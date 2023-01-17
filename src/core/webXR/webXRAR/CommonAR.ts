@@ -25,6 +25,6 @@ export interface XRCamera {
 export interface ExtentedXRView extends XRView {
 	camera?: XRCamera;
 }
-export abstract class ExtendedXRWebGLBinding extends XRWebGLBinding {
-	abstract getCameraImage(camera: XRCamera): WebGLTexture | undefined;
-}
+// export abstract class ExtendedXRWebGLBinding extends XRWebGLBinding {
+// 	abstract getCameraImage(camera: XRCamera): WebGLTexture | undefined;
+// }
