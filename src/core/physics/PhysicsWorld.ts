@@ -1,21 +1,44 @@
 import {CorePhysics} from './CorePhysics';
 import type {World, RigidBody, Collider} from '@dimforge/rapier3d';
-import {CorePhysicsUserData} from './PhysicsUserData';
+// import {CorePhysicsUserData} from './PhysicsUserData';
 import {Object3D, Vector3} from 'three';
 import {physicsCreateRBD, physicsUpdateRBD} from './PhysicsRBD';
 import {physicsCreateJoint} from './PhysicsJoint';
+import {CoreGraphNodeId} from '../graph/CoreGraph';
+import {BaseNodeType} from '../../engine/nodes/_Base';
+import {CoreObject} from '../geometry/Object';
+import {PhysicsIdAttribute} from './PhysicsAttribute';
 
 export const PHYSICS_GRAVITY_DEFAULT = new Vector3(0, -9.81, 0);
 
-export async function createWorld(worldObject: Object3D, gravity: Vector3) {
-	const PhysicsLib = await CorePhysics();
-	// const gravity = {x: 0.0, y: -9.81, z: 0.0};
-	const world = new PhysicsLib.World(gravity);
-	CorePhysicsUserData.setWorld(worldObject, world);
+const physicsworldByGraphNodeId: Map<CoreGraphNodeId, World> = new Map();
+export async function createOrFindPhysicsWorld(node: BaseNodeType, worldObject: Object3D, gravity: Vector3) {
+	const nodeId = node.graphNodeId();
+	let world = physicsworldByGraphNodeId.get(nodeId);
+	if (!world) {
+		const PhysicsLib = await CorePhysics();
+		// const gravity = {x: 0.0, y: -9.81, z: 0.0};
+		world = new PhysicsLib.World(gravity);
+		physicsworldByGraphNodeId.set(nodeId, world);
+	}
+
+	CoreObject.addAttribute(worldObject, PhysicsIdAttribute.WORLD, nodeId);
+}
+export function physicsWorldNodeIdFromObject(worldObject: Object3D) {
+	const nodeId = CoreObject.attribValue(worldObject, PhysicsIdAttribute.WORLD) as CoreGraphNodeId | undefined;
+	return nodeId;
+}
+
+export function physicsWorldFromObject(worldObject: Object3D) {
+	const nodeId = CoreObject.attribValue(worldObject, PhysicsIdAttribute.WORLD) as CoreGraphNodeId | undefined;
+	if (nodeId == null) {
+		return;
+	}
+	return physicsworldByGraphNodeId.get(nodeId);
 }
 
 export async function initCorePhysicsWorld(worldObject: Object3D) {
-	const world = CorePhysicsUserData.world(worldObject);
+	const world = physicsWorldFromObject(worldObject);
 	if (!world) {
 		console.warn('no physicsWorld found with this object', worldObject);
 		return;
@@ -57,7 +80,7 @@ function _clearWorld(world: World) {
 }
 
 export function stepWorld(worldObject: Object3D) {
-	const world = CorePhysicsUserData.world(worldObject);
+	const world = physicsWorldFromObject(worldObject);
 	if (!world) {
 		return;
 	}
@@ -70,7 +93,7 @@ export function stepWorld(worldObject: Object3D) {
 const currentGravity = new Vector3();
 const newGravity = new Vector3();
 export function setWorldGravity(worldObject: Object3D, gravity: Vector3, lerp: number) {
-	const world = CorePhysicsUserData.world(worldObject);
+	const world = physicsWorldFromObject(worldObject);
 	if (!world) {
 		return;
 	}

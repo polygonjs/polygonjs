@@ -4,7 +4,7 @@
  */
 import {Constructor} from '../../../types/GlobalTypes';
 import {TypedCopNode} from './_Base';
-import {VideoTexture} from 'three';
+import {CanvasTexture, VideoTexture} from 'three';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {TextureParamsController} from './utils/TextureParamsController';
 import {InputCloneMode} from '../../poly/InputCloneMode';
@@ -46,9 +46,10 @@ export class SnapshotCopNode extends TypedCopNode<SnapshotCopParamsConfig> {
 		const inputTexture = inputTextures[0];
 
 		if (inputTexture && inputTexture instanceof VideoTexture) {
-			const texture = await this._canvasToTexture(inputTexture);
+			const texture = this._videoSnapshotCanvas(inputTexture);
 			if (texture) {
 				TextureParamsController.copyTextureAttributes(texture, inputTexture);
+				console.log('set', texture);
 				this.setTexture(texture);
 				return;
 			}
@@ -72,47 +73,51 @@ export class SnapshotCopNode extends TypedCopNode<SnapshotCopParamsConfig> {
 			return;
 		}
 
-		const canvasElement = document.createElement('canvas');
+		this._canvas = this._canvas || document.createElement('canvas');
+		this._canvasTexture = this._canvasTexture || new CanvasTexture(this._canvas);
 		// videoWidth and videoHeight are more robust than .width and .height (see https://discourse.threejs.org/t/how-to-get-camera-video-texture-size-or-resolution/2879)
-		canvasElement.width = inputTexture.image.videoWidth;
-		canvasElement.height = inputTexture.image.videoHeight;
-		const canvasCtx = canvasElement.getContext('2d')!;
-		canvasCtx.drawImage(inputTexture.image, 0, 0, canvasElement.width, canvasElement.height);
-		return canvasElement;
+		this._canvas.width = inputTexture.image.videoWidth;
+		this._canvas.height = inputTexture.image.videoHeight;
+		const canvasCtx = this._canvas.getContext('2d')!;
+		canvasCtx.drawImage(inputTexture.image, 0, 0, this._canvas.width, this._canvas.height);
+		console.log('draw');
+		this._canvasTexture.needsUpdate = true;
+		return this._canvasTexture;
 	}
 	private _canvas: HTMLCanvasElement | undefined;
-	private _canvasToTexture(inputTexture: VideoTexture): Promise<Texture> | void {
-		const prevCanvas = this._canvas;
-		let newTextureRequired = true;
-		const newCanvas = this._videoSnapshotCanvas(inputTexture);
-		if (!newCanvas) {
-			return;
-		}
-		if (prevCanvas) {
-			if (newCanvas.width == prevCanvas.width && newCanvas.height == prevCanvas.height) {
-				newTextureRequired = false;
-			}
-		}
-		this._canvas = newCanvas;
-		return new Promise((resolve) => {
-			if (!this._canvas) {
-				return;
-			}
-			const imgDataURL = this._canvas.toDataURL('image/png');
-			const image = new Image();
-			image.onload = () => {
-				let newTexture: Texture | undefined;
-				if (newTextureRequired) {
-					newTexture = new Texture(image);
-					newTexture.encoding = inputTexture.encoding;
-				} else {
-					newTexture = this.containerController.container().coreContent();
-					newTexture.copy(inputTexture);
-				}
-				newTexture.needsUpdate = true;
-				resolve(newTexture);
-			};
-			image.src = imgDataURL;
-		});
-	}
+	private _canvasTexture: CanvasTexture | undefined;
+	// private _canvasToTexture(inputTexture: VideoTexture): Promise<Texture> | void {
+	// 	const prevCanvas = this._canvas;
+	// 	let newTextureRequired = true;
+	// 	const newCanvas = this._videoSnapshotCanvas(inputTexture);
+	// 	if (!newCanvas) {
+	// 		return;
+	// 	}
+	// 	if (prevCanvas) {
+	// 		if (newCanvas.width == prevCanvas.width && newCanvas.height == prevCanvas.height) {
+	// 			newTextureRequired = false;
+	// 		}
+	// 	}
+	// 	this._canvas = newCanvas;
+	// 	return new Promise((resolve) => {
+	// 		if (!this._canvas) {
+	// 			return;
+	// 		}
+	// 		const imgDataURL = this._canvas.toDataURL('image/png');
+	// 		const image = new Image();
+	// 		image.onload = () => {
+	// 			let newTexture: Texture | undefined;
+	// 			if (newTextureRequired) {
+	// 				newTexture = new Texture(image);
+	// 				newTexture.encoding = inputTexture.encoding;
+	// 			} else {
+	// 				newTexture = this.containerController.container().coreContent();
+	// 				newTexture.copy(inputTexture);
+	// 			}
+	// 			newTexture.needsUpdate = true;
+	// 			resolve(newTexture);
+	// 		};
+	// 		image.src = imgDataURL;
+	// 	});
+	// }
 }

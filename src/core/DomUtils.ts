@@ -12,6 +12,9 @@ export class CoreDomUtils {
 	static isHTMLVideoElementLoaded(videoElement: HTMLVideoElement) {
 		return videoElement.readyState === 4;
 	}
+	static isHTMLVideoPaused(videoElement: HTMLVideoElement) {
+		return videoElement.paused;
+	}
 }
 export function observeStyleChange(element: HTMLElement) {
 	const Observe = (element: HTMLElement, opt: any, cb: any) => {

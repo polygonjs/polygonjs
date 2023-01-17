@@ -18,10 +18,21 @@ import {Number3} from '../../../types/GlobalTypes';
 import {ColorConversion} from '../../../core/Color';
 import {PaletteController, paletteControllerCallbackOptions} from '../utils/color/PaletteController';
 import {NodeContext} from '../../poly/NodeContext';
+import {
+	AttribClass,
+	AttribClassMenuEntriesWithoutCoreGroup,
+	ATTRIBUTE_CLASSES_WITHOUT_CORE_GROUP,
+} from '../../../core/geometry/Constant';
 
 const DEFAULT = PaletteSopOperation.DEFAULT_PARAMS;
 
 class PaletteSopParamsConfig extends NodeParamsConfig {
+	/** @param the attribute class (geometry or object) */
+	class = ParamConfig.INTEGER(DEFAULT.class, {
+		menu: {
+			entries: AttribClassMenuEntriesWithoutCoreGroup,
+		},
+	});
 	/** @param name of the palette */
 	paletteName = ParamConfig.STRING(DEFAULT.paletteName, {
 		menuString: {
@@ -98,5 +109,16 @@ export class PaletteSopNode extends TypedSopNode<PaletteSopParamsConfig> {
 		this._operation = this._operation || new PaletteSopOperation(this._scene, this.states);
 		const core_group = this._operation.cook(input_contents, this.pv);
 		this.setCoreGroup(core_group);
+	}
+	//
+	//
+	// API UTILS
+	//
+	//
+	setAttribClass(attribClass: AttribClass) {
+		this.p.class.set(ATTRIBUTE_CLASSES_WITHOUT_CORE_GROUP.indexOf(attribClass));
+	}
+	attribClass() {
+		return ATTRIBUTE_CLASSES_WITHOUT_CORE_GROUP[this.pv.class];
 	}
 }

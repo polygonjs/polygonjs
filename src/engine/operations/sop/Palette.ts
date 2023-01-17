@@ -5,8 +5,12 @@ import {Color} from 'three';
 import {CoreGeometry} from '../../../core/geometry/Geometry';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 import {SORTED_PALETTE_NAMES} from '../../../core/color/chromotomeWrapper';
+import {AttribClass, ATTRIBUTE_CLASSES} from '../../../core/geometry/Constant';
+import {TypeAssert} from '../../poly/Assert';
+import {CoreObject} from '../../../core/geometry/Object';
 
 interface PaletteSopParams extends DefaultOperationParams {
+	class: number;
 	paletteName: string;
 	colorsCount: number;
 	color1: Color;
@@ -18,6 +22,7 @@ interface PaletteSopParams extends DefaultOperationParams {
 
 export class PaletteSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: PaletteSopParams = {
+		class: ATTRIBUTE_CLASSES.indexOf(AttribClass.VERTEX),
 		paletteName: SORTED_PALETTE_NAMES[0],
 		colorsCount: 0,
 		color1: new Color(1, 1, 1),
@@ -31,18 +36,50 @@ export class PaletteSopOperation extends BaseSopOperation {
 		return 'palette';
 	}
 
-	override cook(input_contents: CoreGroup[], params: PaletteSopParams) {
-		const core_group = input_contents[0];
+	override cook(inputCoreGroups: CoreGroup[], params: PaletteSopParams) {
+		const coreGroup = inputCoreGroups[0];
 
-		const objects = core_group.objectsWithGeo();
-		for (let object of objects) {
-			this._applyPalette(object, params);
+		const colors = [params.color1, params.color2, params.color3, params.color4, params.color5];
+		this._addAttribute(ATTRIBUTE_CLASSES[params.class], coreGroup, params, colors);
+
+		return coreGroup;
+	}
+	private async _addAttribute(
+		attribClass: AttribClass,
+		coreGroup: CoreGroup,
+		params: PaletteSopParams,
+		colors: Color[]
+	) {
+		switch (attribClass) {
+			case AttribClass.VERTEX:
+				return await this._setVertexColor(coreGroup, params, colors);
+			case AttribClass.OBJECT:
+				return await this._setObjectColor(coreGroup, params, colors);
+			case AttribClass.CORE_GROUP:
+				return;
 		}
-
-		return core_group;
+		TypeAssert.unreachable(attribClass);
 	}
 
-	private _applyPalette(object: Object3DWithGeometry, params: PaletteSopParams) {
+	private _setObjectColor(coreGroup: CoreGroup, params: PaletteSopParams, colors: Color[]) {
+		const objects = coreGroup.objectsWithGeo();
+		let i = 0;
+		for (let object of objects) {
+			const color = colors[i % params.colorsCount];
+			CoreObject.addAttribute(object, 'color', color.clone());
+			i++;
+		}
+		return coreGroup;
+	}
+
+	private _setVertexColor(coreGroup: CoreGroup, params: PaletteSopParams, colors: Color[]) {
+		const objects = coreGroup.objectsWithGeo();
+		for (let object of objects) {
+			this._setVertexColorToObject(object, params, colors);
+		}
+	}
+
+	private _setVertexColorToObject(object: Object3DWithGeometry, params: PaletteSopParams, colors: Color[]) {
 		if (params.colorsCount <= 0) {
 			return;
 		}
@@ -61,22 +98,12 @@ export class PaletteSopOperation extends BaseSopOperation {
 			return;
 		}
 
-		const allColors = [params.color1, params.color2, params.color3, params.color4, params.color4];
-		const colors: Color[] = new Array(params.colorsCount);
-		for (let i = 0; i < colors.length; i++) {
-			colors[i] = allColors[i];
-		}
-		let colorIndex = 0;
 		const array = colorAttrib.array;
+		let ptIndex = 0;
 		for (let i = 0; i < array.length; i += 3) {
-			const color = colors[colorIndex];
+			const color = colors[ptIndex % params.colorsCount];
 			color.toArray(array, i);
-
-			if (colorIndex == colors.length - 1) {
-				colorIndex = 0;
-			} else {
-				colorIndex++;
-			}
+			ptIndex++;
 		}
 	}
 }

@@ -7,28 +7,25 @@ import {CameraAttribute} from '../../../core/camera/CoreCamera';
 import {CameraSopNodeType} from '../../poly/NodeContext';
 import {Camera, Object3D, WebGLRenderer} from 'three';
 import {isBooleanTrue} from '../../../core/Type';
-import {
-	CoreWebXRVRControllerOptions,
-	DEFAULT_XR_REFERENCE_SPACE_TYPE,
-	WebXRVRFeature,
-	XR_REFERENCE_SPACE_TYPES,
-} from '../../../core/webXR/webXRVR/CommonVR';
+import {CoreWebXRVRControllerOptions, WebXRVRFeature} from '../../../core/webXR/webXRVR/CommonVR';
 import type {PolyScene} from '../../scene/PolyScene';
 import {CoreWebXRVRController} from '../../../core/webXR/webXRVR/CoreWebXRVRController';
 import {
 	WebXRFeatureStatus,
 	WEBXR_FEATURE_STATUSES,
 	WEBXR_FEATURE_STATUS_OPTIONAL_INDEX,
+	DEFAULT_WEBXR_REFERENCE_SPACE_TYPE,
+	WEBXR_REFERENCE_SPACE_TYPES,
 } from '../../../core/webXR/Common';
 import {TypeAssert} from '../../poly/Assert';
 
 interface CameraWebXRVRSopParams extends DefaultOperationParams {
-	overrideReferenceSpaceType: boolean;
-	referenceSpaceType: number;
 	localFloor: number;
 	boundedFloor: number;
 	handTracking: number;
 	layers: number;
+	overrideReferenceSpaceType: boolean;
+	referenceSpaceType: number;
 }
 
 interface UpdateObjectOptions {
@@ -40,12 +37,12 @@ interface UpdateObjectOptions {
 
 export class CameraWebXRVRSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: CameraWebXRVRSopParams = {
-		overrideReferenceSpaceType: false,
-		referenceSpaceType: XR_REFERENCE_SPACE_TYPES.indexOf(DEFAULT_XR_REFERENCE_SPACE_TYPE),
 		localFloor: WEBXR_FEATURE_STATUS_OPTIONAL_INDEX,
 		boundedFloor: WEBXR_FEATURE_STATUS_OPTIONAL_INDEX,
 		handTracking: WEBXR_FEATURE_STATUS_OPTIONAL_INDEX,
 		layers: WEBXR_FEATURE_STATUS_OPTIONAL_INDEX,
+		overrideReferenceSpaceType: false,
+		referenceSpaceType: WEBXR_REFERENCE_SPACE_TYPES.indexOf(DEFAULT_WEBXR_REFERENCE_SPACE_TYPE),
 	};
 	static override readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
 	static override type(): Readonly<CameraSopNodeType.WEBXR_VR> {
@@ -100,18 +97,18 @@ export class CameraWebXRVRSopOperation extends BaseSopOperation {
 
 		for (let object of objects) {
 			CoreObject.addAttribute(object, CameraAttribute.WEBXR_VR, active);
-			CoreObject.addAttribute(object, CameraAttribute.WEBXR_VR_FEATURES_OPTIONAL, optionalFeaturesStr);
-			CoreObject.addAttribute(object, CameraAttribute.WEBXR_VR_FEATURES_REQUIRED, requiredFeaturesStr);
+			CoreObject.addAttribute(object, CameraAttribute.WEBXR_FEATURES_OPTIONAL, optionalFeaturesStr);
+			CoreObject.addAttribute(object, CameraAttribute.WEBXR_FEATURES_REQUIRED, requiredFeaturesStr);
 			CoreObject.addAttribute(
 				object,
-				CameraAttribute.WEBXR_VR_OVERRIDE_REFERENCE_SPACE_TYPE,
+				CameraAttribute.WEBXR_OVERRIDE_REFERENCE_SPACE_TYPE,
 				isBooleanTrue(params.overrideReferenceSpaceType)
 			);
 			if (isBooleanTrue(params.overrideReferenceSpaceType)) {
 				CoreObject.addAttribute(
 					object,
-					CameraAttribute.WEBXR_VR_REFERENCE_SPACE_TYPE,
-					XR_REFERENCE_SPACE_TYPES[params.referenceSpaceType]
+					CameraAttribute.WEBXR_REFERENCE_SPACE_TYPE,
+					WEBXR_REFERENCE_SPACE_TYPES[params.referenceSpaceType]
 				);
 			}
 		}

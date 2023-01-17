@@ -1,6 +1,11 @@
 import {CoreObject} from '../geometry/Object';
 import {Vector3, Object3D} from 'three';
 import {PhysicsJointAttribute} from './PhysicsJoint';
+
+export enum PhysicsIdAttribute {
+	WORLD = 'PhysicsIdAttribute_worldId',
+	RBD = 'PhysicsIdAttribute_rbdId',
+}
 export enum PhysicsRBDType {
 	FIXED = 'fixed',
 	DYNAMIC = 'dynamic',

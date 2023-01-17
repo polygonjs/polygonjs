@@ -2,8 +2,12 @@ import {Camera, WebGLRenderer} from 'three';
 import {PolyScene} from '../../../engine/scene/PolyScene';
 import {CoreObject} from '../../geometry/Object';
 import {CameraAttribute} from '../CoreCamera';
-import {WebXRControllerMountFunction, WebXRControllerUnmountFunction} from '../../webXR/Common';
-import {WebXRVRFeature, WEBXR_VR_FEATURES, XR_REFERENCE_SPACE_TYPES} from '../../webXR/webXRVR/CommonVR';
+import {
+	WebXRControllerMountFunction,
+	WebXRControllerUnmountFunction,
+	WEBXR_REFERENCE_SPACE_TYPES,
+} from '../../webXR/Common';
+import {WebXRVRFeature, WEBXR_VR_FEATURES} from '../../webXR/webXRVR/CommonVR';
 import {BaseCoreWebXRController} from '../../webXR/_BaseCoreWebXRController';
 import {WebXRARFeature, WEBXR_AR_FEATURES} from '../../webXR/webXRAR/CommonAR';
 
@@ -36,6 +40,35 @@ function getFeatures<F extends WebXRARFeature | WebXRVRFeature>(
 	}
 	return features;
 }
+function _getRequiredAndOptionalFeatures<E extends WebXRARFeature | WebXRVRFeature>(
+	camera: Camera,
+	existingFeatures: E[]
+) {
+	// features
+	const optionalFeatures = getFeatures<E>(camera, CameraAttribute.WEBXR_FEATURES_OPTIONAL, existingFeatures);
+	const requiredFeatures = getFeatures<E>(camera, CameraAttribute.WEBXR_FEATURES_REQUIRED, existingFeatures);
+
+	return {requiredFeatures, optionalFeatures};
+}
+
+function _getReferenceSpaceType(camera: Camera) {
+	// referenceSpaceType
+	let overrideReferenceSpaceType = CoreObject.attribValue(
+		camera,
+		CameraAttribute.WEBXR_OVERRIDE_REFERENCE_SPACE_TYPE
+	) as boolean | null;
+	let referenceSpaceType: string | null | undefined = CoreObject.attribValue(
+		camera,
+		CameraAttribute.WEBXR_REFERENCE_SPACE_TYPE
+	) as string | null;
+
+	if (!(referenceSpaceType && WEBXR_REFERENCE_SPACE_TYPES.includes(referenceSpaceType as XRReferenceSpaceType))) {
+		overrideReferenceSpaceType = false;
+		referenceSpaceType = undefined;
+	}
+
+	return {overrideReferenceSpaceType, referenceSpaceType};
+}
 
 export class CoreCameraWebXRController {
 	static process(options: WebXRControllerOptions): CoreCameraWebXRControllerConfig {
@@ -61,20 +94,20 @@ export class CoreCameraWebXRController {
 		if (isWebAR == true) {
 			const createFunction = scene.webXR.ARControllerCreateFunction();
 			if (createFunction) {
-				// features
-				const optionalFeatures = getFeatures<WebXRARFeature>(
+				const {overrideReferenceSpaceType, referenceSpaceType} = _getReferenceSpaceType(camera);
+
+				const {requiredFeatures, optionalFeatures} = _getRequiredAndOptionalFeatures<WebXRARFeature>(
 					camera,
-					CameraAttribute.WEBXR_AR_FEATURES_OPTIONAL,
-					WEBXR_AR_FEATURES
-				);
-				const requiredFeatures = getFeatures<WebXRARFeature>(
-					camera,
-					CameraAttribute.WEBXR_AR_FEATURES_REQUIRED,
 					WEBXR_AR_FEATURES
 				);
 
 				// createFunction
-				const controller = createFunction(renderer, camera, canvas, {requiredFeatures, optionalFeatures});
+				const controller = createFunction(renderer, camera, canvas, {
+					overrideReferenceSpaceType: overrideReferenceSpaceType || false,
+					referenceSpaceType: referenceSpaceType as XRReferenceSpaceType | undefined,
+					requiredFeatures,
+					optionalFeatures,
+				});
 				controllers.push(controller);
 			}
 		}
@@ -85,35 +118,10 @@ export class CoreCameraWebXRController {
 		if (isWebVR == true) {
 			const createFunction = scene.webXR.VRControllerCreateFunction();
 			if (createFunction) {
-				// referenceSpaceType
-				let overrideReferenceSpaceType = CoreObject.attribValue(
-					camera,
-					CameraAttribute.WEBXR_VR_OVERRIDE_REFERENCE_SPACE_TYPE
-				) as boolean | null;
-				let referenceSpaceType: string | null | undefined = CoreObject.attribValue(
-					camera,
-					CameraAttribute.WEBXR_VR_REFERENCE_SPACE_TYPE
-				) as string | null;
+				const {overrideReferenceSpaceType, referenceSpaceType} = _getReferenceSpaceType(camera);
 
-				if (
-					!(
-						referenceSpaceType &&
-						XR_REFERENCE_SPACE_TYPES.includes(referenceSpaceType as XRReferenceSpaceType)
-					)
-				) {
-					overrideReferenceSpaceType = false;
-					referenceSpaceType = undefined;
-				}
-
-				// features
-				const optionalFeatures = getFeatures<WebXRVRFeature>(
+				const {requiredFeatures, optionalFeatures} = _getRequiredAndOptionalFeatures<WebXRVRFeature>(
 					camera,
-					CameraAttribute.WEBXR_VR_FEATURES_OPTIONAL,
-					WEBXR_VR_FEATURES
-				);
-				const requiredFeatures = getFeatures<WebXRVRFeature>(
-					camera,
-					CameraAttribute.WEBXR_VR_FEATURES_REQUIRED,
 					WEBXR_VR_FEATURES
 				);
 

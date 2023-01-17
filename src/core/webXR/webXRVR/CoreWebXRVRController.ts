@@ -12,9 +12,7 @@ import {
 	Camera,
 } from 'three';
 import {PolyScene} from '../../../engine/scene/PolyScene';
-import {isBooleanTrue} from '../../Type';
 import {CoreVRButton} from '../buttons/CoreVRButton';
-import {DEFAULT_WEBXR_VR_REFERENCE_SPACE_TYPE} from '../Common';
 import {CoreWebXRVRControllerOptions} from './CommonVR';
 import {CoreWebXRControllerContainer} from '../CoreWebXRControllerContainer';
 import {BaseCoreWebXRController, OnWebXRSessionStartedCallback} from '../_BaseCoreWebXRController';
@@ -49,15 +47,9 @@ export class CoreWebXRVRController extends BaseCoreWebXRController {
 		renderer: WebGLRenderer,
 		camera: Camera,
 		canvas: HTMLCanvasElement,
-		protected options: CoreWebXRVRControllerOptions
+		protected override options: CoreWebXRVRControllerOptions
 	) {
-		super(scene, renderer, camera, canvas);
-
-		if (isBooleanTrue(options.overrideReferenceSpaceType) && options.referenceSpaceType) {
-			renderer.xr.setReferenceSpaceType(options.referenceSpaceType);
-		} else {
-			renderer.xr.setReferenceSpaceType(DEFAULT_WEBXR_VR_REFERENCE_SPACE_TYPE);
-		}
+		super(scene, renderer, camera, canvas, options);
 	}
 	override mount() {
 		super.mount();

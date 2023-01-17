@@ -31,6 +31,7 @@ import {SwitchCopNode} from '../../../nodes/cop/Switch';
 import {TexturePropertiesCopNode} from '../../../nodes/cop/TextureProperties';
 import {VideoCopNode} from '../../../nodes/cop/Video';
 import {WebCamCopNode} from '../../../nodes/cop/WebCam';
+// import {WebXRARCopNode} from '../../../nodes/cop/WebXRAR';
 // networks
 import {ActorsNetworkCopNode} from '../../../nodes/cop/ActorsNetwork';
 import {AnimationsNetworkCopNode} from '../../../nodes/cop/AnimationsNetwork';
@@ -73,6 +74,7 @@ export interface CopNodeChildrenMap {
 	textureProperties: TexturePropertiesCopNode;
 	video: VideoCopNode;
 	webCam: WebCamCopNode;
+	// webXRAR: WebXRARCopNode;
 	// networks
 	actorsNetwork: ActorsNetworkCopNode;
 	animationsNetwork: AnimationsNetworkCopNode;
@@ -120,6 +122,7 @@ export class CopRegister {
 		poly.registerNode(TexturePropertiesCopNode, CATEGORY_COP.ADVANCED);
 		poly.registerNode(VideoCopNode, CATEGORY_COP.INPUT);
 		poly.registerNode(WebCamCopNode, CATEGORY_COP.ADVANCED);
+		// poly.registerNode(WebXRARCopNode, CATEGORY_COP.ADVANCED);
 		// networks
 		poly.registerNode(ActorsNetworkCopNode, CATEGORY_COP.NETWORK);
 		poly.registerNode(AnimationsNetworkCopNode, CATEGORY_COP.NETWORK);

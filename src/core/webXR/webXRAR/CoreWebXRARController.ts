@@ -4,6 +4,7 @@ import {CoreARButton} from '../buttons/CoreARButton';
 import {CoreWebXRARControllerOptions} from './CommonAR';
 import {CoreWebXRAREstimatedLightController} from './CoreWebXRAREstimatedLightController';
 import {BaseCoreWebXRController, OnWebXRSessionStartedCallback} from '../_BaseCoreWebXRController';
+// import {CoreWebXRARCaptureController} from './CoreWebXRARCapture';
 
 const s = new Vector3();
 
@@ -14,14 +15,16 @@ export class CoreWebXRARController extends BaseCoreWebXRController {
 	private _hitMatrix = new Matrix4();
 	private _hitPosition = new Vector3();
 	private _hitQuaternion = new Quaternion();
+	// public readonly capture: CoreWebXRARCaptureController;
 	constructor(
 		scene: PolyScene,
 		renderer: WebGLRenderer,
 		camera: Camera,
 		canvas: HTMLCanvasElement,
-		protected options: CoreWebXRARControllerOptions
+		protected override options: CoreWebXRARControllerOptions
 	) {
-		super(scene, renderer, camera, canvas);
+		super(scene, renderer, camera, canvas, options);
+		// this.capture = new CoreWebXRARCaptureController(renderer);
 	}
 
 	createButton(): HTMLElement {
@@ -49,7 +52,12 @@ export class CoreWebXRARController extends BaseCoreWebXRController {
 	async requestSession(sessionInit: XRSessionInit, onSessionStarted: OnWebXRSessionStartedCallback) {
 		this._estimatedLightController = new CoreWebXRAREstimatedLightController();
 		this._estimatedLightController.initialize(this.scene, this.renderer);
-		return navigator.xr?.requestSession('immersive-ar', sessionInit).then(onSessionStarted);
+
+		return navigator.xr?.requestSession('immersive-ar', sessionInit).then(async (session) => {
+			// await this.capture.init(session);
+
+			onSessionStarted(session);
+		});
 	}
 	private _estimatedLightController: CoreWebXRAREstimatedLightController | undefined;
 	private _previousSceneBackground: Color | Texture | null = null;
@@ -84,15 +92,20 @@ export class CoreWebXRARController extends BaseCoreWebXRController {
 
 	override process(frame?: XRFrame) {
 		super.process(frame);
-		this._resolveHit(frame);
-	}
-	private _resolveHit(frame?: XRFrame) {
 		if (!frame) {
 			return;
 		}
 		const referenceSpace = this.renderer.xr.getReferenceSpace();
 		const session = this.renderer.xr.getSession();
 		if (!(session && referenceSpace)) {
+			return;
+		}
+		this._resolveHit(frame, session, referenceSpace);
+		// this.capture.process(frame, referenceSpace);
+	}
+
+	private _resolveHit(frame: XRFrame, session: XRSession, referenceSpace: XRReferenceSpace) {
+		if (!frame) {
 			return;
 		}
 

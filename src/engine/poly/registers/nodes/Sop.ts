@@ -160,6 +160,10 @@ import {TextureCopySopNode} from '../../../nodes/sop/TextureCopy';
 import {TexturePropertiesSopNode} from '../../../nodes/sop/TextureProperties';
 import {TorusSopNode} from '../../../nodes/sop/Torus';
 import {TorusKnotSopNode} from '../../../nodes/sop/TorusKnot';
+import {TrackingLandmarksFaceSopNode} from '../../../nodes/sop/TrackingLandmarksFace';
+import {TrackingLandmarksFaceAttributesSopNode} from '../../../nodes/sop/TrackingLandmarksFaceAttributes';
+import {TrackingLandmarksHandSopNode} from '../../../nodes/sop/TrackingLandmarksHand';
+import {TrackingLandmarksHandAttributesSopNode} from '../../../nodes/sop/TrackingLandmarksHandAttributes';
 import {TransformSopNode} from '../../../nodes/sop/Transform';
 import {TransformCopySopNode} from '../../../nodes/sop/TransformCopy';
 import {TransformMultiSopNode} from '../../../nodes/sop/TransformMulti';
@@ -337,6 +341,10 @@ export interface GeoNodeChildrenMap {
 	textureProperties: TexturePropertiesSopNode;
 	torus: TorusSopNode;
 	torusKnot: TorusKnotSopNode;
+	trackingLandmarksFace: TrackingLandmarksFaceSopNode;
+	trackingLandmarksFaceAttributes: TrackingLandmarksFaceAttributesSopNode;
+	trackingLandmarksHand: TrackingLandmarksHandSopNode;
+	trackingLandmarksHandAttributes: TrackingLandmarksHandAttributesSopNode;
 	transform: TransformSopNode;
 	transformCopy: TransformCopySopNode;
 	transformMulti: TransformMultiSopNode;
@@ -531,10 +539,10 @@ export class SopRegister {
 		poly.registerOperation(JitterSopOperation);
 		poly.registerOperation(LightProbeSopOperation);
 		poly.registerOperation(LookAtSopOperation);
-		poly.registerOperation(MergeSopOperation);
-		poly.registerOperation(MetaballSopOperation);
 		poly.registerOperation(MaterialSopOperation);
 		poly.registerOperation(MaterialPropertiesSopOperation);
+		poly.registerOperation(MergeSopOperation);
+		poly.registerOperation(MetaballSopOperation);
 		// poly.registerOperation(MaterialPropertiesMeshStandardSopOperation);
 		poly.registerOperation(NullSopOperation);
 		poly.registerOperation(ObjectPropertiesSopOperation);
@@ -683,7 +691,6 @@ export class SopRegister {
 		poly.registerNode(MaterialPropertiesSopNode, CATEGORY_SOP.RENDER);
 		// poly.registerNode(MaterialPropertiesMeshStandardSopNode, CATEGORY_SOP.RENDER);
 		poly.registerNode(MergeSopNode, CATEGORY_SOP.FLOW);
-
 		poly.registerNode(MetaballSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.registerNode(NoiseSopNode, CATEGORY_SOP.MISC);
 		poly.registerNode(NormalsSopNode, CATEGORY_SOP.MODIFIER);
@@ -749,6 +756,10 @@ export class SopRegister {
 		poly.registerNode(TextSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.registerNode(TextureCopySopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(TexturePropertiesSopNode, CATEGORY_SOP.MODIFIER);
+		poly.registerNode(TrackingLandmarksFaceSopNode, CATEGORY_SOP.COMPUTER_VISION);
+		poly.registerNode(TrackingLandmarksFaceAttributesSopNode, CATEGORY_SOP.COMPUTER_VISION);
+		poly.registerNode(TrackingLandmarksHandSopNode, CATEGORY_SOP.COMPUTER_VISION);
+		poly.registerNode(TrackingLandmarksHandAttributesSopNode, CATEGORY_SOP.COMPUTER_VISION);
 		poly.registerNode(TorusSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.registerNode(TorusKnotSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.registerNode(TransformSopNode, CATEGORY_SOP.MODIFIER);

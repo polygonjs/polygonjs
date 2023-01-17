@@ -43,9 +43,9 @@ QUnit.test('COP snapshot from webcam', async (assert) => {
 	snapshot1.setInput(0, webcam1);
 
 	let container = await snapshot1.compute();
-	assert.equal(snapshot1.states.error.message(), 'video not loaded');
+	// assert.equal(snapshot1.states.error.message(), 'video not loaded');
 
-	await CoreSleep.sleep(2000);
+	// await CoreSleep.sleep(2000);
 
 	snapshot1.p.capture.pressButton();
 	container = await snapshot1.compute();

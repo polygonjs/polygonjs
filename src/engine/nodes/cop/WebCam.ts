@@ -121,9 +121,24 @@ export class WebCamCopNode extends TypedCopNode<WebCamCopParamsConfig> {
 					if (!this._video) {
 						return;
 					}
-					this._video.srcObject = stream;
-					this._video.play();
-					this.setTexture(texture);
+					const video = this._video;
+					// video.onload = () => {
+					// 	console.log('onLoad');
+					// };
+					// .setTexture is called only in .oncanplay
+					// as otherwise, if it is given to actor/trackHand
+					// too early
+					// then the computer vision would crash
+					video.oncanplay = () => {
+						console.log('can play');
+						video.play();
+						this.setTexture(texture);
+					};
+					video.onerror = (err) => {
+						this.states.error.set(`webcam video error: ${err}`);
+					};
+					video.srcObject = stream;
+					console.log('stream given');
 				})
 				.catch((error) => {
 					this.states.error.set('Unable to access the camera/webcam');

@@ -13,12 +13,18 @@ import {
 	WebXRFeatureStatus,
 	WEBXR_FEATURE_STATUSES,
 	WEBXR_FEATURE_STATUS_OPTIONAL_INDEX,
+	DEFAULT_WEBXR_REFERENCE_SPACE_TYPE,
+	WEBXR_REFERENCE_SPACE_TYPES,
 } from '../../../core/webXR/Common';
 import {TypeAssert} from '../../poly/Assert';
+import {isBooleanTrue} from '../../../core/Type';
 
 interface CameraWebXRARSopParams extends DefaultOperationParams {
 	hitTest: number;
 	lightEstimation: number;
+	cameraAccess: number;
+	overrideReferenceSpaceType: boolean;
+	referenceSpaceType: number;
 }
 
 interface UpdateObjectOptions {
@@ -32,6 +38,9 @@ export class CameraWebXRARSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: CameraWebXRARSopParams = {
 		hitTest: WEBXR_FEATURE_STATUS_OPTIONAL_INDEX,
 		lightEstimation: WEBXR_FEATURE_STATUS_OPTIONAL_INDEX,
+		cameraAccess: WEBXR_FEATURE_STATUS_OPTIONAL_INDEX,
+		overrideReferenceSpaceType: false,
+		referenceSpaceType: WEBXR_REFERENCE_SPACE_TYPES.indexOf(DEFAULT_WEBXR_REFERENCE_SPACE_TYPE),
 	};
 	static override readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
 	static override type(): Readonly<CameraSopNodeType.WEBXR_AR> {
@@ -78,13 +87,26 @@ export class CameraWebXRARSopOperation extends BaseSopOperation {
 		}
 		assignFeatureByStatus(WebXRARFeature.HIT_TEST, params.hitTest);
 		assignFeatureByStatus(WebXRARFeature.LIGHT_ESTIMATION, params.lightEstimation);
+		// assignFeatureByStatus(WebXRARFeature.CAMERA_ACCESS, params.cameraAccess);
 
 		const optionalFeaturesStr = optionalFeatures.join(' ');
 		const requiredFeaturesStr = requiredFeatures.join(' ');
 		for (let object of objects) {
 			CoreObject.addAttribute(object, CameraAttribute.WEBXR_AR, active);
-			CoreObject.addAttribute(object, CameraAttribute.WEBXR_AR_FEATURES_OPTIONAL, optionalFeaturesStr);
-			CoreObject.addAttribute(object, CameraAttribute.WEBXR_AR_FEATURES_REQUIRED, requiredFeaturesStr);
+			CoreObject.addAttribute(object, CameraAttribute.WEBXR_FEATURES_OPTIONAL, optionalFeaturesStr);
+			CoreObject.addAttribute(object, CameraAttribute.WEBXR_FEATURES_REQUIRED, requiredFeaturesStr);
+			CoreObject.addAttribute(
+				object,
+				CameraAttribute.WEBXR_OVERRIDE_REFERENCE_SPACE_TYPE,
+				isBooleanTrue(params.overrideReferenceSpaceType)
+			);
+			if (isBooleanTrue(params.overrideReferenceSpaceType)) {
+				CoreObject.addAttribute(
+					object,
+					CameraAttribute.WEBXR_REFERENCE_SPACE_TYPE,
+					WEBXR_REFERENCE_SPACE_TYPES[params.referenceSpaceType]
+				);
+			}
 		}
 	}
 }
