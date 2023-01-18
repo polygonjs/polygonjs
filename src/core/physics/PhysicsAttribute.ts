@@ -89,6 +89,10 @@ type PhysicsAttribute =
 	| PhysicsRBDCapsuleAttribute
 	| PhysicsJointAttribute;
 
+export function physicsAttribNameLive(attribute: PhysicsAttribute): string {
+	return `${attribute}-live`;
+}
+
 export class CorePhysicsBaseAttribute {
 	protected static _setVector3(object: Object3D, attribName: PhysicsAttribute, value: Vector3) {
 		CoreObject.addAttribute(object, attribName, value);

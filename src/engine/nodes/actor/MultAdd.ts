@@ -11,7 +11,7 @@ import {ActorNodeTriggerContext, TypedActorNode} from './_Base';
 import {CoreType} from '../../../core/Type';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 
-enum MultAddActorNodeInputName {
+export enum MultAddActorNodeInputName {
 	VALUE = 'value',
 	PRE_ADD = 'preAdd',
 	MULT = 'mult',

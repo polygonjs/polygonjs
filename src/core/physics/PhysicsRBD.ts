@@ -5,6 +5,7 @@ import {BufferAttribute, Mesh, Object3D, Vector3, Quaternion} from 'three';
 import type {World, RigidBodyType, RigidBodyDesc, RigidBody} from '@dimforge/rapier3d';
 import {CorePhysicsLoaded, PhysicsLib} from './CorePhysics';
 import {CoreObject} from '../geometry/Object';
+import {createPhysicsSphere} from './shapes/RBDSphere';
 
 let rbdId = 1;
 const physicsRBDByRBDId: Map<number, RigidBody> = new Map();
@@ -16,7 +17,7 @@ function _createRBD(world: World, rigidBodyDesc: RigidBodyDesc, object: Object3D
 	rbdId++;
 	return rigidBody;
 }
-function _getRBD(object: Object3D) {
+export function _getRBD(object: Object3D) {
 	const rbdId = CoreObject.attribValue(object, PhysicsIdAttribute.RBD) as number | undefined;
 	if (rbdId == null) {
 		return;
@@ -304,8 +305,7 @@ function PhysicsRBDCollider(PhysicsLib: PhysicsLib, colliderType: PhysicsRBDColl
 			return PhysicsLib.ColliderDesc.cylinder(halfHeight, radius);
 		}
 		case PhysicsRBDColliderType.SPHERE: {
-			const radius = CorePhysicsAttribute.getRadius(object);
-			return PhysicsLib.ColliderDesc.ball(radius);
+			return createPhysicsSphere(PhysicsLib, object);
 		}
 	}
 	TypeAssert.unreachable(colliderType);

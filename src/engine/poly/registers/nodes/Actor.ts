@@ -54,6 +54,7 @@ import {GetObjectPropertyActorNode} from '../../../nodes/actor/GetObjectProperty
 import {GetObjectUserDataActorNode} from '../../../nodes/actor/GetObjectUserData';
 import {GetObjectWorldPositionActorNode} from '../../../nodes/actor/GetObjectWorldPosition';
 import {GetParentActorNode} from '../../../nodes/actor/GetParent';
+import {GetPhysicsRBDSpherePropertyActorNode} from '../../../nodes/actor/GetPhysicsRBDSphereProperty';
 import {GetPlanePropertyActorNode} from '../../../nodes/actor/GetPlaneProperty';
 import {GetRayPropertyActorNode} from '../../../nodes/actor/GetRayProperty';
 import {GetSpherePropertyActorNode} from '../../../nodes/actor/GetSphereProperty';
@@ -159,6 +160,7 @@ import {SetObjectScaleActorNode} from '../../../nodes/actor/SetObjectScale';
 import {SetObjectVisibleActorNode} from '../../../nodes/actor/SetObjectVisible';
 import {SetPhysicsRBDPositionActorNode} from '../../../nodes/actor/SetPhysicsRBDPosition';
 import {SetPhysicsRBDRotationActorNode} from '../../../nodes/actor/SetPhysicsRBDRotation';
+import {SetPhysicsRBDSpherePropertyActorNode} from '../../../nodes/actor/SetPhysicsRBDSphereProperty';
 import {SetPhysicsWorldGravityActorNode} from '../../../nodes/actor/SetPhysicsWorldGravity';
 import {SetParamActorNode} from '../../../nodes/actor/SetParam';
 import {SetPerspectiveCameraFovActorNode} from '../../../nodes/actor/SetPerspectiveCameraFov';
@@ -255,6 +257,7 @@ export interface ActorNodeChildrenMap {
 	getChildrenAttributes: GetChildrenAttributesActorNode;
 	getObjectChild: GetObjectChildActorNode;
 	getDefaultCamera: GetDefaultCameraActorNode;
+	getPhysicsRBDSphereProperty: GetPhysicsRBDSpherePropertyActorNode;
 	getIntersectionProperty: GetIntersectionPropertyActorNode;
 	getMaterial: GetMaterialActorNode;
 	getObject: GetObjectActorNode;
@@ -368,6 +371,7 @@ export interface ActorNodeChildrenMap {
 	setObjectScale: SetObjectScaleActorNode;
 	setPhysicsRBDPosition: SetPhysicsRBDPositionActorNode;
 	setPhysicsRBDRotation: SetPhysicsRBDRotationActorNode;
+	setPhysicsRBDSphereProperty: SetPhysicsRBDSpherePropertyActorNode;
 	setPhysicsWorldGravity: SetPhysicsWorldGravityActorNode;
 	setParam: SetParamActorNode;
 	setPerspectiveCameraFov: SetPerspectiveCameraFovActorNode;
@@ -478,6 +482,7 @@ export class ActorRegister {
 		poly.registerNode(GetObjectUserDataActorNode, CATEGORY_ACTOR.GET);
 		poly.registerNode(GetObjectWorldPositionActorNode, CATEGORY_ACTOR.GET);
 		poly.registerNode(GetParentActorNode, CATEGORY_ACTOR.GET);
+		poly.registerNode(GetPhysicsRBDSpherePropertyActorNode, CATEGORY_ACTOR.PHYSICS);
 		poly.registerNode(GetPlanePropertyActorNode, CATEGORY_ACTOR.GET);
 		poly.registerNode(GetRayPropertyActorNode, CATEGORY_ACTOR.GET);
 		poly.registerNode(GetSpherePropertyActorNode, CATEGORY_ACTOR.GET);
@@ -584,6 +589,7 @@ export class ActorRegister {
 		poly.registerNode(SetObjectVisibleActorNode, CATEGORY_ACTOR.ACTION);
 		poly.registerNode(SetPhysicsRBDPositionActorNode, CATEGORY_ACTOR.PHYSICS);
 		poly.registerNode(SetPhysicsRBDRotationActorNode, CATEGORY_ACTOR.PHYSICS);
+		poly.registerNode(SetPhysicsRBDSpherePropertyActorNode, CATEGORY_ACTOR.PHYSICS);
 		poly.registerNode(SetPhysicsWorldGravityActorNode, CATEGORY_ACTOR.PHYSICS);
 		poly.registerNode(SetParamActorNode, CATEGORY_ACTOR.ACTION);
 		poly.registerNode(SetPerspectiveCameraFovActorNode, CATEGORY_ACTOR.ACTION);

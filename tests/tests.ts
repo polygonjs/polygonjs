@@ -199,6 +199,7 @@ import './engine/nodes/actor/SetParam';
 import './engine/nodes/actor/SetPerspectiveCameraFov';
 import './engine/nodes/actor/SetPerspectiveCameraNearFar';
 import './engine/nodes/actor/SetPhysicsRBDPosition';
+import './engine/nodes/actor/SetPhysicsRBDSphereProperty';
 import './engine/nodes/actor/SetSpotLightIntensity';
 import './engine/nodes/actor/SetViewer';
 import './engine/nodes/actor/Smoothstep';
