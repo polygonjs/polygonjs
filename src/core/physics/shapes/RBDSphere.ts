@@ -4,20 +4,22 @@ import {
 	CorePhysicsAttribute,
 	PhysicsRBDColliderType,
 	physicsAttribNameLive,
-	PhysicsRBDSphereAttribute,
+	PhysicsRBDRadiusAttribute,
 } from '../PhysicsAttribute';
 import {_getRBD} from '../PhysicsRBD';
 import {PhysicsLib} from '../CorePhysics';
 import {CoreObject} from '../../geometry/Object';
+import {getPhysicsRBDRadius} from './_CommonHeightRadius';
+
+const EXPECTED_TYPE = PhysicsRBDColliderType.SPHERE;
 
 export function createPhysicsSphere(PhysicsLib: PhysicsLib, object: Object3D) {
 	const radius = CorePhysicsAttribute.getRadius(object);
 	return PhysicsLib.ColliderDesc.ball(radius);
 }
 
-const attributeRadiusLive = physicsAttribNameLive(PhysicsRBDSphereAttribute.RADIUS);
+const attributeRadiusLive = physicsAttribNameLive(PhysicsRBDRadiusAttribute.RADIUS);
 export function currentRadius(object: Object3D, collider: Collider) {
-	// get prev value
 	let _currentRadius: number | undefined = CoreObject.attribValue(object, attributeRadiusLive) as number | undefined;
 	if (_currentRadius == null) {
 		const shape = collider.shape as Ball;
@@ -28,20 +30,7 @@ export function currentRadius(object: Object3D, collider: Collider) {
 }
 
 export function getPhysicsRBDSphereRadius(object: Object3D): number | undefined {
-	const body = _getRBD(object);
-	if (!body) {
-		console.warn('no rbd found');
-		return;
-	}
-	const colliderType = CorePhysicsAttribute.getColliderType(object);
-	if (colliderType == null || colliderType != PhysicsRBDColliderType.SPHERE) {
-		return;
-	}
-	const collider = body.collider(0);
-	if (!collider) {
-		return;
-	}
-	return currentRadius(object, collider);
+	return getPhysicsRBDRadius(EXPECTED_TYPE, object);
 }
 
 export function setPhysicsRBDSphereProperty(
@@ -56,7 +45,7 @@ export function setPhysicsRBDSphereProperty(
 		return;
 	}
 	const colliderType = CorePhysicsAttribute.getColliderType(object);
-	if (colliderType == null || colliderType != PhysicsRBDColliderType.SPHERE) {
+	if (colliderType == null || colliderType != EXPECTED_TYPE) {
 		return;
 	}
 	const collidersCount = body.numColliders();

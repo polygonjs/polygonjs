@@ -1,9 +1,9 @@
 import {Object3D, Vector3} from 'three';
 import {
 	PhysicsCommonAttribute,
-	PhysicsRBDCapsuleAttribute,
 	PhysicsRBDCuboidAttribute,
-	PhysicsRBDSphereAttribute,
+	PhysicsRBDHeightAttribute,
+	PhysicsRBDRadiusAttribute,
 } from './../../../../src/core/physics/PhysicsAttribute';
 import {CoreObject} from './../../../../src/core/geometry/Object';
 import {PhysicsRBDColliderType} from '../../../../src/core/physics/PhysicsAttribute';
@@ -82,7 +82,7 @@ QUnit.test('sop/physicsRBDAttributes with expressions', async (assert) => {
 	const container = await physicsWorld1.compute();
 	const objects = container.coreContent()!.objects()[0].children;
 	const radii = objects.map(
-		(object: Object3D) => CoreObject.attribValue(object, PhysicsRBDSphereAttribute.RADIUS) as number
+		(object: Object3D) => CoreObject.attribValue(object, PhysicsRBDRadiusAttribute.RADIUS) as number
 	);
 	assert.in_delta(radii[0], 0.07, 0.05);
 	assert.in_delta(radii[1], 0.075, 0.05);
@@ -127,10 +127,10 @@ QUnit.test('sop/physicsRBDAttributes capsule', async (assert) => {
 	const container = await physicsWorld1.compute();
 	const objects = container.coreContent()!.objects()[0].children;
 	const radii = objects.map((object: Object3D) => {
-		return CoreObject.attribValue(object, PhysicsRBDCapsuleAttribute.RADIUS) as number;
+		return CoreObject.attribValue(object, PhysicsRBDRadiusAttribute.RADIUS) as number;
 	});
 	const heights = objects.map((object: Object3D) => {
-		return CoreObject.attribValue(object, PhysicsRBDCapsuleAttribute.HEIGHT) as number;
+		return CoreObject.attribValue(object, PhysicsRBDHeightAttribute.HEIGHT) as number;
 	});
 	assert.deepEqual(radii, [0.25, 0.25, 0.25, 0.25]);
 	assert.deepEqual(heights, [0.6, 0.6, 0.6, 0.6]);
@@ -173,10 +173,10 @@ QUnit.test('sop/physicsRBDAttributes cone', async (assert) => {
 	const container = await physicsWorld1.compute();
 	const objects = container.coreContent()!.objects()[0].children;
 	const radii = objects.map((object: Object3D) => {
-		return CoreObject.attribValue(object, PhysicsRBDCapsuleAttribute.RADIUS) as number;
+		return CoreObject.attribValue(object, PhysicsRBDRadiusAttribute.RADIUS) as number;
 	});
 	const heights = objects.map((object: Object3D) => {
-		return CoreObject.attribValue(object, PhysicsRBDCapsuleAttribute.HEIGHT) as number;
+		return CoreObject.attribValue(object, PhysicsRBDHeightAttribute.HEIGHT) as number;
 	});
 	assert.deepEqual(radii, [0.25, 0.25, 0.25, 0.25]);
 	assert.deepEqual(heights, [0.6, 0.6, 0.6, 0.6]);
@@ -438,10 +438,10 @@ QUnit.test('sop/physicsRBDAttributes cylinder', async (assert) => {
 	const container = await physicsWorld1.compute();
 	const objects = container.coreContent()!.objects()[0].children;
 	const radii = objects.map((object: Object3D) => {
-		return CoreObject.attribValue(object, PhysicsRBDCapsuleAttribute.RADIUS) as number;
+		return CoreObject.attribValue(object, PhysicsRBDRadiusAttribute.RADIUS) as number;
 	});
 	const heights = objects.map((object: Object3D) => {
-		return CoreObject.attribValue(object, PhysicsRBDCapsuleAttribute.HEIGHT) as number;
+		return CoreObject.attribValue(object, PhysicsRBDHeightAttribute.HEIGHT) as number;
 	});
 	assert.deepEqual(radii, [0.25, 0.25, 0.25, 0.25]);
 	assert.deepEqual(heights, [0.6, 0.6, 0.6, 0.6]);
@@ -483,7 +483,7 @@ QUnit.test('sop/physicsRBDAttributes sphere', async (assert) => {
 	const container = await physicsWorld1.compute();
 	const objects = container.coreContent()!.objects()[0].children;
 	const radii = objects.map(
-		(object: Object3D) => CoreObject.attribValue(object, PhysicsRBDSphereAttribute.RADIUS) as number
+		(object: Object3D) => CoreObject.attribValue(object, PhysicsRBDRadiusAttribute.RADIUS) as number
 	);
 	assert.deepEqual(radii, [0.25, 0.25, 0.25, 0.25]);
 
@@ -524,7 +524,7 @@ QUnit.test('sop/physicsRBDAttributes sphere with expression non entity dependent
 	const container = await physicsWorld1.compute();
 	const objects = container.coreContent()!.objects()[0].children;
 	const radii = objects.map(
-		(object: Object3D) => CoreObject.attribValue(object, PhysicsRBDSphereAttribute.RADIUS) as number
+		(object: Object3D) => CoreObject.attribValue(object, PhysicsRBDRadiusAttribute.RADIUS) as number
 	);
 	assert.deepEqual(radii, [0.2, 0.2, 0.2, 0.2]);
 
@@ -565,7 +565,7 @@ QUnit.test('sop/physicsRBDAttributes sphere with expression entity dependent', a
 	const container = await physicsWorld1.compute();
 	const objects = container.coreContent()!.objects()[0].children;
 	const radii = objects.map(
-		(object: Object3D) => CoreObject.attribValue(object, PhysicsRBDSphereAttribute.RADIUS) as number
+		(object: Object3D) => CoreObject.attribValue(object, PhysicsRBDRadiusAttribute.RADIUS) as number
 	);
 	assert.in_delta(radii[0], 0.3, 0.001);
 	assert.in_delta(radii[1], 0.4, 0.001);

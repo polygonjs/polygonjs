@@ -1,11 +1,17 @@
 import {TypeAssert} from './../../engine/poly/Assert';
 // import {CorePhysicsUserData} from './PhysicsUserData';
 import {PhysicsRBDColliderType, PhysicsRBDType, CorePhysicsAttribute, PhysicsIdAttribute} from './PhysicsAttribute';
-import {BufferAttribute, Mesh, Object3D, Vector3, Quaternion} from 'three';
+import {Object3D, Vector3, Quaternion} from 'three';
 import type {World, RigidBodyType, RigidBodyDesc, RigidBody} from '@dimforge/rapier3d';
 import {CorePhysicsLoaded, PhysicsLib} from './CorePhysics';
 import {CoreObject} from '../geometry/Object';
 import {createPhysicsSphere} from './shapes/RBDSphere';
+import {createPhysicsCuboid} from './shapes/RBDCuboid';
+import {createPhysicsCapsule} from './shapes/RBDCapsule';
+import {createPhysicsCone} from './shapes/RBDCone';
+import {createPhysicsCylinder} from './shapes/RBDCylinder';
+import {createPhysicsTriMesh} from './shapes/RBDTrimesh';
+import {createPhysicsConvexHull} from './shapes/ConvexHull';
 
 let rbdId = 1;
 const physicsRBDByRBDId: Map<number, RigidBody> = new Map();
@@ -253,56 +259,26 @@ function PhysicsRBDTypeToRigidBodyType(type: PhysicsRBDType) {
 	}
 	TypeAssert.unreachable(type);
 }
-const tmp = new Vector3();
+
 function PhysicsRBDCollider(PhysicsLib: PhysicsLib, colliderType: PhysicsRBDColliderType, object: Object3D) {
 	switch (colliderType) {
 		case PhysicsRBDColliderType.CAPSULE: {
-			const halfHeight = CorePhysicsAttribute.getHeight(object) * 0.5;
-			const radius = CorePhysicsAttribute.getRadius(object);
-			return PhysicsLib.ColliderDesc.capsule(halfHeight, radius);
+			return createPhysicsCapsule(PhysicsLib, object);
 		}
 		case PhysicsRBDColliderType.CUBOID: {
-			CorePhysicsAttribute.getCuboidSizes(object, tmp);
-			const size = CorePhysicsAttribute.getCuboidSize(object);
-			tmp.multiplyScalar(size * 0.5);
-			return PhysicsLib.ColliderDesc.cuboid(tmp.x, tmp.y, tmp.z);
+			return createPhysicsCuboid(PhysicsLib, object);
 		}
 		case PhysicsRBDColliderType.CONE: {
-			const halfHeight = CorePhysicsAttribute.getHeight(object) * 0.5;
-			const radius = CorePhysicsAttribute.getRadius(object);
-			return PhysicsLib.ColliderDesc.cone(halfHeight, radius);
+			return createPhysicsCone(PhysicsLib, object);
 		}
 		case PhysicsRBDColliderType.CONVEX_HULL: {
-			const geometry = (object as Mesh).geometry;
-			if (!geometry) {
-				return;
-			}
-			const nonIndexedGeometry = geometry.toNonIndexed();
-			const position = nonIndexedGeometry.getAttribute('position') as BufferAttribute;
-			if (!position) {
-				return;
-			}
-			const float32Array = new Float32Array(position.array);
-			return PhysicsLib.ColliderDesc.convexHull(float32Array);
+			return createPhysicsConvexHull(PhysicsLib, object);
 		}
 		case PhysicsRBDColliderType.TRIMESH: {
-			const geometry = (object as Mesh).geometry;
-			if (!geometry) {
-				return;
-			}
-			const position = geometry.getAttribute('position') as BufferAttribute;
-			const index = geometry.getIndex();
-			if (!(position && index)) {
-				return;
-			}
-			const float32ArrayPosition = new Float32Array(position.array);
-			const uint32ArrayIndex = new Uint32Array(index.array);
-			return PhysicsLib.ColliderDesc.trimesh(float32ArrayPosition, uint32ArrayIndex);
+			return createPhysicsTriMesh(PhysicsLib, object);
 		}
 		case PhysicsRBDColliderType.CYLINDER: {
-			const halfHeight = CorePhysicsAttribute.getHeight(object) * 0.5;
-			const radius = CorePhysicsAttribute.getRadius(object);
-			return PhysicsLib.ColliderDesc.cylinder(halfHeight, radius);
+			return createPhysicsCylinder(PhysicsLib, object);
 		}
 		case PhysicsRBDColliderType.SPHERE: {
 			return createPhysicsSphere(PhysicsLib, object);

@@ -31,7 +31,7 @@ class ConeSopParamsConfig extends NodeParamsConfig {
 	/** @param center */
 	center = ParamConfig.VECTOR3([0, 0, 0]);
 	/** @param direction */
-	direction = ParamConfig.VECTOR3([0, 0, 1]);
+	direction = ParamConfig.VECTOR3([0, 1, 0]); // should point up to match RBD expectation
 }
 const ParamsConfig = new ConeSopParamsConfig();
 

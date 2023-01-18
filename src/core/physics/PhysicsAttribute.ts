@@ -58,16 +58,14 @@ export enum PhysicsRBDCuboidAttribute {
 	SIZES = 'sizes',
 	SIZE = 'size',
 }
-export enum PhysicsRBDSphereAttribute {
+export enum PhysicsRBDRadiusAttribute {
 	RADIUS = 'radius',
 }
-export enum PhysicsRBDCapsuleAttribute {
+export enum PhysicsRBDHeightAttribute {
 	HEIGHT = 'height',
-	RADIUS = 'radius',
 }
 export enum PhysicsRBDCylinderAttribute {
 	HEIGHT = 'height',
-	RADIUS = 'radius',
 }
 
 export enum PhysicsCommonAttribute {
@@ -85,8 +83,8 @@ export enum PhysicsCommonAttribute {
 type PhysicsAttribute =
 	| PhysicsCommonAttribute
 	| PhysicsRBDCuboidAttribute
-	| PhysicsRBDSphereAttribute
-	| PhysicsRBDCapsuleAttribute
+	| PhysicsRBDRadiusAttribute
+	| PhysicsRBDHeightAttribute
 	| PhysicsJointAttribute;
 
 export function physicsAttribNameLive(attribute: PhysicsAttribute): string {
@@ -200,16 +198,16 @@ export class CorePhysicsAttribute extends CorePhysicsBaseAttribute {
 	}
 	// sphere + capsule + cylinder
 	static setRadius(object: Object3D, value: number) {
-		this._setNumber(object, PhysicsRBDSphereAttribute.RADIUS, value);
+		this._setNumber(object, PhysicsRBDRadiusAttribute.RADIUS, value);
 	}
 	static getRadius(object: Object3D) {
-		return this._getNumber(object, PhysicsRBDSphereAttribute.RADIUS, 1);
+		return this._getNumber(object, PhysicsRBDRadiusAttribute.RADIUS, 1);
 	}
 	// capsule + cylinder
 	static setHeight(object: Object3D, value: number) {
-		this._setNumber(object, PhysicsRBDCapsuleAttribute.HEIGHT, value);
+		this._setNumber(object, PhysicsRBDHeightAttribute.HEIGHT, value);
 	}
 	static getHeight(object: Object3D) {
-		return this._getNumber(object, PhysicsRBDCapsuleAttribute.HEIGHT, 1);
+		return this._getNumber(object, PhysicsRBDHeightAttribute.HEIGHT, 1);
 	}
 }

@@ -3,11 +3,12 @@ import {CoreSleep} from '../../../../src/core/Sleep';
 import {PhysicsWorldSopNode} from '../../../../src/engine/nodes/sop/PhysicsWorld';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 import {PhysicsRBDColliderType, PhysicsRBDType} from '../../../../src/core/physics/PhysicsAttribute';
-import {PhysicsRBDRadiusAttribute} from '../../../../src/core/physics/PhysicsAttribute';
-import {getPhysicsRBDSphereRadius} from '../../../../src/core/physics/shapes/RBDSphere';
+import {PhysicsRBDCuboidAttribute} from '../../../../src/core/physics/PhysicsAttribute';
 import {MultAddActorNodeInputName} from '../../../../src/engine/nodes/actor/MultAdd';
-import {GetPhysicsRBDSpherePropertyActorNodeInputName} from '../../../../src/engine/nodes/actor/GetPhysicsRBDSphereProperty';
 import {ActorConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Actor';
+import {GetPhysicsRBDCuboidPropertyActorNodeInputName} from '../../../../src/engine/nodes/actor/GetPhysicsRBDCuboidProperty';
+import {getPhysicsRBDCuboidSizes} from '../../../../src/core/physics/shapes/RBDCuboid';
+import {Vector3} from 'three';
 
 function createPhysicsWorldNodes(node: PhysicsWorldSopNode) {
 	// const physicsWorldReset = node.createNode('physicsWorldReset');
@@ -19,33 +20,33 @@ function createPhysicsWorldNodes(node: PhysicsWorldSopNode) {
 	physicsWorldStepSimulation.setInput(0, onTick);
 }
 
-QUnit.test('actor/setPhysicsRBDSphereProperty simple', async (assert) => {
+QUnit.test('actor/setPhysicsRBDCuboidProperty simple', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
 	const cameraNode = window.perspective_camera1;
 	cameraNode.p.t.z.set(5);
 
-	const sphere1 = geo1.createNode('sphere');
+	const box1 = geo1.createNode('box');
 	const physicsRBDAttributes1 = geo1.createNode('physicsRBDAttributes');
 	const physicsWorld1 = geo1.createNode('physicsWorld');
 	const actor1 = geo1.createNode('actor');
 
-	physicsRBDAttributes1.setInput(0, sphere1);
+	physicsRBDAttributes1.setInput(0, box1);
 	physicsRBDAttributes1.setRBDType(PhysicsRBDType.DYNAMIC);
-	physicsRBDAttributes1.setColliderType(PhysicsRBDColliderType.SPHERE);
+	physicsRBDAttributes1.setColliderType(PhysicsRBDColliderType.CUBOID);
 	actor1.setInput(0, physicsRBDAttributes1);
 	physicsWorld1.setInput(0, actor1);
 	physicsWorld1.flags.display.set(true);
 
 	createPhysicsWorldNodes(physicsWorld1);
-	const getPhysicsRBDSphereProperty1 = actor1.createNode('getPhysicsRBDSphereProperty');
-	const setPhysicsRBDSphereProperty1 = actor1.createNode('setPhysicsRBDSphereProperty');
+	const getPhysicsRBDCuboidProperty1 = actor1.createNode('getPhysicsRBDCuboidProperty');
+	const setPhysicsRBDCuboidProperty1 = actor1.createNode('setPhysicsRBDCuboidProperty');
 	const onManualTrigger1 = actor1.createNode('onManualTrigger');
 	const getObjectAttribute1 = actor1.createNode('getObjectAttribute');
 	const multAdd1 = actor1.createNode('multAdd');
-	setPhysicsRBDSphereProperty1.setInput(0, onManualTrigger1);
-	getObjectAttribute1.p.attribName.set(PhysicsRBDRadiusAttribute.RADIUS);
-	getObjectAttribute1.setAttribType(ActorConnectionPointType.FLOAT);
+	setPhysicsRBDCuboidProperty1.setInput(0, onManualTrigger1);
+	getObjectAttribute1.p.attribName.set(PhysicsRBDCuboidAttribute.SIZES);
+	getObjectAttribute1.setAttribType(ActorConnectionPointType.VECTOR3);
 	// setPhysicsRBDSphereProperty1.setInput(setPhysicsRBDSphereProperty1.p.radius.name(), getPhysicsRBDSphereProperty1);
 
 	const container = await physicsWorld1.compute();
@@ -57,35 +58,42 @@ QUnit.test('actor/setPhysicsRBDSphereProperty simple', async (assert) => {
 		assert.less_than(object.position.y, -0.01, 'object has gone down');
 
 		//
-		setPhysicsRBDSphereProperty1.p.radius.set(2);
+		setPhysicsRBDCuboidProperty1.p.sizes.set([2, 2, 2]);
 		onManualTrigger1.p.trigger.pressButton();
 		await CoreSleep.sleep(50);
-		assert.equal(getPhysicsRBDSphereRadius(object), 2);
+		const target = new Vector3();
+		getPhysicsRBDCuboidSizes(object, target);
+		assert.equal(target.x, 2);
 
 		//
-		setPhysicsRBDSphereProperty1.p.radius.set(4);
-		setPhysicsRBDSphereProperty1.p.lerp.set(0.5);
+		setPhysicsRBDCuboidProperty1.p.sizes.set([4, 4, 4]);
+		setPhysicsRBDCuboidProperty1.p.lerp.set(0.5);
 		onManualTrigger1.p.trigger.pressButton();
 		await CoreSleep.sleep(50);
-		assert.equal(getPhysicsRBDSphereRadius(object), 3, 'with lerp=0.5');
+		getPhysicsRBDCuboidSizes(object, target);
+		assert.equal(target.x, 3, 'with lerp=0.5');
 
 		//
-		setPhysicsRBDSphereProperty1.setInput(setPhysicsRBDSphereProperty1.p.radius.name(), multAdd1);
-		setPhysicsRBDSphereProperty1.p.lerp.set(1);
+		setPhysicsRBDCuboidProperty1.setInput(setPhysicsRBDCuboidProperty1.p.sizes.name(), multAdd1);
+		setPhysicsRBDCuboidProperty1.p.lerp.set(1);
 		multAdd1.setInput(
 			MultAddActorNodeInputName.VALUE,
-			getPhysicsRBDSphereProperty1,
-			GetPhysicsRBDSpherePropertyActorNodeInputName.radius
+			getPhysicsRBDCuboidProperty1,
+			GetPhysicsRBDCuboidPropertyActorNodeInputName.sizes
 		);
-		multAdd1.params.get('mult')!.set(2);
+		// const constant1 = actor1.createNode('constant')
+		// constant1.setConstantType(ActorConnectionPointType.VECTOR3)
+		multAdd1.params.get('mult')!.set([2, 2, 2]);
 		onManualTrigger1.p.trigger.pressButton();
 		await CoreSleep.sleep(50);
-		assert.equal(getPhysicsRBDSphereRadius(object), 6, 'radius x2');
+		getPhysicsRBDCuboidSizes(object, target);
+		assert.equal(target.x, 6, 'radius x2');
 
 		//
-		setPhysicsRBDSphereProperty1.setInput(setPhysicsRBDSphereProperty1.p.radius.name(), getObjectAttribute1);
+		setPhysicsRBDCuboidProperty1.setInput(setPhysicsRBDCuboidProperty1.p.sizes.name(), getObjectAttribute1);
 		onManualTrigger1.p.trigger.pressButton();
 		await CoreSleep.sleep(50);
-		assert.equal(getPhysicsRBDSphereRadius(object), 1, 'back to original attrib value');
+		getPhysicsRBDCuboidSizes(object, target);
+		assert.equal(target.x, 1, 'back to original attrib value');
 	});
 });

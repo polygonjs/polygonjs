@@ -54,6 +54,9 @@ import {GetObjectPropertyActorNode} from '../../../nodes/actor/GetObjectProperty
 import {GetObjectUserDataActorNode} from '../../../nodes/actor/GetObjectUserData';
 import {GetObjectWorldPositionActorNode} from '../../../nodes/actor/GetObjectWorldPosition';
 import {GetParentActorNode} from '../../../nodes/actor/GetParent';
+import {GetPhysicsRBDConePropertyActorNode} from '../../../nodes/actor/GetPhysicsRBDConeProperty';
+import {GetPhysicsRBDCylinderPropertyActorNode} from '../../../nodes/actor/GetPhysicsRBDCylinderProperty';
+import {GetPhysicsRBDCuboidPropertyActorNode} from '../../../nodes/actor/GetPhysicsRBDCuboidProperty';
 import {GetPhysicsRBDSpherePropertyActorNode} from '../../../nodes/actor/GetPhysicsRBDSphereProperty';
 import {GetPlanePropertyActorNode} from '../../../nodes/actor/GetPlaneProperty';
 import {GetRayPropertyActorNode} from '../../../nodes/actor/GetRayProperty';
@@ -160,6 +163,9 @@ import {SetObjectScaleActorNode} from '../../../nodes/actor/SetObjectScale';
 import {SetObjectVisibleActorNode} from '../../../nodes/actor/SetObjectVisible';
 import {SetPhysicsRBDPositionActorNode} from '../../../nodes/actor/SetPhysicsRBDPosition';
 import {SetPhysicsRBDRotationActorNode} from '../../../nodes/actor/SetPhysicsRBDRotation';
+import {SetPhysicsRBDConePropertyActorNode} from '../../../nodes/actor/SetPhysicsRBDConeProperty';
+import {SetPhysicsRBDCylinderPropertyActorNode} from '../../../nodes/actor/SetPhysicsRBDCylinderProperty';
+import {SetPhysicsRBDCuboidPropertyActorNode} from '../../../nodes/actor/SetPhysicsRBDCuboidProperty';
 import {SetPhysicsRBDSpherePropertyActorNode} from '../../../nodes/actor/SetPhysicsRBDSphereProperty';
 import {SetPhysicsWorldGravityActorNode} from '../../../nodes/actor/SetPhysicsWorldGravity';
 import {SetParamActorNode} from '../../../nodes/actor/SetParam';
@@ -257,7 +263,6 @@ export interface ActorNodeChildrenMap {
 	getChildrenAttributes: GetChildrenAttributesActorNode;
 	getObjectChild: GetObjectChildActorNode;
 	getDefaultCamera: GetDefaultCameraActorNode;
-	getPhysicsRBDSphereProperty: GetPhysicsRBDSpherePropertyActorNode;
 	getIntersectionProperty: GetIntersectionPropertyActorNode;
 	getMaterial: GetMaterialActorNode;
 	getObject: GetObjectActorNode;
@@ -266,6 +271,10 @@ export interface ActorNodeChildrenMap {
 	getObjectUserData: GetObjectUserDataActorNode;
 	getObjectWorldPosition: GetObjectWorldPositionActorNode;
 	getParent: GetParentActorNode;
+	getPhysicsRBDConeProperty: GetPhysicsRBDConePropertyActorNode;
+	getPhysicsRBDCylinderProperty: GetPhysicsRBDCylinderPropertyActorNode;
+	getPhysicsRBDCuboidProperty: GetPhysicsRBDCuboidPropertyActorNode;
+	getPhysicsRBDSphereProperty: GetPhysicsRBDSpherePropertyActorNode;
 	getPlaneProperty: GetPlanePropertyActorNode;
 	getRayProperty: GetRayPropertyActorNode;
 	getSphereProperty: GetSpherePropertyActorNode;
@@ -338,7 +347,7 @@ export interface ActorNodeChildrenMap {
 	rand: RandActorNode;
 	random: RandomActorNode;
 	ray: RayActorNode;
-	rayDistanceToPlaneActorNode: RayDistanceToPlaneActorNode;
+	rayDistanceToPlane: RayDistanceToPlaneActorNode;
 	rayFromCamera: RayFromCameraActorNode;
 	rayFromCursor: RayFromCursorActorNode;
 	rayIntersectBox: RayIntersectBoxActorNode;
@@ -371,6 +380,9 @@ export interface ActorNodeChildrenMap {
 	setObjectScale: SetObjectScaleActorNode;
 	setPhysicsRBDPosition: SetPhysicsRBDPositionActorNode;
 	setPhysicsRBDRotation: SetPhysicsRBDRotationActorNode;
+	setPhysicsRBDConeProperty: SetPhysicsRBDConePropertyActorNode;
+	setPhysicsRBDCylinderProperty: SetPhysicsRBDCylinderPropertyActorNode;
+	setPhysicsRBDCuboidProperty: SetPhysicsRBDCuboidPropertyActorNode;
 	setPhysicsRBDSphereProperty: SetPhysicsRBDSpherePropertyActorNode;
 	setPhysicsWorldGravity: SetPhysicsWorldGravityActorNode;
 	setParam: SetParamActorNode;
@@ -482,6 +494,9 @@ export class ActorRegister {
 		poly.registerNode(GetObjectUserDataActorNode, CATEGORY_ACTOR.GET);
 		poly.registerNode(GetObjectWorldPositionActorNode, CATEGORY_ACTOR.GET);
 		poly.registerNode(GetParentActorNode, CATEGORY_ACTOR.GET);
+		poly.registerNode(GetPhysicsRBDConePropertyActorNode, CATEGORY_ACTOR.PHYSICS);
+		poly.registerNode(GetPhysicsRBDCylinderPropertyActorNode, CATEGORY_ACTOR.PHYSICS);
+		poly.registerNode(GetPhysicsRBDCuboidPropertyActorNode, CATEGORY_ACTOR.PHYSICS);
 		poly.registerNode(GetPhysicsRBDSpherePropertyActorNode, CATEGORY_ACTOR.PHYSICS);
 		poly.registerNode(GetPlanePropertyActorNode, CATEGORY_ACTOR.GET);
 		poly.registerNode(GetRayPropertyActorNode, CATEGORY_ACTOR.GET);
@@ -589,6 +604,9 @@ export class ActorRegister {
 		poly.registerNode(SetObjectVisibleActorNode, CATEGORY_ACTOR.ACTION);
 		poly.registerNode(SetPhysicsRBDPositionActorNode, CATEGORY_ACTOR.PHYSICS);
 		poly.registerNode(SetPhysicsRBDRotationActorNode, CATEGORY_ACTOR.PHYSICS);
+		poly.registerNode(SetPhysicsRBDConePropertyActorNode, CATEGORY_ACTOR.PHYSICS);
+		poly.registerNode(SetPhysicsRBDCylinderPropertyActorNode, CATEGORY_ACTOR.PHYSICS);
+		poly.registerNode(SetPhysicsRBDCuboidPropertyActorNode, CATEGORY_ACTOR.PHYSICS);
 		poly.registerNode(SetPhysicsRBDSpherePropertyActorNode, CATEGORY_ACTOR.PHYSICS);
 		poly.registerNode(SetPhysicsWorldGravityActorNode, CATEGORY_ACTOR.PHYSICS);
 		poly.registerNode(SetParamActorNode, CATEGORY_ACTOR.ACTION);

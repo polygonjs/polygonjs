@@ -77,7 +77,7 @@ export interface PostNodeChildrenMap {
 	outline: OutlinePostNode;
 	pixel: PixelPostNode;
 	render: RenderPostNode;
-	screenSpaceAmbientOcclusionPostNode: ScreenSpaceAmbientOcclusionPostNode;
+	screenSpaceAmbientOcclusion: ScreenSpaceAmbientOcclusionPostNode;
 	sepia: SepiaPostNode;
 	sequence: SequencePostNode;
 	texture: TexturePostNode;

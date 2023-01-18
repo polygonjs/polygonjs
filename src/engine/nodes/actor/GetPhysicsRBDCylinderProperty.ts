@@ -1,5 +1,5 @@
 /**
- * get an RBD sphere property
+ * get an RBD cylinder property
  *
  *
  */
@@ -11,21 +11,23 @@ import {
 	ACTOR_CONNECTION_POINT_IN_NODE_DEF,
 	ReturnValueTypeByActorConnectionPointType,
 } from '../utils/io/connections/Actor';
-import {getPhysicsRBDSphereRadius} from '../../../core/physics/shapes/RBDSphere';
+import {getPhysicsRBDCylinderHeight, getPhysicsRBDCylinderRadius} from '../../../core/physics/shapes/RBDCylinder';
 import {TypeAssert} from '../../poly/Assert';
 
 const CONNECTION_OPTIONS = ACTOR_CONNECTION_POINT_IN_NODE_DEF;
 
-export enum GetPhysicsRBDSpherePropertyActorNodeInputName {
+export enum GetPhysicsRBDCylinderPropertyActorNodeInputName {
+	height = 'height',
 	radius = 'radius',
 }
-const PROPERTIES: GetPhysicsRBDSpherePropertyActorNodeInputName[] = [
-	GetPhysicsRBDSpherePropertyActorNodeInputName.radius,
+const PROPERTIES: GetPhysicsRBDCylinderPropertyActorNodeInputName[] = [
+	GetPhysicsRBDCylinderPropertyActorNodeInputName.radius,
+	GetPhysicsRBDCylinderPropertyActorNodeInputName.height,
 ];
 
-export class GetPhysicsRBDSpherePropertyActorNode extends ParamlessTypedActorNode {
+export class GetPhysicsRBDCylinderPropertyActorNode extends ParamlessTypedActorNode {
 	static override type() {
-		return 'getPhysicsRBDSphereproperty';
+		return 'getPhysicsRBDCylinderproperty';
 	}
 
 	override initializeNode() {
@@ -39,7 +41,11 @@ export class GetPhysicsRBDSpherePropertyActorNode extends ParamlessTypedActorNod
 
 		this.io.outputs.setNamedOutputConnectionPoints([
 			new ActorConnectionPoint(
-				GetPhysicsRBDSpherePropertyActorNodeInputName.radius,
+				GetPhysicsRBDCylinderPropertyActorNodeInputName.radius,
+				ActorConnectionPointType.FLOAT
+			),
+			new ActorConnectionPoint(
+				GetPhysicsRBDCylinderPropertyActorNodeInputName.height,
 				ActorConnectionPointType.FLOAT
 			),
 		]);
@@ -47,15 +53,18 @@ export class GetPhysicsRBDSpherePropertyActorNode extends ParamlessTypedActorNod
 
 	public override outputValue(
 		context: ActorNodeTriggerContext,
-		outputName: GetPhysicsRBDSpherePropertyActorNodeInputName
+		outputName: GetPhysicsRBDCylinderPropertyActorNodeInputName
 	): ReturnValueTypeByActorConnectionPointType[ActorConnectionPointType] | undefined {
 		const Object3D =
 			this._inputValue<ActorConnectionPointType.OBJECT_3D>(ActorConnectionPointType.OBJECT_3D, context) ||
 			context.Object3D;
-		if (PROPERTIES.includes(outputName as GetPhysicsRBDSpherePropertyActorNodeInputName)) {
+		if (PROPERTIES.includes(outputName as GetPhysicsRBDCylinderPropertyActorNodeInputName)) {
 			switch (outputName) {
-				case GetPhysicsRBDSpherePropertyActorNodeInputName.radius: {
-					return getPhysicsRBDSphereRadius(Object3D) || 0;
+				case GetPhysicsRBDCylinderPropertyActorNodeInputName.radius: {
+					return getPhysicsRBDCylinderRadius(Object3D);
+				}
+				case GetPhysicsRBDCylinderPropertyActorNodeInputName.height: {
+					return getPhysicsRBDCylinderHeight(Object3D);
 				}
 			}
 			TypeAssert.unreachable(outputName);
