@@ -49,7 +49,8 @@ export class CoreWebXRARController extends BaseCoreWebXRController {
 		parentElement.prepend(buttonElement);
 	}
 
-	async requestSession(sessionInit: XRSessionInit, onSessionStarted: OnWebXRSessionStartedCallback) {
+	override async requestSession(sessionInit: XRSessionInit, onSessionStarted: OnWebXRSessionStartedCallback) {
+		super.requestSession(sessionInit, onSessionStarted);
 		this._estimatedLightController = new CoreWebXRAREstimatedLightController();
 		this._estimatedLightController.initialize(this.scene, this.renderer);
 

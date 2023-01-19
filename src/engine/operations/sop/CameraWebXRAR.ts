@@ -93,17 +93,17 @@ export class CameraWebXRARSopOperation extends BaseSopOperation {
 		const requiredFeaturesStr = requiredFeatures.join(' ');
 		for (let object of objects) {
 			CoreObject.addAttribute(object, CameraAttribute.WEBXR_AR, active);
-			CoreObject.addAttribute(object, CameraAttribute.WEBXR_FEATURES_OPTIONAL, optionalFeaturesStr);
-			CoreObject.addAttribute(object, CameraAttribute.WEBXR_FEATURES_REQUIRED, requiredFeaturesStr);
+			CoreObject.addAttribute(object, CameraAttribute.WEBXR_AR_FEATURES_OPTIONAL, optionalFeaturesStr);
+			CoreObject.addAttribute(object, CameraAttribute.WEBXR_AR_FEATURES_REQUIRED, requiredFeaturesStr);
 			CoreObject.addAttribute(
 				object,
-				CameraAttribute.WEBXR_OVERRIDE_REFERENCE_SPACE_TYPE,
+				CameraAttribute.WEBXR_AR_OVERRIDE_REFERENCE_SPACE_TYPE,
 				isBooleanTrue(params.overrideReferenceSpaceType)
 			);
 			if (isBooleanTrue(params.overrideReferenceSpaceType)) {
 				CoreObject.addAttribute(
 					object,
-					CameraAttribute.WEBXR_REFERENCE_SPACE_TYPE,
+					CameraAttribute.WEBXR_AR_REFERENCE_SPACE_TYPE,
 					WEBXR_REFERENCE_SPACE_TYPES[params.referenceSpaceType]
 				);
 			}

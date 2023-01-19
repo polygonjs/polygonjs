@@ -19,10 +19,8 @@ export abstract class BaseCoreWebXRController {
 		renderer.xr.enabled = true;
 
 		if (isBooleanTrue(options.overrideReferenceSpaceType) && options.referenceSpaceType) {
-			console.log('A:ref', options.referenceSpaceType);
 			renderer.xr.setReferenceSpaceType(options.referenceSpaceType);
 		} else {
-			console.log('B:ref', DEFAULT_WEBXR_REFERENCE_SPACE_TYPE);
 			renderer.xr.setReferenceSpaceType(DEFAULT_WEBXR_REFERENCE_SPACE_TYPE);
 		}
 	}
@@ -31,16 +29,30 @@ export abstract class BaseCoreWebXRController {
 	}
 
 	mount() {
-		this.renderer.xr.addEventListener('sessionstart', this._onSessionStartBound);
-		this.renderer.xr.addEventListener('sessionend', this._onSessionEndBound);
+		// sessionstart and sessionend events
+		// are only added right before the session request
+		// and not when mounting the button.
+		// Otherwise, when mounting both AR and VR buttons,
+		// both AR and VR controllers would react to a sessionstart event.
+		// By adding the events only when doing the session request,
+		// we ensure that only one controller has those events added
 		this._mountButton();
 	}
 	unmount() {
-		this.renderer.xr.removeEventListener('sessionstart', this._onSessionStartBound);
-		this.renderer.xr.removeEventListener('sessionend', this._onSessionEndBound);
+		this._removedStartEndEvents();
 		this._unmountButton();
 	}
-	abstract requestSession(sessionInit: XRSessionInit, callback: OnWebXRSessionStartedCallback): void;
+	requestSession(sessionInit: XRSessionInit, callback: OnWebXRSessionStartedCallback) {
+		this._addStartEndEvents();
+	}
+	private _addStartEndEvents() {
+		this.renderer.xr.addEventListener('sessionstart', this._onSessionStartBound);
+		this.renderer.xr.addEventListener('sessionend', this._onSessionEndBound);
+	}
+	private _removedStartEndEvents() {
+		this.renderer.xr.removeEventListener('sessionstart', this._onSessionStartBound);
+		this.renderer.xr.removeEventListener('sessionend', this._onSessionEndBound);
+	}
 
 	private _createController(controllerIndex: number): CoreWebXRControllerContainer {
 		const controllerContainer = new CoreWebXRControllerContainer(this.renderer, controllerIndex);
@@ -67,6 +79,7 @@ export abstract class BaseCoreWebXRController {
 		this.scene.play();
 	}
 	protected _onSessionEnd() {
+		this._removedStartEndEvents();
 		for (let controllerContainer of this.controllerContainers) {
 			controllerContainer.initialize(null);
 		}

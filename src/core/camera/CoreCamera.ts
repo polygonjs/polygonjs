@@ -19,10 +19,17 @@ export enum CameraAttribute {
 	// webXR
 	WEBXR_AR = '_Camera_WebXR_AR',
 	WEBXR_VR = '_Camera_WebXR_VR',
-	WEBXR_FEATURES_OPTIONAL = '_Camera_WebXR_Features_Optional',
-	WEBXR_FEATURES_REQUIRED = '_Camera_WebXR_Features_Required',
-	WEBXR_OVERRIDE_REFERENCE_SPACE_TYPE = '_Camera_WebXR_overrideReferenceSpaceType',
-	WEBXR_REFERENCE_SPACE_TYPE = '_Camera_WebXR_referenceSpaceType',
+	// AR and VR attributes should be 2 different sets
+	// to ensure that there will be no conflict
+	// when a camera is set up with both
+	WEBXR_AR_FEATURES_OPTIONAL = '_Camera_WebXR_AR_Features_Optional',
+	WEBXR_AR_FEATURES_REQUIRED = '_Camera_WebXR_AR_Features_Required',
+	WEBXR_AR_OVERRIDE_REFERENCE_SPACE_TYPE = '_Camera_WebXR_AR_overrideReferenceSpaceType',
+	WEBXR_AR_REFERENCE_SPACE_TYPE = '_Camera_WebXR_AR_referenceSpaceType',
+	WEBXR_VR_FEATURES_OPTIONAL = '_Camera_WebXR_VR_Features_Optional',
+	WEBXR_VR_FEATURES_REQUIRED = '_Camera_WebXR_VR_Features_Required',
+	WEBXR_VR_OVERRIDE_REFERENCE_SPACE_TYPE = '_Camera_WebXR_VR_overrideReferenceSpaceType',
+	WEBXR_VR_REFERENCE_SPACE_TYPE = '_Camera_WebXR_VR_referenceSpaceType',
 	// webXR + marker tracking
 	WEBXR_AR_MARKER_TRACKING = '_Camera_WebXR_AR_markerTracking',
 	WEBXR_AR_MARKER_TRACKING_BAR_CODE_TYPE = '_Camera_WebXR_AR_markerTracking_barCodeType',
@@ -40,10 +47,14 @@ export const CAMERA_ATTRIBUTES: CameraAttribute[] = [
 	CameraAttribute.RENDERER_NODE_ID,
 	CameraAttribute.WEBXR_AR,
 	CameraAttribute.WEBXR_VR,
-	CameraAttribute.WEBXR_FEATURES_OPTIONAL,
-	CameraAttribute.WEBXR_FEATURES_REQUIRED,
-	CameraAttribute.WEBXR_OVERRIDE_REFERENCE_SPACE_TYPE,
-	CameraAttribute.WEBXR_REFERENCE_SPACE_TYPE,
+	CameraAttribute.WEBXR_AR_FEATURES_OPTIONAL,
+	CameraAttribute.WEBXR_AR_FEATURES_REQUIRED,
+	CameraAttribute.WEBXR_AR_OVERRIDE_REFERENCE_SPACE_TYPE,
+	CameraAttribute.WEBXR_AR_REFERENCE_SPACE_TYPE,
+	CameraAttribute.WEBXR_VR_FEATURES_OPTIONAL,
+	CameraAttribute.WEBXR_VR_FEATURES_REQUIRED,
+	CameraAttribute.WEBXR_VR_OVERRIDE_REFERENCE_SPACE_TYPE,
+	CameraAttribute.WEBXR_VR_REFERENCE_SPACE_TYPE,
 ];
 export enum PerspectiveCameraAttribute {
 	FOV = '_PerspectiveCamera_fov',

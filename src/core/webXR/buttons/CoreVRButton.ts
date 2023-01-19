@@ -1,6 +1,6 @@
 import {WebGLRenderer} from 'three';
 import {CoreWebXRVRController} from '../webXRVR/CoreWebXRVRController';
-import {setErrorStyle} from './Common';
+import {applyDefaultStyle, createInfoLink, disableButtonElement, setErrorStyle} from './Common';
 
 interface SessionInitOptions extends XRSessionInit {}
 
@@ -86,16 +86,7 @@ export class CoreVRButton {
 		}
 
 		function disableButton() {
-			button.style.display = '';
-
-			button.style.cursor = 'auto';
-			button.style.left = 'calc(50% - 75px)';
-			button.style.width = '150px';
-
-			button.onmouseenter = null;
-			button.onmouseleave = null;
-
-			button.onclick = null;
+			disableButtonElement(button);
 		}
 
 		function showWebXRNotFound() {
@@ -115,17 +106,8 @@ export class CoreVRButton {
 		}
 
 		function stylizeElement(element: HTMLElement) {
-			element.style.margin = '0px 6px';
-			element.style.padding = '12px 6px';
-			element.style.border = '1px solid #fff';
-			element.style.borderRadius = '4px';
+			applyDefaultStyle(element);
 			element.style.background = 'rgb(16 27 44 / 95%)';
-			element.style.color = '#fff';
-			element.style.font = 'normal 13px sans-serif';
-			element.style.textAlign = 'center';
-			element.style.opacity = '0.8';
-			element.style.outline = 'none';
-			element.style.zIndex = '999';
 		}
 
 		if ('xr' in navigator) {
@@ -147,19 +129,7 @@ export class CoreVRButton {
 
 			return button;
 		} else {
-			const message = document.createElement('a');
-
-			if (window.isSecureContext === false) {
-				message.href = document.location.href.replace(/^http:/, 'https:');
-				message.innerHTML = 'WEBXR NEEDS HTTPS'; // TODO Improve message
-			} else {
-				message.href = 'https://immersiveweb.dev/';
-				message.innerHTML = 'WEBXR NOT AVAILABLE';
-			}
-
-			message.style.left = 'calc(50% - 90px)';
-			message.style.width = '180px';
-			message.style.textDecoration = 'none';
+			const message = createInfoLink();
 
 			stylizeElement(message);
 			setErrorStyle(message);

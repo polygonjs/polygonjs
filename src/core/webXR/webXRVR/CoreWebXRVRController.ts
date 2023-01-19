@@ -16,6 +16,7 @@ import {CoreVRButton} from '../buttons/CoreVRButton';
 import {CoreWebXRVRControllerOptions} from './CommonVR';
 import {CoreWebXRControllerContainer} from '../CoreWebXRControllerContainer';
 import {BaseCoreWebXRController, OnWebXRSessionStartedCallback} from '../_BaseCoreWebXRController';
+import {BaseXRSessionEventName} from '../Common';
 
 // from three
 // examples/webxr_vr_ballshooter.html
@@ -58,7 +59,8 @@ export class CoreWebXRVRController extends BaseCoreWebXRController {
 		const xr = this.renderer.xr;
 		xr.addEventListener('sessionstart', () => (this._baseReferenceSpace = xr.getReferenceSpace()));
 	}
-	async requestSession(sessionInit: XRSessionInit, onSessionStarted: OnWebXRSessionStartedCallback) {
+	override async requestSession(sessionInit: XRSessionInit, onSessionStarted: OnWebXRSessionStartedCallback) {
+		super.requestSession(sessionInit, onSessionStarted);
 		return navigator.xr?.requestSession('immersive-vr', sessionInit).then(onSessionStarted);
 	}
 	protected override _onSessionStart() {
@@ -84,7 +86,7 @@ export class CoreWebXRVRController extends BaseCoreWebXRController {
 	): void {
 		let controllerChild: Object3D | undefined;
 		// add/remove crosshair to controller
-		controllerContainer.controller.addEventListener('connected', function (event) {
+		controllerContainer.controller.addEventListener(BaseXRSessionEventName.CONNECTED, function (event) {
 			const data: XRInputSource = event.data;
 			const _controllerChild = buildController(data);
 			if (_controllerChild) {
@@ -93,7 +95,7 @@ export class CoreWebXRVRController extends BaseCoreWebXRController {
 				controllerContainer.controller.add(controllerChild);
 			}
 		});
-		controllerContainer.controller.addEventListener('disconnected', function () {
+		controllerContainer.controller.addEventListener(BaseXRSessionEventName.DISCONNECTED, function () {
 			if (controllerChild) {
 				controllerContainer.controller.remove(controllerChild);
 			}
