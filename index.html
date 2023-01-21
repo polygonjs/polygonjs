@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>Examples</title>
+		<style>
+			html,
+			body,
+			#app {
+				margin: 0px;
+				height: 100%;
+				overflow: hidden;
+				color: #eee;
+				background-color: #111;
+			}
+			canvas {
+				display: block;
+				height: 100%;
+			}
+			#examples-container {
+				position: absolute;
+				top: 10px;
+				left: 10px;
+				margin: 10px;
+				padding: 0px;
+				border: 1px solid lightgray;
+			}
+			#examples-container h1 {
+				font-size: 1.5rem;
+				padding: 10px;
+				margin: 0px;
+			}
+			#examples-container ul {
+				margin: 0px;
+				padding: 0px;
+			}
+			ul#examples-list li {
+				display: block;
+			}
+			ul#examples-list li a {
+				display: block;
+				padding: 5px 10px;
+			}
+			ul#examples-list li.active {
+				background-color: #dde;
+			}
+			ul#examples-list li a:hover {
+				background-color: #eee;
+			}
+			#controls-container {
+				position: absolute;
+				top: 10px;
+				right: 10px;
+				border: 1px solid lightgray;
+				margin: 10px;
+				padding: 10px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="examples-container">
+			<h1>Examples:</h1>
+			<ul id="examples-list">
+				<li id="example-list-item-template">
+					<a></a>
+				</li>
+			</ul>
+		</div>
+
+		<div id="controls-container">
+			<a id="source-link" target="_blank">view source</a>
+			<div id="controls-container-inner"></div>
+		</div>
+
+		<div id="app"></div>
+		<script type="module" src="/src/engine/example.ts"></script>
+	</body>
+</html>
