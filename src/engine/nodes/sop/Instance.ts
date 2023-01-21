@@ -2,7 +2,7 @@
  * Copies a geometry onto every point from the right input.
  *
  * @remarks
- * Creates an instance geometry, but instancing the geometry in the left input onto every point from the right input. This is a great way to display a lot of geometries on screen with little performance penalty.
+ * Creates an instance geometry, by instancing the geometry in the left input onto every point from the right input. This is a great way to display a lot of geometries on screen with little performance penalty.
  *
  *
  */

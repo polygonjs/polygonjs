@@ -33,9 +33,9 @@ export type OnNodeRegisterCallback = (poly: PolyEngine) => void;
 export type OnOperationRegisterCallback = (poly: PolyEngine) => void;
 
 export class NodesRegister {
-	private _node_register: NodeConstructorByTypeByContext = new Map();
-	private _node_register_categories: TabMenuByTypeByContext = new Map();
-	private _node_register_options: RegisterOptionsByTypeByContext = new Map();
+	private _nodesRegister: NodeConstructorByTypeByContext = new Map();
+	private _nodesRegisterCategories: TabMenuByTypeByContext = new Map();
+	private _nodesRegisterOptions: RegisterOptionsByTypeByContext = new Map();
 
 	constructor(private poly: PolyEngine) {}
 
@@ -54,17 +54,17 @@ export class NodesRegister {
 			printWarnings = true;
 		}
 
-		let current_nodes_for_context = this._node_register.get(context);
+		let current_nodes_for_context = this._nodesRegister.get(context);
 		if (!current_nodes_for_context) {
 			current_nodes_for_context = new Map();
-			this._node_register.set(context, current_nodes_for_context);
+			this._nodesRegister.set(context, current_nodes_for_context);
 		}
 
 		const alreadyRegisteredNode = current_nodes_for_context.get(nodeType);
 		if (alreadyRegisteredNode) {
 			// if the node that is already registered is a polyNode, it can be overwritten by another polyNode.
 			const isAlreadyRegisteredNodePolyNode =
-				this._node_register_options.get(context)?.get(nodeType)?.polyNode == true;
+				this._nodesRegisterOptions.get(context)?.get(nodeType)?.polyNode == true;
 			const isNewNodePolyNode = options?.polyNode == true;
 			if (isAlreadyRegisteredNodePolyNode && isNewNodePolyNode) {
 				// we don't show a warning or return if both are polyNodes
@@ -81,19 +81,19 @@ export class NodesRegister {
 		}
 
 		if (tab_menu_category) {
-			let current_categories = this._node_register_categories.get(context);
+			let current_categories = this._nodesRegisterCategories.get(context);
 			if (!current_categories) {
 				current_categories = new Map();
-				this._node_register_categories.set(context, current_categories);
+				this._nodesRegisterCategories.set(context, current_categories);
 			}
 			current_categories.set(nodeType, tab_menu_category);
 		}
 
 		if (options) {
-			let current_options = this._node_register_options.get(context);
+			let current_options = this._nodesRegisterOptions.get(context);
 			if (!current_options) {
 				current_options = new Map();
-				this._node_register_options.set(context, current_options);
+				this._nodesRegisterOptions.set(context, current_options);
 			}
 			current_options.set(nodeType, options);
 		}
@@ -101,12 +101,12 @@ export class NodesRegister {
 	}
 	deregister(context: NodeContext, nodeType: string) {
 		nodeType = NodesRegister.filterType(nodeType);
-		this._node_register.get(context)?.delete(nodeType);
-		this._node_register_categories.get(context)?.delete(nodeType);
-		this._node_register_options.get(context)?.delete(nodeType);
+		this._nodesRegister.get(context)?.delete(nodeType);
+		this._nodesRegisterCategories.get(context)?.delete(nodeType);
+		this._nodesRegisterOptions.get(context)?.delete(nodeType);
 	}
 	isRegistered(context: NodeContext, nodeType: string): boolean {
-		const nodes_for_context = this._node_register.get(context);
+		const nodes_for_context = this._nodesRegister.get(context);
 		if (!nodes_for_context) {
 			return false;
 		}
@@ -115,17 +115,17 @@ export class NodesRegister {
 	}
 	nodeOptions(context: NodeContext, nodeType: string): NodeRegisterOptions | undefined {
 		nodeType = NodesRegister.filterType(nodeType);
-		return this._node_register_options.get(context)?.get(nodeType);
+		return this._nodesRegisterOptions.get(context)?.get(nodeType);
 	}
 	registeredNodesForParentNode(parentNode: BaseNodeType) {
 		const context = parentNode.childrenController?.context;
 		if (!context) {
 			return [];
 		}
-		const map = this._node_register.get(context);
+		const map = this._nodesRegister.get(context);
 		if (map) {
 			const nodes_for_context: BaseNodeConstructor[] = [];
-			this._node_register.get(context)?.forEach((node, type) => {
+			this._nodesRegister.get(context)?.forEach((node, type) => {
 				nodes_for_context.push(node);
 			});
 			return nodes_for_context.filter((node) => {
@@ -168,11 +168,11 @@ export class NodesRegister {
 	}
 	registeredCategory(context: NodeContext, nodeType: string) {
 		nodeType = NodesRegister.filterType(nodeType);
-		return this._node_register_categories.get(context)?.get(nodeType);
+		return this._nodesRegisterCategories.get(context)?.get(nodeType);
 	}
 
 	map() {
-		return this._node_register;
+		return this._nodesRegister;
 	}
 }
 
