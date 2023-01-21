@@ -8,6 +8,7 @@
 		"noImplicitOverride": true,
 		"strict": true,
 
+		"incremental": true,
 		// output & paths
 		"outDir": "./dist/",
 		"module": "ESNext", // changed from commonjs to ESNext to ensure typescript outputs code that can be split by webpack (with commonjs, the dynamic imports were removed)

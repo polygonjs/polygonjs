@@ -1,6 +1,6 @@
 const argv = require('yargs').argv;
-const FAST_COMPILE = argv.env.FAST_COMPILE || false;
-const TYPESCRIPT_TRANSPILE_ONLY = FAST_COMPILE;
+// const FAST_COMPILE = argv.env.FAST_COMPILE || false;
+// const TYPESCRIPT_TRANSPILE_ONLY = FAST_COMPILE;
 
 // IN CASE OF CRASHES WHEN BUILDING
 // - try and deactivate experimentalWatchApi in ts-loader
@@ -8,7 +8,7 @@ const TYPESCRIPT_TRANSPILE_ONLY = FAST_COMPILE;
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
-// const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const webpack = require('webpack');
 
@@ -32,11 +32,11 @@ const plugins = [
 	}),
 ];
 
-if (TYPESCRIPT_TRANSPILE_ONLY) {
-	// no need for this for now, since I only do transpile_only when doing quick test
-	// and the point is to build fast
-	// plugins.push(new ForkTsCheckerWebpackPlugin());
-}
+// if (TYPESCRIPT_TRANSPILE_ONLY) {
+// no need for this for now, since I only do transpile_only when doing quick test
+// and the point is to build fast
+plugins.push(new ForkTsCheckerWebpackPlugin());
+// }
 
 module.exports = (env = {}) => {
 	// const dist_path = path.resolve(__dirname, env.DIST_PATH ? env.DIST_PATH : '../../dist');
@@ -79,7 +79,7 @@ module.exports = (env = {}) => {
 		module: {
 			rules: [
 				// engine
-				ts(TYPESCRIPT_TRANSPILE_ONLY),
+				ts(),
 				glsl,
 			],
 		},

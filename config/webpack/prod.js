@@ -18,10 +18,11 @@ const POLYGONJS_VERSION = require('../../package.json').version;
 const fs = require('fs');
 const {merge} = require('webpack-merge');
 const common = require('./common.js');
-const TerserPlugin = require('terser-webpack-plugin');
+// const TerserPlugin = require('terser-webpack-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
 // const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
 var {AggressiveMergingPlugin} = require('webpack').optimize;
+const {ESBuildMinifyPlugin} = require('esbuild-loader');
 // const EsmWebpackPlugin = require('@purtuga/esm-webpack-plugin');
 // const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 
@@ -94,25 +95,25 @@ module.exports = (env) => {
 	// if (USE_STATO_ANALYSE) {
 	// 	common_options.plugins.push(new StatoscopeWebpackPlugin());
 	// }
-	if (MINIFY) {
-		common_options.plugins.push(new AggressiveMergingPlugin()); //Merge chunks
-		// common_options.plugins.push(new FaviconsWebpackPlugin(LOGO_PATH));
-		common_options.plugins.push(
-			new CompressionPlugin({
-				test: /\.(js)$/,
-			})
-		); // gz by default
-		common_options.plugins.push(
-			new CompressionPlugin({
-				filename: '[file].br',
-				algorithm: 'brotliCompress',
-				test: /\.(js|css|html|svg)$/,
-				compressionOptions: {level: 11},
-				threshold: 10240,
-				minRatio: 0.8,
-			})
-		);
-	}
+	// if (MINIFY) {
+	// 	common_options.plugins.push(new AggressiveMergingPlugin()); //Merge chunks
+	// 	// common_options.plugins.push(new FaviconsWebpackPlugin(LOGO_PATH));
+	// 	common_options.plugins.push(
+	// 		new CompressionPlugin({
+	// 			test: /\.(js)$/,
+	// 		})
+	// 	); // gz by default
+	// 	common_options.plugins.push(
+	// 		new CompressionPlugin({
+	// 			filename: '[file].br',
+	// 			algorithm: 'brotliCompress',
+	// 			test: /\.(js|css|html|svg)$/,
+	// 			compressionOptions: {level: 11},
+	// 			threshold: 10240,
+	// 			minRatio: 0.8,
+	// 		})
+	// 	);
+	// }
 
 	// https://github.com/johnagan/clean-webpack-plugin/issues/194
 	common_options.output.clean = true;
@@ -188,9 +189,12 @@ module.exports = (env) => {
 
 			minimize: MINIFY,
 			minimizer: [
-				new TerserPlugin({
-					extractComments: true,
-					parallel: true,
+				// new TerserPlugin({
+				// 	extractComments: true,
+				// 	parallel: true,
+				// }),
+				new ESBuildMinifyPlugin({
+					target: 'es2016',
 				}),
 			],
 		},
