@@ -4,10 +4,9 @@ const argv = require('yargs').argv;
 
 // IN CASE OF CRASHES WHEN BUILDING
 // - try and deactivate experimentalWatchApi in ts-loader
-
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-
+const html = require('./loaders/html');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const webpack = require('webpack');
@@ -21,8 +20,9 @@ const POLYGONJS_VERSION = JSON.stringify(require('../../package.json').version);
 const plugins = [
 	new HtmlWebpackPlugin({
 		title: 'Index',
-		// filename: 'index.html',
+		filename: 'index.html',
 		chunks: ['all'],
+		scriptLoading: 'module',
 	}),
 	new MiniCssExtractPlugin({
 		filename: '[name].css',
@@ -38,10 +38,10 @@ const plugins = [
 plugins.push(new ForkTsCheckerWebpackPlugin());
 // }
 
-module.exports = (env = {}) => {
+module.exports = (options = {}) => {
 	// const dist_path = path.resolve(__dirname, env.DIST_PATH ? env.DIST_PATH : '../../dist');
 
-	return {
+	const config = {
 		context: path.resolve(__dirname, '../../'), // to automatically find tsconfig.json
 		entry: {
 			all: './src/engine/index_all.ts',
@@ -49,7 +49,7 @@ module.exports = (env = {}) => {
 		plugins: plugins,
 
 		output: {
-			// filename: '[name].js',
+			filename: '[name].js',
 			// // library: 'POLY',
 			// // libraryTarget: 'window',
 			// libraryExport: 'default',
@@ -87,4 +87,30 @@ module.exports = (env = {}) => {
 			asyncWebAssembly: true, // wasm (rapier physics)
 		},
 	};
+
+	config.module.rules.push(html);
+	if (options.createExamples) {
+		config.entry.example = './src/engine/example.ts';
+		config.plugins.push(
+			new HtmlWebpackPlugin({
+				title: 'Example',
+				filename: 'example.html',
+				template: './src/engine/example.html',
+				chunks: ['example'],
+			})
+		);
+	}
+	if (options.registerAll) {
+		config.entry.registerAll = './src/engine/registerAll.ts';
+		config.plugins.push(
+			new HtmlWebpackPlugin({
+				title: 'registerAll',
+				filename: 'registerAll.html',
+				template: './src/engine/registerAll.html',
+				chunks: ['registerAll'],
+			})
+		);
+	}
+
+	return config;
 };

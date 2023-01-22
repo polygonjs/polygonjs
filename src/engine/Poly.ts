@@ -35,8 +35,10 @@ declare global {
 
 // having __POLYGONJS_VERSION__ here really adds friction
 // for compiling this after exporting from the editor
-// declare var __POLYGONJS_VERSION__: string;
-// const POLYGONJS_VERSION = __POLYGONJS_VERSION__;
+// UPDATE: it can be used now as the editor does not compile anymore
+// and we would use that to check if the editor is the same version as the installed one
+declare var __POLYGONJS_VERSION__: string;
+const POLYGONJS_VERSION = __POLYGONJS_VERSION__;
 export class PolyEngine {
 	// static _instance: Poly | undefined;
 	public readonly renderersController: RenderersController = new RenderersController();
@@ -74,6 +76,10 @@ export class PolyEngine {
 	}
 	private constructor() {}
 
+	version() {
+		return POLYGONJS_VERSION;
+	}
+
 	setPlayerMode(mode: boolean) {
 		this._playerMode = mode;
 	}
@@ -82,6 +88,7 @@ export class PolyEngine {
 	}
 
 	registerNode(node: BaseNodeConstructor, tab_menu_category?: string, options?: NodeRegisterOptions) {
+		// console.warn('registerNode', node.context(), node.type());
 		this.nodesRegister.register(node, tab_menu_category, options);
 	}
 	registerOperation(operation: typeof BaseOperation, options?: OperationRegisterOptions) {

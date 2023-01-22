@@ -30,7 +30,10 @@ const {ESBuildMinifyPlugin} = require('esbuild-loader');
 // const StatoscopeWebpackPlugin = require('@statoscope/webpack-plugin').default;
 
 module.exports = (env) => {
-	const common_options = common(env);
+	const common_options = common({
+		createExamples: true,
+		registerAll: true,
+	});
 
 	// const MODULES = [
 	// 	'EXRLoader',
@@ -132,6 +135,7 @@ module.exports = (env) => {
 	if (env.PUBLIC_PATH) {
 		common_options.output.publicPath = env.PUBLIC_PATH; // this may be crucial to update depending on the build
 	}
+	common_options.output.publicPath = '/';
 	// options for https://github.com/purtuga/esm-webpack-plugin
 	// common_options.plugins.push(new EsmWebpackPlugin());
 	common_options.output.library = {

@@ -1,4 +1,4 @@
-const CREATE_EXAMPLE_INDEX = true;
+// const CREATE_EXAMPLE_INDEX = true;
 const CREATE_TEST_INDEX = true;
 
 const fs = require('fs');
@@ -7,23 +7,24 @@ const common = require('./common.js');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path');
 
-const html = require('./loaders/html');
-
 module.exports = (env) => {
-	const common_options = common(env);
+	const common_options = common({
+		createExamples: true,
+		registerAll: true,
+	});
 
-	if (CREATE_EXAMPLE_INDEX) {
-		common_options.entry.example = './src/engine/example.ts';
-		common_options.plugins.push(
-			new HtmlWebpackPlugin({
-				title: 'Example',
-				filename: 'example.html',
-				template: './src/engine/example.html',
-				chunks: ['example'],
-			})
-		);
-		common_options.module.rules.push(html);
-	}
+	// if (CREATE_EXAMPLE_INDEX) {
+	// 	common_options.entry.example = './src/engine/example.ts';
+	// 	common_options.plugins.push(
+	// 		new HtmlWebpackPlugin({
+	// 			title: 'Example',
+	// 			filename: 'example.html',
+	// 			template: './src/engine/example.html',
+	// 			chunks: ['example'],
+	// 		})
+	// 	);
+	// 	common_options.module.rules.push(html);
+	// }
 
 	// load test index file
 	if (CREATE_TEST_INDEX) {

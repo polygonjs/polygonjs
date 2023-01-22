@@ -30,6 +30,7 @@
 		"build_unpkg": "webpack --env NODE_ENV=production --env production --env PUBLIC_PATH='./' --progress --config config/webpack/prod.js",
 		"build_verbose": "webpack --env NODE_ENV=production --env production --progress --display-reasons --display-used-exports --display-provided-exports --display-chunks --display-max-modules 99999 --display-origins --display-entrypoints --config config/webpack/prod.js",
 		"build_custom_paths_verbose": "webpack --env NODE_ENV=production --env production --env PUBLIC_PATH=/packs-engine/ --env DIST_PATH=../dist --progress --display-reasons --display-used-exports --display-provided-exports --display-chunks --display-max-modules 99999 --display-origins --display-entrypoints --config config/webpack/prod.js",
+		"build_notify": "yarn build && xmessage '@polygonjs build completed'",
 		"analyze": "webpack --env NODE_ENV=production --env production --config config/webpack/prod.js --profile --json > config/webpack/stats.json && node_modules/.bin/webpack-bundle-analyzer config/webpack/stats.json",
 		"concat_dts": "./node_modules/typescript/bin/tsc --allowSyntheticDefaultImports --esModuleInterop --moduleResolution node config/webpack/dts_concat.ts; node config/webpack/dts_concat.js",
 		"tsc_esbuild": "./node_modules/typescript/bin/tsc config/esbuild/esbuild.ts --moduleResolution node",
