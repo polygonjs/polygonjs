@@ -68,7 +68,7 @@ import {GetWebXRControllerPropertyActorNode} from '../../../nodes/actor/GetWebXR
 import {GetWebXRTrackedMarkerPropertyActorNode} from '../../../nodes/actor/GetWebXRTrackedMarkerProperty';
 import {IntToFloatActorNode} from '../../../nodes/actor/IntToFloat';
 import {IntToBoolActorNode} from '../../../nodes/actor/IntToBool';
-import {KeyframesActorNode} from '../../../nodes/actor/Keyframes';
+// import {KeyframesActorNode} from '../../../nodes/actor/Keyframes';
 import {LengthActorNode} from '../../../nodes/actor/Length';
 import {LerpActorNode} from '../../../nodes/actor/Lerp';
 import {ManhattanDistanceActorNode} from '../../../nodes/actor/ManhattanDistance';
@@ -285,7 +285,7 @@ export interface ActorNodeChildrenMap {
 	getWebXRTrackedMarkerProperty: GetWebXRTrackedMarkerPropertyActorNode;
 	intToBool: IntToBoolActorNode;
 	intToFloat: IntToFloatActorNode;
-	keyframes: KeyframesActorNode;
+	// keyframes: KeyframesActorNode;
 	length: LengthActorNode;
 	lerp: LerpActorNode;
 	manhattanDistance: ManhattanDistanceActorNode;
@@ -508,7 +508,7 @@ export class ActorRegister {
 		poly.registerNode(GetWebXRTrackedMarkerPropertyActorNode, CATEGORY_ACTOR.WEBXR);
 		poly.registerNode(IntToBoolActorNode, CATEGORY_ACTOR.GET);
 		poly.registerNode(IntToFloatActorNode, CATEGORY_ACTOR.GET);
-		poly.registerNode(KeyframesActorNode, CATEGORY_ACTOR.ANIMATION);
+		// poly.registerNode(KeyframesActorNode, CATEGORY_ACTOR.ANIMATION);
 		poly.registerNode(LengthActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(LerpActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(ManhattanDistanceActorNode, CATEGORY_ACTOR.MATH);

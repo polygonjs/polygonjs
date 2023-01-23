@@ -1,10 +1,10 @@
 import {CATEGORY_ANIM} from './Category';
 
-import {CopyAnimNode} from '../../../nodes/anim/Copy';
+// import {CopyAnimNode} from '../../../nodes/anim/Copy';
 import {DelayAnimNode} from '../../../nodes/anim/Delay';
 import {DurationAnimNode} from '../../../nodes/anim/Duration';
 import {EasingAnimNode} from '../../../nodes/anim/Easing';
-import {KeyframesAnimNode} from '../../../nodes/anim/Keyframes';
+// import {KeyframesAnimNode} from '../../../nodes/anim/Keyframes';
 import {MergeAnimNode} from '../../../nodes/anim/Merge';
 import {NullAnimNode} from '../../../nodes/anim/Null';
 import {OperationAnimNode} from '../../../nodes/anim/Operation';
@@ -29,11 +29,11 @@ import {PostProcessNetworkAnimNode} from '../../../nodes/anim/PostProcessNetwork
 import {RenderersNetworkAnimNode} from '../../../nodes/anim/RenderersNetwork';
 
 export interface AnimNodeChildrenMap {
-	copy: CopyAnimNode;
+	// copy: CopyAnimNode;
 	delay: DelayAnimNode;
 	duration: DurationAnimNode;
 	easing: EasingAnimNode;
-	keyframes: KeyframesAnimNode;
+	// keyframes: KeyframesAnimNode;
 	merge: MergeAnimNode;
 	null: NullAnimNode;
 	operation: OperationAnimNode;
@@ -61,11 +61,11 @@ export interface AnimNodeChildrenMap {
 import {PolyEngine} from '../../../Poly';
 export class AnimRegister {
 	static run(poly: PolyEngine) {
-		poly.registerNode(CopyAnimNode, CATEGORY_ANIM.MODIFIER);
+		// poly.registerNode(CopyAnimNode, CATEGORY_ANIM.MODIFIER);
 		poly.registerNode(DelayAnimNode, CATEGORY_ANIM.TIMING);
 		poly.registerNode(DurationAnimNode, CATEGORY_ANIM.MODIFIER);
 		poly.registerNode(EasingAnimNode, CATEGORY_ANIM.MODIFIER);
-		poly.registerNode(KeyframesAnimNode, CATEGORY_ANIM.MODIFIER);
+		// poly.registerNode(KeyframesAnimNode, CATEGORY_ANIM.MODIFIER);
 		poly.registerNode(MergeAnimNode, CATEGORY_ANIM.MODIFIER);
 		poly.registerNode(NullAnimNode, CATEGORY_ANIM.MISC);
 		poly.registerNode(OperationAnimNode, CATEGORY_ANIM.MODIFIER);
