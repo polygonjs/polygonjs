@@ -1,17 +1,18 @@
+import {ExpressionType} from '../../../expressions/methods/Common';
 import {BaseMethod} from '../../../expressions/methods/_Base';
 
 export class BaseExpressionRegister {
-	private _methods_names: string[] = [];
-	private _methods_by_name: Map<string, typeof BaseMethod> = new Map();
+	private _methodsNames: ExpressionType[] = [];
+	private _methodsByName: Map<ExpressionType, typeof BaseMethod> = new Map();
 
-	register(expression: typeof BaseMethod, name: string) {
-		this._methods_names.push(name);
-		this._methods_by_name.set(name, expression);
+	register(expression: typeof BaseMethod, name: ExpressionType) {
+		this._methodsNames.push(name);
+		this._methodsByName.set(name, expression);
 	}
-	getMethod(name: string) {
-		return this._methods_by_name.get(name);
+	getMethod(name: ExpressionType) {
+		return this._methodsByName.get(name);
 	}
-	availableMethods(): string[] {
-		return this._methods_names;
+	availableMethods(): ExpressionType[] {
+		return this._methodsNames;
 	}
 }
