@@ -3,7 +3,7 @@
 //  *
 //  *
 //  */
-// import {TypedPostProcessNode, TypedPostNodeContext} from './_Base';
+// import {TypedPostNode, TypedPostNodeContext} from './_Base';
 // import {LayerPass, LAYER_MODES} from '../../../modules/core/post_process/LayerPass';
 // import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 
@@ -16,7 +16,7 @@
 // 	});
 // }
 // const ParamsConfig = new LayerPostParamsConfig();
-// export class LayerPostNode extends TypedPostProcessNode<LayerPass, LayerPostParamsConfig> {
+// export class LayerPostNode extends TypedPostNode<LayerPass, LayerPostParamsConfig> {
 // 	override paramsConfig = ParamsConfig;
 // 	static override type() {
 // 		return 'layer';

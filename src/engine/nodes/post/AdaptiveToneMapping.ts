@@ -3,7 +3,7 @@
 //  *
 //  *
 //  */
-// import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
+// import {TypedPostNode, TypedPostNodeContext, PostParamOptions} from './_Base';
 // import {AdaptiveToneMappingPass} from '../../../modules/three/examples/jsm/postprocessing/AdaptiveToneMappingPass';
 
 // // import VERTEX_SHADER from './gl/Adaptive.vert.glsl'
@@ -59,7 +59,7 @@
 // 	});
 // }
 // const ParamsConfig = new AdaptiveToneMappingPostParamsConfig();
-// export class AdaptiveToneMappingPostNode extends TypedPostProcessNode<
+// export class AdaptiveToneMappingPostNode extends TypedPostNode<
 // 	AdaptiveToneMappingPass,
 // 	AdaptiveToneMappingPostParamsConfig
 // > {

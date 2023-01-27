@@ -3,13 +3,13 @@
 //  *
 //  *
 //  */
-// import {TypedPostProcessNode, TypedPostNodeContext} from './_Base';
+// import {TypedPostNode, TypedPostNodeContext} from './_Base';
 // import {ClearPass} from '../../../modules/three/examples/jsm/postprocessing/ClearPass';
 
 // import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 // class ClearPostParamsConfig extends NodeParamsConfig {}
 // const ParamsConfig = new ClearPostParamsConfig();
-// export class ClearPostNode extends TypedPostProcessNode<ClearPass, ClearPostParamsConfig> {
+// export class ClearPostNode extends TypedPostNode<ClearPass, ClearPostParamsConfig> {
 // 	override paramsConfig = ParamsConfig;
 // 	static override type() {
 // 		return 'clear';

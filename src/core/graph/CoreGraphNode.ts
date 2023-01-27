@@ -3,6 +3,9 @@ import {DirtyController, PostDirtyHook} from './DirtyController';
 import {PolyScene} from '../../engine/scene/PolyScene';
 
 /**
+ *
+ * # [API](/docs/api) / CoreGraphNode
+ *
  * This is the base class for nodes and params, which are part of the same graph, and are connected to dependencies.
  *
  */

@@ -101,5 +101,5 @@ export interface ContainerMap extends ContainerMapGeneric {
 // 	[NodeContext.MAT]: TypedMatNode<any, any>,
 // 	[NodeContext.OBJ]: TypedObjNode<any, any>,
 // 	[NodeContext.COP]: TypedCopNode<any>,
-// 	[NodeContext.POST]: TypedPostProcessNode<any, any>,
+// 	[NodeContext.POST]: TypedPostNode<any, any>,
 // }

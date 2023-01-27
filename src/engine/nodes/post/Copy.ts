@@ -1,4 +1,4 @@
-// import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
+// import {TypedPostNode, TypedPostNodeContext, PostParamOptions} from './_Base';
 // import {CopyShader} from '../../../modules/three/examples/jsm/shaders/CopyShader';
 // import {ShaderPass} from '../../../modules/three/examples/jsm/postprocessing/ShaderPass';
 // import {IUniformN} from '../utils/code/gl/Uniforms';
@@ -18,7 +18,7 @@
 // 	transparent = ParamConfig.BOOLEAN(1, PostParamOptions);
 // }
 // const ParamsConfig = new CopyPostParamsConfig();
-// export class CopyPostNode extends TypedPostProcessNode<ShaderPass, CopyPostParamsConfig> {
+// export class CopyPostNode extends TypedPostNode<ShaderPass, CopyPostParamsConfig> {
 // 	override paramsConfig = ParamsConfig;
 // 	static override type() {
 // 		return 'copy';

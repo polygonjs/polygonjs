@@ -4,7 +4,7 @@
  *
  */
 import {Vector2} from 'three';
-import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
+import {TypedPostNode, TypedPostNodeContext, PostParamOptions} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {BlendFunction, GlitchEffect, EffectPass, GlitchMode} from 'postprocessing';
 import {BLEND_FUNCTION_MENU_OPTIONS} from '../../../core/post/BlendFunction';
@@ -121,7 +121,7 @@ class GlitchPostParamsConfig extends NodeParamsConfig {
 	});
 }
 const ParamsConfig = new GlitchPostParamsConfig();
-export class GlitchPostNode extends TypedPostProcessNode<EffectPass, GlitchPostParamsConfig> {
+export class GlitchPostNode extends TypedPostNode<EffectPass, GlitchPostParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
 		return 'glitch';

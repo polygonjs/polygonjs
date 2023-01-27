@@ -4,7 +4,7 @@
  *
  */
 import {Texture, Vector2} from 'three';
-import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
+import {TypedPostNode, TypedPostNodeContext, PostParamOptions} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {BlendFunction, EffectPass, TextureEffect} from 'postprocessing';
 import {BLEND_FUNCTION_MENU_OPTIONS} from '../../../core/post/BlendFunction';
@@ -33,7 +33,7 @@ class TexturePostParamsConfig extends NodeParamsConfig {
 	});
 }
 const ParamsConfig = new TexturePostParamsConfig();
-export class TexturePostNode extends TypedPostProcessNode<EffectPass, TexturePostParamsConfig> {
+export class TexturePostNode extends TypedPostNode<EffectPass, TexturePostParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
 		return 'texture';

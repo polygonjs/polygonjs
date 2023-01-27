@@ -3,13 +3,13 @@
  *
  *
  */
-import {TypedPostProcessNode, TypedPostNodeContext} from './_Base';
+import {TypedPostNode, TypedPostNodeContext} from './_Base';
 import {NormalPass} from 'postprocessing';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 
 class NormalParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new NormalParamsConfig();
-export class NormalPostNode extends TypedPostProcessNode<NormalPass, NormalParamsConfig> {
+export class NormalPostNode extends TypedPostNode<NormalPass, NormalParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
 		return 'Normal';

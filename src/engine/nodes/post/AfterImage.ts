@@ -3,7 +3,7 @@
 //  *
 //  *
 //  */
-// import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
+// import {TypedPostNode, TypedPostNodeContext, PostParamOptions} from './_Base';
 // import {AfterimagePass} from '../../../modules/three/examples/jsm/postprocessing/AfterimagePass';
 // import {IUniformN} from '../utils/code/gl/Uniforms';
 // interface AfterImagePassWithUniforms extends AfterimagePass {
@@ -22,7 +22,7 @@
 // 	});
 // }
 // const ParamsConfig = new AfterImagePostParamsConfig();
-// export class AfterImagePostNode extends TypedPostProcessNode<AfterImagePassWithUniforms, AfterImagePostParamsConfig> {
+// export class AfterImagePostNode extends TypedPostNode<AfterImagePassWithUniforms, AfterImagePostParamsConfig> {
 // 	override paramsConfig = ParamsConfig;
 // 	static override type() {
 // 		return 'afterImage';

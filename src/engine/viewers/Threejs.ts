@@ -34,6 +34,9 @@ type RenderFuncWithDelta = (delta: number) => void;
 type RenderFunc = () => void;
 
 /**
+ *
+ * # [API](/docs/api) / ThreejsViewer
+ *
  * threejs viewers are created by the [PerspectiveCamera](/docs/nodes/obj/perspectivecamera) and [OrthographicCamera](/docs/nodes/obj/orthographiccamera) object nodes. They inherit from [TypedViewer](/docs/api/TypedViewer).
  *
  */

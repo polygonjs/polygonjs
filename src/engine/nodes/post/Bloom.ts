@@ -5,7 +5,7 @@
  */
 import {SelectionController} from './utils/SelectionController';
 import {Vector2} from 'three';
-import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
+import {TypedPostNode, TypedPostNodeContext, PostParamOptions} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {
 	BlendFunction,
@@ -85,7 +85,7 @@ class BloomPostParamsConfig extends NodeParamsConfig {
 	// });
 }
 const ParamsConfig = new BloomPostParamsConfig();
-export class BloomPostNode extends TypedPostProcessNode<EffectPass, BloomPostParamsConfig> {
+export class BloomPostNode extends TypedPostNode<EffectPass, BloomPostParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
 		return 'bloom';

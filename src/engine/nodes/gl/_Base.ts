@@ -21,7 +21,10 @@ import {ParamsEditableStateController} from '../utils/io/ParamsEditableStateCont
 const REGEX_PATH_SANITIZE = /\/+/g;
 
 /**
- * BaseGlNode is the base class for all nodes that process GLSL code. This inherits from [BaseNode](/docs/api/BaseNode).
+ *
+ * # [API](/docs/api) / TypedGlNode
+ *
+ * TypedGlNode is the base class for all nodes that process GLSL code. This inherits from [TypedNode](/docs/api/TypedNode).
  *
  */
 export class TypedGlNode<K extends NodeParamsConfig> extends TypedNode<NodeContext.GL, K> {

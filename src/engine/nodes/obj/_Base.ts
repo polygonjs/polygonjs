@@ -21,7 +21,10 @@ export enum ObjNodeRenderOrder {
 }
 
 /**
- * BaseObjNode is the base class for all nodes that process objects and hierarchies. This inherits from [BaseNode](/docs/api/BaseNode).
+ *
+ * # [API](/docs/api) / TypedObjNode
+ *
+ * TypedObjNode is the base class for all nodes that process objects and hierarchies. This inherits from [TypedNode](/docs/api/TypedNode).
  *
  */
 export class TypedObjNode<O extends Object3D, K extends NodeParamsConfig> extends TypedNode<NodeContext.OBJ, K> {

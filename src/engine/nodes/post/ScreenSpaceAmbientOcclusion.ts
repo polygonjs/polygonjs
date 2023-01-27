@@ -3,7 +3,7 @@
  *
  *
  */
-import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
+import {TypedPostNode, TypedPostNodeContext, PostParamOptions} from './_Base';
 import {BlendFunction, DepthDownsamplingPass, Effect, EffectPass, NormalPass, SSAOEffect, Pass} from 'postprocessing';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {BLEND_FUNCTION_MENU_OPTIONS} from '../../../core/post/BlendFunction';
@@ -98,10 +98,7 @@ class ScreenSpaceAmbientOcclusionParamsConfig extends NodeParamsConfig {
 	});
 }
 const ParamsConfig = new ScreenSpaceAmbientOcclusionParamsConfig();
-export class ScreenSpaceAmbientOcclusionPostNode extends TypedPostProcessNode<
-	Pass,
-	ScreenSpaceAmbientOcclusionParamsConfig
-> {
+export class ScreenSpaceAmbientOcclusionPostNode extends TypedPostNode<Pass, ScreenSpaceAmbientOcclusionParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
 		return 'screenSpaceAmbientOcclusion';

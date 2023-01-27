@@ -25,7 +25,7 @@ export interface TypedPostNodeContext {
 }
 
 function PostParamCallback(node: BaseNodeType, param: BaseParamType) {
-	TypedPostProcessNode.PARAM_CALLBACK_updatePasses(node as BasePostProcessNodeType);
+	TypedPostNode.PARAM_CALLBACK_updatePasses(node as BasePostProcessNodeType);
 }
 export const PostParamOptions: ParamOptions = {
 	cook: false,
@@ -34,11 +34,14 @@ export const PostParamOptions: ParamOptions = {
 };
 
 /**
- * BasePostNode is the base class for all nodes that process post-processing passes. This inherits from [BaseNode](/docs/api/BaseNode).
+ *
+ * # [API](/docs/api) / TypedPostNode
+ *
+ * TypedPostNode is the base class for all nodes that create post-processing passes. This inherits from [TypedNode](/docs/api/TypedNode).
  *
  */
 
-export class TypedPostProcessNode<P extends Pass, K extends NodeParamsConfig> extends TypedNode<NodeContext.POST, K> {
+export class TypedPostNode<P extends Pass, K extends NodeParamsConfig> extends TypedNode<NodeContext.POST, K> {
 	static override context(): NodeContext {
 		return NodeContext.POST;
 	}
@@ -140,5 +143,5 @@ export class TypedPostProcessNode<P extends Pass, K extends NodeParamsConfig> ex
 	// }
 }
 
-export type BasePostProcessNodeType = TypedPostProcessNode<Pass, NodeParamsConfig>;
-export class BasePostProcessNodeClass extends TypedPostProcessNode<Pass, NodeParamsConfig> {}
+export type BasePostProcessNodeType = TypedPostNode<Pass, NodeParamsConfig>;
+export class BasePostProcessNodeClass extends TypedPostNode<Pass, NodeParamsConfig> {}

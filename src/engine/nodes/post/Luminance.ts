@@ -3,13 +3,13 @@
  *
  *
  */
-import {TypedPostProcessNode, TypedPostNodeContext} from './_Base';
+import {TypedPostNode, TypedPostNodeContext} from './_Base';
 import {LuminancePass} from 'postprocessing';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 
 class LuminanceParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new LuminanceParamsConfig();
-export class LuminancePostNode extends TypedPostProcessNode<LuminancePass, LuminanceParamsConfig> {
+export class LuminancePostNode extends TypedPostNode<LuminancePass, LuminanceParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
 		return 'luminance';

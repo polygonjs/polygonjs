@@ -3,7 +3,7 @@
 //  *
 //  *
 //  */
-// import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
+// import {TypedPostNode, TypedPostNodeContext, PostParamOptions} from './_Base';
 // import {MaskPass} from '../../../modules/three/examples/jsm/postprocessing/MaskPass';
 // import {CameraNodeType, CAMERA_TYPES, NodeContext} from '../../poly/NodeContext';
 // import {SceneObjNode} from '../obj/Scene';
@@ -47,7 +47,7 @@
 // 	inverse = ParamConfig.BOOLEAN(0, PostParamOptions);
 // }
 // const ParamsConfig = new MaskPostParamsConfig();
-// export class MaskPostNode extends TypedPostProcessNode<MaskPassWithContext, MaskPostParamsConfig> {
+// export class MaskPostNode extends TypedPostNode<MaskPassWithContext, MaskPostParamsConfig> {
 // 	override paramsConfig = ParamsConfig;
 // 	static override type() {
 // 		return 'mask';

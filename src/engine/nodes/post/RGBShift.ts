@@ -3,7 +3,7 @@
 //  *
 //  *
 //  */
-// import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
+// import {TypedPostNode, TypedPostNodeContext, PostParamOptions} from './_Base';
 // import {RGBShiftShader} from '../../../modules/three/examples/jsm/shaders/RGBShiftShader';
 // import {ShaderPass} from '../../../modules/three/examples/jsm/postprocessing/ShaderPass';
 // import {IUniformN} from '../utils/code/gl/Uniforms';
@@ -31,7 +31,7 @@
 // 	});
 // }
 // const ParamsConfig = new RGBShiftPostParamsConfig();
-// export class RGBShiftPostNode extends TypedPostProcessNode<ShaderPass, RGBShiftPostParamsConfig> {
+// export class RGBShiftPostNode extends TypedPostNode<ShaderPass, RGBShiftPostParamsConfig> {
 // 	override paramsConfig = ParamsConfig;
 // 	static override type() {
 // 		return 'RGBShift';

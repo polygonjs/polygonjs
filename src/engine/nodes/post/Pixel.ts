@@ -3,7 +3,7 @@
  *
  *
  */
-import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
+import {TypedPostNode, TypedPostNodeContext, PostParamOptions} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {EffectPass, PixelationEffect} from 'postprocessing';
 
@@ -16,7 +16,7 @@ class PixelPostParamsConfig extends NodeParamsConfig {
 	});
 }
 const ParamsConfig = new PixelPostParamsConfig();
-export class PixelPostNode extends TypedPostProcessNode<EffectPass, PixelPostParamsConfig> {
+export class PixelPostNode extends TypedPostNode<EffectPass, PixelPostParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
 		return 'pixel';

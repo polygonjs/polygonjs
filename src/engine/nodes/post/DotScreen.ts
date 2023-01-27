@@ -3,7 +3,7 @@
 //  *
 //  *
 //  */
-// import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
+// import {TypedPostNode, TypedPostNodeContext, PostParamOptions} from './_Base';
 // import {DotScreenShader} from '../../../modules/three/examples/jsm/shaders/DotScreenShader';
 // import {ShaderPass} from '../../../modules/three/examples/jsm/postprocessing/ShaderPass';
 // import {IUniformN, IUniformV2} from '../utils/code/gl/Uniforms';
@@ -36,7 +36,7 @@
 // 	});
 // }
 // const ParamsConfig = new DotScreenPostParamsConfig();
-// export class DotScreenPostNode extends TypedPostProcessNode<ShaderPass, DotScreenPostParamsConfig> {
+// export class DotScreenPostNode extends TypedPostNode<ShaderPass, DotScreenPostParamsConfig> {
 // 	override paramsConfig = ParamsConfig;
 // 	static override type() {
 // 		return 'dotScreen';

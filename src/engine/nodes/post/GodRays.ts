@@ -8,7 +8,7 @@ import {PolyScene} from './../../scene/PolyScene';
 import {Points} from 'three';
 import {BLEND_FUNCTION_MENU_OPTIONS} from './../../../core/post/BlendFunction';
 import {Vector2, Mesh, BufferGeometry, MeshBasicMaterial, Object3D, Material, Group} from 'three';
-import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
+import {TypedPostNode, TypedPostNodeContext, PostParamOptions} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {BlendFunction, GodRaysEffect, EffectPass, KernelSize} from 'postprocessing';
 import {KERNEL_SIZES, KERNEL_SIZE_MENU_OPTIONS} from '../../../core/post/KernelSize';
@@ -96,7 +96,7 @@ class GodRaysPostParamsConfig extends NodeParamsConfig {
 	});
 }
 const ParamsConfig = new GodRaysPostParamsConfig();
-export class GodRaysPostNode extends TypedPostProcessNode<EffectPass, GodRaysPostParamsConfig> {
+export class GodRaysPostNode extends TypedPostNode<EffectPass, GodRaysPostParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
 		return 'godRays';

@@ -3,14 +3,14 @@
 //  *
 //  *
 //  */
-// import {TypedPostProcessNode, TypedPostNodeContext} from './_Base';
+// import {TypedPostNode, TypedPostNodeContext} from './_Base';
 // import {GammaCorrectionShader} from '../../../modules/three/examples/jsm/shaders/GammaCorrectionShader';
 // import {ShaderPass} from '../../../modules/three/examples/jsm/postprocessing/ShaderPass';
 
 // import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 // class GammaCorrectionPostParamsConfig extends NodeParamsConfig {}
 // const ParamsConfig = new GammaCorrectionPostParamsConfig();
-// export class GammaCorrectionPostNode extends TypedPostProcessNode<ShaderPass, GammaCorrectionPostParamsConfig> {
+// export class GammaCorrectionPostNode extends TypedPostNode<ShaderPass, GammaCorrectionPostParamsConfig> {
 // 	override paramsConfig = ParamsConfig;
 // 	static override type() {
 // 		return 'gammaCorrection';

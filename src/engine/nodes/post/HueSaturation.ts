@@ -3,7 +3,7 @@
  *
  *
  */
-import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
+import {TypedPostNode, TypedPostNodeContext, PostParamOptions} from './_Base';
 import {HueSaturationEffect, EffectPass, BlendFunction} from 'postprocessing';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
@@ -35,7 +35,7 @@ class HueSaturationPostParamsConfig extends NodeParamsConfig {
 	});
 }
 const ParamsConfig = new HueSaturationPostParamsConfig();
-export class HueSaturationPostNode extends TypedPostProcessNode<EffectPass, HueSaturationPostParamsConfig> {
+export class HueSaturationPostNode extends TypedPostNode<EffectPass, HueSaturationPostParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
 		return 'hueSaturation';

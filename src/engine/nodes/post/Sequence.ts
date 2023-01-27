@@ -3,14 +3,14 @@
  *
  *
  */
-import {TypedPostProcessNode, TypedPostNodeContext} from './_Base';
+import {TypedPostNode, TypedPostNodeContext} from './_Base';
 import {Pass} from 'postprocessing';
 
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 
 class SequencePostParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new SequencePostParamsConfig();
-export class SequencePostNode extends TypedPostProcessNode<Pass, SequencePostParamsConfig> {
+export class SequencePostNode extends TypedPostNode<Pass, SequencePostParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
 		return 'sequence';

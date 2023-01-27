@@ -3,7 +3,7 @@
  *
  *
  */
-import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
+import {TypedPostNode, TypedPostNodeContext, PostParamOptions} from './_Base';
 import {ChromaticAberrationEffect, EffectPass} from 'postprocessing';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {Vector2} from 'three';
@@ -23,7 +23,7 @@ class ChromaticAberrationPostParamsConfig extends NodeParamsConfig {
 	});
 }
 const ParamsConfig = new ChromaticAberrationPostParamsConfig();
-export class ChromaticAberrationPostNode extends TypedPostProcessNode<EffectPass, ChromaticAberrationPostParamsConfig> {
+export class ChromaticAberrationPostNode extends TypedPostNode<EffectPass, ChromaticAberrationPostParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
 		return 'chromaticAberration';

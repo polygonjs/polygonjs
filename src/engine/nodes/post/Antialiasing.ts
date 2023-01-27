@@ -3,7 +3,7 @@
  *
  *
  */
-import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
+import {TypedPostNode, TypedPostNodeContext, PostParamOptions} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {BlendFunction, EffectPass, PredicationMode, SMAAEffect, TextureEffect} from 'postprocessing';
 class AntialiasingPostParamsConfig extends NodeParamsConfig {
@@ -15,7 +15,7 @@ class AntialiasingPostParamsConfig extends NodeParamsConfig {
 	});
 }
 const ParamsConfig = new AntialiasingPostParamsConfig();
-export class AntialiasingPostNode extends TypedPostProcessNode<EffectPass, AntialiasingPostParamsConfig> {
+export class AntialiasingPostNode extends TypedPostNode<EffectPass, AntialiasingPostParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
 		return 'antialiasing';

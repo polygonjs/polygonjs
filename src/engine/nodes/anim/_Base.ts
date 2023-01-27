@@ -8,7 +8,10 @@ const INPUT_GEOMETRY_NAME = 'input animation clip';
 const DEFAULT_INPUT_NAMES = [INPUT_GEOMETRY_NAME, INPUT_GEOMETRY_NAME, INPUT_GEOMETRY_NAME, INPUT_GEOMETRY_NAME];
 
 /**
- * BaseAnimNode is the base class for all nodes that process animations. This inherits from [BaseNode](/docs/api/BaseNode).
+ *
+ * # [API](/docs/api) / TypedAnimNode
+ *
+ * TypedAnimNode is the base class for all nodes that process animations. This inherits from [TypedNode](/docs/api/TypedNode).
  *
  */
 export class TypedAnimNode<K extends NodeParamsConfig> extends TypedNode<NodeContext.ANIM, K> {

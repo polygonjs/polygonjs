@@ -3,7 +3,7 @@
  *
  *
  */
-import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
+import {TypedPostNode, TypedPostNodeContext, PostParamOptions} from './_Base';
 import {EffectPass} from 'postprocessing';
 import {BuilderEffect} from './utils/BuilderEffect';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
@@ -32,7 +32,7 @@ class BuilderPostParamsConfig extends NodeParamsConfig {
 	});
 }
 const ParamsConfig = new BuilderPostParamsConfig();
-export class BuilderPostNode extends TypedPostProcessNode<EffectPass, BuilderPostParamsConfig> {
+export class BuilderPostNode extends TypedPostNode<EffectPass, BuilderPostParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
 		return PostType.BUILDER;

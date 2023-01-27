@@ -3,7 +3,7 @@
  *
  *
  */
-import {TypedPostProcessNode, TypedPostNodeContext} from './_Base';
+import {TypedPostNode, TypedPostNodeContext} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {Effect, EffectPass, Pass} from 'postprocessing';
 import {ArrayUtils} from '../../../core/ArrayUtils';
@@ -25,7 +25,7 @@ class EffectPassPostParamsConfig extends NodeParamsConfig {
 	});
 }
 const ParamsConfig = new EffectPassPostParamsConfig();
-export class EffectPassPostNode extends TypedPostProcessNode<EffectPass, EffectPassPostParamsConfig> {
+export class EffectPassPostNode extends TypedPostNode<EffectPass, EffectPassPostParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
 		return 'effectPass';

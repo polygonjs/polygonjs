@@ -3,7 +3,7 @@
 //  *
 //  *
 //  */
-// import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
+// import {TypedPostNode, TypedPostNodeContext, PostParamOptions} from './_Base';
 // import {ShaderPass} from '../../../modules/three/examples/jsm/postprocessing/ShaderPass';
 // import {BleachBypassShader} from '../../../modules/three/examples/jsm/shaders/BleachBypassShader';
 
@@ -25,7 +25,7 @@
 // 	});
 // }
 // const ParamsConfig = new BleachPostParamsConfig();
-// export class BleachPostNode extends TypedPostProcessNode<ShaderPass, BleachPostParamsConfig> {
+// export class BleachPostNode extends TypedPostNode<ShaderPass, BleachPostParamsConfig> {
 // 	override paramsConfig = ParamsConfig;
 
 // 	static override type() {

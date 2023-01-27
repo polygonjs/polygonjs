@@ -7,7 +7,7 @@ import {TypeAssert} from './../../poly/Assert';
 import {PerspectiveCamera} from 'three';
 import {PolyScene} from './../../scene/PolyScene';
 import {Vector2, PointLight, DirectionalLight, Object3D} from 'three';
-import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
+import {TypedPostNode, TypedPostNodeContext, PostParamOptions} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 // import {GodraysPass} from 'three-good-godrays/src/index';
 import {GodraysPass} from './utils/GodRaysVolumetric/GodRaysPass';
@@ -105,7 +105,7 @@ class GodRaysVolumetricPostParamsConfig extends NodeParamsConfig {
 	});
 }
 const ParamsConfig = new GodRaysVolumetricPostParamsConfig();
-export class GodRaysVolumetricPostNode extends TypedPostProcessNode<GodraysPass, GodRaysVolumetricPostParamsConfig> {
+export class GodRaysVolumetricPostNode extends TypedPostNode<GodraysPass, GodRaysVolumetricPostParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
 		return 'godRaysVolumetric';

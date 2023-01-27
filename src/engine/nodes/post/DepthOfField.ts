@@ -3,7 +3,7 @@
  *
  *
  */
-import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
+import {TypedPostNode, TypedPostNodeContext, PostParamOptions} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {
 	BlendFunction,
@@ -94,7 +94,7 @@ class DepthOfFieldPostParamsConfig extends NodeParamsConfig {
 	});
 }
 const ParamsConfig = new DepthOfFieldPostParamsConfig();
-export class DepthOfFieldPostNode extends TypedPostProcessNode<EffectPass, DepthOfFieldPostParamsConfig> {
+export class DepthOfFieldPostNode extends TypedPostNode<EffectPass, DepthOfFieldPostParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
 		return 'depthOfField';

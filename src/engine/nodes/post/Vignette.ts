@@ -3,7 +3,7 @@
  *
  *
  */
-import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
+import {TypedPostNode, TypedPostNodeContext, PostParamOptions} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {EffectPass, VignetteEffect, VignetteTechnique} from 'postprocessing';
 import {IUniform} from 'three';
@@ -23,7 +23,7 @@ class VignettePostParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new VignettePostParamsConfig();
 
-export class VignettePostNode extends TypedPostProcessNode<EffectPass, VignettePostParamsConfig> {
+export class VignettePostNode extends TypedPostNode<EffectPass, VignettePostParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
 		return 'vignette';

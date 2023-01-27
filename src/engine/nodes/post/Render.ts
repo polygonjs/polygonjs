@@ -3,7 +3,7 @@
  *
  *
  */
-import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
+import {TypedPostNode, TypedPostNodeContext, PostParamOptions} from './_Base';
 import {RenderPass} from 'postprocessing';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {NodeContext} from '../../poly/NodeContext';
@@ -54,7 +54,7 @@ class RenderPostParamsConfig extends NodeParamsConfig {
 	// clear_depth = ParamConfig.BOOLEAN(0);
 }
 const ParamsConfig = new RenderPostParamsConfig();
-export class RenderPostNode extends TypedPostProcessNode<RenderPass, RenderPostParamsConfig> {
+export class RenderPostNode extends TypedPostNode<RenderPass, RenderPostParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
 		return 'render';

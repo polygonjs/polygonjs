@@ -8,7 +8,10 @@ const INPUT_NAME = 'input audio properties';
 const DEFAULT_INPUT_NAMES = [INPUT_NAME, INPUT_NAME, INPUT_NAME, INPUT_NAME];
 
 /**
- * BaseAnimNode is the base class for all nodes that process animations. This inherits from [BaseNode](/docs/api/BaseNode).
+ *
+ * # [API](/docs/api) / TypedAnimNode
+ *
+ * TypedAnimNode is the base class for all nodes that process animations. This inherits from [TypedNode](/docs/api/TypedNode).
  *
  */
 export class TypedAudioNode<K extends NodeParamsConfig> extends TypedNode<NodeContext.AUDIO, K> {

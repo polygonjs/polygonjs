@@ -5,7 +5,7 @@
  */
 import {SelectionController} from './utils/SelectionController';
 import {BLEND_FUNCTION_MENU_OPTIONS} from './../../../core/post/BlendFunction';
-import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
+import {TypedPostNode, TypedPostNodeContext, PostParamOptions} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {BlendFunction, EffectPass, KernelSize, OutlineEffect} from 'postprocessing';
 import {KERNEL_SIZE_MENU_OPTIONS} from '../../../core/post/KernelSize';
@@ -67,7 +67,7 @@ class OutlinePostParamsConfig extends NodeParamsConfig {
 	});
 }
 const ParamsConfig = new OutlinePostParamsConfig();
-export class OutlinePostNode extends TypedPostProcessNode<EffectPass, OutlinePostParamsConfig> {
+export class OutlinePostNode extends TypedPostNode<EffectPass, OutlinePostParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
 		return 'outline';

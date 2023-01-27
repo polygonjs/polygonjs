@@ -3,7 +3,7 @@
  *
  *
  */
-import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
+import {TypedPostNode, TypedPostNodeContext, PostParamOptions} from './_Base';
 import {EffectPass, BlendFunction, LUT3DEffect} from 'postprocessing';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
@@ -32,7 +32,7 @@ class LutPostParamsConfig extends NodeParamsConfig {
 	});
 }
 const ParamsConfig = new LutPostParamsConfig();
-export class LutPostNode extends TypedPostProcessNode<EffectPass, LutPostParamsConfig> {
+export class LutPostNode extends TypedPostNode<EffectPass, LutPostParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
 		return 'lut';

@@ -3,7 +3,7 @@
  *
  *
  */
-import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
+import {TypedPostNode, TypedPostNodeContext, PostParamOptions} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {EffectPass, SepiaEffect} from 'postprocessing';
 class SepiaPostParamsConfig extends NodeParamsConfig {
@@ -15,7 +15,7 @@ class SepiaPostParamsConfig extends NodeParamsConfig {
 	});
 }
 const ParamsConfig = new SepiaPostParamsConfig();
-export class SepiaPostNode extends TypedPostProcessNode<EffectPass, SepiaPostParamsConfig> {
+export class SepiaPostNode extends TypedPostNode<EffectPass, SepiaPostParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
 		return 'sepia';

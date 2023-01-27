@@ -1,7 +1,3 @@
-/**
- * BaseMatNode is the base class for all nodes that process materials. This inherits from [BaseNode](/docs/api/BaseNode).
- *
- */
 import {TypedNode} from '../_Base';
 import {Material} from 'three';
 import {NodeContext} from '../../poly/NodeContext';
@@ -11,6 +7,13 @@ import {FlagsControllerB} from '../utils/FlagsController';
 import {BaseController, MaterialTexturesRecord, SetParamsTextureNodesRecord} from './utils/_BaseController';
 import {ArrayUtils} from '../../../core/ArrayUtils';
 
+/**
+ *
+ * # [API](/docs/api) / TypedMatNode
+ *
+ * TypedMatNode is the base class for all nodes that process materials. This inherits from [TypedNode](/docs/api/TypedNode).
+ *
+ */
 export abstract class TypedMatNode<M extends Material, K extends NodeParamsConfig> extends TypedNode<
 	NodeContext.MAT,
 	K

@@ -58,6 +58,9 @@ export interface BaseNodeEvent extends BaseEvent {
 }
 
 /**
+ *
+ * # [API](/docs/api) / TypedNode
+ *
  * TypedNode is the base class that all nodes inherit from. This inherits from [CoreGraphNode](/docs/api/CoreGraphNode).
  *
  */

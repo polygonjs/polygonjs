@@ -3,7 +3,7 @@
 //  *
 //  *
 //  */
-// import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
+// import {TypedPostNode, TypedPostNodeContext, PostParamOptions} from './_Base';
 // import {FilmPass} from '../../../modules/three/examples/jsm/postprocessing/FilmPass';
 // import {IUniformN} from '../utils/code/gl/Uniforms';
 
@@ -44,7 +44,7 @@
 // 	});
 // }
 // const ParamsConfig = new FilmPostParamsConfig();
-// export class FilmPostNode extends TypedPostProcessNode<FilmPass, FilmPostParamsConfig> {
+// export class FilmPostNode extends TypedPostNode<FilmPass, FilmPostParamsConfig> {
 // 	override paramsConfig = ParamsConfig;
 // 	static override type() {
 // 		return 'film';

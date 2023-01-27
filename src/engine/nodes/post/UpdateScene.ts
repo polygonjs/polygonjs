@@ -6,7 +6,7 @@
  * This node will then be able to reset the changes made by this node.
  *
  */
-import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
+import {TypedPostNode, TypedPostNodeContext, PostParamOptions} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {isBooleanTrue} from '../../../core/Type';
 import {BaseNodeType} from '../_Base';
@@ -83,7 +83,7 @@ class UpdateScenePostParamsConfig extends NodeParamsConfig {
 	// });
 }
 const ParamsConfig = new UpdateScenePostParamsConfig();
-export class UpdateScenePostNode extends TypedPostProcessNode<UpdateScenePass, UpdateScenePostParamsConfig> {
+export class UpdateScenePostNode extends TypedPostNode<UpdateScenePass, UpdateScenePostParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
 		return 'updateScene';

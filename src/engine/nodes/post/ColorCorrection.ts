@@ -3,7 +3,7 @@
 //  *
 //  *
 //  */
-// import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
+// import {TypedPostNode, TypedPostNodeContext, PostParamOptions} from './_Base';
 // import {ColorCorrectionShader} from '../../../modules/three/examples/jsm/shaders/ColorCorrectionShader';
 // import {ShaderPass} from '../../../modules/three/examples/jsm/postprocessing/ShaderPass';
 // import {IUniformV3} from '../utils/code/gl/Uniforms';
@@ -32,7 +32,7 @@
 // 	});
 // }
 // const ParamsConfig = new ColorCorrectionPostParamsConfig();
-// export class ColorCorrectionPostNode extends TypedPostProcessNode<ShaderPass, ColorCorrectionPostParamsConfig> {
+// export class ColorCorrectionPostNode extends TypedPostNode<ShaderPass, ColorCorrectionPostParamsConfig> {
 // 	override paramsConfig = ParamsConfig;
 // 	static override type() {
 // 		return 'colorCorrection';

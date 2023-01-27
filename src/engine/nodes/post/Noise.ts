@@ -4,7 +4,7 @@
  *
  */
 import {Vector2} from 'three';
-import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
+import {TypedPostNode, TypedPostNodeContext, PostParamOptions} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {EffectPass, NoiseEffect} from 'postprocessing';
 class NoisePostParamsConfig extends NodeParamsConfig {
@@ -20,7 +20,7 @@ class NoisePostParamsConfig extends NodeParamsConfig {
 	});
 }
 const ParamsConfig = new NoisePostParamsConfig();
-export class NoisePostNode extends TypedPostProcessNode<EffectPass, NoisePostParamsConfig> {
+export class NoisePostNode extends TypedPostNode<EffectPass, NoisePostParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
 		return 'noise';

@@ -9,7 +9,10 @@ import {Poly} from '../../Poly';
 type DispatchHook = (event_context: EventContext<Event>) => void;
 
 /**
- * BaseEventNode is the base class for all nodes that process events. This inherits from [BaseNode](/docs/api/BaseNode).
+ *
+ * # [API](/docs/api) / TypedEventNode
+ *
+ * TypedEventNode is the base class for all nodes that process events. This inherits from [TypedNode](/docs/api/TypedNode).
  *
  */
 

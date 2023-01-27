@@ -3,7 +3,7 @@
  *
  *
  */
-import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
+import {TypedPostNode, TypedPostNodeContext, PostParamOptions} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {KawaseBlurPass, KernelSize} from 'postprocessing';
 import {KERNEL_SIZES, KERNEL_SIZE_MENU_OPTIONS} from '../../../core/post/KernelSize';
@@ -23,7 +23,7 @@ class BlurPostParamsConfig extends NodeParamsConfig {
 	});
 }
 const ParamsConfig = new BlurPostParamsConfig();
-export class BlurPostNode extends TypedPostProcessNode<KawaseBlurPass, BlurPostParamsConfig> {
+export class BlurPostNode extends TypedPostNode<KawaseBlurPass, BlurPostParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
 		return 'blur';

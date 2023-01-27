@@ -3,7 +3,7 @@
 //  *
 //  *
 //  */
-// import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
+// import {TypedPostNode, TypedPostNodeContext, PostParamOptions} from './_Base';
 // import {ShaderPass} from '../../../modules/three/examples/jsm/postprocessing/ShaderPass';
 // import {IUniformN, IUniformTexture} from '../utils/code/gl/Uniforms';
 // import VertexShader from './Image/vert.glsl';
@@ -39,7 +39,7 @@
 // 	});
 // }
 // const ParamsConfig = new ImagePostParamsConfig();
-// export class ImagePostNode extends TypedPostProcessNode<ShaderPass, ImagePostParamsConfig> {
+// export class ImagePostNode extends TypedPostNode<ShaderPass, ImagePostParamsConfig> {
 // 	override paramsConfig = ParamsConfig;
 // 	static override type() {
 // 		return 'image';

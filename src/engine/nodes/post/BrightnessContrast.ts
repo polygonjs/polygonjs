@@ -3,7 +3,7 @@
  *
  *
  */
-import {TypedPostProcessNode, TypedPostNodeContext, PostParamOptions} from './_Base';
+import {TypedPostNode, TypedPostNodeContext, PostParamOptions} from './_Base';
 import {BlendFunction, BrightnessContrastEffect, EffectPass} from 'postprocessing';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
@@ -34,7 +34,7 @@ class BrightnessContrastPostParamsConfig extends NodeParamsConfig {
 	});
 }
 const ParamsConfig = new BrightnessContrastPostParamsConfig();
-export class BrightnessContrastPostNode extends TypedPostProcessNode<EffectPass, BrightnessContrastPostParamsConfig> {
+export class BrightnessContrastPostNode extends TypedPostNode<EffectPass, BrightnessContrastPostParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
 		return 'brightnessContrast';
