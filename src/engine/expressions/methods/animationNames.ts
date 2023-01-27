@@ -4,10 +4,10 @@
  * @remarks
  * It takes 1 or 2 arguments.
  *
- * animationNames(<input_index_or_node_path\>)
+ * `animationNames(input_index_or_node_path, object_index)`
  *
- * - **<input_index_or_node_path\>** the path to a node, or input index
- * - **<object_index\>** the index of the object (default to 0)
+ * - `input_index_or_node_path` the path to a node, or input index
+ * - `object_index` the index of the object (default to 0)
  *
  * ## Usage
  *

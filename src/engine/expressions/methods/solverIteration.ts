@@ -4,9 +4,9 @@
  * @remarks
  * It takes 1 arguments.
  *
- * solverIteration(<node_path\>)
+ * `solverIteration(node_path)`
  *
- * - **<node_path\>** the path to the solver node (defaults to '..' for the parent node)
+ * - `node_path` the path to the solver node (defaults to '..' for the parent node)
  *
  * ## Usage
  *

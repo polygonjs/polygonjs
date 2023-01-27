@@ -1,5 +1,5 @@
 /**
- * import an audio file
+ * imports an audio file
  *
  *
  */

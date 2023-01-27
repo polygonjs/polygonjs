@@ -4,10 +4,10 @@
  * @remarks
  * It takes 2 arguments.
  *
- * arg(<arguments\>, <index\>)
+ * `arg(arguments, index)`
  *
- * - **<arguments\>** space-separated arguments list
- * - **<index\>** index of argument to return
+ * - `arguments` space-separated arguments list
+ * - `index` index of argument to return
  *
  * ## Usage
  *

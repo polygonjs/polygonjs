@@ -4,7 +4,7 @@
  * @remarks
  * It takes 0 arguments.
  *
- * isDeviceMobile()
+ * `isDeviceMobile()`
  *
  *
  * ## Usage

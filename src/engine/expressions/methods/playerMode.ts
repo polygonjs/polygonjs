@@ -5,7 +5,7 @@
  *
  * This expression does not take any argument
  *
- * playerMode()
+ * `playerMode()`
  *
  * ## Usage
  *

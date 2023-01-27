@@ -4,9 +4,9 @@
  * @remarks
  * It takes 1 arguments.
  *
- * pointsCount(<input_index_or_node_path\>)
+ * `pointsCount(input_index_or_node_path)`
  *
- * - **<input_index_or_node_path\>** returns the number of points, as a number
+ * - `input_index_or_node_path` returns the number of points, as a number
  *
  * ## Usage
  *

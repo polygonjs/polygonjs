@@ -4,11 +4,11 @@
  * @remarks
  * It takes 1, 2 or 3 arguments.
  *
- * bbox(<input_index_or_node_path\>, <bbox_vector\>, <vector_component\>)
+ * `bbox(input_index_or_node_path, bbox_vector, vector_component)`
  *
- * - **<input_index_or_node_path\>** is a number or a string
- * - **<bbox_vector\>** is a string, either 'min' or 'max'
- * - **<vector_component\>** is a string, either 'x', 'y' or 'z'
+ * - `input_index_or_node_path` is a number or a string
+ * - `bbox_vector` is a string, either 'min' or 'max'
+ * - `vector_component` is a string, either 'x', 'y' or 'z'
  *
  * ## Usage
  *

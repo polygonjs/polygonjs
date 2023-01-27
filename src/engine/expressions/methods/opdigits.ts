@@ -4,9 +4,9 @@
  * @remarks
  * It takes 1 arguments.
  *
- * opdigits(<word\>)
+ * `opdigits(word)`
  *
- * - **<word\>** returns the number at the end of word
+ * - `word` returns the number at the end of word
  *
  * ## Usage
  *

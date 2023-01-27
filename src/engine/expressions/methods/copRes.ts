@@ -4,10 +4,10 @@
  * @remarks
  * It takes 1 or 2 arguments
  *
- * copRes(<input_index_or_node_path\>, <vector_component/>)
+ * `copRes(input_index_or_node_path, vector_component)`
  *
- * - **<input_index_or_node_path\>** is a number or a string
- * - **<vector_component\>** is a string or number, either 'x', 'y', 0 or 1
+ * - `input_index_or_node_path` is a number or a string
+ * - `vector_component` is a string or number, either 'x', 'y', 0 or 1
  *
  * ## Usage
  *

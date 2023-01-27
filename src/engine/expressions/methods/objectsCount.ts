@@ -4,9 +4,9 @@
  * @remarks
  * It takes 1 arguments.
  *
- * objectsCount(<input_index_or_node_path\>)
+ * `objectsCount(input_index_or_node_path)`
  *
- * - **<input_index_or_node_path\>** the path to a node, or input index
+ * - `input_index_or_node_path` the path to a node, or input index
  *
  * ## Usage
  *

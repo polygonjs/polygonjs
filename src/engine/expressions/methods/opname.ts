@@ -4,9 +4,9 @@
  * @remarks
  * It takes 1 arguments.
  *
- * opname(<node_path\>)
+ * `opname(node_path)`
  *
- * - **<node_path\>** path to referred node
+ * - `node_path` path to referred node
  *
  * ## Usage
  *

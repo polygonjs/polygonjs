@@ -4,10 +4,10 @@
  * @remarks
  * It takes 2 arguments.
  *
- * cameraName(<input_index_or_node_path\>, <object_index/>)
+ * `cameraName(input_index_or_node_path, object_index)`
  *
- * - **<input_index_or_node_path\>** the path to a node, or input index
- * - **<object_index\>** the index of the object
+ * - `input_index_or_node_path` the path to a node, or input index
+ * - `object_index` the index of the object
  *
  * ## Usage
  *

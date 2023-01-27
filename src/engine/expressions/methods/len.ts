@@ -4,9 +4,9 @@
  * @remarks
  * It takes 1 arguments.
  *
- * len(<array_or_word\>)
+ * `len(array_or_word)`
  *
- * - **<array_or_word\>** - array or word to returns the number of elements of
+ * - `array_or_word` - array or word to returns the number of elements of
  *
  * ## Usage
  *

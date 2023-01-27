@@ -4,10 +4,10 @@
  * @remarks
  * It takes 2 or more arguments, converts them to strings and concats them.
  *
- * strConcat(<word1\>, <word1\>, ...)
+ * `strConcat(word1, word2, ...)`
  *
- * - **<word1\>** - a string or number
- * - **<word2\>** - a string or number
+ * - `word1` - a string or number
+ * - `word2` - a string or number
  *
  * ## Usage
  *

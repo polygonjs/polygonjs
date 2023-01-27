@@ -4,11 +4,11 @@
  * @remarks
  * It takes 2 or 3 arguments
  *
- * copy(<input_index_or_node_path\>, <default_value/>, <attribute_name/>)
+ * `copy(input_index_or_node_path, default_value, attribute_name)`
  *
- * - **<input_index_or_node_path\>** is a number or a string
- * - **<default_value\>** is a number
- * - **<attribute_name\>** is the attribute that will be stamped
+ * - `input_index_or_node_path` is a number or a string
+ * - `default_value` is a number
+ * - `attribute_name` is the attribute that will be stamped
  *
  * ## Usage
  *

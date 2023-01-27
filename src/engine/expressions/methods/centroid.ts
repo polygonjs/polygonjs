@@ -4,10 +4,10 @@
  * @remarks
  * It takes 1 or 2 arguments.
  *
- * centroid(<input_index_or_node_path\>, <vector_component\>)
+ * `centroid(input_index_or_node_path, vector_component)`
  *
- * - **<input_index_or_node_path\>** is a number or a string
- * - **<vector_component\>** is a string, either 'x', 'y' or 'z'
+ * - `input_index_or_node_path` is a number or a string
+ * - `vector_component` is a string, either 'x', 'y' or 'z'
  *
  * ## Usage
  *

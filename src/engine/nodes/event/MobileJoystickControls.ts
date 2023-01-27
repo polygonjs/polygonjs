@@ -2,21 +2,30 @@
  * Creates a virtual joystick for mobile first person controls
  *
  * @remarks
- * Ensure to have the following tag in your html <head>:
- * <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+ * Ensure to have the following tag in your html `<head>`:
+ *
+ * `<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />`
+ *
  * as this will prevent the screen from zooming in and out when using a finger to translate and another to rotate.
  *
  * And if you are using an iphone, you may need to also add the following css:
- * - to prevent page reload when swiping down
- * body {
+ * - to prevent page reload when swiping down:
+ *
+ * ``` css
+ *body {
  *	overscroll-behavior-y: none;
  *	position: fixed;
  *	overflow: hidden;
- * }
- * - and to disable page zoom from double tap or when using 2 fingers
- * body {
+ *}
+ *```
+ *
+ * - and to disable page zoom from double tap or when using 2 fingers:
+ *
+ *``` css
+ *body {
  *	touch-action: none;
  *}
+ *```
  *
  */
 import {Camera} from 'three';

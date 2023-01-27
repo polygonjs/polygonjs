@@ -4,11 +4,11 @@
  * @remarks
  * It takes 3 arguments
  *
- * strSub(<word\>, <start\>, <size\>)
+ * `strSub(word, start, size)`
  *
- * - **<word\>** - a string
- * - **<start\>** - the start position as a number
- * - **<size\>** - the number of characters to take, as a number
+ * - `word` - a string
+ * - `start` - the start position as a number
+ * - `size` - the number of characters to take, as a number
  *
  * ## Usage
  *

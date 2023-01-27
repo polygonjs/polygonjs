@@ -4,10 +4,10 @@
  * @remarks
  * It takes 2 arguments.
  *
- * padzero(<count\>, <word_or_number\>)
+ * `padzero(count, word_or_number)`
  *
- * - **<count\>** - number of character the word will have
- * - **<word_or_number\>** start of the word
+ * - `count` - number of character the word will have
+ * - `word_or_number` start of the word
  *
  * ## Usage
  *

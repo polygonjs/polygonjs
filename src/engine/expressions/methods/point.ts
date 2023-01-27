@@ -4,11 +4,11 @@
  * @remarks
  * It takes 3 arguments.
  *
- * point(<input_index_or_node_path\>, <attrib_name\>, <point_index\>)
+ * `point(input_index_or_node_path, attrib_name, point_index)`
  *
- * - **<input_index_or_node_path\>** is a number or a string
- * - **<attrib_name\>** is a string, the name of the attribute
- * - **<point_index\>** index of the point to fetch
+ * - `input_index_or_node_path` is a number or a string
+ * - `attrib_name` is a string, the name of the attribute
+ * - `point_index` index of the point to fetch
  *
  * ## Usage
  *

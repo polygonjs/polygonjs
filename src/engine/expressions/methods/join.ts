@@ -4,10 +4,10 @@
  * @remarks
  * It takes 1 or 2 arguments.
  *
- * join(<array_or_word\>, <separator\>)
+ * `join(array_or_word, separator)`
  *
- * - **<array_or_word\>** - array to join the elements of
- * - **<separator\>** - string to join the elements (default is a space ' ')
+ * - `array_or_word` - array to join the elements of
+ * - `separator` - string to join the elements (default is a space ' ')
  *
  * ## Usage
  *

@@ -4,11 +4,11 @@
  * @remarks
  * It takes 3 arguments.
  *
- * object(<input_index_or_node_path\>, <attrib_name\>, <object_index\>)
+ * `object(input_index_or_node_path, attrib_name, object_index)`
  *
- * - **<input_index_or_node_path\>** is a number or a string
- * - **<attrib_name\>** is a string, the name of the attribute
- * - **<object_index\>** index of the object to fetch
+ * - `input_index_or_node_path` is a number or a string
+ * - `attrib_name` is a string, the name of the attribute
+ * - `object_index` index of the object to fetch
  *
  * ## Usage
  *

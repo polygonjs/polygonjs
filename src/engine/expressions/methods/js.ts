@@ -4,9 +4,9 @@
  * @remarks
  * It takes 1 arguments.
  *
- * js(<js_expression\>)
+ * `js(js_expression)`
  *
- * - **<js_expression\>** is a a string
+ * - `js_expression` is a a string
  *
  * ## Usage
  *

@@ -4,9 +4,9 @@
  * @remarks
  * It takes 1 arguments.
  *
- * strCharCount(<word\>)
+ * `strCharCount(word)`
  *
- * - **<word\>** - word to returns the number of characters of
+ * - `word` - word to returns the number of characters of
  *
  * ## Usage
  *

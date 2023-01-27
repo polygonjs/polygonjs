@@ -4,9 +4,9 @@
  * @remarks
  * It takes 1 argument.
  *
- * argc(<arguments\>)
+ * `argc(arguments)`
  *
- * - **<arguments\>** space-separated arguments list
+ * - `<arguments` space-separated arguments list
  *
  * ## Usage
  *

@@ -4,9 +4,9 @@
  * @remarks
  * It takes 1 argument, the path to the parameter.
  *
- * ch(<param_path\>)
+ * `ch(param_path)`
  *
- * - **<param_path\>** is a string, which can be the absolute or relative path
+ * - `param_path` is a string, which can be the absolute or relative path
  *
  * ## Usage
  *

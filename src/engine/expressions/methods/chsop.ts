@@ -5,9 +5,9 @@
  * @remarks
  * It takes 1 argument, the path to the parameter.
  *
- * chsop(<param_path\>)
+ * `chsop(param_path)`
  *
- * - **<param_path\>** is a string, which can be the absolute or relative path
+ * - `param_path` is a string, which can be the absolute or relative path
  *
  * ## Usage
  *

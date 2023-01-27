@@ -4,10 +4,10 @@
  * @remarks
  * It takes 2 arguments
  *
- * strIndex(<word\>, <character\>)
+ * `strIndex(word, character)`
  *
- * - **<word\>** - a string
- * - **<character\>** - a string
+ * - `word` - a string
+ * - `character` - a string
  *
  * ## Usage
  *
