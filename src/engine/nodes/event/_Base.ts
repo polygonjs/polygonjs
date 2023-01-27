@@ -115,7 +115,7 @@ export class TypedEventNode<K extends NodeParamsConfig> extends TypedNode<NodeCo
 	 * ``` ts
 	 *let _currentState = false;
 	 *function setHit( newState ){
-	 *  if(_currentState != newState){
+	 *  if( _currentState != newState ){
 	 *    if( newState ){
 	 *      playSound();
 	 *    }
