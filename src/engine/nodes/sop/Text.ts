@@ -15,7 +15,9 @@ import {textBuildGeometries} from './utils/text/TextGeometries';
 import {TextType, TEXT_TYPES} from './utils/text/TextType';
 import {textMergeLetters} from './utils/text/TextMergeLetters';
 import {isBooleanTrue} from '../../../core/Type';
-
+import {SopType} from '../../poly/registers/nodes/types/Sop';
+import {EXTENSIONS_BY_NODE_TYPE_BY_CONTEXT} from '../../../core/loader/FileExtensionRegister';
+import {NodeContext} from '../../poly/NodeContext';
 const DEFAULT_FONT_URL = `${DEMO_ASSETS_ROOT_URL}/fonts/droid_sans_regular.typeface.json`;
 
 // function isGeometryValid(geometry: BufferGeometry) {
@@ -26,7 +28,7 @@ const GENERATION_ERROR_MESSAGE = `failed to generate geometry. Try to remove som
 class TextSopParamsConfig extends NodeParamsConfig {
 	/** @param font used */
 	font = ParamConfig.STRING(DEFAULT_FONT_URL, {
-		fileBrowse: {extensions: ['ttf', 'json']},
+		fileBrowse: {extensions: EXTENSIONS_BY_NODE_TYPE_BY_CONTEXT[NodeContext.SOP][SopType.TEXT]},
 	});
 	/** @param text created */
 	text = ParamConfig.STRING('polygonjs', {
@@ -135,7 +137,7 @@ const ParamsConfig = new TextSopParamsConfig();
 export class TextSopNode extends TypedSopNode<TextSopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'text';
+		return SopType.TEXT;
 	}
 	override dispose(): void {
 		super.dispose();

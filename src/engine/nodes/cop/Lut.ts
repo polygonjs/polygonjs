@@ -8,15 +8,17 @@ import {TypedCopNode} from './_Base';
 import {BaseNodeType} from '../_Base';
 import {BaseParamType} from '../../params/_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {ImageExtension} from '../../../core/FileTypeController';
 import {LUT3dlLoader, LUTCubeLoader} from 'postprocessing';
 import {LOADING_MANAGER} from '../../../core/loader/_Base';
+import {CopType} from '../../poly/registers/nodes/types/Cop';
+import {EXTENSIONS_BY_NODE_TYPE_BY_CONTEXT} from '../../../core/loader/FileExtensionRegister';
+import {NodeContext} from '../../poly/NodeContext';
 
 type OnTextureLoad = (texture: Texture) => void;
 class LutCopParamsConfig extends NodeParamsConfig {
-	/** @param url to fetch the gif from */
+	/** @param url to fetch the lut from */
 	url = ParamConfig.STRING('', {
-		fileBrowse: {extensions: [ImageExtension.GIF]},
+		fileBrowse: {extensions: EXTENSIONS_BY_NODE_TYPE_BY_CONTEXT[NodeContext.COP][CopType.LUT]},
 	});
 	/** @param reload the image */
 	reload = ParamConfig.BUTTON(null, {
@@ -31,7 +33,7 @@ const ParamsConfig = new LutCopParamsConfig();
 export class LutCopNode extends TypedCopNode<LutCopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'lut';
+		return CopType.LUT;
 	}
 
 	override initializeNode() {

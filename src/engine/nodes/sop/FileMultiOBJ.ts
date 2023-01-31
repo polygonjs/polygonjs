@@ -5,7 +5,6 @@
  * Note that this node will automatically use a specific loader depending on the extension of the url.
  *
  */
-import {GeometryExtension} from '../../../core/FileTypeController';
 import {BaseNodeType} from '../_Base';
 import {Object3D} from 'three';
 import {BaseFileMultiSopNode} from './utils/file/_BaseSopFileMulti';
@@ -13,6 +12,8 @@ import {SopTypeFileMulti} from '../../poly/registers/nodes/types/Sop';
 import {OBJLoaderHandler} from '../../../core/loader/geometry/OBJ';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {ASSETS_ROOT} from '../../../core/loader/AssetsUtils';
+import {EXTENSIONS_BY_NODE_TYPE_BY_CONTEXT} from '../../../core/loader/FileExtensionRegister';
+import {NodeContext} from '../../poly/NodeContext';
 // export class FileMultiOBJSopNode extends fileMultiSopNodeFactory<Object3D>({
 // 	type: SopTypeFileMulti.FILE_OBJ,
 // 	extensions: [GeometryExtension.OBJ],
@@ -22,7 +23,7 @@ import {ASSETS_ROOT} from '../../../core/loader/AssetsUtils';
 class FileMultiOBJParamsConfig extends NodeParamsConfig {
 	/** @param url to load the geometry from */
 	url = ParamConfig.STRING(`${ASSETS_ROOT}/models/\`@name\`.obj`, {
-		fileBrowse: {extensions: [GeometryExtension.OBJ]},
+		fileBrowse: {extensions: EXTENSIONS_BY_NODE_TYPE_BY_CONTEXT[NodeContext.SOP][SopTypeFileMulti.FILE_OBJ]},
 		expression: {forEntities: true},
 	});
 	/** @param sets the matrixAutoUpdate attribute for the objects loaded */

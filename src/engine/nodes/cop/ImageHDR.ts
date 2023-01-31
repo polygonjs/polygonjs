@@ -9,12 +9,13 @@
 import {copImageNodeFactoryFactory} from './utils/image/_BaseImage';
 import {HDRTextureLoader} from '../../../core/loader/texture/HDR';
 import {BaseNodeType} from '../_Base';
-import {ImageExtension} from '../../../core/FileTypeController';
 import {CopTypeImage} from '../../poly/registers/nodes/types/Cop';
+import {EXTENSIONS_BY_NODE_TYPE_BY_CONTEXT} from '../../../core/loader/FileExtensionRegister';
+import {NodeContext} from '../../poly/NodeContext';
 
 export class ImageHDRCopNode extends copImageNodeFactoryFactory({
 	type: CopTypeImage.IMAGE_HDR,
 	defaultUrl: HDRTextureLoader.PARAM_ENV_DEFAULT,
-	browseExtensions: [ImageExtension.HDR],
+	extensions: EXTENSIONS_BY_NODE_TYPE_BY_CONTEXT[NodeContext.COP][CopTypeImage.IMAGE_HDR],
 	getLoader: (url: string, node: BaseNodeType) => new HDRTextureLoader(url, node),
 }) {}

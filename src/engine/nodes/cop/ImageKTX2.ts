@@ -9,12 +9,13 @@
 import {copImageNodeFactoryFactory} from './utils/image/_BaseImage';
 import {KTX2TextureLoader} from '../../../core/loader/texture/KTX2';
 import {BaseNodeType} from '../_Base';
-import {ImageExtension} from '../../../core/FileTypeController';
 import {CopTypeImage} from '../../poly/registers/nodes/types/Cop';
+import {EXTENSIONS_BY_NODE_TYPE_BY_CONTEXT} from '../../../core/loader/FileExtensionRegister';
+import {NodeContext} from '../../poly/NodeContext';
 
 export class ImageKTX2CopNode extends copImageNodeFactoryFactory({
 	type: CopTypeImage.IMAGE_KTX2,
 	defaultUrl: KTX2TextureLoader.PARAM_ENV_DEFAULT,
-	browseExtensions: [ImageExtension.KTX2],
+	extensions: EXTENSIONS_BY_NODE_TYPE_BY_CONTEXT[NodeContext.COP][CopTypeImage.IMAGE_KTX2],
 	getLoader: (url: string, node: BaseNodeType) => new KTX2TextureLoader(url, node),
 }) {}

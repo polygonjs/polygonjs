@@ -12,13 +12,14 @@ import {CoreGroup} from '../../../core/geometry/Group';
 import {FileSVGSopOperation} from '../../operations/sop/FileSVG';
 import {Poly} from '../../Poly';
 import {SopTypeFile} from '../../poly/registers/nodes/types/Sop';
-import {GeometryExtension} from '../../../core/FileTypeController';
+import {EXTENSIONS_BY_NODE_TYPE_BY_CONTEXT} from '../../../core/loader/FileExtensionRegister';
+import {NodeContext} from '../../poly/NodeContext';
 const DEFAULT = FileSVGSopOperation.DEFAULT_PARAMS;
 
 class FileSVGSopParamsConfig extends NodeParamsConfig {
 	/** @param url to load the geometry from */
 	url = ParamConfig.STRING(DEFAULT.url, {
-		fileBrowse: {extensions: [GeometryExtension.SVG]},
+		fileBrowse: {extensions: EXTENSIONS_BY_NODE_TYPE_BY_CONTEXT[NodeContext.SOP][SopTypeFile.FILE_SVG]},
 	});
 	/** @param reload the geometry */
 	reload = ParamConfig.BUTTON(null, {

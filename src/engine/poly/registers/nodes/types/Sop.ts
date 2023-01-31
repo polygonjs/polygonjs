@@ -1,8 +1,10 @@
 export enum SopType {
 	COPY = 'copy',
+	DATA_URL = 'dataUrl',
 	PARTICLES_SYSTEM_GPU = 'particlesSystemGpu',
 	PHYSICS_WORLD = 'physicsWorld',
 	SHEAR = 'shear',
+	TEXT = 'text',
 	TRANSFORM = 'transform',
 	UV_LAYOUT = 'uvLayout',
 	UV_TRANSFORM = 'uvTransform',

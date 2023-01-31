@@ -5,7 +5,6 @@
  * Note that this node will automatically use a specific loader depending on the extension of the url.
  *
  */
-import {GeometryExtension} from '../../../core/FileTypeController';
 import {BaseNodeType} from '../_Base';
 import {BaseFileMultiSopNode} from './utils/file/_BaseSopFileMulti';
 import {SopTypeFileMulti} from '../../poly/registers/nodes/types/Sop';
@@ -14,12 +13,14 @@ import {ASSETS_ROOT} from '../../../core/loader/AssetsUtils';
 import {GLTFLoaderHandler} from '../../../core/loader/geometry/GLTF';
 import {FileGLTFSopOperation} from '../../operations/sop/FileGLTF';
 import {GLTF} from '../../../modules/three/examples/jsm/loaders/GLTFLoader';
+import {EXTENSIONS_BY_NODE_TYPE_BY_CONTEXT} from '../../../core/loader/FileExtensionRegister';
+import {NodeContext} from '../../poly/NodeContext';
 const DEFAULT = FileGLTFSopOperation.DEFAULT_PARAMS;
 
 class FileMultiGLTFParamsConfig extends NodeParamsConfig {
 	/** @param url to load the geometry from */
 	url = ParamConfig.STRING(`${ASSETS_ROOT}/models/\`@name\`.glb`, {
-		fileBrowse: {extensions: [GeometryExtension.GLTF, GeometryExtension.GLB]},
+		fileBrowse: {extensions: EXTENSIONS_BY_NODE_TYPE_BY_CONTEXT[NodeContext.SOP][SopTypeFileMulti.FILE_GLTF]},
 		expression: {forEntities: true},
 	});
 	/** @param uses draco compression */

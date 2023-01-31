@@ -11,7 +11,6 @@ import {CoreLoaderAudio} from '../../../core/loader/Audio';
 import {isBooleanTrue} from '../../../core/Type';
 import {BaseNodeType} from '../_Base';
 import {Poly} from '../../Poly';
-import {AUDIO_EXTENSIONS} from '../../../core/FileTypeController';
 import {
 	AudioPlayerCallbacksManager,
 	OnBeforePlayCallback,
@@ -22,6 +21,9 @@ import {
 	PlayerEventName,
 	CallbackByEventName,
 } from './../../../core/audio/PlayerCallbacksManager';
+import {AudioType} from '../../poly/registers/nodes/types/Audio';
+import {EXTENSIONS_BY_NODE_TYPE_BY_CONTEXT} from '../../../core/loader/FileExtensionRegister';
+import {NodeContext} from '../../poly/NodeContext';
 
 const EPSILON = 1e-6;
 
@@ -35,7 +37,7 @@ const LOOP_OPTIONS = {
 class FileAudioParamsConfig extends NodeParamsConfig {
 	/** @param url to fetch the audio file from */
 	url = ParamConfig.STRING('', {
-		fileBrowse: {extensions: AUDIO_EXTENSIONS},
+		fileBrowse: {extensions: EXTENSIONS_BY_NODE_TYPE_BY_CONTEXT[NodeContext.AUDIO][AudioType.FILE]},
 	});
 	/** @param auto start */
 	autostart = ParamConfig.BOOLEAN(1);
@@ -130,7 +132,7 @@ const ParamsConfig = new FileAudioParamsConfig();
 export class FileAudioNode extends TypedAudioNode<FileAudioParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'file';
+		return AudioType.FILE;
 	}
 
 	override initializeNode() {

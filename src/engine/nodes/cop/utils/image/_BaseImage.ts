@@ -15,7 +15,7 @@ import {BaseCoreImageLoader} from '../../../../../core/loader/texture/_BaseImage
 interface CopImageNodeFactoryOptions {
 	type: string;
 	defaultUrl: string;
-	browseExtensions: string[];
+	extensions: string[];
 	getLoader: (url: string, node: BaseNodeType) => BaseCoreImageLoader;
 }
 
@@ -46,7 +46,7 @@ export function copImageNodeFactoryFactory(
 		return class Mixin extends Base {
 			/** @param url to fetch the image from */
 			url = ParamConfig.STRING(options.defaultUrl, {
-				fileBrowse: {extensions: options.browseExtensions},
+				fileBrowse: {extensions: options.extensions},
 			});
 			/** @param reload the image */
 			reload = ParamConfig.BUTTON(null, {

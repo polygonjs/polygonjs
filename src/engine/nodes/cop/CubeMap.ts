@@ -7,7 +7,6 @@ import {Texture} from 'three';
 import {TypedCopNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CopType} from '../../poly/registers/nodes/types/Cop';
-import {ImageExtension} from '../../../core/FileTypeController';
 import {BaseNodeType} from '../_Base';
 import {ParamEvent} from '../../poly/ParamEvent';
 import {Poly} from '../../Poly';
@@ -15,6 +14,8 @@ import {InputCloneMode} from '../../poly/InputCloneMode';
 import {TextureParamConfig, TextureParamsController} from './utils/TextureParamsController';
 import {Constructor} from '../../../types/GlobalTypes';
 import {CoreCubeTextureLoader} from '../../../core/loader/texture/Cube';
+import {EXTENSIONS_BY_NODE_TYPE_BY_CONTEXT} from '../../../core/loader/FileExtensionRegister';
+import {NodeContext} from '../../poly/NodeContext';
 
 export enum CubeMapUrlKey {
 	P = 'p',
@@ -37,7 +38,7 @@ function CubeMapCopParamConfig<TBase extends Constructor>(Base: TBase) {
 		/** @param url prefix */
 		prefix = ParamConfig.STRING('', {
 			fileBrowse: {
-				extensions: [ImageExtension.PNG, ImageExtension.JPEG, ImageExtension.JPG, ImageExtension.WEBP],
+				extensions: EXTENSIONS_BY_NODE_TYPE_BY_CONTEXT[NodeContext.COP][CopType.CUBE_MAP],
 			},
 		});
 		/** @param url prefix */

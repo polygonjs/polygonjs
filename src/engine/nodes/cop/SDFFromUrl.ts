@@ -3,18 +3,19 @@
  *
  *
  */
-import {SDF_EXTENSIONS} from './../../../core/FileTypeController';
 import {SDFDataContainer, SDFLoader} from './../../../core/loader/geometry/SDF';
 import {Texture} from 'three';
 import {TypedCopNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {BaseNodeType} from '../_Base';
 import {CopType} from '../../poly/registers/nodes/types/Cop';
+import {EXTENSIONS_BY_NODE_TYPE_BY_CONTEXT} from '../../../core/loader/FileExtensionRegister';
+import {NodeContext} from '../../poly/NodeContext';
 
 class SDFFromUrlCopParamsConfig extends NodeParamsConfig {
 	/** @param url to fetch the image from */
 	url = ParamConfig.STRING('', {
-		fileBrowse: {extensions: SDF_EXTENSIONS},
+		fileBrowse: {extensions: EXTENSIONS_BY_NODE_TYPE_BY_CONTEXT[NodeContext.COP][CopType.SDF_FROM_URL]},
 	});
 
 	/** @param reload */

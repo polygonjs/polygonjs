@@ -21,7 +21,7 @@ import {TypedCopNode} from './_Base';
 import {BaseNodeType} from '../_Base';
 import {BaseParamType} from '../../params/_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {isUrlVideo, VIDEO_EXTENSIONS} from '../../../core/FileTypeController';
+import {isUrlVideo} from '../../../core/FileTypeController';
 import {TextureParamsController, TextureParamConfig} from './utils/TextureParamsController';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {InputCloneMode} from '../../poly/InputCloneMode';
@@ -30,12 +30,14 @@ import {FileTypeCheckCopParamConfig} from './utils/CheckFileType';
 import {Poly} from '../../Poly';
 import {VideoTextureLoader} from '../../../core/loader/texture/Video';
 import {VideoEvent, VIDEO_EVENTS} from '../../../core/Video';
+import {EXTENSIONS_BY_NODE_TYPE_BY_CONTEXT} from '../../../core/loader/FileExtensionRegister';
+import {NodeContext} from '../../poly/NodeContext';
 
 function VideoCopParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		/** @param url to fetch the video from */
 		url = ParamConfig.STRING('', {
-			fileBrowse: {extensions: VIDEO_EXTENSIONS},
+			fileBrowse: {extensions: EXTENSIONS_BY_NODE_TYPE_BY_CONTEXT[NodeContext.COP][CopType.VIDEO]},
 		});
 		/** @param reload the video */
 		reload = ParamConfig.BUTTON(null, {

@@ -17,7 +17,9 @@ import {ASSETS_ROOT} from '../../../core/loader/AssetsUtils';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {Poly} from '../../Poly';
 import {ParamEvent} from '../../poly/ParamEvent';
-
+import {SopType} from '../../poly/registers/nodes/types/Sop';
+import {EXTENSIONS_BY_NODE_TYPE_BY_CONTEXT} from '../../../core/loader/FileExtensionRegister';
+import {NodeContext} from '../../poly/NodeContext';
 export enum DataType {
 	JSON = 'json',
 	CSV = 'csv',
@@ -39,7 +41,7 @@ class DataUrlSopParamsConfig extends NodeParamsConfig {
 	});
 	/** @param the url to fetch the data from */
 	url = ParamConfig.STRING(DEFAULT_URL, {
-		fileBrowse: {extensions: ['json']},
+		fileBrowse: {extensions: EXTENSIONS_BY_NODE_TYPE_BY_CONTEXT[NodeContext.SOP][SopType.DATA_URL]},
 	});
 
 	//
@@ -95,7 +97,7 @@ const ParamsConfig = new DataUrlSopParamsConfig();
 export class DataUrlSopNode extends TypedSopNode<DataUrlSopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'dataUrl';
+		return SopType.DATA_URL;
 	}
 
 	override async cook() {

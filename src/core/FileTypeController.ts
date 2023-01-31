@@ -55,9 +55,13 @@ export enum AudioExtension {
 	WAV = 'wav',
 	OGG = 'ogg',
 }
-export const AUDIO_EXTENSIONS: string[] = [AudioExtension.MP3, AudioExtension.WAV, AudioExtension.OGG
+export const AUDIO_EXTENSIONS: string[] = [AudioExtension.MP3, AudioExtension.WAV, AudioExtension.OGG];
 
-];
+export enum FontExtension {
+	TTF = 'ttf',
+	JSON = 'json',
+}
+export const FONT_EXTENSIONS: string[] = [FontExtension.TTF, FontExtension.JSON];
 
 function urlExt(url: string) {
 	const url_without_query_params = url.split('?')[0];

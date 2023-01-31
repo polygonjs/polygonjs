@@ -15,13 +15,16 @@ import {InputCloneMode} from '../../poly/InputCloneMode';
 import {CanvasTexture} from 'three';
 import {parseGIF, decompressFrames, ParsedFrame} from 'gifuct-js';
 import {isBooleanTrue} from '../../../core/BooleanValue';
-import {ImageExtension, isUrlGif} from '../../../core/FileTypeController';
+import {isUrlGif} from '../../../core/FileTypeController';
+import {CopType} from '../../poly/registers/nodes/types/Cop';
+import {EXTENSIONS_BY_NODE_TYPE_BY_CONTEXT} from '../../../core/loader/FileExtensionRegister';
+import {NodeContext} from '../../poly/NodeContext';
 
 export function GifCopParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		/** @param url to fetch the gif from */
 		url = ParamConfig.STRING('', {
-			fileBrowse: {extensions: [ImageExtension.GIF]},
+			fileBrowse: {extensions: EXTENSIONS_BY_NODE_TYPE_BY_CONTEXT[NodeContext.COP][CopType.GIF]},
 		});
 		/** @param reload the image */
 		reload = ParamConfig.BUTTON(null, {
@@ -54,7 +57,7 @@ const ParamsConfig = new GifCopParamsConfig();
 export class GifCopNode extends TypedCopNode<GifCopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'gif';
+		return CopType.GIF;
 	}
 
 	public readonly textureParamsController: TextureParamsController = new TextureParamsController(this);

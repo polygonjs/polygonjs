@@ -11,13 +11,14 @@ import {FileGLTFSopOperation} from '../../operations/sop/FileGLTF';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {Poly} from '../../Poly';
-import {GeometryExtension} from '../../../core/FileTypeController';
 import {SopTypeFile} from '../../poly/registers/nodes/types/Sop';
+import {EXTENSIONS_BY_NODE_TYPE_BY_CONTEXT} from '../../../core/loader/FileExtensionRegister';
+import {NodeContext} from '../../poly/NodeContext';
 const DEFAULT = FileGLTFSopOperation.DEFAULT_PARAMS;
 class FileGLTFParamsConfig extends NodeParamsConfig {
 	/** @param url to load the geometry from */
 	url = ParamConfig.STRING(DEFAULT.url, {
-		fileBrowse: {extensions: [GeometryExtension.GLB, GeometryExtension.GLTF]},
+		fileBrowse: {extensions: EXTENSIONS_BY_NODE_TYPE_BY_CONTEXT[NodeContext.SOP][SopTypeFile.FILE_GLTF]},
 	});
 	/** @param uses draco compression */
 	draco = ParamConfig.BOOLEAN(DEFAULT.draco);

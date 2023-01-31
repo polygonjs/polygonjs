@@ -9,12 +9,13 @@
 import {copImageNodeFactoryFactory} from './utils/image/_BaseImage';
 import {EXRTextureLoader} from '../../../core/loader/texture/EXR';
 import {BaseNodeType} from '../_Base';
-import {ImageExtension} from '../../../core/FileTypeController';
 import {CopTypeImage} from '../../poly/registers/nodes/types/Cop';
+import {EXTENSIONS_BY_NODE_TYPE_BY_CONTEXT} from '../../../core/loader/FileExtensionRegister';
+import {NodeContext} from '../../poly/NodeContext';
 
 export class ImageEXRCopNode extends copImageNodeFactoryFactory({
 	type: CopTypeImage.IMAGE_EXR,
 	defaultUrl: EXRTextureLoader.PARAM_ENV_DEFAULT,
-	browseExtensions: [ImageExtension.EXR],
+	extensions: EXTENSIONS_BY_NODE_TYPE_BY_CONTEXT[NodeContext.COP][CopTypeImage.IMAGE_EXR],
 	getLoader: (url: string, node: BaseNodeType) => new EXRTextureLoader(url, node),
 }) {}
