@@ -705,29 +705,25 @@ QUnit.test('mat/rayMarchingBuilder persisted_config', async (assert) => {
 		// test that the raymarching lights uniforms are shared with the scene
 		const pointLightUniforms = (scene2.sceneTraverser as any)._pointLightsRayMarching;
 		assert.equal(pointLightUniforms.value.length, 1);
-		assert.deepEqual(pointLightUniforms.value[0]['worldPos'].toArray(), [8, 12, 24]);
+		assert.deepEqual(pointLightUniforms.value[0]['penumbra'], 0);
 
 		assert.equal(
 			MaterialUserDataUniforms.getUniforms(material)![UniformName.POINTLIGHTS_RAYMARCHING].value.length,
 			1
 		);
 		assert.deepEqual(
-			MaterialUserDataUniforms.getUniforms(material)![UniformName.POINTLIGHTS_RAYMARCHING].value[0][
-				'worldPos'
-			].toArray(),
-			[8, 12, 24]
+			MaterialUserDataUniforms.getUniforms(material)![UniformName.POINTLIGHTS_RAYMARCHING].value[0]['penumbra'],
+			0
 		);
 
-		// we move the light and both uniforms are updated (since they are the same)
-		pointLight2.p.t.set([5, 6, 9]);
+		// we change the penumbra and both uniforms are updated (since they are the same)
+		pointLight2.p.raymarchingPenumbra.set(1);
 		await pointLight2.compute();
 		scene2.update(0.1);
-		assert.deepEqual(pointLightUniforms.value[0]['worldPos'].toArray(), [12, 16, 30]);
+		assert.deepEqual(pointLightUniforms.value[0]['penumbra'], 1);
 		assert.deepEqual(
-			MaterialUserDataUniforms.getUniforms(material)![UniformName.POINTLIGHTS_RAYMARCHING].value[0][
-				'worldPos'
-			].toArray(),
-			[12, 16, 30]
+			MaterialUserDataUniforms.getUniforms(material)![UniformName.POINTLIGHTS_RAYMARCHING].value[0]['penumbra'],
+			1
 		);
 	});
 

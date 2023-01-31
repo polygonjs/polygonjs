@@ -81,6 +81,8 @@ export function setupQUnit(qUnit: QUnit) {
 		window.scene.cooker.unblock();
 	});
 	qUnit.testDone(() => {
-		console.log(`%c ✓ ${QUnit.config.current.testName}`, 'background: #222; color: #bada55');
+		// it's preferable to not display anything
+		// so that we can correctly display non-blocking crashing tests
+		// console.log(`%c ✓ ${QUnit.config.current.testName}`, 'background: #222; color: #bada55');
 	});
 }

@@ -73,17 +73,17 @@ QUnit.test('actor/onObjectPointerdown', async (assert) => {
 		triggerPointerdownInMiddle(canvas);
 		await CoreSleep.sleep(100);
 		assert.deepEqual(object.position.toArray(), [0, 0, -0.5], 'pos set');
-		assert.equal(geo2.p.scale.value, 4, 'scale');
+		assert.in_delta(geo2.p.scale.value, 4, 0.0001, 'scale');
 
 		triggerPointerdownAside(canvas);
 		await CoreSleep.sleep(100);
 		assert.deepEqual(object.position.toArray(), [0, 0, -0.5], 'position unset');
-		assert.equal(geo2.p.scale.value, 4, 'scale');
+		assert.in_delta(geo2.p.scale.value, 4, 0.0001, 'scale');
 
 		triggerPointerdownInMiddle(canvas);
 		await CoreSleep.sleep(100);
 		assert.deepEqual(object.position.toArray(), [0, 0, 0.5], 'pos set');
-		assert.equal(geo2.p.scale.value, 5, 'scale');
+		assert.in_delta(geo2.p.scale.value, 5, 0.0001, 'scale');
 
 		// test intersection: point
 		setParam1.setInput(

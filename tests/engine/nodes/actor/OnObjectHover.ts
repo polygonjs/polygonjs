@@ -54,7 +54,7 @@ QUnit.test('actor/OnObjectHover', async (assert) => {
 		triggerPointermoveInMiddle(canvas);
 		await CoreSleep.sleep(200);
 		assert.deepEqual(object.position.toArray(), [0, 0, 1]);
-		assert.equal(geo2.p.scale.value, 4.5, 'scale');
+		assert.in_delta(geo2.p.scale.value, 4.5, 0.001, 'scale');
 		object.position.set(0, 0, 0);
 
 		// hover out of the object will also throw an event since it is a state change

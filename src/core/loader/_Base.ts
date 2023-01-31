@@ -91,7 +91,7 @@ export class CoreBaseLoader<U extends string | Array<string>> {
 			if (this._node) {
 				const assetsRoot = this._node.scene().assets.root();
 				if (!fullUrl.startsWith('http')) {
-					fullUrl = assetsRoot ? `${assetsRoot}/${fullUrl}` : fullUrl;
+					fullUrl = assetsRoot ? sanitizeUrl(`${assetsRoot}/${fullUrl}`) : fullUrl;
 				}
 				await Poly.blobs.fetchBlobForNode({
 					fullUrl,

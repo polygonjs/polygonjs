@@ -4,9 +4,14 @@ interface ConsoleHistory {
 	warn: any[];
 	error: any[];
 }
-export async function checkConsolePrints(callback: Callback) {
-	// Save original console methods
-	var originalConsole = {
+interface PreservedConsole {
+	log: (...data: any[]) => void;
+	warn: (...data: any[]) => void;
+	error: (...data: any[]) => void;
+}
+const DO_OVERRIDE = true;
+function overrideConsole() {
+	const originalConsole: PreservedConsole = {
 		log: console.log,
 		warn: console.warn,
 		error: console.error,
@@ -18,21 +23,32 @@ export async function checkConsolePrints(callback: Callback) {
 		error: [],
 	};
 
-	console.log = function () {
-		consoleHistory.log.push(arguments);
-		// originalConsole.log.apply(window.console, arguments as any);
-	};
-	console.warn = function () {
-		consoleHistory.warn.push(arguments);
-		// originalConsole.warn.apply(window.console, arguments as any);
-	};
-	console.error = function () {
-		consoleHistory.error.push(arguments);
-		// originalConsole.error.apply(window.console, arguments as any);
-	};
-	await callback();
+	if (DO_OVERRIDE) {
+		console.log = function () {
+			consoleHistory.log.push(arguments);
+			// originalConsole.log.apply(window.console, arguments as any);
+		};
+		console.warn = function () {
+			consoleHistory.warn.push(arguments);
+			// originalConsole.warn.apply(window.console, arguments as any);
+		};
+		console.error = function () {
+			consoleHistory.error.push(arguments);
+			// originalConsole.error.apply(window.console, arguments as any);
+		};
+	}
+
+	return {originalConsole, consoleHistory};
+}
+function restoreConsole(originalConsole: PreservedConsole) {
 	console.log = originalConsole.log;
 	console.warn = originalConsole.warn;
 	console.error = originalConsole.error;
+}
+export async function checkConsolePrints(callback: Callback) {
+	// Save original console methods
+	const {originalConsole, consoleHistory} = overrideConsole();
+	await callback();
+	restoreConsole(originalConsole);
 	return consoleHistory;
 }
