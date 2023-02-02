@@ -18,7 +18,6 @@ const EMPTY_DATA_TEXTURE = new DataTexture(data, size, 1, LuminanceFormat, HalfF
 
 /**
  *
- * # [API](/docs/api) / TypedCopNode
  *
  * TypedCopNode is the base class for all nodes that process textures. This inherits from [TypedNode](/docs/api/TypedNode).
  *

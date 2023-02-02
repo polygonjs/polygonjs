@@ -52,7 +52,6 @@ export interface TypedViewerInterectionObserverChangeOptions {
 
 /**
  *
- * # [API](/docs/api) / TypedViewer
  *
  * Base class to create a viewer. It is used for the [Threejs viewer](/docs/api/ThreejsViewer) as well as the [Mapbox Viewer](https://github.com/polygonjs/plugin-mapbox)
  *

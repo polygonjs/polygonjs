@@ -48,7 +48,6 @@ interface UpdateState {
 
 /**
  *
- * # [API](/docs/api) / PolyScene
  *
  * PolyScene contains all nodes within a scene.
  *

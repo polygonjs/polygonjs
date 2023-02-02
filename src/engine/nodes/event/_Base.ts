@@ -10,7 +10,6 @@ type DispatchHook = (event_context: EventContext<Event>) => void;
 
 /**
  *
- * # [API](/docs/api) / TypedEventNode
  *
  * TypedEventNode is the base class for all nodes that process events. This inherits from [TypedNode](/docs/api/TypedNode).
  *

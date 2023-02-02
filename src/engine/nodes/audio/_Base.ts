@@ -9,7 +9,6 @@ const DEFAULT_INPUT_NAMES = [INPUT_NAME, INPUT_NAME, INPUT_NAME, INPUT_NAME];
 
 /**
  *
- * # [API](/docs/api) / TypedAnimNode
  *
  * TypedAnimNode is the base class for all nodes that process animations. This inherits from [TypedNode](/docs/api/TypedNode).
  *

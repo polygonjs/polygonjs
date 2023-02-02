@@ -5,7 +5,6 @@ import {FlagsController} from '../utils/FlagsController';
 
 /**
  *
- * # [API](/docs/api) / TypedRopNode
  *
  * TypedRopNode is the base class for all nodes that process outputs. This inherits from [TypedNode](/docs/api/TypedNode).
  *

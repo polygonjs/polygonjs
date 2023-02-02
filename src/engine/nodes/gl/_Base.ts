@@ -22,7 +22,6 @@ const REGEX_PATH_SANITIZE = /\/+/g;
 
 /**
  *
- * # [API](/docs/api) / TypedGlNode
  *
  * TypedGlNode is the base class for all nodes that process GLSL code. This inherits from [TypedNode](/docs/api/TypedNode).
  *

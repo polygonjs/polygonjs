@@ -24,7 +24,6 @@ const DEFAULT_INPUT_NAMES = [INPUT_NAME, INPUT_NAME, INPUT_NAME, INPUT_NAME];
 export const TRIGGER_CONNECTION_NAME = 'trigger';
 /**
  *
- * # [API](/docs/api) / TypedActorNode
  *
  * TypedActorNode is the base class for all nodes that create behaviors. This inherits from [TypedNode](/docs/api/TypedNode).
  *

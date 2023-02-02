@@ -9,7 +9,6 @@ import {ArrayUtils} from '../../../core/ArrayUtils';
 
 /**
  *
- * # [API](/docs/api) / TypedMatNode
  *
  * TypedMatNode is the base class for all nodes that process materials. This inherits from [TypedNode](/docs/api/TypedNode).
  *

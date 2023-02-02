@@ -9,7 +9,6 @@ const DEFAULT_INPUT_NAMES = [INPUT_GEOMETRY_NAME, INPUT_GEOMETRY_NAME, INPUT_GEO
 
 /**
  *
- * # [API](/docs/api) / TypedAnimNode
  *
  * TypedAnimNode is the base class for all nodes that process animations. This inherits from [TypedNode](/docs/api/TypedNode).
  *

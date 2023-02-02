@@ -35,7 +35,6 @@ export const PostParamOptions: ParamOptions = {
 
 /**
  *
- * # [API](/docs/api) / TypedPostNode
  *
  * TypedPostNode is the base class for all nodes that create post-processing passes. This inherits from [TypedNode](/docs/api/TypedNode).
  *

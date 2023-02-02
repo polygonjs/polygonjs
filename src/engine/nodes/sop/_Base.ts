@@ -38,7 +38,6 @@ const DEFAULT_INPUT_NAMES = [INPUT_GEOMETRY_NAME, INPUT_GEOMETRY_NAME, INPUT_GEO
 
 /**
  *
- * # [API](/docs/api) / TypedSopNode
  *
  * BaseSopNode is the base class for all nodes that process geometries. This inherits from [TypedNode](/docs/api/TypedNode).
  *

@@ -22,7 +22,6 @@ export enum ObjNodeRenderOrder {
 
 /**
  *
- * # [API](/docs/api) / TypedObjNode
  *
  * TypedObjNode is the base class for all nodes that process objects and hierarchies. This inherits from [TypedNode](/docs/api/TypedNode).
  *

@@ -10,7 +10,6 @@ const DEFAULT_INPUT_NAMES = [INPUT_GEOMETRY_NAME, INPUT_GEOMETRY_NAME, INPUT_GEO
 
 /**
  *
- * # [API](/docs/api) / TypedCsgNode
  *
  * TypedCsgNode is the base class for all nodes that process constructive solid geometries. This inherits from [TypedNode](/docs/api/TypedNode).
  *
