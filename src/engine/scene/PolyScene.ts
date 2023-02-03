@@ -139,9 +139,8 @@ export class PolyScene {
 		return (this._webXRController = this._webXRController || new SceneWebXRController(this));
 	}
 	/**
-	 * When using Polygonjs viewers, a raycaster is created to use mouse events
-	 * and detect if there are any object under the cursor.
-	 * But if no viewer is created, such as when [importing a scene in react three fiber](https://polygonjs.com/docs/integrations/react_three_fiber),
+	 * When using Polygonjs viewers, a raycaster is created to use mouse events and detect if there are any object under the cursor.
+	 * But if no viewer is created, such as when [importing a scene in react three fiber](/docs/integrations/react_three_fiber),
 	 * It is then useful to give a raycaster.
 	 *
 	 */
