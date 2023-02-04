@@ -11,7 +11,6 @@ import {NodeContext} from '../../poly/NodeContext';
 import {CopType} from '../../poly/registers/nodes/types/Cop';
 import {VideoCopNode} from '../cop/Video';
 import {ActorType} from '../../poly/registers/nodes/types/Actor';
-import type {PolyScene} from '../../scene/PolyScene';
 import {objectsForActorNode} from '../../scene/utils/actors/ActorsManagerUtils';
 import {Object3D} from 'three';
 import {VideoEvent, VIDEO_EVENTS, VIDEO_EVENT_INDICES} from '../../../core/Video';
@@ -43,12 +42,8 @@ export class OnVideoEventActorNode extends TypedActorNode<OnVideoEventActorParam
 		);
 	}
 
-	static addEventListeners(scene: PolyScene) {
-		const nodes = scene.nodesController.nodesByContextAndType(NodeContext.ACTOR, this.type());
-
-		for (let node of nodes) {
-			node._addEventListenersToObjects();
-		}
+	initOnPlay() {
+		this._addEventListenersToObjects();
 	}
 	private async _addEventListenersToObjects() {
 		if (this.p.node.isDirty()) {

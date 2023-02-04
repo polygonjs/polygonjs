@@ -7,9 +7,7 @@
 import {TypedActorNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {ActorConnectionPoint, ActorConnectionPointType} from '../utils/io/connections/Actor';
-import {NodeContext} from '../../poly/NodeContext';
 import {ActorType} from '../../poly/registers/nodes/types/Actor';
-import type {PolyScene} from '../../scene/PolyScene';
 import {objectsForActorNode} from '../../scene/utils/actors/ActorsManagerUtils';
 import {Object3D} from 'three';
 import {BASE_XR_EVENT_INDICES, BASE_XR_SESSION_EVENT_NAMES, BaseXRSessionEventName} from '../../../core/webXR/Common';
@@ -43,12 +41,8 @@ export class OnWebXRControllerEventActorNode extends TypedActorNode<OnWebXRContr
 		);
 	}
 
-	static addEventListeners(scene: PolyScene) {
-		const nodes = scene.nodesController.nodesByContextAndType(NodeContext.ACTOR, this.type());
-
-		for (let node of nodes) {
-			node._addEventListenersToObjects();
-		}
+	initOnPlay() {
+		this._addEventListenersToObjects();
 	}
 	private async _addEventListenersToObjects() {
 		const objects = objectsForActorNode(this);

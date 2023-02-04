@@ -99,6 +99,7 @@ import {OnObjectDispatchEventActorNode} from '../../../nodes/actor/OnObjectDispa
 import {OnObjectHoverActorNode} from '../../../nodes/actor/OnObjectHover';
 import {OnObjectPointerdownActorNode} from '../../../nodes/actor/OnObjectPointerdown';
 import {OnObjectPointerupActorNode} from '../../../nodes/actor/OnObjectPointerup';
+import {OnPerformanceChangeActorNode} from '../../../nodes/actor/OnPerformanceChange';
 import {OnPlayerEventActorNode} from '../../../nodes/actor/OnPlayerEvent';
 import {OnPointerdownActorNode} from '../../../nodes/actor/OnPointerdown';
 import {OnPointerupActorNode} from '../../../nodes/actor/OnPointerup';
@@ -316,6 +317,7 @@ export interface ActorNodeChildrenMap {
 	onObjectHover: OnObjectHoverActorNode;
 	onObjectPointerdown: OnObjectPointerdownActorNode;
 	onObjectPointerup: OnObjectPointerupActorNode;
+	onPerformanceChange: OnPerformanceChangeActorNode;
 	onPlayerEvent: OnPlayerEventActorNode;
 	onPointerdown: OnPointerdownActorNode;
 	onPointerup: OnPointerupActorNode;
@@ -539,6 +541,7 @@ export class ActorRegister {
 		poly.registerNode(OnObjectHoverActorNode, CATEGORY_ACTOR.EVENTS);
 		poly.registerNode(OnObjectPointerdownActorNode, CATEGORY_ACTOR.EVENTS);
 		poly.registerNode(OnObjectPointerupActorNode, CATEGORY_ACTOR.EVENTS);
+		poly.registerNode(OnPerformanceChangeActorNode, CATEGORY_ACTOR.EVENTS);
 		poly.registerNode(OnPlayerEventActorNode, CATEGORY_ACTOR.EVENTS);
 		poly.registerNode(OnPointerdownActorNode, CATEGORY_ACTOR.EVENTS);
 		poly.registerNode(OnPointerupActorNode, CATEGORY_ACTOR.EVENTS);

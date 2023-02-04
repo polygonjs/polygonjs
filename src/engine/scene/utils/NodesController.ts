@@ -230,4 +230,16 @@ export class NodesController {
 		}
 		return nodes;
 	}
+
+	hasNodesByContextAndType<NC extends NodeContext>(context: NC, nodeType: string) {
+		const mapForContext: NodeMapByType<NC> | undefined = this._instanciatedNodesByContextAndType.get(context);
+		if (!mapForContext) {
+			return false;
+		}
+		const mapForType = mapForContext.get(nodeType as any);
+		if (!mapForType) {
+			return false;
+		}
+		return mapForType.size != 0;
+	}
 }

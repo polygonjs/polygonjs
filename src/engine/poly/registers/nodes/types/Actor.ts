@@ -14,6 +14,7 @@ export enum ActorType {
 	ON_OBJECT_HOVER = 'onObjectHover',
 	ON_OBJECT_POINTERDOWN = 'onObjectPointerdown',
 	ON_OBJECT_POINTERUP = 'onObjectPointerup',
+	ON_PERFORMANCE_CHANGE = 'onPerformanceChange',
 	ON_POINTERDOWN = 'onPointerdown',
 	ON_POINTERUP = 'onPointerup',
 	ON_VIDEO_EVENT = 'onVideoEvent',

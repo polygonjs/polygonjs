@@ -6,7 +6,8 @@ import {
 	DEFAULT_SHADOW_MAP_TYPE,
 	DEFAULT_TONE_MAPPING,
 } from '../../engine/nodes/rop/WebGLRenderer';
-import {defaultPixelRatio} from './defaultPixelRatio';
+import {defaultPixelRatio} from '../render/defaultPixelRatio';
+import {PowerPreference} from '../render/Common';
 import {CoreObject} from '../geometry/Object';
 import {CameraAttribute} from './CoreCamera';
 import {CoreType} from '../Type';
@@ -18,6 +19,10 @@ import type {PathTracingRendererRopNode} from '../../engine/nodes/rop/PathTracin
 import type {WebGLRendererRopNode} from '../../engine/nodes/rop/WebGLRenderer';
 // @ts-ignore
 import type {PathTracingRenderer} from 'three-gpu-pathtracer';
+
+const UPDATE_STYLE = false;
+const SIZE_MULT = 1;
+
 interface CreateRendererOptions {
 	camera: Camera;
 	scene: PolyScene;
@@ -130,17 +135,17 @@ export class CoreCameraRendererController {
 	static setRendererSize(canvas: HTMLCanvasElement, size: Vector2) {
 		const renderer = this.renderer(canvas);
 		if (renderer) {
-			const updateStyle = false;
-			renderer.setSize(size.x, size.y, updateStyle);
+			renderer.setSize(SIZE_MULT * size.x, SIZE_MULT * size.y, UPDATE_STYLE);
 		}
 	}
 	static createDefaultRenderer(canvas: HTMLCanvasElement, gl: WebGLRenderingContext) {
 		const params: WebGLRendererParameters = {
+			powerPreference: PowerPreference.HIGH,
 			canvas: canvas,
 			// no anti alias with a pixel ratio of 2 is more performant
 			// but using a pixel ratio of 2 by default can also create hard to debug
 			// inconsistencies when using post processing
-			antialias: false, //defaultPixelRatio() < 2,
+			antialias: true, //defaultPixelRatio() < 2,
 			// alpha: true, // let's use threejs default alpha
 			context: gl,
 		};

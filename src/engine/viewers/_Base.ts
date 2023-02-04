@@ -10,6 +10,7 @@ import {Poly, PolyEngine} from '../Poly';
 
 import {AbstractRenderer} from './Common';
 import {ViewerRaycastersController} from './utils/ViewerRaycastersController';
+import {ViewerPerformanceMonitor} from './utils/ViewerPerformanceMonitor';
 
 const HOVERED_CLASS_NAME = 'hovered';
 
@@ -157,6 +158,9 @@ export abstract class TypedViewer<C extends Camera> {
 	render(delta: number) {
 		this._scene.viewersRegister.markViewerAsRendered(this);
 		this.raycastersController.update();
+		if (this.scene().timeController.playing()) {
+			this.performanceMonitor.measurePerformance(delta);
+		}
 	}
 
 	setRenderObjectOverride(object?: Object3D | null) {
@@ -198,6 +202,7 @@ export abstract class TypedViewer<C extends Camera> {
 		return (this._audioController = this._audioController || new ViewerAudioController(this));
 	}
 	public readonly raycastersController: ViewerRaycastersController = new ViewerRaycastersController(this);
+	public readonly performanceMonitor: ViewerPerformanceMonitor = new ViewerPerformanceMonitor(this);
 
 	domElement() {
 		return this._domElement;

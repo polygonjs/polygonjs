@@ -22,7 +22,8 @@ export interface NodeCreateOptions {
 
 export class HierarchyChildrenController {
 	private _childrenByName: Map<string, BaseNodeType> = new Map();
-	private _childrenByType: Map<string, Set<CoreGraphNodeId>> = new Map();
+	private _childrenIdByType: Map<string, Set<CoreGraphNodeId>> = new Map();
+	private _childrenByType: Map<string, Array<BaseNodeType>> = new Map();
 	private _childrenAndGrandchildrenByContext: Map<NodeContext, Set<CoreGraphNodeId>> = new Map();
 
 	private _selection: CoreNodeSelection | undefined;
@@ -89,8 +90,9 @@ export class HierarchyChildrenController {
 
 			// add to new name
 			this._childrenByName.set(newName, node);
+			this._updateCache();
 			node.nameController.updateNameFromParent(newName);
-			this._addToNodesByType(node);
+
 			this.node.scene().nodesController.addToInstanciatedNode(node);
 		}
 	}
@@ -197,6 +199,7 @@ export class HierarchyChildrenController {
 
 	private _addNode(child_node: BaseNodeType) {
 		child_node.setParent(this.node);
+		this._addToNodesByType(child_node);
 		child_node.params.init();
 		child_node.parentController.onSetParent();
 		child_node.nameController.runPostSetFullPathHooks();
@@ -271,6 +274,7 @@ export class HierarchyChildrenController {
 			// remove from children
 			childNode.setParent(null);
 			this._childrenByName.delete(childNode.name());
+			this._updateCache();
 			this._removeFromNodesByType(childNode);
 			this.node.scene().nodesController.removeFromInstanciatedNode(childNode);
 
@@ -294,14 +298,18 @@ export class HierarchyChildrenController {
 	private _addToNodesByType(node: BaseNodeType) {
 		const nodeId = node.graphNodeId();
 		const type = node.type();
-		MapUtils.addToSetAtEntry(this._childrenByType, type, nodeId);
+
+		MapUtils.addToSetAtEntry(this._childrenIdByType, type, nodeId);
+		MapUtils.pushOnArrayAtEntry(this._childrenByType, type, node);
+
 		this._addToChildrenAndGrandchildrenByContext(node);
 	}
 	private _removeFromNodesByType(node: BaseNodeType) {
 		const nodeId = node.graphNodeId();
 		const type = node.type();
 
-		MapUtils.removeFromSetAtEntry(this._childrenByType, type, nodeId);
+		MapUtils.removeFromSetAtEntry(this._childrenIdByType, type, nodeId);
+		MapUtils.popFromArrayAtEntry(this._childrenByType, type, node);
 		this._removeFromChildrenAndGrandchildrenByContext(node);
 	}
 	private _addToChildrenAndGrandchildrenByContext(node: BaseNodeType) {
@@ -317,6 +325,7 @@ export class HierarchyChildrenController {
 	private _removeFromChildrenAndGrandchildrenByContext(node: BaseNodeType) {
 		const nodeId = node.graphNodeId();
 		const type = node.context();
+
 		MapUtils.removeFromSetAtEntry(this._childrenAndGrandchildrenByContext, type, nodeId);
 		const parent = this.node.parent();
 		if (parent && parent.childrenAllowed()) {
@@ -324,20 +333,24 @@ export class HierarchyChildrenController {
 		}
 	}
 
-	nodesByType(type: string): BaseNodeType[] {
-		const nodeIds = this._childrenByType.get(type);
-		if (!nodeIds) {
-			return [];
-		}
-		const graph = this.node.scene().graph;
-		const nodes: BaseNodeType[] = [];
-		for (let node_id of nodeIds) {
-			const node = graph.nodeFromId(node_id) as BaseNodeType;
-			if (node) {
-				nodes.push(node);
+	nodesByType(type: string, target: BaseNodeType[] = []): BaseNodeType[] {
+		const nodes = this._childrenByType.get(type);
+		// if (!nodes) {
+		// 	nodes = [];
+		// 	this._childrenByType.set(type, nodes);
+		// }
+		// ensure we don't return the same array,
+		// otherwise a previous call to .nodesByType()
+		// would share the same array,
+		// which is not what we want, when we aim to compare
+		// different results after different node creation/deletion
+		target.length = nodes ? nodes.length : 0;
+		if (nodes) {
+			for (let i = 0; i < nodes.length; i++) {
+				target[i] = nodes[i];
 			}
 		}
-		return nodes;
+		return target;
 	}
 	childByName(name: string) {
 		return this._childrenByName.get(name) || null;
@@ -347,19 +360,37 @@ export class HierarchyChildrenController {
 		return this._childrenAndGrandchildrenByContext.get(context) != null;
 	}
 
-	children(): BaseNodeType[] {
-		const nodes: BaseNodeType[] = [];
+	private _childrenCount: number = 0;
+	private _children: BaseNodeType[] = [];
+	private _childrenNames: string[] = [];
+	private _updateCache() {
+		this._children.length = 0;
+		this._childrenNames.length = 0;
 		this._childrenByName.forEach((node) => {
-			nodes.push(node);
+			this._children.push(node);
+			this._childrenNames.push(node.name());
 		});
-		return nodes;
+		this._childrenCount = this._childrenNames.length;
 	}
-	childrenNames() {
-		const names: string[] = [];
-		this._childrenByName.forEach((node, nodeName) => {
-			names.push(nodeName);
-		});
-		return names;
+	children(target: BaseNodeType[] = []): BaseNodeType[] {
+		target.length = 0;
+		// this._childrenByName.forEach((node) => {
+		// 	target.push(node);
+		// });
+		for (let i = 0; i < this._childrenCount; i++) {
+			target[i] = this._children[i];
+		}
+		return target;
+	}
+	childrenNames(target: string[] = []) {
+		target.length = 0;
+		// this._childrenByName.forEach((node, nodeName) => {
+		// 	target.push(nodeName);
+		// });
+		for (let i = 0; i < this._childrenCount; i++) {
+			target[i] = this._childrenNames[i];
+		}
+		return target;
 	}
 
 	traverseChildren(callback: (arg0: BaseNodeType) => void) {

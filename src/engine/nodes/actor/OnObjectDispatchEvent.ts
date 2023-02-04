@@ -3,8 +3,6 @@
  *
  *
  */
-import {NodeContext} from './../../poly/NodeContext';
-import {PolyScene} from './../../scene/PolyScene';
 import {ReturnValueTypeByActorConnectionPointType} from './../utils/io/connections/Actor';
 import {Object3D} from 'three';
 import {ActorNodeTriggerContext, TRIGGER_CONNECTION_NAME, TypedActorNode} from './_Base';
@@ -65,12 +63,8 @@ export class OnObjectDispatchEventActorNode extends TypedActorNode<OnObjectDispa
 		return this._lastReceivedEventName || '';
 	}
 
-	static addEventListeners(scene: PolyScene) {
-		const nodes = scene.nodesController.nodesByContextAndType(NodeContext.ACTOR, this.type());
-
-		for (let node of nodes) {
-			node._addEventListenersToObjects();
-		}
+	initOnPlay() {
+		this._addEventListenersToObjects();
 	}
 	private _addEventListenersToObjects() {
 		const eventNames = this.pv.eventNames.split(' ');

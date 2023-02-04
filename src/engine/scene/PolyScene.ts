@@ -13,6 +13,7 @@ import {NodesController} from './utils/NodesController';
 import {PolySceneSerializer} from './utils/Serializer';
 import {SceneEventsDispatcher} from './utils/events/EventsDispatcher';
 import {ObjectsController} from './utils/ObjectsController';
+import {ScenePerformanceMonitor} from './utils/ScenePerformanceMonitor';
 import {ReferencesController} from './utils/ReferencesController';
 import {
 	onTimeTickHook,
@@ -238,6 +239,7 @@ export class PolyScene {
 	get performance() {
 		return (this._performance = this._performance || new CorePerformance());
 	}
+	public readonly perfMonitor = new ScenePerformanceMonitor(this);
 
 	protected _viewers_register: ViewersRegister | undefined;
 	get viewersRegister() {

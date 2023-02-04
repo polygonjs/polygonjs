@@ -32,8 +32,9 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CoreType} from '../../../core/Type';
 import {Poly} from '../../Poly';
 import {isBooleanTrue} from '../../../core/BooleanValue';
-import {defaultPixelRatio} from '../../../core/camera/defaultPixelRatio';
-
+import {defaultPixelRatio} from '../../../core/render/defaultPixelRatio';
+import {PowerPreference, POWER_PREFERENCES} from '../../../core/render/Common';
+import {BaseNodeType} from '../_Base';
 enum EncodingName {
 	Linear = 'Linear',
 	sRGB = 'sRGB',
@@ -108,12 +109,6 @@ const RENDERER_PRECISIONS: RendererPrecision[] = [
 	RendererPrecision.MEDIUM,
 	RendererPrecision.LOW,
 ];
-enum PowerPreference {
-	HIGH = 'high-performance',
-	LOW = 'low-power',
-	DEFAULT = 'default',
-}
-const POWER_PREFERENCES: PowerPreference[] = [PowerPreference.HIGH, PowerPreference.LOW, PowerPreference.DEFAULT];
 
 enum ShadowMapTypeName {
 	Basic = 'Basic',
@@ -162,17 +157,23 @@ class WebGLRendererRopParamsConfig extends NodeParamsConfig {
 	//
 	//
 	common = ParamConfig.FOLDER();
-	/** @param toggle on to have antialias on (change requires page reload) */
-	antialias = ParamConfig.BOOLEAN(1);
 	/** @param tone mapping */
 	toneMapping = ParamConfig.INTEGER(DEFAULT_TONE_MAPPING, {
 		menu: {
 			entries: TONE_MAPPING_MENU_ENTRIES,
 		},
+		cook: false,
+		callback: (node: BaseNodeType) => {
+			WebGLRendererRopNode.PARAM_CALLBACK_updateToneMapping(node as WebGLRendererRopNode);
+		},
 	});
 	/** @param tone mapping exposure */
 	toneMappingExposure = ParamConfig.FLOAT(1, {
 		range: [0, 2],
+		cook: false,
+		callback: (node: BaseNodeType) => {
+			WebGLRendererRopNode.PARAM_CALLBACK_updateToneMappingExposure(node as WebGLRendererRopNode);
+		},
 	});
 	/** @param output encoding */
 	outputEncoding = ParamConfig.INTEGER(DEFAULT_OUTPUT_ENCODING, {
@@ -184,8 +185,42 @@ class WebGLRendererRopParamsConfig extends NodeParamsConfig {
 				};
 			}),
 		},
+		cook: false,
+		callback: (node: BaseNodeType) => {
+			WebGLRendererRopNode.PARAM_CALLBACK_updateOutputEncoding(node as WebGLRendererRopNode);
+		},
 	});
-
+	/** @param physically correct lights */
+	physicallyCorrectLights = ParamConfig.BOOLEAN(1, {
+		cook: false,
+		callback: (node: BaseNodeType) => {
+			WebGLRendererRopNode.PARAM_CALLBACK_updatePhysicallyCorrect(node as WebGLRendererRopNode);
+		},
+	});
+	/** @param sort objects, which can be necessary when rendering transparent objects */
+	sortObjects = ParamConfig.BOOLEAN(1, {
+		cook: false,
+		callback: (node: BaseNodeType) => {
+			WebGLRendererRopNode.PARAM_CALLBACK_updateSortObjects(node as WebGLRendererRopNode);
+		},
+	});
+	/** @param toggle to override the default pixel ratio, which is 1 for mobile devices, and Math.max(2, window.devicePixelRatio) for other devices */
+	tpixelRatio = ParamConfig.BOOLEAN(0, {
+		cook: false,
+		callback: (node: BaseNodeType) => {
+			WebGLRendererRopNode.PARAM_CALLBACK_updatePixelRatio(node as WebGLRendererRopNode);
+		},
+	});
+	/** @param higher pixelRatio improves render sharpness but reduces performance */
+	pixelRatio = ParamConfig.FLOAT(2, {
+		visibleIf: {tpixelRatio: true},
+		range: [0.1, 4],
+		rangeLocked: [true, false],
+		cook: false,
+		callback: (node: BaseNodeType) => {
+			WebGLRendererRopNode.PARAM_CALLBACK_updatePixelRatio(node as WebGLRendererRopNode);
+		},
+	});
 	//
 	//
 	//
@@ -193,11 +228,28 @@ class WebGLRendererRopParamsConfig extends NodeParamsConfig {
 	//
 	shadow = ParamConfig.FOLDER();
 	/** @param toggle on to have shadow maps */
-	tshadowMap = ParamConfig.BOOLEAN(1);
+	tshadowMap = ParamConfig.BOOLEAN(1, {
+		cook: false,
+		callback: (node: BaseNodeType) => {
+			WebGLRendererRopNode.PARAM_CALLBACK_updateShadow(node as WebGLRendererRopNode);
+		},
+	});
 	/** @param toggle on to recompute the shadow maps on every frame. If all objects are static, you may want to turn this off */
-	shadowMapAutoUpdate = ParamConfig.BOOLEAN(1, {visibleIf: {tshadowMap: 1}});
+	shadowMapAutoUpdate = ParamConfig.BOOLEAN(1, {
+		visibleIf: {tshadowMap: 1},
+		cook: false,
+		callback: (node: BaseNodeType) => {
+			WebGLRendererRopNode.PARAM_CALLBACK_updateShadow(node as WebGLRendererRopNode);
+		},
+	});
 	/** @param toggle on to trigger shadows update */
-	shadowMapNeedsUpdate = ParamConfig.BOOLEAN(0, {visibleIf: {tshadowMap: 1}});
+	shadowMapNeedsUpdate = ParamConfig.BOOLEAN(0, {
+		visibleIf: {tshadowMap: 1},
+		cook: false,
+		callback: (node: BaseNodeType) => {
+			WebGLRendererRopNode.PARAM_CALLBACK_updateShadow(node as WebGLRendererRopNode);
+		},
+	});
 	/** @param shadows type */
 	shadowMapType = ParamConfig.INTEGER(DEFAULT_SHADOW_MAP_TYPE, {
 		visibleIf: {tshadowMap: 1},
@@ -209,6 +261,10 @@ class WebGLRendererRopParamsConfig extends NodeParamsConfig {
 				};
 			}),
 		},
+		cook: false,
+		callback: (node: BaseNodeType) => {
+			WebGLRendererRopNode.PARAM_CALLBACK_updateShadow(node as WebGLRendererRopNode);
+		},
 	});
 
 	//
@@ -219,6 +275,8 @@ class WebGLRendererRopParamsConfig extends NodeParamsConfig {
 	advanced = ParamConfig.FOLDER();
 	/** @param toggle on to have alpha on (change requires page reload) */
 	alpha = ParamConfig.BOOLEAN(1);
+	/** @param toggle on to have antialias on (change requires page reload) */
+	antialias = ParamConfig.BOOLEAN(1);
 	/** @param premultipliedAlpha */
 	premultipliedAlpha = ParamConfig.BOOLEAN(1);
 	/** @param stencil */
@@ -243,26 +301,13 @@ class WebGLRendererRopParamsConfig extends NodeParamsConfig {
 	/** @param toggle on to set the power preferenc */
 	tpowerPreference = ParamConfig.BOOLEAN(0);
 	/** @param set the precision */
-	powerPreference = ParamConfig.INTEGER(POWER_PREFERENCES.indexOf(PowerPreference.DEFAULT), {
+	powerPreference = ParamConfig.INTEGER(POWER_PREFERENCES.indexOf(PowerPreference.HIGH), {
 		visibleIf: {tpowerPreference: 1},
 		menu: {
 			entries: POWER_PREFERENCES.map((name, value) => {
 				return {value, name};
 			}),
 		},
-	});
-
-	/** @param physically correct lights */
-	physicallyCorrectLights = ParamConfig.BOOLEAN(1);
-	/** @param sort objects, which can be necessary when rendering transparent objects */
-	sortObjects = ParamConfig.BOOLEAN(1);
-	/** @param toggle to override the default pixel ratio, which is 1 for mobile devices, and Math.max(2, window.devicePixelRatio) for other devices */
-	tpixelRatio = ParamConfig.BOOLEAN(0);
-	/** @param higher pixelRatio improves render sharpness but reduces performance */
-	pixelRatio = ParamConfig.INTEGER(2, {
-		visibleIf: {tpixelRatio: true},
-		range: [1, 4],
-		rangeLocked: [true, false],
 	});
 
 	// preserve_drawing_buffer = ParamConfig.BOOLEAN(0);
@@ -274,6 +319,8 @@ export class WebGLRendererRopNode extends TypedRopNode<WebGLRendererRopParamsCon
 	static override type(): Readonly<RopType.WEBGL> {
 		return RopType.WEBGL;
 	}
+
+	private _rendererByCanvas: Map<HTMLCanvasElement, WebGLRenderer> = new Map();
 
 	// private _renderersbyCamera: Map<Camera, WebGLRenderer> = new Map();
 	createRenderer(canvas: HTMLCanvasElement, gl: WebGLRenderingContext): WebGLRenderer {
@@ -303,6 +350,7 @@ export class WebGLRendererRopNode extends TypedRopNode<WebGLRendererRopParamsCon
 		params.context = gl;
 		params.preserveDrawingBuffer = this.pv.preserveDrawingBuffer;
 		const renderer = Poly.renderersController.createWebGLRenderer(params);
+		this._rendererByCanvas.set(canvas, renderer);
 
 		if (Poly.renderersController.printDebug()) {
 			Poly.renderersController.printDebugMessage(`create renderer from node '${this.path()}'`);
@@ -323,29 +371,13 @@ export class WebGLRendererRopNode extends TypedRopNode<WebGLRendererRopParamsCon
 	}
 	private _updateRenderer(renderer: WebGLRenderer) {
 		// this._renderer.setClearAlpha(this.pv.alpha);
-		renderer.physicallyCorrectLights = this.pv.physicallyCorrectLights;
-		renderer.outputEncoding = this.pv.outputEncoding;
-		renderer.toneMapping = this.pv.toneMapping;
-		renderer.toneMappingExposure = this.pv.toneMappingExposure;
-
-		// shadows
-		renderer.shadowMap.enabled = this.pv.tshadowMap;
-		renderer.shadowMap.autoUpdate = this.pv.shadowMapAutoUpdate;
-		renderer.shadowMap.needsUpdate = this.pv.shadowMapNeedsUpdate;
-		renderer.shadowMap.type = this.pv.shadowMapType;
-
-		renderer.sortObjects = this.pv.sortObjects;
-
-		const pixelRatio = this.pv.tpixelRatio ? this.pv.pixelRatio : defaultPixelRatio();
-
-		if (Poly.renderersController.printDebug()) {
-			Poly.renderersController.printDebugMessage(`set renderer pixelRatio from '${this.path()}'`);
-			Poly.renderersController.printDebugMessage({
-				pixelRatio: pixelRatio,
-			});
-		}
-
-		renderer.setPixelRatio(pixelRatio);
+		this._updateRendererPhysicallyCorrect(renderer);
+		this._updateRendererOutputEncoding(renderer);
+		this._updateRendererToneMapping(renderer);
+		this._updateRendererToneMappingExposure(renderer);
+		this._updateRendererShadow(renderer);
+		this._updateRendererSortObjects(renderer);
+		this._updateRendererPixelRatio(renderer);
 	}
 
 	private _traverseSceneAndUpdateMaterials() {
@@ -363,5 +395,78 @@ export class WebGLRendererRopNode extends TypedRopNode<WebGLRendererRopParamsCon
 					}
 				}
 			});
+	}
+
+	//
+	//
+
+	static PARAM_CALLBACK_updateToneMapping(node: WebGLRendererRopNode) {
+		node._rendererByCanvas.forEach((renderer, canvas) => {
+			node._updateRendererToneMapping(renderer);
+		});
+	}
+	static PARAM_CALLBACK_updateToneMappingExposure(node: WebGLRendererRopNode) {
+		node._rendererByCanvas.forEach((renderer, canvas) => {
+			node._updateRendererToneMappingExposure(renderer);
+		});
+	}
+	static PARAM_CALLBACK_updateOutputEncoding(node: WebGLRendererRopNode) {
+		node._rendererByCanvas.forEach((renderer, canvas) => {
+			node._updateRendererOutputEncoding(renderer);
+		});
+	}
+	static PARAM_CALLBACK_updateShadow(node: WebGLRendererRopNode) {
+		node._rendererByCanvas.forEach((renderer, canvas) => {
+			node._updateRendererShadow(renderer);
+		});
+	}
+	static PARAM_CALLBACK_updateSortObjects(node: WebGLRendererRopNode) {
+		node._rendererByCanvas.forEach((renderer, canvas) => {
+			node._updateRendererSortObjects(renderer);
+		});
+	}
+	static PARAM_CALLBACK_updatePhysicallyCorrect(node: WebGLRendererRopNode) {
+		node._rendererByCanvas.forEach((renderer, canvas) => {
+			node._updateRendererPhysicallyCorrect(renderer);
+		});
+	}
+	static PARAM_CALLBACK_updatePixelRatio(node: WebGLRendererRopNode) {
+		node._rendererByCanvas.forEach((renderer, canvas) => {
+			node._updateRendererPixelRatio(renderer);
+		});
+		window.dispatchEvent(new Event('resize'));
+	}
+	//
+	//
+	private _updateRendererToneMapping(renderer: WebGLRenderer) {
+		renderer.toneMapping = this.pv.toneMapping;
+	}
+	private _updateRendererToneMappingExposure(renderer: WebGLRenderer) {
+		renderer.toneMappingExposure = this.pv.toneMappingExposure;
+	}
+	private _updateRendererOutputEncoding(renderer: WebGLRenderer) {
+		renderer.outputEncoding = this.pv.outputEncoding;
+	}
+	private _updateRendererShadow(renderer: WebGLRenderer) {
+		renderer.shadowMap.enabled = this.pv.tshadowMap;
+		renderer.shadowMap.autoUpdate = this.pv.shadowMapAutoUpdate;
+		renderer.shadowMap.needsUpdate = this.pv.shadowMapNeedsUpdate;
+		renderer.shadowMap.type = this.pv.shadowMapType;
+	}
+	private _updateRendererSortObjects(renderer: WebGLRenderer): void {
+		renderer.sortObjects = this.pv.sortObjects;
+	}
+	private _updateRendererPhysicallyCorrect(renderer: WebGLRenderer) {
+		renderer.physicallyCorrectLights = this.pv.physicallyCorrectLights;
+	}
+	private _updateRendererPixelRatio(renderer: WebGLRenderer) {
+		const pixelRatio = this.pv.tpixelRatio ? this.pv.pixelRatio : defaultPixelRatio();
+		if (Poly.renderersController.printDebug()) {
+			Poly.renderersController.printDebugMessage(`set renderer pixelRatio from '${this.path()}'`);
+			Poly.renderersController.printDebugMessage({
+				pixelRatio: pixelRatio,
+			});
+		}
+		renderer.setPixelRatio(pixelRatio);
 	}
 }

@@ -8,5 +8,8 @@ export function defaultPixelRatio() {
 	// so Math.max(2, window.devicePixelRatio) seems like a good compromise between
 	// simplicity and result.
 	// Any further customisation can be done with the rop/WebGLRenderer node
-	return Math.max(2, window.devicePixelRatio);
+	// return Math.max(2, window.devicePixelRatio);
+	// using a fixed value of 2 now,
+	// since high dpi devices probably don't need higher
+	return 2;
 }

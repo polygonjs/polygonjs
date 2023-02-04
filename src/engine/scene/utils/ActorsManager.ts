@@ -14,10 +14,8 @@ import {ActorPointerEventsController} from './actors/ActorsPointerEventsControll
 import {ActorHoveredEventsController} from './actors/ActorsHoveredEventsController';
 import {ActorKeyboardEventsController} from './actors/ActorsKeyboardEventsController';
 import {AttributeProxy} from '../../../core/geometry/attribute/_Base';
-import {OnObjectDispatchEventActorNode} from '../../nodes/actor/OnObjectDispatchEvent';
 import {OnScenePlayStateActorNode} from '../../nodes/actor/OnScenePlayState';
-import {OnVideoEventActorNode} from '../../nodes/actor/OnVideoEvent';
-import {OnWebXRControllerEventActorNode} from '../../nodes/actor/OnWebXRControllerEvent';
+import {ActorNodeTriggerContext} from '../../nodes/actor/_Base';
 
 const ACTOR_BUILDER_NODE_IDS_KEY = 'actorBuilderNodeIds';
 
@@ -48,6 +46,18 @@ export class ActorBuilderNode extends TypedNode<any, any> {
 	}
 }
 
+type ActorNodeToInitOnPlay =
+	| ActorType.ON_PERFORMANCE_CHANGE
+	| ActorType.ON_OBJECT_DISPATCH_EVENT
+	| ActorType.ON_VIDEO_EVENT
+	| ActorType.ON_WEBXR_CONTROLLER_EVENT;
+const ACTOR_TYPES_TO_INIT_ON_PLAY: Array<ActorNodeToInitOnPlay> = [
+	ActorType.ON_PERFORMANCE_CHANGE,
+	ActorType.ON_OBJECT_DISPATCH_EVENT,
+	ActorType.ON_VIDEO_EVENT,
+	ActorType.ON_WEBXR_CONTROLLER_EVENT,
+];
+
 export class ActorsManager {
 	constructor(public readonly scene: PolyScene) {}
 
@@ -56,6 +66,7 @@ export class ActorsManager {
 	private _manualTriggerController: ActorManualTriggersController | undefined;
 	private _pointerEventsController: ActorPointerEventsController | undefined;
 	private _hoveredEventsController: ActorHoveredEventsController | undefined;
+	private _contextByObject: WeakMap<Object3D, ActorNodeTriggerContext> = new WeakMap();
 
 	assignActorBuilder(object: Object3D, node: ActorBuilderNode) {
 		let ids = this.objectActorNodeIds(object);
@@ -115,13 +126,21 @@ export class ActorsManager {
 		this._onEventScenePlayTraverse();
 
 		// any caching goes here
-		OnObjectDispatchEventActorNode.addEventListeners(this.scene);
-		OnVideoEventActorNode.addEventListeners(this.scene);
-		OnWebXRControllerEventActorNode.addEventListeners(this.scene);
+		this.scene.perfMonitor.reset();
+		for (let type of ACTOR_TYPES_TO_INIT_ON_PLAY) {
+			const nodes = this.scene.nodesController.nodesByContextAndType(NodeContext.ACTOR, type);
+			for (let node of nodes) {
+				node.initOnPlay();
+			}
+		}
+
 		this._makeRequiredObjectAttributesReactive();
 	}
 	runOnEventScenePause() {
 		this._onEventScenePauseTraverse();
+	}
+	runOnEventPerformanceChange() {
+		this._onEventPerformanceChangeTraverse();
 	}
 
 	/*
@@ -139,7 +158,7 @@ export class ActorsManager {
 		this._triggerEventNodes(object, ActorType.ON_TICK);
 	}
 	private _onEventTickTraverse() {
-		if (this.scene.nodesController.nodesByContextAndType(NodeContext.ACTOR, ActorType.ON_TICK).length == 0) {
+		if (!this.scene.nodesController.hasNodesByContextAndType(NodeContext.ACTOR, ActorType.ON_TICK)) {
 			return;
 		}
 		this.scene.threejsScene().traverse(this._onEventTickBound);
@@ -150,7 +169,7 @@ export class ActorsManager {
 		this._triggerEventNodes(object, ActorType.ON_SCENE_RESET);
 	}
 	private _onEventSceneResetTraverse() {
-		if (this.scene.nodesController.nodesByContextAndType(NodeContext.ACTOR, ActorType.ON_SCENE_RESET).length == 0) {
+		if (!this.scene.nodesController.hasNodesByContextAndType(NodeContext.ACTOR, ActorType.ON_SCENE_RESET)) {
 			return;
 		}
 		this.scene.threejsScene().traverse(this._onEventSceneResetBound);
@@ -165,10 +184,7 @@ export class ActorsManager {
 		);
 	}
 	private _onEventScenePlayTraverse() {
-		if (
-			this.scene.nodesController.nodesByContextAndType(NodeContext.ACTOR, ActorType.ON_SCENE_PLAY_STATE).length ==
-			0
-		) {
+		if (!this.scene.nodesController.hasNodesByContextAndType(NodeContext.ACTOR, ActorType.ON_SCENE_PLAY_STATE)) {
 			return;
 		}
 		this.scene.threejsScene().traverse(this._onEventScenePlayBound);
@@ -183,13 +199,40 @@ export class ActorsManager {
 		);
 	}
 	private _onEventScenePauseTraverse() {
-		if (
-			this.scene.nodesController.nodesByContextAndType(NodeContext.ACTOR, ActorType.ON_SCENE_PLAY_STATE).length ==
-			0
-		) {
+		if (!this.scene.nodesController.hasNodesByContextAndType(NodeContext.ACTOR, ActorType.ON_SCENE_PLAY_STATE)) {
 			return;
 		}
 		this.scene.threejsScene().traverse(this._onEventScenePauseBound);
+	}
+	// performanceChange
+	private _onEventPerformanceChangeBound = this._onEventPerformanceChange.bind(this);
+	private _onEventPerformanceChange(object: Object3D) {
+		const actorType = ActorType.ON_PERFORMANCE_CHANGE;
+		const nodeIds = this.objectActorNodeIds(object);
+		if (!nodeIds) {
+			return;
+		}
+
+		for (let nodeId of nodeIds) {
+			const node = this.scene.graph.nodeFromId(nodeId) as ActorBuilderNode | undefined;
+			if (node) {
+				const onEventNodes = node.nodesByType(actorType);
+				for (let onEventNode of onEventNodes) {
+					let context = this._contextByObject.get(object);
+					if (!context) {
+						context = {Object3D: object};
+						this._contextByObject.set(object, context);
+					}
+					onEventNode.runTriggerIfRequired(context);
+				}
+			}
+		}
+	}
+	private _onEventPerformanceChangeTraverse() {
+		if (!this.scene.nodesController.hasNodesByContextAndType(NodeContext.ACTOR, ActorType.ON_PERFORMANCE_CHANGE)) {
+			return;
+		}
+		this.scene.threejsScene().traverse(this._onEventPerformanceChangeBound);
 	}
 	//
 	private _triggerEventNodes(object: Object3D, actorType: ActorType, outputIndex: number = 0) {
@@ -203,11 +246,17 @@ export class ActorsManager {
 			if (node) {
 				const onEventNodes = node.nodesByType(actorType);
 				for (let onEventNode of onEventNodes) {
-					onEventNode.runTrigger({Object3D: object}, outputIndex);
+					let context = this._contextByObject.get(object);
+					if (!context) {
+						context = {Object3D: object};
+						this._contextByObject.set(object, context);
+					}
+					onEventNode.runTrigger(context, outputIndex);
 				}
 			}
 		}
 	}
+
 	// param
 
 	// video
@@ -332,8 +381,12 @@ export class ActorsManager {
 						// 	return;
 						// }
 						// proxy.callbackRanAtFrame = this.scene.frame();
+						let context = this._contextByObject.get(object);
+						if (!context) {
+							context = {Object3D: object};
+							this._contextByObject.set(object, context);
+						}
 
-						const context = {Object3D: object};
 						if (directActorNodes) {
 							for (let node of directActorNodes) {
 								node.runTrigger(context);
