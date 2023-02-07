@@ -12,7 +12,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CameraNodeType} from '../../poly/NodeContext';
 import {registerOrthographicCamera} from '../../../core/camera/CoreOrthographicCamera';
 import {BaseNodeType} from '../_Base';
-import {setSopMainCamera} from './utils/camera/setSopMainCamera';
+import {updateCameraTransformParams} from './utils/camera/updateCameraTransformParams';
 const DEFAULT = OrthographicCameraSopOperation.DEFAULT_PARAMS;
 class OrthographicCameraSopParamsConfig extends NodeParamsConfig {
 	/** @param camera view size */
@@ -41,9 +41,9 @@ class OrthographicCameraSopParamsConfig extends NodeParamsConfig {
 	/** @param camera name */
 	name = ParamConfig.STRING('`$OS`');
 	/** @param set main camera */
-	setMainCamera = ParamConfig.BUTTON(null, {
+	updateTransformFromCamera = ParamConfig.BUTTON(null, {
 		callback: (node: BaseNodeType) => {
-			setSopMainCamera(node as OrthographicCameraSopNode);
+			updateCameraTransformParams(node as OrthographicCameraSopNode);
 		},
 	});
 }
@@ -61,9 +61,9 @@ export class OrthographicCameraSopNode extends TypedSopNode<OrthographicCameraSo
 	}
 
 	private _operation: OrthographicCameraSopOperation | undefined;
-	override cook(input_contents: CoreGroup[]) {
+	override cook(inputCoreGroups: CoreGroup[]) {
 		this._operation = this._operation || new OrthographicCameraSopOperation(this._scene, this.states, this);
-		const core_group = this._operation.cook(input_contents, this.pv);
-		this.setCoreGroup(core_group);
+		const coreGroup = this._operation.cook(inputCoreGroups, this.pv);
+		this.setCoreGroup(coreGroup);
 	}
 }

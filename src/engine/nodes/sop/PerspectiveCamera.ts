@@ -12,7 +12,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CameraNodeType} from '../../poly/NodeContext';
 import {PERSPECTIVE_CAMERA_DEFAULT, registerPerspectiveCamera} from '../../../core/camera/CorePerspectiveCamera';
 import {BaseNodeType} from '../_Base';
-import {setSopMainCamera} from './utils/camera/setSopMainCamera';
+import {updateCameraTransformParams} from './utils/camera/updateCameraTransformParams';
 const DEFAULT = PerspectiveCameraSopOperation.DEFAULT_PARAMS;
 class PerspectiveCameraSopParamsConfig extends NodeParamsConfig {
 	/** @param camera fov */
@@ -41,9 +41,9 @@ class PerspectiveCameraSopParamsConfig extends NodeParamsConfig {
 	/** @param camera name */
 	name = ParamConfig.STRING('`$OS`');
 	/** @param set main camera */
-	setMainCamera = ParamConfig.BUTTON(null, {
+	updateTransformFromCamera = ParamConfig.BUTTON(null, {
 		callback: (node: BaseNodeType) => {
-			setSopMainCamera(node as PerspectiveCameraSopNode);
+			updateCameraTransformParams(node as PerspectiveCameraSopNode);
 		},
 	});
 }

@@ -140,8 +140,8 @@ export class ThreejsLayer {
 
 		this._updateCameraMatrix(matrix);
 
-		this._renderer.state.reset();
-		// this._renderer.resetState();
+		// this._renderer.state.reset();
+		this._renderer.resetState();
 
 		this._renderFunc(this._renderer);
 		// const delta = this._scene.timeController.updateClockDelta();
