@@ -3,7 +3,8 @@ import {CoreGroup} from '../../../../../core/geometry/Group';
 import {Mesh, BufferGeometry, Object3D} from 'three';
 import {DefaultOperationParams} from '../../../../../core/operations/_Base';
 import {Poly} from '../../../../Poly';
-import {BaseGeoLoaderHandler, BaseGeoLoaderOutput} from '../../../../../core/loader/geometry/_BaseLoaderHandler';
+import type {BaseGeoLoaderOutput} from '../../../../../core/loader/geometry/Common';
+import {BaseGeoLoaderHandler} from '../../../../../core/loader/geometry/_BaseLoaderHandler';
 
 export interface BaseFileSopParams extends DefaultOperationParams {
 	url: string;

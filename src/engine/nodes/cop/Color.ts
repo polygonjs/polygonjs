@@ -17,6 +17,10 @@ class ColorCopParamsConfig extends NodeParamsConfig {
 	});
 	/** @param color to generate */
 	color = ParamConfig.COLOR([1, 1, 1]);
+	/** @param alpha */
+	alpha = ParamConfig.FLOAT(1, {
+		range: [0, 1],
+	});
 }
 const ParamsConfig = new ColorCopParamsConfig();
 
@@ -32,18 +36,18 @@ export class ColorCopNode extends TypedCopNode<ColorCopParamsConfig> {
 		const h = this.pv.resolution.y;
 		this._dataTexture = this._dataTexture || this._createDataTexture(w, h);
 
-		const pixelsCount = h * w;
+		const bufferSize = 4 * h * w;
 		const c = this.pv.color.toArray();
 		const r = c[0] * 255;
 		const g = c[1] * 255;
 		const b = c[2] * 255;
-		const a = 255;
+		// const a = 255;
 		const data = this._dataTexture.image.data;
-		for (let i = 0; i < pixelsCount; i++) {
-			data[i * 4 + 0] = r;
-			data[i * 4 + 1] = g;
-			data[i * 4 + 2] = b;
-			data[i * 4 + 3] = a;
+		for (let i = 0; i < bufferSize; i += 4) {
+			data[i + 0] = r;
+			data[i + 1] = g;
+			data[i + 2] = b;
+			// data[i * 4 + 3] = a;
 		}
 		this._dataTexture.needsUpdate = true;
 
@@ -57,7 +61,9 @@ export class ColorCopNode extends TypedCopNode<ColorCopParamsConfig> {
 	private _createPixelBuffer(width: number, height: number) {
 		const size = width * height * 4;
 
-		return new Uint8Array(size);
+		const buffer = new Uint8Array(size);
+		buffer.fill(this.pv.alpha * 255);
+		return buffer;
 	}
 
 	static PARAM_CALLBACK_reset(node: ColorCopNode) {

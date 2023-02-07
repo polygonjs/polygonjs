@@ -1,7 +1,7 @@
 import {CoreUserAgent} from '../UserAgent';
 import {CoreBaseLoader} from './_Base';
 import {BaseNodeType} from '../../engine/nodes/_Base';
-import {BaseGeoLoaderOutput} from './geometry/_BaseLoaderHandler';
+import type {BaseGeoLoaderOutput} from './geometry/Common';
 
 export enum GeometryFormat {
 	AUTO = 'auto',

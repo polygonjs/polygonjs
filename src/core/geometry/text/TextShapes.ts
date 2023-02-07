@@ -1,4 +1,4 @@
-import {Font, FontGenerateShapesOptions} from '../../../../../core/loader/font/Font';
+import {Font, FontGenerateShapesOptions} from '../../loader/font/Font';
 
 export interface TextShapesParams extends FontGenerateShapesOptions {
 	text: string;

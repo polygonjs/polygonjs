@@ -23,8 +23,8 @@ import {AssetUrlsController} from './poly/AssetUrlsController';
 // import {SelfContainedScenesLoader} from './poly/SelfContainedSceneLoader';
 import {PolyPerformanceformanceController} from './poly/PerformanceController';
 import {ScenesRegister} from './poly/ScenesRegister';
-import {LogoController} from './poly/LogoController';
-import {PolyMarkerTrackingController} from './poly/MarkerTrackingController';
+// import {LogoController} from './poly/LogoController';
+import {PolyThirdPartyController} from './poly/ThirdPartyController';
 import {Camera} from 'three';
 
 declare global {
@@ -51,8 +51,8 @@ export class PolyEngine {
 	public readonly camerasRegister: PolyCamerasRegister = new PolyCamerasRegister(this);
 	public readonly blobs: BlobsController = new BlobsController(this);
 	public readonly assetUrls: AssetUrlsController = new AssetUrlsController();
-	public readonly logo = new LogoController();
-	public readonly markerTracking = new PolyMarkerTrackingController();
+	// public readonly logo = new LogoController();
+	public readonly thirdParty = new PolyThirdPartyController();
 	// public readonly selfContainedScenesLoader: SelfContainedScenesLoader = new SelfContainedScenesLoader();
 	public readonly performance: PolyPerformanceformanceController = new PolyPerformanceformanceController();
 	scenesByUuid: PolyDictionary<PolyScene> = {};

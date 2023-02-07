@@ -66,6 +66,7 @@ export class OnObjectDispatchEventActorNode extends TypedActorNode<OnObjectDispa
 	initOnPlay() {
 		this._addEventListenersToObjects();
 	}
+	disposeOnPause() {}
 	private _addEventListenersToObjects() {
 		const eventNames = this.pv.eventNames.split(' ');
 		const objects = objectsForActorNode(this);

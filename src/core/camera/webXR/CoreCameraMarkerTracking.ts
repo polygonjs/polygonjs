@@ -26,7 +26,10 @@ export function CoreCameraMarkerTrackingParamConfig<TBase extends Constructor>(B
 		/** @param barcode type */
 		barCodeType = ParamConfig.STRING(DEFAULT.barCodeType, {
 			menuString: {
-				entries: Poly.markerTracking.barCodeTypes().map((name, value) => ({name, value: name})),
+				entries: Poly.thirdParty
+					.markerTracking()
+					.barCodeTypes()
+					.map((name, value) => ({name, value: name})),
 			},
 		});
 		/** @param barcode value */
@@ -75,7 +78,7 @@ export class CoreCameraMarkerTrackingController {
 		if (!CoreType.isString(transformMode)) {
 			return;
 		}
-		if (!Poly.markerTracking.barCodeTypes().includes(barCodeType)) {
+		if (!Poly.thirdParty.markerTracking().barCodeTypes().includes(barCodeType)) {
 			return;
 		}
 		if (!MARKER_TRACKING_TRANSFORM_MODES.includes(transformMode as MarkerTrackingTransformMode)) {
@@ -85,7 +88,7 @@ export class CoreCameraMarkerTrackingController {
 			return;
 		}
 
-		const controller = Poly.markerTracking.createController({
+		const controller = Poly.thirdParty.markerTracking().createController({
 			canvas,
 			camera,
 			scene: scene.threejsScene(),

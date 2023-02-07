@@ -14,6 +14,7 @@ export enum SopType {
 export enum SopTypeFile {
 	FILE_DRC = 'fileDRC',
 	FILE_FBX = 'fileFBX',
+	FILE_GEOJSON = 'fileGEOJSON',
 	FILE_GLTF = 'fileGLTF',
 	FILE_JSON = 'fileJSON',
 	FILE_MPD = 'fileMPD',

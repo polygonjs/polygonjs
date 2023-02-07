@@ -22,6 +22,7 @@ export const IMAGE_EXTENSIONS: string[] = [
 export enum GeometryExtension {
 	DRC = 'drc',
 	FBX = 'fbx',
+	GEOJSON = 'geojson',
 	GLTF = 'gltf',
 	GLB = 'glb',
 	JSON = 'json',
@@ -35,6 +36,7 @@ export enum GeometryExtension {
 export const GEOMETRY_EXTENSIONS: string[] = [
 	GeometryExtension.DRC,
 	GeometryExtension.FBX,
+	GeometryExtension.GEOJSON,
 	GeometryExtension.GLTF,
 	GeometryExtension.GLB,
 	GeometryExtension.JSON,

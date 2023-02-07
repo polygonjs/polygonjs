@@ -1,5 +1,5 @@
-import type {CoreMarkerTrackingController} from '../../core/webXR/markerTracking/MarkerTrackingController';
-import type {CoreMarkerTrackingControllerOptions} from '../../core/webXR/markerTracking/Common';
+import type {CoreMarkerTrackingController} from '../../../core/webXR/markerTracking/MarkerTrackingController';
+import type {CoreMarkerTrackingControllerOptions} from '../../../core/webXR/markerTracking/Common';
 
 export type MarkerTrackingControllerCreateFunc = (
 	options: CoreMarkerTrackingControllerOptions

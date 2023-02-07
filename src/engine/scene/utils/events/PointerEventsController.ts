@@ -63,7 +63,7 @@ export class PointerEventsController extends BaseSceneEventsController<
 		viewer.raycastersController.setCursor0(this._cursor);
 		// even though the update is in the render loop
 		// it may be more up to date to do it here as well
-		viewer.raycastersController.update();
+		viewer.raycastersController.updateRaycasters();
 		this._raycaster = viewer.raycastersController.raycaster0();
 		// }
 

@@ -1,11 +1,11 @@
 import {BufferGeometry, Object3D} from 'three';
-import {ArrayUtils} from '../../../../../core/ArrayUtils';
-import {ObjectType} from '../../../../../core/geometry/Constant';
-import {CoreObject} from '../../../../../core/geometry/Object';
-import {isBooleanTrue} from '../../../../../core/Type';
-import {mergeBufferGeometries} from '../../../../../modules/three/examples/jsm/utils/BufferGeometryUtils';
-import {TransformResetSopOperation} from '../../../../operations/sop/TransformReset';
-import {TypedSopNode} from '../../_Base';
+import {ArrayUtils} from '../../ArrayUtils';
+import {ObjectType} from '../Constant';
+import {CoreObject} from '../Object';
+import {isBooleanTrue} from '../../Type';
+import {mergeBufferGeometries} from '../../../modules/three/examples/jsm/utils/BufferGeometryUtils';
+import {TransformResetSopOperation} from '../../../engine/operations/sop/TransformReset';
+import {TypedSopNode} from '../../../engine/nodes/sop/_Base';
 import {applyJustifyModeToGeometries, TextJustifiyParams} from './TextJustify';
 import {applyTextLineHeight, TextLineHeightParams} from './TextLineHeight';
 import {TextType} from './TextType';

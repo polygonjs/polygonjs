@@ -9,7 +9,8 @@ import {Group} from 'three';
 import {CoreInstancer} from '../../../../../core/geometry/Instancer';
 import {Matrix4} from 'three';
 import {Poly} from '../../../../Poly';
-import {BaseGeoLoaderHandler, BaseGeoLoaderOutput} from '../../../../../core/loader/geometry/_BaseLoaderHandler';
+import type {BaseGeoLoaderOutput} from '../../../../../core/loader/geometry/Common';
+import {BaseGeoLoaderHandler} from '../../../../../core/loader/geometry/_BaseLoaderHandler';
 import {CorePoint} from '../../../../../core/geometry/Point';
 // import { Constructor } from 'vue/types/options';
 

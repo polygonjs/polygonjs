@@ -1,0 +1,15 @@
+export enum MapboxCameraAttribute {
+	STYLE = 'mapbox-camera-attrib-style',
+	LONGITUDE = 'mapbox-camera-attrib-longitude',
+	LATITUDE = 'mapbox-camera-attrib-latitude',
+	ZOOM = 'mapbox-camera-attrib-zoom',
+	MIN_ZOOM = 'mapbox-camera-attrib-minZoom',
+	MAX_ZOOM = 'mapbox-camera-attrib-maxZoom',
+	PITCH = 'mapbox-camera-attrib-pitch',
+	BEARING = 'mapbox-camera-attrib-bearing',
+	ALLOW_DRAG_ROTATE = 'mapbox-camera-attrib-allowDragRotate',
+	ADD_ZOOM_CONTROL = 'mapbox-camera-attrib-addZoomControl',
+	LAYER_BUILDINGS = 'mapbox-camera-attrib-tlayerBuildings',
+	LAYER_3D = 'mapbox-camera-attrib-tlayer3D',
+	LAYER_SKY = 'mapbox-camera-attrib-tlayerSky',
+}

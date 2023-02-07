@@ -17,6 +17,8 @@ import {ImageKTX2CopNode} from '../../../nodes/cop/ImageKTX2';
 // import {ImageSequenceCopNode} from '../../../nodes/cop/ImageSequence';
 import {LightMapCopNode} from '../../../nodes/cop/LightMap';
 import {LutCopNode} from '../../../nodes/cop/Lut';
+import {MapboxElevationCopNode} from '../../../nodes/cop/MapboxElevation';
+import {MapboxSatelliteCopNode} from '../../../nodes/cop/MapboxSatellite';
 import {NullCopNode} from '../../../nodes/cop/Null';
 // import {PostCopNode} from '../../../nodes/cop/Post';
 import {PaletteCopNode} from '../../../nodes/cop/Palette';
@@ -60,6 +62,8 @@ export interface CopNodeChildrenMap {
 	// imageSequence: ImageSequenceCopNode;
 	lightMap: LightMapCopNode;
 	lut: LutCopNode;
+	mapboxElevation: MapboxElevationCopNode;
+	mapboxSatellite: MapboxSatelliteCopNode;
 	null: NullCopNode;
 	// post: PostCopNode;
 	palette: PaletteCopNode;
@@ -106,6 +110,8 @@ export class CopRegister {
 		// poly.registerNode(ImageSequenceCopNode, CATEGORY_COP.INPUT);
 		poly.registerNode(LightMapCopNode, CATEGORY_COP.MISC);
 		poly.registerNode(LutCopNode, CATEGORY_COP.MISC);
+		poly.registerNode(MapboxElevationCopNode, CATEGORY_COP.MAPS);
+		poly.registerNode(MapboxSatelliteCopNode, CATEGORY_COP.MAPS);
 		poly.registerNode(NullCopNode, CATEGORY_COP.MISC);
 		// poly.registerNode(PostCopNode, CATEGORY_COP.FILTER); // removed until usable
 		poly.registerNode(PaletteCopNode, CATEGORY_COP.INPUT);

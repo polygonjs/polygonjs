@@ -3,11 +3,11 @@ import {getShapes, TextShapesParams} from './TextShapes';
 import {createGeometriesFromTypeFlat} from './TextFlat';
 import {createGeometriesFromTypeStroke} from './TextStroke';
 import {shapesFromFont} from './TextShapesFromFont';
-import {TypeAssert} from '../../../../poly/Assert';
+import {TypeAssert} from '../../../engine/poly/Assert';
 import {createGeometriesFromTypeLine} from './TextLine';
 import {TextType} from './TextType';
 import {BufferGeometry} from 'three';
-import {Font} from '../../../../../core/loader/font/Font';
+import {Font} from '../../loader/font/Font';
 
 interface TextBuildGeometriesParams extends BevelParams, TextShapesParams {
 	textType: TextType;

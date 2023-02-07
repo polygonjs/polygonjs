@@ -1,7 +1,7 @@
 import {Camera, WebGLRenderer} from 'three';
 import {TypedViewer, TypedViewerOptions} from './_Base';
-import {Poly} from '../Poly';
-import {ViewerLogoController} from './utils/logo/ViewerLogoController';
+// import {Poly} from '../Poly';
+// import {ViewerLogoController} from './utils/logo/ViewerLogoController';
 import {AvailableRenderConfig, CoreCameraRendererController} from '../../core/camera/CoreCameraRendererController';
 import {CoreCameraPostProcessController} from '../../core/camera/CoreCameraPostProcessController';
 import {CoreCameraCSSRendererController, CSSRendererConfig} from '../../core/camera/CoreCameraCSSRendererController';
@@ -150,9 +150,9 @@ export class ThreejsViewer<C extends Camera> extends TypedViewer<C> {
 		this._setEvents();
 		this.onResize();
 
-		if (Poly.logo.displayed()) {
-			new ViewerLogoController(this);
-		}
+		// if (Poly.logo.displayed()) {
+		// 	new ViewerLogoController(this);
+		// }
 	}
 
 	public _build() {

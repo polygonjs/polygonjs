@@ -60,6 +60,9 @@ export class OnPerformanceChangeActorNode extends TypedActorNode<OnPerformanceCh
 		this._currentPerfAboveThreshold = undefined;
 		this.scene().perfMonitor.addThreshold(this.pv.threshold);
 	}
+	disposeOnPause() {
+		this.scene().perfMonitor.reset();
+	}
 
 	private _currentPerfAboveThreshold: boolean | undefined;
 	// private _lastChangeAt: number | undefined;

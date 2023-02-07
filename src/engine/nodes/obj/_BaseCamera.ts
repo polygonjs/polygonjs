@@ -19,8 +19,8 @@ import {TypedObjNode} from './_Base';
 import {BaseViewerType} from '../../viewers/_Base';
 import {HierarchyController} from './utils/HierarchyController';
 import {GeoNodeChildrenMap} from '../../poly/registers/nodes/Sop';
-import {Raycaster} from 'three';
-import {Vector2} from 'three';
+// import {Raycaster} from 'three';
+// import {Vector2} from 'three';
 import {CameraHelper} from '../../../core/helpers/CameraHelper';
 import {ParamConfig, NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {isBooleanTrue} from '../../../core/BooleanValue';
@@ -146,7 +146,7 @@ export abstract class TypedCameraObjNode<
 		this.cookController.endCook();
 	}
 
-	prepareRaycaster(mouse: Vector2, raycaster: Raycaster) {}
+	// prepareRaycaster(mouse: Vector2, raycaster: Raycaster) {}
 
 	camera() {
 		return this._object;
@@ -242,9 +242,9 @@ export class TypedThreejsCameraObjNode<
 		return super.nodesByType(type) as GeoNodeChildrenMap[K][];
 	}
 
-	override prepareRaycaster(mouse: Vector2, raycaster: Raycaster) {
-		raycaster.setFromCamera(mouse, this._object);
-	}
+	// override prepareRaycaster(mouse: Vector2, raycaster: Raycaster) {
+	// 	raycaster.setFromCamera(mouse, this._object);
+	// }
 
 	override async cook() {
 		this.transformController.update();

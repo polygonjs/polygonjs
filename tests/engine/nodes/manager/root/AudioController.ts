@@ -2,7 +2,6 @@ import {Camera} from 'three';
 import {CoreSleep} from '../../../../../src/core/Sleep';
 import {ThreejsViewer} from '../../../../../src/engine/viewers/Threejs';
 import {RendererUtils} from '../../../../helpers/RendererUtils';
-
 function soundIcon(viewer: ThreejsViewer<Camera>) {
 	return viewer.domElement()?.querySelector('svg') as HTMLElement | undefined;
 }
@@ -47,51 +46,51 @@ QUnit.test('root audio controller simple', async (assert) => {
 
 		// icon is off as there is no audioListener yet
 		assert.equal(root.audioController.soundOn(), false);
-		soundIconIsDisplayAndOn(assert, viewer, false);
+		soundIconIsDisplayAndOn(assert, viewer as ThreejsViewer<any>, false);
 		assert.equal(root.pv.displayAudioIcon, true);
 
 		const audioListener1 = root.createNode('audioListener');
 		assert.equal(audioListener1.pv.soundOn, 1);
 		assert.equal(audioListener1.object.masterVolume(), 1);
 		assert.equal(root.audioController.soundOn(), true);
-		soundIconIsDisplayAndOn(assert, viewer, true);
+		soundIconIsDisplayAndOn(assert, viewer as ThreejsViewer<any>, true);
 
 		await root.audioController.toggleSound();
 		assert.equal(count, 3);
 		assert.equal(audioListener1.pv.soundOn, 0);
-		soundIconIsDisplayAndOn(assert, viewer, false);
+		soundIconIsDisplayAndOn(assert, viewer as ThreejsViewer<any>, false);
 		await CoreSleep.sleep(100);
 		assert.in_delta(audioListener1.object.masterVolume(), 0, 0.01);
 
 		await root.audioController.toggleSound();
 		assert.equal(count, 4);
 		assert.equal(audioListener1.pv.soundOn, 1);
-		soundIconIsDisplayAndOn(assert, viewer, true);
+		soundIconIsDisplayAndOn(assert, viewer as ThreejsViewer<any>, true);
 		await CoreSleep.sleep(100);
 		assert.in_delta(audioListener1.object.masterVolume(), 1, 0.01);
 
 		// when the audioListener param is updated, the viewer icon updates
 		audioListener1.p.soundOn.set(0);
-		soundIconIsDisplayAndOn(assert, viewer, false);
+		soundIconIsDisplayAndOn(assert, viewer as ThreejsViewer<any>, false);
 		await CoreSleep.sleep(100);
 		assert.in_delta(audioListener1.object.masterVolume(), 0, 0.01);
 
 		audioListener1.p.soundOn.set(1);
-		soundIconIsDisplayAndOn(assert, viewer, true);
+		soundIconIsDisplayAndOn(assert, viewer as ThreejsViewer<any>, true);
 		await CoreSleep.sleep(100);
 		assert.in_delta(audioListener1.object.masterVolume(), 1, 0.01);
 
 		// when clicking on the sound icon, the sound toggle
-		clickOnSoundIcon(viewer);
-		soundIconIsDisplayAndOn(assert, viewer, false);
+		clickOnSoundIcon(viewer as ThreejsViewer<any>);
+		soundIconIsDisplayAndOn(assert, viewer as ThreejsViewer<any>, false);
 		assert.equal(audioListener1.pv.soundOn, 0);
 		assert.equal(root.audioController.soundOn(), false);
 		await CoreSleep.sleep(100);
 		await CoreSleep.sleep(1000);
 		assert.in_delta(audioListener1.object.masterVolume(), 0, 0.01);
 
-		clickOnSoundIcon(viewer);
-		soundIconIsDisplayAndOn(assert, viewer, true);
+		clickOnSoundIcon(viewer as ThreejsViewer<any>);
+		soundIconIsDisplayAndOn(assert, viewer as ThreejsViewer<any>, true);
 		assert.equal(audioListener1.pv.soundOn, 1);
 		assert.equal(root.audioController.soundOn(), true);
 		await CoreSleep.sleep(100);
@@ -100,7 +99,7 @@ QUnit.test('root audio controller simple', async (assert) => {
 		// when the audioListener is removed, sound is off
 		root.removeNode(audioListener1);
 		await CoreSleep.sleep(100);
-		soundIconIsDisplayAndOn(assert, viewer, false);
+		soundIconIsDisplayAndOn(assert, viewer as ThreejsViewer<any>, false);
 		assert.equal(root.audioController.soundOn(), false);
 		assert.in_delta(audioListener1.object.masterVolume(), 0, 0.01);
 	});
@@ -118,7 +117,7 @@ QUnit.test('root audio controller sound icon display controller by root param', 
 
 	await RendererUtils.withViewer({cameraNode: window.perspective_camera1}, async ({viewer, element}) => {
 		assert.equal(root.audioController.soundOn(), true);
-		soundIconIsDisplayAndOn(assert, viewer, true);
+		soundIconIsDisplayAndOn(assert, viewer as ThreejsViewer<any>, true);
 	});
 });
 

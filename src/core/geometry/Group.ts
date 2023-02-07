@@ -393,13 +393,14 @@ export class CoreGroup extends CoreEntity {
 			return null;
 		}
 	}
-	objectAttribType(name: string) {
-		const first_core_object = this.coreObjects()[0];
-		if (first_core_object != null) {
-			return first_core_object.attribType(name);
-		} else {
-			return null;
-		}
+	objectAttribTypesByName() {
+		return CoreObject.coreObjectAttributeTypesByName(this.coreObjects());
+		// const first_core_object = this.coreObjects()[0];
+		// if (first_core_object != null) {
+		// 	return first_core_object.attribType(name);
+		// } else {
+		// 	return null;
+		// }
 	}
 
 	renameAttrib(old_name: string, new_name: string, attrib_class: AttribClass) {
@@ -443,12 +444,7 @@ export class CoreGroup extends CoreEntity {
 		}
 	}
 	objectAttribNames() {
-		const firstObject = this.coreObjects()[0];
-		if (firstObject) {
-			return firstObject.attribNames();
-		} else {
-			return [];
-		}
+		return CoreObject.coreObjectsAttribNames(this.coreObjects());
 	}
 
 	geoAttribNamesMatchingMask(masksString: GroupString) {
@@ -469,13 +465,14 @@ export class CoreGroup extends CoreEntity {
 			return {};
 		}
 	}
-	objectAttribSizes(): PolyDictionary<AttribSize> {
-		const firstObject = this.coreObjects()[0];
-		if (firstObject) {
-			return firstObject.attribSizes();
-		} else {
-			return {};
-		}
+	objectAttribSizesByName(): PolyDictionary<AttribSize[]> {
+		return CoreObject.coreObjectsAttribSizesByName(this.coreObjects());
+		// const firstObject = this.coreObjects()[0];
+		// if (firstObject) {
+		// 	return firstObject.attribSizes();
+		// } else {
+		// 	return {};
+		// }
 	}
 	geoAttribSize(attrib_name: string) {
 		const firstGeometry = this.coreGeometries()[0];

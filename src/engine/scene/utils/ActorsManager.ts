@@ -126,7 +126,6 @@ export class ActorsManager {
 		this._onEventScenePlayTraverse();
 
 		// any caching goes here
-		this.scene.perfMonitor.reset();
 		for (let type of ACTOR_TYPES_TO_INIT_ON_PLAY) {
 			const nodes = this.scene.nodesController.nodesByContextAndType(NodeContext.ACTOR, type);
 			for (let node of nodes) {
@@ -137,6 +136,12 @@ export class ActorsManager {
 		this._makeRequiredObjectAttributesReactive();
 	}
 	runOnEventScenePause() {
+		for (let type of ACTOR_TYPES_TO_INIT_ON_PLAY) {
+			const nodes = this.scene.nodesController.nodesByContextAndType(NodeContext.ACTOR, type);
+			for (let node of nodes) {
+				node.disposeOnPause();
+			}
+		}
 		this._onEventScenePauseTraverse();
 	}
 	runOnEventPerformanceChange() {
@@ -155,7 +160,7 @@ export class ActorsManager {
 	// tick
 	private _onEventTickBound = this._onEventTick.bind(this);
 	private _onEventTick(object: Object3D) {
-		this._triggerEventNodes(object, ActorType.ON_TICK);
+		this.triggerEventNodes(object, ActorType.ON_TICK);
 	}
 	private _onEventTickTraverse() {
 		if (!this.scene.nodesController.hasNodesByContextAndType(NodeContext.ACTOR, ActorType.ON_TICK)) {
@@ -166,7 +171,7 @@ export class ActorsManager {
 	// reset
 	private _onEventSceneResetBound = this._onEventSceneReset.bind(this);
 	private _onEventSceneReset(object: Object3D) {
-		this._triggerEventNodes(object, ActorType.ON_SCENE_RESET);
+		this.triggerEventNodes(object, ActorType.ON_SCENE_RESET);
 	}
 	private _onEventSceneResetTraverse() {
 		if (!this.scene.nodesController.hasNodesByContextAndType(NodeContext.ACTOR, ActorType.ON_SCENE_RESET)) {
@@ -177,7 +182,7 @@ export class ActorsManager {
 	// play
 	private _onEventScenePlayBound = this._onEventScenePlay.bind(this);
 	private _onEventScenePlay(object: Object3D) {
-		this._triggerEventNodes(
+		this.triggerEventNodes(
 			object,
 			ActorType.ON_SCENE_PLAY_STATE,
 			OnScenePlayStateActorNode.OUTPUT_TRIGGER_NAMES.indexOf(OnScenePlayStateActorNode.OUTPUT_NAME_PLAY)
@@ -192,7 +197,7 @@ export class ActorsManager {
 	// pause
 	private _onEventScenePauseBound = this._onEventScenePause.bind(this);
 	private _onEventScenePause(object: Object3D) {
-		this._triggerEventNodes(
+		this.triggerEventNodes(
 			object,
 			ActorType.ON_SCENE_PLAY_STATE,
 			OnScenePlayStateActorNode.OUTPUT_TRIGGER_NAMES.indexOf(OnScenePlayStateActorNode.OUTPUT_NAME_PAUSE)
@@ -235,7 +240,7 @@ export class ActorsManager {
 		this.scene.threejsScene().traverse(this._onEventPerformanceChangeBound);
 	}
 	//
-	private _triggerEventNodes(object: Object3D, actorType: ActorType, outputIndex: number = 0) {
+	triggerEventNodes(object: Object3D, actorType: ActorType, outputIndex: number = 0) {
 		const nodeIds = this.objectActorNodeIds(object);
 		if (!nodeIds) {
 			return;

@@ -7,8 +7,8 @@ import {RopType} from '../../engine/poly/registers/nodes/types/Rop';
 import {CoreObject} from '../geometry/Object';
 import {CameraAttribute} from './CoreCamera';
 import {CoreType} from '../Type';
-import {CSS3DRenderer} from '../../modules/three/examples/jsm/renderers/CSS3DRenderer';
-import {CSS2DRenderer} from '../../modules/three/examples/jsm/renderers/CSS2DRenderer';
+import {CSS3DRenderer} from '../render/CSSRenderers/CSS3DRenderer';
+import {CSS2DRenderer} from '../render/CSSRenderers/CSS2DRenderer';
 
 interface CreateCSSRendererOptions {
 	scene: PolyScene;

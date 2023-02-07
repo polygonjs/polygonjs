@@ -77,8 +77,9 @@ export enum NetworkChildNodeType {
 	OUTPUT = 'subnetOutput',
 }
 export enum CameraNodeType {
-	PERSPECTIVE = 'perspectiveCamera',
+	MAPBOX = 'mapboxCamera',
 	ORTHOGRAPHIC = 'orthographicCamera',
+	PERSPECTIVE = 'perspectiveCamera',
 }
 export enum CameraSopNodeType {
 	CONTROLS = 'cameraControls',
@@ -91,7 +92,7 @@ export enum CameraSopNodeType {
 	WEBXR_VR = 'cameraWebXRVR',
 	WEBXR_AR_MARKER_TRACKING = 'cameraWebXRARMarkerTracking',
 }
-export const CAMERA_TYPES = [CameraNodeType.ORTHOGRAPHIC, CameraNodeType.PERSPECTIVE];
+export const CAMERA_TYPES = [CameraNodeType.MAPBOX, CameraNodeType.ORTHOGRAPHIC, CameraNodeType.PERSPECTIVE];
 
 export enum CameraControlsNodeType {
 	// DEVICE_ORIENTATION = 'cameraDeviceOrientationControls',

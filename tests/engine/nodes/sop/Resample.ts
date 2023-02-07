@@ -1,6 +1,6 @@
 import {SplineCurveType} from '../../../../src/core/geometry/Curve';
 import {METHOD, METHODS} from '../../../../src/engine/nodes/sop/Resample';
-import {TextType} from '../../../../src/engine/nodes/sop/utils/text/TextType';
+import {TextType} from '../../../../src/core/geometry/text/TextType';
 
 QUnit.test('resample a line', async (assert) => {
 	const geo1 = window.geo1;

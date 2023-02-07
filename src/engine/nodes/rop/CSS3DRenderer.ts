@@ -9,7 +9,7 @@
  */
 import {DEFAULT_CSS3DOBJECT_CLASS} from './../../operations/sop/CSS3DObject';
 import {TypedRopNode} from './_Base';
-import {CSS3DRenderer} from '../../../modules/three/examples/jsm/renderers/CSS3DRenderer';
+import {CSS3DRenderer} from '../../../core/render/CSSRenderers/CSS3DRenderer';
 import {RopType} from '../../poly/registers/nodes/types/Rop';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';

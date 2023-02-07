@@ -4,10 +4,10 @@ import {ViewerControlsController} from './utils/ViewerControlsController';
 import {ViewerEventsController} from './utils/ViewerEventsController';
 import {ViewerWebGLController} from './utils/ViewerWebglController';
 import {ViewerAudioController} from './utils/ViewerAudioController';
-import {Camera, Object3D} from 'three';
+import {Camera, Object3D, Raycaster} from 'three';
 import {PolyScene} from '../scene/PolyScene';
 import {Poly, PolyEngine} from '../Poly';
-
+import {RaycasterForBVH} from '../operations/sop/utils/Bvh/three-mesh-bvh';
 import {AbstractRenderer} from './Common';
 import {ViewerRaycastersController} from './utils/ViewerRaycastersController';
 import {ViewerPerformanceMonitor} from './utils/ViewerPerformanceMonitor';
@@ -86,6 +86,12 @@ export abstract class TypedViewer<C extends Camera> {
 	private static _nextId() {
 		return `${TypedViewer._nextViewerId++}`;
 	}
+	createRaycaster() {
+		const raycaster = new Raycaster();
+		(raycaster as RaycasterForBVH).firstHitOnly = true;
+		return raycaster;
+	}
+	abstract renderer(): AbstractRenderer | undefined;
 
 	protected _mounted = false;
 	/**
@@ -157,7 +163,7 @@ export abstract class TypedViewer<C extends Camera> {
 
 	render(delta: number) {
 		this._scene.viewersRegister.markViewerAsRendered(this);
-		this.raycastersController.update();
+		this.raycastersController.updateRaycasters();
 		if (this.scene().timeController.playing()) {
 			this.performanceMonitor.measurePerformance(delta);
 		}

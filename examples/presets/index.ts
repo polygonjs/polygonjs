@@ -17,6 +17,8 @@ import {cubeMapCopPresetRegister} from './cop/CubeMap';
 import {imageCopPresetRegister} from './cop/Image';
 import {imageEXRCopPresetRegister} from './cop/ImageEXR';
 import {lutCopPresetRegister} from './cop/Lut';
+import {mapboxElevationCopPresetRegister} from './cop/MapboxElevation';
+import {mapboxSatelliteCopPresetRegister} from './cop/MapboxSatellite';
 import {SDFFromUrlCopPresetRegister} from './cop/SDFFromUrl';
 import {videoCopPresetRegister} from './cop/Video';
 // // gl
@@ -48,12 +50,14 @@ import {
 	filePLYSopPresetRegister,
 	fileSTLSopPresetRegister,
 } from './sop/File';
+import {fileSVGSopPresetRegister} from './sop/FileSVG';
+import {fileGEOJSONSopPresetRegister} from './sop/FileGEOJSON';
+import {mapboxCameraSopPresetRegister} from './sop/MapboxCamera';
 import {normalsSopPresetRegister} from './sop/Normals';
 import {pointSopPresetRegister} from './sop/Point';
 import {roundedBoxSopPresetRegister} from './sop/RoundedBox';
 import {scatterSopPresetRegister} from './sop/Scatter';
 import {transformSopPresetRegister} from './sop/Transform';
-import {fileSVGSopPresetRegister} from './sop/FileSVG';
 import {textSopPresetRegister} from './sop/Text';
 
 import {PresetRegister} from './BasePreset';
@@ -80,6 +84,8 @@ class PresetLibraryClass {
 		this._registerPreset(imageCopPresetRegister);
 		this._registerPreset(imageEXRCopPresetRegister);
 		this._registerPreset(lutCopPresetRegister);
+		this._registerPreset(mapboxElevationCopPresetRegister);
+		this._registerPreset(mapboxSatelliteCopPresetRegister);
 		this._registerPreset(SDFFromUrlCopPresetRegister);
 		this._registerPreset(videoCopPresetRegister);
 		// gl
@@ -101,6 +107,7 @@ class PresetLibraryClass {
 		this._registerPreset(dataUrlSopPresetRegister);
 		this._registerPreset(fileDRCSopPresetRegister);
 		this._registerPreset(fileFBXSopPresetRegister);
+		this._registerPreset(fileGEOJSONSopPresetRegister);
 		this._registerPreset(fileGLTFSopPresetRegister);
 		this._registerPreset(fileJSONSopPresetRegister);
 		this._registerPreset(fileMPDSopPresetRegister);
@@ -109,6 +116,7 @@ class PresetLibraryClass {
 		this._registerPreset(filePLYSopPresetRegister);
 		this._registerPreset(fileSTLSopPresetRegister);
 		this._registerPreset(fileSVGSopPresetRegister);
+		this._registerPreset(mapboxCameraSopPresetRegister);
 		this._registerPreset(normalsSopPresetRegister);
 		this._registerPreset(pointSopPresetRegister);
 		this._registerPreset(roundedBoxSopPresetRegister);

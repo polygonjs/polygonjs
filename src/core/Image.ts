@@ -217,13 +217,16 @@ export class CoreImage {
 		});
 	}
 
-	static data_from_url(url: string): Promise<ImageData> {
+	static data_from_url(url: string): Promise<ImageData | undefined> {
 		return new Promise((resolve, reject) => {
 			const img = new Image();
 			img.crossOrigin = 'Anonymous';
 			img.onload = () => {
 				const data = this.data_from_image(img);
 				resolve(data);
+			};
+			img.onerror = () => {
+				resolve(undefined);
 			};
 			img.src = url;
 		});

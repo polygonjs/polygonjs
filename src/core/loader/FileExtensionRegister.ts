@@ -41,6 +41,7 @@ export const EXTENSIONS_BY_NODE_TYPE_BY_CONTEXT: Record<NodeContext, Record<stri
 		[SopTypeFile.FILE_GLTF]: [GeometryExtension.GLB, GeometryExtension.GLTF],
 		[SopTypeFile.FILE_DRC]: [GeometryExtension.DRC],
 		[SopTypeFile.FILE_FBX]: [GeometryExtension.FBX],
+		[SopTypeFile.FILE_GEOJSON]: [GeometryExtension.GEOJSON],
 		[SopTypeFile.FILE_JSON]: [GeometryExtension.JSON],
 		[SopTypeFile.FILE_MPD]: [GeometryExtension.MPD],
 		[SopTypeFileMulti.FILE_GLTF]: [GeometryExtension.GLTF, GeometryExtension.GLB],

@@ -1,5 +1,6 @@
 import {Poly} from '../../../src/engine/Poly';
 import {HTMLElementWithViewer} from '../../../src/engine/viewers/_Base';
+import {ThreejsViewer} from '../../../src/engine/viewers/Threejs';
 import {RendererUtils} from '../../helpers/RendererUtils';
 
 QUnit.test('viewer domElement is assigned scene and viewer', async (assert) => {
@@ -38,7 +39,7 @@ QUnit.test('viewer has a viewer with and without post processing', async (assert
 		assert.ok(canvas);
 		const renderer = viewer.renderer()!;
 		assert.ok(renderer);
-		const effectComposer = viewer.effectComposer()!;
+		const effectComposer = (viewer as ThreejsViewer<any>).effectComposer()!;
 		assert.ok(effectComposer);
 		assert.ok(effectComposer.getRenderer());
 	});

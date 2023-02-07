@@ -1,5 +1,5 @@
 import {Box3, BufferGeometry} from 'three';
-import {TypeAssert} from '../../../../poly/Assert';
+import {TypeAssert} from '../../../engine/poly/Assert';
 
 export enum TextSopJustifiyMode {
 	LEFT = 'left',

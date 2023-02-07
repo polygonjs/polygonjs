@@ -28,6 +28,8 @@ import {makeAttribReactiveVector3} from './attribute/Vector3';
 import {makeAttribReactiveVector2} from './attribute/Vector2';
 import {makeAttribReactiveSimple} from './attribute/Simple';
 import {AttributeCallbackQueue} from './attribute/AttributeCallbackQueue';
+import {SetUtils} from '../../core/SetUtils';
+import {MapUtils} from '../../core/MapUtils';
 
 enum PropertyName {
 	NAME = 'name',
@@ -195,6 +197,28 @@ export class CoreObject extends CoreEntity {
 	}
 	attribNames(): string[] {
 		return CoreObject.attribNames(this._object);
+	}
+	static objectsAttribNames(objects: Object3D[]) {
+		const names: Set<string> = new Set();
+		for (let object of objects) {
+			const objectAttriNames = CoreObject.attribNames(object);
+			for (let attribName of objectAttriNames) {
+				names.add(attribName);
+			}
+		}
+
+		return SetUtils.toArray(names);
+	}
+	static coreObjectsAttribNames(coreObjects: CoreObject[]) {
+		const names: Set<string> = new Set();
+		for (let coreObject of coreObjects) {
+			const objectAttriNames = coreObject.attribNames();
+			for (let attribName of objectAttriNames) {
+				names.add(attribName);
+			}
+		}
+
+		return SetUtils.toArray(names);
 	}
 
 	hasAttrib(attribName: string): boolean {
@@ -371,30 +395,76 @@ export class CoreObject extends CoreEntity {
 		}
 		return h;
 	}
-	attribType(name: string) {
-		const val = this.attribValue(name);
+	static attribType(object: Object3D, attribName: string) {
+		const val = this.attribValue(object, attribName);
 		if (CoreType.isString(val)) {
 			return AttribType.STRING;
 		} else {
 			return AttribType.NUMERIC;
 		}
 	}
+	attribType(attribName: string) {
+		return CoreObject.attribType(this._object, attribName);
+	}
+	static coreObjectAttributeTypesByName(coreObjects: CoreObject[]): PolyDictionary<AttribType[]> {
+		const _typesByName: Map<string, Set<AttribType>> = new Map();
+		for (let coreObject of coreObjects) {
+			const objectAttriNames = coreObject.attribNames();
+			for (let attribName of objectAttriNames) {
+				const attribType = coreObject.attribType(attribName);
+				MapUtils.addToSetAtEntry(_typesByName, attribName, attribType);
+			}
+		}
+
+		const typesByName: PolyDictionary<AttribType[]> = {};
+		_typesByName.forEach((attribTypes, attribName) => {
+			typesByName[attribName] = SetUtils.toArray(attribTypes);
+		});
+		return typesByName;
+		// const core_object = this.firstCoreObject();
+		// if (core_object) {
+		// 	for (let name of core_object.attribNames()) {
+		// 		types_by_name[name] = core_object.attribType(name);
+		// 	}
+		// }
+		// return types_by_name;
+	}
 	attribSizes() {
 		const h: PolyDictionary<AttribSize> = {};
-		for (let attrib_name of this.attribNames()) {
-			const size = this.attribSize(attrib_name);
+		const attribNames = this.attribNames();
+		for (let attribName of attribNames) {
+			const size = this.attribSize(attribName);
 			if (size != null) {
-				h[attrib_name] = size;
+				h[attribName] = size;
 			}
 		}
 		return h;
 	}
-	attribSize(name: string): AttribSize | null {
-		const val = this.attribValue(name);
+	static attribSize(object: Object3D, attribName: string): AttribSize | null {
+		const val = this.attribValue(object, attribName);
 		if (val == null) {
 			return null;
 		}
 		return CoreAttribute.attribSizeFromValue(val);
+	}
+	attribSize(attribName: string) {
+		return CoreObject.attribSize(this._object, attribName);
+	}
+	static coreObjectsAttribSizesByName(coreObjects: CoreObject[]): PolyDictionary<AttribSize[]> {
+		const _sizesByName: Map<string, Set<AttribSize>> = new Map();
+		for (let coreObject of coreObjects) {
+			const objectAttriNames = coreObject.attribNames();
+			for (let attribName of objectAttriNames) {
+				const attribSize = coreObject.attribSize(attribName);
+				MapUtils.addToSetAtEntry(_sizesByName, attribName, attribSize);
+			}
+		}
+
+		const sizesByName: PolyDictionary<AttribSize[]> = {};
+		_sizesByName.forEach((attribSizes, attribName) => {
+			sizesByName[attribName] = SetUtils.toArray(attribSizes);
+		});
+		return sizesByName;
 	}
 
 	clone() {

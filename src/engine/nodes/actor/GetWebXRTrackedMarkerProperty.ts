@@ -42,7 +42,7 @@ export class GetWebXRTrackedMarkerPropertyActorNode extends TypedActorNode<GetWe
 		context: ActorNodeTriggerContext,
 		outputName: GetWebXRTrackedMarkerActorNodeInputName
 	): ReturnValueTypeByActorConnectionPointType[ActorConnectionPointType] | undefined {
-		const controller = Poly.markerTracking.controller();
+		const controller = Poly.thirdParty.markerTracking().controller();
 
 		switch (outputName) {
 			case GetWebXRTrackedMarkerActorNodeInputName.matrix: {

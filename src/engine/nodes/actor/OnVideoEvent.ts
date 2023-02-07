@@ -45,6 +45,8 @@ export class OnVideoEventActorNode extends TypedActorNode<OnVideoEventActorParam
 	initOnPlay() {
 		this._addEventListenersToObjects();
 	}
+	disposeOnPause() {}
+
 	private async _addEventListenersToObjects() {
 		if (this.p.node.isDirty()) {
 			await this.p.node.compute();

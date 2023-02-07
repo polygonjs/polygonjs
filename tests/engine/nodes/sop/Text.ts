@@ -1,5 +1,5 @@
 import {CoreObject} from '../../../../src/core/geometry/Object';
-import {TextType} from '../../../../src/engine/nodes/sop/utils/text/TextType';
+import {TextType} from '../../../../src/core/geometry/text/TextType';
 import {checkConsolePrints} from '../../../helpers/Console';
 
 QUnit.test('sop/text simple', async (assert) => {

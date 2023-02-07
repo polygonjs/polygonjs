@@ -9,7 +9,7 @@
  */
 import {DEFAULT_CSS2DOBJECT_CLASS} from './../../operations/sop/CSS2DObject';
 import {TypedRopNode} from './_Base';
-import {CSS2DRenderer} from '../../../modules/three/examples/jsm/renderers/CSS2DRenderer';
+import {CSS2DRenderer} from '../../../core/render/CSSRenderers/CSS2DRenderer';
 import {RopType} from '../../poly/registers/nodes/types/Rop';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';

@@ -1,5 +1,5 @@
 import {Shape, ShapeGeometry} from 'three';
-import {mergeBufferGeometries} from '../../../../../modules/three/examples/jsm/utils/BufferGeometryUtils';
+import {mergeBufferGeometries} from '../../../modules/three/examples/jsm/utils/BufferGeometryUtils';
 interface TextFlatsParams {
 	shapes?: Array<Array<Shape>>;
 }

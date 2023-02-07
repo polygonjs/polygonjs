@@ -1,7 +1,7 @@
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 import {RenderPass, KawaseBlurPass, BloomEffect, EffectPass} from 'postprocessing';
-
+import {ThreejsViewer} from '../../../../src/engine/viewers/Threejs';
 QUnit.test('Post nodes simple', async (assert) => {
 	const scene = window.scene;
 	await scene.waitForCooksCompleted();
@@ -23,7 +23,7 @@ QUnit.test('Post nodes simple', async (assert) => {
 	// 2 passes by default
 	await RendererUtils.withViewer({cameraNode: camera}, async (args) => {
 		const {viewer} = args;
-		const composer = viewer.effectComposer()!;
+		const composer = (viewer as ThreejsViewer<any>).effectComposer()!;
 		assert.ok(composer, 'composer exists');
 		assert.equal(composer.passes.length, 2, 'composer has two passes');
 		assert.ok(composer.passes[0] instanceof RenderPass);
@@ -35,7 +35,7 @@ QUnit.test('Post nodes simple', async (assert) => {
 	await CoreSleep.sleep(20);
 	await RendererUtils.withViewer({cameraNode: camera}, async (args) => {
 		const {viewer} = args;
-		const composer = viewer.effectComposer()!;
+		const composer = (viewer as ThreejsViewer<any>).effectComposer()!;
 		assert.ok(composer, 'composer exists');
 		assert.equal(composer.passes.length, 1, 'composer has one pass (1)');
 		assert.ok(composer.passes[0] instanceof KawaseBlurPass);
@@ -47,7 +47,7 @@ QUnit.test('Post nodes simple', async (assert) => {
 	await CoreSleep.sleep(20);
 	await RendererUtils.withViewer({cameraNode: camera}, async (args) => {
 		const {viewer} = args;
-		const composer = viewer.effectComposer()!;
+		const composer = (viewer as ThreejsViewer<any>).effectComposer()!;
 		assert.equal(composer.passes.length, 2, 'composer has two passes (2)');
 		assert.ok(composer.passes[0] instanceof KawaseBlurPass);
 		assert.ok(composer.passes[1] instanceof KawaseBlurPass);
@@ -58,7 +58,7 @@ QUnit.test('Post nodes simple', async (assert) => {
 	bloom1.flags.display.set(true);
 	await RendererUtils.withViewer({cameraNode: camera}, async (args) => {
 		const {viewer} = args;
-		const composer = viewer.effectComposer()!;
+		const composer = (viewer as ThreejsViewer<any>).effectComposer()!;
 		assert.equal(composer.passes.length, 1, 'composer has one pass (2)');
 		assert.ok(composer.passes[0] instanceof EffectPass);
 		assert.ok((composer.passes[0] as any).effects[0] instanceof BloomEffect);
@@ -68,7 +68,7 @@ QUnit.test('Post nodes simple', async (assert) => {
 	blur2.flags.display.set(true);
 	await RendererUtils.withViewer({cameraNode: camera}, async (args) => {
 		const {viewer} = args;
-		const composer = viewer.effectComposer()!;
+		const composer = (viewer as ThreejsViewer<any>).effectComposer()!;
 		assert.equal(composer.passes.length, 1, 'composer has one pass (3)');
 		assert.ok(composer.passes[0] instanceof KawaseBlurPass);
 	});
@@ -77,7 +77,7 @@ QUnit.test('Post nodes simple', async (assert) => {
 	blur1.flags.display.set(true);
 	await RendererUtils.withViewer({cameraNode: camera}, async (args) => {
 		const {viewer} = args;
-		const composer = viewer.effectComposer()!;
+		const composer = (viewer as ThreejsViewer<any>).effectComposer()!;
 		assert.equal(composer.passes.length, 2, 'composer has two passes (3)');
 		assert.ok(composer.passes[0] instanceof KawaseBlurPass);
 		assert.ok(composer.passes[1] instanceof KawaseBlurPass);

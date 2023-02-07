@@ -44,6 +44,8 @@ export class OnWebXRControllerEventActorNode extends TypedActorNode<OnWebXRContr
 	initOnPlay() {
 		this._addEventListenersToObjects();
 	}
+	disposeOnPause() {}
+
 	private async _addEventListenersToObjects() {
 		const objects = objectsForActorNode(this);
 		for (let object of objects) {

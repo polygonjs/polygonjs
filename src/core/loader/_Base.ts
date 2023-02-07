@@ -4,7 +4,7 @@ import {Poly} from '../../engine/Poly';
 import {BlobsControllerFetchNodeOptions, FetchBlobResponse} from '../../engine/poly/BlobsController';
 import {isArray} from '../Type';
 import {sanitizeUrl} from '../UrlHelper';
-import {BaseGeoLoaderOutput} from './geometry/_BaseLoaderHandler';
+import type {BaseGeoLoaderOutput} from './geometry/Common';
 
 export interface BaseLoaderLoadOptions {
 	node: BaseNodeType;

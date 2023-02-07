@@ -1,5 +1,5 @@
 import {ExtrudeGeometry, ExtrudeGeometryOptions, Shape} from 'three';
-import {mergeBufferGeometries} from '../../../../../modules/three/examples/jsm/utils/BufferGeometryUtils';
+import {mergeBufferGeometries} from '../../../modules/three/examples/jsm/utils/BufferGeometryUtils';
 
 export interface BevelParams {
 	bevelEnabled: boolean;

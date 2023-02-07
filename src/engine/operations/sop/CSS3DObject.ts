@@ -1,6 +1,6 @@
 import {BaseSopOperation} from './_Base';
 import {InputCloneMode} from '../../poly/InputCloneMode';
-import {CSS3DObject} from '../../../modules/three/examples/jsm/renderers/CSS3DRenderer';
+import {CSS3DObject} from '../../../core/render/CSSRenderers/CSS3DObject';
 import {CoreString} from '../../../core/String';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {CoreType} from '../../../core/Type';

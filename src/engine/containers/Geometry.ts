@@ -10,10 +10,13 @@ import {CoreGeometry} from '../../core/geometry/Geometry';
 import {BufferGeometry} from 'three';
 // import {Object3D} from 'three';
 import {ContainableMap} from './utils/ContainableMap';
+// import {CoreObject} from '../../core/geometry/Object';
+import {AttribSize, AttribType, ObjectData} from '../../core/geometry/Constant';
 import {CoreObject} from '../../core/geometry/Object';
-import {AttribType, ObjectData} from '../../core/geometry/Constant';
+import {SetUtils} from '../../core/SetUtils';
 import {NodeContext} from '../poly/NodeContext';
 import {PolyDictionary} from '../../types/GlobalTypes';
+import {MapUtils} from '../../core/MapUtils';
 
 export class GeometryContainer extends TypedContainer<NodeContext.SOP> {
 	// set_objects(objects: Object3D[]) {}
@@ -28,19 +31,19 @@ export class GeometryContainer extends TypedContainer<NodeContext.SOP> {
 		super.set_content(content);
 	}
 
-	private firstObject() {
+	private _firstObject() {
 		if (this._content) {
 			return this._content.objects()[0];
 		}
 	}
-	private firstCoreObject() {
-		const object = this.firstObject();
-		if (object) {
-			return new CoreObject(object, 0);
-		}
-	}
+	// private firstCoreObject() {
+	// 	const object = this.firstObject();
+	// 	if (object) {
+	// 		return new CoreObject(object, 0);
+	// 	}
+	// }
 	private firstGeometry(): BufferGeometry | null {
-		const object = this.firstObject();
+		const object = this._firstObject();
 		if (object) {
 			return (object as Mesh).geometry as BufferGeometry;
 		} else {
@@ -113,19 +116,36 @@ export class GeometryContainer extends TypedContainer<NodeContext.SOP> {
 		}
 		return sizes_by_name;
 	}
-	objectAttributeSizesByName() {
-		let sizes_by_name: PolyDictionary<number> = {};
-		const core_object = this.firstCoreObject();
-		if (core_object) {
-			const attribNames = core_object.attribNames();
-			for (let name of attribNames) {
-				const size = core_object.attribSize(name);
-				if (size != null) {
-					sizes_by_name[name] = size;
-				}
-			}
-		}
-		return sizes_by_name;
+
+	objectAttributeSizesByName(): PolyDictionary<AttribSize[]> {
+		return CoreObject.coreObjectsAttribSizesByName(this._content.coreObjects());
+		// const _sizesByName: Map<string, Set<AttribSize>> = new Map();
+		// const objects = this._content.objects();
+		// for (let object of objects) {
+		// 	const objectAttriNames = CoreObject.attribNames(object);
+		// 	for (let attribName of objectAttriNames) {
+		// 		const attribSize = CoreObject.attribSize(object, attribName);
+		// 		MapUtils.addToSetAtEntry(_sizesByName, attribName, attribSize);
+		// 	}
+		// }
+
+		// const sizesByName: PolyDictionary<AttribSize[]> = {};
+		// _sizesByName.forEach((attribSizes, attribName) => {
+		// 	sizesByName[attribName] = SetUtils.toArray(attribSizes);
+		// });
+		// return sizesByName;
+		// let sizes_by_name: PolyDictionary<number> = {};
+		// const core_object = this.firstCoreObject();
+		// if (core_object) {
+		// 	const attribNames = core_object.attribNames();
+		// 	for (let name of attribNames) {
+		// 		const size = core_object.attribSize(name);
+		// 		if (size != null) {
+		// 			sizes_by_name[name] = size;
+		// 		}
+		// 	}
+		// }
+		// return sizes_by_name;
 	}
 	coreGroupAttributeSizesByName() {
 		let sizes_by_name: PolyDictionary<number> = {};
@@ -150,15 +170,64 @@ export class GeometryContainer extends TypedContainer<NodeContext.SOP> {
 		}
 		return types_by_name;
 	}
-	objectAttributeTypesByName() {
-		let types_by_name: PolyDictionary<AttribType> = {};
-		const core_object = this.firstCoreObject();
-		if (core_object) {
-			for (let name of core_object.attribNames()) {
-				types_by_name[name] = core_object.attribType(name);
+	objectAttributeTypesByName(): PolyDictionary<AttribType[]> {
+		return CoreObject.coreObjectAttributeTypesByName(this._content.coreObjects());
+		// const _typesByName: Map<string, Set<AttribType>> = new Map();
+		// const objects = this._content.objects();
+		// for (let object of objects) {
+		// 	const objectAttriNames = CoreObject.attribNames(object);
+		// 	for (let attribName of objectAttriNames) {
+		// 		const attribType = CoreObject.attribType(object, attribName);
+		// 		MapUtils.addToSetAtEntry(_typesByName, attribName, attribType);
+		// 	}
+		// }
+
+		// const typesByName: PolyDictionary<AttribType[]> = {};
+		// _typesByName.forEach((attribTypes, attribName) => {
+		// 	typesByName[attribName] = SetUtils.toArray(attribTypes);
+		// });
+		// return typesByName;
+		// const core_object = this.firstCoreObject();
+		// if (core_object) {
+		// 	for (let name of core_object.attribNames()) {
+		// 		types_by_name[name] = core_object.attribType(name);
+		// 	}
+		// }
+		// return types_by_name;
+	}
+	objectAttributeTypeAndSizesByName(): PolyDictionary<Record<AttribType, AttribSize[]>> {
+		const _sizesByTypeByName: Map<string, Map<AttribType, Set<AttribSize>>> = new Map();
+		const objects = this._content.objects();
+		for (let object of objects) {
+			const objectAttriNames = CoreObject.attribNames(object);
+			for (let attribName of objectAttriNames) {
+				const attribType = CoreObject.attribType(object, attribName);
+				const attribSize = CoreObject.attribSize(object, attribName);
+				let mapForName = _sizesByTypeByName.get(attribName);
+				if (!mapForName) {
+					mapForName = new Map();
+				}
+				_sizesByTypeByName.set(attribName, mapForName);
+				MapUtils.addToSetAtEntry(mapForName, attribType, attribSize);
 			}
 		}
-		return types_by_name;
+
+		const sizesByTypeByName: PolyDictionary<Record<AttribType, AttribSize[]>> = {};
+		_sizesByTypeByName.forEach((mapForName, attribName) => {
+			// typesByName[attribName] = SetUtils.toArray(attribTypes);
+			sizesByTypeByName[attribName] = {[AttribType.NUMERIC]: [], [AttribType.STRING]: []};
+			mapForName.forEach((attribSizes, attribType) => {
+				sizesByTypeByName[attribName][attribType] = SetUtils.toArray(attribSizes);
+			});
+		});
+		return sizesByTypeByName;
+		// const core_object = this.firstCoreObject();
+		// if (core_object) {
+		// 	for (let name of core_object.attribNames()) {
+		// 		types_by_name[name] = core_object.attribType(name);
+		// 	}
+		// }
+		// return types_by_name;
 	}
 	coreGroupAttributeTypesByName() {
 		let types_by_name: PolyDictionary<AttribType> = {};
@@ -177,12 +246,7 @@ export class GeometryContainer extends TypedContainer<NodeContext.SOP> {
 		return valuesByName;
 	}
 	objectAttributeNames() {
-		let names: string[] = [];
-		const object = this.firstObject();
-		if (object) {
-			names = Object.keys(object.userData['attributes'] || {});
-		}
-		return names;
+		return CoreObject.objectsAttribNames(this._content.objects());
 	}
 
 	pointsCount(): number {

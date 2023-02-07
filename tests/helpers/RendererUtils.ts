@@ -4,7 +4,7 @@ import {Mesh} from 'three';
 import {PerspectiveCamera} from 'three';
 import {BaseBuilderMatNodeType} from '../../src/engine/nodes/mat/_BaseBuilder';
 import {PerspectiveCameraObjNode} from '../../src/engine/nodes/obj/PerspectiveCamera';
-import {ThreejsViewer} from '../../src/engine/viewers/Threejs';
+// import {ThreejsViewer} from '../../src/engine/viewers/Threejs';
 import {BoxGeometry} from 'three';
 import {Material} from 'three';
 import {PolyScene} from '../../src/engine/scene/PolyScene';
@@ -20,13 +20,13 @@ interface RendererConfig {
 }
 
 interface WithViewerCallbackArgs {
-	viewer: ThreejsViewer<Camera>;
+	viewer: TypedViewer<Camera>;
 	element: HTMLElement;
 	canvas: HTMLCanvasElement;
 	renderer?: AbstractRenderer;
 }
 interface WithViewerOptions {
-	viewer?: ThreejsViewer<Camera>;
+	viewer?: TypedViewer<Camera>;
 	cameraNode?: PerspectiveCameraObjNode | OrthographicCameraObjNode;
 	mount?: boolean;
 }

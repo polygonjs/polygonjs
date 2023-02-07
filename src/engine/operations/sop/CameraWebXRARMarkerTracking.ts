@@ -26,7 +26,7 @@ interface UpdateObjectOptions {
 export class CameraWebXRARMarkerTrackingSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: CameraWebXRARMarkerTrackingSopParams = {
 		transformMode: MARKER_TRACKING_TRANSFORM_MODES.indexOf(MarkerTrackingTransformMode.CAMERA),
-		barCodeType: Poly.markerTracking.barCodeTypes()[0] || '',
+		barCodeType: Poly.thirdParty.markerTracking().barCodeTypes()[0] || '',
 		barCodeValue: 0,
 	};
 	static override readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
@@ -36,7 +36,7 @@ export class CameraWebXRARMarkerTrackingSopOperation extends BaseSopOperation {
 	override cook(inputCoreGroups: CoreGroup[], params: CameraWebXRARMarkerTrackingSopParams) {
 		const objects = inputCoreGroups[0].objects();
 
-		if (Poly.markerTracking.hasController()) {
+		if (Poly.thirdParty.markerTracking().hasController()) {
 			if (this._node) {
 				CameraWebXRARMarkerTrackingSopOperation.updateObject({
 					scene: this._node.scene(),
