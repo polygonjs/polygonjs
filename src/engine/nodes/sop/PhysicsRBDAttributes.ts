@@ -17,7 +17,12 @@ import {
 } from './../../../core/physics/PhysicsAttribute';
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {PhysicsRBDAttributesSopOperation} from '../../operations/sop/PhysicsRBDAttributes';
+import {
+	PhysicsRBDAttributesSopOperation,
+	SIZE_COMPUTATION_METHOD_MENU_ENTRIES,
+	SizeComputationMethod,
+	SIZE_COMPUTATION_METHODS,
+} from '../../operations/sop/PhysicsRBDAttributes';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CoreObject} from '../../../core/geometry/Object';
 import {Object3D, Vector3} from 'three';
@@ -28,21 +33,28 @@ const DEFAULT = PhysicsRBDAttributesSopOperation.DEFAULT_PARAMS;
 
 type Vector3Component = 'x' | 'y' | 'z';
 const VECTOR3_COMPONENT_NAMES: Array<Vector3Component> = ['x', 'y', 'z'];
+const tmpV3 = new Vector3();
 
+const SIZE_METHOD_CUSTOM = {sizeMethod: SIZE_COMPUTATION_METHODS.indexOf(SizeComputationMethod.CUSTOM)};
 const VISIBLE_OPTIONS = {
 	CAPSULE: {
+		...SIZE_METHOD_CUSTOM,
 		colliderType: PHYSICS_RBD_COLLIDER_TYPES.indexOf(PhysicsRBDColliderType.CAPSULE),
 	},
 	CONE: {
+		...SIZE_METHOD_CUSTOM,
 		colliderType: PHYSICS_RBD_COLLIDER_TYPES.indexOf(PhysicsRBDColliderType.CONE),
 	},
 	CUBOID: {
+		...SIZE_METHOD_CUSTOM,
 		colliderType: PHYSICS_RBD_COLLIDER_TYPES.indexOf(PhysicsRBDColliderType.CUBOID),
 	},
 	CYLINDER: {
+		...SIZE_METHOD_CUSTOM,
 		colliderType: PHYSICS_RBD_COLLIDER_TYPES.indexOf(PhysicsRBDColliderType.CYLINDER),
 	},
 	SPHERE: {
+		...SIZE_METHOD_CUSTOM,
 		colliderType: PHYSICS_RBD_COLLIDER_TYPES.indexOf(PhysicsRBDColliderType.SPHERE),
 	},
 };
@@ -66,6 +78,12 @@ class PhysicsRBDAttributesSopParamsConfig extends NodeParamsConfig {
 	colliderType = ParamConfig.INTEGER(DEFAULT.colliderType, {
 		menu: {
 			entries: PHYSICS_RBD_COLLIDER_TYPE_MENU_ENTRIES,
+		},
+	});
+	/** @param Rigid body type */
+	sizeMethod = ParamConfig.INTEGER(DEFAULT.sizeMethod, {
+		menu: {
+			entries: SIZE_COMPUTATION_METHOD_MENU_ENTRIES,
 		},
 	});
 
@@ -158,12 +176,19 @@ export class PhysicsRBDAttributesSopNode extends TypedSopNode<PhysicsRBDAttribut
 	colliderType() {
 		return PHYSICS_RBD_COLLIDER_TYPES[this.pv.colliderType];
 	}
+	setSizeMethod(sizeMethod: SizeComputationMethod) {
+		this.p.sizeMethod.set(SIZE_COMPUTATION_METHODS.indexOf(sizeMethod));
+	}
+	sizeMethod() {
+		return SIZE_COMPUTATION_METHODS[this.pv.sizeMethod];
+	}
 
 	override cook(inputCoreGroups: CoreGroup[]) {
 		const coreGroup = inputCoreGroups[0];
 
 		const RBDType = this.RBDType();
 		const colliderType = this.colliderType();
+		const sizeMethod = this.sizeMethod();
 		const coreObjects = coreGroup.coreObjects();
 		for (let coreObject of coreObjects) {
 			const object = coreObject.object();
@@ -202,7 +227,7 @@ export class PhysicsRBDAttributesSopNode extends TypedSopNode<PhysicsRBDAttribut
 			CorePhysicsAttribute.setCanSleep.bind(CorePhysicsAttribute)
 		);
 
-		this._applyColliderType(colliderType, coreObjects);
+		this._applyColliderType(colliderType, sizeMethod, coreObjects);
 		if (isBooleanTrue(this.pv.addId)) {
 			this._computeStringParam(this.p.id, coreObjects, CorePhysicsAttribute.setRBDId.bind(CorePhysicsAttribute));
 		}
@@ -211,42 +236,105 @@ export class PhysicsRBDAttributesSopNode extends TypedSopNode<PhysicsRBDAttribut
 		// const core_group = this._operation.cook(input_contents, this.pv);
 		this.setCoreGroup(coreGroup);
 	}
-	protected _applyColliderType(colliderType: PhysicsRBDColliderType, coreObjects: CoreObject[]) {
+	protected _applyColliderType(
+		colliderType: PhysicsRBDColliderType,
+		sizeMethod: SizeComputationMethod,
+		coreObjects: CoreObject[]
+	) {
 		switch (colliderType) {
 			case PhysicsRBDColliderType.CUBOID: {
-				this._computeVector3Param(
-					this.p.sizes,
-					coreObjects,
-					CorePhysicsAttribute.setCuboidSizes.bind(CorePhysicsAttribute)
-				);
-				this._computeFloatParam(
-					this.p.size,
-					coreObjects,
-					CorePhysicsAttribute.setCuboidSize.bind(CorePhysicsAttribute)
-				);
+				switch (sizeMethod) {
+					case SizeComputationMethod.AUTO: {
+						for (let coreObject of coreObjects) {
+							const geometry = coreObject.geometry();
+							if (geometry) {
+								geometry.computeBoundingBox();
+								if (geometry.boundingBox != null) {
+									geometry.boundingBox.getSize(tmpV3);
+									CorePhysicsAttribute.setCuboidSizes(coreObject.object(), tmpV3);
+									CorePhysicsAttribute.setCuboidSize(coreObject.object(), 1);
+								}
+							}
+						}
+						return;
+					}
+					case SizeComputationMethod.CUSTOM: {
+						this._computeVector3Param(
+							this.p.sizes,
+							coreObjects,
+							CorePhysicsAttribute.setCuboidSizes.bind(CorePhysicsAttribute)
+						);
+						this._computeFloatParam(
+							this.p.size,
+							coreObjects,
+							CorePhysicsAttribute.setCuboidSize.bind(CorePhysicsAttribute)
+						);
+						return;
+					}
+				}
+
 				return;
 			}
 			case PhysicsRBDColliderType.SPHERE: {
-				this._computeFloatParam(
-					this.p.radius,
-					coreObjects,
-					CorePhysicsAttribute.setRadius.bind(CorePhysicsAttribute)
-				);
+				switch (sizeMethod) {
+					case SizeComputationMethod.AUTO: {
+						for (let coreObject of coreObjects) {
+							const geometry = coreObject.geometry();
+							if (geometry) {
+								geometry.computeBoundingSphere();
+								const radius = geometry.boundingSphere?.radius;
+								if (radius != null) {
+									CorePhysicsAttribute.setRadius(coreObject.object(), radius);
+								}
+							}
+						}
+						return;
+					}
+					case SizeComputationMethod.CUSTOM: {
+						this._computeFloatParam(
+							this.p.radius,
+							coreObjects,
+							CorePhysicsAttribute.setRadius.bind(CorePhysicsAttribute)
+						);
+						return;
+					}
+				}
+
 				return;
 			}
 			case PhysicsRBDColliderType.CAPSULE:
 			case PhysicsRBDColliderType.CONE:
 			case PhysicsRBDColliderType.CYLINDER: {
-				this._computeFloatParam(
-					this.p.height,
-					coreObjects,
-					CorePhysicsAttribute.setHeight.bind(CorePhysicsAttribute)
-				);
-				this._computeFloatParam(
-					this.p.radius,
-					coreObjects,
-					CorePhysicsAttribute.setRadius.bind(CorePhysicsAttribute)
-				);
+				switch (sizeMethod) {
+					case SizeComputationMethod.AUTO: {
+						for (let coreObject of coreObjects) {
+							const geometry = coreObject.geometry();
+							if (geometry) {
+								geometry.computeBoundingBox();
+								if (geometry.boundingBox != null) {
+									geometry.boundingBox.getSize(tmpV3);
+									CorePhysicsAttribute.setHeight(coreObject.object(), tmpV3.y);
+									CorePhysicsAttribute.setRadius(coreObject.object(), tmpV3.x);
+								}
+							}
+						}
+						return;
+					}
+					case SizeComputationMethod.CUSTOM: {
+						this._computeFloatParam(
+							this.p.height,
+							coreObjects,
+							CorePhysicsAttribute.setHeight.bind(CorePhysicsAttribute)
+						);
+						this._computeFloatParam(
+							this.p.radius,
+							coreObjects,
+							CorePhysicsAttribute.setRadius.bind(CorePhysicsAttribute)
+						);
+						return;
+					}
+				}
+
 				return;
 			}
 			case PhysicsRBDColliderType.CONVEX_HULL:

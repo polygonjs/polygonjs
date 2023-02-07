@@ -1,21 +1,31 @@
 import {
-	CorePhysicsAttribute,
+	// CorePhysicsAttribute,
 	PHYSICS_RBD_COLLIDER_TYPES,
 	PHYSICS_RBD_TYPES,
 } from './../../../core/physics/PhysicsAttribute';
 import {BaseSopOperation} from './_Base';
-import {CoreGroup} from '../../../core/geometry/Group';
+// import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 import {PhysicsRBDColliderType, PhysicsRBDType} from '../../../core/physics/PhysicsAttribute';
 import {Vector3} from 'three';
-import {isBooleanTrue} from '../../../core/Type';
+// import {isBooleanTrue} from '../../../core/Type';
 
+export enum SizeComputationMethod {
+	AUTO = 'auto',
+	CUSTOM = 'custom',
+}
+export const SIZE_COMPUTATION_METHODS: SizeComputationMethod[] = [
+	SizeComputationMethod.AUTO,
+	SizeComputationMethod.CUSTOM,
+];
+export const SIZE_COMPUTATION_METHOD_MENU_ENTRIES = SIZE_COMPUTATION_METHODS.map((name, value) => ({name, value}));
 interface PhysicsRBDAttributesSopParams extends DefaultOperationParams {
 	RBDType: number;
 	colliderType: number;
 	taddId: boolean;
 	id: string;
+	sizeMethod: number;
 	// cuboid
 	sizes: Vector3;
 	size: number;
@@ -38,6 +48,7 @@ export class PhysicsRBDAttributesSopOperation extends BaseSopOperation {
 		colliderType: PHYSICS_RBD_COLLIDER_TYPES.indexOf(PhysicsRBDColliderType.CUBOID),
 		taddId: true,
 		id: '',
+		sizeMethod: SIZE_COMPUTATION_METHODS.indexOf(SizeComputationMethod.AUTO),
 		// cuboid
 		sizes: new Vector3(1, 1, 1),
 		size: 1,
@@ -57,40 +68,40 @@ export class PhysicsRBDAttributesSopOperation extends BaseSopOperation {
 	static override type(): Readonly<'physicsRBDAttributes'> {
 		return 'physicsRBDAttributes';
 	}
-	override cook(inputCoreGroups: CoreGroup[], params: PhysicsRBDAttributesSopParams) {
-		const inputCoreGroup = inputCoreGroups[0];
-		const objects = inputCoreGroup.objects();
-		for (let object of objects) {
-			const colliderType = PHYSICS_RBD_COLLIDER_TYPES[params.colliderType];
-			CorePhysicsAttribute.setRBDType(object, PHYSICS_RBD_TYPES[params.RBDType]);
-			CorePhysicsAttribute.setColliderType(object, colliderType);
-			CorePhysicsAttribute.setDensity(object, params.density);
-			CorePhysicsAttribute.setRestitution(object, params.restitution);
-			CorePhysicsAttribute.setLinearDamping(object, params.linearDamping);
-			CorePhysicsAttribute.setAngularDamping(object, params.angularDamping);
-			CorePhysicsAttribute.setCanSleep(object, params.canSleep);
+	// override cook(inputCoreGroups: CoreGroup[], params: PhysicsRBDAttributesSopParams) {
+	// 	const inputCoreGroup = inputCoreGroups[0];
+	// 	const objects = inputCoreGroup.objects();
+	// 	for (let object of objects) {
+	// 		const colliderType = PHYSICS_RBD_COLLIDER_TYPES[params.colliderType];
+	// 		CorePhysicsAttribute.setRBDType(object, PHYSICS_RBD_TYPES[params.RBDType]);
+	// 		CorePhysicsAttribute.setColliderType(object, colliderType);
+	// 		CorePhysicsAttribute.setDensity(object, params.density);
+	// 		CorePhysicsAttribute.setRestitution(object, params.restitution);
+	// 		CorePhysicsAttribute.setLinearDamping(object, params.linearDamping);
+	// 		CorePhysicsAttribute.setAngularDamping(object, params.angularDamping);
+	// 		CorePhysicsAttribute.setCanSleep(object, params.canSleep);
 
-			if (isBooleanTrue(params.taddId)) {
-				CorePhysicsAttribute.setRBDId(object, params.id);
-			}
+	// 		if (isBooleanTrue(params.taddId)) {
+	// 			CorePhysicsAttribute.setRBDId(object, params.id);
+	// 		}
 
-			switch (colliderType) {
-				case PhysicsRBDColliderType.CUBOID: {
-					CorePhysicsAttribute.setCuboidSize(object, params.size);
-					break;
-				}
-				case PhysicsRBDColliderType.SPHERE: {
-					CorePhysicsAttribute.setRadius(object, params.radius);
-					break;
-				}
-				case PhysicsRBDColliderType.CAPSULE: {
-					CorePhysicsAttribute.setHeight(object, params.height);
-					CorePhysicsAttribute.setRadius(object, params.radius);
-					break;
-				}
-			}
-		}
+	// 		switch (colliderType) {
+	// 			case PhysicsRBDColliderType.CUBOID: {
+	// 				CorePhysicsAttribute.setCuboidSize(object, params.size);
+	// 				break;
+	// 			}
+	// 			case PhysicsRBDColliderType.SPHERE: {
+	// 				CorePhysicsAttribute.setRadius(object, params.radius);
+	// 				break;
+	// 			}
+	// 			case PhysicsRBDColliderType.CAPSULE: {
+	// 				CorePhysicsAttribute.setHeight(object, params.height);
+	// 				CorePhysicsAttribute.setRadius(object, params.radius);
+	// 				break;
+	// 			}
+	// 		}
+	// 	}
 
-		return inputCoreGroup;
-	}
+	// 	return inputCoreGroup;
+	// }
 }

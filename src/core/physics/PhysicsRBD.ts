@@ -13,14 +13,13 @@ import {createPhysicsCylinder} from './shapes/RBDCylinder';
 import {createPhysicsTriMesh} from './shapes/RBDTrimesh';
 import {createPhysicsConvexHull} from './shapes/ConvexHull';
 
-let rbdId = 1;
 const physicsRBDByRBDId: Map<number, RigidBody> = new Map();
 
 function _createRBD(world: World, rigidBodyDesc: RigidBodyDesc, object: Object3D) {
 	const rigidBody = world.createRigidBody(rigidBodyDesc);
-	physicsRBDByRBDId.set(rbdId, rigidBody);
-	CoreObject.addAttribute(object, PhysicsIdAttribute.RBD, rbdId);
-	rbdId++;
+	const handle = rigidBody.handle;
+	physicsRBDByRBDId.set(handle, rigidBody);
+	CoreObject.addAttribute(object, PhysicsIdAttribute.RBD, handle);
 	return rigidBody;
 }
 export function _getRBD(object: Object3D) {
