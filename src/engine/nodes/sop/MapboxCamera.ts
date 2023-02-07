@@ -1,6 +1,16 @@
 /**
  * Creates a mapbox camera.
  *
+ * @remarks
+ *
+ * In order to use Mapbox inside Polygons, you need to add your Mapbox token.
+ *
+ * This is done by adding the following line inside your `PolyConfig.ts` file:
+ *
+ * ``` ts
+ * Poly.thirdParty.mapbox().setToken('<your token>');
+ * ```
+ *
  *
  */
 

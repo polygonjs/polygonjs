@@ -2,7 +2,11 @@
  * Transforms a geometry from the world space to the mapbox space
  *
  * @remarks
+ *
  * The mapbox space is very specific to mapbox, as it is very small (several orders of magnitude) compared to the threejs space.
+ * See [sop/mapboxCamera](/docs/nodes/sop/mapboxCamera) for info on how to setup mapbox to use with Polygonjs
+ *
+ *
  */
 import {CoreMapboxTransform} from '../../../core/thirdParty/Mapbox/Transform';
 import {InputCloneMode} from '../../poly/InputCloneMode';

@@ -2,7 +2,9 @@
  * Creates a plane visible by a mapbox camera.
  *
  * @remarks
- * Note that you will need a mapbox key to use this node.
+ *
+ * See [sop/mapboxCamera](/docs/nodes/sop/mapboxCamera) for info on how to setup mapbox to use with Polygonjs
+ *
  */
 import {BufferGeometry, Box2, Matrix4, Vector2, Vector3, PlaneGeometry} from 'three';
 import mapboxgl from 'mapbox-gl';

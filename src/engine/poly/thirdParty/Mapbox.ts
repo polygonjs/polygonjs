@@ -1,13 +1,13 @@
-export const MAPBOX_TOKEN_MISSING_ERROR_MESSAGE = `Set your mapbox token with "Poly.thirdParty.mapbox().setToken('<YOUR TOKEN>')" in the PolyConfig.ts file`;
+export const MAPBOX_TOKEN_MISSING_ERROR_MESSAGE = `Set your mapbox token with "poly.thirdParty.mapbox().setToken('<YOUR TOKEN>')" in the PolyConfig.ts file, then reload the page`;
 
 type GetTokenFunc = () => Promise<string | undefined>;
 
 export class PolyThirdPartyMapboxController {
 	private _token: string | undefined;
 	private _getTokenFunc: GetTokenFunc | undefined;
-	// setToken(token: string) {
-	// 	this._token = token;
-	// }
+	setToken(token: string) {
+		this._token = token;
+	}
 	setGetTokenFunction(tokenFunc: GetTokenFunc) {
 		this._getTokenFunc = tokenFunc;
 	}

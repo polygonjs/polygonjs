@@ -2,8 +2,11 @@
  * Creates Mapbox layers.
  *
  * @remarks
+ *
  * This is best used with the Mapbox camera.
- * Note that you will need a mapbox key to use this node.
+ *
+ * See [sop/mapboxCamera](/docs/nodes/sop/mapboxCamera) for info on how to setup mapbox to use with Polygonjs
+ *
  */
 import {Object3D} from 'three';
 import {CoreType} from '../../../core/Type';
