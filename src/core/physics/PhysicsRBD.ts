@@ -57,10 +57,10 @@ export function physicsCreateRBD(PhysicsLib: PhysicsLib, world: World, object: O
 	const canSleep = CorePhysicsAttribute.getCanSleep(object);
 
 	if (linearDamping != null) {
-		rigidBodyDesc.setLinearDamping(linearDamping);
+		rigidBody.setLinearDamping(linearDamping);
 	}
 	if (angularDamping != null) {
-		rigidBodyDesc.setAngularDamping(angularDamping);
+		rigidBody.setAngularDamping(angularDamping);
 	}
 	if (canSleep != null) {
 		rigidBodyDesc.setCanSleep(canSleep);

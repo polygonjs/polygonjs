@@ -114,7 +114,7 @@ class PhysicsRBDAttributesSopParamsConfig extends NodeParamsConfig {
 	dynamics = ParamConfig.FOLDER();
 	/** @param density */
 	density = ParamConfig.FLOAT(DEFAULT.density, {
-		range: [0, 1],
+		range: [0, 10],
 		rangeLocked: [true, false],
 		expression: {forEntities: true},
 	});
@@ -132,13 +132,13 @@ class PhysicsRBDAttributesSopParamsConfig extends NodeParamsConfig {
 	});
 	/** @param linear damping (affects velocity) */
 	linearDamping = ParamConfig.FLOAT(DEFAULT.linearDamping, {
-		range: [0, 1],
+		range: [0, 10],
 		rangeLocked: [true, false],
 		expression: {forEntities: true},
 	});
 	/** @param angular damping (affects rotations) */
 	angularDamping = ParamConfig.FLOAT(DEFAULT.angularDamping, {
-		range: [0, 1],
+		range: [0, 10],
 		rangeLocked: [true, false],
 		expression: {forEntities: true},
 	});
