@@ -6,7 +6,7 @@
  */
 import {PolyDictionary} from '../../../types/GlobalTypes';
 import {ActorConnectionPointType} from '../utils/io/connections/Actor';
-import {Vector2, Vector3, Vector4} from 'three';
+import {Vector2, Vector3, Vector4, Color} from 'three';
 import {ActorNodeTriggerContext, TypedActorNode} from './_Base';
 import {CoreType} from '../../../core/Type';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
@@ -24,12 +24,14 @@ const DefaultValues: PolyDictionary<number> = {
 
 const ALLOWED_INPUT_TYPES: ActorConnectionPointType[] = [
 	ActorConnectionPointType.FLOAT,
+	ActorConnectionPointType.COLOR,
 	ActorConnectionPointType.VECTOR2,
 	ActorConnectionPointType.VECTOR3,
 	ActorConnectionPointType.VECTOR4,
 ];
 
 type MixedVector =
+	| ActorConnectionPointType.COLOR
 	| ActorConnectionPointType.VECTOR2
 	| ActorConnectionPointType.VECTOR3
 	| ActorConnectionPointType.VECTOR4;
@@ -47,6 +49,7 @@ function _createVectors(): Vectors {
 		v4: new Vector4(),
 	};
 }
+const tmpColor = new Color();
 
 class MixActorParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new MixActorParamsConfig();
@@ -92,14 +95,18 @@ export class MixActorNode extends TypedActorNode<MixActorParamsConfig> {
 			const val0Tmp = this._vectorTmp(value0, this._val0Tmp) as Vector3;
 			const val1Tmp = this._vectorTmp(value1, this._val1Tmp) as Vector3;
 			return val0Tmp.multiplyScalar(1 - blend).add(val1Tmp.multiplyScalar(blend));
-		} else {
-			if (CoreType.isNumber(value0) && CoreType.isNumber(value1)) {
-				return (1 - blend) * value0 + blend * value1;
-			}
+		}
+		if (CoreType.isColor(value0) && CoreType.isColor(value1)) {
+			tmpColor.copy(value0).lerp(value1, blend);
+			return tmpColor;
+		}
+		if (CoreType.isNumber(value0) && CoreType.isNumber(value1)) {
+			return (1 - blend) * value0 + blend * value1;
 		}
 
 		return 0;
 	}
+
 	private _vectorTmp<V extends Vector2 | Vector3 | Vector4>(vecSrc: Vector2 | Vector3 | Vector4, target: Vectors): V {
 		if (vecSrc instanceof Vector2) {
 			target.v2.copy(vecSrc);

@@ -1,9 +1,8 @@
 /**
- * Initializes a physics simulation
+ * Removes an RBD from the physics
  *
  *
  */
-// import {SopType} from '../../poly/registers/nodes/types/Sop';
 import {ActorNodeTriggerContext, TRIGGER_CONNECTION_NAME, TypedActorNode} from './_Base';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {
@@ -11,16 +10,16 @@ import {
 	ActorConnectionPointType,
 	ACTOR_CONNECTION_POINT_IN_NODE_DEF,
 } from '../utils/io/connections/Actor';
-import {getPhysicsWorldNodeFromWorldObject} from '../sop/PhysicsWorld';
+import {physicsRBDRemove} from '../../../core/physics/PhysicsRBD';
 const CONNECTION_OPTIONS = ACTOR_CONNECTION_POINT_IN_NODE_DEF;
 
-class PhysicsWorldResetActorParamsConfig extends NodeParamsConfig {}
-const ParamsConfig = new PhysicsWorldResetActorParamsConfig();
+class PhysicsRBDRemoveActorParamsConfig extends NodeParamsConfig {}
+const ParamsConfig = new PhysicsRBDRemoveActorParamsConfig();
 
-export class PhysicsWorldResetActorNode extends TypedActorNode<PhysicsWorldResetActorParamsConfig> {
+export class PhysicsRBDRemoveActorNode extends TypedActorNode<PhysicsRBDRemoveActorParamsConfig> {
 	override readonly paramsConfig = ParamsConfig;
 	static override type() {
-		return 'physicsWorldReset';
+		return 'physicsRBDRemove';
 	}
 
 	override initializeNode() {
@@ -43,11 +42,8 @@ export class PhysicsWorldResetActorNode extends TypedActorNode<PhysicsWorldReset
 			this._inputValue<ActorConnectionPointType.OBJECT_3D>(ActorConnectionPointType.OBJECT_3D, context) ||
 			context.Object3D;
 
-		const physicsWorldNode = getPhysicsWorldNodeFromWorldObject(Object3D, this.scene());
-		if (!physicsWorldNode) {
-			// console.warn(`no ${SopType.PHYSICS_WORLD} node found`);
-			return;
-		}
-		physicsWorldNode.setDirty();
+		physicsRBDRemove(Object3D);
+
+		this.runTrigger(context);
 	}
 }

@@ -8,11 +8,18 @@ export function createPhysicsTriMesh(PhysicsLib: PhysicsLib, object: Object3D) {
 		return;
 	}
 	const position = geometry.getAttribute('position') as BufferAttribute;
-	const index = geometry.getIndex();
-	if (!(position && index)) {
+	if (!position) {
 		return;
 	}
+	let indexArray = geometry.getIndex()?.array as number[];
+	if (!indexArray) {
+		const pointsCount = position.array.length / 3;
+		indexArray = new Array(pointsCount);
+		for (let i = 0; i < pointsCount; i++) {
+			indexArray[i] = i;
+		}
+	}
 	const float32ArrayPosition = new Float32Array(position.array);
-	const uint32ArrayIndex = new Uint32Array(index.array);
+	const uint32ArrayIndex = new Uint32Array(indexArray);
 	return PhysicsLib.ColliderDesc.trimesh(float32ArrayPosition, uint32ArrayIndex);
 }

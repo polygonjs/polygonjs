@@ -7,8 +7,8 @@ import {getPhysicsRBDHeight, getPhysicsRBDRadius, setPhysicsRBDHeightRadiusPrope
 const EXPECTED_TYPE = PhysicsRBDColliderType.CYLINDER;
 
 export function createPhysicsCylinder(PhysicsLib: PhysicsLib, object: Object3D) {
-	const halfHeight = CorePhysicsAttribute.getHeight(object) * 0.5;
-	const radius = CorePhysicsAttribute.getRadius(object);
+	const halfHeight = CorePhysicsAttribute.getHeight(object) * 0.5 * object.scale.y;
+	const radius = CorePhysicsAttribute.getRadius(object) * object.scale.x;
 	return PhysicsLib.ColliderDesc.cylinder(halfHeight, radius);
 }
 

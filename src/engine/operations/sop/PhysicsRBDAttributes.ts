@@ -13,11 +13,11 @@ import {Vector3} from 'three';
 
 export enum SizeComputationMethod {
 	AUTO = 'auto',
-	CUSTOM = 'custom',
+	MANUAL = 'manual',
 }
 export const SIZE_COMPUTATION_METHODS: SizeComputationMethod[] = [
 	SizeComputationMethod.AUTO,
-	SizeComputationMethod.CUSTOM,
+	SizeComputationMethod.MANUAL,
 ];
 export const SIZE_COMPUTATION_METHOD_MENU_ENTRIES = SIZE_COMPUTATION_METHODS.map((name, value) => ({name, value}));
 interface PhysicsRBDAttributesSopParams extends DefaultOperationParams {

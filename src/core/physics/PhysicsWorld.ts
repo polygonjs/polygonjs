@@ -8,6 +8,7 @@ import {CoreGraphNodeId} from '../graph/CoreGraph';
 import {BaseNodeType} from '../../engine/nodes/_Base';
 import {CoreObject} from '../geometry/Object';
 import {PhysicsIdAttribute} from './PhysicsAttribute';
+import {physicsDebugPairFromDebugObject, updatePhysicsDebugObject} from './PhysicsDebug';
 
 export const PHYSICS_GRAVITY_DEFAULT = new Vector3(0, -9.81, 0);
 
@@ -23,6 +24,7 @@ export async function createOrFindPhysicsWorld(node: BaseNodeType, worldObject: 
 	}
 
 	CoreObject.addAttribute(worldObject, PhysicsIdAttribute.WORLD, nodeId);
+	return world;
 }
 export function physicsWorldNodeIdFromObject(worldObject: Object3D) {
 	const nodeId = CoreObject.attribValue(worldObject, PhysicsIdAttribute.WORLD) as CoreGraphNodeId | undefined;
@@ -48,7 +50,14 @@ export async function initCorePhysicsWorld(worldObject: Object3D) {
 	// create RBDs
 	const rigidBodyById: Map<string, RigidBody> = new Map();
 	const PhysicsLib = await CorePhysics();
-	for (let child of worldObject.children) {
+	// we keep a copy of the children here,
+	// as they are removed/added inside physicsCreateRBD
+	// in order to compute relative transform
+	// (even though there surely are ways to avoid this remove/add)
+	// We also need to keep a copy as when traversing to create the joints,
+	// we end up removing them from the hierarchy
+	const children = [...worldObject.children];
+	for (let child of children) {
 		const result = physicsCreateRBD(PhysicsLib, world, child);
 		if (result) {
 			const {rigidBody, id} = result;
@@ -57,7 +66,7 @@ export async function initCorePhysicsWorld(worldObject: Object3D) {
 	}
 
 	// create joints
-	for (let child of worldObject.children) {
+	for (let child of children) {
 		physicsCreateJoint(PhysicsLib, world, worldObject, child, rigidBodyById);
 	}
 }
@@ -82,6 +91,12 @@ function _clearWorld(world: World) {
 export function stepWorld(worldObject: Object3D) {
 	const world = physicsWorldFromObject(worldObject);
 	if (!world) {
+		// if it is not the word, maybe it is the debug object
+		const pair = physicsDebugPairFromDebugObject(worldObject);
+		if (!pair) {
+			return;
+		}
+		updatePhysicsDebugObject(pair);
 		return;
 	}
 	world.step();

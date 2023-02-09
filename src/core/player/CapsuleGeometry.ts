@@ -13,7 +13,7 @@ export function createCapsuleGeometry(capsuleOptions: CapsuleOptions) {
 	const bevel = radius;
 	const width = diameter;
 	const boxHeight = height;
-	const geometry = new RoundedBoxGeometry(width, boxHeight, width, divisions, bevel);
+	const geometry = new RoundedBoxGeometry(width, boxHeight + diameter, width, divisions, bevel);
 	geometry.translate(center.x, center.y, center.z);
 	return geometry;
 }

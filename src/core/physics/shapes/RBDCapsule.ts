@@ -14,8 +14,8 @@ import {CoreObject} from '../../geometry/Object';
 const EXPECTED_TYPE = PhysicsRBDColliderType.CAPSULE;
 
 export function createPhysicsCapsule(PhysicsLib: PhysicsLib, object: Object3D) {
-	const halfHeight = CorePhysicsAttribute.getHeight(object) * 0.5;
-	const radius = CorePhysicsAttribute.getRadius(object);
+	const halfHeight = CorePhysicsAttribute.getHeight(object) * 0.5 * object.scale.y;
+	const radius = CorePhysicsAttribute.getRadius(object) * object.scale.x;
 	return PhysicsLib.ColliderDesc.capsule(halfHeight, radius);
 }
 

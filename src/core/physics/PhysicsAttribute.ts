@@ -1,10 +1,11 @@
 import {CoreObject} from '../geometry/Object';
-import {Vector3, Object3D} from 'three';
+import {Vector4, Vector3, Vector2, Object3D} from 'three';
 import {PhysicsJointAttribute} from './PhysicsJoint';
 
 export enum PhysicsIdAttribute {
 	WORLD = 'PhysicsIdAttribute_worldId',
 	RBD = 'PhysicsIdAttribute_rbdId',
+	DEBUG = 'PhysicsIdAttribute_debugId',
 }
 export enum PhysicsRBDType {
 	FIXED = 'fixed',
@@ -92,10 +93,22 @@ export function physicsAttribNameLive(attribute: PhysicsAttribute): string {
 }
 
 export class CorePhysicsBaseAttribute {
+	protected static _setVector4(object: Object3D, attribName: PhysicsAttribute, value: Vector4) {
+		CoreObject.addAttribute(object, attribName, value);
+	}
+	protected static _getVector4(object: Object3D, attribName: PhysicsAttribute, target: Vector4) {
+		CoreObject.attribValue(object, attribName, 0, target);
+	}
 	protected static _setVector3(object: Object3D, attribName: PhysicsAttribute, value: Vector3) {
 		CoreObject.addAttribute(object, attribName, value);
 	}
 	protected static _getVector3(object: Object3D, attribName: PhysicsAttribute, target: Vector3) {
+		CoreObject.attribValue(object, attribName, 0, target);
+	}
+	protected static _setVector2(object: Object3D, attribName: PhysicsAttribute, value: Vector2) {
+		CoreObject.addAttribute(object, attribName, value);
+	}
+	protected static _getVector2(object: Object3D, attribName: PhysicsAttribute, target: Vector2) {
 		CoreObject.attribValue(object, attribName, 0, target);
 	}
 	protected static _setNumber(object: Object3D, attribName: PhysicsAttribute, value: number) {

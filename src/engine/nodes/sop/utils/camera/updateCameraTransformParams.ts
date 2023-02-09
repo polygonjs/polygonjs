@@ -10,7 +10,6 @@ export async function updateCameraTransformParams(node: SopCameraNode) {
 	const cameraName = node.p.name.value;
 	const mask = `*/${cameraName}`;
 	const object = node.scene().objectsController.findObjectByMask(mask);
-	console.log(object);
 	if (!object) {
 		return;
 	}

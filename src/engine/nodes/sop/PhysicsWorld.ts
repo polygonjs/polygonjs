@@ -19,13 +19,16 @@ import {NodeCreateOptions} from '../utils/hierarchy/ChildrenController';
 import {Constructor, valueof} from '../../../types/GlobalTypes';
 import {BaseActorNodeType} from '../actor/_Base';
 import {createOrFindPhysicsWorld} from '../../../core/physics/PhysicsWorld';
+import {createOrFindPhysicsDebugObject, updatePhysicsDebugObject} from '../../../core/physics/PhysicsDebug';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
-import {PolyScene} from '../../index_all';
-import {CoreType} from '../../../core/Type';
+import {PolyScene} from '../../scene/PolyScene';
+import {CoreType, isBooleanTrue} from '../../../core/Type';
 import {BaseNodeType} from '../_Base';
 class PhysicsWorldSopParamsConfig extends NodeParamsConfig {
 	/** @param gravity */
 	gravity = ParamConfig.VECTOR3(PHYSICS_GRAVITY_DEFAULT);
+	/** @param display debug information */
+	debug = ParamConfig.BOOLEAN(0);
 	/** @param actor node */
 	// node = ParamConfig.NODE_PATH('', {
 	// 	visibleIf: {useThisNode: 0},
@@ -52,24 +55,33 @@ export class PhysicsWorldSopNode extends TypedSopNode<PhysicsWorldSopParamsConfi
 	override async cook(inputCoreGroups: CoreGroup[]) {
 		const coreGroup = inputCoreGroups[0];
 
-		const group = new Group();
-		group.matrixAutoUpdate = false;
+		const worldGroup = new Group();
+		worldGroup.matrixAutoUpdate = false;
+
+		const inputObjects = coreGroup.objects();
+		for (let inputObject of inputObjects) {
+			worldGroup.add(inputObject);
+		}
+
+		const world = await createOrFindPhysicsWorld(this, worldGroup, this.pv.gravity);
+		// assignPhysicsWorldNodeToWorldObject(group, this);
+		await initCorePhysicsWorld(worldGroup);
 
 		const actorNode = this._findActorNode();
 		// if (actorNode) {
-		this.scene().actorsManager.assignActorBuilder(group, actorNode);
 		// }
+		const objects: Object3D[] = [worldGroup];
 
-		const objects = coreGroup.objects();
-		for (let object of objects) {
-			group.add(object);
+		if (isBooleanTrue(this.pv.debug)) {
+			const pair = createOrFindPhysicsDebugObject(this, world);
+			updatePhysicsDebugObject(pair);
+			objects.push(pair.object);
 		}
 
-		await createOrFindPhysicsWorld(this, group, this.pv.gravity);
-		// assignPhysicsWorldNodeToWorldObject(group, this);
-		await initCorePhysicsWorld(group);
-
-		this.setObject(group);
+		for (let object of objects) {
+			this.scene().actorsManager.assignActorBuilder(object, actorNode);
+		}
+		this.setObjects(objects);
 	}
 
 	private _findActorNode() {

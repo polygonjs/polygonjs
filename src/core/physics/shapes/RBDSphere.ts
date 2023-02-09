@@ -14,7 +14,7 @@ import {getPhysicsRBDRadius} from './_CommonHeightRadius';
 const EXPECTED_TYPE = PhysicsRBDColliderType.SPHERE;
 
 export function createPhysicsSphere(PhysicsLib: PhysicsLib, object: Object3D) {
-	const radius = CorePhysicsAttribute.getRadius(object);
+	const radius = CorePhysicsAttribute.getRadius(object) * object.scale.y;
 	return PhysicsLib.ColliderDesc.ball(radius);
 }
 

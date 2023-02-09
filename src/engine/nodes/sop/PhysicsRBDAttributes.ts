@@ -35,7 +35,7 @@ type Vector3Component = 'x' | 'y' | 'z';
 const VECTOR3_COMPONENT_NAMES: Array<Vector3Component> = ['x', 'y', 'z'];
 const tmpV3 = new Vector3();
 
-const SIZE_METHOD_CUSTOM = {sizeMethod: SIZE_COMPUTATION_METHODS.indexOf(SizeComputationMethod.CUSTOM)};
+const SIZE_METHOD_CUSTOM = {sizeMethod: SIZE_COMPUTATION_METHODS.indexOf(SizeComputationMethod.MANUAL)};
 const VISIBLE_OPTIONS = {
 	CAPSULE: {
 		...SIZE_METHOD_CUSTOM,
@@ -66,14 +66,6 @@ class PhysicsRBDAttributesSopParamsConfig extends NodeParamsConfig {
 			entries: PHYSICS_RBD_TYPE_MENU_ENTRIES,
 		},
 	});
-	/** @param add id */
-	addId = ParamConfig.BOOLEAN(1);
-	/** @param id */
-	id = ParamConfig.STRING('`$OS`-`@objnum`', {
-		visibleIf: {addId: true},
-		expression: {forEntities: true},
-	});
-	shape = ParamConfig.FOLDER();
 	/** @param collider type */
 	colliderType = ParamConfig.INTEGER(DEFAULT.colliderType, {
 		menu: {
@@ -111,12 +103,12 @@ class PhysicsRBDAttributesSopParamsConfig extends NodeParamsConfig {
 		visibleIf: [VISIBLE_OPTIONS.CAPSULE, VISIBLE_OPTIONS.CONE, VISIBLE_OPTIONS.CYLINDER],
 		expression: {forEntities: true},
 	});
-	dynamics = ParamConfig.FOLDER();
 	/** @param density */
 	density = ParamConfig.FLOAT(DEFAULT.density, {
 		range: [0, 10],
 		rangeLocked: [true, false],
 		expression: {forEntities: true},
+		separatorBefore: true,
 	});
 	/** @param friction */
 	friction = ParamConfig.FLOAT(DEFAULT.friction, {
@@ -144,6 +136,14 @@ class PhysicsRBDAttributesSopParamsConfig extends NodeParamsConfig {
 	});
 	/** @param can sleep */
 	canSleep = ParamConfig.BOOLEAN(DEFAULT.canSleep, {
+		expression: {forEntities: true},
+	});
+	details = ParamConfig.FOLDER();
+	/** @param add id */
+	addId = ParamConfig.BOOLEAN(1);
+	/** @param id */
+	id = ParamConfig.STRING('`$OS`-`@objnum`', {
+		visibleIf: {addId: true},
 		expression: {forEntities: true},
 	});
 }
@@ -258,7 +258,7 @@ export class PhysicsRBDAttributesSopNode extends TypedSopNode<PhysicsRBDAttribut
 						}
 						return;
 					}
-					case SizeComputationMethod.CUSTOM: {
+					case SizeComputationMethod.MANUAL: {
 						this._computeVector3Param(
 							this.p.sizes,
 							coreObjects,
@@ -290,7 +290,7 @@ export class PhysicsRBDAttributesSopNode extends TypedSopNode<PhysicsRBDAttribut
 						}
 						return;
 					}
-					case SizeComputationMethod.CUSTOM: {
+					case SizeComputationMethod.MANUAL: {
 						this._computeFloatParam(
 							this.p.radius,
 							coreObjects,
@@ -302,7 +302,41 @@ export class PhysicsRBDAttributesSopNode extends TypedSopNode<PhysicsRBDAttribut
 
 				return;
 			}
-			case PhysicsRBDColliderType.CAPSULE:
+			case PhysicsRBDColliderType.CAPSULE: {
+				switch (sizeMethod) {
+					case SizeComputationMethod.AUTO: {
+						for (let coreObject of coreObjects) {
+							const geometry = coreObject.geometry();
+							if (geometry) {
+								geometry.computeBoundingBox();
+								if (geometry.boundingBox != null) {
+									geometry.boundingBox.getSize(tmpV3);
+									const radius = 0.5 * tmpV3.x;
+									const height = tmpV3.y - 2 * radius;
+									CorePhysicsAttribute.setHeight(coreObject.object(), height);
+									CorePhysicsAttribute.setRadius(coreObject.object(), radius);
+								}
+							}
+						}
+						return;
+					}
+					case SizeComputationMethod.MANUAL: {
+						this._computeFloatParam(
+							this.p.height,
+							coreObjects,
+							CorePhysicsAttribute.setHeight.bind(CorePhysicsAttribute)
+						);
+						this._computeFloatParam(
+							this.p.radius,
+							coreObjects,
+							CorePhysicsAttribute.setRadius.bind(CorePhysicsAttribute)
+						);
+						return;
+					}
+				}
+
+				return;
+			}
 			case PhysicsRBDColliderType.CONE:
 			case PhysicsRBDColliderType.CYLINDER: {
 				switch (sizeMethod) {
@@ -314,13 +348,13 @@ export class PhysicsRBDAttributesSopNode extends TypedSopNode<PhysicsRBDAttribut
 								if (geometry.boundingBox != null) {
 									geometry.boundingBox.getSize(tmpV3);
 									CorePhysicsAttribute.setHeight(coreObject.object(), tmpV3.y);
-									CorePhysicsAttribute.setRadius(coreObject.object(), tmpV3.x);
+									CorePhysicsAttribute.setRadius(coreObject.object(), 0.5 * tmpV3.x);
 								}
 							}
 						}
 						return;
 					}
-					case SizeComputationMethod.CUSTOM: {
+					case SizeComputationMethod.MANUAL: {
 						this._computeFloatParam(
 							this.p.height,
 							coreObjects,

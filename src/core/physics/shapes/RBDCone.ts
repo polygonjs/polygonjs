@@ -7,8 +7,8 @@ import {getPhysicsRBDHeight, getPhysicsRBDRadius, setPhysicsRBDHeightRadiusPrope
 const EXPECTED_TYPE = PhysicsRBDColliderType.CONE;
 
 export function createPhysicsCone(PhysicsLib: PhysicsLib, object: Object3D) {
-	const halfHeight = CorePhysicsAttribute.getHeight(object) * 0.5;
-	const radius = CorePhysicsAttribute.getRadius(object);
+	const halfHeight = CorePhysicsAttribute.getHeight(object) * 0.5 * object.scale.y;
+	const radius = CorePhysicsAttribute.getRadius(object) * object.scale.x;
 	return PhysicsLib.ColliderDesc.cone(halfHeight, radius);
 }
 

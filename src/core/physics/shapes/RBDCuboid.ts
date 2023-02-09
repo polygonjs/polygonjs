@@ -20,6 +20,7 @@ export function createPhysicsCuboid(PhysicsLib: PhysicsLib, object: Object3D) {
 	CorePhysicsAttribute.getCuboidSizes(object, tmp);
 	const size = CorePhysicsAttribute.getCuboidSize(object);
 	tmp.multiplyScalar(size * 0.5);
+	tmp.multiply(object.scale);
 	return PhysicsLib.ColliderDesc.cuboid(tmp.x, tmp.y, tmp.z);
 }
 

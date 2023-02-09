@@ -121,6 +121,7 @@ import {PhysicsRBDAddTorqueActorNode} from '../../../nodes/actor/PhysicsRBDAddTo
 import {PhysicsRBDApplyImpulseActorNode} from '../../../nodes/actor/PhysicsRBDApplyImpulse';
 import {PhysicsRBDApplyTorqueImpulseActorNode} from '../../../nodes/actor/PhysicsRBDApplyTorqueImpulse';
 import {PhysicsRBDApplyImpulseAtPointActorNode} from '../../../nodes/actor/PhysicsRBDApplyImpulseAtPoint';
+import {PhysicsRBDRemoveActorNode} from '../../../nodes/actor/PhysicsRBDRemove';
 import {PhysicsRBDResetForcesActorNode} from '../../../nodes/actor/PhysicsRBDResetForces';
 import {PhysicsRBDResetTorquesActorNode} from '../../../nodes/actor/PhysicsRBDResetTorques';
 import {PhysicsWorldResetActorNode} from '../../../nodes/actor/PhysicsWorldReset';
@@ -343,6 +344,7 @@ export interface ActorNodeChildrenMap {
 	physicsRBDApplyImpulse: PhysicsRBDApplyImpulseActorNode;
 	physicsRBDApplyTorqueImpulse: PhysicsRBDApplyTorqueImpulseActorNode;
 	physicsRBDApplyImpulseAtPoint: PhysicsRBDApplyImpulseAtPointActorNode;
+	PhysicsRBDRemove: PhysicsRBDRemoveActorNode;
 	physicsRBDResetForces: PhysicsRBDResetForcesActorNode;
 	physicsRBDResetTorques: PhysicsRBDResetTorquesActorNode;
 	physicsWorldReset: PhysicsWorldResetActorNode;
@@ -571,6 +573,7 @@ export class ActorRegister {
 		poly.registerNode(PhysicsRBDApplyImpulseActorNode, CATEGORY_ACTOR.PHYSICS);
 		poly.registerNode(PhysicsRBDApplyTorqueImpulseActorNode, CATEGORY_ACTOR.PHYSICS);
 		poly.registerNode(PhysicsRBDApplyImpulseAtPointActorNode, CATEGORY_ACTOR.PHYSICS);
+		poly.registerNode(PhysicsRBDRemoveActorNode, CATEGORY_ACTOR.PHYSICS);
 		poly.registerNode(PhysicsRBDResetForcesActorNode, CATEGORY_ACTOR.PHYSICS);
 		poly.registerNode(PhysicsRBDResetTorquesActorNode, CATEGORY_ACTOR.PHYSICS);
 		poly.registerNode(PhysicsWorldResetActorNode, CATEGORY_ACTOR.PHYSICS);

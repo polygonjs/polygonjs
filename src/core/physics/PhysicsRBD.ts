@@ -2,7 +2,7 @@ import {TypeAssert} from './../../engine/poly/Assert';
 // import {CorePhysicsUserData} from './PhysicsUserData';
 import {PhysicsRBDColliderType, PhysicsRBDType, CorePhysicsAttribute, PhysicsIdAttribute} from './PhysicsAttribute';
 import {Object3D, Vector3, Quaternion} from 'three';
-import type {World, RigidBodyType, RigidBodyDesc, RigidBody} from '@dimforge/rapier3d';
+import type {World, RigidBodyType, RigidBodyDesc, RigidBody, ColliderDesc} from '@dimforge/rapier3d';
 import {CorePhysicsLoaded, PhysicsLib} from './CorePhysics';
 import {CoreObject} from '../geometry/Object';
 import {createPhysicsSphere} from './shapes/RBDSphere';
@@ -13,47 +13,46 @@ import {createPhysicsCylinder} from './shapes/RBDCylinder';
 import {createPhysicsTriMesh} from './shapes/RBDTrimesh';
 import {createPhysicsConvexHull} from './shapes/ConvexHull';
 
-const physicsRBDByRBDId: Map<number, RigidBody> = new Map();
+const tmpV3 = new Vector3();
+// const q1 = new Quaternion();
+// const q2 = new Quaternion();
+const currentPos = new Vector3();
+const newPos = new Vector3();
+const currentQuaternion = new Quaternion();
+const newQuaternion = new Quaternion();
 
-function _createRBD(world: World, rigidBodyDesc: RigidBodyDesc, object: Object3D) {
+interface CollidescObjectPair {
+	object: Object3D;
+	colliderDesc: ColliderDesc;
+}
+
+const physicsRBDByRBDId: Map<number, RigidBody> = new Map();
+const worldByRBD: WeakMap<RigidBody, World> = new WeakMap();
+
+function _createRBDFromDesc(world: World, rigidBodyDesc: RigidBodyDesc, object: Object3D) {
 	const rigidBody = world.createRigidBody(rigidBodyDesc);
 	const handle = rigidBody.handle;
+	worldByRBD.set(rigidBody, world);
 	physicsRBDByRBDId.set(handle, rigidBody);
 	CoreObject.addAttribute(object, PhysicsIdAttribute.RBD, handle);
 	return rigidBody;
 }
-export function _getRBD(object: Object3D) {
-	const rbdId = CoreObject.attribValue(object, PhysicsIdAttribute.RBD) as number | undefined;
-	if (rbdId == null) {
-		return;
-	}
-	return physicsRBDByRBDId.get(rbdId);
-}
-
-export function physicsCreateRBD(PhysicsLib: PhysicsLib, world: World, object: Object3D) {
+function _createRBDFromAttributes(PhysicsLib: PhysicsLib, world: World, object: Object3D) {
 	const type = CorePhysicsAttribute.getRBDType(object);
-	const colliderType = CorePhysicsAttribute.getColliderType(object);
-	if (!(type != null && colliderType != null)) {
+	if (type == null) {
 		return;
 	}
 	const rbdType: RigidBodyType | undefined = PhysicsRBDTypeToRigidBodyType(type);
 	if (rbdType == null) {
 		return;
 	}
-
-	// restoreRBDInitMatrix(object);
-
-	const id = CorePhysicsAttribute.getRBDId(object);
 	const rigidBodyDesc = new PhysicsLib.RigidBodyDesc(rbdType);
-
 	rigidBodyDesc.setTranslation(object.position.x, object.position.y, object.position.z);
 	rigidBodyDesc.setRotation(object.quaternion);
-	const rigidBody = _createRBD(world, rigidBodyDesc, object);
+	const rigidBody = _createRBDFromDesc(world, rigidBodyDesc, object);
 
-	const density = CorePhysicsAttribute.getDensity(object);
 	const linearDamping = CorePhysicsAttribute.getLinearDamping(object);
 	const angularDamping = CorePhysicsAttribute.getAngularDamping(object);
-	const friction = CorePhysicsAttribute.getFriction(object);
 	const canSleep = CorePhysicsAttribute.getCanSleep(object);
 
 	if (linearDamping != null) {
@@ -65,12 +64,21 @@ export function physicsCreateRBD(PhysicsLib: PhysicsLib, world: World, object: O
 	if (canSleep != null) {
 		rigidBodyDesc.setCanSleep(canSleep);
 	}
+	return rigidBody;
+}
+function _createColliderDesc(PhysicsLib: PhysicsLib, object: Object3D) {
+	const colliderType = CorePhysicsAttribute.getColliderType(object);
+	if (!(colliderType != null)) {
+		return;
+	}
 	const colliderDesc = PhysicsRBDCollider(PhysicsLib, colliderType, object);
 	if (!colliderDesc) {
 		console.error('no collider', object);
 		return;
 	}
 	const restitution = CorePhysicsAttribute.getRestitution(object);
+	const friction = CorePhysicsAttribute.getFriction(object);
+	const density = CorePhysicsAttribute.getDensity(object);
 	if (restitution != null) {
 		colliderDesc.setRestitution(restitution);
 	}
@@ -80,43 +88,104 @@ export function physicsCreateRBD(PhysicsLib: PhysicsLib, world: World, object: O
 	if (density != null) {
 		colliderDesc.setDensity(density);
 	}
-
-	world.createCollider(colliderDesc, rigidBody);
-
-	return {colliderDesc, rigidBody, id};
+	return colliderDesc;
+}
+export function _getRBD(object: Object3D) {
+	const rbdId = CoreObject.attribValue(object, PhysicsIdAttribute.RBD) as number | undefined;
+	if (rbdId == null) {
+		return;
+	}
+	return physicsRBDByRBDId.get(rbdId);
 }
 
-// const PHYSICS_INIT_MATRIX_ATTRIB_NAME = '__physicsInitMatrix__';
-// interface Object3DWithInitMatrix extends Object3D {
-// 	__physicsInitMatrix__?: Matrix4;
-// }
-// function physicsRBDSetInitMatrix(object: Object3D) {
-// 	if (PHYSICS_INIT_MATRIX_ATTRIB_NAME in object) {
-// 		return;
-// 	}
-// 	object.updateWorldMatrix(true, false);
-// 	object.updateMatrix();
-// 	(object as Object3DWithInitMatrix)[PHYSICS_INIT_MATRIX_ATTRIB_NAME] = object.matrix.clone();
-// 	console.warn('set', object.matrix.elements);
-// }
-// function restoreRBDInitMatrix(object: Object3D) {
-// 	if (!(PHYSICS_INIT_MATRIX_ATTRIB_NAME in object)) {
-// 		return;
-// 	}
-// 	const initMatrix = (object as Object3DWithInitMatrix)[PHYSICS_INIT_MATRIX_ATTRIB_NAME];
-// 	if (!(initMatrix instanceof Matrix4)) {
-// 		return;
-// 	}
-// 	object.matrix.copy(initMatrix);
-// 	console.warn('restored', initMatrix.elements);
-// 	delete (object as Object3DWithInitMatrix)[PHYSICS_INIT_MATRIX_ATTRIB_NAME];
-// }
-
-// private _updateRBDBound = this._updateRBD.bind(this);
-export async function physicsUpdateRBD(object: Object3D) {
-	const body = await _getRBD(object);
+export function physicsRBDRemove(object: Object3D) {
+	const rbdId = CoreObject.attribValue(object, PhysicsIdAttribute.RBD) as number | undefined;
+	if (rbdId == null) {
+		return;
+	}
+	const body = physicsRBDByRBDId.get(rbdId);
 	if (!body) {
-		console.warn('no rbd found');
+		return;
+	}
+	const world = worldByRBD.get(body);
+	if (!world) {
+		return;
+	}
+	world.removeRigidBody(body);
+	worldByRBD.delete(body);
+	physicsRBDByRBDId.delete(rbdId);
+	CoreObject.deleteAttribute(object, PhysicsIdAttribute.RBD);
+	object.visible = false;
+}
+
+export function physicsCreateRBD(PhysicsLib: PhysicsLib, world: World, object: Object3D) {
+	const rigidBody = _createRBDFromAttributes(PhysicsLib, world, object);
+	if (!rigidBody) {
+		return;
+	}
+
+	const id = CorePhysicsAttribute.getRBDId(object);
+	let childrenColliderDesc: CollidescObjectPair[] | undefined;
+	if (object.children.length > 0) {
+		object.traverse((child) => {
+			if (child != object) {
+				const childColliderDesc = _createColliderDesc(PhysicsLib, child);
+				if (childColliderDesc) {
+					childrenColliderDesc = childrenColliderDesc || [];
+					childrenColliderDesc.push({object: child, colliderDesc: childColliderDesc});
+				}
+			}
+		});
+	}
+
+	const colliderDesc = _createColliderDesc(PhysicsLib, object);
+	if (!(colliderDesc || childrenColliderDesc)) {
+		return;
+	}
+	if (colliderDesc) {
+		world.createCollider(colliderDesc, rigidBody);
+	}
+	if (childrenColliderDesc) {
+		// we must not alterate the hierarchy here,
+		// as it messes up with orders of children
+		// let currentParent = object.parent;
+		// currentParent?.remove(object);
+		// object.getWorldQuaternion(q1);
+		for (let childCollider of childrenColliderDesc) {
+			const collider = world.createCollider(childCollider.colliderDesc, rigidBody);
+
+			// t
+			tmpV3.copy(childCollider.object.position);
+			childCollider.object.localToWorld(tmpV3);
+			object.worldToLocal(tmpV3);
+			collider.setTranslationWrtParent(tmpV3);
+
+			// r
+			// TODO: here we are only getting the quaternion of the object,
+			// not its quaternion relative to the parent.
+			// It works if it is a direct child, but will fail with a deeper hierarchy
+			// let currentChildParent = childCollider.object.parent;
+			// object.attach(childCollider.object);
+			// object.matrix.decompose(t, q, s);
+			// it seems that computing .getWorldQuaternion
+			// messes up with .quaternion
+			// object.getWorldQuaternion(q1);
+			// childCollider.object.getWorldQuaternion(q2);
+			// q1.invert().multiply(q2);
+			// q2.multiply(q1.invert());
+			collider.setRotationWrtParent(childCollider.object.quaternion);
+			// currentChildParent?.attach(childCollider.object);
+		}
+		// currentParent?.add(object);
+	}
+
+	return {rigidBody, id};
+}
+
+export function physicsUpdateRBD(object: Object3D) {
+	const body = _getRBD(object);
+	if (!body) {
+		// console.warn('no rbd found');
 		return;
 	}
 	// physicsRBDSetInitMatrix(object);
@@ -126,10 +195,6 @@ export async function physicsUpdateRBD(object: Object3D) {
 	object.quaternion.set(rotation.x, rotation.y, rotation.z, rotation.w);
 	object.updateMatrix();
 }
-const currentPos = new Vector3();
-const newPos = new Vector3();
-const currentQuaternion = new Quaternion();
-const newQuaternion = new Quaternion();
 
 // impulse
 export function physicsRBDApplyImpulse(object: Object3D, impulse: Vector3) {
@@ -259,7 +324,11 @@ function PhysicsRBDTypeToRigidBodyType(type: PhysicsRBDType) {
 	TypeAssert.unreachable(type);
 }
 
-function PhysicsRBDCollider(PhysicsLib: PhysicsLib, colliderType: PhysicsRBDColliderType, object: Object3D) {
+function PhysicsRBDCollider(
+	PhysicsLib: PhysicsLib,
+	colliderType: PhysicsRBDColliderType,
+	object: Object3D
+): ColliderDesc | null | undefined {
 	switch (colliderType) {
 		case PhysicsRBDColliderType.CAPSULE: {
 			return createPhysicsCapsule(PhysicsLib, object);
