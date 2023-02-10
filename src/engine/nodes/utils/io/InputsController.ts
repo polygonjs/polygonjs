@@ -298,6 +298,7 @@ export class NodeInputsController<NC extends NodeContext> {
 							this.evalRequiredInput(this._singleInputIndexListenedTo) as Promise<ContainerMap[NC]>
 						);
 					} else {
+						const lastExistingInputIndex = existingInputIndices[existingInputIndices.length - 1];
 						for (let i = 0; i < this._inputs.length; i++) {
 							input = this._inputs[i];
 							if (input) {
@@ -308,6 +309,15 @@ export class NodeInputsController<NC extends NodeContext> {
 								// } else {
 								promises.push(this.evalRequiredInput(i) as Promise<ContainerMap[NC]>);
 								// }
+							} else {
+								// we need to add an empty container,
+								// for non connected inputs.
+								// otherwise, if input 0 is not connected,
+								// and input 1 is, then we get only 1 container
+								// which appears to be from input 0
+								if (i <= lastExistingInputIndex) {
+									promises.push(undefined as any);
+								}
 							}
 						}
 					}

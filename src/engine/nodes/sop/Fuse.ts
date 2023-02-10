@@ -12,7 +12,7 @@ import {BufferAttribute, BufferGeometry, Object3D, Vector2, Vector3, Vector4, Me
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {MapUtils} from '../../../core/MapUtils';
-import {ObjectType, ObjectTypeByObject} from '../../../core/geometry/Constant';
+import {ObjectType, objectTypeFromConstructor} from '../../../core/geometry/Constant';
 import {ArrayUtils} from '../../../core/ArrayUtils';
 
 const roundedPosition = new Vector3();
@@ -117,7 +117,7 @@ export class FuseSopNode extends TypedSopNode<FuseSopParamsConfig> {
 	// }
 
 	private _filterObject(object: Object3D) {
-		const objectType = ObjectTypeByObject(object);
+		const objectType = objectTypeFromConstructor(object.constructor);
 		switch (objectType) {
 			case ObjectType.MESH: {
 				return this._filterMesh(object as Mesh);

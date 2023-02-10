@@ -260,7 +260,13 @@ export class TypedThreejsCameraObjNode<
 
 		const objects = [this._object];
 		const node = this;
-		CameraControlsSopOperation.updateObject({objects, params: {node: this.pv.controls}, node, active: true});
+		CameraControlsSopOperation.updateObject({
+			objects,
+			params: {node: this.pv.controls},
+			node,
+			active: true,
+			errorIfNodeNotFound: false,
+		});
 		CameraRendererSopOperation.updateObject({
 			objects,
 			params: {node: this.pv.renderer},

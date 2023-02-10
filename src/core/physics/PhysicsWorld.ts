@@ -10,6 +10,7 @@ import {CoreObject} from '../geometry/Object';
 import {PhysicsIdAttribute} from './PhysicsAttribute';
 import {physicsDebugPairFromDebugObject, updatePhysicsDebugObject} from './PhysicsDebug';
 import {clearPhysicsPlayers, createOrFindPhysicsPlayer} from './player/PhysicsPlayer';
+import {PolyScene} from '../../engine/scene/PolyScene';
 
 export const PHYSICS_GRAVITY_DEFAULT = new Vector3(0, -9.81, 0);
 
@@ -40,7 +41,7 @@ export function physicsWorldFromObject(worldObject: Object3D) {
 	return physicsworldByGraphNodeId.get(nodeId);
 }
 
-export async function initCorePhysicsWorld(worldObject: Object3D) {
+export async function initCorePhysicsWorld(worldObject: Object3D, scene: PolyScene) {
 	const world = physicsWorldFromObject(worldObject);
 	if (!world) {
 		console.warn('no physicsWorld found with this object', worldObject);
@@ -72,7 +73,7 @@ export async function initCorePhysicsWorld(worldObject: Object3D) {
 	}
 	// create character controller
 	for (let child of children) {
-		createOrFindPhysicsPlayer(child, PhysicsLib, world);
+		createOrFindPhysicsPlayer({scene, object: child, PhysicsLib, world, worldObject});
 	}
 }
 

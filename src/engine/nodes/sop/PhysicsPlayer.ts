@@ -18,8 +18,11 @@ import {CorePhysicsAttribute, PhysicsRBDColliderType, PhysicsRBDType} from '../.
 import {PhysicsPlayerType} from '../../../core/physics/player/PhysicsPlayer';
 import {SphereBuilder} from '../../../core/geometry/builders/SphereBuilder';
 import {ObjectType} from '../../../core/geometry/Constant';
+import {CorePath} from '../../../core/geometry/CorePath';
+// import {CoreObject} from '../../../core/geometry/Object';
 import {BaseSopOperation} from '../../operations/sop/_Base';
-import {Vector3} from 'three';
+import {Vector3, Object3D} from 'three';
+// import {CameraAttribute} from '../../../core/camera/CoreCamera';
 
 // Note that the default used for torque player
 // are different than the ones used for PhysicsRBDAttributes
@@ -34,6 +37,7 @@ const DEFAULT = {
 	angularVelocity: new Vector3(0, 0, 0),
 	gravityScale: 1,
 };
+const type = PhysicsPlayerType.TORQUE;
 
 class PhysicsPlayerSopParamsConfig extends NodeParamsConfig {
 	main = ParamConfig.FOLDER();
@@ -139,19 +143,38 @@ export class PhysicsPlayerSopNode extends TypedSopNode<PhysicsPlayerSopParamsCon
 		return SopType.PHYSICS_PLAYER;
 	}
 
+	static override displayedInputNames(): string[] {
+		return ['player object (optional)', 'camera (optional)'];
+	}
+
 	protected override initializeNode() {
-		this.io.inputs.setCount(0, 1);
+		this.io.inputs.setCount(0, 2);
 		this.io.inputs.initInputsClonedState(InputCloneMode.FROM_NODE);
 	}
 
 	override async cook(inputCoreGroups: CoreGroup[]) {
-		const coreGroup = inputCoreGroups[0];
-		const inputObjects = coreGroup ? coreGroup.objects() : this._createDefaultInputObjects();
-		const object = inputObjects[0];
+		const coreGroup0 = inputCoreGroups[0];
+		const coreGroup1 = inputCoreGroups[1];
+		const inputObjects = coreGroup0 ? coreGroup0.objects() : this._createDefaultInputObjects();
+		const playerObject = inputObjects[0];
 		// console.log(inputObjects);
+		this._updatePlayerObject(playerObject);
+		const objects = [playerObject];
+
+		if (coreGroup1) {
+			const cameraObject = coreGroup1.objects()[0];
+			if (cameraObject) {
+				objects.push(cameraObject);
+				const cameraPath = CorePath.objectPath(cameraObject);
+				CorePhysicsAttribute.setCharacterControllerCameraPath(playerObject, cameraPath);
+			}
+		}
+
+		this.setObjects(objects);
+	}
+	private _updatePlayerObject(object: Object3D) {
 		const actorNode = this._findActorNode();
 
-		const type = PhysicsPlayerType.TORQUE;
 		// for (let object of inputObjects) {
 		// actor
 		this.scene().actorsManager.assignActorBuilder(object, actorNode);
@@ -166,6 +189,7 @@ export class PhysicsPlayerSopNode extends TypedSopNode<PhysicsPlayerSopParamsCon
 
 		// id
 		const rbdId = this.pv.id;
+		object.name = rbdId;
 		CorePhysicsAttribute.setRBDId(object, rbdId);
 
 		// set character controller id to rbd id
@@ -199,7 +223,6 @@ export class PhysicsPlayerSopNode extends TypedSopNode<PhysicsPlayerSopParamsCon
 		// CorePhysicsAttribute.setCharacterControllerMinSlopeSlideAngle(object, this.pv.minSlopeSlideAngle);
 		// CorePhysicsAttribute.setCharacterControllerUp(object, this.pv.up);
 		// }
-		this.setObject(object);
 	}
 
 	private _createDefaultInputObjects() {

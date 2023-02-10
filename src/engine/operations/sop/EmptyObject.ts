@@ -2,7 +2,7 @@ import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {Group, LineSegments, Mesh, Object3D, Points} from 'three';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
-import {CoreConstant, ObjectType} from '../../../core/geometry/Constant';
+import {ObjectType, DEFAULT_MATERIALS} from '../../../core/geometry/Constant';
 
 interface EmptyObjectSopParams extends DefaultOperationParams {
 	type: ObjectType;
@@ -16,9 +16,9 @@ export class EmptyObjectSopOperation extends BaseSopOperation {
 		const object = this._createObjectFromType(params);
 		const objects: Object3D[] = [];
 		if (object) {
-			const material = CoreConstant.MATERIALS[params.type];
+			const material = DEFAULT_MATERIALS[params.type];
 			if (material) {
-				(object as Mesh).material = material.clone();
+				(object as Mesh).material = material; //.clone();
 			}
 			BaseSopOperation.applyObjectDefault(object);
 			objects.push(object);

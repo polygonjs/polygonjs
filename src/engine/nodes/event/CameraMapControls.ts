@@ -6,7 +6,7 @@
  *
  */
 import {Camera} from 'three';
-import {MapControls} from '../../../modules/core/controls/OrbitControls';
+import {MapControls} from 'three/examples/jsm/controls/OrbitControls';
 import {CameraControlsNodeType} from '../../poly/NodeContext';
 import {CameraOrbitControlsEventNode} from './CameraOrbitControls';
 

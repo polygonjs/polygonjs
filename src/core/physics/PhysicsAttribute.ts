@@ -95,6 +95,7 @@ export enum PhysicsCommonAttribute {
 	CHARACTER_CONTROLLER_MAX_SLOPE_CLIMB_ANGLE = 'characterControllerMaxSlopeClimbAngle',
 	CHARACTER_CONTROLLER_MIN_SLOPE_CLIMB_ANGLE = 'characterControllerMinSlopeSlideAngle',
 	CHARACTER_CONTROLLER_UP = 'characterControllerUp',
+	CHARACTER_CONTROLLER_CAMERA_OBJECT_PATH = 'characterControllerCameraObjectPath',
 }
 type PhysicsAttribute =
 	| PhysicsCommonAttribute
@@ -329,5 +330,12 @@ export class CorePhysicsAttribute extends CorePhysicsBaseAttribute {
 			PhysicsCommonAttribute.CHARACTER_CONTROLLER_AUTO_STEP_ON_DYNAMIC,
 			false
 		) as boolean;
+	}
+	// camera
+	static setCharacterControllerCameraPath(object: Object3D, value: string) {
+		this._setString(object, PhysicsCommonAttribute.CHARACTER_CONTROLLER_CAMERA_OBJECT_PATH, value);
+	}
+	static getCharacterControllerCameraPath(object: Object3D): string {
+		return this._getString(object, PhysicsCommonAttribute.CHARACTER_CONTROLLER_CAMERA_OBJECT_PATH) as string;
 	}
 }

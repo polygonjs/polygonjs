@@ -11,6 +11,7 @@ import {CoreSleep} from '../../../../src/core/Sleep';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 import {OnScenePlayStateActorNode} from './../../../../src/engine/nodes/actor/OnScenePlayState';
 import {PhysicsWorldSopNode} from './../../../../src/engine/nodes/sop/PhysicsWorld';
+import {SizeComputationMethod} from '../../../../src/engine/operations/sop/PhysicsRBDAttributes';
 
 function createPhysicsWorldNodes(node: PhysicsWorldSopNode) {
 	const physicsWorldReset = node.createNode('physicsWorldReset');
@@ -75,6 +76,7 @@ QUnit.test('sop/physicsRBDAttributes with expressions', async (assert) => {
 	physicsWorld1.flags.display.set(true);
 
 	sphere1.p.radius.set(0.25);
+	physicsRBDAttributes1.setSizeMethod(SizeComputationMethod.MANUAL);
 	physicsRBDAttributes1.setColliderType(PhysicsRBDColliderType.SPHERE);
 	physicsRBDAttributes1.p.radius.set('rand(@ptnum)');
 
@@ -119,6 +121,7 @@ QUnit.test('sop/physicsRBDAttributes capsule', async (assert) => {
 	physicsWorld1.flags.display.set(true);
 
 	capsule1.p.radius.set(0.25);
+	physicsRBDAttributes1.setSizeMethod(SizeComputationMethod.MANUAL);
 	physicsRBDAttributes1.setColliderType(PhysicsRBDColliderType.CAPSULE);
 	physicsRBDAttributes1.p.radius.set(0.25);
 	physicsRBDAttributes1.p.height.set(0.6);
@@ -165,6 +168,7 @@ QUnit.test('sop/physicsRBDAttributes cone', async (assert) => {
 	physicsWorld1.flags.display.set(true);
 
 	cone1.p.radius.set(0.25);
+	physicsRBDAttributes1.setSizeMethod(SizeComputationMethod.MANUAL);
 	physicsRBDAttributes1.setColliderType(PhysicsRBDColliderType.CONE);
 	physicsRBDAttributes1.p.radius.set(0.25);
 	physicsRBDAttributes1.p.height.set(0.6);
@@ -249,6 +253,7 @@ QUnit.test('sop/physicsRBDAttributes cuboid', async (assert) => {
 	physicsWorld1.flags.display.set(true);
 
 	box1.p.size.set(0.25);
+	physicsRBDAttributes1.setSizeMethod(SizeComputationMethod.MANUAL);
 	physicsRBDAttributes1.setColliderType(PhysicsRBDColliderType.CUBOID);
 	physicsRBDAttributes1.p.sizes.set([0.25, 0.3, 0.35]);
 	physicsRBDAttributes1.p.size.set(0.55);
@@ -309,6 +314,7 @@ QUnit.test('sop/physicsRBDAttributes cuboid with expressions non entity dependen
 
 	box1.p.size.set(0.25);
 	box1.p.sizes.set([0.9, 1.1, 1.2]);
+	physicsRBDAttributes1.setSizeMethod(SizeComputationMethod.MANUAL);
 	physicsRBDAttributes1.setColliderType(PhysicsRBDColliderType.CUBOID);
 	physicsRBDAttributes1.p.sizes.set([`ch('../${box1.name()}/sizesx')`, 0.3, 0.35]);
 	physicsRBDAttributes1.p.size.set(0.55);
@@ -369,6 +375,7 @@ QUnit.test('sop/physicsRBDAttributes cuboid with expressions entity dependent', 
 
 	box1.p.size.set(0.25);
 	box1.p.sizes.set([0.9, 1.1, 1.2]);
+	physicsRBDAttributes1.setSizeMethod(SizeComputationMethod.MANUAL);
 	physicsRBDAttributes1.setColliderType(PhysicsRBDColliderType.CUBOID);
 	physicsRBDAttributes1.p.sizes.set([`ch('../${box1.name()}/sizesx') + 0.1*@objnum`, 0.3, 0.35]);
 	physicsRBDAttributes1.p.size.set(0.55);
@@ -430,6 +437,7 @@ QUnit.test('sop/physicsRBDAttributes cylinder', async (assert) => {
 
 	tube1.p.radiusTop.set(0.25);
 	tube1.p.radiusBottom.set(0.25);
+	physicsRBDAttributes1.setSizeMethod(SizeComputationMethod.MANUAL);
 	physicsRBDAttributes1.setColliderType(PhysicsRBDColliderType.CYLINDER);
 	physicsRBDAttributes1.p.radius.set(0.25);
 	physicsRBDAttributes1.p.height.set(0.6);
@@ -476,6 +484,7 @@ QUnit.test('sop/physicsRBDAttributes sphere', async (assert) => {
 	physicsWorld1.flags.display.set(true);
 
 	sphere1.p.radius.set(0.25);
+	physicsRBDAttributes1.setSizeMethod(SizeComputationMethod.MANUAL);
 	physicsRBDAttributes1.setColliderType(PhysicsRBDColliderType.SPHERE);
 	physicsRBDAttributes1.p.radius.set(0.25);
 
@@ -517,6 +526,7 @@ QUnit.test('sop/physicsRBDAttributes sphere with expression non entity dependent
 	physicsWorld1.flags.display.set(true);
 
 	sphere1.p.radius.set(0.2);
+	physicsRBDAttributes1.setSizeMethod(SizeComputationMethod.MANUAL);
 	physicsRBDAttributes1.setColliderType(PhysicsRBDColliderType.SPHERE);
 	physicsRBDAttributes1.p.radius.set(`ch('../${sphere1.name()}/radius')`);
 
@@ -558,6 +568,7 @@ QUnit.test('sop/physicsRBDAttributes sphere with expression entity dependent', a
 	physicsWorld1.flags.display.set(true);
 
 	sphere1.p.radius.set(0.3);
+	physicsRBDAttributes1.setSizeMethod(SizeComputationMethod.MANUAL);
 	physicsRBDAttributes1.setColliderType(PhysicsRBDColliderType.SPHERE);
 	physicsRBDAttributes1.p.radius.set(`ch('../${sphere1.name()}/radius') + 0.1*@objnum`);
 
@@ -571,6 +582,52 @@ QUnit.test('sop/physicsRBDAttributes sphere with expression entity dependent', a
 	assert.in_delta(radii[1], 0.4, 0.001);
 	assert.in_delta(radii[2], 0.5, 0.001);
 	assert.in_delta(radii[3], 0.6, 0.001);
+
+	for (let object of objects) {
+		assert.in_delta(object.position.y, 0, 0.01);
+	}
+	await RendererUtils.withViewer({cameraNode}, async ({viewer, element}) => {
+		scene.play();
+		await CoreSleep.sleep(500);
+		for (let object of objects) {
+			assert.less_than(object.position.y, -0.1);
+		}
+	});
+});
+QUnit.test('sop/physicsRBDAttributes sphere with size auto', async (assert) => {
+	const scene = window.scene;
+	const geo1 = window.geo1;
+	const cameraNode = window.perspective_camera1;
+	cameraNode.p.t.z.set(20);
+
+	const sphere1 = geo1.createNode('sphere');
+	const copy1 = geo1.createNode('copy');
+	const physicsRBDAttributes1 = geo1.createNode('physicsRBDAttributes');
+	const physicsWorld1 = geo1.createNode('physicsWorld');
+
+	copy1.setInput(0, sphere1);
+	copy1.p.count.set(4);
+	copy1.p.t.x.set(2);
+	copy1.p.scale.set(1.4);
+	physicsRBDAttributes1.setInput(0, copy1);
+	physicsWorld1.setInput(0, physicsRBDAttributes1);
+	physicsWorld1.flags.display.set(true);
+
+	sphere1.p.radius.set(0.3);
+	physicsRBDAttributes1.setSizeMethod(SizeComputationMethod.AUTO);
+	physicsRBDAttributes1.setColliderType(PhysicsRBDColliderType.SPHERE);
+	physicsRBDAttributes1.p.radius.set(`ch('../${sphere1.name()}/radius') + 0.1*@objnum`);
+
+	createPhysicsWorldNodes(physicsWorld1);
+	const container = await physicsWorld1.compute();
+	const objects = container.coreContent()!.objects()[0].children;
+	const radii = objects.map(
+		(object: Object3D) => CoreObject.attribValue(object, PhysicsRBDRadiusAttribute.RADIUS) as number
+	);
+	assert.in_delta(radii[0], 0.3, 0.001);
+	assert.in_delta(radii[1], 0.3, 0.001);
+	assert.in_delta(radii[2], 0.3, 0.001);
+	assert.in_delta(radii[3], 0.3, 0.001);
 
 	for (let object of objects) {
 		assert.in_delta(object.position.y, 0, 0.01);

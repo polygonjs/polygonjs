@@ -57,6 +57,7 @@ export class PhysicsWorldSopNode extends TypedSopNode<PhysicsWorldSopParamsConfi
 		const coreGroup = inputCoreGroups[0];
 
 		const worldGroup = new Group();
+		worldGroup.name = this.name();
 		worldGroup.matrixAutoUpdate = false;
 
 		const inputObjects = coreGroup.objects();
@@ -65,7 +66,7 @@ export class PhysicsWorldSopNode extends TypedSopNode<PhysicsWorldSopParamsConfi
 		}
 
 		const world = await createOrFindPhysicsWorld(this, worldGroup, this.pv.gravity);
-		await initCorePhysicsWorld(worldGroup);
+		await initCorePhysicsWorld(worldGroup, this.scene());
 
 		const actorNode = this._findActorNode();
 		// if (actorNode) {

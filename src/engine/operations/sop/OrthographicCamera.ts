@@ -10,7 +10,7 @@ import {CameraHelper} from '../../../core/helpers/CameraHelper';
 import {ORTHOGRAPHIC_CAMERA_DEFAULT, registerOrthographicCamera} from '../../../core/camera/CoreOrthographicCamera';
 import {CoreObject} from '../../../core/geometry/Object';
 import type {BaseNodeType} from '../../nodes/_Base';
-
+import {ObjectType, registerObjectType} from '../../../core/geometry/Constant';
 interface CreateOrthographicCameraParams {
 	size: number;
 	near: number;
@@ -75,6 +75,11 @@ export class OrthographicCameraSopOperation extends BaseSopOperation {
 		return this.createCoreGroupFromObjects(objects);
 	}
 	static createCamera(params: CreateOrthographicCameraParams, nodeGenerator?: BaseNodeType) {
+		registerObjectType({
+			type: ObjectType.ORTHOGRAPHIC_CAMERA,
+			ctor: OrthographicCamera,
+			humanName: 'OrthographicCamera',
+		});
 		const camera = new OrthographicCamera(
 			params.size * 2,
 			params.size * 2,

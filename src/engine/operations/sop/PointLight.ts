@@ -6,6 +6,7 @@ import {PointLight} from 'three';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {Group} from 'three';
 import {CorePointLightHelper, PointLightParams, DEFAULT_POINT_LIGHT_PARAMS} from '../../../core/lights/PointLight';
+import {ObjectType, registerObjectType} from '../../../core/geometry/Constant';
 // import {Mesh, PlaneGeometry, MeshBasicMaterial, Color, DoubleSide} from 'three';
 export class PointLightSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: PointLightParams = DEFAULT_POINT_LIGHT_PARAMS;
@@ -42,6 +43,7 @@ export class PointLightSopOperation extends BaseSopOperation {
 	}
 
 	createLight() {
+		registerObjectType({type: ObjectType.POINT_LIGHT, ctor: PointLight, humanName: 'PointLight'});
 		const light = new PointLight();
 		const nodeName = this._node?.name();
 		if (nodeName) {

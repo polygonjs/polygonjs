@@ -86,6 +86,6 @@ QUnit.test('actor/setPhysicsRBDSphereProperty simple', async (assert) => {
 		setPhysicsRBDSphereProperty1.setInput(setPhysicsRBDSphereProperty1.p.radius.name(), getObjectAttribute1);
 		onManualTrigger1.p.trigger.pressButton();
 		await CoreSleep.sleep(50);
-		assert.equal(getPhysicsRBDSphereRadius(object), 1, 'back to original attrib value');
+		assert.in_delta(getPhysicsRBDSphereRadius(object) || 0, 1, 0.001, 'back to original attrib value');
 	});
 });

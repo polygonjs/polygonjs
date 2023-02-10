@@ -3,6 +3,7 @@ import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {AmbientLight} from 'three';
 import {AmbientLightParams, DEFAULT_AMBIENT_LIGHT_PARAMS} from '../../../core/lights/AmbientLight';
+import {ObjectType, registerObjectType} from '../../../core/geometry/Constant';
 
 export class AmbientLightSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: AmbientLightParams = DEFAULT_AMBIENT_LIGHT_PARAMS;
@@ -10,7 +11,7 @@ export class AmbientLightSopOperation extends BaseSopOperation {
 	static override type(): Readonly<'ambientLight'> {
 		return 'ambientLight';
 	}
-	override cook(input_contents: CoreGroup[], params: AmbientLightParams) {
+	override cook(_: CoreGroup[], params: AmbientLightParams) {
 		const light = this.createLight();
 		light.name = params.name;
 
@@ -19,6 +20,7 @@ export class AmbientLightSopOperation extends BaseSopOperation {
 	}
 
 	createLight() {
+		registerObjectType({type: ObjectType.AMBIENT_LIGHT, ctor: AmbientLight, humanName: 'AmbientLight'});
 		const light = new AmbientLight();
 		light.matrixAutoUpdate = false;
 		light.name = `AmbientLight_${this._node?.name() || ''}`;

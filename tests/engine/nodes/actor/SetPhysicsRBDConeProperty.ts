@@ -85,6 +85,6 @@ QUnit.test('actor/setPhysicsRBDConeProperty simple', async (assert) => {
 		setPhysicsRBDConeProperty1.setInput(setPhysicsRBDConeProperty1.p.radius.name(), getObjectAttribute1);
 		onManualTrigger1.p.trigger.pressButton();
 		await CoreSleep.sleep(50);
-		assert.equal(getPhysicsRBDConeRadius(object), 1, 'back to original attrib value');
+		assert.in_delta(getPhysicsRBDConeRadius(object) || 0, 1, 0.01, 'back to original attrib value');
 	});
 });

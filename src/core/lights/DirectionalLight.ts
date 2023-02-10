@@ -1,19 +1,21 @@
 import {ParamConfig} from '../../engine/nodes/utils/params/ParamsConfig';
 import {Constructor, Number3} from '../../types/GlobalTypes';
 import {ColorConversion} from '../Color';
-import {Mesh} from 'three';
+import {
+	Group,
+	Mesh,
+	Color,
+	Vector2,
+	DirectionalLight,
+	LineBasicMaterial,
+	BufferGeometry,
+	Float32BufferAttribute,
+	Line,
+} from 'three';
 import {DefaultOperationParams} from '../operations/_Base';
-import {Color} from 'three';
-import {Vector2} from 'three';
-import {DirectionalLight} from 'three';
-import {LineBasicMaterial} from 'three';
-import {BufferGeometry} from 'three';
-import {Float32BufferAttribute} from 'three';
-import {Line} from 'three';
 // import {CameraHelper} from 'three';
 import {CoreCameraHelper} from '../helpers/CoreCameraHelper';
-import {Group} from 'three';
-
+import {ObjectType, registerObjectType} from '../geometry/Constant';
 export interface DirectionalLightParams extends DefaultOperationParams {
 	color: Color;
 	intensity: number;
@@ -129,6 +131,7 @@ export class DirectionalLightContainer extends Group {
 	public override matrixAutoUpdate = false;
 	constructor(options: DirectionalLightContainerParams, public readonly nodeName: string) {
 		super();
+		registerObjectType({type: ObjectType.DIRECTIONAL_LIGHT, ctor: DirectionalLight, humanName: 'DirectionalLight'});
 		this.showHelper = options.showHelper;
 		// set light pos to 0,0,1
 		// in order to have it face z axis

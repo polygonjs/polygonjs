@@ -3,7 +3,7 @@ import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {HemisphereLight} from 'three';
 import {HemisphereLightParams, DEFAULT_HEMISPHERE_LIGHT_PARAMS} from '../../../core/lights/HemisphereLight';
-
+import {ObjectType, registerObjectType} from '../../../core/geometry/Constant';
 export class HemisphereLightSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: HemisphereLightParams = DEFAULT_HEMISPHERE_LIGHT_PARAMS;
 	static override readonly INPUT_CLONED_STATE = InputCloneMode.NEVER;
@@ -19,6 +19,7 @@ export class HemisphereLightSopOperation extends BaseSopOperation {
 	}
 
 	createLight() {
+		registerObjectType({type: ObjectType.HEMISPHERE_LIGHT, ctor: HemisphereLight, humanName: 'HemisphereLight'});
 		const light = new HemisphereLight();
 		light.name = `HemisphereLight_${this._node?.name() || ''}`;
 		light.matrixAutoUpdate = false;

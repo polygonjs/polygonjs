@@ -1,7 +1,7 @@
 import {Vector4} from 'three';
 import {Vector2} from 'three';
 import {Vector3} from 'three';
-import {CoreConstant, AttribType, AttribClass, AttribSize} from '../../../../src/core/geometry/Constant';
+import {AttribType, AttribClass, AttribSize} from '../../../../src/core/geometry/Constant';
 import {CoreEntity} from '../../../../src/core/geometry/Entity';
 import {TransformTargetType} from '../../../../src/core/Transform';
 import {CoreType} from '../../../../src/core/Type';
@@ -243,7 +243,7 @@ QUnit.test('sop/attribCreate simple float object', async (assert) => {
 	const box1 = geo1.createNode('box');
 	const attrib_create1 = geo1.createNode('attribCreate');
 	attrib_create1.p.name.set('test');
-	attrib_create1.setAttribClass(CoreConstant.ATTRIB_CLASS.OBJECT);
+	attrib_create1.setAttribClass(AttribClass.OBJECT);
 	attrib_create1.p.size.set(1);
 	attrib_create1.p.value1.set(3.5);
 	attrib_create1.setInput(0, box1);
@@ -263,7 +263,7 @@ QUnit.test('sop/attribCreate simple vector2 object', async (assert) => {
 	const box1 = geo1.createNode('box');
 	const attrib_create1 = geo1.createNode('attribCreate');
 	attrib_create1.p.name.set('test');
-	attrib_create1.setAttribClass(CoreConstant.ATTRIB_CLASS.OBJECT);
+	attrib_create1.setAttribClass(AttribClass.OBJECT);
 	attrib_create1.p.size.set(2);
 	attrib_create1.p.value2.set([3.5, 12]);
 	attrib_create1.setInput(0, box1);
@@ -293,7 +293,7 @@ QUnit.test('sop/attribCreate simple vector object', async (assert) => {
 	const box1 = geo1.createNode('box');
 	const attrib_create1 = geo1.createNode('attribCreate');
 	attrib_create1.p.name.set('test');
-	attrib_create1.setAttribClass(CoreConstant.ATTRIB_CLASS.OBJECT);
+	attrib_create1.setAttribClass(AttribClass.OBJECT);
 	attrib_create1.p.size.set(3);
 	attrib_create1.p.value3.set([3.5, 12, 17]);
 	attrib_create1.setInput(0, box1);
@@ -315,7 +315,7 @@ QUnit.test('sop/attribCreate simple string object', async (assert) => {
 	const box1 = geo1.createNode('box');
 	const attrib_create1 = geo1.createNode('attribCreate');
 	attrib_create1.p.name.set('test_string');
-	attrib_create1.setAttribClass(CoreConstant.ATTRIB_CLASS.OBJECT);
+	attrib_create1.setAttribClass(AttribClass.OBJECT);
 	attrib_create1.p.size.set(1);
 	attrib_create1.setAttribType(AttribType.STRING);
 	attrib_create1.p.string.set('pt_`$F`');

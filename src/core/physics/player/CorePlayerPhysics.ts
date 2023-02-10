@@ -4,6 +4,11 @@ import {Object3D, Vector3} from 'three';
 import {PhysicsPlayerType} from './PhysicsPlayer';
 import {createCharacterController} from './CharacterController';
 import {physicsRBDResetAll} from '../PhysicsRBD';
+import {CorePhysicsAttribute} from '../PhysicsAttribute';
+import {CorePath} from '../../geometry/CorePath';
+import {CoreCameraControlsController, ApplicableControlsNode} from '../../camera/CoreCameraControlsController';
+import {PolyScene} from '../../../engine/scene/PolyScene';
+import {Camera} from 'three';
 
 type BooleanGetter = () => boolean;
 type SetInputData = (inputData: CorePlayerPhysicsInputData) => void;
@@ -36,10 +41,35 @@ export interface CorePlayerPhysicsComputeInputData {
 	resetIfBelowThreshold: boolean;
 	resetThreshold: number;
 }
+
+interface CorePlayerPhysicsOptions {
+	scene: PolyScene;
+	object: Object3D;
+	PhysicsLib: PhysicsLib;
+	world: World;
+	worldObject: Object3D;
+	body: RigidBody;
+	collider: Collider;
+	type: PhysicsPlayerType;
+}
+interface CameraAndControls {
+	camera: Camera;
+	controlsNode: ApplicableControlsNode;
+}
+
 const gravity = new Vector3();
 const forcesByDelta = new Vector3();
 const desiredTranslation = new Vector3();
 const correctedTranslation = new Vector3();
+const torqueLR = new Vector3();
+const torqueFB = new Vector3();
+const up = new Vector3(0, 1, 0);
+const forwardDir = new Vector3();
+const currentTarget = new Vector3();
+const delta = new Vector3();
+const newCameraPosition = new Vector3();
+const newTarget = new Vector3();
+const LERP = 0.2;
 export class CorePlayerPhysics {
 	private _inputData: CorePlayerPhysicsInputData = {
 		forward: false,
@@ -69,30 +99,37 @@ export class CorePlayerPhysics {
 	// 	onGround: false,
 	// 	velocityFromPositionDelta: new Vector3(0, 0, 0),
 	// };
+	protected object: Object3D;
+	// protected worldObject: Object3D;
+	protected PhysicsLib: PhysicsLib;
+	protected world: World;
+	protected body: RigidBody;
+	protected collider: Collider;
+	// protected type: PhysicsPlayerType
 	protected characterController: KinematicCharacterController | undefined;
 	protected startPosition: Vector3 = new Vector3();
 	public onGround: BooleanGetter;
 	public setInputData: SetInputData;
 	public update: UpdateFunc;
-	constructor(
-		protected object: Object3D,
-		protected PhysicsLib: PhysicsLib,
-		protected world: World,
-		protected body: RigidBody,
-		protected collider: Collider,
+	private cameraAndControls: CameraAndControls | undefined;
+	constructor(protected options: CorePlayerPhysicsOptions) {
+		this.object = options.object;
+		this.PhysicsLib = options.PhysicsLib;
+		this.world = options.world;
+		this.body = options.body;
+		this.collider = options.collider;
 
-		protected type = PhysicsPlayerType.TORQUE
-	) {
-		this.startPosition.copy(object.position);
-		if (this.type == PhysicsPlayerType.CHARACTER_CONTROLLER) {
-			this.characterController = createCharacterController(world, object);
-			this.onGround = this.onGroundCharacterController;
-			this.setInputData = this.setInputDataCharacterController;
-			this.update = this.updateCharacterController;
+		this.startPosition.copy(this.object.position);
+		if (options.type == PhysicsPlayerType.CHARACTER_CONTROLLER) {
+			this.characterController = createCharacterController(this.world, this.object);
+			this.onGround = this.onGroundWithCharacterController;
+			this.setInputData = this.setInputDataWithCharacterController;
+			this.update = this.updateWithCharacterController;
 		} else {
-			this.onGround = this.onGroundTorque;
-			this.setInputData = this.setInputDataTorque;
-			this.update = this.updateTorque;
+			this.onGround = this.onGroundWithTorque;
+			this.setInputData = this.setInputDataWithTorque;
+			this.update = this.updateWithTorque;
+			this.initWithTorque(options.worldObject, options.scene);
 		}
 	}
 
@@ -109,11 +146,50 @@ export class CorePlayerPhysics {
 		this._computeInputData.jumpAllowed = data.jumpAllowed;
 		this._computeInputData.jumpStrength = data.jumpStrength;
 	}
+	private _computeForwardDirAndUpdateCamera() {
+		if (!this.cameraAndControls) {
+			return;
+		}
+		const {camera, controlsNode} = this.cameraAndControls;
+		forwardDir.set(0, 0, -1).unproject(camera).sub(camera.position);
+		forwardDir.y = 0;
+		forwardDir.normalize();
 
-	onGroundTorque(): boolean {
+		if (controlsNode.target && controlsNode.setTarget) {
+			controlsNode.target(currentTarget);
+			delta.copy(this.object.position).sub(currentTarget);
+			newCameraPosition.copy(camera.position).add(delta);
+			camera.position.lerp(newCameraPosition, LERP);
+			newTarget.copy(currentTarget).lerp(this.object.position, LERP);
+			controlsNode.setTarget(newTarget);
+		}
+	}
+
+	/**
+	 *
+	 * torque
+	 *
+	 */
+	initWithTorque(worldObject: Object3D, scene: PolyScene) {
+		const cameraPath = CorePhysicsAttribute.getCharacterControllerCameraPath(this.object);
+		if (cameraPath == null) {
+			return;
+		}
+		const camera = CorePath.findObjectByMaskInObject(`*/${cameraPath}`, worldObject) as Camera;
+		if (!camera) {
+			return;
+		}
+		const controlsNode = CoreCameraControlsController.controlsNode({camera, scene});
+		if (!controlsNode) {
+			return;
+		}
+		this.cameraAndControls = {camera, controlsNode};
+	}
+	onGroundWithTorque(): boolean {
 		return Math.abs(this.body.linvel().y) < 0.1;
 	}
-	setInputDataTorque(inputData: CorePlayerPhysicsInputData) {
+	setInputDataWithTorque(inputData: CorePlayerPhysicsInputData) {
+		this._computeForwardDirAndUpdateCamera();
 		this._inputData.left = inputData.left;
 		this._inputData.right = inputData.right;
 		this._inputData.backward = inputData.backward;
@@ -137,22 +213,26 @@ export class CorePlayerPhysics {
 			: this._computeInputData.speed;
 
 		if (this._inputData.left) {
-			this._userTorques.z = speed;
+			torqueLR.copy(forwardDir).multiplyScalar(-speed);
+			this._userTorques.add(torqueLR);
 		} else {
 			if (this._inputData.right) {
-				this._userTorques.z = -speed;
+				torqueLR.copy(forwardDir).multiplyScalar(speed);
+				this._userTorques.add(torqueLR);
 			}
 		}
 		if (this._inputData.forward) {
-			this._userTorques.x = -speed;
+			torqueFB.copy(forwardDir).cross(up).normalize().multiplyScalar(-speed);
+			this._userTorques.add(torqueFB);
 		} else {
 			if (this._inputData.backward) {
-				this._userTorques.x = speed;
+				torqueFB.copy(forwardDir).cross(up).normalize().multiplyScalar(speed);
+				this._userTorques.add(torqueFB);
 			}
 		}
 	}
 
-	updateTorque(delta: number) {
+	updateWithTorque(delta: number) {
 		if (this._computeInputData.resetIfBelowThreshold) {
 			if (this.body.translation().y < this._computeInputData.resetThreshold) {
 				physicsRBDResetAll(this.object, true);
@@ -168,11 +248,11 @@ export class CorePlayerPhysics {
 	 * character controller
 	 *
 	 */
-	onGroundCharacterController() {
+	onGroundWithCharacterController() {
 		return Math.abs(this._correctedMovement.y) < 0.01;
 	}
 
-	setInputDataCharacterController(inputData: CorePlayerPhysicsInputData) {
+	setInputDataWithCharacterController(inputData: CorePlayerPhysicsInputData) {
 		this._inputData.left = inputData.left;
 		this._inputData.right = inputData.right;
 		this._inputData.backward = inputData.backward;
@@ -231,7 +311,7 @@ export class CorePlayerPhysics {
 
 		// console.log('X', this._inputData.left, this._inputData.right, this._forces.x);
 	}
-	updateCharacterController(delta: number) {
+	updateWithCharacterController(delta: number) {
 		const characterController = this.characterController!;
 		gravity.set(this.world.gravity.x, this.world.gravity.y, this.world.gravity.z);
 		forcesByDelta.copy(this._userForces).add(gravity).multiplyScalar(delta).divideScalar(this._mass);

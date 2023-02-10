@@ -6,13 +6,13 @@
  *
  */
 import {Number3} from '../../../types/GlobalTypes';
-import {Camera} from 'three';
+import {Camera, Vector3} from 'three';
 import {TypedCameraControlsEventNode} from './_BaseCameraControls';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {EventConnectionPoint, EventConnectionPointType} from '../utils/io/connections/Event';
 import {BaseNodeType} from '../_Base';
 // import {OrbitControls} from '../../../../modules/three/examples/jsm/controls/OrbitControls';
-import {OrbitControls} from '../../../modules/core/controls/OrbitControls';
+import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls';
 import {CameraControlsNodeType} from '../../poly/NodeContext';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 
@@ -20,11 +20,11 @@ const OUTPUT_START = 'start';
 const OUTPUT_CHANGE = 'change';
 const OUTPUT_END = 'end';
 
-enum KeysMode {
-	PAN = 'pan',
-	ROTATE = 'rotate',
-}
-const KEYS_MODES: KeysMode[] = [KeysMode.PAN, KeysMode.ROTATE];
+// enum KeysMode {
+// 	PAN = 'pan',
+// 	ROTATE = 'rotate',
+// }
+// const KEYS_MODES: KeysMode[] = [KeysMode.PAN, KeysMode.ROTATE];
 
 class CameraOrbitEventParamsConfig extends NodeParamsConfig {
 	/** @param enable/disable */
@@ -68,38 +68,38 @@ class CameraOrbitEventParamsConfig extends NodeParamsConfig {
 		cook: false,
 		computeOnDirty: true,
 		callback: (node: BaseNodeType) => {
-			CameraOrbitControlsEventNode.PARAM_CALLBACK_update_target(node as CameraOrbitControlsEventNode);
+			CameraOrbitControlsEventNode.PARAM_CALLBACK_updateTarget(node as CameraOrbitControlsEventNode);
 		},
 	});
 	/** @param toggle on to enable keys */
-	enableKeys = ParamConfig.BOOLEAN(0);
-	/** @param key modes (pan or rotate) */
-	keysMode = ParamConfig.INTEGER(KEYS_MODES.indexOf(KeysMode.PAN), {
-		visibleIf: {enableKeys: 1},
-		menu: {
-			entries: KEYS_MODES.map((name, value) => {
-				return {name, value};
-			}),
-		},
-	});
-	/** @param keys pan speed */
-	keysPanSpeed = ParamConfig.FLOAT(7, {
-		range: [0, 10],
-		rangeLocked: [false, false],
-		visibleIf: {enableKeys: 1, keysMode: KEYS_MODES.indexOf(KeysMode.PAN)},
-	});
-	/** @param keys rotate speed vertical */
-	keysRotateSpeedVertical = ParamConfig.FLOAT(1, {
-		range: [0, 1],
-		rangeLocked: [false, false],
-		visibleIf: {enableKeys: 1, keysMode: KEYS_MODES.indexOf(KeysMode.ROTATE)},
-	});
-	/** @param keys rotate speed horizontal */
-	keysRotateSpeedHorizontal = ParamConfig.FLOAT(1, {
-		range: [0, 1],
-		rangeLocked: [false, false],
-		visibleIf: {enableKeys: 1, keysMode: KEYS_MODES.indexOf(KeysMode.ROTATE)},
-	});
+	// enableKeys = ParamConfig.BOOLEAN(0);
+	// /** @param key modes (pan or rotate) */
+	// keysMode = ParamConfig.INTEGER(KEYS_MODES.indexOf(KeysMode.PAN), {
+	// 	visibleIf: {enableKeys: 1},
+	// 	menu: {
+	// 		entries: KEYS_MODES.map((name, value) => {
+	// 			return {name, value};
+	// 		}),
+	// 	},
+	// });
+	// /** @param keys pan speed */
+	// keysPanSpeed = ParamConfig.FLOAT(7, {
+	// 	range: [0, 10],
+	// 	rangeLocked: [false, false],
+	// 	visibleIf: {enableKeys: 1, keysMode: KEYS_MODES.indexOf(KeysMode.PAN)},
+	// });
+	// /** @param keys rotate speed vertical */
+	// keysRotateSpeedVertical = ParamConfig.FLOAT(1, {
+	// 	range: [0, 1],
+	// 	rangeLocked: [false, false],
+	// 	visibleIf: {enableKeys: 1, keysMode: KEYS_MODES.indexOf(KeysMode.ROTATE)},
+	// });
+	// /** @param keys rotate speed horizontal */
+	// keysRotateSpeedHorizontal = ParamConfig.FLOAT(1, {
+	// 	range: [0, 1],
+	// 	rangeLocked: [false, false],
+	// 	visibleIf: {enableKeys: 1, keysMode: KEYS_MODES.indexOf(KeysMode.ROTATE)},
+	// });
 }
 const ParamsConfig = new CameraOrbitEventParamsConfig();
 
@@ -119,7 +119,8 @@ export class CameraOrbitControlsEventNode extends TypedCameraControlsEventNode<C
 		]);
 	}
 
-	private _controls_by_element_id: Map<string, OrbitControls> = new Map();
+	private _controlsByElementId: Map<string, OrbitControls> = new Map();
+	private _firstControls: OrbitControls | undefined;
 
 	async createControlsInstance(camera: Camera, element: HTMLElement) {
 		const controls = new OrbitControls(camera, element);
@@ -127,7 +128,8 @@ export class CameraOrbitControlsEventNode extends TypedCameraControlsEventNode<C
 			this._on_controls_end(controls);
 		});
 
-		this._controls_by_element_id.set(element.id, controls);
+		this._controlsByElementId.set(element.id, controls);
+		this._updateCache();
 		this._bind_listeners_to_controls_instance(controls);
 		return controls;
 	}
@@ -168,13 +170,13 @@ export class CameraOrbitControlsEventNode extends TypedCameraControlsEventNode<C
 			controls.update(); // necessary if target is not 0,0,0
 		}
 
-		controls.enableKeys = isBooleanTrue(this.pv.enableKeys);
-		if (controls.enableKeys) {
-			controls.keyMode = KEYS_MODES[this.pv.keysMode];
-			controls.keyRotateSpeedVertical = this.pv.keysRotateSpeedVertical;
-			controls.keyRotateSpeedHorizontal = this.pv.keysRotateSpeedHorizontal;
-			controls.keyPanSpeed = this.pv.keysPanSpeed;
-		}
+		// controls.enableKeys = isBooleanTrue(this.pv.enableKeys);
+		// if (controls.enableKeys) {
+		// 	controls.keyMode = KEYS_MODES[this.pv.keysMode];
+		// 	controls.keyRotateSpeedVertical = this.pv.keysRotateSpeedVertical;
+		// 	controls.keyRotateSpeedHorizontal = this.pv.keysRotateSpeedHorizontal;
+		// 	controls.keyPanSpeed = this.pv.keysPanSpeed;
+		// }
 	}
 	private _set_azimuth_angle(controls: OrbitControls) {
 		if (isBooleanTrue(this.pv.limitAzimuthAngle)) {
@@ -206,15 +208,23 @@ export class CameraOrbitControlsEventNode extends TypedCameraControlsEventNode<C
 		this.p.target.set(this._target_array);
 	}
 
-	static PARAM_CALLBACK_update_target(node: CameraOrbitControlsEventNode) {
-		node._update_target();
+	static PARAM_CALLBACK_updateTarget(node: CameraOrbitControlsEventNode) {
+		node._updateTarget();
 	}
-	private _update_target() {
-		const src_target = this.pv.target;
-		this._controls_by_element_id.forEach((control, element_id) => {
-			const dest_target = control.target;
-			if (!dest_target.equals(src_target)) {
-				dest_target.copy(src_target);
+	private _updateTarget() {
+		this.setTarget(this.pv.target);
+	}
+	target(target: Vector3) {
+		if (!this._firstControls) {
+			return;
+		}
+		target.copy(this._firstControls.target);
+	}
+	setTarget(newTarget: Vector3) {
+		this._controlsByElementId.forEach((control, element_id) => {
+			const destTarget = control.target;
+			if (!destTarget.equals(newTarget)) {
+				destTarget.copy(newTarget);
 				control.update();
 			}
 		});
@@ -225,10 +235,17 @@ export class CameraOrbitControlsEventNode extends TypedCameraControlsEventNode<C
 		// 1. assign an orbit_controls to the camera
 		// 2. remove the controls
 		// 3. update the target param of the controls, and this doesn't affect the camera (nor should it!)
-		const controls = this._controls_by_element_id.get(html_element_id);
+		const controls = this._controlsByElementId.get(html_element_id);
 		if (controls) {
 			// controls.dispose(); // no need to dispose here, as it is done by the viewer for now
-			this._controls_by_element_id.delete(html_element_id);
+			this._controlsByElementId.delete(html_element_id);
 		}
+		this._updateCache();
+	}
+	private _updateCache() {
+		this._firstControls = undefined;
+		this._controlsByElementId.forEach((controls) => {
+			this._firstControls = this._firstControls || controls;
+		});
 	}
 }

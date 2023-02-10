@@ -17,7 +17,7 @@ export class DirectionalLightSopOperation extends BaseSopOperation {
 	static override type(): Readonly<'directionalLight'> {
 		return 'directionalLight';
 	}
-	override cook(input_contents: CoreGroup[], params: DirectionalLightParams) {
+	override cook(_: CoreGroup[], params: DirectionalLightParams) {
 		const container = this.createLight(params);
 		if (!container) {
 			return this.createCoreGroupFromObjects([]);

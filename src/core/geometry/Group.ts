@@ -11,7 +11,7 @@ import {CoreObject, AttributeDictionary} from './Object';
 import {CoreGeometry} from './Geometry';
 import {CoreAttribute} from './Attribute';
 import {CoreString} from '../String';
-import {CoreConstant, AttribClass, AttribSize, ObjectData, objectTypeFromConstructor, AttribType} from './Constant';
+import {AttribClass, AttribSize, ObjectData, objectTypeFromConstructor, AttribType} from './Constant';
 import {CoreType} from '../Type';
 import {ArrayUtils} from '../ArrayUtils';
 import {CoreFace} from './Face';
@@ -405,7 +405,7 @@ export class CoreGroup extends CoreEntity {
 
 	renameAttrib(old_name: string, new_name: string, attrib_class: AttribClass) {
 		switch (attrib_class) {
-			case CoreConstant.ATTRIB_CLASS.VERTEX:
+			case AttribClass.VERTEX:
 				if (this.hasAttrib(old_name)) {
 					if (this._objects) {
 						for (let object of this._objects) {
@@ -421,7 +421,7 @@ export class CoreGroup extends CoreEntity {
 				}
 				break;
 
-			case CoreConstant.ATTRIB_CLASS.OBJECT:
+			case AttribClass.OBJECT:
 				if (this.hasAttrib(old_name)) {
 					if (this._objects) {
 						for (let object of this._objects) {

@@ -10,7 +10,7 @@ import {LineSegments} from 'three';
 import {BufferGeometry} from 'three';
 import {BufferAttribute} from 'three';
 import {InterleavedBufferAttribute} from 'three';
-import {CoreConstant, ObjectType} from '../../../core/geometry/Constant';
+import {DEFAULT_MATERIALS, ObjectType} from '../../../core/geometry/Constant';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 import {Box3} from 'three';
 
@@ -118,7 +118,7 @@ export class ClipSopOperation extends BaseSopOperation {
 		const linePosAttr = new BufferAttribute(new Float32Array(index * 3), 3, false);
 		// linePosAttr.setUsage(DynamicDrawUsage);
 		lineGeometry.setAttribute('position', linePosAttr);
-		const outlineLines = new LineSegments(lineGeometry, CoreConstant.MATERIALS[ObjectType.LINE_SEGMENTS]);
+		const outlineLines = new LineSegments(lineGeometry, DEFAULT_MATERIALS[ObjectType.LINE_SEGMENTS]);
 		outlineLines.frustumCulled = false;
 
 		const posAttr = outlineLines.geometry.attributes.position;

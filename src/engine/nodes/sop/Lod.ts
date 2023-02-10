@@ -15,11 +15,18 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CoreTransform} from '../../../core/Transform';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {Camera} from 'three';
+import {ObjectType, registerObjectType} from '../../../core/geometry/Constant';
 class LODSopParamsConfig extends NodeParamsConfig {
 	/** @param distance when switching between high res and mid res (first input and second input) */
-	distance0 = ParamConfig.FLOAT(1);
+	distance0 = ParamConfig.FLOAT(10, {
+		range: [0, 100],
+		rangeLocked: [true, false],
+	});
 	/** @param distance when switching between mid res and low res (second input and third input) */
-	distance1 = ParamConfig.FLOAT(2);
+	distance1 = ParamConfig.FLOAT(20, {
+		range: [0, 100],
+		rangeLocked: [true, false],
+	});
 	/** @param sets if the switch is done automatically */
 	autoUpdate = ParamConfig.BOOLEAN(1);
 	/** @param updates which object is displayed manually */
@@ -49,14 +56,15 @@ export class LodSopNode extends TypedSopNode<LODSopParamsConfig> {
 	static override displayedInputNames(): string[] {
 		return ['high res', 'mid res', 'low res'];
 	}
-	private _lod = this._create_LOD();
+	private _lod = this._createLOD();
 
 	override initializeNode() {
 		this.io.inputs.setCount(1, 3);
 		this.io.inputs.initInputsClonedState(InputCloneMode.FROM_NODE);
 	}
 
-	private _create_LOD() {
+	private _createLOD() {
+		registerObjectType({type: ObjectType.LOD, ctor: LOD, humanName: 'LOD'});
 		const lod = new LOD();
 		lod.matrixAutoUpdate = false;
 		return lod;
@@ -74,9 +82,9 @@ export class LodSopNode extends TypedSopNode<LODSopParamsConfig> {
 		this.setObject(this._lod);
 	}
 
-	_addLevel(core_group: CoreGroup | undefined, level: number) {
-		if (core_group) {
-			const objects = core_group.objects();
+	_addLevel(coreGroup: CoreGroup | undefined, level: number) {
+		if (coreGroup) {
+			const objects = coreGroup.objects();
 			let object: Object3D;
 			for (let i = 0; i < objects.length; i++) {
 				object = objects[i];

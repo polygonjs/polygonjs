@@ -8,14 +8,19 @@ import {PolyScene} from '../../engine/scene/PolyScene';
 import {CoreObject} from '../geometry/Object';
 import {CameraAttribute} from './CoreCamera';
 import {CoreType} from '../Type';
-
+import {Vector3} from 'three';
 interface CreateControlsConfigOptions {
 	scene: PolyScene;
 	camera: Camera;
 }
 
+type GetTargetFunction = (target: Vector3) => void;
+type SetTargetFunction = (target: Vector3) => void;
+
 export interface ApplicableControlsNode {
 	applyControls: (camera: Camera, viewer: BaseViewerType) => Promise<CameraControls>;
+	target?: GetTargetFunction;
+	setTarget?: SetTargetFunction;
 }
 
 export class CoreCameraControlsController {

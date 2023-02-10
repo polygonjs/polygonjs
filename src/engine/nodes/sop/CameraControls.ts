@@ -39,8 +39,8 @@ export class CameraControlsSopNode extends TypedSopNode<CameraControlsSopParamsC
 	private _operation: CameraControlsSopOperation | undefined;
 	override cook(inputCoreGroups: CoreGroup[]) {
 		this._operation = this._operation || new CameraControlsSopOperation(this._scene, this.states, this);
-		const core_group = this._operation.cook(inputCoreGroups, this.pv);
-		this.setCoreGroup(core_group);
+		const coreGroup = this._operation.cook(inputCoreGroups, this.pv);
+		this.setCoreGroup(coreGroup);
 	}
 	/*
 	children

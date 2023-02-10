@@ -13,7 +13,7 @@ import {Bone} from 'three';
 import {CoreGeometry} from './Geometry';
 import {GroupString} from './Group';
 import {Attribute, CoreAttribute} from './Attribute';
-import {CoreConstant, AttribType, AttribSize} from './Constant';
+import {AttribType, AttribSize, dataFromConstructor} from './Constant';
 import {CorePoint} from './Point';
 import {CoreMaterial, MaterialWithCustomMaterials} from './Material';
 import {CoreString} from '../String';
@@ -383,7 +383,7 @@ export class CoreObject extends CoreEntity {
 		return this.attribValue(PropertyName.NAME) as string;
 	}
 	humanType(): string {
-		return CoreConstant.CONSTRUCTOR_NAMES_BY_CONSTRUCTOR_NAME[this._object.constructor.name];
+		return dataFromConstructor(this._object.constructor).humanName;
 	}
 	attribTypes() {
 		const h: PolyDictionary<AttribType> = {};

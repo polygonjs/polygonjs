@@ -17,6 +17,7 @@ interface UpdateObjectOptions {
 	params: CameraControlsSopParams;
 	node: BaseNodeType;
 	active: boolean;
+	errorIfNodeNotFound: boolean;
 }
 
 export class CameraControlsSopOperation extends BaseSopOperation {
@@ -31,13 +32,19 @@ export class CameraControlsSopOperation extends BaseSopOperation {
 		const objects = inputCoreGroups[0].objects();
 
 		if (this._node) {
-			CameraControlsSopOperation.updateObject({objects, params, node: this._node, active: true});
+			CameraControlsSopOperation.updateObject({
+				objects,
+				params,
+				node: this._node,
+				active: true,
+				errorIfNodeNotFound: true,
+			});
 		}
 
 		return this.createCoreGroupFromObjects(objects);
 	}
 	static updateObject(options: UpdateObjectOptions) {
-		const {objects, params, node, active} = options;
+		const {objects, params, node, active, errorIfNodeNotFound} = options;
 
 		const relativeOrAbsolutePath = params.node.path();
 		const foundNode = node.node(relativeOrAbsolutePath);
@@ -54,6 +61,9 @@ export class CameraControlsSopOperation extends BaseSopOperation {
 		} else {
 			for (let object of objects) {
 				CoreObject.deleteAttribute(object, CameraAttribute.CONTROLS_NODE_ID);
+			}
+			if (errorIfNodeNotFound) {
+				node.states.error.set('controls node not found');
 			}
 		}
 	}

@@ -4,6 +4,8 @@ import {CorePhysicsAttribute} from '../PhysicsAttribute';
 import {_getRBD} from '../PhysicsRBD';
 import {CorePlayerPhysics} from './CorePlayerPhysics';
 import {PhysicsLib} from '../CorePhysics';
+import {PolyScene} from '../../../engine/scene/PolyScene';
+
 const physicsCharacterControllerById: Map<string, CorePlayerPhysics> = new Map();
 
 export enum PhysicsPlayerType {
@@ -18,8 +20,16 @@ export function clearPhysicsPlayers() {
 
 	physicsCharacterControllerById.clear();
 }
+interface CreateOrFindPhysicsPlayerOptions {
+	scene: PolyScene;
+	object: Object3D;
+	PhysicsLib: PhysicsLib;
+	world: World;
+	worldObject: Object3D;
+}
 
-export function createOrFindPhysicsPlayer(object: Object3D, PhysicsLib: PhysicsLib, world: World) {
+export function createOrFindPhysicsPlayer(options: CreateOrFindPhysicsPlayerOptions) {
+	const {scene, object, PhysicsLib, world, worldObject} = options;
 	let player = findPhysicsPlayer(object);
 	if (!player) {
 		const characterControllerId = CorePhysicsAttribute.getCharacterControllerId(object);
@@ -35,7 +45,16 @@ export function createOrFindPhysicsPlayer(object: Object3D, PhysicsLib: PhysicsL
 			return;
 		}
 
-		player = new CorePlayerPhysics(object, PhysicsLib, world, body, collider);
+		player = new CorePlayerPhysics({
+			scene,
+			object,
+			PhysicsLib,
+			world,
+			worldObject,
+			body,
+			collider,
+			type: PhysicsPlayerType.TORQUE,
+		});
 		physicsCharacterControllerById.set(characterControllerId, player);
 	}
 	// CoreObject.addAttribute(pair.object, PhysicsIdAttribute.DEBUG, nodeId);

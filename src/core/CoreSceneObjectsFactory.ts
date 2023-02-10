@@ -1,4 +1,5 @@
 import {ColorRepresentation, PerspectiveCamera, RectAreaLight, SpotLight} from 'three';
+import {ObjectType, registerObjectType} from './geometry/Constant';
 
 type PerspectiveCameraContructor = (fov: number, aspect: number, near: number, far: number) => PerspectiveCamera;
 type AreaLightContructor = (
@@ -19,11 +20,22 @@ interface Generators {
 
 export class CoreSceneObjectsFactory {
 	static generators: Generators = {
-		perspectiveCamera: (fov: number, aspect: number, near: number, far: number) =>
-			new PerspectiveCamera(fov, aspect, near, far),
-		areaLight: (color: ColorRepresentation, intensity: number, width: number, height: number) =>
-			new RectAreaLight(color, intensity, width, height),
-		spotLight: () => new SpotLight(),
+		perspectiveCamera: (fov: number, aspect: number, near: number, far: number) => {
+			registerObjectType({
+				type: ObjectType.PERSPECTIVE_CAMERA,
+				ctor: PerspectiveCamera,
+				humanName: 'PerspectiveCamera',
+			});
+			return new PerspectiveCamera(fov, aspect, near, far);
+		},
+		areaLight: (color: ColorRepresentation, intensity: number, width: number, height: number) => {
+			registerObjectType({type: ObjectType.AREA_LIGHT, ctor: RectAreaLight, humanName: 'AreaLight'});
+			return new RectAreaLight(color, intensity, width, height);
+		},
+		spotLight: () => {
+			registerObjectType({type: ObjectType.SPOT_LIGHT, ctor: SpotLight, humanName: ObjectType.SPOT_LIGHT});
+			return new SpotLight();
+		},
 		spotLightUpdate: (spotLight, textureName) => {},
 	};
 }

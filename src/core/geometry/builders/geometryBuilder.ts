@@ -1,4 +1,4 @@
-import {TypeAssert} from '../../../engine/poly/Assert';
+// import {TypeAssert} from '../../../engine/poly/Assert';
 import {ObjectType} from '../Constant';
 import {CoreGeometryBuilderLineSegments} from './LineSegments';
 import {CoreGeometryBuilderMesh} from './Mesh';
@@ -16,8 +16,9 @@ export function geometryBuilder(objectType: ObjectType) {
 			return null;
 		case ObjectType.GROUP:
 			return null;
-		case ObjectType.LOD:
-			return null;
+		// case ObjectType.LOD:
+		// 	return null;
 	}
-	TypeAssert.unreachable(objectType);
+	return null;
+	// TypeAssert.unreachable(objectType);
 }

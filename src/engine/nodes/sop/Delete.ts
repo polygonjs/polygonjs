@@ -10,8 +10,6 @@ import {
 	AttribClass,
 	AttribClassMenuEntries,
 	ObjectType,
-	ObjectTypeMenuEntries,
-	ObjectTypes,
 	objectTypeFromConstructor,
 	AttribType,
 	AttribTypeMenuEntries,
@@ -35,7 +33,7 @@ import {
 import {ByExpressionHelper} from './utils/delete/ByExpressionHelper';
 import {ByBboxHelper} from './utils/delete/ByBboxHelper';
 import {Object3D} from 'three';
-import {ByObjectTypeHelper} from './utils/delete/ByObjectTypeHelper';
+import {ByObjectTypeHelper, OBJECT_TYPE_MENU_ENTRIES, OBJECT_TYPES} from './utils/delete/ByObjectTypeHelper';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {ByBoundingObjectHelper} from './utils/delete/ByBoundingObjectHelper';
 import {geometryBuilder} from '../../../core/geometry/builders/geometryBuilder';
@@ -58,9 +56,9 @@ class DeleteSopParamsConfig extends NodeParamsConfig {
 		visibleIf: {class: ATTRIBUTE_CLASSES.indexOf(AttribClass.OBJECT)},
 	});
 	/** @param sets which object types should be deleted */
-	objectType = ParamConfig.INTEGER(ObjectTypes.indexOf(ObjectType.MESH), {
+	objectType = ParamConfig.INTEGER(OBJECT_TYPES.indexOf(ObjectType.MESH), {
 		menu: {
-			entries: ObjectTypeMenuEntries,
+			entries: OBJECT_TYPE_MENU_ENTRIES,
 		},
 		visibleIf: {
 			class: ATTRIBUTE_CLASSES.indexOf(AttribClass.OBJECT),
