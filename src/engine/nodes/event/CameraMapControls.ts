@@ -6,18 +6,21 @@
  *
  */
 import {Camera} from 'three';
-import {MapControls} from 'three/examples/jsm/controls/OrbitControls';
+
 import {CameraControlsNodeType} from '../../poly/NodeContext';
 import {CameraOrbitControlsEventNode} from './CameraOrbitControls';
+
+// see note in orbitControls
+// regarding where to import the module from
+import {MapControls} from '../../../modules/core/controls/OrbitControls';
+// import {MapControls} from 'three/examples/jsm/controls/OrbitControls';
 
 export class CameraMapControlsEventNode extends CameraOrbitControlsEventNode {
 	static override type() {
 		return CameraControlsNodeType.MAP;
 	}
 
-	async create_controls_instance(camera: Camera, element: HTMLElement) {
-		const controls = new MapControls(camera, element);
-		this._bind_listeners_to_controls_instance(controls);
-		return controls;
+	protected override _createControls(camera: Camera, element: HTMLElement) {
+		return new MapControls(camera, element);
 	}
 }

@@ -30,7 +30,7 @@ export enum PhysicsRBDColliderType {
 	CYLINDER = 'cylinder',
 	SPHERE = 'sphere',
 	TRIMESH = 'trimesh',
-	// heightfield
+	HEIGHT_FIELD = 'heightField',
 }
 export const PHYSICS_RBD_COLLIDER_TYPES: PhysicsRBDColliderType[] = [
 	PhysicsRBDColliderType.CUBOID,
@@ -41,6 +41,7 @@ export const PHYSICS_RBD_COLLIDER_TYPES: PhysicsRBDColliderType[] = [
 	PhysicsRBDColliderType.CONVEX_HULL,
 	// PhysicsRBDColliderType.CONVEX_MESH,
 	PhysicsRBDColliderType.TRIMESH,
+	PhysicsRBDColliderType.HEIGHT_FIELD,
 ];
 const SORTED_ENTRIES: PhysicsRBDColliderType[] = [
 	PhysicsRBDColliderType.CAPSULE,
@@ -51,6 +52,7 @@ const SORTED_ENTRIES: PhysicsRBDColliderType[] = [
 	PhysicsRBDColliderType.CYLINDER,
 	PhysicsRBDColliderType.SPHERE,
 	PhysicsRBDColliderType.TRIMESH,
+	PhysicsRBDColliderType.HEIGHT_FIELD,
 ];
 export const PHYSICS_RBD_COLLIDER_TYPE_MENU_ENTRIES = SORTED_ENTRIES.map((entry) => {
 	return {name: entry, value: PHYSICS_RBD_COLLIDER_TYPES.indexOf(entry)};
@@ -68,6 +70,10 @@ export enum PhysicsRBDHeightAttribute {
 }
 export enum PhysicsRBDCylinderAttribute {
 	HEIGHT = 'height',
+}
+export enum PhysicsRBDHeightFieldAttribute {
+	HEIGHT_FIELD_ROWS = 'heightFieldRows',
+	HEIGHT_FIELD_COLS = 'heightFieldCols',
 }
 
 export enum PhysicsCommonAttribute {
@@ -102,6 +108,7 @@ type PhysicsAttribute =
 	| PhysicsRBDCuboidAttribute
 	| PhysicsRBDRadiusAttribute
 	| PhysicsRBDHeightAttribute
+	| PhysicsRBDHeightFieldAttribute
 	| PhysicsJointAttribute;
 
 export function physicsAttribNameLive(attribute: PhysicsAttribute): string {
@@ -256,6 +263,19 @@ export class CorePhysicsAttribute extends CorePhysicsBaseAttribute {
 	}
 	static getHeight(object: Object3D) {
 		return this._getNumber(object, PhysicsRBDHeightAttribute.HEIGHT, 1);
+	}
+	// heightfield
+	static setHeightFieldRows(object: Object3D, value: number) {
+		this._setNumber(object, PhysicsRBDHeightFieldAttribute.HEIGHT_FIELD_ROWS, value);
+	}
+	static getHeightFieldRows(object: Object3D) {
+		return this._getNumber(object, PhysicsRBDHeightFieldAttribute.HEIGHT_FIELD_ROWS, 2);
+	}
+	static setHeightFieldCols(object: Object3D, value: number) {
+		this._setNumber(object, PhysicsRBDHeightFieldAttribute.HEIGHT_FIELD_COLS, value);
+	}
+	static getHeightFieldCols(object: Object3D) {
+		return this._getNumber(object, PhysicsRBDHeightFieldAttribute.HEIGHT_FIELD_COLS, 2);
 	}
 	// character controller
 	static setCharacterControllerId(object: Object3D, value: string) {

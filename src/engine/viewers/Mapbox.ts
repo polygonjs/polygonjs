@@ -12,13 +12,13 @@ import {CoreCameraCSSRendererController, CSSRendererConfig} from '../../core/cam
 import {CoreCameraRenderSceneController} from '../../core/camera/CoreCameraRenderSceneController';
 import type {EffectComposer} from 'postprocessing';
 // import {AbstractRenderer} from './Common';
-import {RaycasterForBVH} from '../operations/sop/utils/Bvh/three-mesh-bvh';
 import {MapboxPerspectiveCamera} from '../../core/thirdParty/Mapbox/MapboxPerspectiveCamera';
 import {CoreStylesheetLoader} from '../../core/loader/Stylesheet';
 import {MapboxMapsController} from '../../core/thirdParty/Mapbox/MapboxMapsController';
 import {MapboxRaycaster} from '../../core/thirdParty/Mapbox/MapboxRaycaster';
 // import {MapboxLayersController} from '../../core/thirdParty/Mapbox/LayersController';
 import {Vector2, WebGLRenderer} from 'three';
+import {ThreeMeshBVHHelper} from '../operations/sop/utils/Bvh/ThreeMeshBVHHelper';
 const CSS_CLASS = 'CoreMapboxViewer';
 
 // export interface ThreejsViewerProperties {
@@ -81,7 +81,7 @@ export class MapboxViewer extends TypedViewer<MapboxPerspectiveCamera> {
 	}
 	override createRaycaster() {
 		const raycaster = new MapboxRaycaster();
-		(raycaster as any as RaycasterForBVH).firstHitOnly = true;
+		ThreeMeshBVHHelper.updateRaycaster(raycaster);
 		return raycaster;
 	}
 	setRenderer(renderer: WebGLRenderer) {

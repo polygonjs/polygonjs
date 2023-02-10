@@ -11,10 +11,16 @@ import {TypedCameraControlsEventNode} from './_BaseCameraControls';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {EventConnectionPoint, EventConnectionPointType} from '../utils/io/connections/Event';
 import {BaseNodeType} from '../_Base';
-// import {OrbitControls} from '../../../../modules/three/examples/jsm/controls/OrbitControls';
-import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls';
 import {CameraControlsNodeType} from '../../poly/NodeContext';
 import {isBooleanTrue} from '../../../core/BooleanValue';
+
+// Note:
+// currently keep using module from modules/core/controls/...
+// as otherwise there is a conflict when a TransformControls
+// is displayed, where the orbitControl seems to not release on pointerup,
+// which is really jarring
+import {OrbitControls} from '../../../modules/core/controls/OrbitControls';
+// import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls';
 
 const OUTPUT_START = 'start';
 const OUTPUT_CHANGE = 'change';
@@ -122,8 +128,11 @@ export class CameraOrbitControlsEventNode extends TypedCameraControlsEventNode<C
 	private _controlsByElementId: Map<string, OrbitControls> = new Map();
 	private _firstControls: OrbitControls | undefined;
 
+	protected _createControls(camera: Camera, element: HTMLElement) {
+		return new OrbitControls(camera, element);
+	}
 	async createControlsInstance(camera: Camera, element: HTMLElement) {
-		const controls = new OrbitControls(camera, element);
+		const controls = this._createControls(camera, element);
 		controls.addEventListener('end', () => {
 			this._on_controls_end(controls);
 		});

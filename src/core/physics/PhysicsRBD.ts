@@ -12,6 +12,7 @@ import {createPhysicsCone} from './shapes/RBDCone';
 import {createPhysicsCylinder} from './shapes/RBDCylinder';
 import {createPhysicsTriMesh} from './shapes/RBDTrimesh';
 import {createPhysicsConvexHull} from './shapes/ConvexHull';
+import {createPhysicsHeightField} from './shapes/HeightField';
 
 const tmpV3 = new Vector3();
 // const q1 = new Quaternion();
@@ -418,6 +419,9 @@ function PhysicsRBDCollider(
 		}
 		case PhysicsRBDColliderType.SPHERE: {
 			return createPhysicsSphere(PhysicsLib, object);
+		}
+		case PhysicsRBDColliderType.HEIGHT_FIELD: {
+			return createPhysicsHeightField(PhysicsLib, object);
 		}
 	}
 	TypeAssert.unreachable(colliderType);

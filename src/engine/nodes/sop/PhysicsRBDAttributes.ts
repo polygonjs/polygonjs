@@ -6,6 +6,7 @@
 import {StringParam} from './../../params/String';
 import {TypeAssert} from './../../poly/Assert';
 import {FloatParam} from './../../params/Float';
+import {IntegerParam} from './../../params/Integer';
 import {
 	PHYSICS_RBD_COLLIDER_TYPES,
 	PHYSICS_RBD_TYPES,
@@ -57,6 +58,9 @@ const VISIBLE_OPTIONS = {
 		...SIZE_METHOD_CUSTOM,
 		colliderType: PHYSICS_RBD_COLLIDER_TYPES.indexOf(PhysicsRBDColliderType.SPHERE),
 	},
+	HEIGHT_FIELD: {
+		colliderType: PHYSICS_RBD_COLLIDER_TYPES.indexOf(PhysicsRBDColliderType.HEIGHT_FIELD),
+	},
 };
 class PhysicsRBDAttributesSopParamsConfig extends NodeParamsConfig {
 	main = ParamConfig.FOLDER();
@@ -74,6 +78,13 @@ class PhysicsRBDAttributesSopParamsConfig extends NodeParamsConfig {
 	});
 	/** @param Rigid body type */
 	sizeMethod = ParamConfig.INTEGER(DEFAULT.sizeMethod, {
+		visibleIf: [
+			VISIBLE_OPTIONS.CAPSULE,
+			VISIBLE_OPTIONS.CONE,
+			VISIBLE_OPTIONS.CUBOID,
+			VISIBLE_OPTIONS.CYLINDER,
+			VISIBLE_OPTIONS.SPHERE,
+		],
 		menu: {
 			entries: SIZE_COMPUTATION_METHOD_MENU_ENTRIES,
 		},
@@ -101,6 +112,20 @@ class PhysicsRBDAttributesSopParamsConfig extends NodeParamsConfig {
 		range: [0, 1],
 		rangeLocked: [true, false],
 		visibleIf: [VISIBLE_OPTIONS.CAPSULE, VISIBLE_OPTIONS.CONE, VISIBLE_OPTIONS.CYLINDER],
+		expression: {forEntities: true},
+	});
+	/** @param heightField rows */
+	rows = ParamConfig.INTEGER(DEFAULT.rows, {
+		range: [1, 100],
+		rangeLocked: [true, false],
+		visibleIf: VISIBLE_OPTIONS.HEIGHT_FIELD,
+		expression: {forEntities: true},
+	});
+	/** @param heightField cols */
+	cols = ParamConfig.INTEGER(DEFAULT.cols, {
+		range: [1, 100],
+		rangeLocked: [true, false],
+		visibleIf: VISIBLE_OPTIONS.HEIGHT_FIELD,
 		expression: {forEntities: true},
 	});
 	/** @param density */
@@ -210,31 +235,32 @@ export class PhysicsRBDAttributesSopNode extends TypedSopNode<PhysicsRBDAttribut
 
 			CorePhysicsAttribute.setColliderType(object, colliderType);
 		}
-		this._applyColliderType(colliderType, sizeMethod, coreObjects);
 		const promises: Array<Promise<void>> = [];
+		this._applyColliderType(colliderType, sizeMethod, coreObjects, promises);
+
 		promises.push(
-			this._computeFloatParam(
+			this._computeNumberParam(
 				this.p.density,
 				coreObjects,
 				CorePhysicsAttribute.setDensity.bind(CorePhysicsAttribute)
 			)
 		);
 		promises.push(
-			this._computeFloatParam(
+			this._computeNumberParam(
 				this.p.friction,
 				coreObjects,
 				CorePhysicsAttribute.setFriction.bind(CorePhysicsAttribute)
 			)
 		);
 		promises.push(
-			this._computeFloatParam(
+			this._computeNumberParam(
 				this.p.linearDamping,
 				coreObjects,
 				CorePhysicsAttribute.setLinearDamping.bind(CorePhysicsAttribute)
 			)
 		);
 		promises.push(
-			this._computeFloatParam(
+			this._computeNumberParam(
 				this.p.angularDamping,
 				coreObjects,
 				CorePhysicsAttribute.setAngularDamping.bind(CorePhysicsAttribute)
@@ -255,14 +281,14 @@ export class PhysicsRBDAttributesSopNode extends TypedSopNode<PhysicsRBDAttribut
 			)
 		);
 		promises.push(
-			this._computeFloatParam(
+			this._computeNumberParam(
 				this.p.gravityScale,
 				coreObjects,
 				CorePhysicsAttribute.setGravityScale.bind(CorePhysicsAttribute)
 			)
 		);
 		promises.push(
-			this._computeFloatParam(
+			this._computeNumberParam(
 				this.p.restitution,
 				coreObjects,
 				CorePhysicsAttribute.setRestitution.bind(CorePhysicsAttribute)
@@ -294,7 +320,8 @@ export class PhysicsRBDAttributesSopNode extends TypedSopNode<PhysicsRBDAttribut
 	protected _applyColliderType(
 		colliderType: PhysicsRBDColliderType,
 		sizeMethod: SizeComputationMethod,
-		coreObjects: CoreObject[]
+		coreObjects: CoreObject[],
+		promises: Array<Promise<void>>
 	) {
 		switch (colliderType) {
 			case PhysicsRBDColliderType.CUBOID: {
@@ -314,15 +341,19 @@ export class PhysicsRBDAttributesSopNode extends TypedSopNode<PhysicsRBDAttribut
 						return;
 					}
 					case SizeComputationMethod.MANUAL: {
-						this._computeVector3Param(
-							this.p.sizes,
-							coreObjects,
-							CorePhysicsAttribute.setCuboidSizes.bind(CorePhysicsAttribute)
+						promises.push(
+							this._computeVector3Param(
+								this.p.sizes,
+								coreObjects,
+								CorePhysicsAttribute.setCuboidSizes.bind(CorePhysicsAttribute)
+							)
 						);
-						this._computeFloatParam(
-							this.p.size,
-							coreObjects,
-							CorePhysicsAttribute.setCuboidSize.bind(CorePhysicsAttribute)
+						promises.push(
+							this._computeNumberParam(
+								this.p.size,
+								coreObjects,
+								CorePhysicsAttribute.setCuboidSize.bind(CorePhysicsAttribute)
+							)
 						);
 						return;
 					}
@@ -346,10 +377,12 @@ export class PhysicsRBDAttributesSopNode extends TypedSopNode<PhysicsRBDAttribut
 						return;
 					}
 					case SizeComputationMethod.MANUAL: {
-						this._computeFloatParam(
-							this.p.radius,
-							coreObjects,
-							CorePhysicsAttribute.setRadius.bind(CorePhysicsAttribute)
+						promises.push(
+							this._computeNumberParam(
+								this.p.radius,
+								coreObjects,
+								CorePhysicsAttribute.setRadius.bind(CorePhysicsAttribute)
+							)
 						);
 						return;
 					}
@@ -376,15 +409,19 @@ export class PhysicsRBDAttributesSopNode extends TypedSopNode<PhysicsRBDAttribut
 						return;
 					}
 					case SizeComputationMethod.MANUAL: {
-						this._computeFloatParam(
-							this.p.height,
-							coreObjects,
-							CorePhysicsAttribute.setHeight.bind(CorePhysicsAttribute)
+						promises.push(
+							this._computeNumberParam(
+								this.p.height,
+								coreObjects,
+								CorePhysicsAttribute.setHeight.bind(CorePhysicsAttribute)
+							)
 						);
-						this._computeFloatParam(
-							this.p.radius,
-							coreObjects,
-							CorePhysicsAttribute.setRadius.bind(CorePhysicsAttribute)
+						promises.push(
+							this._computeNumberParam(
+								this.p.radius,
+								coreObjects,
+								CorePhysicsAttribute.setRadius.bind(CorePhysicsAttribute)
+							)
 						);
 						return;
 					}
@@ -410,20 +447,41 @@ export class PhysicsRBDAttributesSopNode extends TypedSopNode<PhysicsRBDAttribut
 						return;
 					}
 					case SizeComputationMethod.MANUAL: {
-						this._computeFloatParam(
-							this.p.height,
-							coreObjects,
-							CorePhysicsAttribute.setHeight.bind(CorePhysicsAttribute)
+						promises.push(
+							this._computeNumberParam(
+								this.p.height,
+								coreObjects,
+								CorePhysicsAttribute.setHeight.bind(CorePhysicsAttribute)
+							)
 						);
-						this._computeFloatParam(
-							this.p.radius,
-							coreObjects,
-							CorePhysicsAttribute.setRadius.bind(CorePhysicsAttribute)
+						promises.push(
+							this._computeNumberParam(
+								this.p.radius,
+								coreObjects,
+								CorePhysicsAttribute.setRadius.bind(CorePhysicsAttribute)
+							)
 						);
 						return;
 					}
 				}
 
+				return;
+			}
+			case PhysicsRBDColliderType.HEIGHT_FIELD: {
+				promises.push(
+					this._computeNumberParam(
+						this.p.rows,
+						coreObjects,
+						CorePhysicsAttribute.setHeightFieldRows.bind(CorePhysicsAttribute)
+					)
+				);
+				promises.push(
+					this._computeNumberParam(
+						this.p.cols,
+						coreObjects,
+						CorePhysicsAttribute.setHeightFieldCols.bind(CorePhysicsAttribute)
+					)
+				);
 				return;
 			}
 			case PhysicsRBDColliderType.CONVEX_HULL:
@@ -509,8 +567,8 @@ export class PhysicsRBDAttributesSopNode extends TypedSopNode<PhysicsRBDAttribut
 		}
 		// }
 	}
-	protected async _computeFloatParam(
-		param: FloatParam,
+	protected async _computeNumberParam(
+		param: FloatParam | IntegerParam,
 		coreObjects: CoreObject[],
 		applyMethod: (object: Object3D, value: number) => void
 	) {

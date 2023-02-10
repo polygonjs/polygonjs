@@ -33,6 +33,9 @@ interface PhysicsRBDAttributesSopParams extends DefaultOperationParams {
 	radius: number;
 	// capsule
 	height: number;
+	// heightField
+	rows: number;
+	cols: number;
 	// common
 	density: number;
 	friction: number;
@@ -59,6 +62,9 @@ export class PhysicsRBDAttributesSopOperation extends BaseSopOperation {
 		radius: 1,
 		// capsule
 		height: 0.5,
+		// heightField
+		rows: 20,
+		cols: 20,
 		// common
 		density: 1,
 		friction: 0.5,

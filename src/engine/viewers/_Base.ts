@@ -7,10 +7,10 @@ import {ViewerAudioController} from './utils/ViewerAudioController';
 import {Camera, Object3D, Raycaster} from 'three';
 import {PolyScene} from '../scene/PolyScene';
 import {Poly, PolyEngine} from '../Poly';
-import {RaycasterForBVH} from '../operations/sop/utils/Bvh/three-mesh-bvh';
 import {AbstractRenderer} from './Common';
 import {ViewerRaycastersController} from './utils/ViewerRaycastersController';
 import {ViewerPerformanceMonitor} from './utils/ViewerPerformanceMonitor';
+import {ThreeMeshBVHHelper} from '../operations/sop/utils/Bvh/ThreeMeshBVHHelper';
 
 const HOVERED_CLASS_NAME = 'hovered';
 
@@ -88,7 +88,7 @@ export abstract class TypedViewer<C extends Camera> {
 	}
 	createRaycaster() {
 		const raycaster = new Raycaster();
-		(raycaster as RaycasterForBVH).firstHitOnly = true;
+		ThreeMeshBVHHelper.updateRaycaster(raycaster);
 		return raycaster;
 	}
 	abstract renderer(): AbstractRenderer | undefined;

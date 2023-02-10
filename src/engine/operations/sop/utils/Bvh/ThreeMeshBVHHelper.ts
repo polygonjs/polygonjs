@@ -1,6 +1,5 @@
-import {Object3D} from 'three';
-import {Mesh} from 'three';
-import {MeshBVH, acceleratedRaycast, BufferGeometryWithBVH, CENTER} from './three-mesh-bvh';
+import {Object3D, Raycaster, Mesh} from 'three';
+import {MeshBVH, acceleratedRaycast, BufferGeometryWithBVH, CENTER, RaycasterForBVH} from './three-mesh-bvh';
 
 interface ThreeMeshBVHHelperOptions {
 	strategy: number;
@@ -30,5 +29,8 @@ export class ThreeMeshBVHHelper {
 			meshDest.raycast = acceleratedRaycast;
 			this.assignBVH(meshDest, existingBVH);
 		}
+	}
+	static updateRaycaster(raycaster: Raycaster) {
+		(raycaster as any as RaycasterForBVH).firstHitOnly = true;
 	}
 }
