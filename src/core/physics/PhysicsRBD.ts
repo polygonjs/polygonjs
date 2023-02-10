@@ -17,9 +17,15 @@ const tmpV3 = new Vector3();
 // const q1 = new Quaternion();
 // const q2 = new Quaternion();
 const currentPos = new Vector3();
+const currentLinearVelocity = new Vector3();
+const currentAngularVelocity = new Vector3();
 const newPos = new Vector3();
+const newLinearVelocity = new Vector3();
+const newAngularVelocity = new Vector3();
 const currentQuaternion = new Quaternion();
 const newQuaternion = new Quaternion();
+const linearVelocity = new Vector3();
+const angularVelocity = new Vector3();
 
 interface CollidescObjectPair {
 	object: Object3D;
@@ -46,24 +52,41 @@ function _createRBDFromAttributes(PhysicsLib: PhysicsLib, world: World, object: 
 	if (rbdType == null) {
 		return;
 	}
+
+	// get attributes
+	const linearDamping = CorePhysicsAttribute.getLinearDamping(object);
+	const angularDamping = CorePhysicsAttribute.getAngularDamping(object);
+	linearVelocity.set(0, 0, 0);
+	angularVelocity.set(0, 0, 0);
+	CorePhysicsAttribute.getLinearVelocity(object, linearVelocity);
+	CorePhysicsAttribute.getAngularVelocity(object, angularVelocity);
+	const gravityScale = CorePhysicsAttribute.getGravityScale(object);
+	const canSleep = CorePhysicsAttribute.getCanSleep(object);
+
+	// create desc
 	const rigidBodyDesc = new PhysicsLib.RigidBodyDesc(rbdType);
 	rigidBodyDesc.setTranslation(object.position.x, object.position.y, object.position.z);
 	rigidBodyDesc.setRotation(object.quaternion);
-	const rigidBody = _createRBDFromDesc(world, rigidBodyDesc, object);
-
-	const linearDamping = CorePhysicsAttribute.getLinearDamping(object);
-	const angularDamping = CorePhysicsAttribute.getAngularDamping(object);
-	const canSleep = CorePhysicsAttribute.getCanSleep(object);
-
+	rigidBodyDesc.setLinvel(linearVelocity.x, linearVelocity.y, linearVelocity.z);
+	rigidBodyDesc.setAngvel(angularVelocity);
 	if (linearDamping != null) {
-		rigidBody.setLinearDamping(linearDamping);
+		rigidBodyDesc.setLinearDamping(linearDamping);
 	}
 	if (angularDamping != null) {
-		rigidBody.setAngularDamping(angularDamping);
+		rigidBodyDesc.setAngularDamping(angularDamping);
+	}
+	if (gravityScale != null) {
+		// .setGravityScale seems to work when set on the rbd desc,
+		// but not on the RBD itself
+		rigidBodyDesc.setGravityScale(gravityScale);
 	}
 	if (canSleep != null) {
 		rigidBodyDesc.setCanSleep(canSleep);
 	}
+
+	// create RBD
+	const rigidBody = _createRBDFromDesc(world, rigidBodyDesc, object);
+
 	return rigidBody;
 }
 function _createColliderDesc(PhysicsLib: PhysicsLib, object: Object3D) {
@@ -247,6 +270,17 @@ export function physicsRBDAddTorque(object: Object3D, torque: Vector3) {
 	body.addTorque(torque, true);
 }
 // reset
+export function physicsRBDResetAll(object: Object3D, wakeup: boolean) {
+	const body = _getRBD(object);
+	if (!body) {
+		console.warn('no rbd found');
+		return;
+	}
+	body.resetForces(wakeup);
+	body.resetTorques(wakeup);
+	body.setLinvel({x: 0, y: 0, z: 0}, wakeup);
+	body.setAngvel({x: 0, y: 0, z: 0}, wakeup);
+}
 export function physicsRBDResetForces(object: Object3D, wakeup: boolean) {
 	const body = _getRBD(object);
 	if (!body) {
@@ -264,44 +298,75 @@ export function physicsRBDResetTorques(object: Object3D, wakeup: boolean) {
 	body.resetTorques(wakeup);
 }
 
-export function setPhysicsRBDKinematicPosition(object: Object3D, targetPosition: Vector3, lerp: number) {
+export function setPhysicsRBDPosition(object: Object3D, targetPosition: Vector3, lerp: number) {
 	const body = _getRBD(object);
 	if (!body) {
 		console.warn('no rbd found');
 		return;
 	}
-	if (!body.isKinematic()) {
-		console.warn('rbd is not kinematic');
-		return;
-	}
+	const translateFunc = body.isKinematic()
+		? body.setNextKinematicTranslation.bind(body)
+		: body.setTranslation.bind(body);
+
 	if (lerp < 1) {
 		const rbdPosition = body.translation();
 		currentPos.set(rbdPosition.x, rbdPosition.y, rbdPosition.z);
 		newPos.copy(targetPosition);
 		currentPos.lerp(newPos, lerp);
-		body.setNextKinematicTranslation(currentPos);
+		translateFunc(currentPos, true);
 	} else {
-		body.setNextKinematicTranslation(targetPosition);
+		translateFunc(targetPosition, true);
 	}
 }
-export function setPhysicsRBDKinematicRotation(object: Object3D, targetQuaternion: Quaternion, lerp: number) {
+export function setPhysicsRBDRotation(object: Object3D, targetQuaternion: Quaternion, lerp: number) {
 	const body = _getRBD(object);
 	if (!body) {
 		console.warn('no rbd found');
 		return;
 	}
-	if (!body.isKinematic()) {
-		console.warn('rbd is not kinematic');
-		return;
-	}
+	const rotateFunc = body.isKinematic() ? body.setNextKinematicRotation.bind(body) : body.setRotation.bind(body);
 	if (lerp < 1) {
 		const rbdRotation = body.rotation();
 		currentQuaternion.set(rbdRotation.x, rbdRotation.y, rbdRotation.z, rbdRotation.w);
 		newQuaternion.copy(currentQuaternion);
 		currentQuaternion.slerp(newQuaternion, lerp);
-		body.setNextKinematicRotation(currentQuaternion);
+		rotateFunc(currentQuaternion, true);
 	} else {
-		body.setNextKinematicRotation(targetQuaternion);
+		rotateFunc(targetQuaternion, true);
+	}
+}
+export function setPhysicsRBDLinearVelocity(object: Object3D, targetVelocity: Vector3, lerp: number) {
+	const body = _getRBD(object);
+	if (!body) {
+		console.warn('no rbd found');
+		return;
+	}
+
+	if (lerp < 1) {
+		const rbdLinearVelocity = body.linvel();
+		currentLinearVelocity.set(rbdLinearVelocity.x, rbdLinearVelocity.y, rbdLinearVelocity.z);
+		newLinearVelocity.copy(targetVelocity);
+		currentLinearVelocity.lerp(newPos, lerp);
+		body.setLinvel(currentLinearVelocity, true);
+	} else {
+		body.setLinvel(targetVelocity, true);
+	}
+}
+export function setPhysicsRBDAngularVelocity(object: Object3D, targetVelocity: Vector3, lerp: number) {
+	const body = _getRBD(object);
+	if (!body) {
+		console.warn('no rbd found');
+		return;
+	}
+
+	if (lerp < 1) {
+		const rbdAngularVelocity = body.angvel();
+		currentAngularVelocity.set(rbdAngularVelocity.x, rbdAngularVelocity.y, rbdAngularVelocity.z);
+		newAngularVelocity.copy(targetVelocity);
+		currentAngularVelocity.lerp(newPos, lerp);
+		body.setAngvel(currentAngularVelocity, true);
+	} else {
+		body.setAngvel(targetVelocity, true);
 	}
 }
 
@@ -319,6 +384,9 @@ function PhysicsRBDTypeToRigidBodyType(type: PhysicsRBDType) {
 		}
 		case PhysicsRBDType.KINEMATIC_POS: {
 			return RigidBodyType.KinematicPositionBased;
+		}
+		case PhysicsRBDType.KINEMATIC_VEL: {
+			return RigidBodyType.KinematicVelocityBased;
 		}
 	}
 	TypeAssert.unreachable(type);

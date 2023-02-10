@@ -12,6 +12,7 @@ import {
 import {CorePhysicsAttribute} from '../../../core/physics/PhysicsAttribute';
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
+import {MapUtils} from '../../../core/MapUtils';
 import {isBooleanTrue} from '../../../core/Type';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {InputCloneMode} from '../../poly/InputCloneMode';
@@ -35,6 +36,7 @@ function quaternionToVector4(quaternion: Quaternion, target: Vector4) {
 	target.z = quaternion.z;
 	target.w = quaternion.w;
 }
+const checkedPair: Map<number, Set<number>> = new Map();
 
 class PhysicsRBDJointsSopParamsConfig extends NodeParamsConfig {
 	/** @param group to assign the material to */
@@ -130,17 +132,18 @@ export class PhysicsRBDJointsSopNode extends TypedSopNode<PhysicsRBDJointsSopPar
 		const candidateObjects = selectedObjects.filter((object) => CorePhysicsAttribute.getRBDId(object) != null);
 
 		const joinObjects: Object3D[] = [];
-		const {maxDistance} = this.pv;
-		const pairChecked: Set<string> = new Set();
+		const maxDistance = this.pv.maxDistance;
+		checkedPair.clear();
 		for (let i1 = 0; i1 < candidateObjects.length; i1++) {
 			const object1 = candidateObjects[i1];
 			for (let i2 = 0; i2 < candidateObjects.length; i2++) {
 				const object2 = candidateObjects[i2];
 				if (i1 != i2) {
 					if (object1.position.distanceTo(object2.position) < maxDistance) {
-						const is = i1 < i2 ? `${i1}-${i2}` : `${i2}-${i1}`; //[i1, i2].sort((a, b) => a - b).join('-');
-						if (!pairChecked.has(is)) {
-							pairChecked.add(is);
+						let key = i1 < i2 ? i1 : i2;
+						let idInSet = i1 < i2 ? i2 : i1;
+						if (checkedPair.get(key)?.has(idInSet) == null) {
+							MapUtils.addToSetAtEntry(checkedPair, key, idInSet);
 							const jointObject = this._createJoint(object1, object2);
 							joinObjects.push(jointObject);
 						}

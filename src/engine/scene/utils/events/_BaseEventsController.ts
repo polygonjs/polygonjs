@@ -121,18 +121,24 @@ export abstract class BaseSceneEventsController<
 		};
 
 		const _actorEventDatas = () => {
-			const eventDatas: EventData[] = [];
+			let eventTypeByEmitter: Map<CoreEventEmitter, Set<string>> = new Map();
 
 			this._actorNodesByEventNames.forEach((mapForEventName, eventName) => {
 				mapForEventName.forEach((nodes, emitter) => {
 					nodes.forEach((node) => {
-						const eventData: EventData = {
-							type: eventName,
-							emitter,
-						};
-						eventDatas.push(eventData);
+						MapUtils.addToSetAtEntry(eventTypeByEmitter, emitter, eventName);
 					});
 				});
+			});
+			const eventDatas: EventData[] = [];
+			eventTypeByEmitter.forEach((eventNames, emitter) => {
+				for (let eventName of eventNames) {
+					const eventData: EventData = {
+						type: eventName,
+						emitter,
+					};
+					eventDatas.push(eventData);
+				}
 			});
 			return eventDatas;
 		};

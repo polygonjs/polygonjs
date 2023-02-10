@@ -5,11 +5,11 @@
  */
 import {CoreTransform} from './../../../core/Transform';
 import {ObjectType} from './../../../core/geometry/Constant';
-import {BoxGeometry, Mesh, Vector3} from 'three';
+import {BoxGeometry, Vector3} from 'three';
 import {CorePhysicsAttribute, PhysicsRBDColliderType, PhysicsRBDType} from './../../../core/physics/PhysicsAttribute';
 import {TypedSopNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {CoreConstant} from '../../../core/geometry/Constant';
+import {BaseSopOperation} from '../../operations/sop/_Base';
 
 const DEFAULT_UP = new Vector3(0, 1, 0);
 const tmp = new Vector3(0, 0, 0);
@@ -31,9 +31,14 @@ class PhysicsGroundSopParamsConfig extends NodeParamsConfig {
 		range: [0, 1],
 		rangeLocked: [true, false],
 	});
+	/** @param friction */
+	friction = ParamConfig.FLOAT(0.5, {
+		separatorBefore: true,
+		range: [0, 1],
+		rangeLocked: [true, false],
+	});
 	/** @param restitution */
 	restitution = ParamConfig.FLOAT(0.5, {
-		separatorBefore: true,
 		range: [0, 1],
 		rangeLocked: [true, false],
 	});
@@ -53,9 +58,9 @@ export class PhysicsGroundSopNode extends TypedSopNode<PhysicsGroundSopParamsCon
 	private _coreTransform = new CoreTransform();
 	override async cook() {
 		const thickness = this.pv.thickness;
-		const object = new Mesh(
+		const object = BaseSopOperation.createObject(
 			new BoxGeometry(this.pv.size.x, thickness, this.pv.size.y),
-			CoreConstant.MATERIALS[ObjectType.MESH]
+			ObjectType.MESH
 		);
 		// object.matrixAutoUpdate = false;
 		// object.lookAt(this.pv.direction);
@@ -72,6 +77,7 @@ export class PhysicsGroundSopNode extends TypedSopNode<PhysicsGroundSopParamsCon
 
 		CorePhysicsAttribute.setRBDType(object, PhysicsRBDType.FIXED);
 		CorePhysicsAttribute.setColliderType(object, PhysicsRBDColliderType.CUBOID);
+		CorePhysicsAttribute.setFriction(object, this.pv.friction);
 		CorePhysicsAttribute.setRestitution(object, this.pv.restitution);
 		CorePhysicsAttribute.setCuboidSizes(object, new Vector3(this.pv.size.x, this.pv.thickness, this.pv.size.y));
 		CorePhysicsAttribute.setCuboidSize(object, 1);

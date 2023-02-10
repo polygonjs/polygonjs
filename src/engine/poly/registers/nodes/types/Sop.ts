@@ -3,6 +3,7 @@ export enum SopType {
 	DATA_URL = 'dataUrl',
 	PARTICLES_SYSTEM_GPU = 'particlesSystemGpu',
 	PHYSICS_WORLD = 'physicsWorld',
+	PHYSICS_PLAYER = 'physicsPlayer',
 	SHEAR = 'shear',
 	TEXT = 'text',
 	TRANSFORM = 'transform',

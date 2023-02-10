@@ -13,6 +13,9 @@ export interface PhysicsLib {
 	RigidBodyDesc: typeof RigidBodyDesc;
 	JointData: typeof JointData;
 	RigidBodyType: RigidBodyType;
+	QueryFilterFlags: {
+		EXCLUDE_KINEMATIC: number;
+	};
 }
 
 let physics: PhysicsLib | undefined;

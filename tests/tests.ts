@@ -450,6 +450,7 @@ import './engine/nodes/sop/PerspectiveCamera';
 import './engine/nodes/sop/Plane';
 import './engine/nodes/sop/PhysicsGround';
 import './engine/nodes/sop/PhysicsRBDAttributes';
+import './engine/nodes/sop/PhysicsRBDJoints';
 import './engine/nodes/sop/PhysicsWorld';
 import './engine/nodes/sop/Point';
 import './engine/nodes/sop/PointLight';

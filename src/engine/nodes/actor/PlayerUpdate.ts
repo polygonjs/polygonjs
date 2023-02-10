@@ -39,14 +39,6 @@ class PlayerUpdateActorParamsConfig extends NodeParamsConfig {
 		range: [0, 10],
 		rangeLocked: [true, false],
 	});
-	/** @param jump Allowed */
-	jumpAllowed = ParamConfig.BOOLEAN(true);
-	/** @param jump Force */
-	jumpStrength = ParamConfig.FLOAT(10, {
-		range: [0, 100],
-		rangeLocked: [true, false],
-		visibleIf: {jumpAllowed: 1},
-	});
 	/** @param run Allowed */
 	runAllowed = ParamConfig.BOOLEAN(true);
 	/** @param jump Force */
@@ -55,6 +47,15 @@ class PlayerUpdateActorParamsConfig extends NodeParamsConfig {
 		rangeLocked: [true, false],
 		visibleIf: {runAllowed: 1},
 	});
+	/** @param jump Allowed */
+	jumpAllowed = ParamConfig.BOOLEAN(true);
+	/** @param jump Force */
+	jumpStrength = ParamConfig.FLOAT(10, {
+		range: [0, 100],
+		rangeLocked: [true, false],
+		visibleIf: {jumpAllowed: 1},
+	});
+
 	/** @param physics Steps */
 	physicsSteps = ParamConfig.INTEGER(5, {
 		range: [1, 10],

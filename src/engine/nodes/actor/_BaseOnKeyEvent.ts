@@ -46,29 +46,51 @@ export abstract class BaseOnKeyEventActorNode extends BaseUserInputActorNode<Bas
 	}
 
 	public override receiveTrigger(context: ActorNodeTriggerContext) {
-		const event = this.scene().eventsDispatcher.keyboardEventsController.currentEvent();
-		if (!event) {
+		const events = this.scene().eventsDispatcher.keyboardEventsController.currentEvents();
+		if (events.length == 0) {
 			return;
 		}
 
-		const ctrlKey = this._inputValueFromParam<ParamType.BOOLEAN>(this.p.ctrlKey, context);
-		if (event.ctrlKey != isBooleanTrue(ctrlKey)) {
+		const eventMatchesAtLeastOneModifier = () => {
+			const ctrlKey = this._inputValueFromParam<ParamType.BOOLEAN>(this.p.ctrlKey, context);
+			for (let event of events) {
+				if (event.ctrlKey == isBooleanTrue(ctrlKey)) {
+					return true;
+				}
+			}
+			const altKey = this._inputValueFromParam<ParamType.BOOLEAN>(this.p.altKey, context);
+			for (let event of events) {
+				if (event.altKey == isBooleanTrue(altKey)) {
+					return true;
+				}
+			}
+
+			const shiftKey = this._inputValueFromParam<ParamType.BOOLEAN>(this.p.shiftKey, context);
+			for (let event of events) {
+				if (event.shiftKey == isBooleanTrue(shiftKey)) {
+					return true;
+				}
+			}
+
+			const metaKey = this._inputValueFromParam<ParamType.BOOLEAN>(this.p.metaKey, context);
+			for (let event of events) {
+				if (event.metaKey == isBooleanTrue(metaKey)) {
+					return true;
+				}
+			}
+		};
+		const eventMatchesAtLeastOneKeyCode = () => {
+			const keyCodes = this._inputValueFromParam<ParamType.STRING>(this.p.keyCodes, context);
+			for (let event of events) {
+				if (CoreString.matchMask(event.code, keyCodes)) {
+					return true;
+				}
+			}
+		};
+		if (!eventMatchesAtLeastOneModifier()) {
 			return;
 		}
-		const altKey = this._inputValueFromParam<ParamType.BOOLEAN>(this.p.altKey, context);
-		if (event.altKey != isBooleanTrue(altKey)) {
-			return;
-		}
-		const shiftKey = this._inputValueFromParam<ParamType.BOOLEAN>(this.p.shiftKey, context);
-		if (event.shiftKey != isBooleanTrue(shiftKey)) {
-			return;
-		}
-		const metaKey = this._inputValueFromParam<ParamType.BOOLEAN>(this.p.metaKey, context);
-		if (event.metaKey != isBooleanTrue(metaKey)) {
-			return;
-		}
-		const keyCodes = this._inputValueFromParam<ParamType.STRING>(this.p.keyCodes, context);
-		if (!CoreString.matchMask(event.code, keyCodes)) {
+		if (!eventMatchesAtLeastOneKeyCode()) {
 			return;
 		}
 		this.runTrigger(context);

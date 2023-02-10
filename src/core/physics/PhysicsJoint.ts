@@ -23,19 +23,19 @@ export const PHYSICS_JOINT_TYPES: PhysicsJointType[] = [
 	PhysicsJointType.REVOLUT,
 	PhysicsJointType.PRISMATIC,
 ];
-export const PHYSICS_JOINT_TYPE_MENU_ENTRIES = PHYSICS_JOINT_TYPES.map((name, value) => ({name, value}));
+const ALLOWED_JOIN_TYPES = [PhysicsJointType.FIXED, PhysicsJointType.SPHERICAL];
+export const PHYSICS_JOINT_TYPE_MENU_ENTRIES = ALLOWED_JOIN_TYPES.map((name, value) => ({name, value}));
 
 export enum PhysicsJointAttribute {
-	JOIN_TYPE = 'PhysicsJointAttribute_jointType',
-	RBD_ID1 = 'PhysicsJointAttribute_rbdId1',
-	RBD_ID2 = 'PhysicsJointAttribute_rbdId2',
-	ANCHOR1 = 'PhysicsJointAttribute_anchor1',
-	ANCHOR2 = 'PhysicsJointAttribute_anchor2',
-	// CENTER = 'PhysicsJointAttribute_center',
-	LIMIT = 'PhysicsJointAttribute_limit',
-	AXIS = 'PhysicsJointAttribute_axis',
-	FRAME1 = 'PhysicsJointAttribute_frame1',
-	FRAME2 = 'PhysicsJointAttribute_frame2',
+	JOIN_TYPE = 'jointType',
+	RBD_ID1 = 'rbdId1',
+	RBD_ID2 = 'rbdId2',
+	ANCHOR1 = 'anchor1',
+	ANCHOR2 = 'anchor2',
+	LIMIT = 'limit',
+	AXIS = 'axis',
+	FRAME1 = 'frame1',
+	FRAME2 = 'frame2',
 }
 const wakeUp = true;
 const _limit = new Vector2();

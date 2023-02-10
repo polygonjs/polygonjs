@@ -1,5 +1,5 @@
 import {CorePhysics} from './CorePhysics';
-import type {World, RigidBody, Collider} from '@dimforge/rapier3d';
+import type {World, RigidBody, Collider, ImpulseJoint, MultibodyJoint} from '@dimforge/rapier3d';
 // import {CorePhysicsUserData} from './PhysicsUserData';
 import {Object3D, Vector3} from 'three';
 import {physicsCreateRBD, physicsUpdateRBD} from './PhysicsRBD';
@@ -9,6 +9,7 @@ import {BaseNodeType} from '../../engine/nodes/_Base';
 import {CoreObject} from '../geometry/Object';
 import {PhysicsIdAttribute} from './PhysicsAttribute';
 import {physicsDebugPairFromDebugObject, updatePhysicsDebugObject} from './PhysicsDebug';
+import {clearPhysicsPlayers, createOrFindPhysicsPlayer} from './player/PhysicsPlayer';
 
 export const PHYSICS_GRAVITY_DEFAULT = new Vector3(0, -9.81, 0);
 
@@ -69,16 +70,28 @@ export async function initCorePhysicsWorld(worldObject: Object3D) {
 	for (let child of children) {
 		physicsCreateJoint(PhysicsLib, world, worldObject, child, rigidBodyById);
 	}
+	// create character controller
+	for (let child of children) {
+		createOrFindPhysicsPlayer(child, PhysicsLib, world);
+	}
 }
 
 function _clearWorld(world: World) {
 	const bodies: RigidBody[] = [];
 	const colliders: Collider[] = [];
+	const joints: ImpulseJoint[] = [];
+	const multiBodyJoints: MultibodyJoint[] = [];
 	world.bodies.forEach((body) => {
 		bodies.push(body);
 	});
 	world.colliders.forEach((collider) => {
 		colliders.push(collider);
+	});
+	world.impulseJoints.forEach((joint) => {
+		joints.push(joint);
+	});
+	world.multibodyJoints.forEach((multiBodyJoint) => {
+		multiBodyJoints.push(multiBodyJoint);
 	});
 	for (let body of bodies) {
 		world.removeRigidBody(body);
@@ -86,6 +99,14 @@ function _clearWorld(world: World) {
 	for (let collider of colliders) {
 		world.removeCollider(collider, false);
 	}
+	for (let joint of joints) {
+		world.removeImpulseJoint(joint, false);
+	}
+	for (let joint of multiBodyJoints) {
+		world.removeMultibodyJoint(joint, false);
+	}
+
+	clearPhysicsPlayers();
 }
 
 export function stepWorld(worldObject: Object3D) {

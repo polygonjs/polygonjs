@@ -42,13 +42,14 @@ const ParamsConfig = new PhysicsWorldSopParamsConfig();
 
 export class PhysicsWorldSopNode extends TypedSopNode<PhysicsWorldSopParamsConfig> {
 	override readonly paramsConfig = ParamsConfig;
-	static override type() {
+	static override type(): SopType.PHYSICS_WORLD {
 		return SopType.PHYSICS_WORLD;
 	}
 
 	protected override initializeNode() {
 		this.io.inputs.setCount(1);
-		// set to always clone, so that the
+		// set to always clone, so that we reset the world
+		// by simply setting this node to dirty
 		this.io.inputs.initInputsClonedState(InputCloneMode.ALWAYS);
 	}
 
@@ -64,7 +65,6 @@ export class PhysicsWorldSopNode extends TypedSopNode<PhysicsWorldSopParamsConfi
 		}
 
 		const world = await createOrFindPhysicsWorld(this, worldGroup, this.pv.gravity);
-		// assignPhysicsWorldNodeToWorldObject(group, this);
 		await initCorePhysicsWorld(worldGroup);
 
 		const actorNode = this._findActorNode();

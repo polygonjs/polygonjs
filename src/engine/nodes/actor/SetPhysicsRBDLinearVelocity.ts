@@ -3,7 +3,7 @@
  *
  *
  */
-import {ParamConfig} from '../utils/params/ParamsConfig';
+import {ParamConfig} from './../utils/params/ParamsConfig';
 import {ActorNodeTriggerContext, TRIGGER_CONNECTION_NAME, TypedActorNode} from './_Base';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {
@@ -12,22 +12,21 @@ import {
 	ACTOR_CONNECTION_POINT_IN_NODE_DEF,
 } from '../utils/io/connections/Actor';
 import {ParamType} from '../../poly/ParamType';
-import {setPhysicsRBDRotation} from '../../../core/physics/PhysicsRBD';
-import {Quaternion} from 'three';
+import {setPhysicsRBDLinearVelocity} from '../../../core/physics/PhysicsRBD';
 const CONNECTION_OPTIONS = ACTOR_CONNECTION_POINT_IN_NODE_DEF;
-const tmpQuaternion = new Quaternion();
-class SetPhysicsRBDRotationActorParamsConfig extends NodeParamsConfig {
-	/** @param target rotation */
-	quaternion = ParamConfig.VECTOR4([0, 0, 0, 0]);
+
+class SetPhysicsRBDLinearVelocityActorParamsConfig extends NodeParamsConfig {
+	/** @param target position */
+	velocity = ParamConfig.VECTOR3([0, 0, 0]);
 	/** @param lerp factor */
 	lerp = ParamConfig.FLOAT(1);
 }
-const ParamsConfig = new SetPhysicsRBDRotationActorParamsConfig();
+const ParamsConfig = new SetPhysicsRBDLinearVelocityActorParamsConfig();
 
-export class SetPhysicsRBDRotationActorNode extends TypedActorNode<SetPhysicsRBDRotationActorParamsConfig> {
+export class SetPhysicsRBDLinearVelocityActorNode extends TypedActorNode<SetPhysicsRBDLinearVelocityActorParamsConfig> {
 	override readonly paramsConfig = ParamsConfig;
 	static override type() {
-		return 'setPhysicsRBDRotation';
+		return 'setPhysicsRBDLinearVelocity';
 	}
 
 	override initializeNode() {
@@ -49,13 +48,10 @@ export class SetPhysicsRBDRotationActorNode extends TypedActorNode<SetPhysicsRBD
 		const Object3D =
 			this._inputValue<ActorConnectionPointType.OBJECT_3D>(ActorConnectionPointType.OBJECT_3D, context) ||
 			context.Object3D;
-		const quatAsVector4 = this._inputValueFromParam<ParamType.VECTOR4>(this.p.quaternion, context);
+		const position = this._inputValueFromParam<ParamType.VECTOR3>(this.p.velocity, context);
 		const lerp = this._inputValueFromParam<ParamType.FLOAT>(this.p.lerp, context);
-		tmpQuaternion.x = quatAsVector4.x;
-		tmpQuaternion.y = quatAsVector4.y;
-		tmpQuaternion.z = quatAsVector4.z;
-		tmpQuaternion.w = quatAsVector4.w;
-		setPhysicsRBDRotation(Object3D, tmpQuaternion, lerp);
+
+		setPhysicsRBDLinearVelocity(Object3D, position, lerp);
 
 		this.runTrigger(context);
 	}

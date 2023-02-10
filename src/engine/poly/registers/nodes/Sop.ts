@@ -127,6 +127,7 @@ import {ParticlesSystemGpuSopNode} from '../../../nodes/sop/ParticlesSystemGpu';
 import {PeakSopNode} from '../../../nodes/sop/Peak';
 import {PerspectiveCameraSopNode} from '../../../nodes/sop/PerspectiveCamera';
 import {PhysicsGroundSopNode} from '../../../nodes/sop/PhysicsGround';
+import {PhysicsPlayerSopNode} from '../../../nodes/sop/PhysicsPlayer';
 import {PhysicsRBDJointsSopNode} from '../../../nodes/sop/PhysicsRBDJoints';
 import {PhysicsRBDAttributesSopNode} from '../../../nodes/sop/PhysicsRBDAttributes';
 import {PhysicsWorldSopNode} from '../../../nodes/sop/PhysicsWorld';
@@ -313,6 +314,7 @@ export interface GeoNodeChildrenMap {
 	peak: PeakSopNode;
 	perspectiveCamera: PerspectiveCameraSopNode;
 	physicsGround: PhysicsGroundSopNode;
+	physicsPlayer: PhysicsPlayerSopNode;
 	physicsRBDJoints: PhysicsRBDJointsSopNode;
 	physicsRBDAttributes: PhysicsRBDAttributesSopNode;
 	physicsWorld: PhysicsWorldSopNode;
@@ -726,6 +728,7 @@ export class SopRegister {
 		poly.registerNode(PeakSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(PerspectiveCameraSopNode, CATEGORY_SOP.RENDER);
 		poly.registerNode(PhysicsGroundSopNode, CATEGORY_SOP.PHYSICS);
+		poly.registerNode(PhysicsPlayerSopNode, CATEGORY_SOP.PHYSICS);
 		poly.registerNode(PhysicsRBDJointsSopNode, CATEGORY_SOP.PHYSICS);
 		poly.registerNode(PhysicsRBDAttributesSopNode, CATEGORY_SOP.PHYSICS);
 		poly.registerNode(PhysicsWorldSopNode, CATEGORY_SOP.PHYSICS);

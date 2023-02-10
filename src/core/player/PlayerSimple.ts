@@ -1,9 +1,5 @@
 import {CapsuleSopOperation} from './../../engine/operations/sop/Capsule';
-import {Object3D} from 'three';
-import {Vector3} from 'three';
-import {Box3} from 'three';
-import {Line3} from 'three';
-import {Matrix4} from 'three';
+import {Object3D, Vector3, Box3, Line3, Matrix4} from 'three';
 import {MeshWithBVH, ExtendedTriangle} from '../../engine/operations/sop/utils/Bvh/three-mesh-bvh';
 
 export enum CorePlayerInput {

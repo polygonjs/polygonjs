@@ -100,25 +100,28 @@ export class OnPlayerEventActorNode extends BaseUserInputActorNode<BaseOnKeyEven
 		]);
 	}
 	public override receiveTrigger(context: ActorNodeTriggerContext) {
-		const event = this.scene().eventsDispatcher.keyboardEventsController.currentEvent();
-		if (!event) {
+		const events = this.scene().eventsDispatcher.keyboardEventsController.currentEvents();
+		if (events.length == 0) {
 			return;
 		}
-		if (event.ctrlKey) {
-			// if ctrl is pressed, we do not register any event.
-			// this is mostly to allow Ctrl+S to work without triggering a player movement
-			return;
-		}
-		const callbackMethod = this._callbackByEventType[event.type as 'keydown' | 'keyup'];
-		if (!callbackMethod) {
-			return;
-		}
-		const callback = callbackMethod(event.code);
-		if (callback) {
-			callback();
-			if (isBooleanTrue(this.pv.stopPropagation)) {
-				event.stopPropagation();
-				event.preventDefault();
+
+		for (let event of events) {
+			if (event.ctrlKey) {
+				// if ctrl is pressed, we do not register any event.
+				// this is mostly to allow Ctrl+S to work without triggering a player movement
+				return;
+			}
+			const callbackMethod = this._callbackByEventType[event.type as 'keydown' | 'keyup'];
+			if (!callbackMethod) {
+				return;
+			}
+			const callback = callbackMethod(event.code);
+			if (callback) {
+				callback();
+				if (isBooleanTrue(this.pv.stopPropagation)) {
+					event.stopPropagation();
+					event.preventDefault();
+				}
 			}
 		}
 	}
@@ -221,19 +224,15 @@ export class OnPlayerEventActorNode extends BaseUserInputActorNode<BaseOnKeyEven
 	};
 	private _onForwardStart() {
 		this._playerInputData.forward = true;
-		this._playerInputData.backward = false;
 	}
 	private _onBackwardStart() {
 		this._playerInputData.backward = true;
-		this._playerInputData.forward = false;
 	}
 	private _onLeftStart() {
 		this._playerInputData.left = true;
-		this._playerInputData.right = false;
 	}
 	private _onRightStart() {
 		this._playerInputData.right = true;
-		this._playerInputData.left = false;
 	}
 	private _onJumpStart() {
 		this._playerInputData.jump = true;

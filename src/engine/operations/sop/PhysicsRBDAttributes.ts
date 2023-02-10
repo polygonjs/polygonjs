@@ -39,6 +39,9 @@ interface PhysicsRBDAttributesSopParams extends DefaultOperationParams {
 	restitution: number;
 	linearDamping: number;
 	angularDamping: number;
+	linearVelocity: Vector3;
+	angularVelocity: Vector3;
+	gravityScale: number;
 	canSleep: boolean;
 }
 
@@ -62,6 +65,9 @@ export class PhysicsRBDAttributesSopOperation extends BaseSopOperation {
 		restitution: 0.5,
 		linearDamping: 0,
 		angularDamping: 0,
+		linearVelocity: new Vector3(0, 0, 0),
+		angularVelocity: new Vector3(0, 0, 0),
+		gravityScale: 1,
 		canSleep: true,
 	};
 	static override readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;

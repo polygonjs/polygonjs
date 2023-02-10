@@ -115,6 +115,7 @@ import {OnWebXRControllerEventActorNode} from '../../../nodes/actor/OnWebXRContr
 import {OrActorNode} from '../../../nodes/actor/Or';
 import {ParamButtonPressActorNode} from '../../../nodes/actor/ParamButtonPress';
 import {PauseAudioSourceActorNode} from '../../../nodes/actor/PauseAudioSource';
+import {PhysicsPlayerUpdateActorNode} from '../../../nodes/actor/PhysicsPlayerUpdate';
 import {PhysicsRBDAddForceActorNode} from '../../../nodes/actor/PhysicsRBDAddForce';
 import {PhysicsRBDAddForceAtPointActorNode} from '../../../nodes/actor/PhysicsRBDAddForceAtPoint';
 import {PhysicsRBDAddTorqueActorNode} from '../../../nodes/actor/PhysicsRBDAddTorque';
@@ -122,6 +123,7 @@ import {PhysicsRBDApplyImpulseActorNode} from '../../../nodes/actor/PhysicsRBDAp
 import {PhysicsRBDApplyTorqueImpulseActorNode} from '../../../nodes/actor/PhysicsRBDApplyTorqueImpulse';
 import {PhysicsRBDApplyImpulseAtPointActorNode} from '../../../nodes/actor/PhysicsRBDApplyImpulseAtPoint';
 import {PhysicsRBDRemoveActorNode} from '../../../nodes/actor/PhysicsRBDRemove';
+import {PhysicsRBDResetAllActorNode} from '../../../nodes/actor/PhysicsRBDResetAll';
 import {PhysicsRBDResetForcesActorNode} from '../../../nodes/actor/PhysicsRBDResetForces';
 import {PhysicsRBDResetTorquesActorNode} from '../../../nodes/actor/PhysicsRBDResetTorques';
 import {PhysicsWorldResetActorNode} from '../../../nodes/actor/PhysicsWorldReset';
@@ -167,6 +169,8 @@ import {SetObjectReceiveShadowActorNode} from '../../../nodes/actor/SetObjectRec
 import {SetObjectRotationActorNode} from '../../../nodes/actor/SetObjectRotation';
 import {SetObjectScaleActorNode} from '../../../nodes/actor/SetObjectScale';
 import {SetObjectVisibleActorNode} from '../../../nodes/actor/SetObjectVisible';
+import {SetPhysicsRBDAngularVelocityActorNode} from '../../../nodes/actor/SetPhysicsRBDAngularVelocity';
+import {SetPhysicsRBDLinearVelocityActorNode} from '../../../nodes/actor/SetPhysicsRBDLinearVelocity';
 import {SetPhysicsRBDPositionActorNode} from '../../../nodes/actor/SetPhysicsRBDPosition';
 import {SetPhysicsRBDRotationActorNode} from '../../../nodes/actor/SetPhysicsRBDRotation';
 import {SetPhysicsRBDConePropertyActorNode} from '../../../nodes/actor/SetPhysicsRBDConeProperty';
@@ -338,6 +342,7 @@ export interface ActorNodeChildrenMap {
 	or: OrActorNode;
 	paramButtonPress: ParamButtonPressActorNode;
 	pauseAudioSource: PauseAudioSourceActorNode;
+	physicsPlayerUpdate: PhysicsPlayerUpdateActorNode;
 	physicsRBDAddForceAtPoint: PhysicsRBDAddForceAtPointActorNode;
 	physicsRBDAddForce: PhysicsRBDAddForceActorNode;
 	physicsRBDAddTorque: PhysicsRBDAddTorqueActorNode;
@@ -345,6 +350,7 @@ export interface ActorNodeChildrenMap {
 	physicsRBDApplyTorqueImpulse: PhysicsRBDApplyTorqueImpulseActorNode;
 	physicsRBDApplyImpulseAtPoint: PhysicsRBDApplyImpulseAtPointActorNode;
 	PhysicsRBDRemove: PhysicsRBDRemoveActorNode;
+	physicsRBDResetAll: PhysicsRBDResetAllActorNode;
 	physicsRBDResetForces: PhysicsRBDResetForcesActorNode;
 	physicsRBDResetTorques: PhysicsRBDResetTorquesActorNode;
 	physicsWorldReset: PhysicsWorldResetActorNode;
@@ -390,6 +396,8 @@ export interface ActorNodeChildrenMap {
 	setObjectPosition: SetObjectPositionActorNode;
 	setObjectRotation: SetObjectRotationActorNode;
 	setObjectScale: SetObjectScaleActorNode;
+	setPhysicsRBDAngularVelocity: SetPhysicsRBDAngularVelocityActorNode;
+	setPhysicsRBDLinearVelocity: SetPhysicsRBDLinearVelocityActorNode;
 	setPhysicsRBDPosition: SetPhysicsRBDPositionActorNode;
 	setPhysicsRBDRotation: SetPhysicsRBDRotationActorNode;
 	setPhysicsRBDConeProperty: SetPhysicsRBDConePropertyActorNode;
@@ -566,7 +574,8 @@ export class ActorRegister {
 		poly.registerNode(OnWebXRControllerEventActorNode, CATEGORY_ACTOR.WEBXR);
 		poly.registerNode(OrActorNode, CATEGORY_ACTOR.LOGIC);
 		poly.registerNode(ParamButtonPressActorNode, CATEGORY_ACTOR.ACTION);
-		poly.registerNode(PauseAudioSourceActorNode, CATEGORY_ACTOR.PHYSICS);
+		poly.registerNode(PauseAudioSourceActorNode, CATEGORY_ACTOR.AUDIO);
+		poly.registerNode(PhysicsPlayerUpdateActorNode, CATEGORY_ACTOR.PHYSICS);
 		poly.registerNode(PhysicsRBDAddForceActorNode, CATEGORY_ACTOR.PHYSICS);
 		poly.registerNode(PhysicsRBDAddForceAtPointActorNode, CATEGORY_ACTOR.PHYSICS);
 		poly.registerNode(PhysicsRBDAddTorqueActorNode, CATEGORY_ACTOR.PHYSICS);
@@ -574,6 +583,7 @@ export class ActorRegister {
 		poly.registerNode(PhysicsRBDApplyTorqueImpulseActorNode, CATEGORY_ACTOR.PHYSICS);
 		poly.registerNode(PhysicsRBDApplyImpulseAtPointActorNode, CATEGORY_ACTOR.PHYSICS);
 		poly.registerNode(PhysicsRBDRemoveActorNode, CATEGORY_ACTOR.PHYSICS);
+		poly.registerNode(PhysicsRBDResetAllActorNode, CATEGORY_ACTOR.PHYSICS);
 		poly.registerNode(PhysicsRBDResetForcesActorNode, CATEGORY_ACTOR.PHYSICS);
 		poly.registerNode(PhysicsRBDResetTorquesActorNode, CATEGORY_ACTOR.PHYSICS);
 		poly.registerNode(PhysicsWorldResetActorNode, CATEGORY_ACTOR.PHYSICS);
@@ -620,6 +630,8 @@ export class ActorRegister {
 		poly.registerNode(SetObjectRotationActorNode, CATEGORY_ACTOR.ACTION);
 		poly.registerNode(SetObjectScaleActorNode, CATEGORY_ACTOR.ACTION);
 		poly.registerNode(SetObjectVisibleActorNode, CATEGORY_ACTOR.ACTION);
+		poly.registerNode(SetPhysicsRBDAngularVelocityActorNode, CATEGORY_ACTOR.PHYSICS);
+		poly.registerNode(SetPhysicsRBDLinearVelocityActorNode, CATEGORY_ACTOR.PHYSICS);
 		poly.registerNode(SetPhysicsRBDPositionActorNode, CATEGORY_ACTOR.PHYSICS);
 		poly.registerNode(SetPhysicsRBDRotationActorNode, CATEGORY_ACTOR.PHYSICS);
 		poly.registerNode(SetPhysicsRBDConePropertyActorNode, CATEGORY_ACTOR.PHYSICS);

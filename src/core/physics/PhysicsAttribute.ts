@@ -10,13 +10,14 @@ export enum PhysicsIdAttribute {
 export enum PhysicsRBDType {
 	FIXED = 'fixed',
 	DYNAMIC = 'dynamic',
-	// KINEMATIC_VEL = 'kinematicVelocityBased',
+	KINEMATIC_VEL = 'kinematicVelocityBased',
 	KINEMATIC_POS = 'kinematicPositionBased',
 }
 export const PHYSICS_RBD_TYPES: PhysicsRBDType[] = [
 	PhysicsRBDType.FIXED,
 	PhysicsRBDType.DYNAMIC,
 	PhysicsRBDType.KINEMATIC_POS,
+	PhysicsRBDType.KINEMATIC_VEL,
 ];
 export const PHYSICS_RBD_TYPE_MENU_ENTRIES = PHYSICS_RBD_TYPES.map((name, value) => ({name, value}));
 
@@ -80,6 +81,20 @@ export enum PhysicsCommonAttribute {
 	FRICTION = 'friction',
 	LINEAR_DAMPING = 'linearDamping',
 	ANGULAR_DAMPING = 'angularDamping',
+	LINEAR_VELOCITY = 'linearVelocity',
+	ANGULAR_VELOCITY = 'angularVelocity',
+	GRAVITY_SCALE = 'gravityScale',
+	//
+	CHARACTER_CONTROLLER_ID = 'characterControllerId',
+	CHARACTER_CONTROLLER_OFFSET = 'characterControllerOffset',
+	CHARACTER_CONTROLLER_APPLY_IMPULSES_TO_DYNAMIC = 'characterControllerApplyImpulsesToDynamic',
+	CHARACTER_CONTROLLER_SNAP_TO_GROUND_DISTANCE = 'characterControllerSnapToGroundDistance',
+	CHARACTER_CONTROLLER_AUTO_STEP_MAX_HEIGHT = 'characterControllerAutoStepMaxHeight',
+	CHARACTER_CONTROLLER_AUTO_STEP_MIN_WIDTH = 'characterControllerAutoStepMinWidth',
+	CHARACTER_CONTROLLER_AUTO_STEP_ON_DYNAMIC = 'characterControllerAutoStepOnDynamic',
+	CHARACTER_CONTROLLER_MAX_SLOPE_CLIMB_ANGLE = 'characterControllerMaxSlopeClimbAngle',
+	CHARACTER_CONTROLLER_MIN_SLOPE_CLIMB_ANGLE = 'characterControllerMinSlopeSlideAngle',
+	CHARACTER_CONTROLLER_UP = 'characterControllerUp',
 }
 type PhysicsAttribute =
 	| PhysicsCommonAttribute
@@ -195,6 +210,24 @@ export class CorePhysicsAttribute extends CorePhysicsBaseAttribute {
 	static getAngularDamping(object: Object3D) {
 		return this._getNumber(object, PhysicsCommonAttribute.ANGULAR_DAMPING, 0);
 	}
+	static setLinearVelocity(object: Object3D, value: Vector3) {
+		this._setVector3(object, PhysicsCommonAttribute.LINEAR_VELOCITY, value);
+	}
+	static getLinearVelocity(object: Object3D, target: Vector3) {
+		return this._getVector3(object, PhysicsCommonAttribute.LINEAR_VELOCITY, target);
+	}
+	static setAngularVelocity(object: Object3D, value: Vector3) {
+		this._setVector3(object, PhysicsCommonAttribute.ANGULAR_VELOCITY, value);
+	}
+	static getAngularVelocity(object: Object3D, target: Vector3) {
+		return this._getVector3(object, PhysicsCommonAttribute.ANGULAR_VELOCITY, target);
+	}
+	static setGravityScale(object: Object3D, value: number) {
+		this._setNumber(object, PhysicsCommonAttribute.GRAVITY_SCALE, value);
+	}
+	static getGravityScale(object: Object3D) {
+		return this._getNumber(object, PhysicsCommonAttribute.GRAVITY_SCALE, 0);
+	}
 
 	// cuboid
 	static setCuboidSizes(object: Object3D, value: Vector3) {
@@ -222,5 +255,79 @@ export class CorePhysicsAttribute extends CorePhysicsBaseAttribute {
 	}
 	static getHeight(object: Object3D) {
 		return this._getNumber(object, PhysicsRBDHeightAttribute.HEIGHT, 1);
+	}
+	// character controller
+	static setCharacterControllerId(object: Object3D, value: string) {
+		this._setString(object, PhysicsCommonAttribute.CHARACTER_CONTROLLER_ID, value);
+	}
+	static getCharacterControllerId(object: Object3D): string {
+		return this._getString(object, PhysicsCommonAttribute.CHARACTER_CONTROLLER_ID) as string;
+	}
+	static setCharacterControllerOffset(object: Object3D, value: number) {
+		this._setNumber(object, PhysicsCommonAttribute.CHARACTER_CONTROLLER_OFFSET, value);
+	}
+	static getCharacterControllerOffset(object: Object3D): number {
+		return this._getNumber(object, PhysicsCommonAttribute.CHARACTER_CONTROLLER_OFFSET, 0.01) as number;
+	}
+	static setCharacterControllerUp(object: Object3D, value: Vector3) {
+		this._setVector3(object, PhysicsCommonAttribute.CHARACTER_CONTROLLER_UP, value);
+	}
+	static getCharacterControllerUp(object: Object3D, target: Vector3) {
+		return this._getVector3(object, PhysicsCommonAttribute.CHARACTER_CONTROLLER_UP, target);
+	}
+	static setCharacterControllerMaxSlopeClimbAngle(object: Object3D, value: number) {
+		this._setNumber(object, PhysicsCommonAttribute.CHARACTER_CONTROLLER_MAX_SLOPE_CLIMB_ANGLE, value);
+	}
+	static getCharacterControllerMaxSlopeClimbAngle(object: Object3D): number {
+		return this._getNumber(object, PhysicsCommonAttribute.CHARACTER_CONTROLLER_MAX_SLOPE_CLIMB_ANGLE, 0) as number;
+	}
+	static setCharacterControllerMinSlopeSlideAngle(object: Object3D, value: number) {
+		this._setNumber(object, PhysicsCommonAttribute.CHARACTER_CONTROLLER_MIN_SLOPE_CLIMB_ANGLE, value);
+	}
+	static getCharacterControllerMinSlopeSlideAngle(object: Object3D): number {
+		return this._getNumber(object, PhysicsCommonAttribute.CHARACTER_CONTROLLER_MIN_SLOPE_CLIMB_ANGLE, 0) as number;
+	}
+	static setCharacterControllerApplyImpulsesToDynamic(object: Object3D, value: boolean) {
+		this._setBoolean(object, PhysicsCommonAttribute.CHARACTER_CONTROLLER_APPLY_IMPULSES_TO_DYNAMIC, value);
+	}
+	static getCharacterControllerApplyImpulsesToDynamic(object: Object3D): boolean {
+		return this._getBoolean(
+			object,
+			PhysicsCommonAttribute.CHARACTER_CONTROLLER_APPLY_IMPULSES_TO_DYNAMIC,
+			false
+		) as boolean;
+	}
+	static setCharacterControllerSnapToGroundDistance(object: Object3D, value: number) {
+		this._setNumber(object, PhysicsCommonAttribute.CHARACTER_CONTROLLER_SNAP_TO_GROUND_DISTANCE, value);
+	}
+	static getCharacterControllerSnapToGroundDistance(object: Object3D): number {
+		return this._getNumber(
+			object,
+			PhysicsCommonAttribute.CHARACTER_CONTROLLER_SNAP_TO_GROUND_DISTANCE,
+			0
+		) as number;
+	}
+	// auto step
+	static setCharacterControllerAutoStepMaxHeight(object: Object3D, value: number) {
+		this._setNumber(object, PhysicsCommonAttribute.CHARACTER_CONTROLLER_AUTO_STEP_MAX_HEIGHT, value);
+	}
+	static getCharacterControllerAutoStepMaxHeight(object: Object3D): number {
+		return this._getNumber(object, PhysicsCommonAttribute.CHARACTER_CONTROLLER_AUTO_STEP_MAX_HEIGHT, 0) as number;
+	}
+	static setCharacterControllerAutoStepMinWidth(object: Object3D, value: number) {
+		this._setNumber(object, PhysicsCommonAttribute.CHARACTER_CONTROLLER_AUTO_STEP_MIN_WIDTH, value);
+	}
+	static getCharacterControllerAutoStepMinWidth(object: Object3D): number {
+		return this._getNumber(object, PhysicsCommonAttribute.CHARACTER_CONTROLLER_AUTO_STEP_MIN_WIDTH, 0) as number;
+	}
+	static setCharacterControllerAutoStepOnDynamic(object: Object3D, value: boolean) {
+		this._setBoolean(object, PhysicsCommonAttribute.CHARACTER_CONTROLLER_AUTO_STEP_ON_DYNAMIC, value);
+	}
+	static getCharacterControllerAutoStepOnDynamic(object: Object3D): boolean {
+		return this._getBoolean(
+			object,
+			PhysicsCommonAttribute.CHARACTER_CONTROLLER_AUTO_STEP_ON_DYNAMIC,
+			false
+		) as boolean;
 	}
 }

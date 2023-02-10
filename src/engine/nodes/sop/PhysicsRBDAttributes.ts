@@ -118,7 +118,7 @@ class PhysicsRBDAttributesSopParamsConfig extends NodeParamsConfig {
 	});
 	/** @param restitution */
 	restitution = ParamConfig.FLOAT(DEFAULT.restitution, {
-		range: [0, 1],
+		range: [0, 2],
 		rangeLocked: [true, false],
 		expression: {forEntities: true},
 	});
@@ -132,6 +132,20 @@ class PhysicsRBDAttributesSopParamsConfig extends NodeParamsConfig {
 	angularDamping = ParamConfig.FLOAT(DEFAULT.angularDamping, {
 		range: [0, 10],
 		rangeLocked: [true, false],
+		expression: {forEntities: true},
+	});
+	/** @param linear velocity */
+	linearVelocity = ParamConfig.VECTOR3(DEFAULT.linearVelocity, {
+		expression: {forEntities: true},
+	});
+	/** @param angular velocity */
+	angularVelocity = ParamConfig.VECTOR3(DEFAULT.angularVelocity, {
+		expression: {forEntities: true},
+	});
+	/** @param gravity Scale */
+	gravityScale = ParamConfig.FLOAT(DEFAULT.gravityScale, {
+		range: [-10, 10],
+		rangeLocked: [false, false],
 		expression: {forEntities: true},
 	});
 	/** @param can sleep */
@@ -183,7 +197,7 @@ export class PhysicsRBDAttributesSopNode extends TypedSopNode<PhysicsRBDAttribut
 		return SIZE_COMPUTATION_METHODS[this.pv.sizeMethod];
 	}
 
-	override cook(inputCoreGroups: CoreGroup[]) {
+	override async cook(inputCoreGroups: CoreGroup[]) {
 		const coreGroup = inputCoreGroups[0];
 
 		const RBDType = this.RBDType();
@@ -196,41 +210,82 @@ export class PhysicsRBDAttributesSopNode extends TypedSopNode<PhysicsRBDAttribut
 
 			CorePhysicsAttribute.setColliderType(object, colliderType);
 		}
-		this._computeFloatParam(
-			this.p.density,
-			coreObjects,
-			CorePhysicsAttribute.setDensity.bind(CorePhysicsAttribute)
+		this._applyColliderType(colliderType, sizeMethod, coreObjects);
+		const promises: Array<Promise<void>> = [];
+		promises.push(
+			this._computeFloatParam(
+				this.p.density,
+				coreObjects,
+				CorePhysicsAttribute.setDensity.bind(CorePhysicsAttribute)
+			)
 		);
-		this._computeFloatParam(
-			this.p.friction,
-			coreObjects,
-			CorePhysicsAttribute.setFriction.bind(CorePhysicsAttribute)
+		promises.push(
+			this._computeFloatParam(
+				this.p.friction,
+				coreObjects,
+				CorePhysicsAttribute.setFriction.bind(CorePhysicsAttribute)
+			)
 		);
-		this._computeFloatParam(
-			this.p.linearDamping,
-			coreObjects,
-			CorePhysicsAttribute.setLinearDamping.bind(CorePhysicsAttribute)
+		promises.push(
+			this._computeFloatParam(
+				this.p.linearDamping,
+				coreObjects,
+				CorePhysicsAttribute.setLinearDamping.bind(CorePhysicsAttribute)
+			)
 		);
-		this._computeFloatParam(
-			this.p.angularDamping,
-			coreObjects,
-			CorePhysicsAttribute.setAngularDamping.bind(CorePhysicsAttribute)
+		promises.push(
+			this._computeFloatParam(
+				this.p.angularDamping,
+				coreObjects,
+				CorePhysicsAttribute.setAngularDamping.bind(CorePhysicsAttribute)
+			)
 		);
-		this._computeFloatParam(
-			this.p.restitution,
-			coreObjects,
-			CorePhysicsAttribute.setRestitution.bind(CorePhysicsAttribute)
+		promises.push(
+			this._computeVector3Param(
+				this.p.linearVelocity,
+				coreObjects,
+				CorePhysicsAttribute.setLinearVelocity.bind(CorePhysicsAttribute)
+			)
 		);
-		this._computeBooleanParam(
-			this.p.canSleep,
-			coreObjects,
-			CorePhysicsAttribute.setCanSleep.bind(CorePhysicsAttribute)
+		promises.push(
+			this._computeVector3Param(
+				this.p.angularVelocity,
+				coreObjects,
+				CorePhysicsAttribute.setAngularVelocity.bind(CorePhysicsAttribute)
+			)
+		);
+		promises.push(
+			this._computeFloatParam(
+				this.p.gravityScale,
+				coreObjects,
+				CorePhysicsAttribute.setGravityScale.bind(CorePhysicsAttribute)
+			)
+		);
+		promises.push(
+			this._computeFloatParam(
+				this.p.restitution,
+				coreObjects,
+				CorePhysicsAttribute.setRestitution.bind(CorePhysicsAttribute)
+			)
+		);
+		promises.push(
+			this._computeBooleanParam(
+				this.p.canSleep,
+				coreObjects,
+				CorePhysicsAttribute.setCanSleep.bind(CorePhysicsAttribute)
+			)
 		);
 
-		this._applyColliderType(colliderType, sizeMethod, coreObjects);
 		if (isBooleanTrue(this.pv.addId)) {
-			this._computeStringParam(this.p.id, coreObjects, CorePhysicsAttribute.setRBDId.bind(CorePhysicsAttribute));
+			promises.push(
+				this._computeStringParam(
+					this.p.id,
+					coreObjects,
+					CorePhysicsAttribute.setRBDId.bind(CorePhysicsAttribute)
+				)
+			);
 		}
+		await Promise.all(promises);
 
 		// this._operation = this._operation || new PhysicsRBDAttributesSopOperation(this._scene, this.states);
 		// const core_group = this._operation.cook(input_contents, this.pv);
