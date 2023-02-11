@@ -21,7 +21,14 @@ export function createPhysicsCuboid(PhysicsLib: PhysicsLib, object: Object3D) {
 	const size = CorePhysicsAttribute.getCuboidSize(object);
 	tmp.multiplyScalar(size * 0.5);
 	tmp.multiply(object.scale);
-	return PhysicsLib.ColliderDesc.cuboid(tmp.x, tmp.y, tmp.z);
+	const borderRadius = CorePhysicsAttribute.getBorderRadius(object);
+	if (borderRadius <= 0) {
+		return PhysicsLib.ColliderDesc.cuboid(tmp.x, tmp.y, tmp.z);
+	} else {
+		const borderRadius2 = Math.min(borderRadius, Math.min(tmp.x, tmp.y, tmp.z));
+		tmp.subScalar(borderRadius2);
+		return PhysicsLib.ColliderDesc.roundCuboid(tmp.x, tmp.y, tmp.z, borderRadius2);
+	}
 }
 
 const attributeSizesLive = physicsAttribNameLive(PhysicsRBDCuboidAttribute.SIZES);

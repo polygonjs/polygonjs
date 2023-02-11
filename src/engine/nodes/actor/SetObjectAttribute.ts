@@ -85,8 +85,13 @@ export class SetObjectAttributeActorNode extends TypedActorNode<SetObjectAttribu
 		// this.io.connection_points.set_output_name_function((index: number) => ConstantActorNode.OUTPUT_NAME);
 		this.io.connection_points.set_input_name_function(() => SetObjectAttributeActorNode.INPUT_NAME_VAL);
 		this.io.connection_points.set_expected_input_types_function(() => [this._currentConnectionType()]);
-		this.io.connection_points.set_output_name_function(() => TRIGGER_CONNECTION_NAME);
-		this.io.connection_points.set_expected_output_types_function(() => [ActorConnectionPointType.TRIGGER]);
+		this.io.connection_points.set_output_name_function(
+			(i) => [TRIGGER_CONNECTION_NAME, ActorConnectionPointType.OBJECT_3D][i]
+		);
+		this.io.connection_points.set_expected_output_types_function(() => [
+			ActorConnectionPointType.TRIGGER,
+			ActorConnectionPointType.OBJECT_3D,
+		]);
 	}
 	private _currentConnectionType() {
 		if (this.pv.type == null) {

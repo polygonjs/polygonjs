@@ -50,29 +50,32 @@ export class SetGeometryPositionsActorNode extends TypedActorNode<SetGeometryPos
 	override initializeNode() {
 		super.initializeNode();
 		this.io.connection_points.set_expected_input_types_function(this.expectedInputTypes.bind(this));
-		this.io.connection_points.set_expected_output_types_function(this._expectedOutputTypes.bind(this));
 		this.io.connection_points.set_input_name_function(this._expectedInputName.bind(this));
+		this.io.connection_points.set_expected_output_types_function(this._expectedOutputTypes.bind(this));
+		this.io.connection_points.set_output_name_function(this._expectedOutputNames.bind(this));
 	}
 	override paramDefaultValue(name: string) {
 		return DefaultValues[name];
 	}
 	expectedInputTypes() {
-		const type = this.io.connection_points.input_connection_type(2) || ActorConnectionPointType.VECTOR3_ARRAY;
 		return [
 			ActorConnectionPointType.TRIGGER,
 			ActorConnectionPointType.OBJECT_3D,
-			type,
+			ActorConnectionPointType.VECTOR3_ARRAY,
 			ActorConnectionPointType.FLOAT,
 			ActorConnectionPointType.BOOLEAN,
 			ActorConnectionPointType.BOOLEAN,
 			ActorConnectionPointType.BOOLEAN,
 		];
 	}
-	protected _expectedOutputTypes() {
-		return [ActorConnectionPointType.TRIGGER];
-	}
 	protected _expectedInputName(index: number) {
 		return INPUT_NAMES[index];
+	}
+	protected _expectedOutputTypes() {
+		return [ActorConnectionPointType.TRIGGER, ActorConnectionPointType.OBJECT_3D];
+	}
+	protected _expectedOutputNames(i: number) {
+		return [ActorConnectionPointType.TRIGGER, ActorConnectionPointType.OBJECT_3D][i];
 	}
 
 	public override receiveTrigger(context: ActorNodeTriggerContext) {

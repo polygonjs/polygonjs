@@ -62,6 +62,18 @@ const VISIBLE_OPTIONS = {
 		colliderType: PHYSICS_RBD_COLLIDER_TYPES.indexOf(PhysicsRBDColliderType.HEIGHT_FIELD),
 	},
 };
+const SIZE_METHOD_AVAILABLE: PhysicsRBDColliderType[] = [
+	PhysicsRBDColliderType.CAPSULE,
+	PhysicsRBDColliderType.CONE,
+	PhysicsRBDColliderType.CUBOID,
+	PhysicsRBDColliderType.CYLINDER,
+	PhysicsRBDColliderType.SPHERE,
+];
+export const BORDER_RADIUS_AVAILABLE: PhysicsRBDColliderType[] = [
+	PhysicsRBDColliderType.CONE,
+	PhysicsRBDColliderType.CUBOID,
+	PhysicsRBDColliderType.CYLINDER,
+];
 class PhysicsRBDAttributesSopParamsConfig extends NodeParamsConfig {
 	main = ParamConfig.FOLDER();
 	/** @param Rigid body type */
@@ -78,18 +90,20 @@ class PhysicsRBDAttributesSopParamsConfig extends NodeParamsConfig {
 	});
 	/** @param Rigid body type */
 	sizeMethod = ParamConfig.INTEGER(DEFAULT.sizeMethod, {
-		visibleIf: [
-			VISIBLE_OPTIONS.CAPSULE,
-			VISIBLE_OPTIONS.CONE,
-			VISIBLE_OPTIONS.CUBOID,
-			VISIBLE_OPTIONS.CYLINDER,
-			VISIBLE_OPTIONS.SPHERE,
-		],
+		visibleIf: SIZE_METHOD_AVAILABLE.map((colliderType) => ({
+			colliderType: PHYSICS_RBD_COLLIDER_TYPES.indexOf(colliderType),
+		})),
 		menu: {
 			entries: SIZE_COMPUTATION_METHOD_MENU_ENTRIES,
 		},
 	});
-
+	/** @param border radius */
+	borderRadius = ParamConfig.FLOAT(DEFAULT.borderRadius, {
+		visibleIf: BORDER_RADIUS_AVAILABLE.map((colliderType) => ({
+			colliderType: PHYSICS_RBD_COLLIDER_TYPES.indexOf(colliderType),
+		})),
+		expression: {forEntities: true},
+	});
 	/** @param sizes */
 	sizes = ParamConfig.VECTOR3(DEFAULT.sizes.toArray(), {
 		visibleIf: VISIBLE_OPTIONS.CUBOID,
@@ -237,6 +251,16 @@ export class PhysicsRBDAttributesSopNode extends TypedSopNode<PhysicsRBDAttribut
 		}
 		const promises: Array<Promise<void>> = [];
 		this._applyColliderType(colliderType, sizeMethod, coreObjects, promises);
+
+		if (BORDER_RADIUS_AVAILABLE.includes(colliderType)) {
+			promises.push(
+				this._computeNumberParam(
+					this.p.borderRadius,
+					coreObjects,
+					CorePhysicsAttribute.setBorderRadius.bind(CorePhysicsAttribute)
+				)
+			);
+		}
 
 		promises.push(
 			this._computeNumberParam(

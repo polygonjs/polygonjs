@@ -73,7 +73,7 @@ export class PhysicsGroundSopNode extends TypedSopNode<PhysicsGroundSopParamsCon
 		object.translateX(this.pv.center.x);
 		object.translateZ(this.pv.center.y);
 		object.updateMatrix();
-		object.name = 'ground';
+		object.name = this.name();
 
 		CorePhysicsAttribute.setRBDType(object, PhysicsRBDType.FIXED);
 		CorePhysicsAttribute.setColliderType(object, PhysicsRBDColliderType.CUBOID);

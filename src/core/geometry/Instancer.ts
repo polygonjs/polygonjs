@@ -25,18 +25,18 @@ const DEFAULT_UV = new Vector2(0, 0);
 export enum InstanceAttrib {
 	POSITION = 'instancePosition',
 	SCALE = 'instanceScale',
-	ORIENTATION = 'instanceOrientation',
+	QUATERNION = 'instanceQuaternion',
 	COLOR = 'instanceColor',
 	UV = 'instanceUv',
 }
 
 const ATTRIB_NAME_MAP: PolyDictionary<string> = {
 	P: InstanceAttrib.POSITION,
-	N: InstanceAttrib.ORIENTATION,
-	up: InstanceAttrib.ORIENTATION,
+	N: InstanceAttrib.QUATERNION,
+	up: InstanceAttrib.QUATERNION,
 	Cd: InstanceAttrib.COLOR,
 	[Attribute.COLOR]: InstanceAttrib.COLOR,
-	[Attribute.NORMAL]: InstanceAttrib.ORIENTATION,
+	[Attribute.NORMAL]: InstanceAttrib.QUATERNION,
 	[Attribute.POSITION]: InstanceAttrib.POSITION,
 	[Attribute.PSCALE]: InstanceAttrib.SCALE,
 	[Attribute.SCALE]: InstanceAttrib.SCALE,
@@ -54,7 +54,7 @@ export class CoreInstancer {
 
 	static transformAttributeNames: string[] = [
 		InstanceAttrib.POSITION,
-		InstanceAttrib.ORIENTATION,
+		InstanceAttrib.QUATERNION,
 		InstanceAttrib.SCALE,
 	];
 
@@ -140,7 +140,7 @@ export class CoreInstancer {
 		const instancesCount = instancePts.length;
 		const positions = new Float32Array(instancesCount * 3);
 		const scales = new Float32Array(instancesCount * 3);
-		const orients = new Float32Array(instancesCount * 4);
+		const quaternions = new Float32Array(instancesCount * 4);
 		const instancer = new CoreInstancer(templateCoreGroup);
 		let i = 0;
 		for (let instancePt of instancePts) {
@@ -151,13 +151,13 @@ export class CoreInstancer {
 			this._tmpMatrix.decompose(this._position, this._quaternion, this._scale);
 
 			this._position.toArray(positions, index3);
-			this._quaternion.toArray(orients, index4);
+			this._quaternion.toArray(quaternions, index4);
 			this._scale.toArray(scales, index3);
 			i++;
 		}
 		geometry.setAttribute(InstanceAttrib.POSITION, new InstancedBufferAttribute(positions, 3));
 		geometry.setAttribute(InstanceAttrib.SCALE, new InstancedBufferAttribute(scales, 3));
-		geometry.setAttribute(InstanceAttrib.ORIENTATION, new InstancedBufferAttribute(orients, 4));
+		geometry.setAttribute(InstanceAttrib.QUATERNION, new InstancedBufferAttribute(quaternions, 4));
 	}
 
 	static updateColorInstanceAttribute(

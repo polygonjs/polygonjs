@@ -335,6 +335,42 @@ QUnit.test('sop/physicsRBDJoints simple', async (assert) => {
 	const container = await physicsWorld1.compute();
 	const objects = [...container.coreContent()!.objects()[0].children];
 	objects.shift();
+	assert.equal(objects.length, 7, 'we only have the rbds, not the ground or joints');
+	for (let object of objects) {
+		assert.more_than(object.position.y, 1);
+	}
+	await RendererUtils.withViewer({cameraNode}, async ({viewer, element}) => {
+		scene.play();
+		await CoreSleep.sleep(500);
+		for (let object of objects) {
+			assert.more_than(object.position.y, 0.1);
+		}
+		await CoreSleep.sleep(3000);
+		for (let object of objects) {
+			assert.less_than(object.position.y, -0.1);
+		}
+	});
+});
+
+QUnit.test('sop/physicsRBDJoints simple with clone', async (assert) => {
+	const scene = window.scene;
+	await scene.waitForCooksCompleted();
+	const cameraNode = window.perspective_camera1;
+	cameraNode.p.t.x.set(20);
+	cameraNode.p.t.y.set(1);
+	cameraNode.p.r.y.set(90);
+
+	const scene_root_nodes = createScene(scene.root());
+	const ground = scene_root_nodes.ground;
+
+	const physicsWorld1 = ground.node.nodesByType(PhysicsWorldSopNode.type())[0];
+	const null1 = ground.node.createNode('null');
+	null1.setInput(0, physicsWorld1);
+	null1.flags.display.set(true);
+	const container = await null1.compute();
+	const objects = [...container.coreContent()!.objects()[0].children];
+	objects.shift();
+	assert.equal(objects.length, 7, 'we only have the rbds, not the ground or joints');
 	for (let object of objects) {
 		assert.more_than(object.position.y, 1);
 	}

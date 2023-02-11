@@ -85,7 +85,12 @@ export class TypedActorNode<K extends NodeParamsConfig> extends TypedNode<NodeCo
 		context: ActorNodeTriggerContext,
 		outputName: string = ''
 	): ReturnValueTypeByActorConnectionPointType[ActorConnectionPointType] | undefined {
-		return undefined;
+		// sends the object by defaut, instead of undefined
+		// as it makes many nodes easier to chain
+		const Object3D =
+			this._inputValue<ActorConnectionPointType.OBJECT_3D>(ActorConnectionPointType.OBJECT_3D, context) ||
+			context.Object3D;
+		return Object3D;
 	}
 
 	protected _inputValueFromParam<T extends ParamType>(

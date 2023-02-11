@@ -7,7 +7,8 @@
 
 import {TypedGlNode} from './_Base';
 import {ThreeToGl} from '../../../core/ThreeToGl';
-
+import {Attribute} from '../../../core/geometry/Attribute';
+import {InstanceAttrib} from '../../../core/geometry/Instancer';
 import QuaternionMethods from './gl/quaternion.glsl';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {GlConnectionPointType, GlConnectionPoint} from '../utils/io/connections/Gl';
@@ -16,18 +17,18 @@ import {FunctionGLDefinition} from './utils/GLDefinition';
 import {BaseGlShaderAssembler} from './code/assemblers/_Base';
 
 const VARS = {
-	position: 'position',
-	normal: 'normal',
-	instancePosition: 'instancePosition',
-	instanceOrientation: 'instanceOrientation',
-	instanceScale: 'instanceScale',
+	position: Attribute.POSITION,
+	normal: Attribute.NORMAL,
+	instancePosition: InstanceAttrib.POSITION,
+	instanceQuaternion: InstanceAttrib.QUATERNION,
+	instanceScale: InstanceAttrib.SCALE,
 };
 
 class InstanceTransformGlParamsConfig extends NodeParamsConfig {
 	position = ParamConfig.VECTOR3([0, 0, 0]);
 	normal = ParamConfig.VECTOR3([0, 0, 1]);
 	instancePosition = ParamConfig.VECTOR3([0, 0, 0]);
-	instanceOrientation = ParamConfig.VECTOR4([0, 0, 0, 0]);
+	instanceQuaternion = ParamConfig.VECTOR4([0, 0, 0, 0]);
 	instanceScale = ParamConfig.VECTOR3([1, 1, 1]);
 }
 const ParamsConfig = new InstanceTransformGlParamsConfig();
@@ -66,10 +67,10 @@ export class InstanceTransformGlNode extends TypedGlNode<InstanceTransformGlPara
 			: this._defaultInstancePosition(shaders_collection_controller);
 		// const instancePosition = ThreeToGl.float(this.variableForInput('instancePosition'))
 
-		const inputInstanceOrientation = this.io.inputs.named_input(this.p.instanceOrientation.name());
-		const instanceOrientation = inputInstanceOrientation
-			? ThreeToGl.float(this.variableForInputParam(this.p.instanceOrientation))
-			: this._defaultInputInstanceOrientation(shaders_collection_controller);
+		const inputInstanceQuaternion = this.io.inputs.named_input(this.p.instanceQuaternion.name());
+		const instanceQuaternion = inputInstanceQuaternion
+			? ThreeToGl.float(this.variableForInputParam(this.p.instanceQuaternion))
+			: this._defaultInputInstanceQuaternion(shaders_collection_controller);
 
 		const inputInstanceScale = this.io.inputs.named_input(this.p.instanceScale.name());
 		const instanceScale = inputInstanceScale
@@ -80,10 +81,10 @@ export class InstanceTransformGlNode extends TypedGlNode<InstanceTransformGlPara
 		const resultNormal = this.glVarName(this.gl_output_name_normal());
 		bodyLines.push(`vec3 ${resultPosition} = vec3(${position})`);
 		bodyLines.push(`${resultPosition} *= ${instanceScale}`);
-		bodyLines.push(`${resultPosition} = rotateWithQuat( ${resultPosition}, ${instanceOrientation} )`);
+		bodyLines.push(`${resultPosition} = rotateWithQuat( ${resultPosition}, ${instanceQuaternion} )`);
 		bodyLines.push(`${resultPosition} += ${instancePosition}`);
 		bodyLines.push(`vec3 ${resultNormal} = vec3(${normal})`);
-		bodyLines.push(`${resultNormal} = rotateWithQuat( ${resultNormal}, ${instanceOrientation} )`);
+		bodyLines.push(`${resultNormal} = rotateWithQuat( ${resultNormal}, ${instanceQuaternion} )`);
 
 		shaders_collection_controller.addBodyLines(this, bodyLines);
 		shaders_collection_controller.addDefinitions(this, functionDeclarationLines);
@@ -110,11 +111,11 @@ export class InstanceTransformGlNode extends TypedGlNode<InstanceTransformGlPara
 		// 	.globalsHandler()
 		// 	.read_attribute(this, 'vec3', VARS.instancePosition, this._shader_name);
 	}
-	private _defaultInputInstanceOrientation(shaders_collection_controller: ShadersCollectionController) {
+	private _defaultInputInstanceQuaternion(shaders_collection_controller: ShadersCollectionController) {
 		const assembler = shaders_collection_controller.assembler() as BaseGlShaderAssembler;
 		return assembler
 			.globalsHandler()
-			?.readAttribute(this, GlConnectionPointType.VEC4, VARS.instanceOrientation, shaders_collection_controller);
+			?.readAttribute(this, GlConnectionPointType.VEC4, VARS.instanceQuaternion, shaders_collection_controller);
 		// return this.assembler()
 		// 	.globalsHandler()
 		// 	.read_attribute(this, 'vec4', VARS.instanceOrientation, this._shader_name);

@@ -81,6 +81,7 @@ export enum PhysicsCommonAttribute {
 	RBD_TYPE = 'RBDType',
 	COLLIDER_TYPE = 'RBDColliderType',
 	//
+	BORDER_RADIUS = 'borderRadius',
 	CAN_SLEEP = 'RBDCanSleep',
 	DENSITY = 'density',
 	RESTITUTION = 'restitution',
@@ -235,6 +236,14 @@ export class CorePhysicsAttribute extends CorePhysicsBaseAttribute {
 	}
 	static getGravityScale(object: Object3D) {
 		return this._getNumber(object, PhysicsCommonAttribute.GRAVITY_SCALE, 0);
+	}
+
+	// shapes
+	static setBorderRadius(object: Object3D, value: number) {
+		this._setNumber(object, PhysicsCommonAttribute.BORDER_RADIUS, value);
+	}
+	static getBorderRadius(object: Object3D) {
+		return this._getNumber(object, PhysicsCommonAttribute.BORDER_RADIUS, 0);
 	}
 
 	// cuboid

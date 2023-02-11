@@ -19,11 +19,16 @@ import {NodeCreateOptions} from '../utils/hierarchy/ChildrenController';
 import {Constructor, valueof} from '../../../types/GlobalTypes';
 import {BaseActorNodeType} from '../actor/_Base';
 import {createOrFindPhysicsWorld} from '../../../core/physics/PhysicsWorld';
-import {createOrFindPhysicsDebugObject, updatePhysicsDebugObject} from '../../../core/physics/PhysicsDebug';
+import {physicsCreateDebugObject, updatePhysicsDebugObject} from '../../../core/physics/PhysicsDebug';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 import {PolyScene} from '../../scene/PolyScene';
 import {CoreType, isBooleanTrue} from '../../../core/Type';
 import {BaseNodeType} from '../_Base';
+import {Poly} from '../../Poly';
+import {CoreObject} from '../../../core/geometry/Object';
+import {PhysicsIdAttribute} from '../../../core/physics/PhysicsAttribute';
+import {CorePhysics} from '../../../core/physics/CorePhysics';
+import {setJointDataListForWorldObject} from '../../../core/physics/PhysicsJoint';
 class PhysicsWorldSopParamsConfig extends NodeParamsConfig {
 	/** @param gravity */
 	gravity = ParamConfig.VECTOR3(PHYSICS_GRAVITY_DEFAULT);
@@ -53,36 +58,83 @@ export class PhysicsWorldSopNode extends TypedSopNode<PhysicsWorldSopParamsConfi
 		this.io.inputs.initInputsClonedState(InputCloneMode.ALWAYS);
 	}
 
+	// private _PhysicsLib: PhysicsLib | undefined;
 	override async cook(inputCoreGroups: CoreGroup[]) {
+		await CorePhysics();
 		const coreGroup = inputCoreGroups[0];
 
-		const worldGroup = new Group();
-		worldGroup.name = this.name();
-		worldGroup.matrixAutoUpdate = false;
+		Poly.onObjectsAddedHooks.registerHook(this.type(), this.traverseObjectOnSopGroupAdd.bind(this));
+
+		const worldObject = new Group();
+		worldObject.name = this.name();
+		worldObject.matrixAutoUpdate = false;
+		CoreObject.addAttribute(worldObject, PhysicsIdAttribute.WORLD, this.graphNodeId());
 
 		const inputObjects = coreGroup.objects();
 		for (let inputObject of inputObjects) {
-			worldGroup.add(inputObject);
+			worldObject.add(inputObject);
 		}
+		setJointDataListForWorldObject(worldObject);
 
-		const world = await createOrFindPhysicsWorld(this, worldGroup, this.pv.gravity);
-		await initCorePhysicsWorld(worldGroup, this.scene());
+		// const {world, PhysicsLib} = await createOrFindPhysicsWorld(this, worldObject, this.pv.gravity);
+		// this._PhysicsLib = PhysicsLib;
+		// initCorePhysicsWorld(this._PhysicsLib, worldObject, this.scene());
 
-		const actorNode = this._findActorNode();
 		// if (actorNode) {
 		// }
-		const objects: Object3D[] = [worldGroup];
-
+		const objects: Object3D[] = [worldObject];
 		if (isBooleanTrue(this.pv.debug)) {
-			const pair = createOrFindPhysicsDebugObject(this, world);
-			updatePhysicsDebugObject(pair);
-			objects.push(pair.object);
+			// const pair = createOrFindPhysicsDebugObject(this, world);
+			// updatePhysicsDebugObject(pair);
+			const debugObject = physicsCreateDebugObject();
+			CoreObject.addAttribute(debugObject, PhysicsIdAttribute.DEBUG, this.graphNodeId());
+			debugObject.name = `${this.name()}_Debug`;
+			objects.push(debugObject);
 		}
-
+		const actorNode = this._findActorNode();
 		for (let object of objects) {
 			this.scene().actorsManager.assignActorBuilder(object, actorNode);
 		}
+
 		this.setObjects(objects);
+	}
+	traverseObjectOnSopGroupAdd(object: Object3D) {
+		// if (!this._PhysicsLib) {
+		// 	return;
+		// }
+		const worldNodeId = CoreObject.attribValue(object, PhysicsIdAttribute.WORLD);
+		if (worldNodeId != null) {
+			if (worldNodeId != this.graphNodeId()) {
+				return;
+			}
+			const worldObject = object;
+			createOrFindPhysicsWorld(this, worldObject, this.pv.gravity).then(({world, PhysicsLib}) => {
+				initCorePhysicsWorld(PhysicsLib, worldObject, this.scene());
+				// once world is create, try and find a sibbling that matches the debug object,
+				// then updated it accordingly
+				const sibblings = worldObject.parent?.children.filter((sibbling) => sibbling.uuid != worldObject.uuid);
+				if (!sibblings) {
+					return;
+				}
+				const debugObject = sibblings.find(
+					(sibbling) => CoreObject.attribValue(sibbling, PhysicsIdAttribute.DEBUG) == this.graphNodeId()
+				);
+				if (debugObject) {
+					updatePhysicsDebugObject(debugObject);
+				}
+				// if (isBooleanTrue(this.pv.debug)) {
+				// 	const pair = createOrFindPhysicsDebugObject(this, world);
+				// 	updatePhysicsDebugObject(pair);
+				// 	objects.push(pair.object);
+				// }
+
+				// for (let object of objects) {
+				// 	this.scene().actorsManager.assignActorBuilder(object, actorNode);
+				// }
+			});
+
+			// initCorePhysicsWorld(this._PhysicsLib, object, this.scene());
+		}
 	}
 
 	private _findActorNode() {

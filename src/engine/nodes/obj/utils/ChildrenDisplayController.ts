@@ -3,6 +3,7 @@ import {Object3D} from 'three';
 import {DisplayNodeController, DisplayNodeControllerCallbacks} from '../../utils/DisplayNodeController';
 import {Group} from 'three';
 import {BaseSopNodeType} from '../../sop/_Base';
+import {Poly} from '../../../Poly';
 
 const DISPLAY_PARAM_NAME = 'display';
 
@@ -148,6 +149,7 @@ export class ChildrenDisplayController {
 				}
 				this._notifyCamerasController();
 				this._runOnSopGroupUpdatedHooks();
+				Poly.onObjectsAddedHooks.runHooks(this._sopGroup.children);
 				return;
 			}
 		}

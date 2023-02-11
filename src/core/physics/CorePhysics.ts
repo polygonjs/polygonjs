@@ -1,5 +1,5 @@
 import type {World, RigidBody, ColliderDesc, RigidBodyDesc, JointData} from '@dimforge/rapier3d';
-
+import {Object3D} from 'three';
 interface RigidBodyType {
 	Dynamic: number;
 	Fixed: number;
@@ -17,6 +17,8 @@ export interface PhysicsLib {
 		EXCLUDE_KINEMATIC: number;
 	};
 }
+export type Object3DByRididBody = WeakMap<RigidBody, Object3D>;
+export type Object3DByRididBodyByWorld = Map<World, Object3DByRididBody>;
 
 let physics: PhysicsLib | undefined;
 

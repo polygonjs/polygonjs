@@ -14,8 +14,8 @@ const attributeGlNodePresetsCollectionFactory: PresetsCollectionFactory<Attribut
 
 	const color = new BasePreset().addEntry(node.p.name, Attribute.COLOR).addEntry(node.p.type, v3);
 	const instanceColor = new BasePreset().addEntry(node.p.name, InstanceAttrib.COLOR).addEntry(node.p.type, v3);
-	const instanceOrientation = new BasePreset()
-		.addEntry(node.p.name, InstanceAttrib.ORIENTATION)
+	const instanceQuaternion = new BasePreset()
+		.addEntry(node.p.name, InstanceAttrib.QUATERNION)
 		.addEntry(node.p.type, v4);
 	const instancePosition = new BasePreset().addEntry(node.p.name, InstanceAttrib.POSITION).addEntry(node.p.type, v3);
 	const instanceScale = new BasePreset().addEntry(node.p.name, InstanceAttrib.SCALE).addEntry(node.p.type, v3);
@@ -34,7 +34,7 @@ const attributeGlNodePresetsCollectionFactory: PresetsCollectionFactory<Attribut
 	collection.setPresets({
 		color,
 		instanceColor,
-		instanceOrientation,
+		instanceQuaternion,
 		instancePosition,
 		instanceScale,
 		instanceUv,

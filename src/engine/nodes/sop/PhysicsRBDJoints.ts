@@ -37,6 +37,7 @@ function quaternionToVector4(quaternion: Quaternion, target: Vector4) {
 	target.w = quaternion.w;
 }
 const checkedPair: Map<number, Set<number>> = new Map();
+const jointsCountByKey: Map<number, number> = new Map();
 
 class PhysicsRBDJointsSopParamsConfig extends NodeParamsConfig {
 	/** @param group to assign the material to */
@@ -45,6 +46,10 @@ class PhysicsRBDJointsSopParamsConfig extends NodeParamsConfig {
 	});
 	/** @param maxDistance */
 	maxDistance = ParamConfig.FLOAT(1, {
+		range: [0, 10],
+	});
+	/** @param max number of joints per object */
+	maxJointsCount = ParamConfig.INTEGER(2, {
 		range: [0, 10],
 	});
 	/** @param joint type */
@@ -133,19 +138,40 @@ export class PhysicsRBDJointsSopNode extends TypedSopNode<PhysicsRBDJointsSopPar
 
 		const joinObjects: Object3D[] = [];
 		const maxDistance = this.pv.maxDistance;
+		const maxJointsCount = this.pv.maxJointsCount;
 		checkedPair.clear();
+		jointsCountByKey.clear();
+		let maxJointsCountReached = false;
+		let maxJointsCountReached1 = false;
+		let maxJointsCountReached2 = false;
+		let jointsCount1: number | undefined;
+		let jointsCount2: number | undefined;
+		let jointIndex = 0;
+		let existingSet: Set<number> | undefined;
 		for (let i1 = 0; i1 < candidateObjects.length; i1++) {
 			const object1 = candidateObjects[i1];
 			for (let i2 = 0; i2 < candidateObjects.length; i2++) {
 				const object2 = candidateObjects[i2];
 				if (i1 != i2) {
-					if (object1.position.distanceTo(object2.position) < maxDistance) {
-						let key = i1 < i2 ? i1 : i2;
-						let idInSet = i1 < i2 ? i2 : i1;
-						if (checkedPair.get(key)?.has(idInSet) == null) {
-							MapUtils.addToSetAtEntry(checkedPair, key, idInSet);
-							const jointObject = this._createJoint(object1, object2);
-							joinObjects.push(jointObject);
+					jointsCount1 = jointsCountByKey.get(i1);
+					jointsCount2 = jointsCountByKey.get(i2);
+					maxJointsCountReached1 = jointsCount1 != null && jointsCount1 >= maxJointsCount;
+					maxJointsCountReached2 = jointsCount2 != null && jointsCount2 >= maxJointsCount;
+					maxJointsCountReached = maxJointsCountReached1 || maxJointsCountReached2;
+					if (!maxJointsCountReached) {
+						if (object1.position.distanceTo(object2.position) < maxDistance) {
+							let key = i1 < i2 ? i1 : i2;
+							let idInSet = i1 < i2 ? i2 : i1;
+							existingSet = checkedPair.get(key);
+							if (existingSet == null || !existingSet.has(idInSet)) {
+								MapUtils.addToSetAtEntry(checkedPair, key, idInSet);
+								const jointObject = this._createJoint(object1, object2);
+								jointObject.name = `${this.name()}_${jointIndex}`;
+								jointIndex++;
+								joinObjects.push(jointObject);
+								MapUtils.incrementAtEntry(jointsCountByKey, i1, 0);
+								MapUtils.incrementAtEntry(jointsCountByKey, i2, 0);
+							}
 						}
 					}
 				}

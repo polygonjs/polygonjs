@@ -81,4 +81,13 @@ export class MapUtils {
 		});
 		return map;
 	}
+	static incrementAtEntry<K>(map: Map<K, number>, key: K, initValue: number): number {
+		let entry = map.get(key);
+		if (entry == null) {
+			entry = initValue;
+		}
+		entry++;
+		map.set(key, entry);
+		return entry;
+	}
 }

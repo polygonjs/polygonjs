@@ -1,6 +1,7 @@
 import {CoreSleep} from './../../../../src/core/Sleep';
 import {OnScenePlayStateActorNode} from '../../../../src/engine/nodes/actor/OnScenePlayState';
 import {PhysicsWorldSopNode} from '../../../../src/engine/nodes/sop/PhysicsWorld';
+import {SizeComputationMethod} from '../../../../src/engine/operations/sop/PhysicsRBDAttributes';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 import {PhysicsRBDColliderType} from '../../../../src/core/physics/PhysicsAttribute';
 
@@ -18,7 +19,10 @@ QUnit.test('sop/physicsGround simple', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
 	const cameraNode = window.perspective_camera1;
-	cameraNode.p.t.z.set(5);
+	cameraNode.p.t.z.set(10);
+	cameraNode.p.t.y.set(2);
+
+	scene.createNode('hemisphereLight');
 
 	const plane1 = geo1.createNode('plane');
 	const sphere1 = geo1.createNode('sphere');
@@ -35,16 +39,18 @@ QUnit.test('sop/physicsGround simple', async (assert) => {
 	merge1.setInput(1, physicsRBDAttributes1);
 	physicsWorld1.setInput(0, merge1);
 	physicsWorld1.flags.display.set(true);
+	physicsWorld1.p.debug.set(true);
 
 	plane1.p.center.set([0, 2, 0]);
 	sphere1.p.radius.set(0.2);
 	physicsRBDAttributes1.setColliderType(PhysicsRBDColliderType.SPHERE);
+	physicsRBDAttributes1.setSizeMethod(SizeComputationMethod.MANUAL);
 	physicsRBDAttributes1.p.radius.set(0.2);
 	physicsRBDAttributes1.p.restitution.set(0);
 
 	createPhysicsWorldNodes(physicsWorld1);
 	const container = await physicsWorld1.compute();
-	const objects = container.coreContent()!.objects()[0].children;
+	const objects = [...container.coreContent()!.objects()[0].children];
 	objects.shift();
 	for (let object of objects) {
 		assert.in_delta(object.position.y, 2, 0.01);

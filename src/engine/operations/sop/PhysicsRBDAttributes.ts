@@ -26,6 +26,7 @@ interface PhysicsRBDAttributesSopParams extends DefaultOperationParams {
 	taddId: boolean;
 	id: string;
 	sizeMethod: number;
+	borderRadius: number;
 	// cuboid
 	sizes: Vector3;
 	size: number;
@@ -55,6 +56,7 @@ export class PhysicsRBDAttributesSopOperation extends BaseSopOperation {
 		taddId: true,
 		id: '',
 		sizeMethod: SIZE_COMPUTATION_METHODS.indexOf(SizeComputationMethod.AUTO),
+		borderRadius: 0.1,
 		// cuboid
 		sizes: new Vector3(1, 1, 1),
 		size: 1,

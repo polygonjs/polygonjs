@@ -45,6 +45,8 @@ import {FloorActorNode} from '../../../nodes/actor/Floor';
 import {GetWebXRARSessionPropertyActorNode} from '../../../nodes/actor/GetWebXRARSessionProperty';
 import {GetBox3PropertyActorNode} from '../../../nodes/actor/GetBox3Property';
 import {GetChildrenAttributesActorNode} from '../../../nodes/actor/GetChildrenAttributes';
+import {GetChildrenPropertiesActorNode} from '../../../nodes/actor/GetChildrenProperties';
+import {GetChildrenPhysicsRBDPropertiesActorNode} from '../../../nodes/actor/GetChildrenPhysicsRBDProperties';
 import {GetIntersectionPropertyActorNode} from '../../../nodes/actor/GetIntersectionProperty';
 import {GetObjectChildActorNode} from '../../../nodes/actor/GetObjectChild';
 import {GetDefaultCameraActorNode} from '../../../nodes/actor/GetDefaultCamera';
@@ -59,6 +61,7 @@ import {GetPhysicsRBDConePropertyActorNode} from '../../../nodes/actor/GetPhysic
 import {GetPhysicsRBDCylinderPropertyActorNode} from '../../../nodes/actor/GetPhysicsRBDCylinderProperty';
 import {GetPhysicsRBDCuboidPropertyActorNode} from '../../../nodes/actor/GetPhysicsRBDCuboidProperty';
 import {GetPhysicsRBDSpherePropertyActorNode} from '../../../nodes/actor/GetPhysicsRBDSphereProperty';
+import {GetPhysicsRBDPropertyActorNode} from '../../../nodes/actor/GetPhysicsRBDProperty';
 import {GetPlanePropertyActorNode} from '../../../nodes/actor/GetPlaneProperty';
 import {GetRayPropertyActorNode} from '../../../nodes/actor/GetRayProperty';
 import {GetSpherePropertyActorNode} from '../../../nodes/actor/GetSphereProperty';
@@ -151,6 +154,11 @@ import {RayIntersectsPlaneActorNode} from '../../../nodes/actor/RayIntersectsPla
 import {RayIntersectsSphereActorNode} from '../../../nodes/actor/RayIntersectsSphere';
 import {RoundActorNode} from '../../../nodes/actor/Round';
 import {SetGeometryPositionsActorNode} from '../../../nodes/actor/SetGeometryPositions';
+import {SetGeometryInstanceAttributeActorNode} from '../../../nodes/actor/SetGeometryInstanceAttribute';
+import {SetGeometryInstancePositionsActorNode} from '../../../nodes/actor/SetGeometryInstancePositions';
+import {SetGeometryInstanceQuaternionsActorNode} from '../../../nodes/actor/SetGeometryInstanceQuaternions';
+import {SetGeometryInstanceScalesActorNode} from '../../../nodes/actor/SetGeometryInstanceScales';
+import {SetGeometryInstanceTransformsActorNode} from '../../../nodes/actor/SetGeometryInstanceTransforms';
 import {SetMaterialColorActorNode} from '../../../nodes/actor/SetMaterialColor';
 import {SetMaterialEmissiveColorActorNode} from '../../../nodes/actor/SetMaterialEmissiveColor';
 import {SetMaterialOpacityActorNode} from '../../../nodes/actor/SetMaterialOpacity';
@@ -272,6 +280,8 @@ export interface ActorNodeChildrenMap {
 	getWebXRARSessionProperty: GetWebXRARSessionPropertyActorNode;
 	getBox3Property: GetBox3PropertyActorNode;
 	getChildrenAttributes: GetChildrenAttributesActorNode;
+	getChildrenProperties: GetChildrenPropertiesActorNode;
+	getChildrenPhysicsRBDProperties: GetChildrenPhysicsRBDPropertiesActorNode;
 	getObjectChild: GetObjectChildActorNode;
 	getDefaultCamera: GetDefaultCameraActorNode;
 	getIntersectionProperty: GetIntersectionPropertyActorNode;
@@ -286,6 +296,7 @@ export interface ActorNodeChildrenMap {
 	getPhysicsRBDCylinderProperty: GetPhysicsRBDCylinderPropertyActorNode;
 	getPhysicsRBDCuboidProperty: GetPhysicsRBDCuboidPropertyActorNode;
 	getPhysicsRBDSphereProperty: GetPhysicsRBDSpherePropertyActorNode;
+	getPhysicsRBDProperty: GetPhysicsRBDPropertyActorNode;
 	getPlaneProperty: GetPlanePropertyActorNode;
 	getRayProperty: GetRayPropertyActorNode;
 	getSphereProperty: GetSpherePropertyActorNode;
@@ -378,6 +389,11 @@ export interface ActorNodeChildrenMap {
 	rayIntersectsSphere: RayIntersectsSphereActorNode;
 	round: RoundActorNode;
 	setGeometryPositions: SetGeometryPositionsActorNode;
+	setGeometryInstanceAttribute: SetGeometryInstanceAttributeActorNode;
+	setGeometryInstancePositions: SetGeometryInstancePositionsActorNode;
+	setGeometryInstanceQuaternions: SetGeometryInstanceQuaternionsActorNode;
+	setGeometryInstanceScales: SetGeometryInstanceScalesActorNode;
+	setGeometryInstanceTransforms: SetGeometryInstanceTransformsActorNode;
 	setMaterialColor: SetMaterialColorActorNode;
 	setMaterialEmissiveColor: SetMaterialEmissiveColorActorNode;
 	setMaterialOpacity: SetMaterialOpacityActorNode;
@@ -505,6 +521,8 @@ export class ActorRegister {
 		poly.registerNode(GetWebXRARSessionPropertyActorNode, CATEGORY_ACTOR.WEBXR);
 		poly.registerNode(GetBox3PropertyActorNode, CATEGORY_ACTOR.GET);
 		poly.registerNode(GetChildrenAttributesActorNode, CATEGORY_ACTOR.GET);
+		poly.registerNode(GetChildrenPropertiesActorNode, CATEGORY_ACTOR.GET);
+		poly.registerNode(GetChildrenPhysicsRBDPropertiesActorNode, CATEGORY_ACTOR.GET);
 		poly.registerNode(GetObjectChildActorNode, CATEGORY_ACTOR.GET);
 		poly.registerNode(GetDefaultCameraActorNode, CATEGORY_ACTOR.GET);
 		poly.registerNode(GetIntersectionPropertyActorNode, CATEGORY_ACTOR.GET);
@@ -519,6 +537,7 @@ export class ActorRegister {
 		poly.registerNode(GetPhysicsRBDCylinderPropertyActorNode, CATEGORY_ACTOR.PHYSICS);
 		poly.registerNode(GetPhysicsRBDCuboidPropertyActorNode, CATEGORY_ACTOR.PHYSICS);
 		poly.registerNode(GetPhysicsRBDSpherePropertyActorNode, CATEGORY_ACTOR.PHYSICS);
+		poly.registerNode(GetPhysicsRBDPropertyActorNode, CATEGORY_ACTOR.PHYSICS);
 		poly.registerNode(GetPlanePropertyActorNode, CATEGORY_ACTOR.GET);
 		poly.registerNode(GetRayPropertyActorNode, CATEGORY_ACTOR.GET);
 		poly.registerNode(GetSpherePropertyActorNode, CATEGORY_ACTOR.GET);
@@ -611,6 +630,11 @@ export class ActorRegister {
 		poly.registerNode(RayIntersectsSphereActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(RoundActorNode, CATEGORY_ACTOR.MATH);
 		poly.registerNode(SetGeometryPositionsActorNode, CATEGORY_ACTOR.ACTION);
+		poly.registerNode(SetGeometryInstanceAttributeActorNode, CATEGORY_ACTOR.ACTION);
+		poly.registerNode(SetGeometryInstancePositionsActorNode, CATEGORY_ACTOR.ACTION);
+		poly.registerNode(SetGeometryInstanceQuaternionsActorNode, CATEGORY_ACTOR.ACTION);
+		poly.registerNode(SetGeometryInstanceScalesActorNode, CATEGORY_ACTOR.ACTION);
+		poly.registerNode(SetGeometryInstanceTransformsActorNode, CATEGORY_ACTOR.ACTION);
 		poly.registerNode(SetMaterialColorActorNode, CATEGORY_ACTOR.ACTION);
 		poly.registerNode(SetMaterialEmissiveColorActorNode, CATEGORY_ACTOR.ACTION);
 		poly.registerNode(SetMaterialOpacityActorNode, CATEGORY_ACTOR.ACTION);
