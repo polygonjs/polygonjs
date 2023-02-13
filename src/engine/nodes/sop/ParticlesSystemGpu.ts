@@ -11,47 +11,66 @@
 // - simulation shaders should update the particles at any frame, and resimulate accordingly when at later frames
 // - render material should update at any frame, without having to resimulate
 // - changing the input will recompute, when on first frame only (otherwise an animated geo could make it recompute all the time)
-
+import {Object3D, MathUtils} from 'three';
 import {Constructor, valueof} from '../../../types/GlobalTypes';
 import {TypedSopNode} from './_Base';
 import {GlobalsTextureHandler, GlobalsTextureHandlerPurpose} from '../gl/code/globals/Texture';
 
 import {InputCloneMode} from '../../poly/InputCloneMode';
-import {BaseNodeType} from '../_Base';
-import {BaseParamType} from '../../params/_Base';
-import {NodeContext} from '../../poly/NodeContext';
+// import {BaseNodeType} from '../_Base';
+// import {BaseParamType} from '../../params/_Base';
+import {
+	// NetworkNodeType,
+	NodeContext,
+} from '../../poly/NodeContext';
 import {CoreGroup} from '../../../core/geometry/Group';
+import {CoreParticlesAttribute} from '../../../core/particles/CoreParticlesAttribute';
+import {
+	createOrFindParticlesController,
+	disposeParticlesFromNode,
+	setParticleRenderer,
+} from '../../../core/particles/CoreParticles';
+import {CoreParticlesController} from '../../../core/particles/CoreParticlesController';
+import {
+	PARTICLE_DATA_TYPES,
+	coreParticlesGpuComputeControllerPointsCount,
+} from '../../../core/particles/CoreParticlesGpuComputeController';
+
 import {GlNodeChildrenMap} from '../../poly/registers/nodes/Gl';
 import {BaseGlNodeType} from '../gl/_Base';
-import {ParticlesSystemGpuRenderController} from './utils/ParticlesSystemGPU/ParticlesSystemGpuRenderController';
-import {
-	ParticlesSystemGpuComputeController,
-	PARTICLE_DATA_TYPES,
-} from './utils/ParticlesSystemGPU/GPUComputeController';
+// import {ParticlesSystemGpuRenderController} from './utils/ParticlesSystemGPU/ParticlesSystemGpuRenderController';
+// import {
+// 	ParticlesSystemGpuComputeController,
+// 	PARTICLE_DATA_TYPES,
+// } from './utils/ParticlesSystemGPU/GPUComputeController';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {ShaderName} from '../utils/shaders/ShaderName';
 import {GlNodeFinder} from '../gl/code/utils/NodeFinder';
 import {AssemblerName} from '../../poly/registers/assemblers/_BaseRegister';
 import {Poly} from '../../Poly';
 import {ParticlesPersistedConfig} from '../gl/code/assemblers/particles/ParticlesPersistedConfig';
-import {TimeController} from '../../scene/utils/TimeController';
+// import {TimeController} from '../../scene/utils/TimeController';
 import {NodeCreateOptions} from '../utils/hierarchy/ChildrenController';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 import {GlAssemblerController} from '../gl/code/Controller';
 import {ShaderAssemblerParticles} from '../gl/code/assemblers/particles/Particles';
+// import {ActorBuilderNode} from '../../scene/utils/ActorsManager';
+import {isBooleanTrue} from '../../../core/Type';
+// import {CoreMath} from '../../../core/math/_Module';
 
+// const _usedTexturesSize = new Vector2();
 class ParticlesSystemGpuSopParamsConfig extends NodeParamsConfig {
 	/** @param frame the particles simulation starts */
-	startFrame = ParamConfig.FLOAT(TimeController.START_FRAME, {
-		range: [0, 1000],
-		rangeLocked: [true, false],
-	});
-	/** @param set active to true to continue simulation */
-	active = ParamConfig.BOOLEAN(1, {
-		// active should be set to not trigger cook
-		// otherwise, it will force the particles to be reset
-		cook: false,
-	});
+	// startFrame = ParamConfig.FLOAT(TimeController.START_FRAME, {
+	// 	range: [0, 1000],
+	// 	rangeLocked: [true, false],
+	// });
+	// /** @param set active to true to continue simulation */
+	// active = ParamConfig.BOOLEAN(1, {
+	// 	// active should be set to not trigger cook
+	// 	// otherwise, it will force the particles to be reset
+	// 	cook: false,
+	// });
 	/** @param auto sets the resolution of the textures used by the GPU shaders */
 	autoTexturesSize = ParamConfig.BOOLEAN(1);
 	/** @param max texture size. This is important to set a limit, as some systems may not handle large textures for particle sims */
@@ -66,20 +85,33 @@ class ParticlesSystemGpuSopParamsConfig extends NodeParamsConfig {
 			}),
 		},
 	});
-	/** @param resets the sim */
-	reset = ParamConfig.BUTTON(null, {
-		callback: (node: BaseNodeType, param: BaseParamType) => {
-			ParticlesSystemGpuSopNode.PARAM_CALLBACK_reset(node as ParticlesSystemGpuSopNode);
-		},
+	/** @param number of frames to run before scene plays */
+	preRollFramesCount = ParamConfig.INTEGER(0, {
+		range: [0, 100],
+		rangeLocked: [true, false],
 	});
+	/** @param resets the sim */
+	// reset = ParamConfig.BUTTON(null, {
+	// 	callback: (node: BaseNodeType, param: BaseParamType) => {
+	// 		ParticlesSystemGpuSopNode.PARAM_CALLBACK_reset(node as ParticlesSystemGpuSopNode);
+	// 	},
+	// });
 
 	/** @param material used to render the particles */
 	material = ParamConfig.NODE_PATH('', {
+		// separatorBefore: true,
 		nodeSelection: {
 			context: NodeContext.MAT,
 		},
 		dependentOnFoundNode: false,
+		separatorAfter: true,
 	});
+	/** @param actor node */
+	// actor = ParamConfig.NODE_PATH('', {
+	// 	nodeSelection: {
+	// 		types: [NetworkNodeType.ACTOR],
+	// 	},
+	// });
 }
 const ParamsConfig = new ParticlesSystemGpuSopParamsConfig();
 export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSopParamsConfig> {
@@ -89,15 +121,8 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 	}
 
 	override dispose() {
+		disposeParticlesFromNode(this);
 		super.dispose();
-		this.gpuController.dispose();
-	}
-	private _debugCook = false;
-	debugMessage(message: string) {
-		if (!this._debugCook) {
-			return;
-		}
-		console.log(message);
 	}
 
 	assemblerController() {
@@ -115,37 +140,28 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 		GlobalsTextureHandler.PARTICLE_SIM_UV,
 		GlobalsTextureHandlerPurpose.PARTICLES_SHADER
 	);
-	private _shaders_by_name: Map<ShaderName, string> = new Map();
-	shaders_by_name() {
-		return this._shaders_by_name;
+	private _shadersByName: Map<ShaderName, string> = new Map();
+	shadersByName() {
+		return this._shadersByName;
 	}
-
-	public readonly gpuController = new ParticlesSystemGpuComputeController(this);
-	public readonly renderController = new ParticlesSystemGpuRenderController(this);
 
 	static override require_webgl2() {
 		return true;
-	}
-	static PARAM_CALLBACK_reset(node: ParticlesSystemGpuSopNode) {
-		node.PARAM_CALLBACK_reset();
-	}
-	PARAM_CALLBACK_reset() {
-		this.gpuController.resetGpuComputeAndSetDirty();
 	}
 
 	static override displayedInputNames(): string[] {
 		return ['points to emit particles from'];
 	}
 
-	private _resetMaterialIfDirtyBound = this._resetMaterialIfDirty.bind(this);
+	// private _resetMaterialIfDirtyBound = this._resetMaterialIfDirty.bind(this);
 	protected override _childrenControllerContext = NodeContext.GL;
 	override initializeNode() {
 		this.io.inputs.setCount(1);
 		// set to never at the moment
 		// otherwise the input is cloned on every frame inside cook_main()
-		this.io.inputs.initInputsClonedState(InputCloneMode.NEVER);
+		this.io.inputs.initInputsClonedState(InputCloneMode.ALWAYS);
 
-		this.addPostDirtyHook('_resetMaterialIfDirty', this._resetMaterialIfDirtyBound);
+		// this.addPostDirtyHook('_resetMaterialIfDirty', this._resetMaterialIfDirtyBound);
 	}
 
 	override createNode<S extends keyof GlNodeChildrenMap>(
@@ -178,70 +194,153 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 		return this.assemblerController() == null;
 	}
 
-	private async _resetMaterialIfDirty() {
-		if (this.p.material.isDirty()) {
-			this.renderController.resetRenderMaterial();
-			if (!this.isOnStartFrame()) {
-				this.debugMessage('particles:this.renderController.initRenderMaterial START');
-				await this.renderController.initRenderMaterial();
-				this.debugMessage('particles:this.renderController.initRenderMaterial END');
-			}
-		}
-	}
+	// private async _resetMaterialIfDirty() {
+	// 	if (this.p.material.isDirty()) {
+	// 		this.renderController.resetRenderMaterial();
+	// 		// if (!this.isOnStartFrame()) {
+	// 		this.debugMessage('particles:this.renderController.initRenderMaterial START');
+	// 		await this.renderController.initRenderMaterial();
+	// 		this.debugMessage('particles:this.renderController.initRenderMaterial END');
+	// 		// }
+	// 	}
+	// }
 
-	isOnStartFrame(): boolean {
-		return this.scene().frame() == this.pv.startFrame;
-	}
+	// isOnStartFrame(): boolean {
+	// 	return this.scene().frame() == this.pv.startFrame;
+	// }
 
-	private _coreGroupSet: boolean = false;
+	// private _coreGroupSet: boolean = false;
 	override async cook(inputContents: CoreGroup[]) {
-		this.gpuController.setRestartNotRequired();
-		const coreGroup = inputContents[0];
+		Poly.onObjectsAddedHooks.registerHook(this.type(), this.traverseObjectOnSopGroupAdd.bind(this));
 
 		this.compileIfRequired();
-		const isOnStartFrame = this.isOnStartFrame();
 
-		if (isOnStartFrame) {
-			this._coreGroupSet = false;
-			this.gpuController.resetParticleGroups();
+		const coreGroup = inputContents[0];
+
+		const objects = coreGroup.objects();
+		const object = objects[0];
+
+		// get texture size
+		if (!isBooleanTrue(this.pv.autoTexturesSize)) {
+			// const nearest_power_of_two = CoreMath.nearestPower2(Math.sqrt(pointsCount));
+			// _usedTexturesSize.x = Math.min(nearest_power_of_two, this.pv.maxTexturesSize.x);
+			// _usedTexturesSize.y = Math.min(nearest_power_of_two, this.pv.maxTexturesSize.y);
+			// } else {
+			if (!(MathUtils.isPowerOfTwo(this.pv.texturesSize.x) && MathUtils.isPowerOfTwo(this.pv.texturesSize.y))) {
+				this.states.error.set('texture size must be a power of 2');
+				return;
+			}
+
+			const pointsCount = coreParticlesGpuComputeControllerPointsCount(object);
+			const maxParticlesCount = this.pv.texturesSize.x * this.pv.texturesSize.y;
+			if (pointsCount > maxParticlesCount) {
+				this.states.error.set(
+					`max particles is set to (${this.pv.texturesSize.x}x${this.pv.texturesSize.y}=) ${maxParticlesCount}`
+				);
+				return;
+			}
+			// _usedTexturesSize.copy(this.pv.texturesSize);
 		}
 
-		if (!this.gpuController.initialized()) {
-			this.debugMessage('particles:this.gpuController.init(coreGroup) START');
-			await this.gpuController.init(coreGroup);
-			this.debugMessage('particles:this.gpuController.init(coreGroup) END');
-		}
+		// this.gpuController.setRestartNotRequired();
 
-		if (!this.renderController.initialized()) {
-			this.renderController.initCoreGroup(coreGroup);
-			this.debugMessage('particles:this.renderController.initRenderMaterial() START');
-			await this.renderController.initRenderMaterial();
-			this.debugMessage('particles:this.renderController.initRenderMaterial() END');
+		// const actorNode = this._findActorNode();
+		// if (actorNode) {
+		// 	// for (let object of objects) {
+		const existingActorIds = this.scene().actorsManager.objectActorNodeIds(object);
+		if (existingActorIds == null || existingActorIds.length == 0) {
+			this.states.error.set(`the input objects requires an actor node assigned to it`);
 		}
+		// this.scene().actorsManager.assignActorBuilder(object, actorNode);
+		// 	// }
+		// }
+		const renderer = await this.scene().renderersRegister.waitForRenderer();
+		setParticleRenderer(this.graphNodeId(), renderer);
+		CoreParticlesAttribute.setParticlesNodeId(object, this.graphNodeId());
+		CoreParticlesAttribute.setDataType(object, this.pv.dataType);
+		CoreParticlesAttribute.setAutoTextureSize(object, this.pv.autoTexturesSize);
+		CoreParticlesAttribute.setMaxTextureSize(object, this.pv.maxTexturesSize);
+		CoreParticlesAttribute.setTextureSize(object, this.pv.texturesSize);
+		CoreParticlesAttribute.setPreRollFramesCount(object, this.pv.preRollFramesCount);
 
-		this.gpuController.restartSimulationIfRequired();
-		this.gpuController.computeSimulationIfRequired(0);
-		if (!this._coreGroupSet) {
-			this._coreGroupSet = true;
-			this.debugMessage('particles:setCoreGroup');
-			this.setCoreGroup(coreGroup);
+		const matNode = this.pv.material.nodeWithContext(NodeContext.MAT, this.states?.error);
+		if (matNode) {
+			const material = await matNode.material();
+			// const baseBuilderMatNode = materialNode as BaseBuilderMatNodeType;
+			// if (baseBuilderMatNode.assemblerController) {
+			// 	baseBuilderMatNode.assemblerController()?.setAssemblerGlobalsHandler(this._globalsHandler);
+			// }
+			CoreParticlesAttribute.setMaterialNodeId(object, matNode.graphNodeId());
+
+			if (!material) {
+				this.states?.error.set(`material invalid. (error: '${matNode.states.error.message()}')`);
+			}
 		} else {
-			this.cookController.endCook();
+			this.states?.error.set(`no material node found`);
 		}
+		// if (node.p.material.isDirty()) {
+		// 	this.mainController.debugMessage('renderController: this.node.p.material.compute() START');
+		// 	await node.p.material.compute();
+		// 	this.mainController.debugMessage('renderController: this.node.p.material.compute() END');
+		// }
+		// const matNode = node.pv.material.nodeWithContext(NodeContext.MAT, node.states.error) as BaseBuilderMatNodeType;
+		this.setObject(object);
+
+		// // const isOnStartFrame = this.isOnStartFrame();
+
+		// // if (isOnStartFrame) {
+		// this._coreGroupSet = false;
+		// this.gpuController.resetParticleGroups();
+		// // }
+
+		// if (!this.gpuController.initialized()) {
+		// 	this.debugMessage('particles:this.gpuController.init(coreGroup) START');
+		// 	await this.gpuController.init(coreGroup);
+		// 	this.debugMessage('particles:this.gpuController.init(coreGroup) END');
+		// }
+
+		// if (!this.renderController.initialized()) {
+		// 	this.renderController.initCoreGroup(coreGroup);
+		// 	this.debugMessage('particles:this.renderController.initRenderMaterial() START');
+		// 	await this.renderController.initRenderMaterial();
+		// 	this.debugMessage('particles:this.renderController.initRenderMaterial() END');
+		// }
+
+		// console.warn('cook');
+		// this.gpuController.restartSimulationIfRequired();
+		// // this.gpuController.computeSimulationIfRequired(0);
+		// if (!this._coreGroupSet) {
+		// 	this._coreGroupSet = true;
+		// 	this.debugMessage('particles:setCoreGroup');
+		// 	this.setCoreGroup(coreGroup);
+		// } else {
+		// 	this.cookController.endCook();
+		// }
 	}
-	async compileIfRequired() {
+	traverseObjectOnSopGroupAdd(object: Object3D) {
+		const particlesNodeId = CoreParticlesAttribute.getParticlesNodeId(object);
+		if (particlesNodeId == null) {
+			return;
+		}
+		if (particlesNodeId != this.graphNodeId()) {
+			return;
+		}
+		createOrFindParticlesController(object, this.scene());
+	}
+
+	compileIfRequired() {
 		if (this.assemblerController()?.compileRequired()) {
-			this.debugMessage('particles:this.run_assembler() START');
+			// this.debugMessage('particles:this.run_assembler() START');
 			try {
-				await this.run_assembler();
+				this.run_assembler();
 			} catch (err) {
 				const message = (err as any).message || 'failed to compile';
 				this.states.error.set(message);
 			}
-			this.debugMessage('particles:this.run_assembler() END');
+			// this.debugMessage('particles:this.run_assembler() END');
 		}
 	}
-	async run_assembler() {
+	run_assembler() {
 		const assemblerController = this.assemblerController();
 		if (!assemblerController) {
 			return;
@@ -256,18 +355,18 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 			assemblerController.post_compile();
 		}
 
-		const shaders_by_name = assemblerController.assembler.shaders_by_name();
-		this._setShaderNames(shaders_by_name);
+		const shadersByName = assemblerController.assembler.shaders_by_name();
+		this._setShaderNames(shadersByName);
 	}
 
-	private _setShaderNames(shaders_by_name: Map<ShaderName, string>) {
-		this._shaders_by_name = shaders_by_name;
+	private _setShaderNames(shadersByName: Map<ShaderName, string>) {
+		this._shadersByName = shadersByName;
 
-		this.gpuController.setShadersByName(this._shaders_by_name);
-		this.renderController.setShadersByName(this._shaders_by_name);
+		// this.gpuController.setShadersByName(this._shaders_by_name);
+		// this.renderController.setShadersByName(this._shaders_by_name);
 
-		this.gpuController.resetGpuCompute();
-		this.gpuController.resetParticleGroups();
+		// this.gpuController.resetGpuCompute();
+		// this.gpuController.resetParticleGroups();
 	}
 
 	init_with_persisted_config() {
@@ -275,7 +374,15 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 		const texture_allocations_controller = this.persisted_config.texture_allocations_controller();
 		if (shaders_by_name && texture_allocations_controller) {
 			this._setShaderNames(shaders_by_name);
-			this.gpuController.setPersistedTextureAllocationController(texture_allocations_controller);
+			// this.gpuController.setPersistedTextureAllocationController(texture_allocations_controller);
+		}
+	}
+	initCoreParticlesControllerFromPersistedConfig(coreParticlesController: CoreParticlesController) {
+		const shaders_by_name = this.persisted_config.shaders_by_name();
+		const texture_allocations_controller = this.persisted_config.texture_allocations_controller();
+		if (shaders_by_name && texture_allocations_controller) {
+			// this._setShaderNames(shaders_by_name);
+			coreParticlesController.setPersistedTextureAllocationController(texture_allocations_controller);
 		}
 	}
 
@@ -295,4 +402,12 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 		}
 		return nodes;
 	}
+
+	// private _findActorNode() {
+	// 	// if (isBooleanTrue(this.pv.useThisNode)) {
+	// 	// 	return this;
+	// 	// } else {
+	// 	return this.pv.actor.node() as ActorBuilderNode | undefined;
+	// 	// }
+	// }
 }

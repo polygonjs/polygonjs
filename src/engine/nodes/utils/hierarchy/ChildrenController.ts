@@ -14,6 +14,8 @@ import {MapUtils} from '../../../../core/MapUtils';
 import {NameController} from '../NameController';
 
 type OutputNodeFindMethod = (() => BaseNodeType) | undefined;
+type TraverseNodeCallback = (node: BaseNodeType) => void;
+type TraverseNodeConditionCallback = (node: BaseNodeType) => boolean;
 
 export interface NodeCreateOptions {
 	paramsInitValueOverrides?: ParamsInitData;
@@ -393,10 +395,12 @@ export class HierarchyChildrenController {
 		return target;
 	}
 
-	traverseChildren(callback: (arg0: BaseNodeType) => void) {
+	traverseChildren(callback: TraverseNodeCallback, conditionCallback?: TraverseNodeConditionCallback) {
 		this._childrenByName.forEach((childNode) => {
 			callback(childNode);
-			childNode.childrenController?.traverseChildren(callback);
+			if (conditionCallback == null || conditionCallback(childNode) == true) {
+				childNode.childrenController?.traverseChildren(callback);
+			}
 		});
 	}
 }

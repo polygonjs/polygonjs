@@ -217,6 +217,15 @@ export class DeleteSopNode extends TypedSopNode<DeleteSopParamsConfig> {
 	setAttribClass(attribClass: AttribClass) {
 		this.p.class.set(ATTRIBUTE_CLASSES.indexOf(attribClass));
 	}
+	attribClass() {
+		return ATTRIBUTE_CLASSES[this.pv.class];
+	}
+	setAttribType(attribType: AttribType) {
+		this.p.attribType.set(ATTRIBUTE_TYPES.indexOf(attribType));
+	}
+	attribType() {
+		return ATTRIBUTE_TYPES[this.pv.attribType];
+	}
 
 	private async _evalForObjects(coreGroup: CoreGroup) {
 		const coreObjects = coreGroup.coreObjects();

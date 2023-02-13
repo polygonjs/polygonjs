@@ -3,6 +3,7 @@ import {GeoObjNode} from '../../../../../../src/engine/nodes/obj/Geo';
 import {MaterialsNetworkSopNode} from '../../../../../../src/engine/nodes/sop/MaterialsNetwork';
 import {ParticlesSystemGpuSopNode} from '../../../../../../src/engine/nodes/sop/ParticlesSystemGpu';
 import {ParamType} from '../../../../../../src/engine/poly/ParamType';
+import {createActorNodeChildren} from '../ParticlesHelper';
 
 export function ParticlesSceneSetup1() {
 	const geo1 = window.geo1;
@@ -209,5 +210,8 @@ export function ParticlesSceneSetup1() {
 	attribCreate1.setInput(0, scatter1);
 	scatter1.setInput(0, sphere1);
 
-	return {particlesSystemGpu1, pointsBuilder1, attribute_randomId_read, attribute_randomId_export};
+	const actor1 = parentNode.createNode('actor');
+	createActorNodeChildren(actor1);
+
+	return {particlesSystemGpu1, pointsBuilder1, attribute_randomId_read, attribute_randomId_export, actor1};
 }

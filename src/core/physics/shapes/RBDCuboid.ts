@@ -25,7 +25,11 @@ export function createPhysicsCuboid(PhysicsLib: PhysicsLib, object: Object3D) {
 	if (borderRadius <= 0) {
 		return PhysicsLib.ColliderDesc.cuboid(tmp.x, tmp.y, tmp.z);
 	} else {
-		const borderRadius2 = Math.min(borderRadius, Math.min(tmp.x, tmp.y, tmp.z));
+		// We seem to need a tiny offset.
+		// If it was 0, the RBD would not fall
+		const safetyOffset = 0.02;
+		const minDim = Math.min(tmp.x, tmp.y, tmp.z) + safetyOffset;
+		const borderRadius2 = Math.min(borderRadius, minDim);
 		tmp.subScalar(borderRadius2);
 		return PhysicsLib.ColliderDesc.roundCuboid(tmp.x, tmp.y, tmp.z, borderRadius2);
 	}

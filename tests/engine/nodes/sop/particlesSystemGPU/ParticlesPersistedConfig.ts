@@ -8,7 +8,15 @@ import {AssemblersUtils} from '../../../../helpers/AssemblersUtils';
 import {AssertUtils} from '../../../../helpers/AssertUtils';
 import {saveAndLoadScene} from '../../../../helpers/ImportHelper';
 import {RendererUtils} from '../../../../helpers/RendererUtils';
-import {createRequiredNodesForParticles} from '../ParticlesSystemGpu';
+import {disposeParticlesFromNode} from '../../../../../src/core/particles/CoreParticles';
+import {
+	resetParticles,
+	gpuController,
+	renderController,
+	createRequiredNodesForParticles,
+	waitForParticlesComputedAndMounted,
+	stepParticlesSimulation,
+} from './ParticlesHelper';
 
 QUnit.test('ParticlesSystemGPU with param and persisted_config', async (assert) => {
 	const geo1 = window.geo1;
@@ -42,19 +50,22 @@ QUnit.test('ParticlesSystemGPU with param and persisted_config', async (assert) 
 	particles1.setInput(0, delete1);
 
 	scene.setFrame(1);
+	particles1.p.preRollFramesCount.set(1);
 	await particles1.compute();
+	await waitForParticlesComputedAndMounted(particles1);
 	const test_param = particles1.params.get('test_param')!;
 	assert.ok(test_param, 'test_param is created');
 	test_param.set([0, 1, 0]);
-	particles1.p.reset.pressButton();
+	resetParticles(particles1);
 	await particles1.compute();
+	await waitForParticlesComputedAndMounted(particles1);
 
-	const render_material = particles1.renderController.material()!;
+	const render_material = renderController(particles1).material()!;
 	await RendererUtils.compile(pointsBuilder1, renderer1);
 	const uniform = MaterialUserDataUniforms.getUniforms(render_material)!.texture_position;
 	assert.ok(render_material, 'material ok');
 	assert.ok(uniform, 'uniform ok');
-	const all_variables = particles1.gpuController.allVariables();
+	const all_variables = gpuController(particles1).allVariables();
 	assert.equal(all_variables.length, 1);
 	const variable = all_variables[0];
 	const param_uniform = variable.material.uniforms.v_POLY_param_test_param;
@@ -62,47 +73,49 @@ QUnit.test('ParticlesSystemGPU with param and persisted_config', async (assert) 
 
 	const buffer_width = 1;
 	const buffer_height = 1;
-	let render_target1 = particles1.gpuController.getCurrentRenderTarget('position' as ShaderName)!;
+	stepParticlesSimulation(particles1);
+	let render_target1 = gpuController(particles1).getCurrentRenderTarget('position' as ShaderName)!;
 	assert.equal(uniform.value.uuid, render_target1.texture.uuid, 'uniform has expected texture');
 	let pixelBuffer = new Float32Array(buffer_width * buffer_height * 4);
 	renderer1.readRenderTargetPixels(render_target1, 0, 0, buffer_width, buffer_height, pixelBuffer);
 	assert.deepEqual(pixelBuffer.join(':'), [-1, 2, -1, 0].join(':'), 'point moved up');
 
-	scene.setFrame(2);
-	let render_target2 = particles1.gpuController.getCurrentRenderTarget('position' as ShaderName)!;
+	stepParticlesSimulation(particles1);
+	let render_target2 = gpuController(particles1).getCurrentRenderTarget('position' as ShaderName)!;
 	assert.notEqual(render_target2.texture.uuid, render_target1.texture.uuid);
 	assert.equal(uniform.value.uuid, render_target2.texture.uuid, 'uniform has expected texture');
 	renderer1.readRenderTargetPixels(render_target2, 0, 0, buffer_width, buffer_height, pixelBuffer);
 	assert.deepEqual(pixelBuffer.join(':'), [-1, 3, -1, 0].join(':'), 'point moved up');
 
-	scene.setFrame(3);
+	stepParticlesSimulation(particles1);
 	assert.equal(uniform.value.uuid, render_target1.texture.uuid, 'uniform has expected texture');
 	renderer1.readRenderTargetPixels(render_target1, 0, 0, buffer_width, buffer_height, pixelBuffer);
 	assert.deepEqual(pixelBuffer.join(':'), [-1, 4, -1, 0].join(':'), 'point moved up');
 
 	test_param.set([0, 0.5, 0]);
-	scene.setFrame(4);
+	stepParticlesSimulation(particles1);
 	assert.equal(uniform.value.uuid, render_target2.texture.uuid, 'uniform has expected texture');
 	renderer1.readRenderTargetPixels(render_target2, 0, 0, buffer_width, buffer_height, pixelBuffer);
 	assert.deepEqual(pixelBuffer.join(':'), [-1, 4.5, -1, 0].join(':'), 'point moved up');
 
 	test_param.set([0, 2, 0]);
-	scene.setFrame(5);
+	stepParticlesSimulation(particles1);
 	assert.equal(uniform.value.uuid, render_target1.texture.uuid, 'uniform has expected texture');
 	renderer1.readRenderTargetPixels(render_target1, 0, 0, buffer_width, buffer_height, pixelBuffer);
 	assert.deepEqual(pixelBuffer.join(':'), [-1, 6.5, -1, 0].join(':'), 'point moved up');
 
 	test_param.set([1, 0, 0]);
-	scene.setFrame(6);
+	stepParticlesSimulation(particles1);
 	assert.equal(uniform.value.uuid, render_target2.texture.uuid, 'uniform has expected texture');
 	renderer1.readRenderTargetPixels(render_target2, 0, 0, buffer_width, buffer_height, pixelBuffer);
 	assert.deepEqual(pixelBuffer.join(':'), [0, 6.5, -1, 0].join(':'), 'point moved up');
 
 	scene.setFrame(1);
+	disposeParticlesFromNode(particles1);
 	await AssemblersUtils.withoutAssemblers(async () => {
 		await saveAndLoadScene(scene, async (scene2) => {
-			await scene2.waitForCooksCompleted();
 			const rendererData2 = await RendererUtils.waitForRenderer(scene2);
+			await scene2.waitForCooksCompleted();
 			const renderer2 = rendererData2.renderer;
 
 			const new_particles1 = scene2.node('/geo1/particlesSystemGpu1') as ParticlesSystemGpuSopNode;
@@ -113,10 +126,12 @@ QUnit.test('ParticlesSystemGPU with param and persisted_config', async (assert) 
 
 			assert.deepEqual(test_param2.value.toArray(), [1, 0, 0], 'test param is read back with expected value');
 			assert.equal(scene2.frame(), 1);
-			new_particles1.p.reset.pressButton();
+			resetParticles(new_particles1);
 			await new_particles1.compute();
+			await waitForParticlesComputedAndMounted(new_particles1);
 
-			render_target1 = new_particles1.gpuController.getCurrentRenderTarget('position' as ShaderName)!;
+			stepParticlesSimulation(particles1);
+			render_target1 = gpuController(new_particles1).getCurrentRenderTarget('position' as ShaderName)!;
 			assert.ok(render_target1, 'render_target1 ok');
 			renderer2.readRenderTargetPixels(render_target1, 0, 0, buffer_width, buffer_height, pixelBuffer);
 			assert.deepEqual(
@@ -125,8 +140,8 @@ QUnit.test('ParticlesSystemGPU with param and persisted_config', async (assert) 
 				'point with persisted config moved x'
 			);
 
-			scene2.setFrame(2);
-			render_target2 = new_particles1.gpuController.getCurrentRenderTarget('position' as ShaderName)!;
+			stepParticlesSimulation(particles1);
+			render_target2 = gpuController(new_particles1).getCurrentRenderTarget('position' as ShaderName)!;
 			renderer2.readRenderTargetPixels(render_target2, 0, 0, buffer_width, buffer_height, pixelBuffer);
 			assert.deepEqual(
 				AssertUtils.arrayWithPrecision(pixelBuffer),
@@ -135,8 +150,8 @@ QUnit.test('ParticlesSystemGPU with param and persisted_config', async (assert) 
 			);
 
 			test_param2.set([0, 2, 0]);
-			scene2.setFrame(3);
-			render_target1 = new_particles1.gpuController.getCurrentRenderTarget('position' as ShaderName)!;
+			stepParticlesSimulation(particles1);
+			render_target1 = gpuController(new_particles1).getCurrentRenderTarget('position' as ShaderName)!;
 			renderer2.readRenderTargetPixels(render_target1, 0, 0, buffer_width, buffer_height, pixelBuffer);
 			assert.deepEqual(
 				AssertUtils.arrayWithPrecision(pixelBuffer),
@@ -145,14 +160,15 @@ QUnit.test('ParticlesSystemGPU with param and persisted_config', async (assert) 
 			);
 
 			test_param2.set([-2, -4, -8]);
-			scene2.setFrame(4);
-			render_target1 = new_particles1.gpuController.getCurrentRenderTarget('position' as ShaderName)!;
+			stepParticlesSimulation(particles1);
+			render_target1 = gpuController(new_particles1).getCurrentRenderTarget('position' as ShaderName)!;
 			renderer2.readRenderTargetPixels(render_target1, 0, 0, buffer_width, buffer_height, pixelBuffer);
 			assert.deepEqual(
 				AssertUtils.arrayWithPrecision(pixelBuffer),
 				[0, -2, -9, 0].join(':'),
 				'point with persisted config moved in all axises'
 			);
+			disposeParticlesFromNode(new_particles1);
 		});
 	});
 

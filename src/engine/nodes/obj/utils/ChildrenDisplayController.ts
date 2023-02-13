@@ -149,7 +149,9 @@ export class ChildrenDisplayController {
 				}
 				this._notifyCamerasController();
 				this._runOnSopGroupUpdatedHooks();
-				Poly.onObjectsAddedHooks.runHooks(this._sopGroup.children);
+				if (this.node.scene().loadingController.loaded()) {
+					Poly.onObjectsAddedHooks.runHooks(this._sopGroup.children);
+				}
 				return;
 			}
 		}

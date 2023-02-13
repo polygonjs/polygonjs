@@ -8,6 +8,7 @@ import {ParamType} from '../../../../src/engine/poly/ParamType';
 import {checkConsolePrints} from '../../../helpers/Console';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 import {create_required_nodes_for_subnet_gl_node} from './Subnet';
+import {waitForParticlesComputedAndMounted, createActorNodeChildren} from '../sop/particlesSystemGPU/ParticlesHelper';
 
 QUnit.test('gl texture updates it parent material with new spare parameters', async (assert) => {
 	const scene = window.scene;
@@ -105,14 +106,23 @@ QUnit.test('gl texture generates an error on material if no name is given', asyn
 	const {renderer} = await RendererUtils.waitForRenderer(scene);
 	assert.ok(renderer, 'renderer created');
 
-	function createParticles() {
+	async function createParticles() {
 		const plane = geo1.createNode('plane');
 		const particles = geo1.createNode('particlesSystemGpu');
 		particles.setInput(0, plane);
 		const mat = MAT.createNode('meshBasicBuilder');
 		particles.p.material.setNode(mat);
-		return particles;
+
+		const actor1 = geo1.createNode('actor');
+		createActorNodeChildren(actor1);
+		particles.setInput(0, actor1);
+		actor1.setInput(0, plane);
+
+		await waitForParticlesComputedAndMounted(particles);
+
+		return {particles, actor1};
 	}
+	const {particles} = await createParticles();
 	const builderNodes = [
 		MAT.createNode('meshBasicBuilder'),
 		MAT.createNode('meshLambertBuilder'),
@@ -120,7 +130,7 @@ QUnit.test('gl texture generates an error on material if no name is given', asyn
 		MAT.createNode('meshStandardBuilder'),
 		MAT.createNode('meshPhysicalBuilder'),
 		MAT.createNode('volumeBuilder'),
-		createParticles(),
+		particles,
 		COP.createNode('builder'),
 	];
 

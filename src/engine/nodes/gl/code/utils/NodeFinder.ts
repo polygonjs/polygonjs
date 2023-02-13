@@ -1,4 +1,5 @@
 import {GlType} from './../../../../poly/registers/nodes/types/Gl';
+import {NodeContext} from './../../../../poly/NodeContext';
 import {BaseGlParentNode} from '../Controller';
 import {BaseGlNodeType} from '../../_Base';
 
@@ -9,12 +10,21 @@ export class GlNodeFinder {
 	}
 	static findParamGeneratingNodes(node: BaseGlParentNode) {
 		const list: BaseGlNodeType[] = [];
-		node.childrenController?.traverseChildren((child) => {
-			const childGlNode = child as BaseGlNodeType;
-			if (childGlNode.paramsGenerating()) {
-				list.push(childGlNode);
+		node.childrenController?.traverseChildren(
+			(child) => {
+				const childGlNode = child as BaseGlNodeType;
+				if (childGlNode.paramsGenerating()) {
+					list.push(childGlNode);
+				}
+			},
+			(child) => {
+				if (!child.childrenController) {
+					return child.context() == NodeContext.GL;
+				} else {
+					return child.context() == NodeContext.GL && child.childrenController.context == NodeContext.GL;
+				}
 			}
-		});
+		);
 
 		return list;
 	}

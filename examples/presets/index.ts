@@ -39,6 +39,7 @@ import {colorSopPresetRegister} from './sop/Color';
 import {CSS2DObjectPresetRegister} from './sop/CSS2DObject';
 import {dataSopPresetRegister} from './sop/Data';
 import {dataUrlSopPresetRegister} from './sop/DataUrl';
+import {deleteSopPresetRegister} from './sop/Delete';
 import {
 	fileDRCSopPresetRegister,
 	fileFBXSopPresetRegister,
@@ -105,6 +106,7 @@ class PresetLibraryClass {
 		this._registerPreset(CSS2DObjectPresetRegister);
 		this._registerPreset(dataSopPresetRegister);
 		this._registerPreset(dataUrlSopPresetRegister);
+		this._registerPreset(deleteSopPresetRegister);
 		this._registerPreset(fileDRCSopPresetRegister);
 		this._registerPreset(fileFBXSopPresetRegister);
 		this._registerPreset(fileGEOJSONSopPresetRegister);

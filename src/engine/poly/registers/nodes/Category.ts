@@ -16,6 +16,7 @@ export const CATEGORY_ACTOR = {
 	MATH: 'math',
 	NETWORK,
 	MISC: 'misc',
+	PARTICLES: 'particles',
 	PHYSICS: 'physics',
 	WEBXR: 'webXR',
 };
@@ -81,6 +82,7 @@ export const CATEGORY_GL = {
 	TRIGO: 'trigo',
 	UTIL: 'util',
 	INSTANCE: 'instance',
+	NETWORK,
 };
 export const CATEGORY_JS = {
 	COLOR: 'color',

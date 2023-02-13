@@ -6,6 +6,7 @@ import {Reflector} from '../../../modules/core/objects/Reflector';
 import {Vector3} from 'three';
 import {TransformResetSopOperation, TRANSFORM_RESET_MODES, TransformResetMode} from './TransformReset';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
+// import {ObjectType, registerObjectType} from '../../../core/geometry/Constant';
 interface ReflectorSopParams extends DefaultOperationParams {
 	direction: Vector3;
 	directionOffset: number;
@@ -62,6 +63,11 @@ export class ReflectorSopOperation extends BaseSopOperation {
 
 		const objects = inputCoreGroup.objectsWithGeo();
 
+		// registerObjectType({
+		// 	type: 'Reflector',
+		// 	ctor: Reflector,
+		// 	humanName: 'Reflector',
+		// });
 		for (let object of objects) {
 			tmpV3.copy(params.direction).normalize().multiplyScalar(params.directionOffset);
 

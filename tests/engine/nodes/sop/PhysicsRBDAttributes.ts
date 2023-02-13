@@ -12,6 +12,7 @@ import {RendererUtils} from '../../../helpers/RendererUtils';
 import {OnScenePlayStateActorNode} from './../../../../src/engine/nodes/actor/OnScenePlayState';
 import {PhysicsWorldSopNode} from './../../../../src/engine/nodes/sop/PhysicsWorld';
 import {SizeComputationMethod} from '../../../../src/engine/operations/sop/PhysicsRBDAttributes';
+import {waitForPhysicsComputedAndMounted} from './physics/PhysicsHelper';
 
 function createPhysicsWorldNodes(node: PhysicsWorldSopNode) {
 	const physicsWorldReset = node.createNode('physicsWorldReset');
@@ -381,7 +382,10 @@ QUnit.test('sop/physicsRBDAttributes cuboid with expressions entity dependent', 
 	physicsRBDAttributes1.p.size.set(0.55);
 
 	createPhysicsWorldNodes(physicsWorld1);
+	physicsWorld1.p.debug.set(true);
 	const container = await physicsWorld1.compute();
+	waitForPhysicsComputedAndMounted(physicsWorld1);
+
 	const objects = container.coreContent()!.objects()[0].children;
 	const sizess = objects.map((object: Object3D) => {
 		const target = new Vector3();

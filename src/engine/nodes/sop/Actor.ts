@@ -8,7 +8,7 @@ import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {NodeContext} from '../../poly/NodeContext';
+import {NetworkNodeType, NodeContext} from '../../poly/NodeContext';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {ActorNodeChildrenMap} from '../../poly/registers/nodes/Actor';
 import {NodeCreateOptions} from '../utils/hierarchy/ChildrenController';
@@ -28,9 +28,9 @@ class ActorSopParamsConfig extends NodeParamsConfig {
 	/** @param actor node */
 	node = ParamConfig.NODE_PATH('', {
 		visibleIf: {useThisNode: 0},
-		// nodeSelection: {
-		// 	// context: NodeContext.ACTOR,
-		// },
+		nodeSelection: {
+			types: [NetworkNodeType.ACTOR],
+		},
 		dependentOnFoundNode: false,
 	});
 }

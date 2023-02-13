@@ -37,7 +37,7 @@ export class OnTickActorNode extends TypedActorNode<OnTickActorParamsConfig> {
 				return this.scene().timeController.time();
 			}
 			case OnTickActorNodeOuput.DELTA: {
-				return this.scene().timeController.timeDelta();
+				return this.scene().timeController.delta();
 			}
 		}
 	}

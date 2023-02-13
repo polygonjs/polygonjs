@@ -61,9 +61,8 @@ export class PhysicsWorldSopNode extends TypedSopNode<PhysicsWorldSopParamsConfi
 	// private _PhysicsLib: PhysicsLib | undefined;
 	override async cook(inputCoreGroups: CoreGroup[]) {
 		await CorePhysics();
-		const coreGroup = inputCoreGroups[0];
-
 		Poly.onObjectsAddedHooks.registerHook(this.type(), this.traverseObjectOnSopGroupAdd.bind(this));
+		const coreGroup = inputCoreGroups[0];
 
 		const worldObject = new Group();
 		worldObject.name = this.name();

@@ -25,13 +25,14 @@ export class TimeController {
 	static START_FRAME: Readonly<number> = 0;
 	private _frame: number = 0;
 	private _timeUniform = {value: 0};
+	private _timeDeltaUniform = {value: 0};
 	private _graphNode: CoreGraphNode;
 	private _realtimeState = true;
 	private _maxFrame = 600;
 	private _maxFrameLocked = false;
 	private _playing: boolean = false;
 	private _clock = new Clock();
-	private _delta: number = 0;
+	// private _delta: number = 0;
 
 	// private _PLAY_EVENT_CONTEXT: EventContext<SceneEvent> | undefined;
 	// private _PAUSE_EVENT_CONTEXT: EventContext<SceneEvent> | undefined;
@@ -55,13 +56,13 @@ export class TimeController {
 	updateClockDelta() {
 		const delta = this._clock.getDelta();
 		const clampedDelta = delta > MAX_DELTA ? MAX_DELTA : delta;
-		return (this._delta = clampedDelta);
+		return this.setDelta(clampedDelta);
 	}
 	delta() {
-		return this._delta;
+		return this._timeDeltaUniform.value;
 	}
 	setDelta(delta: number) {
-		this._delta = delta;
+		return (this._timeDeltaUniform.value = delta);
 	}
 
 	frame(): number {
@@ -70,12 +71,15 @@ export class TimeController {
 	timeUniform() {
 		return this._timeUniform;
 	}
+	timeDeltaUniform() {
+		return this._timeDeltaUniform;
+	}
 	time(): number {
 		return this._timeUniform.value;
 	}
-	timeDelta() {
-		return this._delta;
-	}
+	// timeDelta() {
+	// 	return this._timeDeltaUniform.value;
+	// }
 	maxFrame() {
 		return this._maxFrame;
 	}
@@ -106,7 +110,7 @@ export class TimeController {
 
 		// we block updates here, so that dependent nodes only cook once
 		this.scene.cooker.block();
-		const delta = this._delta;
+		const delta = this.delta();
 		for (const callback of this._onBeforeTickCallbacks) {
 			callback(delta);
 		}
@@ -173,7 +177,7 @@ export class TimeController {
 
 		if (this._realtimeState) {
 			// const performance_now = performance.now();
-			const newTime = this._timeUniform.value + this._delta;
+			const newTime = this._timeUniform.value + this.delta();
 			// this._prev_performance_now = performance_now;
 			this.setTime(newTime, false);
 			this.setFrame(this._frame + 1, false);

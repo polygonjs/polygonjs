@@ -23,7 +23,7 @@ export class ParticlesPersistedConfig extends BasePersistedConfig {
 			return;
 		}
 		const shaders_by_name: PolyDictionary<string> = {};
-		const node_shaders_by_name = this.node.shaders_by_name();
+		const node_shaders_by_name = this.node.shadersByName();
 		node_shaders_by_name.forEach((shader, shader_name) => {
 			shaders_by_name[shader_name] = shader;
 		});

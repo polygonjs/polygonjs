@@ -118,6 +118,8 @@ import {OnWebXRControllerEventActorNode} from '../../../nodes/actor/OnWebXRContr
 import {OrActorNode} from '../../../nodes/actor/Or';
 import {ParamButtonPressActorNode} from '../../../nodes/actor/ParamButtonPress';
 import {PauseAudioSourceActorNode} from '../../../nodes/actor/PauseAudioSource';
+import {ParticlesSystemResetActorNode} from '../../../nodes/actor/ParticlesSystemReset';
+import {ParticlesSystemStepSimulationActorNode} from '../../../nodes/actor/ParticlesSystemStepSimulation';
 import {PhysicsPlayerUpdateActorNode} from '../../../nodes/actor/PhysicsPlayerUpdate';
 import {PhysicsRBDAddForceActorNode} from '../../../nodes/actor/PhysicsRBDAddForce';
 import {PhysicsRBDAddForceAtPointActorNode} from '../../../nodes/actor/PhysicsRBDAddForceAtPoint';
@@ -353,6 +355,8 @@ export interface ActorNodeChildrenMap {
 	or: OrActorNode;
 	paramButtonPress: ParamButtonPressActorNode;
 	pauseAudioSource: PauseAudioSourceActorNode;
+	particlesSystemReset: ParticlesSystemResetActorNode;
+	particlesSystemStepSimulation: ParticlesSystemStepSimulationActorNode;
 	physicsPlayerUpdate: PhysicsPlayerUpdateActorNode;
 	physicsRBDAddForceAtPoint: PhysicsRBDAddForceAtPointActorNode;
 	physicsRBDAddForce: PhysicsRBDAddForceActorNode;
@@ -594,6 +598,8 @@ export class ActorRegister {
 		poly.registerNode(OrActorNode, CATEGORY_ACTOR.LOGIC);
 		poly.registerNode(ParamButtonPressActorNode, CATEGORY_ACTOR.ACTION);
 		poly.registerNode(PauseAudioSourceActorNode, CATEGORY_ACTOR.AUDIO);
+		poly.registerNode(ParticlesSystemResetActorNode, CATEGORY_ACTOR.PARTICLES);
+		poly.registerNode(ParticlesSystemStepSimulationActorNode, CATEGORY_ACTOR.PARTICLES);
 		poly.registerNode(PhysicsPlayerUpdateActorNode, CATEGORY_ACTOR.PHYSICS);
 		poly.registerNode(PhysicsRBDAddForceActorNode, CATEGORY_ACTOR.PHYSICS);
 		poly.registerNode(PhysicsRBDAddForceAtPointActorNode, CATEGORY_ACTOR.PHYSICS);

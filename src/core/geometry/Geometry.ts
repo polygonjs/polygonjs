@@ -67,28 +67,41 @@ export class CoreGeometry {
 	computeVertexNormals() {
 		this._geometry.computeVertexNormals();
 	}
-
+	static userDataAttribs(geometry: BufferGeometry) {
+		return (geometry.userData[INDEX_ATTRIB_VALUES] = geometry.userData[INDEX_ATTRIB_VALUES] || {});
+	}
 	userDataAttribs() {
-		return (this._geometry.userData[INDEX_ATTRIB_VALUES] = this._geometry.userData[INDEX_ATTRIB_VALUES] || {});
+		return CoreGeometry.userDataAttribs(this._geometry);
 	}
 	indexedAttributeNames() {
 		return Object.keys(this.userDataAttribs() || {});
 	}
+	static userDataAttrib(geometry: BufferGeometry, attribName: string) {
+		attribName = CoreAttribute.remapName(attribName);
+		return this.userDataAttribs(geometry)[attribName];
+	}
 	userDataAttrib(name: string) {
 		name = CoreAttribute.remapName(name);
 		return this.userDataAttribs()[name];
+	}
+	static isAttribIndexed(geometry: BufferGeometry, attribName: string): boolean {
+		attribName = CoreAttribute.remapName(attribName);
+		return this.userDataAttrib(geometry, attribName) != null;
 	}
 	isAttribIndexed(name: string): boolean {
 		name = CoreAttribute.remapName(name);
 		return this.userDataAttrib(name) != null;
 	}
 
-	hasAttrib(name: string): boolean {
-		if (name === Attribute.POINT_INDEX) {
+	static hasAttrib(geometry: BufferGeometry, attribName: string): boolean {
+		if (attribName === Attribute.POINT_INDEX) {
 			return true;
 		}
-		name = CoreAttribute.remapName(name);
-		return this._geometry.attributes[name] != null;
+		attribName = CoreAttribute.remapName(attribName);
+		return geometry.attributes[attribName] != null;
+	}
+	hasAttrib(attribName: string): boolean {
+		return CoreGeometry.hasAttrib(this._geometry, attribName);
 	}
 	markAttribAsNeedsUpdate(attribName: string) {
 		attribName = CoreAttribute.remapName(attribName);
@@ -125,19 +138,35 @@ export class CoreGeometry {
 		}
 		return h;
 	}
-	attribSize(name: string): number {
-		let attrib;
-		name = CoreAttribute.remapName(name);
-		if ((attrib = this._geometry.attributes[name]) != null) {
+	static attribSize(geometry: BufferGeometry, attribName: string): number {
+		// let attrib;
+		attribName = CoreAttribute.remapName(attribName);
+		const attrib = geometry.attributes[attribName];
+		if (attrib) {
 			return attrib.itemSize;
 		} else {
-			if (name === Attribute.POINT_INDEX) {
+			if (attribName === Attribute.POINT_INDEX) {
 				// to ensure attrib copy with ptnum as source works
 				return 1;
 			} else {
 				return 0;
 			}
 		}
+	}
+	attribSize(attribName: string): number {
+		return CoreGeometry.attribSize(this._geometry, attribName);
+		// let attrib;
+		// name = CoreAttribute.remapName(name);
+		// if ((attrib = this._geometry.attributes[name]) != null) {
+		// 	return attrib.itemSize;
+		// } else {
+		// 	if (name === Attribute.POINT_INDEX) {
+		// 		// to ensure attrib copy with ptnum as source works
+		// 		return 1;
+		// 	} else {
+		// 		return 0;
+		// 	}
+		// }
 	}
 
 	setIndexedAttributeValues(name: string, values: string[]) {
