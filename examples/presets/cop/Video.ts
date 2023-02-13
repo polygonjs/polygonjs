@@ -5,12 +5,13 @@ import {BasePreset, NodePresetsCollection, PresetRegister, PresetsCollectionFact
 const videoCopNodePresetsCollectionFactory: PresetsCollectionFactory<VideoCopNode> = (node: VideoCopNode) => {
 	const collection = new NodePresetsCollection();
 
-	const ogv = new BasePreset().addEntry(node.p.url, `${DEMO_ASSETS_ROOT_URL}/textures/sintel.ogv`);
-	const mp4 = new BasePreset().addEntry(node.p.url, `${DEMO_ASSETS_ROOT_URL}/textures/sintel.mp4`);
+	const blenderSintel = new BasePreset()
+		.addEntry(node.p.urlsCount, 2)
+		.addEntry(node.p.url1, `${DEMO_ASSETS_ROOT_URL}/textures/sintel.mp4`)
+		.addEntry(node.p.url2, `${DEMO_ASSETS_ROOT_URL}/textures/sintel.ogv`);
 
 	collection.setPresets({
-		ogv,
-		mp4,
+		blenderSintel,
 	});
 
 	return collection;

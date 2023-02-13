@@ -76,7 +76,8 @@ QUnit.test('expression cosRes updates if referenced video updates', async (asser
 
 	const video = COP.createNode('video');
 	assert.equal(video.path(), videoPath);
-	video.p.url.set(`${ASSETS_ROOT}/textures/sintel.mp4`);
+	video.p.url1.set(`${ASSETS_ROOT}/textures/sintel.mp4`);
+	video.p.url2.set(`${ASSETS_ROOT}/textures/sintel.ogv`);
 	tx.set(`copRes('${videoPath}', 'x')`);
 	await tx.compute();
 	assert.equal(tx.value, 480);

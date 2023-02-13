@@ -28,16 +28,59 @@ import {InputCloneMode} from '../../poly/InputCloneMode';
 import {CopType} from '../../poly/registers/nodes/types/Cop';
 import {FileTypeCheckCopParamConfig} from './utils/CheckFileType';
 import {Poly} from '../../Poly';
-import {VideoTextureLoader} from '../../../core/loader/texture/Video';
+import {CoreVideoTextureLoader} from '../../../core/loader/texture/Video';
 import {VideoEvent, VIDEO_EVENTS} from '../../../core/Video';
 import {EXTENSIONS_BY_NODE_TYPE_BY_CONTEXT} from '../../../core/loader/FileExtensionRegister';
+import {CoreDomUtils} from '../../../core/DomUtils';
 import {NodeContext} from '../../poly/NodeContext';
+// import {TypeAssert} from '../../poly/Assert'
+import {StringParam} from '../../params/String';
+
+export enum VideoMode {
+	FROM_URLS = 'From Urls',
+	FROM_HTML_ELEMENT = 'From HTML Element',
+}
+const VIDEO_MODES: VideoMode[] = [VideoMode.FROM_URLS, VideoMode.FROM_HTML_ELEMENT];
+const VIDEO_MODE_ENTRIES = VIDEO_MODES.map((name, value) => ({name, value}));
+const VIDEO_MODE_FROM_URLS = VIDEO_MODES.indexOf(VideoMode.FROM_URLS);
+const VIDEO_MODE_FROM_HTML_ELEMENT = VIDEO_MODES.indexOf(VideoMode.FROM_HTML_ELEMENT);
 
 function VideoCopParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
+		/** @param mode */
+		mode = ParamConfig.INTEGER(VIDEO_MODE_FROM_URLS, {
+			menu: {
+				entries: VIDEO_MODE_ENTRIES,
+			},
+		});
+		/** @param number of video files to fetch */
+		urlsCount = ParamConfig.INTEGER(2, {
+			range: [1, 3],
+			rangeLocked: [true, true],
+			visibleIf: {
+				mode: VIDEO_MODE_FROM_URLS,
+			},
+		});
 		/** @param url to fetch the video from */
-		url = ParamConfig.STRING('', {
+		url1 = ParamConfig.STRING('', {
 			fileBrowse: {extensions: EXTENSIONS_BY_NODE_TYPE_BY_CONTEXT[NodeContext.COP][CopType.VIDEO]},
+		});
+		/** @param url to fetch the video from */
+		url2 = ParamConfig.STRING('', {
+			fileBrowse: {extensions: EXTENSIONS_BY_NODE_TYPE_BY_CONTEXT[NodeContext.COP][CopType.VIDEO]},
+			visibleIf: [
+				{mode: VIDEO_MODE_FROM_URLS, urlsCount: 2},
+				{mode: VIDEO_MODE_FROM_URLS, urlsCount: 3},
+			],
+		});
+		/** @param url to fetch the video from */
+		url3 = ParamConfig.STRING('', {
+			fileBrowse: {extensions: EXTENSIONS_BY_NODE_TYPE_BY_CONTEXT[NodeContext.COP][CopType.VIDEO]},
+			visibleIf: {mode: VIDEO_MODE_FROM_URLS, urlsCount: 3},
+		});
+		/** @param selector */
+		selector = ParamConfig.STRING('', {
+			visibleIf: {mode: VIDEO_MODE_FROM_HTML_ELEMENT},
 		});
 		/** @param reload the video */
 		reload = ParamConfig.BUTTON(null, {
@@ -118,34 +161,57 @@ export class VideoCopNode extends TypedCopNode<VideoCopParamsConfig> {
 			this._video.parentElement?.removeChild(this._video);
 		}
 	}
+	setMode(mode: VideoMode) {
+		this.p.mode.set(VIDEO_MODES.indexOf(mode));
+	}
+	mode() {
+		return VIDEO_MODES[this.pv.mode];
+	}
 
 	override async cook(input_contents: Texture[]) {
-		if (isBooleanTrue(this.pv.checkFileType) && !isUrlVideo(this.pv.url)) {
-			this.states.error.set('url is not a video');
-		} else {
-			const texture = await this._loadTexture(this.pv.url);
-
-			if (texture) {
-				this._disposeHTMLVideoElement();
-				this._video = texture.image;
-				if (this._video) {
-					this._addVideoEvents(this._video);
-					document.body.appendChild(this._video);
-				}
-				const inputTexture = input_contents[0];
-				if (inputTexture) {
-					TextureParamsController.copyTextureAttributes(texture, inputTexture);
-				}
-
-				this.videoUpdateLoop();
-				this.videoUpdateMuted();
-				this.videoUpdatePlay();
-				this.videoUpdateTime();
-				await this.textureParamsController.update(texture);
-				this.setTexture(texture);
-			} else {
-				this.cookController.endCook();
+		const mode = this.mode();
+		if (mode == VideoMode.FROM_URLS && isBooleanTrue(this.pv.checkFileType)) {
+			const setUrlNotVideoError = (param: StringParam) => {
+				this.states.error.set(`url from param ${param.name} is not a video ('${param.value}')`);
+			};
+			if (!isUrlVideo(this.pv.url1)) {
+				return setUrlNotVideoError(this.p.url1);
 			}
+			const urlsCount = this.pv.urlsCount;
+			if (urlsCount >= 2) {
+				if (!isUrlVideo(this.pv.url2)) {
+					return setUrlNotVideoError(this.p.url2);
+				}
+			}
+			if (urlsCount >= 3) {
+				if (!isUrlVideo(this.pv.url3)) {
+					return setUrlNotVideoError(this.p.url3);
+				}
+			}
+		}
+
+		const texture =
+			mode == VideoMode.FROM_URLS ? await this._loadTexture() : await this._videoTextureFromSelector();
+		if (texture) {
+			this._disposeHTMLVideoElement();
+			this._video = texture.image;
+			if (this._video) {
+				this._addVideoEvents(this._video);
+				// document.body.appendChild(this._video);
+			}
+			const inputTexture = input_contents[0];
+			if (inputTexture) {
+				TextureParamsController.copyTextureAttributes(texture, inputTexture);
+			}
+
+			this.videoUpdateLoop();
+			this.videoUpdateMuted();
+			this.videoUpdatePlay();
+			this.videoUpdateTime();
+			await this.textureParamsController.update(texture);
+			this.setTexture(texture);
+		} else {
+			this.cookController.endCook();
 		}
 	}
 	private _videoBoundEvents: Record<VideoEvent, () => void> = {
@@ -193,17 +259,16 @@ export class VideoCopNode extends TypedCopNode<VideoCopParamsConfig> {
 		return this._video?.currentTime || 0;
 	}
 
+	//
+	//
+	// VIDEO STATE
+	//
+	//
+	//
+
+	// time
 	static PARAM_CALLBACK_videoUpdateTime(node: VideoCopNode) {
 		node.videoUpdateTime();
-	}
-	static PARAM_CALLBACK_videoUpdatePlay(node: VideoCopNode) {
-		node.videoUpdatePlay();
-	}
-	static PARAM_CALLBACK_videoUpdateMuted(node: VideoCopNode) {
-		node.videoUpdateMuted();
-	}
-	static PARAM_CALLBACK_videoUpdateLoop(node: VideoCopNode) {
-		node.videoUpdateLoop();
 	}
 	private async videoUpdateTime() {
 		if (this._video) {
@@ -211,47 +276,151 @@ export class VideoCopNode extends TypedCopNode<VideoCopParamsConfig> {
 			if (param.isDirty()) {
 				await param.compute();
 			}
-			this._video.currentTime = param.value;
+			this._videoUpdateTime(this._video);
 		}
+	}
+	private async _videoUpdateTime(video: HTMLVideoElement) {
+		video.currentTime = this.pv.videoTime;
+	}
+	// play
+	static PARAM_CALLBACK_videoUpdatePlay(node: VideoCopNode) {
+		node.videoUpdatePlay();
+	}
+	private videoUpdatePlay() {
+		if (this._video) {
+			this._videoUpdatePlay(this._video);
+		}
+	}
+	private _videoUpdatePlay(video: HTMLVideoElement) {
+		if (isBooleanTrue(this.pv.play)) {
+			video.play();
+		} else {
+			video.pause();
+		}
+	}
+	// muted
+	static PARAM_CALLBACK_videoUpdateMuted(node: VideoCopNode) {
+		node.videoUpdateMuted();
 	}
 	private videoUpdateMuted() {
 		if (this._video) {
-			this._video.muted = isBooleanTrue(this.pv.muted);
+			this._videoUpdateMuted(this._video);
 		}
+	}
+	private _videoUpdateMuted(video: HTMLVideoElement) {
+		video.muted = isBooleanTrue(this.pv.muted);
+	}
+	// loop
+	static PARAM_CALLBACK_videoUpdateLoop(node: VideoCopNode) {
+		node.videoUpdateLoop();
 	}
 	private videoUpdateLoop() {
 		if (this._video) {
-			this._video.loop = isBooleanTrue(this.pv.loop);
+			this._videoUpdateLoop(this._video);
 		}
+	}
+	private _videoUpdateLoop(video: HTMLVideoElement) {
+		video.loop = isBooleanTrue(this.pv.loop);
+	}
+	//
+	// VIDEO CREATE / GET
+	//
+	//
+	// private _createVideoElement(){
+	// 	const mode = VIDEO_MODES[this.pv.mode]
+	// 	switch(mode){
+	// 		case VideoMode.FROM_URLS:{
+	// 			return this._videoElementFromUrls()
+	// 		}
+	// 		case VideoMode.FROM_HTML_ELEMENT:{
+	// 			return this._videoElementFromSelector()
+	// 		}
+	// 	}
+	// 	TypeAssert.unreachable(mode)
+	// }
+	// private _videoElementFromUrls(){
+	// 	const _createVideoTag=()=>{
+	// 		const video = document.createElement('video')
+	// 		this._videoUpdateLoop(video)
+	// 		this._videoUpdateMuted(video)
+	// 		video.setAttribute('crossOrigin', 'anonymous');
+	// 		video.setAttribute('autoplay', `${true}`); // to ensure it loads
+	// 		return video
+	// 	}
+	// 	const _addUrls=(video:HTMLVideoElement, urls:string[])=>{
+	// 		for(let url of urls){
+	// 			const source = document.createElement('source')
+	// 			source.src = url;
+	// 			video.append(source)
+	// 			}
+	// 	}
+	// 	return _addUrls(_createVideoTag(),this._urlParams().map(p=>p.value))
+
+	// }
+	private async _videoTextureFromSelector(): Promise<VideoTexture | undefined> {
+		const selector = this.pv.selector;
+		const element = document.querySelector(selector);
+		if (!element) {
+			return;
+		}
+		if (!(element instanceof HTMLVideoElement)) {
+			this.states.error.set(`element found with selector '${selector}' is not a video`);
+			return;
+		}
+
+		const texture = new VideoTexture(element);
+		return new Promise((resolve) => {
+			if (CoreDomUtils.isHTMLVideoElementLoaded(element)) {
+				resolve(texture);
+			}
+			element.onloadedmetadata = () => {
+				resolve(texture);
+			};
+		});
 	}
 
-	private videoUpdatePlay() {
-		if (this._video) {
-			if (isBooleanTrue(this.pv.play)) {
-				this._video.play();
-			} else {
-				this._video.pause();
-			}
-		}
-	}
 	//
 	//
 	// UTILS
 	//
 	//
+	urlParams() {
+		const urlsCount = this.pv.urlsCount;
+		switch (urlsCount) {
+			case 1: {
+				return [this.p.url1];
+			}
+			case 2: {
+				return [this.p.url1, this.p.url2];
+			}
+			case 3: {
+				return [this.p.url1, this.p.url2, this.p.url3];
+			}
+		}
+		return [];
+	}
+	private _urlsToLoad() {
+		return this.urlParams().map((p) => p.value);
+	}
 	static PARAM_CALLBACK_reload(node: VideoCopNode, param: BaseParamType) {
 		node.paramCallbackReload();
 	}
 	private paramCallbackReload() {
 		// set the param dirty is preferable to just the successors, in case the expression result needs to be updated
 		// this.p.url.set_successors_dirty();
-		this.p.url.setDirty();
-		this.p.url.emit(ParamEvent.ASSET_RELOAD_REQUEST);
+		// this.p.url.setDirty();
+		// this.p.url.emit(ParamEvent.ASSET_RELOAD_REQUEST);
+		const urlParams = this.urlParams();
+		for (let urlParam of urlParams) {
+			urlParam.setDirty();
+			urlParam.emit(ParamEvent.ASSET_RELOAD_REQUEST);
+		}
 	}
 
-	private async _loadTexture(url: string) {
+	private async _loadTexture() {
+		const urls = this._urlsToLoad();
 		let texture: Texture | VideoTexture | null = null;
-		const loader = new VideoTextureLoader(url, this);
+		const loader = new CoreVideoTextureLoader(urls, this);
 		try {
 			texture = await loader.loadVideo();
 			if (texture) {
@@ -259,7 +428,7 @@ export class VideoCopNode extends TypedCopNode<VideoCopParamsConfig> {
 			}
 		} catch (e) {}
 		if (!texture) {
-			this.states.error.set(`could not load texture '${url}'`);
+			this.states.error.set(`could not load video from textures '${urls.join(',')}'`);
 		}
 		return texture;
 	}

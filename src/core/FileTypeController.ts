@@ -1,4 +1,4 @@
-export const VIDEO_EXTENSIONS = ['mp4', 'ogv', 'ogg'];
+export const VIDEO_EXTENSIONS = ['mp4', 'ogv', 'ogg', 'webm'];
 export enum ImageExtension {
 	GIF = 'gif',
 	JPG = 'jpg',

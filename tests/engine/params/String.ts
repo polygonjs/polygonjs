@@ -141,7 +141,8 @@ QUnit.test('a string param can clear its error when missing ref is solved', asyn
 
 	const video1 = COP.createNode('video');
 	assert.equal(video1.path(), videoPath);
-	video1.p.url.set(`${ASSETS_ROOT}/textures/sintel.mp4`);
+	video1.p.url1.set(`${ASSETS_ROOT}/textures/sintel.mp4`);
+	video1.p.url2.set(`${ASSETS_ROOT}/textures/sintel.mp4`);
 	// await video1.compute();
 
 	assert.ok(param.isDirty());
@@ -176,7 +177,8 @@ QUnit.test('a string param can clear its error when expression resolves', async 
 		"expression error: \"`copRes('/COP/video1','x')`\" (referenced node invalid: /COP/video1)"
 	);
 
-	video1.p.url.set(`${ASSETS_ROOT}/textures/sintel.mp4`);
+	video1.p.url1.set(`${ASSETS_ROOT}/textures/sintel.mp4`);
+	video1.p.url2.set(`${ASSETS_ROOT}/textures/sintel.mp4`);
 	// await video1.compute();
 
 	assert.ok(param.isDirty());

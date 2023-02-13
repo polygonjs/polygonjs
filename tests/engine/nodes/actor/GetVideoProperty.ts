@@ -14,7 +14,8 @@ QUnit.test('actor/GetVideoProperty', async (assert) => {
 
 	const video1 = COP.createNode('video');
 	const meshBasic1 = MAT.createNode('meshBasic');
-	video1.p.url.set(`${ASSETS_ROOT}/textures/sintel.mp4`);
+	video1.p.url1.set(`${ASSETS_ROOT}/textures/sintel.mp4`);
+	video1.p.url2.set(`${ASSETS_ROOT}/textures/sintel.ogv`);
 	const box1 = geo1.createNode('box');
 	const material1 = geo1.createNode('material');
 	const actor1 = geo1.createNode('actor');

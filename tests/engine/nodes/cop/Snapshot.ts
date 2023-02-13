@@ -6,7 +6,8 @@ QUnit.test('COP snapshot from video', async (assert) => {
 	const COP = window.COP;
 
 	const video1 = COP.createNode('video');
-	video1.p.url.set(`${ASSETS_ROOT}/textures/sintel.mp4`);
+	video1.p.url1.set(`${ASSETS_ROOT}/textures/sintel.mp4`);
+	video1.p.url2.set(`${ASSETS_ROOT}/textures/sintel.ogv`);
 	video1.p.tencoding.set(true);
 	video1.p.encoding.set(sRGBEncoding);
 

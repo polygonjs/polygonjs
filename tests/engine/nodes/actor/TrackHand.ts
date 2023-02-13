@@ -55,7 +55,8 @@ QUnit.test('actor/trackHand', async (assert) => {
 
 	// video
 	const video1 = COP.createNode('video');
-	video1.p.url.set(`${ASSETS_ROOT}/computerVision/tests/hand.mp4`);
+	video1.p.urlsCount.set(1);
+	video1.p.url1.set(`${ASSETS_ROOT}/computerVision/tests/hand.mp4`);
 	video1.p.tflipY.set(true);
 	video1.p.flipY.set(true);
 	await video1.compute();
