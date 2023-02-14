@@ -1,5 +1,5 @@
 /**
- * Update the geometry instance attribuute
+ * Update the geometry instance attribute
  *
  *
  */
