@@ -6,6 +6,7 @@
 import {TypedCsgNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CsgCoreGroup} from '../../../core/geometry/csg/CsgCoreGroup';
+import {isBooleanTrue} from '../../../core/Type';
 import type {maths} from '@jscad/modeling';
 import {transforms, geometries} from '@jscad/modeling';
 import {vector3ToCsgVec3} from '../../../core/geometry/csg/CsgVecToVector';
@@ -16,6 +17,8 @@ class MirrorCsgParamsConfig extends NodeParamsConfig {
 	origin = ParamConfig.VECTOR3([0, 0, 0]);
 	/** @param normal */
 	normal = ParamConfig.VECTOR3([0, 1, 0]);
+	/** @param invert */
+	invert = ParamConfig.BOOLEAN(1);
 }
 const ParamsConfig = new MirrorCsgParamsConfig();
 
@@ -39,7 +42,7 @@ export class MirrorCsgNode extends TypedCsgNode<MirrorCsgParamsConfig> {
 		};
 		const objects = inputCoreGroups[0].objects().map((o) => {
 			const geo = mirror(options, o);
-			if (geometries.geom3.isA(geo)) {
+			if (geometries.geom3.isA(geo) && isBooleanTrue(this.pv.invert)) {
 				return geometries.geom3.invert(geo);
 			} else {
 				return geo;

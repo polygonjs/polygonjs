@@ -46,7 +46,7 @@ export interface CsgNodeChildrenMap {
 	copy: CopyCsgNode;
 	cube: CubeCsgNode;
 	cylinder: CylinderCsgNode;
-	CylinderElliptic: CylinderEllipticCsgNode;
+	cylinderElliptic: CylinderEllipticCsgNode;
 	dodecahedron: DodecahedronCsgNode;
 	ellipse: EllipseCsgNode;
 	ellipsoid: EllipsoidCsgNode;

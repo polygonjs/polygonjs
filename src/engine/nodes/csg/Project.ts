@@ -1,5 +1,5 @@
 /**
- * Extrude the geometry and rotates it
+ * Projects a 3D shape onto a plane and outputs a curve out of the resulting shape
  *
  *
  */
