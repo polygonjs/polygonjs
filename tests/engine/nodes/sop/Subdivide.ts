@@ -1,4 +1,4 @@
-QUnit.test('subdivide simple', async (assert) => {
+QUnit.test('sop/subdivide simple', async (assert) => {
 	const geo1 = window.geo1;
 
 	const box1 = geo1.createNode('box');

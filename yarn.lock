@@ -4073,10 +4073,10 @@ three-mesh-bvh@^0.5.19:
   resolved "https://registry.yarnpkg.com/three-mesh-bvh/-/three-mesh-bvh-0.5.19.tgz#72d489856561d01ef7d4add81f0c82d3fb644d09"
   integrity sha512-Q8huT0NautyR4afW0oMlOz8a4qm3b1jQ1ccMLF/TZ0rA4i58HljsnBjCLEDLQtIINZyLtZPdw60mrD81V/TZDA==
 
-three-subdivide@1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/three-subdivide/-/three-subdivide-1.1.0.tgz#8a5ebdde825a1cb2d8ef0f3cd8be1686a9d2d6c6"
-  integrity sha512-0BqTWLzqRHnM4ctKgscxo8oPB4R10mjH1Uycy+/8FIbizhpjEfku3I2wCq/Itt3Qv2IglHUzjc1qHioKAlYeoA==
+three-subdivide@1.1.2:
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/three-subdivide/-/three-subdivide-1.1.2.tgz#e29f770dcfc748096086e9a20a66d0b16905d171"
+  integrity sha512-qcMX3vIyKiZecJQuDZFoIkImOFwMBT/SzdGwMwoL+48Pq/6r3+jVGIKOP03sMjK9bOQDy3wc1ZH+xiUaYk2aCw==
 
 three@0.148.0:
   version "0.148.0"
