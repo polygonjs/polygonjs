@@ -6,10 +6,10 @@
 import {TypedCsgNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CsgCoreGroup} from '../../../core/geometry/csg/CsgCoreGroup';
-import jscad from '@jscad/modeling';
+import {hulls, geometries} from '@jscad/modeling';
 import {CsgObject} from '../../../core/geometry/csg/CsgCoreObject';
 import {geom2ApplyTransforms} from '../../../core/geometry/csg/math/CsgMat4';
-const {hull, hullChain} = jscad.hulls;
+const {hull, hullChain} = hulls;
 
 class HullCsgParamsConfig extends NodeParamsConfig {
 	/** @param chain */
@@ -27,20 +27,20 @@ export class HullCsgNode extends TypedCsgNode<HullCsgParamsConfig> {
 	}
 
 	override cook(inputCoreGroups: CsgCoreGroup[]) {
-		const geom3: jscad.geometries.geom3.Geom3[] = [];
-		const geom2: jscad.geometries.geom2.Geom2[] = [];
-		const path2: jscad.geometries.path2.Path2[] = [];
+		const geom3: geometries.geom3.Geom3[] = [];
+		const geom2: geometries.geom2.Geom2[] = [];
+		const path2: geometries.path2.Path2[] = [];
 		const objects = inputCoreGroups[0].objects();
 		for (let object of objects) {
-			if (jscad.geometries.geom3.isA(object)) {
+			if (geometries.geom3.isA(object)) {
 				geom3.push(object);
 			}
-			if (jscad.geometries.geom2.isA(object)) {
+			if (geometries.geom2.isA(object)) {
 				// the transforms are applied for geom2
 				geom2ApplyTransforms(object);
 				geom2.push(object);
 			}
-			if (jscad.geometries.path2.isA(object)) {
+			if (geometries.path2.isA(object)) {
 				path2.push(object);
 			}
 		}

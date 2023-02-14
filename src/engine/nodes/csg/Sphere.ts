@@ -6,11 +6,12 @@
 import {TypedCsgNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CsgCoreGroup} from '../../../core/geometry/csg/CsgCoreGroup';
-import jscad from '@jscad/modeling';
+import type {maths} from '@jscad/modeling';
+import {primitives} from '@jscad/modeling';
 import {vector3ToCsgVec3} from '../../../core/geometry/csg/CsgVecToVector';
 import {Matrix4} from 'three';
 import {csgApplyMatrix4} from '../../../core/geometry/csg/math/CsgMat4';
-const {sphere, geodesicSphere} = jscad.primitives;
+const {sphere, geodesicSphere} = primitives;
 
 class SphereCsgParamsConfig extends NodeParamsConfig {
 	/** @param radius */
@@ -42,9 +43,9 @@ export class SphereCsgNode extends TypedCsgNode<SphereCsgParamsConfig> {
 		return 'sphere';
 	}
 
-	private _center: jscad.maths.vec3.Vec3 = [0, 0, 0];
+	private _center: maths.vec3.Vec3 = [0, 0, 0];
 	private _matrix4 = new Matrix4();
-	// private _axes: jscad.maths.vec3.Vec3 = [0, 1, 0];
+	// private _axes: maths.vec3.Vec3 = [0, 1, 0];
 	override cook(inputCoreGroups: CsgCoreGroup[]) {
 		vector3ToCsgVec3(this.pv.center, this._center);
 		// vector3ToCsgVec3(this.pv.axes, this._axes);

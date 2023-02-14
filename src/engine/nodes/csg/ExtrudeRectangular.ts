@@ -6,8 +6,8 @@
 import {TypedCsgNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CsgCoreGroup} from '../../../core/geometry/csg/CsgCoreGroup';
-import jscad from '@jscad/modeling';
-const {extrudeRectangular} = jscad.extrusions;
+import {extrusions, geometries} from '@jscad/modeling';
+const {extrudeRectangular} = extrusions;
 
 class ExtrudeRectangularCsgParamsConfig extends NodeParamsConfig {
 	/** @param size */
@@ -33,14 +33,14 @@ export class ExtrudeRectangularCsgNode extends TypedCsgNode<ExtrudeRectangularCs
 	}
 
 	override cook(inputCoreGroups: CsgCoreGroup[]) {
-		const options: jscad.extrusions.ExtrudeRectangularOptions = {
+		const options: extrusions.ExtrudeRectangularOptions = {
 			size: this.pv.size,
 			height: this.pv.height,
 		};
 		const objects = inputCoreGroups[0]
 			.objects()
 			.map((o) => {
-				if (jscad.geometries.geom2.isA(o) || jscad.geometries.path2.isA(o)) {
+				if (geometries.geom2.isA(o) || geometries.path2.isA(o)) {
 					return extrudeRectangular(options, o);
 				} else {
 					return o;

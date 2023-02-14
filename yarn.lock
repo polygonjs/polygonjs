@@ -224,10 +224,10 @@
     "@jridgewell/resolve-uri" "^3.0.3"
     "@jridgewell/sourcemap-codec" "^1.4.10"
 
-"@jscad/modeling@2.9.3":
-  version "2.9.3"
-  resolved "https://registry.yarnpkg.com/@jscad/modeling/-/modeling-2.9.3.tgz#b058015b82fb6fd54257f32510ce4b8cc491d257"
-  integrity sha512-UnSKU1OAl5g93sh84VnDxF/EMGsUBIZuhD1PjkCh3Gxaut3p+39GTTF5MHYhGFEfvQKbhXQHVbtoE+mdohQuxg==
+"@jscad/modeling@2.11.0":
+  version "2.11.0"
+  resolved "https://registry.yarnpkg.com/@jscad/modeling/-/modeling-2.11.0.tgz#890e8e3bda0fb89e8905e815eea8302225a12b89"
+  integrity sha512-B2GnufqIP6vLwQs9ZWBJRWir0dE9O5EV0Vtz2w9370S6i/6+IQA3Xqhghr8xGdEblKJoJXeE5GOOMUHEsqzoDA==
 
 "@mapbox/geojson-rewind@^0.5.2":
   version "0.5.2"

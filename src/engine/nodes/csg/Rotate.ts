@@ -6,10 +6,11 @@
 import {TypedCsgNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CsgCoreGroup} from '../../../core/geometry/csg/CsgCoreGroup';
-import jscad from '@jscad/modeling';
+import type {maths} from '@jscad/modeling';
+import {transforms} from '@jscad/modeling';
 import {vector3ToCsgVec3} from '../../../core/geometry/csg/CsgVecToVector';
 import {MathUtils} from 'three';
-const {rotate} = jscad.transforms;
+const {rotate} = transforms;
 const {degToRad} = MathUtils;
 
 class RotateCsgParamsConfig extends NodeParamsConfig {
@@ -27,7 +28,7 @@ export class RotateCsgNode extends TypedCsgNode<RotateCsgParamsConfig> {
 		this.io.inputs.setCount(1);
 	}
 
-	private _r: jscad.maths.vec3.Vec3 = [0, 0, 0];
+	private _r: maths.vec3.Vec3 = [0, 0, 0];
 	override cook(inputCoreGroups: CsgCoreGroup[]) {
 		vector3ToCsgVec3(this.pv.r, this._r);
 		this._r[0] = degToRad(this._r[0]);

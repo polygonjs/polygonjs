@@ -1,7 +1,7 @@
-import jscad from '@jscad/modeling';
 import {Matrix4, Vector3} from 'three';
 import {CsgObject} from '../CsgCoreObject';
-const {mat4} = jscad.maths;
+import {maths, geometries} from '@jscad/modeling';
+const {mat4} = maths;
 
 const TMP_MAT4 = new Matrix4();
 const TMP_VEC3 = new Vector3();
@@ -9,7 +9,7 @@ const TMP_VEC3 = new Vector3();
 /*
  * from jscad source, but with typescript
  */
-const isIdentity = (matrix: jscad.maths.mat4.Mat4) =>
+const isIdentity = (matrix: maths.mat4.Mat4) =>
 	matrix[0] === 1 &&
 	matrix[1] === 0 &&
 	matrix[2] === 0 &&
@@ -26,7 +26,7 @@ const isIdentity = (matrix: jscad.maths.mat4.Mat4) =>
 	matrix[13] === 0 &&
 	matrix[14] === 0 &&
 	matrix[15] === 1;
-export function geom3ApplyTransforms(geom: jscad.geometries.geom3.Geom3) {
+export function geom3ApplyTransforms(geom: geometries.geom3.Geom3) {
 	if (isIdentity(geom.transforms)) return;
 
 	TMP_MAT4.elements = geom.transforms;
@@ -39,7 +39,7 @@ export function geom3ApplyTransforms(geom: jscad.geometries.geom3.Geom3) {
 	}
 	mat4.identity(geom.transforms);
 }
-export function path2ApplyTransforms(geom: jscad.geometries.path2.Path2) {
+export function path2ApplyTransforms(geom: geometries.path2.Path2) {
 	if (isIdentity(geom.transforms)) return;
 
 	TMP_MAT4.elements = geom.transforms;
@@ -59,18 +59,18 @@ export function path2ApplyTransforms(geom: jscad.geometries.path2.Path2) {
 //   }
 
 export function csgApplyTransform(csg: CsgObject) {
-	if (jscad.geometries.geom3.isA(csg)) {
+	if (geometries.geom3.isA(csg)) {
 		geom3ApplyTransforms(csg);
 	}
-	if (jscad.geometries.geom2.isA(csg)) {
+	if (geometries.geom2.isA(csg)) {
 		geom2ApplyTransforms(csg);
 	}
-	if (jscad.geometries.path2.isA(csg)) {
+	if (geometries.path2.isA(csg)) {
 		path2ApplyTransforms(csg);
 	}
 }
 
-export function matrix4ToMat4(matrix4: Matrix4, target: jscad.maths.mat4.Mat4) {
+export function matrix4ToMat4(matrix4: Matrix4, target: maths.mat4.Mat4) {
 	const elements = matrix4.elements;
 	target[0] = elements[0];
 	target[1] = elements[1];
@@ -95,7 +95,7 @@ export function csgApplyMatrix4(csg: CsgObject, matrix4: Matrix4) {
 	csgApplyTransform(csg);
 }
 
-function transformVec2(vec2: jscad.maths.vec2.Vec2, matrix4: Matrix4) {
+function transformVec2(vec2: maths.vec2.Vec2, matrix4: Matrix4) {
 	TMP_VEC3.x = vec2[0];
 	TMP_VEC3.y = 0;
 	TMP_VEC3.z = vec2[1];
@@ -103,7 +103,7 @@ function transformVec2(vec2: jscad.maths.vec2.Vec2, matrix4: Matrix4) {
 	vec2[0] = TMP_VEC3.x;
 	vec2[1] = TMP_VEC3.z;
 }
-function transformVec3(vec3: jscad.maths.vec3.Vec3, matrix4: Matrix4) {
+function transformVec3(vec3: maths.vec3.Vec3, matrix4: Matrix4) {
 	TMP_VEC3.x = vec3[0];
 	TMP_VEC3.y = vec3[1];
 	TMP_VEC3.z = vec3[2];
@@ -112,7 +112,7 @@ function transformVec3(vec3: jscad.maths.vec3.Vec3, matrix4: Matrix4) {
 	vec3[1] = TMP_VEC3.y;
 	vec3[2] = TMP_VEC3.z;
 }
-export function geom2ApplyTransforms(geom: jscad.geometries.geom2.Geom2) {
+export function geom2ApplyTransforms(geom: geometries.geom2.Geom2) {
 	if (isIdentity(geom.transforms)) {
 		return;
 	}

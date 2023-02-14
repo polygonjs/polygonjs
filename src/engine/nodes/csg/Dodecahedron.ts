@@ -6,11 +6,11 @@
 import {TypedCsgNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CsgCoreGroup} from '../../../core/geometry/csg/CsgCoreGroup';
-import jscad from '@jscad/modeling';
-const {cuboid} = jscad.primitives;
-const {intersect} = jscad.booleans;
-const {rotateX, rotateZ, scale} = jscad.transforms;
-const {degToRad} = jscad.utils;
+import {primitives, booleans, utils, transforms, maths} from '@jscad/modeling';
+const {cuboid} = primitives;
+const {intersect} = booleans;
+const {rotateX, rotateZ, scale} = transforms;
+const {degToRad} = utils;
 
 const dodecahedron = (h: number) => {
 	let cuboid1 = cuboid({size: [20, 20, 10]});
@@ -29,7 +29,7 @@ const dodecahedron = (h: number) => {
 class DodecahedronCsgParamsConfig extends NodeParamsConfig {
 	/** @param radius */
 	radius = ParamConfig.FLOAT(1, {
-		range: [jscad.maths.constants.EPS, 1],
+		range: [maths.constants.EPS, 1],
 		rangeLocked: [true, false],
 	});
 }

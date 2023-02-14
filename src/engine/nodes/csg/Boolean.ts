@@ -6,10 +6,10 @@
 import {TypedCsgNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CsgCoreGroup} from '../../../core/geometry/csg/CsgCoreGroup';
-import jscad from '@jscad/modeling';
+import {geometries, booleans} from '@jscad/modeling';
 import {CsgObject} from '../../../core/geometry/csg/CsgCoreObject';
 import {csgApplyTransform} from '../../../core/geometry/csg/math/CsgMat4';
-const {intersect, union, subtract} = jscad.booleans;
+const {intersect, union, subtract} = booleans;
 
 export enum BooleanCsgOperationType {
 	INTERSECT = 'intersect',
@@ -63,11 +63,11 @@ export class BooleanCsgNode extends TypedCsgNode<BooleanCsgParamsConfig> {
 	private _applyOperation(object0: CsgObject, object1: CsgObject) {
 		const method = this._method();
 
-		const bothAreGeom3 = jscad.geometries.geom3.isA(object0) && jscad.geometries.geom3.isA(object1);
+		const bothAreGeom3 = geometries.geom3.isA(object0) && geometries.geom3.isA(object1);
 		if (bothAreGeom3) {
 			return method(object0, object1);
 		}
-		const bothAreGeom2 = jscad.geometries.geom2.isA(object0) && jscad.geometries.geom2.isA(object1);
+		const bothAreGeom2 = geometries.geom2.isA(object0) && geometries.geom2.isA(object1);
 		if (bothAreGeom2) {
 			// the transforms are applied for geom2, as otherwise the matrix is not taken into account
 			csgApplyTransform(object0);

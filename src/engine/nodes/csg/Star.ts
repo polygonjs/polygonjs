@@ -6,9 +6,9 @@
 import {TypedCsgNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CsgCoreGroup} from '../../../core/geometry/csg/CsgCoreGroup';
-import jscad from '@jscad/modeling';
+import {primitives, maths} from '@jscad/modeling';
 import {vector2ToCsgVec2} from '../../../core/geometry/csg/CsgVecToVector';
-const {star} = jscad.primitives;
+const {star} = primitives;
 
 class StarCsgParamsConfig extends NodeParamsConfig {
 	/** @param center */
@@ -20,12 +20,12 @@ class StarCsgParamsConfig extends NodeParamsConfig {
 	});
 	/** @param outer radius */
 	innerRadius = ParamConfig.FLOAT(1, {
-		range: [2 * jscad.maths.constants.EPS, 10],
+		range: [2 * maths.constants.EPS, 10],
 		rangeLocked: [true, false],
 	});
 	/** @param outer radius */
 	outerRadius = ParamConfig.FLOAT(2, {
-		range: [2 * jscad.maths.constants.EPS, 10],
+		range: [2 * maths.constants.EPS, 10],
 		rangeLocked: [true, false],
 	});
 	/** @param start angle */
@@ -42,7 +42,7 @@ export class StarCsgNode extends TypedCsgNode<StarCsgParamsConfig> {
 		return 'star';
 	}
 
-	private _center: jscad.maths.vec2.Vec2 = [0, 0];
+	private _center: maths.vec2.Vec2 = [0, 0];
 	override cook(inputCoreGroups: CsgCoreGroup[]) {
 		try {
 			vector2ToCsgVec2(this.pv.center, this._center);

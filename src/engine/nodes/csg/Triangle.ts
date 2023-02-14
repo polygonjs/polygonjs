@@ -6,10 +6,11 @@
 import {TypedCsgNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CsgCoreGroup} from '../../../core/geometry/csg/CsgCoreGroup';
-import jscad from '@jscad/modeling';
+import type {maths} from '@jscad/modeling';
+import {primitives} from '@jscad/modeling';
 import {MathUtils} from 'three';
 const {degToRad} = MathUtils;
-const {triangle} = jscad.primitives;
+const {triangle} = primitives;
 
 enum TriangleType {
 	AAA = 'AAA',
@@ -44,7 +45,7 @@ export class TriangleCsgNode extends TypedCsgNode<TriangleCsgParamsConfig> {
 		return 'triangle';
 	}
 
-	private _angles: jscad.maths.vec3.Vec3 = [0, 0, 0];
+	private _angles: maths.vec3.Vec3 = [0, 0, 0];
 	override cook(inputCoreGroups: CsgCoreGroup[]) {
 		try {
 			const angles = this.pv.angles;

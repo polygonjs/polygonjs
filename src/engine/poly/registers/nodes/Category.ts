@@ -52,7 +52,8 @@ export const CATEGORY_CSG = {
 	EXTRUDE: 'extrude',
 	FLOW: 'flow',
 	MODIFIER: 'modifiers',
-	PRIMITIVES: 'primitives',
+	PRIMITIVES_2D: 'primitives 2D',
+	PRIMITIVES_3D: 'primitives 3D',
 	TRANSFORM: 'transform',
 	NETWORK,
 };

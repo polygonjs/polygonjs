@@ -7,18 +7,18 @@ import {TypedCsgNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CsgCoreGroup} from '../../../core/geometry/csg/CsgCoreGroup';
 import {step} from '../../../core/geometry/csg/CsgUiUtils';
-import jscad from '@jscad/modeling';
-const {torus} = jscad.primitives;
+import {primitives, maths} from '@jscad/modeling';
+const {torus} = primitives;
 
 class TorusCsgParamsConfig extends NodeParamsConfig {
 	/** @param inner radius */
 	innerRadius = ParamConfig.FLOAT(0.5, {
-		range: [2 * jscad.maths.constants.EPS, 1],
+		range: [2 * maths.constants.EPS, 1],
 		rangeLocked: [true, false],
 	});
 	/** @param outer radius */
 	outerRadius = ParamConfig.FLOAT(0.5, {
-		range: [2 * jscad.maths.constants.EPS, 1],
+		range: [2 * maths.constants.EPS, 1],
 		rangeLocked: [true, false],
 	});
 	/** @param inner segments */
@@ -36,15 +36,17 @@ class TorusCsgParamsConfig extends NodeParamsConfig {
 		range: [0, 2 * Math.PI],
 		rangeLocked: [false, false],
 	});
+
+	/** @param open */
+	open = ParamConfig.BOOLEAN(0);
 	/** @param start angle */
 	startAngle = ParamConfig.FLOAT(0, {
 		range: [0, 2 * Math.PI],
 		rangeLocked: [false, false],
 		step,
-	});
-	/** @param open */
-	open = ParamConfig.BOOLEAN(0);
-	/** @param outer rotation */
+		visibleIf: {open: 1},
+	}); /** @param outer rotation */
+
 	outerRotation = ParamConfig.FLOAT(0, {
 		range: [0, 2 * Math.PI],
 		rangeLocked: [false, false],
@@ -73,7 +75,7 @@ export class TorusCsgNode extends TypedCsgNode<TorusCsgParamsConfig> {
 				startAngle,
 			} = this.pv;
 
-			const innerRadius2 = Math.min(innerRadius, outerRadius - 1 * jscad.maths.constants.EPS);
+			const innerRadius2 = Math.min(innerRadius, outerRadius - 1 * maths.constants.EPS);
 			const geo = torus({
 				innerRadius: innerRadius2,
 				outerRadius,
@@ -81,7 +83,7 @@ export class TorusCsgNode extends TypedCsgNode<TorusCsgParamsConfig> {
 				outerSegments,
 				innerRotation,
 				outerRotation: open ? outerRotation : 2 * Math.PI,
-				startAngle,
+				startAngle: open ? startAngle : 0,
 			});
 			this.setCsgCoreObject(geo);
 		} catch (err) {

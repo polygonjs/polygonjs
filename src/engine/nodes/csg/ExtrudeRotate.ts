@@ -7,8 +7,8 @@ import {TypedCsgNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CsgCoreGroup} from '../../../core/geometry/csg/CsgCoreGroup';
 import {step} from '../../../core/geometry/csg/CsgUiUtils';
-import jscad from '@jscad/modeling';
-const {extrudeRotate} = jscad.extrusions;
+import {extrusions, geometries} from '@jscad/modeling';
+const {extrudeRotate} = extrusions;
 
 class ExtrudeRotateCsgParamsConfig extends NodeParamsConfig {
 	/** @param angle */
@@ -41,7 +41,7 @@ export class ExtrudeRotateCsgNode extends TypedCsgNode<ExtrudeRotateCsgParamsCon
 	}
 
 	override cook(inputCoreGroups: CsgCoreGroup[]) {
-		const options: jscad.extrusions.ExtrudeRotateOptions = {
+		const options: extrusions.ExtrudeRotateOptions = {
 			angle: this.pv.angle,
 			startAngle: this.pv.startAngle,
 			segments: this.pv.segments * 4,
@@ -49,7 +49,7 @@ export class ExtrudeRotateCsgNode extends TypedCsgNode<ExtrudeRotateCsgParamsCon
 		const objects = inputCoreGroups[0]
 			.objects()
 			.map((o) => {
-				if (jscad.geometries.geom2.isA(o)) {
+				if (geometries.geom2.isA(o)) {
 					return extrudeRotate(options, o);
 				} else {
 					return o;

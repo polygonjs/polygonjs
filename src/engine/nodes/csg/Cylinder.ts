@@ -6,10 +6,10 @@
 import {TypedCsgNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CsgCoreGroup} from '../../../core/geometry/csg/CsgCoreGroup';
-import jscad from '@jscad/modeling';
+import {primitives, maths} from '@jscad/modeling';
 import {vector3ToCsgVec3} from '../../../core/geometry/csg/CsgVecToVector';
 import {CoreMath} from '../../../core/math/_Module';
-const {cylinder, roundedCylinder} = jscad.primitives;
+const {cylinder, roundedCylinder} = primitives;
 
 class CylinderCsgParamsConfig extends NodeParamsConfig {
 	/** @param center */
@@ -40,25 +40,22 @@ export class CylinderCsgNode extends TypedCsgNode<CylinderCsgParamsConfig> {
 		return 'cylinder';
 	}
 
-	private _center: jscad.maths.vec3.Vec3 = [0, 0, 0];
+	private _center: maths.vec3.Vec3 = [0, 0, 0];
 	override cook(inputCoreGroups: CsgCoreGroup[]) {
 		try {
 			vector3ToCsgVec3(this.pv.center, this._center);
 			const {height, radius, segments} = this.pv;
-			const cylinderOptions: jscad.primitives.CylinderOptions = {
+			const cylinderOptions: primitives.CylinderOptions = {
 				center: this._center,
 				height,
 				radius,
 				segments,
 			};
 			const createRoundedCylinder = () => {
-				const maxSize = Math.min(
-					height * 0.5 - 2 * jscad.maths.constants.EPS,
-					radius - 2 * jscad.maths.constants.EPS
-				);
-				const minSize = 2 * jscad.maths.constants.EPS;
+				const maxSize = Math.min(height * 0.5 - 2 * maths.constants.EPS, radius - 2 * maths.constants.EPS);
+				const minSize = 2 * maths.constants.EPS;
 				const roundRadius = CoreMath.clamp(this.pv.roundedRadius, minSize, maxSize);
-				const roundedCylinderOptions: jscad.primitives.RoundedCylinderOptions = {
+				const roundedCylinderOptions: primitives.RoundedCylinderOptions = {
 					...cylinderOptions,
 					roundRadius,
 				};

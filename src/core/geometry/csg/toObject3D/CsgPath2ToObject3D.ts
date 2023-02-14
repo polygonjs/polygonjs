@@ -1,5 +1,5 @@
 import {BufferGeometry, BufferAttribute, Matrix4, Vector3, Quaternion} from 'three';
-import jscad from '@jscad/modeling';
+import type {geometries} from '@jscad/modeling';
 import {ObjectType} from '../../Constant';
 import {BaseSopOperation} from '../../../../engine/operations/sop/_Base';
 import {CSG_MATERIAL} from '../CsgConstant';
@@ -8,12 +8,12 @@ const t = new Vector3();
 const q = new Quaternion();
 const s = new Vector3();
 
-export function path2ToObject3D(csg: jscad.geometries.path2.Path2) {
+export function path2ToObject3D(csg: geometries.path2.Path2) {
 	const geometry = path2ToBufferGeometry(csg);
 	return BaseSopOperation.createObject(geometry, ObjectType.LINE_SEGMENTS, CSG_MATERIAL[ObjectType.LINE_SEGMENTS]);
 }
 
-export function path2ToBufferGeometry(csg: jscad.geometries.path2.Path2) {
+export function path2ToBufferGeometry(csg: geometries.path2.Path2) {
 	const vertices: number[] = [];
 	const colors: number[] = [];
 	const indices: number[] = [];
@@ -44,7 +44,7 @@ export function path2ToBufferGeometry(csg: jscad.geometries.path2.Path2) {
 	return geo;
 }
 
-export function path2Positions(csg: jscad.geometries.path2.Path2): Vector3[] {
+export function path2Positions(csg: geometries.path2.Path2): Vector3[] {
 	const points = csg.points;
 	const vectors: Vector3[] = new Array(points.length);
 	let i = 0;

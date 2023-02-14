@@ -6,9 +6,10 @@
 import {TypedCsgNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CsgCoreGroup} from '../../../core/geometry/csg/CsgCoreGroup';
-import jscad from '@jscad/modeling';
+import type {maths} from '@jscad/modeling';
+import {primitives} from '@jscad/modeling';
 import {vector3ToCsgVec3} from '../../../core/geometry/csg/CsgVecToVector';
-const {ellipsoid} = jscad.primitives;
+const {ellipsoid} = primitives;
 
 class EllipsoidCsgParamsConfig extends NodeParamsConfig {
 	/** @param center */
@@ -31,9 +32,9 @@ export class EllipsoidCsgNode extends TypedCsgNode<EllipsoidCsgParamsConfig> {
 		return 'ellipsoid';
 	}
 
-	private _center: jscad.maths.vec3.Vec3 = [0, 0, 0];
-	private _radius: jscad.maths.vec3.Vec3 = [0, 0, 0];
-	// private _axes: jscad.maths.vec3.Vec3 = [0, 0, 0];
+	private _center: maths.vec3.Vec3 = [0, 0, 0];
+	private _radius: maths.vec3.Vec3 = [0, 0, 0];
+	// private _axes: maths.vec3.Vec3 = [0, 0, 0];
 	override cook(inputCoreGroups: CsgCoreGroup[]) {
 		vector3ToCsgVec3(this.pv.center, this._center);
 		vector3ToCsgVec3(this.pv.radius, this._radius);

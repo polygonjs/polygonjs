@@ -11,8 +11,8 @@ import {NodeEvent} from '../../poly/NodeEvent';
 import {csgObjectType, CsgObjectType} from '../../../core/geometry/csg/CsgToObject3D';
 import {CsgObject} from '../../../core/geometry/csg/CsgCoreObject';
 import {MapUtils} from '../../../core/MapUtils';
-import jscad from '@jscad/modeling';
-const {union} = jscad.booleans;
+import {booleans} from '@jscad/modeling';
+const {union} = booleans;
 const DEFAULT_INPUTS_COUNT = 4;
 
 class MergeCsgParamsConfig extends NodeParamsConfig {
@@ -60,7 +60,7 @@ export class MergeCsgNode extends TypedCsgNode<MergeCsgParamsConfig> {
 		}
 		const mergedObjects: CsgObject[] = [];
 		objectsByType.forEach((objects, type) => {
-			const mergedObject = union(objects as Array<jscad.geometries.geom2.Geom2>);
+			const mergedObject = union(objects as Array<geometries.geom2.Geom2>);
 			mergedObjects.push(mergedObject);
 		});
 		this.setCsgCoreObjects(mergedObjects);

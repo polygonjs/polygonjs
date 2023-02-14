@@ -6,11 +6,12 @@
 import {TypedCsgNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CsgCoreGroup} from '../../../core/geometry/csg/CsgCoreGroup';
-import jscad from '@jscad/modeling';
+import type {maths} from '@jscad/modeling';
+import {primitives} from '@jscad/modeling';
 import {vector2ToCsgVec2, vector3ToCsgVec3} from '../../../core/geometry/csg/CsgVecToVector';
 import {step} from '../../../core/geometry/csg/CsgUiUtils';
 import {csgVec2MultScalar} from '../../../core/geometry/csg/math/CsgMathVec2';
-const {cylinderElliptic} = jscad.primitives;
+const {cylinderElliptic} = primitives;
 
 class CylinderEllipticCsgParamsConfig extends NodeParamsConfig {
 	/** @param center */
@@ -61,9 +62,9 @@ export class CylinderEllipticCsgNode extends TypedCsgNode<CylinderEllipticCsgPar
 		return 'cylinderElliptic';
 	}
 
-	private _center: jscad.maths.vec3.Vec3 = [0, 0, 0];
-	private _startRadiuses: jscad.maths.vec2.Vec2 = [0, 0];
-	private _endRadiuses: jscad.maths.vec2.Vec2 = [0, 0];
+	private _center: maths.vec3.Vec3 = [0, 0, 0];
+	private _startRadiuses: maths.vec2.Vec2 = [0, 0];
+	private _endRadiuses: maths.vec2.Vec2 = [0, 0];
 	override cook(inputCoreGroups: CsgCoreGroup[]) {
 		vector3ToCsgVec3(this.pv.center, this._center);
 		vector2ToCsgVec2(this.pv.startRadiuses, this._startRadiuses);

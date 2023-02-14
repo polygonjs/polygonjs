@@ -1,5 +1,5 @@
 import {BufferGeometry, BufferAttribute, Vector3, Matrix4} from 'three';
-import jscad from '@jscad/modeling';
+import type {maths, geometries} from '@jscad/modeling';
 // import {PolyDictionary} from '../../../../types/GlobalTypes';
 import {ObjectType} from '../../Constant';
 import {BaseSopOperation} from '../../../../engine/operations/sop/_Base';
@@ -10,7 +10,7 @@ interface Geom3ToObject3DOptions {
 		angle: number;
 	};
 }
-interface jscadVertexWithIndex extends jscad.maths.vec3.Vec3 {
+interface jscadVertexWithIndex extends maths.vec3.Vec3 {
 	// positionAsString: string;
 	index: number;
 }
@@ -23,12 +23,12 @@ interface jscadVertexWithIndex extends jscad.maths.vec3.Vec3 {
 // 	normals: Normal[];
 // }
 
-export function geom3ToObject3D(csg: jscad.geometries.geom3.Geom3, options?: Geom3ToObject3DOptions) {
+export function geom3ToObject3D(csg: geometries.geom3.Geom3, options?: Geom3ToObject3DOptions) {
 	const geometry = geom3ToBufferGeometry(csg, options);
 	return BaseSopOperation.createObject(geometry, ObjectType.MESH, CSG_MATERIAL[ObjectType.MESH]);
 }
 
-export function geom3ToBufferGeometry(csg: jscad.geometries.geom3.Geom3, options?: Geom3ToObject3DOptions) {
+export function geom3ToBufferGeometry(csg: geometries.geom3.Geom3, options?: Geom3ToObject3DOptions) {
 	const positions: number[] = [];
 	const colors: number[] = [];
 	const indices: number[] = [];
@@ -169,7 +169,7 @@ export function geom3ToBufferGeometry(csg: jscad.geometries.geom3.Geom3, options
 	// return geo;
 }
 
-export function geom3Positions(csg: jscad.geometries.geom3.Geom3): Vector3[] {
+export function geom3Positions(csg: geometries.geom3.Geom3): Vector3[] {
 	const bufferGeometry = geom3ToBufferGeometry(csg);
 	const positionAttribute = bufferGeometry.getAttribute('position');
 	const positionsArray = positionAttribute.array;

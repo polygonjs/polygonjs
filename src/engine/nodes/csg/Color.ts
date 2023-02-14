@@ -6,7 +6,7 @@
 import {TypedCsgNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CsgCoreGroup} from '../../../core/geometry/csg/CsgCoreGroup';
-import jscad from '@jscad/modeling';
+import type {colors} from '@jscad/modeling';
 import {colorToCsgRGB} from '../../../core/geometry/csg/CsgVecToVector';
 // import {CsgObject} from '../../../core/geometry/csg/CsgCoreObject';
 // const {colorize} = jscad.colors;
@@ -39,7 +39,7 @@ export class ColorCsgNode extends TypedCsgNode<ColorCsgParamsConfig> {
 		this.io.inputs.setCount(1);
 	}
 
-	private _color: jscad.colors.RGB = [0, 0, 0];
+	private _color: colors.RGB = [0, 0, 0];
 	override cook(inputCoreGroups: CsgCoreGroup[]) {
 		colorToCsgRGB(this.pv.color, this._color);
 		const objects = inputCoreGroups[0].objects();
@@ -48,7 +48,6 @@ export class ColorCsgNode extends TypedCsgNode<ColorCsgParamsConfig> {
 			// colorize(this._color, object);
 			object.color = this._color;
 		}
-		console.log(objects);
 		this.setCsgCoreObjects(objects);
 	}
 }

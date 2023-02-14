@@ -61,7 +61,7 @@ export class MaterialSopNode extends TypedSopNode<MaterialSopParamsConfig> {
 		return ['objects to assign material to'];
 	}
 
-	override initializeNode() {
+	protected override initializeNode() {
 		this.io.inputs.setCount(1);
 		this.io.inputs.initInputsClonedState(MaterialSopOperation.INPUT_CLONED_STATE);
 	}

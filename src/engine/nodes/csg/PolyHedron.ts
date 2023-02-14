@@ -6,11 +6,12 @@
 import {TypedCsgNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CsgCoreGroup} from '../../../core/geometry/csg/CsgCoreGroup';
-import jscad from '@jscad/modeling';
+import type {maths} from '@jscad/modeling';
+import {primitives} from '@jscad/modeling';
 import {csgVec3sToJSON} from '../../../core/geometry/csg/math/CsgMathVec3';
-const {polyhedron} = jscad.primitives;
+const {polyhedron} = primitives;
 
-const DEFAULT_POINTS: jscad.maths.vec3.Vec3[] = [
+const DEFAULT_POINTS: maths.vec3.Vec3[] = [
 	[-1, -1, -1],
 	[-1, -1, 1],
 	[1, 1, 1],

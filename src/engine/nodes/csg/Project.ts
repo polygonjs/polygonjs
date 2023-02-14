@@ -6,9 +6,10 @@
 import {TypedCsgNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CsgCoreGroup} from '../../../core/geometry/csg/CsgCoreGroup';
-import jscad from '@jscad/modeling';
+import type {maths} from '@jscad/modeling';
+import {extrusions, geometries} from '@jscad/modeling';
 import {vector3ToCsgVec3} from '../../../core/geometry/csg/CsgVecToVector';
-const {project} = jscad.extrusions;
+const {project} = extrusions;
 
 class ProjectCsgParamsConfig extends NodeParamsConfig {
 	/** @param axis */
@@ -27,19 +28,19 @@ export class ProjectCsgNode extends TypedCsgNode<ProjectCsgParamsConfig> {
 		this.io.inputs.setCount(1);
 	}
 
-	private _axis: jscad.maths.vec3.Vec3 = [0, 0, 0];
-	private _origin: jscad.maths.vec3.Vec3 = [0, 0, 0];
+	private _axis: maths.vec3.Vec3 = [0, 0, 0];
+	private _origin: maths.vec3.Vec3 = [0, 0, 0];
 	override cook(inputCoreGroups: CsgCoreGroup[]) {
 		vector3ToCsgVec3(this.pv.axis, this._axis);
 		vector3ToCsgVec3(this.pv.origin, this._origin);
-		const options: jscad.extrusions.ProjectOptions = {
+		const options: extrusions.ProjectOptions = {
 			axis: this._axis,
 			origin: this._origin,
 		};
 		const objects = inputCoreGroups[0]
 			.objects()
 			.map((o) => {
-				if (jscad.geometries.geom3.isA(o)) {
+				if (geometries.geom3.isA(o)) {
 					return project(options, o);
 				} else {
 					return o;

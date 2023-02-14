@@ -6,10 +6,10 @@
 import {TypedCsgNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CsgCoreGroup} from '../../../core/geometry/csg/CsgCoreGroup';
-import jscad from '@jscad/modeling';
+import {primitives} from '@jscad/modeling';
 import {vector2ToCsgVec2} from '../../../core/geometry/csg/CsgVecToVector';
 import {Vector2} from 'three';
-const {line} = jscad.primitives;
+const {line} = primitives;
 
 class LineCsgParamsConfig extends NodeParamsConfig {
 	/** @param length */
@@ -47,8 +47,8 @@ export class LineCsgNode extends TypedCsgNode<LineCsgParamsConfig> {
 			vector2.add(this.pv.origin);
 		}
 
-		const vec2s: jscad.maths.vec2.Vec2[] = positions.map((v) => {
-			const v2: jscad.maths.vec2.Vec2 = [3, 2];
+		const vec2s: maths.vec2.Vec2[] = positions.map((v) => {
+			const v2: maths.vec2.Vec2 = [3, 2];
 			vector2ToCsgVec2(v, v2);
 			return v2;
 		});

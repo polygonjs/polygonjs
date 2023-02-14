@@ -6,11 +6,11 @@
 import {TypedCsgNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CsgCoreGroup} from '../../../core/geometry/csg/CsgCoreGroup';
-import jscad from '@jscad/modeling';
+import {primitives, maths} from '@jscad/modeling';
 import {vector2ToCsgVec2} from '../../../core/geometry/csg/CsgVecToVector';
 import {csgVec2MultScalar} from '../../../core/geometry/csg/math/CsgMathVec2';
 import {CoreMath} from '../../../core/math/_Module';
-const {rectangle, roundedRectangle} = jscad.primitives;
+const {rectangle, roundedRectangle} = primitives;
 
 class RectangleCsgParamsConfig extends NodeParamsConfig {
 	/** @param center */
@@ -42,22 +42,22 @@ export class RectangleCsgNode extends TypedCsgNode<RectangleCsgParamsConfig> {
 		return 'rectangle';
 	}
 
-	private _center: jscad.maths.vec2.Vec2 = [0, 0];
-	private _sizes: jscad.maths.vec2.Vec2 = [0, 0];
+	private _center: maths.vec2.Vec2 = [0, 0];
+	private _sizes: maths.vec2.Vec2 = [0, 0];
 	override cook(inputCoreGroups: CsgCoreGroup[]) {
 		try {
 			vector2ToCsgVec2(this.pv.center, this._center);
 			vector2ToCsgVec2(this.pv.sizes, this._sizes);
 			csgVec2MultScalar(this._sizes, this.pv.size);
-			const rectangleOptions: jscad.primitives.RectangleOptions = {
+			const rectangleOptions: primitives.RectangleOptions = {
 				center: this._center,
 				size: this._sizes,
 			};
 			const createRoundedRectangle = () => {
-				const maxSize = Math.min(this._sizes[0], this._sizes[1]) * 0.5 - 2 * jscad.maths.constants.EPS;
-				const minSize = 2 * jscad.maths.constants.EPS;
+				const maxSize = Math.min(this._sizes[0], this._sizes[1]) * 0.5 - 2 * maths.constants.EPS;
+				const minSize = 2 * maths.constants.EPS;
 				const roundRadius = CoreMath.clamp(this.pv.roundedRadius, minSize, maxSize);
-				const roundedRectangleOptions: jscad.primitives.RoundedRectangleOptions = {
+				const roundedRectangleOptions: primitives.RoundedRectangleOptions = {
 					...rectangleOptions,
 					roundRadius,
 					segments: this.pv.roundedSegments * 4,

@@ -49,7 +49,7 @@
 	},
 	"dependencies": {
 		"@dimforge/rapier3d": "0.11.1",
-		"@jscad/modeling": "2.9.3",
+		"@jscad/modeling": "2.11.0",
 		"@mediapipe/face_mesh": "0.4.1633559619",
 		"@mediapipe/hands": "0.4.1646424915",
 		"@types/mapbox-gl": "2.7.10",

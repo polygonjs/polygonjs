@@ -45,12 +45,14 @@ export class CsgNetworkSopNode extends TypedSopNode<CsgNetworkParamsConfig> {
 	override async cook(inputCoreGroups: CoreGroup[]) {
 		const displayNode = this.displayNodeController.displayNode() as BaseCsgNodeType | undefined;
 		if (!displayNode) {
-			return this.setCoreGroup(inputCoreGroups[0]);
+			this.states.error.set(`at least 1 display node is required`);
+			return;
 		}
 		const container = await displayNode.compute();
 		const csgCoreGroup = container.coreContent();
 		if (!csgCoreGroup) {
-			return this.setCoreGroup(inputCoreGroups[0]);
+			this.states.error.set(`displayNode ${displayNode.path()} is invalid`);
+			return;
 		}
 		const rad = degToRad(this.pv.facetAngle);
 		const csgObjects = csgCoreGroup.objects();

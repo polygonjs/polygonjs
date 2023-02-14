@@ -6,12 +6,12 @@
 import {TypedCsgNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CsgCoreGroup} from '../../../core/geometry/csg/CsgCoreGroup';
-import jscad from '@jscad/modeling';
+import {primitives, maths} from '@jscad/modeling';
 import {vector3ToCsgVec3} from '../../../core/geometry/csg/CsgVecToVector';
 import {csgVec3MultScalar} from '../../../core/geometry/csg/math/CsgMathVec3';
 import {step} from '../../../core/geometry/csg/CsgUiUtils';
 import {CoreMath} from '../../../core/math/_Module';
-const {cuboid, roundedCuboid} = jscad.primitives;
+const {cuboid, roundedCuboid} = primitives;
 
 class CubeCsgParamsConfig extends NodeParamsConfig {
 	/** @param size */
@@ -46,23 +46,23 @@ export class CubeCsgNode extends TypedCsgNode<CubeCsgParamsConfig> {
 		return 'cube';
 	}
 
-	private _center: jscad.maths.vec3.Vec3 = [0, 0, 0];
-	private _sizes: jscad.maths.vec3.Vec3 = [0, 0, 0];
+	private _center: maths.vec3.Vec3 = [0, 0, 0];
+	private _sizes: maths.vec3.Vec3 = [0, 0, 0];
 	override cook(inputCoreGroups: CsgCoreGroup[]) {
 		vector3ToCsgVec3(this.pv.center, this._center);
 		vector3ToCsgVec3(this.pv.sizes, this._sizes);
 		csgVec3MultScalar(this._sizes, this.pv.size);
 		try {
-			const cuboidOptions: jscad.primitives.CuboidOptions = {
+			const cuboidOptions: primitives.CuboidOptions = {
 				center: this._center,
 				size: this._sizes,
 			};
 			const createRoundedCuboid = () => {
 				const maxSize =
-					Math.min(this._sizes[0], this._sizes[1], this._sizes[2]) * 0.5 - 2 * jscad.maths.constants.EPS;
-				const minSize = 2 * jscad.maths.constants.EPS;
+					Math.min(this._sizes[0], this._sizes[1], this._sizes[2]) * 0.5 - 2 * maths.constants.EPS;
+				const minSize = 2 * maths.constants.EPS;
 				const roundRadius = CoreMath.clamp(this.pv.roundedRadius, minSize, maxSize);
-				const roundedCuboidOptions: jscad.primitives.RoundedCuboidOptions = {
+				const roundedCuboidOptions: primitives.RoundedCuboidOptions = {
 					...cuboidOptions,
 					roundRadius,
 					segments: this.pv.roundedSegments * 4,

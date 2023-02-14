@@ -6,14 +6,14 @@
 import {TypedCsgNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CsgCoreGroup} from '../../../core/geometry/csg/CsgCoreGroup';
-import jscad from '@jscad/modeling';
+import {expansions, maths} from '@jscad/modeling';
 import {CsgCorner, CSG_CORNERS} from '../../../core/geometry/csg/operations/CsgCorner';
-const {expand} = jscad.expansions;
+const {expand} = expansions;
 
 class ExpandCsgParamsConfig extends NodeParamsConfig {
 	/** @param delta */
 	delta = ParamConfig.FLOAT(0.1, {
-		range: [1 * jscad.maths.constants.EPS, 1],
+		range: [1 * maths.constants.EPS, 1],
 		rangeLocked: [true, false],
 	});
 	/** @param corners */
@@ -38,7 +38,7 @@ export class ExpandCsgNode extends TypedCsgNode<ExpandCsgParamsConfig> {
 	}
 
 	override cook(inputCoreGroups: CsgCoreGroup[]) {
-		const minDelta = 1 * jscad.maths.constants.EPS;
+		const minDelta = 1 * maths.constants.EPS;
 		const delta = Math.max(this.pv.delta, minDelta);
 		const options: expansions.ExpandOptions = {
 			delta,

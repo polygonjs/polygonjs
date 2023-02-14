@@ -6,9 +6,9 @@
 import {TypedCsgNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CsgCoreGroup} from '../../../core/geometry/csg/CsgCoreGroup';
-import jscad from '@jscad/modeling';
+import {maths} from '@jscad/modeling';
 import {csgApplyTransform} from '../../../core/geometry/csg/math/CsgMat4';
-const {mat4} = jscad.maths;
+const {mat4} = maths;
 
 class ResetTransformCsgParamsConfig extends NodeParamsConfig {
 	/** @param bake matrix onto points */

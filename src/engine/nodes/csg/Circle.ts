@@ -6,10 +6,11 @@
 import {TypedCsgNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CsgCoreGroup} from '../../../core/geometry/csg/CsgCoreGroup';
-import jscad from '@jscad/modeling';
+import type {maths} from '@jscad/modeling';
+import {primitives} from '@jscad/modeling';
 import {vector2ToCsgVec2} from '../../../core/geometry/csg/CsgVecToVector';
 import {step} from '../../../core/geometry/csg/CsgUiUtils';
-const {circle} = jscad.primitives;
+const {circle} = primitives;
 
 class CircleCsgParamsConfig extends NodeParamsConfig {
 	/** @param center */
@@ -49,7 +50,7 @@ export class CircleCsgNode extends TypedCsgNode<CircleCsgParamsConfig> {
 		return 'circle';
 	}
 
-	private _center: jscad.maths.vec2.Vec2 = [0, 0];
+	private _center: maths.vec2.Vec2 = [0, 0];
 	override cook(inputCoreGroups: CsgCoreGroup[]) {
 		vector2ToCsgVec2(this.pv.center, this._center);
 		try {

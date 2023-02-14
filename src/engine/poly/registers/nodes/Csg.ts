@@ -79,41 +79,41 @@ export interface CsgNodeChildrenMap {
 import {PolyEngine} from '../../../Poly';
 export class CsgRegister {
 	static run(poly: PolyEngine) {
-		poly.registerNode(ArcCsgNode, CATEGORY_CSG.PRIMITIVES);
+		poly.registerNode(ArcCsgNode, CATEGORY_CSG.PRIMITIVES_2D);
 		poly.registerNode(BooleanCsgNode, CATEGORY_CSG.MODIFIER);
 		poly.registerNode(CenterCsgNode, CATEGORY_CSG.TRANSFORM);
-		poly.registerNode(CircleCsgNode, CATEGORY_CSG.PRIMITIVES);
+		poly.registerNode(CircleCsgNode, CATEGORY_CSG.PRIMITIVES_2D);
 		poly.registerNode(ColorCsgNode, CATEGORY_CSG.MODIFIER);
 		poly.registerNode(CopyCsgNode, CATEGORY_CSG.ADVANCED);
-		poly.registerNode(CubeCsgNode, CATEGORY_CSG.PRIMITIVES);
-		poly.registerNode(CylinderCsgNode, CATEGORY_CSG.PRIMITIVES);
-		poly.registerNode(CylinderEllipticCsgNode, CATEGORY_CSG.PRIMITIVES);
-		poly.registerNode(DodecahedronCsgNode, CATEGORY_CSG.PRIMITIVES);
-		poly.registerNode(EllipseCsgNode, CATEGORY_CSG.PRIMITIVES);
-		poly.registerNode(EllipsoidCsgNode, CATEGORY_CSG.PRIMITIVES);
+		poly.registerNode(CubeCsgNode, CATEGORY_CSG.PRIMITIVES_3D);
+		poly.registerNode(CylinderCsgNode, CATEGORY_CSG.PRIMITIVES_3D);
+		poly.registerNode(CylinderEllipticCsgNode, CATEGORY_CSG.PRIMITIVES_3D);
+		poly.registerNode(DodecahedronCsgNode, CATEGORY_CSG.PRIMITIVES_3D);
+		poly.registerNode(EllipseCsgNode, CATEGORY_CSG.PRIMITIVES_2D);
+		poly.registerNode(EllipsoidCsgNode, CATEGORY_CSG.PRIMITIVES_3D);
 		poly.registerNode(ExpandCsgNode, CATEGORY_CSG.MODIFIER);
 		// poly.registerNode(ExtrudeFromSlicesCsgNode, CATEGORY_CSG.EXTRUDE);
 		poly.registerNode(ExtrudeLinearCsgNode, CATEGORY_CSG.EXTRUDE);
 		poly.registerNode(ExtrudeRectangularCsgNode, CATEGORY_CSG.EXTRUDE);
 		poly.registerNode(ExtrudeRotateCsgNode, CATEGORY_CSG.EXTRUDE);
 		poly.registerNode(HullCsgNode, CATEGORY_CSG.MODIFIER);
-		poly.registerNode(LineCsgNode, CATEGORY_CSG.PRIMITIVES);
+		poly.registerNode(LineCsgNode, CATEGORY_CSG.PRIMITIVES_2D);
 		poly.registerNode(MergeCsgNode, CATEGORY_CSG.FLOW);
 		poly.registerNode(MirrorCsgNode, CATEGORY_CSG.TRANSFORM);
 		poly.registerNode(NullCsgNode, CATEGORY_CSG.FLOW);
 		poly.registerNode(OffsetCsgNode, CATEGORY_CSG.MODIFIER);
-		poly.registerNode(PolygonCsgNode, CATEGORY_CSG.PRIMITIVES);
-		poly.registerNode(PolyhedronCsgNode, CATEGORY_CSG.PRIMITIVES);
+		poly.registerNode(PolygonCsgNode, CATEGORY_CSG.PRIMITIVES_2D);
+		poly.registerNode(PolyhedronCsgNode, CATEGORY_CSG.PRIMITIVES_3D);
 		poly.registerNode(ProjectCsgNode, CATEGORY_CSG.EXTRUDE);
-		poly.registerNode(RectangleCsgNode, CATEGORY_CSG.PRIMITIVES);
+		poly.registerNode(RectangleCsgNode, CATEGORY_CSG.PRIMITIVES_2D);
 		poly.registerNode(ResetTransformCsgNode, CATEGORY_CSG.MODIFIER);
 		poly.registerNode(RotateCsgNode, CATEGORY_CSG.TRANSFORM);
 		poly.registerNode(ScaleCsgNode, CATEGORY_CSG.TRANSFORM);
-		poly.registerNode(SphereCsgNode, CATEGORY_CSG.PRIMITIVES);
-		poly.registerNode(StarCsgNode, CATEGORY_CSG.PRIMITIVES);
+		poly.registerNode(SphereCsgNode, CATEGORY_CSG.PRIMITIVES_3D);
+		poly.registerNode(StarCsgNode, CATEGORY_CSG.PRIMITIVES_2D);
 		poly.registerNode(SwitchCsgNode, CATEGORY_CSG.FLOW);
-		poly.registerNode(TorusCsgNode, CATEGORY_CSG.PRIMITIVES);
+		poly.registerNode(TorusCsgNode, CATEGORY_CSG.PRIMITIVES_3D);
 		poly.registerNode(TranslateCsgNode, CATEGORY_CSG.TRANSFORM);
-		poly.registerNode(TriangleCsgNode, CATEGORY_CSG.PRIMITIVES);
+		poly.registerNode(TriangleCsgNode, CATEGORY_CSG.PRIMITIVES_2D);
 	}
 }

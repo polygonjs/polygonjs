@@ -6,8 +6,8 @@
 import {TypedCsgNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CsgCoreGroup} from '../../../core/geometry/csg/CsgCoreGroup';
-import jscad from '@jscad/modeling';
-const {extrudeLinear} = jscad.extrusions;
+import {extrusions, geometries} from '@jscad/modeling';
+const {extrudeLinear} = extrusions;
 
 class ExtrudeLinearCsgParamsConfig extends NodeParamsConfig {
 	/** @param height */
@@ -38,7 +38,7 @@ export class ExtrudeLinearCsgNode extends TypedCsgNode<ExtrudeLinearCsgParamsCon
 	}
 
 	override cook(inputCoreGroups: CsgCoreGroup[]) {
-		const options: jscad.extrusions.ExtrudeLinearOptions = {
+		const options: extrusions.ExtrudeLinearOptions = {
 			height: this.pv.height,
 			twistAngle: this.pv.twistAngle,
 			twistSteps: this.pv.twistSteps,
@@ -46,7 +46,7 @@ export class ExtrudeLinearCsgNode extends TypedCsgNode<ExtrudeLinearCsgParamsCon
 		const objects = inputCoreGroups[0]
 			.objects()
 			.map((o) => {
-				if (jscad.geometries.geom2.isA(o) || jscad.geometries.path2.isA(o)) {
+				if (geometries.geom2.isA(o) || geometries.path2.isA(o)) {
 					return extrudeLinear(options, o);
 				} else {
 					return o;
