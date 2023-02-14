@@ -85,7 +85,12 @@ export class UvUnwrapSopOperation extends BaseSopOperation {
 		const originalVertexCount = geometry.attributes.position.count;
 		const originalIndexCount = geometry.index.count;
 
-		xatlas.createAtlas();
+		try {
+			xatlas.createAtlas();
+		} catch (err) {
+			this._node?.states.error.set('failed to create atlas');
+			return;
+		}
 
 		const meshInfo = xatlas.createMesh(originalVertexCount, originalIndexCount, true, true);
 		const index = geometry.getIndex();
@@ -109,7 +114,12 @@ export class UvUnwrapSopOperation extends BaseSopOperation {
 			throw new Error(`UVUnwrapper: Error adding mesh. Status code ${statusCode}`);
 		}
 
-		xatlas.generateAtlas();
+		try {
+			xatlas.generateAtlas();
+		} catch (err) {
+			this._node?.states.error.set('failed to generate atlas');
+			return;
+		}
 
 		const meshData = xatlas.getMeshData(meshInfo.meshId);
 		const oldPositionArray = geometry.attributes.position.array;
