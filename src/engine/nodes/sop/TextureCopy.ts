@@ -18,7 +18,7 @@ const ParamsConfig = new TextureCopySopParamsConfig();
 export class TextureCopySopNode extends TypedSopNode<TextureCopySopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'TextureCopy';
+		return 'textureCopy';
 	}
 
 	static override displayedInputNames(): string[] {

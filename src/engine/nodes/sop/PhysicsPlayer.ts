@@ -85,9 +85,7 @@ class PhysicsPlayerSopParamsConfig extends NodeParamsConfig {
 
 	details = ParamConfig.FOLDER();
 	/** @param id */
-	id = ParamConfig.STRING('`$OS`', {
-		visibleIf: {addId: true},
-	});
+	id = ParamConfig.STRING('`$OS`');
 
 	/** @param collision offset */
 	// offset = ParamConfig.FLOAT(0.02, {

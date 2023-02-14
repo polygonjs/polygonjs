@@ -25,14 +25,6 @@ import {
 
 const CONNECTION_OPTIONS = ACTOR_CONNECTION_POINT_IN_NODE_DEF;
 
-export enum PlayerUpdateInput {
-	COLLIDER = 'collider',
-}
-export enum PlayerUpdateOutput {
-	VELOCITY = 'velocity',
-	ON_GROUND = 'onGround',
-}
-
 class PhysicsPlayerUpdateActorParamsConfig extends NodeParamsConfig {
 	/** @param travel speed */
 	speed = ParamConfig.FLOAT(40, {
@@ -97,11 +89,7 @@ export class PhysicsPlayerUpdateActorNode extends TypedActorNode<PhysicsPlayerUp
 				ActorConnectionPointType.OBJECT_3D,
 				CONNECTION_OPTIONS
 			),
-			new ActorConnectionPoint(
-				PlayerUpdateInput.COLLIDER,
-				ActorConnectionPointType.OBJECT_3D,
-				CONNECTION_OPTIONS
-			),
+
 			...CORE_PLAYER_PHYSICS_INPUTS.map(
 				(inputName) => new ActorConnectionPoint(inputName, ActorConnectionPointType.BOOLEAN, CONNECTION_OPTIONS)
 			),

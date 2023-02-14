@@ -44,6 +44,16 @@ QUnit.test('string matchMask with exclusion', (assert) => {
 	assert.ok(CoreString.matchMask('abcdef', 'abc* ^de*'), 'abc* ^de*');
 	assert.notOk(CoreString.matchMask('abcdef', 'abc* ^*de*'), 'abc* ^*de*');
 });
+QUnit.test('string matchMask does not break with invalid input', (assert) => {
+	assert.notOk(CoreString.matchMask('abc', '{"actor":"var nodesByRequestedName_1372 = {}\ncon'), 'abc* ^de*');
+	assert.notOk(
+		CoreString.matchMask(
+			'abc',
+			`{"actor":"var nodesByRequestedName_1372 = {}\nconst actor1_nodes /*: ReturnedNodeDataDict*/ = {};\nactor1_nodes['setGeometryInstanceTransforms1'] = {node: parentNode.node('setGeometryInstanceTransforms1')}\nactor1_nodes['getChildrenPhysicsRBDProperties1'] = {node: parentNode.node('getChildrenPhysicsRBDProperties1')}\nactor1_nodes['getChildrenProperties1'] = {node: parentNode.node('getChildrenProperties1')}\nfunction create_getChildrenPhysicsRBDProperties1(parentNode/*: ActorSopNode*/){\n\tvar getChildrenPhysicsRBDProperties1 = parentNode.createNode('getChildrenPhysicsRBDProperties')\n\tgetChildrenPhysicsRBDProperties1.setName('getChildrenPhysicsRBDProperties1')\n\tconst getChildrenPhysicsRBDProperties1_nodes /*: ReturnedNodeDataDict*/ = {};\n\tgetChildrenPhysicsRBDProperties1.uiData.setPosition(-150, 0)\n\tgetChildrenPhysicsRBDProperties1.params.postCreateSpareParams()\n\tgetChildrenPhysicsRBDProperties1.params.runOnSceneLoadHooks()\n\treturn {node: getChildrenPhysicsRBDProperties1, children: getChildrenPhysicsRBDProperties1_nodes}\n}\nactor1_nodes['getChildrenPhysicsRBDProperties1'] = create_getChildrenPhysicsRBDProperties1(parentNode)\nnodesByRequestedName_1372['getChildrenPhysicsRBDProperties1'] = actor1_nodes['getChildrenPhysicsRBDProperties1'].node\nreturn nodesByRequestedName_1372"}`
+		),
+		'abc* ^de*'
+	);
+});
 
 QUnit.test('string attrib_names', (assert) => {
 	assert.deepEqual(CoreString.attribNames('position, normal'), ['position', 'normal']);

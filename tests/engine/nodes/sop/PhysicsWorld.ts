@@ -1,17 +1,6 @@
 import {CoreSleep} from './../../../../src/core/Sleep';
-import {OnScenePlayStateActorNode} from '../../../../src/engine/nodes/actor/OnScenePlayState';
-import {PhysicsWorldSopNode} from '../../../../src/engine/nodes/sop/PhysicsWorld';
 import {RendererUtils} from '../../../helpers/RendererUtils';
-
-function createPhysicsWorldNodes(node: PhysicsWorldSopNode) {
-	const physicsWorldReset = node.createNode('physicsWorldReset');
-	const onScenePlayState = node.createNode('onScenePlayState');
-	const physicsWorldStepSimulation = node.createNode('physicsWorldStepSimulation');
-	const onTick = node.createNode('onTick');
-
-	physicsWorldReset.setInput(0, onScenePlayState, OnScenePlayStateActorNode.OUTPUT_NAME_PAUSE);
-	physicsWorldStepSimulation.setInput(0, onTick);
-}
+import {createPhysicsWorldNodes} from './physics/PhysicsHelper';
 
 QUnit.test('sop/physicsWorld simple', async (assert) => {
 	const scene = window.scene;

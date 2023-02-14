@@ -214,11 +214,16 @@ export class CoreString {
 		// "$"  => Matches any string with that in front at the end of it
 		mask = `^${mask}$`;
 
-		// Create a regular expression object for matching string
-		const regex = new RegExp(mask);
+		try {
+			// Create a regular expression object for matching string
+			const regex = new RegExp(mask);
 
-		// Returns true if it finds a match, otherwise it returns false
-		return regex.test(word);
+			// Returns true if it finds a match, otherwise it returns false
+			return regex.test(word);
+		} catch (err) {
+			// we need to wrap in a try catch in case it would create an invalid regex
+			return false;
+		}
 	}
 	static matchesOneMask(word: string, masks: string[]): boolean {
 		let matches_one_mask = false;
