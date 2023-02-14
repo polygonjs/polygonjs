@@ -70,21 +70,21 @@ export class NormalsSopNode extends TypedSopNode<NormalsSopParamsConfig> {
 		this.io.inputs.initInputsClonedState(InputCloneMode.FROM_NODE);
 	}
 
-	override async cook(input_contents: CoreGroup[]) {
-		const core_group = input_contents[0];
+	override async cook(inputCoreGroups: CoreGroup[]) {
+		const coreGroup = inputCoreGroups[0];
 
 		if (isBooleanTrue(this.pv.edit)) {
-			await this._eval_expressions_for_core_group(core_group);
+			await this._eval_expressions_for_core_group(coreGroup);
 		} else {
 			if (this.pv.recompute) {
-				core_group.computeVertexNormals();
+				coreGroup.computeVertexNormals();
 			}
 		}
 		if (isBooleanTrue(this.pv.invert)) {
-			this._invert_normals(core_group);
+			this._invert_normals(coreGroup);
 		}
 
-		this.setCoreGroup(core_group);
+		this.setCoreGroup(coreGroup);
 	}
 
 	private async _eval_expressions_for_core_group(core_group: CoreGroup) {

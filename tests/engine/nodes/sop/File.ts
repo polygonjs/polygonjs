@@ -53,14 +53,7 @@ async function withFileJSON(path: string) {
 	const container = await fileNode.compute();
 	return {container, fileNode};
 }
-async function withFileMPD(path: string) {
-	const geo1 = window.geo1;
-	const fileNode = geo1.createNode('fileMPD');
-	fileNode.p.url.set(_url(path));
 
-	const container = await fileNode.compute();
-	return {container, fileNode};
-}
 async function withFileOBJ(path: string) {
 	const geo1 = window.geo1;
 	const fileNode = geo1.createNode('fileOBJ');
@@ -236,12 +229,6 @@ QUnit.test('SOP file format stl', async (assert) => {
 	assert.equal(container.pointsCount(), 154059);
 });
 
-QUnit.test('SOP file Ldraw', async (assert) => {
-	const {container, fileNode} = await withFileMPD('models/889-1-RadarTruck.mpd_Packed.mpd');
-	assert.equal(container.pointsCount(), 0);
-	const container2 = await withHierarchy(fileNode, 3);
-	assert.equal(container2.pointsCount(), 75218);
-});
 QUnit.test('SOP file draco bunny with format OBJ', async (assert) => {
 	const {container, fileNode} = await withFileFBX('models/bunny.drc');
 	assert.equal(

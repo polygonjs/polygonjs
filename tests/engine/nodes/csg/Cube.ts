@@ -18,7 +18,7 @@ QUnit.test('csg/cube simple', async (assert) => {
 	let container = await csgNetwork1.compute();
 	const core_group = container.coreContent();
 	const geometry = core_group?.objectsWithGeo()[0].geometry;
-	assert.equal(geometry?.getAttribute('position').array.length, 573);
+	assert.equal(geometry?.getAttribute('position').array.length, 2304);
 	assert.equal(container.boundingBox().min.y, -1);
 	assert.notOk(csgNetwork1.isDirty(), 'box is dirty');
 

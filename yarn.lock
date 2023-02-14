@@ -632,10 +632,10 @@
   dependencies:
     "@types/node" "*"
 
-"@types/three@0.144.0":
-  version "0.144.0"
-  resolved "https://registry.yarnpkg.com/@types/three/-/three-0.144.0.tgz#a154f40122dbc3668c5424a5373f3965c6564557"
-  integrity sha512-psvEs6q5rLN50jUYZ3D4pZMfxTbdt3A243blt0my7/NcL6chaCZpHe2csbCtx0SOD9fI/XnF3wnVUAYZGqCSYg==
+"@types/three@0.148.0":
+  version "0.148.0"
+  resolved "https://registry.yarnpkg.com/@types/three/-/three-0.148.0.tgz#bf7f0f6f12a9b318eebb7dc3813ae69824e13ae6"
+  integrity sha512-1GiErjt1pJMadO8EhaxNrtULzdn+f3BbM3YTukiiXBVeRvvx4CXc2rpYdEuEBU/ouCX7Rc95j1HoVG9kFQXQJw==
   dependencies:
     "@types/webxr" "*"
 
@@ -3433,10 +3433,10 @@ portfinder@^1.0.28:
     debug "^3.1.1"
     mkdirp "^0.5.5"
 
-postprocessing@6.29.0:
-  version "6.29.0"
-  resolved "https://registry.yarnpkg.com/postprocessing/-/postprocessing-6.29.0.tgz#a489f0215e0402c01484bc37abef8d1aabf17921"
-  integrity sha512-bicnFesmIZu53U0f777US8zwE9QyJGKClUhjmvq8+TKMU1BDdUHPJWpXKe0SChEcTSkqvS3xBdqddMVuosgsVA==
+postprocessing@6.29.3:
+  version "6.29.3"
+  resolved "https://registry.yarnpkg.com/postprocessing/-/postprocessing-6.29.3.tgz#a878b2e60ef0402193e782e9580e90516a10f1f8"
+  integrity sha512-gxXC6LKLRwI4eSySdmxqEfQBMKEdQtxg5aYrdvJ/tPHDOS4aZAb/bY4ulQnL5YGKqCC6SmgNmU4dNIc68TTVMw==
 
 potpack@1.0.2:
   version "1.0.2"
@@ -4061,11 +4061,6 @@ text-table@^0.2.0:
   resolved "https://registry.yarnpkg.com/text-table/-/text-table-0.2.0.tgz#7f5ee823ae805207c00af2df4a84ec3fcfa570b4"
   integrity sha1-f17oI66AUgfACvLfSoTsP8+lcLQ=
 
-three-good-godrays@0.4.0:
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/three-good-godrays/-/three-good-godrays-0.4.0.tgz#bbddcf7533f9e00b7cac3dc19c46f1ec19e80941"
-  integrity sha512-Hg13zxFXhkmnuPUifgYpg70XBb8v/54P90Hcx8MS1du7FM6UPgaARIsHem9TEOX8jX9gyBrbsdWQNkvJ1dTW9w==
-
 three-gpu-pathtracer@0.0.8:
   version "0.0.8"
   resolved "https://registry.yarnpkg.com/three-gpu-pathtracer/-/three-gpu-pathtracer-0.0.8.tgz#a44418a83d56d7f582fce507f9d802befb95ce9c"
@@ -4073,7 +4068,12 @@ three-gpu-pathtracer@0.0.8:
   dependencies:
     three-mesh-bvh "^0.5.19"
 
-three-mesh-bvh@0.5.19, three-mesh-bvh@^0.5.19:
+three-mesh-bvh@0.5.23:
+  version "0.5.23"
+  resolved "https://registry.yarnpkg.com/three-mesh-bvh/-/three-mesh-bvh-0.5.23.tgz#08e5b629144b48b11acbd433519680e457d398ed"
+  integrity sha512-nyk+MskdyDgECqkxdv57UjazqqhrMi+Al9PxJN6yFtx1CTW4r0eCQ27FtyYKY5gCIWhxjtNfWYDPVy8lzx6LkA==
+
+three-mesh-bvh@^0.5.19:
   version "0.5.19"
   resolved "https://registry.yarnpkg.com/three-mesh-bvh/-/three-mesh-bvh-0.5.19.tgz#72d489856561d01ef7d4add81f0c82d3fb644d09"
   integrity sha512-Q8huT0NautyR4afW0oMlOz8a4qm3b1jQ1ccMLF/TZ0rA4i58HljsnBjCLEDLQtIINZyLtZPdw60mrD81V/TZDA==
@@ -4083,10 +4083,10 @@ three-subdivide@1.1.0:
   resolved "https://registry.yarnpkg.com/three-subdivide/-/three-subdivide-1.1.0.tgz#8a5ebdde825a1cb2d8ef0f3cd8be1686a9d2d6c6"
   integrity sha512-0BqTWLzqRHnM4ctKgscxo8oPB4R10mjH1Uycy+/8FIbizhpjEfku3I2wCq/Itt3Qv2IglHUzjc1qHioKAlYeoA==
 
-three@0.144.0:
-  version "0.144.0"
-  resolved "https://registry.yarnpkg.com/three/-/three-0.144.0.tgz#2818517169f8ff94eea5f664f6ff1fcdcd436cc8"
-  integrity sha512-R8AXPuqfjfRJKkYoTQcTK7A6i3AdO9++2n8ubya/GTU+fEHhYKu1ZooRSCPkx69jbnzT7dD/xEo6eROQTt2lJw==
+three@0.148.0:
+  version "0.148.0"
+  resolved "https://registry.yarnpkg.com/three/-/three-0.148.0.tgz#b6f62f9c84227f8d51c151bf17b67984ded8e4d7"
+  integrity sha512-8uzVV+qhTPi0bOFs/3te3RW6hb3urL8jYEl6irjCWo/l6sr8MPNMcClFev/MMYeIxr0gmDcoXTy/8LXh/LXkfw==
 
 thunky@^1.0.2:
   version "1.1.0"

@@ -3,7 +3,6 @@ import {BaseNodeType} from '../../../_Base';
 import {ParamConfig} from '../../../utils/params/ParamsConfig';
 import {isBooleanTrue} from '../../../../../core/BooleanValue';
 import {RootManagerNode} from '../../Root';
-import {Scene} from 'three';
 
 const CallbackOptions = {
 	computeOnDirty: false,
@@ -11,10 +10,6 @@ const CallbackOptions = {
 		SceneAutoUpdateController.update(node as RootManagerNode);
 	},
 };
-
-export interface SceneWithAutoUpdateRenamed extends Scene {
-	matrixWorldAutoUpdate: boolean;
-}
 
 export function SceneAutoUpdateParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
@@ -41,8 +36,8 @@ export class SceneAutoUpdateController {
 		const scene = this.node.object;
 		const pv = this.node.pv;
 
-		if (isBooleanTrue(pv.autoUpdate) != (scene as SceneWithAutoUpdateRenamed).matrixWorldAutoUpdate) {
-			(scene as SceneWithAutoUpdateRenamed).matrixWorldAutoUpdate = isBooleanTrue(pv.autoUpdate);
+		if (isBooleanTrue(pv.autoUpdate) != scene.matrixWorldAutoUpdate) {
+			scene.matrixWorldAutoUpdate = isBooleanTrue(pv.autoUpdate);
 		}
 	}
 

@@ -8,12 +8,12 @@
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {BufferAttribute, BufferGeometry, Object3D, Vector2, Vector3, Vector4, Mesh, Points, LineSegments} from 'three';
-
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {MapUtils} from '../../../core/MapUtils';
 import {ObjectType, objectTypeFromConstructor} from '../../../core/geometry/Constant';
 import {ArrayUtils} from '../../../core/ArrayUtils';
+import {isBooleanTrue} from '../../../core/Type';
 
 const roundedPosition = new Vector3();
 const vector2 = new Vector2();
@@ -39,7 +39,10 @@ class FuseSopParamsConfig extends NodeParamsConfig {
 	dist = ParamConfig.FLOAT(0.1, {
 		range: [0, 1],
 		rangeLocked: [true, false],
+		step: 0.001,
 	});
+	/** @param recompute normals */
+	computeNormals = ParamConfig.BOOLEAN(1);
 }
 const ParamsConfig = new FuseSopParamsConfig();
 
@@ -155,6 +158,9 @@ export class FuseSopNode extends TypedSopNode<FuseSopParamsConfig> {
 		if (newIndices.length == 0) {
 			clearAttributes(geometry);
 		}
+		if (isBooleanTrue(this.pv.computeNormals)) {
+			geometry.computeVertexNormals();
+		}
 	}
 	private _filterLineSegments(object: LineSegments) {
 		const geometry = object.geometry;
@@ -207,9 +213,11 @@ export class FuseSopNode extends TypedSopNode<FuseSopParamsConfig> {
 		function roundedPos(index: number, target: Vector3) {
 			target.fromBufferAttribute(position, index);
 
-			target.x = Math.round(target.x / precision) * precision;
-			target.y = Math.round(target.y / precision) * precision;
-			target.z = Math.round(target.z / precision) * precision;
+			if (precision > 0) {
+				target.x = Math.round(target.x / precision) * precision;
+				target.y = Math.round(target.y / precision) * precision;
+				target.z = Math.round(target.z / precision) * precision;
+			}
 		}
 
 		const indicesByPosKey: Map<string, Array<number>> = new Map();

@@ -5,6 +5,7 @@ import {
 	WebGLRenderTargetOptions,
 	LinearEncoding,
 	NoToneMapping,
+	ColorManagement,
 } from 'three';
 import {AbstractRenderer} from '../viewers/Common';
 
@@ -68,6 +69,7 @@ export class RenderersController {
 	}
 
 	createWebGLRenderer(params: WebGLRendererParameters) {
+		ColorManagement.legacyMode = true;
 		const renderer = new WebGLRenderer(params);
 
 		this.assignIdToRenderer(renderer);

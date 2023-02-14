@@ -520,7 +520,7 @@ vec3 GetLight(vec3 _p, vec3 _n, inout SDFContext sdfContext) {
 				
 				#if defined( USE_SHADOWMAP ) && ( UNROLLED_LOOP_INDEX < NUM_SPOT_LIGHT_SHADOWS )
 					spotLightShadow = spotLightShadows[ i ];
-					vec4 spotLightShadowCoord = spotLightMatrix[ i ] * vec4(p, 1.0);
+					vec4 spotLightShadowCoord = spotLightMatrix[ i ] * vec4(geometry.position, 1.0);
 					directLight.color *= all( bvec2( directLight.visible, receiveShadow ) ) ? getShadow( spotShadowMap[ i ], spotLightShadow.shadowMapSize, spotLightShadow.shadowBias, spotLightShadow.shadowRadius, spotLightShadowCoord ) : 1.0;
 				#endif
 				lightPos = spotLight.position;
@@ -581,7 +581,7 @@ vec3 GetLight(vec3 _p, vec3 _n, inout SDFContext sdfContext) {
 				getPointLightInfo( pointLight, geometry, directLight );
 				#if defined( USE_SHADOWMAP ) && ( UNROLLED_LOOP_INDEX < NUM_POINT_LIGHT_SHADOWS )
 					pointLightShadow = pointLightShadows[ i ];
-					vec4 pointLightShadowCoord = pointShadowMatrix[ i ] * vec4(p, 1.0);
+					vec4 pointLightShadowCoord = pointShadowMatrix[ i ] * vec4(geometry.position, 1.0);
 					directLight.color *= all( bvec2( directLight.visible, receiveShadow ) ) ? getPointShadow( pointShadowMap[ i ], pointLightShadow.shadowMapSize, pointLightShadow.shadowBias, pointLightShadow.shadowRadius, pointLightShadowCoord, pointLightShadow.shadowCameraNear, pointLightShadow.shadowCameraFar ) : 1.0;
 				#endif
 				

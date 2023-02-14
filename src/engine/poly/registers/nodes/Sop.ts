@@ -668,9 +668,7 @@ export class SopRegister {
 		poly.registerNode(EmptyObjectSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.registerNode(ExporterSopNode, CATEGORY_SOP.ADVANCED);
 		poly.registerNode(FaceSopNode, CATEGORY_SOP.MODIFIER);
-		if (process.env.NODE_ENV == 'development') {
-			poly.registerNode(FacetSopNode, CATEGORY_SOP.MODIFIER);
-		}
+		poly.registerNode(FacetSopNode, CATEGORY_SOP.MODIFIER);
 		// poly.registerNode(FileSopNode, CATEGORY_SOP.INPUT);
 		poly.registerNode(FileDRCSopNode, CATEGORY_SOP.INPUT);
 		poly.registerNode(FileFBXSopNode, CATEGORY_SOP.INPUT);

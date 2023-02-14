@@ -27,6 +27,11 @@ class LODSopParamsConfig extends NodeParamsConfig {
 		range: [0, 100],
 		rangeLocked: [true, false],
 	});
+	/** @param Threshold used to avoid flickering at LOD boundaries, as a fraction of distance */
+	hysteresis = ParamConfig.FLOAT(0, {
+		range: [0, 1],
+		rangeLocked: [true, true],
+	});
 	/** @param sets if the switch is done automatically */
 	autoUpdate = ParamConfig.BOOLEAN(1);
 	/** @param updates which object is displayed manually */
@@ -91,7 +96,7 @@ export class LodSopNode extends TypedSopNode<LODSopParamsConfig> {
 				// force objects to visible = true
 				// otherwise objects previously given to the LOD would appear hidden in a recook
 				object.visible = true;
-				this._lod.addLevel(object, level);
+				this._lod.addLevel(object, level, this.pv.hysteresis);
 				if (level == 0) {
 					if (i == 0) {
 						// copy transform of first object to LOD

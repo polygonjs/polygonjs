@@ -4,7 +4,12 @@ import jscad from '@jscad/modeling';
 import {ObjectType} from '../../Constant';
 import {BaseSopOperation} from '../../../../engine/operations/sop/_Base';
 import {CSG_MATERIAL} from '../CsgConstant';
-
+import {toCreasedNormals} from '../../../../modules/three/examples/jsm/utils/BufferGeometryUtils';
+interface Geom3ToObject3DOptions {
+	facet?: {
+		angle: number;
+	};
+}
 interface jscadVertexWithIndex extends jscad.maths.vec3.Vec3 {
 	// positionAsString: string;
 	index: number;
@@ -18,12 +23,12 @@ interface jscadVertexWithIndex extends jscad.maths.vec3.Vec3 {
 // 	normals: Normal[];
 // }
 
-export function geom3ToObject3D(csg: jscad.geometries.geom3.Geom3) {
-	const geometry = geom3ToBufferGeometry(csg);
+export function geom3ToObject3D(csg: jscad.geometries.geom3.Geom3, options?: Geom3ToObject3DOptions) {
+	const geometry = geom3ToBufferGeometry(csg, options);
 	return BaseSopOperation.createObject(geometry, ObjectType.MESH, CSG_MATERIAL[ObjectType.MESH]);
 }
 
-export function geom3ToBufferGeometry(csg: jscad.geometries.geom3.Geom3) {
+export function geom3ToBufferGeometry(csg: jscad.geometries.geom3.Geom3, options?: Geom3ToObject3DOptions) {
 	const positions: number[] = [];
 	const colors: number[] = [];
 	const indices: number[] = [];
@@ -96,6 +101,12 @@ export function geom3ToBufferGeometry(csg: jscad.geometries.geom3.Geom3) {
 	}
 	geo.computeVertexNormals();
 
+	if (options && options.facet) {
+		return toCreasedNormals(geo, options.facet.angle);
+	} else {
+		return geo;
+	}
+
 	// const positions: PolyDictionary<NormalAttributes> = {};
 	// for (let i = 0; i < geo.attributes.position.count; i++) {
 	// 	const pArray = geo.attributes.position.array;
@@ -155,7 +166,7 @@ export function geom3ToBufferGeometry(csg: jscad.geometries.geom3.Geom3) {
 	// matrix.elements = csg.transforms;
 	// geo.applyMatrix4(matrix);
 
-	return geo;
+	// return geo;
 }
 
 export function geom3Positions(csg: jscad.geometries.geom3.Geom3): Vector3[] {

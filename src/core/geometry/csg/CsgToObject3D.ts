@@ -24,9 +24,9 @@ export function csgObjectType(csg: CsgObject) {
 	return CsgObjectType.UNKNOWN;
 }
 
-export function csgToObject3D(csg: CsgObject) {
+export function csgToObject3D(csg: CsgObject, facetAngle: number) {
 	if (jscad.geometries.geom3.isA(csg)) {
-		return geom3ToObject3D(csg);
+		return geom3ToObject3D(csg, {facet: {angle: facetAngle}});
 	}
 	if (jscad.geometries.geom2.isA(csg)) {
 		return geom2ToObject3D(csg);

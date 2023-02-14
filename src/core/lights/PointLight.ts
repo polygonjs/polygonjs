@@ -29,8 +29,8 @@ export interface PointLightParams extends DefaultOperationParams {
 
 export const DEFAULT_POINT_LIGHT_PARAMS: PointLightParams = {
 	color: new Color(1, 1, 1),
-	intensity: 1,
-	decay: 0.1,
+	intensity: 2,
+	decay: 2,
 	distance: 100,
 	name: 'pointLight',
 	//
@@ -59,12 +59,12 @@ export function PointLightParamConfig<TBase extends Constructor>(Base: TBase) {
 		});
 		/** @param light intensity */
 		intensity = ParamConfig.FLOAT(DEFAULT.intensity, {
-			range: [0, 2],
+			range: [0, 10],
 			rangeLocked: [true, false],
 		});
 		/** @param light decay */
 		decay = ParamConfig.FLOAT(DEFAULT.decay, {
-			range: [0, 1],
+			range: [0, 10],
 			rangeLocked: [true, false],
 		});
 		/** @param light distance */

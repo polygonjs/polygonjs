@@ -98,7 +98,11 @@ QUnit.test('sop/material access group by object name', async (assert) => {
 
 	material1.p.group.set('SheenChair_fabric');
 	const objects1 = await getObjects();
-	assert.notEqual((objects1[0].material as Material).uuid, (await lambert1.material()).uuid, 'not assigned');
+	assert.notEqual(
+		(objects1[objectNames.indexOf('SheenChair_label')].material as Material).uuid,
+		(await lambert1.material()).uuid,
+		'not assigned'
+	);
 	assert.equal(
 		(objects1[objectNames.indexOf('SheenChair_fabric')].material as Material).uuid,
 		(await lambert1.material()).uuid,
@@ -107,7 +111,10 @@ QUnit.test('sop/material access group by object name', async (assert) => {
 
 	material1.p.group.set('SheenChair_metal');
 	const objects2 = await getObjects();
-	assert.notEqual((objects2[3].material as Material).uuid, (await lambert1.material()).uuid);
+	assert.notEqual(
+		(objects1[objectNames.indexOf('SheenChair_label')].material as Material).uuid,
+		(await lambert1.material()).uuid
+	);
 	assert.equal(
 		(objects2[objectNames.indexOf('SheenChair_metal')].material as Material).uuid,
 		(await lambert1.material()).uuid

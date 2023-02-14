@@ -27,10 +27,10 @@ QUnit.test('actor/setSpotlightIntensity', async (assert) => {
 	await CoreSleep.sleep(150);
 
 	await RendererUtils.withViewer({cameraNode: perspective_camera1}, async (args) => {
-		assert.equal(spotLight.intensity, 1);
+		assert.equal(spotLight.intensity, 2);
 		scene.play();
 		assert.equal(scene.time(), 0);
-		assert.equal(spotLight.intensity, 1);
+		assert.equal(spotLight.intensity, 2);
 
 		onManualTrigger1.p.trigger.pressButton();
 		await CoreSleep.sleep(200);

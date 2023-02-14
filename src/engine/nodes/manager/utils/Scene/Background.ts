@@ -49,6 +49,18 @@ export function SceneBackgroundParamConfig<TBase extends Constructor>(Base: TBas
 			// dependentOnFoundNode: false,
 			...CallbackOptions,
 		});
+		/** @param background blur */
+		bgBlur = ParamConfig.FLOAT(0, {
+			range: [0, 1],
+			rangeLocked: [true, false],
+			...CallbackOptions,
+		});
+		/** @param background intensity */
+		bgIntensity = ParamConfig.FLOAT(1, {
+			range: [0, 2],
+			rangeLocked: [true, false],
+			...CallbackOptions,
+		});
 	};
 }
 
@@ -109,7 +121,10 @@ export class SceneBackgroundController {
 			scene.background = container.texture();
 		} else {
 			this.node.states.error.set('bgTexture node not found');
+			scene.background = null;
 		}
+		scene.backgroundBlurriness = pv.bgBlur;
+		scene.backgroundIntensity = pv.bgIntensity;
 	}
 
 	static update(node: RootManagerNode) {

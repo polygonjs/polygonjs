@@ -8,6 +8,9 @@ import {isBooleanTrue} from '../../../../core/BooleanValue';
 import {MaterialTexturesRecord, SetParamsTextureNodesRecord} from './_BaseController';
 import {ColorConversion} from '../../../../core/Color';
 
+// in THREE 148, the object renders black when attenuation is 0
+const ATTENUATION_DISTANCE_MIN = 0.0001;
+
 export function MeshPhysicalParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		/** @param Represents the thickness of the clear coat layer, from 0.0 to 1.0 */
@@ -57,25 +60,45 @@ export function MeshPhysicalParamConfig<TBase extends Constructor>(Base: TBase) 
 		});
 
 		/** @param toggle if you want to use iridescence */
-		// useIridescence = ParamConfig.BOOLEAN(0, {
-		// 	separatorBefore: true,
-		// });
-		// /** @param iridescence index of refraction */
-		// iridescenceIOR = ParamConfig.FLOAT(1.3, {
-		// 	range: [0, 2],
-		// 	rangeLocked: [true, false],
-		// 	visibleIf: {useIridescence: 1},
-		// });
-		// /** @param toggle if you want to use an iridescence map */
-		// useIridescenceMap = ParamConfig.BOOLEAN(0, {
-		// 	...BooleanParamOptions(MeshPhysicalController),
-		// 	visibleIf: {useIridescence: 1},
-		// });
-		// /** @param specify the iridescence map COP node */
-		// iridescenceMap = ParamConfig.NODE_PATH('', {
-		// 	...NodePathOptions(MeshPhysicalController, 'useIridescenceMap'),
-		// 	visibleIf: {useIridescence: 1, useIridescenceMap: 1},
-		// });
+		useIridescence = ParamConfig.BOOLEAN(0, {
+			separatorBefore: true,
+		});
+		/** @param Iridescence amount */
+		iridescence = ParamConfig.FLOAT(1, {
+			range: [0, 10],
+			rangeLocked: [true, false],
+			visibleIf: {useIridescence: 1},
+		});
+		/** @param iridescence index of refraction */
+		iridescenceIOR = ParamConfig.FLOAT(1.3, {
+			range: [1, 10],
+			rangeLocked: [false, false],
+			visibleIf: {useIridescence: 1},
+		});
+		/** @param Iridescence Thickness Range */
+		iridescenceThicknessRange = ParamConfig.VECTOR2([0, 1], {
+			visibleIf: {useIridescence: 1},
+		});
+		/** @param toggle if you want to use an iridescence map */
+		useIridescenceMap = ParamConfig.BOOLEAN(0, {
+			...BooleanParamOptions(MeshPhysicalController),
+			visibleIf: {useIridescence: 1},
+		});
+		/** @param specify the iridescence map COP node */
+		iridescenceMap = ParamConfig.NODE_PATH('', {
+			...NodePathOptions(MeshPhysicalController, 'useIridescenceMap'),
+			visibleIf: {useIridescence: 1, useIridescenceMap: 1},
+		});
+		/** @param toggle if you want to use an iridescence map */
+		useIridescenceThicknessMap = ParamConfig.BOOLEAN(0, {
+			...BooleanParamOptions(MeshPhysicalController),
+			visibleIf: {useIridescence: 1},
+		});
+		/** @param specify the iridescence map COP node */
+		iridescenceThicknessMap = ParamConfig.NODE_PATH('', {
+			...NodePathOptions(MeshPhysicalController, 'useIridescenceThicknessMap'),
+			visibleIf: {useIridescence: 1, useIridescenceThicknessMap: 1},
+		});
 
 		/** @param Degree of transmission (or optical transparency), from 0.0 to 1.0. Default is 0.0.
 Thin, transparent or semitransparent, plastic or glass materials remain largely reflective even if they are fully transmissive. The transmission property can be used to model these materials.
@@ -104,9 +127,10 @@ When transmission is non-zero, opacity should be set to 1.  */
 		/** @param specify the roughness map COP node */
 		thicknessMap = ParamConfig.NODE_PATH('', {visibleIf: {useThicknessMap: 1}});
 		/** @param attenuation distance */
-		attenuationDistance = ParamConfig.FLOAT(0, {
-			range: [0, 10],
+		attenuationDistance = ParamConfig.FLOAT(100, {
+			range: [ATTENUATION_DISTANCE_MIN, 100],
 			rangeLocked: [true, false],
+			step: 0.01,
 		});
 		/** @param attenuation color */
 		attenuationColor = ParamConfig.COLOR([1, 1, 1]);
@@ -149,10 +173,10 @@ export class MeshPhysicalController extends BaseTextureMapController {
 		this.add_hooks(this.node.p.useClearCoatRoughnessMap, this.node.p.clearcoatRoughnessMap);
 		this.add_hooks(this.node.p.useTransmissionMap, this.node.p.transmissionMap);
 		this.add_hooks(this.node.p.useThicknessMap, this.node.p.thicknessMap);
-		// this.add_hooks(this.node.p.useIridescenceMap, this.node.p.iridescenceMap);
+		this.add_hooks(this.node.p.useIridescenceMap, this.node.p.iridescenceMap);
 	}
 	private _sheenColorClone = new Color();
-
+	private _iridescenceRange: Number2 = [0, 0];
 	static override async update(node: TextureClearCoatMapMatNode) {
 		const container = await node.compute();
 		const material = container.material();
@@ -163,7 +187,6 @@ export class MeshPhysicalController extends BaseTextureMapController {
 	}
 
 	override async updateMaterial(material: MeshPhysicalControllerCurrentMaterial) {
-		// this._update(this.node.material, 'iridescenceMap', this.node.p.useIridescenceMap, this.node.p.iridescenceMap);
 		const pv = this.node.pv;
 
 		const mat = material as MeshPhysicalMaterial;
@@ -187,12 +210,13 @@ export class MeshPhysicalController extends BaseTextureMapController {
 		} else {
 			mat.sheen = 0;
 		}
-		// if (isBooleanTrue(pv.useIridescence)) {
-		// 	(mat as any).iridescence = 1;
-		// 	mat.iridescenceIOR = pv.iridescenceIOR;
-		// } else {
-		// 	(mat as any).iridescence = 0;
-		// }
+		if (isBooleanTrue(pv.useIridescence)) {
+			mat.iridescence = pv.iridescence;
+			mat.iridescenceIOR = pv.iridescenceIOR;
+			mat.iridescenceThicknessRange = pv.iridescenceThicknessRange.toArray(this._iridescenceRange);
+		} else {
+			mat.iridescence = 0;
+		}
 
 		mat.transmission = pv.transmission;
 		mat.thickness = pv.thickness;
@@ -215,6 +239,13 @@ export class MeshPhysicalController extends BaseTextureMapController {
 			),
 			this._update(material, 'transmissionMap', this.node.p.useTransmissionMap, this.node.p.transmissionMap),
 			this._update(material, 'thicknessMap', this.node.p.useThicknessMap, this.node.p.thicknessMap),
+			this._update(material, 'iridescenceMap', this.node.p.useIridescenceMap, this.node.p.iridescenceMap),
+			this._update(
+				material,
+				'iridescenceThicknessMap',
+				this.node.p.useIridescenceThicknessMap,
+				this.node.p.iridescenceThicknessMap
+			),
 		]);
 	}
 	override getTextures(material: MeshPhysicalControllerCurrentMaterial, record: MaterialTexturesRecord) {
@@ -223,6 +254,8 @@ export class MeshPhysicalController extends BaseTextureMapController {
 		record.set('clearcoatRoughnessMap', material.clearcoatRoughnessMap);
 		record.set('transmissionMap', material.transmissionMap);
 		record.set('thicknessMap', material.thicknessMap);
+		record.set('iridescenceMap', material.iridescenceMap);
+		record.set('iridescenceThicknessMap', material.iridescenceThicknessMap);
 	}
 	override setParamsFromMaterial(
 		material: MeshPhysicalControllerCurrentMaterial,
@@ -263,11 +296,27 @@ export class MeshPhysicalController extends BaseTextureMapController {
 				this.node.p.thicknessMap.setNode(mapNode, {relative: true});
 			}
 		};
+		const iridescenceMap = () => {
+			const mapNode = record.get('iridescenceMap');
+			this.node.p.useIridescenceMap.set(mapNode != null);
+			if (mapNode) {
+				this.node.p.iridescenceMap.setNode(mapNode, {relative: true});
+			}
+		};
+		const iridescenceThicknessMap = () => {
+			const mapNode = record.get('iridescenceThicknessMap');
+			this.node.p.useIridescenceThicknessMap.set(mapNode != null);
+			if (mapNode) {
+				this.node.p.iridescenceThicknessMap.setNode(mapNode, {relative: true});
+			}
+		};
 		clearcoatMap();
 		clearcoatNormalMap();
 		clearcoatRoughnessMap();
 		transmissionMap();
 		thicknessMap();
+		iridescenceMap();
+		iridescenceThicknessMap();
 
 		const p = this.node.p;
 		p.ior.set(material.ior);
@@ -289,5 +338,9 @@ export class MeshPhysicalController extends BaseTextureMapController {
 		material.attenuationColor.toArray(tmpN3);
 		p.attenuationColor.set(tmpN3);
 		p.attenuationColor.setConversion(ColorConversion.NONE);
+		//
+		p.iridescence.set(material.iridescence);
+		p.iridescenceIOR.set(material.iridescenceIOR);
+		p.iridescenceThicknessRange.set(material.iridescenceThicknessRange as Number2);
 	}
 }

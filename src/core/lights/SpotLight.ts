@@ -45,10 +45,10 @@ export interface SpotLightParams extends DefaultOperationParams {
 
 export const DEFAULT_SPOT_LIGHT_PARAMS: SpotLightParams = {
 	color: new Color(1, 1, 1),
-	intensity: 1,
+	intensity: 2,
 	angle: 45,
 	penumbra: 0.1,
-	decay: 0.1,
+	decay: 2,
 	distance: 100,
 	//
 	showHelper: false,
@@ -83,7 +83,7 @@ export function SpotLightParamConfig<TBase extends Constructor>(Base: TBase) {
 		});
 		/** @param light intensity */
 		intensity = ParamConfig.FLOAT(DEFAULT.intensity, {
-			range: [0, 2],
+			range: [0, 10],
 			rangeLocked: [true, false],
 		});
 		/** @param angle */
@@ -91,7 +91,7 @@ export function SpotLightParamConfig<TBase extends Constructor>(Base: TBase) {
 		/** @param penumbra */
 		penumbra = ParamConfig.FLOAT(DEFAULT.penumbra);
 		/** @param decay */
-		decay = ParamConfig.FLOAT(DEFAULT.decay, {range: [0, 1]});
+		decay = ParamConfig.FLOAT(DEFAULT.decay, {range: [0, 10]});
 		/** @param distance */
 		distance = ParamConfig.FLOAT(DEFAULT.distance, {range: [0, 100]});
 

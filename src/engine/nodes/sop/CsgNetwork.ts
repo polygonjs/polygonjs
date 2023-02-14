@@ -11,7 +11,7 @@
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 
-import {NodeParamsConfig} from '../utils/params/ParamsConfig';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {NetworkNodeType, NodeContext} from '../../poly/NodeContext';
 import {NodeCreateOptions} from '../utils/hierarchy/ChildrenController';
 import {Constructor, valueof} from '../../../types/GlobalTypes';
@@ -21,7 +21,15 @@ import {DisplayNodeController} from '../utils/DisplayNodeController';
 import {CsgChildrenDisplayController} from './utils/csg/CsgChildrenNodesController';
 import {csgToObject3D} from '../../../core/geometry/csg/CsgToObject3D';
 import {Object3D} from 'three';
-class CsgNetworkParamsConfig extends NodeParamsConfig {}
+import {MathUtils} from 'three';
+const {degToRad} = MathUtils;
+class CsgNetworkParamsConfig extends NodeParamsConfig {
+	/** @param angle threshold to separate vertices */
+	facetAngle = ParamConfig.FLOAT(20, {
+		range: [0, 90],
+		rangeLocked: [true, false],
+	});
+}
 const ParamsConfig = new CsgNetworkParamsConfig();
 
 export class CsgNetworkSopNode extends TypedSopNode<CsgNetworkParamsConfig> {
@@ -44,10 +52,11 @@ export class CsgNetworkSopNode extends TypedSopNode<CsgNetworkParamsConfig> {
 		if (!csgCoreGroup) {
 			return this.setCoreGroup(inputCoreGroups[0]);
 		}
+		const rad = degToRad(this.pv.facetAngle);
 		const csgObjects = csgCoreGroup.objects();
 		const objects: Object3D[] = [];
 		for (let csgObject of csgObjects) {
-			const object = csgToObject3D(csgObject);
+			const object = csgToObject3D(csgObject, rad);
 			if (object) {
 				objects.push(object);
 			} else {
