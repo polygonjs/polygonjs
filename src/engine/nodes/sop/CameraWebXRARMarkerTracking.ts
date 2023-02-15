@@ -11,6 +11,13 @@ import {CameraWebXRARMarkerTrackingSopOperation} from '../../operations/sop/Came
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {CameraSopNodeType} from '../../poly/NodeContext';
 import {CoreCameraMarkerTrackingParamConfig} from '../../../core/camera/webXR/CoreCameraMarkerTracking';
+import {
+	MarkerTrackingSourceMode,
+	MARKER_TRACKING_SOURCE_MODES,
+	MARKER_TRACKING_TRANSFORM_MODES,
+	MarkerTrackingTransformMode,
+} from '../../../core/webXR/markerTracking/Common';
+
 class CameraWebXRARMarkerTrackingSopParamsConfig extends CoreCameraMarkerTrackingParamConfig(NodeParamsConfig) {}
 const ParamsConfig = new CameraWebXRARMarkerTrackingSopParamsConfig();
 
@@ -31,5 +38,18 @@ export class CameraWebXRARMarkerTrackingSopNode extends TypedSopNode<CameraWebXR
 			this._operation || new CameraWebXRARMarkerTrackingSopOperation(this._scene, this.states, this);
 		const coreGroup = this._operation.cook(inputCoreGroups, this.pv);
 		this.setCoreGroup(coreGroup);
+	}
+
+	setSourceMode(sourceMode: MarkerTrackingSourceMode) {
+		this.p.sourceMode.set(MARKER_TRACKING_SOURCE_MODES.indexOf(sourceMode));
+	}
+	sourceMode(): MarkerTrackingSourceMode {
+		return MARKER_TRACKING_SOURCE_MODES[this.pv.sourceMode];
+	}
+	setTransformMode(sourceMode: MarkerTrackingTransformMode) {
+		this.p.transformMode.set(MARKER_TRACKING_TRANSFORM_MODES.indexOf(sourceMode));
+	}
+	transformMode(): MarkerTrackingTransformMode {
+		return MARKER_TRACKING_TRANSFORM_MODES[this.pv.transformMode];
 	}
 }

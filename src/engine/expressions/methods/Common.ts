@@ -3,6 +3,7 @@ export enum ExpressionType {
 	arg = 'arg',
 	argc = 'argc',
 	bbox = 'bbox',
+	blob = 'blob',
 	cameraName = 'cameraName',
 	cameraNames = 'cameraNames',
 	camerasCount = 'camerasCount',

@@ -7,11 +7,20 @@ import {Object3D} from 'three';
 import {PolyScene} from '../../scene/PolyScene';
 import {CoreObject} from '../../../core/geometry/Object';
 import {CameraAttribute} from '../../../core/camera/CoreCamera';
-import {MarkerTrackingTransformMode, MARKER_TRACKING_TRANSFORM_MODES} from '../../../core/webXR/markerTracking/Common';
+import {
+	MarkerTrackingTransformMode,
+	MARKER_TRACKING_TRANSFORM_MODES,
+	MarkerTrackingSourceMode,
+	MARKER_TRACKING_SOURCE_MODES,
+} from '../../../core/webXR/markerTracking/Common';
 import {Poly} from '../../Poly';
 
 interface CameraWebXRARMarkerTrackingSopParams extends DefaultOperationParams {
+	sourceMode: number;
+	sourceUrl: string;
 	transformMode: number;
+	smooth: boolean;
+	smoothCount: number;
 	barCodeType: string;
 	barCodeValue: number;
 }
@@ -25,7 +34,11 @@ interface UpdateObjectOptions {
 
 export class CameraWebXRARMarkerTrackingSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: CameraWebXRARMarkerTrackingSopParams = {
+		sourceMode: MARKER_TRACKING_SOURCE_MODES.indexOf(MarkerTrackingSourceMode.WEBCAM),
+		sourceUrl: '',
 		transformMode: MARKER_TRACKING_TRANSFORM_MODES.indexOf(MarkerTrackingTransformMode.CAMERA),
+		smooth: true,
+		smoothCount: 5,
 		barCodeType: Poly.thirdParty.markerTracking().barCodeTypes()[0] || '',
 		barCodeValue: 0,
 	};
@@ -58,14 +71,26 @@ export class CameraWebXRARMarkerTrackingSopOperation extends BaseSopOperation {
 
 		for (let object of objects) {
 			CoreObject.addAttribute(object, CameraAttribute.WEBXR_AR_MARKER_TRACKING, active);
+
+			// source
+			const sourceMode = MARKER_TRACKING_SOURCE_MODES[params.sourceMode];
+			CoreObject.addAttribute(object, CameraAttribute.WEBXR_AR_MARKER_TRACKING_SOURCE_MODE, sourceMode);
+			CoreObject.addAttribute(object, CameraAttribute.WEBXR_AR_MARKER_TRACKING_SOURCE_URL, params.sourceUrl);
+
+			// transform
+			const transformMode = MARKER_TRACKING_TRANSFORM_MODES[params.transformMode];
+			CoreObject.addAttribute(object, CameraAttribute.WEBXR_AR_MARKER_TRACKING_TRANSFORM_MODE, transformMode);
+
+			// smooth
+			CoreObject.addAttribute(object, CameraAttribute.WEBXR_AR_MARKER_TRACKING_SMOOTH, params.smooth);
+			CoreObject.addAttribute(object, CameraAttribute.WEBXR_AR_MARKER_TRACKING_SMOOTH_COUNT, params.smoothCount);
+
 			CoreObject.addAttribute(object, CameraAttribute.WEBXR_AR_MARKER_TRACKING_BAR_CODE_TYPE, params.barCodeType);
 			CoreObject.addAttribute(
 				object,
 				CameraAttribute.WEBXR_AR_MARKER_TRACKING_BAR_CODE_VALUE,
 				params.barCodeValue
 			);
-			const transformMode = MARKER_TRACKING_TRANSFORM_MODES[params.transformMode];
-			CoreObject.addAttribute(object, CameraAttribute.WEBXR_AR_MARKER_TRACKING_TRANSFORM_MODE, transformMode);
 		}
 	}
 }

@@ -52,6 +52,7 @@ export class ThreejsViewer<C extends Camera> extends TypedViewer<C> {
 	private _cssRendererConfig: CSSRendererConfig | undefined;
 
 	private _effectComposer: EffectComposer | undefined;
+	private _errorMessage: string | undefined;
 
 	static override _canvasIdPrefix() {
 		return 'ThreejsViewer';
@@ -66,6 +67,7 @@ export class ThreejsViewer<C extends Camera> extends TypedViewer<C> {
 		const scene = this.scene();
 		const canvas = this.canvas();
 		const threejsScene = scene.threejsScene();
+		this._errorMessage = undefined;
 
 		// WebGLRenderer
 		this._renderer = options.renderer;
@@ -109,6 +111,9 @@ export class ThreejsViewer<C extends Camera> extends TypedViewer<C> {
 					canvas,
 					camera,
 					scene,
+					onError: (errorMessage) => {
+						this._errorMessage = errorMessage;
+					},
 				});
 			}
 			// CSSRender
@@ -149,6 +154,22 @@ export class ThreejsViewer<C extends Camera> extends TypedViewer<C> {
 		this._build();
 		this._setEvents();
 		this.onResize();
+
+		// display error if any
+		if (this._errorMessage) {
+			const errorElement = document.createElement('div');
+			errorElement.style.position = 'absolute';
+			errorElement.style.top = '0px';
+			errorElement.style.width = '100%';
+			errorElement.style.color = 'red';
+			errorElement.style.backgroundColor = 'white';
+			errorElement.style.padding = '20px';
+			// errorElement.style.margin = '20px';
+			errorElement.style.textAlign = 'center';
+			errorElement.style.opacity = '90%';
+			errorElement.innerText = this._errorMessage;
+			this._domElement?.append(errorElement);
+		}
 
 		// if (Poly.logo.displayed()) {
 		// 	new ViewerLogoController(this);

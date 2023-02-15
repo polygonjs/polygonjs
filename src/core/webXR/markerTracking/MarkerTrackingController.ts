@@ -3,6 +3,7 @@ import {CoreMarkerTrackingControllerOptions, MarkerTrackingControllerConfig} fro
 
 export class CoreMarkerTrackingController {
 	constructor(options: CoreMarkerTrackingControllerOptions) {}
+	errorMessage(): string | void {}
 	trackedMatrix(targetMatrix: Matrix4) {}
 	config(): MarkerTrackingControllerConfig {
 		return {

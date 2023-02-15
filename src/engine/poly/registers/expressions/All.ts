@@ -2,6 +2,7 @@ import {AnimationNamesExpression} from '../../../expressions/methods/animationNa
 import {ArgExpression} from '../../../expressions/methods/arg';
 import {ArgcExpression} from '../../../expressions/methods/argc';
 import {BboxExpression} from '../../../expressions/methods/bbox';
+import {BlobExpression} from '../../../expressions/methods/blob';
 import {CameraNameExpression} from '../../../expressions/methods/cameraName';
 import {CameraNamesExpression} from '../../../expressions/methods/cameraNames';
 import {CamerasCountExpression} from '../../../expressions/methods/camerasCount';
@@ -38,6 +39,7 @@ export interface ExpressionMap extends PolyDictionary<typeof BaseMethod> {
 	arg: typeof ArgExpression;
 	argc: typeof ArgcExpression;
 	bbox: typeof BboxExpression;
+	blob: typeof BlobExpression;
 	cameraName: typeof CameraNameExpression;
 	cameraNames: typeof CameraNamesExpression;
 	camerasCount: typeof CamerasCountExpression;
@@ -78,6 +80,7 @@ export class AllExpressionsRegister {
 		poly.expressionsRegister.register(ArgExpression, ExpressionType.arg);
 		poly.expressionsRegister.register(ArgcExpression, ExpressionType.argc);
 		poly.expressionsRegister.register(BboxExpression, ExpressionType.bbox);
+		poly.expressionsRegister.register(BlobExpression, ExpressionType.blob);
 		poly.expressionsRegister.register(CameraNameExpression, ExpressionType.cameraName);
 		poly.expressionsRegister.register(CameraNamesExpression, ExpressionType.cameraNames);
 		poly.expressionsRegister.register(CamerasCountExpression, ExpressionType.camerasCount);

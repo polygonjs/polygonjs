@@ -10,6 +10,17 @@ export interface MarkerTrackingControllerConfig {
 	unmountFunction: MarkerTrackingControllerUnmountFunction;
 }
 
+export enum MarkerTrackingSourceMode {
+	WEBCAM = 'webcam',
+	IMAGE = 'image',
+	VIDEO = 'video',
+}
+export const MARKER_TRACKING_SOURCE_MODES: MarkerTrackingSourceMode[] = [
+	MarkerTrackingSourceMode.WEBCAM,
+	MarkerTrackingSourceMode.IMAGE,
+	MarkerTrackingSourceMode.VIDEO,
+];
+
 export enum MarkerTrackingTransformMode {
 	CAMERA = 'camera',
 	MARKER = 'marker',
@@ -20,6 +31,8 @@ export const MARKER_TRACKING_TRANSFORM_MODES: MarkerTrackingTransformMode[] = [
 ];
 
 export interface CoreMarkerTrackingControllerOptions {
+	sourceMode: MarkerTrackingSourceMode;
+	sourceUrl?: string;
 	canvas: HTMLCanvasElement;
 	camera: Camera;
 	scene: Scene;
@@ -28,4 +41,8 @@ export interface CoreMarkerTrackingControllerOptions {
 		value: number;
 	};
 	transformMode: MarkerTrackingTransformMode;
+	smooth: {
+		active: boolean;
+		count: number;
+	};
 }

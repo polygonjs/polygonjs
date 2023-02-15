@@ -1,4 +1,4 @@
-import {NodeContext} from '../../engine/poly/NodeContext';
+import {CameraSopNodeType, NodeContext} from '../../engine/poly/NodeContext';
 import {AudioType} from '../../engine/poly/registers/nodes/types/Audio';
 import {CopType, CopTypeImage} from '../../engine/poly/registers/nodes/types/Cop';
 import {SopType, SopTypeFile, SopTypeFileMulti} from '../../engine/poly/registers/nodes/types/Sop';
@@ -37,6 +37,13 @@ export const EXTENSIONS_BY_NODE_TYPE_BY_CONTEXT: Record<NodeContext, Record<stri
 	[NodeContext.POST]: {},
 	[NodeContext.ROP]: {},
 	[NodeContext.SOP]: {
+		[CameraSopNodeType.WEBXR_AR_MARKER_TRACKING]: [
+			ImageExtension.PNG,
+			ImageExtension.JPEG,
+			ImageExtension.JPG,
+			ImageExtension.WEBP,
+			...VIDEO_EXTENSIONS,
+		],
 		[SopType.DATA_URL]: [GeometryExtension.JSON],
 		[SopTypeFile.FILE_GLTF]: [GeometryExtension.GLB, GeometryExtension.GLTF],
 		[SopTypeFile.FILE_DRC]: [GeometryExtension.DRC],
