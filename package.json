@@ -48,7 +48,7 @@
 		"bundle_types": "yarn bundle_types_pre && yarn bundle_types_mid; yarn bundle_types_post"
 	},
 	"dependencies": {
-		"@dimforge/rapier3d": "0.11.1",
+		"@dimforge/rapier3d-compat": "0.11.1",
 		"@jscad/modeling": "2.11.0",
 		"@mediapipe/face_mesh": "0.4.1633559619",
 		"@mediapipe/hands": "0.4.1646424915",

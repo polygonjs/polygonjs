@@ -1,4 +1,4 @@
-// import type {World, RigidBody} from '@dimforge/rapier3d';
+// import type {World, RigidBody} from '@dimforge/rapier3d-compat';
 // import {Object3D} from 'three';
 // import {CorePhysicsLoaded} from './CorePhysics';
 // export enum PhysicsUserData {

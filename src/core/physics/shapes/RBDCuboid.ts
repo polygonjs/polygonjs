@@ -1,4 +1,4 @@
-import type {Collider, Cuboid} from '@dimforge/rapier3d';
+import type {Collider, Cuboid} from '@dimforge/rapier3d-compat';
 import {Object3D, Vector3} from 'three';
 import {
 	CorePhysicsAttribute,

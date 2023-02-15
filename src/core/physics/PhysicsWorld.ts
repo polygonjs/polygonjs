@@ -1,5 +1,5 @@
 import {PhysicsLib, CorePhysics, Object3DByRididBodyByWorld} from './CorePhysics';
-import {World, RigidBody, Collider, ImpulseJoint, MultibodyJoint} from '@dimforge/rapier3d';
+import {World, RigidBody, Collider, ImpulseJoint, MultibodyJoint} from '@dimforge/rapier3d-compat';
 // import {CorePhysicsUserData} from './PhysicsUserData';
 import {Object3D, Vector3} from 'three';
 import {physicsCreateRBD, physicsUpdateRBD} from './PhysicsRBD';

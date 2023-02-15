@@ -1,4 +1,4 @@
-import type {World} from '@dimforge/rapier3d';
+import type {World} from '@dimforge/rapier3d-compat';
 import {Object3D, Vector3} from 'three';
 import {CorePhysicsAttribute} from '../PhysicsAttribute';
 const up = new Vector3();

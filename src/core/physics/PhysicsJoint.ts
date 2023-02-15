@@ -6,7 +6,7 @@ import type {
 	PrismaticImpulseJoint,
 	SphericalImpulseJoint,
 	RevoluteImpulseJoint,
-} from '@dimforge/rapier3d';
+} from '@dimforge/rapier3d-compat';
 import {Object3D, Vector4, Vector3, Vector2} from 'three';
 import {PhysicsLib} from './CorePhysics';
 import {CorePhysicsBaseAttribute} from './PhysicsAttribute';

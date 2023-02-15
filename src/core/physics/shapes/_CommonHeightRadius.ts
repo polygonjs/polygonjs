@@ -1,4 +1,4 @@
-import type {Collider, Cone} from '@dimforge/rapier3d';
+import type {Collider, Cone} from '@dimforge/rapier3d-compat';
 import {Object3D} from 'three';
 import {
 	CorePhysicsAttribute,

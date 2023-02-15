@@ -2,7 +2,7 @@ import {TypeAssert} from './../../engine/poly/Assert';
 // import {CorePhysicsUserData} from './PhysicsUserData';
 import {PhysicsRBDColliderType, PhysicsRBDType, CorePhysicsAttribute, PhysicsIdAttribute} from './PhysicsAttribute';
 import {Object3D, Vector3, Quaternion} from 'three';
-import type {World, RigidBodyType, RigidBodyDesc, RigidBody, ColliderDesc} from '@dimforge/rapier3d';
+import type {World, RigidBodyType, RigidBodyDesc, RigidBody, ColliderDesc} from '@dimforge/rapier3d-compat';
 import {CorePhysicsLoaded, PhysicsLib, Object3DByRididBody} from './CorePhysics';
 import {CoreObject} from '../geometry/Object';
 import {createPhysicsSphere} from './shapes/RBDSphere';

@@ -1,8 +1,5 @@
-// import type {World} from '@dimforge/rapier3d';
-import {Object3D} from 'three';
 import {CoreGraphNodeId} from '../graph/CoreGraph';
-import {LineBasicMaterial, BufferGeometry, LineSegments, BufferAttribute} from 'three';
-// import {BaseNodeType} from '../../engine/nodes/_Base';
+import {LineBasicMaterial, BufferGeometry, LineSegments, BufferAttribute, Object3D} from 'three';
 import {CoreObject} from '../geometry/Object';
 import {PhysicsIdAttribute} from './PhysicsAttribute';
 import {physicsWorldFromNodeId} from './PhysicsWorld';

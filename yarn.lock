@@ -30,10 +30,10 @@
   dependencies:
     regenerator-runtime "^0.13.4"
 
-"@dimforge/rapier3d@0.11.1":
+"@dimforge/rapier3d-compat@0.11.1":
   version "0.11.1"
-  resolved "https://registry.yarnpkg.com/@dimforge/rapier3d/-/rapier3d-0.11.1.tgz#75f94156012dbc76f90c322a72e797d427c91bd0"
-  integrity sha512-rJT944tfEPZ2h+yEe2mqsl6yIsEtriEfpKt6pmuGwC9aodMO+p0sHbUMPC32Kw8aIpDo/Ok+nJopwkeJsUZSZA==
+  resolved "https://registry.yarnpkg.com/@dimforge/rapier3d-compat/-/rapier3d-compat-0.11.1.tgz#24cdf14ea7c6551242f186133c0b09ada310803d"
+  integrity sha512-Xt3KcvwxnTZxjZ3uA4Qx5S9LoAqCvj4mTzcSwdPnVpM0F/ZPU7cY9bjGiNqB3+/IvUSCQB1eVamAd2IQX7hzTA==
 
 "@discoveryjs/json-ext@^0.5.0", "@discoveryjs/json-ext@^0.5.5":
   version "0.5.6"

@@ -1,4 +1,4 @@
-import type {World, RigidBody, Collider, KinematicCharacterController} from '@dimforge/rapier3d';
+import type {World, RigidBody, Collider, KinematicCharacterController} from '@dimforge/rapier3d-compat';
 import {PhysicsLib} from '../CorePhysics';
 import {Object3D, Vector3} from 'three';
 import {PhysicsPlayerType} from './PhysicsPlayer';

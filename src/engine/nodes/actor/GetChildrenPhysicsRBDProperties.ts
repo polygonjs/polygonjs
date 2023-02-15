@@ -4,7 +4,7 @@
  *
  */
 
-import type {RigidBody} from '@dimforge/rapier3d';
+import type {RigidBody} from '@dimforge/rapier3d-compat';
 import {ActorNodeTriggerContext, ParamlessTypedActorNode} from './_Base';
 import {
 	ActorConnectionPoint,

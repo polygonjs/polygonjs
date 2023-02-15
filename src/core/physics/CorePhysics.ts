@@ -1,4 +1,4 @@
-import type {World, RigidBody, ColliderDesc, RigidBodyDesc, JointData} from '@dimforge/rapier3d';
+import type {World, RigidBody, ColliderDesc, RigidBodyDesc, JointData} from '@dimforge/rapier3d-compat';
 import {Object3D} from 'three';
 interface RigidBodyType {
 	Dynamic: number;
@@ -36,14 +36,16 @@ export async function CorePhysics(): Promise<PhysicsLib> {
 		}
 
 		_importStarted = true;
-		import('@dimforge/rapier3d').then((RAPIER) => {
-			physics = RAPIER;
-			resolve(physics);
-			if (_resolves.length > 0) {
-				for (let _resolve of _resolves) {
-					_resolve(physics);
+		import('@dimforge/rapier3d-compat').then((RAPIER) => {
+			RAPIER.init().then(() => {
+				physics = RAPIER;
+				resolve(physics);
+				if (_resolves.length > 0) {
+					for (let _resolve of _resolves) {
+						_resolve(physics);
+					}
 				}
-			}
+			});
 		});
 	});
 }
