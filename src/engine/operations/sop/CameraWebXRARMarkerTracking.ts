@@ -60,7 +60,7 @@ export class CameraWebXRARMarkerTrackingSopOperation extends BaseSopOperation {
 			}
 		} else {
 			this._node?.states.error.set(
-				'Make sure to install plugin-marker-tracking is not installed. See https://github.com/polygonjs/plugin-marker-tracking'
+				'This node requires the plugin-marker-tracking. See [https://github.com/polygonjs/plugin-marker-tracking](https://github.com/polygonjs/plugin-marker-tracking)'
 			);
 		}
 
