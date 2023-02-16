@@ -1,5 +1,5 @@
 /**
- * texture SDF
+ * loads an SDF texture, which is used in raymarching materials.
  *
  *
  *
