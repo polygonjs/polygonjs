@@ -9,6 +9,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CoreGroup} from '../../../core/geometry/Group';
 
 import {PolywireSopOperation} from '../../operations/sop/Polywire';
+import {SopType} from '../../poly/registers/nodes/types/Sop';
 const DEFAULT = PolywireSopOperation.DEFAULT_PARAMS;
 class PolywireSopParamsConfig extends NodeParamsConfig {
 	/** @param radius */
@@ -22,14 +23,13 @@ class PolywireSopParamsConfig extends NodeParamsConfig {
 	closed = ParamConfig.BOOLEAN(DEFAULT.closed);
 	/** @param attributesToCopy */
 	attributesToCopy = ParamConfig.STRING(DEFAULT.attributesToCopy);
-	
 }
 const ParamsConfig = new PolywireSopParamsConfig();
 
 export class PolywireSopNode extends TypedSopNode<PolywireSopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'polywire';
+		return SopType.POLYWIRE;
 	}
 
 	static override displayedInputNames(): string[] {

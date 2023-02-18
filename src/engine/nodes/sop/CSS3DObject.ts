@@ -13,6 +13,7 @@ import {CoreGroup} from '../../../core/geometry/Group';
 import {CSS3DObjectSopOperation} from '../../operations/sop/CSS3DObject';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {StringParamLanguage} from '../../params/utils/OptionsController';
+import {SopType} from '../../poly/registers/nodes/types/Sop';
 const DEFAULT = CSS3DObjectSopOperation.DEFAULT_PARAMS;
 class CSS3DObjectSopParamsConfig extends NodeParamsConfig {
 	/** @param toggles on if attributes are copied from the geometry to the html element */
@@ -48,7 +49,7 @@ const ParamsConfig = new CSS3DObjectSopParamsConfig();
 export class CSS3DObjectSopNode extends TypedSopNode<CSS3DObjectSopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'CSS3DObject';
+		return SopType.CSS3D_OBJECT;
 	}
 
 	override initializeNode() {

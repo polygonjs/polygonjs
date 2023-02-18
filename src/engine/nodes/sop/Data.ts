@@ -33,6 +33,7 @@ const DEFAULT_DATA_STR = JSON.stringify(DEFAULT_DATA);
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {ObjectType} from '../../../core/geometry/Constant';
+import {SopType} from '../../poly/registers/nodes/types/Sop';
 class DataSopParamsConfig extends NodeParamsConfig {
 	/** @param json object used to create the geometry */
 	data = ParamConfig.STRING(DEFAULT_DATA_STR);
@@ -42,7 +43,7 @@ const ParamsConfig = new DataSopParamsConfig();
 export class DataSopNode extends TypedSopNode<DataSopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'data';
+		return SopType.DATA;
 	}
 
 	override cook() {

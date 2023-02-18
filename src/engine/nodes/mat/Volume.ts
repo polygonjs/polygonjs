@@ -17,13 +17,14 @@ import {UniformsUtils} from 'three';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {CoreMaterial} from '../../../core/geometry/Material';
 import {VolumeController, VolumeParamConfig} from './utils/VolumeController';
+import {MatType} from '../../poly/registers/nodes/types/Mat';
 class VolumeMatParamsConfig extends VolumeParamConfig(NodeParamsConfig) {}
 const ParamsConfig = new VolumeMatParamsConfig();
 
 export class VolumeMatNode extends PrimitiveMatNode<ShaderMaterial, VolumeMatParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'volume';
+		return MatType.VOLUME;
 	}
 
 	private _volumeController = new VolumeController(this);

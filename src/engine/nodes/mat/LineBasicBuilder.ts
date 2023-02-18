@@ -26,6 +26,7 @@ import {LineBasicMaterial} from 'three';
 import {CustomMaterialName} from '../../../core/geometry/Material';
 import {Material} from 'three';
 import {GlAssemblerController} from '../gl/code/Controller';
+import {MatType} from '../../poly/registers/nodes/types/Mat';
 // import {
 // 	CustomMaterialLineParamConfig,
 // 	materialLineAssemblerCustomMaterialRequested,
@@ -61,7 +62,7 @@ export class LineBasicBuilderMatNode extends TypedBuilderMatNode<
 > {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'lineBasicBuilder';
+		return MatType.LINE_BASIC_BUILDER;
 	}
 	public override usedAssembler(): Readonly<AssemblerName.GL_LINE> {
 		return AssemblerName.GL_LINE;

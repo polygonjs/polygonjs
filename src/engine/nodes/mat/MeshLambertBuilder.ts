@@ -55,6 +55,7 @@ import {AdvancedFolderParamConfig} from './utils/AdvancedFolder';
 import {Material} from 'three';
 import {MeshLambertMaterial} from 'three';
 import {CustomMaterialName, IUniforms} from '../../../core/geometry/Material';
+import {MatType} from '../../poly/registers/nodes/types/Mat';
 // import {
 // 	CustomMaterialMeshParamConfig,
 // 	materialMeshAssemblerCustomMaterialRequested,
@@ -119,7 +120,7 @@ export class MeshLambertBuilderMatNode extends TypedBuilderMatNode<
 > {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'meshLambertBuilder';
+		return MatType.MESH_LAMBERT_BUILDER;
 	}
 	public override usedAssembler(): Readonly<AssemblerName.GL_MESH_LAMBERT> {
 		return AssemblerName.GL_MESH_LAMBERT;

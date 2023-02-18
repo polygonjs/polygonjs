@@ -8,6 +8,7 @@ import {TypedSopNode} from './_Base';
 import {TorusSopOperation} from '../../operations/sop/Torus';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {SopType} from '../../poly/registers/nodes/types/Sop';
 const DEFAULT = TorusSopOperation.DEFAULT_PARAMS;
 class TorusSopParamsConfig extends NodeParamsConfig {
 	/** @param large radius */
@@ -47,7 +48,7 @@ const ParamsConfig = new TorusSopParamsConfig();
 export class TorusSopNode extends TypedSopNode<TorusSopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'torus';
+		return SopType.TORUS;
 	}
 
 	private _operation: TorusSopOperation | undefined;

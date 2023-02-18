@@ -24,6 +24,7 @@ import {AnimationUpdateCallback} from '../../../core/animation/UpdateCallback';
 import {BaseParamType} from '../../params/_Base';
 import {BaseNodeType} from '../_Base';
 import {isBooleanTrue} from '../../../core/BooleanValue';
+import {AnimType} from '../../poly/registers/nodes/types/Anim';
 class TargetAnimParamsConfig extends NodeParamsConfig {
 	/** @param sets if the target is a Polygonjs node, or a THREE object */
 	type = ParamConfig.INTEGER(TARGET_TYPE_SCENE_GRAPH, {
@@ -58,7 +59,7 @@ const ParamsConfig = new TargetAnimParamsConfig();
 export class TargetAnimNode extends TypedAnimNode<TargetAnimParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'target';
+		return AnimType.TARGET;
 	}
 
 	override initializeNode() {

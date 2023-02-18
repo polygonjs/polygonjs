@@ -13,6 +13,7 @@ import {CoreGroup} from '../../../core/geometry/Group';
 import {BufferGeometry} from 'three';
 import {Mesh} from 'three';
 import {isBooleanTrue} from '../../../core/Type';
+import {SopType} from '../../poly/registers/nodes/types/Sop';
 
 class BlendSopParamsConfig extends NodeParamsConfig {
 	/** @param name of the attribute to blend */
@@ -30,7 +31,7 @@ const ParamsConfig = new BlendSopParamsConfig();
 export class BlendSopNode extends TypedSopNode<BlendSopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'blend';
+		return SopType.BLEND;
 	}
 
 	static override displayedInputNames(): string[] {

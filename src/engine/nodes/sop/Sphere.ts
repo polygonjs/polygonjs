@@ -11,6 +11,7 @@ import {SphereSopOperation, SPHERE_TYPES, SPHERE_TYPE} from '../../operations/so
 import {CoreGroup} from '../../../core/geometry/Group';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {SopType} from '../../poly/registers/nodes/types/Sop';
 const DEFAULT = SphereSopOperation.DEFAULT_PARAMS;
 const step = 0.00001;
 class SphereSopParamsConfig extends NodeParamsConfig {
@@ -68,7 +69,7 @@ const ParamsConfig = new SphereSopParamsConfig();
 export class SphereSopNode extends TypedSopNode<SphereSopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'sphere';
+		return SopType.SPHERE;
 	}
 
 	override initializeNode() {

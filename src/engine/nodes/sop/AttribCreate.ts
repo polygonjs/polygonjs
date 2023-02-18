@@ -42,6 +42,7 @@ interface ArraysByGeoUuid {
 import {AttribCreateSopOperation} from '../../operations/sop/AttribCreate';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CoreMask} from '../../../core/geometry/Mask';
+import {SopType} from '../../poly/registers/nodes/types/Sop';
 const DEFAULT = AttribCreateSopOperation.DEFAULT_PARAMS;
 class AttribCreateSopParamsConfig extends NodeParamsConfig {
 	/** @param the group this applies to */
@@ -96,7 +97,7 @@ const ParamsConfig = new AttribCreateSopParamsConfig();
 export class AttribCreateSopNode extends TypedSopNode<AttribCreateSopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'attribCreate';
+		return SopType.ATTRIB_CREATE;
 	}
 
 	private _arraysByGeoUuid: ArraysByGeoUuid = {

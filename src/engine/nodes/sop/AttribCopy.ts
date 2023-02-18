@@ -21,6 +21,7 @@ import {CoreGroup} from '../../../core/geometry/Group';
 
 import {AttribCopySopOperation} from '../../operations/sop/AttribCopy';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {SopType} from '../../poly/registers/nodes/types/Sop';
 const DEFAULT = AttribCopySopOperation.DEFAULT_PARAMS;
 class AttribCopySopParamsConfig extends NodeParamsConfig {
 	/** @param name of the attribute to copy */
@@ -47,7 +48,7 @@ const ParamsConfig = new AttribCopySopParamsConfig();
 export class AttribCopySopNode extends TypedSopNode<AttribCopySopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'attribCopy';
+		return SopType.ATTRIB_COPY;
 	}
 
 	static override displayedInputNames(): string[] {

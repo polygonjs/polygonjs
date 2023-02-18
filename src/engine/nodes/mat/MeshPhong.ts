@@ -60,7 +60,7 @@ import {
 import {TextureAOMapController, AOMapParamConfig, TextureAOMapControllers} from './utils/TextureAOMapController';
 import {FlatShadingController, FlatShadingParamConfig, FlatShadingControllers} from './utils/FlatShadingController';
 import {WireframeController, WireframeControllers, WireframeParamConfig} from './utils/WireframeController';
-
+import {MatType} from '../../poly/registers/nodes/types/Mat';
 import {FogController, FogControllers, FogParamConfig} from './utils/FogController';
 import {DefaultFolderParamConfig} from './utils/DefaultFolder';
 import {TexturesFolderParamConfig} from './utils/TexturesFolder';
@@ -122,8 +122,8 @@ const ParamsConfig = new MeshPhongMatParamsConfig();
 
 export class MeshPhongMatNode extends PrimitiveMatNode<MeshPhongMaterial, MeshPhongMatParamsConfig> {
 	override paramsConfig = ParamsConfig;
-	static override type(): 'meshPhong' {
-		return 'meshPhong';
+	static override type(): MatType.MESH_PHONG {
+		return MatType.MESH_PHONG;
 	}
 
 	override createMaterial() {

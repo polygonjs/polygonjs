@@ -10,6 +10,7 @@ import {CorePhysicsAttribute, PhysicsRBDColliderType, PhysicsRBDType} from './..
 import {TypedSopNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {BaseSopOperation} from '../../operations/sop/_Base';
+import {SopType} from '../../poly/registers/nodes/types/Sop';
 
 const DEFAULT_UP = new Vector3(0, 1, 0);
 const tmp = new Vector3(0, 0, 0);
@@ -48,7 +49,7 @@ const ParamsConfig = new PhysicsGroundSopParamsConfig();
 export class PhysicsGroundSopNode extends TypedSopNode<PhysicsGroundSopParamsConfig> {
 	override readonly paramsConfig = ParamsConfig;
 	static override type() {
-		return 'physicsGround';
+		return SopType.PHYSICS_GROUND;
 	}
 
 	protected override initializeNode() {

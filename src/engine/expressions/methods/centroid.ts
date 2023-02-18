@@ -22,7 +22,6 @@ import {MethodDependency} from '../MethodDependency';
 import {GeometryContainer} from '../../containers/Geometry';
 import {Vector3Like} from '../../../types/GlobalTypes';
 export class CentroidExpression extends BaseMethod {
-	protected override _requireDependency = true;
 	static override requiredArguments() {
 		return [
 			['string', 'path to node'],

@@ -60,7 +60,7 @@ import {FogController, FogControllers, FogParamConfig} from './utils/FogControll
 import {DefaultFolderParamConfig} from './utils/DefaultFolder';
 import {TexturesFolderParamConfig} from './utils/TexturesFolder';
 import {AdvancedFolderParamConfig} from './utils/AdvancedFolder';
-
+import {MatType} from '../../poly/registers/nodes/types/Mat';
 interface MeshPhysicalMatControllers
 	extends AdvancedCommonControllers,
 		ColorsControllers,
@@ -118,8 +118,8 @@ const ParamsConfig = new MeshPhysicalMatParamsConfig();
 
 export class MeshPhysicalMatNode extends PrimitiveMatNode<MeshPhysicalMaterial, MeshPhysicalMatParamsConfig> {
 	override paramsConfig = ParamsConfig;
-	static override type(): 'meshPhysical' {
-		return 'meshPhysical';
+	static override type(): MatType.MESH_PHYSICAL {
+		return MatType.MESH_PHYSICAL;
 	}
 
 	override createMaterial() {

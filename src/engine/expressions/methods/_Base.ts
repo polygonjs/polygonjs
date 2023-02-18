@@ -15,11 +15,6 @@ export interface BaseMethodFindDependencyArgs {
 	node?: BaseNodeType;
 }
 export class BaseMethod {
-	protected _requireDependency = false;
-	requireDependency() {
-		return this._requireDependency;
-	}
-
 	constructor(public readonly param: BaseParamType) {}
 	// the node is not fetched from the param in the constructor,
 	// since the param may not have a node yet, especially when the param's value

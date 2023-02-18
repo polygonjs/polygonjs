@@ -130,7 +130,6 @@ export class WebCamCopNode extends TypedCopNode<WebCamCopParamsConfig> {
 					// too early
 					// then the computer vision would crash
 					video.oncanplay = () => {
-						console.log('can play');
 						video.play();
 						this.setTexture(texture);
 					};
@@ -138,7 +137,6 @@ export class WebCamCopNode extends TypedCopNode<WebCamCopParamsConfig> {
 						this.states.error.set(`webcam video error: ${err}`);
 					};
 					video.srcObject = stream;
-					console.log('stream given');
 				})
 				.catch((error) => {
 					this.states.error.set('Unable to access the camera/webcam');

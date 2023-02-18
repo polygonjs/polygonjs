@@ -13,6 +13,7 @@ import {VolumeController, VolumeParamConfig} from './utils/VolumeController';
 import {AssemblerName} from '../../poly/registers/assemblers/_BaseRegister';
 import {Poly} from '../../Poly';
 import {ShaderMaterialWithCustomMaterials} from '../../../core/geometry/Material';
+import {MatType} from '../../poly/registers/nodes/types/Mat';
 // import {
 // 	CustomMaterialVolumeParamConfig,
 // 	materialVolumeAssemblerCustomMaterialRequested,
@@ -27,7 +28,7 @@ export class VolumeBuilderMatNode extends TypedBuilderMatNode<
 > {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'volumeBuilder';
+		return MatType.VOLUME_BUILDER;
 	}
 	public override usedAssembler(): Readonly<AssemblerName.GL_VOLUME> {
 		return AssemblerName.GL_VOLUME;

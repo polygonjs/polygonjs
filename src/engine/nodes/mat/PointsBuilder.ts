@@ -27,6 +27,7 @@ import {CustomMaterialName} from '../../../core/geometry/Material';
 import {Material} from 'three';
 import {PointsMaterial} from 'three';
 import {PointsSizeController, PointsParamConfig, PointsSizeControllers} from './utils/PointsSizeController';
+import {MatType} from '../../poly/registers/nodes/types/Mat';
 // import {
 // 	CustomMaterialPointsParamConfig,
 // 	materialPointsAssemblerCustomMaterialRequested,
@@ -63,7 +64,7 @@ export class PointsBuilderMatNode extends TypedBuilderMatNode<
 > {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'pointsBuilder';
+		return MatType.POINTS_BUILDER;
 	}
 	public override usedAssembler(): Readonly<AssemblerName.GL_POINTS> {
 		return AssemblerName.GL_POINTS;

@@ -25,7 +25,6 @@ const COMPONENT_NAME_0 = [0, '0', 'x'];
 const COMPONENT_NAME_1 = [1, '1', 'y'];
 
 export class CopResExpression extends BaseMethod {
-	protected override _requireDependency = true;
 	static override requiredArguments() {
 		return [
 			['string', 'path to node'],

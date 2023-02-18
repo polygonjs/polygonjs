@@ -11,6 +11,7 @@ import {CoreGroup} from '../../../core/geometry/Group';
 
 import {AttribAddMultSopOperation} from '../../operations/sop/AttribAddMult';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {SopType} from '../../poly/registers/nodes/types/Sop';
 const DEFAULT = AttribAddMultSopOperation.DEFAULT_PARAMS;
 class AttribAddMultSopParamsConfig extends NodeParamsConfig {
 	/** @param attribute name */
@@ -27,7 +28,7 @@ const ParamsConfig = new AttribAddMultSopParamsConfig();
 export class AttribAddMultSopNode extends TypedSopNode<AttribAddMultSopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'attribAddMult';
+		return SopType.ATTRIB_ADD_MULT;
 	}
 
 	override initializeNode() {

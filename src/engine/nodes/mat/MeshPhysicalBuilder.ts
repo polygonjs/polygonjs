@@ -79,6 +79,7 @@ import {
 	CustomMaterialMeshParamConfig,
 	materialMeshAssemblerCustomMaterialRequested,
 } from './utils/customMaterials/CustomMaterialMesh';
+import {MatType} from '../../poly/registers/nodes/types/Mat';
 
 interface MeshPhysicalBuilderMaterial extends MeshPhysicalMaterial {
 	vertexShader: string;
@@ -155,7 +156,7 @@ export class MeshPhysicalBuilderMatNode extends TypedBuilderMatNode<
 > {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'meshPhysicalBuilder';
+		return MatType.MESH_PHYSICAL_BUILDER;
 	}
 	public override usedAssembler(): Readonly<AssemblerName.GL_MESH_PHYSICAL> {
 		return AssemblerName.GL_MESH_PHYSICAL;

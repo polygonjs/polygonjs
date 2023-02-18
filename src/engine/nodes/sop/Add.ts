@@ -12,6 +12,7 @@ import {CoreGroup} from '../../../core/geometry/Group';
 
 import {AddSopOperation} from '../../operations/sop/Add';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {SopType} from '../../poly/registers/nodes/types/Sop';
 const DEFAULT = AddSopOperation.DEFAULT_PARAMS;
 class AddSopParamsConfig extends NodeParamsConfig {
 	/** @param toggle to create points */
@@ -34,7 +35,7 @@ const ParamsConfig = new AddSopParamsConfig();
 export class AddSopNode extends TypedSopNode<AddSopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'add';
+		return SopType.ADD;
 	}
 
 	static override displayedInputNames(): string[] {

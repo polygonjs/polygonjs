@@ -33,6 +33,7 @@ import {
 import {FlatShadingController, FlatShadingParamConfig, FlatShadingControllers} from './utils/FlatShadingController';
 import {TexturesFolderParamConfig} from './utils/TexturesFolder';
 import {DefaultFolderParamConfig} from './utils/DefaultFolder';
+import {MatType} from '../../poly/registers/nodes/types/Mat';
 
 interface MeshNormalControllers
 	extends AdvancedCommonControllers,
@@ -57,8 +58,8 @@ const ParamsConfig = new MeshNormalMatParamsConfig();
 
 export class MeshNormalMatNode extends PrimitiveMatNode<MeshNormalMaterial, MeshNormalMatParamsConfig> {
 	override paramsConfig = ParamsConfig;
-	static override type(): 'meshNormal' {
-		return 'meshNormal';
+	static override type(): MatType.MESH_NORMAL {
+		return MatType.MESH_NORMAL;
 	}
 
 	override createMaterial() {

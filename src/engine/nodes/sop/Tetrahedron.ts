@@ -8,6 +8,7 @@ import {TypedSopNode} from './_Base';
 import {TetrahedronBufferGeometry} from '../../../core/geometry/operation/Tetrahedron';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {ObjectType} from '../../../core/geometry/Constant';
+import {SopType} from '../../poly/registers/nodes/types/Sop';
 class TetrahedronSopParamsConfig extends NodeParamsConfig {
 	/** @param radius of the tetrahedron */
 	radius = ParamConfig.FLOAT(1);
@@ -26,7 +27,7 @@ const ParamsConfig = new TetrahedronSopParamsConfig();
 export class TetrahedronSopNode extends TypedSopNode<TetrahedronSopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'tetrahedron';
+		return SopType.TETRAHEDRON;
 	}
 
 	override cook() {

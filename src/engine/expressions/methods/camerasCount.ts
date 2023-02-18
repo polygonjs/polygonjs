@@ -21,7 +21,6 @@ import {MethodDependency} from '../MethodDependency';
 import {GeometryContainer} from '../../containers/Geometry';
 
 export class CamerasCountExpression extends BaseMethod {
-	protected override _requireDependency = true;
 	static override requiredArguments() {
 		return [['string', 'path to node']];
 	}

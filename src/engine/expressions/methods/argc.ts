@@ -17,7 +17,6 @@
 import {BaseMethod} from './_Base';
 
 export class ArgcExpression extends BaseMethod {
-	protected override _requireDependency = true;
 	static override requiredArguments() {
 		return [['string', 'arguments list']];
 	}

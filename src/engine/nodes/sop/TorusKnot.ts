@@ -10,6 +10,7 @@ import {TypedSopNode} from './_Base';
 import {TorusKnotSopOperation} from '../../operations/sop/TorusKnot';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {SopType} from '../../poly/registers/nodes/types/Sop';
 const DEFAULT = TorusKnotSopOperation.DEFAULT_PARAMS;
 class TorusKnotSopParamsConfig extends NodeParamsConfig {
 	/** @param large radius */
@@ -32,7 +33,7 @@ const ParamsConfig = new TorusKnotSopParamsConfig();
 export class TorusKnotSopNode extends TypedSopNode<TorusKnotSopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'torusKnot';
+		return SopType.TORUS_KNOT;
 	}
 	override initializeNode() {}
 

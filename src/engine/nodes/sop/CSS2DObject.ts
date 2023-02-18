@@ -13,6 +13,7 @@ import {CoreGroup} from '../../../core/geometry/Group';
 import {CSS2DObjectSopOperation} from '../../operations/sop/CSS2DObject';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {StringParamLanguage} from '../../params/utils/OptionsController';
+import {SopType} from '../../poly/registers/nodes/types/Sop';
 const DEFAULT = CSS2DObjectSopOperation.DEFAULT_PARAMS;
 class CSS2DObjectSopParamsConfig extends NodeParamsConfig {
 	/** @param toggles on if attributes are copied from the geometry to the html element */
@@ -46,7 +47,7 @@ const ParamsConfig = new CSS2DObjectSopParamsConfig();
 export class CSS2DObjectSopNode extends TypedSopNode<CSS2DObjectSopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'CSS2DObject';
+		return SopType.CSS2D_OBJECT;
 	}
 
 	override initializeNode() {

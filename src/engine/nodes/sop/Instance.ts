@@ -12,6 +12,7 @@ import {CoreGroup} from '../../../core/geometry/Group';
 import {NodeContext} from '../../poly/NodeContext';
 import {InstanceSopOperation} from '../../operations/sop/Instance';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {SopType} from '../../poly/registers/nodes/types/Sop';
 const DEFAULT = InstanceSopOperation.DEFAULT_PARAMS;
 class InstanceSopParamsConfig extends NodeParamsConfig {
 	/** @param attributes to copy to the instance */
@@ -32,7 +33,7 @@ const ParamsConfig = new InstanceSopParamsConfig();
 export class InstanceSopNode extends TypedSopNode<InstanceSopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'instance';
+		return SopType.INSTANCE;
 	}
 
 	static override displayedInputNames(): string[] {

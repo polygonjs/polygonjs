@@ -25,7 +25,6 @@ function isSolverNode(node?: BaseNodeType | null) {
 	return node && node.type() == NetworkNodeType.SOLVER;
 }
 export class SolverIterationExpression extends BaseMethod {
-	protected override _requireDependency = true;
 	static override requiredArguments() {
 		return [];
 	}

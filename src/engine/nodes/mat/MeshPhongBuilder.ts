@@ -74,8 +74,8 @@ import {
 } from './utils/TextureSpecularMapController';
 import {PCSSController, PCSSControllers, PCSSParamConfig} from './utils/PCSSController';
 import {CustomMaterialName, IUniforms} from '../../../core/geometry/Material';
-import {Material} from 'three';
-import {MeshPhongMaterial} from 'three';
+import {Material, MeshPhongMaterial} from 'three';
+import {MatType} from '../../poly/registers/nodes/types/Mat';
 // import {
 // 	CustomMaterialMeshParamConfig,
 // 	materialMeshAssemblerCustomMaterialRequested,
@@ -152,7 +152,7 @@ export class MeshPhongBuilderMatNode extends TypedBuilderMatNode<
 > {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'meshPhongBuilder';
+		return MatType.MESH_PHONG_BUILDER;
 	}
 	public override usedAssembler(): Readonly<AssemblerName.GL_MESH_PHONG> {
 		return AssemblerName.GL_MESH_PHONG;

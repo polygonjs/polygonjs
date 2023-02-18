@@ -7,6 +7,7 @@ import {TypedSopNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {SubdivideSopOperation} from '../../operations/sop/Subdivide';
+import {SopType} from '../../poly/registers/nodes/types/Sop';
 const DEFAULT = SubdivideSopOperation.DEFAULT_PARAMS;
 class SubdivideSopParamsConfig extends NodeParamsConfig {
 	/** @param number of subdivisions */
@@ -22,7 +23,7 @@ const ParamsConfig = new SubdivideSopParamsConfig();
 export class SubdivideSopNode extends TypedSopNode<SubdivideSopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'subdivide';
+		return SopType.SUBDIVIDE;
 	}
 
 	override initializeNode() {

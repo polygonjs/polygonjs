@@ -159,6 +159,7 @@ import {ShadersCollectionController} from './code/utils/ShadersCollectionControl
 import {ThreeToGl} from '../../../core/ThreeToGl';
 import {FunctionGLDefinition} from './utils/GLDefinition';
 import {PolyDictionary} from '../../../types/GlobalTypes';
+import {GlType} from '../../poly/registers/nodes/types/Gl';
 class NoiseGlParamsConfig extends NodeParamsConfig {
 	type = ParamConfig.INTEGER(default_noise_type, {
 		menu: {
@@ -190,7 +191,7 @@ export class NoiseGlNode extends TypedGlNode<NoiseGlParamsConfig> {
 	override paramsConfig = ParamsConfig;
 
 	static override type() {
-		return 'noise';
+		return GlType.NOISE;
 	}
 
 	// public readonly gl_connections_controller: GlConnectionsController = new GlConnectionsController(this);

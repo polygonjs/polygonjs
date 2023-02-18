@@ -6,6 +6,7 @@ import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {RaySopMode, RaySopOperation, RAY_SOP_MODES} from '../../operations/sop/Ray';
+import {SopType} from '../../poly/registers/nodes/types/Sop';
 const DEFAULT = RaySopOperation.DEFAULT_PARAMS;
 
 class RaySopParamsConfig extends NodeParamsConfig {
@@ -33,7 +34,7 @@ const ParamsConfig = new RaySopParamsConfig();
 export class RaySopNode extends TypedSopNode<RaySopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'ray';
+		return SopType.RAY;
 	}
 
 	static override displayedInputNames(): string[] {

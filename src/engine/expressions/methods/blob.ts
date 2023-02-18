@@ -24,8 +24,6 @@ async function blobFromUrl(url: string) {
 }
 
 export class BlobExpression extends BaseMethod {
-	protected override _requireDependency = true;
-
 	static override requiredArguments() {
 		return [['string', 'url']];
 	}

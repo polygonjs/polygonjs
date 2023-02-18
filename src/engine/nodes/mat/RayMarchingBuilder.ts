@@ -25,6 +25,7 @@ import {
 	CustomMaterialRayMarchingParamConfig,
 	materialRayMarchingAssemblerCustomMaterialRequested,
 } from './utils/customMaterials/CustomMaterialRayMarching';
+import {MatType} from '../../poly/registers/nodes/types/Mat';
 
 export function AdvancedCommonParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
@@ -62,7 +63,7 @@ export class RayMarchingBuilderMatNode extends TypedBuilderMatNode<
 > {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'rayMarchingBuilder';
+		return MatType.RAY_MARCHING_BUILDER;
 	}
 	public override usedAssembler(): Readonly<AssemblerName.GL_RAYMARCHING> {
 		return AssemblerName.GL_RAYMARCHING;

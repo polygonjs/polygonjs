@@ -9,6 +9,7 @@ import {CurveFromPointsSopOperation} from '../../operations/sop/CurveFromPoints'
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {SplineCurveType, SPLINE_CURVE_TYPES} from '../../../core/geometry/Curve';
+import {SopType} from '../../poly/registers/nodes/types/Sop';
 const DEFAULT = CurveFromPointsSopOperation.DEFAULT_PARAMS;
 class CurveFromPointsSopParamsConfig extends NodeParamsConfig {
 	/** @param points Count */
@@ -44,7 +45,7 @@ const ParamsConfig = new CurveFromPointsSopParamsConfig();
 export class CurveFromPointsSopNode extends TypedSopNode<CurveFromPointsSopParamsConfig> {
 	override readonly paramsConfig = ParamsConfig;
 	static override type() {
-		return 'curveFromPoints';
+		return SopType.CURVE_FROM_POINTS;
 	}
 
 	protected override initializeNode() {

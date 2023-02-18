@@ -7,6 +7,7 @@ import {CoreGroup} from '../../../core/geometry/Group';
 import {RoundedBoxSopOperation} from '../../operations/sop/RoundedBox';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {SopType} from '../../poly/registers/nodes/types/Sop';
 const DEFAULT = RoundedBoxSopOperation.DEFAULT_PARAMS;
 class RoundedBoxSopParamsConfig extends NodeParamsConfig {
 	/** @param size of the box */
@@ -31,7 +32,7 @@ const ParamsConfig = new RoundedBoxSopParamsConfig();
 export class RoundedBoxSopNode extends TypedSopNode<RoundedBoxSopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'roundedBox';
+		return SopType.ROUNDED_BOX;
 	}
 
 	static override displayedInputNames(): string[] {

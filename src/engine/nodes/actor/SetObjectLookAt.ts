@@ -15,6 +15,7 @@ import {ParamType} from '../../poly/ParamType';
 import {Quaternion} from 'three';
 import {isBooleanTrue} from '../../../core/Type';
 import {CoreLookAt} from '../../../core/LookAt';
+import {ActorType} from '../../poly/registers/nodes/types/Actor';
 
 const CONNECTION_OPTIONS = ACTOR_CONNECTION_POINT_IN_NODE_DEF;
 
@@ -37,7 +38,7 @@ const q2 = new Quaternion();
 export class SetObjectLookAtActorNode extends TypedActorNode<SetObjectLookAtActorParamsConfig> {
 	override readonly paramsConfig = ParamsConfig;
 	static override type() {
-		return 'setObjectLookAt';
+		return ActorType.SET_OBJECT_LOOK_AT;
 	}
 
 	override initializeNode() {

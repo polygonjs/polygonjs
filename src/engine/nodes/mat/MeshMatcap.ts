@@ -47,6 +47,7 @@ import {FogController, FogParamConfig, FogControllers} from './utils/FogControll
 import {DefaultFolderParamConfig} from './utils/DefaultFolder';
 import {TexturesFolderParamConfig} from './utils/TexturesFolder';
 import {AdvancedFolderParamConfig} from './utils/AdvancedFolder';
+import {MatType} from '../../poly/registers/nodes/types/Mat';
 interface MeshMatCapControllers
 	extends AdvancedCommonControllers,
 		ColorsControllers,
@@ -88,8 +89,8 @@ const ParamsConfig = new MeshMatCapMatParamsConfig();
 
 export class MeshMatcapMatNode extends PrimitiveMatNode<MeshMatcapMaterial, MeshMatCapMatParamsConfig> {
 	override paramsConfig = ParamsConfig;
-	static override type(): 'meshMatcap' {
-		return 'meshMatcap';
+	static override type(): MatType.MESH_MATCAP {
+		return MatType.MESH_MATCAP;
 	}
 
 	override createMaterial() {

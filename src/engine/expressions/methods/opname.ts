@@ -20,7 +20,6 @@ import {BaseNodeType} from '../../nodes/_Base';
 import {MethodDependency} from '../MethodDependency';
 
 export class OpnameExpression extends BaseMethod {
-	protected override _requireDependency = true;
 	static override requiredArguments() {
 		return [['string', 'path to node']];
 	}

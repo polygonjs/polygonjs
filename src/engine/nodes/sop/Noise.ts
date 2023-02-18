@@ -44,6 +44,7 @@ import {CoreType} from '../../../core/Type';
 import {AttribValue, NumericAttribValue} from '../../../types/GlobalTypes';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {AttribType} from '../../../core/geometry/Constant';
+import {SopType} from '../../poly/registers/nodes/types/Sop';
 class NoiseSopParamsConfig extends NodeParamsConfig {
 	/** @param noise amplitude */
 	amplitude = ParamConfig.FLOAT(1);
@@ -101,7 +102,7 @@ const normal = new Vector3();
 export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'noise';
+		return SopType.NOISE;
 	}
 
 	private _simplexBySeed: Map<number, SimplexNoise> = new Map();

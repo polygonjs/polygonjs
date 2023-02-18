@@ -13,6 +13,7 @@ import {
 } from '../utils/io/connections/Actor';
 import {ParamType} from '../../poly/ParamType';
 import {setPhysicsRBDPosition} from '../../../core/physics/PhysicsRBD';
+import {ActorType} from '../../poly/registers/nodes/types/Actor';
 const CONNECTION_OPTIONS = ACTOR_CONNECTION_POINT_IN_NODE_DEF;
 
 class SetPhysicsRBDPositionActorParamsConfig extends NodeParamsConfig {
@@ -26,7 +27,7 @@ const ParamsConfig = new SetPhysicsRBDPositionActorParamsConfig();
 export class SetPhysicsRBDPositionActorNode extends TypedActorNode<SetPhysicsRBDPositionActorParamsConfig> {
 	override readonly paramsConfig = ParamsConfig;
 	static override type() {
-		return 'setPhysicsRBDPosition';
+		return ActorType.SET_PHYSICS_RBD_POSITION;
 	}
 
 	override initializeNode() {

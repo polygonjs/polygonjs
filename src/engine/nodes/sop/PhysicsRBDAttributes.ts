@@ -30,6 +30,7 @@ import {Object3D, Vector3} from 'three';
 import {Vector3Param} from '../../params/Vector3';
 import {isBooleanTrue} from '../../../core/Type';
 import {BooleanParam} from '../../params/Boolean';
+import {SopType} from '../../poly/registers/nodes/types/Sop';
 const DEFAULT = PhysicsRBDAttributesSopOperation.DEFAULT_PARAMS;
 
 type Vector3Component = 'x' | 'y' | 'z';
@@ -205,7 +206,7 @@ const ParamsConfig = new PhysicsRBDAttributesSopParamsConfig();
 export class PhysicsRBDAttributesSopNode extends TypedSopNode<PhysicsRBDAttributesSopParamsConfig> {
 	override readonly paramsConfig = ParamsConfig;
 	static override type() {
-		return 'physicsRBDAttributes';
+		return SopType.PHYSICS_RBD_ATTRIBUTES;
 	}
 
 	static override displayedInputNames(): string[] {

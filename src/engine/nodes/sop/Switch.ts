@@ -9,6 +9,7 @@ import {TypedSopNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {BaseNodeType} from '../_Base';
+import {SopType} from '../../poly/registers/nodes/types/Sop';
 
 const INPUT_NAME = 'geometry to switch to';
 class SwitchSopParamsConfig extends NodeParamsConfig {
@@ -26,7 +27,7 @@ const ParamsConfig = new SwitchSopParamsConfig();
 export class SwitchSopNode extends TypedSopNode<SwitchSopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'switch';
+		return SopType.SWITCH;
 	}
 
 	static override displayedInputNames(): string[] {

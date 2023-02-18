@@ -33,7 +33,6 @@ function isCopyNode(node?: BaseNodeType | null) {
 	return node && node.type() == SopType.COPY && node.type() == AnimType.COPY;
 }
 export class CopyExpression extends BaseMethod {
-	protected override _requireDependency = true;
 	static override requiredArguments() {
 		return [
 			['string', 'path to copy'],

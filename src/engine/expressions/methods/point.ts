@@ -22,7 +22,6 @@ import {GeometryContainer} from '../../containers/Geometry';
 
 const EXPECTED_ARGS_COUNT = 3;
 export class PointExpression extends BaseMethod {
-	protected override _requireDependency = true;
 	static override requiredArguments() {
 		return [
 			['string', 'path to node'],

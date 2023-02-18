@@ -23,8 +23,6 @@ import {MethodDependency} from '../MethodDependency';
 import {BaseParamType} from '../../params/_Base';
 
 export class ChsopExpression extends BaseMethod {
-	protected override _requireDependency = true;
-
 	static override requiredArguments() {
 		return [['string', 'path to param']];
 	}

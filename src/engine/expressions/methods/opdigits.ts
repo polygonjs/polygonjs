@@ -21,7 +21,6 @@ import {MethodDependency} from '../MethodDependency';
 import {CoreString} from '../../../core/String';
 
 export class OpdigitsExpression extends BaseMethod {
-	protected override _requireDependency = true;
 	static override requiredArguments() {
 		return [['string', 'path to node']];
 	}

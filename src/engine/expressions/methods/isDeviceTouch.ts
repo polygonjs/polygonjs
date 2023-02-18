@@ -16,8 +16,6 @@ import {BaseMethod} from './_Base';
 import {CoreUserAgent} from '../../../core/UserAgent';
 
 export class isDeviceTouchExpression extends BaseMethod {
-	protected override _requireDependency = true;
-
 	static override requiredArguments() {
 		return [];
 	}

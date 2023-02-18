@@ -8,6 +8,7 @@ import {TimelineBuilder} from '../../../core/animation/TimelineBuilder';
 import {AnimNodeEasing, EASINGS, InOutMode, IN_OUT_MODES} from '../../../core/animation/Constant';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {AnimType} from '../../poly/registers/nodes/types/Anim';
 class EasingAnimParamsConfig extends NodeParamsConfig {
 	/** @param name of easing */
 	name = ParamConfig.INTEGER(EASINGS.indexOf(AnimNodeEasing.POWER4), {
@@ -31,7 +32,7 @@ const ParamsConfig = new EasingAnimParamsConfig();
 export class EasingAnimNode extends TypedAnimNode<EasingAnimParamsConfig> {
 	override readonly paramsConfig = ParamsConfig;
 	static override type() {
-		return 'easing';
+		return AnimType.EASING;
 	}
 
 	override initializeNode() {

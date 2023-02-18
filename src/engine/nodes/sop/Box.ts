@@ -11,6 +11,7 @@ import {CoreGroup} from '../../../core/geometry/Group';
 import {BoxSopOperation} from '../../operations/sop/Box';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {SopType} from '../../poly/registers/nodes/types/Sop';
 const DEFAULT = BoxSopOperation.DEFAULT_PARAMS;
 class BoxSopParamsConfig extends NodeParamsConfig {
 	/** @param size of the box */
@@ -30,7 +31,7 @@ const ParamsConfig = new BoxSopParamsConfig();
 export class BoxSopNode extends TypedSopNode<BoxSopParamsConfig> {
 	override readonly paramsConfig = ParamsConfig;
 	static override type() {
-		return 'box';
+		return SopType.BOX;
 	}
 
 	static override displayedInputNames(): string[] {

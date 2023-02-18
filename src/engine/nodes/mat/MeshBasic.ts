@@ -45,6 +45,7 @@ import {WireframeController, WireframeParamConfig, WireframeControllers} from '.
 import {DefaultFolderParamConfig} from './utils/DefaultFolder';
 import {TexturesFolderParamConfig} from './utils/TexturesFolder';
 import {AdvancedFolderParamConfig} from './utils/AdvancedFolder';
+import {MatType} from '../../poly/registers/nodes/types/Mat';
 
 interface MeshBasicControllers
 	extends AdvancedCommonControllers,
@@ -83,8 +84,8 @@ const ParamsConfig = new MeshBasicMatParamsConfig();
 
 export class MeshBasicMatNode extends PrimitiveMatNode<MeshBasicMaterialWithLightMap, MeshBasicMatParamsConfig> {
 	override paramsConfig = ParamsConfig;
-	static override type(): 'meshBasic' {
-		return 'meshBasic';
+	static override type(): MatType.MESH_BASIC {
+		return MatType.MESH_BASIC;
 	}
 
 	override createMaterial() {

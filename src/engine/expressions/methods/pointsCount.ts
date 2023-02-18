@@ -21,7 +21,6 @@ import {GeometryContainer} from '../../containers/Geometry';
 // import {CoreGroup} from '../../../core/Geometry/Group';
 
 export class PointsCountExpression extends BaseMethod {
-	protected override _requireDependency = true;
 	// npoints(0)
 	// npoints('../REF_bbox')
 	static override requiredArguments() {

@@ -50,6 +50,7 @@ import {
 	materialMeshAssemblerCustomMaterialRequested,
 } from './utils/customMaterials/CustomMaterialMesh';
 import {GlAssemblerController} from '../gl/code/Controller';
+import {MatType} from '../../poly/registers/nodes/types/Mat';
 interface MeshBasicBuilderControllers
 	extends AdvancedCommonControllers,
 		UniformFogControllers,
@@ -102,7 +103,7 @@ export class MeshBasicBuilderMatNode extends TypedBuilderMatNode<
 > {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'meshBasicBuilder';
+		return MatType.MESH_BASIC_BUILDER;
 	}
 	public override usedAssembler(): Readonly<AssemblerName.GL_MESH_BASIC> {
 		return AssemblerName.GL_MESH_BASIC;

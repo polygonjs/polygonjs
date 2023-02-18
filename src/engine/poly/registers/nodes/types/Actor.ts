@@ -24,5 +24,7 @@ export enum ActorType {
 	ON_WEBXR_CONTROLLER_EVENT = 'onWebXRControllerEvent',
 	RAY_FROM_CURSOR = 'rayFromCursor',
 	RAY_FROM_CAMERA = 'rayFromCamera',
+	SET_OBJECT_LOOK_AT = 'setObjectLookAt',
+	SET_PHYSICS_RBD_POSITION = 'setPhysicsRBDPosition',
 	// SET_OBJECT_HOVERED_STATE = 'setObjectHoveredState',
 }

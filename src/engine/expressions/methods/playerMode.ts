@@ -16,8 +16,6 @@ import {BaseMethod} from './_Base';
 import {Poly} from '../../Poly';
 
 export class PlayerModeExpression extends BaseMethod {
-	protected override _requireDependency = true;
-
 	static override requiredArguments() {
 		return [];
 	}

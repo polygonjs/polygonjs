@@ -12,6 +12,7 @@ import {CoreGroup} from '../../../core/geometry/Group';
 import {MaterialSopOperation} from '../../operations/sop/Material';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {SopType} from '../../poly/registers/nodes/types/Sop';
 const DEFAULT = MaterialSopOperation.DEFAULT_PARAMS;
 class MaterialSopParamsConfig extends NodeParamsConfig {
 	/** @param group to assign the material to */
@@ -54,7 +55,7 @@ const ParamsConfig = new MaterialSopParamsConfig();
 export class MaterialSopNode extends TypedSopNode<MaterialSopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'material';
+		return SopType.MATERIAL;
 	}
 
 	static override displayedInputNames(): string[] {

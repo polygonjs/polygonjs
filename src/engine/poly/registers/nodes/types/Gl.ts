@@ -1,6 +1,7 @@
 export enum GlType {
 	ATTRIBUTE = 'attribute',
 	GLOBALS = 'globals',
+	NOISE = 'noise',
 	OUTPUT = 'output',
 	PARAM = 'param',
 	SDF_CONTEXT = 'SDFContext',

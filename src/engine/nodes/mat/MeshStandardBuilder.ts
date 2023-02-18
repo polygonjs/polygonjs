@@ -77,6 +77,7 @@ import {
 	CustomMaterialMeshParamConfig,
 	materialMeshAssemblerCustomMaterialRequested,
 } from './utils/customMaterials/CustomMaterialMesh';
+import {MatType} from '../../poly/registers/nodes/types/Mat';
 interface MeshStandardBuilderControllers
 	extends AdvancedCommonControllers,
 		PCSSControllers,
@@ -151,7 +152,7 @@ export class MeshStandardBuilderMatNode extends TypedBuilderMatNode<
 > {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'meshStandardBuilder';
+		return MatType.MESH_STANDARD_BUILDER;
 	}
 	public override usedAssembler(): Readonly<AssemblerName.GL_MESH_STANDARD> {
 		return AssemblerName.GL_MESH_STANDARD;

@@ -26,6 +26,7 @@ import {DefaultFolderParamConfig} from './utils/DefaultFolder';
 import {TexturesFolderParamConfig} from './utils/TexturesFolder';
 import {AdvancedFolderParamConfig} from './utils/AdvancedFolder';
 import {PointsSizeController, PointsParamConfig, PointsSizeControllers} from './utils/PointsSizeController';
+import {MatType} from '../../poly/registers/nodes/types/Mat';
 interface PointsControllers
 	extends AdvancedCommonControllers,
 		ColorsControllers,
@@ -53,8 +54,8 @@ const ParamsConfig = new PointsMatParamsConfig();
 
 export class PointsMatNode extends PrimitiveMatNode<PointsMaterial, PointsMatParamsConfig> {
 	override paramsConfig = ParamsConfig;
-	static override type(): 'points' {
-		return 'points';
+	static override type(): MatType.POINTS {
+		return MatType.POINTS;
 	}
 
 	override createMaterial() {

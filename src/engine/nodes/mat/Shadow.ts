@@ -14,6 +14,7 @@ import {
 	AdvancedCommonControllers,
 	AdvancedCommonParamConfig,
 } from './utils/AdvancedCommonController';
+import {MatType} from '../../poly/registers/nodes/types/Mat';
 
 interface ShadowControllers extends AdvancedCommonControllers, ColorsControllers {}
 
@@ -23,7 +24,7 @@ const ParamsConfig = new ShadowMatParamsConfig();
 export class ShadowMatNode extends PrimitiveMatNode<ShadowMaterial, ShadowMatParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'shadow';
+		return MatType.SHADOW;
 	}
 
 	override createMaterial() {

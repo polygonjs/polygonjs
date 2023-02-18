@@ -12,6 +12,7 @@ import {
 	AdvancedCommonParamConfig,
 } from './utils/AdvancedCommonController';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {MatType} from '../../poly/registers/nodes/types/Mat';
 
 interface LineBasicBuilderControllers extends AdvancedCommonControllers {}
 class LineBasicMatParamsConfig extends AdvancedCommonParamConfig(NodeParamsConfig) {
@@ -27,8 +28,8 @@ const ParamsConfig = new LineBasicMatParamsConfig();
 
 export class LineBasicMatNode extends PrimitiveMatNode<LineBasicMaterial, LineBasicMatParamsConfig> {
 	override paramsConfig = ParamsConfig;
-	static override type(): 'lineBasic' {
-		return 'lineBasic';
+	static override type(): MatType.LINE_BASIC {
+		return MatType.LINE_BASIC;
 	}
 
 	override createMaterial() {
