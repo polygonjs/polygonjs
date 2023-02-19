@@ -149,10 +149,7 @@ export class PhysicsPlayerUpdateActorNode extends TypedActorNode<PhysicsPlayerUp
 		this._playerInputData.jump =
 			this._inputValue<ActorConnectionPointType.BOOLEAN>(CorePlayerPhysicsInput.JUMP, context) || false;
 
-		// apply changes
-		player.setComputeInputData(this._playerComputeInputData);
-		player.setInputData(this._playerInputData);
-		player.update(this.scene().timeController.delta());
+		player.update(this._playerComputeInputData, this._playerInputData, this.scene().timeController.delta());
 
 		this.runTrigger(context);
 	}

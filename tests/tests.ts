@@ -501,6 +501,7 @@ import './engine/nodes/sop/Subdivide';
 import './engine/nodes/sop/Subnet';
 import './engine/nodes/sop/FileSVG';
 import './engine/nodes/sop/Switch';
+import './engine/nodes/sop/Tangent';
 import './engine/nodes/sop/Text';
 import './engine/nodes/sop/TextureCopy';
 import './engine/nodes/sop/TextureProperties';

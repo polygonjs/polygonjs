@@ -160,6 +160,7 @@ import {SubnetSopNode} from '../../../nodes/sop/Subnet';
 import {SubnetInputSopNode} from '../../../nodes/sop/SubnetInput';
 import {SubnetOutputSopNode} from '../../../nodes/sop/SubnetOutput';
 import {SwitchSopNode} from '../../../nodes/sop/Switch';
+import {TangentSopNode} from '../../../nodes/sop/Tangent';
 import {TetrahedronSopNode} from '../../../nodes/sop/Tetrahedron';
 import {TextSopNode} from '../../../nodes/sop/Text';
 import {TextureCopySopNode} from '../../../nodes/sop/TextureCopy';
@@ -347,6 +348,7 @@ export interface GeoNodeChildrenMap {
 	subnetInput: SubnetInputSopNode;
 	subnetOutput: SubnetOutputSopNode;
 	switch: SwitchSopNode;
+	tangent: TangentSopNode;
 	tetrahedron: TetrahedronSopNode;
 	text: TextSopNode;
 	textureCopy: TextureCopySopNode;
@@ -476,6 +478,7 @@ import {SortSopOperation} from '../../../operations/sop/Sort';
 import {SphereSopOperation} from '../../../operations/sop/Sphere';
 import {SpotLightSopOperation} from '../../../operations/sop/SpotLight';
 import {SubdivideSopOperation} from '../../../operations/sop/Subdivide';
+import {TangentSopOperation} from '../../../operations/sop/Tangent';
 import {TextureCopySopOperation} from '../../../operations/sop/TextureCopy';
 import {TexturePropertiesSopOperation} from '../../../operations/sop/TextureProperties';
 import {TorusSopOperation} from '../../../operations/sop/Torus';
@@ -586,6 +589,7 @@ export class SopRegister {
 		poly.registerOperation(SphereSopOperation);
 		poly.registerOperation(SpotLightSopOperation);
 		poly.registerOperation(SubdivideSopOperation);
+		poly.registerOperation(TangentSopOperation);
 		poly.registerOperation(TextureCopySopOperation);
 		poly.registerOperation(TexturePropertiesSopOperation);
 		poly.registerOperation(TorusSopOperation);
@@ -768,6 +772,7 @@ export class SopRegister {
 		}*/
 		);
 		poly.registerNode(SwitchSopNode, CATEGORY_SOP.FLOW);
+		poly.registerNode(TangentSopNode, CATEGORY_SOP.ATTRIBUTE);
 		poly.registerNode(TetrahedronSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.registerNode(TextSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.registerNode(TextureCopySopNode, CATEGORY_SOP.MODIFIER);

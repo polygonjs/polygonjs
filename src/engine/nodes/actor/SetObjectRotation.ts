@@ -6,8 +6,8 @@
 
 import {ActorNodeTriggerContext, TRIGGER_CONNECTION_NAME, TypedActorNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {Quaternion} from 'three';
-import {Euler} from 'three';
+import {Quaternion, Euler} from 'three';
+import {ROTATION_ORDERS, RotationOrder} from '../../../core/Transform';
 import {isBooleanTrue} from '../../../core/Type';
 import {
 	ActorConnectionPoint,
@@ -19,6 +19,14 @@ import {ParamType} from '../../poly/ParamType';
 const CONNECTION_OPTIONS = ACTOR_CONNECTION_POINT_IN_NODE_DEF;
 
 class SetObjectRotationActorParamsConfig extends NodeParamsConfig {
+	/** @param rotation order */
+	rotationOrder = ParamConfig.INTEGER(ROTATION_ORDERS.indexOf(RotationOrder.XYZ), {
+		menu: {
+			entries: ROTATION_ORDERS.map((order, v) => {
+				return {name: order, value: v};
+			}),
+		},
+	});
 	/** @param rotation */
 	rotation = ParamConfig.VECTOR3([0, 0, 0]);
 	/** @param lerp factor */
@@ -38,6 +46,7 @@ export class SetObjectRotationActorNode extends TypedActorNode<SetObjectRotation
 	}
 
 	override initializeNode() {
+		this.io.connection_points.spare_params.setInputlessParamNames(['rotationOrder']);
 		this.io.inputs.setNamedInputConnectionPoints([
 			new ActorConnectionPoint(TRIGGER_CONNECTION_NAME, ActorConnectionPointType.TRIGGER, CONNECTION_OPTIONS),
 			new ActorConnectionPoint(
@@ -59,6 +68,7 @@ export class SetObjectRotationActorNode extends TypedActorNode<SetObjectRotation
 		const rotation = this._inputValueFromParam<ParamType.VECTOR3>(this.p.rotation, context);
 		const lerp = this._inputValueFromParam<ParamType.FLOAT>(this.p.lerp, context);
 		const updateMatrix = this._inputValueFromParam<ParamType.BOOLEAN>(this.p.updateMatrix, context);
+		tmpEuler.order = ROTATION_ORDERS[this.pv.rotationOrder];
 		tmpEuler.set(rotation.x, rotation.y, rotation.z);
 
 		if (lerp >= 1) {

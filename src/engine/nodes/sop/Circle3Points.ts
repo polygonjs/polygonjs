@@ -78,9 +78,16 @@ export class Circle3PointsSopNode extends TypedSopNode<Circle3PointsSopParamsCon
 		this.io.inputs.initInputsClonedState([InputCloneMode.NEVER]);
 	}
 
-	override cook(input_contents: CoreGroup[]) {
-		const core_group = input_contents[0];
-		const points = core_group.points();
+	setPointsCountMode(mode: PointsCountMode) {
+		this.p.pointsCountMode.set(POINTS_COUNT_MODE.indexOf(mode));
+	}
+	pointsCountMode() {
+		return POINTS_COUNT_MODE[this.pv.pointsCountMode];
+	}
+
+	override cook(inputCoreGroups: CoreGroup[]) {
+		const coreGroup = inputCoreGroups[0];
+		const points = coreGroup.points();
 		if (points.length < 3) {
 			this.states.error.set(`only ${points.length} points found, when 3 are required`);
 		} else {

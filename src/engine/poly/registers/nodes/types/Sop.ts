@@ -27,6 +27,7 @@ export enum SopType {
 	SPHERE = 'sphere',
 	SUBDIVIDE = 'subdivide',
 	SWITCH = 'switch',
+	TANGENT = 'tangent',
 	TETRAHEDRON = 'tetrahedron',
 	TEXT = 'text',
 	TORUS = 'torus',
