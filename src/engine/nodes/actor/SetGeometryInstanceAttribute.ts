@@ -41,10 +41,10 @@ const INPUT_NAMES = [
 	SetGeometryInstanceAttributeInputName.lerp,
 	SetGeometryInstanceAttributeInputName.attributeNeedsUpdate,
 ];
-// const DefaultValues: Record<string, number | boolean> = {
-// 	[SetGeometryInstancePositionsInputName.lerp]: 1,
-// 	[SetGeometryInstancePositionsInputName.attributeNeedsUpdate]: true,
-// };
+const DefaultValues: Record<string, number | boolean> = {
+	[SetGeometryInstanceAttributeInputName.lerp]: 1,
+	[SetGeometryInstanceAttributeInputName.attributeNeedsUpdate]: true,
+};
 const CONNECTION_TYPE_BY_ATTRIB_SIZE: ActorConnectionPointType[] = [
 	ActorConnectionPointType.FLOAT_ARRAY,
 	ActorConnectionPointType.VECTOR2_ARRAY,
@@ -98,9 +98,9 @@ export class SetGeometryInstanceAttributeActorNode extends TypedActorNode<SetGeo
 		const type = CONNECTION_TYPE_BY_ATTRIB_SIZE[this.pv.size - 1] || ActorConnectionPointType.FLOAT;
 		return [type, ActorConnectionPointType.FLOAT, ActorConnectionPointType.BOOLEAN];
 	}
-	// override paramDefaultValue(name: string) {
-	// 	return DefaultValues[name];
-	// }
+	override paramDefaultValue(name: string) {
+		return DefaultValues[name];
+	}
 	// expectedInputTypes() {
 	// 	return [
 	// 		ActorConnectionPointType.TRIGGER,
