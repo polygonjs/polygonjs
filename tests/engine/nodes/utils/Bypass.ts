@@ -326,3 +326,34 @@ QUnit.test('bypass: using an expression referencing a bypassed node that has not
 		assert.deepEqual((points[2].attribValue('up') as Vector3).toArray(), [0, 1, 0]);
 	});
 });
+
+QUnit.test('bypass a node which cooks async errors gracefully if inputs are errored', async (assert) => {
+	const geo1 = window.geo1;
+	const box2 = geo1.createNode('box');
+	box2.flags.display.set(true);
+
+	const box1 = geo1.createNode('box');
+	const transform1 = geo1.createNode('transform');
+	const color1 = geo1.createNode('color');
+
+	transform1.setInput(0, box1);
+	color1.setInput(0, transform1);
+	transform1.flags.bypass.set(true);
+
+	async function getWidth() {
+		const container = await color1.compute();
+		const bbox = container.coreContent()?.boundingBox();
+		const size = new Vector3(-1, -1, -1);
+		if (bbox) {
+			bbox.getSize(size);
+		}
+		return size.x;
+	}
+	assert.equal(await getWidth(), 1);
+	box1.p.size.set(0.5);
+	assert.equal(await getWidth(), 0.5);
+	box1.p.size.set('1a');
+	assert.equal(await getWidth(), -1);
+	box1.p.size.set(1);
+	assert.equal(await getWidth(), 1);
+});

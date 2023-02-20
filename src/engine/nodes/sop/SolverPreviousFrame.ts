@@ -19,7 +19,7 @@ export class SolverPreviousFrameSopNode extends TypedSopNode<SolverPreviousFrame
 		return 'solverPreviousFrame';
 	}
 
-	override async cook() {
+	override cook() {
 		const solverNode = this._solverNode();
 		if (!solverNode) {
 			this.states.error.set(`subnet input has no parent`);

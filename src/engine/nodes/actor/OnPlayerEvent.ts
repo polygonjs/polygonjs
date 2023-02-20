@@ -105,6 +105,10 @@ export class OnPlayerEventActorNode extends BaseUserInputActorNode<BaseOnKeyEven
 			return;
 		}
 
+		// console.log(
+		// 	events.map((e) => e.type),
+		// 	events.map((e) => e.code)
+		// );
 		for (let event of events) {
 			if (event.ctrlKey) {
 				// if ctrl is pressed, we do not register any event.
@@ -119,6 +123,7 @@ export class OnPlayerEventActorNode extends BaseUserInputActorNode<BaseOnKeyEven
 			if (callback) {
 				callback();
 				if (isBooleanTrue(this.pv.stopPropagation)) {
+					event.stopImmediatePropagation();
 					event.stopPropagation();
 					event.preventDefault();
 				}

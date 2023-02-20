@@ -43,7 +43,16 @@ export class NodeCookController<NC extends NodeContext> {
 		} else {
 			try {
 				this._performanceController.recordCookStart();
-				this.node.cook(inputContents || []);
+				// make sure we treat rejected promise
+				// if cook is async
+				const promise = this.node.cook(inputContents || []);
+				if (promise != null) {
+					promise.catch((e: any) => {
+						this.node.states.error.set(`node inputs error: '${e}'.`);
+						Poly.warn(e);
+						this.endCook();
+					});
+				}
 			} catch (e) {
 				this.node.states.error.set(`node internal error: '${e}'.`);
 				Poly.warn(e);

@@ -37,7 +37,6 @@ export class TypedContainerController<NC extends NodeContext> {
 			if (inputNode) {
 				return inputNode.containerController.containerUnlessBypassed();
 			} else {
-				console.log('ok');
 				return this._createContainerWithContent();
 			}
 		} else {

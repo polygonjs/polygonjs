@@ -26,7 +26,7 @@ export function currentHeight(object: Object3D, collider: Collider) {
 	if (_currentHeight == null) {
 		const shape = collider.shape as Capsule;
 		_currentHeight = shape.halfHeight * 2;
-		CoreObject.setAttribute(object, attributeRadiusLive, _currentHeight);
+		CoreObject.setAttribute(object, attributeHeightLive, _currentHeight);
 	}
 	return _currentHeight;
 }
@@ -75,8 +75,7 @@ export function getPhysicsRBDCapsuleRadius(object: Object3D): number | undefined
 
 export function setPhysicsRBDCapsuleProperty(
 	object: Object3D,
-	targetHeight: number,
-	targetRadius: number,
+	targetScale: number,
 	lerp: number,
 	updateObjectMatrix: boolean
 ) {
@@ -98,23 +97,26 @@ export function setPhysicsRBDCapsuleProperty(
 		if (!collider) {
 			return;
 		}
+		// let targetHeight = targetScale;
+		let targetRadius = targetScale;
+
 		if (lerp < 1) {
-			targetHeight = lerp * targetHeight + (1 - lerp) * currentHeight(object, collider);
+			// targetHeight = lerp * targetHeight + (1 - lerp) * currentHeight(object, collider);
 			targetRadius = lerp * targetRadius + (1 - lerp) * currentRadius(object, collider);
 		}
+		const radiusRatio = targetRadius / originalRadiusAttrib;
+		const targetHeight = 0.5 * radiusRatio * originalHeightAttrib;
 		// update radius on shape and object
-		collider.setHalfHeight(targetHeight * 0.5);
+		collider.setHalfHeight(targetHeight);
 		collider.setRadius(targetRadius);
 		CoreObject.setAttribute(object, attributeHeightLive, targetHeight);
 		CoreObject.setAttribute(object, attributeRadiusLive, targetRadius);
 		// update scale
 		// TODO: we can't apply a simple scale to a capsule
 		// it could possibly work if the capsule was 3 objects (1 tube + 2 half spheres)
-		object.scale.set(
-			targetRadius / originalRadiusAttrib,
-			targetRadius / originalRadiusAttrib,
-			targetHeight / originalHeightAttrib
-		);
+
+		// const heightRatio = targetHeight / originalHeightAttrib; // should be on y
+		object.scale.set(radiusRatio, radiusRatio, radiusRatio);
 		if (updateObjectMatrix) {
 			object.updateMatrix();
 		}

@@ -26,7 +26,7 @@ export class TrackingLandmarksFaceAttributesSopNode extends TypedSopNode<Trackin
 		this.io.inputs.initInputsClonedState(InputCloneMode.FROM_NODE);
 	}
 
-	override async cook(inputCoreGroups: CoreGroup[]) {
+	override cook(inputCoreGroups: CoreGroup[]) {
 		const inputCoreGroup = inputCoreGroups[0];
 
 		const objects = inputCoreGroup.objects();

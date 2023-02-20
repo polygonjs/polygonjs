@@ -34,8 +34,7 @@ export class FacetSopNode extends TypedSopNode<FacetSopParamsConfig> {
 		this.io.inputs.initInputsClonedState(InputCloneMode.FROM_NODE);
 	}
 
-	override async cook(inputCoreGroups: CoreGroup[]) {
-		console.log('facet', this.pv.angle);
+	override cook(inputCoreGroups: CoreGroup[]) {
 		const inputCoreGroup = inputCoreGroups[0];
 
 		const objects = inputCoreGroup.objectsWithGeo();

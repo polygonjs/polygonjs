@@ -42,7 +42,7 @@ export class MaterialPropertiesSopOperation extends BaseSopOperation {
 		return 'materialProperties';
 	}
 
-	override async cook(inputCoreGroups: CoreGroup[], params: MaterialPropertiesSopParams) {
+	override cook(inputCoreGroups: CoreGroup[], params: MaterialPropertiesSopParams) {
 		const coreGroup = inputCoreGroups[0];
 
 		const selectedObjects = CoreMask.filterObjects(coreGroup, params);
@@ -58,7 +58,7 @@ export class MaterialPropertiesSopOperation extends BaseSopOperation {
 			this._updateMaterial(material, params);
 		}
 	}
-	private async _updateMaterial(material: Material, params: MaterialPropertiesSopParams) {
+	private _updateMaterial(material: Material, params: MaterialPropertiesSopParams) {
 		if (isBooleanTrue(params.tside)) {
 			updateMaterialSideWithShadow(material, params);
 		}

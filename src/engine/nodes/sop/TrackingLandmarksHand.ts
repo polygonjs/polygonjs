@@ -24,7 +24,7 @@ export class TrackingLandmarksHandSopNode extends TypedSopNode<TrackingLandmarks
 		return 'trackingLandmarksHand';
 	}
 
-	override async cook() {
+	override cook() {
 		const geometry = new BufferGeometry();
 
 		// add position

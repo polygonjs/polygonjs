@@ -127,7 +127,7 @@ export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
 		this.p.operation.set(OPERATIONS.indexOf(operation));
 	}
 
-	override async cook(input_contents: CoreGroup[]) {
+	override cook(input_contents: CoreGroup[]) {
 		const coreGroup = input_contents[0];
 		const destPoints = coreGroup.points();
 		const destAttribName = this.pv.attribName;

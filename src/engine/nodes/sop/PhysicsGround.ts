@@ -57,7 +57,7 @@ export class PhysicsGroundSopNode extends TypedSopNode<PhysicsGroundSopParamsCon
 	}
 
 	private _coreTransform = new CoreTransform();
-	override async cook() {
+	override cook() {
 		const thickness = this.pv.thickness;
 		const object = BaseSopOperation.createObject(
 			new BoxGeometry(this.pv.size.x, thickness, this.pv.size.y),
@@ -78,6 +78,7 @@ export class PhysicsGroundSopNode extends TypedSopNode<PhysicsGroundSopParamsCon
 
 		CorePhysicsAttribute.setRBDType(object, PhysicsRBDType.FIXED);
 		CorePhysicsAttribute.setColliderType(object, PhysicsRBDColliderType.CUBOID);
+		CorePhysicsAttribute.setDensity(object, 0);
 		CorePhysicsAttribute.setFriction(object, this.pv.friction);
 		CorePhysicsAttribute.setRestitution(object, this.pv.restitution);
 		CorePhysicsAttribute.setCuboidSizes(object, new Vector3(this.pv.size.x, this.pv.thickness, this.pv.size.y));

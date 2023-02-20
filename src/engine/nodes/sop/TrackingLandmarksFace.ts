@@ -25,7 +25,7 @@ export class TrackingLandmarksFaceSopNode extends TypedSopNode<TrackingLandmarks
 	}
 
 	private _uv = new Vector2();
-	override async cook() {
+	override cook() {
 		const geometry = new BufferGeometry();
 
 		// add position

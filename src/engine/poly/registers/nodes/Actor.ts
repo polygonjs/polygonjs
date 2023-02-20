@@ -58,6 +58,7 @@ import {GetObjectUserDataActorNode} from '../../../nodes/actor/GetObjectUserData
 import {GetObjectWorldPositionActorNode} from '../../../nodes/actor/GetObjectWorldPosition';
 import {GetParentActorNode} from '../../../nodes/actor/GetParent';
 import {GetPhysicsRBDConePropertyActorNode} from '../../../nodes/actor/GetPhysicsRBDConeProperty';
+import {GetPhysicsRBDCapsulePropertyActorNode} from '../../../nodes/actor/GetPhysicsRBDCapsuleProperty';
 import {GetPhysicsRBDCylinderPropertyActorNode} from '../../../nodes/actor/GetPhysicsRBDCylinderProperty';
 import {GetPhysicsRBDCuboidPropertyActorNode} from '../../../nodes/actor/GetPhysicsRBDCuboidProperty';
 import {GetPhysicsRBDSpherePropertyActorNode} from '../../../nodes/actor/GetPhysicsRBDSphereProperty';
@@ -183,6 +184,7 @@ import {SetPhysicsRBDAngularVelocityActorNode} from '../../../nodes/actor/SetPhy
 import {SetPhysicsRBDLinearVelocityActorNode} from '../../../nodes/actor/SetPhysicsRBDLinearVelocity';
 import {SetPhysicsRBDPositionActorNode} from '../../../nodes/actor/SetPhysicsRBDPosition';
 import {SetPhysicsRBDRotationActorNode} from '../../../nodes/actor/SetPhysicsRBDRotation';
+import {SetPhysicsRBDCapsulePropertyActorNode} from '../../../nodes/actor/SetPhysicsRBDCapsuleProperty';
 import {SetPhysicsRBDConePropertyActorNode} from '../../../nodes/actor/SetPhysicsRBDConeProperty';
 import {SetPhysicsRBDCylinderPropertyActorNode} from '../../../nodes/actor/SetPhysicsRBDCylinderProperty';
 import {SetPhysicsRBDCuboidPropertyActorNode} from '../../../nodes/actor/SetPhysicsRBDCuboidProperty';
@@ -294,6 +296,7 @@ export interface ActorNodeChildrenMap {
 	getObjectUserData: GetObjectUserDataActorNode;
 	getObjectWorldPosition: GetObjectWorldPositionActorNode;
 	getParent: GetParentActorNode;
+	getPhysicsRBDCapsuleProperty: GetPhysicsRBDCapsulePropertyActorNode;
 	getPhysicsRBDConeProperty: GetPhysicsRBDConePropertyActorNode;
 	getPhysicsRBDCylinderProperty: GetPhysicsRBDCylinderPropertyActorNode;
 	getPhysicsRBDCuboidProperty: GetPhysicsRBDCuboidPropertyActorNode;
@@ -420,6 +423,7 @@ export interface ActorNodeChildrenMap {
 	setPhysicsRBDLinearVelocity: SetPhysicsRBDLinearVelocityActorNode;
 	setPhysicsRBDPosition: SetPhysicsRBDPositionActorNode;
 	setPhysicsRBDRotation: SetPhysicsRBDRotationActorNode;
+	setPhysicsRBDCapsuleProperty: SetPhysicsRBDCapsulePropertyActorNode;
 	setPhysicsRBDConeProperty: SetPhysicsRBDConePropertyActorNode;
 	setPhysicsRBDCylinderProperty: SetPhysicsRBDCylinderPropertyActorNode;
 	setPhysicsRBDCuboidProperty: SetPhysicsRBDCuboidPropertyActorNode;
@@ -537,6 +541,7 @@ export class ActorRegister {
 		poly.registerNode(GetObjectUserDataActorNode, CATEGORY_ACTOR.GET);
 		poly.registerNode(GetObjectWorldPositionActorNode, CATEGORY_ACTOR.GET);
 		poly.registerNode(GetParentActorNode, CATEGORY_ACTOR.GET);
+		poly.registerNode(GetPhysicsRBDCapsulePropertyActorNode, CATEGORY_ACTOR.PHYSICS);
 		poly.registerNode(GetPhysicsRBDConePropertyActorNode, CATEGORY_ACTOR.PHYSICS);
 		poly.registerNode(GetPhysicsRBDCylinderPropertyActorNode, CATEGORY_ACTOR.PHYSICS);
 		poly.registerNode(GetPhysicsRBDCuboidPropertyActorNode, CATEGORY_ACTOR.PHYSICS);
@@ -664,6 +669,7 @@ export class ActorRegister {
 		poly.registerNode(SetPhysicsRBDLinearVelocityActorNode, CATEGORY_ACTOR.PHYSICS);
 		poly.registerNode(SetPhysicsRBDPositionActorNode, CATEGORY_ACTOR.PHYSICS);
 		poly.registerNode(SetPhysicsRBDRotationActorNode, CATEGORY_ACTOR.PHYSICS);
+		poly.registerNode(SetPhysicsRBDCapsulePropertyActorNode, CATEGORY_ACTOR.PHYSICS);
 		poly.registerNode(SetPhysicsRBDConePropertyActorNode, CATEGORY_ACTOR.PHYSICS);
 		poly.registerNode(SetPhysicsRBDCylinderPropertyActorNode, CATEGORY_ACTOR.PHYSICS);
 		poly.registerNode(SetPhysicsRBDCuboidPropertyActorNode, CATEGORY_ACTOR.PHYSICS);

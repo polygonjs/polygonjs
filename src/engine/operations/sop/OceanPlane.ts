@@ -63,7 +63,7 @@ export class OceanPlaneSopOperation extends BaseSopOperation {
 
 	private _transformResetOptions: TransformResetSopOperation | undefined;
 	protected _coreTransform = new CoreTransform();
-	override async cook(inputCoreGroups: CoreGroup[], params: OceanPlaneSopParams) {
+	override cook(inputCoreGroups: CoreGroup[], params: OceanPlaneSopParams) {
 		this._transformResetOptions = this._transformResetOptions || new TransformResetSopOperation(this._scene);
 		const transformResetMode = TRANSFORM_RESET_MODES.indexOf(TransformResetMode.CENTER_GEO_RESET_OBJECT);
 		const inputCoreGroup = this._transformResetOptions.cook(inputCoreGroups, {mode: transformResetMode});

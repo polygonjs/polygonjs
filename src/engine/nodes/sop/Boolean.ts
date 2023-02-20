@@ -43,9 +43,9 @@ export class BooleanSopNode extends TypedSopNode<BooleanSopParamsConfig> {
 	}
 
 	private _operation: BooleanSopOperation | undefined;
-	override async cook(inputCoreGroups: CoreGroup[]) {
+	override cook(inputCoreGroups: CoreGroup[]) {
 		this._operation = this._operation || new BooleanSopOperation(this.scene(), this.states, this);
-		const coreGroup = await this._operation.cook(inputCoreGroups, this.pv);
+		const coreGroup = this._operation.cook(inputCoreGroups, this.pv);
 		this.setCoreGroup(coreGroup);
 	}
 }

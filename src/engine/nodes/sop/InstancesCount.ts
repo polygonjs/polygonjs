@@ -33,7 +33,7 @@ export class InstancesCountSopNode extends TypedSopNode<InstancesCountSopParamsC
 		this.io.inputs.initInputsClonedState(InputCloneMode.FROM_NODE);
 	}
 
-	override async cook(input_contents: CoreGroup[]) {
+	override cook(input_contents: CoreGroup[]) {
 		const core_group = input_contents[0];
 		const objects = core_group.objectsWithGeo();
 		for (let object of objects) {

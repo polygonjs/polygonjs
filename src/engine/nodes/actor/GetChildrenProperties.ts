@@ -12,13 +12,13 @@ import {
 	ReturnValueTypeByActorConnectionPointType,
 } from '../utils/io/connections/Actor';
 import {
-	Vector2,
+	// Vector2,
 	Vector3,
 	// Vector4,
 	Quaternion,
 	Object3D,
 } from 'three';
-import {CoreType} from '../../../core/Type';
+// import {CoreType} from '../../../core/Type';
 import {
 	Copyable,
 	CreateCopyableItemFunc,
@@ -32,15 +32,15 @@ enum GetChildrenPropertiesActorNodeInputName {
 	position = 'position',
 	quaternion = 'quaternion',
 	scale = 'scale',
-	matrix = 'matrix',
+	// matrix = 'matrix',
 	visible = 'visible',
 	castShadow = 'castShadow',
 	receiveShadow = 'receiveShadow',
 	frustumCulled = 'frustumCulled',
 	// ptnum = 'ptnum',
 	// id = 'id',
-	uuid = 'uuid',
-	name = 'name',
+	// uuid = 'uuid',
+	// name = 'name',
 	// quaternion = 'quaternion',
 	// rotation = 'rotation',
 	up = 'up',
@@ -50,24 +50,36 @@ const OBJECT_PROPERTIES: GetChildrenPropertiesActorNodeInputName[] = [
 	GetChildrenPropertiesActorNodeInputName.position,
 	GetChildrenPropertiesActorNodeInputName.quaternion,
 	GetChildrenPropertiesActorNodeInputName.scale,
-	GetChildrenPropertiesActorNodeInputName.matrix,
+	// GetChildrenPropertiesActorNodeInputName.matrix,
 	GetChildrenPropertiesActorNodeInputName.visible,
 	GetChildrenPropertiesActorNodeInputName.castShadow,
 	GetChildrenPropertiesActorNodeInputName.receiveShadow,
 	GetChildrenPropertiesActorNodeInputName.frustumCulled,
-	GetChildrenPropertiesActorNodeInputName.uuid,
-	GetChildrenPropertiesActorNodeInputName.name,
+	// GetChildrenPropertiesActorNodeInputName.uuid,
+	// GetChildrenPropertiesActorNodeInputName.name,
 	GetChildrenPropertiesActorNodeInputName.up,
 	GetChildrenPropertiesActorNodeInputName.matrixAutoUpdate,
 ];
 //  const MATERIAL_OUTPUT = 'material';
 
-const tmpV2: Vector2[] = [];
-const tmpV3: Vector3[] = [];
-// const tmpV4: Vector4[] = [];
+/**
+ *
+ * We need different arrays per property.
+ * Otherwise, a downstream node which would
+ * query positions and scales would receive 2 identical arrays,
+ * instead of 2 distinct ones
+ *
+ */
+const tmpPositions: Vector3[] = [];
 const tmpQuat: Quaternion[] = [];
-const tmpBoolean: boolean[] = [];
-const createVector2: CreateCopyableItemFunc<Vector2> = () => new Vector2();
+const tmpScales: Vector3[] = [];
+const tmpVisibles: boolean[] = [];
+const tmpCastShadows: boolean[] = [];
+const tmpReceiveShadows: boolean[] = [];
+const tmpFrustumCulleds: boolean[] = [];
+const tmpUps: Vector3[] = [];
+const tmpMatrixAutoUpdates: boolean[] = [];
+// const createVector2: CreateCopyableItemFunc<Vector2> = () => new Vector2();
 const createVector3: CreateCopyableItemFunc<Vector3> = () => new Vector3();
 const createQuaternion: CreateCopyableItemFunc<Quaternion> = () => new Quaternion();
 
@@ -127,10 +139,10 @@ export class GetChildrenPropertiesActorNode extends ParamlessTypedActorNode {
 				GetChildrenPropertiesActorNodeInputName.scale,
 				ActorConnectionPointType.VECTOR3_ARRAY
 			),
-			new ActorConnectionPoint(
-				GetChildrenPropertiesActorNodeInputName.matrix,
-				ActorConnectionPointType.MATRIX4_ARRAY
-			),
+			// new ActorConnectionPoint(
+			// 	GetChildrenPropertiesActorNodeInputName.matrix,
+			// 	ActorConnectionPointType.MATRIX4_ARRAY
+			// ),
 			new ActorConnectionPoint(
 				GetChildrenPropertiesActorNodeInputName.up,
 				ActorConnectionPointType.VECTOR3_ARRAY
@@ -174,20 +186,35 @@ export class GetChildrenPropertiesActorNode extends ParamlessTypedActorNode {
 			return [];
 		}
 		if (OBJECT_PROPERTIES.includes(outputName)) {
-			const firstPropValue = firstChild[outputName];
-			if (firstPropValue instanceof Vector2) {
-				return updateCopyableArray(children, outputName, tmpV2, createVector2);
+			switch (outputName) {
+				case GetChildrenPropertiesActorNodeInputName.position: {
+					return updateCopyableArray(children, outputName, tmpPositions, createVector3);
+				}
+				case GetChildrenPropertiesActorNodeInputName.quaternion: {
+					return updateCopyableArray(children, outputName, tmpQuat, createQuaternion);
+				}
+				case GetChildrenPropertiesActorNodeInputName.scale: {
+					return updateCopyableArray(children, outputName, tmpScales, createVector3);
+				}
+				case GetChildrenPropertiesActorNodeInputName.visible: {
+					return updatePrimitiveArray(children, outputName, tmpVisibles, true);
+				}
+				case GetChildrenPropertiesActorNodeInputName.castShadow: {
+					return updatePrimitiveArray(children, outputName, tmpCastShadows, true);
+				}
+				case GetChildrenPropertiesActorNodeInputName.receiveShadow: {
+					return updatePrimitiveArray(children, outputName, tmpReceiveShadows, true);
+				}
+				case GetChildrenPropertiesActorNodeInputName.frustumCulled: {
+					return updatePrimitiveArray(children, outputName, tmpFrustumCulleds, true);
+				}
+				case GetChildrenPropertiesActorNodeInputName.up: {
+					return updateCopyableArray(children, outputName, tmpUps, createVector3);
+				}
+				case GetChildrenPropertiesActorNodeInputName.matrixAutoUpdate: {
+					return updatePrimitiveArray(children, outputName, tmpMatrixAutoUpdates, true);
+				}
 			}
-			if (firstPropValue instanceof Vector3) {
-				return updateCopyableArray(children, outputName, tmpV3, createVector3);
-			}
-			if (firstPropValue instanceof Quaternion) {
-				return updateCopyableArray(children, outputName, tmpQuat, createQuaternion);
-			}
-			if (CoreType.isBoolean(firstPropValue)) {
-				return updatePrimitiveArray(children, outputName, tmpBoolean, firstPropValue);
-			}
-			// return firstPropValue;
 		}
 	}
 }

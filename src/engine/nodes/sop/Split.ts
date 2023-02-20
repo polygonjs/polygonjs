@@ -50,7 +50,7 @@ export class SplitSopNode extends TypedSopNode<SplitSopParamsConfig> {
 	}
 
 	private _new_objects: Object3D[] = [];
-	override async cook(input_contents: CoreGroup[]) {
+	override cook(input_contents: CoreGroup[]) {
 		const core_group = input_contents[0];
 
 		this._new_objects = [];
@@ -61,7 +61,7 @@ export class SplitSopNode extends TypedSopNode<SplitSopParamsConfig> {
 		this.setObjects(this._new_objects);
 	}
 
-	async _split_core_group(core_group: CoreGroup) {
+	_split_core_group(core_group: CoreGroup) {
 		const core_objects = core_group.coreObjects();
 		for (let core_object of core_objects) {
 			this._split_core_object(core_object);

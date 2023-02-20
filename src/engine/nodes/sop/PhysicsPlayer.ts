@@ -28,10 +28,10 @@ import {Vector3, Object3D} from 'three';
 // are different than the ones used for PhysicsRBDAttributes
 const DEFAULT = {
 	radius: 0.5,
-	density: 1000,
-	friction: 0.5,
+	density: 5, //1000,
+	friction: 1, //0.5,
 	restitution: 0.5,
-	linearDamping: 0,
+	linearDamping: 0.4, //0,
 	angularDamping: 10,
 	linearVelocity: new Vector3(0, 0, 0),
 	angularVelocity: new Vector3(0, 0, 0),
@@ -49,7 +49,7 @@ class PhysicsPlayerSopParamsConfig extends NodeParamsConfig {
 
 	/** @param density */
 	density = ParamConfig.FLOAT(DEFAULT.density, {
-		range: [0, 1000],
+		range: [0, 100],
 		rangeLocked: [true, false],
 		separatorBefore: true,
 	});
@@ -150,7 +150,7 @@ export class PhysicsPlayerSopNode extends TypedSopNode<PhysicsPlayerSopParamsCon
 		this.io.inputs.initInputsClonedState(InputCloneMode.FROM_NODE);
 	}
 
-	override async cook(inputCoreGroups: CoreGroup[]) {
+	override cook(inputCoreGroups: CoreGroup[]) {
 		const coreGroup0 = inputCoreGroups[0];
 		const coreGroup1 = inputCoreGroups[1];
 		const inputObjects = coreGroup0 ? coreGroup0.objects() : this._createDefaultInputObjects();

@@ -53,7 +53,7 @@ export class ReflectorSopOperation extends BaseSopOperation {
 	}
 
 	private _transformResetOptions: TransformResetSopOperation | undefined;
-	override async cook(inputCoreGroups: CoreGroup[], params: ReflectorSopParams) {
+	override cook(inputCoreGroups: CoreGroup[], params: ReflectorSopParams) {
 		this._transformResetOptions = this._transformResetOptions || new TransformResetSopOperation(this._scene);
 		const transformResetMode = TRANSFORM_RESET_MODES.indexOf(TransformResetMode.CENTER_GEO_RESET_OBJECT);
 		const inputCoreGroup = this._transformResetOptions.cook(inputCoreGroups, {mode: transformResetMode});

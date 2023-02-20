@@ -200,6 +200,7 @@ import './engine/nodes/actor/SetParam';
 import './engine/nodes/actor/SetPerspectiveCameraFov';
 import './engine/nodes/actor/SetPerspectiveCameraNearFar';
 import './engine/nodes/actor/SetPhysicsRBDPosition';
+import './engine/nodes/actor/SetPhysicsRBDCapsuleProperty';
 import './engine/nodes/actor/SetPhysicsRBDConeProperty';
 import './engine/nodes/actor/SetPhysicsRBDCuboidProperty';
 import './engine/nodes/actor/SetPhysicsRBDCylinderProperty';

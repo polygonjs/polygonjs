@@ -225,12 +225,11 @@ export class CorePlayerPhysics {
 
 		// torques
 		const speed = running ? computeInputData.speed * computeInputData.runSpeedMult : computeInputData.speed;
-
 		if (inputData.left && !inputData.right) {
 			torqueLR.copy(forwardDir).multiplyScalar(-speed);
 			this._userTorques.add(torqueLR);
 		} else {
-			if (inputData.right) {
+			if (inputData.right && !inputData.left) {
 				torqueLR.copy(forwardDir).multiplyScalar(speed);
 				this._userTorques.add(torqueLR);
 			}
@@ -239,7 +238,7 @@ export class CorePlayerPhysics {
 			torqueFB.copy(forwardDir).cross(up).normalize().multiplyScalar(-speed);
 			this._userTorques.add(torqueFB);
 		} else {
-			if (inputData.backward) {
+			if (inputData.backward && !inputData.forward) {
 				torqueFB.copy(forwardDir).cross(up).normalize().multiplyScalar(speed);
 				this._userTorques.add(torqueFB);
 			}

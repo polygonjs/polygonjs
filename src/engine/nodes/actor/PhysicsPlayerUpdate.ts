@@ -27,8 +27,8 @@ const CONNECTION_OPTIONS = ACTOR_CONNECTION_POINT_IN_NODE_DEF;
 
 class PhysicsPlayerUpdateActorParamsConfig extends NodeParamsConfig {
 	/** @param travel speed */
-	speed = ParamConfig.FLOAT(40, {
-		range: [0, 100],
+	speed = ParamConfig.FLOAT(0.5, {
+		range: [0, 10],
 		rangeLocked: [true, false],
 	});
 	/** @param run Allowed */
@@ -42,8 +42,8 @@ class PhysicsPlayerUpdateActorParamsConfig extends NodeParamsConfig {
 	/** @param jump Allowed */
 	jumpAllowed = ParamConfig.BOOLEAN(true);
 	/** @param jump Force */
-	jumpStrength = ParamConfig.FLOAT(30, {
-		range: [0, 100],
+	jumpStrength = ParamConfig.FLOAT(0.2, {
+		range: [0, 10],
 		rangeLocked: [true, false],
 		visibleIf: {jumpAllowed: 1},
 	});

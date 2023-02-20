@@ -46,7 +46,7 @@ export class ScatterSopOperation extends BaseSopOperation {
 
 	private _position = new Vector3();
 	private _normal = new Vector3();
-	override async cook(inputContents: CoreGroup[], params: ScatterSopParams) {
+	override cook(inputContents: CoreGroup[], params: ScatterSopParams) {
 		const coreGroup = inputContents[0];
 		let inputMesh = coreGroup.objectsWithGeo()[0] as Mesh;
 		if (inputMesh) {

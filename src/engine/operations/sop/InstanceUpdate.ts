@@ -30,7 +30,7 @@ export class InstanceUpdateSopOperation extends BaseSopOperation {
 		return 'instanceUpdate';
 	}
 
-	override async cook(inputCoreGroups: CoreGroup[], params: InstanceUpdateSopParams) {
+	override cook(inputCoreGroups: CoreGroup[], params: InstanceUpdateSopParams) {
 		this._cookFromUpdateMode(inputCoreGroups, params);
 
 		return inputCoreGroups[0];
