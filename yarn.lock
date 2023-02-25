@@ -3433,10 +3433,10 @@ portfinder@^1.0.28:
     debug "^3.1.1"
     mkdirp "^0.5.5"
 
-postprocessing@6.29.3:
-  version "6.29.3"
-  resolved "https://registry.yarnpkg.com/postprocessing/-/postprocessing-6.29.3.tgz#a878b2e60ef0402193e782e9580e90516a10f1f8"
-  integrity sha512-gxXC6LKLRwI4eSySdmxqEfQBMKEdQtxg5aYrdvJ/tPHDOS4aZAb/bY4ulQnL5YGKqCC6SmgNmU4dNIc68TTVMw==
+postprocessing@6.30.1:
+  version "6.30.1"
+  resolved "https://registry.yarnpkg.com/postprocessing/-/postprocessing-6.30.1.tgz#b1739eb78c26730bb86196f7dc8c759237e660b4"
+  integrity sha512-GkBrQtX6KjNz+Pz3+ABvP1aXKCCW7h/tuE37wlM90WZLbaGfJ7eSIBN2gPgKExuK584IPde0YOoNiuWMr7PNCQ==
 
 potpack@2.0.0, potpack@^2.0.0:
   version "2.0.0"
