@@ -1,4 +1,4 @@
-import 'qunit';
+import QUnit from 'qunit';
 import {PolyScene} from '../../src/engine/scene/PolyScene';
 import {RootManagerNode} from '../../src/engine/nodes/manager/Root';
 import {PerspectiveCameraObjNode} from '../../src/engine/nodes/obj/PerspectiveCamera';
@@ -37,8 +37,9 @@ declare global {
 	}
 }
 
-export function setupQUnit(qUnit: QUnit) {
-	qUnit.testStart(async () => {
+export {QUnit};
+export function setupQUnit() {
+	QUnit.testStart(async () => {
 		// console.log(`%c ^^^^ ${QUnit.config.current.testName}`, 'background: #222; color: #da5555');
 
 		await waitForUserInteraction();
@@ -80,7 +81,7 @@ export function setupQUnit(qUnit: QUnit) {
 		await window.scene.loadingController.markAsLoaded();
 		window.scene.cooker.unblock();
 	});
-	qUnit.testDone(() => {
+	QUnit.testDone(() => {
 		// it's preferable to not display anything
 		// so that we can correctly display non-blocking crashing tests
 		// console.log(`%c ✓ ${QUnit.config.current.testName}`, 'background: #222; color: #bada55');

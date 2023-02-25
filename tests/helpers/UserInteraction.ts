@@ -32,5 +32,6 @@ export async function waitForUserInteraction(): Promise<void> {
 		buttonElement.style.padding = '20px';
 		buttonElement.style.fontSize = '3rem';
 		buttonElement.style.whiteSpace = 'nowrap';
+		buttonElement.style.zIndex = '99999999';
 	});
 }

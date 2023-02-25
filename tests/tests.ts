@@ -1,4 +1,4 @@
-import QUnit from 'qunit';
+import {QUnit} from './helpers/setup';
 
 QUnit.module('core');
 import './core/ArrayUtils';

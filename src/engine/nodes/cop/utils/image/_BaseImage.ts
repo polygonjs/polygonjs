@@ -136,7 +136,12 @@ export function copImageNodeFactoryFactory(
 				}
 			} catch (e) {}
 			if (!texture) {
-				this.states.error.set(`could not load texture '${this.pv.url}'`);
+				// we don't override the error,
+				// in case it comes from the loader itself,
+				// which would have hints to install the library.
+				if (!this.states.error.active()) {
+					this.states.error.set(`could not load texture '${this.pv.url}'`);
+				}
 			}
 			return texture;
 		}

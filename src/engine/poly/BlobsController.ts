@@ -118,10 +118,10 @@ export class BlobsController {
 					blobWrapper,
 				};
 			} else {
-				return {error: `failed to fetch ${remapedUrl}`};
+				return {error: `failed to fetch '${remapedUrl}' (remaped from '${url}')`};
 			}
 		} catch (err) {
-			return {error: `failed to fetch ${url}`};
+			return {error: `failed to fetch '${url}'`};
 		}
 	}
 

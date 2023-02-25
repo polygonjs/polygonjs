@@ -48,8 +48,10 @@ export class NodeCookController<NC extends NodeContext> {
 				const promise = this.node.cook(inputContents || []);
 				if (promise != null) {
 					promise.catch((e: any) => {
-						this.node.states.error.set(`node inputs error: '${e}'.`);
-						Poly.warn(e);
+						if (!this.node.states.error.active()) {
+							this.node.states.error.set(`node inputs error: '${e}'.`);
+							Poly.warn(e);
+						}
 						this.endCook();
 					});
 				}

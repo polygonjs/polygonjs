@@ -172,7 +172,7 @@ export class VideoCopNode extends TypedCopNode<VideoCopParamsConfig> {
 		const mode = this.mode();
 		if (mode == VideoMode.FROM_URLS && isBooleanTrue(this.pv.checkFileType)) {
 			const setUrlNotVideoError = (param: StringParam) => {
-				this.states.error.set(`url from param ${param.name} is not a video ('${param.value}')`);
+				this.states.error.set(`url from param ${param.name()} is not a video ('${param.value}')`);
 			};
 			if (!isUrlVideo(this.pv.url1)) {
 				return setUrlNotVideoError(this.p.url1);

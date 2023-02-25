@@ -12,6 +12,7 @@ import {TypeAssert} from '../../poly/Assert';
 import {Vector3} from 'three';
 import {Line3} from 'three';
 import {Potpack, PotPackBox, PotPackBoxResult} from '../../../core/libs/Potpack';
+import {LIBRARY_INSTALL_HINT} from '../../../core/loader/common';
 
 export enum UvUnwrapMethod {
 	POTPACK = 'potpack',
@@ -61,7 +62,7 @@ export class UvUnwrapSopOperation extends BaseSopOperation {
 		}
 		const xatlas = await XAtlasLoaderHandler.xatlas(this._node);
 		if (!xatlas) {
-			this.states?.error.set(`failed to load xatlas. Make sure this is installed`);
+			this.states?.error.set(`failed to load xatlas. Make sure this is installed. ${LIBRARY_INSTALL_HINT}`);
 			return coreGroup;
 		}
 

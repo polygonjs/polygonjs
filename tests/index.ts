@@ -4,6 +4,5 @@ AllRegister.registerAll();
 import {setupQUnit} from './helpers/setup';
 import './tests';
 
-import QUnit from 'qunit';
-setupQUnit(QUnit);
+setupQUnit();
 QUnit.start();
