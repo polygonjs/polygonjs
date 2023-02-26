@@ -2,7 +2,7 @@ import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {TypeAssert} from '../../poly/Assert';
-import {InstancedBufferGeometry} from 'three';
+import {BufferAttribute, InstancedBufferGeometry} from 'three';
 import {Mesh} from 'three';
 import {CoreInstancer} from '../../../core/geometry/Instancer';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
@@ -55,8 +55,9 @@ export class InstanceUpdateSopOperation extends BaseSopOperation {
 		const updatingMesh = inputCoreGroups[1].objectsWithGeo()[0] as Mesh;
 		const attribNames = instanceCoreGroup.geoAttribNamesMatchingMask(params.geoAttributes);
 		for (let attribName of attribNames) {
-			const instanceAttrib = instanceBufferGeo.getAttribute(attribName);
-			const updatingAttribArray = updatingMesh.geometry.getAttribute(attribName).array as number[];
+			const instanceAttrib = instanceBufferGeo.getAttribute(attribName) as BufferAttribute;
+			const updatingAttribArray = (updatingMesh.geometry.getAttribute(attribName) as BufferAttribute)
+				.array as number[];
 			(instanceAttrib.array as number[]) = updatingAttribArray.slice(0, updatingAttribArray.length - 1);
 			instanceAttrib.needsUpdate = true;
 		}

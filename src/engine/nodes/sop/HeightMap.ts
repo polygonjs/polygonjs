@@ -3,7 +3,7 @@
  *
  *
  */
-import {DataTexture} from 'three';
+import {BufferAttribute, DataTexture} from 'three';
 import {TypedSopNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {NodeContext} from '../../poly/NodeContext';
@@ -69,9 +69,9 @@ export class HeightMapSopNode extends TypedSopNode<HeightMapSopParamsConfig> {
 			return;
 		}
 
-		const positions = geometry.getAttribute('position').array as number[];
-		const uv_attrib = geometry.getAttribute('uv');
-		const normal_attrib = geometry.getAttribute('normal');
+		const positions = (geometry.getAttribute('position') as BufferAttribute).array as number[];
+		const uv_attrib = geometry.getAttribute('uv') as BufferAttribute;
+		const normal_attrib = geometry.getAttribute('normal') as BufferAttribute;
 
 		if (uv_attrib == null) {
 			this.states.error.set('uvs are required');

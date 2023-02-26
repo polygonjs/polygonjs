@@ -9,7 +9,7 @@ import {CoreGroup} from '../../../core/geometry/Group';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {AUDIO_ANALYSER_NODES, NodeContext} from '../../poly/NodeContext';
 import {InputCloneMode} from '../../poly/InputCloneMode';
-import {BufferGeometry} from 'three';
+import {BufferAttribute, BufferGeometry} from 'three';
 import {Mesh} from 'three';
 import {NodePathParam} from '../../params/NodePath';
 import {BooleanParam} from '../../params/Boolean';
@@ -131,12 +131,12 @@ export class AttribAudioAnalyserSopNode extends TypedSopNode<AttribAudioAnalyser
 			return;
 		}
 		const attribName = paramSet.attribName.value;
-		let attrib = geometry.getAttribute(attribName);
+		let attrib = geometry.getAttribute(attribName) as BufferAttribute | undefined;
 		// create attrib if needed
 		if (!attrib) {
 			const coreGeometry = new CoreGeometry(geometry);
 			coreGeometry.addNumericAttrib(attribName, 1, 0);
-			attrib = geometry.getAttribute(attribName);
+			attrib = geometry.getAttribute(attribName) as BufferAttribute;
 		}
 
 		// update buffer

@@ -2,7 +2,7 @@ import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
-import {Mesh} from 'three';
+import {BufferAttribute, Mesh} from 'three';
 import {Potpack, PotPackBox, PotPackBoxResult} from '../../../core/libs/Potpack';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 
@@ -67,7 +67,7 @@ export class UvLayoutSopOperation extends BaseSopOperation {
 			const index = objIndexByBox.get(uv_box);
 			if (index != null) {
 				const mesh = meshes[index] as Mesh;
-				const uv2 = mesh.geometry.getAttribute(params.uv).clone();
+				const uv2 = (mesh.geometry.getAttribute(params.uv) as BufferAttribute).clone();
 				const array = uv2.array as number[];
 				for (let i = 0; i < uv2.array.length; i += uv2.itemSize) {
 					array[i] = (uv2.array[i] + uvBoxResult.x + padding) / dimensions.w;

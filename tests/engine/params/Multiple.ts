@@ -55,7 +55,7 @@ QUnit.test('color keep their default and also for their components', async (asse
 	assert.equal(param.valuePreConversion().r, 0.4);
 	assert.equal(param.valuePreConversion().g, 1);
 	assert.equal(param.valuePreConversion().b, 1);
-	assert.in_delta(param.value.r, 0.13, 0.1);
+	assert.in_delta(param.value.r, 0.4, 0.1, 'r');
 	assert.in_delta(param.value.g, 1, 0.1);
 	assert.in_delta(param.value.b, 1, 0.1);
 

@@ -207,7 +207,7 @@ export class FuseSopNode extends TypedSopNode<FuseSopParamsConfig> {
 		}
 		const indexArray = index.array as number[];
 		const precision = this.pv.dist;
-		const position = geometry.getAttribute('position');
+		const position = geometry.getAttribute('position') as BufferAttribute;
 		const pointsCount = position.array.length / 3;
 
 		function roundedPos(index: number, target: Vector3) {

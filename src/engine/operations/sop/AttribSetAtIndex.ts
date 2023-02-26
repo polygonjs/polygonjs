@@ -1,6 +1,6 @@
 import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {Vector2} from 'three';
+import {BufferAttribute, Vector2} from 'three';
 import {Vector3} from 'three';
 import {Vector4} from 'three';
 import {ATTRIBUTE_CLASSES, AttribClass, AttribType, ATTRIBUTE_TYPES} from '../../../core/geometry/Constant';
@@ -134,7 +134,7 @@ export class AttribSetAtIndexSopOperation extends BaseSopOperation {
 			coreGeometry.addNumericAttrib(attribName, params.size, 0);
 		}
 
-		const attrib = coreGeometry.geometry().attributes[attribName];
+		const attrib = coreGeometry.geometry().attributes[attribName] as BufferAttribute;
 		const array = attrib.array as number[];
 		const {index, size} = params;
 		switch (size) {

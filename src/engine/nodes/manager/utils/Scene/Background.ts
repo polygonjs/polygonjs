@@ -3,7 +3,7 @@ import {BaseNodeType} from '../../../_Base';
 import {ParamConfig} from '../../../utils/params/ParamsConfig';
 import {NodeContext} from '../../../../poly/NodeContext';
 import {RootManagerNode} from '../../Root';
-import {ColorConversion} from '../../../../../core/Color';
+// import {ColorConversion} from '../../../../../core/Color';
 import {Color} from 'three';
 import {TypeAssert} from '../../../../poly/Assert';
 
@@ -35,10 +35,10 @@ export function SceneBackgroundParamConfig<TBase extends Constructor>(Base: TBas
 			separatorBefore: true,
 		});
 		/** @param background color */
-		bgColor = ParamConfig.COLOR([0.4, 0.4, 0.4], {
+		bgColor = ParamConfig.COLOR([0.02, 0.02, 0.02], {
 			visibleIf: {backgroundMode: BACKGROUND_MODES.indexOf(BackgroundMode.COLOR)},
 			...CallbackOptions,
-			conversion: ColorConversion.SRGB_TO_LINEAR,
+			// conversion: ColorConversion.SRGB_TO_LINEAR,
 		});
 		/** @param background texture */
 		bgTexture = ParamConfig.NODE_PATH('', {
@@ -51,12 +51,14 @@ export function SceneBackgroundParamConfig<TBase extends Constructor>(Base: TBas
 		});
 		/** @param background blur */
 		bgBlur = ParamConfig.FLOAT(0, {
+			visibleIf: {backgroundMode: BACKGROUND_MODES.indexOf(BackgroundMode.TEXTURE)},
 			range: [0, 1],
 			rangeLocked: [true, false],
 			...CallbackOptions,
 		});
 		/** @param background intensity */
 		bgIntensity = ParamConfig.FLOAT(1, {
+			visibleIf: {backgroundMode: BACKGROUND_MODES.indexOf(BackgroundMode.TEXTURE)},
 			range: [0, 2],
 			rangeLocked: [true, false],
 			...CallbackOptions,

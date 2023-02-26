@@ -1,3 +1,4 @@
+import {BufferAttribute} from 'three';
 import {BaseSopNodeType} from '../../../../src/engine/nodes/sop/_Base';
 
 QUnit.test('attribcopy latitude to position', async (assert) => {
@@ -34,7 +35,7 @@ QUnit.test('attribcopy latitude to position', async (assert) => {
 	assert.ok(core_group, 'core group exists');
 	assert.ok(geometry, 'geometry exists');
 
-	let {array} = geometry.getAttribute('position');
+	let {array} = geometry.getAttribute('position') as BufferAttribute;
 	assert.equal(array.length, container.pointsCount() * 3, 'array is 3x the points count');
 	assert.equal(array[0], 0);
 	assert.equal(array[3], 1);
@@ -62,7 +63,7 @@ QUnit.test('attribcopy latitude to position', async (assert) => {
 	assert.ok(core_group);
 	assert.ok(geometry);
 
-	array = geometry.getAttribute('position').array;
+	array = (geometry.getAttribute('position') as BufferAttribute).array;
 	assert.equal(array.length, container.pointsCount() * 3, 'array is 3x points_count');
 	assert.equal(array[0], 0);
 	assert.equal(array[3], 1);
@@ -77,7 +78,7 @@ async function requestAttribArray(assert: Assert, node: BaseSopNodeType, attribN
 	assert.notOk(node.states.error.message());
 	let core_group = container.coreContent()!;
 	let geometry = core_group.objectsWithGeo()[0].geometry;
-	return geometry.getAttribute(attribName).array;
+	return (geometry.getAttribute(attribName) as BufferAttribute).array;
 }
 
 QUnit.test('attribcopy from input 2', async (assert) => {

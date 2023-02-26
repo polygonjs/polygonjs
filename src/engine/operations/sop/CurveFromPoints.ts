@@ -1,6 +1,14 @@
 import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {BufferGeometry, CatmullRomCurve3, Float32BufferAttribute, Object3D, Vector3, Vector2} from 'three';
+import {
+	BufferGeometry,
+	CatmullRomCurve3,
+	Float32BufferAttribute,
+	Object3D,
+	Vector3,
+	Vector2,
+	BufferAttribute,
+} from 'three';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 import {ObjectType} from '../../../core/geometry/Constant';
@@ -140,7 +148,7 @@ export class CurveFromPointsSopOperation extends BaseSopOperation {
 
 		// compute tangent
 		if (tTangent) {
-			const positions = geometry.getAttribute('position').array;
+			const positions = (geometry.getAttribute('position') as BufferAttribute).array;
 			const tangentName = params.tangentName;
 			const tangents: number[] = new Array(pointsCount * 3);
 			for (let i = 0; i < pointsCount - 1; i++) {

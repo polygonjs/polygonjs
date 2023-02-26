@@ -111,7 +111,7 @@ export class PointSopNode extends TypedSopNode<PointSopParamsConfig> {
 		const geometry = (object as Mesh).geometry as BufferGeometry;
 		const points = coreObject.points();
 
-		const array = geometry.getAttribute(POSITION_ATTRIB_NAME).array as number[];
+		const array = (geometry.getAttribute(POSITION_ATTRIB_NAME) as BufferAttribute).array as number[];
 
 		const tmp_array_x = await this._updateFromParam(
 			geometry,
@@ -207,7 +207,7 @@ export class PointSopNode extends TypedSopNode<PointSopParamsConfig> {
 
 	private _array_for_component(geometry: BufferGeometry, points_count: number, offset: ComponentOffset) {
 		const new_array = new Array<number>(points_count);
-		const src_array = geometry.getAttribute(POSITION_ATTRIB_NAME).array;
+		const src_array = (geometry.getAttribute(POSITION_ATTRIB_NAME) as BufferAttribute).array;
 		for (let i = 0; i < new_array.length; i++) {
 			new_array[i] = src_array[i * 3 + offset];
 		}

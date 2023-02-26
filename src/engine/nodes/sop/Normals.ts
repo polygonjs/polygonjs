@@ -10,7 +10,7 @@ import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {CoreObject} from '../../../core/geometry/Object';
 import {Attribute} from '../../../core/geometry/Attribute';
-import {Mesh} from 'three';
+import {BufferAttribute, Mesh} from 'three';
 import {BufferGeometry} from 'three';
 import {CoreGeometry} from '../../../core/geometry/Geometry';
 
@@ -98,11 +98,11 @@ export class NormalsSopNode extends TypedSopNode<NormalsSopParamsConfig> {
 		const geometry = (object as Mesh).geometry as BufferGeometry;
 		const points = core_object.points();
 
-		let attrib = geometry.getAttribute(Attribute.NORMAL);
+		let attrib = geometry.getAttribute(Attribute.NORMAL) as BufferAttribute;
 		if (!attrib) {
 			const core_geometry = new CoreGeometry(geometry);
 			core_geometry.addNumericAttrib(Attribute.NORMAL, 3, 0);
-			attrib = geometry.getAttribute(Attribute.NORMAL);
+			attrib = geometry.getAttribute(Attribute.NORMAL) as BufferAttribute;
 		}
 		const array = attrib.array as number[];
 
@@ -157,7 +157,7 @@ export class NormalsSopNode extends TypedSopNode<NormalsSopParamsConfig> {
 		for (let core_object of core_group.coreObjects()) {
 			const geometry = core_object.coreGeometry()?.geometry();
 			if (geometry) {
-				const normal_attrib = geometry.attributes[Attribute.NORMAL];
+				const normal_attrib = geometry.attributes[Attribute.NORMAL] as BufferAttribute;
 				if (normal_attrib) {
 					const array = normal_attrib.array as number[];
 					for (let i = 0; i < array.length; i++) {

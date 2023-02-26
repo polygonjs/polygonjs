@@ -17,12 +17,12 @@ export function CustomMaterialMeshParamConfig<TBase extends Constructor>(Base: T
 			separatorBefore: true,
 			separatorAfter: true,
 		});
-		/** @param distance */
+		/** @param distance material used for shadows from points lights */
 		createCustomMatDistance = ParamConfig.BOOLEAN(1, {
 			visibleIf: {overrideCustomMaterials: 1},
 			...CUSTOM_MAT_PARAM_OPTIONS,
 		});
-		/** @param depth */
+		/** @param depth material used for shadows from spot lights and directional lights */
 		createCustomMatDepth = ParamConfig.BOOLEAN(1, {
 			visibleIf: {overrideCustomMaterials: 1},
 			...CUSTOM_MAT_PARAM_OPTIONS,

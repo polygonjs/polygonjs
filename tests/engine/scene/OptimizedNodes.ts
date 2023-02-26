@@ -4,6 +4,7 @@ import {Poly} from '../../../src/engine/Poly';
 import {BoxSopNode} from '../../../src/engine/nodes/sop/Box';
 import {OperationsComposerSopNode} from '../../../src/engine/nodes/sop/OperationsComposer';
 import {TransformSopNode} from '../../../src/engine/nodes/sop/Transform';
+import {BufferAttribute} from 'three';
 
 QUnit.test('scene can be imported with a single optimized node', async (assert) => {
 	const scene = window.scene;
@@ -27,7 +28,7 @@ QUnit.test('scene can be imported with a single optimized node', async (assert) 
 	let container = await box1_player.compute();
 	const core_group = container.coreContent();
 	const geometry = core_group?.objectsWithGeo()[0].geometry;
-	assert.equal(geometry?.getAttribute('position').array.length, 72);
+	assert.equal((geometry?.getAttribute('position') as BufferAttribute).array.length, 72);
 });
 
 QUnit.test('scene can be imported with a 2 optimized nodes plugged into each other', async (assert) => {
@@ -56,7 +57,7 @@ QUnit.test('scene can be imported with a 2 optimized nodes plugged into each oth
 	let container = await transform1_player.compute();
 	const core_group = container.coreContent();
 	const geometry = core_group?.objectsWithGeo()[0].geometry;
-	assert.equal(geometry?.getAttribute('position').array.length, 72);
+	assert.equal((geometry?.getAttribute('position') as BufferAttribute).array.length, 72);
 });
 
 QUnit.test(
@@ -110,6 +111,6 @@ QUnit.test(
 		let container = await merge2_player.compute();
 		const core_group = container.coreContent();
 		const geometry = core_group?.objectsWithGeo()[0].geometry;
-		assert.equal(geometry?.getAttribute('position').array.length, 2955);
+		assert.equal((geometry?.getAttribute('position') as BufferAttribute).array.length, 2955);
 	}
 );

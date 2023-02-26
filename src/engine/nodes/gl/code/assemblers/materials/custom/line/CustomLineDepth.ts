@@ -1,11 +1,5 @@
-import {UniformsUtils} from 'three';
-import {ShaderMaterial} from 'three';
-import {ShaderLib} from 'three';
-import {RGBADepthPacking} from 'three';
-import {BasicDepthPacking} from 'three';
-
+import {UniformsUtils, ShaderMaterial, ShaderLib, RGBADepthPacking, BasicDepthPacking} from 'three';
 import {ShaderAssemblerMaterial} from '../../_BaseMaterial';
-
 import TemplateVertex from '../../../../templates/custom/line/CustomLineDepth.vert.glsl';
 import TemplateFragment from '../../../../templates/custom/mesh/CustomMeshDepth.frag.glsl';
 import {ShaderName} from '../../../../../../utils/shaders/ShaderName';

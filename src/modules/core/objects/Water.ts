@@ -104,7 +104,7 @@ export class Water extends BaseReflector<BufferGeometry, WaterMaterial> {
 					textureMatrix: {value: new Matrix4()},
 					sunColor: {value: new Color(0x7f7f7f)},
 					sunDirection: {value: new Vector3(0.70707, 0.70707, 0)},
-					direction: {value: new Vector3().copy(BaseReflector.DEFAULT_UP)},
+					direction: {value: new Vector3().copy(BaseReflector.REFLECTOR_DEFAULT_UP)},
 					eye: {value: new Vector3()},
 					wavesHeight: {value: wavesHeight},
 					waterColor: {value: new Color(0x555555)},

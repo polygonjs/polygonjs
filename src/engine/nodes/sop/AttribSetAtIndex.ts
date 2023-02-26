@@ -24,6 +24,7 @@ import {TypeAssert} from '../../poly/Assert';
 
 import {AttribSetAtIndexSopOperation} from '../../operations/sop/AttribSetAtIndex';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {BufferAttribute} from 'three';
 const DEFAULT = AttribSetAtIndexSopOperation.DEFAULT_PARAMS;
 class AttribSetAtIndexSopParamsConfig extends NodeParamsConfig {
 	/** @param the point or object index this applies to */
@@ -186,7 +187,7 @@ export class AttribSetAtIndexSopNode extends TypedSopNode<AttribSetAtIndexSopPar
 		if (!coreGeometry.hasAttrib(attribName)) {
 			coreGeometry.addNumericAttrib(attribName, this.pv.size, 0);
 		}
-		const attrib = coreGeometry.geometry().attributes[attribName];
+		const attrib = coreGeometry.geometry().attributes[attribName] as BufferAttribute;
 		const array = attrib.array as number[];
 		const {index, size} = this.pv;
 		switch (size) {

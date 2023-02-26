@@ -79,7 +79,7 @@ export class FaceSopNode extends TypedSopNode<FaceSopParamsConfig> {
 				const faces = ArrayUtils.chunk((geometry.index?.array as number[]) || [], 3);
 				const points_count = faces.length * 3;
 				for (let attrib_name of Object.keys(geometry.attributes)) {
-					const attrib = geometry.attributes[attrib_name];
+					const attrib = geometry.attributes[attrib_name] as BufferAttribute;
 					const attrib_size = attrib.itemSize;
 					const new_values = new Float32Array(points_count * attrib_size);
 					let new_value_index = 0;

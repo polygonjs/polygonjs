@@ -171,7 +171,7 @@ export function geom3ToBufferGeometry(csg: geometries.geom3.Geom3, options?: Geo
 
 export function geom3Positions(csg: geometries.geom3.Geom3): Vector3[] {
 	const bufferGeometry = geom3ToBufferGeometry(csg);
-	const positionAttribute = bufferGeometry.getAttribute('position');
+	const positionAttribute = bufferGeometry.getAttribute('position') as BufferAttribute;
 	const positionsArray = positionAttribute.array;
 	const pointsCount = positionAttribute.itemSize;
 	const vectors: Vector3[] = new Array(pointsCount);

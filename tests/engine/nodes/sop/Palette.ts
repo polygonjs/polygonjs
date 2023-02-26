@@ -1,4 +1,4 @@
-import {Color, Object3D} from 'three';
+import {BufferAttribute, Color, Object3D} from 'three';
 import {SORTED_PALETTE_NAMES} from '../../../../src/core/color/chromotomeWrapper';
 import {AttribClass} from '../../../../src/core/geometry/Constant';
 import {CoreObject} from '../../../../src/core/geometry/Object';
@@ -20,7 +20,7 @@ QUnit.test('sop/palette simple vertex', async (assert) => {
 	let coreContent = container.coreContent()!;
 	assert.ok(coreContent);
 	let geometry = coreContent.objectsWithGeo()[0].geometry;
-	let colorAttribArray = geometry.getAttribute('color').array;
+	let colorAttribArray = (geometry.getAttribute('color') as BufferAttribute).array;
 
 	assert.in_delta(colorAttribArray[0], 1, delta);
 	assert.in_delta(colorAttribArray[1], 0.09084171056747437, delta);
@@ -40,7 +40,7 @@ QUnit.test('sop/palette simple vertex', async (assert) => {
 	coreContent = container.coreContent()!;
 	assert.ok(coreContent);
 	geometry = coreContent.objectsWithGeo()[0].geometry;
-	colorAttribArray = geometry.getAttribute('color').array;
+	colorAttribArray = (geometry.getAttribute('color') as BufferAttribute).array;
 
 	assert.in_delta(colorAttribArray[0], 0.9046611785888672, delta);
 	assert.in_delta(colorAttribArray[1], 0.0003035269910469651, delta);

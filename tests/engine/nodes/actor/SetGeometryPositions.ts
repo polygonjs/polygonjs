@@ -1,4 +1,4 @@
-import {Mesh, Vector3} from 'three';
+import {BufferAttribute, Mesh, Vector3} from 'three';
 import {Attribute} from '../../../../src/core/geometry/Attribute';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {SetGeometryPositionsInputName} from '../../../../src/engine/nodes/actor/SetGeometryPositions';
@@ -43,7 +43,7 @@ QUnit.test('actor/setGeometryPositions', async (assert) => {
 	}
 	function readPositions() {
 		const geometry = object.geometry;
-		const positionArray = geometry.getAttribute(Attribute.POSITION).array;
+		const positionArray = (geometry.getAttribute(Attribute.POSITION) as BufferAttribute).array;
 		_positions[0].fromArray(positionArray, 0);
 		_positions[1].fromArray(positionArray, 3);
 		_positions[2].fromArray(positionArray, 6);

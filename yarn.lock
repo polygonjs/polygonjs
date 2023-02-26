@@ -252,7 +252,7 @@
   resolved "https://registry.yarnpkg.com/@mapbox/point-geometry/-/point-geometry-0.1.0.tgz#8a83f9335c7860effa2eeeca254332aa0aeed8f2"
   integrity sha512-6j56HdLTwWGO0fJPlrZtdU/B13q8Uwmo18Ck2GnGgN9PCFyKTZ3UbXeEdRFh18i9XQ92eH2VdtpJHpBD3aripQ==
 
-"@mapbox/tiny-sdf@^2.0.5":
+"@mapbox/tiny-sdf@^2.0.6":
   version "2.0.6"
   resolved "https://registry.yarnpkg.com/@mapbox/tiny-sdf/-/tiny-sdf-2.0.6.tgz#9a1d33e5018093e88f6a4df2343e886056287282"
   integrity sha512-qMqa27TLw+ZQz5Jk+RcwZGH7BQf5G/TrutJhspsca/3SHwmgKQ1iq+d3Jxz5oysPVYTGP6aXxCo5Lk9Er6YBAA==
@@ -632,10 +632,10 @@
   dependencies:
     "@types/node" "*"
 
-"@types/three@0.148.0":
-  version "0.148.0"
-  resolved "https://registry.yarnpkg.com/@types/three/-/three-0.148.0.tgz#bf7f0f6f12a9b318eebb7dc3813ae69824e13ae6"
-  integrity sha512-1GiErjt1pJMadO8EhaxNrtULzdn+f3BbM3YTukiiXBVeRvvx4CXc2rpYdEuEBU/ouCX7Rc95j1HoVG9kFQXQJw==
+"@types/three@0.149.0":
+  version "0.149.0"
+  resolved "https://registry.yarnpkg.com/@types/three/-/three-0.149.0.tgz#f48c03ffcf35b2d196f3532b51bc845e96f6090e"
+  integrity sha512-fgNBm9LWc65ER/W0cvoXdC0iMy7Ke9e2CONmEr6Jt8sDSY3sw4DgOubZfmdZ747dkPhbQrgRQAWwDEr2S/7IEg==
   dependencies:
     "@types/webxr" "*"
 
@@ -2942,16 +2942,16 @@ lru-cache@^6.0.0:
   dependencies:
     yallist "^4.0.0"
 
-mapbox-gl@2.12.0:
-  version "2.12.0"
-  resolved "https://registry.yarnpkg.com/mapbox-gl/-/mapbox-gl-2.12.0.tgz#e9df28e72adc2f5b5999007e836df72c2f189e10"
-  integrity sha512-T60fbDV1ULikrhwPdRbpeQOF02+Nhv7QgJ4uGfKWybkoH+DdCxNWTmT7OFiKR0uz9ed98TAodYiHZQAQtFdwwQ==
+mapbox-gl@2.13.0:
+  version "2.13.0"
+  resolved "https://registry.yarnpkg.com/mapbox-gl/-/mapbox-gl-2.13.0.tgz#a69b1ec4c26e075f17fa5db292757e5fe8af8310"
+  integrity sha512-G8pU1/I9HC7xNbhKPKFtRkdUDkWJBNbYPMeRjBig3lPaYtvHPIaFmXMR6BDyZ/gnwodElrwMZGdGsoH8kecX8w==
   dependencies:
     "@mapbox/geojson-rewind" "^0.5.2"
     "@mapbox/jsonlint-lines-primitives" "^2.0.2"
     "@mapbox/mapbox-gl-supported" "^2.0.1"
     "@mapbox/point-geometry" "^0.1.0"
-    "@mapbox/tiny-sdf" "^2.0.5"
+    "@mapbox/tiny-sdf" "^2.0.6"
     "@mapbox/unitbezier" "^0.0.1"
     "@mapbox/vector-tile" "^1.3.1"
     "@mapbox/whoots-js" "^3.1.0"
@@ -4078,10 +4078,10 @@ three-subdivide@1.1.2:
   resolved "https://registry.yarnpkg.com/three-subdivide/-/three-subdivide-1.1.2.tgz#e29f770dcfc748096086e9a20a66d0b16905d171"
   integrity sha512-qcMX3vIyKiZecJQuDZFoIkImOFwMBT/SzdGwMwoL+48Pq/6r3+jVGIKOP03sMjK9bOQDy3wc1ZH+xiUaYk2aCw==
 
-three@0.148.0:
-  version "0.148.0"
-  resolved "https://registry.yarnpkg.com/three/-/three-0.148.0.tgz#b6f62f9c84227f8d51c151bf17b67984ded8e4d7"
-  integrity sha512-8uzVV+qhTPi0bOFs/3te3RW6hb3urL8jYEl6irjCWo/l6sr8MPNMcClFev/MMYeIxr0gmDcoXTy/8LXh/LXkfw==
+three@0.150.0:
+  version "0.150.0"
+  resolved "https://registry.yarnpkg.com/three/-/three-0.150.0.tgz#38a324c3976e07799671d06d99f01b02a2fe65c6"
+  integrity sha512-12oqqBZom9fb5HtX3rD8qPVnamojuiN5Os7r0x8s3HQ+WHRwnEyzl2XU3aEKocsDkG++rkE9+HWzx77O59NXtw==
 
 thunky@^1.0.2:
   version "1.1.0"

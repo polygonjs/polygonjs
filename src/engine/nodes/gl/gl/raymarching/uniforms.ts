@@ -5,6 +5,7 @@ export interface RayMarchingUniforms {
 	MAX_DIST: IUniformN;
 	SURF_DIST: IUniformN;
 	NORMALS_BIAS: IUniformN;
+	SHADOW_BIAS: IUniformN;
 	debugMinSteps: IUniformN;
 	debugMaxSteps: IUniformN;
 	debugMinDepth: IUniformN;
@@ -30,6 +31,9 @@ export const RAYMARCHING_UNIFORMS: RayMarchingUniforms = {
 	NORMALS_BIAS: {
 		value: 0.01,
 	},
+	SHADOW_BIAS: {
+		value: 0,
+	},
 	debugMinSteps: {
 		value: 0,
 	},
@@ -46,13 +50,13 @@ export const RAYMARCHING_UNIFORMS: RayMarchingUniforms = {
 		value: 0,
 	},
 	shadowDistanceMax: {
-		value: 128,
+		value: 100,
 	},
 	shadowDepthMin: {
 		value: 0,
 	},
 	shadowDepthMax: {
-		value: 128,
+		value: 100,
 	},
 	envMapRotationY: {
 		value: 0,

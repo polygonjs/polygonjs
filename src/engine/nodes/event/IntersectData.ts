@@ -230,7 +230,7 @@ export class IntersectDataEventNode extends TypedEventNode<IntersectDataParamsCo
 		if (geometry && intersection.index != null) {
 			switch (attribType) {
 				case AttribType.NUMERIC: {
-					const attribute = geometry.getAttribute(attribName);
+					const attribute = geometry.getAttribute(attribName) as BufferAttribute|undefined;
 					if (attribute) {
 						return attribute.array[intersection.index];
 					}

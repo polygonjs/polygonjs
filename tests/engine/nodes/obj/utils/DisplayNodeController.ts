@@ -1,4 +1,4 @@
-import {Matrix4} from 'three';
+import {BufferAttribute, Matrix4} from 'three';
 import {Mesh} from 'three';
 import {BufferGeometry} from 'three';
 import {CoreSleep} from '../../../../../src/core/Sleep';
@@ -139,7 +139,7 @@ QUnit.test('geo obj renders the child which has the display node', async (assert
 		'object contains a hierarchy parent and a sop group'
 	);
 	let geometry = (obj.children[1].children[0] as Mesh).geometry as BufferGeometry;
-	assert.equal(geometry.getAttribute('position').array.length, 24 * 3);
+	assert.equal((geometry.getAttribute('position') as BufferAttribute).array.length, 24 * 3);
 
 	// display the plane
 	plane1.flags.display.set(true);
@@ -148,7 +148,7 @@ QUnit.test('geo obj renders the child which has the display node', async (assert
 	await CoreSleep.sleep(20);
 	assert.equal(obj.children.length, 2);
 	geometry = (obj.children[1].children[0] as Mesh).geometry as BufferGeometry;
-	let positions = geometry.getAttribute('position').array;
+	let positions = (geometry.getAttribute('position') as BufferAttribute).array;
 	assert.equal(positions.length, 4 * 3);
 	assert.equal(positions[0], -0.5);
 	assert.equal(positions[2], -0.5, 'y position');
@@ -159,7 +159,7 @@ QUnit.test('geo obj renders the child which has the display node', async (assert
 	await CoreSleep.sleep(20);
 	assert.equal(obj.children.length, 2);
 	geometry = (obj.children[1].children[0] as Mesh).geometry as BufferGeometry;
-	positions = geometry.getAttribute('position').array;
+	positions = (geometry.getAttribute('position') as BufferAttribute).array;
 	assert.equal(positions[0], -1);
 	assert.equal(positions[2], -2.5, 'y position');
 });

@@ -1,6 +1,6 @@
 import {ParamConfig} from '../../engine/nodes/utils/params/ParamsConfig';
 import {Constructor, Number3} from '../../types/GlobalTypes';
-import {ColorConversion} from '../Color';
+// import {ColorConversion} from '../Color';
 import {DefaultOperationParams} from '../operations/_Base';
 import {Color} from 'three';
 
@@ -21,7 +21,7 @@ export function AmbientLightParamConfig<TBase extends Constructor>(Base: TBase) 
 	return class Mixin extends Base {
 		/** @param sky color */
 		color = ParamConfig.COLOR(DEFAULT.color.toArray() as Number3, {
-			conversion: ColorConversion.SRGB_TO_LINEAR,
+			// conversion: ColorConversion.SRGB_TO_LINEAR,
 		});
 		/** @param light intensity */
 		intensity = ParamConfig.FLOAT(DEFAULT.intensity, {

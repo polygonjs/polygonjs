@@ -52,7 +52,7 @@ export abstract class BaseReflector<TGeometry extends BufferGeometry, TMaterial 
 	TGeometry,
 	TMaterial
 > {
-	static DEFAULT_UP = new Vector3(0, 0, 1);
+	static REFLECTOR_DEFAULT_UP = new Vector3(0, 0, 1);
 	public override type = 'BaseReflector';
 
 	private reflectorPlane = new Plane();
@@ -146,10 +146,10 @@ export abstract class BaseReflector<TGeometry extends BufferGeometry, TMaterial 
 
 	private static _coreTransform = new CoreTransform();
 	static rotateGeometry(geometry: BufferGeometry, direction: Vector3) {
-		this._coreTransform.rotateGeometry(geometry, direction, this.DEFAULT_UP);
+		this._coreTransform.rotateGeometry(geometry, direction, this.REFLECTOR_DEFAULT_UP);
 	}
 	static compensateGeometryRotation(object: Object3D, direction: Vector3) {
-		this._coreTransform.rotateObject(object, this.DEFAULT_UP, direction);
+		this._coreTransform.rotateObject(object, this.REFLECTOR_DEFAULT_UP, direction);
 	}
 
 	protected _onBeforeRender(

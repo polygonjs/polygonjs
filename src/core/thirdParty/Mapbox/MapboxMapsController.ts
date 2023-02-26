@@ -73,7 +73,7 @@ class MapboxMapsControllerClass {
 		const tlayer3D = CoreObject.attribValue(camera, MapboxCameraAttribute.LAYER_3D) as boolean;
 		const tlayerSky = CoreObject.attribValue(camera, MapboxCameraAttribute.LAYER_SKY) as boolean;
 
-		const map = new mapboxgl.Map({
+		const mapOptions: mapboxgl.MapboxOptions = {
 			style,
 			container,
 			center: [longitude, latitude],
@@ -86,7 +86,12 @@ class MapboxMapsControllerClass {
 			dragRotate: allowDragRotate,
 			pitchWithRotate: allowDragRotate,
 			antialias: true,
-		});
+			interactive: true,
+			// useWebGL2: true,
+		};
+		// webgl2 required since three 150 addition of textureLod in common.glsl
+		(mapOptions as any).useWebGL2 = true;
+		const map = new mapboxgl.Map(mapOptions);
 
 		const layersOptions: LayersOptions = {
 			map,

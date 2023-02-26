@@ -1,6 +1,6 @@
 import {ParamConfig} from '../../engine/nodes/utils/params/ParamsConfig';
 import {Constructor, Number3} from '../../types/GlobalTypes';
-import {ColorConversion} from '../Color';
+// import {ColorConversion} from '../Color';
 import {Vector3, Color} from 'three';
 import {DefaultOperationParams} from '../operations/_Base';
 
@@ -25,11 +25,11 @@ export function HemisphereLightParamConfig<TBase extends Constructor>(Base: TBas
 	return class Mixin extends Base {
 		/** @param sky color */
 		skyColor = ParamConfig.COLOR(DEFAULT.skyColor.toArray() as Number3, {
-			conversion: ColorConversion.SRGB_TO_LINEAR,
+			// conversion: ColorConversion.SRGB_TO_LINEAR,
 		});
 		/** @param ground color */
 		groundColor = ParamConfig.COLOR(DEFAULT.groundColor.toArray() as Number3, {
-			conversion: ColorConversion.SRGB_TO_LINEAR,
+			// conversion: ColorConversion.SRGB_TO_LINEAR,
 		});
 		/** @param light intensity */
 		intensity = ParamConfig.FLOAT(DEFAULT.intensity, {

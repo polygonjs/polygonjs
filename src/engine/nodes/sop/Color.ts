@@ -110,7 +110,7 @@ export class ColorSopNode extends TypedSopNode<ColorSopParamsConfig> {
 			return;
 		}
 		const geometry = coreGeometry.geometry();
-		const srcAttrib = geometry.getAttribute(attribName);
+		const srcAttrib = geometry.getAttribute(attribName) as BufferAttribute|undefined;
 		if (!srcAttrib) {
 			return;
 		}
@@ -120,7 +120,7 @@ export class ColorSopNode extends TypedSopNode<ColorSopParamsConfig> {
 
 		const srcAttribSize = coreGeometry.attribSize(attribName);
 		const srcArray = srcAttrib.array;
-		const destArray = geometry.getAttribute(COLOR_ATTRIB_NAME).array as number[];
+		const destArray = (geometry.getAttribute(COLOR_ATTRIB_NAME) as BufferAttribute).array as number[];
 
 		switch (srcAttribSize) {
 			case 1: {
@@ -193,7 +193,7 @@ export class ColorSopNode extends TypedSopNode<ColorSopParamsConfig> {
 		}
 		const geometry = (object as Mesh).geometry as BufferGeometry;
 		if (geometry) {
-			const array = geometry.getAttribute(COLOR_ATTRIB_NAME).array as number[];
+			const array = (geometry.getAttribute(COLOR_ATTRIB_NAME) as BufferAttribute).array as number[];
 
 			const tmpArrayR = await this._updateFromParam(geometry, array, points, 0);
 			const tmpArrayG = await this._updateFromParam(geometry, array, points, 1);

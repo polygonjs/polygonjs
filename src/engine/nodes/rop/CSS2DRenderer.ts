@@ -21,6 +21,8 @@ const DEFAULT_CSS = `.${DEFAULT_CSS2DOBJECT_CLASS} {
 	padding: 5px 10px;
 	border: 1px solid blue;
 	border-radius: 5px;
+	pointer-events: auto;
+	user-select: none;
 }`;
 
 class CSS2DRendererRopParamsConfig extends NodeParamsConfig {

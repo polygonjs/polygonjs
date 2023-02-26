@@ -6,6 +6,7 @@ uniform int MAX_STEPS;
 uniform float MAX_DIST;
 uniform float SURF_DIST;
 uniform float NORMALS_BIAS;
+uniform float SHADOW_BIAS;
 #define ZERO 0
 uniform float debugMinSteps;
 uniform float debugMaxSteps;
@@ -30,7 +31,7 @@ uniform float debugMaxDepth;
 	uniform float shadowDepthMax;
 #endif
 
-
+// varying vec2 vHighPrecisionZW;
 
 varying vec3 vPw;
 varying mat4 vModelMatrix;
@@ -156,26 +157,27 @@ float calcSoftshadow( in vec3 ro, in vec3 rd, float mint, float maxt, float k, i
 vec3 GetLight(vec3 _p, vec3 _n, inout SDFContext sdfContext) {
 	vec3 dif = vec3(0.,0.,0.);
 	GeometricContext geometry;
-	geometry.position = _p;
-	geometry.normal = _n;
+	// geometry.position = _p;
+	// geometry.normal = _n;
 	// geometry.viewDir = rayDir;
 
 	// vec4 mvPosition = vec4( p, 1.0 );
 	// mvPosition = modelViewMatrix * mvPosition;
 	// vec3 vViewPosition = - mvPosition.xyz;
 	vec3 pWorld = ( vModelMatrix * vec4( _p, 1.0 )).xyz;
+	vec3 nWorld = transformDirection(_n, vModelMatrix);
 	// geometry.position = (VViewMatrix * vec4( _p, 1.0 )).xyz;
 	geometry.position = (VViewMatrix * vec4(pWorld, 1.0 )).xyz;
 	// geometry.normal = transformDirection(_n, VViewMatrix);
 	// geometry.normal = inverseTransformDirection(transformDirection(_n, VViewMatrix), vInverseModelMatrix);
-	geometry.normal = transformDirection(transformDirection(_n, vModelMatrix), VViewMatrix);
+	geometry.normal = transformDirection(nWorld, VViewMatrix);
 	geometry.viewDir = ( isOrthographic ) ? vec3( 0, 0, 1 ) : normalize( cameraPosition - geometry.position );
 
 	#if NUM_SPOT_LIGHTS > 0 || NUM_DIR_LIGHTS > 0 || NUM_HEMI_LIGHTS > 0 || NUM_POINT_LIGHTS > 0 || NUM_RECT_AREA_LIGHTS > 0
 
 		IncidentLight directLight;
 		ReflectedLight reflectedLight;
-		vec3 lightPos, lightDir, worldLightDir;//, l;
+		vec3 lightPos, lightDir, worldLightDir, objectSpaceLightDir;//, l;
 		vec3 lighDif;
 		#if NUM_SPOT_LIGHTS > 0
 			SpotLightRayMarching spotLightRayMarching;
@@ -186,20 +188,34 @@ vec3 GetLight(vec3 _p, vec3 _n, inout SDFContext sdfContext) {
 			#endif
 			#pragma unroll_loop_start
 			for ( int i = 0; i < NUM_SPOT_LIGHTS; i ++ ) {
-				spotLight = spotLights[ i ];
 				spotLightRayMarching = spotLightsRayMarching[ i ];
+				spotLight = spotLights[ i ];
 				getSpotLightInfo( spotLight, geometry, directLight );
 				
-				#if defined( USE_SHADOWMAP ) && ( UNROLLED_LOOP_INDEX < NUM_SPOT_LIGHT_SHADOWS )
-					spotLightShadow = spotLightShadows[ i ];
-					vec4 spotLightShadowCoord = spotLightMatrix[ i ] * vec4(geometry.position, 1.0);
-					directLight.color *= all( bvec2( directLight.visible, receiveShadow ) ) ? getShadow( spotShadowMap[ i ], spotLightShadow.shadowMapSize, spotLightShadow.shadowBias, spotLightShadow.shadowRadius, spotLightShadowCoord ) : 1.0;
-				#endif
+				// #if defined( USE_SHADOWMAP ) && ( UNROLLED_LOOP_INDEX < NUM_SPOT_LIGHT_SHADOWS )
+				// 	spotLightShadow = spotLightShadows[ i ];
+				// 	vec4 spotLightShadowCoord = spotLightMatrix[ i ] * vec4(pWorld+SHADOW_BIAS*nWorld, 1.0);
+				// 	directLight.color *= (directLight.visible && receiveShadow) ? getShadow(
+				// 		spotShadowMap[ i ],
+				// 		spotLightShadow.shadowMapSize,
+				// 		spotLightShadow.shadowBias,
+				// 		spotLightShadow.shadowRadius,
+				// 		spotLightShadowCoord
+				// 	) : 1.0;
+				// #endif
 
 				lightPos = spotLight.position;
 				lightDir = normalize(lightPos-geometry.position);
 				worldLightDir = inverseTransformDirection(lightDir, VViewMatrix);
-				spotLightSdfShadow = calcSoftshadow(_p, worldLightDir, 10.*SURF_DIST, distance(geometry.position,lightPos), 1./max(spotLightRayMarching.penumbra*0.2,0.001), sdfContext);
+				objectSpaceLightDir = inverseTransformDirection(worldLightDir, vModelMatrix);
+				spotLightSdfShadow = calcSoftshadow(
+					_p,
+					objectSpaceLightDir,
+					10.*SURF_DIST,
+					distance(geometry.position,lightPos),
+					1./max(spotLightRayMarching.penumbra*0.2,0.001),
+					sdfContext
+				);
 				lighDif = directLight.color * clamp(dot(geometry.normal, lightDir), 0., 1.) * spotLightSdfShadow;
 				
 				dif += lighDif;
@@ -217,17 +233,32 @@ vec3 GetLight(vec3 _p, vec3 _n, inout SDFContext sdfContext) {
 			for ( int i = 0; i < NUM_DIR_LIGHTS; i ++ ) {
 				directionalLightRayMarching = directionalLightsRayMarching[ i ];
 				directionalLight = directionalLights[ i ];
-				lightDir = directionalLight.direction;
+				
 				getDirectionalLightInfo( directionalLight, geometry, directLight );
 
-				#if defined( USE_SHADOWMAP ) && ( UNROLLED_LOOP_INDEX < NUM_DIR_LIGHT_SHADOWS )
-					directionalLightShadow = directionalLightShadows[ i ];
-					vec4 dirLightShadowCoord = directionalShadowMatrix[ i ] * vec4(geometry.position, 1.0);
-					directLight.color *= all( bvec2( directLight.visible, receiveShadow ) ) ? getShadow( directionalShadowMap[ i ], directionalLightShadow.shadowMapSize, directionalLightShadow.shadowBias, directionalLightShadow.shadowRadius, dirLightShadowCoord ) : 1.0;
-				#endif
+				// #if defined( USE_SHADOWMAP ) && ( UNROLLED_LOOP_INDEX < NUM_DIR_LIGHT_SHADOWS )
+				// 	directionalLightShadow = directionalLightShadows[ i ];
+				// 	vec4 dirLightShadowCoord = directionalShadowMatrix[ i ] * vec4(pWorld+SHADOW_BIAS*nWorld, 1.0);
+				// 	directLight.color *= (directLight.visible && receiveShadow) ? getShadow(
+				// 		directionalShadowMap[ i ],
+				// 		directionalLightShadow.shadowMapSize,
+				// 		directionalLightShadow.shadowBias,
+				// 		directionalLightShadow.shadowRadius,
+				// 		dirLightShadowCoord
+				// 	) : 1.0;
+				// #endif
 
+				lightDir = directionalLight.direction;
 				worldLightDir = inverseTransformDirection(lightDir, VViewMatrix);
-				dirLightSdfShadow = calcSoftshadow(_p, worldLightDir, 10.*SURF_DIST, distance(geometry.position,lightPos), 1./max(directionalLightRayMarching.penumbra*0.2,0.001), sdfContext);
+				objectSpaceLightDir = inverseTransformDirection(worldLightDir, vModelMatrix);
+				dirLightSdfShadow = calcSoftshadow(
+					_p,
+					objectSpaceLightDir,
+					10.*SURF_DIST,
+					MAX_DIST,//distance(geometry.position,lightPos),
+					1./max(directionalLightRayMarching.penumbra*0.2,0.001),
+					sdfContext
+				);
 				lighDif = directLight.color * clamp(dot(geometry.normal, lightDir), 0., 1.) * dirLightSdfShadow;
 
 				dif += lighDif;
@@ -261,17 +292,33 @@ vec3 GetLight(vec3 _p, vec3 _n, inout SDFContext sdfContext) {
 				pointLight = pointLights[ i ];
 				getPointLightInfo( pointLight, geometry, directLight );
 
+
 				#if defined( USE_SHADOWMAP ) && ( UNROLLED_LOOP_INDEX < NUM_POINT_LIGHT_SHADOWS )
 					pointLightShadow = pointLightShadows[ i ];
-					vec4 pointLightShadowCoord = pointShadowMatrix[ i ] * vec4(geometry.position, 1.0);
-					directLight.color *= all( bvec2( directLight.visible, receiveShadow ) ) ? getPointShadow( pointShadowMap[ i ], pointLightShadow.shadowMapSize, pointLightShadow.shadowBias, pointLightShadow.shadowRadius, pointLightShadowCoord, pointLightShadow.shadowCameraNear, pointLightShadow.shadowCameraFar ) : 1.0;
+					vec4 pointLightShadowCoord = pointShadowMatrix[ i ] * vec4(pWorld+SHADOW_BIAS*nWorld, 1.0);
+					directLight.color *= (directLight.visible && receiveShadow) ? getPointShadow(
+						pointShadowMap[ i ],
+						pointLightShadow.shadowMapSize,
+						pointLightShadow.shadowBias,
+						pointLightShadow.shadowRadius,
+						pointLightShadowCoord,
+						pointLightShadow.shadowCameraNear,
+						pointLightShadow.shadowCameraFar
+					) : 1.0;
 				#endif
-				
+
 				lightPos = pointLight.position;
 				lightDir = normalize(lightPos-geometry.position);
 				worldLightDir = inverseTransformDirection(lightDir, VViewMatrix);
-				// TODO: check artefacts with self shadowing
-				pointLightSdfShadow = pointLightRayMarching.penumbra <= 0. ? 1. : calcSoftshadow(_p, worldLightDir, 10.*SURF_DIST, distance(geometry.position,lightPos), 1./max(pointLightRayMarching.penumbra*0.2,0.001), sdfContext);
+				objectSpaceLightDir = inverseTransformDirection(worldLightDir, vModelMatrix);
+				pointLightSdfShadow = calcSoftshadow(
+					_p,
+					objectSpaceLightDir,
+					10.*SURF_DIST,
+					distance(geometry.position,lightPos),
+					1./max(pointLightRayMarching.penumbra*0.2,0.001),
+					sdfContext
+				);
 				lighDif = directLight.color * clamp(dot(geometry.normal, lightDir), 0., 1.) * pointLightSdfShadow;
 
 				dif += lighDif;
@@ -346,9 +393,14 @@ void main()	{
 		return;
 	#endif
 	#if defined( SHADOW_DEPTH )
-		float normalizedDepth = 1.-(sdfContext.d - shadowDepthMin ) / ( shadowDepthMax - shadowDepthMin );
-		normalizedDepth = saturate(normalizedDepth); // clamp to [0,1]
-		gl_FragColor = packDepthToRGBA( normalizedDepth );
+		float normalizedDepth = 1.-(sdfContext.d - debugMinDepth ) / ( debugMaxDepth - debugMinDepth );
+		// float fragCoordZ = sdfContext.d / vHighPrecisionZW[1];
+		float compoundedDepth = 0.5 * (normalizedDepth) + 0.5;
+		float alpha = sdfContext.d < MAX_DIST ? 0.:1.;
+		gl_FragColor = vec4( vec3(compoundedDepth), alpha );
+		// normalizedDepth = 0.5*normalizedDepth+0.5;
+		// gl_FragColor = packDepthToRGBA( normalizedDepth );
+		// gl_FragColor = vec4(0.);
 		return;
 	#endif
 	#if defined( SHADOW_DISTANCE )

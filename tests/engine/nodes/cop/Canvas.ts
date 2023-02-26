@@ -110,9 +110,9 @@ QUnit.test('COP canvas simple', async (assert) => {
 		await CoreSleep.sleep(pauseDuration);
 		data = await getRenderData();
 		// the color of the root.backgroundColor seems to have an impact on this color, not sure why yet
-		assert.in_delta(data[0], 0.13, 0.1, 'black');
-		assert.in_delta(data[1], 0.13, 0.1, 'black');
-		assert.in_delta(data[2], 0.13, 0.1), 'black';
+		assert.in_delta(data[0], 0.02, 0.02, 'black');
+		assert.in_delta(data[1], 0.02, 0.02, 'black');
+		assert.in_delta(data[2], 0.02, 0.02), 'black';
 
 		setCanvasColor('white');
 		await CoreSleep.sleep(pauseDuration);

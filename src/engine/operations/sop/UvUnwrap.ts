@@ -2,7 +2,7 @@ import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
-import {Mesh} from 'three';
+import {BufferAttribute, Mesh} from 'three';
 import {Float32BufferAttribute, Uint32BufferAttribute} from 'three';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 import {BufferGeometry} from 'three';
@@ -104,11 +104,17 @@ export class UvUnwrapSopOperation extends BaseSopOperation {
 		}
 		xatlas.HEAPU16.set(geometry.index.array, meshInfo.indexOffset / Uint16Array.BYTES_PER_ELEMENT);
 		xatlas.HEAPF32.set(
-			geometry.attributes.position.array,
+			(geometry.attributes.position as BufferAttribute).array,
 			meshInfo.positionOffset / Float32Array.BYTES_PER_ELEMENT
 		);
-		xatlas.HEAPF32.set(geometry.attributes.normal.array, meshInfo.normalOffset / Float32Array.BYTES_PER_ELEMENT);
-		xatlas.HEAPF32.set(geometry.attributes.uv.array, meshInfo.uvOffset / Float32Array.BYTES_PER_ELEMENT);
+		xatlas.HEAPF32.set(
+			(geometry.attributes.normal as BufferAttribute).array,
+			meshInfo.normalOffset / Float32Array.BYTES_PER_ELEMENT
+		);
+		xatlas.HEAPF32.set(
+			(geometry.attributes.uv as BufferAttribute).array,
+			meshInfo.uvOffset / Float32Array.BYTES_PER_ELEMENT
+		);
 
 		const statusCode = xatlas.addMesh();
 		if (statusCode !== AddMeshStatus.Success) {
@@ -123,9 +129,9 @@ export class UvUnwrapSopOperation extends BaseSopOperation {
 		}
 
 		const meshData = xatlas.getMeshData(meshInfo.meshId);
-		const oldPositionArray = geometry.attributes.position.array;
-		const oldNormalArray = geometry.attributes.normal.array;
-		const oldUvArray = geometry.attributes.uv.array;
+		const oldPositionArray = (geometry.attributes.position as BufferAttribute).array;
+		const oldNormalArray = (geometry.attributes.normal as BufferAttribute).array;
+		const oldUvArray = (geometry.attributes.uv as BufferAttribute).array;
 		const newPositionArray = new Float32Array(meshData.newVertexCount * 3);
 		const newNormalArray = new Float32Array(meshData.newVertexCount * 3);
 		const newUvArray = new Float32Array(meshData.newVertexCount * 2);
@@ -186,11 +192,11 @@ export class UvUnwrapSopOperation extends BaseSopOperation {
 		if (!indexArray) {
 			return;
 		}
-		const positionArray = geometry.attributes.position?.array;
+		const positionArray = (geometry.attributes.position as BufferAttribute)?.array;
 		if (!positionArray) {
 			return;
 		}
-		const uvArray = geometry.attributes[params.uv]?.array;
+		const uvArray = (geometry.attributes[params.uv] as BufferAttribute)?.array;
 		if (!uvArray) {
 			return;
 		}

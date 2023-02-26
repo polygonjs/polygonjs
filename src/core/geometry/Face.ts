@@ -159,7 +159,7 @@ export class CoreFace {
 	) {
 		// let point_index, i, sum
 		const pointIndices = [face.a, face.b, face.c];
-		const positionAttrib = geometry.getAttribute('position');
+		const positionAttrib = geometry.getAttribute('position') as BufferAttribute;
 		const positionAttribArray = positionAttrib.array;
 		const pointPositions = pointIndices.map(
 			(point_index) =>

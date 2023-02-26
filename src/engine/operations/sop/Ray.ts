@@ -1,7 +1,7 @@
 import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
-import {Matrix4, Mesh, Triangle, Vector3} from 'three';
+import {BufferAttribute, Matrix4, Mesh, Triangle, Vector3} from 'three';
 import {Raycaster, Intersection} from 'three';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {MatDoubleSideTmpSetter} from '../../../core/render/MatDoubleSideTmpSetter';
@@ -142,7 +142,7 @@ export class RaySopOperation extends BaseSopOperation {
 		objectWorldMatInverse.copy(objectWorldMat).invert();
 
 		// find closest pt
-		const position = collisionGeometry.getAttribute('position');
+		const position = collisionGeometry.getAttribute('position') as BufferAttribute;
 		const points = coreGroup.points();
 		for (let point of points) {
 			point.getPosition(this._pointPos);

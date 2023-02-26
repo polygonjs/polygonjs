@@ -1,6 +1,6 @@
 import {ParamConfig} from '../../engine/nodes/utils/params/ParamsConfig';
 import {Constructor, Number3} from '../../types/GlobalTypes';
-import {ColorConversion} from '../Color';
+// import {ColorConversion} from '../Color';
 import {
 	Group,
 	Mesh,
@@ -53,7 +53,7 @@ export const DEFAULT_DIRECTIONAL_LIGHT_PARAMS: DirectionalLightParams = {
 	shadowRadius: 0,
 	debugShadow: false,
 	//
-	raymarchingPenumbra: 0,
+	raymarchingPenumbra: 0, // keep as 0 by default since it's more performant
 };
 const DEFAULT = DEFAULT_DIRECTIONAL_LIGHT_PARAMS;
 
@@ -62,7 +62,7 @@ export function DirectionalLightParamConfig<TBase extends Constructor>(Base: TBa
 		light = ParamConfig.FOLDER();
 		/** @param light color */
 		color = ParamConfig.COLOR(DEFAULT.color.toArray() as Number3, {
-			conversion: ColorConversion.SRGB_TO_LINEAR,
+			// conversion: ColorConversion.SRGB_TO_LINEAR,
 		});
 		/** @param light intensity */
 		intensity = ParamConfig.FLOAT(DEFAULT.intensity, {
@@ -103,6 +103,8 @@ export function DirectionalLightParamConfig<TBase extends Constructor>(Base: TBa
 		/** @param shadow bias */
 		shadowBias = ParamConfig.FLOAT(DEFAULT.shadowBias, {
 			visibleIf: {castShadow: true},
+			range: [-0.01, 0.01],
+			rangeLocked: [false, false],
 		});
 		/** @param shadows radius. This only has effect when setting the ROP/WebGLRenderer's shadowMapType to VSM */
 		shadowRadius = ParamConfig.FLOAT(DEFAULT.shadowRadius, {

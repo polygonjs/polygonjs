@@ -121,7 +121,7 @@ export class ClipSopOperation extends BaseSopOperation {
 		const outlineLines = new LineSegments(lineGeometry, DEFAULT_MATERIALS[ObjectType.LINE_SEGMENTS]);
 		outlineLines.frustumCulled = false;
 
-		const posAttr = outlineLines.geometry.attributes.position;
+		const posAttr = outlineLines.geometry.attributes.position as BufferAttribute;
 		// and we perform the intersection a second time to actually set the position attribute values
 		performIntersection(posAttr);
 

@@ -69,7 +69,7 @@ export class RenderersController {
 	}
 
 	createWebGLRenderer(params: WebGLRendererParameters) {
-		ColorManagement.legacyMode = true;
+		(ColorManagement as any).enabled = true;
 		const renderer = new WebGLRenderer(params);
 
 		this.assignIdToRenderer(renderer);

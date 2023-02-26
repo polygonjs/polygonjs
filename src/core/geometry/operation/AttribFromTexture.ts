@@ -33,7 +33,7 @@ export class AttribFromTexture {
 		const {data, resx, resy} = texture_data;
 		const texture_component_size = data.length / (resx * resy);
 
-		const uv_attrib = geometry.getAttribute(params.uvAttribName);
+		const uv_attrib = geometry.getAttribute(params.uvAttribName) as BufferAttribute;
 		if (!uv_attrib) {
 			return;
 		}

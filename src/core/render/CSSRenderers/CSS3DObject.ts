@@ -7,8 +7,6 @@ export class CSS3DObject extends Object3D {
 
 		this.element = element;
 		this.element.style.position = 'absolute';
-		this.element.style.pointerEvents = 'auto';
-		this.element.style.userSelect = 'none';
 
 		this.element.setAttribute('draggable', false as any);
 

@@ -26,7 +26,7 @@ import {CoreAttribute} from '../../../core/geometry/Attribute';
 import {CoreObject} from '../../../core/geometry/Object';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {TypeAssert} from '../../poly/Assert';
-import {BufferGeometry, Vector2, Vector3, Vector4} from 'three';
+import {BufferAttribute, BufferGeometry, Vector2, Vector3, Vector4} from 'three';
 
 type VectorComponent = 'x' | 'y' | 'z' | 'w';
 const COMPONENT_NAMES: Array<VectorComponent> = ['x', 'y', 'z', 'w'];
@@ -217,7 +217,7 @@ export class AttribCreateSopNode extends TypedSopNode<AttribCreateSopParamsConfi
 			}
 
 			const geometry = coreGeometry.geometry();
-			const attrib = geometry.getAttribute(attribName);
+			const attrib = geometry.getAttribute(attribName) as BufferAttribute;
 			attrib.needsUpdate = true;
 			const array = attrib.array as number[];
 			if (this.pv.size == 1) {

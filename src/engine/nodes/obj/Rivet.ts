@@ -4,7 +4,7 @@
  *
  */
 import {TypedObjNode} from './_Base';
-import {Group} from 'three';
+import {BufferAttribute, Group} from 'three';
 import {FlagsControllerD} from '../utils/FlagsController';
 import {AxesHelper} from 'three';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
@@ -218,7 +218,7 @@ export class RivetObjNode extends TypedObjNode<Mesh, RivetObjParamConfig> {
 		if (resolved_object) {
 			const geometry = resolved_object.geometry;
 			if (geometry) {
-				const position_attrib = geometry.attributes['position'];
+				const position_attrib = geometry.attributes['position'] as BufferAttribute;
 				if (position_attrib) {
 					const position_array = position_attrib.array;
 					this._found_point_post.fromArray(position_array, this.pv.pointIndex * 3);

@@ -38,9 +38,9 @@ export class MeshSurfaceSampler {
 
 		this.geometry = geometry;
 
-		this.positionAttribute = this.geometry.getAttribute('position');
+		this.positionAttribute = this.geometry.getAttribute('position') as BufferAttribute;
 		for (let attribName of additionalAttributeNames) {
-			const attribute = this.geometry.getAttribute(attribName);
+			const attribute = this.geometry.getAttribute(attribName) as BufferAttribute;
 			if (attribute) {
 				this.additionalAttributes.set(attribName, attribute);
 			}
@@ -48,7 +48,7 @@ export class MeshSurfaceSampler {
 	}
 
 	setWeightAttribute(name: string) {
-		this.weightAttribute = name ? this.geometry.getAttribute(name) : null;
+		this.weightAttribute = name ? (this.geometry.getAttribute(name) as BufferAttribute) : null;
 
 		return this;
 	}

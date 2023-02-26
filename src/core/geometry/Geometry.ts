@@ -6,7 +6,7 @@ import {
 	Vector3Like,
 	Vector4Like,
 } from '../../types/GlobalTypes';
-import {Vector3} from 'three';
+import {BufferAttribute, Vector3} from 'three';
 import {Int32BufferAttribute} from 'three';
 import {Float32BufferAttribute} from 'three';
 import {BufferGeometry} from 'three';
@@ -284,7 +284,7 @@ export class CoreGeometry {
 			delete this.userDataAttribs()[old_name];
 		}
 
-		const old_attrib = this._geometry.getAttribute(old_name);
+		const old_attrib = this._geometry.getAttribute(old_name) as BufferAttribute;
 		this._geometry.setAttribute(new_name.trim(), new Float32BufferAttribute(old_attrib.array, old_attrib.itemSize));
 		return this._geometry.deleteAttribute(old_name);
 	}
@@ -314,7 +314,6 @@ export class CoreGeometry {
 	}
 
 	static pointsCount(geometry: BufferGeometry): number {
-		let position;
 		let count = 0;
 		const core_geometry = new this(geometry);
 		let position_attrib_name = 'position';
@@ -322,7 +321,8 @@ export class CoreGeometry {
 			position_attrib_name = 'instancePosition';
 		}
 
-		if ((position = geometry.getAttribute(position_attrib_name)) != null) {
+		const position = geometry.getAttribute(position_attrib_name) as BufferAttribute | undefined;
+		if (position) {
 			let array;
 			if ((array = position.array) != null) {
 				count = array.length / 3;
@@ -339,7 +339,7 @@ export class CoreGeometry {
 	}
 	pointsFromGeometry(): CorePoint[] {
 		const points = [];
-		const positionAttrib = this._geometry.getAttribute(this.positionAttribName());
+		const positionAttrib = this._geometry.getAttribute(this.positionAttribName()) as BufferAttribute;
 
 		if (positionAttrib != null) {
 			const count = positionAttrib.array.length / 3;

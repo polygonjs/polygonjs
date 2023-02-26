@@ -1,4 +1,4 @@
-import {Mesh} from 'three';
+import {BufferAttribute, Mesh} from 'three';
 import {LOD} from 'three';
 import {BufferGeometry} from 'three';
 
@@ -25,18 +25,21 @@ QUnit.test('LOD simple', async (assert) => {
 
 	let container = await box0.compute();
 	let core_group = container.coreContent()!;
-	const box0_pts_count = ((core_group.objects()[0] as Mesh).geometry as BufferGeometry).getAttribute('position').array
-		.length;
+	const box0_pts_count = (
+		((core_group.objects()[0] as Mesh).geometry as BufferGeometry).getAttribute('position') as BufferAttribute
+	).array.length;
 
 	container = await box1.compute();
 	core_group = container.coreContent()!;
-	const box1_pts_count = ((core_group.objects()[0] as Mesh).geometry as BufferGeometry).getAttribute('position').array
-		.length;
+	const box1_pts_count = (
+		((core_group.objects()[0] as Mesh).geometry as BufferGeometry).getAttribute('position') as BufferAttribute
+	).array.length;
 
 	container = await box2.compute();
 	core_group = container.coreContent()!;
-	const box2_pts_count = ((core_group.objects()[0] as Mesh).geometry as BufferGeometry).getAttribute('position').array
-		.length;
+	const box2_pts_count = (
+		((core_group.objects()[0] as Mesh).geometry as BufferGeometry).getAttribute('position') as BufferAttribute
+	).array.length;
 
 	assert.equal(box0_pts_count, 2178);
 	assert.equal(box1_pts_count, 648);
@@ -55,7 +58,10 @@ QUnit.test('LOD simple', async (assert) => {
 	camera_object.updateProjectionMatrix();
 	lod.update(camera_object);
 	let visible_object = lod.children.filter((o) => o.visible)[0] as Mesh;
-	assert.equal((visible_object.geometry as BufferGeometry).getAttribute('position').array.length, box2_pts_count);
+	assert.equal(
+		((visible_object.geometry as BufferGeometry).getAttribute('position') as BufferAttribute).array.length,
+		box2_pts_count
+	);
 
 	camera_object.position.x = 9;
 	camera_object.updateMatrix();
@@ -63,7 +69,10 @@ QUnit.test('LOD simple', async (assert) => {
 	camera_object.updateProjectionMatrix();
 	lod.update(camera_object);
 	visible_object = lod.children.filter((o) => o.visible)[0] as Mesh;
-	assert.equal((visible_object.geometry as BufferGeometry).getAttribute('position').array.length, box1_pts_count);
+	assert.equal(
+		((visible_object.geometry as BufferGeometry).getAttribute('position') as BufferAttribute).array.length,
+		box1_pts_count
+	);
 
 	camera_object.position.x = 2;
 	camera_object.updateMatrix();
@@ -71,5 +80,8 @@ QUnit.test('LOD simple', async (assert) => {
 	camera_object.updateProjectionMatrix();
 	lod.update(camera_object);
 	visible_object = lod.children.filter((o) => o.visible)[0] as Mesh;
-	assert.equal((visible_object.geometry as BufferGeometry).getAttribute('position').array.length, box0_pts_count);
+	assert.equal(
+		((visible_object.geometry as BufferGeometry).getAttribute('position') as BufferAttribute).array.length,
+		box0_pts_count
+	);
 });

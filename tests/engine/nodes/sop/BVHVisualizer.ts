@@ -1,7 +1,7 @@
 import {ObjectTransformSpace} from './../../../../src/core/TransformSpace';
 import {TransformTargetType} from './../../../../src/core/Transform';
 import {HierarchyMode} from './../../../../src/engine/operations/sop/Hierarchy';
-import {Mesh, Vector3} from 'three';
+import {BufferAttribute, Mesh, Vector3} from 'three';
 
 QUnit.test('sop/BVHVisualizer simple', async (assert) => {
 	const geo1 = window.geo1;
@@ -17,27 +17,27 @@ QUnit.test('sop/BVHVisualizer simple', async (assert) => {
 	let coreGroup = container.coreContent()!;
 	assert.equal(coreGroup.objects().length, 2, '2 objects');
 	let geo = (coreGroup.objects()[0] as Mesh).geometry;
-	assert.equal(geo.attributes.position.array.length, 2883, '2883');
+	assert.equal((geo.attributes.position as BufferAttribute).array.length, 2883, '2883');
 	geo = (coreGroup.objects()[1].children[0] as Mesh).geometry;
-	assert.equal(geo.attributes.position.array.length, 5856, '5856');
+	assert.equal((geo.attributes.position as BufferAttribute).array.length, 5856, '5856');
 
 	BVHVisualizer1.p.depth.set(5);
 	container = await BVHVisualizer1.compute();
 	coreGroup = container.coreContent()!;
 	geo = (coreGroup.objects()[1].children[0] as Mesh).geometry;
-	assert.equal(geo.attributes.position.array.length, 384, '384');
+	assert.equal((geo.attributes.position as BufferAttribute).array.length, 384, '384');
 
 	BVHVisualizer1.p.depth.set(6);
 	container = await BVHVisualizer1.compute();
 	coreGroup = container.coreContent()!;
 	geo = (coreGroup.objects()[1].children[0] as Mesh).geometry;
-	assert.equal(geo.attributes.position.array.length, 768, '768');
+	assert.equal((geo.attributes.position as BufferAttribute).array.length, 768, '768');
 
 	BVHVisualizer1.p.depth.set(2);
 	container = await BVHVisualizer1.compute();
 	coreGroup = container.coreContent()!;
 	geo = (coreGroup.objects()[1].children[0] as Mesh).geometry;
-	assert.equal(geo.attributes.position.array.length, 48, '48');
+	assert.equal((geo.attributes.position as BufferAttribute).array.length, 48, '48');
 });
 
 QUnit.test('sop/BVHVisualizer with hierarchy', async (assert) => {

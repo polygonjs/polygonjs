@@ -96,10 +96,10 @@ export class AttribCopySopOperation extends BaseSopOperation {
 	}
 	private _copyPointAttributesBetweenGeometries(copyArgs: CopyBetweenGeometriesArgs) {
 		const {geo, attribName, params} = copyArgs;
-		const srcAttrib = geo.src.getAttribute(attribName.src);
+		const srcAttrib = geo.src.getAttribute(attribName.src) as BufferAttribute | undefined;
 		if (srcAttrib) {
 			const size = srcAttrib.itemSize;
-			const destAttrib = geo.dest.getAttribute(attribName.dest);
+			const destAttrib = geo.dest.getAttribute(attribName.dest) as BufferAttribute | undefined;
 			const srcPointsCount = srcAttrib.array.length / srcAttrib.itemSize;
 
 			if (destAttrib) {
@@ -112,7 +112,7 @@ export class AttribCopySopOperation extends BaseSopOperation {
 				}
 			} else {
 				const src_array = srcAttrib.array as number[];
-				const destPointsCount = geo.dest.getAttribute('position').array.length / 3;
+				const destPointsCount = (geo.dest.getAttribute('position') as BufferAttribute).array.length / 3;
 				const dest_array = src_array.slice(0, destPointsCount * size);
 				geo.dest.setAttribute(attribName.dest, new Float32BufferAttribute(dest_array, size));
 			}

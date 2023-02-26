@@ -29,6 +29,7 @@ export function updateMaterialSide(mat: Material, params: SideUpdateParamValues)
 	const newSide = isBooleanTrue(params.doubleSided) ? DoubleSide : singleSide;
 	if (newSide != mat.side) {
 		mat.side = newSide;
+		mat.forceSinglePass = !isBooleanTrue(params.doubleSided);
 		mat.needsUpdate = true;
 	}
 }

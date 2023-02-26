@@ -25,14 +25,14 @@ export function CustomMaterialRayMarchingParamConfig<TBase extends Constructor>(
 		});
 		/** @param min shadow depth for point lights */
 		shadowDistanceMin = ParamConfig.FLOAT(RAYMARCHING_UNIFORMS.shadowDistanceMin.value, {
-			range: [0, 128],
+			range: [0, 100],
 			rangeLocked: [true, false],
 			step: 1,
 			visibleIf: [{overrideCustomMaterials: 0}, {overrideCustomMaterials: 1, createCustomMatDistance: 1}],
 		});
 		/** @param max shadow depth for point lights */
 		shadowDistanceMax = ParamConfig.FLOAT(RAYMARCHING_UNIFORMS.shadowDistanceMax.value, {
-			range: [0, 128],
+			range: [0, 100],
 			rangeLocked: [true, false],
 			step: 1,
 			visibleIf: [{overrideCustomMaterials: 0}, {overrideCustomMaterials: 1, createCustomMatDistance: 1}],
@@ -44,14 +44,14 @@ export function CustomMaterialRayMarchingParamConfig<TBase extends Constructor>(
 		});
 		/** @param min shadow depth for spot lights and directional lights */
 		shadowDepthMin = ParamConfig.FLOAT(RAYMARCHING_UNIFORMS.shadowDepthMin.value, {
-			range: [0, 128],
+			range: [0, 100],
 			rangeLocked: [true, false],
 			step: 1,
 			visibleIf: [{overrideCustomMaterials: 0}, {overrideCustomMaterials: 1, createCustomMatDepth: 1}],
 		});
 		/** @param max shadow depth for spot lights and directional lights */
 		shadowDepthMax = ParamConfig.FLOAT(RAYMARCHING_UNIFORMS.shadowDepthMax.value, {
-			range: [0, 128],
+			range: [0, 100],
 			rangeLocked: [true, false],
 			step: 1,
 			visibleIf: [{overrideCustomMaterials: 0}, {overrideCustomMaterials: 1, createCustomMatDepth: 1}],

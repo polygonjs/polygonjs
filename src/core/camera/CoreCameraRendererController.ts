@@ -23,6 +23,10 @@ import type {PathTracingRenderer} from 'three-gpu-pathtracer';
 const UPDATE_STYLE = false;
 const SIZE_MULT = 1;
 
+export interface WebGLRendererWithTypes extends WebGLRenderer {
+	useLegacyLights: boolean;
+}
+
 interface CreateRendererOptions {
 	camera: Camera;
 	scene: PolyScene;
@@ -156,7 +160,7 @@ export class CoreCameraRendererController {
 		renderer.shadowMap.enabled = true;
 		renderer.shadowMap.type = DEFAULT_SHADOW_MAP_TYPE;
 
-		renderer.physicallyCorrectLights = true;
+		(renderer as WebGLRendererWithTypes).useLegacyLights = false;
 
 		// // TODO: find a way to have those accessible via params
 		renderer.toneMapping = DEFAULT_TONE_MAPPING;

@@ -13,7 +13,7 @@ import {
 	visibleIfColorsCountAtLeast,
 } from '../../../core/color/chromotomeWrapper';
 import {PaletteController, paletteControllerCallbackOptions} from '../utils/color/PaletteController';
-import {ColorConversion} from '../../../core/Color';
+// import {ColorConversion} from '../../../core/Color';
 import {NodeContext} from '../../poly/NodeContext';
 import {ColorParam} from '../../params/Color';
 import {Color} from 'three';
@@ -54,27 +54,27 @@ class PaletteCopParamsConfig extends NodeParamsConfig {
 	/** @param palette color 1 */
 	color1 = ParamConfig.COLOR([0, 0, 0], {
 		visibleIf: visibleIfColorsCountAtLeast(1),
-		conversion: ColorConversion.SRGB_TO_LINEAR,
+		// conversion: ColorConversion.SRGB_TO_LINEAR,
 	});
 	/** @param palette color 2 */
 	color2 = ParamConfig.COLOR([0, 0, 0], {
 		visibleIf: visibleIfColorsCountAtLeast(2),
-		conversion: ColorConversion.SRGB_TO_LINEAR,
+		// conversion: ColorConversion.SRGB_TO_LINEAR,
 	});
 	/** @param palette color 3 */
 	color3 = ParamConfig.COLOR([0, 0, 0], {
 		visibleIf: visibleIfColorsCountAtLeast(3),
-		conversion: ColorConversion.SRGB_TO_LINEAR,
+		// conversion: ColorConversion.SRGB_TO_LINEAR,
 	});
 	/** @param palette color 4 */
 	color4 = ParamConfig.COLOR([0, 0, 0], {
 		visibleIf: visibleIfColorsCountAtLeast(4),
-		conversion: ColorConversion.SRGB_TO_LINEAR,
+		// conversion: ColorConversion.SRGB_TO_LINEAR,
 	});
 	/** @param palette color 5 */
 	color5 = ParamConfig.COLOR([0, 0, 0], {
 		visibleIf: visibleIfColorsCountAtLeast(5),
-		conversion: ColorConversion.SRGB_TO_LINEAR,
+		// conversion: ColorConversion.SRGB_TO_LINEAR,
 	});
 }
 const ParamsConfig = new PaletteCopParamsConfig();

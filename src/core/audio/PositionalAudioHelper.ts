@@ -53,7 +53,7 @@ export class CorePositionalAudioHelper extends Line {
 		let stride;
 
 		const geometry = this.geometry;
-		const positionAttribute = geometry.attributes.position;
+		const positionAttribute = geometry.attributes.position as BufferAttribute;
 
 		geometry.clearGroups();
 

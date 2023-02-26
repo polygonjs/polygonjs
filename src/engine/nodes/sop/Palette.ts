@@ -15,7 +15,7 @@ import {
 	visibleIfColorsCountAtLeast,
 } from '../../../core/color/chromotomeWrapper';
 import {Number3} from '../../../types/GlobalTypes';
-import {ColorConversion} from '../../../core/Color';
+// import {ColorConversion} from '../../../core/Color';
 import {PaletteController, paletteControllerCallbackOptions} from '../utils/color/PaletteController';
 import {NodeContext} from '../../poly/NodeContext';
 import {
@@ -62,27 +62,27 @@ class PaletteSopParamsConfig extends NodeParamsConfig {
 	/** @param palette color 1 */
 	color1 = ParamConfig.COLOR(DEFAULT.color1.toArray() as Number3, {
 		visibleIf: visibleIfColorsCountAtLeast(1),
-		conversion: ColorConversion.SRGB_TO_LINEAR,
+		// conversion: ColorConversion.SRGB_TO_LINEAR,
 	});
 	/** @param palette color 2 */
 	color2 = ParamConfig.COLOR(DEFAULT.color2.toArray() as Number3, {
 		visibleIf: visibleIfColorsCountAtLeast(2),
-		conversion: ColorConversion.SRGB_TO_LINEAR,
+		// conversion: ColorConversion.SRGB_TO_LINEAR,
 	});
 	/** @param palette color 3 */
 	color3 = ParamConfig.COLOR(DEFAULT.color3.toArray() as Number3, {
 		visibleIf: visibleIfColorsCountAtLeast(3),
-		conversion: ColorConversion.SRGB_TO_LINEAR,
+		// conversion: ColorConversion.SRGB_TO_LINEAR,
 	});
 	/** @param palette color 4 */
 	color4 = ParamConfig.COLOR(DEFAULT.color4.toArray() as Number3, {
 		visibleIf: visibleIfColorsCountAtLeast(4),
-		conversion: ColorConversion.SRGB_TO_LINEAR,
+		// conversion: ColorConversion.SRGB_TO_LINEAR,
 	});
 	/** @param palette color 5 */
 	color5 = ParamConfig.COLOR(DEFAULT.color5.toArray() as Number3, {
 		visibleIf: visibleIfColorsCountAtLeast(5),
-		conversion: ColorConversion.SRGB_TO_LINEAR,
+		// conversion: ColorConversion.SRGB_TO_LINEAR,
 	});
 }
 const ParamsConfig = new PaletteSopParamsConfig();

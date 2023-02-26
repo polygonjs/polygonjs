@@ -20,6 +20,7 @@ import {
 	OrthographicCamera,
 	PlaneGeometry,
 	WebGLRenderTarget,
+	BufferAttribute,
 } from 'three';
 import {TypedObjNode} from './_Base';
 import {FlagsControllerD} from '../utils/FlagsController';
@@ -155,7 +156,7 @@ export class ContactShadowObjNode extends TypedObjNode<Group, ContactShadowObjPa
 
 		const planeGeometry = new PlaneGeometry(PLANE_WIDTH, PLANE_HEIGHT).rotateX(-Math.PI / 2);
 		// update uvs
-		const uvArray = planeGeometry.getAttribute('uv').array as number[];
+		const uvArray = (planeGeometry.getAttribute('uv') as BufferAttribute).array as number[];
 		for (let index of [1, 3, 5, 7]) {
 			uvArray[index] = 1 - uvArray[index];
 		}

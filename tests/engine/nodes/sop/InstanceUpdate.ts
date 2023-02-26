@@ -1,4 +1,4 @@
-import {InstancedBufferGeometry} from 'three';
+import {BufferAttribute, InstancedBufferGeometry} from 'three';
 import {Attribute} from '../../../../src/core/geometry/Attribute';
 import {InstanceAttrib} from '../../../../src/core/geometry/Instancer';
 import {InstanceUpdateMode} from '../../../../src/engine/operations/sop/InstanceUpdate';
@@ -30,7 +30,7 @@ QUnit.test('instanceUpdate simple on geo mode', async (assert) => {
 		let objects = core_group.objectsWithGeo();
 		let first_object = objects[0];
 		let first_geo = first_object.geometry as InstancedBufferGeometry;
-		return first_geo.getAttribute(Attribute.POSITION).array;
+		return (first_geo.getAttribute(Attribute.POSITION) as BufferAttribute).array;
 	}
 
 	assert.in_delta((await getPosition())[0], 0.5, 0.1);
@@ -65,7 +65,7 @@ QUnit.test('instanceUpdate simple on point mode', async (assert) => {
 		let objects = core_group.objectsWithGeo();
 		let first_object = objects[0];
 		let first_geo = first_object.geometry as InstancedBufferGeometry;
-		return first_geo.getAttribute(InstanceAttrib.POSITION).array;
+		return (first_geo.getAttribute(InstanceAttrib.POSITION) as BufferAttribute).array;
 	}
 
 	assert.in_delta((await getPosition())[0], -2.3, 0.1);

@@ -1,4 +1,4 @@
-import {Camera, PerspectiveCamera} from 'three';
+import {BufferAttribute, Camera, PerspectiveCamera} from 'three';
 import {Vector3} from 'three';
 import {LineSegments} from 'three';
 import {Color} from 'three';
@@ -211,7 +211,7 @@ function setPoint(
 	const points = pointMap[point];
 
 	if (points !== undefined) {
-		const position = geometry.getAttribute('position');
+		const position = geometry.getAttribute('position') as BufferAttribute;
 
 		for (let i = 0, l = points.length; i < l; i++) {
 			position.setXYZ(points[i], _vector.x, _vector.y, _vector.z);

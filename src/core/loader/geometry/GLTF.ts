@@ -85,18 +85,17 @@ export class GLTFLoaderHandler extends BaseGeoLoaderHandler<GLTF> {
 		const DRACOGLTFPath = Poly.libs.DRACOGLTFPath();
 		if (root || DRACOGLTFPath) {
 			const decoderPath = sanitizeUrl(`${root || ''}${DRACOGLTFPath || ''}/`);
-
+			const timestamp = Date.now();
 			const files = useJS ? ['draco_decoder.js'] : ['draco_decoder.wasm', 'draco_wasm_wrapper.js'];
 			await CoreBaseLoader._loadMultipleBlobGlobal({
 				files: files.map((file) => {
 					return {
-						fullUrl: `${decoderPath}${file}`,
+						fullUrl: `${decoderPath}${file}?t=${timestamp}`,
 					};
 				}),
 				node,
 				error: `failed to load draco libraries. Make sure to install them to load .glb files (${LIBRARY_INSTALL_HINT})`,
 			});
-
 			dracoLoader.setDecoderPath(decoderPath);
 		} else {
 			(dracoLoader as any).setDecoderPath(undefined);

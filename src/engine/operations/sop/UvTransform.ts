@@ -1,7 +1,7 @@
 import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
-import {Vector2} from 'three';
+import {BufferAttribute, Vector2} from 'three';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 
@@ -28,7 +28,7 @@ export class UvTransformSopOperation extends BaseSopOperation {
 		const objects = input_contents[0].objectsWithGeo();
 		for (let object of objects) {
 			const geometry = object.geometry;
-			const attrib = geometry.getAttribute(params.attribName);
+			const attrib = geometry.getAttribute(params.attribName) as BufferAttribute;
 			const array = attrib.array as number[];
 			const ptsCount = array.length / 2;
 			for (let i = 0; i < ptsCount; i++) {

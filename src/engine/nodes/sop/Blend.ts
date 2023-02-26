@@ -6,7 +6,7 @@
  *
  */
 import {TypedSopNode} from './_Base';
-import {Object3D} from 'three';
+import {BufferAttribute, Object3D} from 'three';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {CoreGroup} from '../../../core/geometry/Group';
@@ -62,8 +62,8 @@ export class BlendSopNode extends TypedSopNode<BlendSopParamsConfig> {
 			return;
 		}
 
-		const attrib0 = geometry0.getAttribute(this.pv.attribName);
-		const attrib1 = geometry1.getAttribute(this.pv.attribName);
+		const attrib0 = geometry0.getAttribute(this.pv.attribName) as BufferAttribute | undefined;
+		const attrib1 = geometry1.getAttribute(this.pv.attribName) as BufferAttribute | undefined;
 		if (attrib0 == null || attrib1 == null) {
 			return;
 		}

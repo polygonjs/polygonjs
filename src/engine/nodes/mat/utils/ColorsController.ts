@@ -11,7 +11,7 @@ export function ColorParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		/** @param material color */
 		color = ParamConfig.COLOR([1, 1, 1], {
-			conversion: ColorConversion.SRGB_TO_LINEAR,
+			// conversion: ColorConversion.SRGB_TO_LINEAR,
 		});
 		/** @param defines if the color attribute on the geometry is used */
 		useVertexColors = ParamConfig.BOOLEAN(0, {separatorAfter: true});

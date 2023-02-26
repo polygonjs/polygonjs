@@ -8,6 +8,9 @@ varying mat4 VViewMatrix;
 
 #include <common>
 
+// // for depth material
+// varying vec2 vHighPrecisionZW;
+
 void main()	{
 
 	vModelMatrix = modelMatrix;
@@ -16,4 +19,5 @@ void main()	{
 	vPw = (modelMatrix * vec4( position, 1.0 )).xyz;
 	gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
 
+	// vHighPrecisionZW = gl_Position.zw;
 }

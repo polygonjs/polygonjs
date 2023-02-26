@@ -46,7 +46,7 @@ QUnit.test('cop/cubeMapFromScene simple', async (assert) => {
 		bufferHeight,
 		pixelBuffer
 	);
-	assert.deepEqual(pixelBuffer.join(':'), [10883, 13017, 14382, 15360].join(':'), 'start values');
+	assert.deepEqual(pixelBuffer.join(':'), [13312, 14336, 14848, 15360].join(':'), 'start values');
 
 	sphere1.p.radius.set(sphere1.pv.radius + 1);
 	container = await cubeMapFromScene1.compute();
@@ -62,7 +62,7 @@ QUnit.test('cop/cubeMapFromScene simple', async (assert) => {
 		bufferHeight,
 		pixelBuffer
 	);
-	assert.deepEqual(pixelBuffer.join(':'), [10883, 13017, 14382, 15360].join(':'), 'no changes');
+	assert.deepEqual(pixelBuffer.join(':'), [13312, 14336, 14848, 15360].join(':'), 'no changes');
 
 	const uuid2 = texture.uuid;
 	assert.notEqual(uuid1, uuid2);
@@ -85,7 +85,7 @@ QUnit.test('cop/cubeMapFromScene simple', async (assert) => {
 		bufferHeight,
 		pixelBuffer
 	);
-	assert.deepEqual(pixelBuffer.join(':'), [14382, 11439, 15360, 15360].join(':'), ' changes');
+	assert.deepEqual(pixelBuffer.join(':'), [14848, 13516, 15360, 15360].join(':'), ' changes');
 
 	RendererUtils.dispose();
 });

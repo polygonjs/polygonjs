@@ -6,7 +6,7 @@
 
 import {ActorNodeTriggerContext, TypedActorNode} from './_Base';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
-import {Vector3, Mesh} from 'three';
+import {Vector3, Mesh, BufferAttribute} from 'three';
 import {Attribute} from '../../../core/geometry/Attribute';
 import {ActorConnectionPointType} from '../utils/io/connections/Actor';
 import {isBooleanTrue} from '../../../core/Type';
@@ -89,7 +89,7 @@ export class SetGeometryPositionsActorNode extends TypedActorNode<SetGeometryPos
 
 		const geometry = (Object3D as Mesh).geometry;
 		if (values && geometry) {
-			const positionAttribute = geometry.getAttribute(Attribute.POSITION);
+			const positionAttribute = geometry.getAttribute(Attribute.POSITION) as BufferAttribute | undefined;
 			if (positionAttribute) {
 				const lerp =
 					this._inputValue<ActorConnectionPointType.FLOAT>(SetGeometryPositionsInputName.lerp, context) || 1;

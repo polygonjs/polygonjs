@@ -1,4 +1,4 @@
-import {Object3D, Vector3} from 'three';
+import {BufferAttribute, Object3D, Vector3} from 'three';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {AttribCreateSopNode} from '../../../../src/engine/nodes/sop/AttribCreate';
 import {CircleSopNode} from '../../../../src/engine/nodes/sop/Circle';
@@ -10,7 +10,7 @@ async function firstPos(node: BaseSopNodeType): Promise<Vector3> {
 	const coreGroup = container.coreContent()!;
 	const object = coreGroup.objectsWithGeo()[0];
 	const v = new Vector3();
-	v.fromArray(object.geometry.attributes.position.array);
+	v.fromArray((object.geometry.attributes.position as BufferAttribute).array);
 	return v;
 }
 

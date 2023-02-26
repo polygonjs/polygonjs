@@ -2,6 +2,7 @@ import {BaseSopOperation} from './_Base';
 import {CoreGroup, Object3DWithGeometry} from '../../../core/geometry/Group';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
+import {BufferAttribute} from 'three';
 interface RestAttributesSopParams extends DefaultOperationParams {
 	tposition: boolean;
 	position: string;
@@ -40,7 +41,7 @@ export class RestAttributesSopOperation extends BaseSopOperation {
 		for (let object of objects) {
 			const geometry = object.geometry;
 			if (geometry) {
-				const src_attrib = geometry.getAttribute(attrib_name);
+				const src_attrib = geometry.getAttribute(attrib_name) as BufferAttribute | undefined;
 				if (src_attrib) {
 					geometry.setAttribute(rest_attrib_name, src_attrib.clone());
 				}

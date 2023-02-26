@@ -76,6 +76,12 @@ export function RayMarchingMainParamConfig<TBase extends Constructor>(Base: TBas
 			rangeLocked: [true, false],
 			step: 0.0000001,
 		});
+		/** @param precision for shadows computation */
+		shadowBias = ParamConfig.FLOAT(RAYMARCHING_UNIFORMS.SHADOW_BIAS.value, {
+			range: [-0.1, 0.1],
+			rangeLocked: [false, false],
+			step: 0.0000001,
+		});
 	};
 }
 
@@ -185,6 +191,7 @@ export class RayMarchingController {
 		uniforms.MAX_DIST.value = pv.maxDist;
 		uniforms.SURF_DIST.value = pv.surfDist;
 		uniforms.NORMALS_BIAS.value = pv.normalsBias;
+		uniforms.SHADOW_BIAS.value = pv.shadowBias;
 
 		uniforms.shadowDepthMin.value = pv.shadowDepthMin;
 		uniforms.shadowDepthMax.value = pv.shadowDepthMax;

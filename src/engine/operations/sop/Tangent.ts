@@ -1,6 +1,6 @@
 import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {Float32BufferAttribute, Object3D, Vector3, Mesh} from 'three';
+import {Float32BufferAttribute, Object3D, Vector3, Mesh, BufferAttribute} from 'three';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
@@ -50,7 +50,7 @@ export class TangentSopOperation extends BaseSopOperation {
 		if (!geometry) {
 			return;
 		}
-		const positionAttribute = geometry.getAttribute(Attribute.POSITION);
+		const positionAttribute = geometry.getAttribute(Attribute.POSITION) as BufferAttribute | undefined;
 		if (!positionAttribute) {
 			return;
 		}
@@ -58,11 +58,11 @@ export class TangentSopOperation extends BaseSopOperation {
 		const pointsCount = positionArray.length / STRIDE;
 
 		// add attribute if not present
-		let tangentAttribute = geometry.getAttribute(tangentName);
+		let tangentAttribute = geometry.getAttribute(tangentName) as BufferAttribute;
 		if (!tangentAttribute) {
 			const values = new Array(pointsCount * STRIDE).fill(1);
 			geometry.setAttribute(tangentName, new Float32BufferAttribute(values, STRIDE));
-			tangentAttribute = geometry.getAttribute(tangentName);
+			tangentAttribute = geometry.getAttribute(tangentName) as BufferAttribute;
 		}
 		const tangentArray = tangentAttribute.array;
 

@@ -35,6 +35,7 @@ import {isBooleanTrue} from '../../../core/BooleanValue';
 import {defaultPixelRatio} from '../../../core/render/defaultPixelRatio';
 import {PowerPreference, POWER_PREFERENCES} from '../../../core/render/Common';
 import {BaseNodeType} from '../_Base';
+import {WebGLRendererWithTypes} from '../../../core/camera/CoreCameraRendererController';
 enum EncodingName {
 	Linear = 'Linear',
 	sRGB = 'sRGB',
@@ -457,7 +458,7 @@ export class WebGLRendererRopNode extends TypedRopNode<WebGLRendererRopParamsCon
 		renderer.sortObjects = this.pv.sortObjects;
 	}
 	private _updateRendererPhysicallyCorrect(renderer: WebGLRenderer) {
-		renderer.physicallyCorrectLights = this.pv.physicallyCorrectLights;
+		(renderer as WebGLRendererWithTypes).useLegacyLights = !this.pv.physicallyCorrectLights;
 	}
 	private _updateRendererPixelRatio(renderer: WebGLRenderer) {
 		const pixelRatio = this.pv.tpixelRatio ? this.pv.pixelRatio : defaultPixelRatio();

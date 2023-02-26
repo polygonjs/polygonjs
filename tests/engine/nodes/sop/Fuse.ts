@@ -1,3 +1,4 @@
+import { BufferAttribute } from 'three';
 import {BaseSopNodeType} from '../../../../src/engine/nodes/sop/_Base';
 
 QUnit.test('fuse simple', async (assert) => {
@@ -35,7 +36,7 @@ async function getIndex(node: BaseSopNodeType) {
 async function getPosition(node: BaseSopNodeType) {
 	const container = await node.compute();
 	const object = container.coreContent()!.objectsWithGeo()[0];
-	return [...(object.geometry.getAttribute('position')!.array as number[])];
+	return [...((object.geometry.getAttribute('position')! as BufferAttribute).array as number[])];
 }
 
 QUnit.test('fuse on simple mesh', async (assert) => {

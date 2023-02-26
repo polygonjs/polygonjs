@@ -1,4 +1,4 @@
-import {BufferGeometry, Vector2, Vector3, Vector4, Quaternion} from 'three';
+import {BufferGeometry, Vector2, Vector3, Vector4, Quaternion, BufferAttribute} from 'three';
 import {InstanceAttrib} from '../../../../core/geometry/Instancer';
 
 const tmpV2 = new Vector2();
@@ -18,7 +18,7 @@ export function updateInstancePositions(
 	lerp: number,
 	attributeNeedsUpdate: boolean
 ) {
-	const instancePositionAttribute = geometry.getAttribute(InstanceAttrib.POSITION);
+	const instancePositionAttribute = geometry.getAttribute(InstanceAttrib.POSITION) as BufferAttribute | undefined;
 	if (!instancePositionAttribute) {
 		return;
 	}
@@ -50,7 +50,7 @@ export function updateInstanceQuaternions(
 	lerp: number,
 	attributeNeedsUpdate: boolean
 ) {
-	const instanceQuaternionAttribute = geometry.getAttribute(InstanceAttrib.QUATERNION);
+	const instanceQuaternionAttribute = geometry.getAttribute(InstanceAttrib.QUATERNION) as BufferAttribute | undefined;
 	if (!instanceQuaternionAttribute) {
 		return;
 	}
@@ -82,7 +82,7 @@ export function updateInstanceScales(
 	lerp: number,
 	attributeNeedsUpdate: boolean
 ) {
-	const instanceScaleAttribute = geometry.getAttribute(InstanceAttrib.SCALE);
+	const instanceScaleAttribute = geometry.getAttribute(InstanceAttrib.SCALE) as BufferAttribute | undefined;
 	if (!instanceScaleAttribute) {
 		return;
 	}
@@ -147,7 +147,7 @@ export function updateInstanceAttributeFloat(
 	lerp: number,
 	attributeNeedsUpdate: boolean
 ) {
-	const instanceAttribute = geometry.getAttribute(attribName);
+	const instanceAttribute = geometry.getAttribute(attribName) as BufferAttribute | undefined;
 	if (!instanceAttribute) {
 		return;
 	}
@@ -176,7 +176,7 @@ export function updateInstanceAttributeVector2(
 	lerp: number,
 	attributeNeedsUpdate: boolean
 ) {
-	const instanceAttribute = geometry.getAttribute(attribName);
+	const instanceAttribute = geometry.getAttribute(attribName) as BufferAttribute | undefined;
 	if (!instanceAttribute) {
 		return;
 	}
@@ -209,7 +209,7 @@ export function updateInstanceAttributeVector3(
 	lerp: number,
 	attributeNeedsUpdate: boolean
 ) {
-	const instanceAttribute = geometry.getAttribute(attribName);
+	const instanceAttribute = geometry.getAttribute(attribName) as BufferAttribute | undefined;
 	if (!instanceAttribute) {
 		return;
 	}
@@ -242,7 +242,7 @@ export function updateInstanceAttributeVector4(
 	lerp: number,
 	attributeNeedsUpdate: boolean
 ) {
-	const instanceAttribute = geometry.getAttribute(attribName);
+	const instanceAttribute = geometry.getAttribute(attribName) as BufferAttribute | undefined;
 	if (!instanceAttribute) {
 		return;
 	}
@@ -274,7 +274,7 @@ export function updateInstanceAttributeQuaternions(
 	lerp: number,
 	attributeNeedsUpdate: boolean
 ) {
-	const instanceAttribute = geometry.getAttribute(attribName);
+	const instanceAttribute = geometry.getAttribute(attribName) as BufferAttribute | undefined;
 	if (!instanceAttribute) {
 		return;
 	}

@@ -1,5 +1,5 @@
 import {BaseShaderAssemblerRayMarchingRendered} from '../../_BaseRayMarchingRendered';
-import {FrontSide, UniformsUtils, ShaderMaterial, ShaderLib, RGBADepthPacking} from 'three';
+import {FrontSide, UniformsUtils, ShaderMaterial, ShaderLib, BasicDepthPacking} from 'three';
 import VERTEX from '../../../../../gl/raymarching/vert.glsl';
 import FRAGMENT from '../../../../../gl/raymarching/frag.glsl';
 import {RAYMARCHING_UNIFORMS} from '../../../../../gl/raymarching/uniforms';
@@ -35,13 +35,14 @@ export class ShaderAssemblerRayMarchingDepth extends BaseShaderAssemblerRayMarch
 			lights: false,
 			defines: {
 				SHADOW_DEPTH: 1,
+				DEPTH_PACKING: BasicDepthPacking,
 			},
 			uniforms: {
 				...UniformsUtils.clone(ShaderLib.standard.uniforms),
 				...UniformsUtils.clone(templateShader.uniforms),
 			},
 		});
-		(material as any).depthPacking = RGBADepthPacking;
+		(material as any).depthPacking = BasicDepthPacking;
 
 		this._gl_parent_node.scene().sceneTraverser.addLightsRayMarchingUniform(material.uniforms);
 		// CoreMaterial.addUserDataRenderHook(material, RayMarchingController.renderHook.bind(RayMarchingController));

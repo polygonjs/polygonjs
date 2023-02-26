@@ -7,7 +7,6 @@ export class CSS2DObject extends Object3D {
 		super();
 
 		this.element.style.position = 'absolute';
-		this.element.style.userSelect = 'none';
 
 		this.element.setAttribute('draggable', false as any);
 

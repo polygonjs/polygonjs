@@ -1,6 +1,6 @@
 import {ParamConfig} from '../../engine/nodes/utils/params/ParamsConfig';
 import {Constructor, Number2, Number3} from '../../types/GlobalTypes';
-import {ColorConversion} from '../Color';
+// import {ColorConversion} from '../Color';
 import {Vector2, Color, Mesh, Vector3, PointLight, SphereGeometry} from 'three';
 import {LIGHT_HELPER_MAT} from './_Base';
 import {DefaultOperationParams} from '../operations/_Base';
@@ -38,7 +38,7 @@ export const DEFAULT_POINT_LIGHT_PARAMS: PointLightParams = {
 	shadowAutoUpdate: true,
 	shadowUpdateOnNextRender: false,
 	shadowRes: new Vector2(1024, 1024),
-	shadowBias: 0.001,
+	shadowBias: 0.0001,
 	shadowNear: 1,
 	shadowFar: 100,
 	// debugShadow: false,
@@ -46,7 +46,7 @@ export const DEFAULT_POINT_LIGHT_PARAMS: PointLightParams = {
 	showHelper: false,
 	helperSize: 1,
 	//
-	raymarchingPenumbra: 0,
+	raymarchingPenumbra: 0, // keep as 0 by default since it's more performant
 };
 const DEFAULT = DEFAULT_POINT_LIGHT_PARAMS;
 
@@ -55,7 +55,7 @@ export function PointLightParamConfig<TBase extends Constructor>(Base: TBase) {
 		light = ParamConfig.FOLDER();
 		/** @param light color */
 		color = ParamConfig.COLOR(DEFAULT.color.toArray() as Number3, {
-			conversion: ColorConversion.SRGB_TO_LINEAR,
+			// conversion: ColorConversion.SRGB_TO_LINEAR,
 		});
 		/** @param light intensity */
 		intensity = ParamConfig.FLOAT(DEFAULT.intensity, {
@@ -95,7 +95,11 @@ export function PointLightParamConfig<TBase extends Constructor>(Base: TBase) {
 		/** @param shadow res */
 		shadowRes = ParamConfig.VECTOR2(DEFAULT.shadowRes.toArray() as Number2, {visibleIf: {castShadow: 1}});
 		/** @param shadow bias */
-		shadowBias = ParamConfig.FLOAT(DEFAULT.shadowBias, {visibleIf: {castShadow: 1}});
+		shadowBias = ParamConfig.FLOAT(DEFAULT.shadowBias, {
+			visibleIf: {castShadow: 1},
+			range: [-0.01, 0.01],
+			rangeLocked: [false, false],
+		});
 		/** @param shadow camera near */
 		shadowNear = ParamConfig.FLOAT(DEFAULT.shadowNear, {visibleIf: {castShadow: 1}});
 		/** @param shadow camera far */

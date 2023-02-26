@@ -1,10 +1,4 @@
-import {EventDispatcher} from 'three';
-import {MOUSE} from 'three';
-import {Quaternion} from 'three';
-import {Spherical} from 'three';
-import {TOUCH} from 'three';
-import {Vector2} from 'three';
-import {Vector3} from 'three';
+import {EventDispatcher, MOUSE, Quaternion, Spherical, TOUCH, Vector2, Vector3} from 'three';
 
 // This set of controls performs orbiting, dollying (zooming), and panning.
 // Unlike TrackballControls, it maintains the "up" direction object.up (+Y by default).
@@ -20,13 +14,6 @@ const _endEvent = {type: 'end'};
 class OrbitControls extends EventDispatcher {
 	constructor(object, domElement) {
 		super();
-
-		if (domElement === undefined)
-			console.warn('THREE.OrbitControls: The second parameter "domElement" is now mandatory.');
-		if (domElement === document)
-			console.error(
-				'THREE.OrbitControls: "document" should not be used as the target "domElement". Please use "renderer.domElement" instead.'
-			);
 
 		this.object = object;
 		this.domElement = domElement;
@@ -81,12 +68,6 @@ class OrbitControls extends EventDispatcher {
 		this.autoRotate = false;
 		this.autoRotateSpeed = 2.0; // 30 seconds per orbit when fps is 60
 
-		// Set to false to disable use of the keys
-		this.enableKeys = true;
-		this.keyMode = 'pan';
-		this.keyRotateSpeedVertical = 1.0;
-		this.keyRotateSpeedHorizontal = 1.0;
-
 		// The four arrow keys
 		this.keys = {LEFT: 'ArrowLeft', UP: 'ArrowUp', RIGHT: 'ArrowRight', BOTTOM: 'ArrowDown'};
 
@@ -121,8 +102,15 @@ class OrbitControls extends EventDispatcher {
 		};
 
 		this.listenToKeyEvents = function (domElement) {
+			console.log('listenToKeyEvents', domElement);
 			domElement.addEventListener('keydown', onKeyDown);
 			this._domElementKeyEvents = domElement;
+		};
+
+		this.stopListenToKeyEvents = function () {
+			console.log('stopListenToKeyEvents');
+			this._domElementKeyEvents.removeEventListener('keydown', onKeyDown);
+			this._domElementKeyEvents = null;
 		};
 
 		this.saveState = function () {
@@ -208,7 +196,7 @@ class OrbitControls extends EventDispatcher {
 					if (max < -Math.PI) max += twoPI;
 					else if (max > Math.PI) max -= twoPI;
 
-					if (min < max) {
+					if (min <= max) {
 						spherical.theta = Math.max(min, Math.min(max, spherical.theta));
 					} else {
 						spherical.theta =
@@ -292,6 +280,7 @@ class OrbitControls extends EventDispatcher {
 
 			if (scope._domElementKeyEvents !== null) {
 				scope._domElementKeyEvents.removeEventListener('keydown', onKeyDown);
+				scope._domElementKeyEvents = null;
 			}
 
 			//scope.dispatchEvent( { type: 'dispose' } ); // should this be added here?
@@ -469,7 +458,7 @@ class OrbitControls extends EventDispatcher {
 
 			rotateDelta.subVectors(rotateEnd, rotateStart).multiplyScalar(scope.rotateSpeed);
 
-			var element = scope.domElement;
+			const element = scope.domElement;
 
 			rotateLeft((2 * Math.PI * rotateDelta.x) / element.clientHeight); // yes, height
 
@@ -521,50 +510,46 @@ class OrbitControls extends EventDispatcher {
 		function handleKeyDown(event) {
 			let needsUpdate = false;
 
-			if (scope.keyMode == 'pan') {
-				switch (event.code) {
-					case scope.keys.UP:
+			switch (event.code) {
+				case scope.keys.UP:
+					if (event.ctrlKey || event.metaKey || event.shiftKey) {
+						rotateUp((2 * Math.PI * scope.rotateSpeed) / scope.domElement.clientHeight);
+					} else {
 						pan(0, scope.keyPanSpeed);
-						needsUpdate = true;
-						break;
+					}
 
-					case scope.keys.BOTTOM:
+					needsUpdate = true;
+					break;
+
+				case scope.keys.BOTTOM:
+					if (event.ctrlKey || event.metaKey || event.shiftKey) {
+						rotateUp((-2 * Math.PI * scope.rotateSpeed) / scope.domElement.clientHeight);
+					} else {
 						pan(0, -scope.keyPanSpeed);
-						needsUpdate = true;
-						break;
+					}
 
-					case scope.keys.LEFT:
+					needsUpdate = true;
+					break;
+
+				case scope.keys.LEFT:
+					if (event.ctrlKey || event.metaKey || event.shiftKey) {
+						rotateLeft((2 * Math.PI * scope.rotateSpeed) / scope.domElement.clientHeight);
+					} else {
 						pan(scope.keyPanSpeed, 0);
-						needsUpdate = true;
-						break;
+					}
 
-					case scope.keys.RIGHT:
+					needsUpdate = true;
+					break;
+
+				case scope.keys.RIGHT:
+					if (event.ctrlKey || event.metaKey || event.shiftKey) {
+						rotateLeft((-2 * Math.PI * scope.rotateSpeed) / scope.domElement.clientHeight);
+					} else {
 						pan(-scope.keyPanSpeed, 0);
-						needsUpdate = true;
-						break;
-				}
-			} else {
-				switch (event.code) {
-					case scope.keys.UP:
-						rotateUp(scope.keyRotateSpeedVertical);
-						needsUpdate = true;
-						break;
+					}
 
-					case scope.keys.BOTTOM:
-						rotateUp(-scope.keyRotateSpeedVertical);
-						needsUpdate = true;
-						break;
-
-					case scope.keys.LEFT:
-						rotateLeft(scope.keyRotateSpeedHorizontal);
-						needsUpdate = true;
-						break;
-
-					case scope.keys.RIGHT:
-						rotateLeft(-scope.keyRotateSpeedHorizontal);
-						needsUpdate = true;
-						break;
-				}
+					needsUpdate = true;
+					break;
 			}
 
 			if (needsUpdate) {
@@ -727,6 +712,7 @@ class OrbitControls extends EventDispatcher {
 
 			if (pointers.length === 0) {
 				scope.domElement.releasePointerCapture(event.pointerId);
+
 				scope.domElement.ownerDocument.removeEventListener('pointermove', onPointerMove);
 				scope.domElement.ownerDocument.removeEventListener('pointerup', onPointerUp);
 			}
@@ -771,9 +757,17 @@ class OrbitControls extends EventDispatcher {
 					break;
 
 				case MOUSE.ROTATE:
-					if (event.ctrlKey || event.metaKey || event.shiftKey) {
-						if (scope.enablePan === false) return;
-
+					// when using the physical player,
+					// we need to be able to rotate the camera while
+					// having shiftKey pressed to run.
+					// Therefore the following condition is replaced,
+					// so that we only check the modifier key
+					// if enablePan is true.
+					//
+					// if (event.ctrlKey || event.metaKey || event.shiftKey) {
+					// if (scope.enablePan === false) return;
+					//
+					if (scope.enablePan === true && (event.ctrlKey || event.metaKey || event.shiftKey)) {
 						handleMouseDownPan(event);
 
 						state = STATE.PAN;
@@ -814,8 +808,6 @@ class OrbitControls extends EventDispatcher {
 		}
 
 		function onMouseMove(event) {
-			if (scope.enabled === false) return;
-
 			switch (state) {
 				case STATE.ROTATE:
 					if (scope.enableRotate === false) return;

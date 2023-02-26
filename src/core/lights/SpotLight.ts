@@ -1,6 +1,6 @@
 import {ParamConfig} from '../../engine/nodes/utils/params/ParamsConfig';
 import {Constructor, Number2, Number3} from '../../types/GlobalTypes';
-import {ColorConversion} from '../Color';
+// import {ColorConversion} from '../Color';
 import {DefaultOperationParams} from '../operations/_Base';
 import {Object3D, Group, Vector2, Color, SpotLight} from 'three';
 import {VolumetricSpotLight} from './spotlight/VolumetricSpotLight';
@@ -70,7 +70,7 @@ export const DEFAULT_SPOT_LIGHT_PARAMS: SpotLightParams = {
 	volAttenuation: 5,
 	volAnglePower: 10,
 	//
-	raymarchingPenumbra: 0,
+	raymarchingPenumbra: 0, // keep as 0 by default since it's more performant
 };
 const DEFAULT = DEFAULT_SPOT_LIGHT_PARAMS;
 
@@ -79,7 +79,7 @@ export function SpotLightParamConfig<TBase extends Constructor>(Base: TBase) {
 		light = ParamConfig.FOLDER();
 		/** @param light color */
 		color = ParamConfig.COLOR(DEFAULT.color.toArray() as Number3, {
-			conversion: ColorConversion.SRGB_TO_LINEAR,
+			// conversion: ColorConversion.SRGB_TO_LINEAR,
 		});
 		/** @param light intensity */
 		intensity = ParamConfig.FLOAT(DEFAULT.intensity, {
