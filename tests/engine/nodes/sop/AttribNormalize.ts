@@ -1,3 +1,4 @@
+import { BufferAttribute } from 'three';
 import {NormalizeMode} from '../../../../src/engine/operations/sop/AttribNormalize';
 
 QUnit.test('attrib normalize simple float', async (assert) => {
@@ -38,7 +39,7 @@ QUnit.test('attrib normalize simple float', async (assert) => {
 	let geometry = core_group.objectsWithGeo()[0].geometry;
 	assert.ok(geometry);
 
-	let array = geometry.getAttribute('blend').array as number[];
+	let array = (geometry.getAttribute('blend') as BufferAttribute).array as number[];
 	assert.equal(array.length, 12);
 	assert.equal(array.join(','), [1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3].join(','));
 
@@ -51,7 +52,7 @@ QUnit.test('attrib normalize simple float', async (assert) => {
 	geometry = core_group.objectsWithGeo()[0].geometry;
 	assert.ok(geometry);
 
-	array = geometry.getAttribute('blend').array as number[];
+	array = (geometry.getAttribute('blend') as BufferAttribute).array as number[];
 	assert.equal(array.length, 12);
 	assert.equal(array.join(','), [0, 0, 0, 0, 0.5, 0.5, 0.5, 0.5, 1, 1, 1, 1].join(','));
 });
@@ -98,7 +99,7 @@ QUnit.test('attrib normalize simple vector', async (assert) => {
 	let geometry = core_group.objectsWithGeo()[0].geometry;
 	assert.ok(geometry);
 
-	let array = geometry.getAttribute('blend').array as number[];
+	let array = (geometry.getAttribute('blend') as BufferAttribute).array as number[];
 	assert.equal(array.length, 36);
 	assert.equal(
 		array.join(','),
@@ -151,7 +152,7 @@ QUnit.test('attrib normalize simple vector', async (assert) => {
 	geometry = core_group.objectsWithGeo()[0].geometry;
 	assert.ok(geometry);
 
-	array = geometry.getAttribute('blend').array as number[];
+	array = (geometry.getAttribute('blend') as BufferAttribute).array as number[];
 	assert.equal(array.length, 36);
 	assert.equal(
 		array.join(','),
@@ -204,7 +205,7 @@ QUnit.test('attrib normalize simple vector', async (assert) => {
 	geometry = core_group.objectsWithGeo()[0].geometry;
 	assert.ok(geometry);
 
-	array = geometry.getAttribute('blend').array as number[];
+	array = (geometry.getAttribute('blend') as BufferAttribute).array as number[];
 	assert.equal(array.length, 36);
 	assert.equal(
 		array.join(','),
@@ -265,7 +266,7 @@ QUnit.test('attrib normalize vector length', async (assert) => {
 
 	let container = await attrib_normalize1.compute();
 	let geometry = container.coreContent()!.objectsWithGeo()[0].geometry;
-	let array = geometry.getAttribute('position').array as number[];
+	let array = (geometry.getAttribute('position') as BufferAttribute).array as number[];
 
 	assert.equal(array.join(','), [1, 0, 0]);
 });

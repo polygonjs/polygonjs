@@ -2,6 +2,7 @@ import {CoreObject} from './../../../../src/core/geometry/Object';
 import {AttribClass} from '../../../../src/core/geometry/Constant';
 import {AttribPromoteMode} from '../../../../src/engine/operations/sop/AttribPromote';
 import {TransformTargetType} from '../../../../src/core/Transform';
+import {BufferAttribute} from 'three';
 
 QUnit.test('sop/attribPromote vertex to vertex with min', async (assert) => {
 	const geo1 = window.geo1;
@@ -26,7 +27,7 @@ QUnit.test('sop/attribPromote vertex to vertex with min', async (assert) => {
 	assert.ok(core_group);
 	assert.ok(geometry);
 
-	const {array} = geometry.getAttribute('test');
+	const {array} = geometry.getAttribute('test') as BufferAttribute;
 	assert.equal(array.length, container.pointsCount());
 	assert.equal(array[0], 0);
 	assert.equal(array[5], 0);
@@ -55,7 +56,7 @@ QUnit.test('sop/attribPromote vertex to vertex with max', async (assert) => {
 	assert.ok(core_group);
 	assert.ok(geometry);
 
-	const {array} = geometry.getAttribute('test');
+	const {array} = geometry.getAttribute('test') as BufferAttribute;
 	assert.equal(array.length, container.pointsCount());
 	assert.equal(array[0], 23);
 	assert.equal(array[5], 23);
@@ -110,7 +111,7 @@ QUnit.test('sop/attribPromote object to vertex with max', async (assert) => {
 	const geometry = coreGroup.objectsWithGeo()[0].geometry;
 	assert.ok(geometry);
 
-	const {array} = geometry.getAttribute('test');
+	const {array} = geometry.getAttribute('test') as BufferAttribute;
 	assert.equal(array.length, container.pointsCount());
 	assert.deepEqual(array[0], 12);
 });
@@ -145,10 +146,10 @@ QUnit.test('sop/attribPromote multiple attributes from objects to vertex', async
 	const geometry = core_group.objectsWithGeo()[0].geometry;
 	assert.ok(geometry);
 
-	const array_id = geometry.getAttribute('id').array;
+	const array_id = (geometry.getAttribute('id') as BufferAttribute).array;
 	assert.equal(array_id.length, container.pointsCount());
 	assert.in_delta(array_id[0], 0.1, 0.001);
-	const array_role = geometry.getAttribute('role').array;
+	const array_role = (geometry.getAttribute('role') as BufferAttribute).array;
 	assert.equal(array_role.length, container.pointsCount());
 	assert.in_delta(array_role[0], 0.2, 0.001);
 });

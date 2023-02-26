@@ -1,6 +1,6 @@
 import {MeshBasicMatNode} from './../../../../src/engine/nodes/mat/MeshBasic';
 import {ImageCopNode} from './../../../../src/engine/nodes/cop/Image';
-import {Mesh, Object3D, Vector3, MeshBasicMaterial, Texture} from 'three';
+import {Mesh, Object3D, Vector3, MeshBasicMaterial, Texture, BufferAttribute} from 'three';
 import {AttribClass} from '../../../../src/core/geometry/Constant';
 import {ASSETS_ROOT} from '../../../../src/core/loader/AssetsUtils';
 import {ArrayUtils} from '../../../../src/core/ArrayUtils';
@@ -74,8 +74,8 @@ QUnit.test('sop/copy with template and stamp', async (assert) => {
 	assert.equal(container.pointsCount(), 28);
 	const objects = container.coreContent()!.objectsWithGeo();
 	assert.equal(objects.length, 2);
-	assert.equal(objects[0].geometry.attributes.test.array[0], 1);
-	assert.equal(objects[1].geometry.attributes.test.array[0], 3);
+	assert.equal((objects[0].geometry.attributes.test as BufferAttribute).array[0], 1);
+	assert.equal((objects[1].geometry.attributes.test as BufferAttribute).array[0], 3);
 });
 
 QUnit.test('sop/copy without template and stamp', async (assert) => {

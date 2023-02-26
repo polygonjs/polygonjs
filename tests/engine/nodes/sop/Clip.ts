@@ -1,3 +1,5 @@
+import {BufferAttribute} from 'three';
+
 QUnit.test('clip simple', async (assert) => {
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false); // cancels geo node displayNodeController
@@ -11,5 +13,5 @@ QUnit.test('clip simple', async (assert) => {
 	let container = await clip1.compute();
 	const core_group = container.coreContent();
 	const geometry = core_group?.objectsWithGeo()[0].geometry;
-	assert.equal(geometry?.getAttribute('position').array.length, 48);
+	assert.equal((geometry?.getAttribute('position') as BufferAttribute).array.length, 48);
 });

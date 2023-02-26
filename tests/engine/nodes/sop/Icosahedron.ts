@@ -1,3 +1,5 @@
+import {BufferAttribute} from 'three';
+
 QUnit.test('icosahedron simple', async (assert) => {
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false); // cancels geo node displayNodeController
@@ -8,7 +10,7 @@ QUnit.test('icosahedron simple', async (assert) => {
 	let container = await icosahedron1.compute();
 	let core_group = container.coreContent();
 	let geometry = core_group?.objectsWithGeo()[0].geometry;
-	assert.equal(geometry?.getAttribute('position').array.length, 180);
+	assert.equal((geometry?.getAttribute('position') as BufferAttribute).array.length, 180);
 	assert.notOk(icosahedron1.isDirty(), 'box is dirty');
 
 	icosahedron1.p.detail.set(2);
@@ -28,7 +30,7 @@ QUnit.test('icosahedron simple', async (assert) => {
 	container = await icosahedron1.compute();
 	core_group = container.coreContent();
 	geometry = core_group?.objectsWithGeo()[0].geometry;
-	assert.equal(geometry?.getAttribute('position').array.length, 36);
+	assert.equal((geometry?.getAttribute('position') as BufferAttribute).array.length, 36);
 	assert.notOk(icosahedron1.isDirty(), 'box is dirty');
 
 	icosahedron1.p.detail.set(2);

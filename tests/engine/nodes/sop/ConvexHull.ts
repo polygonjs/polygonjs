@@ -1,3 +1,5 @@
+import {BufferAttribute} from 'three';
+
 QUnit.test('sop/convexHull simple', async (assert) => {
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false); // cancels geo node displayNodeController
@@ -19,7 +21,7 @@ QUnit.test('sop/convexHull simple', async (assert) => {
 		const container = await convexHull1.compute();
 		const coreGroup = container.coreContent();
 		const geometry = coreGroup?.objectsWithGeo()[0].geometry;
-		const pos = geometry?.getAttribute('position')!;
+		const pos = (geometry?.getAttribute('position') as BufferAttribute)!;
 		const pointsCount = pos.array.length / 3;
 		return {pointsCount};
 	}

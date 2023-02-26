@@ -1,3 +1,5 @@
+import {BufferAttribute} from 'three';
+
 QUnit.test('csg/extrudeRectangular with non closed shapes', async (assert) => {
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false); // cancels geo node displayNodeController
@@ -14,7 +16,7 @@ QUnit.test('csg/extrudeRectangular with non closed shapes', async (assert) => {
 	let container = await csgNetwork1.compute();
 	const core_group = container.coreContent();
 	const geometry = core_group?.objectsWithGeo()[0].geometry;
-	assert.equal(geometry?.getAttribute('position').array.length, 1260);
+	assert.equal((geometry?.getAttribute('position') as BufferAttribute).array.length, 1260);
 	assert.in_delta(container.boundingBox().min.x, -1.497, 0.002);
 	assert.in_delta(container.boundingBox().max.x, 1.497, 0.002);
 	assert.notOk(csgNetwork1.isDirty(), 'box is dirty');
@@ -34,7 +36,7 @@ QUnit.test('csg/extrudeRectangular with closed shapes', async (assert) => {
 	let container = await csgNetwork1.compute();
 	const core_group = container.coreContent();
 	const geometry = core_group?.objectsWithGeo()[0].geometry;
-	assert.equal(geometry?.getAttribute('position').array.length, 2304);
+	assert.equal((geometry?.getAttribute('position') as BufferAttribute).array.length, 2304);
 	assert.in_delta(container.boundingBox().min.x, -1.502, 0.002);
 	assert.in_delta(container.boundingBox().max.x, 1.502, 0.002);
 	assert.notOk(csgNetwork1.isDirty(), 'box is dirty');

@@ -1,3 +1,5 @@
+import {BufferAttribute} from 'three';
+
 QUnit.test('csg/offset on 2d prim', async (assert) => {
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false); // cancels geo node displayNodeController
@@ -14,7 +16,7 @@ QUnit.test('csg/offset on 2d prim', async (assert) => {
 	let core_group = container.coreContent();
 	assert.equal(core_group?.objectsWithGeo().length, 1, '1 object');
 	let geometry = core_group?.objectsWithGeo()[0].geometry;
-	assert.equal(geometry?.getAttribute('position').array.length, 102);
+	assert.equal((geometry?.getAttribute('position') as BufferAttribute).array.length, 102);
 	assert.in_delta(container.boundingBox().min.x, -1.099, 0.002);
 	assert.in_delta(container.boundingBox().max.x, 1.099, 0.002);
 	assert.notOk(csgNetwork1.isDirty(), 'box is dirty');
@@ -24,7 +26,7 @@ QUnit.test('csg/offset on 2d prim', async (assert) => {
 	core_group = container.coreContent();
 	assert.equal(core_group?.objectsWithGeo().length, 1, '1 object');
 	geometry = core_group?.objectsWithGeo()[0].geometry;
-	assert.equal(geometry?.getAttribute('position').array.length, 102);
+	assert.equal((geometry?.getAttribute('position') as BufferAttribute).array.length, 102);
 	assert.in_delta(container.boundingBox().min.x, -1.099, 0.002);
 	assert.in_delta(container.boundingBox().max.x, 1.099, 0.002);
 	assert.notOk(csgNetwork1.isDirty(), 'box is dirty');
@@ -46,7 +48,7 @@ QUnit.test('csg/offset on 3d prim', async (assert) => {
 	const core_group = container.coreContent();
 	assert.equal(core_group?.objectsWithGeo().length, 1, '1 object');
 	let geometry = core_group?.objectsWithGeo()[0].geometry;
-	assert.equal(geometry?.getAttribute('position').array.length, 108);
+	assert.equal((geometry?.getAttribute('position') as BufferAttribute).array.length, 108);
 	assert.in_delta(container.boundingBox().min.x, -0.5, 0.002);
 	assert.in_delta(container.boundingBox().max.x, 0.5, 0.002);
 	assert.notOk(csgNetwork1.isDirty(), 'box is dirty');

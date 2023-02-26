@@ -1,3 +1,5 @@
+import {BufferAttribute} from 'three';
+
 QUnit.test('UvTransform simple', async (assert) => {
 	const geo1 = window.geo1;
 	const plane = geo1.createNode('plane');
@@ -9,7 +11,10 @@ QUnit.test('UvTransform simple', async (assert) => {
 		let container = await uvTransform.compute();
 		let core_group = container.coreContent()!;
 		let geometry0 = core_group.objectsWithGeo()[0].geometry;
-		assert.deepEqual((geometry0.getAttribute('uv').array as number[]).join(','), array.join(','));
+		assert.deepEqual(
+			((geometry0.getAttribute('uv') as BufferAttribute).array as number[]).join(','),
+			array.join(',')
+		);
 	}
 
 	await assertUv([0, 1, 1, 1, 0, 0, 1, 0]);

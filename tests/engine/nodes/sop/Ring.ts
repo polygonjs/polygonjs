@@ -1,3 +1,5 @@
+import {BufferAttribute} from 'three';
+
 QUnit.test('sop/ring simple', async (assert) => {
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false); // cancels geo node displayNodeController
@@ -7,7 +9,7 @@ QUnit.test('sop/ring simple', async (assert) => {
 	let container = await ring1.compute();
 	const coreGroup = container.coreContent();
 	const geometry = coreGroup?.objectsWithGeo()[0].geometry;
-	assert.equal(geometry?.getAttribute('position').array.length, 297);
+	assert.equal((geometry?.getAttribute('position') as BufferAttribute).array.length, 297);
 	assert.equal(container.boundingBox().min.x, -1);
 	assert.notOk(ring1.isDirty(), 'box is dirty');
 

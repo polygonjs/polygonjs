@@ -2,6 +2,7 @@ import {Object3D} from 'three/src/core/Object3D';
 import {CoreObject} from './../../../../src/core/geometry/Object';
 import {AttribClass} from '../../../../src/core/geometry/Constant';
 import {AttributeHelper} from '../../../helpers/AttributeHelper';
+import { BufferAttribute } from 'three';
 
 QUnit.test('sop/attribId simple on points', async (assert) => {
 	const geo1 = window.geo1;
@@ -17,9 +18,9 @@ QUnit.test('sop/attribId simple on points', async (assert) => {
 	const geo = coreGroup.objectsWithGeo()[0].geometry;
 	assert.ok(geo.getAttribute('id'));
 	assert.ok(geo.getAttribute('idn'));
-	assert.deepEqual((geo.getAttribute('id').array as number[]).join(','), [0, 1, 2, 3].join(','));
+	assert.deepEqual(((geo.getAttribute('id') as BufferAttribute).array as number[]).join(','), [0, 1, 2, 3].join(','));
 	assert.deepEqual(
-		AttributeHelper.toArray(geo.getAttribute('idn'))
+		AttributeHelper.toArray(geo.getAttribute('idn')  as BufferAttribute)
 			.map((n) => n.toFixed(3))
 			.join(','),
 		[0, 1 / 3, 2 / 3, 1].map((n) => n.toFixed(3)).join(',')

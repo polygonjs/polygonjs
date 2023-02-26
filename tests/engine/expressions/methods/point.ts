@@ -1,3 +1,4 @@
+import { BufferAttribute } from 'three';
 import {SceneJsonExporter} from '../../../../src/engine/io/json/export/Scene';
 import {SceneJsonImporter} from '../../../../src/engine/io/json/import/Scene';
 import {PointSopNode} from '../../../../src/engine/nodes/sop/Point';
@@ -19,7 +20,7 @@ QUnit.test('expression points works with path', async (assert) => {
 	attrib_create2.p.value1.set('point("../attribCreate1", "h", 2)');
 
 	const container = await attrib_create2.compute();
-	const array = container.coreContent()!.objectsWithGeo()[0].geometry.attributes['t'].array as number[];
+	const array = (container.coreContent()!.objectsWithGeo()[0].geometry.attributes['t']  as BufferAttribute).array as number[];
 	assert.deepEqual(array.join(','), [2, 2, 2, 2].join(','));
 });
 
@@ -40,7 +41,7 @@ QUnit.test('expression points works with input index', async (assert) => {
 	attrib_create2.p.value1.set('point(0, "h", 2)');
 
 	const container = await attrib_create2.compute();
-	const array = container.coreContent()!.objectsWithGeo()[0].geometry.attributes['t'].array as number[];
+	const array = (container.coreContent()!.objectsWithGeo()[0].geometry.attributes['t']  as BufferAttribute).array as number[];
 	assert.deepEqual(array.join(','), [2, 2, 2, 2].join(','));
 });
 
@@ -59,7 +60,7 @@ QUnit.test('expression points works in a point sop on scene load', async (assert
 	let container = await point1.compute();
 	assert.notOk(point1.states.error.active());
 	let geometry = container.coreContent()!.objectsWithGeo()[0].geometry;
-	let positions = geometry.getAttribute('position').array as number[];
+	let positions = (geometry.getAttribute('position')  as BufferAttribute).array as number[];
 	assert.deepEqual(positions.join(','), [0, 0.5, 0, 0, 0.5, 0].join(','));
 
 	const data = await new SceneJsonExporter(scene).data();
@@ -71,6 +72,6 @@ QUnit.test('expression points works in a point sop on scene load', async (assert
 	container = await point2.compute();
 	assert.notOk(point2.states.error.active());
 	geometry = container.coreContent()!.objectsWithGeo()[0].geometry;
-	positions = geometry.getAttribute('position').array as number[];
+	positions = (geometry.getAttribute('position')  as BufferAttribute).array as number[];
 	assert.deepEqual(positions.join(','), [0, 0.5, 0, 0, 0.5, 0].join(','));
 });

@@ -1,3 +1,4 @@
+import {BufferAttribute} from 'three';
 import {BooleanCsgOperationType} from '../../../../src/engine/nodes/csg/Boolean';
 
 QUnit.test('csg/cylinderElliptic simple', async (assert) => {
@@ -18,7 +19,7 @@ QUnit.test('csg/cylinderElliptic simple', async (assert) => {
 	let container = await csgNetwork1.compute();
 	const core_group = container.coreContent();
 	const geometry = core_group?.objectsWithGeo()[0].geometry;
-	assert.equal(geometry?.getAttribute('position').array.length, 1692);
+	assert.equal((geometry?.getAttribute('position') as BufferAttribute).array.length, 1692);
 	assert.in_delta(container.boundingBox().min.y, -0.845, 0.002);
 	assert.notOk(csgNetwork1.isDirty(), 'box is dirty');
 });

@@ -1,3 +1,5 @@
+import {BufferAttribute} from 'three';
+
 QUnit.test('sop/color simple', async (assert) => {
 	const geo1 = window.geo1;
 
@@ -11,8 +13,8 @@ QUnit.test('sop/color simple', async (assert) => {
 	let geometry = core_group.objectsWithGeo()[0].geometry;
 
 	// let color = await color1.p.color.compute();
-	let {array} = geometry.getAttribute('color');
-	const position = geometry.getAttribute('position').array;
+	let {array} = geometry.getAttribute('color') as BufferAttribute;
+	const position = (geometry.getAttribute('position') as BufferAttribute).array;
 	assert.equal(array.length, position.length);
 	assert.in_delta(array[0], 0.4, 0.001);
 	assert.in_delta(array[1], 0.5, 0.001);
@@ -22,7 +24,7 @@ QUnit.test('sop/color simple', async (assert) => {
 	container = await color1.compute();
 	core_group = container.coreContent()!;
 	geometry = core_group.objectsWithGeo()[0].geometry;
-	({array} = geometry.getAttribute('color'));
+	({array} = geometry.getAttribute('color') as BufferAttribute);
 	assert.equal(array[0], 1.5);
 	assert.equal(array[1], 0.5);
 	assert.equal(array[2], 0.75);
@@ -44,7 +46,7 @@ QUnit.test('sop/color with expression', async (assert) => {
 	let core_group = container.coreContent()!;
 	let geometry = core_group.objectsWithGeo()[0].geometry;
 
-	const array = geometry.getAttribute('color').array as number[];
+	const array = (geometry.getAttribute('color') as BufferAttribute).array as number[];
 	assert.equal(
 		array.join(','),
 		[
@@ -71,7 +73,7 @@ QUnit.test('sop/color with position', async (assert) => {
 	container = await color1.compute();
 	core_group = container.coreContent()!;
 	geometry = core_group.objectsWithGeo()[0].geometry;
-	array = geometry.getAttribute('color').array as number[];
+	array = (geometry.getAttribute('color') as BufferAttribute).array as number[];
 	assert.equal(
 		array.join(','),
 		[
@@ -87,7 +89,7 @@ QUnit.test('sop/color with position', async (assert) => {
 	container = await color1.compute();
 	core_group = container.coreContent()!;
 	geometry = core_group.objectsWithGeo()[0].geometry;
-	array = geometry.getAttribute('color').array as number[];
+	array = (geometry.getAttribute('color') as BufferAttribute).array as number[];
 	assert.equal(
 		array.join(','),
 		[
@@ -112,7 +114,7 @@ QUnit.test('sop/color with non entity dependent expression', async (assert) => {
 		const core_group = container.coreContent()!;
 		const geometry = core_group.objectsWithGeo()[0].geometry;
 
-		const array = geometry.getAttribute('color').array as number[];
+		const array = (geometry.getAttribute('color') as BufferAttribute).array as number[];
 		return array;
 	}
 

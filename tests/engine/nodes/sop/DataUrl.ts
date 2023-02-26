@@ -1,3 +1,4 @@
+import { BufferAttribute } from 'three';
 import {ASSETS_ROOT} from '../../../../src/core/loader/AssetsUtils';
 import {DataType, DATA_TYPES} from '../../../../src/engine/nodes/sop/DataUrl';
 
@@ -69,10 +70,10 @@ QUnit.test('dataUrl csv without reading names from file', async (assert) => {
 	assert.equal(point1.attribValue('attr2'), 6);
 	assert.equal(point1.attribValue('attr3'), 7);
 	const geometry = core_group.objectsWithGeo()[0].geometry;
-	assert.deepEqual(geometry.attributes.position.array.length, 6);
-	assert.deepEqual(geometry.attributes.attr1.array.length, 2);
-	assert.deepEqual(geometry.attributes.attr2.array.length, 2);
-	assert.deepEqual(geometry.attributes.attr3.array.length, 2);
+	assert.deepEqual((geometry.attributes.position as BufferAttribute).array.length, 6);
+	assert.deepEqual((geometry.attributes.attr1 as BufferAttribute).array.length, 2);
+	assert.deepEqual((geometry.attributes.attr2 as BufferAttribute).array.length, 2);
+	assert.deepEqual((geometry.attributes.attr3 as BufferAttribute).array.length, 2);
 	assert.deepEqual(Object.keys(geometry.attributes).sort(), ['attr1', 'attr2', 'attr3', 'position']);
 });
 QUnit.test('dataUrl csv with reading names from file', async (assert) => {
@@ -98,11 +99,11 @@ QUnit.test('dataUrl csv with reading names from file', async (assert) => {
 	assert.equal(point1.attribValue('mult'), 7);
 	assert.equal(point1.attribValue('add'), 8);
 	const geometry = core_group.objectsWithGeo()[0].geometry;
-	assert.deepEqual(geometry.attributes.position.array.length, 6);
-	assert.deepEqual(geometry.attributes.rot.array.length, 2);
-	assert.deepEqual(geometry.attributes.scale.array.length, 2);
-	assert.deepEqual(geometry.attributes.mult.array.length, 2);
-	assert.deepEqual(geometry.attributes.add.array.length, 2);
+	assert.deepEqual((geometry.attributes.position as BufferAttribute).array.length, 6);
+	assert.deepEqual((geometry.attributes.rot as BufferAttribute).array.length, 2);
+	assert.deepEqual((geometry.attributes.scale as BufferAttribute).array.length, 2);
+	assert.deepEqual((geometry.attributes.mult as BufferAttribute).array.length, 2);
+	assert.deepEqual((geometry.attributes.add as BufferAttribute).array.length, 2);
 	assert.deepEqual(Object.keys(geometry.attributes).sort(), ['rot', 'mult', 'add', 'position', 'scale'].sort());
 });
 QUnit.test('dataUrl csv with empty line', async (assert) => {
@@ -118,8 +119,8 @@ QUnit.test('dataUrl csv with empty line', async (assert) => {
 	assert.equal(container.pointsCount(), 2);
 	const core_group = container.coreContent()!;
 	const geometry = core_group.objectsWithGeo()[0].geometry;
-	assert.deepEqual(geometry.attributes.position.array.length, 6);
-	assert.deepEqual(geometry.attributes.rot.array.length, 2);
+	assert.deepEqual((geometry.attributes.position as BufferAttribute).array.length, 6);
+	assert.deepEqual((geometry.attributes.rot as BufferAttribute).array.length, 2);
 	assert.deepEqual(Object.keys(geometry.attributes).sort(), ['rot', 'mult', 'add', 'position', 'scale'].sort());
 });
 QUnit.test('dataUrl with assetsRoot', async (assert) => {

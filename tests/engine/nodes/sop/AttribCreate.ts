@@ -1,4 +1,4 @@
-import {Vector4} from 'three';
+import {BufferAttribute, Vector4} from 'three';
 import {Vector2} from 'three';
 import {Vector3} from 'three';
 import {AttribType, AttribClass, AttribSize} from '../../../../src/core/geometry/Constant';
@@ -30,12 +30,12 @@ QUnit.test('sop/attribCreate simple float vertex', async (assert) => {
 	assert.ok(core_group);
 	assert.ok(geometry);
 
-	const {array} = geometry.getAttribute('test');
+	const {array} = geometry.getAttribute('test') as BufferAttribute;
 	assert.equal(array.length, container.pointsCount());
 	assert.equal(array[0], 3.5);
 
 	const cloned_geo = geometry.clone();
-	const cloned_array = cloned_geo.getAttribute('test').array;
+	const cloned_array = (cloned_geo.getAttribute('test') as BufferAttribute).array;
 	assert.equal(cloned_array.length, container.pointsCount());
 	assert.equal(cloned_array[0], 3.5);
 });
@@ -56,7 +56,7 @@ QUnit.test('sop/attribCreate expression float vertex', async (assert) => {
 	assert.ok(core_group);
 	assert.ok(geometry);
 
-	const {array} = geometry.getAttribute('test');
+	const {array} = geometry.getAttribute('test') as BufferAttribute;
 	assert.equal(array.length, container.pointsCount());
 	assert.equal(array[0], 3);
 	assert.equal(array[1], 6);
@@ -79,7 +79,7 @@ QUnit.test('sop/attribCreate expression float vertex from position', async (asse
 	assert.ok(core_group);
 	assert.ok(geometry);
 
-	const {array} = geometry.getAttribute('test');
+	const {array} = geometry.getAttribute('test') as BufferAttribute;
 	assert.equal(array.length, container.pointsCount());
 	assert.equal(array[0], 1);
 	assert.equal(array[1], 1);
@@ -123,7 +123,7 @@ QUnit.test('sop/attribCreate simple vector2 vertex', async (assert) => {
 	assert.ok(core_group);
 	assert.ok(geometry);
 
-	const {array} = geometry.getAttribute('test');
+	const {array} = geometry.getAttribute('test') as BufferAttribute;
 
 	assert.equal(array.length, container.pointsCount() * 2);
 	assert.equal(array[0], 3.5);
@@ -150,7 +150,7 @@ QUnit.test('sop/attribCreate simple vector vertex', async (assert) => {
 	assert.ok(core_group);
 	assert.ok(geometry);
 
-	const {array} = geometry.getAttribute('test');
+	const {array} = geometry.getAttribute('test') as BufferAttribute;
 
 	assert.equal(array.length, container.pointsCount() * 3);
 	assert.equal(array[0], 3.5);
@@ -176,7 +176,7 @@ QUnit.test('sop/attribCreate expression vector vertex', async (assert) => {
 	assert.ok(core_group);
 	assert.ok(geometry);
 
-	let array = geometry.getAttribute('test').array;
+	let array = (geometry.getAttribute('test') as BufferAttribute).array;
 
 	assert.equal(array.length, container.pointsCount() * 3);
 	assert.equal(array[0], 0);
@@ -197,7 +197,7 @@ QUnit.test('sop/attribCreate expression vector vertex', async (assert) => {
 	assert.ok(core_group);
 	assert.ok(geometry);
 
-	array = geometry.getAttribute('test').array;
+	array = (geometry.getAttribute('test') as BufferAttribute).array;
 
 	assert.equal(array.length, container.pointsCount() * 3);
 	assert.equal(array[0], 0);
@@ -221,7 +221,7 @@ QUnit.test('sop/attribCreate on existing attrib vector2 uv', async (assert) => {
 	container = await attrib_create1.compute();
 	core_group = container.coreContent()!;
 	geometry = core_group.objectsWithGeo()[0].geometry;
-	array = geometry.getAttribute('uv').array as number[];
+	array = (geometry.getAttribute('uv') as BufferAttribute).array as number[];
 	assert.ok(core_group);
 	assert.ok(geometry);
 
@@ -233,7 +233,7 @@ QUnit.test('sop/attribCreate on existing attrib vector2 uv', async (assert) => {
 	container = await attrib_create1.compute();
 	core_group = container.coreContent()!;
 	geometry = core_group.objectsWithGeo()[0].geometry;
-	array = geometry.getAttribute('uv').array as number[];
+	array =( geometry.getAttribute('uv') as BufferAttribute).array as number[];
 	assert.equal(array.join(','), [1, 0, 1, 1, 0, 0, 0, 1].join(','));
 });
 
@@ -446,7 +446,7 @@ QUnit.test('sop/attribCreate for string on vertices without expr', async (assert
 	assert.equal(points[2].attribValue('ids'), 'test', 'pt 2 has pt_4');
 
 	const geometry = container.coreContent()!.objectsWithGeo()[0].geometry;
-	const array = geometry.getAttribute('ids').array;
+	const array = (geometry.getAttribute('ids') as BufferAttribute).array;
 	assert.equal(array.length, 24);
 	assert.equal(array[0], 0);
 	assert.equal(array[1], 0);

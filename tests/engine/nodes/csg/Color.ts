@@ -1,3 +1,5 @@
+import {BufferAttribute} from 'three';
+
 QUnit.test('csg/color', async (assert) => {
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false); // cancels geo node displayNodeController
@@ -13,7 +15,7 @@ QUnit.test('csg/color', async (assert) => {
 	let container = await csgNetwork1.compute();
 	let core_group = container.coreContent();
 	let geometry = core_group?.objectsWithGeo()[0].geometry;
-	let attrib = geometry?.getAttribute('color');
+	let attrib = geometry?.getAttribute('color') as BufferAttribute;
 	assert.ok(attrib);
 	assert.equal(attrib?.array[0], 1);
 	assert.equal(attrib?.array[1], 1);
@@ -24,7 +26,7 @@ QUnit.test('csg/color', async (assert) => {
 	container = await csgNetwork1.compute();
 	core_group = container.coreContent();
 	geometry = core_group?.objectsWithGeo()[0].geometry;
-	attrib = geometry?.getAttribute('color');
+	attrib = geometry?.getAttribute('color') as BufferAttribute;
 	assert.ok(attrib);
 	assert.equal(attrib?.array[0], 0);
 	assert.equal(attrib?.array[1], 0.5);
@@ -34,7 +36,7 @@ QUnit.test('csg/color', async (assert) => {
 	container = await csgNetwork1.compute();
 	core_group = container.coreContent();
 	geometry = core_group?.objectsWithGeo()[0].geometry;
-	attrib = geometry?.getAttribute('color');
+	attrib = geometry?.getAttribute('color') as BufferAttribute;
 	assert.ok(attrib);
 	assert.equal(attrib?.array[0], 1);
 	assert.equal(attrib?.array[1], 1);

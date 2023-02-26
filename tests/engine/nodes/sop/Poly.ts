@@ -1,3 +1,4 @@
+import {BufferAttribute} from 'three';
 import {PolyNodeController} from '../../../../src/engine/nodes/utils/poly/PolyNodeController';
 import {PolyNodeDefinition} from '../../../../src/engine/nodes/utils/poly/PolyNodeDefinition';
 import {NodeContext} from '../../../../src/engine/poly/NodeContext';
@@ -51,5 +52,5 @@ QUnit.test('poly sop simple', async (assert) => {
 	let container = await poly1.compute();
 	const core_group = container.coreContent();
 	const geometry = core_group?.objectsWithGeo()[0].geometry;
-	assert.equal(geometry?.getAttribute('position').array.length, 72);
+	assert.equal((geometry?.getAttribute('position') as BufferAttribute).array.length, 72);
 });

@@ -1,3 +1,5 @@
+import {BufferAttribute} from 'three';
+
 QUnit.test('sop/tangent', async (assert) => {
 	const geo1 = window.geo1;
 
@@ -14,7 +16,7 @@ QUnit.test('sop/tangent', async (assert) => {
 	const geo = coreGroup.objectsWithGeo()[0].geometry;
 	assert.ok(geo.getAttribute('tangent'));
 	assert.ok(geo.getAttribute('tangent'));
-	let array = geo.getAttribute('tangent').array;
+	let array = (geo.getAttribute('tangent') as BufferAttribute).array;
 	assert.equal(array[0], 0);
 	assert.in_delta(array[1], 0.707, 0.01);
 	assert.in_delta(array[2], 0.707, 0.01);

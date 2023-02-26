@@ -1,3 +1,4 @@
+import {BufferAttribute} from 'three';
 import {UvUnwrapMethod} from '../../../../src/engine/operations/sop/UvUnwrap';
 
 QUnit.test('UvUnwrap potpack', async (assert) => {
@@ -18,7 +19,7 @@ QUnit.test('UvUnwrap potpack', async (assert) => {
 	let core_group = container.coreContent()!;
 	let geometry0 = core_group.objectsWithGeo()[0].geometry;
 	assert.deepEqual(
-		(geometry0.getAttribute('uv').array as number[]).join(';'),
+		((geometry0.getAttribute('uv') as BufferAttribute).array as number[]).join(';'),
 		[
 			0, 0, 0.25, 0.3333333432674408, 0.25, 0, 0.5, 0, 0.5, 0, 0.75, 0.3333333432674408, 0.75, 0, 1, 0, 0,
 			0.3333333432674408, 0.25, 0.6666666865348816, 0.25, 0.3333333432674408, 0.5, 0.3333333432674408, 0.5,
@@ -32,7 +33,7 @@ QUnit.test('UvUnwrap potpack', async (assert) => {
 	core_group = container.coreContent()!;
 	geometry0 = core_group.objectsWithGeo()[0].geometry;
 	assert.deepEqual(
-		(geometry0.getAttribute('uv2').array as number[]).join(';'),
+		((geometry0.getAttribute('uv2') as BufferAttribute).array as number[]).join(';'),
 		[
 			0.002912621246650815, 0.4985436797142029, 0.9970873594284058, 0.4985436797142029, 0.002912621246650815,
 			0.0014563106233254075, 0.9970873594284058, 0.0014563106233254075,
@@ -40,7 +41,7 @@ QUnit.test('UvUnwrap potpack', async (assert) => {
 	);
 	let geometry1 = core_group.objectsWithGeo()[1].geometry;
 	assert.deepEqual(
-		(geometry1.getAttribute('uv2').array as number[]).join(';'),
+		((geometry1.getAttribute('uv2') as BufferAttribute).array as number[]).join(';'),
 		[
 			0.002912621246650815, 0.9985436797142029, 0.9970873594284058, 0.9985436797142029, 0.002912621246650815,
 			0.5014563202857971, 0.9970873594284058, 0.5014563202857971, 0.002912621246650815, 0.9985436797142029,
@@ -74,7 +75,7 @@ QUnit.test('UvUnwrap xatlast', async (assert) => {
 	let core_group = container.coreContent()!;
 	let geometry0 = core_group.objectsWithGeo()[0].geometry;
 	assert.deepEqual(
-		(geometry0.getAttribute('uv').array as number[]).join(';'),
+		((geometry0.getAttribute('uv') as BufferAttribute).array as number[]).join(';'),
 		[
 			0.9993686676025391, 0.6683394312858582, 0.5410353541374207, 0.6683394312858582, 0.9993686676025391,
 			0.9995437860488892, 0.5410353541374207, 0.9995437860488892, 0.4930555522441864, 0.9986313581466675,
@@ -93,7 +94,7 @@ QUnit.test('UvUnwrap xatlast', async (assert) => {
 	core_group = container.coreContent()!;
 	geometry0 = core_group.objectsWithGeo()[0].geometry;
 	assert.deepEqual(
-		(geometry0.getAttribute('uv2').array as number[]).join(';'),
+		((geometry0.getAttribute('uv2') as BufferAttribute).array as number[]).join(';'),
 		[
 			0.002912621246650815, 0.4985436797142029, 0.9970873594284058, 0.4985436797142029, 0.002912621246650815,
 			0.0014563106233254075, 0.9970873594284058, 0.0014563106233254075,
@@ -101,7 +102,7 @@ QUnit.test('UvUnwrap xatlast', async (assert) => {
 	);
 	let geometry1 = core_group.objectsWithGeo()[1].geometry;
 	assert.deepEqual(
-		(geometry1.getAttribute('uv2').array as number[]).join(';'),
+		((geometry1.getAttribute('uv2') as BufferAttribute).array as number[]).join(';'),
 		[
 			0.002912621246650815, 0.9985436797142029, 0.9970873594284058, 0.9985436797142029, 0.002912621246650815,
 			0.5014563202857971, 0.9970873594284058, 0.5014563202857971, 0.002912621246650815, 0.9985436797142029,

@@ -1,3 +1,5 @@
+import {BufferAttribute} from 'three';
+
 QUnit.test('center simple', async (assert) => {
 	const geo1 = window.geo1;
 
@@ -11,7 +13,7 @@ QUnit.test('center simple', async (assert) => {
 
 	let container = await center1.compute();
 	const geometry = container.coreContent()!.objectsWithGeo()[0].geometry;
-	const positions = geometry.getAttribute('position').array as number[];
+	const positions = (geometry.getAttribute('position') as BufferAttribute).array as number[];
 	assert.deepEqual(positions.join(','), [1, 3, 4].join(','));
 });
 
@@ -36,6 +38,6 @@ QUnit.test('center with multiple objects', async (assert) => {
 
 	let container = await center1.compute();
 	const geometry = container.coreContent()!.objectsWithGeo()[0].geometry;
-	const positions = geometry.getAttribute('position').array as number[];
+	const positions = (geometry.getAttribute('position') as BufferAttribute).array as number[];
 	assert.deepEqual(positions.join(','), [1, 3, 4, -1, 5, 2].join(','));
 });

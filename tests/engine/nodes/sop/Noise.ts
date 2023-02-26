@@ -1,3 +1,4 @@
+import {BufferAttribute} from 'three';
 import {NoiseOperation} from '../../../../src/engine/nodes/sop/Noise';
 
 QUnit.test('noise simple', async (assert) => {
@@ -41,7 +42,7 @@ QUnit.test('noise to update a float attribute', async (assert) => {
 	noise1.setOperation(NoiseOperation.SET);
 	coreContent = (await noise1.compute()).coreContent();
 	assert.notOk(noise1.states.error.active());
-	let massAttribArray = coreContent?.objectsWithGeo()[0].geometry.getAttribute('mass').array!;
+	let massAttribArray = (coreContent?.objectsWithGeo()[0].geometry.getAttribute('mass') as BufferAttribute).array!;
 	assert.in_delta(massAttribArray[0], 0.16, 0.01);
 	assert.in_delta(massAttribArray[1], -0.01, 0.01);
 	assert.in_delta(massAttribArray[2], 0.02, 0.01);
@@ -50,7 +51,7 @@ QUnit.test('noise to update a float attribute', async (assert) => {
 	noise1.setOperation(NoiseOperation.ADD);
 	coreContent = (await noise1.compute()).coreContent();
 	assert.notOk(noise1.states.error.active());
-	massAttribArray = coreContent?.objectsWithGeo()[0].geometry.getAttribute('mass').array!;
+	massAttribArray = (coreContent?.objectsWithGeo()[0].geometry.getAttribute('mass') as BufferAttribute).array!;
 	assert.in_delta(massAttribArray[0], 1 + 0.16, 0.01);
 	assert.in_delta(massAttribArray[1], 1 - 0.01, 0.01);
 	assert.in_delta(massAttribArray[2], 1 + 0.02, 0.01);

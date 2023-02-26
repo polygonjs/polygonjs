@@ -1,3 +1,5 @@
+import { BufferAttribute } from "three";
+
 QUnit.test('csg/hull', async (assert) => {
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false); // cancels geo node displayNodeController
@@ -18,7 +20,7 @@ QUnit.test('csg/hull', async (assert) => {
 	const core_group = container.coreContent();
 	assert.equal(core_group?.objectsWithGeo().length, 1, '1 object');
 	let geometry = core_group?.objectsWithGeo()[0].geometry;
-	assert.equal(geometry?.getAttribute('position').array.length, 1116);
+	assert.equal((geometry?.getAttribute('position') as BufferAttribute).array.length, 1116);
 	assert.in_delta(container.boundingBox().min.x, -2.5, 0.002);
 	assert.in_delta(container.boundingBox().max.x, 2.5, 0.002);
 	assert.notOk(csgNetwork1.isDirty(), 'box is dirty');
