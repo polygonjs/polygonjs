@@ -185,6 +185,7 @@ import {WebXRAREstimatedLightSopNode} from '../../../nodes/sop/WebXRAREstimatedL
 import {ActorsNetworkSopNode} from '../../../nodes/sop/ActorsNetwork';
 import {AnimationsNetworkSopNode} from '../../../nodes/sop/AnimationsNetwork';
 import {AudioNetworkSopNode} from '../../../nodes/sop/AudioNetwork';
+import {CadNetworkSopNode} from '../../../nodes/sop/CadNetwork';
 import {CopNetworkSopNode} from '../../../nodes/sop/CopNetwork';
 import {CsgNetworkSopNode} from '../../../nodes/sop/CsgNetwork';
 import {EventsNetworkSopNode} from '../../../nodes/sop/EventsNetwork';
@@ -374,6 +375,7 @@ export interface GeoNodeChildrenMap {
 	actorsNetwork: ActorsNetworkSopNode;
 	animationsNetwork: AnimationsNetworkSopNode;
 	audioNetwork: AudioNetworkSopNode;
+	cadNetwork: CadNetworkSopNode;
 	copNetwork: CopNetworkSopNode;
 	csgNetwork: CsgNetworkSopNode;
 	eventsNetwork: EventsNetworkSopNode;
@@ -797,6 +799,7 @@ export class SopRegister {
 		poly.registerNode(ActorsNetworkSopNode, CATEGORY_SOP.NETWORK);
 		poly.registerNode(AnimationsNetworkSopNode, CATEGORY_SOP.NETWORK);
 		poly.registerNode(AudioNetworkSopNode, CATEGORY_SOP.NETWORK);
+		poly.registerNode(CadNetworkSopNode, CATEGORY_SOP.NETWORK);
 		poly.registerNode(CopNetworkSopNode, CATEGORY_SOP.NETWORK);
 		poly.registerNode(CsgNetworkSopNode, CATEGORY_SOP.NETWORK);
 		poly.registerNode(EventsNetworkSopNode, CATEGORY_SOP.NETWORK);

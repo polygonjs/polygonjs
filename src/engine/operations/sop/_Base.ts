@@ -46,7 +46,7 @@ export class BaseSopOperation extends BaseOperation<NodeContext.SOP> {
 		this.createIndexIfNone(geometry);
 
 		const objectConstructor = objectConstructorByObjectType(type) || objectConstructorByObjectType(ObjectType.MESH);
-		material = DEFAULT_MATERIALS[type];
+		material = material || DEFAULT_MATERIALS[type];
 		const object = new (objectConstructor as any)(geometry, material);
 		this.applyObjectDefault(object);
 

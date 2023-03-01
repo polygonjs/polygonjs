@@ -29,6 +29,7 @@ export enum NodeContext {
 	ACTOR = 'actor',
 	ANIM = 'anim',
 	AUDIO = 'audio',
+	CAD = 'cad',
 	COP = 'cop',
 	CSG = 'csg',
 	EVENT = 'event',
@@ -46,6 +47,7 @@ export type NodeContextUnion =
 	| NodeContext.ACTOR
 	| NodeContext.ANIM
 	| NodeContext.AUDIO
+	| NodeContext.CAD
 	| NodeContext.COP
 	| NodeContext.CSG
 	| NodeContext.EVENT
@@ -62,6 +64,7 @@ export enum NetworkNodeType {
 	ACTOR = 'actorsNetwork',
 	ANIM = 'animationsNetwork',
 	AUDIO = 'audioNetwork',
+	CAD = 'cadNetwork',
 	COP = 'copNetwork',
 	CSG = 'csgNetwork',
 	EVENT = 'eventsNetwork',

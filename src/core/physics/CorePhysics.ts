@@ -33,6 +33,7 @@ export async function CorePhysics(): Promise<PhysicsLib> {
 	return new Promise((resolve) => {
 		if (_importStarted) {
 			_resolves.push(resolve);
+			return;
 		}
 
 		_importStarted = true;

@@ -32,6 +32,7 @@ export interface ConnectionPointTypeMap extends ConnectionPointTypeMapGeneric {
 	[NodeContext.ACTOR]: BaseActorConnectionPoint;
 	[NodeContext.ANIM]: undefined;
 	[NodeContext.AUDIO]: undefined;
+	[NodeContext.CAD]: undefined;
 	[NodeContext.COP]: undefined;
 	[NodeContext.CSG]: undefined;
 	[NodeContext.EVENT]: BaseEventConnectionPoint;
@@ -57,6 +58,7 @@ export interface ConnectionPointEnumMap extends ConnectionPointEnumMapGeneric {
 	[NodeContext.ACTOR]: ActorConnectionPointType;
 	[NodeContext.ANIM]: undefined;
 	[NodeContext.AUDIO]: undefined;
+	[NodeContext.CAD]: undefined;
 	[NodeContext.COP]: undefined;
 	[NodeContext.CSG]: undefined;
 	[NodeContext.EVENT]: EventConnectionPointType;
@@ -76,6 +78,7 @@ export const DEFAULT_CONNECTION_POINT_ENUM_MAP: IConnectionPointEnumMap = {
 	[NodeContext.ACTOR]: ActorConnectionPointType.TRIGGER,
 	[NodeContext.ANIM]: undefined,
 	[NodeContext.AUDIO]: undefined,
+	[NodeContext.CAD]: undefined,
 	[NodeContext.COP]: undefined,
 	[NodeContext.CSG]: undefined,
 	[NodeContext.EVENT]: EventConnectionPointType.BASE,

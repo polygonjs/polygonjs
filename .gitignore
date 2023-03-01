@@ -8,3 +8,4 @@ config/webpack/dts_concat.js
 public/dist
 public/bundled_types.d.ts
 dist/
+src/core/geometry/cad/build/

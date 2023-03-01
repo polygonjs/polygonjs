@@ -37,7 +37,16 @@ export const CATEGORY_AUDIO = {
 	MISC: 'misc',
 	NETWORK,
 };
-
+export const CATEGORY_CAD = {
+	ADVANCED: 'advanced',
+	EXTRUDE: 'extrude',
+	FLOW: 'flow',
+	MODIFIER: 'modifiers',
+	PRIMITIVES_2D: 'primitives 2D',
+	PRIMITIVES_3D: 'primitives 3D',
+	TRANSFORM: 'transform',
+	NETWORK,
+};
 export const CATEGORY_COP = {
 	ADVANCED: 'advanced',
 	SDF: 'SDF',

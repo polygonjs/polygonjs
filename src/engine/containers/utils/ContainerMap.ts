@@ -13,6 +13,7 @@ import {TextureContainer} from '../Texture';
 import {PostProcessContainer} from '../PostProcess';
 import {RopContainer} from '../Rop';
 import {CsgContainer} from '../Csg';
+import {CadContainer} from '../Cad';
 // import {TypedNode} from '../../nodes/_Base';
 // import {BaseAnimNodeType} from '../../nodes/anim/_Base';
 // import {BaseEventNodeType} from '../../nodes/event/_Base';
@@ -43,6 +44,7 @@ export const ContainerClassMap = {
 	[NodeContext.ACTOR]: AnimationContainer,
 	[NodeContext.ANIM]: AnimationContainer,
 	[NodeContext.AUDIO]: AudioContainer,
+	[NodeContext.CAD]: CadContainer,
 	[NodeContext.COP]: TextureContainer,
 	[NodeContext.CSG]: CsgContainer,
 	[NodeContext.EVENT]: EventContainer,

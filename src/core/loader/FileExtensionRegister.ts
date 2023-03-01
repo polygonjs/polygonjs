@@ -16,6 +16,7 @@ export const EXTENSIONS_BY_NODE_TYPE_BY_CONTEXT: Record<NodeContext, Record<stri
 	[NodeContext.AUDIO]: {
 		[AudioType.FILE]: [...AUDIO_EXTENSIONS],
 	},
+	[NodeContext.CAD]: {},
 	[NodeContext.COP]: {
 		[CopType.CUBE_MAP]: [ImageExtension.PNG, ImageExtension.JPEG, ImageExtension.JPG, ImageExtension.WEBP],
 		[CopType.GIF]: [ImageExtension.GIF],
