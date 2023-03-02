@@ -22,7 +22,7 @@ export function cadShapeToObject3D(
 	tesselationParams: TesselationParams
 ) {
 	let cachedParams = tesselationParamsByShape.get(object);
-	if (cachedParams && cachedTesselationParamsEqual(cachedParams, tesselationParams)) {
+	if (cachedParams && !cachedTesselationParamsEqual(cachedParams, tesselationParams)) {
 		oc.BRepTools.Clean(object, true);
 	}
 	tesselationParamsByShape.set(object, {...tesselationParams});

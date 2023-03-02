@@ -3,7 +3,7 @@
 import type {OpenCascadeInstance} from './CadCommon';
 
 type Callback = () => void;
-export function withCadException(oc: OpenCascadeInstance, callback: Callback) {
+export function withCadException<T>(oc: OpenCascadeInstance, callback: Callback): T | void {
 	try {
 		return callback();
 	} catch (e) {

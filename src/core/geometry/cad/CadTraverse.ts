@@ -16,7 +16,7 @@ export function traverseFaces(
 		const explorerCurrent = explorer.Current();
 		const face = oc.TopoDS.Face_1(explorerCurrent);
 		callback(face);
-		face.delete();
+		// face.delete();
 		// itemsCount += 1;
 		explorer.Next();
 	}

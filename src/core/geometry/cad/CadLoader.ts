@@ -29,7 +29,7 @@ export class CadLoader {
 			}
 			_importStarted = true;
 
-			const startTime = performance.now();
+			// const startTime = performance.now();
 			// 1 - full opencascade build
 			// const oc = await initOpenCascade();
 			// 2 - custom opencascade build
@@ -39,9 +39,8 @@ export class CadLoader {
 			});
 			//
 			//
-			console.log('opencascade build loaded in:', performance.now() - startTime);
+			// console.log('opencascade build loaded in:', performance.now() - startTime);
 			_oc = oc;
-			console.log({oc});
 			resolve(oc);
 			if (_resolves.length > 0) {
 				for (let _resolve of _resolves) {

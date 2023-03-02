@@ -8,6 +8,7 @@ import {
 	gp_Pnt2d,
 	TopoDS_Vertex,
 	TopoDS_Edge,
+	TopoDS_Wire,
 	TopoDS_Shell,
 	TopoDS_Face,
 	Geom2d_Curve,
@@ -65,6 +66,9 @@ export class TypedCadNode<K extends NodeParamsConfig> extends TypedNode<NodeCont
 	// }
 	setEdge(edge: TopoDS_Edge) {
 		this._setContainerObjects([new CadCoreObject(edge, CadObjectType.EDGE)]);
+	}
+	setWire(wire: TopoDS_Wire) {
+		this._setContainerObjects([new CadCoreObject(wire, CadObjectType.WIRE)]);
 	}
 	setFace(shape: TopoDS_Face) {
 		this._setContainerObjects([new CadCoreObject(shape, CadObjectType.FACE)]);

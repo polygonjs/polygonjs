@@ -12,7 +12,6 @@ import {cadEdgeToBufferGeometry} from './CadEdge';
 export function cadWireToObject3D(oc: OpenCascadeInstance, wire: TopoDS_Wire, tesselationParams: TesselationParams) {
 	const geometries: BufferGeometry[] = [];
 	traverseEdges(oc, wire, (edge) => {
-		console.log(edge);
 		const geometry = cadEdgeToBufferGeometry(oc, edge, tesselationParams);
 		geometries.push(geometry);
 	});

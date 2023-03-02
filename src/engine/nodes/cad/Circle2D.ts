@@ -32,8 +32,6 @@ export class Circle2DCadNode extends TypedCadNode<Circle2DCadParamsConfig> {
 		const oc = await CadLoader.core();
 		const axis = new oc.gp_Ax22d_1();
 		const circle = new oc.Geom2d_Circle_3(axis, this.pv.radius);
-		console.log(circle);
-		// console.log('DynamicType', circle.DynamicType().get());
 
 		this.setGeom2dCurve(circle);
 	}

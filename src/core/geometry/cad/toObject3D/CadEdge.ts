@@ -64,8 +64,6 @@ export function cadEdgeToBufferGeometry(
 				indices[(i - 1) * 2 + 1] = i;
 			}
 		}
-	} else {
-		console.warn('abscissa not done');
 	}
 
 	const geometry = new BufferGeometry();

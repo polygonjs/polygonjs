@@ -1,6 +1,7 @@
 mainBuild:
   name: cadNodes.js
   bindings:
+    - symbol: Adaptor2d_Curve2d
     - symbol: Adaptor3d_Curve
     - symbol: Adaptor3d_Surface
     - symbol: BRep_Tool
@@ -16,6 +17,7 @@ mainBuild:
     - symbol: BRepAlgoAPI_Section
     - symbol: BRepBuilderAPI_Command
     - symbol: BRepBuilderAPI_Copy
+    - symbol: BRepBuilderAPI_EdgeError
     - symbol: BRepBuilderAPI_MakeEdge
     - symbol: BRepBuilderAPI_MakeFace
     - symbol: BRepBuilderAPI_MakePolygon
@@ -31,10 +33,12 @@ mainBuild:
     - symbol: BRepGProp
     - symbol: BRepGProp_Face
     - symbol: BRepLib
+    - symbol: BRepLib_FindSurface
     - symbol: BRepLib_MakePolygon
     - symbol: BRepMesh_DiscretRoot
     - symbol: BRepMesh_IncrementalMesh
     - symbol: BRepOffset_Mode
+    - symbol: BRepOffsetAPI_MakeOffsetShape
     - symbol: BRepOffsetAPI_MakeThickSolid
     - symbol: BRepPrimAPI_MakeBox
     - symbol: BRepPrimAPI_MakeCylinder
@@ -67,11 +71,13 @@ mainBuild:
     - symbol: Geom_Geometry
     - symbol: Geom_Surface
     - symbol: Geom_TrimmedCurve
+    - symbol: Geom2dAdaptor_Curve
     - symbol: Geom2d_BezierCurve
     - symbol: Geom2d_BoundedCurve
     - symbol: Geom2d_Circle
     - symbol: Geom2d_Conic
     - symbol: Geom2d_Curve
+    - symbol: Geom2d_Ellipse
     - symbol: Geom2d_Geometry
     - symbol: Geom2d_Line
     - symbol: Geom2d_OffsetCurve
@@ -127,6 +133,7 @@ mainBuild:
     - symbol: IntTools_Array1OfRange
     - symbol: Message_ProgressRange
     - symbol: MoniTool_TypedValue
+    - symbol: NCollection_BaseList
     - symbol: Poly_Connect
     - symbol: Poly_PolygonOnTriangulation
     - symbol: Poly_Triangle
@@ -135,6 +142,7 @@ mainBuild:
     - symbol: Standard_Transient
     - symbol: StdPrs_ToolTriangulatedShape
     - symbol: TColgp_Array1OfDir
+    - symbol: TColgp_Array1OfPnt2d
     - symbol: TColgp_SequenceOfPnt2d
     - symbol: TopAbs_Orientation
     - symbol: TopAbs_ShapeEnum
@@ -151,12 +159,13 @@ mainBuild:
     - symbol: TopoDS_Solid
     - symbol: TopoDS_Vertex
     - symbol: TopoDS_Wire
+    - symbol: TopTools_Array1OfShape
     - symbol: TopTools_ListOfShape
 
   emccFlags:
-      - -O3
-      - -sEXPORT_ES6=1
-      - -sUSE_ES6_IMPORT_META=0
-      - -sEXPORTED_RUNTIME_METHODS=['FS']
-      - -sALLOW_MEMORY_GROWTH=1
+    - -O3
+    - -sEXPORT_ES6=1
+    - -sUSE_ES6_IMPORT_META=0
+    - -sEXPORTED_RUNTIME_METHODS=['FS']
+    - -sALLOW_MEMORY_GROWTH=1
 

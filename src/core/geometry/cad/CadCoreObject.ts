@@ -18,7 +18,8 @@ import {cadEdgeToObject3D, cadEdgeTransform, cadEdgeClone} from './toObject3D/Ca
 import {cadWireToObject3D, cadWireTransform, cadWireClone} from './toObject3D/CadWire';
 import {cadShapeToObject3D} from './toObject3D/CadShape';
 import {cadShapeClone, cadShapeTransform} from './toObject3D/CadShapeCommon';
-import {Vector2, Vector3} from 'three';
+import {Vector2, Vector3, Object3D} from 'three';
+// import {withCadException} from './CadExceptionHandler';
 
 const t2 = new Vector2();
 
@@ -80,8 +81,10 @@ export class CadCoreObject<T extends CadObjectType> {
 		console.warn('not cloning');
 		return this as any as CadCoreObject<T>;
 	}
-	toObject3D(oc: OpenCascadeInstance, tesselationParams: TesselationParams) {
+	toObject3D(oc: OpenCascadeInstance, tesselationParams: TesselationParams): Object3D | undefined {
+		// return withCadException(oc, () => {
 		return CadCoreObject.toObject3D(oc, this._object, this.type(), tesselationParams);
+		// }) as any as Object3D;
 	}
 
 	transform(t: Vector3, r: Vector3, s: Vector3) {

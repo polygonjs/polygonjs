@@ -10,7 +10,8 @@ import {CadType} from '../../poly/registers/nodes/types/Cad';
 import {Vector3} from 'three';
 
 const tmpS = new Vector3();
-
+// TODO: scale should use current t as pivit (maybe just scale before translate?)
+// TODO: use a transform2D node that would have more sensible transform parameters
 class TransformCadParamsConfig extends NodeParamsConfig {
 	/** @param translate */
 	t = ParamConfig.VECTOR3([0, 0, 0]);
