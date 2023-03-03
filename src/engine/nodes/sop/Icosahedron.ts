@@ -8,6 +8,7 @@ import {TypedSopNode} from './_Base';
 import {IcosahedronSopOperation} from '../../operations/sop/Icosahedron';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {SopType} from '../../poly/registers/nodes/types/Sop';
 const DEFAULT = IcosahedronSopOperation.DEFAULT_PARAMS;
 class IcosahedronSopParamsConfig extends NodeParamsConfig {
 	/** @param radius of the icosahedron */
@@ -27,7 +28,7 @@ const ParamsConfig = new IcosahedronSopParamsConfig();
 export class IcosahedronSopNode extends TypedSopNode<IcosahedronSopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'icosahedron';
+		return SopType.ICOSAHEDRON;
 	}
 
 	private _operation: IcosahedronSopOperation | undefined;

@@ -1,5 +1,5 @@
-import type {OpenCascadeInstance, TopoDS_Edge, TesselationParams, Geom_Curve, gp_Pnt, gp_Vec} from '../CadCommon';
-import {BufferGeometry, Float32BufferAttribute, Vector3} from 'three';
+import type {OpenCascadeInstance, TopoDS_Edge, TesselationParams, Geom_Curve, gp_Pnt} from '../CadCommon';
+import {BufferGeometry, Float32BufferAttribute} from 'three';
 import {BaseSopOperation} from '../../../../engine/operations/sop/_Base';
 import {CAD_MATERIAL} from '../CadConstant';
 // import {withCadException} from '../CadExceptionHandler';
@@ -14,11 +14,14 @@ const v1 = {current: 0};
 // const WITH_ORIENTATION = true;
 export function cadEdgeToObject3D(oc: OpenCascadeInstance, edge: TopoDS_Edge, tesselationParams: TesselationParams) {
 	const geometry = cadEdgeToBufferGeometry(oc, edge, tesselationParams);
-	return BaseSopOperation.createObject(
-		geometry,
-		ObjectType.LINE_SEGMENTS,
-		CAD_MATERIAL[ObjectType.LINE_SEGMENTS].plain
-	);
+	if (!geometry) {
+		return;
+	}
+	const mat = CAD_MATERIAL[ObjectType.LINE_SEGMENTS];
+	mat.color.copy(tesselationParams.edgesColor);
+	const object = BaseSopOperation.createObject(geometry, ObjectType.LINE_SEGMENTS, mat);
+
+	return object;
 }
 export function cadEdgeToBufferGeometry(
 	oc: OpenCascadeInstance,
@@ -30,9 +33,12 @@ export function cadEdgeToBufferGeometry(
 	// type Standard_Real = number;
 	// with:
 	// type Standard_Real = number | { current: number };
-	oc.BRep_Tool.Range_1(edge, v0 as any, v1 as any);
-	const handle = oc.BRep_Tool.Curve_2(edge, v0.current, v1.current);
+	// oc.BRep_Tool.Range_1(edge, v0 as any, v1 as any);
+	const handle = curveHandleFromEdge(oc, edge); //oc.BRep_Tool.Curve_2(edge, v0.current, v1.current);
 	const curve = handle.get();
+	if (!curve) {
+		return;
+	}
 	const geom2Dadaptor = new oc.GeomAdaptor_Curve_2(handle);
 
 	const uniformAbscissa = new oc.GCPnts_UniformAbscissa_3(
@@ -72,6 +78,11 @@ export function cadEdgeToBufferGeometry(
 	return geometry;
 }
 
+export function curveHandleFromEdge(oc: OpenCascadeInstance, edge: TopoDS_Edge) {
+	oc.BRep_Tool.Range_1(edge, v0 as any, v1 as any);
+	return oc.BRep_Tool.Curve_2(edge, v0.current, v1.current);
+}
+
 export function cadEdgeCreate(oc: OpenCascadeInstance, curve: Geom_Curve): TopoDS_Edge {
 	const handle = new oc.Handle_Geom_Curve_2(curve);
 	const api = new oc.BRepBuilderAPI_MakeEdge_24(handle);
@@ -79,23 +90,23 @@ export function cadEdgeCreate(oc: OpenCascadeInstance, curve: Geom_Curve): TopoD
 	return edge;
 }
 
-let _t: gp_Vec | undefined;
-// let _transform: gp_Trsf | undefined;
-export function cadEdgeTransform(edge: TopoDS_Edge, t: Vector3, r: Vector3, s: Vector3) {
-	const oc = CadLoader.oc();
-	_t = _t || new oc.gp_Vec_1();
-	// _pivot = _pivot || new oc.gp_Pnt2d_1();
-	_t.SetCoord_2(t.x, t.y, t.z);
-	const curve = oc.BRep_Tool.Curve_2(edge, 0, 1).get();
-	curve.Translate_1(_t);
-	// curve.Rotate(_pivot, MathUtils.degToRad(r));
-	// curve.Scale(_pivot, s);
-	// point.SetX(point.X() + t.x);
-	// point.SetY(point.Y() + t.y);
-	// const newPoint = new oc.gp_Pnt2d_3(point.X() + t.x, point.Y() + t.y);
-	// return newPoint;
-	return cadEdgeCreate(oc, curve);
-}
+// let _t: gp_Vec | undefined;
+// // let _transform: gp_Trsf | undefined;
+// export function cadEdgeTransform(edge: TopoDS_Edge, t: Vector3, r: Vector3, s: Vector3) {
+// 	const oc = CadLoader.oc();
+// 	_t = _t || new oc.gp_Vec_1();
+// 	// _pivot = _pivot || new oc.gp_Pnt2d_1();
+// 	_t.SetCoord_2(t.x, t.y, t.z);
+// 	const curve = oc.BRep_Tool.Curve_2(edge, 0, 1).get();
+// 	curve.Translate_1(_t);
+// 	// curve.Rotate(_pivot, MathUtils.degToRad(r));
+// 	// curve.Scale(_pivot, s);
+// 	// point.SetX(point.X() + t.x);
+// 	// point.SetY(point.Y() + t.y);
+// 	// const newPoint = new oc.gp_Pnt2d_3(point.X() + t.x, point.Y() + t.y);
+// 	// return newPoint;
+// 	return cadEdgeCreate(oc, curve);
+// }
 
 export function cadEdgeClone(src: TopoDS_Edge): TopoDS_Edge {
 	const oc = CadLoader.oc();

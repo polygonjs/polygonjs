@@ -35,13 +35,18 @@ export function cadMerge(inputObjects: CadCoreObject<CadObjectType>[]): CadCoreO
 				newObjects.push(new CadCoreObject(wire, CadObjectType.WIRE));
 				return;
 			}
-			case CadObjectType.FACE: {
-				// TODO
-				return;
-			}
-			case CadObjectType.SHELL: {
-				console.log(objects);
-				return;
+			// case CadObjectType.FACE: {
+			// 	// TODO
+			// 	return;
+			// }
+			// case CadObjectType.SHELL: {
+			// 	console.log(objects);
+			// 	return;
+			// }
+			default: {
+				for (let object of objects) {
+					newObjects.push(object);
+				}
 			}
 		}
 	});

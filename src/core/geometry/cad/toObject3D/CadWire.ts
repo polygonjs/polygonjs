@@ -1,11 +1,11 @@
 import type {OpenCascadeInstance, TopoDS_Wire, TesselationParams} from '../CadCommon';
-import {BufferGeometry, Vector3} from 'three';
+import {BufferGeometry} from 'three';
 import {BaseSopOperation} from '../../../../engine/operations/sop/_Base';
 import {CAD_MATERIAL} from '../CadConstant';
 import {ObjectType} from '../../Constant';
-import {CoreGeometryBuilderMerge} from '../../builders/Merge';
+// import {CoreGeometryBuilderMerge} from '../../builders/Merge';
 import {CadLoader} from '../CadLoader';
-import {cadShapeClone, cadShapeTransform} from './CadShapeCommon';
+import {cadShapeClone} from './CadShapeCommon';
 import {traverseEdges} from '../CadTraverse';
 import {cadEdgeToBufferGeometry} from './CadEdge';
 
@@ -13,21 +13,29 @@ export function cadWireToObject3D(oc: OpenCascadeInstance, wire: TopoDS_Wire, te
 	const geometries: BufferGeometry[] = [];
 	traverseEdges(oc, wire, (edge) => {
 		const geometry = cadEdgeToBufferGeometry(oc, edge, tesselationParams);
-		geometries.push(geometry);
+		if (geometry) {
+			geometries.push(geometry);
+		}
 	});
-	const geometry = CoreGeometryBuilderMerge.merge(geometries);
-	if (geometry) {
-		return BaseSopOperation.createObject(
-			geometry,
-			ObjectType.LINE_SEGMENTS,
-			CAD_MATERIAL[ObjectType.LINE_SEGMENTS].plain
-		);
-	}
+	// do not merge here,
+	// do it at the cadNetwork level to control perf
+	// const geometry = CoreGeometryBuilderMerge.merge(geometries);
+	return geometries.map((geometry) =>
+		BaseSopOperation.createObject(geometry, ObjectType.LINE_SEGMENTS, CAD_MATERIAL[ObjectType.LINE_SEGMENTS])
+	);
+
+	// if (geometry) {
+	// 	return BaseSopOperation.createObject(
+	// 		geometry,
+	// 		ObjectType.LINE_SEGMENTS,
+	// 		CAD_MATERIAL[ObjectType.LINE_SEGMENTS].plain
+	// 	);
+	// }
 }
 
-export function cadWireTransform(edge: TopoDS_Wire, t: Vector3, r: Vector3, s: Vector3) {
-	return cadShapeTransform(edge, t, r, s);
-}
+// export function cadWireTransform(edge: TopoDS_Wire, t: Vector3, r: Vector3, s: Vector3) {
+// 	return cadShapeTransform(edge, t, r, s);
+// }
 
 export function cadWireClone(src: TopoDS_Wire): TopoDS_Wire {
 	const oc = CadLoader.oc();

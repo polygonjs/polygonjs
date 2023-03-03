@@ -6,6 +6,7 @@ import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {CapsuleSopOperation} from '../../operations/sop/Capsule';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {SopType} from '../../poly/registers/nodes/types/Sop';
 // import {PolyNodeController} from './../utils/poly/PolyNodeController';
 // import {NodeContext} from './../../poly/NodeContext';
 // import {PolyNodeDataRegister} from '../utils/poly/PolyNodeDataRegister';
@@ -36,7 +37,7 @@ const ParamsConfig = new CapsuleSopParamsConfig();
 export class CapsuleSopNode extends TypedSopNode<CapsuleSopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'capsule';
+		return SopType.CAPSULE;
 	}
 
 	override initializeNode() {

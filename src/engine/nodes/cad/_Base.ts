@@ -55,26 +55,26 @@ export class TypedCadNode<K extends NodeParamsConfig> extends TypedNode<NodeCont
 	setPoint2D(point: gp_Pnt2d) {
 		this._setContainerObjects([new CadCoreObject(point, CadObjectType.POINT_2D)]);
 	}
-	setVertex(point: TopoDS_Vertex) {
-		this._setContainerObjects([new CadCoreObject(point, CadObjectType.VERTEX)]);
-	}
 	setGeom2dCurve(curve: Geom2d_Curve) {
 		this._setContainerObjects([new CadCoreObject(curve, CadObjectType.CURVE_2D)]);
 	}
 	// setGeomCurve(curve: Geom_Curve) {
 	// 	this._setContainerObjects([new CadCoreObject(curve, CadObjectType.CURVE_3D)]);
 	// }
+	setVertex(vertex: TopoDS_Vertex) {
+		this._setContainerObjects([new CadCoreObject(vertex)]);
+	}
 	setEdge(edge: TopoDS_Edge) {
-		this._setContainerObjects([new CadCoreObject(edge, CadObjectType.EDGE)]);
+		this._setContainerObjects([new CadCoreObject(edge)]);
 	}
 	setWire(wire: TopoDS_Wire) {
-		this._setContainerObjects([new CadCoreObject(wire, CadObjectType.WIRE)]);
+		this._setContainerObjects([new CadCoreObject(wire)]);
 	}
-	setFace(shape: TopoDS_Face) {
-		this._setContainerObjects([new CadCoreObject(shape, CadObjectType.FACE)]);
+	setFace(face: TopoDS_Face) {
+		this._setContainerObjects([new CadCoreObject(face)]);
 	}
-	setShell(shape: TopoDS_Shell) {
-		this._setContainerObjects([new CadCoreObject(shape, CadObjectType.SHELL)]);
+	setShell(shell: TopoDS_Shell) {
+		this._setContainerObjects([new CadCoreObject(shell)]);
 	}
 	// setCadObject(object: CadObject) {
 	// 	this._setContainerObjects([object]);

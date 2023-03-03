@@ -34,19 +34,25 @@ mainBuild:
     - symbol: BRepGProp_Face
     - symbol: BRepLib
     - symbol: BRepLib_FindSurface
+    - symbol: BRepLib_Command
+    - symbol: BRepLib_MakeEdge2d
     - symbol: BRepLib_MakePolygon
+    - symbol: BRepLib_MakeShape
     - symbol: BRepMesh_DiscretRoot
     - symbol: BRepMesh_IncrementalMesh
     - symbol: BRepOffset_Mode
     - symbol: BRepOffsetAPI_MakeOffsetShape
     - symbol: BRepOffsetAPI_MakeThickSolid
+    - symbol: BRepOffsetAPI_ThruSections
     - symbol: BRepPrimAPI_MakeBox
+    - symbol: BRepPrimAPI_MakeCone
     - symbol: BRepPrimAPI_MakeCylinder
     - symbol: BRepPrimAPI_MakeOneAxis
     - symbol: BRepPrimAPI_MakePrism
     - symbol: BRepPrimAPI_MakeRevolution
     - symbol: BRepPrimAPI_MakeSphere
     - symbol: BRepPrimAPI_MakeSweep
+    - symbol: BRepPrimAPI_MakeTorus
     - symbol: BRepTools
     - symbol: ChFi3d_FilletShape
     - symbol: ChFiDS_ChamfMode
@@ -87,6 +93,7 @@ mainBuild:
     - symbol: GeomAbs_Shape
     - symbol: GeomAbs_SurfaceType
     - symbol: GeomAdaptor_Curve
+    - symbol: GeomAPI
     - symbol: GeomAPI_Interpolate
     - symbol: GeomLib
     - symbol: gp_Ax1
@@ -101,10 +108,13 @@ mainBuild:
     - symbol: gp_Dir2d
     - symbol: gp_Elips
     - symbol: gp_Elips2d
+    - symbol: gp_EulerSequence
     - symbol: gp_GTrsf
     - symbol: gp_GTrsf2d
+    - symbol: gp_Pln
     - symbol: gp_Pnt
     - symbol: gp_Pnt2d
+    - symbol: gp_Quaternion
     - symbol: gp_Trsf
     - symbol: gp_Trsf2d
     - symbol: gp_Vec

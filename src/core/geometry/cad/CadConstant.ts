@@ -7,9 +7,9 @@ import {ObjectType} from '../Constant';
 // }
 export const step = 0.000001;
 
-interface MaterialPair {
-	plain: Material;
-	wireframe: Material;
+interface MaterialPair<M extends Material> {
+	plain: M;
+	wireframe: M;
 }
 const MESH_MAT = new MeshStandardMaterial({
 	color: 0xffffff,
@@ -33,9 +33,9 @@ const POINTS_MAT = new PointsMaterial({
 });
 
 interface CadMaterial {
-	[ObjectType.MESH]: MaterialPair;
-	[ObjectType.LINE_SEGMENTS]: MaterialPair;
-	[ObjectType.POINTS]: MaterialPair;
+	[ObjectType.MESH]: MaterialPair<MeshStandardMaterial>;
+	[ObjectType.LINE_SEGMENTS]: LineBasicMaterial;
+	[ObjectType.POINTS]: PointsMaterial;
 }
 
 export const CAD_MATERIAL: CadMaterial = {
@@ -43,14 +43,8 @@ export const CAD_MATERIAL: CadMaterial = {
 		plain: MESH_MAT,
 		wireframe: MESH_MAT_WIREFRAME,
 	},
-	[ObjectType.LINE_SEGMENTS]: {
-		plain: LINES_MAT,
-		wireframe: LINES_MAT,
-	},
-	[ObjectType.POINTS]: {
-		plain: POINTS_MAT,
-		wireframe: POINTS_MAT,
-	},
+	[ObjectType.LINE_SEGMENTS]: LINES_MAT,
+	[ObjectType.POINTS]: POINTS_MAT,
 };
 
 // export const HASH_CODE_MAX = Number.MAX_SAFE_INTEGER;

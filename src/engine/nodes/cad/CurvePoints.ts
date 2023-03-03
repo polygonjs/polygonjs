@@ -17,6 +17,7 @@ import {Vector3} from 'three';
 const v0 = {current: 0};
 const v1 = {current: 0};
 const tmpV3 = new Vector3();
+// TODO: normalize range?
 
 class CurvePointsCadParamsConfig extends NodeParamsConfig {
 	/** @param points count */
@@ -69,12 +70,9 @@ export class CurvePointsCadNode extends TypedCadNode<CurvePointsCadParamsConfig>
 				}
 			} else if (CoreCadType.isEdge(inputObject)) {
 				const edge = inputObject.object();
-				console.log(edge);
 				oc.BRep_Tool.Range_1(edge, v0 as any, v1 as any);
 				const handle = oc.BRep_Tool.Curve_2(edge, v0.current, v1.current);
-				console.log(handle);
 				const curve = handle.get();
-				console.log(curve);
 				const pt = new oc.gp_Pnt_1();
 
 				for (let i = 0; i < count; i++) {

@@ -25,9 +25,9 @@ export class Curve2DToSurfaceCadNode extends TypedCadNode<Curve2DToSurfaceCadPar
 
 	override async cook(inputCoreGroups: CadCoreGroup[]) {
 		const oc = await CadLoader.core();
-		const inputCurves: CadCoreObject<CadObjectType.CURVE_2D>[] = inputCoreGroups[0]
-			.objects()
-			.filter((o) => CoreCadType.isGeom2dCurve(o)) as CadCoreObject<CadObjectType.CURVE_2D>[];
+		const inputCurves: CadCoreObject<CadObjectType.CURVE_2D>[] = inputCoreGroups[0].objectsWithType(
+			CadObjectType.CURVE_2D
+		);
 		const inputSurfaces = inputCoreGroups[1].objects().filter((o) => CoreCadType.isShape(o));
 
 		const newObjects: CadCoreObject<CadObjectType>[] = [];
@@ -45,7 +45,7 @@ export class Curve2DToSurfaceCadNode extends TypedCadNode<Curve2DToSurfaceCadPar
 				const edge = api.Edge();
 				const result = oc.BRepLib.BuildCurves3d_2(edge);
 				if (result) {
-					newObjects.push(new CadCoreObject(edge, CadObjectType.EDGE));
+					newObjects.push(new CadCoreObject(edge));
 				}
 			}
 

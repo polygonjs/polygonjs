@@ -8,6 +8,7 @@ import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {PlaneSopOperation} from '../../operations/sop/Plane';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {SopType} from '../../poly/registers/nodes/types/Sop';
 const DEFAULT = PlaneSopOperation.DEFAULT_PARAMS;
 class PlaneSopParamsConfig extends NodeParamsConfig {
 	/** @param size of the plane */
@@ -34,7 +35,7 @@ const ParamsConfig = new PlaneSopParamsConfig();
 export class PlaneSopNode extends TypedSopNode<PlaneSopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'plane';
+		return SopType.PLANE;
 	}
 
 	static override displayedInputNames(): string[] {

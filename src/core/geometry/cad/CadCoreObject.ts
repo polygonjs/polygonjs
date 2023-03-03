@@ -10,18 +10,20 @@ import {
 	CadObjectType,
 	CadTypeMap,
 	TesselationParams,
+	cadObjectTypeFromShape,
+	cadDowncast,
 } from './CadCommon';
-import {cadPnt2dToObject3D, cadPnt2dTransform, cadPnt2dClone} from './toObject3D/CadPnt2d';
-import {cadVertexToObject3D, cadVertexTransform, cadVertexClone} from './toObject3D/CadVertex';
-import {cadGeom2dCurveToObject3D, cadGeom2dCurveTransform, cadGeom2dCurveClone} from './toObject3D/CadGeom2dCurve';
-import {cadEdgeToObject3D, cadEdgeTransform, cadEdgeClone} from './toObject3D/CadEdge';
-import {cadWireToObject3D, cadWireTransform, cadWireClone} from './toObject3D/CadWire';
+import {CadLoader} from './CadLoader';
+import {CoreCadType} from './CadCoreType';
+import {cadPnt2dToObject3D, cadPnt2dClone} from './toObject3D/CadPnt2d';
+import {cadVertexToObject3D, cadVertexClone} from './toObject3D/CadVertex';
+import {cadGeom2dCurveToObject3D, cadGeom2dCurveClone} from './toObject3D/CadGeom2dCurve';
+import {cadEdgeToObject3D, cadEdgeClone} from './toObject3D/CadEdge';
+import {cadWireToObject3D, cadWireClone} from './toObject3D/CadWire';
 import {cadShapeToObject3D} from './toObject3D/CadShape';
-import {cadShapeClone, cadShapeTransform} from './toObject3D/CadShapeCommon';
-import {Vector2, Vector3, Object3D} from 'three';
+import {cadShapeClone} from './toObject3D/CadShapeCommon';
+import {Object3D} from 'three';
 // import {withCadException} from './CadExceptionHandler';
-
-const t2 = new Vector2();
 
 function cloneCadObject<T extends CadObjectType>(
 	type: CadObjectType,
@@ -57,14 +59,36 @@ function cloneCadObject<T extends CadObjectType>(
 }
 
 export class CadCoreObject<T extends CadObjectType> {
-	constructor(private _object: CadTypeMap[T], private _type: T) {}
+	constructor(private _object: CadTypeMap[T], private _type?: T) {
+		const oc = CadLoader.oc();
+
+		if (CoreCadType.isObjectShape(this._object)) {
+			this._object = cadDowncast(oc, this._object) as CadTypeMap[T];
+			const type = cadObjectTypeFromShape(oc, _object as any) as T;
+			if (type) {
+				this._type = type;
+			} else {
+				console.error('no type for object', this._object);
+			}
+		} else {
+			if (this._type == null) {
+				console.error('type is required for object', this._object);
+			}
+		}
+		// if ((_object as TopoDS_Shape).ShapeType) {
+		// 	const type = cadObjectTypeFromShape(oc, _object as any);
+		// 	if (type != null && type != _type) {
+		// 		console.error('got type', type, 'instead of expected', _type);
+		// 	}
+		// }
+	}
 	dispose() {}
 
 	object() {
 		return this._object;
 	}
 	type() {
-		return this._type;
+		return this._type!;
 	}
 
 	clone(): CadCoreObject<T> {
@@ -81,54 +105,10 @@ export class CadCoreObject<T extends CadObjectType> {
 		console.warn('not cloning');
 		return this as any as CadCoreObject<T>;
 	}
-	toObject3D(oc: OpenCascadeInstance, tesselationParams: TesselationParams): Object3D | undefined {
+	toObject3D(oc: OpenCascadeInstance, tesselationParams: TesselationParams): Object3D | Object3D[] | undefined {
 		// return withCadException(oc, () => {
 		return CadCoreObject.toObject3D(oc, this._object, this.type(), tesselationParams);
 		// }) as any as Object3D;
-	}
-
-	transform(t: Vector3, r: Vector3, s: Vector3) {
-		switch (this.type()) {
-			case CadObjectType.POINT_2D: {
-				t2.set(t.x, t.y);
-				return cadPnt2dTransform(this._object as gp_Pnt2d, t2);
-			}
-			case CadObjectType.CURVE_2D: {
-				t2.set(t.x, t.y);
-				return cadGeom2dCurveTransform(this._object as Geom2d_Curve, t2, r.z, Math.max(s.x, s.y));
-			}
-			// case CadObjectType.CURVE_3D: {
-			// 	return cadGeomCurveTransform(this._object as Geom_Curve, t, r, s);
-			// }
-			case CadObjectType.VERTEX: {
-				this._object = cadVertexTransform(this._object as TopoDS_Vertex, t) as CadTypeMap[T];
-				return;
-			}
-			case CadObjectType.EDGE: {
-				this._object = cadEdgeTransform(this._object as TopoDS_Edge, t, r, s) as CadTypeMap[T];
-				return;
-			}
-			case CadObjectType.WIRE: {
-				this._object = cadWireTransform(this._object as TopoDS_Wire, t, r, s) as CadTypeMap[T];
-				return;
-			}
-			// case CadObjectType.CURVE_2D: {
-			// 	return cadGeom2dCurveToObject3D(oc, object as Geom2d_Curve, tesselationParams);
-			// }
-			// case CadObjectType.CURVE_3D: {
-			// 	return cadGeom2dCurve(oc, object as Geom_Curve, tesselationParams);
-			// }
-			case CadObjectType.FACE:
-			case CadObjectType.SHELL:
-			case CadObjectType.SOLID:
-			case CadObjectType.COMPSOLID:
-			case CadObjectType.COMPOUND: {
-				// make sure to re-assign the object,
-				// since it is not modified in place
-				this._object = cadShapeTransform(this._object as TopoDS_Shape, t, r, s) as CadTypeMap[T];
-				return;
-			}
-		}
 	}
 
 	static toObject3D(

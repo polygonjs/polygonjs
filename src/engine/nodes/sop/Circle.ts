@@ -8,6 +8,7 @@ import {TypedSopNode} from './_Base';
 import {CircleSopOperation} from '../../operations/sop/Circle';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {SopType} from '../../poly/registers/nodes/types/Sop';
 const DEFAULT = CircleSopOperation.DEFAULT_PARAMS;
 class CircleSopParamsConfig extends NodeParamsConfig {
 	/** @param circle radius */
@@ -39,7 +40,7 @@ const ParamsConfig = new CircleSopParamsConfig();
 export class CircleSopNode extends TypedSopNode<CircleSopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'circle';
+		return SopType.CIRCLE;
 	}
 
 	private _operation: CircleSopOperation | undefined;

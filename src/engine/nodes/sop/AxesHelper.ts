@@ -9,6 +9,7 @@ import {CoreGroup} from '../../../core/geometry/Group';
 
 import {AxesHelperSopOperation} from '../../operations/sop/AxesHelper';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {SopType} from '../../poly/registers/nodes/types/Sop';
 const DEFAULT = AxesHelperSopOperation.DEFAULT_PARAMS;
 class AxesHelperSopParamsConfig extends NodeParamsConfig {
 	/** @param center of the geometry */
@@ -19,7 +20,7 @@ const ParamsConfig = new AxesHelperSopParamsConfig();
 export class AxesHelperSopNode extends TypedSopNode<AxesHelperSopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'axesHelper';
+		return SopType.AXES_HELPER;
 	}
 
 	override initializeNode() {

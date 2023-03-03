@@ -9,6 +9,7 @@ import {CadCoreGroup} from '../../../core/geometry/cad/CadCoreGroup';
 import {step} from '../../../core/geometry/csg/CsgUiUtils';
 import {CadLoader} from '../../../core/geometry/cad/CadLoader';
 import {cadEdgeCreate} from '../../../core/geometry/cad/toObject3D/CadEdge';
+import {CadType} from '../../poly/registers/nodes/types/Cad';
 
 class CircleCadParamsConfig extends NodeParamsConfig {
 	/** @param radius */
@@ -27,19 +28,21 @@ const ParamsConfig = new CircleCadParamsConfig();
 export class CircleCadNode extends TypedCadNode<CircleCadParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'circle';
+		return CadType.CIRCLE;
 	}
 
 	override async cook(inputCoreGroups: CadCoreGroup[]) {
 		const oc = await CadLoader.core();
-		const dir = new oc.gp_Dir_4(this.pv.axis.x, this.pv.axis.y, this.pv.axis.z);
-		const axis1 = new oc.gp_Ax1_1();
+		const axis1 = CadLoader.gp_Ax1;
+		const dir = CadLoader.gp_Dir;
+		dir.SetCoord_2(this.pv.axis.x, this.pv.axis.y, this.pv.axis.z);
 		axis1.SetDirection(dir);
-		const axis = new oc.gp_Ax2_1();
+		const axis = CadLoader.gp_Ax2;
 		axis.SetAxis(axis1);
 		const circle = new oc.Geom_Circle_2(axis, this.pv.radius);
 
-		const t = new oc.gp_Vec_3(new oc.gp_XYZ_2(this.pv.center.x, this.pv.center.y, this.pv.center.z));
+		const t = CadLoader.gp_Vec;
+		t.SetCoord_2(this.pv.center.x, this.pv.center.y, this.pv.center.z);
 		circle.Translate_1(t);
 
 		const edge = cadEdgeCreate(oc, circle);

@@ -7,6 +7,7 @@ import {TypedSopNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {TubeSopOperation} from '../../operations/sop/Tube';
 import {CoreGroup} from '../../../core/geometry/Group';
+import {SopType} from '../../poly/registers/nodes/types/Sop';
 class TubeSopParamsConfig extends NodeParamsConfig {
 	/** @param top radius */
 	radiusTop = ParamConfig.FLOAT(1, {range: [0, 1]});
@@ -30,7 +31,7 @@ const ParamsConfig = new TubeSopParamsConfig();
 export class TubeSopNode extends TypedSopNode<TubeSopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'tube';
+		return SopType.TUBE;
 	}
 
 	private _operation: TubeSopOperation | undefined;

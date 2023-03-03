@@ -1,5 +1,5 @@
 /**
- * Creates a cylinder.
+ * Creates a cone.
  *
  *
  */
@@ -12,9 +12,15 @@ import {CadType} from '../../poly/registers/nodes/types/Cad';
 import {cadShapeTranslate} from '../../../core/geometry/cad/toObject3D/CadShapeCommon';
 import {cadAxis} from '../../../core/geometry/cad/CadMath';
 
-class CylinderCadParamsConfig extends NodeParamsConfig {
-	/** @param radius */
-	radius = ParamConfig.FLOAT(1, {
+class ConeCadParamsConfig extends NodeParamsConfig {
+	/** @param base radius */
+	baseRadius = ParamConfig.FLOAT(0.5, {
+		range: [0, 2],
+		rangeLocked: [true, false],
+		step,
+	});
+	/** @param top radius */
+	topRadius = ParamConfig.FLOAT(0, {
 		range: [0, 2],
 		rangeLocked: [true, false],
 		step,
@@ -31,20 +37,20 @@ class CylinderCadParamsConfig extends NodeParamsConfig {
 	axis = ParamConfig.VECTOR3([0, 1, 0]);
 	/** @param closed */
 	closed = ParamConfig.BOOLEAN(true);
-	/** @param angle */
-	angle = ParamConfig.FLOAT(`2*$PI`, {
+	/** @param phi */
+	phi = ParamConfig.FLOAT(`2*$PI`, {
 		range: [0, 2 * Math.PI],
 		rangeLocked: [true, true],
 		step,
 		visibleIf: {closed: false},
 	});
 }
-const ParamsConfig = new CylinderCadParamsConfig();
+const ParamsConfig = new ConeCadParamsConfig();
 
-export class CylinderCadNode extends TypedCadNode<CylinderCadParamsConfig> {
+export class ConeCadNode extends TypedCadNode<ConeCadParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return CadType.CYLINDER;
+		return CadType.CONE;
 	}
 
 	override async cook(inputCoreGroups: CadCoreGroup[]) {
@@ -52,8 +58,8 @@ export class CylinderCadNode extends TypedCadNode<CylinderCadParamsConfig> {
 		const axis = cadAxis(this.pv.axis);
 
 		const api = this.pv.closed
-			? new oc.BRepPrimAPI_MakeCylinder_3(axis, this.pv.radius, this.pv.height)
-			: new oc.BRepPrimAPI_MakeCylinder_4(axis, this.pv.radius, this.pv.height, this.pv.angle);
+			? new oc.BRepPrimAPI_MakeCone_3(axis, this.pv.baseRadius, this.pv.topRadius, this.pv.height)
+			: new oc.BRepPrimAPI_MakeCone_4(axis, this.pv.baseRadius, this.pv.topRadius, this.pv.height, this.pv.phi);
 
 		const shape = cadShapeTranslate(api.Shape(), this.pv.center);
 

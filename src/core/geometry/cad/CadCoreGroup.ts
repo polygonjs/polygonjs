@@ -1,8 +1,10 @@
 import {Poly} from '../../../engine/Poly';
 import {CadCoreObject} from './CadCoreObject';
-import {CadObjectType, TesselationParams} from './CadCommon';
+import {CadObjectType, CadObjectTypeShape, TesselationParams} from './CadCommon';
 import {CadLoader} from './CadLoader';
 import {Object3D} from 'three';
+import {CoreCadType} from './CadCoreType';
+import {CoreType} from '../../Type';
 
 export class CadCoreGroup {
 	private _timestamp: number | undefined;
@@ -57,6 +59,12 @@ export class CadCoreGroup {
 	objects() {
 		return this._objects;
 	}
+	objectsWithType<T extends CadObjectType>(type: T) {
+		return this._objects.filter((o) => o.type() == type) as CadCoreObject<T>[];
+	}
+	objectsWithShape() {
+		return this._objects.filter((o) => CoreCadType.isShape(o)) as CadCoreObject<CadObjectTypeShape>[];
+	}
 
 	async toObject3Ds(tesselationParams: TesselationParams) {
 		const oc = await CadLoader.core();
@@ -64,7 +72,11 @@ export class CadCoreGroup {
 		for (let obj of this._objects) {
 			const object3D = obj.toObject3D(oc, tesselationParams);
 			if (object3D) {
-				objects3D.push(object3D);
+				if (CoreType.isArray(object3D)) {
+					objects3D.push(...object3D);
+				} else {
+					objects3D.push(object3D);
+				}
 			}
 		}
 		return objects3D;

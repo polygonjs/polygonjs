@@ -1,10 +1,11 @@
-import {traverseFaces} from '../CadTraverse';
+import {traverseEdges, traverseFaces} from '../CadTraverse';
 import type {OpenCascadeInstance, TopoDS_Shape, TesselationParams, CachedTesselationParams} from '../CadCommon';
 import {faceData} from '../CadCoreFace';
-import {BufferGeometry, BufferAttribute} from 'three';
+import {BufferGeometry, BufferAttribute, Object3D} from 'three';
 import {BaseSopOperation} from '../../../../engine/operations/sop/_Base';
 import {ObjectType} from '../../Constant';
 import {CAD_MATERIAL} from '../CadConstant';
+import {cadEdgeToObject3D} from './CadEdge';
 
 function cachedTesselationParamsEqual(params1: CachedTesselationParams, params2: CachedTesselationParams) {
 	return (
@@ -27,6 +28,30 @@ export function cadShapeToObject3D(
 	}
 	tesselationParamsByShape.set(object, {...tesselationParams});
 
+	const objects: Object3D[] = [];
+	if (tesselationParams.displayMeshes) {
+		const mesh = _createMesh(oc, object, tesselationParams);
+		if (mesh) {
+			objects.push(mesh);
+		}
+	}
+	if (tesselationParams.displayEdges) {
+		// const edgeObjects:Object3D[]=[]
+		traverseEdges(oc, object, (edge) => {
+			const edgeObject = cadEdgeToObject3D(oc, edge, tesselationParams);
+			if (edgeObject) {
+				// it seems better to not have shadows from those edges
+				edgeObject.castShadow = false;
+				edgeObject.receiveShadow = false;
+				objects.push(edgeObject);
+			}
+		});
+	}
+
+	return objects;
+}
+
+function _createMesh(oc: OpenCascadeInstance, object: TopoDS_Shape, tesselationParams: TesselationParams) {
 	const mesher = new oc.BRepMesh_IncrementalMesh_2(
 		object,
 		tesselationParams.linearTolerance,
@@ -57,6 +82,7 @@ export function cadShapeToObject3D(
 
 		const materialPair = CAD_MATERIAL[ObjectType.MESH];
 		const material = tesselationParams.wireframe ? materialPair.wireframe : materialPair.plain;
+		material.color.copy(tesselationParams.meshesColor);
 		return BaseSopOperation.createObject(geo, ObjectType.MESH, material);
 	}
 }

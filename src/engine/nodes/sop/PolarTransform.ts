@@ -13,6 +13,7 @@ import {PolarTransformSopOperation} from '../../operations/sop/PolarTransform';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {TransformTargetType, TRANSFORM_TARGET_TYPES} from '../../../core/Transform';
+import {SopType} from '../../poly/registers/nodes/types/Sop';
 const DEFAULT = PolarTransformSopOperation.DEFAULT_PARAMS;
 class PolarTransformSopParamConfig extends NodeParamsConfig {
 	/** @param sets if this node should transform objects or geometries */
@@ -43,7 +44,7 @@ const ParamsConfig = new PolarTransformSopParamConfig();
 export class PolarTransformSopNode extends TypedSopNode<PolarTransformSopParamConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'polarTransform';
+		return SopType.POLAR_TRANSFORM;
 	}
 
 	static override displayedInputNames(): string[] {

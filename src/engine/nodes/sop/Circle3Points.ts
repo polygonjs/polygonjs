@@ -21,6 +21,7 @@ import {
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {isBooleanTrue} from '../../../core/BooleanValue';
+import {SopType} from '../../poly/registers/nodes/types/Sop';
 class Circle3PointsSopParamsConfig extends NodeParamsConfig {
 	/** @param toggle on to create the arc */
 	arc = ParamConfig.BOOLEAN(1);
@@ -70,7 +71,7 @@ const ParamsConfig = new Circle3PointsSopParamsConfig();
 export class Circle3PointsSopNode extends TypedSopNode<Circle3PointsSopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'circle3Points';
+		return SopType.CIRCLE_3_POINTS;
 	}
 
 	override initializeNode() {

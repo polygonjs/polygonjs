@@ -11,6 +11,7 @@ import {CadCoreObject} from '../../../core/geometry/cad/CadCoreObject';
 import {CadObjectType, TopoDS_Shape, cadObjectTypeFromShape} from '../../../core/geometry/cad/CadCommon';
 import {CoreCadType} from '../../../core/geometry/cad/CadCoreType';
 
+// TODO: make sure it works for 3D as well
 class MirrorCadParamsConfig extends NodeParamsConfig {
 	/** @param origin */
 	// origin = ParamConfig.VECTOR3([0, 0, 0]);

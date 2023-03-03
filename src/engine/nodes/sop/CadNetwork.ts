@@ -57,8 +57,26 @@ class CadNetworkParamsConfig extends NodeParamsConfig {
 		// 	CadNetworkSopNode.PARAM_CALLBACK_displayNodeSetDirty(node as CadNetworkSopNode);
 		// },
 	});
+	/** @param display edges */
+	displayEdges = ParamConfig.BOOLEAN(true, {
+		separatorBefore: true,
+	});
+	/** @param edges color */
+	edgesColor = ParamConfig.COLOR([0, 0, 0]);
+	/** @param display meshes */
+	displayMeshes = ParamConfig.BOOLEAN(true);
+	/** @param meshes color */
+	meshesColor = ParamConfig.COLOR([1, 1, 1], {
+		visibleIf: {
+			displayMeshes: true,
+		},
+	});
 	/** @param wireframe */
-	wireframe = ParamConfig.BOOLEAN(false);
+	wireframe = ParamConfig.BOOLEAN(false, {
+		visibleIf: {
+			displayMeshes: true,
+		},
+	});
 }
 const ParamsConfig = new CadNetworkParamsConfig();
 

@@ -30,6 +30,7 @@ const projected = new Vector3();
 const facesByDist: Map<number, Set<TopoDS_Face>> = new Map();
 const faceDists: Set<number> = new Set();
 
+// TODO: find more meaningful name
 class ThickSolidCadParamsConfig extends NodeParamsConfig {
 	/** @param offset */
 	offset = ParamConfig.FLOAT(-0.1, {

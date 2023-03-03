@@ -11,6 +11,7 @@ import {CoreTransform} from '../../../core/Transform';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {BaseSopOperation} from '../../operations/sop/_Base';
+import { SopType } from '../../poly/registers/nodes/types/Sop';
 const DEFAULT_UP = new Vector3(0, 1, 0);
 
 class ConeSopParamsConfig extends NodeParamsConfig {
@@ -38,7 +39,7 @@ const ParamsConfig = new ConeSopParamsConfig();
 export class ConeSopNode extends TypedSopNode<ConeSopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'cone';
+		return SopType.CONE;
 	}
 
 	private _core_transform = new CoreTransform();

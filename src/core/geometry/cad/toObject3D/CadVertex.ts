@@ -11,7 +11,7 @@ export function cadVertexToObject3D(oc: OpenCascadeInstance, vertex: TopoDS_Vert
 	const geo = new BufferGeometry();
 	const positions: number[] = [point.X(), point.Y(), point.Z()];
 	geo.setAttribute('position', new BufferAttribute(new Float32Array(positions), 3));
-	return BaseSopOperation.createObject(geo, ObjectType.POINTS, CAD_MATERIAL[ObjectType.POINTS].plain);
+	return BaseSopOperation.createObject(geo, ObjectType.POINTS, CAD_MATERIAL[ObjectType.POINTS]);
 }
 
 export function cadVertexCreate(oc: OpenCascadeInstance, t: Vector3): TopoDS_Vertex {
@@ -24,15 +24,15 @@ function _vertexFromPoint(oc: OpenCascadeInstance, point: gp_Pnt): TopoDS_Vertex
 	return vertex;
 }
 
-export function cadVertexTransform(src: TopoDS_Vertex, t: Vector3) {
-	const oc = CadLoader.oc();
-	const point = oc.BRep_Tool.Pnt(src);
+// export function cadVertexTransform(src: TopoDS_Vertex, t: Vector3) {
+// 	const oc = CadLoader.oc();
+// 	const point = oc.BRep_Tool.Pnt(src);
 
-	point.SetX(point.X() + t.x);
-	point.SetY(point.Y() + t.y);
-	point.SetZ(point.Z() + t.z);
-	return _vertexFromPoint(oc, point);
-}
+// 	point.SetX(point.X() + t.x);
+// 	point.SetY(point.Y() + t.y);
+// 	point.SetZ(point.Z() + t.z);
+// 	return _vertexFromPoint(oc, point);
+// }
 
 export function cadVertexClone(src: TopoDS_Vertex): TopoDS_Vertex {
 	const oc = CadLoader.oc();

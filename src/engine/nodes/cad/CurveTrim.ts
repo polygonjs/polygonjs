@@ -15,7 +15,7 @@ import {cadEdgeCreate} from '../../../core/geometry/cad/toObject3D/CadEdge';
 
 const v0 = {current: 0};
 const v1 = {current: 0};
-
+// TODO: normalize range?
 class CurveTrimCadParamsConfig extends NodeParamsConfig {
 	/** @param min */
 	min = ParamConfig.FLOAT(0, {
@@ -52,6 +52,7 @@ export class CurveTrimCadNode extends TypedCadNode<CurveTrimCadParamsConfig> {
 				const curve = inputObject.object();
 				const handle = new oc.Handle_Geom2d_Curve_2(curve);
 				const trimmedCurve = new oc.Geom2d_TrimmedCurve(handle, this.pv.min, this.pv.max, true, true);
+				console.log({trimmedCurve});
 				newObjects.push(new CadCoreObject(trimmedCurve, CadObjectType.CURVE_2D));
 			} else if (CoreCadType.isEdge(inputObject)) {
 				const edge = inputObject.object();
