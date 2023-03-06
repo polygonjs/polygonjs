@@ -26,19 +26,25 @@ QUnit.test('LOD simple', async (assert) => {
 	let container = await box0.compute();
 	let core_group = container.coreContent()!;
 	const box0_pts_count = (
-		((core_group.objects()[0] as Mesh).geometry as BufferGeometry).getAttribute('position') as BufferAttribute
+		((core_group.threejsObjects()[0] as Mesh).geometry as BufferGeometry).getAttribute(
+			'position'
+		) as BufferAttribute
 	).array.length;
 
 	container = await box1.compute();
 	core_group = container.coreContent()!;
 	const box1_pts_count = (
-		((core_group.objects()[0] as Mesh).geometry as BufferGeometry).getAttribute('position') as BufferAttribute
+		((core_group.threejsObjects()[0] as Mesh).geometry as BufferGeometry).getAttribute(
+			'position'
+		) as BufferAttribute
 	).array.length;
 
 	container = await box2.compute();
 	core_group = container.coreContent()!;
 	const box2_pts_count = (
-		((core_group.objects()[0] as Mesh).geometry as BufferGeometry).getAttribute('position') as BufferAttribute
+		((core_group.threejsObjects()[0] as Mesh).geometry as BufferGeometry).getAttribute(
+			'position'
+		) as BufferAttribute
 	).array.length;
 
 	assert.equal(box0_pts_count, 2178);
@@ -48,7 +54,7 @@ QUnit.test('LOD simple', async (assert) => {
 	container = await LOD1.compute();
 	assert.notOk(LOD1.states.error.message());
 	core_group = container.coreContent()!;
-	const lod = core_group.objects()[0] as LOD;
+	const lod = core_group.threejsObjects()[0] as LOD;
 
 	lod.autoUpdate = false;
 

@@ -2,6 +2,7 @@ import {Box3} from 'three';
 import {TextSopNode} from '../../../../src/engine/nodes/sop/Text';
 import {TransformSopNode} from '../../../../src/engine/nodes/sop/Transform';
 import {sceneFromScene} from '../../../helpers/ImportHelper';
+const tmpBox = new Box3();
 
 QUnit.test('expression centroid works with path', async (assert) => {
 	const geo1 = window.geo1;
@@ -73,18 +74,18 @@ QUnit.test('expression centroid with input index still build dependency after sc
 
 	let container = await transform.compute();
 	let core_group = container.coreContent()!;
-	let bbox = core_group.boundingBox();
-	assert.in_delta(bboxCenterX(bbox), 1, 0.1);
-	assert.in_delta(bbox.min.x, 0.1, 0.1);
-	assert.in_delta(bbox.max.x, 1.8, 0.1);
+	core_group.boundingBox(tmpBox);
+	assert.in_delta(bboxCenterX(tmpBox), 1, 0.1);
+	assert.in_delta(tmpBox.min.x, 0.1, 0.1);
+	assert.in_delta(tmpBox.max.x, 1.8, 0.1);
 
 	transform.p.t.x.set('-centroid(0).x');
 	container = await transform.compute();
 	core_group = container.coreContent()!;
-	bbox = core_group.boundingBox();
-	assert.equal(bboxCenterX(bbox), 0);
-	assert.in_delta(bbox.min.x, -0.84, 0.1);
-	assert.in_delta(bbox.max.x, 0.84, 0.1);
+	core_group.boundingBox(tmpBox);
+	assert.equal(bboxCenterX(tmpBox), 0);
+	assert.in_delta(tmpBox.min.x, -0.84, 0.1);
+	assert.in_delta(tmpBox.max.x, 0.84, 0.1);
 
 	const scene = window.scene;
 
@@ -96,18 +97,18 @@ QUnit.test('expression centroid with input index still build dependency after sc
 	const transform2 = scene2.node(transform.path()) as TransformSopNode;
 	container = await transform2.compute();
 	core_group = container.coreContent()!;
-	bbox = core_group.boundingBox();
-	assert.equal(bboxCenterX(bbox), 0);
-	assert.in_delta(bbox.min.x, -0.84, 0.1);
-	assert.in_delta(bbox.max.x, 0.84, 0.1);
+	core_group.boundingBox(tmpBox);
+	assert.equal(bboxCenterX(tmpBox), 0);
+	assert.in_delta(tmpBox.min.x, -0.84, 0.1);
+	assert.in_delta(tmpBox.max.x, 0.84, 0.1);
 
 	// make a longer word
 	// and make sure that the transform still updates accordingly
 	text2.p.text.set('This is a much much longer word to test that transform updates');
 	container = await transform2.compute();
 	core_group = container.coreContent()!;
-	bbox = core_group.boundingBox();
-	assert.equal(bboxCenterX(bbox), 0);
-	assert.in_delta(bbox.min.x, -18.9, 1);
-	assert.in_delta(bbox.max.x, 18.9, 1);
+	core_group.boundingBox(tmpBox);
+	assert.equal(bboxCenterX(tmpBox), 0);
+	assert.in_delta(tmpBox.min.x, -18.9, 1);
+	assert.in_delta(tmpBox.max.x, 18.9, 1);
 });

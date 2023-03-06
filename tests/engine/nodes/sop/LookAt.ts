@@ -7,7 +7,7 @@ const s = new Vector3();
 async function getObject(node: BaseSopNodeType): Promise<Quaternion> {
 	const container = await node.compute();
 	const coreGroup = container.coreContent()!;
-	const object = coreGroup.objects()[0];
+	const object = coreGroup.threejsObjects()[0];
 	object.updateMatrix();
 	object.matrix.decompose(t, q, s);
 	return q.clone();

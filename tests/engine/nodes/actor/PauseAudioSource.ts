@@ -51,7 +51,7 @@ QUnit.test('actor/pauseAudioSource', async (assert) => {
 	pauseAudioSource1.p.node.setNode(file1);
 
 	const container = await actor1.compute();
-	const object = container.coreContent()!.objects()[0] as Mesh;
+	const object = container.coreContent()!.threejsObjects()[0] as Mesh;
 	assert.equal(geo1.p.t.x.value, 0, '0');
 
 	// wait to make sure objects are mounted to the scene

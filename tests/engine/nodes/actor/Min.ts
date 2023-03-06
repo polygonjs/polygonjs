@@ -47,7 +47,7 @@ QUnit.test('actor/min', async (assert) => {
 	min.setInput(1, getObjectAttribute2);
 
 	const container = await actor1.compute();
-	const object = container.coreContent()!.objects()[0] as Mesh;
+	const object = container.coreContent()!.threejsObjects()[0] as Mesh;
 
 	// wait to make sure objects are mounted to the scene
 	await CoreSleep.sleep(150);
@@ -126,7 +126,7 @@ QUnit.test('actor/min for more than 2 inputs', async (assert) => {
 	min.setInput(3, getObjectAttribute4);
 
 	const container = await actor1.compute();
-	const object = container.coreContent()!.objects()[0] as Mesh;
+	const object = container.coreContent()!.threejsObjects()[0] as Mesh;
 
 	// wait to make sure objects are mounted to the scene
 	await CoreSleep.sleep(150);

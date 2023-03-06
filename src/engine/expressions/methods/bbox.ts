@@ -21,11 +21,10 @@
 import {BaseMethodFindDependencyArgs} from './_Base';
 import {BaseMethod} from './_Base';
 import {MethodDependency} from '../MethodDependency';
-import {Vector3} from 'three';
+import {Vector3, Box3} from 'three';
 import {GeometryContainer} from '../../containers/Geometry';
 import {Vector3Like} from '../../../types/GlobalTypes';
-import {Box3} from 'three';
-
+const tmpBox = new Box3();
 interface BoxComponents {
 	min: Vector3;
 	max: Vector3;
@@ -78,21 +77,21 @@ export class BboxExpression extends BaseMethod {
 		vector_name: undefined | keyof BoxComponents,
 		component_name: undefined | keyof Vector3Like
 	) {
-		const bbox = container.boundingBox();
+		container.boundingBox(tmpBox);
 		if (!vector_name) {
-			return bbox;
+			return tmpBox;
 		}
 		if (VECTOR_NAMES.indexOf(vector_name) >= 0) {
 			let vector = new Vector3();
 			switch (vector_name) {
 				case 'size':
-					bbox.getSize(vector);
+					tmpBox.getSize(vector);
 					break;
 				case 'center':
-					bbox.getCenter(vector);
+					tmpBox.getCenter(vector);
 					break;
 				default:
-					vector = bbox[vector_name];
+					vector = tmpBox[vector_name];
 			}
 
 			if (!component_name) {

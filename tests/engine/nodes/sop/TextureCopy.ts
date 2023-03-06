@@ -7,7 +7,7 @@ async function findTexture(node: BaseSopNodeType, textureName: string) {
 	const container = await node.compute();
 	const coreGroup = container.coreContent()!;
 	let texture: Texture | undefined;
-	for (let object of coreGroup.objects() as Mesh[]) {
+	for (let object of coreGroup.threejsObjects() as Mesh[]) {
 		object.traverse((child) => {
 			const mat = (child as Mesh).material;
 			if (mat) {

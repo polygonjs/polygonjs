@@ -37,7 +37,7 @@ export class FacetSopNode extends TypedSopNode<FacetSopParamsConfig> {
 	override cook(inputCoreGroups: CoreGroup[]) {
 		const inputCoreGroup = inputCoreGroups[0];
 
-		const objects = inputCoreGroup.objectsWithGeo();
+		const objects = inputCoreGroup.threejsObjectsWithGeo();
 		const rad = degToRad(this.pv.angle);
 		for (let object of objects) {
 			object.geometry = toCreasedNormals(object.geometry, rad);

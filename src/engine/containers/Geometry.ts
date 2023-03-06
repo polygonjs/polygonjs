@@ -1,22 +1,21 @@
 import {AttribValue} from './../../types/GlobalTypes';
-import {Vector3} from 'three';
 // import {Object3D} from 'three'
 // import {Group} from 'three'
-import {Mesh} from 'three';
-import {Box3} from 'three';
+import {Mesh, Box3, BufferGeometry} from 'three';
 import {TypedContainer} from './_Base';
 import {CoreGroup} from '../../core/geometry/Group';
 import {CoreGeometry} from '../../core/geometry/Geometry';
-import {BufferGeometry} from 'three';
 // import {Object3D} from 'three';
 import {ContainableMap} from './utils/ContainableMap';
 // import {CoreObject} from '../../core/geometry/Object';
 import {AttribSize, AttribType, ObjectData} from '../../core/geometry/Constant';
+import {BaseCoreObject} from '../../core/geometry/_BaseObject';
 import {CoreObject} from '../../core/geometry/Object';
 import {SetUtils} from '../../core/SetUtils';
 import {NodeContext} from '../poly/NodeContext';
 import {PolyDictionary} from '../../types/GlobalTypes';
 import {MapUtils} from '../../core/MapUtils';
+import {isObject3D} from '../../core/geometry/ObjectContent';
 
 export class GeometryContainer extends TypedContainer<NodeContext.SOP> {
 	// set_objects(objects: Object3D[]) {}
@@ -33,7 +32,7 @@ export class GeometryContainer extends TypedContainer<NodeContext.SOP> {
 
 	private _firstObject() {
 		if (this._content) {
-			return this._content.objects()[0];
+			return this._content.allObjects()[0];
 		}
 	}
 	// private firstCoreObject() {
@@ -44,7 +43,7 @@ export class GeometryContainer extends TypedContainer<NodeContext.SOP> {
 	// }
 	private firstGeometry(): BufferGeometry | null {
 		const object = this._firstObject();
-		if (object) {
+		if (object && isObject3D(object)) {
 			return (object as Mesh).geometry as BufferGeometry;
 		} else {
 			return null;
@@ -53,7 +52,7 @@ export class GeometryContainer extends TypedContainer<NodeContext.SOP> {
 
 	objectsCount(): number {
 		if (this._content) {
-			return this._content.objects().length;
+			return this._content.allObjects().length;
 		} else {
 			return 0;
 		}
@@ -61,7 +60,7 @@ export class GeometryContainer extends TypedContainer<NodeContext.SOP> {
 	objectsVisibleCount(): number {
 		let count = 0;
 		if (this._content) {
-			const objects = this._content.objects();
+			const objects = this._content.allObjects();
 			for (let object of objects) {
 				if (object.visible) {
 					count++;
@@ -74,7 +73,7 @@ export class GeometryContainer extends TypedContainer<NodeContext.SOP> {
 		const count_by_type: PolyDictionary<number> = {};
 		const core_group = this._content;
 		if (this._content && core_group) {
-			for (let core_object of core_group.coreObjects()) {
+			for (let core_object of core_group.allCoreObjects()) {
 				const human_type = core_object.humanType();
 				if (count_by_type[human_type] == null) {
 					count_by_type[human_type] = 0;
@@ -88,7 +87,9 @@ export class GeometryContainer extends TypedContainer<NodeContext.SOP> {
 		const names_by_type: PolyDictionary<string[]> = {};
 		const core_group = this._content;
 		if (this._content && core_group) {
-			for (let core_object of core_group.coreObjects()) {
+			const coreObjects = core_group.allCoreObjects();
+			for (let core_object of coreObjects) {
+				console.log(core_object);
 				const human_type = core_object.humanType();
 				names_by_type[human_type] = names_by_type[human_type] || [];
 				names_by_type[human_type].push(core_object.name());
@@ -118,7 +119,7 @@ export class GeometryContainer extends TypedContainer<NodeContext.SOP> {
 	}
 
 	objectAttributeSizesByName(): PolyDictionary<AttribSize[]> {
-		return CoreObject.coreObjectsAttribSizesByName(this._content.coreObjects());
+		return BaseCoreObject.coreObjectsAttribSizesByName(this._content.allCoreObjects());
 		// const _sizesByName: Map<string, Set<AttribSize>> = new Map();
 		// const objects = this._content.objects();
 		// for (let object of objects) {
@@ -171,7 +172,7 @@ export class GeometryContainer extends TypedContainer<NodeContext.SOP> {
 		return types_by_name;
 	}
 	objectAttributeTypesByName(): PolyDictionary<AttribType[]> {
-		return CoreObject.coreObjectAttributeTypesByName(this._content.coreObjects());
+		return CoreObject.coreObjectAttributeTypesByName(this._content.allCoreObjects());
 		// const _typesByName: Map<string, Set<AttribType>> = new Map();
 		// const objects = this._content.objects();
 		// for (let object of objects) {
@@ -197,7 +198,7 @@ export class GeometryContainer extends TypedContainer<NodeContext.SOP> {
 	}
 	objectAttributeTypeAndSizesByName(): PolyDictionary<Record<AttribType, AttribSize[]>> {
 		const _sizesByTypeByName: Map<string, Map<AttribType, Set<AttribSize>>> = new Map();
-		const objects = this._content.objects();
+		const objects = this._content.allObjects();
 		for (let object of objects) {
 			const objectAttriNames = CoreObject.attribNames(object);
 			for (let attribName of objectAttriNames) {
@@ -246,7 +247,7 @@ export class GeometryContainer extends TypedContainer<NodeContext.SOP> {
 		return valuesByName;
 	}
 	objectAttributeNames() {
-		return CoreObject.objectsAttribNames(this._content.objects());
+		return CoreObject.objectsAttribNames(this._content.allObjects());
 	}
 
 	pointsCount(): number {
@@ -276,13 +277,13 @@ export class GeometryContainer extends TypedContainer<NodeContext.SOP> {
 	// BBOX
 	//
 	//
-	boundingBox(forceUpdate: boolean = false): Box3 {
-		return this._content.boundingBox(forceUpdate);
+	boundingBox(target: Box3) {
+		return this._content.boundingBox(target);
 	}
-	center(): Vector3 {
-		return this._content.center();
-	}
-	size(): Vector3 {
-		return this._content.size();
-	}
+	// center(): Vector3 {
+	// 	return this._content.center();
+	// }
+	// size(): Vector3 {
+	// 	return this._content.size();
+	// }
 }

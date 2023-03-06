@@ -7,12 +7,12 @@ QUnit.test('sop/polarTransform simple', async (assert) => {
 	const polarTransform1 = geo1.createNode('polarTransform');
 	polarTransform1.setInput(0, add1);
 
-	polarTransform1.setApplyOn(TransformTargetType.GEOMETRIES);
+	polarTransform1.setApplyOn(TransformTargetType.GEOMETRY);
 
 	let container, core_group;
 	container = await polarTransform1.compute();
 	core_group = container.coreContent();
-	let geometry = core_group?.objectsWithGeo()[0].geometry;
+	let geometry = core_group?.threejsObjectsWithGeo()[0].geometry;
 	assert.ok(geometry);
 
 	assert.equal(container.pointsCount(), 1);
@@ -25,7 +25,7 @@ QUnit.test('sop/polarTransform simple', async (assert) => {
 
 	container = await polarTransform1.compute();
 	core_group = container.coreContent();
-	geometry = core_group?.objectsWithGeo()[0].geometry;
+	geometry = core_group?.threejsObjectsWithGeo()[0].geometry;
 	assert.ok(geometry);
 
 	assert.equal(container.pointsCount(), 1);

@@ -73,7 +73,7 @@ export class ExporterSopNode extends TypedSopNode<ExporterSopParamsConfig> {
 
 			// save current parents
 			const previousParentByObject: WeakMap<Object3D, Object3D | null> = new WeakMap();
-			const objects = coreGroup.objects();
+			const objects = coreGroup.threejsObjects();
 			for (let object of objects) {
 				previousParentByObject.set(object, object.parent);
 			}

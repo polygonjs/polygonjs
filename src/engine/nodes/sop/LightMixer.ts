@@ -74,7 +74,7 @@ export class LightMixerSopNode extends TypedSopNode<LightMixerParamsConfig> {
 
 	private _findLights(coreGroup: CoreGroup) {
 		this._lightsByName.clear();
-		const objects = coreGroup.objects();
+		const objects = coreGroup.threejsObjects();
 		for (let object of objects) {
 			object.traverse((child) => {
 				if ((child as Light).isLight) {

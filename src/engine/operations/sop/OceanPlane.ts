@@ -8,6 +8,7 @@ import {isBooleanTrue} from '../../../core/Type';
 import {Water, WaterOptions} from '../../../modules/core/objects/Water';
 import {TransformResetMode, TransformResetSopOperation, TRANSFORM_RESET_MODES} from './TransformReset';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
+import {CoreObjectType, ObjectContent} from '../../../core/geometry/ObjectContent';
 interface OceanPlaneSopParams extends DefaultOperationParams {
 	direction: Vector3;
 	sunDirection: Vector3;
@@ -70,8 +71,8 @@ export class OceanPlaneSopOperation extends BaseSopOperation {
 
 		const renderer = this._node?.scene().renderersRegister.lastRegisteredRenderer();
 
-		const objects = inputCoreGroup.objectsWithGeo();
-		const waterObjects: Water[] = [];
+		const objects = inputCoreGroup.threejsObjectsWithGeo();
+		const waterObjects: ObjectContent<CoreObjectType>[] = [];
 		const scene = this.scene().threejsScene();
 		for (let object of objects) {
 			Water.rotateGeometry(object.geometry, params.direction);
@@ -96,7 +97,7 @@ export class OceanPlaneSopOperation extends BaseSopOperation {
 				useFog: params.useFog,
 			};
 			const water = new Water(object.geometry, waterOptions);
-			waterObjects.push(water);
+			waterObjects.push(water as any as ObjectContent<CoreObjectType>);
 			water.matrixAutoUpdate = false;
 			// make sure object attributes are up to date
 			object.matrix.decompose(object.position, object.quaternion, object.scale);

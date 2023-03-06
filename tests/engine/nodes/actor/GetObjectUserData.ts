@@ -27,7 +27,7 @@ QUnit.test('actor/GetObjectUserData simple', async (assert) => {
 	getObjectUserData1.p.name.set('myUserData');
 
 	const container = await actor1.compute();
-	const object = container.coreContent()!.objects()[0] as Mesh;
+	const object = container.coreContent()!.threejsObjects()[0] as Mesh;
 	object.userData['myUserData'] = new Vector3(0, 1, 2);
 
 	// wait to make sure objects are mounted to the scene

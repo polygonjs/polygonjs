@@ -11,25 +11,31 @@ import {BaseNodeType} from '../_Base';
 import {DisplayNodeController} from '../utils/DisplayNodeController';
 import {NodeContext} from '../../poly/NodeContext';
 import {BaseSopNodeType} from '../sop/_Base';
-import {TransformedParamConfig, TransformController} from './utils/TransformController';
 import {GeoNodeChildrenMap} from '../../poly/registers/nodes/Sop';
 import {FlagsControllerD} from '../utils/FlagsController';
 import {HierarchyController} from './utils/HierarchyController';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {ChildrenDisplayController} from './utils/ChildrenDisplayController';
+import {ChildrenDisplayControllerSpecialized} from './utils/ChildrenDisplayControllerSpecialized';
 import {Constructor, valueof} from '../../../types/GlobalTypes';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {ObjType} from '../../poly/registers/nodes/types/Obj';
 import {NodeCreateOptions} from '../utils/hierarchy/ChildrenController';
-class GeoObjParamConfig extends TransformedParamConfig(NodeParamsConfig) {
-	/** @param toggle off to hide */
-	display = ParamConfig.BOOLEAN(1);
-	/** @param set render order */
-	renderOrder = ParamConfig.INTEGER(0, {
-		range: [0, 10],
-		rangeLocked: [true, false],
-	});
+import {TransformedParamConfig, TransformController} from './utils/TransformController';
+import {ObjTesselationParamConfig} from './utils/TesselationParams';
+import {addTesselationParamsCallback} from '../../../core/geometry/cad/utils/TesselationParamsConfig';
+
+export function GeoParamConfig<TBase extends Constructor>(Base: TBase) {
+	return class Mixin extends Base {
+		/** @param toggle off to hide */
+		display = ParamConfig.BOOLEAN(1);
+		/** @param set render order */
+		renderOrder = ParamConfig.INTEGER(0, {
+			range: [0, 10],
+			rangeLocked: [true, false],
+		});
+	};
 }
+class GeoObjParamConfig extends ObjTesselationParamConfig(GeoParamConfig(TransformedParamConfig(NodeParamsConfig))) {}
 const ParamsConfig = new GeoObjParamConfig();
 
 export class GeoObjNode extends TypedObjNode<Group, GeoObjParamConfig> {
@@ -47,7 +53,8 @@ export class GeoObjNode extends TypedObjNode<Group, GeoObjParamConfig> {
 	}
 
 	// display_node and children_display controllers
-	public override readonly childrenDisplayController: ChildrenDisplayController = new ChildrenDisplayController(this);
+	public override readonly childrenDisplayController: ChildrenDisplayControllerSpecialized =
+		new ChildrenDisplayControllerSpecialized(this);
 	public override readonly displayNodeController: DisplayNodeController = new DisplayNodeController(
 		this,
 		this.childrenDisplayController.displayNodeControllerCallbacks()
@@ -65,6 +72,10 @@ export class GeoObjNode extends TypedObjNode<Group, GeoObjParamConfig> {
 		this.transformController.initializeNode();
 
 		this.childrenDisplayController.initializeNode();
+
+		addTesselationParamsCallback(this, () => {
+			this.childrenDisplayController.requestDisplayNodeContainer();
+		});
 	}
 
 	// override isDisplayNodeCooking(): boolean {

@@ -54,7 +54,7 @@ QUnit.test('actor/CatmullRomCurve3GetPoint simple', async (assert) => {
 	getObjectUserData1.p.name.set('path');
 
 	const container = await actor1.compute();
-	const object = container.coreContent()!.objects()[0] as Mesh;
+	const object = container.coreContent()!.threejsObjects()[0] as Mesh;
 
 	// wait to make sure objects are mounted to the scene
 	await CoreSleep.sleep(150);

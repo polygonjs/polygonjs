@@ -39,7 +39,7 @@ QUnit.test('sop/physicsGround simple', async (assert) => {
 
 	createPhysicsWorldNodes(physicsWorld1);
 	const container = await physicsWorld1.compute();
-	const objects = [...container.coreContent()!.objects()[0].children];
+	const objects = [...container.coreContent()!.threejsObjects()[0].children];
 	objects.shift();
 	for (let object of objects) {
 		assert.in_delta(object.position.y, 2, 0.01);

@@ -19,7 +19,7 @@ QUnit.test('actor/object3DUpdateWorldMatrix', async (assert) => {
 	objectUpdateMatrix1.setInput(ActorConnectionPointType.TRIGGER, onManualTrigger1);
 
 	const container = await actor1.compute();
-	const object = container.coreContent()!.objects()[0] as Mesh;
+	const object = container.coreContent()!.threejsObjects()[0] as Mesh;
 	object.position.set(1, 2, 3);
 	const child = new Group();
 	object.add(child);

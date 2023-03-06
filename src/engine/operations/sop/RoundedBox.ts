@@ -1,11 +1,13 @@
 import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {Vector3} from 'three';
+import {Vector3, Box3} from 'three';
 import {CoreTransform} from '../../../core/Transform';
 import {RoundedBoxGeometry} from '../../../modules/three/examples/jsm/geometries/RoundedBoxGeometry';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
-
+const tmpBox = new Box3();
+const tmpSize = new Vector3();
+const tmpCenter = new Vector3();
 interface RoundedBoxSopParams extends DefaultOperationParams {
 	size: number;
 	sizes: Vector3;
@@ -49,15 +51,13 @@ export class RoundedBoxSopOperation extends BaseSopOperation {
 		return geometry;
 	}
 
-	private _cook_with_input(core_group: CoreGroup, params: RoundedBoxSopParams) {
-		const divisions = params.divisions;
+	private _cook_with_input(coreGroup: CoreGroup, params: RoundedBoxSopParams) {
+		coreGroup.boundingBox(tmpBox);
+		tmpBox.getSize(tmpSize);
+		tmpBox.getCenter(tmpCenter);
 
-		const bbox = core_group.boundingBox();
-		const size = bbox.max.clone().sub(bbox.min);
-		const center = bbox.max.clone().add(bbox.min).multiplyScalar(0.5);
-
-		const geometry = new RoundedBoxGeometry(size.x, size.y, size.z, divisions, params.bevel);
-		const matrix = this._core_transform.translationMatrix(center);
+		const geometry = new RoundedBoxGeometry(tmpSize.x, tmpSize.y, tmpSize.z, params.divisions, params.bevel);
+		const matrix = this._core_transform.translationMatrix(tmpCenter);
 		geometry.applyMatrix4(matrix);
 		return geometry;
 	}

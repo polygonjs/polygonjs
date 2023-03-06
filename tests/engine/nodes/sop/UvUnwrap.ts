@@ -17,7 +17,7 @@ QUnit.test('UvUnwrap potpack', async (assert) => {
 
 	let container = await uvUnwrap.compute();
 	let core_group = container.coreContent()!;
-	let geometry0 = core_group.objectsWithGeo()[0].geometry;
+	let geometry0 = core_group.threejsObjectsWithGeo()[0].geometry;
 	assert.deepEqual(
 		((geometry0.getAttribute('uv') as BufferAttribute).array as number[]).join(';'),
 		[
@@ -31,7 +31,7 @@ QUnit.test('UvUnwrap potpack', async (assert) => {
 
 	container = await uvLayout.compute();
 	core_group = container.coreContent()!;
-	geometry0 = core_group.objectsWithGeo()[0].geometry;
+	geometry0 = core_group.threejsObjectsWithGeo()[0].geometry;
 	assert.deepEqual(
 		((geometry0.getAttribute('uv2') as BufferAttribute).array as number[]).join(';'),
 		[
@@ -39,7 +39,7 @@ QUnit.test('UvUnwrap potpack', async (assert) => {
 			0.0014563106233254075, 0.9970873594284058, 0.0014563106233254075,
 		].join(';')
 	);
-	let geometry1 = core_group.objectsWithGeo()[1].geometry;
+	let geometry1 = core_group.threejsObjectsWithGeo()[1].geometry;
 	assert.deepEqual(
 		((geometry1.getAttribute('uv2') as BufferAttribute).array as number[]).join(';'),
 		[
@@ -73,7 +73,7 @@ QUnit.test('UvUnwrap xatlast', async (assert) => {
 
 	let container = await uvUnwrap.compute();
 	let core_group = container.coreContent()!;
-	let geometry0 = core_group.objectsWithGeo()[0].geometry;
+	let geometry0 = core_group.threejsObjectsWithGeo()[0].geometry;
 	assert.deepEqual(
 		((geometry0.getAttribute('uv') as BufferAttribute).array as number[]).join(';'),
 		[
@@ -92,7 +92,7 @@ QUnit.test('UvUnwrap xatlast', async (assert) => {
 
 	container = await uvLayout.compute();
 	core_group = container.coreContent()!;
-	geometry0 = core_group.objectsWithGeo()[0].geometry;
+	geometry0 = core_group.threejsObjectsWithGeo()[0].geometry;
 	assert.deepEqual(
 		((geometry0.getAttribute('uv2') as BufferAttribute).array as number[]).join(';'),
 		[
@@ -100,7 +100,7 @@ QUnit.test('UvUnwrap xatlast', async (assert) => {
 			0.0014563106233254075, 0.9970873594284058, 0.0014563106233254075,
 		].join(';')
 	);
-	let geometry1 = core_group.objectsWithGeo()[1].geometry;
+	let geometry1 = core_group.threejsObjectsWithGeo()[1].geometry;
 	assert.deepEqual(
 		((geometry1.getAttribute('uv2') as BufferAttribute).array as number[]).join(';'),
 		[

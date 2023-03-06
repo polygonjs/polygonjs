@@ -1,41 +1,83 @@
 import {AttribValue} from './../../types/GlobalTypes';
 import {NumericAttribValue, PolyDictionary} from '../../types/GlobalTypes';
-import {Vector3} from 'three';
-import {Points} from 'three';
-import {Object3D} from 'three';
-import {Mesh} from 'three';
-import {LineSegments} from 'three';
-import {BufferGeometry} from 'three';
-import {Box3} from 'three';
+import {Box3, BufferGeometry, LineSegments, Mesh, Points, Object3D} from 'three';
+import {BaseCoreObject} from './_BaseObject';
 import {CoreObject, AttributeDictionary} from './Object';
 import {CoreGeometry} from './Geometry';
 import {CoreAttribute} from './Attribute';
 import {CoreString} from '../String';
-import {AttribClass, AttribSize, ObjectData, objectTypeFromConstructor, AttribType} from './Constant';
+import {AttribClass, AttribSize, ObjectData, objectTypeFromConstructor, AttribType, ObjectType} from './Constant';
 import {CoreType} from '../Type';
 import {ArrayUtils} from '../ArrayUtils';
 import {CoreFace} from './Face';
 import {Poly} from '../../engine/Poly';
 import {CoreEntity} from './Entity';
+import {CoreObjectType, ObjectContent, isObject3D} from './ObjectContent';
+// import {computeBoundingBoxFromObject3Ds} from './BoundingBox';
+import {coreObjectInstanceFactory} from './CoreObjectFactory';
+
+// CAD
+import type {CadGeometryType, CadGeometryTypeShape} from './cad/CadCommon';
+import {CAD_GEOMETRY_TYPES_SET} from './cad/CadCommon';
+import type {CadObject} from './cad/CadObject';
+import {CoreCadType} from './cad/CadCoreType';
+//
+
 // import {CoreMask} from './Mask';
 export type GroupString = string;
+const tmpBox3 = new Box3();
 
 export interface Object3DWithGeometry extends Object3D {
 	geometry: BufferGeometry;
 }
 
+function objectData<T extends CoreObjectType>(object: ObjectContent<T>): ObjectData {
+	const pointsCount: number =
+		isObject3D(object) && (object as Mesh).geometry
+			? CoreGeometry.pointsCount((object as Mesh).geometry as BufferGeometry)
+			: 0;
+	const childrenCount = isObject3D(object) ? object.children.length : 0;
+	// if ((object as Mesh).geometry) {
+	// 	points_count = CoreGeometry.pointsCount((object as Mesh).geometry as BufferGeometry);
+	// }
+	const objectType = isObject3D(object) ? objectTypeFromConstructor(object.constructor) : (object.type as ObjectType);
+	return {
+		type: objectType,
+		name: object.name,
+		childrenCount,
+		pointsCount,
+	};
+}
+function objectTotalPointsCount(object: Object3D) {
+	let sum = 0;
+	object.traverse((child) => {
+		const geometry = (child as Mesh).geometry as BufferGeometry;
+		if (geometry) {
+			sum += CoreGeometry.pointsCount(geometry);
+		}
+	});
+	return sum;
+}
+
 export class CoreGroup extends CoreEntity {
 	// _group: Group
-	private _timestamp: number | undefined;
-	// _core_objects:
-	private _objects: Object3D[] = [];
-	private _objectsWithGeo: Object3DWithGeometry[] = [];
-	private _coreObjects: CoreObject[] | undefined;
+	private _timestamp: number | undefined; // _core_objects:
+
+	// all
+	private _allObjects: ObjectContent<CoreObjectType>[] = [];
+	// private _allCoreObjects: BaseCoreObject<CoreObjectType>[] | undefined;
+	// cad
+	// private _cadObjects: CadObject<CadGeometryType>[] | undefined;
+	// private _cadCoreObjects: CadCoreObject<CadGeometryType>[] | undefined;
+	// object3D
+	// private _objects: Object3D[] = [];
+	// private _objectsWithGeo: Object3DWithGeometry[] = [];
+	// private _coreObjects: CoreObject[] | undefined;
 
 	// _geometries: BufferGeometry[];
-	private _coreGeometries: CoreGeometry[] | undefined;
+	// private _coreGeometries: CoreGeometry[] | undefined;
 
-	private _boundingBox: Box3 | undefined;
+	// private _boundingBox: Box3 | undefined;
 	// private _bounding_sphere: Sphere | undefined;
 
 	constructor() {
@@ -45,20 +87,41 @@ export class CoreGroup extends CoreEntity {
 		this.touch();
 	}
 	dispose() {
-		this._objects = [];
-		this._objectsWithGeo = [];
-		if (this._coreObjects) {
-			for (let coreObject of this._coreObjects) {
-				coreObject.dispose();
+		// all
+		if (this._allObjects) {
+			for (let object of this._allObjects) {
+				if (object.dispose) {
+					object.dispose();
+				}
 			}
-			this._coreObjects = undefined;
 		}
-		if (this._coreGeometries) {
-			for (let coreGeometry of this._coreGeometries) {
-				coreGeometry.dispose();
-			}
-			this._coreGeometries = undefined;
-		}
+		this._allObjects.length = 0;
+		// this._allCoreObjects = undefined;
+
+		// cad
+		// this._cadObjects = undefined;
+		// if (this._cadCoreObjects) {
+		// 	for (let coreObject of this._cadCoreObjects) {
+		// 		coreObject.dispose();
+		// 	}
+		// 	this._cadCoreObjects = undefined;
+		// }
+
+		// object3D
+		// this._objects = [];
+		// this._objectsWithGeo = [];
+		// if (this._coreObjects) {
+		// 	for (let coreObject of this._coreObjects) {
+		// 		coreObject.dispose();
+		// 	}
+		// 	this._coreObjects = undefined;
+		// }
+		// if (this._coreGeometries) {
+		// 	for (let coreGeometry of this._coreGeometries) {
+		// 		coreGeometry.dispose();
+		// 	}
+		// 	this._coreGeometries = undefined;
+		// }
 	}
 
 	//
@@ -72,16 +135,16 @@ export class CoreGroup extends CoreEntity {
 	touch() {
 		const performance = Poly.performance.performanceManager();
 		this._timestamp = performance.now();
-		this.reset();
+		// this.reset();
 	}
-	reset() {
-		this.resetBoundingBox();
-		// this._bounding_sphere = undefined;
-		this._coreGeometries = undefined;
-		this._coreObjects = undefined;
-	}
+	// reset() {
+	// 	// this.resetBoundingBox();
+	// 	// this._bounding_sphere = undefined;
+	// 	// this._coreGeometries = undefined;
+	// 	// this._coreObjects = undefined;
+	// }
 	resetBoundingBox() {
-		this._boundingBox = undefined;
+		// this._boundingBox = undefined;
 	}
 
 	//
@@ -91,13 +154,33 @@ export class CoreGroup extends CoreEntity {
 	//
 	clone() {
 		const coreGroup = new CoreGroup();
-		if (this._objects) {
-			const objects = [];
-			for (let object of this._objects) {
-				objects.push(CoreObject.clone(object));
-			}
-			coreGroup.setObjects(objects);
+		// all
+		if (this._allObjects) {
+			const clonedObjects: ObjectContent<CoreObjectType>[] = this.allCoreObjects().map((o) => {
+				return o.clone().object();
+			});
+			// for (let object of this._allObjects) {
+			// 	allObjects.push(object.clone());
+			// }
+
+			coreGroup.setAllObjects(clonedObjects);
 		}
+		// cad
+		// if (this._cadObjects) {
+		// 	const cadObjects: CadObject<CadGeometryType>[] = [];
+		// 	for (let object of this._cadObjects) {
+		// 		cadObjects.push(object.clone());
+		// 	}
+		// 	coreGroup.setCadObjects(cadObjects);
+		// }
+		// object3d
+		// if (this._objects) {
+		// 	const objects: Object3D[] = [];
+		// 	for (let object of this._objects) {
+		// 		objects.push(CoreObject.clone(object));
+		// 	}
+		// 	coreGroup.setObjects(objects);
+		// }
 
 		const attribNames = this.attribNames();
 		for (let attribName of attribNames) {
@@ -109,57 +192,103 @@ export class CoreGroup extends CoreEntity {
 	}
 	//
 	//
+	// ALL OBJECTS
+	//
+	//
+	setAllObjects(objects: ObjectContent<CoreObjectType>[]) {
+		this._allObjects = objects;
+		this.touch();
+	}
+	allObjects() {
+		return this._allObjects;
+		// return (this._allObjects =
+		// 	this._allObjects ||
+		// 	(() => {
+		// 		const cadObjects = this._cadObjects;
+		// 		if (cadObjects) {
+		// 			return (this._objects as ObjectContent<CoreObjectType>[]).concat(cadObjects);
+		// 		} else {
+		// 			return this._objects;
+		// 		}
+		// 	})());
+	}
+	allCoreObjects() {
+		return this.allObjects()?.map((o, i) => coreObjectInstanceFactory(o, i));
+		// return (this._allCoreObjects =
+		// 	this._allCoreObjects || this.allObjects().map((o, i) => new BaseCoreObject(o, i)));
+	}
+	//
+	//
+	// CAD OBJECTS
+	//
+	//
+	// setCadObjects(cadObjects: CadObject<CadGeometryType>[]) {
+	// 	this._cadObjects = cadObjects;
+	// 	this.touch();
+	// }
+	cadObjects() {
+		const list =
+			this._allObjects?.filter((o) => CAD_GEOMETRY_TYPES_SET.has(o.type as CadGeometryType)) || undefined;
+		return list as CadObject<CadGeometryType>[] | undefined;
+	}
+	cadObjectsWithShape() {
+		return this.cadObjects()?.filter((o) => CoreCadType.isShape(o)) as
+			| CadObject<CadGeometryTypeShape>[]
+			| undefined;
+		// if (this._cadObjects) {
+		// 	return this._cadObjects.filter((o) => CoreCadType.isShape(o)) as CadObject<CadGeometryTypeShape>[];
+		// }
+	}
+	cadCoreObjects() {
+		return this.cadObjects()?.map((o, i) => coreObjectInstanceFactory(o, i));
+		// if (this._cadObjects) {
+		// 	return this._cadObjects.map((object, i) => new CadCoreObject(object, i));
+		// }
+	}
+
+	//
+	//
 	// OBJECTS
 	//
 	//
-	setObjects(objects: Object3D[]) {
-		this._objects = objects;
-		this._objectsWithGeo = objects.filter((obj) => (obj as Mesh).geometry != null) as Object3DWithGeometry[];
-		this.touch();
-	}
-	objects() {
-		return this._objects;
-	}
-	objectsWithGeo() {
-		return this._objectsWithGeo;
-	}
-	coreObjects() {
-		return (this._coreObjects = this._coreObjects || this._create_core_objects());
-	}
-	private _create_core_objects(): CoreObject[] {
-		// const list: CoreObject[] = [];
-		// if (this._objects) {
-		// 	for (let i = 0; i < this._objects.length; i++) {
-		// 		this._objects[i].traverse((object) => {
-		// 			const core_object = new CoreObject(object, i);
-		// 			list.push(core_object);
-		// 		});
-		// 	}
+	// setObjects(objects: Object3D[]) {
+	// 	this._objects = objects;
+	// 	this._objectsWithGeo = objects.filter((obj) => (obj as Mesh).geometry != null) as Object3DWithGeometry[];
+	// 	this.touch();
+	// }
+	threejsObjects(): Object3D[] {
+		return this._allObjects ? this._allObjects.filter(isObject3D) : [];
+		// if( this._allObjects){
+		// 	const list = this._allObjects.filter(isObjec3D)
+		// 	return list as any as Object3D[]
 		// }
-		if (this._objects) {
-			return this._objects.map((object, i) => new CoreObject(object, i));
-		}
-		return [];
-		// return list;
+		// return []
 	}
-	objectsData(): Array<ObjectData> {
-		if (this._objects) {
-			return this._objects.map((object) => this._objectData(object));
-		}
-		return [];
+	threejsObjectsWithGeo() {
+		return this.threejsObjects().filter((o) => (o as Mesh).geometry != null) as Object3DWithGeometry[];
 	}
-	private _objectData(object: Object3D): ObjectData {
-		let points_count = 0;
-		if ((object as Mesh).geometry) {
-			points_count = CoreGeometry.pointsCount((object as Mesh).geometry as BufferGeometry);
-		}
-		const objectType = objectTypeFromConstructor(object.constructor);
-		return {
-			type: objectType,
-			name: object.name,
-			children_count: object.children.length,
-			points_count: points_count,
-		};
+	threejsCoreObjects() {
+		return this.threejsObjects().map((o, i) => new CoreObject(o, i));
+		// return (this._coreObjects = this._coreObjects || this._create_core_objects());
+	}
+	// private _create_core_objects(): CoreObject[] {
+	// 	// const list: CoreObject[] = [];
+	// 	// if (this._objects) {
+	// 	// 	for (let i = 0; i < this._objects.length; i++) {
+	// 	// 		this._objects[i].traverse((object) => {
+	// 	// 			const core_object = new CoreObject(object, i);
+	// 	// 			list.push(core_object);
+	// 	// 		});
+	// 	// 	}
+	// 	// }
+	// 	if (this._objects) {
+	// 		return this._objects.map((object, i) => new CoreObject(object, i));
+	// 	}
+	// 	return [];
+	// 	// return list;
+	// }
+	objectsData(): ObjectData[] {
+		return this._allObjects?.map(objectData) || [];
 	}
 
 	// group() {
@@ -170,6 +299,7 @@ export class CoreGroup extends CoreEntity {
 	// }
 
 	geometries(): BufferGeometry[] {
+		return this.threejsObjectsWithGeo().map((o) => o.geometry);
 		// this._geometries = [];
 		// for (let object of this._objects) {
 		// 	object.traverse((object) => this.__geometry_from_object.bind(this)(this._geometries, object));
@@ -180,31 +310,32 @@ export class CoreGroup extends CoreEntity {
 		// 	// });
 		// }
 		// return this._geometries;
-		const list: BufferGeometry[] = [];
-		for (let core_object of this.coreObjects()) {
-			const geometry = (core_object.object() as Mesh).geometry as BufferGeometry;
-			if (geometry) {
-				list.push(geometry);
-			}
-		}
-		return list;
+		// const list: BufferGeometry[] = [];
+		// for (let core_object of this.coreObjects()) {
+		// 	const geometry = (core_object.object() as Mesh).geometry as BufferGeometry;
+		// 	if (geometry) {
+		// 		list.push(geometry);
+		// 	}
+		// }
+		// return list;
 	}
 	coreGeometries(): CoreGeometry[] {
-		return (this._coreGeometries = this._coreGeometries || this._createCoreGeometries());
+		return this.geometries().map((g) => new CoreGeometry(g));
+		// return (this._coreGeometries = this._coreGeometries || this._createCoreGeometries());
 	}
-	private _createCoreGeometries() {
-		const list: CoreGeometry[] = [];
-		for (let geometry of this.geometries()) {
-			list.push(new CoreGeometry(geometry));
-			// object.traverse(object=> this.__core_geometry_from_object.bind(this)(this._core_geometries, object))
-			// 	const geometry = this.geometry_from_object(object)
-			// 	if (geometry != null) {
-			// 		return list.push(new CoreGeometry(geometry));
-			// 	}
-			// });
-		}
-		return list;
-	}
+	// private _createCoreGeometries() {
+	// 	const list: CoreGeometry[] = [];
+	// 	for (let geometry of this.geometries()) {
+	// 		list.push(new CoreGeometry(geometry));
+	// 		// object.traverse(object=> this.__core_geometry_from_object.bind(this)(this._core_geometries, object))
+	// 		// 	const geometry = this.geometry_from_object(object)
+	// 		// 	if (geometry != null) {
+	// 		// 		return list.push(new CoreGeometry(geometry));
+	// 		// 	}
+	// 		// });
+	// 	}
+	// 	return list;
+	// }
 	// __geometry_from_object(list: BufferGeometry[], object: Mesh) {
 	// 	if (object.geometry) {
 	// 		return list.push(object.geometry as BufferGeometry);
@@ -224,7 +355,7 @@ export class CoreGroup extends CoreEntity {
 	}
 	faces() {
 		const faces: CoreFace[] = [];
-		for (let object of this.objectsWithGeo()) {
+		for (let object of this.threejsObjectsWithGeo()) {
 			if (object.geometry) {
 				const coreGeo = new CoreGeometry(object.geometry);
 				const geoFaces = coreGeo.faces();
@@ -245,20 +376,26 @@ export class CoreGroup extends CoreEntity {
 		return ArrayUtils.sum(this.coreGeometries().map((g) => g.pointsCount()));
 	}
 	totalPointsCount() {
-		if (this._objects) {
-			let sum = 0;
-			for (let object of this._objects) {
-				object.traverse((object) => {
-					const geometry = (object as Mesh).geometry as BufferGeometry;
-					if (geometry) {
-						sum += CoreGeometry.pointsCount(geometry);
-					}
-				});
-			}
-			return sum;
-		} else {
-			return 0;
+		const threejsObjects = this.threejsObjects();
+		let sum = 0;
+		for (let object of threejsObjects) {
+			sum += objectTotalPointsCount(object);
 		}
+		return sum;
+		// if (this._objects) {
+		// 	let sum = 0;
+		// 	for (let object of this._objects) {
+		// 		object.traverse((object) => {
+		// 			const geometry = (object as Mesh).geometry as BufferGeometry;
+		// 			if (geometry) {
+		// 				sum += CoreGeometry.pointsCount(geometry);
+		// 			}
+		// 		});
+		// 	}
+		// 	return sum;
+		// } else {
+		// 	return 0;
+		// }
 	}
 	pointsFromGroup(group: GroupString) {
 		if (group) {
@@ -271,9 +408,9 @@ export class CoreGroup extends CoreEntity {
 	}
 
 	static _fromObjects(objects: Object3D[]): CoreGroup {
-		const core_group = new CoreGroup();
-		core_group.setObjects(objects);
-		return core_group;
+		const coreGroup = new CoreGroup();
+		coreGroup.setAllObjects(objects);
+		return coreGroup;
 	}
 
 	// objectsFromGroup(groupString: string): Object3D[] {
@@ -283,78 +420,87 @@ export class CoreGroup extends CoreEntity {
 	// 	return CoreMask.coreObjects(groupString, this);
 	// }
 
-	boundingBox(forceUpdate: boolean = false): Box3 {
-		if (forceUpdate) {
-			return (this._boundingBox = this._computeBoundingBox());
+	boundingBox(target: Box3) {
+		target.makeEmpty();
+		const coreObjects = this.allCoreObjects();
+		for (let coreObject of coreObjects) {
+			coreObject.boundingBox(tmpBox3);
+			target.union(tmpBox3);
 		}
-		return (this._boundingBox = this._boundingBox || this._computeBoundingBox());
+
+		// if (forceUpdate) {
+		// 	return (this._boundingBox = this._computeBoundingBox());
+		// }
+		// return (this._boundingBox = this._boundingBox || this._computeBoundingBox());
 	}
 	// bounding_sphere(): Sphere {
 	// 	return (this._bounding_sphere = this._bounding_sphere || this._compute_bounding_sphere());
 	// }
-	private _center = new Vector3();
-	private _size = new Vector3();
-	center(): Vector3 {
-		this.boundingBox().getCenter(this._center);
-		return this._center;
-	}
-	size(): Vector3 {
-		this.boundingBox().getSize(this._size);
-		return this._size;
-	}
+	// private _center = new Vector3();
+	// private _size = new Vector3();
+	// center(): Vector3 {
+	// 	this.boundingBox().getCenter(this._center);
+	// 	return this._center;
+	// }
+	// size(): Vector3 {
+	// 	this.boundingBox().getSize(this._size);
+	// 	return this._size;
+	// }
 
 	// private _geometriesWithComputedBoundingBox: Set<BufferGeometry> = new Set();
-	private _computeBoundingBox() {
-		let bbox: Box3 | undefined;
-		// this._geometriesWithComputedBoundingBox.clear();
-		if (this._objects) {
-			// 1. Initialize bbox to the first found object
-			for (let object of this._objects) {
-				object.traverse((childObject) => {
-					if (!bbox) {
-						const geometry = (childObject as Object3DWithGeometry).geometry;
-						if (geometry) {
-							// if we do not set updateParents to true,
-							// the bounding box calculation appears fine
-							// when checking node by node,
-							// but will be unreliable when processing multiple transform nodes before
-							// rendering the objects
-							childObject.updateWorldMatrix(true, false);
-							geometry.computeBoundingBox();
-							// this._geometriesWithComputedBoundingBox.add(geometry);
-							if (geometry.boundingBox) {
-								bbox = geometry.boundingBox.clone();
-								bbox.applyMatrix4(childObject.matrixWorld);
-							}
-							// if (bbox) {
-							// 	bbox.expandByObject(object);
-							// }
-						}
-					}
-				});
-			}
+	// private _computeBoundingBox() {
+	// 	const bbox = computeBoundingBoxFromObject3Ds(this.threejsObjects());
+	// 	return bbox;
+	// 	// let bbox: Box3 | undefined;
+	// 	// // this._geometriesWithComputedBoundingBox.clear();
+	// 	// if (this._objects) {
+	// 	// 	// 1. Initialize bbox to the first found object
+	// 	// 	for (let object of this._objects) {
+	// 	// 		object.traverse((childObject) => {
+	// 	// 			if (!bbox) {
+	// 	// 				const geometry = (childObject as Object3DWithGeometry).geometry;
+	// 	// 				if (geometry) {
+	// 	// 					// if we do not set updateParents to true,
+	// 	// 					// the bounding box calculation appears fine
+	// 	// 					// when checking node by node,
+	// 	// 					// but will be unreliable when processing multiple transform nodes before
+	// 	// 					// rendering the objects
+	// 	// 					childObject.updateWorldMatrix(true, false);
+	// 	// 					geometry.computeBoundingBox();
+	// 	// 					// this._geometriesWithComputedBoundingBox.add(geometry);
+	// 	// 					if (geometry.boundingBox) {
+	// 	// 						bbox = geometry.boundingBox.clone();
+	// 	// 						bbox.applyMatrix4(childObject.matrixWorld);
+	// 	// 					}
+	// 	// 					// if (bbox) {
+	// 	// 					// 	bbox.expandByObject(object);
+	// 	// 					// }
+	// 	// 				}
+	// 	// 			}
+	// 	// 		});
+	// 	// 	}
 
-			// 2. Now that it is initialized, we can loop through the object.
-			// If we had not initialized it, this would have skipped objects
-			// that have no geometry, but have children that do
-			if (bbox) {
-				for (let object of this._objects) {
-					// const geometry = (object as Object3DWithGeometry).geometry;
-					// if (geometry) {
-					// if (!this._geometriesWithComputedBoundingBox.has(geometry)) {
-					// 	geometry.computeBoundingBox();
-					// }
+	// 	// 	// 2. Now that it is initialized, we can loop through the object.
+	// 	// 	// If we had not initialized it, this would have skipped objects
+	// 	// 	// that have no geometry, but have children that do
+	// 	// 	if (bbox) {
+	// 	// 		for (let object of this._objects) {
+	// 	// 			// const geometry = (object as Object3DWithGeometry).geometry;
+	// 	// 			// if (geometry) {
+	// 	// 			// if (!this._geometriesWithComputedBoundingBox.has(geometry)) {
+	// 	// 			// 	geometry.computeBoundingBox();
+	// 	// 			// }
 
-					if (bbox) {
-						bbox.expandByObject(object);
-					}
-					// }
-				}
-			}
-		}
-		bbox = bbox || new Box3(new Vector3(-1, -1, -1), new Vector3(+1, +1, +1));
-		return bbox;
-	}
+	// 	// 			if (bbox) {
+	// 	// 				bbox.expandByObject(object);
+	// 	// 			}
+	// 	// 			// }
+	// 	// 		}
+	// 	// 	}
+	// 	// }
+	// 	// bbox = bbox || new Box3(new Vector3(-1, -1, -1), new Vector3(+1, +1, +1));
+	// 	// return bbox;
+	// }
 	// private _compute_bounding_sphere() {
 	// 	let sphere: Sphere | undefined; // = new Box3();
 	// 	if (this._objects) {
@@ -372,7 +518,7 @@ export class CoreGroup extends CoreEntity {
 	// 	return sphere;
 	// }
 	computeVertexNormals() {
-		for (let object of this.coreObjects()) {
+		for (let object of this.threejsCoreObjects()) {
 			object.computeVertexNormals();
 		}
 	}
@@ -394,7 +540,7 @@ export class CoreGroup extends CoreEntity {
 		}
 	}
 	objectAttribTypesByName() {
-		return CoreObject.coreObjectAttributeTypesByName(this.coreObjects());
+		return BaseCoreObject.coreObjectAttributeTypesByName(this.allCoreObjects());
 		// const first_core_object = this.coreObjects()[0];
 		// if (first_core_object != null) {
 		// 	return first_core_object.attribType(name);
@@ -403,34 +549,38 @@ export class CoreGroup extends CoreEntity {
 		// }
 	}
 
-	renameAttrib(old_name: string, new_name: string, attrib_class: AttribClass) {
-		switch (attrib_class) {
+	renameAttrib(old_name: string, new_name: string, attribClass: AttribClass) {
+		switch (attribClass) {
 			case AttribClass.VERTEX:
 				if (this.hasAttrib(old_name)) {
-					if (this._objects) {
-						for (let object of this._objects) {
-							object.traverse((child) => {
-								const geometry = CoreGroup.geometryFromObject(child);
-								if (geometry) {
-									const core_geometry = new CoreGeometry(geometry);
-									core_geometry.renameAttrib(old_name, new_name);
-								}
-							});
-						}
+					const objects = this.threejsObjects();
+					// if (this._objects) {
+					for (let object of objects) {
+						object.traverse((child) => {
+							const geometry = CoreGroup.geometryFromObject(child);
+							if (geometry) {
+								const core_geometry = new CoreGeometry(geometry);
+								core_geometry.renameAttrib(old_name, new_name);
+							}
+						});
 					}
+					// }
 				}
 				break;
 
 			case AttribClass.OBJECT:
 				if (this.hasAttrib(old_name)) {
-					if (this._objects) {
-						for (let object of this._objects) {
+					// if (this._allObjects) {
+					for (let object of this._allObjects) {
+						if (isObject3D(object)) {
 							object.traverse((child) => {
-								const core_object = new CoreObject(child, 0);
-								core_object.renameAttrib(old_name, new_name);
+								CoreObject.renameAttrib(child, old_name, new_name);
 							});
+						} else {
+							CoreObject.renameAttrib(object, old_name, new_name);
 						}
 					}
+					// }
 				}
 				break;
 		}
@@ -444,7 +594,7 @@ export class CoreGroup extends CoreEntity {
 		}
 	}
 	objectAttribNames() {
-		return CoreObject.coreObjectsAttribNames(this.coreObjects());
+		return BaseCoreObject.coreObjectsAttribNames(this.allCoreObjects());
 	}
 
 	geoAttribNamesMatchingMask(masksString: GroupString) {
@@ -466,7 +616,7 @@ export class CoreGroup extends CoreEntity {
 		}
 	}
 	objectAttribSizesByName(): PolyDictionary<AttribSize[]> {
-		return CoreObject.coreObjectsAttribSizesByName(this.coreObjects());
+		return BaseCoreObject.coreObjectsAttribSizesByName(this.allCoreObjects());
 		// const firstObject = this.coreObjects()[0];
 		// if (firstObject) {
 		// 	return firstObject.attribSizes();

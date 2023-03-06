@@ -84,7 +84,7 @@ function addParentToCoreGroup(
 
 		let newParent: Object3D | undefined;
 		if (parentCoreGroup) {
-			newParent = parentCoreGroup?.objects()[0];
+			newParent = parentCoreGroup?.threejsObjects()[0];
 		}
 		newParent = newParent || _createNewParent();
 		for (let object of objects) {
@@ -105,9 +105,9 @@ function addParentToCoreGroup(
 	}
 
 	if (params.levels == 0) {
-		return coreGroup.objects();
+		return coreGroup.threejsObjects();
 	} else {
-		const newObject = _addParentToObject(coreGroup.objects());
+		const newObject = _addParentToObject(coreGroup.threejsObjects());
 		return [newObject];
 	}
 }
@@ -137,16 +137,17 @@ function _removeParentFromCoreGroup(coreGroup: CoreGroup, params: HierarchySopPa
 	}
 
 	if (params.levels == 0) {
-		return coreGroup.objects();
+		return coreGroup.threejsObjects();
 	} else {
-		const new_objects: Object3D[] = [];
-		for (let object of coreGroup.objects()) {
-			const new_children = _removeParentFromObject(object, params);
-			for (let new_child of new_children) {
-				new_objects.push(new_child);
+		const newObjects: Object3D[] = [];
+		const threejsObjects = coreGroup.threejsObjects();
+		for (let object of threejsObjects) {
+			const newChildren = _removeParentFromObject(object, params);
+			for (let newChild of newChildren) {
+				newObjects.push(newChild);
 			}
 		}
-		return new_objects;
+		return newObjects;
 	}
 }
 
@@ -157,7 +158,7 @@ function _addChildrenToCoreGroup(
 	operation: HierarchySopOperation,
 	states: NodeStatesController<NodeContext.SOP> | undefined
 ): Object3D[] {
-	const objects = coreGroup.objects();
+	const objects = coreGroup.threejsObjects();
 
 	if (!childCoreGroup) {
 		states?.error.set('input 1 is invalid');
@@ -179,7 +180,7 @@ function _addChildrenToCoreGroup(
 		return parentObjects;
 	}
 	const parentObjects = _getParentObjects();
-	const childObjects = childCoreGroup.objects();
+	const childObjects = childCoreGroup.threejsObjects();
 
 	function _addOneChildPerParent() {
 		for (let i = 0; i < parentObjects.length; i++) {

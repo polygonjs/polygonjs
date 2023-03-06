@@ -1,18 +1,19 @@
-import type {OpenCascadeInstance, TopoDS_Wire, TesselationParams} from '../CadCommon';
+import type {TopoDS_Wire, TesselationParams} from '../CadCommon';
 import {BufferGeometry} from 'three';
 import {BaseSopOperation} from '../../../../engine/operations/sop/_Base';
 import {CAD_MATERIAL} from '../CadConstant';
 import {ObjectType} from '../../Constant';
 // import {CoreGeometryBuilderMerge} from '../../builders/Merge';
-import {CadLoader} from '../CadLoader';
+import {CadLoaderSync} from '../CadLoaderSync';
 import {cadShapeClone} from './CadShapeCommon';
 import {traverseEdges} from '../CadTraverse';
 import {cadEdgeToBufferGeometry} from './CadEdge';
 
-export function cadWireToObject3D(oc: OpenCascadeInstance, wire: TopoDS_Wire, tesselationParams: TesselationParams) {
+export function cadWireToObject3D(wire: TopoDS_Wire, tesselationParams: TesselationParams) {
 	const geometries: BufferGeometry[] = [];
+	const oc = CadLoaderSync.oc();
 	traverseEdges(oc, wire, (edge) => {
-		const geometry = cadEdgeToBufferGeometry(oc, edge, tesselationParams);
+		const geometry = cadEdgeToBufferGeometry(edge, tesselationParams);
 		if (geometry) {
 			geometries.push(geometry);
 		}
@@ -38,6 +39,6 @@ export function cadWireToObject3D(oc: OpenCascadeInstance, wire: TopoDS_Wire, te
 // }
 
 export function cadWireClone(src: TopoDS_Wire): TopoDS_Wire {
-	const oc = CadLoader.oc();
+	const oc = CadLoaderSync.oc();
 	return oc.TopoDS.Wire_1(cadShapeClone(src));
 }

@@ -1,11 +1,13 @@
 import {ObjectType} from './../../../core/geometry/Constant';
 import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {Vector3, BoxGeometry} from 'three';
+import {Vector3, BoxGeometry, Box3} from 'three';
 import {CoreTransform} from '../../../core/Transform';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
-
+const tmpBox = new Box3();
+const tmpSize = new Vector3();
+const tmpCenter = new Vector3();
 interface BoxSopParams extends DefaultOperationParams {
 	sizes: Vector3;
 	size: number;
@@ -13,8 +15,8 @@ interface BoxSopParams extends DefaultOperationParams {
 	center: Vector3;
 }
 
-const _size = new Vector3();
-const _center = new Vector3();
+// const _size = new Vector3();
+// const _center = new Vector3();
 
 export class BoxSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: BoxSopParams = {
@@ -55,14 +57,13 @@ export class BoxSopOperation extends BaseSopOperation {
 	}
 
 	private _cookWithInput(coreGroup: CoreGroup, params: BoxSopParams) {
+		coreGroup.boundingBox(tmpBox);
+		tmpBox.getSize(tmpSize);
+		tmpBox.getCenter(tmpCenter);
+
 		const divisions = params.divisions;
-
-		const bbox = coreGroup.boundingBox();
-		_size.copy(bbox.max).sub(bbox.min);
-		_center.copy(bbox.max).add(bbox.min).multiplyScalar(0.5);
-
-		const geometry = new BoxGeometry(_size.x, _size.y, _size.z, divisions, divisions, divisions);
-		const matrix = this._coreTransform.translationMatrix(_center);
+		const geometry = new BoxGeometry(tmpSize.x, tmpSize.y, tmpSize.z, divisions, divisions, divisions);
+		const matrix = this._coreTransform.translationMatrix(tmpCenter);
 		geometry.applyMatrix4(matrix);
 		return geometry;
 	}

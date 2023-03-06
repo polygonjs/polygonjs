@@ -45,7 +45,7 @@ QUnit.test('actor/onChildAttributeUpdate', async (assert) => {
 	or1.setInput(0, getChildrenAttributes1);
 
 	const container = await actor1.compute();
-	const object = container.coreContent()!.objects()[0];
+	const object = container.coreContent()!.threejsObjects()[0];
 
 	// wait to make sure objects are mounted to the scene
 	await CoreSleep.sleep(150);

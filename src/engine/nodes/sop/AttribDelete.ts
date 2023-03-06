@@ -6,15 +6,10 @@
 import {TypeAssert} from './../../poly/Assert';
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {CoreObject} from '../../../core/geometry/Object';
 import {CoreGeometry} from '../../../core/geometry/Geometry';
 import {AttribClassMenuEntries, AttribClass, ATTRIBUTE_CLASSES} from '../../../core/geometry/Constant';
-
 import {InputCloneMode} from '../../poly/InputCloneMode';
-import {Object3D} from 'three';
-import {BufferGeometry} from 'three';
-import {Mesh} from 'three';
-
+import {Object3D, BufferGeometry, Mesh} from 'three';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 class AttribDeleteSopParamsConfig extends NodeParamsConfig {
 	/** @param attribute class (geometry or object) */
@@ -83,7 +78,8 @@ export class AttribDeleteSopNode extends TypedSopNode<AttribDeleteSopParamsConfi
 	}
 
 	private _deleteVertexAttribute(core_group: CoreGroup, attribName: string) {
-		for (let object of core_group.objects()) {
+		const objects = core_group.threejsObjects();
+		for (let object of objects) {
 			object.traverse((object3d: Object3D) => {
 				const child = object3d as Mesh;
 				if (child.geometry) {
@@ -93,15 +89,10 @@ export class AttribDeleteSopNode extends TypedSopNode<AttribDeleteSopParamsConfi
 			});
 		}
 	}
-	private _deleteObjectAttribute(core_group: CoreGroup, attribName: string) {
-		for (let object of core_group.objects()) {
-			let index = 0;
-			object.traverse((object3d: Object3D) => {
-				const child = object3d as Mesh;
-				const core_object = new CoreObject(child, index);
-				core_object.deleteAttribute(attribName);
-				index++;
-			});
+	private _deleteObjectAttribute(coreGroup: CoreGroup, attribName: string) {
+		const coreObjects = coreGroup.allCoreObjects();
+		for (let coreObject of coreObjects) {
+			coreObject.deleteAttribute(attribName);
 		}
 	}
 	private _deleteCoreGroupAttribute(coreGroup: CoreGroup, attribName: string) {

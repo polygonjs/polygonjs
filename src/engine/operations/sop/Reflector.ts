@@ -6,6 +6,7 @@ import {Reflector} from '../../../modules/core/objects/Reflector';
 import {Vector3} from 'three';
 import {TransformResetSopOperation, TRANSFORM_RESET_MODES, TransformResetMode} from './TransformReset';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
+import {CoreObjectType, ObjectContent} from '../../../core/geometry/ObjectContent';
 // import {ObjectType, registerObjectType} from '../../../core/geometry/Constant';
 interface ReflectorSopParams extends DefaultOperationParams {
 	direction: Vector3;
@@ -58,10 +59,10 @@ export class ReflectorSopOperation extends BaseSopOperation {
 		const transformResetMode = TRANSFORM_RESET_MODES.indexOf(TransformResetMode.CENTER_GEO_RESET_OBJECT);
 		const inputCoreGroup = this._transformResetOptions.cook(inputCoreGroups, {mode: transformResetMode});
 
-		const reflectors: Reflector[] = [];
+		const reflectors: ObjectContent<CoreObjectType>[] = [];
 		const renderer = this._node?.scene().renderersRegister.lastRegisteredRenderer();
 
-		const objects = inputCoreGroup.objectsWithGeo();
+		const objects = inputCoreGroup.threejsObjectsWithGeo();
 
 		// registerObjectType({
 		// 	type: 'Reflector',
@@ -101,7 +102,7 @@ export class ReflectorSopOperation extends BaseSopOperation {
 			reflector.scale.copy(object.scale);
 			reflector.updateMatrix();
 			Reflector.compensateGeometryRotation(reflector, params.direction);
-			reflectors.push(reflector);
+			reflectors.push(reflector as any as ObjectContent<CoreObjectType>);
 		}
 
 		return this.createCoreGroupFromObjects(reflectors);

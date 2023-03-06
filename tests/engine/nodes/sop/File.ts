@@ -167,9 +167,9 @@ QUnit.test('SOP file obj wolf', async (assert) => {
 	assert.equal(container.objectsCount(), 1);
 	assert.equal(container.pointsCount(), 0);
 	assert.deepEqual(container.objectsCountByType(), {Group: 1});
-	assert.equal(core_content.objects().length, 1);
+	assert.equal(core_content.threejsObjects().length, 1);
 	assert.equal(core_content.pointsCount(), 0);
-	const first_object = core_content.objects()[0];
+	const first_object = core_content.threejsObjects()[0];
 	assert.equal(first_object.children.length, 4);
 
 	const first_mesh = first_object.children[0] as Mesh;

@@ -1,6 +1,6 @@
-import {Object3D} from 'three';
 import {AttribClass} from '../../../../src/core/geometry/Constant';
-import {CoreObject} from '../../../../src/core/geometry/Object';
+import {coreObjectFactory} from '../../../../src/core/geometry/CoreObjectFactory';
+import {CoreObjectType, ObjectContent} from '../../../../src/core/geometry/ObjectContent';
 
 QUnit.test('nodes/cookController bypassed input works as expected when changing node params', async (assert) => {
 	const geo1 = window.geo1;
@@ -52,8 +52,8 @@ QUnit.test('merge is updated correctly if two inputs are updated at the same tim
 		const container = await merge1.compute();
 		const values = container
 			.coreContent()
-			?.objects()
-			.map((o: Object3D) => CoreObject.attribValue(o, 'bla') as number);
+			?.allObjects()
+			.map((o: ObjectContent<CoreObjectType>) => coreObjectFactory(o).attribValue(o, 'bla') as number);
 		return values;
 	}
 	function setValues(value0: number, value1: number) {

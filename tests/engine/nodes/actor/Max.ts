@@ -47,7 +47,7 @@ QUnit.test('actor/max', async (assert) => {
 	max.setInput(1, getObjectAttribute2);
 
 	const container = await actor1.compute();
-	const object = container.coreContent()!.objects()[0] as Mesh;
+	const object = container.coreContent()!.threejsObjects()[0] as Mesh;
 
 	// wait to make sure objects are mounted to the scene
 	await CoreSleep.sleep(150);
@@ -125,7 +125,7 @@ QUnit.test('actor/max for more than 2 inputs', async (assert) => {
 	max.setInput(3, getObjectAttribute4);
 
 	const container = await actor1.compute();
-	const object = container.coreContent()!.objects()[0] as Mesh;
+	const object = container.coreContent()!.threejsObjects()[0] as Mesh;
 
 	// wait to make sure objects are mounted to the scene
 	await CoreSleep.sleep(150);

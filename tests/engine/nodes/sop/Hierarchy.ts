@@ -22,30 +22,30 @@ QUnit.test('sop/hierarchy simple set/remove parent', async (assert) => {
 
 	let container = await file1.compute();
 	let core_group = container.coreContent()!;
-	assert.equal(core_group.objects().length, 1, '1 object');
-	assert.equal(core_group.objects()[0].children.length, 4, '4 children');
+	assert.equal(core_group.threejsObjects().length, 1, '1 object');
+	assert.equal(core_group.threejsObjects()[0].children.length, 4, '4 children');
 
 	container = await hierarchy1.compute();
 	core_group = container.coreContent()!;
-	assert.equal(core_group.objects().length, 1, '1 object');
-	assert.equal(core_group.objects()[0].children.length, 1);
-	assert.equal(core_group.objects()[0].children[0].children.length, 4);
+	assert.equal(core_group.threejsObjects().length, 1, '1 object');
+	assert.equal(core_group.threejsObjects()[0].children.length, 1);
+	assert.equal(core_group.threejsObjects()[0].children[0].children.length, 4);
 
 	hierarchy1.p.levels.set(2);
 	container = await hierarchy1.compute();
 	core_group = container.coreContent()!;
-	assert.equal(core_group.objects()[0].children[0].children[0].children.length, 4);
+	assert.equal(core_group.threejsObjects()[0].children[0].children[0].children.length, 4);
 
 	hierarchy1.setMode(HierarchyMode.REMOVE_PARENT);
 	hierarchy1.p.levels.set(0);
 	container = await hierarchy1.compute();
 	core_group = container.coreContent()!;
-	assert.equal(core_group.objects()[0].children.length, 4);
+	assert.equal(core_group.threejsObjects()[0].children.length, 4);
 
 	hierarchy1.p.levels.set(1);
 	container = await hierarchy1.compute();
 	core_group = container.coreContent()!;
-	assert.equal(core_group.objects().length, 4);
+	assert.equal(core_group.threejsObjects().length, 4);
 
 	// testing hierarchy2 on more than 1 level
 	hierarchy1.setMode(HierarchyMode.ADD_PARENT); // add parent
@@ -54,7 +54,7 @@ QUnit.test('sop/hierarchy simple set/remove parent', async (assert) => {
 	hierarchy2.p.levels.set(3);
 	container = await hierarchy2.compute();
 	core_group = container.coreContent()!;
-	assert.equal(core_group.objects().length, 4);
+	assert.equal(core_group.threejsObjects().length, 4);
 });
 
 QUnit.test('sop/hierarchy simple add children', async (assert) => {
@@ -88,7 +88,7 @@ QUnit.test('sop/hierarchy simple add children', async (assert) => {
 	async function getChildrenCount(): Promise<number[]> {
 		const container = await hierarchy1.compute();
 
-		const objects = container.coreContent()!.objects();
+		const objects = container.coreContent()!.threejsObjects();
 		return objects.map((object: Object3D) => object.children.length);
 	}
 
@@ -107,7 +107,7 @@ QUnit.test('sop/hierarchy simple add parent', async (assert) => {
 
 	async function _objectsList(hierarchyNode: HierarchySopNode) {
 		const container = await hierarchyNode.compute();
-		const objects = container.coreContent()!.objects();
+		const objects = container.coreContent()!.threejsObjects();
 		const list: string[] = [];
 		for (let object of objects) {
 			object.traverse((child: Object3D) => {

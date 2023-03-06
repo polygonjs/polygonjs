@@ -13,7 +13,7 @@ QUnit.test('setChildren simple', async (assert) => {
 	async function getChildrenCount(): Promise<number[]> {
 		const container = await setChildren1.compute();
 
-		const objects = container.coreContent()!.objects();
+		const objects = container.coreContent()!.threejsObjects();
 		return objects.map((object: Object3D) => object.children.length);
 	}
 
@@ -27,7 +27,7 @@ QUnit.test('setChildren simple', async (assert) => {
 	async function getChildrenCount2(): Promise<number[]> {
 		const container = await setChildren2.compute();
 
-		const objects = container.coreContent()!.objects();
+		const objects = container.coreContent()!.threejsObjects();
 		return objects.map((object: Object3D) => object.children.length);
 	}
 	assert.deepEqual(await getChildrenCount2(), [1]);

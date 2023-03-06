@@ -25,7 +25,7 @@ QUnit.test('actor/Vector4', async (assert) => {
 	vector4_1.p.Vector4.set([1, 2, 3, 4]);
 
 	const container = await actor1.compute();
-	const object = container.coreContent()!.objects()[0] as Mesh;
+	const object = container.coreContent()!.threejsObjects()[0] as Mesh;
 
 	// wait to make sure objects are mounted to the scene
 	await CoreSleep.sleep(150);

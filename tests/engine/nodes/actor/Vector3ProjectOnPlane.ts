@@ -15,7 +15,7 @@ QUnit.test('actor/Vector3ProjectOnPlane', async (assert) => {
 	actor1.setInput(0, transform1);
 	actor1.flags.display.set(true);
 
-	transform1.setApplyOn(TransformTargetType.OBJECTS);
+	transform1.setApplyOn(TransformTargetType.OBJECT);
 	transform1.p.t.set([1, 2, 3]);
 
 	const onManualTrigger1 = actor1.createNode('onManualTrigger');
@@ -29,7 +29,7 @@ QUnit.test('actor/Vector3ProjectOnPlane', async (assert) => {
 	vector3ProjectOnPlane1.p.planeNormal.set([1, 1, 1]);
 
 	const container = await actor1.compute();
-	const object = container.coreContent()!.objects()[0] as Mesh;
+	const object = container.coreContent()!.threejsObjects()[0] as Mesh;
 
 	// wait to make sure objects are mounted to the scene
 	await CoreSleep.sleep(150);

@@ -1,5 +1,6 @@
-import {BufferAttribute} from 'three';
 import {BooleanCsgOperationType} from '../../../../src/engine/nodes/csg/Boolean';
+import {BufferAttribute, Box3} from 'three';
+const tmpBox = new Box3();
 
 QUnit.test('csg/cube simple', async (assert) => {
 	const geo1 = window.geo1;
@@ -18,9 +19,10 @@ QUnit.test('csg/cube simple', async (assert) => {
 
 	let container = await csgNetwork1.compute();
 	const core_group = container.coreContent();
-	const geometry = core_group?.objectsWithGeo()[0].geometry;
+	const geometry = core_group?.threejsObjectsWithGeo()[0].geometry;
 	assert.equal((geometry?.getAttribute('position') as BufferAttribute).array.length, 2304);
-	assert.equal(container.boundingBox().min.y, -1);
+	container.boundingBox(tmpBox);
+	assert.equal(tmpBox.min.y, -1);
 	assert.notOk(csgNetwork1.isDirty(), 'box is dirty');
 
 	cube1.p.sizes.set([2.9, 4.6, 1.6]);
@@ -28,5 +30,6 @@ QUnit.test('csg/cube simple', async (assert) => {
 	assert.ok(csgNetwork1.isDirty(), 'box is dirty');
 	container = await csgNetwork1.compute();
 	assert.ok(!csgNetwork1.isDirty(), 'box is not dirty anymore');
-	assert.in_delta(container.boundingBox().min.y, -0.568, 0.01);
+	container.boundingBox(tmpBox);
+	assert.in_delta(tmpBox.min.y, -0.568, 0.01);
 });

@@ -18,7 +18,7 @@ QUnit.test('sop/lightProbe simple', async (assert) => {
 	lightProbe1.p.cubeMap.setNode(cubeMap1);
 	container = await lightProbe1.compute();
 	assert.notOk(lightProbe1.states.error.message());
-	const objects = container.coreContent()?.objects()!;
+	const objects = container.coreContent()?.threejsObjects()!;
 	assert.ok(objects);
 	assert.ok((objects[0] as LightProbe).isLightProbe);
 	const lightProbe = objects[0] as LightProbe;

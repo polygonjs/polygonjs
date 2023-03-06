@@ -6,10 +6,12 @@ import {Vector4} from 'three';
 import {ATTRIBUTE_CLASSES, AttribClass, AttribType, ATTRIBUTE_TYPES} from '../../../core/geometry/Constant';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {TypeAssert} from '../../../engine/poly/Assert';
-import {CoreObject} from '../../../core/geometry/Object';
+import {BaseCoreObject,} from '../../../core/geometry/_BaseObject';
+import { CoreObject} from '../../../core/geometry/Object';
 import {CoreAttribute} from '../../../core/geometry/Attribute';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 import {CoreMask} from '../../../core/geometry/Mask';
+import {CoreObjectType} from '../../../core/geometry/ObjectContent';
 
 interface AttribCreateSopParams extends DefaultOperationParams {
 	group: string;
@@ -69,7 +71,7 @@ export class AttribCreateSopOperation extends BaseSopOperation {
 	}
 
 	private _addPointAttribute(attribType: AttribType, coreGroup: CoreGroup, params: AttribCreateSopParams) {
-		const coreObjects = coreGroup.coreObjects();
+		const coreObjects = coreGroup.threejsCoreObjects();
 		switch (attribType) {
 			case AttribType.NUMERIC: {
 				for (let coreObject of coreObjects) {
@@ -87,11 +89,11 @@ export class AttribCreateSopOperation extends BaseSopOperation {
 		TypeAssert.unreachable(attribType);
 	}
 	private _addObjectAttribute(attribType: AttribType, coreGroup: CoreGroup, params: AttribCreateSopParams) {
-		const coreObjects = CoreMask.coreObjects(params.group, coreGroup);
+		const coreObjects = CoreMask.filterCoreObjects(params.group, coreGroup.allCoreObjects());
 
 		// add attrib if non existent
 		const attribName = params.name;
-		const allCoreObjects = coreGroup.coreObjects();
+		const allCoreObjects = coreGroup.allCoreObjects();
 		const defaultValue = AttribCreateSopOperation.defaultAttribValue(params);
 		if (defaultValue != null) {
 			for (let coreObject of allCoreObjects) {
@@ -147,7 +149,10 @@ export class AttribCreateSopOperation extends BaseSopOperation {
 		}
 	}
 
-	private _addNumericAttributeToObjects(coreObjects: CoreObject[], params: AttribCreateSopParams) {
+	private _addNumericAttributeToObjects<T extends CoreObjectType>(
+		coreObjects: BaseCoreObject<T>[],
+		params: AttribCreateSopParams
+	) {
 		const value = [params.value1, params.value2, params.value3, params.value4][params.size - 1];
 		const attribName = params.name;
 		for (let coreObject of coreObjects) {
@@ -199,7 +204,10 @@ export class AttribCreateSopOperation extends BaseSopOperation {
 		coreGeometry.setIndexedAttribute(attribName, indexData['values'], indexData['indices']);
 	}
 
-	private _addStringAttributeToObjects(coreObjects: CoreObject[], params: AttribCreateSopParams) {
+	private _addStringAttributeToObjects<T extends CoreObjectType>(
+		coreObjects: BaseCoreObject<T>[],
+		params: AttribCreateSopParams
+	) {
 		const value = params.string;
 		for (let coreObject of coreObjects) {
 			coreObject.setAttribValue(params.name, value);

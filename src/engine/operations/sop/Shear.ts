@@ -71,7 +71,7 @@ export class ShearSopOperation extends BaseSopOperation {
 
 	private _m4 = new Matrix4();
 	override cook(input_contents: CoreGroup[], params: ShearSopParams) {
-		const objects = input_contents[0].objects();
+		const objects = input_contents[0].threejsObjects();
 
 		this._applyShear(objects, params);
 

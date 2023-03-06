@@ -22,7 +22,7 @@ const INPUT_NAMES = ['points to transform in mapbox space'];
 
 class MapboxTransformSopParamsConfig extends NodeParamsConfig {
 	/** @param sets if this node should transform objects or geometries */
-	applyOn = ParamConfig.INTEGER(TRANSFORM_TARGET_TYPES.indexOf(TransformTargetType.GEOMETRIES), {
+	applyOn = ParamConfig.INTEGER(TRANSFORM_TARGET_TYPES.indexOf(TransformTargetType.GEOMETRY), {
 		menu: {
 			entries: TRANSFORM_TARGET_TYPES.map((name, value) => {
 				return {name, value};
@@ -66,17 +66,17 @@ export class MapboxTransformSopNode extends TypedSopNode<MapboxTransformSopParam
 			lng: this.pv.longitude,
 			lat: this.pv.latitude,
 		});
-		const objects = coreGroup.objects();
+		const objects = coreGroup.threejsObjects();
 		this._applyTransform(objects);
 		this.setCoreGroup(coreGroup);
 	}
 	private _applyTransform(objects: Object3D[]) {
 		const mode = TRANSFORM_TARGET_TYPES[this.pv.applyOn];
 		switch (mode) {
-			case TransformTargetType.GEOMETRIES: {
+			case TransformTargetType.GEOMETRY: {
 				return this._updateGeometries(objects);
 			}
-			case TransformTargetType.OBJECTS: {
+			case TransformTargetType.OBJECT: {
 				return this._updateObjects(objects);
 			}
 		}

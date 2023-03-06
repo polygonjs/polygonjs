@@ -1,19 +1,20 @@
-import {Object3D, Vector2, Vector3, Vector4} from 'three';
-import {CoreObject} from '../Object';
+import {Vector2, Vector3, Vector4} from 'three';
+import {BaseCoreObject} from '../_BaseObject';
+import {CoreObjectType, ObjectContent} from '../ObjectContent';
 import {AttributeCallbackQueue} from './AttributeCallbackQueue';
 import {AttributeProxy, AttributeReactiveCallback} from './_Base';
 
 type Vector4Prop = 'x' | 'y' | 'z' | 'w';
 type AttribValueVector = Vector2 | Vector3 | Vector4;
 
-export function _makeAttribReactiveBaseVector<V extends AttribValueVector>(
-	object: Object3D,
+export function _makeAttribReactiveBaseVector<V extends AttribValueVector, T extends CoreObjectType>(
+	object: ObjectContent<T>,
 	attribName: string,
 	props: Array<Vector4Prop>,
 	callback: AttributeReactiveCallback<V>
 ) {
-	const attributesDict = CoreObject.attributesDictionary(object);
-	const attributesPreviousValuesDict = CoreObject.attributesPreviousValuesDictionary(object);
+	const attributesDict = BaseCoreObject.attributesDictionary(object);
+	const attributesPreviousValuesDict = BaseCoreObject.attributesPreviousValuesDictionary(object);
 
 	const proxy: AttributeProxy<V> = {
 		value: (attributesDict[attribName] as V).clone() as V,

@@ -45,7 +45,7 @@ QUnit.test('actor/OnVideoEvent', async (assert) => {
 	(add1.params.get('add1') as Vector3Param).set([0, 1, 0]);
 
 	const container = await actor1.compute();
-	const object = container.coreContent()!.objects()[0];
+	const object = container.coreContent()!.threejsObjects()[0];
 
 	// wait to make sure objects are mounted to the scene
 	await CoreSleep.sleep(150);

@@ -13,10 +13,10 @@ QUnit.test('sop/fileJSON simple', async (assert) => {
 	console.log(fileNode.p.url.value);
 	const container = await fileNode.compute();
 	assert.notOk(fileNode.states.error.active());
-	assert.equal(container.coreContent()!.objects()[0].children.length, 4);
+	assert.equal(container.coreContent()!.threejsObjects()[0].children.length, 4);
 	assert.equal(
-		(container.coreContent()!.objects()[0].children[0].children[1].children[0] as Mesh).geometry.attributes.position
-			.count,
+		(container.coreContent()!.threejsObjects()[0].children[0].children[1].children[0] as Mesh).geometry.attributes
+			.position.count,
 		240
 	);
 });

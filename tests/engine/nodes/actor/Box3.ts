@@ -25,7 +25,7 @@ QUnit.test('actor/Box3 simple', async (assert) => {
 	box3.p.max.set([5, 6, 8]);
 
 	const container = await actor1.compute();
-	const object = container.coreContent()!.objects()[0];
+	const object = container.coreContent()!.threejsObjects()[0];
 
 	await RendererUtils.withViewer({cameraNode: perspective_camera1}, async (args) => {
 		scene.play();

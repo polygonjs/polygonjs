@@ -27,7 +27,7 @@ QUnit.test('actor/Sphere simple', async (assert) => {
 	sphere.p.radius.set(7);
 
 	const container = await actor1.compute();
-	const object = container.coreContent()!.objects()[0];
+	const object = container.coreContent()!.threejsObjects()[0];
 
 	await RendererUtils.withViewer({cameraNode: perspective_camera1}, async (args) => {
 		scene.play();

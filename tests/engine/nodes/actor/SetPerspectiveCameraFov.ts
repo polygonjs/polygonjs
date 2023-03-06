@@ -20,7 +20,7 @@ QUnit.test('actor/setPerspectiveCameraFov', async (assert) => {
 	setPerspectiveCameraFov1.p.fov.set(20);
 
 	const container = await actor1.compute();
-	const camera = container.coreContent()!.objects()[0] as PerspectiveCamera;
+	const camera = container.coreContent()!.threejsObjects()[0] as PerspectiveCamera;
 
 	// wait to make sure objects are mounted to the scene
 	await CoreSleep.sleep(150);

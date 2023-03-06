@@ -102,8 +102,8 @@ export interface ObjectByObjectType {
 export interface ObjectData {
 	type: ObjectType;
 	name: string | null;
-	children_count: number;
-	points_count: number;
+	childrenCount: number;
+	pointsCount: number;
 }
 
 // Zexport interface ObjectConstructorByObjectType {

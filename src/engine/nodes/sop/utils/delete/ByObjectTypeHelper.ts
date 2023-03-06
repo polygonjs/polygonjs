@@ -1,6 +1,7 @@
 import {DeleteSopNode} from '../../Delete';
-import {CoreObject} from '../../../../../core/geometry/Object';
+import {BaseCoreObject} from '../../../../../core/geometry/_BaseObject';
 import {ObjectType, objectTypeFromConstructor} from '../../../../../core/geometry/Constant';
+import {CoreObjectType} from '../../../../../core/geometry/ObjectContent';
 
 export const OBJECT_TYPES: ObjectType[] = [
 	ObjectType.MESH,
@@ -14,7 +15,7 @@ export const OBJECT_TYPE_MENU_ENTRIES = OBJECT_TYPES.map((name, value) => ({name
 export class ByObjectTypeHelper {
 	constructor(private node: DeleteSopNode) {}
 
-	eval_for_objects(core_objects: CoreObject[]) {
+	eval_for_objects(core_objects: BaseCoreObject<CoreObjectType>[]) {
 		const object_type = OBJECT_TYPES[this.node.pv.objectType];
 
 		for (let core_object of core_objects) {

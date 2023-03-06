@@ -21,7 +21,7 @@ QUnit.test('geo obj display flag off does not cook', async (assert) => {
 	await CoreSleep.sleep(10);
 	assert.equal(
 		geo1.childrenDisplayController.sopGroup().children[0].uuid,
-		box1.containerController.container().coreContent()?.objects()[0].uuid
+		box1.containerController.container().coreContent()?.threejsObjects()[0].uuid
 	);
 
 	assert.equal(box1.cookController.cooksCount(), 1);
@@ -109,7 +109,7 @@ QUnit.test('geo obj display flag off does not cook its content on load', async (
 	assert.equal(box1.cookController.cooksCount(), 1);
 	assert.equal(
 		geo1.childrenDisplayController.sopGroup().children[0].uuid,
-		box1.containerController.container().coreContent()?.objects()[0].uuid
+		box1.containerController.container().coreContent()?.threejsObjects()[0].uuid
 	);
 });
 

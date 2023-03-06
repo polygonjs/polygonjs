@@ -10,7 +10,7 @@ QUnit.test('pointLight simple', async (assert) => {
 
 	let container = await pointLight.compute();
 	const core_group = container.coreContent();
-	const object = core_group?.objects()[0] as PointLight;
+	const object = core_group?.threejsObjects()[0] as PointLight;
 	assert.deepEqual(object.color.toArray(), [1, 1, 1]);
 });
 
@@ -22,12 +22,12 @@ QUnit.test('pointLight with transform', async (assert) => {
 	const transform = geo1.createNode('transform');
 
 	transform.setInput(0, pointLight);
-	transform.p.applyOn.set(TRANSFORM_TARGET_TYPES.indexOf(TransformTargetType.OBJECTS));
+	transform.p.applyOn.set(TRANSFORM_TARGET_TYPES.indexOf(TransformTargetType.OBJECT));
 	transform.p.t.set([1, 2, 3]);
 
 	let container = await transform.compute();
 	const core_group = container.coreContent();
-	const object = core_group?.objects()[0] as PointLight;
+	const object = core_group?.threejsObjects()[0] as PointLight;
 	assert.deepEqual(object.color.toArray(), [1, 1, 1]);
 	assert.deepEqual(object.position.toArray(), [1, 2, 3]);
 });
@@ -44,7 +44,7 @@ QUnit.test('pointLight with copy SOP', async (assert) => {
 
 	let container = await copy.compute();
 	const core_group = container.coreContent();
-	const objects = core_group?.objects() as PointLight[];
+	const objects = core_group?.threejsObjects() as PointLight[];
 	assert.equal(objects.length, 4);
 	const object0 = objects[0];
 	assert.deepEqual(object0.color.toArray(), [1, 1, 1]);
@@ -80,7 +80,7 @@ QUnit.test('sop/pointLight hierarchy is maintained as it is cloned', async (asse
 
 	let container = await pointLight1.compute();
 	let coreGroup = container.coreContent();
-	let object = coreGroup?.objects()[0]!;
+	let object = coreGroup?.threejsObjects()[0]!;
 	assert.equal(objectsCount(object), 3);
 	assert.deepEqual(objectNames(object), [
 		'PointLightGroup_pointLight1',
@@ -90,7 +90,7 @@ QUnit.test('sop/pointLight hierarchy is maintained as it is cloned', async (asse
 
 	container = await transform1.compute();
 	coreGroup = container.coreContent();
-	object = coreGroup?.objects()[0]!;
+	object = coreGroup?.threejsObjects()[0]!;
 	assert.equal(objectsCount(object), 3);
 	assert.deepEqual(objectNames(object), [
 		'PointLightGroup_pointLight1',

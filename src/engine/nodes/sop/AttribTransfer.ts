@@ -13,6 +13,8 @@ import {CoreOctree} from '../../../core/math/octree/Octree';
 import {CoreIterator} from '../../../core/Iterator';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {InputCloneMode} from '../../poly/InputCloneMode';
+import {Box3} from 'three';
+const tmpBox = new Box3();
 class AttribTransferSopParamsConfig extends NodeParamsConfig {
 	/** @param source group to transfer from (right input, or input 1) */
 	srcGroup = ParamConfig.STRING();
@@ -90,7 +92,8 @@ export class AttribTransferSopNode extends TypedSopNode<AttribTransferSopParamsC
 
 			const points_src = this._core_group_src.pointsFromGroup(this.pv.srcGroup);
 
-			this._octree = new CoreOctree(this._core_group_src.boundingBox());
+			this._core_group_src.boundingBox(tmpBox);
+			this._octree = new CoreOctree(tmpBox);
 			this._octree.set_points(points_src);
 		}
 	}

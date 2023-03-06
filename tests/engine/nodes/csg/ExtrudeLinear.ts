@@ -1,4 +1,5 @@
-import {BufferAttribute} from 'three';
+import {BufferAttribute,Box3} from 'three';
+const tmpBox = new Box3()
 
 QUnit.test('csg/extrudeLinear with non closed shapes', async (assert) => {
 	const geo1 = window.geo1;
@@ -30,9 +31,10 @@ QUnit.test('csg/extrudeLinear with closed shapes', async (assert) => {
 
 	let container = await csgNetwork1.compute();
 	const core_group = container.coreContent();
-	const geometry = core_group?.objectsWithGeo()[0].geometry;
+	const geometry = core_group?.threejsObjectsWithGeo()[0].geometry;
 	assert.equal((geometry?.getAttribute('position') as BufferAttribute).array.length, 1116);
-	assert.in_delta(container.boundingBox().min.x, -1, 0.002);
-	assert.in_delta(container.boundingBox().max.x, 1, 0.002);
+	container.boundingBox(tmpBox)
+	assert.in_delta(tmpBox.min.x, -1, 0.002);
+	assert.in_delta(tmpBox.max.x, 1, 0.002);
 	assert.notOk(csgNetwork1.isDirty(), 'box is dirty');
 });

@@ -28,7 +28,7 @@ export class LookAtSopOperation extends BaseSopOperation {
 	}
 
 	override cook(inputCoreGroups: CoreGroup[], params: LookAtSopParams) {
-		const objects = inputCoreGroups[0].objects();
+		const objects = inputCoreGroups[0].threejsObjects();
 
 		for (let object of objects) {
 			object.up.copy(params.up);

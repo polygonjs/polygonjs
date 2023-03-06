@@ -1,4 +1,5 @@
-import {BufferAttribute} from 'three';
+import {BufferAttribute, Box3} from 'three';
+const tmpBox = new Box3();
 
 QUnit.test('csg/offset on 2d prim', async (assert) => {
 	const geo1 = window.geo1;
@@ -14,21 +15,23 @@ QUnit.test('csg/offset on 2d prim', async (assert) => {
 
 	let container = await csgNetwork1.compute();
 	let core_group = container.coreContent();
-	assert.equal(core_group?.objectsWithGeo().length, 1, '1 object');
-	let geometry = core_group?.objectsWithGeo()[0].geometry;
+	assert.equal(core_group?.threejsObjectsWithGeo().length, 1, '1 object');
+	let geometry = core_group?.threejsObjectsWithGeo()[0].geometry;
 	assert.equal((geometry?.getAttribute('position') as BufferAttribute).array.length, 102);
-	assert.in_delta(container.boundingBox().min.x, -1.099, 0.002);
-	assert.in_delta(container.boundingBox().max.x, 1.099, 0.002);
+	container.boundingBox(tmpBox);
+	assert.in_delta(tmpBox.min.x, -1.099, 0.002);
+	assert.in_delta(tmpBox.max.x, 1.099, 0.002);
 	assert.notOk(csgNetwork1.isDirty(), 'box is dirty');
 
 	offset1.p.delta.set(0.1);
 	container = await csgNetwork1.compute();
 	core_group = container.coreContent();
-	assert.equal(core_group?.objectsWithGeo().length, 1, '1 object');
-	geometry = core_group?.objectsWithGeo()[0].geometry;
+	assert.equal(core_group?.threejsObjectsWithGeo().length, 1, '1 object');
+	geometry = core_group?.threejsObjectsWithGeo()[0].geometry;
 	assert.equal((geometry?.getAttribute('position') as BufferAttribute).array.length, 102);
-	assert.in_delta(container.boundingBox().min.x, -1.099, 0.002);
-	assert.in_delta(container.boundingBox().max.x, 1.099, 0.002);
+	container.boundingBox(tmpBox);
+	assert.in_delta(tmpBox.min.x, -1.099, 0.002);
+	assert.in_delta(tmpBox.max.x, 1.099, 0.002);
 	assert.notOk(csgNetwork1.isDirty(), 'box is dirty');
 });
 
@@ -46,10 +49,11 @@ QUnit.test('csg/offset on 3d prim', async (assert) => {
 
 	let container = await csgNetwork1.compute();
 	const core_group = container.coreContent();
-	assert.equal(core_group?.objectsWithGeo().length, 1, '1 object');
-	let geometry = core_group?.objectsWithGeo()[0].geometry;
+	assert.equal(core_group?.threejsObjectsWithGeo().length, 1, '1 object');
+	let geometry = core_group?.threejsObjectsWithGeo()[0].geometry;
 	assert.equal((geometry?.getAttribute('position') as BufferAttribute).array.length, 108);
-	assert.in_delta(container.boundingBox().min.x, -0.5, 0.002);
-	assert.in_delta(container.boundingBox().max.x, 0.5, 0.002);
+	container.boundingBox(tmpBox);
+	assert.in_delta(tmpBox.min.x, -0.5, 0.002);
+	assert.in_delta(tmpBox.max.x, 0.5, 0.002);
 	assert.notOk(csgNetwork1.isDirty(), 'box is dirty');
 });

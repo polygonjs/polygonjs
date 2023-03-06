@@ -37,7 +37,7 @@ export class DecalSopOperation extends BaseSopOperation {
 		this._rotation.set(this._r.x, this._r.y, this._r.z);
 		this._scale.copy(params.s).multiplyScalar(params.scale);
 
-		const objects = inputCoreGroup.objectsWithGeo() as Mesh[];
+		const objects = inputCoreGroup.threejsObjectsWithGeo() as Mesh[];
 		const decalObjects: Mesh[] = [];
 		for (let object of objects) {
 			if (object.isMesh) {

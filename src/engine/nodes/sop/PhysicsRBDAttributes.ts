@@ -25,12 +25,15 @@ import {
 	SIZE_COMPUTATION_METHODS,
 } from '../../operations/sop/PhysicsRBDAttributes';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {CoreObject} from '../../../core/geometry/Object';
-import {Object3D, Vector3} from 'three';
+import {BaseCoreObject} from '../../../core/geometry/_BaseObject';
+import {Vector3, Box3, Sphere} from 'three';
 import {Vector3Param} from '../../params/Vector3';
 import {isBooleanTrue} from '../../../core/Type';
 import {BooleanParam} from '../../params/Boolean';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
+import {CoreObjectType, ObjectContent} from '../../../core/geometry/ObjectContent';
+const tmpBox = new Box3();
+const tmpSphere = new Sphere();
 const DEFAULT = PhysicsRBDAttributesSopOperation.DEFAULT_PARAMS;
 
 type Vector3Component = 'x' | 'y' | 'z';
@@ -243,7 +246,7 @@ export class PhysicsRBDAttributesSopNode extends TypedSopNode<PhysicsRBDAttribut
 		const RBDType = this.RBDType();
 		const colliderType = this.colliderType();
 		const sizeMethod = this.sizeMethod();
-		const coreObjects = coreGroup.coreObjects();
+		const coreObjects = coreGroup.allCoreObjects();
 		for (let coreObject of coreObjects) {
 			const object = coreObject.object();
 			CorePhysicsAttribute.setRBDType(object, RBDType);
@@ -345,7 +348,7 @@ export class PhysicsRBDAttributesSopNode extends TypedSopNode<PhysicsRBDAttribut
 	protected _applyColliderType(
 		colliderType: PhysicsRBDColliderType,
 		sizeMethod: SizeComputationMethod,
-		coreObjects: CoreObject[],
+		coreObjects: BaseCoreObject<CoreObjectType>[],
 		promises: Array<Promise<void>>
 	) {
 		switch (colliderType) {
@@ -353,15 +356,10 @@ export class PhysicsRBDAttributesSopNode extends TypedSopNode<PhysicsRBDAttribut
 				switch (sizeMethod) {
 					case SizeComputationMethod.AUTO: {
 						for (let coreObject of coreObjects) {
-							const geometry = coreObject.geometry();
-							if (geometry) {
-								geometry.computeBoundingBox();
-								if (geometry.boundingBox != null) {
-									geometry.boundingBox.getSize(tmpV3);
-									CorePhysicsAttribute.setCuboidSizes(coreObject.object(), tmpV3);
-									CorePhysicsAttribute.setCuboidSize(coreObject.object(), 1);
-								}
-							}
+							coreObject.boundingBox(tmpBox);
+							tmpBox.getSize(tmpV3);
+							CorePhysicsAttribute.setCuboidSizes(coreObject.object(), tmpV3);
+							CorePhysicsAttribute.setCuboidSize(coreObject.object(), 1);
 						}
 						return;
 					}
@@ -390,14 +388,9 @@ export class PhysicsRBDAttributesSopNode extends TypedSopNode<PhysicsRBDAttribut
 				switch (sizeMethod) {
 					case SizeComputationMethod.AUTO: {
 						for (let coreObject of coreObjects) {
-							const geometry = coreObject.geometry();
-							if (geometry) {
-								geometry.computeBoundingSphere();
-								const radius = geometry.boundingSphere?.radius;
-								if (radius != null) {
-									CorePhysicsAttribute.setRadius(coreObject.object(), radius);
-								}
-							}
+							coreObject.boundingSphere(tmpSphere);
+							const radius = tmpSphere.radius;
+							CorePhysicsAttribute.setRadius(coreObject.object(), radius);
 						}
 						return;
 					}
@@ -419,17 +412,12 @@ export class PhysicsRBDAttributesSopNode extends TypedSopNode<PhysicsRBDAttribut
 				switch (sizeMethod) {
 					case SizeComputationMethod.AUTO: {
 						for (let coreObject of coreObjects) {
-							const geometry = coreObject.geometry();
-							if (geometry) {
-								geometry.computeBoundingBox();
-								if (geometry.boundingBox != null) {
-									geometry.boundingBox.getSize(tmpV3);
-									const radius = 0.5 * tmpV3.x;
-									const height = tmpV3.y - 2 * radius;
-									CorePhysicsAttribute.setHeight(coreObject.object(), height);
-									CorePhysicsAttribute.setRadius(coreObject.object(), radius);
-								}
-							}
+							coreObject.boundingBox(tmpBox);
+							tmpBox.getSize(tmpV3);
+							const radius = 0.5 * tmpV3.x;
+							const height = tmpV3.y - 2 * radius;
+							CorePhysicsAttribute.setHeight(coreObject.object(), height);
+							CorePhysicsAttribute.setRadius(coreObject.object(), radius);
 						}
 						return;
 					}
@@ -459,15 +447,10 @@ export class PhysicsRBDAttributesSopNode extends TypedSopNode<PhysicsRBDAttribut
 				switch (sizeMethod) {
 					case SizeComputationMethod.AUTO: {
 						for (let coreObject of coreObjects) {
-							const geometry = coreObject.geometry();
-							if (geometry) {
-								geometry.computeBoundingBox();
-								if (geometry.boundingBox != null) {
-									geometry.boundingBox.getSize(tmpV3);
-									CorePhysicsAttribute.setHeight(coreObject.object(), tmpV3.y);
-									CorePhysicsAttribute.setRadius(coreObject.object(), 0.5 * tmpV3.x);
-								}
-							}
+							coreObject.boundingBox(tmpBox);
+							tmpBox.getSize(tmpV3);
+							CorePhysicsAttribute.setHeight(coreObject.object(), tmpV3.y);
+							CorePhysicsAttribute.setRadius(coreObject.object(), 0.5 * tmpV3.x);
 						}
 						return;
 					}
@@ -519,8 +502,8 @@ export class PhysicsRBDAttributesSopNode extends TypedSopNode<PhysicsRBDAttribut
 
 	protected async _computeStringParam(
 		param: StringParam,
-		coreObjects: CoreObject[],
-		applyMethod: (object: Object3D, value: string) => void
+		coreObjects: BaseCoreObject<CoreObjectType>[],
+		applyMethod: (object: ObjectContent<CoreObjectType>, value: string) => void
 	) {
 		if (param.expressionController && param.expressionController.entitiesDependent()) {
 			await param.expressionController.computeExpressionForObjects(coreObjects, (coreObject, value: string) => {
@@ -534,8 +517,8 @@ export class PhysicsRBDAttributesSopNode extends TypedSopNode<PhysicsRBDAttribut
 	}
 	protected async _computeVector3Param(
 		vectorParam: Vector3Param,
-		coreObjects: CoreObject[],
-		applyMethod: (object: Object3D, value: Vector3) => void
+		coreObjects: BaseCoreObject<CoreObjectType>[],
+		applyMethod: (object: ObjectContent<CoreObjectType>, value: Vector3) => void
 	) {
 		// if (param.expressionController && param.expressionController.entitiesDependent()) {
 		// 	await param.expressionController.computeExpressionForObjects(coreObjects, (coreObject, value) => {
@@ -594,8 +577,8 @@ export class PhysicsRBDAttributesSopNode extends TypedSopNode<PhysicsRBDAttribut
 	}
 	protected async _computeNumberParam(
 		param: FloatParam | IntegerParam,
-		coreObjects: CoreObject[],
-		applyMethod: (object: Object3D, value: number) => void
+		coreObjects: BaseCoreObject<CoreObjectType>[],
+		applyMethod: (object: ObjectContent<CoreObjectType>, value: number) => void
 	) {
 		if (param.expressionController && param.expressionController.entitiesDependent()) {
 			await param.expressionController.computeExpressionForObjects(coreObjects, (coreObject, value) => {
@@ -609,8 +592,8 @@ export class PhysicsRBDAttributesSopNode extends TypedSopNode<PhysicsRBDAttribut
 	}
 	protected async _computeBooleanParam(
 		param: BooleanParam,
-		coreObjects: CoreObject[],
-		applyMethod: (object: Object3D, value: boolean) => void
+		coreObjects: BaseCoreObject<CoreObjectType>[],
+		applyMethod: (object: ObjectContent<CoreObjectType>, value: boolean) => void
 	) {
 		if (param.expressionController && param.expressionController.entitiesDependent()) {
 			await param.expressionController.computeExpressionForObjects(coreObjects, (coreObject, value) => {

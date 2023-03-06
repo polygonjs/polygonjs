@@ -16,6 +16,7 @@ import {ActorKeyboardEventsController} from './actors/ActorsKeyboardEventsContro
 import {AttributeProxy} from '../../../core/geometry/attribute/_Base';
 import {OnScenePlayStateActorNode} from '../../nodes/actor/OnScenePlayState';
 import {ActorNodeTriggerContext} from '../../nodes/actor/_Base';
+import {CoreObjectType} from '../../../core/geometry/ObjectContent';
 
 const ACTOR_BUILDER_NODE_IDS_KEY = 'actorBuilderNodeIds';
 
@@ -376,7 +377,7 @@ export class ActorsManager {
 				const parentNodes = parentNodesByAttribName?.get(attributeName);
 
 				// apply callback
-				CoreObject.makeAttribReactive<AttribValue>(
+				CoreObject.makeAttribReactive<AttribValue, CoreObjectType>(
 					object,
 					attributeName,
 					(proxy: AttributeProxy<AttribValue>) => {

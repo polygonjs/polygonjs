@@ -136,7 +136,7 @@ QUnit.test('actor/Vector3Unproject', async (assert) => {
 	// const actor1 = nodes.actor4.node as ActorSopNode;
 	merge1.flags.display.set(true);
 	const container = await merge1.compute();
-	const object = container.coreContent()!.objects()[1] as Mesh;
+	const object = container.coreContent()!.threejsObjects()[1] as Mesh;
 	let currentCameraObject: PerspectiveCamera | undefined;
 
 	// wait to make sure objects are mounted to the scene

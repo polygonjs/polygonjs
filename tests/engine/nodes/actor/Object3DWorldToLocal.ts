@@ -15,7 +15,7 @@ QUnit.test('actor/object3DWorldToLocal', async (assert) => {
 	actor1.setInput(0, transform1);
 	actor1.flags.display.set(true);
 
-	transform1.setApplyOn(TransformTargetType.OBJECTS);
+	transform1.setApplyOn(TransformTargetType.OBJECT);
 	transform1.p.t.set([1, 2, 3]);
 
 	const onManualTrigger1 = actor1.createNode('onManualTrigger');
@@ -31,7 +31,7 @@ QUnit.test('actor/object3DWorldToLocal', async (assert) => {
 	constant1.p.vector3.set([6, 4, 2]);
 
 	const container = await actor1.compute();
-	const object = container.coreContent()!.objects()[0] as Mesh;
+	const object = container.coreContent()!.threejsObjects()[0] as Mesh;
 
 	// wait to make sure objects are mounted to the scene
 	await CoreSleep.sleep(150);

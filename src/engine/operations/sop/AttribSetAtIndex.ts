@@ -6,9 +6,11 @@ import {Vector4} from 'three';
 import {ATTRIBUTE_CLASSES, AttribClass, AttribType, ATTRIBUTE_TYPES} from '../../../core/geometry/Constant';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {TypeAssert} from '../../../engine/poly/Assert';
+import {BaseCoreObject} from '../../../core/geometry/_BaseObject';
 import {CoreObject} from '../../../core/geometry/Object';
 import {CoreAttribute} from '../../../core/geometry/Attribute';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
+import {CoreObjectType} from '../../../core/geometry/ObjectContent';
 
 interface AttribSetAtIndexSopParams extends DefaultOperationParams {
 	index: number;
@@ -68,7 +70,7 @@ export class AttribSetAtIndexSopOperation extends BaseSopOperation {
 	}
 
 	private _addPointAttribute(attribType: AttribType, coreGroup: CoreGroup, params: AttribSetAtIndexSopParams) {
-		const coreObjects = coreGroup.coreObjects();
+		const coreObjects = coreGroup.threejsCoreObjects();
 		switch (attribType) {
 			case AttribType.NUMERIC: {
 				for (let coreObject of coreObjects) {
@@ -86,7 +88,7 @@ export class AttribSetAtIndexSopOperation extends BaseSopOperation {
 		TypeAssert.unreachable(attribType);
 	}
 	private _addObjectAttribute(attribType: AttribType, coreGroup: CoreGroup, params: AttribSetAtIndexSopParams) {
-		const allCoreObjects = coreGroup.coreObjects();
+		const allCoreObjects = coreGroup.allCoreObjects();
 
 		// add attrib if non existent
 		const attribName = params.name;
@@ -172,7 +174,10 @@ export class AttribSetAtIndexSopOperation extends BaseSopOperation {
 		}
 	}
 
-	private _addNumericAttributeToObject(coreObject: CoreObject, params: AttribSetAtIndexSopParams) {
+	private _addNumericAttributeToObject(
+		coreObject: BaseCoreObject<CoreObjectType>,
+		params: AttribSetAtIndexSopParams
+	) {
 		const value = [params.value1, params.value2, params.value3, params.value4][params.size - 1];
 		const attribName = params.name;
 		coreObject.setAttribValue(attribName, value);
@@ -223,7 +228,7 @@ export class AttribSetAtIndexSopOperation extends BaseSopOperation {
 		coreGeometry.setIndexedAttribute(attribName, indexData['values'], indexData['indices']);
 	}
 
-	private _addStringAttributeToObject(coreObject: CoreObject, params: AttribSetAtIndexSopParams) {
+	private _addStringAttributeToObject(coreObject: BaseCoreObject<CoreObjectType>, params: AttribSetAtIndexSopParams) {
 		const value = params.string;
 		coreObject.setAttribValue(params.name, value);
 	}

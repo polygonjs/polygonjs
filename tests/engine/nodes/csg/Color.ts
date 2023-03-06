@@ -14,7 +14,7 @@ QUnit.test('csg/color', async (assert) => {
 	await csgNetwork1.compute();
 	let container = await csgNetwork1.compute();
 	let core_group = container.coreContent();
-	let geometry = core_group?.objectsWithGeo()[0].geometry;
+	let geometry = core_group?.threejsObjectsWithGeo()[0].geometry;
 	let attrib = geometry?.getAttribute('color') as BufferAttribute;
 	assert.ok(attrib);
 	assert.equal(attrib?.array[0], 1);
@@ -25,7 +25,7 @@ QUnit.test('csg/color', async (assert) => {
 	await csgNetwork1.compute();
 	container = await csgNetwork1.compute();
 	core_group = container.coreContent();
-	geometry = core_group?.objectsWithGeo()[0].geometry;
+	geometry = core_group?.threejsObjectsWithGeo()[0].geometry;
 	attrib = geometry?.getAttribute('color') as BufferAttribute;
 	assert.ok(attrib);
 	assert.equal(attrib?.array[0], 0);
@@ -35,7 +35,7 @@ QUnit.test('csg/color', async (assert) => {
 	cube1.flags.display.set(true);
 	container = await csgNetwork1.compute();
 	core_group = container.coreContent();
-	geometry = core_group?.objectsWithGeo()[0].geometry;
+	geometry = core_group?.threejsObjectsWithGeo()[0].geometry;
 	attrib = geometry?.getAttribute('color') as BufferAttribute;
 	assert.ok(attrib);
 	assert.equal(attrib?.array[0], 1);

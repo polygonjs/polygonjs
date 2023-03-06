@@ -10,7 +10,7 @@ QUnit.test('BVH simple', async (assert) => {
 
 	let container = await BVH1.compute();
 	const core_group = container.coreContent();
-	const geometry = core_group?.objectsWithGeo()[0].geometry!;
+	const geometry = core_group?.threejsObjectsWithGeo()[0].geometry!;
 	assert.ok((geometry as BufferGeometryWithBVH).boundsTree);
 });
 
@@ -26,11 +26,11 @@ QUnit.test('BVH is cloned', async (assert) => {
 
 	let container = await BVH1.compute();
 	let coreGroup = container.coreContent();
-	let geometry = coreGroup?.objectsWithGeo()[0].geometry!;
+	let geometry = coreGroup?.threejsObjectsWithGeo()[0].geometry!;
 	assert.ok((geometry as BufferGeometryWithBVH).boundsTree);
 
 	container = await transform1.compute();
 	coreGroup = container.coreContent();
-	geometry = coreGroup?.objectsWithGeo()[0].geometry!;
+	geometry = coreGroup?.threejsObjectsWithGeo()[0].geometry!;
 	assert.ok((geometry as BufferGeometryWithBVH).boundsTree);
 });

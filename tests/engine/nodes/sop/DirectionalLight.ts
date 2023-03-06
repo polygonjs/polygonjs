@@ -19,7 +19,7 @@ function objectNames(object: Object3D, names: string[] = []) {
 async function getObject(node: BaseSopNodeType) {
 	const container = await node.compute();
 	const coreGroup = container.coreContent();
-	const object = coreGroup?.objects()[0]!;
+	const object = coreGroup?.threejsObjects()[0]!;
 	return object;
 }
 

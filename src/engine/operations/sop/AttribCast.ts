@@ -90,7 +90,7 @@ export class AttribCastSopOperation extends BaseSopOperation {
 
 	override cook(input_contents: CoreGroup[], params: AttribCastSopParams) {
 		const core_group = input_contents[0];
-		const objects = core_group.objectsWithGeo();
+		const objects = core_group.threejsObjectsWithGeo();
 		for (let object of objects) {
 			this._castGeoAttributes(object.geometry, params);
 		}

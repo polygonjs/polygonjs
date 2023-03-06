@@ -1,12 +1,14 @@
+import {Box3} from 'three';
+const tmpBox = new Box3();
 QUnit.test('sop/plane simple', async (assert) => {
 	const geo1 = window.geo1;
 
 	const plane1 = geo1.createNode('plane');
 
 	let container = await plane1.compute();
-
-	assert.equal(container.boundingBox().max.x, 0.5);
-	assert.equal(container.boundingBox().min.x, -0.5);
+	container.boundingBox(tmpBox);
+	assert.equal(tmpBox.max.x, 0.5);
+	assert.equal(tmpBox.min.x, -0.5);
 });
 
 QUnit.test('sop/plane with input', async (assert) => {
@@ -17,11 +19,11 @@ QUnit.test('sop/plane with input', async (assert) => {
 
 	plane1.p.stepSize.set(0.1);
 	let container = await plane1.compute();
-
-	assert.in_delta(container.boundingBox().max.x, 1, 0.1);
-	assert.in_delta(container.boundingBox().min.x, -1, 0.1);
-	assert.in_delta(container.boundingBox().max.z, 1, 0.1);
-	assert.in_delta(container.boundingBox().min.z, -1, 0.1);
+	container.boundingBox(tmpBox);
+	assert.in_delta(tmpBox.max.x, 1, 0.1);
+	assert.in_delta(tmpBox.min.x, -1, 0.1);
+	assert.in_delta(tmpBox.max.z, 1, 0.1);
+	assert.in_delta(tmpBox.min.z, -1, 0.1);
 });
 
 QUnit.test('sop/plane as lines', async (assert) => {
@@ -32,19 +34,21 @@ QUnit.test('sop/plane as lines', async (assert) => {
 
 	async function getIndex() {
 		const container = await plane1.compute();
-		const object = container.coreContent()!.objectsWithGeo()[0];
+		const object = container.coreContent()!.threejsObjectsWithGeo()[0];
 		return [...(object.geometry.getIndex()!.array as number[])];
 	}
 
 	let container = await plane1.compute();
-	assert.equal(container.boundingBox().max.x, 0.5);
-	assert.equal(container.boundingBox().min.x, -0.5);
+	container.boundingBox(tmpBox);
+	assert.equal(tmpBox.max.x, 0.5);
+	assert.equal(tmpBox.min.x, -0.5);
 	assert.deepEqual(await getIndex(), [0, 2, 0, 1, 1, 3, 2, 3]);
 
 	plane1.p.size.set([5, 8]);
 	container = await plane1.compute();
-	assert.equal(container.boundingBox().max.x, 2.5);
-	assert.equal(container.boundingBox().min.x, -2.5);
+	container.boundingBox(tmpBox);
+	assert.equal(tmpBox.max.x, 2.5);
+	assert.equal(tmpBox.min.x, -2.5);
 	assert.deepEqual(
 		await getIndex(),
 		[

@@ -19,7 +19,7 @@ QUnit.test('sop/fileGEOJSON simple', async (assert) => {
 	const {container} = await withFile('models/geojson/wikipedia.geojson');
 	assert.equal(container.objectsCount(), 1);
 	assert.equal(container.totalPointsCount(), 9);
-	const group = container.coreContent()?.objects()[0]!;
+	const group = container.coreContent()?.threejsObjects()[0]!;
 	assert.ok(group);
 	const objects = group.children;
 	assert.equal(objects.length, 3);
@@ -45,7 +45,7 @@ QUnit.test('sop/fileGEOJSON brooklyn', async (assert) => {
 	const {container} = await withFile('models/geojson/ebrelsford/brooklyn.geojson');
 	assert.equal(container.objectsCount(), 1);
 	assert.equal(container.totalPointsCount(), 17585);
-	const group = container.coreContent()?.objects()[0]!;
+	const group = container.coreContent()?.threejsObjects()[0]!;
 	assert.ok(group);
 	const objects = group.children;
 	assert.equal(objects.length, 18);
@@ -77,7 +77,7 @@ QUnit.test('sop/fileGEOJSON queens', async (assert) => {
 	const {container} = await withFile('models/geojson/ebrelsford/queens.geojson');
 	assert.equal(container.objectsCount(), 1);
 	assert.equal(container.totalPointsCount(), 466);
-	const group = container.coreContent()?.objects()[0]!;
+	const group = container.coreContent()?.threejsObjects()[0]!;
 	assert.ok(group);
 	const objects = group.children;
 	assert.equal(objects.length, 16);

@@ -1,6 +1,7 @@
-import {Object3D} from 'three';
 import {CoreObject} from './../../../../src/core/geometry/Object';
 import {AttribClass} from '../../../../src/core/geometry/Constant';
+import {coreObjectFactory} from '../../../../src/core/geometry/CoreObjectFactory';
+import {CoreObjectType, ObjectContent} from '../../../../src/core/geometry/ObjectContent';
 
 QUnit.test('copy can use default value with 1 arg', async (assert) => {
 	const geo1 = window.geo1;
@@ -20,14 +21,17 @@ QUnit.test('copy can use default value with 1 arg', async (assert) => {
 	copy1.p.count.set(4);
 
 	let container = await attribCreate1.compute();
-	assert.equal(CoreObject.attribValue(container.coreContent()!.objects()[0], 'test'), 0);
+	assert.equal(CoreObject.attribValue(container.coreContent()!.allObjects()[0], 'test'), 0);
 
 	container = await copy1.compute();
 	assert.deepEqual(
 		container
 			.coreContent()!
-			.objects()
-			.map((o: Object3D) => CoreObject.attribValue(o, 'test')),
+			.allObjects()
+			.map((o: ObjectContent<CoreObjectType>) => {
+				const abstractCoreObject = coreObjectFactory(o);
+				return abstractCoreObject.attribValue(o, 'test');
+			}),
 		[0, 1, 2, 3]
 	);
 });
@@ -50,14 +54,14 @@ QUnit.test('copy can use default value with 2 args', async (assert) => {
 	copy1.p.count.set(4);
 
 	let container = await attribCreate1.compute();
-	assert.equal(CoreObject.attribValue(container.coreContent()!.objects()[0], 'test'), 2);
+	assert.equal(CoreObject.attribValue(container.coreContent()!.allObjects()[0], 'test'), 2);
 
 	container = await copy1.compute();
 	assert.deepEqual(
 		container
 			.coreContent()!
-			.objects()
-			.map((o: Object3D) => CoreObject.attribValue(o, 'test')),
+			.allObjects()
+			.map((o: ObjectContent<CoreObjectType>) => coreObjectFactory(o).attribValue(o, 'test')),
 		[0, 1, 2, 3]
 	);
 });
@@ -79,14 +83,14 @@ QUnit.test('copy can use default value with 3 args', async (assert) => {
 	copy1.p.count.set(4);
 
 	let container = await attribCreate1.compute();
-	assert.equal(CoreObject.attribValue(container.coreContent()!.objects()[0], 'test'), 2);
+	assert.equal(CoreObject.attribValue(container.coreContent()!.allObjects()[0], 'test'), 2);
 
 	container = await copy1.compute();
 	assert.deepEqual(
 		container
 			.coreContent()!
-			.objects()
-			.map((o: Object3D) => CoreObject.attribValue(o, 'test')),
+			.allObjects()
+			.map((o: ObjectContent<CoreObjectType>) => coreObjectFactory(o).attribValue(o, 'test')),
 		[0, 1, 2, 3]
 	);
 });

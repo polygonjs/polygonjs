@@ -25,7 +25,7 @@ QUnit.test('sop/setGeometry simple with mode one geo per object', async (assert)
 	async function pointsCount() {
 		const container = await setGeometry1.compute();
 
-		const objects = container.coreContent()!.objectsWithGeo();
+		const objects = container.coreContent()!.threejsObjectsWithGeo();
 		const firstObject = objects[0];
 		if (!firstObject) {
 			return 0;
@@ -61,7 +61,7 @@ QUnit.test('sop/setGeometry simple with mode first geo to each object', async (a
 
 	const container = await setGeometry1.compute();
 
-	const objects = container.coreContent()!.objectsWithGeo();
+	const objects = container.coreContent()!.threejsObjectsWithGeo();
 	assert.equal(objects.length, 3);
 	assert.equal((objects[0] as Mesh).geometry.uuid, (objects[1] as Mesh).geometry.uuid);
 	assert.equal((objects[0] as Mesh).geometry.uuid, (objects[2] as Mesh).geometry.uuid);

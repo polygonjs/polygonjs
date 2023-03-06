@@ -68,7 +68,7 @@ QUnit.test('actor/add for more than 2 inputs float', async (assert) => {
 	assert.notOk(add.params.get('add4')!.states.error.active());
 
 	const container = await actor1.compute();
-	const object = container.coreContent()!.objects()[0] as Mesh;
+	const object = container.coreContent()!.threejsObjects()[0] as Mesh;
 
 	// wait to make sure objects are mounted to the scene
 	await CoreSleep.sleep(150);
@@ -124,7 +124,7 @@ QUnit.test('actor/add with 2 inputs float', async (assert) => {
 	assert.deepEqual(add1.params.get('add2')?.valueSerialized(), 0);
 
 	const container = await actor1.compute();
-	const object = container.coreContent()!.objects()[0] as Mesh;
+	const object = container.coreContent()!.threejsObjects()[0] as Mesh;
 
 	await RendererUtils.withViewer({cameraNode: perspective_camera1}, async (args) => {
 		scene.play();
@@ -173,7 +173,7 @@ QUnit.test('actor/add with 2 inputs vector', async (assert) => {
 	assert.deepEqual(add1.params.get('add2')?.valueSerialized(), [0, 0, 0]);
 
 	const container = await actor1.compute();
-	const object = container.coreContent()!.objects()[0] as Mesh;
+	const object = container.coreContent()!.threejsObjects()[0] as Mesh;
 
 	await RendererUtils.withViewer({cameraNode: perspective_camera1}, async (args) => {
 		scene.play();
@@ -237,7 +237,7 @@ QUnit.test('actor/add with 2 inputs vector from attrib to pos', async (assert) =
 	assert.deepEqual(add1.params.get('add2')?.valueSerialized(), [0, 0, 0]);
 
 	const container = await actor1.compute();
-	const object = container.coreContent()!.objects()[0] as Mesh;
+	const object = container.coreContent()!.threejsObjects()[0] as Mesh;
 	function assertResPUnchanged() {
 		assert.deepEqual(object.userData.attributes.restP.toArray(), [1, 2, 3], 'restP as expected');
 	}

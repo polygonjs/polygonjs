@@ -31,14 +31,14 @@ QUnit.test('scatter takes into account the transform of objects', async (assert)
 	scatter1.p.pointsCount.set(1);
 
 	let container = await scatter1.compute();
-	let object = container.coreContent()!.objectsWithGeo()[0];
+	let object = container.coreContent()!.threejsObjectsWithGeo()[0];
 	let firstPt = container.coreContent()!.points()[0];
 	assert.equal(object.position.x, 0);
 	assert.in_delta(firstPt.position().x, -0.23, 0.01);
 
 	add.p.position.x.set(5);
 	container = await scatter1.compute();
-	object = container.coreContent()!.objectsWithGeo()[0];
+	object = container.coreContent()!.threejsObjectsWithGeo()[0];
 	firstPt = container.coreContent()!.points()[0];
 	assert.equal(object.position.x, 5);
 	assert.in_delta(firstPt.position().x, -0.23, 0.01);
@@ -93,7 +93,7 @@ QUnit.test(
 
 		let container = await scatter1.compute();
 		assert.ok(!scatter1.states.error.active());
-		const geometry = container.coreContent()?.objectsWithGeo()[0].geometry;
+		const geometry = container.coreContent()?.threejsObjectsWithGeo()[0].geometry;
 		assert.ok(geometry);
 
 		assert.equal(geometry?.getAttribute('uv').itemSize, 2);

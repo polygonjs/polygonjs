@@ -7,9 +7,14 @@ import {CoreSleep} from '../../../../src/core/Sleep';
 import {AnimationActionActorNode} from '../../../../src/engine/nodes/actor/AnimationAction';
 import {getMostActiveAnimationActionFromMixer} from '../../../../src/core/actor/AnimationMixerUtils';
 import {PolyScene} from '../../../../src/engine/scene/PolyScene';
+import {BackgroundMode} from '../../../../src/engine/nodes/manager/utils/Scene/Background';
 
 function addReflector(scene: PolyScene) {
 	const geo2 = scene.root().createNode('geo');
+
+	scene.root().sceneBackgroundController.setMode(BackgroundMode.COLOR);
+	scene.root().p.bgColor.set([0.4, 0.4, 0.4]);
+
 	const plane = geo2.createNode('plane');
 	const reflector = geo2.createNode('reflector');
 	reflector.setInput(0, plane);

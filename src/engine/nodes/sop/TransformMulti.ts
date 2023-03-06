@@ -49,7 +49,7 @@ import {BufferAttribute} from 'three';
 import {CoreAttribute, Attribute} from '../../../core/geometry/Attribute';
 class TransformMultiSopParamConfig extends NodeParamsConfig {
 	/** @param defines if this applies to objects or geometries */
-	applyOn = ParamConfig.INTEGER(TRANSFORM_TARGET_TYPES.indexOf(TransformTargetType.GEOMETRIES), {
+	applyOn = ParamConfig.INTEGER(TRANSFORM_TARGET_TYPES.indexOf(TransformTargetType.GEOMETRY), {
 		menu: {
 			entries: TRANSFORM_TARGET_TYPES.map((target_type, i) => {
 				return {name: target_type, value: i};
@@ -137,24 +137,26 @@ export class TransformMultiSopNode extends TypedSopNode<TransformMultiSopParamCo
 	override initializeNode() {
 		this.io.inputs.setCount(1, 2);
 		this.io.inputs.initInputsClonedState([InputCloneMode.FROM_NODE, InputCloneMode.NEVER]);
-
-		this.params.onParamsCreated('cache param pairs', () => {
-			this._rot_and_index_pairs = [
-				[this.p.r0, this.p.rotationOrder0],
-				[this.p.r1, this.p.rotationOrder1],
-				[this.p.r2, this.p.rotationOrder2],
-				[this.p.r3, this.p.rotationOrder3],
-				[this.p.r4, this.p.rotationOrder4],
-				[this.p.r5, this.p.rotationOrder5],
-			];
-		});
 	}
 
 	private _core_transform = new CoreTransform();
-	private _rot_and_index_pairs: VectorNumberParamPair[] | undefined;
+	private __rotAndIndexPairs: VectorNumberParamPair[] | undefined;
+	private _createRotAndIndexPairs(): VectorNumberParamPair[] {
+		return [
+			[this.p.r0, this.p.rotationOrder0],
+			[this.p.r1, this.p.rotationOrder1],
+			[this.p.r2, this.p.rotationOrder2],
+			[this.p.r3, this.p.rotationOrder3],
+			[this.p.r4, this.p.rotationOrder4],
+			[this.p.r5, this.p.rotationOrder5],
+		];
+	}
+	private _rotAndIndexPairs() {
+		return (this.__rotAndIndexPairs = this.__rotAndIndexPairs || this._createRotAndIndexPairs());
+	}
 	override cook(input_contents: CoreGroup[]) {
-		const objects = input_contents[0].objectsWithGeo();
-		const src_object = input_contents[1] ? input_contents[1].objectsWithGeo()[0] : undefined;
+		const objects = input_contents[0].threejsObjectsWithGeo();
+		const src_object = input_contents[1] ? input_contents[1].threejsObjectsWithGeo()[0] : undefined;
 
 		this._apply_transforms(objects, src_object);
 
@@ -164,10 +166,10 @@ export class TransformMultiSopNode extends TypedSopNode<TransformMultiSopParamCo
 	private _apply_transforms(objects: Object3DWithGeometry[], src_object: Object3DWithGeometry | undefined) {
 		const mode = TRANSFORM_TARGET_TYPES[this.pv.applyOn];
 		switch (mode) {
-			case TransformTargetType.GEOMETRIES: {
+			case TransformTargetType.GEOMETRY: {
 				return this._apply_matrix_to_geometries(objects, src_object);
 			}
-			case TransformTargetType.OBJECTS: {
+			case TransformTargetType.OBJECT: {
 				return this._apply_matrix_to_objects(objects, src_object);
 			}
 		}
@@ -175,10 +177,6 @@ export class TransformMultiSopNode extends TypedSopNode<TransformMultiSopParamCo
 	}
 
 	private _apply_matrix_to_geometries(objects: Object3DWithGeometry[], src_object: Object3DWithGeometry | undefined) {
-		if (!this._rot_and_index_pairs) {
-			return;
-		}
-
 		if (src_object) {
 			const src_geometry = src_object.geometry;
 			if (src_geometry) {
@@ -199,7 +197,7 @@ export class TransformMultiSopNode extends TypedSopNode<TransformMultiSopParamCo
 
 		let pair: VectorNumberParamPair;
 		for (let i = 0; i < this.pv.count; i++) {
-			pair = this._rot_and_index_pairs[i];
+			pair = this._rotAndIndexPairs()[i];
 			const matrix = this._matrix(pair[0].value, pair[1].value);
 			for (let object of objects) {
 				object.geometry.applyMatrix4(matrix);
@@ -208,9 +206,6 @@ export class TransformMultiSopNode extends TypedSopNode<TransformMultiSopParamCo
 	}
 
 	private _apply_matrix_to_objects(objects: Object3D[], src_object: Object3D | undefined) {
-		if (!this._rot_and_index_pairs) {
-			return;
-		}
 		if (src_object) {
 			for (let object of objects) {
 				object.matrix.copy(src_object.matrix);
@@ -221,7 +216,7 @@ export class TransformMultiSopNode extends TypedSopNode<TransformMultiSopParamCo
 
 		let pair: VectorNumberParamPair;
 		for (let i = 0; i < this.pv.count; i++) {
-			pair = this._rot_and_index_pairs[i];
+			pair = this._rotAndIndexPairs()[i];
 			const matrix = this._matrix(pair[0].value, pair[1].value);
 			for (let object of objects) {
 				object.applyMatrix4(matrix);

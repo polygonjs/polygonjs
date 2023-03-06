@@ -62,7 +62,7 @@ export class PaletteSopOperation extends BaseSopOperation {
 	}
 
 	private _setObjectColor(coreGroup: CoreGroup, params: PaletteSopParams, colors: Color[]) {
-		const objects = coreGroup.objectsWithGeo();
+		const objects = coreGroup.allObjects();
 		let i = 0;
 		for (let object of objects) {
 			const color = colors[i % params.colorsCount];
@@ -73,7 +73,7 @@ export class PaletteSopOperation extends BaseSopOperation {
 	}
 
 	private _setVertexColor(coreGroup: CoreGroup, params: PaletteSopParams, colors: Color[]) {
-		const objects = coreGroup.objectsWithGeo();
+		const objects = coreGroup.threejsObjectsWithGeo();
 		for (let object of objects) {
 			this._setVertexColorToObject(object, params, colors);
 		}

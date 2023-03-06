@@ -59,7 +59,7 @@ export class ObjectExpression extends BaseMethod {
 	_get_value_from_container(container: GeometryContainer, attrib_name: string, point_index: number) {
 		const core_group = container.coreContent();
 		if (core_group) {
-			const coreObject = core_group.coreObjects()[point_index];
+			const coreObject = core_group.allCoreObjects()[point_index];
 
 			if (coreObject) {
 				return coreObject.attribValue(attrib_name);

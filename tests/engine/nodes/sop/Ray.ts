@@ -1,4 +1,7 @@
 import {RaySopMode} from '../../../../src/engine/operations/sop/Ray';
+import {Box3, Vector3} from 'three';
+const tmpBox = new Box3();
+const tmpSize = new Vector3();
 
 QUnit.test('ray from normal', async (assert) => {
 	const geo1 = window.geo1;
@@ -14,13 +17,15 @@ QUnit.test('ray from normal', async (assert) => {
 	ray1.setInput(0, transform1);
 	ray1.setInput(1, box1);
 
-	let container, size;
-
-	container = await ray1.compute();
-	size = container.size().toArray();
-	assert.in_delta(size[0], 1, 0.1);
-	assert.in_delta(size[1], 1, 0.1);
-	assert.in_delta(size[2], 1, 0.1);
+	async function getSize() {
+		const container = await ray1.compute();
+		container.coreContent()?.boundingBox(tmpBox);
+		tmpBox.getSize(tmpSize);
+		return tmpSize.toArray();
+	}
+	assert.in_delta((await getSize())[0], 1, 0.1);
+	assert.in_delta((await getSize())[1], 1, 0.1);
+	assert.in_delta((await getSize())[2], 1, 0.1);
 });
 
 QUnit.test('ray from dir', async (assert) => {
@@ -41,13 +46,16 @@ QUnit.test('ray from dir', async (assert) => {
 	ray1.setInput(0, transform1);
 	ray1.setInput(1, transform2);
 
-	let container, size;
+	async function getSize() {
+		const container = await ray1.compute();
+		container.coreContent()?.boundingBox(tmpBox);
+		tmpBox.getSize(tmpSize);
+		return tmpSize.toArray();
+	}
 
-	container = await ray1.compute();
-	size = container.size().toArray();
-	assert.in_delta(size[0], 2, 0.1);
-	assert.in_delta(size[1], 0, 0.1);
-	assert.in_delta(size[2], 2, 0.1);
+	assert.in_delta((await getSize())[0], 2, 0.1);
+	assert.in_delta((await getSize())[1], 0, 0.1);
+	assert.in_delta((await getSize())[2], 2, 0.1);
 });
 
 QUnit.test('ray with min dist creates a bvh if none given', async (assert) => {
@@ -66,9 +74,13 @@ QUnit.test('ray with min dist creates a bvh if none given', async (assert) => {
 	ray1.setInput(0, scatter1);
 	ray1.setInput(1, sphere1);
 
-	let container = await ray1.compute();
-	let size = container.size().toArray();
-	assert.in_delta(size[0], 1.7, 0.1);
-	assert.in_delta(size[1], 0.6, 0.1);
-	assert.in_delta(size[2], 1.68, 0.1);
+	async function getSize() {
+		const container = await ray1.compute();
+		container.coreContent()?.boundingBox(tmpBox);
+		tmpBox.getSize(tmpSize);
+		return tmpSize.toArray();
+	}
+	assert.in_delta((await getSize())[0], 1.7, 0.1);
+	assert.in_delta((await getSize())[1], 0.6, 0.1);
+	assert.in_delta((await getSize())[2], 1.68, 0.1);
 });

@@ -65,7 +65,7 @@ export class TexturePropertiesSopOperation extends BaseSopOperation {
 		const core_group = input_contents[0];
 
 		const objects: Mesh[] = [];
-		for (let object of core_group.objects() as Mesh[]) {
+		for (let object of core_group.threejsObjects() as Mesh[]) {
 			if (isBooleanTrue(params.applyToChildren)) {
 				object.traverse((child) => {
 					objects.push(child as Mesh);

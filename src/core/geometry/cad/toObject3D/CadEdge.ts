@@ -1,19 +1,26 @@
-import type {OpenCascadeInstance, TopoDS_Edge, TesselationParams, Geom_Curve, gp_Pnt} from '../CadCommon';
+import type {
+	OpenCascadeInstance,
+	TopoDS_Edge,
+	TesselationParams,
+	Geom_Curve,
+	gp_Pnt,
+	CadNumberHandle,
+} from '../CadCommon';
 import {BufferGeometry, Float32BufferAttribute} from 'three';
 import {BaseSopOperation} from '../../../../engine/operations/sop/_Base';
 import {CAD_MATERIAL} from '../CadConstant';
 // import {withCadException} from '../CadExceptionHandler';
 import {ObjectType} from '../../Constant';
-import {CadLoader} from '../CadLoader';
+import {CadLoaderSync} from '../CadLoaderSync';
 import {cadShapeClone} from './CadShapeCommon';
 
 const STRIDE = 3;
 let point: gp_Pnt | undefined;
-const v0 = {current: 0};
-const v1 = {current: 0};
+const v0: CadNumberHandle = {current: 0};
+const v1: CadNumberHandle = {current: 0};
 // const WITH_ORIENTATION = true;
-export function cadEdgeToObject3D(oc: OpenCascadeInstance, edge: TopoDS_Edge, tesselationParams: TesselationParams) {
-	const geometry = cadEdgeToBufferGeometry(oc, edge, tesselationParams);
+export function cadEdgeToObject3D(edge: TopoDS_Edge, tesselationParams: TesselationParams) {
+	const geometry = cadEdgeToBufferGeometry(edge, tesselationParams);
 	if (!geometry) {
 		return;
 	}
@@ -23,17 +30,14 @@ export function cadEdgeToObject3D(oc: OpenCascadeInstance, edge: TopoDS_Edge, te
 
 	return object;
 }
-export function cadEdgeToBufferGeometry(
-	oc: OpenCascadeInstance,
-	edge: TopoDS_Edge,
-	tesselationParams: TesselationParams
-) {
+export function cadEdgeToBufferGeometry(edge: TopoDS_Edge, tesselationParams: TesselationParams) {
 	// TODO: in the build process,
 	// update the types so that we replace:
 	// type Standard_Real = number;
 	// with:
 	// type Standard_Real = number | { current: number };
 	// oc.BRep_Tool.Range_1(edge, v0 as any, v1 as any);
+	const oc = CadLoaderSync.oc();
 	const handle = curveHandleFromEdge(oc, edge); //oc.BRep_Tool.Curve_2(edge, v0.current, v1.current);
 	const curve = handle.get();
 	if (!curve) {
@@ -109,6 +113,6 @@ export function cadEdgeCreate(oc: OpenCascadeInstance, curve: Geom_Curve): TopoD
 // }
 
 export function cadEdgeClone(src: TopoDS_Edge): TopoDS_Edge {
-	const oc = CadLoader.oc();
+	const oc = CadLoaderSync.oc();
 	return oc.TopoDS.Edge_1(cadShapeClone(src));
 }

@@ -86,7 +86,7 @@ export class SDFFromObjectCopNode extends TypedCopNode<SDFFromObjectCopParamsCon
 		const container = await geometryNode.compute();
 		const coreGroup = container.coreContent();
 
-		const objects = coreGroup?.objects();
+		const objects = coreGroup?.threejsObjects();
 		if (!(coreGroup && objects && objects.length)) {
 			this.states.error.set(`no objects found`);
 			return;
@@ -123,7 +123,7 @@ export class SDFFromObjectCopNode extends TypedCopNode<SDFFromObjectCopParamsCon
 		}
 
 		// update boundMin and BoundMax
-		_bbox.copy(coreGroup.boundingBox());
+		coreGroup.boundingBox(_bbox);
 
 		const _updateResolution = () => {
 			_bbox.getSize(_bboxSize);
@@ -144,9 +144,11 @@ export class SDFFromObjectCopNode extends TypedCopNode<SDFFromObjectCopParamsCon
 		_updateResolution();
 
 		// update params
-		this.p.boundMin.set(_bbox.min);
-		this.p.boundMax.set(_bbox.max);
-		this.p.resolution.set(_resolution);
+		this.scene().batchUpdates(() => {
+			this.p.boundMin.set(_bbox.min);
+			this.p.boundMax.set(_bbox.max);
+			this.p.resolution.set(_resolution);
+		});
 
 		// write texture data
 		const timeStart = performance.now();

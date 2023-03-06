@@ -1,12 +1,14 @@
 import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {IcosahedronGeometry, BufferGeometry, Vector2, Vector3} from 'three';
+import {IcosahedronGeometry, BufferGeometry, Vector2, Vector3, Box3} from 'three';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 import {ObjectType} from '../../../core/geometry/Constant';
 import {SphereBuilder} from '../../../core/geometry/builders/SphereBuilder';
-
+const tmpBox = new Box3();
+const tmpSize = new Vector3();
+const tmpCenter = new Vector3();
 interface SphereSopParams extends DefaultOperationParams {
 	type: number;
 	radius: number;
@@ -66,14 +68,14 @@ export class SphereSopOperation extends BaseSopOperation {
 		return object;
 	}
 	private _cookWithInput(coreGroup: CoreGroup, params: SphereSopParams) {
-		const bbox = coreGroup.boundingBox();
-		const size = bbox.max.clone().sub(bbox.min);
-		const center = bbox.max.clone().add(bbox.min).multiplyScalar(0.5);
+		coreGroup.boundingBox(tmpBox);
+		tmpBox.getSize(tmpSize);
+		tmpBox.getCenter(tmpCenter);
 
 		const geometry = this._createRequiredGeometry(params);
-		geometry.scale(size.x, size.y, size.z);
+		geometry.scale(tmpSize.x, tmpSize.y, tmpSize.z);
 		geometry.translate(params.center.x, params.center.y, params.center.z);
-		geometry.translate(center.x, center.y, center.z);
+		geometry.translate(tmpCenter.x, tmpCenter.y, tmpCenter.z);
 		const object = this._createSphereObject(geometry, params);
 		return object;
 	}

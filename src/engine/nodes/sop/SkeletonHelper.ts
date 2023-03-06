@@ -37,7 +37,7 @@ export class SkeletonHelperSopNode extends TypedSopNode<SkeletonHelperSopParamsC
 
 	override cook(inputCoreGroups: CoreGroup[]) {
 		const inputCoreGroup = inputCoreGroups[0];
-		const objects = inputCoreGroup.objects();
+		const objects = inputCoreGroup.threejsObjects();
 		const newObjects: Object3D[] = [];
 		for (let object of objects) {
 			const helper = new SkeletonHelper(object);

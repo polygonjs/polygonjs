@@ -9,6 +9,7 @@ import {ASSETS_ROOT} from '../../../../src/core/loader/AssetsUtils';
 import {Object3D} from 'three';
 import {HierarchyMode} from '../../../../src/engine/operations/sop/Hierarchy';
 import {CoreType} from '../../../../src/core/Type';
+import {CoreObjectType, ObjectContent} from '../../../../src/core/geometry/ObjectContent';
 // import {CorePath} from '../../../../src/core/geometry/CorePath';
 
 const LAMBERT_UNIFORMS = UniformsUtils.clone(ShaderLib.lambert.uniforms);
@@ -28,7 +29,7 @@ QUnit.test('sop/material simple', async (assert) => {
 	let container;
 
 	container = await material1.compute();
-	const first_object = container.coreContent()!.objects()[0] as Mesh;
+	const first_object = container.coreContent()!.allObjects()[0] as Mesh;
 	const material = first_object.material as Material;
 	assert.equal(material.uuid, (await lambert1.material()).uuid);
 });
@@ -57,7 +58,7 @@ QUnit.test('sop/material clone', async (assert) => {
 	let container;
 
 	container = await copy1.compute();
-	const objects = container.coreContent()!.objects() as Mesh[];
+	const objects = container.coreContent()!.allObjects() as Mesh[];
 	assert.equal(objects.length, 2);
 	const src_material = await lambert1.material();
 	assert.notEqual(src_material.uuid, (objects[0].material as Material).uuid);
@@ -80,9 +81,9 @@ QUnit.test('sop/material access group by object name', async (assert) => {
 
 	const container1 = await hierarchy1.compute();
 	const coreContent = container1.coreContent()!;
-	const objects = coreContent.objects();
+	const objects = coreContent.allObjects();
 	assert.equal(objects.length, 4);
-	const objectNames = objects.map((o: Object3D) => o.name);
+	const objectNames = objects.map((o: ObjectContent<CoreObjectType>) => o.name);
 	const objectNamesSorted = [...objectNames].sort();
 	assert.deepEqual(
 		objectNamesSorted.sort(),
@@ -92,7 +93,7 @@ QUnit.test('sop/material access group by object name', async (assert) => {
 	async function getObjects() {
 		const container1 = await material1.compute();
 		const coreContent = container1.coreContent()!;
-		const objects = coreContent.objects();
+		const objects = coreContent.allObjects();
 		return objects as Mesh[];
 	}
 
@@ -137,9 +138,9 @@ QUnit.test('sop/material access group by object index', async (assert) => {
 
 	const container1 = await hierarchy1.compute();
 	const coreContent = container1.coreContent()!;
-	const objects = coreContent.objects();
+	const objects = coreContent.allObjects();
 	assert.equal(objects.length, 4);
-	const objectNames = objects.map((o: Object3D) => o.name);
+	const objectNames = objects.map((o: ObjectContent<CoreObjectType>) => o.name);
 	const objectNamesSorted = [...objectNames].sort();
 	assert.deepEqual(
 		objectNamesSorted.sort(),
@@ -149,7 +150,7 @@ QUnit.test('sop/material access group by object index', async (assert) => {
 	async function getObjects() {
 		const container1 = await material1.compute();
 		const coreContent = container1.coreContent()!;
-		const objects = coreContent.objects();
+		const objects = coreContent.allObjects();
 		return objects as Mesh[];
 	}
 
@@ -196,7 +197,7 @@ QUnit.test('sop/material access group by hierarchy mask', async (assert) => {
 	async function getObjects() {
 		const container1 = await material1.compute();
 		const coreContent = container1.coreContent()!;
-		const objects = coreContent.objects()[0].children;
+		const objects = coreContent.threejsObjects()[0].children;
 		return objects as Mesh[];
 	}
 	const mat = await lambert1.material();
@@ -252,12 +253,12 @@ QUnit.test('sop/material applies to children correctly', async (assert) => {
 	material1.p.group.set('');
 
 	const container = await material1.compute();
-	const objects = container.coreContent()!.objects();
+	const objects = container.coreContent()!.allObjects();
 	assert.ok(objects);
 
 	let anyWithAdifferentMat = false;
 	for (let object of objects) {
-		object.traverse((child: Object3D) => {
+		object.traverse((child: ObjectContent<CoreObjectType>) => {
 			const childMat = (child as Mesh).material;
 			if (childMat) {
 				if (CoreType.isArray(childMat)) {
@@ -312,7 +313,7 @@ QUnit.test('sop/material clone preserves builder onBeforeCompile', async (assert
 
 	async function getCompiledMaterials() {
 		container = await copy1.compute();
-		const objects = container.coreContent()!.objects() as Mesh[];
+		const objects = container.coreContent()!.allObjects() as Mesh[];
 		assert.equal(objects.length, 2);
 		const srcMaterial = await meshLambertBuilder1.material();
 		const materialObject0 = objects[0].material as Material;

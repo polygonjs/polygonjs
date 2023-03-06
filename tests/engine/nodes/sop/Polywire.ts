@@ -1,5 +1,6 @@
-import {Vector3} from 'three';
-
+import {Vector3, Box3} from 'three';
+const tmpBox = new Box3();
+const tmpSize = new Vector3();
 QUnit.test('polywire simple', async (assert) => {
 	const geo1 = window.geo1;
 
@@ -8,26 +9,36 @@ QUnit.test('polywire simple', async (assert) => {
 
 	polywire1.setInput(0, circle1);
 
-	let container;
+	async function computeCircle() {
+		const container = await circle1.compute();
+		const coreGroup = container.coreContent()!;
+		coreGroup.boundingBox(tmpBox);
+		tmpBox.getSize(tmpSize);
 
-	container = await circle1.compute();
-	assert.equal(container.pointsCount(), 12);
-	const size = new Vector3();
+		return {bbox: tmpBox, size: tmpSize, pointsCount: coreGroup.pointsCount()};
+	}
+	async function computePolywire() {
+		const container = await polywire1.compute();
+		const coreGroup = container.coreContent()!;
+		coreGroup.boundingBox(tmpBox);
+		tmpBox.getSize(tmpSize);
+
+		return {bbox: tmpBox, size: tmpSize, pointsCount: coreGroup.pointsCount()};
+	}
+
+	assert.equal((await computeCircle()).pointsCount, 12);
 
 	polywire1.p.closed.set(0);
-	container = await polywire1.compute();
-	assert.equal(container.pointsCount(), 192);
-	assert.equal(container.boundingBox().getSize(size).y, 2, 'bbox');
+	assert.equal((await computePolywire()).pointsCount, 192);
+	assert.equal((await computePolywire()).size.y, 2, 'bbox');
 
 	polywire1.p.closed.set(1);
-	container = await polywire1.compute();
-	assert.equal(container.pointsCount(), 208);
-	assert.equal(container.boundingBox().getSize(size).y, 2, 'bbox');
+	assert.equal((await computePolywire()).pointsCount, 208);
+	assert.equal((await computePolywire()).size.y, 2, 'bbox');
 
 	polywire1.p.radius.set(0.5);
-	container = await polywire1.compute();
-	assert.equal(container.pointsCount(), 208);
-	assert.equal(container.boundingBox().getSize(size).y, 1, 'bbox');
+	assert.equal((await computePolywire()).pointsCount, 208);
+	assert.equal((await computePolywire()).size.y, 1, 'bbox');
 });
 
 QUnit.test('polywire preserves attributes', async (assert) => {

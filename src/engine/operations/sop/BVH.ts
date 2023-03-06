@@ -39,7 +39,7 @@ export class BVHSopOperation extends BaseSopOperation {
 		const inputCoreGroup = inputCoreGroups[0];
 		// for (let inputCoreGroup of inputCoreGroups) {
 		if (inputCoreGroup) {
-			const objects = inputCoreGroup.objects();
+			const objects = inputCoreGroup.threejsObjects();
 			for (let object of objects) {
 				object.traverse((child) => {
 					const mesh = child as Mesh;

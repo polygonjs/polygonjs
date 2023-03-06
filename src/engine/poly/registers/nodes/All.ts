@@ -1,7 +1,7 @@
 import {ActorRegister, ActorNodeChildrenMap} from './Actor';
 import {AnimRegister, AnimNodeChildrenMap} from './Anim';
 import {AudioRegister, AudioNodeChildrenMap} from './Audio';
-import {CadRegister, CadNodeChildrenMap} from './Cad';
+// import {CadRegister, CadNodeChildrenMap} from './Cad';
 import {CopRegister, CopNodeChildrenMap} from './Cop';
 import {CsgRegister, CsgNodeChildrenMap} from './Csg';
 import {EventRegister, EventNodeChildrenMap} from './Event';
@@ -32,7 +32,7 @@ export interface NodeChildrenMapByContext {
 	[NodeContext.ACTOR]: ActorNodeChildrenMap;
 	[NodeContext.ANIM]: AnimNodeChildrenMap;
 	[NodeContext.AUDIO]: AudioNodeChildrenMap;
-	[NodeContext.CAD]: CadNodeChildrenMap;
+	// [NodeContext.CAD]: CadNodeChildrenMap;
 	[NodeContext.COP]: CopNodeChildrenMap;
 	[NodeContext.CSG]: CsgNodeChildrenMap;
 	[NodeContext.EVENT]: EventNodeChildrenMap;
@@ -51,7 +51,7 @@ export class AllNodesRegister {
 		ActorRegister.run(poly);
 		AnimRegister.run(poly);
 		AudioRegister.run(poly);
-		CadRegister.run(poly);
+		// CadRegister.run(poly);
 		CopRegister.run(poly);
 		CsgRegister.run(poly);
 		EventRegister.run(poly);

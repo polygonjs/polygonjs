@@ -1,15 +1,20 @@
 import {CoreMath} from './../../../core/math/_Module';
+import {BaseCoreObject} from './../../../core/geometry/_BaseObject';
 import {CoreObject} from './../../../core/geometry/Object';
 import {TypeAssert} from './../../poly/Assert';
 import {AttribClass} from './../../../core/geometry/Constant';
 import {BaseSopOperation} from './_Base';
 import {CoreGroup, Object3DWithGeometry} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
-import {Vector3, Object3D} from 'three';
+import {Vector3} from 'three';
 import {MapUtils} from '../../../core/MapUtils';
 import {CoreGeometry} from '../../../core/geometry/Geometry';
 import {BufferAttribute} from 'three';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
+import {CoreObjectType, ObjectContent} from '../../../core/geometry/ObjectContent';
+import {isBooleanTrue} from '../../../core/Type';
+
+const tmpPos = new Vector3();
 
 export enum SortMode {
 	RANDOM = 'random',
@@ -79,8 +84,8 @@ export class SortSopOperation extends BaseSopOperation {
 		TypeAssert.unreachable(sortMode);
 	}
 	private _sortObjectsByAxis(coreGroup: CoreGroup, params: SortSopParams) {
-		const coreObjects = coreGroup.coreObjects();
-		const objectsByPos: Map<number, CoreObject[]> = new Map();
+		const coreObjects = coreGroup.allCoreObjects();
+		const objectsByPos: Map<number, BaseCoreObject<CoreObjectType>[]> = new Map();
 		const positions: number[] = [];
 
 		// accumulate axisValue
@@ -88,18 +93,18 @@ export class SortSopOperation extends BaseSopOperation {
 		let axisValue: number = 0;
 		let i = 0;
 		for (let coreObject of coreObjects) {
-			const position = coreObject.object().position;
+			coreObject.position(tmpPos);
 			switch (axis) {
 				case Axis.X: {
-					axisValue = position.x;
+					axisValue = tmpPos.x;
 					break;
 				}
 				case Axis.Y: {
-					axisValue = position.y;
+					axisValue = tmpPos.y;
 					break;
 				}
 				case Axis.Z: {
-					axisValue = position.z;
+					axisValue = tmpPos.z;
 					break;
 				}
 			}
@@ -110,11 +115,11 @@ export class SortSopOperation extends BaseSopOperation {
 
 		// sort
 		let sortedPositions: number[] = positions.sort((a, b) => a - b);
-		if (params.invert) {
+		if (isBooleanTrue(params.invert)) {
 			sortedPositions.reverse();
 		}
 
-		const sortedObjects: Object3D[] = [];
+		const sortedObjects: ObjectContent<CoreObjectType>[] = [];
 		for (let position of sortedPositions) {
 			const coreObjectsForPosition = objectsByPos.get(position);
 			if (coreObjectsForPosition) {
@@ -123,11 +128,11 @@ export class SortSopOperation extends BaseSopOperation {
 				}
 			}
 		}
-		coreGroup.setObjects(sortedObjects);
+		coreGroup.setAllObjects(sortedObjects);
 	}
 	private _sortObjectsByRandom(coreGroup: CoreGroup, params: SortSopParams) {
-		const coreObjects = coreGroup.coreObjects();
-		const objectsByPos: Map<number, CoreObject[]> = new Map();
+		const coreObjects = coreGroup.allCoreObjects();
+		const objectsByPos: Map<number, BaseCoreObject<CoreObjectType>[]> = new Map();
 		const positions: number[] = [];
 
 		// accumulate axisValue
@@ -146,7 +151,7 @@ export class SortSopOperation extends BaseSopOperation {
 			sortedPositions.reverse();
 		}
 
-		const sortedObjects: Object3D[] = [];
+		const sortedObjects: ObjectContent<CoreObjectType>[] = [];
 		for (let position of sortedPositions) {
 			const coreObjectsForPosition = objectsByPos.get(position);
 			if (coreObjectsForPosition) {
@@ -155,7 +160,7 @@ export class SortSopOperation extends BaseSopOperation {
 				}
 			}
 		}
-		coreGroup.setObjects(sortedObjects);
+		coreGroup.setAllObjects(sortedObjects);
 	}
 
 	private _sortPoints(coreGroup: CoreGroup, params: SortSopParams) {
@@ -169,7 +174,7 @@ export class SortSopOperation extends BaseSopOperation {
 		TypeAssert.unreachable(sortMode);
 	}
 	private _sortPointsByAxis(coreGroup: CoreGroup, params: SortSopParams) {
-		const objects = coreGroup.objectsWithGeo();
+		const objects = coreGroup.threejsObjectsWithGeo();
 		for (let object of objects) {
 			this._sortPointsForObject(object, params);
 		}

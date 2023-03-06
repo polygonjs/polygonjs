@@ -34,7 +34,7 @@ export class LayerSopNode extends TypedSopNode<LayerSopParamsConfig> {
 	override cook(input_contents: CoreGroup[]) {
 		const core_group = input_contents[0];
 
-		for (let object of core_group.objects()) {
+		for (let object of core_group.threejsObjects()) {
 			object.layers.set(this.pv.layer);
 		}
 

@@ -44,7 +44,7 @@ export class SkinSopNode extends TypedSopNode<SkinSopParamsConfig> {
 
 	process_one_input(input_contents: CoreGroup[]) {
 		const core_group0 = input_contents[0];
-		const line_segments0 = this._get_line_segments(core_group0);
+		const line_segments0 = this._getLineSegments(core_group0);
 
 		const geometries: BufferGeometry[] = [];
 		if (line_segments0) {
@@ -70,8 +70,8 @@ export class SkinSopNode extends TypedSopNode<SkinSopParamsConfig> {
 	process_two_inputs(input_contents: CoreGroup[]) {
 		const core_group0 = input_contents[0];
 		const core_group1 = input_contents[1];
-		const line_segments0 = this._get_line_segments(core_group0);
-		const line_segments1 = this._get_line_segments(core_group1);
+		const line_segments0 = this._getLineSegments(core_group0);
+		const line_segments1 = this._getLineSegments(core_group1);
 		const line_segments = ArrayUtils.sortBy([line_segments0, line_segments1], (array) => -array.length);
 		const smallest_array = line_segments[0];
 		const largest_array = line_segments[1];
@@ -91,8 +91,8 @@ export class SkinSopNode extends TypedSopNode<SkinSopParamsConfig> {
 		this.setGeometries(geometries);
 	}
 
-	_get_line_segments(core_group: CoreGroup) {
-		return core_group.objects().filter((child) => (child as LineSegments).isLineSegments);
+	_getLineSegments(core_group: CoreGroup) {
+		return core_group.threejsObjects().filter((child) => (child as LineSegments).isLineSegments);
 	}
 
 	_skin(geometry1: BufferGeometry, geometry0: BufferGeometry) {

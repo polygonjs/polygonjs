@@ -28,7 +28,7 @@ QUnit.test('actor/trackHand', async (assert) => {
 	trackingLandmarksHandAttributes1.setInput(0, trackingLandmarksHand1);
 	transform1.setInput(0, trackingLandmarksHandAttributes1);
 	actor1.setInput(0, transform1);
-	transform1.setApplyOn(TransformTargetType.OBJECTS);
+	transform1.setApplyOn(TransformTargetType.OBJECT);
 	transform1.p.t.set([0, -0.5, -2]);
 	// transform1.p.r.set([0, 180, 0]);
 
@@ -113,7 +113,7 @@ QUnit.test('actor/trackHand', async (assert) => {
 	setObjectAttribute1.setAttribType(ActorConnectionPointType.VECTOR3);
 
 	const container = await merge1.compute();
-	const objects = container.coreContent()!.objects();
+	const objects = container.coreContent()!.threejsObjects();
 	const trackedObject = objects[0] as Mesh;
 	const attributeObject = objects[1];
 

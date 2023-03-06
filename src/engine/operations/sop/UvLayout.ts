@@ -27,7 +27,7 @@ export class UvLayoutSopOperation extends BaseSopOperation {
 
 	override cook(input_contents: CoreGroup[], params: UvLayoutSopParams) {
 		const coreGroup = input_contents[0];
-		const objects = coreGroup.objectsWithGeo();
+		const objects = coreGroup.threejsObjectsWithGeo();
 		const meshes: Mesh[] = [];
 		for (let object of objects) {
 			const mesh = object as Mesh;

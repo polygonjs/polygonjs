@@ -1,5 +1,6 @@
-import {BufferAttribute} from 'three';
 import {NoiseOperation} from '../../../../src/engine/nodes/sop/Noise';
+import {BufferAttribute, Box3} from 'three';
+const tmpBox = new Box3();
 
 QUnit.test('noise simple', async (assert) => {
 	const geo1 = window.geo1;
@@ -13,9 +14,9 @@ QUnit.test('noise simple', async (assert) => {
 	let container = await noise1.compute();
 	// const core_group = container.coreContent();
 	// const {geometry} = core_group.objects()[0];
-
-	assert.in_delta(container.boundingBox().max.y, 1.3, 0.1);
-	assert.in_delta(container.boundingBox().min.y, -1.3, 0.1);
+	container.boundingBox(tmpBox);
+	assert.in_delta(tmpBox.max.y, 1.3, 0.1);
+	assert.in_delta(tmpBox.min.y, -1.3, 0.1);
 });
 
 QUnit.test('noise to update a float attribute', async (assert) => {
@@ -42,7 +43,8 @@ QUnit.test('noise to update a float attribute', async (assert) => {
 	noise1.setOperation(NoiseOperation.SET);
 	coreContent = (await noise1.compute()).coreContent();
 	assert.notOk(noise1.states.error.active());
-	let massAttribArray = (coreContent?.objectsWithGeo()[0].geometry.getAttribute('mass') as BufferAttribute).array!;
+	let massAttribArray = (coreContent?.threejsObjectsWithGeo()[0].geometry.getAttribute('mass') as BufferAttribute)
+		.array!;
 	assert.in_delta(massAttribArray[0], 0.16, 0.01);
 	assert.in_delta(massAttribArray[1], -0.01, 0.01);
 	assert.in_delta(massAttribArray[2], 0.02, 0.01);
@@ -51,7 +53,7 @@ QUnit.test('noise to update a float attribute', async (assert) => {
 	noise1.setOperation(NoiseOperation.ADD);
 	coreContent = (await noise1.compute()).coreContent();
 	assert.notOk(noise1.states.error.active());
-	massAttribArray = (coreContent?.objectsWithGeo()[0].geometry.getAttribute('mass') as BufferAttribute).array!;
+	massAttribArray = (coreContent?.threejsObjectsWithGeo()[0].geometry.getAttribute('mass') as BufferAttribute).array!;
 	assert.in_delta(massAttribArray[0], 1 + 0.16, 0.01);
 	assert.in_delta(massAttribArray[1], 1 - 0.01, 0.01);
 	assert.in_delta(massAttribArray[2], 1 + 0.02, 0.01);
@@ -74,15 +76,16 @@ QUnit.test('noise without rest and no input cloning', async (assert) => {
 	let container = await noise1.compute();
 	// const core_group = container.coreContent();
 	// const {geometry} = core_group.objects()[0];
-
-	assert.in_delta(container.boundingBox(true).max.y, 1.3, 0.1);
-	assert.in_delta(container.boundingBox(true).min.y, -1.3, 0.1);
+	container.boundingBox(tmpBox);
+	assert.in_delta(tmpBox.max.y, 1.3, 0.1);
+	assert.in_delta(tmpBox.min.y, -1.3, 0.1);
 	for (let i = 0; i < 1000; i++) {
 		scene.setFrame(i);
 		container = await noise1.compute();
 	}
-	assert.in_delta(container.boundingBox(true).max.y, 10.17, 0.1);
-	assert.in_delta(container.boundingBox(true).min.y, -13.46, 0.1);
+	container.boundingBox(tmpBox);
+	assert.in_delta(tmpBox.max.y, 10.17, 0.1);
+	assert.in_delta(tmpBox.min.y, -13.46, 0.1);
 });
 
 QUnit.test('noise with rest and no input cloning', async (assert) => {
@@ -104,15 +107,16 @@ QUnit.test('noise with rest and no input cloning', async (assert) => {
 	// const core_group = container.coreContent();
 	// const {geometry} = core_group.objects()[0];
 
-	assert.in_delta(container.boundingBox(true).max.y, 1.3, 0.1);
-	assert.in_delta(container.boundingBox(true).min.y, -1.3, 0.1);
+	container.boundingBox(tmpBox);
+	assert.in_delta(tmpBox.max.y, 1.3, 0.1);
+	assert.in_delta(tmpBox.min.y, -1.3, 0.1);
 	for (let i = 0; i < 1000; i++) {
 		scene.setFrame(i);
 		container = await noise1.compute();
 	}
-
-	assert.in_delta(container.boundingBox(true).max.y, 1.3, 0.1);
-	assert.in_delta(container.boundingBox(true).min.y, -1.3, 0.1);
+	container.boundingBox(tmpBox);
+	assert.in_delta(tmpBox.max.y, 1.3, 0.1);
+	assert.in_delta(tmpBox.min.y, -1.3, 0.1);
 });
 
 QUnit.skip('noise on flamingo', (assert) => {

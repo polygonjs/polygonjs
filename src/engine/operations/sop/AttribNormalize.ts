@@ -33,7 +33,7 @@ export class AttribNormalizeSopOperation extends BaseSopOperation {
 
 	override cook(input_contents: CoreGroup[], params: AttribNormalizeSopParams) {
 		const core_group = input_contents[0];
-		const objects = input_contents[0].objectsWithGeo();
+		const objects = input_contents[0].threejsObjectsWithGeo();
 		const attrib_names = CoreString.attribNames(params.name);
 		for (let object of objects) {
 			const geometry = object.geometry;

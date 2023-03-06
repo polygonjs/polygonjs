@@ -29,7 +29,7 @@ export class SolverPreviousFrameSopNode extends TypedSopNode<SolverPreviousFrame
 		this._createSolverNodeDependencyIfRequired();
 		const previousFrameCoreGroup = solverNode.previousFrameCoreGroup();
 		if (previousFrameCoreGroup) {
-			this.setObjects(previousFrameCoreGroup.objects());
+			this.setObjects(previousFrameCoreGroup.allObjects());
 		} else {
 			this.setObjects([]);
 		}

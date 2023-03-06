@@ -43,7 +43,7 @@ export class ObjectNamesExpression extends BaseMethod {
 				if (container) {
 					const coreContent = container.coreContent();
 					if (coreContent) {
-						const objects = coreContent.objects();
+						const objects = coreContent.allObjects();
 						const list: string[] = new Array(objects.length);
 						let i = 0;
 						for (let object of objects) {

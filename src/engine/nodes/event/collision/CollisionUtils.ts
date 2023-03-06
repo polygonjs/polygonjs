@@ -33,7 +33,7 @@ export async function setupCollision(controls: BaseCollisionHandler, node: BaseC
 				console.error('obj node contains invalid sop');
 				return;
 			}
-			const object = coreGroup.objectsWithGeo()[0];
+			const object = coreGroup.threejsObjectsWithGeo()[0];
 			controls.setCheckCollisions(object);
 			controls.setCollisionCapsule(
 				new Capsule(

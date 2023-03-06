@@ -23,7 +23,7 @@ export class CameraProjectSopOperation extends BaseSopOperation {
 		const cameraCoreGroup = inputCoreGroups[1];
 
 		let cameraObject: Camera | undefined;
-		const cameraCoreGroupObjects = cameraCoreGroup.objects();
+		const cameraCoreGroupObjects = cameraCoreGroup.threejsObjects();
 		for (let cameraCoreGroupObject of cameraCoreGroupObjects) {
 			cameraCoreGroupObject.traverse((childObject) => {
 				if (!cameraObject) {

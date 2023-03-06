@@ -75,14 +75,14 @@ export class PointSopNode extends TypedSopNode<PointSopParamsConfig> {
 	}
 
 	async _evalExpressionsForCoreGroup(coreGroup: CoreGroup) {
-		const coreObjects = coreGroup.coreObjects();
+		const coreObjects = coreGroup.threejsCoreObjects();
 
 		for (let i = 0; i < coreObjects.length; i++) {
 			await this._evalExpressionsForCoreObject(coreObjects[i]);
 		}
 
 		if (isBooleanTrue(this.pv.updateNormals)) {
-			const objects = coreGroup.objectsWithGeo();
+			const objects = coreGroup.threejsObjectsWithGeo();
 			for (let object of objects) {
 				if ((object as Mesh).isMesh) {
 					coreGroup.computeVertexNormals();

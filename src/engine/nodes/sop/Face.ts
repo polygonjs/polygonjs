@@ -73,7 +73,8 @@ export class FaceSopNode extends TypedSopNode<FaceSopParamsConfig> {
 	}
 
 	private _makeFacesUnique(core_group: CoreGroup) {
-		for (let object of core_group.objects()) {
+		const objects = core_group.threejsObjects();
+		for (let object of objects) {
 			if ((object as Mesh).isMesh) {
 				const geometry = (object as Mesh).geometry as BufferGeometry;
 				const faces = ArrayUtils.chunk((geometry.index?.array as number[]) || [], 3);
@@ -105,7 +106,7 @@ export class FaceSopNode extends TypedSopNode<FaceSopParamsConfig> {
 		const face_center = new Vector3();
 		let faces: CoreFace[], face: CoreFace, points: CorePoint[], point: CorePoint;
 
-		core_group.coreObjects().forEach((core_object) => {
+		core_group.threejsCoreObjects().forEach((core_object) => {
 			const object = core_object.object();
 			const core_geometry = core_object.coreGeometry();
 			if ((object as Mesh).isMesh && core_geometry) {
@@ -131,7 +132,7 @@ export class FaceSopNode extends TypedSopNode<FaceSopParamsConfig> {
 	private _addFaceId(core_group: CoreGroup) {
 		const attrib_name = 'face_id';
 
-		core_group.coreObjects().forEach((core_object) => {
+		core_group.threejsCoreObjects().forEach((core_object) => {
 			const object = core_object.object();
 			const core_geometry = core_object.coreGeometry();
 			if ((object as Mesh).isMesh && core_geometry) {
@@ -161,7 +162,7 @@ export class FaceSopNode extends TypedSopNode<FaceSopParamsConfig> {
 		const scale = this.pv.scale;
 		let faces: CoreFace[], face: CoreFace, points: CorePoint[], point: CorePoint;
 
-		core_group.coreObjects().forEach((core_object) => {
+		core_group.threejsCoreObjects().forEach((core_object) => {
 			const object = core_object.object();
 			const core_geometry = core_object.coreGeometry();
 			if ((object as Mesh).isMesh && core_geometry) {

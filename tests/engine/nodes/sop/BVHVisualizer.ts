@@ -1,7 +1,9 @@
 import {ObjectTransformSpace} from './../../../../src/core/TransformSpace';
 import {TransformTargetType} from './../../../../src/core/Transform';
 import {HierarchyMode} from './../../../../src/engine/operations/sop/Hierarchy';
-import {BufferAttribute, Mesh, Vector3} from 'three';
+import {BufferAttribute, Box3, Mesh, Vector3} from 'three';
+const tmpBox = new Box3();
+const tmpCenter = new Vector3();
 
 QUnit.test('sop/BVHVisualizer simple', async (assert) => {
 	const geo1 = window.geo1;
@@ -15,28 +17,28 @@ QUnit.test('sop/BVHVisualizer simple', async (assert) => {
 
 	let container = await BVHVisualizer1.compute();
 	let coreGroup = container.coreContent()!;
-	assert.equal(coreGroup.objects().length, 2, '2 objects');
-	let geo = (coreGroup.objects()[0] as Mesh).geometry;
+	assert.equal(coreGroup.threejsObjects().length, 2, '2 objects');
+	let geo = (coreGroup.threejsObjects()[0] as Mesh).geometry;
 	assert.equal((geo.attributes.position as BufferAttribute).array.length, 2883, '2883');
-	geo = (coreGroup.objects()[1].children[0] as Mesh).geometry;
+	geo = (coreGroup.threejsObjects()[1].children[0] as Mesh).geometry;
 	assert.equal((geo.attributes.position as BufferAttribute).array.length, 5856, '5856');
 
 	BVHVisualizer1.p.depth.set(5);
 	container = await BVHVisualizer1.compute();
 	coreGroup = container.coreContent()!;
-	geo = (coreGroup.objects()[1].children[0] as Mesh).geometry;
+	geo = (coreGroup.threejsObjects()[1].children[0] as Mesh).geometry;
 	assert.equal((geo.attributes.position as BufferAttribute).array.length, 384, '384');
 
 	BVHVisualizer1.p.depth.set(6);
 	container = await BVHVisualizer1.compute();
 	coreGroup = container.coreContent()!;
-	geo = (coreGroup.objects()[1].children[0] as Mesh).geometry;
+	geo = (coreGroup.threejsObjects()[1].children[0] as Mesh).geometry;
 	assert.equal((geo.attributes.position as BufferAttribute).array.length, 768, '768');
 
 	BVHVisualizer1.p.depth.set(2);
 	container = await BVHVisualizer1.compute();
 	coreGroup = container.coreContent()!;
-	geo = (coreGroup.objects()[1].children[0] as Mesh).geometry;
+	geo = (coreGroup.threejsObjects()[1].children[0] as Mesh).geometry;
 	assert.equal((geo.attributes.position as BufferAttribute).array.length, 48, '48');
 });
 
@@ -54,7 +56,7 @@ QUnit.test('sop/BVHVisualizer with hierarchy', async (assert) => {
 	hierarchy1.p.levels.set(2);
 	const transform1 = geo1.createNode('transform');
 	transform1.setInput(0, hierarchy1);
-	transform1.setApplyOn(TransformTargetType.OBJECTS);
+	transform1.setApplyOn(TransformTargetType.OBJECT);
 	transform1.p.scale.set(10);
 
 	// template pts
@@ -73,14 +75,16 @@ QUnit.test('sop/BVHVisualizer with hierarchy', async (assert) => {
 	const bvhVisualizer1 = geo1.createNode('BVHVisualizer');
 	bvh1.setInput(0, copy1);
 	bvhVisualizer1.setInput(0, bvh1);
+	async function getBbox() {
+		const container = await bvhVisualizer1.compute();
+		container.boundingBox(tmpBox);
+		tmpBox.getCenter(tmpCenter);
+		return {box: tmpBox, center: tmpCenter};
+	}
 
 	copy1.setObjectTransformSpace(ObjectTransformSpace.PARENT);
-	let container = await bvhVisualizer1.compute();
-	let center = container.coreContent()!.boundingBox().getCenter(new Vector3())!;
-	assert.in_delta(center.x, 1, 0.1);
+	assert.in_delta((await getBbox()).center.x, 1, 0.1);
 
 	copy1.setObjectTransformSpace(ObjectTransformSpace.LOCAL);
-	container = await bvhVisualizer1.compute();
-	center = container.coreContent()!.boundingBox().getCenter(new Vector3())!;
-	assert.in_delta(center.x, 10, 0.1);
+	assert.in_delta((await getBbox()).center.x, 10, 0.1);
 });

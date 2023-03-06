@@ -20,7 +20,7 @@ QUnit.test('sop/convexHull simple', async (assert) => {
 	async function _compute() {
 		const container = await convexHull1.compute();
 		const coreGroup = container.coreContent();
-		const geometry = coreGroup?.objectsWithGeo()[0].geometry;
+		const geometry = coreGroup?.threejsObjectsWithGeo()[0].geometry;
 		const pos = (geometry?.getAttribute('position') as BufferAttribute)!;
 		const pointsCount = pos.array.length / 3;
 		return {pointsCount};

@@ -1,42 +1,36 @@
 import {AttribValue, NumericAttribValue, PolyDictionary} from '../../types/GlobalTypes';
-import {Vector2} from 'three';
-import {Vector3} from 'three';
-import {Vector4} from 'three';
-import {Object3D} from 'three';
-import {Mesh} from 'three';
-import {Color} from 'three';
-import {BufferGeometry} from 'three';
-import {AnimationClip} from 'three';
-import {Material} from 'three';
-import {SkinnedMesh} from 'three';
-import {Bone} from 'three';
+import {
+	Bone,
+	SkinnedMesh,
+	Material,
+	AnimationClip,
+	BufferGeometry,
+	Color,
+	Mesh,
+	Box3,
+	Sphere,
+	Vector3,
+	Object3D,
+	Matrix4,
+} from 'three';
 import {CoreGeometry} from './Geometry';
-import {GroupString} from './Group';
-import {Attribute, CoreAttribute} from './Attribute';
-import {AttribType, AttribSize, dataFromConstructor} from './Constant';
+import {GroupString, Object3DWithGeometry} from './Group';
+import {CoreAttribute} from './Attribute';
+import {dataFromConstructor} from './Constant';
 import {CorePoint} from './Point';
 import {CoreMaterial, MaterialWithCustomMaterials} from './Material';
 import {CoreString} from '../String';
-import {CoreEntity} from './Entity';
-import {CoreType} from '../Type';
 import {ObjectUtils} from '../ObjectUtils';
 import {ArrayUtils} from '../ArrayUtils';
 import {ThreeMeshBVHHelper} from '../../engine/operations/sop/utils/Bvh/ThreeMeshBVHHelper';
-import {makeAttribReactiveVector4} from './attribute/Vector4';
-import {AttributeReactiveCallback} from './attribute/_Base';
-import {makeAttribReactiveVector3} from './attribute/Vector3';
-import {makeAttribReactiveVector2} from './attribute/Vector2';
-import {makeAttribReactiveSimple} from './attribute/Simple';
-import {AttributeCallbackQueue} from './attribute/AttributeCallbackQueue';
-import {SetUtils} from '../../core/SetUtils';
-import {MapUtils} from '../../core/MapUtils';
 
-enum PropertyName {
-	NAME = 'name',
-	POSITION = 'position',
-}
-const ATTRIBUTES = 'attributes';
-const ATTRIBUTES_PREVIOUS_VALUES = 'attributesPreviousValues';
+import {CoreObjectType} from './ObjectContent';
+import {BaseCoreObject} from './_BaseObject';
+import {TransformTargetType} from '../Transform';
+import {TypeAssert} from '../../engine/poly/Assert';
+import {applyTransformWithSpaceToObject, ObjectTransformSpace} from '../TransformSpace';
+// import {computeBoundingBoxFromObject3D} from './BoundingBox';
+// import {setSphereFromObject} from './BoundingSphere';
 
 interface Object3DWithAnimations extends Object3D {
 	animations: AnimationClip[];
@@ -44,40 +38,34 @@ interface Object3DWithAnimations extends Object3D {
 interface MaterialWithColor extends Material {
 	color: Color;
 }
-function _convertArrayToVector(value: number[]) {
-	switch (value.length) {
-		case 1:
-			return value[0];
-		case 2:
-			return new Vector2(value[0], value[1]);
-		case 3:
-			return new Vector3(value[0], value[1], value[2]);
-		case 4:
-			return new Vector4(value[0], value[1], value[2], value[3]);
-	}
-}
+const COMPUTE_PRECISE_BOUNDS = true;
+const SPHERE_EMPTY = new Sphere(new Vector3(0, 0, 0), 0);
+
 // interface SkinnedMeshWithisSkinnedMesh extends SkinnedMesh {
 // 	readonly isSkinnedMesh: boolean;
 // }
 
 export type AttributeDictionary = PolyDictionary<AttribValue>;
 
-export class CoreObject extends CoreEntity {
-	constructor(private _object: Object3D, index: number) {
-		super(index);
+// export type CoreObjectContent = Object3D|CadObject
+
+// type ThreejsCoreObjectContent =  ObjectContent<BufferGeometry>
+export class CoreObject extends BaseCoreObject<CoreObjectType.THREEJS> {
+	constructor(protected override _object: Object3D, index: number) {
+		super(_object, index);
 	}
-	dispose() {}
-
-	// set_index(i: number) {
-	// 	this._index = i;
-	// }
-
-	object() {
+	override humanType(): string {
+		return dataFromConstructor(this._object.constructor).humanName;
+	}
+	override object() {
 		return this._object;
 	}
-	geometry(): BufferGeometry | null {
+	override geometry(): BufferGeometry | null {
 		return (this._object as Mesh).geometry as BufferGeometry | null;
 	}
+	// object():Object3D{
+	// 	return this._object
+	// }
 	coreGeometry(): CoreGeometry | null {
 		const geo = this.geometry();
 		if (geo) {
@@ -108,372 +96,40 @@ export class CoreObject extends CoreEntity {
 			return this.points();
 		}
 	}
-
-	computeVertexNormals() {
-		this.coreGeometry()?.computeVertexNormals();
-	}
-
-	static setAttribute(object: Object3D, attribName: string, value: AttribValue) {
-		this.addAttribute(object, attribName, value);
-	}
-	static addAttribute(object: Object3D, attribName: string, value: AttribValue) {
-		if (CoreType.isArray(value)) {
-			const convertedValue = _convertArrayToVector(value);
-			if (!convertedValue) {
-				const message = `attribute_value invalid`;
-				console.error(message, value);
-				throw new Error(message);
-			}
-		}
-
-		const dict = this.attributesDictionary(object);
-		const currentValue = dict[attribName];
-		if (currentValue != null) {
-			if (CoreType.isVector(currentValue) && CoreType.isVector(value)) {
-				AttributeCallbackQueue.block();
-				if (currentValue instanceof Vector2 && value instanceof Vector2) {
-					currentValue.copy(value);
-				}
-				if (currentValue instanceof Vector3 && value instanceof Vector3) {
-					currentValue.copy(value);
-				}
-				if (currentValue instanceof Vector4 && value instanceof Vector4) {
-					currentValue.copy(value);
-				}
-				AttributeCallbackQueue.unblock();
-				return;
-			}
-		}
-		if (CoreType.isVector(value)) {
-			// make sure to clone it, otherwise editing the attrib of one object would update another object's
-			dict[attribName] = value.clone();
-		} else {
-			dict[attribName] = value;
-		}
-	}
-	addAttribute(name: string, value: AttribValue) {
-		CoreObject.addAttribute(this._object, name, value);
-	}
-	addNumericAttrib(name: string, value: NumericAttribValue) {
-		this.addAttribute(name, value);
-	}
-	setAttribValue(name: string, value: AttribValue) {
-		this.addAttribute(name, value);
-	}
 	addNumericVertexAttrib(name: string, size: number, defaultValue: NumericAttribValue) {
 		if (defaultValue == null) {
 			defaultValue = CoreAttribute.default_value(size);
 		}
 		this.coreGeometry()?.addNumericAttrib(name, size, defaultValue);
 	}
-	static attributesDictionary(object: Object3D) {
-		return (object.userData[ATTRIBUTES] as AttributeDictionary) || this._createAttributesDictionaryIfNone(object);
+	static override position(object: Object3D, target: Vector3) {
+		target.copy(object.position);
 	}
-	static attributesPreviousValuesDictionary(object: Object3D) {
-		return (
-			(object.userData[ATTRIBUTES_PREVIOUS_VALUES] as AttributeDictionary) ||
-			this._createAttributesPreviousValuesDictionaryIfNone(object)
-		);
+	override boundingBox(target: Box3) {
+		target.setFromObject(this._object, COMPUTE_PRECISE_BOUNDS);
 	}
-	private static _createAttributesDictionaryIfNone(object: Object3D) {
-		if (!object.userData[ATTRIBUTES]) {
-			return (object.userData[ATTRIBUTES] = {});
+	override boundingSphere(target: Sphere) {
+		const geometry = (this._object as Mesh).geometry;
+		if (!geometry) {
+			target.copy(SPHERE_EMPTY);
+			return;
 		}
-	}
-	private static _createAttributesPreviousValuesDictionaryIfNone(object: Object3D) {
-		if (!object.userData[ATTRIBUTES_PREVIOUS_VALUES]) {
-			return (object.userData[ATTRIBUTES_PREVIOUS_VALUES] = {});
+		geometry.computeBoundingSphere();
+		const computedSphere = geometry.boundingSphere;
+		if (!computedSphere) {
+			target.copy(SPHERE_EMPTY);
+			return;
 		}
+		target.copy(computedSphere);
+		// setSphereFromObject(target, this._object, COMPUTE_PRECISE_BOUNDS);
+		// console.log('boundingSphere', target.radius);
 	}
 
-	private _attributesDictionary() {
-		return CoreObject.attributesDictionary(this._object);
+	computeVertexNormals() {
+		this.coreGeometry()?.computeVertexNormals();
 	}
-	attributeNames(): string[] {
-		return this.attribNames();
-	}
-	static attribNames(object: Object3D): string[] {
-		return Object.keys(CoreObject.attributesDictionary(object));
-	}
-	attribNames(): string[] {
-		return CoreObject.attribNames(this._object);
-	}
-	static objectsAttribNames(objects: Object3D[]) {
-		const names: Set<string> = new Set();
-		for (let object of objects) {
-			const objectAttriNames = CoreObject.attribNames(object);
-			for (let attribName of objectAttriNames) {
-				names.add(attribName);
-			}
-		}
-
-		return SetUtils.toArray(names);
-	}
-	static coreObjectsAttribNames(coreObjects: CoreObject[]) {
-		const names: Set<string> = new Set();
-		for (let coreObject of coreObjects) {
-			const objectAttriNames = coreObject.attribNames();
-			for (let attribName of objectAttriNames) {
-				names.add(attribName);
-			}
-		}
-
-		return SetUtils.toArray(names);
-	}
-
-	hasAttrib(attribName: string): boolean {
-		return CoreObject.hasAttrib(this._object, attribName);
-	}
-	static hasAttrib(object: Object3D, attribName: string) {
-		return attribName in this.attributesDictionary(object);
-	}
-
-	renameAttrib(old_name: string, new_name: string) {
-		const current_value = this.attribValue(old_name);
-		if (current_value != null) {
-			this.addAttribute(new_name, current_value);
-			this.deleteAttribute(old_name);
-		} else {
-			console.warn(`attribute ${old_name} not found`);
-		}
-	}
-
-	deleteAttribute(name: string) {
-		delete this._attributesDictionary()[name];
-	}
-	static deleteAttribute(object: Object3D, attribName: string) {
-		delete this.attributesDictionary(object)[attribName];
-	}
-	static attribValue(
-		object: Object3D,
-		attribName: string,
-		index: number = 0,
-		target?: Vector2 | Vector3 | Vector4
-	): AttribValue | undefined {
-		function _attribFromProperty() {
-			if (attribName == PropertyName.NAME) {
-				return object.name;
-			}
-			if (attribName == PropertyName.POSITION) {
-				return object.position.toArray();
-			}
-		}
-		if (attribName === Attribute.OBJECT_INDEX) {
-			return index;
-		}
-		if (object.userData) {
-			const dict = this.attributesDictionary(object);
-			const val = dict[attribName];
-			if (val == null) {
-				return _attribFromProperty();
-			} else {
-				if (CoreType.isVector(val) && target) {
-					if (val instanceof Vector3 && target instanceof Vector3) {
-						return target.copy(val);
-					}
-					if (val instanceof Vector2 && target instanceof Vector2) {
-						return target.copy(val);
-					}
-					if (val instanceof Vector4 && target instanceof Vector4) {
-						return target.copy(val);
-					}
-				}
-				if (CoreType.isArray(val) && target) {
-					target.fromArray(val);
-					return target;
-				}
-			}
-			return val;
-		}
-		return _attribFromProperty();
-	}
-	static previousAttribValue(object: Object3D, attribName: string): AttribValue | undefined {
-		const dict = this.attributesPreviousValuesDictionary(object);
-		return dict[attribName];
-	}
-
-	static stringAttribValue(object: Object3D, attribName: string, index: number = 0): string | undefined {
-		const str = this.attribValue(object, attribName, index);
-		if (str != null) {
-			if (CoreType.isString(str)) {
-				return str;
-			} else {
-				return `${str}`;
-			}
-		}
-	}
-	static makeAttribReactive<V extends AttribValue>(
-		object: Object3D,
-		attribName: string,
-		callback: AttributeReactiveCallback<V>
-	) {
-		const attributesDict = this.attributesDictionary(object);
-		// const attributesPreviousValuesDict = this.attributesPreviousValuesDictionary(object);
-
-		const currentValue = attributesDict[attribName];
-		if (currentValue instanceof Vector4) {
-			return makeAttribReactiveVector4(
-				object,
-				attribName,
-				(<unknown>callback) as AttributeReactiveCallback<Vector4>
-			);
-		}
-		if (currentValue instanceof Vector3) {
-			return makeAttribReactiveVector3(
-				object,
-				attribName,
-				(<unknown>callback) as AttributeReactiveCallback<Vector3>
-			);
-		}
-		if (currentValue instanceof Vector2) {
-			return makeAttribReactiveVector2(
-				object,
-				attribName,
-				(<unknown>callback) as AttributeReactiveCallback<Vector2>
-			);
-		}
-		return makeAttribReactiveSimple(
-			object,
-			attribName,
-			(<unknown>callback) as AttributeReactiveCallback<string | number>
-		);
-
-		// // create a dummy val in case there is no attribute yet
-		// if (attributesDict[attribName] == null) {
-		// 	attributesDict[attribName] = 0;
-		// }
-
-		// const proxy: AttributeProxy<V> = {
-		// 	value: attributesDict[attribName] as V,
-		// 	previousValue: attributesDict[attribName] as V,
-		// };
-		// Object.defineProperties(attributesDict, {
-		// 	[attribName]: {
-		// 		get: function () {
-		// 			return proxy.value;
-		// 		},
-		// 		set: function (x) {
-		// 			if (x != proxy.value) {
-		// 				proxy.previousValue = proxy.value;
-		// 				proxy.value = x;
-		// 				callback(proxy.value, proxy.previousValue);
-		// 			}
-		// 			return proxy.value;
-		// 		},
-		// 		configurable: true,
-		// 	},
-		// });
-		// Object.defineProperties(attributesPreviousValuesDict, {
-		// 	[attribName]: {
-		// 		get: function () {
-		// 			return proxy.previousValue;
-		// 		},
-		// 		configurable: true,
-		// 	},
-		// });
-	}
-
-	attribValue(attribName: string, target?: Vector2 | Vector3 | Vector4): AttribValue | undefined {
-		return CoreObject.attribValue(this._object, attribName, this._index, target);
-	}
-	stringAttribValue(name: string) {
-		return CoreObject.stringAttribValue(this._object, name, this._index);
-	}
-	name(): string {
-		return this.attribValue(PropertyName.NAME) as string;
-	}
-	humanType(): string {
-		return dataFromConstructor(this._object.constructor).humanName;
-	}
-	attribTypes() {
-		const h: PolyDictionary<AttribType> = {};
-		for (let attrib_name of this.attribNames()) {
-			const type = this.attribType(attrib_name);
-			if (type != null) {
-				h[attrib_name] = type;
-			}
-		}
-		return h;
-	}
-	static attribType(object: Object3D, attribName: string) {
-		const val = this.attribValue(object, attribName);
-		if (CoreType.isString(val)) {
-			return AttribType.STRING;
-		} else {
-			return AttribType.NUMERIC;
-		}
-	}
-	attribType(attribName: string) {
-		return CoreObject.attribType(this._object, attribName);
-	}
-	static coreObjectAttributeTypesByName(coreObjects: CoreObject[]): PolyDictionary<AttribType[]> {
-		const _typesByName: Map<string, Set<AttribType>> = new Map();
-		for (let coreObject of coreObjects) {
-			const objectAttriNames = coreObject.attribNames();
-			for (let attribName of objectAttriNames) {
-				const attribType = coreObject.attribType(attribName);
-				MapUtils.addToSetAtEntry(_typesByName, attribName, attribType);
-			}
-		}
-
-		const typesByName: PolyDictionary<AttribType[]> = {};
-		_typesByName.forEach((attribTypes, attribName) => {
-			typesByName[attribName] = SetUtils.toArray(attribTypes);
-		});
-		return typesByName;
-		// const core_object = this.firstCoreObject();
-		// if (core_object) {
-		// 	for (let name of core_object.attribNames()) {
-		// 		types_by_name[name] = core_object.attribType(name);
-		// 	}
-		// }
-		// return types_by_name;
-	}
-	attribSizes() {
-		const h: PolyDictionary<AttribSize> = {};
-		const attribNames = this.attribNames();
-		for (let attribName of attribNames) {
-			const size = this.attribSize(attribName);
-			if (size != null) {
-				h[attribName] = size;
-			}
-		}
-		return h;
-	}
-	static attribSize(object: Object3D, attribName: string): AttribSize | null {
-		const val = this.attribValue(object, attribName);
-		if (val == null) {
-			return null;
-		}
-		return CoreAttribute.attribSizeFromValue(val);
-	}
-	attribSize(attribName: string) {
-		return CoreObject.attribSize(this._object, attribName);
-	}
-	static coreObjectsAttribSizesByName(coreObjects: CoreObject[]): PolyDictionary<AttribSize[]> {
-		const _sizesByName: Map<string, Set<AttribSize>> = new Map();
-		for (let coreObject of coreObjects) {
-			const objectAttriNames = coreObject.attribNames();
-			for (let attribName of objectAttriNames) {
-				const attribSize = coreObject.attribSize(attribName);
-				MapUtils.addToSetAtEntry(_sizesByName, attribName, attribSize);
-			}
-		}
-
-		const sizesByName: PolyDictionary<AttribSize[]> = {};
-		_sizesByName.forEach((attribSizes, attribName) => {
-			sizesByName[attribName] = SetUtils.toArray(attribSizes);
-		});
-		return sizesByName;
-	}
-
-	clone() {
-		return CoreObject.clone(this._object);
-	}
-
-	static clone(srcObject: Object3D) {
+	static override clone(srcObject: Object3D) {
 		const clonedObject = srcObject.clone();
-
 		var sourceLookup = new Map<Object3D, Object3D>();
 		var cloneLookup = new Map<Object3D, Object3D>();
 		CoreObject.parallelTraverse(srcObject, clonedObject, function (sourceNode: Object3D, clonedNode: Object3D) {
@@ -540,7 +196,6 @@ export class CoreObject extends CoreEntity {
 
 		return clonedObject;
 	}
-
 	static parallelTraverse(a: Object3D, b: Object3D, callback: (a: Object3D, b: Object3D) => void) {
 		callback(a, b);
 		for (var i = 0; i < a.children.length; i++) {
@@ -550,5 +205,27 @@ export class CoreObject extends CoreEntity {
 				this.parallelTraverse(childA, childB, callback);
 			}
 		}
+	}
+	static override applyMatrix(
+		object: Object3D,
+		matrix: Matrix4,
+		transformTargetType: TransformTargetType,
+		transformSpace: ObjectTransformSpace
+	) {
+		switch (transformTargetType) {
+			case TransformTargetType.OBJECT: {
+				applyTransformWithSpaceToObject(object, matrix, transformSpace);
+				// this._applyMatrixToObject(object, matrix);
+				return;
+			}
+			case TransformTargetType.GEOMETRY: {
+				const geometry = (object as Object3DWithGeometry).geometry;
+				if (geometry) {
+					geometry.applyMatrix4(matrix);
+				}
+				return;
+			}
+		}
+		TypeAssert.unreachable(transformTargetType);
 	}
 }

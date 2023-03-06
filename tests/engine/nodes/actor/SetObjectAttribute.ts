@@ -40,7 +40,7 @@ QUnit.test('actor/setObjectAttribute', async (assert) => {
 	add1.params.get('add1')!.set(1);
 
 	const container = await actor1.compute();
-	const object = container.coreContent()!.objects()[0];
+	const object = container.coreContent()!.threejsObjects()[0];
 	const coreObject = new CoreObject(object, 0);
 
 	// wait to make sure objects are mounted to the scene

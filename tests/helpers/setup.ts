@@ -40,7 +40,7 @@ declare global {
 export {QUnit};
 export function setupQUnit() {
 	QUnit.testStart(async () => {
-		// console.log(`%c ^^^^ ${QUnit.config.current.testName}`, 'background: #222; color: #da5555');
+		console.log(`%c ^^^^ ${QUnit.config.current.testName}`, 'background: #222; color: #da5555');
 
 		await waitForUserInteraction();
 
@@ -84,6 +84,6 @@ export function setupQUnit() {
 	QUnit.testDone(() => {
 		// it's preferable to not display anything
 		// so that we can correctly display non-blocking crashing tests
-		// console.log(`%c ✓ ${QUnit.config.current.testName}`, 'background: #222; color: #bada55');
+		console.log(`%c ✓ ${QUnit.config.current.testName}`, 'background: #222; color: #bada55');
 	});
 }

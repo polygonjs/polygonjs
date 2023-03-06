@@ -155,7 +155,7 @@ export class CubeMapFromSceneCopNode extends TypedCopNode<CubeMapFromSceneCopPar
 		for (const child of currentChildren) {
 			this._renderScene.remove(child);
 		}
-		const objects = coreGroup.objects();
+		const objects = coreGroup.threejsObjects();
 		for (const object of objects) {
 			this._renderScene.add(object);
 		}

@@ -65,7 +65,7 @@ export class FuseSopNode extends TypedSopNode<FuseSopParamsConfig> {
 		const inputCoreGroup = inputCoreGroups[0];
 
 		const newObjects: Object3D[] = [];
-		for (let object of inputCoreGroup.objects()) {
+		for (let object of inputCoreGroup.threejsObjects()) {
 			const geometry = (object as Mesh).geometry;
 			this._fuseGeometry(geometry);
 			this._filterObject(object);

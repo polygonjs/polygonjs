@@ -27,7 +27,7 @@ export class RestAttributesSopOperation extends BaseSopOperation {
 
 	override cook(input_contents: CoreGroup[], params: RestAttributesSopParams) {
 		const core_group = input_contents[0];
-		const objects = core_group.objectsWithGeo();
+		const objects = core_group.threejsObjectsWithGeo();
 		if (isBooleanTrue(params.tposition)) {
 			this._create_rest_attribute(objects, params.position, params.restP);
 		}

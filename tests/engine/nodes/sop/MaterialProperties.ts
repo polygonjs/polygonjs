@@ -5,7 +5,7 @@ import {BaseNodeType} from '../../../../src/engine/nodes/_Base';
 
 async function getMaterial(node: BaseNodeType) {
 	const container = await node.compute();
-	const object = container.coreContent()!.objects()[0] as Mesh;
+	const object = container.coreContent()!.allObjects()[0] as Mesh;
 	return object.material as Material;
 }
 

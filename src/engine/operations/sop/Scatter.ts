@@ -48,7 +48,7 @@ export class ScatterSopOperation extends BaseSopOperation {
 	private _normal = new Vector3();
 	override cook(inputContents: CoreGroup[], params: ScatterSopParams) {
 		const coreGroup = inputContents[0];
-		let inputMesh = coreGroup.objectsWithGeo()[0] as Mesh;
+		let inputMesh = coreGroup.threejsObjectsWithGeo()[0] as Mesh;
 		if (inputMesh) {
 			return this._createPoints(inputMesh, coreGroup, params);
 		} else {

@@ -4,6 +4,7 @@ mainBuild:
     - symbol: Adaptor2d_Curve2d
     - symbol: Adaptor3d_Curve
     - symbol: Adaptor3d_Surface
+    - symbol: Bnd_Box
     - symbol: BRep_Tool
     - symbol: BRepAdaptor_CompCurve
     - symbol: BRepAdaptor_Curve
@@ -15,6 +16,7 @@ mainBuild:
     - symbol: BRepAlgoAPI_Cut
     - symbol: BRepAlgoAPI_Fuse
     - symbol: BRepAlgoAPI_Section
+    - symbol: BRepBndLib
     - symbol: BRepBuilderAPI_Command
     - symbol: BRepBuilderAPI_Copy
     - symbol: BRepBuilderAPI_EdgeError
@@ -74,6 +76,7 @@ mainBuild:
     - symbol: Geom_Curve
     - symbol: Geom_CylindricalSurface
     - symbol: Geom_ElementarySurface
+    - symbol: Geom_Ellipse
     - symbol: Geom_Geometry
     - symbol: Geom_Surface
     - symbol: Geom_TrimmedCurve
@@ -109,8 +112,6 @@ mainBuild:
     - symbol: gp_Elips
     - symbol: gp_Elips2d
     - symbol: gp_EulerSequence
-    - symbol: gp_GTrsf
-    - symbol: gp_GTrsf2d
     - symbol: gp_Pln
     - symbol: gp_Pnt
     - symbol: gp_Pnt2d
@@ -152,8 +153,8 @@ mainBuild:
     - symbol: Standard_Transient
     - symbol: StdPrs_ToolTriangulatedShape
     - symbol: TColgp_Array1OfDir
+    - symbol: TColgp_Array1OfPnt
     - symbol: TColgp_Array1OfPnt2d
-    - symbol: TColgp_SequenceOfPnt2d
     - symbol: TopAbs_Orientation
     - symbol: TopAbs_ShapeEnum
     - symbol: TopExp_Explorer
@@ -171,6 +172,7 @@ mainBuild:
     - symbol: TopoDS_Wire
     - symbol: TopTools_Array1OfShape
     - symbol: TopTools_ListOfShape
+    - symbol: CustomClass
 
   emccFlags:
     - -O3
@@ -178,4 +180,11 @@ mainBuild:
     - -sUSE_ES6_IMPORT_META=0
     - -sEXPORTED_RUNTIME_METHODS=['FS']
     - -sALLOW_MEMORY_GROWTH=1
-
+additionalCppCode: |
+  #include <iostream>
+  class CustomClass {
+  public:
+    static void SayHello() {
+      std::cout << "Hello, World" << std::endl;
+    }
+  };

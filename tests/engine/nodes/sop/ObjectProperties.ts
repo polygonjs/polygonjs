@@ -1,5 +1,5 @@
-import {Object3D} from 'three';
 import {AttribClass} from '../../../../src/core/geometry/Constant';
+import {CoreObjectType, ObjectContent} from '../../../../src/core/geometry/ObjectContent';
 import {HierarchyMode} from '../../../../src/engine/operations/sop/Hierarchy';
 
 QUnit.test('sop/objectProperties simple', async (assert) => {
@@ -13,25 +13,25 @@ QUnit.test('sop/objectProperties simple', async (assert) => {
 	objectProperties1.p.treceiveShadow.set(1);
 
 	container = await objectProperties1.compute();
-	let object = container.coreContent()!.objects()[0];
+	let object = container.coreContent()!.allObjects()[0];
 	assert.ok(object.castShadow);
 	assert.ok(object.receiveShadow);
 
 	objectProperties1.setInput(0, plane1);
 	container = await objectProperties1.compute();
-	object = container.coreContent()!.objects()[0];
+	object = container.coreContent()!.allObjects()[0];
 	assert.ok(object.castShadow);
 	assert.ok(object.receiveShadow);
 
 	objectProperties1.p.castShadow.set(0);
 	container = await objectProperties1.compute();
-	object = container.coreContent()!.objects()[0];
+	object = container.coreContent()!.allObjects()[0];
 	assert.ok(!object.castShadow);
 	assert.ok(object.receiveShadow);
 
 	objectProperties1.p.receiveShadow.set(0);
 	container = await objectProperties1.compute();
-	object = container.coreContent()!.objects()[0];
+	object = container.coreContent()!.allObjects()[0];
 	assert.ok(!object.castShadow);
 	assert.ok(!object.receiveShadow);
 
@@ -39,14 +39,14 @@ QUnit.test('sop/objectProperties simple', async (assert) => {
 	objectProperties1.p.tmatrixAutoUpdate.set(1);
 	objectProperties1.p.matrixAutoUpdate.set(1);
 	container = await objectProperties1.compute();
-	object = container.coreContent()!.objects()[0];
+	object = container.coreContent()!.allObjects()[0];
 	assert.ok(object.matrixAutoUpdate);
 
 	assert.ok(object.visible, 'object is visible');
 	objectProperties1.p.tvisible.set(1);
 	objectProperties1.p.visible.set(0);
 	container = await objectProperties1.compute();
-	object = container.coreContent()!.objects()[0];
+	object = container.coreContent()!.allObjects()[0];
 	assert.ok(!object.visible);
 });
 QUnit.test('sop/objectProperties with non entity dependent expression', async (assert) => {
@@ -71,8 +71,8 @@ QUnit.test('sop/objectProperties with non entity dependent expression', async (a
 		const container = await objectProperties1.compute();
 		return container
 			.coreContent()!
-			.objects()
-			.map((o: Object3D) => o.name);
+			.allObjects()
+			.map((o: ObjectContent<CoreObjectType>) => o.name);
 	}
 	// const container = await objectProperties1.compute();
 	assert.deepEqual(await _getNames(), ['box_2', 'box_2']);
@@ -95,8 +95,8 @@ QUnit.test('sop/objectProperties with non entity dependent expression', async (a
 		const container = await objectProperties1.compute();
 		return container
 			.coreContent()!
-			.objects()
-			.map((o: Object3D) => o.renderOrder);
+			.allObjects()
+			.map((o: ObjectContent<CoreObjectType>) => o.renderOrder);
 	}
 	// - non entity dependent expression
 	objectProperties1.p.renderOrder.set(`ch('../${sphere1.name()}/radius')`);
@@ -117,8 +117,8 @@ QUnit.test('sop/objectProperties with non entity dependent expression', async (a
 		const container = await objectProperties1.compute();
 		return container
 			.coreContent()!
-			.objects()
-			.map((o: Object3D) => o.visible);
+			.allObjects()
+			.map((o: ObjectContent<CoreObjectType>) => o.visible);
 	}
 	// - non entity dependent expression
 	objectProperties1.p.visible.set(`ch('../${sphere1.name()}/radius')>0.5`);
@@ -148,8 +148,8 @@ QUnit.test('sop/objectProperties with entity dependent expression', async (asser
 	assert.deepEqual(
 		container
 			.coreContent()!
-			.objects()
-			.map((o: Object3D) => o.name),
+			.allObjects()
+			.map((o: ObjectContent<CoreObjectType>) => o.name),
 		['box_0', 'box_1']
 	);
 
@@ -165,8 +165,8 @@ QUnit.test('sop/objectProperties with entity dependent expression', async (asser
 	assert.deepEqual(
 		container
 			.coreContent()!
-			.objects()
-			.map((o: Object3D) => o.name),
+			.allObjects()
+			.map((o: ObjectContent<CoreObjectType>) => o.name),
 		['box_2', 'box_4']
 	);
 });
@@ -191,10 +191,10 @@ QUnit.test('sop/objectProperties does not fail with bad expression', async (asse
 		const container = await objectProperties1.compute();
 		const coreContent = container.coreContent();
 		assert.ok(coreContent);
-		const objects = coreContent!.objects();
+		const objects = coreContent!.allObjects();
 		let names: string[] = [];
 		for (let object of objects) {
-			object.traverse((child: Object3D) => names.push(child.name));
+			object.traverse((child: ObjectContent<CoreObjectType>) => names.push(child.name));
 		}
 		return names;
 	}

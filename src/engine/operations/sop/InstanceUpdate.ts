@@ -50,9 +50,9 @@ export class InstanceUpdateSopOperation extends BaseSopOperation {
 	}
 	private _cookForUpdateGeo(inputCoreGroups: CoreGroup[], params: InstanceUpdateSopParams) {
 		const instanceCoreGroup = inputCoreGroups[0];
-		const instanceObject = instanceCoreGroup.objects()[0] as Mesh;
+		const instanceObject = instanceCoreGroup.threejsObjects()[0] as Mesh;
 		const instanceBufferGeo = instanceObject.geometry as InstancedBufferGeometry;
-		const updatingMesh = inputCoreGroups[1].objectsWithGeo()[0] as Mesh;
+		const updatingMesh = inputCoreGroups[1].threejsObjectsWithGeo()[0] as Mesh;
 		const attribNames = instanceCoreGroup.geoAttribNamesMatchingMask(params.geoAttributes);
 		for (let attribName of attribNames) {
 			const instanceAttrib = instanceBufferGeo.getAttribute(attribName) as BufferAttribute;
@@ -64,7 +64,7 @@ export class InstanceUpdateSopOperation extends BaseSopOperation {
 	}
 	private _cookForUpdatePoints(inputCoreGroups: CoreGroup[], params: InstanceUpdateSopParams) {
 		const instanceCoreGroup = inputCoreGroups[0];
-		const instanceObject = instanceCoreGroup.objects()[0] as Mesh;
+		const instanceObject = instanceCoreGroup.threejsObjects()[0] as Mesh;
 		const instanceBufferGeo = instanceObject.geometry as InstancedBufferGeometry;
 		const updatingCoreGroup = inputCoreGroups[1];
 

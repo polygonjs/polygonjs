@@ -62,7 +62,7 @@ QUnit.test('sop merge has predictable order in assembled objects', async (assert
 
 	let container = await merge1.compute();
 	let core_group = container.coreContent()!;
-	let objects = core_group.objects();
+	let objects = core_group.allObjects();
 	assert.equal(objects[0].constructor, Points);
 	assert.equal(objects[1].constructor, Mesh);
 });
@@ -80,7 +80,7 @@ QUnit.test('sop merge can have missing inputs, save and load again', async (asse
 
 	let container = await merge1.compute();
 	let core_group = container.coreContent()!;
-	let objects = core_group.objects();
+	let objects = core_group.allObjects();
 	assert.equal(objects[0].constructor, Points);
 	assert.equal(objects[1].constructor, Mesh);
 
@@ -98,7 +98,7 @@ QUnit.test('sop merge can have missing inputs, save and load again', async (asse
 
 	container = await merge1.compute();
 	core_group = container.coreContent()!;
-	objects = core_group.objects();
+	objects = core_group.allObjects();
 	assert.equal(objects[0].constructor, Points);
 	assert.equal(objects[1].constructor, Mesh);
 });
@@ -117,7 +117,7 @@ QUnit.test('sop merge can update its inputs count', async (assert) => {
 
 	let container = await merge1.compute();
 	let core_group = container.coreContent()!;
-	let objects = core_group.objects();
+	let objects = core_group.allObjects();
 	assert.equal(objects[0].constructor, Points);
 	assert.equal(objects[1].constructor, Mesh);
 
@@ -135,7 +135,7 @@ QUnit.test('sop merge can update its inputs count', async (assert) => {
 
 	container = await merge1.compute();
 	core_group = container.coreContent()!;
-	objects = core_group.objects();
+	objects = core_group.allObjects();
 	assert.equal(objects[0].constructor, Points);
 	assert.equal(objects[1].constructor, Mesh);
 });

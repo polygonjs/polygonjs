@@ -1,7 +1,7 @@
-import {Vector3} from 'three';
+import {Box3, Vector3} from 'three';
 import {SolverSopNode} from '../../../../src/engine/nodes/sop/Solver';
 import {BooleanOperation} from '../../../../src/engine/operations/sop/Boolean';
-
+const tmpBox = new Box3();
 function create_required_nodes(node: SolverSopNode) {
 	const subnetInput1 = node.createNode('subnetInput');
 	const solverPreviousFrame = node.createNode('solverPreviousFrame');
@@ -38,7 +38,8 @@ QUnit.test('solver simple', async (assert) => {
 		const container = await solver1.compute();
 		const coreGroup = container.coreContent()!;
 
-		coreGroup.boundingBox().getSize(size);
+		coreGroup.boundingBox(tmpBox);
+		tmpBox.getSize(size);
 		return {coreGroup, size};
 	}
 

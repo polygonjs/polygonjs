@@ -6,7 +6,8 @@ import {Attribute} from '../../../core/geometry/Attribute';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 import {BufferAttribute, Object3D} from 'three';
 import {isBooleanTrue} from '../../../core/Type';
-import {CoreObject} from '../../../core/geometry/Object';
+import {BaseCoreObject} from '../../../core/geometry/_BaseObject';
+import {CoreObjectType} from '../../../core/geometry/ObjectContent';
 
 interface AttribIdSopParams extends DefaultOperationParams {
 	class: number;
@@ -40,13 +41,12 @@ export class AttribIdSopOperation extends BaseSopOperation {
 		// return this.createCoreGroupFromObjects(objects);
 	}
 	private async _addAttribute(attribClass: AttribClass, coreGroup: CoreGroup, params: AttribIdSopParams) {
-		const objects = coreGroup.objects();
 		switch (attribClass) {
 			case AttribClass.VERTEX:
-				return this._addPointAttributesToObjects(objects, params);
+				return this._addPointAttributesToObjects(coreGroup.threejsObjects(), params);
 
 			case AttribClass.OBJECT:
-				return this._addObjectAttributes(objects, params);
+				return this._addObjectAttributes(coreGroup.allCoreObjects(), params);
 			case AttribClass.CORE_GROUP:
 				// no effect
 				return;
@@ -54,15 +54,15 @@ export class AttribIdSopOperation extends BaseSopOperation {
 		TypeAssert.unreachable(attribClass);
 	}
 
-	private _addObjectAttributes(objects: Object3D[], params: AttribIdSopParams) {
+	private _addObjectAttributes(coreObjects: BaseCoreObject<CoreObjectType>[], params: AttribIdSopParams) {
 		let i = 0;
-		let objectsCount = objects.length;
-		for (const object of objects) {
+		let objectsCount = coreObjects.length;
+		for (const coreObject of coreObjects) {
 			if (isBooleanTrue(params.id)) {
-				CoreObject.addAttribute(object, params.idName, i);
+				coreObject.addAttribute(params.idName, i);
 			}
 			if (isBooleanTrue(params.idn)) {
-				CoreObject.addAttribute(object, params.idnName, i / (objectsCount - 1));
+				coreObject.addAttribute(params.idnName, i / (objectsCount - 1));
 			}
 
 			i++;

@@ -47,7 +47,7 @@ export class CameraWebXRARMarkerTrackingSopOperation extends BaseSopOperation {
 		return CameraSopNodeType.WEBXR_AR_MARKER_TRACKING;
 	}
 	override cook(inputCoreGroups: CoreGroup[], params: CameraWebXRARMarkerTrackingSopParams) {
-		const objects = inputCoreGroups[0].objects();
+		const objects = inputCoreGroups[0].threejsObjects();
 
 		if (Poly.thirdParty.markerTracking().hasController()) {
 			if (this._node) {

@@ -1,6 +1,8 @@
-import {Vector3} from 'three';
+import {Vector3, Box3} from 'three';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {SubnetSopNode} from '../../../../src/engine/nodes/sop/Subnet';
+const tmpBbox = new Box3();
+const tmpSize = new Vector3();
 
 function create_required_nodes(node: SubnetSopNode) {
 	const subnetInput1 = node.createNode('subnetInput');
@@ -50,9 +52,10 @@ QUnit.test('subnet simple', async (assert) => {
 	box1.p.size.set(30);
 	container = await subnet1.compute();
 	core_group = container.coreContent()!;
-	const size = new Vector3();
-	core_group.boundingBox().getSize(size);
-	assert.equal(size.x, 30);
+
+	core_group.boundingBox(tmpBbox);
+	tmpBbox.getSize(tmpSize);
+	assert.equal(tmpSize.x, 30);
 	assert.ok(!subnet1.states.error.message());
 });
 

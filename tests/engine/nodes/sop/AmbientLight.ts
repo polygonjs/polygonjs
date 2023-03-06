@@ -26,13 +26,13 @@ QUnit.test('sop/ambientLight hierarchy is maintained as it is cloned', async (as
 
 	let container = await ambientLight1.compute();
 	let coreGroup = container.coreContent();
-	let object = coreGroup?.objects()[0]!;
+	let object = coreGroup?.threejsObjects()[0]!;
 	assert.equal(objectsCount(object), 1);
 	assert.deepEqual(objectNames(object), ['ambientLight1']);
 
 	container = await transform1.compute();
 	coreGroup = container.coreContent();
-	object = coreGroup?.objects()[0]!;
+	object = coreGroup?.threejsObjects()[0]!;
 	assert.equal(objectsCount(object), 1);
 	assert.deepEqual(objectNames(object), ['ambientLight1']);
 });

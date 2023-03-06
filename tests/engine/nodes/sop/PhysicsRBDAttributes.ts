@@ -46,7 +46,7 @@ QUnit.test('sop/physicsRBDAttributes simple', async (assert) => {
 
 	createPhysicsWorldNodes(physicsWorld1);
 	const container = await physicsWorld1.compute();
-	const objects = container.coreContent()!.objects()[0].children;
+	const objects = container.coreContent()!.threejsObjects()[0].children;
 	for (let object of objects) {
 		assert.in_delta(object.position.y, 0, 0.01);
 	}
@@ -83,7 +83,7 @@ QUnit.test('sop/physicsRBDAttributes with expressions', async (assert) => {
 
 	createPhysicsWorldNodes(physicsWorld1);
 	const container = await physicsWorld1.compute();
-	const objects = container.coreContent()!.objects()[0].children;
+	const objects = container.coreContent()!.threejsObjects()[0].children;
 	const radii = objects.map(
 		(object: Object3D) => CoreObject.attribValue(object, PhysicsRBDRadiusAttribute.RADIUS) as number
 	);
@@ -129,7 +129,7 @@ QUnit.test('sop/physicsRBDAttributes capsule', async (assert) => {
 
 	createPhysicsWorldNodes(physicsWorld1);
 	const container = await physicsWorld1.compute();
-	const objects = container.coreContent()!.objects()[0].children;
+	const objects = container.coreContent()!.threejsObjects()[0].children;
 	const radii = objects.map((object: Object3D) => {
 		return CoreObject.attribValue(object, PhysicsRBDRadiusAttribute.RADIUS) as number;
 	});
@@ -176,7 +176,7 @@ QUnit.test('sop/physicsRBDAttributes cone', async (assert) => {
 
 	createPhysicsWorldNodes(physicsWorld1);
 	const container = await physicsWorld1.compute();
-	const objects = container.coreContent()!.objects()[0].children;
+	const objects = container.coreContent()!.threejsObjects()[0].children;
 	const radii = objects.map((object: Object3D) => {
 		return CoreObject.attribValue(object, PhysicsRBDRadiusAttribute.RADIUS) as number;
 	});
@@ -222,7 +222,7 @@ QUnit.test('sop/physicsRBDAttributes convex hull', async (assert) => {
 
 	createPhysicsWorldNodes(physicsWorld1);
 	const container = await physicsWorld1.compute();
-	const objects = container.coreContent()!.objects()[0].children;
+	const objects = container.coreContent()!.threejsObjects()[0].children;
 
 	for (let object of objects) {
 		assert.in_delta(object.position.y, 0, 0.01);
@@ -261,7 +261,7 @@ QUnit.test('sop/physicsRBDAttributes cuboid', async (assert) => {
 
 	createPhysicsWorldNodes(physicsWorld1);
 	const container = await physicsWorld1.compute();
-	const objects = container.coreContent()!.objects()[0].children;
+	const objects = container.coreContent()!.threejsObjects()[0].children;
 	const sizess = objects.map((object: Object3D) => {
 		const target = new Vector3();
 		CoreObject.attribValue(object, PhysicsRBDCuboidAttribute.SIZES, 0, target);
@@ -322,7 +322,7 @@ QUnit.test('sop/physicsRBDAttributes cuboid with expressions non entity dependen
 
 	createPhysicsWorldNodes(physicsWorld1);
 	const container = await physicsWorld1.compute();
-	const objects = container.coreContent()!.objects()[0].children;
+	const objects = container.coreContent()!.threejsObjects()[0].children;
 	const sizess = objects.map((object: Object3D) => {
 		const target = new Vector3();
 		CoreObject.attribValue(object, PhysicsRBDCuboidAttribute.SIZES, 0, target);
@@ -386,7 +386,7 @@ QUnit.test('sop/physicsRBDAttributes cuboid with expressions entity dependent', 
 	const container = await physicsWorld1.compute();
 	waitForPhysicsComputedAndMounted(physicsWorld1);
 
-	const objects = container.coreContent()!.objects()[0].children;
+	const objects = container.coreContent()!.threejsObjects()[0].children;
 	const sizess = objects.map((object: Object3D) => {
 		const target = new Vector3();
 		CoreObject.attribValue(object, PhysicsRBDCuboidAttribute.SIZES, 0, target);
@@ -448,7 +448,7 @@ QUnit.test('sop/physicsRBDAttributes cylinder', async (assert) => {
 
 	createPhysicsWorldNodes(physicsWorld1);
 	const container = await physicsWorld1.compute();
-	const objects = container.coreContent()!.objects()[0].children;
+	const objects = container.coreContent()!.threejsObjects()[0].children;
 	const radii = objects.map((object: Object3D) => {
 		return CoreObject.attribValue(object, PhysicsRBDRadiusAttribute.RADIUS) as number;
 	});
@@ -494,7 +494,7 @@ QUnit.test('sop/physicsRBDAttributes sphere', async (assert) => {
 
 	createPhysicsWorldNodes(physicsWorld1);
 	const container = await physicsWorld1.compute();
-	const objects = container.coreContent()!.objects()[0].children;
+	const objects = container.coreContent()!.threejsObjects()[0].children;
 	const radii = objects.map(
 		(object: Object3D) => CoreObject.attribValue(object, PhysicsRBDRadiusAttribute.RADIUS) as number
 	);
@@ -536,7 +536,7 @@ QUnit.test('sop/physicsRBDAttributes sphere with expression non entity dependent
 
 	createPhysicsWorldNodes(physicsWorld1);
 	const container = await physicsWorld1.compute();
-	const objects = container.coreContent()!.objects()[0].children;
+	const objects = container.coreContent()!.threejsObjects()[0].children;
 	const radii = objects.map(
 		(object: Object3D) => CoreObject.attribValue(object, PhysicsRBDRadiusAttribute.RADIUS) as number
 	);
@@ -578,7 +578,7 @@ QUnit.test('sop/physicsRBDAttributes sphere with expression entity dependent', a
 
 	createPhysicsWorldNodes(physicsWorld1);
 	const container = await physicsWorld1.compute();
-	const objects = container.coreContent()!.objects()[0].children;
+	const objects = container.coreContent()!.threejsObjects()[0].children;
 	const radii = objects.map(
 		(object: Object3D) => CoreObject.attribValue(object, PhysicsRBDRadiusAttribute.RADIUS) as number
 	);
@@ -624,7 +624,7 @@ QUnit.test('sop/physicsRBDAttributes sphere with size auto', async (assert) => {
 
 	createPhysicsWorldNodes(physicsWorld1);
 	const container = await physicsWorld1.compute();
-	const objects = container.coreContent()!.objects()[0].children;
+	const objects = container.coreContent()!.threejsObjects()[0].children;
 	const radii = objects.map(
 		(object: Object3D) => CoreObject.attribValue(object, PhysicsRBDRadiusAttribute.RADIUS) as number
 	);
@@ -667,7 +667,7 @@ QUnit.test('sop/physicsRBDAttributes trimesh', async (assert) => {
 
 	createPhysicsWorldNodes(physicsWorld1);
 	const container = await physicsWorld1.compute();
-	const objects = container.coreContent()!.objects()[0].children;
+	const objects = container.coreContent()!.threejsObjects()[0].children;
 
 	for (let object of objects) {
 		assert.in_delta(object.position.y, 0, 0.01);
@@ -708,7 +708,7 @@ QUnit.test('sop/physicsRBDAttributes can sleep with expressions non entity depen
 
 	async function _getCanSleeps() {
 		const container = await physicsWorld1.compute();
-		const objects = container.coreContent()!.objects()[0].children;
+		const objects = container.coreContent()!.threejsObjects()[0].children;
 
 		const cansleeps = objects.map((object: Object3D) => {
 			return CoreObject.attribValue(object, PhysicsCommonAttribute.CAN_SLEEP, 0) as boolean;
@@ -748,7 +748,7 @@ QUnit.test('sop/physicsRBDAttributes can sleep with expressions entity dependent
 
 	async function _getCanSleeps() {
 		const container = await physicsWorld1.compute();
-		const objects = container.coreContent()!.objects()[0].children;
+		const objects = container.coreContent()!.threejsObjects()[0].children;
 
 		const cansleeps = objects.map((object: Object3D) => {
 			return CoreObject.attribValue(object, PhysicsCommonAttribute.CAN_SLEEP, 0) as boolean;

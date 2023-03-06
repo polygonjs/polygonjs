@@ -20,7 +20,7 @@ export class ByBoundingObjectHelper {
 		if (!core_group2) {
 			return;
 		}
-		const boundingObject = core_group2?.objectsWithGeo()[0];
+		const boundingObject = core_group2?.threejsObjectsWithGeo()[0];
 		if (!boundingObject) {
 			return;
 		}

@@ -1,4 +1,4 @@
-import { BufferAttribute } from "three";
+import {BufferAttribute} from 'three';
 
 QUnit.test('skin simple with 2 curves', async (assert) => {
 	const geo1 = window.geo1;
@@ -40,7 +40,7 @@ QUnit.test('skin simple with 2 curves', async (assert) => {
 	assert.deepEqual(coreGroup.geoAttribNames().sort(), ['position', 'h'].sort());
 	assert.equal(container.pointsCount(), 4);
 	assert.equal(
-		((coreGroup.objectsWithGeo()[0].geometry.attributes['h'] as BufferAttribute).array as number[]).join(''),
+		((coreGroup.threejsObjectsWithGeo()[0].geometry.attributes['h'] as BufferAttribute).array as number[]).join(''),
 		[0, 1, 2, 3].join('')
 	);
 
@@ -54,7 +54,7 @@ QUnit.test('skin simple with 2 curves', async (assert) => {
 	assert.equal(container.pointsCount(), 4);
 	assert.deepEqual(coreGroup.geoAttribNames().sort(), ['normal', 'position', 'h'].sort());
 	assert.equal(
-		((coreGroup.objectsWithGeo()[0].geometry.attributes['h'] as BufferAttribute).array as number[]).join(''),
+		((coreGroup.threejsObjectsWithGeo()[0].geometry.attributes['h'] as BufferAttribute).array as number[]).join(''),
 		[0, 1, 2, 3].join('')
 	);
 });

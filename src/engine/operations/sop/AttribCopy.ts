@@ -77,8 +77,8 @@ export class AttribCopySopOperation extends BaseSopOperation {
 
 	private _copyPointAttributeBetweenCoreGroups(copyArgs: CopyBetweenCoreGroupsArgs) {
 		const {coreGroup, attribName, params} = copyArgs;
-		const srcObjects = coreGroup.src.objectsWithGeo();
-		const destObjects = coreGroup.dest.objectsWithGeo();
+		const srcObjects = coreGroup.src.threejsObjectsWithGeo();
+		const destObjects = coreGroup.dest.threejsObjectsWithGeo();
 
 		if (destObjects.length > srcObjects.length) {
 			this.states?.error.set('second input does not have enough objects to copy attributes from');

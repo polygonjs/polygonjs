@@ -29,7 +29,7 @@ export class TangentSopOperation extends BaseSopOperation {
 	override cook(inputCoreGroups: CoreGroup[], params: TangentSopParams) {
 		const inputCoreGroup = inputCoreGroups[0];
 
-		const objects = inputCoreGroup.objects();
+		const objects = inputCoreGroup.threejsObjects();
 		const newObjects: Object3D[] = [];
 
 		for (let object of objects) {

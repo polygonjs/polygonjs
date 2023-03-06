@@ -1,38 +1,37 @@
-import {CadCoreObject} from '../CadCoreObject';
-import {CadObjectType, TopoDS_Edge, TopoDS_Wire} from '../CadCommon';
-import {CadLoader} from '../CadLoader';
+import {CadGeometryType, TopoDS_Edge, TopoDS_Wire} from '../CadCommon';
+import {CadLoaderSync} from '../CadLoaderSync';
 import {MapUtils} from '../../../MapUtils';
+import {CadObject} from '../CadObject';
 
-const objectsByType: Map<CadObjectType, CadCoreObject<CadObjectType>[]> = new Map();
-export function cadMerge(inputObjects: CadCoreObject<CadObjectType>[]): CadCoreObject<CadObjectType>[] {
+const objectsByType: Map<CadGeometryType, CadObject<CadGeometryType>[]> = new Map();
+export function cadMerge(inputObjects: CadObject<CadGeometryType>[]): CadObject<CadGeometryType>[] {
 	objectsByType.clear();
 	for (let inputObject of inputObjects) {
-		let type = inputObject.type();
-		MapUtils.pushOnArrayAtEntry(objectsByType, type, inputObject);
+		MapUtils.pushOnArrayAtEntry(objectsByType, inputObject.type, inputObject);
 	}
 
-	const oc = CadLoader.oc();
+	const oc = CadLoaderSync.oc();
 
-	const newObjects: CadCoreObject<CadObjectType>[] = [];
+	const newObjects: CadObject<CadGeometryType>[] = [];
 
 	objectsByType.forEach((objects, type) => {
 		switch (type) {
-			case CadObjectType.EDGE: {
+			case CadGeometryType.EDGE: {
 				const api = new oc.BRepBuilderAPI_MakeWire_1();
 				for (let object of objects) {
-					api.Add_1(object.object() as TopoDS_Edge);
+					api.Add_1(object.cadGeometry() as TopoDS_Edge);
 				}
 				const wire = api.Wire();
-				newObjects.push(new CadCoreObject(wire, CadObjectType.WIRE));
+				newObjects.push(new CadObject(wire, CadGeometryType.WIRE));
 				return;
 			}
-			case CadObjectType.WIRE: {
+			case CadGeometryType.WIRE: {
 				const api = new oc.BRepBuilderAPI_MakeWire_1();
 				for (let object of objects) {
-					api.Add_2(object.object() as TopoDS_Wire);
+					api.Add_2(object.cadGeometry() as TopoDS_Wire);
 				}
 				const wire = api.Wire();
-				newObjects.push(new CadCoreObject(wire, CadObjectType.WIRE));
+				newObjects.push(new CadObject(wire, CadGeometryType.WIRE));
 				return;
 			}
 			// case CadObjectType.FACE: {

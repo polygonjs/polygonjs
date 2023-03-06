@@ -47,7 +47,7 @@ QUnit.test('actor/setPhysicsRBDPosition simple', async (assert) => {
 	physicsRBDAttributes1.p.restitution.set(0);
 
 	const container = await physicsWorld1.compute();
-	const object = container.coreContent()!.objects()[0].children[0];
+	const object = container.coreContent()!.threejsObjects()[0].children[0];
 	assert.in_delta(object.position.y, 0, 0.01);
 	await RendererUtils.withViewer({cameraNode}, async ({viewer, element}) => {
 		scene.play();

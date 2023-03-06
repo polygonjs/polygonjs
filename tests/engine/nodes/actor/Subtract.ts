@@ -69,7 +69,7 @@ QUnit.test('actor/subtract for more than 2 inputs float', async (assert) => {
 	// assert.notOk(subtract.params.get('sub4')!.states.error.active());
 
 	const container = await actor1.compute();
-	const object = container.coreContent()!.objects()[0] as Mesh;
+	const object = container.coreContent()!.threejsObjects()[0] as Mesh;
 
 	// wait to make sure objects are mounted to the scene
 	await CoreSleep.sleep(150);
@@ -123,7 +123,7 @@ QUnit.test('actor/subtract with 2 inputs float', async (assert) => {
 	assert.equal(subtract1.params.get('sub1')!.type(), ParamType.FLOAT);
 
 	const container = await actor1.compute();
-	const object = container.coreContent()!.objects()[0] as Mesh;
+	const object = container.coreContent()!.threejsObjects()[0] as Mesh;
 
 	await RendererUtils.withViewer({cameraNode: perspective_camera1}, async (args) => {
 		scene.play();
@@ -171,7 +171,7 @@ QUnit.test('actor/subtract with 2 inputs vector', async (assert) => {
 	assert.deepEqual(subtract1.params.get('sub1')?.valueSerialized(), [0, 0, 0]);
 
 	const container = await actor1.compute();
-	const object = container.coreContent()!.objects()[0] as Mesh;
+	const object = container.coreContent()!.threejsObjects()[0] as Mesh;
 
 	await RendererUtils.withViewer({cameraNode: perspective_camera1}, async (args) => {
 		scene.play();
@@ -235,7 +235,7 @@ QUnit.test('actor/subtract with 2 inputs vector from attrib to pos', async (asse
 	assert.deepEqual(subtract1.params.get('sub1')?.valueSerialized(), [0, 0, 0]);
 
 	const container = await actor1.compute();
-	const object = container.coreContent()!.objects()[0] as Mesh;
+	const object = container.coreContent()!.threejsObjects()[0] as Mesh;
 	function assertResPUnchanged() {
 		assert.deepEqual(object.userData.attributes.restP.toArray(), [1, 2, 3], 'restP as expected');
 	}
@@ -286,7 +286,7 @@ QUnit.test('actor/subtract with 2 inputs vector from attrib to pos 2', async (as
 	attribCreate1.p.name.set('restP');
 	attribCreate1.p.size.set(3);
 	attribCreate1.p.value3.set([1, 2, 3]);
-	transform1.setApplyOn(TransformTargetType.OBJECTS);
+	transform1.setApplyOn(TransformTargetType.OBJECT);
 	transform1.p.t.set([-5, -6, -7]);
 
 	const onManualTrigger1 = actor1.createNode('onManualTrigger');
@@ -311,7 +311,7 @@ QUnit.test('actor/subtract with 2 inputs vector from attrib to pos 2', async (as
 	assert.deepEqual(subtract1.params.get('sub1')?.valueSerialized(), [0, 0, 0]);
 
 	const container = await actor1.compute();
-	const object = container.coreContent()!.objects()[0] as Mesh;
+	const object = container.coreContent()!.threejsObjects()[0] as Mesh;
 	function assertResPUnchanged() {
 		assert.deepEqual(object.userData.attributes.restP.toArray(), [1, 2, 3], 'restP as expected');
 	}

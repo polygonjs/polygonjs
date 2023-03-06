@@ -1,14 +1,16 @@
 import {MeshBasicMatNode} from './../../../../src/engine/nodes/mat/MeshBasic';
 import {ImageCopNode} from './../../../../src/engine/nodes/cop/Image';
-import {Mesh, Object3D, Vector3, MeshBasicMaterial, Texture, BufferAttribute} from 'three';
+import {Box3, Mesh, Object3D, Vector3, MeshBasicMaterial, Texture, BufferAttribute} from 'three';
 import {AttribClass} from '../../../../src/core/geometry/Constant';
 import {ASSETS_ROOT} from '../../../../src/core/loader/AssetsUtils';
 import {ArrayUtils} from '../../../../src/core/ArrayUtils';
 import {TransformTargetType} from '../../../../src/core/Transform';
 import {ObjectTransformSpace} from '../../../../src/core/TransformSpace';
-import {CopySopNode, TransformMode} from '../../../../src/engine/nodes/sop/Copy';
+import {CopySopNode} from '../../../../src/engine/nodes/sop/Copy';
 import {HierarchyMode} from '../../../../src/engine/operations/sop/Hierarchy';
 import {saveAndLoadScene} from '../../../helpers/ImportHelper';
+const tmpBox = new Box3();
+const tmpCenter = new Vector3();
 
 QUnit.test('sop/copy simple', async (assert) => {
 	const geo1 = window.geo1;
@@ -20,22 +22,29 @@ QUnit.test('sop/copy simple', async (assert) => {
 	copy1.setInput(1, plane1);
 	plane1.p.direction.set([0, 0, 1]);
 
-	let container = await copy1.compute();
+	async function compute() {
+		const container = await copy1.compute();
+		const coreGroup = container.coreContent()!;
+		coreGroup.boundingBox(tmpBox);
+
+		return {bbox: tmpBox, pointsCount: coreGroup.pointsCount()};
+	}
+
 	// let core_group = container.coreContent()!;
 	// let {geometry} = core_group.objects()[0];
 
-	assert.equal(container.pointsCount(), 96);
-	assert.equal(container.boundingBox().min.y, -1.0);
+	assert.equal((await compute()).pointsCount, 96);
+	assert.equal((await compute()).bbox.min.y, -1.0);
 
 	plane1.p.useSegmentsCount.set(1);
 	plane1.p.size.y.set(2);
 
-	container = await copy1.compute();
+	// container = await copy1.compute();
 	// core_group = container.coreContent()!;
 	// ({geometry} = core_group.objects()[0]);
 
-	assert.equal(container.pointsCount(), 96);
-	assert.equal(container.boundingBox().min.y, -1.5);
+	assert.equal((await compute()).pointsCount, 96);
+	assert.equal((await compute()).bbox.min.y, -1.5);
 });
 
 QUnit.test('sop/copy with template and stamp', async (assert) => {
@@ -72,7 +81,7 @@ QUnit.test('sop/copy with template and stamp', async (assert) => {
 	// ({geometry} = core_group.objects()[0]);
 
 	assert.equal(container.pointsCount(), 28);
-	const objects = container.coreContent()!.objectsWithGeo();
+	const objects = container.coreContent()!.threejsObjectsWithGeo();
 	assert.equal(objects.length, 2);
 	assert.equal((objects[0].geometry.attributes.test as BufferAttribute).array[0], 1);
 	assert.equal((objects[1].geometry.attributes.test as BufferAttribute).array[0], 3);
@@ -129,7 +138,7 @@ QUnit.test('sop/copy objects with template and stamp', async (assert) => {
 	// let core_group = container.coreContent();
 	// let {geometry} = core_group.objects()[0];
 
-	const objects = container.coreContent()!.objects();
+	const objects = container.coreContent()!.threejsObjects();
 	assert.equal(objects.length, 4);
 	assert.equal(objects[0].userData.attributes.test, 0);
 	assert.equal(objects[1].userData.attributes.test, 1);
@@ -195,7 +204,7 @@ QUnit.test('sop/copy switching from useCopyExpr from true to false will give exp
 		const container = await attribPromote.compute();
 		return container
 			.coreContent()
-			?.objects()
+			?.threejsObjects()
 			.map((o: Object3D) => o.name);
 	}
 
@@ -218,7 +227,7 @@ QUnit.test('sop/copy accumulated transform without template points', async (asse
 	copy.p.t.z.set(1);
 	async function computeCopy(copy: CopySopNode) {
 		const container = await copy.compute();
-		return container.coreContent()?.objects()!;
+		return container.coreContent()?.threejsObjects()!;
 	}
 	const objects = await computeCopy(copy);
 	assert.in_delta(objects[0].position.z, 0, 0.05);
@@ -238,7 +247,7 @@ QUnit.test('sop/copy accumulated transform with template points and local transf
 	copy.setObjectTransformSpace(ObjectTransformSpace.LOCAL);
 	async function computeCopy(copy: CopySopNode) {
 		const container = await copy.compute();
-		return container.coreContent()?.objects()!;
+		return container.coreContent()?.threejsObjects()!;
 	}
 	const objects = await computeCopy(copy);
 	assert.in_delta(objects[0].position.y, 0, 0.05);
@@ -258,7 +267,7 @@ QUnit.test('sop/copy accumulated transform with template points and parent trans
 	copy.setObjectTransformSpace(ObjectTransformSpace.PARENT);
 	async function computeCopy(copy: CopySopNode) {
 		const container = await copy.compute();
-		return container.coreContent()?.objects()!;
+		return container.coreContent()?.threejsObjects()!;
 	}
 	const objects = await computeCopy(copy);
 	assert.in_delta(objects[0].position.z, -0.5, 0.0001);
@@ -275,10 +284,10 @@ QUnit.test('sop/copy accumulated transform with template points and geometry mod
 	copy.setInput(0, box);
 	copy.setInput(1, plane);
 	copy.p.t.z.set(1);
-	copy.setTransformMode(TransformMode.GEOMETRY);
+	copy.setTransformMode(TransformTargetType.GEOMETRY);
 	async function computeCopy(copy: CopySopNode) {
 		const container = await copy.compute();
-		return container.coreContent()?.objects()!;
+		return container.coreContent()?.threejsObjects()!;
 	}
 	const objects = await computeCopy(copy);
 	assert.in_delta(objects[0].position.z, 0, 0.0001);
@@ -311,7 +320,7 @@ QUnit.test('sop/copy transform only with not enough points or objects', async (a
 	copy2.p.transformOnly.set(1);
 	async function computeCopy(copy: CopySopNode) {
 		const container = await copy.compute();
-		return container.coreContent()?.objects()!;
+		return container.coreContent()?.threejsObjects()!;
 	}
 	let objects = await computeCopy(copy2);
 	assert.equal(objects.length, 5);
@@ -357,7 +366,7 @@ QUnit.test('sop/copy transform only with accumulated transform in local space', 
 	copy2.setObjectTransformSpace(ObjectTransformSpace.LOCAL);
 	async function computeCopy(copy: CopySopNode) {
 		const container = await copy.compute();
-		return container.coreContent()?.objects()!;
+		return container.coreContent()?.threejsObjects()!;
 	}
 	const objects = await computeCopy(copy2);
 	assert.in_delta(objects[0].position.y, 0, 0.05);
@@ -386,7 +395,7 @@ QUnit.test('sop/copy transform only with accumulated transform in parent space',
 	copy2.setObjectTransformSpace(ObjectTransformSpace.PARENT);
 	async function computeCopy(copy: CopySopNode) {
 		const container = await copy.compute();
-		return container.coreContent()?.objects()!;
+		return container.coreContent()?.threejsObjects()!;
 	}
 	const objects = await computeCopy(copy2);
 	assert.in_delta(objects[0].position.y, 0, 0.05);
@@ -409,7 +418,7 @@ QUnit.test('sop/copy can copy and move a hierarchy', async (assert) => {
 	hierarchy1.p.levels.set(2);
 	const transform1 = geo1.createNode('transform');
 	transform1.setInput(0, hierarchy1);
-	transform1.setApplyOn(TransformTargetType.OBJECTS);
+	transform1.setApplyOn(TransformTargetType.OBJECT);
 	transform1.p.scale.set(10);
 
 	// template pts
@@ -423,23 +432,28 @@ QUnit.test('sop/copy can copy and move a hierarchy', async (assert) => {
 	copy1.setInput(0, transform1);
 	copy1.setInput(1, transform2);
 
+	async function compute() {
+		const container = await copy1.compute();
+		const coreGroup = container.coreContent()!;
+		coreGroup.boundingBox(tmpBox);
+		tmpBox.getCenter(tmpCenter);
+
+		return {bbox: tmpBox, center: tmpCenter, pointsCount: coreGroup.pointsCount()};
+	}
+
 	// test result
 	copy1.setObjectTransformSpace(ObjectTransformSpace.PARENT);
-	let container = await copy1.compute();
-	let center = container.coreContent()!.boundingBox().getCenter(new Vector3())!;
-	assert.in_delta(center.x, 1, 0.1);
+	assert.in_delta((await compute()).center.x, 1, 0.1);
 
 	copy1.setObjectTransformSpace(ObjectTransformSpace.LOCAL);
-	container = await copy1.compute();
-	center = container.coreContent()!.boundingBox().getCenter(new Vector3())!;
-	assert.in_delta(center.x, 10, 0.1);
+	assert.in_delta((await compute()).center.x, 10, 0.1);
 });
 
 QUnit.test('sop/copy can handle expression inside a nodePath param such as sop/material', async (assert) => {
 	async function runAsserts(_copyNode: CopySopNode, _imageNodes: ImageCopNode[], _materialNodes: MeshBasicMatNode[]) {
 		let container = await _copyNode.compute();
 		let coreContent = container.coreContent()!;
-		let objects = coreContent.objects() as Mesh[];
+		let objects = coreContent.threejsObjects() as Mesh[];
 		assert.equal(objects.length, 3, '3 objects');
 		assert.equal(
 			(objects[0].material as MeshBasicMaterial).uuid,

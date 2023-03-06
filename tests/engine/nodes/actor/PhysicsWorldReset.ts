@@ -39,7 +39,7 @@ QUnit.test('actor/physicsWorldReset simple', async (assert) => {
 
 	createPhysicsWorldNodes(physicsWorld1);
 	let container = await physicsWorld1.compute();
-	let objects = container.coreContent()!.objects()[0].children;
+	let objects = container.coreContent()!.threejsObjects()[0].children;
 	for (let object of objects) {
 		assert.in_delta(object.position.y, 0, 0.01);
 	}
@@ -51,7 +51,7 @@ QUnit.test('actor/physicsWorldReset simple', async (assert) => {
 		}
 		scene.pause();
 		await CoreSleep.sleep(50);
-		objects = container.coreContent()!.objects()[0].children;
+		objects = container.coreContent()!.threejsObjects()[0].children;
 		// check that the objects have been reset
 		for (let object of objects) {
 			assert.in_delta(object.position.y, 0, 0.01, 'objects are back to initial pos');

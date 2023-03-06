@@ -10,7 +10,7 @@ export class CodeSopProcessor extends BaseCodeSopProcessor {
 	override initializeProcessor() {}
 	override cook(inputCoreGroups: CoreGroup[]) {
 		const inputCoreGroup = inputCoreGroups[0];
-		const objects = inputCoreGroup.objectsWithGeo();
+		const objects = inputCoreGroup.threejsObjectsWithGeo();
 		for (let object of objects) {
 			this._processObject(object);
 		}

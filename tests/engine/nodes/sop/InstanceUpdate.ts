@@ -27,7 +27,7 @@ QUnit.test('instanceUpdate simple on geo mode', async (assert) => {
 	async function getPosition() {
 		let container = await instanceUpdate1.compute();
 		let core_group = container.coreContent()!;
-		let objects = core_group.objectsWithGeo();
+		let objects = core_group.threejsObjectsWithGeo();
 		let first_object = objects[0];
 		let first_geo = first_object.geometry as InstancedBufferGeometry;
 		return (first_geo.getAttribute(Attribute.POSITION) as BufferAttribute).array;
@@ -62,7 +62,7 @@ QUnit.test('instanceUpdate simple on point mode', async (assert) => {
 	async function getPosition() {
 		let container = await instanceUpdate1.compute();
 		let core_group = container.coreContent()!;
-		let objects = core_group.objectsWithGeo();
+		let objects = core_group.threejsObjectsWithGeo();
 		let first_object = objects[0];
 		let first_geo = first_object.geometry as InstancedBufferGeometry;
 		return (first_geo.getAttribute(InstanceAttrib.POSITION) as BufferAttribute).array;

@@ -88,7 +88,7 @@ export class NormalsSopNode extends TypedSopNode<NormalsSopParamsConfig> {
 	}
 
 	private async _eval_expressions_for_core_group(core_group: CoreGroup) {
-		const core_objects = core_group.coreObjects();
+		const core_objects = core_group.threejsCoreObjects();
 		for (let i = 0; i < core_objects.length; i++) {
 			await this._eval_expressions_for_core_object(core_objects[i]);
 		}
@@ -154,7 +154,7 @@ export class NormalsSopNode extends TypedSopNode<NormalsSopParamsConfig> {
 	}
 
 	private _invert_normals(core_group: CoreGroup) {
-		for (let core_object of core_group.coreObjects()) {
+		for (let core_object of core_group.threejsCoreObjects()) {
 			const geometry = core_object.coreGeometry()?.geometry();
 			if (geometry) {
 				const normal_attrib = geometry.attributes[Attribute.NORMAL] as BufferAttribute;

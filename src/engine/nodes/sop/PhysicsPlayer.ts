@@ -153,14 +153,14 @@ export class PhysicsPlayerSopNode extends TypedSopNode<PhysicsPlayerSopParamsCon
 	override cook(inputCoreGroups: CoreGroup[]) {
 		const coreGroup0 = inputCoreGroups[0];
 		const coreGroup1 = inputCoreGroups[1];
-		const inputObjects = coreGroup0 ? coreGroup0.objects() : this._createDefaultInputObjects();
+		const inputObjects = coreGroup0 ? coreGroup0.threejsObjects() : this._createDefaultInputObjects();
 		const playerObject = inputObjects[0];
 		// console.log(inputObjects);
 		this._updatePlayerObject(playerObject);
 		const objects = [playerObject];
 
 		if (coreGroup1) {
-			const cameraObject = coreGroup1.objects()[0];
+			const cameraObject = coreGroup1.threejsObjects()[0];
 			if (cameraObject) {
 				objects.push(cameraObject);
 				const cameraPath = CorePath.objectPath(cameraObject);

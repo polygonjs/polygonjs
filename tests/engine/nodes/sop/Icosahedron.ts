@@ -9,7 +9,7 @@ QUnit.test('icosahedron simple', async (assert) => {
 
 	let container = await icosahedron1.compute();
 	let core_group = container.coreContent();
-	let geometry = core_group?.objectsWithGeo()[0].geometry;
+	let geometry = core_group?.threejsObjectsWithGeo()[0].geometry;
 	assert.equal((geometry?.getAttribute('position') as BufferAttribute).array.length, 180);
 	assert.notOk(icosahedron1.isDirty(), 'box is dirty');
 
@@ -29,7 +29,7 @@ QUnit.test('icosahedron simple', async (assert) => {
 
 	container = await icosahedron1.compute();
 	core_group = container.coreContent();
-	geometry = core_group?.objectsWithGeo()[0].geometry;
+	geometry = core_group?.threejsObjectsWithGeo()[0].geometry;
 	assert.equal((geometry?.getAttribute('position') as BufferAttribute).array.length, 36);
 	assert.notOk(icosahedron1.isDirty(), 'box is dirty');
 

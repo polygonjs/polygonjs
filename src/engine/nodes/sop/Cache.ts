@@ -45,7 +45,7 @@ export class CacheSopNode extends TypedSopNode<CacheSopParamsConfig> {
 
 		function toJSON() {
 			const json = [];
-			for (let object of coreGroup.objects()) {
+			for (let object of coreGroup.threejsObjects()) {
 				json.push(object.toJSON());
 			}
 			return JSON.stringify(json);

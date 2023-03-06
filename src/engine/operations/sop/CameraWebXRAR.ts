@@ -47,7 +47,7 @@ export class CameraWebXRARSopOperation extends BaseSopOperation {
 		return CameraSopNodeType.WEBXR_AR;
 	}
 	override cook(inputCoreGroups: CoreGroup[], params: CameraWebXRARSopParams) {
-		const objects = inputCoreGroups[0].objects();
+		const objects = inputCoreGroups[0].threejsObjects();
 
 		if (this._node) {
 			CameraWebXRARSopOperation.updateObject({scene: this._node.scene(), objects, params, active: true});

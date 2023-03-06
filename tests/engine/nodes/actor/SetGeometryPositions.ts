@@ -33,7 +33,7 @@ QUnit.test('actor/setGeometryPositions', async (assert) => {
 	constant2.p.vector3.set([2, 4, 6]);
 
 	const container = await actor1.compute();
-	const object = container.coreContent()!.objects()[0] as Mesh;
+	const object = container.coreContent()!.threejsObjects()[0] as Mesh;
 
 	const _positions: [Vector3, Vector3, Vector3] = [new Vector3(), new Vector3(), new Vector3()];
 	function _vector3Ceil(v: Vector3) {

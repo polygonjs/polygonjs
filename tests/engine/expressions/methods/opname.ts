@@ -36,7 +36,7 @@ QUnit.test('expression $OS', async (assert) => {
 
 	async function getName() {
 		const container = await perspectiveCamera1.compute();
-		const object = container.coreContent()!.objects()[0];
+		const object = container.coreContent()!.allObjects()[0];
 		return object.name;
 	}
 

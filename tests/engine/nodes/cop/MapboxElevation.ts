@@ -1,3 +1,5 @@
+import {Box3} from 'three';
+const tmpBox = new Box3();
 QUnit.test('cop/mapboxElevation simple', async (assert) => {
 	const scene = window.scene;
 	const geo1 = scene.root().createNode('geo');
@@ -20,10 +22,11 @@ QUnit.test('cop/mapboxElevation simple', async (assert) => {
 
 	await mapboxElevation1.compute();
 	const container = await heightMap1.compute();
-	assert.equal(container.boundingBox().min.x, -0.5);
-	assert.equal(container.boundingBox().max.x, 0.5);
-	assert.equal(container.boundingBox().min.z, -0.5);
-	assert.equal(container.boundingBox().max.z, 0.5);
-	assert.in_delta(container.boundingBox().min.y, 9.654235, 0.2);
-	assert.in_delta(container.boundingBox().max.y, 21.41265, 0.2);
+	container.boundingBox(tmpBox);
+	assert.equal(tmpBox.min.x, -0.5);
+	assert.equal(tmpBox.max.x, 0.5);
+	assert.equal(tmpBox.min.z, -0.5);
+	assert.equal(tmpBox.max.z, 0.5);
+	assert.in_delta(tmpBox.min.y, 9.654235, 0.2);
+	assert.in_delta(tmpBox.max.y, 21.41265, 0.2);
 });

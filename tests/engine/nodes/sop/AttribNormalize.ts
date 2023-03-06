@@ -1,4 +1,4 @@
-import { BufferAttribute } from 'three';
+import {BufferAttribute} from 'three';
 import {NormalizeMode} from '../../../../src/engine/operations/sop/AttribNormalize';
 
 QUnit.test('attrib normalize simple float', async (assert) => {
@@ -36,7 +36,7 @@ QUnit.test('attrib normalize simple float', async (assert) => {
 
 	let container = await merge2.compute();
 	let core_group = container.coreContent()!;
-	let geometry = core_group.objectsWithGeo()[0].geometry;
+	let geometry = core_group.threejsObjectsWithGeo()[0].geometry;
 	assert.ok(geometry);
 
 	let array = (geometry.getAttribute('blend') as BufferAttribute).array as number[];
@@ -49,7 +49,7 @@ QUnit.test('attrib normalize simple float', async (assert) => {
 
 	container = await attrib_normalize1.compute();
 	core_group = container.coreContent()!;
-	geometry = core_group.objectsWithGeo()[0].geometry;
+	geometry = core_group.threejsObjectsWithGeo()[0].geometry;
 	assert.ok(geometry);
 
 	array = (geometry.getAttribute('blend') as BufferAttribute).array as number[];
@@ -96,7 +96,7 @@ QUnit.test('attrib normalize simple vector', async (assert) => {
 
 	let container = await merge2.compute();
 	let core_group = container.coreContent()!;
-	let geometry = core_group.objectsWithGeo()[0].geometry;
+	let geometry = core_group.threejsObjectsWithGeo()[0].geometry;
 	assert.ok(geometry);
 
 	let array = (geometry.getAttribute('blend') as BufferAttribute).array as number[];
@@ -104,42 +104,7 @@ QUnit.test('attrib normalize simple vector', async (assert) => {
 	assert.equal(
 		array.join(','),
 		[
-			1,
-			2,
-			3,
-			1,
-			2,
-			3,
-			1,
-			2,
-			3,
-			1,
-			2,
-			3,
-			2,
-			3,
-			4,
-			2,
-			3,
-			4,
-			2,
-			3,
-			4,
-			2,
-			3,
-			4,
-			3,
-			4,
-			5,
-			3,
-			4,
-			5,
-			3,
-			4,
-			5,
-			3,
-			4,
-			5,
+			1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3, 2, 3, 4, 2, 3, 4, 2, 3, 4, 2, 3, 4, 3, 4, 5, 3, 4, 5, 3, 4, 5, 3, 4, 5,
 		].join(',')
 	);
 
@@ -149,7 +114,7 @@ QUnit.test('attrib normalize simple vector', async (assert) => {
 
 	container = await attrib_normalize1.compute();
 	core_group = container.coreContent()!;
-	geometry = core_group.objectsWithGeo()[0].geometry;
+	geometry = core_group.threejsObjectsWithGeo()[0].geometry;
 	assert.ok(geometry);
 
 	array = (geometry.getAttribute('blend') as BufferAttribute).array as number[];
@@ -157,42 +122,8 @@ QUnit.test('attrib normalize simple vector', async (assert) => {
 	assert.equal(
 		array.join(','),
 		[
-			0,
-			0,
-			0,
-			0,
-			0,
-			0,
-			0,
-			0,
-			0,
-			0,
-			0,
-			0,
-			0.5,
-			0.5,
-			0.5,
-			0.5,
-			0.5,
-			0.5,
-			0.5,
-			0.5,
-			0.5,
-			0.5,
-			0.5,
-			0.5,
-			1,
-			1,
-			1,
-			1,
-			1,
-			1,
-			1,
-			1,
-			1,
-			1,
-			1,
-			1,
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 1, 1, 1, 1,
+			1, 1, 1, 1, 1, 1, 1, 1,
 		].join(',')
 	);
 
@@ -202,7 +133,7 @@ QUnit.test('attrib normalize simple vector', async (assert) => {
 
 	container = await attrib_normalize1.compute();
 	core_group = container.coreContent()!;
-	geometry = core_group.objectsWithGeo()[0].geometry;
+	geometry = core_group.threejsObjectsWithGeo()[0].geometry;
 	assert.ok(geometry);
 
 	array = (geometry.getAttribute('blend') as BufferAttribute).array as number[];
@@ -210,42 +141,8 @@ QUnit.test('attrib normalize simple vector', async (assert) => {
 	assert.equal(
 		array.join(','),
 		[
-			0,
-			0,
-			0,
-			0,
-			0,
-			0,
-			0,
-			0,
-			0,
-			0,
-			0,
-			0,
-			0.375,
-			0,
-			1,
-			0.375,
-			0,
-			1,
-			0.375,
-			0,
-			1,
-			0.375,
-			0,
-			1,
-			1,
-			1,
-			0,
-			1,
-			1,
-			0,
-			1,
-			1,
-			0,
-			1,
-			1,
-			0,
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.375, 0, 1, 0.375, 0, 1, 0.375, 0, 1, 0.375, 0, 1, 1, 1, 0, 1, 1, 0, 1,
+			1, 0, 1, 1, 0,
 		].join(',')
 	);
 });
@@ -265,7 +162,7 @@ QUnit.test('attrib normalize vector length', async (assert) => {
 	attrib_normalize1.set_mode(NormalizeMode.VECTOR_TO_LENGTH_1);
 
 	let container = await attrib_normalize1.compute();
-	let geometry = container.coreContent()!.objectsWithGeo()[0].geometry;
+	let geometry = container.coreContent()!.threejsObjectsWithGeo()[0].geometry;
 	let array = (geometry.getAttribute('position') as BufferAttribute).array as number[];
 
 	assert.equal(array.join(','), [1, 0, 0]);

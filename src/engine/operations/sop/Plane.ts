@@ -1,12 +1,19 @@
 import {BaseSopOperation} from './_Base';
-import {BufferGeometry, Vector2, Vector3, PlaneGeometry, Quaternion, BoxGeometry} from 'three';
+import {BufferGeometry, Vector2, Vector3, PlaneGeometry, Quaternion, BoxGeometry, Box3} from 'three';
 import {CoreTransform} from '../../../core/Transform';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 import {ObjectType} from '../../../core/geometry/Constant';
-
+const tmpBox = new Box3();
+const tmpBoxPreRotation = new Box3();
+const tmpSize = new Vector3();
+const tmpCenter = new Vector3();
+const DEFAULT_UP = new Vector3(0, 0, 1);
+const q = new Quaternion();
+// const size = new Vector3();
+// const center = new Vector3();
 interface PlaneSopParams extends DefaultOperationParams {
 	size: Vector2;
 	useSegmentsCount: boolean;
@@ -16,10 +23,7 @@ interface PlaneSopParams extends DefaultOperationParams {
 	center: Vector3;
 	asLines: boolean;
 }
-const DEFAULT_UP = new Vector3(0, 0, 1);
-const q = new Quaternion();
-const size = new Vector3();
-const center = new Vector3();
+
 export class PlaneSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: PlaneSopParams = {
 		size: new Vector2(1, 1),
@@ -61,14 +65,14 @@ export class PlaneSopOperation extends BaseSopOperation {
 	}
 
 	private _cookWithInput(coreGroup: CoreGroup, params: PlaneSopParams) {
-		const bboxPreRotation = coreGroup.boundingBox();
-		bboxPreRotation.getCenter(center);
+		coreGroup.boundingBox(tmpBoxPreRotation);
+		tmpBoxPreRotation.getCenter(tmpCenter);
 
 		// create box
-		const bbox = coreGroup.boundingBox();
-		size.copy(bbox.max).sub(bbox.min);
-		center.copy(bbox.max).add(bbox.min).multiplyScalar(0.5);
-		const boxGeometry = new BoxGeometry(size.x, size.y, size.z, 1, 1, 1);
+		coreGroup.boundingBox(tmpBox);
+		tmpBox.getSize(tmpSize);
+		tmpBox.getCenter(tmpCenter);
+		const boxGeometry = new BoxGeometry(tmpSize.x, tmpSize.y, tmpSize.z, 1, 1, 1);
 
 		// rotate box
 		function _applyInputQuaternion(_q: Quaternion) {
@@ -85,15 +89,15 @@ export class PlaneSopOperation extends BaseSopOperation {
 		// }
 		_setInputRotation();
 		const bboxPostRotation = boxGeometry.boundingBox!; //coreGroup.boundingBox(true);
-		bboxPostRotation.getSize(size);
+		bboxPostRotation.getSize(tmpSize);
 		// bboxPreRotation.getCenter(center); // debug
 		// _resetInputRotation();
 
-		const size2d = new Vector2(size.x, size.y);
+		const size2d = new Vector2(tmpSize.x, tmpSize.y);
 		const geometry = this._createPlane(size2d, params);
 
 		this._coreTransform.rotateGeometry(geometry, DEFAULT_UP, params.direction);
-		geometry.translate(center.x, center.y, center.z);
+		geometry.translate(tmpCenter.x, tmpCenter.y, tmpCenter.z);
 
 		const object = this._createPlaneObject(geometry, params);
 		return this.createCoreGroupFromObjects([object]);

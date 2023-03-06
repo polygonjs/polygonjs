@@ -24,7 +24,7 @@ QUnit.test('actor/OnObjectDispatchEvent simple', async (assert) => {
 	onObjectDispatchEvent.p.eventNames.set('A B');
 
 	const container = await actor1.compute();
-	const object = container.coreContent()!.objects()[0];
+	const object = container.coreContent()!.threejsObjects()[0];
 	await geo1.compute();
 	// wait to make sure the scene is fully generated,
 	// so that it can be traversed the the actorsManager

@@ -49,7 +49,7 @@ export class ActorSopNode extends TypedSopNode<ActorSopParamsConfig> {
 
 	override cook(inputCoreGroups: CoreGroup[]) {
 		const coreGroup = inputCoreGroups[0];
-		const objects = coreGroup.objects();
+		const objects = coreGroup.threejsObjects();
 
 		const actorNode = this._findActorNode();
 		if (actorNode) {

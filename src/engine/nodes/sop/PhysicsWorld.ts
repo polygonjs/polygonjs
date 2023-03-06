@@ -69,7 +69,7 @@ export class PhysicsWorldSopNode extends TypedSopNode<PhysicsWorldSopParamsConfi
 		worldObject.matrixAutoUpdate = false;
 		CoreObject.addAttribute(worldObject, PhysicsIdAttribute.WORLD, this.graphNodeId());
 
-		const inputObjects = coreGroup.objects();
+		const inputObjects = coreGroup.threejsObjects();
 		for (let inputObject of inputObjects) {
 			worldObject.add(inputObject);
 		}

@@ -27,7 +27,7 @@ export class CameraFrameModeSopOperation extends BaseSopOperation {
 		return CameraSopNodeType.FRAME_MODE;
 	}
 	override cook(inputCoreGroups: CoreGroup[], params: CameraFrameModeSopParams) {
-		const objects = inputCoreGroups[0].objects();
+		const objects = inputCoreGroups[0].threejsObjects();
 
 		if (this._node) {
 			CameraFrameModeSopOperation.updateObject({objects, params});

@@ -25,7 +25,7 @@ export class BVHVisualizerSopOperation extends BaseSopOperation {
 	}
 	override cook(inputCoreGroups: CoreGroup[], params: BVHVisualizerSopParams) {
 		const inputCoreGroup = inputCoreGroups[0];
-		const objects = inputCoreGroup.objects();
+		const objects = inputCoreGroup.threejsObjects();
 		const newObjects: Object3D[] = [];
 		for (let object of objects) {
 			newObjects.push(object);

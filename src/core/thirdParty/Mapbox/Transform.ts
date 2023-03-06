@@ -7,6 +7,11 @@ import {CoreMapboxUtils} from './Utils';
 import mapboxgl from 'mapbox-gl';
 import {PolyDictionary} from '../../../types/GlobalTypes';
 import {LngLat} from './Common';
+const tmpBox = new Box3();
+const tmpCenter = new Vector3();
+const tmpSize = new Vector3();
+// const tmpSize1 = new Vector3()
+// const tmpSize2 = new Vector3()
 
 const MAT_RX = new Matrix4().makeRotationAxis(new Vector3(1, 0, 0), -Math.PI / 2);
 const POSITION_ATTRIB_NAME = 'position';
@@ -52,20 +57,22 @@ export class CoreMapboxTransform {
 	// }
 
 	transform_group2(group: Group) {
-		const core_group = new CoreGroup();
-		core_group.setObjects(group.children);
-		const center = core_group.center();
-		const bbox = core_group.boundingBox();
-		const size = core_group.size();
+		const coreGroup = new CoreGroup();
+		coreGroup.setAllObjects(group.children);
+		coreGroup.boundingBox(tmpBox);
+		tmpBox.getCenter(tmpCenter);
+		tmpBox.getSize(tmpSize);
 
-		const new_center = CoreMapboxUtils.fromLLv(center);
-		const new_min = CoreMapboxUtils.fromLLv(bbox.min);
-		const new_max = CoreMapboxUtils.fromLLv(bbox.max);
+		const new_center = CoreMapboxUtils.fromLLv(tmpCenter);
+		const new_min = CoreMapboxUtils.fromLLv(tmpBox.min);
+		const new_max = CoreMapboxUtils.fromLLv(tmpBox.max);
 
-		const new_size = new_max.clone().sub(new_min);
+		const new_size = new_max /*().clone()*/
+			.sub(new_min);
 
 		// const tr_offset = center.clone().sub(new_center)
-		const s_offset = size.clone().multiply(new_size);
+		const s_offset = tmpSize /*.clone()*/
+			.multiply(new_size);
 		s_offset.x = Math.abs(s_offset.x);
 		s_offset.z = Math.abs(s_offset.z);
 		s_offset.y = 0.5 * (s_offset.x + s_offset.z);
@@ -73,7 +80,7 @@ export class CoreMapboxTransform {
 		const mat_tr = new Matrix4();
 		const mat_tr_reset = new Matrix4();
 		const mat_s = new Matrix4();
-		mat_tr_reset.makeTranslation(-center.x, -center.y, -center.z);
+		mat_tr_reset.makeTranslation(-tmpCenter.x, -tmpCenter.y, -tmpCenter.z);
 		mat_tr.makeTranslation(new_center.x - this.pos_offset[0], new_center.y, new_center.z - this.pos_offset[1]);
 		mat_s.makeScale(s_offset.x, s_offset.y, s_offset.z);
 
@@ -218,9 +225,9 @@ export class CoreMapboxTransform {
 
 	private group_bbox_ratio(group: Group): number {
 		const core_group = new CoreGroup();
-		core_group.setObjects(group.children);
-		const bbox = core_group.boundingBox();
-		return this.bbox_ratio(bbox);
+		core_group.setAllObjects(group.children);
+		core_group.boundingBox(tmpBox);
+		return this.bbox_ratio(tmpBox);
 	}
 	// private geometry_bbox_ratio(geometry: BufferGeometry): number {
 	// 	geometry.computeBoundingBox();

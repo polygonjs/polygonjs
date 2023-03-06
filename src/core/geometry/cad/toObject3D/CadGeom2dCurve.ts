@@ -1,18 +1,15 @@
-import type {OpenCascadeInstance, Geom2d_Curve, TesselationParams} from '../CadCommon';
+import type {Geom2d_Curve, TesselationParams} from '../CadCommon';
 import {BufferGeometry, Float32BufferAttribute, Vector2, MathUtils} from 'three';
 import {BaseSopOperation} from '../../../../engine/operations/sop/_Base';
 import {CAD_MATERIAL} from '../CadConstant';
-import {CadLoader} from '../CadLoader';
+import {CadLoaderSync} from '../CadLoaderSync';
 // import {withCadException} from '../CadExceptionHandler';
 import {ObjectType} from '../../Constant';
 
 const STRIDE = 3;
 // let point: gp_Pnt2d | undefined;
-export function cadGeom2dCurveToObject3D(
-	oc: OpenCascadeInstance,
-	object: Geom2d_Curve,
-	tesselationParams: TesselationParams
-) {
+export function cadGeom2dCurveToObject3D(object: Geom2d_Curve, tesselationParams: TesselationParams) {
+	const oc = CadLoaderSync.oc();
 	const curve = new oc.Handle_Geom2d_Curve_2(object);
 	const geom2Dadaptor = new oc.Geom2dAdaptor_Curve_2(curve);
 
@@ -24,7 +21,7 @@ export function cadGeom2dCurveToObject3D(
 
 	let positions: number[] | undefined;
 	let indices: number[] | undefined;
-	const point = CadLoader.gp_Pnt2d;
+	const point = CadLoaderSync.gp_Pnt2d;
 
 	if (uniformAbscissa.IsDone()) {
 		const pointsCount = uniformAbscissa.NbPoints();
@@ -52,14 +49,14 @@ export function cadGeom2dCurveToObject3D(
 
 // let _t: gp_Vec2d | undefined;
 // let _pivot: gp_Pnt2d | undefined;
-export function cadGeom2dCurveTransform(curve: Geom2d_Curve, t: Vector2, r: number, s: number) {
+export function cadGeom2dCurveTransform(curve: Geom2d_Curve, t: Vector2, r: number, s: number, p: Vector2) {
 	// const oc = CadLoader.oc();
 	// _t = _t || new oc.gp_Vec2d_1();
-	const _t = CadLoader.gp_Vec2d;
-	const _pivot = CadLoader.gp_Pnt2d;
+	const _t = CadLoaderSync.gp_Vec2d;
+	const _pivot = CadLoaderSync.gp_Pnt2d;
 	// _pivot = _pivot || new oc.gp_Pnt2d_1();
 	_t.SetCoord_2(t.x, t.y);
-	_pivot.SetCoord_2(t.x, t.y);
+	_pivot.SetCoord_2(p.x, p.y);
 	curve.Translate_1(_t);
 	curve.Rotate(_pivot, MathUtils.degToRad(r));
 	curve.Scale(_pivot, s);
@@ -69,7 +66,7 @@ export function cadGeom2dCurveTransform(curve: Geom2d_Curve, t: Vector2, r: numb
 	// return newPoint;
 }
 export function cadGeom2dCurveTranslate(curve: Geom2d_Curve, t: Vector2) {
-	const _t = CadLoader.gp_Vec2d;
+	const _t = CadLoaderSync.gp_Vec2d;
 	_t.SetCoord_2(t.x, t.y);
 	curve.Translate_1(_t);
 }

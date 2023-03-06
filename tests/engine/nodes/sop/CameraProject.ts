@@ -26,7 +26,7 @@ async function createCameraProject(cameraNode: PerspectiveCameraSopNode) {
 async function getBbox(cameraProject: CameraProjectSopNode) {
 	const container = await cameraProject.compute();
 	const core_group = container.coreContent()!;
-	const geometry = core_group?.objectsWithGeo()[0].geometry;
+	const geometry = core_group?.threejsObjectsWithGeo()[0].geometry;
 	geometry.computeBoundingBox();
 	return geometry.boundingBox!;
 }

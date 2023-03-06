@@ -113,26 +113,29 @@ QUnit.test('sop/delete: (class=object) simple box', async (assert) => {
 
 	let container = await merge1.compute();
 	let core_object = container.coreContent()!;
-	assert.equal(core_object.coreObjects().length, 2);
-	assert.equal(objectTypeFromConstructor(core_object.coreObjects()[0].object().constructor), ObjectType.MESH);
-	assert.equal(objectTypeFromConstructor(core_object.coreObjects()[1].object().constructor), ObjectType.MESH);
+	assert.equal(core_object.threejsCoreObjects().length, 2);
+	assert.equal(objectTypeFromConstructor(core_object.threejsCoreObjects()[0].object().constructor), ObjectType.MESH);
+	assert.equal(objectTypeFromConstructor(core_object.threejsCoreObjects()[1].object().constructor), ObjectType.MESH);
 
 	// now with keep_points on
 	delete1.p.keepPoints.set(1);
 	container = await delete1.compute();
 	assert.notOk(delete1.states.error.message());
 	core_object = container.coreContent()!;
-	assert.equal(core_object.coreObjects().length, 2);
-	assert.equal(objectTypeFromConstructor(core_object.coreObjects()[0].object().constructor), ObjectType.MESH);
-	assert.equal(objectTypeFromConstructor(core_object.coreObjects()[1].object().constructor), ObjectType.POINTS);
+	assert.equal(core_object.threejsCoreObjects().length, 2);
+	assert.equal(objectTypeFromConstructor(core_object.threejsCoreObjects()[0].object().constructor), ObjectType.MESH);
+	assert.equal(
+		objectTypeFromConstructor(core_object.threejsCoreObjects()[1].object().constructor),
+		ObjectType.POINTS
+	);
 
 	// now with keep_points off
 	delete1.p.keepPoints.set(0);
 	container = await delete1.compute();
 	assert.notOk(delete1.states.error.message());
 	core_object = container.coreContent()!;
-	assert.equal(core_object.coreObjects().length, 1);
-	assert.equal(objectTypeFromConstructor(core_object.coreObjects()[0].object().constructor), ObjectType.MESH);
+	assert.equal(core_object.threejsCoreObjects().length, 1);
+	assert.equal(objectTypeFromConstructor(core_object.threejsCoreObjects()[0].object().constructor), ObjectType.MESH);
 });
 
 QUnit.test('sop/delete: (class=point) string attrib', async (assert) => {
@@ -233,12 +236,12 @@ QUnit.test('sop/delete byBoundingObject 2', async (assert) => {
 	container = await delete1.compute();
 	assert.equal(container.pointsCount(), 1110);
 
-	transform1.setApplyOn(TransformTargetType.OBJECTS);
+	transform1.setApplyOn(TransformTargetType.OBJECT);
 	transform1.p.t.z.set(1);
 	container = await delete1.compute();
 	assert.equal(container.pointsCount(), 1110);
 
-	transform1.setApplyOn(TransformTargetType.GEOMETRIES);
+	transform1.setApplyOn(TransformTargetType.GEOMETRY);
 	container = await delete1.compute();
 	assert.equal(container.pointsCount(), 1005);
 

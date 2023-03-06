@@ -1,4 +1,5 @@
-import {BufferAttribute} from 'three';
+import {BufferAttribute,Box3} from 'three';
+const tmpBox = new Box3()
 
 QUnit.test('csg/expand with 2D primitive', async (assert) => {
 	const geo1 = window.geo1;
@@ -13,27 +14,30 @@ QUnit.test('csg/expand with 2D primitive', async (assert) => {
 
 	let container = await csgNetwork1.compute();
 	let core_group = container.coreContent();
-	let geometry = core_group?.objectsWithGeo()[0].geometry;
+	let geometry = core_group?.threejsObjectsWithGeo()[0].geometry;
 	assert.equal((geometry?.getAttribute('position') as BufferAttribute).array.length, 324);
-	assert.in_delta(container.boundingBox().min.x, -1.099, 0.002);
-	assert.in_delta(container.boundingBox().max.x, 1.099, 0.002);
+	container.boundingBox(tmpBox)
+	assert.in_delta(tmpBox.min.x, -1.099, 0.002);
+	assert.in_delta(tmpBox.max.x, 1.099, 0.002);
 	assert.notOk(csgNetwork1.isDirty(), 'box is dirty');
 
 	expand1.p.delta.set(0.5);
 	container = await csgNetwork1.compute();
 	core_group = container.coreContent();
-	geometry = core_group?.objectsWithGeo()[0].geometry;
+	geometry = core_group?.threejsObjectsWithGeo()[0].geometry;
 	assert.equal((geometry?.getAttribute('position') as BufferAttribute).array.length, 324);
-	assert.in_delta(container.boundingBox().min.x, -1.497, 0.002);
-	assert.in_delta(container.boundingBox().max.x, 1.497, 0.002);
+	container.boundingBox(tmpBox)
+	assert.in_delta(tmpBox.min.x, -1.497, 0.002);
+	assert.in_delta(tmpBox.max.x, 1.497, 0.002);
 	assert.notOk(csgNetwork1.isDirty(), 'box is dirty');
 
 	expand1.p.segments.set(5);
 	container = await csgNetwork1.compute();
 	core_group = container.coreContent();
-	geometry = core_group?.objectsWithGeo()[0].geometry;
+	geometry = core_group?.threejsObjectsWithGeo()[0].geometry;
 	assert.equal((geometry?.getAttribute('position') as BufferAttribute).array.length, 420);
-	assert.in_delta(container.boundingBox().min.x, -1.497, 0.002);
-	assert.in_delta(container.boundingBox().max.x, 1.497, 0.002);
+	container.boundingBox(tmpBox)
+	assert.in_delta(tmpBox.min.x, -1.497, 0.002);
+	assert.in_delta(tmpBox.max.x, 1.497, 0.002);
 	assert.notOk(csgNetwork1.isDirty(), 'box is dirty');
 });

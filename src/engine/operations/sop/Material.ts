@@ -101,7 +101,9 @@ export class MaterialSopOperation extends BaseSopOperation {
 
 		this._materialByUuid.clear();
 
-		const objects = CoreMask.coreObjects(params.group, coreGroup).map((co) => co.object());
+		const objects = CoreMask.filterCoreObjects(params.group, coreGroup.allCoreObjects()).map((co) =>
+			co.object()
+		) as Object3D[];
 		for (let object of objects) {
 			if (params.applyToChildren) {
 				object.traverse((child) => {

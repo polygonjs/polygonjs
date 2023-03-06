@@ -15,6 +15,7 @@ import {StringParam} from '../../params/String';
 import {BooleanParam} from '../../params/Boolean';
 import {IntegerParam} from '../../params/Integer';
 import {FloatParam} from '../../params/Float';
+import {isObject3D} from '../../../core/geometry/ObjectContent';
 const DEFAULT = ObjectPropertiesSopOperation.DEFAULT_PARAMS;
 class ObjectPropertiesSopParamsConfig extends NodeParamsConfig {
 	/** @param toggle on to apply recursively to children */
@@ -121,15 +122,17 @@ export class ObjectPropertiesSopNode extends TypedSopNode<ObjectPropertiesSopPar
 	private async _cookWithExpressions(coreGroup: CoreGroup) {
 		await this._cookWithExpressionsForCoreGroup(coreGroup);
 		if (isBooleanTrue(this.pv.applyToChildren)) {
-			const objects = coreGroup.objects();
+			const objects = coreGroup.allObjects();
 			for (let object of objects) {
-				const subCoreGroup = CoreGroup._fromObjects(object.children);
-				await this._cookWithExpressionsForCoreGroup(subCoreGroup);
+				if (isObject3D(object)) {
+					const subCoreGroup = CoreGroup._fromObjects(object.children);
+					await this._cookWithExpressionsForCoreGroup(subCoreGroup);
+				}
 			}
 		}
 	}
 	private async _cookWithExpressionsForCoreGroup(coreGroup: CoreGroup) {
-		const entities = coreGroup.coreObjects();
+		const entities = coreGroup.allCoreObjects();
 		const p = this.p;
 
 		async function applyStringParam(booleanParam: BooleanParam, valueParam: StringParam, property: 'name') {

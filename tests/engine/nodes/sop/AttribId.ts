@@ -1,8 +1,8 @@
-import {Object3D} from 'three/src/core/Object3D';
-import {CoreObject} from './../../../../src/core/geometry/Object';
 import {AttribClass} from '../../../../src/core/geometry/Constant';
 import {AttributeHelper} from '../../../helpers/AttributeHelper';
-import { BufferAttribute } from 'three';
+import {BufferAttribute} from 'three';
+import {coreObjectFactory} from '../../../../src/core/geometry/CoreObjectFactory';
+import {CoreObjectType, ObjectContent} from '../../../../src/core/geometry/ObjectContent';
 
 QUnit.test('sop/attribId simple on points', async (assert) => {
 	const geo1 = window.geo1;
@@ -15,12 +15,12 @@ QUnit.test('sop/attribId simple on points', async (assert) => {
 
 	let container = await attribId1.compute();
 	let coreGroup = container.coreContent()!;
-	const geo = coreGroup.objectsWithGeo()[0].geometry;
+	const geo = coreGroup.threejsObjectsWithGeo()[0].geometry;
 	assert.ok(geo.getAttribute('id'));
 	assert.ok(geo.getAttribute('idn'));
 	assert.deepEqual(((geo.getAttribute('id') as BufferAttribute).array as number[]).join(','), [0, 1, 2, 3].join(','));
 	assert.deepEqual(
-		AttributeHelper.toArray(geo.getAttribute('idn')  as BufferAttribute)
+		AttributeHelper.toArray(geo.getAttribute('idn') as BufferAttribute)
 			.map((n) => n.toFixed(3))
 			.join(','),
 		[0, 1 / 3, 2 / 3, 1].map((n) => n.toFixed(3)).join(',')
@@ -41,14 +41,14 @@ QUnit.test('sop/attribId simple on objects', async (assert) => {
 
 	let container = await attribId1.compute();
 	let coreGroup = container.coreContent()!;
-	const objects = coreGroup.objects();
+	const objects = coreGroup.allObjects();
 	assert.equal(objects.length, 4);
 	assert.deepEqual(
-		objects.map((o: Object3D) => CoreObject.attribValue(o, 'id')),
+		objects.map((o: ObjectContent<CoreObjectType>) => coreObjectFactory(o).attribValue(o, 'id')),
 		[0, 1, 2, 3]
 	);
 	assert.deepEqual(
-		objects.map((o: Object3D) => CoreObject.attribValue(o, 'idn')),
+		objects.map((o: ObjectContent<CoreObjectType>) => coreObjectFactory(o).attribValue(o, 'idn')),
 		[0, 1 / 3, 2 / 3, 1]
 	);
 });

@@ -24,7 +24,7 @@ QUnit.test('actor/GetParent', async (assert) => {
 		hierarchy1.setInput(0, objectProperties1);
 		hierarchy1.setMode(HierarchyMode.ADD_PARENT);
 
-		transform1.setApplyOn(TransformTargetType.OBJECTS);
+		transform1.setApplyOn(TransformTargetType.OBJECT);
 		transform1.p.t.set([1, 0, 0]);
 		transform1.setInput(0, hierarchy1);
 		transform1.flags.display.set(true);
@@ -58,7 +58,7 @@ QUnit.test('actor/GetParent', async (assert) => {
 	setObjectPosition1.setInput('position', getObjectProperty1, 'position');
 
 	const container = await actor1.compute();
-	const object = container.coreContent()!.objects()[0] as Mesh;
+	const object = container.coreContent()!.threejsObjects()[0] as Mesh;
 
 	// wait to make sure objects are mounted to the scene
 	await CoreSleep.sleep(150);

@@ -1,7 +1,7 @@
-import {Object3D} from 'three';
+import {Object3D, Box3} from 'three';
 import {AttribClass} from '../../../../src/core/geometry/Constant';
 import {AXISES, Axis, SortMode} from '../../../../src/engine/operations/sop/Sort';
-
+const tmpBox = new Box3();
 QUnit.test('sop/sort simple with mesh axis', async (assert) => {
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false); // cancels geo node displayNodeController
@@ -20,20 +20,28 @@ QUnit.test('sop/sort simple with mesh axis', async (assert) => {
 	delete1.p.byExpression.set(true);
 	delete1.p.expression.set('@ptnum>=$F');
 
+	async function compute() {
+		const container = await delete1.compute();
+		const coreGroup = container.coreContent()!;
+		coreGroup.boundingBox(tmpBox);
+
+		return {bbox: tmpBox, pointsCount: coreGroup.pointsCount()};
+	}
+
 	window.scene.setFrame(1);
-	let coreGroup = (await delete1.compute()).coreContent()!;
-	assert.equal(coreGroup.boundingBox().min.y, Infinity);
-	assert.equal(coreGroup.boundingBox().max.y, -Infinity);
+	// let coreGroup = (await delete1.compute()).coreContent()!;
+	assert.equal((await compute()).bbox.min.y, Infinity);
+	assert.equal((await compute()).bbox.max.y, -Infinity);
 
 	window.scene.setFrame(10);
-	coreGroup = (await delete1.compute()).coreContent()!;
-	assert.in_delta(coreGroup.boundingBox().min.y, 0.35, 0.1);
-	assert.in_delta(coreGroup.boundingBox().max.y, 0.85, 0.1);
+	// coreGroup = (await delete1.compute()).coreContent()!;
+	assert.in_delta((await compute()).bbox.min.y, 0.35, 0.1);
+	assert.in_delta((await compute()).bbox.max.y, 0.85, 0.1);
 
 	window.scene.setFrame(30);
-	coreGroup = (await delete1.compute()).coreContent()!;
-	assert.in_delta(coreGroup.boundingBox().min.y, -0.85, 0.1);
-	assert.in_delta(coreGroup.boundingBox().max.y, 0.85, 0.1);
+	// coreGroup = (await delete1.compute()).coreContent()!;
+	assert.in_delta((await compute()).bbox.min.y, -0.85, 0.1);
+	assert.in_delta((await compute()).bbox.max.y, 0.85, 0.1);
 });
 
 QUnit.test('sop/sort simple with mesh random', async (assert) => {
@@ -61,7 +69,7 @@ QUnit.test('sop/sort simple with mesh random', async (assert) => {
 		return (
 			container
 				.coreContent()
-				?.objects()
+				?.threejsObjects()
 				.map((o: Object3D) => o.name || '') || []
 		);
 	}
@@ -97,28 +105,36 @@ QUnit.test('sop/sort simple with points axis', async (assert) => {
 	delete1.p.byExpression.set(true);
 	delete1.p.expression.set('@ptnum>=$F');
 
+	async function compute() {
+		const container = await delete1.compute();
+		const coreGroup = container.coreContent()!;
+		coreGroup.boundingBox(tmpBox);
+
+		return {bbox: tmpBox, pointsCount: coreGroup.pointsCount()};
+	}
+
 	window.scene.setFrame(1);
-	let coreGroup = (await delete1.compute()).coreContent()!;
-	assert.in_delta(coreGroup.boundingBox().min.y, 0.76, 0.1);
-	assert.in_delta(coreGroup.boundingBox().max.y, 0.76, 0.1);
+	// let coreGroup = (await delete1.compute()).coreContent()!;
+	assert.in_delta((await compute()).bbox.min.y, 0.76, 0.1);
+	assert.in_delta((await compute()).bbox.max.y, 0.76, 0.1);
 
 	window.scene.setFrame(10);
-	coreGroup = (await delete1.compute()).coreContent()!;
-	assert.in_delta(coreGroup.boundingBox().min.y, 0.48, 0.1);
-	assert.in_delta(coreGroup.boundingBox().max.y, 0.76, 0.1);
+	// coreGroup = (await delete1.compute()).coreContent()!;
+	assert.in_delta((await compute()).bbox.min.y, 0.48, 0.1);
+	assert.in_delta((await compute()).bbox.max.y, 0.76, 0.1);
 
 	window.scene.setFrame(30);
-	coreGroup = (await delete1.compute()).coreContent()!;
-	assert.in_delta(coreGroup.boundingBox().min.y, 0.29, 0.1);
-	assert.in_delta(coreGroup.boundingBox().max.y, 0.76, 0.1);
+	// coreGroup = (await delete1.compute()).coreContent()!;
+	assert.in_delta((await compute()).bbox.min.y, 0.29, 0.1);
+	assert.in_delta((await compute()).bbox.max.y, 0.76, 0.1);
 
 	window.scene.setFrame(80);
-	coreGroup = (await delete1.compute()).coreContent()!;
-	assert.in_delta(coreGroup.boundingBox().min.y, -0.3, 0.1);
-	assert.in_delta(coreGroup.boundingBox().max.y, 0.76, 0.1);
+	// coreGroup = (await delete1.compute()).coreContent()!;
+	assert.in_delta((await compute()).bbox.min.y, -0.3, 0.1);
+	assert.in_delta((await compute()).bbox.max.y, 0.76, 0.1);
 
 	window.scene.setFrame(100);
-	coreGroup = (await delete1.compute()).coreContent()!;
-	assert.in_delta(coreGroup.boundingBox().min.y, -0.76, 0.1);
-	assert.in_delta(coreGroup.boundingBox().max.y, 0.76, 0.1);
+	// coreGroup = (await delete1.compute()).coreContent()!;
+	assert.in_delta((await compute()).bbox.min.y, -0.76, 0.1);
+	assert.in_delta((await compute()).bbox.max.y, 0.76, 0.1);
 });

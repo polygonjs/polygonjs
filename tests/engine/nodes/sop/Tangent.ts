@@ -13,7 +13,7 @@ QUnit.test('sop/tangent', async (assert) => {
 
 	let container = await tangent1.compute();
 	let coreGroup = container.coreContent()!;
-	const geo = coreGroup.objectsWithGeo()[0].geometry;
+	const geo = coreGroup.threejsObjectsWithGeo()[0].geometry;
 	assert.ok(geo.getAttribute('tangent'));
 	assert.ok(geo.getAttribute('tangent'));
 	let array = (geo.getAttribute('tangent') as BufferAttribute).array;

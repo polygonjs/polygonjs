@@ -108,7 +108,7 @@ export class NodeCookController<NC extends NodeContext> {
 		this._startCookIfNoErrors(undefined);
 	}
 
-	endCook(message?: string | null) {
+	endCook(/*message?: string | null*/) {
 		this._finalizeCookPerformance();
 
 		const dirtyTimestamp = this.node.dirtyController.dirtyTimestamp();

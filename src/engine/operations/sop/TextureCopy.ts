@@ -24,9 +24,10 @@ export class TextureCopySopOperation extends BaseSopOperation {
 		const coreGroupSrc = inputContents[1];
 
 		let texture: Texture | undefined;
-		for (let object of coreGroupSrc.objects() as Mesh[]) {
+		const srcObjects = coreGroupSrc.allObjects();
+		for (let object of srcObjects) {
 			object.traverse((child) => {
-				const mat = (child as Mesh).material;
+				const mat = child.material;
 				if (mat) {
 					if (!CoreType.isArray(mat)) {
 						if (!texture) {
@@ -37,7 +38,8 @@ export class TextureCopySopOperation extends BaseSopOperation {
 			});
 		}
 		if (texture) {
-			for (let object of coreGroupTarget.objects() as Mesh[]) {
+			const targetObjects = coreGroupTarget.allObjects();
+			for (let object of targetObjects) {
 				object.traverse((child) => {
 					const mat = (child as Mesh).material;
 					if (mat) {

@@ -1,51 +1,52 @@
-import {CadCoreObject} from './CadCoreObject';
-import {CadObjectType, CadObjectTypeShape, CAD_OBJECT_TYPES_SET_SHAPE, CadTypeMap, CadShape} from './CadCommon';
+import {CadGeometryType, CAD_GEOMETRY_TYPES_SET_SHAPE} from './CadCommon';
+import type {CadGeometryTypeShape, CadTypeMap, CadShape} from './CadCommon';
 import {CoreType} from '../../Type';
+import type {CadObject} from './CadObject';
 export class CoreCadType {
-	static isPoint2d(object: CadCoreObject<CadObjectType>): object is CadCoreObject<CadObjectType.POINT_2D> {
-		return object.type() == CadObjectType.POINT_2D;
+	static isPoint2d(object: CadObject<CadGeometryType>): object is CadObject<CadGeometryType.POINT_2D> {
+		return object.type == CadGeometryType.POINT_2D;
 	}
-	static isGeom2dCurve(object: CadCoreObject<CadObjectType>): object is CadCoreObject<CadObjectType.CURVE_2D> {
-		return object.type() == CadObjectType.CURVE_2D;
+	static isGeom2dCurve(object: CadObject<CadGeometryType>): object is CadObject<CadGeometryType.CURVE_2D> {
+		return object.type == CadGeometryType.CURVE_2D;
 	}
-	static isVertex(object: CadCoreObject<CadObjectType>): object is CadCoreObject<CadObjectType.VERTEX> {
-		return object.type() == CadObjectType.VERTEX;
+	static isVertex(object: CadObject<CadGeometryType>): object is CadObject<CadGeometryType.VERTEX> {
+		return object.type == CadGeometryType.VERTEX;
 	}
-	static isEdge(object: CadCoreObject<CadObjectType>): object is CadCoreObject<CadObjectType.EDGE> {
-		return object.type() == CadObjectType.EDGE;
+	static isEdge(object: CadObject<CadGeometryType>): object is CadObject<CadGeometryType.EDGE> {
+		return object.type == CadGeometryType.EDGE;
 	}
-	static isWire(object: CadCoreObject<CadObjectType>): object is CadCoreObject<CadObjectType.WIRE> {
-		return object.type() == CadObjectType.WIRE;
+	static isWire(object: CadObject<CadGeometryType>): object is CadObject<CadGeometryType.WIRE> {
+		return object.type == CadGeometryType.WIRE;
 	}
-	static isFace(object: CadCoreObject<CadObjectType>): object is CadCoreObject<CadObjectType.FACE> {
-		return object.type() == CadObjectType.FACE;
+	static isFace(object: CadObject<CadGeometryType>): object is CadObject<CadGeometryType.FACE> {
+		return object.type == CadGeometryType.FACE;
 	}
-	static isShell(object: CadCoreObject<CadObjectType>): object is CadCoreObject<CadObjectType.SHELL> {
-		return object.type() == CadObjectType.SHELL;
+	static isShell(object: CadObject<CadGeometryType>): object is CadObject<CadGeometryType.SHELL> {
+		return object.type == CadGeometryType.SHELL;
 	}
-	static isSolid(object: CadCoreObject<CadObjectType>): object is CadCoreObject<CadObjectType.SOLID> {
-		return object.type() == CadObjectType.SOLID;
+	static isSolid(object: CadObject<CadGeometryType>): object is CadObject<CadGeometryType.SOLID> {
+		return object.type == CadGeometryType.SOLID;
 	}
-	static isCompsolid(object: CadCoreObject<CadObjectType>): object is CadCoreObject<CadObjectType.COMPSOLID> {
-		return object.type() == CadObjectType.COMPSOLID;
+	static isCompsolid(object: CadObject<CadGeometryType>): object is CadObject<CadGeometryType.COMPSOLID> {
+		return object.type == CadGeometryType.COMPSOLID;
 	}
-	static isCompound(object: CadCoreObject<CadObjectType>): object is CadCoreObject<CadObjectType.COMPOUND> {
-		return object.type() == CadObjectType.COMPOUND;
+	static isCompound(object: CadObject<CadGeometryType>): object is CadObject<CadGeometryType.COMPOUND> {
+		return object.type == CadGeometryType.COMPOUND;
 	}
 	static isShape(
-		object: CadCoreObject<CadObjectType>
+		object: CadObject<CadGeometryType>
 	): object is
-		| CadCoreObject<CadObjectType.VERTEX>
-		| CadCoreObject<CadObjectType.EDGE>
-		| CadCoreObject<CadObjectType.WIRE>
-		| CadCoreObject<CadObjectType.FACE>
-		| CadCoreObject<CadObjectType.SHELL>
-		| CadCoreObject<CadObjectType.SOLID>
-		| CadCoreObject<CadObjectType.COMPSOLID>
-		| CadCoreObject<CadObjectType.COMPOUND> {
-		return CAD_OBJECT_TYPES_SET_SHAPE.has(object.type() as CadObjectTypeShape);
+		| CadObject<CadGeometryType.VERTEX>
+		| CadObject<CadGeometryType.EDGE>
+		| CadObject<CadGeometryType.WIRE>
+		| CadObject<CadGeometryType.FACE>
+		| CadObject<CadGeometryType.SHELL>
+		| CadObject<CadGeometryType.SOLID>
+		| CadObject<CadGeometryType.COMPSOLID>
+		| CadObject<CadGeometryType.COMPOUND> {
+		return CAD_GEOMETRY_TYPES_SET_SHAPE.has(object.type as CadGeometryTypeShape);
 	}
-	static isObjectShape<T extends CadObjectType>(object: CadTypeMap[T] | CadShape): object is CadShape {
-		return CoreType.isFunction((object as CadShape).ShapeType);
+	static isGeometryShape<T extends CadGeometryType>(geometry: CadTypeMap[T] | CadShape): geometry is CadShape {
+		return CoreType.isFunction((geometry as CadShape).ShapeType);
 	}
 }

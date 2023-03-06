@@ -29,7 +29,7 @@ export class CameraControlsSopOperation extends BaseSopOperation {
 		return CameraSopNodeType.CONTROLS;
 	}
 	override cook(inputCoreGroups: CoreGroup[], params: CameraControlsSopParams) {
-		const objects = inputCoreGroups[0].objects();
+		const objects = inputCoreGroups[0].threejsObjects();
 
 		if (this._node) {
 			CameraControlsSopOperation.updateObject({

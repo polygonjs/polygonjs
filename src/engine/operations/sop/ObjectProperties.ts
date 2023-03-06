@@ -1,9 +1,9 @@
 import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {Object3D} from 'three';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
+import {CoreObjectType, ObjectContent} from '../../../core/geometry/ObjectContent';
 
 interface ObjectPropertiesSopParams extends DefaultOperationParams {
 	applyToChildren: boolean;
@@ -63,7 +63,7 @@ export class ObjectPropertiesSopOperation extends BaseSopOperation {
 	override cook(inputCoreGroups: CoreGroup[], params: ObjectPropertiesSopParams) {
 		const coreGroup = inputCoreGroups[0];
 
-		for (let object of coreGroup.objects()) {
+		for (let object of coreGroup.allObjects()) {
 			if (isBooleanTrue(params.applyToChildren)) {
 				object.traverse((child) => {
 					this._updateObject(child, params);
@@ -75,7 +75,7 @@ export class ObjectPropertiesSopOperation extends BaseSopOperation {
 
 		return coreGroup;
 	}
-	private _updateObject(object: Object3D, params: ObjectPropertiesSopParams) {
+	private _updateObject<T extends CoreObjectType>(object: ObjectContent<T>, params: ObjectPropertiesSopParams) {
 		if (isBooleanTrue(params.tname)) {
 			object.name = params.name;
 		}

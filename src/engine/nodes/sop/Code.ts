@@ -22,7 +22,7 @@ export class CodeSopProcessor extends BaseCodeSopProcessor {
 	}
 	override cook(inputCoreGroups: CoreGroup[]){
 		const inputCoreGroup = inputCoreGroups[0];
-		const object = inputCoreGroup.objects()[0];
+		const object = inputCoreGroup.threejsObjects()[0];
 		object.position.y = 1;
 		this.setCoreGroup(inputCoreGroup);
 	}

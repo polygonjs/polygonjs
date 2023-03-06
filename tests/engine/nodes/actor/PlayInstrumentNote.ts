@@ -71,7 +71,7 @@ QUnit.test('actor/playInstrumentNote', async (assert) => {
 	playInstrumentNote1.setInput(playInstrumentNote1.p.note.name(), getObjectAttribute1);
 
 	const container = await actor1.compute();
-	const objects = container.coreContent()!.objects();
+	const objects = container.coreContent()!.threejsObjects();
 	assert.deepEqual(
 		objects.map((o: Object3D) => CoreObject.attribValue(o, 'note')),
 		['C2', 'C#2', 'D2', 'D#2', 'E2', 'F2', 'F#2', 'G2', 'G#2', 'A2']

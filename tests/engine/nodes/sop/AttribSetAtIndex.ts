@@ -197,7 +197,7 @@ QUnit.test('sop/attribSetAtIndex using group or not', async (assert) => {
 		// assert.notOk(attribCreate1.states.error.active());
 		// assert.notOk(attribCreate1.states.error.message());
 		const pts = container.coreContent()!.points();
-		const coreObjects = container.coreContent()!.coreObjects();
+		const coreObjects = container.coreContent()!.threejsCoreObjects();
 		const entities = attribClass == AttribClass.VERTEX ? pts : coreObjects;
 
 		// if (existingAttrib) {

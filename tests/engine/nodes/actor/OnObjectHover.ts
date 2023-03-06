@@ -38,7 +38,7 @@ QUnit.test('actor/OnObjectHover', async (assert) => {
 	setParam1.p.param.setParam(geo2.p.scale);
 
 	const container = await actor1.compute();
-	const object = container.coreContent()!.objects()[0];
+	const object = container.coreContent()!.threejsObjects()[0];
 
 	// wait to make sure objects are mounted to the scene
 	await CoreSleep.sleep(150);

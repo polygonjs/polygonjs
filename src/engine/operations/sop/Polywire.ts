@@ -49,7 +49,7 @@ export class PolywireSopOperation extends BaseSopOperation {
 		const coreGroup = inputCoreGroups[0];
 
 		this._geometries = [];
-		for (let object of coreGroup.objects()) {
+		for (let object of coreGroup.threejsObjects()) {
 			if (object instanceof LineSegments) {
 				this._createTube(object, params);
 			}

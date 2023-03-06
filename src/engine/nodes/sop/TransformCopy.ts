@@ -42,9 +42,9 @@ export class TransformCopySopNode extends TypedSopNode<TransformCopySopParamConf
 
 	override cook(input_contents: CoreGroup[]) {
 		if (isBooleanTrue(this.pv.useSecondInput) && input_contents[1]) {
-			this._copy_from_src_objects(input_contents[0].objects(), input_contents[1].objects());
+			this._copy_from_src_objects(input_contents[0].threejsObjects(), input_contents[1].threejsObjects());
 		} else {
-			this._copy_from_found_node(input_contents[0].objects());
+			this._copy_from_found_node(input_contents[0].threejsObjects());
 		}
 	}
 
@@ -70,7 +70,7 @@ export class TransformCopySopNode extends TypedSopNode<TransformCopySopParamConf
 			const container = await node.compute();
 			const core_group = container.coreContent();
 			if (core_group) {
-				const src_objects = core_group.objects();
+				const src_objects = core_group.threejsObjects();
 				this._copy_from_src_objects(target_objects, src_objects);
 				return;
 			}

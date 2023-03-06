@@ -45,7 +45,7 @@ export class CurveFromPointsSopOperation extends BaseSopOperation {
 	override cook(inputCoreGroups: CoreGroup[], params: CurveFromPointsSopParams) {
 		const inputCoreGroup = inputCoreGroups[0];
 
-		const coreObjects = inputCoreGroup.coreObjects();
+		const coreObjects = inputCoreGroup.threejsCoreObjects();
 		const newObjects: Object3D[] = [];
 		for (let coreObject of coreObjects) {
 			const object = this._createCurveFromCoreObject(coreObject, params);

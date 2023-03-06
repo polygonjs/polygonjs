@@ -12,7 +12,7 @@ async function createCameraNodes(scene: PolyScene) {
 	const mapboxCamera1 = cameras.createNode('mapboxCamera');
 
 	const container = await mapboxCamera1.compute();
-	const camera = container.coreContent()?.objects()[0]! as Camera;
+	const camera = container.coreContent()?.threejsObjects()[0]! as Camera;
 	const objectPath = CorePath.objectPath(camera);
 	scene.root().mainCameraController.setCameraPath(objectPath);
 	scene.root().sceneBackgroundController.setMode(BackgroundMode.NONE);

@@ -18,7 +18,7 @@ QUnit.test('anim null simple', async (assert) => {
 	// otherwise the anim nodes will not find them.
 	await CoreSleep.sleep(100);
 
-	const object = (await objectProperties.compute()).coreContent()?.objects()[0]!;
+	const object = (await objectProperties.compute()).coreContent()?.threejsObjects()[0]!;
 	assert.equal(object.name, 'test');
 
 	// setup anim
@@ -60,7 +60,7 @@ QUnit.test('anim null object property vector3 element', async (assert) => {
 	// otherwise the anim nodes will not find them.
 	await CoreSleep.sleep(100);
 
-	const object = (await objectProperties.compute()).coreContent()?.objects()[0]!;
+	const object = (await objectProperties.compute()).coreContent()?.threejsObjects()[0]!;
 	assert.equal(object.name, 'test');
 
 	// setup anim
@@ -102,7 +102,7 @@ QUnit.test('anim null object property euler', async (assert) => {
 	// otherwise the anim nodes will not find them.
 	await CoreSleep.sleep(100);
 
-	const object = (await objectProperties.compute()).coreContent()?.objects()[0]!;
+	const object = (await objectProperties.compute()).coreContent()?.threejsObjects()[0]!;
 	assert.equal(object.name, 'test');
 
 	// setup anim
@@ -144,7 +144,7 @@ QUnit.test('anim null object property euler component', async (assert) => {
 	// otherwise the anim nodes will not find them.
 	await CoreSleep.sleep(100);
 
-	const object = (await objectProperties.compute()).coreContent()?.objects()[0]!;
+	const object = (await objectProperties.compute()).coreContent()?.threejsObjects()[0]!;
 	assert.equal(object.name, 'test');
 
 	// setup anim
@@ -400,7 +400,7 @@ QUnit.test('animating a scene graph prop when it is already animated kills the p
 	// otherwise the anim nodes will not find them.
 	await CoreSleep.sleep(100);
 
-	const object = (await objectProperties.compute()).coreContent()?.objects()[0]!;
+	const object = (await objectProperties.compute()).coreContent()?.threejsObjects()[0]!;
 	assert.equal(object.name, 'test');
 
 	// setup anim

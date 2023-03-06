@@ -17,10 +17,10 @@ QUnit.test('reflectors can be cloned and keep unique material', async (assert) =
 	null1.setInput(0, reflector);
 
 	let container = await reflector.compute();
-	let reflectorObject1 = container.coreContent()!.objectsWithGeo()[0] as Reflector;
+	let reflectorObject1 = container.coreContent()!.threejsObjectsWithGeo()[0] as Reflector;
 
 	container = await null1.compute();
-	let reflectorObject2 = container.coreContent()!.objectsWithGeo()[0] as Reflector;
+	let reflectorObject2 = container.coreContent()!.threejsObjectsWithGeo()[0] as Reflector;
 
 	assert.notEqual((reflectorObject1.material as Material).uuid, (reflectorObject2.material as Material).uuid);
 });

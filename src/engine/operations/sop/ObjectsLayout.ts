@@ -39,7 +39,7 @@ export class ObjectsLayoutSopOperation extends BaseSopOperation {
 	}
 
 	override cook(inputCoreGroups: CoreGroup[], params: ObjectsLayoutSopParams) {
-		const objects = inputCoreGroups[0].objects();
+		const objects = inputCoreGroups[0].threejsObjects();
 		currentPos.set(0, 0);
 		maxPos.set(0, 0);
 		objectsByRow.clear();

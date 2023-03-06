@@ -16,14 +16,12 @@ class TransformSopParamConfig extends NodeParamsConfig {
 	/** @param sets if this node should transform objects or geometries */
 	applyOn = ParamConfig.INTEGER(DEFAULT.applyOn, {
 		menu: {
-			entries: TRANSFORM_TARGET_TYPES.map((name, value) => {
-				return {name, value};
-			}),
+			entries: TRANSFORM_TARGET_TYPES.map((name, value) => ({name, value})),
 		},
 	});
 	/** @param if applyOn is set to object, the transform can then be applied in 2 different ways on those objects. Either the .position, .rotation and .scale attributes are set, or the matrix is set directly. */
 	objectMode = ParamConfig.INTEGER(DEFAULT.objectMode, {
-		visibleIf: {applyOn: TRANSFORM_TARGET_TYPES.indexOf(TransformTargetType.OBJECTS)},
+		visibleIf: {applyOn: TRANSFORM_TARGET_TYPES.indexOf(TransformTargetType.OBJECT)},
 		menu: {
 			entries: TRANSFORM_OBJECT_MODES.map((name, value) => {
 				return {name, value};
@@ -33,7 +31,7 @@ class TransformSopParamConfig extends NodeParamsConfig {
 	/** @param defines how the objects are transformed */
 	objectTransformSpace = ParamConfig.INTEGER(0, {
 		visibleIf: {
-			applyOn: TRANSFORM_TARGET_TYPES.indexOf(TransformTargetType.OBJECTS),
+			applyOn: TRANSFORM_TARGET_TYPES.indexOf(TransformTargetType.OBJECT),
 			objectMode: TRANSFORM_OBJECT_MODES.indexOf(TransformObjectMode.MULT),
 		},
 		menu: {
@@ -42,7 +40,7 @@ class TransformSopParamConfig extends NodeParamsConfig {
 	});
 	/** @param group this applies to */
 	group = ParamConfig.STRING(DEFAULT.group, {
-		visibleIf: {applyOn: TRANSFORM_TARGET_TYPES.indexOf(TransformTargetType.GEOMETRIES)},
+		visibleIf: {applyOn: TRANSFORM_TARGET_TYPES.indexOf(TransformTargetType.GEOMETRY)},
 	});
 
 	// transform
@@ -69,7 +67,7 @@ class TransformSopParamConfig extends NodeParamsConfig {
 	// up = ParamConfig.VECTOR3([0, 1, 0]);
 	/** @param pivot */
 	pivot = ParamConfig.VECTOR3(DEFAULT.pivot, {
-		visibleIf: {applyOn: TRANSFORM_TARGET_TYPES.indexOf(TransformTargetType.GEOMETRIES)},
+		visibleIf: {applyOn: TRANSFORM_TARGET_TYPES.indexOf(TransformTargetType.GEOMETRY)},
 	});
 }
 const ParamsConfig = new TransformSopParamConfig();

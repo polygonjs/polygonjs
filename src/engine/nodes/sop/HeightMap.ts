@@ -45,7 +45,7 @@ export class HeightMapSopNode extends TypedSopNode<HeightMapSopParamsConfig> {
 				const container = await texture_node.compute();
 				const texture = container.texture();
 
-				for (let core_object of core_group.coreObjects()) {
+				for (let core_object of core_group.threejsCoreObjects()) {
 					this._set_position_from_data_texture(core_object, texture);
 				}
 			} else {

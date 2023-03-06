@@ -1,6 +1,8 @@
-import {Vector3} from 'three';
+import {Vector3, Box3} from 'three';
 import {ASSETS_ROOT} from '../../../../src/core/loader/AssetsUtils';
 import {TransformTargetType} from '../../../../src/core/Transform';
+const tmpBox3 = new Box3();
+const tmpV3 = new Vector3();
 
 QUnit.test('expression bbox works with path', async (assert) => {
 	const geo1 = window.geo1;
@@ -72,18 +74,20 @@ QUnit.test('expression bbox works on hierarchy', async (assert) => {
 
 	const transform1 = geo1.createNode('transform');
 	transform1.setInput(0, fileNode);
-	transform1.setApplyOn(TransformTargetType.GEOMETRIES);
+	transform1.setApplyOn(TransformTargetType.GEOMETRY);
 	transform1.p.scale.set(`1 / bbox(0,"size").x`);
 
 	await transform1.p.scale.compute();
 	assert.in_delta(transform1.pv.scale, 0.24, 0.001, 'scale');
 
-	let container = await transform1.compute();
-	let size = container.coreContent()?.boundingBox().getSize(new Vector3())!;
-	assert.in_delta(size.x, 1, 0.001, 'bbox');
+	async function getSize() {
+		const container = await transform1.compute();
+		container.coreContent()?.boundingBox(tmpBox3);
+		tmpBox3.getSize(tmpV3);
+		return tmpV3;
+	}
+	assert.in_delta((await getSize()).x, 1, 0.001, 'bbox');
 
-	transform1.setApplyOn(TransformTargetType.OBJECTS);
-	container = await transform1.compute();
-	size = container.coreContent()?.boundingBox().getSize(new Vector3())!;
-	assert.in_delta(size.x, 1, 0.0001, 'bbox');
+	transform1.setApplyOn(TransformTargetType.OBJECT);
+	assert.in_delta((await getSize()).x, 1, 0.0001, 'bbox');
 });

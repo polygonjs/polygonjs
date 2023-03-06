@@ -26,7 +26,7 @@ QUnit.test('sop/attribCreate simple float vertex', async (assert) => {
 
 	let container = await attrib_create1.compute();
 	const core_group = container.coreContent()!;
-	const geometry = core_group.objectsWithGeo()[0].geometry;
+	const geometry = core_group.threejsObjectsWithGeo()[0].geometry;
 	assert.ok(core_group);
 	assert.ok(geometry);
 
@@ -52,7 +52,7 @@ QUnit.test('sop/attribCreate expression float vertex', async (assert) => {
 
 	const container = await attrib_create1.compute();
 	const core_group = container.coreContent()!;
-	const geometry = core_group.objectsWithGeo()[0].geometry;
+	const geometry = core_group.threejsObjectsWithGeo()[0].geometry;
 	assert.ok(core_group);
 	assert.ok(geometry);
 
@@ -75,7 +75,7 @@ QUnit.test('sop/attribCreate expression float vertex from position', async (asse
 
 	const container = await attrib_create1.compute();
 	const core_group = container.coreContent()!;
-	const geometry = core_group.objectsWithGeo()[0].geometry;
+	const geometry = core_group.threejsObjectsWithGeo()[0].geometry;
 	assert.ok(core_group);
 	assert.ok(geometry);
 
@@ -119,7 +119,7 @@ QUnit.test('sop/attribCreate simple vector2 vertex', async (assert) => {
 
 	const container = await attrib_create1.compute();
 	const core_group = container.coreContent()!;
-	const geometry = core_group.objectsWithGeo()[0].geometry;
+	const geometry = core_group.threejsObjectsWithGeo()[0].geometry;
 	assert.ok(core_group);
 	assert.ok(geometry);
 
@@ -146,7 +146,7 @@ QUnit.test('sop/attribCreate simple vector vertex', async (assert) => {
 
 	const container = await attrib_create1.compute();
 	const core_group = container.coreContent()!;
-	const geometry = core_group.objectsWithGeo()[0].geometry;
+	const geometry = core_group.threejsObjectsWithGeo()[0].geometry;
 	assert.ok(core_group);
 	assert.ok(geometry);
 
@@ -172,7 +172,7 @@ QUnit.test('sop/attribCreate expression vector vertex', async (assert) => {
 
 	let container = await attrib_create1.compute();
 	let core_group = container.coreContent()!;
-	let geometry = core_group.objectsWithGeo()[0].geometry;
+	let geometry = core_group.threejsObjectsWithGeo()[0].geometry;
 	assert.ok(core_group);
 	assert.ok(geometry);
 
@@ -193,7 +193,7 @@ QUnit.test('sop/attribCreate expression vector vertex', async (assert) => {
 	const attrib_create2 = scene2.node(attrib_create1.path()) as AttribCreateSopNode;
 	container = await attrib_create2.compute();
 	core_group = container.coreContent()!;
-	geometry = core_group.objectsWithGeo()[0].geometry;
+	geometry = core_group.threejsObjectsWithGeo()[0].geometry;
 	assert.ok(core_group);
 	assert.ok(geometry);
 
@@ -220,7 +220,7 @@ QUnit.test('sop/attribCreate on existing attrib vector2 uv', async (assert) => {
 	let container, core_group, geometry, array;
 	container = await attrib_create1.compute();
 	core_group = container.coreContent()!;
-	geometry = core_group.objectsWithGeo()[0].geometry;
+	geometry = core_group.threejsObjectsWithGeo()[0].geometry;
 	array = (geometry.getAttribute('uv') as BufferAttribute).array as number[];
 	assert.ok(core_group);
 	assert.ok(geometry);
@@ -232,8 +232,8 @@ QUnit.test('sop/attribCreate on existing attrib vector2 uv', async (assert) => {
 	attrib_create1.p.value2.y.set('@uv.x');
 	container = await attrib_create1.compute();
 	core_group = container.coreContent()!;
-	geometry = core_group.objectsWithGeo()[0].geometry;
-	array =( geometry.getAttribute('uv') as BufferAttribute).array as number[];
+	geometry = core_group.threejsObjectsWithGeo()[0].geometry;
+	array = (geometry.getAttribute('uv') as BufferAttribute).array as number[];
 	assert.equal(array.join(','), [1, 0, 1, 1, 0, 0, 0, 1].join(','));
 });
 
@@ -250,7 +250,7 @@ QUnit.test('sop/attribCreate simple float object', async (assert) => {
 
 	const container = await attrib_create1.compute();
 	const core_group = container.coreContent()!;
-	const object = core_group.objects()[0];
+	const object = core_group.allObjects()[0];
 	assert.ok(object);
 
 	assert.deepEqual(object.userData, {attributes: {test: 3.5}});
@@ -270,7 +270,7 @@ QUnit.test('sop/attribCreate simple vector2 object', async (assert) => {
 
 	let container = await attrib_create1.compute();
 	let core_group = container.coreContent()!;
-	let object = core_group.objects()[0];
+	let object = core_group.allObjects()[0];
 	assert.ok(core_group);
 	assert.ok(object);
 
@@ -283,7 +283,7 @@ QUnit.test('sop/attribCreate simple vector2 object', async (assert) => {
 	assert.ok(attrib_create1.isDirty());
 	container = await attrib_create1.compute();
 	core_group = container.coreContent()!;
-	object = core_group.objects()[0];
+	object = core_group.allObjects()[0];
 	assert.deepEqual(object.userData, {attributes: {test: new Vector2(21.5, 12)}});
 });
 
@@ -300,7 +300,7 @@ QUnit.test('sop/attribCreate simple vector object', async (assert) => {
 
 	const container = await attrib_create1.compute();
 	const core_group = container.coreContent()!;
-	const object = core_group.objects()[0];
+	const object = core_group.allObjects()[0];
 	assert.ok(core_group);
 	assert.ok(object);
 
@@ -323,7 +323,7 @@ QUnit.test('sop/attribCreate simple string object', async (assert) => {
 
 	let container = await attrib_create1.compute();
 	let core_group = container.coreContent()!;
-	let object = core_group.objects()[0];
+	let object = core_group.allObjects()[0];
 	assert.ok(core_group);
 	assert.ok(object);
 
@@ -332,13 +332,13 @@ QUnit.test('sop/attribCreate simple string object', async (assert) => {
 	scene.setFrame(12);
 	container = await attrib_create1.compute();
 	core_group = container.coreContent()!;
-	object = core_group.objects()[0];
+	object = core_group.allObjects()[0];
 	assert.deepEqual(object.userData, {attributes: {test_string: 'pt_12'}});
 
 	attrib_create1.p.string.set('`$F*2`');
 	container = await attrib_create1.compute();
 	core_group = container.coreContent()!;
-	object = core_group.objects()[0];
+	object = core_group.allObjects()[0];
 	assert.deepEqual(object.userData, {attributes: {test_string: '24'}});
 });
 
@@ -445,7 +445,7 @@ QUnit.test('sop/attribCreate for string on vertices without expr', async (assert
 	assert.equal(points[1].attribValue('ids'), 'test', 'pt 1 has pt_2');
 	assert.equal(points[2].attribValue('ids'), 'test', 'pt 2 has pt_4');
 
-	const geometry = container.coreContent()!.objectsWithGeo()[0].geometry;
+	const geometry = container.coreContent()!.threejsObjectsWithGeo()[0].geometry;
 	const array = (geometry.getAttribute('ids') as BufferAttribute).array;
 	assert.equal(array.length, 24);
 	assert.equal(array[0], 0);
@@ -515,8 +515,8 @@ QUnit.test('sop/attribCreate object position', async (assert) => {
 	transform1.setInput(0, box1);
 	transform2.setInput(0, box2);
 
-	transform1.setApplyOn(TransformTargetType.OBJECTS);
-	transform2.setApplyOn(TransformTargetType.OBJECTS);
+	transform1.setApplyOn(TransformTargetType.OBJECT);
+	transform2.setApplyOn(TransformTargetType.OBJECT);
 
 	transform1.p.t.set([1, 2, 3]);
 	transform2.p.t.set([4, 5, 6]);
@@ -534,7 +534,7 @@ QUnit.test('sop/attribCreate object position', async (assert) => {
 
 	let container = await attribCreate1.compute();
 	const coreGroup = container.coreContent()!;
-	const objects = coreGroup.coreObjects();
+	const objects = coreGroup.allCoreObjects();
 	assert.deepEqual((objects[0].attribValue('center') as Vector3).toArray(), [1, 2, 3]);
 	assert.deepEqual((objects[1].attribValue('center') as Vector3).toArray(), [4, 5, 6]);
 });
@@ -752,7 +752,7 @@ QUnit.test('sop/attribCreate using group or not', async (assert) => {
 		// assert.notOk(attribCreate1.states.error.active());
 		// assert.notOk(attribCreate1.states.error.message());
 		const pts = container.coreContent()!.points();
-		const coreObjects = container.coreContent()!.coreObjects();
+		const coreObjects = container.coreContent()!.allCoreObjects();
 		const entities = attribClass == AttribClass.VERTEX ? pts : coreObjects;
 
 		const expectedValues = buildExpectedValues(options);

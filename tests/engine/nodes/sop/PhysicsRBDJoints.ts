@@ -333,7 +333,7 @@ QUnit.test('sop/physicsRBDJoints simple', async (assert) => {
 	const physicsWorld1 = ground.node.nodesByType(PhysicsWorldSopNode.type())[0];
 	physicsWorld1.flags.display.set(true);
 	const container = await physicsWorld1.compute();
-	const objects = [...container.coreContent()!.objects()[0].children];
+	const objects = [...container.coreContent()!.threejsObjects()[0].children];
 	objects.shift();
 	assert.equal(objects.length, 7, 'we only have the rbds, not the ground or joints');
 	for (let object of objects) {
@@ -368,7 +368,7 @@ QUnit.test('sop/physicsRBDJoints simple with clone', async (assert) => {
 	null1.setInput(0, physicsWorld1);
 	null1.flags.display.set(true);
 	const container = await null1.compute();
-	const objects = [...container.coreContent()!.objects()[0].children];
+	const objects = [...container.coreContent()!.threejsObjects()[0].children];
 	objects.shift();
 	assert.equal(objects.length, 7, 'we only have the rbds, not the ground or joints');
 	for (let object of objects) {

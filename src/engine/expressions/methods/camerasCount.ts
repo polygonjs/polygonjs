@@ -45,7 +45,7 @@ export class CamerasCountExpression extends BaseMethod {
 					const coreContent = container.coreContent();
 					if (coreContent) {
 						const count = coreContent
-							.objects()
+							.threejsObjects()
 							.filter((object) => Poly.camerasRegister.objectRegistered(object)).length;
 
 						resolve(count);

@@ -9,6 +9,7 @@ import {
 } from '../../../core/geometry/Constant';
 import {CoreGeometryIndexBuilder} from '../../../core/geometry/util/IndexBuilder';
 import {BufferGeometry, Material, Object3D} from 'three';
+import {CoreObjectType, ObjectContent} from '../../../core/geometry/ObjectContent';
 
 export class BaseSopOperation extends BaseOperation<NodeContext.SOP> {
 	static override context() {
@@ -21,10 +22,10 @@ export class BaseSopOperation extends BaseOperation<NodeContext.SOP> {
 	// UTILS
 	//
 	//
-	protected createCoreGroupFromObjects(objects: Object3D[]) {
-		const core_group = new CoreGroup();
-		core_group.setObjects(objects);
-		return core_group;
+	protected createCoreGroupFromObjects(objects: ObjectContent<CoreObjectType>[]) {
+		const coreGroup = new CoreGroup();
+		coreGroup.setAllObjects(objects);
+		return coreGroup;
 	}
 	protected createCoreGroupFromGeometry(geometry: BufferGeometry, type: ObjectType = ObjectType.MESH) {
 		const object = BaseSopOperation.createObject(geometry, type);

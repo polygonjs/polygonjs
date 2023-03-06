@@ -45,7 +45,7 @@ QUnit.test('actor/Math_Arg1 simple', async (assert) => {
 	setObjectPosition.setInput('position', floatToVec3);
 
 	const container = await actor1.compute();
-	const object = container.coreContent()!.objects()[0];
+	const object = container.coreContent()!.threejsObjects()[0];
 
 	async function useNode(
 		node:

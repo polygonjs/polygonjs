@@ -51,6 +51,6 @@ QUnit.test('poly sop simple', async (assert) => {
 	assert.equal(poly1.params.get('id')!.type(), ParamType.INTEGER);
 	let container = await poly1.compute();
 	const core_group = container.coreContent();
-	const geometry = core_group?.objectsWithGeo()[0].geometry;
+	const geometry = core_group?.threejsObjectsWithGeo()[0].geometry;
 	assert.equal((geometry?.getAttribute('position') as BufferAttribute).array.length, 72);
 });

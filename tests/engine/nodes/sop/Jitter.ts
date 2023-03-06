@@ -1,3 +1,7 @@
+import {Box3, Vector3} from 'three';
+const tmpBox = new Box3();
+const tmpSize = new Vector3();
+
 QUnit.test('jitter simple', async (assert) => {
 	const geo1 = window.geo1;
 
@@ -8,11 +12,12 @@ QUnit.test('jitter simple', async (assert) => {
 	scatter1.setInput(0, plane1);
 
 	let container = await jitter1.compute();
+	container.boundingBox(tmpBox);
+	tmpBox.getSize(tmpSize);
 
-	let size = container.size();
-	assert.more_than(size.x, 1.8);
-	assert.more_than(size.y, 1.5);
-	assert.more_than(size.z, 1.8);
+	assert.more_than(tmpSize.x, 1.8);
+	assert.more_than(tmpSize.y, 1.5);
+	assert.more_than(tmpSize.z, 1.8);
 });
 
 QUnit.test('jitter with large y mult', async (assert) => {
@@ -26,11 +31,12 @@ QUnit.test('jitter with large y mult', async (assert) => {
 	jitter1.p.mult.y.set(10);
 
 	let container = await jitter1.compute();
+	container.boundingBox(tmpBox);
+	tmpBox.getSize(tmpSize);
 
-	let size = container.size();
-	assert.more_than(size.x, 1.8);
-	assert.more_than(size.y, 15);
-	assert.more_than(size.z, 1.8);
+	assert.more_than(tmpSize.x, 1.8);
+	assert.more_than(tmpSize.y, 15);
+	assert.more_than(tmpSize.z, 1.8);
 });
 
 QUnit.test('jitter with copy', async (assert) => {
@@ -49,19 +55,19 @@ QUnit.test('jitter with copy', async (assert) => {
 	jitter1.p.seed.set(56);
 
 	let container = await copy1.compute();
-	let objects = container.coreContent()!.objects();
+	let objects = container.coreContent()!.threejsObjects();
 	assert.in_delta(objects[0].position.x, -2.75, 0.1);
 	assert.in_delta(objects[5].position.x, -1.93, 0.1);
 
 	jitter1.p.amount.set(10);
 	container = await copy1.compute();
-	objects = container.coreContent()!.objects();
+	objects = container.coreContent()!.threejsObjects();
 	assert.in_delta(objects[0].position.x, -9.52, 0.1);
 	assert.in_delta(objects[5].position.x, -1.32, 0.1);
 
 	jitter1.p.amount.set(100);
 	container = await copy1.compute();
-	objects = container.coreContent()!.objects();
+	objects = container.coreContent()!.threejsObjects();
 	assert.in_delta(objects[0].position.x, -77.2, 0.1);
 	assert.in_delta(objects[5].position.x, 4.74, 0.1);
 });

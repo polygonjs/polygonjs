@@ -1,3 +1,5 @@
+import {Box3} from 'three';
+const tmpBox = new Box3();
 QUnit.test('height map simple', async (assert) => {
 	const geo1 = window.geo1;
 	const COP = window.COP;
@@ -12,6 +14,7 @@ QUnit.test('height map simple', async (assert) => {
 	height_map1.p.mult.set(100);
 
 	let container = await height_map1.compute();
-	assert.equal(container.boundingBox().min.y, 6200);
-	assert.equal(container.boundingBox().max.y, 10800);
+	container.boundingBox(tmpBox);
+	assert.equal(tmpBox.min.y, 6200);
+	assert.equal(tmpBox.max.y, 10800);
 });

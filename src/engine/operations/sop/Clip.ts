@@ -35,7 +35,7 @@ export class ClipSopOperation extends BaseSopOperation {
 	}
 	override cook(inputCoreGroups: CoreGroup[], params: ClipSopParams) {
 		const coreGroup = inputCoreGroups[0];
-		const mesh = coreGroup.objectsWithGeo()[0] as Mesh;
+		const mesh = coreGroup.threejsObjectsWithGeo()[0] as Mesh;
 
 		this._plane.set(params.direction, -params.distance);
 		this._plane.translate(params.origin);

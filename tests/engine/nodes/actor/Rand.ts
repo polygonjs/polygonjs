@@ -31,7 +31,7 @@ QUnit.test('actor/rand with float inputs', async (assert) => {
 	rand.setInput(0, constant1);
 
 	const container = await actor1.compute();
-	const object = container.coreContent()!.objects()[0] as Mesh;
+	const object = container.coreContent()!.threejsObjects()[0] as Mesh;
 
 	// wait to make sure objects are mounted to the scene
 	await CoreSleep.sleep(150);
@@ -75,7 +75,7 @@ QUnit.test('actor/rand with float inputs', async (assert) => {
 // 	complement.setInput(0, constant1);
 
 // 	const container = await actor1.compute();
-// 	const object = container.coreContent()!.objects()[0] as Mesh;
+// 	const object = container.coreContent()!.threejsObjects()[0] as Mesh;
 
 // 	// wait to make sure objects are mounted to the scene
 // 	await CoreSleep.sleep(150);

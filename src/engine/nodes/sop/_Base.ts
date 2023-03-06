@@ -9,15 +9,16 @@ import {NodeContext} from '../../poly/NodeContext';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {FlagsControllerDBO} from '../utils/FlagsController';
 import {BaseSopOperation} from '../../operations/sop/_Base';
+import {CoreObjectType, ObjectContent} from '../../../core/geometry/ObjectContent';
 
-enum MESSAGE {
-	FROM_SET_CORE_GROUP = 'from set_core_group',
-	FROM_SET_GROUP = 'from set_group',
-	FROM_SET_OBJECTS = 'from set_objects',
-	FROM_SET_OBJECT = 'from set_object',
-	FROM_SET_GEOMETRIES = 'from set_geometries',
-	FROM_SET_GEOMETRY = 'from set_geometry',
-}
+// enum MESSAGE {
+// 	FROM_SET_CORE_GROUP = 'from set_core_group',
+// 	FROM_SET_GROUP = 'from set_group',
+// 	FROM_SET_OBJECTS = 'from set_objects',
+// 	FROM_SET_OBJECT = 'from set_object',
+// 	FROM_SET_GEOMETRIES = 'from set_geometries',
+// 	FROM_SET_GEOMETRY = 'from set_geometry',
+// }
 
 const INPUT_GEOMETRY_NAME = 'input geometry';
 const DEFAULT_INPUT_NAMES = [INPUT_GEOMETRY_NAME, INPUT_GEOMETRY_NAME, INPUT_GEOMETRY_NAME, INPUT_GEOMETRY_NAME];
@@ -47,7 +48,9 @@ export class TypedSopNode<K extends NodeParamsConfig> extends TypedNode<NodeCont
 		return NodeContext.SOP;
 	}
 	public override readonly flags: FlagsControllerDBO = new FlagsControllerDBO(this);
-
+	override dataType(): string {
+		return CoreObjectType.THREEJS;
+	}
 	static override displayedInputNames(): string[] {
 		return DEFAULT_INPUT_NAMES;
 	}
@@ -64,21 +67,27 @@ export class TypedSopNode<K extends NodeParamsConfig> extends TypedNode<NodeCont
 		});
 		this.io.outputs.setHasOneOutput();
 	}
+	//
+	// ALL OBJECTS
+	//
 
+	//
+	// THREEJS OBJECTS
+	//
 	setCoreGroup(coreGroup: CoreGroup) {
-		this._setContainer(coreGroup, MESSAGE.FROM_SET_CORE_GROUP);
+		this._setContainer(coreGroup /*, MESSAGE.FROM_SET_CORE_GROUP*/);
 	}
 
-	setObject(object: Object3D) {
-		this._setContainerObjects([object], MESSAGE.FROM_SET_OBJECT);
+	setObject(object: ObjectContent<CoreObjectType>) {
+		this._setContainerObjects([object] /*, MESSAGE.FROM_SET_OBJECT*/);
 	}
-	setObjects(objects: Object3D[]) {
-		this._setContainerObjects(objects, MESSAGE.FROM_SET_OBJECTS);
+	setObjects(objects: ObjectContent<CoreObjectType>[]) {
+		this._setContainerObjects(objects /*, MESSAGE.FROM_SET_OBJECTS*/);
 	}
 
 	setGeometry(geometry: BufferGeometry, type: ObjectType = ObjectType.MESH) {
 		const object = this.createObject(geometry, type);
-		this._setContainerObjects([object], MESSAGE.FROM_SET_GEOMETRY);
+		this._setContainerObjects([object] /*, MESSAGE.FROM_SET_GEOMETRY*/);
 	}
 
 	setGeometries(geometries: BufferGeometry[], type: ObjectType = ObjectType.MESH) {
@@ -88,14 +97,17 @@ export class TypedSopNode<K extends NodeParamsConfig> extends TypedNode<NodeCont
 			object = this.createObject(geometry, type);
 			objects.push(object);
 		}
-		this._setContainerObjects(objects, MESSAGE.FROM_SET_GEOMETRIES);
+		this._setContainerObjects(objects /*, MESSAGE.FROM_SET_GEOMETRIES*/);
 	}
-
-	private _setContainerObjects(objects: Object3D[], message: MESSAGE) {
-		const core_group = this.containerController.container().coreContent() || new CoreGroup();
-		core_group.setObjects(objects);
-		core_group.touch();
-		this._setContainer(core_group);
+	// protected _setContainerAllObjects(objects: Object3D[] /*, message: MESSAGE*/) {
+	// 	const coreGroup = this.containerController.container().coreContent() || new CoreGroup();
+	// 	coreGroup.setAllObjects(objects);
+	// 	this._setContainer(coreGroup);
+	// }
+	protected _setContainerObjects(objects: ObjectContent<CoreObjectType>[] /*, message: MESSAGE*/) {
+		const coreGroup = this.containerController.container().coreContent() || new CoreGroup();
+		coreGroup.setAllObjects(objects);
+		this._setContainer(coreGroup);
 	}
 
 	static createObject<OT extends ObjectType>(

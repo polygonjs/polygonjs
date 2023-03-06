@@ -27,7 +27,7 @@ QUnit.test('actor/rayIntersectBox', async (assert) => {
 	rayIntersectBox1.setInput(ActorConnectionPointType.BOX3, box3_1);
 
 	const container = await actor1.compute();
-	const object = container.coreContent()!.objects()[0];
+	const object = container.coreContent()!.threejsObjects()[0];
 
 	// wait to make sure objects are mounted to the scene
 	await CoreSleep.sleep(150);

@@ -158,7 +158,7 @@ QUnit.test('obj/geo obj: display node can update and still inherit geo transform
 
 	await CoreSleep.sleep(100);
 
-	let obj = box.containerController.container().coreContent()!.objects()[0];
+	let obj = box.containerController.container().coreContent()!.threejsObjects()[0];
 	if (obj.matrixWorldNeedsUpdate) {
 		// TODO: this isn't a great test.
 		// maybe a better one would be to render one frame first?

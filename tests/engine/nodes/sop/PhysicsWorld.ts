@@ -24,7 +24,7 @@ QUnit.test('sop/physicsWorld simple', async (assert) => {
 
 	createPhysicsWorldNodes(physicsWorld1);
 	const container = await physicsWorld1.compute();
-	const objects = container.coreContent()!.objects()[0].children;
+	const objects = container.coreContent()!.threejsObjects()[0].children;
 	for (let object of objects) {
 		assert.in_delta(object.position.y, 0, 0.01);
 	}
@@ -63,7 +63,7 @@ QUnit.test('sop/physicsWorld with actor/setPhysicsWorldGravity', async (assert) 
 
 	createPhysicsWorldNodes(physicsWorld1);
 	const container = await physicsWorld1.compute();
-	const objects = container.coreContent()!.objects()[0].children;
+	const objects = container.coreContent()!.threejsObjects()[0].children;
 	for (let object of objects) {
 		assert.in_delta(object.position.y, 0, 0.01);
 	}
@@ -101,7 +101,7 @@ QUnit.test('sop/physicsWorld can be cloned', async (assert) => {
 	null1.flags.display.set(true);
 
 	const container = await null1.compute();
-	const objects = container.coreContent()!.objects()[0].children;
+	const objects = container.coreContent()!.threejsObjects()[0].children;
 	assert.equal(objects.length, 1);
 	const object = objects[0];
 

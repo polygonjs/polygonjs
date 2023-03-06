@@ -34,7 +34,7 @@ QUnit.test('sop/orthographicCamera simple', async (assert) => {
 	cameraRenderScene1.flags.display.set(true);
 
 	const container = await cameraRenderScene1.compute();
-	const object = container.coreContent()!.objects()[0];
+	const object = container.coreContent()!.threejsObjects()[0];
 	assert.ok(object);
 	assert.equal(
 		CoreObject.attribValue(object, CameraAttribute.CONTROLS_NODE_ID),

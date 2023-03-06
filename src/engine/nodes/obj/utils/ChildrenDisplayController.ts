@@ -4,19 +4,23 @@ import {DisplayNodeController, DisplayNodeControllerCallbacks} from '../../utils
 import {Group} from 'three';
 import {BaseSopNodeType} from '../../sop/_Base';
 import {Poly} from '../../../Poly';
+import {CoreGroup} from '../../../../core/geometry/Group';
+// import {TesselationParams} from '../../../../core/geometry/cad/CadCommon';
 
 const DISPLAY_PARAM_NAME = 'display';
 
 export type OnSopGroupUpdatedHook = () => void;
 interface BaseObjNodeClassWithDisplayNode extends BaseObjNodeClass {
 	displayNodeController: DisplayNodeController;
+	// pv: TesselationParams;
 }
 
 export class ChildrenDisplayController {
-	_childrenUuids: Set<string> = new Set();
-	private _sopGroup = this._createSopGroup();
-
-	constructor(private node: BaseObjNodeClassWithDisplayNode) {}
+	protected _childrenUuids: Set<string> = new Set();
+	protected _sopGroup = this._createSopGroup();
+	protected _newObjectsAreDifferent = false;
+	protected _newSpecializedObjects: Object3D[] = [];
+	constructor(protected node: BaseObjNodeClassWithDisplayNode) {}
 
 	private _createSopGroup() {
 		// This may need to be a Mesh for the rivet to update correctly
@@ -128,23 +132,37 @@ export class ChildrenDisplayController {
 			const coreGroup = container.coreContent();
 			if (coreGroup) {
 				// check if the new objects are different
-				const newObjects = coreGroup.objects();
-				let new_objects_are_different = newObjects.length != this._childrenUuids.size;
-				if (!new_objects_are_different) {
-					for (let object of newObjects) {
-						if (!this._childrenUuids.has(object.uuid)) {
-							new_objects_are_different = true;
+				const newObjects = coreGroup.threejsObjects();
+				this._newObjectsAreDifferent = false;
+				const checkObjectsAreDifferent = () => {
+					this._newObjectsAreDifferent = newObjects.length != this._childrenUuids.size;
+					if (!this._newObjectsAreDifferent) {
+						for (let object of newObjects) {
+							if (!this._childrenUuids.has(object.uuid)) {
+								this._newObjectsAreDifferent = true;
+							}
 						}
 					}
-				}
+				};
+				// add CAD objects
+				checkObjectsAreDifferent();
+				this._newSpecializedObjects.length = 0;
+				this._addSpecializedObjects(coreGroup, this._newSpecializedObjects);
+
 				// update hierarchy if different
-				if (new_objects_are_different) {
+				if (this._newObjectsAreDifferent) {
 					this.removeChildren();
-					for (let object of newObjects) {
+					const addObject = (object: Object3D) => {
 						this._sopGroup.add(object);
 						// ensure the matrix of the parent is used
 						object.updateMatrix();
 						this._childrenUuids.add(object.uuid);
+					};
+					for (let object of newObjects) {
+						addObject(object);
+					}
+					for (let object of this._newSpecializedObjects) {
+						addObject(object);
 					}
 				}
 				this._notifyCamerasController();
@@ -161,6 +179,7 @@ export class ChildrenDisplayController {
 	private _notifyCamerasController() {
 		this.node.scene().camerasController.updateFromChangeInObject(this._sopGroup);
 	}
+	protected _addSpecializedObjects(coreGroup: CoreGroup, newObjects: Object3D[]) {}
 
 	//
 	//

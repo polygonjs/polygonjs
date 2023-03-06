@@ -104,7 +104,7 @@ export class RaySopOperation extends BaseSopOperation {
 				direction = this._pointNormal;
 			}
 			this._raycaster.set(this._pointPos, direction);
-			firstIntersect = this._raycaster.intersectObjects(coreGroupCollision.objects(), true)[0];
+			firstIntersect = this._raycaster.intersectObjects(coreGroupCollision.threejsObjects(), true)[0];
 			if (firstIntersect) {
 				if (isBooleanTrue(params.transformPoints)) {
 					point.setPosition(firstIntersect.point);
@@ -122,7 +122,7 @@ export class RaySopOperation extends BaseSopOperation {
 		return coreGroup;
 	}
 	private _computeWithMinDist(coreGroup: CoreGroup, coreGroupCollision: CoreGroup, params: RaySopParams) {
-		const coreGroupCollisionObject = coreGroupCollision.objectsWithGeo()[0];
+		const coreGroupCollisionObject = coreGroupCollision.threejsObjectsWithGeo()[0];
 		const collisionGeometry = coreGroupCollisionObject.geometry as BufferGeometryWithBVH;
 		const indexArray = collisionGeometry.getIndex()?.array;
 		if (!indexArray) {

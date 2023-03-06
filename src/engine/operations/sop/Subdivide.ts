@@ -22,7 +22,7 @@ export class SubdivideSopOperation extends BaseSopOperation {
 	override cook(inputCoreGroups: CoreGroup[], params: SubdivideSopParams) {
 		const coreGroup = inputCoreGroups[0];
 
-		const objects = coreGroup.objects();
+		const objects = coreGroup.threejsObjects();
 		for (let object of objects) {
 			const geometry = (object as Mesh).geometry as BufferGeometry;
 			if (geometry) {

@@ -1,6 +1,8 @@
+import {BaseCoreObject} from '../geometry/_BaseObject';
 import {CoreObject} from '../geometry/Object';
-import {Vector4, Vector3, Vector2, Object3D} from 'three';
+import {Vector4, Vector3, Vector2} from 'three';
 import {PhysicsJointAttribute} from './PhysicsJoint';
+import {CoreObjectType, ObjectContent} from '../geometry/ObjectContent';
 
 export enum PhysicsIdAttribute {
 	WORLD = 'PhysicsIdAttribute_worldId',
@@ -117,220 +119,231 @@ export function physicsAttribNameLive(attribute: PhysicsAttribute): string {
 }
 
 export class CorePhysicsBaseAttribute {
-	protected static _setVector4(object: Object3D, attribName: PhysicsAttribute, value: Vector4) {
+	protected static _setVector4(object: ObjectContent<CoreObjectType>, attribName: PhysicsAttribute, value: Vector4) {
 		CoreObject.addAttribute(object, attribName, value);
 	}
-	protected static _getVector4(object: Object3D, attribName: PhysicsAttribute, target: Vector4) {
+	protected static _getVector4(object: ObjectContent<CoreObjectType>, attribName: PhysicsAttribute, target: Vector4) {
 		CoreObject.attribValue(object, attribName, 0, target);
 	}
-	protected static _setVector3(object: Object3D, attribName: PhysicsAttribute, value: Vector3) {
+	protected static _setVector3(object: ObjectContent<CoreObjectType>, attribName: PhysicsAttribute, value: Vector3) {
 		CoreObject.addAttribute(object, attribName, value);
 	}
-	protected static _getVector3(object: Object3D, attribName: PhysicsAttribute, target: Vector3) {
+	protected static _getVector3(object: ObjectContent<CoreObjectType>, attribName: PhysicsAttribute, target: Vector3) {
 		CoreObject.attribValue(object, attribName, 0, target);
 	}
-	protected static _setVector2(object: Object3D, attribName: PhysicsAttribute, value: Vector2) {
+	protected static _setVector2(object: ObjectContent<CoreObjectType>, attribName: PhysicsAttribute, value: Vector2) {
 		CoreObject.addAttribute(object, attribName, value);
 	}
-	protected static _getVector2(object: Object3D, attribName: PhysicsAttribute, target: Vector2) {
+	protected static _getVector2(object: ObjectContent<CoreObjectType>, attribName: PhysicsAttribute, target: Vector2) {
 		CoreObject.attribValue(object, attribName, 0, target);
 	}
-	protected static _setNumber(object: Object3D, attribName: PhysicsAttribute, value: number) {
+	protected static _setNumber(object: ObjectContent<CoreObjectType>, attribName: PhysicsAttribute, value: number) {
 		CoreObject.addAttribute(object, attribName, value);
 	}
-	protected static _setBoolean(object: Object3D, attribName: PhysicsAttribute, value: boolean) {
+	protected static _setBoolean(object: ObjectContent<CoreObjectType>, attribName: PhysicsAttribute, value: boolean) {
 		CoreObject.addAttribute(object, attribName, value);
 	}
-	protected static _getNumber(object: Object3D, attribName: PhysicsAttribute, defaultValue: number): number {
+	protected static _getNumber(
+		object: ObjectContent<CoreObjectType>,
+		attribName: PhysicsAttribute,
+		defaultValue: number
+	): number {
 		const val = CoreObject.attribValue(object, attribName, 0) as number | undefined;
 		if (val == null) {
 			return defaultValue;
 		}
 		return val;
 	}
-	protected static _getBoolean(object: Object3D, attribName: PhysicsAttribute, defaultValue: boolean): boolean {
+	protected static _getBoolean(
+		object: ObjectContent<CoreObjectType>,
+		attribName: PhysicsAttribute,
+		defaultValue: boolean
+	): boolean {
 		const val = CoreObject.attribValue(object, attribName, 0) as boolean | undefined;
 		if (val == null) {
 			return defaultValue;
 		}
 		return val;
 	}
-	protected static _setString(object: Object3D, attribName: PhysicsAttribute, value: string) {
-		CoreObject.addAttribute(object, attribName, value);
+	protected static _setString(object: ObjectContent<CoreObjectType>, attribName: PhysicsAttribute, value: string) {
+		BaseCoreObject.addAttribute(object, attribName, value);
 	}
-	protected static _getString(object: Object3D, attribName: PhysicsAttribute): string | undefined {
-		return CoreObject.attribValue(object, attribName, 0) as string | undefined;
+	protected static _getString(
+		object: ObjectContent<CoreObjectType>,
+		attribName: PhysicsAttribute
+	): string | undefined {
+		return BaseCoreObject.attribValue(object, attribName, 0) as string | undefined;
 	}
 }
 
 export class CorePhysicsAttribute extends CorePhysicsBaseAttribute {
 	// common
-	static setRBDId(object: Object3D, value: string) {
+	static setRBDId(object: ObjectContent<CoreObjectType>, value: string) {
 		this._setString(object, PhysicsCommonAttribute.RBD_ID, value);
 	}
-	static getRBDId(object: Object3D): string {
+	static getRBDId(object: ObjectContent<CoreObjectType>): string {
 		return this._getString(object, PhysicsCommonAttribute.RBD_ID) as string;
 	}
-	static setRBDType(object: Object3D, value: PhysicsRBDType) {
+	static setRBDType(object: ObjectContent<CoreObjectType>, value: PhysicsRBDType) {
 		this._setString(object, PhysicsCommonAttribute.RBD_TYPE, value);
 	}
-	static getRBDType(object: Object3D): PhysicsRBDType | undefined {
+	static getRBDType(object: ObjectContent<CoreObjectType>): PhysicsRBDType | undefined {
 		return this._getString(object, PhysicsCommonAttribute.RBD_TYPE) as PhysicsRBDType | undefined;
 	}
-	static setColliderType(object: Object3D, value: PhysicsRBDColliderType) {
+	static setColliderType(object: ObjectContent<CoreObjectType>, value: PhysicsRBDColliderType) {
 		this._setString(object, PhysicsCommonAttribute.COLLIDER_TYPE, value);
 	}
-	static getColliderType(object: Object3D): PhysicsRBDColliderType | undefined {
+	static getColliderType(object: ObjectContent<CoreObjectType>): PhysicsRBDColliderType | undefined {
 		return this._getString(object, PhysicsCommonAttribute.COLLIDER_TYPE) as PhysicsRBDColliderType | undefined;
 	}
-	static setCanSleep(object: Object3D, value: boolean) {
+	static setCanSleep(object: ObjectContent<CoreObjectType>, value: boolean) {
 		this._setBoolean(object, PhysicsCommonAttribute.CAN_SLEEP, value);
 	}
-	static getCanSleep(object: Object3D) {
+	static getCanSleep(object: ObjectContent<CoreObjectType>) {
 		return this._getBoolean(object, PhysicsCommonAttribute.CAN_SLEEP, true);
 	}
-	static setDensity(object: Object3D, value: number) {
+	static setDensity(object: ObjectContent<CoreObjectType>, value: number) {
 		this._setNumber(object, PhysicsCommonAttribute.DENSITY, value);
 	}
-	static getDensity(object: Object3D) {
+	static getDensity(object: ObjectContent<CoreObjectType>) {
 		return this._getNumber(object, PhysicsCommonAttribute.DENSITY, 1);
 	}
-	static setRestitution(object: Object3D, value: number) {
+	static setRestitution(object: ObjectContent<CoreObjectType>, value: number) {
 		this._setNumber(object, PhysicsCommonAttribute.RESTITUTION, value);
 	}
-	static getRestitution(object: Object3D) {
+	static getRestitution(object: ObjectContent<CoreObjectType>) {
 		return this._getNumber(object, PhysicsCommonAttribute.RESTITUTION, 0.5);
 	}
-	static setFriction(object: Object3D, value: number) {
+	static setFriction(object: ObjectContent<CoreObjectType>, value: number) {
 		this._setNumber(object, PhysicsCommonAttribute.FRICTION, value);
 	}
-	static getFriction(object: Object3D) {
+	static getFriction(object: ObjectContent<CoreObjectType>) {
 		return this._getNumber(object, PhysicsCommonAttribute.FRICTION, 0);
 	}
-	static setLinearDamping(object: Object3D, value: number) {
+	static setLinearDamping(object: ObjectContent<CoreObjectType>, value: number) {
 		this._setNumber(object, PhysicsCommonAttribute.LINEAR_DAMPING, value);
 	}
-	static getLinearDamping(object: Object3D) {
+	static getLinearDamping(object: ObjectContent<CoreObjectType>) {
 		return this._getNumber(object, PhysicsCommonAttribute.LINEAR_DAMPING, 0);
 	}
-	static setAngularDamping(object: Object3D, value: number) {
+	static setAngularDamping(object: ObjectContent<CoreObjectType>, value: number) {
 		this._setNumber(object, PhysicsCommonAttribute.ANGULAR_DAMPING, value);
 	}
-	static getAngularDamping(object: Object3D) {
+	static getAngularDamping(object: ObjectContent<CoreObjectType>) {
 		return this._getNumber(object, PhysicsCommonAttribute.ANGULAR_DAMPING, 0);
 	}
-	static setLinearVelocity(object: Object3D, value: Vector3) {
+	static setLinearVelocity(object: ObjectContent<CoreObjectType>, value: Vector3) {
 		this._setVector3(object, PhysicsCommonAttribute.LINEAR_VELOCITY, value);
 	}
-	static getLinearVelocity(object: Object3D, target: Vector3) {
+	static getLinearVelocity(object: ObjectContent<CoreObjectType>, target: Vector3) {
 		return this._getVector3(object, PhysicsCommonAttribute.LINEAR_VELOCITY, target);
 	}
-	static setAngularVelocity(object: Object3D, value: Vector3) {
+	static setAngularVelocity(object: ObjectContent<CoreObjectType>, value: Vector3) {
 		this._setVector3(object, PhysicsCommonAttribute.ANGULAR_VELOCITY, value);
 	}
-	static getAngularVelocity(object: Object3D, target: Vector3) {
+	static getAngularVelocity(object: ObjectContent<CoreObjectType>, target: Vector3) {
 		return this._getVector3(object, PhysicsCommonAttribute.ANGULAR_VELOCITY, target);
 	}
-	static setGravityScale(object: Object3D, value: number) {
+	static setGravityScale(object: ObjectContent<CoreObjectType>, value: number) {
 		this._setNumber(object, PhysicsCommonAttribute.GRAVITY_SCALE, value);
 	}
-	static getGravityScale(object: Object3D) {
+	static getGravityScale(object: ObjectContent<CoreObjectType>) {
 		return this._getNumber(object, PhysicsCommonAttribute.GRAVITY_SCALE, 0);
 	}
 
 	// shapes
-	static setBorderRadius(object: Object3D, value: number) {
+	static setBorderRadius(object: ObjectContent<CoreObjectType>, value: number) {
 		this._setNumber(object, PhysicsCommonAttribute.BORDER_RADIUS, value);
 	}
-	static getBorderRadius(object: Object3D) {
+	static getBorderRadius(object: ObjectContent<CoreObjectType>) {
 		return this._getNumber(object, PhysicsCommonAttribute.BORDER_RADIUS, 0);
 	}
 
 	// cuboid
-	static setCuboidSizes(object: Object3D, value: Vector3) {
+	static setCuboidSizes(object: ObjectContent<CoreObjectType>, value: Vector3) {
 		this._setVector3(object, PhysicsRBDCuboidAttribute.SIZES, value);
 	}
-	static getCuboidSizes(object: Object3D, value: Vector3) {
+	static getCuboidSizes(object: ObjectContent<CoreObjectType>, value: Vector3) {
 		this._getVector3(object, PhysicsRBDCuboidAttribute.SIZES, value);
 	}
-	static setCuboidSize(object: Object3D, value: number) {
+	static setCuboidSize(object: ObjectContent<CoreObjectType>, value: number) {
 		this._setNumber(object, PhysicsRBDCuboidAttribute.SIZE, value);
 	}
-	static getCuboidSize(object: Object3D) {
+	static getCuboidSize(object: ObjectContent<CoreObjectType>) {
 		return this._getNumber(object, PhysicsRBDCuboidAttribute.SIZE, 1);
 	}
 	// sphere + capsule + cylinder
-	static setRadius(object: Object3D, value: number) {
+	static setRadius(object: ObjectContent<CoreObjectType>, value: number) {
 		this._setNumber(object, PhysicsRBDRadiusAttribute.RADIUS, value);
 	}
-	static getRadius(object: Object3D) {
+	static getRadius(object: ObjectContent<CoreObjectType>) {
 		return this._getNumber(object, PhysicsRBDRadiusAttribute.RADIUS, 1);
 	}
 	// capsule + cylinder
-	static setHeight(object: Object3D, value: number) {
+	static setHeight(object: ObjectContent<CoreObjectType>, value: number) {
 		this._setNumber(object, PhysicsRBDHeightAttribute.HEIGHT, value);
 	}
-	static getHeight(object: Object3D) {
+	static getHeight(object: ObjectContent<CoreObjectType>) {
 		return this._getNumber(object, PhysicsRBDHeightAttribute.HEIGHT, 1);
 	}
 	// heightfield
-	static setHeightFieldRows(object: Object3D, value: number) {
+	static setHeightFieldRows(object: ObjectContent<CoreObjectType>, value: number) {
 		this._setNumber(object, PhysicsRBDHeightFieldAttribute.HEIGHT_FIELD_ROWS, value);
 	}
-	static getHeightFieldRows(object: Object3D) {
+	static getHeightFieldRows(object: ObjectContent<CoreObjectType>) {
 		return this._getNumber(object, PhysicsRBDHeightFieldAttribute.HEIGHT_FIELD_ROWS, 2);
 	}
-	static setHeightFieldCols(object: Object3D, value: number) {
+	static setHeightFieldCols(object: ObjectContent<CoreObjectType>, value: number) {
 		this._setNumber(object, PhysicsRBDHeightFieldAttribute.HEIGHT_FIELD_COLS, value);
 	}
-	static getHeightFieldCols(object: Object3D) {
+	static getHeightFieldCols(object: ObjectContent<CoreObjectType>) {
 		return this._getNumber(object, PhysicsRBDHeightFieldAttribute.HEIGHT_FIELD_COLS, 2);
 	}
 	// character controller
-	static setCharacterControllerId(object: Object3D, value: string) {
+	static setCharacterControllerId(object: ObjectContent<CoreObjectType>, value: string) {
 		this._setString(object, PhysicsCommonAttribute.CHARACTER_CONTROLLER_ID, value);
 	}
-	static getCharacterControllerId(object: Object3D): string {
+	static getCharacterControllerId(object: ObjectContent<CoreObjectType>): string {
 		return this._getString(object, PhysicsCommonAttribute.CHARACTER_CONTROLLER_ID) as string;
 	}
-	static setCharacterControllerOffset(object: Object3D, value: number) {
+	static setCharacterControllerOffset(object: ObjectContent<CoreObjectType>, value: number) {
 		this._setNumber(object, PhysicsCommonAttribute.CHARACTER_CONTROLLER_OFFSET, value);
 	}
-	static getCharacterControllerOffset(object: Object3D): number {
+	static getCharacterControllerOffset(object: ObjectContent<CoreObjectType>): number {
 		return this._getNumber(object, PhysicsCommonAttribute.CHARACTER_CONTROLLER_OFFSET, 0.01) as number;
 	}
-	static setCharacterControllerUp(object: Object3D, value: Vector3) {
+	static setCharacterControllerUp(object: ObjectContent<CoreObjectType>, value: Vector3) {
 		this._setVector3(object, PhysicsCommonAttribute.CHARACTER_CONTROLLER_UP, value);
 	}
-	static getCharacterControllerUp(object: Object3D, target: Vector3) {
+	static getCharacterControllerUp(object: ObjectContent<CoreObjectType>, target: Vector3) {
 		return this._getVector3(object, PhysicsCommonAttribute.CHARACTER_CONTROLLER_UP, target);
 	}
-	static setCharacterControllerMaxSlopeClimbAngle(object: Object3D, value: number) {
+	static setCharacterControllerMaxSlopeClimbAngle(object: ObjectContent<CoreObjectType>, value: number) {
 		this._setNumber(object, PhysicsCommonAttribute.CHARACTER_CONTROLLER_MAX_SLOPE_CLIMB_ANGLE, value);
 	}
-	static getCharacterControllerMaxSlopeClimbAngle(object: Object3D): number {
+	static getCharacterControllerMaxSlopeClimbAngle(object: ObjectContent<CoreObjectType>): number {
 		return this._getNumber(object, PhysicsCommonAttribute.CHARACTER_CONTROLLER_MAX_SLOPE_CLIMB_ANGLE, 0) as number;
 	}
-	static setCharacterControllerMinSlopeSlideAngle(object: Object3D, value: number) {
+	static setCharacterControllerMinSlopeSlideAngle(object: ObjectContent<CoreObjectType>, value: number) {
 		this._setNumber(object, PhysicsCommonAttribute.CHARACTER_CONTROLLER_MIN_SLOPE_CLIMB_ANGLE, value);
 	}
-	static getCharacterControllerMinSlopeSlideAngle(object: Object3D): number {
+	static getCharacterControllerMinSlopeSlideAngle(object: ObjectContent<CoreObjectType>): number {
 		return this._getNumber(object, PhysicsCommonAttribute.CHARACTER_CONTROLLER_MIN_SLOPE_CLIMB_ANGLE, 0) as number;
 	}
-	static setCharacterControllerApplyImpulsesToDynamic(object: Object3D, value: boolean) {
+	static setCharacterControllerApplyImpulsesToDynamic(object: ObjectContent<CoreObjectType>, value: boolean) {
 		this._setBoolean(object, PhysicsCommonAttribute.CHARACTER_CONTROLLER_APPLY_IMPULSES_TO_DYNAMIC, value);
 	}
-	static getCharacterControllerApplyImpulsesToDynamic(object: Object3D): boolean {
+	static getCharacterControllerApplyImpulsesToDynamic(object: ObjectContent<CoreObjectType>): boolean {
 		return this._getBoolean(
 			object,
 			PhysicsCommonAttribute.CHARACTER_CONTROLLER_APPLY_IMPULSES_TO_DYNAMIC,
 			false
 		) as boolean;
 	}
-	static setCharacterControllerSnapToGroundDistance(object: Object3D, value: number) {
+	static setCharacterControllerSnapToGroundDistance(object: ObjectContent<CoreObjectType>, value: number) {
 		this._setNumber(object, PhysicsCommonAttribute.CHARACTER_CONTROLLER_SNAP_TO_GROUND_DISTANCE, value);
 	}
-	static getCharacterControllerSnapToGroundDistance(object: Object3D): number {
+	static getCharacterControllerSnapToGroundDistance(object: ObjectContent<CoreObjectType>): number {
 		return this._getNumber(
 			object,
 			PhysicsCommonAttribute.CHARACTER_CONTROLLER_SNAP_TO_GROUND_DISTANCE,
@@ -338,22 +351,22 @@ export class CorePhysicsAttribute extends CorePhysicsBaseAttribute {
 		) as number;
 	}
 	// auto step
-	static setCharacterControllerAutoStepMaxHeight(object: Object3D, value: number) {
+	static setCharacterControllerAutoStepMaxHeight(object: ObjectContent<CoreObjectType>, value: number) {
 		this._setNumber(object, PhysicsCommonAttribute.CHARACTER_CONTROLLER_AUTO_STEP_MAX_HEIGHT, value);
 	}
-	static getCharacterControllerAutoStepMaxHeight(object: Object3D): number {
+	static getCharacterControllerAutoStepMaxHeight(object: ObjectContent<CoreObjectType>): number {
 		return this._getNumber(object, PhysicsCommonAttribute.CHARACTER_CONTROLLER_AUTO_STEP_MAX_HEIGHT, 0) as number;
 	}
-	static setCharacterControllerAutoStepMinWidth(object: Object3D, value: number) {
+	static setCharacterControllerAutoStepMinWidth(object: ObjectContent<CoreObjectType>, value: number) {
 		this._setNumber(object, PhysicsCommonAttribute.CHARACTER_CONTROLLER_AUTO_STEP_MIN_WIDTH, value);
 	}
-	static getCharacterControllerAutoStepMinWidth(object: Object3D): number {
+	static getCharacterControllerAutoStepMinWidth(object: ObjectContent<CoreObjectType>): number {
 		return this._getNumber(object, PhysicsCommonAttribute.CHARACTER_CONTROLLER_AUTO_STEP_MIN_WIDTH, 0) as number;
 	}
-	static setCharacterControllerAutoStepOnDynamic(object: Object3D, value: boolean) {
+	static setCharacterControllerAutoStepOnDynamic(object: ObjectContent<CoreObjectType>, value: boolean) {
 		this._setBoolean(object, PhysicsCommonAttribute.CHARACTER_CONTROLLER_AUTO_STEP_ON_DYNAMIC, value);
 	}
-	static getCharacterControllerAutoStepOnDynamic(object: Object3D): boolean {
+	static getCharacterControllerAutoStepOnDynamic(object: ObjectContent<CoreObjectType>): boolean {
 		return this._getBoolean(
 			object,
 			PhysicsCommonAttribute.CHARACTER_CONTROLLER_AUTO_STEP_ON_DYNAMIC,
@@ -361,10 +374,10 @@ export class CorePhysicsAttribute extends CorePhysicsBaseAttribute {
 		) as boolean;
 	}
 	// camera
-	static setCharacterControllerCameraPath(object: Object3D, value: string) {
+	static setCharacterControllerCameraPath(object: ObjectContent<CoreObjectType>, value: string) {
 		this._setString(object, PhysicsCommonAttribute.CHARACTER_CONTROLLER_CAMERA_OBJECT_PATH, value);
 	}
-	static getCharacterControllerCameraPath(object: Object3D): string {
+	static getCharacterControllerCameraPath(object: ObjectContent<CoreObjectType>): string {
 		return this._getString(object, PhysicsCommonAttribute.CHARACTER_CONTROLLER_CAMERA_OBJECT_PATH) as string;
 	}
 }

@@ -133,13 +133,13 @@ function promoteAttributeFromCoreGroup(coreGroup: CoreGroup, classTo: AttribClas
 function pointsToPoints(coreGroup: CoreGroup, attribName: string, params: AttribPromoteSopParams) {
 	const values = findValuesFromPoints(coreGroup.points(), attribName);
 	const value = filterValues(values, params);
-	const coreObjects = coreGroup.coreObjects();
+	const coreObjects = coreGroup.threejsCoreObjects();
 	for (let coreObject of coreObjects) {
 		setValuesToPoints(coreObject, attribName, value as NumericAttribValue);
 	}
 }
 function pointsToObject(coreGroup: CoreGroup, attribName: string, params: AttribPromoteSopParams) {
-	const coreObjects = coreGroup.coreObjects();
+	const coreObjects = coreGroup.threejsCoreObjects();
 	for (let coreObject of coreObjects) {
 		const values = findValuesFromPoints(coreObject.points(), attribName);
 		const value = filterValues(values, params);
@@ -152,7 +152,7 @@ function pointsToCoreGroup(coreGroup: CoreGroup, attribName: string, params: Att
 	coreGroup.setAttribValue(attribName, value);
 }
 function objectsToPoints(coreGroup: CoreGroup, attribName: string) {
-	const coreObjects = coreGroup.coreObjects();
+	const coreObjects = coreGroup.threejsCoreObjects();
 	for (let coreObject of coreObjects) {
 		const value = coreObject.attribValue(attribName);
 		if (value == null) {
@@ -176,7 +176,7 @@ function coreGroupToPoints(coreGroup: CoreGroup, attribName: string) {
 	if (value == null) {
 		return;
 	}
-	const coreObjects = coreGroup.coreObjects();
+	const coreObjects = coreGroup.threejsCoreObjects();
 	for (let coreObject of coreObjects) {
 		setValuesToPoints(coreObject, attribName, value as NumericAttribValue);
 	}
@@ -245,7 +245,7 @@ function setValuesToPoints(coreObject: CoreObject, attribName: string, newValue:
 //
 //
 function findValuesFromObjects(coreGroup: CoreGroup, attribName: string) {
-	const values = coreGroup.coreObjects().map((coreObject: CoreObject) => coreObject.attribValue(attribName));
+	const values = coreGroup.allCoreObjects().map((coreObject) => coreObject.attribValue(attribName));
 
 	const nonNullValues = ArrayUtils.compact(values);
 	const numericValues = nonNullValues.filter((value) => CoreType.isNumber(value)) as number[];
@@ -253,7 +253,7 @@ function findValuesFromObjects(coreGroup: CoreGroup, attribName: string) {
 }
 
 function setValuesToObjects(coreGroup: CoreGroup, attribName: string, newValue: AttribValue) {
-	const coreObjects = coreGroup.coreObjects();
+	const coreObjects = coreGroup.allCoreObjects();
 	for (let coreObject of coreObjects) {
 		coreObject.setAttribValue(attribName, newValue);
 	}

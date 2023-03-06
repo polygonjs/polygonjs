@@ -18,6 +18,7 @@ import {
 	ATTRIBUTE_TYPES,
 } from '../../../core/geometry/Constant';
 import {CoreAttribute} from '../../../core/geometry/Attribute';
+import {BaseCoreObject} from '../../../core/geometry/_BaseObject';
 import {CoreObject} from '../../../core/geometry/Object';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {TypeAssert} from '../../poly/Assert';
@@ -25,6 +26,7 @@ import {TypeAssert} from '../../poly/Assert';
 import {AttribSetAtIndexSopOperation} from '../../operations/sop/AttribSetAtIndex';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {BufferAttribute} from 'three';
+import {CoreObjectType} from '../../../core/geometry/ObjectContent';
 const DEFAULT = AttribSetAtIndexSopOperation.DEFAULT_PARAMS;
 class AttribSetAtIndexSopParamsConfig extends NodeParamsConfig {
 	/** @param the point or object index this applies to */
@@ -120,7 +122,7 @@ export class AttribSetAtIndexSopNode extends TypedSopNode<AttribSetAtIndexSopPar
 	}
 
 	private _addPointAttribute(attribType: AttribType, coreGroup: CoreGroup) {
-		const coreObjects = coreGroup.coreObjects();
+		const coreObjects = coreGroup.threejsCoreObjects();
 		switch (attribType) {
 			case AttribType.NUMERIC: {
 				for (let i = 0; i < coreObjects.length; i++) {
@@ -138,7 +140,7 @@ export class AttribSetAtIndexSopNode extends TypedSopNode<AttribSetAtIndexSopPar
 		TypeAssert.unreachable(attribType);
 	}
 	private _addObjectAttribute(attribType: AttribType, coreGroup: CoreGroup) {
-		const allCoreObjects = coreGroup.coreObjects();
+		const allCoreObjects = coreGroup.allCoreObjects();
 
 		// add attrib if non existent
 		const attribName = this.pv.name;
@@ -234,7 +236,7 @@ export class AttribSetAtIndexSopNode extends TypedSopNode<AttribSetAtIndexSopPar
 		// point.setAttribValue(attribName, param.value);
 	}
 
-	private _addNumericAttributeToObject(coreObject: CoreObject) {
+	private _addNumericAttributeToObject(coreObject: BaseCoreObject<CoreObjectType>) {
 		const param = [this.p.value1, this.p.value2, this.p.value3, this.p.value4][this.pv.size - 1];
 		const attribName = this.pv.name;
 		coreObject.setAttribValue(attribName, param.value);
@@ -281,7 +283,7 @@ export class AttribSetAtIndexSopNode extends TypedSopNode<AttribSetAtIndexSopPar
 		}
 	}
 
-	private _addStringAttributeToObject(coreObject: CoreObject) {
+	private _addStringAttributeToObject(coreObject: BaseCoreObject<CoreObjectType>) {
 		const param = this.p.string;
 		const attribName = this.pv.name;
 		coreObject.setAttribValue(attribName, param.value);

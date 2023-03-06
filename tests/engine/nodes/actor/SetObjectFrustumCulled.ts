@@ -26,7 +26,7 @@ QUnit.test('actor/setObjectFrustumCulled', async (assert) => {
 	await CoreSleep.sleep(50);
 
 	const container = await actor1.compute();
-	const object = container.coreContent()!.objects()[0] as Mesh;
+	const object = container.coreContent()!.threejsObjects()[0] as Mesh;
 	object.frustumCulled = true;
 
 	await RendererUtils.withViewer({cameraNode: perspective_camera1}, async (args) => {

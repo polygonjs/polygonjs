@@ -4,7 +4,7 @@ import {checkConsolePrints} from '../../../helpers/Console';
 async function compute(metaball: MetaballSopNode) {
 	const container = await metaball.compute();
 	const coreGroup = container.coreContent()!;
-	const geometry = coreGroup?.objectsWithGeo()[0].geometry;
+	const geometry = coreGroup?.threejsObjectsWithGeo()[0].geometry;
 	geometry.computeBoundingBox();
 	return {bbox: geometry.boundingBox!, coreGroup: coreGroup};
 }

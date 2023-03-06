@@ -46,8 +46,8 @@ export class BlendSopNode extends TypedSopNode<BlendSopParamsConfig> {
 		const coreGroup0 = inputCoreGroups[0];
 		const coreGroup1 = inputCoreGroups[1];
 
-		const objects0 = coreGroup0.objects();
-		const objects1 = coreGroup1.objects();
+		const objects0 = coreGroup0.threejsObjects();
+		const objects1 = coreGroup1.threejsObjects();
 
 		for (let i = 0; i < objects0.length; i++) {
 			this.blend(objects0[i], objects1[i], this.pv.blend);

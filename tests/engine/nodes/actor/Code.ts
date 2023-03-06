@@ -18,7 +18,7 @@ QUnit.test('actor/code simple', async (assert) => {
 	code1.setInput(ActorConnectionPointType.TRIGGER, onTick1);
 
 	const container = await actor1.compute();
-	const object = container.coreContent()!.objects()[0];
+	const object = container.coreContent()!.threejsObjects()[0];
 
 	await RendererUtils.withViewer({cameraNode: perspective_camera1}, async (args) => {
 		scene.play();
@@ -74,7 +74,7 @@ export class CodeSopProcessor extends BaseCodeActorProcessor {
 	setObjectPosition1.setInput(ActorConnectionPointType.TRIGGER, code1);
 
 	const container = await actor1.compute();
-	const object = container.coreContent()!.objects()[0];
+	const object = container.coreContent()!.threejsObjects()[0];
 
 	await RendererUtils.withViewer({cameraNode: perspective_camera1}, async (args) => {
 		scene.play();

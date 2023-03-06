@@ -25,7 +25,7 @@ export class PeakSopOperation extends BaseSopOperation {
 		const core_group = input_contents[0];
 
 		let core_geometry: CoreGeometry, point: CorePoint;
-		for (let object of core_group.objects()) {
+		for (let object of core_group.threejsObjects()) {
 			object.traverse((child_object) => {
 				let geometry;
 				if ((geometry = (child_object as Mesh).geometry as BufferGeometry) != null) {

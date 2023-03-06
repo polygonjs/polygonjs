@@ -14,7 +14,7 @@ QUnit.test('mat sky simple', async (assert) => {
 
 	const container = await material1.compute();
 	const core_group = container.coreContent()!;
-	const objects = core_group.objectsWithGeo();
+	const objects = core_group.threejsObjectsWithGeo();
 	const material = (objects[0] as Mesh).material as Material;
 
 	assert.equal(material.uuid, (await sky1.material()).uuid);

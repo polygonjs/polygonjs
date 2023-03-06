@@ -1,5 +1,6 @@
-import {CoreObject} from './../../../../src/core/geometry/Object';
+import {BaseCoreObject} from './../../../../src/core/geometry/_BaseObject';
 import {AttribClass, AttribType} from '../../../../src/core/geometry/Constant';
+import {CoreObjectType} from '../../../../src/core/geometry/ObjectContent';
 
 QUnit.test('expression object with float attr', async (assert) => {
 	const geo1 = window.geo1;
@@ -47,8 +48,8 @@ QUnit.test('expression object with string attr', async (assert) => {
 		const container = await attribCreate2.compute();
 		const values = container
 			.coreContent()
-			?.coreObjects()
-			.map((o: CoreObject) => o.attribValue('test2') as string);
+			?.allCoreObjects()
+			.map((o: BaseCoreObject<CoreObjectType>) => o.attribValue('test2') as string);
 		return values;
 	}
 

@@ -25,7 +25,7 @@ QUnit.test('actor/trackFace', async (assert) => {
 	transform1.setInput(0, trackingLandmarksFaceAttributes1);
 	actor1.setInput(0, transform1);
 	actor1.flags.display.set(true);
-	transform1.setApplyOn(TransformTargetType.OBJECTS);
+	transform1.setApplyOn(TransformTargetType.OBJECT);
 	transform1.p.t.set([0, -0.5, -2]);
 	transform1.p.r.set([0, 180, 0]);
 
@@ -71,7 +71,7 @@ QUnit.test('actor/trackFace', async (assert) => {
 	trackFace1.setInput(ActorConnectionPointType.TEXTURE, getTexture1);
 
 	const container = await actor1.compute();
-	const object = container.coreContent()!.objects()[0] as Mesh;
+	const object = container.coreContent()!.threejsObjects()[0] as Mesh;
 
 	const center = new Vector3();
 	let minX = 100000;

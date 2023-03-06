@@ -20,6 +20,7 @@ import type {
 	gp_Quaternion,
 	gp_Vec2d,
 	gp_Vec,
+	Bnd_Box,
 	gp_Trsf,
 	gp_Ax1,
 	gp_Ax2,
@@ -41,6 +42,7 @@ export type {
 	TopoDS_Wire,
 	Geom2d_Curve,
 	Geom_Curve,
+	Bnd_Box,
 	gp_Pln,
 	gp_Pnt2d,
 	gp_Pnt,
@@ -54,7 +56,7 @@ export type {
 	gp_XYZ,
 };
 
-export type CadObject =
+export type CadGeometry =
 	| gp_Pnt2d
 	| Geom2d_Curve
 	// Geom_Curve |
@@ -63,53 +65,66 @@ export type CadObject =
 	| TopoDS_Wire
 	| TopoDS_Shape;
 
-export enum CadObjectType {
-	POINT_2D = 'point2D',
-	CURVE_2D = 'curve2D',
+export enum CadGeometryType {
+	POINT_2D = 'CADPoint2D',
+	CURVE_2D = 'CADCurve2D',
 	// CURVE_3D = 'curve3D',
-	VERTEX = 'vertex',
-	EDGE = 'edge',
-	WIRE = 'wire',
-	FACE = 'face',
-	SHELL = 'shell',
-	SOLID = 'solid',
-	COMPSOLID = 'compsolid',
-	COMPOUND = 'compound',
+	VERTEX = 'CADVertex',
+	EDGE = 'CADEdge',
+	WIRE = 'CADWire',
+	FACE = 'CADFace',
+	SHELL = 'CADShell',
+	SOLID = 'CADSolid',
+	COMPSOLID = 'CADCompsolid',
+	COMPOUND = 'CADCompound',
 }
-export type CadObjectTypeShape =
-	| CadObjectType.VERTEX
-	| CadObjectType.EDGE
-	| CadObjectType.WIRE
-	| CadObjectType.FACE
-	| CadObjectType.SHELL
-	| CadObjectType.SOLID
-	| CadObjectType.COMPSOLID
-	| CadObjectType.COMPOUND;
-export const CAD_OBJECT_TYPES_SHAPE: CadObjectTypeShape[] = [
-	CadObjectType.VERTEX,
-	CadObjectType.EDGE,
-	CadObjectType.WIRE,
-	CadObjectType.FACE,
-	CadObjectType.SHELL,
-	CadObjectType.SOLID,
-	CadObjectType.COMPSOLID,
-	CadObjectType.COMPOUND,
+const CAD_GEOMETRY_TYPES: CadGeometryType[] = [
+	CadGeometryType.POINT_2D,
+	CadGeometryType.CURVE_2D,
+	CadGeometryType.VERTEX,
+	CadGeometryType.EDGE,
+	CadGeometryType.WIRE,
+	CadGeometryType.FACE,
+	CadGeometryType.SHELL,
+	CadGeometryType.SOLID,
+	CadGeometryType.COMPSOLID,
+	CadGeometryType.COMPOUND,
 ];
-export const CAD_OBJECT_TYPES_SET_SHAPE: Set<CadObjectTypeShape> = new Set(CAD_OBJECT_TYPES_SHAPE);
+export const CAD_GEOMETRY_TYPES_SET: Set<CadGeometryType> = new Set(CAD_GEOMETRY_TYPES);
+export type CadGeometryTypeShape =
+	| CadGeometryType.VERTEX
+	| CadGeometryType.EDGE
+	| CadGeometryType.WIRE
+	| CadGeometryType.FACE
+	| CadGeometryType.SHELL
+	| CadGeometryType.SOLID
+	| CadGeometryType.COMPSOLID
+	| CadGeometryType.COMPOUND;
+export const CAD_GEOMETRY_TYPES_SHAPE: CadGeometryTypeShape[] = [
+	CadGeometryType.VERTEX,
+	CadGeometryType.EDGE,
+	CadGeometryType.WIRE,
+	CadGeometryType.FACE,
+	CadGeometryType.SHELL,
+	CadGeometryType.SOLID,
+	CadGeometryType.COMPSOLID,
+	CadGeometryType.COMPOUND,
+];
+export const CAD_GEOMETRY_TYPES_SET_SHAPE: Set<CadGeometryType> = new Set(CAD_GEOMETRY_TYPES_SHAPE);
 
-function _createShapeTypeToCadObjectTypeMap(oc: OpenCascadeInstance): Map<TopAbs_ShapeEnum, CadObjectTypeShape> {
+function _createShapeTypeToCadGeometryTypeMap(oc: OpenCascadeInstance): Map<TopAbs_ShapeEnum, CadGeometryTypeShape> {
 	const shapeEnum = oc.TopAbs_ShapeEnum;
 	const map = new Map([
-		[shapeEnum.TopAbs_VERTEX, CadObjectType.VERTEX],
-		[shapeEnum.TopAbs_EDGE, CadObjectType.EDGE],
-		[shapeEnum.TopAbs_WIRE, CadObjectType.WIRE],
-		[shapeEnum.TopAbs_FACE, CadObjectType.FACE],
-		[shapeEnum.TopAbs_SHELL, CadObjectType.SHELL],
-		[shapeEnum.TopAbs_SOLID, CadObjectType.SOLID],
-		[shapeEnum.TopAbs_COMPSOLID, CadObjectType.COMPSOLID],
-		[shapeEnum.TopAbs_COMPOUND, CadObjectType.COMPOUND],
+		[shapeEnum.TopAbs_VERTEX, CadGeometryType.VERTEX],
+		[shapeEnum.TopAbs_EDGE, CadGeometryType.EDGE],
+		[shapeEnum.TopAbs_WIRE, CadGeometryType.WIRE],
+		[shapeEnum.TopAbs_FACE, CadGeometryType.FACE],
+		[shapeEnum.TopAbs_SHELL, CadGeometryType.SHELL],
+		[shapeEnum.TopAbs_SOLID, CadGeometryType.SOLID],
+		[shapeEnum.TopAbs_COMPSOLID, CadGeometryType.COMPSOLID],
+		[shapeEnum.TopAbs_COMPOUND, CadGeometryType.COMPOUND],
 	]);
-	return map as Map<TopAbs_ShapeEnum, CadObjectTypeShape>;
+	return map as Map<TopAbs_ShapeEnum, CadGeometryTypeShape>;
 }
 export type CadShape =
 	| TopoDS_Vertex
@@ -121,7 +136,7 @@ export type CadShape =
 	| TopoDS_CompSolid
 	| TopoDS_Compound;
 type ShapeCaster = (S: TopoDS_Shape) => CadShape;
-function _createCastMapFromCadObjectTypeMap(oc: OpenCascadeInstance): Map<TopAbs_ShapeEnum, ShapeCaster> {
+function _createCastMapFromCadGeometryTypeMap(oc: OpenCascadeInstance): Map<TopAbs_ShapeEnum, ShapeCaster> {
 	const shapeEnum = oc.TopAbs_ShapeEnum;
 	const map = new Map([
 		[shapeEnum.TopAbs_VERTEX, oc.TopoDS.Vertex_1],
@@ -135,30 +150,30 @@ function _createCastMapFromCadObjectTypeMap(oc: OpenCascadeInstance): Map<TopAbs
 	]);
 	return map as Map<TopAbs_ShapeEnum, ShapeCaster>;
 }
-let shapeTypeToCadObjectTypeMap: Map<TopAbs_ShapeEnum, CadObjectType> | undefined;
-let shapeCasterByCadObjectTypeMap: Map<TopAbs_ShapeEnum, ShapeCaster> | undefined;
-export function cadObjectTypeFromShape(oc: OpenCascadeInstance, shape: TopoDS_Shape) {
-	shapeTypeToCadObjectTypeMap = shapeTypeToCadObjectTypeMap || _createShapeTypeToCadObjectTypeMap(oc);
-	return shapeTypeToCadObjectTypeMap.get(shape.ShapeType());
+let shapeTypeToCadGeometryTypeMap: Map<TopAbs_ShapeEnum, CadGeometryType> | undefined;
+let shapeCasterByCadGeometryTypeMap: Map<TopAbs_ShapeEnum, ShapeCaster> | undefined;
+export function cadGeometryTypeFromShape(oc: OpenCascadeInstance, shape: TopoDS_Shape) {
+	shapeTypeToCadGeometryTypeMap = shapeTypeToCadGeometryTypeMap || _createShapeTypeToCadGeometryTypeMap(oc);
+	return shapeTypeToCadGeometryTypeMap.get(shape.ShapeType());
 }
 export function cadDowncast(oc: OpenCascadeInstance, shape: TopoDS_Shape) {
-	shapeCasterByCadObjectTypeMap = shapeCasterByCadObjectTypeMap || _createCastMapFromCadObjectTypeMap(oc);
-	const caster = shapeCasterByCadObjectTypeMap.get(shape.ShapeType())!;
+	shapeCasterByCadGeometryTypeMap = shapeCasterByCadGeometryTypeMap || _createCastMapFromCadGeometryTypeMap(oc);
+	const caster = shapeCasterByCadGeometryTypeMap.get(shape.ShapeType())!;
 	return caster(shape);
 }
 
 export interface CadTypeMap {
-	[CadObjectType.POINT_2D]: gp_Pnt2d;
-	[CadObjectType.CURVE_2D]: Geom2d_Curve;
+	[CadGeometryType.POINT_2D]: gp_Pnt2d;
+	[CadGeometryType.CURVE_2D]: Geom2d_Curve;
 	// [CadObjectType.CURVE_3D]: Geom_Curve;
-	[CadObjectType.VERTEX]: TopoDS_Vertex;
-	[CadObjectType.EDGE]: TopoDS_Edge;
-	[CadObjectType.WIRE]: TopoDS_Wire;
-	[CadObjectType.FACE]: TopoDS_Face;
-	[CadObjectType.SHELL]: TopoDS_Shell;
-	[CadObjectType.SOLID]: TopoDS_Solid;
-	[CadObjectType.COMPSOLID]: TopoDS_CompSolid;
-	[CadObjectType.COMPOUND]: TopoDS_Compound;
+	[CadGeometryType.VERTEX]: TopoDS_Vertex;
+	[CadGeometryType.EDGE]: TopoDS_Edge;
+	[CadGeometryType.WIRE]: TopoDS_Wire;
+	[CadGeometryType.FACE]: TopoDS_Face;
+	[CadGeometryType.SHELL]: TopoDS_Shell;
+	[CadGeometryType.SOLID]: TopoDS_Solid;
+	[CadGeometryType.COMPSOLID]: TopoDS_CompSolid;
+	[CadGeometryType.COMPOUND]: TopoDS_Compound;
 }
 export interface CachedTesselationParams {
 	linearTolerance: number;
@@ -184,5 +199,28 @@ export interface EdgeData {
 	positions: number[];
 }
 export interface CadObjectData {
-	type: CadObjectType;
+	type: CadGeometryType;
 }
+export interface CadNumberHandle {
+	current: number;
+}
+export const _createCadNumberHandle: () => CadNumberHandle = () => ({current: 0});
+export interface CadVector3Handle {
+	x: CadNumberHandle;
+	y: CadNumberHandle;
+	z: CadNumberHandle;
+}
+export const _createCadVector3Handle: () => CadVector3Handle = () => ({
+	x: _createCadNumberHandle(),
+	y: _createCadNumberHandle(),
+	z: _createCadNumberHandle(),
+});
+
+export interface CadBox3Handle {
+	min: CadVector3Handle;
+	max: CadVector3Handle;
+}
+export const _createCadBox3Handle: () => CadBox3Handle = () => ({
+	min: _createCadVector3Handle(),
+	max: _createCadVector3Handle(),
+});

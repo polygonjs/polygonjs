@@ -18,7 +18,7 @@ export class ConvexHullSopOperation extends BaseSopOperation {
 	override cook(inputCoreGroups: CoreGroup[], params: ConvexHullSopParams) {
 		const inputCoreGroup = inputCoreGroups[0];
 
-		const objects = inputCoreGroup.objectsWithGeo();
+		const objects = inputCoreGroup.threejsObjectsWithGeo();
 		const newObjects = objects.map((object) => this._createConvexHull(object));
 
 		return this.createCoreGroupFromObjects(newObjects);

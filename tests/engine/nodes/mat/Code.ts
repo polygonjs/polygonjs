@@ -12,7 +12,7 @@ QUnit.test('mat/code simple', async (assert) => {
 	material1.p.material.setNode(code1);
 
 	const container = await material1.compute();
-	const object = container.coreContent()!.objectsWithGeo()[0];
+	const object = container.coreContent()!.allObjects()[0];
 	const material = (object as Mesh).material as ShaderMaterial;
 	assert.equal(
 		material.vertexShader,

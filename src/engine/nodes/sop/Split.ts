@@ -62,7 +62,7 @@ export class SplitSopNode extends TypedSopNode<SplitSopParamsConfig> {
 	}
 
 	_split_core_group(core_group: CoreGroup) {
-		const core_objects = core_group.coreObjects();
+		const core_objects = core_group.threejsCoreObjects();
 		for (let core_object of core_objects) {
 			this._split_core_object(core_object);
 		}

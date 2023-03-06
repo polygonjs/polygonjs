@@ -23,6 +23,7 @@ import {
 	ATTRIBUTE_TYPES,
 } from '../../../core/geometry/Constant';
 import {CoreAttribute} from '../../../core/geometry/Attribute';
+import {BaseCoreObject} from '../../../core/geometry/_BaseObject';
 import {CoreObject} from '../../../core/geometry/Object';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {TypeAssert} from '../../poly/Assert';
@@ -43,6 +44,7 @@ import {AttribCreateSopOperation} from '../../operations/sop/AttribCreate';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CoreMask} from '../../../core/geometry/Mask';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
+import {CoreObjectType} from '../../../core/geometry/ObjectContent';
 const DEFAULT = AttribCreateSopOperation.DEFAULT_PARAMS;
 class AttribCreateSopParamsConfig extends NodeParamsConfig {
 	/** @param the group this applies to */
@@ -147,7 +149,7 @@ export class AttribCreateSopNode extends TypedSopNode<AttribCreateSopParamsConfi
 	}
 
 	private async _addPointAttribute(attribType: AttribType, coreGroup: CoreGroup) {
-		const coreObjects = coreGroup.coreObjects();
+		const coreObjects = coreGroup.threejsCoreObjects();
 		switch (attribType) {
 			case AttribType.NUMERIC: {
 				for (let i = 0; i < coreObjects.length; i++) {
@@ -165,11 +167,11 @@ export class AttribCreateSopNode extends TypedSopNode<AttribCreateSopParamsConfi
 		TypeAssert.unreachable(attribType);
 	}
 	private async _addObjectAttribute(attribType: AttribType, coreGroup: CoreGroup) {
-		const coreObjects = CoreMask.coreObjects(this.pv.group, coreGroup);
+		const coreObjects = CoreMask.filterCoreObjects(this.pv.group, coreGroup.allCoreObjects());
 
 		// add attrib if non existent
 		const attribName = this.pv.name;
-		const allCoreObjects = coreGroup.coreObjects();
+		const allCoreObjects = coreGroup.allCoreObjects();
 		const defaultValue = AttribCreateSopOperation.defaultAttribValue(this.pv);
 		if (defaultValue != null) {
 			for (let coreObject of allCoreObjects) {
@@ -287,7 +289,7 @@ export class AttribCreateSopNode extends TypedSopNode<AttribCreateSopParamsConfi
 		}
 	}
 
-	private async _addNumericAttributeToObject(coreObjects: CoreObject[]) {
+	private async _addNumericAttributeToObject<T extends CoreObjectType>(coreObjects: BaseCoreObject<T>[]) {
 		const param = [this.p.value1, this.p.value2, this.p.value3, this.p.value4][this.pv.size - 1];
 		const attribName = this.pv.name;
 		if (param.hasExpression()) {
@@ -467,7 +469,7 @@ export class AttribCreateSopNode extends TypedSopNode<AttribCreateSopParamsConfi
 		}
 	}
 
-	private async _addStringAttributeToObject(coreObjects: CoreObject[]) {
+	private async _addStringAttributeToObject<T extends CoreObjectType>(coreObjects: BaseCoreObject<T>[]) {
 		const param = this.p.string;
 		const attribName = this.pv.name;
 		if (param.hasExpression() && param.expressionController) {

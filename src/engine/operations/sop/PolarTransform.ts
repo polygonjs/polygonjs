@@ -13,7 +13,7 @@ interface PolarTransformSopParams extends DefaultOperationParams, PolarTransform
 
 export class PolarTransformSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: PolarTransformSopParams = {
-		applyOn: TRANSFORM_TARGET_TYPES.indexOf(TransformTargetType.OBJECTS),
+		applyOn: TRANSFORM_TARGET_TYPES.indexOf(TransformTargetType.OBJECT),
 		center: new Vector3(0, 0, 0),
 		longitude: 0,
 		latitude: 0,
@@ -25,7 +25,7 @@ export class PolarTransformSopOperation extends BaseSopOperation {
 	}
 
 	override cook(inputCoreGroups: CoreGroup[], params: PolarTransformSopParams) {
-		const objects = inputCoreGroups[0].objects();
+		const objects = inputCoreGroups[0].threejsObjects();
 		CorePolarTransform.matrix(params, this._fullMatrix);
 
 		this._applyTransform(objects, params, this._fullMatrix);
@@ -35,10 +35,10 @@ export class PolarTransformSopOperation extends BaseSopOperation {
 	private _applyTransform(objects: Object3D[], params: PolarTransformSopParams, matrix: Matrix4) {
 		const mode = TRANSFORM_TARGET_TYPES[params.applyOn];
 		switch (mode) {
-			case TransformTargetType.GEOMETRIES: {
+			case TransformTargetType.GEOMETRY: {
 				return this._applyMatrixToGeometries(objects, matrix);
 			}
-			case TransformTargetType.OBJECTS: {
+			case TransformTargetType.OBJECT: {
 				return this._applyMatrixToObjects(objects, matrix);
 			}
 		}

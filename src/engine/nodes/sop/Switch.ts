@@ -64,7 +64,7 @@ export class SwitchSopNode extends TypedSopNode<SwitchSopParamsConfig> {
 			return;
 		}
 
-		this.setObjects(coreGroup.objects());
+		this.setObjects(coreGroup.allObjects());
 	}
 
 	private async _callbackUpdateInputsEvaluation() {

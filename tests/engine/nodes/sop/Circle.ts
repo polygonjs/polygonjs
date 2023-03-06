@@ -1,3 +1,6 @@
+import {Box3} from 'three';
+const tmpBox = new Box3();
+
 QUnit.test('circle simple', async (assert) => {
 	const geo1 = window.geo1;
 	const scene = window.scene;
@@ -5,24 +8,25 @@ QUnit.test('circle simple', async (assert) => {
 	const circle1 = geo1.createNode('circle');
 	circle1.p.open.set(0);
 
-	let container;
-	container = await circle1.compute();
-	let core_group = container.coreContent()!;
-	let geometry = core_group.objectsWithGeo()[0].geometry;
+	async function compute() {
+		const container = await circle1.compute();
+		const coreGroup = container.coreContent()!;
+		const geometry = coreGroup.threejsObjectsWithGeo()[0].geometry;
+		coreGroup.boundingBox(tmpBox);
 
-	assert.ok(geometry);
-	assert.equal(container.pointsCount(), 14);
-	assert.equal(container.boundingBox().min.z, -1);
+		return {geometry, bbox: tmpBox, pointsCount: coreGroup.pointsCount()};
+	}
+
+	assert.ok((await compute()).geometry);
+	assert.equal((await compute()).pointsCount, 14);
+	assert.equal((await compute()).bbox.min.z, -1);
 
 	scene.batchUpdates(() => {
 		circle1.p.radius.set(2);
 		circle1.p.segments.set(50);
 	});
 
-	container = await circle1.compute();
-	core_group = container.coreContent()!;
-	geometry = core_group.objectsWithGeo()[0].geometry;
-	assert.ok(geometry);
-	assert.equal(container.pointsCount(), 52);
-	assert.in_delta(container.boundingBox().min.z, -2.0, 0.01);
+	assert.ok((await compute()).geometry);
+	assert.equal((await compute()).pointsCount, 52);
+	assert.in_delta((await compute()).bbox.min.z, -2.0, 0.01);
 });

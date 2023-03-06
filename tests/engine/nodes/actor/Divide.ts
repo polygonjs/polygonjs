@@ -30,7 +30,7 @@ QUnit.test('actor/divide with float inputs', async (assert) => {
 	divide1.setInput(1, constant1);
 
 	const container = await actor1.compute();
-	const object = container.coreContent()!.objects()[0] as Mesh;
+	const object = container.coreContent()!.threejsObjects()[0] as Mesh;
 
 	// wait to make sure objects are mounted to the scene
 	await CoreSleep.sleep(150);
@@ -81,7 +81,7 @@ QUnit.test('actor/divide with vector inputs', async (assert) => {
 	divide1.params.get('div1')!.set([0.5, 0.25, 0.1]);
 
 	const container = await actor1.compute();
-	const object = container.coreContent()!.objects()[0] as Mesh;
+	const object = container.coreContent()!.threejsObjects()[0] as Mesh;
 
 	// wait to make sure objects are mounted to the scene
 	await CoreSleep.sleep(150);

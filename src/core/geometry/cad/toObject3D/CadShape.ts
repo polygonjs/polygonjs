@@ -6,6 +6,7 @@ import {BaseSopOperation} from '../../../../engine/operations/sop/_Base';
 import {ObjectType} from '../../Constant';
 import {CAD_MATERIAL} from '../CadConstant';
 import {cadEdgeToObject3D} from './CadEdge';
+import {CadLoaderSync} from '../CadLoaderSync';
 
 function cachedTesselationParamsEqual(params1: CachedTesselationParams, params2: CachedTesselationParams) {
 	return (
@@ -17,11 +18,8 @@ function cachedTesselationParamsEqual(params1: CachedTesselationParams, params2:
 }
 
 const tesselationParamsByShape: WeakMap<TopoDS_Shape, CachedTesselationParams> = new WeakMap();
-export function cadShapeToObject3D(
-	oc: OpenCascadeInstance,
-	object: TopoDS_Shape,
-	tesselationParams: TesselationParams
-) {
+export function cadShapeToObject3D(object: TopoDS_Shape, tesselationParams: TesselationParams) {
+	const oc = CadLoaderSync.oc();
 	let cachedParams = tesselationParamsByShape.get(object);
 	if (cachedParams && !cachedTesselationParamsEqual(cachedParams, tesselationParams)) {
 		oc.BRepTools.Clean(object, true);
@@ -38,7 +36,7 @@ export function cadShapeToObject3D(
 	if (tesselationParams.displayEdges) {
 		// const edgeObjects:Object3D[]=[]
 		traverseEdges(oc, object, (edge) => {
-			const edgeObject = cadEdgeToObject3D(oc, edge, tesselationParams);
+			const edgeObject = cadEdgeToObject3D(edge, tesselationParams);
 			if (edgeObject) {
 				// it seems better to not have shadows from those edges
 				edgeObject.castShadow = false;

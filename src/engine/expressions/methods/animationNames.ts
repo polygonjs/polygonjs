@@ -53,7 +53,7 @@ export class AnimationNamesExpression extends BaseMethod {
 				if (container) {
 					const coreContent = container.coreContent();
 					if (coreContent) {
-						const object = coreContent.objects()[objectIndex] as Object3D | null;
+						const object = coreContent.threejsObjects()[objectIndex] as Object3D | null;
 						if (object) {
 							const animations = object.animations;
 							if (!animations) {

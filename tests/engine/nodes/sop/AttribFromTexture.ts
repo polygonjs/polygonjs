@@ -1,4 +1,6 @@
 import {PolyScene} from '../../../../src/engine/scene/PolyScene';
+import {Box3} from 'three';
+const tmpBox = new Box3();
 
 function prepareCOP(scene: PolyScene) {
 	const cop = scene.root().createNode('copNetwork');
@@ -28,8 +30,8 @@ QUnit.test('attribFromTexture with float', async (assert) => {
 
 	let container = await point.compute();
 	let core_group = container.coreContent()!;
-	let bbox = core_group.boundingBox();
-	assert.in_delta(bbox.max.y, 0.5, 0.1);
+	core_group.boundingBox(tmpBox);
+	assert.in_delta(tmpBox.max.y, 0.5, 0.1);
 });
 
 QUnit.test('attribFromTexture with vector', async (assert) => {
@@ -57,7 +59,7 @@ QUnit.test('attribFromTexture with vector', async (assert) => {
 
 	let container = await point.compute();
 	let core_group = container.coreContent()!;
-	let bbox = core_group.boundingBox();
-	assert.in_delta(bbox.max.y, 1.4, 0.1);
-	assert.in_delta(bbox.min.y, -1, 0.1);
+	core_group.boundingBox(tmpBox);
+	assert.in_delta(tmpBox.max.y, 1.4, 0.1);
+	assert.in_delta(tmpBox.min.y, -1, 0.1);
 });

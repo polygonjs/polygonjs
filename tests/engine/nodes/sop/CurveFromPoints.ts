@@ -26,7 +26,7 @@ QUnit.test('sop/curveFromPoints simple', async (assert) => {
 
 	let container = await curveFromPoints1.compute();
 	let coreGroup = container.coreContent()!;
-	const object = coreGroup.objectsWithGeo()[0];
+	const object = coreGroup.threejsObjectsWithGeo()[0];
 	assert.ok(object.userData['path']);
 	assert.equal(coreGroup.pointsCount(), 100);
 });

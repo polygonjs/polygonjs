@@ -28,7 +28,7 @@ export class CameraRendererSopOperation extends BaseSopOperation {
 		return CameraSopNodeType.RENDERER;
 	}
 	override cook(inputCoreGroups: CoreGroup[], params: CameraRendererSopParams) {
-		const objects = inputCoreGroups[0].objects();
+		const objects = inputCoreGroups[0].threejsObjects();
 
 		if (this._node) {
 			CameraRendererSopOperation.updateObject({objects, params, node: this._node, active: true});

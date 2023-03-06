@@ -4,13 +4,10 @@ import {MathUtils, BufferGeometry, Euler, Matrix4, Object3D, Vector3, Quaternion
 import {BaseNodeType} from '../engine/nodes/_Base';
 
 export enum TransformTargetType {
-	OBJECTS = 'objects',
-	GEOMETRIES = 'geometries',
+	OBJECT = 'object',
+	GEOMETRY = 'geometry',
 }
-export const TRANSFORM_TARGET_TYPES: Array<TransformTargetType> = [
-	TransformTargetType.GEOMETRIES,
-	TransformTargetType.OBJECTS,
-];
+export const TRANSFORM_TARGET_TYPES: TransformTargetType[] = [TransformTargetType.GEOMETRY, TransformTargetType.OBJECT];
 
 export enum RotationOrder {
 	XYZ = 'XYZ',

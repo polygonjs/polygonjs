@@ -28,7 +28,7 @@ QUnit.test('CSS3DObject simple', async (assert) => {
 	async function CSS2DObjects() {
 		let container = await CSS3DObject1.compute();
 		const core_group = container.coreContent()!;
-		const objects = core_group?.objects() as CSS2DObject[];
+		const objects = core_group?.threejsObjects() as CSS2DObject[];
 		return objects;
 	}
 	let objects = await CSS2DObjects();

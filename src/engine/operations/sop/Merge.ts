@@ -1,16 +1,13 @@
 import {BaseSopOperation} from './_Base';
 import {CoreGroup, Object3DWithGeometry} from '../../../core/geometry/Group';
 import {ObjectType, objectTypeFromConstructor} from '../../../core/geometry/Constant';
-import {Material} from 'three';
+import {Group, Mesh, Material, BufferGeometry} from 'three';
 import {MapUtils} from '../../../core/MapUtils';
-import {Object3D} from 'three';
-import {Group} from 'three';
-import {Mesh} from 'three';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {isBooleanTrue} from '../../../core/BooleanValue';
-import {BufferGeometry} from 'three';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 import {CoreGeometryBuilderMerge} from '../../../core/geometry/builders/Merge';
+import {CoreObjectType, isObject3D, ObjectContent} from '../../../core/geometry/ObjectContent';
 
 interface MergeSopParams extends DefaultOperationParams {
 	compact: boolean;
@@ -30,10 +27,10 @@ export class MergeSopOperation extends BaseSopOperation {
 	// for compact, I should really keep track of geometry ids,
 	// to make sure I am not including a geometry twice, if there is a hierarchy
 	override cook(inputCoreGroups: CoreGroup[], params: MergeSopParams) {
-		let allObjects: Object3D[] = [];
+		let allObjects: ObjectContent<CoreObjectType>[] = [];
 		for (let inputCoreGroup of inputCoreGroups) {
 			if (inputCoreGroup) {
-				const objects = inputCoreGroup.objects();
+				const objects = inputCoreGroup.threejsObjects();
 				if (isBooleanTrue(params.compact)) {
 					for (let object of objects) {
 						object.traverse((child) => {
@@ -43,7 +40,7 @@ export class MergeSopOperation extends BaseSopOperation {
 				} else {
 					// if we are not compact,
 					// we only use the current level, not children
-					for (let object of inputCoreGroup.objects()) {
+					for (let object of inputCoreGroup.allObjects()) {
 						allObjects.push(object);
 					}
 				}
@@ -55,7 +52,7 @@ export class MergeSopOperation extends BaseSopOperation {
 
 		return this.createCoreGroupFromObjects(allObjects);
 	}
-	private _makeCompact(all_objects: Object3D[]): Object3DWithGeometry[] {
+	private _makeCompact(allObjects: ObjectContent<CoreObjectType>[]): Object3DWithGeometry[] {
 		const materialsByObjectType: Map<ObjectType, Material> = new Map();
 		const objectsByType: Map<ObjectType, Object3DWithGeometry[]> = new Map();
 		// objects_by_type.set(ObjectType.MESH, []);
@@ -63,26 +60,28 @@ export class MergeSopOperation extends BaseSopOperation {
 		// objects_by_type.set(ObjectType.LINE_SEGMENTS, []);
 		const orderedObjectTypes: ObjectType[] = [];
 
-		for (let object of all_objects) {
-			object.traverse((object3d: Object3D) => {
-				if (object3d instanceof Group) {
-					// we do not want groups,
-					// as their children will end up being duplicated
-					return;
-				}
-				const object = object3d as Object3DWithGeometry;
-				if (object.geometry) {
-					const objectType = objectTypeFromConstructor(object.constructor);
-					if (objectType) {
-						if (!orderedObjectTypes.includes(objectType)) {
-							orderedObjectTypes.push(objectType);
-						}
+		for (let object of allObjects) {
+			object.traverse((object3d) => {
+				if (isObject3D(object3d)) {
+					if (object3d instanceof Group) {
+						// we do not want groups,
+						// as their children will end up being duplicated
+						return;
+					}
+					const object = object3d as Object3DWithGeometry;
+					if (object.geometry) {
+						const objectType = objectTypeFromConstructor(object.constructor);
 						if (objectType) {
-							const found_mat = materialsByObjectType.get(objectType);
-							if (!found_mat) {
-								materialsByObjectType.set(objectType, (object as Mesh).material as Material);
+							if (!orderedObjectTypes.includes(objectType)) {
+								orderedObjectTypes.push(objectType);
 							}
-							MapUtils.pushOnArrayAtEntry(objectsByType, objectType, object);
+							if (objectType) {
+								const found_mat = materialsByObjectType.get(objectType);
+								if (!found_mat) {
+									materialsByObjectType.set(objectType, (object as Mesh).material as Material);
+								}
+								MapUtils.pushOnArrayAtEntry(objectsByType, objectType, object);
+							}
 						}
 					}
 				}

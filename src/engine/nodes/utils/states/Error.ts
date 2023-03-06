@@ -30,7 +30,7 @@ export class NodeErrorState<NC extends NodeContext> extends NodeBaseState<NC> {
 	protected onUpdate() {
 		if (this._message != null) {
 			// console.warn("new error", message, this.self.path())
-			this.node._setContainer(null as any, `from error '${this._message}'`);
+			this.node._setContainer(null as any /*, `from error '${this._message}'`*/);
 		}
 
 		this.node.emit(NodeEvent.ERROR_UPDATED);

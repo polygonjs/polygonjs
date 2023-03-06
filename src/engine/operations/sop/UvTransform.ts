@@ -25,7 +25,7 @@ export class UvTransformSopOperation extends BaseSopOperation {
 	}
 
 	override cook(input_contents: CoreGroup[], params: UvTransformSopParams): CoreGroup {
-		const objects = input_contents[0].objectsWithGeo();
+		const objects = input_contents[0].threejsObjectsWithGeo();
 		for (let object of objects) {
 			const geometry = object.geometry;
 			const attrib = geometry.getAttribute(params.attribName) as BufferAttribute;

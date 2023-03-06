@@ -17,6 +17,9 @@ import {
 	ObjectTransformSpace,
 	applyTransformWithSpaceToObject,
 } from '../../../core/TransformSpace';
+// import type { CadCoreObject } from '../../../core/geometry/cad/CadCoreObject';
+// import type{ CadGeometryType } from '../../../core/geometry/cad/CadCommon';
+// import { cadTransform } from '../../../core/geometry/cad/operations/CadTransform';
 
 export enum TransformObjectMode {
 	SET = 'set matrix',
@@ -39,7 +42,7 @@ interface TransformSopParams extends DefaultOperationParams {
 
 export class TransformSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: TransformSopParams = {
-		applyOn: TRANSFORM_TARGET_TYPES.indexOf(TransformTargetType.GEOMETRIES),
+		applyOn: TRANSFORM_TARGET_TYPES.indexOf(TransformTargetType.GEOMETRY),
 		objectMode: TRANSFORM_OBJECT_MODES.indexOf(TransformObjectMode.SET),
 		objectTransformSpace: OBJECT_TRANSFORM_SPACES.indexOf(ObjectTransformSpace.PARENT),
 		group: '',
@@ -58,24 +61,32 @@ export class TransformSopOperation extends BaseSopOperation {
 	private _coreTransform = new CoreTransform();
 	override cook(inputCoreGroups: CoreGroup[], params: TransformSopParams) {
 		const coreGroup = inputCoreGroups[0];
-		const objects = coreGroup.objects();
 
-		this._applyTransform(objects, params);
+		this._applyTransform(coreGroup.threejsObjects(), params);
+		// this._applyCadTransform(coreGroup.cadCoreObjects(), params);
 		coreGroup.resetBoundingBox();
 		return coreGroup;
 	}
 	private _applyTransform(objects: Object3D[], params: TransformSopParams) {
 		const mode = TRANSFORM_TARGET_TYPES[params.applyOn];
 		switch (mode) {
-			case TransformTargetType.GEOMETRIES: {
+			case TransformTargetType.GEOMETRY: {
 				return this._updateGeometries(objects, params);
 			}
-			case TransformTargetType.OBJECTS: {
+			case TransformTargetType.OBJECT: {
 				return this._updateObjects(objects, params);
 			}
 		}
 		TypeAssert.unreachable(mode);
 	}
+	// private _applyCadTransform(objects: CadCoreObject<CadGeometryType>[]|undefined, params: TransformSopParams) {
+	// 	if(!objects){
+	// 		return
+	// 	}
+	// 	for(let object of objects){
+	// 		cadTransform(object, params.t, params.r, params.scale)
+	// 	}
+	// }
 
 	private _point_pos = new Vector3();
 	private _updateGeometries(objects: Object3D[], params: TransformSopParams) {

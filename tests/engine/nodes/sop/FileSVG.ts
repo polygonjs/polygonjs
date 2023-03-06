@@ -19,9 +19,9 @@ QUnit.test('SOP svg with tiger', async (assert) => {
 	assert.equal(container.objectsCount(), 466);
 	assert.equal(container.pointsCount(), 164050);
 	assert.deepEqual(container.objectsCountByType(), {Mesh: 466});
-	assert.equal(core_content.objects().length, 466);
+	assert.equal(core_content.threejsObjects().length, 466);
 	assert.equal(core_content.pointsCount(), 164050);
-	const first_mesh = core_content.objectsWithGeo()[0];
+	const first_mesh = core_content.threejsObjectsWithGeo()[0];
 	assert.equal(first_mesh.children.length, 0);
 
 	const first_geometry = first_mesh.geometry as BufferGeometry;
@@ -33,9 +33,9 @@ QUnit.test('SOP svg with wolf', async (assert) => {
 	assert.equal(container.objectsCount(), 60);
 	assert.equal(container.pointsCount(), 43260);
 	assert.deepEqual(container.objectsCountByType(), {Mesh: 60});
-	assert.equal(core_content.objects().length, 60);
+	assert.equal(core_content.threejsObjects().length, 60);
 	assert.equal(core_content.pointsCount(), 43260);
-	const first_mesh = core_content.objectsWithGeo()[0];
+	const first_mesh = core_content.threejsObjectsWithGeo()[0];
 	assert.equal(first_mesh.children.length, 0);
 
 	const first_geometry = first_mesh.geometry as BufferGeometry;

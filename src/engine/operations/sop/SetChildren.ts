@@ -27,7 +27,7 @@ export class SetChildrenSopOperation extends BaseSopOperation {
 			return this.createCoreGroupFromObjects([]);
 		}
 
-		const parentObjects = parentCoreGroup.objects();
+		const parentObjects = parentCoreGroup.threejsObjects();
 		const parent = parentObjects[0];
 
 		if (isBooleanTrue(params.clearExistingChildren)) {
@@ -37,7 +37,7 @@ export class SetChildrenSopOperation extends BaseSopOperation {
 			}
 		}
 
-		const childrenObjects = childrenCoreGroup.objects();
+		const childrenObjects = childrenCoreGroup.threejsObjects();
 		for (let childObject of childrenObjects) {
 			parent.add(childObject);
 		}

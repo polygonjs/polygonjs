@@ -89,7 +89,7 @@ export class LodSopNode extends TypedSopNode<LODSopParamsConfig> {
 
 	_addLevel(coreGroup: CoreGroup | undefined, level: number) {
 		if (coreGroup) {
-			const objects = coreGroup.objects();
+			const objects = coreGroup.threejsObjects();
 			let object: Object3D;
 			for (let i = 0; i < objects.length; i++) {
 				object = objects[i];

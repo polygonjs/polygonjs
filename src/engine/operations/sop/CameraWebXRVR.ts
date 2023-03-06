@@ -49,7 +49,7 @@ export class CameraWebXRVRSopOperation extends BaseSopOperation {
 		return CameraSopNodeType.WEBXR_VR;
 	}
 	override cook(inputCoreGroups: CoreGroup[], params: CameraWebXRVRSopParams) {
-		const objects = inputCoreGroups[0].objects();
+		const objects = inputCoreGroups[0].threejsObjects();
 
 		if (this._node) {
 			CameraWebXRVRSopOperation.updateObject({scene: this._node.scene(), objects, params, active: true});

@@ -17,7 +17,7 @@ QUnit.test('circle 3 points simple', async (assert) => {
 
 	let container = await circle_3_points1.compute();
 	let core_group = container.coreContent()!;
-	let geometry = core_group.objectsWithGeo()[0].geometry;
+	let geometry = core_group.threejsObjectsWithGeo()[0].geometry;
 
 	assert.ok(geometry);
 	assert.equal(container.pointsCount(), 101);

@@ -132,7 +132,7 @@ export class PhysicsRBDJointsSopNode extends TypedSopNode<PhysicsRBDJointsSopPar
 
 	override cook(inputCoreGroups: CoreGroup[]) {
 		const coreGroup = inputCoreGroups[0];
-		const inputObjects = coreGroup.objects();
+		const inputObjects = coreGroup.allObjects();
 		const selectedObjects = CoreMask.filterObjects(coreGroup, {group: this.pv.group, applyToChildren: true});
 		const candidateObjects = selectedObjects.filter((object) => CorePhysicsAttribute.getRBDId(object) != null);
 

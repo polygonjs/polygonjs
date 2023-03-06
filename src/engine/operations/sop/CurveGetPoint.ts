@@ -36,7 +36,7 @@ export class CurveGetPointSopOperation extends BaseSopOperation {
 	override cook(inputCoreGroups: CoreGroup[], params: CurveGetPointSopParams) {
 		const inputCoreGroup = inputCoreGroups[0];
 
-		const coreObjects = inputCoreGroup.coreObjects();
+		const coreObjects = inputCoreGroup.threejsCoreObjects();
 		const newObjects: Object3D[] = [];
 		for (let coreObject of coreObjects) {
 			const object = this._createSplineFromCoreObject(coreObject, params);

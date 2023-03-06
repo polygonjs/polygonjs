@@ -66,7 +66,7 @@ export class UvUnwrapSopOperation extends BaseSopOperation {
 			return coreGroup;
 		}
 
-		const objects = coreGroup.objectsWithGeo();
+		const objects = coreGroup.threejsObjectsWithGeo();
 		for (let object of objects) {
 			const mesh = object as Mesh;
 			if (mesh.isMesh) {
@@ -172,7 +172,7 @@ export class UvUnwrapSopOperation extends BaseSopOperation {
 	private _unwrapMeshUVsWithPotpack(inputCoreGroups: CoreGroup[], params: UvUnwrapSopParams) {
 		const coreGroup = inputCoreGroups[0];
 
-		const objects = coreGroup.objectsWithGeo();
+		const objects = coreGroup.threejsObjectsWithGeo();
 		for (let object of objects) {
 			const mesh = object as Mesh;
 			if (mesh.isMesh) {

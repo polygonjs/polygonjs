@@ -36,7 +36,7 @@ QUnit.test('actor/GetVideoProperty', async (assert) => {
 	setObjectVisible1.setInput('visible', getVideoProperty1, GetVideoPropertyActorNodeOutputName.playing);
 
 	const container = await actor1.compute();
-	const object = container.coreContent()!.objects()[0];
+	const object = container.coreContent()!.threejsObjects()[0];
 
 	// wait to make sure objects are mounted to the scene
 	await CoreSleep.sleep(150);

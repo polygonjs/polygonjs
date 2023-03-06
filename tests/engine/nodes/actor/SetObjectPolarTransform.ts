@@ -23,7 +23,7 @@ QUnit.test('actor/setObjectPolarTransform', async (assert) => {
 	setObjectPolarTransform1.p.latitude.set(45);
 
 	const container = await actor1.compute();
-	const object = container.coreContent()!.objects()[0] as Mesh;
+	const object = container.coreContent()!.threejsObjects()[0] as Mesh;
 	const quat0 = new Quaternion();
 
 	// wait to make sure objects are mounted to the scene

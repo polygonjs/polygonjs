@@ -31,7 +31,7 @@ QUnit.test('actor/distance with vector2 inputs', async (assert) => {
 	distance.setInput(0, constant1);
 
 	const container = await actor1.compute();
-	const object = container.coreContent()!.objects()[0] as Mesh;
+	const object = container.coreContent()!.threejsObjects()[0] as Mesh;
 
 	// wait to make sure objects are mounted to the scene
 	await CoreSleep.sleep(150);
@@ -78,7 +78,7 @@ QUnit.test('actor/distance with vector3 inputs', async (assert) => {
 	distance.params.get('v1')!.set([0, 1, 0]);
 
 	const container = await actor1.compute();
-	const object = container.coreContent()!.objects()[0] as Mesh;
+	const object = container.coreContent()!.threejsObjects()[0] as Mesh;
 
 	// wait to make sure objects are mounted to the scene
 	await CoreSleep.sleep(150);

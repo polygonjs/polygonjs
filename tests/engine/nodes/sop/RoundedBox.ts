@@ -1,5 +1,5 @@
-import {BufferAttribute} from 'three';
-
+import {BufferAttribute, Box3} from 'three';
+const tmpBox = new Box3();
 QUnit.test('roundedBox simple', async (assert) => {
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false); // cancels geo node displayNodeController
@@ -8,21 +8,23 @@ QUnit.test('roundedBox simple', async (assert) => {
 
 	let container = await rounded_box1.compute();
 	let core_group = container.coreContent();
-	let geometry = core_group?.objectsWithGeo()[0].geometry;
+	let geometry = core_group?.threejsObjectsWithGeo()[0].geometry;
 	assert.equal((geometry?.getAttribute('position') as BufferAttribute).array.length, 2700);
-	assert.equal(container.boundingBox().min.y, -0.5);
+	container.boundingBox(tmpBox);
+	assert.equal(tmpBox.min.y, -0.5);
 	assert.notOk(rounded_box1.isDirty(), 'box is dirty');
 
 	rounded_box1.p.sizes.set([2, 2, 2]);
 	assert.ok(rounded_box1.isDirty(), 'box is dirty');
 	container = await rounded_box1.compute();
 	assert.ok(!rounded_box1.isDirty(), 'box is not dirty anymore');
-	assert.equal(container.boundingBox().min.y, -1.0);
+	container.boundingBox(tmpBox);
+	assert.equal(tmpBox.min.y, -1.0);
 
 	rounded_box1.p.divisions.set(10);
 	container = await rounded_box1.compute();
 	core_group = container.coreContent();
-	geometry = core_group?.objectsWithGeo()[0].geometry;
+	geometry = core_group?.threejsObjectsWithGeo()[0].geometry;
 	assert.equal((geometry?.getAttribute('position') as BufferAttribute).array.length, 47628);
 });
 
@@ -49,8 +51,9 @@ QUnit.test('roundedBox with input', async (assert) => {
 
 	container = await rounded_box2.compute();
 	const group = container.coreContent()!;
-	const {geometry} = group.objectsWithGeo()[0];
+	const {geometry} = group.threejsObjectsWithGeo()[0];
 
 	assert.equal((geometry.getAttribute('position') as BufferAttribute).array.length, 2700);
-	assert.equal(container.boundingBox().min.y, -1.5);
+	container.boundingBox(tmpBox);
+	assert.equal(tmpBox.min.y, -1.5);
 });

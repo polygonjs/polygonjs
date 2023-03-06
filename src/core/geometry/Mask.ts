@@ -4,7 +4,9 @@ import {CoreString} from '../String';
 import {CoreType, isBooleanTrue} from '../Type';
 import {CorePath} from './CorePath';
 import {CoreGroup} from './Group';
+import {BaseCoreObject} from './_BaseObject';
 import {CoreObject} from './Object';
+import {CoreObjectType} from './ObjectContent';
 
 export interface CoreMaskFilterOptions {
 	group: string;
@@ -13,7 +15,10 @@ export interface CoreMaskFilterOptions {
 
 export class CoreMask {
 	static filterObjects(coreGroup: CoreGroup, options: CoreMaskFilterOptions) {
-		const selectedTopObjects = this.coreObjects(options.group, coreGroup).map((o) => o.object());
+		const selectedTopObjects = this.filterCoreObjects<CoreObjectType.THREEJS>(
+			options.group,
+			coreGroup.threejsCoreObjects()
+		).map((o) => o.object()) as Object3D[];
 
 		// check if children should be included
 		const selectedObjectsByUuid: Map<string, Object3D> = new Map();
@@ -36,7 +41,7 @@ export class CoreMask {
 		return selectedObjects;
 	}
 
-	static isInGroup(groupString: string, coreObject: CoreObject) {
+	static isInGroup<T extends CoreObjectType>(groupString: string, coreObject: BaseCoreObject<T>) {
 		const group = groupString.trim();
 		if (group.length == 0) {
 			return true;
@@ -59,24 +64,29 @@ export class CoreMask {
 		}
 		return false;
 	}
-	static coreObjects(groupString: string, coreGroup: CoreGroup): CoreObject[] {
+	static filterCoreObjects<T extends CoreObjectType>(
+		groupString: string,
+		coreObjects: BaseCoreObject<T>[]
+	): BaseCoreObject<T>[] {
 		groupString = groupString.trim();
 
 		if (groupString == '') {
-			return coreGroup.coreObjects();
+			return coreObjects;
 		}
 		const index = parseInt(groupString);
 		if (!CoreType.isNaN(index)) {
-			return ArrayUtils.compact([coreGroup.coreObjects()[index]]);
+			return ArrayUtils.compact([coreObjects[index]]);
 		}
 
-		const selectedCoreObjects: CoreObject[] = [];
-		const rootObjects = coreGroup.coreObjects();
+		const selectedCoreObjects: BaseCoreObject<T>[] = [];
 
-		for (const rootObject of rootObjects) {
-			const objectsInMask = CorePath.objectsByMask(groupString, rootObject.object());
-			for (const objectInMask of objectsInMask) {
-				selectedCoreObjects.push(new CoreObject(objectInMask, 0));
+		for (const rootObject of coreObjects) {
+			const object = rootObject.object();
+			if (object instanceof Object3D) {
+				const objectsInMask = CorePath.objectsByMask(groupString, object);
+				for (const objectInMask of objectsInMask) {
+					selectedCoreObjects.push(new CoreObject(objectInMask, 0) as any as BaseCoreObject<T>);
+				}
 			}
 			const isInGroup = CoreMask.isInGroup(groupString, rootObject);
 			if (isInGroup) {

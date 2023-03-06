@@ -1,7 +1,9 @@
 import {BaseSopNodeType} from '../../../../src/engine/nodes/sop/_Base';
-import {Vector3} from 'three';
 import {saveAndLoadScene} from '../../../helpers/ImportHelper';
 import {OperationsComposerSopNode} from '../../../../src/engine/nodes/sop/OperationsComposer';
+import {Box3, Vector3} from 'three';
+const tmpBox = new Box3();
+const tmpSize = new Vector3();
 
 QUnit.test('operation/sop/null loads fine when node has overriden params', async (assert) => {
 	const scene = window.scene;
@@ -23,7 +25,9 @@ QUnit.test('operation/sop/null loads fine when node has overriden params', async
 
 	async function bboxSizeY(node: BaseSopNodeType) {
 		const container = await transform2.compute();
-		return container.coreContent()?.boundingBox().getSize(new Vector3()).y || 0;
+		container.coreContent()?.boundingBox(tmpBox);
+		tmpBox.getSize(tmpSize);
+		return tmpSize.y;
 	}
 	assert.in_delta(await bboxSizeY(transform2), 1.41, 0.1);
 

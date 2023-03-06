@@ -12,13 +12,13 @@ export class MatDoubleSideTmpSetter {
 	private _bound_restoreMat = this._restoreObjectMaterialSide.bind(this);
 
 	setCoreGroupMaterialDoubleSided(core_group: CoreGroup) {
-		const objects = core_group.objects();
+		const objects = core_group.threejsObjects();
 		for (let object of objects) {
 			object.traverse(this._bound_setMat);
 		}
 	}
 	restoreMaterialSideProperty(core_group: CoreGroup) {
-		const objects = core_group.objects();
+		const objects = core_group.threejsObjects();
 		for (let object of objects) {
 			object.traverse(this._bound_restoreMat);
 		}

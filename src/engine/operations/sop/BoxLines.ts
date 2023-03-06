@@ -1,11 +1,13 @@
 import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {Vector3} from 'three';
+import {Vector3, Box3} from 'three';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 import {BoxLineGeometry} from '../../../modules/three/examples/jsm/geometries/BoxLineGeometry';
 import {ObjectType} from '../../../core/geometry/Constant';
-
+const tmpBox = new Box3();
+const tmpSize = new Vector3();
+const tmpCenter = new Vector3();
 interface BoxLinesSopParams extends DefaultOperationParams {
 	size: number;
 	sizes: Vector3;
@@ -13,8 +15,8 @@ interface BoxLinesSopParams extends DefaultOperationParams {
 	center: Vector3;
 }
 
-const _sizes = new Vector3();
-const _center = new Vector3();
+// const _sizes = new Vector3();
+// const _center = new Vector3();
 export class BoxLinesSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: BoxLinesSopParams = {
 		size: 1,
@@ -41,15 +43,15 @@ export class BoxLinesSopOperation extends BaseSopOperation {
 	}
 
 	private _cookWithInput(coreGroup: CoreGroup, params: BoxLinesSopParams) {
-		const bbox = coreGroup.boundingBox();
-		bbox.getSize(_sizes);
-		bbox.getCenter(_center);
+		coreGroup.boundingBox(tmpBox);
+		tmpBox.getSize(tmpSize);
+		tmpBox.getCenter(tmpCenter);
 
 		return this._createLines({
 			size: 1,
-			sizes: _sizes,
+			sizes: tmpSize,
 			divisions: params.divisions,
-			center: _center,
+			center: tmpCenter,
 		});
 	}
 

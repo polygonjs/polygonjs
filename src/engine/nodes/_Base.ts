@@ -56,6 +56,7 @@ export interface BaseNodeEvent extends BaseEvent {
 	target?: BaseNodeType;
 	// [attachment: string]: any;
 }
+export const DEFAULT_DATA_TYPE = 'default';
 
 /**
  *
@@ -91,6 +92,9 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 				param.copyValue(other_param);
 			}
 		}
+	}
+	dataType(): string {
+		return DEFAULT_DATA_TYPE;
 	}
 
 	private _nameController: NameController | undefined;
@@ -305,7 +309,7 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 			return this.containerController.container();
 		}
 	}
-	_setContainer(content: ContainableMap[NC], message: string | null = null) {
+	_setContainer(content: ContainableMap[NC] /*, message: string | null = null*/) {
 		// TODO: typescript: why is this a type of never
 		this.containerController.container().set_content(content as never); //, this.self.cook_eval_key());
 		if (content != null) {
@@ -316,7 +320,7 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 				(content as any).node = this;
 			}
 		}
-		this.cookController.endCook(message);
+		this.cookController.endCook(/*message*/);
 	}
 
 	/**

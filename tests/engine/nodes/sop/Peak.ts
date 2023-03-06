@@ -1,3 +1,7 @@
+import {Box3, Vector3} from 'three';
+const tmpBox = new Box3();
+const tmpSize = new Vector3();
+
 QUnit.test('peak simple', async (assert) => {
 	const geo1 = window.geo1;
 
@@ -6,18 +10,19 @@ QUnit.test('peak simple', async (assert) => {
 	peak1.p.amount.set(1);
 	peak1.setInput(0, box1);
 
-	let container, size;
+	async function getSize() {
+		const container = await peak1.compute();
+		container.coreContent()?.boundingBox(tmpBox);
+		tmpBox.getSize(tmpSize);
+		return tmpSize.toArray();
+	}
 
-	container = await peak1.compute();
-	size = container.size().toArray();
-	assert.equal(size[0], 3);
-	assert.equal(size[1], 3);
-	assert.equal(size[2], 3);
+	assert.equal((await getSize())[0], 3);
+	assert.equal((await getSize())[1], 3);
+	assert.equal((await getSize())[2], 3);
 
 	peak1.p.amount.set(0.5);
-	container = await peak1.compute();
-	size = container.size().toArray();
-	assert.equal(size[0], 2);
-	assert.equal(size[1], 2);
-	assert.equal(size[2], 2);
+	assert.equal((await getSize())[0], 2);
+	assert.equal((await getSize())[1], 2);
+	assert.equal((await getSize())[2], 2);
 });

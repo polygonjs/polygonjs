@@ -42,7 +42,7 @@ export class NormalsHelperSopNode extends TypedSopNode<NormalsHelperSopParamsCon
 
 	override cook(inputCoreGroups: CoreGroup[]) {
 		const inputCoreGroup = inputCoreGroups[0];
-		const objects = inputCoreGroup.objectsWithGeo();
+		const objects = inputCoreGroup.threejsObjectsWithGeo();
 		const newObjects: Object3D[] = [];
 		for (let object of objects) {
 			const helper = new VertexNormalsHelper(object, this.pv.size);

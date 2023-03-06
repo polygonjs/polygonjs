@@ -10,7 +10,7 @@ QUnit.test('UvTransform simple', async (assert) => {
 	async function assertUv(array: number[]) {
 		let container = await uvTransform.compute();
 		let core_group = container.coreContent()!;
-		let geometry0 = core_group.objectsWithGeo()[0].geometry;
+		let geometry0 = core_group.threejsObjectsWithGeo()[0].geometry;
 		assert.deepEqual(
 			((geometry0.getAttribute('uv') as BufferAttribute).array as number[]).join(','),
 			array.join(',')

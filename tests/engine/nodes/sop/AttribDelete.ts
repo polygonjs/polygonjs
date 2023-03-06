@@ -18,14 +18,14 @@ QUnit.test('sop/attribDelete simple vertex', async (assert) => {
 	assert.notOk(attribCreate1.states.error.active());
 	assert.notOk(attribCreate1.states.error.message());
 	let coreGroup = container.coreContent()!;
-	let geometry = coreGroup.objectsWithGeo()[0].geometry;
+	let geometry = coreGroup.threejsObjectsWithGeo()[0].geometry;
 	assert.ok(geometry.getAttribute('test') != null);
 
 	container = await attribDelete1.compute();
 	assert.notOk(attribDelete1.states.error.active());
 	assert.notOk(attribDelete1.states.error.message());
 	coreGroup = container.coreContent()!;
-	geometry = coreGroup.objectsWithGeo()[0].geometry;
+	geometry = coreGroup.threejsObjectsWithGeo()[0].geometry;
 	assert.notOk(geometry.getAttribute('test') != null);
 });
 
@@ -43,7 +43,7 @@ QUnit.test('sop/attribDelete simple object', async (assert) => {
 	assert.notOk(attribCreate1.states.error.active());
 	assert.notOk(attribCreate1.states.error.message());
 	let coreGroup = container.coreContent()!;
-	let coreObject = coreGroup.coreObjects()[0];
+	let coreObject = coreGroup.allCoreObjects()[0];
 	assert.equal(coreObject.attribValue('test'), 2);
 	assert.deepEqual(coreObject.attribNames(), ['test']);
 
@@ -56,7 +56,7 @@ QUnit.test('sop/attribDelete simple object', async (assert) => {
 	assert.notOk(attribDelete1.states.error.active());
 	assert.notOk(attribDelete1.states.error.message());
 	coreGroup = container.coreContent()!;
-	coreObject = coreGroup.coreObjects()[0];
+	coreObject = coreGroup.allCoreObjects()[0];
 	assert.notOk(coreObject.attribValue('test'));
 	assert.deepEqual(coreObject.attribNames(), []);
 });

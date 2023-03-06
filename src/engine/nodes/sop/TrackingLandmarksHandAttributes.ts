@@ -29,7 +29,7 @@ export class TrackingLandmarksHandAttributesSopNode extends TypedSopNode<Trackin
 	override cook(inputCoreGroups: CoreGroup[]) {
 		const inputCoreGroup = inputCoreGroups[0];
 
-		const objects = inputCoreGroup.objects();
+		const objects = inputCoreGroup.threejsObjects();
 		for (const object of objects) {
 			CoreComputerVisionHand.setAttributes(object, this.pv);
 		}

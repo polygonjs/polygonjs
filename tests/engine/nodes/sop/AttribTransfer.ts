@@ -24,7 +24,7 @@ QUnit.test('attrib_transfer simple', async (assert) => {
 	let container, core_group, array;
 	container = await attrib_transfer1.compute();
 	core_group = container.coreContent()!;
-	array = (core_group.objectsWithGeo()[0].geometry.getAttribute('test') as BufferAttribute).array;
+	array = (core_group.threejsObjectsWithGeo()[0].geometry.getAttribute('test') as BufferAttribute).array;
 	assert.deepEqual(Array.from(array), [0, 1, 1, 1]);
 
 	// attrib_transfer1.p.distance_threshold.set(0.5);

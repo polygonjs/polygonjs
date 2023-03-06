@@ -37,7 +37,7 @@ QUnit.test('actor/onObjectAttributeUpdate with number', async (assert) => {
 	setObjectPosition1.setInput('position', floatToVec3_1);
 
 	const container = await actor1.compute();
-	const object = container.coreContent()!.objects()[0] as Mesh;
+	const object = container.coreContent()!.threejsObjects()[0] as Mesh;
 
 	// wait to make sure objects are mounted to the scene
 	await CoreSleep.sleep(150);
@@ -91,7 +91,7 @@ QUnit.test('actor/onObjectAttributeUpdate with string', async (assert) => {
 	setObjectAttribute1.setAttribType(ActorConnectionPointType.STRING);
 
 	const container = await actor1.compute();
-	const object = container.coreContent()!.objects()[0] as Mesh;
+	const object = container.coreContent()!.threejsObjects()[0] as Mesh;
 
 	// wait to make sure objects are mounted to the scene
 	await CoreSleep.sleep(150);
@@ -146,7 +146,7 @@ QUnit.test('actor/onObjectAttributeUpdate with vector2', async (assert) => {
 	vec2ToFloat_1.setInput(0, onObjectAttributeUpdate1, OnObjectAttributeUpdateActorNode.OUTPUT_NEW_VAL);
 
 	const container = await actor1.compute();
-	const object = container.coreContent()!.objects()[0] as Mesh;
+	const object = container.coreContent()!.threejsObjects()[0] as Mesh;
 
 	// wait to make sure objects are mounted to the scene
 	await CoreSleep.sleep(150);
@@ -199,7 +199,7 @@ QUnit.test('actor/onObjectAttributeUpdate with vector3', async (assert) => {
 	setObjectPosition1.setInput('position', onObjectAttributeUpdate1, OnObjectAttributeUpdateActorNode.OUTPUT_NEW_VAL);
 
 	const container = await actor1.compute();
-	const object = container.coreContent()!.objects()[0] as Mesh;
+	const object = container.coreContent()!.threejsObjects()[0] as Mesh;
 
 	// wait to make sure objects are mounted to the scene
 	await CoreSleep.sleep(150);
@@ -259,7 +259,7 @@ QUnit.test('actor/onObjectAttributeUpdate with vector4', async (assert) => {
 	vec4ToFloat_1.setInput(0, onObjectAttributeUpdate1, OnObjectAttributeUpdateActorNode.OUTPUT_NEW_VAL);
 
 	const container = await actor1.compute();
-	const object = container.coreContent()!.objects()[0] as Mesh;
+	const object = container.coreContent()!.threejsObjects()[0] as Mesh;
 
 	// wait to make sure objects are mounted to the scene
 	await CoreSleep.sleep(150);

@@ -26,7 +26,7 @@ QUnit.test('actor/onObjectClick', async (assert) => {
 	meshBasic1.p.color.set([1, 0, 0]);
 	material1.p.material.setNode(meshBasic1);
 
-	transform1.setApplyOn(TransformTargetType.OBJECTS);
+	transform1.setApplyOn(TransformTargetType.OBJECT);
 	transform1.p.t.set([0, 0, 0.5]);
 
 	actor1.setInput(0, material1);
@@ -57,7 +57,7 @@ QUnit.test('actor/onObjectClick', async (assert) => {
 	setParam1.p.param.setParam(geo2.p.scale);
 
 	const container = await actor1.compute();
-	const object = container.coreContent()!.objects()[0];
+	const object = container.coreContent()!.threejsObjects()[0];
 
 	// wait to make sure objects are mounted to the scene
 	await CoreSleep.sleep(150);

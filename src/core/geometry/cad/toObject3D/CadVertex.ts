@@ -3,10 +3,11 @@ import {BufferGeometry, BufferAttribute, Vector3} from 'three';
 import {BaseSopOperation} from '../../../../engine/operations/sop/_Base';
 import {ObjectType} from '../../Constant';
 import {CAD_MATERIAL} from '../CadConstant';
-import {CadLoader} from '../CadLoader';
+import {CadLoaderSync} from '../CadLoaderSync';
 import {cadShapeClone} from './CadShapeCommon';
 
-export function cadVertexToObject3D(oc: OpenCascadeInstance, vertex: TopoDS_Vertex) {
+export function cadVertexToObject3D(vertex: TopoDS_Vertex) {
+	const oc = CadLoaderSync.oc();
 	const point = oc.BRep_Tool.Pnt(vertex);
 	const geo = new BufferGeometry();
 	const positions: number[] = [point.X(), point.Y(), point.Z()];
@@ -35,6 +36,6 @@ function _vertexFromPoint(oc: OpenCascadeInstance, point: gp_Pnt): TopoDS_Vertex
 // }
 
 export function cadVertexClone(src: TopoDS_Vertex): TopoDS_Vertex {
-	const oc = CadLoader.oc();
+	const oc = CadLoaderSync.oc();
 	return oc.TopoDS.Vertex_1(cadShapeClone(src));
 }

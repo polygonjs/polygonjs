@@ -1,6 +1,8 @@
 import {PointSopNode} from '../../../../src/engine/nodes/sop/Point';
 import {PolyScene} from '../../../../src/engine/scene/PolyScene';
 import {saveAndLoadScene} from '../../../helpers/ImportHelper';
+import {Box3} from 'three';
+const tmpBox=new Box3()
 
 function prepareCOP(scene: PolyScene) {
 	const cop = scene.root().createNode('copNetwork');
@@ -31,8 +33,8 @@ QUnit.test('operation/sop/attribFromTexture with float - optimized', async (asse
 
 	let container = await point.compute();
 	let core_group = container.coreContent()!;
-	let bbox = core_group.boundingBox();
-	assert.in_delta(bbox.max.y, 0.5, 0.1);
+	core_group.boundingBox(tmpBox);
+	assert.in_delta(tmpBox.max.y, 0.5, 0.1);
 
 	attribFromTexture.flags.optimize.set(true);
 
@@ -42,8 +44,8 @@ QUnit.test('operation/sop/attribFromTexture with float - optimized', async (asse
 		await point2.compute();
 		container = await point2.compute();
 		core_group = container.coreContent()!;
-		bbox = core_group.boundingBox();
-		assert.in_delta(bbox.max.y, 0.5, 0.1);
+		core_group.boundingBox(tmpBox);
+		assert.in_delta(tmpBox.max.y, 0.5, 0.1);
 	});
 });
 
@@ -73,9 +75,9 @@ QUnit.test('operation/sop/attribFromTexture with vector - optimized', async (ass
 
 	let container = await point.compute();
 	let core_group = container.coreContent()!;
-	let bbox = core_group.boundingBox();
-	assert.in_delta(bbox.max.y, 1.4, 0.1);
-	assert.in_delta(bbox.min.y, -1, 0.1);
+	core_group.boundingBox(tmpBox);
+	assert.in_delta(tmpBox.max.y, 1.4, 0.1);
+	assert.in_delta(tmpBox.min.y, -1, 0.1);
 
 	attribFromTexture.flags.optimize.set(true);
 
@@ -84,8 +86,8 @@ QUnit.test('operation/sop/attribFromTexture with vector - optimized', async (ass
 		await point2.compute();
 		container = await point2.compute();
 		core_group = container.coreContent()!;
-		bbox = core_group.boundingBox();
-		assert.in_delta(bbox.max.y, 1.4, 0.1);
-		assert.in_delta(bbox.min.y, -1, 0.1);
+		core_group.boundingBox(tmpBox);
+		assert.in_delta(tmpBox.max.y, 1.4, 0.1);
+		assert.in_delta(tmpBox.min.y, -1, 0.1);
 	});
 });

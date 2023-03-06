@@ -1,14 +1,16 @@
-import {BufferAttribute, Object3D, Vector3} from 'three';
+import {BufferAttribute, Object3D, Vector3, Box3} from 'three';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {AttribCreateSopNode} from '../../../../src/engine/nodes/sop/AttribCreate';
 import {CircleSopNode} from '../../../../src/engine/nodes/sop/Circle';
 import {BaseSopNodeType} from '../../../../src/engine/nodes/sop/_Base';
 import {saveAndLoadScene} from '../../../helpers/ImportHelper';
+const tmpBox = new Box3();
+const tmpSize = new Vector3();
 
 async function firstPos(node: BaseSopNodeType): Promise<Vector3> {
 	const container = await node.compute();
 	const coreGroup = container.coreContent()!;
-	const object = coreGroup.objectsWithGeo()[0];
+	const object = coreGroup.threejsObjectsWithGeo()[0];
 	const v = new Vector3();
 	v.fromArray((object.geometry.attributes.position as BufferAttribute).array);
 	return v;
@@ -74,7 +76,7 @@ QUnit.test('bypass a node that has no input returns an empty container', async (
 	merge1.setInput(1, hemisphereLight1);
 
 	let container = await merge1.compute();
-	let objects = container.coreContent()!.objects();
+	let objects = container.coreContent()!.threejsObjects();
 	assert.notOk(merge1.states.error.active());
 	assert.notOk(hemisphereLight1.states.error.active());
 	assert.equal(objects.length, 2);
@@ -85,7 +87,7 @@ QUnit.test('bypass a node that has no input returns an empty container', async (
 
 	hemisphereLight1.flags.bypass.set(true);
 	container = await merge1.compute();
-	objects = container.coreContent()!.objects();
+	objects = container.coreContent()!.threejsObjects();
 	assert.notOk(merge1.states.error.active());
 	assert.notOk(hemisphereLight1.states.error.active());
 	assert.equal(objects.length, 1);
@@ -113,14 +115,14 @@ QUnit.test('bypass a node that has no input but requires one sets the node as er
 	assert.notOk(transform1.states.error.active());
 	assert.notOk(merge1.states.error.active());
 	assert.ok(container.coreContent());
-	let objects = container.coreContent()!.objects();
+	let objects = container.coreContent()!.threejsObjects();
 	assert.equal(objects.length, 2);
 	assert.deepEqual(
 		objects.map((o: Object3D) => o.name),
 		['SpotLightContainer_spotLight1', 'hemisphereLight1']
 	);
 	assert.equal(container.coreContent()!.pointsCount(), 0, '0 points');
-	assert.equal(container.coreContent()!.objects().length, 2, '2 objects');
+	assert.equal(container.coreContent()!.threejsObjects().length, 2, '2 objects');
 
 	hemisphereLight1.flags.bypass.set(true);
 	container = await merge1.compute();
@@ -129,7 +131,7 @@ QUnit.test('bypass a node that has no input but requires one sets the node as er
 	assert.notOk(merge1.states.error.active());
 	assert.ok(container.coreContent());
 	assert.equal(container.coreContent()!.pointsCount(), 0, '0 points');
-	assert.equal(container.coreContent()!.objects().length, 1, '1 object');
+	assert.equal(container.coreContent()!.threejsObjects().length, 1, '1 object');
 
 	transform1.flags.bypass.set(true);
 	container = await merge1.compute();
@@ -137,14 +139,14 @@ QUnit.test('bypass a node that has no input but requires one sets the node as er
 	assert.notOk(transform1.states.error.active(), 'transformed NOT errored after bypassing transform');
 	assert.notOk(merge1.states.error.active());
 	assert.ok(container.coreContent());
-	objects = container.coreContent()!.objects();
+	objects = container.coreContent()!.threejsObjects();
 	assert.equal(objects.length, 1);
 	assert.deepEqual(
 		objects.map((o: Object3D) => o.name),
 		['SpotLightContainer_spotLight1']
 	);
 	assert.equal(container.coreContent()!.pointsCount(), 0, '0 points');
-	assert.equal(container.coreContent()!.objects().length, 1, '1 object');
+	assert.equal(container.coreContent()!.threejsObjects().length, 1, '1 object');
 
 	hemisphereLight1.flags.bypass.set(false);
 	await CoreSleep.sleep(50); // TODO: ideally that should not be needed
@@ -153,14 +155,14 @@ QUnit.test('bypass a node that has no input but requires one sets the node as er
 	assert.notOk(transform1.states.error.active(), 'transformed NOT errored after un-bypassing hemisphereLight');
 	assert.notOk(merge1.states.error.active());
 	assert.ok(container.coreContent());
-	objects = container.coreContent()!.objects();
+	objects = container.coreContent()!.threejsObjects();
 	assert.equal(objects.length, 2);
 	assert.deepEqual(
 		objects.map((o: Object3D) => o.name),
 		['SpotLightContainer_spotLight1', 'hemisphereLight1']
 	);
 	assert.equal(container.coreContent()!.pointsCount(), 0, '0 points');
-	assert.equal(container.coreContent()!.objects().length, 2, '2 objects');
+	assert.equal(container.coreContent()!.threejsObjects().length, 2, '2 objects');
 
 	transform1.flags.bypass.set(false);
 	container = await merge1.compute();
@@ -168,7 +170,7 @@ QUnit.test('bypass a node that has no input but requires one sets the node as er
 	assert.notOk(transform1.states.error.active(), 'transform NOT errored after un-bypassing transform');
 	assert.notOk(merge1.states.error.active());
 	assert.ok(container.coreContent());
-	objects = container.coreContent()!.objects();
+	objects = container.coreContent()!.threejsObjects();
 	assert.equal(objects.length, 2);
 	assert.deepEqual(
 		objects.map((o: Object3D) => o.name),
@@ -182,7 +184,7 @@ QUnit.test('bypass a node that has no input but requires one sets the node as er
 	assert.notOk(transform1.states.error.active(), 'transform NOT errored after bypassing transform & hemisphereLight');
 	assert.notOk(merge1.states.error.active());
 	assert.ok(container.coreContent());
-	objects = container.coreContent()!.objects();
+	objects = container.coreContent()!.threejsObjects();
 	assert.equal(objects.length, 1);
 	assert.deepEqual(
 		objects.map((o: Object3D) => o.name),
@@ -196,7 +198,7 @@ QUnit.test('bypass a node that has no input but requires one sets the node as er
 	assert.notOk(merge1.states.error.active());
 	assert.ok(container.coreContent());
 	assert.equal(container.coreContent()!.pointsCount(), 0, '0 points');
-	assert.equal(container.coreContent()!.objects().length, 1, '1 object');
+	assert.equal(container.coreContent()!.threejsObjects().length, 1, '1 object');
 });
 
 import {RendererUtils} from '../../../helpers/RendererUtils';
@@ -342,12 +344,17 @@ QUnit.test('bypass a node which cooks async errors gracefully if inputs are erro
 
 	async function getWidth() {
 		const container = await color1.compute();
-		const bbox = container.coreContent()?.boundingBox();
-		const size = new Vector3(-1, -1, -1);
-		if (bbox) {
-			bbox.getSize(size);
+		const coreGroup = container.coreContent();
+		if (coreGroup) {
+			coreGroup.boundingBox(tmpBox);
+			tmpBox.getSize(tmpSize);
+			return tmpSize.x;
+		} else {
+			return -1;
 		}
-		return size.x;
+		// const size = new Vector3(-1, -1, -1);
+		// if (bbox) {
+		// }
 	}
 	assert.equal(await getWidth(), 1);
 	box1.p.size.set(0.5);

@@ -31,7 +31,7 @@ QUnit.test('attribcopy latitude to position', async (assert) => {
 	let container = await attrib_copy1.compute();
 	assert.notOk(attrib_copy1.states.error.message(), 'no error');
 	let core_group = container.coreContent()!;
-	let geometry = core_group.objectsWithGeo()[0].geometry;
+	let geometry = core_group.threejsObjectsWithGeo()[0].geometry;
 	assert.ok(core_group, 'core group exists');
 	assert.ok(geometry, 'geometry exists');
 
@@ -59,7 +59,7 @@ QUnit.test('attribcopy latitude to position', async (assert) => {
 	container = await attrib_copy2.compute();
 	assert.notOk(attrib_copy2.states.error.message());
 	core_group = container.coreContent()!;
-	geometry = core_group.objectsWithGeo()[0].geometry;
+	geometry = core_group.threejsObjectsWithGeo()[0].geometry;
 	assert.ok(core_group);
 	assert.ok(geometry);
 
@@ -77,7 +77,7 @@ async function requestAttribArray(assert: Assert, node: BaseSopNodeType, attribN
 	let container = await node.compute();
 	assert.notOk(node.states.error.message());
 	let core_group = container.coreContent()!;
-	let geometry = core_group.objectsWithGeo()[0].geometry;
+	let geometry = core_group.threejsObjectsWithGeo()[0].geometry;
 	return (geometry.getAttribute(attribName) as BufferAttribute).array;
 }
 
@@ -137,7 +137,7 @@ QUnit.test('attribcopy multiple from input 2 and rename', async (assert) => {
 	let container = await attribCopy.compute();
 	assert.notOk(attribCopy.states.error.message());
 	let core_group = container.coreContent()!;
-	let geometry = core_group.objectsWithGeo()[0].geometry;
+	let geometry = core_group.threejsObjectsWithGeo()[0].geometry;
 	assert.notOk(geometry.getAttribute('restP'), 'no restP');
 	assert.notOk(geometry.getAttribute('restN'), 'no restN');
 	assert.notOk(geometry.getAttribute('pti'), 'no pti');

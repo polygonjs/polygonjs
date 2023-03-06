@@ -228,7 +228,7 @@ export class DeleteSopNode extends TypedSopNode<DeleteSopParamsConfig> {
 	}
 
 	private async _evalForObjects(coreGroup: CoreGroup) {
-		const coreObjects = coreGroup.coreObjects();
+		const coreObjects = coreGroup.allCoreObjects();
 		this.entitySelectionHelper.init(coreObjects);
 
 		this._marked_for_deletion_per_object_index = new Map();
@@ -265,7 +265,7 @@ export class DeleteSopNode extends TypedSopNode<DeleteSopParamsConfig> {
 	}
 
 	private async _evalForPoints(core_group: CoreGroup, core_group2?: CoreGroup) {
-		const core_objects = core_group.coreObjects();
+		const core_objects = core_group.threejsCoreObjects();
 		let core_object;
 		let objects: Object3D[] = [];
 		for (let i = 0; i < core_objects.length; i++) {

@@ -33,7 +33,7 @@ QUnit.test('SOP file Ldraw radar truck', async (assert) => {
 	const container2 = await withHierarchy(fileNode, 3);
 	assert.equal(container2.pointsCount(), 75218);
 
-	const objects1 = container.coreContent()?.objects()!;
+	const objects1 = container.coreContent()?.threejsObjects()!;
 	assert.equal(objects1?.length, 1);
 	assert.equal(CoreObject.attribValue(objects1[0], 'buildingStep') as number, 0, 'buildingStep 0');
 	assert.equal(CoreObject.attribValue(objects1[0].children[0], 'buildingStep') as number, 1, 'buildingStep 1');
@@ -45,7 +45,7 @@ QUnit.test('SOP file Ldraw car', async (assert) => {
 	const container2 = await withHierarchy(fileNode, 3);
 	assert.equal(container2.pointsCount(), 4508);
 
-	const objects1 = container.coreContent()?.objects()!;
+	const objects1 = container.coreContent()?.threejsObjects()!;
 	assert.equal(objects1.length, 1, '1 object');
 	assert.equal(CoreObject.attribValue(objects1[0], 'buildingStep') as number, 0, 'buildingStep 0');
 

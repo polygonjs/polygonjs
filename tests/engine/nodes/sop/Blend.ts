@@ -1,3 +1,5 @@
+import {Box3} from 'three';
+const tmpBox = new Box3()
 QUnit.test('blend simple', async (assert) => {
 	const geo1 = window.geo1;
 
@@ -16,9 +18,11 @@ QUnit.test('blend simple', async (assert) => {
 	// const {geometry} = core_group.objects()[0];
 
 	assert.equal(container.pointsCount(), 24);
-	assert.equal(container.boundingBox().min.y, 2);
+	container.boundingBox(tmpBox)
+	assert.equal(tmpBox.min.y, 2);
 
 	blend1.p.blend.set(0.75);
 	container = await blend1.compute();
-	assert.equal(container.boundingBox().min.y, 3.25);
+	container.boundingBox(tmpBox)
+	assert.equal(tmpBox.min.y, 3.25);
 });

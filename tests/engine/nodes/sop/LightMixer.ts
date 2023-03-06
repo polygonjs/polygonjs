@@ -3,7 +3,7 @@ import {GeometryContainer} from '../../../../src/engine/containers/Geometry';
 
 function getLight(container: GeometryContainer, lightName: string): Light | undefined {
 	const coreGroup = container.coreContent()!;
-	const objects = coreGroup.objects();
+	const objects = coreGroup.threejsObjects();
 	let light: Light | undefined;
 	for (let object of objects) {
 		object.traverse((child) => {

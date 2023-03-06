@@ -19,7 +19,7 @@ QUnit.test('sop/palette simple vertex', async (assert) => {
 	let container = await palette.compute();
 	let coreContent = container.coreContent()!;
 	assert.ok(coreContent);
-	let geometry = coreContent.objectsWithGeo()[0].geometry;
+	let geometry = coreContent.threejsObjectsWithGeo()[0].geometry;
 	let colorAttribArray = (geometry.getAttribute('color') as BufferAttribute).array;
 
 	assert.in_delta(colorAttribArray[0], 1, delta);
@@ -39,7 +39,7 @@ QUnit.test('sop/palette simple vertex', async (assert) => {
 	container = await palette.compute();
 	coreContent = container.coreContent()!;
 	assert.ok(coreContent);
-	geometry = coreContent.objectsWithGeo()[0].geometry;
+	geometry = coreContent.threejsObjectsWithGeo()[0].geometry;
 	colorAttribArray = (geometry.getAttribute('color') as BufferAttribute).array;
 
 	assert.in_delta(colorAttribArray[0], 0.9046611785888672, delta);
@@ -75,7 +75,7 @@ QUnit.test('sop/palette simple object', async (assert) => {
 
 	async function objectColors() {
 		const container = await palette.compute();
-		const objects = container.coreContent()?.objects() || [];
+		const objects = container.coreContent()?.threejsObjects() || [];
 		const colors = objects.map((object: Object3D) => CoreObject.attribValue(object, 'color') as Color);
 		return colors.map((c) => c.toArray()).flat();
 	}

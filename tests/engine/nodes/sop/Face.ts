@@ -1,4 +1,6 @@
-import {Vector3} from 'three';
+import {Vector3, Box3} from 'three';
+const tmpBox = new Box3();
+const tmpSize = new Vector3();
 
 QUnit.test('face simple', async (assert) => {
 	const geo1 = window.geo1;
@@ -9,21 +11,26 @@ QUnit.test('face simple', async (assert) => {
 	face1.setInput(0, sphere1);
 	face1.p.makeFacesUnique.set(0);
 
-	let container = await face1.compute();
-	assert.equal(container.pointsCount(), 63);
+	async function compute() {
+		const container = await face1.compute();
+		const coreGroup = container.coreContent()!;
+		coreGroup.boundingBox(tmpBox);
+		tmpBox.getSize(tmpSize);
+
+		return {bbox: tmpBox, size: tmpSize, pointsCount: coreGroup.pointsCount()};
+	}
+
+	// let container = await face1.compute();
+	assert.equal((await compute()).pointsCount, 63);
 
 	face1.p.makeFacesUnique.set(1);
-	container = await face1.compute();
-	assert.equal(container.pointsCount(), 240);
-	const bbox_size = new Vector3();
-	assert.deepEqual(container.boundingBox().getSize(bbox_size).toArray(), [2, 2, 2]);
+	// container = await face1.compute();
+	assert.equal((await compute()).pointsCount, 240);
+	assert.deepEqual((await compute()).size.toArray(), [2, 2, 2]);
 
 	face1.p.transform.set(1);
 	face1.p.scale.set(2);
-	container = await face1.compute();
-	assert.equal(container.pointsCount(), 240);
-	assert.deepEqual(
-		container.boundingBox().getSize(bbox_size).toArray(),
-		[2.4536805152893066, 2.2200846672058105, 2.4536805152893066]
-	);
+	// container = await face1.compute();
+	assert.equal((await compute()).pointsCount, 240);
+	assert.deepEqual((await compute()).size.toArray(), [2.4536805152893066, 2.2200846672058105, 2.4536805152893066]);
 });

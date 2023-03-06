@@ -1,5 +1,6 @@
-import {Matrix4, Object3D} from 'three';
+import {Matrix4} from 'three';
 import {TypeAssert} from '../engine/poly/Assert';
+import {CoreObjectType, isObject3D, ObjectContent} from './geometry/ObjectContent';
 
 export enum ObjectTransformSpace {
 	PARENT = 'parent',
@@ -15,21 +16,31 @@ export const OBJECT_TRANSFORM_SPACE_MENU_ENTRIES = [
 ];
 
 export function applyTransformWithSpaceToObject(
-	object: Object3D,
+	object: ObjectContent<CoreObjectType>,
 	matrix: Matrix4,
 	transformSpace: ObjectTransformSpace
 ) {
 	switch (transformSpace) {
 		case ObjectTransformSpace.PARENT: {
-			object.updateMatrix();
-			object.applyMatrix4(matrix);
-			object.matrix.decompose(object.position, object.quaternion, object.scale);
+			if (isObject3D(object)) {
+				object.updateMatrix();
+				object.applyMatrix4(matrix);
+				object.matrix.decompose(object.position, object.quaternion, object.scale);
+			} else {
+				object.applyMatrix4(matrix);
+			}
 			return;
 		}
 		case ObjectTransformSpace.LOCAL: {
-			object.updateMatrix();
-			object.matrix.multiply(matrix);
-			object.matrix.decompose(object.position, object.quaternion, object.scale);
+			if (isObject3D(object)) {
+				object.updateMatrix();
+				object.matrix.multiply(matrix);
+				object.matrix.decompose(object.position, object.quaternion, object.scale);
+			} else {
+				// it should ideally multiply the existing matrix,
+				// but I'm not sure how to do that with cad objects for now
+				object.applyMatrix4(matrix);
+			}
 			return;
 		}
 	}

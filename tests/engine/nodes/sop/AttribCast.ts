@@ -17,7 +17,7 @@ QUnit.test('attribCast simple', async (assert) => {
 
 	let container = await hierarchy.compute();
 	let core_group = container.coreContent()!;
-	let geometry = core_group.objectsWithGeo()[0].geometry;
+	let geometry = core_group.threejsObjectsWithGeo()[0].geometry;
 	let index = geometry.getIndex()!;
 	assert.ok(index instanceof BufferAttribute);
 	assert.notOk(index instanceof Uint16BufferAttribute);
@@ -30,7 +30,7 @@ QUnit.test('attribCast simple', async (assert) => {
 
 	container = await attribCast.compute();
 	core_group = container.coreContent()!;
-	geometry = core_group.objectsWithGeo()[0].geometry;
+	geometry = core_group.threejsObjectsWithGeo()[0].geometry;
 	index = geometry.getIndex()!;
 	assert.ok(index instanceof BufferAttribute);
 	assert.ok(index instanceof Uint16BufferAttribute);

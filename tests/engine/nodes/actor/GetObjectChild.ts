@@ -39,7 +39,7 @@ QUnit.test('actor/GetObjectChild', async (assert) => {
 	setObjectVisible1.p.visible.set(false);
 
 	const container = await actor1.compute();
-	const object = container.coreContent()!.objects()[0];
+	const object = container.coreContent()!.threejsObjects()[0];
 	const children = object.children;
 	assert.equal(children.length, 2);
 

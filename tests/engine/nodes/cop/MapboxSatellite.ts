@@ -1,3 +1,6 @@
+import {Box3} from 'three';
+const tmpBox = new Box3();
+
 QUnit.test('cop/mapboxSatellite simple', async (assert) => {
 	const scene = window.scene;
 	const geo1 = scene.root().createNode('geo');
@@ -13,10 +16,11 @@ QUnit.test('cop/mapboxSatellite simple', async (assert) => {
 
 	await mapboxSatellite1.compute();
 	const container = await heightMap1.compute();
-	assert.equal(container.boundingBox().min.x, -0.5);
-	assert.equal(container.boundingBox().max.x, 0.5);
-	assert.equal(container.boundingBox().min.z, -0.5);
-	assert.equal(container.boundingBox().max.z, 0.5);
-	assert.in_delta(container.boundingBox().min.y, 400, 0.1);
-	assert.in_delta(container.boundingBox().max.y, 400, 0.1);
+	container.boundingBox(tmpBox);
+	assert.equal(tmpBox.min.x, -0.5);
+	assert.equal(tmpBox.max.x, 0.5);
+	assert.equal(tmpBox.min.z, -0.5);
+	assert.equal(tmpBox.max.z, 0.5);
+	assert.in_delta(tmpBox.min.y, 400, 0.1);
+	assert.in_delta(tmpBox.max.y, 400, 0.1);
 });

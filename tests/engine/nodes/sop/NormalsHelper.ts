@@ -7,9 +7,9 @@ QUnit.test('normalsHelper simple', async (assert) => {
 	normalsHelper.setInput(0, sphere1);
 
 	let container = await normalsHelper.compute();
-	assert.equal(container.coreContent()!.objects().length, 2);
+	assert.equal(container.coreContent()!.threejsObjects().length, 2);
 
 	normalsHelper.p.keepInput.set(0);
 	container = await normalsHelper.compute();
-	assert.equal(container.coreContent()!.objects().length, 1);
+	assert.equal(container.coreContent()!.threejsObjects().length, 1);
 });

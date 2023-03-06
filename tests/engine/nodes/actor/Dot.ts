@@ -32,7 +32,7 @@ QUnit.test('actor/dot with vector2 inputs', async (assert) => {
 	dot.params.get('v1')!.set([0, 1]);
 
 	const container = await actor1.compute();
-	const object = container.coreContent()!.objects()[0] as Mesh;
+	const object = container.coreContent()!.threejsObjects()[0] as Mesh;
 
 	// wait to make sure objects are mounted to the scene
 	await CoreSleep.sleep(150);
@@ -79,7 +79,7 @@ QUnit.test('actor/dot with vector3 inputs', async (assert) => {
 	dot.params.get('v1')!.set([0, 1, 0]);
 
 	const container = await actor1.compute();
-	const object = container.coreContent()!.objects()[0] as Mesh;
+	const object = container.coreContent()!.threejsObjects()[0] as Mesh;
 
 	// wait to make sure objects are mounted to the scene
 	await CoreSleep.sleep(150);
@@ -128,7 +128,7 @@ QUnit.test('actor/dot with vector4 inputs', async (assert) => {
 	dot.params.get('v1')!.set([0, 1, 0, 0]);
 
 	const container = await actor1.compute();
-	const object = container.coreContent()!.objects()[0] as Mesh;
+	const object = container.coreContent()!.threejsObjects()[0] as Mesh;
 
 	// wait to make sure objects are mounted to the scene
 	await CoreSleep.sleep(150);

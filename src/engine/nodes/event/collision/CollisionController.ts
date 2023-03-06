@@ -64,7 +64,7 @@ export class CollisionController {
 			return;
 		}
 
-		const collider = coreGroup.objects()[0] as MeshWithBVH;
+		const collider = coreGroup.threejsObjects()[0] as MeshWithBVH;
 		return collider;
 	}
 

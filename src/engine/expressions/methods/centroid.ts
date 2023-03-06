@@ -21,6 +21,9 @@ import {BaseMethod} from './_Base';
 import {MethodDependency} from '../MethodDependency';
 import {GeometryContainer} from '../../containers/Geometry';
 import {Vector3Like} from '../../../types/GlobalTypes';
+import {Box3, Vector3} from 'three';
+const tmpBox = new Box3();
+const tmpCenter = new Vector3();
 export class CentroidExpression extends BaseMethod {
 	static override requiredArguments() {
 		return [
@@ -46,18 +49,18 @@ export class CentroidExpression extends BaseMethod {
 				}
 
 				if (container) {
-					const bbox = container.boundingBox();
-					const center = bbox.min.clone().add(bbox.max).multiplyScalar(0.5);
+					container.boundingBox(tmpBox);
+					tmpBox.getCenter(tmpCenter);
 
 					if (component_name) {
-						const value = center[component_name];
+						const value = tmpCenter[component_name];
 						if (value != null) {
 							resolve(value);
 						} else {
 							resolve(0);
 						}
 					} else {
-						resolve(center);
+						resolve(tmpCenter);
 					}
 				}
 			} else {

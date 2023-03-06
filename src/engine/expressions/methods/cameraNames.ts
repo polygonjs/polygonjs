@@ -45,7 +45,7 @@ export class CameraNamesExpression extends BaseMethod {
 					const coreContent = container.coreContent();
 					if (coreContent) {
 						const objects = coreContent
-							.objects()
+							.threejsObjects()
 							.filter((object) => Poly.camerasRegister.objectRegistered(object));
 						const list: string[] = new Array(objects.length);
 						let i = 0;

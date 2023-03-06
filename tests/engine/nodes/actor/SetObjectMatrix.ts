@@ -21,7 +21,7 @@ QUnit.test('actor/setObjectMatrix', async (assert) => {
 	objectProperties2.setInput(0, transform2);
 	transform2.setInput(0, box2);
 
-	transform2.setApplyOn(TransformTargetType.OBJECTS);
+	transform2.setApplyOn(TransformTargetType.OBJECT);
 	transform2.p.t.set([3, 5, 7]);
 	objectProperties2.p.tname.set(true);
 	objectProperties2.p.name.set('matrixSource');
@@ -40,7 +40,7 @@ QUnit.test('actor/setObjectMatrix', async (assert) => {
 	getObject1.p.mask.set('*/matrixSource');
 
 	const container = await merge2.compute();
-	const object = container.coreContent()!.objects()[0] as Mesh;
+	const object = container.coreContent()!.threejsObjects()[0] as Mesh;
 
 	// wait to make sure objects are mounted to the scene
 	await CoreSleep.sleep(150);

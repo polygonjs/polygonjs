@@ -5,7 +5,7 @@ import {createRequiredNodes} from './Instance';
 async function get_first_geo(instances_count_node: InstancesCountSopNode) {
 	const container = await instances_count_node.compute();
 	const core_group = container.coreContent()!;
-	const objects = core_group.objectsWithGeo();
+	const objects = core_group.threejsObjectsWithGeo();
 	const first_object = objects[0];
 	const first_geo = first_object.geometry as InstancedBufferGeometry;
 	return first_geo;

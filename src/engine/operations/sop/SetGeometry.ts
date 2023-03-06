@@ -50,8 +50,8 @@ export class SetGeometrySopOperation extends BaseSopOperation {
 	}
 
 	private _oneGeoPerObject(coreGroupDest: CoreGroup, coreGroupSrc: CoreGroup) {
-		const destObjects = coreGroupDest.objects();
-		const srcObjects = coreGroupSrc.objects();
+		const destObjects = coreGroupDest.threejsObjects();
+		const srcObjects = coreGroupSrc.threejsObjects();
 		for (let i = 0; i < destObjects.length; i++) {
 			const destObject = destObjects[i] as Mesh | undefined;
 			const srcObject = srcObjects[i] as Mesh | undefined;
@@ -62,8 +62,8 @@ export class SetGeometrySopOperation extends BaseSopOperation {
 		}
 	}
 	private _firstGeoToEachObject(coreGroupDest: CoreGroup, coreGroupSrc: CoreGroup) {
-		const destObjects = coreGroupDest.objects();
-		const srcObjects = coreGroupSrc.objects();
+		const destObjects = coreGroupDest.threejsObjects();
+		const srcObjects = coreGroupSrc.threejsObjects();
 		let firstGeometry: BufferGeometry | undefined;
 		for (let srcObject of srcObjects) {
 			if ((srcObject as Mesh).geometry) {

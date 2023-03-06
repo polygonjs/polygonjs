@@ -9,7 +9,7 @@ QUnit.test('sop/code simple', async (assert) => {
 	async function getPos() {
 		let container = await code1.compute();
 		const core_group = container.coreContent()!;
-		return core_group.objectsWithGeo()[0].position;
+		return core_group.threejsObjectsWithGeo()[0].position;
 	}
 	assert.equal((await getPos()).y, 1);
 });
@@ -28,7 +28,7 @@ QUnit.test('sop/code js changed', async (assert) => {
 		}
 		cook(inputCoreGroups){
 			const inputCoreGroup = inputCoreGroups[0];
-			const object = inputCoreGroup.objects()[0];
+			const object = inputCoreGroup.threejsObjects()[0];
 			object.position.y = 5;
 			this.setCoreGroup(inputCoreGroup);
 		}
@@ -37,9 +37,9 @@ QUnit.test('sop/code js changed', async (assert) => {
 	code1.p.codeJavascript.set(newCode);
 
 	async function getPos() {
-		let container = await code1.compute();
+		const container = await code1.compute();
 		const core_group = container.coreContent()!;
-		return core_group.objectsWithGeo()[0].position;
+		return core_group.threejsObjectsWithGeo()[0].position;
 	}
 	assert.equal((await getPos()).y, 5);
 });

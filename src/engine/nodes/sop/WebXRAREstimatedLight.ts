@@ -60,7 +60,7 @@ export class WebXRAREstimatedLightSopNode extends TypedSopNode<WebXRAREstimatedL
 		defaultLightsParent.matrixAutoUpdate = false;
 		CoreObject.addAttribute(defaultLightsParent, ATTRIB_NAME.IS_DEFAULT_LIGHTS_PARENT, true);
 
-		const objects = coreGroup.objects();
+		const objects = coreGroup.threejsObjects();
 		for (let object of objects) {
 			defaultLightsParent.add(object);
 		}

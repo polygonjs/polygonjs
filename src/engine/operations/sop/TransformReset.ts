@@ -69,7 +69,7 @@ export class TransformResetSopOperation extends BaseSopOperation {
 	}
 
 	private _resetObjects(coreGroup: CoreGroup) {
-		const objects = coreGroup.objects();
+		const objects = coreGroup.threejsObjects();
 		for (let object of objects) {
 			object.matrix.identity();
 			CoreTransform.decomposeMatrix(object);
@@ -78,10 +78,10 @@ export class TransformResetSopOperation extends BaseSopOperation {
 		return coreGroup;
 	}
 	static centerCoreGroup(coreGroup: CoreGroup, options: CenterCoreGroupOptions) {
-		const objects = coreGroup.objects();
+		const objects = coreGroup.threejsObjects();
 		let refObjects = objects;
 		if (options.refCoreGroup) {
-			refObjects = options.refCoreGroup.objectsWithGeo();
+			refObjects = options.refCoreGroup.threejsObjectsWithGeo();
 		}
 		for (let i = 0; i < objects.length; i++) {
 			const object = objects[i];

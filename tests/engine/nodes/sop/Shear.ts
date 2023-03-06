@@ -3,7 +3,7 @@ import {GeometryContainer} from '../../../../src/engine/containers/Geometry';
 import {ShearMode} from '../../../../src/engine/operations/sop/Shear';
 
 function getMinMaxPointYPos(container: GeometryContainer) {
-	let geometry = container.coreContent()!.objectsWithGeo()[0].geometry;
+	let geometry = container.coreContent()!.threejsObjectsWithGeo()[0].geometry;
 	geometry.computeBoundingBox();
 	const coreGeo = new CoreGeometry(geometry);
 	const points = coreGeo.points();
@@ -32,7 +32,7 @@ QUnit.test('shear simple', async (assert) => {
 	assert.deepEqual(getMinMaxPointYPos(container), {min: -1, max: 1});
 
 	shear.p.xy.set(0);
-	shear.p.xz.set(4);	
+	shear.p.xz.set(4);
 	container = await shear.compute();
 	assert.deepEqual(getMinMaxPointYPos(container), {min: -0.5, max: 0.5});
 

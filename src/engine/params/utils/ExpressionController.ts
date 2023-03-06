@@ -5,9 +5,11 @@ import {CorePoint} from '../../../core/geometry/Point';
 import {CoreEntity} from '../../../core/geometry/Entity';
 import {ParamType} from '../../poly/ParamType';
 import {ParamValuesTypeMap} from '../types/ParamValuesTypeMap';
+import {BaseCoreObject} from '../../../core/geometry/_BaseObject';
 import {CoreObject} from '../../../core/geometry/Object';
 import {MethodDependency} from '../../expressions/MethodDependency';
 import {CoreGraphNodeId} from '../../../core/graph/CoreGraph';
+import {CoreObjectType} from '../../../core/geometry/ObjectContent';
 
 // type ParamTypeElem = ParamType;
 type EntityCallback<T extends ParamType> = (
@@ -125,7 +127,10 @@ export class ExpressionController<T extends ParamType> {
 	computeExpressionForPoints(entities: CorePoint[], callback: PointEntityCallback<T>) {
 		return this.computeExpressionForEntities(entities, callback as EntityCallback<T>);
 	}
-	computeExpressionForObjects(entities: CoreObject[], callback: ObjectEntityCallback<T>) {
+	computeExpressionForObjects<OT extends CoreObjectType>(
+		entities: BaseCoreObject<OT>[],
+		callback: ObjectEntityCallback<T>
+	) {
 		return this.computeExpressionForEntities(entities, callback as EntityCallback<T>);
 	}
 	computeExpressionForCoreGroup(entity: CoreGroup, callback: CoreGroupEntityCallback<T>) {

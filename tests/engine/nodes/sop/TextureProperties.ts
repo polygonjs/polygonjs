@@ -24,7 +24,7 @@ QUnit.test('texture_properties simple', async (assert) => {
 
 	let container = await material1.compute();
 	let core_group = container.coreContent()!;
-	let texture = ((core_group.objects()[0] as Mesh).material as MeshBasicMaterial).map as Texture;
+	let texture = ((core_group.allObjects()[0] as Mesh).material as MeshBasicMaterial).map as Texture;
 	assert.equal(texture.anisotropy, 1);
 
 	// test
@@ -33,7 +33,7 @@ QUnit.test('texture_properties simple', async (assert) => {
 
 	container = await texture_properties1.compute();
 	core_group = container.coreContent()!;
-	texture = ((core_group.objects()[0] as Mesh).material as MeshBasicMaterial).map as Texture;
+	texture = ((core_group.allObjects()[0] as Mesh).material as MeshBasicMaterial).map as Texture;
 	assert.equal(texture.anisotropy, 1);
 
 	texture_properties1.p.tanisotropy.set(1);
@@ -41,6 +41,6 @@ QUnit.test('texture_properties simple', async (assert) => {
 	texture_properties1.p.anisotropy.set(8);
 	container = await texture_properties1.compute();
 	core_group = container.coreContent()!;
-	texture = ((core_group.objects()[0] as Mesh).material as MeshBasicMaterial).map as Texture;
+	texture = ((core_group.allObjects()[0] as Mesh).material as MeshBasicMaterial).map as Texture;
 	assert.equal(texture.anisotropy, 8);
 });

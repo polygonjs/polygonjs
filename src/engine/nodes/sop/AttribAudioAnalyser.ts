@@ -102,7 +102,7 @@ export class AttribAudioAnalyserSopNode extends TypedSopNode<AttribAudioAnalyser
 		// 	this._attribIndex += 1;
 		// }
 
-		const objects = coreGroup.objects();
+		const objects = coreGroup.threejsObjects();
 		for (let object of objects) {
 			const mesh = object as Mesh;
 			if (mesh.geometry) {

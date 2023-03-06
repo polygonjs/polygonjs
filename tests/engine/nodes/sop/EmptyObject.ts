@@ -11,7 +11,7 @@ QUnit.test('SOP emptyObject simple', async (assert) => {
 
 	async function getOutput() {
 		const container = await transform1.compute();
-		const objects = container.coreContent()?.objects()!;
+		const objects = container.coreContent()?.allObjects()!;
 		return objects[0];
 	}
 

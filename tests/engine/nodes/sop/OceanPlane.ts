@@ -20,7 +20,7 @@ QUnit.test(
 		null1.setInput(0, oceanPlane);
 
 		let container = await oceanPlane.compute();
-		let water1 = container.coreContent()!.objectsWithGeo()[0] as Water;
+		let water1 = container.coreContent()!.threejsObjectsWithGeo()[0] as Water;
 
 		assert.equal(water1.material.uniforms.time.value, scene.time());
 		scene.setFrame(600);
@@ -29,7 +29,7 @@ QUnit.test(
 
 		// clone
 		container = await null1.compute();
-		let water2 = container.coreContent()!.objectsWithGeo()[0] as Water;
+		let water2 = container.coreContent()!.threejsObjectsWithGeo()[0] as Water;
 
 		assert.notEqual((water1.material as Material).uuid, (water2.material as Material).uuid);
 

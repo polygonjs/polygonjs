@@ -31,7 +31,7 @@ export class CameraPostProcessSopOperation extends BaseSopOperation {
 		return CameraSopNodeType.POST_PROCESS;
 	}
 	override cook(inputCoreGroups: CoreGroup[], params: CameraPostProcessSopParams) {
-		const objects = inputCoreGroups[0].objects();
+		const objects = inputCoreGroups[0].threejsObjects();
 
 		const relativeOrAbsolutePath = params.node.path();
 		const node = isBooleanTrue(params.useOtherNode) ? this._node?.node(relativeOrAbsolutePath) : this._node;

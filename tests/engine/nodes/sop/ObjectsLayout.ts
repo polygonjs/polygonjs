@@ -15,12 +15,12 @@ function createObject(geo1: GeoObjNode, x: number, y: number) {
 
 async function getPositions(objectLayout1: ObjectsLayoutSopNode) {
 	const container = await objectLayout1.compute();
-	const computedObjects = container.coreContent()!.objects();
+	const computedObjects = container.coreContent()!.threejsObjects();
 	return computedObjects.map((object) => object.position.toArray());
 }
 async function getAttributes(objectLayout1: ObjectsLayoutSopNode, attribName: string): Promise<number[]> {
 	const container = await objectLayout1.compute();
-	const computedObjects = container.coreContent()!.objects();
+	const computedObjects = container.coreContent()!.threejsObjects();
 	return computedObjects.map((object) => CoreObject.attribValue(object, attribName) as number);
 }
 

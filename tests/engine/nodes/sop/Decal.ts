@@ -1,4 +1,5 @@
-import {BufferAttribute} from 'three';
+import {Box3, BufferAttribute} from 'three';
+const tmpBox = new Box3();
 
 QUnit.test('decal simple', async (assert) => {
 	const geo1 = window.geo1;
@@ -12,12 +13,13 @@ QUnit.test('decal simple', async (assert) => {
 
 	let container = await decal1.compute();
 	const core_group = container.coreContent();
-	const geometry = core_group?.objectsWithGeo()[0].geometry;
+	const geometry = core_group?.threejsObjectsWithGeo()[0].geometry;
 	assert.equal((geometry?.getAttribute('position') as BufferAttribute).array.length, 1602);
-	assert.in_delta(container.boundingBox().min.x, 0.7, 0.1);
-	assert.equal(container.boundingBox().min.y, -0.5);
-	assert.in_delta(container.boundingBox().min.z, -0.5, 0.1);
-	assert.in_delta(container.boundingBox().max.x, 1, 0.1);
-	assert.equal(container.boundingBox().max.y, 0.5);
-	assert.in_delta(container.boundingBox().max.z, 0.5, 0.1);
+	container.boundingBox(tmpBox);
+	assert.in_delta(tmpBox.min.x, 0.7, 0.1);
+	assert.equal(tmpBox.min.y, -0.5);
+	assert.in_delta(tmpBox.min.z, -0.5, 0.1);
+	assert.in_delta(tmpBox.max.x, 1, 0.1);
+	assert.equal(tmpBox.max.y, 0.5);
+	assert.in_delta(tmpBox.max.z, 0.5, 0.1);
 });

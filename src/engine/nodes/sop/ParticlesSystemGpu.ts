@@ -217,7 +217,7 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 
 		const coreGroup = inputContents[0];
 
-		const objects = coreGroup.objects();
+		const objects = coreGroup.threejsObjects();
 		const object = objects[0];
 
 		// get texture size

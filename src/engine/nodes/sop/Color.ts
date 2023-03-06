@@ -74,7 +74,7 @@ export class ColorSopNode extends TypedSopNode<ColorSopParamsConfig> {
 
 	override async cook(inputCoreGroups: CoreGroup[]) {
 		const coreGroup = inputCoreGroups[0];
-		const coreObjects = coreGroup.coreObjects();
+		const coreObjects = coreGroup.threejsCoreObjects();
 
 		for (let coreObject of coreObjects) {
 			if (isBooleanTrue(this.pv.fromAttribute)) {
@@ -110,7 +110,7 @@ export class ColorSopNode extends TypedSopNode<ColorSopParamsConfig> {
 			return;
 		}
 		const geometry = coreGeometry.geometry();
-		const srcAttrib = geometry.getAttribute(attribName) as BufferAttribute|undefined;
+		const srcAttrib = geometry.getAttribute(attribName) as BufferAttribute | undefined;
 		if (!srcAttrib) {
 			return;
 		}

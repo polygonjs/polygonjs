@@ -53,7 +53,7 @@ export class ObjectNameExpression extends BaseMethod {
 				if (container) {
 					const coreContent = container.coreContent();
 					if (coreContent) {
-						const object = coreContent.objects()[objectIndex] as Object3D | null;
+						const object = coreContent.allObjects()[objectIndex] as Object3D | null;
 						if (object) {
 							resolve(object.name);
 						}

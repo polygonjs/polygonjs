@@ -1,8 +1,9 @@
-import {CoreObject} from './../../../../src/core/geometry/Object';
 import {AttribClass} from '../../../../src/core/geometry/Constant';
 import {AttribPromoteMode} from '../../../../src/engine/operations/sop/AttribPromote';
 import {TransformTargetType} from '../../../../src/core/Transform';
 import {BufferAttribute} from 'three';
+import {CoreObjectType} from '../../../../src/core/geometry/ObjectContent';
+import {BaseCoreObject} from '../../../../src/core/geometry/_BaseObject';
 
 QUnit.test('sop/attribPromote vertex to vertex with min', async (assert) => {
 	const geo1 = window.geo1;
@@ -23,7 +24,7 @@ QUnit.test('sop/attribPromote vertex to vertex with min', async (assert) => {
 
 	let container = await attrib_promote1.compute();
 	const core_group = container.coreContent()!;
-	const geometry = core_group.objectsWithGeo()[0].geometry;
+	const geometry = core_group.threejsObjectsWithGeo()[0].geometry;
 	assert.ok(core_group);
 	assert.ok(geometry);
 
@@ -52,7 +53,7 @@ QUnit.test('sop/attribPromote vertex to vertex with max', async (assert) => {
 
 	let container = await attrib_promote1.compute();
 	const core_group = container.coreContent()!;
-	const geometry = core_group.objectsWithGeo()[0].geometry;
+	const geometry = core_group.threejsObjectsWithGeo()[0].geometry;
 	assert.ok(core_group);
 	assert.ok(geometry);
 
@@ -81,7 +82,7 @@ QUnit.test('sop/attribPromote vertex to object with max', async (assert) => {
 
 	let container = await attrib_promote1.compute();
 	const core_group = container.coreContent()!;
-	const object = core_group.objects()[0];
+	const object = core_group.allObjects()[0];
 	assert.ok(core_group);
 	assert.ok(object);
 
@@ -108,7 +109,7 @@ QUnit.test('sop/attribPromote object to vertex with max', async (assert) => {
 
 	let container = await attribPromote1.compute();
 	const coreGroup = container.coreContent()!;
-	const geometry = coreGroup.objectsWithGeo()[0].geometry;
+	const geometry = coreGroup.threejsObjectsWithGeo()[0].geometry;
 	assert.ok(geometry);
 
 	const {array} = geometry.getAttribute('test') as BufferAttribute;
@@ -143,7 +144,7 @@ QUnit.test('sop/attribPromote multiple attributes from objects to vertex', async
 
 	let container = await attrib_promote1.compute();
 	const core_group = container.coreContent()!;
-	const geometry = core_group.objectsWithGeo()[0].geometry;
+	const geometry = core_group.threejsObjectsWithGeo()[0].geometry;
 	assert.ok(geometry);
 
 	const array_id = (geometry.getAttribute('id') as BufferAttribute).array;
@@ -181,11 +182,11 @@ QUnit.test('sop/attribPromote object to object with max', async (assert) => {
 
 	let container = await attribPromote1.compute();
 	const coreGroup = container.coreContent()!;
-	const coreObjects = coreGroup.coreObjects();
+	const coreObjects = coreGroup.allCoreObjects();
 	assert.equal(coreObjects.length, 3);
 
 	assert.deepEqual(
-		coreObjects.map((o: CoreObject) => o.attribValue('test')),
+		coreObjects.map((o: BaseCoreObject<CoreObjectType>) => o.attribValue('test')),
 		[2, 2, 2]
 	);
 });
@@ -198,7 +199,7 @@ QUnit.test('sop/attribPromote object to object with max (2)', async (assert) => 
 		const transform = geo1.createNode('transform');
 		const box = geo1.createNode('box');
 		transform.setInput(0, box);
-		transform.setApplyOn(TransformTargetType.OBJECTS);
+		transform.setApplyOn(TransformTargetType.OBJECT);
 		transform.p.t.x.set((i + 1) * 2);
 		merge1.setInput(i, transform);
 	}
@@ -218,18 +219,18 @@ QUnit.test('sop/attribPromote object to object with max (2)', async (assert) => 
 	attribPromote1.p.name.set('xMin');
 
 	let container = await attribPromote1.compute();
-	let coreObjects = container.coreContent()!.coreObjects();
+	let coreObjects = container.coreContent()!.allCoreObjects();
 	assert.equal(coreObjects.length, 3);
 	assert.deepEqual(
-		coreObjects.map((o: CoreObject) => o.attribValue('xMin')),
+		coreObjects.map((o: BaseCoreObject<CoreObjectType>) => o.attribValue('xMin')),
 		[6, 6, 6]
 	);
 
 	attribPromote1.setPromoteMode(AttribPromoteMode.MIN);
 	container = await attribPromote1.compute();
-	coreObjects = container.coreContent()!.coreObjects();
+	coreObjects = container.coreContent()!.allCoreObjects();
 	assert.deepEqual(
-		coreObjects.map((o: CoreObject) => o.attribValue('xMin')),
+		coreObjects.map((o: BaseCoreObject<CoreObjectType>) => o.attribValue('xMin')),
 		[2, 2, 2]
 	);
 });

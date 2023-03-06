@@ -61,7 +61,7 @@ export class AudioNotesSopOperation extends BaseSopOperation {
 	}
 
 	private _addPointAttribute(coreGroup: CoreGroup, params: AudioNotesSopParams) {
-		const coreObjects = coreGroup.coreObjects();
+		const coreObjects = coreGroup.threejsCoreObjects();
 
 		for (let coreObject of coreObjects) {
 			const corePoints = coreObject.points();
@@ -86,7 +86,7 @@ export class AudioNotesSopOperation extends BaseSopOperation {
 		}
 	}
 	private _addObjectAttribute(coreGroup: CoreGroup, params: AudioNotesSopParams) {
-		const coreObjects = coreGroup.coreObjects();
+		const coreObjects = coreGroup.allCoreObjects();
 
 		const values = this._values(coreObjects, params);
 		for (let i = 0; i < coreObjects.length; i++) {

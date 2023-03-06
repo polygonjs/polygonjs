@@ -18,7 +18,7 @@ QUnit.test('sop/actor with objectsMask', async (assert) => {
 	async function _objectNamesWithActor() {
 		const container = await actor1.compute();
 		const coreGroup = container.coreContent()!;
-		const objects = coreGroup.objects();
+		const objects = coreGroup.threejsObjects();
 		const names: string[] = [];
 
 		for (let object of objects) {

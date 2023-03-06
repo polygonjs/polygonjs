@@ -1,6 +1,9 @@
 import {CoreObject} from '../../../../src/core/geometry/Object';
 import {TextType} from '../../../../src/core/geometry/text/TextType';
 import {checkConsolePrints} from '../../../helpers/Console';
+import {Box3, Vector3} from 'three';
+const tmpBox = new Box3();
+const tmpSize = new Vector3();
 
 QUnit.test('sop/text simple', async (assert) => {
 	const geo1 = window.geo1;
@@ -9,7 +12,7 @@ QUnit.test('sop/text simple', async (assert) => {
 
 	let container = await text1.compute();
 	let core_group = container.coreContent();
-	let geometry = core_group?.objectsWithGeo()[0]?.geometry;
+	let geometry = core_group?.threejsObjectsWithGeo()[0]?.geometry;
 
 	assert.ok(geometry);
 	assert.equal(container.pointsCount(), 3324);
@@ -17,7 +20,7 @@ QUnit.test('sop/text simple', async (assert) => {
 	text1.p.text.set('this is a test');
 	container = await text1.compute();
 	core_group = container.coreContent();
-	geometry = core_group?.objectsWithGeo()[0]?.geometry;
+	geometry = core_group?.threejsObjectsWithGeo()[0]?.geometry;
 
 	assert.ok(geometry);
 	assert.equal(container.pointsCount(), 3792);
@@ -36,7 +39,7 @@ QUnit.test('sop/text prints no warning', async (assert) => {
 
 		let container = await transform2.compute();
 		let core_group = container.coreContent();
-		let geometry = core_group?.objectsWithGeo()[0]?.geometry;
+		let geometry = core_group?.threejsObjectsWithGeo()[0]?.geometry;
 
 		assert.ok(geometry);
 		assert.equal(container.pointsCount(), 3324);
@@ -44,7 +47,7 @@ QUnit.test('sop/text prints no warning', async (assert) => {
 		text1.p.text.set('this is a test');
 		container = await transform2.compute();
 		core_group = container.coreContent();
-		geometry = core_group?.objectsWithGeo()[0]?.geometry;
+		geometry = core_group?.threejsObjectsWithGeo()[0]?.geometry;
 
 		assert.ok(geometry);
 		assert.equal(container.pointsCount(), 3792);
@@ -142,17 +145,25 @@ QUnit.test('sop/text with multiline', async (assert) => {
 	const text1 = geo1.createNode('text');
 	text1.p.text.set('line1line2');
 
+	async function getSize() {
+		const container = await text1.compute();
+		container.boundingBox(tmpBox);
+		tmpBox.getSize(tmpSize);
+		return tmpSize;
+	}
+
 	let container = await text1.compute();
-	assert.equal(container.coreContent()?.objects().length, 1);
-	assert.more_than_or_equal(container.size().y, 1);
-	assert.less_than_or_equal(container.size().y, 1.2);
+	assert.equal(container.coreContent()?.threejsObjects().length, 1);
+
+	assert.more_than_or_equal((await getSize()).y, 1);
+	assert.less_than_or_equal((await getSize()).y, 1.2);
 
 	text1.p.text.set('line1\nline2');
 
 	container = await text1.compute();
-	assert.equal(container.coreContent()?.objects().length, 1);
-	assert.more_than_or_equal(container.size().y, 2.1);
-	assert.less_than_or_equal(container.size().y, 3.5);
+	assert.equal(container.coreContent()?.threejsObjects().length, 1);
+	assert.more_than_or_equal((await getSize()).y, 2.1);
+	assert.less_than_or_equal((await getSize()).y, 3.5);
 });
 
 QUnit.test('sop/text with multiline and mutliple objects', async (assert) => {
@@ -161,49 +172,55 @@ QUnit.test('sop/text with multiline and mutliple objects', async (assert) => {
 	const text1 = geo1.createNode('text');
 	text1.p.splitPerLetter.set(1);
 	text1.p.text.set('line1line2');
+	async function getSize() {
+		const container = await text1.compute();
+		container.boundingBox(tmpBox);
+		tmpBox.getSize(tmpSize);
+		return tmpSize;
+	}
 
 	let container = await text1.compute();
 	// TODO: at the moment, letters like i (lowercase) generate 2 objects, when it should be 1
-	assert.equal(container.coreContent()?.objects().length, 10);
-	assert.more_than_or_equal(container.size().y, 1);
-	assert.less_than_or_equal(container.size().y, 1.6);
+	assert.equal(container.coreContent()?.threejsObjects().length, 10);
+	assert.more_than_or_equal((await getSize()).y, 1);
+	assert.less_than_or_equal((await getSize()).y, 1.6);
 
 	text1.p.text.set('line1\nli ne2');
 	text1.p.keepEmptyGeometries.set(true);
 
 	container = await text1.compute();
-	assert.equal(container.coreContent()?.objects().length, 11);
+	assert.equal(container.coreContent()?.threejsObjects().length, 11);
 	assert.deepEqual(
 		container
 			.coreContent()
-			?.coreObjects()
+			?.threejsCoreObjects()
 			.map((o: CoreObject) => o.attribValue('character')),
 		['l', 'i', 'n', 'e', '1', 'l', 'i', ' ', 'n', 'e', '2']
 	);
 	assert.deepEqual(
 		container
 			.coreContent()
-			?.coreObjects()
+			?.threejsCoreObjects()
 			.map((o: CoreObject) => o.attribValue('lineId')),
 		[0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1]
 	);
 	assert.deepEqual(
 		container
 			.coreContent()
-			?.coreObjects()
+			?.threejsCoreObjects()
 			.map((o: CoreObject) => o.attribValue('characterId')),
 		[0, 1, 2, 3, 4, 6, 7, 8, 9, 10, 11]
 	);
-	assert.more_than_or_equal(container.size().y, 2.1);
-	assert.less_than_or_equal(container.size().y, 3.5);
+	assert.more_than_or_equal((await getSize()).y, 2.1);
+	assert.less_than_or_equal((await getSize()).y, 3.5);
 
 	text1.p.keepEmptyGeometries.set(false);
 	container = await text1.compute();
-	assert.equal(container.coreContent()?.objects().length, 10);
+	assert.equal(container.coreContent()?.threejsObjects().length, 10);
 	assert.deepEqual(
 		container
 			.coreContent()
-			?.coreObjects()
+			?.threejsCoreObjects()
 			.map((o: CoreObject) => o.attribValue('character')),
 		['l', 'i', 'n', 'e', '1', 'l', 'i', 'n', 'e', '2']
 	);

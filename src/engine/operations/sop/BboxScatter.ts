@@ -2,10 +2,9 @@ import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
-import {BufferGeometry} from 'three';
-import {BufferAttribute} from 'three';
+import {BufferAttribute, BufferGeometry, Box3} from 'three';
 import {ObjectType} from '../../../core/geometry/Constant';
-
+const tmpBox = new Box3();
 interface BboxScatterSopParams extends DefaultOperationParams {
 	stepSize: number;
 }
@@ -21,9 +20,9 @@ export class BboxScatterSopOperation extends BaseSopOperation {
 	override cook(inputCoreGroups: CoreGroup[], params: BboxScatterSopParams) {
 		const inputCoreGroup = inputCoreGroups[0];
 		const stepSize = params.stepSize;
-		const bbox = inputCoreGroup.boundingBox();
-		const min = bbox.min;
-		const max = bbox.max;
+		inputCoreGroup.boundingBox(tmpBox);
+		const min = tmpBox.min;
+		const max = tmpBox.max;
 
 		const positions: number[] = [];
 		for (let x = min.x; x <= max.x; x += stepSize) {

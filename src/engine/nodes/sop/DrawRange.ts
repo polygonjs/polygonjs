@@ -41,7 +41,7 @@ export class DrawRangeSopNode extends TypedSopNode<DrawRangeSopParamsConfig> {
 
 	override cook(input_contents: CoreGroup[]) {
 		const core_group = input_contents[0];
-		const objects = core_group.objects();
+		const objects = core_group.threejsObjects();
 		for (let object of objects) {
 			const geometry = (object as Mesh).geometry as BufferGeometry;
 			if (geometry) {
