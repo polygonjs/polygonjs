@@ -4,7 +4,7 @@ import {MapUtils} from '../../../MapUtils';
 import {CadObject} from '../CadObject';
 
 const objectsByType: Map<CadGeometryType, CadObject<CadGeometryType>[]> = new Map();
-export function cadMerge(inputObjects: CadObject<CadGeometryType>[]): CadObject<CadGeometryType>[] {
+export function cadMergeCompact(inputObjects: CadObject<CadGeometryType>[]): CadObject<CadGeometryType>[] {
 	objectsByType.clear();
 	for (let inputObject of inputObjects) {
 		MapUtils.pushOnArrayAtEntry(objectsByType, inputObject.type, inputObject);

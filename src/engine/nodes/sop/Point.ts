@@ -85,7 +85,7 @@ export class PointSopNode extends TypedSopNode<PointSopParamsConfig> {
 			const objects = coreGroup.threejsObjectsWithGeo();
 			for (let object of objects) {
 				if ((object as Mesh).isMesh) {
-					coreGroup.computeVertexNormals();
+					object.geometry.computeVertexNormals();
 				}
 			}
 		}

@@ -9,7 +9,7 @@ import {
 	CadTypeMap,
 	cadGeometryTypeFromShape,
 	cadDowncast,
-	TesselationParams,
+	CADTesselationParams,
 	CadBox3Handle,
 	_createCadBox3Handle,
 } from './CadCommon';
@@ -116,14 +116,14 @@ export class CadObject<T extends CadGeometryType> implements ObjectContent<CoreO
 		objectContentCopyProperties(this, clone);
 		return clone;
 	}
-	toObject3D(tesselationParams: TesselationParams): Object3D | Object3D[] | undefined {
+	toObject3D(tesselationParams: CADTesselationParams): Object3D | Object3D[] | undefined {
 		return CadObject.toObject3D(this, this.type, tesselationParams);
 	}
 
 	static toObject3D<T extends CadGeometryType>(
 		cadObject: CadObject<T>,
 		type: T,
-		tesselationParams: TesselationParams
+		tesselationParams: CADTesselationParams
 	): Object3D | Object3D[] | undefined {
 		const geometry = cadObject.cadGeometry();
 

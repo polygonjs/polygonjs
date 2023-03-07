@@ -1,14 +1,14 @@
 import type {
 	OpenCascadeInstance,
 	TopoDS_Edge,
-	TesselationParams,
+	CADTesselationParams,
 	Geom_Curve,
 	gp_Pnt,
 	CadNumberHandle,
 } from '../CadCommon';
 import {BufferGeometry, Float32BufferAttribute} from 'three';
 import {BaseSopOperation} from '../../../../engine/operations/sop/_Base';
-import {CAD_MATERIAL} from '../CadConstant';
+import {cadMaterialLine} from '../CadConstant';
 // import {withCadException} from '../CadExceptionHandler';
 import {ObjectType} from '../../Constant';
 import {CadLoaderSync} from '../CadLoaderSync';
@@ -19,18 +19,20 @@ let point: gp_Pnt | undefined;
 const v0: CadNumberHandle = {current: 0};
 const v1: CadNumberHandle = {current: 0};
 // const WITH_ORIENTATION = true;
-export function cadEdgeToObject3D(edge: TopoDS_Edge, tesselationParams: TesselationParams) {
+export function cadEdgeToObject3D(edge: TopoDS_Edge, tesselationParams: CADTesselationParams) {
 	const geometry = cadEdgeToBufferGeometry(edge, tesselationParams);
 	if (!geometry) {
 		return;
 	}
-	const mat = CAD_MATERIAL[ObjectType.LINE_SEGMENTS];
-	mat.color.copy(tesselationParams.edgesColor);
-	const object = BaseSopOperation.createObject(geometry, ObjectType.LINE_SEGMENTS, mat);
+	const object = BaseSopOperation.createObject(
+		geometry,
+		ObjectType.LINE_SEGMENTS,
+		cadMaterialLine(tesselationParams.edgesColor)
+	);
 
 	return object;
 }
-export function cadEdgeToBufferGeometry(edge: TopoDS_Edge, tesselationParams: TesselationParams) {
+export function cadEdgeToBufferGeometry(edge: TopoDS_Edge, tesselationParams: CADTesselationParams) {
 	// TODO: in the build process,
 	// update the types so that we replace:
 	// type Standard_Real = number;
@@ -91,6 +93,8 @@ export function cadEdgeCreate(oc: OpenCascadeInstance, curve: Geom_Curve): TopoD
 	const handle = new oc.Handle_Geom_Curve_2(curve);
 	const api = new oc.BRepBuilderAPI_MakeEdge_24(handle);
 	const edge = api.Edge();
+	handle.delete();
+	api.delete();
 	return edge;
 }
 

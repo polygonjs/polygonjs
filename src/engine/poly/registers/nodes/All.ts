@@ -3,7 +3,7 @@ import {AnimRegister, AnimNodeChildrenMap} from './Anim';
 import {AudioRegister, AudioNodeChildrenMap} from './Audio';
 // import {CadRegister, CadNodeChildrenMap} from './Cad';
 import {CopRegister, CopNodeChildrenMap} from './Cop';
-import {CsgRegister, CsgNodeChildrenMap} from './Csg';
+// import {CsgRegister, CsgNodeChildrenMap} from './Csg';
 import {EventRegister, EventNodeChildrenMap} from './Event';
 import {GlRegister, GlNodeChildrenMap} from './Gl';
 import {JsRegister, JsNodeChildrenMap} from './Js';
@@ -34,7 +34,7 @@ export interface NodeChildrenMapByContext {
 	[NodeContext.AUDIO]: AudioNodeChildrenMap;
 	// [NodeContext.CAD]: CadNodeChildrenMap;
 	[NodeContext.COP]: CopNodeChildrenMap;
-	[NodeContext.CSG]: CsgNodeChildrenMap;
+	// [NodeContext.CSG]: CsgNodeChildrenMap;
 	[NodeContext.EVENT]: EventNodeChildrenMap;
 	[NodeContext.GL]: GlNodeChildrenMap;
 	[NodeContext.JS]: JsNodeChildrenMap;
@@ -53,7 +53,7 @@ export class AllNodesRegister {
 		AudioRegister.run(poly);
 		// CadRegister.run(poly);
 		CopRegister.run(poly);
-		CsgRegister.run(poly);
+		// CsgRegister.run(poly);
 		EventRegister.run(poly);
 		GlRegister.run(poly);
 		JsRegister.run(poly);

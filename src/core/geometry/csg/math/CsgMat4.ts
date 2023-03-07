@@ -1,6 +1,7 @@
 import {Matrix4, Vector3} from 'three';
-import {CsgObject} from '../CsgCoreObject';
+import {CsgGeometry, CsgGeometryType, csgGeometryTypeFromGeometry} from '../CsgCommon';
 import {maths, geometries} from '@jscad/modeling';
+import {TypeAssert} from '../../../../engine/poly/Assert';
 const {mat4} = maths;
 
 const TMP_MAT4 = new Matrix4();
@@ -58,16 +59,20 @@ export function path2ApplyTransforms(geom: geometries.path2.Path2) {
 // 	return out
 //   }
 
-export function csgApplyTransform(csg: CsgObject) {
-	if (geometries.geom3.isA(csg)) {
-		geom3ApplyTransforms(csg);
+export function csgApplyTransform(csg: CsgGeometry) {
+	const type = csgGeometryTypeFromGeometry(csg);
+	switch (type) {
+		case CsgGeometryType.PATH2: {
+			return path2ApplyTransforms(csg as geometries.path2.Path2);
+		}
+		case CsgGeometryType.GEOM2: {
+			return geom2ApplyTransforms(csg as geometries.geom2.Geom2);
+		}
+		case CsgGeometryType.GEOM3: {
+			return geom3ApplyTransforms(csg as geometries.geom3.Geom3);
+		}
 	}
-	if (geometries.geom2.isA(csg)) {
-		geom2ApplyTransforms(csg);
-	}
-	if (geometries.path2.isA(csg)) {
-		path2ApplyTransforms(csg);
-	}
+	TypeAssert.unreachable(type);
 }
 
 export function matrix4ToMat4(matrix4: Matrix4, target: maths.mat4.Mat4) {
@@ -89,8 +94,26 @@ export function matrix4ToMat4(matrix4: Matrix4, target: maths.mat4.Mat4) {
 	target[14] = elements[14];
 	target[15] = elements[15];
 }
+// export function mat4Copy(src: maths.mat4.Mat4, target: maths.mat4.Mat4) {
+// 	target[0] = src[0];
+// 	target[1] = src[1];
+// 	target[2] = src[2];
+// 	target[3] = src[3];
+// 	target[4] = src[4];
+// 	target[5] = src[5];
+// 	target[6] = src[6];
+// 	target[7] = src[7];
+// 	target[8] = src[8];
+// 	target[9] = src[9];
+// 	target[10] = src[10];
+// 	target[11] = src[11];
+// 	target[12] = src[12];
+// 	target[13] = src[13];
+// 	target[14] = src[14];
+// 	target[15] = src[15];
+// }
 
-export function csgApplyMatrix4(csg: CsgObject, matrix4: Matrix4) {
+export function csgApplyMatrix4(csg: CsgGeometry, matrix4: Matrix4) {
 	matrix4ToMat4(matrix4, csg.transforms);
 	csgApplyTransform(csg);
 }

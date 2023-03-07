@@ -77,7 +77,10 @@ export class NormalsSopNode extends TypedSopNode<NormalsSopParamsConfig> {
 			await this._eval_expressions_for_core_group(coreGroup);
 		} else {
 			if (this.pv.recompute) {
-				coreGroup.computeVertexNormals();
+				const objects = coreGroup.threejsObjectsWithGeo();
+				for (let object of objects) {
+					object.geometry.computeVertexNormals();
+				}
 			}
 		}
 		if (isBooleanTrue(this.pv.invert)) {

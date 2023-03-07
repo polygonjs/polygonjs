@@ -2,7 +2,7 @@ import type {OpenCascadeInstance, TopoDS_Vertex, gp_Pnt} from '../CadCommon';
 import {BufferGeometry, BufferAttribute, Vector3} from 'three';
 import {BaseSopOperation} from '../../../../engine/operations/sop/_Base';
 import {ObjectType} from '../../Constant';
-import {CAD_MATERIAL} from '../CadConstant';
+import {cadMaterialPoint} from '../CadConstant';
 import {CadLoaderSync} from '../CadLoaderSync';
 import {cadShapeClone} from './CadShapeCommon';
 
@@ -12,7 +12,7 @@ export function cadVertexToObject3D(vertex: TopoDS_Vertex) {
 	const geo = new BufferGeometry();
 	const positions: number[] = [point.X(), point.Y(), point.Z()];
 	geo.setAttribute('position', new BufferAttribute(new Float32Array(positions), 3));
-	return BaseSopOperation.createObject(geo, ObjectType.POINTS, CAD_MATERIAL[ObjectType.POINTS]);
+	return BaseSopOperation.createObject(geo, ObjectType.POINTS, cadMaterialPoint());
 }
 
 export function cadVertexCreate(oc: OpenCascadeInstance, t: Vector3): TopoDS_Vertex {

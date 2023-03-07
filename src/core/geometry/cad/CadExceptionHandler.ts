@@ -8,7 +8,7 @@ export function withCadException<T>(oc: OpenCascadeInstance, callback: Callback)
 		return callback();
 	} catch (e) {
 		if (typeof e === 'number') {
-			const exceptionData = oc.OCJS.getStandard_FailureData(e);
+			const exceptionData = (oc as any).OCJS.getStandard_FailureData(e);
 			console.log(`That didn't work because: ${exceptionData.GetMessageString()}`);
 			console.log(e, exceptionData);
 		} else {

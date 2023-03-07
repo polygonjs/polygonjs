@@ -22,7 +22,8 @@ import {ObjType} from '../../poly/registers/nodes/types/Obj';
 import {NodeCreateOptions} from '../utils/hierarchy/ChildrenController';
 import {TransformedParamConfig, TransformController} from './utils/TransformController';
 import {ObjTesselationParamConfig} from './utils/TesselationParams';
-import {addTesselationParamsCallback} from '../../../core/geometry/cad/utils/TesselationParamsConfig';
+import {addCADTesselationParamsCallback} from '../../../core/geometry/cad/utils/TesselationParamsConfig';
+import {addCSGTesselationParamsCallback} from '../../../core/geometry/csg/utils/TesselationParamsConfig';
 
 export function GeoParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
@@ -73,7 +74,10 @@ export class GeoObjNode extends TypedObjNode<Group, GeoObjParamConfig> {
 
 		this.childrenDisplayController.initializeNode();
 
-		addTesselationParamsCallback(this, () => {
+		addCADTesselationParamsCallback(this, () => {
+			this.childrenDisplayController.requestDisplayNodeContainer();
+		});
+		addCSGTesselationParamsCallback(this, () => {
 			this.childrenDisplayController.requestDisplayNodeContainer();
 		});
 	}

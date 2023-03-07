@@ -10,10 +10,13 @@ import {CadObject} from '../../../core/geometry/cad/CadObject';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {CoreObjectType} from '../../../core/geometry/ObjectContent';
 import {CadLoaderSync} from '../../../core/geometry/cad/CadLoaderSync';
-
+import {ModuleName} from '../../poly/registers/modules/Common';
 export class CADSopNode<K extends NodeParamsConfig> extends TypedSopNode<K> {
 	override dataType(): string {
 		return CoreObjectType.CAD;
+	}
+	override async requiredModules() {
+		return [ModuleName.CAD];
 	}
 	setCADGeom2dCurve(curve: Geom2d_Curve) {
 		const objects = [new CadObject(curve, CadGeometryType.CURVE_2D)];

@@ -79,7 +79,6 @@ export class BooleanSopOperation extends BaseSopOperation {
 		// we currently need to use the returned object from .evaluate in order to
 		// have a new object with a correct bounding box
 		const output = csgEvaluator.evaluate(brush1, brush2, operationId);
-
 		// brush1.geometry.computeBoundingBox();
 
 		if (!params.keepMaterials) {

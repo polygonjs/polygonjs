@@ -34,8 +34,8 @@ export class HeightMapSopNode extends TypedSopNode<HeightMapSopParamsConfig> {
 		this.io.inputs.initInputsClonedState(InputCloneMode.FROM_NODE);
 	}
 
-	override async cook(input_contents: CoreGroup[]) {
-		const core_group = input_contents[0];
+	override async cook(inputCoreGroups: CoreGroup[]) {
+		const coreGroup = inputCoreGroups[0];
 
 		const node = this.pv.texture.nodeWithContext(NodeContext.COP, this.states.error);
 		if (node) {
@@ -45,15 +45,20 @@ export class HeightMapSopNode extends TypedSopNode<HeightMapSopParamsConfig> {
 				const container = await texture_node.compute();
 				const texture = container.texture();
 
-				for (let core_object of core_group.threejsCoreObjects()) {
-					this._set_position_from_data_texture(core_object, texture);
+				const objects = coreGroup.threejsCoreObjects()
+				for (let coreObject of objects) {
+					this._set_position_from_data_texture(coreObject, texture);
 				}
 			} else {
 				this.states.error.set('found node is not a texture');
 			}
 		}
-		core_group.computeVertexNormals();
-		this.setCoreGroup(core_group);
+		// core_group.computeVertexNormals();
+		const objects = coreGroup.threejsObjectsWithGeo();
+				for (let object of objects) {
+					object.geometry.computeVertexNormals();
+				}
+		this.setCoreGroup(coreGroup);
 	}
 
 	private _set_position_from_data_texture(core_object: CoreObject, texture: Texture) {

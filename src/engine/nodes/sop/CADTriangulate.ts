@@ -10,8 +10,8 @@ import {CoreGroup} from '../../../core/geometry/Group';
 import {Object3D} from 'three';
 import {CoreType} from '../../../core/Type';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
-import {TesselationParamConfig} from '../../../core/geometry/cad/utils/TesselationParamsConfig';
-class CADTriangulateSopParamsConfig extends TesselationParamConfig(NodeParamsConfig) {}
+import {SOPCADTesselationParamConfig} from '../../../core/geometry/cad/utils/TesselationParamsConfig';
+class CADTriangulateSopParamsConfig extends SOPCADTesselationParamConfig(NodeParamsConfig) {}
 const ParamsConfig = new CADTriangulateSopParamsConfig();
 
 export class CADTriangulateSopNode extends CADSopNode<CADTriangulateSopParamsConfig> {

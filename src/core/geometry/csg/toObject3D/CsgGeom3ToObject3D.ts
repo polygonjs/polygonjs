@@ -1,15 +1,17 @@
-import {BufferGeometry, BufferAttribute, Vector3, Matrix4} from 'three';
+import {BufferGeometry, BufferAttribute, Matrix4, MathUtils} from 'three';
 import type {maths, geometries} from '@jscad/modeling';
 // import {PolyDictionary} from '../../../../types/GlobalTypes';
 import {ObjectType} from '../../Constant';
 import {BaseSopOperation} from '../../../../engine/operations/sop/_Base';
-import {CSG_MATERIAL} from '../CsgConstant';
+import {csgMaterialMesh} from '../CsgConstant';
+import {CSGTesselationParams} from '../CsgCommon';
 import {toCreasedNormals} from '../../../../modules/three/examples/jsm/utils/BufferGeometryUtils';
-interface Geom3ToObject3DOptions {
-	facet?: {
-		angle: number;
-	};
-}
+
+// interface Geom3ToObject3DOptions {
+// 	facet?: {
+// 		angle: number;
+// 	};
+// }
 interface jscadVertexWithIndex extends maths.vec3.Vec3 {
 	// positionAsString: string;
 	index: number;
@@ -23,41 +25,45 @@ interface jscadVertexWithIndex extends maths.vec3.Vec3 {
 // 	normals: Normal[];
 // }
 
-export function geom3ToObject3D(csg: geometries.geom3.Geom3, options?: Geom3ToObject3DOptions) {
+export function geom3ToObject3D(csg: geometries.geom3.Geom3, options: CSGTesselationParams) {
 	const geometry = geom3ToBufferGeometry(csg, options);
-	return BaseSopOperation.createObject(geometry, ObjectType.MESH, CSG_MATERIAL[ObjectType.MESH]);
+	return BaseSopOperation.createObject(
+		geometry,
+		ObjectType.MESH,
+		csgMaterialMesh(options.meshesColor, options.wireframe)
+	);
 }
 
-export function geom3ToBufferGeometry(csg: geometries.geom3.Geom3, options?: Geom3ToObject3DOptions) {
+export function geom3ToBufferGeometry(csg: geometries.geom3.Geom3, options: CSGTesselationParams) {
 	const positions: number[] = [];
-	const colors: number[] = [];
+	// const colors: number[] = [];
 	const indices: number[] = [];
 	const polygons = csg.polygons;
 	let currentIndex = 0;
-	const color = csg.color;
+	// const color = csg.color;
 	const indexByPosition: Map<string, number> = new Map();
 	for (let polygon of polygons) {
+		const polygonjsCount = polygon.vertices.length;
 		const polygonVertices = polygon.vertices as jscadVertexWithIndex[];
 		// console.log(polygonVertices.map((v) => v.index));
 		for (let vertex of polygonVertices) {
 			const positionAsString = `${vertex[0]},${vertex[1]},${vertex[2]}`;
-			// vertex.positionAsString = positionAsString;
 			let index = indexByPosition.get(positionAsString);
 			if (index == null) {
 				index = currentIndex;
 				indexByPosition.set(positionAsString, index);
 				positions.push(vertex[0], vertex[1], vertex[2]);
-				if (color) {
-					colors.push(color[0], color[1], color[2]);
-				} else {
-					colors.push(1, 1, 1);
-				}
+				// if (color) {
+				// 	colors.push(color[0], color[1], color[2]);
+				// } else {
+				// 	colors.push(1, 1, 1);
+				// }
 				currentIndex++;
 			}
 			vertex.index = index;
 		}
 		const first = (polygonVertices[0] as jscadVertexWithIndex).index;
-		for (let i = 2; i < polygon.vertices.length; i++) {
+		for (let i = 2; i < polygonjsCount; i++) {
 			const second = (polygon.vertices[i - 1] as jscadVertexWithIndex).index;
 			const third = (polygon.vertices[i] as jscadVertexWithIndex).index;
 			indices.push(first, second, third);
@@ -92,7 +98,7 @@ export function geom3ToBufferGeometry(csg: geometries.geom3.Geom3, options?: Geo
 
 	const geo = new BufferGeometry();
 	geo.setAttribute('position', new BufferAttribute(new Float32Array(positions), 3));
-	geo.setAttribute('color', new BufferAttribute(new Float32Array(colors), 3));
+	// geo.setAttribute('color', new BufferAttribute(new Float32Array(colors), 3));
 	geo.setIndex(indices);
 	if (csg.transforms) {
 		const transforms = new Matrix4();
@@ -101,11 +107,11 @@ export function geom3ToBufferGeometry(csg: geometries.geom3.Geom3, options?: Geo
 	}
 	geo.computeVertexNormals();
 
-	if (options && options.facet) {
-		return toCreasedNormals(geo, options.facet.angle);
-	} else {
-		return geo;
-	}
+	// if (options && options.facetAngle!=null) {
+	return toCreasedNormals(geo, MathUtils.degToRad(options.facetAngle));
+	// } else {
+	// return geo;
+	// }
 
 	// const positions: PolyDictionary<NormalAttributes> = {};
 	// for (let i = 0; i < geo.attributes.position.count; i++) {
@@ -169,16 +175,16 @@ export function geom3ToBufferGeometry(csg: geometries.geom3.Geom3, options?: Geo
 	// return geo;
 }
 
-export function geom3Positions(csg: geometries.geom3.Geom3): Vector3[] {
-	const bufferGeometry = geom3ToBufferGeometry(csg);
-	const positionAttribute = bufferGeometry.getAttribute('position') as BufferAttribute;
-	const positionsArray = positionAttribute.array;
-	const pointsCount = positionAttribute.itemSize;
-	const vectors: Vector3[] = new Array(pointsCount);
-	for (let i = 0; i < pointsCount; i++) {
-		const vec = new Vector3().fromArray(positionsArray, i * 3);
-		vectors[i] = vec;
-		i++;
-	}
-	return vectors;
-}
+// export function geom3Positions(csg: geometries.geom3.Geom3): Vector3[] {
+// 	const bufferGeometry = geom3ToBufferGeometry(csg);
+// 	const positionAttribute = bufferGeometry.getAttribute('position') as BufferAttribute;
+// 	const positionsArray = positionAttribute.array;
+// 	const pointsCount = positionAttribute.itemSize;
+// 	const vectors: Vector3[] = new Array(pointsCount);
+// 	for (let i = 0; i < pointsCount; i++) {
+// 		const vec = new Vector3().fromArray(positionsArray, i * 3);
+// 		vectors[i] = vec;
+// 		i++;
+// 	}
+// 	return vectors;
+// }

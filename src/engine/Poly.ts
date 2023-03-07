@@ -26,6 +26,9 @@ import {ScenesRegister} from './poly/ScenesRegister';
 // import {LogoController} from './poly/LogoController';
 import {PolyThirdPartyController} from './poly/ThirdPartyController';
 import {PolyOnObjectsAddedHooksController} from './poly/PolyOnObjectsAddedHooksController';
+import {BaseModule} from './poly/registers/modules/_BaseModule';
+import {ModuleName} from './poly/registers/modules/Common';
+import {DynamicModulesRegister} from './poly/registers/modules/DynamicModulesRegister';
 import {Camera} from 'three';
 
 declare global {
@@ -50,6 +53,7 @@ export class PolyEngine {
 	public readonly assemblersRegister: AssemblersRegister = new AssemblersRegister();
 	public readonly pluginsRegister: PluginsRegister = new PluginsRegister(this);
 	public readonly camerasRegister: PolyCamerasRegister = new PolyCamerasRegister(this);
+	public readonly modulesRegister: DynamicModulesRegister = new DynamicModulesRegister();
 	public readonly blobs: BlobsController = new BlobsController(this);
 	public readonly assetUrls: AssetUrlsController = new AssetUrlsController();
 	// public readonly logo = new LogoController();
@@ -119,6 +123,9 @@ export class PolyEngine {
 	// registeredCameraTypes() {
 	// 	return this.camerasRegister.registeredTypes();
 	// }
+	registerModule(module: BaseModule<ModuleName>) {
+		this.modulesRegister.register(module.moduleName, module /*.module()*/);
+	}
 
 	inWorkerThread() {
 		return false;

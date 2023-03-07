@@ -2,27 +2,32 @@ import {BufferGeometry, BufferAttribute, Matrix4, Vector3, Quaternion} from 'thr
 import type {geometries} from '@jscad/modeling';
 import {ObjectType} from '../../Constant';
 import {BaseSopOperation} from '../../../../engine/operations/sop/_Base';
-import {CSG_MATERIAL} from '../CsgConstant';
+import {csgMaterialLine} from '../CsgConstant';
+import {CSGTesselationParams} from '../CsgCommon';
 const matrix = new Matrix4();
 const t = new Vector3();
 const q = new Quaternion();
 const s = new Vector3();
 
-export function path2ToObject3D(csg: geometries.path2.Path2) {
+export function path2ToObject3D(csg: geometries.path2.Path2, tesselationParams: CSGTesselationParams) {
 	const geometry = path2ToBufferGeometry(csg);
-	return BaseSopOperation.createObject(geometry, ObjectType.LINE_SEGMENTS, CSG_MATERIAL[ObjectType.LINE_SEGMENTS]);
+	return BaseSopOperation.createObject(
+		geometry,
+		ObjectType.LINE_SEGMENTS,
+		csgMaterialLine(tesselationParams.linesColor)
+	);
 }
 
 export function path2ToBufferGeometry(csg: geometries.path2.Path2) {
 	const vertices: number[] = [];
-	const colors: number[] = [];
+	// const colors: number[] = [];
 	const indices: number[] = [];
 	const points2D = csg.points;
-	const color = csg.color || [1, 1, 1];
+	// const color = csg.color || [1, 1, 1];
 	let i = 0;
 	for (let point of points2D) {
 		vertices.push(point[0], 0, point[1]);
-		colors.push(...color);
+		// colors.push(...color);
 		if (i != 0) {
 			indices.push(i - 1);
 			indices.push(i);

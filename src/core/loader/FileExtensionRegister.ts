@@ -28,7 +28,7 @@ export const EXTENSIONS_BY_NODE_TYPE_BY_CONTEXT: Record<NodeContext, Record<stri
 		[CopType.SDF_FROM_URL]: [...SDF_EXTENSIONS],
 		[CopType.VIDEO]: [...VIDEO_EXTENSIONS],
 	},
-	[NodeContext.CSG]: {},
+	// [NodeContext.CSG]: {},
 	[NodeContext.EVENT]: {},
 	[NodeContext.GL]: {},
 	[NodeContext.JS]: {},

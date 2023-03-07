@@ -155,6 +155,7 @@ mainBuild:
     - symbol: TColgp_Array1OfDir
     - symbol: TColgp_Array1OfPnt
     - symbol: TColgp_Array1OfPnt2d
+    - symbol: TColgp_SequenceOfPnt2d
     - symbol: TopAbs_Orientation
     - symbol: TopAbs_ShapeEnum
     - symbol: TopExp_Explorer
@@ -172,7 +173,7 @@ mainBuild:
     - symbol: TopoDS_Wire
     - symbol: TopTools_Array1OfShape
     - symbol: TopTools_ListOfShape
-    - symbol: CustomClass
+    - symbol: OCJS
 
   emccFlags:
     - -O3
@@ -180,11 +181,12 @@ mainBuild:
     - -sUSE_ES6_IMPORT_META=0
     - -sEXPORTED_RUNTIME_METHODS=['FS']
     - -sALLOW_MEMORY_GROWTH=1
+
 additionalCppCode: |
-  #include <iostream>
-  class CustomClass {
+  typedef Handle(IMeshTools_Context) Handle_IMeshTools_Context;
+  class OCJS {
   public:
-    static void SayHello() {
-      std::cout << "Hello, World" << std::endl;
+    static Standard_Failure* getStandard_FailureData(intptr_t exceptionPtr) {
+      return reinterpret_cast<Standard_Failure*>(exceptionPtr);
     }
   };

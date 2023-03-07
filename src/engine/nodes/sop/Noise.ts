@@ -202,7 +202,10 @@ export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
 		}
 
 		if (isBooleanTrue(this.pv.computeNormals)) {
-			coreGroup.computeVertexNormals();
+			const objects = coreGroup.threejsObjectsWithGeo();
+			for (let object of objects) {
+				object.geometry.computeVertexNormals();
+			}
 		}
 		this.setCoreGroup(coreGroup);
 	}

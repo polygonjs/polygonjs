@@ -6,7 +6,7 @@
 import {CADSopNode} from './_BaseCAD';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CadGeometryType} from '../../../core/geometry/cad/CadCommon';
-import {cadMerge} from '../../../core/geometry/cad/utils/CadMerge';
+import {cadMergeCompact} from '../../../core/geometry/cad/utils/CadMerge';
 import {BaseNodeType} from '../_Base';
 import {NodeEvent} from '../../poly/NodeEvent';
 import {CoreGroup} from '../../../core/geometry/Group';
@@ -47,7 +47,7 @@ export class CADMergeSopNode extends CADSopNode<CADMergeSopParamsConfig> {
 			}
 		}
 		if (this.pv.compact) {
-			this.setCADObjects(cadMerge(inputObjects));
+			this.setCADObjects(cadMergeCompact(inputObjects));
 		} else {
 			this.setCADObjects(inputObjects);
 		}

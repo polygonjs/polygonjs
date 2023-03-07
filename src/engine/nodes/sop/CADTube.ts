@@ -5,7 +5,7 @@
  */
 import {CADSopNode} from './_BaseCAD';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {step} from '../../../core/geometry/csg/CsgUiUtils';
+import {step} from '../../../core/geometry/cad/CadConstant';
 import {CadLoader} from '../../../core/geometry/cad/CadLoader';
 import {cadShapeTranslate} from '../../../core/geometry/cad/toObject3D/CadShapeCommon';
 import {cadAxis} from '../../../core/geometry/cad/CadMath';

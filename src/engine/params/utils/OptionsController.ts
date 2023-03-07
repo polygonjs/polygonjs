@@ -157,7 +157,8 @@ export interface BooleanParamOptions
 		ComputeOnDirtyParamOptions,
 		MenuNumericParamOptions,
 		ExpressionParamOptions,
-		CallbackParamOptions {}
+		CallbackParamOptions,
+		LabelParamOptions {}
 export interface ButtonParamOptions extends BaseParamOptions, CallbackParamOptions, LabelParamOptions {}
 export interface ColorParamOptions
 	extends BaseParamOptions,

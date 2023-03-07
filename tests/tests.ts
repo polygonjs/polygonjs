@@ -419,6 +419,26 @@ import './engine/nodes/sop/Copy';
 import './engine/nodes/sop/CsgNetwork';
 import './engine/nodes/sop/CurveFromPoints';
 import './engine/nodes/sop/CurveGetPoint';
+// CSG
+import './engine/nodes/sop/CSGBox';
+import './engine/nodes/sop/CSGCenter';
+import './engine/nodes/sop/CSGDodecahedron';
+import './engine/nodes/sop/CSGEllipse';
+import './engine/nodes/sop/CSGEllipsoid';
+import './engine/nodes/sop/CSGExpand';
+import './engine/nodes/sop/CSGExtrudeLinear';
+import './engine/nodes/sop/CSGExtrudeRectangular';
+import './engine/nodes/sop/CSGExtrudeRotate';
+import './engine/nodes/sop/CSGHull';
+import './engine/nodes/sop/CSGMirror';
+import './engine/nodes/sop/CSGOffset';
+import './engine/nodes/sop/CSGPolyhedron';
+import './engine/nodes/sop/CSGProject';
+import './engine/nodes/sop/CSGTransformReset';
+import './engine/nodes/sop/CSGTorus';
+import './engine/nodes/sop/CSGTube';
+import './engine/nodes/sop/CSGTubeElliptic';
+//
 import './engine/nodes/sop/CSS2DObject';
 import './engine/nodes/sop/CSS3DObject';
 import './engine/nodes/sop/Data';

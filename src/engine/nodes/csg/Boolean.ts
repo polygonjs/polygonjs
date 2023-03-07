@@ -1,90 +1,90 @@
-/**
- * Boolean Intersect Operation
- *
- *
- */
-import {TypedCsgNode} from './_Base';
-import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {CsgCoreGroup} from '../../../core/geometry/csg/CsgCoreGroup';
-import {geometries, booleans} from '@jscad/modeling';
-import {CsgObject} from '../../../core/geometry/csg/CsgCoreObject';
-import {csgApplyTransform} from '../../../core/geometry/csg/math/CsgMat4';
-const {intersect, union, subtract} = booleans;
+// /**
+//  * Boolean Intersect Operation
+//  *
+//  *
+//  */
+// import {TypedCsgNode} from './_Base';
+// import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+// import {CsgCoreGroup} from '../../../core/geometry/csg/CsgCoreGroup';
+// import {geometries, booleans} from '@jscad/modeling';
+// import {CsgObject} from '../../../core/geometry/csg/CsgCoreObject';
+// import {csgApplyTransform} from '../../../core/geometry/csg/math/CsgMat4';
+// const {intersect, union, subtract} = booleans;
 
-export enum BooleanCsgOperationType {
-	INTERSECT = 'intersect',
-	SUBTRACT = 'subtract',
-	UNION = 'union',
-}
-export const BOOLEAN_CSG_OPERATION_TYPES: BooleanCsgOperationType[] = [
-	BooleanCsgOperationType.INTERSECT,
-	BooleanCsgOperationType.SUBTRACT,
-	BooleanCsgOperationType.UNION,
-];
+// export enum BooleanCsgOperationType {
+// 	INTERSECT = 'intersect',
+// 	SUBTRACT = 'subtract',
+// 	UNION = 'union',
+// }
+// export const BOOLEAN_CSG_OPERATION_TYPES: BooleanCsgOperationType[] = [
+// 	BooleanCsgOperationType.INTERSECT,
+// 	BooleanCsgOperationType.SUBTRACT,
+// 	BooleanCsgOperationType.UNION,
+// ];
 
-class BooleanCsgParamsConfig extends NodeParamsConfig {
-	/** @param operation */
-	operation = ParamConfig.INTEGER(BOOLEAN_CSG_OPERATION_TYPES.indexOf(BooleanCsgOperationType.INTERSECT), {
-		menu: {entries: BOOLEAN_CSG_OPERATION_TYPES.map((name, value) => ({name, value}))},
-	});
-}
-const ParamsConfig = new BooleanCsgParamsConfig();
+// class BooleanCsgParamsConfig extends NodeParamsConfig {
+// 	/** @param operation */
+// 	operation = ParamConfig.INTEGER(BOOLEAN_CSG_OPERATION_TYPES.indexOf(BooleanCsgOperationType.INTERSECT), {
+// 		menu: {entries: BOOLEAN_CSG_OPERATION_TYPES.map((name, value) => ({name, value}))},
+// 	});
+// }
+// const ParamsConfig = new BooleanCsgParamsConfig();
 
-export class BooleanCsgNode extends TypedCsgNode<BooleanCsgParamsConfig> {
-	override paramsConfig = ParamsConfig;
-	static override type() {
-		return 'boolean';
-	}
-	protected override initializeNode() {
-		this.io.inputs.setCount(2);
-	}
-	setOperation(operation: BooleanCsgOperationType) {
-		this.p.operation.set(BOOLEAN_CSG_OPERATION_TYPES.indexOf(operation));
-	}
+// export class BooleanCsgNode extends TypedCsgNode<BooleanCsgParamsConfig> {
+// 	override paramsConfig = ParamsConfig;
+// 	static override type() {
+// 		return 'boolean';
+// 	}
+// 	protected override initializeNode() {
+// 		this.io.inputs.setCount(2);
+// 	}
+// 	setOperation(operation: BooleanCsgOperationType) {
+// 		this.p.operation.set(BOOLEAN_CSG_OPERATION_TYPES.indexOf(operation));
+// 	}
 
-	override cook(inputCoreGroups: CsgCoreGroup[]) {
-		const objects0 = inputCoreGroups[0].objects();
-		const objects1 = inputCoreGroups[1].objects();
+// 	override cook(inputCoreGroups: CsgCoreGroup[]) {
+// 		const objects0 = inputCoreGroups[0].objects();
+// 		const objects1 = inputCoreGroups[1].objects();
 
-		const count = Math.min(objects0.length, objects1.length);
+// 		const count = Math.min(objects0.length, objects1.length);
 
-		const objects: CsgObject[] = [];
-		for (let i = 0; i < count; i++) {
-			const object0 = objects0[i];
-			const object1 = objects1[i];
+// 		const objects: CsgObject[] = [];
+// 		for (let i = 0; i < count; i++) {
+// 			const object0 = objects0[i];
+// 			const object1 = objects1[i];
 
-			const result = this._applyOperation(object0, object1);
-			if (result) {
-				objects.push(result);
-			}
-		}
-		this.setCsgCoreObjects(objects);
-	}
-	private _applyOperation(object0: CsgObject, object1: CsgObject) {
-		const method = this._method();
+// 			const result = this._applyOperation(object0, object1);
+// 			if (result) {
+// 				objects.push(result);
+// 			}
+// 		}
+// 		this.setCsgCoreObjects(objects);
+// 	}
+// 	private _applyOperation(object0: CsgObject, object1: CsgObject) {
+// 		const method = this._method();
 
-		const bothAreGeom3 = geometries.geom3.isA(object0) && geometries.geom3.isA(object1);
-		if (bothAreGeom3) {
-			return method(object0, object1);
-		}
-		const bothAreGeom2 = geometries.geom2.isA(object0) && geometries.geom2.isA(object1);
-		if (bothAreGeom2) {
-			// the transforms are applied for geom2, as otherwise the matrix is not taken into account
-			csgApplyTransform(object0);
-			csgApplyTransform(object1);
-			const result = method(object0, object1);
-			return result;
-		}
-	}
-	private _method() {
-		const operation = BOOLEAN_CSG_OPERATION_TYPES[this.pv.operation];
-		switch (operation) {
-			case BooleanCsgOperationType.INTERSECT:
-				return intersect;
-			case BooleanCsgOperationType.SUBTRACT:
-				return subtract;
-			case BooleanCsgOperationType.UNION:
-				return union;
-		}
-	}
-}
+// 		const bothAreGeom3 = geometries.geom3.isA(object0) && geometries.geom3.isA(object1);
+// 		if (bothAreGeom3) {
+// 			return method(object0, object1);
+// 		}
+// 		const bothAreGeom2 = geometries.geom2.isA(object0) && geometries.geom2.isA(object1);
+// 		if (bothAreGeom2) {
+// 			// the transforms are applied for geom2, as otherwise the matrix is not taken into account
+// 			csgApplyTransform(object0);
+// 			csgApplyTransform(object1);
+// 			const result = method(object0, object1);
+// 			return result;
+// 		}
+// 	}
+// 	private _method() {
+// 		const operation = BOOLEAN_CSG_OPERATION_TYPES[this.pv.operation];
+// 		switch (operation) {
+// 			case BooleanCsgOperationType.INTERSECT:
+// 				return intersect;
+// 			case BooleanCsgOperationType.SUBTRACT:
+// 				return subtract;
+// 			case BooleanCsgOperationType.UNION:
+// 				return union;
+// 		}
+// 	}
+// }

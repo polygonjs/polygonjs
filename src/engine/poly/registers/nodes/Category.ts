@@ -138,6 +138,7 @@ export const CATEGORY_SOP = {
 	ATTRIBUTE: 'attributes',
 	AUDIO: 'audio',
 	CAD: 'CAD',
+	CSG: 'CSG',
 	COMPUTER_VISION: 'computer vision',
 	DYNAMICS: 'dynamics',
 	FLOW: 'flow',

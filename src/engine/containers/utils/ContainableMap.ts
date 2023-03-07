@@ -4,7 +4,7 @@ import {TimelineBuilder} from '../../../core/animation/TimelineBuilder';
 import {AudioBuilder} from '../../../core/audio/AudioBuilder';
 import {NodeContext} from '../../poly/NodeContext';
 // import {CadCoreGroup} from '../../../core/geometry/cad/CadCoreGroup';
-import {CsgCoreGroup} from '../../../core/geometry/csg/CsgCoreGroup';
+// import {CsgCoreGroup} from '../../../core/geometry/csg/CsgCoreGroup';
 
 export interface ContainableMap {
 	[NodeContext.ACTOR]: string;
@@ -12,7 +12,7 @@ export interface ContainableMap {
 	[NodeContext.AUDIO]: AudioBuilder;
 	// [NodeContext.CAD]: string; //CadCoreGroup;
 	[NodeContext.COP]: Texture;
-	[NodeContext.CSG]: CsgCoreGroup;
+	// [NodeContext.CSG]: CsgCoreGroup;
 	[NodeContext.EVENT]: string;
 	[NodeContext.GL]: string;
 	[NodeContext.JS]: string;
@@ -30,7 +30,7 @@ export const ContainableClassMap = {
 	[NodeContext.AUDIO]: AudioBuilder,
 	// [NodeContext.CAD]: String, //CadCoreGroup,
 	[NodeContext.COP]: Texture,
-	[NodeContext.CSG]: CsgCoreGroup,
+	// [NodeContext.CSG]: CsgCoreGroup,
 	[NodeContext.EVENT]: String,
 	[NodeContext.GL]: String,
 	[NodeContext.JS]: String,

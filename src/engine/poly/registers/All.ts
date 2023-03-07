@@ -4,6 +4,7 @@ import {AllAssemblersRegister} from './assemblers/All';
 import {AllCamerasRegister} from './cameras/All';
 import {Poly} from '../../Poly';
 import {CoreFeaturesController} from '../../../core/FeaturesController';
+import {AllModulesRegister} from './modules/All';
 
 export class AllRegister {
 	private static _started = false;
@@ -21,7 +22,6 @@ export class AllRegister {
 			AllAssemblersRegister.run(Poly);
 		}
 
-		// modules are now registered separately
-		// AllModulesRegister.run(Poly);
+		AllModulesRegister.run(Poly);
 	}
 }

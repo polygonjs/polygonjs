@@ -27,16 +27,18 @@ import {BaseCoreObject} from '../_BaseObject';
 // import {cadShapeClone} from './toObject3D/CadShapeCommon';
 // import {Object3D} from 'three';
 import {CadObject} from './CadObject';
-import {CoreObjectType} from '../ObjectContent';
+import {CoreObjectType, MergeCompactOptions} from '../ObjectContent';
 import {Box3, Matrix4, Sphere, Vector3} from 'three';
 import {TransformTargetType} from '../../Transform';
 import {ObjectTransformSpace} from '../../TransformSpace';
+import {cadMergeCompact} from './utils/CadMerge';
 // import { CadLoaderSync } from './CadLoaderSync';
 // import {Object3D, Vector3} from 'three'
 // import {withCadException} from './CadExceptionHandler';
 // const BBOX_EMPTY = new Box3();
-const SPHERE_EMPTY = new Sphere();
-const ORIGIN = new Vector3(0, 0, 0);
+
+const _bbox = new Box3();
+const _bboxSize = new Vector3();
 export class CadCoreObject<T extends CadGeometryType> extends BaseCoreObject<CoreObjectType.CAD> {
 	constructor(protected override _object: CadObject<T>, index: number) {
 		super(_object, index);
@@ -59,18 +61,19 @@ export class CadCoreObject<T extends CadGeometryType> extends BaseCoreObject<Cor
 	override object() {
 		return this._object;
 	}
-	// static override position = cadObjectPosition as any;
 	static override position(object: CadObject<CadGeometryType>, target: Vector3) {
-		console.warn('cad position not implemented');
-		target.copy(ORIGIN);
-		// return target.copy(object.position);
+		object.boundingBox(_bbox);
+		_bbox.getCenter(target);
 	}
 	override boundingBox(target: Box3) {
 		this._object.boundingBox(target);
 	}
 	override boundingSphere(target: Sphere) {
-		console.warn('cad boundingSphere not implemented');
-		return SPHERE_EMPTY;
+		this.boundingBox(_bbox);
+		_bbox.getSize(_bboxSize);
+		_bbox.getCenter(target.center);
+		const diameter = Math.max(_bboxSize.x, _bboxSize.y, _bboxSize.z);
+		target.radius = diameter * 0.5;
 	}
 
 	static override applyMatrix<T extends CadGeometryType>(
@@ -81,75 +84,21 @@ export class CadCoreObject<T extends CadGeometryType> extends BaseCoreObject<Cor
 	) {
 		object.applyMatrix4(matrix);
 	}
-	// static override position(object: Object3D):Vector3 {
-	// 	// TODO: optimize
-	// 	return object.position;
-	// }
-	// override position(): Vector3 {
-	// 	return new Vector3()
-	// }
-	// dispose() {}
+	static override mergeCompact(options: MergeCompactOptions) {
+		const {objects, materialsByObjectType, mergedObjects, onError} = options;
+		try {
+			const newObjects = cadMergeCompact(objects as CadObject<CadGeometryType>[]);
 
-	// object() {
-	// 	return this._object;
-	// }
-	// type() {
-	// 	return this._type!;
-	// }
+			for (let newObject of newObjects) {
+				const material = materialsByObjectType.get(newObject.type);
+				if (material) {
+					newObject.material = material;
+				}
+			}
 
-	// clone(): CadCoreObject<T> {
-	// 	return new CadCoreObject(this._object.clone(),this._index)
-	// 	// return CadCoreObject.clone(this);
-	// }
-
-	// static override clone<T extends CadGeometryType>(srcObject: CadCoreObject<T>): CadCoreObject<T> {
-	// 	// const clonedObject = cloneCadObject<T>(srcObject.type(), srcObject.object());
-	// 	// if (clonedObject) {
-	// 		return new CadCoreObject(clonedObject, srcObject.type());
-	// 	// } else {
-	// 	// }
-
-	// 	// console.warn('not cloning');
-	// 	// return this as any as CadCoreObject<T>;
-	// }
-	// toObject3D(oc: OpenCascadeInstance, tesselationParams: TesselationParams): Object3D | Object3D[] | undefined {
-	// 	// return withCadException(oc, () => {
-	// 	return CadCoreObject.toObject3D(oc, this._object, this.type(), tesselationParams);
-	// 	// }) as any as Object3D;
-	// }
-
-	// static toObject3D(
-	// 	oc: OpenCascadeInstance,
-	// 	object: CadObject,
-	// 	type: CadObjectType,
-	// 	tesselationParams: TesselationParams
-	// ) {
-	// 	switch (type) {
-	// 		case CadObjectType.POINT_2D: {
-	// 			return cadPnt2dToObject3D(oc, object as gp_Pnt2d);
-	// 		}
-	// 		case CadObjectType.CURVE_2D: {
-	// 			return cadGeom2dCurveToObject3D(oc, object as Geom2d_Curve, tesselationParams);
-	// 		}
-	// 		// case CadObjectType.CURVE_3D: {
-	// 		// 	return cadGeomCurveToObject3D(oc, object as Geom_Curve, tesselationParams);
-	// 		// }
-	// 		case CadObjectType.VERTEX: {
-	// 			return cadVertexToObject3D(oc, object as TopoDS_Vertex);
-	// 		}
-	// 		case CadObjectType.EDGE: {
-	// 			return cadEdgeToObject3D(oc, object as TopoDS_Edge, tesselationParams);
-	// 		}
-	// 		case CadObjectType.WIRE: {
-	// 			return cadWireToObject3D(oc, object as TopoDS_Wire, tesselationParams);
-	// 		}
-	// 		case CadObjectType.FACE:
-	// 		case CadObjectType.SHELL:
-	// 		case CadObjectType.SOLID:
-	// 		case CadObjectType.COMPSOLID:
-	// 		case CadObjectType.COMPOUND: {
-	// 			return cadShapeToObject3D(oc, object as TopoDS_Shape, tesselationParams);
-	// 		}
-	// 	}
-	// }
+			mergedObjects.push(...newObjects);
+		} catch (e) {
+			onError((e as Error).message || 'unknown error');
+		}
+	}
 }

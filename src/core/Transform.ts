@@ -98,21 +98,16 @@ export class CoreTransform {
 	}
 
 	private _matrix = new Matrix4().identity();
-	private _matrix_q = new Quaternion();
-	private _matrix_euler = new Euler();
-	private _matrix_s = new Vector3();
-	matrix(t: Vector3, r: Vector3, s: Vector3, scale: number, rotation_order: RotationOrder) {
-		this._matrix_euler.set(
-			MathUtils.degToRad(r.x),
-			MathUtils.degToRad(r.y),
-			MathUtils.degToRad(r.z),
-			rotation_order
-		);
-		this._matrix_q.setFromEuler(this._matrix_euler);
+	private _matrixQ = new Quaternion();
+	private _matrixEuler = new Euler();
+	private _matrixS = new Vector3();
+	matrix(t: Vector3, r: Vector3, s: Vector3, scale: number, rotationOrder: RotationOrder) {
+		this._matrixEuler.set(MathUtils.degToRad(r.x), MathUtils.degToRad(r.y), MathUtils.degToRad(r.z), rotationOrder);
+		this._matrixQ.setFromEuler(this._matrixEuler);
 
-		this._matrix_s.copy(s).multiplyScalar(scale);
+		this._matrixS.copy(s).multiplyScalar(scale);
 
-		this._matrix.compose(t, this._matrix_q, this._matrix_s);
+		this._matrix.compose(t, this._matrixQ, this._matrixS);
 		return this._matrix;
 	}
 

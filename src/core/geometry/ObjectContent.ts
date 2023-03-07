@@ -1,15 +1,18 @@
 import {BufferGeometry, Object3D, Material, Mesh, Matrix4} from 'three';
 import {ObjectUtils} from '../ObjectUtils';
-import {CadGeometry} from './cad/CadCommon';
+import type {CadGeometry} from './cad/CadCommon';
+import type {CsgGeometry} from './csg/CsgCommon';
 
 export enum CoreObjectType {
 	THREEJS = 'Object3D',
-	CAD = 'cadObject',
+	CAD = 'CADObject',
+	CSG = 'CSGObject',
 }
 
 export interface ObjectGeometryMap {
 	[CoreObjectType.THREEJS]: BufferGeometry;
 	[CoreObjectType.CAD]: CadGeometry;
+	[CoreObjectType.CSG]: CsgGeometry;
 }
 export interface ObjectContent<T extends CoreObjectType> {
 	type: string;
@@ -42,4 +45,12 @@ export function objectContentCopyProperties(src: ObjectContent<CoreObjectType>, 
 		(target as Mesh).material = src.material;
 	}
 	target.userData = ObjectUtils.cloneDeep(src.userData); //JSON.parse(JSON.stringify(this.userData));
+}
+
+export interface MergeCompactOptions {
+	objects: ObjectContent<CoreObjectType>[];
+	mergedObjects: ObjectContent<CoreObjectType>[];
+	materialsByObjectType: Map<string, Material>;
+	objectType: string;
+	onError: (message: string) => void;
 }

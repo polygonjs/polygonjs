@@ -1,7 +1,7 @@
-import type {TopoDS_Wire, TesselationParams} from '../CadCommon';
+import type {TopoDS_Wire, CADTesselationParams} from '../CadCommon';
 import {BufferGeometry} from 'three';
 import {BaseSopOperation} from '../../../../engine/operations/sop/_Base';
-import {CAD_MATERIAL} from '../CadConstant';
+import {cadMaterialLine} from '../CadConstant';
 import {ObjectType} from '../../Constant';
 // import {CoreGeometryBuilderMerge} from '../../builders/Merge';
 import {CadLoaderSync} from '../CadLoaderSync';
@@ -9,7 +9,7 @@ import {cadShapeClone} from './CadShapeCommon';
 import {traverseEdges} from '../CadTraverse';
 import {cadEdgeToBufferGeometry} from './CadEdge';
 
-export function cadWireToObject3D(wire: TopoDS_Wire, tesselationParams: TesselationParams) {
+export function cadWireToObject3D(wire: TopoDS_Wire, tesselationParams: CADTesselationParams) {
 	const geometries: BufferGeometry[] = [];
 	const oc = CadLoaderSync.oc();
 	traverseEdges(oc, wire, (edge) => {
@@ -22,7 +22,7 @@ export function cadWireToObject3D(wire: TopoDS_Wire, tesselationParams: Tesselat
 	// do it at the cadNetwork level to control perf
 	// const geometry = CoreGeometryBuilderMerge.merge(geometries);
 	return geometries.map((geometry) =>
-		BaseSopOperation.createObject(geometry, ObjectType.LINE_SEGMENTS, CAD_MATERIAL[ObjectType.LINE_SEGMENTS])
+		BaseSopOperation.createObject(geometry, ObjectType.LINE_SEGMENTS, cadMaterialLine(tesselationParams.edgesColor))
 	);
 
 	// if (geometry) {

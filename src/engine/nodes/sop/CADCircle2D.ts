@@ -5,7 +5,7 @@
  */
 import {CADSopNode} from './_BaseCAD';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {step} from '../../../core/geometry/csg/CsgUiUtils';
+import {step} from '../../../core/geometry/cad/CadConstant';
 import {CadLoader} from '../../../core/geometry/cad/CadLoader';
 import {cadGeom2dCurveTranslate} from '../../../core/geometry/cad/toObject3D/CadGeom2dCurve';
 import {SopType} from '../../poly/registers/nodes/types/Sop';

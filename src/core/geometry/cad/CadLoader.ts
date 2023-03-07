@@ -1,4 +1,5 @@
 import type {OpenCascadeInstance} from './CadCommon';
+import {CadLoaderSync} from './CadLoaderSync';
 
 // 1 - full opencascade build
 // import initOpenCascade from 'opencascade.js';
@@ -8,7 +9,6 @@ import type {OpenCascadeInstance} from './CadCommon';
 import opencascadeCustomBuildWasm from './build/cadNodes.wasm';
 import opencascadeCustomBuild from './build/cadNodes.js';
 import initOpenCascade from 'opencascade.js';
-import {CadLoaderSync} from './CadLoaderSync';
 //
 
 let _resolves: Resolve[] = [];
@@ -29,12 +29,12 @@ export class CadLoader {
 
 			// const startTime = performance.now();
 			// 1 - full opencascade build
-			// const oc = await initOpenCascade();
+			// const oc = (await initOpenCascade()) as any as OpenCascadeInstance;
 			// 2 - custom opencascade build
-			const oc = await initOpenCascade({
+			const oc = (await initOpenCascade({
 				mainJS: opencascadeCustomBuild,
 				mainWasm: opencascadeCustomBuildWasm,
-			});
+			})) as unknown as OpenCascadeInstance;
 			//
 			//
 			// console.log('opencascade build loaded in:', performance.now() - startTime);

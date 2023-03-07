@@ -27,7 +27,8 @@ import type {
 	gp_Dir,
 	gp_XYZ,
 	TopAbs_ShapeEnum,
-} from 'opencascade.js';
+} from './build/cadNodes';
+// } from 'opencascade.js';
 export type {
 	OpenCascadeInstance,
 	BRepMesh_IncrementalMesh,
@@ -175,14 +176,14 @@ export interface CadTypeMap {
 	[CadGeometryType.COMPSOLID]: TopoDS_CompSolid;
 	[CadGeometryType.COMPOUND]: TopoDS_Compound;
 }
-export interface CachedTesselationParams {
+export interface CachedCADTesselationParams {
 	linearTolerance: number;
 	angularTolerance: number;
 	curveAbscissa: number;
 	curveTolerance: number;
 }
 
-export interface TesselationParams extends CachedTesselationParams {
+export interface CADTesselationParams extends CachedCADTesselationParams {
 	wireframe: boolean;
 	displayMeshes: boolean;
 	displayEdges: boolean;

@@ -1,13 +1,12 @@
 import {BaseSopOperation} from './_Base';
+import {Group, Material, Mesh} from 'three';
 import {CoreGroup, Object3DWithGeometry} from '../../../core/geometry/Group';
-import {ObjectType, objectTypeFromConstructor} from '../../../core/geometry/Constant';
-import {Group, Mesh, Material, BufferGeometry} from 'three';
 import {MapUtils} from '../../../core/MapUtils';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
-import {CoreGeometryBuilderMerge} from '../../../core/geometry/builders/Merge';
-import {CoreObjectType, isObject3D, ObjectContent} from '../../../core/geometry/ObjectContent';
+import {CoreObjectType, ObjectContent} from '../../../core/geometry/ObjectContent';
+import {coreObjectFactory} from '../../../core/geometry/CoreObjectFactory';
 
 interface MergeSopParams extends DefaultOperationParams {
 	compact: boolean;
@@ -30,7 +29,7 @@ export class MergeSopOperation extends BaseSopOperation {
 		let allObjects: ObjectContent<CoreObjectType>[] = [];
 		for (let inputCoreGroup of inputCoreGroups) {
 			if (inputCoreGroup) {
-				const objects = inputCoreGroup.threejsObjects();
+				const objects = inputCoreGroup.allObjects();
 				if (isBooleanTrue(params.compact)) {
 					for (let object of objects) {
 						object.traverse((child) => {
@@ -52,66 +51,58 @@ export class MergeSopOperation extends BaseSopOperation {
 
 		return this.createCoreGroupFromObjects(allObjects);
 	}
-	private _makeCompact(allObjects: ObjectContent<CoreObjectType>[]): Object3DWithGeometry[] {
-		const materialsByObjectType: Map<ObjectType, Material> = new Map();
-		const objectsByType: Map<ObjectType, Object3DWithGeometry[]> = new Map();
+	private _makeCompact(allObjects: ObjectContent<CoreObjectType>[]): ObjectContent<CoreObjectType>[] {
+		const materialsByObjectType: Map<string, Material> = new Map();
+		const objectsByType: Map<string, ObjectContent<CoreObjectType>[]> = new Map();
 		// objects_by_type.set(ObjectType.MESH, []);
 		// objects_by_type.set(ObjectType.POINTS, []);
 		// objects_by_type.set(ObjectType.LINE_SEGMENTS, []);
-		const orderedObjectTypes: ObjectType[] = [];
-
+		const orderedObjectTypes: string[] = [];
 		for (let object of allObjects) {
 			object.traverse((object3d) => {
-				if (isObject3D(object3d)) {
-					if (object3d instanceof Group) {
-						// we do not want groups,
-						// as their children will end up being duplicated
-						return;
+				if (object3d instanceof Group) {
+					// we do not want groups,
+					// as their children will end up being duplicated
+					return;
+				}
+				const objectType: string | undefined = object.type; //objectTypeFromConstructor(object.constructor);
+				if (objectType) {
+					if (!orderedObjectTypes.includes(objectType)) {
+						orderedObjectTypes.push(objectType);
 					}
-					const object = object3d as Object3DWithGeometry;
-					if (object.geometry) {
-						const objectType = objectTypeFromConstructor(object.constructor);
-						if (objectType) {
-							if (!orderedObjectTypes.includes(objectType)) {
-								orderedObjectTypes.push(objectType);
-							}
-							if (objectType) {
-								const found_mat = materialsByObjectType.get(objectType);
-								if (!found_mat) {
-									materialsByObjectType.set(objectType, (object as Mesh).material as Material);
-								}
-								MapUtils.pushOnArrayAtEntry(objectsByType, objectType, object);
-							}
+					if (objectType) {
+						const found_mat = materialsByObjectType.get(objectType);
+						if (!found_mat) {
+							materialsByObjectType.set(objectType, (object as Mesh).material as Material);
 						}
+						MapUtils.pushOnArrayAtEntry(objectsByType, objectType, object);
 					}
 				}
 			});
 		}
-		const mergedObjects: Object3DWithGeometry[] = [];
+		const mergedObjects: ObjectContent<CoreObjectType>[] = [];
 		orderedObjectTypes.forEach((objectType) => {
 			const objects = objectsByType.get(objectType);
-			if (objects) {
-				const geometries: BufferGeometry[] = [];
-				for (let object of objects) {
-					const geometry = object.geometry;
-					geometry.applyMatrix4(object.matrix);
-					geometries.push(geometry);
-				}
-
-				// TODO: test that this works with geometries with same attributes
-				try {
-					const merged_geometry = CoreGeometryBuilderMerge.merge(geometries);
-					if (merged_geometry) {
-						const material = materialsByObjectType.get(objectType);
-						const object = this.createObject(merged_geometry, objectType, material);
-						object.matrixAutoUpdate = false;
-						mergedObjects.push(object as Object3DWithGeometry);
-					} else {
-						this.states?.error.set('merge failed, check that input geometries have the same attributes');
-					}
-				} catch (e) {
-					this.states?.error.set((e as Error).message);
-				}
+			if (objects && objects.length != 0) {
+				// even with just 1 geometry,
+				// we should still perform the merge,
+				// to make sure the output is consistent.
+				// The main discrepency notices is that if not merged,
+				// any non-identity matrix will be preserved, when it should not
+				// if (objects.length == 1) {
+				// 	mergedObjects.push(objects[0]);
+				// } else {
+				const coreObjectClass = coreObjectFactory(objects[0]);
+				coreObjectClass.mergeCompact({
+					objects,
+					materialsByObjectType,
+					objectType,
+					mergedObjects,
+					onError: (message) => {
+						this._node?.states.error.set(message);
+					},
+				});
+				// }
 			}
 		});
 

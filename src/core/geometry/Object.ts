@@ -16,19 +16,20 @@ import {
 import {CoreGeometry} from './Geometry';
 import {GroupString, Object3DWithGeometry} from './Group';
 import {CoreAttribute} from './Attribute';
-import {dataFromConstructor} from './Constant';
+import {dataFromConstructor, ObjectType} from './Constant';
 import {CorePoint} from './Point';
 import {CoreMaterial, MaterialWithCustomMaterials} from './Material';
 import {CoreString} from '../String';
 import {ObjectUtils} from '../ObjectUtils';
 import {ArrayUtils} from '../ArrayUtils';
 import {ThreeMeshBVHHelper} from '../../engine/operations/sop/utils/Bvh/ThreeMeshBVHHelper';
-
-import {CoreObjectType} from './ObjectContent';
+import {CoreGeometryBuilderMerge} from './builders/Merge';
+import {CoreObjectType, MergeCompactOptions} from './ObjectContent';
 import {BaseCoreObject} from './_BaseObject';
 import {TransformTargetType} from '../Transform';
 import {TypeAssert} from '../../engine/poly/Assert';
 import {applyTransformWithSpaceToObject, ObjectTransformSpace} from '../TransformSpace';
+import {BaseSopOperation} from '../../engine/operations/sop/_Base';
 // import {computeBoundingBoxFromObject3D} from './BoundingBox';
 // import {setSphereFromObject} from './BoundingSphere';
 
@@ -227,5 +228,31 @@ export class CoreObject extends BaseCoreObject<CoreObjectType.THREEJS> {
 			}
 		}
 		TypeAssert.unreachable(transformTargetType);
+	}
+	static override mergeCompact(options: MergeCompactOptions) {
+		const {objects, materialsByObjectType, objectType, mergedObjects, onError} = options;
+
+		const geometries: BufferGeometry[] = [];
+		for (let object of objects) {
+			const geometry = (object as Mesh).geometry;
+			if (geometry) {
+				geometry.applyMatrix4((object as Mesh).matrix);
+				geometries.push(geometry);
+			}
+		}
+
+		try {
+			const mergedGeometry = CoreGeometryBuilderMerge.merge(geometries);
+			if (mergedGeometry) {
+				const material = materialsByObjectType.get(objectType);
+				const object = BaseSopOperation.createObject(mergedGeometry, objectType as ObjectType, material);
+				object.matrixAutoUpdate = false;
+				mergedObjects.push(object as Object3DWithGeometry);
+			} else {
+				onError('merge failed, check that input geometries have the same attributes');
+			}
+		} catch (e) {
+			onError((e as Error).message || 'unknown error');
+		}
 	}
 }

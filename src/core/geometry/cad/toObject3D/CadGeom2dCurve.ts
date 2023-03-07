@@ -1,14 +1,14 @@
-import type {Geom2d_Curve, TesselationParams} from '../CadCommon';
+import type {Geom2d_Curve, CADTesselationParams} from '../CadCommon';
 import {BufferGeometry, Float32BufferAttribute, Vector2, MathUtils} from 'three';
 import {BaseSopOperation} from '../../../../engine/operations/sop/_Base';
-import {CAD_MATERIAL} from '../CadConstant';
+import {cadMaterialLine} from '../CadConstant';
 import {CadLoaderSync} from '../CadLoaderSync';
 // import {withCadException} from '../CadExceptionHandler';
 import {ObjectType} from '../../Constant';
 
 const STRIDE = 3;
 // let point: gp_Pnt2d | undefined;
-export function cadGeom2dCurveToObject3D(object: Geom2d_Curve, tesselationParams: TesselationParams) {
+export function cadGeom2dCurveToObject3D(object: Geom2d_Curve, tesselationParams: CADTesselationParams) {
 	const oc = CadLoaderSync.oc();
 	const curve = new oc.Handle_Geom2d_Curve_2(object);
 	const geom2Dadaptor = new oc.Geom2dAdaptor_Curve_2(curve);
@@ -44,7 +44,11 @@ export function cadGeom2dCurveToObject3D(object: Geom2d_Curve, tesselationParams
 	const geometry = new BufferGeometry();
 	geometry.setAttribute('position', new Float32BufferAttribute(positions || [], 3));
 	geometry.setIndex(indices || []);
-	return BaseSopOperation.createObject(geometry, ObjectType.LINE_SEGMENTS, CAD_MATERIAL[ObjectType.LINE_SEGMENTS]);
+	return BaseSopOperation.createObject(
+		geometry,
+		ObjectType.LINE_SEGMENTS,
+		cadMaterialLine(tesselationParams.edgesColor)
+	);
 }
 
 // let _t: gp_Vec2d | undefined;

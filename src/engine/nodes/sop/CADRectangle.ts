@@ -5,7 +5,7 @@
  */
 import {CADSopNode} from './_BaseCAD';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {step} from '../../../core/geometry/csg/CsgUiUtils';
+import {step} from '../../../core/geometry/cad/CadConstant';
 import {CadLoader} from '../../../core/geometry/cad/CadLoader';
 import type {OpenCascadeInstance} from '../../../core/geometry/cad/CadCommon';
 import {CoreGroup} from '../../../core/geometry/Group';

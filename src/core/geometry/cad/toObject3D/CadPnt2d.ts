@@ -1,7 +1,7 @@
 import {BufferGeometry, BufferAttribute, Vector2} from 'three';
 import {BaseSopOperation} from '../../../../engine/operations/sop/_Base';
 import {ObjectType} from '../../Constant';
-import {CAD_MATERIAL} from '../CadConstant';
+import {cadMaterialPoint} from '../CadConstant';
 import {CadLoaderSync} from '../CadLoaderSync';
 import type {gp_Pnt2d} from '../CadCommon';
 
@@ -9,7 +9,7 @@ export function cadPnt2dToObject3D(point: gp_Pnt2d) {
 	const geo = new BufferGeometry();
 	const positions: number[] = [point.X(), point.Y(), 0];
 	geo.setAttribute('position', new BufferAttribute(new Float32Array(positions), 3));
-	return BaseSopOperation.createObject(geo, ObjectType.POINTS, CAD_MATERIAL[ObjectType.POINTS]);
+	return BaseSopOperation.createObject(geo, ObjectType.POINTS, cadMaterialPoint());
 }
 
 export function cadPnt2dTransform(point: gp_Pnt2d, t: Vector2) {

@@ -1,14 +1,14 @@
 import {traverseEdges, traverseFaces} from '../CadTraverse';
-import type {OpenCascadeInstance, TopoDS_Shape, TesselationParams, CachedTesselationParams} from '../CadCommon';
+import type {OpenCascadeInstance, TopoDS_Shape, CADTesselationParams, CachedCADTesselationParams} from '../CadCommon';
 import {faceData} from '../CadCoreFace';
 import {BufferGeometry, BufferAttribute, Object3D} from 'three';
 import {BaseSopOperation} from '../../../../engine/operations/sop/_Base';
 import {ObjectType} from '../../Constant';
-import {CAD_MATERIAL} from '../CadConstant';
+import {cadMaterialMesh} from '../CadConstant';
 import {cadEdgeToObject3D} from './CadEdge';
 import {CadLoaderSync} from '../CadLoaderSync';
 
-function cachedTesselationParamsEqual(params1: CachedTesselationParams, params2: CachedTesselationParams) {
+function cachedTesselationParamsEqual(params1: CachedCADTesselationParams, params2: CachedCADTesselationParams) {
 	return (
 		params1.linearTolerance == params2.linearTolerance &&
 		params1.angularTolerance == params2.angularTolerance &&
@@ -17,8 +17,8 @@ function cachedTesselationParamsEqual(params1: CachedTesselationParams, params2:
 	);
 }
 
-const tesselationParamsByShape: WeakMap<TopoDS_Shape, CachedTesselationParams> = new WeakMap();
-export function cadShapeToObject3D(object: TopoDS_Shape, tesselationParams: TesselationParams) {
+const tesselationParamsByShape: WeakMap<TopoDS_Shape, CachedCADTesselationParams> = new WeakMap();
+export function cadShapeToObject3D(object: TopoDS_Shape, tesselationParams: CADTesselationParams) {
 	const oc = CadLoaderSync.oc();
 	let cachedParams = tesselationParamsByShape.get(object);
 	if (cachedParams && !cachedTesselationParamsEqual(cachedParams, tesselationParams)) {
@@ -49,7 +49,7 @@ export function cadShapeToObject3D(object: TopoDS_Shape, tesselationParams: Tess
 	return objects;
 }
 
-function _createMesh(oc: OpenCascadeInstance, object: TopoDS_Shape, tesselationParams: TesselationParams) {
+function _createMesh(oc: OpenCascadeInstance, object: TopoDS_Shape, tesselationParams: CADTesselationParams) {
 	const mesher = new oc.BRepMesh_IncrementalMesh_2(
 		object,
 		tesselationParams.linearTolerance,
@@ -78,9 +78,10 @@ function _createMesh(oc: OpenCascadeInstance, object: TopoDS_Shape, tesselationP
 		geo.setAttribute('normal', new BufferAttribute(new Float32Array(normals), 3));
 		geo.setIndex(indices);
 
-		const materialPair = CAD_MATERIAL[ObjectType.MESH];
-		const material = tesselationParams.wireframe ? materialPair.wireframe : materialPair.plain;
-		material.color.copy(tesselationParams.meshesColor);
-		return BaseSopOperation.createObject(geo, ObjectType.MESH, material);
+		return BaseSopOperation.createObject(
+			geo,
+			ObjectType.MESH,
+			cadMaterialMesh(tesselationParams.meshesColor, tesselationParams.wireframe)
+		);
 	}
 }

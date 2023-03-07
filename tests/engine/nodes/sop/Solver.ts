@@ -18,7 +18,7 @@ function create_required_nodes(node: SolverSopNode) {
 	return {switch1, subnetInput1, solverPreviousFrame, subnetOutput1};
 }
 
-QUnit.test('solver simple', async (assert) => {
+QUnit.test('sop/solver simple', async (assert) => {
 	const scene = window.scene;
 	scene.setFrame(0);
 	await scene.waitForCooksCompleted();

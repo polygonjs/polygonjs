@@ -1,5 +1,5 @@
 /**
- * Transform 2D points and curves
+ * Transform 2D CAD points and curves
  *
  *
  */

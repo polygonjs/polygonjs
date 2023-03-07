@@ -31,7 +31,7 @@ export enum NodeContext {
 	AUDIO = 'audio',
 	// CAD = 'cad',
 	COP = 'cop',
-	CSG = 'csg',
+	// CSG = 'csg',
 	EVENT = 'event',
 	GL = 'gl',
 	JS = 'js',
@@ -49,7 +49,7 @@ export type NodeContextUnion =
 	| NodeContext.AUDIO
 	// | NodeContext.CAD
 	| NodeContext.COP
-	| NodeContext.CSG
+	// | NodeContext.CSG
 	| NodeContext.EVENT
 	| NodeContext.GL
 	| NodeContext.JS

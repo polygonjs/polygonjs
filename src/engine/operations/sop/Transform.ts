@@ -9,17 +9,27 @@ import {
 	TransformTargetType,
 	TRANSFORM_TARGET_TYPES,
 } from '../../../core/Transform';
+
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
-import {MathUtils, Vector3, Object3D} from 'three';
+import {coreObjectFactory} from '../../../core/geometry/CoreObjectFactory';
+import {MathUtils, Vector3, Object3D, Matrix4, Euler, Quaternion} from 'three';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 import {
 	OBJECT_TRANSFORM_SPACES,
 	ObjectTransformSpace,
 	applyTransformWithSpaceToObject,
 } from '../../../core/TransformSpace';
+import {CoreObjectType, isObject3D, ObjectContent} from '../../../core/geometry/ObjectContent';
 // import type { CadCoreObject } from '../../../core/geometry/cad/CadCoreObject';
 // import type{ CadGeometryType } from '../../../core/geometry/cad/CadCommon';
 // import { cadTransform } from '../../../core/geometry/cad/operations/CadTransform';
+
+// const _t = new Vector3();
+const _r = new Vector3();
+const _euler = new Euler();
+const _q = new Quaternion();
+const _s = new Vector3();
+const _mat4 = new Matrix4();
 
 export enum TransformObjectMode {
 	SET = 'set matrix',
@@ -62,19 +72,35 @@ export class TransformSopOperation extends BaseSopOperation {
 	override cook(inputCoreGroups: CoreGroup[], params: TransformSopParams) {
 		const coreGroup = inputCoreGroups[0];
 
-		this._applyTransform(coreGroup.threejsObjects(), params);
+		const inputObjects = coreGroup.allObjects();
+		for (let inputObject of inputObjects) {
+			this._applyTransform(inputObject, coreGroup, params);
+		}
 		// this._applyCadTransform(coreGroup.cadCoreObjects(), params);
 		coreGroup.resetBoundingBox();
 		return coreGroup;
 	}
-	private _applyTransform(objects: Object3D[], params: TransformSopParams) {
+	private _applyTransform(object: ObjectContent<CoreObjectType>, coreGroup: CoreGroup, params: TransformSopParams) {
+		if (isObject3D(object)) {
+			this._applyTransformWithTransformTargetType(object, coreGroup, params);
+		} else {
+			this._applyTransformWithoutTransformTargetType(object, params);
+		}
+	}
+	private _applyTransformWithoutTransformTargetType(
+		object: ObjectContent<CoreObjectType>,
+		params: TransformSopParams
+	) {
+		this._updateObject(object, params);
+	}
+	private _applyTransformWithTransformTargetType(object: Object3D, coreGroup: CoreGroup, params: TransformSopParams) {
 		const mode = TRANSFORM_TARGET_TYPES[params.applyOn];
 		switch (mode) {
 			case TransformTargetType.GEOMETRY: {
-				return this._updateGeometries(objects, params);
+				return this._updateGeometry(object, coreGroup, params);
 			}
 			case TransformTargetType.OBJECT: {
-				return this._updateObjects(objects, params);
+				return this._updateObject(object, params);
 			}
 		}
 		TypeAssert.unreachable(mode);
@@ -89,22 +115,20 @@ export class TransformSopOperation extends BaseSopOperation {
 	// }
 
 	private _point_pos = new Vector3();
-	private _updateGeometries(objects: Object3D[], params: TransformSopParams) {
+	private _updateGeometry(object: Object3D, coreGroup: CoreGroup, params: TransformSopParams) {
 		const matrix = this._matrix(params);
 
 		if (params.group.trim() === '') {
-			for (let object of objects) {
-				object.traverse((childObject) => {
-					const geometry = (childObject as Object3DWithGeometry).geometry;
-					if (geometry) {
-						geometry.translate(-params.pivot.x, -params.pivot.y, -params.pivot.z);
-						geometry.applyMatrix4(matrix);
-						geometry.translate(params.pivot.x, params.pivot.y, params.pivot.z);
-					}
-				});
-			}
+			object.traverse((childObject) => {
+				const geometry = (childObject as Object3DWithGeometry).geometry;
+				if (geometry) {
+					geometry.translate(-params.pivot.x, -params.pivot.y, -params.pivot.z);
+					geometry.applyMatrix4(matrix);
+					geometry.translate(params.pivot.x, params.pivot.y, params.pivot.z);
+				}
+			});
 		} else {
-			const coreGroup = CoreGroup._fromObjects(objects);
+			// const coreGroup = CoreGroup._fromObjects(objects);
 			const points = coreGroup.pointsFromGroup(params.group);
 			for (let point of points) {
 				const position = point.getPosition(this._point_pos).sub(params.pivot);
@@ -114,51 +138,52 @@ export class TransformSopOperation extends BaseSopOperation {
 		}
 	}
 
-	private _updateObjects(objects: Object3D[], params: TransformSopParams) {
+	private _updateObject(object: ObjectContent<CoreObjectType>, params: TransformSopParams) {
 		const objectMode = TRANSFORM_OBJECT_MODES[params.objectMode];
 		switch (objectMode) {
 			case TransformObjectMode.SET: {
-				return this._setMatrix(objects, params);
+				return this._setMatrix(object, params);
 			}
 			case TransformObjectMode.MULT: {
-				return this._multMatrix(objects, params);
+				return this._multMatrix(object, params);
 			}
 		}
 		TypeAssert.unreachable(objectMode);
 	}
 
-	private _objectScale = new Vector3();
-	private _r = new Vector3();
-	private _setMatrix(objects: Object3D[], params: TransformSopParams) {
-		for (let object of objects) {
-			object.position.copy(params.t);
-			const order = ROTATION_ORDERS[params.rotationOrder];
-			this._r.copy(params.r).multiplyScalar(MathUtils.DEG2RAD);
-			object.rotation.set(this._r.x, this._r.y, this._r.z, order);
-			this._objectScale.copy(params.s).multiplyScalar(params.scale);
-			object.scale.copy(this._objectScale);
-			object.updateMatrix();
-		}
+	private _setMatrix(object: ObjectContent<CoreObjectType>, params: TransformSopParams) {
+		const order = ROTATION_ORDERS[params.rotationOrder];
+		_r.copy(params.r).multiplyScalar(MathUtils.DEG2RAD);
+		_euler.set(_r.x, _r.y, _r.z, order);
+		_q.setFromEuler(_euler);
+		_s.copy(params.s).multiplyScalar(params.scale);
+		_mat4.compose(params.t, _q, _s);
+		coreObjectFactory(object).applyMatrix(
+			object,
+			_mat4,
+			TRANSFORM_TARGET_TYPES[params.applyOn],
+			ObjectTransformSpace.LOCAL
+		);
 	}
 
 	// private _objectPosition = new Vector3();
-	private _multMatrix(objects: Object3D[], params: TransformSopParams) {
+	private _multMatrix(object: ObjectContent<CoreObjectType>, params: TransformSopParams) {
 		const matrix = this._matrix(params);
 		const transformSpace = OBJECT_TRANSFORM_SPACES[params.objectTransformSpace];
-		for (let object of objects) {
-			applyTransformWithSpaceToObject(object, matrix, transformSpace);
-			// // center to origin
-			// // this._objectPosition.copy(object.position);
-			// // object.position.set(0, 0, 0);
-			// object.updateMatrix();
-			// // apply matrix
-			// // object.applyMatrix4(matrix);
-			// object.matrix.multiply(matrix);
-			// // revert to position
-			// // object.position.add(this._objectPosition);
-			// // object.updateMatrix();
-			// object.matrix.decompose(object.position, object.quaternion, object.scale);
-		}
+		// for (let object of objects) {
+		applyTransformWithSpaceToObject(object, matrix, transformSpace);
+		// // center to origin
+		// // this._objectPosition.copy(object.position);
+		// // object.position.set(0, 0, 0);
+		// object.updateMatrix();
+		// // apply matrix
+		// // object.applyMatrix4(matrix);
+		// object.matrix.multiply(matrix);
+		// // revert to position
+		// // object.position.add(this._objectPosition);
+		// // object.updateMatrix();
+		// object.matrix.decompose(object.position, object.quaternion, object.scale);
+		// }
 	}
 
 	private _matrix(params: TransformSopParams) {

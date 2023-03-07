@@ -12,7 +12,7 @@ import {makeAttribReactiveSimple} from './attribute/Simple';
 import {AttributeCallbackQueue} from './attribute/AttributeCallbackQueue';
 import {SetUtils} from '../../core/SetUtils';
 import {MapUtils} from '../../core/MapUtils';
-import {ObjectContent, CoreObjectType, ObjectGeometryMap} from './ObjectContent';
+import {ObjectContent, CoreObjectType, ObjectGeometryMap, MergeCompactOptions} from './ObjectContent';
 import {TransformTargetType} from '../Transform';
 import {ObjectTransformSpace} from '../TransformSpace';
 // import {computeBoundingBoxFromObject3D} from './BoundingBox';
@@ -483,5 +483,8 @@ export abstract class BaseCoreObject<T extends CoreObjectType> extends CoreEntit
 		transformSpace: ObjectTransformSpace
 	) {
 		console.warn('applyMatrix.override required', this);
+	}
+	static mergeCompact(options: MergeCompactOptions) {
+		console.warn('mergeCompact.override required', this);
 	}
 }

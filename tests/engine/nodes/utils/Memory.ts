@@ -13,7 +13,7 @@ QUnit.test('nodes can dispose themselves when removed by their parents', async (
 	scatter.p.pointsCount.set(`bbox('${box.path()}')`);
 
 	const maxGraphNodesCount = scene.graph.nodesCount();
-	assert.equal(maxGraphNodesCount, startGraphNodesCount + 93);
+	assert.equal(maxGraphNodesCount, startGraphNodesCount + 104);
 
 	root.removeNode(geo);
 

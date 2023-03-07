@@ -89,7 +89,6 @@ export class GeometryContainer extends TypedContainer<NodeContext.SOP> {
 		if (this._content && core_group) {
 			const coreObjects = core_group.allCoreObjects();
 			for (let core_object of coreObjects) {
-				console.log(core_object);
 				const human_type = core_object.humanType();
 				names_by_type[human_type] = names_by_type[human_type] || [];
 				names_by_type[human_type].push(core_object.name());
