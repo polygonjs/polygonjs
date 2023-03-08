@@ -1,4 +1,4 @@
-import {BooleanCsgOperationType} from '../../../../src/engine/nodes/sop/CSBBoolean';
+import {BooleanCsgOperationType} from '../../../../src/engine/nodes/sop/CSGBoolean';
 import {BufferAttribute, Box3, Vector3} from 'three';
 const tmpBox = new Box3();
 const tmpSize = new Vector3();

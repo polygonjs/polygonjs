@@ -3,13 +3,18 @@ import {CoreObject} from './Object';
 import {CoreObjectType, isObject3D, ObjectContent} from './ObjectContent';
 import {Object3D} from 'three';
 
+type BaseCoreObjectInstance = BaseCoreObject<CoreObjectType>;
+// type BaseCoreObjectClass = typeof BaseCoreObject<CoreObjectType>;
+class BaseCoreObjectClass extends BaseCoreObject<CoreObjectType> {}
+type BaseCoreObjectClassClass = typeof BaseCoreObjectClass;
+
 export type CoreObjectClassFactoryCheckFunction = (
 	object: ObjectContent<CoreObjectType>
-) => undefined | typeof BaseCoreObject<CoreObjectType>;
+) => BaseCoreObjectClassClass | undefined;
 export type CoreObjectInstanceFactoryCheckFunction = (
 	object: ObjectContent<CoreObjectType>,
 	index: number
-) => undefined | BaseCoreObject<CoreObjectType>;
+) => BaseCoreObjectInstance | undefined;
 export type CoreObjectFactoryCheckFunctions = {
 	class: CoreObjectClassFactoryCheckFunction;
 	instance: CoreObjectInstanceFactoryCheckFunction;
@@ -37,7 +42,7 @@ export function registerCoreObjectCheckFunctions(checkFunctions: CoreObjectFacto
 	coreObjectCheckFunctions.push(checkFunctions);
 }
 
-export function coreObjectFactory(object: ObjectContent<CoreObjectType>): typeof BaseCoreObject<CoreObjectType> {
+export function coreObjectFactory(object: ObjectContent<CoreObjectType>): BaseCoreObjectClassClass {
 	for (let checkFunction of coreObjectCheckFunctions) {
 		const result = checkFunction.class(object);
 		if (result) {

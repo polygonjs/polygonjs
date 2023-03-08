@@ -87,6 +87,7 @@
 		"esbuild-loader": "2.21.0",
 		"esbuild-plugin-import-map": "2.1.0",
 		"eslint": "8.26.0",
+		"file-loader": "6.2.0",
 		"fork-ts-checker-webpack-plugin": "7.3.0",
 		"html-loader": "3.1.0",
 		"html-webpack-plugin": "5.5.0",

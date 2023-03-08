@@ -28,5 +28,5 @@
 		// "typeRoots": []
 	},
 	// "include": ["./**/*.ts", "./**/*.vue"],
-	"exclude": ["node_modules", "modules", "dist", "public", "webpack"]
+	"exclude": ["node_modules", "modules", "dist", "public", "webpack", "src/core/geometry/cad/build"]
 }

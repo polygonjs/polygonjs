@@ -14,6 +14,7 @@ const webpack = require('webpack');
 // loaders
 const glsl = require('./loaders/glsl');
 const ts = require('./loaders/ts');
+const opencascade = require('./loaders/opencascade');
 
 const POLYGONJS_VERSION = JSON.stringify(require('../../package.json').version);
 
@@ -74,6 +75,10 @@ module.exports = (options = {}) => {
 			extensions: ['.ts', '.js'],
 			fallback: {
 				fs: false, // to attempt bundling ammo-typed without error in prod
+				path: false, // opencascade
+				assert: false, // opencascade
+				crypto: false, // opencascade
+				util: false, // opencascade
 			},
 		},
 		module: {
@@ -81,6 +86,7 @@ module.exports = (options = {}) => {
 				// engine
 				ts(),
 				glsl,
+				opencascade,
 			],
 		},
 		experiments: {
