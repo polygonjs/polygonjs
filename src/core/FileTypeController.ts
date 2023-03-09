@@ -30,6 +30,7 @@ export enum GeometryExtension {
 	OBJ = 'obj',
 	PDB = 'pdb',
 	PLY = 'ply',
+	STEP = 'step',
 	STL = 'stl',
 	SVG = 'svg',
 }
@@ -44,6 +45,7 @@ export const GEOMETRY_EXTENSIONS: string[] = [
 	GeometryExtension.OBJ,
 	GeometryExtension.PDB,
 	GeometryExtension.PLY,
+	GeometryExtension.STEP,
 	GeometryExtension.STL,
 	GeometryExtension.SVG,
 ];

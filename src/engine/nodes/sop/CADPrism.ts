@@ -5,7 +5,7 @@
  */
 import {CADSopNode} from './_BaseCAD';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {CadGeometryType, cadGeometryTypeFromShape} from '../../../core/geometry/cad/CadCommon';
+import {CadGC, CadGeometryType, cadGeometryTypeFromShape} from '../../../core/geometry/cad/CadCommon';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 import {CadLoaderSync} from '../../../core/geometry/cad/CadLoaderSync';
@@ -46,19 +46,21 @@ export class CADPrismSopNode extends CADSopNode<CADPrismSopParamsConfig> {
 		const newObjects: CadObject<CadGeometryType>[] = [];
 		const inputObjects = cadFilterObjects(inputCoreGroup.cadObjects(), CadGeometryType.WIRE);
 		if (inputObjects) {
-			for (let object of inputObjects) {
-				const wire = object.cadGeometry();
-				// TODO: cad/convert or cad/makeFace
-				const faceApi = new oc.BRepBuilderAPI_MakeFace_15(wire, true);
-				const face = faceApi.Face();
-				const prismApi = new oc.BRepPrimAPI_MakePrism_1(face, prismVec, false, true);
-				const prism = prismApi.Shape();
-				const type = cadGeometryTypeFromShape(oc, prism);
-				if (type) {
-					const newObject = new CadObject(prism, type);
-					newObjects.push(newObject);
+			CadGC.withGC((r) => {
+				for (let object of inputObjects) {
+					const wire = object.cadGeometry();
+					// TODO: cad/convert or cad/makeFace
+					const faceApi = r(new oc.BRepBuilderAPI_MakeFace_15(wire, true));
+					const face = faceApi.Face();
+					const prismApi = r(new oc.BRepPrimAPI_MakePrism_1(face, prismVec, false, true));
+					const prism = prismApi.Shape();
+					const type = cadGeometryTypeFromShape(oc, prism);
+					if (type) {
+						const newObject = new CadObject(prism, type);
+						newObjects.push(newObject);
+					}
 				}
-			}
+			});
 		}
 
 		this.setCADObjects(newObjects);

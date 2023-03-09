@@ -12,6 +12,10 @@ import type {
 	gp_XYZ,
 	gp_Pln,
 	Bnd_Box,
+	TopLoc_Location,
+	Message_ProgressRange,
+	TopTools_ListOfShape,
+	GProp_GProps,
 } from './CadCommon';
 
 let _oc: OpenCascadeInstance | undefined;
@@ -35,6 +39,10 @@ export class CadLoaderSync {
 		this.gp_Vec = new oc.gp_Vec_1();
 		this.gp_XYZ = new oc.gp_XYZ_1();
 		this.Bnd_Box = new oc.Bnd_Box_1();
+		this.TopLoc_Location = new oc.TopLoc_Location_1();
+		this.Message_ProgressRange = new oc.Message_ProgressRange_1();
+		this.TopTools_ListOfShape = new oc.TopTools_ListOfShape_1();
+		this.GProp_GProps = new oc.GProp_GProps_1();
 	}
 	static oc() {
 		return _oc!;
@@ -55,5 +63,9 @@ export class CadLoaderSync {
 	static gp_Vec: gp_Vec;
 	static gp_XYZ: gp_XYZ;
 	static Bnd_Box: Bnd_Box;
+	static TopLoc_Location: TopLoc_Location;
+	static Message_ProgressRange: Message_ProgressRange;
+	static TopTools_ListOfShape: TopTools_ListOfShape;
+	static GProp_GProps: GProp_GProps;
 	// static TopLoc_Location:TopLoc_Location
 }

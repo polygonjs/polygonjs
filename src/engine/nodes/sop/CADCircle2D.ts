@@ -10,6 +10,7 @@ import {CadLoader} from '../../../core/geometry/cad/CadLoader';
 import {cadGeom2dCurveTranslate} from '../../../core/geometry/cad/toObject3D/CadGeom2dCurve';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 import {CoreGroup} from '../../../core/geometry/Group';
+import {CadGC} from '../../../core/geometry/cad/CadCommon';
 
 class CADCircle2DSopParamsConfig extends NodeParamsConfig {
 	/** @param radius */
@@ -31,11 +32,13 @@ export class CADCircle2DSopNode extends CADSopNode<CADCircle2DSopParamsConfig> {
 	}
 
 	override async cook(inputCoreGroups: CoreGroup[]) {
-		const oc = await CadLoader.core();
-		const axis = new oc.gp_Ax22d_1();
-		const circle = new oc.Geom2d_Circle_3(axis, this.pv.radius);
-		cadGeom2dCurveTranslate(circle, this.pv.center);
+		const oc = await CadLoader.core(this);
+		CadGC.withGC((r) => {
+			const axis = r(new oc.gp_Ax22d_1());
+			const circle = new oc.Geom2d_Circle_3(axis, this.pv.radius);
+			cadGeom2dCurveTranslate(circle, this.pv.center);
 
-		this.setCADGeom2dCurve(circle);
+			this.setCADGeom2dCurve(circle);
+		});
 	}
 }

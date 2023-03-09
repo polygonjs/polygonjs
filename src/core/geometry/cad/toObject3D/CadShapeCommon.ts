@@ -57,5 +57,7 @@ export function cadShapeTranslate(shape: TopoDS_Shape, t: Vector3) {
 	transform.SetTranslation_1(translation);
 	transform.SetScaleFactor(1);
 	const loc = new oc.TopLoc_Location_2(transform);
-	return shape.Moved(loc, false);
+	const newShape = shape.Moved(loc, false);
+	loc.delete();
+	return newShape;
 }

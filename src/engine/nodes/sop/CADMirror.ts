@@ -49,6 +49,7 @@ export class CADMirrorSopNode extends CADSopNode<CADMirrorSopParamsConfig> {
 					const shape = object.cadGeometry() as TopoDS_Shape;
 					const transformApi = new oc.BRepBuilderAPI_Transform_2(shape, transform, false);
 					const mirroredShape = transformApi.Shape();
+					transformApi.delete();
 					const type = cadGeometryTypeFromShape(oc, mirroredShape);
 					if (type) {
 						newObjects.push(new CadObject(mirroredShape, type));

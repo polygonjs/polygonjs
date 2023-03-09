@@ -23,7 +23,7 @@
 	"main": "./dist/src/engine/index_all.js",
 	"scripts": {
 		"start": "webpack-dev-server --env NODE_ENV=development --env production=false --config config/webpack/dev.js",
-		"build": "export NODE_OPTIONS='--max-old-space-size=32768' yarn build_folder_delete && yarn build_with_webpack && yarn build_with_esbuild && yarn build_folder_remove_unneeded && yarn copy_threejs_examples_to_dist",
+		"build": "export NODE_OPTIONS='--max-old-space-size=32768' yarn build_folder_delete && yarn build_with_webpack && yarn build_with_esbuild && yarn build_folder_remove_unneeded && yarn copy_threejs_examples_to_dist && copy_occt_wasm_to_dist",
 		"build_fast": "export NODE_OPTIONS='--max-old-space-size=32768' yarn build_folder_delete && yarn build_with_webpack_fast && yarn build_with_esbuild && yarn build_folder_remove_unneeded && yarn copy_threejs_examples_to_dist",
 		"build_with_webpack": "webpack --env NODE_ENV=production --env production --progress --config config/webpack/prod.js && yarn renameMJS",
 		"build_with_webpack_fast": "webpack --env NODE_ENV=production --env production --progress --env FAST_COMPILE=true --config config/webpack/prod.js && yarn renameMJS",
@@ -39,6 +39,7 @@
 		"build_folder_delete": "rm -rf dist/*",
 		"build_folder_remove_unneeded": "rm -rf dist/config && rm -rf dist/tests",
 		"copy_threejs_examples_to_dist": "cp -rf src/modules/three/* dist/src/modules/three/",
+		"copy_occt_wasm_to_dist": "cp src/core/geometry/cad/build/*.wasm dist/src/core/geometry/cad/build/",
 		"build_renameMJS": "./node_modules/typescript/bin/tsc config/common/renameMJStoJS.ts --moduleResolution node",
 		"renameMJS": "node config/common/renameMJStoJS.js",
 		"bundle_types_build": "tsc config/dts_bundle/dts_bundle_pre.ts && tsc config/dts_bundle/dts_bundle_post.ts",
@@ -46,7 +47,7 @@
 		"bundle_types_mid": "rm -f public/bundled_types.d.ts && node_modules/dts-bundle-generator/dist/bin/dts-bundle-generator.js --config config/dts_bundle/dts_bundle.config.json",
 		"bundle_types_post": "node config/dts_bundle/dts_bundle_post.js",
 		"bundle_types": "yarn bundle_types_pre && yarn bundle_types_mid; yarn bundle_types_post",
-		"build_opencascade": "cd src/core/geometry/cad/config && docker run --rm -it -v \"$(pwd):/src\" -u \"$(id -u):$(id -g)\" donalffons/opencascade.js config.yml && mv ./cadNodes.* ../build && cd ../../../../../ && xmessage 'opencascade custom build completed'"
+		"build_opencascade": "cd src/core/geometry/cad/config && docker run --rm -it -v \"$(pwd):/src\" -u \"$(id -u):$(id -g)\" donalffons/opencascade.js config.yml && mv ./polygonjs-occt.* ../build && cd ../../../../../ && xmessage 'opencascade custom build completed'"
 	},
 	"dependencies": {
 		"@dimforge/rapier3d-compat": "0.11.1",

@@ -6,7 +6,6 @@
 import {CADSopNode} from './_BaseCAD';
 import {step} from '../../../core/geometry/cad/CadConstant';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {CadLoader} from '../../../core/geometry/cad/CadLoader';
 import {CoreCadType} from '../../../core/geometry/cad/CadCoreType';
 import {CadGeometryType, cadGeometryTypeFromShape, TopoDS_Edge} from '../../../core/geometry/cad/CadCommon';
 import {CadObject} from '../../../core/geometry/cad/CadObject';
@@ -16,8 +15,9 @@ import {
 } from '../../../core/geometry/cad/CadMath';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
-import {curveHandleFromEdge} from '../../../core/geometry/cad/toObject3D/CadEdge';
+import {curveDataFromEdge} from '../../../core/geometry/cad/toObject3D/CadEdge';
 import {traverseEdges} from '../../../core/geometry/cad/CadTraverse';
+import {CadLoaderSync} from '../../../core/geometry/cad/CadLoaderSync';
 // import {withCadException} from '../../../core/geometry/cad/CadExceptionHandler';
 
 class CADRevolutionSopParamsConfig extends NodeParamsConfig {
@@ -58,10 +58,10 @@ export class CADRevolutionSopNode extends CADSopNode<CADRevolutionSopParamsConfi
 		this.io.inputs.setCount(1);
 	}
 
-	override async cook(inputCoreGroups: CoreGroup[]) {
+	override cook(inputCoreGroups: CoreGroup[]) {
 		// TODO: if input is 2d, convert to 3d
 		// provide axis, angle, min, max
-		const oc = await CadLoader.core();
+		const oc = CadLoaderSync.oc();
 		const coreGroup0 = inputCoreGroups[0];
 		const newObjects: CadObject<CadGeometryType>[] = [];
 		const axis = cadAxis(this.pv.axis);
@@ -70,9 +70,10 @@ export class CADRevolutionSopNode extends CADSopNode<CADRevolutionSopParamsConfi
 		// const thetaMax = Math.max(this.pv.thetaMin, this.pv.thetaMax);
 
 		const createRevolution = (edge: TopoDS_Edge) => {
-			const handle = curveHandleFromEdge(oc, edge);
+			const handle = curveDataFromEdge(oc, edge).curveHandle;
 			const api = new oc.BRepPrimAPI_MakeRevolution_6(axis, handle, this.pv.phi);
 			const newShape = api.Shape();
+			api.delete();
 			const type = cadGeometryTypeFromShape(oc, newShape);
 			if (type) {
 				newObjects.push(new CadObject(newShape, type));

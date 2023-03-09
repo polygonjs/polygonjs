@@ -1,6 +1,6 @@
 import {AttribValue} from './../../types/GlobalTypes';
 import {NumericAttribValue, PolyDictionary} from '../../types/GlobalTypes';
-import {Box3, BufferGeometry, LineSegments, Mesh, Points, Object3D} from 'three';
+import {Box3, BufferGeometry, LineSegments, Mesh, Points, Object3D, Vector3} from 'three';
 import {BaseCoreObject} from './_BaseObject';
 import {CoreObject, AttributeDictionary} from './Object';
 import {CoreGeometry} from './Geometry';
@@ -14,7 +14,7 @@ import {Poly} from '../../engine/Poly';
 import {CoreEntity} from './Entity';
 import {CoreObjectType, ObjectContent, isObject3D} from './ObjectContent';
 // import {computeBoundingBoxFromObject3Ds} from './BoundingBox';
-import {coreObjectInstanceFactory} from './CoreObjectFactory';
+import {coreObjectFactory, coreObjectInstanceFactory} from './CoreObjectFactory';
 
 // CAD
 import type {CadGeometryType, CadGeometryTypeShape} from './cad/CadCommon';
@@ -31,6 +31,7 @@ import type {CsgObject} from './csg/CsgObject';
 // import {CoreMask} from './Mask';
 export type GroupString = string;
 const tmpBox3 = new Box3();
+const tmpPos = new Vector3();
 
 export interface Object3DWithGeometry extends Object3D {
 	geometry: BufferGeometry;
@@ -456,5 +457,14 @@ export class CoreGroup extends CoreEntity {
 
 	stringAttribValue(attribName: string) {
 		return this.attribValue(attribName) as string | undefined;
+	}
+	position(target: Vector3) {
+		const objectsCount = this._allObjects.length;
+		target.set(0, 0, 0);
+		for (let object of this._allObjects) {
+			coreObjectFactory(object).position(object, tmpPos);
+			target.add(tmpPos);
+		}
+		target.divideScalar(objectsCount);
 	}
 }

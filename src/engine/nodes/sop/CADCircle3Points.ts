@@ -37,13 +37,14 @@ export class CADCircle3PointsSopNode extends CADSopNode<CADCircle3PointsSopParam
 			}
 		}
 		if (vertices.length >= 3) {
-			const oc = await CadLoader.core();
+			const oc = await CadLoader.core(this);
 			const point0 = oc.BRep_Tool.Pnt(vertices[0]);
 			const point1 = oc.BRep_Tool.Pnt(vertices[1]);
 			const point2 = oc.BRep_Tool.Pnt(vertices[2]);
-			const circle3Points = new oc.GC_MakeArcOfCircle_4(point0, point1, point2);
-			const curve = circle3Points.Value().get();
+			const api = new oc.GC_MakeArcOfCircle_4(point0, point1, point2);
+			const curve = api.Value().get();
 			const edge = cadEdgeCreate(oc, curve);
+			api.delete();
 			this.setCADShape(edge);
 		} else {
 			this.setCADObjects([]);

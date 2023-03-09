@@ -22,6 +22,7 @@ export function cadMergeCompact(inputObjects: CadObject<CadGeometryType>[]): Cad
 					api.Add_1(object.cadGeometry() as TopoDS_Edge);
 				}
 				const wire = api.Wire();
+				api.delete();
 				newObjects.push(new CadObject(wire, CadGeometryType.WIRE));
 				return;
 			}
@@ -31,6 +32,7 @@ export function cadMergeCompact(inputObjects: CadObject<CadGeometryType>[]): Cad
 					api.Add_2(object.cadGeometry() as TopoDS_Wire);
 				}
 				const wire = api.Wire();
+				api.delete();
 				newObjects.push(new CadObject(wire, CadGeometryType.WIRE));
 				return;
 			}

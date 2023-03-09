@@ -33,7 +33,7 @@ export class CADCircleSopNode extends CADSopNode<CADCircleSopParamsConfig> {
 	}
 
 	override async cook(inputCoreGroups: CoreGroup[]) {
-		const oc = await CadLoader.core();
+		const oc = await CadLoader.core(this);
 		const axis1 = CadLoaderSync.gp_Ax1;
 		const dir = CadLoaderSync.gp_Dir;
 		dir.SetCoord_2(this.pv.axis.x, this.pv.axis.y, this.pv.axis.z);

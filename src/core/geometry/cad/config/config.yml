@@ -1,5 +1,5 @@
 mainBuild:
-  name: cadNodes.js
+  name: polygonjs-occt.js
   bindings:
     - symbol: Adaptor2d_Curve2d
     - symbol: Adaptor3d_Curve
@@ -28,6 +28,7 @@ mainBuild:
     - symbol: BRepBuilderAPI_MakeWire
     - symbol: BRepBuilderAPI_ModifyShape
     - symbol: BRepBuilderAPI_Transform
+    - symbol: BRepFill_Pipe
     - symbol: BRepFill_TypeOfContact
     - symbol: BRepFilletAPI_LocalOperation
     - symbol: BRepFilletAPI_MakeChamfer
@@ -43,6 +44,8 @@ mainBuild:
     - symbol: BRepMesh_DiscretRoot
     - symbol: BRepMesh_IncrementalMesh
     - symbol: BRepOffset_Mode
+    - symbol: BRepOffsetAPI_MakePipe
+    - symbol: BRepOffsetAPI_MakePipeShell
     - symbol: BRepOffsetAPI_MakeOffsetShape
     - symbol: BRepOffsetAPI_MakeThickSolid
     - symbol: BRepOffsetAPI_ThruSections
@@ -55,6 +58,7 @@ mainBuild:
     - symbol: BRepPrimAPI_MakeSphere
     - symbol: BRepPrimAPI_MakeSweep
     - symbol: BRepPrimAPI_MakeTorus
+    - symbol: BRepPrimAPI_MakeWedge
     - symbol: BRepTools
     - symbol: ChFi3d_FilletShape
     - symbol: ChFiDS_ChamfMode
@@ -138,6 +142,7 @@ mainBuild:
     - symbol: Handle_Poly_PolygonOnTriangulation
     - symbol: Handle_Poly_Triangulation
     - symbol: Handle_StepData_StepModel
+    - symbol: IFSelect_ReturnStatus
     - symbol: IMeshTools_Parameters
     - symbol: Interface_Static
     - symbol: Interface_TypedValue
@@ -151,6 +156,7 @@ mainBuild:
     - symbol: Poly_Triangulation
     - symbol: Precision
     - symbol: Standard_Transient
+    - symbol: STEPControl_Reader
     - symbol: StdPrs_ToolTriangulatedShape
     - symbol: TColgp_Array1OfDir
     - symbol: TColgp_Array1OfPnt
@@ -173,7 +179,9 @@ mainBuild:
     - symbol: TopoDS_Wire
     - symbol: TopTools_Array1OfShape
     - symbol: TopTools_ListOfShape
+    - symbol: XSControl_Reader
     - symbol: OCJS
+    - symbol: Standard_Failure
 
   emccFlags:
     - -O3

@@ -1,18 +1,23 @@
-import type {OpenCascadeInstance, TopoDS_Vertex, gp_Pnt} from '../CadCommon';
+import type {OpenCascadeInstance, TopoDS_Vertex, gp_Pnt, CadGeometryType} from '../CadCommon';
 import {BufferGeometry, BufferAttribute, Vector3} from 'three';
 import {BaseSopOperation} from '../../../../engine/operations/sop/_Base';
 import {ObjectType} from '../../Constant';
 import {cadMaterialPoint} from '../CadConstant';
 import {CadLoaderSync} from '../CadLoaderSync';
 import {cadShapeClone} from './CadShapeCommon';
+import {CadObject} from '../CadObject';
+import {objectContentCopyProperties} from '../../ObjectContent';
 
-export function cadVertexToObject3D(vertex: TopoDS_Vertex) {
+export function cadVertexToObject3D(cadObject: CadObject<CadGeometryType.VERTEX>) {
 	const oc = CadLoaderSync.oc();
+	const vertex = cadObject.cadGeometry();
 	const point = oc.BRep_Tool.Pnt(vertex);
 	const geo = new BufferGeometry();
 	const positions: number[] = [point.X(), point.Y(), point.Z()];
 	geo.setAttribute('position', new BufferAttribute(new Float32Array(positions), 3));
-	return BaseSopOperation.createObject(geo, ObjectType.POINTS, cadMaterialPoint());
+	const object = BaseSopOperation.createObject(geo, ObjectType.POINTS, cadMaterialPoint());
+	objectContentCopyProperties(cadObject, object);
+	return object;
 }
 
 export function cadVertexCreate(oc: OpenCascadeInstance, t: Vector3): TopoDS_Vertex {
@@ -22,6 +27,7 @@ export function cadVertexCreate(oc: OpenCascadeInstance, t: Vector3): TopoDS_Ver
 function _vertexFromPoint(oc: OpenCascadeInstance, point: gp_Pnt): TopoDS_Vertex {
 	const api = new oc.BRepBuilderAPI_MakeVertex(point);
 	const vertex = api.Vertex();
+	api.delete();
 	return vertex;
 }
 

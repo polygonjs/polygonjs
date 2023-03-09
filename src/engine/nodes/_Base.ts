@@ -477,6 +477,11 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 
 	// poly nodes
 	public readonly polyNodeController: PolyNodeController | undefined;
+
+	// error processing
+	processError(e: unknown) {
+		return e;
+	}
 }
 
 export type BaseNodeType = TypedNode<any, any>;

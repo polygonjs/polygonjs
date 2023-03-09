@@ -43,7 +43,7 @@ export class CADSegmentSopNode extends CADSopNode<CADSegmentSopParamsConfig> {
 	}
 
 	override async cook(inputCoreGroups: CoreGroup[]) {
-		const oc = await CadLoader.core();
+		const oc = await CadLoader.core(this);
 
 		const mode = SEGMENT_MODES[this.pv.mode];
 		switch (mode) {
@@ -162,14 +162,15 @@ function _createSegmentsFromPoint2DPairs(
 function _createSegment(oc: OpenCascadeInstance, vertex0: TopoDS_Vertex, vertex1: TopoDS_Vertex) {
 	const point0 = oc.BRep_Tool.Pnt(vertex0);
 	const point1 = oc.BRep_Tool.Pnt(vertex1);
-	const segment = new oc.GC_MakeSegment_1(point0, point1);
-	const curve = segment.Value().get();
+	const api = new oc.GC_MakeSegment_1(point0, point1);
+	const curve = api.Value().get();
 	const edge = cadEdgeCreate(oc, curve);
-
+	api.delete();
 	return new CadObject(edge, CadGeometryType.EDGE);
 }
 function _createSegment2d(oc: OpenCascadeInstance, point0: gp_Pnt2d, point1: gp_Pnt2d) {
-	const segment = new oc.GCE2d_MakeSegment_1(point0, point1);
-	const curve = segment.Value().get();
+	const api = new oc.GCE2d_MakeSegment_1(point0, point1);
+	const curve = api.Value().get();
+	api.delete();
 	return new CadObject(curve, CadGeometryType.CURVE_2D);
 }

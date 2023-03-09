@@ -12,12 +12,13 @@ import {
 	CADTesselationParams,
 	CadBox3Handle,
 	_createCadBox3Handle,
+	CadGeometryTypeShape,
 } from './CadCommon';
 import {ObjectContent, CoreObjectType, ObjectGeometryMap, objectContentCopyProperties} from '../ObjectContent';
 import {cadPnt2dClone, cadPnt2dToObject3D} from './toObject3D/CadPnt2d';
 import {cadVertexClone, cadVertexToObject3D} from './toObject3D/CadVertex';
 import {cadGeom2dCurveClone, cadGeom2dCurveToObject3D} from './toObject3D/CadGeom2dCurve';
-import {cadEdgeClone, cadEdgeToObject3D} from './toObject3D/CadEdge';
+import {cadEdgeClone, cadEdgeObjectToObject3D} from './toObject3D/CadEdge';
 import {cadWireClone, cadWireToObject3D} from './toObject3D/CadWire';
 import {CoreCadType} from './CadCoreType';
 import {CadLoaderSync} from './CadLoaderSync';
@@ -25,7 +26,6 @@ import {cadShapeClone} from './toObject3D/CadShapeCommon';
 import {TypeAssert} from '../../../engine/poly/Assert';
 import {cadShapeToObject3D} from './toObject3D/CadShape';
 import {Object3D, Material, Matrix4, Box3, Vector3, Quaternion, Euler} from 'three';
-import {CoreType} from '../../Type';
 import {cadGeometryTransform} from './operations/CadTransform';
 const t = new Vector3();
 const q = new Quaternion();
@@ -125,48 +125,51 @@ export class CadObject<T extends CadGeometryType> implements ObjectContent<CoreO
 		type: T,
 		tesselationParams: CADTesselationParams
 	): Object3D | Object3D[] | undefined {
-		const geometry = cadObject.cadGeometry();
-
-		const buildObject = () => {
-			switch (type) {
-				case CadGeometryType.POINT_2D: {
-					return cadPnt2dToObject3D(geometry as gp_Pnt2d);
-				}
-				case CadGeometryType.CURVE_2D: {
-					return cadGeom2dCurveToObject3D(geometry as Geom2d_Curve, tesselationParams);
-				}
-				// case CadObjectType.CURVE_3D: {
-				// 	return cadGeomCurveToObject3D(oc, object as Geom_Curve, tesselationParams);
-				// }
-				case CadGeometryType.VERTEX: {
-					return cadVertexToObject3D(geometry as TopoDS_Vertex);
-				}
-				case CadGeometryType.EDGE: {
-					return cadEdgeToObject3D(geometry as TopoDS_Edge, tesselationParams);
-				}
-				case CadGeometryType.WIRE: {
-					return cadWireToObject3D(geometry as TopoDS_Wire, tesselationParams);
-				}
-				case CadGeometryType.FACE:
-				case CadGeometryType.SHELL:
-				case CadGeometryType.SOLID:
-				case CadGeometryType.COMPSOLID:
-				case CadGeometryType.COMPOUND: {
-					return cadShapeToObject3D(geometry as TopoDS_Shape, tesselationParams);
-				}
+		switch (type) {
+			case CadGeometryType.POINT_2D: {
+				return cadPnt2dToObject3D(cadObject as CadObject<CadGeometryType.POINT_2D>);
 			}
-		};
-		const object3D = buildObject();
-		if (object3D) {
-			if (CoreType.isArray(object3D)) {
-				for (let object of object3D) {
-					objectContentCopyProperties(cadObject, object);
-				}
-			} else {
-				objectContentCopyProperties(cadObject, object3D);
+			case CadGeometryType.CURVE_2D: {
+				return cadGeom2dCurveToObject3D(cadObject as CadObject<CadGeometryType.CURVE_2D>, tesselationParams);
+			}
+			// case CadObjectType.CURVE_3D: {
+			// 	return cadGeomCurveToObject3D(oc, object as Geom_Curve, tesselationParams);
+			// }
+			case CadGeometryType.VERTEX: {
+				return cadVertexToObject3D(cadObject as CadObject<CadGeometryType.VERTEX>);
+			}
+			case CadGeometryType.EDGE: {
+				return cadEdgeObjectToObject3D(cadObject as CadObject<CadGeometryType.EDGE>, tesselationParams);
+			}
+			case CadGeometryType.WIRE: {
+				return cadWireToObject3D(cadObject as CadObject<CadGeometryType.WIRE>, tesselationParams);
+			}
+			case CadGeometryType.FACE:
+			case CadGeometryType.SHELL:
+			case CadGeometryType.SOLID:
+			case CadGeometryType.COMPSOLID:
+			case CadGeometryType.COMPOUND: {
+				return cadShapeToObject3D(cadObject as CadObject<CadGeometryTypeShape>, tesselationParams);
 			}
 		}
-		return object3D;
+		TypeAssert.unreachable(type);
+
+		// const geometry = cadObject.cadGeometry();
+
+		// const buildObject = () => {
+
+		// };
+		// const object3D = buildObject();
+		// if (object3D) {
+		// 	if (CoreType.isArray(object3D)) {
+		// 		for (let object of object3D) {
+		// 			objectContentCopyProperties(cadObject, object);
+		// 		}
+		// 	} else {
+		// 		objectContentCopyProperties(cadObject, object3D);
+		// 	}
+		// }
+		// return object3D;
 	}
 
 	boundingBox(target: Box3): void {

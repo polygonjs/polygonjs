@@ -27,7 +27,11 @@ import type {
 	gp_Dir,
 	gp_XYZ,
 	TopAbs_ShapeEnum,
-} from './build/cadNodes';
+	TopLoc_Location,
+	Message_ProgressRange,
+	TopTools_ListOfShape,
+	GProp_GProps,
+} from './build/polygonjs-occt';
 // } from 'opencascade.js';
 export type {
 	OpenCascadeInstance,
@@ -55,6 +59,10 @@ export type {
 	gp_Ax2,
 	gp_Dir,
 	gp_XYZ,
+	TopLoc_Location,
+	Message_ProgressRange,
+	TopTools_ListOfShape,
+	GProp_GProps,
 };
 
 export type CadGeometry =
@@ -225,3 +233,27 @@ export const _createCadBox3Handle: () => CadBox3Handle = () => ({
 	min: _createCadVector3Handle(),
 	max: _createCadVector3Handle(),
 });
+
+interface Deletable {
+	delete: () => void;
+}
+export type GCRegisterFunction = <D extends Deletable>(deletable: D) => D;
+type GCCallback<T> = (r: GCRegisterFunction) => T;
+export class CadGC {
+	static withGC<T>(callback: GCCallback<T>): T {
+		const deletables: Set<Deletable> = new Set();
+		function r<D extends Deletable>(deletable: D): D {
+			deletables.add(deletable);
+			return deletable;
+		}
+
+		const result = callback(r);
+
+		deletables.forEach((deletable) => {
+			deletable.delete();
+		});
+		deletables.clear();
+
+		return result;
+	}
+}

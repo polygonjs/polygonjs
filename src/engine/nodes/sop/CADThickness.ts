@@ -5,7 +5,6 @@
  */
 import {CADSopNode} from './_BaseCAD';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {CadLoader} from '../../../core/geometry/cad/CadLoader';
 import {step} from '../../../core/geometry/cad/CadConstant';
 import {CoreCadType} from '../../../core/geometry/cad/CadCoreType';
 import {
@@ -23,6 +22,7 @@ import {Line3, Vector3} from 'three';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 import {CadObject} from '../../../core/geometry/cad/CadObject';
+import {CadLoaderSync} from '../../../core/geometry/cad/CadLoaderSync';
 
 const line = new Line3();
 const normalizedAxis = new Vector3();
@@ -63,8 +63,8 @@ export class CADThicknessSopNode extends CADSopNode<CADThicknessSopParamsConfig>
 		this.io.inputs.setCount(1);
 	}
 
-	override async cook(inputCoreGroups: CoreGroup[]) {
-		const oc = await CadLoader.core();
+	override cook(inputCoreGroups: CoreGroup[]) {
+		const oc = CadLoaderSync.oc();
 		const inputCoreGroup = inputCoreGroups[0];
 
 		line.start.set(0, 0, 0);
@@ -124,9 +124,12 @@ export class CADThicknessSopNode extends CADSopNode<CADThicknessSopParamsConfig>
 			false,
 			oc.GeomAbs_JoinType.GeomAbs_Arc as any,
 			false,
-			new oc.Message_ProgressRange_1()
+			CadLoaderSync.Message_ProgressRange
 		);
-		return api.Shape();
+		const newShape = api.Shape();
+		api.delete();
+		faces.delete();
+		return newShape;
 	}
 
 	private _getFacesToRemove(oc: OpenCascadeInstance, shape: TopoDS_Shape, axis: Line3): TopoDS_Face[] {
@@ -135,7 +138,7 @@ export class CADThicknessSopNode extends CADSopNode<CADThicknessSopParamsConfig>
 		traverseFaces(oc, shape, (face) => {
 			// const surface = oc.BRep_Tool.Surface_2(face);
 
-			const surfaceProperties = new oc.GProp_GProps_1();
+			const surfaceProperties = CadLoaderSync.GProp_GProps;
 			oc.BRepGProp.SurfaceProperties_1(face, surfaceProperties, false, false);
 			const centerOfMass = surfaceProperties.CentreOfMass();
 

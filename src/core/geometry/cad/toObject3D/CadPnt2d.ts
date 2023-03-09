@@ -3,13 +3,18 @@ import {BaseSopOperation} from '../../../../engine/operations/sop/_Base';
 import {ObjectType} from '../../Constant';
 import {cadMaterialPoint} from '../CadConstant';
 import {CadLoaderSync} from '../CadLoaderSync';
-import type {gp_Pnt2d} from '../CadCommon';
+import type {CadGeometryType, gp_Pnt2d} from '../CadCommon';
+import {CadObject} from '../CadObject';
+import {objectContentCopyProperties} from '../../ObjectContent';
 
-export function cadPnt2dToObject3D(point: gp_Pnt2d) {
+export function cadPnt2dToObject3D(cadObject: CadObject<CadGeometryType.POINT_2D>) {
+	const point = cadObject.cadGeometry();
 	const geo = new BufferGeometry();
 	const positions: number[] = [point.X(), point.Y(), 0];
 	geo.setAttribute('position', new BufferAttribute(new Float32Array(positions), 3));
-	return BaseSopOperation.createObject(geo, ObjectType.POINTS, cadMaterialPoint());
+	const object = BaseSopOperation.createObject(geo, ObjectType.POINTS, cadMaterialPoint());
+	objectContentCopyProperties(cadObject, object);
+	return object;
 }
 
 export function cadPnt2dTransform(point: gp_Pnt2d, t: Vector2) {

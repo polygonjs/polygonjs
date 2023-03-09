@@ -6,6 +6,11 @@ import {ContainerMap} from '../../containers/utils/ContainerMap';
 import {NodeContext} from '../../poly/NodeContext';
 import {ContainableMap} from '../../containers/utils/ContainableMap';
 
+enum ErrorType {
+	FROM_INPUTS = 'node inputs error',
+	INTERNAL = 'node internal error',
+}
+
 export type OnCookCompleteHook = () => void;
 export class NodeCookController<NC extends NodeContext> {
 	private _corePerformance: CorePerformance;
@@ -48,17 +53,11 @@ export class NodeCookController<NC extends NodeContext> {
 				const promise = this.node.cook(inputContents || []);
 				if (promise != null) {
 					promise.catch((e: any) => {
-						if (!this.node.states.error.active()) {
-							this.node.states.error.set(`node inputs error: '${e}'.`);
-							Poly.warn(e);
-						}
-						this.endCook();
+						this._onError(e, ErrorType.INTERNAL, false);
 					});
 				}
 			} catch (e) {
-				this.node.states.error.set(`node internal error: '${e}'.`);
-				Poly.warn(e);
-				this.endCook();
+				this._onError(e, ErrorType.INTERNAL);
 			}
 		}
 	}
@@ -84,11 +83,19 @@ export class NodeCookController<NC extends NodeContext> {
 			}
 			this._startCookIfNoErrors(inputContents);
 		} catch (e) {
-			this.node.states.error.set(`node inputs error: '${e}'.`);
-			Poly.warn(e);
-			this.endCook();
+			this._onError(e, ErrorType.FROM_INPUTS);
 		}
 	}
+	private _onError(e: unknown, errorType: ErrorType, alwaysSet: boolean = true) {
+		if (alwaysSet || !this.node.states.error.active()) {
+			const processedError = this.node.processError(e);
+			console.log({processedError});
+			this.node.states.error.set(`${errorType}: '${processedError}'.`);
+			Poly.warn(e);
+		}
+		this.endCook();
+	}
+
 	async cookMainWithoutInputs() {
 		this.node.scene().cookController.addNode(this.node);
 		if (this.isCooking()) {

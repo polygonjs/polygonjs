@@ -6,47 +6,89 @@ import {CadLoaderSync} from './CadLoaderSync';
 //
 // 2 - custom opencascade build
 // @ts-ignore
-import opencascadeCustomBuildWasm from './build/cadNodes.wasm';
-import opencascadeCustomBuild from './build/cadNodes.js';
+// // import opencascadeCustomBuildWasm from './build/cadNodes.wasm';
+import opencascadeCustomBuild from './build/polygonjs-occt.js';
 import initOpenCascade from 'opencascade.js';
 //
+import {Poly} from '../../../engine/Poly';
+import {sanitizeUrl} from '../../UrlHelper';
+import {BaseNodeType} from '../../../engine/nodes/_Base';
+import {LIBRARY_INSTALL_HINT} from './../../loader/common';
 
 let _resolves: Resolve[] = [];
+// let _requestingNodes: BaseNodeType[] = [];
 let _importStarted = false;
 type Resolve = (value: OpenCascadeInstance | PromiseLike<OpenCascadeInstance>) => void;
 let _oc: OpenCascadeInstance | undefined;
 export class CadLoader {
-	static async core(): Promise<OpenCascadeInstance> {
+	static async core(node: BaseNodeType): Promise<OpenCascadeInstance> {
 		if (_oc) {
 			return _oc;
 		}
-		return new Promise(async (resolve) => {
+		return new Promise(async (resolve, reject) => {
 			if (_importStarted) {
 				_resolves.push(resolve);
+				// _requestingNodes.push(node);
 				return;
 			}
 			_importStarted = true;
 
-			// const startTime = performance.now();
-			// 1 - full opencascade build
-			// const oc = (await initOpenCascade()) as any as OpenCascadeInstance;
-			// 2 - custom opencascade build
-			const oc = (await initOpenCascade({
-				mainJS: opencascadeCustomBuild,
-				mainWasm: opencascadeCustomBuildWasm,
-			})) as unknown as OpenCascadeInstance;
-			//
-			//
-			// console.log('opencascade build loaded in:', performance.now() - startTime);
-			_oc = oc;
+			const onError = () => {
+				// console.log(err);
+				const message = `failed to load OpenCascade library. Make sure to install it to use CAD nodes (${LIBRARY_INSTALL_HINT})`;
+				// console.log(message);
+				// if (_requestingNodes.length > 0) {
+				// 	for (let node of _requestingNodes) {
+				// 		node.states.error.set(message);
+				// 	}
+				// }
 
-			CadLoaderSync.__setOC(oc);
-			// this.TopLoc_Location = new oc.TopLoc_Location_1()
+				reject(new Error(message));
+			};
 
-			resolve(oc);
-			if (_resolves.length > 0) {
-				for (let _resolve of _resolves) {
-					_resolve(oc);
+			const root = Poly.libs.root();
+			const OCCTPath = Poly.libs.OCCTPath();
+			if (root || OCCTPath) {
+				const version = Poly.version().replace(/\./, '-');
+				const wasmUrl = sanitizeUrl(`${root || ''}${OCCTPath || ''}/polygonjs-occt.wasm?v=${version}`);
+				try {
+					// prefetch wasm to get a proper error if wasm isn't found
+					const response = await fetch(wasmUrl, {method: 'HEAD'});
+					if (!response.ok) {
+						onError();
+						return;
+					}
+
+					// fetch wasm
+					// const startTime = performance.now();
+					// 1 - full opencascade build
+					// const oc = (await initOpenCascade()) as any as OpenCascadeInstance;
+					// 2 - custom opencascade build
+					const oc = await initOpenCascade({
+						mainJS: opencascadeCustomBuild,
+						mainWasm: wasmUrl,
+					});
+					// .then((oc) => {
+					//
+					//
+					// console.log('opencascade build loaded in:', performance.now() - startTime);
+					_oc = oc;
+
+					CadLoaderSync.__setOC(oc);
+
+					resolve(oc);
+					if (_resolves.length > 0) {
+						for (let _resolve of _resolves) {
+							_resolve(oc);
+						}
+						_resolves.length = 0;
+					}
+					// })
+					// .catch((err) => {
+					// 	onError();
+					// });
+				} catch (err) {
+					onError();
 				}
 			}
 		});

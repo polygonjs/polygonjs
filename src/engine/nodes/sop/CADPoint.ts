@@ -23,7 +23,7 @@ export class CADPointSopNode extends CADSopNode<CADPointSopParamsConfig> {
 	}
 
 	override async cook(inputCoreGroups: CoreGroup[]) {
-		const oc = await CadLoader.core();
+		const oc = await CadLoader.core(this);
 		const vertex = cadVertexCreate(oc, this.pv.center);
 		this.setCADShape(vertex);
 	}

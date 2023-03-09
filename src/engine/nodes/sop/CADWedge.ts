@@ -1,5 +1,5 @@
 /**
- * Creates a CAD box.
+ * Creates a CAD wedge.
  *
  *
  */
@@ -15,7 +15,7 @@ import {Vector3} from 'three';
 const size = new Vector3();
 const centerOffset = new Vector3();
 
-class CADBoxSopParamsConfig extends NodeParamsConfig {
+class CADWedgeSopParamsConfig extends NodeParamsConfig {
 	/** @param size */
 	size = ParamConfig.FLOAT(1, {
 		range: [0, 10],
@@ -26,19 +26,21 @@ class CADBoxSopParamsConfig extends NodeParamsConfig {
 	sizes = ParamConfig.VECTOR3([1, 1, 1]);
 	/** @param center */
 	center = ParamConfig.VECTOR3([0, 0, 0]);
+	/** @param end width */
+	endWidth = ParamConfig.FLOAT(0.5);
 }
-const ParamsConfig = new CADBoxSopParamsConfig();
+const ParamsConfig = new CADWedgeSopParamsConfig();
 
-export class CADBoxSopNode extends CADSopNode<CADBoxSopParamsConfig> {
+export class CADWedgeSopNode extends CADSopNode<CADWedgeSopParamsConfig> {
 	override readonly paramsConfig = ParamsConfig;
 	static override type() {
-		return SopType.CAD_BOX;
+		return SopType.CAD_WEDGE;
 	}
 
 	override async cook() {
 		const oc = await CadLoader.core(this);
 		size.copy(this.pv.sizes).multiplyScalar(this.pv.size);
-		const api = new oc.BRepPrimAPI_MakeBox_2(size.x, size.y, size.z);
+		const api = new oc.BRepPrimAPI_MakeWedge_1(size.x, size.y, size.z, this.pv.endWidth);
 		centerOffset.copy(size).multiplyScalar(-0.5);
 		const centered = cadShapeTranslate(api.Shape(), centerOffset);
 		const shape = cadShapeTranslate(centered, this.pv.center);

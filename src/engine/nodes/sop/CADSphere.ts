@@ -57,7 +57,7 @@ export class CADSphereSopNode extends CADSopNode<CADSphereSopParamsConfig> {
 	}
 
 	override async cook(inputCoreGroups: CoreGroup[]) {
-		const oc = await CadLoader.core();
+		const oc = await CadLoader.core(this);
 		const axis = cadAxis(this.pv.axis);
 		const api = this.pv.closed
 			? new oc.BRepPrimAPI_MakeSphere_9(axis, this.pv.radius)
@@ -68,7 +68,7 @@ export class CADSphereSopNode extends CADSopNode<CADSphereSopParamsConfig> {
 			  })();
 
 		const shape = cadShapeTranslate(api.Shape(), this.pv.center);
-
+		api.delete();
 		this.setCADShape(shape);
 	}
 }

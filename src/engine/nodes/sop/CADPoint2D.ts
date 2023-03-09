@@ -23,7 +23,7 @@ export class CADPoint2DSopNode extends CADSopNode<CADPoint2DSopParamsConfig> {
 	}
 
 	override async cook() {
-		const oc = await CadLoader.core();
+		const oc = await CadLoader.core(this);
 
 		const point = new oc.gp_Pnt2d_3(this.pv.center.x, this.pv.center.y);
 		const cadObject = new CadObject(point, CadGeometryType.POINT_2D);

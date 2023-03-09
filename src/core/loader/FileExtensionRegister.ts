@@ -45,6 +45,7 @@ export const EXTENSIONS_BY_NODE_TYPE_BY_CONTEXT: Record<NodeContext, Record<stri
 			ImageExtension.WEBP,
 			...VIDEO_EXTENSIONS,
 		],
+		[SopType.CAD_FILE_STEP]: [GeometryExtension.STEP],
 		[SopType.DATA_URL]: [GeometryExtension.JSON],
 		[SopTypeFile.FILE_GLTF]: [GeometryExtension.GLB, GeometryExtension.GLTF],
 		[SopTypeFile.FILE_DRC]: [GeometryExtension.DRC],

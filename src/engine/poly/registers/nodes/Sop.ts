@@ -36,8 +36,6 @@ import {BVHSopNode} from '../../../nodes/sop/BVH';
 import {BVHVisualizerSopNode} from '../../../nodes/sop/BVHVisualizer';
 import {CacheSopNode} from '../../../nodes/sop/Cache';
 //
-import {CADBezierSopNode} from '../../../nodes/sop/CADBezier';
-import {CADBezier2DSopNode} from '../../../nodes/sop/CADBezier2D';
 import {CADBooleanSopNode} from '../../../nodes/sop/CADBoolean';
 import {CADBoxSopNode} from '../../../nodes/sop/CADBox';
 import {CADCircleSopNode} from '../../../nodes/sop/CADCircle';
@@ -46,15 +44,20 @@ import {CADCircle3PointsSopNode} from '../../../nodes/sop/CADCircle3Points';
 import {CADConeSopNode} from '../../../nodes/sop/CADCone';
 import {CADConvertDimensionSopNode} from '../../../nodes/sop/CADConvertDimension';
 import {CADCurve2DToSurfaceSopNode} from '../../../nodes/sop/CADCurve2DToSurface';
-import {CADCurvePointsSopNode} from '../../../nodes/sop/CADCurvePoints';
+import {CADCurveFromPointsSopNode} from '../../../nodes/sop/CADCurveFromPoints';
+import {CADCurveFromPoints2DSopNode} from '../../../nodes/sop/CADCurveFromPoints2D';
 import {CADCurveTrimSopNode} from '../../../nodes/sop/CADCurveTrim';
 import {CADEllipseSopNode} from '../../../nodes/sop/CADEllipse';
 import {CADEllipse2DSopNode} from '../../../nodes/sop/CADEllipse2D';
+import {CADFileSTEPSopNode} from '../../../nodes/sop/CADFileSTEP';
 import {CADFilletSopNode} from '../../../nodes/sop/CADFillet';
-import {CADMergeSopNode} from '../../../nodes/sop/CADMerge';
+import {CADGroupSopNode} from '../../../nodes/sop/CADGroup';
+import {CADLoftSopNode} from '../../../nodes/sop/CADLoft';
 import {CADMirrorSopNode} from '../../../nodes/sop/CADMirror';
+import {CADPipeSopNode} from '../../../nodes/sop/CADPipe';
 import {CADPointSopNode} from '../../../nodes/sop/CADPoint';
 import {CADPoint2DSopNode} from '../../../nodes/sop/CADPoint2D';
+import {CADPointsFromCurveSopNode} from '../../../nodes/sop/CADPointsFromCurve';
 import {CADPrismSopNode} from '../../../nodes/sop/CADPrism';
 import {CADRectangleSopNode} from '../../../nodes/sop/CADRectangle';
 import {CADRevolutionSopNode} from '../../../nodes/sop/CADRevolution';
@@ -66,6 +69,7 @@ import {CADTransformSopNode} from '../../../nodes/sop/CADTransform';
 import {CADTransform2DSopNode} from '../../../nodes/sop/CADTransform2D';
 import {CADTriangulateSopNode} from '../../../nodes/sop/CADTriangulate';
 import {CADTubeSopNode} from '../../../nodes/sop/CADTube';
+import {CADWedgeSopNode} from '../../../nodes/sop/CADWedge';
 //
 import {CameraControlsSopNode} from '../../../nodes/sop/CameraControls';
 import {CameraCSSRendererSopNode} from '../../../nodes/sop/CameraCSSRenderer';
@@ -288,8 +292,6 @@ export interface GeoNodeChildrenMap {
 	BVHVisualizer: BVHVisualizerSopNode;
 	cache: CacheSopNode;
 	//
-	CADBezier: CADBezierSopNode;
-	CADBezier2D: CADBezier2DSopNode;
 	CADBoolean: CADBooleanSopNode;
 	CADBox: CADBoxSopNode;
 	CADCircle: CADCircleSopNode;
@@ -298,15 +300,21 @@ export interface GeoNodeChildrenMap {
 	CADCone: CADConeSopNode;
 	CADConvertDimention: CADConvertDimensionSopNode;
 	CADCurve2DToSurface: CADCurve2DToSurfaceSopNode;
-	CADCurvePoints: CADCurvePointsSopNode;
+	CADCurveFromPoints: CADCurveFromPointsSopNode;
+	CADCurveFromPoints2D: CADCurveFromPoints2DSopNode;
 	CADCurveTrim: CADCurveTrimSopNode;
 	CADEllipse: CADEllipseSopNode;
 	CADEllipse2D: CADEllipse2DSopNode;
+	CADFileSTEP: CADFileSTEPSopNode;
 	CADFillet: CADFilletSopNode;
-	CADMerge: CADMergeSopNode;
+	CADGroup: CADGroupSopNode;
+	CADLoft: CADLoftSopNode;
+	// CADMerge: CADMergeSopNode;
 	CADMirror: CADMirrorSopNode;
+	CADPipe: CADPipeSopNode;
 	CADPoint: CADPointSopNode;
 	CADPoint2D: CADPoint2DSopNode;
+	CADPointsFromCurve: CADPointsFromCurveSopNode;
 	CADPrism: CADPrismSopNode;
 	CADRectangle: CADRectangleSopNode;
 	CADRevolution: CADRevolutionSopNode;
@@ -318,6 +326,7 @@ export interface GeoNodeChildrenMap {
 	CADTransform2D: CADTransform2DSopNode;
 	CADTriangulate: CADTriangulateSopNode;
 	CADTube: CADTubeSopNode;
+	CADWedge: CADWedgeSopNode;
 	//
 	cameraControls: CameraControlsSopNode;
 	cameraCSSRenderer: CameraCSSRendererSopNode;
@@ -763,8 +772,6 @@ export class SopRegister {
 		poly.registerNode(BVHVisualizerSopNode, CATEGORY_SOP.ADVANCED);
 		poly.registerNode(CacheSopNode, CATEGORY_SOP.MISC);
 		// CAD
-		poly.registerNode(CADBezierSopNode, CATEGORY_SOP.CAD);
-		poly.registerNode(CADBezier2DSopNode, CATEGORY_SOP.CAD);
 		poly.registerNode(CADBooleanSopNode, CATEGORY_SOP.CAD);
 		poly.registerNode(CADBoxSopNode, CATEGORY_SOP.CAD);
 		poly.registerNode(CADCircleSopNode, CATEGORY_SOP.CAD);
@@ -773,15 +780,20 @@ export class SopRegister {
 		poly.registerNode(CADConeSopNode, CATEGORY_SOP.CAD);
 		poly.registerNode(CADConvertDimensionSopNode, CATEGORY_SOP.CAD);
 		poly.registerNode(CADCurve2DToSurfaceSopNode, CATEGORY_SOP.CAD);
-		poly.registerNode(CADCurvePointsSopNode, CATEGORY_SOP.CAD);
+		poly.registerNode(CADCurveFromPointsSopNode, CATEGORY_SOP.CAD);
+		poly.registerNode(CADCurveFromPoints2DSopNode, CATEGORY_SOP.CAD);
 		poly.registerNode(CADCurveTrimSopNode, CATEGORY_SOP.CAD);
 		poly.registerNode(CADEllipseSopNode, CATEGORY_SOP.CAD);
 		poly.registerNode(CADEllipse2DSopNode, CATEGORY_SOP.CAD);
+		poly.registerNode(CADFileSTEPSopNode, CATEGORY_SOP.CAD);
 		poly.registerNode(CADFilletSopNode, CATEGORY_SOP.CAD);
-		poly.registerNode(CADMergeSopNode, CATEGORY_SOP.CAD);
+		poly.registerNode(CADGroupSopNode, CATEGORY_SOP.CAD);
+		poly.registerNode(CADLoftSopNode, CATEGORY_SOP.CAD);
 		poly.registerNode(CADMirrorSopNode, CATEGORY_SOP.CAD);
+		poly.registerNode(CADPipeSopNode, CATEGORY_SOP.CAD);
 		poly.registerNode(CADPointSopNode, CATEGORY_SOP.CAD);
 		poly.registerNode(CADPoint2DSopNode, CATEGORY_SOP.CAD);
+		poly.registerNode(CADPointsFromCurveSopNode, CATEGORY_SOP.CAD);
 		poly.registerNode(CADPrismSopNode, CATEGORY_SOP.CAD);
 		poly.registerNode(CADRectangleSopNode, CATEGORY_SOP.CAD);
 		poly.registerNode(CADRevolutionSopNode, CATEGORY_SOP.CAD);
@@ -793,6 +805,7 @@ export class SopRegister {
 		poly.registerNode(CADTransform2DSopNode, CATEGORY_SOP.CAD);
 		poly.registerNode(CADTriangulateSopNode, CATEGORY_SOP.CAD);
 		poly.registerNode(CADTubeSopNode, CATEGORY_SOP.CAD);
+		poly.registerNode(CADWedgeSopNode, CATEGORY_SOP.CAD);
 		//
 		poly.registerNode(CameraControlsSopNode, CATEGORY_SOP.RENDER);
 		poly.registerNode(CameraFrameModeSopNode, CATEGORY_SOP.RENDER);

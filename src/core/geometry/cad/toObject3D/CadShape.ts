@@ -1,5 +1,11 @@
 import {traverseEdges, traverseFaces} from '../CadTraverse';
-import type {OpenCascadeInstance, TopoDS_Shape, CADTesselationParams, CachedCADTesselationParams} from '../CadCommon';
+import type {
+	OpenCascadeInstance,
+	TopoDS_Shape,
+	CADTesselationParams,
+	CachedCADTesselationParams,
+	CadGeometryTypeShape,
+} from '../CadCommon';
 import {faceData} from '../CadCoreFace';
 import {BufferGeometry, BufferAttribute, Object3D} from 'three';
 import {BaseSopOperation} from '../../../../engine/operations/sop/_Base';
@@ -7,6 +13,7 @@ import {ObjectType} from '../../Constant';
 import {cadMaterialMesh} from '../CadConstant';
 import {cadEdgeToObject3D} from './CadEdge';
 import {CadLoaderSync} from '../CadLoaderSync';
+import {CadObject} from '../CadObject';
 
 function cachedTesselationParamsEqual(params1: CachedCADTesselationParams, params2: CachedCADTesselationParams) {
 	return (
@@ -18,24 +25,28 @@ function cachedTesselationParamsEqual(params1: CachedCADTesselationParams, param
 }
 
 const tesselationParamsByShape: WeakMap<TopoDS_Shape, CachedCADTesselationParams> = new WeakMap();
-export function cadShapeToObject3D(object: TopoDS_Shape, tesselationParams: CADTesselationParams) {
+export function cadShapeToObject3D(
+	cadObject: CadObject<CadGeometryTypeShape>,
+	tesselationParams: CADTesselationParams
+) {
 	const oc = CadLoaderSync.oc();
-	let cachedParams = tesselationParamsByShape.get(object);
+	const shape = cadObject.cadGeometry();
+	let cachedParams = tesselationParamsByShape.get(shape);
 	if (cachedParams && !cachedTesselationParamsEqual(cachedParams, tesselationParams)) {
-		oc.BRepTools.Clean(object, true);
+		oc.BRepTools.Clean(shape, true);
 	}
-	tesselationParamsByShape.set(object, {...tesselationParams});
+	tesselationParamsByShape.set(shape, {...tesselationParams});
 
 	const objects: Object3D[] = [];
 	if (tesselationParams.displayMeshes) {
-		const mesh = _createMesh(oc, object, tesselationParams);
+		const mesh = _createMesh(oc, shape, tesselationParams);
 		if (mesh) {
 			objects.push(mesh);
 		}
 	}
 	if (tesselationParams.displayEdges) {
 		// const edgeObjects:Object3D[]=[]
-		traverseEdges(oc, object, (edge) => {
+		traverseEdges(oc, shape, (edge) => {
 			const edgeObject = cadEdgeToObject3D(edge, tesselationParams);
 			if (edgeObject) {
 				// it seems better to not have shadows from those edges

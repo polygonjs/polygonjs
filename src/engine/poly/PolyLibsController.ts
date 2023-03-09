@@ -54,7 +54,7 @@ export class PolyLibsController {
 	}
 	//
 	//
-	// DRACO GLTF
+	// XATLAS GLTF
 	//
 	//
 	private _XATLASPath: string | null = '/xatlas';
@@ -63,5 +63,14 @@ export class PolyLibsController {
 	// }
 	XATLASPath() {
 		return this._XATLASPath;
+	}
+	//
+	//
+	// OCCT GLTF
+	//
+	//
+	private _OCCTPath: string | null = '/occt';
+	OCCTPath() {
+		return this._OCCTPath;
 	}
 }

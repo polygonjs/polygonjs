@@ -87,13 +87,13 @@ export class CorePoint extends CoreEntity {
 				component_index = COMPONENT_INDICES[component_name];
 				attribName = attribName.substring(0, attribName.length - 2);
 			}
-			const remaped_name = CoreAttribute.remapName(attribName);
+			const remapedName = CoreAttribute.remapName(attribName);
 
-			const attrib = geometry.getAttribute(remaped_name) as BufferAttribute | undefined;
+			const attrib = geometry.getAttribute(remapedName) as BufferAttribute | undefined;
 			if (attrib) {
 				const {array} = attrib;
-				if (CoreGeometry.isAttribIndexed(geometry, remaped_name)) {
-					return CorePoint.indexedAttribValue(geometry, index, remaped_name);
+				if (CoreGeometry.isAttribIndexed(geometry, remapedName)) {
+					return CorePoint.indexedAttribValue(geometry, index, remapedName);
 				} else {
 					const size = attrib.itemSize;
 					const start_index = index * size;

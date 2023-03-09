@@ -10,6 +10,7 @@ import {CadLoader} from '../../../core/geometry/cad/CadLoader';
 import {cadGeom2dCurveTranslate} from '../../../core/geometry/cad/toObject3D/CadGeom2dCurve';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
+import {CadGC} from '../../../core/geometry/cad/CadCommon';
 
 class CADEllipse2DSopParamsConfig extends NodeParamsConfig {
 	/** @param major radius */
@@ -38,13 +39,15 @@ export class CADEllipse2DSopNode extends CADSopNode<CADEllipse2DSopParamsConfig>
 	}
 
 	override async cook(inputCoreGroups: CoreGroup[]) {
-		const oc = await CadLoader.core();
-		const axis = new oc.gp_Ax22d_1();
-		const majorRadius = Math.max(this.pv.majorRadius, this.pv.minorRadius);
-		const minorRadius = Math.min(this.pv.majorRadius, this.pv.minorRadius);
-		const ellipse = new oc.Geom2d_Ellipse_3(axis, majorRadius, minorRadius);
-		cadGeom2dCurveTranslate(ellipse, this.pv.center);
+		const oc = await CadLoader.core(this);
+		CadGC.withGC((r) => {
+			const axis = r(new oc.gp_Ax22d_1());
+			const majorRadius = Math.max(this.pv.majorRadius, this.pv.minorRadius);
+			const minorRadius = Math.min(this.pv.majorRadius, this.pv.minorRadius);
+			const ellipse = new oc.Geom2d_Ellipse_3(axis, majorRadius, minorRadius);
+			cadGeom2dCurveTranslate(ellipse, this.pv.center);
 
-		this.setCADGeom2dCurve(ellipse);
+			this.setCADGeom2dCurve(ellipse);
+		});
 	}
 }

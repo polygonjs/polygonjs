@@ -14,6 +14,7 @@ const LEADING_ZEROS_MATCH_REGEXP = /^0+/;
 const INDICES_LIST_SEPARATOR = /,| /;
 const ZERO = '0';
 const SPACE = ' ';
+const RANGE_SEPARATOR = '-';
 
 // https://stackoverflow.com/questions/41856126/regexp-optional-dot-in-a-decimal-number
 const NUM_REGEXP = /^-?\d+\.?\d*$/;
@@ -252,13 +253,20 @@ export class CoreString {
 		} else {
 			const element = elements[0];
 			if (element) {
-				const range_separator = '-';
-				if (element.indexOf(range_separator) > 0) {
-					const range_elements = element.split(range_separator);
-					return ArrayUtils.range(parseInt(range_elements[0]), parseInt(range_elements[1]) + 1);
+				if (element.indexOf(RANGE_SEPARATOR) > 0) {
+					const rangeElements = element.split(RANGE_SEPARATOR);
+					const rangeStart = rangeElements[0];
+					const rangeEnd = rangeElements[1];
+					const rangeStartI = parseInt(rangeStart);
+					const rangeEndI = parseInt(rangeEnd);
+					if (CoreType.isNumberValid(rangeStartI) && CoreType.isNumberValid(rangeEndI)) {
+						return ArrayUtils.range(rangeStartI, rangeEndI + 1);
+					} else {
+						return [];
+					}
 				} else {
 					const parsed = parseInt(element);
-					if (CoreType.isNumber(parsed)) {
+					if (CoreType.isNumberValid(parsed)) {
 						return [parsed];
 					} else {
 						return [];

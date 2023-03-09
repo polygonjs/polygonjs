@@ -48,7 +48,7 @@ export class CADTubeSopNode extends CADSopNode<CADTubeSopParamsConfig> {
 	}
 
 	override async cook(inputCoreGroups: CoreGroup[]) {
-		const oc = await CadLoader.core();
+		const oc = await CadLoader.core(this);
 		const axis = cadAxis(this.pv.axis);
 
 		const api = this.pv.closed
@@ -56,7 +56,7 @@ export class CADTubeSopNode extends CADSopNode<CADTubeSopParamsConfig> {
 			: new oc.BRepPrimAPI_MakeCylinder_4(axis, this.pv.radius, this.pv.height, this.pv.angle);
 
 		const shape = cadShapeTranslate(api.Shape(), this.pv.center);
-
+		api.delete();
 		this.setCADShape(shape);
 	}
 }

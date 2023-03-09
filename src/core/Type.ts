@@ -28,6 +28,9 @@ export class CoreType {
 	static isNaN(value: any): boolean {
 		return isNaN(value);
 	}
+	static isNumberValid(value: any): value is number {
+		return this.isNumber(value) && !this.isNaN(value);
+	}
 	static isArray = isArray;
 	static isObject(value: any): value is object {
 		var type = typeof value;

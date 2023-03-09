@@ -54,7 +54,7 @@ export class CADConeSopNode extends CADSopNode<CADConeSopParamsConfig> {
 	}
 
 	override async cook(inputCoreGroups: CoreGroup[]) {
-		const oc = await CadLoader.core();
+		const oc = await CadLoader.core(this);
 		const axis = cadAxis(this.pv.axis);
 
 		const api = this.pv.closed
@@ -62,7 +62,7 @@ export class CADConeSopNode extends CADSopNode<CADConeSopParamsConfig> {
 			: new oc.BRepPrimAPI_MakeCone_4(axis, this.pv.baseRadius, this.pv.topRadius, this.pv.height, this.pv.phi);
 
 		const shape = cadShapeTranslate(api.Shape(), this.pv.center);
-
+		api.delete();
 		this.setCADShape(shape);
 	}
 }

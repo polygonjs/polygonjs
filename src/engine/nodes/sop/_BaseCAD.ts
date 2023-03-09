@@ -10,7 +10,9 @@ import {CadObject} from '../../../core/geometry/cad/CadObject';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {CoreObjectType} from '../../../core/geometry/ObjectContent';
 import {CadLoaderSync} from '../../../core/geometry/cad/CadLoaderSync';
+import {cadProcessError} from '../../../core/geometry/cad/CadExceptionHandler';
 import {ModuleName} from '../../poly/registers/modules/Common';
+
 export class CADSopNode<K extends NodeParamsConfig> extends TypedSopNode<K> {
 	override dataType(): string {
 		return CoreObjectType.CAD;
@@ -46,6 +48,11 @@ export class CADSopNode<K extends NodeParamsConfig> extends TypedSopNode<K> {
 		const coreGroup = this.containerController.container().coreContent() || new CoreGroup();
 		coreGroup.setAllObjects(objects);
 		this._setContainer(coreGroup);
+	}
+
+	// error processing
+	override processError(e: unknown) {
+		return cadProcessError(e);
 	}
 }
 

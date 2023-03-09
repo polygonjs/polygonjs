@@ -15,6 +15,7 @@ import {MapUtils} from '../../core/MapUtils';
 import {ObjectContent, CoreObjectType, ObjectGeometryMap, MergeCompactOptions} from './ObjectContent';
 import {TransformTargetType} from '../Transform';
 import {ObjectTransformSpace} from '../TransformSpace';
+import {EntityGroupCollection} from './EntityGroupCollection';
 // import {computeBoundingBoxFromObject3D} from './BoundingBox';
 // import {setSphereFromObject} from './BoundingSphere';
 
@@ -469,7 +470,8 @@ export abstract class BaseCoreObject<T extends CoreObjectType> extends CoreEntit
 
 	clone(): BaseCoreObject<T> {
 		const clonedObject = (this.constructor as typeof BaseCoreObject<CoreObjectType>).clone(this._object);
-		return new (this.constructor as any)(clonedObject, this._index);
+		const cloned = new (this.constructor as any)(clonedObject, this._index);
+		return cloned;
 	}
 
 	static clone<T extends CoreObjectType>(srcObject: ObjectContent<T>): ObjectContent<T> {
@@ -486,5 +488,14 @@ export abstract class BaseCoreObject<T extends CoreObjectType> extends CoreEntit
 	}
 	static mergeCompact(options: MergeCompactOptions) {
 		console.warn('mergeCompact.override required', this);
+	}
+
+	//
+	//
+	// ENTITY GROUPS
+	//
+	//
+	groupCollection() {
+		return new EntityGroupCollection(this._object);
 	}
 }

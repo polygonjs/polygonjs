@@ -5,17 +5,17 @@
  */
 import {CADSopNode} from './_BaseCAD';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {CadLoader} from '../../../core/geometry/cad/CadLoader';
 import {CoreCadType} from '../../../core/geometry/cad/CadCoreType';
 import {cadPlaneXY} from '../../../core/geometry/cad/CadMath';
 import {OpenCascadeInstance, CadGeometryType, gp_Pln} from '../../../core/geometry/cad/CadCommon';
 import {gp_Pnt2d, Geom2d_Curve, TopoDS_Vertex, TopoDS_Edge} from '../../../core/geometry/cad/CadCommon';
 import {cadVertexCreate} from '../../../core/geometry/cad/toObject3D/CadVertex';
-import {curveHandleFromEdge, cadEdgeCreate} from '../../../core/geometry/cad/toObject3D/CadEdge';
+import {curveDataFromEdge, cadEdgeCreate} from '../../../core/geometry/cad/toObject3D/CadEdge';
 import {Vector3} from 'three';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 import {CadObject} from '../../../core/geometry/cad/CadObject';
+import {CadLoaderSync} from '../../../core/geometry/cad/CadLoaderSync';
 
 enum ConversionMode {
 	TO_2D = 'to 2D',
@@ -44,8 +44,8 @@ export class CADConvertDimensionSopNode extends CADSopNode<CADConvertDimensionSo
 		this.io.inputs.setCount(1);
 	}
 
-	override async cook(inputCoreGroups: CoreGroup[]) {
-		const oc = await CadLoader.core();
+	override cook(inputCoreGroups: CoreGroup[]) {
+		const oc = CadLoaderSync.oc();
 
 		const mode = CONVERSION_MODES[this.pv.mode];
 		const plane = cadPlaneXY(); //cadPlaneFromAxis(this.pv.axis)
@@ -126,7 +126,7 @@ function convertEdgeToCurve2D(
 	plane: gp_Pln,
 	newObjects: CadObject<CadGeometryType>[]
 ) {
-	const handle3D = curveHandleFromEdge(oc, edge);
+	const handle3D = curveDataFromEdge(oc, edge).curveHandle;
 	const curve3D = handle3D.get();
 	if (!curve3D) {
 		return;
@@ -163,5 +163,6 @@ function convertCurve2DToEdge(
 		return;
 	}
 	const edge = cadEdgeCreate(oc, curve3D);
+	handle2D.delete();
 	newObjects.push(new CadObject(edge, CadGeometryType.EDGE));
 }

@@ -49,14 +49,14 @@ export class CADTorusSopNode extends CADSopNode<CADTorusSopParamsConfig> {
 	}
 
 	override async cook(inputCoreGroups: CoreGroup[]) {
-		const oc = await CadLoader.core();
+		const oc = await CadLoader.core(this);
 		const axis = cadAxis(this.pv.axis);
 		const api = this.pv.closed
 			? new oc.BRepPrimAPI_MakeTorus_5(axis, this.pv.outerRadius, this.pv.innerRadius)
 			: new oc.BRepPrimAPI_MakeTorus_6(axis, this.pv.outerRadius, this.pv.innerRadius, this.pv.phi);
 
 		const shape = cadShapeTranslate(api.Shape(), this.pv.center);
-
+		api.delete();
 		this.setCADShape(shape);
 	}
 }

@@ -6,7 +6,6 @@
 import {CADSopNode} from './_BaseCAD';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 // import {CadCoreGroup} from '../../../core/geometry/cad/CadCoreGroup';
-import {CadLoader} from '../../../core/geometry/cad/CadLoader';
 import {
 	OpenCascadeInstance,
 	TopoDS_Shape,
@@ -18,6 +17,7 @@ import {CadObject} from '../../../core/geometry/cad/CadObject';
 import {TypeAssert} from '../../poly/Assert';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 import {CoreGroup} from '../../../core/geometry/Group';
+import {CadLoaderSync} from '../../../core/geometry/cad/CadLoaderSync';
 
 enum BooleanMode {
 	ALL_IN_SEQUENCE = 'process all in sequence',
@@ -65,8 +65,8 @@ export class CADBooleanSopNode extends CADSopNode<CADBooleanSopParamsConfig> {
 		this.p.operation.set(BOOLEAN_CAD_OPERATION_TYPES.indexOf(operation));
 	}
 
-	override async cook(inputCoreGroups: CoreGroup[]) {
-		const oc = await CadLoader.core();
+	override cook(inputCoreGroups: CoreGroup[]) {
+		const oc = CadLoaderSync.oc();
 
 		const operation = BOOLEAN_CAD_OPERATION_TYPES[this.pv.operation];
 
@@ -273,30 +273,34 @@ function _booleanOperation(
 }
 
 function _booleanOperationIntersect(oc: OpenCascadeInstance, shape0: TopoDS_Shape, shape1: TopoDS_Shape) {
-	const cut = new oc.BRepAlgoAPI_Common_3(shape0, shape1, new oc.Message_ProgressRange_1());
-	cut.Build(new oc.Message_ProgressRange_1());
+	const operation = new oc.BRepAlgoAPI_Common_3(shape0, shape1, CadLoaderSync.Message_ProgressRange);
+	operation.Build(CadLoaderSync.Message_ProgressRange);
 
-	const shape = cut.Shape();
+	const shape = operation.Shape();
+	operation.delete();
 	return shape;
 }
 function _booleanOperationSubtract(oc: OpenCascadeInstance, shape0: TopoDS_Shape, shape1: TopoDS_Shape) {
-	const cut = new oc.BRepAlgoAPI_Cut_3(shape0, shape1, new oc.Message_ProgressRange_1());
-	cut.Build(new oc.Message_ProgressRange_1());
+	const operation = new oc.BRepAlgoAPI_Cut_3(shape0, shape1, CadLoaderSync.Message_ProgressRange);
+	operation.Build(CadLoaderSync.Message_ProgressRange);
 
-	const shape = cut.Shape();
+	const shape = operation.Shape();
+	operation.delete();
 	return shape;
 }
 function _booleanOperationUnion(oc: OpenCascadeInstance, shape0: TopoDS_Shape, shape1: TopoDS_Shape) {
-	const cut = new oc.BRepAlgoAPI_Fuse_3(shape0, shape1, new oc.Message_ProgressRange_1());
-	cut.Build(new oc.Message_ProgressRange_1());
+	const operation = new oc.BRepAlgoAPI_Fuse_3(shape0, shape1, CadLoaderSync.Message_ProgressRange);
+	operation.Build(CadLoaderSync.Message_ProgressRange);
 
-	const shape = cut.Shape();
+	const shape = operation.Shape();
+	operation.delete();
 	return shape;
 }
 function _booleanOperationSection(oc: OpenCascadeInstance, shape0: TopoDS_Shape, shape1: TopoDS_Shape) {
-	const cut = new oc.BRepAlgoAPI_Section_3(shape0, shape1, true);
-	// cut.Build(new oc.Message_ProgressRange_1());
+	const operation = new oc.BRepAlgoAPI_Section_3(shape0, shape1, true);
+	// cut.Build(CadLoaderSync.Message_ProgressRange);
 
-	const shape = cut.Shape();
+	const shape = operation.Shape();
+	operation.delete();
 	return shape;
 }
