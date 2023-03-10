@@ -89,7 +89,6 @@ export class NodeCookController<NC extends NodeContext> {
 	private _onError(e: unknown, errorType: ErrorType, alwaysSet: boolean = true) {
 		if (alwaysSet || !this.node.states.error.active()) {
 			const processedError = this.node.processError(e);
-			console.log({processedError});
 			this.node.states.error.set(`${errorType}: '${processedError}'.`);
 			Poly.warn(e);
 		}
