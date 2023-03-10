@@ -38,17 +38,14 @@ export class CADCurveFromPoints2DSopNode extends CADSopNode<CADCurveFromPoints2D
 			const oc = CadLoaderSync.oc();
 
 			const positions = new oc.TColgp_Array1OfPnt2d_2(0, points.length - 1);
-			console.log('size', positions.Size());
 			let index = 0;
 			for (let point of points) {
 				positions.SetValue(index, point);
 				index++;
 			}
 
-			const bezier = new oc.Geom2d_BezierCurve_1(positions);
-			// const curve = circle3Points.Value().get();
-			console.log({bezier});
-			this.setCADGeom2dCurve(bezier);
+			const curve = new oc.Geom2d_BezierCurve_1(positions);
+			this.setCADGeom2dCurve(curve);
 		} else {
 			this.setCADObjects([]);
 		}

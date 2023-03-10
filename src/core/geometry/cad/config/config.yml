@@ -172,6 +172,7 @@ mainBuild:
     - symbol: TopoDS_CompSolid
     - symbol: TopoDS_Edge
     - symbol: TopoDS_Face
+    - symbol: TopoDS_Iterator
     - symbol: TopoDS_Shape
     - symbol: TopoDS_Shell
     - symbol: TopoDS_Solid

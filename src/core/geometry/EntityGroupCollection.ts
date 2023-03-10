@@ -1,6 +1,6 @@
 import {TypeAssert} from '../../engine/poly/Assert';
 import {SetUtils} from '../SetUtils';
-import {CoreEntity} from './Entity';
+// import {CoreEntity} from './Entity';
 import {CoreObjectType, ObjectContent} from './ObjectContent';
 
 export enum GroupOperation {
@@ -103,11 +103,22 @@ export class EntityGroupCollection {
 		}
 		return data;
 	}
-	entities<E extends CoreEntity>(type: EntityGroupType, groupName: string, entities: E[]): E[] {
-		const indices = this.findOrCreateGroup(type, groupName);
-		const set = SetUtils.fromArray(indices);
-		return entities.filter((e) => set.has(e.index()));
+	indicesSet(type: EntityGroupType, groupName: string, target: Set<number>) {
+		const dict = this.attributesDictionary();
+		const groupsByName = dict[type];
+		target.clear();
+		if (groupsByName) {
+			const indices = groupsByName[groupName];
+			if (indices) {
+				SetUtils.fromArray(indices, target);
+			}
+		}
 	}
+	// entities<E extends CoreEntity>(type: EntityGroupType, groupName: string, entities: E[]): E[] {
+	// 	const indices = this.findOrCreateGroup(type, groupName);
+	// 	const set = SetUtils.fromArray(indices);
+	// 	return entities.filter((e) => set.has(e.index()));
+	// }
 	updateGroup(options: UpdateGroupOptions, selectedIndices: Set<number>) {
 		const {type, groupName, operation} = options;
 		const currentIndices = this.findOrCreateGroup(type, groupName);

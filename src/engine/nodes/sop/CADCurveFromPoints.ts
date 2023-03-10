@@ -46,13 +46,12 @@ export class CADCurveFromPointsSopNode extends CADSopNode<CADCurveFromPointsSopP
 				for (let vertex of vertices) {
 					const point = oc.BRep_Tool.Pnt(vertex);
 					points.push(point);
-					console.log(point);
 					positions.SetValue(index, point);
 					index++;
 				}
 
 				const _createBezier: () => TopoDS_Edge = () => {
-					const curve = r(new oc.Geom_BezierCurve_1(positions));
+					const curve = new oc.Geom_BezierCurve_1(positions);
 					const edge = cadEdgeCreate(oc, curve);
 					return edge;
 				};

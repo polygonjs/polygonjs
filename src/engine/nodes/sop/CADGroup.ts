@@ -106,6 +106,13 @@ export class CADGroupSopNode extends CADSopNode<CADGroupSopParamsConfig> {
 		this.io.inputs.initInputsClonedState(InputCloneMode.FROM_NODE);
 	}
 
+	setGroupType(groupType: EntityGroupType) {
+		this.p.type.set(GROUP_TYPES.indexOf(groupType));
+	}
+	groupType() {
+		return GROUP_TYPES[this.pv.type];
+	}
+
 	override async cook(inputCoreGroups: CoreGroup[]) {
 		const oc = await CadLoader.core(this);
 		const coreGroup0 = inputCoreGroups[0];
@@ -132,7 +139,7 @@ export class CADGroupSopNode extends CADSopNode<CADGroupSopParamsConfig> {
 	) {
 		const entities: CoreEntity[] = [];
 		const shape = inputObject.cadGeometry();
-		const type = GROUP_TYPES[this.pv.type];
+		const type = this.groupType();
 
 		switch (type) {
 			case EntityGroupType.EDGE: {

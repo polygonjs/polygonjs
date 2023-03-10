@@ -6,6 +6,7 @@ import {cadPnt2dTransform} from '../toObject3D/CadPnt2d';
 import {cadGeom2dCurveTransform} from '../toObject3D/CadGeom2dCurve';
 import {cadShapeTransform} from '../toObject3D/CadShapeCommon';
 import {CadLoaderSync} from '../CadLoaderSync';
+import {CoreCadType} from '../CadCoreType';
 // import {CadLoaderSync} from '../CadLoaderSync';
 
 const t2 = new Vector2();
@@ -14,9 +15,13 @@ export function cadTransform(cadObject: CadObject<CadGeometryType>, t: Vector3, 
 	const newGeometry = cadGeometryTransform(cadObject.type, cadObject.cadGeometry(), t, r, s, p);
 	if (newGeometry) {
 		const oc = CadLoaderSync.oc();
-		const newType = cadGeometryTypeFromShape(oc, newGeometry as any);
-		if (newType) {
-			cadObject.setGeometry(newGeometry, newType);
+		if (CoreCadType.isGeometryShape(newGeometry)) {
+			const newType = cadGeometryTypeFromShape(oc, newGeometry);
+			if (newType) {
+				cadObject.setGeometry(newGeometry, newType);
+			}
+		} else {
+			// no need to re-add as it is transformed in place
 		}
 	}
 	// switch (cadObject.type) {

@@ -30,7 +30,7 @@ export class CADCurve2DToSurfaceSopNode extends CADSopNode<CADCurve2DToSurfaceSo
 			inputCoreGroups[0].cadObjects(),
 			CadGeometryType.CURVE_2D
 		);
-		const inputSurfaces = cadFilterShapes(inputCoreGroups[1].cadObjects());
+		const inputSurfaces = cadFilterShapes(inputCoreGroups[1].cadObjectsWithShape());
 
 		const newObjects: CadObject<CadGeometryType>[] = [];
 
@@ -42,9 +42,9 @@ export class CADCurve2DToSurfaceSopNode extends CADSopNode<CADCurve2DToSurfaceSo
 					const shape = inputFaceObject.cadGeometry() as TopoDS_Shape;
 					const curve = inputCurve.cadGeometry();
 					const curveHandle = r(new oc.Handle_Geom2d_Curve_2(curve));
-					const surface = r(new oc.BRepLib_FindSurface_2(shape, 0, false, false)).Surface();
-					const api = r(new oc.BRepBuilderAPI_MakeEdge_30(curveHandle, surface));
-
+					const findSurface = r(new oc.BRepLib_FindSurface_2(shape, 0, false, false));
+					const surfaceHandle = findSurface.Surface();
+					const api = r(new oc.BRepBuilderAPI_MakeEdge_30(curveHandle, surfaceHandle));
 					if (api.IsDone()) {
 						const edge = api.Edge();
 						const result = oc.BRepLib.BuildCurves3d_2(edge);

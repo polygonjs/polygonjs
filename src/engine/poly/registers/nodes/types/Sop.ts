@@ -41,6 +41,7 @@ export enum SopType {
 	CAD_TRANSFORM_2D = 'CADTransform2D',
 	CAD_TRIANGULATE = 'CADTriangulate',
 	CAD_TUBE = 'CADTube',
+	CAD_UNPACK = 'CADUnpack',
 	CAD_WEDGE = 'CADWedge',
 	//
 	CAPSULE = 'capsule',

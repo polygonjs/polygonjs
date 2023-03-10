@@ -17,7 +17,7 @@ export class CADSopNode<K extends NodeParamsConfig> extends TypedSopNode<K> {
 	override dataType(): string {
 		return CoreObjectType.CAD;
 	}
-	override async requiredModules() {
+	override requiredModules() {
 		return [ModuleName.CAD];
 	}
 	setCADGeom2dCurve(curve: Geom2d_Curve) {

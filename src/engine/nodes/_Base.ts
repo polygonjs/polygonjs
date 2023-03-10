@@ -471,7 +471,7 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 	}
 
 	// modules
-	public async requiredModules(): Promise<ModuleName[] | void> {}
+	public requiredModules(): ModuleName[] | void {}
 	public usedAssembler(): AssemblerName | void {}
 	public integrationData(): IntegrationData | void {}
 

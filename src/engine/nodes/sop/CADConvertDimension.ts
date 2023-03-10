@@ -17,11 +17,11 @@ import {SopType} from '../../poly/registers/nodes/types/Sop';
 import {CadObject} from '../../../core/geometry/cad/CadObject';
 import {CadLoaderSync} from '../../../core/geometry/cad/CadLoaderSync';
 
-enum ConversionMode {
+export enum ConversionMode {
 	TO_2D = 'to 2D',
 	TO_3D = 'to 3D',
 }
-const CONVERSION_MODES: ConversionMode[] = [ConversionMode.TO_2D, ConversionMode.TO_3D];
+export const CONVERSION_MODES: ConversionMode[] = [ConversionMode.TO_2D, ConversionMode.TO_3D];
 
 class CADConvertDimensionSopParamsConfig extends NodeParamsConfig {
 	/** @param mode */
@@ -42,6 +42,10 @@ export class CADConvertDimensionSopNode extends CADSopNode<CADConvertDimensionSo
 	}
 	protected override initializeNode() {
 		this.io.inputs.setCount(1);
+	}
+
+	setMode(mode: ConversionMode) {
+		this.p.mode.set(CONVERSION_MODES.indexOf(mode));
 	}
 
 	override cook(inputCoreGroups: CoreGroup[]) {

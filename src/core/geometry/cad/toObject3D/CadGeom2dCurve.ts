@@ -7,10 +7,35 @@ import {CadLoaderSync} from '../CadLoaderSync';
 import {ObjectType} from '../../Constant';
 import {CadObject} from '../CadObject';
 import {objectContentCopyProperties} from '../../ObjectContent';
+import {Color} from 'three';
+
+export const CURVE_2D_TESSELATION_PARAMS: CADTesselationParams = {
+	linearTolerance: 0.1,
+	angularTolerance: 0.1,
+	curveAbscissa: 0.1,
+	curveTolerance: 0.1,
+	wireframe: false,
+	displayMeshes: false,
+	displayEdges: true,
+	meshesColor: new Color(),
+	edgesColor: new Color(),
+};
 
 const STRIDE = 3;
-// let point: gp_Pnt2d | undefined;
 export function cadGeom2dCurveToObject3D(
+	cadObject: CadObject<CadGeometryType.CURVE_2D>,
+	tesselationParams: CADTesselationParams
+) {
+	const geometry = cadGeom2dCurveToBufferGeometry(cadObject, tesselationParams);
+	const object = BaseSopOperation.createObject(
+		geometry,
+		ObjectType.LINE_SEGMENTS,
+		cadMaterialLine(tesselationParams.edgesColor)
+	);
+	objectContentCopyProperties(cadObject, object);
+	return object;
+}
+export function cadGeom2dCurveToBufferGeometry(
 	cadObject: CadObject<CadGeometryType.CURVE_2D>,
 	tesselationParams: CADTesselationParams
 ) {
@@ -18,7 +43,7 @@ export function cadGeom2dCurveToObject3D(
 
 	return CadGC.withGC((r) => {
 		const curve = cadObject.cadGeometry();
-		const curveHandle = r(new oc.Handle_Geom2d_Curve_2(curve));
+		const curveHandle = new oc.Handle_Geom2d_Curve_2(curve);
 		const geom2Dadaptor = r(new oc.Geom2dAdaptor_Curve_2(curveHandle));
 
 		const uniformAbscissa = r(
@@ -54,13 +79,7 @@ export function cadGeom2dCurveToObject3D(
 		const geometry = new BufferGeometry();
 		geometry.setAttribute('position', new Float32BufferAttribute(positions || [], 3));
 		geometry.setIndex(indices || []);
-		const object = BaseSopOperation.createObject(
-			geometry,
-			ObjectType.LINE_SEGMENTS,
-			cadMaterialLine(tesselationParams.edgesColor)
-		);
-		objectContentCopyProperties(cadObject, object);
-		return object;
+		return geometry;
 	});
 }
 

@@ -69,6 +69,7 @@ import {CADTransformSopNode} from '../../../nodes/sop/CADTransform';
 import {CADTransform2DSopNode} from '../../../nodes/sop/CADTransform2D';
 import {CADTriangulateSopNode} from '../../../nodes/sop/CADTriangulate';
 import {CADTubeSopNode} from '../../../nodes/sop/CADTube';
+import {CADUnpackSopNode} from '../../../nodes/sop/CADUnpack';
 import {CADWedgeSopNode} from '../../../nodes/sop/CADWedge';
 //
 import {CameraControlsSopNode} from '../../../nodes/sop/CameraControls';
@@ -298,7 +299,7 @@ export interface GeoNodeChildrenMap {
 	CADCircle2D: CADCircle2DSopNode;
 	CADCircle3Points: CADCircle3PointsSopNode;
 	CADCone: CADConeSopNode;
-	CADConvertDimention: CADConvertDimensionSopNode;
+	CADConvertDimension: CADConvertDimensionSopNode;
 	CADCurve2DToSurface: CADCurve2DToSurfaceSopNode;
 	CADCurveFromPoints: CADCurveFromPointsSopNode;
 	CADCurveFromPoints2D: CADCurveFromPoints2DSopNode;
@@ -326,6 +327,7 @@ export interface GeoNodeChildrenMap {
 	CADTransform2D: CADTransform2DSopNode;
 	CADTriangulate: CADTriangulateSopNode;
 	CADTube: CADTubeSopNode;
+	CADUnpack: CADUnpackSopNode;
 	CADWedge: CADWedgeSopNode;
 	//
 	cameraControls: CameraControlsSopNode;
@@ -805,6 +807,7 @@ export class SopRegister {
 		poly.registerNode(CADTransform2DSopNode, CATEGORY_SOP.CAD);
 		poly.registerNode(CADTriangulateSopNode, CATEGORY_SOP.CAD);
 		poly.registerNode(CADTubeSopNode, CATEGORY_SOP.CAD);
+		poly.registerNode(CADUnpackSopNode, CATEGORY_SOP.CAD);
 		poly.registerNode(CADWedgeSopNode, CATEGORY_SOP.CAD);
 		//
 		poly.registerNode(CameraControlsSopNode, CATEGORY_SOP.RENDER);

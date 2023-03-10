@@ -12,19 +12,20 @@ import {
 	TopoDS_Shape,
 	OpenCascadeInstance,
 	cadGeometryTypeFromShape,
-	TopTools_ListOfShape,
+	// TopTools_ListOfShape,
 } from '../../../core/geometry/cad/CadCommon';
 import {traverseFaces} from '../../../core/geometry/cad/CadTraverse';
 // import {withCadException} from '../../../core/geometry/cad/CadExceptionHandler';
-import {SetUtils} from '../../../core/SetUtils';
+// import {SetUtils} from '../../../core/SetUtils';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 import {CadObject} from '../../../core/geometry/cad/CadObject';
 import {CadLoaderSync} from '../../../core/geometry/cad/CadLoaderSync';
-import {CoreString} from '../../../core/String';
-import {CadCoreFace} from '../../../core/geometry/cad/CadCoreFace';
-import {coreObjectInstanceFactory} from '../../../core/geometry/CoreObjectFactory';
+// import {CoreString} from '../../../core/String';
+// import {CadCoreFace} from '../../../core/geometry/cad/CadCoreFace';
+// import {coreObjectInstanceFactory} from '../../../core/geometry/CoreObjectFactory';
 import {EntityGroupType} from '../../../core/geometry/EntityGroupCollection';
+import {CadEntityGroupCollection} from '../../../core/geometry/cad/CadEntityGroupCollection';
 
 // TODO: find more meaningful name
 class CADThicknessSopParamsConfig extends NodeParamsConfig {
@@ -97,7 +98,16 @@ export class CADThicknessSopNode extends CADSopNode<CADThicknessSopParamsConfig>
 		// 	faces.Append_1(face);
 		// }
 		const shape = object.cadGeometry() as TopoDS_Shape;
-		this._getFacesToRemove(oc, object, shape, faces);
+		CadEntityGroupCollection.traverseEntitiesInGroup({
+			groupName: this.pv.facesGroupToDelete,
+			groupType: EntityGroupType.FACE,
+			object,
+			shape,
+			traverseFunction: traverseFaces,
+			onEntityTraversed: (face, i) => {
+				faces.Append_1(face);
+			},
+		});
 
 		//
 		const api = new oc.BRepOffsetAPI_MakeThickSolid();
@@ -119,77 +129,78 @@ export class CADThicknessSopNode extends CADSopNode<CADThicknessSopParamsConfig>
 		return newShape;
 	}
 
-	private _getFacesToRemove(
-		oc: OpenCascadeInstance,
-		object: CadObject<CadGeometryType>,
-		shape: TopoDS_Shape,
-		faces: TopTools_ListOfShape
-	) {
-		const groupName = this.pv.facesGroupToDelete;
-		if (groupName.trim() == '') {
-			// no group
-			traverseFaces(oc, shape, (face) => {
-				faces.Append_1(face);
-			});
-		} else {
-			const indices = CoreString.indices(groupName);
-			if (indices.length != 0) {
-				// group by indices
-				const indicesSet = SetUtils.fromArray(indices);
-				traverseFaces(oc, shape, (face, i) => {
-					if (indicesSet.has(i)) {
-						faces.Append_1(face);
-					}
-				});
-			} else {
-				// group by name
-				const coreFaces: CadCoreFace[] = [];
-				traverseFaces(oc, shape, (face, i) => {
-					coreFaces.push(new CadCoreFace(shape, face, i));
-				});
-				const coreObject = coreObjectInstanceFactory(object);
-				const groupCollection = coreObject.groupCollection();
-				const selectedCoreFaces = groupCollection.entities(EntityGroupType.FACE, groupName, coreFaces);
-				for (let selectedCoreFace of selectedCoreFaces) {
-					faces.Append_1(selectedCoreFace.face());
-				}
-			}
-		}
+	// private _getFacesToRemove(
+	// 	oc: OpenCascadeInstance,
+	// 	object: CadObject<CadGeometryType>,
+	// 	shape: TopoDS_Shape,
+	// 	faces: TopTools_ListOfShape
+	// ) {
 
-		// facesByDist.clear();
-		// faceDists.clear();
-		// traverseFaces(oc, shape, (face) => {
-		// 	// const surface = oc.BRep_Tool.Surface_2(face);
+	// 	// const groupName = this.pv.facesGroupToDelete;
+	// 	// if (groupName.trim() == '') {
+	// 	// 	// no group
+	// 	// 	traverseFaces(oc, shape, (face) => {
+	// 	// 		faces.Append_1(face);
+	// 	// 	});
+	// 	// } else {
+	// 	// 	const indices = CoreString.indices(groupName);
+	// 	// 	if (indices.length != 0) {
+	// 	// 		// group by indices
+	// 	// 		const indicesSet = SetUtils.fromArray(indices);
+	// 	// 		traverseFaces(oc, shape, (face, i) => {
+	// 	// 			if (indicesSet.has(i)) {
+	// 	// 				faces.Append_1(face);
+	// 	// 			}
+	// 	// 		});
+	// 	// 	} else {
+	// 	// 		// group by name
+	// 	// 		const coreFaces: CadCoreFace[] = [];
+	// 	// 		traverseFaces(oc, shape, (face, i) => {
+	// 	// 			coreFaces.push(new CadCoreFace(shape, face, i));
+	// 	// 		});
+	// 	// 		const coreObject = coreObjectInstanceFactory(object);
+	// 	// 		const groupCollection = coreObject.groupCollection();
+	// 	// 		const selectedCoreFaces = groupCollection.entities(EntityGroupType.FACE, groupName, coreFaces);
+	// 	// 		for (let selectedCoreFace of selectedCoreFaces) {
+	// 	// 			faces.Append_1(selectedCoreFace.face());
+	// 	// 		}
+	// 	// 	}
+	// 	// }
 
-		// 	const surfaceProperties = CadLoaderSync.GProp_GProps;
-		// 	oc.BRepGProp.SurfaceProperties_1(face, surfaceProperties, false, false);
-		// 	const centerOfMass = surfaceProperties.CentreOfMass();
+	// 	// facesByDist.clear();
+	// 	// faceDists.clear();
+	// 	// traverseFaces(oc, shape, (face) => {
+	// 	// 	// const surface = oc.BRep_Tool.Surface_2(face);
 
-		// 	faceCenter.set(centerOfMass.X(), centerOfMass.Y(), centerOfMass.Z());
-		// 	axis.closestPointToPoint(faceCenter, false, projected);
-		// 	const position = projected.dot(axis.end);
-		// 	// const currentFace = new oc.TopExp_Explorer_2(
-		// 	// 	face,
-		// 	// 	oc.TopAbs_ShapeEnum.TopAbs_FACE as any,
-		// 	// 	oc.TopAbs_ShapeEnum.TopAbs_SHAPE as any
-		// 	// ).Current();
-		// 	MapUtils.addToSetAtEntry(facesByDist, position, face);
-		// 	faceDists.add(position);
-		// });
-		// const dists = SetUtils.toArray(faceDists);
-		// const sortedDists = dists.sort((a, b) => (a > b ? 1 : -1));
-		// const facesToRemove: TopoDS_Face[] = [];
-		// for (let dist of sortedDists) {
-		// 	const faces = facesByDist.get(dist);
-		// 	if (faces) {
-		// 		for (let face of faces) {
-		// 			facesToRemove.push(face);
-		// 			if (facesToRemove.length >= this.pv.facesCount) {
-		// 				return facesToRemove;
-		// 			}
-		// 		}
-		// 	}
-		// }
-		// return facesToRemove;
-	}
+	// 	// 	const surfaceProperties = CadLoaderSync.GProp_GProps;
+	// 	// 	oc.BRepGProp.SurfaceProperties_1(face, surfaceProperties, false, false);
+	// 	// 	const centerOfMass = surfaceProperties.CentreOfMass();
+
+	// 	// 	faceCenter.set(centerOfMass.X(), centerOfMass.Y(), centerOfMass.Z());
+	// 	// 	axis.closestPointToPoint(faceCenter, false, projected);
+	// 	// 	const position = projected.dot(axis.end);
+	// 	// 	// const currentFace = new oc.TopExp_Explorer_2(
+	// 	// 	// 	face,
+	// 	// 	// 	oc.TopAbs_ShapeEnum.TopAbs_FACE as any,
+	// 	// 	// 	oc.TopAbs_ShapeEnum.TopAbs_SHAPE as any
+	// 	// 	// ).Current();
+	// 	// 	MapUtils.addToSetAtEntry(facesByDist, position, face);
+	// 	// 	faceDists.add(position);
+	// 	// });
+	// 	// const dists = SetUtils.toArray(faceDists);
+	// 	// const sortedDists = dists.sort((a, b) => (a > b ? 1 : -1));
+	// 	// const facesToRemove: TopoDS_Face[] = [];
+	// 	// for (let dist of sortedDists) {
+	// 	// 	const faces = facesByDist.get(dist);
+	// 	// 	if (faces) {
+	// 	// 		for (let face of faces) {
+	// 	// 			facesToRemove.push(face);
+	// 	// 			if (facesToRemove.length >= this.pv.facesCount) {
+	// 	// 				return facesToRemove;
+	// 	// 			}
+	// 	// 		}
+	// 	// 	}
+	// 	// }
+	// 	// return facesToRemove;
+	// }
 }

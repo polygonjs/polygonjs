@@ -57,7 +57,6 @@ export class CADLoftSopNode extends CADSopNode<CADLoftSopParamsConfig> {
 			// CadGeometryType.FACE,
 			// CadGeometryType.SHELL,
 		]);
-		console.log({inputObjects});
 		// const pathObjects = cadFilterObjects(pathsCoreGroup.cadObjects(), [CadGeometryType.EDGE, CadGeometryType.WIRE]);
 		if (inputObjects && inputObjects.length != 0) {
 			CadGC.withGC((r) => {

@@ -84,13 +84,13 @@ export function OBJCADTesselationParamConfig<TBase extends Constructor>(Base: TB
 		/** @param meshes color */
 		CADMeshesColor = ParamConfig.COLOR([1, 1, 1], {
 			visibleIf: {
-				displayMeshes: true,
+				CADDisplayMeshes: true,
 			},
 		});
 		/** @param wireframe */
 		CADWireframe = ParamConfig.BOOLEAN(false, {
 			visibleIf: {
-				displayMeshes: true,
+				CADDisplayMeshes: true,
 			},
 		});
 	};

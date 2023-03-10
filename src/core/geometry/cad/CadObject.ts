@@ -17,7 +17,12 @@ import {
 import {ObjectContent, CoreObjectType, ObjectGeometryMap, objectContentCopyProperties} from '../ObjectContent';
 import {cadPnt2dClone, cadPnt2dToObject3D} from './toObject3D/CadPnt2d';
 import {cadVertexClone, cadVertexToObject3D} from './toObject3D/CadVertex';
-import {cadGeom2dCurveClone, cadGeom2dCurveToObject3D} from './toObject3D/CadGeom2dCurve';
+import {
+	cadGeom2dCurveClone,
+	cadGeom2dCurveToBufferGeometry,
+	cadGeom2dCurveToObject3D,
+	CURVE_2D_TESSELATION_PARAMS,
+} from './toObject3D/CadGeom2dCurve';
 import {cadEdgeClone, cadEdgeObjectToObject3D} from './toObject3D/CadEdge';
 import {cadWireClone, cadWireToObject3D} from './toObject3D/CadWire';
 import {CoreCadType} from './CadCoreType';
@@ -99,9 +104,13 @@ export class CadObject<T extends CadGeometryType> implements ObjectContent<CoreO
 		const newGeometry = cadGeometryTransform(this.type, this.cadGeometry(), t, r, s.x, pivot);
 		if (newGeometry) {
 			const oc = CadLoaderSync.oc();
-			const newType = cadGeometryTypeFromShape(oc, newGeometry as any);
-			if (newType) {
-				this.setGeometry(newGeometry, newType);
+			if (CoreCadType.isGeometryShape(newGeometry)) {
+				const newType = cadGeometryTypeFromShape(oc, newGeometry);
+				if (newType) {
+					this.setGeometry(newGeometry, newType);
+				}
+			} else {
+				// no need to re-add as it is transformed in place
 			}
 		}
 	}
@@ -176,8 +185,9 @@ export class CadObject<T extends CadGeometryType> implements ObjectContent<CoreO
 		const oc = CadLoaderSync.oc();
 		const Bnd_Box = CadLoaderSync.Bnd_Box;
 		Bnd_Box.SetVoid();
+		const useTriangulation = true;
 		if (CoreCadType.isShape(this)) {
-			oc.BRepBndLib.AddClose(this.cadGeometry() as TopoDS_Shape, Bnd_Box);
+			oc.BRepBndLib.Add(this.cadGeometry() as TopoDS_Shape, Bnd_Box, useTriangulation);
 			Bnd_Box.Get(
 				DEFAULT_BND_BOX.min.x as any,
 				DEFAULT_BND_BOX.min.y as any,
@@ -192,9 +202,37 @@ export class CadObject<T extends CadGeometryType> implements ObjectContent<CoreO
 			target.max.x = DEFAULT_BND_BOX.max.x.current;
 			target.max.y = DEFAULT_BND_BOX.max.y.current;
 			target.max.z = DEFAULT_BND_BOX.max.z.current;
+			return;
 		} else {
-			console.warn('cad BoundingBox not implemented for non shapes');
-			target.copy(BBOX_EMPTY);
+			switch (this.type) {
+				case CadGeometryType.POINT_2D: {
+					const point = this.cadGeometry() as gp_Pnt2d;
+					target.min.x = point.X();
+					target.min.y = point.Y();
+					target.min.z = 0;
+					target.max.x = point.X();
+					target.max.y = point.Y();
+					target.max.z = 0;
+					return;
+				}
+				case CadGeometryType.CURVE_2D: {
+					const geometry = cadGeom2dCurveToBufferGeometry(
+						this as CadObject<CadGeometryType.CURVE_2D>,
+						CURVE_2D_TESSELATION_PARAMS
+					);
+					geometry.computeBoundingBox();
+					if (geometry.boundingBox) {
+						target.copy(geometry.boundingBox);
+					} else {
+						target.copy(BBOX_EMPTY);
+					}
+					return;
+				}
+				default: {
+					console.warn('cad BoundingBox not implemented for type', this.type);
+					target.copy(BBOX_EMPTY);
+				}
+			}
 		}
 		// switch (type) {
 

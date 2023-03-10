@@ -9,7 +9,7 @@ export class CSGSopNode<K extends NodeParamsConfig> extends TypedSopNode<K> {
 	override dataType(): string {
 		return CoreObjectType.CSG;
 	}
-	override async requiredModules() {
+	override requiredModules() {
 		return [ModuleName.CSG];
 	}
 	setCSGGeometry<T extends CsgGeometryType>(geometry: CsgTypeMap[T]) {

@@ -12,6 +12,7 @@ import {CadGC} from '../../../core/geometry/cad/CadCommon';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 import {CadLoaderSync} from '../../../core/geometry/cad/CadLoaderSync';
+import {cadShapeTranslate} from '../../../core/geometry/cad/toObject3D/CadShapeCommon';
 
 // TODO: make by default on the same axis as other 3d curve primitives like cad/circle
 const FILLET_RADIUS_SAFETY_MARGIN = 0.01;
@@ -90,7 +91,8 @@ export class CADRectangleSopNode extends CADSopNode<CADRectangleSopParamsConfig>
 			}
 
 			const wire = wireApi.Wire();
-			this.setCADShape(wire);
+			const shape = cadShapeTranslate(wire, this.pv.center);
+			this.setCADShape(shape);
 		});
 	}
 }
