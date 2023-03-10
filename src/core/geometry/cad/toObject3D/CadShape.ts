@@ -6,7 +6,7 @@ import type {
 	CachedCADTesselationParams,
 	CadGeometryTypeShape,
 } from '../CadCommon';
-import {faceData} from '../CadCoreFace';
+import {faceData} from './CadTriangulationFaceUtils';
 import {BufferGeometry, BufferAttribute, Object3D} from 'three';
 import {BaseSopOperation} from '../../../../engine/operations/sop/_Base';
 import {ObjectType} from '../../Constant';

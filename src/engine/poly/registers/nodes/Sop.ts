@@ -49,6 +49,7 @@ import {CADCurveFromPoints2DSopNode} from '../../../nodes/sop/CADCurveFromPoints
 import {CADCurveTrimSopNode} from '../../../nodes/sop/CADCurveTrim';
 import {CADEllipseSopNode} from '../../../nodes/sop/CADEllipse';
 import {CADEllipse2DSopNode} from '../../../nodes/sop/CADEllipse2D';
+import {CADExtrudeSopNode} from '../../../nodes/sop/CADExtrude';
 import {CADFileSTEPSopNode} from '../../../nodes/sop/CADFileSTEP';
 import {CADFilletSopNode} from '../../../nodes/sop/CADFillet';
 import {CADGroupSopNode} from '../../../nodes/sop/CADGroup';
@@ -58,7 +59,6 @@ import {CADPipeSopNode} from '../../../nodes/sop/CADPipe';
 import {CADPointSopNode} from '../../../nodes/sop/CADPoint';
 import {CADPoint2DSopNode} from '../../../nodes/sop/CADPoint2D';
 import {CADPointsFromCurveSopNode} from '../../../nodes/sop/CADPointsFromCurve';
-import {CADPrismSopNode} from '../../../nodes/sop/CADPrism';
 import {CADRectangleSopNode} from '../../../nodes/sop/CADRectangle';
 import {CADRevolutionSopNode} from '../../../nodes/sop/CADRevolution';
 import {CADSegmentSopNode} from '../../../nodes/sop/CADSegment';
@@ -305,6 +305,7 @@ export interface GeoNodeChildrenMap {
 	CADCurveTrim: CADCurveTrimSopNode;
 	CADEllipse: CADEllipseSopNode;
 	CADEllipse2D: CADEllipse2DSopNode;
+	CADExtrude: CADExtrudeSopNode;
 	CADFileSTEP: CADFileSTEPSopNode;
 	CADFillet: CADFilletSopNode;
 	CADGroup: CADGroupSopNode;
@@ -315,7 +316,6 @@ export interface GeoNodeChildrenMap {
 	CADPoint: CADPointSopNode;
 	CADPoint2D: CADPoint2DSopNode;
 	CADPointsFromCurve: CADPointsFromCurveSopNode;
-	CADPrism: CADPrismSopNode;
 	CADRectangle: CADRectangleSopNode;
 	CADRevolution: CADRevolutionSopNode;
 	CADSegment: CADSegmentSopNode;
@@ -785,6 +785,7 @@ export class SopRegister {
 		poly.registerNode(CADCurveTrimSopNode, CATEGORY_SOP.CAD);
 		poly.registerNode(CADEllipseSopNode, CATEGORY_SOP.CAD);
 		poly.registerNode(CADEllipse2DSopNode, CATEGORY_SOP.CAD);
+		poly.registerNode(CADExtrudeSopNode, CATEGORY_SOP.CAD);
 		poly.registerNode(CADFileSTEPSopNode, CATEGORY_SOP.CAD);
 		poly.registerNode(CADFilletSopNode, CATEGORY_SOP.CAD);
 		poly.registerNode(CADGroupSopNode, CATEGORY_SOP.CAD);
@@ -794,7 +795,6 @@ export class SopRegister {
 		poly.registerNode(CADPointSopNode, CATEGORY_SOP.CAD);
 		poly.registerNode(CADPoint2DSopNode, CATEGORY_SOP.CAD);
 		poly.registerNode(CADPointsFromCurveSopNode, CATEGORY_SOP.CAD);
-		poly.registerNode(CADPrismSopNode, CATEGORY_SOP.CAD);
 		poly.registerNode(CADRectangleSopNode, CATEGORY_SOP.CAD);
 		poly.registerNode(CADRevolutionSopNode, CATEGORY_SOP.CAD);
 		poly.registerNode(CADSegmentSopNode, CATEGORY_SOP.CAD);

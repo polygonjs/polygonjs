@@ -24,10 +24,10 @@ type GroupsDataForType = GroupData[];
 type AllGroupsData = Record<string, GroupsDataForType>;
 
 export enum EntityGroupType {
-	POINT = 'point',
-	OBJECT = 'object',
-	CAD_EDGE = 'CADEdge',
-	CAD_FACE = 'CADFace',
+	POINT = 'points',
+	OBJECT = 'objects',
+	EDGE = 'edges',
+	FACE = 'faces',
 }
 export interface UpdateGroupOptions {
 	type: EntityGroupType;

@@ -7,8 +7,47 @@ import {CadLoaderSync} from './CadLoaderSync';
 // 2 - custom opencascade build
 // @ts-ignore
 // // import opencascadeCustomBuildWasm from './build/cadNodes.wasm';
+interface InitOpenCascadeOption {
+	mainJS: () => Promise<OpenCascadeInstance>;
+	mainWasm: string;
+	worker?: string;
+	libs?: string[];
+	module?: Object;
+}
+type InitCallback = (options: InitOpenCascadeOption) => Promise<OpenCascadeInstance>;
 import opencascadeCustomBuild from './build/polygonjs-occt.js';
-import initOpenCascade from 'opencascade.js';
+const initOpenCascade: InitCallback = (options) => {
+	const module = options.module || {};
+	return new Promise((resolve, reject) => {
+		new (options.mainJS as any)({
+			locateFile(path: string) {
+				if (path.endsWith('.wasm')) {
+					return options.mainWasm;
+				}
+				if (path.endsWith('.worker.js') && !!options.worker) {
+					return options.worker;
+				}
+				return path;
+			},
+			...module,
+		}).then(async (oc: OpenCascadeInstance) => {
+			if (options.libs) {
+				for (let lib of options.libs) {
+					await (oc as any).loadDynamicLibrary(lib, {
+						loadAsync: true,
+						global: true,
+						nodelete: true,
+						allowUndefined: false,
+					});
+				}
+			}
+			resolve(oc);
+		});
+	});
+};
+
+// import initOpenCascade from 'opencascade.js';
+
 //
 import {Poly} from '../../../engine/Poly';
 import {sanitizeUrl} from '../../UrlHelper';

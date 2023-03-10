@@ -97,7 +97,7 @@ export class CADFilletSopNode extends CADSopNode<CADFilletSopParamsConfig> {
 							const coreObject = coreObjectInstanceFactory(inputObject);
 							const groupCollection = coreObject.groupCollection();
 							const selectedCoreEdges = groupCollection.entities(
-								EntityGroupType.CAD_EDGE,
+								EntityGroupType.EDGE,
 								groupName,
 								coreEdges
 							);

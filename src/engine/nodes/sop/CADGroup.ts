@@ -10,7 +10,7 @@ import {SopType} from '../../poly/registers/nodes/types/Sop';
 import {CadLoader} from '../../../core/geometry/cad/CadLoader';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {traverseEdges} from '../../../core/geometry/cad/CadTraverse';
+import {traverseEdges, traverseFaces} from '../../../core/geometry/cad/CadTraverse';
 import {CoreCadType} from '../../../core/geometry/cad/CadCoreType';
 import {GroupByExpressionHelper} from './utils/group/GroupByExpressionHelper';
 import {GroupByBoundingBoxHelper} from './utils/group/GroupByBoundingBoxHelper';
@@ -26,12 +26,22 @@ import {
 	EntityGroupType,
 } from '../../../core/geometry/EntityGroupCollection';
 import {coreObjectInstanceFactory} from '../../../core/geometry/CoreObjectFactory';
+import {CoreEntity} from '../../../core/geometry/Entity';
+import {CadCoreFace} from '../../../core/geometry/cad/CadCoreFace';
 
 const DISPLAYED_INPUT_NAMES = ['input geometries', 'bounding box (optional)'];
+
+const GROUP_TYPES: EntityGroupType[] = [EntityGroupType.EDGE, EntityGroupType.FACE];
 
 class CADGroupSopParamsConfig extends NodeParamsConfig {
 	/** @param group name */
 	name = ParamConfig.STRING('');
+	/** @param group type */
+	type = ParamConfig.INTEGER(GROUP_TYPES.indexOf(EntityGroupType.EDGE), {
+		menu: {
+			entries: GROUP_TYPES.map((name, value) => ({name, value})),
+		},
+	});
 	/** @param mode */
 	operation = ParamConfig.INTEGER(GROUP_OPERATIONS.indexOf(GroupOperation.SET), {
 		menu: {
@@ -120,26 +130,39 @@ export class CADGroupSopNode extends CADSopNode<CADGroupSopParamsConfig> {
 		inputObject: CadObject<CadGeometryTypeShape>,
 		boundingCoreGroup: CoreGroup
 	) {
-		const coreEdges: CadCoreEdge[] = [];
+		const entities: CoreEntity[] = [];
 		const shape = inputObject.cadGeometry();
-		traverseEdges(oc, shape, (edge, index) => {
-			coreEdges.push(new CadCoreEdge(shape, edge, index));
-		});
+		const type = GROUP_TYPES[this.pv.type];
+
+		switch (type) {
+			case EntityGroupType.EDGE: {
+				traverseEdges(oc, shape, (edge, index) => {
+					entities.push(new CadCoreEdge(shape, edge, index));
+				});
+				break;
+			}
+			case EntityGroupType.FACE: {
+				traverseFaces(oc, shape, (face, index) => {
+					entities.push(new CadCoreFace(shape, face, index));
+				});
+				break;
+			}
+		}
 
 		const selectedIndices: Set<number> = new Set();
 		if (isBooleanTrue(this.pv.byExpression)) {
-			await this.byExpressionHelper.evalForEntities(coreEdges, selectedIndices);
+			await this.byExpressionHelper.evalForEntities(entities, selectedIndices);
 		}
 		if (isBooleanTrue(this.pv.byBoundingBox)) {
-			await this.byBoundingBoxHelper.evalForEntities(coreEdges, selectedIndices);
+			await this.byBoundingBoxHelper.evalForEntities(entities, selectedIndices);
 		}
 		if (isBooleanTrue(this.pv.byBoundingObject)) {
-			await this.byBoundingObjectHelper.evalForEntities(coreEdges, selectedIndices, boundingCoreGroup);
+			await this.byBoundingObjectHelper.evalForEntities(entities, selectedIndices, boundingCoreGroup);
 		}
 		const coreObject = coreObjectInstanceFactory(inputObject);
 		const groupCollection = coreObject.groupCollection();
 		const options: UpdateGroupOptions = {
-			type: EntityGroupType.CAD_EDGE,
+			type,
 			groupName: this.pv.name,
 			operation: GROUP_OPERATIONS[this.pv.operation],
 		};
