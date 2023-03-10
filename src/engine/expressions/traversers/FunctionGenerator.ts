@@ -118,7 +118,7 @@
  * - `easeIO3( number )`, is a shortcut for `ease_io( number, 3 )`
  * - `easeI4( number )`, is a shortcut for `ease_i( number, 4 )`
  * - `easeO4( number )`, is a shortcut for `ease_o( number, 4 )`
- * - `easeIO4( number )`, is a shortcut for` ease_io( number, 4 )`
+ * - `easeIO4( number )`, is a shortcut for `ease_io( number, 4 )`
  * - `easeSinI( number )`
  * - `easeSinO( number )`
  * - `easeSinIO( number )`
