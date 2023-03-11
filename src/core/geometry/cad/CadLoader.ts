@@ -88,7 +88,7 @@ export class CadLoader {
 			const root = Poly.libs.root();
 			const OCCTPath = Poly.libs.OCCTPath();
 			if (root || OCCTPath) {
-				const version = Poly.version().replace(/\./, '-');
+				const version = Poly.version().replace(/\./g, '-');
 				const wasmUrl = sanitizeUrl(`${root || ''}${OCCTPath || ''}/polygonjs-occt.wasm?v=${version}`);
 				try {
 					// prefetch wasm to get a proper error if wasm isn't found
