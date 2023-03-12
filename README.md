@@ -26,13 +26,35 @@ The editor can be used both from the web or locally. The web version is convenie
 
 ![Inside Polygonjs node-based Editor](https://raw.githubusercontent.com/polygonjs/polygonjs-assets/master/demo/media/demo.003.jpg?v=1)
 
-Install:
+## Start a project:
 
-`npm install @polygonjs/polygonjs`
+The easiest way to start a project is by using the cli tool:
+
+`npm create polygonjs@latest`
 
 or
 
-`yarn add @polygonjs/polygonjs`
+`yarn create polygonjs`
+
+You'll then be able to choose one of the templates for vanilla js, threejs, vuejs, react or react-three-fiber.
+
+## Add to an existing project:
+
+If you already have an npm project, you can easily add it with:
+
+`npm add polygonjs-editor`
+
+or
+
+`yarn add polygonjs-editor`
+
+And you can then start the editor with:
+
+`npm run polygonjs-editor`
+
+or
+
+`yarn polygonjs-editor`
 
 ## Node-based
 
