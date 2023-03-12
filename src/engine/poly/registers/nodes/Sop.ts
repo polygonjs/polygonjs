@@ -212,6 +212,9 @@ import {RestAttributesSopNode} from '../../../nodes/sop/RestAttributes';
 import {RingSopNode} from '../../../nodes/sop/Ring';
 import {RoundedBoxSopNode} from '../../../nodes/sop/RoundedBox';
 import {ScatterSopNode} from '../../../nodes/sop/Scatter';
+// SDF
+import {SDFBoxSopNode} from '../../../nodes/sop/SDFBox';
+//
 import {SetChildrenSopNode} from '../../../nodes/sop/SetChildren';
 import {SetGeometrySopNode} from '../../../nodes/sop/SetGeometry';
 import {ShearSopNode} from '../../../nodes/sop/Shear';
@@ -470,6 +473,9 @@ export interface GeoNodeChildrenMap {
 	ring: RingSopNode;
 	roundedBox: RoundedBoxSopNode;
 	scatter: ScatterSopNode;
+	// SDF
+	SDFBox: SDFBoxSopNode;
+	//
 	setChildren: SetChildrenSopNode;
 	setGeometry: SetGeometrySopNode;
 	shear: ShearSopNode;
@@ -952,6 +958,9 @@ export class SopRegister {
 		poly.registerNode(RingSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.registerNode(RoundedBoxSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.registerNode(ScatterSopNode, CATEGORY_SOP.MODIFIER);
+		// SDF
+		poly.registerNode(SDFBoxSopNode, CATEGORY_SOP.SDF);
+		//
 		poly.registerNode(SetChildrenSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(SetGeometrySopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(SkeletonHelperSopNode, CATEGORY_SOP.HELPERS);

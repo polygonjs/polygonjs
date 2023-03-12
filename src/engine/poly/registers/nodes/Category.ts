@@ -152,6 +152,7 @@ export const CATEGORY_SOP = {
 	PHYSICS: 'physics',
 	PRIMITIVES: 'primitives',
 	RENDER: 'render',
+	SDF: 'SDF',
 	SUBNET: 'subnet',
 	WEBXR: 'webXR',
 };
