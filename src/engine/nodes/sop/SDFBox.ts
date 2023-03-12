@@ -32,10 +32,10 @@ export class SDFBoxSopNode extends CADSopNode<SDFBoxSopParamsConfig> {
 
 	override async cook() {
 		console.log(Module);
-		// const wasm = await Module();
-		// wasm.setup();
-		// const manifold_1 = wasm.cube([0.2, 0.2, 0.2], true);
-		// console.log(manifold_1);
+		const wasm = await Module();
+		wasm.setup();
+		const manifold_1 = wasm.cube([0.2, 0.2, 0.2], true);
+		console.log(manifold_1);
 		this.setObjects([]);
 	}
 }
