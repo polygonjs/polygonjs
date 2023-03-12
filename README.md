@@ -42,7 +42,6 @@ The nodes are grouped in contexts, each for a specific type of task:
 -   [ANIM](https://polygonjs.com/docs/nodes/anim) nodes are to create animations.
 -   [AUDIO](https://polygonjs.com/docs/nodes/audio) nodes are to generate and modify audio.
 -   [COP](https://polygonjs.com/docs/nodes/cop) nodes can import and update textures.
--   [CSG](https://polygonjs.com/docs/nodes/csg) nodes create constructive solid geometry.
 -   [EVENT](https://polygonjs.com/docs/nodes/event) nodes are to trigger or react to scene events.
 -   [GL](https://polygonjs.com/docs/nodes/gl) nodes help you create GLSL shaders.
 -   [MAT](https://polygonjs.com/docs/nodes/mat) nodes are to create materials.
