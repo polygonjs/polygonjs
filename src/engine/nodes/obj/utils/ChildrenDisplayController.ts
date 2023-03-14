@@ -169,12 +169,16 @@ export class ChildrenDisplayController {
 				this._runOnSopGroupUpdatedHooks();
 				if (this.node.scene().loadingController.loaded()) {
 					Poly.onObjectsAddedHooks.runHooks(this._sopGroup.children);
+					Poly.onSceneUpdatedHooks.runHooks();
 				}
 				return;
 			}
 		}
 		this.removeChildren();
 		this._runOnSopGroupUpdatedHooks();
+		if (this.node.scene().loadingController.loaded()) {
+			Poly.onSceneUpdatedHooks.runHooks();
+		}
 	}
 	private _notifyCamerasController() {
 		this.node.scene().camerasController.updateFromChangeInObject(this._sopGroup);

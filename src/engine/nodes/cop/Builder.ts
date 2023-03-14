@@ -290,6 +290,7 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 		this._renderer.render(this._textureScene, this._textureCamera);
 		await this._postRender(updateTextureFromParams);
 		this._restoreRendererState(this._renderer);
+		Poly.onSceneUpdatedHooks.runHooks();
 	}
 	private async _postRender(updateTextureFromParams: boolean) {
 		if (this._renderTarget?.texture) {

@@ -17,23 +17,22 @@ import {FullScreenQuad} from '../../../modules/three/examples/jsm/postprocessing
 import {
 	PathTracingRenderer,
 	PhysicalPathTracingMaterial,
-	PhysicalCamera,
-	ShapedAreaLight,
-	PhysicalSpotLight,
-	IESLoader,
 	// @ts-ignore
 } from 'three-gpu-pathtracer';
 import {PathTracingRendererContainer} from './utils/pathTracing/PathTracingRendererContainer';
 import {BaseNodeType} from '../_Base';
-import {CoreSceneObjectsFactory} from '../../../core/CoreSceneObjectsFactory';
-import {IES_PROFILE_LM_63_1995} from '../../../core/lights/spotlight/ies/lm_63_1995';
+import {ModuleName} from '../../poly/registers/modules/Common';
 
 class PathTracingRendererRopParamsConfig extends NodeParamsConfig {
+	realtime = ParamConfig.FOLDER();
+	/** @param display samples count */
+	displayDebug = ParamConfig.BOOLEAN(1);
 	/** @param samples */
-	samplesPerFrame = ParamConfig.INTEGER(5, {
+	samplesPerFrame = ParamConfig.INTEGER(1, {
 		range: [1, 10],
 		rangeLocked: [true, false],
 	});
+
 	/** @param resolutionScale */
 	resolutionScale = ParamConfig.FLOAT(0.5, {
 		range: [0.1, 1],
@@ -46,9 +45,9 @@ class PathTracingRendererRopParamsConfig extends NodeParamsConfig {
 		rangeLocked: [true, false],
 	});
 	/** @param stableNoise*/
-	stableNoise = ParamConfig.BOOLEAN(false);
+	stableNoise = ParamConfig.BOOLEAN(1);
 	/** @param multipleImportanceSampling */
-	multipleImportanceSampling = ParamConfig.BOOLEAN(0);
+	multipleImportanceSampling = ParamConfig.BOOLEAN(1);
 	/** @param filterGlossyFactor */
 	filterGlossyFactor = ParamConfig.FLOAT(0.5, {
 		range: [0, 1],
@@ -80,6 +79,14 @@ class PathTracingRendererRopParamsConfig extends NodeParamsConfig {
 			PathTracingRendererRopNode.PARAM_CALLBACK_reset(node as PathTracingRendererRopNode);
 		},
 	});
+	recording = ParamConfig.FOLDER();
+	/** @param samples */
+	samplesPerAnimationFrame = ParamConfig.INTEGER(20, {
+		range: [1, 1000],
+		rangeLocked: [true, false],
+	});
+	/** @param this can remain off if only the camera is moving, but needs to be ON if other objects are animated */
+	// rebuild = ParamConfig.BOOLEAN(1);
 }
 const ParamsConfig = new PathTracingRendererRopParamsConfig();
 
@@ -88,20 +95,20 @@ export class PathTracingRendererRopNode extends TypedRopNode<PathTracingRenderer
 	static override type(): Readonly<RopType.PATH_TRACING> {
 		return RopType.PATH_TRACING;
 	}
+	override requiredModules() {
+		return [ModuleName.PBR];
+	}
 
 	private _lastRenderer: PathTracingRendererContainer | undefined;
 
 	protected override initializeNode(): void {
 		super.initializeNode();
 
-		CoreSceneObjectsFactory.generators.perspectiveCamera = (fov, aspect, near, far) =>
-			new PhysicalCamera(fov, aspect, near, far);
-		CoreSceneObjectsFactory.generators.areaLight = (color, intensity, width, height) =>
-			new ShapedAreaLight(color, intensity, width, height);
-		CoreSceneObjectsFactory.generators.spotLight = () => new PhysicalSpotLight();
-		CoreSceneObjectsFactory.generators.spotLightUpdate = (spotLight: PhysicalSpotLight, textureName: string) => {
-			spotLight.iesTexture = new IESLoader().parse(IES_PROFILE_LM_63_1995);
-		};
+		Poly.onSceneUpdatedHooks.registerHook(this, this._paramCallbackGenerate.bind(this));
+	}
+	override dispose() {
+		super.dispose();
+		Poly.onSceneUpdatedHooks.unregisterHook(this);
 	}
 
 	createRenderer(canvas: HTMLCanvasElement, gl: WebGLRenderingContext): PathTracingRendererContainer {
@@ -118,6 +125,7 @@ export class PathTracingRendererRopNode extends TypedRopNode<PathTracingRenderer
 		params.alpha = isBooleanTrue(this.pv.alpha);
 		params.canvas = canvas;
 		params.context = gl;
+		params.preserveDrawingBuffer = false;
 		const webGLRenderer = Poly.renderersController.createWebGLRenderer(params);
 
 		if (Poly.renderersController.printDebug()) {
@@ -130,19 +138,23 @@ export class PathTracingRendererRopNode extends TypedRopNode<PathTracingRenderer
 		const pathTracingRenderer = new PathTracingRenderer(webGLRenderer);
 		pathTracingRenderer.material = new PhysicalPathTracingMaterial();
 
-		const blitQuadMat = new MeshBasicMaterial({
+		const fsQuadMat = new MeshBasicMaterial({
 			map: pathTracingRenderer.target.texture,
 			blending: CustomBlending,
 		});
-		const blitQuad = new FullScreenQuad(blitQuadMat);
+		const fsQuad = new FullScreenQuad(fsQuadMat);
 		const pathTracingRendererContainer = new PathTracingRendererContainer(
 			webGLRenderer,
 			pathTracingRenderer,
-			blitQuad,
-			blitQuadMat
+			fsQuad,
+			fsQuadMat
 		);
 
 		this._updateRenderer(pathTracingRendererContainer);
+
+		if (this._lastRenderer) {
+			this._lastRenderer.dispose();
+		}
 
 		this._lastRenderer = pathTracingRendererContainer;
 		return pathTracingRendererContainer;
@@ -155,7 +167,9 @@ export class PathTracingRendererRopNode extends TypedRopNode<PathTracingRenderer
 	private _updateRenderer(rendererContainer: PathTracingRendererContainer) {
 		const {pathTracingRenderer} = rendererContainer;
 		rendererContainer.samplesPerFrame = this.pv.samplesPerFrame;
+		rendererContainer.samplesPerAnimationFrame = this.pv.samplesPerAnimationFrame;
 		rendererContainer.resolutionScale = this.pv.resolutionScale;
+		rendererContainer.displayDebug = this.pv.displayDebug;
 		pathTracingRenderer.material.bounces = this.pv.bounces;
 		pathTracingRenderer.stableNoise = this.pv.stableNoise;
 		pathTracingRenderer.material.filterGlossyFactor = this.pv.filterGlossyFactor;
@@ -169,7 +183,8 @@ export class PathTracingRendererRopNode extends TypedRopNode<PathTracingRenderer
 		node._paramCallbackGenerate();
 	}
 	private _paramCallbackGenerate() {
-		this._lastRenderer?.generate(this.scene().threejsScene());
+		const scene = this.scene().threejsScene();
+		this._lastRenderer?.generate(scene);
 	}
 	static PARAM_CALLBACK_reset(node: PathTracingRendererRopNode) {
 		node._paramCallbackReset();

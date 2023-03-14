@@ -6,6 +6,7 @@ import {InputCloneMode} from '../../poly/InputCloneMode';
 import {FlagsControllerB} from '../utils/FlagsController';
 import {BaseController, MaterialTexturesRecord, SetParamsTextureNodesRecord} from './utils/_BaseController';
 import {ArrayUtils} from '../../../core/ArrayUtils';
+import {Poly} from '../../Poly';
 
 /**
  *
@@ -38,6 +39,7 @@ export abstract class TypedMatNode<M extends Material, K extends NodeParamsConfi
 	abstract material(): Promise<M | undefined>;
 
 	setMaterial(material: M) {
+		Poly.onSceneUpdatedHooks.runHooks();
 		this._setContainer(material);
 	}
 }

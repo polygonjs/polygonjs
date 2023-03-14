@@ -5,7 +5,7 @@ import {RectAreaLightUniformsLib} from '../../../modules/three/examples/jsm/ligh
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {Group, RectAreaLight} from 'three';
 import {AreaLightParams, CoreRectAreaLightHelper, DEFAULT_AREA_LIGHT_PARAMS} from '../../../core/lights/AreaLight';
-import {CoreSceneObjectsFactory} from '../../../core/CoreSceneObjectsFactory';
+import {CoreSceneObjectsFactory, GeneratorName} from '../../../core/CoreSceneObjectsFactory';
 
 export class AreaLightSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: AreaLightParams = DEFAULT_AREA_LIGHT_PARAMS;
@@ -36,7 +36,12 @@ export class AreaLightSopOperation extends BaseSopOperation {
 	}
 
 	createLight() {
-		const light = CoreSceneObjectsFactory.generators.areaLight(0xffffff, 1, 1, 1);
+		const light = CoreSceneObjectsFactory.generator(GeneratorName.AREA_LIGHT)({
+			color: 0xffffff,
+			intensity: 1,
+			width: 1,
+			height: 1,
+		});
 		light.matrixAutoUpdate = false;
 		const nodeName = this._node?.name();
 		if (nodeName) {

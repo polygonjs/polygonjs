@@ -11,6 +11,7 @@
 // import {SVGLoader} from '../../../../modules/three/examples/jsm/loaders/SVGLoader';
 // import {STLLoader} from '../../../../modules/three/examples/jsm/loaders/STLLoader';
 // import {TTFLoader} from '../../../../modules/three/examples/jsm/loaders/TTFLoader';
+import {PolyEngine} from '../../../Poly';
 import {ModuleName} from './Common';
 import {BaseModule} from './_BaseModule';
 
@@ -31,6 +32,7 @@ import {BaseModule} from './_BaseModule';
 // }
 
 export class BaseModulesRegister {
+	constructor(private poly: PolyEngine) {}
 	// private _loaded_module_by_name: Map<ModuleName, any> = new Map();
 	private _moduleByName: Map<ModuleName, any> = new Map();
 
@@ -40,7 +42,7 @@ export class BaseModulesRegister {
 			return;
 		}
 		this._moduleByName.set(moduleName, module);
-		module.onRegister();
+		module.onRegister(this.poly);
 	}
 
 	moduleNames() {

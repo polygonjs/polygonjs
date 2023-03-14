@@ -20,6 +20,7 @@ import {
 import {CORE_CAMERA_DEFAULT} from '../../../core/camera/CoreCamera';
 import {CoreCameraFrameParamConfig} from '../../../core/camera/CoreCameraFrameMode';
 import {OrthographicCameraSopOperation} from '../../operations/sop/OrthographicCamera';
+import {OnNodeRegisterCallback} from '../../poly/registers/nodes/NodesRegister';
 
 class OrthographicCameraObjParamConfig extends CameraPostProcessParamConfig(
 	CameraRenderParamConfig(
@@ -46,7 +47,7 @@ export class OrthographicCameraObjNode extends TypedThreejsCameraObjNode<
 	static override type(): Readonly<CameraNodeType.ORTHOGRAPHIC> {
 		return CameraNodeType.ORTHOGRAPHIC;
 	}
-	static override onRegister = registerOrthographicCamera;
+	static override onRegister: OnNodeRegisterCallback = registerOrthographicCamera;
 
 	override createObject() {
 		const camera = OrthographicCameraSopOperation.createCamera(

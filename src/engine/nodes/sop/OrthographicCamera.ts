@@ -13,6 +13,7 @@ import {CameraNodeType} from '../../poly/NodeContext';
 import {registerOrthographicCamera} from '../../../core/camera/CoreOrthographicCamera';
 import {BaseNodeType} from '../_Base';
 import {updateCameraTransformParams} from './utils/camera/updateCameraTransformParams';
+import {OnNodeRegisterCallback} from '../../poly/registers/nodes/NodesRegister';
 const DEFAULT = OrthographicCameraSopOperation.DEFAULT_PARAMS;
 class OrthographicCameraSopParamsConfig extends NodeParamsConfig {
 	/** @param camera view size */
@@ -54,7 +55,7 @@ export class OrthographicCameraSopNode extends TypedSopNode<OrthographicCameraSo
 	static override type() {
 		return CameraNodeType.ORTHOGRAPHIC;
 	}
-	static override onRegister = registerOrthographicCamera;
+	static override onRegister: OnNodeRegisterCallback = registerOrthographicCamera;
 
 	protected override initializeNode() {
 		this.io.inputs.setCount(0);

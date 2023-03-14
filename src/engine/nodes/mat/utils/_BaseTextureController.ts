@@ -9,6 +9,7 @@ import {NodePathParam} from '../../../params/NodePath';
 import {BooleanParam} from '../../../params/Boolean';
 import {BaseNodeType} from '../../_Base';
 import {BaseParamType} from '../../../params/_Base';
+import {Poly} from '../../../Poly';
 
 export function TextureMapParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
@@ -125,6 +126,7 @@ export abstract class BaseTextureMapController extends BaseController {
 			texture_owner[mat_attrib_name] = newTexture as any;
 			material.needsUpdate = true;
 		}
+		Poly.onSceneUpdatedHooks.runHooks();
 	}
 	private _remove_texture_from_material<M extends Material>(
 		material: Material,
@@ -135,6 +137,7 @@ export abstract class BaseTextureMapController extends BaseController {
 			texture_owner[mat_attrib_name] = null as any;
 			material.needsUpdate = true;
 		}
+		Poly.onSceneUpdatedHooks.runHooks();
 	}
 
 	//

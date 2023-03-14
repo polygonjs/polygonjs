@@ -27,6 +27,8 @@ export enum ExpressionType {
 	playerMode = 'playerMode',
 	point = 'point',
 	pointsCount = 'pointsCount',
+	smoothstep = 'smoothstep',
+	smootherstep = 'smootherstep',
 	solverIteration = 'solverIteration',
 	strCharsCount = 'strCharsCount',
 	strConcat = 'strConcat',

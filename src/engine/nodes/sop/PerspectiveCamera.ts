@@ -13,6 +13,7 @@ import {CameraNodeType} from '../../poly/NodeContext';
 import {PERSPECTIVE_CAMERA_DEFAULT, registerPerspectiveCamera} from '../../../core/camera/CorePerspectiveCamera';
 import {BaseNodeType} from '../_Base';
 import {updateCameraTransformParams} from './utils/camera/updateCameraTransformParams';
+import {OnNodeRegisterCallback} from '../../poly/registers/nodes/NodesRegister';
 const DEFAULT = PerspectiveCameraSopOperation.DEFAULT_PARAMS;
 class PerspectiveCameraSopParamsConfig extends NodeParamsConfig {
 	/** @param camera fov */
@@ -54,7 +55,7 @@ export class PerspectiveCameraSopNode extends TypedSopNode<PerspectiveCameraSopP
 	static override type() {
 		return CameraNodeType.PERSPECTIVE;
 	}
-	static override onRegister = registerPerspectiveCamera;
+	static override onRegister: OnNodeRegisterCallback = registerPerspectiveCamera;
 
 	protected override initializeNode() {
 		this.io.inputs.setCount(0);

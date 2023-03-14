@@ -22,6 +22,7 @@ import {CameraNodeType} from '../../poly/NodeContext';
 import {registerMapboxCamera} from '../../../core/thirdParty/Mapbox/registerMapboxCamera';
 import {MapboxMapsController} from '../../../core/thirdParty/Mapbox/MapboxMapsController';
 import {BaseNodeType} from '../_Base';
+import {OnNodeRegisterCallback} from '../../poly/registers/nodes/NodesRegister';
 const DEFAULT = MapboxCameraSopOperation.DEFAULT_PARAMS;
 class MapboxCameraSopParamsConfig extends NodeParamsConfig {
 	style = ParamConfig.STRING(DEFAULT.style);
@@ -79,7 +80,7 @@ export class MapboxCameraSopNode extends TypedSopNode<MapboxCameraSopParamsConfi
 	static override type() {
 		return CameraNodeType.MAPBOX;
 	}
-	static override onRegister = registerMapboxCamera;
+	static override onRegister: OnNodeRegisterCallback = registerMapboxCamera;
 
 	protected override initializeNode() {
 		this.io.inputs.setCount(0);

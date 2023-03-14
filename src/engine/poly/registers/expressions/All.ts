@@ -26,6 +26,8 @@ import {PadzeroExpression} from '../../../expressions/methods/padzero';
 import {PlayerModeExpression} from '../../../expressions/methods/playerMode';
 import {PointExpression} from '../../../expressions/methods/point';
 import {PointsCountExpression} from '../../../expressions/methods/pointsCount';
+import {SmoothstepExpression} from '../../../expressions/methods/smoothstep';
+import {SmootherstepExpression} from '../../../expressions/methods/smootherstep';
 import {SolverIterationExpression} from '../../../expressions/methods/solverIteration';
 import {StrCharsCountExpression} from '../../../expressions/methods/strCharsCount';
 import {StrConcatExpression} from '../../../expressions/methods/strConcat';
@@ -63,6 +65,8 @@ export interface ExpressionMap extends PolyDictionary<typeof BaseMethod> {
 	playerMode: typeof PlayerModeExpression;
 	point: typeof PointExpression;
 	pointsCount: typeof PointsCountExpression;
+	smoothstep: typeof SmoothstepExpression;
+	smootherstep: typeof SmootherstepExpression;
 	solverIteration: typeof SolverIterationExpression;
 	strCharsCount: typeof StrCharsCountExpression;
 	strConcat: typeof StrConcatExpression;
@@ -104,6 +108,8 @@ export class AllExpressionsRegister {
 		poly.expressionsRegister.register(PlayerModeExpression, ExpressionType.playerMode);
 		poly.expressionsRegister.register(PointExpression, ExpressionType.point);
 		poly.expressionsRegister.register(PointsCountExpression, ExpressionType.pointsCount);
+		poly.expressionsRegister.register(SmoothstepExpression, ExpressionType.smoothstep);
+		poly.expressionsRegister.register(SmootherstepExpression, ExpressionType.smootherstep);
 		poly.expressionsRegister.register(SolverIterationExpression, ExpressionType.solverIteration);
 		poly.expressionsRegister.register(StrCharsCountExpression, ExpressionType.strCharsCount);
 		poly.expressionsRegister.register(StrConcatExpression, ExpressionType.strConcat);

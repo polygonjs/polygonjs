@@ -1,4 +1,4 @@
-import {Camera, WebGLRenderer} from 'three';
+import {Camera, WebGLRenderer, Scene} from 'three';
 import {TypedViewer, TypedViewerOptions} from './_Base';
 // import {Poly} from '../Poly';
 // import {ViewerLogoController} from './utils/logo/ViewerLogoController';
@@ -32,6 +32,11 @@ export interface ThreejsViewerOptions<C extends Camera> extends TypedViewerOptio
 
 type RenderFuncWithDelta = (delta: number) => void;
 type RenderFunc = () => void;
+export interface ThreejsViewerSetupData<C extends Camera> {
+	renderer: AbstractRenderer;
+	renderScene: Scene;
+	camera: C;
+}
 
 /**
  *
@@ -41,18 +46,18 @@ type RenderFunc = () => void;
  */
 
 export class ThreejsViewer<C extends Camera> extends TypedViewer<C> {
-	private _requestAnimationFrameId: number | undefined;
+	protected _requestAnimationFrameId: number | undefined;
 
 	private _webXRConfig: CoreCameraWebXRControllerConfig | undefined;
 	private _markerTrackingConfig: MarkerTrackingControllerConfig | undefined;
-	private _renderer: AbstractRenderer | undefined;
+	protected _renderer: AbstractRenderer | undefined;
 	private _rendererConfig: AvailableRenderConfig | undefined;
-	private _renderFunc: RenderFuncWithDelta | undefined;
-	private _renderCSSFunc: RenderFunc | undefined;
+	protected _renderFunc: RenderFuncWithDelta | undefined;
+	protected _renderCSSFunc: RenderFunc | undefined;
 	private _cssRendererConfig: CSSRendererConfig | undefined;
 
 	private _effectComposer: EffectComposer | undefined;
-	private _errorMessage: string | undefined;
+	protected _errorMessage: string | undefined;
 
 	static override _canvasIdPrefix() {
 		return 'ThreejsViewer';
@@ -62,7 +67,7 @@ export class ThreejsViewer<C extends Camera> extends TypedViewer<C> {
 		this._setupFunctions(options);
 		// this._container.style.height = '100%'; // this should be app specific
 	}
-	private _setupFunctions(options: ThreejsViewerOptions<C>) {
+	protected _setupFunctions(options: ThreejsViewerOptions<C>): ThreejsViewerSetupData<C> | void {
 		const camera = this.camera();
 		const scene = this.scene();
 		const canvas = this.canvas();
@@ -128,6 +133,7 @@ export class ThreejsViewer<C extends Camera> extends TypedViewer<C> {
 			} else {
 				this._renderFunc = () => renderer.render(renderScene, camera);
 			}
+			return {renderer, renderScene, camera};
 		}
 	}
 
@@ -309,8 +315,8 @@ export class ThreejsViewer<C extends Camera> extends TypedViewer<C> {
 		}
 	}
 
-	private _animateWebBound: () => void = this._animateWeb.bind(this);
-	private _animateWeb() {
+	protected _animateWebBound: () => void = this._animateWeb.bind(this);
+	protected _animateWeb() {
 		if (!this._doRender) {
 			return;
 		}
@@ -320,12 +326,9 @@ export class ThreejsViewer<C extends Camera> extends TypedViewer<C> {
 	private _animateWebXR() {
 		this.__animateCommon__();
 	}
-	private __animateCommon__() {
+	protected __animateCommon__() {
 		const delta = this._scene.timeController.updateClockDelta();
-		this._runOnBeforeTickCallbacks(delta);
-		this.scene().update(delta);
-		this._runOnAfterTickCallbacks(delta);
-		this._markerTrackingConfig?.renderFunction();
+		this._preRender(delta);
 		this.render(delta);
 	}
 
@@ -343,23 +346,32 @@ export class ThreejsViewer<C extends Camera> extends TypedViewer<C> {
 	override render(delta: number) {
 		if (this._canvas) {
 			super.render(delta);
-			const renderer = this._renderer;
-			if (!renderer) {
-				return;
-			}
-
-			this._runOnBeforeRenderCallbacks(delta, renderer);
-			if (this._renderFunc) {
-				this._renderFunc(delta);
-			}
-			if (this._renderCSSFunc) {
-				this._renderCSSFunc();
-			}
-			this.controlsController().update(delta);
-			this._runOnAfterRenderCallbacks(delta, renderer);
+			this._postRender(delta);
 		} else {
 			console.warn('no canvas to render onto');
 		}
+	}
+	protected _preRender(delta: number) {
+		this._runOnBeforeTickCallbacks(delta);
+		this.scene().update(delta);
+		this._runOnAfterTickCallbacks(delta);
+		this._markerTrackingConfig?.renderFunction();
+	}
+	protected _postRender(delta: number) {
+		const renderer = this._renderer;
+		if (!renderer) {
+			return;
+		}
+
+		this._runOnBeforeRenderCallbacks(delta, renderer);
+		if (this._renderFunc) {
+			this._renderFunc(delta);
+		}
+		if (this._renderCSSFunc) {
+			this._renderCSSFunc();
+		}
+		this.controlsController().update(delta);
+		this._runOnAfterRenderCallbacks(delta, renderer);
 	}
 
 	/**

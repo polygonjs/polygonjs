@@ -10,7 +10,7 @@ import {isBooleanTrue} from '../../../core/Type';
 import {CameraHelper} from '../../../core/helpers/CameraHelper';
 import {CoreObject} from '../../../core/geometry/Object';
 import type {BaseNodeType} from '../../nodes/_Base';
-import {CoreSceneObjectsFactory} from '../../../core/CoreSceneObjectsFactory';
+import {CoreSceneObjectsFactory, GeneratorName} from '../../../core/CoreSceneObjectsFactory';
 interface CreatePerspectiveCameraParams {
 	fov: number;
 	near: number;
@@ -73,7 +73,12 @@ export class PerspectiveCameraSopOperation extends BaseSopOperation {
 		return this.createCoreGroupFromObjects(objects);
 	}
 	static createCamera(params: CreatePerspectiveCameraParams, nodeGenerator?: BaseNodeType) {
-		const camera = CoreSceneObjectsFactory.generators.perspectiveCamera(params.fov, 1, params.near, params.far);
+		const camera = CoreSceneObjectsFactory.generator(GeneratorName.PERSPECTIVE_CAMERA)({
+			fov: params.fov,
+			aspect: 1,
+			near: params.near,
+			far: params.far,
+		});
 		if (nodeGenerator) {
 			CoreObject.addAttribute(camera, CameraAttribute.NODE_ID, nodeGenerator.graphNodeId());
 		}

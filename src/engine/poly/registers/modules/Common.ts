@@ -1,6 +1,7 @@
 export enum ModuleName {
 	CAD = 'CAD',
 	CSG = 'CSG',
+	PBR = 'PBR',
 	// EXRLoader = 'EXRLoader',
 	// FBXLoader = 'FBXLoader',
 	// GLTFLoader = 'GLTFLoader',

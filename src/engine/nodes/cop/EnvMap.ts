@@ -14,6 +14,7 @@ import {isBooleanTrue} from '../../../core/BooleanValue';
 
 import {CubeUVReflectionMapping} from 'three';
 import {CopType} from '../../poly/registers/nodes/types/Cop';
+import type {PathTracingRendererContainer} from '../rop/utils/pathTracing/PathTracingRendererContainer';
 
 // enum MapMode {
 // 	REFLECTION = 'reflection',
@@ -56,14 +57,21 @@ export class EnvMapCopNode extends TypedCopNode<EnvMapCopParamsConfig> {
 
 	private async _convertTextureToEnvMap(inputTexture: Texture) {
 		this._rendererController = this._rendererController || new CopRendererController(this);
-		const renderer = await this._rendererController.waitForRenderer();
+		let renderer = await this._rendererController.waitForRenderer();
 
 		if (!renderer) {
 			this.states.error.set('no renderer found to convert the texture to an env map');
 			return this.cookController.endCook();
 		}
 		if (!(renderer instanceof WebGLRenderer)) {
+			const webGLRenderer = (renderer as PathTracingRendererContainer).webGLRenderer;
+			if (webGLRenderer && webGLRenderer instanceof WebGLRenderer) {
+				renderer = webGLRenderer;
+			}
+		}
+		if (!(renderer instanceof WebGLRenderer)) {
 			this.states.error.set('renderer found is not WebGLRenderer');
+			console.log(renderer);
 			return this.cookController.endCook();
 		}
 

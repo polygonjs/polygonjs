@@ -6,7 +6,7 @@ import {Object3D, Group, Vector2, Color, SpotLight} from 'three';
 import {VolumetricSpotLight} from './spotlight/VolumetricSpotLight';
 import {isBooleanTrue} from '../Type';
 import {CoreSpotLightHelper, CoreSpotLightHelperParams} from './spotlight/CoreSpotLightHelper';
-import {CoreSceneObjectsFactory} from '../CoreSceneObjectsFactory';
+import {CoreSceneObjectsFactory, GeneratorName} from '../CoreSceneObjectsFactory';
 
 export interface SpotLightParams extends DefaultOperationParams {
 	color: Color;
@@ -203,8 +203,11 @@ export class SpotLightContainer extends Group {
 		if (params.volAttenuation != null) {
 			this.params.volAttenuation = params.volAttenuation;
 		}
-		this._light = CoreSceneObjectsFactory.generators.spotLight();
-		CoreSceneObjectsFactory.generators.spotLightUpdate(this._light, 'IES_PROFILE_LM_63_1995');
+		this._light = CoreSceneObjectsFactory.generator(GeneratorName.SPOT_LIGHT)();
+		CoreSceneObjectsFactory.generator(GeneratorName.SPOT_LIGHT_UPDATE)({
+			spotLight: this._light,
+			textureName: 'IES_PROFILE_LM_63_1995',
+		});
 		this._target.copy(this._light.target, false);
 		this._light.target = this._target;
 
