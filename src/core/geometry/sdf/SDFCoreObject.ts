@@ -4,19 +4,23 @@ import {BaseCoreObject} from '../_BaseObject';
 import {CoreObjectType, MergeCompactOptions} from '../ObjectContent';
 import {TransformTargetType} from '../../Transform';
 import {ObjectTransformSpace} from '../../TransformSpace';
+import {SDFLoaderSync} from './SDFLoaderSync';
+import {SDFGeometry} from './SDFCommon';
 
+const _box = new Box3();
 export class SDFCoreObject extends BaseCoreObject<CoreObjectType.SDF> {
 	constructor(protected override _object: SDFObject, index: number) {
 		super(_object, index);
 	}
 	static override position(object: SDFObject, target: Vector3) {
-		console.warn('not implemented');
+		object.boundingBox(_box);
+		_box.getCenter(target);
 	}
 	override boundingBox(target: Box3) {
-		console.warn('not implemented');
+		this._object.boundingBox(target);
 	}
 	override boundingSphere(target: Sphere) {
-		console.warn('not implemented');
+		this._object.boundingSphere(target);
 	}
 
 	static override applyMatrix(
@@ -25,9 +29,24 @@ export class SDFCoreObject extends BaseCoreObject<CoreObjectType.SDF> {
 		transformTargetType: TransformTargetType,
 		transformSpace: ObjectTransformSpace
 	) {
-		console.warn('not implemented');
+		object.applyMatrix4(matrix);
 	}
 	static override mergeCompact(options: MergeCompactOptions) {
-		console.warn('not implemented');
+		const manifold = SDFLoaderSync.manifold();
+		const {objects, mergedObjects} = options;
+
+		const sdfObjects = objects as SDFObject[];
+
+		let previousGeometry: SDFGeometry | undefined;
+		for (let object of sdfObjects) {
+			if (previousGeometry) {
+				previousGeometry = manifold.union(previousGeometry, object.SDFGeometry());
+			} else {
+				previousGeometry = object.SDFGeometry();
+			}
+		}
+		if (previousGeometry) {
+			mergedObjects.push(new SDFObject(previousGeometry));
+		}
 	}
 }

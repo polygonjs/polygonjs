@@ -7,8 +7,14 @@
 import {SDFSopNode} from './_BaseSDF';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
-import {step} from '../../../core/geometry/cad/CadConstant';
+import {step} from '../../../core/geometry/sdf/SDFConstant';
 import {SDFLoader} from '../../../core/geometry/sdf/SDFLoader';
+import {Number3} from '../../../types/GlobalTypes';
+import {Vector3} from 'three';
+
+const _size: Vector3 = new Vector3();
+const _sizeN3: Number3 = [0, 0, 0];
+const _centerN3: Number3 = [0, 0, 0];
 
 class SDFBoxSopParamsConfig extends NodeParamsConfig {
 	/** @param size */
@@ -32,11 +38,10 @@ export class SDFBoxSopNode extends SDFSopNode<SDFBoxSopParamsConfig> {
 
 	override async cook() {
 		const manifold = await SDFLoader.core();
-		const geometry = manifold.cube(
-			[this.pv.size * this.pv.sizes.x, this.pv.size * this.pv.sizes.y, this.pv.size * this.pv.sizes.z],
-			true
-		);
-
-		this.setSDFGeometry(geometry);
+		_size.copy(this.pv.sizes).multiplyScalar(this.pv.size).toArray(_sizeN3);
+		this.pv.center.toArray(_centerN3);
+		const geometry = manifold.cube(_sizeN3, true);
+		const centered = geometry.translate(_centerN3);
+		this.setSDFGeometry(centered);
 	}
 }

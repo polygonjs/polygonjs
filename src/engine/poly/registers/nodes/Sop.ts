@@ -215,8 +215,13 @@ import {ScatterSopNode} from '../../../nodes/sop/Scatter';
 // SDF
 import {SDFBooleanSopNode} from '../../../nodes/sop/SDFBoolean';
 import {SDFBoxSopNode} from '../../../nodes/sop/SDFBox';
+// import {SDFExtrudeSopNode} from '../../../nodes/sop/SDFExtrude';
+import {SDFLevelSetSopNode} from '../../../nodes/sop/SDFLevelSet';
+import {SDFRefineSopNode} from '../../../nodes/sop/SDFRefine';
+// import {SDFSmoothSopNode} from '../../../nodes/sop/SDFSmooth';
 import {SDFSphereSopNode} from '../../../nodes/sop/SDFSphere';
 import {SDFTriangulateSopNode} from '../../../nodes/sop/SDFTriangulate';
+import {SDFTubeSopNode} from '../../../nodes/sop/SDFTube';
 //
 import {SetChildrenSopNode} from '../../../nodes/sop/SetChildren';
 import {SetGeometrySopNode} from '../../../nodes/sop/SetGeometry';
@@ -479,8 +484,13 @@ export interface GeoNodeChildrenMap {
 	// SDF
 	SDFBoolean: SDFBooleanSopNode;
 	SDFBox: SDFBoxSopNode;
+	// SDFExtrude: SDFExtrudeSopNode;
+	SDFLevelSet: SDFLevelSetSopNode;
+	SDFRefine: SDFRefineSopNode;
+	// SDFSmooth: SDFSmoothSopNode;
 	SDFSphere: SDFSphereSopNode;
 	SDFTriangulate: SDFTriangulateSopNode;
+	SDFTube: SDFTubeSopNode;
 	//
 	setChildren: SetChildrenSopNode;
 	setGeometry: SetGeometrySopNode;
@@ -967,8 +977,13 @@ export class SopRegister {
 		// SDF
 		poly.registerNode(SDFBooleanSopNode, CATEGORY_SOP.SDF);
 		poly.registerNode(SDFBoxSopNode, CATEGORY_SOP.SDF);
+		// poly.registerNode(SDFExtrudeSopNode, CATEGORY_SOP.SDF);
+		poly.registerNode(SDFLevelSetSopNode, CATEGORY_SOP.SDF);
+		poly.registerNode(SDFRefineSopNode, CATEGORY_SOP.SDF);
+		// poly.registerNode(SDFSmoothSopNode, CATEGORY_SOP.SDF);
 		poly.registerNode(SDFSphereSopNode, CATEGORY_SOP.SDF);
 		poly.registerNode(SDFTriangulateSopNode, CATEGORY_SOP.SDF);
+		poly.registerNode(SDFTubeSopNode, CATEGORY_SOP.SDF);
 		//
 		poly.registerNode(SetChildrenSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(SetGeometrySopNode, CATEGORY_SOP.MODIFIER);

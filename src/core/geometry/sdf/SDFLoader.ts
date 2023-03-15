@@ -2,8 +2,8 @@ import {SDFLoaderSync} from './SDFLoaderSync';
 import {Poly} from '../../../engine/Poly';
 import {sanitizeUrl} from '../../UrlHelper';
 import {LIBRARY_INSTALL_HINT} from './../../loader/common';
-import Module from './manifold/manifold';
 import type {ManifoldStatic} from './SDFCommon';
+import {Module} from './SDFCommon';
 
 let _resolves: Resolve[] = [];
 let _importStarted = false;
