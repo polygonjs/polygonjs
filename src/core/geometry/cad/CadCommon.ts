@@ -190,6 +190,12 @@ export interface CachedCADTesselationParams {
 	curveAbscissa: number;
 	curveTolerance: number;
 }
+export interface CachedCADOBJTesselationParams {
+	CADLinearTolerance: number;
+	CADAngularTolerance: number;
+	CADCurveAbscissa: number;
+	CADCurveTolerance: number;
+}
 
 export interface CADTesselationParams extends CachedCADTesselationParams {
 	wireframe: boolean;
@@ -197,6 +203,13 @@ export interface CADTesselationParams extends CachedCADTesselationParams {
 	displayEdges: boolean;
 	meshesColor: Color;
 	edgesColor: Color;
+}
+export interface CADOBJTesselationParams extends CachedCADOBJTesselationParams {
+	CADWireframe: boolean;
+	CADDisplayMeshes: boolean;
+	CADDisplayEdges: boolean;
+	CADMeshesColor: Color;
+	CADEdgesColor: Color;
 }
 
 export interface FaceData {

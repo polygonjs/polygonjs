@@ -27,6 +27,11 @@ import type {CsgGeometryType} from './csg/CsgCommon';
 import {CSG_GEOMETRY_TYPES_SET} from './csg/CsgCommon';
 import type {CsgObject} from './csg/CsgObject';
 //
+// SDF
+import type {SDFObjectType} from './sdf/SDFCommon';
+import {SDF_OBJECT_TYPES_SET} from './sdf/SDFCommon';
+import type {SDFObject} from './sdf/SDFObject';
+//
 
 // import {CoreMask} from './Mask';
 export type GroupString = string;
@@ -178,6 +183,18 @@ export class CoreGroup extends CoreEntity {
 		return list as CsgObject<CsgGeometryType>[] | undefined;
 	}
 	csgCoreObjects() {
+		return this.csgObjects()?.map((o, i) => coreObjectInstanceFactory(o, i));
+	}
+	//
+	//
+	// SDF OBJECTS
+	//
+	//
+	SDFObjects() {
+		const list = this._allObjects?.filter((o) => SDF_OBJECT_TYPES_SET.has(o.type as SDFObjectType)) || undefined;
+		return list as SDFObject[] | undefined;
+	}
+	SDFCoreObjects() {
 		return this.csgObjects()?.map((o, i) => coreObjectInstanceFactory(o, i));
 	}
 	//

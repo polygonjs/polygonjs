@@ -2,17 +2,20 @@ import {BufferGeometry, Object3D, Material, Mesh, Matrix4} from 'three';
 import {ObjectUtils} from '../ObjectUtils';
 import type {CadGeometry} from './cad/CadCommon';
 import type {CsgGeometry} from './csg/CsgCommon';
+import type {SDFGeometry} from './sdf/SDFCommon';
 
 export enum CoreObjectType {
 	THREEJS = 'Object3D',
 	CAD = 'CADObject',
 	CSG = 'CSGObject',
+	SDF = 'SDFObject',
 }
 
 export interface ObjectGeometryMap {
 	[CoreObjectType.THREEJS]: BufferGeometry;
 	[CoreObjectType.CAD]: CadGeometry;
 	[CoreObjectType.CSG]: CsgGeometry;
+	[CoreObjectType.SDF]: SDFGeometry;
 }
 export interface ObjectContent<T extends CoreObjectType> {
 	type: string;

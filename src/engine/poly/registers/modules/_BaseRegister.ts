@@ -11,6 +11,7 @@
 // import {SVGLoader} from '../../../../modules/three/examples/jsm/loaders/SVGLoader';
 // import {STLLoader} from '../../../../modules/three/examples/jsm/loaders/STLLoader';
 // import {TTFLoader} from '../../../../modules/three/examples/jsm/loaders/TTFLoader';
+import {PolyEngine} from '../../../Poly';
 import {ModuleName} from './Common';
 import {BaseModule} from './_BaseModule';
 
@@ -33,14 +34,14 @@ import {BaseModule} from './_BaseModule';
 export class BaseModulesRegister {
 	// private _loaded_module_by_name: Map<ModuleName, any> = new Map();
 	private _moduleByName: Map<ModuleName, any> = new Map();
-
+	constructor(private poly: PolyEngine) {}
 	register<K extends ModuleName>(moduleName: K, module: BaseModule<K>) {
 		if (this._moduleByName.has(moduleName)) {
 			console.warn('module already registered', moduleName);
 			return;
 		}
 		this._moduleByName.set(moduleName, module);
-		module.onRegister();
+		module.onRegister(this.poly);
 	}
 
 	moduleNames() {

@@ -213,7 +213,10 @@ import {RingSopNode} from '../../../nodes/sop/Ring';
 import {RoundedBoxSopNode} from '../../../nodes/sop/RoundedBox';
 import {ScatterSopNode} from '../../../nodes/sop/Scatter';
 // SDF
+import {SDFBooleanSopNode} from '../../../nodes/sop/SDFBoolean';
 import {SDFBoxSopNode} from '../../../nodes/sop/SDFBox';
+import {SDFSphereSopNode} from '../../../nodes/sop/SDFSphere';
+import {SDFTriangulateSopNode} from '../../../nodes/sop/SDFTriangulate';
 //
 import {SetChildrenSopNode} from '../../../nodes/sop/SetChildren';
 import {SetGeometrySopNode} from '../../../nodes/sop/SetGeometry';
@@ -474,7 +477,10 @@ export interface GeoNodeChildrenMap {
 	roundedBox: RoundedBoxSopNode;
 	scatter: ScatterSopNode;
 	// SDF
+	SDFBoolean: SDFBooleanSopNode;
 	SDFBox: SDFBoxSopNode;
+	SDFSphere: SDFSphereSopNode;
+	SDFTriangulate: SDFTriangulateSopNode;
 	//
 	setChildren: SetChildrenSopNode;
 	setGeometry: SetGeometrySopNode;
@@ -959,7 +965,10 @@ export class SopRegister {
 		poly.registerNode(RoundedBoxSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.registerNode(ScatterSopNode, CATEGORY_SOP.MODIFIER);
 		// SDF
+		poly.registerNode(SDFBooleanSopNode, CATEGORY_SOP.SDF);
 		poly.registerNode(SDFBoxSopNode, CATEGORY_SOP.SDF);
+		poly.registerNode(SDFSphereSopNode, CATEGORY_SOP.SDF);
+		poly.registerNode(SDFTriangulateSopNode, CATEGORY_SOP.SDF);
 		//
 		poly.registerNode(SetChildrenSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(SetGeometrySopNode, CATEGORY_SOP.MODIFIER);

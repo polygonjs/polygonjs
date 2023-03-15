@@ -102,7 +102,10 @@ export enum SopType {
 	RING = 'ring',
 	ROUNDED_BOX = 'roundedBox',
 	// SDF
+	SDF_BOOLEAN = 'SDFBoolean',
 	SDF_BOX = 'SDFBox',
+	SDF_SPHERE = 'SDFSphere',
+	SDF_TRIANGULATE = 'SDFTriangulate',
 	//
 	SHEAR = 'shear',
 	SPHERE = 'sphere',

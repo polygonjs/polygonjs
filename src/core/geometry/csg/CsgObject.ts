@@ -35,6 +35,7 @@ export class CsgObject<T extends CsgGeometryType> implements ObjectContent<CoreO
 	}
 
 	setGeometry<TE extends CsgGeometryType>(geometry: CsgTypeMap[TE]) {
+		this._geometry = geometry as CsgTypeMap[T];
 		this._validate();
 	}
 	private _validate() {

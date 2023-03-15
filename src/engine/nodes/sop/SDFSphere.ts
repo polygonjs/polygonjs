@@ -1,5 +1,5 @@
 /**
- * Creates an SDF box.
+ * Creates an SDF sphere.
  *
  *
  */
@@ -10,32 +10,33 @@ import {SopType} from '../../poly/registers/nodes/types/Sop';
 import {step} from '../../../core/geometry/cad/CadConstant';
 import {SDFLoader} from '../../../core/geometry/sdf/SDFLoader';
 
-class SDFBoxSopParamsConfig extends NodeParamsConfig {
-	/** @param size */
-	size = ParamConfig.FLOAT(1, {
-		range: [0, 10],
+class SDFSphereSopParamsConfig extends NodeParamsConfig {
+	/** @param radius */
+	radius = ParamConfig.FLOAT(1, {
+		range: [0, 2],
 		rangeLocked: [true, false],
 		step,
 	});
-	/** @param sizes */
-	sizes = ParamConfig.VECTOR3([1, 1, 1]);
+	/** @param resulution */
+	resolution = ParamConfig.INTEGER(64, {
+		range: [1, 128],
+		rangeLocked: [true, false],
+		step,
+	});
 	/** @param center */
 	center = ParamConfig.VECTOR3([0, 0, 0]);
 }
-const ParamsConfig = new SDFBoxSopParamsConfig();
+const ParamsConfig = new SDFSphereSopParamsConfig();
 
-export class SDFBoxSopNode extends SDFSopNode<SDFBoxSopParamsConfig> {
+export class SDFSphereSopNode extends SDFSopNode<SDFSphereSopParamsConfig> {
 	override readonly paramsConfig = ParamsConfig;
 	static override type() {
-		return SopType.SDF_BOX;
+		return SopType.SDF_SPHERE;
 	}
 
 	override async cook() {
 		const manifold = await SDFLoader.core();
-		const geometry = manifold.cube(
-			[this.pv.size * this.pv.sizes.x, this.pv.size * this.pv.sizes.y, this.pv.size * this.pv.sizes.z],
-			true
-		);
+		const geometry = manifold.sphere(this.pv.radius, this.pv.resolution);
 
 		this.setSDFGeometry(geometry);
 	}
