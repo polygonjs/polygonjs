@@ -10,19 +10,28 @@ import {BaseJsNodeType} from '../js/_Base';
 
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {NodeCreateOptions} from '../utils/hierarchy/ChildrenController';
-class JsPointSopParamsConfig extends NodeParamsConfig {}
-const ParamsConfig = new JsPointSopParamsConfig();
-export class JsPointSopNode extends TypedSopNode<JsPointSopParamsConfig> {
+import {SopType} from '../../poly/registers/nodes/types/Sop';
+import {AssemblerName} from '../../poly/registers/assemblers/_BaseRegister';
+import {Poly} from '../../Poly';
+import {JsAssemblerController} from '../js/code/Controller';
+import {JsAssemblerSDF} from '../js/code/assemblers/sdf/SDF';
+class JSSDFSopParamsConfig extends NodeParamsConfig {}
+const ParamsConfig = new JSSDFSopParamsConfig();
+export class JSSDFSopNode extends TypedSopNode<JSSDFSopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'jsPoint';
+		return SopType.JS_SDF;
 	}
-	// protected _assemblerController: GlAssemblerController<ShaderAssemblerParticles> = new GlAssemblerController<
-	// 	ShaderAssemblerParticles
-	// >(this, ShaderAssemblerParticles);
-	// assemblerController() {
-	// 	return this._assemblerController;
-	// }
+	assemblerController() {
+		return this._assemblerController;
+	}
+	public override usedAssembler(): Readonly<AssemblerName.JS_SDF> {
+		return AssemblerName.JS_SDF;
+	}
+	protected _assemblerController = this._createAssemblerController();
+	private _createAssemblerController(): JsAssemblerController<JsAssemblerSDF> | undefined {
+		return Poly.assemblersRegister.assembler(this, this.usedAssembler());
+	}
 
 	// static PARAM_CALLBACK_reset(node: ParticlesSystemGpuSopNode) {
 	// 	node.PARAM_CALLBACK_reset();
@@ -38,7 +47,7 @@ export class JsPointSopNode extends TypedSopNode<JsPointSopParamsConfig> {
 		this.io.inputs.setCount(1);
 		// set to never at the moment
 		// otherwise the input is cloned on every frame inside cook_main()
-		this.io.inputs.initInputsClonedState(InputCloneMode.NEVER);
+		this.io.inputs.initInputsClonedState(InputCloneMode.FROM_NODE);
 
 		// this.addPostDirtyHook('_reset_material_if_dirty', this._reset_material_if_dirty_bound);
 
@@ -68,9 +77,9 @@ export class JsPointSopNode extends TypedSopNode<JsPointSopParamsConfig> {
 		return super.nodesByType(type) as JsNodeChildrenMap[K][];
 	}
 
-	override async cook(input_contents: CoreGroup[]) {
+	override async cook(inputCoreGroups: CoreGroup[]) {
 		// this.gpu_controller.set_restart_not_required();
-		const core_group = input_contents[0];
+		const coreGroup = inputCoreGroups[0];
 
 		this.compileIfRequired();
 
@@ -87,7 +96,7 @@ export class JsPointSopNode extends TypedSopNode<JsPointSopParamsConfig> {
 		// } else {
 		// 	this.cookController.end_cook();
 		// }
-		this.setCoreGroup(core_group);
+		this.setCoreGroup(coreGroup);
 	}
 	async compileIfRequired() {
 		// if (this.assembler_controller.compileRequired()) {

@@ -87,6 +87,7 @@ export enum SopType {
 	DATA_URL = 'dataUrl',
 	ICOSAHEDRON = 'icosahedron',
 	INSTANCE = 'instance',
+	JS_SDF = 'JSSDF',
 	MAPBOX_TRANSFORM = 'mapboxTransform',
 	MATERIAL = 'material',
 	NOISE = 'noise',

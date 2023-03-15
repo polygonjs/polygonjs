@@ -164,7 +164,7 @@ import {InstanceSopNode} from '../../../nodes/sop/Instance';
 import {InstanceUpdateSopNode} from '../../../nodes/sop/InstanceUpdate';
 import {InstancesCountSopNode} from '../../../nodes/sop/InstancesCount';
 import {JitterSopNode} from '../../../nodes/sop/Jitter';
-// import {JsPointSopNode} from '../../../nodes/sop/JsPoint';
+import {JSSDFSopNode} from '../../../nodes/sop/JSSDF';
 import {LayerSopNode} from '../../../nodes/sop/Layer';
 import {LightMixerSopNode} from '../../../nodes/sop/LightMixer';
 import {LightProbeSopNode} from '../../../nodes/sop/LightProbe';
@@ -422,7 +422,7 @@ export interface GeoNodeChildrenMap {
 	instanceUpdate: InstanceUpdateSopNode;
 	instancesCount: InstancesCountSopNode;
 	jitter: JitterSopNode;
-	// jsPoint: JsPointSopNode;
+	JSSDF: JSSDFSopNode;
 	layer: LayerSopNode;
 	lightMixer: LightMixerSopNode;
 	lightProbe: LightProbeSopNode;
@@ -902,9 +902,9 @@ export class SopRegister {
 		poly.registerNode(InstanceUpdateSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(InstancesCountSopNode, CATEGORY_SOP.RENDER);
 		poly.registerNode(JitterSopNode, CATEGORY_SOP.MODIFIER);
-		// if (process.env.NODE_ENV == 'development') {
-		// 	poly.registerNode(JsPointSopNode, CATEGORY_SOP.ADVANCED);
-		// }
+		if (process.env.NODE_ENV == 'development') {
+			poly.registerNode(JSSDFSopNode, CATEGORY_SOP.ADVANCED);
+		}
 		poly.registerNode(LayerSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(LightMixerSopNode, CATEGORY_SOP.LIGHTS);
 		poly.registerNode(LightProbeSopNode, CATEGORY_SOP.LIGHTS);

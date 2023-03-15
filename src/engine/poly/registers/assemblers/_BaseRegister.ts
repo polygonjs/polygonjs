@@ -16,6 +16,8 @@ export enum AssemblerName {
 	GL_TEXTURE = 'GL_TEXTURE',
 	GL_TEXTURE_2D_ARRAY = 'GL_TEXTURE_2D_ARRAY',
 	GL_VOLUME = 'GL_VOLUME',
+	//
+	JS_SDF = 'JS_SDF',
 }
 
 export interface ControllerAssemblerPair {
