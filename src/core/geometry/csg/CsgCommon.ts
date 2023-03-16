@@ -24,6 +24,12 @@ export interface CSGTesselationParams {
 	meshesColor: Color;
 	linesColor: Color;
 }
+export interface CSGOBJTesselationParams {
+	CSGFacetAngle: number;
+	CSGWireframe: boolean;
+	CSGMeshesColor: Color;
+	CSGLinesColor: Color;
+}
 
 export function csgIsPath2(geometry: CsgGeometry): geometry is geometries.path2.Path2 {
 	// DO NOT use this function 'geometries.path2'

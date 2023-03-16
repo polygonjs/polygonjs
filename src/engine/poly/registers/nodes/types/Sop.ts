@@ -102,6 +102,17 @@ export enum SopType {
 	RAY = 'ray',
 	RING = 'ring',
 	ROUNDED_BOX = 'roundedBox',
+	// SDF
+	SDF_BOOLEAN = 'SDFBoolean',
+	SDF_BOX = 'SDFBox',
+	// SDF_EXTRUDE = 'SDFExtrude',
+	SDF_REFINE = 'SDFRefine',
+	SDF_LEVEL_SET = 'SDFLevelSet',
+	// SDF_SMOOTH = 'SDFSmooth',
+	SDF_SPHERE = 'SDFSphere',
+	SDF_TRIANGULATE = 'SDFTriangulate',
+	SDF_TUBE = 'SDFTube',
+	//
 	SHEAR = 'shear',
 	SPHERE = 'sphere',
 	SUBDIVIDE = 'subdivide',
