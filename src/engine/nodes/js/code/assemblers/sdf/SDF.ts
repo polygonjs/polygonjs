@@ -1,4 +1,10 @@
-import {BaseJsShaderAssembler} from '../_Base';
+import {
+	BaseJsShaderAssembler,
+	INSERT_DEFINE_AFTER,
+	INSERT_BODY_AFTER,
+	RegisterableVariable,
+	FunctionData,
+} from '../_Base';
 import {IUniforms} from '../../../../../../core/geometry/Material';
 import {ThreeToGl} from '../../../../../../core/ThreeToGl';
 // import TemplateDefault from '../../templates/textures/Default.frag.glsl';
@@ -10,38 +16,78 @@ import {GlobalsJsNode} from '../../../Globals';
 import {JsConnectionPointType, JsConnectionPoint} from '../../../../utils/io/connections/Js';
 import {ShadersCollectionController} from '../../utils/ShadersCollectionController';
 import {UniformJsDefinition} from '../../../utils/JsDefinition';
+import {Vector3} from 'three';
+// import {Vector3} from 'three';
 // import {IUniformsWithTime} from '../../../../../scene/utils/UniformsController';
 // import {handleCopBuilderDependencies} from '../../../../cop/utils/BuilderUtils';
 // import { JSSDFSopNode } from '../../../../sop/JSSDF';
 
+enum SDFVariable {
+	D = 'd',
+}
+
+const TEMPLATE = `
+${INSERT_DEFINE_AFTER}
+
+${INSERT_BODY_AFTER}
+`;
+
 export class JsAssemblerSDF extends BaseJsShaderAssembler {
+	// private _function: Function | undefined;
 	private _uniforms: IUniforms | undefined;
+	private _functionsByName: Map<string, Function> = new Map();
 
 	override templateShader() {
 		return {
-			fragmentShader: 'TemplateDefault',
+			fragmentShader: TEMPLATE,
 			vertexShader: undefined,
 			uniforms: undefined,
 		};
 	}
 
-	fragment_shader() {
-		return this._shaders_by_name.get(ShaderName.FRAGMENT);
+	functionData(): FunctionData | undefined {
+		const functionBody = this._shaders_by_name.get(ShaderName.FRAGMENT);
+		if (!functionBody) {
+			return;
+		}
+		const variableNames: string[] = [];
+		const functionNames: string[] = [];
+		const variablesByName: Record<string, RegisterableVariable> = {};
+		const functionsByName: Record<string, Function> = {};
+		this.traverseRegisteredVariables((variable, varName) => {
+			variableNames.push(varName);
+			variablesByName[varName] = variable;
+		});
+		this.traverseRegisteredFunctions((_func, functionName) => {
+			functionNames.push(functionName);
+			functionsByName[functionName] = _func;
+		});
+		if (functionBody) {
+			return {functionBody, variableNames, variablesByName, functionNames, functionsByName};
+		}
 	}
 
 	uniforms() {
 		return this._uniforms;
 	}
 
+	// evalFunction(position: Vector3) {
+	// 	if (this._function) {
+	// 		return this._function(position);
+	// 	}
+	// }
+
 	updateFragmentShader() {
 		this._lines = new Map();
 		this._shaders_by_name = new Map();
-		for (let shader_name of this.shaderNames()) {
-			if (shader_name == ShaderName.FRAGMENT) {
-				const template = this.templateShader().fragmentShader;
-				this._lines.set(shader_name, template.split('\n'));
-			}
-		}
+		this._functionsByName.clear();
+		const shaderNames = this.shaderNames();
+		// for (let shader_name of shaderNames) {
+		// 	if (shader_name == ShaderName.FRAGMENT) {
+		// 		const template = this.templateShader().fragmentShader;
+		// 		this._lines.set(shader_name, template.split('\n'));
+		// 	}
+		// }
 		if (this._root_nodes.length > 0) {
 			this.buildCodeFromNodes(this._root_nodes);
 			this._buildLines();
@@ -56,12 +102,40 @@ export class JsAssemblerSDF extends BaseJsShaderAssembler {
 		// 	raymarchingLightsWorldCoordsDependent: this._raymarchingLightsWorldCoordsDependent(),
 		// });
 
-		for (let shader_name of this.shaderNames()) {
-			const lines = this._lines.get(shader_name);
+		for (let shaderName of shaderNames) {
+			const lines = this._lines.get(shaderName);
 			if (lines) {
-				this._shaders_by_name.set(shader_name, lines.join('\n'));
+				// const body = lines.join('\n');
+				// // if (this.function_main_string) {
+				// try {
+				// 	this._function = new Function(
+				// 		'position',
+				// 		// 'Core',
+				// 		// 'CoreType',
+				// 		// 'param',
+				// 		// 'methods',
+				// 		// '_set_error_from_error',
+				// 		`
+				// 		try {
+				// 			${body}
+				// 		} catch(e) {
+				// 			_set_error_from_error(e)
+				// 			return 0;
+				// 		}`
+				// 	);
+				// } catch (e) {
+				// 	console.warn(e);
+				// 	// this.set_error('cannot generate function');
+				// }
+				//} //else {
+				// this.set_error('cannot generate function body');
+				// }
+
+				this._shaders_by_name.set(shaderName, lines.join('\n'));
 			}
 		}
+
+		ShadersCollectionController;
 
 		// handleCopBuilderDependencies({
 		// 	node: this.currentGlParentNode() as JSSDFSopNode,
@@ -79,7 +153,7 @@ export class JsAssemblerSDF extends BaseJsShaderAssembler {
 		// output_child.add_param(ParamType.COLOR, 'color', [1, 1, 1], {hidden: true});
 		// output_child.add_param(ParamType.FLOAT, 'alpha', 1, {hidden: true});
 		output_child.io.inputs.setNamedInputConnectionPoints([
-			new JsConnectionPoint('d', JsConnectionPointType.FLOAT),
+			new JsConnectionPoint(SDFVariable.D, JsConnectionPointType.FLOAT),
 			// new JsConnectionPoint('alpha', JsConnectionPointType.FLOAT),
 		]);
 	}
@@ -99,17 +173,17 @@ export class JsAssemblerSDF extends BaseJsShaderAssembler {
 	//
 	//
 	override create_shader_configs() {
-		return [new ShaderConfig(ShaderName.FRAGMENT, ['color', 'alpha'], [])];
+		return [new ShaderConfig(ShaderName.FRAGMENT, [SDFVariable.D], [])];
 	}
 	override create_variable_configs() {
 		return [
-			new VariableConfig('color', {
-				prefix: 'diffuseColor.xyz = ',
+			new VariableConfig(SDFVariable.D, {
+				prefix: 'return ',
 			}),
-			new VariableConfig('alpha', {
-				prefix: 'diffuseColor.a = ',
-				default: '1.0',
-			}),
+			// new VariableConfig('alpha', {
+			// 	prefix: 'diffuseColor.a = ',
+			// 	default: '1.0',
+			// }),
 		];
 	}
 
@@ -118,58 +192,52 @@ export class JsAssemblerSDF extends BaseJsShaderAssembler {
 	// TEMPLATE HOOKS
 	//
 	//
-	protected override insertDefineAfter(shader_name: ShaderName) {
-		return '// INSERT DEFINE';
-	}
-	protected override insertBodyAfter(shader_name: ShaderName) {
-		return '// INSERT BODY';
-	}
-	protected override linesToRemove(shader_name: ShaderName) {
-		return ['// INSERT DEFINE', '// INSERT BODY'];
-	}
+	// protected override insertDefineAfter(shader_name: ShaderName) {
+	// 	return '// INSERT DEFINE';
+	// }
+	// protected override insertBodyAfter(shader_name: ShaderName) {
+	// 	return '// INSERT BODY';
+	// }
+	// protected override linesToRemove(shader_name: ShaderName) {
+	// 	return ['// INSERT DEFINE', '// INSERT BODY'];
+	// }
 
-	private _handle_gl_FragCoord(body_lines: string[], shaderName: ShaderName, var_name: string) {
-		if (shaderName == ShaderName.FRAGMENT) {
-			body_lines.push(`vec4 ${var_name} = gl_FragCoord`);
-		}
-	}
-	private _handle_resolution(bodyLines: string[], shaderName: ShaderName, var_name: string) {
-		if (shaderName == ShaderName.FRAGMENT) {
-			bodyLines.push(`vec2 ${var_name} = resolution`);
-		}
-	}
-	private _handleUV(bodyLines: string[], shaderName: ShaderName, var_name: string) {
-		if (shaderName == ShaderName.FRAGMENT) {
-			bodyLines.push(
-				`vec2 ${var_name} = vec2(gl_FragCoord.x / (resolution.x-1.), gl_FragCoord.y / (resolution.y-1.))`
-			);
-		}
-	}
+	// private _handle_gl_FragCoord(body_lines: string[], shaderName: ShaderName, var_name: string) {
+	// 	if (shaderName == ShaderName.FRAGMENT) {
+	// 		body_lines.push(`vec4 ${var_name} = gl_FragCoord`);
+	// 	}
+	// }
+	// private _handle_resolution(bodyLines: string[], shaderName: ShaderName, var_name: string) {
+	// 	if (shaderName == ShaderName.FRAGMENT) {
+	// 		bodyLines.push(`vec2 ${var_name} = resolution`);
+	// 	}
+	// }
+	// private _handleUV(bodyLines: string[], shaderName: ShaderName, var_name: string) {
+	// 	if (shaderName == ShaderName.FRAGMENT) {
+	// 		bodyLines.push(
+	// 			`vec2 ${var_name} = vec2(gl_FragCoord.x / (resolution.x-1.), gl_FragCoord.y / (resolution.y-1.))`
+	// 		);
+	// 	}
+	// }
 
-	override set_node_lines_output(
-		output_node: OutputJsNode,
-		shaders_collection_controller: ShadersCollectionController
-	) {
-		const input_names = this.inputNamesForShaderName(
-			output_node,
-			shaders_collection_controller.currentShaderName()
-		);
-		if (input_names) {
-			for (let input_name of input_names) {
-				const input = output_node.io.inputs.named_input(input_name);
+	override set_node_lines_output(outputNode: OutputJsNode, shadersCollectionController: ShadersCollectionController) {
+		const inputNames = this.inputNamesForShaderName(outputNode, shadersCollectionController.currentShaderName());
+		if (inputNames) {
+			for (const inputName of inputNames) {
+				const input = outputNode.io.inputs.named_input(inputName);
 
 				if (input) {
-					const gl_var = output_node.variableForInput(input_name);
+					const gl_var = outputNode.variableForInput(shadersCollectionController, inputName);
 
-					let body_line: string | undefined;
-					if (input_name == 'color') {
-						body_line = `diffuseColor.xyz = ${ThreeToGl.any(gl_var)}`;
+					let bodyLine: string | undefined;
+					if (inputName == SDFVariable.D) {
+						bodyLine = `return ${ThreeToGl.any(gl_var)}`;
 					}
-					if (input_name == 'alpha') {
-						body_line = `diffuseColor.a = ${ThreeToGl.any(gl_var)}`;
-					}
-					if (body_line) {
-						shaders_collection_controller.addBodyLines(output_node, [body_line]);
+					// if (input_name == 'alpha') {
+					// 	body_line = `diffuseColor.a = ${ThreeToGl.any(gl_var)}`;
+					// }
+					if (bodyLine) {
+						shadersCollectionController.addBodyLines(outputNode, [bodyLine]);
 					}
 				}
 			}
@@ -177,42 +245,42 @@ export class JsAssemblerSDF extends BaseJsShaderAssembler {
 	}
 
 	override set_node_lines_globals(
-		globals_node: GlobalsJsNode,
-		shaders_collection_controller: ShadersCollectionController
+		globalsNode: GlobalsJsNode,
+		shadersCollectionController: ShadersCollectionController
 	) {
-		const shader_name = shaders_collection_controller.currentShaderName();
-		const shader_config = this.shader_config(shader_name);
-		if (!shader_config) {
+		const shaderName = shadersCollectionController.currentShaderName();
+		const shaderConfig = this.shader_config(shaderName);
+		if (!shaderConfig) {
 			return;
 		}
-		const body_lines: string[] = [];
+		const bodyLines: string[] = [];
 		const definitions: UniformJsDefinition[] = [];
 
-		for (let output_name of globals_node.io.outputs.used_output_names()) {
-			const var_name = globals_node.jsVarName(output_name);
+		const usedOutputNames = globalsNode.io.outputs.used_output_names();
+		for (const outputName of usedOutputNames) {
+			const varName = globalsNode.jsVarName(outputName);
 
-			switch (output_name) {
-				case 'time':
-					definitions.push(new UniformJsDefinition(globals_node, JsConnectionPointType.FLOAT, output_name));
+			switch (outputName) {
+				case 'position':
+					// definitions.push(new UniformJsDefinition(globals_node, JsConnectionPointType.FLOAT, output_name));
+					shadersCollectionController.addVariable(globalsNode, varName, new Vector3());
+					bodyLines.push(`${varName}.copy(${outputName})`);
 
-					body_lines.push(`float ${var_name} = ${output_name}`);
-
-					this.setUniformsTimeDependent();
+					// this.setUniformsTimeDependent();
 					break;
 
-				case 'uv':
-					this._handleUV(body_lines, shader_name, var_name);
-					break;
-				case 'gl_FragCoord':
-					this._handle_gl_FragCoord(body_lines, shader_name, var_name);
-					break;
-				case 'resolution':
-					this._handle_resolution(body_lines, shader_name, var_name);
-					break;
+				// case 'uv':
+				// 	this._handleUV(body_lines, shader_name, var_name);
+				// 	break;
+				// case 'gl_FragCoord':
+				// 	this._handle_gl_FragCoord(body_lines, shader_name, var_name);
+				// 	break;
+				// case 'resolution':
+				// 	this._handle_resolution(body_lines, shader_name, var_name);
+				// 	break;
 			}
 		}
-
-		shaders_collection_controller.addDefinitions(globals_node, definitions, shader_name);
-		shaders_collection_controller.addBodyLines(globals_node, body_lines);
+		shadersCollectionController.addDefinitions(globalsNode, definitions, shaderName);
+		shadersCollectionController.addBodyLines(globalsNode, bodyLines);
 	}
 }

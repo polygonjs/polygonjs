@@ -37,25 +37,32 @@ export abstract class TypedJsDefinition<T extends JsDefinitionType> {
 	}
 }
 
-export class AttributeGLDefinition extends TypedJsDefinition<JsDefinitionType.ATTRIBUTE> {
-	constructor(
-		protected override _node: BaseJsNodeType,
-		protected override _data_type: JsConnectionPointType,
-		protected override _name: string
-	) {
-		super(JsDefinitionType.ATTRIBUTE, _data_type, _node, _name);
-	}
-	get line() {
-		return `attribute ${this.data_type} ${this.name()}`;
-	}
-}
+// export class AttributeGLDefinition extends TypedJsDefinition<JsDefinitionType.ATTRIBUTE> {
+// 	constructor(
+// 		protected override _node: BaseJsNodeType,
+// 		protected override _data_type: JsConnectionPointType,
+// 		protected override _name: string
+// 	) {
+// 		super(JsDefinitionType.ATTRIBUTE, _data_type, _node, _name);
+// 	}
+// 	get line() {
+// 		return `attribute ${this.data_type} ${this.name()}`;
+// 	}
+// }
 
 export class FunctionJsDefinition extends TypedJsDefinition<JsDefinitionType.FUNCTION> {
-	constructor(protected override _node: BaseJsNodeType, protected override _name: string) {
+	constructor(
+		protected override _node: BaseJsNodeType,
+		protected override _name: string,
+		private _function: Function
+	) {
 		super(JsDefinitionType.FUNCTION, JsConnectionPointType.FLOAT, _node, _name);
 	}
 	get line() {
 		return this.name();
+	}
+	registeredFunction() {
+		return this._function;
 	}
 }
 

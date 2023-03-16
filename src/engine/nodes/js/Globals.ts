@@ -21,6 +21,6 @@ export class GlobalsJsNode extends TypedJsNode<GlobalsJsParamsConfig> {
 	}
 
 	override setLines(linesController: ShadersCollectionController) {
-		// this.function_node?.assembler_controller?.assembler.set_node_lines_globals(this, lines_controller);
+		this.functionNode()?.assemblerController()?.assembler.set_node_lines_globals(this, linesController);
 	}
 }

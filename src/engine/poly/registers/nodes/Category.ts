@@ -103,6 +103,7 @@ export const CATEGORY_JS = {
 	LOGIC: 'logic',
 	MATH: 'math',
 	QUAT: 'quat',
+	SDF: 'SDF',
 	TRIGO: 'trigo',
 	UTIL: 'util',
 	INSTANCE: 'instance',

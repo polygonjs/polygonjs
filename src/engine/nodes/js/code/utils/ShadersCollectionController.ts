@@ -2,8 +2,7 @@ import {ShaderName} from '../../../utils/shaders/ShaderName';
 import {BaseJsDefinition} from '../../utils/JsDefinition';
 import {JsLinesController, DefinitionTraverseCallback, AddBodyLinesOptions} from './LinesController';
 import {BaseJsNodeType} from '../../_Base';
-import {TypedAssembler} from '../../../utils/shaders/BaseAssembler';
-import {NodeContext} from '../../../../poly/NodeContext';
+import {RegisterableVariable, BaseJsShaderAssembler} from '../assemblers/_Base';
 
 export class ShadersCollectionController {
 	private _linesControllerByShaderName: Map<ShaderName, JsLinesController> = new Map();
@@ -11,7 +10,7 @@ export class ShadersCollectionController {
 	constructor(
 		private _shaderNames: ShaderName[],
 		private _currentShaderName: ShaderName,
-		private _assembler: TypedAssembler<NodeContext.JS>
+		private _assembler: BaseJsShaderAssembler
 	) {
 		for (let shaderName of this._shaderNames) {
 			this._linesControllerByShaderName.set(shaderName, new JsLinesController(shaderName));
@@ -46,7 +45,28 @@ export class ShadersCollectionController {
 	currentShaderName() {
 		return this._currentShaderName;
 	}
+	//
+	//
+	// REGISTERED VARIABLES
+	//
+	//
+	addVariable(node: BaseJsNodeType, varName: string, variable: RegisterableVariable) {
+		return this.assembler().addVariable(node, varName, variable);
+	}
+	//
+	//
+	// REGISTERED FUNCTIONS
+	//
+	//
+	addFunction(node: BaseJsNodeType, functionName: string, _func: Function) {
+		return this.assembler().addFunction(node, functionName, _func);
+	}
 
+	//
+	//
+	//
+	//
+	//
 	addDefinitions(node: BaseJsNodeType, definitions: BaseJsDefinition[], shaderName?: ShaderName) {
 		if (definitions.length == 0) {
 			return;

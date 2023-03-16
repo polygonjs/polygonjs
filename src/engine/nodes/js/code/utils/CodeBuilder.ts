@@ -7,14 +7,13 @@ import {TypedJsDefinitionCollection} from '../../utils/JsDefinitionCollection';
 import {ParamConfigsController} from '../../../../nodes/utils/code/controllers/ParamConfigsController';
 import {ShadersCollectionController} from './ShadersCollectionController';
 import {CodeFormatter} from './CodeFormatter';
-
 import {LineType} from './LineType';
 import {JsParamConfig} from './JsParamConfig';
 import {ParamType} from '../../../../poly/ParamType';
 import {NodeContext} from '../../../../poly/NodeContext';
 import {CoreGraphNodeId} from '../../../../../core/graph/CoreGraph';
 import {ArrayUtils} from '../../../../../core/ArrayUtils';
-import {TypedAssembler} from '../../../utils/shaders/BaseAssembler';
+import {BaseJsShaderAssembler} from '../assemblers/_Base';
 
 type RootNodesForShaderMethod = (shader_name: ShaderName, rootNodes: BaseJsNodeType[]) => BaseJsNodeType[];
 // let nextId = 1;
@@ -35,7 +34,7 @@ export class CodeBuilder {
 	constructor(
 		private _nodeTraverser: TypedNodeTraverser<NodeContext.JS>,
 		private _root_nodes_for_shader_method: RootNodesForShaderMethod,
-		private _assembler: TypedAssembler<NodeContext.JS>
+		private _assembler: BaseJsShaderAssembler
 	) {}
 	nodeTraverser() {
 		return this._nodeTraverser;

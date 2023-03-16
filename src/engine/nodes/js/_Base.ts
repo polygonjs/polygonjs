@@ -19,6 +19,7 @@ import {ColorParam} from '../../params/Color';
 import {BooleanParam} from '../../params/Boolean';
 import {ThreeToGl} from '../../../core/ThreeToGl';
 import {ParamsEditableStateController} from '../utils/io/ParamsEditableStateController';
+import {Vector3} from 'three';
 
 export class TypedJsNode<K extends NodeParamsConfig> extends TypedNode<NodeContext.JS, K> {
 	static override context(): NodeContext {
@@ -45,7 +46,6 @@ export class TypedJsNode<K extends NodeParamsConfig> extends TypedNode<NodeConte
 	}
 	functionNode(): AssemblerControllerNode | undefined {
 		const parent = this.parent();
-		console.log('parent', parent, parent?.context());
 		if (parent) {
 			if (parent.context() == NodeContext.JS) {
 				return (parent as BaseJsNodeType)?.functionNode();
@@ -65,30 +65,53 @@ export class TypedJsNode<K extends NodeParamsConfig> extends TypedNode<NodeConte
 	}
 
 	variableForInputParam(
+		shadersCollectionController: ShadersCollectionController,
 		param: IntegerParam | FloatParam | Vector2Param | Vector3Param | Vector4Param | ColorParam | BooleanParam
 	) {
-		return this.variableForInput(param.name());
+		return this.variableForInput(shadersCollectionController, param.name());
 	}
-	variableForInput(inputName: string): string {
-		const input_index = this.io.inputs.getInputIndex(inputName);
-		const connection = this.io.connections.inputConnection(input_index);
+	variableForInput(shadersCollectionController: ShadersCollectionController, inputName: string): string {
+		const inputIndex = this.io.inputs.getInputIndex(inputName);
+		const connection = this.io.connections.inputConnection(inputIndex);
 		if (connection) {
-			const input_node = (<unknown>connection.node_src) as BaseJsNodeType;
-			const output_connection_point =
-				input_node.io.outputs.namedOutputConnectionPoints()[connection.output_index];
-			if (output_connection_point) {
-				const output_name = output_connection_point.name();
-				return input_node.jsVarName(output_name);
+			const inputNode = (<unknown>connection.node_src) as BaseJsNodeType;
+			const outputConnectionPoint = inputNode.io.outputs.namedOutputConnectionPoints()[connection.output_index];
+			if (outputConnectionPoint) {
+				const outputName = outputConnectionPoint.name();
+				return inputNode.jsVarName(outputName);
 			} else {
-				console.warn(`no output called '${inputName}' for gl node ${input_node.path()}`);
+				console.warn(`no output called '${inputName}' for js node ${inputNode.path()}`);
 				throw 'variable_for_input ERROR';
 			}
 		} else {
 			if (this.params.has(inputName)) {
-				return ThreeToGl.any(this.params.get(inputName)?.value);
+				const param = this.params.get(inputName);
+				if (
+					param instanceof ColorParam ||
+					param instanceof Vector2Param ||
+					param instanceof Vector3Param ||
+					param instanceof Vector4Param
+				) {
+					if (param instanceof ColorParam) {
+						console.warn('not implemented');
+						return 'Color not implemented';
+					} else if (param instanceof Vector2Param) {
+						console.warn('not implemented');
+						return 'Vector2 not implemented';
+					} else if (param instanceof Vector3Param) {
+						shadersCollectionController.addVariable(this, inputName, new Vector3());
+						return `${inputName}.set(${param.value.toArray().join(', ')})`;
+					} else if (param instanceof Vector4Param) {
+						console.warn('not implemented');
+						return 'Vector4 not implemented';
+					}
+					return 'Vector4 not implemented';
+				} else {
+					return ThreeToGl.any(this.params.get(inputName)?.value);
+				}
 			} else {
-				const connection_point = this.io.inputs.namedInputConnectionPoints()[input_index];
-				return ThreeToGl.any(connection_point.init_value);
+				const connectionPoint = this.io.inputs.namedInputConnectionPoints()[inputIndex];
+				return ThreeToGl.any(connectionPoint.init_value);
 			}
 		}
 	}

@@ -1,4 +1,4 @@
-import {ShaderMaterial} from 'three';
+import {ShaderMaterial, Color, Vector2, Vector3, Vector4} from 'three';
 import {LineType} from '../utils/LineType';
 import {VariableConfig} from '../configs/VariableConfig';
 import {CodeBuilder, CodeBuilderSetCodeLinesOptions} from '../utils/CodeBuilder';
@@ -25,25 +25,35 @@ import {JsType} from '../../../../poly/registers/nodes/types/Js';
 // import {VaryingWriteGlNode} from '../../VaryingWrite';
 // import {SubnetOutputGlNode} from '../../SubnetOutput';
 import {GlobalsOutput} from './common/GlobalsOutput';
+// import {CoreString} from '../../../../../core/String';
 
 type StringArrayByShaderName = Map<ShaderName, string[]>;
-
+export type RegisterableVariable = Color | Vector2 | Vector3 | Vector4;
+export interface FunctionData {
+	functionBody: string;
+	variableNames: string[];
+	variablesByName: Record<string, RegisterableVariable>;
+	functionNames: string[];
+	functionsByName: Record<string, Function>;
+}
 interface ITemplateShader {
 	vertexShader?: string;
 	fragmentShader?: string;
 	uniforms?: IUniforms;
 }
+export const INSERT_DEFINE_AFTER = '// insert defines';
+export const INSERT_BODY_AFTER = '// insert body';
 
 const INSERT_DEFINE_AFTER_MAP: Map<ShaderName, string> = new Map([
-	[ShaderName.VERTEX, '#include <common>'],
-	[ShaderName.FRAGMENT, '#include <common>'],
+	// [ShaderName.VERTEX, '#include <common>'],
+	[ShaderName.FRAGMENT, INSERT_DEFINE_AFTER],
 ]);
 const INSERT_BODY_AFTER_MAP: Map<ShaderName, string> = new Map([
-	[ShaderName.VERTEX, '#include <color_vertex>'],
-	[ShaderName.FRAGMENT, 'vec4 diffuseColor = vec4( diffuse, opacity );'],
+	// [ShaderName.VERTEX, '#include <color_vertex>'],
+	[ShaderName.FRAGMENT, INSERT_BODY_AFTER],
 ]);
 const LINES_TO_REMOVE_MAP: Map<ShaderName, string[]> = new Map([
-	[ShaderName.VERTEX, ['#include <begin_vertex>', '#include <beginnormal_vertex>']],
+	// [ShaderName.VERTEX, ['#include <begin_vertex>', '#include <beginnormal_vertex>']],
 	[ShaderName.FRAGMENT, []],
 ]);
 
@@ -363,28 +373,28 @@ export class BaseJsShaderAssembler extends TypedAssembler<NodeContext.JS> {
 	}
 	static create_variable_configs() {
 		return [
-			new VariableConfig('position', {
-				default_from_attribute: true,
+			new VariableConfig('d', {
+				// default_from_attribute: true,
 				// default: this.globalsHandler().variable_config_default('position'),
 				// required_definitions: this.globalsHandler().variable_config_required_definitions('position'),
-				prefix: 'vec3 transformed = ',
+				prefix: 'return ',
 			}),
-			new VariableConfig('normal', {
-				default_from_attribute: true,
-				prefix: 'vec3 objectNormal = ',
-				postLines: ['#ifdef USE_TANGENT', '	vec3 objectTangent = vec3( tangent.xyz );', '#endif'],
-			}),
-			new VariableConfig('color', {
-				prefix: 'diffuseColor.xyz = ',
-			}),
-			new VariableConfig('alpha', {
-				prefix: 'diffuseColor.a = ',
-			}),
-			new VariableConfig('uv', {
-				// default_from_attribute: true,
-				prefix: 'vUv = ',
-				// if: GlobalsGeometryHandler.IF_RULE.uv,
-			}),
+			// new VariableConfig('normal', {
+			// 	default_from_attribute: true,
+			// 	prefix: 'vec3 objectNormal = ',
+			// 	postLines: ['#ifdef USE_TANGENT', '	vec3 objectTangent = vec3( tangent.xyz );', '#endif'],
+			// }),
+			// new VariableConfig('color', {
+			// 	prefix: 'diffuseColor.xyz = ',
+			// }),
+			// new VariableConfig('alpha', {
+			// 	prefix: 'diffuseColor.a = ',
+			// }),
+			// new VariableConfig('uv', {
+			// 	// default_from_attribute: true,
+			// 	prefix: 'vUv = ',
+			// 	// if: GlobalsGeometryHandler.IF_RULE.uv,
+			// }),
 		];
 	}
 	create_variable_configs(): VariableConfig[] {
@@ -547,5 +557,54 @@ export class BaseJsShaderAssembler extends TypedAssembler<NodeContext.JS> {
 		for (let i = 0; i < SPACED_LINES; i++) {
 			newLines.push('');
 		}
+	}
+
+	//
+	//
+	// REGISTERED VARIABLES
+	//
+	//
+	private _registeredVariables: Map<string, RegisterableVariable> = new Map();
+	addVariable(node: BaseJsNodeType, varName: string, variable: RegisterableVariable) {
+		// const nodeSanitizedPath = CoreString.sanitizeName(node.path());
+		// const varFullName = `${nodeSanitizedPath}_${varName}`;
+		this._registeredVariables.set(varName, variable);
+		// return varFullName;
+	}
+	traverseRegisteredVariables(callback: (variable: RegisterableVariable, varName: string) => void) {
+		this._registeredVariables.forEach(callback);
+	}
+	//
+	//
+	// REGISTERED FUNCTIONS
+	//
+	//
+	private _registeredFunctions: Map<string, Function> = new Map();
+	private _nameByFunctions: Map<Function, string> = new Map();
+	addFunction(node: BaseJsNodeType, functionName: string, _func: Function) {
+		const existingFunctionName = this._nameByFunctions.get(_func);
+		if (existingFunctionName) {
+			return;
+		}
+
+		this._registeredFunctions.set(functionName, _func);
+		this._nameByFunctions.set(_func, functionName);
+
+		// let i=0
+		// for(let _func of functions){
+		// 	const functionName= this._nameByFunctions.get(_func)
+		// 	if(!functionName){
+
+		// 	}
+		// }
+
+		// const functionDefinitions = functions.map((f,i)=>{
+		// 	const functionName=`${node.name()})_${i}`
+		// 	return new FunctionJsDefinition(node, functionName, f)
+		// })
+		// this.addDefinitions(node, functionDefinitions);
+	}
+	traverseRegisteredFunctions(callback: (variable: Function, functionName: string) => void) {
+		this._registeredFunctions.forEach(callback);
 	}
 }

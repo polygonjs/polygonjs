@@ -15,6 +15,12 @@ import {AssemblerName} from '../../poly/registers/assemblers/_BaseRegister';
 import {Poly} from '../../Poly';
 import {JsAssemblerController} from '../js/code/Controller';
 import {JsAssemblerSDF} from '../js/code/assemblers/sdf/SDF';
+import {JsNodeFinder} from '../js/code/utils/NodeFinder';
+import {Vector3} from 'three';
+import {FunctionData, RegisterableVariable} from '../js/code/assemblers/_Base';
+
+type SDFFunction = Function; //(p: any) => number;
+
 class JSSDFSopParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new JSSDFSopParamsConfig();
 export class JSSDFSopNode extends TypedSopNode<JSSDFSopParamsConfig> {
@@ -83,6 +89,16 @@ export class JSSDFSopNode extends TypedSopNode<JSSDFSopParamsConfig> {
 
 		this.compileIfRequired();
 
+		if (this._function) {
+			this._position.set(0, 0, 0);
+			console.log(this._function(...this._functionEvalArgs));
+			this._position.set(1, 0, 0);
+			console.log(this._function(...this._functionEvalArgs));
+			this._position.set(2, 0, 0);
+			console.log(this._function(...this._functionEvalArgs));
+		}
+		// const val = assemblerController.assembler
+
 		// if (!this.render_controller.initialized) {
 		// 	this.render_controller.init_core_group(core_group);
 		// 	await this.render_controller.init_render_material();
@@ -99,17 +115,115 @@ export class JSSDFSopNode extends TypedSopNode<JSSDFSopParamsConfig> {
 		this.setCoreGroup(coreGroup);
 	}
 	async compileIfRequired() {
-		// if (this.assembler_controller.compileRequired()) {
-		// 	await this.run_assembler();
-		// }
+		if (this.assemblerController()?.compileRequired()) {
+			await this.compile();
+		}
 	}
-	async run_assembler() {
+	private _position = new Vector3();
+	private _functionData: FunctionData | undefined;
+	private _functionCreationArgs: string[] = [];
+	private _functionEvalArgs: (Function | RegisterableVariable)[] = [];
+	private _function: SDFFunction | undefined;
+	async compile() {
+		const assemblerController = this.assemblerController();
+		if (!assemblerController) {
+			return;
+		}
+		const outputNodes: BaseJsNodeType[] = JsNodeFinder.findOutputNodes(this);
+		if (outputNodes.length == 0) {
+			this.states.error.set('one output node is required');
+			return;
+		}
+		if (outputNodes.length > 1) {
+			this.states.error.set('only one output node allowed');
+			return;
+		}
+		const outputNode = outputNodes[0];
+		if (outputNode) {
+			//const param_nodes = GlNodeFinder.find_param_generating_nodes(this);
+			const rootNodes = outputNodes; //.concat(param_nodes);
+			assemblerController.assembler.set_root_nodes(rootNodes);
+
+			// main compilation
+			assemblerController.assembler.updateFragmentShader();
+
+			// receives fragment and uniforms
+			this._functionData = assemblerController.assembler.functionData();
+			if (!this._functionData) {
+				this.states.error.set('failed to compile ');
+				return;
+			}
+			const {functionBody, variableNames, variablesByName, functionNames, functionsByName} = this._functionData;
+
+			console.log(functionBody, variableNames, variablesByName, functionNames, functionsByName);
+			const wrappedBody = `
+			try {
+				${functionBody}
+			} catch(e) {
+				_setErrorFromError(e)
+				return 0;
+			}`;
+			// console.log(wrappedBody);
+			const _setErrorFromError = (e: Error) => {
+				this.states.error.set(e.message);
+			};
+			this._functionCreationArgs = [
+				'position',
+				...variableNames,
+				...functionNames,
+				'_setErrorFromError',
+				wrappedBody,
+			];
+			const variables: RegisterableVariable[] = [];
+			const functions: Function[] = [];
+			for (const variableName of variableNames) {
+				const variable = variablesByName[variableName];
+				variables.push(variable);
+			}
+			for (const functionName of functionNames) {
+				const _func = functionsByName[functionName];
+				functions.push(_func);
+			}
+			this._functionEvalArgs = [this._position, ...variables, ...functions, _setErrorFromError];
+
+			// console.log(this._functionCreationArgs, this._functionEvalArgs);
+			try {
+				this._function = new Function(...this._functionCreationArgs) as SDFFunction;
+			} catch (e) {
+				console.warn(e);
+				// this.set_error('cannot generate function');
+			}
+
+			// console.log('fragmentShader', fragmentShader);
+			// const uniforms = assemblerController.assembler.uniforms();
+			// if (fragmentShader && uniforms) {
+			// this._fragmentShader = fragmentShader;
+			// this._uniforms = uniforms;
+			// }
+
+			// handleCopBuilderDependencies({
+			// 	node: this,
+			// 	timeDependent: assemblerController.assembler.uniformsTimeDependent(),
+			// 	uniforms: undefined,
+			// });
+		}
+
+		// if (this._fragmentShader && this._uniforms) {
+		// 	this.textureMaterial.fragmentShader = this._fragmentShader;
+		// 	this.textureMaterial.uniforms = this._uniforms;
+		// 	this.textureMaterial.needsUpdate = true;
+		// 	this.textureMaterial.uniforms.resolution = {
+		// 		value: this.pv.resolution,
+		// 	};
+		// }
+		assemblerController.post_compile();
+
 		// const root_nodes = this._find_root_nodes();
 		// if (root_nodes.length > 0) {
-		// 	// this.assembler_controller.set_assembler_globalsHandler(globalsHandler);
-		// 	// this.assembler_controller.assembler.set_root_nodes(root_nodes);
-		// 	// await this.assembler_controller.assembler.compile();
-		// 	// await this.assembler_controller.post_compile();
+		// 	this.assembler_controller.set_assembler_globalsHandler(globalsHandler);
+		// 	this.assembler_controller.assembler.set_root_nodes(root_nodes);
+		// 	await this.assembler_controller.assembler.compile();
+		// 	await this.assembler_controller.post_compile();
 		// }
 		// const shaders_by_name: Map<ShaderName, string> = this.assembler_controller.assembler.shaders_by_name();
 	}
