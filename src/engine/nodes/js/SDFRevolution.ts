@@ -6,11 +6,13 @@
  * based on [https://iquilezles.org/articles/distfunctions/](https://iquilezles.org/articles/distfunctions/)
  */
 
-import {BaseSDFGlNode} from './_BaseSDF';
-import {ThreeToGl} from '../../../../src/core/ThreeToGl';
+import {BaseSDFJsNode} from './_BaseSDF';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {GlConnectionPointType, GlConnectionPoint} from '../utils/io/connections/Gl';
+import {JsConnectionPointType, JsConnectionPoint} from '../utils/io/connections/Js';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {SDFRevolutionX, SDFRevolutionY, SDFRevolutionZ} from './js/sdf/sdf2D';
+import {TypeAssert} from '../../poly/Assert';
+import {Vector2} from 'three';
 
 enum SDFRevolutionAxis {
 	X = 'X',
@@ -31,7 +33,7 @@ class SDFRevolutionGlParamsConfig extends NodeParamsConfig {
 	});
 }
 const ParamsConfig = new SDFRevolutionGlParamsConfig();
-export class SDFRevolutionGlNode extends BaseSDFGlNode<SDFRevolutionGlParamsConfig> {
+export class SDFRevolutionJsNode extends BaseSDFJsNode<SDFRevolutionGlParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
 		return 'SDFRevolution';
@@ -40,7 +42,7 @@ export class SDFRevolutionGlNode extends BaseSDFGlNode<SDFRevolutionGlParamsConf
 	override initializeNode() {
 		super.initializeNode();
 		this.io.outputs.setNamedOutputConnectionPoints([
-			new GlConnectionPoint(OUTPUT_NAME, GlConnectionPointType.VEC2),
+			new JsConnectionPoint(OUTPUT_NAME, JsConnectionPointType.VEC2),
 		]);
 	}
 	setAxis(axis: SDFRevolutionAxis) {
@@ -48,19 +50,31 @@ export class SDFRevolutionGlNode extends BaseSDFGlNode<SDFRevolutionGlParamsConf
 	}
 
 	override setLines(shadersCollectionController: ShadersCollectionController) {
-		const position = this.position();
-		const center = ThreeToGl.vector3(this.variableForInputParam(this.p.center));
-		const radius = ThreeToGl.float(this.variableForInputParam(this.p.radius));
+		const position = this.position(shadersCollectionController);
+		const center = this.variableForInputParam(shadersCollectionController, this.p.center);
+		const radius = this.variableForInputParam(shadersCollectionController, this.p.radius);
 
-		const out = this.glVarName(OUTPUT_NAME);
-		const functionName = this._functionName();
-		const bodyLine = `vec2 ${out} = ${functionName}(${position} - ${center}, ${radius})`;
+		const out = this.jsVarName(OUTPUT_NAME);
+		shadersCollectionController.addVariable(this, out, new Vector2());
+		const func = this._function();
+		const bodyLine = `${func.name}(${position}.sub(${center}), ${radius},${out})`;
 		shadersCollectionController.addBodyLines(this, [bodyLine]);
 
-		this._addSDFMethods(shadersCollectionController);
+		shadersCollectionController.addFunction(this, func);
 	}
-	private _functionName() {
+	private _function() {
 		const axis = SDF_REVOLUTION_AXISES[this.pv.axis];
-		return `SDFRevolution${axis}`;
+		switch (axis) {
+			case SDFRevolutionAxis.X: {
+				return SDFRevolutionX;
+			}
+			case SDFRevolutionAxis.Y: {
+				return SDFRevolutionY;
+			}
+			case SDFRevolutionAxis.Z: {
+				return SDFRevolutionZ;
+			}
+		}
+		TypeAssert.unreachable(axis);
 	}
 }

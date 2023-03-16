@@ -136,8 +136,8 @@ export class JsAssemblerNodeSpareParamsController {
 				// const config_options = ObjectUtils.clone(paramConfig.paramOptions());
 				const options: ParamOptions = {
 					spare: true,
-					computeOnDirty: true,
-					cook: false, // it should update the uniforms only via its callback
+					// computeOnDirty: true, // not needed if cook option is not set
+					// cook: false, // for SDFBuilder, the node needs to recook
 					// important for texture nodes
 					// that compute after being found by the nodepath param
 					dependentOnFoundNode: true,

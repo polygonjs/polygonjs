@@ -3,11 +3,12 @@ import {ParamType} from '../../../../poly/ParamType';
 
 export enum JsConnectionPointType {
 	BOOL = 'bool',
+	COLOR = 'Color',
 	INT = 'int',
 	FLOAT = 'float',
-	VEC2 = 'vec2',
-	VEC3 = 'vec3',
-	VEC4 = 'vec4',
+	VEC2 = 'Vector2',
+	VEC3 = 'Vector3',
+	VEC4 = 'Vector4',
 	// MAT3 = 'mat3',
 	// MAT4 = 'mat4',
 }
@@ -36,6 +37,7 @@ export const JS_CONNECTION_POINT_TYPES: Array<JsConnectionPointType> = [
 type JSConnectionPointTypeToParamTypeMapGeneric = {[key in JsConnectionPointType]: ParamType | undefined};
 export interface JsIConnectionPointTypeToParamTypeMap extends JSConnectionPointTypeToParamTypeMapGeneric {
 	[JsConnectionPointType.BOOL]: ParamType.BOOLEAN;
+	[JsConnectionPointType.COLOR]: ParamType.COLOR;
 	[JsConnectionPointType.INT]: ParamType.INTEGER;
 	[JsConnectionPointType.FLOAT]: ParamType.FLOAT;
 	[JsConnectionPointType.VEC2]: ParamType.VECTOR2;
@@ -46,6 +48,7 @@ export interface JsIConnectionPointTypeToParamTypeMap extends JSConnectionPointT
 }
 export const JsConnectionPointTypeToParamTypeMap: JsIConnectionPointTypeToParamTypeMap = {
 	[JsConnectionPointType.BOOL]: ParamType.BOOLEAN,
+	[JsConnectionPointType.COLOR]: ParamType.COLOR,
 	[JsConnectionPointType.INT]: ParamType.INTEGER,
 	[JsConnectionPointType.FLOAT]: ParamType.FLOAT,
 	[JsConnectionPointType.VEC2]: ParamType.VECTOR2,
@@ -104,6 +107,7 @@ export type ConnectionPointInitValueMapGeneric = {
 };
 export const JsConnectionPointInitValueMap: ConnectionPointInitValueMapGeneric = {
 	[JsConnectionPointType.BOOL]: false,
+	[JsConnectionPointType.COLOR]: [1, 1, 1],
 	[JsConnectionPointType.INT]: 0,
 	[JsConnectionPointType.FLOAT]: 0,
 	[JsConnectionPointType.VEC2]: [0, 0],
@@ -123,6 +127,7 @@ export type ConnectionPointComponentsCountMapGeneric = {
 };
 export const GlConnectionPointComponentsCountMap: ConnectionPointComponentsCountMapGeneric = {
 	[JsConnectionPointType.BOOL]: 1,
+	[JsConnectionPointType.COLOR]: 3,
 	[JsConnectionPointType.INT]: 1,
 	[JsConnectionPointType.FLOAT]: 1,
 	[JsConnectionPointType.VEC2]: 2,

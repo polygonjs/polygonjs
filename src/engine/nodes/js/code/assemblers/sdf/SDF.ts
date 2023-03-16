@@ -58,13 +58,12 @@ export class JsAssemblerSDF extends BaseJsShaderAssembler {
 			variableNames.push(varName);
 			variablesByName[varName] = variable;
 		});
-		this.traverseRegisteredFunctions((_func, functionName) => {
-			functionNames.push(functionName);
-			functionsByName[functionName] = _func;
+		this.traverseRegisteredFunctions((namedFunction) => {
+			functionNames.push(namedFunction.name);
+			functionsByName[namedFunction.name] = namedFunction.func;
 		});
-		if (functionBody) {
-			return {functionBody, variableNames, variablesByName, functionNames, functionsByName};
-		}
+		const paramConfigs = this.param_configs();
+		return {functionBody, variableNames, variablesByName, functionNames, functionsByName, paramConfigs};
 	}
 
 	uniforms() {
@@ -77,7 +76,8 @@ export class JsAssemblerSDF extends BaseJsShaderAssembler {
 	// 	}
 	// }
 
-	updateFragmentShader() {
+	override updateFunction() {
+		super.updateFunction();
 		this._lines = new Map();
 		this._shaders_by_name = new Map();
 		this._functionsByName.clear();

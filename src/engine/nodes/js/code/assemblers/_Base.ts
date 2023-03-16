@@ -25,16 +25,23 @@ import {JsType} from '../../../../poly/registers/nodes/types/Js';
 // import {VaryingWriteGlNode} from '../../VaryingWrite';
 // import {SubnetOutputGlNode} from '../../SubnetOutput';
 import {GlobalsOutput} from './common/GlobalsOutput';
+import {JsParamConfig} from '../utils/JsParamConfig';
+import {ParamType} from '../../../../poly/ParamType';
 // import {CoreString} from '../../../../../core/String';
 
 type StringArrayByShaderName = Map<ShaderName, string[]>;
 export type RegisterableVariable = Color | Vector2 | Vector3 | Vector4;
+export interface NamedFunction {
+	name: string;
+	func: Function;
+}
 export interface FunctionData {
 	functionBody: string;
 	variableNames: string[];
 	variablesByName: Record<string, RegisterableVariable>;
 	functionNames: string[];
 	functionsByName: Record<string, Function>;
+	paramConfigs: readonly JsParamConfig<ParamType>[];
 }
 interface ITemplateShader {
 	vertexShader?: string;
@@ -140,6 +147,11 @@ export class BaseJsShaderAssembler extends TypedAssembler<NodeContext.JS> {
 		return undefined;
 	}
 
+	updateFunction() {
+		this._resetRegisteredFunctions();
+		this._resetRegisteredVariables();
+	}
+
 	// protected addUniforms(uniforms: IUniforms) {
 
 	// 	for (let param_config of this.param_configs()) {
@@ -226,9 +238,10 @@ export class BaseJsShaderAssembler extends TypedAssembler<NodeContext.JS> {
 	codeBuilder() {
 		return (this._codeBuilder = this._codeBuilder || this._createCodeBuilder());
 	}
-	protected _resetCodeBuilder() {
-		this._codeBuilder = undefined;
-	}
+	// protected _resetCodeBuilder() {
+	// 	this._codeBuilder = undefined;
+	// 	console.warn('_resetCodeBuilder');
+	// }
 	private _createCodeBuilder() {
 		const nodeTraverser = new TypedNodeTraverser<NodeContext.JS>(
 			this.currentGlParentNode(),
@@ -331,7 +344,7 @@ export class BaseJsShaderAssembler extends TypedAssembler<NodeContext.JS> {
 	// CONFIGS
 	//
 	//
-	reset_configs() {
+	resetConfigs() {
 		this._reset_shader_configs();
 		this._reset_variable_configs();
 		this._resetUniformsTimeDependency();
@@ -574,21 +587,22 @@ export class BaseJsShaderAssembler extends TypedAssembler<NodeContext.JS> {
 	traverseRegisteredVariables(callback: (variable: RegisterableVariable, varName: string) => void) {
 		this._registeredVariables.forEach(callback);
 	}
+	private _resetRegisteredVariables() {
+		this._registeredVariables.clear();
+	}
 	//
 	//
 	// REGISTERED FUNCTIONS
 	//
 	//
-	private _registeredFunctions: Map<string, Function> = new Map();
-	private _nameByFunctions: Map<Function, string> = new Map();
-	addFunction(node: BaseJsNodeType, functionName: string, _func: Function) {
-		const existingFunctionName = this._nameByFunctions.get(_func);
+	private _registeredFunctions: Map<string, NamedFunction> = new Map();
+	addFunction(node: BaseJsNodeType, namedFunction: NamedFunction) {
+		const existingFunctionName = this._registeredFunctions.get(namedFunction.name);
 		if (existingFunctionName) {
 			return;
 		}
 
-		this._registeredFunctions.set(functionName, _func);
-		this._nameByFunctions.set(_func, functionName);
+		this._registeredFunctions.set(namedFunction.name, namedFunction);
 
 		// let i=0
 		// for(let _func of functions){
@@ -604,7 +618,11 @@ export class BaseJsShaderAssembler extends TypedAssembler<NodeContext.JS> {
 		// })
 		// this.addDefinitions(node, functionDefinitions);
 	}
-	traverseRegisteredFunctions(callback: (variable: Function, functionName: string) => void) {
+	traverseRegisteredFunctions(callback: (variable: NamedFunction) => void) {
 		this._registeredFunctions.forEach(callback);
+	}
+	private _resetRegisteredFunctions() {
+		this._registeredFunctions.clear();
+		// this._nameByFunctions.clear();
 	}
 }

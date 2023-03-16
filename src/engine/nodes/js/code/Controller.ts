@@ -54,7 +54,7 @@ export class JsAssemblerController<A extends BaseJsShaderAssembler> {
 		if (current_id != new_id) {
 			this._globalsHandler = globalsHandler;
 			this.setCompilationRequiredAndDirty();
-			this._assembler.reset_configs();
+			this._assembler.resetConfigs();
 		}
 	}
 	get assembler() {

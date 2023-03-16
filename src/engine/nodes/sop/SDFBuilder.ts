@@ -1,14 +1,13 @@
-import {Constructor, valueof} from '../../../types/GlobalTypes';
-import {TypedSopNode} from './_Base';
+import {Constructor, Number3, valueof} from '../../../types/GlobalTypes';
 // import {ShaderAssemblerParticles} from '../gl/code/assemblers/particles/Particles';
-import {InputCloneMode} from '../../poly/InputCloneMode';
+// import {InputCloneMode} from '../../poly/InputCloneMode';
 import {NodeContext} from '../../poly/NodeContext';
 import {CoreGroup} from '../../../core/geometry/Group';
 // import {GlAssemblerController} from '../gl/code/Controller';
 import {JsNodeChildrenMap} from '../../poly/registers/nodes/Js';
 import {BaseJsNodeType} from '../js/_Base';
 
-import {NodeParamsConfig} from '../utils/params/ParamsConfig';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {NodeCreateOptions} from '../utils/hierarchy/ChildrenController';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 import {AssemblerName} from '../../poly/registers/assemblers/_BaseRegister';
@@ -16,17 +15,57 @@ import {Poly} from '../../Poly';
 import {JsAssemblerController} from '../js/code/Controller';
 import {JsAssemblerSDF} from '../js/code/assemblers/sdf/SDF';
 import {JsNodeFinder} from '../js/code/utils/NodeFinder';
-import {Vector3} from 'three';
+import {Box3, Vector3} from 'three';
 import {FunctionData, RegisterableVariable} from '../js/code/assemblers/_Base';
-
+import {InputCloneMode} from '../../poly/InputCloneMode';
+import {SDFLoader} from '../../../core/geometry/sdf/SDFLoader';
+import {Box} from '../../../core/geometry/sdf/SDFCommon';
+import {TypedSopNode} from './_Base';
+import {ModuleName} from '../../poly/registers/modules/Common';
+import {SDFObject} from '../../../core/geometry/sdf/SDFObject';
+import {CoreType} from '../../../core/Type';
+import {JsParamConfig} from '../js/code/utils/JsParamConfig';
+import {ParamType} from '../../poly/ParamType';
+const _box3 = new Box3();
+const box: Box = {min: [-1, -1, -1], max: [1, 1, 1]};
 type SDFFunction = Function; //(p: any) => number;
 
-class JSSDFSopParamsConfig extends NodeParamsConfig {}
-const ParamsConfig = new JSSDFSopParamsConfig();
-export class JSSDFSopNode extends TypedSopNode<JSSDFSopParamsConfig> {
+class SDFBuilderSopParamsConfig extends NodeParamsConfig {
+	/** @param stepSize */
+	stepSize = ParamConfig.FLOAT(0.1, {
+		range: [0.01, 1],
+		rangeLocked: [true, false],
+	});
+	/** @param level */
+	level = ParamConfig.FLOAT(0, {
+		range: [-1, 1],
+		rangeLocked: [false, false],
+	});
+	/** @param min bound */
+	min = ParamConfig.VECTOR3([-1, -1, -1]);
+	/** @param max bound */
+	max = ParamConfig.VECTOR3([1, 1, 1]);
+	/** @param linear Tolerance */
+	facetAngle = ParamConfig.FLOAT(45, {
+		range: [0, 180],
+		rangeLocked: [true, false],
+	});
+	/** @param meshes color */
+	meshesColor = ParamConfig.COLOR([1, 1, 1]);
+	/** @param wireframe */
+	wireframe = ParamConfig.BOOLEAN(false, {
+		// we need the separator for spare params
+		separatorAfter: true,
+	});
+}
+const ParamsConfig = new SDFBuilderSopParamsConfig();
+export class SDFBuilderSopNode extends TypedSopNode<SDFBuilderSopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return SopType.JS_SDF;
+		return SopType.SDF_BUILDER;
+	}
+	override requiredModules() {
+		return [ModuleName.SDF];
 	}
 	assemblerController() {
 		return this._assemblerController;
@@ -50,10 +89,10 @@ export class JSSDFSopNode extends TypedSopNode<JSSDFSopParamsConfig> {
 	protected override _childrenControllerContext = NodeContext.JS;
 	// private _on_create_prepare_material_bound = this._on_create_prepare_material.bind(this);
 	override initializeNode() {
-		this.io.inputs.setCount(1);
+		this.io.inputs.setCount(0, 1);
 		// set to never at the moment
 		// otherwise the input is cloned on every frame inside cook_main()
-		this.io.inputs.initInputsClonedState(InputCloneMode.FROM_NODE);
+		this.io.inputs.initInputsClonedState(InputCloneMode.NEVER);
 
 		// this.addPostDirtyHook('_reset_material_if_dirty', this._reset_material_if_dirty_bound);
 
@@ -84,35 +123,46 @@ export class JSSDFSopNode extends TypedSopNode<JSSDFSopParamsConfig> {
 	}
 
 	override async cook(inputCoreGroups: CoreGroup[]) {
-		// this.gpu_controller.set_restart_not_required();
-		const coreGroup = inputCoreGroups[0];
+		const manifold = await SDFLoader.core();
 
+		// bbox
+		const coreGroup = inputCoreGroups[0];
+		if (coreGroup) {
+			coreGroup.boundingBox(_box3);
+			_box3.min.toArray(box.min);
+			_box3.max.toArray(box.max);
+		} else {
+			this.pv.min.toArray(box.min);
+			this.pv.max.toArray(box.max);
+		}
+
+		// compile
 		this.compileIfRequired();
 
-		if (this._function) {
-			this._position.set(0, 0, 0);
-			console.log(this._function(...this._functionEvalArgs));
-			this._position.set(1, 0, 0);
-			console.log(this._function(...this._functionEvalArgs));
-			this._position.set(2, 0, 0);
-			console.log(this._function(...this._functionEvalArgs));
+		// eval
+		const _func = this._function;
+		if (_func) {
+			// console.log(this.functionEvalArgsWithParamConfigs());
+			const args = this.functionEvalArgsWithParamConfigs();
+			const convertedFunction = (p: Number3) => {
+				this._position.fromArray(p);
+				return -1 * _func(...args);
+			};
+			const geometry = manifold.levelSet(convertedFunction, box, this.pv.stepSize, this.pv.level);
+			const sdfObject = new SDFObject(geometry);
+			const results = sdfObject.toObject3D(this.pv);
+			if (results) {
+				if (CoreType.isArray(results)) {
+					this.setObjects(results);
+				} else {
+					this.setObjects([results]);
+				}
+			} else {
+				this.setObjects([]);
+			}
+		} else {
+			this.setObjects([]);
 		}
-		// const val = assemblerController.assembler
-
-		// if (!this.render_controller.initialized) {
-		// 	this.render_controller.init_core_group(core_group);
-		// 	await this.render_controller.init_render_material();
-		// }
-
-		// this.gpu_controller.restart_simulation_if_required();
-		// this.gpu_controller.compute_similation_if_required();
-
-		// if (this.is_on_frame_start()) {
-		// 	this.setCoreGroup(core_group);
-		// } else {
-		// 	this.cookController.end_cook();
-		// }
-		this.setCoreGroup(coreGroup);
 	}
 	async compileIfRequired() {
 		if (this.assemblerController()?.compileRequired()) {
@@ -120,6 +170,7 @@ export class JSSDFSopNode extends TypedSopNode<JSSDFSopParamsConfig> {
 		}
 	}
 	private _position = new Vector3();
+	private _paramConfigs: JsParamConfig<ParamType>[] = [];
 	private _functionData: FunctionData | undefined;
 	private _functionCreationArgs: string[] = [];
 	private _functionEvalArgs: (Function | RegisterableVariable)[] = [];
@@ -145,7 +196,7 @@ export class JSSDFSopNode extends TypedSopNode<JSSDFSopParamsConfig> {
 			assemblerController.assembler.set_root_nodes(rootNodes);
 
 			// main compilation
-			assemblerController.assembler.updateFragmentShader();
+			assemblerController.assembler.updateFunction();
 
 			// receives fragment and uniforms
 			this._functionData = assemblerController.assembler.functionData();
@@ -153,9 +204,11 @@ export class JSSDFSopNode extends TypedSopNode<JSSDFSopParamsConfig> {
 				this.states.error.set('failed to compile ');
 				return;
 			}
-			const {functionBody, variableNames, variablesByName, functionNames, functionsByName} = this._functionData;
+			const {functionBody, variableNames, variablesByName, functionNames, functionsByName, paramConfigs} =
+				this._functionData;
 
-			console.log(functionBody, variableNames, variablesByName, functionNames, functionsByName);
+			// console.log(functionBody);
+			// console.log(functionBody, variableNames, variablesByName, functionNames, functionsByName, paramConfigs);
 			const wrappedBody = `
 			try {
 				${functionBody}
@@ -167,13 +220,6 @@ export class JSSDFSopNode extends TypedSopNode<JSSDFSopParamsConfig> {
 			const _setErrorFromError = (e: Error) => {
 				this.states.error.set(e.message);
 			};
-			this._functionCreationArgs = [
-				'position',
-				...variableNames,
-				...functionNames,
-				'_setErrorFromError',
-				wrappedBody,
-			];
 			const variables: RegisterableVariable[] = [];
 			const functions: Function[] = [];
 			for (const variableName of variableNames) {
@@ -184,61 +230,50 @@ export class JSSDFSopNode extends TypedSopNode<JSSDFSopParamsConfig> {
 				const _func = functionsByName[functionName];
 				functions.push(_func);
 			}
-			this._functionEvalArgs = [this._position, ...variables, ...functions, _setErrorFromError];
+			this._paramConfigs = [...paramConfigs];
+			const paramConfigUniformNames = paramConfigs.map((pc) => pc.uniformName());
 
-			// console.log(this._functionCreationArgs, this._functionEvalArgs);
+			// console.log(paramConfigs.map((pc) => ({uniformName: pc.uniformName(), defaultValue: pc.defaultValue()})));
+			this._functionCreationArgs = [
+				'position',
+				'_setErrorFromError',
+				...variableNames,
+				...functionNames,
+				...paramConfigUniformNames,
+				wrappedBody,
+			];
+			this._functionEvalArgs = [this._position, _setErrorFromError, ...variables, ...functions];
 			try {
 				this._function = new Function(...this._functionCreationArgs) as SDFFunction;
 			} catch (e) {
 				console.warn(e);
-				// this.set_error('cannot generate function');
+				this.states.error.set('failed to compile');
 			}
-
-			// console.log('fragmentShader', fragmentShader);
-			// const uniforms = assemblerController.assembler.uniforms();
-			// if (fragmentShader && uniforms) {
-			// this._fragmentShader = fragmentShader;
-			// this._uniforms = uniforms;
-			// }
-
-			// handleCopBuilderDependencies({
-			// 	node: this,
-			// 	timeDependent: assemblerController.assembler.uniformsTimeDependent(),
-			// 	uniforms: undefined,
-			// });
 		}
 
-		// if (this._fragmentShader && this._uniforms) {
-		// 	this.textureMaterial.fragmentShader = this._fragmentShader;
-		// 	this.textureMaterial.uniforms = this._uniforms;
-		// 	this.textureMaterial.needsUpdate = true;
-		// 	this.textureMaterial.uniforms.resolution = {
-		// 		value: this.pv.resolution,
-		// 	};
-		// }
 		assemblerController.post_compile();
-
-		// const root_nodes = this._find_root_nodes();
-		// if (root_nodes.length > 0) {
-		// 	this.assembler_controller.set_assembler_globalsHandler(globalsHandler);
-		// 	this.assembler_controller.assembler.set_root_nodes(root_nodes);
-		// 	await this.assembler_controller.assembler.compile();
-		// 	await this.assembler_controller.post_compile();
-		// }
-		// const shaders_by_name: Map<ShaderName, string> = this.assembler_controller.assembler.shaders_by_name();
 	}
-
-	// private _find_root_nodes() {
-	// 	// const nodes: BaseGlNodeType[] = GlNodeFinder.find_attribute_export_nodes(this);
-	// 	// const output_nodes = GlNodeFinder.find_output_nodes(this);
-	// 	// if (output_nodes.length > 1) {
-	// 	// 	this.states.error.set('only one output node is allowed');
-	// 	// 	return [];
-	// 	// }
-	// 	// const output_node = output_nodes[0];
-	// 	// if (output_node) {
-	// 	// 	nodes.push(output_node);
-	// 	// }
-	// 	// return nodes;
-	// }
+	functionEvalArgsWithParamConfigs() {
+		const list: Array<Function | RegisterableVariable | number | boolean> = [...this._functionEvalArgs];
+		for (const paramConfig of this._paramConfigs) {
+			const spareParam = this.params.get(paramConfig.name());
+			if (spareParam && spareParam.value != null) {
+				if (
+					CoreType.isBoolean(spareParam.value) ||
+					CoreType.isNumberValid(spareParam.value) ||
+					CoreType.isColor(spareParam.value) ||
+					CoreType.isVector(spareParam.value)
+				) {
+					list.push(spareParam.value);
+				} else {
+					console.warn(
+						`spareParam not found but type not yet copied to function args:'${paramConfig.name()}'`
+					);
+				}
+			} else {
+				console.warn(`spareParam not found:'${paramConfig.name()}'`);
+			}
+		}
+		return list;
+	}
 }

@@ -39,7 +39,7 @@ export class SDFLoader {
 						return;
 					}
 
-					const manifold = await (Module as any)({
+					const manifold: ManifoldStatic = await (Module as any)({
 						locateFile: () => wasmUrl,
 					});
 					manifold.setup();

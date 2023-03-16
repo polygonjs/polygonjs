@@ -2,7 +2,7 @@ import {ShaderName} from '../../../utils/shaders/ShaderName';
 import {BaseJsDefinition} from '../../utils/JsDefinition';
 import {JsLinesController, DefinitionTraverseCallback, AddBodyLinesOptions} from './LinesController';
 import {BaseJsNodeType} from '../../_Base';
-import {RegisterableVariable, BaseJsShaderAssembler} from '../assemblers/_Base';
+import {RegisterableVariable, BaseJsShaderAssembler, NamedFunction} from '../assemblers/_Base';
 
 export class ShadersCollectionController {
 	private _linesControllerByShaderName: Map<ShaderName, JsLinesController> = new Map();
@@ -58,8 +58,8 @@ export class ShadersCollectionController {
 	// REGISTERED FUNCTIONS
 	//
 	//
-	addFunction(node: BaseJsNodeType, functionName: string, _func: Function) {
-		return this.assembler().addFunction(node, functionName, _func);
+	addFunction(node: BaseJsNodeType, namedFunction: NamedFunction) {
+		return this.assembler().addFunction(node, namedFunction);
 	}
 
 	//

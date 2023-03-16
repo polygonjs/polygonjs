@@ -164,7 +164,6 @@ import {InstanceSopNode} from '../../../nodes/sop/Instance';
 import {InstanceUpdateSopNode} from '../../../nodes/sop/InstanceUpdate';
 import {InstancesCountSopNode} from '../../../nodes/sop/InstancesCount';
 import {JitterSopNode} from '../../../nodes/sop/Jitter';
-import {JSSDFSopNode} from '../../../nodes/sop/JSSDF';
 import {LayerSopNode} from '../../../nodes/sop/Layer';
 import {LightMixerSopNode} from '../../../nodes/sop/LightMixer';
 import {LightProbeSopNode} from '../../../nodes/sop/LightProbe';
@@ -213,15 +212,16 @@ import {RingSopNode} from '../../../nodes/sop/Ring';
 import {RoundedBoxSopNode} from '../../../nodes/sop/RoundedBox';
 import {ScatterSopNode} from '../../../nodes/sop/Scatter';
 // SDF
-import {SDFBooleanSopNode} from '../../../nodes/sop/SDFBoolean';
-import {SDFBoxSopNode} from '../../../nodes/sop/SDFBox';
+// import {SDFBooleanSopNode} from '../../../nodes/sop/SDFBoolean';
+// import {SDFBoxSopNode} from '../../../nodes/sop/SDFBox';
+import {SDFBuilderSopNode} from '../../../nodes/sop/SDFBuilder';
 // import {SDFExtrudeSopNode} from '../../../nodes/sop/SDFExtrude';
-import {SDFLevelSetSopNode} from '../../../nodes/sop/SDFLevelSet';
-import {SDFRefineSopNode} from '../../../nodes/sop/SDFRefine';
+// import {SDFLevelSetSopNode} from '../../../nodes/sop/SDFLevelSet';
+// import {SDFRefineSopNode} from '../../../nodes/sop/SDFRefine';
 // import {SDFSmoothSopNode} from '../../../nodes/sop/SDFSmooth';
-import {SDFSphereSopNode} from '../../../nodes/sop/SDFSphere';
-import {SDFTriangulateSopNode} from '../../../nodes/sop/SDFTriangulate';
-import {SDFTubeSopNode} from '../../../nodes/sop/SDFTube';
+// import {SDFSphereSopNode} from '../../../nodes/sop/SDFSphere';
+// import {SDFTriangulateSopNode} from '../../../nodes/sop/SDFTriangulate';
+// import {SDFTubeSopNode} from '../../../nodes/sop/SDFTube';
 //
 import {SetChildrenSopNode} from '../../../nodes/sop/SetChildren';
 import {SetGeometrySopNode} from '../../../nodes/sop/SetGeometry';
@@ -433,7 +433,7 @@ export interface GeoNodeChildrenMap {
 	instanceUpdate: InstanceUpdateSopNode;
 	instancesCount: InstancesCountSopNode;
 	jitter: JitterSopNode;
-	JSSDF: JSSDFSopNode;
+	// JSSDF: JSSDFSopNode;
 	layer: LayerSopNode;
 	lightMixer: LightMixerSopNode;
 	lightProbe: LightProbeSopNode;
@@ -482,15 +482,16 @@ export interface GeoNodeChildrenMap {
 	roundedBox: RoundedBoxSopNode;
 	scatter: ScatterSopNode;
 	// SDF
-	SDFBoolean: SDFBooleanSopNode;
-	SDFBox: SDFBoxSopNode;
+	// SDFBoolean: SDFBooleanSopNode;
+	// SDFBox: SDFBoxSopNode;
+	SDFBuilder: SDFBuilderSopNode;
 	// SDFExtrude: SDFExtrudeSopNode;
-	SDFLevelSet: SDFLevelSetSopNode;
-	SDFRefine: SDFRefineSopNode;
+	// SDFLevelSet: SDFLevelSetSopNode;
+	// SDFRefine: SDFRefineSopNode;
 	// SDFSmooth: SDFSmoothSopNode;
-	SDFSphere: SDFSphereSopNode;
-	SDFTriangulate: SDFTriangulateSopNode;
-	SDFTube: SDFTubeSopNode;
+	// SDFSphere: SDFSphereSopNode;
+	// SDFTriangulate: SDFTriangulateSopNode;
+	// SDFTube: SDFTubeSopNode;
 	//
 	setChildren: SetChildrenSopNode;
 	setGeometry: SetGeometrySopNode;
@@ -924,9 +925,6 @@ export class SopRegister {
 		poly.registerNode(InstanceUpdateSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(InstancesCountSopNode, CATEGORY_SOP.RENDER);
 		poly.registerNode(JitterSopNode, CATEGORY_SOP.MODIFIER);
-		if (process.env.NODE_ENV == 'development') {
-			poly.registerNode(JSSDFSopNode, CATEGORY_SOP.ADVANCED);
-		}
 		poly.registerNode(LayerSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(LightMixerSopNode, CATEGORY_SOP.LIGHTS);
 		poly.registerNode(LightProbeSopNode, CATEGORY_SOP.LIGHTS);
@@ -975,15 +973,16 @@ export class SopRegister {
 		poly.registerNode(RoundedBoxSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.registerNode(ScatterSopNode, CATEGORY_SOP.MODIFIER);
 		// SDF
-		poly.registerNode(SDFBooleanSopNode, CATEGORY_SOP.SDF);
-		poly.registerNode(SDFBoxSopNode, CATEGORY_SOP.SDF);
+		// poly.registerNode(SDFBooleanSopNode, CATEGORY_SOP.SDF);
+		// poly.registerNode(SDFBoxSopNode, CATEGORY_SOP.SDF);
+		poly.registerNode(SDFBuilderSopNode, CATEGORY_SOP.SDF);
 		// poly.registerNode(SDFExtrudeSopNode, CATEGORY_SOP.SDF);
-		poly.registerNode(SDFLevelSetSopNode, CATEGORY_SOP.SDF);
-		poly.registerNode(SDFRefineSopNode, CATEGORY_SOP.SDF);
+		// poly.registerNode(SDFLevelSetSopNode, CATEGORY_SOP.SDF);
+		// poly.registerNode(SDFRefineSopNode, CATEGORY_SOP.SDF);
 		// poly.registerNode(SDFSmoothSopNode, CATEGORY_SOP.SDF);
-		poly.registerNode(SDFSphereSopNode, CATEGORY_SOP.SDF);
-		poly.registerNode(SDFTriangulateSopNode, CATEGORY_SOP.SDF);
-		poly.registerNode(SDFTubeSopNode, CATEGORY_SOP.SDF);
+		// poly.registerNode(SDFSphereSopNode, CATEGORY_SOP.SDF);
+		// poly.registerNode(SDFTriangulateSopNode, CATEGORY_SOP.SDF);
+		// poly.registerNode(SDFTubeSopNode, CATEGORY_SOP.SDF);
 		//
 		poly.registerNode(SetChildrenSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(SetGeometrySopNode, CATEGORY_SOP.MODIFIER);
