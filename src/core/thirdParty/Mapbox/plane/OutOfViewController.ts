@@ -81,6 +81,6 @@ export class MapboxPlaneFrustumController {
 			}
 		}
 
-		return new CoreGeometryBuilderMesh().from_points(kept_points);
+		return new CoreGeometryBuilderMesh().fromPoints(kept_points);
 	}
 }

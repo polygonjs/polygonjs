@@ -10,7 +10,7 @@ import {Poly, PolyEngine} from '../Poly';
 import {AbstractRenderer} from './Common';
 import {ViewerRaycastersController} from './utils/ViewerRaycastersController';
 import {ViewerPerformanceMonitor} from './utils/ViewerPerformanceMonitor';
-import {ThreeMeshBVHHelper} from '../operations/sop/utils/Bvh/ThreeMeshBVHHelper';
+import {ThreeMeshBVHHelper} from '../../core/geometry/bvh/ThreeMeshBVHHelper';
 
 const HOVERED_CLASS_NAME = 'hovered';
 

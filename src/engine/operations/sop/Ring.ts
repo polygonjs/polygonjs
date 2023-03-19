@@ -39,7 +39,6 @@ export class RingSopOperation extends BaseSopOperation {
 	static override type(): Readonly<'ring'> {
 		return 'ring';
 	}
-	private _coreTransform = new CoreTransform();
 	override cook(inputCoreGroups: CoreGroup[], params: RingSopParams) {
 		// const coreGroup = inputCoreGroups[0];
 		// const object = coreGroup ? this._cookWithInput(coreGroup, params) : this._cookWithoutInput(params);
@@ -51,7 +50,7 @@ export class RingSopOperation extends BaseSopOperation {
 	}
 	private _cookWithoutInput(params: RingSopParams) {
 		const geometry = this._createRequiredGeometry(params);
-		this._coreTransform.rotateGeometry(geometry, DEFAULT_UP, params.direction);
+		CoreTransform.rotateGeometry(geometry, DEFAULT_UP, params.direction);
 		geometry.translate(params.center.x, params.center.y, params.center.z);
 		const object = this._createRingObject(geometry, params);
 		return object;

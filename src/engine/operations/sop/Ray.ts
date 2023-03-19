@@ -5,12 +5,11 @@ import {BufferAttribute, Matrix4, Mesh, Triangle, Vector3} from 'three';
 import {Raycaster, Intersection} from 'three';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {MatDoubleSideTmpSetter} from '../../../core/render/MatDoubleSideTmpSetter';
-import {RaycasterForBVH} from './utils/Bvh/three-mesh-bvh';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 import {TypeAssert} from '../../poly/Assert';
-import {BufferGeometryWithBVH} from './utils/Bvh/three-mesh-bvh';
 import {HitPointInfo} from 'three-mesh-bvh';
-import {ThreeMeshBVHHelper} from './utils/Bvh/ThreeMeshBVHHelper';
+import {RaycasterForBVH, BufferGeometryWithBVH} from '../../../core/geometry/bvh/three-mesh-bvh';
+import {ThreeMeshBVHHelper} from '../../../core/geometry/bvh/ThreeMeshBVHHelper';
 
 export enum RaySopMode {
 	PROJECT_RAY = 'project rays',

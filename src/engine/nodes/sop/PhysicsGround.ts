@@ -56,7 +56,6 @@ export class PhysicsGroundSopNode extends TypedSopNode<PhysicsGroundSopParamsCon
 		this.io.inputs.setCount(0);
 	}
 
-	private _coreTransform = new CoreTransform();
 	override cook() {
 		const thickness = this.pv.thickness;
 		const object = BaseSopOperation.createObject(
@@ -66,7 +65,7 @@ export class PhysicsGroundSopNode extends TypedSopNode<PhysicsGroundSopParamsCon
 		// object.matrixAutoUpdate = false;
 		// object.lookAt(this.pv.direction);
 		// object.updateMatrix();
-		this._coreTransform.rotateObject(object, DEFAULT_UP, this.pv.direction);
+		CoreTransform.rotateObject(object, DEFAULT_UP, this.pv.direction);
 		tmp.copy(this.pv.direction)
 			.normalize()
 			.multiplyScalar(-0.5 * this.pv.thickness + this.pv.height);

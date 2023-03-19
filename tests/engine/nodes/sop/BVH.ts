@@ -1,4 +1,4 @@
-import {BufferGeometryWithBVH} from '../../../../src/engine/operations/sop/utils/Bvh/three-mesh-bvh';
+import {BufferGeometryWithBVH} from '../../../../src/core/geometry/bvh/three-mesh-bvh';
 
 QUnit.test('BVH simple', async (assert) => {
 	const geo1 = window.geo1;

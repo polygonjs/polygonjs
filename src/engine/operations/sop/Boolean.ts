@@ -2,13 +2,11 @@ import {CoreString} from './../../../core/String';
 import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../poly/InputCloneMode';
-// import {CSG} from '../../../core/geometry/boolean/three-csg-ts/CSG';
-import {Mesh} from 'three';
-// import {TypeAssert} from '../../poly/Assert';
-// import {isBooleanTrue} from '../../../core/BooleanValue';
-// import {CoreType} from '../../../core/Type';
+import {Mesh, Line3, BufferGeometry, Float32BufferAttribute} from 'three';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
-import {SUBTRACTION, ADDITION, DIFFERENCE, INTERSECTION, Brush, Evaluator} from './utils/BvhCsg/three-bvh-csg';
+import {SUBTRACTION, ADDITION, DIFFERENCE, INTERSECTION, Brush, Evaluator} from 'three-bvh-csg';
+import {ObjectType} from '../../../core/geometry/Constant';
+import {CoreGeometryBuilderMerge} from '../../../core/geometry/builders/Merge';
 
 export enum BooleanOperation {
 	INTERSECT = 'intersect',
@@ -31,10 +29,13 @@ const evaluationIdByBooleanOperation: Record<BooleanOperation, number> = {
 
 interface BooleanSopParams extends DefaultOperationParams {
 	operation: number;
+	//
 	keepVertexColor: boolean;
 	additionalAttributes: string;
+	//
 	keepMaterials: boolean;
 	useInputGroups: boolean;
+	intersectionEdgesOnly: boolean;
 }
 
 export class BooleanSopOperation extends BaseSopOperation {
@@ -44,6 +45,7 @@ export class BooleanSopOperation extends BaseSopOperation {
 		additionalAttributes: '',
 		keepMaterials: true,
 		useInputGroups: false,
+		intersectionEdgesOnly: false,
 	};
 	static override readonly INPUT_CLONED_STATE = [InputCloneMode.FROM_NODE, InputCloneMode.NEVER];
 	static override type(): Readonly<'boolean'> {
@@ -74,47 +76,55 @@ export class BooleanSopOperation extends BaseSopOperation {
 			attributes.push(...newNames);
 		}
 		csgEvaluator.attributes = attributes;
-		// csgEvaluator.debug.enabled = true;
 		csgEvaluator.useGroups = params.keepMaterials || params.useInputGroups;
 		// we currently need to use the returned object from .evaluate in order to
 		// have a new object with a correct bounding box
+		(csgEvaluator.debug as any).enabled = params.intersectionEdgesOnly;
 		const output = csgEvaluator.evaluate(brush1, brush2, operationId);
-		// brush1.geometry.computeBoundingBox();
 
-		if (!params.keepMaterials) {
-			output.material = meshA.material;
+		if (params.intersectionEdgesOnly) {
+			const lines = csgEvaluator.debug.intersectionEdges as any as Line3[];
+			if (lines.length > 0) {
+				const linesGeometry = _createLinesObject(lines);
+				if (linesGeometry) {
+					const object = BaseSopOperation.createObject(linesGeometry, ObjectType.LINE_SEGMENTS);
+					return this.createCoreGroupFromObjects([object]);
+				}
+			}
+		} else {
+			output.disposeCacheData();
+			BaseSopOperation.createIndexIfNone(output.geometry);
+			// brush1.geometry.computeBoundingBox();
+
+			if (!params.keepMaterials) {
+				output.material = meshA.material;
+			}
+
+			return this.createCoreGroupFromObjects([output]);
 		}
-		// console.log(result);
-
-		// const result = this._applyBooleaOperation(meshA, meshB, params);
-
-		// let matA = meshA.material;
-
-		// if (isBooleanTrue(params.useBothMaterials)) {
-		// 	matA = CoreType.isArray(matA) ? matA[0] : matA;
-		// 	let matB = meshB.material;
-		// 	matB = CoreType.isArray(matB) ? matB[0] : matB;
-		// 	matA = [matA, matB];
-		// }
-		// const meshResult: Mesh = CSG.toMesh(result, meshA.matrix, matA);
-		return this.createCoreGroupFromObjects([output]);
+		return this.createCoreGroupFromObjects([]);
 	}
+}
 
-	// private _applyBooleaOperation(meshA: Mesh, meshB: Mesh, params: BooleanSopParams) {
-	// 	const operation = BOOLEAN_OPERATIONS[params.operation];
-	// 	let bspA = CSG.fromMesh(meshA, 0);
-	// 	let bspB = CSG.fromMesh(meshB, 1);
-	// 	switch (operation) {
-	// 		case BooleanOperation.INTERSECT: {
-	// 			return bspA.intersect(bspB);
-	// 		}
-	// 		case BooleanOperation.SUBTRACT: {
-	// 			return bspA.subtract(bspB);
-	// 		}
-	// 		case BooleanOperation.UNION: {
-	// 			return bspA.union(bspB);
-	// 		}
-	// 	}
-	// 	TypeAssert.unreachable(operation);
-	// }
+function _createLinesObject(lines: Line3[]): BufferGeometry | undefined {
+	const geometries = lines.map(_createLineGeometry);
+	return CoreGeometryBuilderMerge.merge(geometries);
+}
+
+function _createLineGeometry(line: Line3): BufferGeometry {
+	const pointsCount = 2;
+
+	const positions: number[] = new Array(pointsCount * 3);
+	const indices: number[] = new Array(pointsCount);
+
+	const i = 0;
+	line.start.toArray(positions, i * 3);
+	line.end.toArray(positions, (i + 1) * 3);
+
+	indices[0] = 0;
+	indices[1] = 1;
+	const geometry = new BufferGeometry();
+	geometry.setAttribute('position', new Float32BufferAttribute(positions, 3));
+	geometry.setIndex(indices);
+	return geometry;
 }

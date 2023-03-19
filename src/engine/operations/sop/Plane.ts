@@ -55,7 +55,7 @@ export class PlaneSopOperation extends BaseSopOperation {
 		// convert to buffer geo, as some render problems can occur otherwise
 		// geometry = BufferGeometryUtils.mergeBufferGeometries([geometry])
 		// console.log(geometry, geometry.isBufferGeometry)
-		this._coreTransform.rotateGeometry(geometry, DEFAULT_UP, params.direction);
+		CoreTransform.rotateGeometry(geometry, DEFAULT_UP, params.direction);
 
 		const matrix = this._coreTransform.translationMatrix(params.center);
 		geometry.applyMatrix4(matrix);
@@ -96,7 +96,7 @@ export class PlaneSopOperation extends BaseSopOperation {
 		const size2d = new Vector2(tmpSize.x, tmpSize.y);
 		const geometry = this._createPlane(size2d, params);
 
-		this._coreTransform.rotateGeometry(geometry, DEFAULT_UP, params.direction);
+		CoreTransform.rotateGeometry(geometry, DEFAULT_UP, params.direction);
 		geometry.translate(tmpCenter.x, tmpCenter.y, tmpCenter.z);
 
 		const object = this._createPlaneObject(geometry, params);

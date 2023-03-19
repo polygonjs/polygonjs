@@ -4,7 +4,7 @@ import {Vector3} from 'three';
 import {Box3} from 'three';
 import {Line3} from 'three';
 import {Matrix4} from 'three';
-import {MeshWithBVH, ExtendedTriangle} from '../../engine/operations/sop/utils/Bvh/three-mesh-bvh';
+import {MeshWithBVH, ExtendedTriangle} from '../../core/geometry/bvh/three-mesh-bvh';
 import {CapsuleOptions} from './CapsuleGeometry';
 import {MathUtils} from 'three';
 export interface CorePlayerOptions {

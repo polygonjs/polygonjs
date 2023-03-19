@@ -67,6 +67,7 @@
 		"postprocessing": "6.30.1",
 		"potpack": "2.0.0",
 		"three": "0.150.0",
+		"three-bvh-csg": "0.0.4",
 		"three-gpu-pathtracer": "0.0.8",
 		"three-mesh-bvh": "0.5.23",
 		"three-subdivide": "1.1.2",

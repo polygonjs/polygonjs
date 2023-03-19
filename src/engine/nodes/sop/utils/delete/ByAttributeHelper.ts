@@ -57,17 +57,17 @@ export class ByAttributeHelper {
 		const attribType = ATTRIBUTE_TYPES[this.node.pv.attribType];
 		switch (attribType) {
 			case AttribType.NUMERIC: {
-				this._eval_for_numeric(entities);
+				this._evalForNumeric(entities);
 				return;
 			}
 			case AttribType.STRING: {
-				this._eval_for_string(entities);
+				this._evalForString(entities);
 				return;
 			}
 		}
 		TypeAssert.unreachable(attribType);
 	}
-	private _eval_for_string(entities: CoreEntity[]) {
+	private _evalForString(entities: CoreEntity[]) {
 		let value: string | undefined;
 		for (let entity of entities) {
 			value = entity.stringAttribValue(this.node.pv.attribName);
@@ -76,26 +76,26 @@ export class ByAttributeHelper {
 			}
 		}
 	}
-	private _eval_for_numeric(entities: CoreEntity[]) {
+	private _evalForNumeric(entities: CoreEntity[]) {
 		const attribSize: AttribSize = ATTRIBUTE_SIZES[this.node.pv.attribSize - 1];
 		switch (attribSize) {
 			case AttribSize.FLOAT: {
-				return this._eval_for_points_numeric_float(entities);
+				return this._evalForPointsNumericFloat(entities);
 			}
 			case AttribSize.VECTOR2: {
-				return this._eval_for_points_numeric_vector2(entities);
+				return this._evalForPointsNumericVector2(entities);
 			}
 			case AttribSize.VECTOR3: {
-				return this._eval_for_points_numeric_vector3(entities);
+				return this._evalForPointsNumericVector3(entities);
 			}
 			case AttribSize.VECTOR4: {
-				return this._eval_for_points_numeric_vector4(entities);
+				return this._evalForPointsNumericVector4(entities);
 			}
 		}
 		TypeAssert.unreachable(attribSize);
 	}
 
-	private _eval_for_points_numeric_float(entities: CoreEntity[]) {
+	private _evalForPointsNumericFloat(entities: CoreEntity[]) {
 		let attribName: string = this.node.pv.attribName;
 		const compared_value = this.node.pv.attribValue1;
 		let value: number;
@@ -108,7 +108,7 @@ export class ByAttributeHelper {
 			}
 		}
 	}
-	private _eval_for_points_numeric_vector2(entities: CoreEntity[]) {
+	private _evalForPointsNumericVector2(entities: CoreEntity[]) {
 		let attribName = this.node.pv.attribName;
 		const compared_value = this.node.pv.attribValue2;
 		let target = new Vector2();
@@ -119,7 +119,7 @@ export class ByAttributeHelper {
 			}
 		}
 	}
-	private _eval_for_points_numeric_vector3(entities: CoreEntity[]) {
+	private _evalForPointsNumericVector3(entities: CoreEntity[]) {
 		let attribName = this.node.pv.attribName;
 		const compared_value = this.node.pv.attribValue3;
 		let target = new Vector3();
@@ -130,7 +130,7 @@ export class ByAttributeHelper {
 			}
 		}
 	}
-	private _eval_for_points_numeric_vector4(entities: CoreEntity[]) {
+	private _evalForPointsNumericVector4(entities: CoreEntity[]) {
 		let attribName = this.node.pv.attribName;
 		const compared_value = this.node.pv.attribValue4;
 		let target = new Vector4();
