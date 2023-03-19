@@ -6,7 +6,7 @@ import {BaseSopNodeType} from '../../sop/_Base';
 import {CoreGraphNode} from '../../../../core/graph/CoreGraphNode';
 import {CorePlayer} from '../../../../core/player/Player';
 import {BaseNodeType} from '../../_Base';
-import {MeshWithBVH} from '../../../operations/sop/utils/Bvh/three-mesh-bvh';
+import {MeshWithBVH} from '../../../../core/geometry/bvh/three-mesh-bvh';
 
 export function ColliderParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {

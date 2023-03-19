@@ -16,6 +16,7 @@ import {updateCameraTransformParams} from './utils/camera/updateCameraTransformP
 import {OnNodeRegisterCallback} from '../../poly/registers/nodes/NodesRegister';
 const DEFAULT = PerspectiveCameraSopOperation.DEFAULT_PARAMS;
 class PerspectiveCameraSopParamsConfig extends NodeParamsConfig {
+	default = ParamConfig.FOLDER();
 	/** @param camera fov */
 	fov = ParamConfig.FLOAT(DEFAULT.fov, {
 		range: PERSPECTIVE_CAMERA_DEFAULT.fovRange,
@@ -47,7 +48,34 @@ class PerspectiveCameraSopParamsConfig extends NodeParamsConfig {
 			updateCameraTransformParams(node as PerspectiveCameraSopNode);
 		},
 	});
+	PBR = ParamConfig.FOLDER();
+	/** @param apertureBlades */
+	apertureBlades = ParamConfig.INTEGER(6, {
+		range: [0, 12],
+		rangeLocked: [true, false],
+	});
+	/** @param apertureBlades */
+	fStop = ParamConfig.FLOAT(0.5, {
+		range: [0, 1],
+		rangeLocked: [true, false],
+	});
+	/** @param focusDistance */
+	focusDistance = ParamConfig.FLOAT(10, {
+		range: [0, 100],
+		rangeLocked: [true, false],
+	});
+	/** @param apertureRotation */
+	apertureRotation = ParamConfig.FLOAT(0, {
+		range: [0, 1],
+		rangeLocked: [true, false],
+	});
+	/** @param anamorphicRatio */
+	anamorphicRatio = ParamConfig.FLOAT(1, {
+		range: [0, 2],
+		rangeLocked: [true, false],
+	});
 }
+
 const ParamsConfig = new PerspectiveCameraSopParamsConfig();
 
 export class PerspectiveCameraSopNode extends TypedSopNode<PerspectiveCameraSopParamsConfig> {

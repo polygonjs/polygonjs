@@ -18,7 +18,7 @@ import {MapboxMapsController} from '../../core/thirdParty/Mapbox/MapboxMapsContr
 import {MapboxRaycaster} from '../../core/thirdParty/Mapbox/MapboxRaycaster';
 // import {MapboxLayersController} from '../../core/thirdParty/Mapbox/LayersController';
 import {Vector2, WebGLRenderer} from 'three';
-import {ThreeMeshBVHHelper} from '../operations/sop/utils/Bvh/ThreeMeshBVHHelper';
+import {ThreeMeshBVHHelper} from '../../core/geometry/bvh/ThreeMeshBVHHelper';
 const CSS_CLASS = 'CoreMapboxViewer';
 
 // export interface ThreejsViewerProperties {

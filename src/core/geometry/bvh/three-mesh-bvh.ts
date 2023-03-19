@@ -32,3 +32,7 @@ export interface MeshWithBVH extends Mesh {
 export interface RaycasterForBVH extends Raycaster {
 	firstHitOnly: boolean;
 }
+export class MeshBVHUniformStruct {
+	updateFrom(bvh: MeshBVH) {}
+	dispose() {}
+}

@@ -3,8 +3,8 @@ import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {Mesh} from 'three';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
-import {ThreeMeshBVHHelper} from './utils/Bvh/ThreeMeshBVHHelper';
-import {CENTER, AVERAGE, SAH} from './utils/Bvh/three-mesh-bvh';
+import {ThreeMeshBVHHelper} from '../../../core/geometry/bvh/ThreeMeshBVHHelper';
+import {CENTER, AVERAGE, SAH} from '../../../core/geometry/bvh/three-mesh-bvh';
 const nameByStragery = {
 	[CENTER]: 'center',
 	[AVERAGE]: 'average',

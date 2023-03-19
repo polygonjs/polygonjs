@@ -1,7 +1,7 @@
 import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
-import {MeshBVHVisualizer} from './utils/Bvh/three-mesh-bvh';
+import {MeshBVHVisualizer} from '../../../core/geometry/bvh/three-mesh-bvh';
 import {Mesh, Object3D} from 'three';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 

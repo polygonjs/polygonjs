@@ -4,7 +4,7 @@ import {Vector3} from 'three';
 import {Plane} from 'three';
 import {Line3} from 'three';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
-import {MeshWithBVH, ExtendedTriangle} from './utils/Bvh/three-mesh-bvh';
+import {MeshWithBVH, ExtendedTriangle} from '../../../core/geometry/bvh/three-mesh-bvh';
 import {Mesh} from 'three';
 import {LineSegments} from 'three';
 import {BufferGeometry} from 'three';

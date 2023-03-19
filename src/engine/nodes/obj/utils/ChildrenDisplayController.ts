@@ -64,11 +64,11 @@ export class ChildrenDisplayController {
 		this.node.nameController.add_post_set_fullPath_hook(this.setSopGroupName.bind(this));
 		this._createSopGroup();
 
-		const display_flag = this.node.flags?.display;
-		if (display_flag) {
-			display_flag.onUpdate(() => {
+		const displayFlag = this.node.flags?.display;
+		if (displayFlag) {
+			displayFlag.onUpdate(() => {
 				this._updateSopGroupHierarchy();
-				if (display_flag.active()) {
+				if (displayFlag.active()) {
 					this.requestDisplayNodeContainer();
 				}
 			});
@@ -86,6 +86,7 @@ export class ChildrenDisplayController {
 				sopGroup.visible = false;
 				this.node.object.remove(sopGroup);
 			}
+			Poly.onSceneUpdatedHooks.runHooks();
 		}
 	}
 

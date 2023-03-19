@@ -162,6 +162,7 @@ export interface BooleanParamOptions
 export interface ButtonParamOptions extends BaseParamOptions, CallbackParamOptions, LabelParamOptions {}
 export interface ColorParamOptions
 	extends BaseParamOptions,
+		LabelParamOptions,
 		ColorConversionOptions,
 		ExpressionParamOptions,
 		CallbackParamOptions,
@@ -215,6 +216,7 @@ export interface StringParamOptions
 }
 interface VectorParamOptions
 	extends BaseParamOptions,
+		LabelParamOptions,
 		ExpressionParamOptions,
 		CallbackParamOptions,
 		ComputeOnDirtyParamOptions {}

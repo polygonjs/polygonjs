@@ -1,11 +1,5 @@
 import {PerspectiveCamera} from 'three';
-import {
-	PhysicalCamera,
-	ShapedAreaLight,
-	PhysicalSpotLight,
-	IESLoader,
-	// @ts-ignore
-} from 'three-gpu-pathtracer';
+import {PhysicalCamera, ShapedAreaLight, PhysicalSpotLight, IESLoader} from './three-gpu-pathtracer';
 import {PathTracingRendererRopNode} from '../../../engine/nodes/rop/PathTracingRenderer';
 import {PolyEngine} from '../../../engine/Poly';
 import {ViewerCallbackOptions} from '../../../engine/poly/registers/cameras/PolyCamerasRegister';
@@ -18,16 +12,38 @@ import {
 	CoreSceneObjectsFactory,
 	GeneratorName,
 	PerspectiveCameraOptions,
+	PerspectiveCameraUpdateOptions,
+	PerspectiveCameraUpdate,
 	AreaLightOptions,
 	SpotLightUpdateOptions,
+	SpotLightUpdate,
 } from '../../CoreSceneObjectsFactory';
 import {IES_PROFILE_LM_63_1995} from '../../lights/spotlight/ies/lm_63_1995';
+
+// type PhysicalSpotLightUpdateOptions = SpotLightUpdateOptions<PhysicalSpotLight>
+const PHYSICAL_CAMERA_UPDATE: PerspectiveCameraUpdate<PhysicalCamera> = (
+	options: PerspectiveCameraUpdateOptions<PhysicalCamera>
+) => {
+	const {camera, apertureBlades, fStop, focusDistance, apertureRotation, anamorphicRatio} = options;
+	camera.apertureBlades = apertureBlades;
+	camera.fStop = fStop;
+	camera.focusDistance = focusDistance;
+	camera.apertureRotation = apertureRotation;
+	camera.anamorphicRatio = anamorphicRatio;
+};
+const PHYSICAL_SPOT_LIGHT_UPDATE: SpotLightUpdate<PhysicalSpotLight> = (
+	options: SpotLightUpdateOptions<PhysicalSpotLight>
+) => {
+	const {spotLight} = options;
+	spotLight.iesTexture = new IESLoader().parse(IES_PROFILE_LM_63_1995);
+};
 
 export function onPBRModuleRegister(poly: PolyEngine) {
 	CoreSceneObjectsFactory.registerGenerator(GeneratorName.PERSPECTIVE_CAMERA, (options: PerspectiveCameraOptions) => {
 		const {fov, aspect, near, far} = options;
 		return new PhysicalCamera(fov, aspect, near, far);
 	});
+	CoreSceneObjectsFactory.registerGenerator(GeneratorName.PERSPECTIVE_CAMERA_UPDATE, PHYSICAL_CAMERA_UPDATE as any);
 	CoreSceneObjectsFactory.registerGenerator(GeneratorName.AREA_LIGHT, (options: AreaLightOptions) => {
 		const {color, intensity, width, height} = options;
 		return new ShapedAreaLight(color, intensity, width, height);
@@ -35,13 +51,7 @@ export function onPBRModuleRegister(poly: PolyEngine) {
 	CoreSceneObjectsFactory.registerGenerator(GeneratorName.SPOT_LIGHT, () => {
 		return new PhysicalSpotLight();
 	});
-	CoreSceneObjectsFactory.registerGenerator(
-		GeneratorName.SPOT_LIGHT_UPDATE,
-		(options: SpotLightUpdateOptions<PhysicalSpotLight>) => {
-			const {spotLight} = options;
-			spotLight.iesTexture = new IESLoader().parse(IES_PROFILE_LM_63_1995);
-		}
-	);
+	CoreSceneObjectsFactory.registerGenerator(GeneratorName.SPOT_LIGHT_UPDATE, PHYSICAL_SPOT_LIGHT_UPDATE as any);
 
 	poly.registerCamera<PhysicalCamera | PerspectiveCamera>(
 		PhysicalCamera,

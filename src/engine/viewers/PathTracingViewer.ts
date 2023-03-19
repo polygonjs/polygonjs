@@ -5,7 +5,17 @@ import {
 } from 'three-gpu-pathtracer';
 import {PathTracingRendererContainer} from '../nodes/rop/utils/pathTracing/PathTracingRendererContainer';
 
-type RenderFuncWithDeltaAsync = (delta: number) => Promise<void>;
+// type RenderFuncWithDeltaAsync = (delta: number) => Promise<void>;
+type OnFrameCompleted = () => Promise<void>;
+interface RecordingStateOptions {
+	isRecording: boolean;
+	// onSampleCompleted?: OnSampleCompleted;
+	onFrameCompleted?: OnFrameCompleted;
+	recordingSamplesPerFrame?: number;
+	// sleepCallback?: SleepCallback;
+	// setTimeout?: SetTimeoutCallback;
+	// requestAnimationFrame?: RequestAnimationFrame;
+}
 
 /**
  *
@@ -17,21 +27,32 @@ type RenderFuncWithDeltaAsync = (delta: number) => Promise<void>;
 export class PathTracingViewer<C extends PhysicalCamera> extends ThreejsViewer<PhysicalCamera> {
 	protected override _renderer: PathTracingRendererContainer | undefined;
 	private _debugElement: HTMLElement | undefined;
-	private _rendering: boolean = false;
-	protected override _renderFunc: RenderFuncWithDeltaAsync | undefined;
+	// private _rendering: boolean = false;
+	// protected override _renderFunc: RenderFuncWithDeltaAsync | undefined;
 	protected override _setupFunctions(options: ThreejsViewerOptions<C>): ThreejsViewerSetupData<C> | void {
 		const data = super._setupFunctions(options);
 		if (data) {
 			const {renderer, renderScene, camera} = data;
 			if (renderer instanceof PathTracingRendererContainer) {
-				this._renderFunc = async () => {
-					if (this._rendering) {
-						return;
+				this._renderFunc = () => {
+					if (this._isRecording) {
+						if (renderer.pbrRenderAllowed()) {
+							renderer.render(renderScene, camera);
+							this.updateDebugDisplay();
+							if (renderer.samplesCount() > this._recordingSamplesPerFrame && this._onFrameCompleted) {
+								renderer.markAsNotGenerated();
+								this._onFrameCompleted();
+							}
+						}
+					} else {
+						// if (this._rendering) {
+						// 	return;
+						// }
+						// this._rendering = true;
+						renderer.render(renderScene, camera);
+						// this._rendering = false;
+						this.updateDebugDisplay();
 					}
-					this._rendering = true;
-					await renderer.render(renderScene, camera);
-					this._rendering = false;
-					this.updateDebugDisplay();
 				};
 				renderer.generate(renderScene);
 			}
@@ -63,6 +84,17 @@ export class PathTracingViewer<C extends PhysicalCamera> extends ThreejsViewer<P
 			this.updateDebugDisplay();
 		}
 	}
+	private _isRecording: boolean = false;
+	private _onFrameCompleted: OnFrameCompleted | undefined;
+	private _recordingSamplesPerFrame: number = 500;
+	setRecordingState(options: RecordingStateOptions) {
+		this._isRecording = options.isRecording;
+		this._onFrameCompleted = options.onFrameCompleted;
+		this._recordingSamplesPerFrame =
+			options.recordingSamplesPerFrame != null
+				? options.recordingSamplesPerFrame
+				: this._recordingSamplesPerFrame;
+	}
 	updateDebugDisplay() {
 		if (!this._debugElement) {
 			return;
@@ -83,7 +115,7 @@ export class PathTracingViewer<C extends PhysicalCamera> extends ThreejsViewer<P
 		// this._requestAnimationFrameId = requestAnimationFrame(this._animateWebBound);
 		this.__animateCommon__();
 	}
-	protected override async _postRender(delta: number) {
+	protected override _postRender(delta: number) {
 		const renderer = this._renderer;
 		if (!renderer) {
 			return;
@@ -91,13 +123,13 @@ export class PathTracingViewer<C extends PhysicalCamera> extends ThreejsViewer<P
 
 		this._runOnBeforeRenderCallbacks(delta, renderer);
 		if (this._renderFunc) {
-			await this._renderFunc(delta);
+			this._renderFunc(delta);
 		}
 		if (this._renderCSSFunc) {
 			this._renderCSSFunc();
 		}
 		this.controlsController().update(delta);
 		this._runOnAfterRenderCallbacks(delta, renderer);
-		this._requestAnimationFrameId = renderer.requestAnimationFrame(this._animateWebBound);
+		this._requestAnimationFrameId = requestAnimationFrame(this._animateWebBound);
 	}
 }

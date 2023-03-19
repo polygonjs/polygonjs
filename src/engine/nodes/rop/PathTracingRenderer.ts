@@ -7,18 +7,14 @@
  */
 import {TypedRopNode} from './_Base';
 import {RopType} from '../../poly/registers/nodes/types/Rop';
-import {WebGLRendererParameters} from 'three';
+import {WebGLRenderer, WebGLRendererParameters} from 'three';
 import {MeshBasicMaterial, CustomBlending} from 'three';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {Poly} from '../../Poly';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {DEFAULT_PARAMS} from './WebGLRenderer';
 import {FullScreenQuad} from '../../../modules/three/examples/jsm/postprocessing/Pass';
-import {
-	PathTracingRenderer,
-	PhysicalPathTracingMaterial,
-	// @ts-ignore
-} from 'three-gpu-pathtracer';
+import {PathTracingRenderer, PhysicalPathTracingMaterial} from '../../../core/render/PBR/three-gpu-pathtracer';
 import {PathTracingRendererContainer} from './utils/pathTracing/PathTracingRendererContainer';
 import {BaseNodeType} from '../_Base';
 import {ModuleName} from '../../poly/registers/modules/Common';
@@ -41,6 +37,11 @@ class PathTracingRendererRopParamsConfig extends NodeParamsConfig {
 	});
 	/** @param bounces */
 	bounces = ParamConfig.INTEGER(3, {
+		range: [1, 10],
+		rangeLocked: [true, false],
+	});
+	/** @param bounces inside transmissive material */
+	transmissiveBounces = ParamConfig.INTEGER(3, {
 		range: [1, 10],
 		rangeLocked: [true, false],
 	});
@@ -79,14 +80,16 @@ class PathTracingRendererRopParamsConfig extends NodeParamsConfig {
 			PathTracingRendererRopNode.PARAM_CALLBACK_reset(node as PathTracingRendererRopNode);
 		},
 	});
-	recording = ParamConfig.FOLDER();
+	videoRender = ParamConfig.FOLDER();
 	/** @param samples */
 	samplesPerAnimationFrame = ParamConfig.INTEGER(20, {
 		range: [1, 1000],
 		rangeLocked: [true, false],
 	});
-	/** @param this can remain off if only the camera is moving, but needs to be ON if other objects are animated */
-	// rebuild = ParamConfig.BOOLEAN(1);
+	/** @param frame range */
+	f = ParamConfig.VECTOR2([0, 100], {
+		label: 'Frame Range',
+	});
 }
 const ParamsConfig = new PathTracingRendererRopParamsConfig();
 
@@ -99,7 +102,8 @@ export class PathTracingRendererRopNode extends TypedRopNode<PathTracingRenderer
 		return [ModuleName.PBR];
 	}
 
-	private _lastRenderer: PathTracingRendererContainer | undefined;
+	private _pathTracingRenderer: PathTracingRendererContainer | undefined;
+	private _webGLRenderer: WebGLRenderer | undefined;
 
 	protected override initializeNode(): void {
 		super.initializeNode();
@@ -110,8 +114,7 @@ export class PathTracingRendererRopNode extends TypedRopNode<PathTracingRenderer
 		super.dispose();
 		Poly.onSceneUpdatedHooks.unregisterHook(this);
 	}
-
-	createRenderer(canvas: HTMLCanvasElement, gl: WebGLRenderingContext): PathTracingRendererContainer {
+	private _createWebGLRenderer(canvas: HTMLCanvasElement, gl: WebGLRenderingContext) {
 		const params: WebGLRendererParameters = {};
 		const keys: Array<keyof WebGLRendererParameters> = Object.keys(DEFAULT_PARAMS) as Array<
 			keyof WebGLRendererParameters
@@ -125,7 +128,7 @@ export class PathTracingRendererRopNode extends TypedRopNode<PathTracingRenderer
 		params.alpha = isBooleanTrue(this.pv.alpha);
 		params.canvas = canvas;
 		params.context = gl;
-		params.preserveDrawingBuffer = false;
+		params.preserveDrawingBuffer = true;
 		const webGLRenderer = Poly.renderersController.createWebGLRenderer(params);
 
 		if (Poly.renderersController.printDebug()) {
@@ -134,8 +137,11 @@ export class PathTracingRendererRopNode extends TypedRopNode<PathTracingRenderer
 				params: params,
 			});
 		}
-
-		const pathTracingRenderer = new PathTracingRenderer(webGLRenderer);
+		return webGLRenderer;
+	}
+	private _createPathTracingRenderer(canvas: HTMLCanvasElement, gl: WebGLRenderingContext) {
+		this._webGLRenderer = this._webGLRenderer || this._createWebGLRenderer(canvas, gl);
+		const pathTracingRenderer = new PathTracingRenderer(this._webGLRenderer);
 		pathTracingRenderer.material = new PhysicalPathTracingMaterial();
 
 		const fsQuadMat = new MeshBasicMaterial({
@@ -144,7 +150,7 @@ export class PathTracingRendererRopNode extends TypedRopNode<PathTracingRenderer
 		});
 		const fsQuad = new FullScreenQuad(fsQuadMat);
 		const pathTracingRendererContainer = new PathTracingRendererContainer(
-			webGLRenderer,
+			this._webGLRenderer,
 			pathTracingRenderer,
 			fsQuad,
 			fsQuadMat
@@ -152,44 +158,66 @@ export class PathTracingRendererRopNode extends TypedRopNode<PathTracingRenderer
 
 		this._updateRenderer(pathTracingRendererContainer);
 
-		if (this._lastRenderer) {
-			this._lastRenderer.dispose();
-		}
+		// if (this._lastRenderer) {
+		// 	this._lastRenderer.dispose();
+		// }
 
-		this._lastRenderer = pathTracingRendererContainer;
+		this._pathTracingRenderer = pathTracingRendererContainer;
 		return pathTracingRendererContainer;
 	}
 
+	createRenderer(canvas: HTMLCanvasElement, gl: WebGLRenderingContext): PathTracingRendererContainer {
+		return (this._pathTracingRenderer = this._pathTracingRenderer || this._createPathTracingRenderer(canvas, gl));
+	}
+
 	override cook() {
+		if (this._pathTracingRenderer) {
+			this._updateRenderer(this._pathTracingRenderer);
+		}
 		this.cookController.endCook();
 	}
 
 	private _updateRenderer(rendererContainer: PathTracingRendererContainer) {
 		const {pathTracingRenderer} = rendererContainer;
+		let resetRequired = true;
+		let generateRequired = false;
+
 		rendererContainer.samplesPerFrame = this.pv.samplesPerFrame;
 		rendererContainer.samplesPerAnimationFrame = this.pv.samplesPerAnimationFrame;
 		rendererContainer.resolutionScale = this.pv.resolutionScale;
 		rendererContainer.displayDebug = this.pv.displayDebug;
+		rendererContainer.frameRange.copy(this.pv.f);
 		pathTracingRenderer.material.bounces = this.pv.bounces;
+		pathTracingRenderer.material.transmissiveBounces = this.pv.transmissiveBounces;
 		pathTracingRenderer.stableNoise = this.pv.stableNoise;
 		pathTracingRenderer.material.filterGlossyFactor = this.pv.filterGlossyFactor;
-		pathTracingRenderer.material.backgroundBlur = this.pv.backgroundBlur;
+		if (rendererContainer.backgroundBlur != this.pv.backgroundBlur) {
+			// pathTracingRenderer.material.backgroundBlur = this.pv.backgroundBlur;
+			rendererContainer.backgroundBlur = this.pv.backgroundBlur;
+			generateRequired = true;
+		}
 		pathTracingRenderer.material.environmentIntensity = this.pv.environmentIntensity;
 		pathTracingRenderer.tiles.set(this.pv.tiles.x, this.pv.tiles.y);
 
 		pathTracingRenderer.material.setDefine('FEATURE_MIS', Number(this.pv.multipleImportanceSampling));
+
+		if (generateRequired) {
+			rendererContainer.markAsNotGenerated();
+		} else if (resetRequired) {
+			rendererContainer.reset();
+		}
 	}
 	static PARAM_CALLBACK_generate(node: PathTracingRendererRopNode) {
 		node._paramCallbackGenerate();
 	}
 	private _paramCallbackGenerate() {
 		const scene = this.scene().threejsScene();
-		this._lastRenderer?.generate(scene);
+		this._pathTracingRenderer?.generate(scene);
 	}
 	static PARAM_CALLBACK_reset(node: PathTracingRendererRopNode) {
 		node._paramCallbackReset();
 	}
 	private _paramCallbackReset() {
-		this._lastRenderer?.reset();
+		this._pathTracingRenderer?.reset();
 	}
 }

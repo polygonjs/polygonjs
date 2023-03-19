@@ -1,7 +1,7 @@
 import {Mesh, Object3D, Vector3, Raycaster} from 'three';
 import {_getRBD} from '../PhysicsRBD';
 import {PhysicsLib} from '../CorePhysics';
-import {ThreeMeshBVHHelper} from '../../../engine/operations/sop/utils/Bvh/ThreeMeshBVHHelper';
+import {ThreeMeshBVHHelper} from '../../../core/geometry/bvh/ThreeMeshBVHHelper';
 import {CoreMath} from '../../math/_Module';
 import {CorePhysicsAttribute} from '../PhysicsAttribute';
 

@@ -22,6 +22,12 @@ interface PerspectiveCameraSopParams extends CreatePerspectiveCameraParams, Defa
 	showHelper: boolean;
 	matrixAutoUpdate: boolean;
 	name: string;
+	// PBR
+	apertureBlades: number;
+	fStop: number;
+	focusDistance: number;
+	apertureRotation: number;
+	anamorphicRatio: number;
 }
 interface AttributeOptions {
 	fov: number;
@@ -37,6 +43,12 @@ export class PerspectiveCameraSopOperation extends BaseSopOperation {
 		showHelper: false,
 		matrixAutoUpdate: true,
 		name: CameraNodeType.PERSPECTIVE,
+		// PBR
+		apertureBlades: 6,
+		fStop: 0.6,
+		focusDistance: 10,
+		apertureRotation: 0,
+		anamorphicRatio: 1,
 	};
 	static override readonly INPUT_CLONED_STATE = InputCloneMode.NEVER;
 	static override type(): Readonly<CameraNodeType.PERSPECTIVE> {
@@ -62,6 +74,11 @@ export class PerspectiveCameraSopOperation extends BaseSopOperation {
 		camera.matrixAutoUpdate = params.matrixAutoUpdate;
 
 		PerspectiveCameraSopOperation.setCameraAttributes(camera, params);
+
+		CoreSceneObjectsFactory.generator(GeneratorName.PERSPECTIVE_CAMERA_UPDATE)({
+			camera,
+			...params,
+		});
 
 		const objects: Object3D[] = [camera];
 		if (isBooleanTrue(params.showHelper)) {

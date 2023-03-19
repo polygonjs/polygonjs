@@ -4,8 +4,8 @@
  *
  */
 import {Matrix4, Quaternion} from 'three';
-import {ThreeMeshBVHHelper} from './../../operations/sop/utils/Bvh/ThreeMeshBVHHelper';
-import {MeshWithBVH} from './../../operations/sop/utils/Bvh/three-mesh-bvh';
+import {ThreeMeshBVHHelper} from './../../../core/geometry/bvh/ThreeMeshBVHHelper';
+import {MeshWithBVH} from './../../../core/geometry/bvh/three-mesh-bvh';
 import {Vector3, Ray, Texture, Data3DTexture, DoubleSide, Box3, Mesh} from 'three';
 import {NodeContext} from './../../poly/NodeContext';
 import {TypedCopNode} from './_Base';

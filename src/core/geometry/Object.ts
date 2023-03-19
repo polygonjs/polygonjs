@@ -22,7 +22,7 @@ import {CoreMaterial, MaterialWithCustomMaterials} from './Material';
 import {CoreString} from '../String';
 import {ObjectUtils} from '../ObjectUtils';
 import {ArrayUtils} from '../ArrayUtils';
-import {ThreeMeshBVHHelper} from '../../engine/operations/sop/utils/Bvh/ThreeMeshBVHHelper';
+import {ThreeMeshBVHHelper} from './bvh/ThreeMeshBVHHelper';
 import {CoreGeometryBuilderMerge} from './builders/Merge';
 import {CoreObjectType, MergeCompactOptions} from './ObjectContent';
 import {BaseCoreObject} from './_BaseObject';
