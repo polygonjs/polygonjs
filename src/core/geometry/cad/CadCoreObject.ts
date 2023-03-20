@@ -27,7 +27,7 @@ import {BaseCoreObject} from '../_BaseObject';
 // import {cadShapeClone} from './toObject3D/CadShapeCommon';
 // import {Object3D} from 'three';
 import {CadObject} from './CadObject';
-import {CoreObjectType, MergeCompactOptions} from '../ObjectContent';
+import {CoreObjectType, MergeCompactOptions, objectContentCopyProperties} from '../ObjectContent';
 import {Box3, Matrix4, Sphere, Vector3} from 'three';
 import {TransformTargetType} from '../../Transform';
 import {ObjectTransformSpace} from '../../TransformSpace';
@@ -87,9 +87,14 @@ export class CadCoreObject<T extends CadGeometryType> extends BaseCoreObject<Cor
 	static override mergeCompact(options: MergeCompactOptions) {
 		const {objects, materialsByObjectType, mergedObjects, onError} = options;
 		try {
+			const firstObject = objects[0];
+			if (!firstObject) {
+				return;
+			}
 			const newObjects = cadMergeCompact(objects as CadObject<CadGeometryType>[]);
 
 			for (let newObject of newObjects) {
+				objectContentCopyProperties(firstObject, newObject);
 				const material = materialsByObjectType.get(newObject.type);
 				if (material) {
 					newObject.material = material;
