@@ -1,5 +1,6 @@
 import {Matrix4, Vector3} from 'three';
-import {CsgGeometry, CsgGeometryType, csgGeometryTypeFromGeometry} from '../CsgCommon';
+import {CsgGeometry, CsgGeometryType} from '../CsgCommon';
+import {csgGeometryTypeFromGeometry} from '../CsgCoreType';
 import {maths, geometries} from '@jscad/modeling';
 import {TypeAssert} from '../../../../engine/poly/Assert';
 const {mat4} = maths;

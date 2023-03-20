@@ -1,6 +1,6 @@
 import {BaseNodeType} from '../../../engine/nodes/_Base';
 import {ASSETS_ROOT} from './../AssetsUtils';
-import {EXRLoader} from '../../../modules/three/examples/jsm/loaders/EXRLoader';
+import {EXRLoader} from 'three/examples/jsm/loaders/EXRLoader';
 import {BaseCoreImageLoader, TextureLoadOptions} from './_BaseImageLoader';
 
 export class EXRTextureLoader extends BaseCoreImageLoader {

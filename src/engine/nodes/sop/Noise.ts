@@ -15,7 +15,7 @@ import {CoreMath} from '../../../core/math/_Module';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {TypeAssert} from '../../poly/Assert';
 import {BufferAttribute} from 'three';
-import {SimplexNoise} from '../../../modules/three/examples/jsm/math/SimplexNoise';
+import {SimplexNoise} from 'three/examples/jsm/math/SimplexNoise';
 
 export enum NoiseOperation {
 	ADD = 'add',

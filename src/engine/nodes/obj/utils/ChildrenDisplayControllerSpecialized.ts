@@ -5,8 +5,8 @@ import {ChildrenDisplayController} from './ChildrenDisplayController';
 import {TesselationParamsObjNode} from './TesselationParams';
 import {CoreGroup} from '../../../../core/geometry/Group';
 import {CoreType} from '../../../../core/Type';
-import {CADTesselationParams} from '../../../../core/geometry/cad/CadCommon';
-import {CSGTesselationParams} from '../../../../core/geometry/csg/CsgCommon';
+import type {CADTesselationParams} from '../../../../core/geometry/cad/CadCommon';
+import type {CSGTesselationParams} from '../../../../core/geometry/csg/CsgCommon';
 
 interface BaseObjNodeClassWithDisplayNode extends TesselationParamsObjNode {
 	displayNodeController: DisplayNodeController;

@@ -4,7 +4,7 @@ import {Vector3} from 'three';
 import {Euler} from 'three';
 import {Mesh} from 'three';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
-import {DecalGeometry} from '../../../modules/three/examples/jsm/geometries/DecalGeometry';
+import {DecalGeometry} from 'three/examples/jsm/geometries/DecalGeometry';
 import {MathUtils} from 'three';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 

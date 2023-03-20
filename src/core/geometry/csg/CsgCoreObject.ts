@@ -1,6 +1,7 @@
 import {Matrix4, Box3, Sphere, Vector3} from 'three';
 import {CsgObject} from './CsgObject';
-import {CsgGeometryType, csgIsGeom2, csgIsGeom3} from './CsgCommon';
+import {CsgGeometryType} from './CsgCommon';
+import {csgIsGeom2, csgIsGeom3} from './CsgCoreType';
 import {BaseCoreObject} from '../_BaseObject';
 import {CoreObjectType, MergeCompactOptions} from '../ObjectContent';
 import {TransformTargetType} from '../../Transform';

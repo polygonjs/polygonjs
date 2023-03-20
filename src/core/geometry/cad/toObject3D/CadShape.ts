@@ -14,6 +14,7 @@ import {cadMaterialMesh} from '../CadConstant';
 import {cadEdgeToObject3D} from './CadEdge';
 import {CadLoaderSync} from '../CadLoaderSync';
 import {CadObject} from '../CadObject';
+import {objectContentCopyProperties} from '../../ObjectContent';
 
 function cachedTesselationParamsEqual(params1: CachedCADTesselationParams, params2: CachedCADTesselationParams) {
 	return (
@@ -41,6 +42,7 @@ export function cadShapeToObject3D(
 	if (tesselationParams.displayMeshes) {
 		const mesh = _createMesh(oc, shape, tesselationParams);
 		if (mesh) {
+			objectContentCopyProperties(cadObject, mesh);
 			objects.push(mesh);
 		}
 	}

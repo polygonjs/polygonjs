@@ -7,8 +7,8 @@ import {
 	WebGLRenderTarget,
 	PlaneGeometry,
 } from 'three';
-import {HorizontalBlurShader} from '../../modules/three/examples/jsm/shaders/HorizontalBlurShader';
-import {VerticalBlurShader} from '../../modules/three/examples/jsm/shaders/VerticalBlurShader';
+import {HorizontalBlurShader} from 'three/examples/jsm/shaders/HorizontalBlurShader';
+import {VerticalBlurShader} from 'three/examples/jsm/shaders/VerticalBlurShader';
 
 const PLANE_WIDTH = 1;
 const PLANE_HEIGHT = 1;

@@ -1,8 +1,8 @@
 import {ObjectLoader} from './tmp/ObjectLoader';
 import {Object3D} from 'three';
-import {BaseGeoLoaderHandler, BaseGeoLoader} from './_BaseLoaderHandler';
+import {BaseObject3DLoaderHandler, BaseGeoLoader} from './_BaseLoaderHandler';
 
-export class JSONLoaderHandler extends BaseGeoLoaderHandler<Object3D> {
+export class JSONLoaderHandler extends BaseObject3DLoaderHandler<Object3D> {
 	protected async _getLoader(): Promise<BaseGeoLoader<Object3D>> {
 		return (this._loader = this._loader || new ObjectLoader(this.loadingManager));
 	}

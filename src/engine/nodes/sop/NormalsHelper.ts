@@ -9,7 +9,7 @@ import {CoreGroup} from '../../../core/geometry/Group';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {InputCloneMode} from '../../poly/InputCloneMode';
-import {VertexNormalsHelper} from '../../../modules/three/examples/jsm/helpers/VertexNormalsHelper';
+import {VertexNormalsHelper} from 'three/examples/jsm/helpers/VertexNormalsHelper';
 import {isBooleanTrue} from '../../../core/Type';
 import {Object3D} from 'three';
 

@@ -2,7 +2,7 @@ import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {Vector3, Box3} from 'three';
 import {CoreTransform} from '../../../core/Transform';
-import {RoundedBoxGeometry} from '../../../modules/three/examples/jsm/geometries/RoundedBoxGeometry';
+import {RoundedBoxGeometry} from 'three/examples/jsm/geometries/RoundedBoxGeometry';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 const tmpBox = new Box3();

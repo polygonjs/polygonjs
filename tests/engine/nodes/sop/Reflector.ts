@@ -1,5 +1,5 @@
 import {Material} from 'three';
-import {Reflector} from '../../../../src/modules/three/examples/jsm/objects/Reflector';
+import {Reflector} from 'three/examples/jsm/objects/Reflector';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 
 QUnit.test('reflectors can be cloned and keep unique material', async (assert) => {

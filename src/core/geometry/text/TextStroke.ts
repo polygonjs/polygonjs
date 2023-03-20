@@ -1,7 +1,7 @@
 import {Shape, Path, Vector3, BufferGeometry} from 'three';
 import {CoreLoaderFont} from '../../loader/font/CoreFontLoader';
-import {SVGLoader} from '../../../modules/three/examples/jsm/loaders/SVGLoader';
-import {mergeBufferGeometries} from '../../../modules/three/examples/jsm/utils/BufferGeometryUtils';
+import {SVGLoader} from 'three/examples/jsm/loaders/SVGLoader';
+import {mergeBufferGeometries} from 'three/examples/jsm/utils/BufferGeometryUtils';
 
 interface TextStrokesParams {
 	shapes?: Array<Array<Shape | Path>>;

@@ -4042,7 +4042,7 @@ text-table@^0.2.0:
   resolved "https://registry.yarnpkg.com/text-table/-/text-table-0.2.0.tgz#7f5ee823ae805207c00af2df4a84ec3fcfa570b4"
   integrity sha1-f17oI66AUgfACvLfSoTsP8+lcLQ=
 
-three-bvh-csg@^0.0.4:
+three-bvh-csg@0.0.4:
   version "0.0.4"
   resolved "https://registry.yarnpkg.com/three-bvh-csg/-/three-bvh-csg-0.0.4.tgz#356ffe6235f5349cef42aefac30f234706ee8b1c"
   integrity sha512-j8W/x2KpTrzmDl7FkqQlJmTsfPFm38jvf7z0D+5qyiehh79Vnjnkxh33FquP+rzxI9zCv64aa57FsUJOkktghA==

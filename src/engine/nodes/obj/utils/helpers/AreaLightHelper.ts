@@ -1,6 +1,6 @@
 // import {AreaLightObjNode} from '../../AreaLight';
 // import {RectAreaLight} from 'three';
-// import {RectAreaLightHelper} from '../../../../../modules/three/examples/jsm/helpers/RectAreaLightHelper';
+// import {RectAreaLightHelper} from 'three/examples/jsm/helpers/RectAreaLightHelper';
 // import {BaseLightHelper} from './_BaseLightHelper';
 
 // export class RectAreaLightObjNodeHelper extends BaseLightHelper<RectAreaLightHelper, RectAreaLight, AreaLightObjNode> {

@@ -53,6 +53,7 @@ import {Poly} from '../../../engine/Poly';
 import {sanitizeUrl} from '../../UrlHelper';
 import {BaseNodeType} from '../../../engine/nodes/_Base';
 import {LIBRARY_INSTALL_HINT} from './../../loader/common';
+import {MathUtils} from 'three';
 
 let _resolves: Resolve[] = [];
 // let _requestingNodes: BaseNodeType[] = [];
@@ -60,7 +61,7 @@ let _importStarted = false;
 type Resolve = (value: OpenCascadeInstance | PromiseLike<OpenCascadeInstance>) => void;
 let _oc: OpenCascadeInstance | undefined;
 export class CadLoader {
-	static async core(node: BaseNodeType): Promise<OpenCascadeInstance> {
+	static async core(_?: BaseNodeType): Promise<OpenCascadeInstance> {
 		if (_oc) {
 			return _oc;
 		}
@@ -89,7 +90,8 @@ export class CadLoader {
 			const OCCTPath = Poly.libs.OCCTPath();
 			if (root || OCCTPath) {
 				const version = Poly.version().replace(/\./g, '-');
-				const wasmUrl = sanitizeUrl(`${root || ''}${OCCTPath || ''}/polygonjs-occt.wasm?v=${version}`);
+				const id = process.env.NODE_ENV == 'development' ? MathUtils.generateUUID() : version;
+				const wasmUrl = sanitizeUrl(`${root || ''}${OCCTPath || ''}/polygonjs-occt.wasm?v=${id}`);
 				try {
 					// prefetch wasm to get a proper error if wasm isn't found
 					const response = await fetch(wasmUrl, {method: 'HEAD'});

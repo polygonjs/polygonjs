@@ -60,6 +60,7 @@ export const EXTENSIONS_BY_NODE_TYPE_BY_CONTEXT: Record<NodeContext, Record<stri
 		[SopTypeFile.FILE_PLY]: [GeometryExtension.PLY],
 		[SopTypeFile.FILE_STL]: [GeometryExtension.STL],
 		[SopTypeFile.FILE_SVG]: [GeometryExtension.SVG],
+		[SopTypeFile.FILE_USDZ]: [GeometryExtension.USDZ],
 		[SopType.TEXT]: [FontExtension.TTF, FontExtension.JSON],
 	},
 };

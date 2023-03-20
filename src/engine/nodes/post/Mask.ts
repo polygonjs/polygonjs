@@ -4,7 +4,7 @@
 //  *
 //  */
 // import {TypedPostNode, TypedPostNodeContext, PostParamOptions} from './_Base';
-// import {MaskPass} from '../../../modules/three/examples/jsm/postprocessing/MaskPass';
+// import {MaskPass} from 'three/examples/jsm/postprocessing/MaskPass';
 // import {CameraNodeType, CAMERA_TYPES, NodeContext} from '../../poly/NodeContext';
 // import {SceneObjNode} from '../obj/Scene';
 // import {BaseCameraObjNodeType} from '../obj/_BaseCamera';

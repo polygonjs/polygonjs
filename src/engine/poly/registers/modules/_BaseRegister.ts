@@ -1,16 +1,16 @@
 // import {CADModule} from '../../../../core/geometry/cad/CadModule';
-// import {EXRLoader} from '../../../../modules/three/examples/jsm/loaders/EXRLoader';
-// import {FBXLoader} from '../../../../modules/three/examples/jsm/loaders/FBXLoader';
-// import {GLTFLoader} from '../../../../modules/three/examples/jsm/loaders/GLTFLoader';
-// import {KTX2Loader} from '../../../../modules/three/examples/jsm/loaders/KTX2Loader';
-// import {LDrawLoader} from '../../../../modules/three/examples/jsm/loaders/LDrawLoader';
-// import {OBJLoader} from '../../../../modules/three/examples/jsm/loaders/OBJLoader';
-// import {PDBLoader} from '../../../../modules/three/examples/jsm/loaders/PDBLoader';
-// import {PLYLoader} from '../../../../modules/three/examples/jsm/loaders/PLYLoader';
-// import {RGBELoader} from '../../../../modules/three/examples/jsm/loaders/RGBELoader';
-// import {SVGLoader} from '../../../../modules/three/examples/jsm/loaders/SVGLoader';
-// import {STLLoader} from '../../../../modules/three/examples/jsm/loaders/STLLoader';
-// import {TTFLoader} from '../../../../modules/three/examples/jsm/loaders/TTFLoader';
+// import {EXRLoader} from 'three/examples/jsm/loaders/EXRLoader';
+// import {FBXLoader} from 'three/examples/jsm/loaders/FBXLoader';
+// import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader';
+// import {KTX2Loader} from 'three/examples/jsm/loaders/KTX2Loader';
+// import {LDrawLoader} from 'three/examples/jsm/loaders/LDrawLoader';
+// import {OBJLoader} from 'three/examples/jsm/loaders/OBJLoader';
+// import {PDBLoader} from 'three/examples/jsm/loaders/PDBLoader';
+// import {PLYLoader} from 'three/examples/jsm/loaders/PLYLoader';
+// import {RGBELoader} from 'three/examples/jsm/loaders/RGBELoader';
+// import {SVGLoader} from 'three/examples/jsm/loaders/SVGLoader';
+// import {STLLoader} from 'three/examples/jsm/loaders/STLLoader';
+// import {TTFLoader} from 'three/examples/jsm/loaders/TTFLoader';
 import {ModuleName} from './Common';
 import {BaseModule} from './_BaseModule';
 

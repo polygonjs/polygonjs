@@ -21,6 +21,7 @@ export enum SopType {
 	CAD_CURVE_TRIM = 'CADCurveTrim',
 	CAD_ELLIPSE = 'CADEllipse',
 	CAD_ELLIPSE_2D = 'CADEllipse2D',
+	CAD_EXPORTER_STEP = 'CADExporterSTEP',
 	CAD_EXTRUDE = 'CADExtrude',
 	CAD_FILE_STEP = 'CADFileSTEP',
 	CAD_FILLET = 'CADFillet',
@@ -129,6 +130,7 @@ export enum SopTypeFile {
 	FILE_PLY = 'filePLY',
 	FILE_STL = 'fileSTL',
 	FILE_SVG = 'fileSVG',
+	FILE_USDZ = 'fileUSDZ',
 }
 
 export enum SopTypeFileMulti {
@@ -142,4 +144,12 @@ export enum SopTypeFileMulti {
 	FILE_PLY = 'fileMultiPLY',
 	FILE_STL = 'fileMultiSTL',
 	FILE_SVG = 'fileMultiSVG',
+}
+
+export enum SopExporter {
+	EXPORTER_GLTF = 'exporterGLTF',
+	EXPORTER_OBJ = 'exporterOBJ',
+	EXPORTER_PLY = 'exporterPLY',
+	EXPORTER_STL = 'exporterSTL',
+	EXPORTER_USDZ = 'exporterUSDZ',
 }

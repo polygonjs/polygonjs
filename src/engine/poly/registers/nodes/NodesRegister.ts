@@ -3,6 +3,7 @@ import {BaseOperation} from '../../../operations/_Base';
 import {NodeContext} from '../../NodeContext';
 import {PolyEngine} from '../../../Poly';
 import {PolyDictionary} from '../../../../types/GlobalTypes';
+import {CoreType} from '../../../../core/Type';
 
 export interface OperationRegisterOptions {
 	printWarnings?: boolean;
@@ -22,7 +23,7 @@ export interface NodeRegisterOptions {
 export type BaseNodeConstructor = typeof BaseNodeClass;
 type NodeConstructorByType = Map<string, BaseNodeConstructor>;
 type NodeConstructorByTypeByContext = Map<NodeContext, NodeConstructorByType>;
-type TabMenuByTypeByContext = Map<NodeContext, Map<string, string>>;
+type TabMenuByTypeByContext = Map<NodeContext, Map<string, string[]>>;
 type RegisterOptionsByTypeByContext = Map<NodeContext, Map<string, NodeRegisterOptions>>;
 
 export type BaseOperationConstructor = typeof BaseOperation;
@@ -46,7 +47,7 @@ export class NodesRegister {
 		return nodeType.toLowerCase();
 	}
 
-	register(node: BaseNodeConstructor, tab_menu_category?: string, options?: NodeRegisterOptions) {
+	register(node: BaseNodeConstructor, tab_menu_category?: string | string[], options?: NodeRegisterOptions) {
 		const context = node.context();
 		const nodeType = NodesRegister.type(node);
 		let printWarnings = options?.printWarnings;
@@ -86,7 +87,8 @@ export class NodesRegister {
 				current_categories = new Map();
 				this._nodesRegisterCategories.set(context, current_categories);
 			}
-			current_categories.set(nodeType, tab_menu_category);
+			const savedCategory = CoreType.isArray(tab_menu_category) ? tab_menu_category : [tab_menu_category];
+			current_categories.set(nodeType, savedCategory);
 		}
 
 		if (options) {
