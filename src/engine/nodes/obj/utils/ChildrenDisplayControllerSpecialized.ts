@@ -7,6 +7,7 @@ import {CoreGroup} from '../../../../core/geometry/Group';
 import {CoreType} from '../../../../core/Type';
 import type {CADTesselationParams} from '../../../../core/geometry/cad/CadCommon';
 import type {CSGTesselationParams} from '../../../../core/geometry/csg/CsgCommon';
+import {BaseSopNodeType} from '../../sop/_Base';
 
 interface BaseObjNodeClassWithDisplayNode extends TesselationParamsObjNode {
 	displayNodeController: DisplayNodeController;
@@ -56,13 +57,13 @@ export class ChildrenDisplayControllerSpecialized extends ChildrenDisplayControl
 		super(node);
 	}
 
-	override _addSpecializedObjects(coreGroup: CoreGroup, newObjects: Object3D[]) {
+	override _addSpecializedObjects(coreGroup: CoreGroup, newObjects: Object3D[], displayNode: BaseSopNodeType) {
 		// CAD
 		const newCadObjects = coreGroup.cadObjects();
 		if (newCadObjects && newCadObjects.length != 0) {
 			updateCADTesselationParams(this.node);
 			for (let cadObject of newCadObjects) {
-				const newObject3D = cadObject.toObject3D(CAD_TESSELATION_PARAMS);
+				const newObject3D = cadObject.toObject3D(CAD_TESSELATION_PARAMS, displayNode);
 				if (newObject3D) {
 					this._newObjectsAreDifferent = true;
 					if (CoreType.isArray(newObject3D)) {

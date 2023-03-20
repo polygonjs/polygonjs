@@ -11,12 +11,21 @@ export const step = 0.000001;
 // 	plain: M;
 // 	wireframe: M;
 // }
+const GROUP_COLOR = 0x11dd00;
 const MESH_MAT = new MeshStandardMaterial({
 	color: 0xffffff,
 	// vertexColors: true,
 	side: FrontSide,
 	metalness: 0.0,
 	roughness: 0.9,
+});
+const MESH_GROUP_MAT = new MeshStandardMaterial({
+	color: GROUP_COLOR,
+	// vertexColors: true,
+	side: FrontSide,
+	metalness: 0.0,
+	roughness: 0.9,
+	emissive: 0.5,
 });
 // const MESH_MAT_WIREFRAME = (() => {
 // 	const mat = MESH_MAT.clone();
@@ -26,6 +35,11 @@ const MESH_MAT = new MeshStandardMaterial({
 const LINES_MAT = new LineBasicMaterial({
 	color: 0xffffff,
 	linewidth: 1,
+});
+const LINES_GROUP_MAT = new LineBasicMaterial({
+	color: GROUP_COLOR,
+	linewidth: 5,
+	// depthWrite: false,
 });
 const POINTS_MAT = new PointsMaterial({
 	color: 0xffffff,
@@ -44,10 +58,16 @@ export function cadMaterialMesh(color: Color, wireframe: boolean) {
 	mat.color = color;
 	return mat;
 }
+export function cadMaterialMeshGroup() {
+	return MESH_GROUP_MAT;
+}
 export function cadMaterialLine(color: Color) {
 	const mat = LINES_MAT.clone();
 	mat.color = color;
 	return mat;
+}
+export function cadMaterialLineGroup() {
+	return LINES_GROUP_MAT;
 }
 export function cadMaterialPoint() {
 	const mat = POINTS_MAT; //.clone();

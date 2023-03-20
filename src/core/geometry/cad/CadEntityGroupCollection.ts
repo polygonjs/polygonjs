@@ -23,11 +23,13 @@ interface TraverseOptions<E extends YieldedEntity> {
 	shape: TopoDS_Shape;
 	traverseFunction: TraverseEntitiesFunction<E>;
 	onEntityTraversed: EntityCallback<E>;
+	onEntityNotInGroupTraversed?: EntityCallback<E>;
 }
 
 export class CadEntityGroupCollection {
 	static traverseEntitiesInGroup<E extends YieldedEntity>(options: TraverseOptions<E>) {
-		const {groupName, groupType, object, shape, traverseFunction, onEntityTraversed} = options;
+		const {groupName, groupType, object, shape, traverseFunction, onEntityTraversed, onEntityNotInGroupTraversed} =
+			options;
 		const oc = CadLoaderSync.oc();
 		if (groupName.trim() == '') {
 			// no group
@@ -46,10 +48,11 @@ export class CadEntityGroupCollection {
 				const coreObject = coreObjectInstanceFactory(object);
 				const groupCollection = coreObject.groupCollection();
 				groupCollection.indicesSet(groupType, groupName, indicesSet);
-
 				traverseFunction(oc, shape, (entity, i) => {
 					if (indicesSet.has(i)) {
 						onEntityTraversed(entity, i);
+					} else if (onEntityNotInGroupTraversed) {
+						onEntityNotInGroupTraversed(entity, i);
 					}
 				});
 			}

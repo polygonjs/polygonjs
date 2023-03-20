@@ -29,7 +29,7 @@ export class CADTriangulateSopNode extends CADSopNode<CADTriangulateSopParamsCon
 		if (cadObjects) {
 			const newObjects: Object3D[] = [];
 			for (let cadObject of cadObjects) {
-				const objects = cadObject.toObject3D(this.pv);
+				const objects = cadObject.toObject3D(this.pv, this);
 				if (objects) {
 					if (CoreType.isArray(objects)) {
 						newObjects.push(...objects);

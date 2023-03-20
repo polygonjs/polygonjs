@@ -26,6 +26,7 @@ import {CoreCadType} from './cad/CadCoreType';
 import type {CsgGeometryType} from './csg/CsgCommon';
 import {CSG_GEOMETRY_TYPES_SET} from './csg/CsgCommon';
 import type {CsgObject} from './csg/CsgObject';
+import {EntityGroupCollection} from './EntityGroupCollection';
 //
 
 // import {CoreMask} from './Mask';
@@ -47,11 +48,13 @@ function objectData<T extends CoreObjectType>(object: ObjectContent<T>): ObjectD
 	// 	points_count = CoreGeometry.pointsCount((object as Mesh).geometry as BufferGeometry);
 	// }
 	const objectType = isObject3D(object) ? objectTypeFromConstructor(object.constructor) : (object.type as ObjectType);
+	const groupData = EntityGroupCollection.data(object);
 	return {
 		type: objectType,
 		name: object.name,
 		childrenCount,
 		pointsCount,
+		groupData,
 	};
 }
 function objectTotalPointsCount(object: Object3D) {
