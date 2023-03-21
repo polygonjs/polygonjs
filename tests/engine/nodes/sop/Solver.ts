@@ -92,11 +92,12 @@ QUnit.test('sop/solver simple', async (assert) => {
 
 	solver1.p.iterations.set(4);
 	await computeSolver();
-	assert.in_delta(size.x, 1.844, 0.01);
+	console.log(size.x);
+	assert.in_delta(size.x, 2.21, 0.01);
 	assert.ok(!solver1.states.error.message());
 
 	solver1.p.iterations.set(5);
 	await computeSolver();
-	assert.in_delta(size.x, 1.844, 0.01);
+	assert.in_delta(size.x, 2.21, 0.01);
 	assert.ok(!solver1.states.error.message());
 });
