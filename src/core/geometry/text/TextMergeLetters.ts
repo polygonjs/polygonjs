@@ -3,7 +3,7 @@ import {ArrayUtils} from '../../ArrayUtils';
 import {ObjectType} from '../Constant';
 import {CoreObject} from '../Object';
 import {isBooleanTrue} from '../../Type';
-import {mergeBufferGeometries} from '../../../modules/three/examples/jsm/utils/BufferGeometryUtils';
+import {mergeBufferGeometries} from 'three/examples/jsm/utils/BufferGeometryUtils';
 import {TransformResetSopOperation} from '../../../engine/operations/sop/TransformReset';
 import {TypedSopNode} from '../../../engine/nodes/sop/_Base';
 import {applyJustifyModeToGeometries, TextJustifiyParams} from './TextJustify';

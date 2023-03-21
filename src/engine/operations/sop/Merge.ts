@@ -54,9 +54,6 @@ export class MergeSopOperation extends BaseSopOperation {
 	private _makeCompact(allObjects: ObjectContent<CoreObjectType>[]): ObjectContent<CoreObjectType>[] {
 		const materialsByObjectType: Map<string, Material> = new Map();
 		const objectsByType: Map<string, ObjectContent<CoreObjectType>[]> = new Map();
-		// objects_by_type.set(ObjectType.MESH, []);
-		// objects_by_type.set(ObjectType.POINTS, []);
-		// objects_by_type.set(ObjectType.LINE_SEGMENTS, []);
 		const orderedObjectTypes: string[] = [];
 		for (let object of allObjects) {
 			object.traverse((object3d) => {

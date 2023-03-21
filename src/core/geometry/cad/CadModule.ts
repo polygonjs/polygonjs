@@ -1,7 +1,9 @@
 // import {ModuleName} from '../../../engine/poly/registers/modules/Common';
 // import {BaseModule} from '../../../engine/poly/registers/modules/_BaseModule';
 import {Object3D, Color} from 'three';
+import {BaseSopNodeType} from '../../../engine/nodes/sop/_Base';
 import {PolyEngine} from '../../../engine/Poly';
+import {SpecializedChildrenHook} from '../../../engine/poly/PolySpecializedChildrenController';
 import {CoreType} from '../../Type';
 import {
 	registerCoreObjectCheckFunctions,
@@ -39,13 +41,18 @@ function updateCADTesselationParams(params: CADOBJTesselationParams) {
 	CAD_TESSELATION_PARAMS.meshesColor.copy(params.CADMeshesColor);
 	CAD_TESSELATION_PARAMS.edgesColor.copy(params.CADEdgesColor);
 }
-function onAddSpecializedChildren(coreGroup: CoreGroup, newObjects: Object3D[], params: CADOBJTesselationParams) {
+const onAddSpecializedChildren: SpecializedChildrenHook = (
+	displayNode: BaseSopNodeType,
+	coreGroup: CoreGroup,
+	newObjects: Object3D[],
+	params: CADOBJTesselationParams
+) => {
 	let newObjectsAreDifferent = false;
 	const newCadObjects = coreGroup.cadObjects();
 	if (newCadObjects && newCadObjects.length != 0) {
 		updateCADTesselationParams(params);
 		for (let cadObject of newCadObjects) {
-			const newObject3D = cadObject.toObject3D(CAD_TESSELATION_PARAMS);
+			const newObject3D = cadObject.toObject3D(CAD_TESSELATION_PARAMS, displayNode);
 			if (newObject3D) {
 				newObjectsAreDifferent = true;
 				if (CoreType.isArray(newObject3D)) {
@@ -57,7 +64,7 @@ function onAddSpecializedChildren(coreGroup: CoreGroup, newObjects: Object3D[], 
 		}
 	}
 	return newObjectsAreDifferent;
-}
+};
 
 export function onCadModuleRegister(poly: PolyEngine) {
 	//

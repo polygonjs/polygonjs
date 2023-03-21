@@ -20,7 +20,7 @@ import {
 } from '../../../core/player/PlayerSimple';
 import {CapsuleSopOperation} from '../../operations/sop/Capsule';
 import {ParamType} from '../../poly/ParamType';
-import {MeshWithBVH} from '../../operations/sop/utils/Bvh/three-mesh-bvh';
+import {MeshWithBVH} from '../../../core/geometry/bvh/three-mesh-bvh';
 import {TypeAssert} from '../../poly/Assert';
 const CONNECTION_OPTIONS = ACTOR_CONNECTION_POINT_IN_NODE_DEF;
 

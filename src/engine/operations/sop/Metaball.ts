@@ -2,7 +2,7 @@ import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 // import {CoreConstant, ObjectType} from '../../../core/geometry/Constant';
-// import {MarchingCubes} from '../../../modules/three/examples/jsm/objects/MarchingCubes';
+// import {MarchingCubes} from 'three/examples/jsm/objects/MarchingCubes';
 import {MarchingCubes} from '../../../modules/core/objects/MarchingCubes';
 import {Vector3} from 'three';
 import {CoreType} from '../../../core/Type';

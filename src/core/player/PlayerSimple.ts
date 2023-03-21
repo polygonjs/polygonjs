@@ -1,6 +1,6 @@
 import {CapsuleSopOperation} from './../../engine/operations/sop/Capsule';
 import {Object3D, Vector3, Box3, Line3, Matrix4} from 'three';
-import {MeshWithBVH, ExtendedTriangle} from '../../engine/operations/sop/utils/Bvh/three-mesh-bvh';
+import {MeshWithBVH, ExtendedTriangle} from '../../core/geometry/bvh/three-mesh-bvh';
 
 export enum CorePlayerInput {
 	LEFT = 'left',

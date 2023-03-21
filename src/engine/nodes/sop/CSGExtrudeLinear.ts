@@ -7,7 +7,8 @@ import {CSGSopNode} from './_BaseCSG';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
-import {CsgGeometry, csgIsPath2, csgIsGeom2} from '../../../core/geometry/csg/CsgCommon';
+import {CsgGeometry} from '../../../core/geometry/csg/CsgCommon';
+import {csgIsPath2, csgIsGeom2} from '../../../core/geometry/csg/CsgCoreType';
 import {extrusions} from '@jscad/modeling';
 const {extrudeLinear} = extrusions;
 

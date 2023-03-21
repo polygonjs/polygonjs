@@ -1,5 +1,5 @@
 import {Vector3} from 'three';
-import {RoundedBoxGeometry} from '../../modules/three/examples/jsm/geometries/RoundedBoxGeometry';
+import {RoundedBoxGeometry} from 'three/examples/jsm/geometries/RoundedBoxGeometry';
 
 export interface CapsuleOptions {
 	radius: number;

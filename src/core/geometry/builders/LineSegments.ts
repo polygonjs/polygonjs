@@ -4,7 +4,7 @@ import {CorePoint} from '../Point';
 import {PolyDictionary} from '../../../types/GlobalTypes';
 
 export class CoreGeometryBuilderLineSegments extends CoreGeometryBuilderBase {
-	protected _filter_points(points: CorePoint[]) {
+	protected _filterPoints(points: CorePoint[]) {
 		// ensures we only keep points that form a full segment.
 		// if a single point from a segment is discarded, we remove both
 
@@ -38,7 +38,7 @@ export class CoreGeometryBuilderLineSegments extends CoreGeometryBuilderBase {
 		return [];
 	}
 
-	protected _indices_from_points(new_index_by_old_index: PolyDictionary<number>, old_geometry: BufferGeometry) {
+	protected _indicesFromPoints(new_index_by_old_index: PolyDictionary<number>, old_geometry: BufferGeometry) {
 		const index_attrib = old_geometry.index;
 		if (index_attrib != null) {
 			const old_indices = index_attrib.array;

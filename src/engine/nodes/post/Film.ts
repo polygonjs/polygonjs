@@ -4,7 +4,7 @@
 //  *
 //  */
 // import {TypedPostNode, TypedPostNodeContext, PostParamOptions} from './_Base';
-// import {FilmPass} from '../../../modules/three/examples/jsm/postprocessing/FilmPass';
+// import {FilmPass} from 'three/examples/jsm/postprocessing/FilmPass';
 // import {IUniformN} from '../utils/code/gl/Uniforms';
 
 // interface FilmPassWithUniforms extends FilmPass {

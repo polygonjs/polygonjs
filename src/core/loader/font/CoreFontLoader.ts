@@ -3,8 +3,8 @@ import {CoreBaseLoader} from './../_Base';
 import {FontLoader} from './FontLoader';
 import {Font, FontData} from './Font';
 import {BaseNodeType} from '../../../engine/nodes/_Base';
-import {SVGLoader} from '../../../modules/three/examples/jsm/loaders/SVGLoader';
-import {TTFLoader} from '../../../modules/three/examples/jsm/loaders/TTFLoader';
+import {SVGLoader} from 'three/examples/jsm/loaders/SVGLoader';
+import {TTFLoader} from 'three/examples/jsm/loaders/TTFLoader';
 
 enum FileFontFormat {
 	JSON = 'json',

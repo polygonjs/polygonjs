@@ -5,7 +5,7 @@
  */
 
 // import {Group} from 'three';
-// import {LDrawLoader} from '../../../modules/three/examples/jsm/loaders/LDrawLoader';
+// import {LDrawLoader} from 'three/examples/jsm/loaders/LDrawLoader';
 // import {BaseGeoLoaderHandler, BaseGeoLoader} from './_BaseLoaderHandler';
 
 // export class LDrawLoaderHandler extends BaseGeoLoaderHandler<Group> {

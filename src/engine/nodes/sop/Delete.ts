@@ -254,7 +254,7 @@ export class DeleteSopNode extends TypedSopNode<DeleteSopParamsConfig> {
 		if (isBooleanTrue(this.pv.keepPoints)) {
 			const core_objects_to_delete = this.entitySelectionHelper.entities_to_delete() as CoreObject[];
 			for (let core_object_to_delete of core_objects_to_delete) {
-				const point_object = this._point_object(core_object_to_delete);
+				const point_object = this._pointObject(core_object_to_delete);
 				if (point_object) {
 					objects_to_keep.push(point_object);
 				}
@@ -302,7 +302,7 @@ export class DeleteSopNode extends TypedSopNode<DeleteSopParamsConfig> {
 						if (objectType) {
 							const builder = geometryBuilder(objectType);
 							if (builder) {
-								const new_geo = builder.from_points(kept_points);
+								const new_geo = builder.fromPoints(kept_points);
 								if (new_geo) {
 									object.geometry = new_geo;
 									objects.push(object);
@@ -316,11 +316,11 @@ export class DeleteSopNode extends TypedSopNode<DeleteSopParamsConfig> {
 		this.setObjects(objects);
 	}
 
-	private _point_object(core_object: CoreObject) {
+	private _pointObject(core_object: CoreObject) {
 		const core_points = core_object.points();
 		const builder = geometryBuilder(ObjectType.POINTS);
 		if (builder) {
-			const geometry = builder.from_points(core_points);
+			const geometry = builder.fromPoints(core_points);
 			if (geometry) return this.createObject(geometry, ObjectType.POINTS);
 		}
 	}

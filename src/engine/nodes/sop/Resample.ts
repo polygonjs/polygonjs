@@ -6,7 +6,7 @@ import {LineSegments} from 'three';
 import {Float32BufferAttribute} from 'three';
 import {BufferGeometry} from 'three';
 import {CatmullRomCurve3} from 'three';
-import {mergeBufferGeometries} from '../../../modules/three/examples/jsm/utils/BufferGeometryUtils';
+import {mergeBufferGeometries} from 'three/examples/jsm/utils/BufferGeometryUtils';
 import {TypedSopNode} from './_Base';
 import {ObjectType} from '../../../core/geometry/Constant';
 import {CoreGeometryUtilCurve} from '../../../core/geometry/util/Curve';

@@ -1,5 +1,5 @@
 import {AttribType} from '../../../../src/core/geometry/Constant';
-import {CSS2DObject} from '../../../../src/modules/three/examples/jsm/renderers/CSS2DRenderer';
+import {CSS2DObject} from 'three/examples/jsm/renderers/CSS2DRenderer';
 
 QUnit.test('CSS3DObject simple', async (assert) => {
 	const geo1 = window.geo1;

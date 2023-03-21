@@ -32,7 +32,6 @@ export class CircleSopOperation extends BaseSopOperation {
 		return 'circle';
 	}
 
-	private _coreTransform = new CoreTransform();
 	override cook(input_contents: CoreGroup[], params: CircleSopParams) {
 		if (isBooleanTrue(params.open)) {
 			return this._createCircle(params);
@@ -57,7 +56,7 @@ export class CircleSopOperation extends BaseSopOperation {
 		// - so that copying circles on hexagon points gives an hexagon grid immediately
 		// update: do not rotate, as it creates a poor shape when using 3, 4 or 5 sides
 		// geometry.rotateZ(degToRad(30));
-		this._coreTransform.rotateGeometry(geometry, DEFAULT_UP, params.direction);
+		CoreTransform.rotateGeometry(geometry, DEFAULT_UP, params.direction);
 		geometry.translate(params.center.x, params.center.y, params.center.z);
 	}
 }

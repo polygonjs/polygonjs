@@ -16,7 +16,7 @@ import {WebGLRenderer} from 'three';
 import {Scene} from 'three';
 import {Camera} from 'three';
 import {BufferGeometry} from 'three';
-import {Geometry} from '../../../modules/three/examples/jsm/deprecated/Geometry';
+import {Geometry} from 'three/examples/jsm/deprecated/Geometry';
 import {Material} from 'three';
 import {Mesh} from 'three';
 import {Vector3} from 'three';

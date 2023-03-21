@@ -4,11 +4,11 @@ import {CorePoint} from '../Point';
 import {PolyDictionary} from '../../../types/GlobalTypes';
 
 export class CoreGeometryBuilderPoints extends CoreGeometryBuilderBase {
-	protected _filter_points(points: CorePoint[]) {
+	protected _filterPoints(points: CorePoint[]) {
 		return points;
 	}
 
-	protected _indices_from_points(new_index_by_old_index: PolyDictionary<number>, old_geometry: BufferGeometry) {
+	protected _indicesFromPoints(new_index_by_old_index: PolyDictionary<number>, old_geometry: BufferGeometry) {
 		const index_attrib = old_geometry.index;
 		if (index_attrib != null) {
 			const old_indices = index_attrib.array;

@@ -2,7 +2,7 @@ import {Object3DWithGeometry} from '../../../core/geometry/Group';
 import {PlayerCollisionController} from './collisions/PlayerCollisionsController';
 import {Object3D} from 'three';
 import {Mesh} from 'three';
-import {Capsule} from '../../../modules/three/examples/jsm/math/Capsule';
+import {Capsule} from 'three/examples/jsm/math/Capsule';
 import {EventDispatcher} from 'three';
 import {Vector3} from 'three';
 

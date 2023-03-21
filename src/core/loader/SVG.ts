@@ -1,4 +1,4 @@
-import {SVGLoader, SVGResult, StrokeStyle} from '../../modules/three/examples/jsm/loaders/SVGLoader';
+import {SVGLoader, SVGResult, StrokeStyle} from 'three/examples/jsm/loaders/SVGLoader';
 import {
 	ShapeGeometry,
 	LineSegments,

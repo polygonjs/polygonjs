@@ -2,7 +2,7 @@ import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {LoopSubdivision} from './utils/Subdivide/three-subdivide';
 import {Mesh, BufferGeometry} from 'three';
-import {mergeVertices} from '../../../modules/three/examples/jsm/utils/BufferGeometryUtils';
+import {mergeVertices} from 'three/examples/jsm/utils/BufferGeometryUtils';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 
 interface SubdivideSopParams extends DefaultOperationParams {

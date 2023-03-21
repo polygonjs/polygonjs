@@ -74,7 +74,7 @@ export class CameraPlaneSopNode extends TypedSopNode<CameraPlaneSopParamsConfig>
 	private _raycaster = new Raycaster();
 	private _planeCorners = [new Vector3(), new Vector3(), new Vector3(), new Vector3()];
 	private _planeCenter = new Vector3();
-	private _core_transform = new CoreTransform();
+	private _coreTransform = new CoreTransform();
 
 	override cook() {
 		this._updateWindowControllerDependency();
@@ -126,9 +126,9 @@ export class CameraPlaneSopNode extends TypedSopNode<CameraPlaneSopParamsConfig>
 		this.planeSize.set(width, height);
 		const geometry = this._createPlane(this.planeSize);
 
-		this._core_transform.rotateGeometry(geometry, DEFAULT_UP, this.pv.direction);
+		CoreTransform.rotateGeometry(geometry, DEFAULT_UP, this.pv.direction);
 
-		const matrix = this._core_transform.translationMatrix(this._planeCenter);
+		const matrix = this._coreTransform.translationMatrix(this._planeCenter);
 		geometry.applyMatrix4(matrix);
 
 		this.setGeometry(geometry);

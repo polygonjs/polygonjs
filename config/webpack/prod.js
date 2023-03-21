@@ -11,7 +11,7 @@ const BUILD_SCENE_DATA_LOADER = !QUICK_N_DIRTY_BUILD;
 // last test at a whooping 804.15s (or 329.12s without compression)
 // so not exacly reasonable)
 // At the moment loading multiple entry points override the POLY lib
-const ONE_ENTRY_PER_NODE = false;
+// const ONE_ENTRY_PER_NODE = false;
 
 const POLYGONJS_VERSION = require('../../package.json').version;
 
@@ -38,51 +38,57 @@ module.exports = (env) => {
 	const MODULES = ['CAD', 'CSG'];
 	if (BUILD_MODULES) {
 		for (let module of MODULES) {
-			common_options.entry[`modules/${module}`] = `./src/engine/poly/registers/modules/entryPoints/${module}.ts`;
+			common_options.entry[`modules/${module}`] = {
+				import: `./src/engine/poly/registers/modules/entryPoints/${module}.ts`,
+				dependOn: 'shared',
+			};
 		}
 	}
 	// common_options.entry[`viewer`] = './src/engine/index_self_contained_importer.ts';
 	if (BUILD_SCENE_DATA_LOADER) {
-		common_options.entry[`sceneDataLoader`] = './src/engine/index_sceneDataLoader.ts';
+		common_options.entry[`sceneDataLoader`] = {
+			import: './src/engine/index_sceneDataLoader.ts',
+			dependOn: 'shared',
+		};
 	}
 
-	if (ONE_ENTRY_PER_NODE) {
-		delete common_options.entry['all'];
-		common_options.entry['engine/Poly'] = './src/engine/Poly.ts';
-		common_options.entry['engine/scene/PolyScene'] = './src/engine/scene/PolyScene.ts';
+	// if (ONE_ENTRY_PER_NODE) {
+	// 	delete common_options.entry['all'];
+	// 	common_options.entry['engine/Poly'] = './src/engine/Poly.ts';
+	// 	common_options.entry['engine/scene/PolyScene'] = './src/engine/scene/PolyScene.ts';
 
-		const contexts = ['anim', 'cop', 'event', 'gl', 'js', 'manager', 'mat', 'obj', 'post', 'rop', 'sop'];
-		const dir = './src/engine/nodes';
-		for (let context of contexts) {
-			const node_class_names = [];
-			const context_dir = `${dir}/${context}`;
-			const file_names = fs.readdirSync(context_dir);
-			for (let file_name of file_names) {
-				const file_path = path.resolve(context_dir, file_name);
-				const stat = fs.statSync(file_path);
-				if (stat && !stat.isDirectory()) {
-					if (file_name[0] != '_') {
-						node_class_names.push(file_name.replace('.ts', ''));
-					}
-				}
-			}
-			// console.log(`using for ${context}:`, node_class_names);
-			for (let node_class_name of node_class_names) {
-				const key = `engine/nodes/${context}/${node_class_name}`;
-				const value = `./src/engine/nodes/${context}/${node_class_name}.ts`;
-				common_options.entry[key] = value;
-			}
-		}
+	// 	const contexts = ['anim', 'cop', 'event', 'gl', 'js', 'manager', 'mat', 'obj', 'post', 'rop', 'sop'];
+	// 	const dir = './src/engine/nodes';
+	// 	for (let context of contexts) {
+	// 		const node_class_names = [];
+	// 		const context_dir = `${dir}/${context}`;
+	// 		const file_names = fs.readdirSync(context_dir);
+	// 		for (let file_name of file_names) {
+	// 			const file_path = path.resolve(context_dir, file_name);
+	// 			const stat = fs.statSync(file_path);
+	// 			if (stat && !stat.isDirectory()) {
+	// 				if (file_name[0] != '_') {
+	// 					node_class_names.push(file_name.replace('.ts', ''));
+	// 				}
+	// 			}
+	// 		}
+	// 		// console.log(`using for ${context}:`, node_class_names);
+	// 		for (let node_class_name of node_class_names) {
+	// 			const key = `engine/nodes/${context}/${node_class_name}`;
+	// 			const value = `./src/engine/nodes/${context}/${node_class_name}.ts`;
+	// 			common_options.entry[key] = value;
+	// 		}
+	// 	}
 
-		// const entries = Object.keys(common_options.entry);
-		// for (let entry of entries) {
-		// 	const value = common_options.entry[entry];
-		// 	delete common_options.entry[entry];
-		// 	const new_entry = entry.replace(/\//g, '');
-		// 	common_options.entry[new_entry] = value;
-		// }
-		// console.log(common_options.entry);
-	}
+	// 	// const entries = Object.keys(common_options.entry);
+	// 	// for (let entry of entries) {
+	// 	// 	const value = common_options.entry[entry];
+	// 	// 	delete common_options.entry[entry];
+	// 	// 	const new_entry = entry.replace(/\//g, '');
+	// 	// 	common_options.entry[new_entry] = value;
+	// 	// }
+	// 	// console.log(common_options.entry);
+	// }
 
 	// common_options.plugins.push(new UglifyJsWebpackPlugin()); //minify everything // no need, terser (below is better)
 	// if (USE_STATO_ANALYSE) {
@@ -181,12 +187,15 @@ module.exports = (env) => {
 			// 	},
 			// },
 
+			// https://webpack.js.org/guides/code-splitting/
+			// runtimeChunk: 'single',
+
 			minimize: MINIFY,
 			minimizer: [
-				new TerserPlugin({
-					extractComments: true,
-					parallel: true,
-				}),
+				// new TerserPlugin({
+				// 	extractComments: true,
+				// 	parallel: true,
+				// }),
 				// new ESBuildMinifyPlugin({
 				// 	target: 'es2016',
 				// }),

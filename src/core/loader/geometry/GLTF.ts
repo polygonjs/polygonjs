@@ -1,12 +1,12 @@
 import {LIBRARY_INSTALL_HINT} from './../common';
 import {Object3D} from 'three';
 import {Poly} from '../../../engine/Poly';
-import {DRACOLoader} from '../../../modules/three/examples/jsm/loaders/DRACOLoader';
-import {GLTFLoader, GLTF} from '../../../modules/three/examples/jsm/loaders/GLTFLoader';
+import {DRACOLoader} from 'three/examples/jsm/loaders/DRACOLoader';
+import {GLTFLoader, GLTF} from 'three/examples/jsm/loaders/GLTFLoader';
 import {BaseLoaderLoadOptions, CoreBaseLoader} from '../_Base';
-import {BaseGeoLoader, BaseGeoLoaderHandler} from './_BaseLoaderHandler';
+import {BaseGeoLoader, BaseObject3DLoaderHandler} from './_BaseLoaderHandler';
 import {KTX2TextureLoader} from '../texture/KTX2';
-import {KTX2Loader} from '../../../modules/three/examples/jsm/loaders/KTX2Loader';
+import {KTX2Loader} from 'three/examples/jsm/loaders/KTX2Loader';
 import {sanitizeUrl} from '../../UrlHelper';
 
 interface GLTFLoaderLoadOptions extends BaseLoaderLoadOptions {
@@ -14,7 +14,7 @@ interface GLTFLoaderLoadOptions extends BaseLoaderLoadOptions {
 	ktx2: boolean;
 }
 
-export class GLTFLoaderHandler extends BaseGeoLoaderHandler<GLTF> {
+export class GLTFLoaderHandler extends BaseObject3DLoaderHandler<GLTF> {
 	//
 	private _gltfLoader: GLTFLoader | undefined;
 	private _gltfdracoLoader: GLTFLoader | undefined;

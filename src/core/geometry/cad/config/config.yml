@@ -157,6 +157,8 @@ mainBuild:
     - symbol: Precision
     - symbol: Standard_Transient
     - symbol: STEPControl_Reader
+    - symbol: STEPControl_StepModelType
+    - symbol: STEPControl_Writer
     - symbol: StdPrs_ToolTriangulatedShape
     - symbol: TColgp_Array1OfDir
     - symbol: TColgp_Array1OfPnt

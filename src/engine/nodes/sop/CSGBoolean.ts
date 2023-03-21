@@ -6,7 +6,8 @@
 import {CSGSopNode} from './_BaseCSG';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {CsgGeometryType, CsgGeometry, csgIsGeom2, csgIsGeom3} from '../../../core/geometry/csg/CsgCommon';
+import {CsgGeometryType, CsgGeometry} from '../../../core/geometry/csg/CsgCommon';
+import {csgIsGeom2, csgIsGeom3} from '../../../core/geometry/csg/CsgCoreType';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 import {csgApplyTransform} from '../../../core/geometry/csg/math/CsgMat4';
 import {booleans} from '@jscad/modeling';

@@ -4,7 +4,6 @@
  */
 import {TypedSopNode} from './_Base';
 import {BooleanOperation, BooleanSopOperation, BOOLEAN_OPERATIONS} from '../../operations/sop/Boolean';
-
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CoreGroup} from '../../../core/geometry/Group';
 const DEFAULT = BooleanSopOperation.DEFAULT_PARAMS;
@@ -16,15 +15,20 @@ class BooleanSopParamsConfig extends NodeParamsConfig {
 				return {name, value};
 			}),
 		},
+		separatorAfter: true,
 	});
 	/** @param preserves the color attribute of both input */
 	keepVertexColor = ParamConfig.BOOLEAN(DEFAULT.keepVertexColor);
 	/** @param add any additional attribute to be preserved */
-	additionalAttributes = ParamConfig.STRING(DEFAULT.additionalAttributes);
+	additionalAttributes = ParamConfig.STRING(DEFAULT.additionalAttributes, {
+		separatorAfter: true,
+	});
 	/** @param defines if only the material from the first input is used, or if the ones from both inputs should be used */
 	keepMaterials = ParamConfig.BOOLEAN(DEFAULT.keepMaterials);
 	/** @param if one of the input has multiple material for a single object, and you'd like to preserve those, toggle this on */
 	useInputGroups = ParamConfig.BOOLEAN(DEFAULT.useInputGroups);
+	/** @param intersectionEdgesOnly */
+	intersectionEdgesOnly = ParamConfig.BOOLEAN(DEFAULT.intersectionEdgesOnly);
 }
 const ParamsConfig = new BooleanSopParamsConfig();
 

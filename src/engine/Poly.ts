@@ -95,7 +95,7 @@ export class PolyEngine {
 		return this._playerMode;
 	}
 
-	registerNode(node: BaseNodeConstructor, tab_menu_category?: string, options?: NodeRegisterOptions) {
+	registerNode(node: BaseNodeConstructor, tab_menu_category?: string|string[], options?: NodeRegisterOptions) {
 		// console.warn('registerNode', node.context(), node.type());
 		this.nodesRegister.register(node, tab_menu_category, options);
 	}

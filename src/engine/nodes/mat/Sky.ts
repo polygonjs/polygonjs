@@ -9,7 +9,7 @@
 import {ShaderMaterial} from 'three';
 import {PrimitiveMatNode} from './_Base';
 import {Vector3} from 'three';
-import {Sky} from '../../../modules/three/examples/jsm/objects/Sky';
+import {Sky} from 'three/examples/jsm/objects/Sky';
 import {MatType} from '../../poly/registers/nodes/types/Mat';
 interface ShaderMaterialWithSkyUniforms extends ShaderMaterial {
 	uniforms: {

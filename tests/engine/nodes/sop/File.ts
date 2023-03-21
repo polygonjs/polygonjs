@@ -86,6 +86,18 @@ async function withFileSTL(path: string) {
 	const container = await fileNode.compute();
 	return {container, fileNode};
 }
+async function withFileUSDZ(path: string) {
+	const geo1 = window.geo1;
+	const fileNode = geo1.createNode('fileUSDZ');
+	fileNode.p.url.set(_url(path));
+	const hierarchyNode = geo1.createNode('hierarchy');
+	hierarchyNode.setMode(HierarchyMode.REMOVE_PARENT);
+	hierarchyNode.setInput(0, fileNode);
+
+	const container = await hierarchyNode.compute();
+
+	return {container, fileNode};
+}
 
 async function withFileAndHierarchyGLTF(path: string) {
 	const geo1 = window.geo1;
@@ -227,6 +239,12 @@ QUnit.test('SOP file format ply', async (assert) => {
 QUnit.test('SOP file format stl', async (assert) => {
 	const {container} = await withFileSTL('models/warrior.stl');
 	assert.equal(container.pointsCount(), 154059);
+});
+
+QUnit.test('SOP file format usdz', async (assert) => {
+	const {container} = await withFileUSDZ('models/saeukkang.usdz');
+	console.log(container.coreContent()?.allObjects());
+	assert.equal(container.pointsCount(), 75000);
 });
 
 QUnit.test('SOP file draco bunny with format OBJ', async (assert) => {

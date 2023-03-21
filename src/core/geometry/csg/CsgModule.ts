@@ -7,6 +7,8 @@ import {
 	CoreObjectInstanceFactoryCheckFunction,
 	CoreObjectFactoryCheckFunctions,
 } from '../CoreObjectFactory';
+import {BaseSopNodeType} from '../../../engine/nodes/sop/_Base';
+import {SpecializedChildrenHook} from '../../../engine/poly/PolySpecializedChildrenController';
 import {CoreGroup} from '../Group';
 import {CoreObjectType, ObjectContent} from '../ObjectContent';
 import {CSG_GEOMETRY_TYPES_SET, CsgGeometryType, CSGTesselationParams, CSGOBJTesselationParams} from './CsgCommon';
@@ -25,7 +27,12 @@ function updateCSGTesselationParams(params: CSGOBJTesselationParams) {
 	CSG_TESSELATION_PARAMS.meshesColor.copy(params.CSGMeshesColor);
 	CSG_TESSELATION_PARAMS.linesColor.copy(params.CSGLinesColor);
 }
-function onAddSpecializedChildren(coreGroup: CoreGroup, newObjects: Object3D[], params: CSGOBJTesselationParams) {
+const onAddSpecializedChildren: SpecializedChildrenHook = (
+	displayNode: BaseSopNodeType,
+	coreGroup: CoreGroup,
+	newObjects: Object3D[],
+	params: CSGOBJTesselationParams
+) => {
 	let newObjectsAreDifferent = false;
 	const newCsgObjects = coreGroup.csgObjects();
 	if (newCsgObjects && newCsgObjects.length != 0) {
@@ -43,7 +50,7 @@ function onAddSpecializedChildren(coreGroup: CoreGroup, newObjects: Object3D[], 
 		}
 	}
 	return newObjectsAreDifferent;
-}
+};
 
 export function onCsgModuleRegister(poly: PolyEngine) {
 	//

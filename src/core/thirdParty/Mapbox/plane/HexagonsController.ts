@@ -8,7 +8,6 @@ import {Vector2Like} from '../../../../types/GlobalTypes';
 const DIR_ORIGIN = new Vector3(0, 1, 0);
 const DIR_DEST = new Vector3(0, 0, 1);
 export class MapboxPlaneHexagonsController {
-	private _coreTransform = new CoreTransform();
 	constructor() {}
 
 	geometry(plane_dimensions: Vector2, segments_counts: Vector2Like, mapboxTransform: boolean): BufferGeometry {
@@ -39,7 +38,7 @@ export class MapboxPlaneHexagonsController {
 			true // always as points in the case of hexagons. too complicated otherwise
 		);
 		const geometry = operation.process();
-		this._coreTransform.rotateGeometry(geometry, DIR_ORIGIN, DIR_DEST);
+		CoreTransform.rotateGeometry(geometry, DIR_ORIGIN, DIR_DEST);
 		if (!mapboxTransform && hexagons_scale_compensate) {
 			geometry.scale(hexagons_scale_compensate.x, hexagons_scale_compensate.y, hexagons_scale_compensate.z);
 		}

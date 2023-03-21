@@ -15,6 +15,7 @@ import {CoreCadType} from '../../../core/geometry/cad/CadCoreType';
 import {GroupByExpressionHelper} from './utils/group/GroupByExpressionHelper';
 import {GroupByBoundingBoxHelper} from './utils/group/GroupByBoundingBoxHelper';
 import {GroupByBoundingObjectHelper} from './utils/group/GroupByBoundingObjectHelper';
+import {CoreEntitySelectionState, updateSelectionState} from './/utils/group/GroupCommon';
 import {isBooleanTrue} from '../../../core/Type';
 import {CadObject} from '../../../core/geometry/cad/CadObject';
 import {OpenCascadeInstance, CadGeometryTypeShape} from '../../../core/geometry/cad/CadCommon';
@@ -112,6 +113,9 @@ export class CADGroupSopNode extends CADSopNode<CADGroupSopParamsConfig> {
 	groupType() {
 		return GROUP_TYPES[this.pv.type];
 	}
+	groupName() {
+		return this.pv.name;
+	}
 
 	override async cook(inputCoreGroups: CoreGroup[]) {
 		const oc = await CadLoader.core(this);
@@ -122,7 +126,7 @@ export class CADGroupSopNode extends CADSopNode<CADGroupSopParamsConfig> {
 		if (inputObjects) {
 			for (let inputObject of inputObjects) {
 				if (CoreCadType.isShape(inputObject)) {
-					this._evalEdges(oc, inputObject, coreGroup1);
+					await this._evalEdges(oc, inputObject, coreGroup1);
 				}
 			}
 
@@ -132,6 +136,7 @@ export class CADGroupSopNode extends CADSopNode<CADGroupSopParamsConfig> {
 		}
 	}
 
+	private selectedStates: CoreEntitySelectionState = new Map();
 	private async _evalEdges(
 		oc: OpenCascadeInstance,
 		inputObject: CadObject<CadGeometryTypeShape>,
@@ -156,23 +161,31 @@ export class CADGroupSopNode extends CADSopNode<CADGroupSopParamsConfig> {
 			}
 		}
 
-		const selectedIndices: Set<number> = new Set();
-		if (isBooleanTrue(this.pv.byExpression)) {
-			await this.byExpressionHelper.evalForEntities(entities, selectedIndices);
-		}
-		if (isBooleanTrue(this.pv.byBoundingBox)) {
-			await this.byBoundingBoxHelper.evalForEntities(entities, selectedIndices);
-		}
-		if (isBooleanTrue(this.pv.byBoundingObject)) {
-			await this.byBoundingObjectHelper.evalForEntities(entities, selectedIndices, boundingCoreGroup);
+		this.selectedStates.clear();
+		const {byExpression, byBoundingBox, byBoundingObject} = this.pv;
+		if (byExpression || byBoundingBox || byBoundingObject) {
+			if (isBooleanTrue(byExpression)) {
+				await this.byExpressionHelper.evalForEntities(entities, this.selectedStates);
+			}
+			if (isBooleanTrue(byBoundingBox)) {
+				await this.byBoundingBoxHelper.evalForEntities(entities, this.selectedStates);
+			}
+			if (isBooleanTrue(byBoundingObject)) {
+				await this.byBoundingObjectHelper.evalForEntities(entities, this.selectedStates, boundingCoreGroup);
+			}
+		} else {
+			for (let entity of entities) {
+				updateSelectionState(this.selectedStates, entity, false);
+			}
 		}
 		const coreObject = coreObjectInstanceFactory(inputObject);
 		const groupCollection = coreObject.groupCollection();
 		const options: UpdateGroupOptions = {
 			type,
-			groupName: this.pv.name,
+			groupName: this.groupName(),
 			operation: GROUP_OPERATIONS[this.pv.operation],
+			invert: this.pv.invert,
 		};
-		groupCollection.updateGroup(options, selectedIndices);
+		groupCollection.updateGroup(options, this.selectedStates);
 	}
 }

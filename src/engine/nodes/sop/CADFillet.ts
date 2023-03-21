@@ -84,43 +84,6 @@ export class CADFilletSopNode extends CADSopNode<CADFilletSopParamsConfig> {
 						},
 					});
 
-					// const edges:CadCoreEdge[]=[]
-					// if (groupName.trim() == '') {
-					// 	// no group
-					// 	traverseEdges(oc, shape, (edge) => {
-					// 		api.Add_2(radius, edge);
-					// 		edgesCount++;
-					// 	});
-					// } else {
-					// 	const indices = CoreString.indices(groupName);
-					// 	if (indices.length != 0) {
-					// 		// group by indices
-					// 		const indicesSet = SetUtils.fromArray(indices);
-					// 		traverseEdges(oc, shape, (edge, i) => {
-					// 			if (indicesSet.has(i)) {
-					// 				api.Add_2(radius, edge);
-					// 				edgesCount++;
-					// 			}
-					// 		});
-					// 	} else {
-					// 		// group by name
-					// 		const coreEdges: CadCoreEdge[] = [];
-					// 		traverseEdges(oc, shape, (edge, i) => {
-					// 			coreEdges.push(new CadCoreEdge(shape, edge, i));
-					// 		});
-					// 		const coreObject = coreObjectInstanceFactory(inputObject);
-					// 		const groupCollection = coreObject.groupCollection();
-					// 		const selectedCoreEdges = groupCollection.entities(
-					// 			EntityGroupType.EDGE,
-					// 			groupName,
-					// 			coreEdges
-					// 		);
-					// 		for (let selectedCoreEdge of selectedCoreEdges) {
-					// 			api.Add_2(radius, selectedCoreEdge.edge());
-					// 			edgesCount++;
-					// 		}
-					// 	}
-					// }
 					if (edgesCount > 0) {
 						const newShape = api.Shape();
 						api.delete();

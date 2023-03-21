@@ -4,7 +4,7 @@
 //  *
 //  */
 // import {TypedPostNode, TypedPostNodeContext} from './_Base';
-// import {ClearPass} from '../../../modules/three/examples/jsm/postprocessing/ClearPass';
+// import {ClearPass} from 'three/examples/jsm/postprocessing/ClearPass';
 
 // import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 // class ClearPostParamsConfig extends NodeParamsConfig {}

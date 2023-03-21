@@ -44,6 +44,9 @@ export function objectContentCopyProperties(src: ObjectContent<CoreObjectType>, 
 	target.name = src.name;
 	target.castShadow = src.castShadow;
 	target.receiveShadow = src.receiveShadow;
+	target.renderOrder = src.renderOrder;
+	target.frustumCulled = src.frustumCulled;
+	target.matrixAutoUpdate = src.matrixAutoUpdate;
 	if (src.material) {
 		(target as Mesh).material = src.material;
 	}

@@ -10,7 +10,7 @@ import {CoreInstancer} from '../../../../../core/geometry/Instancer';
 import {Matrix4} from 'three';
 import {Poly} from '../../../../Poly';
 import type {BaseGeoLoaderOutput} from '../../../../../core/loader/geometry/Common';
-import {BaseGeoLoaderHandler} from '../../../../../core/loader/geometry/_BaseLoaderHandler';
+import {BaseObject3DLoaderHandler} from '../../../../../core/loader/geometry/_BaseLoaderHandler';
 import {CorePoint} from '../../../../../core/geometry/Point';
 // import { Constructor } from 'vue/types/options';
 
@@ -65,7 +65,7 @@ export abstract class BaseFileMultiSopNode<
 	// static override type() {
 	// 	return options.type;
 	// }
-	protected abstract _createLoader(url: string): BaseGeoLoaderHandler<O>;
+	protected abstract _createLoader(url: string): BaseObject3DLoaderHandler<O>;
 
 	override dispose(): void {
 		super.dispose();
@@ -170,7 +170,7 @@ export abstract class BaseFileMultiSopNode<
 		const loader = this._createLoader(url);
 		return this._loadWithLoader(loader);
 	}
-	protected _loadWithLoader(loader: BaseGeoLoaderHandler<O>) {
+	protected _loadWithLoader(loader: BaseObject3DLoaderHandler<O>) {
 		return loader.load({node: this});
 	}
 

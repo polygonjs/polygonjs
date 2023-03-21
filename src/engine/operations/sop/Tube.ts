@@ -34,7 +34,6 @@ export class TubeSopOperation extends BaseSopOperation {
 	static override type(): Readonly<'tube'> {
 		return 'tube';
 	}
-	private _coreTransform = new CoreTransform();
 	override cook(input_contents: CoreGroup[], params: TubeSopParams) {
 		const geometry = new CylinderGeometry(
 			params.radiusTop,
@@ -45,7 +44,7 @@ export class TubeSopOperation extends BaseSopOperation {
 			!isBooleanTrue(params.cap)
 		);
 
-		this._coreTransform.rotateGeometry(geometry, DEFAULT_UP, params.direction);
+		CoreTransform.rotateGeometry(geometry, DEFAULT_UP, params.direction);
 		geometry.translate(params.center.x, params.center.y, params.center.z);
 		return this.createCoreGroupFromGeometry(geometry);
 	}

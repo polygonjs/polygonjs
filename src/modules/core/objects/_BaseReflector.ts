@@ -144,12 +144,11 @@ export abstract class BaseReflector<TGeometry extends BufferGeometry, TMaterial 
 		return {width, height};
 	}
 
-	private static _coreTransform = new CoreTransform();
 	static rotateGeometry(geometry: BufferGeometry, direction: Vector3) {
-		this._coreTransform.rotateGeometry(geometry, direction, this.REFLECTOR_DEFAULT_UP);
+		CoreTransform.rotateGeometry(geometry, direction, this.REFLECTOR_DEFAULT_UP);
 	}
 	static compensateGeometryRotation(object: Object3D, direction: Vector3) {
-		this._coreTransform.rotateObject(object, this.REFLECTOR_DEFAULT_UP, direction);
+		CoreTransform.rotateObject(object, this.REFLECTOR_DEFAULT_UP, direction);
 	}
 
 	protected _onBeforeRender(

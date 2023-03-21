@@ -11,7 +11,7 @@ import {CoreTransform} from '../../../core/Transform';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {BaseSopOperation} from '../../operations/sop/_Base';
-import { SopType } from '../../poly/registers/nodes/types/Sop';
+import {SopType} from '../../poly/registers/nodes/types/Sop';
 const DEFAULT_UP = new Vector3(0, 1, 0);
 
 class ConeSopParamsConfig extends NodeParamsConfig {
@@ -42,8 +42,6 @@ export class ConeSopNode extends TypedSopNode<ConeSopParamsConfig> {
 		return SopType.CONE;
 	}
 
-	private _core_transform = new CoreTransform();
-
 	override cook() {
 		const geometry = new ConeGeometry(
 			this.pv.radius,
@@ -55,7 +53,7 @@ export class ConeSopNode extends TypedSopNode<ConeSopParamsConfig> {
 			this.pv.thetaLength
 		);
 
-		this._core_transform.rotateGeometry(geometry, DEFAULT_UP, this.pv.direction);
+		CoreTransform.rotateGeometry(geometry, DEFAULT_UP, this.pv.direction);
 		geometry.translate(this.pv.center.x, this.pv.center.y, this.pv.center.z);
 
 		const object = BaseSopOperation.createObject(geometry, ObjectType.MESH);

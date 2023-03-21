@@ -22,9 +22,9 @@ import {CoreMaterial, MaterialWithCustomMaterials} from './Material';
 import {CoreString} from '../String';
 import {ObjectUtils} from '../ObjectUtils';
 import {ArrayUtils} from '../ArrayUtils';
-import {ThreeMeshBVHHelper} from '../../engine/operations/sop/utils/Bvh/ThreeMeshBVHHelper';
+import {ThreeMeshBVHHelper} from '../../core/geometry/bvh/ThreeMeshBVHHelper';
 import {CoreGeometryBuilderMerge} from './builders/Merge';
-import {CoreObjectType, MergeCompactOptions} from './ObjectContent';
+import {CoreObjectType, MergeCompactOptions, objectContentCopyProperties} from './ObjectContent';
 import {BaseCoreObject} from './_BaseObject';
 import {TransformTargetType} from '../Transform';
 import {TypeAssert} from '../../engine/poly/Assert';
@@ -231,7 +231,10 @@ export class CoreObject extends BaseCoreObject<CoreObjectType.THREEJS> {
 	}
 	static override mergeCompact(options: MergeCompactOptions) {
 		const {objects, materialsByObjectType, objectType, mergedObjects, onError} = options;
-
+		const firstObject = objects[0];
+		if (!firstObject) {
+			return;
+		}
 		const geometries: BufferGeometry[] = [];
 		for (let object of objects) {
 			const geometry = (object as Mesh).geometry;
@@ -245,9 +248,9 @@ export class CoreObject extends BaseCoreObject<CoreObjectType.THREEJS> {
 			const mergedGeometry = CoreGeometryBuilderMerge.merge(geometries);
 			if (mergedGeometry) {
 				const material = materialsByObjectType.get(objectType);
-				const object = BaseSopOperation.createObject(mergedGeometry, objectType as ObjectType, material);
-				object.matrixAutoUpdate = false;
-				mergedObjects.push(object as Object3DWithGeometry);
+				const newObject = BaseSopOperation.createObject(mergedGeometry, objectType as ObjectType, material);
+				objectContentCopyProperties(firstObject, newObject);
+				mergedObjects.push(newObject as Object3DWithGeometry);
 			} else {
 				onError('merge failed, check that input geometries have the same attributes');
 			}

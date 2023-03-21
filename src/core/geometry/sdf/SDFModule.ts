@@ -6,6 +6,8 @@ import {
 	CoreObjectInstanceFactoryCheckFunction,
 	CoreObjectFactoryCheckFunctions,
 } from '../CoreObjectFactory';
+import {BaseSopNodeType} from '../../../engine/nodes/sop/_Base';
+import {SpecializedChildrenHook} from '../../../engine/poly/PolySpecializedChildrenController';
 import {CoreObjectType, ObjectContent} from '../ObjectContent';
 import {SDF_OBJECT_TYPES_SET, SDFObjectType, SDFTesselationParams, SDFOBJTesselationParams} from './SDFCommon';
 import {SDFCoreObject} from './SDFCoreObject';
@@ -23,7 +25,12 @@ function updateSDFTesselationParams(params: SDFOBJTesselationParams) {
 	SDF_TESSELATION_PARAMS.wireframe = params.SDFWireframe;
 	SDF_TESSELATION_PARAMS.meshesColor.copy(params.SDFMeshesColor);
 }
-function onAddSpecializedChildren(coreGroup: CoreGroup, newObjects: Object3D[], params: SDFOBJTesselationParams) {
+const onAddSpecializedChildren: SpecializedChildrenHook = (
+	displayNode: BaseSopNodeType,
+	coreGroup: CoreGroup,
+	newObjects: Object3D[],
+	params: SDFOBJTesselationParams
+) => {
 	let newObjectsAreDifferent = false;
 	const newSDFObjects = coreGroup.SDFObjects();
 	if (newSDFObjects && newSDFObjects.length != 0) {
@@ -41,7 +48,7 @@ function onAddSpecializedChildren(coreGroup: CoreGroup, newObjects: Object3D[], 
 		}
 	}
 	return newObjectsAreDifferent;
-}
+};
 
 export function onSDFModuleRegister(poly: PolyEngine) {
 	//
