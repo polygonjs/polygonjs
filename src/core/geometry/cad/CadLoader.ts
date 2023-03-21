@@ -116,6 +116,8 @@ export class CadLoader {
 					_oc = oc;
 
 					CadLoaderSync.__setOC(oc);
+					// register blob
+					Poly.blobs.fetchBlobGlobal(wasmUrl);
 
 					resolve(oc);
 					if (_resolves.length > 0) {
