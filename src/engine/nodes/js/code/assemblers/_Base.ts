@@ -1,4 +1,4 @@
-import {ShaderMaterial, Color, Vector2, Vector3, Vector4} from 'three';
+import {ShaderMaterial, Color, Vector2, Vector3, Vector4, Plane, Ray} from 'three';
 import {LineType} from '../utils/LineType';
 import {VariableConfig} from '../configs/VariableConfig';
 import {CodeBuilder, CodeBuilderSetCodeLinesOptions} from '../utils/CodeBuilder';
@@ -24,17 +24,15 @@ import {JsNodeFinder} from '../utils/NodeFinder';
 import {JsType} from '../../../../poly/registers/nodes/types/Js';
 // import {VaryingWriteGlNode} from '../../VaryingWrite';
 // import {SubnetOutputGlNode} from '../../SubnetOutput';
-import {GlobalsOutput} from './common/GlobalsOutput';
+// import {GlobalsOutput} from './common/GlobalsOutput';
 import {JsParamConfig} from '../utils/JsParamConfig';
 import {ParamType} from '../../../../poly/ParamType';
+import {BaseNamedFunction} from './NamedFunction';
 // import {CoreString} from '../../../../../core/String';
 
 type StringArrayByShaderName = Map<ShaderName, string[]>;
-export type RegisterableVariable = Color | Vector2 | Vector3 | Vector4;
-export interface NamedFunction {
-	name: string;
-	func: Function;
-}
+export type RegisterableVariable = Color | Plane | Ray | Vector2 | Vector3 | Vector4;
+// export abstract class ObjectNamedFunction4<ARGS extends [any,any,any,any]> extends ObjectNamedFunction<ARGS,[string,string,string,string]> {}
 export interface FunctionData {
 	functionBody: string;
 	variableNames: string[];
@@ -80,6 +78,7 @@ export class BaseJsShaderAssembler extends TypedAssembler<NodeContext.JS> {
 
 	private _uniformsTimeDependent: boolean = false;
 	private _uniformsResolutionDependent: boolean = false;
+	private _computedVarNames: Set<string> = new Set();
 
 	constructor(protected _gl_parent_node: AssemblerControllerNode) {
 		super();
@@ -91,6 +90,15 @@ export class BaseJsShaderAssembler extends TypedAssembler<NodeContext.JS> {
 	}
 	currentGlParentNode() {
 		return this._overriden_gl_parent_node || this._gl_parent_node;
+	}
+	makeFunctionNodeDirtyOnRecompileRequired() {
+		return true;
+	}
+	addComputedVarName(varName: string) {
+		this._computedVarNames.add(varName);
+	}
+	registeredAsComputed(varName: string): boolean {
+		return this._computedVarNames.has(varName);
 	}
 
 	compile() {}
@@ -146,10 +154,14 @@ export class BaseJsShaderAssembler extends TypedAssembler<NodeContext.JS> {
 	protected templateShader(): ITemplateShader | undefined {
 		return undefined;
 	}
-
-	updateFunction() {
+	protected _reset() {
 		this._resetRegisteredFunctions();
 		this._resetRegisteredVariables();
+		this._computedVarNames.clear();
+	}
+
+	updateFunction() {
+		this._reset;
 	}
 
 	// protected addUniforms(uniforms: IUniforms) {
@@ -297,11 +309,11 @@ export class BaseJsShaderAssembler extends TypedAssembler<NodeContext.JS> {
 	//
 	static output_input_connection_points(): JsConnectionPoint<JsConnectionPointType>[] {
 		return [
-			new JsConnectionPoint('position', JsConnectionPointType.VEC3),
-			new JsConnectionPoint('normal', JsConnectionPointType.VEC3),
-			new JsConnectionPoint('color', JsConnectionPointType.VEC3),
-			new JsConnectionPoint('alpha', JsConnectionPointType.FLOAT),
-			new JsConnectionPoint('uv', JsConnectionPointType.VEC2),
+			// new JsConnectionPoint('position', JsConnectionPointType.VEC3),
+			// new JsConnectionPoint('normal', JsConnectionPointType.VEC3),
+			// new JsConnectionPoint('color', JsConnectionPointType.VEC3),
+			// new JsConnectionPoint('alpha', JsConnectionPointType.FLOAT),
+			// new JsConnectionPoint('uv', JsConnectionPointType.VEC2),
 		];
 	}
 	add_output_inputs(output_child: OutputJsNode) {
@@ -310,23 +322,23 @@ export class BaseJsShaderAssembler extends TypedAssembler<NodeContext.JS> {
 	static create_globals_node_output_connections() {
 		// TODO: move this in material only, to use the enum GlobalsOutput
 		return [
-			new JsConnectionPoint('position', JsConnectionPointType.VEC3),
-			new JsConnectionPoint('normal', JsConnectionPointType.VEC3),
-			new JsConnectionPoint('color', JsConnectionPointType.VEC3),
-			new JsConnectionPoint('uv', JsConnectionPointType.VEC2),
-			new JsConnectionPoint(GlobalsOutput.MV_POSITION, JsConnectionPointType.VEC4),
-			// Maybe I should not add worldPosition, worldNormal, I just now
-			// as those could add computation overhead when always present in the shader.
-			// But hopefully in the soon future, they will only be added when the code builder
-			// adds lines based on connections, as opposed to the whole node
-			new JsConnectionPoint('worldPosition', JsConnectionPointType.VEC4), // vec4 worldPosition = modelMatrix * vec4( position, 1.0 );
-			new JsConnectionPoint('worldNormal', JsConnectionPointType.VEC3), // vec3 worldNormal = normalize( mat3( modelMatrix[0].xyz, modelMatrix[1].xyz, modelMatrix[2].xyz ) * normal );
-			// new GlConnectionPoint('I', GlConnectionPointType.VEC3), // vec3 I = worldPosition.xyz - cameraPosition;
-			new JsConnectionPoint(GlobalsOutput.GL_POSITION, JsConnectionPointType.VEC4),
-			new JsConnectionPoint(GlobalsOutput.GL_FRAGCOORD, JsConnectionPointType.VEC4),
-			new JsConnectionPoint('cameraPosition', JsConnectionPointType.VEC3),
-			new JsConnectionPoint(GlobalsOutput.RESOLUTION, JsConnectionPointType.VEC2),
-			new JsConnectionPoint(GlobalsOutput.TIME, JsConnectionPointType.FLOAT),
+			// new JsConnectionPoint('position', JsConnectionPointType.VEC3),
+			// new JsConnectionPoint('normal', JsConnectionPointType.VEC3),
+			// new JsConnectionPoint('color', JsConnectionPointType.VEC3),
+			// new JsConnectionPoint('uv', JsConnectionPointType.VEC2),
+			// new JsConnectionPoint(GlobalsOutput.MV_POSITION, JsConnectionPointType.VEC4),
+			// // Maybe I should not add worldPosition, worldNormal, I just now
+			// // as those could add computation overhead when always present in the shader.
+			// // But hopefully in the soon future, they will only be added when the code builder
+			// // adds lines based on connections, as opposed to the whole node
+			// new JsConnectionPoint('worldPosition', JsConnectionPointType.VEC4), // vec4 worldPosition = modelMatrix * vec4( position, 1.0 );
+			// new JsConnectionPoint('worldNormal', JsConnectionPointType.VEC3), // vec3 worldNormal = normalize( mat3( modelMatrix[0].xyz, modelMatrix[1].xyz, modelMatrix[2].xyz ) * normal );
+			// // new GlConnectionPoint('I', GlConnectionPointType.VEC3), // vec3 I = worldPosition.xyz - cameraPosition;
+			// new JsConnectionPoint(GlobalsOutput.GL_POSITION, JsConnectionPointType.VEC4),
+			// new JsConnectionPoint(GlobalsOutput.GL_FRAGCOORD, JsConnectionPointType.VEC4),
+			// new JsConnectionPoint('cameraPosition', JsConnectionPointType.VEC3),
+			// new JsConnectionPoint(GlobalsOutput.RESOLUTION, JsConnectionPointType.VEC2),
+			// new JsConnectionPoint(GlobalsOutput.TIME, JsConnectionPointType.FLOAT),
 		];
 	}
 	create_globals_node_output_connections() {
@@ -587,7 +599,7 @@ export class BaseJsShaderAssembler extends TypedAssembler<NodeContext.JS> {
 	traverseRegisteredVariables(callback: (variable: RegisterableVariable, varName: string) => void) {
 		this._registeredVariables.forEach(callback);
 	}
-	private _resetRegisteredVariables() {
+	protected _resetRegisteredVariables() {
 		this._registeredVariables.clear();
 	}
 	//
@@ -595,14 +607,14 @@ export class BaseJsShaderAssembler extends TypedAssembler<NodeContext.JS> {
 	// REGISTERED FUNCTIONS
 	//
 	//
-	private _registeredFunctions: Map<string, NamedFunction> = new Map();
-	addFunction(node: BaseJsNodeType, namedFunction: NamedFunction) {
-		const existingFunctionName = this._registeredFunctions.get(namedFunction.name);
+	private _registeredFunctions: Map<string, BaseNamedFunction> = new Map();
+	addFunction(node: BaseJsNodeType, namedFunction: BaseNamedFunction) {
+		const existingFunctionName = this._registeredFunctions.get(namedFunction.type);
 		if (existingFunctionName) {
 			return;
 		}
 
-		this._registeredFunctions.set(namedFunction.name, namedFunction);
+		this._registeredFunctions.set(namedFunction.type, namedFunction);
 
 		// let i=0
 		// for(let _func of functions){
@@ -618,10 +630,10 @@ export class BaseJsShaderAssembler extends TypedAssembler<NodeContext.JS> {
 		// })
 		// this.addDefinitions(node, functionDefinitions);
 	}
-	traverseRegisteredFunctions(callback: (variable: NamedFunction) => void) {
+	traverseRegisteredFunctions(callback: (variable: BaseNamedFunction) => void) {
 		this._registeredFunctions.forEach(callback);
 	}
-	private _resetRegisteredFunctions() {
+	protected _resetRegisteredFunctions() {
 		this._registeredFunctions.clear();
 		// this._nameByFunctions.clear();
 	}

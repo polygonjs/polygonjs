@@ -42,7 +42,7 @@ export class SDFRevolutionJsNode extends BaseSDFJsNode<SDFRevolutionGlParamsConf
 	override initializeNode() {
 		super.initializeNode();
 		this.io.outputs.setNamedOutputConnectionPoints([
-			new JsConnectionPoint(OUTPUT_NAME, JsConnectionPointType.VEC2),
+			new JsConnectionPoint(OUTPUT_NAME, JsConnectionPointType.VECTOR2),
 		]);
 	}
 	setAxis(axis: SDFRevolutionAxis) {
@@ -56,11 +56,10 @@ export class SDFRevolutionJsNode extends BaseSDFJsNode<SDFRevolutionGlParamsConf
 
 		const out = this.jsVarName(OUTPUT_NAME);
 		shadersCollectionController.addVariable(this, out, new Vector2());
-		const func = this._function();
-		const bodyLine = `${func.name}(${position}.sub(${center}), ${radius},${out})`;
+		const _func = this._function();
+		const func = new _func(this, shadersCollectionController);
+		const bodyLine = `${func.asString(position, center, radius, out)}`;
 		shadersCollectionController.addBodyLines(this, [bodyLine]);
-
-		shadersCollectionController.addFunction(this, func);
 	}
 	private _function() {
 		const axis = SDF_REVOLUTION_AXISES[this.pv.axis];

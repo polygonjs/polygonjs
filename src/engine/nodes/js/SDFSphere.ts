@@ -35,12 +35,12 @@ export class SDFSphereJsNode extends BaseSDFJsNode<SDFSphereJsParamsConfig> {
 
 	override setLines(shadersCollectionController: ShadersCollectionController) {
 		const position = this.position(shadersCollectionController);
-		const radius = this.variableForInputParam(shadersCollectionController, this.p.radius);
 		const center = this.variableForInputParam(shadersCollectionController, this.p.center); //this.jsVarName(VARIABLE_NAME_CENTER);
+		const radius = this.variableForInputParam(shadersCollectionController, this.p.radius);
 
 		const float = this.jsVarName(OUTPUT_NAME);
-		const bodyLine = `const ${float} = ${sdSphere.name}(${position}.sub(${center}), ${radius})`;
+		const func = new sdSphere(this, shadersCollectionController);
+		const bodyLine = `const ${float} = ${func.asString(position, center, radius)}`;
 		shadersCollectionController.addBodyLines(this, [bodyLine]);
-		shadersCollectionController.addFunction(this, sdSphere);
 	}
 }

@@ -17,6 +17,8 @@ import {ShaderAssemblerTexture2DArray} from '../../../nodes/gl/code/assemblers/t
 import {ShaderAssemblerVolume} from '../../../nodes/gl/code/assemblers/materials/Volume';
 import {ShaderAssemblerCustomMeshDepthForRender} from '../../../nodes/gl/code/assemblers/materials/custom/mesh/CustomMeshDepth';
 import {ShaderAssemblerCustomMeshDistanceForRender} from '../../../nodes/gl/code/assemblers/materials/custom/mesh/CustomMeshDistance';
+//
+import {JsAssemblerActor} from '../../../nodes/js/code/assemblers/actor/ActorAssembler';
 import {JsAssemblerSDF} from '../../../nodes/js/code/assemblers/sdf/SDF';
 export interface AssemblersMap extends PolyDictionary<ControllerAssemblerPair> {
 	[AssemblerName.GL_MESH_BASIC]: {
@@ -79,6 +81,11 @@ export interface AssemblersMap extends PolyDictionary<ControllerAssemblerPair> {
 		controller: GlAssemblerController<ShaderAssemblerVolume>;
 		assembler: typeof ShaderAssemblerVolume;
 	};
+	//
+	[AssemblerName.JS_ACTOR]: {
+		controller: JsAssemblerController<JsAssemblerActor>;
+		assembler: typeof JsAssemblerActor;
+	};
 	[AssemblerName.JS_SDF]: {
 		controller: JsAssemblerController<JsAssemblerSDF>;
 		assembler: typeof JsAssemblerSDF;
@@ -129,6 +136,8 @@ export class AllAssemblersRegister {
 			ShaderAssemblerTexture2DArray
 		);
 		poly.assemblersRegister.register(AssemblerName.GL_VOLUME, GlAssemblerController, ShaderAssemblerVolume);
+		//
+		poly.assemblersRegister.register(AssemblerName.JS_ACTOR, JsAssemblerController, JsAssemblerActor);
 		poly.assemblersRegister.register(AssemblerName.JS_SDF, JsAssemblerController, JsAssemblerSDF);
 	}
 }

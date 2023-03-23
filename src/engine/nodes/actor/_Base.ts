@@ -135,7 +135,7 @@ export class TypedActorNode<K extends NodeParamsConfig> extends TypedNode<NodeCo
 	}
 
 	static PARAM_CALLBACK_selfTrigger(node: BaseActorNodeType) {
-		node.scene().actorsManager.manualTriggerController.setNodeToReceiveTrigger(node);
+		// node.scene().actorsManager.manualTriggerController.setNodeToReceiveTrigger(node);
 	}
 	// processActor(object: Object3D) {}
 }

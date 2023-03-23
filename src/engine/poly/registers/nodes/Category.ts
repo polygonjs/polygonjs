@@ -95,11 +95,14 @@ export const CATEGORY_GL = {
 	NETWORK,
 };
 export const CATEGORY_JS = {
+	ACTION: 'action',
 	COLOR: 'color',
 	CONVERSION: 'conversion',
 	DYNAMICS: 'dynamics',
+	EVENTS: 'events',
 	GEOMETRY: 'geometry',
 	GLOBALS: 'globals',
+	INPUTS: 'inputs',
 	LOGIC: 'logic',
 	MATH: 'math',
 	QUAT: 'quat',

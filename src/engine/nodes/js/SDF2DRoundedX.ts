@@ -42,8 +42,8 @@ export class SDF2DRoundedXJsNode extends BaseSDF2DJsNode<SDF2DRoundedXJsParamsCo
 		const radius = this.variableForInputParam(shadersCollectionController, this.p.radius);
 
 		const float = this.jsVarName(OUTPUT_NAME);
-		const bodyLine = `const ${float} = ${sdRoundedX.name}(${position}.sub(${center}), ${length}, ${radius})`;
+		const func = new sdRoundedX(this, shadersCollectionController);
+		const bodyLine = `const ${float} = ${func.asString(position, center, length, radius)}`;
 		shadersCollectionController.addBodyLines(this, [bodyLine]);
-		shadersCollectionController.addFunction(this, sdRoundedX);
 	}
 }

@@ -12,9 +12,16 @@ import {
 
 import {AttributeJsNode} from '../../../nodes/js/Attribute';
 import {ConstantJsNode} from '../../../nodes/js/Constant';
+import {CursorJsNode} from '../../../nodes/js/Cursor';
+import {FloatToVec3JsNode} from '../../../nodes/js/FloatToVec3';
 import {GlobalsJsNode} from '../../../nodes/js/Globals';
+import {OnManualTriggerJsNode} from '../../../nodes/js/OnManualTrigger';
+import {OnTickJsNode} from '../../../nodes/js/OnTick';
 import {OutputJsNode} from '../../../nodes/js/Output';
 import {ParamJsNode} from '../../../nodes/js/Param';
+import {PlaneJsNode} from '../../../nodes/js/Plane';
+import {RayFromCursorJsNode} from '../../../nodes/js/RayFromCursor';
+import {RayIntersectPlaneJsNode} from '../../../nodes/js/RayIntersectPlane';
 import {SDF2DRoundedXJsNode} from '../../../nodes/js/SDF2DRoundedX';
 import {SDFBoxJsNode} from '../../../nodes/js/SDFBox';
 import {SDFIntersectJsNode} from '../../../nodes/js/SDFIntersect';
@@ -22,13 +29,23 @@ import {SDFRevolutionJsNode} from '../../../nodes/js/SDFRevolution';
 import {SDFSphereJsNode} from '../../../nodes/js/SDFSphere';
 import {SDFSubtractJsNode} from '../../../nodes/js/SDFSubtract';
 import {SDFUnionJsNode} from '../../../nodes/js/SDFUnion';
+import {SetObjectLookAtJsNode} from '../../../nodes/js/SetObjectLookAt';
+import {SetObjectPositionJsNode} from '../../../nodes/js/SetObjectPosition';
+import {SinJsNode} from '../../../nodes/js/Sin';
 
 export interface JsNodeChildrenMap {
 	attribute: AttributeJsNode;
+	cursor: CursorJsNode;
 	constant: ConstantJsNode;
+	floatToVec3: FloatToVec3JsNode;
 	globals: GlobalsJsNode;
+	onManualTrigger: OnManualTriggerJsNode;
+	onTick: OnTickJsNode;
 	output: OutputJsNode;
 	param: ParamJsNode;
+	plane: PlaneJsNode;
+	rayFromCursor: RayFromCursorJsNode;
+	rayIntersectPlane: RayIntersectPlaneJsNode;
 	SDF2DRoundedX: SDF2DRoundedXJsNode;
 	SDFBox: SDFBoxJsNode;
 	SDFIntersect: SDFIntersectJsNode;
@@ -36,6 +53,9 @@ export interface JsNodeChildrenMap {
 	SDFSphere: SDFSphereJsNode;
 	SDFSubtract: SDFSubtractJsNode;
 	SDFUnion: SDFUnionJsNode;
+	setObjectLookAt: SetObjectLookAtJsNode;
+	setObjectPosition: SetObjectPositionJsNode;
+	sin: SinJsNode;
 	vec2ToFloat: Vec2ToFloatJsNode;
 	vec2ToVec3: Vec2ToVec3JsNode;
 	vec3ToFloat: Vec3ToFloatJsNode;
@@ -46,13 +66,25 @@ export interface JsNodeChildrenMap {
 }
 
 import {PolyEngine} from '../../../Poly';
+import {SopType} from './types/Sop';
+import {NodeContext} from '../../NodeContext';
+const sopType = (type: SopType) => `${NodeContext.SOP}/${type}`;
+const ONLY_WITH_GLOBALS = {only: [sopType(SopType.SDF_BUILDER)]};
+const ONLY_ACTOR = {only: [sopType(SopType.ACTOR_JS)]};
 export class JsRegister {
 	static run(poly: PolyEngine) {
 		// poly.registerNode(AttributeJsNode, CATEGORY_JS.GLOBALS);
 		poly.registerNode(ConstantJsNode, CATEGORY_JS.GLOBALS);
-		poly.registerNode(GlobalsJsNode, CATEGORY_JS.GLOBALS);
-		poly.registerNode(OutputJsNode, CATEGORY_JS.GLOBALS);
+		poly.registerNode(CursorJsNode, CATEGORY_JS.INPUTS, ONLY_ACTOR);
+		poly.registerNode(FloatToVec3JsNode, CATEGORY_JS.CONVERSION);
+		poly.registerNode(GlobalsJsNode, CATEGORY_JS.GLOBALS, ONLY_WITH_GLOBALS);
+		poly.registerNode(OnManualTriggerJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
+		poly.registerNode(OnTickJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
+		poly.registerNode(OutputJsNode, CATEGORY_JS.GLOBALS, ONLY_WITH_GLOBALS);
 		poly.registerNode(ParamJsNode, CATEGORY_JS.GLOBALS);
+		poly.registerNode(PlaneJsNode, CATEGORY_JS.MATH);
+		poly.registerNode(RayFromCursorJsNode, CATEGORY_JS.INPUTS);
+		poly.registerNode(RayIntersectPlaneJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(SDF2DRoundedXJsNode, CATEGORY_JS.SDF_PRIMITIVES_2D);
 		poly.registerNode(SDFBoxJsNode, CATEGORY_JS.SDF_PRIMITIVES);
 		poly.registerNode(SDFIntersectJsNode, CATEGORY_JS.SDF_MODIFIERS);
@@ -60,6 +92,9 @@ export class JsRegister {
 		poly.registerNode(SDFSphereJsNode, CATEGORY_JS.SDF_PRIMITIVES);
 		poly.registerNode(SDFSubtractJsNode, CATEGORY_JS.SDF_MODIFIERS);
 		poly.registerNode(SDFUnionJsNode, CATEGORY_JS.SDF_MODIFIERS);
+		poly.registerNode(SetObjectLookAtJsNode, CATEGORY_JS.ACTION);
+		poly.registerNode(SetObjectPositionJsNode, CATEGORY_JS.ACTION);
+		poly.registerNode(SinJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(Vec2ToFloatJsNode, CATEGORY_JS.CONVERSION);
 		poly.registerNode(Vec2ToVec3JsNode, CATEGORY_JS.CONVERSION);
 		poly.registerNode(Vec3ToFloatJsNode, CATEGORY_JS.CONVERSION);

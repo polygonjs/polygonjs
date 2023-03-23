@@ -1,8 +1,10 @@
 import {ShaderName} from '../../../utils/shaders/ShaderName';
-import {BaseJsDefinition} from '../../utils/JsDefinition';
+import {BaseJsDefinition, ComputedValueJsDefinition} from '../../utils/JsDefinition';
 import {JsLinesController, DefinitionTraverseCallback, AddBodyLinesOptions} from './LinesController';
 import {BaseJsNodeType} from '../../_Base';
-import {RegisterableVariable, BaseJsShaderAssembler, NamedFunction} from '../assemblers/_Base';
+import {RegisterableVariable, BaseJsShaderAssembler} from '../assemblers/_Base';
+import {BaseNamedFunction} from '../assemblers/NamedFunction';
+import {JsConnectionPointType} from '../../../utils/io/connections/Js';
 
 export class ShadersCollectionController {
 	private _linesControllerByShaderName: Map<ShaderName, JsLinesController> = new Map();
@@ -58,7 +60,7 @@ export class ShadersCollectionController {
 	// REGISTERED FUNCTIONS
 	//
 	//
-	addFunction(node: BaseJsNodeType, namedFunction: NamedFunction) {
+	addFunction(node: BaseJsNodeType, namedFunction: BaseNamedFunction) {
 		return this.assembler().addFunction(node, namedFunction);
 	}
 
@@ -67,6 +69,17 @@ export class ShadersCollectionController {
 	//
 	//
 	//
+
+	addComputedVarName(varName: string) {
+		this._assembler.addComputedVarName(varName);
+	}
+	registeredAsComputed(varName: string): boolean {
+		return this._assembler.registeredAsComputed(varName);
+	}
+	addBodyOrComputed(node: BaseJsNodeType, dataType: JsConnectionPointType, varName: string, value: string) {
+		this.addDefinitions(node, [new ComputedValueJsDefinition(node, this, dataType, varName, value)]);
+	}
+
 	addDefinitions(node: BaseJsNodeType, definitions: BaseJsDefinition[], shaderName?: ShaderName) {
 		if (definitions.length == 0) {
 			return;

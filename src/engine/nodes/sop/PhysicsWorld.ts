@@ -90,10 +90,11 @@ export class PhysicsWorldSopNode extends TypedSopNode<PhysicsWorldSopParamsConfi
 			debugObject.name = `${this.name()}_Debug`;
 			objects.push(debugObject);
 		}
-		const actorNode = this._findActorNode();
-		for (let object of objects) {
-			this.scene().actorsManager.assignActorBuilder(object, actorNode);
-		}
+		// const actorNode = this._findActorNode();
+		// for (let object of objects) {
+		// 	console.warn('physics node actor node behavior removed')
+		// 	// this.scene().actorsManager.assignActorBuilder(object, actorNode);
+		// }
 
 		this.setObjects(objects);
 	}
@@ -136,13 +137,13 @@ export class PhysicsWorldSopNode extends TypedSopNode<PhysicsWorldSopParamsConfi
 		}
 	}
 
-	private _findActorNode() {
-		// if (isBooleanTrue(this.pv.useThisNode)) {
-		return this;
-		// } else {
-		// 	return this.pv.node.node() as ActorBuilderNode | undefined;
-		// }
-	}
+	// private _findActorNode() {
+	// 	// if (isBooleanTrue(this.pv.useThisNode)) {
+	// 	return this;
+	// 	// } else {
+	// 	// 	return this.pv.node.node() as ActorBuilderNode | undefined;
+	// 	// }
+	// }
 
 	//
 	// CHILDREN

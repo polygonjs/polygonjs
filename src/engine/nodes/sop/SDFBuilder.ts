@@ -191,8 +191,8 @@ export class SDFBuilderSopNode extends TypedSopNode<SDFBuilderSopParamsConfig> {
 		}
 		const outputNode = outputNodes[0];
 		if (outputNode) {
-			//const param_nodes = GlNodeFinder.find_param_generating_nodes(this);
-			const rootNodes = outputNodes; //.concat(param_nodes);
+			const paramNodes = JsNodeFinder.findParamGeneratingNodes(this);
+			const rootNodes = outputNodes.concat(paramNodes);
 			assemblerController.assembler.set_root_nodes(rootNodes);
 
 			// main compilation

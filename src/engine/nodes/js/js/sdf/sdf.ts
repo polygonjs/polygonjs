@@ -1,7 +1,7 @@
 import {Vector3} from 'three';
 import {CoreMath} from '../../../../../core/math/_Module';
-import {NamedFunction} from '../../code/assemblers/_Base';
-import {absV3, maxV3Components, maxV3Component} from './sdfUtils';
+import {NamedFunction2, NamedFunction3, NamedFunction4} from '../../code/assemblers/NamedFunction';
+import {absV3, maxV3Components, maxV3Component} from '../conversion';
 
 const _q = new Vector3();
 const _sHalf = new Vector3();
@@ -11,17 +11,17 @@ const _sHalf = new Vector3();
 // SDF PRIMITIVES
 //
 //
-export const sdSphere: NamedFunction = {
-	name: 'sdSphere',
-	func: (p: Vector3, s: number): number => {
-		return p.length() - s;
-	},
-};
-export const sdBox: NamedFunction = {
-	name: 'sdBox',
-	func: (p: Vector3, s: Vector3): number => {
-		_sHalf.copy(s).multiplyScalar(0.5);
-		absV3(p, _q);
+export class sdSphere extends NamedFunction3<[Vector3, Vector3, number]> {
+	type = 'sdSphere';
+	func(p: Vector3, center: Vector3, s: number): number {
+		return p.sub(center).length() - s;
+	}
+}
+export class sdBox extends NamedFunction4<[Vector3, Vector3, Vector3, number]> {
+	type = 'sdBox';
+	func(p: Vector3, center: Vector3, sizes: Vector3, size: number): number {
+		_sHalf.copy(sizes).multiplyScalar(size * 0.5);
+		absV3(p.sub(center), _q);
 		_q.sub(_sHalf);
 
 		const max = Math.min(0, maxV3Components(_q));
@@ -29,56 +29,56 @@ export const sdBox: NamedFunction = {
 		const length = _q.length();
 
 		return length + max;
-	},
-};
+	}
+}
 
 /*
  *
  * SDF OPERATIONS
  *
  */
-export const SDFUnion: NamedFunction = {
-	name: 'SDFUnion',
-	func: (d1: number, d2: number): number => {
+export class SDFUnion extends NamedFunction2<[number, number]> {
+	type = 'SDFUnion';
+	func(d1: number, d2: number): number {
 		return Math.min(d1, d2);
-	},
-};
-export const SDFSubtract: NamedFunction = {
-	name: 'SDFSubtract',
-	func: (d1: number, d2: number): number => {
+	}
+}
+export class SDFSubtract extends NamedFunction2<[number, number]> {
+	type = 'SDFSubtract';
+	func(d1: number, d2: number): number {
 		return Math.max(-d1, d2);
-	},
-};
-export const SDFIntersect: NamedFunction = {
-	name: 'SDFIntersect',
-	func: (d1: number, d2: number): number => {
+	}
+}
+export class SDFIntersect extends NamedFunction2<[number, number]> {
+	type = 'SDFIntersect';
+	func(d1: number, d2: number): number {
 		return Math.max(d1, d2);
-	},
-};
+	}
+}
 
-export const SDFSmoothUnion: NamedFunction = {
-	name: 'SDFSmoothUnion',
-	func: (d1: number, d2: number, k: number): number => {
+export class SDFSmoothUnion extends NamedFunction3<[number, number, number]> {
+	type = 'SDFSmoothUnion';
+	func(d1: number, d2: number, k: number): number {
 		const h = CoreMath.clamp(0.5 + (0.5 * (d2 - d1)) / k, 0.0, 1.0);
 		return CoreMath.mix(d2, d1, h) - k * h * (1.0 - h);
-	},
-};
+	}
+}
 
-export const SDFSmoothSubtract: NamedFunction = {
-	name: 'SDFSmoothSubtract',
-	func: (d1: number, d2: number, k: number): number => {
+export class SDFSmoothSubtract extends NamedFunction3<[number, number, number]> {
+	type = 'SDFSmoothSubtract';
+	func(d1: number, d2: number, k: number): number {
 		const h = CoreMath.clamp(0.5 - (0.5 * (d2 + d1)) / k, 0.0, 1.0);
 		return CoreMath.mix(d2, -d1, h) + k * h * (1.0 - h);
-	},
-};
+	}
+}
 
-export const SDFSmoothIntersect: NamedFunction = {
-	name: 'SDFSmoothIntersect',
-	func: (d1: number, d2: number, k: number): number => {
+export class SDFSmoothIntersect extends NamedFunction3<[number, number, number]> {
+	type = 'SDFSmoothIntersect';
+	func(d1: number, d2: number, k: number): number {
 		const h = CoreMath.clamp(0.5 - (0.5 * (d2 - d1)) / k, 0.0, 1.0);
 		return CoreMath.mix(d2, d1, h) + k * h * (1.0 - h);
-	},
-};
+	}
+}
 
 // export function  SDFElongateFast( p:Vector3, h:Vector3 )
 // {
@@ -90,6 +90,6 @@ export const SDFSmoothIntersect: NamedFunction = {
 // 	return vec4( max(q,0.0), min(max(q.x,max(q.y,q.z)),0.0) );
 // }
 
-export function SDFOnion(sdf: number, thickness: number) {
-	return Math.abs(sdf) - thickness;
-}
+// export function SDFOnion(sdf: number, thickness: number) {
+// 	return Math.abs(sdf) - thickness;
+// }

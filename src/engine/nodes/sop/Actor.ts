@@ -16,7 +16,7 @@ import {Constructor, valueof} from '../../../types/GlobalTypes';
 import {BaseActorNodeType} from '../actor/_Base';
 import {isBooleanTrue} from '../../../core/Type';
 import {ActorBuilderNode} from '../../scene/utils/ActorsManager';
-import {CorePath} from '../../../core/geometry/CorePath';
+// import {CorePath} from '../../../core/geometry/CorePath';
 // import {ActorsManager} from '../../../core/actor/ActorsManager';
 class ActorSopParamsConfig extends NodeParamsConfig {
 	/** @param select which objects this applies the actor behavior to */
@@ -49,22 +49,22 @@ export class ActorSopNode extends TypedSopNode<ActorSopParamsConfig> {
 
 	override cook(inputCoreGroups: CoreGroup[]) {
 		const coreGroup = inputCoreGroups[0];
-		const objects = coreGroup.threejsObjects();
+		// const objects = coreGroup.threejsObjects();
 
 		const actorNode = this._findActorNode();
 		if (actorNode) {
 			const objectsMask = this.pv.objectsMask.trim();
 			if (objectsMask == '') {
-				for (let object of objects) {
-					this.scene().actorsManager.assignActorBuilder(object, actorNode);
-				}
+				// for (let object of objects) {
+				// 	// this.scene().actorsManager.assignActorBuilder(object, actorNode);
+				// }
 			} else {
-				for (let object of objects) {
-					const children = CorePath.objectsByMaskInObject(objectsMask, object);
-					for (let child of children) {
-						this.scene().actorsManager.assignActorBuilder(child, actorNode);
-					}
-				}
+				// for (let object of objects) {
+				// 	// const children = CorePath.objectsByMaskInObject(objectsMask, object);
+				// 	// for (let child of children) {
+				// 	// 	// this.scene().actorsManager.assignActorBuilder(child, actorNode);
+				// 	// }
+				// }
 			}
 		}
 

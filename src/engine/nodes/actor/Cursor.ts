@@ -50,7 +50,7 @@ export class CursorActorNode extends BaseUserInputActorNode<CursorActorParamsCon
 		context: ActorNodeTriggerContext
 	): ReturnValueTypeByActorConnectionPointType[ActorConnectionPointType.VECTOR2] | undefined {
 		const pointerEventsController = this.scene().eventsDispatcher.pointerEventsController;
-		const eventCursor = pointerEventsController.cursor();
+		const eventCursor = pointerEventsController.cursor().value;
 
 		const currentCursor = this.pv.cursor;
 		if (eventCursor.x != currentCursor.x || eventCursor.y != currentCursor.y) {

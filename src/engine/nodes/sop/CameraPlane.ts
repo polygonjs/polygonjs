@@ -9,12 +9,12 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CameraNodeType, NodeContext, CAMERA_TYPES} from '../../poly/NodeContext';
 import {TypedSopNode} from './_Base';
 import {Plane} from 'three';
-import {Raycaster} from 'three';
 import {OrthographicCamera} from 'three';
 import {PerspectiveCamera} from 'three';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {CoreTransform} from '../../../core/Transform';
 import {BaseNodeType} from '../_Base';
+import {createRaycaster} from '../../../core/RaycastHelper';
 
 type CameraType = OrthographicCamera | PerspectiveCamera;
 const DEFAULT = {
@@ -71,7 +71,7 @@ export class CameraPlaneSopNode extends TypedSopNode<CameraPlaneSopParamsConfig>
 		return 'cameraPlane';
 	}
 	private _plane = new Plane();
-	private _raycaster = new Raycaster();
+	private _raycaster = createRaycaster();
 	private _planeCorners = [new Vector3(), new Vector3(), new Vector3(), new Vector3()];
 	private _planeCenter = new Vector3();
 	private _coreTransform = new CoreTransform();

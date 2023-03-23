@@ -17,6 +17,7 @@ export enum AssemblerName {
 	GL_TEXTURE_2D_ARRAY = 'GL_TEXTURE_2D_ARRAY',
 	GL_VOLUME = 'GL_VOLUME',
 	//
+	JS_ACTOR = 'JS_ACTOR',
 	JS_SDF = 'JS_SDF',
 }
 

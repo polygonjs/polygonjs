@@ -22,6 +22,20 @@ import {ParamsEditableStateController} from '../utils/io/ParamsEditableStateCont
 import {Color, Vector2, Vector3, Vector4} from 'three';
 import {CoreString} from '../../../core/String';
 import {BaseParamType} from '../../params/_Base';
+import {EvaluatorEventData} from './code/assemblers/actor/Evaluator';
+
+export const TRIGGER_CONNECTION_NAME = 'trigger';
+
+function wrapComputed(varName: string): string {
+	return `this.${varName}.value`;
+}
+function wrapIfComputed(varName: string, shadersCollectionController: ShadersCollectionController): string {
+	if (shadersCollectionController.registeredAsComputed(varName)) {
+		return wrapComputed(varName);
+	} else {
+		return varName;
+	}
+}
 
 export function variableFromParamRequired(
 	param: BaseParamType
@@ -55,6 +69,9 @@ export class TypedJsNode<K extends NodeParamsConfig> extends TypedNode<NodeConte
 	protected _param_configs_controller: ParamConfigsController<JsParamConfig<ParamType>> | undefined;
 	// protected _assembler: BaseJsFunctionAssembler | undefined;
 	private _paramsEditableStatesController = new ParamsEditableStateController(this);
+	eventData(): EvaluatorEventData | undefined {
+		return undefined;
+	}
 
 	override initializeBaseNode() {
 		this.uiData.setLayoutHorizontal();
@@ -62,9 +79,14 @@ export class TypedJsNode<K extends NodeParamsConfig> extends TypedNode<NodeConte
 
 		this.io.connection_points.spare_params.initializeNode();
 		this._paramsEditableStatesController.initializeNode();
+
+		// TODO: only trigger a recompile
+		// if the current node has a trigger input?
+		this.addPostDirtyHook('_setMatToRecompile', this._setFunctionNodeToRecompile.bind(this));
 	}
 	override cook() {
-		console.warn('js node cooking');
+		console.warn('js node cooking', this.path());
+		this.cookController.endCook();
 	}
 
 	protected _setFunctionNodeToRecompile() {
@@ -89,6 +111,11 @@ export class TypedJsNode<K extends NodeParamsConfig> extends TypedNode<NodeConte
 	jsVarName(name: string) {
 		return `v_POLY_${this.name()}_${name}`;
 	}
+	inputVarName(inputName: string) {
+		const sanitizedNodePath = CoreString.sanitizeName(this.path().replace(this.functionNode()?.path() || '', ''));
+		const varName = `${sanitizedNodePath}_${inputName}`;
+		return varName;
+	}
 
 	variableForInputParam(
 		shadersCollectionController: ShadersCollectionController,
@@ -97,6 +124,10 @@ export class TypedJsNode<K extends NodeParamsConfig> extends TypedNode<NodeConte
 		return this.variableForInput(shadersCollectionController, param.name());
 	}
 	variableForInput(shadersCollectionController: ShadersCollectionController, inputName: string): string {
+		const varName = this._variableForInput(shadersCollectionController, inputName);
+		return wrapIfComputed(varName, shadersCollectionController);
+	}
+	private _variableForInput(shadersCollectionController: ShadersCollectionController, inputName: string): string {
 		const inputIndex = this.io.inputs.getInputIndex(inputName);
 		const connection = this.io.connections.inputConnection(inputIndex);
 		let outputJsVarName: string | undefined;
@@ -117,21 +148,11 @@ export class TypedJsNode<K extends NodeParamsConfig> extends TypedNode<NodeConte
 		if (this.params.has(inputName)) {
 			const param = this.params.get(inputName);
 			if (param && variableFromParamRequired(param)) {
-				const sanitizedNodePath = CoreString.sanitizeName(this.path());
-				const varName = `${sanitizedNodePath}_${inputName}`;
-				// if (
-				// 	param instanceof ColorParam ||
-				// 	param instanceof Vector2Param ||
-				// 	param instanceof Vector3Param ||
-				// 	param instanceof Vector4Param
-				// ) {
+				const varName = this.inputVarName(inputName);
 				shadersCollectionController.addVariable(this, varName, createVariableFromParam(param));
-				// } else {
-				// 	console.log(param);
-				// 	return 'param not implemented';
-				// }
+
 				return outputJsVarName
-					? `${varName}.copy(${outputJsVarName})`
+					? `${varName}.copy(${wrapIfComputed(outputJsVarName, shadersCollectionController)})`
 					: `${varName}.set(${param.value.toArray().join(', ')})`;
 			} else {
 				return outputJsVarName || ThreeToGl.any(this.params.get(inputName)?.value);
@@ -166,7 +187,9 @@ export class TypedJsNode<K extends NodeParamsConfig> extends TypedNode<NodeConte
 	// // ADDED LINES
 	// //
 	// //
-	setLines(lines_controller: ShadersCollectionController) {}
+	setLines(shadersCollectionController: ShadersCollectionController) {
+		console.warn(`setLines not defined for node '${this.path()}'`);
+	}
 
 	reset_code() {
 		this._param_configs_controller?.reset();

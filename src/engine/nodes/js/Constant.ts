@@ -8,7 +8,7 @@ import {ThreeToGl} from '../../../core/ThreeToGl';
 // import {BaseParamType} from '../../params/_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
-import {CoreType, isBooleanTrue} from '../../../core/Type';
+import {CoreType} from '../../../core/Type';
 import {PolyDictionary} from '../../../types/GlobalTypes';
 import {JsConnectionPointType, JS_CONNECTION_POINT_TYPES} from '../utils/io/connections/Js';
 
@@ -25,15 +25,13 @@ class ConstantJsParamsConfig extends NodeParamsConfig {
 			}),
 		},
 	});
-	bool = ParamConfig.BOOLEAN(0, typedVisibleOptions(JsConnectionPointType.BOOL));
+	bool = ParamConfig.BOOLEAN(0, typedVisibleOptions(JsConnectionPointType.BOOLEAN));
 	color = ParamConfig.COLOR([0, 0, 0], typedVisibleOptions(JsConnectionPointType.COLOR));
 	int = ParamConfig.INTEGER(0, typedVisibleOptions(JsConnectionPointType.INT));
 	float = ParamConfig.FLOAT(0, typedVisibleOptions(JsConnectionPointType.FLOAT));
-	vec2 = ParamConfig.VECTOR2([0, 0], typedVisibleOptions(JsConnectionPointType.VEC2));
-	vec3 = ParamConfig.VECTOR3([0, 0, 0], typedVisibleOptions(JsConnectionPointType.VEC3));
-	vec4 = ParamConfig.VECTOR4([0, 0, 0, 0], typedVisibleOptions(JsConnectionPointType.VEC4));
-	/** @param when using vec3, use toggle on it should be a color */
-	asColor = ParamConfig.BOOLEAN(0, typedVisibleOptions(JsConnectionPointType.VEC3));
+	vec2 = ParamConfig.VECTOR2([0, 0], typedVisibleOptions(JsConnectionPointType.VECTOR2));
+	vec3 = ParamConfig.VECTOR3([0, 0, 0], typedVisibleOptions(JsConnectionPointType.VECTOR3));
+	vec4 = ParamConfig.VECTOR4([0, 0, 0, 0], typedVisibleOptions(JsConnectionPointType.VECTOR4));
 }
 const ParamsConfig = new ConstantJsParamsConfig();
 export class ConstantJsNode extends TypedJsNode<ConstantJsParamsConfig> {
@@ -90,8 +88,11 @@ export class ConstantJsNode extends TypedJsNode<ConstantJsParamsConfig> {
 	currentParam() {
 		const type = JS_CONNECTION_POINT_TYPES[this.pv.type];
 		switch (type) {
-			case JsConnectionPointType.BOOL: {
+			case JsConnectionPointType.BOOLEAN: {
 				return this.p.bool;
+			}
+			case JsConnectionPointType.COLOR: {
+				return this.p.color;
 			}
 			case JsConnectionPointType.INT: {
 				return this.p.int;
@@ -99,17 +100,13 @@ export class ConstantJsNode extends TypedJsNode<ConstantJsParamsConfig> {
 			case JsConnectionPointType.FLOAT: {
 				return this.p.float;
 			}
-			case JsConnectionPointType.VEC2: {
+			case JsConnectionPointType.VECTOR2: {
 				return this.p.vec2;
 			}
-			case JsConnectionPointType.VEC3: {
-				if (isBooleanTrue(this.pv.asColor)) {
-					return this.p.color;
-				} else {
-					return this.p.vec3;
-				}
+			case JsConnectionPointType.VECTOR3: {
+				return this.p.vec3;
 			}
-			case JsConnectionPointType.VEC4: {
+			case JsConnectionPointType.VECTOR4: {
 				return this.p.vec4;
 			}
 		}

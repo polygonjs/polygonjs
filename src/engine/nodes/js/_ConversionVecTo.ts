@@ -5,7 +5,7 @@ import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {JsConnectionPointType, JsConnectionPoint} from '../utils/io/connections/Js';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 import {Vector2, Vector3} from 'three';
-import {sizzleVec3XY, sizzleVec4XYZ, vec2ToVec3, vec3ToVec4} from './js/sdf/sdfUtils';
+import {sizzleVec3XY, sizzleVec4XYZ, vec2ToVec3, vec3ToVec4} from './js/conversion';
 
 class VecToParamsJsConfig extends NodeParamsConfig {}
 const ParamsConfig = new VecToParamsJsConfig();
@@ -78,7 +78,7 @@ export class Vec4ToVec3JsNode extends BaseVecToJsNode {
 
 	override initializeNode() {
 		this.io.outputs.setNamedOutputConnectionPoints([
-			new JsConnectionPoint(Vec4ToVec3JsNode.OUTPUT_NAME_VEC3, JsConnectionPointType.VEC3),
+			new JsConnectionPoint(Vec4ToVec3JsNode.OUTPUT_NAME_VEC3, JsConnectionPointType.VECTOR3),
 			new JsConnectionPoint(Vec4ToVec3JsNode.OUTPUT_NAME_W, JsConnectionPointType.FLOAT),
 		]);
 	}
@@ -87,7 +87,7 @@ export class Vec4ToVec3JsNode extends BaseVecToJsNode {
 	}
 
 	override setLines(shadersCollectionController: ShadersCollectionController) {
-		const body_lines = [];
+		const body_lines: string[] = [];
 
 		const in_vec4 = Vec4ToVec3JsNode.INPUT_NAME_VEC4;
 		const out_vec3 = Vec4ToVec3JsNode.OUTPUT_NAME_VEC3;
@@ -99,8 +99,8 @@ export class Vec4ToVec3JsNode extends BaseVecToJsNode {
 		if (used_output_names.indexOf(out_vec3) >= 0) {
 			const out = this.jsVarName(out_vec3);
 			shadersCollectionController.addVariable(this, out, new Vector3());
-			shadersCollectionController.addFunction(this, sizzleVec4XYZ);
-			body_lines.push(`${sizzleVec4XYZ.name}(${vec}, ${out})`);
+			const func = new sizzleVec4XYZ(this, shadersCollectionController);
+			body_lines.push(`${func.asString(vec, out)}`);
 			// const var_name = this.jsVarName(out_vec3);
 			// body_lines.push(`vec3 ${var_name} = ${vec}.xyz`);
 		}
@@ -122,7 +122,7 @@ export class Vec3ToVec2JsNode extends BaseVecToJsNode {
 
 	override initializeNode() {
 		this.io.outputs.setNamedOutputConnectionPoints([
-			new JsConnectionPoint(Vec3ToVec2JsNode.OUTPUT_NAME_VEC2, JsConnectionPointType.VEC2),
+			new JsConnectionPoint(Vec3ToVec2JsNode.OUTPUT_NAME_VEC2, JsConnectionPointType.VECTOR2),
 			new JsConnectionPoint(Vec3ToVec2JsNode.OUTPUT_NAME_Z, JsConnectionPointType.FLOAT),
 		]);
 	}
@@ -131,7 +131,7 @@ export class Vec3ToVec2JsNode extends BaseVecToJsNode {
 	}
 
 	override setLines(shadersCollectionController: ShadersCollectionController) {
-		const body_lines = [];
+		const body_lines: string[] = [];
 
 		const in_vec3 = Vec3ToVec2JsNode.INPUT_NAME_VEC3;
 		const out_vec2 = Vec3ToVec2JsNode.OUTPUT_NAME_VEC2;
@@ -143,8 +143,8 @@ export class Vec3ToVec2JsNode extends BaseVecToJsNode {
 		if (used_output_names.indexOf(out_vec2) >= 0) {
 			const out = this.jsVarName(out_vec2);
 			shadersCollectionController.addVariable(this, out, new Vector2());
-			shadersCollectionController.addFunction(this, sizzleVec3XY);
-			body_lines.push(`${sizzleVec3XY.name}(${vec}, ${out})`);
+			const func = new sizzleVec3XY(this, shadersCollectionController);
+			body_lines.push(`${func.asString(vec, out)}`);
 		}
 		if (used_output_names.indexOf(out_z) >= 0) {
 			const var_name = this.jsVarName(out_z);
@@ -163,7 +163,7 @@ export class Vec2ToVec3JsNode extends BaseVecToJsNode {
 
 	override initializeNode() {
 		this.io.outputs.setNamedOutputConnectionPoints([
-			new JsConnectionPoint(Vec2ToVec3JsNode.OUTPUT_NAME_VEC3, JsConnectionPointType.VEC3),
+			new JsConnectionPoint(Vec2ToVec3JsNode.OUTPUT_NAME_VEC3, JsConnectionPointType.VECTOR3),
 		]);
 	}
 	override createParams() {
@@ -172,7 +172,7 @@ export class Vec2ToVec3JsNode extends BaseVecToJsNode {
 	}
 
 	override setLines(shadersCollectionController: ShadersCollectionController) {
-		const body_lines = [];
+		// const body_lines: string[] = [];
 
 		const in_vec2 = Vec2ToVec3JsNode.INPUT_NAME_VEC2;
 		const in_z = Vec2ToVec3JsNode.INPUT_NAME_Z;
@@ -180,14 +180,19 @@ export class Vec2ToVec3JsNode extends BaseVecToJsNode {
 		const vec2 = this.variableForInput(shadersCollectionController, in_vec2);
 		const z = this.variableForInput(shadersCollectionController, in_z);
 
-		const var_name = this.jsVarName(out_vec3);
+		const varName = this.jsVarName(out_vec3);
 
-		shadersCollectionController.addVariable(this, var_name, new Vector2());
-		shadersCollectionController.addFunction(this, vec2ToVec3);
-		body_lines.push(`${vec2ToVec3.name}(${vec2}, ${z}, ${var_name})`);
+		shadersCollectionController.addVariable(this, varName, new Vector2());
+		const func = new vec2ToVec3(this, shadersCollectionController);
+		// body_lines.push(`${func.asString(vec2, z, varName)}`);
 
 		// body_lines.push(`vec3 ${var_name} = vec3(${vec2}.xy, ${z})`);
-		shadersCollectionController.addBodyLines(this, body_lines);
+		shadersCollectionController.addBodyOrComputed(
+			this,
+			JsConnectionPointType.VECTOR3,
+			varName,
+			func.asString(vec2, z, varName)
+		);
 	}
 }
 export class Vec3ToVec4JsNode extends BaseVecToJsNode {
@@ -200,7 +205,7 @@ export class Vec3ToVec4JsNode extends BaseVecToJsNode {
 
 	override initializeNode() {
 		this.io.outputs.setNamedOutputConnectionPoints([
-			new JsConnectionPoint(Vec3ToVec4JsNode.OUTPUT_NAME_VEC4, JsConnectionPointType.VEC4),
+			new JsConnectionPoint(Vec3ToVec4JsNode.OUTPUT_NAME_VEC4, JsConnectionPointType.VECTOR4),
 		]);
 	}
 	override createParams() {
@@ -209,7 +214,7 @@ export class Vec3ToVec4JsNode extends BaseVecToJsNode {
 	}
 
 	override setLines(shadersCollectionController: ShadersCollectionController) {
-		const body_lines = [];
+		const body_lines: string[] = [];
 
 		const in_vec3 = Vec3ToVec4JsNode.INPUT_NAME_VEC3;
 		const in_w = Vec3ToVec4JsNode.INPUT_NAME_W;
@@ -217,11 +222,12 @@ export class Vec3ToVec4JsNode extends BaseVecToJsNode {
 		const vec3 = this.variableForInput(shadersCollectionController, in_vec3);
 		const w = this.variableForInput(shadersCollectionController, in_w);
 
-		const var_name = this.jsVarName(out_vec4);
+		const varName = this.jsVarName(out_vec4);
 
-		shadersCollectionController.addVariable(this, var_name, new Vector2());
-		shadersCollectionController.addFunction(this, vec3ToVec4);
-		body_lines.push(`${vec3ToVec4.name}(${vec3}, ${w}, ${var_name})`);
+		shadersCollectionController.addVariable(this, varName, new Vector2());
+		const func = new vec3ToVec4(this, shadersCollectionController);
+
+		body_lines.push(`${func.asString(vec3, w, varName)}`);
 		// body_lines.push(`vec4 ${var_name} = vec4(${vec3}.xyz, ${w})`);
 
 		shadersCollectionController.addBodyLines(this, body_lines);

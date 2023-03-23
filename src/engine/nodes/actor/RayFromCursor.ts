@@ -46,6 +46,6 @@ export class RayFromCursorActorNode extends BaseUserInputActorNode<RayFromCursor
 	): ReturnValueTypeByActorConnectionPointType[ActorConnectionPointType.RAY] | undefined {
 		const pointerEventsController = this.scene().eventsDispatcher.pointerEventsController;
 		const raycaster = pointerEventsController.raycaster();
-		return raycaster.ray;
+		return raycaster.value.ray;
 	}
 }

@@ -5,9 +5,9 @@ import {JsType} from '../../poly/registers/nodes/types/Js';
 
 const ATTRIBUTE_NODE_AVAILABLE_JS_TYPES = [
 	JsConnectionPointType.FLOAT,
-	JsConnectionPointType.VEC2,
-	JsConnectionPointType.VEC3,
-	JsConnectionPointType.VEC4,
+	JsConnectionPointType.VECTOR2,
+	JsConnectionPointType.VECTOR3,
+	JsConnectionPointType.VECTOR4,
 ];
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';

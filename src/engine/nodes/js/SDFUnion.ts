@@ -45,9 +45,9 @@ export class SDFUnionJsNode extends TypedJsNode<SDFUnionJsParamsConfig> {
 		const smoothFactor = this.variableForInputParam(shadersCollectionController, this.p.smoothFactor);
 
 		const _func = isBooleanTrue(this.pv.smooth) ? SDFSmoothUnion : SDFUnion;
+		const func = new _func(this, shadersCollectionController);
 		const float = this.jsVarName(OUTPUT_NAME);
-		const bodyLine = `const ${float} = ${_func.name}(${sdf0}, ${sdf1}, ${smoothFactor})`;
+		const bodyLine = `const ${float} = ${func.asString(sdf0, sdf1, smoothFactor)}`;
 		shadersCollectionController.addBodyLines(this, [bodyLine]);
-		shadersCollectionController.addFunction(this, _func);
 	}
 }

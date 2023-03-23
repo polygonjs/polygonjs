@@ -5,7 +5,7 @@ import {
 	RegisterableVariable,
 	FunctionData,
 } from '../_Base';
-import {IUniforms} from '../../../../../../core/geometry/Material';
+// import {IUniforms} from '../../../../../../core/geometry/Material';
 import {ThreeToGl} from '../../../../../../core/ThreeToGl';
 // import TemplateDefault from '../../templates/textures/Default.frag.glsl';
 import {ShaderConfig} from '../../configs/ShaderConfig';
@@ -15,7 +15,7 @@ import {OutputJsNode} from '../../../Output';
 import {GlobalsJsNode} from '../../../Globals';
 import {JsConnectionPointType, JsConnectionPoint} from '../../../../utils/io/connections/Js';
 import {ShadersCollectionController} from '../../utils/ShadersCollectionController';
-import {UniformJsDefinition} from '../../../utils/JsDefinition';
+// import {UniformJsDefinition} from '../../../utils/JsDefinition';
 import {Vector3} from 'three';
 // import {Vector3} from 'three';
 // import {IUniformsWithTime} from '../../../../../scene/utils/UniformsController';
@@ -34,8 +34,8 @@ ${INSERT_BODY_AFTER}
 
 export class JsAssemblerSDF extends BaseJsShaderAssembler {
 	// private _function: Function | undefined;
-	private _uniforms: IUniforms | undefined;
-	private _functionsByName: Map<string, Function> = new Map();
+	// private _uniforms: IUniforms | undefined;
+	// private _functionsByName: Map<string, Function> = new Map();
 
 	override templateShader() {
 		return {
@@ -59,16 +59,16 @@ export class JsAssemblerSDF extends BaseJsShaderAssembler {
 			variablesByName[varName] = variable;
 		});
 		this.traverseRegisteredFunctions((namedFunction) => {
-			functionNames.push(namedFunction.name);
-			functionsByName[namedFunction.name] = namedFunction.func;
+			functionNames.push(namedFunction.type);
+			functionsByName[namedFunction.type] = namedFunction.func;
 		});
 		const paramConfigs = this.param_configs();
 		return {functionBody, variableNames, variablesByName, functionNames, functionsByName, paramConfigs};
 	}
 
-	uniforms() {
-		return this._uniforms;
-	}
+	// uniforms() {
+	// 	return this._uniforms;
+	// }
 
 	// evalFunction(position: Vector3) {
 	// 	if (this._function) {
@@ -80,7 +80,7 @@ export class JsAssemblerSDF extends BaseJsShaderAssembler {
 		super.updateFunction();
 		this._lines = new Map();
 		this._shaders_by_name = new Map();
-		this._functionsByName.clear();
+		// this._functionsByName.clear();
 		const shaderNames = this.shaderNames();
 		// for (let shader_name of shaderNames) {
 		// 	if (shader_name == ShaderName.FRAGMENT) {
@@ -93,7 +93,7 @@ export class JsAssemblerSDF extends BaseJsShaderAssembler {
 			this._buildLines();
 		}
 
-		this._uniforms = this._uniforms || {};
+		// this._uniforms = this._uniforms || {};
 		// this._gl_parent_node.scene().uniformsController.addUniforms(this._uniforms, {
 		// 	paramConfigs: this.param_configs(),
 		// 	additionalTextureUniforms: {},
@@ -135,7 +135,7 @@ export class JsAssemblerSDF extends BaseJsShaderAssembler {
 			}
 		}
 
-		ShadersCollectionController;
+		// ShadersCollectionController;
 
 		// handleCopBuilderDependencies({
 		// 	node: this.currentGlParentNode() as JSSDFSopNode,
@@ -159,7 +159,7 @@ export class JsAssemblerSDF extends BaseJsShaderAssembler {
 	}
 	override add_globals_outputs(globals_node: GlobalsJsNode) {
 		globals_node.io.outputs.setNamedOutputConnectionPoints([
-			new JsConnectionPoint('position', JsConnectionPointType.VEC3),
+			new JsConnectionPoint('position', JsConnectionPointType.VECTOR3),
 			// new JsConnectionPoint('gl_FragCoord', JsConnectionPointType.VEC4),
 			// new JsConnectionPoint('resolution', JsConnectionPointType.VEC2),
 			// new JsConnectionPoint('time', JsConnectionPointType.FLOAT),
@@ -254,7 +254,7 @@ export class JsAssemblerSDF extends BaseJsShaderAssembler {
 			return;
 		}
 		const bodyLines: string[] = [];
-		const definitions: UniformJsDefinition[] = [];
+		// const definitions: UniformJsDefinition[] = [];
 
 		const usedOutputNames = globalsNode.io.outputs.used_output_names();
 		for (const outputName of usedOutputNames) {
@@ -280,7 +280,7 @@ export class JsAssemblerSDF extends BaseJsShaderAssembler {
 				// 	break;
 			}
 		}
-		shadersCollectionController.addDefinitions(globalsNode, definitions, shaderName);
+		// shadersCollectionController.addDefinitions(globalsNode, definitions, shaderName);
 		shadersCollectionController.addBodyLines(globalsNode, bodyLines);
 	}
 }

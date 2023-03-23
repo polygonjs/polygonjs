@@ -84,7 +84,7 @@ export class OnObjectHoverActorNode extends BaseUserInputActorNode<OnObjectHover
 			this._intersectionByObject.set(Object3D, intersections);
 		}
 		intersections.length = 0;
-		raycaster.intersectObject(Object3D, isBooleanTrue(this.pv.traverseChildren), intersections);
+		raycaster.value.intersectObject(Object3D, isBooleanTrue(this.pv.traverseChildren), intersections);
 		const newHoveredState = intersections[0] != null;
 		const previousHoveredState = this._lastIntersectionStateByObject.get(Object3D);
 		const hoveredStateChanged = previousHoveredState == null || newHoveredState != previousHoveredState;

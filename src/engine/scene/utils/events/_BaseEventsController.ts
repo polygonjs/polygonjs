@@ -3,10 +3,12 @@ import {SceneEventsDispatcher} from './EventsDispatcher';
 import {BaseNodeType} from '../../../nodes/_Base';
 import {Intersection} from 'three';
 import {BaseViewerType} from '../../../viewers/_Base';
-import type {BaseUserInputActorNodeType} from '../../../nodes/actor/_BaseUserInput';
+// import type {BaseUserInputJsNodeType} from '../../../nodes/js/_BaseUserInput';
 import {EventData} from '../../../../core/event/EventData';
-import {MapUtils} from '../../../../core/MapUtils';
+// import {MapUtils} from '../../../../core/MapUtils';
 import {CoreEventEmitter} from '../../../../core/event/CoreEventEmitter';
+import {ActorEvaluator} from '../../../nodes/js/code/assemblers/actor/Evaluator';
+import {MapUtils} from '../../../../core/MapUtils';
 
 interface EventContextValue {
 	node?: BaseNodeType; // for node_cook
@@ -22,16 +24,16 @@ export interface EventContext<E extends Event> {
 }
 export abstract class BaseSceneEventsController<
 	E extends Event,
-	T extends BaseInputEventNodeType,
-	ActorType extends BaseUserInputActorNodeType
+	T extends BaseInputEventNodeType
+	// JsNodeType extends BaseUserInputJsNodeType
 > {
 	private _activeEventDatas: EventData[] = [];
 	private _activeEventDataTypes: Set<string> = new Set();
 	protected _eventNodes: Set<T> = new Set();
 	protected _requireCanvasEventListeners: boolean = false;
-	protected _actorEventNodes: Set<ActorType> = new Set();
+	protected _actorEvaluators: Set<ActorEvaluator> = new Set();
 	// protected _actorEventNames: Set<string> = new Set();
-	protected _actorNodesByEventNames: Map<string, Map<CoreEventEmitter, Set<ActorType>>> = new Map();
+	protected _actorEvaluatorsByEventNames: Map<string, Map<CoreEventEmitter, Set<ActorEvaluator>>> = new Map();
 	constructor(protected dispatcher: SceneEventsDispatcher) {}
 
 	registerEventNode(node: T) {
@@ -42,33 +44,46 @@ export abstract class BaseSceneEventsController<
 		this._eventNodes.delete(node);
 		this.updateViewerEventListeners();
 	}
-	registerActorNode(node: ActorType) {
-		this._actorEventNodes.add(node);
-		this._updateActorCache();
+	registerEvaluator(evaluator: ActorEvaluator) {
+		this._actorEvaluators.add(evaluator);
+		this._updateActorEvaluatorCache();
 		this.updateViewerEventListeners();
 	}
-	unregisterActorNode(node: ActorType) {
-		this._actorEventNodes.delete(node);
-		this._updateActorCache();
+	unregisterEvaluator(evaluator: ActorEvaluator) {
+		this._actorEvaluators.delete(evaluator);
+		this._updateActorEvaluatorCache();
 		this.updateViewerEventListeners();
 	}
 
-	private _updateActorCache() {
+	private _updateActorEvaluatorCache() {
 		// this._actorEventNames.clear();
-		this._actorNodesByEventNames.clear();
-		this._actorEventNodes.forEach((node) => {
-			const nodeEventNames = node.userInputEventNames();
-			const emitter = node.eventEmitter();
-			for (let eventName of nodeEventNames) {
-				// this._actorEventNames.add(eventName);
-
-				let mapForEventName = this._actorNodesByEventNames.get(eventName);
-				if (!mapForEventName) {
-					mapForEventName = new Map();
-					this._actorNodesByEventNames.set(eventName, mapForEventName);
-				}
-				MapUtils.addToSetAtEntry(mapForEventName, emitter, node);
+		this._actorEvaluatorsByEventNames.clear();
+		this._actorEvaluators.forEach((evaluator) => {
+			const eventDatas = evaluator.eventDatas;
+			if (eventDatas) {
+				eventDatas.forEach((eventData) => {
+					const eventName = eventData.type;
+					const emitter = eventData.emitter;
+					let mapForEventName = this._actorEvaluatorsByEventNames.get(eventName);
+					if (!mapForEventName) {
+						mapForEventName = new Map();
+						this._actorEvaluatorsByEventNames.set(eventName, mapForEventName);
+					}
+					MapUtils.addToSetAtEntry(mapForEventName, emitter, evaluator);
+				});
 			}
+			// const nodeEventNames = node.userInputEventNames();
+			// const emitter = node.eventEmitter();
+			// for (let eventName of nodeEventNames) {
+			// 	// this._actorEventNames.add(eventName);
+
+			// 	let mapForEventName = this._actorNodesByEventNames.get(eventName);
+			// 	if (!mapForEventName) {
+			// 		mapForEventName = new Map();
+			// 		this._actorNodesByEventNames.set(eventName, mapForEventName);
+			// 	}
+			// 	MapUtils.addToSetAtEntry(mapForEventName, emitter, node);
+			// }
 		});
 	}
 
@@ -123,7 +138,7 @@ export abstract class BaseSceneEventsController<
 		const _actorEventDatas = () => {
 			let eventTypeByEmitter: Map<CoreEventEmitter, Set<string>> = new Map();
 
-			this._actorNodesByEventNames.forEach((mapForEventName, eventName) => {
+			this._actorEvaluatorsByEventNames.forEach((mapForEventName, eventName) => {
 				mapForEventName.forEach((nodes, emitter) => {
 					nodes.forEach((node) => {
 						MapUtils.addToSetAtEntry(eventTypeByEmitter, emitter, eventName);
@@ -175,13 +190,13 @@ export abstract class BaseSceneEventsController<
 
 export type BaseSceneEventsControllerType = BaseSceneEventsController<
 	Event,
-	BaseInputEventNodeType,
-	BaseUserInputActorNodeType
+	BaseInputEventNodeType
+	// BaseUserInputJsNodeType
 >;
 export class BaseSceneEventsControllerClass extends BaseSceneEventsController<
 	Event,
-	BaseInputEventNodeType,
-	BaseUserInputActorNodeType
+	BaseInputEventNodeType
+	// BaseUserInputJsNodeType
 > {
 	type() {
 		return '';

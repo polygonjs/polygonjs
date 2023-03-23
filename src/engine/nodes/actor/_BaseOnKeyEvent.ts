@@ -9,9 +9,9 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {ActorConnectionPoint, ActorConnectionPointType} from '../utils/io/connections/Actor';
 import {BaseUserInputActorNode} from './_BaseUserInput';
 import {CoreEventEmitter, EVENT_EMITTERS, EVENT_EMITTER_PARAM_MENU_OPTIONS} from '../../../core/event/CoreEventEmitter';
-import {CoreString} from '../../../core/String';
-import {isBooleanTrue} from '../../../core/Type';
-import {ParamType} from '../../poly/ParamType';
+// import {CoreString} from '../../../core/String';
+// import {isBooleanTrue} from '../../../core/Type';
+// import {ParamType} from '../../poly/ParamType';
 
 class BaseOnKeyEventActorParamsConfig extends NodeParamsConfig {
 	/** @param set which element triggers the event */
@@ -46,53 +46,50 @@ export abstract class BaseOnKeyEventActorNode extends BaseUserInputActorNode<Bas
 	}
 
 	public override receiveTrigger(context: ActorNodeTriggerContext) {
-		const events = this.scene().eventsDispatcher.keyboardEventsController.currentEvents();
-		if (events.length == 0) {
-			return;
-		}
-
-		const eventMatchesAtLeastOneModifier = () => {
-			const ctrlKey = this._inputValueFromParam<ParamType.BOOLEAN>(this.p.ctrlKey, context);
-			for (let event of events) {
-				if (event.ctrlKey == isBooleanTrue(ctrlKey)) {
-					return true;
-				}
-			}
-			const altKey = this._inputValueFromParam<ParamType.BOOLEAN>(this.p.altKey, context);
-			for (let event of events) {
-				if (event.altKey == isBooleanTrue(altKey)) {
-					return true;
-				}
-			}
-
-			const shiftKey = this._inputValueFromParam<ParamType.BOOLEAN>(this.p.shiftKey, context);
-			for (let event of events) {
-				if (event.shiftKey == isBooleanTrue(shiftKey)) {
-					return true;
-				}
-			}
-
-			const metaKey = this._inputValueFromParam<ParamType.BOOLEAN>(this.p.metaKey, context);
-			for (let event of events) {
-				if (event.metaKey == isBooleanTrue(metaKey)) {
-					return true;
-				}
-			}
-		};
-		const eventMatchesAtLeastOneKeyCode = () => {
-			const keyCodes = this._inputValueFromParam<ParamType.STRING>(this.p.keyCodes, context);
-			for (let event of events) {
-				if (CoreString.matchMask(event.code, keyCodes)) {
-					return true;
-				}
-			}
-		};
-		if (!eventMatchesAtLeastOneModifier()) {
-			return;
-		}
-		if (!eventMatchesAtLeastOneKeyCode()) {
-			return;
-		}
-		this.runTrigger(context);
+		// const events = this.scene().eventsDispatcher.keyboardEventsController.currentEvents();
+		// if (events.length == 0) {
+		// 	return;
+		// }
+		// const eventMatchesAtLeastOneModifier = () => {
+		// 	const ctrlKey = this._inputValueFromParam<ParamType.BOOLEAN>(this.p.ctrlKey, context);
+		// 	for (let event of events) {
+		// 		if (event.ctrlKey == isBooleanTrue(ctrlKey)) {
+		// 			return true;
+		// 		}
+		// 	}
+		// 	const altKey = this._inputValueFromParam<ParamType.BOOLEAN>(this.p.altKey, context);
+		// 	for (let event of events) {
+		// 		if (event.altKey == isBooleanTrue(altKey)) {
+		// 			return true;
+		// 		}
+		// 	}
+		// 	const shiftKey = this._inputValueFromParam<ParamType.BOOLEAN>(this.p.shiftKey, context);
+		// 	for (let event of events) {
+		// 		if (event.shiftKey == isBooleanTrue(shiftKey)) {
+		// 			return true;
+		// 		}
+		// 	}
+		// 	const metaKey = this._inputValueFromParam<ParamType.BOOLEAN>(this.p.metaKey, context);
+		// 	for (let event of events) {
+		// 		if (event.metaKey == isBooleanTrue(metaKey)) {
+		// 			return true;
+		// 		}
+		// 	}
+		// };
+		// const eventMatchesAtLeastOneKeyCode = () => {
+		// 	const keyCodes = this._inputValueFromParam<ParamType.STRING>(this.p.keyCodes, context);
+		// 	for (let event of events) {
+		// 		if (CoreString.matchMask(event.code, keyCodes)) {
+		// 			return true;
+		// 		}
+		// 	}
+		// };
+		// if (!eventMatchesAtLeastOneModifier()) {
+		// 	return;
+		// }
+		// if (!eventMatchesAtLeastOneKeyCode()) {
+		// 	return;
+		// }
+		// this.runTrigger(context);
 	}
 }

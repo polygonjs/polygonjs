@@ -34,6 +34,7 @@ export class BaseJsParentNode extends TypedNode<any, any> {
 }
 export abstract class AssemblerControllerNode extends BaseJsParentNode {
 	abstract assemblerController(): JsAssemblerController<BaseJsShaderAssembler> | undefined;
+	abstract compile(): void;
 }
 
 type BaseJsShaderAssemblerConstructor<A extends BaseJsShaderAssembler> = new (...args: any[]) => A;
@@ -41,7 +42,7 @@ export class JsAssemblerController<A extends BaseJsShaderAssembler> {
 	protected _assembler!: A;
 	private _spareParamsController!: JsAssemblerNodeSpareParamsController;
 	private _globalsHandler: GlobalsBaseController | undefined = new GlobalsGeometryHandler();
-	private _compile_required: boolean = true;
+	private _compileRequired: boolean = true;
 
 	constructor(private node: AssemblerControllerNode, assembler_class: BaseJsShaderAssemblerConstructor<A>) {
 		this._assembler = new assembler_class(this.node);
@@ -75,14 +76,18 @@ export class JsAssemblerController<A extends BaseJsShaderAssembler> {
 	}
 
 	setCompilationRequired(newState = true) {
-		this._compile_required = newState;
+		this._compileRequired = newState;
 	}
 	setCompilationRequiredAndDirty(triggerNode?: BaseJsNodeType) {
 		this.setCompilationRequired();
-		this.node.setDirty(triggerNode);
+		if (this._assembler.makeFunctionNodeDirtyOnRecompileRequired()) {
+			this.node.setDirty(triggerNode);
+		} else {
+			this.node.compile();
+		}
 	}
 	compileRequired(): boolean {
-		return this._compile_required;
+		return this._compileRequired;
 	}
 
 	post_compile() {

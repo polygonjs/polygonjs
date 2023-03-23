@@ -33,7 +33,7 @@ export class CodeBuilder {
 
 	constructor(
 		private _nodeTraverser: TypedNodeTraverser<NodeContext.JS>,
-		private _root_nodes_for_shader_method: RootNodesForShaderMethod,
+		private _rootNodesByShaderName: RootNodesForShaderMethod,
 		private _assembler: BaseJsShaderAssembler
 	) {}
 	nodeTraverser() {
@@ -56,7 +56,7 @@ export class CodeBuilder {
 		}
 		const sortedNodes = this._nodeTraverser.sortedNodes();
 		for (let shaderName of this.shaderNames()) {
-			const rootNodesForShader = this._root_nodes_for_shader_method(shaderName, rootNodes);
+			const rootNodesForShader = this._rootNodesByShaderName(shaderName, rootNodes);
 
 			for (let rootNode of rootNodesForShader) {
 				MapUtils.pushOnArrayAtEntry(nodesByShaderName, shaderName, rootNode);
@@ -99,8 +99,8 @@ export class CodeBuilder {
 		for (let shaderName of this.shaderNames()) {
 			let nodes = nodesByShaderName.get(shaderName) || [];
 			nodes = ArrayUtils.uniq(nodes);
-
 			this._shadersCollectionController.setCurrentShaderName(shaderName);
+
 			if (nodes) {
 				for (let node of nodes) {
 					node.setLines(this._shadersCollectionController);
@@ -123,6 +123,7 @@ export class CodeBuilder {
 		}
 
 		// finalize
+
 		this._setCodeLines(sortedNodes, setCodeLinesOptions);
 	}
 
@@ -193,16 +194,17 @@ export class CodeBuilder {
 
 	private _addCodeLines(nodes: BaseJsNodeType[], shaderName: ShaderName, additionalDefinitions?: BaseJsDefinition[]) {
 		// this.addDefinitions(nodes, shaderName, JsDefinitionType.PRECISION, LineType.DEFINE, additionalDefinitions);
-		this.addDefinitions(
-			nodes,
-			shaderName,
-			JsDefinitionType.FUNCTION,
-			LineType.FUNCTION_DECLARATION,
-			additionalDefinitions
-		);
-		this.addDefinitions(nodes, shaderName, JsDefinitionType.UNIFORM, LineType.DEFINE, additionalDefinitions);
+		// this.addDefinitions(
+		// 	nodes,
+		// 	shaderName,
+		// 	JsDefinitionType.FUNCTION,
+		// 	LineType.FUNCTION_DECLARATION,
+		// 	additionalDefinitions
+		// );
+		// this.addDefinitions(nodes, shaderName, JsDefinitionType.UNIFORM, LineType.DEFINE, additionalDefinitions);
 		// this.addDefinitions(nodes, shaderName, JsDefinitionType.VARYING, LineType.DEFINE, additionalDefinitions);
-		this.addDefinitions(nodes, shaderName, JsDefinitionType.ATTRIBUTE, LineType.DEFINE, additionalDefinitions);
+		// this.addDefinitions(nodes, shaderName, JsDefinitionType.ATTRIBUTE, LineType.DEFINE, additionalDefinitions);
+		this.addDefinitions(nodes, shaderName, JsDefinitionType.COMPUTED, LineType.DEFINE, additionalDefinitions);
 
 		this.add_code_line_for_nodes_and_line_type(nodes, shaderName, LineType.BODY);
 	}
@@ -221,7 +223,7 @@ export class CodeBuilder {
 		for (let node of nodes) {
 			let nodeDefinitions = this._shadersCollectionController.definitions(shaderName, node);
 			if (nodeDefinitions) {
-				nodeDefinitions = nodeDefinitions.filter((d) => d.definition_type == definitionType);
+				nodeDefinitions = nodeDefinitions.filter((d) => d.definitionType() == definitionType);
 				for (let definition of nodeDefinitions) {
 					definitions.push(definition);
 				}
@@ -229,7 +231,7 @@ export class CodeBuilder {
 		}
 		if (additionalDefinitions) {
 			const filteredAdditionalDefinitions = additionalDefinitions.filter(
-				(d) => d.definition_type == definitionType
+				(d) => d.definitionType() == definitionType
 			);
 			for (let definition of filteredAdditionalDefinitions) {
 				definitions.push(definition);
@@ -247,7 +249,7 @@ export class CodeBuilder {
 			const definitions_by_node_id: Map<CoreGraphNodeId, BaseJsDefinition[]> = new Map();
 			const nodeIds: Map<CoreGraphNodeId, boolean> = new Map();
 			for (let definition of uniqDefinitions) {
-				const nodeId = definition.node.graphNodeId();
+				const nodeId = definition.node().graphNodeId();
 				if (!nodeIds.has(nodeId)) {
 					nodeIds.set(nodeId, true);
 				}
@@ -260,11 +262,11 @@ export class CodeBuilder {
 					const first_definition = definitions[0];
 
 					if (first_definition) {
-						const comment = CodeFormatter.nodeComment(first_definition.node, lineType);
+						const comment = CodeFormatter.nodeComment(first_definition.node(), lineType);
 						MapUtils.pushOnArrayAtEntry(lines_for_shader, lineType, comment);
 
 						for (let definition of definitions) {
-							const line = CodeFormatter.lineWrap(first_definition.node, definition.line, lineType);
+							const line = CodeFormatter.lineWrap(first_definition.node(), definition.line(), lineType);
 							MapUtils.pushOnArrayAtEntry(lines_for_shader, lineType, line);
 						}
 						const separator = CodeFormatter.post_line_separator(lineType);
@@ -282,17 +284,17 @@ export class CodeBuilder {
 			}
 		});
 
-		var nodes_count = nodes.length;
-		for (let i = 0; i < nodes_count; i++) {
-			const is_last = i == nodes.length - 1;
-			this.add_code_line_for_node_and_line_type(nodes[i], shader_name, line_type, is_last);
+		var nodesCount = nodes.length;
+		for (let i = 0; i < nodesCount; i++) {
+			const isLast = i == nodes.length - 1;
+			this.add_code_line_for_node_and_line_type(nodes[i], shader_name, line_type, isLast);
 		}
 	}
 	add_code_line_for_node_and_line_type(
 		node: BaseJsNodeType,
 		shader_name: ShaderName,
 		line_type: LineType,
-		is_last: boolean
+		isLast: boolean
 	): void {
 		if (!this._shadersCollectionController) {
 			return;
@@ -307,7 +309,7 @@ export class CodeBuilder {
 				line = CodeFormatter.lineWrap(node, line, line_type);
 				MapUtils.pushOnArrayAtEntry(lines_for_shader, line_type, line);
 			});
-			if (!(line_type == LineType.BODY && is_last)) {
+			if (!(line_type == LineType.BODY && isLast)) {
 				const separator = CodeFormatter.post_line_separator(line_type);
 				MapUtils.pushOnArrayAtEntry(lines_for_shader, line_type, separator);
 			}

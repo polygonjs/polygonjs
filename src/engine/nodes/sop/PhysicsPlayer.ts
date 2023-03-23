@@ -171,11 +171,12 @@ export class PhysicsPlayerSopNode extends TypedSopNode<PhysicsPlayerSopParamsCon
 		this.setObjects(objects);
 	}
 	private _updatePlayerObject(object: Object3D) {
-		const actorNode = this._findActorNode();
+		// const actorNode = this._findActorNode();
 
 		// for (let object of inputObjects) {
 		// actor
-		this.scene().actorsManager.assignActorBuilder(object, actorNode);
+		console.warn('physics player actor node behavior removed');
+		// this.scene().actorsManager.assignActorBuilder(object, actorNode);
 		// force rbd type
 		CorePhysicsAttribute.setRBDType(
 			object,
@@ -235,13 +236,13 @@ export class PhysicsPlayerSopNode extends TypedSopNode<PhysicsPlayerSopParamsCon
 		return [object];
 	}
 
-	private _findActorNode() {
-		// if (isBooleanTrue(this.pv.useThisNode)) {
-		return this;
-		// } else {
-		// 	return this.pv.node.node() as ActorBuilderNode | undefined;
-		// }
-	}
+	// private _findActorNode() {
+	// 	// if (isBooleanTrue(this.pv.useThisNode)) {
+	// 	return this;
+	// 	// } else {
+	// 	// 	return this.pv.node.node() as ActorBuilderNode | undefined;
+	// 	// }
+	// }
 
 	//
 	// CHILDREN

@@ -1,4 +1,5 @@
 export enum SopType {
+	ACTOR_JS = 'actorJs',
 	ADD = 'add',
 	ATTRIB_ADD_MULT = 'attribAddMult',
 	ATTRIB_COPY = 'attribCopy',

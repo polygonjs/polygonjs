@@ -35,6 +35,6 @@ export class OnManualTriggerActorNode extends TypedActorNode<OnManualTriggerActo
 	}
 
 	private _triggerWithNode() {
-		this.scene().actorsManager.manualTriggerController.setNodeToRunTriggerFrom(this);
+		// this.scene().actorsManager.manualTriggerController.setNodeToRunTriggerFrom(this);
 	}
 }

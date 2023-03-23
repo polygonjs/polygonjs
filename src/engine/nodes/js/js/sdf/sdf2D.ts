@@ -1,6 +1,6 @@
 import {Vector2, Vector3} from 'three';
-import {absV2, sizzleVec3XY, sizzleVec3XZ, sizzleVec3YZ} from './sdfUtils';
-import {NamedFunction} from '../../code/assemblers/_Base';
+import {absV2, _sizzleVec3XY, _sizzleVec3XZ, _sizzleVec3YZ} from '../conversion';
+import {NamedFunction4} from '../../code/assemblers/NamedFunction';
 // float sdBox( in vec2 p, in vec2 b )
 // {
 // 	vec2 d = abs(p)-b;
@@ -28,15 +28,16 @@ import {NamedFunction} from '../../code/assemblers/_Base';
 // 	return sign(k)*length(max(w,0.0)) + r;
 // }
 const _q = new Vector2();
-export const sdRoundedX: NamedFunction = {
-	name: 'sdRoundedX',
-	func: (p: Vector2, w: number, r: number): number => {
+export class sdRoundedX extends NamedFunction4<[Vector2, Vector2, number, number]> {
+	type = 'sdRoundedX';
+	func(p: Vector2, center: Vector2, w: number, r: number): number {
+		p.sub(center);
 		absV2(p, _q);
 		const min = Math.min(_q.x + _q.y, w) * 0.5;
 		_q.subScalar(min);
 		return _q.length() - r;
-	},
-};
+	}
+}
 // float SDFExtrudeX( in vec3 p, in float sdf, in float h )
 // {
 // 	vec2 w = vec2( sdf, abs(p.x) - h );
@@ -54,30 +55,33 @@ export const sdRoundedX: NamedFunction = {
 // }
 
 const _sizzle2 = new Vector2();
-export const SDFRevolutionX: NamedFunction = {
-	name: 'SDFRevolutionX',
-	func: (p: Vector3, o: number, target: Vector2): void => {
-		sizzleVec3YZ.func(p, _sizzle2);
+export class SDFRevolutionX extends NamedFunction4<[Vector3, Vector3, number, Vector2]> {
+	type = 'SDFRevolutionX';
+	func(p: Vector3, center: Vector3, o: number, target: Vector2): void {
+		p.sub(center);
+		_sizzleVec3YZ(p, _sizzle2);
 		const l = _sizzle2.length();
 		target.x = l - o;
 		target.y = p.x;
-	},
-};
-export const SDFRevolutionY: NamedFunction = {
-	name: 'SDFRevolutionY',
-	func: (p: Vector3, o: number, target: Vector2): void => {
-		sizzleVec3XZ.func(p, _sizzle2);
+	}
+}
+export class SDFRevolutionY extends NamedFunction4<[Vector3, Vector3, number, Vector2]> {
+	type = 'SDFRevolutionY';
+	func(p: Vector3, center: Vector3, o: number, target: Vector2): void {
+		p.sub(center);
+		_sizzleVec3XZ(p, _sizzle2);
 		const l = _sizzle2.length();
 		target.x = l - o;
 		target.y = p.y;
-	},
-};
-export const SDFRevolutionZ: NamedFunction = {
-	name: 'SDFRevolutionZ',
-	func: (p: Vector3, o: number, target: Vector2): void => {
-		sizzleVec3XY.func(p, _sizzle2);
+	}
+}
+export class SDFRevolutionZ extends NamedFunction4<[Vector3, Vector3, number, Vector2]> {
+	type = 'SDFRevolutionZ';
+	func(p: Vector3, center: Vector3, o: number, target: Vector2): void {
+		p.sub(center);
+		_sizzleVec3XY(p, _sizzle2);
 		const l = _sizzle2.length();
 		target.x = l - o;
 		target.y = p.z;
-	},
-};
+	}
+}

@@ -41,8 +41,8 @@ export class SDFBoxJsNode extends BaseSDFJsNode<SDFBoxJsParamsConfig> {
 		const sizes = this.variableForInputParam(shadersCollectionController, this.p.sizes);
 
 		const float = this.jsVarName(OUTPUT_NAME);
-		const bodyLine = `const ${float} = ${sdBox.name}(${position}.sub(${center}), ${sizes}.multiplyScalar(${size}))`;
+		const func = new sdBox(this, shadersCollectionController);
+		const bodyLine = `const ${float} = ${func.asString(position, center, sizes, size)}`;
 		shadersCollectionController.addBodyLines(this, [bodyLine]);
-		shadersCollectionController.addFunction(this, sdBox);
 	}
 }

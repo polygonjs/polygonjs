@@ -3,6 +3,7 @@ import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
 import {SceneEvent} from '../../poly/SceneEvent';
 import {Clock} from 'three';
 import {SCENE_EVENT_PLAY_EVENT_CONTEXT, SCENE_EVENT_PAUSE_EVENT_CONTEXT} from './events/SceneEventsController';
+import {Ref, ref} from '@vue/reactivity';
 
 // ensure that FPS remains a float
 // to have divisions and multiplications also give a float
@@ -24,8 +25,8 @@ type onTimeTickCallbacksMap = Map<string, onTimeTickHook>;
 export class TimeController {
 	static START_FRAME: Readonly<number> = 0;
 	private _frame: number = 0;
-	private _timeUniform = {value: 0};
-	private _timeDeltaUniform = {value: 0};
+	private _timeUniform: Ref<number> = ref(0);
+	private _timeDeltaUniform: Ref<number> = ref(0);
 	private _graphNode: CoreGraphNode;
 	private _realtimeState = true;
 	private _maxFrame = 600;

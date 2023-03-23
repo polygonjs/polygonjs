@@ -45,9 +45,13 @@ export class SDFIntersectJsNode extends TypedJsNode<SDFIntersectJsParamsConfig> 
 		const smoothFactor = this.variableForInputParam(shadersCollectionController, this.p.smoothFactor);
 
 		const _func = isBooleanTrue(this.pv.smooth) ? SDFSmoothIntersect : SDFIntersect;
+		const func = new _func(this, shadersCollectionController);
 		const float = this.jsVarName(OUTPUT_NAME);
-		const bodyLine = `const ${float} = ${_func.name}(${sdf0}, ${sdf1}, ${smoothFactor})`;
+		const bodyLine = `const ${float} = ${func.asString(
+			sdf0,
+			sdf1,
+			smoothFactor
+		)}(${sdf0}, ${sdf1}, ${smoothFactor})`;
 		shadersCollectionController.addBodyLines(this, [bodyLine]);
-		shadersCollectionController.addFunction(this, _func);
 	}
 }

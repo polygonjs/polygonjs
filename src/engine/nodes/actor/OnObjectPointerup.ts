@@ -72,7 +72,7 @@ export class OnObjectPointerupActorNode extends BaseUserInputActorNode<OnObjectP
 			this._intersectionByObject.set(Object3D, intersections);
 		}
 		intersections.length = 0;
-		raycaster.intersectObject(Object3D, isBooleanTrue(this.pv.traverseChildren), intersections);
+		raycaster.value.intersectObject(Object3D, isBooleanTrue(this.pv.traverseChildren), intersections);
 		this._intersectionByObject.set(Object3D, intersections);
 		if (intersections.length != 0) {
 			this.runTrigger(context);

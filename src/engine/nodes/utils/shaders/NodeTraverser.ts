@@ -30,13 +30,13 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 	private _depth_by_graph_id: NumberByCoreGraphNodeId = new Map();
 	private _graph_id_by_depth: Map<number, CoreGraphNodeId[]> = new Map();
 	private _graph: CoreGraph;
-	private _shader_name!: ShaderName;
+	private _shaderName!: ShaderName;
 	// private _subnets_by_id: BaseNodeTypeByString = new Map();
 
 	constructor(
 		private _parent_node: TypedNode<NC, any>,
 		private _shader_names: ShaderName[],
-		private _input_names_for_shader_name_method: InputNamesByShaderNameMethod<NC>,
+		private _inputNamesForShaderNameMethod: InputNamesByShaderNameMethod<NC>,
 		private _options?: NodeTraverserOptions
 	) {
 		this._graph = this._parent_node.scene().graph;
@@ -61,8 +61,8 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 	shaderNames() {
 		return this._shader_names;
 	}
-	input_names_for_shader_name(root_node: BaseNodeByContextMap[NC], shader_name: ShaderName) {
-		return this._input_names_for_shader_name_method(root_node, shader_name);
+	inputNamesForShaderName(root_node: BaseNodeByContextMap[NC], shader_name: ShaderName) {
+		return this._inputNamesForShaderNameMethod(root_node, shader_name);
 	}
 
 	traverse(rootNodes: BaseNodeByContextMap[NC][]) {
@@ -72,8 +72,8 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 			this._leaves_graph_id.set(shaderName, new Map());
 		}
 
-		for (let shader_name of this.shaderNames()) {
-			this._shader_name = shader_name;
+		for (let shaderName of this.shaderNames()) {
+			this._shaderName = shaderName;
 			for (let rootNode of rootNodes) {
 				this._findLeavesFromRootNode(rootNode);
 				this._setNodesDepth();
@@ -91,15 +91,15 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 	}
 
 	leavesFromNodes(nodes: BaseNodeByContextMap[NC][]) {
-		this._shader_name = ShaderName.LEAVES_FROM_NODES_SHADER;
-		this._graph_ids_by_shader_name.set(this._shader_name, new Map());
-		this._leaves_graph_id.set(this._shader_name, new Map());
+		this._shaderName = ShaderName.LEAVES_FROM_NODES_SHADER;
+		this._graph_ids_by_shader_name.set(this._shaderName, new Map());
+		this._leaves_graph_id.set(this._shaderName, new Map());
 		for (let node of nodes) {
 			this._findLeaves(node);
 		}
 
 		const node_ids: CoreGraphNodeId[] = [];
-		this._leaves_graph_id.get(this._shader_name)?.forEach((value: boolean, key: CoreGraphNodeId) => {
+		this._leaves_graph_id.get(this._shaderName)?.forEach((value: boolean, key: CoreGraphNodeId) => {
 			node_ids.push(key);
 		});
 		return this._graph.nodesFromIds(node_ids) as BaseNodeByContextMap[NC][];
@@ -121,7 +121,7 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 					if (is_present) {
 						const node = this._graph.nodeFromId(graph_id) as BaseNodeByContextMap[NC];
 
-						this._addNodesWithChildren(node, node_id_used_state, nodes, shaderName);
+						this._addNodesWithChildren(node, node_id_used_state, nodes);
 					}
 				});
 			}
@@ -153,8 +153,8 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 	private _addNodesWithChildren(
 		node: BaseNodeByContextMap[NC],
 		node_id_used_state: Map<CoreGraphNodeId, boolean>,
-		accumulated_nodes: BaseNodeByContextMap[NC][],
-		shader_name?: ShaderName
+		accumulated_nodes: BaseNodeByContextMap[NC][]
+		// shader_name?: ShaderName
 	) {
 		if (!node_id_used_state.get(node.graphNodeId())) {
 			accumulated_nodes.push(node);
@@ -210,9 +210,9 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 	// }
 
 	private _findLeavesFromRootNode(rootNode: BaseNodeByContextMap[NC]) {
-		this._graph_ids_by_shader_name.get(this._shader_name)?.set(rootNode.graphNodeId(), true);
+		this._graph_ids_by_shader_name.get(this._shaderName)?.set(rootNode.graphNodeId(), true);
 
-		const inputNames = this.input_names_for_shader_name(rootNode, this._shader_name);
+		const inputNames = this.inputNamesForShaderName(rootNode, this._shaderName);
 		if (inputNames) {
 			for (let inputName of inputNames) {
 				const input = rootNode.io.inputs.named_input(inputName) as BaseNodeByContextMap[NC];
@@ -234,7 +234,7 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 	}
 
 	private _findLeaves(node: BaseNodeByContextMap[NC]) {
-		this._graph_ids_by_shader_name.get(this._shader_name)?.set(node.graphNodeId(), true);
+		this._graph_ids_by_shader_name.get(this._shaderName)?.set(node.graphNodeId(), true);
 
 		const inputs = this._findInputs(node) as BaseNodeByContextMap[NC][];
 		const compactInputs: BaseNodeByContextMap[NC][] = ArrayUtils.compact(inputs);
@@ -250,7 +250,7 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 				this._findLeaves(input);
 			}
 		} else {
-			this._leaves_graph_id.get(this._shader_name)!.set(node.graphNodeId(), true);
+			this._leaves_graph_id.get(this._shaderName)!.set(node.graphNodeId(), true);
 		}
 	}
 	getNodeInputs(node: BaseNodeByContextMap[NC]) {
