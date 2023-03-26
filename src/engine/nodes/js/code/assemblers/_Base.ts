@@ -46,9 +46,14 @@ interface ITemplateShader {
 	fragmentShader?: string;
 	uniforms?: IUniforms;
 }
+export const INSERT_MEMBERS_AFTER = '// insert members';
 export const INSERT_DEFINE_AFTER = '// insert defines';
 export const INSERT_BODY_AFTER = '// insert body';
 
+const INSERT_MEMBER_AFTER_MAP: Map<ShaderName, string> = new Map([
+	// [ShaderName.VERTEX, '#include <common>'],
+	[ShaderName.FRAGMENT, INSERT_MEMBERS_AFTER],
+]);
 const INSERT_DEFINE_AFTER_MAP: Map<ShaderName, string> = new Map([
 	// [ShaderName.VERTEX, '#include <common>'],
 	[ShaderName.FRAGMENT, INSERT_DEFINE_AFTER],
@@ -461,6 +466,9 @@ export class BaseJsShaderAssembler extends TypedAssembler<NodeContext.JS> {
 	// TEMPLATE HOOKS
 	//
 	//
+	protected insertMemberAfter(shaderName: ShaderName): string | undefined {
+		return INSERT_MEMBER_AFTER_MAP.get(shaderName);
+	}
 	protected insertDefineAfter(shaderName: ShaderName): string | undefined {
 		return INSERT_DEFINE_AFTER_MAP.get(shaderName);
 	}
@@ -478,11 +486,12 @@ export class BaseJsShaderAssembler extends TypedAssembler<NodeContext.JS> {
 	//
 
 	private _replaceTemplate(template: string, shaderName: ShaderName) {
-		const functionDeclaration = this.builder_lines(shaderName, LineType.FUNCTION_DECLARATION);
-		const define = this.builder_lines(shaderName, LineType.DEFINE);
+		const memberLines = this.builder_lines(shaderName, LineType.MEMBER);
+		const constructorLines = this.builder_lines(shaderName, LineType.CONSTRUCTOR);
+		// const define = this.builder_lines(shaderName, LineType.DEFINE);
 		// let all_define = function_declaration.concat(define);
 		const body = this.builder_lines(shaderName, LineType.BODY);
-
+		// console.log({constructorLines, define, body});
 		let templateLines = template.split('\n');
 		// const scene = this.currentGlParentNode().scene;
 		const newLines: string[] = [
@@ -492,21 +501,29 @@ export class BaseJsShaderAssembler extends TypedAssembler<NodeContext.JS> {
 			// `#define FRAME_RANGE_END ${ThreeToGl.float(scene.time_controller.frame_range[1])}`,
 		];
 
+		const lineBeforeMember = this.insertMemberAfter(shaderName);
 		const lineBeforeDefine = this.insertDefineAfter(shaderName);
 		const lineBeforeBody = this.insertBodyAfter(shaderName);
 		const linesToRemove = this.linesToRemove(shaderName);
+		let lineBeforeMemberFound = false;
 		let lineBeforeDefineFound = false;
 		let lineBeforeBodyFoundOnPreviousLine = false;
 		let lineBeforeBodyFound = false;
 
 		for (let templateLine of templateLines) {
+			if (lineBeforeMemberFound == true) {
+				if (memberLines) {
+					this._insertLines(newLines, memberLines);
+				}
+				lineBeforeMemberFound = false;
+			}
 			if (lineBeforeDefineFound == true) {
-				if (functionDeclaration) {
-					this._insertLines(newLines, functionDeclaration);
+				if (constructorLines) {
+					this._insertLines(newLines, constructorLines);
 				}
-				if (define) {
-					this._insertLines(newLines, define);
-				}
+				// if (define) {
+				// 	this._insertLines(newLines, define);
+				// }
 				lineBeforeDefineFound = false;
 			}
 			if (lineBeforeBodyFoundOnPreviousLine == true) {
@@ -535,6 +552,9 @@ export class BaseJsShaderAssembler extends TypedAssembler<NodeContext.JS> {
 
 			if (lineBeforeDefine && templateLine.indexOf(lineBeforeDefine) >= 0) {
 				lineBeforeDefineFound = true;
+			}
+			if (lineBeforeMember && templateLine.indexOf(lineBeforeMember) >= 0) {
+				lineBeforeMemberFound = true;
 			}
 			if (lineBeforeBody && templateLine.indexOf(lineBeforeBody) >= 0) {
 				lineBeforeBodyFoundOnPreviousLine = true;

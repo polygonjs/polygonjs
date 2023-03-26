@@ -1,5 +1,5 @@
 /**
- * Make object look at a position
+ * Update the object scale
  *
  *
  */
@@ -7,30 +7,30 @@
 import {TRIGGER_CONNECTION_NAME, TypedJsNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {JsConnectionPoint, JsConnectionPointType, JS_CONNECTION_POINT_IN_NODE_DEF} from '../utils/io/connections/Js';
-import {JsType} from '../../poly/registers/nodes/types/Js';
+import {setObjectScale} from './js/action';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
-import {setObjectLookAt} from './js/action';
 
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
 
-class SetObjectLookAtJsParamsConfig extends NodeParamsConfig {
-	/** @param targetPosition */
-	targetPosition = ParamConfig.VECTOR3([0, 0, 0]);
-	/** @param up */
-	up = ParamConfig.VECTOR3([0, 1, 0]);
+class SetObjectScaleJsParamsConfig extends NodeParamsConfig {
+	/** @param target scale */
+	scale = ParamConfig.VECTOR3([1, 1, 1]);
+	/** @param target scale */
+	mult = ParamConfig.FLOAT(1, {
+		range: [0, 2],
+		rangeLocked: [false, false],
+	});
 	/** @param lerp factor */
 	lerp = ParamConfig.FLOAT(1);
-	/** @param invertDirection */
-	invertDirection = ParamConfig.BOOLEAN(0);
 	/** @param sets if the matrix should be updated as the animation progresses */
 	updateMatrix = ParamConfig.BOOLEAN(1);
 }
-const ParamsConfig = new SetObjectLookAtJsParamsConfig();
+const ParamsConfig = new SetObjectScaleJsParamsConfig();
 
-export class SetObjectLookAtJsNode extends TypedJsNode<SetObjectLookAtJsParamsConfig> {
+export class SetObjectScaleJsNode extends TypedJsNode<SetObjectScaleJsParamsConfig> {
 	override readonly paramsConfig = ParamsConfig;
 	static override type() {
-		return JsType.SET_OBJECT_LOOK_AT;
+		return 'setObjectScale';
 	}
 
 	override initializeNode() {
@@ -45,14 +45,13 @@ export class SetObjectLookAtJsNode extends TypedJsNode<SetObjectLookAtJsParamsCo
 		]);
 	}
 	override setLines(shadersCollectionController: ShadersCollectionController) {
-		const targetPosition = this.variableForInputParam(shadersCollectionController, this.p.targetPosition);
-		const up = this.variableForInputParam(shadersCollectionController, this.p.up);
+		const scale = this.variableForInputParam(shadersCollectionController, this.p.scale);
+		const mult = this.variableForInputParam(shadersCollectionController, this.p.mult);
 		const lerp = this.variableForInputParam(shadersCollectionController, this.p.lerp);
-		const invertDirection = this.variableForInputParam(shadersCollectionController, this.p.invertDirection);
 		const updateMatrix = this.variableForInputParam(shadersCollectionController, this.p.updateMatrix);
 
-		const func = new setObjectLookAt(this, shadersCollectionController);
-		const bodyLine = func.asString(targetPosition, up, lerp, invertDirection, updateMatrix);
+		const func = new setObjectScale(this, shadersCollectionController);
+		const bodyLine = func.asString(scale, mult, lerp, updateMatrix);
 		shadersCollectionController.addBodyLines(this, [bodyLine]);
 	}
 }

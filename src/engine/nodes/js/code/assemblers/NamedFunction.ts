@@ -53,6 +53,10 @@ export abstract class ObjectNamedFunction3<ARGS extends [any, any, any]> extends
 	ARGS,
 	[string, string, string]
 > {}
+export abstract class ObjectNamedFunction4<ARGS extends [any, any, any, any]> extends ObjectNamedFunction<
+	ARGS,
+	[string, string, string, string]
+> {}
 export abstract class ObjectNamedFunction5<ARGS extends [any, any, any, any, any]> extends ObjectNamedFunction<
 	ARGS,
 	[string, string, string, string, string]

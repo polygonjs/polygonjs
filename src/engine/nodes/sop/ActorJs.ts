@@ -22,6 +22,7 @@ import {isBooleanTrue} from '../../../core/Type';
 import {CorePath} from '../../../core/geometry/CorePath';
 import {ActorBuilderNode} from '../../scene/utils/ActorsManager';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
+import {ActorEvaluatorGenerator} from '../js/code/assemblers/actor/EvaluatorGenerator';
 class ActorJsSopParamsConfig extends NodeParamsConfig {
 	/** @param select which objects this applies the actor behavior to */
 	objectsMask = ParamConfig.STRING('', {
@@ -147,14 +148,15 @@ export class ActorJsSopNode extends TypedSopNode<ActorJsSopParamsConfig> {
 		}
 	}
 
-	private _evaluator = new ActorEvaluator(this.scene());
-	evaluator() {
-		return this._evaluator;
+	private _evaluatorGenerator = new ActorEvaluatorGenerator((object) => new ActorEvaluator(this.scene(), object));
+	evaluatorGenerator() {
+		return this._evaluatorGenerator;
 	}
-	setEvaluator(evaluator: ActorEvaluator) {
-		this.scene().eventsDispatcher.unregisterEvaluator(this._evaluator);
-		this._evaluator = evaluator;
-		this.scene().eventsDispatcher.registerEvaluator(evaluator);
+	setEvaluatorGenerator(evaluatorGenerator: ActorEvaluatorGenerator) {
+		this.scene().eventsDispatcher.unregisterEvaluatorGenerator(this._evaluatorGenerator);
+		this._evaluatorGenerator.dispose();
+		this._evaluatorGenerator = evaluatorGenerator;
+		this.scene().eventsDispatcher.registerEvaluatorGenerator(evaluatorGenerator);
 	}
 	async compile() {
 		const assemblerController = this.assemblerController();

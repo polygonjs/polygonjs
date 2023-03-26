@@ -11,7 +11,6 @@ import {BaseNodeType} from '../_Base';
 import {JsType} from '../../poly/registers/nodes/types/Js';
 import {ActorBuilderNode} from '../../scene/utils/ActorsManager';
 import {ActorJsSopNode} from '../sop/ActorJs';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 
 class OnManualTriggerJsParamsConfig extends NodeParamsConfig {
 	trigger = ParamConfig.BUTTON(null, {
@@ -40,18 +39,15 @@ export class OnManualTriggerJsNode extends TypedJsNode<OnManualTriggerJsParamsCo
 	}
 
 	private _triggerWithNode() {
-		console.log('_triggerWithNode');
 		const functionNode = this.functionNode();
 		if (!functionNode) {
 			console.warn('no function node found');
 			return;
 		}
 		const actorNode = functionNode as ActorJsSopNode as ActorBuilderNode;
-		if (!actorNode.evaluator()) {
+		if (!actorNode.evaluatorGenerator()) {
 			console.warn('no evaluator found');
 		}
 		this.scene().actorsManager.manualTriggerController.runTriggerFromFunctionNode(actorNode);
 	}
-
-	override setLines(shadersCollectionController: ShadersCollectionController) {}
 }

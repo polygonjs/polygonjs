@@ -4,11 +4,11 @@ import {PointerEventNode} from '../../../nodes/event/Pointer';
 import {Raycaster, Vector2} from 'three';
 // import type {PointerEventActorNode} from '../actors/ActorsPointerEventsController';
 import {ACCEPTED_POINTER_EVENT_TYPES} from '../../../../core/event/PointerEventType';
-import {Ref, ref} from '@vue/reactivity';
+import {ref} from '../../../../core/reactivity';
 import {CursorHelper} from '../../../nodes/event/utils/CursorHelper';
 import {createRaycaster} from '../../../../core/RaycastHelper';
 
-interface RaycasterUpdateOptions {
+export interface RaycasterUpdateOptions {
 	pointsThreshold: number;
 	lineThreshold: number;
 }
@@ -24,9 +24,9 @@ export class PointerEventsController extends BaseSceneEventsController<
 	private _cursorHelper: CursorHelper = new CursorHelper();
 	// init to a large value so we don't get a fake intersect
 	// if there was no interaction
-	protected _cursor0: Ref<Vector2> = ref(new Vector2(-1000, -1000));
+	protected _cursor0 = ref<Vector2>(new Vector2(-1000, -1000));
 	// protected _camera: Camera | undefined;
-	private _raycaster0: Ref<Raycaster> = ref(createRaycaster());
+	private _raycaster0 = ref<Raycaster>(createRaycaster());
 	type() {
 		return 'pointer';
 	}
@@ -43,23 +43,10 @@ export class PointerEventsController extends BaseSceneEventsController<
 		this._cursorHelper.setCursorForCPU(eventContext, this._cursor0.value);
 		// super.processEvent(eventContext);
 
-		// const eventEmitter = eventContext.emitter;
-		// if (!eventEmitter) {
-		// 	return;
-		// }
 		const {viewer, event} = eventContext;
 		if (!(event && viewer)) {
 			return;
 		}
-		// const eventType = event.type;
-		// const mapForEvent = this._actorNodesByEventNames.get(eventType);
-		// if (!mapForEvent) {
-		// 	return;
-		// }
-		// const nodesToTrigger = mapForEvent.get(eventEmitter);
-		// if (!nodesToTrigger) {
-		// 	return;
-		// }
 
 		// const camera = viewer.camera();
 		// this._cursorHelper.setCursorForCPU(eventContext, this._cursor);
@@ -71,6 +58,35 @@ export class PointerEventsController extends BaseSceneEventsController<
 		// this._raycaster = viewer.raycastersController.raycaster0();
 		// }
 
+		const eventType = event.type;
+		if (eventType == 'pointermove') {
+			// pointermove is not processed here,
+			// since callbacks such as onObjectHover
+			// should be triggered even if the pointer is not moving
+			// (for instance if instead  the object is moving).
+			// It is therefore triggered via the ActorsManager
+			return;
+		}
+
+		const mapForEvent = this._actorEvaluatorsByEventNames.get(eventType);
+		if (!mapForEvent) {
+			return;
+		}
+		const eventEmitter = eventContext.emitter;
+		if (!eventEmitter) {
+			return;
+		}
+		const evaluatorGenerators = mapForEvent.get(eventEmitter);
+		if (!evaluatorGenerators) {
+			return;
+		}
+		evaluatorGenerators.forEach((evaluatorGenerator) => {
+			evaluatorGenerator.traverseEvaluator((evaluator) => {
+				if (evaluator.onObjectClick) {
+					evaluator.onObjectClick();
+				}
+			});
+		});
 		// this.dispatcher.scene.actorsManager.pointerEventsController.setTriggeredNodes(nodesToTrigger);
 	}
 

@@ -26,6 +26,11 @@ import {EvaluatorEventData} from './code/assemblers/actor/Evaluator';
 
 export const TRIGGER_CONNECTION_NAME = 'trigger';
 
+interface WrappedBodyLines {
+	methodNames: string[];
+	wrappedLines: string;
+}
+
 function wrapComputed(varName: string): string {
 	return `this.${varName}.value`;
 }
@@ -188,7 +193,24 @@ export class TypedJsNode<K extends NodeParamsConfig> extends TypedNode<NodeConte
 	// //
 	// //
 	setLines(shadersCollectionController: ShadersCollectionController) {
-		console.warn(`setLines not defined for node '${this.path()}'`);
+		// console.warn(`setLines not defined for node '${this.path()}'`);
+	}
+	wrappedBodyLines(
+		shadersCollectionController: ShadersCollectionController,
+		bodyLines: string[],
+		existingMethodNames: Set<string>
+	): WrappedBodyLines | undefined {
+		const methodName = this.type();
+		if (existingMethodNames.has(methodName)) {
+			return;
+		}
+		const wrappedLines = `${methodName}(){
+			${bodyLines.join('\n')}
+		}`;
+		return {
+			methodNames: [methodName],
+			wrappedLines,
+		};
 	}
 
 	reset_code() {

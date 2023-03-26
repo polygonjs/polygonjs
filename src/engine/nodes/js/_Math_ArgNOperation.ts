@@ -2,27 +2,25 @@ import {BaseMathFunctionJsNode} from './_BaseMathFunction';
 import {
 	JsConnectionPointType,
 	// isJsConnectionPointPrimitive,
-	// ReturnValueTypeByJsConnectionPointType,
+	// ReturnValueTypeByActorConnectionPointType,
 } from '../utils/io/connections/Js';
-// import {JsNodeTriggerContext} from './_Base';
 // import {Vector2, Vector3, Vector4} from 'three';
-// const tmpV2 = new Vector2();
-// const tmpV3 = new Vector3();
-// const tmpV4 = new Vector4();
 
-interface MathArg1OperationOptions {
+interface MathArgNOperationOptions {
 	inputPrefix: string;
 	out: string;
 	allowed_in_types?: JsConnectionPointType[];
 }
-// type PrimitiveJsConnectionPointType = JsConnectionPointType.BOOL | JsConnectionPointType.FLOAT;
+// const tmpV2 = new Vector2();
+// const tmpV3 = new Vector3();
+// const tmpV4 = new Vector4();
 
-export function MathFunctionArg1OperationFactory(
+export function MathFunctionArgNOperationFactory(
 	type: string,
-	options: MathArg1OperationOptions
+	options: MathArgNOperationOptions
 ): typeof BaseMathFunctionJsNode {
 	const inputPrefix = options.inputPrefix || type;
-	const outputName = options.out || 'val';
+	const output_name = options.out || 'val';
 	const allowed_in_types = options.allowed_in_types;
 	return class Node extends BaseMathFunctionJsNode {
 		static override type() {
@@ -37,42 +35,46 @@ export function MathFunctionArg1OperationFactory(
 			this.io.connection_points.set_expected_output_types_function(this._expectedOutputTypes.bind(this));
 		}
 
-		// protected _applyOperation<T>(arg1: T): any {}
-		// private _applyOperationForVector<T extends Vector2 | Vector3 | Vector4>(arg1: T): T {
+		// protected _applyOperation<T>(arg1: T, arg2: T): any {}
+		// private _applyOperationForVector<T extends Vector2 | Vector3 | Vector4>(arg1: T, arg2: T): T {
 		// 	if (arg1 instanceof Vector2) {
-		// 		arg1.x = this._applyOperation(arg1.x);
-		// 		arg1.y = this._applyOperation(arg1.y);
+		// 		arg1.x = this._applyOperation(arg1.x, arg2.x);
+		// 		arg1.y = this._applyOperation(arg1.y, arg2.y);
 		// 	}
-		// 	if (arg1 instanceof Vector3) {
-		// 		arg1.x = this._applyOperation(arg1.x);
-		// 		arg1.y = this._applyOperation(arg1.y);
-		// 		arg1.z = this._applyOperation(arg1.z);
+		// 	if (arg1 instanceof Vector3 && arg2 instanceof Vector3) {
+		// 		arg1.x = this._applyOperation(arg1.x, arg2.x);
+		// 		arg1.y = this._applyOperation(arg1.y, arg2.y);
+		// 		arg1.z = this._applyOperation(arg1.z, arg2.z);
 		// 	}
-		// 	if (arg1 instanceof Vector4) {
-		// 		arg1.x = this._applyOperation(arg1.x);
-		// 		arg1.y = this._applyOperation(arg1.y);
-		// 		arg1.z = this._applyOperation(arg1.z);
-		// 		arg1.w = this._applyOperation(arg1.w);
+		// 	if (arg1 instanceof Vector4 && arg2 instanceof Vector4) {
+		// 		arg1.x = this._applyOperation(arg1.x, arg2.x);
+		// 		arg1.y = this._applyOperation(arg1.y, arg2.y);
+		// 		arg1.z = this._applyOperation(arg1.z, arg2.z);
+		// 		arg1.w = this._applyOperation(arg1.w, arg2.w);
 		// 	}
 
 		// 	return arg1;
 		// }
 
 		// private _defaultVector4 = new Vector4();
+		// private _defaultVector4Tmp = new Vector4();
 		// public override outputValue(
 		// 	context: ActorNodeTriggerContext,
 		// 	outputName: string = ''
 		// ): ReturnValueTypeByActorConnectionPointType[ActorConnectionPointType] {
 		// 	const isPrimitive = isActorConnectionPointPrimitive(this._expectedInputTypes()[0]);
-
+		// 	const inputsCount = this.io.inputs.namedInputConnectionPoints().length;
 		// 	if (isPrimitive) {
-		// 		// note this can also be a boolean in the case of the negate and complement
-		// 		const inputValue = this._inputValue<PrimitiveActorConnectionPointType>(0, context);
-		// 		if (inputValue != null) {
-		// 			return this._applyOperation(inputValue);
-		// 		} else {
-		// 			return this._applyOperation(0);
+		// 		let startValue = this._inputValue<ActorConnectionPointType.FLOAT>(0, context) || 0;
+
+		// 		for (let i = 1; i < inputsCount; i++) {
+		// 			const nextValue = this._inputValue<ActorConnectionPointType.FLOAT>(
+		// 				this._expectedInputName(i),
+		// 				context
+		// 			);
+		// 			startValue = this._applyOperation(startValue, nextValue);
 		// 		}
+		// 		return startValue;
 		// 	} else {
 		// 		let startValue =
 		// 			this._inputValue<
@@ -80,6 +82,7 @@ export function MathFunctionArg1OperationFactory(
 		// 				| ActorConnectionPointType.VECTOR3
 		// 				| ActorConnectionPointType.VECTOR4
 		// 			>(0, context) || this._defaultVector4.set(0, 0, 0, 0);
+
 		// 		if (startValue instanceof Vector2) {
 		// 			tmpV2.copy(startValue);
 		// 			startValue = tmpV2;
@@ -92,16 +95,25 @@ export function MathFunctionArg1OperationFactory(
 		// 			tmpV4.copy(startValue);
 		// 			startValue = tmpV4;
 		// 		}
-		// 		const r = this._applyOperationForVector(startValue);
-		// 		return r;
+
+		// 		for (let i = 1; i < inputsCount; i++) {
+		// 			const nextValue =
+		// 				this._inputValue<
+		// 					| ActorConnectionPointType.VECTOR2
+		// 					| ActorConnectionPointType.VECTOR3
+		// 					| ActorConnectionPointType.VECTOR4
+		// 				>(this._expectedInputName(i), context) || this._defaultVector4Tmp.set(0, 0, 0, 0);
+		// 			this._applyOperationForVector(startValue, nextValue);
+		// 		}
+		// 		return startValue;
 		// 	}
 		// }
 
 		override _expectedInputName(index: number): string {
-			return inputPrefix;
+			return `${inputPrefix}${index}`;
 		}
 		override _expectedOutputName(index: number): string {
-			return outputName;
+			return output_name;
 		}
 
 		protected override _expectedInputTypes() {
@@ -117,7 +129,15 @@ export function MathFunctionArg1OperationFactory(
 				}
 			}
 			const type = first_input_type || JsConnectionPointType.FLOAT;
-			return [type];
+
+			const current_connections = this.io.connections.existingInputConnections();
+
+			const expected_count = current_connections ? Math.max(current_connections.length + 1, 2) : 2;
+			const expected_input_types = [];
+			for (let i = 0; i < expected_count; i++) {
+				expected_input_types.push(type);
+			}
+			return expected_input_types;
 		}
 		protected override _expectedOutputTypes() {
 			const inputTypes = this._expectedInputTypes();

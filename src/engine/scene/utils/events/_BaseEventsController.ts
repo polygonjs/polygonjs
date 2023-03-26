@@ -7,8 +7,8 @@ import {BaseViewerType} from '../../../viewers/_Base';
 import {EventData} from '../../../../core/event/EventData';
 // import {MapUtils} from '../../../../core/MapUtils';
 import {CoreEventEmitter} from '../../../../core/event/CoreEventEmitter';
-import {ActorEvaluator} from '../../../nodes/js/code/assemblers/actor/Evaluator';
 import {MapUtils} from '../../../../core/MapUtils';
+import {ActorEvaluatorGenerator} from '../../../nodes/js/code/assemblers/actor/EvaluatorGenerator';
 
 interface EventContextValue {
 	node?: BaseNodeType; // for node_cook
@@ -31,9 +31,10 @@ export abstract class BaseSceneEventsController<
 	private _activeEventDataTypes: Set<string> = new Set();
 	protected _eventNodes: Set<T> = new Set();
 	protected _requireCanvasEventListeners: boolean = false;
-	protected _actorEvaluators: Set<ActorEvaluator> = new Set();
+	protected _actorEvaluators: Set<ActorEvaluatorGenerator> = new Set();
 	// protected _actorEventNames: Set<string> = new Set();
-	protected _actorEvaluatorsByEventNames: Map<string, Map<CoreEventEmitter, Set<ActorEvaluator>>> = new Map();
+	protected _actorEvaluatorsByEventNames: Map<string, Map<CoreEventEmitter, Set<ActorEvaluatorGenerator>>> =
+		new Map();
 	constructor(protected dispatcher: SceneEventsDispatcher) {}
 
 	registerEventNode(node: T) {
@@ -44,12 +45,12 @@ export abstract class BaseSceneEventsController<
 		this._eventNodes.delete(node);
 		this.updateViewerEventListeners();
 	}
-	registerEvaluator(evaluator: ActorEvaluator) {
+	registerEvaluatorGenerator(evaluator: ActorEvaluatorGenerator) {
 		this._actorEvaluators.add(evaluator);
 		this._updateActorEvaluatorCache();
 		this.updateViewerEventListeners();
 	}
-	unregisterEvaluator(evaluator: ActorEvaluator) {
+	unregisterEvaluatorGenerator(evaluator: ActorEvaluatorGenerator) {
 		this._actorEvaluators.delete(evaluator);
 		this._updateActorEvaluatorCache();
 		this.updateViewerEventListeners();

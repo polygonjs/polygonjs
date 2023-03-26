@@ -204,7 +204,10 @@ export class CodeBuilder {
 		// this.addDefinitions(nodes, shaderName, JsDefinitionType.UNIFORM, LineType.DEFINE, additionalDefinitions);
 		// this.addDefinitions(nodes, shaderName, JsDefinitionType.VARYING, LineType.DEFINE, additionalDefinitions);
 		// this.addDefinitions(nodes, shaderName, JsDefinitionType.ATTRIBUTE, LineType.DEFINE, additionalDefinitions);
-		this.addDefinitions(nodes, shaderName, JsDefinitionType.COMPUTED, LineType.DEFINE, additionalDefinitions);
+		// this.addDefinitions(nodes, shaderName, JsDefinitionType.INIT, LineType.DEFINE, additionalDefinitions);
+		this.addDefinitions(nodes, shaderName, JsDefinitionType.COMPUTED, LineType.MEMBER, additionalDefinitions);
+		this.addDefinitions(nodes, shaderName, JsDefinitionType.REF, LineType.MEMBER, additionalDefinitions);
+		this.addDefinitions(nodes, shaderName, JsDefinitionType.WATCH, LineType.CONSTRUCTOR, additionalDefinitions);
 
 		this.add_code_line_for_nodes_and_line_type(nodes, shaderName, LineType.BODY);
 	}

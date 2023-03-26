@@ -4,10 +4,14 @@ import {ParamType} from '../../../../poly/ParamType';
 export enum JsConnectionPointType {
 	BOOLEAN = 'boolean',
 	COLOR = 'Color',
-	INT = 'int',
 	FLOAT = 'float',
+	INT = 'int',
+	INTERSECTION = 'Intersection',
+	MATERIAL = 'Material',
+	MATRIX4 = 'Matrix4',
 	OBJECT_3D = 'Object3D',
 	PLANE = 'Plane',
+	QUATERNION = 'Quaternion',
 	RAY = 'Ray',
 	TRIGGER = 'trigger',
 	VECTOR2 = 'Vector2',
@@ -25,10 +29,14 @@ export enum JsConnectionPointType {
 export const JS_CONNECTION_POINT_TYPES: Array<JsConnectionPointType> = [
 	JsConnectionPointType.BOOLEAN,
 	JsConnectionPointType.COLOR,
-	JsConnectionPointType.INT,
 	JsConnectionPointType.FLOAT,
+	JsConnectionPointType.INT,
+	JsConnectionPointType.INTERSECTION,
+	JsConnectionPointType.MATERIAL,
+	JsConnectionPointType.MATRIX4,
 	JsConnectionPointType.OBJECT_3D,
 	JsConnectionPointType.PLANE,
+	JsConnectionPointType.QUATERNION,
 	JsConnectionPointType.RAY,
 	JsConnectionPointType.TRIGGER,
 	JsConnectionPointType.VECTOR2,
@@ -47,10 +55,14 @@ type JSConnectionPointTypeToParamTypeMapGeneric = {[key in JsConnectionPointType
 export interface JsIConnectionPointTypeToParamTypeMap extends JSConnectionPointTypeToParamTypeMapGeneric {
 	[JsConnectionPointType.BOOLEAN]: ParamType.BOOLEAN;
 	[JsConnectionPointType.COLOR]: ParamType.COLOR;
-	[JsConnectionPointType.INT]: ParamType.INTEGER;
 	[JsConnectionPointType.FLOAT]: ParamType.FLOAT;
+	[JsConnectionPointType.INT]: ParamType.INTEGER;
+	[JsConnectionPointType.INTERSECTION]: ParamType.BUTTON;
+	[JsConnectionPointType.MATERIAL]: ParamType.BUTTON;
+	[JsConnectionPointType.MATRIX4]: ParamType.BUTTON;
 	[JsConnectionPointType.OBJECT_3D]: ParamType.BUTTON;
 	[JsConnectionPointType.PLANE]: ParamType.BUTTON;
+	[JsConnectionPointType.QUATERNION]: ParamType.BUTTON;
 	[JsConnectionPointType.RAY]: ParamType.BUTTON;
 	[JsConnectionPointType.TRIGGER]: ParamType.BUTTON;
 	[JsConnectionPointType.VECTOR2]: ParamType.VECTOR2;
@@ -62,10 +74,14 @@ export interface JsIConnectionPointTypeToParamTypeMap extends JSConnectionPointT
 export const JsConnectionPointTypeToParamTypeMap: JsIConnectionPointTypeToParamTypeMap = {
 	[JsConnectionPointType.BOOLEAN]: ParamType.BOOLEAN,
 	[JsConnectionPointType.COLOR]: ParamType.COLOR,
-	[JsConnectionPointType.INT]: ParamType.INTEGER,
 	[JsConnectionPointType.FLOAT]: ParamType.FLOAT,
+	[JsConnectionPointType.INT]: ParamType.INTEGER,
+	[JsConnectionPointType.INTERSECTION]: ParamType.BUTTON,
+	[JsConnectionPointType.MATERIAL]: ParamType.BUTTON,
+	[JsConnectionPointType.MATRIX4]: ParamType.BUTTON,
 	[JsConnectionPointType.OBJECT_3D]: ParamType.BUTTON,
 	[JsConnectionPointType.PLANE]: ParamType.BUTTON,
+	[JsConnectionPointType.QUATERNION]: ParamType.BUTTON,
 	[JsConnectionPointType.RAY]: ParamType.BUTTON,
 	[JsConnectionPointType.TRIGGER]: ParamType.BUTTON,
 	[JsConnectionPointType.VECTOR2]: ParamType.VECTOR2,
@@ -84,8 +100,8 @@ type JsParamTypeToConnectionPointTypeMapGeneric = {[key in ParamType]: JsConnect
 export interface IJsParamTypeToConnectionPointTypeMap extends JsParamTypeToConnectionPointTypeMapGeneric {
 	[ParamType.BOOLEAN]: JsConnectionPointType.BOOLEAN;
 	[ParamType.COLOR]: JsConnectionPointType.COLOR;
-	[ParamType.INTEGER]: JsConnectionPointType.INT;
 	[ParamType.FLOAT]: JsConnectionPointType.FLOAT;
+	[ParamType.INTEGER]: JsConnectionPointType.INT;
 	[ParamType.FOLDER]: undefined;
 	[ParamType.VECTOR2]: JsConnectionPointType.VECTOR2;
 	[ParamType.VECTOR3]: JsConnectionPointType.VECTOR3;
@@ -100,8 +116,8 @@ export interface IJsParamTypeToConnectionPointTypeMap extends JsParamTypeToConne
 export const JsParamTypeToConnectionPointTypeMap: IJsParamTypeToConnectionPointTypeMap = {
 	[ParamType.BOOLEAN]: JsConnectionPointType.BOOLEAN,
 	[ParamType.COLOR]: JsConnectionPointType.COLOR,
-	[ParamType.INTEGER]: JsConnectionPointType.INT,
 	[ParamType.FLOAT]: JsConnectionPointType.FLOAT,
+	[ParamType.INTEGER]: JsConnectionPointType.INT,
 	[ParamType.FOLDER]: undefined,
 	[ParamType.VECTOR2]: JsConnectionPointType.VECTOR2,
 	[ParamType.VECTOR3]: JsConnectionPointType.VECTOR3,
@@ -125,10 +141,14 @@ export type ConnectionPointInitValueMapGeneric = {
 export const JsConnectionPointInitValueMap: ConnectionPointInitValueMapGeneric = {
 	[JsConnectionPointType.BOOLEAN]: false,
 	[JsConnectionPointType.COLOR]: [1, 1, 1],
-	[JsConnectionPointType.INT]: 0,
 	[JsConnectionPointType.FLOAT]: 0,
+	[JsConnectionPointType.INT]: 0,
+	[JsConnectionPointType.INTERSECTION]: null,
+	[JsConnectionPointType.MATERIAL]: null,
+	[JsConnectionPointType.MATRIX4]: null,
 	[JsConnectionPointType.OBJECT_3D]: null,
 	[JsConnectionPointType.PLANE]: null,
+	[JsConnectionPointType.QUATERNION]: null,
 	[JsConnectionPointType.RAY]: null,
 	[JsConnectionPointType.TRIGGER]: null,
 	[JsConnectionPointType.VECTOR2]: [0, 0],
@@ -149,10 +169,14 @@ export type ConnectionPointComponentsCountMapGeneric = {
 export const GlConnectionPointComponentsCountMap: ConnectionPointComponentsCountMapGeneric = {
 	[JsConnectionPointType.BOOLEAN]: 1,
 	[JsConnectionPointType.COLOR]: 3,
-	[JsConnectionPointType.INT]: 1,
 	[JsConnectionPointType.FLOAT]: 1,
+	[JsConnectionPointType.INT]: 1,
+	[JsConnectionPointType.INTERSECTION]: 1,
+	[JsConnectionPointType.MATERIAL]: 1,
+	[JsConnectionPointType.MATRIX4]: 1,
 	[JsConnectionPointType.OBJECT_3D]: 1,
 	[JsConnectionPointType.PLANE]: 1,
+	[JsConnectionPointType.QUATERNION]: 1,
 	[JsConnectionPointType.RAY]: 1,
 	[JsConnectionPointType.TRIGGER]: 1,
 	[JsConnectionPointType.VECTOR2]: 2,

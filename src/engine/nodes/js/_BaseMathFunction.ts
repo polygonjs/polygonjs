@@ -3,9 +3,9 @@ import {JsConnectionPointType} from '../utils/io/connections/Js';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {ArrayUtils} from '../../../core/ArrayUtils';
 
-export class BaseActorMathFunctionParamsConfig extends NodeParamsConfig {}
-const ParamsConfig = new BaseActorMathFunctionParamsConfig();
-export abstract class BaseMathFunctionActorNode extends TypedJsNode<BaseActorMathFunctionParamsConfig> {
+export class BaseJsMathFunctionParamsConfig extends NodeParamsConfig {}
+const ParamsConfig = new BaseJsMathFunctionParamsConfig();
+export abstract class BaseMathFunctionJsNode extends TypedJsNode<BaseJsMathFunctionParamsConfig> {
 	override paramsConfig = ParamsConfig;
 
 	override initializeNode() {
@@ -54,7 +54,7 @@ function inputTypeOrFloatExceptBool(inputType: JsConnectionPointType | undefined
 // 1 argument
 //
 //
-export abstract class BaseMathFunctionArg1ActorNode extends BaseMathFunctionActorNode {
+export abstract class BaseMathFunctionArg1JsNode extends BaseMathFunctionJsNode {
 	protected override _expectedInputName(index: number) {
 		return 'in';
 	}
@@ -69,7 +69,7 @@ export abstract class BaseMathFunctionArg1ActorNode extends BaseMathFunctionActo
 // 2 arguments
 //
 //
-export abstract class BaseMathFunctionArg2ActorNode extends BaseMathFunctionActorNode {
+export abstract class BaseMathFunctionArg2JsNode extends BaseMathFunctionJsNode {
 	protected override _expectedInputTypes() {
 		const type = inputTypeOrFloatExceptBool(this.io.connection_points.first_input_connection_type());
 		return [type, type];
@@ -81,7 +81,7 @@ export abstract class BaseMathFunctionArg2ActorNode extends BaseMathFunctionActo
 // 3 arguments
 //
 //
-export abstract class BaseMathFunctionArg3ActorNode extends BaseMathFunctionActorNode {
+export abstract class BaseMathFunctionArg3JsNode extends BaseMathFunctionJsNode {
 	protected override _expectedInputTypes() {
 		const type = inputTypeOrFloatExceptBool(this.io.connection_points.first_input_connection_type());
 		return [type, type, type];
@@ -92,7 +92,7 @@ export abstract class BaseMathFunctionArg3ActorNode extends BaseMathFunctionActo
 // 4 arguments
 //
 //
-export abstract class BaseMathFunctionArg4ActorNode extends BaseMathFunctionActorNode {
+export abstract class BaseMathFunctionArg4JsNode extends BaseMathFunctionJsNode {
 	protected override _expectedInputTypes() {
 		const type = inputTypeOrFloatExceptBool(this.io.connection_points.first_input_connection_type());
 		return [type, type, type, type];
@@ -103,7 +103,7 @@ export abstract class BaseMathFunctionArg4ActorNode extends BaseMathFunctionActo
 // 5 arguments
 //
 //
-export abstract class BaseMathFunctionArg5ActorNode extends BaseMathFunctionActorNode {
+export abstract class BaseMathFunctionArg5JsNode extends BaseMathFunctionJsNode {
 	protected override _expectedInputTypes() {
 		const type = inputTypeOrFloatExceptBool(this.io.connection_points.first_input_connection_type());
 		return [type, type, type, type, type];

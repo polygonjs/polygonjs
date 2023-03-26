@@ -8,6 +8,7 @@ import {Object3D} from 'three';
 import {PolyScene} from '../../../../../scene/PolyScene';
 import {JsType} from '../../../../../poly/registers/nodes/types/Js';
 import {EventData} from '../../../../../../core/event/EventData';
+// import {ref} from '../../../../../../core/reactivity';
 
 // // updateObjectPosition
 // function runUpdatePosition(object){
@@ -74,6 +75,7 @@ export type EvaluatorMethodName =
 	| JsType.ON_MAPBOX_CAMERA_MOVE
 	| JsType.ON_MAPBOX_CAMERA_MOVE_START
 	| JsType.ON_MAPBOX_CAMERA_MOVE_END
+	| JsType.ON_OBJECT_CLICK
 	| JsType.ON_OBJECT_HOVER
 	| JsType.ON_PERFORMANCE_CHANGE
 	| JsType.ON_SCENE_PLAY_STATE
@@ -84,6 +86,7 @@ export const EVALUATOR_METHOD_NAMES: Array<EvaluatorMethodName> = [
 	JsType.ON_MAPBOX_CAMERA_MOVE,
 	JsType.ON_MAPBOX_CAMERA_MOVE_START,
 	JsType.ON_MAPBOX_CAMERA_MOVE_END,
+	JsType.ON_OBJECT_CLICK,
 	JsType.ON_OBJECT_HOVER,
 	JsType.ON_PERFORMANCE_CHANGE,
 	JsType.ON_SCENE_PLAY_STATE,
@@ -96,22 +99,24 @@ export interface EvaluatorEventData extends EventData {
 }
 
 export class ActorEvaluator {
-	protected _context: EvaluationContext;
-	constructor(public readonly scene: PolyScene) {
-		this._context = {
-			Object3D: this.scene.threejsScene(),
-		};
+	// protected _context: EvaluationContext;
+	constructor(public readonly scene: PolyScene, public readonly object3D: Object3D) {
+		// this._context = {
+		// Object3D: this.scene.threejsScene(),
+		// };
 	}
 	//
-	context() {
-		return this._context;
-	}
-	eventDatas?: Set<EvaluatorEventData>;
+	// objectUuid = ref('');
+	// context() {
+	// 	return this._context;
+	// }
+	// eventDatas?: Set<EvaluatorEventData>;
 	//
 	onManualTrigger?: TriggerCallback;
 	onMapboxCameraMove?: TriggerCallback;
 	onMapboxCameraMoveStart?: TriggerCallback;
 	onMapboxCameraMoveEnd?: TriggerCallback;
+	onObjectClick?: TriggerCallback;
 	onObjectHover?: TriggerCallback;
 	onPerformanceChange?: TriggerCallback;
 	onScenePlayState?: TriggerCallback;
@@ -120,6 +125,6 @@ export class ActorEvaluator {
 }
 
 export enum EvaluatorConstant {
-	OBJECT_3D = 'this._context.Object3D',
+	OBJECT_3D = 'this.object3D',
 	SCENE = 'this.scene',
 }

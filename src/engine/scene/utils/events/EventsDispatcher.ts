@@ -16,7 +16,7 @@ import {EventInputType} from '../../../poly/registers/nodes/types/Event';
 // import {BaseUserInputJsNodeType} from '../../../nodes/js/_BaseUserInput';
 // import {JsType} from '../../../poly/registers/nodes/types/Js';
 import {Raycaster} from 'three';
-import {ActorEvaluator} from '../../../nodes/js/code/assemblers/actor/Evaluator';
+import {ActorEvaluatorGenerator} from '../../../nodes/js/code/assemblers/actor/EvaluatorGenerator';
 import {JsType} from '../../../poly/registers/nodes/types/Js';
 
 export class SceneEventsDispatcher {
@@ -30,16 +30,16 @@ export class SceneEventsDispatcher {
 	private _controllers: BaseSceneEventsController<Event, BaseInputEventNodeType>[] = [];
 	constructor(public scene: PolyScene) {}
 
-	registerEvaluator(evaluator: ActorEvaluator) {
+	registerEvaluatorGenerator(evaluator: ActorEvaluatorGenerator) {
 		const controllers = this._findOrCreateControllerForEvaluator(evaluator);
 		if (controllers) {
-			controllers.forEach((c) => c.registerEvaluator(evaluator));
+			controllers.forEach((c) => c.registerEvaluatorGenerator(evaluator));
 		}
 	}
-	unregisterEvaluator(evaluator: ActorEvaluator) {
+	unregisterEvaluatorGenerator(evaluator: ActorEvaluatorGenerator) {
 		const controllers = this._findOrCreateControllerForEvaluator(evaluator);
 		if (controllers) {
-			controllers.forEach((c) => c.unregisterEvaluator(evaluator));
+			controllers.forEach((c) => c.unregisterEvaluatorGenerator(evaluator));
 		}
 	}
 	// updateControllersFromJsNodes() {
@@ -97,7 +97,7 @@ export class SceneEventsDispatcher {
 	}
 
 	private _findOrCreateControllerForEvaluator(
-		evaluator: ActorEvaluator
+		evaluator: ActorEvaluatorGenerator
 	): Set<BaseSceneEventsController<Event, BaseInputEventNodeType>> | undefined {
 		const eventDatas = evaluator.eventDatas;
 		if (!eventDatas) {

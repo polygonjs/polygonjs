@@ -2,6 +2,7 @@ import {
 	BaseJsShaderAssembler,
 	INSERT_DEFINE_AFTER,
 	INSERT_BODY_AFTER,
+	INSERT_MEMBERS_AFTER,
 	RegisterableVariable,
 	FunctionData,
 } from '../_Base';
@@ -28,12 +29,14 @@ import {
 import {BaseJsNodeType} from '../../../_Base';
 import {SetUtils} from '../../../../../../core/SetUtils';
 import {JsConnectionPointType} from '../../../../utils/io/connections/Js';
-import {computed} from '@vue/reactivity';
+
 import {ArrayUtils} from '../../../../../../core/ArrayUtils';
 import {ShadersCollectionController} from '../../utils/ShadersCollectionController';
 import {CoreString} from '../../../../../../core/String';
 import {PrettierController} from '../../../../../../core/code/PrettierController';
 import {CoreType} from '../../../../../../core/Type';
+import {computed, ref, watch} from '../../../../../../core/reactivity';
+import {ActorEvaluatorGenerator} from './EvaluatorGenerator';
 // import {Vector3} from 'three';
 // import {IUniformsWithTime} from '../../../../../scene/utils/UniformsController';
 // import {handleCopBuilderDependencies} from '../../../../cop/utils/BuilderUtils';
@@ -41,7 +44,11 @@ import {CoreType} from '../../../../../../core/Type';
 
 const TEMPLATE = `
 class CustomActorEvaluator extends ActorEvaluator {
-	${INSERT_DEFINE_AFTER}
+	${INSERT_MEMBERS_AFTER}
+	constructor(scene, object3D){
+		super(scene, object3D);
+		${INSERT_DEFINE_AFTER}
+	}
 	${INSERT_BODY_AFTER}
 `;
 const CLOSE_CLASS_DEFINITION = `};
@@ -101,13 +108,13 @@ export class JsAssemblerActor extends BaseJsShaderAssembler {
 
 		const shaderNames = this.shaderNames();
 
-		const evaluator = this._createNonTriggerables(
+		const evaluatorGenerator = this._createNonTriggerables(
 			// nodeType as EvaluatorMethodName,
 			this._triggerNodes,
 			shaderNames
 		);
-		if (evaluator) {
-			node.setEvaluator(evaluator);
+		if (evaluatorGenerator) {
+			node.setEvaluatorGenerator(evaluatorGenerator);
 		}
 
 		this._triggerNodesByType.forEach((triggerNodes, nodeType) => {
@@ -163,48 +170,86 @@ export class JsAssemblerActor extends BaseJsShaderAssembler {
 		const nodeMethodName = (node: BaseJsNodeType) =>
 			CoreString.sanitizeName(node.path().replace(functionNode.path(), ''));
 
-		const triggerableFunctionLines: string[] = [];
-		this._triggerNodesByType.forEach((triggerNodes, nodeType) => {
-			const triggerableNodes: Set<BaseJsNodeType> = new Set();
-			connectedTriggerableNodes({triggerNodes, triggerableNodes: triggerableNodes});
-			for (let node of triggerableNodes) {
-				const shadersCollectionController = new ShadersCollectionController(
-					this.shaderNames(),
-					this.shaderNames()[0],
-					this
-				);
-				node.setLines(shadersCollectionController);
-				const bodyLines = shadersCollectionController.bodyLines(ShaderName.FRAGMENT, node);
-				if (bodyLines) {
-					const methodName = nodeMethodName(node);
-					const wrappedLines = `${methodName}(){
-	${bodyLines.join('\n')}
-}`;
-					triggerableFunctionLines.push(wrappedLines);
+		const _buildTriggerableFunctionLines = () => {
+			const triggerableFunctionLines: string[] = [];
+			this._triggerNodesByType.forEach((triggerNodes, nodeType) => {
+				const triggerableNodes: Set<BaseJsNodeType> = new Set();
+				connectedTriggerableNodes({triggerNodes, triggerableNodes: triggerableNodes});
+				for (let node of triggerableNodes) {
+					const shadersCollectionController = new ShadersCollectionController(
+						this.shaderNames(),
+						this.shaderNames()[0],
+						this
+					);
+					node.setLines(shadersCollectionController);
+					const bodyLines = shadersCollectionController.bodyLines(ShaderName.FRAGMENT, node);
+					if (bodyLines) {
+						const methodName = nodeMethodName(node);
+						const wrappedLines = `${methodName}(){
+			${bodyLines.join('\n')}
+		}`;
+						triggerableFunctionLines.push(wrappedLines);
+					}
 				}
-			}
-		});
+			});
+			return triggerableFunctionLines;
+		};
+		const triggerableFunctionLines = _buildTriggerableFunctionLines();
 		//
 		//
 		// create trigger methods
 		//
 		//
-		const triggerFunctionLines: string[] = [];
-		this._triggerNodesByType.forEach((triggerNodes, nodeType) => {
-			const triggerableNodes: Set<BaseJsNodeType> = new Set();
-			connectedTriggerableNodes({triggerNodes, triggerableNodes: triggerableNodes});
+		const _buildTriggerFunctionLines = () => {
+			const shadersCollectionController = new ShadersCollectionController(
+				this.shaderNames(),
+				this.shaderNames()[0],
+				this
+			);
+			const triggerFunctionLines: string[] = [];
+			const existingMethodNames: Set<string> = new Set();
+			this._triggerNodesByType.forEach((triggerNodes, nodeType) => {
+				const triggerableNodes: Set<BaseJsNodeType> = new Set();
+				connectedTriggerableNodes({triggerNodes, triggerableNodes: triggerableNodes});
 
-			const bodyLines: string[] = [];
-			for (let triggerableNode of triggerableNodes) {
-				const triggerableMethodName = nodeMethodName(triggerableNode);
-				bodyLines.push(`this.${triggerableMethodName}()`);
-			}
-			const methodName = nodeType;
-			const wrappedLines = `${methodName}(){
-				${bodyLines.join('\n')}
-			}`;
-			triggerFunctionLines.push(wrappedLines);
-		});
+				const bodyLines: string[] = [];
+				for (let triggerableNode of triggerableNodes) {
+					const triggerableMethodName = nodeMethodName(triggerableNode);
+					bodyLines.push(`this.${triggerableMethodName}()`);
+				}
+				if (bodyLines.length == 0) {
+					// we must not return here,
+					// and instead we must let the nodes control
+					// if the callback is added based on their own logic.
+					// For instance, the onObjectHover will always want
+					// to add its own trigger, so that the hovered can be added
+					// without its trigger necessarily being used
+					// update: onObjectClick does not currently depend on the ref set by onObjectHover
+					return;
+				}
+				// const methodName = nodeType;
+				let firstTriggerNode: BaseJsNodeType | undefined;
+				triggerNodes.forEach((triggerNode) => {
+					firstTriggerNode = firstTriggerNode || triggerNode;
+				});
+				if (!firstTriggerNode) {
+					return;
+				}
+				const wrappedLinesData = firstTriggerNode.wrappedBodyLines(
+					shadersCollectionController,
+					bodyLines,
+					existingMethodNames
+				);
+				if (wrappedLinesData) {
+					for (let methodName of wrappedLinesData.methodNames) {
+						existingMethodNames.add(methodName);
+					}
+					triggerFunctionLines.push(wrappedLinesData.wrappedLines);
+				}
+			});
+			return triggerFunctionLines;
+		};
+		const triggerFunctionLines = _buildTriggerFunctionLines();
 
 		// const paramNodes = JsNodeFinder.findParamGeneratingNodes(this);
 		// const rootNodes = SetUtils.toArray(this._triggerableNodes); //outputNodes.concat(paramNodes);
@@ -228,13 +273,17 @@ export class JsAssemblerActor extends BaseJsShaderAssembler {
 		// ASSEMBLE FUNCTION BODY
 		//
 		//
-		const functionBodyElements = [
-			this._shaders_by_name.get(ShaderName.FRAGMENT),
-			triggerableFunctionLines.join('\n'),
-			triggerFunctionLines.join('\n'),
-			CLOSE_CLASS_DEFINITION,
-		];
-		const functionBody = PrettierController.formatJs(functionBodyElements.join('\n'));
+		const _buildFunctionBody = () => {
+			const functionBodyElements = [
+				this._shaders_by_name.get(ShaderName.FRAGMENT),
+				triggerableFunctionLines.join('\n'),
+				triggerFunctionLines.join('\n'),
+				CLOSE_CLASS_DEFINITION,
+			];
+			const functionBody = PrettierController.formatJs(functionBodyElements.join('\n'));
+			return functionBody;
+		};
+		const functionBody = _buildFunctionBody();
 		console.log(functionBody);
 		//
 		//
@@ -287,19 +336,23 @@ export class JsAssemblerActor extends BaseJsShaderAssembler {
 		const functionCreationArgs = [
 			'ActorEvaluator',
 			'computed',
+			'ref',
+			'watch',
 			'_setErrorFromError',
 			...variableNames,
 			...functionNames,
 			...paramConfigUniformNames,
 			wrappedBody,
 		];
-		const functionEvalArgs = [ActorEvaluator, computed, _setErrorFromError, ...variables, ...functions];
+		const functionEvalArgs = [ActorEvaluator, computed, ref, watch, _setErrorFromError, ...variables, ...functions];
 		// console.log(functionCreationArgs, functionEvalArgs);
 		try {
 			const _function = new Function(...functionCreationArgs);
 			const evaluatorClass = _function(...functionEvalArgs) as typeof ActorEvaluator;
 			const node = this.currentGlParentNode() as ActorJsSopNode;
-			const evaluator = new evaluatorClass(node.scene());
+			const evaluatorGenerator = new ActorEvaluatorGenerator(
+				(object) => new evaluatorClass(node.scene(), object)
+			);
 			// console.log({evaluator});
 
 			//
@@ -317,14 +370,14 @@ export class JsAssemblerActor extends BaseJsShaderAssembler {
 					}
 				}
 			});
-			evaluator.eventDatas = eventDatas;
+			evaluatorGenerator.eventDatas = eventDatas;
 
 			//
 			//
 			// evaluator is ready
 			//
 			//
-			return evaluator;
+			return evaluatorGenerator;
 		} catch (e) {
 			console.warn(e);
 			this.currentGlParentNode().states.error.set('failed to compile');

@@ -101,6 +101,7 @@ export const CATEGORY_JS = {
 	DYNAMICS: 'dynamics',
 	EVENTS: 'events',
 	GEOMETRY: 'geometry',
+	GET: 'get',
 	GLOBALS: 'globals',
 	INPUTS: 'inputs',
 	LOGIC: 'logic',

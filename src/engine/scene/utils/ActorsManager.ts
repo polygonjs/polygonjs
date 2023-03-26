@@ -14,15 +14,17 @@ import {PolyScene} from '../PolyScene';
 // import {MapUtils} from '../../../core/MapUtils';
 import {ActorManualTriggersController} from './actors/ManualTriggersController';
 import {NodeContext} from '../../poly/NodeContext';
-import {ActorPointerEventsController} from './actors/ActorsPointerEventsController';
-import {ActorHoveredEventsController} from './actors/ActorsHoveredEventsController';
+// import {ActorPointerEventsController} from './actors/ActorsPointerEventsController';
+// import {ActorHoveredEventsController} from './actors/ActorsHoveredEventsController';
 import {ActorKeyboardEventsController} from './actors/ActorsKeyboardEventsController';
 // import {AttributeProxy} from '../../../core/geometry/attribute/_Base';
 // import {OnScenePlayStateActorNode} from '../../nodes/actor/OnScenePlayState';
 // import {ActorNodeTriggerContext} from '../../nodes/actor/_Base';
 // import {CoreObjectType} from '../../../core/geometry/ObjectContent';
 import {JsType} from '../../poly/registers/nodes/types/Js';
-import {ActorEvaluator, EvaluatorMethodName} from '../../nodes/js/code/assemblers/actor/Evaluator';
+import {EvaluatorMethodName} from '../../nodes/js/code/assemblers/actor/Evaluator';
+import {ActorEvaluatorGenerator} from '../../nodes/js/code/assemblers/actor/EvaluatorGenerator';
+// import { ActorJsSopNode } from '../../nodes/sop/ActorJs';
 // import {SopType} from '../../poly/registers/nodes/types/Sop';
 // import {EventData} from '../../../core/event/EventData';
 
@@ -53,7 +55,7 @@ export abstract class ActorBuilderNode extends TypedNode<any, any> {
 	// override childrenAllowed() {
 	// 	return true;
 	// }
-	abstract evaluator(): ActorEvaluator;
+	abstract evaluatorGenerator(): ActorEvaluatorGenerator;
 }
 
 type ActorNodeToInitOnPlay =
@@ -72,10 +74,11 @@ export class ActorsManager {
 	private _actorNodes: Set<ActorBuilderNode> = new Set();
 	private _keyboardEventsController: ActorKeyboardEventsController | undefined;
 	private _manualTriggerController: ActorManualTriggersController | undefined;
-	private _pointerEventsController: ActorPointerEventsController | undefined;
-	private _hoveredEventsController: ActorHoveredEventsController | undefined;
+	// private _pointerEventsController: ActorPointerEventsController | undefined;
+	// private _hoveredEventsController: ActorHoveredEventsController | undefined;
 	// private _contextByObject: WeakMap<Object3D, ActorNodeTriggerContext> = new WeakMap();
 	// private _context: EvaluationContext;
+	// private _evaluatorByObjectByActorNode:WeakMap<Object3D,WeakMap<ActorJsSopNode,ActorEvaluator>>= new WeakMap()
 	constructor(public readonly scene: PolyScene) {
 		// this._context = {Object3D: scene.threejsScene()};
 	}
@@ -129,14 +132,14 @@ export class ActorsManager {
 		return (this._manualTriggerController =
 			this._manualTriggerController || new ActorManualTriggersController(this));
 	}
-	get pointerEventsController() {
-		return (this._pointerEventsController =
-			this._pointerEventsController || new ActorPointerEventsController(this));
-	}
-	get hoveredEventsController() {
-		return (this._hoveredEventsController =
-			this._hoveredEventsController || new ActorHoveredEventsController(this));
-	}
+	// get pointerEventsController() {
+	// 	return (this._pointerEventsController =
+	// 		this._pointerEventsController || new ActorPointerEventsController(this));
+	// }
+	// get hoveredEventsController() {
+	// 	return (this._hoveredEventsController =
+	// 		this._hoveredEventsController || new ActorHoveredEventsController(this));
+	// }
 
 	/*
 	 *
@@ -145,9 +148,13 @@ export class ActorsManager {
 	 */
 	tick() {
 		// this._manualTriggerController?.runTriggers();
-		this._pointerEventsController?.runTriggers();
+		// this._pointerEventsController?.runTriggers();
 		this._keyboardEventsController?.runTriggers();
-		this.hoveredEventsController.runTriggers();
+		// this.hoveredEventsController.runTriggers();
+		this.scene.threejsScene().traverse((object) => {
+			this.triggerEventNodes(object, JsType.ON_OBJECT_HOVER);
+			// this.triggerEventNodes(object, JsType.ON_OBJECT_CLICK);
+		});
 		this._runOnEventTick();
 	}
 	runOnEventSceneReset() {
@@ -292,12 +299,17 @@ export class ActorsManager {
 		}
 	}
 	triggerEventNode(node: ActorBuilderNode, object: Object3D, methodName: EvaluatorMethodName) {
-		const evaluator = node.evaluator();
-		evaluator.context().Object3D = object;
+		const evaluatorGenerator = node.evaluatorGenerator();
+		// evaluator.context().Object3D = object;
+		const evaluator = evaluatorGenerator.findOrCreateEvaluator(object);
+		// evaluator.objectUuid.value = object.uuid;
 		if (evaluator[methodName]) {
 			evaluator[methodName]!();
 		}
 	}
+	// private _findOrCreateEvaluator( object: Object3D,node: ActorBuilderNode){
+
+	// }
 
 	// param
 

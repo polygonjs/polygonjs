@@ -4,14 +4,16 @@ import {BaseNodeType} from '../../../_Base';
 import {NetworkChildNodeType} from '../../../../poly/NodeContext';
 
 const LINE_SUFFIXES = {
-	[LineType.FUNCTION_DECLARATION]: '',
-	[LineType.DEFINE]: ';',
+	[LineType.MEMBER]: '',
+	[LineType.CONSTRUCTOR]: '',
+	// [LineType.DEFINE]: ';',
 	[LineType.BODY]: ';',
 };
 
 const LINE_PREFIXES = {
-	[LineType.FUNCTION_DECLARATION]: '',
-	[LineType.DEFINE]: '',
+	[LineType.MEMBER]: '',
+	[LineType.CONSTRUCTOR]: '',
+	// [LineType.DEFINE]: '',
 	[LineType.BODY]: '	',
 };
 const BLOCK_START_LAST_CHAR = '{';
