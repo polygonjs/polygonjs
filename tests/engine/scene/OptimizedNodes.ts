@@ -98,7 +98,7 @@ QUnit.test(
 		Poly.setPlayerMode(true);
 		const scene_player = await SceneJsonImporter.loadData(data);
 		const diff = scene_no_player.graph.nextId() - scene_player.graph.nextId();
-		assert.equal(diff, 78, '78 diff');
+		assert.equal(diff, 80, '80 diff');
 		assert.equal(
 			scene_player.nodesController.allNodes().length,
 			scene_no_player.nodesController.allNodes().length - 4,

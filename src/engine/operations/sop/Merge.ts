@@ -79,8 +79,8 @@ export class MergeSopOperation extends BaseSopOperation {
 						orderedObjectTypes.push(objectType);
 					}
 					if (objectType) {
-						const found_mat = materialsByObjectType.get(objectType);
-						if (!found_mat) {
+						const foundMat = materialsByObjectType.get(objectType);
+						if (!foundMat) {
 							materialsByObjectType.set(objectType, (object as Mesh).material as Material);
 						}
 						MapUtils.pushOnArrayAtEntry(objectsByType, objectType, object);
@@ -91,9 +91,7 @@ export class MergeSopOperation extends BaseSopOperation {
 		const mergedObjects: ObjectContent<CoreObjectType>[] = [];
 		orderedObjectTypes.forEach((objectType) => {
 			const material = materialsByObjectType.get(objectType);
-			if (!material) {
-				return;
-			}
+
 			const objects = objectsByType.get(objectType);
 			if (objects && objects.length != 0) {
 				// even with just 1 geometry,
