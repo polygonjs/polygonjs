@@ -53,7 +53,7 @@ export function objectContentCopyProperties(src: ObjectContent<CoreObjectType>, 
 export interface MergeCompactOptions {
 	objects: ObjectContent<CoreObjectType>[];
 	mergedObjects: ObjectContent<CoreObjectType>[];
-	materialsByObjectType: Map<string, Material>;
+	material: Material;
 	objectType: string;
 	onError: (message: string) => void;
 }

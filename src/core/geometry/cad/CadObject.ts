@@ -33,6 +33,7 @@ import {cadShapeToObject3D} from './toObject3D/CadShape';
 import {Object3D, Material, Matrix4, Box3, Vector3, Quaternion, Euler} from 'three';
 import {cadGeometryTransform} from './operations/CadTransform';
 import {BaseSopNodeType} from '../../../engine/nodes/sop/_Base';
+import {cadCompoundToObject3D} from './toObject3D/CadCompound';
 const t = new Vector3();
 const q = new Quaternion();
 const s = new Vector3();
@@ -161,9 +162,15 @@ export class CadObject<T extends CadGeometryType> implements ObjectContent<CoreO
 			case CadGeometryType.FACE:
 			case CadGeometryType.SHELL:
 			case CadGeometryType.SOLID:
-			case CadGeometryType.COMPSOLID:
-			case CadGeometryType.COMPOUND: {
+			case CadGeometryType.COMPSOLID: {
 				return cadShapeToObject3D(cadObject as CadObject<CadGeometryTypeShape>, tesselationParams, displayNode);
+			}
+			case CadGeometryType.COMPOUND: {
+				return cadCompoundToObject3D(
+					cadObject as CadObject<CadGeometryType.COMPOUND>,
+					tesselationParams,
+					displayNode
+				);
 			}
 		}
 		TypeAssert.unreachable(type);

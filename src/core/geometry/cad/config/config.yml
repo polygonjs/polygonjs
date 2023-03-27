@@ -150,6 +150,7 @@ mainBuild:
     - symbol: Message_ProgressRange
     - symbol: MoniTool_TypedValue
     - symbol: NCollection_BaseList
+    - symbol: NCollection_BaseMap
     - symbol: Poly_Connect
     - symbol: Poly_PolygonOnTriangulation
     - symbol: Poly_Triangle
@@ -166,6 +167,7 @@ mainBuild:
     - symbol: TColgp_SequenceOfPnt2d
     - symbol: TopAbs_Orientation
     - symbol: TopAbs_ShapeEnum
+    - symbol: TopExp
     - symbol: TopExp_Explorer
     - symbol: TopLoc_Location
     - symbol: TopoDS
@@ -181,6 +183,7 @@ mainBuild:
     - symbol: TopoDS_Vertex
     - symbol: TopoDS_Wire
     - symbol: TopTools_Array1OfShape
+    - symbol: TopTools_IndexedMapOfShape
     - symbol: TopTools_ListOfShape
     - symbol: XSControl_Reader
     - symbol: OCJS

@@ -43,7 +43,7 @@ export class CADFileSTEPSopNode extends CADSopNode<CADFileSTEPSopParamsConfig> {
 
 	override async cook(inputCoreGroups: CoreGroup[]) {
 		Poly.blobs.clearBlobsForNode(this);
-		const loader = this._createGeoLoaderHandler(this.pv.url); //new FBXLoaderHandler(params.url, this.scene(), this._node);
+		const loader = this._createGeoLoaderHandler(this.pv.url);
 		const result = await loader.load({node: this});
 		if (result) {
 			const matrixAutoUpdate: boolean = this.pv.matrixAutoUpdate;
@@ -52,7 +52,6 @@ export class CADFileSTEPSopNode extends CADSopNode<CADFileSTEPSopParamsConfig> {
 					child.matrixAutoUpdate = matrixAutoUpdate;
 				});
 			}
-			// const processedObjects = this._onLoad(result, params);
 			return this.setCADObjects(result);
 		}
 		return this.setCADObjects([]);

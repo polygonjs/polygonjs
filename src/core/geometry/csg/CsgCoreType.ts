@@ -1,5 +1,10 @@
 import {geometries} from '@jscad/modeling';
-import {CsgGeometryType, CsgGeometry, CsgTypeMap} from './CsgCommon';
+import {CoreObjectType, ObjectContent} from '../ObjectContent';
+import {CsgGeometryType, CsgGeometry, CsgTypeMap, CSG_GEOMETRY_TYPES_SET} from './CsgCommon';
+
+export function isCSGObject(o: ObjectContent<CoreObjectType>) {
+	return CSG_GEOMETRY_TYPES_SET.has(o.type as CsgGeometryType);
+}
 
 export function csgIsPath2(geometry: CsgGeometry): geometry is geometries.path2.Path2 {
 	// DO NOT use this function 'geometries.path2'

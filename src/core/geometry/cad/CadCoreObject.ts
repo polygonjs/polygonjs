@@ -85,7 +85,7 @@ export class CadCoreObject<T extends CadGeometryType> extends BaseCoreObject<Cor
 		object.applyMatrix4(matrix);
 	}
 	static override mergeCompact(options: MergeCompactOptions) {
-		const {objects, materialsByObjectType, mergedObjects, onError} = options;
+		const {objects, material, mergedObjects, onError} = options;
 		try {
 			const firstObject = objects[0];
 			if (!firstObject) {
@@ -95,7 +95,6 @@ export class CadCoreObject<T extends CadGeometryType> extends BaseCoreObject<Cor
 
 			for (let newObject of newObjects) {
 				objectContentCopyProperties(firstObject, newObject);
-				const material = materialsByObjectType.get(newObject.type);
 				if (material) {
 					newObject.material = material;
 				}

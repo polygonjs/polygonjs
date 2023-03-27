@@ -201,3 +201,44 @@ QUnit.test('sop/merge compact preserves object properties', async (assert) => {
 	assert.equal(await getObjectPropertyProperty(), false);
 	assert.equal(await getMergeProperty(), false);
 });
+
+QUnit.test('sop/merge with preserveMaterials', async (assert) => {
+	const geo1 = window.geo1;
+	const MAT = window.MAT;
+
+	const meshBasic1 = MAT.createNode('meshBasic');
+	const meshBasic2 = MAT.createNode('meshBasic');
+
+	const box1 = geo1.createNode('box');
+	const box2 = geo1.createNode('box');
+	const box3 = geo1.createNode('box');
+	const material1 = geo1.createNode('material');
+	const material2 = geo1.createNode('material');
+	const material3 = geo1.createNode('material');
+	const merge1 = geo1.createNode('merge');
+
+	material1.setInput(0, box1);
+	material2.setInput(0, box2);
+	material3.setInput(0, box3);
+
+	material1.p.material.setNode(meshBasic1);
+	material2.p.material.setNode(meshBasic2);
+	material3.p.material.setNode(meshBasic2);
+	merge1.setInput(0, material1);
+	merge1.setInput(1, material2);
+	merge1.setInput(2, material3);
+
+	async function getObjectsCount() {
+		const container = await merge1.compute();
+		const objects = container.coreContent()?.threejsObjects()!;
+		return objects.length;
+	}
+
+	assert.equal(await getObjectsCount(), 3);
+
+	merge1.setCompactMode(true);
+	assert.equal(await getObjectsCount(), 2);
+
+	merge1.p.preserveMaterials.set(false);
+	assert.equal(await getObjectsCount(), 1);
+});

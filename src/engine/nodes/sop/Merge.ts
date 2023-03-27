@@ -22,6 +22,12 @@ const DEFAULT_INPUTS_COUNT = 4;
 class MergeSopParamsConfig extends NodeParamsConfig {
 	/** @param When off, input objects remain separate. When on, they are merged together by type (mesh, points and lines). In order to merge them correctly, you'll have to make sure they have the same attributes */
 	compact = ParamConfig.BOOLEAN(DEFAULT.compact);
+	/** @param When off, objects with same type (mesh, points, lines) will be merged together, regardless of their material. When on, only objects with same type and same material will be merged */
+	preserveMaterials = ParamConfig.BOOLEAN(DEFAULT.preserveMaterials, {
+		visibleIf: {
+			compact: true,
+		},
+	});
 	/** @param number of inputs that this node can merge geometries from */
 	inputsCount = ParamConfig.INTEGER(DEFAULT_INPUTS_COUNT, {
 		range: [1, 32],

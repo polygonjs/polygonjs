@@ -33,7 +33,11 @@ export function SOPCADTesselationParamConfig<TBase extends Constructor>(Base: TB
 			separatorBefore: true,
 		});
 		/** @param edges color */
-		edgesColor = ParamConfig.COLOR(DEFAULT.edgesColor);
+		edgesColor = ParamConfig.COLOR(DEFAULT.edgesColor, {
+			visibleIf: {
+				edgesColor: true,
+			},
+		});
 		/** @param display meshes */
 		displayMeshes = ParamConfig.BOOLEAN(true);
 		/** @param meshes color */
@@ -78,7 +82,11 @@ export function OBJCADTesselationParamConfig<TBase extends Constructor>(Base: TB
 			separatorBefore: true,
 		});
 		/** @param edges color */
-		CADEdgesColor = ParamConfig.COLOR(DEFAULT.edgesColor);
+		CADEdgesColor = ParamConfig.COLOR(DEFAULT.edgesColor, {
+			visibleIf: {
+				edgesColor: true,
+			},
+		});
 		/** @param display meshes */
 		CADDisplayMeshes = ParamConfig.BOOLEAN(true);
 		/** @param meshes color */

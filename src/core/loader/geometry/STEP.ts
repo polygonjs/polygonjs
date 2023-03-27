@@ -42,15 +42,18 @@ class STEPLoader extends Loader {
 			const isDone = result == oc.IFSelect_ReturnStatus.IFSelect_RetDone;
 			if (isDone) {
 				reader.TransferRoots(CadLoaderSync.Message_ProgressRange);
-				const shape = reader.OneShape();
+				const shapesCount = reader.NbShapes();
+				for (let i = 0; i < shapesCount; i++) {
+					const shape = reader.Shape(i + 1);
+					const type = cadGeometryTypeFromShape(oc, shape);
+					if (type) {
+						const newObject = new CadObject(shape, type);
 
-				const type = cadGeometryTypeFromShape(oc, shape);
-				if (type) {
-					const newObject = new CadObject(shape, type);
-
-					newObjects.push(newObject);
+						newObjects.push(newObject);
+					}
 				}
 			}
+			reader.delete();
 			onLoad(newObjects);
 		});
 	}
