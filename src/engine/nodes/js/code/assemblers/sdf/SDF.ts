@@ -59,8 +59,8 @@ export class JsAssemblerSDF extends BaseJsShaderAssembler {
 			variablesByName[varName] = variable;
 		});
 		this.traverseRegisteredFunctions((namedFunction) => {
-			functionNames.push(namedFunction.type);
-			functionsByName[namedFunction.type] = namedFunction.func;
+			functionNames.push(namedFunction.type());
+			functionsByName[namedFunction.type()] = namedFunction.func;
 		});
 		const paramConfigs = this.param_configs();
 		return {functionBody, variableNames, variablesByName, functionNames, functionsByName, paramConfigs};

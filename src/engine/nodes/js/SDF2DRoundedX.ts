@@ -11,7 +11,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {JsConnectionPointType, JsConnectionPoint} from '../utils/io/connections/Js';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 import {BaseSDF2DJsNode} from './_BaseSDF2D';
-import {sdRoundedX} from './js/sdf/sdf2D';
+import {Poly} from '../../Poly';
 
 const OUTPUT_NAME = 'float';
 class SDF2DRoundedXJsParamsConfig extends NodeParamsConfig {
@@ -42,7 +42,7 @@ export class SDF2DRoundedXJsNode extends BaseSDF2DJsNode<SDF2DRoundedXJsParamsCo
 		const radius = this.variableForInputParam(shadersCollectionController, this.p.radius);
 
 		const float = this.jsVarName(OUTPUT_NAME);
-		const func = new sdRoundedX(this, shadersCollectionController);
+		const func = Poly.namedFunctionsRegister.getFunction('SDFRoundedX', this, shadersCollectionController);
 		const bodyLine = `const ${float} = ${func.asString(position, center, length, radius)}`;
 		shadersCollectionController.addBodyLines(this, [bodyLine]);
 	}

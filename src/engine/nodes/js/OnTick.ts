@@ -9,8 +9,8 @@ import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {JsConnectionPoint, JsConnectionPointType} from '../utils/io/connections/Js';
 import {JsType} from '../../poly/registers/nodes/types/Js';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
-import {globalsTime, globalsTimeDelta} from './js/globals';
 import {ComputedValueJsDefinition} from './utils/JsDefinition';
+import {Poly} from '../../Poly';
 
 export enum OnTickJsNodeOuput {
 	TIME = 'time',
@@ -38,8 +38,8 @@ export class OnTickJsNode extends TypedJsNode<OnTickJsParamsConfig> {
 		const timeVarName = this.jsVarName(OnTickJsNodeOuput.TIME);
 		const deltaVarName = this.jsVarName(OnTickJsNodeOuput.DELTA);
 
-		const _time = new globalsTime(this, shadersCollectionController);
-		const _delta = new globalsTimeDelta(this, shadersCollectionController);
+		const _time = Poly.namedFunctionsRegister.getFunction('globalsTime', this, shadersCollectionController);
+		const _delta = Poly.namedFunctionsRegister.getFunction('globalsTimeDelta', this, shadersCollectionController);
 		shadersCollectionController.addDefinitions(this, [
 			new ComputedValueJsDefinition(
 				this,

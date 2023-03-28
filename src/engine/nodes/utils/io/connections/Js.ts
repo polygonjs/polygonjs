@@ -13,12 +13,23 @@ export enum JsConnectionPointType {
 	PLANE = 'Plane',
 	QUATERNION = 'Quaternion',
 	RAY = 'Ray',
+	STRING = 'string',
 	TRIGGER = 'trigger',
 	VECTOR2 = 'Vector2',
 	VECTOR3 = 'Vector3',
 	VECTOR4 = 'Vector4',
 	// MAT3 = 'mat3',
 	// MAT4 = 'mat4',
+}
+
+const PRIMITIVE_JS_CONNECTION_TYPES = [
+	JsConnectionPointType.BOOLEAN,
+	JsConnectionPointType.FLOAT,
+	JsConnectionPointType.INT,
+	JsConnectionPointType.STRING,
+];
+export function isJsConnectionPointPrimitive(type: JsConnectionPointType) {
+	return PRIMITIVE_JS_CONNECTION_TYPES.includes(type);
 }
 
 //
@@ -38,6 +49,7 @@ export const JS_CONNECTION_POINT_TYPES: Array<JsConnectionPointType> = [
 	JsConnectionPointType.PLANE,
 	JsConnectionPointType.QUATERNION,
 	JsConnectionPointType.RAY,
+	JsConnectionPointType.STRING,
 	JsConnectionPointType.TRIGGER,
 	JsConnectionPointType.VECTOR2,
 	JsConnectionPointType.VECTOR3,
@@ -64,6 +76,7 @@ export interface JsIConnectionPointTypeToParamTypeMap extends JSConnectionPointT
 	[JsConnectionPointType.PLANE]: ParamType.BUTTON;
 	[JsConnectionPointType.QUATERNION]: ParamType.BUTTON;
 	[JsConnectionPointType.RAY]: ParamType.BUTTON;
+	[JsConnectionPointType.STRING]: ParamType.STRING;
 	[JsConnectionPointType.TRIGGER]: ParamType.BUTTON;
 	[JsConnectionPointType.VECTOR2]: ParamType.VECTOR2;
 	[JsConnectionPointType.VECTOR3]: ParamType.VECTOR3;
@@ -83,6 +96,7 @@ export const JsConnectionPointTypeToParamTypeMap: JsIConnectionPointTypeToParamT
 	[JsConnectionPointType.PLANE]: ParamType.BUTTON,
 	[JsConnectionPointType.QUATERNION]: ParamType.BUTTON,
 	[JsConnectionPointType.RAY]: ParamType.BUTTON,
+	[JsConnectionPointType.STRING]: ParamType.STRING,
 	[JsConnectionPointType.TRIGGER]: ParamType.BUTTON,
 	[JsConnectionPointType.VECTOR2]: ParamType.VECTOR2,
 	[JsConnectionPointType.VECTOR3]: ParamType.VECTOR3,
@@ -111,7 +125,7 @@ export interface IJsParamTypeToConnectionPointTypeMap extends JsParamTypeToConne
 	[ParamType.PARAM_PATH]: undefined;
 	[ParamType.NODE_PATH]: undefined;
 	[ParamType.RAMP]: undefined;
-	[ParamType.STRING]: undefined;
+	[ParamType.STRING]: JsConnectionPointType.STRING;
 }
 export const JsParamTypeToConnectionPointTypeMap: IJsParamTypeToConnectionPointTypeMap = {
 	[ParamType.BOOLEAN]: JsConnectionPointType.BOOLEAN,
@@ -127,7 +141,7 @@ export const JsParamTypeToConnectionPointTypeMap: IJsParamTypeToConnectionPointT
 	[ParamType.PARAM_PATH]: undefined,
 	[ParamType.NODE_PATH]: undefined,
 	[ParamType.RAMP]: undefined,
-	[ParamType.STRING]: undefined,
+	[ParamType.STRING]: JsConnectionPointType.STRING,
 };
 
 //
@@ -150,6 +164,7 @@ export const JsConnectionPointInitValueMap: ConnectionPointInitValueMapGeneric =
 	[JsConnectionPointType.PLANE]: null,
 	[JsConnectionPointType.QUATERNION]: null,
 	[JsConnectionPointType.RAY]: null,
+	[JsConnectionPointType.STRING]: '',
 	[JsConnectionPointType.TRIGGER]: null,
 	[JsConnectionPointType.VECTOR2]: [0, 0],
 	[JsConnectionPointType.VECTOR3]: [0, 0, 0],
@@ -178,6 +193,7 @@ export const GlConnectionPointComponentsCountMap: ConnectionPointComponentsCount
 	[JsConnectionPointType.PLANE]: 1,
 	[JsConnectionPointType.QUATERNION]: 1,
 	[JsConnectionPointType.RAY]: 1,
+	[JsConnectionPointType.STRING]: 1,
 	[JsConnectionPointType.TRIGGER]: 1,
 	[JsConnectionPointType.VECTOR2]: 2,
 	[JsConnectionPointType.VECTOR3]: 3,

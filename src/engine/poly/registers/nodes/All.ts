@@ -32,9 +32,7 @@ export interface NodeChildrenMapByContext {
 	[NodeContext.ACTOR]: ActorNodeChildrenMap;
 	[NodeContext.ANIM]: AnimNodeChildrenMap;
 	[NodeContext.AUDIO]: AudioNodeChildrenMap;
-	// [NodeContext.CAD]: CadNodeChildrenMap;
 	[NodeContext.COP]: CopNodeChildrenMap;
-	// [NodeContext.CSG]: CsgNodeChildrenMap;
 	[NodeContext.EVENT]: EventNodeChildrenMap;
 	[NodeContext.GL]: GlNodeChildrenMap;
 	[NodeContext.JS]: JsNodeChildrenMap;
@@ -51,9 +49,7 @@ export class AllNodesRegister {
 		ActorRegister.run(poly);
 		AnimRegister.run(poly);
 		AudioRegister.run(poly);
-		// CadRegister.run(poly);
 		CopRegister.run(poly);
-		// CsgRegister.run(poly);
 		EventRegister.run(poly);
 		GlRegister.run(poly);
 		JsRegister.run(poly);

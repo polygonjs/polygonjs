@@ -11,8 +11,8 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {JsConnectionPointType, JsConnectionPoint} from '../utils/io/connections/Js';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 import {TypedJsNode} from './_Base';
-import {SDFSubtract, SDFSmoothSubtract} from './js/sdf/sdf';
 import {isBooleanTrue} from '../../../core/Type';
+import {Poly} from '../../Poly';
 
 const OUTPUT_NAME = 'subtract';
 
@@ -44,8 +44,8 @@ export class SDFSubtractJsNode extends TypedJsNode<SDFSubtractJsParamsConfig> {
 		// const smooth = this.variableForInputParam(shadersCollectionController, this.p.smooth);
 		const smoothFactor = this.variableForInputParam(shadersCollectionController, this.p.smoothFactor);
 
-		const _func = isBooleanTrue(this.pv.smooth) ? SDFSmoothSubtract : SDFSubtract;
-		const func = new _func(this, shadersCollectionController);
+		const functionName = isBooleanTrue(this.pv.smooth) ? 'SDFSmoothSubtract' : 'SDFSubtract';
+		const func = Poly.namedFunctionsRegister.getFunction(functionName, this, shadersCollectionController);
 		const float = this.jsVarName(OUTPUT_NAME);
 		const bodyLine = `const ${float} = ${func.asString(sdf0, sdf1, smoothFactor)}`;
 		shadersCollectionController.addBodyLines(this, [bodyLine]);

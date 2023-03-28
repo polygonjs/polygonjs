@@ -5,7 +5,7 @@ import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {JsConnectionPointType, JsConnectionPoint} from '../utils/io/connections/Js';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 import {Vector2, Vector3} from 'three';
-import {sizzleVec3XY, sizzleVec4XYZ, vec2ToVec3, vec3ToVec4} from './js/conversion';
+import {Poly} from '../../Poly';
 
 class VecToParamsJsConfig extends NodeParamsConfig {}
 const ParamsConfig = new VecToParamsJsConfig();
@@ -99,7 +99,7 @@ export class Vec4ToVec3JsNode extends BaseVecToJsNode {
 		if (used_output_names.indexOf(out_vec3) >= 0) {
 			const out = this.jsVarName(out_vec3);
 			shadersCollectionController.addVariable(this, out, new Vector3());
-			const func = new sizzleVec4XYZ(this, shadersCollectionController);
+			const func = Poly.namedFunctionsRegister.getFunction('sizzleVec4XYZ', this, shadersCollectionController);
 			body_lines.push(`${func.asString(vec, out)}`);
 			// const var_name = this.jsVarName(out_vec3);
 			// body_lines.push(`vec3 ${var_name} = ${vec}.xyz`);
@@ -143,7 +143,7 @@ export class Vec3ToVec2JsNode extends BaseVecToJsNode {
 		if (used_output_names.indexOf(out_vec2) >= 0) {
 			const out = this.jsVarName(out_vec2);
 			shadersCollectionController.addVariable(this, out, new Vector2());
-			const func = new sizzleVec3XY(this, shadersCollectionController);
+			const func = Poly.namedFunctionsRegister.getFunction('sizzleVec3XY', this, shadersCollectionController);
 			body_lines.push(`${func.asString(vec, out)}`);
 		}
 		if (used_output_names.indexOf(out_z) >= 0) {
@@ -183,7 +183,7 @@ export class Vec2ToVec3JsNode extends BaseVecToJsNode {
 		const varName = this.jsVarName(out_vec3);
 
 		shadersCollectionController.addVariable(this, varName, new Vector2());
-		const func = new vec2ToVec3(this, shadersCollectionController);
+		const func = Poly.namedFunctionsRegister.getFunction('vec2ToVec3', this, shadersCollectionController);
 		// body_lines.push(`${func.asString(vec2, z, varName)}`);
 
 		// body_lines.push(`vec3 ${var_name} = vec3(${vec2}.xy, ${z})`);
@@ -225,7 +225,7 @@ export class Vec3ToVec4JsNode extends BaseVecToJsNode {
 		const varName = this.jsVarName(out_vec4);
 
 		shadersCollectionController.addVariable(this, varName, new Vector2());
-		const func = new vec3ToVec4(this, shadersCollectionController);
+		const func = Poly.namedFunctionsRegister.getFunction('vec3ToVec4', this, shadersCollectionController);
 
 		body_lines.push(`${func.asString(vec3, w, varName)}`);
 		// body_lines.push(`vec4 ${var_name} = vec4(${vec3}.xyz, ${w})`);

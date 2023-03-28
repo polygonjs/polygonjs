@@ -9,7 +9,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {JsConnectionPoint, JsConnectionPointType, JS_CONNECTION_POINT_IN_NODE_DEF} from '../utils/io/connections/Js';
 import {JsType} from '../../poly/registers/nodes/types/Js';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
-import {setObjectLookAt} from './js/action';
+import {Poly} from '../../Poly';
 
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
 
@@ -51,7 +51,7 @@ export class SetObjectLookAtJsNode extends TypedJsNode<SetObjectLookAtJsParamsCo
 		const invertDirection = this.variableForInputParam(shadersCollectionController, this.p.invertDirection);
 		const updateMatrix = this.variableForInputParam(shadersCollectionController, this.p.updateMatrix);
 
-		const func = new setObjectLookAt(this, shadersCollectionController);
+		const func = Poly.namedFunctionsRegister.getFunction('setObjectLookAt', this, shadersCollectionController);
 		const bodyLine = func.asString(targetPosition, up, lerp, invertDirection, updateMatrix);
 		shadersCollectionController.addBodyLines(this, [bodyLine]);
 	}

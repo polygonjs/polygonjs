@@ -11,7 +11,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {JsConnectionPointType, JsConnectionPoint} from '../utils/io/connections/Js';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 import {BaseSDFJsNode} from './_BaseSDF';
-import {sdBox} from './js/sdf/sdf';
+import {Poly} from '../../Poly';
 const OUTPUT_NAME = 'float';
 class SDFBoxJsParamsConfig extends NodeParamsConfig {
 	position = ParamConfig.VECTOR3([0, 0, 0], {hidden: true});
@@ -41,7 +41,7 @@ export class SDFBoxJsNode extends BaseSDFJsNode<SDFBoxJsParamsConfig> {
 		const sizes = this.variableForInputParam(shadersCollectionController, this.p.sizes);
 
 		const float = this.jsVarName(OUTPUT_NAME);
-		const func = new sdBox(this, shadersCollectionController);
+		const func = Poly.namedFunctionsRegister.getFunction('SDFBox', this, shadersCollectionController);
 		const bodyLine = `const ${float} = ${func.asString(position, center, sizes, size)}`;
 		shadersCollectionController.addBodyLines(this, [bodyLine]);
 	}

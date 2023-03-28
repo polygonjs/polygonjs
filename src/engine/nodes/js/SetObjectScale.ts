@@ -7,8 +7,8 @@
 import {TRIGGER_CONNECTION_NAME, TypedJsNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {JsConnectionPoint, JsConnectionPointType, JS_CONNECTION_POINT_IN_NODE_DEF} from '../utils/io/connections/Js';
-import {setObjectScale} from './js/action';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {Poly} from '../../Poly';
 
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
 
@@ -50,7 +50,7 @@ export class SetObjectScaleJsNode extends TypedJsNode<SetObjectScaleJsParamsConf
 		const lerp = this.variableForInputParam(shadersCollectionController, this.p.lerp);
 		const updateMatrix = this.variableForInputParam(shadersCollectionController, this.p.updateMatrix);
 
-		const func = new setObjectScale(this, shadersCollectionController);
+		const func = Poly.namedFunctionsRegister.getFunction('setObjectScale', this, shadersCollectionController);
 		const bodyLine = func.asString(scale, mult, lerp, updateMatrix);
 		shadersCollectionController.addBodyLines(this, [bodyLine]);
 	}

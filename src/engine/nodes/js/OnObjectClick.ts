@@ -10,7 +10,7 @@ import {JsType} from '../../poly/registers/nodes/types/Js';
 import {EvaluatorEventData} from './code/assemblers/actor/Evaluator';
 import {BaseOnObjectPointerEventJsNode} from './_BaseOnObjectPointerEvent';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
-import {getObjectHoveredState} from './js/event';
+import {Poly} from '../../Poly';
 
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
 
@@ -49,7 +49,11 @@ export class OnObjectClickJsNode extends BaseOnObjectPointerEventJsNode {
 		const traverseChildren = this.variableForInputParam(shadersCollectionController, this.p.traverseChildren);
 		const lineThreshold = this.variableForInputParam(shadersCollectionController, this.p.lineThreshold);
 		const pointsThreshold = this.variableForInputParam(shadersCollectionController, this.p.pointsThreshold);
-		const func = new getObjectHoveredState(this, shadersCollectionController);
+		const func = Poly.namedFunctionsRegister.getFunction(
+			'getObjectHoveredState',
+			this,
+			shadersCollectionController
+		);
 		const bodyLine = func.asString(traverseChildren, lineThreshold, pointsThreshold);
 
 		const methodName = this.type();

@@ -3,8 +3,8 @@ import {BaseJsDefinition, ComputedValueJsDefinition} from '../../utils/JsDefinit
 import {JsLinesController, DefinitionTraverseCallback, AddBodyLinesOptions} from './LinesController';
 import {BaseJsNodeType} from '../../_Base';
 import {RegisterableVariable, BaseJsShaderAssembler} from '../assemblers/_Base';
-import {BaseNamedFunction} from '../assemblers/NamedFunction';
 import {JsConnectionPointType} from '../../../utils/io/connections/Js';
+import {BaseNamedFunction} from '../../../../functions/_Base';
 
 export class ShadersCollectionController {
 	private _linesControllerByShaderName: Map<ShaderName, JsLinesController> = new Map();

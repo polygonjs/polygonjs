@@ -304,6 +304,7 @@ export class ActorsManager {
 		const evaluator = evaluatorGenerator.findOrCreateEvaluator(object);
 		// evaluator.objectUuid.value = object.uuid;
 		if (evaluator[methodName]) {
+			console.log(evaluator, methodName);
 			evaluator[methodName]!();
 		}
 	}

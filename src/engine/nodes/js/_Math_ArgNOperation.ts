@@ -4,12 +4,18 @@ import {
 	// isJsConnectionPointPrimitive,
 	// ReturnValueTypeByActorConnectionPointType,
 } from '../utils/io/connections/Js';
+import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {isJsConnectionPointPrimitive} from '../utils/io/connections/Js';
 // import {Vector2, Vector3, Vector4} from 'three';
 
 interface MathArgNOperationOptions {
 	inputPrefix: string;
 	out: string;
 	allowed_in_types?: JsConnectionPointType[];
+	operator: {
+		primitive: string;
+		vector: string;
+	};
 }
 // const tmpV2 = new Vector2();
 // const tmpV3 = new Vector3();
@@ -22,6 +28,7 @@ export function MathFunctionArgNOperationFactory(
 	const inputPrefix = options.inputPrefix || type;
 	const output_name = options.out || 'val';
 	const allowed_in_types = options.allowed_in_types;
+	const operator = options.operator;
 	return class Node extends BaseMathFunctionJsNode {
 		static override type() {
 			return type;
@@ -33,6 +40,33 @@ export function MathFunctionArgNOperationFactory(
 
 			this.io.connection_points.set_expected_input_types_function(this._expectedInputTypes.bind(this));
 			this.io.connection_points.set_expected_output_types_function(this._expectedOutputTypes.bind(this));
+		}
+
+		override setLines(shadersCollectionController: ShadersCollectionController) {
+			const values: string[] = [];
+			const connectionPoints = this.io.inputs.namedInputConnectionPoints();
+			for (let connectionPoint of connectionPoints) {
+				const connectionPointName = connectionPoint.name();
+				const value = this.variableForInput(shadersCollectionController, connectionPointName);
+				values.push(value);
+			}
+
+			const firstType = this.io.connection_points.first_input_connection_type();
+			if (!firstType) {
+				return;
+			}
+			const isPrimitive = firstType != null && isJsConnectionPointPrimitive(firstType);
+			const line = isPrimitive
+				? values.join(` ${operator.primitive} `)
+				: values.join(`.${operator.vector}(`) + ')';
+			// if (isPrimitive) {
+			// 	return values.join(' + ');
+			// }
+			// if (CoreType.isVector(firstType)) {
+			// 	return values.join('.add(') + ')';
+			// }
+
+			shadersCollectionController.addBodyOrComputed(this, firstType, this.jsVarName(output_name), line);
 		}
 
 		// protected _applyOperation<T>(arg1: T, arg2: T): any {}
@@ -132,9 +166,9 @@ export function MathFunctionArgNOperationFactory(
 
 			const current_connections = this.io.connections.existingInputConnections();
 
-			const expected_count = current_connections ? Math.max(current_connections.length + 1, 2) : 2;
+			const expectedCount = current_connections ? Math.max(current_connections.length + 1, 2) : 2;
 			const expected_input_types = [];
-			for (let i = 0; i < expected_count; i++) {
+			for (let i = 0; i < expectedCount; i++) {
 				expected_input_types.push(type);
 			}
 			return expected_input_types;

@@ -11,10 +11,10 @@ import {JsConnectionPoint, JsConnectionPointType} from '../utils/io/connections/
 import {JsType} from '../../poly/registers/nodes/types/Js';
 import {BaseUserInputJsNode} from './_BaseUserInput';
 import {CoreEventEmitter, EVENT_EMITTERS, EVENT_EMITTER_PARAM_MENU_OPTIONS} from '../../../core/event/CoreEventEmitter';
-import {globalsCursor} from './js/globals';
 import {ComputedValueJsDefinition} from './utils/JsDefinition';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 import {EvaluatorEventData} from './code/assemblers/actor/Evaluator';
+import {Poly} from '../../Poly';
 
 const OUTPUT_NAME = 'cursor';
 class CursorJsParamsConfig extends NodeParamsConfig {
@@ -53,7 +53,7 @@ export class CursorJsNode extends BaseUserInputJsNode<CursorJsParamsConfig> {
 	override setLines(shadersCollectionController: ShadersCollectionController) {
 		const out = this.jsVarName(OUTPUT_NAME);
 
-		const _cursor = new globalsCursor(this, shadersCollectionController);
+		const _cursor = Poly.namedFunctionsRegister.getFunction('globalsCursor', this, shadersCollectionController);
 		shadersCollectionController.addDefinitions(this, [
 			new ComputedValueJsDefinition(
 				this,

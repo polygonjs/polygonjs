@@ -27,7 +27,7 @@ import {JsType} from '../../../../poly/registers/nodes/types/Js';
 // import {GlobalsOutput} from './common/GlobalsOutput';
 import {JsParamConfig} from '../utils/JsParamConfig';
 import {ParamType} from '../../../../poly/ParamType';
-import {BaseNamedFunction} from './NamedFunction';
+import {BaseNamedFunction} from '../../../../functions/_Base';
 // import {CoreString} from '../../../../../core/String';
 
 type StringArrayByShaderName = Map<ShaderName, string[]>;
@@ -629,12 +629,12 @@ export class BaseJsShaderAssembler extends TypedAssembler<NodeContext.JS> {
 	//
 	private _registeredFunctions: Map<string, BaseNamedFunction> = new Map();
 	addFunction(node: BaseJsNodeType, namedFunction: BaseNamedFunction) {
-		const existingFunctionName = this._registeredFunctions.get(namedFunction.type);
+		const existingFunctionName = this._registeredFunctions.get(namedFunction.type());
 		if (existingFunctionName) {
 			return;
 		}
 
-		this._registeredFunctions.set(namedFunction.type, namedFunction);
+		this._registeredFunctions.set(namedFunction.type(), namedFunction);
 
 		// let i=0
 		// for(let _func of functions){

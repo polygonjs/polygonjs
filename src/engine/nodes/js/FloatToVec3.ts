@@ -12,7 +12,7 @@ import {
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 import {Vector3} from 'three';
-import {floatToVec3} from './js/conversion';
+import {Poly} from '../../Poly';
 // import {Vector3} from 'three';
 // import {ParamType} from '../../poly/ParamType';
 // const tmpV3 = new Vector3();
@@ -45,7 +45,7 @@ export class FloatToVec3JsNode extends TypedJsNode<FloatToVec3JsParamsConfig> {
 		const varName = this.jsVarName(FloatToVec3JsNode.OUTPUT_NAME);
 
 		shadersCollectionController.addVariable(this, varName, new Vector3());
-		const func = new floatToVec3(this, shadersCollectionController);
+		const func = Poly.namedFunctionsRegister.getFunction('floatToVec3', this, shadersCollectionController);
 		// bodyLines.push(`${func.asString(x, y, z, varName)}`);
 
 		// body_lines.push(`vec3 ${var_name} = vec3(${vec2}.xy, ${z})`);

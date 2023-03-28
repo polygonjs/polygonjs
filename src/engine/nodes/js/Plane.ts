@@ -10,9 +10,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {JsConnectionPoint, JsConnectionPointType} from '../utils/io/connections/Js';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 import {Plane} from 'three';
-import {planeSet} from './js/plane';
-// import {Plane} from 'three';
-// import {BaseNodeType} from '../_Base';
+import {Poly} from '../../Poly';
 
 const OUTPUT_NAME = JsConnectionPointType.PLANE;
 class PlaneJsParamsConfig extends NodeParamsConfig {
@@ -43,7 +41,7 @@ export class PlaneJsNode extends TypedJsNode<PlaneJsParamsConfig> {
 		const out = this.jsVarName(OUTPUT_NAME);
 
 		shadersCollectionController.addVariable(this, out, new Plane());
-		const func = new planeSet(this, shadersCollectionController);
+		const func = Poly.namedFunctionsRegister.getFunction('planeSet', this, shadersCollectionController);
 		const bodyLine = func.asString(normal, constant, out);
 		shadersCollectionController.addBodyOrComputed(this, JsConnectionPointType.PLANE, out, bodyLine);
 	}

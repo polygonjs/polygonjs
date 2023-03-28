@@ -8,8 +8,8 @@ import {TRIGGER_CONNECTION_NAME, TypedJsNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {JsConnectionPoint, JsConnectionPointType, JS_CONNECTION_POINT_IN_NODE_DEF} from '../utils/io/connections/Js';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
-import {setObjectPosition} from './js/action';
 import {JsType} from '../../poly/registers/nodes/types/Js';
+import {Poly} from '../../Poly';
 
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
 
@@ -37,10 +37,7 @@ export class SetObjectPositionJsNode extends TypedJsNode<SetObjectPositionJsPara
 
 		this.io.outputs.setNamedOutputConnectionPoints([
 			new JsConnectionPoint(TRIGGER_CONNECTION_NAME, JsConnectionPointType.TRIGGER),
-			new JsConnectionPoint(
-				JsConnectionPointType.OBJECT_3D,
-				JsConnectionPointType.OBJECT_3D,
-			),
+			new JsConnectionPoint(JsConnectionPointType.OBJECT_3D, JsConnectionPointType.OBJECT_3D),
 		]);
 	}
 	override setLines(shadersCollectionController: ShadersCollectionController) {
@@ -48,7 +45,7 @@ export class SetObjectPositionJsNode extends TypedJsNode<SetObjectPositionJsPara
 		const lerp = this.variableForInputParam(shadersCollectionController, this.p.lerp);
 		const updateMatrix = this.variableForInputParam(shadersCollectionController, this.p.updateMatrix);
 
-		const func = new setObjectPosition(this, shadersCollectionController);
+		const func = Poly.namedFunctionsRegister.getFunction('setObjectPosition', this, shadersCollectionController);
 		const bodyLine = func.asString(position, lerp, updateMatrix);
 		shadersCollectionController.addBodyLines(this, [bodyLine]);
 	}

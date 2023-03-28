@@ -10,9 +10,9 @@ import {BaseSDFJsNode} from './_BaseSDF';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {JsConnectionPointType, JsConnectionPoint} from '../utils/io/connections/Js';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
-import {SDFRevolutionX, SDFRevolutionY, SDFRevolutionZ} from './js/sdf/sdf2D';
 import {TypeAssert} from '../../poly/Assert';
 import {Vector2} from 'three';
+import {Poly} from '../../Poly';
 
 enum SDFRevolutionAxis {
 	X = 'X',
@@ -56,22 +56,21 @@ export class SDFRevolutionJsNode extends BaseSDFJsNode<SDFRevolutionGlParamsConf
 
 		const out = this.jsVarName(OUTPUT_NAME);
 		shadersCollectionController.addVariable(this, out, new Vector2());
-		const _func = this._function();
-		const func = new _func(this, shadersCollectionController);
+		const func = Poly.namedFunctionsRegister.getFunction(this._functionName(), this, shadersCollectionController);
 		const bodyLine = `${func.asString(position, center, radius, out)}`;
 		shadersCollectionController.addBodyLines(this, [bodyLine]);
 	}
-	private _function() {
+	private _functionName() {
 		const axis = SDF_REVOLUTION_AXISES[this.pv.axis];
 		switch (axis) {
 			case SDFRevolutionAxis.X: {
-				return SDFRevolutionX;
+				return 'SDFRevolutionX';
 			}
 			case SDFRevolutionAxis.Y: {
-				return SDFRevolutionY;
+				return 'SDFRevolutionY';
 			}
 			case SDFRevolutionAxis.Z: {
-				return SDFRevolutionZ;
+				return 'SDFRevolutionZ';
 			}
 		}
 		TypeAssert.unreachable(axis);

@@ -7,9 +7,9 @@
  */
 
 import {Vector3} from 'three';
+import {Poly} from '../../Poly';
 import {JsConnectionPoint, JsConnectionPointType} from '../utils/io/connections/Js';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
-import {rayIntersectPlane} from './js/ray';
 import {BaseRayPlaneJsNode} from './_BaseRayPlane';
 
 const OUTPUT_NAME = 'position';
@@ -30,7 +30,7 @@ export class RayIntersectPlaneJsNode extends BaseRayPlaneJsNode {
 		const out = this.jsVarName(OUTPUT_NAME);
 		shadersCollectionController.addVariable(this, out, new Vector3());
 
-		const func = new rayIntersectPlane(this, shadersCollectionController);
+		const func = Poly.namedFunctionsRegister.getFunction('rayIntersectPlane', this, shadersCollectionController);
 		const bodyLine = func.asString(ray, plane, out);
 		shadersCollectionController.addBodyOrComputed(this, JsConnectionPointType.VECTOR3, out, bodyLine);
 	}

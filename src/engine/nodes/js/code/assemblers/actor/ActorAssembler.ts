@@ -88,8 +88,8 @@ export class JsAssemblerActor extends BaseJsShaderAssembler {
 			variablesByName[varName] = variable;
 		});
 		this.traverseRegisteredFunctions((namedFunction) => {
-			functionNames.push(namedFunction.type);
-			functionsByName[namedFunction.type] = namedFunction.func;
+			functionNames.push(namedFunction.type());
+			functionsByName[namedFunction.type()] = namedFunction.func;
 		});
 		const paramConfigs = this.param_configs();
 		return {functionBody, variableNames, variablesByName, functionNames, functionsByName, paramConfigs};
@@ -299,8 +299,8 @@ export class JsAssemblerActor extends BaseJsShaderAssembler {
 			variablesByName[varName] = variable;
 		});
 		this.traverseRegisteredFunctions((namedFunction) => {
-			functionNames.push(namedFunction.type);
-			functionsByName[namedFunction.type] = namedFunction.func.bind(namedFunction);
+			functionNames.push(namedFunction.type());
+			functionsByName[namedFunction.type()] = namedFunction.func.bind(namedFunction);
 		});
 		const paramConfigs = this.param_configs();
 
@@ -344,15 +344,25 @@ export class JsAssemblerActor extends BaseJsShaderAssembler {
 			...paramConfigUniformNames,
 			wrappedBody,
 		];
-		const functionEvalArgs = [ActorEvaluator, computed, ref, watch, _setErrorFromError, ...variables, ...functions];
+		const functionEvalArgs = () => [
+			ActorEvaluator,
+			computed,
+			ref,
+			watch,
+			_setErrorFromError,
+			// it is currently preferable to create a unique set of variables
+			// for each evaluator
+			...variables.map((v) => v.clone()),
+			...functions,
+		];
 		// console.log(functionCreationArgs, functionEvalArgs);
 		try {
 			const _function = new Function(...functionCreationArgs);
-			const evaluatorClass = _function(...functionEvalArgs) as typeof ActorEvaluator;
 			const node = this.currentGlParentNode() as ActorJsSopNode;
-			const evaluatorGenerator = new ActorEvaluatorGenerator(
-				(object) => new evaluatorClass(node.scene(), object)
-			);
+			const evaluatorGenerator = new ActorEvaluatorGenerator((object) => {
+				const evaluatorClass = _function(...functionEvalArgs()) as typeof ActorEvaluator;
+				return new evaluatorClass(node.scene(), object);
+			});
 			// console.log({evaluator});
 
 			//

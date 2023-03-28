@@ -2,21 +2,10 @@ import {BaseNodeClass, BaseNodeType} from './nodes/_Base';
 import {PolyScene} from './scene/PolyScene';
 import {RenderersController} from './poly/RenderersController';
 import {PolyLibsController} from './poly/PolyLibsController';
-import {
-	NodesRegister,
-	NodeRegisterOptions,
-	OperationRegisterOptions,
-	BaseNodeConstructor,
-	OperationsRegister,
-} from './poly/registers/nodes/NodesRegister';
-import {ExpressionRegister} from './poly/registers/expressions/ExpressionRegister';
+
 import {NodeContext} from './poly/NodeContext';
-import {AssemblersRegister} from './poly/registers/assemblers/AssemblersRegistry';
 import {BaseCoreLogger} from '../core/logger/Base';
 import {BaseOperation} from './operations/_Base';
-import {PluginsRegister, WrapConfigurePolygonjsCallback} from './poly/registers/plugins/PluginsRegister';
-import {PolyCamerasRegister, ViewerCreateCallback} from './poly/registers/cameras/PolyCamerasRegister';
-import {PolyPluginInterface} from './poly/registers/plugins/Plugin';
 import {PolyDictionary} from '../types/GlobalTypes';
 import {BlobsController} from './poly/BlobsController';
 import {AssetUrlsController} from './poly/AssetUrlsController';
@@ -27,10 +16,27 @@ import {ScenesRegister} from './poly/ScenesRegister';
 import {PolyThirdPartyController} from './poly/ThirdPartyController';
 import {PolyOnObjectsAddedHooksController} from './poly/PolyOnObjectsAddedHooksController';
 import {PolySpecializedChildrenController} from './poly/PolySpecializedChildrenController';
+import {Camera} from 'three';
+
+// registers
+import {PluginsRegister, WrapConfigurePolygonjsCallback} from './poly/registers/plugins/PluginsRegister';
+import {PolyCamerasRegister, ViewerCreateCallback} from './poly/registers/cameras/PolyCamerasRegister';
 import {BaseModule} from './poly/registers/modules/_BaseModule';
 import {ModuleName} from './poly/registers/modules/Common';
 import {DynamicModulesRegister} from './poly/registers/modules/DynamicModulesRegister';
-import {Camera} from 'three';
+import {ExpressionRegister} from './poly/registers/expressions/ExpressionRegister';
+import {AssemblersRegister} from './poly/registers/assemblers/AssemblersRegistry';
+import {
+	NodesRegister,
+	NodeRegisterOptions,
+	OperationRegisterOptions,
+	BaseNodeConstructor,
+	OperationsRegister,
+} from './poly/registers/nodes/NodesRegister';
+import {PolyPluginInterface} from './poly/registers/plugins/Plugin';
+import {NamedFunctionRegister} from './poly/registers/functions/FunctionsRegister';
+import {BaseNamedFunction} from './functions/_Base';
+//
 
 declare global {
 	interface Window {
@@ -55,6 +61,7 @@ export class PolyEngine {
 	public readonly pluginsRegister: PluginsRegister = new PluginsRegister(this);
 	public readonly camerasRegister: PolyCamerasRegister = new PolyCamerasRegister(this);
 	public readonly modulesRegister: DynamicModulesRegister = new DynamicModulesRegister(this);
+	public readonly namedFunctionsRegister: NamedFunctionRegister = new NamedFunctionRegister();
 	public readonly blobs: BlobsController = new BlobsController(this);
 	public readonly assetUrls: AssetUrlsController = new AssetUrlsController();
 	// public readonly logo = new LogoController();
@@ -95,12 +102,15 @@ export class PolyEngine {
 		return this._playerMode;
 	}
 
-	registerNode(node: BaseNodeConstructor, tab_menu_category?: string|string[], options?: NodeRegisterOptions) {
+	registerNode(node: BaseNodeConstructor, tab_menu_category?: string | string[], options?: NodeRegisterOptions) {
 		// console.warn('registerNode', node.context(), node.type());
 		this.nodesRegister.register(node, tab_menu_category, options);
 	}
 	registerOperation(operation: typeof BaseOperation, options?: OperationRegisterOptions) {
 		this.operationsRegister.register(operation, options);
+	}
+	registerNamedFunction(namedFunction: typeof BaseNamedFunction) {
+		this.namedFunctionsRegister.register(namedFunction);
 	}
 
 	registerCamera<C extends Camera>(cameraClass: any, viewerCreateCallback: ViewerCreateCallback<C>) {

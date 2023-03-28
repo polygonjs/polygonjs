@@ -11,7 +11,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {JsConnectionPointType, JsConnectionPoint} from '../utils/io/connections/Js';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 import {BaseSDFJsNode} from './_BaseSDF';
-import {sdSphere} from './js/sdf/sdf';
+import {Poly} from '../../Poly';
 const OUTPUT_NAME = 'float';
 class SDFSphereJsParamsConfig extends NodeParamsConfig {
 	position = ParamConfig.VECTOR3([0, 0, 0], {hidden: true});
@@ -38,9 +38,9 @@ export class SDFSphereJsNode extends BaseSDFJsNode<SDFSphereJsParamsConfig> {
 		const center = this.variableForInputParam(shadersCollectionController, this.p.center); //this.jsVarName(VARIABLE_NAME_CENTER);
 		const radius = this.variableForInputParam(shadersCollectionController, this.p.radius);
 
-		const float = this.jsVarName(OUTPUT_NAME);
-		const func = new sdSphere(this, shadersCollectionController);
-		const bodyLine = `const ${float} = ${func.asString(position, center, radius)}`;
+		const out = this.jsVarName(OUTPUT_NAME);
+		const func = Poly.namedFunctionsRegister.getFunction('SDFSphere', this, shadersCollectionController);
+		const bodyLine = `const ${out} = ${func.asString(position, center, radius)}`;
 		shadersCollectionController.addBodyLines(this, [bodyLine]);
 	}
 }
