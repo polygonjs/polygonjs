@@ -7,6 +7,7 @@ export enum JsDefinitionType {
 	// ATTRIBUTE = 'attribute',
 	// FUNCTION = 'function',
 	COMPUTED = 'computed',
+	CONSTANT = 'constant',
 	REF = 'ref',
 	WATCH = 'watch',
 }
@@ -112,6 +113,21 @@ export class ComputedValueJsDefinition extends TypedJsDefinition<JsDefinitionTyp
 	}
 	line() {
 		return `	${this.name()} = computed(()=> ${this._value} )`;
+	}
+}
+export class ConstantJsDefinition extends TypedJsDefinition<JsDefinitionType.CONSTANT> {
+	constructor(
+		protected override _node: BaseJsNodeType,
+		protected override _shaderCollectionController: ShadersCollectionController,
+		protected override _dataType: JsConnectionPointType,
+		protected override _name: string,
+		protected _value: string
+	) {
+		super(JsDefinitionType.CONSTANT, _node, _shaderCollectionController, _dataType, _name);
+		_shaderCollectionController.addComputedVarName(this.name());
+	}
+	line() {
+		return `	${this.name()} = {value:${this._value}}`;
 	}
 }
 export class RefJsDefinition extends TypedJsDefinition<JsDefinitionType.REF> {

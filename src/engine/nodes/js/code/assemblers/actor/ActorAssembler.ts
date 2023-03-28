@@ -42,6 +42,13 @@ import {ActorEvaluatorGenerator} from './EvaluatorGenerator';
 // import {handleCopBuilderDependencies} from '../../../../cop/utils/BuilderUtils';
 // import { JSSDFSopNode } from '../../../../sop/JSSDF';
 
+function logBlue(message: string) {
+	console.log('%c' + message, 'color:blue; font-weight:bold;');
+}
+// function logGreen(message: string) {
+// 	console.log('%c' + message, 'color:green; font-weight:bold;');
+// }
+
 const TEMPLATE = `
 class CustomActorEvaluator extends ActorEvaluator {
 	${INSERT_MEMBERS_AFTER}
@@ -99,7 +106,7 @@ export class JsAssemblerActor extends BaseJsShaderAssembler {
 	private _triggerNodesByType: Map<string, Set<BaseJsNodeType>> = new Map();
 
 	updateEvaluator() {
-		console.log('%c' + '*************', 'color:blue; font-weight:bold;');
+		logBlue('*************');
 		this._reset();
 		//
 		const node = this.currentGlParentNode() as ActorJsSopNode;
@@ -136,17 +143,21 @@ export class JsAssemblerActor extends BaseJsShaderAssembler {
 		// create computed props
 		//
 		//
-		const addComputedProps = () => {
+		const _addComputedProps = () => {
 			const triggerableNodes: Set<BaseJsNodeType> = new Set();
-			connectedTriggerableNodes({triggerNodes, triggerableNodes: triggerableNodes});
+			triggerableNodes.clear();
+			connectedTriggerableNodes({triggerNodes, triggerableNodes, recursive: true});
 			const rootNodesSet: Set<BaseJsNodeType> = new Set();
 			triggerableNodes.forEach((trigerrableNode) => {
 				const rootNodes = ArrayUtils.compact(trigerrableNode.io.inputs.inputs());
 				for (let rootNode of rootNodes) {
-					rootNodesSet.add(rootNode);
+					if (!triggerableNodes.has(rootNode)) {
+						rootNodesSet.add(rootNode);
+					}
 				}
 			});
 			const rootNodes = SetUtils.toArray(rootNodesSet);
+
 			this.set_root_nodes(rootNodes);
 			if (this._root_nodes.length > 0) {
 				this.buildCodeFromNodes(this._root_nodes);
@@ -159,7 +170,7 @@ export class JsAssemblerActor extends BaseJsShaderAssembler {
 				}
 			}
 		};
-		addComputedProps();
+		_addComputedProps();
 		// const functionBody = this._shaders_by_name.get(ShaderName.FRAGMENT);
 		// console.log(functionBody);
 		//
@@ -174,7 +185,7 @@ export class JsAssemblerActor extends BaseJsShaderAssembler {
 			const triggerableFunctionLines: string[] = [];
 			this._triggerNodesByType.forEach((triggerNodes, nodeType) => {
 				const triggerableNodes: Set<BaseJsNodeType> = new Set();
-				connectedTriggerableNodes({triggerNodes, triggerableNodes: triggerableNodes});
+				connectedTriggerableNodes({triggerNodes, triggerableNodes, recursive: true});
 				for (let node of triggerableNodes) {
 					const shadersCollectionController = new ShadersCollectionController(
 						this.shaderNames(),
@@ -210,7 +221,7 @@ export class JsAssemblerActor extends BaseJsShaderAssembler {
 			const existingMethodNames: Set<string> = new Set();
 			this._triggerNodesByType.forEach((triggerNodes, nodeType) => {
 				const triggerableNodes: Set<BaseJsNodeType> = new Set();
-				connectedTriggerableNodes({triggerNodes, triggerableNodes: triggerableNodes});
+				connectedTriggerableNodes({triggerNodes, triggerableNodes, recursive: true});
 
 				const bodyLines: string[] = [];
 				for (let triggerableNode of triggerableNodes) {

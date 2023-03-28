@@ -1,33 +1,37 @@
 import {BaseMathFunctionJsNode} from './_BaseMathFunction';
 import {
 	JsConnectionPointType,
-	// isJsConnectionPointPrimitive,
-	// ReturnValueTypeByActorConnectionPointType,
+	isJsConnectionPointPrimitive,
+	isJsConnectionPointVector,
+	isJsConnectionPointNumber,
 } from '../utils/io/connections/Js';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
-import {isJsConnectionPointPrimitive} from '../utils/io/connections/Js';
+import {Poly} from '../../Poly';
+import {ComputedValueJsDefinition} from './utils/JsDefinition';
 // import {Vector2, Vector3, Vector4} from 'three';
 
 interface MathArgNOperationOptions {
 	inputPrefix: string;
 	out: string;
-	allowed_in_types?: JsConnectionPointType[];
+	allowedInTypes?: JsConnectionPointType[];
 	operator: {
-		primitive: string;
-		vector: string;
+		primitive: 'addNumber' | 'divideNumber' | 'multNumber' | 'subtractNumber';
+		vector?: 'addVector' | 'subtractVector' | 'multVector';
+		vectorScalar: 'addVectorNumber' | 'divideVectorNumber' | 'multVectorNumber' | 'subtractVectorNumber';
 	};
 }
 // const tmpV2 = new Vector2();
 // const tmpV3 = new Vector3();
 // const tmpV4 = new Vector4();
+const VECTOR_TYPES = [JsConnectionPointType.VECTOR2, JsConnectionPointType.VECTOR3, JsConnectionPointType.VECTOR4];
 
 export function MathFunctionArgNOperationFactory(
 	type: string,
 	options: MathArgNOperationOptions
 ): typeof BaseMathFunctionJsNode {
 	const inputPrefix = options.inputPrefix || type;
-	const output_name = options.out || 'val';
-	const allowed_in_types = options.allowed_in_types;
+	const outputName = options.out || 'val';
+	const allowedInTypes = options.allowedInTypes;
 	const operator = options.operator;
 	return class Node extends BaseMathFunctionJsNode {
 		static override type() {
@@ -55,18 +59,56 @@ export function MathFunctionArgNOperationFactory(
 			if (!firstType) {
 				return;
 			}
-			const isPrimitive = firstType != null && isJsConnectionPointPrimitive(firstType);
-			const line = isPrimitive
-				? values.join(` ${operator.primitive} `)
-				: values.join(`.${operator.vector}(`) + ')';
-			// if (isPrimitive) {
-			// 	return values.join(' + ');
-			// }
-			// if (CoreType.isVector(firstType)) {
-			// 	return values.join('.add(') + ')';
-			// }
+			const secondInputType = this.io.connection_points.input_connection_type(1);
+			const isPrimitive = isJsConnectionPointPrimitive(firstType);
+			const isVectorScalar =
+				isJsConnectionPointVector(firstType) &&
+				secondInputType != null &&
+				isJsConnectionPointNumber(secondInputType);
+			// const line = isPrimitive
+			// 	? values.join(` ${operator.primitive} `)
+			// 	: values.join(`.${operator.vector}(`) + ')';
+			// // if (isPrimitive) {
+			// // 	return values.join(' + ');
+			// // }
+			// // if (CoreType.isVector(firstType)) {
+			// // 	return values.join('.add(') + ')';
+			// // }
 
-			shadersCollectionController.addBodyOrComputed(this, firstType, this.jsVarName(output_name), line);
+			// shadersCollectionController.addBodyOrComputed(this, firstType, this.jsVarName(outputName), line);
+
+			const out = this.jsVarName(outputName);
+			// const functionName = isPrimitive
+			// 	? operator.primitive
+			// 	: isVectorScalar
+			// 	? operator.vectorScalar
+			// 	: operator.vector;
+
+			// if (!functionName) {
+			// 	return;
+			// }
+			// const func = Poly.namedFunctionsRegister.getFunction(functionName, this, shadersCollectionController);
+			const funcString = isPrimitive
+				? Poly.namedFunctionsRegister
+						.getFunction(operator.primitive, this, shadersCollectionController)
+						.asString(...values)
+				: isVectorScalar
+				? Poly.namedFunctionsRegister
+						.getFunction(operator.vectorScalar, this, shadersCollectionController)
+						.asString(values[0], values[1])
+				: operator.vector
+				? Poly.namedFunctionsRegister
+						.getFunction(operator.vector, this, shadersCollectionController)
+						.asString(...values)
+				: undefined;
+
+			if (!funcString) {
+				return;
+			}
+
+			shadersCollectionController.addDefinitions(this, [
+				new ComputedValueJsDefinition(this, shadersCollectionController, firstType, out, funcString),
+			]);
 		}
 
 		// protected _applyOperation<T>(arg1: T, arg2: T): any {}
@@ -147,35 +189,48 @@ export function MathFunctionArgNOperationFactory(
 			return `${inputPrefix}${index}`;
 		}
 		override _expectedOutputName(index: number): string {
-			return output_name;
+			return outputName;
 		}
 
 		protected override _expectedInputTypes() {
-			let first_input_type = this.io.connection_points.first_input_connection_type();
-			if (first_input_type && allowed_in_types) {
-				if (!allowed_in_types.includes(first_input_type)) {
+			let firstInputType = this.io.connection_points.first_input_connection_type();
+			if (firstInputType && allowedInTypes) {
+				if (!allowedInTypes.includes(firstInputType)) {
 					// if the first input type is not allowed, either leave the connection point as is,
 					// or use the default if there is none
-					const first_connection = this.io.inputs.namedInputConnectionPoints()[0];
-					if (first_connection) {
-						first_input_type = first_connection.type();
+					const firstConnection = this.io.inputs.namedInputConnectionPoints()[0];
+					if (firstConnection) {
+						firstInputType = firstConnection.type();
 					}
 				}
 			}
-			const type = first_input_type || JsConnectionPointType.FLOAT;
+			const type = firstInputType || JsConnectionPointType.FLOAT;
 
-			const current_connections = this.io.connections.existingInputConnections();
-
-			const expectedCount = current_connections ? Math.max(current_connections.length + 1, 2) : 2;
-			const expected_input_types = [];
-			for (let i = 0; i < expectedCount; i++) {
-				expected_input_types.push(type);
+			if (VECTOR_TYPES.includes(type)) {
+				const secondInputType = this.io.connection_points.input_connection_type(1);
+				if (secondInputType && secondInputType == JsConnectionPointType.FLOAT) {
+					const expectedInputTypes: JsConnectionPointType[] = [type, secondInputType];
+					return expectedInputTypes;
+				}
 			}
-			return expected_input_types;
+
+			const currentConnections = this.io.connections.existingInputConnections();
+
+			const expectedCount = currentConnections ? Math.max(currentConnections.length + 1, 2) : 2;
+			const expectedInputTypes = [];
+			for (let i = 0; i < expectedCount; i++) {
+				if (i == 0) {
+					expectedInputTypes.push(type);
+				} else {
+					const nextType = operator.vector ? type : JsConnectionPointType.FLOAT;
+					expectedInputTypes.push(nextType);
+				}
+			}
+			return expectedInputTypes;
 		}
 		protected override _expectedOutputTypes() {
 			const inputTypes = this._expectedInputTypes();
-			const type = inputTypes[1] || inputTypes[0] || JsConnectionPointType.FLOAT;
+			const type = inputTypes[0] || JsConnectionPointType.FLOAT;
 			return [type];
 		}
 	};

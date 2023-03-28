@@ -7,42 +7,35 @@
 import {ParamlessTypedJsNode} from './_Base';
 import {JsConnectionPoint, JsConnectionPointType, JS_CONNECTION_POINT_IN_NODE_DEF} from '../utils/io/connections/Js';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
-import {EvaluatorConstant} from './code/assemblers/actor/Evaluator';
+import {
+	GetObjectPropertyJsNodeInputName,
+	OBJECT_VECTOR3_PROPERTIES,
+	OBJECT_BOOLEAN_PROPERTIES,
+} from '../../functions/GetObjectProperty';
+import {Poly} from '../../Poly';
 // import {Vector2, Vector3, Vector4} from 'three';
 
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
+// enum GetObjectPropertyJsNodeInputName {
+// 	position = 'position',
+// 	quaternion = 'quaternion',
+// 	scale = 'scale',
+// 	matrix = 'matrix',
+// 	visible = 'visible',
+// 	castShadow = 'castShadow',
+// 	receiveShadow = 'receiveShadow',
+// 	frustumCulled = 'frustumCulled',
+// 	// ptnum = 'ptnum',
+// 	// id = 'id',
+// 	// uuid = 'uuid',
+// 	// name = 'name',
+// 	// quaternion = 'quaternion',
+// 	// rotation = 'rotation',
+// 	up = 'up',
+// 	matrixAutoUpdate = 'matrixAutoUpdate',
+// 	material = 'material',
+// }
 
-enum GetObjectPropertyJsNodeInputName {
-	position = 'position',
-	quaternion = 'quaternion',
-	scale = 'scale',
-	matrix = 'matrix',
-	visible = 'visible',
-	castShadow = 'castShadow',
-	receiveShadow = 'receiveShadow',
-	frustumCulled = 'frustumCulled',
-	// ptnum = 'ptnum',
-	// id = 'id',
-	// uuid = 'uuid',
-	// name = 'name',
-	// quaternion = 'quaternion',
-	// rotation = 'rotation',
-	up = 'up',
-	matrixAutoUpdate = 'matrixAutoUpdate',
-	material = 'material',
-}
-const VECTOR3_PROPERTIES = [
-	GetObjectPropertyJsNodeInputName.position,
-	GetObjectPropertyJsNodeInputName.scale,
-	GetObjectPropertyJsNodeInputName.up,
-];
-const BOOLEAN_PROPERTIES = [
-	GetObjectPropertyJsNodeInputName.visible,
-	GetObjectPropertyJsNodeInputName.castShadow,
-	GetObjectPropertyJsNodeInputName.receiveShadow,
-	GetObjectPropertyJsNodeInputName.frustumCulled,
-	GetObjectPropertyJsNodeInputName.matrixAutoUpdate,
-];
 // const OBJECT_PROPERTIES: GetObjectPropertyJsNodeInputName[] = [
 // 	GetObjectPropertyJsNodeInputName.position,
 // 	GetObjectPropertyJsNodeInputName.quaternion,
@@ -89,70 +82,33 @@ export class GetObjectPropertyJsNode extends ParamlessTypedJsNode {
 		]);
 	}
 	override setLines(shadersCollectionController: ShadersCollectionController) {
-		VECTOR3_PROPERTIES.forEach((property) => {
-			shadersCollectionController.addBodyOrComputed(
-				this,
-				JsConnectionPointType.VECTOR3,
-				this.jsVarName(property),
-				`${EvaluatorConstant.OBJECT_3D}.${property}`
-			);
-		});
-		BOOLEAN_PROPERTIES.forEach((property) => {
-			shadersCollectionController.addBodyOrComputed(
-				this,
-				JsConnectionPointType.BOOLEAN,
-				this.jsVarName(property),
-				`${EvaluatorConstant.OBJECT_3D}.${property}`
-			);
-		});
-		shadersCollectionController.addBodyOrComputed(
-			this,
-			JsConnectionPointType.QUATERNION,
-			this.jsVarName(GetObjectPropertyJsNodeInputName.quaternion),
-			`${EvaluatorConstant.OBJECT_3D}.quaternion`
-		);
+		const usedOutputNames = this.io.outputs.used_output_names();
 
-		shadersCollectionController.addBodyOrComputed(
-			this,
-			JsConnectionPointType.MATRIX4,
-			this.jsVarName(GetObjectPropertyJsNodeInputName.matrix),
-			`${EvaluatorConstant.OBJECT_3D}.matrix`
-		);
-		shadersCollectionController.addBodyOrComputed(
-			this,
-			JsConnectionPointType.MATERIAL,
-			this.jsVarName(GetObjectPropertyJsNodeInputName.material),
-			`${EvaluatorConstant.OBJECT_3D}.material`
-		);
+		const _f = (propertyName: string, type: JsConnectionPointType) => {
+			if (!usedOutputNames.includes(propertyName)) {
+				return;
+			}
+			const func = Poly.namedFunctionsRegister.getFunction(
+				'getObjectProperty',
+				this,
+				shadersCollectionController
+			);
+			shadersCollectionController.addBodyOrComputed(
+				this,
+				type,
+				this.jsVarName(propertyName),
+				func.asString(`'${propertyName}'`)
+			);
+		};
+
+		OBJECT_VECTOR3_PROPERTIES.forEach((propertyName) => {
+			_f(propertyName, JsConnectionPointType.VECTOR3);
+		});
+		OBJECT_BOOLEAN_PROPERTIES.forEach((propertyName) => {
+			_f(propertyName, JsConnectionPointType.BOOLEAN);
+		});
+		_f('quaternion', JsConnectionPointType.QUATERNION);
+		_f('matrix', JsConnectionPointType.MATRIX4);
+		_f('material', JsConnectionPointType.MATERIAL);
 	}
-
-	// public override outputValue(
-	// 	context: ActorNodeTriggerContext,
-	// 	outputName: GetObjectPropertyActorNodeInputName | string
-	// ): ReturnValueTypeByActorConnectionPointType[ActorConnectionPointType] | undefined {
-	// 	const Object3D =
-	// 		this._inputValue<ActorConnectionPointType.OBJECT_3D>(ActorConnectionPointType.OBJECT_3D, context) ||
-	// 		context.Object3D;
-	// 	if (OBJECT_PROPERTIES.includes(outputName as GetObjectPropertyActorNodeInputName)) {
-	// 		const propValue = Object3D[outputName as GetObjectPropertyActorNodeInputName];
-	// 		if (propValue instanceof Vector2) {
-	// 			return tmpV2.copy(propValue);
-	// 		}
-	// 		if (propValue instanceof Vector3) {
-	// 			return tmpV3.copy(propValue);
-	// 		}
-	// 		if (propValue instanceof Quaternion) {
-	// 			tmpV4.x = propValue.x;
-	// 			tmpV4.y = propValue.y;
-	// 			tmpV4.z = propValue.z;
-	// 			tmpV4.w = propValue.w;
-	// 			return tmpV4;
-	// 		}
-	// 		return propValue;
-	// 	} else {
-	// 		if (outputName == MATERIAL_OUTPUT) {
-	// 			return (Object3D as Mesh).material as Material;
-	// 		}
-	// 	}
-	// }
 }

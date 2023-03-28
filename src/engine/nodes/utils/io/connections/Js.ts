@@ -22,14 +22,26 @@ export enum JsConnectionPointType {
 	// MAT4 = 'mat4',
 }
 
-const PRIMITIVE_JS_CONNECTION_TYPES = [
+const NUMBER_JS_CONNECTION_TYPES = new Set([JsConnectionPointType.FLOAT, JsConnectionPointType.INT]);
+const PRIMITIVE_JS_CONNECTION_TYPES = new Set([
 	JsConnectionPointType.BOOLEAN,
 	JsConnectionPointType.FLOAT,
 	JsConnectionPointType.INT,
 	JsConnectionPointType.STRING,
-];
+]);
+const VECTOR_JS_CONNECTION_TYPES = new Set([
+	JsConnectionPointType.VECTOR2,
+	JsConnectionPointType.VECTOR3,
+	JsConnectionPointType.VECTOR4,
+]);
+export function isJsConnectionPointNumber(type: JsConnectionPointType) {
+	return NUMBER_JS_CONNECTION_TYPES.has(type);
+}
 export function isJsConnectionPointPrimitive(type: JsConnectionPointType) {
-	return PRIMITIVE_JS_CONNECTION_TYPES.includes(type);
+	return PRIMITIVE_JS_CONNECTION_TYPES.has(type);
+}
+export function isJsConnectionPointVector(type: JsConnectionPointType) {
+	return VECTOR_JS_CONNECTION_TYPES.has(type);
 }
 
 //

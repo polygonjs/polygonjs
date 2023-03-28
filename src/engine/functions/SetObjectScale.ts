@@ -1,4 +1,5 @@
 import {Object3D, Vector3} from 'three';
+import {touchObjectProperty, GetObjectPropertyJsNodeInputName} from './GetObjectProperty';
 import {ObjectNamedFunction4} from './_Base';
 
 const _scale = new Vector3();
@@ -13,8 +14,10 @@ export class setObjectScale extends ObjectNamedFunction4<[Vector3, number, numbe
 			_scale.copy(scale).multiplyScalar(mult);
 			object3D.scale.lerp(_scale, lerp);
 		}
+		touchObjectProperty(object3D, GetObjectPropertyJsNodeInputName.scale);
 		if (updateMatrix) {
 			object3D.updateMatrix();
+			touchObjectProperty(object3D, GetObjectPropertyJsNodeInputName.matrix);
 		}
 	}
 }

@@ -1,5 +1,5 @@
 /**
- * adds 2 inputs together
+ * adds multiple inputs together
  *
  *
  */
@@ -9,7 +9,8 @@ export class AddJsNode extends MathFunctionArgNOperationFactory('add', {
 	inputPrefix: 'add',
 	out: 'sum',
 	operator: {
-		primitive: '+',
-		vector: 'add',
+		primitive: 'addNumber',
+		vector: 'addVector',
+		vectorScalar: 'addVectorNumber',
 	},
 }) {}

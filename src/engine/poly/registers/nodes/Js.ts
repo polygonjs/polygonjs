@@ -14,9 +14,11 @@ import {AddJsNode} from '../../../nodes/js/Add';
 import {AttributeJsNode} from '../../../nodes/js/Attribute';
 import {ConstantJsNode} from '../../../nodes/js/Constant';
 import {CursorJsNode} from '../../../nodes/js/Cursor';
+import {DivideJsNode} from '../../../nodes/js/Divide';
 import {FloatToVec3JsNode} from '../../../nodes/js/FloatToVec3';
 import {GetObjectPropertyJsNode} from '../../../nodes/js/GetObjectProperty';
 import {GlobalsJsNode} from '../../../nodes/js/Globals';
+import {MultJsNode} from '../../../nodes/js/Mult';
 import {OnManualTriggerJsNode} from '../../../nodes/js/OnManualTrigger';
 import {OnObjectClickJsNode} from '../../../nodes/js/OnObjectClick';
 import {OnObjectHoverJsNode} from '../../../nodes/js/OnObjectHover';
@@ -37,6 +39,7 @@ import {SetObjectLookAtJsNode} from '../../../nodes/js/SetObjectLookAt';
 import {SetObjectPositionJsNode} from '../../../nodes/js/SetObjectPosition';
 import {SetObjectScaleJsNode} from '../../../nodes/js/SetObjectScale';
 import {SinJsNode} from '../../../nodes/js/Sin';
+import {SubtractJsNode} from '../../../nodes/js/Subtract';
 import {TwoWaySwitchJsNode} from '../../../nodes/js/TwoWaySwitch';
 
 export interface JsNodeChildrenMap {
@@ -44,9 +47,11 @@ export interface JsNodeChildrenMap {
 	attribute: AttributeJsNode;
 	cursor: CursorJsNode;
 	constant: ConstantJsNode;
+	divide: DivideJsNode;
 	floatToVec3: FloatToVec3JsNode;
 	getObjectProperty: GetObjectPropertyJsNode;
 	globals: GlobalsJsNode;
+	mult: MultJsNode;
 	onManualTrigger: OnManualTriggerJsNode;
 	onObjectClick: OnObjectClickJsNode;
 	onObjectHover: OnObjectHoverJsNode;
@@ -67,6 +72,7 @@ export interface JsNodeChildrenMap {
 	setObjectPosition: SetObjectPositionJsNode;
 	setObjectScale: SetObjectScaleJsNode;
 	sin: SinJsNode;
+	subtract: SubtractJsNode;
 	twoWaySwitch: TwoWaySwitchJsNode;
 	vec2ToFloat: Vec2ToFloatJsNode;
 	vec2ToVec3: Vec2ToVec3JsNode;
@@ -86,12 +92,14 @@ const ONLY_ACTOR = {only: [sopType(SopType.ACTOR_JS)]};
 export class JsRegister {
 	static run(poly: PolyEngine) {
 		// poly.registerNode(AttributeJsNode, CATEGORY_JS.GLOBALS);
-		poly.registerNode(AddJsNode, CATEGORY_JS.GLOBALS);
+		poly.registerNode(AddJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(ConstantJsNode, CATEGORY_JS.GLOBALS);
 		poly.registerNode(CursorJsNode, CATEGORY_JS.INPUTS, ONLY_ACTOR);
 		poly.registerNode(FloatToVec3JsNode, CATEGORY_JS.CONVERSION);
+		poly.registerNode(DivideJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(GetObjectPropertyJsNode, CATEGORY_JS.GET, ONLY_ACTOR);
 		poly.registerNode(GlobalsJsNode, CATEGORY_JS.GLOBALS, ONLY_WITH_GLOBALS);
+		poly.registerNode(MultJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(OnManualTriggerJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
 		poly.registerNode(OnObjectClickJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
 		poly.registerNode(OnObjectHoverJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
@@ -112,6 +120,7 @@ export class JsRegister {
 		poly.registerNode(SetObjectPositionJsNode, CATEGORY_JS.ACTION);
 		poly.registerNode(SetObjectScaleJsNode, CATEGORY_JS.ACTION);
 		poly.registerNode(SinJsNode, CATEGORY_JS.MATH);
+		poly.registerNode(SubtractJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(TwoWaySwitchJsNode, CATEGORY_JS.LOGIC);
 		poly.registerNode(Vec2ToFloatJsNode, CATEGORY_JS.CONVERSION);
 		poly.registerNode(Vec2ToVec3JsNode, CATEGORY_JS.CONVERSION);

@@ -30,20 +30,7 @@ export abstract class NamedFunction<ARGS extends Array<any>, ARGS_STR extends Ar
 		return `${this.type()}(${args.join(', ')})`;
 	}
 }
-abstract class ObjectNamedFunction<ARGS extends Array<any>, ARGS_STR extends Array<string>> extends BaseNamedFunction {
-	abstract override func(object: Object3D, ...args: ARGS): any;
-	override asString(...args: ARGS_STR): string {
-		super.asString(...args);
-		return `${this.type()}(${EvaluatorConstant.OBJECT_3D}, ${args.join(', ')})`;
-	}
-}
-abstract class SceneNamedFunction<ARGS extends Array<any>, ARGS_STR extends Array<string>> extends BaseNamedFunction {
-	abstract override func(object: PolyScene, ...args: ARGS): any;
-	override asString(...args: ARGS_STR): string {
-		super.asString(...args);
-		return `${this.type()}(${EvaluatorConstant.SCENE}, ${args.join(', ')})`;
-	}
-}
+
 export abstract class NamedFunction0 extends NamedFunction<[], []> {}
 
 export abstract class NamedFunction1<ARGS extends [any]> extends NamedFunction<ARGS, [string]> {}
@@ -55,6 +42,24 @@ export abstract class NamedFunction3<ARGS extends [any, any, any]> extends Named
 export abstract class NamedFunction4<ARGS extends [any, any, any, any]> extends NamedFunction<
 	ARGS,
 	[string, string, string, string]
+> {}
+
+//
+//
+// OBJECT
+//
+//
+abstract class ObjectNamedFunction<ARGS extends Array<any>, ARGS_STR extends Array<string>> extends BaseNamedFunction {
+	abstract override func(object: Object3D, ...args: ARGS): any;
+	override asString(...args: ARGS_STR): string {
+		super.asString(...args);
+		return `${this.type()}(${EvaluatorConstant.OBJECT_3D}, ${args.join(', ')})`;
+	}
+}
+export abstract class ObjectNamedFunction1<ARGS extends [any]> extends ObjectNamedFunction<ARGS, [string]> {}
+export abstract class ObjectNamedFunction2<ARGS extends [any, any]> extends ObjectNamedFunction<
+	ARGS,
+	[string, string]
 > {}
 export abstract class ObjectNamedFunction3<ARGS extends [any, any, any]> extends ObjectNamedFunction<
 	ARGS,
@@ -68,4 +73,17 @@ export abstract class ObjectNamedFunction5<ARGS extends [any, any, any, any, any
 	ARGS,
 	[string, string, string, string, string]
 > {}
+
+//
+//
+// SCENE
+//
+//
+abstract class SceneNamedFunction<ARGS extends Array<any>, ARGS_STR extends Array<string>> extends BaseNamedFunction {
+	abstract override func(object: PolyScene, ...args: ARGS): any;
+	override asString(...args: ARGS_STR): string {
+		super.asString(...args);
+		return `${this.type()}(${EvaluatorConstant.SCENE}, ${args.join(', ')})`;
+	}
+}
 export abstract class SceneNamedFunction0 extends SceneNamedFunction<[], []> {}

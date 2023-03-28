@@ -3,7 +3,7 @@
  *
  *
  */
-import {createVariableFromParam, TypedJsNode, variableFromParamRequired} from './_Base';
+import {TypedJsNode} from './_Base';
 import {ThreeToGl} from '../../../core/ThreeToGl';
 // import {BaseParamType} from '../../params/_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
@@ -11,6 +11,7 @@ import {ShadersCollectionController} from './code/utils/ShadersCollectionControl
 import {CoreType} from '../../../core/Type';
 import {PolyDictionary} from '../../../types/GlobalTypes';
 import {JsConnectionPointType, JS_CONNECTION_POINT_TYPES} from '../utils/io/connections/Js';
+import {ConstantJsDefinition} from './utils/JsDefinition';
 
 function typedVisibleOptions(type: JsConnectionPointType, otherParamVal: PolyDictionary<number | boolean> = {}) {
 	const val = JS_CONNECTION_POINT_TYPES.indexOf(type);
@@ -59,19 +60,24 @@ export class ConstantJsNode extends TypedJsNode<ConstantJsParamsConfig> {
 		}
 
 		// const connection_type = this._currentConnectionType();
-		const bodyLines: string[] = [];
+		// const bodyLines: string[] = [];
 		const out = this._currentVarName();
 		const varName = this.variableForInputParam(shadersCollectionController, param);
-		if (param.components) {
-			// bodyLines.push(varName);
-			if (variableFromParamRequired(param)) {
-				shadersCollectionController.addVariable(this, out, createVariableFromParam(param));
-			}
-			bodyLines.push(`${out}.copy(${varName})`);
-		} else {
-			bodyLines.push(`const ${out} = ${varName}`);
-		}
-		shadersCollectionController.addBodyLines(this, bodyLines);
+		// if (param.components) {
+		// 	// bodyLines.push(varName);
+		// 	if (variableFromParamRequired(param)) {
+		// 		shadersCollectionController.addVariable(this, out, createVariableFromParam(param));
+		// 	}
+		// 	bodyLines.push(`${out}.copy(${varName})`);
+		// } else {
+		// 	bodyLines.push(`const ${out} = ${varName}`);
+		// }
+
+		shadersCollectionController.addDefinitions(this, [
+			new ConstantJsDefinition(this, shadersCollectionController, this._currentConnectionType(), out, varName),
+		]);
+
+		// shadersCollectionController.addBodyLines(this, bodyLines);
 	}
 
 	private _currentConnectionType() {

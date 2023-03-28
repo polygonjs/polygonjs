@@ -1,6 +1,7 @@
 import {Object3D, Quaternion, Vector3} from 'three';
 import {CoreLookAt} from '../../core/LookAt';
 import {isBooleanTrue} from '../../core/Type';
+import {touchObjectProperty, GetObjectPropertyJsNodeInputName} from './GetObjectProperty';
 import {ObjectNamedFunction5} from './_Base';
 
 const q1 = new Quaternion();
@@ -28,9 +29,11 @@ export class setObjectLookAt extends ObjectNamedFunction5<[Vector3, Vector3, num
 			q1.slerp(q2, lerp);
 			object3D.quaternion.copy(q1);
 		}
+		touchObjectProperty(object3D, GetObjectPropertyJsNodeInputName.quaternion);
 
 		if (isBooleanTrue(updateMatrix)) {
 			object3D.updateMatrix();
+			touchObjectProperty(object3D, GetObjectPropertyJsNodeInputName.matrix);
 		}
 	}
 }

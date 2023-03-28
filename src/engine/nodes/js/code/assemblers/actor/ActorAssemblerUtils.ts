@@ -48,10 +48,10 @@ export function groupNodesByType(nodes: Set<BaseJsNodeType>, nodesByType: Map<st
 interface ConnectedTriggerableNodesOptions {
 	triggerNodes: Set<BaseJsNodeType>;
 	triggerableNodes: Set<BaseJsNodeType>;
+	recursive: boolean;
 }
 export function connectedTriggerableNodes(options: ConnectedTriggerableNodesOptions) {
-	const {triggerNodes, triggerableNodes} = options;
-	triggerableNodes.clear();
+	const {triggerNodes, triggerableNodes, recursive} = options;
 	triggerNodes.forEach((node) => {
 		// get output connection points with type trigger
 		let triggerOutputIndices: number[] = [];
@@ -69,6 +69,13 @@ export function connectedTriggerableNodes(options: ConnectedTriggerableNodesOpti
 			if (triggerConnections) {
 				triggerConnections.forEach((triggerConnection) => {
 					triggerableNodes.add(triggerConnection.node_dest);
+					if (recursive) {
+						connectedTriggerableNodes({
+							triggerNodes: new Set([triggerConnection.node_dest]),
+							triggerableNodes,
+							recursive,
+						});
+					}
 				});
 			}
 		}
