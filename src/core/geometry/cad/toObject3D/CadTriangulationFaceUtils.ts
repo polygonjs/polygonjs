@@ -29,7 +29,6 @@ export function faceData(oc: OpenCascadeInstance, face: TopoDS_Face, index0 = 0)
 		const pc = r(new oc.Poly_Connect_2(triangulation));
 		oc.StdPrs_ToolTriangulatedShape.Normal(face, pc, normalsArray);
 		const nbTriangles = tri.NbTriangles();
-
 		const faceData: FaceData = {
 			positions: new Array(nbNodes * 3),
 			normals: new Array(normalsArray.Length() * 3),

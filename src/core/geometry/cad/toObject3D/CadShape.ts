@@ -24,6 +24,7 @@ import {CadEntityGroupCollection} from '../CadEntityGroupCollection';
 import type {CADGroupSopNode} from '../../../../engine/nodes/sop/CADGroup';
 import {EntityGroupType} from '../../EntityGroupCollection';
 import {withCadException} from '../CadExceptionHandler';
+import {arrayPushItems} from '../../../ArrayUtils';
 
 function cachedTesselationParamsEqual(params1: CachedCADTesselationParams, params2: CachedCADTesselationParams) {
 	return (
@@ -211,9 +212,9 @@ function _updateBufferFromFace(oc: OpenCascadeInstance, face: TopoDS_Face, buffe
 	const data = faceData(oc, face, positions.length / 3);
 
 	if (data) {
-		positions.push(...data.positions);
-		normals.push(...data.normals);
-		indices.push(...data.indices);
+		arrayPushItems(positions, data.positions);
+		arrayPushItems(normals, data.normals);
+		arrayPushItems(indices, data.indices);
 	}
 }
 function _createMeshFromBuffers(buffers: MeshBuffers, tesselationParams: CADTesselationParams) {

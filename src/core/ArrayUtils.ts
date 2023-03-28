@@ -191,3 +191,20 @@ export class ArrayUtils {
 		return array;
 	}
 }
+
+const MAX_ITEMS_LENGTH = 1024;
+export function arrayPushItems<T>(array: Array<T>, items: Array<T>) {
+	// we avoid the standard
+	// array.push(...items),
+	// as this can trigger an
+	// 'Maximum call stack size exceeded' error
+	// on some large items array.
+	// So instead, we push them elements one by one if items.length is above a threshold
+	if (items.length <= MAX_ITEMS_LENGTH) {
+		array.push(...items);
+	} else {
+		for (let item of items) {
+			array.push(item);
+		}
+	}
+}
