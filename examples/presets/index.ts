@@ -33,6 +33,7 @@ import {codeMatPresetRegister} from './mat/Code';
 // sop
 import {attribCreateSopPresetRegister} from './sop/AttribCreate';
 import {attribPromoteSopPresetRegister} from './sop/AttribPromote';
+import {cadFileSTEPSopPresetRegister} from './sop/CADFileSTEP';
 import {cameraWebXRARMarkerTrackingSopPresetRegister} from './sop/CameraWebXRARMarkerTracking';
 import {capsuleSopPresetRegister} from './sop/Capsule';
 import {codeSopPresetRegister} from './sop/Code';
@@ -101,6 +102,7 @@ class PresetLibraryClass {
 		// sop
 		this._registerPreset(attribCreateSopPresetRegister);
 		this._registerPreset(attribPromoteSopPresetRegister);
+		this._registerPreset(cadFileSTEPSopPresetRegister);
 		this._registerPreset(cameraWebXRARMarkerTrackingSopPresetRegister);
 		this._registerPreset(capsuleSopPresetRegister);
 		this._registerPreset(codeSopPresetRegister);

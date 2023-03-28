@@ -44,7 +44,7 @@ export class CsgCoreObject<T extends CsgGeometryType> extends BaseCoreObject<Cor
 		TypeAssert.unreachable(transformTargetType);
 	}
 	static override mergeCompact<T extends CsgGeometryType>(options: MergeCompactOptions) {
-		const {objects, materialsByObjectType, mergedObjects, onError} = options;
+		const {objects, material, mergedObjects, onError} = options;
 		try {
 			const csgObjects = objects as CsgObject<T>[];
 			const firstObject = csgObjects[0];
@@ -70,7 +70,6 @@ export class CsgCoreObject<T extends CsgGeometryType> extends BaseCoreObject<Cor
 				typedGeometries.forEach(csgApplyTransform);
 				const mergedGeom = union(typedGeometries as Array<geometries.geom2.Geom2>);
 				const newObject = new CsgObject(mergedGeom);
-				const material = materialsByObjectType.get(newObject.type);
 				objectContentCopyProperties(firstObject, newObject);
 				if (material) {
 					newObject.material = material;

@@ -20,6 +20,8 @@ import {
 import {cadFilterObjects} from '../../../core/geometry/cad/utils/CadFilter';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {isBooleanTrue} from '../../../core/Type';
+import {CoreCadType} from '../../../core/geometry/cad/CadCoreType';
+import {cadWireFromEdge} from '../../../core/geometry/cad/toObject3D/CadWire';
 
 const DISPLAYED_INPUT_NAMES = ['profiles', 'paths'];
 
@@ -65,9 +67,10 @@ export class CADPipeSopNode extends CADSopNode<CADPipeSopParamsConfig> {
 					const profileObject = profilesObjects[i];
 					const pathObject = pathObjects[i];
 
-					const api = r(
-						new oc.BRepOffsetAPI_MakePipe_1(pathObject.cadGeometry(), profileObject.cadGeometry())
-					);
+					const wirePath = CoreCadType.isWire(pathObject)
+						? pathObject.cadGeometry()
+						: cadWireFromEdge(oc, pathObject.cadGeometry());
+					const api = r(new oc.BRepOffsetAPI_MakePipe_1(wirePath, profileObject.cadGeometry()));
 					if (api.IsDone()) {
 						// api.Build(CadLoaderSync.Message_ProgressRange);
 						// const pipe = api.Pipe();

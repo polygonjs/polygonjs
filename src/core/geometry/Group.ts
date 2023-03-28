@@ -18,15 +18,14 @@ import {coreObjectFactory, coreObjectInstanceFactory} from './CoreObjectFactory'
 
 // CAD
 import type {CadGeometryType, CadGeometryTypeShape} from './cad/CadCommon';
-import {CAD_GEOMETRY_TYPES_SET} from './cad/CadCommon';
 import type {CadObject} from './cad/CadObject';
-import {CoreCadType} from './cad/CadCoreType';
+import {CoreCadType, isCADObject} from './cad/CadCoreType';
 //
 // CSG
 import type {CsgGeometryType} from './csg/CsgCommon';
-import {CSG_GEOMETRY_TYPES_SET} from './csg/CsgCommon';
 import type {CsgObject} from './csg/CsgObject';
 import {EntityGroupCollection} from './EntityGroupCollection';
+import {isCSGObject} from './csg/CsgCoreType';
 //
 // SDF
 import type {SDFObjectType} from './sdf/SDFCommon';
@@ -163,8 +162,7 @@ export class CoreGroup extends CoreEntity {
 	//
 	//
 	cadObjects() {
-		const list =
-			this._allObjects?.filter((o) => CAD_GEOMETRY_TYPES_SET.has(o.type as CadGeometryType)) || undefined;
+		const list = this._allObjects?.filter(isCADObject) || undefined;
 		return list as CadObject<CadGeometryType>[] | undefined;
 	}
 	cadObjectsWithShape() {
@@ -181,8 +179,7 @@ export class CoreGroup extends CoreEntity {
 	//
 	//
 	csgObjects() {
-		const list =
-			this._allObjects?.filter((o) => CSG_GEOMETRY_TYPES_SET.has(o.type as CsgGeometryType)) || undefined;
+		const list = this._allObjects?.filter(isCSGObject) || undefined;
 		return list as CsgObject<CsgGeometryType>[] | undefined;
 	}
 	csgCoreObjects() {

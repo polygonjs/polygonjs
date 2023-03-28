@@ -46,6 +46,7 @@ export class CADUnpackSopNode extends CADSopNode<CADUnpackSopParamsConfig> {
 
 						iterator.Next();
 					}
+					iterator.delete();
 				} else {
 					newObjects.push(inputObject);
 				}

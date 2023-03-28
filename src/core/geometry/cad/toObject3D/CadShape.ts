@@ -7,6 +7,7 @@ import type {
 	CadGeometryTypeShape,
 	TopoDS_Edge,
 	TopoDS_Face,
+	BRepMesh_IncrementalMesh,
 } from '../CadCommon';
 import {faceData} from './CadTriangulationFaceUtils';
 import {BufferGeometry, BufferAttribute, Object3D, Mesh} from 'three';
@@ -22,6 +23,8 @@ import {SopType} from '../../../../engine/poly/registers/nodes/types/Sop';
 import {CadEntityGroupCollection} from '../CadEntityGroupCollection';
 import type {CADGroupSopNode} from '../../../../engine/nodes/sop/CADGroup';
 import {EntityGroupType} from '../../EntityGroupCollection';
+import {withCadException} from '../CadExceptionHandler';
+import {arrayPushItems} from '../../../ArrayUtils';
 
 function cachedTesselationParamsEqual(params1: CachedCADTesselationParams, params2: CachedCADTesselationParams) {
 	return (
@@ -142,14 +145,29 @@ interface MeshBuffers {
 	normals: number[];
 	indices: number[];
 }
-function _createMesh(oc: OpenCascadeInstance, object: TopoDS_Shape, tesselationParams: CADTesselationParams) {
-	const mesher = new oc.BRepMesh_IncrementalMesh_2(
-		object,
-		tesselationParams.linearTolerance,
-		true,
-		tesselationParams.angularTolerance,
-		true
-	);
+function _createMesh(
+	oc: OpenCascadeInstance,
+	object: TopoDS_Shape,
+	tesselationParams: CADTesselationParams
+): Mesh | undefined {
+	const mesher = withCadException<BRepMesh_IncrementalMesh>(oc, () => {
+		const _mesher = new oc.BRepMesh_IncrementalMesh_2(
+			object,
+			tesselationParams.linearTolerance,
+			true,
+			tesselationParams.angularTolerance,
+			true
+		);
+		return _mesher;
+	});
+	if (!mesher) {
+		const updatedTesselationParams: CADTesselationParams = {...tesselationParams};
+		updatedTesselationParams.linearTolerance *= 2;
+		updatedTesselationParams.angularTolerance *= 2;
+		updatedTesselationParams.curveAbscissa *= 2;
+		updatedTesselationParams.curveTolerance *= 2;
+		return _createMesh(oc, object, updatedTesselationParams);
+	}
 	if (mesher.IsDone()) {
 		const positions: number[] = [];
 		const normals: number[] = [];
@@ -194,9 +212,9 @@ function _updateBufferFromFace(oc: OpenCascadeInstance, face: TopoDS_Face, buffe
 	const data = faceData(oc, face, positions.length / 3);
 
 	if (data) {
-		positions.push(...data.positions);
-		normals.push(...data.normals);
-		indices.push(...data.indices);
+		arrayPushItems(positions, data.positions);
+		arrayPushItems(normals, data.normals);
+		arrayPushItems(indices, data.indices);
 	}
 }
 function _createMeshFromBuffers(buffers: MeshBuffers, tesselationParams: CADTesselationParams) {

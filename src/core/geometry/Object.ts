@@ -230,7 +230,7 @@ export class CoreObject extends BaseCoreObject<CoreObjectType.THREEJS> {
 		TypeAssert.unreachable(transformTargetType);
 	}
 	static override mergeCompact(options: MergeCompactOptions) {
-		const {objects, materialsByObjectType, objectType, mergedObjects, onError} = options;
+		const {objects, material, objectType, mergedObjects, onError} = options;
 		const firstObject = objects[0];
 		if (!firstObject) {
 			return;
@@ -247,7 +247,6 @@ export class CoreObject extends BaseCoreObject<CoreObjectType.THREEJS> {
 		try {
 			const mergedGeometry = CoreGeometryBuilderMerge.merge(geometries);
 			if (mergedGeometry) {
-				const material = materialsByObjectType.get(objectType);
 				const newObject = BaseSopOperation.createObject(mergedGeometry, objectType as ObjectType, material);
 				objectContentCopyProperties(firstObject, newObject);
 				mergedObjects.push(newObject as Object3DWithGeometry);

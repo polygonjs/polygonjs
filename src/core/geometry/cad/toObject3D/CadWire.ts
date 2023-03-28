@@ -1,4 +1,4 @@
-import type {TopoDS_Wire, CADTesselationParams, CadGeometryType} from '../CadCommon';
+import type {TopoDS_Wire, CADTesselationParams, CadGeometryType, OpenCascadeInstance, TopoDS_Edge} from '../CadCommon';
 import {BufferGeometry} from 'three';
 import {BaseSopOperation} from '../../../../engine/operations/sop/_Base';
 import {cadMaterialLine} from '../CadConstant';
@@ -50,4 +50,12 @@ export function cadWireToObject3D(cadObject: CadObject<CadGeometryType.WIRE>, te
 export function cadWireClone(src: TopoDS_Wire): TopoDS_Wire {
 	const oc = CadLoaderSync.oc();
 	return oc.TopoDS.Wire_1(cadShapeClone(src));
+}
+
+export function cadWireFromEdge(oc: OpenCascadeInstance, edge: TopoDS_Edge) {
+	const api = new oc.BRepBuilderAPI_MakeWire_1();
+	api.Add_1(edge);
+	const wire = api.Wire();
+	api.delete();
+	return wire;
 }
