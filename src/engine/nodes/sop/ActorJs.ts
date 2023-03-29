@@ -23,6 +23,10 @@ import {CorePath} from '../../../core/geometry/CorePath';
 import {ActorBuilderNode} from '../../scene/utils/ActorsManager';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 import {ActorEvaluatorGenerator} from '../js/code/assemblers/actor/EvaluatorGenerator';
+import {ActorFunctionData, ActorPersistedConfig} from '../js/code/assemblers/actor/ActorPersistedConfig';
+import {computed, ref, watch} from '../../../core/reactivity/CoreReactivity';
+import {RegisterableVariable} from '../js/code/assemblers/_BaseJsPersistedConfigUtils';
+import {SetUtils} from '../../../core/SetUtils';
 class ActorJsSopParamsConfig extends NodeParamsConfig {
 	/** @param select which objects this applies the actor behavior to */
 	objectsMask = ParamConfig.STRING('', {
@@ -50,6 +54,7 @@ export class ActorJsSopNode extends TypedSopNode<ActorJsSopParamsConfig> {
 	//
 	// ASSEMBLERS
 	//
+	override readonly persisted_config: ActorPersistedConfig = new ActorPersistedConfig(this);
 	assemblerController() {
 		return this._assemblerController;
 	}
@@ -94,7 +99,13 @@ export class ActorJsSopNode extends TypedSopNode<ActorJsSopParamsConfig> {
 		return super.nodesByType(type) as JsNodeChildrenMap[K][];
 	}
 	override childrenAllowed() {
-		return true;
+		if (this.assemblerController()) {
+			return super.childrenAllowed();
+		}
+		return false;
+	}
+	override sceneReadonly() {
+		return this.assemblerController() == null;
 	}
 
 	//
@@ -108,14 +119,6 @@ export class ActorJsSopNode extends TypedSopNode<ActorJsSopParamsConfig> {
 		//
 		const coreGroup = inputCoreGroups[0];
 		const objects = coreGroup.threejsObjects();
-		// if (this._evaluator) {
-		// 	const inputObjects = coreGroup.threejsObjects();
-		// 	for (let inputObject of inputObjects) {
-		// 		if (this._evaluator.onTick) {
-		// 			this._evaluator.onTick({Object3D: inputObject});
-		// 		}
-		// 	}
-		// }
 		const actorNode = this._findActorNode();
 		if (actorNode) {
 			const objectsMask = this.pv.objectsMask.trim();
@@ -152,7 +155,98 @@ export class ActorJsSopNode extends TypedSopNode<ActorJsSopParamsConfig> {
 	evaluatorGenerator() {
 		return this._evaluatorGenerator;
 	}
-	setEvaluatorGenerator(evaluatorGenerator: ActorEvaluatorGenerator) {
+	private _functionData: ActorFunctionData | undefined;
+	functionData() {
+		return this._functionData;
+	}
+	updateFromFunctionData(functionData: ActorFunctionData) {
+		this._functionData = functionData;
+		const {
+			functionBody,
+			variableNames,
+			variablesByName,
+			functionNames,
+			functionsByName,
+			serializedParamConfigs,
+			eventDatas,
+		} = this._functionData;
+
+		const wrappedBody = `
+			try {
+				${functionBody}
+			} catch(e) {
+				console.log(e);
+				_setErrorFromError(e)
+				return null
+			}`;
+		const _setErrorFromError = (e: Error) => {
+			this.states.error.set(e.message);
+		};
+
+		const variables: RegisterableVariable[] = [];
+		const functions: Function[] = [];
+		for (const variableName of variableNames) {
+			const variable = variablesByName[variableName];
+			variables.push(variable);
+		}
+		for (const functionName of functionNames) {
+			const _func = functionsByName[functionName];
+			functions.push(_func);
+		}
+
+		const paramConfigUniformNames: string[] = serializedParamConfigs.map((pc) => pc.uniformName);
+
+		const functionCreationArgs = [
+			'ActorEvaluator',
+			'computed',
+			'ref',
+			'watch',
+			'_setErrorFromError',
+			...variableNames,
+			...functionNames,
+			...paramConfigUniformNames,
+			wrappedBody,
+		];
+		const functionEvalArgs = () => [
+			ActorEvaluator,
+			computed,
+			ref,
+			watch,
+			_setErrorFromError,
+			// it is currently preferable to create a unique set of variables
+			// for each evaluator
+			...variables.map((v) => v.clone()),
+			...functions,
+		];
+		// console.log(functionCreationArgs, functionEvalArgs());
+		try {
+			const _function = new Function(...functionCreationArgs);
+			// const node = this.currentGlParentNode() as ActorJsSopNode;
+			const evaluatorGenerator = new ActorEvaluatorGenerator((object) => {
+				const evaluatorClass = _function(...functionEvalArgs()) as typeof ActorEvaluator;
+				return new evaluatorClass(this.scene(), object);
+			});
+			// console.log({evaluator});
+
+			//
+			//
+			// add inputEvents
+			//
+			//
+			evaluatorGenerator.eventDatas = SetUtils.fromArray(eventDatas);
+
+			//
+			//
+			// evaluator is ready
+			//
+			//
+			this._setEvaluatorGenerator(evaluatorGenerator);
+		} catch (e) {
+			console.warn(e);
+			this.states.error.set('failed to compile');
+		}
+	}
+	private _setEvaluatorGenerator(evaluatorGenerator: ActorEvaluatorGenerator) {
 		this.scene().actorsManager.unregisterEvaluatorGenerator(this._evaluatorGenerator);
 		this._evaluatorGenerator.dispose();
 		this._evaluatorGenerator = evaluatorGenerator;
@@ -165,6 +259,10 @@ export class ActorJsSopNode extends TypedSopNode<ActorJsSopParamsConfig> {
 		}
 
 		// main compilation
-		assemblerController.assembler.updateEvaluator();
+		const functionData = assemblerController.assembler.createFunctionData();
+		if (!functionData) {
+			return;
+		}
+		this.updateFromFunctionData(functionData);
 	}
 }

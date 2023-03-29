@@ -1,4 +1,4 @@
-import {ShaderMaterial, Color, Vector2, Vector3, Vector4, Plane, Ray} from 'three';
+import {ShaderMaterial} from 'three';
 import {LineType} from '../utils/LineType';
 import {VariableConfig} from '../configs/VariableConfig';
 import {CodeBuilder, CodeBuilderSetCodeLinesOptions} from '../utils/CodeBuilder';
@@ -25,21 +25,26 @@ import {JsType} from '../../../../poly/registers/nodes/types/Js';
 // import {VaryingWriteGlNode} from '../../VaryingWrite';
 // import {SubnetOutputGlNode} from '../../SubnetOutput';
 // import {GlobalsOutput} from './common/GlobalsOutput';
-import {JsParamConfig} from '../utils/JsParamConfig';
-import {ParamType} from '../../../../poly/ParamType';
+// import {JsParamConfig} from '../utils/JsParamConfig';
+// import {ParamType} from '../../../../poly/ParamType';
 import {BaseNamedFunction} from '../../../../functions/_Base';
 // import {CoreString} from '../../../../../core/String';
+import {RegisterableVariable} from './_BaseJsPersistedConfigUtils';
+import {NamedFunctionMap} from '../../../../poly/registers/functions/All';
+import {JsParamConfigJSON} from '../utils/JsParamConfig';
+import {ParamType} from '../../../../poly/ParamType';
 
 type StringArrayByShaderName = Map<ShaderName, string[]>;
-export type RegisterableVariable = Color | Plane | Ray | Vector2 | Vector3 | Vector4;
+
 // export abstract class ObjectNamedFunction4<ARGS extends [any,any,any,any]> extends ObjectNamedFunction<ARGS,[string,string,string,string]> {}
 export interface FunctionData {
 	functionBody: string;
 	variableNames: string[];
 	variablesByName: Record<string, RegisterableVariable>;
-	functionNames: string[];
+	functionNames: Array<keyof NamedFunctionMap>;
 	functionsByName: Record<string, Function>;
-	paramConfigs: readonly JsParamConfig<ParamType>[];
+	serializedParamConfigs: JsParamConfigJSON<ParamType>[];
+	// paramConfigs: readonly JsParamConfig<ParamType>[];
 }
 interface ITemplateShader {
 	vertexShader?: string;

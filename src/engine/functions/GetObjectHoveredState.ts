@@ -30,11 +30,5 @@ export class getObjectHoveredState extends ObjectNamedFunction3<[boolean, number
 		raycaster.value.intersectObject(object3D, isBooleanTrue(traverseChildren), intersections);
 		const newHoveredState = intersections[0] != null;
 		return newHoveredState;
-		// const previousHoveredState = _lastIntersectionStateByObject.get(object3D);
-		// const hoveredStateChanged = previousHoveredState == null || newHoveredState != previousHoveredState;
-		// if (hoveredStateChanged) {
-		// 	_lastIntersectionStateByObject.set(object3D, newHoveredState);
-		// }
-		// return hoveredStateChanged
 	}
 }

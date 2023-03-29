@@ -1,10 +1,5 @@
-import {
-	BaseJsShaderAssembler,
-	INSERT_DEFINE_AFTER,
-	INSERT_BODY_AFTER,
-	RegisterableVariable,
-	FunctionData,
-} from '../_Base';
+import {BaseJsShaderAssembler, INSERT_DEFINE_AFTER, INSERT_BODY_AFTER, FunctionData} from '../_Base';
+import {RegisterableVariable} from '../_BaseJsPersistedConfigUtils';
 // import {IUniforms} from '../../../../../../core/geometry/Material';
 import {ThreeToGl} from '../../../../../../core/ThreeToGl';
 // import TemplateDefault from '../../templates/textures/Default.frag.glsl';
@@ -17,6 +12,7 @@ import {JsConnectionPointType, JsConnectionPoint} from '../../../../utils/io/con
 import {ShadersCollectionController} from '../../utils/ShadersCollectionController';
 // import {UniformJsDefinition} from '../../../utils/JsDefinition';
 import {Vector3} from 'three';
+import {NamedFunctionMap} from '../../../../../poly/registers/functions/All';
 // import {Vector3} from 'three';
 // import {IUniformsWithTime} from '../../../../../scene/utils/UniformsController';
 // import {handleCopBuilderDependencies} from '../../../../cop/utils/BuilderUtils';
@@ -51,7 +47,7 @@ export class JsAssemblerSDF extends BaseJsShaderAssembler {
 			return;
 		}
 		const variableNames: string[] = [];
-		const functionNames: string[] = [];
+		const functionNames: Array<keyof NamedFunctionMap> = [];
 		const variablesByName: Record<string, RegisterableVariable> = {};
 		const functionsByName: Record<string, Function> = {};
 		this.traverseRegisteredVariables((variable, varName) => {
@@ -59,11 +55,12 @@ export class JsAssemblerSDF extends BaseJsShaderAssembler {
 			variablesByName[varName] = variable;
 		});
 		this.traverseRegisteredFunctions((namedFunction) => {
-			functionNames.push(namedFunction.type());
-			functionsByName[namedFunction.type()] = namedFunction.func;
+			functionNames.push(namedFunction.type() as keyof NamedFunctionMap);
+			functionsByName[namedFunction.type()] = namedFunction.func.bind(namedFunction);
 		});
-		const paramConfigs = this.param_configs();
-		return {functionBody, variableNames, variablesByName, functionNames, functionsByName, paramConfigs};
+		// const paramConfigs = this.param_configs();
+		const serializedParamConfigs = this.param_configs().map((p) => p.toJSON());
+		return {functionBody, variableNames, variablesByName, functionNames, functionsByName, serializedParamConfigs};
 	}
 
 	// uniforms() {

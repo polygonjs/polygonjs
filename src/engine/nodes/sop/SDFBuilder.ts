@@ -16,7 +16,8 @@ import {JsAssemblerController} from '../js/code/Controller';
 import {JsAssemblerSDF} from '../js/code/assemblers/sdf/SDF';
 import {JsNodeFinder} from '../js/code/utils/NodeFinder';
 import {Box3, Vector3} from 'three';
-import {FunctionData, RegisterableVariable} from '../js/code/assemblers/_Base';
+import {FunctionData} from '../js/code/assemblers/_Base';
+import {RegisterableVariable} from '../js/code/assemblers/_BaseJsPersistedConfigUtils';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {SDFLoader} from '../../../core/geometry/sdf/SDFLoader';
 import {Box} from '../../../core/geometry/sdf/SDFCommon';
@@ -24,8 +25,11 @@ import {TypedSopNode} from './_Base';
 import {ModuleName} from '../../poly/registers/modules/Common';
 import {SDFObject} from '../../../core/geometry/sdf/SDFObject';
 import {CoreType} from '../../../core/Type';
-import {JsParamConfig} from '../js/code/utils/JsParamConfig';
+// import {JsParamConfig} from '../js/code/utils/JsParamConfig';
+// import {ParamType} from '../../poly/ParamType';
+import {SDFPersistedConfig} from '../js/code/assemblers/sdf/SDFPersistedConfig';
 import {ParamType} from '../../poly/ParamType';
+import {JsParamConfigJSON} from '../js/code/utils/JsParamConfig';
 const _box3 = new Box3();
 const box: Box = {min: [-1, -1, -1], max: [1, 1, 1]};
 type SDFFunction = Function; //(p: any) => number;
@@ -67,6 +71,7 @@ export class SDFBuilderSopNode extends TypedSopNode<SDFBuilderSopParamsConfig> {
 	override requiredModules() {
 		return [ModuleName.SDF];
 	}
+	override readonly persisted_config: SDFPersistedConfig = new SDFPersistedConfig(this);
 	assemblerController() {
 		return this._assemblerController;
 	}
@@ -121,6 +126,15 @@ export class SDFBuilderSopNode extends TypedSopNode<SDFBuilderSopParamsConfig> {
 	override nodesByType<K extends keyof JsNodeChildrenMap>(type: K): JsNodeChildrenMap[K][] {
 		return super.nodesByType(type) as JsNodeChildrenMap[K][];
 	}
+	override childrenAllowed() {
+		if (this.assemblerController()) {
+			return super.childrenAllowed();
+		}
+		return false;
+	}
+	override sceneReadonly() {
+		return this.assemblerController() == null;
+	}
 
 	override async cook(inputCoreGroups: CoreGroup[]) {
 		const manifold = await SDFLoader.core();
@@ -142,7 +156,6 @@ export class SDFBuilderSopNode extends TypedSopNode<SDFBuilderSopParamsConfig> {
 		// eval
 		const _func = this._function;
 		if (_func) {
-			// console.log(this.functionEvalArgsWithParamConfigs());
 			const args = this.functionEvalArgsWithParamConfigs();
 			const convertedFunction = (p: Number3) => {
 				this._position.fromArray(p);
@@ -170,11 +183,15 @@ export class SDFBuilderSopNode extends TypedSopNode<SDFBuilderSopParamsConfig> {
 		}
 	}
 	private _position = new Vector3();
-	private _paramConfigs: JsParamConfig<ParamType>[] = [];
+	private _serializedParamConfigs: JsParamConfigJSON<ParamType>[] = [];
+	// private _paramConfigNames: string[] = [];
 	private _functionData: FunctionData | undefined;
 	private _functionCreationArgs: string[] = [];
 	private _functionEvalArgs: (Function | RegisterableVariable)[] = [];
 	private _function: SDFFunction | undefined;
+	functionData() {
+		return this._functionData;
+	}
 	async compile() {
 		const assemblerController = this.assemblerController();
 		if (!assemblerController) {
@@ -198,66 +215,74 @@ export class SDFBuilderSopNode extends TypedSopNode<SDFBuilderSopParamsConfig> {
 			// main compilation
 			assemblerController.assembler.updateFunction();
 
-			// receives fragment and uniforms
-			this._functionData = assemblerController.assembler.functionData();
-			if (!this._functionData) {
+			// update
+			const functionData = assemblerController.assembler.functionData();
+			if (!functionData) {
 				this.states.error.set('failed to compile ');
 				return;
 			}
-			const {functionBody, variableNames, variablesByName, functionNames, functionsByName, paramConfigs} =
-				this._functionData;
-
-			// console.log(functionBody);
-			// console.log(functionBody, variableNames, variablesByName, functionNames, functionsByName, paramConfigs);
-			const wrappedBody = `
-			try {
-				${functionBody}
-			} catch(e) {
-				_setErrorFromError(e)
-				return 0;
-			}`;
-			// console.log(wrappedBody);
-			const _setErrorFromError = (e: Error) => {
-				this.states.error.set(e.message);
-			};
-			const variables: RegisterableVariable[] = [];
-			const functions: Function[] = [];
-			for (const variableName of variableNames) {
-				const variable = variablesByName[variableName];
-				variables.push(variable);
-			}
-			for (const functionName of functionNames) {
-				const _func = functionsByName[functionName];
-				functions.push(_func);
-			}
-			this._paramConfigs = [...paramConfigs];
-			const paramConfigUniformNames = paramConfigs.map((pc) => pc.uniformName());
-
-			// console.log(paramConfigs.map((pc) => ({uniformName: pc.uniformName(), defaultValue: pc.defaultValue()})));
-			this._functionCreationArgs = [
-				'position',
-				'_setErrorFromError',
-				...variableNames,
-				...functionNames,
-				...paramConfigUniformNames,
-				wrappedBody,
-			];
-			this._functionEvalArgs = [this._position, _setErrorFromError, ...variables, ...functions];
-			// console.log(this._functionCreationArgs, this._functionEvalArgs);
-			try {
-				this._function = new Function(...this._functionCreationArgs) as SDFFunction;
-			} catch (e) {
-				console.warn(e);
-				this.states.error.set('failed to compile');
-			}
+			this.updateFromFunctionData(functionData);
 		}
 
 		assemblerController.post_compile();
 	}
+	updateFromFunctionData(functionData: FunctionData) {
+		this._functionData = functionData;
+
+		const {functionBody, variableNames, variablesByName, functionNames, functionsByName, serializedParamConfigs} =
+			this._functionData;
+
+		const wrappedBody = `
+		try {
+			${functionBody}
+		} catch(e) {
+			_setErrorFromError(e)
+			return 0;
+		}`;
+		const _setErrorFromError = (e: Error) => {
+			this.states.error.set(e.message);
+		};
+		const variables: RegisterableVariable[] = [];
+		const functions: Function[] = [];
+		for (const variableName of variableNames) {
+			const variable = variablesByName[variableName];
+			variables.push(variable);
+		}
+		for (const functionName of functionNames) {
+			const _func = functionsByName[functionName];
+			functions.push(_func);
+		}
+		this._serializedParamConfigs = [...serializedParamConfigs]; //[...paramConfigs];
+		const paramConfigNames: string[] = serializedParamConfigs.map((pc) => pc.uniformName);
+
+		this._functionCreationArgs = [
+			'position',
+			'_setErrorFromError',
+			...variableNames,
+			...functionNames,
+			...paramConfigNames,
+			wrappedBody,
+		];
+		this._functionEvalArgs = [
+			this._position,
+			_setErrorFromError,
+			...variables,
+			...functions,
+			// paramConfigs are added dynamically during cook
+		];
+		try {
+			this._function = new Function(...this._functionCreationArgs) as SDFFunction;
+		} catch (e) {
+			console.warn(e);
+			this.states.error.set('failed to compile');
+		}
+	}
+
 	functionEvalArgsWithParamConfigs() {
 		const list: Array<Function | RegisterableVariable | number | boolean> = [...this._functionEvalArgs];
-		for (const paramConfig of this._paramConfigs) {
-			const spareParam = this.params.get(paramConfig.name());
+		for (const paramConfigName of this._serializedParamConfigs) {
+			const paramName = paramConfigName.name;
+			const spareParam = this.params.get(paramName);
 			if (spareParam && spareParam.value != null) {
 				if (
 					CoreType.isBoolean(spareParam.value) ||
@@ -267,12 +292,10 @@ export class SDFBuilderSopNode extends TypedSopNode<SDFBuilderSopParamsConfig> {
 				) {
 					list.push(spareParam.value);
 				} else {
-					console.warn(
-						`spareParam not found but type not yet copied to function args:'${paramConfig.name()}'`
-					);
+					console.warn(`spareParam not found but type not yet copied to function args:'${paramName}'`);
 				}
 			} else {
-				console.warn(`spareParam not found:'${paramConfig.name()}'`);
+				console.warn(`spareParam not found:'${paramName}'`);
 			}
 		}
 		return list;

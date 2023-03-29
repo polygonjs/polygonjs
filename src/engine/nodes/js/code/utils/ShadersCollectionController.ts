@@ -2,7 +2,8 @@ import {ShaderName} from '../../../utils/shaders/ShaderName';
 import {BaseJsDefinition, ComputedValueJsDefinition} from '../../utils/JsDefinition';
 import {JsLinesController, DefinitionTraverseCallback, AddBodyLinesOptions} from './LinesController';
 import {BaseJsNodeType} from '../../_Base';
-import {RegisterableVariable, BaseJsShaderAssembler} from '../assemblers/_Base';
+import {BaseJsShaderAssembler} from '../assemblers/_Base';
+import {RegisterableVariable} from '../assemblers/_BaseJsPersistedConfigUtils';
 import {JsConnectionPointType} from '../../../utils/io/connections/Js';
 import {BaseNamedFunction} from '../../../../functions/_Base';
 

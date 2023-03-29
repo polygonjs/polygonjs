@@ -1,8 +1,10 @@
 import {Object3D} from 'three';
 import {PolyScene} from '../scene/PolyScene';
+import {BaseNodeType} from '../nodes/_Base';
 import {BaseJsNodeType} from '../nodes/js/_Base';
 import {ShadersCollectionController} from '../nodes/js/code/utils/ShadersCollectionController';
 import {EvaluatorConstant} from '../nodes/js/code/assemblers/actor/Evaluator';
+import {NodeContext} from '../poly/NodeContext';
 
 export abstract class BaseNamedFunction {
 	// abstract type: string;
@@ -14,12 +16,19 @@ export abstract class BaseNamedFunction {
 		return c.type();
 	}
 	public readonly scene: PolyScene;
-	constructor(protected node: BaseJsNodeType, protected shadersCollectionController: ShadersCollectionController) {
+	constructor(protected node: BaseNodeType, protected shadersCollectionController?: ShadersCollectionController) {
 		this.scene = node.scene();
 	}
 	abstract func(...args: any): any;
 	asString(...args: any): string {
-		this.shadersCollectionController.addFunction(this.node, this);
+		if (this.shadersCollectionController) {
+			if (this.node.context() == NodeContext.JS) {
+				const jsNode = this.node as BaseJsNodeType;
+				this.shadersCollectionController.addFunction(jsNode, this);
+			}
+		} else {
+			console.warn('no shadersCollectionController in func', this.type());
+		}
 		return '';
 	}
 }

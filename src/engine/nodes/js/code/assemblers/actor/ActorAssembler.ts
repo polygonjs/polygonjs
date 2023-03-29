@@ -3,9 +3,9 @@ import {
 	INSERT_DEFINE_AFTER,
 	INSERT_BODY_AFTER,
 	INSERT_MEMBERS_AFTER,
-	RegisterableVariable,
 	FunctionData,
 } from '../_Base';
+import {RegisterableVariable} from '../_BaseJsPersistedConfigUtils';
 // import {IUniforms} from '../../../../../../core/geometry/Material';
 // import {ThreeToGl} from '../../../../../../core/ThreeToGl';
 // import TemplateDefault from '../../templates/textures/Default.frag.glsl';
@@ -20,12 +20,7 @@ import {ShaderName} from '../../../../utils/shaders/ShaderName';
 // import {Vector3} from 'three';
 import {ActorJsSopNode} from '../../../../sop/ActorJs';
 import {connectedTriggerableNodes, findTriggeringNodesNonTriggerable, groupNodesByType} from './ActorAssemblerUtils';
-import {
-	ActorEvaluator,
-	EvaluatorEventData,
-	// EvaluatorMethodName,
-	// EVALUATOR_METHOD_NAMES
-} from './Evaluator';
+
 import {BaseJsNodeType} from '../../../_Base';
 import {SetUtils} from '../../../../../../core/SetUtils';
 import {JsConnectionPointType} from '../../../../utils/io/connections/Js';
@@ -34,9 +29,11 @@ import {ArrayUtils} from '../../../../../../core/ArrayUtils';
 import {ShadersCollectionController} from '../../utils/ShadersCollectionController';
 import {CoreString} from '../../../../../../core/String';
 import {PrettierController} from '../../../../../../core/code/PrettierController';
+
+import {NamedFunctionMap} from '../../../../../poly/registers/functions/All';
+import {ActorFunctionData} from './ActorPersistedConfig';
+import {EvaluatorEventData} from './Evaluator';
 import {CoreType} from '../../../../../../core/Type';
-import {computed, ref, watch} from '../../../../../../core/reactivity/CoreReactivity';
-import {ActorEvaluatorGenerator} from './EvaluatorGenerator';
 // import {Vector3} from 'three';
 // import {IUniformsWithTime} from '../../../../../scene/utils/UniformsController';
 // import {handleCopBuilderDependencies} from '../../../../cop/utils/BuilderUtils';
@@ -90,7 +87,7 @@ export class JsAssemblerActor extends BaseJsShaderAssembler {
 			return;
 		}
 		const variableNames: string[] = [];
-		const functionNames: string[] = [];
+		const functionNames: Array<keyof NamedFunctionMap> = [];
 		const variablesByName: Record<string, RegisterableVariable> = {};
 		const functionsByName: Record<string, Function> = {};
 		this.traverseRegisteredVariables((variable, varName) => {
@@ -98,17 +95,17 @@ export class JsAssemblerActor extends BaseJsShaderAssembler {
 			variablesByName[varName] = variable;
 		});
 		this.traverseRegisteredFunctions((namedFunction) => {
-			functionNames.push(namedFunction.type());
+			functionNames.push(namedFunction.type() as keyof NamedFunctionMap);
 			functionsByName[namedFunction.type()] = namedFunction.func;
 		});
-		const paramConfigs = this.param_configs();
-		return {functionBody, variableNames, variablesByName, functionNames, functionsByName, paramConfigs};
+		const serializedParamConfigs = this.param_configs().map((pc) => pc.toJSON());
+		return {functionBody, variableNames, variablesByName, functionNames, functionsByName, serializedParamConfigs};
 	}
 
 	private _triggerNodes: Set<BaseJsNodeType> = new Set();
 	private _triggerNodesByType: Map<string, Set<BaseJsNodeType>> = new Map();
 
-	updateEvaluator() {
+	createFunctionData(): ActorFunctionData | undefined {
 		logBlue('*************');
 		this._reset();
 		//
@@ -118,27 +115,19 @@ export class JsAssemblerActor extends BaseJsShaderAssembler {
 
 		const shaderNames = this.shaderNames();
 
-		const evaluatorGenerator = this._createNonTriggerables(
+		const functionData = this._createFunctionData(
 			// nodeType as EvaluatorMethodName,
 			this._triggerNodes,
 			shaderNames
 		);
-		if (evaluatorGenerator) {
-			node.setEvaluatorGenerator(evaluatorGenerator);
-		}
 
-		this._triggerNodesByType.forEach((triggerNodes, nodeType) => {
-			// if (EVALUATOR_METHOD_NAMES.includes(nodeType as EvaluatorMethodName)) {
-			// } else {
-			// 	console.warn(`type ${nodeType} not part of evaluator methods`);
-			// }
-		});
+		return functionData;
 	}
-	private _createNonTriggerables(
+	private _createFunctionData(
 		// nodeType: EvaluatorMethodName,
 		triggerNodes: Set<BaseJsNodeType>,
 		shaderNames: ShaderName[]
-	) {
+	): ActorFunctionData | undefined {
 		const functionNode = this.currentGlParentNode() as ActorJsSopNode;
 
 		//
@@ -299,14 +288,14 @@ export class JsAssemblerActor extends BaseJsShaderAssembler {
 			return functionBody;
 		};
 		const functionBody = _buildFunctionBody();
-		console.log(functionBody);
+		// console.log(functionBody);
 		//
 		//
 		// gather function data
 		//
 		//
 		const variableNames: string[] = [];
-		const functionNames: string[] = [];
+		const functionNames: Array<keyof NamedFunctionMap> = [];
 		const variablesByName: Record<string, RegisterableVariable> = {};
 		const functionsByName: Record<string, Function> = {};
 		this.traverseRegisteredVariables((variable, varName) => {
@@ -314,7 +303,7 @@ export class JsAssemblerActor extends BaseJsShaderAssembler {
 			variablesByName[varName] = variable;
 		});
 		this.traverseRegisteredFunctions((namedFunction) => {
-			functionNames.push(namedFunction.type());
+			functionNames.push(namedFunction.type() as keyof NamedFunctionMap);
 			functionsByName[namedFunction.type()] = namedFunction.func.bind(namedFunction);
 		});
 		const paramConfigs = this.param_configs();
@@ -324,17 +313,7 @@ export class JsAssemblerActor extends BaseJsShaderAssembler {
 		// create evaluator
 		//
 		//
-		const wrappedBody = `
-			try {
-				${functionBody}
-			} catch(e) {
-				console.log(e);
-				_setErrorFromError(e)
-				return null
-			}`;
-		const _setErrorFromError = (e: Error) => {
-			this.currentGlParentNode().states.error.set(e.message);
-		};
+
 		const variables: RegisterableVariable[] = [];
 		const functions: Function[] = [];
 		for (const variableName of variableNames) {
@@ -346,67 +325,30 @@ export class JsAssemblerActor extends BaseJsShaderAssembler {
 			const _func = functionsByName[functionName];
 			functions.push(_func);
 		}
-		const paramConfigUniformNames = paramConfigs.map((pc) => pc.uniformName());
+		// const paramConfigUniformNames = paramConfigs.map((pc) => pc.uniformName());
+		const serializedParamConfigs = paramConfigs.map((p) => p.toJSON());
 
-		const functionCreationArgs = [
-			'ActorEvaluator',
-			'computed',
-			'ref',
-			'watch',
-			'_setErrorFromError',
-			...variableNames,
-			...functionNames,
-			...paramConfigUniformNames,
-			wrappedBody,
-		];
-		const functionEvalArgs = () => [
-			ActorEvaluator,
-			computed,
-			ref,
-			watch,
-			_setErrorFromError,
-			// it is currently preferable to create a unique set of variables
-			// for each evaluator
-			...variables.map((v) => v.clone()),
-			...functions,
-		];
-		// console.log(functionCreationArgs, functionEvalArgs);
-		try {
-			const _function = new Function(...functionCreationArgs);
-			const node = this.currentGlParentNode() as ActorJsSopNode;
-			const evaluatorGenerator = new ActorEvaluatorGenerator((object) => {
-				const evaluatorClass = _function(...functionEvalArgs()) as typeof ActorEvaluator;
-				return new evaluatorClass(node.scene(), object);
-			});
-			// console.log({evaluator});
-
-			//
-			//
-			// add inputEvents
-			//
-			//
-			const eventDatas: Set<EvaluatorEventData> = new Set();
-			functionNode.childrenController?.traverseChildren((child) => {
-				const eventDataFunction = (child as BaseJsNodeType).eventData;
-				if (eventDataFunction && CoreType.isFunction(eventDataFunction)) {
-					const eventData = (child as BaseJsNodeType).eventData();
-					if (eventData) {
-						eventDatas.add(eventData);
-					}
+		const eventDatas: EvaluatorEventData[] = [];
+		this._gl_parent_node.childrenController?.traverseChildren((child) => {
+			const eventDataFunction = (child as BaseJsNodeType).eventData;
+			if (eventDataFunction && CoreType.isFunction(eventDataFunction)) {
+				const eventData = (child as BaseJsNodeType).eventData();
+				if (eventData) {
+					eventDatas.push(eventData);
 				}
-			});
-			evaluatorGenerator.eventDatas = eventDatas;
+			}
+		});
 
-			//
-			//
-			// evaluator is ready
-			//
-			//
-			return evaluatorGenerator;
-		} catch (e) {
-			console.warn(e);
-			this.currentGlParentNode().states.error.set('failed to compile');
-		}
+		const functionData: ActorFunctionData = {
+			functionBody,
+			variableNames,
+			variablesByName,
+			functionNames,
+			functionsByName,
+			serializedParamConfigs,
+			eventDatas,
+		};
+		return functionData;
 	}
 	override rootNodesByShaderName(shaderName: ShaderName, rootNodes: BaseJsNodeType[]): BaseJsNodeType[] {
 		return rootNodes;

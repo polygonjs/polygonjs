@@ -28,6 +28,10 @@ export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 	) {}
 
 	process_data(scene_importer: SceneJsonImporter, data: NodeJsonExporterData) {
+		if (this._node.sceneReadonly()) {
+			scene_importer.report.markAsLoadedWithoutAssemblers();
+		}
+
 		this.set_connection_points(data['connection_points']);
 
 		// rather than having the children creation dependent on the persisted config and player mode, use the childrenAllowed() method
@@ -121,9 +125,6 @@ export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 	) {
 		if (!data) {
 			return;
-		}
-		if (this._node.sceneReadonly()) {
-			scene_importer.report.markAsLoadedWithoutAssemblers();
 		}
 
 		// const nodes_importer = new NodesJsonImporter(this._node);
