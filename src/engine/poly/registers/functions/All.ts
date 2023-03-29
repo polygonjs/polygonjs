@@ -38,6 +38,8 @@ import {SDFBox, SDFSphere} from '../../../functions/SDFPrimitives';
 import {SDFRoundedX} from '../../../functions/SDFPrimitives2D';
 
 //
+import {getObject} from '../../../functions/GetObject';
+import {getParent} from '../../../functions/GetParent';
 import {getObjectHoveredState} from '../../../functions/GetObjectHoveredState';
 import {getObjectProperty} from '../../../functions/GetObjectProperty';
 import {setObjectPosition} from '../../../functions/SetObjectPosition';
@@ -51,8 +53,10 @@ export interface NamedFunctionMap {
 	divideNumber: divideNumber;
 	divideVectorNumber: divideVectorNumber<Vector2 | Vector3 | Vector4>;
 	floatToVec3: floatToVec3;
+	getObject: getObject;
 	getObjectHoveredState: getObjectHoveredState;
 	getObjectProperty: getObjectProperty;
+	getParent: getParent;
 	globalsTime: globalsTime;
 	globalsTimeDelta: globalsTimeDelta;
 	globalsRaycaster: globalsRaycaster;
@@ -98,8 +102,10 @@ export class AllNamedFunctionRegister {
 			divideNumber,
 			divideVectorNumber,
 			floatToVec3,
+			getObject,
 			getObjectHoveredState,
 			getObjectProperty,
+			getParent,
 			globalsTime,
 			globalsTimeDelta,
 			globalsRaycaster,

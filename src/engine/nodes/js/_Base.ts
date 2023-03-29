@@ -23,6 +23,7 @@ import {Color, Vector2, Vector3, Vector4} from 'three';
 import {CoreString} from '../../../core/String';
 import {BaseParamType} from '../../params/_Base';
 import {EvaluatorEventData} from './code/assemblers/actor/Evaluator';
+import {StringParam} from '../../params/String';
 
 export const TRIGGER_CONNECTION_NAME = 'trigger';
 
@@ -124,7 +125,15 @@ export class TypedJsNode<K extends NodeParamsConfig> extends TypedNode<NodeConte
 
 	variableForInputParam(
 		shadersCollectionController: ShadersCollectionController,
-		param: IntegerParam | FloatParam | Vector2Param | Vector3Param | Vector4Param | ColorParam | BooleanParam
+		param:
+			| IntegerParam
+			| FloatParam
+			| Vector2Param
+			| Vector3Param
+			| Vector4Param
+			| ColorParam
+			| BooleanParam
+			| StringParam
 	) {
 		return this.variableForInput(shadersCollectionController, param.name());
 	}
@@ -152,16 +161,20 @@ export class TypedJsNode<K extends NodeParamsConfig> extends TypedNode<NodeConte
 
 		if (this.params.has(inputName)) {
 			const param = this.params.get(inputName);
-			if (param && variableFromParamRequired(param)) {
-				const varName = this.inputVarName(inputName);
-				shadersCollectionController.addVariable(this, varName, createVariableFromParam(param));
+			if (param) {
+				if (param.type() == ParamType.STRING) {
+					return outputJsVarName != null ? outputJsVarName : `'${param.value}'`;
+				}
+				if (variableFromParamRequired(param)) {
+					const varName = this.inputVarName(inputName);
+					shadersCollectionController.addVariable(this, varName, createVariableFromParam(param));
 
-				return outputJsVarName
-					? `${varName}.copy(${wrapIfComputed(outputJsVarName, shadersCollectionController)})`
-					: `${varName}.set(${param.value.toArray().join(', ')})`;
-			} else {
-				return outputJsVarName || ThreeToGl.any(this.params.get(inputName)?.value);
+					return outputJsVarName
+						? `${varName}.copy(${wrapIfComputed(outputJsVarName, shadersCollectionController)})`
+						: `${varName}.set(${param.value.toArray().join(', ')})`;
+				}
 			}
+			return outputJsVarName || ThreeToGl.any(this.params.get(inputName)?.value);
 		} else {
 			const connectionPoint = this.io.inputs.namedInputConnectionPoints()[inputIndex];
 			return outputJsVarName || ThreeToGl.any(connectionPoint.init_value);

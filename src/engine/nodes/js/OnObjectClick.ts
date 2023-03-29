@@ -11,6 +11,7 @@ import {EvaluatorEventData} from './code/assemblers/actor/Evaluator';
 import {BaseOnObjectPointerEventJsNode} from './_BaseOnObjectPointerEvent';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 import {Poly} from '../../Poly';
+import {inputObject3D} from './_BaseObject3D';
 
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
 
@@ -46,6 +47,7 @@ export class OnObjectClickJsNode extends BaseOnObjectPointerEventJsNode {
 		bodyLines: string[],
 		existingMethodNames: Set<string>
 	) {
+		const object3D = inputObject3D(this, shadersCollectionController);
 		const traverseChildren = this.variableForInputParam(shadersCollectionController, this.p.traverseChildren);
 		const lineThreshold = this.variableForInputParam(shadersCollectionController, this.p.lineThreshold);
 		const pointsThreshold = this.variableForInputParam(shadersCollectionController, this.p.pointsThreshold);
@@ -54,7 +56,7 @@ export class OnObjectClickJsNode extends BaseOnObjectPointerEventJsNode {
 			this,
 			shadersCollectionController
 		);
-		const bodyLine = func.asString(traverseChildren, lineThreshold, pointsThreshold);
+		const bodyLine = func.asString(object3D, traverseChildren, lineThreshold, pointsThreshold);
 
 		const methodName = this.type();
 		//

@@ -11,6 +11,7 @@ import {EvaluatorEventData} from './code/assemblers/actor/Evaluator';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 import {BaseOnObjectPointerEventJsNode, OnObjectHoverJsNodeOutputName} from './_BaseOnObjectPointerEvent';
 import {Poly} from '../../Poly';
+import {inputObject3D} from './_BaseObject3D';
 
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
 
@@ -53,6 +54,7 @@ export class OnObjectHoverJsNode extends BaseOnObjectPointerEventJsNode {
 		bodyLines: string[],
 		existingMethodNames: Set<string>
 	) {
+		const object3D = inputObject3D(this, shadersCollectionController);
 		const traverseChildren = this.variableForInputParam(shadersCollectionController, this.p.traverseChildren);
 		const lineThreshold = this.variableForInputParam(shadersCollectionController, this.p.lineThreshold);
 		const pointsThreshold = this.variableForInputParam(shadersCollectionController, this.p.pointsThreshold);
@@ -61,7 +63,7 @@ export class OnObjectHoverJsNode extends BaseOnObjectPointerEventJsNode {
 			this,
 			shadersCollectionController
 		);
-		const bodyLine = func.asString(traverseChildren, lineThreshold, pointsThreshold);
+		const bodyLine = func.asString(object3D, traverseChildren, lineThreshold, pointsThreshold);
 
 		const outHovered = this.jsVarName(OnObjectHoverJsNodeOutputName.hovered);
 		const methodName = this.type();

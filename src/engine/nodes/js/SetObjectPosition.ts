@@ -10,6 +10,7 @@ import {JsConnectionPoint, JsConnectionPointType, JS_CONNECTION_POINT_IN_NODE_DE
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 import {JsType} from '../../poly/registers/nodes/types/Js';
 import {Poly} from '../../Poly';
+import {inputObject3D} from './_BaseObject3D';
 
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
 
@@ -41,12 +42,13 @@ export class SetObjectPositionJsNode extends TypedJsNode<SetObjectPositionJsPara
 		]);
 	}
 	override setLines(shadersCollectionController: ShadersCollectionController) {
+		const object3D = inputObject3D(this, shadersCollectionController);
 		const position = this.variableForInputParam(shadersCollectionController, this.p.position);
 		const lerp = this.variableForInputParam(shadersCollectionController, this.p.lerp);
 		const updateMatrix = this.variableForInputParam(shadersCollectionController, this.p.updateMatrix);
 
 		const func = Poly.namedFunctionsRegister.getFunction('setObjectPosition', this, shadersCollectionController);
-		const bodyLine = func.asString(position, lerp, updateMatrix);
+		const bodyLine = func.asString(object3D, position, lerp, updateMatrix);
 		shadersCollectionController.addBodyLines(this, [bodyLine]);
 	}
 }

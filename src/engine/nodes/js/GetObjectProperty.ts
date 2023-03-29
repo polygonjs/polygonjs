@@ -13,6 +13,7 @@ import {
 	OBJECT_BOOLEAN_PROPERTIES,
 } from '../../functions/GetObjectProperty';
 import {Poly} from '../../Poly';
+import {inputObject3D} from './_BaseObject3D';
 // import {Vector2, Vector3, Vector4} from 'three';
 
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
@@ -83,6 +84,7 @@ export class GetObjectPropertyJsNode extends ParamlessTypedJsNode {
 	}
 	override setLines(shadersCollectionController: ShadersCollectionController) {
 		const usedOutputNames = this.io.outputs.used_output_names();
+		const object3D = inputObject3D(this, shadersCollectionController);
 
 		const _f = (propertyName: string, type: JsConnectionPointType) => {
 			if (!usedOutputNames.includes(propertyName)) {
@@ -97,7 +99,7 @@ export class GetObjectPropertyJsNode extends ParamlessTypedJsNode {
 				this,
 				type,
 				this.jsVarName(propertyName),
-				func.asString(`'${propertyName}'`)
+				func.asString(object3D, `'${propertyName}'`)
 			);
 		};
 

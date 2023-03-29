@@ -10,26 +10,27 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 import {CoreType} from '../../../core/Type';
 import {PolyDictionary} from '../../../types/GlobalTypes';
-import {JsConnectionPointType, JS_CONNECTION_POINT_TYPES} from '../utils/io/connections/Js';
+import {JsConnectionPointType, JS_CONNECTION_TYPES_FOR_CONSTANT} from '../utils/io/connections/Js';
 import {ConstantJsDefinition} from './utils/JsDefinition';
 
 function typedVisibleOptions(type: JsConnectionPointType, otherParamVal: PolyDictionary<number | boolean> = {}) {
-	const val = JS_CONNECTION_POINT_TYPES.indexOf(type);
+	const val = JS_CONNECTION_TYPES_FOR_CONSTANT.indexOf(type);
 	return {visibleIf: {type: val, ...otherParamVal}};
 }
 
 class ConstantJsParamsConfig extends NodeParamsConfig {
-	type = ParamConfig.INTEGER(JS_CONNECTION_POINT_TYPES.indexOf(JsConnectionPointType.FLOAT), {
+	type = ParamConfig.INTEGER(JS_CONNECTION_TYPES_FOR_CONSTANT.indexOf(JsConnectionPointType.FLOAT), {
 		menu: {
-			entries: JS_CONNECTION_POINT_TYPES.map((name, i) => {
+			entries: JS_CONNECTION_TYPES_FOR_CONSTANT.map((name, i) => {
 				return {name: name, value: i};
 			}),
 		},
 	});
 	bool = ParamConfig.BOOLEAN(0, typedVisibleOptions(JsConnectionPointType.BOOLEAN));
 	color = ParamConfig.COLOR([0, 0, 0], typedVisibleOptions(JsConnectionPointType.COLOR));
-	int = ParamConfig.INTEGER(0, typedVisibleOptions(JsConnectionPointType.INT));
 	float = ParamConfig.FLOAT(0, typedVisibleOptions(JsConnectionPointType.FLOAT));
+	int = ParamConfig.INTEGER(0, typedVisibleOptions(JsConnectionPointType.INT));
+	string = ParamConfig.STRING('', typedVisibleOptions(JsConnectionPointType.STRING));
 	vec2 = ParamConfig.VECTOR2([0, 0], typedVisibleOptions(JsConnectionPointType.VECTOR2));
 	vec3 = ParamConfig.VECTOR3([0, 0, 0], typedVisibleOptions(JsConnectionPointType.VECTOR3));
 	vec4 = ParamConfig.VECTOR4([0, 0, 0, 0], typedVisibleOptions(JsConnectionPointType.VECTOR4));
@@ -84,7 +85,7 @@ export class ConstantJsNode extends TypedJsNode<ConstantJsParamsConfig> {
 		if (this.pv.type == null) {
 			console.warn('constant gl node type is null', this.path());
 		}
-		const connectionType = JS_CONNECTION_POINT_TYPES[this.pv.type] || JsConnectionPointType.FLOAT;
+		const connectionType = JS_CONNECTION_TYPES_FOR_CONSTANT[this.pv.type] || JsConnectionPointType.FLOAT;
 		if (connectionType == null) {
 			console.warn(`constant gl node type if not valid (${this.pv.type})`, this.path());
 		}
@@ -92,7 +93,7 @@ export class ConstantJsNode extends TypedJsNode<ConstantJsParamsConfig> {
 	}
 
 	currentParam() {
-		const type = JS_CONNECTION_POINT_TYPES[this.pv.type];
+		const type = JS_CONNECTION_TYPES_FOR_CONSTANT[this.pv.type];
 		switch (type) {
 			case JsConnectionPointType.BOOLEAN: {
 				return this.p.bool;
@@ -100,11 +101,14 @@ export class ConstantJsNode extends TypedJsNode<ConstantJsParamsConfig> {
 			case JsConnectionPointType.COLOR: {
 				return this.p.color;
 			}
+			case JsConnectionPointType.FLOAT: {
+				return this.p.float;
+			}
 			case JsConnectionPointType.INT: {
 				return this.p.int;
 			}
-			case JsConnectionPointType.FLOAT: {
-				return this.p.float;
+			case JsConnectionPointType.STRING: {
+				return this.p.string;
 			}
 			case JsConnectionPointType.VECTOR2: {
 				return this.p.vec2;
@@ -116,6 +120,7 @@ export class ConstantJsNode extends TypedJsNode<ConstantJsParamsConfig> {
 				return this.p.vec4;
 			}
 		}
+		console.warn(`constant with type '${type}' not yet implemented`);
 		// we should never run this
 		return this.p.bool;
 	}
@@ -136,7 +141,7 @@ export class ConstantJsNode extends TypedJsNode<ConstantJsParamsConfig> {
 		}
 	}
 
-	setGlType(type: JsConnectionPointType) {
-		this.p.type.set(JS_CONNECTION_POINT_TYPES.indexOf(type));
+	setJsType(type: JsConnectionPointType) {
+		this.p.type.set(JS_CONNECTION_TYPES_FOR_CONSTANT.indexOf(type));
 	}
 }

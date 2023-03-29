@@ -53,25 +53,26 @@ abstract class ObjectNamedFunction<ARGS extends Array<any>, ARGS_STR extends Arr
 	abstract override func(object: Object3D, ...args: ARGS): any;
 	override asString(...args: ARGS_STR): string {
 		super.asString(...args);
-		return `${this.type()}(${EvaluatorConstant.OBJECT_3D}, ${args.join(', ')})`;
+		return `${this.type()}(${args.join(', ')})`;
 	}
 }
-export abstract class ObjectNamedFunction1<ARGS extends [any]> extends ObjectNamedFunction<ARGS, [string]> {}
+export abstract class ObjectNamedFunction0 extends ObjectNamedFunction<[], [string]> {}
+export abstract class ObjectNamedFunction1<ARGS extends [any]> extends ObjectNamedFunction<ARGS, [string, string]> {}
 export abstract class ObjectNamedFunction2<ARGS extends [any, any]> extends ObjectNamedFunction<
-	ARGS,
-	[string, string]
-> {}
-export abstract class ObjectNamedFunction3<ARGS extends [any, any, any]> extends ObjectNamedFunction<
 	ARGS,
 	[string, string, string]
 > {}
-export abstract class ObjectNamedFunction4<ARGS extends [any, any, any, any]> extends ObjectNamedFunction<
+export abstract class ObjectNamedFunction3<ARGS extends [any, any, any]> extends ObjectNamedFunction<
 	ARGS,
 	[string, string, string, string]
 > {}
-export abstract class ObjectNamedFunction5<ARGS extends [any, any, any, any, any]> extends ObjectNamedFunction<
+export abstract class ObjectNamedFunction4<ARGS extends [any, any, any, any]> extends ObjectNamedFunction<
 	ARGS,
 	[string, string, string, string, string]
+> {}
+export abstract class ObjectNamedFunction5<ARGS extends [any, any, any, any, any]> extends ObjectNamedFunction<
+	ARGS,
+	[string, string, string, string, string, string]
 > {}
 
 //

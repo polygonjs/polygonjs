@@ -34,6 +34,16 @@ const VECTOR_JS_CONNECTION_TYPES = new Set([
 	JsConnectionPointType.VECTOR3,
 	JsConnectionPointType.VECTOR4,
 ]);
+export const JS_CONNECTION_TYPES_FOR_CONSTANT = [
+	JsConnectionPointType.BOOLEAN,
+	JsConnectionPointType.COLOR,
+	JsConnectionPointType.FLOAT,
+	JsConnectionPointType.INT,
+	JsConnectionPointType.STRING,
+	JsConnectionPointType.VECTOR2,
+	JsConnectionPointType.VECTOR3,
+	JsConnectionPointType.VECTOR4,
+];
 export function isJsConnectionPointNumber(type: JsConnectionPointType) {
 	return NUMBER_JS_CONNECTION_TYPES.has(type);
 }
