@@ -38,12 +38,16 @@ import {SDFBox, SDFSphere} from '../../../functions/SDFPrimitives';
 import {SDFRoundedX} from '../../../functions/SDFPrimitives2D';
 
 //
+import {keyboardEventMatchesConfig} from '../../../functions/KeyboardEventMatchesConfig';
 import {getObject} from '../../../functions/GetObject';
 import {getParent} from '../../../functions/GetParent';
+import {getObjectAttribute} from '../../../functions/GetObjectAttribute';
+import {getObjectAttributeRef} from '../../../functions/GetObjectAttributeRef';
 import {getObjectHoveredState} from '../../../functions/GetObjectHoveredState';
 import {getObjectProperty} from '../../../functions/GetObjectProperty';
-import {setObjectPosition} from '../../../functions/SetObjectPosition';
+import {setObjectAttribute} from '../../../functions/SetObjectAttribute';
 import {setObjectLookAt} from '../../../functions/SetObjectLookAt';
+import {setObjectPosition} from '../../../functions/SetObjectPosition';
 import {setObjectScale} from '../../../functions/SetObjectScale';
 
 export interface NamedFunctionMap {
@@ -54,6 +58,8 @@ export interface NamedFunctionMap {
 	divideVectorNumber: divideVectorNumber<Vector2 | Vector3 | Vector4>;
 	floatToVec3: floatToVec3;
 	getObject: getObject;
+	getObjectAttribute: getObjectAttribute;
+	getObjectAttributeRef: getObjectAttributeRef;
 	getObjectHoveredState: getObjectHoveredState;
 	getObjectProperty: getObjectProperty;
 	getParent: getParent;
@@ -62,6 +68,7 @@ export interface NamedFunctionMap {
 	globalsRaycaster: globalsRaycaster;
 	globalsRayFromCursor: globalsRayFromCursor;
 	globalsCursor: globalsCursor;
+	keyboardEventMatchesConfig: keyboardEventMatchesConfig;
 	multNumber: multNumber;
 	multVector: multVector<Vector2 | Vector3 | Vector4>;
 	multVectorNumber: multVectorNumber<Vector2 | Vector3 | Vector4>;
@@ -79,6 +86,7 @@ export interface NamedFunctionMap {
 	SDFSphere: SDFSphere;
 	SDFSubtract: SDFSubtract;
 	SDFUnion: SDFUnion;
+	setObjectAttribute: setObjectAttribute;
 	setObjectLookAt: setObjectLookAt;
 	setObjectPosition: setObjectPosition;
 	setObjectScale: setObjectScale;
@@ -103,6 +111,8 @@ export class AllNamedFunctionRegister {
 			divideVectorNumber,
 			floatToVec3,
 			getObject,
+			getObjectAttribute,
+			getObjectAttributeRef,
 			getObjectHoveredState,
 			getObjectProperty,
 			getParent,
@@ -111,6 +121,7 @@ export class AllNamedFunctionRegister {
 			globalsRaycaster,
 			globalsRayFromCursor,
 			globalsCursor,
+			keyboardEventMatchesConfig,
 			multNumber,
 			multVector,
 			multVectorNumber,
@@ -129,6 +140,7 @@ export class AllNamedFunctionRegister {
 			SDFSphere,
 			SDFSubtract,
 			SDFUnion,
+			setObjectAttribute,
 			setObjectLookAt,
 			setObjectScale,
 			sizzleVec3XY,

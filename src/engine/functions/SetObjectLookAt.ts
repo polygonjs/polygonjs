@@ -1,7 +1,7 @@
 import {Object3D, Quaternion, Vector3} from 'three';
 import {CoreLookAt} from '../../core/LookAt';
 import {isBooleanTrue} from '../../core/Type';
-import {touchObjectProperty, GetObjectPropertyJsNodeInputName} from './GetObjectProperty';
+import {touchObjectProperty, GetObjectPropertyJsNodeInputName} from '../../core/reactivity/ObjectPropertyReactivity';
 import {ObjectNamedFunction5} from './_Base';
 
 const q1 = new Quaternion();

@@ -8,6 +8,7 @@ export enum JsType {
 	ON_MAPBOX_CAMERA_MOVE = 'onMapboxCameraMove',
 	ON_MAPBOX_CAMERA_MOVE_START = 'onMapboxCameraMoveStart',
 	ON_MAPBOX_CAMERA_MOVE_END = 'onMapboxCameraMoveEnd',
+	ON_OBJECT_ATTRIBUTE_UPDATE = 'onObjectAttributeUpdate',
 	ON_OBJECT_CLICK = 'onObjectClick',
 	ON_OBJECT_HOVER = 'onObjectHover',
 	ON_OBJECT_POINTERDOWN = 'onObjectPointerdown',

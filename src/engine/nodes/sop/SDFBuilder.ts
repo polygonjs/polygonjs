@@ -47,7 +47,7 @@ class SDFBuilderSopParamsConfig extends NodeParamsConfig {
 	max = ParamConfig.VECTOR3([1, 1, 1]);
 	/** @param linear Tolerance */
 	facetAngle = ParamConfig.FLOAT(45, {
-		range: [0, 180],
+		range: [0.01, 180],
 		rangeLocked: [true, false],
 	});
 	/** @param meshes color */
@@ -243,6 +243,7 @@ export class SDFBuilderSopNode extends TypedSopNode<SDFBuilderSopParamsConfig> {
 				wrappedBody,
 			];
 			this._functionEvalArgs = [this._position, _setErrorFromError, ...variables, ...functions];
+			// console.log(this._functionCreationArgs, this._functionEvalArgs);
 			try {
 				this._function = new Function(...this._functionCreationArgs) as SDFFunction;
 			} catch (e) {

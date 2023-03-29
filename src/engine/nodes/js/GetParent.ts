@@ -38,6 +38,8 @@ export class GetParentJsNode extends TypedJsNode<GetParentJsParamsConfig> {
 
 		const func = Poly.namedFunctionsRegister.getFunction('getParent', this, shadersCollectionController);
 		const bodyLine = func.asString(object3D);
-		shadersCollectionController.addBodyOrComputed(this, JsConnectionPointType.PLANE, out, bodyLine);
+		shadersCollectionController.addBodyOrComputed(this, [
+			{dataType: JsConnectionPointType.PLANE, varName: out, value: bodyLine},
+		]);
 	}
 }

@@ -9,6 +9,8 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {JsConnectionPoint, JsConnectionPointType} from '../utils/io/connections/Js';
 import {BaseUserInputJsNode} from './_BaseUserInput';
 import {CoreEventEmitter, EVENT_EMITTERS, EVENT_EMITTER_PARAM_MENU_OPTIONS} from '../../../core/event/CoreEventEmitter';
+import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {Poly} from '../../Poly';
 // import {CoreString} from '../../../core/String';
 // import {isBooleanTrue} from '../../../core/Type';
 // import {ParamType} from '../../poly/ParamType';
@@ -43,6 +45,34 @@ export abstract class BaseOnKeyEventJsNode extends BaseUserInputJsNode<BaseOnKey
 	}
 	override eventEmitter(): CoreEventEmitter {
 		return EVENT_EMITTERS[this.pv.element];
+	}
+
+	override wrappedBodyLines(
+		shadersCollectionController: ShadersCollectionController,
+		bodyLines: string[],
+		existingMethodNames: Set<string>
+	) {
+		const keyCodes = this.variableForInputParam(shadersCollectionController, this.p.keyCodes);
+		const ctrlKey = this.variableForInputParam(shadersCollectionController, this.p.ctrlKey);
+		const altKey = this.variableForInputParam(shadersCollectionController, this.p.altKey);
+		const shiftKey = this.variableForInputParam(shadersCollectionController, this.p.shiftKey);
+		const metaKey = this.variableForInputParam(shadersCollectionController, this.p.metaKey);
+		const func = Poly.namedFunctionsRegister.getFunction(
+			'keyboardEventMatchesConfig',
+			this,
+			shadersCollectionController
+		);
+		const bodyLine = func.asString(keyCodes, ctrlKey, altKey, shiftKey, metaKey);
+
+		const methodName = this.type();
+		//
+		const wrappedLines: string = `${methodName}(event){
+			if( !${bodyLine} ){
+				return
+			}
+			${bodyLines.join('\n')}
+		}`;
+		return {methodNames: [methodName], wrappedLines};
 	}
 
 	// public override receiveTrigger(context: ActorNodeTriggerContext) {

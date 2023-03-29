@@ -105,6 +105,9 @@ export class BaseJsShaderAssembler extends TypedAssembler<NodeContext.JS> {
 	registeredAsComputed(varName: string): boolean {
 		return this._computedVarNames.has(varName);
 	}
+	computedVariablesAllowed(): boolean {
+		return false;
+	}
 
 	compile() {}
 

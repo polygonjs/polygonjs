@@ -4,7 +4,7 @@ import {PointerEventNode} from '../../../nodes/event/Pointer';
 import {Raycaster, Vector2} from 'three';
 // import type {PointerEventActorNode} from '../actors/ActorsPointerEventsController';
 import {ACCEPTED_POINTER_EVENT_TYPES} from '../../../../core/event/PointerEventType';
-import {ref} from '../../../../core/reactivity';
+import {ref} from '../../../../core/reactivity/CoreReactivity';
 import {CursorHelper} from '../../../nodes/event/utils/CursorHelper';
 import {createRaycaster} from '../../../../core/RaycastHelper';
 

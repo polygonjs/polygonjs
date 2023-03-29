@@ -6,6 +6,12 @@ import {RegisterableVariable, BaseJsShaderAssembler} from '../assemblers/_Base';
 import {JsConnectionPointType} from '../../../utils/io/connections/Js';
 import {BaseNamedFunction} from '../../../../functions/_Base';
 
+export interface ComputedValueJsDefinitionData {
+	dataType: JsConnectionPointType;
+	varName: string;
+	value: string;
+}
+
 export class ShadersCollectionController {
 	private _linesControllerByShaderName: Map<ShaderName, JsLinesController> = new Map();
 
@@ -76,8 +82,25 @@ export class ShadersCollectionController {
 	registeredAsComputed(varName: string): boolean {
 		return this._assembler.registeredAsComputed(varName);
 	}
-	addBodyOrComputed(node: BaseJsNodeType, dataType: JsConnectionPointType, varName: string, value: string) {
-		this.addDefinitions(node, [new ComputedValueJsDefinition(node, this, dataType, varName, value)]);
+	addBodyOrComputed(node: BaseJsNodeType, linesData: ComputedValueJsDefinitionData[]) {
+		if (this._assembler.computedVariablesAllowed()) {
+			this.addDefinitions(
+				node,
+				linesData.map((lineData) => {
+					const {dataType, varName, value} = lineData;
+					return new ComputedValueJsDefinition(node, this, dataType, varName, value);
+				})
+			);
+		} else {
+			this._addBodyLines(
+				node,
+				linesData.map((lineData) => {
+					const {varName, value} = lineData;
+					const bodyLine = `const ${varName} = ${value}`;
+					return bodyLine;
+				})
+			);
+		}
 	}
 
 	addDefinitions(node: BaseJsNodeType, definitions: BaseJsDefinition[], shaderName?: ShaderName) {
@@ -106,8 +129,16 @@ export class ShadersCollectionController {
 	// all_definition_nodes(shader_name: ShaderName, scene: PolyScene) {
 	// 	return this._lines_controller_by_shader_name.get(shader_name)?.all_definition_nodes(scene) || [];
 	// }
+	addActionBodyLines(node: BaseJsNodeType, lines: string[]) {
+		this._addBodyLines(node, lines);
+	}
 
-	addBodyLines(node: BaseJsNodeType, lines: string[], shaderName?: ShaderName, options?: AddBodyLinesOptions) {
+	private _addBodyLines(
+		node: BaseJsNodeType,
+		lines: string[],
+		shaderName?: ShaderName,
+		options?: AddBodyLinesOptions
+	) {
 		if (lines.length == 0) {
 			return;
 		}

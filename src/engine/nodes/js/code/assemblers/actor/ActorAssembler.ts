@@ -35,7 +35,7 @@ import {ShadersCollectionController} from '../../utils/ShadersCollectionControll
 import {CoreString} from '../../../../../../core/String';
 import {PrettierController} from '../../../../../../core/code/PrettierController';
 import {CoreType} from '../../../../../../core/Type';
-import {computed, ref, watch} from '../../../../../../core/reactivity';
+import {computed, ref, watch} from '../../../../../../core/reactivity/CoreReactivity';
 import {ActorEvaluatorGenerator} from './EvaluatorGenerator';
 // import {Vector3} from 'three';
 // import {IUniformsWithTime} from '../../../../../scene/utils/UniformsController';
@@ -79,6 +79,9 @@ export class JsAssemblerActor extends BaseJsShaderAssembler {
 			.namedInputConnectionPoints()
 			.filter((cp) => cp.type() != JsConnectionPointType.TRIGGER)
 			.map((cp) => cp.name());
+	}
+	override computedVariablesAllowed(): boolean {
+		return true;
 	}
 
 	functionData(): FunctionData | undefined {
@@ -285,8 +288,9 @@ export class JsAssemblerActor extends BaseJsShaderAssembler {
 		//
 		//
 		const _buildFunctionBody = () => {
+			const bodyLines = this._shaders_by_name.get(ShaderName.FRAGMENT) || TEMPLATE;
 			const functionBodyElements = [
-				this._shaders_by_name.get(ShaderName.FRAGMENT),
+				bodyLines,
 				triggerableFunctionLines.join('\n'),
 				triggerFunctionLines.join('\n'),
 				CLOSE_CLASS_DEFINITION,

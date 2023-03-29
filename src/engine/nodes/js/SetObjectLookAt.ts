@@ -55,6 +55,6 @@ export class SetObjectLookAtJsNode extends TypedJsNode<SetObjectLookAtJsParamsCo
 
 		const func = Poly.namedFunctionsRegister.getFunction('setObjectLookAt', this, shadersCollectionController);
 		const bodyLine = func.asString(object3D, targetPosition, up, lerp, invertDirection, updateMatrix);
-		shadersCollectionController.addBodyLines(this, [bodyLine]);
+		shadersCollectionController.addActionBodyLines(this, [bodyLine]);
 	}
 }

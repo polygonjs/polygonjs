@@ -79,6 +79,16 @@ export const JS_CONNECTION_POINT_TYPES: Array<JsConnectionPointType> = [
 	// JsConnectionPointType.MAT3,
 	// JsConnectionPointType.MAT4,
 ];
+export const PARAM_CONVERTIBLE_JS_CONNECTION_POINT_TYPES: Array<JsConnectionPointType> = [
+	JsConnectionPointType.BOOLEAN,
+	JsConnectionPointType.COLOR,
+	JsConnectionPointType.FLOAT,
+	JsConnectionPointType.INT,
+	JsConnectionPointType.STRING,
+	JsConnectionPointType.VECTOR2,
+	JsConnectionPointType.VECTOR3,
+	JsConnectionPointType.VECTOR4,
+];
 
 //
 //

@@ -86,11 +86,11 @@ export class OnChildAttributeUpdateActorNode extends TypedActorNode<OnChildAttri
 					CoreObject.attribValue(child, this.attributeName())
 				) as ReturnValueTypeByActorConnectionPointType[ActorConnectionPointType];
 			}
-			case OnChildAttributeUpdateActorNode.OUTPUT_PREV_VALUES: {
-				return context.Object3D.children.map((child) =>
-					CoreObject.previousAttribValue(child, this.attributeName())
-				) as ReturnValueTypeByActorConnectionPointType[ActorConnectionPointType];
-			}
+			// case OnChildAttributeUpdateActorNode.OUTPUT_PREV_VALUES: {
+			// 	return context.Object3D.children.map((child) =>
+			// 		CoreObject.previousAttribValue(child, this.attributeName())
+			// 	) as ReturnValueTypeByActorConnectionPointType[ActorConnectionPointType];
+			// }
 		}
 	}
 }

@@ -41,33 +41,10 @@ export abstract class BaseOnObjectPointerEventJsNode extends BaseUserInputJsNode
 		]);
 	}
 
-	// protected onObjectHoverWrappedLines(shadersCollectionController: ShadersCollectionController, bodyLines: string[]) {
-	// 	const traverseChildren = this.variableForInputParam(shadersCollectionController, this.p.traverseChildren);
-	// 	const lineThreshold = this.variableForInputParam(shadersCollectionController, this.p.lineThreshold);
-	// 	const pointsThreshold = this.variableForInputParam(shadersCollectionController, this.p.pointsThreshold);
-	// 	const func = new getObjectHoveredState(this, shadersCollectionController);
-	// 	const bodyLine = func.asString(traverseChildren, lineThreshold, pointsThreshold);
-
-	// 	const outHovered = this.jsVarName(OnObjectHoverJsNodeOutputName.hovered);
-	// 	const methodName = JsType.ON_OBJECT_HOVER;
-	// 	const newValue = `newHovered`;
-	// 	const currentValue = `currentHovered`;
-	// 	//
-	// 	const wrappedLines: string = `${methodName}(){
-	// 		const ${newValue} = ${bodyLine};
-	// 		const ${currentValue} = this.${outHovered}.value;
-	// 		this.${outHovered}.value = ${newValue};
-	// 		if( ${newValue} != ${currentValue} ){
-	// 			${bodyLines.join('\n')}
-	// 		}
-	// 	}`;
-	// 	return {methodName: methodName, wrappedLines};
-	// }
-
 	// this ref() is not named after the node's name
 	// but is instead using a constant name,
 	// so that multiple onObjectHover do not require multiple raycast tests.
-	override jsVarName(name: string) {
-		return `v_POLY_${name}`;
-	}
+	// override jsVarName(name: string) {
+	// 	return `v_POLY_${name}`;
+	// }
 }

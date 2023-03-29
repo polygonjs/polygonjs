@@ -43,7 +43,13 @@ export class SDF2DRoundedXJsNode extends BaseSDF2DJsNode<SDF2DRoundedXJsParamsCo
 
 		const float = this.jsVarName(OUTPUT_NAME);
 		const func = Poly.namedFunctionsRegister.getFunction('SDFRoundedX', this, shadersCollectionController);
-		const bodyLine = `const ${float} = ${func.asString(position, center, length, radius)}`;
-		shadersCollectionController.addBodyLines(this, [bodyLine]);
+		// const bodyLine = `const ${float} = ${func.asString(position, center, length, radius)}`;
+		shadersCollectionController.addBodyOrComputed(this, [
+			{
+				dataType: JsConnectionPointType.FLOAT,
+				varName: float,
+				value: func.asString(position, center, length, radius),
+			},
+		]);
 	}
 }

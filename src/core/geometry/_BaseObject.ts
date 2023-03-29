@@ -4,11 +4,11 @@ import {Attribute, CoreAttribute} from './Attribute';
 import {AttribType, AttribSize} from './Constant';
 import {CoreEntity} from './Entity';
 import {CoreType} from '../Type';
-import {makeAttribReactiveVector4} from './attribute/Vector4';
-import {AttributeReactiveCallback} from './attribute/_Base';
-import {makeAttribReactiveVector3} from './attribute/Vector3';
-import {makeAttribReactiveVector2} from './attribute/Vector2';
-import {makeAttribReactiveSimple} from './attribute/Simple';
+// import {makeAttribReactiveVector4} from './attribute/Vector4';
+// import {AttributeReactiveCallback} from './attribute/_Base';
+// import {makeAttribReactiveVector3} from './attribute/Vector3';
+// import {makeAttribReactiveVector2} from './attribute/Vector2';
+// import {makeAttribReactiveSimple} from './attribute/Simple';
 import {AttributeCallbackQueue} from './attribute/AttributeCallbackQueue';
 import {SetUtils} from '../../core/SetUtils';
 import {MapUtils} from '../../core/MapUtils';
@@ -18,13 +18,15 @@ import {ObjectTransformSpace} from '../TransformSpace';
 import {EntityGroupCollection} from './EntityGroupCollection';
 // import {computeBoundingBoxFromObject3D} from './BoundingBox';
 // import {setSphereFromObject} from './BoundingSphere';
+// import {ref} from '../reactivity';
+// import {Ref} from '@vue/reactivity';
 
 enum PropertyName {
 	NAME = 'name',
 	POSITION = 'position',
 }
 const ATTRIBUTES = 'attributes';
-const ATTRIBUTES_PREVIOUS_VALUES = 'attributesPreviousValues';
+// const ATTRIBUTES_PREVIOUS_VALUES = 'attributesPreviousValues';
 
 const ORIGIN = new Vector3(0, 0, 0);
 function _convertArrayToVector(value: number[]) {
@@ -87,6 +89,8 @@ export abstract class BaseCoreObject<T extends CoreObjectType> extends CoreEntit
 		const dict = this.attributesDictionary(object);
 		const currentValue = dict[attribName];
 		if (currentValue != null) {
+			// console.log('set', object, attribName, currentRef, currentRef.value);
+			// const currentValue = currentRef.value;
 			if (CoreType.isVector(currentValue) && CoreType.isVector(value)) {
 				AttributeCallbackQueue.block();
 				if (currentValue instanceof Vector2 && value instanceof Vector2) {
@@ -102,12 +106,13 @@ export abstract class BaseCoreObject<T extends CoreObjectType> extends CoreEntit
 				return;
 			}
 		}
-		if (CoreType.isVector(value)) {
-			// make sure to clone it, otherwise editing the attrib of one object would update another object's
-			dict[attribName] = value.clone();
-		} else {
-			dict[attribName] = value;
-		}
+		dict[attribName] = value;
+		// if (CoreType.isVector(value)) {
+		// 	// make sure to clone it, otherwise editing the attrib of one object would update another object's
+		// 	dict[attribName] = value.clone();
+		// } else {
+		// 	dict[attribName] = value;
+		// }
 	}
 	addAttribute(name: string, value: AttribValue) {
 		(this.constructor as any as typeof BaseCoreObject<CoreObjectType>).addAttribute(this._object, name, value);
@@ -127,22 +132,22 @@ export abstract class BaseCoreObject<T extends CoreObjectType> extends CoreEntit
 	static attributesDictionary<T extends CoreObjectType>(object: ObjectContent<T>) {
 		return (object.userData[ATTRIBUTES] as AttributeDictionary) || this._createAttributesDictionaryIfNone(object);
 	}
-	static attributesPreviousValuesDictionary<T extends CoreObjectType>(object: ObjectContent<T>) {
-		return (
-			(object.userData[ATTRIBUTES_PREVIOUS_VALUES] as AttributeDictionary) ||
-			this._createAttributesPreviousValuesDictionaryIfNone(object)
-		);
-	}
+	// static attributesPreviousValuesDictionary<T extends CoreObjectType>(object: ObjectContent<T>) {
+	// 	return (
+	// 		(object.userData[ATTRIBUTES_PREVIOUS_VALUES] as AttributeDictionary) ||
+	// 		this._createAttributesPreviousValuesDictionaryIfNone(object)
+	// 	);
+	// }
 	private static _createAttributesDictionaryIfNone<T extends CoreObjectType>(object: ObjectContent<T>) {
 		if (!object.userData[ATTRIBUTES]) {
 			return (object.userData[ATTRIBUTES] = {});
 		}
 	}
-	private static _createAttributesPreviousValuesDictionaryIfNone<T extends CoreObjectType>(object: ObjectContent<T>) {
-		if (!object.userData[ATTRIBUTES_PREVIOUS_VALUES]) {
-			return (object.userData[ATTRIBUTES_PREVIOUS_VALUES] = {});
-		}
-	}
+	// private static _createAttributesPreviousValuesDictionaryIfNone<T extends CoreObjectType>(object: ObjectContent<T>) {
+	// 	if (!object.userData[ATTRIBUTES_PREVIOUS_VALUES]) {
+	// 		return (object.userData[ATTRIBUTES_PREVIOUS_VALUES] = {});
+	// 	}
+	// }
 
 	private _attributesDictionary() {
 		return (this.constructor as typeof BaseCoreObject<CoreObjectType>).attributesDictionary(this._object);
@@ -248,6 +253,7 @@ export abstract class BaseCoreObject<T extends CoreObjectType> extends CoreEntit
 			if (val == null) {
 				return _attribFromProperty();
 			} else {
+				// const val = _ref.value;
 				if (CoreType.isVector(val) && target) {
 					if (val instanceof Vector3 && target instanceof Vector3) {
 						return target.copy(val);
@@ -264,17 +270,18 @@ export abstract class BaseCoreObject<T extends CoreObjectType> extends CoreEntit
 					return target;
 				}
 			}
-			return val;
+			// console.log(attribName, _ref, _ref.value);
+			return val; //_ref.value;
 		}
 		return _attribFromProperty();
 	}
-	static previousAttribValue<T extends CoreObjectType>(
-		object: ObjectContent<T>,
-		attribName: string
-	): AttribValue | undefined {
-		const dict = this.attributesPreviousValuesDictionary(object);
-		return dict[attribName];
-	}
+	// static previousAttribValue<T extends CoreObjectType>(
+	// 	object: ObjectContent<T>,
+	// 	attribName: string
+	// ): AttribValue | undefined {
+	// 	const dict = this.attributesPreviousValuesDictionary(object);
+	// 	return dict[attribName];
+	// }
 
 	static stringAttribValue<T extends CoreObjectType>(
 		object: ObjectContent<T>,
@@ -290,76 +297,76 @@ export abstract class BaseCoreObject<T extends CoreObjectType> extends CoreEntit
 			}
 		}
 	}
-	static makeAttribReactive<V extends AttribValue, T extends CoreObjectType>(
-		object: ObjectContent<T>,
-		attribName: string,
-		callback: AttributeReactiveCallback<V>
-	) {
-		const attributesDict = this.attributesDictionary(object);
-		// const attributesPreviousValuesDict = this.attributesPreviousValuesDictionary(object);
+	// static makeAttribReactive<V extends AttribValue, T extends CoreObjectType>(
+	// 	object: ObjectContent<T>,
+	// 	attribName: string,
+	// 	callback: AttributeReactiveCallback<V>
+	// ) {
+	// 	const attributesDict = this.attributesDictionary(object);
+	// 	// const attributesPreviousValuesDict = this.attributesPreviousValuesDictionary(object);
 
-		const currentValue = attributesDict[attribName];
-		if (currentValue instanceof Vector4) {
-			return makeAttribReactiveVector4(
-				object,
-				attribName,
-				(<unknown>callback) as AttributeReactiveCallback<Vector4>
-			);
-		}
-		if (currentValue instanceof Vector3) {
-			return makeAttribReactiveVector3(
-				object,
-				attribName,
-				(<unknown>callback) as AttributeReactiveCallback<Vector3>
-			);
-		}
-		if (currentValue instanceof Vector2) {
-			return makeAttribReactiveVector2(
-				object,
-				attribName,
-				(<unknown>callback) as AttributeReactiveCallback<Vector2>
-			);
-		}
-		return makeAttribReactiveSimple(
-			object,
-			attribName,
-			(<unknown>callback) as AttributeReactiveCallback<string | number>
-		);
+	// 	const currentValue = attributesDict[attribName];
+	// 	if (currentValue instanceof Vector4) {
+	// 		return makeAttribReactiveVector4(
+	// 			object,
+	// 			attribName,
+	// 			(<unknown>callback) as AttributeReactiveCallback<Vector4>
+	// 		);
+	// 	}
+	// 	if (currentValue instanceof Vector3) {
+	// 		return makeAttribReactiveVector3(
+	// 			object,
+	// 			attribName,
+	// 			(<unknown>callback) as AttributeReactiveCallback<Vector3>
+	// 		);
+	// 	}
+	// 	if (currentValue instanceof Vector2) {
+	// 		return makeAttribReactiveVector2(
+	// 			object,
+	// 			attribName,
+	// 			(<unknown>callback) as AttributeReactiveCallback<Vector2>
+	// 		);
+	// 	}
+	// 	return makeAttribReactiveSimple(
+	// 		object,
+	// 		attribName,
+	// 		(<unknown>callback) as AttributeReactiveCallback<string | number>
+	// 	);
 
-		// // create a dummy val in case there is no attribute yet
-		// if (attributesDict[attribName] == null) {
-		// 	attributesDict[attribName] = 0;
-		// }
+	// 	// // create a dummy val in case there is no attribute yet
+	// 	// if (attributesDict[attribName] == null) {
+	// 	// 	attributesDict[attribName] = 0;
+	// 	// }
 
-		// const proxy: AttributeProxy<V> = {
-		// 	value: attributesDict[attribName] as V,
-		// 	previousValue: attributesDict[attribName] as V,
-		// };
-		// Object.defineProperties(attributesDict, {
-		// 	[attribName]: {
-		// 		get: function () {
-		// 			return proxy.value;
-		// 		},
-		// 		set: function (x) {
-		// 			if (x != proxy.value) {
-		// 				proxy.previousValue = proxy.value;
-		// 				proxy.value = x;
-		// 				callback(proxy.value, proxy.previousValue);
-		// 			}
-		// 			return proxy.value;
-		// 		},
-		// 		configurable: true,
-		// 	},
-		// });
-		// Object.defineProperties(attributesPreviousValuesDict, {
-		// 	[attribName]: {
-		// 		get: function () {
-		// 			return proxy.previousValue;
-		// 		},
-		// 		configurable: true,
-		// 	},
-		// });
-	}
+	// 	// const proxy: AttributeProxy<V> = {
+	// 	// 	value: attributesDict[attribName] as V,
+	// 	// 	previousValue: attributesDict[attribName] as V,
+	// 	// };
+	// 	// Object.defineProperties(attributesDict, {
+	// 	// 	[attribName]: {
+	// 	// 		get: function () {
+	// 	// 			return proxy.value;
+	// 	// 		},
+	// 	// 		set: function (x) {
+	// 	// 			if (x != proxy.value) {
+	// 	// 				proxy.previousValue = proxy.value;
+	// 	// 				proxy.value = x;
+	// 	// 				callback(proxy.value, proxy.previousValue);
+	// 	// 			}
+	// 	// 			return proxy.value;
+	// 	// 		},
+	// 	// 		configurable: true,
+	// 	// 	},
+	// 	// });
+	// 	// Object.defineProperties(attributesPreviousValuesDict, {
+	// 	// 	[attribName]: {
+	// 	// 		get: function () {
+	// 	// 			return proxy.previousValue;
+	// 	// 		},
+	// 	// 		configurable: true,
+	// 	// 	},
+	// 	// });
+	// }
 
 	attribValue(attribName: string, target?: Vector2 | Vector3 | Vector4): AttribValue | undefined {
 		return (this.constructor as any as typeof BaseCoreObject<CoreObjectType>).attribValue(

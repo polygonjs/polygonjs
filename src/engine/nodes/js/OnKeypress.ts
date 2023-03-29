@@ -5,14 +5,22 @@
  */
 
 import {JsType} from '../../poly/registers/nodes/types/Js';
-import {KeyboardEventType} from '../../../core/event/KeyboardEventType';
+// import {KeyboardEventType} from '../../../core/event/KeyboardEventType';
 import {BaseOnKeyEventJsNode} from './_BaseOnKeyEvent';
+import {EvaluatorEventData} from './code/assemblers/actor/Evaluator';
 
 export class OnKeypressJsNode extends BaseOnKeyEventJsNode {
 	static override type() {
 		return JsType.ON_KEYPRESS;
 	}
-	userInputEventNames() {
-		return [KeyboardEventType.keypress];
+	// userInputEventNames() {
+	// 	return [KeyboardEventType.keypress];
+	// }
+	override eventData(): EvaluatorEventData | undefined {
+		return {
+			type: 'keypress',
+			emitter: this.eventEmitter(),
+			jsType: JsType.ON_KEYPRESS,
+		};
 	}
 }

@@ -49,6 +49,6 @@ export class SetObjectPositionJsNode extends TypedJsNode<SetObjectPositionJsPara
 
 		const func = Poly.namedFunctionsRegister.getFunction('setObjectPosition', this, shadersCollectionController);
 		const bodyLine = func.asString(object3D, position, lerp, updateMatrix);
-		shadersCollectionController.addBodyLines(this, [bodyLine]);
+		shadersCollectionController.addActionBodyLines(this, [bodyLine]);
 	}
 }

@@ -8,6 +8,8 @@ import {Object3D} from 'three';
 import {PolyScene} from '../../../../../scene/PolyScene';
 import {JsType} from '../../../../../poly/registers/nodes/types/Js';
 import {EventData} from '../../../../../../core/event/EventData';
+// import {watch} from '../../../../../../core/reactivity/CoreReactivity';
+// import {getObjectAttributeRef} from '../../../../../../core/reactivity/ObjectAttributeReactivity';
 // import {ref} from '../../../../../../core/reactivity';
 
 // // updateObjectPosition
@@ -69,6 +71,8 @@ export interface EvaluationContext {
 	Object3D: Object3D;
 }
 type TriggerCallback = () => void;
+// type KeyboardTriggerCallback = (event: KeyboardEvent) => void;
+export type EvaluatorKeyboardMethod = 'onKeydown' | 'onKeypress' | 'onKeyup';
 
 export type EvaluatorMethodName =
 	| JsType.ON_MANUAL_TRIGGER
@@ -112,6 +116,9 @@ export class ActorEvaluator {
 	// }
 	// eventDatas?: Set<EvaluatorEventData>;
 	//
+	onKeydown?: TriggerCallback;
+	onKeypress?: TriggerCallback;
+	onKeyup?: TriggerCallback;
 	onManualTrigger?: TriggerCallback;
 	onMapboxCameraMove?: TriggerCallback;
 	onMapboxCameraMoveStart?: TriggerCallback;
@@ -122,6 +129,12 @@ export class ActorEvaluator {
 	onScenePlayState?: TriggerCallback;
 	onSceneReset?: TriggerCallback;
 	onTick?: TriggerCallback;
+
+	// onObjectAttributeUpdate(attribName: string, callback: TriggerCallback) {
+	// 	console.log('onAttributeUpdate', attribName, callback);
+	// 	const _ref = getObjectAttributeRef(this.object3D, attribName);
+	// 	watch(_ref, callback);
+	// }
 }
 
 export enum EvaluatorConstant {

@@ -157,7 +157,7 @@ export class WatchedValueJsDefinition extends TypedJsDefinition<JsDefinitionType
 		_shaderCollectionController.addComputedVarName(this.name());
 	}
 	line() {
-		return `	watch(this.${this.name()}, ()=> ${this._value})`;
+		return `	watch(this.${this.name()}.value, ()=> {${this._value}})`;
 	}
 }
 

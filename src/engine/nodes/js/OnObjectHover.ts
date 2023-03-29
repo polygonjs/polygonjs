@@ -29,6 +29,9 @@ export class OnObjectHoverJsNode extends BaseOnObjectPointerEventJsNode {
 	}
 	override initializeNode() {
 		super.initializeNode();
+		this.io.inputs.setNamedInputConnectionPoints([
+			new JsConnectionPoint(JsConnectionPointType.OBJECT_3D, JsConnectionPointType.OBJECT_3D, CONNECTION_OPTIONS),
+		]);
 		this.io.outputs.setNamedOutputConnectionPoints([
 			new JsConnectionPoint(TRIGGER_CONNECTION_NAME, JsConnectionPointType.TRIGGER, CONNECTION_OPTIONS),
 			new JsConnectionPoint(
@@ -42,11 +45,11 @@ export class OnObjectHoverJsNode extends BaseOnObjectPointerEventJsNode {
 				CONNECTION_OPTIONS
 			),
 		]);
-		this.io.connection_points.spare_params.setInputlessParamNames([
-			'traverseChildren',
-			'pointsThreshold',
-			'lineThreshold',
-		]);
+		// this.io.connection_points.spare_params.setInputlessParamNames([
+		// 	'traverseChildren',
+		// 	'pointsThreshold',
+		// 	'lineThreshold',
+		// ]);
 	}
 
 	override wrappedBodyLines(

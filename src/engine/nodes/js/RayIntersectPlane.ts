@@ -32,6 +32,8 @@ export class RayIntersectPlaneJsNode extends BaseRayPlaneJsNode {
 
 		const func = Poly.namedFunctionsRegister.getFunction('rayIntersectPlane', this, shadersCollectionController);
 		const bodyLine = func.asString(ray, plane, out);
-		shadersCollectionController.addBodyOrComputed(this, JsConnectionPointType.VECTOR3, out, bodyLine);
+		shadersCollectionController.addBodyOrComputed(this, [
+			{dataType: JsConnectionPointType.VECTOR3, varName: out, value: bodyLine},
+		]);
 	}
 }

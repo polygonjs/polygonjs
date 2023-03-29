@@ -11,7 +11,7 @@ import {
 	GetObjectPropertyJsNodeInputName,
 	OBJECT_VECTOR3_PROPERTIES,
 	OBJECT_BOOLEAN_PROPERTIES,
-} from '../../functions/GetObjectProperty';
+} from '../../../core/reactivity/ObjectPropertyReactivity';
 import {Poly} from '../../Poly';
 import {inputObject3D} from './_BaseObject3D';
 // import {Vector2, Vector3, Vector4} from 'three';
@@ -95,12 +95,13 @@ export class GetObjectPropertyJsNode extends ParamlessTypedJsNode {
 				this,
 				shadersCollectionController
 			);
-			shadersCollectionController.addBodyOrComputed(
-				this,
-				type,
-				this.jsVarName(propertyName),
-				func.asString(object3D, `'${propertyName}'`)
-			);
+			shadersCollectionController.addBodyOrComputed(this, [
+				{
+					dataType: type,
+					varName: this.jsVarName(propertyName),
+					value: func.asString(object3D, `'${propertyName}'`),
+				},
+			]);
 		};
 
 		OBJECT_VECTOR3_PROPERTIES.forEach((propertyName) => {

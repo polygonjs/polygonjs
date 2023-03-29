@@ -47,7 +47,13 @@ export class SDFUnionJsNode extends TypedJsNode<SDFUnionJsParamsConfig> {
 		const functionName = isBooleanTrue(this.pv.smooth) ? 'SDFSmoothUnion' : 'SDFUnion';
 		const func = Poly.namedFunctionsRegister.getFunction(functionName, this, shadersCollectionController);
 		const out = this.jsVarName(OUTPUT_NAME);
-		const bodyLine = `const ${out} = ${func.asString(sdf0, sdf1, smoothFactor)}`;
-		shadersCollectionController.addBodyLines(this, [bodyLine]);
+		// const bodyLine = `const ${out} = ${func.asString(sdf0, sdf1, smoothFactor)}`;
+		shadersCollectionController.addBodyOrComputed(this, [
+			{
+				dataType: JsConnectionPointType.FLOAT,
+				varName: out,
+				value: func.asString(sdf0, sdf1, smoothFactor),
+			},
+		]);
 	}
 }

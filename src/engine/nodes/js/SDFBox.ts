@@ -42,7 +42,13 @@ export class SDFBoxJsNode extends BaseSDFJsNode<SDFBoxJsParamsConfig> {
 
 		const float = this.jsVarName(OUTPUT_NAME);
 		const func = Poly.namedFunctionsRegister.getFunction('SDFBox', this, shadersCollectionController);
-		const bodyLine = `const ${float} = ${func.asString(position, center, sizes, size)}`;
-		shadersCollectionController.addBodyLines(this, [bodyLine]);
+		// const bodyLine = `const ${float} = ${func.asString(position, center, sizes, size)}`;
+		shadersCollectionController.addBodyOrComputed(this, [
+			{
+				dataType: JsConnectionPointType.FLOAT,
+				varName: float,
+				value: func.asString(position, center, sizes, size),
+			},
+		]);
 	}
 }

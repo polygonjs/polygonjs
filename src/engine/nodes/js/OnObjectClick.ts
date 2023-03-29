@@ -28,6 +28,9 @@ export class OnObjectClickJsNode extends BaseOnObjectPointerEventJsNode {
 	}
 	override initializeNode() {
 		super.initializeNode();
+		this.io.inputs.setNamedInputConnectionPoints([
+			new JsConnectionPoint(JsConnectionPointType.OBJECT_3D, JsConnectionPointType.OBJECT_3D, CONNECTION_OPTIONS),
+		]);
 		this.io.outputs.setNamedOutputConnectionPoints([
 			new JsConnectionPoint(TRIGGER_CONNECTION_NAME, JsConnectionPointType.TRIGGER, CONNECTION_OPTIONS),
 			new JsConnectionPoint(
@@ -36,11 +39,11 @@ export class OnObjectClickJsNode extends BaseOnObjectPointerEventJsNode {
 				CONNECTION_OPTIONS
 			),
 		]);
-		this.io.connection_points.spare_params.setInputlessParamNames([
-			'traverseChildren',
-			'pointsThreshold',
-			'lineThreshold',
-		]);
+		// this.io.connection_points.spare_params.setInputlessParamNames([
+		// 	'traverseChildren',
+		// 	'pointsThreshold',
+		// 	'lineThreshold',
+		// ]);
 	}
 	override wrappedBodyLines(
 		shadersCollectionController: ShadersCollectionController,
@@ -67,35 +70,5 @@ export class OnObjectClickJsNode extends BaseOnObjectPointerEventJsNode {
 			${bodyLines.join('\n')}
 		}`;
 		return {methodNames: [methodName], wrappedLines};
-
-		// 	// const hoverWrappedLinesData = this.onObjectHoverWrappedLines(shadersCollectionController, []);
-		// 	const traverseChildren = this.variableForInputParam(shadersCollectionController, this.p.traverseChildren);
-		// 	const lineThreshold = this.variableForInputParam(shadersCollectionController, this.p.lineThreshold);
-		// 	const pointsThreshold = this.variableForInputParam(shadersCollectionController, this.p.pointsThreshold);
-		// 	const func = new getObjectHoveredState(this, shadersCollectionController);
-		// 	const bodyLine = func.asString(traverseChildren, lineThreshold, pointsThreshold);
-
-		// 	const outHovered = this.jsVarName(OnObjectHoverJsNodeOutputName.hovered);
-		// 	const methodName = this.type();
-		// 	const wrappedLinesOnClick = `
-		// 	${methodName}(){
-		// 		if( !this.${outHovered}.value ){
-		// 			return
-		// 		}
-		// 		${bodyLines.join('\n')}
-		// 	}`;
-
-		// 	if (existingMethodNames.has(hoverWrappedLinesData.methodName)) {
-		// 		return {
-		// 			methodNames: [methodName],
-		// 			wrappedLines: wrappedLinesOnClick,
-		// 		};
-		// 	} else {
-		// 		return {
-		// 			methodNames: [hoverWrappedLinesData.methodName, methodName],
-		// 			wrappedLines: `${hoverWrappedLinesData.wrappedLines}
-		// ${wrappedLinesOnClick}`,
-		// 		};
-		// 	}
 	}
 }

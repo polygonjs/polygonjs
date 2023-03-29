@@ -57,8 +57,14 @@ export class SDFRevolutionJsNode extends BaseSDFJsNode<SDFRevolutionGlParamsConf
 		const out = this.jsVarName(OUTPUT_NAME);
 		shadersCollectionController.addVariable(this, out, new Vector2());
 		const func = Poly.namedFunctionsRegister.getFunction(this._functionName(), this, shadersCollectionController);
-		const bodyLine = `${func.asString(position, center, radius, out)}`;
-		shadersCollectionController.addBodyLines(this, [bodyLine]);
+		// const bodyLine = `${func.asString(position, center, radius, out)}`;
+		shadersCollectionController.addBodyOrComputed(this, [
+			{
+				dataType: JsConnectionPointType.VECTOR2,
+				varName: out,
+				value: func.asString(position, center, radius, out),
+			},
+		]);
 	}
 	private _functionName() {
 		const axis = SDF_REVOLUTION_AXISES[this.pv.axis];

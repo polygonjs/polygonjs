@@ -47,7 +47,13 @@ export class SDFSubtractJsNode extends TypedJsNode<SDFSubtractJsParamsConfig> {
 		const functionName = isBooleanTrue(this.pv.smooth) ? 'SDFSmoothSubtract' : 'SDFSubtract';
 		const func = Poly.namedFunctionsRegister.getFunction(functionName, this, shadersCollectionController);
 		const float = this.jsVarName(OUTPUT_NAME);
-		const bodyLine = `const ${float} = ${func.asString(sdf0, sdf1, smoothFactor)}`;
-		shadersCollectionController.addBodyLines(this, [bodyLine]);
+		// const bodyLine = `const ${float} = ${func.asString(sdf0, sdf1, smoothFactor)}`;
+		shadersCollectionController.addBodyOrComputed(this, [
+			{
+				dataType: JsConnectionPointType.FLOAT,
+				varName: float,
+				value: func.asString(sdf0, sdf1, smoothFactor),
+			},
+		]);
 	}
 }

@@ -18,7 +18,7 @@ export class OutputJsNode extends TypedJsNode<OutputJsParamsConfig> {
 
 	override initializeNode() {
 		super.initializeNode();
-		this.addPostDirtyHook('_setMatToRecompile', this._setFunctionNodeToRecompile.bind(this));
+		// this.addPostDirtyHook('_setMatToRecompile', this._setFunctionNodeToRecompile.bind(this));
 
 		this.lifecycle.onAfterAdded(() => {
 			this.functionNode()?.assemblerController()?.add_output_inputs(this);

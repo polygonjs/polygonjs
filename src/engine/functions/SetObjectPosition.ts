@@ -1,5 +1,5 @@
 import {Object3D, Vector3} from 'three';
-import {touchObjectProperty, GetObjectPropertyJsNodeInputName} from './GetObjectProperty';
+import {touchObjectProperty, GetObjectPropertyJsNodeInputName} from '../../core/reactivity/ObjectPropertyReactivity';
 import {ObjectNamedFunction3} from './_Base';
 
 export class setObjectPosition extends ObjectNamedFunction3<[Vector3, number, boolean]> {

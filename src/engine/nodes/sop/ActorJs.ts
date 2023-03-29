@@ -153,10 +153,10 @@ export class ActorJsSopNode extends TypedSopNode<ActorJsSopParamsConfig> {
 		return this._evaluatorGenerator;
 	}
 	setEvaluatorGenerator(evaluatorGenerator: ActorEvaluatorGenerator) {
-		this.scene().eventsDispatcher.unregisterEvaluatorGenerator(this._evaluatorGenerator);
+		this.scene().actorsManager.unregisterEvaluatorGenerator(this._evaluatorGenerator);
 		this._evaluatorGenerator.dispose();
 		this._evaluatorGenerator = evaluatorGenerator;
-		this.scene().eventsDispatcher.registerEvaluatorGenerator(evaluatorGenerator);
+		this.scene().actorsManager.registerEvaluatorGenerator(evaluatorGenerator);
 	}
 	async compile() {
 		const assemblerController = this.assemblerController();

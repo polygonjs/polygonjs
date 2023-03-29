@@ -2,8 +2,8 @@
 // https://antfu.me/posts/watch-with-reactivity
 //
 
-import {computed, ref, effect, isRef, isReactive, EffectScheduler, stop} from '@vue/reactivity';
-import {CoreType} from './Type';
+import {computed, Ref, ref, effect, isRef, isReactive, EffectScheduler, stop} from '@vue/reactivity';
+import {CoreType} from '../Type';
 
 function traverse(value: any, seen = new Set()) {
 	console.log(value);
@@ -37,8 +37,18 @@ function watch(source: any, fn: EffectScheduler, options?: WatchOptions) {
 		lazy,
 		scheduler: fn,
 	});
+	console.log(runner);
 
 	return () => stop(runner);
+}
+
+const MAX = Math.floor(Number.MAX_SAFE_INTEGER / 100);
+export function incrementRefSafely(_ref: Ref<number>) {
+	if (_ref.value > MAX) {
+		_ref.value = 0;
+	} else {
+		_ref.value += 1;
+	}
 }
 
 export {computed, ref, watch};

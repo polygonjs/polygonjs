@@ -54,6 +54,6 @@ export class SetObjectScaleJsNode extends TypedJsNode<SetObjectScaleJsParamsConf
 
 		const func = Poly.namedFunctionsRegister.getFunction('setObjectScale', this, shadersCollectionController);
 		const bodyLine = func.asString(object3D, scale, mult, lerp, updateMatrix);
-		shadersCollectionController.addBodyLines(this, [bodyLine]);
+		shadersCollectionController.addActionBodyLines(this, [bodyLine]);
 	}
 }

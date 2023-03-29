@@ -63,6 +63,8 @@ export class TwoWaySwitchJsNode extends ParamlessTypedJsNode {
 		const out = this.jsVarName(OUTPUT_NAME);
 
 		const bodyLine = `${condition} ? ${ifTrue} : ${ifFalse}`;
-		shadersCollectionController.addBodyOrComputed(this, JsConnectionPointType.PLANE, out, bodyLine);
+		shadersCollectionController.addBodyOrComputed(this, [
+			{dataType: JsConnectionPointType.PLANE, varName: out, value: bodyLine},
+		]);
 	}
 }

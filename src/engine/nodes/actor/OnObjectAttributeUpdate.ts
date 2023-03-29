@@ -4,17 +4,17 @@
  *
  */
 
-import {ActorNodeTriggerContext, TRIGGER_CONNECTION_NAME, TypedActorNode} from './_Base';
+import {TRIGGER_CONNECTION_NAME, TypedActorNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {
 	ActorConnectionPoint,
 	ActorConnectionPointType,
 	ACTOR_CONNECTION_POINT_IN_NODE_DEF,
 	PARAM_CONVERTIBLE_ACTOR_CONNECTION_POINT_TYPES,
-	ReturnValueTypeByActorConnectionPointType,
+	// ReturnValueTypeByActorConnectionPointType,
 } from '../utils/io/connections/Actor';
 import {ActorType} from '../../poly/registers/nodes/types/Actor';
-import {CoreObject} from '../../../core/geometry/Object';
+// import {CoreObject} from '../../../core/geometry/Object';
 
 const CONNECTION_OPTIONS = ACTOR_CONNECTION_POINT_IN_NODE_DEF;
 class OnObjectAttributeUpdateActorParamsConfig extends NodeParamsConfig {
@@ -74,23 +74,23 @@ export class OnObjectAttributeUpdateActorNode extends TypedActorNode<OnObjectAtt
 		return this.pv.attribName;
 	}
 
-	public override outputValue(
-		context: ActorNodeTriggerContext,
-		outputName: string
-	): ReturnValueTypeByActorConnectionPointType[ActorConnectionPointType] | undefined {
-		switch (outputName) {
-			case OnObjectAttributeUpdateActorNode.OUTPUT_NEW_VAL: {
-				const val = CoreObject.attribValue(context.Object3D, this.attributeName());
-				if (val != null) {
-					return val as ReturnValueTypeByActorConnectionPointType[ActorConnectionPointType];
-				}
-			}
-			case OnObjectAttributeUpdateActorNode.OUTPUT_PREV_VAL: {
-				const val = CoreObject.previousAttribValue(context.Object3D, this.attributeName());
-				if (val != null) {
-					return val as ReturnValueTypeByActorConnectionPointType[ActorConnectionPointType];
-				}
-			}
-		}
-	}
+	// public override outputValue(
+	// 	context: ActorNodeTriggerContext,
+	// 	outputName: string
+	// ): ReturnValueTypeByActorConnectionPointType[ActorConnectionPointType] | undefined {
+	// 	// switch (outputName) {
+	// 	// 	case OnObjectAttributeUpdateActorNode.OUTPUT_NEW_VAL: {
+	// 	// 		const val = CoreObject.attribValue(context.Object3D, this.attributeName());
+	// 	// 		if (val != null) {
+	// 	// 			return val as ReturnValueTypeByActorConnectionPointType[ActorConnectionPointType];
+	// 	// 		}
+	// 	// 	}
+	// 	// 	case OnObjectAttributeUpdateActorNode.OUTPUT_PREV_VAL: {
+	// 	// 		const val = CoreObject.previousAttribValue(context.Object3D, this.attributeName());
+	// 	// 		if (val != null) {
+	// 	// 			return val as ReturnValueTypeByActorConnectionPointType[ActorConnectionPointType];
+	// 	// 		}
+	// 	// 	}
+	// 	// }
+	// }
 }

@@ -1,5 +1,5 @@
 import {Object3D, Vector3} from 'three';
-import {touchObjectProperty, GetObjectPropertyJsNodeInputName} from './GetObjectProperty';
+import {touchObjectProperty, GetObjectPropertyJsNodeInputName} from '../../core/reactivity/ObjectPropertyReactivity';
 import {ObjectNamedFunction4} from './_Base';
 
 const _scale = new Vector3();

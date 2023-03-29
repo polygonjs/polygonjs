@@ -179,31 +179,35 @@ export class ParamsController {
 		}
 	}
 	private _initParamAccessors() {
-		let current_names_in_accessor = Object.getOwnPropertyNames(this.node.pv);
-		this._removeUnneededAccessors(current_names_in_accessor);
+		let currentNamesInAccessor = Object.getOwnPropertyNames(this.node.pv);
+		this._removeUnneededAccessors(currentNamesInAccessor);
 		// update var after having removed accessors
-		current_names_in_accessor = Object.getOwnPropertyNames(this.node.pv);
+		currentNamesInAccessor = Object.getOwnPropertyNames(this.node.pv);
 
 		for (let param of this.all) {
-			const is_spare: boolean = param.options.isSpare();
+			const isSpare: boolean = param.options.isSpare();
 
-			const param_not_yet_in_accessors = !current_names_in_accessor.includes(param.name());
+			const paramNotYetInAccessors = !currentNamesInAccessor.includes(param.name());
 
-			if (param_not_yet_in_accessors || is_spare) {
-				Object.defineProperty(this.node.pv, param.name(), {
-					get: () => {
-						return param.value;
-					},
-					// only spare parameters can be removed
-					configurable: is_spare,
-				});
-				Object.defineProperty(this.node.p, param.name(), {
-					get: () => {
-						return param;
-					},
-					configurable: is_spare,
-				});
-			}
+			try {
+				// this currently fails
+				// when copy/pasting the js/getObjectAttribute node
+				if (paramNotYetInAccessors || isSpare) {
+					Object.defineProperty(this.node.pv, param.name(), {
+						get: () => {
+							return param.value;
+						},
+						// only spare parameters can be removed
+						configurable: isSpare,
+					});
+					Object.defineProperty(this.node.p, param.name(), {
+						get: () => {
+							return param;
+						},
+						configurable: isSpare,
+					});
+				}
+			} catch (err) {}
 		}
 	}
 	private _removeUnneededAccessors(current_names_in_accessor: string[]) {

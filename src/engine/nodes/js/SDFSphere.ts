@@ -40,7 +40,12 @@ export class SDFSphereJsNode extends BaseSDFJsNode<SDFSphereJsParamsConfig> {
 
 		const out = this.jsVarName(OUTPUT_NAME);
 		const func = Poly.namedFunctionsRegister.getFunction('SDFSphere', this, shadersCollectionController);
-		const bodyLine = `const ${out} = ${func.asString(position, center, radius)}`;
-		shadersCollectionController.addBodyLines(this, [bodyLine]);
+		shadersCollectionController.addBodyOrComputed(this, [
+			{
+				dataType: JsConnectionPointType.FLOAT,
+				varName: out,
+				value: func.asString(position, center, radius),
+			},
+		]);
 	}
 }

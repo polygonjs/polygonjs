@@ -15,9 +15,9 @@ export class SinJsNode extends MathFunctionArg1OperationFactory('sin', {
 		const angle = this.variableForInput(shadersCollectionController, this._expectedInputName(0));
 
 		const out = this.jsVarName(this._expectedOutputName(0));
-		// const bodyLine = `const ${float} = Math.sin(${angle})`;
-		// shadersCollectionController.addBodyLines(this, [bodyLine]);
 
-		shadersCollectionController.addBodyOrComputed(this, JsConnectionPointType.FLOAT, out, `Math.sin(${angle})`);
+		shadersCollectionController.addBodyOrComputed(this, [
+			{dataType: JsConnectionPointType.FLOAT, varName: out, value: `Math.sin(${angle})`},
+		]);
 	}
 }

@@ -43,6 +43,8 @@ export class PlaneJsNode extends TypedJsNode<PlaneJsParamsConfig> {
 		shadersCollectionController.addVariable(this, out, new Plane());
 		const func = Poly.namedFunctionsRegister.getFunction('planeSet', this, shadersCollectionController);
 		const bodyLine = func.asString(normal, constant, out);
-		shadersCollectionController.addBodyOrComputed(this, JsConnectionPointType.PLANE, out, bodyLine);
+		shadersCollectionController.addBodyOrComputed(this, [
+			{dataType: JsConnectionPointType.PLANE, varName: out, value: bodyLine},
+		]);
 	}
 }

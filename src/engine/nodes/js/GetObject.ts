@@ -48,6 +48,8 @@ export class GetObjectJsNode extends TypedJsNode<GetObjectJsParamsConfig> {
 
 		const func = Poly.namedFunctionsRegister.getFunction('getObject', this, shadersCollectionController);
 		const bodyLine = func.asString(object3D, getCurrentObject, mask);
-		shadersCollectionController.addBodyOrComputed(this, JsConnectionPointType.PLANE, out, bodyLine);
+		shadersCollectionController.addBodyOrComputed(this, [
+			{dataType: JsConnectionPointType.PLANE, varName: out, value: bodyLine},
+		]);
 	}
 }

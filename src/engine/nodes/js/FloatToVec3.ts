@@ -50,11 +50,8 @@ export class FloatToVec3JsNode extends TypedJsNode<FloatToVec3JsParamsConfig> {
 
 		// body_lines.push(`vec3 ${var_name} = vec3(${vec2}.xy, ${z})`);
 		// shadersCollectionController.addBodyLines(this, bodyLines);
-		shadersCollectionController.addBodyOrComputed(
-			this,
-			JsConnectionPointType.VECTOR3,
-			varName,
-			func.asString(x, y, z, varName)
-		);
+		shadersCollectionController.addBodyOrComputed(this, [
+			{dataType: JsConnectionPointType.VECTOR3, varName, value: func.asString(x, y, z, varName)},
+		]);
 	}
 }
