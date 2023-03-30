@@ -8,6 +8,8 @@ import {Object3D} from 'three';
 import {PolyScene} from '../../../../../scene/PolyScene';
 import {JsType} from '../../../../../poly/registers/nodes/types/Js';
 import {EventData} from '../../../../../../core/event/EventData';
+import {ActorBuilderNode} from '../../../../../scene/utils/ActorsManager';
+import {TimeController} from '../../../../../scene/utils/TimeController';
 // import {watch} from '../../../../../../core/reactivity/CoreReactivity';
 // import {getObjectAttributeRef} from '../../../../../../core/reactivity/ObjectAttributeReactivity';
 // import {ref} from '../../../../../../core/reactivity';
@@ -104,7 +106,11 @@ export interface EvaluatorEventData extends EventData {
 
 export class ActorEvaluator {
 	// protected _context: EvaluationContext;
-	constructor(public readonly scene: PolyScene, public readonly object3D: Object3D) {
+	protected scene: PolyScene;
+	protected timeController: TimeController;
+	constructor(public readonly node: ActorBuilderNode, public readonly object3D: Object3D) {
+		this.scene = node.scene();
+		this.timeController = this.scene.timeController;
 		// this._context = {
 		// Object3D: this.scene.threejsScene(),
 		// };

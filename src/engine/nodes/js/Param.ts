@@ -13,6 +13,8 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {ParamConfigsController} from '../utils/code/controllers/ParamConfigsController';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 import {JsParamConfig} from './code/utils/JsParamConfig';
+import {Poly} from '../../Poly';
+// import {ComputedValueJsDefinition} from './utils/JsDefinition';
 // import {CoreType} from '../../../core/Type';
 // import {isBooleanTrue} from '../../../core/BooleanValue';
 class ParamJsParamsConfig extends NodeParamsConfig {
@@ -45,6 +47,31 @@ export class ParamJsNode extends TypedJsNode<ParamJsParamsConfig> {
 	}
 
 	override setLines(shadersCollectionController: ShadersCollectionController) {
+		const out = this.jsVarName(ParamJsNode.OUTPUT_NAME);
+
+		const _func = Poly.namedFunctionsRegister.getFunction(
+			'getActorNodeParamValue',
+			this,
+			shadersCollectionController
+		);
+		// shadersCollectionController.addDefinitions(this, [
+		// 	new ComputedValueJsDefinition(
+		// 		this,
+		// 		shadersCollectionController,
+		// 		JsConnectionPointType.RAY,
+		// 		out,
+		// 		_func.asString(`'${this.pv.name}'`)
+		// 	),
+		// ]);
+
+		shadersCollectionController.addBodyOrComputed(this, [
+			{
+				dataType: JS_CONNECTION_POINT_TYPES[this.pv.type],
+				varName: out,
+				value: _func.asString(`'${this.pv.name}'`),
+			},
+		]);
+
 		// const definitions = [];
 		// const bodyLines: string[] = [];
 		// const type = JS_CONNECTION_POINT_TYPES[this.pv.type];

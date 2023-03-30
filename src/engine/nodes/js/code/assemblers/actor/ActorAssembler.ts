@@ -1,10 +1,4 @@
-import {
-	BaseJsShaderAssembler,
-	INSERT_DEFINE_AFTER,
-	INSERT_BODY_AFTER,
-	INSERT_MEMBERS_AFTER,
-	FunctionData,
-} from '../_Base';
+import {BaseJsShaderAssembler, INSERT_DEFINE_AFTER, INSERT_BODY_AFTER, INSERT_MEMBERS_AFTER} from '../_Base';
 import {RegisterableVariable} from '../_BaseJsPersistedConfigUtils';
 // import {IUniforms} from '../../../../../../core/geometry/Material';
 // import {ThreeToGl} from '../../../../../../core/ThreeToGl';
@@ -34,6 +28,7 @@ import {NamedFunctionMap} from '../../../../../poly/registers/functions/All';
 import {ActorFunctionData} from './ActorPersistedConfig';
 import {EvaluatorEventData} from './Evaluator';
 import {CoreType} from '../../../../../../core/Type';
+import {ParamOptions} from '../../../../../params/utils/OptionsController';
 // import {Vector3} from 'three';
 // import {IUniformsWithTime} from '../../../../../scene/utils/UniformsController';
 // import {handleCopBuilderDependencies} from '../../../../cop/utils/BuilderUtils';
@@ -61,9 +56,9 @@ return CustomActorEvaluator;`;
 export class JsAssemblerActor extends BaseJsShaderAssembler {
 	// private _function: Function | undefined;
 	// private _uniforms: IUniforms | undefined;
-	override makeFunctionNodeDirtyOnRecompileRequired() {
-		return false;
-	}
+	// override makeFunctionNodeDirtyOnRecompileRequired() {
+	// 	return false;
+	// }
 	override templateShader() {
 		return {
 			fragmentShader: TEMPLATE,
@@ -80,32 +75,47 @@ export class JsAssemblerActor extends BaseJsShaderAssembler {
 	override computedVariablesAllowed(): boolean {
 		return true;
 	}
-
-	functionData(): FunctionData | undefined {
-		const functionBody = this._shaders_by_name.get(ShaderName.FRAGMENT);
-		if (!functionBody) {
-			return;
-		}
-		const variableNames: string[] = [];
-		const functionNames: Array<keyof NamedFunctionMap> = [];
-		const variablesByName: Record<string, RegisterableVariable> = {};
-		const functionsByName: Record<string, Function> = {};
-		this.traverseRegisteredVariables((variable, varName) => {
-			variableNames.push(varName);
-			variablesByName[varName] = variable;
-		});
-		this.traverseRegisteredFunctions((namedFunction) => {
-			functionNames.push(namedFunction.type() as keyof NamedFunctionMap);
-			functionsByName[namedFunction.type()] = namedFunction.func;
-		});
-		const serializedParamConfigs = this.param_configs().map((pc) => pc.toJSON());
-		return {functionBody, variableNames, variablesByName, functionNames, functionsByName, serializedParamConfigs};
+	override spareParamsOptions() {
+		const _options: ParamOptions = {
+			spare: true,
+			computeOnDirty: true,
+			cook: false,
+			// dependentOnFoundNode: true,
+			// there is no point in setting the callback option here,
+			// as it would then not be present when reloading the scene
+			// callback: (node, param) => {
+			// 	touchParamRef(node, param.name());
+			// },
+		};
+		return _options;
 	}
+
+	// functionData(): FunctionData | undefined {
+	// 	const functionBody = this._shaders_by_name.get(ShaderName.FRAGMENT);
+	// 	if (!functionBody) {
+	// 		return;
+	// 	}
+	// 	const variableNames: string[] = [];
+	// 	const functionNames: Array<keyof NamedFunctionMap> = [];
+	// 	const variablesByName: Record<string, RegisterableVariable> = {};
+	// 	const functionsByName: Record<string, Function> = {};
+	// 	this.traverseRegisteredVariables((variable, varName) => {
+	// 		variableNames.push(varName);
+	// 		variablesByName[varName] = variable;
+	// 	});
+	// 	this.traverseRegisteredFunctions((namedFunction) => {
+	// 		functionNames.push(namedFunction.type() as keyof NamedFunctionMap);
+	// 		functionsByName[namedFunction.type()] = namedFunction.func;
+	// 	});
+	// 	console.log(this.param_configs());
+	// 	const serializedParamConfigs = this.param_configs().map((pc) => pc.toJSON());
+	// 	return {functionBody, variableNames, variablesByName, functionNames, functionsByName, serializedParamConfigs};
+	// }
 
 	private _triggerNodes: Set<BaseJsNodeType> = new Set();
 	private _triggerNodesByType: Map<string, Set<BaseJsNodeType>> = new Map();
 
-	createFunctionData(): ActorFunctionData | undefined {
+	createFunctionData(additionalRootNodes: BaseJsNodeType[]): ActorFunctionData | undefined {
 		logBlue('*************');
 		this._reset();
 		//
@@ -117,6 +127,7 @@ export class JsAssemblerActor extends BaseJsShaderAssembler {
 
 		const functionData = this._createFunctionData(
 			// nodeType as EvaluatorMethodName,
+			additionalRootNodes,
 			this._triggerNodes,
 			shaderNames
 		);
@@ -125,6 +136,7 @@ export class JsAssemblerActor extends BaseJsShaderAssembler {
 	}
 	private _createFunctionData(
 		// nodeType: EvaluatorMethodName,
+		additionalRootNodes: BaseJsNodeType[],
 		triggerNodes: Set<BaseJsNodeType>,
 		shaderNames: ShaderName[]
 	): ActorFunctionData | undefined {
@@ -148,7 +160,7 @@ export class JsAssemblerActor extends BaseJsShaderAssembler {
 					}
 				}
 			});
-			const rootNodes = SetUtils.toArray(rootNodesSet);
+			const rootNodes = SetUtils.toArray(rootNodesSet).concat(additionalRootNodes);
 
 			this.set_root_nodes(rootNodes);
 			if (this._root_nodes.length > 0) {
@@ -163,8 +175,7 @@ export class JsAssemblerActor extends BaseJsShaderAssembler {
 			}
 		};
 		_addComputedProps();
-		// const functionBody = this._shaders_by_name.get(ShaderName.FRAGMENT);
-		// console.log(functionBody);
+
 		//
 		//
 		// create triggerable methods
@@ -288,7 +299,7 @@ export class JsAssemblerActor extends BaseJsShaderAssembler {
 			return functionBody;
 		};
 		const functionBody = _buildFunctionBody();
-		// console.log(functionBody);
+		console.log(functionBody);
 		//
 		//
 		// gather function data
@@ -320,13 +331,11 @@ export class JsAssemblerActor extends BaseJsShaderAssembler {
 			const variable = variablesByName[variableName];
 			variables.push(variable);
 		}
-		// console.log({functionNames});
+
 		for (const functionName of functionNames) {
 			const _func = functionsByName[functionName];
 			functions.push(_func);
 		}
-		// const paramConfigUniformNames = paramConfigs.map((pc) => pc.uniformName());
-		const serializedParamConfigs = paramConfigs.map((p) => p.toJSON());
 
 		const eventDatas: EvaluatorEventData[] = [];
 		this._gl_parent_node.childrenController?.traverseChildren((child) => {
@@ -345,7 +354,7 @@ export class JsAssemblerActor extends BaseJsShaderAssembler {
 			variablesByName,
 			functionNames,
 			functionsByName,
-			serializedParamConfigs,
+			paramConfigs: [...paramConfigs],
 			eventDatas,
 		};
 		return functionData;

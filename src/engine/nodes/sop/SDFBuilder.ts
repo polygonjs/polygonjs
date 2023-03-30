@@ -29,7 +29,7 @@ import {CoreType} from '../../../core/Type';
 // import {ParamType} from '../../poly/ParamType';
 import {SDFPersistedConfig} from '../js/code/assemblers/sdf/SDFPersistedConfig';
 import {ParamType} from '../../poly/ParamType';
-import {JsParamConfigJSON} from '../js/code/utils/JsParamConfig';
+import {JsParamConfig} from '../js/code/utils/JsParamConfig';
 const _box3 = new Box3();
 const box: Box = {min: [-1, -1, -1], max: [1, 1, 1]};
 type SDFFunction = Function; //(p: any) => number;
@@ -183,7 +183,7 @@ export class SDFBuilderSopNode extends TypedSopNode<SDFBuilderSopParamsConfig> {
 		}
 	}
 	private _position = new Vector3();
-	private _serializedParamConfigs: JsParamConfigJSON<ParamType>[] = [];
+	private _paramConfigs: JsParamConfig<ParamType>[] = [];
 	// private _paramConfigNames: string[] = [];
 	private _functionData: FunctionData | undefined;
 	private _functionCreationArgs: string[] = [];
@@ -215,7 +215,7 @@ export class SDFBuilderSopNode extends TypedSopNode<SDFBuilderSopParamsConfig> {
 			// main compilation
 			assemblerController.assembler.updateFunction();
 
-			// update
+			// get functionData
 			const functionData = assemblerController.assembler.functionData();
 			if (!functionData) {
 				this.states.error.set('failed to compile ');
@@ -229,7 +229,7 @@ export class SDFBuilderSopNode extends TypedSopNode<SDFBuilderSopParamsConfig> {
 	updateFromFunctionData(functionData: FunctionData) {
 		this._functionData = functionData;
 
-		const {functionBody, variableNames, variablesByName, functionNames, functionsByName, serializedParamConfigs} =
+		const {functionBody, variableNames, variablesByName, functionNames, functionsByName, paramConfigs} =
 			this._functionData;
 
 		const wrappedBody = `
@@ -252,8 +252,10 @@ export class SDFBuilderSopNode extends TypedSopNode<SDFBuilderSopParamsConfig> {
 			const _func = functionsByName[functionName];
 			functions.push(_func);
 		}
-		this._serializedParamConfigs = [...serializedParamConfigs]; //[...paramConfigs];
-		const paramConfigNames: string[] = serializedParamConfigs.map((pc) => pc.uniformName);
+		this._paramConfigs = [...paramConfigs]; //[...paramConfigs];
+		const paramConfigNames: string[] = paramConfigs.map((pc) => pc.uniformName());
+
+		paramConfigs.forEach((p) => p.applyToNode(this));
 
 		this._functionCreationArgs = [
 			'position',
@@ -280,8 +282,8 @@ export class SDFBuilderSopNode extends TypedSopNode<SDFBuilderSopParamsConfig> {
 
 	functionEvalArgsWithParamConfigs() {
 		const list: Array<Function | RegisterableVariable | number | boolean> = [...this._functionEvalArgs];
-		for (const paramConfigName of this._serializedParamConfigs) {
-			const paramName = paramConfigName.name;
+		for (const paramConfig of this._paramConfigs) {
+			const paramName = paramConfig.name();
 			const spareParam = this.params.get(paramName);
 			if (spareParam && spareParam.value != null) {
 				if (

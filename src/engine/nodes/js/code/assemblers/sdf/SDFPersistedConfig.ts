@@ -10,7 +10,7 @@ import {
 import {SDFBuilderSopNode} from '../../../../sop/SDFBuilder';
 import {Poly} from '../../../../../Poly';
 import {NamedFunctionMap} from '../../../../../poly/registers/functions/All';
-import {JsParamConfigJSON} from '../../utils/JsParamConfig';
+import {JsParamConfig, JsParamConfigJSON} from '../../utils/JsParamConfig';
 import {ParamType} from '../../../../../poly/ParamType';
 
 export interface PersistedConfigBaseSDFData extends PersistedConfigWithShaders {
@@ -34,7 +34,7 @@ export class SDFPersistedConfig extends BasePersistedConfig {
 		if (!functionData) {
 			return;
 		}
-		const {functionBody, variableNames, variablesByName, functionNames, serializedParamConfigs} = functionData;
+		const {functionBody, variableNames, variablesByName, functionNames, paramConfigs} = functionData;
 
 		const serializedVariables: SerializedVariable<SerializedVariableType>[] = [];
 		for (let variableName of variableNames) {
@@ -50,7 +50,7 @@ export class SDFPersistedConfig extends BasePersistedConfig {
 			variableNames,
 			variables: serializedVariables,
 			functionNames,
-			serializedParamConfigs,
+			serializedParamConfigs: paramConfigs.map((p) => p.toJSON()),
 		};
 		return data;
 	}
@@ -87,7 +87,7 @@ export class SDFPersistedConfig extends BasePersistedConfig {
 			variablesByName,
 			functionNames,
 			functionsByName,
-			serializedParamConfigs,
+			paramConfigs: serializedParamConfigs.map((json) => JsParamConfig.fromJSON(json)),
 		};
 		this.node.updateFromFunctionData(functionData);
 	}

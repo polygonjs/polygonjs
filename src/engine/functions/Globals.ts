@@ -1,44 +1,70 @@
 import {Ray, Raycaster, Vector2} from 'three';
+import {ShadersCollectionController} from '../nodes/js/code/utils/ShadersCollectionController';
+import {BaseNodeType} from '../nodes/_Base';
+import {PointerEventsController} from '../scene/utils/events/PointerEventsController';
+import {TimeController} from '../scene/utils/TimeController';
 import {NamedFunction0} from './_Base';
 
-export class globalsTime extends NamedFunction0 {
+abstract class GlobalsTimeFunction0 extends NamedFunction0 {
+	protected timeController: TimeController;
+	constructor(node: BaseNodeType, shadersCollectionController?: ShadersCollectionController) {
+		super(node, shadersCollectionController);
+		this.timeController = node.scene().timeController;
+	}
+}
+
+// abstract class EventsTimeFunction0 extends NamedFunction0 {
+// 	protected eventsDispatcher: SceneEventsDispatcher
+// 	constructor( node: BaseNodeType,  shadersCollectionController?: ShadersCollectionController) {
+// 		super(node,shadersCollectionController);
+// 		this.eventsDispatcher = node.scene().eventsDispatcher;
+// 	}
+// }
+abstract class PointerEventsTimeFunction0 extends NamedFunction0 {
+	protected pointerEventsController: PointerEventsController;
+	constructor(node: BaseNodeType, shadersCollectionController?: ShadersCollectionController) {
+		super(node, shadersCollectionController);
+		this.pointerEventsController = node.scene().eventsDispatcher.pointerEventsController;
+	}
+}
+export class globalsTime extends GlobalsTimeFunction0 {
 	static override type() {
 		return 'globalsTime';
 	}
 	func(): number {
-		return this.scene.timeController.timeUniform().value;
+		return this.timeController.timeUniform().value;
 	}
 }
-export class globalsTimeDelta extends NamedFunction0 {
+export class globalsTimeDelta extends GlobalsTimeFunction0 {
 	static override type() {
 		return 'globalsTimeDelta';
 	}
 	func(): number {
-		return this.scene.timeController.timeDeltaUniform().value;
+		return this.timeController.timeDeltaUniform().value;
 	}
 }
 
-export class globalsRaycaster extends NamedFunction0 {
+export class globalsRaycaster extends PointerEventsTimeFunction0 {
 	static override type() {
 		return 'globalsRaycaster';
 	}
 	func(): Raycaster {
-		return this.scene.eventsDispatcher.pointerEventsController.raycaster().value;
+		return this.pointerEventsController.raycaster().value;
 	}
 }
-export class globalsRayFromCursor extends NamedFunction0 {
+export class globalsRayFromCursor extends PointerEventsTimeFunction0 {
 	static override type() {
 		return 'globalsRayFromCursor';
 	}
 	func(): Ray {
-		return this.scene.eventsDispatcher.pointerEventsController.raycaster().value.ray;
+		return this.pointerEventsController.raycaster().value.ray;
 	}
 }
-export class globalsCursor extends NamedFunction0 {
+export class globalsCursor extends PointerEventsTimeFunction0 {
 	static override type() {
 		return 'globalsCursor';
 	}
 	func(): Vector2 {
-		return this.scene.eventsDispatcher.pointerEventsController.cursor().value;
+		return this.pointerEventsController.cursor().value;
 	}
 }

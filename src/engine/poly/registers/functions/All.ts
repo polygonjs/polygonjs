@@ -39,6 +39,7 @@ import {SDFRoundedX} from '../../../functions/SDFPrimitives2D';
 
 //
 import {keyboardEventMatchesConfig} from '../../../functions/KeyboardEventMatchesConfig';
+import {getActorNodeParamValue} from '../../../functions/GetActorNodeParamValue';
 import {getObject} from '../../../functions/GetObject';
 import {getParent} from '../../../functions/GetParent';
 import {getObjectAttribute} from '../../../functions/GetObjectAttribute';
@@ -57,6 +58,7 @@ export interface NamedFunctionMap {
 	divideNumber: divideNumber;
 	divideVectorNumber: divideVectorNumber<Vector2 | Vector3 | Vector4>;
 	floatToVec3: floatToVec3;
+	getActorNodeParamValue: getActorNodeParamValue;
 	getObject: getObject;
 	getObjectAttribute: getObjectAttribute;
 	getObjectAttributeRef: getObjectAttributeRef;
@@ -110,6 +112,7 @@ export class AllNamedFunctionRegister {
 			divideNumber,
 			divideVectorNumber,
 			floatToVec3,
+			getActorNodeParamValue,
 			getObject,
 			getObjectAttribute,
 			getObjectAttributeRef,

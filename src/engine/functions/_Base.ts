@@ -5,6 +5,7 @@ import {BaseJsNodeType} from '../nodes/js/_Base';
 import {ShadersCollectionController} from '../nodes/js/code/utils/ShadersCollectionController';
 import {EvaluatorConstant} from '../nodes/js/code/assemblers/actor/Evaluator';
 import {NodeContext} from '../poly/NodeContext';
+import {AssemblerControllerNode} from '../nodes/js/code/Controller';
 
 export abstract class BaseNamedFunction {
 	// abstract type: string;
@@ -16,15 +17,23 @@ export abstract class BaseNamedFunction {
 		return c.type();
 	}
 	public readonly scene: PolyScene;
-	constructor(protected node: BaseNodeType, protected shadersCollectionController?: ShadersCollectionController) {
+	public readonly jsNode?: BaseJsNodeType;
+	public readonly functionNode?: AssemblerControllerNode;
+	constructor(node: BaseNodeType, protected shadersCollectionController?: ShadersCollectionController) {
 		this.scene = node.scene();
+		if (node.context() == NodeContext.JS) {
+			this.jsNode = node as BaseJsNodeType;
+			this.functionNode = this.jsNode.functionNode();
+		} else {
+			this.jsNode = undefined;
+			this.functionNode = node as AssemblerControllerNode;
+		}
 	}
 	abstract func(...args: any): any;
 	asString(...args: any): string {
 		if (this.shadersCollectionController) {
-			if (this.node.context() == NodeContext.JS) {
-				const jsNode = this.node as BaseJsNodeType;
-				this.shadersCollectionController.addFunction(jsNode, this);
+			if (this.jsNode) {
+				this.shadersCollectionController.addFunction(this.jsNode, this);
 			}
 		} else {
 			console.warn('no shadersCollectionController in func', this.type());

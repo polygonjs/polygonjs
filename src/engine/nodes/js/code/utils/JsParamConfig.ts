@@ -1,14 +1,17 @@
-import {IUniform, Color, Vector2, Vector3, Vector4} from 'three';
+// import {IUniform, Color, Vector2, Vector3, Vector4} from 'three';
 import {ParamType} from '../../../../poly/ParamType';
 import {ParamInitValuesTypeMap} from '../../../../params/types/ParamInitValuesTypeMap';
-import {BaseNodeType} from '../../../_Base';
-import {BaseParamType} from '../../../../params/_Base';
-import {TypeAssert} from '../../../../poly/Assert';
-import {RampParam} from '../../../../params/Ramp';
+// import {BaseNodeType} from '../../../_Base';
+// import {BaseParamType} from '../../../../params/_Base';
+// import {TypeAssert} from '../../../../poly/Assert';
+// import {RampParam} from '../../../../params/Ramp';
 // import {OperatorPathParam} from '../../../../params/OperatorPath';
 import {BaseParamConfig} from '../../../utils/code/configs/BaseParamConfig';
-import {NodePathParam} from '../../../../params/NodePath';
-import {NodeContext} from '../../../../poly/NodeContext';
+import {BaseNodeType} from '../../../_Base';
+import {BaseParamType} from '../../../../params/_Base';
+import {touchParamRef} from '../../../../../core/reactivity/ParamReactivity';
+// import {NodePathParam} from '../../../../params/NodePath';
+// import {NodeContext} from '../../../../poly/NodeContext';
 
 export interface JsParamConfigJSON<T extends ParamType> {
 	type: T;
@@ -17,7 +20,7 @@ export interface JsParamConfigJSON<T extends ParamType> {
 	uniformName: string;
 }
 export class JsParamConfig<T extends ParamType> extends BaseParamConfig<T> {
-	private _uniform: IUniform | undefined;
+	// private _uniform: IUniform | undefined;
 
 	constructor(_type: T, _name: string, _defaultValue: ParamInitValuesTypeMap[T], private _uniformName: string) {
 		super(_type, _name, _defaultValue);
@@ -39,16 +42,20 @@ export class JsParamConfig<T extends ParamType> extends BaseParamConfig<T> {
 		return this._uniformName;
 	}
 
-	uniform() {
-		return (this._uniform = this._uniform || this._createUniform());
-	}
+	// override applyToNode(node: BaseNodeType) {
+	// 	console.warn('not needed in js context');
+	// }
 
-	private _createUniform() {
-		return JsParamConfig.uniformByType(this._type);
-	}
+	// uniform() {
+	// 	return (this._uniform = this._uniform || this._createUniform());
+	// }
+
+	// private _createUniform() {
+	// 	return JsParamConfig.uniformByType(this._type);
+	// }
 
 	protected override _callback(node: BaseNodeType, param: BaseParamType) {
-		JsParamConfig.callback(param, this.uniform());
+		JsParamConfig.callback(node, param.name());
 		// switch (param.type) {
 		// 	case ParamType.RAMP:
 		// 		this.uniform.value = (param as RampParam).rampTexture();
@@ -61,57 +68,58 @@ export class JsParamConfig<T extends ParamType> extends BaseParamConfig<T> {
 		// }
 	}
 
-	static callback(param: BaseParamType, uniform: IUniform) {
-		switch (param.type()) {
-			case ParamType.RAMP:
-				uniform.value = (param as RampParam).rampTexture();
-				return;
-			// case ParamType.OPERATOR_PATH:
-			// 	GlParamConfig.set_uniform_value_from_texture(param as OperatorPathParam, uniform);
-			// 	return;
-			case ParamType.NODE_PATH:
-				JsParamConfig.setUniformValueFromTextureFromNodePathParam(param as NodePathParam, uniform);
-				return;
-			default:
-				uniform.value = param.value;
-		}
+	static callback(node: BaseNodeType, paramName: string) {
+		touchParamRef(node, paramName);
+		// switch (param.type()) {
+		// 	case ParamType.RAMP:
+		// 		uniform.value = (param as RampParam).rampTexture();
+		// 		return;
+		// 	// case ParamType.OPERATOR_PATH:
+		// 	// 	GlParamConfig.set_uniform_value_from_texture(param as OperatorPathParam, uniform);
+		// 	// 	return;
+		// 	case ParamType.NODE_PATH:
+		// 		// JsParamConfig.setUniformValueFromTextureFromNodePathParam(param as NodePathParam, uniform);
+		// 		return;
+		// 	default:
+		// 		uniform.value = param.value;
+		// }
 	}
 
 	// TODO: refactor that to use the default values map?
-	static uniformByType(type: ParamType): IUniform {
-		switch (type) {
-			case ParamType.BOOLEAN:
-				return {value: 0};
-			case ParamType.BUTTON:
-				return {value: 0};
-			case ParamType.COLOR:
-				return {value: new Color(0, 0, 0)};
-			case ParamType.FLOAT:
-				return {value: 0};
-			case ParamType.FOLDER:
-				return {value: 0};
-			case ParamType.INTEGER:
-				return {value: 0};
-			// case ParamType.OPERATOR_PATH:
-			// 	return {value: 0};
-			case ParamType.NODE_PATH:
-				return {value: 0};
-			case ParamType.PARAM_PATH:
-				return {value: 0};
-			// case ParamType.STRING: return {type: 't', value: null} // new Texture()}
-			case ParamType.RAMP:
-				return {value: null}; // new Texture()}
-			case ParamType.STRING:
-				return {value: null};
-			case ParamType.VECTOR2:
-				return {value: new Vector2(0, 0)};
-			case ParamType.VECTOR3:
-				return {value: new Vector3(0, 0, 0)};
-			case ParamType.VECTOR4:
-				return {value: new Vector4(0, 0, 0, 0)};
-		}
-		TypeAssert.unreachable(type);
-	}
+	// static uniformByType(type: ParamType): IUniform {
+	// 	switch (type) {
+	// 		case ParamType.BOOLEAN:
+	// 			return {value: 0};
+	// 		case ParamType.BUTTON:
+	// 			return {value: 0};
+	// 		case ParamType.COLOR:
+	// 			return {value: new Color(0, 0, 0)};
+	// 		case ParamType.FLOAT:
+	// 			return {value: 0};
+	// 		case ParamType.FOLDER:
+	// 			return {value: 0};
+	// 		case ParamType.INTEGER:
+	// 			return {value: 0};
+	// 		// case ParamType.OPERATOR_PATH:
+	// 		// 	return {value: 0};
+	// 		case ParamType.NODE_PATH:
+	// 			return {value: 0};
+	// 		case ParamType.PARAM_PATH:
+	// 			return {value: 0};
+	// 		// case ParamType.STRING: return {type: 't', value: null} // new Texture()}
+	// 		case ParamType.RAMP:
+	// 			return {value: null}; // new Texture()}
+	// 		case ParamType.STRING:
+	// 			return {value: null};
+	// 		case ParamType.VECTOR2:
+	// 			return {value: new Vector2(0, 0)};
+	// 		case ParamType.VECTOR3:
+	// 			return {value: new Vector3(0, 0, 0)};
+	// 		case ParamType.VECTOR4:
+	// 			return {value: new Vector4(0, 0, 0, 0)};
+	// 	}
+	// 	TypeAssert.unreachable(type);
+	// }
 
 	// private static set_uniform_value_from_texture(param: OperatorPathParam, uniform: IUniform) {
 	// 	const found_node = param.found_node();
@@ -130,20 +138,20 @@ export class JsParamConfig<T extends ParamType> extends BaseParamConfig<T> {
 	// 		uniform.value = null;
 	// 	}
 	// }
-	private static async setUniformValueFromTextureFromNodePathParam(param: NodePathParam, uniform: IUniform) {
-		if (param.isDirty()) {
-			await param.compute();
-		}
-		const node = param.value.nodeWithContext(NodeContext.COP);
-		if (node) {
-			if (node.isDirty()) {
-				await node.compute();
-			}
-			const container = node.containerController.container();
-			const texture = container.texture();
-			uniform.value = texture;
-		} else {
-			uniform.value = null;
-		}
-	}
+	// private static async setUniformValueFromTextureFromNodePathParam(param: NodePathParam, uniform: IUniform) {
+	// 	if (param.isDirty()) {
+	// 		await param.compute();
+	// 	}
+	// 	const node = param.value.nodeWithContext(NodeContext.COP);
+	// 	if (node) {
+	// 		if (node.isDirty()) {
+	// 			await node.compute();
+	// 		}
+	// 		const container = node.containerController.container();
+	// 		const texture = container.texture();
+	// 		uniform.value = texture;
+	// 	} else {
+	// 		uniform.value = null;
+	// 	}
+	// }
 }

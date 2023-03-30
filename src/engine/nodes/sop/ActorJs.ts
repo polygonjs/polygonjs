@@ -17,6 +17,7 @@ import {AssemblerName} from '../../poly/registers/assemblers/_BaseRegister';
 import {JsAssemblerController} from '../js/code/Controller';
 import {JsAssemblerActor} from '../js/code/assemblers/actor/ActorAssembler';
 import {Poly} from '../../Poly';
+import {JsNodeFinder} from '../js/code/utils/NodeFinder';
 import {ActorEvaluator} from '../js/code/assemblers/actor/Evaluator';
 import {isBooleanTrue} from '../../../core/Type';
 import {CorePath} from '../../../core/geometry/CorePath';
@@ -33,7 +34,9 @@ class ActorJsSopParamsConfig extends NodeParamsConfig {
 		objectMask: true,
 	});
 	/** @param build actor from child nodes */
-	useThisNode = ParamConfig.BOOLEAN(1);
+	useThisNode = ParamConfig.BOOLEAN(1, {
+		separatorAfter: true,
+	});
 	/** @param actor node */
 	node = ParamConfig.NODE_PATH('', {
 		visibleIf: {useThisNode: 0},
@@ -41,6 +44,7 @@ class ActorJsSopParamsConfig extends NodeParamsConfig {
 			types: [NetworkNodeType.ACTOR],
 		},
 		dependentOnFoundNode: false,
+		separatorAfter: true,
 	});
 }
 const ParamsConfig = new ActorJsSopParamsConfig();
@@ -151,7 +155,9 @@ export class ActorJsSopNode extends TypedSopNode<ActorJsSopParamsConfig> {
 		}
 	}
 
-	private _evaluatorGenerator = new ActorEvaluatorGenerator((object) => new ActorEvaluator(this.scene(), object));
+	private _evaluatorGenerator: ActorEvaluatorGenerator = new ActorEvaluatorGenerator(
+		(object) => new ActorEvaluator(this, object)
+	);
 	evaluatorGenerator() {
 		return this._evaluatorGenerator;
 	}
@@ -161,15 +167,8 @@ export class ActorJsSopNode extends TypedSopNode<ActorJsSopParamsConfig> {
 	}
 	updateFromFunctionData(functionData: ActorFunctionData) {
 		this._functionData = functionData;
-		const {
-			functionBody,
-			variableNames,
-			variablesByName,
-			functionNames,
-			functionsByName,
-			serializedParamConfigs,
-			eventDatas,
-		} = this._functionData;
+		const {functionBody, variableNames, variablesByName, functionNames, functionsByName, paramConfigs, eventDatas} =
+			this._functionData;
 
 		const wrappedBody = `
 			try {
@@ -194,7 +193,9 @@ export class ActorJsSopNode extends TypedSopNode<ActorJsSopParamsConfig> {
 			functions.push(_func);
 		}
 
-		const paramConfigUniformNames: string[] = serializedParamConfigs.map((pc) => pc.uniformName);
+		const paramConfigUniformNames: string[] = paramConfigs.map((pc) => pc.uniformName());
+
+		paramConfigs.forEach((p) => p.applyToNode(this));
 
 		const functionCreationArgs = [
 			'ActorEvaluator',
@@ -218,15 +219,13 @@ export class ActorJsSopNode extends TypedSopNode<ActorJsSopParamsConfig> {
 			...variables.map((v) => v.clone()),
 			...functions,
 		];
-		// console.log(functionCreationArgs, functionEvalArgs());
 		try {
 			const _function = new Function(...functionCreationArgs);
 			// const node = this.currentGlParentNode() as ActorJsSopNode;
 			const evaluatorGenerator = new ActorEvaluatorGenerator((object) => {
 				const evaluatorClass = _function(...functionEvalArgs()) as typeof ActorEvaluator;
-				return new evaluatorClass(this.scene(), object);
+				return new evaluatorClass(this, object);
 			});
-			// console.log({evaluator});
 
 			//
 			//
@@ -258,11 +257,16 @@ export class ActorJsSopNode extends TypedSopNode<ActorJsSopParamsConfig> {
 			return;
 		}
 
-		// main compilation
-		const functionData = assemblerController.assembler.createFunctionData();
+		// main compilation (just used for reset in this assembler)
+		assemblerController.assembler.updateFunction();
+
+		// get functionData
+		const paramNodes = JsNodeFinder.findParamGeneratingNodes(this);
+		const functionData = assemblerController.assembler.createFunctionData(paramNodes);
 		if (!functionData) {
 			return;
 		}
 		this.updateFromFunctionData(functionData);
+		assemblerController.post_compile();
 	}
 }

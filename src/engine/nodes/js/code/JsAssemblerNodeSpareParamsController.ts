@@ -1,6 +1,5 @@
 import {TypedParam} from '../../../params/_Base';
 import {ParamsUpdateOptions} from '../../utils/params/ParamsController';
-import {ParamOptions} from '../../../params/utils/OptionsController';
 import {ParamType} from '../../../poly/ParamType';
 import {JsAssemblerControllerType, AssemblerControllerNode} from './Controller';
 import {ParamInitValueSerialized} from '../../../params/types/ParamInitValueSerialized';
@@ -134,14 +133,7 @@ export class JsAssemblerNodeSpareParamsController {
 		for (let paramConfig of paramConfigs) {
 			if (spare_param_names_to_add.has(paramConfig.name())) {
 				// const config_options = ObjectUtils.clone(paramConfig.paramOptions());
-				const options: ParamOptions = {
-					spare: true,
-					// computeOnDirty: true, // not needed if cook option is not set
-					// cook: false, // for SDFBuilder, the node needs to recook
-					// important for texture nodes
-					// that compute after being found by the nodepath param
-					dependentOnFoundNode: true,
-				};
+				const options = this.assembler.spareParamsOptions();
 				// const options = ObjectUtils.merge(config_options, default_options);
 
 				// set init_value and raw_input to the previous param's
@@ -160,8 +152,9 @@ export class JsAssemblerNodeSpareParamsController {
 					type: paramConfig.type(),
 					initValue: init_value as any,
 					rawInput: raw_input as any,
-					options: options,
+					options,
 				});
+				console.log(options);
 			}
 		}
 

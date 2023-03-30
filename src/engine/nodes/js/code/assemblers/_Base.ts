@@ -31,19 +31,19 @@ import {BaseNamedFunction} from '../../../../functions/_Base';
 // import {CoreString} from '../../../../../core/String';
 import {RegisterableVariable} from './_BaseJsPersistedConfigUtils';
 import {NamedFunctionMap} from '../../../../poly/registers/functions/All';
-import {JsParamConfigJSON} from '../utils/JsParamConfig';
+import {JsParamConfig} from '../utils/JsParamConfig';
 import {ParamType} from '../../../../poly/ParamType';
+import {ParamOptions} from '../../../../params/utils/OptionsController';
 
 type StringArrayByShaderName = Map<ShaderName, string[]>;
 
-// export abstract class ObjectNamedFunction4<ARGS extends [any,any,any,any]> extends ObjectNamedFunction<ARGS,[string,string,string,string]> {}
 export interface FunctionData {
 	functionBody: string;
 	variableNames: string[];
 	variablesByName: Record<string, RegisterableVariable>;
 	functionNames: Array<keyof NamedFunctionMap>;
 	functionsByName: Record<string, Function>;
-	serializedParamConfigs: JsParamConfigJSON<ParamType>[];
+	paramConfigs: JsParamConfig<ParamType>[];
 	// paramConfigs: readonly JsParamConfig<ParamType>[];
 }
 interface ITemplateShader {
@@ -74,7 +74,7 @@ const LINES_TO_REMOVE_MAP: Map<ShaderName, string[]> = new Map([
 
 const SPACED_LINES = 3;
 
-export class BaseJsShaderAssembler extends TypedAssembler<NodeContext.JS> {
+export abstract class BaseJsShaderAssembler extends TypedAssembler<NodeContext.JS> {
 	protected _shaders_by_name: Map<ShaderName, string> = new Map();
 	protected _lines: StringArrayByShaderName = new Map();
 	protected _codeBuilder: CodeBuilder | undefined;
@@ -113,6 +113,8 @@ export class BaseJsShaderAssembler extends TypedAssembler<NodeContext.JS> {
 	computedVariablesAllowed(): boolean {
 		return false;
 	}
+
+	abstract spareParamsOptions(): ParamOptions;
 
 	compile() {}
 
@@ -174,7 +176,7 @@ export class BaseJsShaderAssembler extends TypedAssembler<NodeContext.JS> {
 	}
 
 	updateFunction() {
-		this._reset;
+		this._reset();
 	}
 
 	// protected addUniforms(uniforms: IUniforms) {
@@ -263,10 +265,7 @@ export class BaseJsShaderAssembler extends TypedAssembler<NodeContext.JS> {
 	codeBuilder() {
 		return (this._codeBuilder = this._codeBuilder || this._createCodeBuilder());
 	}
-	// protected _resetCodeBuilder() {
-	// 	this._codeBuilder = undefined;
-	// 	console.warn('_resetCodeBuilder');
-	// }
+
 	private _createCodeBuilder() {
 		const nodeTraverser = new TypedNodeTraverser<NodeContext.JS>(
 			this.currentGlParentNode(),
@@ -499,7 +498,7 @@ export class BaseJsShaderAssembler extends TypedAssembler<NodeContext.JS> {
 		// const define = this.builder_lines(shaderName, LineType.DEFINE);
 		// let all_define = function_declaration.concat(define);
 		const body = this.builder_lines(shaderName, LineType.BODY);
-		// console.log({constructorLines, define, body});
+
 		let templateLines = template.split('\n');
 		// const scene = this.currentGlParentNode().scene;
 		const newLines: string[] = [

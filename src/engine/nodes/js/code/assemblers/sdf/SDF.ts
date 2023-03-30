@@ -13,6 +13,7 @@ import {ShadersCollectionController} from '../../utils/ShadersCollectionControll
 // import {UniformJsDefinition} from '../../../utils/JsDefinition';
 import {Vector3} from 'three';
 import {NamedFunctionMap} from '../../../../../poly/registers/functions/All';
+import {ParamOptions} from '../../../../../params/utils/OptionsController';
 // import {Vector3} from 'three';
 // import {IUniformsWithTime} from '../../../../../scene/utils/UniformsController';
 // import {handleCopBuilderDependencies} from '../../../../cop/utils/BuilderUtils';
@@ -41,6 +42,18 @@ export class JsAssemblerSDF extends BaseJsShaderAssembler {
 		};
 	}
 
+	override spareParamsOptions() {
+		const _options: ParamOptions = {
+			spare: true,
+			// computeOnDirty: true, // not needed if cook option is not set
+			// cook: false, // for SDFBuilder, the node needs to recook
+			// important for texture nodes
+			// that compute after being found by the nodepath param
+			dependentOnFoundNode: true,
+		};
+		return _options;
+	}
+
 	functionData(): FunctionData | undefined {
 		const functionBody = this._shaders_by_name.get(ShaderName.FRAGMENT);
 		if (!functionBody) {
@@ -59,8 +72,15 @@ export class JsAssemblerSDF extends BaseJsShaderAssembler {
 			functionsByName[namedFunction.type()] = namedFunction.func.bind(namedFunction);
 		});
 		// const paramConfigs = this.param_configs();
-		const serializedParamConfigs = this.param_configs().map((p) => p.toJSON());
-		return {functionBody, variableNames, variablesByName, functionNames, functionsByName, serializedParamConfigs};
+		const paramConfigs = this.param_configs();
+		return {
+			functionBody,
+			variableNames,
+			variablesByName,
+			functionNames,
+			functionsByName,
+			paramConfigs: [...paramConfigs],
+		};
 	}
 
 	// uniforms() {

@@ -10,7 +10,7 @@ import {
 import {ActorJsSopNode} from '../../../../sop/ActorJs';
 import {Poly} from '../../../../../Poly';
 import {NamedFunctionMap} from '../../../../../poly/registers/functions/All';
-import {JsParamConfigJSON} from '../../utils/JsParamConfig';
+import {JsParamConfig, JsParamConfigJSON} from '../../utils/JsParamConfig';
 import {ParamType} from '../../../../../poly/ParamType';
 import {EvaluatorEventData} from './Evaluator';
 
@@ -40,8 +40,7 @@ export class ActorPersistedConfig extends BasePersistedConfig {
 		if (!functionData) {
 			return;
 		}
-		const {functionBody, variableNames, variablesByName, functionNames, serializedParamConfigs, eventDatas} =
-			functionData;
+		const {functionBody, variableNames, variablesByName, functionNames, paramConfigs, eventDatas} = functionData;
 
 		const serializedVariables: SerializedVariable<SerializedVariableType>[] = [];
 		for (let variableName of variableNames) {
@@ -57,7 +56,7 @@ export class ActorPersistedConfig extends BasePersistedConfig {
 			variableNames,
 			variables: serializedVariables,
 			functionNames,
-			serializedParamConfigs,
+			serializedParamConfigs: paramConfigs.map((p) => p.toJSON()),
 			eventDatas,
 		};
 		return data;
@@ -95,7 +94,7 @@ export class ActorPersistedConfig extends BasePersistedConfig {
 			variablesByName,
 			functionNames,
 			functionsByName,
-			serializedParamConfigs,
+			paramConfigs: serializedParamConfigs.map((json) => JsParamConfig.fromJSON(json)),
 			eventDatas,
 		};
 		this.node.updateFromFunctionData(functionData);
