@@ -1,4 +1,10 @@
-import {BaseJsShaderAssembler, INSERT_DEFINE_AFTER, INSERT_BODY_AFTER, INSERT_MEMBERS_AFTER} from '../_Base';
+import {
+	BaseJsShaderAssembler,
+	INSERT_DEFINE_AFTER,
+	INSERT_CONSTRUCTOR_AFTER,
+	INSERT_BODY_AFTER,
+	INSERT_MEMBERS_AFTER,
+} from '../_Base';
 import {RegisterableVariable} from '../_BaseJsPersistedConfigUtils';
 // import {IUniforms} from '../../../../../../core/geometry/Material';
 // import {ThreeToGl} from '../../../../../../core/ThreeToGl';
@@ -42,11 +48,12 @@ function logBlue(message: string) {
 // }
 
 const TEMPLATE = `
+${INSERT_DEFINE_AFTER}
 class CustomActorEvaluator extends ActorEvaluator {
 	${INSERT_MEMBERS_AFTER}
 	constructor(scene, object3D){
 		super(scene, object3D);
-		${INSERT_DEFINE_AFTER}
+		${INSERT_CONSTRUCTOR_AFTER}
 	}
 	${INSERT_BODY_AFTER}
 `;

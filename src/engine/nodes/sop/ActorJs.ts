@@ -221,10 +221,10 @@ export class ActorJsSopNode extends TypedSopNode<ActorJsSopParamsConfig> {
 		];
 		try {
 			const _function = new Function(...functionCreationArgs);
-			// const node = this.currentGlParentNode() as ActorJsSopNode;
 			const evaluatorGenerator = new ActorEvaluatorGenerator((object) => {
 				const evaluatorClass = _function(...functionEvalArgs()) as typeof ActorEvaluator;
-				return new evaluatorClass(this, object);
+				const evaluator = new evaluatorClass(this, object);
+				return this.scene().dispatchController.processActorEvaluator(evaluator) || evaluator;
 			});
 
 			//

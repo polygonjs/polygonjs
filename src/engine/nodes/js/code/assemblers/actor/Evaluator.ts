@@ -77,6 +77,9 @@ type TriggerCallback = () => void;
 export type EvaluatorKeyboardMethod = 'onKeydown' | 'onKeypress' | 'onKeyup';
 
 export type EvaluatorMethodName =
+	| JsType.ON_KEYDOWN
+	| JsType.ON_KEYPRESS
+	| JsType.ON_KEYUP
 	| JsType.ON_MANUAL_TRIGGER
 	| JsType.ON_MAPBOX_CAMERA_MOVE
 	| JsType.ON_MAPBOX_CAMERA_MOVE_START
@@ -84,10 +87,14 @@ export type EvaluatorMethodName =
 	| JsType.ON_OBJECT_CLICK
 	| JsType.ON_OBJECT_HOVER
 	| JsType.ON_PERFORMANCE_CHANGE
-	| JsType.ON_SCENE_PLAY_STATE
+	| JsType.ON_SCENE_PAUSE
+	| JsType.ON_SCENE_PLAY
 	| JsType.ON_SCENE_RESET
 	| JsType.ON_TICK;
 export const EVALUATOR_METHOD_NAMES: Array<EvaluatorMethodName> = [
+	JsType.ON_KEYDOWN,
+	JsType.ON_KEYPRESS,
+	JsType.ON_KEYUP,
 	JsType.ON_MANUAL_TRIGGER,
 	JsType.ON_MAPBOX_CAMERA_MOVE,
 	JsType.ON_MAPBOX_CAMERA_MOVE_START,
@@ -95,7 +102,8 @@ export const EVALUATOR_METHOD_NAMES: Array<EvaluatorMethodName> = [
 	JsType.ON_OBJECT_CLICK,
 	JsType.ON_OBJECT_HOVER,
 	JsType.ON_PERFORMANCE_CHANGE,
-	JsType.ON_SCENE_PLAY_STATE,
+	JsType.ON_SCENE_PAUSE,
+	JsType.ON_SCENE_PLAY,
 	JsType.ON_SCENE_RESET,
 	JsType.ON_TICK,
 ];
@@ -132,7 +140,8 @@ export class ActorEvaluator {
 	onObjectClick?: TriggerCallback;
 	onObjectHover?: TriggerCallback;
 	onPerformanceChange?: TriggerCallback;
-	onScenePlayState?: TriggerCallback;
+	onScenePause?: TriggerCallback;
+	onScenePlay?: TriggerCallback;
 	onSceneReset?: TriggerCallback;
 	onTick?: TriggerCallback;
 

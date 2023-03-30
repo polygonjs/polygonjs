@@ -8,7 +8,7 @@ import {BaseActorNodeType} from '../../nodes/actor/_Base';
 // 	// Constructor,
 // 	//  valueof
 // 	} from '../../../types/GlobalTypes';
-import {ActorType} from '../../poly/registers/nodes/types/Actor';
+// import {ActorType} from '../../poly/registers/nodes/types/Actor';
 import {PolyScene} from '../PolyScene';
 // import {CoreObject} from '../../../core/geometry/Object';
 // import {MapUtils} from '../../../core/MapUtils';
@@ -24,6 +24,10 @@ import {ActorKeyboardEventsController} from './actors/ActorsKeyboardEventsContro
 import {JsType} from '../../poly/registers/nodes/types/Js';
 import {EvaluatorMethodName} from '../../nodes/js/code/assemblers/actor/Evaluator';
 import {ActorEvaluatorGenerator} from '../../nodes/js/code/assemblers/actor/EvaluatorGenerator';
+import {JsNodeChildrenMap} from '../../poly/registers/nodes/Js';
+import {NodeCreateOptions} from '../../nodes/utils/hierarchy/ChildrenController';
+import {Constructor, valueof} from '../../../types/GlobalTypes';
+import {BaseJsNodeType} from '../../nodes/js/_Base';
 // import { ActorJsSopNode } from '../../nodes/sop/ActorJs';
 // import {SopType} from '../../poly/registers/nodes/types/Sop';
 // import {EventData} from '../../../core/event/EventData';
@@ -31,27 +35,27 @@ import {ActorEvaluatorGenerator} from '../../nodes/js/code/assemblers/actor/Eval
 const ACTOR_BUILDER_NODE_IDS_KEY = 'actorBuilderNodeIds';
 
 export abstract class ActorBuilderNode extends TypedNode<any, any> {
-	// protected override _childrenControllerContext = NodeContext.ACTOR;
-	// override createNode<S extends keyof ActorNodeChildrenMap>(
-	// 	node_class: S,
-	// 	options?: NodeCreateOptions
-	// ): ActorNodeChildrenMap[S];
-	// override createNode<K extends valueof<ActorNodeChildrenMap>>(
-	// 	node_class: Constructor<K>,
-	// 	options?: NodeCreateOptions
-	// ): K;
-	// override createNode<K extends valueof<ActorNodeChildrenMap>>(
-	// 	node_class: Constructor<K>,
-	// 	options?: NodeCreateOptions
-	// ): K {
-	// 	return super.createNode(node_class, options) as K;
-	// }
-	// override children() {
-	// 	return super.children() as BaseActorNodeType[];
-	// }
-	// override nodesByType<K extends keyof ActorNodeChildrenMap>(type: K): ActorNodeChildrenMap[K][] {
-	// 	return super.nodesByType(type) as ActorNodeChildrenMap[K][];
-	// }
+	// protected override _childrenControllerContext = NodeContext.JS;
+	override createNode<S extends keyof JsNodeChildrenMap>(
+		node_class: S,
+		options?: NodeCreateOptions
+	): JsNodeChildrenMap[S];
+	override createNode<K extends valueof<JsNodeChildrenMap>>(
+		node_class: Constructor<K>,
+		options?: NodeCreateOptions
+	): K;
+	override createNode<K extends valueof<JsNodeChildrenMap>>(
+		node_class: Constructor<K>,
+		options?: NodeCreateOptions
+	): K {
+		return super.createNode(node_class, options) as K;
+	}
+	override children() {
+		return super.children() as BaseJsNodeType[];
+	}
+	override nodesByType<K extends keyof JsNodeChildrenMap>(type: K): JsNodeChildrenMap[K][] {
+		return super.nodesByType(type) as JsNodeChildrenMap[K][];
+	}
 	// override childrenAllowed() {
 	// 	return true;
 	// }
@@ -208,9 +212,9 @@ export class ActorsManager {
 		this.triggerEventNodes(object, JsType.ON_TICK);
 	}
 	private _onEventTickTraverse() {
-		if (!this.scene.nodesController.hasNodesByContextAndType(NodeContext.ACTOR, ActorType.ON_TICK)) {
-			return;
-		}
+		// if (!this.scene.nodesController.hasNodesByContextAndType(NodeContext.ACTOR, ActorType.ON_TICK)) {
+		// 	return;
+		// }
 		this.scene.threejsScene().traverse(this._onEventTickBound);
 	}
 	// reset
@@ -219,9 +223,9 @@ export class ActorsManager {
 		this.triggerEventNodes(object, JsType.ON_SCENE_RESET);
 	}
 	private _onEventSceneResetTraverse() {
-		if (!this.scene.nodesController.hasNodesByContextAndType(NodeContext.ACTOR, ActorType.ON_SCENE_RESET)) {
-			return;
-		}
+		// if (!this.scene.nodesController.hasNodesByContextAndType(NodeContext.ACTOR, ActorType.ON_SCENE_RESET)) {
+		// 	return;
+		// }
 		this.scene.threejsScene().traverse(this._onEventSceneResetBound);
 	}
 	// play
@@ -229,29 +233,29 @@ export class ActorsManager {
 	private _onEventScenePlay(object: Object3D) {
 		this.triggerEventNodes(
 			object,
-			JsType.ON_SCENE_PLAY_STATE
+			JsType.ON_SCENE_PLAY
 			// OnScenePlayStateActorNode.OUTPUT_TRIGGER_NAMES.indexOf(OnScenePlayStateActorNode.OUTPUT_NAME_PLAY)
 		);
 	}
 	private _onEventScenePlayTraverse() {
-		if (!this.scene.nodesController.hasNodesByContextAndType(NodeContext.ACTOR, ActorType.ON_SCENE_PLAY_STATE)) {
-			return;
-		}
+		// if (!this.scene.nodesController.hasNodesByContextAndType(NodeContext.ACTOR, ActorType.ON_SCENE_PLAY_STATE)) {
+		// 	return;
+		// }
 		this.scene.threejsScene().traverse(this._onEventScenePlayBound);
 	}
 	// pause
 	private _onEventScenePauseBound = this._onEventScenePause.bind(this);
 	private _onEventScenePause(object: Object3D) {
-		// this.triggerEventNodes(
-		// 	object,
-		// 	JsType.ON_SCENE_PLAY_STATE,
-		// 	OnScenePlayStateActorNode.OUTPUT_TRIGGER_NAMES.indexOf(OnScenePlayStateActorNode.OUTPUT_NAME_PAUSE)
-		// );
+		this.triggerEventNodes(
+			object,
+			JsType.ON_SCENE_PAUSE
+			// OnScenePlayStateActorNode.OUTPUT_TRIGGER_NAMES.indexOf(OnScenePlayStateActorNode.OUTPUT_NAME_PAUSE)
+		);
 	}
 	private _onEventScenePauseTraverse() {
-		if (!this.scene.nodesController.hasNodesByContextAndType(NodeContext.ACTOR, ActorType.ON_SCENE_PLAY_STATE)) {
-			return;
-		}
+		// if (!this.scene.nodesController.hasNodesByContextAndType(NodeContext.ACTOR, ActorType.ON_SCENE_PLAY_STATE)) {
+		// 	return;
+		// }
 		this.scene.threejsScene().traverse(this._onEventScenePauseBound);
 	}
 	// performanceChange
@@ -285,9 +289,9 @@ export class ActorsManager {
 		// }
 	}
 	private _onEventPerformanceChangeTraverse() {
-		if (!this.scene.nodesController.hasNodesByContextAndType(NodeContext.ACTOR, ActorType.ON_PERFORMANCE_CHANGE)) {
-			return;
-		}
+		// if (!this.scene.nodesController.hasNodesByContextAndType(NodeContext.ACTOR, ActorType.ON_PERFORMANCE_CHANGE)) {
+		// 	return;
+		// }
 		this.scene.threejsScene().traverse(this._onEventPerformanceChangeBound);
 	}
 	//

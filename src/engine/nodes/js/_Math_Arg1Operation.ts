@@ -4,6 +4,8 @@ import {
 	// isJsConnectionPointPrimitive,
 	// ReturnValueTypeByJsConnectionPointType,
 } from '../utils/io/connections/Js';
+import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {LocalFunctionJsDefinition} from './utils/JsDefinition';
 // import {JsNodeTriggerContext} from './_Base';
 // import {Vector2, Vector3, Vector4} from 'three';
 // const tmpV2 = new Vector2();
@@ -16,6 +18,14 @@ interface MathArg1OperationOptions {
 	allowed_in_types?: JsConnectionPointType[];
 }
 // type PrimitiveJsConnectionPointType = JsConnectionPointType.BOOL | JsConnectionPointType.FLOAT;
+const DEFAULT_ALLOWED_TYPES = [
+	JsConnectionPointType.INT,
+	JsConnectionPointType.COLOR,
+	JsConnectionPointType.FLOAT,
+	JsConnectionPointType.VECTOR2,
+	JsConnectionPointType.VECTOR3,
+	JsConnectionPointType.VECTOR4,
+];
 
 export function MathFunctionArg1OperationFactory(
 	type: string,
@@ -23,7 +33,7 @@ export function MathFunctionArg1OperationFactory(
 ): typeof BaseMathFunctionJsNode {
 	const inputPrefix = options.inputPrefix || type;
 	const outputName = options.out || 'val';
-	const allowed_in_types = options.allowed_in_types;
+	const allowed_in_types = options.allowed_in_types || DEFAULT_ALLOWED_TYPES;
 	return class Node extends BaseMathFunctionJsNode {
 		static override type() {
 			return type;
@@ -35,6 +45,85 @@ export function MathFunctionArg1OperationFactory(
 
 			this.io.connection_points.set_expected_input_types_function(this._expectedInputTypes.bind(this));
 			this.io.connection_points.set_expected_output_types_function(this._expectedOutputTypes.bind(this));
+		}
+
+		override setLines(shadersCollectionController: ShadersCollectionController) {
+			const arg0 = this.variableForInput(shadersCollectionController, this._expectedInputName(0));
+			const out = this.jsVarName(this._expectedOutputName(0));
+
+			const inputType = this._expectedInputTypes()[0];
+			const functionName = `${type}_${inputType}`;
+			const functionDefinition = this._functionDefinition(functionName, inputType);
+			const functionCall = this._functionCall(functionName, inputType, arg0);
+			shadersCollectionController.addDefinitions(this, [
+				new LocalFunctionJsDefinition(
+					this,
+					shadersCollectionController,
+					this._expectedInputTypes()[0],
+					functionName,
+					functionDefinition
+				),
+			]);
+
+			shadersCollectionController.addBodyOrComputed(this, [
+				{dataType: inputType, varName: out, value: functionCall},
+			]);
+		}
+		private _functionCall(functionName: string, inputType: JsConnectionPointType, arg0: string) {
+			switch (inputType) {
+				case JsConnectionPointType.INT:
+				case JsConnectionPointType.FLOAT: {
+					return `${functionName}(${arg0})`;
+				}
+				case JsConnectionPointType.COLOR:
+				case JsConnectionPointType.VECTOR2:
+				case JsConnectionPointType.VECTOR3:
+				case JsConnectionPointType.VECTOR4: {
+					return `${functionName}(${arg0})`;
+				}
+			}
+			return `${functionName}(${arg0})`;
+		}
+		private _functionDefinition(functionName: string, inputType: JsConnectionPointType) {
+			switch (inputType) {
+				case JsConnectionPointType.COLOR: {
+					return `function ${functionName}(dest){
+						dest.r = Math.${type}(dest.r);
+						dest.g = Math.${type}(dest.g);
+						dest.b = Math.${type}(dest.b);
+						return dest;
+					}`;
+				}
+				case JsConnectionPointType.INT:
+				case JsConnectionPointType.FLOAT: {
+					return `function ${functionName} = Math.${type};`;
+				}
+				case JsConnectionPointType.VECTOR2: {
+					return `function ${functionName}(dest){
+						dest.x = Math.${type}(dest.x);
+						dest.y = Math.${type}(dest.y);
+						return dest;
+					}`;
+				}
+				case JsConnectionPointType.VECTOR3: {
+					return `function ${functionName}(dest){
+						dest.x = Math.${type}(dest.x);
+						dest.y = Math.${type}(dest.y);
+						dest.z = Math.${type}(dest.z);
+						return dest;
+					}`;
+				}
+				case JsConnectionPointType.VECTOR4: {
+					return `function ${functionName}(dest){
+						dest.x = Math.${type}(dest.x);
+						dest.y = Math.${type}(dest.y);
+						dest.z = Math.${type}(dest.z);
+						dest.w = Math.${type}(dest.w);
+						return dest;
+					}`;
+				}
+			}
+			return `function ${functionName} = Math.${type};`;
 		}
 
 		// protected _applyOperation<T>(arg1: T): any {}

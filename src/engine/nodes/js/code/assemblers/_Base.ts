@@ -53,6 +53,7 @@ interface ITemplateShader {
 }
 export const INSERT_MEMBERS_AFTER = '// insert members';
 export const INSERT_DEFINE_AFTER = '// insert defines';
+export const INSERT_CONSTRUCTOR_AFTER = '// insert after constructor';
 export const INSERT_BODY_AFTER = '// insert body';
 
 const INSERT_MEMBER_AFTER_MAP: Map<ShaderName, string> = new Map([
@@ -62,6 +63,10 @@ const INSERT_MEMBER_AFTER_MAP: Map<ShaderName, string> = new Map([
 const INSERT_DEFINE_AFTER_MAP: Map<ShaderName, string> = new Map([
 	// [ShaderName.VERTEX, '#include <common>'],
 	[ShaderName.FRAGMENT, INSERT_DEFINE_AFTER],
+]);
+const INSERT_CONSTRUCTOR_AFTER_MAP: Map<ShaderName, string> = new Map([
+	// [ShaderName.VERTEX, '#include <common>'],
+	[ShaderName.FRAGMENT, INSERT_CONSTRUCTOR_AFTER],
 ]);
 const INSERT_BODY_AFTER_MAP: Map<ShaderName, string> = new Map([
 	// [ShaderName.VERTEX, '#include <color_vertex>'],
@@ -479,6 +484,9 @@ export abstract class BaseJsShaderAssembler extends TypedAssembler<NodeContext.J
 	protected insertDefineAfter(shaderName: ShaderName): string | undefined {
 		return INSERT_DEFINE_AFTER_MAP.get(shaderName);
 	}
+	protected insertConstructorAfter(shaderName: ShaderName): string | undefined {
+		return INSERT_CONSTRUCTOR_AFTER_MAP.get(shaderName);
+	}
 	protected insertBodyAfter(shaderName: ShaderName): string | undefined {
 		return INSERT_BODY_AFTER_MAP.get(shaderName);
 	}
@@ -495,6 +503,7 @@ export abstract class BaseJsShaderAssembler extends TypedAssembler<NodeContext.J
 	private _replaceTemplate(template: string, shaderName: ShaderName) {
 		const memberLines = this.builder_lines(shaderName, LineType.MEMBER);
 		const constructorLines = this.builder_lines(shaderName, LineType.CONSTRUCTOR);
+		const defineLines = this.builder_lines(shaderName, LineType.DEFINE);
 		// const define = this.builder_lines(shaderName, LineType.DEFINE);
 		// let all_define = function_declaration.concat(define);
 		const body = this.builder_lines(shaderName, LineType.BODY);
@@ -510,10 +519,12 @@ export abstract class BaseJsShaderAssembler extends TypedAssembler<NodeContext.J
 
 		const lineBeforeMember = this.insertMemberAfter(shaderName);
 		const lineBeforeDefine = this.insertDefineAfter(shaderName);
+		const lineBeforeConstructor = this.insertConstructorAfter(shaderName);
 		const lineBeforeBody = this.insertBodyAfter(shaderName);
 		const linesToRemove = this.linesToRemove(shaderName);
 		let lineBeforeMemberFound = false;
 		let lineBeforeDefineFound = false;
+		let lineBeforeConstructorFound = false;
 		let lineBeforeBodyFoundOnPreviousLine = false;
 		let lineBeforeBodyFound = false;
 
@@ -525,13 +536,16 @@ export abstract class BaseJsShaderAssembler extends TypedAssembler<NodeContext.J
 				lineBeforeMemberFound = false;
 			}
 			if (lineBeforeDefineFound == true) {
+				if (defineLines) {
+					this._insertLines(newLines, defineLines);
+				}
+				lineBeforeDefineFound = false;
+			}
+			if (lineBeforeConstructorFound == true) {
 				if (constructorLines) {
 					this._insertLines(newLines, constructorLines);
 				}
-				// if (define) {
-				// 	this._insertLines(newLines, define);
-				// }
-				lineBeforeDefineFound = false;
+				lineBeforeConstructorFound = false;
 			}
 			if (lineBeforeBodyFoundOnPreviousLine == true) {
 				// this._insert_default_body_declarations(new_lines, shaderName)
@@ -559,6 +573,9 @@ export abstract class BaseJsShaderAssembler extends TypedAssembler<NodeContext.J
 
 			if (lineBeforeDefine && templateLine.indexOf(lineBeforeDefine) >= 0) {
 				lineBeforeDefineFound = true;
+			}
+			if (lineBeforeConstructor && templateLine.indexOf(lineBeforeConstructor) >= 0) {
+				lineBeforeConstructorFound = true;
 			}
 			if (lineBeforeMember && templateLine.indexOf(lineBeforeMember) >= 0) {
 				lineBeforeMemberFound = true;

@@ -7,13 +7,20 @@ import {multNumber, multVector, multVectorNumber} from '../../../functions/Mult'
 import {subtractNumber, subtractVector, subtractVectorNumber} from '../../../functions/Subtract';
 
 //
+// import {
+// 	abs,
+// 	acos,
+// 	sin,
+// } from '../../../functions/_Math';
 import {
+	colorToVec3,
 	sizzleVec3XY,
 	sizzleVec3XZ,
 	sizzleVec3YZ,
 	sizzleVec4XYZ,
 	floatToVec3,
 	vec2ToVec3,
+	vec3ToColor,
 	vec3ToVec4,
 } from '../../../functions/conversion';
 import {
@@ -55,6 +62,7 @@ export interface NamedFunctionMap {
 	addNumber: addNumber;
 	addVector: addVector<Vector2 | Vector3 | Vector4>;
 	addVectorNumber: addVectorNumber<Vector2 | Vector3 | Vector4>;
+	colorToVec3: colorToVec3;
 	divideNumber: divideNumber;
 	divideVectorNumber: divideVectorNumber<Vector2 | Vector3 | Vector4>;
 	floatToVec3: floatToVec3;
@@ -100,15 +108,22 @@ export interface NamedFunctionMap {
 	subtractVector: subtractVector<Vector2 | Vector3 | Vector4>;
 	subtractVectorNumber: subtractVectorNumber<Vector2 | Vector3 | Vector4>;
 	vec2ToVec3: vec2ToVec3;
+	vec3ToColor: vec3ToColor;
 	vec3ToVec4: vec3ToVec4;
 }
 
 export class AllNamedFunctionRegister {
 	static run(poly: PolyEngine) {
 		[
+			// Math
+			// abs,
+			// acos,
+			// sin,
+			//
 			addNumber,
 			addVector,
 			addVectorNumber,
+			colorToVec3,
 			divideNumber,
 			divideVectorNumber,
 			floatToVec3,
@@ -154,6 +169,7 @@ export class AllNamedFunctionRegister {
 			subtractVector,
 			subtractVectorNumber,
 			vec2ToVec3,
+			vec3ToColor,
 			vec3ToVec4,
 		].forEach((f) => poly.registerNamedFunction(f));
 	}

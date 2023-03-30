@@ -1,4 +1,4 @@
-import {Vector2, Vector3, Vector4} from 'three';
+import {Color, Vector2, Vector3, Vector4} from 'three';
 import {NamedFunction2, NamedFunction3, NamedFunction4} from './_Base';
 
 //
@@ -116,6 +116,28 @@ export class vec3ToVec4 extends NamedFunction3<[Vector3, number, Vector4]> {
 		target.y = src.y;
 		target.z = src.z;
 		target.w = w;
+		return target;
+	}
+}
+export class vec3ToColor extends NamedFunction2<[Vector3, Color]> {
+	static override type() {
+		return 'vec3ToColor';
+	}
+	func(src: Vector3, target: Color): Color {
+		target.r = src.x;
+		target.g = src.y;
+		target.b = src.z;
+		return target;
+	}
+}
+export class colorToVec3 extends NamedFunction2<[Color, Vector3]> {
+	static override type() {
+		return 'colorToVec3';
+	}
+	func(src: Color, target: Vector3): Vector3 {
+		target.x = src.r;
+		target.y = src.g;
+		target.z = src.b;
 		return target;
 	}
 }

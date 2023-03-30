@@ -205,6 +205,7 @@ export class CodeBuilder {
 		// this.addDefinitions(nodes, shaderName, JsDefinitionType.VARYING, LineType.DEFINE, additionalDefinitions);
 		// this.addDefinitions(nodes, shaderName, JsDefinitionType.ATTRIBUTE, LineType.DEFINE, additionalDefinitions);
 		// this.addDefinitions(nodes, shaderName, JsDefinitionType.INIT, LineType.DEFINE, additionalDefinitions);
+		this.addDefinitions(nodes, shaderName, JsDefinitionType.LOCAL_FUNCTION, LineType.DEFINE, additionalDefinitions);
 		this.addDefinitions(nodes, shaderName, JsDefinitionType.COMPUTED, LineType.MEMBER, additionalDefinitions);
 		this.addDefinitions(nodes, shaderName, JsDefinitionType.CONSTANT, LineType.MEMBER, additionalDefinitions);
 		this.addDefinitions(nodes, shaderName, JsDefinitionType.REF, LineType.MEMBER, additionalDefinitions);

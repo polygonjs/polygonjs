@@ -2,6 +2,8 @@ import {ParamInitValuesTypeMap} from '../../../../params/types/ParamInitValuesTy
 import {ParamType} from '../../../../poly/ParamType';
 
 export enum JsConnectionPointType {
+	ANIMATION_MIXER = 'AnimationMixer',
+	ANIMATION_ACTION = 'AnimationAction',
 	BOOLEAN = 'boolean',
 	COLOR = 'Color',
 	FLOAT = 'float',
@@ -60,6 +62,8 @@ export function isJsConnectionPointVector(type: JsConnectionPointType) {
 //
 //
 export const JS_CONNECTION_POINT_TYPES: Array<JsConnectionPointType> = [
+	JsConnectionPointType.ANIMATION_MIXER,
+	JsConnectionPointType.ANIMATION_ACTION,
 	JsConnectionPointType.BOOLEAN,
 	JsConnectionPointType.COLOR,
 	JsConnectionPointType.FLOAT,
@@ -97,6 +101,8 @@ export const PARAM_CONVERTIBLE_JS_CONNECTION_POINT_TYPES: Array<JsConnectionPoin
 //
 type JSConnectionPointTypeToParamTypeMapGeneric = {[key in JsConnectionPointType]: ParamType | undefined};
 export interface JsIConnectionPointTypeToParamTypeMap extends JSConnectionPointTypeToParamTypeMapGeneric {
+	[JsConnectionPointType.ANIMATION_MIXER]: ParamType.BUTTON;
+	[JsConnectionPointType.ANIMATION_ACTION]: ParamType.BUTTON;
 	[JsConnectionPointType.BOOLEAN]: ParamType.BOOLEAN;
 	[JsConnectionPointType.COLOR]: ParamType.COLOR;
 	[JsConnectionPointType.FLOAT]: ParamType.FLOAT;
@@ -117,6 +123,8 @@ export interface JsIConnectionPointTypeToParamTypeMap extends JSConnectionPointT
 	// [JsConnectionPointType.MAT4]: undefined;
 }
 export const JsConnectionPointTypeToParamTypeMap: JsIConnectionPointTypeToParamTypeMap = {
+	[JsConnectionPointType.ANIMATION_MIXER]: ParamType.BUTTON,
+	[JsConnectionPointType.ANIMATION_ACTION]: ParamType.BUTTON,
 	[JsConnectionPointType.BOOLEAN]: ParamType.BOOLEAN,
 	[JsConnectionPointType.COLOR]: ParamType.COLOR,
 	[JsConnectionPointType.FLOAT]: ParamType.FLOAT,
@@ -185,6 +193,8 @@ export type ConnectionPointInitValueMapGeneric = {
 	[key in JsConnectionPointType]: ParamInitValuesTypeMap[JsIConnectionPointTypeToParamTypeMap[key]];
 };
 export const JsConnectionPointInitValueMap: ConnectionPointInitValueMapGeneric = {
+	[JsConnectionPointType.ANIMATION_ACTION]: null,
+	[JsConnectionPointType.ANIMATION_MIXER]: null,
 	[JsConnectionPointType.BOOLEAN]: false,
 	[JsConnectionPointType.COLOR]: [1, 1, 1],
 	[JsConnectionPointType.FLOAT]: 0,
@@ -214,6 +224,8 @@ export type ConnectionPointComponentsCountMapGeneric = {
 	[key in JsConnectionPointType]: number;
 };
 export const GlConnectionPointComponentsCountMap: ConnectionPointComponentsCountMapGeneric = {
+	[JsConnectionPointType.ANIMATION_ACTION]: 1,
+	[JsConnectionPointType.ANIMATION_MIXER]: 1,
 	[JsConnectionPointType.BOOLEAN]: 1,
 	[JsConnectionPointType.COLOR]: 3,
 	[JsConnectionPointType.FLOAT]: 1,

@@ -6,14 +6,14 @@ import {NetworkChildNodeType} from '../../../../poly/NodeContext';
 const LINE_SUFFIXES = {
 	[LineType.MEMBER]: '',
 	[LineType.CONSTRUCTOR]: '',
-	// [LineType.DEFINE]: ';',
+	[LineType.DEFINE]: '',
 	[LineType.BODY]: ';',
 };
 
 const LINE_PREFIXES = {
 	[LineType.MEMBER]: '',
 	[LineType.CONSTRUCTOR]: '',
-	// [LineType.DEFINE]: '',
+	[LineType.DEFINE]: '',
 	[LineType.BODY]: '	',
 };
 const BLOCK_START_LAST_CHAR = '{';

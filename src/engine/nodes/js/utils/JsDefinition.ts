@@ -5,7 +5,7 @@ import {ShadersCollectionController} from '../code/utils/ShadersCollectionContro
 
 export enum JsDefinitionType {
 	// ATTRIBUTE = 'attribute',
-	// FUNCTION = 'function',
+	LOCAL_FUNCTION = 'localFunction',
 	COMPUTED = 'computed',
 	CONSTANT = 'constant',
 	REF = 'ref',
@@ -55,21 +55,23 @@ export abstract class TypedJsDefinition<T extends JsDefinitionType> {
 // 	}
 // }
 
-// export class FunctionJsDefinition extends TypedJsDefinition<JsDefinitionType.FUNCTION> {
-// 	constructor(
-// 		protected override _node: BaseJsNodeType,
-// 		protected override _name: string,
-// 		private _function: Function
-// 	) {
-// 		super(JsDefinitionType.FUNCTION, JsConnectionPointType.FLOAT, _node, _name);
-// 	}
-// 	get line() {
-// 		return this.name();
-// 	}
-// 	registeredFunction() {
-// 		return this._function;
-// 	}
-// }
+export class LocalFunctionJsDefinition extends TypedJsDefinition<JsDefinitionType.LOCAL_FUNCTION> {
+	constructor(
+		protected override _node: BaseJsNodeType,
+		protected override _shaderCollectionController: ShadersCollectionController,
+		protected override _dataType: JsConnectionPointType,
+		protected override _name: string,
+		protected _functionDefinition: string
+	) {
+		super(JsDefinitionType.LOCAL_FUNCTION, _node, _shaderCollectionController, _dataType, _name);
+	}
+	line() {
+		return this._functionDefinition;
+	}
+	// functionDefinition() {
+	// 	return this._functionDefinition;
+	// }
+}
 
 // export class UniformJsDefinition extends TypedJsDefinition<JsDefinitionType.UNIFORM> {
 // 	constructor(
