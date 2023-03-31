@@ -30,6 +30,41 @@ import {
 	vec3ToColor,
 	vec3ToVec4,
 } from '../../../functions/Conversion';
+import {particlesSystemReset, particlesSystemStepSimulation} from '../../../functions/ParticlesSystem';
+import {
+	// globals
+	physicsWorldReset,
+	physicsWorldStepSimulation,
+	// get shape
+	getPhysicsRBDCapsuleRadius,
+	getPhysicsRBDCapsuleHeight,
+	getPhysicsRBDConeRadius,
+	getPhysicsRBDConeHeight,
+	getPhysicsRBDCuboidSizes,
+	getPhysicsRBDCylinderRadius,
+	getPhysicsRBDCylinderHeight,
+	getPhysicsRBDSphereRadius,
+	// set shape
+	setPhysicsRBDCapsuleProperty,
+	setPhysicsRBDConeProperty,
+	setPhysicsRBDCuboidProperty,
+	setPhysicsRBDCylinderProperty,
+	setPhysicsRBDSphereProperty,
+	// get RBD
+	getPhysicsRBDAngularVelocity,
+	getPhysicsRBDLinearVelocity,
+	getPhysicsRBDAngularDamping,
+	getPhysicsRBDLinearDamping,
+	getPhysicsRBDIsSleeping,
+	getPhysicsRBDIsMoving,
+	// set RBD
+	setPhysicsRBDPosition,
+	setPhysicsRBDRotation,
+	setPhysicsRBDAngularVelocity,
+	setPhysicsRBDLinearVelocity,
+	// set world
+	setPhysicsWorldGravity,
+} from '../../../functions/Physics';
 import {sizzleVec3XY, sizzleVec3XZ, sizzleVec3YZ, sizzleVec4XYZ} from '../../../functions/Sizzle';
 import {
 	globalsTime,
@@ -94,6 +129,20 @@ export interface NamedFunctionMap {
 	getObjectHoveredState: getObjectHoveredState;
 	getObjectProperty: getObjectProperty;
 	getParent: getParent;
+	getPhysicsRBDCapsuleHeight: getPhysicsRBDCapsuleHeight;
+	getPhysicsRBDCapsuleRadius: getPhysicsRBDCapsuleRadius;
+	getPhysicsRBDConeHeight: getPhysicsRBDConeHeight;
+	getPhysicsRBDConeRadius: getPhysicsRBDConeRadius;
+	getPhysicsRBDCuboidSizes: getPhysicsRBDCuboidSizes;
+	getPhysicsRBDCylinderHeight: getPhysicsRBDCylinderHeight;
+	getPhysicsRBDCylinderRadius: getPhysicsRBDCylinderRadius;
+	getPhysicsRBDSphereRadius: getPhysicsRBDSphereRadius;
+	getPhysicsRBDAngularVelocity: getPhysicsRBDAngularVelocity;
+	getPhysicsRBDLinearVelocity: getPhysicsRBDLinearVelocity;
+	getPhysicsRBDAngularDamping: getPhysicsRBDAngularDamping;
+	getPhysicsRBDLinearDamping: getPhysicsRBDLinearDamping;
+	getPhysicsRBDIsSleeping: getPhysicsRBDIsSleeping;
+	getPhysicsRBDIsMoving: getPhysicsRBDIsMoving;
 	globalsTime: globalsTime;
 	globalsTimeDelta: globalsTimeDelta;
 	globalsRaycaster: globalsRaycaster;
@@ -105,6 +154,10 @@ export interface NamedFunctionMap {
 	multNumber: multNumber;
 	multVector: multVector<Vector2 | Vector3 | Vector4>;
 	multVectorNumber: multVectorNumber<Vector2 | Vector3 | Vector4>;
+	particlesSystemReset: particlesSystemReset;
+	particlesSystemStepSimulation: particlesSystemStepSimulation;
+	physicsWorldReset: physicsWorldReset;
+	physicsWorldStepSimulation: physicsWorldStepSimulation;
 	planeSet: planeSet;
 	rayIntersectPlane: rayIntersectPlane;
 	SDFBox: SDFBox;
@@ -123,6 +176,16 @@ export interface NamedFunctionMap {
 	setObjectLookAt: setObjectLookAt;
 	setObjectPosition: setObjectPosition;
 	setObjectScale: setObjectScale;
+	setPhysicsRBDCapsuleProperty: setPhysicsRBDCapsuleProperty;
+	setPhysicsRBDConeProperty: setPhysicsRBDConeProperty;
+	setPhysicsRBDCuboidProperty: setPhysicsRBDCuboidProperty;
+	setPhysicsRBDCylinderProperty: setPhysicsRBDCylinderProperty;
+	setPhysicsRBDSphereProperty: setPhysicsRBDSphereProperty;
+	setPhysicsRBDPosition: setPhysicsRBDPosition;
+	setPhysicsRBDRotation: setPhysicsRBDRotation;
+	setPhysicsRBDAngularVelocity: setPhysicsRBDAngularVelocity;
+	setPhysicsRBDLinearVelocity: setPhysicsRBDLinearVelocity;
+	setPhysicsWorldGravity: setPhysicsWorldGravity;
 	sizzleVec3XY: sizzleVec3XY;
 	sizzleVec3XZ: sizzleVec3XZ;
 	sizzleVec3YZ: sizzleVec3YZ;
@@ -165,6 +228,20 @@ export class AllNamedFunctionRegister {
 			getObjectHoveredState,
 			getObjectProperty,
 			getParent,
+			getPhysicsRBDCapsuleHeight,
+			getPhysicsRBDCapsuleRadius,
+			getPhysicsRBDConeHeight,
+			getPhysicsRBDConeRadius,
+			getPhysicsRBDCuboidSizes,
+			getPhysicsRBDCylinderHeight,
+			getPhysicsRBDCylinderRadius,
+			getPhysicsRBDSphereRadius,
+			getPhysicsRBDAngularVelocity,
+			getPhysicsRBDLinearVelocity,
+			getPhysicsRBDAngularDamping,
+			getPhysicsRBDLinearDamping,
+			getPhysicsRBDIsSleeping,
+			getPhysicsRBDIsMoving,
 			globalsTime,
 			globalsTimeDelta,
 			globalsRaycaster,
@@ -176,7 +253,11 @@ export class AllNamedFunctionRegister {
 			multNumber,
 			multVector,
 			multVectorNumber,
+			particlesSystemReset,
+			particlesSystemStepSimulation,
 			planeSet,
+			physicsWorldReset,
+			physicsWorldStepSimulation,
 			rayIntersectPlane,
 			setObjectPosition,
 			SDFBox,
@@ -194,6 +275,16 @@ export class AllNamedFunctionRegister {
 			setObjectAttribute,
 			setObjectLookAt,
 			setObjectScale,
+			setPhysicsRBDCapsuleProperty,
+			setPhysicsRBDConeProperty,
+			setPhysicsRBDCuboidProperty,
+			setPhysicsRBDCylinderProperty,
+			setPhysicsRBDSphereProperty,
+			setPhysicsRBDPosition,
+			setPhysicsRBDRotation,
+			setPhysicsRBDAngularVelocity,
+			setPhysicsRBDLinearVelocity,
+			setPhysicsWorldGravity,
 			sizzleVec3XY,
 			sizzleVec3XZ,
 			sizzleVec3YZ,

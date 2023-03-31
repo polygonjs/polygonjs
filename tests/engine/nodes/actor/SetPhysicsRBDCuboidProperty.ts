@@ -7,7 +7,7 @@ import {PhysicsRBDCuboidAttribute} from '../../../../src/core/physics/PhysicsAtt
 import {MultAddActorNodeInputName} from '../../../../src/engine/nodes/actor/MultAdd';
 import {ActorConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Actor';
 import {GetPhysicsRBDCuboidPropertyActorNodeInputName} from '../../../../src/engine/nodes/actor/GetPhysicsRBDCuboidProperty';
-import {getPhysicsRBDCuboidSizes} from '../../../../src/core/physics/shapes/RBDCuboid';
+import {_getPhysicsRBDCuboidSizes} from '../../../../src/core/physics/shapes/RBDCuboid';
 import {Vector3} from 'three';
 
 function createPhysicsWorldNodes(node: PhysicsWorldSopNode) {
@@ -62,7 +62,7 @@ QUnit.test('actor/setPhysicsRBDCuboidProperty simple', async (assert) => {
 		onManualTrigger1.p.trigger.pressButton();
 		await CoreSleep.sleep(50);
 		const target = new Vector3();
-		getPhysicsRBDCuboidSizes(object, target);
+		_getPhysicsRBDCuboidSizes(object, target);
 		assert.equal(target.x, 2);
 
 		//
@@ -70,7 +70,7 @@ QUnit.test('actor/setPhysicsRBDCuboidProperty simple', async (assert) => {
 		setPhysicsRBDCuboidProperty1.p.lerp.set(0.5);
 		onManualTrigger1.p.trigger.pressButton();
 		await CoreSleep.sleep(50);
-		getPhysicsRBDCuboidSizes(object, target);
+		_getPhysicsRBDCuboidSizes(object, target);
 		assert.equal(target.x, 3, 'with lerp=0.5');
 
 		//
@@ -86,14 +86,14 @@ QUnit.test('actor/setPhysicsRBDCuboidProperty simple', async (assert) => {
 		multAdd1.params.get('mult')!.set([2, 2, 2]);
 		onManualTrigger1.p.trigger.pressButton();
 		await CoreSleep.sleep(50);
-		getPhysicsRBDCuboidSizes(object, target);
+		_getPhysicsRBDCuboidSizes(object, target);
 		assert.equal(target.x, 6, 'radius x2');
 
 		//
 		setPhysicsRBDCuboidProperty1.setInput(setPhysicsRBDCuboidProperty1.p.sizes.name(), getObjectAttribute1);
 		onManualTrigger1.p.trigger.pressButton();
 		await CoreSleep.sleep(50);
-		getPhysicsRBDCuboidSizes(object, target);
+		_getPhysicsRBDCuboidSizes(object, target);
 		assert.equal(target.x, 1, 'back to original attrib value');
 	});
 });

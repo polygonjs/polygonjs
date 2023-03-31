@@ -12,7 +12,7 @@ import {
 	ACTOR_CONNECTION_POINT_IN_NODE_DEF,
 } from '../utils/io/connections/Actor';
 import {ParamType} from '../../poly/ParamType';
-import {setPhysicsRBDSphereProperty} from '../../../core/physics/shapes/RBDSphere';
+import {_setPhysicsRBDSphereProperty} from '../../../core/physics/shapes/RBDSphere';
 const CONNECTION_OPTIONS = ACTOR_CONNECTION_POINT_IN_NODE_DEF;
 
 class SetPhysicsRBDSpherePropertyActorParamsConfig extends NodeParamsConfig {
@@ -54,7 +54,7 @@ export class SetPhysicsRBDSpherePropertyActorNode extends TypedActorNode<SetPhys
 		const lerp = this._inputValueFromParam<ParamType.FLOAT>(this.p.lerp, context);
 		const updateMatrix = this._inputValueFromParam<ParamType.BOOLEAN>(this.p.updateMatrix, context);
 
-		setPhysicsRBDSphereProperty(Object3D, radius, lerp, updateMatrix);
+		_setPhysicsRBDSphereProperty(Object3D, radius, lerp, updateMatrix);
 
 		this.runTrigger(context);
 	}

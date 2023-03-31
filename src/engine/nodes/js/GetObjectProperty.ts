@@ -14,48 +14,8 @@ import {
 } from '../../../core/reactivity/ObjectPropertyReactivity';
 import {Poly} from '../../Poly';
 import {inputObject3D} from './_BaseObject3D';
-// import {Vector2, Vector3, Vector4} from 'three';
 
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
-// enum GetObjectPropertyJsNodeInputName {
-// 	position = 'position',
-// 	quaternion = 'quaternion',
-// 	scale = 'scale',
-// 	matrix = 'matrix',
-// 	visible = 'visible',
-// 	castShadow = 'castShadow',
-// 	receiveShadow = 'receiveShadow',
-// 	frustumCulled = 'frustumCulled',
-// 	// ptnum = 'ptnum',
-// 	// id = 'id',
-// 	// uuid = 'uuid',
-// 	// name = 'name',
-// 	// quaternion = 'quaternion',
-// 	// rotation = 'rotation',
-// 	up = 'up',
-// 	matrixAutoUpdate = 'matrixAutoUpdate',
-// 	material = 'material',
-// }
-
-// const OBJECT_PROPERTIES: GetObjectPropertyJsNodeInputName[] = [
-// 	GetObjectPropertyJsNodeInputName.position,
-// 	GetObjectPropertyJsNodeInputName.quaternion,
-// 	GetObjectPropertyJsNodeInputName.scale,
-// 	GetObjectPropertyJsNodeInputName.matrix,
-// 	GetObjectPropertyJsNodeInputName.visible,
-// 	GetObjectPropertyJsNodeInputName.castShadow,
-// 	GetObjectPropertyJsNodeInputName.receiveShadow,
-// 	GetObjectPropertyJsNodeInputName.frustumCulled,
-// 	GetObjectPropertyJsNodeInputName.uuid,
-// 	GetObjectPropertyJsNodeInputName.name,
-// 	GetObjectPropertyJsNodeInputName.up,
-// 	GetObjectPropertyJsNodeInputName.matrixAutoUpdate,
-// ];
-// const MATERIAL_OUTPUT = 'material';
-
-// const tmpV2 = new Vector2();
-// const tmpV3 = new Vector3();
-// const tmpV4 = new Vector4();
 export class GetObjectPropertyJsNode extends ParamlessTypedJsNode {
 	static override type() {
 		return 'getObjectProperty';

@@ -107,6 +107,8 @@ export const CATEGORY_JS = {
 	INPUTS: 'inputs',
 	LOGIC: 'logic',
 	MATH: 'math',
+	PARTICLES: 'particles',
+	PHYSICS: 'physics',
 	QUAT: 'quat',
 	SDF_PRIMITIVES_2D: 'SDF prims 2D',
 	SDF_PRIMITIVES: 'SDF prims 3D',

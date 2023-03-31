@@ -9,18 +9,17 @@ import {CoreObject} from './../../../../src/core/geometry/Object';
 import {PhysicsRBDColliderType} from '../../../../src/core/physics/PhysicsAttribute';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {RendererUtils} from '../../../helpers/RendererUtils';
-import {OnScenePlayStateActorNode} from './../../../../src/engine/nodes/actor/OnScenePlayState';
 import {PhysicsWorldSopNode} from './../../../../src/engine/nodes/sop/PhysicsWorld';
 import {SizeComputationMethod} from '../../../../src/engine/operations/sop/PhysicsRBDAttributes';
 import {waitForPhysicsComputedAndMounted} from './physics/PhysicsHelper';
 
 function createPhysicsWorldNodes(node: PhysicsWorldSopNode) {
 	const physicsWorldReset = node.createNode('physicsWorldReset');
-	const onScenePlayState = node.createNode('onScenePlayState');
+	const onScenePause = node.createNode('onScenePause');
 	const physicsWorldStepSimulation = node.createNode('physicsWorldStepSimulation');
 	const onTick = node.createNode('onTick');
 
-	physicsWorldReset.setInput(0, onScenePlayState, OnScenePlayStateActorNode.OUTPUT_NAME_PAUSE);
+	physicsWorldReset.setInput(0, onScenePause);
 	physicsWorldStepSimulation.setInput(0, onTick);
 }
 

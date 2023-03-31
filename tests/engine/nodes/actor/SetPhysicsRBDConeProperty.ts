@@ -6,7 +6,7 @@ import {PhysicsRBDColliderType, PhysicsRBDType} from '../../../../src/core/physi
 import {PhysicsRBDRadiusAttribute} from '../../../../src/core/physics/PhysicsAttribute';
 import {MultAddActorNodeInputName} from '../../../../src/engine/nodes/actor/MultAdd';
 import {ActorConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Actor';
-import {getPhysicsRBDConeRadius} from '../../../../src/core/physics/shapes/RBDCone';
+import {_getPhysicsRBDConeRadius} from '../../../../src/core/physics/shapes/RBDCone';
 import {GetPhysicsRBDConePropertyActorNodeInputName} from '../../../../src/engine/nodes/actor/GetPhysicsRBDConeProperty';
 
 function createPhysicsWorldNodes(node: PhysicsWorldSopNode) {
@@ -59,14 +59,14 @@ QUnit.test('actor/setPhysicsRBDConeProperty simple', async (assert) => {
 		setPhysicsRBDConeProperty1.p.radius.set(2);
 		onManualTrigger1.p.trigger.pressButton();
 		await CoreSleep.sleep(50);
-		assert.equal(getPhysicsRBDConeRadius(object), 2);
+		assert.equal(_getPhysicsRBDConeRadius(object), 2);
 
 		//
 		setPhysicsRBDConeProperty1.p.radius.set(4);
 		setPhysicsRBDConeProperty1.p.lerp.set(0.5);
 		onManualTrigger1.p.trigger.pressButton();
 		await CoreSleep.sleep(50);
-		assert.equal(getPhysicsRBDConeRadius(object), 3, 'with lerp=0.5');
+		assert.equal(_getPhysicsRBDConeRadius(object), 3, 'with lerp=0.5');
 
 		//
 		setPhysicsRBDConeProperty1.setInput(setPhysicsRBDConeProperty1.p.radius.name(), multAdd1);
@@ -79,12 +79,12 @@ QUnit.test('actor/setPhysicsRBDConeProperty simple', async (assert) => {
 		multAdd1.params.get('mult')!.set(2);
 		onManualTrigger1.p.trigger.pressButton();
 		await CoreSleep.sleep(50);
-		assert.equal(getPhysicsRBDConeRadius(object), 6, 'radius x2');
+		assert.equal(_getPhysicsRBDConeRadius(object), 6, 'radius x2');
 
 		//
 		setPhysicsRBDConeProperty1.setInput(setPhysicsRBDConeProperty1.p.radius.name(), getObjectAttribute1);
 		onManualTrigger1.p.trigger.pressButton();
 		await CoreSleep.sleep(50);
-		assert.in_delta(getPhysicsRBDConeRadius(object) || 0, 1, 0.01, 'back to original attrib value');
+		assert.in_delta(_getPhysicsRBDConeRadius(object) || 0, 1, 0.01, 'back to original attrib value');
 	});
 });

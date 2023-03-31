@@ -11,7 +11,7 @@ import {
 	ACTOR_CONNECTION_POINT_IN_NODE_DEF,
 	ReturnValueTypeByActorConnectionPointType,
 } from '../utils/io/connections/Actor';
-import {getPhysicsRBDCapsuleRadius, getPhysicsRBDCapsuleHeight} from '../../../core/physics/shapes/RBDCapsule';
+import {_getPhysicsRBDCapsuleRadius, _getPhysicsRBDCapsuleHeight} from '../../../core/physics/shapes/RBDCapsule';
 import {TypeAssert} from '../../poly/Assert';
 
 const CONNECTION_OPTIONS = ACTOR_CONNECTION_POINT_IN_NODE_DEF;
@@ -60,10 +60,10 @@ export class GetPhysicsRBDCapsulePropertyActorNode extends ParamlessTypedActorNo
 		if (PROPERTIES.includes(outputName as GetPhysicsRBDCapsulePropertyActorNodeInputName)) {
 			switch (outputName) {
 				case GetPhysicsRBDCapsulePropertyActorNodeInputName.radius: {
-					return getPhysicsRBDCapsuleRadius(Object3D) || 0;
+					return _getPhysicsRBDCapsuleRadius(Object3D) || 0;
 				}
 				case GetPhysicsRBDCapsulePropertyActorNodeInputName.height: {
-					return getPhysicsRBDCapsuleHeight(Object3D) || 0;
+					return _getPhysicsRBDCapsuleHeight(Object3D) || 0;
 				}
 			}
 			TypeAssert.unreachable(outputName);

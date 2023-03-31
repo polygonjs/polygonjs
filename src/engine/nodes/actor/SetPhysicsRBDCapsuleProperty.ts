@@ -12,7 +12,7 @@ import {
 	ACTOR_CONNECTION_POINT_IN_NODE_DEF,
 } from '../utils/io/connections/Actor';
 import {ParamType} from '../../poly/ParamType';
-import {setPhysicsRBDCapsuleProperty} from '../../../core/physics/shapes/RBDCapsule';
+import {_setPhysicsRBDCapsuleProperty} from '../../../core/physics/shapes/RBDCapsule';
 const CONNECTION_OPTIONS = ACTOR_CONNECTION_POINT_IN_NODE_DEF;
 
 // Note:
@@ -58,7 +58,7 @@ export class SetPhysicsRBDCapsulePropertyActorNode extends TypedActorNode<SetPhy
 		const lerp = this._inputValueFromParam<ParamType.FLOAT>(this.p.lerp, context);
 		const updateMatrix = this._inputValueFromParam<ParamType.BOOLEAN>(this.p.updateMatrix, context);
 
-		setPhysicsRBDCapsuleProperty(Object3D, scale, lerp, updateMatrix);
+		_setPhysicsRBDCapsuleProperty(Object3D, scale, lerp, updateMatrix);
 
 		this.runTrigger(context);
 	}

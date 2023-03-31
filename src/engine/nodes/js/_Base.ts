@@ -19,7 +19,7 @@ import {ColorParam} from '../../params/Color';
 import {BooleanParam} from '../../params/Boolean';
 import {ThreeToJs} from '../../../core/ThreeToJs';
 import {ParamsEditableStateController} from '../utils/io/ParamsEditableStateController';
-import {Color, Vector2, Vector3, Vector4} from 'three';
+import {Color, Quaternion, Vector2, Vector3, Vector4} from 'three';
 import {CoreString} from '../../../core/String';
 import {BaseParamType} from '../../params/_Base';
 import {EvaluatorEventData} from './code/assemblers/actor/Evaluator';
@@ -63,9 +63,14 @@ export function createVariableFromParam(param: ColorParam | Vector2Param | Vecto
 	if (param instanceof Vector3Param) {
 		return new Vector3();
 	}
-	// if (param instanceof Vector4Param) {
+	if (param instanceof Vector4Param) {
+		if (param.options.asQuaternion()) {
+			return new Quaternion();
+		} else {
+			return new Vector4();
+		}
+	}
 	return new Vector4();
-	// }
 }
 export class TypedJsNode<K extends NodeParamsConfig> extends TypedNode<NodeContext.JS, K> {
 	static override context(): NodeContext {

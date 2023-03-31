@@ -224,8 +224,14 @@ export abstract class BaseCoreObject<T extends CoreObjectType> extends CoreEntit
 	boundingBox(target: Box3) {
 		target.makeEmpty();
 	}
+	geometryBoundingBox(target: Box3) {
+		this.boundingBox(target);
+	}
 	boundingSphere(target: Sphere) {
 		target.makeEmpty();
+	}
+	geometryBoundingSphere(target: Sphere) {
+		this.boundingSphere(target);
 	}
 	static attribValue<T extends CoreObjectType>(
 		object: ObjectContent<T>,

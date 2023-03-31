@@ -21,14 +21,14 @@ export function createPhysicsCylinder(PhysicsLib: PhysicsLib, object: Object3D) 
 	return;
 }
 
-export function getPhysicsRBDCylinderHeight(object: Object3D): number | undefined {
+export function _getPhysicsRBDCylinderHeight(object: Object3D): number | undefined {
 	return getPhysicsRBDHeight(EXPECTED_TYPE, object);
 }
-export function getPhysicsRBDCylinderRadius(object: Object3D): number | undefined {
+export function _getPhysicsRBDCylinderRadius(object: Object3D): number | undefined {
 	return getPhysicsRBDRadius(EXPECTED_TYPE, object);
 }
 
-export function setPhysicsRBDCylinderProperty(
+export function _setPhysicsRBDCylinderProperty(
 	object: Object3D,
 	targetRadius: number,
 	targetHeight: number,

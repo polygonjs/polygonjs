@@ -12,7 +12,7 @@ import {
 	ACTOR_CONNECTION_POINT_IN_NODE_DEF,
 } from '../utils/io/connections/Actor';
 import {ParamType} from '../../poly/ParamType';
-import {setPhysicsRBDCuboidProperty} from '../../../core/physics/shapes/RBDCuboid';
+import {_setPhysicsRBDCuboidProperty} from '../../../core/physics/shapes/RBDCuboid';
 const CONNECTION_OPTIONS = ACTOR_CONNECTION_POINT_IN_NODE_DEF;
 
 class SetPhysicsRBDCuboidPropertyActorParamsConfig extends NodeParamsConfig {
@@ -57,7 +57,7 @@ export class SetPhysicsRBDCuboidPropertyActorNode extends TypedActorNode<SetPhys
 		const lerp = this._inputValueFromParam<ParamType.FLOAT>(this.p.lerp, context);
 		const updateMatrix = this._inputValueFromParam<ParamType.BOOLEAN>(this.p.updateMatrix, context);
 
-		setPhysicsRBDCuboidProperty(Object3D, sizes, size, lerp, updateMatrix);
+		_setPhysicsRBDCuboidProperty(Object3D, sizes, size, lerp, updateMatrix);
 
 		this.runTrigger(context);
 	}

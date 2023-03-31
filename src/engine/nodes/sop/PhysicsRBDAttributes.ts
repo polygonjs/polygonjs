@@ -32,6 +32,7 @@ import {isBooleanTrue} from '../../../core/Type';
 import {BooleanParam} from '../../params/Boolean';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 import {CoreObjectType, ObjectContent} from '../../../core/geometry/ObjectContent';
+import {CoreObject} from '../../../core/geometry/Object';
 const tmpBox = new Box3();
 const tmpSphere = new Sphere();
 const DEFAULT = PhysicsRBDAttributesSopOperation.DEFAULT_PARAMS;
@@ -246,7 +247,7 @@ export class PhysicsRBDAttributesSopNode extends TypedSopNode<PhysicsRBDAttribut
 		const RBDType = this.RBDType();
 		const colliderType = this.colliderType();
 		const sizeMethod = this.sizeMethod();
-		const coreObjects = coreGroup.allCoreObjects();
+		const coreObjects = coreGroup.threejsCoreObjects();
 		for (let coreObject of coreObjects) {
 			const object = coreObject.object();
 			CorePhysicsAttribute.setRBDType(object, RBDType);
@@ -348,7 +349,7 @@ export class PhysicsRBDAttributesSopNode extends TypedSopNode<PhysicsRBDAttribut
 	protected _applyColliderType(
 		colliderType: PhysicsRBDColliderType,
 		sizeMethod: SizeComputationMethod,
-		coreObjects: BaseCoreObject<CoreObjectType>[],
+		coreObjects: CoreObject[], //BaseCoreObject<CoreObjectType>[],
 		promises: Array<Promise<void>>
 	) {
 		switch (colliderType) {
@@ -356,7 +357,7 @@ export class PhysicsRBDAttributesSopNode extends TypedSopNode<PhysicsRBDAttribut
 				switch (sizeMethod) {
 					case SizeComputationMethod.AUTO: {
 						for (let coreObject of coreObjects) {
-							coreObject.boundingBox(tmpBox);
+							coreObject.geometryBoundingBox(tmpBox);
 							tmpBox.getSize(tmpV3);
 							CorePhysicsAttribute.setCuboidSizes(coreObject.object(), tmpV3);
 							CorePhysicsAttribute.setCuboidSize(coreObject.object(), 1);
@@ -388,7 +389,7 @@ export class PhysicsRBDAttributesSopNode extends TypedSopNode<PhysicsRBDAttribut
 				switch (sizeMethod) {
 					case SizeComputationMethod.AUTO: {
 						for (let coreObject of coreObjects) {
-							coreObject.boundingSphere(tmpSphere);
+							coreObject.geometryBoundingSphere(tmpSphere);
 							const radius = tmpSphere.radius;
 							CorePhysicsAttribute.setRadius(coreObject.object(), radius);
 						}
@@ -412,7 +413,7 @@ export class PhysicsRBDAttributesSopNode extends TypedSopNode<PhysicsRBDAttribut
 				switch (sizeMethod) {
 					case SizeComputationMethod.AUTO: {
 						for (let coreObject of coreObjects) {
-							coreObject.boundingBox(tmpBox);
+							coreObject.geometryBoundingBox(tmpBox);
 							tmpBox.getSize(tmpV3);
 							const radius = 0.5 * tmpV3.x;
 							const height = tmpV3.y - 2 * radius;
@@ -447,7 +448,7 @@ export class PhysicsRBDAttributesSopNode extends TypedSopNode<PhysicsRBDAttribut
 				switch (sizeMethod) {
 					case SizeComputationMethod.AUTO: {
 						for (let coreObject of coreObjects) {
-							coreObject.boundingBox(tmpBox);
+							coreObject.geometryBoundingBox(tmpBox);
 							tmpBox.getSize(tmpV3);
 							CorePhysicsAttribute.setHeight(coreObject.object(), tmpV3.y);
 							CorePhysicsAttribute.setRadius(coreObject.object(), 0.5 * tmpV3.x);

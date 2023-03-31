@@ -4,7 +4,7 @@ import {PhysicsWorldSopNode} from '../../../../src/engine/nodes/sop/PhysicsWorld
 import {RendererUtils} from '../../../helpers/RendererUtils';
 import {PhysicsRBDColliderType, PhysicsRBDType} from '../../../../src/core/physics/PhysicsAttribute';
 import {PhysicsRBDRadiusAttribute} from '../../../../src/core/physics/PhysicsAttribute';
-import {getPhysicsRBDSphereRadius} from '../../../../src/core/physics/shapes/RBDSphere';
+import {_getPhysicsRBDSphereRadius} from '../../../../src/core/physics/shapes/RBDSphere';
 import {MultAddActorNodeInputName} from '../../../../src/engine/nodes/actor/MultAdd';
 import {GetPhysicsRBDSpherePropertyActorNodeInputName} from '../../../../src/engine/nodes/actor/GetPhysicsRBDSphereProperty';
 import {ActorConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Actor';
@@ -60,14 +60,14 @@ QUnit.test('actor/setPhysicsRBDSphereProperty simple', async (assert) => {
 		setPhysicsRBDSphereProperty1.p.radius.set(2);
 		onManualTrigger1.p.trigger.pressButton();
 		await CoreSleep.sleep(50);
-		assert.equal(getPhysicsRBDSphereRadius(object), 2);
+		assert.equal(_getPhysicsRBDSphereRadius(object), 2);
 
 		//
 		setPhysicsRBDSphereProperty1.p.radius.set(4);
 		setPhysicsRBDSphereProperty1.p.lerp.set(0.5);
 		onManualTrigger1.p.trigger.pressButton();
 		await CoreSleep.sleep(50);
-		assert.equal(getPhysicsRBDSphereRadius(object), 3, 'with lerp=0.5');
+		assert.equal(_getPhysicsRBDSphereRadius(object), 3, 'with lerp=0.5');
 
 		//
 		setPhysicsRBDSphereProperty1.setInput(setPhysicsRBDSphereProperty1.p.radius.name(), multAdd1);
@@ -80,12 +80,12 @@ QUnit.test('actor/setPhysicsRBDSphereProperty simple', async (assert) => {
 		multAdd1.params.get('mult')!.set(2);
 		onManualTrigger1.p.trigger.pressButton();
 		await CoreSleep.sleep(50);
-		assert.equal(getPhysicsRBDSphereRadius(object), 6, 'radius x2');
+		assert.equal(_getPhysicsRBDSphereRadius(object), 6, 'radius x2');
 
 		//
 		setPhysicsRBDSphereProperty1.setInput(setPhysicsRBDSphereProperty1.p.radius.name(), getObjectAttribute1);
 		onManualTrigger1.p.trigger.pressButton();
 		await CoreSleep.sleep(50);
-		assert.in_delta(getPhysicsRBDSphereRadius(object) || 0, 1, 0.001, 'back to original attrib value');
+		assert.in_delta(_getPhysicsRBDSphereRadius(object) || 0, 1, 0.001, 'back to original attrib value');
 	});
 });

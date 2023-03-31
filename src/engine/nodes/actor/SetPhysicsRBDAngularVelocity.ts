@@ -12,7 +12,7 @@ import {
 	ACTOR_CONNECTION_POINT_IN_NODE_DEF,
 } from '../utils/io/connections/Actor';
 import {ParamType} from '../../poly/ParamType';
-import {setPhysicsRBDAngularVelocity} from '../../../core/physics/PhysicsRBD';
+import {_setPhysicsRBDAngularVelocity} from '../../../core/physics/PhysicsRBD';
 const CONNECTION_OPTIONS = ACTOR_CONNECTION_POINT_IN_NODE_DEF;
 
 class SetPhysicsRBDAngularVelocityActorParamsConfig extends NodeParamsConfig {
@@ -51,7 +51,7 @@ export class SetPhysicsRBDAngularVelocityActorNode extends TypedActorNode<SetPhy
 		const position = this._inputValueFromParam<ParamType.VECTOR3>(this.p.velocity, context);
 		const lerp = this._inputValueFromParam<ParamType.FLOAT>(this.p.lerp, context);
 
-		setPhysicsRBDAngularVelocity(Object3D, position, lerp);
+		_setPhysicsRBDAngularVelocity(Object3D, position, lerp);
 
 		this.runTrigger(context);
 	}

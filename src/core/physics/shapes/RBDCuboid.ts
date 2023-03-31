@@ -9,8 +9,13 @@ import {
 import {_getRBD} from '../PhysicsRBD';
 import {PhysicsLib} from '../CorePhysics';
 import {CoreObject} from '../../geometry/Object';
+import {touchRBDProperty} from '../../reactivity/RBDPropertyReactivity';
 
 const EXPECTED_TYPE = PhysicsRBDColliderType.CUBOID;
+
+export enum RBDCuboidProperty {
+	SIZES = 'sizes',
+}
 
 const tmp = new Vector3();
 let _currentSizes = new Vector3();
@@ -48,7 +53,7 @@ export function currentSizes(object: Object3D, collider: Collider, target: Vecto
 	}
 }
 
-export function getPhysicsRBDCuboidSizes(object: Object3D, target: Vector3): void {
+export function _getPhysicsRBDCuboidSizes(object: Object3D, target: Vector3): void {
 	const body = _getRBD(object);
 	if (!body) {
 		console.warn('no rbd found');
@@ -65,7 +70,7 @@ export function getPhysicsRBDCuboidSizes(object: Object3D, target: Vector3): voi
 	currentSizes(object, collider, target);
 }
 
-export function setPhysicsRBDCuboidProperty(
+export function _setPhysicsRBDCuboidProperty(
 	object: Object3D,
 	targetSizes: Vector3,
 	targetSize: number,
@@ -98,6 +103,7 @@ export function setPhysicsRBDCuboidProperty(
 		}
 		// update radius on shape and object
 		CoreObject.setAttribute(object, attributeSizesLive, _targetSizes);
+		touchRBDProperty(object, RBDCuboidProperty.SIZES);
 		// update scale
 		object.scale.copy(_targetSizes).divide(_originalSizes);
 		if (updateObjectMatrix) {

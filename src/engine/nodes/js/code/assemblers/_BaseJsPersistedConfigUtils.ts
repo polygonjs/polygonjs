@@ -1,11 +1,12 @@
-import {Color, Vector2, Vector3, Vector4, Plane, Ray} from 'three';
+import {Color, Vector2, Vector3, Vector4, Plane, Ray, Quaternion} from 'three';
 import {Number2, Number3, Number4} from '../../../../../types/GlobalTypes';
 import {TypeAssert} from '../../../../poly/Assert';
-export type RegisterableVariable = Color | Plane | Ray | Vector2 | Vector3 | Vector4;
+export type RegisterableVariable = Color | Plane | Quaternion | Ray | Vector2 | Vector3 | Vector4;
 
 export enum SerializedVariableType {
 	Color = 'Color',
 	Plane = 'Plane',
+	Quaternion = 'Quaternion',
 	Ray = 'Ray',
 	Vector2 = 'Vector2',
 	Vector3 = 'Vector3',
@@ -15,6 +16,7 @@ export enum SerializedVariableType {
 interface SerializedDataByType {
 	[SerializedVariableType.Color]: Number3;
 	[SerializedVariableType.Plane]: {normal: Number3; constant: number};
+	[SerializedVariableType.Quaternion]: Number4;
 	[SerializedVariableType.Ray]: {origin: Number3; direction: Number3};
 	[SerializedVariableType.Vector2]: Number2;
 	[SerializedVariableType.Vector3]: Number3;
@@ -23,6 +25,7 @@ interface SerializedDataByType {
 interface VariableByType {
 	[SerializedVariableType.Color]: Color;
 	[SerializedVariableType.Plane]: Plane;
+	[SerializedVariableType.Quaternion]: Quaternion;
 	[SerializedVariableType.Ray]: Ray;
 	[SerializedVariableType.Vector2]: Vector2;
 	[SerializedVariableType.Vector3]: Vector3;
@@ -51,6 +54,13 @@ export function serializeVariable<T extends SerializedVariableType>(
 				normal: variable.normal.toArray() as Number3,
 				constant: variable.constant,
 			},
+		};
+		return data as SerializedVariable<T>;
+	}
+	if (variable instanceof Quaternion) {
+		const data: SerializedVariable<SerializedVariableType.Quaternion> = {
+			type: SerializedVariableType.Quaternion,
+			data: variable.toArray() as Number4,
 		};
 		return data as SerializedVariable<T>;
 	}
@@ -113,6 +123,12 @@ export function deserializeVariable<T extends SerializedVariableType>(
 			plane.normal.set(...data.normal);
 			plane.constant = data.constant;
 			return plane as VariableByType[T];
+		}
+		case SerializedVariableType.Quaternion: {
+			const data = (serialized as SerializedVariable<SerializedVariableType.Quaternion>).data;
+			const vector = new Quaternion();
+			vector.set(...data);
+			return vector as VariableByType[T];
 		}
 		case SerializedVariableType.Ray: {
 			const data = (serialized as SerializedVariable<SerializedVariableType.Ray>).data;

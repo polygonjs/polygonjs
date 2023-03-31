@@ -54,6 +54,7 @@ const COLOR_CONVERSION = 'conversion';
 const SEPARATOR_BEFORE_OPTION = 'separatorBefore';
 const SEPARATOR_AFTER_OPTION = 'separatorAfter';
 const JOIN_TO_PREVIOUS_PARAM = 'joinToPreviousParam';
+const AS_QUATERNION = 'asQuaternion';
 
 export const PARAM_OPTION_NAMES = {
 	CALLBACK_OPTION,
@@ -220,7 +221,11 @@ interface VectorParamOptions
 		ComputeOnDirtyParamOptions {}
 export interface Vector2ParamOptions extends VectorParamOptions {}
 export interface Vector3ParamOptions extends VectorParamOptions {}
-export interface Vector4ParamOptions extends VectorParamOptions {}
+
+interface QuaternionOptions {
+	asQuaternion?: boolean;
+}
+export interface Vector4ParamOptions extends VectorParamOptions, QuaternionOptions {}
 
 export interface ParamOptions
 	extends NumberParamOptions,
@@ -234,7 +239,8 @@ export interface ParamOptions
 		StringParamOptions,
 		NodePathParamOptions,
 		ParamPathParamOptions,
-		LabelVisibilityParamOptions {
+		LabelVisibilityParamOptions,
+		QuaternionOptions {
 	texture?: {
 		env?: boolean;
 	};
@@ -611,6 +617,9 @@ export class OptionsController {
 	}
 	step(): number | undefined {
 		return this._options[STEP_OPTION];
+	}
+	asQuaternion() {
+		return this._options[AS_QUATERNION] == true;
 	}
 
 	private rangeLocked(): Boolean2 {

@@ -4,7 +4,7 @@ import {PhysicsWorldSopNode} from '../../../../src/engine/nodes/sop/PhysicsWorld
 import {RendererUtils} from '../../../helpers/RendererUtils';
 import {PhysicsRBDColliderType, PhysicsRBDType} from '../../../../src/core/physics/PhysicsAttribute';
 import {PhysicsRBDRadiusAttribute} from '../../../../src/core/physics/PhysicsAttribute';
-import {getPhysicsRBDCapsuleRadius} from '../../../../src/core/physics/shapes/RBDCapsule';
+import {_getPhysicsRBDCapsuleRadius} from '../../../../src/core/physics/shapes/RBDCapsule';
 import {MultAddActorNodeInputName} from '../../../../src/engine/nodes/actor/MultAdd';
 import {GetPhysicsRBDCapsulePropertyActorNodeInputName} from '../../../../src/engine/nodes/actor/GetPhysicsRBDCapsuleProperty';
 import {ActorConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Actor';
@@ -54,21 +54,21 @@ QUnit.test('actor/setPhysicsRBDCapsuleProperty simple', async (assert) => {
 	await RendererUtils.withViewer({cameraNode}, async ({viewer, element}) => {
 		scene.play();
 		await CoreSleep.sleep(100);
-		assert.in_delta(getPhysicsRBDCapsuleRadius(object) || 0, 0.2, 0.001, 'original attrib value');
+		assert.in_delta(_getPhysicsRBDCapsuleRadius(object) || 0, 0.2, 0.001, 'original attrib value');
 		assert.less_than(object.position.y, -0.01, 'object has gone down');
 
 		//
 		setPhysicsRBDCapsuleProperty1.p.scale.set(2);
 		onManualTrigger1.p.trigger.pressButton();
 		await CoreSleep.sleep(50);
-		assert.equal(getPhysicsRBDCapsuleRadius(object), 2);
+		assert.equal(_getPhysicsRBDCapsuleRadius(object), 2);
 
 		//
 		setPhysicsRBDCapsuleProperty1.p.scale.set(4);
 		setPhysicsRBDCapsuleProperty1.p.lerp.set(0.5);
 		onManualTrigger1.p.trigger.pressButton();
 		await CoreSleep.sleep(50);
-		assert.equal(getPhysicsRBDCapsuleRadius(object), 3, 'with lerp=0.5');
+		assert.equal(_getPhysicsRBDCapsuleRadius(object), 3, 'with lerp=0.5');
 
 		//
 		setPhysicsRBDCapsuleProperty1.setInput(setPhysicsRBDCapsuleProperty1.p.scale.name(), multAdd1);
@@ -81,12 +81,12 @@ QUnit.test('actor/setPhysicsRBDCapsuleProperty simple', async (assert) => {
 		multAdd1.params.get('mult')!.set(2);
 		onManualTrigger1.p.trigger.pressButton();
 		await CoreSleep.sleep(50);
-		assert.equal(getPhysicsRBDCapsuleRadius(object), 6, 'radius x2');
+		assert.equal(_getPhysicsRBDCapsuleRadius(object), 6, 'radius x2');
 
 		//
 		setPhysicsRBDCapsuleProperty1.setInput(setPhysicsRBDCapsuleProperty1.p.scale.name(), getObjectAttribute1);
 		onManualTrigger1.p.trigger.pressButton();
 		await CoreSleep.sleep(50);
-		assert.in_delta(getPhysicsRBDCapsuleRadius(object) || 0, 0.2, 0.001, 'back to original attrib value');
+		assert.in_delta(_getPhysicsRBDCapsuleRadius(object) || 0, 0.2, 0.001, 'back to original attrib value');
 	});
 });

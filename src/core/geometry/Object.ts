@@ -109,6 +109,19 @@ export class CoreObject extends BaseCoreObject<CoreObjectType.THREEJS> {
 	override boundingBox(target: Box3) {
 		target.setFromObject(this._object, COMPUTE_PRECISE_BOUNDS);
 	}
+	override geometryBoundingBox(target: Box3) {
+		const geometry = this.geometry();
+		if (geometry) {
+			if (!geometry.boundingBox) {
+				geometry.computeBoundingBox();
+			}
+			if (geometry.boundingBox) {
+				target.copy(geometry.boundingBox);
+			}
+		} else {
+			target.makeEmpty();
+		}
+	}
 	override boundingSphere(target: Sphere) {
 		const geometry = (this._object as Mesh).geometry;
 		if (!geometry) {

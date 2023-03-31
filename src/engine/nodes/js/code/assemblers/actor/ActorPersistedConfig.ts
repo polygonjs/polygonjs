@@ -7,7 +7,7 @@ import {
 	serializeVariable,
 	deserializeVariable,
 } from '../_BaseJsPersistedConfigUtils';
-import {ActorJsSopNode} from '../../../../sop/ActorJs';
+import {BaseActorSopNodeType} from '../../../../sop/_BaseActor';
 import {Poly} from '../../../../../Poly';
 import {NamedFunctionMap} from '../../../../../poly/registers/functions/All';
 import {JsParamConfig, JsParamConfigJSON} from '../../utils/JsParamConfig';
@@ -28,7 +28,7 @@ export interface PersistedConfigBaseSDFData extends PersistedConfigWithShaders {
 }
 
 export class ActorPersistedConfig extends BasePersistedConfig {
-	constructor(protected override node: ActorJsSopNode) {
+	constructor(protected override node: BaseActorSopNodeType) {
 		super(node);
 	}
 	override async toData(): Promise<PersistedConfigBaseSDFData | undefined> {

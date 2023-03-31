@@ -9,6 +9,12 @@ import {
 } from '../PhysicsAttribute';
 import {_getRBD} from '../PhysicsRBD';
 import {CoreObject} from '../../geometry/Object';
+import {touchRBDProperty} from '../../reactivity/RBDPropertyReactivity';
+
+export enum RBDCommonProperty {
+	RADIUS = 'radius',
+	HEIGHT = 'height',
+}
 
 const attributeHeightLive = physicsAttribNameLive(PhysicsRBDHeightAttribute.HEIGHT);
 const attributeRadiusLive = physicsAttribNameLive(PhysicsRBDRadiusAttribute.RADIUS);
@@ -106,6 +112,8 @@ export function setPhysicsRBDHeightRadiusProperty(
 		collider.setRadius(targetRadius);
 		CoreObject.setAttribute(object, attributeHeightLive, targetHeight);
 		CoreObject.setAttribute(object, attributeRadiusLive, targetRadius);
+		touchRBDProperty(object, RBDCommonProperty.HEIGHT);
+		touchRBDProperty(object, RBDCommonProperty.RADIUS);
 		// update scale
 		const scaleXZ = targetRadius / originalRadiusAttrib;
 		object.scale.set(scaleXZ, targetHeight / originalHeightAttrib, scaleXZ);

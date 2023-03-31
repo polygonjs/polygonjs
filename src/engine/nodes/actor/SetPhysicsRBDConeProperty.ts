@@ -12,7 +12,7 @@ import {
 	ACTOR_CONNECTION_POINT_IN_NODE_DEF,
 } from '../utils/io/connections/Actor';
 import {ParamType} from '../../poly/ParamType';
-import {setPhysicsRBDConeProperty} from '../../../core/physics/shapes/RBDCone';
+import {_setPhysicsRBDConeProperty} from '../../../core/physics/shapes/RBDCone';
 const CONNECTION_OPTIONS = ACTOR_CONNECTION_POINT_IN_NODE_DEF;
 
 class SetPhysicsRBDConePropertyActorParamsConfig extends NodeParamsConfig {
@@ -57,7 +57,7 @@ export class SetPhysicsRBDConePropertyActorNode extends TypedActorNode<SetPhysic
 		const lerp = this._inputValueFromParam<ParamType.FLOAT>(this.p.lerp, context);
 		const updateMatrix = this._inputValueFromParam<ParamType.BOOLEAN>(this.p.updateMatrix, context);
 
-		setPhysicsRBDConeProperty(Object3D, radius, height, lerp, updateMatrix);
+		_setPhysicsRBDConeProperty(Object3D, radius, height, lerp, updateMatrix);
 
 		this.runTrigger(context);
 	}

@@ -12,7 +12,7 @@ import {
 	ACTOR_CONNECTION_POINT_IN_NODE_DEF,
 } from '../utils/io/connections/Actor';
 import {ParamType} from '../../poly/ParamType';
-import {setPhysicsRBDCylinderProperty} from '../../../core/physics/shapes/RBDCylinder';
+import {_setPhysicsRBDCylinderProperty} from '../../../core/physics/shapes/RBDCylinder';
 const CONNECTION_OPTIONS = ACTOR_CONNECTION_POINT_IN_NODE_DEF;
 
 class SetPhysicsRBDCylinderPropertyActorParamsConfig extends NodeParamsConfig {
@@ -57,7 +57,7 @@ export class SetPhysicsRBDCylinderPropertyActorNode extends TypedActorNode<SetPh
 		const lerp = this._inputValueFromParam<ParamType.FLOAT>(this.p.lerp, context);
 		const updateMatrix = this._inputValueFromParam<ParamType.BOOLEAN>(this.p.updateMatrix, context);
 
-		setPhysicsRBDCylinderProperty(Object3D, radius, height, lerp, updateMatrix);
+		_setPhysicsRBDCylinderProperty(Object3D, radius, height, lerp, updateMatrix);
 
 		this.runTrigger(context);
 	}

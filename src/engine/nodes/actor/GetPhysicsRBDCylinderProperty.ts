@@ -11,7 +11,7 @@ import {
 	ACTOR_CONNECTION_POINT_IN_NODE_DEF,
 	ReturnValueTypeByActorConnectionPointType,
 } from '../utils/io/connections/Actor';
-import {getPhysicsRBDCylinderHeight, getPhysicsRBDCylinderRadius} from '../../../core/physics/shapes/RBDCylinder';
+import {_getPhysicsRBDCylinderHeight, _getPhysicsRBDCylinderRadius} from '../../../core/physics/shapes/RBDCylinder';
 import {TypeAssert} from '../../poly/Assert';
 
 const CONNECTION_OPTIONS = ACTOR_CONNECTION_POINT_IN_NODE_DEF;
@@ -61,10 +61,10 @@ export class GetPhysicsRBDCylinderPropertyActorNode extends ParamlessTypedActorN
 		if (PROPERTIES.includes(outputName as GetPhysicsRBDCylinderPropertyActorNodeInputName)) {
 			switch (outputName) {
 				case GetPhysicsRBDCylinderPropertyActorNodeInputName.radius: {
-					return getPhysicsRBDCylinderRadius(Object3D);
+					return _getPhysicsRBDCylinderRadius(Object3D);
 				}
 				case GetPhysicsRBDCylinderPropertyActorNodeInputName.height: {
-					return getPhysicsRBDCylinderHeight(Object3D);
+					return _getPhysicsRBDCylinderHeight(Object3D);
 				}
 			}
 			TypeAssert.unreachable(outputName);

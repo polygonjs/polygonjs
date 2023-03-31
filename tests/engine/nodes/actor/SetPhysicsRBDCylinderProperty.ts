@@ -6,7 +6,7 @@ import {PhysicsRBDColliderType, PhysicsRBDType} from '../../../../src/core/physi
 import {PhysicsRBDRadiusAttribute} from '../../../../src/core/physics/PhysicsAttribute';
 import {MultAddActorNodeInputName} from '../../../../src/engine/nodes/actor/MultAdd';
 import {ActorConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Actor';
-import {getPhysicsRBDCylinderRadius} from '../../../../src/core/physics/shapes/RBDCylinder';
+import {_getPhysicsRBDCylinderRadius} from '../../../../src/core/physics/shapes/RBDCylinder';
 import {GetPhysicsRBDCylinderPropertyActorNodeInputName} from '../../../../src/engine/nodes/actor/GetPhysicsRBDCylinderProperty';
 
 function createPhysicsWorldNodes(node: PhysicsWorldSopNode) {
@@ -59,14 +59,14 @@ QUnit.test('actor/setPhysicsRBDCylinderProperty simple', async (assert) => {
 		setPhysicsRBDCylinderProperty1.p.radius.set(2);
 		onManualTrigger1.p.trigger.pressButton();
 		await CoreSleep.sleep(50);
-		assert.equal(getPhysicsRBDCylinderRadius(object), 2);
+		assert.equal(_getPhysicsRBDCylinderRadius(object), 2);
 
 		//
 		setPhysicsRBDCylinderProperty1.p.radius.set(4);
 		setPhysicsRBDCylinderProperty1.p.lerp.set(0.5);
 		onManualTrigger1.p.trigger.pressButton();
 		await CoreSleep.sleep(50);
-		assert.equal(getPhysicsRBDCylinderRadius(object), 3, 'with lerp=0.5');
+		assert.equal(_getPhysicsRBDCylinderRadius(object), 3, 'with lerp=0.5');
 
 		//
 		setPhysicsRBDCylinderProperty1.setInput(setPhysicsRBDCylinderProperty1.p.radius.name(), multAdd1);
@@ -79,12 +79,12 @@ QUnit.test('actor/setPhysicsRBDCylinderProperty simple', async (assert) => {
 		multAdd1.params.get('mult')!.set(2);
 		onManualTrigger1.p.trigger.pressButton();
 		await CoreSleep.sleep(50);
-		assert.equal(getPhysicsRBDCylinderRadius(object), 6, 'radius x2');
+		assert.equal(_getPhysicsRBDCylinderRadius(object), 6, 'radius x2');
 
 		//
 		setPhysicsRBDCylinderProperty1.setInput(setPhysicsRBDCylinderProperty1.p.radius.name(), getObjectAttribute1);
 		onManualTrigger1.p.trigger.pressButton();
 		await CoreSleep.sleep(50);
-		assert.equal(getPhysicsRBDCylinderRadius(object), 1, 'back to original attrib value');
+		assert.equal(_getPhysicsRBDCylinderRadius(object), 1, 'back to original attrib value');
 	});
 });

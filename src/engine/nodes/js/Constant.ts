@@ -31,9 +31,9 @@ class ConstantJsParamsConfig extends NodeParamsConfig {
 	float = ParamConfig.FLOAT(0, typedVisibleOptions(JsConnectionPointType.FLOAT));
 	int = ParamConfig.INTEGER(0, typedVisibleOptions(JsConnectionPointType.INT));
 	string = ParamConfig.STRING('', typedVisibleOptions(JsConnectionPointType.STRING));
-	vec2 = ParamConfig.VECTOR2([0, 0], typedVisibleOptions(JsConnectionPointType.VECTOR2));
-	vec3 = ParamConfig.VECTOR3([0, 0, 0], typedVisibleOptions(JsConnectionPointType.VECTOR3));
-	vec4 = ParamConfig.VECTOR4([0, 0, 0, 0], typedVisibleOptions(JsConnectionPointType.VECTOR4));
+	vector2 = ParamConfig.VECTOR2([0, 0], typedVisibleOptions(JsConnectionPointType.VECTOR2));
+	vector3 = ParamConfig.VECTOR3([0, 0, 0], typedVisibleOptions(JsConnectionPointType.VECTOR3));
+	vector4 = ParamConfig.VECTOR4([0, 0, 0, 0], typedVisibleOptions(JsConnectionPointType.VECTOR4));
 }
 const ParamsConfig = new ConstantJsParamsConfig();
 export class ConstantJsNode extends TypedJsNode<ConstantJsParamsConfig> {
@@ -111,13 +111,13 @@ export class ConstantJsNode extends TypedJsNode<ConstantJsParamsConfig> {
 				return this.p.string;
 			}
 			case JsConnectionPointType.VECTOR2: {
-				return this.p.vec2;
+				return this.p.vector2;
 			}
 			case JsConnectionPointType.VECTOR3: {
-				return this.p.vec3;
+				return this.p.vector3;
 			}
 			case JsConnectionPointType.VECTOR4: {
-				return this.p.vec4;
+				return this.p.vector4;
 			}
 		}
 		console.warn(`constant with type '${type}' not yet implemented`);

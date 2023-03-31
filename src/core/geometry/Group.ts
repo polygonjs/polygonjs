@@ -28,9 +28,9 @@ import {EntityGroupCollection} from './EntityGroupCollection';
 import {isCSGObject} from './csg/CsgCoreType';
 //
 // SDF
-import type {SDFObjectType} from './sdf/SDFCommon';
-import {SDF_OBJECT_TYPES_SET} from './sdf/SDFCommon';
-import type {SDFObject} from './sdf/SDFObject';
+// import type {SDFObjectType} from './sdf/SDFCommon';
+// import {SDF_OBJECT_TYPES_SET} from './sdf/SDFCommon';
+// import type {SDFObject} from './sdf/SDFObject';
 //
 
 // import {CoreMask} from './Mask';
@@ -190,13 +190,13 @@ export class CoreGroup extends CoreEntity {
 	// SDF OBJECTS
 	//
 	//
-	SDFObjects() {
-		const list = this._allObjects?.filter((o) => SDF_OBJECT_TYPES_SET.has(o.type as SDFObjectType)) || undefined;
-		return list as SDFObject[] | undefined;
-	}
-	SDFCoreObjects() {
-		return this.csgObjects()?.map((o, i) => coreObjectInstanceFactory(o, i));
-	}
+	// SDFObjects() {
+	// 	const list = this._allObjects?.filter((o) => SDF_OBJECT_TYPES_SET.has(o.type as SDFObjectType)) || undefined;
+	// 	return list as SDFObject[] | undefined;
+	// }
+	// SDFCoreObjects() {
+	// 	return this.csgObjects()?.map((o, i) => coreObjectInstanceFactory(o, i));
+	// }
 	//
 	//
 	// THREEJS OBJECTS

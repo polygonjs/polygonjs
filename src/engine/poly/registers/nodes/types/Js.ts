@@ -29,4 +29,5 @@ export enum JsType {
 	SET_OBJECT_LOOK_AT = 'setObjectLookAt',
 	SET_OBJECT_POSITION = 'setObjectPosition',
 	SET_OBJECT_ROTATION = 'setObjectRotation',
+	SET_PHYSICS_RBD_POSITION = 'setPhysicsRBDPosition',
 }

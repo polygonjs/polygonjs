@@ -11,7 +11,7 @@ import {
 	ACTOR_CONNECTION_POINT_IN_NODE_DEF,
 	ReturnValueTypeByActorConnectionPointType,
 } from '../utils/io/connections/Actor';
-import {getPhysicsRBDSphereRadius} from '../../../core/physics/shapes/RBDSphere';
+import {_getPhysicsRBDSphereRadius} from '../../../core/physics/shapes/RBDSphere';
 import {TypeAssert} from '../../poly/Assert';
 
 const CONNECTION_OPTIONS = ACTOR_CONNECTION_POINT_IN_NODE_DEF;
@@ -55,7 +55,7 @@ export class GetPhysicsRBDSpherePropertyActorNode extends ParamlessTypedActorNod
 		if (PROPERTIES.includes(outputName as GetPhysicsRBDSpherePropertyActorNodeInputName)) {
 			switch (outputName) {
 				case GetPhysicsRBDSpherePropertyActorNodeInputName.radius: {
-					return getPhysicsRBDSphereRadius(Object3D) || 0;
+					return _getPhysicsRBDSphereRadius(Object3D) || 0;
 				}
 			}
 			TypeAssert.unreachable(outputName);

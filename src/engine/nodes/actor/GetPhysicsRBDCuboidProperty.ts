@@ -11,7 +11,7 @@ import {
 	ACTOR_CONNECTION_POINT_IN_NODE_DEF,
 	ReturnValueTypeByActorConnectionPointType,
 } from '../utils/io/connections/Actor';
-import {getPhysicsRBDCuboidSizes} from '../../../core/physics/shapes/RBDCuboid';
+import {_getPhysicsRBDCuboidSizes} from '../../../core/physics/shapes/RBDCuboid';
 import {TypeAssert} from '../../poly/Assert';
 import {Vector3} from 'three';
 
@@ -57,7 +57,7 @@ export class GetPhysicsRBDCuboidPropertyActorNode extends ParamlessTypedActorNod
 		if (PROPERTIES.includes(outputName as GetPhysicsRBDCuboidPropertyActorNodeInputName)) {
 			switch (outputName) {
 				case GetPhysicsRBDCuboidPropertyActorNodeInputName.sizes: {
-					getPhysicsRBDCuboidSizes(Object3D, target);
+					_getPhysicsRBDCuboidSizes(Object3D, target);
 					return target;
 				}
 			}

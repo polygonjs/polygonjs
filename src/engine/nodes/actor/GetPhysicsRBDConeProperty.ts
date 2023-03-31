@@ -11,7 +11,7 @@ import {
 	ACTOR_CONNECTION_POINT_IN_NODE_DEF,
 	ReturnValueTypeByActorConnectionPointType,
 } from '../utils/io/connections/Actor';
-import {getPhysicsRBDConeHeight, getPhysicsRBDConeRadius} from '../../../core/physics/shapes/RBDCone';
+import {_getPhysicsRBDConeHeight, _getPhysicsRBDConeRadius} from '../../../core/physics/shapes/RBDCone';
 import {TypeAssert} from '../../poly/Assert';
 
 const CONNECTION_OPTIONS = ACTOR_CONNECTION_POINT_IN_NODE_DEF;
@@ -61,10 +61,10 @@ export class GetPhysicsRBDConePropertyActorNode extends ParamlessTypedActorNode 
 		if (PROPERTIES.includes(outputName as GetPhysicsRBDConePropertyActorNodeInputName)) {
 			switch (outputName) {
 				case GetPhysicsRBDConePropertyActorNodeInputName.radius: {
-					return getPhysicsRBDConeRadius(Object3D);
+					return _getPhysicsRBDConeRadius(Object3D);
 				}
 				case GetPhysicsRBDConePropertyActorNodeInputName.height: {
-					return getPhysicsRBDConeHeight(Object3D);
+					return _getPhysicsRBDConeHeight(Object3D);
 				}
 			}
 			TypeAssert.unreachable(outputName);

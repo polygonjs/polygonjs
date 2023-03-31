@@ -9,7 +9,8 @@ import {
 import {_getRBD} from '../PhysicsRBD';
 import {PhysicsLib} from '../CorePhysics';
 import {CoreObject} from '../../geometry/Object';
-import {getPhysicsRBDRadius} from './_CommonHeightRadius';
+import {getPhysicsRBDRadius, RBDCommonProperty} from './_CommonHeightRadius';
+import {touchRBDProperty} from '../../reactivity/RBDPropertyReactivity';
 
 const EXPECTED_TYPE = PhysicsRBDColliderType.SPHERE;
 
@@ -29,11 +30,11 @@ export function currentRadius(object: Object3D, collider: Collider) {
 	return _currentRadius;
 }
 
-export function getPhysicsRBDSphereRadius(object: Object3D): number | undefined {
+export function _getPhysicsRBDSphereRadius(object: Object3D): number | undefined {
 	return getPhysicsRBDRadius(EXPECTED_TYPE, object);
 }
 
-export function setPhysicsRBDSphereProperty(
+export function _setPhysicsRBDSphereProperty(
 	object: Object3D,
 	targetRadius: number,
 	lerp: number,
@@ -62,6 +63,7 @@ export function setPhysicsRBDSphereProperty(
 		// update radius on shape and object
 		collider.setRadius(targetRadius);
 		CoreObject.setAttribute(object, attributeRadiusLive, targetRadius);
+		touchRBDProperty(object, RBDCommonProperty.RADIUS);
 		// update scale
 		const newScale = targetRadius / originalRadiusAttrib;
 		object.scale.set(newScale, newScale, newScale);

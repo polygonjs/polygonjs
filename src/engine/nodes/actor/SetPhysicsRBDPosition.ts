@@ -12,7 +12,7 @@ import {
 	ACTOR_CONNECTION_POINT_IN_NODE_DEF,
 } from '../utils/io/connections/Actor';
 import {ParamType} from '../../poly/ParamType';
-import {setPhysicsRBDPosition} from '../../../core/physics/PhysicsRBD';
+import {_setPhysicsRBDPosition} from '../../../core/physics/PhysicsRBD';
 import {ActorType} from '../../poly/registers/nodes/types/Actor';
 const CONNECTION_OPTIONS = ACTOR_CONNECTION_POINT_IN_NODE_DEF;
 
@@ -52,7 +52,7 @@ export class SetPhysicsRBDPositionActorNode extends TypedActorNode<SetPhysicsRBD
 		const position = this._inputValueFromParam<ParamType.VECTOR3>(this.p.position, context);
 		const lerp = this._inputValueFromParam<ParamType.FLOAT>(this.p.lerp, context);
 
-		setPhysicsRBDPosition(Object3D, position, lerp);
+		_setPhysicsRBDPosition(Object3D, position, lerp);
 
 		this.runTrigger(context);
 	}

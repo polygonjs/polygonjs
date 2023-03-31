@@ -13,6 +13,18 @@ import {createPhysicsCylinder} from './shapes/RBDCylinder';
 import {createPhysicsTriMesh} from './shapes/RBDTrimesh';
 import {createPhysicsConvexHull} from './shapes/ConvexHull';
 import {createPhysicsHeightField} from './shapes/HeightField';
+import {touchRBDProperty} from '../reactivity/RBDPropertyReactivity';
+
+export enum RBDProperty {
+	ANGULAR_VELOCITY = 'angVel',
+	LINEAR_VELOCITY = 'linVel',
+	POSITION = 'position',
+	ROTATION = 'rotation',
+	LINEAR_DAMPING = 'linearDamping',
+	ANGULAR_DAMPING = 'angularDamping',
+	IS_SLEEPING = 'isSleeping',
+	IS_MOVING = 'isMoving',
+}
 
 const tmpV3 = new Vector3();
 // const q1 = new Quaternion();
@@ -235,6 +247,13 @@ export function physicsUpdateRBD(object: Object3D, rigidBody: RigidBody) {
 	object.position.set(position.x, position.y, position.z);
 	object.quaternion.set(rotation.x, rotation.y, rotation.z, rotation.w);
 	object.updateMatrix();
+	updateRBDRefs(object);
+}
+function updateRBDRefs(object: Object3D) {
+	touchRBDProperty(object, RBDProperty.ANGULAR_VELOCITY);
+	touchRBDProperty(object, RBDProperty.LINEAR_VELOCITY);
+	touchRBDProperty(object, RBDProperty.POSITION);
+	touchRBDProperty(object, RBDProperty.ROTATION);
 }
 
 // impulse
@@ -316,7 +335,7 @@ export function physicsRBDResetTorques(object: Object3D, wakeup: boolean) {
 	body.resetTorques(wakeup);
 }
 
-export function setPhysicsRBDPosition(object: Object3D, targetPosition: Vector3, lerp: number) {
+export function _setPhysicsRBDPosition(object: Object3D, targetPosition: Vector3, lerp: number) {
 	const body = _getRBD(object);
 	if (!body) {
 		console.warn('no rbd found');
@@ -335,8 +354,9 @@ export function setPhysicsRBDPosition(object: Object3D, targetPosition: Vector3,
 	} else {
 		translateFunc(targetPosition, true);
 	}
+	touchRBDProperty(object, RBDProperty.POSITION);
 }
-export function setPhysicsRBDRotation(object: Object3D, targetQuaternion: Quaternion, lerp: number) {
+export function _setPhysicsRBDRotation(object: Object3D, targetQuaternion: Quaternion, lerp: number) {
 	const body = _getRBD(object);
 	if (!body) {
 		console.warn('no rbd found');
@@ -352,8 +372,9 @@ export function setPhysicsRBDRotation(object: Object3D, targetQuaternion: Quater
 	} else {
 		rotateFunc(targetQuaternion, true);
 	}
+	touchRBDProperty(object, RBDProperty.ROTATION);
 }
-export function setPhysicsRBDLinearVelocity(object: Object3D, targetVelocity: Vector3, lerp: number) {
+export function _setPhysicsRBDLinearVelocity(object: Object3D, targetVelocity: Vector3, lerp: number) {
 	const body = _getRBD(object);
 	if (!body) {
 		console.warn('no rbd found');
@@ -369,8 +390,9 @@ export function setPhysicsRBDLinearVelocity(object: Object3D, targetVelocity: Ve
 	} else {
 		body.setLinvel(targetVelocity, true);
 	}
+	touchRBDProperty(object, RBDProperty.LINEAR_VELOCITY);
 }
-export function setPhysicsRBDAngularVelocity(object: Object3D, targetVelocity: Vector3, lerp: number) {
+export function _setPhysicsRBDAngularVelocity(object: Object3D, targetVelocity: Vector3, lerp: number) {
 	const body = _getRBD(object);
 	if (!body) {
 		console.warn('no rbd found');
@@ -386,6 +408,7 @@ export function setPhysicsRBDAngularVelocity(object: Object3D, targetVelocity: V
 	} else {
 		body.setAngvel(targetVelocity, true);
 	}
+	touchRBDProperty(object, RBDProperty.ANGULAR_VELOCITY);
 }
 
 function PhysicsRBDTypeToRigidBodyType(type: PhysicsRBDType) {

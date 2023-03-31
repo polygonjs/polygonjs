@@ -10,6 +10,12 @@ import {
 import {_getRBD} from '../PhysicsRBD';
 import {PhysicsLib} from '../CorePhysics';
 import {CoreObject} from '../../geometry/Object';
+import {touchRBDProperty} from '../../reactivity/RBDPropertyReactivity';
+
+export enum RBDCapsuleProperty {
+	RADIUS = 'radius',
+	HEIGHT = 'height',
+}
 
 const EXPECTED_TYPE = PhysicsRBDColliderType.CAPSULE;
 
@@ -40,7 +46,7 @@ export function currentRadius(object: Object3D, collider: Collider) {
 	return _currentRadius;
 }
 
-export function getPhysicsRBDCapsuleHeight(object: Object3D): number | undefined {
+export function _getPhysicsRBDCapsuleHeight(object: Object3D): number | undefined {
 	const body = _getRBD(object);
 	if (!body) {
 		console.warn('no rbd found');
@@ -56,7 +62,7 @@ export function getPhysicsRBDCapsuleHeight(object: Object3D): number | undefined
 	}
 	return currentHeight(object, collider);
 }
-export function getPhysicsRBDCapsuleRadius(object: Object3D): number | undefined {
+export function _getPhysicsRBDCapsuleRadius(object: Object3D): number | undefined {
 	const body = _getRBD(object);
 	if (!body) {
 		console.warn('no rbd found');
@@ -73,7 +79,7 @@ export function getPhysicsRBDCapsuleRadius(object: Object3D): number | undefined
 	return currentRadius(object, collider);
 }
 
-export function setPhysicsRBDCapsuleProperty(
+export function _setPhysicsRBDCapsuleProperty(
 	object: Object3D,
 	targetScale: number,
 	lerp: number,
@@ -111,6 +117,8 @@ export function setPhysicsRBDCapsuleProperty(
 		collider.setRadius(targetRadius);
 		CoreObject.setAttribute(object, attributeHeightLive, targetHeight);
 		CoreObject.setAttribute(object, attributeRadiusLive, targetRadius);
+		touchRBDProperty(object, RBDCapsuleProperty.HEIGHT);
+		touchRBDProperty(object, RBDCapsuleProperty.RADIUS);
 		// update scale
 		// TODO: we can't apply a simple scale to a capsule
 		// it could possibly work if the capsule was 3 objects (1 tube + 2 half spheres)

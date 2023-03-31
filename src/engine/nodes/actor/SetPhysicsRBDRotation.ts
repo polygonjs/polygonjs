@@ -12,7 +12,7 @@ import {
 	ACTOR_CONNECTION_POINT_IN_NODE_DEF,
 } from '../utils/io/connections/Actor';
 import {ParamType} from '../../poly/ParamType';
-import {setPhysicsRBDRotation} from '../../../core/physics/PhysicsRBD';
+import {_setPhysicsRBDRotation} from '../../../core/physics/PhysicsRBD';
 import {Quaternion} from 'three';
 const CONNECTION_OPTIONS = ACTOR_CONNECTION_POINT_IN_NODE_DEF;
 const tmpQuaternion = new Quaternion();
@@ -55,7 +55,7 @@ export class SetPhysicsRBDRotationActorNode extends TypedActorNode<SetPhysicsRBD
 		tmpQuaternion.y = quatAsVector4.y;
 		tmpQuaternion.z = quatAsVector4.z;
 		tmpQuaternion.w = quatAsVector4.w;
-		setPhysicsRBDRotation(Object3D, tmpQuaternion, lerp);
+		_setPhysicsRBDRotation(Object3D, tmpQuaternion, lerp);
 
 		this.runTrigger(context);
 	}
