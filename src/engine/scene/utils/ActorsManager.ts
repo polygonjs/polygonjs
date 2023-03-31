@@ -1,6 +1,6 @@
 import {Object3D} from 'three';
 import {TypedNode} from '../../nodes/_Base';
-import {BaseActorNodeType} from '../../nodes/actor/_Base';
+// import {BaseActorNodeType} from '../../nodes/actor/_Base';
 // import {ActorNodeChildrenMap} from '../../poly/registers/nodes/Actor';
 // import {NodeCreateOptions} from '../../nodes/utils/hierarchy/ChildrenController';
 // import {
@@ -13,7 +13,7 @@ import {PolyScene} from '../PolyScene';
 // import {CoreObject} from '../../../core/geometry/Object';
 // import {MapUtils} from '../../../core/MapUtils';
 import {ActorManualTriggersController} from './actors/ManualTriggersController';
-import {NodeContext} from '../../poly/NodeContext';
+// import {NodeContext} from '../../poly/NodeContext';
 // import {ActorPointerEventsController} from './actors/ActorsPointerEventsController';
 // import {ActorHoveredEventsController} from './actors/ActorsHoveredEventsController';
 import {ActorKeyboardEventsController} from './actors/ActorsKeyboardEventsController';
@@ -467,7 +467,7 @@ export class ActorsManager {
 	// 	// });
 	// }
 
-	parentActorBuilderNode(node: BaseActorNodeType) {
-		return node.parentController.findParent((parent) => parent.childrenControllerContext() == NodeContext.ACTOR);
-	}
+	// parentActorBuilderNode(node: BaseActorNodeType) {
+	// 	return node.parentController.findParent((parent) => parent.childrenControllerContext() == NodeContext.ACTOR);
+	// }
 }

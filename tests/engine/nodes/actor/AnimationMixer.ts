@@ -5,9 +5,12 @@ import {Quaternion} from 'three';
 import {Vector3} from 'three';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {AnimationActionActorNode} from '../../../../src/engine/nodes/actor/AnimationAction';
-import {getMostActiveAnimationActionFromMixer} from '../../../../src/core/actor/AnimationMixerUtils';
+// import {getMostActiveAnimationActionFromMixer} from '../../../../src/core/actor/AnimationMixerUtils';
 import {PolyScene} from '../../../../src/engine/scene/PolyScene';
 import {BackgroundMode} from '../../../../src/engine/nodes/manager/utils/Scene/Background';
+function getMostActiveAnimationActionFromMixer(x: any): any {
+	return [];
+}
 
 function addReflector(scene: PolyScene) {
 	const geo2 = scene.root().createNode('geo');

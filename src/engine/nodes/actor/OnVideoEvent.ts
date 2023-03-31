@@ -11,9 +11,13 @@ import {NodeContext} from '../../poly/NodeContext';
 import {CopType} from '../../poly/registers/nodes/types/Cop';
 import {VideoCopNode} from '../cop/Video';
 import {ActorType} from '../../poly/registers/nodes/types/Actor';
-import {objectsForActorNode} from '../../scene/utils/actors/ActorsManagerUtils';
+// import {objectsForActorNode} from '../../scene/utils/actors/ActorsManagerUtils';
 import {Object3D} from 'three';
-import {VideoEvent, VIDEO_EVENTS, VIDEO_EVENT_INDICES} from '../../../core/Video';
+import {
+	VideoEvent,
+	VIDEO_EVENTS,
+	//   VIDEO_EVENT_INDICES
+} from '../../../core/Video';
 
 type Listener = () => void;
 type Listeners = Record<VideoEvent, Listener>;
@@ -63,38 +67,38 @@ export class OnVideoEventActorNode extends TypedActorNode<OnVideoEventActorParam
 			return;
 		}
 
-		const objects = objectsForActorNode(this);
-		for (let object of objects) {
-			this._createEventListener(videoNode, object);
-		}
+		// const objects = objectsForActorNode(this);
+		// for (let object of objects) {
+		// 	this._createEventListener(videoNode, object);
+		// }
 	}
 	private _listenerByObjectByVideoNode: Map<VideoCopNode, Map<Object3D, Listeners>> = new Map();
-	private _createEventListener(videoNode: VideoCopNode, Object3D: Object3D) {
-		let listenerByObject = this._listenerByObjectByVideoNode.get(videoNode);
-		if (!listenerByObject) {
-			listenerByObject = new Map();
-			this._listenerByObjectByVideoNode.set(videoNode, listenerByObject);
-		}
-		let listeners = listenerByObject.get(Object3D);
-		if (!listeners) {
-			const createListener = (eventName: VideoEvent) => {
-				const listener = () => {
-					this.runTrigger({Object3D}, VIDEO_EVENT_INDICES.get(eventName));
-				};
-				return listener;
-			};
-			listeners = {
-				[VideoEvent.PLAY]: createListener(VideoEvent.PLAY),
-				[VideoEvent.PAUSE]: createListener(VideoEvent.PAUSE),
-				[VideoEvent.TIME_UPDATE]: createListener(VideoEvent.TIME_UPDATE),
-				[VideoEvent.VOLUME_CHANGE]: createListener(VideoEvent.VOLUME_CHANGE),
-			};
-			listenerByObject.set(Object3D, listeners);
-			for (let eventName of VIDEO_EVENTS) {
-				videoNode.addEventListener(eventName, listeners[eventName]);
-			}
-		}
-	}
+	// private _createEventListener(videoNode: VideoCopNode, Object3D: Object3D) {
+	// 	let listenerByObject = this._listenerByObjectByVideoNode.get(videoNode);
+	// 	if (!listenerByObject) {
+	// 		listenerByObject = new Map();
+	// 		this._listenerByObjectByVideoNode.set(videoNode, listenerByObject);
+	// 	}
+	// 	let listeners = listenerByObject.get(Object3D);
+	// 	if (!listeners) {
+	// 		const createListener = (eventName: VideoEvent) => {
+	// 			const listener = () => {
+	// 				this.runTrigger({Object3D}, VIDEO_EVENT_INDICES.get(eventName));
+	// 			};
+	// 			return listener;
+	// 		};
+	// 		listeners = {
+	// 			[VideoEvent.PLAY]: createListener(VideoEvent.PLAY),
+	// 			[VideoEvent.PAUSE]: createListener(VideoEvent.PAUSE),
+	// 			[VideoEvent.TIME_UPDATE]: createListener(VideoEvent.TIME_UPDATE),
+	// 			[VideoEvent.VOLUME_CHANGE]: createListener(VideoEvent.VOLUME_CHANGE),
+	// 		};
+	// 		listenerByObject.set(Object3D, listeners);
+	// 		for (let eventName of VIDEO_EVENTS) {
+	// 			videoNode.addEventListener(eventName, listeners[eventName]);
+	// 		}
+	// 	}
+	// }
 	override dispose(): void {
 		this._removeVideoNodeEventListener();
 		super.dispose();

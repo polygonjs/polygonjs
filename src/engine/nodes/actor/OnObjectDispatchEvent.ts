@@ -12,7 +12,7 @@ import {
 	ActorConnectionPointType,
 	ACTOR_CONNECTION_POINT_IN_NODE_DEF,
 } from '../utils/io/connections/Actor';
-import {objectsForActorNode} from '../../scene/utils/actors/ActorsManagerUtils';
+// import {objectsForActorNode} from '../../scene/utils/actors/ActorsManagerUtils';
 import {ActorType} from '../../poly/registers/nodes/types/Actor';
 
 enum OnObjectDispatchEventActorNodeInputName {
@@ -68,31 +68,31 @@ export class OnObjectDispatchEventActorNode extends TypedActorNode<OnObjectDispa
 	}
 	disposeOnPause() {}
 	private _addEventListenersToObjects() {
-		const eventNames = this.pv.eventNames.split(' ');
-		const objects = objectsForActorNode(this);
-		for (let object of objects) {
-			for (let eventName of eventNames) {
-				this._createEventListener(eventName, object);
-			}
-		}
+		// const eventNames = this.pv.eventNames.split(' ');
+		// const objects = objectsForActorNode(this);
+		// for (let object of objects) {
+		// 	for (let eventName of eventNames) {
+		// 		this._createEventListener(eventName, object);
+		// 	}
+		// }
 	}
 	private _listenerByObject: Map<Object3D, Map<string, Listener>> = new Map();
-	private _createEventListener(eventName: string, Object3D: Object3D) {
-		let listenerByEventName = this._listenerByObject.get(Object3D);
-		if (!listenerByEventName) {
-			listenerByEventName = new Map();
-			this._listenerByObject.set(Object3D, listenerByEventName);
-		}
-		let listener = listenerByEventName.get(eventName);
-		if (!listener) {
-			listener = () => {
-				this._lastReceivedEventName = eventName;
-				this.runTrigger({Object3D});
-			};
-			Object3D.addEventListener(eventName, listener);
-			listenerByEventName.set(eventName, listener);
-		}
-	}
+	// private _createEventListener(eventName: string, Object3D: Object3D) {
+	// 	let listenerByEventName = this._listenerByObject.get(Object3D);
+	// 	if (!listenerByEventName) {
+	// 		listenerByEventName = new Map();
+	// 		this._listenerByObject.set(Object3D, listenerByEventName);
+	// 	}
+	// 	let listener = listenerByEventName.get(eventName);
+	// 	if (!listener) {
+	// 		listener = () => {
+	// 			this._lastReceivedEventName = eventName;
+	// 			this.runTrigger({Object3D});
+	// 		};
+	// 		Object3D.addEventListener(eventName, listener);
+	// 		listenerByEventName.set(eventName, listener);
+	// 	}
+	// }
 	override dispose(): void {
 		this._listenerByObject.forEach((map, Object3D) => {
 			map.forEach((listener, eventName) => {

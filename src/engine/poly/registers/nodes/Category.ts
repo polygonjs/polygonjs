@@ -96,6 +96,7 @@ export const CATEGORY_GL = {
 };
 export const CATEGORY_JS = {
 	ACTION: 'action',
+	ANIMATION: 'animation',
 	COLOR: 'color',
 	CONVERSION: 'conversion',
 	DYNAMICS: 'dynamics',

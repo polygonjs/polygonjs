@@ -3,7 +3,7 @@ import {ActorConnectionPointType} from '../../../../src/engine/nodes/utils/io/co
 import {RendererUtils} from '../../../helpers/RendererUtils';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {AnimationActionActorNode} from '../../../../src/engine/nodes/actor/AnimationAction';
-import {getMostActiveAnimationActionFromMixer} from '../../../../src/core/actor/AnimationMixerUtils';
+// import {getMostActiveAnimationActionFromMixer} from '../../../../src/core/actor/AnimationMixerUtils';
 
 QUnit.test('actor/animationActionPlay', async (assert) => {
 	const scene = window.scene;
@@ -55,7 +55,7 @@ QUnit.test('actor/animationActionPlay', async (assert) => {
 		await CoreSleep.sleep(500);
 		assert.in_delta(scene.time(), 1, 0.25, 'time is 1 sec');
 
-		const animationAction = getMostActiveAnimationActionFromMixer(mixer).mostActiveAnimationAction;
+		const animationAction = null as any;//getMostActiveAnimationActionFromMixer(mixer).mostActiveAnimationAction;
 		assert.equal(animationAction.getClip().name, 'Attack', 'clip is Attack');
 
 		assert.ok(animationAction.isRunning(), 'is running');

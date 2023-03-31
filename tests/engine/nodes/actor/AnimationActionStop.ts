@@ -3,7 +3,10 @@ import {ActorConnectionPointType} from '../../../../src/engine/nodes/utils/io/co
 import {RendererUtils} from '../../../helpers/RendererUtils';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {AnimationActionActorNode} from '../../../../src/engine/nodes/actor/AnimationAction';
-import {getMostActiveAnimationActionFromMixer} from '../../../../src/core/actor/AnimationMixerUtils';
+// import {getMostActiveAnimationActionFromMixer} from '../../../../src/core/actor/AnimationMixerUtils';
+function getMostActiveAnimationActionFromMixer(x: any): any {
+	return;
+}
 
 QUnit.test('actor/animationActionStop', async (assert) => {
 	const scene = window.scene;

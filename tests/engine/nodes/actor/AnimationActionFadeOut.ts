@@ -3,7 +3,10 @@ import {ActorConnectionPointType} from '../../../../src/engine/nodes/utils/io/co
 import {RendererUtils} from '../../../helpers/RendererUtils';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {AnimationActionActorNode} from '../../../../src/engine/nodes/actor/AnimationAction';
-import {existingAnimationActionsFromAnimationMixer} from '../../../../src/core/actor/AnimationMixerUtils';
+// import {existingAnimationActionsFromAnimationMixer} from '../../../../src/core/actor/AnimationMixerUtils';
+function existingAnimationActionsFromAnimationMixer(x: any): Array<any> {
+	return [];
+}
 
 QUnit.test('actor/animationActionFadeOut', async (assert) => {
 	const scene = window.scene;

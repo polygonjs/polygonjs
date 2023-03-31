@@ -114,8 +114,8 @@ export class ConnectionPointsSpareParamsController<NC extends NodeContext> {
 			if (connection_point) {
 				const isConnected = this.node.io.inputs.input(i) != null;
 				const param_name = connection_point.name();
-				const param_type: ParamType | null = connection_point.param_type;
-				if (param_type) {
+				const paramType: ParamType | null = connection_point.param_type;
+				if (paramType) {
 					let init_value = connection_point.init_value;
 
 					const last_param_init_value = this._default_value_serialized_by_param_name.get(param_name);
@@ -152,11 +152,11 @@ export class ConnectionPointsSpareParamsController<NC extends NodeContext> {
 						}
 					}
 
-					if (init_value != null) {
+					if (init_value != null && paramType != ParamType.BUTTON) {
 						params_update_options.toAdd = params_update_options.toAdd || [];
 						params_update_options.toAdd.push({
 							name: param_name,
-							type: param_type,
+							type: paramType,
 							// TODO: I should really treat differently init_value and raw_input here
 							initValue: ObjectUtils.clone(init_value as any),
 							rawInput: ObjectUtils.clone(init_value as any),

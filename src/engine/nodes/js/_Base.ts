@@ -17,7 +17,7 @@ import {Vector3Param} from '../../params/Vector3';
 import {Vector4Param} from '../../params/Vector4';
 import {ColorParam} from '../../params/Color';
 import {BooleanParam} from '../../params/Boolean';
-import {ThreeToGl} from '../../../core/ThreeToGl';
+import {ThreeToJs} from '../../../core/ThreeToJs';
 import {ParamsEditableStateController} from '../utils/io/ParamsEditableStateController';
 import {Color, Vector2, Vector3, Vector4} from 'three';
 import {CoreString} from '../../../core/String';
@@ -174,10 +174,10 @@ export class TypedJsNode<K extends NodeParamsConfig> extends TypedNode<NodeConte
 						: `${varName}.set(${param.value.toArray().join(', ')})`;
 				}
 			}
-			return outputJsVarName || ThreeToGl.any(this.params.get(inputName)?.value);
+			return outputJsVarName || ThreeToJs.any(this.params.get(inputName)?.value);
 		} else {
 			const connectionPoint = this.io.inputs.namedInputConnectionPoints()[inputIndex];
-			return outputJsVarName || ThreeToGl.any(connectionPoint.init_value);
+			return outputJsVarName || ThreeToJs.any(connectionPoint.init_value);
 		}
 	}
 

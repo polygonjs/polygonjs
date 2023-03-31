@@ -96,7 +96,7 @@ export function MathFunctionArg1OperationFactory(
 				}
 				case JsConnectionPointType.INT:
 				case JsConnectionPointType.FLOAT: {
-					return `function ${functionName} = Math.${type};`;
+					return `const ${functionName} = Math.${type};`;
 				}
 				case JsConnectionPointType.VECTOR2: {
 					return `function ${functionName}(dest){
@@ -123,7 +123,7 @@ export function MathFunctionArg1OperationFactory(
 					}`;
 				}
 			}
-			return `function ${functionName} = Math.${type};`;
+			return `const ${functionName} = Math.${type};`;
 		}
 
 		// protected _applyOperation<T>(arg1: T): any {}

@@ -146,15 +146,17 @@ export class JsAssemblerNodeSpareParamsController {
 					raw_input = paramConfig.defaultValue() as any;
 				}
 
-				paramsUpdateOptions.toAdd = paramsUpdateOptions.toAdd || [];
-				paramsUpdateOptions.toAdd.push({
-					name: paramConfig.name(),
-					type: paramConfig.type(),
-					initValue: init_value as any,
-					rawInput: raw_input as any,
-					options,
-				});
-				console.log(options);
+				const type = paramConfig.type();
+				if (type != ParamType.BUTTON) {
+					paramsUpdateOptions.toAdd = paramsUpdateOptions.toAdd || [];
+					paramsUpdateOptions.toAdd.push({
+						name: paramConfig.name(),
+						type,
+						initValue: init_value as any,
+						rawInput: raw_input as any,
+						options,
+					});
+				}
 			}
 		}
 

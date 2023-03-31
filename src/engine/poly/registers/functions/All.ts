@@ -6,23 +6,31 @@ import {divideNumber, divideVectorNumber} from '../../../functions/Divide';
 import {multNumber, multVector, multVectorNumber} from '../../../functions/Mult';
 import {subtractNumber, subtractVector, subtractVectorNumber} from '../../../functions/Subtract';
 
-//
-// import {
-// 	abs,
-// 	acos,
-// 	sin,
-// } from '../../../functions/_Math';
 import {
+	getAnimationMixer,
+	animationMixerUpdate,
+	getAnimationAction,
+	animationActionCrossFade,
+	animationActionFadeIn,
+	animationActionFadeOut,
+	animationActionPlay,
+	animationActionStop,
+} from '../../../functions/AnimationMixer';
+import {
+	boolToInt,
+	intToBool,
+	floatToInt,
+	intToFloat,
 	colorToVec3,
-	sizzleVec3XY,
-	sizzleVec3XZ,
-	sizzleVec3YZ,
-	sizzleVec4XYZ,
+	floatToColor,
+	floatToVec2,
 	floatToVec3,
+	floatToVec4,
 	vec2ToVec3,
 	vec3ToColor,
 	vec3ToVec4,
-} from '../../../functions/conversion';
+} from '../../../functions/Conversion';
+import {sizzleVec3XY, sizzleVec3XZ, sizzleVec3YZ, sizzleVec4XYZ} from '../../../functions/Sizzle';
 import {
 	globalsTime,
 	globalsTimeDelta,
@@ -62,11 +70,24 @@ export interface NamedFunctionMap {
 	addNumber: addNumber;
 	addVector: addVector<Vector2 | Vector3 | Vector4>;
 	addVectorNumber: addVectorNumber<Vector2 | Vector3 | Vector4>;
+	animationActionCrossFade: animationActionCrossFade;
+	animationActionFadeIn: animationActionFadeIn;
+	animationActionFadeOut: animationActionFadeOut;
+	animationActionPlay: animationActionPlay;
+	animationActionStop: animationActionStop;
+	animationMixerUpdate: animationMixerUpdate;
+	boolToInt: boolToInt;
 	colorToVec3: colorToVec3;
 	divideNumber: divideNumber;
 	divideVectorNumber: divideVectorNumber<Vector2 | Vector3 | Vector4>;
+	floatToColor: floatToColor;
+	floatToInt: floatToInt;
+	floatToVec2: floatToVec2;
 	floatToVec3: floatToVec3;
+	floatToVec4: floatToVec4;
 	getActorNodeParamValue: getActorNodeParamValue;
+	getAnimationAction: getAnimationAction;
+	getAnimationMixer: getAnimationMixer;
 	getObject: getObject;
 	getObjectAttribute: getObjectAttribute;
 	getObjectAttributeRef: getObjectAttributeRef;
@@ -78,6 +99,8 @@ export interface NamedFunctionMap {
 	globalsRaycaster: globalsRaycaster;
 	globalsRayFromCursor: globalsRayFromCursor;
 	globalsCursor: globalsCursor;
+	intToBool: intToBool;
+	intToFloat: intToFloat;
 	keyboardEventMatchesConfig: keyboardEventMatchesConfig;
 	multNumber: multNumber;
 	multVector: multVector<Vector2 | Vector3 | Vector4>;
@@ -115,19 +138,27 @@ export interface NamedFunctionMap {
 export class AllNamedFunctionRegister {
 	static run(poly: PolyEngine) {
 		[
-			// Math
-			// abs,
-			// acos,
-			// sin,
-			//
 			addNumber,
 			addVector,
 			addVectorNumber,
+			animationActionCrossFade,
+			animationActionFadeIn,
+			animationActionFadeOut,
+			animationActionPlay,
+			animationActionStop,
+			animationMixerUpdate,
+			boolToInt,
 			colorToVec3,
 			divideNumber,
 			divideVectorNumber,
+			floatToColor,
+			floatToInt,
+			floatToVec2,
 			floatToVec3,
+			floatToVec4,
 			getActorNodeParamValue,
+			getAnimationAction,
+			getAnimationMixer,
 			getObject,
 			getObjectAttribute,
 			getObjectAttributeRef,
@@ -139,6 +170,8 @@ export class AllNamedFunctionRegister {
 			globalsRaycaster,
 			globalsRayFromCursor,
 			globalsCursor,
+			intToBool,
+			intToFloat,
 			keyboardEventMatchesConfig,
 			multNumber,
 			multVector,

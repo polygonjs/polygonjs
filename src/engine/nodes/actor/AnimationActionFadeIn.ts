@@ -6,21 +6,25 @@
 
 import {
 	AnimationActionBaseActorNode,
-	AnimationActionEventListenerExtended,
-	AnimationActionLoopEvent,
+	// AnimationActionEventListenerExtended,
+	// AnimationActionLoopEvent,
 } from './_BaseAnimationAction';
-import {AnimationMixer} from 'three';
+// import {AnimationMixer} from 'three';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {ActorNodeTriggerContext, TRIGGER_CONNECTION_NAME, ACTOR_NODE_SELF_TRIGGER_CALLBACK} from './_Base';
+import {
+	// ActorNodeTriggerContext,
+	TRIGGER_CONNECTION_NAME,
+	ACTOR_NODE_SELF_TRIGGER_CALLBACK,
+} from './_Base';
 import {
 	ActorConnectionPoint,
 	ActorConnectionPointType,
 	ACTOR_CONNECTION_POINT_IN_NODE_DEF,
 } from '../utils/io/connections/Actor';
-import {ParamType} from '../../poly/ParamType';
-import {EventListener, Event} from 'three';
-import {AnimationAction} from 'three';
-import {getMostActiveAnimationActionFromMixer} from '../../../core/actor/AnimationMixerUtils';
+// import {ParamType} from '../../poly/ParamType';
+// import {EventListener, Event} from 'three';
+// import {AnimationAction} from 'three';
+// import {getMostActiveAnimationActionFromMixer} from '../../../core/actor/AnimationMixerUtils';
 
 const CONNECTION_OPTIONS = ACTOR_CONNECTION_POINT_IN_NODE_DEF;
 
@@ -59,74 +63,74 @@ export class AnimationActionFadeInActorNode extends AnimationActionBaseActorNode
 		]);
 	}
 
-	public override receiveTrigger(context: ActorNodeTriggerContext) {
-		const duration = this._inputValueFromParam<ParamType.FLOAT>(this.p.duration, context);
-		const fadeOutOtherActions = this._inputValueFromParam<ParamType.BOOLEAN>(this.p.fadeOutOtherActions, context);
+	// public override receiveTrigger(context: ActorNodeTriggerContext) {
+	// 	const duration = this._inputValueFromParam<ParamType.FLOAT>(this.p.duration, context);
+	// 	const fadeOutOtherActions = this._inputValueFromParam<ParamType.BOOLEAN>(this.p.fadeOutOtherActions, context);
 
-		const animationActionTo = this._inputValue<ActorConnectionPointType.ANIMATION_ACTION>(
-			ActorConnectionPointType.ANIMATION_ACTION,
-			context
-		);
-		if (!animationActionTo) {
-			return;
-		}
-		if (fadeOutOtherActions) {
-			this._fadeOutOtherActions(context, animationActionTo, duration);
-		} else {
-			this._fadeInSimple(animationActionTo, duration);
-		}
-	}
+	// 	const animationActionTo = this._inputValue<ActorConnectionPointType.ANIMATION_ACTION>(
+	// 		ActorConnectionPointType.ANIMATION_ACTION,
+	// 		context
+	// 	);
+	// 	if (!animationActionTo) {
+	// 		return;
+	// 	}
+	// 	if (fadeOutOtherActions) {
+	// 		this._fadeOutOtherActions(context, animationActionTo, duration);
+	// 	} else {
+	// 		this._fadeInSimple(animationActionTo, duration);
+	// 	}
+	// }
 
-	private _fadeOutOtherActions(
-		context: ActorNodeTriggerContext,
-		animationActionTo: AnimationAction,
-		duration: number
-	) {
-		const warp = this._inputValueFromParam<ParamType.BOOLEAN>(this.p.startOnFromActionEnd, context);
-		const startOnFromActionEnd = this._inputValueFromParam<ParamType.BOOLEAN>(this.p.startOnFromActionEnd, context);
-		const mixer = animationActionTo.getMixer();
-		const {otherActions, mostActiveAnimationAction} = getMostActiveAnimationActionFromMixer(
-			mixer,
-			animationActionTo
-		);
-		const animationActionFrom = mostActiveAnimationAction;
-		const _fadeInCurrentAndFadeOutOtherActions = () => {
-			this._crossFade(animationActionFrom, animationActionTo, duration, warp);
+	// private _fadeOutOtherActions(
+	// 	context: ActorNodeTriggerContext,
+	// 	animationActionTo: AnimationAction,
+	// 	duration: number
+	// ) {
+	// 	const warp = this._inputValueFromParam<ParamType.BOOLEAN>(this.p.startOnFromActionEnd, context);
+	// 	const startOnFromActionEnd = this._inputValueFromParam<ParamType.BOOLEAN>(this.p.startOnFromActionEnd, context);
+	// 	const mixer = animationActionTo.getMixer();
+	// 	const {otherActions, mostActiveAnimationAction} = getMostActiveAnimationActionFromMixer(
+	// 		mixer,
+	// 		animationActionTo
+	// 	);
+	// 	const animationActionFrom = mostActiveAnimationAction;
+	// 	const _fadeInCurrentAndFadeOutOtherActions = () => {
+	// 		this._crossFade(animationActionFrom, animationActionTo, duration, warp);
 
-			for (let action of otherActions) {
-				action.fadeOut(duration);
-			}
-		};
+	// 		for (let action of otherActions) {
+	// 			action.fadeOut(duration);
+	// 		}
+	// 	};
 
-		if (otherActions.length == 0) {
-			this._fadeInSimple(animationActionTo, duration);
-		} else {
-			if (startOnFromActionEnd) {
-				animationActionTo.stop();
-				this._fadeInWhenPreviousLoopCompleted(mixer, animationActionFrom, _fadeInCurrentAndFadeOutOtherActions);
-			} else {
-				_fadeInCurrentAndFadeOutOtherActions();
-			}
-		}
-	}
+	// 	if (otherActions.length == 0) {
+	// 		this._fadeInSimple(animationActionTo, duration);
+	// 	} else {
+	// 		if (startOnFromActionEnd) {
+	// 			animationActionTo.stop();
+	// 			this._fadeInWhenPreviousLoopCompleted(mixer, animationActionFrom, _fadeInCurrentAndFadeOutOtherActions);
+	// 		} else {
+	// 			_fadeInCurrentAndFadeOutOtherActions();
+	// 		}
+	// 	}
+	// }
 
-	private _fadeInWhenPreviousLoopCompleted(
-		mixer: AnimationMixer,
-		animationActionFrom: AnimationAction,
-		callback: () => void
-	) {
-		const onLoop: AnimationActionEventListenerExtended = ((event: AnimationActionLoopEvent) => {
-			if (event.action === animationActionFrom) {
-				mixer.removeEventListener('loop', onLoop);
+	// private _fadeInWhenPreviousLoopCompleted(
+	// 	mixer: AnimationMixer,
+	// 	animationActionFrom: AnimationAction,
+	// 	callback: () => void
+	// ) {
+	// 	const onLoop: AnimationActionEventListenerExtended = ((event: AnimationActionLoopEvent) => {
+	// 		if (event.action === animationActionFrom) {
+	// 			mixer.removeEventListener('loop', onLoop);
 
-				callback();
-			}
-		}) as EventListener<Event, 'loop', AnimationMixer>;
-		mixer.addEventListener('loop', onLoop);
-	}
+	// 			callback();
+	// 		}
+	// 	}) as EventListener<Event, 'loop', AnimationMixer>;
+	// 	mixer.addEventListener('loop', onLoop);
+	// }
 
-	private _fadeInSimple(animationActionTo: AnimationAction, duration: number) {
-		this._setAnimationActionWeight(animationActionTo, 1);
-		animationActionTo.fadeIn(duration);
-	}
+	// private _fadeInSimple(animationActionTo: AnimationAction, duration: number) {
+	// 	this._setAnimationActionWeight(animationActionTo, 1);
+	// 	animationActionTo.fadeIn(duration);
+	// }
 }

@@ -6,8 +6,12 @@ import {Vector3} from 'three';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {AnimationActionActorNode} from '../../../../src/engine/nodes/actor/AnimationAction';
 import {AnimationActionCrossFadeActorNodeInputName} from '../../../../src/engine/nodes/actor/AnimationActionCrossFade';
-import {getMostActiveAnimationActionFromMixer} from '../../../../src/core/actor/AnimationMixerUtils';
+// import {getMostActiveAnimationActionFromMixer} from '../../../../src/core/actor/AnimationMixerUtils';
 import {PolyScene} from '../../../../src/engine/scene/PolyScene';
+
+function getMostActiveAnimationActionFromMixer(x: any): any {
+	return [];
+}
 
 function addWater(scene: PolyScene) {
 	const geo2 = scene.root().createNode('geo');

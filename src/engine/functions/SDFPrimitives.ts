@@ -1,6 +1,6 @@
 import {Vector3} from 'three';
 import {NamedFunction3, NamedFunction4} from './_Base';
-import {absV3, maxV3Components, maxV3Component} from './conversion';
+import {absV3, maxV3Components, maxV3Component} from './_VectorUtils';
 
 const _q = new Vector3();
 const _sHalf = new Vector3();
