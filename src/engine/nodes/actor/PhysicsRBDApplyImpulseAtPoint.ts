@@ -12,7 +12,7 @@ import {
 	ACTOR_CONNECTION_POINT_IN_NODE_DEF,
 } from '../utils/io/connections/Actor';
 import {ParamType} from '../../poly/ParamType';
-import {physicsRBDApplyImpulseAtPoint} from '../../../core/physics/PhysicsRBD';
+import {_physicsRBDApplyImpulseAtPoint} from '../../../core/physics/PhysicsRBD';
 const CONNECTION_OPTIONS = ACTOR_CONNECTION_POINT_IN_NODE_DEF;
 
 class PhysicsRBDApplyImpulseAtPointActorParamsConfig extends NodeParamsConfig {
@@ -51,7 +51,7 @@ export class PhysicsRBDApplyImpulseAtPointActorNode extends TypedActorNode<Physi
 		const impulse = this._inputValueFromParam<ParamType.VECTOR3>(this.p.impulse, context);
 		const point = this._inputValueFromParam<ParamType.VECTOR3>(this.p.point, context);
 
-		physicsRBDApplyImpulseAtPoint(Object3D, impulse, point);
+		_physicsRBDApplyImpulseAtPoint(Object3D, impulse, point);
 
 		this.runTrigger(context);
 	}

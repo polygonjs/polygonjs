@@ -65,7 +65,18 @@ export function _dummyReadPropertyRefVal(value: number) {
 	// we just need this method to force a call to .value
 	// and ensure that we have a dependency with the ref()
 }
-
+export function touchObjectProperties(object3D: Object3D, propertyNames: Array<keyof PropertyType>) {
+	const map = refByObjectUuidByPropertyName.get(object3D.uuid);
+	if (!map) {
+		return;
+	}
+	for (let propertyName of propertyNames) {
+		const _ref = map.get(propertyName);
+		if (_ref) {
+			incrementRefSafely(_ref);
+		}
+	}
+}
 export function touchObjectProperty<K extends keyof PropertyType>(object3D: Object3D, propertyName: K) {
 	const _ref = getObjectPropertyRef(object3D, propertyName);
 	incrementRefSafely(_ref);

@@ -12,7 +12,7 @@ import {
 	ACTOR_CONNECTION_POINT_IN_NODE_DEF,
 } from '../utils/io/connections/Actor';
 import {ParamType} from '../../poly/ParamType';
-import {physicsRBDAddForceAtPoint} from '../../../core/physics/PhysicsRBD';
+import {_physicsRBDAddForceAtPoint} from '../../../core/physics/PhysicsRBD';
 const CONNECTION_OPTIONS = ACTOR_CONNECTION_POINT_IN_NODE_DEF;
 
 class PhysicsRBDAddForceAtPointActorParamsConfig extends NodeParamsConfig {
@@ -51,7 +51,7 @@ export class PhysicsRBDAddForceAtPointActorNode extends TypedActorNode<PhysicsRB
 		const force = this._inputValueFromParam<ParamType.VECTOR3>(this.p.force, context);
 		const point = this._inputValueFromParam<ParamType.VECTOR3>(this.p.point, context);
 
-		physicsRBDAddForceAtPoint(Object3D, force, point);
+		_physicsRBDAddForceAtPoint(Object3D, force, point);
 
 		this.runTrigger(context);
 	}

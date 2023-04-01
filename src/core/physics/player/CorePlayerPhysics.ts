@@ -3,7 +3,7 @@ import {PhysicsLib} from '../CorePhysics';
 import {Object3D, Vector3} from 'three';
 import {PhysicsPlayerType} from './PhysicsPlayer';
 import {createCharacterController} from './CharacterController';
-import {physicsRBDResetAll} from '../PhysicsRBD';
+import {_physicsRBDResetAll} from '../PhysicsRBD';
 import {CorePhysicsAttribute} from '../PhysicsAttribute';
 import {CorePath} from '../../geometry/CorePath';
 import {CoreCameraControlsController, ApplicableControlsNode} from '../../camera/CoreCameraControlsController';
@@ -247,7 +247,7 @@ export class CorePlayerPhysics {
 		// reset if below threshold
 		if (computeInputData.resetIfBelowThreshold) {
 			if (this.body.translation().y < computeInputData.resetThreshold) {
-				physicsRBDResetAll(this.object, true);
+				_physicsRBDResetAll(this.object, true);
 				this.body.setTranslation(this.startPosition, true);
 			}
 		}

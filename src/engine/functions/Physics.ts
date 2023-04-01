@@ -14,6 +14,16 @@ import {setWorldGravity, stepWorld} from '../../core/physics/PhysicsWorld';
 import {
 	RBDProperty,
 	_getRBD,
+	_physicsRBDAddForce,
+	_physicsRBDAddForceAtPoint,
+	_physicsRBDAddTorque,
+	_physicsRBDApplyImpulse,
+	_physicsRBDApplyImpulseAtPoint,
+	_physicsRBDRemove,
+	_physicsRBDResetAll,
+	_physicsRBDApplyTorqueImpulse,
+	_physicsRBDResetForces,
+	_physicsRBDResetTorques,
 	_setPhysicsRBDAngularVelocity,
 	_setPhysicsRBDLinearVelocity,
 	_setPhysicsRBDPosition,
@@ -352,5 +362,94 @@ export class setPhysicsRBDLinearVelocity extends ObjectNamedFunction2<[Vector3, 
 	}
 	func(object3D: Object3D, velocity: Vector3, lerp: number): void {
 		_setPhysicsRBDLinearVelocity(object3D, velocity, lerp);
+	}
+}
+
+//
+//
+// FORCES
+//
+//
+export class physicsRBDAddForce extends ObjectNamedFunction1<[Vector3]> {
+	static override type() {
+		return 'physicsRBDAddForce';
+	}
+	func(object3D: Object3D, force: Vector3): void {
+		_physicsRBDAddForce(object3D, force);
+	}
+}
+
+export class physicsRBDAddForceAtPoint extends ObjectNamedFunction2<[Vector3, Vector3]> {
+	static override type() {
+		return 'physicsRBDAddForceAtPoint';
+	}
+	func(object3D: Object3D, force: Vector3, point: Vector3): void {
+		_physicsRBDAddForceAtPoint(object3D, force, point);
+	}
+}
+export class physicsRBDAddTorque extends ObjectNamedFunction1<[Vector3]> {
+	static override type() {
+		return 'physicsRBDAddTorque';
+	}
+	func(object3D: Object3D, force: Vector3): void {
+		_physicsRBDAddTorque(object3D, force);
+	}
+}
+export class physicsRBDApplyTorqueImpulse extends ObjectNamedFunction1<[Vector3]> {
+	static override type() {
+		return 'physicsRBDApplyTorqueImpulse';
+	}
+	func(object3D: Object3D, impulse: Vector3): void {
+		_physicsRBDApplyTorqueImpulse(object3D, impulse);
+	}
+}
+
+export class physicsRBDApplyImpulse extends ObjectNamedFunction1<[Vector3]> {
+	static override type() {
+		return 'physicsRBDApplyImpulse';
+	}
+	func(object3D: Object3D, impulse: Vector3): void {
+		_physicsRBDApplyImpulse(object3D, impulse);
+	}
+}
+
+export class physicsRBDApplyImpulseAtPoint extends ObjectNamedFunction2<[Vector3, Vector3]> {
+	static override type() {
+		return 'physicsRBDApplyImpulseAtPoint';
+	}
+	func(object3D: Object3D, impulse: Vector3, point: Vector3): void {
+		_physicsRBDApplyImpulseAtPoint(object3D, impulse, point);
+	}
+}
+export class physicsRBDRemove extends ObjectNamedFunction0 {
+	static override type() {
+		return 'physicsRBDRemove';
+	}
+	func(object3D: Object3D): void {
+		_physicsRBDRemove(object3D);
+	}
+}
+export class physicsRBDResetAll extends ObjectNamedFunction1<[boolean]> {
+	static override type() {
+		return 'physicsRBDResetAll';
+	}
+	func(object3D: Object3D, wakeup: boolean): void {
+		_physicsRBDResetAll(object3D, wakeup);
+	}
+}
+export class physicsRBDResetForces extends ObjectNamedFunction1<[boolean]> {
+	static override type() {
+		return 'physicsRBDResetForces';
+	}
+	func(object3D: Object3D, wakeup: boolean): void {
+		_physicsRBDResetForces(object3D, wakeup);
+	}
+}
+export class physicsRBDResetTorques extends ObjectNamedFunction1<[boolean]> {
+	static override type() {
+		return 'physicsRBDResetTorques';
+	}
+	func(object3D: Object3D, wakeup: boolean): void {
+		_physicsRBDResetTorques(object3D, wakeup);
 	}
 }

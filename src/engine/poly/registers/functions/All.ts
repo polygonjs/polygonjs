@@ -16,6 +16,7 @@ import {
 	animationActionPlay,
 	animationActionStop,
 } from '../../../functions/AnimationMixer';
+import {setPerspectiveCameraFov, setPerspectiveCameraNearFar} from '../../../functions/Camera';
 import {
 	boolToInt,
 	intToBool,
@@ -30,7 +31,16 @@ import {
 	vec3ToColor,
 	vec3ToVec4,
 } from '../../../functions/Conversion';
-import {setObjectMaterial, setObjectMaterialColor} from '../../../functions/Material';
+import {setSpotLightIntensity} from '../../../functions/Light';
+import {
+	setObjectMaterial,
+	setObjectMaterialColor,
+	setMaterialColor,
+	setMaterialEmissiveColor,
+	setMaterialOpacity,
+	setMaterialUniformNumber,
+	setMaterialUniformVectorColor,
+} from '../../../functions/Material';
 import {particlesSystemReset, particlesSystemStepSimulation} from '../../../functions/ParticlesSystem';
 import {
 	// globals
@@ -65,6 +75,17 @@ import {
 	setPhysicsRBDLinearVelocity,
 	// set world
 	setPhysicsWorldGravity,
+	// forces
+	physicsRBDAddForce,
+	physicsRBDAddForceAtPoint,
+	physicsRBDAddTorque,
+	physicsRBDApplyImpulse,
+	physicsRBDApplyImpulseAtPoint,
+	physicsRBDApplyTorqueImpulse,
+	physicsRBDRemove,
+	physicsRBDResetAll,
+	physicsRBDResetForces,
+	physicsRBDResetTorques,
 } from '../../../functions/Physics';
 import {sizzleVec3XY, sizzleVec3XZ, sizzleVec3YZ, sizzleVec4XYZ} from '../../../functions/Sizzle';
 import {
@@ -99,7 +120,17 @@ import {getObjectHoveredState} from '../../../functions/GetObjectHoveredState';
 import {getObjectProperty} from '../../../functions/GetObjectProperty';
 import {setObjectAttribute} from '../../../functions/SetObjectAttribute';
 import {setObjectLookAt} from '../../../functions/SetObjectLookAt';
+import {setObjectPolarTransform} from '../../../functions/SetObjectPolarTransform';
 import {setObjectPosition} from '../../../functions/SetObjectPosition';
+import {setObjectRotation} from '../../../functions/SetObjectRotation';
+import {
+	setObjectCastShadow,
+	setObjectFrustumCulled,
+	setObjectMatrix,
+	setObjectMatrixAutoUpdate,
+	setObjectReceiveShadow,
+	setObjectVisible,
+} from '../../../functions/SetObjectProperty';
 import {setObjectScale} from '../../../functions/SetObjectScale';
 
 export interface NamedFunctionMap {
@@ -157,6 +188,16 @@ export interface NamedFunctionMap {
 	multVectorNumber: multVectorNumber<Vector2 | Vector3 | Vector4>;
 	particlesSystemReset: particlesSystemReset;
 	particlesSystemStepSimulation: particlesSystemStepSimulation;
+	physicsRBDAddForce: physicsRBDAddForce;
+	physicsRBDAddForceAtPoint: physicsRBDAddForceAtPoint;
+	physicsRBDAddTorque: physicsRBDAddTorque;
+	physicsRBDApplyImpulse: physicsRBDApplyImpulse;
+	physicsRBDApplyImpulseAtPoint: physicsRBDApplyImpulseAtPoint;
+	physicsRBDApplyTorqueImpulse: physicsRBDApplyTorqueImpulse;
+	physicsRBDRemove: physicsRBDRemove;
+	physicsRBDResetAll: physicsRBDResetAll;
+	physicsRBDResetForces: physicsRBDResetForces;
+	physicsRBDResetTorques: physicsRBDResetTorques;
 	physicsWorldReset: physicsWorldReset;
 	physicsWorldStepSimulation: physicsWorldStepSimulation;
 	planeSet: planeSet;
@@ -173,12 +214,27 @@ export interface NamedFunctionMap {
 	SDFSphere: SDFSphere;
 	SDFSubtract: SDFSubtract;
 	SDFUnion: SDFUnion;
+	setMaterialColor: setMaterialColor;
+	setMaterialEmissiveColor: setMaterialEmissiveColor;
+	setMaterialOpacity: setMaterialOpacity;
+	setMaterialUniformNumber: setMaterialUniformNumber;
+	setMaterialUniformVectorColor: setMaterialUniformVectorColor;
 	setObjectAttribute: setObjectAttribute;
 	setObjectLookAt: setObjectLookAt;
 	setObjectMaterial: setObjectMaterial;
 	setObjectMaterialColor: setObjectMaterialColor;
 	setObjectPosition: setObjectPosition;
+	setObjectPolarTransform: setObjectPolarTransform;
+	setObjectRotation: setObjectRotation;
+	setObjectCastShadow: setObjectCastShadow;
+	setObjectFrustumCulled: setObjectFrustumCulled;
+	setObjectMatrix: setObjectMatrix;
+	setObjectMatrixAutoUpdate: setObjectMatrixAutoUpdate;
+	setObjectReceiveShadow: setObjectReceiveShadow;
+	setObjectVisible: setObjectVisible;
 	setObjectScale: setObjectScale;
+	setPerspectiveCameraFov: setPerspectiveCameraFov;
+	setPerspectiveCameraNearFar: setPerspectiveCameraNearFar;
 	setPhysicsRBDCapsuleProperty: setPhysicsRBDCapsuleProperty;
 	setPhysicsRBDConeProperty: setPhysicsRBDConeProperty;
 	setPhysicsRBDCuboidProperty: setPhysicsRBDCuboidProperty;
@@ -189,6 +245,7 @@ export interface NamedFunctionMap {
 	setPhysicsRBDAngularVelocity: setPhysicsRBDAngularVelocity;
 	setPhysicsRBDLinearVelocity: setPhysicsRBDLinearVelocity;
 	setPhysicsWorldGravity: setPhysicsWorldGravity;
+	setSpotLightIntensity: setSpotLightIntensity;
 	sizzleVec3XY: sizzleVec3XY;
 	sizzleVec3XZ: sizzleVec3XZ;
 	sizzleVec3YZ: sizzleVec3YZ;
@@ -259,10 +316,19 @@ export class AllNamedFunctionRegister {
 			particlesSystemReset,
 			particlesSystemStepSimulation,
 			planeSet,
+			physicsRBDAddForce,
+			physicsRBDAddForceAtPoint,
+			physicsRBDAddTorque,
+			physicsRBDApplyImpulse,
+			physicsRBDApplyImpulseAtPoint,
+			physicsRBDApplyTorqueImpulse,
+			physicsRBDRemove,
+			physicsRBDResetAll,
+			physicsRBDResetForces,
+			physicsRBDResetTorques,
 			physicsWorldReset,
 			physicsWorldStepSimulation,
 			rayIntersectPlane,
-			setObjectPosition,
 			SDFBox,
 			SDFIntersect,
 			SDFRevolutionX,
@@ -275,11 +341,27 @@ export class AllNamedFunctionRegister {
 			SDFSphere,
 			SDFSubtract,
 			SDFUnion,
+			setMaterialColor,
+			setMaterialEmissiveColor,
+			setMaterialOpacity,
+			setMaterialUniformNumber,
+			setMaterialUniformVectorColor,
 			setObjectAttribute,
 			setObjectLookAt,
 			setObjectMaterial,
 			setObjectMaterialColor,
+			setObjectCastShadow,
+			setObjectFrustumCulled,
+			setObjectMatrix,
+			setObjectMatrixAutoUpdate,
+			setObjectPosition,
+			setObjectPolarTransform,
+			setObjectReceiveShadow,
+			setObjectRotation,
+			setObjectVisible,
 			setObjectScale,
+			setPerspectiveCameraFov,
+			setPerspectiveCameraNearFar,
 			setPhysicsRBDCapsuleProperty,
 			setPhysicsRBDConeProperty,
 			setPhysicsRBDCuboidProperty,
@@ -290,6 +372,7 @@ export class AllNamedFunctionRegister {
 			setPhysicsRBDAngularVelocity,
 			setPhysicsRBDLinearVelocity,
 			setPhysicsWorldGravity,
+			setSpotLightIntensity,
 			sizzleVec3XY,
 			sizzleVec3XZ,
 			sizzleVec3YZ,

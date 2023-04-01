@@ -12,7 +12,7 @@ import {
 	ACTOR_CONNECTION_POINT_IN_NODE_DEF,
 } from '../utils/io/connections/Actor';
 import {ParamType} from '../../poly/ParamType';
-import {physicsRBDResetForces} from '../../../core/physics/PhysicsRBD';
+import {_physicsRBDResetForces} from '../../../core/physics/PhysicsRBD';
 const CONNECTION_OPTIONS = ACTOR_CONNECTION_POINT_IN_NODE_DEF;
 
 class PhysicsRBDResetForcesActorParamsConfig extends NodeParamsConfig {
@@ -48,7 +48,7 @@ export class PhysicsRBDResetForcesActorNode extends TypedActorNode<PhysicsRBDRes
 			context.Object3D;
 		const wakeup = this._inputValueFromParam<ParamType.BOOLEAN>(this.p.wakeup, context);
 
-		physicsRBDResetForces(Object3D, wakeup);
+		_physicsRBDResetForces(Object3D, wakeup);
 
 		this.runTrigger(context);
 	}

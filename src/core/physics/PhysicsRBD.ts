@@ -146,7 +146,7 @@ export function _getRBD(object: Object3D) {
 	return physicsRBDByRBDId.get(rbdId);
 }
 
-export function physicsRBDRemove(object: Object3D) {
+export function _physicsRBDRemove(object: Object3D) {
 	const rbdId = CoreObject.attribValue(object, PhysicsIdAttribute.RBD) as number | undefined;
 	if (rbdId == null) {
 		return;
@@ -262,7 +262,7 @@ function updateRBDRefs(object: Object3D) {
 }
 
 // impulse
-export function physicsRBDApplyImpulse(object: Object3D, impulse: Vector3) {
+export function _physicsRBDApplyImpulse(object: Object3D, impulse: Vector3) {
 	const body = _getRBD(object);
 	if (!body) {
 		console.warn('no rbd found');
@@ -270,7 +270,7 @@ export function physicsRBDApplyImpulse(object: Object3D, impulse: Vector3) {
 	}
 	body.applyImpulse(impulse, true);
 }
-export function physicsRBDApplyImpulseAtPoint(object: Object3D, impulse: Vector3, point: Vector3) {
+export function _physicsRBDApplyImpulseAtPoint(object: Object3D, impulse: Vector3, point: Vector3) {
 	const body = _getRBD(object);
 	if (!body) {
 		console.warn('no rbd found');
@@ -278,7 +278,7 @@ export function physicsRBDApplyImpulseAtPoint(object: Object3D, impulse: Vector3
 	}
 	body.applyImpulseAtPoint(impulse, point, true);
 }
-export function physicsRBDApplyTorqueImpulse(object: Object3D, impulse: Vector3) {
+export function _physicsRBDApplyTorqueImpulse(object: Object3D, impulse: Vector3) {
 	const body = _getRBD(object);
 	if (!body) {
 		console.warn('no rbd found');
@@ -287,7 +287,7 @@ export function physicsRBDApplyTorqueImpulse(object: Object3D, impulse: Vector3)
 	body.applyTorqueImpulse(impulse, true);
 }
 // add
-export function physicsRBDAddForce(object: Object3D, force: Vector3) {
+export function _physicsRBDAddForce(object: Object3D, force: Vector3) {
 	const body = _getRBD(object);
 	if (!body) {
 		console.warn('no rbd found');
@@ -295,7 +295,7 @@ export function physicsRBDAddForce(object: Object3D, force: Vector3) {
 	}
 	body.addForce(force, true);
 }
-export function physicsRBDAddForceAtPoint(object: Object3D, force: Vector3, point: Vector3) {
+export function _physicsRBDAddForceAtPoint(object: Object3D, force: Vector3, point: Vector3) {
 	const body = _getRBD(object);
 	if (!body) {
 		console.warn('no rbd found');
@@ -303,7 +303,7 @@ export function physicsRBDAddForceAtPoint(object: Object3D, force: Vector3, poin
 	}
 	body.addForceAtPoint(force, point, true);
 }
-export function physicsRBDAddTorque(object: Object3D, torque: Vector3) {
+export function _physicsRBDAddTorque(object: Object3D, torque: Vector3) {
 	const body = _getRBD(object);
 	if (!body) {
 		console.warn('no rbd found');
@@ -312,7 +312,7 @@ export function physicsRBDAddTorque(object: Object3D, torque: Vector3) {
 	body.addTorque(torque, true);
 }
 // reset
-export function physicsRBDResetAll(object: Object3D, wakeup: boolean) {
+export function _physicsRBDResetAll(object: Object3D, wakeup: boolean) {
 	const body = _getRBD(object);
 	if (!body) {
 		console.warn('no rbd found');
@@ -323,7 +323,7 @@ export function physicsRBDResetAll(object: Object3D, wakeup: boolean) {
 	body.setLinvel({x: 0, y: 0, z: 0}, wakeup);
 	body.setAngvel({x: 0, y: 0, z: 0}, wakeup);
 }
-export function physicsRBDResetForces(object: Object3D, wakeup: boolean) {
+export function _physicsRBDResetForces(object: Object3D, wakeup: boolean) {
 	const body = _getRBD(object);
 	if (!body) {
 		console.warn('no rbd found');
@@ -331,7 +331,7 @@ export function physicsRBDResetForces(object: Object3D, wakeup: boolean) {
 	}
 	body.resetForces(wakeup);
 }
-export function physicsRBDResetTorques(object: Object3D, wakeup: boolean) {
+export function _physicsRBDResetTorques(object: Object3D, wakeup: boolean) {
 	const body = _getRBD(object);
 	if (!body) {
 		console.warn('no rbd found');

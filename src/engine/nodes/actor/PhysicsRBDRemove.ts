@@ -10,7 +10,7 @@ import {
 	ActorConnectionPointType,
 	ACTOR_CONNECTION_POINT_IN_NODE_DEF,
 } from '../utils/io/connections/Actor';
-import {physicsRBDRemove} from '../../../core/physics/PhysicsRBD';
+import {_physicsRBDRemove} from '../../../core/physics/PhysicsRBD';
 const CONNECTION_OPTIONS = ACTOR_CONNECTION_POINT_IN_NODE_DEF;
 
 class PhysicsRBDRemoveActorParamsConfig extends NodeParamsConfig {}
@@ -42,7 +42,7 @@ export class PhysicsRBDRemoveActorNode extends TypedActorNode<PhysicsRBDRemoveAc
 			this._inputValue<ActorConnectionPointType.OBJECT_3D>(ActorConnectionPointType.OBJECT_3D, context) ||
 			context.Object3D;
 
-		physicsRBDRemove(Object3D);
+		_physicsRBDRemove(Object3D);
 
 		this.runTrigger(context);
 	}
