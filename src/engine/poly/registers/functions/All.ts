@@ -30,6 +30,7 @@ import {
 	vec3ToColor,
 	vec3ToVec4,
 } from '../../../functions/Conversion';
+import {setObjectMaterial, setObjectMaterialColor} from '../../../functions/Material';
 import {particlesSystemReset, particlesSystemStepSimulation} from '../../../functions/ParticlesSystem';
 import {
 	// globals
@@ -174,6 +175,8 @@ export interface NamedFunctionMap {
 	SDFUnion: SDFUnion;
 	setObjectAttribute: setObjectAttribute;
 	setObjectLookAt: setObjectLookAt;
+	setObjectMaterial: setObjectMaterial;
+	setObjectMaterialColor: setObjectMaterialColor;
 	setObjectPosition: setObjectPosition;
 	setObjectScale: setObjectScale;
 	setPhysicsRBDCapsuleProperty: setPhysicsRBDCapsuleProperty;
@@ -274,6 +277,8 @@ export class AllNamedFunctionRegister {
 			SDFUnion,
 			setObjectAttribute,
 			setObjectLookAt,
+			setObjectMaterial,
+			setObjectMaterialColor,
 			setObjectScale,
 			setPhysicsRBDCapsuleProperty,
 			setPhysicsRBDConeProperty,

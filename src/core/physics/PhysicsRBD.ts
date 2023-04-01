@@ -13,7 +13,7 @@ import {createPhysicsCylinder} from './shapes/RBDCylinder';
 import {createPhysicsTriMesh} from './shapes/RBDTrimesh';
 import {createPhysicsConvexHull} from './shapes/ConvexHull';
 import {createPhysicsHeightField} from './shapes/HeightField';
-import {touchRBDProperty} from '../reactivity/RBDPropertyReactivity';
+import {touchRBDProperties, touchRBDProperty} from '../reactivity/RBDPropertyReactivity';
 
 export enum RBDProperty {
 	ANGULAR_VELOCITY = 'angVel',
@@ -249,11 +249,16 @@ export function physicsUpdateRBD(object: Object3D, rigidBody: RigidBody) {
 	object.updateMatrix();
 	updateRBDRefs(object);
 }
+const SIM_PROPERTIES = [
+	RBDProperty.ANGULAR_VELOCITY,
+	RBDProperty.LINEAR_VELOCITY,
+	RBDProperty.POSITION,
+	RBDProperty.ROTATION,
+	RBDProperty.IS_SLEEPING,
+	RBDProperty.IS_MOVING,
+];
 function updateRBDRefs(object: Object3D) {
-	touchRBDProperty(object, RBDProperty.ANGULAR_VELOCITY);
-	touchRBDProperty(object, RBDProperty.LINEAR_VELOCITY);
-	touchRBDProperty(object, RBDProperty.POSITION);
-	touchRBDProperty(object, RBDProperty.ROTATION);
+	touchRBDProperties(object, SIM_PROPERTIES);
 }
 
 // impulse

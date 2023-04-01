@@ -323,10 +323,9 @@ export class Vec3ToColorJsNode extends TypedJsNode<Vec3ToColorParamsJsConfig> {
 	override setLines(shadersCollectionController: ShadersCollectionController) {
 		const linesData: ComputedValueJsDefinitionData[] = [];
 
-		const out = JsConnectionPointType.COLOR;
 		const vec3 = this.variableForInputParam(shadersCollectionController, this.p.vec3);
 
-		const varName = this.jsVarName(out);
+		const varName = this.jsVarName(JsConnectionPointType.COLOR);
 
 		shadersCollectionController.addVariable(this, varName, new Color());
 		const func = Poly.namedFunctionsRegister.getFunction('vec3ToColor', this, shadersCollectionController);
@@ -334,7 +333,7 @@ export class Vec3ToColorJsNode extends TypedJsNode<Vec3ToColorParamsJsConfig> {
 		linesData.push({
 			dataType: JsConnectionPointType.COLOR,
 			varName,
-			value: func.asString(vec3, out),
+			value: func.asString(vec3, varName),
 		});
 
 		shadersCollectionController.addBodyOrComputed(this, linesData);
@@ -365,10 +364,9 @@ export class ColorToVec3JsNode extends TypedJsNode<ColorToVec3ParamsJsConfig> {
 	override setLines(shadersCollectionController: ShadersCollectionController) {
 		const linesData: ComputedValueJsDefinitionData[] = [];
 
-		const out = JsConnectionPointType.VECTOR3;
 		const color = this.variableForInputParam(shadersCollectionController, this.p.color);
 
-		const varName = this.jsVarName(out);
+		const varName = this.jsVarName(JsConnectionPointType.VECTOR3);
 
 		shadersCollectionController.addVariable(this, varName, new Vector3());
 		const func = Poly.namedFunctionsRegister.getFunction('colorToVec3', this, shadersCollectionController);
@@ -376,7 +374,7 @@ export class ColorToVec3JsNode extends TypedJsNode<ColorToVec3ParamsJsConfig> {
 		linesData.push({
 			dataType: JsConnectionPointType.COLOR,
 			varName,
-			value: func.asString(color, out),
+			value: func.asString(color, varName),
 		});
 
 		shadersCollectionController.addBodyOrComputed(this, linesData);

@@ -28,6 +28,18 @@ export function _dummyReadPropertyRefVal(value: number) {
 	// and ensure that we have a dependency with the ref()
 }
 
+export function touchRBDProperties(object3D: Object3D, propertyNames: string[]) {
+	const map = refByRBDObjectUuidByPropertyName.get(object3D.uuid);
+	if (!map) {
+		return;
+	}
+	for (let propertyName of propertyNames) {
+		const _ref = map.get(propertyName);
+		if (_ref) {
+			incrementRefSafely(_ref);
+		}
+	}
+}
 export function touchRBDProperty(object3D: Object3D, propertyName: string) {
 	const _ref = getRBDPropertyRef(object3D, propertyName);
 	if (!_ref) {

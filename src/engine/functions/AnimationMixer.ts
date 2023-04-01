@@ -294,7 +294,7 @@ export class animationActionCrossFade extends NamedFunction5<
 	[AnimationAction, AnimationAction, number, boolean, boolean]
 > {
 	static override type() {
-		return 'animationActionFadeOut';
+		return 'animationActionCrossFade';
 	}
 	func(
 		actionFrom: AnimationAction,
