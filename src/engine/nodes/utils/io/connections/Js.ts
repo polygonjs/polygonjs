@@ -5,6 +5,8 @@ export enum JsConnectionPointType {
 	ANIMATION_MIXER = 'AnimationMixer',
 	ANIMATION_ACTION = 'AnimationAction',
 	BOOLEAN = 'boolean',
+	BOX3 = 'Box3',
+	CAMERA = 'Camera',
 	COLOR = 'Color',
 	FLOAT = 'float',
 	INT = 'int',
@@ -15,6 +17,7 @@ export enum JsConnectionPointType {
 	PLANE = 'Plane',
 	QUATERNION = 'Quaternion',
 	RAY = 'Ray',
+	SPHERE = 'Sphere',
 	STRING = 'string',
 	TRIGGER = 'trigger',
 	VECTOR2 = 'Vector2',
@@ -64,7 +67,9 @@ export function isJsConnectionPointVector(type: JsConnectionPointType) {
 export const JS_CONNECTION_POINT_TYPES: Array<JsConnectionPointType> = [
 	JsConnectionPointType.ANIMATION_MIXER,
 	JsConnectionPointType.ANIMATION_ACTION,
+	JsConnectionPointType.BOX3,
 	JsConnectionPointType.BOOLEAN,
+	JsConnectionPointType.CAMERA,
 	JsConnectionPointType.COLOR,
 	JsConnectionPointType.FLOAT,
 	JsConnectionPointType.INT,
@@ -75,6 +80,7 @@ export const JS_CONNECTION_POINT_TYPES: Array<JsConnectionPointType> = [
 	JsConnectionPointType.PLANE,
 	JsConnectionPointType.QUATERNION,
 	JsConnectionPointType.RAY,
+	JsConnectionPointType.SPHERE,
 	JsConnectionPointType.STRING,
 	JsConnectionPointType.TRIGGER,
 	JsConnectionPointType.VECTOR2,
@@ -104,6 +110,8 @@ export interface JsIConnectionPointTypeToParamTypeMap extends JSConnectionPointT
 	[JsConnectionPointType.ANIMATION_MIXER]: ParamType.BUTTON;
 	[JsConnectionPointType.ANIMATION_ACTION]: ParamType.BUTTON;
 	[JsConnectionPointType.BOOLEAN]: ParamType.BOOLEAN;
+	[JsConnectionPointType.BOX3]: ParamType.BUTTON;
+	[JsConnectionPointType.CAMERA]: ParamType.BUTTON;
 	[JsConnectionPointType.COLOR]: ParamType.COLOR;
 	[JsConnectionPointType.FLOAT]: ParamType.FLOAT;
 	[JsConnectionPointType.INT]: ParamType.INTEGER;
@@ -114,6 +122,7 @@ export interface JsIConnectionPointTypeToParamTypeMap extends JSConnectionPointT
 	[JsConnectionPointType.PLANE]: ParamType.BUTTON;
 	[JsConnectionPointType.QUATERNION]: ParamType.BUTTON;
 	[JsConnectionPointType.RAY]: ParamType.BUTTON;
+	[JsConnectionPointType.SPHERE]: ParamType.BUTTON;
 	[JsConnectionPointType.STRING]: ParamType.STRING;
 	[JsConnectionPointType.TRIGGER]: ParamType.BUTTON;
 	[JsConnectionPointType.VECTOR2]: ParamType.VECTOR2;
@@ -126,6 +135,8 @@ export const JsConnectionPointTypeToParamTypeMap: JsIConnectionPointTypeToParamT
 	[JsConnectionPointType.ANIMATION_MIXER]: ParamType.BUTTON,
 	[JsConnectionPointType.ANIMATION_ACTION]: ParamType.BUTTON,
 	[JsConnectionPointType.BOOLEAN]: ParamType.BOOLEAN,
+	[JsConnectionPointType.BOX3]: ParamType.BUTTON,
+	[JsConnectionPointType.CAMERA]: ParamType.BUTTON,
 	[JsConnectionPointType.COLOR]: ParamType.COLOR,
 	[JsConnectionPointType.FLOAT]: ParamType.FLOAT,
 	[JsConnectionPointType.INT]: ParamType.INTEGER,
@@ -136,6 +147,7 @@ export const JsConnectionPointTypeToParamTypeMap: JsIConnectionPointTypeToParamT
 	[JsConnectionPointType.PLANE]: ParamType.BUTTON,
 	[JsConnectionPointType.QUATERNION]: ParamType.BUTTON,
 	[JsConnectionPointType.RAY]: ParamType.BUTTON,
+	[JsConnectionPointType.SPHERE]: ParamType.BUTTON,
 	[JsConnectionPointType.STRING]: ParamType.STRING,
 	[JsConnectionPointType.TRIGGER]: ParamType.BUTTON,
 	[JsConnectionPointType.VECTOR2]: ParamType.VECTOR2,
@@ -196,6 +208,8 @@ export const JsConnectionPointInitValueMap: ConnectionPointInitValueMapGeneric =
 	[JsConnectionPointType.ANIMATION_ACTION]: null,
 	[JsConnectionPointType.ANIMATION_MIXER]: null,
 	[JsConnectionPointType.BOOLEAN]: false,
+	[JsConnectionPointType.BOX3]: null,
+	[JsConnectionPointType.CAMERA]: null,
 	[JsConnectionPointType.COLOR]: [1, 1, 1],
 	[JsConnectionPointType.FLOAT]: 0,
 	[JsConnectionPointType.INT]: 0,
@@ -206,6 +220,7 @@ export const JsConnectionPointInitValueMap: ConnectionPointInitValueMapGeneric =
 	[JsConnectionPointType.PLANE]: null,
 	[JsConnectionPointType.QUATERNION]: null,
 	[JsConnectionPointType.RAY]: null,
+	[JsConnectionPointType.SPHERE]: null,
 	[JsConnectionPointType.STRING]: '',
 	[JsConnectionPointType.TRIGGER]: null,
 	[JsConnectionPointType.VECTOR2]: [0, 0],
@@ -227,6 +242,8 @@ export const GlConnectionPointComponentsCountMap: ConnectionPointComponentsCount
 	[JsConnectionPointType.ANIMATION_ACTION]: 1,
 	[JsConnectionPointType.ANIMATION_MIXER]: 1,
 	[JsConnectionPointType.BOOLEAN]: 1,
+	[JsConnectionPointType.BOX3]: 1,
+	[JsConnectionPointType.CAMERA]: 1,
 	[JsConnectionPointType.COLOR]: 3,
 	[JsConnectionPointType.FLOAT]: 1,
 	[JsConnectionPointType.INT]: 1,
@@ -237,6 +254,7 @@ export const GlConnectionPointComponentsCountMap: ConnectionPointComponentsCount
 	[JsConnectionPointType.PLANE]: 1,
 	[JsConnectionPointType.QUATERNION]: 1,
 	[JsConnectionPointType.RAY]: 1,
+	[JsConnectionPointType.SPHERE]: 1,
 	[JsConnectionPointType.STRING]: 1,
 	[JsConnectionPointType.TRIGGER]: 1,
 	[JsConnectionPointType.VECTOR2]: 2,

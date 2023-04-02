@@ -1,0 +1,60 @@
+/**
+ * created a sphere
+ *
+ * @remarks
+ *
+ *
+ */
+
+import {TypedJsNode} from './_Base';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {JsConnectionPoint, JsConnectionPointType, JS_CONNECTION_POINT_IN_NODE_DEF} from '../utils/io/connections/Js';
+import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {Sphere} from 'three';
+import {Poly} from '../../Poly';
+const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
+
+class SphereJsParamsConfig extends NodeParamsConfig {
+	/** @param sphere center */
+	center = ParamConfig.VECTOR3([0, 0, 0]);
+	/** @param sphere radius */
+	radius = ParamConfig.FLOAT(1, {
+		range: [0, 10],
+		rangeLocked: [true, false],
+	});
+}
+const ParamsConfig = new SphereJsParamsConfig();
+export class SphereJsNode extends TypedJsNode<SphereJsParamsConfig> {
+	override paramsConfig = ParamsConfig;
+	static override type() {
+		return 'sphere';
+	}
+	override initializeNode() {
+		super.initializeNode();
+
+		this.io.outputs.setNamedOutputConnectionPoints([
+			new JsConnectionPoint(JsConnectionPointType.SPHERE, JsConnectionPointType.SPHERE, CONNECTION_OPTIONS),
+		]);
+	}
+	override setLines(shadersCollectionController: ShadersCollectionController) {
+		const center = this.variableForInputParam(shadersCollectionController, this.p.center);
+		const radius = this.variableForInputParam(shadersCollectionController, this.p.radius);
+		const out = this.jsVarName(JsConnectionPointType.SPHERE);
+
+		shadersCollectionController.addVariable(this, out, new Sphere());
+		const func = Poly.namedFunctionsRegister.getFunction('sphereSet', this, shadersCollectionController);
+		const bodyLine = func.asString(center, radius, out);
+		shadersCollectionController.addBodyOrComputed(this, [
+			{dataType: JsConnectionPointType.SPHERE, varName: out, value: bodyLine},
+		]);
+	}
+
+	// private _sphere = new Sphere();
+	// public override outputValue(context: ActorNodeTriggerContext) {
+	// 	const center = this._inputValueFromParam<ParamType.VECTOR3>(this.p.center, context);
+	// 	const radius = this._inputValueFromParam<ParamType.FLOAT>(this.p.radius, context);
+	// 	this._sphere.center.copy(center);
+	// 	this._sphere.radius = radius;
+	// 	return this._sphere;
+	// }
+}

@@ -15,6 +15,7 @@ import {AsinJsNode} from '../../../nodes/js/Asin';
 import {AtanJsNode} from '../../../nodes/js/Atan';
 import {AttributeJsNode} from '../../../nodes/js/Attribute';
 import {BoolToIntJsNode} from '../../../nodes/js/BoolToInt';
+import {Box3JsNode} from '../../../nodes/js/Box3';
 import {CeilJsNode} from '../../../nodes/js/Ceil';
 import {ColorToVec3JsNode} from '../../../nodes/js/ColorToVec3';
 import {ConstantJsNode} from '../../../nodes/js/Constant';
@@ -27,6 +28,8 @@ import {FloatToVec2JsNode} from '../../../nodes/js/FloatToVec2';
 import {FloatToVec3JsNode} from '../../../nodes/js/FloatToVec3';
 import {FloatToVec4JsNode} from '../../../nodes/js/FloatToVec4';
 import {FloorJsNode} from '../../../nodes/js/Floor';
+import {GetBox3PropertyJsNode} from '../../../nodes/js/GetBox3Property';
+import {GetPlanePropertyJsNode} from '../../../nodes/js/GetPlaneProperty';
 import {GetObjectJsNode} from '../../../nodes/js/GetObject';
 import {GetObjectAttributeJsNode} from '../../../nodes/js/GetObjectAttribute';
 import {GetObjectPropertyJsNode} from '../../../nodes/js/GetObjectProperty';
@@ -37,6 +40,8 @@ import {GetPhysicsRBDCuboidPropertyJsNode} from '../../../nodes/js/GetPhysicsRBD
 import {GetPhysicsRBDSpherePropertyJsNode} from '../../../nodes/js/GetPhysicsRBDSphereProperty';
 import {GetPhysicsRBDPropertyJsNode} from '../../../nodes/js/GetPhysicsRBDProperty';
 import {GetParentJsNode} from '../../../nodes/js/GetParent';
+import {GetRayPropertyJsNode} from '../../../nodes/js/GetRayProperty';
+import {GetSpherePropertyJsNode} from '../../../nodes/js/GetSphereProperty';
 import {GlobalsJsNode} from '../../../nodes/js/Globals';
 import {IntToBoolJsNode} from '../../../nodes/js/IntToBool';
 import {IntToFloatJsNode} from '../../../nodes/js/IntToFloat';
@@ -73,8 +78,20 @@ import {PhysicsRBDResetTorquesJsNode} from '../../../nodes/js/PhysicsRBDResetTor
 import {PhysicsWorldResetJsNode} from '../../../nodes/js/PhysicsWorldReset';
 import {PhysicsWorldStepSimulationJsNode} from '../../../nodes/js/PhysicsWorldStepSimulation';
 import {PlaneJsNode} from '../../../nodes/js/Plane';
+
+import {RayJsNode} from '../../../nodes/js/Ray';
+import {RayFromCameraJsNode} from '../../../nodes/js/RayFromCamera';
 import {RayFromCursorJsNode} from '../../../nodes/js/RayFromCursor';
+import {RayIntersectBoxJsNode} from '../../../nodes/js/RayIntersectBox';
+import {RayIntersectsBoxJsNode} from '../../../nodes/js/RayIntersectsBox';
+import {RayIntersectObjectJsNode} from '../../../nodes/js/RayIntersectObject';
+import {RayIntersectsObjectJsNode} from '../../../nodes/js/RayIntersectsObject';
+import {RayDistanceToPlaneJsNode} from '../../../nodes/js/RayDistanceToPlane';
 import {RayIntersectPlaneJsNode} from '../../../nodes/js/RayIntersectPlane';
+import {RayIntersectsPlaneJsNode} from '../../../nodes/js/RayIntersectsPlane';
+import {RayIntersectSphereJsNode} from '../../../nodes/js/RayIntersectSphere';
+import {RayIntersectsSphereJsNode} from '../../../nodes/js/RayIntersectsSphere';
+
 import {RoundJsNode} from '../../../nodes/js/Round';
 import {SDF2DRoundedXJsNode} from '../../../nodes/js/SDF2DRoundedX';
 import {SDFBoxJsNode} from '../../../nodes/js/SDFBox';
@@ -116,6 +133,7 @@ import {SetPhysicsWorldGravityJsNode} from '../../../nodes/js/SetPhysicsWorldGra
 import {SetSpotLightIntensityJsNode} from '../../../nodes/js/SetSpotLightIntensity';
 import {SignJsNode} from '../../../nodes/js/Sign';
 import {SinJsNode} from '../../../nodes/js/Sin';
+import {SphereJsNode} from '../../../nodes/js/Sphere';
 import {SqrtJsNode} from '../../../nodes/js/Sqrt';
 import {SubtractJsNode} from '../../../nodes/js/Subtract';
 import {SwitchJsNode} from '../../../nodes/js/Switch';
@@ -146,6 +164,7 @@ export interface JsNodeChildrenMap {
 	atan: AtanJsNode;
 	attribute: AttributeJsNode;
 	boolToInt: BoolToIntJsNode;
+	box3: Box3JsNode;
 	ceil: CeilJsNode;
 	cos: CosJsNode;
 	cursor: CursorJsNode;
@@ -158,16 +177,20 @@ export interface JsNodeChildrenMap {
 	floatToVec3: FloatToVec3JsNode;
 	floatToVec4: FloatToVec4JsNode;
 	floor: FloorJsNode;
+	getBox3Property: GetBox3PropertyJsNode;
 	getObject: GetObjectJsNode;
 	getObjectAttribute: GetObjectAttributeJsNode;
 	getObjectProperty: GetObjectPropertyJsNode;
 	getParent: GetParentJsNode;
+	getPlaneProperty: GetPlanePropertyJsNode;
 	getPhysicsRBDCapsuleProperty: GetPhysicsRBDCapsulePropertyJsNode;
 	getPhysicsRBDConeProperty: GetPhysicsRBDConePropertyJsNode;
 	getPhysicsRBDCylinderProperty: GetPhysicsRBDCylinderPropertyJsNode;
 	getPhysicsRBDCuboidProperty: GetPhysicsRBDCuboidPropertyJsNode;
 	getPhysicsRBDSphereProperty: GetPhysicsRBDSpherePropertyJsNode;
 	getPhysicsRBDProperty: GetPhysicsRBDPropertyJsNode;
+	getRayProperty: GetRayPropertyJsNode;
+	getSphereProperty: GetSpherePropertyJsNode;
 	globals: GlobalsJsNode;
 	intToBool: IntToBoolJsNode;
 	intToFloat: IntToFloatJsNode;
@@ -204,8 +227,18 @@ export interface JsNodeChildrenMap {
 	physicsWorldReset: PhysicsWorldResetJsNode;
 	physicsWorldStepSimulation: PhysicsWorldStepSimulationJsNode;
 	plane: PlaneJsNode;
+	ray: RayJsNode;
+	rayFromCamera: RayFromCameraJsNode;
 	rayFromCursor: RayFromCursorJsNode;
+	rayIntersectBox: RayIntersectBoxJsNode;
+	rayIntersectsBox: RayIntersectsBoxJsNode;
+	rayIntersectObject: RayIntersectObjectJsNode;
+	rayIntersectsObject: RayIntersectsObjectJsNode;
+	rayDistanceToPlane: RayDistanceToPlaneJsNode;
 	rayIntersectPlane: RayIntersectPlaneJsNode;
+	rayIntersectsPlane: RayIntersectsPlaneJsNode;
+	rayIntersectSphere: RayIntersectSphereJsNode;
+	rayIntersectsSphere: RayIntersectsSphereJsNode;
 	round: RoundJsNode;
 	SDF2DRoundedX: SDF2DRoundedXJsNode;
 	SDFBox: SDFBoxJsNode;
@@ -247,6 +280,7 @@ export interface JsNodeChildrenMap {
 	setSpotLightIntensity: SetSpotLightIntensityJsNode;
 	sign: SignJsNode;
 	sin: SinJsNode;
+	sphere: SphereJsNode;
 	sqrt: SqrtJsNode;
 	subtract: SubtractJsNode;
 	switch: SwitchJsNode;
@@ -285,6 +319,7 @@ export class JsRegister {
 		poly.registerNode(AsinJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(AtanJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(BoolToIntJsNode, CATEGORY_JS.CONVERSION);
+		poly.registerNode(Box3JsNode, CATEGORY_JS.MATH);
 		poly.registerNode(CeilJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(ColorToVec3JsNode, CATEGORY_JS.CONVERSION);
 		poly.registerNode(ConstantJsNode, CATEGORY_JS.GLOBALS);
@@ -297,16 +332,21 @@ export class JsRegister {
 		poly.registerNode(FloatToVec4JsNode, CATEGORY_JS.CONVERSION);
 		poly.registerNode(FloorJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(DivideJsNode, CATEGORY_JS.MATH);
+		poly.registerNode(GetBox3PropertyJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(GetObjectJsNode, CATEGORY_JS.GET, ONLY_ACTOR);
 		poly.registerNode(GetObjectAttributeJsNode, CATEGORY_JS.GET, ONLY_ACTOR);
 		poly.registerNode(GetObjectPropertyJsNode, CATEGORY_JS.GET, ONLY_ACTOR);
 		poly.registerNode(GetParentJsNode, CATEGORY_JS.GET, ONLY_ACTOR);
+		poly.registerNode(GetPlanePropertyJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(GetPhysicsRBDCapsulePropertyJsNode, CATEGORY_JS.PHYSICS, ONLY_ACTOR);
 		poly.registerNode(GetPhysicsRBDConePropertyJsNode, CATEGORY_JS.PHYSICS, ONLY_ACTOR);
 		poly.registerNode(GetPhysicsRBDCylinderPropertyJsNode, CATEGORY_JS.PHYSICS, ONLY_ACTOR);
 		poly.registerNode(GetPhysicsRBDCuboidPropertyJsNode, CATEGORY_JS.PHYSICS, ONLY_ACTOR);
 		poly.registerNode(GetPhysicsRBDSpherePropertyJsNode, CATEGORY_JS.PHYSICS, ONLY_ACTOR);
 		poly.registerNode(GetPhysicsRBDPropertyJsNode, CATEGORY_JS.PHYSICS, ONLY_ACTOR);
+		poly.registerNode(GetRayPropertyJsNode, CATEGORY_JS.MATH);
+		poly.registerNode(GetSpherePropertyJsNode, CATEGORY_JS.MATH);
+
 		poly.registerNode(GlobalsJsNode, CATEGORY_JS.GLOBALS, ONLY_WITH_GLOBALS);
 		poly.registerNode(IntToBoolJsNode, CATEGORY_JS.CONVERSION);
 		poly.registerNode(IntToFloatJsNode, CATEGORY_JS.CONVERSION);
@@ -345,8 +385,19 @@ export class JsRegister {
 		poly.registerNode(PhysicsWorldResetJsNode, CATEGORY_JS.PHYSICS, ONLY_ACTOR);
 		poly.registerNode(PhysicsWorldStepSimulationJsNode, CATEGORY_JS.PHYSICS, ONLY_ACTOR);
 		poly.registerNode(PlaneJsNode, CATEGORY_JS.MATH);
+
+		poly.registerNode(RayJsNode, CATEGORY_JS.MATH);
+		poly.registerNode(RayFromCameraJsNode, CATEGORY_JS.INPUTS);
 		poly.registerNode(RayFromCursorJsNode, CATEGORY_JS.INPUTS);
+		poly.registerNode(RayIntersectBoxJsNode, CATEGORY_JS.MATH);
+		poly.registerNode(RayIntersectsBoxJsNode, CATEGORY_JS.MATH);
+		poly.registerNode(RayIntersectObjectJsNode, CATEGORY_JS.MATH);
+		poly.registerNode(RayIntersectsObjectJsNode, CATEGORY_JS.MATH);
+		poly.registerNode(RayDistanceToPlaneJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(RayIntersectPlaneJsNode, CATEGORY_JS.MATH);
+		poly.registerNode(RayIntersectsPlaneJsNode, CATEGORY_JS.MATH);
+		poly.registerNode(RayIntersectSphereJsNode, CATEGORY_JS.MATH);
+		poly.registerNode(RayIntersectsSphereJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(RoundJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(SDF2DRoundedXJsNode, CATEGORY_JS.SDF_PRIMITIVES_2D);
 		poly.registerNode(SDFBoxJsNode, CATEGORY_JS.SDF_PRIMITIVES);
@@ -389,6 +440,7 @@ export class JsRegister {
 
 		poly.registerNode(SignJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(SinJsNode, CATEGORY_JS.MATH);
+		poly.registerNode(SphereJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(SqrtJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(SubtractJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(SwitchJsNode, CATEGORY_JS.LOGIC);

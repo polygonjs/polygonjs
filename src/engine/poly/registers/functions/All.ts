@@ -16,6 +16,7 @@ import {
 	animationActionPlay,
 	animationActionStop,
 } from '../../../functions/AnimationMixer';
+import {box3Set, getBox3Min, getBox3Max} from '../../../functions/Box3';
 import {setPerspectiveCameraFov, setPerspectiveCameraNearFar} from '../../../functions/Camera';
 import {
 	boolToInt,
@@ -95,8 +96,22 @@ import {
 	globalsRayFromCursor,
 	globalsCursor,
 } from '../../../functions/Globals';
-import {planeSet} from '../../../functions/Plane';
-import {rayIntersectPlane} from '../../../functions/Ray';
+import {planeSet, getPlaneNormal, getPlaneConstant} from '../../../functions/Plane';
+import {
+	raySet,
+	rayFromCamera,
+	getRayDirection,
+	getRayOrigin,
+	rayIntersectBox3,
+	rayIntersectsBox3,
+	rayIntersectObject3D,
+	rayIntersectsObject3D,
+	rayIntersectPlane,
+	rayIntersectsPlane,
+	rayDistanceToPlane,
+	rayIntersectSphere,
+	rayIntersectsSphere,
+} from '../../../functions/Ray';
 import {
 	SDFUnion,
 	SDFSubtract,
@@ -108,6 +123,7 @@ import {
 import {SDFRevolutionX, SDFRevolutionY, SDFRevolutionZ} from '../../../functions/SDFOperations2D';
 import {SDFBox, SDFSphere} from '../../../functions/SDFPrimitives';
 import {SDFRoundedX} from '../../../functions/SDFPrimitives2D';
+import {sphereSet, getSphereCenter, getSphereRadius} from '../../../functions/Sphere';
 
 //
 import {keyboardEventMatchesConfig} from '../../../functions/KeyboardEventMatchesConfig';
@@ -144,6 +160,7 @@ export interface NamedFunctionMap {
 	animationActionStop: animationActionStop;
 	animationMixerUpdate: animationMixerUpdate;
 	boolToInt: boolToInt;
+	box3Set: box3Set;
 	colorToVec3: colorToVec3;
 	divideNumber: divideNumber;
 	divideVectorNumber: divideVectorNumber<Vector2 | Vector3 | Vector4>;
@@ -155,12 +172,16 @@ export interface NamedFunctionMap {
 	getActorNodeParamValue: getActorNodeParamValue;
 	getAnimationAction: getAnimationAction;
 	getAnimationMixer: getAnimationMixer;
+	getBox3Min: getBox3Min;
+	getBox3Max: getBox3Max;
 	getObject: getObject;
 	getObjectAttribute: getObjectAttribute;
 	getObjectAttributeRef: getObjectAttributeRef;
 	getObjectHoveredState: getObjectHoveredState;
 	getObjectProperty: getObjectProperty;
 	getParent: getParent;
+	getPlaneNormal: getPlaneNormal;
+	getPlaneConstant: getPlaneConstant;
 	getPhysicsRBDCapsuleHeight: getPhysicsRBDCapsuleHeight;
 	getPhysicsRBDCapsuleRadius: getPhysicsRBDCapsuleRadius;
 	getPhysicsRBDConeHeight: getPhysicsRBDConeHeight;
@@ -175,6 +196,10 @@ export interface NamedFunctionMap {
 	getPhysicsRBDLinearDamping: getPhysicsRBDLinearDamping;
 	getPhysicsRBDIsSleeping: getPhysicsRBDIsSleeping;
 	getPhysicsRBDIsMoving: getPhysicsRBDIsMoving;
+	getRayDirection: getRayDirection;
+	getRayOrigin: getRayOrigin;
+	getSphereCenter: getSphereCenter;
+	getSphereRadius: getSphereRadius;
 	globalsTime: globalsTime;
 	globalsTimeDelta: globalsTimeDelta;
 	globalsRaycaster: globalsRaycaster;
@@ -201,7 +226,17 @@ export interface NamedFunctionMap {
 	physicsWorldReset: physicsWorldReset;
 	physicsWorldStepSimulation: physicsWorldStepSimulation;
 	planeSet: planeSet;
+	raySet: raySet;
+	rayFromCamera: rayFromCamera;
+	rayIntersectBox3: rayIntersectBox3;
+	rayIntersectsBox3: rayIntersectsBox3;
+	rayIntersectObject3D: rayIntersectObject3D;
+	rayIntersectsObject3D: rayIntersectsObject3D;
 	rayIntersectPlane: rayIntersectPlane;
+	rayIntersectsPlane: rayIntersectsPlane;
+	rayDistanceToPlane: rayDistanceToPlane;
+	rayIntersectSphere: rayIntersectSphere;
+	rayIntersectsSphere: rayIntersectsSphere;
 	SDFBox: SDFBox;
 	SDFIntersect: SDFIntersect;
 	SDFRevolutionX: SDFRevolutionX;
@@ -250,6 +285,7 @@ export interface NamedFunctionMap {
 	sizzleVec3XZ: sizzleVec3XZ;
 	sizzleVec3YZ: sizzleVec3YZ;
 	sizzleVec4XYZ: sizzleVec4XYZ;
+	sphereSet: sphereSet;
 	subtractNumber: subtractNumber;
 	subtractVector: subtractVector<Vector2 | Vector3 | Vector4>;
 	subtractVectorNumber: subtractVectorNumber<Vector2 | Vector3 | Vector4>;
@@ -271,6 +307,7 @@ export class AllNamedFunctionRegister {
 			animationActionStop,
 			animationMixerUpdate,
 			boolToInt,
+			box3Set,
 			colorToVec3,
 			divideNumber,
 			divideVectorNumber,
@@ -282,12 +319,16 @@ export class AllNamedFunctionRegister {
 			getActorNodeParamValue,
 			getAnimationAction,
 			getAnimationMixer,
+			getBox3Min,
+			getBox3Max,
 			getObject,
 			getObjectAttribute,
 			getObjectAttributeRef,
 			getObjectHoveredState,
 			getObjectProperty,
 			getParent,
+			getPlaneNormal,
+			getPlaneConstant,
 			getPhysicsRBDCapsuleHeight,
 			getPhysicsRBDCapsuleRadius,
 			getPhysicsRBDConeHeight,
@@ -302,6 +343,10 @@ export class AllNamedFunctionRegister {
 			getPhysicsRBDLinearDamping,
 			getPhysicsRBDIsSleeping,
 			getPhysicsRBDIsMoving,
+			getRayDirection,
+			getRayOrigin,
+			getSphereCenter,
+			getSphereRadius,
 			globalsTime,
 			globalsTimeDelta,
 			globalsRaycaster,
@@ -328,7 +373,17 @@ export class AllNamedFunctionRegister {
 			physicsRBDResetTorques,
 			physicsWorldReset,
 			physicsWorldStepSimulation,
+			raySet,
+			rayFromCamera,
+			rayIntersectBox3,
+			rayIntersectsBox3,
+			rayIntersectObject3D,
+			rayIntersectsObject3D,
 			rayIntersectPlane,
+			rayIntersectsPlane,
+			rayDistanceToPlane,
+			rayIntersectSphere,
+			rayIntersectsSphere,
 			SDFBox,
 			SDFIntersect,
 			SDFRevolutionX,
@@ -377,6 +432,7 @@ export class AllNamedFunctionRegister {
 			sizzleVec3XZ,
 			sizzleVec3YZ,
 			sizzleVec4XYZ,
+			sphereSet,
 			subtractNumber,
 			subtractVector,
 			subtractVectorNumber,
