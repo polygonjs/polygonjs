@@ -1,5 +1,6 @@
 import {NamedFunction1} from './_Base';
-import {getOrCreateParamRef, _dummyReadParamRefVal} from '../../core/reactivity/ParamReactivity';
+import {getOrCreateParamRef} from '../../core/reactivity/ParamReactivity';
+import {dummyReadRefVal} from '../../core/reactivity/CoreReactivity';
 
 export class getActorNodeParamValue extends NamedFunction1<[string]> {
 	static override type() {
@@ -11,7 +12,7 @@ export class getActorNodeParamValue extends NamedFunction1<[string]> {
 			return;
 		}
 		const _ref = getOrCreateParamRef(functionNode, paramName);
-		_dummyReadParamRefVal(_ref.value);
+		dummyReadRefVal(_ref.value);
 		return functionNode.params.get(paramName)!.value;
 	}
 }

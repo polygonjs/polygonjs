@@ -48,13 +48,4 @@ export class SphereJsNode extends TypedJsNode<SphereJsParamsConfig> {
 			{dataType: JsConnectionPointType.SPHERE, varName: out, value: bodyLine},
 		]);
 	}
-
-	// private _sphere = new Sphere();
-	// public override outputValue(context: ActorNodeTriggerContext) {
-	// 	const center = this._inputValueFromParam<ParamType.VECTOR3>(this.p.center, context);
-	// 	const radius = this._inputValueFromParam<ParamType.FLOAT>(this.p.radius, context);
-	// 	this._sphere.center.copy(center);
-	// 	this._sphere.radius = radius;
-	// 	return this._sphere;
-	// }
 }

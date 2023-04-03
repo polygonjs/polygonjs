@@ -11,6 +11,8 @@ import {AnimationActionPlayJsNode} from '../../../nodes/js/AnimationActionPlay';
 import {AnimationActionStopJsNode} from '../../../nodes/js/AnimationActionStop';
 import {AnimationMixerJsNode} from '../../../nodes/js/AnimationMixer';
 import {AnimationMixerUpdateJsNode} from '../../../nodes/js/AnimationMixerUpdate';
+import {ArrayElementJsNode} from '../../../nodes/js/ArrayElement';
+import {ArrayLengthJsNode} from '../../../nodes/js/ArrayLength';
 import {AsinJsNode} from '../../../nodes/js/Asin';
 import {AtanJsNode} from '../../../nodes/js/Atan';
 import {AttributeJsNode} from '../../../nodes/js/Attribute';
@@ -21,7 +23,9 @@ import {ColorToVec3JsNode} from '../../../nodes/js/ColorToVec3';
 import {ConstantJsNode} from '../../../nodes/js/Constant';
 import {CosJsNode} from '../../../nodes/js/Cos';
 import {CursorJsNode} from '../../../nodes/js/Cursor';
+import {DebugJsNode} from '../../../nodes/js/Debug';
 import {DivideJsNode} from '../../../nodes/js/Divide';
+import {ElementsToArrayJsNode} from '../../../nodes/js/ElementsToArray';
 import {FloatToColorJsNode} from '../../../nodes/js/FloatToColor';
 import {FloatToIntJsNode} from '../../../nodes/js/FloatToInt';
 import {FloatToVec2JsNode} from '../../../nodes/js/FloatToVec2';
@@ -29,23 +33,27 @@ import {FloatToVec3JsNode} from '../../../nodes/js/FloatToVec3';
 import {FloatToVec4JsNode} from '../../../nodes/js/FloatToVec4';
 import {FloorJsNode} from '../../../nodes/js/Floor';
 import {GetBox3PropertyJsNode} from '../../../nodes/js/GetBox3Property';
-import {GetPlanePropertyJsNode} from '../../../nodes/js/GetPlaneProperty';
+import {GetMaterialJsNode} from '../../../nodes/js/GetMaterial';
 import {GetObjectJsNode} from '../../../nodes/js/GetObject';
 import {GetObjectAttributeJsNode} from '../../../nodes/js/GetObjectAttribute';
 import {GetObjectPropertyJsNode} from '../../../nodes/js/GetObjectProperty';
+import {GetParentJsNode} from '../../../nodes/js/GetParent';
 import {GetPhysicsRBDConePropertyJsNode} from '../../../nodes/js/GetPhysicsRBDConeProperty';
 import {GetPhysicsRBDCapsulePropertyJsNode} from '../../../nodes/js/GetPhysicsRBDCapsuleProperty';
 import {GetPhysicsRBDCylinderPropertyJsNode} from '../../../nodes/js/GetPhysicsRBDCylinderProperty';
 import {GetPhysicsRBDCuboidPropertyJsNode} from '../../../nodes/js/GetPhysicsRBDCuboidProperty';
 import {GetPhysicsRBDSpherePropertyJsNode} from '../../../nodes/js/GetPhysicsRBDSphereProperty';
 import {GetPhysicsRBDPropertyJsNode} from '../../../nodes/js/GetPhysicsRBDProperty';
-import {GetParentJsNode} from '../../../nodes/js/GetParent';
+import {GetPlanePropertyJsNode} from '../../../nodes/js/GetPlaneProperty';
 import {GetRayPropertyJsNode} from '../../../nodes/js/GetRayProperty';
 import {GetSpherePropertyJsNode} from '../../../nodes/js/GetSphereProperty';
+import {GetTextureJsNode} from '../../../nodes/js/GetTexture';
+import {GetTrackedHandPropertyJsNode} from '../../../nodes/js/GetTrackedHandProperty';
 import {GlobalsJsNode} from '../../../nodes/js/Globals';
 import {IntToBoolJsNode} from '../../../nodes/js/IntToBool';
 import {IntToFloatJsNode} from '../../../nodes/js/IntToFloat';
 import {MultJsNode} from '../../../nodes/js/Mult';
+import {NullJsNode} from '../../../nodes/js/Null';
 import {OnKeydownJsNode} from '../../../nodes/js/OnKeydown';
 import {OnKeypressJsNode} from '../../../nodes/js/OnKeypress';
 import {OnKeyupJsNode} from '../../../nodes/js/OnKeyup';
@@ -100,6 +108,8 @@ import {SDFRevolutionJsNode} from '../../../nodes/js/SDFRevolution';
 import {SDFSphereJsNode} from '../../../nodes/js/SDFSphere';
 import {SDFSubtractJsNode} from '../../../nodes/js/SDFSubtract';
 import {SDFUnionJsNode} from '../../../nodes/js/SDFUnion';
+
+import {SetGeometryPositionsJsNode} from '../../../nodes/js/SetGeometryPositions';
 import {SetMaterialColorJsNode} from '../../../nodes/js/SetMaterialColor';
 import {SetMaterialEmissiveColorJsNode} from '../../../nodes/js/SetMaterialEmissiveColor';
 import {SetMaterialOpacityJsNode} from '../../../nodes/js/SetMaterialOpacity';
@@ -138,7 +148,13 @@ import {SqrtJsNode} from '../../../nodes/js/Sqrt';
 import {SubtractJsNode} from '../../../nodes/js/Subtract';
 import {SwitchJsNode} from '../../../nodes/js/Switch';
 import {TanJsNode} from '../../../nodes/js/Tan';
+import {TrackFaceJsNode} from '../../../nodes/js/TrackFace';
+import {TrackHandJsNode} from '../../../nodes/js/TrackHand';
 import {TwoWaySwitchJsNode} from '../../../nodes/js/TwoWaySwitch';
+import {Vector3AngleToJsNode} from '../../../nodes/js/Vector3AngleTo';
+import {Vector3ProjectJsNode} from '../../../nodes/js/Vector3Project';
+import {Vector3ProjectOnPlaneJsNode} from '../../../nodes/js/Vector3ProjectOnPlane';
+import {Vector3UnprojectJsNode} from '../../../nodes/js/Vector3Unproject';
 import {Vec2ToFloatJsNode} from '../../../nodes/js/Vec2ToFloat';
 import {Vec2ToVec3JsNode} from '../../../nodes/js/Vec2ToVec3';
 import {Vec3ToFloatJsNode} from '../../../nodes/js/Vec3ToFloat';
@@ -160,6 +176,8 @@ export interface JsNodeChildrenMap {
 	animationActionStop: AnimationActionStopJsNode;
 	animationMixer: AnimationMixerJsNode;
 	animationMixerUpdate: AnimationMixerUpdateJsNode;
+	arrayElement: ArrayElementJsNode;
+	arrayLength: ArrayLengthJsNode;
 	asin: AsinJsNode;
 	atan: AtanJsNode;
 	attribute: AttributeJsNode;
@@ -170,7 +188,9 @@ export interface JsNodeChildrenMap {
 	cursor: CursorJsNode;
 	colorToVec3: ColorToVec3JsNode;
 	constant: ConstantJsNode;
+	debug: DebugJsNode;
 	divide: DivideJsNode;
+	elementsToArray: ElementsToArrayJsNode;
 	floatToColor: FloatToColorJsNode;
 	floatToInt: FloatToIntJsNode;
 	floatToVec2: FloatToVec2JsNode;
@@ -178,6 +198,7 @@ export interface JsNodeChildrenMap {
 	floatToVec4: FloatToVec4JsNode;
 	floor: FloorJsNode;
 	getBox3Property: GetBox3PropertyJsNode;
+	getMaterial: GetMaterialJsNode;
 	getObject: GetObjectJsNode;
 	getObjectAttribute: GetObjectAttributeJsNode;
 	getObjectProperty: GetObjectPropertyJsNode;
@@ -191,10 +212,13 @@ export interface JsNodeChildrenMap {
 	getPhysicsRBDProperty: GetPhysicsRBDPropertyJsNode;
 	getRayProperty: GetRayPropertyJsNode;
 	getSphereProperty: GetSpherePropertyJsNode;
+	getTexture: GetTextureJsNode;
+	getTrackedHandProperty: GetTrackedHandPropertyJsNode;
 	globals: GlobalsJsNode;
 	intToBool: IntToBoolJsNode;
 	intToFloat: IntToFloatJsNode;
 	mult: MultJsNode;
+	null: NullJsNode;
 	onKeydown: OnKeydownJsNode;
 	onKeypress: OnKeypressJsNode;
 	onKeyup: OnKeyupJsNode;
@@ -247,6 +271,7 @@ export interface JsNodeChildrenMap {
 	SDFSphere: SDFSphereJsNode;
 	SDFSubtract: SDFSubtractJsNode;
 	SDFUnion: SDFUnionJsNode;
+	setGeometryPositions: SetGeometryPositionsJsNode;
 	setMaterialColor: SetMaterialColorJsNode;
 	setMaterialEmissiveColor: SetMaterialEmissiveColorJsNode;
 	setMaterialOpacity: SetMaterialOpacityJsNode;
@@ -285,6 +310,12 @@ export interface JsNodeChildrenMap {
 	subtract: SubtractJsNode;
 	switch: SwitchJsNode;
 	tan: TanJsNode;
+	trackFace: TrackFaceJsNode;
+	trackHand: TrackHandJsNode;
+	vector3AngleTo: Vector3AngleToJsNode;
+	vector3Project: Vector3ProjectJsNode;
+	vector3ProjectOnPlane: Vector3ProjectOnPlaneJsNode;
+	vector3Unproject: Vector3UnprojectJsNode;
 	twoWaySwitch: TwoWaySwitchJsNode;
 	vec2ToFloat: Vec2ToFloatJsNode;
 	vec2ToVec3: Vec2ToVec3JsNode;
@@ -316,6 +347,10 @@ export class JsRegister {
 		poly.registerNode(AnimationActionStopJsNode, CATEGORY_JS.ANIMATION);
 		poly.registerNode(AnimationMixerJsNode, CATEGORY_JS.ANIMATION);
 		poly.registerNode(AnimationMixerUpdateJsNode, CATEGORY_JS.ANIMATION);
+
+		poly.registerNode(ArrayElementJsNode, CATEGORY_JS.CONVERSION);
+		poly.registerNode(ArrayLengthJsNode, CATEGORY_JS.LOGIC);
+
 		poly.registerNode(AsinJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(AtanJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(BoolToIntJsNode, CATEGORY_JS.CONVERSION);
@@ -325,14 +360,19 @@ export class JsRegister {
 		poly.registerNode(ConstantJsNode, CATEGORY_JS.GLOBALS);
 		poly.registerNode(CosJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(CursorJsNode, CATEGORY_JS.INPUTS, ONLY_ACTOR);
+
+		poly.registerNode(DebugJsNode, CATEGORY_JS.FLOW);
+		poly.registerNode(DivideJsNode, CATEGORY_JS.MATH);
+
+		poly.registerNode(ElementsToArrayJsNode, CATEGORY_JS.CONVERSION);
 		poly.registerNode(FloatToColorJsNode, CATEGORY_JS.CONVERSION);
 		poly.registerNode(FloatToIntJsNode, CATEGORY_JS.CONVERSION);
 		poly.registerNode(FloatToVec2JsNode, CATEGORY_JS.CONVERSION);
 		poly.registerNode(FloatToVec3JsNode, CATEGORY_JS.CONVERSION);
 		poly.registerNode(FloatToVec4JsNode, CATEGORY_JS.CONVERSION);
 		poly.registerNode(FloorJsNode, CATEGORY_JS.MATH);
-		poly.registerNode(DivideJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(GetBox3PropertyJsNode, CATEGORY_JS.MATH);
+		poly.registerNode(GetMaterialJsNode, CATEGORY_JS.GET);
 		poly.registerNode(GetObjectJsNode, CATEGORY_JS.GET, ONLY_ACTOR);
 		poly.registerNode(GetObjectAttributeJsNode, CATEGORY_JS.GET, ONLY_ACTOR);
 		poly.registerNode(GetObjectPropertyJsNode, CATEGORY_JS.GET, ONLY_ACTOR);
@@ -346,11 +386,15 @@ export class JsRegister {
 		poly.registerNode(GetPhysicsRBDPropertyJsNode, CATEGORY_JS.PHYSICS, ONLY_ACTOR);
 		poly.registerNode(GetRayPropertyJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(GetSpherePropertyJsNode, CATEGORY_JS.MATH);
+		poly.registerNode(GetTextureJsNode, CATEGORY_JS.GET, ONLY_ACTOR);
+		poly.registerNode(GetTrackedHandPropertyJsNode, CATEGORY_JS.COMPUTER_VISION, ONLY_ACTOR);
 
 		poly.registerNode(GlobalsJsNode, CATEGORY_JS.GLOBALS, ONLY_WITH_GLOBALS);
 		poly.registerNode(IntToBoolJsNode, CATEGORY_JS.CONVERSION);
 		poly.registerNode(IntToFloatJsNode, CATEGORY_JS.CONVERSION);
 		poly.registerNode(MultJsNode, CATEGORY_JS.MATH);
+		poly.registerNode(NullJsNode, CATEGORY_JS.FLOW);
+
 		poly.registerNode(OnKeydownJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
 		poly.registerNode(OnKeypressJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
 		poly.registerNode(OnKeyupJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
@@ -406,6 +450,8 @@ export class JsRegister {
 		poly.registerNode(SDFSphereJsNode, CATEGORY_JS.SDF_PRIMITIVES);
 		poly.registerNode(SDFSubtractJsNode, CATEGORY_JS.SDF_MODIFIERS);
 		poly.registerNode(SDFUnionJsNode, CATEGORY_JS.SDF_MODIFIERS);
+
+		poly.registerNode(SetGeometryPositionsJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR);
 		poly.registerNode(SetMaterialColorJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR);
 		poly.registerNode(SetMaterialEmissiveColorJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR);
 		poly.registerNode(SetMaterialOpacityJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR);
@@ -445,7 +491,15 @@ export class JsRegister {
 		poly.registerNode(SubtractJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(SwitchJsNode, CATEGORY_JS.LOGIC);
 		poly.registerNode(TanJsNode, CATEGORY_JS.MATH);
+		poly.registerNode(TrackFaceJsNode, CATEGORY_JS.COMPUTER_VISION);
+		poly.registerNode(TrackHandJsNode, CATEGORY_JS.COMPUTER_VISION);
 		poly.registerNode(TwoWaySwitchJsNode, CATEGORY_JS.LOGIC);
+
+		poly.registerNode(Vector3AngleToJsNode, CATEGORY_JS.MATH);
+		poly.registerNode(Vector3ProjectJsNode, CATEGORY_JS.MATH);
+		poly.registerNode(Vector3ProjectOnPlaneJsNode, CATEGORY_JS.MATH);
+		poly.registerNode(Vector3UnprojectJsNode, CATEGORY_JS.MATH);
+
 		poly.registerNode(Vec2ToFloatJsNode, CATEGORY_JS.CONVERSION);
 		poly.registerNode(Vec2ToVec3JsNode, CATEGORY_JS.CONVERSION);
 		poly.registerNode(Vec3ToFloatJsNode, CATEGORY_JS.CONVERSION);

@@ -18,12 +18,12 @@ export abstract class BaseNamedFunction {
 	}
 	public readonly scene: PolyScene;
 	public readonly jsNode?: BaseJsNodeType;
-	public readonly functionNode?: AssemblerControllerNode;
+	public readonly functionNode: AssemblerControllerNode;
 	constructor(node: BaseNodeType, public readonly shadersCollectionController?: ShadersCollectionController) {
 		this.scene = node.scene();
 		if (node.context() == NodeContext.JS) {
 			this.jsNode = node as BaseJsNodeType;
-			this.functionNode = this.jsNode.functionNode();
+			this.functionNode = this.jsNode.functionNode()!;
 		} else {
 			this.jsNode = undefined;
 			this.functionNode = node as AssemblerControllerNode;

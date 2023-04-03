@@ -120,7 +120,7 @@ export class TypedJsNode<K extends NodeParamsConfig> extends TypedNode<NodeConte
 	// //
 	// //
 	jsVarName(name: string) {
-		return `v_POLY_${this.name()}_${name}`;
+		return `v_POLY_${this.name()}_${name}`.replace(/\[\]$/g, '');
 	}
 	inputVarName(inputName: string) {
 		const sanitizedNodePath = CoreString.sanitizeName(this.path().replace(this.functionNode()?.path() || '', ''));

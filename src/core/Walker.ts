@@ -29,7 +29,7 @@ abstract class GraphNodePathParamValue<T extends CoreGraphNode> {
 	private _setGraphNode(graphNode: T | null) {
 		this._graphNode = graphNode;
 	}
-	abstract graphNodePath():string|undefined
+	abstract graphNodePath(): string | undefined;
 	path() {
 		return this._path;
 	}
@@ -51,8 +51,8 @@ export class TypedNodePathParamValue extends GraphNodePathParamValue<BaseNodeTyp
 	node() {
 		return this._graphNode;
 	}
-	graphNodePath(){
-		return this.node()?.path()
+	graphNodePath() {
+		return this.node()?.path();
 	}
 
 	resolve(nodeStart: BaseNodeType) {
@@ -68,11 +68,11 @@ export class TypedNodePathParamValue extends GraphNodePathParamValue<BaseNodeTyp
 			errorState?.set(`no node found at ${this.path()}`);
 			return;
 		}
-		const node_context = foundNode.context();
-		if (node_context == context) {
+		const nodeContext = foundNode.context();
+		if (nodeContext == context) {
 			return foundNode as BaseNodeByContextMap[N];
 		} else {
-			errorState?.set(`expected ${context} node, but got a ${node_context}`);
+			errorState?.set(`expected ${context} node, but got a ${nodeContext}`);
 			return;
 		}
 	}
@@ -85,8 +85,8 @@ export class TypedParamPathParamValue extends GraphNodePathParamValue<BaseParamT
 	param() {
 		return this._graphNode;
 	}
-	graphNodePath(){
-		return this.param()?.path()
+	graphNodePath() {
+		return this.param()?.path();
 	}
 
 	resolve(nodeStart: BaseNodeType) {

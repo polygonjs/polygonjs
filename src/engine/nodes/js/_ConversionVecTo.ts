@@ -81,66 +81,7 @@ export class Vec4ToFloatJsNode extends VecToJsFactory('vec4ToFloat', {
 // Vector4 -> Vector3
 //
 //
-class Vec4ToVec3ParamsJsConfig extends NodeParamsConfig {
-	vec4 = ParamConfig.VECTOR4([0, 0, 0, 0]);
-}
-const ParamsConfig_Vec4ToVec3 = new Vec4ToVec3ParamsJsConfig();
-export class Vec4ToVec3JsNode extends TypedJsNode<Vec4ToVec3ParamsJsConfig> {
-	override paramsConfig = ParamsConfig_Vec4ToVec3;
-	static override type() {
-		return 'vec4ToVec3';
-	}
-	static readonly INPUT_NAME_VEC4 = 'vec4';
-	static readonly OUTPUT_NAME_VEC3 = 'vec3';
-	static readonly OUTPUT_NAME_W = 'w';
 
-	override initializeNode() {
-		this.io.outputs.setNamedOutputConnectionPoints([
-			new JsConnectionPoint(Vec4ToVec3JsNode.OUTPUT_NAME_VEC3, JsConnectionPointType.VECTOR3),
-			new JsConnectionPoint(Vec4ToVec3JsNode.OUTPUT_NAME_W, JsConnectionPointType.FLOAT),
-		]);
-	}
-
-	override setLines(shadersCollectionController: ShadersCollectionController) {
-		// const body_lines: string[] = [];
-
-		const in_vec4 = Vec4ToVec3JsNode.INPUT_NAME_VEC4;
-		const out_vec3 = Vec4ToVec3JsNode.OUTPUT_NAME_VEC3;
-		const out_w = Vec4ToVec3JsNode.OUTPUT_NAME_W;
-		const vec = this.variableForInput(shadersCollectionController, in_vec4);
-
-		const used_output_names = this.io.outputs.used_output_names();
-
-		if (used_output_names.indexOf(out_vec3) >= 0) {
-			const varName = this.jsVarName(out_vec3);
-			shadersCollectionController.addVariable(this, varName, new Vector3());
-			const func = Poly.namedFunctionsRegister.getFunction('sizzleVec4XYZ', this, shadersCollectionController);
-			shadersCollectionController.addBodyOrComputed(this, [
-				{
-					dataType: JsConnectionPointType.VECTOR3,
-					varName,
-					value: func.asString(vec, varName),
-				},
-			]);
-			// body_lines.push(`${func.asString(vec, out)}`);
-			// const var_name = this.jsVarName(out_vec3);
-			// body_lines.push(`vec3 ${var_name} = ${vec}.xyz`);
-		}
-		if (used_output_names.indexOf(out_w) >= 0) {
-			const varName = this.jsVarName(out_w);
-			// body_lines.push(`const ${var_name} = ${vec}.w`);
-
-			shadersCollectionController.addBodyOrComputed(this, [
-				{
-					dataType: JsConnectionPointType.FLOAT,
-					varName,
-					value: `${vec}.w`,
-				},
-			]);
-		}
-		// shadersCollectionController.addBodyOrComputed(this, body_lines);
-	}
-}
 //
 //
 // Vector3 -> Vector2

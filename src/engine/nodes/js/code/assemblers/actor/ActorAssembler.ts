@@ -202,6 +202,7 @@ export class JsAssemblerActor extends BaseJsShaderAssembler {
 						this.shaderNames()[0],
 						this
 					);
+					shadersCollectionController.setAllowActionLines(true);
 					node.setLines(shadersCollectionController);
 					const bodyLines = shadersCollectionController.bodyLines(ShaderName.FRAGMENT, node);
 					if (bodyLines) {
@@ -227,6 +228,7 @@ export class JsAssemblerActor extends BaseJsShaderAssembler {
 				this.shaderNames()[0],
 				this
 			);
+			// shadersCollectionController.setAllowActionLines(true);
 			const triggerFunctionLines: string[] = [];
 			const existingMethodNames: Set<string> = new Set();
 			this._triggerNodesByType.forEach((triggerNodes, nodeType) => {

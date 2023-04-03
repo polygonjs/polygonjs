@@ -1,6 +1,6 @@
 import {TypedJsNode} from './_Base';
 import {
-	JS_CONNECTION_POINT_TYPES,
+	PARAM_CONVERTIBLE_JS_CONNECTION_POINT_TYPES,
 	// GlConnectionPoint,
 	JsConnectionPointType,
 	JsConnectionPointInitValueMap,
@@ -19,9 +19,9 @@ import {Poly} from '../../Poly';
 // import {isBooleanTrue} from '../../../core/BooleanValue';
 class ParamJsParamsConfig extends NodeParamsConfig {
 	name = ParamConfig.STRING('');
-	type = ParamConfig.INTEGER(JS_CONNECTION_POINT_TYPES.indexOf(JsConnectionPointType.FLOAT), {
+	type = ParamConfig.INTEGER(PARAM_CONVERTIBLE_JS_CONNECTION_POINT_TYPES.indexOf(JsConnectionPointType.FLOAT), {
 		menu: {
-			entries: JS_CONNECTION_POINT_TYPES.map((name, i) => {
+			entries: PARAM_CONVERTIBLE_JS_CONNECTION_POINT_TYPES.map((name, i) => {
 				return {name: name, value: i};
 			}),
 		},
@@ -43,7 +43,9 @@ export class ParamJsNode extends TypedJsNode<ParamJsParamsConfig> {
 
 		this.io.connection_points.set_output_name_function((index: number) => ParamJsNode.OUTPUT_NAME);
 		this.io.connection_points.set_expected_input_types_function(() => []);
-		this.io.connection_points.set_expected_output_types_function(() => [JS_CONNECTION_POINT_TYPES[this.pv.type]]);
+		this.io.connection_points.set_expected_output_types_function(() => [
+			PARAM_CONVERTIBLE_JS_CONNECTION_POINT_TYPES[this.pv.type],
+		]);
 	}
 
 	override setLines(shadersCollectionController: ShadersCollectionController) {
@@ -66,7 +68,7 @@ export class ParamJsNode extends TypedJsNode<ParamJsParamsConfig> {
 
 		shadersCollectionController.addBodyOrComputed(this, [
 			{
-				dataType: JS_CONNECTION_POINT_TYPES[this.pv.type],
+				dataType: PARAM_CONVERTIBLE_JS_CONNECTION_POINT_TYPES[this.pv.type],
 				varName: out,
 				value: _func.asString(`'${this.pv.name}'`),
 			},
@@ -102,7 +104,7 @@ export class ParamJsNode extends TypedJsNode<ParamJsParamsConfig> {
 		// shadersCollectionController.addBodyLines(this, bodyLines);
 	}
 	override setParamConfigs() {
-		const type = JS_CONNECTION_POINT_TYPES[this.pv.type];
+		const type = PARAM_CONVERTIBLE_JS_CONNECTION_POINT_TYPES[this.pv.type];
 		const defaultValue = JsConnectionPointInitValueMap[type];
 		const paramType = JsConnectionPointTypeToParamTypeMap[type];
 
@@ -129,7 +131,7 @@ export class ParamJsNode extends TypedJsNode<ParamJsParamsConfig> {
 		// return varName;
 	}
 	setJsType(type: JsConnectionPointType) {
-		const index = JS_CONNECTION_POINT_TYPES.indexOf(type);
+		const index = PARAM_CONVERTIBLE_JS_CONNECTION_POINT_TYPES.indexOf(type);
 		this.p.type.set(index);
 	}
 	override paramsGenerating() {

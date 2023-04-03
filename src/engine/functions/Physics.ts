@@ -50,9 +50,9 @@ import {
 	_setPhysicsRBDCylinderProperty,
 } from '../../core/physics/shapes/RBDCylinder';
 import {_getPhysicsRBDSphereRadius, _setPhysicsRBDSphereProperty} from '../../core/physics/shapes/RBDSphere';
-import {_dummyReadPropertyRefVal} from '../../core/reactivity/ObjectPropertyReactivity';
 import {getOrCreatePropertyRef} from '../../core/reactivity/RBDPropertyReactivity';
 import {RBDCommonProperty} from '../../core/physics/shapes/_CommonHeightRadius';
+import {dummyReadRefVal} from '../../core/reactivity/CoreReactivity';
 
 //
 //
@@ -109,7 +109,7 @@ export class getPhysicsRBDCapsuleRadius extends ObjectNamedFunction0 {
 	}
 	func(object3D: Object3D): number {
 		const _ref = getOrCreatePropertyRef(object3D, RBDCapsuleProperty.RADIUS);
-		_dummyReadPropertyRefVal(_ref.value);
+		dummyReadRefVal(_ref.value);
 		return _getPhysicsRBDCapsuleRadius(object3D)!;
 	}
 }
@@ -119,7 +119,7 @@ export class getPhysicsRBDCapsuleHeight extends ObjectNamedFunction0 {
 	}
 	func(object3D: Object3D): number {
 		const _ref = getOrCreatePropertyRef(object3D, RBDCapsuleProperty.HEIGHT);
-		_dummyReadPropertyRefVal(_ref.value);
+		dummyReadRefVal(_ref.value);
 		return _getPhysicsRBDCapsuleRadius(object3D)!;
 	}
 }
@@ -130,7 +130,7 @@ export class getPhysicsRBDConeHeight extends ObjectNamedFunction0 {
 	}
 	func(object3D: Object3D): number {
 		const _ref = getOrCreatePropertyRef(object3D, RBDCommonProperty.HEIGHT);
-		_dummyReadPropertyRefVal(_ref.value);
+		dummyReadRefVal(_ref.value);
 		return _getPhysicsRBDConeHeight(object3D)!;
 	}
 }
@@ -140,7 +140,7 @@ export class getPhysicsRBDConeRadius extends ObjectNamedFunction0 {
 	}
 	func(object3D: Object3D): number {
 		const _ref = getOrCreatePropertyRef(object3D, RBDCommonProperty.RADIUS);
-		_dummyReadPropertyRefVal(_ref.value);
+		dummyReadRefVal(_ref.value);
 		return _getPhysicsRBDConeRadius(object3D)!;
 	}
 }
@@ -151,7 +151,7 @@ export class getPhysicsRBDCuboidSizes extends ObjectNamedFunction1<[Vector3]> {
 	}
 	func(object3D: Object3D, target: Vector3): Vector3 {
 		const _ref = getOrCreatePropertyRef(object3D, RBDCuboidProperty.SIZES);
-		_dummyReadPropertyRefVal(_ref.value);
+		dummyReadRefVal(_ref.value);
 		_getPhysicsRBDCuboidSizes(object3D, target);
 		return target;
 	}
@@ -163,7 +163,7 @@ export class getPhysicsRBDCylinderHeight extends ObjectNamedFunction0 {
 	}
 	func(object3D: Object3D): number {
 		const _ref = getOrCreatePropertyRef(object3D, RBDCommonProperty.HEIGHT);
-		_dummyReadPropertyRefVal(_ref.value);
+		dummyReadRefVal(_ref.value);
 		return _getPhysicsRBDCylinderHeight(object3D)!;
 	}
 }
@@ -173,7 +173,7 @@ export class getPhysicsRBDCylinderRadius extends ObjectNamedFunction0 {
 	}
 	func(object3D: Object3D): number {
 		const _ref = getOrCreatePropertyRef(object3D, RBDCommonProperty.RADIUS);
-		_dummyReadPropertyRefVal(_ref.value);
+		dummyReadRefVal(_ref.value);
 		return _getPhysicsRBDCylinderRadius(object3D)!;
 	}
 }
@@ -184,7 +184,7 @@ export class getPhysicsRBDSphereRadius extends ObjectNamedFunction0 {
 	}
 	func(object3D: Object3D): number {
 		const _ref = getOrCreatePropertyRef(object3D, RBDCommonProperty.RADIUS);
-		_dummyReadPropertyRefVal(_ref.value);
+		dummyReadRefVal(_ref.value);
 		return _getPhysicsRBDSphereRadius(object3D)!;
 	}
 }
@@ -246,7 +246,7 @@ export class getPhysicsRBDAngularVelocity extends ObjectNamedFunction1<[Vector3]
 		const body = _getRBD(object3D);
 		if (body) {
 			const _ref = getOrCreatePropertyRef(object3D, RBDProperty.ANGULAR_VELOCITY);
-			_dummyReadPropertyRefVal(_ref.value);
+			dummyReadRefVal(_ref.value);
 			const linVel = body.linvel();
 			return target.set(linVel.x, linVel.y, linVel.z);
 		} else {
@@ -262,7 +262,7 @@ export class getPhysicsRBDLinearVelocity extends ObjectNamedFunction1<[Vector3]>
 		const body = _getRBD(object3D);
 		if (body) {
 			const _ref = getOrCreatePropertyRef(object3D, RBDProperty.LINEAR_VELOCITY);
-			_dummyReadPropertyRefVal(_ref.value);
+			dummyReadRefVal(_ref.value);
 			const angVel = body.angvel();
 			return target.set(angVel.x, angVel.y, angVel.z);
 		} else {
@@ -278,7 +278,7 @@ export class getPhysicsRBDAngularDamping extends ObjectNamedFunction0 {
 		const body = _getRBD(object3D);
 		if (body) {
 			const _ref = getOrCreatePropertyRef(object3D, RBDProperty.ANGULAR_DAMPING);
-			_dummyReadPropertyRefVal(_ref.value);
+			dummyReadRefVal(_ref.value);
 			return body.angularDamping();
 		}
 		return 0;
@@ -292,7 +292,7 @@ export class getPhysicsRBDLinearDamping extends ObjectNamedFunction0 {
 		const body = _getRBD(object3D);
 		if (body) {
 			const _ref = getOrCreatePropertyRef(object3D, RBDProperty.LINEAR_DAMPING);
-			_dummyReadPropertyRefVal(_ref.value);
+			dummyReadRefVal(_ref.value);
 			return body.linearDamping();
 		}
 		return 0;
@@ -306,7 +306,7 @@ export class getPhysicsRBDIsSleeping extends ObjectNamedFunction0 {
 		const body = _getRBD(object3D);
 		if (body) {
 			const _ref = getOrCreatePropertyRef(object3D, RBDProperty.IS_SLEEPING);
-			_dummyReadPropertyRefVal(_ref.value);
+			dummyReadRefVal(_ref.value);
 			return body.isSleeping();
 		}
 		return false;
@@ -320,7 +320,7 @@ export class getPhysicsRBDIsMoving extends ObjectNamedFunction0 {
 		const body = _getRBD(object3D);
 		if (body) {
 			const _ref = getOrCreatePropertyRef(object3D, RBDProperty.IS_MOVING);
-			_dummyReadPropertyRefVal(_ref.value);
+			dummyReadRefVal(_ref.value);
 			return body.isMoving();
 		}
 		return false;

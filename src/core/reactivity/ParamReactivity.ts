@@ -22,10 +22,6 @@ export function createParamRef(node: BaseNodeType, paramName: string) {
 	}
 	return refForParam;
 }
-export function _dummyReadParamRefVal(value: number) {
-	// we just need this method to force a call to .value
-	// and ensure that we have a dependency with the ref()
-}
 
 export function touchParamRef(node: BaseNodeType, paramName: string) {
 	const _ref = getParamRef(node, paramName);

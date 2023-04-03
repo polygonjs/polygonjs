@@ -5,6 +5,7 @@ import {NodeCookPerformanceformanceController} from './cook/PerformanceControlle
 import {ContainerMap} from '../../containers/utils/ContainerMap';
 import {NodeContext} from '../../poly/NodeContext';
 import {ContainableMap} from '../../containers/utils/ContainableMap';
+import {touchNodeRef} from '../../../core/reactivity/NodeReactivity';
 
 enum ErrorType {
 	FROM_INPUTS = 'node inputs error',
@@ -154,6 +155,7 @@ export class NodeCookController<NC extends NodeContext> {
 			// setTimeout(this.node.containerController.notifyRequesters.bind(this.node.containerController), 0);
 			this.node.containerController.notifyRequesters();
 			this._runOnCookCompleteHooks();
+			touchNodeRef(this.node.path());
 		}
 	}
 

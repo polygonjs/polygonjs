@@ -26,6 +26,11 @@ export class ShadersCollectionController {
 		}
 	}
 
+	private _allowActionLines = false;
+	setAllowActionLines(state: boolean) {
+		this._allowActionLines = state;
+	}
+
 	// mergeDefinitions(shadersCollectionController: ShadersCollectionController) {
 	// 	for (let shaderName of this._shaderNames) {
 	// 		// this._linesControllerByShaderName.set(shaderName, new LinesController(shaderName));
@@ -131,6 +136,9 @@ export class ShadersCollectionController {
 	// 	return this._lines_controller_by_shader_name.get(shader_name)?.all_definition_nodes(scene) || [];
 	// }
 	addActionBodyLines(node: BaseJsNodeType, lines: string[]) {
+		if (!this._allowActionLines) {
+			return;
+		}
 		this._addBodyLines(node, lines);
 	}
 

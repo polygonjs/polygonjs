@@ -23,10 +23,6 @@ function createRBDPropertyRef(object3D: Object3D, propertyName: string) {
 function getRBDPropertyRef(object3D: Object3D, propertyName: string) {
 	return refByRBDObjectUuidByPropertyName.get(object3D.uuid)?.get(propertyName);
 }
-export function _dummyReadPropertyRefVal(value: number) {
-	// we just need this method to force a call to .value
-	// and ensure that we have a dependency with the ref()
-}
 
 export function touchRBDProperties(object3D: Object3D, propertyNames: string[]) {
 	const map = refByRBDObjectUuidByPropertyName.get(object3D.uuid);

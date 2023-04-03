@@ -50,5 +50,8 @@ export function incrementRefSafely(_ref: Ref<number>) {
 		_ref.value += 1;
 	}
 }
-
+export function dummyReadRefVal(value: number) {
+	// we just need this method to force a call to .value
+	// and ensure that we have a dependency with the ref()
+}
 export {computed, ref, watch};

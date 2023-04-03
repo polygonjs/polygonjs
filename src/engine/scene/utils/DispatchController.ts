@@ -5,10 +5,18 @@ import {SceneEvent} from '../../poly/SceneEvent';
 import {NodeEvent} from '../../poly/NodeEvent';
 import {ParamEvent} from '../../poly/ParamEvent';
 import {ActorEvaluator} from '../../nodes/js/code/assemblers/actor/Evaluator';
+import {Object3D} from 'three';
+import {JsDataType} from '../../nodes/utils/io/connections/Js';
 
+export interface ActorEvaluatorDebugOptions {
+	object3D: Object3D;
+	nodePath: string;
+	value: JsDataType;
+}
 export interface EventsListener {
 	processEvents: (emitter: CoreGraphNode, event: SceneEvent | NodeEvent | ParamEvent, data?: any) => void;
 	processActorEvaluator(evaluator: ActorEvaluator): ActorEvaluator;
+	actorEvaluatorDebug(options: ActorEvaluatorDebugOptions): void;
 }
 type OnAddListenerCallback = () => void;
 
@@ -58,5 +66,8 @@ export class DispatchController {
 	}
 	processActorEvaluator(evaluator: ActorEvaluator) {
 		return this._eventsListener?.processActorEvaluator(evaluator);
+	}
+	actorEvaluatorDebug(options: ActorEvaluatorDebugOptions) {
+		return this._eventsListener?.actorEvaluatorDebug(options);
 	}
 }

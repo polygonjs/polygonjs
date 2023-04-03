@@ -1,11 +1,95 @@
-import {Box3, Color, Vector2, Vector3, Vector4, Plane, Ray, Sphere, Quaternion} from 'three';
-import {Number2, Number3, Number4} from '../../../../../types/GlobalTypes';
+import {Box3, Color, Vector2, Vector3, Vector4, Plane, Ray, Sphere, Quaternion, Matrix4} from 'three';
+import {CoreType} from '../../../../../core/Type';
+import {Number2, Number3, Number4, Number16} from '../../../../../types/GlobalTypes';
 import {TypeAssert} from '../../../../poly/Assert';
-export type RegisterableVariable = Box3 | Color | Plane | Quaternion | Ray | Sphere | Vector2 | Vector3 | Vector4;
+import {JsConnectionPointType, PrimitiveArrayElement, VectorArrayElement} from '../../../utils/io/connections/Js';
+export type RegisterableVariable =
+	| Box3
+	| Color
+	| Plane
+	| Quaternion
+	| Matrix4
+	| Ray
+	| Sphere
+	| Vector2
+	| Vector3
+	| Vector4
+	| PrimitiveArray<boolean>
+	| PrimitiveArray<number>
+	| PrimitiveArray<string>
+	| VectorArray<Color>
+	| VectorArray<Matrix4>
+	| VectorArray<Quaternion>
+	| VectorArray<Vector2>
+	| VectorArray<Vector3>
+	| VectorArray<Vector4>;
+
+export class PrimitiveArray<V extends PrimitiveArrayElement> {
+	constructor(protected _elements: V[]) {}
+	elements() {
+		return this._elements;
+	}
+	clone(): V[] {
+		return this._elements.map((v) => v as V);
+	}
+}
+export class VectorArray<V extends VectorArrayElement> {
+	constructor(protected _elements: V[]) {}
+	elements() {
+		return this._elements;
+	}
+	clone(): V[] {
+		return this._elements.map((v) => v.clone() as V);
+	}
+}
+// Color | Vector2 | Vector3 | Vector4 | Matrix4 | Quaternion
+export function createPrimitiveArray<V extends PrimitiveArrayElement>(type: JsConnectionPointType): PrimitiveArray<V> {
+	switch (type) {
+		case JsConnectionPointType.BOOLEAN: {
+			return new PrimitiveArray([false]) as PrimitiveArray<V>;
+		}
+		case JsConnectionPointType.INT: {
+			return new PrimitiveArray([0]) as PrimitiveArray<V>;
+		}
+		case JsConnectionPointType.FLOAT: {
+			return new PrimitiveArray([0]) as PrimitiveArray<V>;
+		}
+		case JsConnectionPointType.STRING: {
+			return new PrimitiveArray(['']) as PrimitiveArray<V>;
+		}
+	}
+	console.warn('createPrimitiveArray not implemented for type:', type);
+	return new PrimitiveArray([0]) as PrimitiveArray<V>;
+}
+export function createVectorArray<V extends VectorArrayElement>(type: JsConnectionPointType): VectorArray<V> {
+	switch (type) {
+		case JsConnectionPointType.COLOR: {
+			return new VectorArray([new Color()]) as VectorArray<V>;
+		}
+		case JsConnectionPointType.MATRIX4: {
+			return new VectorArray([new Matrix4()]) as VectorArray<V>;
+		}
+		case JsConnectionPointType.QUATERNION: {
+			return new VectorArray([new Quaternion()]) as VectorArray<V>;
+		}
+		case JsConnectionPointType.VECTOR2: {
+			return new VectorArray([new Vector2()]) as VectorArray<V>;
+		}
+		case JsConnectionPointType.VECTOR3: {
+			return new VectorArray([new Vector3()]) as VectorArray<V>;
+		}
+		case JsConnectionPointType.VECTOR4: {
+			return new VectorArray([new Vector4()]) as VectorArray<V>;
+		}
+	}
+	console.warn('createVectorArray not implemented for type:', type);
+	return new VectorArray([new Vector4()]) as VectorArray<V>;
+}
 
 export enum SerializedVariableType {
 	Box3 = 'Box3',
 	Color = 'Color',
+	Matrix4 = 'Matrix4',
 	Plane = 'Plane',
 	Quaternion = 'Quaternion',
 	Ray = 'Ray',
@@ -13,11 +97,23 @@ export enum SerializedVariableType {
 	Vector2 = 'Vector2',
 	Vector3 = 'Vector3',
 	Vector4 = 'Vector4',
+	// prim array
+	boolean_Array = 'boolean[]',
+	number_Array = 'number[]',
+	string_Array = 'string[]',
+	// vector array
+	Color_Array = 'Color[]',
+	Matrix4_Array = 'Matrix4[]',
+	Quaternion_Array = 'Quaternion[]',
+	Vector2_Array = 'Vector2[]',
+	Vector3_Array = 'Vector3[]',
+	Vector4_Array = 'Vector4[]',
 }
 
 interface SerializedDataByType {
 	[SerializedVariableType.Box3]: {min: Number3; max: Number3};
 	[SerializedVariableType.Color]: Number3;
+	[SerializedVariableType.Matrix4]: Number16;
 	[SerializedVariableType.Plane]: {normal: Number3; constant: number};
 	[SerializedVariableType.Quaternion]: Number4;
 	[SerializedVariableType.Ray]: {origin: Number3; direction: Number3};
@@ -25,10 +121,22 @@ interface SerializedDataByType {
 	[SerializedVariableType.Vector2]: Number2;
 	[SerializedVariableType.Vector3]: Number3;
 	[SerializedVariableType.Vector4]: Number4;
+	// prim array
+	[SerializedVariableType.boolean_Array]: boolean[];
+	[SerializedVariableType.number_Array]: number[];
+	[SerializedVariableType.string_Array]: string[];
+	// vector array
+	[SerializedVariableType.Color_Array]: Number3[];
+	[SerializedVariableType.Matrix4_Array]: Number16[];
+	[SerializedVariableType.Quaternion_Array]: Number4[];
+	[SerializedVariableType.Vector2_Array]: Number2[];
+	[SerializedVariableType.Vector3_Array]: Number3[];
+	[SerializedVariableType.Vector4_Array]: Number4[];
 }
 interface VariableByType {
 	[SerializedVariableType.Box3]: Box3;
 	[SerializedVariableType.Color]: Color;
+	[SerializedVariableType.Matrix4]: Matrix4;
 	[SerializedVariableType.Plane]: Plane;
 	[SerializedVariableType.Quaternion]: Quaternion;
 	[SerializedVariableType.Ray]: Ray;
@@ -36,6 +144,17 @@ interface VariableByType {
 	[SerializedVariableType.Vector2]: Vector2;
 	[SerializedVariableType.Vector3]: Vector3;
 	[SerializedVariableType.Vector4]: Vector4;
+	// prim array
+	[SerializedVariableType.boolean_Array]: PrimitiveArray<boolean>;
+	[SerializedVariableType.number_Array]: PrimitiveArray<number>;
+	[SerializedVariableType.string_Array]: PrimitiveArray<string>;
+	// vector array
+	[SerializedVariableType.Color_Array]: VectorArray<Color>;
+	[SerializedVariableType.Matrix4_Array]: VectorArray<Matrix4>;
+	[SerializedVariableType.Quaternion_Array]: VectorArray<Quaternion>;
+	[SerializedVariableType.Vector2_Array]: VectorArray<Vector2>;
+	[SerializedVariableType.Vector3_Array]: VectorArray<Vector3>;
+	[SerializedVariableType.Vector4_Array]: VectorArray<Vector4>;
 }
 
 export interface SerializedVariable<T extends SerializedVariableType> {
@@ -60,6 +179,13 @@ export function serializeVariable<T extends SerializedVariableType>(
 		const data: SerializedVariable<SerializedVariableType.Color> = {
 			type: SerializedVariableType.Color,
 			data: variable.toArray() as Number3,
+		};
+		return data as SerializedVariable<T>;
+	}
+	if (variable instanceof Matrix4) {
+		const data: SerializedVariable<SerializedVariableType.Matrix4> = {
+			type: SerializedVariableType.Matrix4,
+			data: variable.toArray() as Number16,
 		};
 		return data as SerializedVariable<T>;
 	}
@@ -121,6 +247,76 @@ export function serializeVariable<T extends SerializedVariableType>(
 		};
 		return data as SerializedVariable<T>;
 	}
+	if (variable instanceof PrimitiveArray<any>) {
+		const firstElement = variable.elements()[0];
+		if (CoreType.isBoolean(firstElement)) {
+			const data: SerializedVariable<SerializedVariableType.boolean_Array> = {
+				type: SerializedVariableType.boolean_Array,
+				data: variable.elements().map((v) => v as boolean),
+			};
+			return data as SerializedVariable<T>;
+		}
+		if (CoreType.isNumber(firstElement)) {
+			const data: SerializedVariable<SerializedVariableType.number_Array> = {
+				type: SerializedVariableType.number_Array,
+				data: variable.elements().map((v) => v as number),
+			};
+			return data as SerializedVariable<T>;
+		}
+		if (CoreType.isString(firstElement)) {
+			const data: SerializedVariable<SerializedVariableType.string_Array> = {
+				type: SerializedVariableType.string_Array,
+				data: variable.elements().map((v) => v as string),
+			};
+			return data as SerializedVariable<T>;
+		}
+	}
+	if (variable instanceof VectorArray<any>) {
+		const firstElement = variable.elements()[0];
+		if (firstElement instanceof Color) {
+			const data: SerializedVariable<SerializedVariableType.Color_Array> = {
+				type: SerializedVariableType.Color_Array,
+				data: variable.elements().map((v) => v.toArray() as Number3),
+			};
+			return data as SerializedVariable<T>;
+		}
+		if (firstElement instanceof Matrix4) {
+			const data: SerializedVariable<SerializedVariableType.Matrix4_Array> = {
+				type: SerializedVariableType.Matrix4_Array,
+				data: variable.elements().map((v) => v.toArray() as Number16),
+			};
+			return data as SerializedVariable<T>;
+		}
+		if (firstElement instanceof Quaternion) {
+			const data: SerializedVariable<SerializedVariableType.Quaternion_Array> = {
+				type: SerializedVariableType.Quaternion_Array,
+				data: variable.elements().map((v) => v.toArray() as Number4),
+			};
+			return data as SerializedVariable<T>;
+		}
+		if (firstElement instanceof Vector2) {
+			const data: SerializedVariable<SerializedVariableType.Vector2_Array> = {
+				type: SerializedVariableType.Vector2_Array,
+				data: variable.elements().map((v) => v.toArray() as Number2),
+			};
+			return data as SerializedVariable<T>;
+		}
+		if (firstElement instanceof Vector3) {
+			const data: SerializedVariable<SerializedVariableType.Vector3_Array> = {
+				type: SerializedVariableType.Vector3_Array,
+				data: variable.elements().map((v) => v.toArray() as Number3),
+			};
+			return data as SerializedVariable<T>;
+		}
+		if (firstElement instanceof Vector4) {
+			const data: SerializedVariable<SerializedVariableType.Vector4_Array> = {
+				type: SerializedVariableType.Vector4_Array,
+				data: variable.elements().map((v) => v.toArray() as Number4),
+			};
+			return data as SerializedVariable<T>;
+		}
+		console.log('array variable serialization not implemeted', variable, firstElement);
+	}
 
 	console.log('variable serialization not implemeted', variable);
 
@@ -149,6 +345,12 @@ export function deserializeVariable<T extends SerializedVariableType>(
 			color.g = data[1];
 			color.b = data[2];
 			return color as VariableByType[T];
+		}
+		case SerializedVariableType.Matrix4: {
+			const data = (serialized as SerializedVariable<SerializedVariableType.Matrix4>).data;
+			const matrix = new Matrix4();
+			matrix.set(...data);
+			return matrix as VariableByType[T];
 		}
 		case SerializedVariableType.Plane: {
 			const data = (serialized as SerializedVariable<SerializedVariableType.Plane>).data;
@@ -194,6 +396,89 @@ export function deserializeVariable<T extends SerializedVariableType>(
 			const vector = new Vector4();
 			vector.set(...data);
 			return vector as VariableByType[T];
+		}
+		// prim array
+		case SerializedVariableType.boolean_Array: {
+			const data = (serialized as SerializedVariable<SerializedVariableType.boolean_Array>).data;
+			const values = [...data];
+			const numberArray = new PrimitiveArray(values);
+			return numberArray as VariableByType[T];
+		}
+		case SerializedVariableType.number_Array: {
+			const data = (serialized as SerializedVariable<SerializedVariableType.number_Array>).data;
+			const values = [...data];
+			const numberArray = new PrimitiveArray(values);
+			return numberArray as VariableByType[T];
+		}
+		case SerializedVariableType.string_Array: {
+			const data = (serialized as SerializedVariable<SerializedVariableType.string_Array>).data;
+			const values = [...data];
+			const numberArray = new PrimitiveArray(values);
+			return numberArray as VariableByType[T];
+		}
+		// vector array
+		case SerializedVariableType.Color_Array: {
+			const data = (serialized as SerializedVariable<SerializedVariableType.Color_Array>).data;
+			const vectors = data.map((d) => {
+				const color = new Color();
+				color.r = d[0];
+				color.g = d[1];
+				color.b = d[2];
+				return color;
+			});
+			const vectorArray = new VectorArray(vectors);
+			return vectorArray as VariableByType[T];
+		}
+		case SerializedVariableType.Matrix4_Array: {
+			const data = (serialized as SerializedVariable<SerializedVariableType.Matrix4_Array>).data;
+			const vectors = data.map((d) => {
+				const v = new Matrix4();
+				v.set(...d);
+				return v;
+			});
+			const vectorArray = new VectorArray(vectors);
+			return vectorArray as VariableByType[T];
+		}
+		case SerializedVariableType.Quaternion_Array: {
+			const data = (serialized as SerializedVariable<SerializedVariableType.Quaternion_Array>).data;
+			const vectors = data.map((d) => {
+				const v = new Quaternion();
+				v.set(...d);
+				return v;
+			});
+			const vectorArray = new VectorArray(vectors);
+			return vectorArray as VariableByType[T];
+		}
+
+		case SerializedVariableType.Vector2_Array: {
+			const data = (serialized as SerializedVariable<SerializedVariableType.Vector2_Array>).data;
+			const vectors = data.map((d) => {
+				const v = new Vector2();
+				v.set(...d);
+				return v;
+			});
+			const vectorArray = new VectorArray(vectors);
+			return vectorArray as VariableByType[T];
+		}
+		case SerializedVariableType.Vector3_Array: {
+			const data = (serialized as SerializedVariable<SerializedVariableType.Vector3_Array>).data;
+			const vectors = data.map((d) => {
+				const v = new Vector3();
+				v.set(...d);
+				return v;
+			});
+			const vectorArray = new VectorArray(vectors);
+			return vectorArray as VariableByType[T];
+		}
+		case SerializedVariableType.Vector4_Array: {
+			const data = (serialized as SerializedVariable<SerializedVariableType.Vector4_Array>).data;
+			const vectors = data.map((d) => {
+				const v = new Vector4();
+				v.set(...d);
+				return v;
+			});
+			const vectorArray = new VectorArray(vectors);
+			return vectorArray as VariableByType[T];
 		}
 	}
 	TypeAssert.unreachable(type);

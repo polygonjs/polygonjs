@@ -16,6 +16,13 @@ import {
 	animationActionPlay,
 	animationActionStop,
 } from '../../../functions/AnimationMixer';
+import {
+	arrayLength,
+	elementsToArrayPrimitive,
+	elementsToArrayVector,
+	arrayElementPrimitive,
+	arrayElementVector,
+} from '../../../functions/Array';
 import {box3Set, getBox3Min, getBox3Max} from '../../../functions/Box3';
 import {setPerspectiveCameraFov, setPerspectiveCameraNearFar} from '../../../functions/Camera';
 import {
@@ -32,6 +39,8 @@ import {
 	vec3ToColor,
 	vec3ToVec4,
 } from '../../../functions/Conversion';
+import {debug} from '../../../functions/Debug';
+import {setGeometryPositions} from '../../../functions/Geometry';
 import {setSpotLightIntensity} from '../../../functions/Light';
 import {
 	setObjectMaterial,
@@ -88,7 +97,25 @@ import {
 	physicsRBDResetForces,
 	physicsRBDResetTorques,
 } from '../../../functions/Physics';
-import {sizzleVec3XY, sizzleVec3XZ, sizzleVec3YZ, sizzleVec4XYZ} from '../../../functions/Sizzle';
+import {
+	sizzleVec3XY,
+	sizzleVec3XZ,
+	sizzleVec3YZ,
+	sizzleVec4XYZ,
+	sizzleVec4WArray,
+	sizzleVec4XYZArray,
+} from '../../../functions/Sizzle';
+import {trackFace, trackFaceGetLandmarks} from '../../../functions/TrackingFace';
+import {
+	trackHand,
+	trackHandGetNormalizedLandmarks,
+	trackHandGetWorldLandmarks,
+	getTrackedHandIndexDirection,
+	getTrackedHandMiddleDirection,
+	getTrackedHandPinkyDirection,
+	getTrackedHandRingDirection,
+	getTrackedHandThumbDirection,
+} from '../../../functions/TrackingHand';
 import {
 	globalsTime,
 	globalsTimeDelta,
@@ -112,6 +139,7 @@ import {
 	rayIntersectSphere,
 	rayIntersectsSphere,
 } from '../../../functions/Ray';
+import {getMaterial, getTexture} from '../../../functions/GetSceneObject';
 import {
 	SDFUnion,
 	SDFSubtract,
@@ -124,6 +152,7 @@ import {SDFRevolutionX, SDFRevolutionY, SDFRevolutionZ} from '../../../functions
 import {SDFBox, SDFSphere} from '../../../functions/SDFPrimitives';
 import {SDFRoundedX} from '../../../functions/SDFPrimitives2D';
 import {sphereSet, getSphereCenter, getSphereRadius} from '../../../functions/Sphere';
+import {vector3AngleTo, vector3Project, vector3ProjectOnPlane, vector3Unproject} from '../../../functions/Vector';
 
 //
 import {keyboardEventMatchesConfig} from '../../../functions/KeyboardEventMatchesConfig';
@@ -148,6 +177,7 @@ import {
 	setObjectVisible,
 } from '../../../functions/SetObjectProperty';
 import {setObjectScale} from '../../../functions/SetObjectScale';
+import {PrimitiveArrayElement, VectorArrayElement} from '../../../nodes/utils/io/connections/Js';
 
 export interface NamedFunctionMap {
 	addNumber: addNumber;
@@ -159,11 +189,17 @@ export interface NamedFunctionMap {
 	animationActionPlay: animationActionPlay;
 	animationActionStop: animationActionStop;
 	animationMixerUpdate: animationMixerUpdate;
+	arrayElementPrimitive: arrayElementPrimitive<PrimitiveArrayElement>;
+	arrayElementVector: arrayElementVector;
+	arrayLength: arrayLength;
 	boolToInt: boolToInt;
 	box3Set: box3Set;
 	colorToVec3: colorToVec3;
+	debug: debug<any>;
 	divideNumber: divideNumber;
 	divideVectorNumber: divideVectorNumber<Vector2 | Vector3 | Vector4>;
+	elementsToArrayPrimitive: elementsToArrayPrimitive<PrimitiveArrayElement>;
+	elementsToArrayVector: elementsToArrayVector<VectorArrayElement>;
 	floatToColor: floatToColor;
 	floatToInt: floatToInt;
 	floatToVec2: floatToVec2;
@@ -174,6 +210,7 @@ export interface NamedFunctionMap {
 	getAnimationMixer: getAnimationMixer;
 	getBox3Min: getBox3Min;
 	getBox3Max: getBox3Max;
+	getMaterial: getMaterial;
 	getObject: getObject;
 	getObjectAttribute: getObjectAttribute;
 	getObjectAttributeRef: getObjectAttributeRef;
@@ -200,6 +237,12 @@ export interface NamedFunctionMap {
 	getRayOrigin: getRayOrigin;
 	getSphereCenter: getSphereCenter;
 	getSphereRadius: getSphereRadius;
+	getTexture: getTexture;
+	getTrackedHandIndexDirection: getTrackedHandIndexDirection;
+	getTrackedHandMiddleDirection: getTrackedHandMiddleDirection;
+	getTrackedHandPinkyDirection: getTrackedHandPinkyDirection;
+	getTrackedHandRingDirection: getTrackedHandRingDirection;
+	getTrackedHandThumbDirection: getTrackedHandThumbDirection;
 	globalsTime: globalsTime;
 	globalsTimeDelta: globalsTimeDelta;
 	globalsRaycaster: globalsRaycaster;
@@ -249,6 +292,7 @@ export interface NamedFunctionMap {
 	SDFSphere: SDFSphere;
 	SDFSubtract: SDFSubtract;
 	SDFUnion: SDFUnion;
+	setGeometryPositions: setGeometryPositions;
 	setMaterialColor: setMaterialColor;
 	setMaterialEmissiveColor: setMaterialEmissiveColor;
 	setMaterialOpacity: setMaterialOpacity;
@@ -285,10 +329,21 @@ export interface NamedFunctionMap {
 	sizzleVec3XZ: sizzleVec3XZ;
 	sizzleVec3YZ: sizzleVec3YZ;
 	sizzleVec4XYZ: sizzleVec4XYZ;
+	sizzleVec4WArray: sizzleVec4WArray;
+	sizzleVec4XYZArray: sizzleVec4XYZArray;
 	sphereSet: sphereSet;
 	subtractNumber: subtractNumber;
 	subtractVector: subtractVector<Vector2 | Vector3 | Vector4>;
 	subtractVectorNumber: subtractVectorNumber<Vector2 | Vector3 | Vector4>;
+	trackFace: trackFace;
+	trackFaceGetLandmarks: trackFaceGetLandmarks;
+	trackHand: trackHand;
+	trackHandGetNormalizedLandmarks: trackHandGetNormalizedLandmarks;
+	trackHandGetWorldLandmarks: trackHandGetWorldLandmarks;
+	vector3AngleTo: vector3AngleTo;
+	vector3Project: vector3Project;
+	vector3ProjectOnPlane: vector3ProjectOnPlane;
+	vector3Unproject: vector3Unproject;
 	vec2ToVec3: vec2ToVec3;
 	vec3ToColor: vec3ToColor;
 	vec3ToVec4: vec3ToVec4;
@@ -306,11 +361,17 @@ export class AllNamedFunctionRegister {
 			animationActionPlay,
 			animationActionStop,
 			animationMixerUpdate,
+			arrayElementPrimitive,
+			arrayElementVector,
+			arrayLength,
 			boolToInt,
 			box3Set,
 			colorToVec3,
+			debug,
 			divideNumber,
 			divideVectorNumber,
+			elementsToArrayPrimitive,
+			elementsToArrayVector,
 			floatToColor,
 			floatToInt,
 			floatToVec2,
@@ -321,6 +382,7 @@ export class AllNamedFunctionRegister {
 			getAnimationMixer,
 			getBox3Min,
 			getBox3Max,
+			getMaterial,
 			getObject,
 			getObjectAttribute,
 			getObjectAttributeRef,
@@ -347,6 +409,12 @@ export class AllNamedFunctionRegister {
 			getRayOrigin,
 			getSphereCenter,
 			getSphereRadius,
+			getTexture,
+			getTrackedHandIndexDirection,
+			getTrackedHandMiddleDirection,
+			getTrackedHandPinkyDirection,
+			getTrackedHandRingDirection,
+			getTrackedHandThumbDirection,
 			globalsTime,
 			globalsTimeDelta,
 			globalsRaycaster,
@@ -396,6 +464,7 @@ export class AllNamedFunctionRegister {
 			SDFSphere,
 			SDFSubtract,
 			SDFUnion,
+			setGeometryPositions,
 			setMaterialColor,
 			setMaterialEmissiveColor,
 			setMaterialOpacity,
@@ -432,10 +501,21 @@ export class AllNamedFunctionRegister {
 			sizzleVec3XZ,
 			sizzleVec3YZ,
 			sizzleVec4XYZ,
+			sizzleVec4WArray,
+			sizzleVec4XYZArray,
 			sphereSet,
 			subtractNumber,
 			subtractVector,
 			subtractVectorNumber,
+			trackFace,
+			trackFaceGetLandmarks,
+			trackHand,
+			trackHandGetNormalizedLandmarks,
+			trackHandGetWorldLandmarks,
+			vector3AngleTo,
+			vector3Project,
+			vector3ProjectOnPlane,
+			vector3Unproject,
 			vec2ToVec3,
 			vec3ToColor,
 			vec3ToVec4,
