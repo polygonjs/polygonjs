@@ -1,120 +1,86 @@
-// import {Vector2, Vector3, Vector4} from 'three';
-// import {NamedFunction2} from './_Base';
+import {_matchArrayLength} from './_ArrayUtils';
+import {NamedFunction1, NamedFunction2, NamedFunction3, NamedFunction4, NamedFunction5} from './_Base';
+import {
+	clamp as _clamp,
+	smoothstep as _smoothstep,
+	fit as _fit,
+	fitClamp as _fitClamp,
+	mix as _mix,
+	randFloat as _randFloat,
+} from '../../core/math/_Module';
 
-import {Color, Vector2, Vector3, Vector4} from 'three';
-import {NamedFunction2, NamedFunction3, NamedFunction4} from './_Base';
-
-type MathFunction = (x: number) => number;
-type MathArrayVectorElement = Color | Vector2 | Vector3 | Vector4;
-type MathArrayVectorElementFunction<T extends MathArrayVectorElement> = (func: MathFunction, src: T, target: T) => T;
-
-const COLOR_FUNC: MathArrayVectorElementFunction<Color> = (_func: MathFunction, src: Color, target: Color): Color => {
-	target.r = _func(src.r);
-	target.g = _func(src.g);
-	target.b = _func(src.b);
-	return target;
-};
-const VECTOR2_FUNC: MathArrayVectorElementFunction<Vector2> = (
-	_func: MathFunction,
-	src: Vector2,
-	target: Vector2
-): Vector2 => {
-	target.x = _func(src.x);
-	target.y = _func(src.y);
-	return target;
-};
-const VECTOR3_FUNC: MathArrayVectorElementFunction<Vector3> = (
-	_func: MathFunction,
-	src: Vector3,
-	target: Vector3
-): Vector3 => {
-	target.x = _func(src.x);
-	target.y = _func(src.y);
-	target.z = _func(src.z);
-	return target;
-};
-const VECTOR4_FUNC: MathArrayVectorElementFunction<Vector4> = (
-	_func: MathFunction,
-	src: Vector4,
-	target: Vector4
-): Vector4 => {
-	target.x = _func(src.x);
-	target.y = _func(src.y);
-	target.z = _func(src.z);
-	target.w = _func(src.w);
-	return target;
-};
-// const FUNC_BY_ARRAY_ELEMENT:Record<MathArrayVectorElement, MathArrayVectorElementFunction<Vector2>>
-// type MathVectorMap = {[key in MathArrayVectorElement]: MathArrayVectorElementFunction<key>};
-// // export interface JsIConnectionPointTypeFromArrayTypeMap extends JsConnectionPointTypeFromArrayTypeMapGeneric {
-// 	interface Map {
-// 		Color: MathArrayVectorElementFunction<Color>
-// 	}
-
-export class mathFloat extends NamedFunction2<[MathFunction, number]> {
+export class clamp extends NamedFunction3<[number, number, number]> {
 	static override type() {
-		return 'mathFloat';
+		return 'clamp';
 	}
-	func(_func: MathFunction, value: number): number {
-		return _func(value);
+	func(value: number, min: number, max: number): number {
+		return _clamp(value, min, max);
 	}
 }
-export class mathColor extends NamedFunction3<[MathFunction, Color, Color]> {
+export class complement extends NamedFunction1<[number]> {
 	static override type() {
-		return 'mathColor';
+		return 'complement';
 	}
-	func = COLOR_FUNC;
-}
-export class mathVector2 extends NamedFunction3<[MathFunction, Vector2, Vector2]> {
-	static override type() {
-		return 'mathVector2';
+	func(value: number): number {
+		return 1 - value;
 	}
-	func = VECTOR2_FUNC;
-}
-export class mathVector3 extends NamedFunction3<[MathFunction, Vector3, Vector3]> {
-	static override type() {
-		return 'mathVector3';
-	}
-	func = VECTOR3_FUNC;
-}
-export class mathVector4 extends NamedFunction3<[MathFunction, Vector4, Vector4]> {
-	static override type() {
-		return 'mathVector4';
-	}
-	func = VECTOR4_FUNC;
 }
 
-export class mathPrimArray extends NamedFunction3<[MathFunction, number[], number[]]> {
+export class fit extends NamedFunction5<[number, number, number, number, number]> {
 	static override type() {
-		return 'mathPrimArray';
+		return 'fit';
 	}
-	func(_func: MathFunction, srcElements: number[], targetElements: number[]): number[] {
-		let i = 0;
-		for (let src of srcElements) {
-			targetElements[i] = _func(src);
-			i++;
-		}
-		return targetElements;
+	func(value: number, srcMin: number, srcMax: number, destMin: number, destMax: number): number {
+		return _fit(value, srcMin, srcMax, destMin, destMax);
 	}
 }
-export class mathVectorArray<T extends MathArrayVectorElement> extends NamedFunction4<
-	[MathFunction, MathArrayVectorElementFunction<T>, T[], T[]]
-> {
+
+export class fitClamp extends NamedFunction5<[number, number, number, number, number]> {
 	static override type() {
-		return 'mathVectorArray';
+		return 'fitClamp';
 	}
-	func(
-		_func: MathFunction,
-		vectorFunc: MathArrayVectorElementFunction<T>,
-		srcElements: T[],
-		targetElements: T[]
-	): T[] {
-		let i = 0;
-		for (let src of srcElements) {
-			const target = targetElements[i];
-			vectorFunc(_func, src, target);
-			i++;
-		}
-		return targetElements;
+	func(value: number, srcMin: number, srcMax: number, destMin: number, destMax: number): number {
+		return _fitClamp(value, srcMin, srcMax, destMin, destMax);
+	}
+}
+export class mix extends NamedFunction3<[number, number, number]> {
+	static override type() {
+		return 'mix';
+	}
+	func(value0: number, value1: number, blend: number): number {
+		return _mix(value0, value1, blend);
+	}
+}
+export class multAdd extends NamedFunction4<[number, number, number, number]> {
+	static override type() {
+		return 'multAdd';
+	}
+	func(value: number, preAdd: number, mult: number, postAdd: number): number {
+		return (value + preAdd) * mult + postAdd;
+	}
+}
+export class negate extends NamedFunction1<[number]> {
+	static override type() {
+		return 'negate';
+	}
+	func(value: number): number {
+		return -value;
+	}
+}
+export class rand extends NamedFunction2<[number, number]> {
+	static override type() {
+		return 'rand';
+	}
+	func(value0: number, value1: number): number {
+		return _randFloat(value0, value1);
+	}
+}
+
+export class smoothstep extends NamedFunction3<[number, number, number]> {
+	static override type() {
+		return 'smoothstep';
+	}
+	func(value: number, min: number, max: number): number {
+		return _smoothstep(min, max, value);
 	}
 }

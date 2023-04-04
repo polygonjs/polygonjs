@@ -56,6 +56,42 @@ export const EASING_NAMES: Array<keyof EasingDictionary> = [
 	'easeElasticIO',
 ];
 
+export const easeI2 = easeI(2);
+export const easeO2 = easeO(2);
+export const easeIO2 = easeIO(2);
+
+export const easeI3 = easeI(3);
+export const easeO3 = easeO(3);
+export const easeIO3 = easeIO(3);
+
+export const easeI4 = easeI(4);
+export const easeO4 = easeO(4);
+export const easeIO4 = easeIO(4);
+
+export function easeSinI(t: number) {
+	return 1 + Math.sin((Math.PI / 2) * t - Math.PI / 2);
+}
+export function easeSinO(t: number) {
+	return Math.sin((Math.PI / 2) * t);
+}
+export function easeSinIO(t: number) {
+	return (1 + Math.sin(Math.PI * t - Math.PI / 2)) / 2;
+}
+
+export function easeElasticI(t: number) {
+	return t == 0 ? 0 : (0.04 - 0.04 / t) * Math.sin(25 * t) + 1;
+}
+export function easeElasticO(t: number) {
+	return t == 1 ? 1 : ((0.04 * t) / --t) * Math.sin(25 * t);
+}
+export function easeElasticIO(t: number) {
+	return t == 0.5
+		? 0
+		: (t -= 0.5) < 0
+		? (0.02 + 0.01 / t) * Math.sin(50 * t)
+		: (0.02 - 0.01 / t) * Math.sin(50 * t) + 1;
+}
+
 export const Easing: EasingDictionary = {
 	// linear: ease_io(1),
 
@@ -69,17 +105,17 @@ export const Easing: EasingDictionary = {
 	// 	return ease_io(power)(t);
 	// },
 
-	easeI2: easeI(2),
-	easeO2: easeO(2),
-	easeIO2: easeIO(2),
+	easeI2,
+	easeO2,
+	easeIO2,
 
-	easeI3: easeI(3),
-	easeO3: easeO(3),
-	easeIO3: easeIO(3),
+	easeI3,
+	easeO3,
+	easeIO3,
 
-	easeI4: easeI(4),
-	easeO4: easeO(4),
-	easeIO4: easeIO(4),
+	easeI4,
+	easeO4,
+	easeIO4,
 	// easeInQuart: EaseIn(4),
 	// easeOutQuart: EaseOut(4),
 	// easeInOutQuart: EaseInOut(4),
@@ -87,29 +123,13 @@ export const Easing: EasingDictionary = {
 	// easeOutQuint: EaseOut(5),
 	// easeInOutQuint: EaseInOut(5)
 
-	easeSinI: function (t: number) {
-		return 1 + Math.sin((Math.PI / 2) * t - Math.PI / 2);
-	},
-	easeSinO: function (t: number) {
-		return Math.sin((Math.PI / 2) * t);
-	},
-	easeSinIO: function (t: number) {
-		return (1 + Math.sin(Math.PI * t - Math.PI / 2)) / 2;
-	},
+	easeSinI,
+	easeSinO,
+	easeSinIO,
 
-	easeElasticI: function (t: number) {
-		return t == 0 ? 0 : (0.04 - 0.04 / t) * Math.sin(25 * t) + 1;
-	},
-	easeElasticO: function (t: number) {
-		return t == 1 ? 1 : ((0.04 * t) / --t) * Math.sin(25 * t);
-	},
-	easeElasticIO: function (t: number) {
-		return t == 0.5
-			? 0
-			: (t -= 0.5) < 0
-			? (0.02 + 0.01 / t) * Math.sin(50 * t)
-			: (0.02 - 0.01 / t) * Math.sin(50 * t) + 1;
-	},
+	easeElasticI,
+	easeElasticO,
+	easeElasticIO,
 };
 
 // export class Easing {

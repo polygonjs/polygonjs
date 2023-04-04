@@ -3,39 +3,60 @@ import {
 	JsConnectionPointType,
 	isJsConnectionPointPrimitive,
 	JsConnectionPointTypeToArrayTypeMap,
-	JsConnectionPointTypeFromArrayTypeMap,
 	isJsConnectionPointArray,
+	JsConnectionPointTypeFromArrayTypeMap,
 } from '../utils/io/connections/Js';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
-import {LocalFunctionJsDefinition} from './utils/JsDefinition';
-import {PolyDictionary} from '../../../types/GlobalTypes';
+// import {LocalFunctionJsDefinition} from './utils/JsDefinition';
+// import {PolyDictionary} from '../../../types/GlobalTypes';
+// import {createVariable} from './code/assemblers/_BaseJsPersistedConfigUtils';
+// import {FunctionUtils} from '../../functions/_FunctionUtils';
+import {Poly} from '../../Poly';
 import {createVariable} from './code/assemblers/_BaseJsPersistedConfigUtils';
-import {FunctionUtils} from '../../functions/_FunctionUtils';
-import {jsFunctionName} from './code/assemblers/JsTypeUtils';
+import {
+	_vectorFunctionName_1,
+	VectorFunctionName,
+	MathVectorFunction,
+	MathVectorFunction1,
+	MathVectorFunction2,
+	MathPrimArray,
+	MathVectorArray,
+	_vectorFunctionName_2,
+	MathFloat,
+	MathVectorFunction3,
+	_vectorFunctionName_3,
+	MathVectorFunction4,
+	_vectorFunctionName_4,
+	MathVectorFunction5,
+	_vectorFunctionName_5,
+} from '../../functions/_MathGeneric';
+// import {jsFunctionName} from './code/assemblers/JsTypeUtils';
 // import {JsNodeTriggerContext} from './_Base';
 // import {Vector2, Vector3, Vector4} from 'three';
 // const tmpV2 = new Vector2();
 // const tmpV3 = new Vector3();
 // const tmpV4 = new Vector4();
-const RGB = ['r', 'g', 'b'];
-const XY = ['x', 'y'];
-const XYZ = ['x', 'y', 'z'];
-const XYZW = ['x', 'y', 'z', 'w'];
-const COMPONENT_BY_JS_TYPE: PolyDictionary<string[]> = {
-	[JsConnectionPointType.COLOR]: RGB,
-	[JsConnectionPointType.VECTOR2]: XY,
-	[JsConnectionPointType.VECTOR3]: XYZ,
-	[JsConnectionPointType.VECTOR4]: XYZW,
-};
+
+// abstract class ArgBaseMathFunctionJsNode extends BaseMathFunctionJsNode {
+// 	protected _inputValuesCount() {
+// 		0;
+// 	}
+// }
 
 interface MathArg1OperationOptions {
 	inputPrefix: string;
 	out: string;
 	allowed_in_types?: JsConnectionPointType[];
-	functionPrefix?: string;
+	// functionArg?: string;
+}
+interface FunctionData<MVF extends MathVectorFunction> {
+	vectorFunctionNameFunction: VectorFunctionName<MVF>;
+	mathFloat: MathFloat;
+	mathPrimArray: MathPrimArray;
+	mathVectorArray: MathVectorArray;
 }
 // type PrimitiveJsConnectionPointType = JsConnectionPointType.BOOL | JsConnectionPointType.FLOAT;
-const PRIMITIVE_ALLOWED_TYPES = [
+export const PRIMITIVE_ALLOWED_TYPES = [
 	JsConnectionPointType.INT,
 	JsConnectionPointType.COLOR,
 	JsConnectionPointType.FLOAT,
@@ -47,14 +68,14 @@ const ARRAY_ALLOWED_TYPES = PRIMITIVE_ALLOWED_TYPES.map((type) => JsConnectionPo
 export const DEFAULT_ALLOWED_TYPES = [...PRIMITIVE_ALLOWED_TYPES, ...ARRAY_ALLOWED_TYPES];
 export const FUNC_ARG_NAME = '_mathFunc';
 
-export function MathFunctionArg1OperationFactory(
+export function MathFunctionArgXOperationFactory<MVF extends MathVectorFunction>(
 	type: string,
 	options: MathArg1OperationOptions
 ): typeof BaseMathFunctionJsNode {
 	const inputPrefix = options.inputPrefix || type;
 	const outputName = options.out || 'val';
 	const allowed_in_types = options.allowed_in_types || DEFAULT_ALLOWED_TYPES;
-	const functionPrefix = options.functionPrefix || 'Math';
+	// const functionArg = options.functionArg || `Math.${type}`;
 	return class Node extends BaseMathFunctionJsNode {
 		static override type() {
 			return type;
@@ -69,68 +90,93 @@ export function MathFunctionArg1OperationFactory(
 		}
 
 		override setLines(shadersCollectionController: ShadersCollectionController) {
-			const arg0 = this.variableForInput(shadersCollectionController, this._expectedInputName(0));
-			this._setLinesWithArgs([arg0], shadersCollectionController);
-		}
-		private _setLinesWithArgs(functionArgs: string[], shadersCollectionController: ShadersCollectionController) {
 			const varName = this.jsVarName(this._expectedOutputName(0));
 
 			const inputType = this._expectedInputTypes()[0];
-			const functionName = jsFunctionName(functionPrefix, inputType);
-			const _functionDefinition = functionDefinition({
-				functionName,
-				inputType,
-				componentFunctionCore: (components) => this.componentFunctionCore(components),
-				useFuncArg: true,
-				secondaryArgs: [],
-			});
-
 			const variable = createVariable(inputType);
 			if (variable) {
 				shadersCollectionController.addVariable(this, varName, variable);
 			}
 
-			const functionCall = this._functionCall(
-				shadersCollectionController,
-				functionName,
-				inputType,
-				functionArgs,
-				varName
-			);
-			shadersCollectionController.addDefinitions(this, [
-				new LocalFunctionJsDefinition(
-					this,
-					shadersCollectionController,
-					this._expectedInputTypes()[0],
-					functionName,
-					_functionDefinition
-				),
-			]);
+			const mainFunction = this._mainFunction(shadersCollectionController, varName);
+			if (!mainFunction) {
+				return;
+			}
 
-			shadersCollectionController.addBodyOrComputed(this, [{dataType: inputType, varName, value: functionCall}]);
+			shadersCollectionController.addBodyOrComputed(this, [{dataType: inputType, varName, value: mainFunction}]);
+		}
+		private _mainFunction(shadersCollectionController: ShadersCollectionController, varName: string) {
+			const functionData = this._functionData();
+			const {vectorFunctionNameFunction, mathFloat, mathPrimArray, mathVectorArray} = functionData;
+
+			// const arg0 = this.variableForInput(shadersCollectionController, this._expectedInputName(0));
+			const args = this._inputArgs(shadersCollectionController);
+			const inputType = this._expectedInputTypes()[0];
+			const isPrimitive = isJsConnectionPointPrimitive(inputType);
+			const coreFunction = this._coreFunction(shadersCollectionController);
+
+			// primitive
+			if (isPrimitive) {
+				return Poly.namedFunctionsRegister
+					.getFunction(mathFloat, this, shadersCollectionController)
+					.asString(...[coreFunction, ...args]);
+			}
+
+			// color / vector
+			const vectorFunctionName = vectorFunctionNameFunction(inputType);
+			if (vectorFunctionName) {
+				return Poly.namedFunctionsRegister
+					.getFunction(vectorFunctionName, this, shadersCollectionController)
+					.asString(...[coreFunction, ...args, varName]);
+			}
+
+			// array
+			if (isJsConnectionPointArray(inputType)) {
+				const elementInputType = JsConnectionPointTypeFromArrayTypeMap[inputType];
+				const vectorElementInputFunctionName = vectorFunctionNameFunction(elementInputType);
+				if (vectorElementInputFunctionName) {
+					// array color / vector
+					Poly.namedFunctionsRegister
+						.getFunction(vectorElementInputFunctionName, this, shadersCollectionController)
+						// we call .asString to ensure the function is added to the shadersCollectionController
+						.asString('', '', '');
+					return Poly.namedFunctionsRegister
+						.getFunction(mathVectorArray, this, shadersCollectionController)
+						.asString(...[coreFunction, vectorElementInputFunctionName, ...args, varName]);
+				} else {
+					// array primitive
+					return Poly.namedFunctionsRegister
+						.getFunction(mathPrimArray, this, shadersCollectionController)
+						.asString(...[coreFunction, ...args, varName]);
+				}
+			}
 		}
 
-		private _functionCall(
-			shadersCollectionController: ShadersCollectionController,
-			functionName: string,
-			inputType: JsConnectionPointType,
-			functionArgs: string[],
-			targetArg: string
-		) {
-			const _func = this._mathFunctionDeclaration(shadersCollectionController);
-			const args = isJsConnectionPointPrimitive(inputType)
-				? [_func, ...functionArgs]
-				: [_func, ...functionArgs, targetArg];
-			return `${functionName}(${args.join(', ')})`;
-		}
-		protected _mathFunctionDeclaration(shadersCollectionController: ShadersCollectionController) {
+		protected _coreFunction(shadersCollectionController: ShadersCollectionController) {
 			return `Math.${type}`;
 		}
-		protected componentFunctionCore(componentNames: string[]) {
-			return componentNames.map((c) => this._functionDefinitionLine(c)).join('\n');
+		protected _functionData(): FunctionData<MVF> {
+			return {
+				vectorFunctionNameFunction: _vectorFunctionName_1 as VectorFunctionName<MVF>,
+				mathFloat: 'mathFloat_1',
+				mathPrimArray: 'mathPrimArray_1',
+				mathVectorArray: 'mathVectorArray_1',
+			};
 		}
-		private _functionDefinitionLine(componentName: string) {
-			return `target.${componentName} = ${FUNC_ARG_NAME}(src.${componentName});`;
+
+		protected _inputValuesCount() {
+			const inputTypes = this._expectedInputTypes();
+			const inputValuesCount = inputTypes.length;
+			return inputValuesCount;
+		}
+		private _inputArgs(shadersCollectionController: ShadersCollectionController) {
+			const inputValuesCount = this._inputValuesCount();
+			const inputArgs: string[] = [];
+			for (let i = 0; i < inputValuesCount; i++) {
+				const arg = this.variableForInput(shadersCollectionController, this._expectedInputName(i));
+				inputArgs.push(arg);
+			}
+			return inputArgs;
 		}
 
 		override _expectedInputName(index: number): string {
@@ -161,57 +207,85 @@ export function MathFunctionArg1OperationFactory(
 	};
 }
 
-interface FunctionDefinitionOptions {
-	functionName: string;
-	inputType: JsConnectionPointType;
-	componentFunctionCore: (components: string[]) => string;
-	useFuncArg: boolean;
-	secondaryArgs: string[];
+export function MathFunctionArg1OperationFactory(
+	type: string,
+	options: MathArg1OperationOptions
+): typeof BaseMathFunctionJsNode {
+	return class Node extends MathFunctionArgXOperationFactory<MathVectorFunction1>(type, options) {};
 }
-export function functionDefinition(options: FunctionDefinitionOptions) {
-	const {functionName, inputType, componentFunctionCore, useFuncArg, secondaryArgs} = options;
-	function withFuncArgIfRequired(_functionArgs: string[]) {
-		const newList = [..._functionArgs];
-		if (useFuncArg) {
-			newList.unshift(FUNC_ARG_NAME);
-		}
-		return newList;
-	}
-	const functionForComponents = () => {
-		if (isJsConnectionPointArray(inputType)) {
-			const elementType = JsConnectionPointTypeFromArrayTypeMap[inputType];
-			const componentNames = COMPONENT_BY_JS_TYPE[elementType] || [];
-			const functionArgs = ['srcElements', 'targetElements'];
-			const allArgs = withFuncArgIfRequired(functionArgs);
 
-			return `
-function ${functionName}(${allArgs.join(', ')}){
-${FunctionUtils.MATCH_ARRAY_LENGTH_WITH_TYPE}(srcElements, targetElements, '${elementType}');
-let i = 0;
-for(let src of srcElements){
-const target = targetElements[i];
-${componentFunctionCore(componentNames)}
-i++;
-}
-return targetElements;
-}`;
-		} else {
-			const componentNames = COMPONENT_BY_JS_TYPE[inputType] || [];
-			const functionArgs = ['src', ...secondaryArgs, 'target'];
-			const allArgs = withFuncArgIfRequired(functionArgs);
-			return `
-function ${functionName}(${allArgs.join(', ')}){
-${componentFunctionCore(componentNames)}
-return target;
-}`;
+export function MathFunctionArg2OperationFactory(
+	type: string,
+	options: MathArg1OperationOptions
+): typeof BaseMathFunctionJsNode {
+	return class Node extends MathFunctionArgXOperationFactory<MathVectorFunction2>(type, options) {
+		// TODO: this should ideally be inherited from the class created by MathFunctionArgXOperationFactory
+		// and would therefore require an override statement,
+		// and would then automatically have the return type FunctionData<MathVectorFunction2>
+		protected _functionData(): FunctionData<MathVectorFunction2> {
+			return {
+				vectorFunctionNameFunction: _vectorFunctionName_2,
+				mathFloat: 'mathFloat_2',
+				mathPrimArray: 'mathPrimArray_2',
+				mathVectorArray: 'mathVectorArray_2',
+			};
 		}
 	};
+}
 
-	const functionForPrimitive = () => {
-		return `function ${functionName}(${FUNC_ARG_NAME}, val){
-			return ${FUNC_ARG_NAME}(val);
-		}`;
+export function MathFunctionArg3OperationFactory(
+	type: string,
+	options: MathArg1OperationOptions
+): typeof BaseMathFunctionJsNode {
+	return class Node extends MathFunctionArgXOperationFactory<MathVectorFunction3>(type, options) {
+		// TODO: this should ideally be inherited from the class created by MathFunctionArgXOperationFactory
+		// and would therefore require an override statement,
+		// and would then automatically have the return type FunctionData<MathVectorFunction2>
+		protected _functionData(): FunctionData<MathVectorFunction3> {
+			return {
+				vectorFunctionNameFunction: _vectorFunctionName_3,
+				mathFloat: 'mathFloat_3',
+				mathPrimArray: 'mathPrimArray_3',
+				mathVectorArray: 'mathVectorArray_3',
+			};
+		}
 	};
+}
 
-	return isJsConnectionPointPrimitive(inputType) ? functionForPrimitive() : functionForComponents();
+export function MathFunctionArg4OperationFactory(
+	type: string,
+	options: MathArg1OperationOptions
+): typeof BaseMathFunctionJsNode {
+	return class Node extends MathFunctionArgXOperationFactory<MathVectorFunction4>(type, options) {
+		// TODO: this should ideally be inherited from the class created by MathFunctionArgXOperationFactory
+		// and would therefore require an override statement,
+		// and would then automatically have the return type FunctionData<MathVectorFunction2>
+		protected _functionData(): FunctionData<MathVectorFunction4> {
+			return {
+				vectorFunctionNameFunction: _vectorFunctionName_4,
+				mathFloat: 'mathFloat_4',
+				mathPrimArray: 'mathPrimArray_4',
+				mathVectorArray: 'mathVectorArray_4',
+			};
+		}
+	};
+}
+
+export function MathFunctionArg5OperationFactory(
+	type: string,
+	options: MathArg1OperationOptions
+): typeof BaseMathFunctionJsNode {
+	return class Node extends MathFunctionArgXOperationFactory<MathVectorFunction5>(type, options) {
+		// TODO: this should ideally be inherited from the class created by MathFunctionArgXOperationFactory
+		// and would therefore require an override statement,
+		// and would then automatically have the return type FunctionData<MathVectorFunction2>
+		protected _functionData(): FunctionData<MathVectorFunction5> {
+			return {
+				vectorFunctionNameFunction: _vectorFunctionName_5,
+				mathFloat: 'mathFloat_5',
+				mathPrimArray: 'mathPrimArray_5',
+				mathVectorArray: 'mathVectorArray_5',
+			};
+		}
+	};
 }

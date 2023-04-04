@@ -112,6 +112,7 @@ export function createVariable(type: JsConnectionPointType) {
 }
 
 export function createPrimitiveArray<V extends PrimitiveArrayElement>(type: JsConnectionPointType): PrimitiveArray<V> {
+	type = JsConnectionPointTypeFromArrayTypeMap[type];
 	switch (type) {
 		case JsConnectionPointType.BOOLEAN: {
 			return new PrimitiveArray([false]) as PrimitiveArray<V>;

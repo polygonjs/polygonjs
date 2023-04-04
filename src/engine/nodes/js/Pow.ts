@@ -1,42 +1,31 @@
 /**
- * returns a blend between 2 inputs
+ * returns value**exponent (the value at the power of the exponent)
  *
  *
  */
 import {PolyDictionary} from '../../../types/GlobalTypes';
-import {Poly} from '../../Poly';
 import {JsConnectionPointType, JsConnectionPointTypeFromArrayTypeMap} from '../utils/io/connections/Js';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
-import {MathFunctionArg3OperationFactory, DEFAULT_ALLOWED_TYPES} from './_Math_Arg1Operation';
+import {MathFunctionArg2OperationFactory, DEFAULT_ALLOWED_TYPES} from './_Math_Arg1Operation';
 
-enum MixInput {
-	value0 = 'value0',
-	value1 = 'value1',
-	blend = 'blend',
+enum PowInput {
+	src = 'src',
+	exp = 'exp',
 }
 const DefaultValues: PolyDictionary<number> = {
-	[MixInput.value0]: 0,
-	[MixInput.value1]: 1,
-	[MixInput.blend]: 0.5,
+	[PowInput.src]: 0,
+	[PowInput.exp]: 1,
 };
 
-const FUNCTION_NAME = 'mix';
-export class MixJsNode extends MathFunctionArg3OperationFactory('mix', {
+export class PowJsNode extends MathFunctionArg2OperationFactory('pow', {
 	inputPrefix: 'in',
-	out: 'mix',
+	out: 'pow',
 }) {
-	protected _coreFunction(shadersCollectionController: ShadersCollectionController) {
-		Poly.namedFunctionsRegister.getFunction(FUNCTION_NAME, this, shadersCollectionController).asString('', '', '');
-
-		return FUNCTION_NAME;
-	}
-
 	override paramDefaultValue(name: string) {
 		return DefaultValues[name];
 	}
 
 	protected override _expectedInputName(index: number): string {
-		return [MixInput.value0, MixInput.value1, MixInput.blend][index];
+		return [PowInput.src, PowInput.exp][index];
 	}
 
 	protected override _expectedInputTypes() {
@@ -53,6 +42,6 @@ export class MixJsNode extends MathFunctionArg3OperationFactory('mix', {
 		}
 		const type = first_input_type || JsConnectionPointType.FLOAT;
 		const boundType = JsConnectionPointTypeFromArrayTypeMap[type];
-		return [type, boundType, JsConnectionPointType.FLOAT];
+		return [type, boundType];
 	}
 }

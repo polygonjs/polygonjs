@@ -4,24 +4,9 @@
  *
  */
 import {PolyDictionary} from '../../../types/GlobalTypes';
-import {
-	isJsConnectionPointPrimitive,
-	JsConnectionPointType,
-	JsConnectionPointTypeFromArrayTypeMap,
-} from '../utils/io/connections/Js';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
-import {LocalFunctionJsDefinition} from './utils/JsDefinition';
-import {
-	MathFunctionArg1OperationFactory,
-	DEFAULT_ALLOWED_TYPES,
-	functionDefinition,
-	FUNC_ARG_NAME,
-} from './_Math_Arg1Operation';
+import {JsConnectionPointType, JsConnectionPointTypeFromArrayTypeMap} from '../utils/io/connections/Js';
+import {MathFunctionArg2OperationFactory, DEFAULT_ALLOWED_TYPES} from './_Math_Arg1Operation';
 
-// const MIN_FUNCTION_NAME = 'mathMin';
-// const MIN_FUNCTION_BODY = `function ${MIN_FUNCTION_NAME}(src, min){
-// 	return Math.min(src,min)
-// }`;
 enum MinInput {
 	src = 'src',
 	min = 'min',
@@ -31,69 +16,10 @@ const DefaultValues: PolyDictionary<number> = {
 	[MinInput.min]: 0,
 };
 
-export class MinJsNode extends MathFunctionArg1OperationFactory('min', {
+export class MinJsNode extends MathFunctionArg2OperationFactory('min', {
 	inputPrefix: 'in',
 	out: 'min',
-	functionPrefix: 'min',
 }) {
-	protected _data() {
-		const functionName = 'mathMin';
-		return {
-			comparisonFunctionName: functionName,
-			comparisonFunctionBody: `function ${functionName}(src, min){
-				return Math.min(src, min)
-			}`,
-		};
-	}
-
-	protected _mathFunctionDeclaration(shadersCollectionController: ShadersCollectionController) {
-		const {comparisonFunctionName, comparisonFunctionBody} = this._data();
-		shadersCollectionController.addDefinitions(this, [
-			new LocalFunctionJsDefinition(
-				this,
-				shadersCollectionController,
-				this._expectedInputTypes()[0],
-				comparisonFunctionName,
-				comparisonFunctionBody
-			),
-		]);
-
-		const inputType = this._expectedInputTypes()[0];
-		// const value0 = this.variableForInput(shadersCollectionController, MixInput.value0);
-		const min = this.variableForInput(shadersCollectionController, MinInput.min);
-		if (isJsConnectionPointPrimitive(inputType)) {
-			return `(src)=> ${comparisonFunctionName}(src, ${min})`;
-		} else {
-			const elementInputType = JsConnectionPointTypeFromArrayTypeMap[inputType];
-			const functionName = `${comparisonFunctionName}_${elementInputType}`;
-			const functionBody = functionDefinition({
-				functionName,
-				inputType: elementInputType,
-				componentFunctionCore: (componentNames) =>
-					componentNames
-						.map((c) => `target.${c} = ${functionName}(src.${c}, ${MinInput.min}.${c})`)
-						.join('\n'),
-				useFuncArg: false,
-				secondaryArgs: [MinInput.min],
-			});
-
-			shadersCollectionController.addDefinitions(this, [
-				new LocalFunctionJsDefinition(
-					this,
-					shadersCollectionController,
-					this._expectedInputTypes()[0],
-					functionName,
-					functionBody
-				),
-			]);
-
-			return `(src,target)=> ${functionName}(src, ${min}, target)`;
-		}
-	}
-	protected componentFunctionCore(componentNames: string[]) {
-		const inputType = this._expectedInputTypes()[0];
-		return isJsConnectionPointPrimitive(inputType) ? `${FUNC_ARG_NAME}(src)` : `${FUNC_ARG_NAME}(src,target)`;
-	}
 	override paramDefaultValue(name: string) {
 		return DefaultValues[name];
 	}

@@ -41,6 +41,23 @@ import {
 } from '../../../functions/Conversion';
 import {catmullRomCurve3GetPoint} from '../../../functions/Curve';
 import {debug} from '../../../functions/Debug';
+import {
+	easeI2,
+	easeO2,
+	easeIO2,
+	easeI3,
+	easeO3,
+	easeIO3,
+	easeI4,
+	easeO4,
+	easeIO4,
+	easeSinI,
+	easeSinO,
+	easeSinIO,
+	easeElasticI,
+	easeElasticO,
+	easeElasticIO,
+} from '../../../functions/Easing';
 import {setGeometryPositions} from '../../../functions/Geometry';
 import {setSpotLightIntensity} from '../../../functions/Light';
 import {andArrays, andBooleans, orArrays, orBooleans} from '../../../functions/Logic';
@@ -53,6 +70,45 @@ import {
 	setMaterialUniformNumber,
 	setMaterialUniformVectorColor,
 } from '../../../functions/Material';
+import {
+	mathColor_1,
+	mathColor_2,
+	mathColor_3,
+	mathColor_4,
+	mathColor_5,
+	mathFloat_1,
+	mathFloat_2,
+	mathFloat_3,
+	mathFloat_4,
+	mathFloat_5,
+	mathPrimArray_1,
+	mathPrimArray_2,
+	mathPrimArray_3,
+	mathPrimArray_4,
+	mathPrimArray_5,
+	mathVector2_1,
+	mathVector2_2,
+	mathVector2_3,
+	mathVector2_4,
+	mathVector2_5,
+	mathVector3_1,
+	mathVector3_2,
+	mathVector3_3,
+	mathVector3_4,
+	mathVector3_5,
+	mathVector4_1,
+	mathVector4_2,
+	mathVector4_3,
+	mathVector4_4,
+	mathVector4_5,
+	mathVectorArray_1,
+	mathVectorArray_2,
+	mathVectorArray_3,
+	mathVectorArray_4,
+	mathVectorArray_5,
+	MathArrayVectorElement,
+} from '../../../functions/_MathGeneric';
+import {clamp, complement, fit, fitClamp, mix, multAdd, negate, rand, smoothstep} from '../../../functions/Math';
 import {particlesSystemReset, particlesSystemStepSimulation} from '../../../functions/ParticlesSystem';
 import {
 	// globals
@@ -200,12 +256,31 @@ export interface NamedFunctionMap {
 	boolToInt: boolToInt;
 	box3Set: box3Set;
 	catmullRomCurve3GetPoint: catmullRomCurve3GetPoint;
+	clamp: clamp;
 	colorToVec3: colorToVec3;
+	complement: complement;
 	debug: debug<any>;
 	divideNumber: divideNumber;
 	divideVectorNumber: divideVectorNumber<Vector2 | Vector3 | Vector4>;
+	easeI2: easeI2;
+	easeO2: easeO2;
+	easeIO2: easeIO2;
+	easeI3: easeI3;
+	easeO3: easeO3;
+	easeIO3: easeIO3;
+	easeI4: easeI4;
+	easeO4: easeO4;
+	easeIO4: easeIO4;
+	easeSinI: easeSinI;
+	easeSinO: easeSinO;
+	easeSinIO: easeSinIO;
+	easeElasticI: easeElasticI;
+	easeElasticO: easeElasticO;
+	easeElasticIO: easeElasticIO;
 	elementsToArrayPrimitive: elementsToArrayPrimitive<PrimitiveArrayElement>;
 	elementsToArrayVector: elementsToArrayVector<VectorArrayElement>;
+	fit: fit;
+	fitClamp: fitClamp;
 	floatToColor: floatToColor;
 	floatToInt: floatToInt;
 	floatToVec2: floatToVec2;
@@ -259,9 +334,47 @@ export interface NamedFunctionMap {
 	intToBool: intToBool;
 	intToFloat: intToFloat;
 	keyboardEventMatchesConfig: keyboardEventMatchesConfig;
+	mathColor_1: mathColor_1;
+	mathColor_2: mathColor_2;
+	mathColor_3: mathColor_3;
+	mathColor_4: mathColor_4;
+	mathColor_5: mathColor_5;
+	mathFloat_1: mathFloat_1;
+	mathFloat_2: mathFloat_2;
+	mathFloat_3: mathFloat_3;
+	mathFloat_4: mathFloat_4;
+	mathFloat_5: mathFloat_5;
+	mathPrimArray_1: mathPrimArray_1;
+	mathPrimArray_2: mathPrimArray_2;
+	mathPrimArray_3: mathPrimArray_3;
+	mathPrimArray_4: mathPrimArray_4;
+	mathPrimArray_5: mathPrimArray_5;
+	mathVector2_1: mathVector2_1;
+	mathVector2_2: mathVector2_2;
+	mathVector2_3: mathVector2_3;
+	mathVector2_4: mathVector2_4;
+	mathVector2_5: mathVector2_5;
+	mathVector3_1: mathVector3_1;
+	mathVector3_2: mathVector3_2;
+	mathVector3_3: mathVector3_3;
+	mathVector3_4: mathVector3_4;
+	mathVector3_5: mathVector3_5;
+	mathVector4_1: mathVector4_1;
+	mathVector4_2: mathVector4_2;
+	mathVector4_3: mathVector4_3;
+	mathVector4_4: mathVector4_4;
+	mathVector4_5: mathVector4_5;
+	mathVectorArray_1: mathVectorArray_1<MathArrayVectorElement>;
+	mathVectorArray_2: mathVectorArray_2<MathArrayVectorElement>;
+	mathVectorArray_3: mathVectorArray_3<MathArrayVectorElement>;
+	mathVectorArray_4: mathVectorArray_4<MathArrayVectorElement>;
+	mathVectorArray_5: mathVectorArray_5<MathArrayVectorElement>;
+	mix: mix;
 	multNumber: multNumber;
 	multVector: multVector<Vector2 | Vector3 | Vector4>;
 	multVectorNumber: multVectorNumber<Vector2 | Vector3 | Vector4>;
+	multAdd: multAdd;
+	negate: negate;
 	orArrays: orArrays;
 	orBooleans: orBooleans;
 	particlesSystemReset: particlesSystemReset;
@@ -279,6 +392,7 @@ export interface NamedFunctionMap {
 	physicsWorldReset: physicsWorldReset;
 	physicsWorldStepSimulation: physicsWorldStepSimulation;
 	planeSet: planeSet;
+	rand: rand;
 	raySet: raySet;
 	rayFromCamera: rayFromCamera;
 	rayIntersectBox3: rayIntersectBox3;
@@ -341,6 +455,7 @@ export interface NamedFunctionMap {
 	sizzleVec4XYZ: sizzleVec4XYZ;
 	sizzleVec4WArray: sizzleVec4WArray;
 	sizzleVec4XYZArray: sizzleVec4XYZArray;
+	smoothstep: smoothstep;
 	sphereSet: sphereSet;
 	subtractNumber: subtractNumber;
 	subtractVector: subtractVector<Vector2 | Vector3 | Vector4>;
@@ -378,13 +493,32 @@ export class AllNamedFunctionRegister {
 			arrayLength,
 			boolToInt,
 			box3Set,
+			clamp,
 			colorToVec3,
 			catmullRomCurve3GetPoint,
+			complement,
 			debug,
 			divideNumber,
 			divideVectorNumber,
+			easeI2,
+			easeO2,
+			easeIO2,
+			easeI3,
+			easeO3,
+			easeIO3,
+			easeI4,
+			easeO4,
+			easeIO4,
+			easeSinI,
+			easeSinO,
+			easeSinIO,
+			easeElasticI,
+			easeElasticO,
+			easeElasticIO,
 			elementsToArrayPrimitive,
 			elementsToArrayVector,
+			fit,
+			fitClamp,
 			floatToColor,
 			floatToInt,
 			floatToVec2,
@@ -438,9 +572,47 @@ export class AllNamedFunctionRegister {
 			intToBool,
 			intToFloat,
 			keyboardEventMatchesConfig,
+			mathColor_1,
+			mathColor_2,
+			mathColor_3,
+			mathColor_4,
+			mathColor_5,
+			mathFloat_1,
+			mathFloat_2,
+			mathFloat_3,
+			mathFloat_4,
+			mathFloat_5,
+			mathPrimArray_1,
+			mathPrimArray_2,
+			mathPrimArray_3,
+			mathPrimArray_4,
+			mathPrimArray_5,
+			mathVector2_1,
+			mathVector2_2,
+			mathVector2_3,
+			mathVector2_4,
+			mathVector2_5,
+			mathVector3_1,
+			mathVector3_2,
+			mathVector3_3,
+			mathVector3_4,
+			mathVector3_5,
+			mathVector4_1,
+			mathVector4_2,
+			mathVector4_3,
+			mathVector4_4,
+			mathVector4_5,
+			mathVectorArray_1,
+			mathVectorArray_2,
+			mathVectorArray_3,
+			mathVectorArray_4,
+			mathVectorArray_5,
+			mix,
+			multAdd,
 			multNumber,
 			multVector,
 			multVectorNumber,
+			negate,
 			orArrays,
 			orBooleans,
 			particlesSystemReset,
@@ -458,6 +630,7 @@ export class AllNamedFunctionRegister {
 			physicsRBDResetTorques,
 			physicsWorldReset,
 			physicsWorldStepSimulation,
+			rand,
 			raySet,
 			rayFromCamera,
 			rayIntersectBox3,
@@ -520,6 +693,7 @@ export class AllNamedFunctionRegister {
 			sizzleVec4XYZ,
 			sizzleVec4WArray,
 			sizzleVec4XYZArray,
+			smoothstep,
 			sphereSet,
 			subtractNumber,
 			subtractVector,

@@ -1,4 +1,20 @@
 import {Vector2, Vector3} from 'three';
+import {PolyDictionary} from '../../types/GlobalTypes';
+import {JsConnectionPointType} from '../nodes/utils/io/connections/Js';
+
+const RGB = ['r', 'g', 'b'];
+const XY = ['x', 'y'];
+const XYZ = ['x', 'y', 'z'];
+const XYZW = ['x', 'y', 'z', 'w'];
+const COMPONENT_BY_JS_TYPE: PolyDictionary<string[]> = {
+	[JsConnectionPointType.COLOR]: RGB,
+	[JsConnectionPointType.VECTOR2]: XY,
+	[JsConnectionPointType.VECTOR3]: XYZ,
+	[JsConnectionPointType.VECTOR4]: XYZW,
+};
+export function componentsForType(type: JsConnectionPointType) {
+	return COMPONENT_BY_JS_TYPE[type] || [];
+}
 
 //
 //

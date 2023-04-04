@@ -23,13 +23,16 @@ import {CatmullRomCurve3GetPointJsNode} from '../../../nodes/js/CatmullRomCurve3
 import {CeilJsNode} from '../../../nodes/js/Ceil';
 import {ClampJsNode} from '../../../nodes/js/Clamp';
 import {ColorToVec3JsNode} from '../../../nodes/js/ColorToVec3';
+import {CompareJsNode} from '../../../nodes/js/Compare';
 import {ComplementJsNode} from '../../../nodes/js/Complement';
 import {ConstantJsNode} from '../../../nodes/js/Constant';
 import {CosJsNode} from '../../../nodes/js/Cos';
 import {CursorJsNode} from '../../../nodes/js/Cursor';
 import {DebugJsNode} from '../../../nodes/js/Debug';
 import {DivideJsNode} from '../../../nodes/js/Divide';
+import {EasingJsNode} from '../../../nodes/js/Easing';
 import {ElementsToArrayJsNode} from '../../../nodes/js/ElementsToArray';
+import {FitJsNode} from '../../../nodes/js/Fit';
 import {FloatToColorJsNode} from '../../../nodes/js/FloatToColor';
 import {FloatToIntJsNode} from '../../../nodes/js/FloatToInt';
 import {FloatToVec2JsNode} from '../../../nodes/js/FloatToVec2';
@@ -62,6 +65,7 @@ import {MaxJsNode} from '../../../nodes/js/Max';
 import {MinJsNode} from '../../../nodes/js/Min';
 import {MixJsNode} from '../../../nodes/js/Mix';
 import {MultJsNode} from '../../../nodes/js/Mult';
+import {MultAddJsNode} from '../../../nodes/js/MultAdd';
 import {NegateJsNode} from '../../../nodes/js/Negate';
 import {NullJsNode} from '../../../nodes/js/Null';
 import {OnKeydownJsNode} from '../../../nodes/js/OnKeydown';
@@ -97,7 +101,10 @@ import {PhysicsRBDResetTorquesJsNode} from '../../../nodes/js/PhysicsRBDResetTor
 import {PhysicsWorldResetJsNode} from '../../../nodes/js/PhysicsWorldReset';
 import {PhysicsWorldStepSimulationJsNode} from '../../../nodes/js/PhysicsWorldStepSimulation';
 import {PlaneJsNode} from '../../../nodes/js/Plane';
+import {PowJsNode} from '../../../nodes/js/Pow';
 
+import {RandJsNode} from '../../../nodes/js/Rand';
+import {RandomJsNode} from '../../../nodes/js/Random';
 import {RayJsNode} from '../../../nodes/js/Ray';
 import {RayFromCameraJsNode} from '../../../nodes/js/RayFromCamera';
 import {RayFromCursorJsNode} from '../../../nodes/js/RayFromCursor';
@@ -154,6 +161,7 @@ import {SetPhysicsWorldGravityJsNode} from '../../../nodes/js/SetPhysicsWorldGra
 import {SetSpotLightIntensityJsNode} from '../../../nodes/js/SetSpotLightIntensity';
 import {SignJsNode} from '../../../nodes/js/Sign';
 import {SinJsNode} from '../../../nodes/js/Sin';
+import {SmoothstepJsNode} from '../../../nodes/js/Smoothstep';
 import {SphereJsNode} from '../../../nodes/js/Sphere';
 import {SqrtJsNode} from '../../../nodes/js/Sqrt';
 import {SubtractJsNode} from '../../../nodes/js/Subtract';
@@ -198,6 +206,7 @@ export interface JsNodeChildrenMap {
 	catmullRomCurve3GetPoint: CatmullRomCurve3GetPointJsNode;
 	ceil: CeilJsNode;
 	clamp: ClampJsNode;
+	compare: CompareJsNode;
 	complement: ComplementJsNode;
 	cos: CosJsNode;
 	cursor: CursorJsNode;
@@ -205,7 +214,9 @@ export interface JsNodeChildrenMap {
 	constant: ConstantJsNode;
 	debug: DebugJsNode;
 	divide: DivideJsNode;
+	easing: EasingJsNode;
 	elementsToArray: ElementsToArrayJsNode;
+	fit: FitJsNode;
 	floatToColor: FloatToColorJsNode;
 	floatToInt: FloatToIntJsNode;
 	floatToVec2: FloatToVec2JsNode;
@@ -238,6 +249,7 @@ export interface JsNodeChildrenMap {
 	min: MinJsNode;
 	mix: MixJsNode;
 	mult: MultJsNode;
+	multAdd: MultAddJsNode;
 	negate: NegateJsNode;
 	null: NullJsNode;
 	onKeydown: OnKeydownJsNode;
@@ -273,6 +285,9 @@ export interface JsNodeChildrenMap {
 	physicsWorldReset: PhysicsWorldResetJsNode;
 	physicsWorldStepSimulation: PhysicsWorldStepSimulationJsNode;
 	plane: PlaneJsNode;
+	pow: PowJsNode;
+	rand: RandJsNode;
+	random: RandomJsNode;
 	ray: RayJsNode;
 	rayFromCamera: RayFromCameraJsNode;
 	rayFromCursor: RayFromCursorJsNode;
@@ -327,6 +342,7 @@ export interface JsNodeChildrenMap {
 	setSpotLightIntensity: SetSpotLightIntensityJsNode;
 	sign: SignJsNode;
 	sin: SinJsNode;
+	smoothstep: SmoothstepJsNode;
 	sphere: SphereJsNode;
 	sqrt: SqrtJsNode;
 	subtract: SubtractJsNode;
@@ -382,6 +398,8 @@ export class JsRegister {
 		poly.registerNode(CeilJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(ClampJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(ColorToVec3JsNode, CATEGORY_JS.CONVERSION);
+
+		poly.registerNode(CompareJsNode, CATEGORY_JS.LOGIC);
 		poly.registerNode(ComplementJsNode, CATEGORY_JS.MATH);
 
 		poly.registerNode(ConstantJsNode, CATEGORY_JS.GLOBALS);
@@ -390,8 +408,10 @@ export class JsRegister {
 
 		poly.registerNode(DebugJsNode, CATEGORY_JS.FLOW);
 		poly.registerNode(DivideJsNode, CATEGORY_JS.MATH);
+		poly.registerNode(EasingJsNode, CATEGORY_JS.MATH);
 
 		poly.registerNode(ElementsToArrayJsNode, CATEGORY_JS.CONVERSION);
+		poly.registerNode(FitJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(FloatToColorJsNode, CATEGORY_JS.CONVERSION);
 		poly.registerNode(FloatToIntJsNode, CATEGORY_JS.CONVERSION);
 		poly.registerNode(FloatToVec2JsNode, CATEGORY_JS.CONVERSION);
@@ -425,6 +445,7 @@ export class JsRegister {
 		poly.registerNode(MinJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(MixJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(MultJsNode, CATEGORY_JS.MATH);
+		poly.registerNode(MultAddJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(NegateJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(NullJsNode, CATEGORY_JS.FLOW);
 
@@ -463,7 +484,10 @@ export class JsRegister {
 		poly.registerNode(PhysicsWorldResetJsNode, CATEGORY_JS.PHYSICS, ONLY_ACTOR);
 		poly.registerNode(PhysicsWorldStepSimulationJsNode, CATEGORY_JS.PHYSICS, ONLY_ACTOR);
 		poly.registerNode(PlaneJsNode, CATEGORY_JS.MATH);
+		poly.registerNode(PowJsNode, CATEGORY_JS.MATH);
 
+		poly.registerNode(RandJsNode, CATEGORY_JS.MATH);
+		poly.registerNode(RandomJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(RayJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(RayFromCameraJsNode, CATEGORY_JS.INPUTS);
 		poly.registerNode(RayFromCursorJsNode, CATEGORY_JS.INPUTS);
@@ -520,6 +544,7 @@ export class JsRegister {
 
 		poly.registerNode(SignJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(SinJsNode, CATEGORY_JS.MATH);
+		poly.registerNode(SmoothstepJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(SphereJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(SqrtJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(SubtractJsNode, CATEGORY_JS.MATH);

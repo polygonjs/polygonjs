@@ -1,5 +1,5 @@
 /**
- * returns a blend between 2 inputs
+ * return (x + preAdd) x mult + postAdd
  *
  *
  */
@@ -7,27 +7,30 @@ import {PolyDictionary} from '../../../types/GlobalTypes';
 import {Poly} from '../../Poly';
 import {JsConnectionPointType, JsConnectionPointTypeFromArrayTypeMap} from '../utils/io/connections/Js';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
-import {MathFunctionArg3OperationFactory, DEFAULT_ALLOWED_TYPES} from './_Math_Arg1Operation';
+import {MathFunctionArg4OperationFactory, DEFAULT_ALLOWED_TYPES} from './_Math_Arg1Operation';
 
-enum MixInput {
-	value0 = 'value0',
-	value1 = 'value1',
-	blend = 'blend',
+enum MultAddInput {
+	VALUE = 'value',
+	PRE_ADD = 'preAdd',
+	MULT = 'mult',
+	POST_ADD = 'postAdd',
 }
 const DefaultValues: PolyDictionary<number> = {
-	[MixInput.value0]: 0,
-	[MixInput.value1]: 1,
-	[MixInput.blend]: 0.5,
+	[MultAddInput.VALUE]: 0,
+	[MultAddInput.PRE_ADD]: 0,
+	[MultAddInput.MULT]: 1,
+	[MultAddInput.POST_ADD]: 0,
 };
 
-const FUNCTION_NAME = 'mix';
-export class MixJsNode extends MathFunctionArg3OperationFactory('mix', {
+const FUNCTION_NAME = 'multAdd';
+export class MultAddJsNode extends MathFunctionArg4OperationFactory('multAdd', {
 	inputPrefix: 'in',
-	out: 'mix',
+	out: 'val',
 }) {
 	protected _coreFunction(shadersCollectionController: ShadersCollectionController) {
-		Poly.namedFunctionsRegister.getFunction(FUNCTION_NAME, this, shadersCollectionController).asString('', '', '');
-
+		Poly.namedFunctionsRegister
+			.getFunction(FUNCTION_NAME, this, shadersCollectionController)
+			.asString('', '', '', '');
 		return FUNCTION_NAME;
 	}
 
@@ -36,7 +39,7 @@ export class MixJsNode extends MathFunctionArg3OperationFactory('mix', {
 	}
 
 	protected override _expectedInputName(index: number): string {
-		return [MixInput.value0, MixInput.value1, MixInput.blend][index];
+		return [MultAddInput.VALUE, MultAddInput.PRE_ADD, MultAddInput.MULT, MultAddInput.POST_ADD][index];
 	}
 
 	protected override _expectedInputTypes() {
@@ -53,6 +56,6 @@ export class MixJsNode extends MathFunctionArg3OperationFactory('mix', {
 		}
 		const type = first_input_type || JsConnectionPointType.FLOAT;
 		const boundType = JsConnectionPointTypeFromArrayTypeMap[type];
-		return [type, boundType, JsConnectionPointType.FLOAT];
+		return [type, boundType, boundType, boundType];
 	}
 }
