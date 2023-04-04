@@ -88,6 +88,7 @@ export class arrayElementVector extends BaseNamedFunction {
 	override func<T extends VectorArrayElement>(src: Array<T>, index: number, target: T): T {
 		let element: T = src[index];
 		element != null ? element : src[0];
+		console.log({src, index, element, target});
 		(target as Vector4).copy(element as Vector4);
 		return target;
 	}

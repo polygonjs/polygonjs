@@ -4,27 +4,21 @@
  *
  */
 
-import {ActorNodeTriggerContext, TypedActorNode} from './_Base';
-import {
-	ActorConnectionPoint,
-	ActorConnectionPointType,
-	ReturnValueTypeByActorConnectionPointType,
-} from '../utils/io/connections/Actor';
+import {TypedJsNode} from './_Base';
+import {JsConnectionPoint, JsConnectionPointType} from '../utils/io/connections/Js';
 import {Matrix4} from 'three';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
-import {TypeAssert} from '../../poly/Assert';
 import {Poly} from '../../Poly';
+import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 
-enum GetWebXRTrackedMarkerActorNodeInputName {
+enum GetWebXRTrackedMarkerJsNodeInputName {
 	matrix = 'matrix',
 }
 
-const tmpMatrix = new Matrix4();
+class GetWebXRTrackedMarkerJsParamsConfig extends NodeParamsConfig {}
+const ParamsConfig = new GetWebXRTrackedMarkerJsParamsConfig();
 
-class GetWebXRTrackedMarkerActorParamsConfig extends NodeParamsConfig {}
-const ParamsConfig = new GetWebXRTrackedMarkerActorParamsConfig();
-
-export class GetWebXRTrackedMarkerPropertyActorNode extends TypedActorNode<GetWebXRTrackedMarkerActorParamsConfig> {
+export class GetWebXRTrackedMarkerPropertyJsNode extends TypedJsNode<GetWebXRTrackedMarkerJsParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
 		return 'getWebXRTrackedMarkerProperty';
@@ -34,22 +28,32 @@ export class GetWebXRTrackedMarkerPropertyActorNode extends TypedActorNode<GetWe
 		this.io.inputs.setNamedInputConnectionPoints([]);
 
 		this.io.outputs.setNamedOutputConnectionPoints([
-			new ActorConnectionPoint(GetWebXRTrackedMarkerActorNodeInputName.matrix, ActorConnectionPointType.MATRIX4),
+			new JsConnectionPoint(GetWebXRTrackedMarkerJsNodeInputName.matrix, JsConnectionPointType.MATRIX4),
 		]);
 	}
+	override setLines(shadersCollectionController: ShadersCollectionController) {
+		const usedOutputNames = this.io.outputs.used_output_names();
 
-	public override outputValue(
-		context: ActorNodeTriggerContext,
-		outputName: GetWebXRTrackedMarkerActorNodeInputName
-	): ReturnValueTypeByActorConnectionPointType[ActorConnectionPointType] | undefined {
-		const controller = Poly.thirdParty.markerTracking().controller();
-
-		switch (outputName) {
-			case GetWebXRTrackedMarkerActorNodeInputName.matrix: {
-				controller?.trackedMatrix(tmpMatrix);
-				return tmpMatrix;
+		const _m4 = (
+			propertyName: GetWebXRTrackedMarkerJsNodeInputName,
+			functionName: 'getWebXRTrackedMarkerMatrix',
+			type: JsConnectionPointType
+		) => {
+			if (!usedOutputNames.includes(propertyName)) {
+				return;
 			}
-		}
-		TypeAssert.unreachable(outputName);
+			const varName = this.jsVarName(propertyName);
+			shadersCollectionController.addVariable(this, varName, new Matrix4());
+			const func = Poly.namedFunctionsRegister.getFunction(functionName, this, shadersCollectionController);
+			shadersCollectionController.addBodyOrComputed(this, [
+				{
+					dataType: type,
+					varName,
+					value: func.asString(varName),
+				},
+			]);
+		};
+
+		_m4(GetWebXRTrackedMarkerJsNodeInputName.matrix, 'getWebXRTrackedMarkerMatrix', JsConnectionPointType.MATRIX4);
 	}
 }

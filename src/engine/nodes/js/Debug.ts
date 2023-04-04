@@ -4,7 +4,7 @@
  *
  *
  */
-import {JsConnectionPointType, JsConnectionPointTypeFromArrayTypeMap} from '../utils/io/connections/Js';
+import {JsConnectionPointType} from '../utils/io/connections/Js';
 import {TypedJsNode} from './_Base';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
@@ -40,9 +40,7 @@ export class DebugJsNode extends TypedJsNode<DebugJsParamsConfig> {
 		return `${type}`;
 	}
 	protected _expectedOutputTypes() {
-		const firstType = this._expectedInputTypes()[0];
-		const outputType = JsConnectionPointTypeFromArrayTypeMap[firstType] || JsConnectionPointType.FLOAT;
-		return [outputType];
+		return this._expectedInputTypes();
 	}
 	override setLines(shadersCollectionController: ShadersCollectionController) {
 		const object3D = inputObject3D(this, shadersCollectionController);

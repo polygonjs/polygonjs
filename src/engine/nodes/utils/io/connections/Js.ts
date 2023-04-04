@@ -93,6 +93,9 @@ export function isJsConnectionPointPrimitive(type: JsConnectionPointType) {
 export function isJsConnectionPointVector(type: JsConnectionPointType) {
 	return VECTOR_JS_CONNECTION_TYPES.has(type);
 }
+export function isJsConnectionPointArray(type: JsConnectionPointType) {
+	return ARRAY_JS_CONNECTION_TYPES_SET.has(type as JsConnectionPointTypeArray);
+}
 
 //
 //

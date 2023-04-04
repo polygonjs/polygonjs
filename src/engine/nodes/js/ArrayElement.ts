@@ -13,7 +13,7 @@ import {
 import {TypedJsNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
-import {RegisterableVariable, createVectorArray} from './code/assemblers/_BaseJsPersistedConfigUtils';
+import {RegisterableVariable, createVariable} from './code/assemblers/_BaseJsPersistedConfigUtils';
 import {Poly} from '../../Poly';
 
 const ALLOWED_INPUT_TYPES = ARRAY_JS_CONNECTION_TYPES_SET;
@@ -112,7 +112,8 @@ export class ArrayElementJsNode extends TypedJsNode<ArrayElementJsParamsConfig> 
 		const index = this.variableForInputParam(shadersCollectionController, this.p.index);
 		const dataType = this._expectedInputTypes()[0];
 		const varName = this.jsVarName(this._expectedOutputName(0));
-		shadersCollectionController.addVariable(this, varName, createVectorArray(dataType) as RegisterableVariable);
+		const elementType = JsConnectionPointTypeFromArrayTypeMap[dataType];
+		shadersCollectionController.addVariable(this, varName, createVariable(elementType) as RegisterableVariable);
 		const func = Poly.namedFunctionsRegister.getFunction('arrayElementVector', this, shadersCollectionController);
 		shadersCollectionController.addBodyOrComputed(this, [
 			{

@@ -10,6 +10,7 @@ import {Vector2, Vector3, Vector4} from 'three';
 import {ActorNodeTriggerContext, TypedActorNode} from './_Base';
 import {CoreType} from '../../../core/Type';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
+import {CoreMath} from '../../../core/math/_Module';
 
 enum SmoothstepActorNodeInputName {
 	EDGE0 = 'edge0',
@@ -47,11 +48,7 @@ function _createVectors(): Vectors {
 		v4: new Vector4(),
 	};
 }
-
-function smoothstep(edge0: number, edge1: number, value: number) {
-	const x = Math.max(0, Math.min(1, (value - edge0) / (edge1 - edge0)));
-	return x * x * (3 - 2 * x);
-}
+const smoothstep = CoreMath.smoothstep;
 
 class SmoothstepActorParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new SmoothstepActorParamsConfig();

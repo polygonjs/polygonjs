@@ -23,6 +23,7 @@ import {ActorFunctionData, ActorPersistedConfig} from '../js/code/assemblers/act
 import {computed, ref, watch} from '../../../core/reactivity/CoreReactivity';
 import {RegisterableVariable} from '../js/code/assemblers/_BaseJsPersistedConfigUtils';
 import {SetUtils} from '../../../core/SetUtils';
+import {FUNCTION_UTILS} from '../../functions/_FunctionUtils';
 // class ActorJsSopParamsConfig extends NodeParamsConfig {
 // 	/** @param select which objects this applies the actor behavior to */
 // 	// objectsMask = ParamConfig.STRING('', {
@@ -64,8 +65,6 @@ export class TypedActorSopNode<K extends NodeParamsConfig> extends TypedSopNode<
 	private _createAssemblerController(): JsAssemblerController<JsAssemblerActor> | undefined {
 		return Poly.assemblersRegister.assembler(this, this.usedAssembler());
 	}
-
-	
 
 	//
 	// CHILDREN
@@ -186,6 +185,7 @@ export class TypedActorSopNode<K extends NodeParamsConfig> extends TypedSopNode<
 
 		paramConfigs.forEach((p) => p.applyToNode(this));
 
+		// args & args names
 		const functionCreationArgs = [
 			'ActorEvaluator',
 			'computed',
@@ -194,6 +194,7 @@ export class TypedActorSopNode<K extends NodeParamsConfig> extends TypedSopNode<
 			'_setErrorFromError',
 			...variableNames,
 			...functionNames,
+			...FUNCTION_UTILS.names,
 			...paramConfigUniformNames,
 			wrappedBody,
 		];
@@ -207,6 +208,7 @@ export class TypedActorSopNode<K extends NodeParamsConfig> extends TypedSopNode<
 			// for each evaluator
 			...variables.map((v) => v.clone()),
 			...functions,
+			...FUNCTION_UTILS.functions,
 		];
 		try {
 			const _function = new Function(...functionCreationArgs);

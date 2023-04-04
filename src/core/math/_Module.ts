@@ -30,6 +30,10 @@ export class CoreMath {
 			return val;
 		}
 	}
+	static smoothstep(edge0: number, edge1: number, value: number) {
+		const x = Math.max(0, Math.min(1, (value - edge0) / (edge1 - edge0)));
+		return x * x * (3 - 2 * x);
+	}
 
 	// used in expressions
 	static fit01(val: number, destMin: number, destMax: number): number {

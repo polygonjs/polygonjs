@@ -118,6 +118,7 @@ export const CATEGORY_JS = {
 	TRIGO: 'trigo',
 	UTIL: 'util',
 	INSTANCE: 'instance',
+	WEBXR: 'webXR',
 };
 export const CATEGORY_MAT = {
 	ADVANCED: 'advanced',

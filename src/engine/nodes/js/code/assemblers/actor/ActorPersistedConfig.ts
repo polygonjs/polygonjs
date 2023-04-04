@@ -5,6 +5,7 @@ import {
 	SerializedVariable,
 	SerializedVariableType,
 	serializeVariable,
+	isVariableSerializable,
 	deserializeVariable,
 } from '../_BaseJsPersistedConfigUtils';
 import {BaseActorSopNodeType} from '../../../../sop/_BaseActor';
@@ -45,7 +46,7 @@ export class ActorPersistedConfig extends BasePersistedConfig {
 		const serializedVariables: SerializedVariable<SerializedVariableType>[] = [];
 		for (let variableName of variableNames) {
 			const variable = variablesByName[variableName];
-			if (variable != null) {
+			if (variable != null && isVariableSerializable(variable)) {
 				const serialized = serializeVariable(variable);
 				serializedVariables.push(serialized);
 			}

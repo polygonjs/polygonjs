@@ -24,6 +24,7 @@ import {CoreString} from '../../../core/String';
 import {BaseParamType} from '../../params/_Base';
 import {EvaluatorEventData} from './code/assemblers/actor/Evaluator';
 import {StringParam} from '../../params/String';
+import {sanitizeJsVarName} from './code/assemblers/JsTypeUtils';
 
 export const TRIGGER_CONNECTION_NAME = 'trigger';
 
@@ -120,7 +121,7 @@ export class TypedJsNode<K extends NodeParamsConfig> extends TypedNode<NodeConte
 	// //
 	// //
 	jsVarName(name: string) {
-		return `v_POLY_${this.name()}_${name}`.replace(/\[\]$/g, '');
+		return sanitizeJsVarName(`v_POLY_${this.name()}_${name}`);
 	}
 	inputVarName(inputName: string) {
 		const sanitizedNodePath = CoreString.sanitizeName(this.path().replace(this.functionNode()?.path() || '', ''));

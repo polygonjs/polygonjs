@@ -4,6 +4,7 @@ import {
 	RegisterableVariable,
 	SerializedVariable,
 	SerializedVariableType,
+	isVariableSerializable,
 	serializeVariable,
 	deserializeVariable,
 } from '../_BaseJsPersistedConfigUtils';
@@ -39,7 +40,7 @@ export class SDFPersistedConfig extends BasePersistedConfig {
 		const serializedVariables: SerializedVariable<SerializedVariableType>[] = [];
 		for (let variableName of variableNames) {
 			const variable = variablesByName[variableName];
-			if (variable != null) {
+			if (variable != null && isVariableSerializable(variable)) {
 				const serialized = serializeVariable(variable);
 				serializedVariables.push(serialized);
 			}

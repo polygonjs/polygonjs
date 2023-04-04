@@ -39,9 +39,11 @@ import {
 	vec3ToColor,
 	vec3ToVec4,
 } from '../../../functions/Conversion';
+import {catmullRomCurve3GetPoint} from '../../../functions/Curve';
 import {debug} from '../../../functions/Debug';
 import {setGeometryPositions} from '../../../functions/Geometry';
 import {setSpotLightIntensity} from '../../../functions/Light';
+import {andArrays, andBooleans, orArrays, orBooleans} from '../../../functions/Logic';
 import {
 	setObjectMaterial,
 	setObjectMaterialColor,
@@ -153,7 +155,7 @@ import {SDFBox, SDFSphere} from '../../../functions/SDFPrimitives';
 import {SDFRoundedX} from '../../../functions/SDFPrimitives2D';
 import {sphereSet, getSphereCenter, getSphereRadius} from '../../../functions/Sphere';
 import {vector3AngleTo, vector3Project, vector3ProjectOnPlane, vector3Unproject} from '../../../functions/Vector';
-
+import {getWebXRTrackedMarkerMatrix} from '../../../functions/WebXR';
 //
 import {keyboardEventMatchesConfig} from '../../../functions/KeyboardEventMatchesConfig';
 import {getActorNodeParamValue} from '../../../functions/GetActorNodeParamValue';
@@ -163,6 +165,7 @@ import {getObjectAttribute} from '../../../functions/GetObjectAttribute';
 import {getObjectAttributeRef} from '../../../functions/GetObjectAttributeRef';
 import {getObjectHoveredState} from '../../../functions/GetObjectHoveredState';
 import {getObjectProperty} from '../../../functions/GetObjectProperty';
+import {getObjectUserData} from '../../../functions/GetObjectUserData';
 import {setObjectAttribute} from '../../../functions/SetObjectAttribute';
 import {setObjectLookAt} from '../../../functions/SetObjectLookAt';
 import {setObjectPolarTransform} from '../../../functions/SetObjectPolarTransform';
@@ -183,6 +186,8 @@ export interface NamedFunctionMap {
 	addNumber: addNumber;
 	addVector: addVector<Vector2 | Vector3 | Vector4>;
 	addVectorNumber: addVectorNumber<Vector2 | Vector3 | Vector4>;
+	andArrays: andArrays;
+	andBooleans: andBooleans;
 	animationActionCrossFade: animationActionCrossFade;
 	animationActionFadeIn: animationActionFadeIn;
 	animationActionFadeOut: animationActionFadeOut;
@@ -194,6 +199,7 @@ export interface NamedFunctionMap {
 	arrayLength: arrayLength;
 	boolToInt: boolToInt;
 	box3Set: box3Set;
+	catmullRomCurve3GetPoint: catmullRomCurve3GetPoint;
 	colorToVec3: colorToVec3;
 	debug: debug<any>;
 	divideNumber: divideNumber;
@@ -216,6 +222,7 @@ export interface NamedFunctionMap {
 	getObjectAttributeRef: getObjectAttributeRef;
 	getObjectHoveredState: getObjectHoveredState;
 	getObjectProperty: getObjectProperty;
+	getObjectUserData: getObjectUserData;
 	getParent: getParent;
 	getPlaneNormal: getPlaneNormal;
 	getPlaneConstant: getPlaneConstant;
@@ -243,6 +250,7 @@ export interface NamedFunctionMap {
 	getTrackedHandPinkyDirection: getTrackedHandPinkyDirection;
 	getTrackedHandRingDirection: getTrackedHandRingDirection;
 	getTrackedHandThumbDirection: getTrackedHandThumbDirection;
+	getWebXRTrackedMarkerMatrix: getWebXRTrackedMarkerMatrix;
 	globalsTime: globalsTime;
 	globalsTimeDelta: globalsTimeDelta;
 	globalsRaycaster: globalsRaycaster;
@@ -254,6 +262,8 @@ export interface NamedFunctionMap {
 	multNumber: multNumber;
 	multVector: multVector<Vector2 | Vector3 | Vector4>;
 	multVectorNumber: multVectorNumber<Vector2 | Vector3 | Vector4>;
+	orArrays: orArrays;
+	orBooleans: orBooleans;
 	particlesSystemReset: particlesSystemReset;
 	particlesSystemStepSimulation: particlesSystemStepSimulation;
 	physicsRBDAddForce: physicsRBDAddForce;
@@ -355,6 +365,8 @@ export class AllNamedFunctionRegister {
 			addNumber,
 			addVector,
 			addVectorNumber,
+			andArrays,
+			andBooleans,
 			animationActionCrossFade,
 			animationActionFadeIn,
 			animationActionFadeOut,
@@ -367,6 +379,7 @@ export class AllNamedFunctionRegister {
 			boolToInt,
 			box3Set,
 			colorToVec3,
+			catmullRomCurve3GetPoint,
 			debug,
 			divideNumber,
 			divideVectorNumber,
@@ -388,6 +401,7 @@ export class AllNamedFunctionRegister {
 			getObjectAttributeRef,
 			getObjectHoveredState,
 			getObjectProperty,
+			getObjectUserData,
 			getParent,
 			getPlaneNormal,
 			getPlaneConstant,
@@ -415,6 +429,7 @@ export class AllNamedFunctionRegister {
 			getTrackedHandPinkyDirection,
 			getTrackedHandRingDirection,
 			getTrackedHandThumbDirection,
+			getWebXRTrackedMarkerMatrix,
 			globalsTime,
 			globalsTimeDelta,
 			globalsRaycaster,
@@ -426,6 +441,8 @@ export class AllNamedFunctionRegister {
 			multNumber,
 			multVector,
 			multVectorNumber,
+			orArrays,
+			orBooleans,
 			particlesSystemReset,
 			particlesSystemStepSimulation,
 			planeSet,

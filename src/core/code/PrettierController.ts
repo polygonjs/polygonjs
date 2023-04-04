@@ -7,6 +7,7 @@ export class PrettierController {
 			return prettier.format(JSContent, {
 				parser: 'babel',
 				plugins: [parserBabel],
+				printWidth: 120,
 			});
 		} catch (err) {
 			console.log(err);

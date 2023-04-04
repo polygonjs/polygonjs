@@ -2,7 +2,12 @@ import {Box3, Color, Vector2, Vector3, Vector4, Plane, Ray, Sphere, Quaternion, 
 import {CoreType} from '../../../../../core/Type';
 import {Number2, Number3, Number4, Number16} from '../../../../../types/GlobalTypes';
 import {TypeAssert} from '../../../../poly/Assert';
-import {JsConnectionPointType, PrimitiveArrayElement, VectorArrayElement} from '../../../utils/io/connections/Js';
+import {
+	JsConnectionPointType,
+	PrimitiveArrayElement,
+	VectorArrayElement,
+	JsConnectionPointTypeFromArrayTypeMap,
+} from '../../../utils/io/connections/Js';
 export type RegisterableVariable =
 	| Box3
 	| Color
@@ -14,15 +19,15 @@ export type RegisterableVariable =
 	| Vector2
 	| Vector3
 	| Vector4
-	| PrimitiveArray<boolean>
-	| PrimitiveArray<number>
-	| PrimitiveArray<string>
-	| VectorArray<Color>
-	| VectorArray<Matrix4>
-	| VectorArray<Quaternion>
-	| VectorArray<Vector2>
-	| VectorArray<Vector3>
-	| VectorArray<Vector4>;
+	| PrimitiveArray<PrimitiveArrayElement>
+	| VectorArray<VectorArrayElement>;
+// | PrimitiveArray<PrimitiveArrayElement>
+// | VectorArray<Color>
+// | VectorArray<Matrix4>
+// | VectorArray<Quaternion>
+// | VectorArray<Vector2>
+// | VectorArray<Vector3>
+// | VectorArray<Vector4>;
 
 export class PrimitiveArray<V extends PrimitiveArrayElement> {
 	constructor(protected _elements: V[]) {}
@@ -43,6 +48,69 @@ export class VectorArray<V extends VectorArrayElement> {
 	}
 }
 // Color | Vector2 | Vector3 | Vector4 | Matrix4 | Quaternion
+export function createVariable(type: JsConnectionPointType) {
+	switch (type) {
+		case JsConnectionPointType.BOOLEAN:
+		case JsConnectionPointType.INT:
+		case JsConnectionPointType.FLOAT:
+		case JsConnectionPointType.STRING: {
+			return null;
+		}
+		case JsConnectionPointType.COLOR: {
+			return new Color();
+		}
+		case JsConnectionPointType.MATRIX4: {
+			return new Matrix4();
+		}
+		case JsConnectionPointType.QUATERNION: {
+			return new Quaternion();
+		}
+		case JsConnectionPointType.VECTOR2: {
+			return new Vector2();
+		}
+		case JsConnectionPointType.VECTOR3: {
+			return new Vector3();
+		}
+		case JsConnectionPointType.VECTOR4: {
+			return new Vector4();
+		}
+		case JsConnectionPointType.BOOLEAN_ARRAY:
+		case JsConnectionPointType.COLOR_ARRAY:
+		case JsConnectionPointType.FLOAT_ARRAY:
+		case JsConnectionPointType.INT_ARRAY: {
+			return createPrimitiveArray(type);
+		}
+		case JsConnectionPointType.MATRIX4_ARRAY:
+		case JsConnectionPointType.QUATERNION_ARRAY:
+		case JsConnectionPointType.STRING_ARRAY:
+		case JsConnectionPointType.TEXTURE_ARRAY:
+		case JsConnectionPointType.VECTOR2_ARRAY:
+		case JsConnectionPointType.VECTOR3_ARRAY:
+		case JsConnectionPointType.VECTOR4_ARRAY: {
+			return createVectorArray(type);
+		}
+		case JsConnectionPointType.ANIMATION_MIXER:
+		case JsConnectionPointType.ANIMATION_ACTION:
+		case JsConnectionPointType.BOX3:
+		case JsConnectionPointType.CAMERA:
+		case JsConnectionPointType.CATMULL_ROM_CURVE3:
+		case JsConnectionPointType.INTERSECTION:
+		case JsConnectionPointType.INTERSECTION_ARRAY:
+		case JsConnectionPointType.MATERIAL:
+		case JsConnectionPointType.OBJECT_3D:
+		case JsConnectionPointType.PLANE:
+		case JsConnectionPointType.RAY:
+		case JsConnectionPointType.SPHERE:
+		case JsConnectionPointType.TEXTURE:
+		case JsConnectionPointType.TEXTURE_ARRAY:
+		case JsConnectionPointType.TRIGGER: {
+			console.warn('no variable can be created for type', type);
+			return null;
+		}
+	}
+	TypeAssert.unreachable(type);
+}
+
 export function createPrimitiveArray<V extends PrimitiveArrayElement>(type: JsConnectionPointType): PrimitiveArray<V> {
 	switch (type) {
 		case JsConnectionPointType.BOOLEAN: {
@@ -62,6 +130,7 @@ export function createPrimitiveArray<V extends PrimitiveArrayElement>(type: JsCo
 	return new PrimitiveArray([0]) as PrimitiveArray<V>;
 }
 export function createVectorArray<V extends VectorArrayElement>(type: JsConnectionPointType): VectorArray<V> {
+	type = JsConnectionPointTypeFromArrayTypeMap[type];
 	switch (type) {
 		case JsConnectionPointType.COLOR: {
 			return new VectorArray([new Color()]) as VectorArray<V>;
@@ -103,8 +172,10 @@ export enum SerializedVariableType {
 	string_Array = 'string[]',
 	// vector array
 	Color_Array = 'Color[]',
+	// Intersection_Array = 'Intersection[]',
 	Matrix4_Array = 'Matrix4[]',
 	Quaternion_Array = 'Quaternion[]',
+	// Texture_Array = 'Texture[]',
 	Vector2_Array = 'Vector2[]',
 	Vector3_Array = 'Vector3[]',
 	Vector4_Array = 'Vector4[]',
@@ -156,10 +227,33 @@ interface VariableByType {
 	[SerializedVariableType.Vector3_Array]: VectorArray<Vector3>;
 	[SerializedVariableType.Vector4_Array]: VectorArray<Vector4>;
 }
+type SerializableVariable = Box3 | Color | Matrix4 | Plane | Quaternion | Ray | Sphere | Vector2 | Vector3 | Vector4;
 
 export interface SerializedVariable<T extends SerializedVariableType> {
 	type: SerializedVariableType;
 	data: SerializedDataByType[T];
+}
+
+export function isVariableSerializable(variable: any): variable is SerializableVariable {
+	if (
+		variable instanceof Box3 ||
+		variable instanceof Color ||
+		variable instanceof Matrix4 ||
+		variable instanceof Plane ||
+		variable instanceof Quaternion ||
+		variable instanceof Ray ||
+		variable instanceof Sphere ||
+		variable instanceof Vector2 ||
+		variable instanceof Vector3 ||
+		variable instanceof Vector4 ||
+		variable instanceof PrimitiveArray ||
+		variable instanceof VectorArray
+	) {
+		return true;
+	} else {
+		console.warn('not serializable', variable);
+		return false;
+	}
 }
 
 export function serializeVariable<T extends SerializedVariableType>(
