@@ -91,7 +91,6 @@ export function MathFunctionArgXOperationFactory<MVF extends MathVectorFunction>
 
 		override setLines(shadersCollectionController: ShadersCollectionController) {
 			const varName = this.jsVarName(this._expectedOutputName(0));
-
 			const inputType = this._expectedInputTypes()[0];
 			const variable = createVariable(inputType);
 			if (variable) {

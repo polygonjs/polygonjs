@@ -26,12 +26,7 @@ export class ClampJsNode extends MathFunctionArg3OperationFactory('clamp', {
 	out: 'clamped',
 }) {
 	protected _coreFunction(shadersCollectionController: ShadersCollectionController) {
-		const mainArg = 'x';
-		const _min = this.variableForInput(shadersCollectionController, ClampInput.min);
-		const _max = this.variableForInput(shadersCollectionController, ClampInput.max);
-		Poly.namedFunctionsRegister
-			.getFunction(FUNCTION_NAME, this, shadersCollectionController)
-			.asString(mainArg, _min, _max);
+		Poly.namedFunctionsRegister.getFunction(FUNCTION_NAME, this, shadersCollectionController).asString('', '', '');
 
 		return FUNCTION_NAME;
 	}

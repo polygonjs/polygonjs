@@ -1,5 +1,5 @@
 import {PolyEngine} from '../../../Poly';
-import {Vector2, Vector3, Vector4} from 'three';
+import {Color, Vector2, Vector3, Vector4} from 'three';
 //
 import {addNumber, addVector, addVectorNumber} from '../../../functions/Add';
 import {divideNumber, divideVectorNumber} from '../../../functions/Divide';
@@ -59,6 +59,7 @@ import {
 	easeElasticIO,
 } from '../../../functions/Easing';
 import {setGeometryPositions} from '../../../functions/Geometry';
+import {lerpColor, lerpNumber, lerpQuaternion, lerpVector2, lerpVector3, lerpVector4} from '../../../functions/Lerp';
 import {setSpotLightIntensity} from '../../../functions/Light';
 import {andArrays, andBooleans, orArrays, orBooleans} from '../../../functions/Logic';
 import {
@@ -109,6 +110,15 @@ import {
 	MathArrayVectorElement,
 } from '../../../functions/_MathGeneric';
 import {clamp, complement, fit, fitClamp, mix, multAdd, negate, rand, smoothstep} from '../../../functions/Math';
+import {
+	multScalarArrayVectorArray,
+	multScalarColor,
+	multScalarVector2,
+	multScalarVector3,
+	multScalarVector4,
+	multScalarVectorArray,
+} from '../../../functions/MultScalar';
+import {nearestPosition} from '../../../functions/NearestPosition';
 import {particlesSystemReset, particlesSystemStepSimulation} from '../../../functions/ParticlesSystem';
 import {
 	// globals
@@ -211,6 +221,14 @@ import {SDFBox, SDFSphere} from '../../../functions/SDFPrimitives';
 import {SDFRoundedX} from '../../../functions/SDFPrimitives2D';
 import {sphereSet, getSphereCenter, getSphereRadius} from '../../../functions/Sphere';
 import {vector3AngleTo, vector3Project, vector3ProjectOnPlane, vector3Unproject} from '../../../functions/Vector';
+import {crossVector2, crossVector3} from '../../../functions/VectorCross';
+import {distanceVector2, distanceVector3} from '../../../functions/VectorDistance';
+import {dotVector2, dotVector3} from '../../../functions/VectorDot';
+import {lengthVector, lengthVectorArray} from '../../../functions/VectorLength';
+import {manhattanDistanceVector2, manhattanDistanceVector3} from '../../../functions/VectorManhattanDistance';
+import {maxLengthVector2, maxLengthVector3, maxLengthVector4} from '../../../functions/VectorMaxLength';
+import {normalizeVector2, normalizeVector3, normalizeVector4} from '../../../functions/VectorNormalize';
+//
 import {getWebXRTrackedMarkerMatrix} from '../../../functions/WebXR';
 //
 import {keyboardEventMatchesConfig} from '../../../functions/KeyboardEventMatchesConfig';
@@ -259,9 +277,15 @@ export interface NamedFunctionMap {
 	clamp: clamp;
 	colorToVec3: colorToVec3;
 	complement: complement;
+	crossVector2: crossVector2;
+	crossVector3: crossVector3;
 	debug: debug<any>;
+	distanceVector2: distanceVector2;
+	distanceVector3: distanceVector3;
 	divideNumber: divideNumber;
 	divideVectorNumber: divideVectorNumber<Vector2 | Vector3 | Vector4>;
+	dotVector2: dotVector2;
+	dotVector3: dotVector3;
 	easeI2: easeI2;
 	easeO2: easeO2;
 	easeIO2: easeIO2;
@@ -331,9 +355,19 @@ export interface NamedFunctionMap {
 	globalsRaycaster: globalsRaycaster;
 	globalsRayFromCursor: globalsRayFromCursor;
 	globalsCursor: globalsCursor;
+	lengthVector: lengthVector<Vector2 | Vector3 | Vector4>;
+	lengthVectorArray: lengthVectorArray<Vector2 | Vector3 | Vector4>;
+	lerpColor: lerpColor;
+	lerpNumber: lerpNumber;
+	lerpQuaternion: lerpQuaternion;
+	lerpVector2: lerpVector2;
+	lerpVector3: lerpVector3;
+	lerpVector4: lerpVector4;
 	intToBool: intToBool;
 	intToFloat: intToFloat;
 	keyboardEventMatchesConfig: keyboardEventMatchesConfig;
+	manhattanDistanceVector2: manhattanDistanceVector2;
+	manhattanDistanceVector3: manhattanDistanceVector3;
 	mathColor_1: mathColor_1;
 	mathColor_2: mathColor_2;
 	mathColor_3: mathColor_3;
@@ -369,12 +403,25 @@ export interface NamedFunctionMap {
 	mathVectorArray_3: mathVectorArray_3<MathArrayVectorElement>;
 	mathVectorArray_4: mathVectorArray_4<MathArrayVectorElement>;
 	mathVectorArray_5: mathVectorArray_5<MathArrayVectorElement>;
+	maxLengthVector2: maxLengthVector2;
+	maxLengthVector3: maxLengthVector3;
+	maxLengthVector4: maxLengthVector4;
 	mix: mix;
 	multNumber: multNumber;
+	multScalarArrayVectorArray: multScalarArrayVectorArray<Vector2 | Vector3 | Vector4 | Color>;
+	multScalarColor: multScalarColor;
+	multScalarVector2: multScalarVector2;
+	multScalarVector3: multScalarVector3;
+	multScalarVector4: multScalarVector4;
+	multScalarVectorArray: multScalarVectorArray<Vector2 | Vector3 | Vector4 | Color>;
 	multVector: multVector<Vector2 | Vector3 | Vector4>;
 	multVectorNumber: multVectorNumber<Vector2 | Vector3 | Vector4>;
 	multAdd: multAdd;
+	nearestPosition: nearestPosition;
 	negate: negate;
+	normalizeVector2: normalizeVector2;
+	normalizeVector3: normalizeVector3;
+	normalizeVector4: normalizeVector4;
 	orArrays: orArrays;
 	orBooleans: orBooleans;
 	particlesSystemReset: particlesSystemReset;
@@ -497,9 +544,15 @@ export class AllNamedFunctionRegister {
 			colorToVec3,
 			catmullRomCurve3GetPoint,
 			complement,
+			crossVector2,
+			crossVector3,
 			debug,
+			distanceVector2,
+			distanceVector3,
 			divideNumber,
 			divideVectorNumber,
+			dotVector2,
+			dotVector3,
 			easeI2,
 			easeO2,
 			easeIO2,
@@ -572,6 +625,16 @@ export class AllNamedFunctionRegister {
 			intToBool,
 			intToFloat,
 			keyboardEventMatchesConfig,
+			lengthVector,
+			lengthVectorArray,
+			lerpColor,
+			lerpNumber,
+			lerpQuaternion,
+			lerpVector2,
+			lerpVector3,
+			lerpVector4,
+			manhattanDistanceVector2,
+			manhattanDistanceVector3,
 			mathColor_1,
 			mathColor_2,
 			mathColor_3,
@@ -607,12 +670,25 @@ export class AllNamedFunctionRegister {
 			mathVectorArray_3,
 			mathVectorArray_4,
 			mathVectorArray_5,
+			maxLengthVector2,
+			maxLengthVector3,
+			maxLengthVector4,
 			mix,
 			multAdd,
 			multNumber,
+			multScalarArrayVectorArray,
+			multScalarColor,
+			multScalarVector2,
+			multScalarVector3,
+			multScalarVector4,
+			multScalarVectorArray,
 			multVector,
 			multVectorNumber,
+			nearestPosition,
 			negate,
+			normalizeVector2,
+			normalizeVector3,
+			normalizeVector4,
 			orArrays,
 			orBooleans,
 			particlesSystemReset,

@@ -27,9 +27,12 @@ import {CompareJsNode} from '../../../nodes/js/Compare';
 import {ComplementJsNode} from '../../../nodes/js/Complement';
 import {ConstantJsNode} from '../../../nodes/js/Constant';
 import {CosJsNode} from '../../../nodes/js/Cos';
+import {CrossJsNode} from '../../../nodes/js/Cross';
 import {CursorJsNode} from '../../../nodes/js/Cursor';
 import {DebugJsNode} from '../../../nodes/js/Debug';
+import {DistanceJsNode} from '../../../nodes/js/Distance';
 import {DivideJsNode} from '../../../nodes/js/Divide';
+import {DotJsNode} from '../../../nodes/js/Dot';
 import {EasingJsNode} from '../../../nodes/js/Easing';
 import {ElementsToArrayJsNode} from '../../../nodes/js/ElementsToArray';
 import {FitJsNode} from '../../../nodes/js/Fit';
@@ -61,12 +64,18 @@ import {GetWebXRTrackedMarkerPropertyJsNode} from '../../../nodes/js/GetWebXRTra
 import {GlobalsJsNode} from '../../../nodes/js/Globals';
 import {IntToBoolJsNode} from '../../../nodes/js/IntToBool';
 import {IntToFloatJsNode} from '../../../nodes/js/IntToFloat';
+import {LengthJsNode} from '../../../nodes/js/Length';
+import {ManhattanDistanceJsNode} from '../../../nodes/js/ManhattanDistance';
 import {MaxJsNode} from '../../../nodes/js/Max';
+import {MaxLengthJsNode} from '../../../nodes/js/MaxLength';
 import {MinJsNode} from '../../../nodes/js/Min';
 import {MixJsNode} from '../../../nodes/js/Mix';
 import {MultJsNode} from '../../../nodes/js/Mult';
 import {MultAddJsNode} from '../../../nodes/js/MultAdd';
+import {MultScalarJsNode} from '../../../nodes/js/MultScalar';
+import {NearestPositionJsNode} from '../../../nodes/js/NearestPosition';
 import {NegateJsNode} from '../../../nodes/js/Negate';
+import {NormalizeJsNode} from '../../../nodes/js/Normalize';
 import {NullJsNode} from '../../../nodes/js/Null';
 import {OnKeydownJsNode} from '../../../nodes/js/OnKeydown';
 import {OnKeypressJsNode} from '../../../nodes/js/OnKeypress';
@@ -209,10 +218,13 @@ export interface JsNodeChildrenMap {
 	compare: CompareJsNode;
 	complement: ComplementJsNode;
 	cos: CosJsNode;
+	cross: CrossJsNode;
 	cursor: CursorJsNode;
 	colorToVec3: ColorToVec3JsNode;
 	constant: ConstantJsNode;
 	debug: DebugJsNode;
+	dot: DotJsNode;
+	distance: DistanceJsNode;
 	divide: DivideJsNode;
 	easing: EasingJsNode;
 	elementsToArray: ElementsToArrayJsNode;
@@ -245,12 +257,18 @@ export interface JsNodeChildrenMap {
 	globals: GlobalsJsNode;
 	intToBool: IntToBoolJsNode;
 	intToFloat: IntToFloatJsNode;
+	length: LengthJsNode;
+	manhattanDistance: ManhattanDistanceJsNode;
 	max: MaxJsNode;
+	maxLength: MaxLengthJsNode;
 	min: MinJsNode;
 	mix: MixJsNode;
 	mult: MultJsNode;
 	multAdd: MultAddJsNode;
+	multScalar: MultScalarJsNode;
+	nearestPosition: NearestPositionJsNode;
 	negate: NegateJsNode;
+	normalize: NormalizeJsNode;
 	null: NullJsNode;
 	onKeydown: OnKeydownJsNode;
 	onKeypress: OnKeypressJsNode;
@@ -404,10 +422,13 @@ export class JsRegister {
 
 		poly.registerNode(ConstantJsNode, CATEGORY_JS.GLOBALS);
 		poly.registerNode(CosJsNode, CATEGORY_JS.MATH);
+		poly.registerNode(CrossJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(CursorJsNode, CATEGORY_JS.INPUTS, ONLY_ACTOR);
 
 		poly.registerNode(DebugJsNode, CATEGORY_JS.FLOW);
+		poly.registerNode(DistanceJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(DivideJsNode, CATEGORY_JS.MATH);
+		poly.registerNode(DotJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(EasingJsNode, CATEGORY_JS.MATH);
 
 		poly.registerNode(ElementsToArrayJsNode, CATEGORY_JS.CONVERSION);
@@ -441,12 +462,18 @@ export class JsRegister {
 		poly.registerNode(GlobalsJsNode, CATEGORY_JS.GLOBALS, ONLY_WITH_GLOBALS);
 		poly.registerNode(IntToBoolJsNode, CATEGORY_JS.CONVERSION);
 		poly.registerNode(IntToFloatJsNode, CATEGORY_JS.CONVERSION);
+		poly.registerNode(LengthJsNode, CATEGORY_JS.MATH);
+		poly.registerNode(ManhattanDistanceJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(MaxJsNode, CATEGORY_JS.MATH);
+		poly.registerNode(MaxLengthJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(MinJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(MixJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(MultJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(MultAddJsNode, CATEGORY_JS.MATH);
+		poly.registerNode(MultScalarJsNode, CATEGORY_JS.MATH);
+		poly.registerNode(NearestPositionJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(NegateJsNode, CATEGORY_JS.MATH);
+		poly.registerNode(NormalizeJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(NullJsNode, CATEGORY_JS.FLOW);
 
 		poly.registerNode(OnKeydownJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
