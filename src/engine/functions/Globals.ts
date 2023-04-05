@@ -2,11 +2,9 @@ import {Ray, Raycaster, Vector2} from 'three';
 import {ShadersCollectionController} from '../nodes/js/code/utils/ShadersCollectionController';
 import {BaseNodeType} from '../nodes/_Base';
 import {PointerEventsController} from '../scene/utils/events/PointerEventsController';
-import {TimeController} from '../scene/utils/TimeController';
 import {NamedFunction0} from './_Base';
 
 abstract class GlobalsTimeFunction0 extends NamedFunction0 {
-	protected timeController: TimeController;
 	constructor(node: BaseNodeType, shadersCollectionController?: ShadersCollectionController) {
 		super(node, shadersCollectionController);
 		this.timeController = node.scene().timeController;

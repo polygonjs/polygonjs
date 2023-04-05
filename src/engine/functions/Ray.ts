@@ -108,18 +108,14 @@ function _defaultIntersection(object3D: Object3D): Intersection {
 	DEFAULT_INTERSECTION.object = object3D;
 	return DEFAULT_INTERSECTION;
 }
-export class rayIntersectObject3D extends NamedFunction3<[Ray, Object3D, Vector3]> {
+export class rayIntersectObject3D extends NamedFunction2<[Ray, Object3D]> {
 	static override type() {
 		return 'rayIntersectObject3D';
 	}
-	func(ray: Ray, object3D: Object3D, target: Vector3): Intersection {
+	func(ray: Ray, object3D: Object3D): Intersection {
 		raycaster.ray.copy(ray);
 		const intersections = raycaster.intersectObject(object3D);
-		const intersection = intersections[0];
-		if (intersection) {
-			return intersection;
-		}
-		return _defaultIntersection(object3D);
+		return intersections[0] || _defaultIntersection(object3D);
 	}
 }
 export class rayIntersectsObject3D extends NamedFunction2<[Ray, Object3D]> {

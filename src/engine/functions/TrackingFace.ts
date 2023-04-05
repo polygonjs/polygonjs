@@ -34,7 +34,7 @@ export class trackFaceGetLandmarks extends ObjectNamedFunction2<[number, Vector4
 		return 'trackFaceGetLandmarks';
 	}
 	func(object3D: Object3D, faceIndex: number, target: Vector4[]): Vector4[] {
-		dummyReadRefVal(getOrCreateTrackedObjectRef(object3D).value);
+		dummyReadRefVal(getOrCreateTrackedObjectRef(this.timeController, object3D).value);
 
 		const results = CoreComputerVisionFace.trackerResults(object3D);
 		const vectorArray = results[faceIndex].multiFaceLandmarks;

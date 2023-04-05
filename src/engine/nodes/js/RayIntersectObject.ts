@@ -11,6 +11,7 @@ import {JsConnectionPoint, JsConnectionPointType, JS_CONNECTION_POINT_IN_NODE_DE
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 // import { Vector3 } from 'three';
 import {Poly} from '../../Poly';
+import {inputObject3D} from './_BaseObject3D';
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
 
 export class RayIntersectObjectJsNode extends BaseRayObjectJsNode {
@@ -29,15 +30,15 @@ export class RayIntersectObjectJsNode extends BaseRayObjectJsNode {
 		]);
 	}
 	override setLines(shadersCollectionController: ShadersCollectionController) {
+		const object3D = inputObject3D(this, shadersCollectionController);
 		const ray = this.variableForInput(shadersCollectionController, JsConnectionPointType.RAY);
-		const object3D = this.variableForInput(shadersCollectionController, JsConnectionPointType.OBJECT_3D);
-		const out = this.jsVarName(JsConnectionPointType.INTERSECTION);
+		const varName = this.jsVarName(JsConnectionPointType.INTERSECTION);
 		// shadersCollectionController.addVariable(this, out, new Vector3());
 
 		const func = Poly.namedFunctionsRegister.getFunction('rayIntersectObject3D', this, shadersCollectionController);
-		const bodyLine = func.asString(ray, object3D, out);
+		const bodyLine = func.asString(ray, object3D);
 		shadersCollectionController.addBodyOrComputed(this, [
-			{dataType: JsConnectionPointType.VECTOR3, varName: out, value: bodyLine},
+			{dataType: JsConnectionPointType.VECTOR3, varName, value: bodyLine},
 		]);
 	}
 

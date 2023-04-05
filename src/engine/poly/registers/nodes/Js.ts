@@ -22,10 +22,12 @@ import {Box3JsNode} from '../../../nodes/js/Box3';
 import {CatmullRomCurve3GetPointJsNode} from '../../../nodes/js/CatmullRomCurve3GetPoint';
 import {CeilJsNode} from '../../../nodes/js/Ceil';
 import {ClampJsNode} from '../../../nodes/js/Clamp';
+import {CodeJsNode} from '../../../nodes/js/Code';
 import {ColorToVec3JsNode} from '../../../nodes/js/ColorToVec3';
 import {CompareJsNode} from '../../../nodes/js/Compare';
 import {ComplementJsNode} from '../../../nodes/js/Complement';
 import {ConstantJsNode} from '../../../nodes/js/Constant';
+import {CookNodeJsNode} from '../../../nodes/js/CookNode';
 import {CosJsNode} from '../../../nodes/js/Cos';
 import {CrossJsNode} from '../../../nodes/js/Cross';
 import {CursorJsNode} from '../../../nodes/js/Cursor';
@@ -43,11 +45,18 @@ import {FloatToVec3JsNode} from '../../../nodes/js/FloatToVec3';
 import {FloatToVec4JsNode} from '../../../nodes/js/FloatToVec4';
 import {FloorJsNode} from '../../../nodes/js/Floor';
 import {GetBox3PropertyJsNode} from '../../../nodes/js/GetBox3Property';
+import {GetChildrenAttributesJsNode} from '../../../nodes/js/GetChildrenAttributes';
+import {GetChildrenPhysicsRBDPropertiesJsNode} from '../../../nodes/js/GetChildrenPhysicsRBDProperties';
+import {GetChildrenPropertiesJsNode} from '../../../nodes/js/GetChildrenProperties';
+import {GetDefaultCameraJsNode} from '../../../nodes/js/GetDefaultCamera';
+import {GetIntersectionPropertyJsNode} from '../../../nodes/js/GetIntersectionProperty';
 import {GetMaterialJsNode} from '../../../nodes/js/GetMaterial';
 import {GetObjectJsNode} from '../../../nodes/js/GetObject';
 import {GetObjectAttributeJsNode} from '../../../nodes/js/GetObjectAttribute';
+import {GetObjectChildJsNode} from '../../../nodes/js/GetObjectChild';
 import {GetObjectPropertyJsNode} from '../../../nodes/js/GetObjectProperty';
 import {GetObjectUserDataJsNode} from '../../../nodes/js/GetObjectUserData';
+import {GetObjectWorldPositionJsNode} from '../../../nodes/js/GetObjectWorldPosition';
 import {GetParentJsNode} from '../../../nodes/js/GetParent';
 import {GetPhysicsRBDConePropertyJsNode} from '../../../nodes/js/GetPhysicsRBDConeProperty';
 import {GetPhysicsRBDCapsulePropertyJsNode} from '../../../nodes/js/GetPhysicsRBDCapsuleProperty';
@@ -77,6 +86,10 @@ import {NearestPositionJsNode} from '../../../nodes/js/NearestPosition';
 import {NegateJsNode} from '../../../nodes/js/Negate';
 import {NormalizeJsNode} from '../../../nodes/js/Normalize';
 import {NullJsNode} from '../../../nodes/js/Null';
+import {Object3DLocalToWorldJsNode} from '../../../nodes/js/Object3DLocalToWorld';
+import {Object3DWorldToLocalJsNode} from '../../../nodes/js/Object3DWorldToLocal';
+import {Object3DUpdateMatrixJsNode} from '../../../nodes/js/Object3DUpdateMatrix';
+import {Object3DUpdateWorldMatrixJsNode} from '../../../nodes/js/Object3DUpdateWorldMatrix';
 import {OnKeydownJsNode} from '../../../nodes/js/OnKeydown';
 import {OnKeypressJsNode} from '../../../nodes/js/OnKeypress';
 import {OnKeyupJsNode} from '../../../nodes/js/OnKeyup';
@@ -97,6 +110,7 @@ import {OutputJsNode} from '../../../nodes/js/Output';
 import {ParamJsNode} from '../../../nodes/js/Param';
 import {ParticlesSystemResetJsNode} from '../../../nodes/js/ParticlesSystemReset';
 import {ParticlesSystemStepSimulationJsNode} from '../../../nodes/js/ParticlesSystemStepSimulation';
+import {PauseAudioSourceJsNode} from '../../../nodes/js/PauseAudioSource';
 import {PhysicsRBDAddForceJsNode} from '../../../nodes/js/PhysicsRBDAddForce';
 import {PhysicsRBDAddForceAtPointJsNode} from '../../../nodes/js/PhysicsRBDAddForceAtPoint';
 import {PhysicsRBDAddTorqueJsNode} from '../../../nodes/js/PhysicsRBDAddTorque';
@@ -110,8 +124,11 @@ import {PhysicsRBDResetTorquesJsNode} from '../../../nodes/js/PhysicsRBDResetTor
 import {PhysicsWorldResetJsNode} from '../../../nodes/js/PhysicsWorldReset';
 import {PhysicsWorldStepSimulationJsNode} from '../../../nodes/js/PhysicsWorldStepSimulation';
 import {PlaneJsNode} from '../../../nodes/js/Plane';
+import {PlayAnimationJsNode} from '../../../nodes/js/PlayAnimation';
+import {PlayAudioSourceJsNode} from '../../../nodes/js/PlayAudioSource';
+import {PlayInstrumentNoteJsNode} from '../../../nodes/js/PlayInstrumentNote';
 import {PowJsNode} from '../../../nodes/js/Pow';
-
+import {PressButtonParamJsNode} from '../../../nodes/js/PressButtonParam';
 import {RandJsNode} from '../../../nodes/js/Rand';
 import {RandomJsNode} from '../../../nodes/js/Random';
 import {RayJsNode} from '../../../nodes/js/Ray';
@@ -136,6 +153,12 @@ import {SDFSphereJsNode} from '../../../nodes/js/SDFSphere';
 import {SDFSubtractJsNode} from '../../../nodes/js/SDFSubtract';
 import {SDFUnionJsNode} from '../../../nodes/js/SDFUnion';
 
+import {SetGeometryInstanceAttributeJsNode} from '../../../nodes/js/SetGeometryInstanceAttribute';
+import {SetGeometryInstancePositionsJsNode} from '../../../nodes/js/SetGeometryInstancePositions';
+import {SetGeometryInstanceQuaternionsJsNode} from '../../../nodes/js/SetGeometryInstanceQuaternions';
+import {SetGeometryInstanceScalesJsNode} from '../../../nodes/js/SetGeometryInstanceScales';
+import {SetGeometryInstanceTransformsJsNode} from '../../../nodes/js/SetGeometryInstanceTransforms';
+
 import {SetGeometryPositionsJsNode} from '../../../nodes/js/SetGeometryPositions';
 import {SetMaterialColorJsNode} from '../../../nodes/js/SetMaterialColor';
 import {SetMaterialEmissiveColorJsNode} from '../../../nodes/js/SetMaterialEmissiveColor';
@@ -155,6 +178,7 @@ import {SetObjectRotationJsNode} from '../../../nodes/js/SetObjectRotation';
 import {SetObjectPolarTransformJsNode} from '../../../nodes/js/SetObjectPolarTransform';
 import {SetObjectScaleJsNode} from '../../../nodes/js/SetObjectScale';
 import {SetObjectVisibleJsNode} from '../../../nodes/js/SetObjectVisible';
+import {SetParamJsNode} from '../../../nodes/js/SetParam';
 import {SetPerspectiveCameraFovJsNode} from '../../../nodes/js/SetPerspectiveCameraFov';
 import {SetPerspectiveCameraNearFarJsNode} from '../../../nodes/js/SetPerspectiveCameraNearFar';
 import {SetPhysicsRBDAngularVelocityJsNode} from '../../../nodes/js/SetPhysicsRBDAngularVelocity';
@@ -168,6 +192,7 @@ import {SetPhysicsRBDCuboidPropertyJsNode} from '../../../nodes/js/SetPhysicsRBD
 import {SetPhysicsRBDSpherePropertyJsNode} from '../../../nodes/js/SetPhysicsRBDSphereProperty';
 import {SetPhysicsWorldGravityJsNode} from '../../../nodes/js/SetPhysicsWorldGravity';
 import {SetSpotLightIntensityJsNode} from '../../../nodes/js/SetSpotLightIntensity';
+import {SetViewerJsNode} from '../../../nodes/js/SetViewer';
 import {SignJsNode} from '../../../nodes/js/Sign';
 import {SinJsNode} from '../../../nodes/js/Sin';
 import {SmoothstepJsNode} from '../../../nodes/js/Smoothstep';
@@ -215,8 +240,10 @@ export interface JsNodeChildrenMap {
 	catmullRomCurve3GetPoint: CatmullRomCurve3GetPointJsNode;
 	ceil: CeilJsNode;
 	clamp: ClampJsNode;
+	code: CodeJsNode;
 	compare: CompareJsNode;
 	complement: ComplementJsNode;
+	cookNode: CookNodeJsNode;
 	cos: CosJsNode;
 	cross: CrossJsNode;
 	cursor: CursorJsNode;
@@ -236,11 +263,18 @@ export interface JsNodeChildrenMap {
 	floatToVec4: FloatToVec4JsNode;
 	floor: FloorJsNode;
 	getBox3Property: GetBox3PropertyJsNode;
+	getChildrenAttributes: GetChildrenAttributesJsNode;
+	getChildrenPhysicsRBDProperties: GetChildrenPhysicsRBDPropertiesJsNode;
+	getChildrenProperties: GetChildrenPropertiesJsNode;
+	getDefaultCamera: GetDefaultCameraJsNode;
+	getIntersectionProperty: GetIntersectionPropertyJsNode;
 	getMaterial: GetMaterialJsNode;
 	getObject: GetObjectJsNode;
 	getObjectAttribute: GetObjectAttributeJsNode;
+	getObjectChild: GetObjectChildJsNode;
 	getObjectProperty: GetObjectPropertyJsNode;
 	getObjectUserData: GetObjectUserDataJsNode;
+	getObjectWorldPosition: GetObjectWorldPositionJsNode;
 	getParent: GetParentJsNode;
 	getPlaneProperty: GetPlanePropertyJsNode;
 	getPhysicsRBDCapsuleProperty: GetPhysicsRBDCapsulePropertyJsNode;
@@ -270,6 +304,10 @@ export interface JsNodeChildrenMap {
 	negate: NegateJsNode;
 	normalize: NormalizeJsNode;
 	null: NullJsNode;
+	object3DLocalToWorld: Object3DLocalToWorldJsNode;
+	object3DWorldToLocal: Object3DWorldToLocalJsNode;
+	object3DUpdateMatrix: Object3DUpdateMatrixJsNode;
+	object3DUpdateWorldMatrix: Object3DUpdateWorldMatrixJsNode;
 	onKeydown: OnKeydownJsNode;
 	onKeypress: OnKeypressJsNode;
 	onKeyup: OnKeyupJsNode;
@@ -290,6 +328,7 @@ export interface JsNodeChildrenMap {
 	param: ParamJsNode;
 	particlesSystemReset: ParticlesSystemResetJsNode;
 	particlesSystemStepSimulation: ParticlesSystemStepSimulationJsNode;
+	pauseAudioSource: PauseAudioSourceJsNode;
 	physicsRBDAddForce: PhysicsRBDAddForceJsNode;
 	physicsRBDAddForceAtPoint: PhysicsRBDAddForceAtPointJsNode;
 	physicsRBDAddTorque: PhysicsRBDAddTorqueJsNode;
@@ -303,7 +342,11 @@ export interface JsNodeChildrenMap {
 	physicsWorldReset: PhysicsWorldResetJsNode;
 	physicsWorldStepSimulation: PhysicsWorldStepSimulationJsNode;
 	plane: PlaneJsNode;
+	playAnimation: PlayAnimationJsNode;
+	playAudioSource: PlayAudioSourceJsNode;
+	playInstrumentNote: PlayInstrumentNoteJsNode;
 	pow: PowJsNode;
+	pressButtonParam: PressButtonParamJsNode;
 	rand: RandJsNode;
 	random: RandomJsNode;
 	ray: RayJsNode;
@@ -326,7 +369,14 @@ export interface JsNodeChildrenMap {
 	SDFSphere: SDFSphereJsNode;
 	SDFSubtract: SDFSubtractJsNode;
 	SDFUnion: SDFUnionJsNode;
+
+	setGeometryInstanceAttribute: SetGeometryInstanceAttributeJsNode;
+	setGeometryInstancePositions: SetGeometryInstancePositionsJsNode;
+	setGeometryInstanceQuaternions: SetGeometryInstanceQuaternionsJsNode;
+	setGeometryInstanceScales: SetGeometryInstanceScalesJsNode;
+	setGeometryInstanceTransforms: SetGeometryInstanceTransformsJsNode;
 	setGeometryPositions: SetGeometryPositionsJsNode;
+
 	setMaterialColor: SetMaterialColorJsNode;
 	setMaterialEmissiveColor: SetMaterialEmissiveColorJsNode;
 	setMaterialOpacity: SetMaterialOpacityJsNode;
@@ -345,6 +395,7 @@ export interface JsNodeChildrenMap {
 	setObjectReceiveShadow: SetObjectReceiveShadowJsNode;
 	setObjectScale: SetObjectScaleJsNode;
 	setObjectVisible: SetObjectVisibleJsNode;
+	setParam: SetParamJsNode;
 	setPerspectiveCameraFovJsNode: SetPerspectiveCameraFovJsNode;
 	setPerspectiveCameraNearFarJsNode: SetPerspectiveCameraNearFarJsNode;
 	setPhysicsRBDAngularVelocity: SetPhysicsRBDAngularVelocityJsNode;
@@ -358,6 +409,7 @@ export interface JsNodeChildrenMap {
 	setPhysicsRBDSphereProperty: SetPhysicsRBDSpherePropertyJsNode;
 	setPhysicsWorldGravity: SetPhysicsWorldGravityJsNode;
 	setSpotLightIntensity: SetSpotLightIntensityJsNode;
+	setViewer: SetViewerJsNode;
 	sign: SignJsNode;
 	sin: SinJsNode;
 	smoothstep: SmoothstepJsNode;
@@ -415,12 +467,14 @@ export class JsRegister {
 		poly.registerNode(CatmullRomCurve3GetPointJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(CeilJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(ClampJsNode, CATEGORY_JS.MATH);
+		poly.registerNode(CodeJsNode, CATEGORY_JS.ADVANCED);
 		poly.registerNode(ColorToVec3JsNode, CATEGORY_JS.CONVERSION);
 
 		poly.registerNode(CompareJsNode, CATEGORY_JS.LOGIC);
 		poly.registerNode(ComplementJsNode, CATEGORY_JS.MATH);
 
 		poly.registerNode(ConstantJsNode, CATEGORY_JS.GLOBALS);
+		poly.registerNode(CookNodeJsNode, CATEGORY_JS.EVENTS);
 		poly.registerNode(CosJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(CrossJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(CursorJsNode, CATEGORY_JS.INPUTS, ONLY_ACTOR);
@@ -440,11 +494,19 @@ export class JsRegister {
 		poly.registerNode(FloatToVec4JsNode, CATEGORY_JS.CONVERSION);
 		poly.registerNode(FloorJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(GetBox3PropertyJsNode, CATEGORY_JS.MATH);
+		poly.registerNode(GetChildrenAttributesJsNode, CATEGORY_JS.GET);
+		poly.registerNode(GetChildrenPhysicsRBDPropertiesJsNode, CATEGORY_JS.PHYSICS);
+		poly.registerNode(GetChildrenPropertiesJsNode, CATEGORY_JS.GET);
+		poly.registerNode(GetDefaultCameraJsNode, CATEGORY_JS.GET);
+		poly.registerNode(GetIntersectionPropertyJsNode, CATEGORY_JS.GET);
+
 		poly.registerNode(GetMaterialJsNode, CATEGORY_JS.GET);
+		poly.registerNode(GetObjectChildJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(GetObjectJsNode, CATEGORY_JS.GET, ONLY_ACTOR);
 		poly.registerNode(GetObjectAttributeJsNode, CATEGORY_JS.GET, ONLY_ACTOR);
 		poly.registerNode(GetObjectPropertyJsNode, CATEGORY_JS.GET, ONLY_ACTOR);
 		poly.registerNode(GetObjectUserDataJsNode, CATEGORY_JS.GET, ONLY_ACTOR);
+		poly.registerNode(GetObjectWorldPositionJsNode, CATEGORY_JS.GET, ONLY_ACTOR);
 		poly.registerNode(GetParentJsNode, CATEGORY_JS.GET, ONLY_ACTOR);
 		poly.registerNode(GetPlanePropertyJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(GetPhysicsRBDCapsulePropertyJsNode, CATEGORY_JS.PHYSICS, ONLY_ACTOR);
@@ -475,7 +537,10 @@ export class JsRegister {
 		poly.registerNode(NegateJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(NormalizeJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(NullJsNode, CATEGORY_JS.FLOW);
-
+		poly.registerNode(Object3DLocalToWorldJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
+		poly.registerNode(Object3DWorldToLocalJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
+		poly.registerNode(Object3DUpdateMatrixJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
+		poly.registerNode(Object3DUpdateWorldMatrixJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
 		poly.registerNode(OnKeydownJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
 		poly.registerNode(OnKeypressJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
 		poly.registerNode(OnKeyupJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
@@ -496,7 +561,7 @@ export class JsRegister {
 		poly.registerNode(ParamJsNode, CATEGORY_JS.GLOBALS);
 		poly.registerNode(ParticlesSystemResetJsNode, CATEGORY_JS.PARTICLES);
 		poly.registerNode(ParticlesSystemStepSimulationJsNode, CATEGORY_JS.PARTICLES);
-
+		poly.registerNode(PauseAudioSourceJsNode, CATEGORY_JS.AUDIO, ONLY_ACTOR);
 		poly.registerNode(PhysicsRBDAddForceJsNode, CATEGORY_JS.PHYSICS, ONLY_ACTOR);
 		poly.registerNode(PhysicsRBDAddForceAtPointJsNode, CATEGORY_JS.PHYSICS, ONLY_ACTOR);
 		poly.registerNode(PhysicsRBDAddTorqueJsNode, CATEGORY_JS.PHYSICS, ONLY_ACTOR);
@@ -511,8 +576,13 @@ export class JsRegister {
 		poly.registerNode(PhysicsWorldResetJsNode, CATEGORY_JS.PHYSICS, ONLY_ACTOR);
 		poly.registerNode(PhysicsWorldStepSimulationJsNode, CATEGORY_JS.PHYSICS, ONLY_ACTOR);
 		poly.registerNode(PlaneJsNode, CATEGORY_JS.MATH);
+		poly.registerNode(PlayAnimationJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR);
+		poly.registerNode(PlayAudioSourceJsNode, CATEGORY_JS.AUDIO, ONLY_ACTOR);
+		poly.registerNode(PlayInstrumentNoteJsNode, CATEGORY_JS.AUDIO, ONLY_ACTOR);
+
 		poly.registerNode(PowJsNode, CATEGORY_JS.MATH);
 
+		poly.registerNode(PressButtonParamJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR);
 		poly.registerNode(RandJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(RandomJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(RayJsNode, CATEGORY_JS.MATH);
@@ -536,7 +606,13 @@ export class JsRegister {
 		poly.registerNode(SDFSubtractJsNode, CATEGORY_JS.SDF_MODIFIERS);
 		poly.registerNode(SDFUnionJsNode, CATEGORY_JS.SDF_MODIFIERS);
 
+		poly.registerNode(SetGeometryInstanceAttributeJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR);
+		poly.registerNode(SetGeometryInstancePositionsJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR);
+		poly.registerNode(SetGeometryInstanceQuaternionsJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR);
+		poly.registerNode(SetGeometryInstanceScalesJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR);
+		poly.registerNode(SetGeometryInstanceTransformsJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR);
 		poly.registerNode(SetGeometryPositionsJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR);
+
 		poly.registerNode(SetMaterialColorJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR);
 		poly.registerNode(SetMaterialEmissiveColorJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR);
 		poly.registerNode(SetMaterialOpacityJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR);
@@ -555,6 +631,7 @@ export class JsRegister {
 		poly.registerNode(SetObjectRotationJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR);
 		poly.registerNode(SetObjectScaleJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR);
 		poly.registerNode(SetObjectVisibleJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR);
+		poly.registerNode(SetParamJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR);
 		poly.registerNode(SetPerspectiveCameraFovJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR);
 		poly.registerNode(SetPerspectiveCameraNearFarJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR);
 		poly.registerNode(SetPhysicsRBDAngularVelocityJsNode, CATEGORY_JS.PHYSICS, ONLY_ACTOR);
@@ -568,6 +645,7 @@ export class JsRegister {
 		poly.registerNode(SetPhysicsRBDSpherePropertyJsNode, CATEGORY_JS.PHYSICS, ONLY_ACTOR);
 		poly.registerNode(SetPhysicsWorldGravityJsNode, CATEGORY_JS.PHYSICS, ONLY_ACTOR);
 		poly.registerNode(SetSpotLightIntensityJsNode, CATEGORY_JS.PHYSICS, ONLY_ACTOR);
+		poly.registerNode(SetViewerJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR);
 
 		poly.registerNode(SignJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(SinJsNode, CATEGORY_JS.MATH);

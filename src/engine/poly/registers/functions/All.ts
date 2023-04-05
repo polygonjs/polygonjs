@@ -6,6 +6,7 @@ import {divideNumber, divideVectorNumber} from '../../../functions/Divide';
 import {multNumber, multVector, multVectorNumber} from '../../../functions/Mult';
 import {subtractNumber, subtractVector, subtractVectorNumber} from '../../../functions/Subtract';
 
+import {playAnimation} from '../../../functions/Animation';
 import {
 	getAnimationMixer,
 	animationMixerUpdate,
@@ -23,8 +24,10 @@ import {
 	arrayElementPrimitive,
 	arrayElementVector,
 } from '../../../functions/Array';
+import {playAudioSource, pauseAudioSource, playInstrumentNote} from '../../../functions/Audio';
 import {box3Set, getBox3Min, getBox3Max} from '../../../functions/Box3';
-import {setPerspectiveCameraFov, setPerspectiveCameraNearFar} from '../../../functions/Camera';
+import {setPerspectiveCameraFov, setPerspectiveCameraNearFar, getDefaultCamera} from '../../../functions/Camera';
+import {cookNode} from '../../../functions/CookNode';
 import {
 	boolToInt,
 	intToBool,
@@ -59,6 +62,33 @@ import {
 	easeElasticIO,
 } from '../../../functions/Easing';
 import {setGeometryPositions} from '../../../functions/Geometry';
+import {
+	getIntersectionPropertyDistance,
+	getIntersectionPropertyNormal,
+	getIntersectionPropertyObject,
+	getIntersectionPropertyPoint,
+	getIntersectionPropertyUv,
+} from '../../../functions/GetIntersectionProperty';
+import {getMaterial, getTexture} from '../../../functions/GetSceneObject';
+import {
+	globalsTime,
+	globalsTimeDelta,
+	globalsRaycaster,
+	globalsRayFromCursor,
+	globalsCursor,
+} from '../../../functions/Globals';
+import {
+	setGeometryInstancePositions,
+	setGeometryInstanceQuaternions,
+	setGeometryInstanceScales,
+	setGeometryInstanceTransforms,
+	setGeometryInstanceAttributeFloat,
+	setGeometryInstanceAttributeVector2,
+	setGeometryInstanceAttributeVector3,
+	setGeometryInstanceAttributeVector4,
+	setGeometryInstanceAttributeQuaternion,
+	setGeometryInstanceAttributeColor,
+} from '../../../functions/Instance';
 import {lerpColor, lerpNumber, lerpQuaternion, lerpVector2, lerpVector3, lerpVector4} from '../../../functions/Lerp';
 import {setSpotLightIntensity} from '../../../functions/Light';
 import {andArrays, andBooleans, orArrays, orBooleans} from '../../../functions/Logic';
@@ -146,6 +176,13 @@ import {
 	getPhysicsRBDLinearDamping,
 	getPhysicsRBDIsSleeping,
 	getPhysicsRBDIsMoving,
+	// get Children RBD,
+	getChildrenPhysicsRBDPropertiesAngularDamping,
+	getChildrenPhysicsRBDPropertiesAngularVelocity,
+	getChildrenPhysicsRBDPropertiesIsMoving,
+	getChildrenPhysicsRBDPropertiesIsSleeping,
+	getChildrenPhysicsRBDPropertiesLinearDamping,
+	getChildrenPhysicsRBDPropertiesLinearVelocity,
 	// set RBD
 	setPhysicsRBDPosition,
 	setPhysicsRBDRotation,
@@ -185,12 +222,17 @@ import {
 	getTrackedHandThumbDirection,
 } from '../../../functions/TrackingHand';
 import {
-	globalsTime,
-	globalsTimeDelta,
-	globalsRaycaster,
-	globalsRayFromCursor,
-	globalsCursor,
-} from '../../../functions/Globals';
+	setParamBoolean,
+	setParamBooleanToggle,
+	setParamColor,
+	setParamFloat,
+	setParamInteger,
+	setParamString,
+	setParamVector2,
+	setParamVector3,
+	setParamVector4,
+	pressButtonParam,
+} from '../../../functions/Param';
 import {planeSet, getPlaneNormal, getPlaneConstant} from '../../../functions/Plane';
 import {
 	raySet,
@@ -207,7 +249,7 @@ import {
 	rayIntersectSphere,
 	rayIntersectsSphere,
 } from '../../../functions/Ray';
-import {getMaterial, getTexture} from '../../../functions/GetSceneObject';
+
 import {
 	SDFUnion,
 	SDFSubtract,
@@ -228,17 +270,33 @@ import {lengthVector, lengthVectorArray} from '../../../functions/VectorLength';
 import {manhattanDistanceVector2, manhattanDistanceVector3} from '../../../functions/VectorManhattanDistance';
 import {maxLengthVector2, maxLengthVector3, maxLengthVector4} from '../../../functions/VectorMaxLength';
 import {normalizeVector2, normalizeVector3, normalizeVector4} from '../../../functions/VectorNormalize';
-//
+import {setViewer} from '../../../functions/Viewer';
 import {getWebXRTrackedMarkerMatrix} from '../../../functions/WebXR';
 //
 import {keyboardEventMatchesConfig} from '../../../functions/KeyboardEventMatchesConfig';
 import {getActorNodeParamValue} from '../../../functions/GetActorNodeParamValue';
+import {getChildrenAttributes} from '../../../functions/GetChildrenAttributes';
 import {getObject} from '../../../functions/GetObject';
+import {getObjectChild} from '../../../functions/GetObjectChild';
 import {getParent} from '../../../functions/GetParent';
 import {getObjectAttribute} from '../../../functions/GetObjectAttribute';
 import {getObjectAttributeRef} from '../../../functions/GetObjectAttributeRef';
 import {getObjectHoveredState} from '../../../functions/GetObjectHoveredState';
-import {getObjectProperty} from '../../../functions/GetObjectProperty';
+import {
+	getObjectProperty,
+	getObjectWorldPosition,
+	object3DLocalToWorld,
+	object3DWorldToLocal,
+	getChildrenPropertiesCastShadow,
+	getChildrenPropertiesFrustumCulled,
+	getChildrenPropertiesMatrixAutoUpdate,
+	getChildrenPropertiesPosition,
+	getChildrenPropertiesQuaternion,
+	getChildrenPropertiesReceiveShadow,
+	getChildrenPropertiesScale,
+	getChildrenPropertiesUp,
+	getChildrenPropertiesVisible,
+} from '../../../functions/GetObjectProperty';
 import {getObjectUserData} from '../../../functions/GetObjectUserData';
 import {setObjectAttribute} from '../../../functions/SetObjectAttribute';
 import {setObjectLookAt} from '../../../functions/SetObjectLookAt';
@@ -252,6 +310,8 @@ import {
 	setObjectMatrixAutoUpdate,
 	setObjectReceiveShadow,
 	setObjectVisible,
+	objectUpdateMatrix,
+	objectUpdateWorldMatrix,
 } from '../../../functions/SetObjectProperty';
 import {setObjectScale} from '../../../functions/SetObjectScale';
 import {PrimitiveArrayElement, VectorArrayElement} from '../../../nodes/utils/io/connections/Js';
@@ -277,6 +337,7 @@ export interface NamedFunctionMap {
 	clamp: clamp;
 	colorToVec3: colorToVec3;
 	complement: complement;
+	cookNode: cookNode;
 	crossVector2: crossVector2;
 	crossVector3: crossVector3;
 	debug: debug<any>;
@@ -315,13 +376,37 @@ export interface NamedFunctionMap {
 	getAnimationMixer: getAnimationMixer;
 	getBox3Min: getBox3Min;
 	getBox3Max: getBox3Max;
+	getChildrenAttributes: getChildrenAttributes;
+	getChildrenPhysicsRBDPropertiesAngularDamping: getChildrenPhysicsRBDPropertiesAngularDamping;
+	getChildrenPhysicsRBDPropertiesAngularVelocity: getChildrenPhysicsRBDPropertiesAngularVelocity;
+	getChildrenPhysicsRBDPropertiesIsMoving: getChildrenPhysicsRBDPropertiesIsMoving;
+	getChildrenPhysicsRBDPropertiesIsSleeping: getChildrenPhysicsRBDPropertiesIsSleeping;
+	getChildrenPhysicsRBDPropertiesLinearDamping: getChildrenPhysicsRBDPropertiesLinearDamping;
+	getChildrenPhysicsRBDPropertiesLinearVelocity: getChildrenPhysicsRBDPropertiesLinearVelocity;
+	getChildrenPropertiesCastShadow: getChildrenPropertiesCastShadow;
+	getChildrenPropertiesFrustumCulled: getChildrenPropertiesFrustumCulled;
+	getChildrenPropertiesMatrixAutoUpdate: getChildrenPropertiesMatrixAutoUpdate;
+	getChildrenPropertiesPosition: getChildrenPropertiesPosition;
+	getChildrenPropertiesQuaternion: getChildrenPropertiesQuaternion;
+	getChildrenPropertiesReceiveShadow: getChildrenPropertiesReceiveShadow;
+	getChildrenPropertiesScale: getChildrenPropertiesScale;
+	getChildrenPropertiesUp: getChildrenPropertiesUp;
+	getChildrenPropertiesVisible: getChildrenPropertiesVisible;
+	getDefaultCamera: getDefaultCamera;
+	getIntersectionPropertyDistance: getIntersectionPropertyDistance;
+	getIntersectionPropertyNormal: getIntersectionPropertyNormal;
+	getIntersectionPropertyObject: getIntersectionPropertyObject;
+	getIntersectionPropertyPoint: getIntersectionPropertyPoint;
+	getIntersectionPropertyUv: getIntersectionPropertyUv;
 	getMaterial: getMaterial;
 	getObject: getObject;
 	getObjectAttribute: getObjectAttribute;
 	getObjectAttributeRef: getObjectAttributeRef;
+	getObjectChild: getObjectChild;
 	getObjectHoveredState: getObjectHoveredState;
 	getObjectProperty: getObjectProperty;
 	getObjectUserData: getObjectUserData;
+	getObjectWorldPosition: getObjectWorldPosition;
 	getParent: getParent;
 	getPlaneNormal: getPlaneNormal;
 	getPlaneConstant: getPlaneConstant;
@@ -422,10 +507,15 @@ export interface NamedFunctionMap {
 	normalizeVector2: normalizeVector2;
 	normalizeVector3: normalizeVector3;
 	normalizeVector4: normalizeVector4;
+	object3DLocalToWorld: object3DLocalToWorld;
+	object3DWorldToLocal: object3DWorldToLocal;
+	objectUpdateMatrix: objectUpdateMatrix;
+	objectUpdateWorldMatrix: objectUpdateWorldMatrix;
 	orArrays: orArrays;
 	orBooleans: orBooleans;
 	particlesSystemReset: particlesSystemReset;
 	particlesSystemStepSimulation: particlesSystemStepSimulation;
+	pauseAudioSource: pauseAudioSource;
 	physicsRBDAddForce: physicsRBDAddForce;
 	physicsRBDAddForceAtPoint: physicsRBDAddForceAtPoint;
 	physicsRBDAddTorque: physicsRBDAddTorque;
@@ -439,6 +529,9 @@ export interface NamedFunctionMap {
 	physicsWorldReset: physicsWorldReset;
 	physicsWorldStepSimulation: physicsWorldStepSimulation;
 	planeSet: planeSet;
+	playAnimation: playAnimation;
+	playAudioSource: playAudioSource;
+	playInstrumentNote: playInstrumentNote;
 	rand: rand;
 	raySet: raySet;
 	rayFromCamera: rayFromCamera;
@@ -463,6 +556,16 @@ export interface NamedFunctionMap {
 	SDFSphere: SDFSphere;
 	SDFSubtract: SDFSubtract;
 	SDFUnion: SDFUnion;
+	setGeometryInstancePositions: setGeometryInstancePositions;
+	setGeometryInstanceQuaternions: setGeometryInstanceQuaternions;
+	setGeometryInstanceScales: setGeometryInstanceScales;
+	setGeometryInstanceTransforms: setGeometryInstanceTransforms;
+	setGeometryInstanceAttributeFloat: setGeometryInstanceAttributeFloat;
+	setGeometryInstanceAttributeVector2: setGeometryInstanceAttributeVector2;
+	setGeometryInstanceAttributeVector3: setGeometryInstanceAttributeVector3;
+	setGeometryInstanceAttributeVector4: setGeometryInstanceAttributeVector4;
+	setGeometryInstanceAttributeQuaternion: setGeometryInstanceAttributeQuaternion;
+	setGeometryInstanceAttributeColor: setGeometryInstanceAttributeColor;
 	setGeometryPositions: setGeometryPositions;
 	setMaterialColor: setMaterialColor;
 	setMaterialEmissiveColor: setMaterialEmissiveColor;
@@ -483,6 +586,17 @@ export interface NamedFunctionMap {
 	setObjectReceiveShadow: setObjectReceiveShadow;
 	setObjectVisible: setObjectVisible;
 	setObjectScale: setObjectScale;
+	setParamBoolean: setParamBoolean;
+	setParamBooleanToggle: setParamBooleanToggle;
+	setParamColor: setParamColor;
+	setParamFloat: setParamFloat;
+	setParamInteger: setParamInteger;
+	setParamString: setParamString;
+	setParamVector2: setParamVector2;
+	setParamVector3: setParamVector3;
+	setParamVector4: setParamVector4;
+	setViewer: setViewer;
+	pressButtonParam: pressButtonParam;
 	setPerspectiveCameraFov: setPerspectiveCameraFov;
 	setPerspectiveCameraNearFar: setPerspectiveCameraNearFar;
 	setPhysicsRBDCapsuleProperty: setPhysicsRBDCapsuleProperty;
@@ -544,6 +658,7 @@ export class AllNamedFunctionRegister {
 			colorToVec3,
 			catmullRomCurve3GetPoint,
 			complement,
+			cookNode,
 			crossVector2,
 			crossVector3,
 			debug,
@@ -582,13 +697,37 @@ export class AllNamedFunctionRegister {
 			getAnimationMixer,
 			getBox3Min,
 			getBox3Max,
+			getChildrenAttributes,
+			getChildrenPhysicsRBDPropertiesAngularDamping,
+			getChildrenPhysicsRBDPropertiesAngularVelocity,
+			getChildrenPhysicsRBDPropertiesIsMoving,
+			getChildrenPhysicsRBDPropertiesIsSleeping,
+			getChildrenPhysicsRBDPropertiesLinearDamping,
+			getChildrenPhysicsRBDPropertiesLinearVelocity,
+			getChildrenPropertiesCastShadow,
+			getChildrenPropertiesFrustumCulled,
+			getChildrenPropertiesMatrixAutoUpdate,
+			getChildrenPropertiesPosition,
+			getChildrenPropertiesQuaternion,
+			getChildrenPropertiesReceiveShadow,
+			getChildrenPropertiesScale,
+			getChildrenPropertiesUp,
+			getChildrenPropertiesVisible,
+			getDefaultCamera,
+			getIntersectionPropertyDistance,
+			getIntersectionPropertyNormal,
+			getIntersectionPropertyObject,
+			getIntersectionPropertyPoint,
+			getIntersectionPropertyUv,
 			getMaterial,
 			getObject,
 			getObjectAttribute,
 			getObjectAttributeRef,
+			getObjectChild,
 			getObjectHoveredState,
 			getObjectProperty,
 			getObjectUserData,
+			getObjectWorldPosition,
 			getParent,
 			getPlaneNormal,
 			getPlaneConstant,
@@ -689,11 +828,19 @@ export class AllNamedFunctionRegister {
 			normalizeVector2,
 			normalizeVector3,
 			normalizeVector4,
+			object3DLocalToWorld,
+			object3DWorldToLocal,
+			objectUpdateMatrix,
+			objectUpdateWorldMatrix,
 			orArrays,
 			orBooleans,
 			particlesSystemReset,
 			particlesSystemStepSimulation,
+			pauseAudioSource,
 			planeSet,
+			playAnimation,
+			playAudioSource,
+			playInstrumentNote,
 			physicsRBDAddForce,
 			physicsRBDAddForceAtPoint,
 			physicsRBDAddTorque,
@@ -730,6 +877,16 @@ export class AllNamedFunctionRegister {
 			SDFSphere,
 			SDFSubtract,
 			SDFUnion,
+			setGeometryInstancePositions,
+			setGeometryInstanceQuaternions,
+			setGeometryInstanceScales,
+			setGeometryInstanceTransforms,
+			setGeometryInstanceAttributeFloat,
+			setGeometryInstanceAttributeVector2,
+			setGeometryInstanceAttributeVector3,
+			setGeometryInstanceAttributeVector4,
+			setGeometryInstanceAttributeQuaternion,
+			setGeometryInstanceAttributeColor,
 			setGeometryPositions,
 			setMaterialColor,
 			setMaterialEmissiveColor,
@@ -750,6 +907,16 @@ export class AllNamedFunctionRegister {
 			setObjectRotation,
 			setObjectVisible,
 			setObjectScale,
+			setParamBoolean,
+			setParamBooleanToggle,
+			setParamColor,
+			setParamFloat,
+			setParamInteger,
+			setParamString,
+			setParamVector2,
+			setParamVector3,
+			setParamVector4,
+			pressButtonParam,
 			setPerspectiveCameraFov,
 			setPerspectiveCameraNearFar,
 			setPhysicsRBDCapsuleProperty,
@@ -763,6 +930,7 @@ export class AllNamedFunctionRegister {
 			setPhysicsRBDLinearVelocity,
 			setPhysicsWorldGravity,
 			setSpotLightIntensity,
+			setViewer,
 			sizzleVec3XY,
 			sizzleVec3XZ,
 			sizzleVec3YZ,

@@ -2,7 +2,6 @@ import {Object3D, Quaternion, Vector3} from 'three';
 import {ShadersCollectionController} from '../nodes/js/code/utils/ShadersCollectionController';
 import {getPhysicsWorldNodeFromWorldObject} from '../nodes/sop/PhysicsWorld';
 import {BaseNodeType} from '../nodes/_Base';
-import {TimeController} from '../scene/utils/TimeController';
 import {
 	ObjectNamedFunction0,
 	ObjectNamedFunction1,
@@ -53,6 +52,7 @@ import {_getPhysicsRBDSphereRadius, _setPhysicsRBDSphereProperty} from '../../co
 import {getOrCreatePropertyRef} from '../../core/reactivity/RBDPropertyReactivity';
 import {RBDCommonProperty} from '../../core/physics/shapes/_CommonHeightRadius';
 import {dummyReadRefVal} from '../../core/reactivity/CoreReactivity';
+import {_matchArrayLength} from './_ArrayUtils';
 
 //
 //
@@ -74,10 +74,8 @@ export class physicsWorldReset extends ObjectNamedFunction0 {
 }
 
 export class physicsWorldStepSimulation extends ObjectNamedFunction0 {
-	protected timeController: TimeController;
 	constructor(node: BaseNodeType, shadersCollectionController?: ShadersCollectionController) {
 		super(node, shadersCollectionController);
-		this.timeController = node.scene().timeController;
 	}
 	static override type() {
 		return 'physicsWorldStepSimulation';
@@ -108,8 +106,7 @@ export class getPhysicsRBDCapsuleRadius extends ObjectNamedFunction0 {
 		return 'getPhysicsRBDCapsuleRadius';
 	}
 	func(object3D: Object3D): number {
-		const _ref = getOrCreatePropertyRef(object3D, RBDCapsuleProperty.RADIUS);
-		dummyReadRefVal(_ref.value);
+		dummyReadRefVal(getOrCreatePropertyRef(this.timeController, object3D, RBDCapsuleProperty.RADIUS).value);
 		return _getPhysicsRBDCapsuleRadius(object3D)!;
 	}
 }
@@ -118,8 +115,7 @@ export class getPhysicsRBDCapsuleHeight extends ObjectNamedFunction0 {
 		return 'getPhysicsRBDCapsuleHeight';
 	}
 	func(object3D: Object3D): number {
-		const _ref = getOrCreatePropertyRef(object3D, RBDCapsuleProperty.HEIGHT);
-		dummyReadRefVal(_ref.value);
+		dummyReadRefVal(getOrCreatePropertyRef(this.timeController, object3D, RBDCapsuleProperty.HEIGHT).value);
 		return _getPhysicsRBDCapsuleRadius(object3D)!;
 	}
 }
@@ -129,8 +125,7 @@ export class getPhysicsRBDConeHeight extends ObjectNamedFunction0 {
 		return 'getPhysicsRBDConeHeight';
 	}
 	func(object3D: Object3D): number {
-		const _ref = getOrCreatePropertyRef(object3D, RBDCommonProperty.HEIGHT);
-		dummyReadRefVal(_ref.value);
+		dummyReadRefVal(getOrCreatePropertyRef(this.timeController, object3D, RBDCommonProperty.HEIGHT).value);
 		return _getPhysicsRBDConeHeight(object3D)!;
 	}
 }
@@ -139,8 +134,7 @@ export class getPhysicsRBDConeRadius extends ObjectNamedFunction0 {
 		return 'getPhysicsRBDConeRadius';
 	}
 	func(object3D: Object3D): number {
-		const _ref = getOrCreatePropertyRef(object3D, RBDCommonProperty.RADIUS);
-		dummyReadRefVal(_ref.value);
+		dummyReadRefVal(getOrCreatePropertyRef(this.timeController, object3D, RBDCommonProperty.RADIUS).value);
 		return _getPhysicsRBDConeRadius(object3D)!;
 	}
 }
@@ -150,8 +144,7 @@ export class getPhysicsRBDCuboidSizes extends ObjectNamedFunction1<[Vector3]> {
 		return 'getPhysicsRBDCuboidSizes';
 	}
 	func(object3D: Object3D, target: Vector3): Vector3 {
-		const _ref = getOrCreatePropertyRef(object3D, RBDCuboidProperty.SIZES);
-		dummyReadRefVal(_ref.value);
+		dummyReadRefVal(getOrCreatePropertyRef(this.timeController, object3D, RBDCuboidProperty.SIZES).value);
 		_getPhysicsRBDCuboidSizes(object3D, target);
 		return target;
 	}
@@ -162,8 +155,7 @@ export class getPhysicsRBDCylinderHeight extends ObjectNamedFunction0 {
 		return 'getPhysicsRBDCylinderHeight';
 	}
 	func(object3D: Object3D): number {
-		const _ref = getOrCreatePropertyRef(object3D, RBDCommonProperty.HEIGHT);
-		dummyReadRefVal(_ref.value);
+		dummyReadRefVal(getOrCreatePropertyRef(this.timeController, object3D, RBDCommonProperty.HEIGHT).value);
 		return _getPhysicsRBDCylinderHeight(object3D)!;
 	}
 }
@@ -172,8 +164,7 @@ export class getPhysicsRBDCylinderRadius extends ObjectNamedFunction0 {
 		return 'getPhysicsRBDCylinderRadius';
 	}
 	func(object3D: Object3D): number {
-		const _ref = getOrCreatePropertyRef(object3D, RBDCommonProperty.RADIUS);
-		dummyReadRefVal(_ref.value);
+		dummyReadRefVal(getOrCreatePropertyRef(this.timeController, object3D, RBDCommonProperty.RADIUS).value);
 		return _getPhysicsRBDCylinderRadius(object3D)!;
 	}
 }
@@ -183,8 +174,7 @@ export class getPhysicsRBDSphereRadius extends ObjectNamedFunction0 {
 		return 'getPhysicsRBDSphereRadius';
 	}
 	func(object3D: Object3D): number {
-		const _ref = getOrCreatePropertyRef(object3D, RBDCommonProperty.RADIUS);
-		dummyReadRefVal(_ref.value);
+		dummyReadRefVal(getOrCreatePropertyRef(this.timeController, object3D, RBDCommonProperty.RADIUS).value);
 		return _getPhysicsRBDSphereRadius(object3D)!;
 	}
 }
@@ -235,41 +225,90 @@ export class setPhysicsRBDSphereProperty extends ObjectNamedFunction3<[number, n
 }
 //
 //
-// GET RBD POS/ROT/VEL
+// GET RBD PROP
 //
 //
+
+// angular velocity
 export class getPhysicsRBDAngularVelocity extends ObjectNamedFunction1<[Vector3]> {
 	static override type() {
 		return 'getPhysicsRBDAngularVelocity';
 	}
-	func(object3D: Object3D, target: Vector3): Vector3 {
+	func(object3D: Object3D, target: Vector3) {
 		const body = _getRBD(object3D);
 		if (body) {
-			const _ref = getOrCreatePropertyRef(object3D, RBDProperty.ANGULAR_VELOCITY);
-			dummyReadRefVal(_ref.value);
-			const linVel = body.linvel();
-			return target.set(linVel.x, linVel.y, linVel.z);
+			dummyReadRefVal(getOrCreatePropertyRef(this.timeController, object3D, RBDProperty.ANGULAR_VELOCITY).value);
+			const angvel = body.angvel();
+			return target.set(angvel.x, angvel.y, angvel.z);
 		} else {
 			return target.set(0, 0, 0);
 		}
 	}
 }
+export class getChildrenPhysicsRBDPropertiesAngularVelocity extends ObjectNamedFunction1<[Array<Vector3>]> {
+	static override type() {
+		return 'getChildrenPhysicsRBDPropertiesAngularVelocity';
+	}
+	func(object3D: Object3D, values: Vector3[]): Vector3[] {
+		dummyReadRefVal(this.timeController.timeUniform().value);
+		_matchArrayLength(object3D.children, values, () => new Vector3());
+		let i = 0;
+		const children = object3D.children;
+		for (let child of children) {
+			const body = _getRBD(child);
+			if (body) {
+				const angvel = body.angvel();
+				values[i].set(angvel.x, angvel.y, angvel.z);
+			} else {
+				values[i].set(0, 0, 0);
+			}
+			i++;
+		}
+		return values;
+	}
+}
+
+// linear velocity
+
 export class getPhysicsRBDLinearVelocity extends ObjectNamedFunction1<[Vector3]> {
 	static override type() {
 		return 'getPhysicsRBDLinearVelocity';
 	}
-	func(object3D: Object3D, target: Vector3): Vector3 {
+	func(object3D: Object3D, target: Vector3) {
 		const body = _getRBD(object3D);
 		if (body) {
-			const _ref = getOrCreatePropertyRef(object3D, RBDProperty.LINEAR_VELOCITY);
-			dummyReadRefVal(_ref.value);
-			const angVel = body.angvel();
-			return target.set(angVel.x, angVel.y, angVel.z);
+			dummyReadRefVal(getOrCreatePropertyRef(this.timeController, object3D, RBDProperty.LINEAR_VELOCITY).value);
+			const linvel = body.linvel();
+			return target.set(linvel.x, linvel.y, linvel.z);
 		} else {
 			return target.set(0, 0, 0);
 		}
 	}
 }
+export class getChildrenPhysicsRBDPropertiesLinearVelocity extends ObjectNamedFunction1<[Array<Vector3>]> {
+	static override type() {
+		return 'getChildrenPhysicsRBDPropertiesLinearVelocity';
+	}
+	func(object3D: Object3D, values: Vector3[]): Vector3[] {
+		dummyReadRefVal(this.timeController.timeUniform().value);
+		_matchArrayLength(object3D.children, values, () => new Vector3());
+		let i = 0;
+		const children = object3D.children;
+		for (let child of children) {
+			const body = _getRBD(child);
+			if (body) {
+				const linvel = body.linvel();
+				values[i].set(linvel.x, linvel.y, linvel.z);
+			} else {
+				values[i].set(0, 0, 0);
+			}
+			i++;
+		}
+		return values;
+	}
+}
+// angular damping
+
 export class getPhysicsRBDAngularDamping extends ObjectNamedFunction0 {
 	static override type() {
 		return 'getPhysicsRBDAngularDamping';
@@ -277,13 +316,29 @@ export class getPhysicsRBDAngularDamping extends ObjectNamedFunction0 {
 	func(object3D: Object3D): number {
 		const body = _getRBD(object3D);
 		if (body) {
-			const _ref = getOrCreatePropertyRef(object3D, RBDProperty.ANGULAR_DAMPING);
-			dummyReadRefVal(_ref.value);
+			dummyReadRefVal(getOrCreatePropertyRef(this.timeController, object3D, RBDProperty.ANGULAR_DAMPING).value);
 			return body.angularDamping();
 		}
 		return 0;
 	}
 }
+export class getChildrenPhysicsRBDPropertiesAngularDamping extends ObjectNamedFunction1<[Array<number>]> {
+	static override type() {
+		return 'getChildrenPhysicsRBDPropertiesAngularDamping';
+	}
+	func(object3D: Object3D, values: number[]): number[] {
+		_matchArrayLength(object3D.children, values, () => 0);
+		let i = 0;
+		const children = object3D.children;
+		for (let child of children) {
+			const body = _getRBD(child);
+			values[i] = body ? body.angularDamping() : 0;
+			i++;
+		}
+		return values;
+	}
+}
+// linear damping
 export class getPhysicsRBDLinearDamping extends ObjectNamedFunction0 {
 	static override type() {
 		return 'getPhysicsRBDLinearDamping';
@@ -291,13 +346,29 @@ export class getPhysicsRBDLinearDamping extends ObjectNamedFunction0 {
 	func(object3D: Object3D): number {
 		const body = _getRBD(object3D);
 		if (body) {
-			const _ref = getOrCreatePropertyRef(object3D, RBDProperty.LINEAR_DAMPING);
-			dummyReadRefVal(_ref.value);
+			dummyReadRefVal(getOrCreatePropertyRef(this.timeController, object3D, RBDProperty.LINEAR_DAMPING).value);
 			return body.linearDamping();
 		}
 		return 0;
 	}
 }
+export class getChildrenPhysicsRBDPropertiesLinearDamping extends ObjectNamedFunction1<[Array<number>]> {
+	static override type() {
+		return 'getChildrenPhysicsRBDPropertiesLinearDamping';
+	}
+	func(object3D: Object3D, values: number[]): number[] {
+		_matchArrayLength(object3D.children, values, () => 0);
+		let i = 0;
+		const children = object3D.children;
+		for (let child of children) {
+			const body = _getRBD(child);
+			values[i] = body ? body.linearDamping() : 0;
+			i++;
+		}
+		return values;
+	}
+}
+// is sleeping
 export class getPhysicsRBDIsSleeping extends ObjectNamedFunction0 {
 	static override type() {
 		return 'getPhysicsRBDIsSleeping';
@@ -305,13 +376,29 @@ export class getPhysicsRBDIsSleeping extends ObjectNamedFunction0 {
 	func(object3D: Object3D): boolean {
 		const body = _getRBD(object3D);
 		if (body) {
-			const _ref = getOrCreatePropertyRef(object3D, RBDProperty.IS_SLEEPING);
-			dummyReadRefVal(_ref.value);
+			dummyReadRefVal(getOrCreatePropertyRef(this.timeController, object3D, RBDProperty.IS_SLEEPING).value);
 			return body.isSleeping();
 		}
 		return false;
 	}
 }
+export class getChildrenPhysicsRBDPropertiesIsSleeping extends ObjectNamedFunction1<[Array<boolean>]> {
+	static override type() {
+		return 'getChildrenPhysicsRBDPropertiesIsSleeping';
+	}
+	func(object3D: Object3D, values: boolean[]): boolean[] {
+		_matchArrayLength(object3D.children, values, () => false);
+		let i = 0;
+		const children = object3D.children;
+		for (let child of children) {
+			const body = _getRBD(child);
+			values[i] = body?.isSleeping() || false;
+			i++;
+		}
+		return values;
+	}
+}
+// is moving
 export class getPhysicsRBDIsMoving extends ObjectNamedFunction0 {
 	static override type() {
 		return 'getPhysicsRBDIsMoving';
@@ -319,11 +406,26 @@ export class getPhysicsRBDIsMoving extends ObjectNamedFunction0 {
 	func(object3D: Object3D): boolean {
 		const body = _getRBD(object3D);
 		if (body) {
-			const _ref = getOrCreatePropertyRef(object3D, RBDProperty.IS_MOVING);
-			dummyReadRefVal(_ref.value);
+			dummyReadRefVal(getOrCreatePropertyRef(this.timeController, object3D, RBDProperty.IS_MOVING).value);
 			return body.isMoving();
 		}
 		return false;
+	}
+}
+export class getChildrenPhysicsRBDPropertiesIsMoving extends ObjectNamedFunction1<[Array<boolean>]> {
+	static override type() {
+		return 'getChildrenPhysicsRBDPropertiesIsMoving';
+	}
+	func(object3D: Object3D, values: boolean[]): boolean[] {
+		_matchArrayLength(object3D.children, values, () => false);
+		let i = 0;
+		const children = object3D.children;
+		for (let child of children) {
+			const body = _getRBD(child);
+			values[i] = body?.isMoving() || false;
+			i++;
+		}
+		return values;
 	}
 }
 

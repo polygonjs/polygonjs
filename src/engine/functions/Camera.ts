@@ -1,6 +1,6 @@
-import {Object3D, PerspectiveCamera} from 'three';
+import {Camera, Object3D, PerspectiveCamera} from 'three';
 import {isBooleanTrue} from '../../core/Type';
-import {ObjectNamedFunction3, ObjectNamedFunction4} from './_Base';
+import {NamedFunction0, ObjectNamedFunction3, ObjectNamedFunction4} from './_Base';
 
 export class setPerspectiveCameraFov extends ObjectNamedFunction3<[number, number, boolean]> {
 	static override type() {
@@ -35,5 +35,18 @@ export class setPerspectiveCameraNearFar extends ObjectNamedFunction4<[number, n
 		if (isBooleanTrue(updateProjectionMatrix)) {
 			perspectiveCamera.updateProjectionMatrix();
 		}
+	}
+}
+
+export class getDefaultCamera extends NamedFunction0 {
+	static override type() {
+		return 'getDefaultCamera';
+	}
+	func(): Camera {
+		return (
+			this.scene.root().mainCameraController.cameraSync() ||
+			this.scene.viewersRegister.lastRenderedViewer()?.camera() ||
+			this.scene.root().mainCameraController.dummyPerspectiveCamera()
+		);
 	}
 }

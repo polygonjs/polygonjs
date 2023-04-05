@@ -96,7 +96,9 @@ export const CATEGORY_GL = {
 };
 export const CATEGORY_JS = {
 	ACTION: 'action',
+	ADVANCED: 'advanced',
 	ANIMATION: 'animation',
+	AUDIO: 'audio',
 	COLOR: 'color',
 	COMPUTER_VISION: 'computer vision',
 	CONVERSION: 'conversion',

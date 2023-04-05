@@ -6,6 +6,7 @@ import {ShadersCollectionController} from '../nodes/js/code/utils/ShadersCollect
 import {EvaluatorConstant} from '../nodes/js/code/assemblers/actor/Evaluator';
 import {NodeContext} from '../poly/NodeContext';
 import {AssemblerControllerNode} from '../nodes/js/code/Controller';
+import {TimeController} from '../scene/utils/TimeController';
 
 export abstract class BaseNamedFunction {
 	// abstract type: string;
@@ -19,8 +20,10 @@ export abstract class BaseNamedFunction {
 	public readonly scene: PolyScene;
 	public readonly jsNode?: BaseJsNodeType;
 	public readonly functionNode: AssemblerControllerNode;
+	protected timeController: TimeController;
 	constructor(node: BaseNodeType, public readonly shadersCollectionController?: ShadersCollectionController) {
 		this.scene = node.scene();
+		this.timeController = this.scene.timeController;
 		if (node.context() == NodeContext.JS) {
 			this.jsNode = node as BaseJsNodeType;
 			this.functionNode = this.jsNode.functionNode()!;
@@ -99,6 +102,10 @@ export abstract class ObjectNamedFunction4<ARGS extends [any, any, any, any]> ex
 export abstract class ObjectNamedFunction5<ARGS extends [any, any, any, any, any]> extends ObjectNamedFunction<
 	ARGS,
 	[string, string, string, string, string, string]
+> {}
+export abstract class ObjectNamedFunction6<ARGS extends [any, any, any, any, any, any]> extends ObjectNamedFunction<
+	ARGS,
+	[string, string, string, string, string, string, string]
 > {}
 
 //

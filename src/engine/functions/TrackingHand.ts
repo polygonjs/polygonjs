@@ -36,7 +36,7 @@ export class trackHandGetNormalizedLandmarks extends ObjectNamedFunction2<[numbe
 		return 'trackHandGetNormalizedLandmarks';
 	}
 	func(object3D: Object3D, handIndex: number, target: Vector4[]): Vector4[] {
-		dummyReadRefVal(getOrCreateTrackedObjectRef(object3D).value);
+		dummyReadRefVal(getOrCreateTrackedObjectRef(this.timeController, object3D).value);
 
 		const results = CoreComputerVisionHand.trackerResults(object3D);
 		const vectorArray = results[handIndex].multiHandLandmarks;
@@ -54,7 +54,7 @@ export class trackHandGetWorldLandmarks extends ObjectNamedFunction2<[number, Ve
 		return 'trackHandGetWorldLandmarks';
 	}
 	func(object3D: Object3D, handIndex: number, target: Vector4[]): Vector4[] {
-		dummyReadRefVal(getOrCreateTrackedObjectRef(object3D).value);
+		dummyReadRefVal(getOrCreateTrackedObjectRef(this.timeController, object3D).value);
 
 		const results = CoreComputerVisionHand.trackerResults(object3D);
 		const vectorArray = results[handIndex].multiHandWorldLandmarks;

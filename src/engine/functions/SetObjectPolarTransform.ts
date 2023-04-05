@@ -24,8 +24,6 @@ export class setObjectPolarTransform extends ObjectNamedFunction4<[Vector3, numb
 		params.longitude = longitude;
 		params.latitude = latitude;
 		params.depth = depth;
-		// const lerp = this._inputValueFromParam<ParamType.FLOAT>(this.p.lerp, context);
-		// const updateMatrix = this._inputValueFromParam<ParamType.BOOLEAN>(this.p.updateMatrix, context);
 
 		CorePolarTransform.matrix(params, fullMatrix);
 		CorePolarTransform.applyMatrixToObject(object3D, fullMatrix);
