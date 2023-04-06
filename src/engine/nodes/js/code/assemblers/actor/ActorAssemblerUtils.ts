@@ -1,4 +1,5 @@
 import {MapUtils} from '../../../../../../core/MapUtils';
+import {SetUtils} from '../../../../../../core/SetUtils';
 import {NodeContext} from '../../../../../poly/NodeContext';
 import {ActorJsSopNode} from '../../../../sop/ActorJs';
 import {JsConnectionPointType} from '../../../../utils/io/connections/Js';
@@ -80,4 +81,24 @@ export function connectedTriggerableNodes(options: ConnectedTriggerableNodesOpti
 			}
 		}
 	});
+}
+
+export function inputNodesExceptTrigger(node: BaseJsNodeType) {
+	const nonTriggerInputNodes: Set<BaseJsNodeType> = new Set();
+	let nonTriggerInputIndices: number[] = [];
+	const inputConnectionPoints = node.io.inputs.namedInputConnectionPoints();
+	let i = 0;
+	for (let outputConnectionPoint of inputConnectionPoints) {
+		if (outputConnectionPoint.type() != JsConnectionPointType.TRIGGER) {
+			nonTriggerInputIndices.push(i);
+		}
+		i++;
+	}
+	for (let nonTriggerInputIndex of nonTriggerInputIndices) {
+		const connection = node.io.connections.inputConnection(nonTriggerInputIndex);
+		if (connection) {
+			nonTriggerInputNodes.add(connection.node_src);
+		}
+	}
+	return SetUtils.toArray(nonTriggerInputNodes);
 }

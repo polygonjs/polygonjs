@@ -22,17 +22,53 @@ import {ActorKeyboardEventsController} from './actors/ActorsKeyboardEventsContro
 // import {ActorNodeTriggerContext} from '../../nodes/actor/_Base';
 // import {CoreObjectType} from '../../../core/geometry/ObjectContent';
 import {JsType} from '../../poly/registers/nodes/types/Js';
-import {EvaluatorMethodName} from '../../nodes/js/code/assemblers/actor/Evaluator';
+import {EvaluatorMethodName, EVALUATOR_METHOD_NAMES} from '../../nodes/js/code/assemblers/actor/Evaluator';
 import {ActorEvaluatorGenerator} from '../../nodes/js/code/assemblers/actor/EvaluatorGenerator';
 import {JsNodeChildrenMap} from '../../poly/registers/nodes/Js';
 import {NodeCreateOptions} from '../../nodes/utils/hierarchy/ChildrenController';
 import {Constructor, valueof} from '../../../types/GlobalTypes';
 import {BaseJsNodeType} from '../../nodes/js/_Base';
+import {ActorPointerEventsController} from './actors/ActorsPointerEventsController';
 // import { ActorJsSopNode } from '../../nodes/sop/ActorJs';
 // import {SopType} from '../../poly/registers/nodes/types/Sop';
 // import {EventData} from '../../../core/event/EventData';
 
 const ACTOR_BUILDER_NODE_IDS_KEY = 'actorBuilderNodeIds';
+
+enum EventHandlerType {
+	instant = 'instant',
+	onTick = 'onTick',
+}
+const EVENT_MAP_LOGIC: Record<EvaluatorMethodName, EventHandlerType> = {
+	[JsType.ON_KEY]: EventHandlerType.onTick,
+	[JsType.ON_KEYDOWN]: EventHandlerType.onTick,
+	[JsType.ON_KEYPRESS]: EventHandlerType.onTick,
+	[JsType.ON_KEYUP]: EventHandlerType.onTick,
+	[JsType.ON_MANUAL_TRIGGER]: EventHandlerType.instant,
+	[JsType.ON_MAPBOX_CAMERA_MOVE]: EventHandlerType.onTick,
+	[JsType.ON_MAPBOX_CAMERA_MOVE_START]: EventHandlerType.onTick,
+	[JsType.ON_MAPBOX_CAMERA_MOVE_END]: EventHandlerType.onTick,
+	[JsType.ON_OBJECT_ATTRIBUTE_UPDATE]: EventHandlerType.onTick,
+	[JsType.ON_OBJECT_CLICK]: EventHandlerType.onTick,
+	[JsType.ON_OBJECT_DISPATCH_EVENT]: EventHandlerType.onTick,
+	[JsType.ON_OBJECT_HOVER]: EventHandlerType.onTick,
+	[JsType.ON_OBJECT_POINTERDOWN]: EventHandlerType.onTick,
+	[JsType.ON_OBJECT_POINTERUP]: EventHandlerType.onTick,
+	[JsType.ON_PERFORMANCE_CHANGE]: EventHandlerType.instant,
+	[JsType.ON_SCENE_PAUSE]: EventHandlerType.instant,
+	[JsType.ON_SCENE_PLAY]: EventHandlerType.instant,
+	[JsType.ON_SCENE_RESET]: EventHandlerType.instant,
+	[JsType.ON_TICK]: EventHandlerType.onTick,
+};
+const ON_TICK_METHOD_NAMES: Set<EvaluatorMethodName> = new Set(
+	EVALUATOR_METHOD_NAMES.filter((methodName) => EVENT_MAP_LOGIC[methodName] == EventHandlerType.onTick)
+);
+const INSTANT_METHOD_NAMES: Set<EvaluatorMethodName> = new Set(
+	EVALUATOR_METHOD_NAMES.filter((methodName) => EVENT_MAP_LOGIC[methodName] == EventHandlerType.instant)
+);
+if (0 + 0) {
+	console.log({ON_TICK_METHOD_NAMES, INSTANT_METHOD_NAMES});
+}
 
 export abstract class ActorBuilderNode extends TypedNode<any, any> {
 	// protected override _childrenControllerContext = NodeContext.JS;
@@ -78,7 +114,7 @@ export class ActorsManager {
 	private _actorNodes: Set<ActorBuilderNode> = new Set();
 	private _keyboardEventsController: ActorKeyboardEventsController | undefined;
 	private _manualTriggerController: ActorManualTriggersController | undefined;
-	// private _pointerEventsController: ActorPointerEventsController | undefined;
+	private _pointerEventsController: ActorPointerEventsController | undefined;
 	// private _hoveredEventsController: ActorHoveredEventsController | undefined;
 	// private _contextByObject: WeakMap<Object3D, ActorNodeTriggerContext> = new WeakMap();
 	// private _context: EvaluationContext;
@@ -143,10 +179,10 @@ export class ActorsManager {
 		return (this._manualTriggerController =
 			this._manualTriggerController || new ActorManualTriggersController(this));
 	}
-	// get pointerEventsController() {
-	// 	return (this._pointerEventsController =
-	// 		this._pointerEventsController || new ActorPointerEventsController(this));
-	// }
+	get pointerEventsController() {
+		return (this._pointerEventsController =
+			this._pointerEventsController || new ActorPointerEventsController(this));
+	}
 	// get hoveredEventsController() {
 	// 	return (this._hoveredEventsController =
 	// 		this._hoveredEventsController || new ActorHoveredEventsController(this));
@@ -159,7 +195,7 @@ export class ActorsManager {
 	 */
 	tick() {
 		// this._manualTriggerController?.runTriggers();
-		// this._pointerEventsController?.runTriggers();
+		this._pointerEventsController?.runTriggers();
 		this._keyboardEventsController?.runTriggers();
 		// this.hoveredEventsController.runTriggers();
 		this.scene.threejsScene().traverse((object) => {

@@ -15,6 +15,7 @@ import {ComputedValueJsDefinition} from './utils/JsDefinition';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 import {EvaluatorEventData} from './code/assemblers/actor/Evaluator';
 import {Poly} from '../../Poly';
+import {PointerEventType} from '../../../core/event/PointerEventType';
 
 const OUTPUT_NAME = 'cursor';
 class CursorJsParamsConfig extends NodeParamsConfig {
@@ -34,9 +35,10 @@ export class CursorJsNode extends BaseUserInputJsNode<CursorJsParamsConfig> {
 	// userInputEventNames() {
 	// 	return ['pointermove'];
 	// }
+
 	override eventData(): EvaluatorEventData | undefined {
 		return {
-			type: 'pointermove',
+			type: PointerEventType.pointermove,
 			emitter: this.eventEmitter(),
 			jsType: JsType.CURSOR,
 		};

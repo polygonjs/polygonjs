@@ -4,7 +4,6 @@
  *
  */
 import {EventConnectionPoint, EventConnectionPointType} from '../utils/io/connections/Event';
-import {ACCEPTED_MOUSE_EVENT_TYPES} from '../../scene/utils/events/MouseEventsController';
 import {BaseNodeType} from '../_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {TypedInputEventNode, EVENT_PARAM_OPTIONS} from './_BaseInput';
@@ -12,6 +11,7 @@ import {isBooleanTrue} from '../../../core/BooleanValue';
 import {EventContext} from '../../scene/utils/events/_BaseEventsController';
 import {EventInputType} from '../../poly/registers/nodes/types/Event';
 import {CoreEventEmitter, EVENT_EMITTERS, EVENT_EMITTER_PARAM_MENU_OPTIONS} from '../../../core/event/CoreEventEmitter';
+import {ACCEPTED_MOUSE_EVENT_TYPES} from '../../../core/event/MouseEventType';
 class MouseEventParamsConfig extends NodeParamsConfig {
 	/** @param toggle on to allow any event to be listened to */
 	active = ParamConfig.BOOLEAN(true, {
@@ -72,7 +72,7 @@ export class MouseEventNode extends TypedInputEventNode<MouseEventParamsConfig> 
 		return EventInputType.MOUSE;
 	}
 	protected acceptedEventTypes() {
-		return new Set(ACCEPTED_MOUSE_EVENT_TYPES.map((n) => `${n}`));
+		return new Set([...ACCEPTED_MOUSE_EVENT_TYPES]);
 	}
 	override initializeNode() {
 		this.io.outputs.setNamedOutputConnectionPoints(

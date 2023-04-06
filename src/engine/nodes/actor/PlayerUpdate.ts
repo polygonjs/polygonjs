@@ -11,13 +11,8 @@ import {
 	ACTOR_CONNECTION_POINT_IN_NODE_DEF,
 } from '../utils/io/connections/Actor';
 import {Object3D, Vector3} from 'three';
-import {
-	CorePlayer,
-	CorePlayerInput,
-	CORE_PLAYER_INPUTS,
-	CorePlayerInputData,
-	CorePlayerComputeInputInputData,
-} from '../../../core/player/PlayerSimple';
+import {CorePlayer, CorePlayerInputData, CorePlayerComputeInputInputData} from '../../../core/player/PlayerSimple';
+import {CorePlayerInput, CORE_PLAYER_INPUTS} from '../../../core/player/PlayerCommon';
 import {CapsuleSopOperation} from '../../operations/sop/Capsule';
 import {ParamType} from '../../poly/ParamType';
 import {MeshWithBVH} from '../../../core/geometry/bvh/three-mesh-bvh';

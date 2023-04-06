@@ -15,6 +15,7 @@ import {ShadersCollectionController} from './code/utils/ShadersCollectionControl
 import {ComputedValueJsDefinition} from './utils/JsDefinition';
 import {EvaluatorEventData} from './code/assemblers/actor/Evaluator';
 import {Poly} from '../../Poly';
+import {PointerEventType} from '../../../core/event/PointerEventType';
 
 const OUTPUT_NAME = JsConnectionPointType.RAY;
 class RayFromCursorJsParamsConfig extends NodeParamsConfig {
@@ -34,7 +35,7 @@ export class RayFromCursorJsNode extends BaseUserInputJsNode<RayFromCursorJsPara
 	// }
 	override eventData(): EvaluatorEventData | undefined {
 		return {
-			type: 'pointermove',
+			type: PointerEventType.pointermove,
 			emitter: this.eventEmitter(),
 			jsType: JsType.RAY_FROM_CURSOR,
 		};

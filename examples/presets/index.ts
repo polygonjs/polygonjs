@@ -25,6 +25,8 @@ import {videoCopPresetRegister} from './cop/Video';
 import {attributeGlPresetRegister} from './gl/Attribute';
 import {neighbourAttractRepulseGlPresetRegister} from './gl/NeighbourAttractRepulse';
 import {neighbourAttractGlPresetRegister, neighbourRepulseGlPresetRegister} from './gl/Neighbour';
+// // gl
+import {onKeyJsPresetRegister} from './js/OnKey';
 
 // // mat
 // import {meshSubsurfaceScatteringMatPresetRegister} from './mat/MeshSubsurfaceScattering';
@@ -96,6 +98,8 @@ class PresetLibraryClass {
 		this._registerPreset(neighbourAttractRepulseGlPresetRegister);
 		this._registerPreset(neighbourAttractGlPresetRegister);
 		this._registerPreset(neighbourRepulseGlPresetRegister);
+		//
+		this._registerPreset(onKeyJsPresetRegister);
 		// mat
 		// this._registerPreset(meshSubsurfaceScatteringMatPresetRegister);
 		this._registerPreset(codeMatPresetRegister);

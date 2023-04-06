@@ -74,9 +74,15 @@ export interface EvaluationContext {
 }
 type TriggerCallback = () => void;
 // type KeyboardTriggerCallback = (event: KeyboardEvent) => void;
-export type EvaluatorKeyboardMethod = 'onKeydown' | 'onKeypress' | 'onKeyup';
+export type EvaluatorKeyboardMethod = JsType.ON_KEY | JsType.ON_KEYDOWN | JsType.ON_KEYPRESS | JsType.ON_KEYUP;
+export type EvaluatorPointerMethod =
+	| JsType.ON_OBJECT_CLICK
+	| JsType.ON_OBJECT_HOVER
+	| JsType.ON_OBJECT_POINTERDOWN
+	| JsType.ON_OBJECT_POINTERUP;
 
 export type EvaluatorMethodName =
+	| JsType.ON_KEY
 	| JsType.ON_KEYDOWN
 	| JsType.ON_KEYPRESS
 	| JsType.ON_KEYUP
@@ -84,14 +90,19 @@ export type EvaluatorMethodName =
 	| JsType.ON_MAPBOX_CAMERA_MOVE
 	| JsType.ON_MAPBOX_CAMERA_MOVE_START
 	| JsType.ON_MAPBOX_CAMERA_MOVE_END
+	| JsType.ON_OBJECT_ATTRIBUTE_UPDATE
 	| JsType.ON_OBJECT_CLICK
+	| JsType.ON_OBJECT_DISPATCH_EVENT
 	| JsType.ON_OBJECT_HOVER
+	| JsType.ON_OBJECT_POINTERDOWN
+	| JsType.ON_OBJECT_POINTERUP
 	| JsType.ON_PERFORMANCE_CHANGE
 	| JsType.ON_SCENE_PAUSE
 	| JsType.ON_SCENE_PLAY
 	| JsType.ON_SCENE_RESET
 	| JsType.ON_TICK;
 export const EVALUATOR_METHOD_NAMES: Array<EvaluatorMethodName> = [
+	JsType.ON_KEY,
 	JsType.ON_KEYDOWN,
 	JsType.ON_KEYPRESS,
 	JsType.ON_KEYUP,
@@ -99,8 +110,12 @@ export const EVALUATOR_METHOD_NAMES: Array<EvaluatorMethodName> = [
 	JsType.ON_MAPBOX_CAMERA_MOVE,
 	JsType.ON_MAPBOX_CAMERA_MOVE_START,
 	JsType.ON_MAPBOX_CAMERA_MOVE_END,
+	JsType.ON_OBJECT_ATTRIBUTE_UPDATE,
 	JsType.ON_OBJECT_CLICK,
+	JsType.ON_OBJECT_DISPATCH_EVENT,
 	JsType.ON_OBJECT_HOVER,
+	JsType.ON_OBJECT_POINTERDOWN,
+	JsType.ON_OBJECT_POINTERUP,
 	JsType.ON_PERFORMANCE_CHANGE,
 	JsType.ON_SCENE_PAUSE,
 	JsType.ON_SCENE_PLAY,
@@ -110,46 +125,37 @@ export const EVALUATOR_METHOD_NAMES: Array<EvaluatorMethodName> = [
 
 export interface EvaluatorEventData extends EventData {
 	jsType: JsType;
+	// methodName: EvaluatorMethodName;
 }
 
 export class ActorEvaluator {
-	// protected _context: EvaluationContext;
 	protected scene: PolyScene;
 	protected timeController: TimeController;
 	constructor(public readonly node: ActorBuilderNode, public readonly object3D: Object3D) {
 		this.scene = node.scene();
 		this.timeController = this.scene.timeController;
-		// this._context = {
-		// Object3D: this.scene.threejsScene(),
-		// };
 	}
-	//
-	// objectUuid = ref('');
-	// context() {
-	// 	return this._context;
-	// }
-	// eventDatas?: Set<EvaluatorEventData>;
-	//
+
+	onKey?: TriggerCallback;
 	onKeydown?: TriggerCallback;
 	onKeypress?: TriggerCallback;
 	onKeyup?: TriggerCallback;
+	onPlayerEvent?: TriggerCallback;
 	onManualTrigger?: TriggerCallback;
 	onMapboxCameraMove?: TriggerCallback;
 	onMapboxCameraMoveStart?: TriggerCallback;
 	onMapboxCameraMoveEnd?: TriggerCallback;
+	onObjectAttributeUpdate?: TriggerCallback;
 	onObjectClick?: TriggerCallback;
+	onObjectDispatchEvent?: TriggerCallback;
 	onObjectHover?: TriggerCallback;
+	onObjectPointerdown?: TriggerCallback;
+	onObjectPointerup?: TriggerCallback;
 	onPerformanceChange?: TriggerCallback;
 	onScenePause?: TriggerCallback;
 	onScenePlay?: TriggerCallback;
 	onSceneReset?: TriggerCallback;
 	onTick?: TriggerCallback;
-
-	// onObjectAttributeUpdate(attribName: string, callback: TriggerCallback) {
-	// 	console.log('onAttributeUpdate', attribName, callback);
-	// 	const _ref = getObjectAttributeRef(this.object3D, attribName);
-	// 	watch(_ref, callback);
-	// }
 }
 
 export enum EvaluatorConstant {

@@ -11,12 +11,10 @@ import {
 	ACTOR_CONNECTION_POINT_IN_NODE_DEF,
 } from '../utils/io/connections/Actor';
 import {
-	// CorePlayerPhysics,
-	CorePlayerPhysicsInput,
-	CORE_PLAYER_PHYSICS_INPUTS,
 	CorePlayerPhysicsInputData,
 	CorePlayerPhysicsComputeInputData,
 } from '../../../core/physics/player/CorePlayerPhysics';
+import {CORE_PLAYER_INPUTS, CorePlayerInput} from '../../../core/player/PlayerCommon';
 import {ParamType} from '../../poly/ParamType';
 import {
 	// findPhysicsCharacterController,
@@ -90,7 +88,7 @@ export class PhysicsPlayerUpdateActorNode extends TypedActorNode<PhysicsPlayerUp
 				CONNECTION_OPTIONS
 			),
 
-			...CORE_PLAYER_PHYSICS_INPUTS.map(
+			...CORE_PLAYER_INPUTS.map(
 				(inputName) => new ActorConnectionPoint(inputName, ActorConnectionPointType.BOOLEAN, CONNECTION_OPTIONS)
 			),
 		]);
@@ -137,17 +135,17 @@ export class PhysicsPlayerUpdateActorNode extends TypedActorNode<PhysicsPlayerUp
 
 		// inputs
 		this._playerInputData.left =
-			this._inputValue<ActorConnectionPointType.BOOLEAN>(CorePlayerPhysicsInput.LEFT, context) || false;
+			this._inputValue<ActorConnectionPointType.BOOLEAN>(CorePlayerInput.LEFT, context) || false;
 		this._playerInputData.right =
-			this._inputValue<ActorConnectionPointType.BOOLEAN>(CorePlayerPhysicsInput.RIGHT, context) || false;
+			this._inputValue<ActorConnectionPointType.BOOLEAN>(CorePlayerInput.RIGHT, context) || false;
 		this._playerInputData.backward =
-			this._inputValue<ActorConnectionPointType.BOOLEAN>(CorePlayerPhysicsInput.BACKWARD, context) || false;
+			this._inputValue<ActorConnectionPointType.BOOLEAN>(CorePlayerInput.BACKWARD, context) || false;
 		this._playerInputData.forward =
-			this._inputValue<ActorConnectionPointType.BOOLEAN>(CorePlayerPhysicsInput.FORWARD, context) || false;
+			this._inputValue<ActorConnectionPointType.BOOLEAN>(CorePlayerInput.FORWARD, context) || false;
 		this._playerInputData.run =
-			this._inputValue<ActorConnectionPointType.BOOLEAN>(CorePlayerPhysicsInput.RUN, context) || false;
+			this._inputValue<ActorConnectionPointType.BOOLEAN>(CorePlayerInput.RUN, context) || false;
 		this._playerInputData.jump =
-			this._inputValue<ActorConnectionPointType.BOOLEAN>(CorePlayerPhysicsInput.JUMP, context) || false;
+			this._inputValue<ActorConnectionPointType.BOOLEAN>(CorePlayerInput.JUMP, context) || false;
 
 		player.update(this._playerComputeInputData, this._playerInputData, this.scene().timeController.delta());
 

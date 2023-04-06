@@ -1,23 +1,8 @@
 import {CapsuleSopOperation} from './../../engine/operations/sop/Capsule';
 import {Object3D, Vector3, Box3, Line3, Matrix4} from 'three';
 import {MeshWithBVH, ExtendedTriangle} from '../../core/geometry/bvh/three-mesh-bvh';
+import {CorePlayerInput} from './PlayerCommon';
 
-export enum CorePlayerInput {
-	LEFT = 'left',
-	RIGHT = 'right',
-	BACKWARD = 'backward',
-	FORWARD = 'forward',
-	RUN = 'run',
-	JUMP = 'jump',
-}
-export const CORE_PLAYER_INPUTS: CorePlayerInput[] = [
-	CorePlayerInput.LEFT,
-	CorePlayerInput.RIGHT,
-	CorePlayerInput.BACKWARD,
-	CorePlayerInput.FORWARD,
-	CorePlayerInput.RUN,
-	CorePlayerInput.JUMP,
-];
 export type CorePlayerInputData = Record<CorePlayerInput, boolean>;
 
 export interface CorePlayerOptions {

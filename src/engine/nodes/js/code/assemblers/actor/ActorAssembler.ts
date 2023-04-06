@@ -19,17 +19,18 @@ import {ShaderName} from '../../../../utils/shaders/ShaderName';
 // import {UniformJsDefinition} from '../../../utils/JsDefinition';
 // import {Vector3} from 'three';
 import {ActorJsSopNode} from '../../../../sop/ActorJs';
-import {connectedTriggerableNodes, findTriggeringNodesNonTriggerable, groupNodesByType} from './ActorAssemblerUtils';
-
+import {
+	connectedTriggerableNodes,
+	findTriggeringNodesNonTriggerable,
+	groupNodesByType,
+	inputNodesExceptTrigger,
+} from './ActorAssemblerUtils';
 import {BaseJsNodeType} from '../../../_Base';
 import {SetUtils} from '../../../../../../core/SetUtils';
 import {JsConnectionPointType} from '../../../../utils/io/connections/Js';
-
-import {ArrayUtils} from '../../../../../../core/ArrayUtils';
 import {ShadersCollectionController} from '../../utils/ShadersCollectionController';
 import {CoreString} from '../../../../../../core/String';
 import {PrettierController} from '../../../../../../core/code/PrettierController';
-
 import {NamedFunctionMap} from '../../../../../poly/registers/functions/All';
 import {ActorFunctionData} from './ActorPersistedConfig';
 import {EvaluatorEventData} from './Evaluator';
@@ -160,11 +161,11 @@ export class JsAssemblerActor extends BaseJsShaderAssembler {
 			connectedTriggerableNodes({triggerNodes, triggerableNodes, recursive: true});
 			const rootNodesSet: Set<BaseJsNodeType> = new Set();
 			triggerableNodes.forEach((trigerrableNode) => {
-				const rootNodes = ArrayUtils.compact(trigerrableNode.io.inputs.inputs());
+				const rootNodes = inputNodesExceptTrigger(trigerrableNode);
 				for (let rootNode of rootNodes) {
-					if (!triggerableNodes.has(rootNode)) {
-						rootNodesSet.add(rootNode);
-					}
+					// if (!triggerableNodes.has(rootNode)) {
+					rootNodesSet.add(rootNode);
+					// }
 				}
 			});
 			const rootNodes = SetUtils.toArray(rootNodesSet).concat(additionalRootNodes);
@@ -352,7 +353,11 @@ export class JsAssemblerActor extends BaseJsShaderAssembler {
 			if (eventDataFunction && CoreType.isFunction(eventDataFunction)) {
 				const eventData = (child as BaseJsNodeType).eventData();
 				if (eventData) {
-					eventDatas.push(eventData);
+					if (CoreType.isArray(eventData)) {
+						eventDatas.push(...eventData);
+					} else {
+						eventDatas.push(eventData);
+					}
 				}
 			}
 		});

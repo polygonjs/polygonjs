@@ -1,19 +1,20 @@
 import {BaseSceneEventsController, EventContext} from './_BaseEventsController';
 import {KeyboardEventNode} from '../../../nodes/event/Keyboard';
 // import type {KeyboardEventActorNode} from '../actors/ActorsKeyboardEventsController';
-import {ACCEPTED_KEYBOARD_EVENT_TYPES} from '../../../../core/event/KeyboardEventType';
+import {ACCEPTED_KEYBOARD_EVENT_TYPES, KeyboardEventType} from '../../../../core/event/KeyboardEventType';
 import {SceneEventsDispatcher} from './EventsDispatcher';
 import {TimeController} from '../TimeController';
 // import {TimeController} from '../TimeController';
 import {ActorKeyboardEventsController} from '../actors/ActorsKeyboardEventsController';
 import {EvaluatorKeyboardMethod} from '../../../nodes/js/code/assemblers/actor/Evaluator';
+import {JsType} from '../../../poly/registers/nodes/types/Js';
 
-type KEYBOARD_EVENT_TYPE = 'keydown' | 'keypress' | 'keyup';
-const TRIGGER_CALLBACK_BY_EVENT_TYPE: Record<KEYBOARD_EVENT_TYPE, EvaluatorKeyboardMethod> = {
-	keydown: 'onKeydown',
-	keypress: 'onKeypress',
-	keyup: 'onKeyup',
+const methodNameByEventType: Record<KeyboardEventType, EvaluatorKeyboardMethod[]> = {
+	[KeyboardEventType.keydown]: [JsType.ON_KEY, JsType.ON_KEYDOWN],
+	[KeyboardEventType.keypress]: [JsType.ON_KEYPRESS],
+	[KeyboardEventType.keyup]: [JsType.ON_KEY, JsType.ON_KEYUP],
 };
+
 export class KeyboardEventsController extends BaseSceneEventsController<
 	KeyboardEvent,
 	KeyboardEventNode
@@ -52,7 +53,7 @@ export class KeyboardEventsController extends BaseSceneEventsController<
 		if (!event) {
 			return;
 		}
-		const eventType = event.type;
+		const eventType = event.type as KeyboardEventType;
 
 		const mapForEvent = this._actorEvaluatorsByEventNames.get(eventType);
 		if (!mapForEvent) {
@@ -79,11 +80,13 @@ export class KeyboardEventsController extends BaseSceneEventsController<
 		if (!evaluatorGenerators) {
 			return;
 		}
-		const methodName = TRIGGER_CALLBACK_BY_EVENT_TYPE[eventType as KEYBOARD_EVENT_TYPE];
-		if (!methodName) {
+		const methodNames = methodNameByEventType[eventType];
+		if (!methodNames) {
 			return;
 		}
-		this.keyboardEventsController.addTriggeredEvaluators(evaluatorGenerators, methodName);
+		for (let methodName of methodNames) {
+			this.keyboardEventsController.addTriggeredEvaluators(evaluatorGenerators, methodName);
+		}
 		// evaluatorGenerators.forEach((evaluatorGenerator) => {
 		// 	this.keyboardEventsController.setTriggeredNodes(nodesToTrigger);
 		// 	// evaluatorGenerator.traverseEvaluator((evaluator) => {

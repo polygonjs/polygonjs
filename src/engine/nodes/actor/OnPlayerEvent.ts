@@ -15,7 +15,8 @@ import {
 	ACTOR_CONNECTION_POINT_IN_NODE_DEF,
 } from '../utils/io/connections/Actor';
 import {ActorNodeTriggerContext} from './_Base';
-import {CORE_PLAYER_INPUTS, CorePlayerInput, CorePlayerInputData} from '../../../core/player/PlayerSimple';
+import {CorePlayerInputData} from '../../../core/player/PlayerSimple';
+import {CORE_PLAYER_INPUTS, CorePlayerInput} from '../../../core/player/PlayerCommon';
 import {isBooleanTrue} from '../../../core/Type';
 const CONNECTION_OPTIONS = ACTOR_CONNECTION_POINT_IN_NODE_DEF;
 

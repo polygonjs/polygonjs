@@ -4,7 +4,7 @@
  *
  */
 
-import {TypedJsNode, TRIGGER_CONNECTION_NAME} from './_Base';
+import {TypedJsNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {JsConnectionPoint, JsConnectionPointType, JS_CONNECTION_POINT_IN_NODE_DEF} from '../utils/io/connections/Js';
 import {inputObject3D} from './_BaseObject3D';
@@ -57,14 +57,14 @@ export class SetGeometryInstanceAttributeJsNode extends TypedJsNode<SetGeometryI
 		this.io.connection_points.spare_params.setInputlessParamNames(['attribName', 'size']);
 
 		this.io.inputs.setNamedInputConnectionPoints([
-			new JsConnectionPoint(TRIGGER_CONNECTION_NAME, JsConnectionPointType.TRIGGER, CONNECTION_OPTIONS),
+			new JsConnectionPoint(JsConnectionPointType.TRIGGER, JsConnectionPointType.TRIGGER, CONNECTION_OPTIONS),
 			new JsConnectionPoint(JsConnectionPointType.OBJECT_3D, JsConnectionPointType.OBJECT_3D, CONNECTION_OPTIONS),
 		]);
 
 		this.io.connection_points.set_input_name_function((i) => this._expectedInputName(i));
 		this.io.connection_points.set_expected_input_types_function(() => this._expectedInputTypes());
 		this.io.connection_points.set_output_name_function(
-			(i) => [TRIGGER_CONNECTION_NAME, JsConnectionPointType.OBJECT_3D][i]
+			(i) => [JsConnectionPointType.TRIGGER, JsConnectionPointType.OBJECT_3D][i]
 		);
 		this.io.connection_points.set_expected_output_types_function(() => [
 			JsConnectionPointType.TRIGGER,

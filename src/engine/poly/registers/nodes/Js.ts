@@ -69,6 +69,7 @@ import {GetRayPropertyJsNode} from '../../../nodes/js/GetRayProperty';
 import {GetSpherePropertyJsNode} from '../../../nodes/js/GetSphereProperty';
 import {GetTextureJsNode} from '../../../nodes/js/GetTexture';
 import {GetTrackedHandPropertyJsNode} from '../../../nodes/js/GetTrackedHandProperty';
+import {GetVideoPropertyJsNode} from '../../../nodes/js/GetVideoProperty';
 import {GetWebXRTrackedMarkerPropertyJsNode} from '../../../nodes/js/GetWebXRTrackedMarkerProperty';
 import {GlobalsJsNode} from '../../../nodes/js/Globals';
 import {IntToBoolJsNode} from '../../../nodes/js/IntToBool';
@@ -90,6 +91,7 @@ import {Object3DLocalToWorldJsNode} from '../../../nodes/js/Object3DLocalToWorld
 import {Object3DWorldToLocalJsNode} from '../../../nodes/js/Object3DWorldToLocal';
 import {Object3DUpdateMatrixJsNode} from '../../../nodes/js/Object3DUpdateMatrix';
 import {Object3DUpdateWorldMatrixJsNode} from '../../../nodes/js/Object3DUpdateWorldMatrix';
+import {OnKeyJsNode} from '../../../nodes/js/OnKey';
 import {OnKeydownJsNode} from '../../../nodes/js/OnKeydown';
 import {OnKeypressJsNode} from '../../../nodes/js/OnKeypress';
 import {OnKeyupJsNode} from '../../../nodes/js/OnKeyup';
@@ -99,18 +101,23 @@ import {OnMapboxCameraMoveEndJsNode} from '../../../nodes/js/OnMapboxCameraMoveE
 import {OnMapboxCameraMoveStartJsNode} from '../../../nodes/js/OnMapboxCameraMoveStart';
 import {OnObjectAttributeUpdateJsNode} from '../../../nodes/js/OnObjectAttributeUpdate';
 import {OnObjectClickJsNode} from '../../../nodes/js/OnObjectClick';
+import {OnObjectDispatchEventJsNode} from '../../../nodes/js/OnObjectDispatchEvent';
 import {OnObjectHoverJsNode} from '../../../nodes/js/OnObjectHover';
+import {OnObjectPointerdownJsNode} from '../../../nodes/js/OnObjectPointerdown';
+import {OnObjectPointerupJsNode} from '../../../nodes/js/OnObjectPointerup';
 import {OnPerformanceChangeJsNode} from '../../../nodes/js/OnPerformanceChange';
 import {OnScenePauseJsNode} from '../../../nodes/js/OnScenePause';
 import {OnScenePlayJsNode} from '../../../nodes/js/OnScenePlay';
 import {OnSceneResetJsNode} from '../../../nodes/js/OnSceneReset';
 import {OnTickJsNode} from '../../../nodes/js/OnTick';
+import {OnVideoEventJsNode} from '../../../nodes/js/OnVideoEvent';
 import {OrJsNode} from '../../../nodes/js/Or';
 import {OutputJsNode} from '../../../nodes/js/Output';
 import {ParamJsNode} from '../../../nodes/js/Param';
 import {ParticlesSystemResetJsNode} from '../../../nodes/js/ParticlesSystemReset';
 import {ParticlesSystemStepSimulationJsNode} from '../../../nodes/js/ParticlesSystemStepSimulation';
 import {PauseAudioSourceJsNode} from '../../../nodes/js/PauseAudioSource';
+import {PhysicsPlayerUpdateJsNode} from '../../../nodes/js/PhysicsPlayerUpdate';
 import {PhysicsRBDAddForceJsNode} from '../../../nodes/js/PhysicsRBDAddForce';
 import {PhysicsRBDAddForceAtPointJsNode} from '../../../nodes/js/PhysicsRBDAddForceAtPoint';
 import {PhysicsRBDAddTorqueJsNode} from '../../../nodes/js/PhysicsRBDAddTorque';
@@ -126,6 +133,7 @@ import {PhysicsWorldStepSimulationJsNode} from '../../../nodes/js/PhysicsWorldSt
 import {PlaneJsNode} from '../../../nodes/js/Plane';
 import {PlayAnimationJsNode} from '../../../nodes/js/PlayAnimation';
 import {PlayAudioSourceJsNode} from '../../../nodes/js/PlayAudioSource';
+import {PlayerUpdateJsNode} from '../../../nodes/js/PlayerUpdate';
 import {PlayInstrumentNoteJsNode} from '../../../nodes/js/PlayInstrumentNote';
 import {PowJsNode} from '../../../nodes/js/Pow';
 import {PressButtonParamJsNode} from '../../../nodes/js/PressButtonParam';
@@ -191,6 +199,7 @@ import {SetPhysicsRBDCylinderPropertyJsNode} from '../../../nodes/js/SetPhysicsR
 import {SetPhysicsRBDCuboidPropertyJsNode} from '../../../nodes/js/SetPhysicsRBDCuboidProperty';
 import {SetPhysicsRBDSpherePropertyJsNode} from '../../../nodes/js/SetPhysicsRBDSphereProperty';
 import {SetPhysicsWorldGravityJsNode} from '../../../nodes/js/SetPhysicsWorldGravity';
+import {SetPlayerInputJsNode} from '../../../nodes/js/SetPlayerInput';
 import {SetSpotLightIntensityJsNode} from '../../../nodes/js/SetSpotLightIntensity';
 import {SetViewerJsNode} from '../../../nodes/js/SetViewer';
 import {SignJsNode} from '../../../nodes/js/Sign';
@@ -287,6 +296,7 @@ export interface JsNodeChildrenMap {
 	getSphereProperty: GetSpherePropertyJsNode;
 	getTexture: GetTextureJsNode;
 	getTrackedHandProperty: GetTrackedHandPropertyJsNode;
+	getVideoProperty: GetVideoPropertyJsNode;
 	getWebXRTrackedMarkerProperty: GetWebXRTrackedMarkerPropertyJsNode;
 	globals: GlobalsJsNode;
 	intToBool: IntToBoolJsNode;
@@ -308,6 +318,7 @@ export interface JsNodeChildrenMap {
 	object3DWorldToLocal: Object3DWorldToLocalJsNode;
 	object3DUpdateMatrix: Object3DUpdateMatrixJsNode;
 	object3DUpdateWorldMatrix: Object3DUpdateWorldMatrixJsNode;
+	onKey: OnKeyJsNode;
 	onKeydown: OnKeydownJsNode;
 	onKeypress: OnKeypressJsNode;
 	onKeyup: OnKeyupJsNode;
@@ -317,18 +328,23 @@ export interface JsNodeChildrenMap {
 	onMapboxCameraMoveStart: OnMapboxCameraMoveStartJsNode;
 	onObjectAttributeUpdate: OnObjectAttributeUpdateJsNode;
 	onObjectClick: OnObjectClickJsNode;
+	onObjectDispatchEvent: OnObjectDispatchEventJsNode;
 	onObjectHover: OnObjectHoverJsNode;
+	onObjectPointerdown: OnObjectPointerdownJsNode;
+	onObjectPointerup: OnObjectPointerupJsNode;
 	onPerformanceChange: OnPerformanceChangeJsNode;
 	onScenePause: OnScenePauseJsNode;
 	onScenePlay: OnScenePlayJsNode;
 	onSceneReset: OnSceneResetJsNode;
 	onTick: OnTickJsNode;
+	onVideoEvent: OnVideoEventJsNode;
 	or: OrJsNode;
 	output: OutputJsNode;
 	param: ParamJsNode;
 	particlesSystemReset: ParticlesSystemResetJsNode;
 	particlesSystemStepSimulation: ParticlesSystemStepSimulationJsNode;
 	pauseAudioSource: PauseAudioSourceJsNode;
+	physicsPlayerUpdate: PhysicsPlayerUpdateJsNode;
 	physicsRBDAddForce: PhysicsRBDAddForceJsNode;
 	physicsRBDAddForceAtPoint: PhysicsRBDAddForceAtPointJsNode;
 	physicsRBDAddTorque: PhysicsRBDAddTorqueJsNode;
@@ -345,6 +361,7 @@ export interface JsNodeChildrenMap {
 	playAnimation: PlayAnimationJsNode;
 	playAudioSource: PlayAudioSourceJsNode;
 	playInstrumentNote: PlayInstrumentNoteJsNode;
+	playerUpdate: PlayerUpdateJsNode;
 	pow: PowJsNode;
 	pressButtonParam: PressButtonParamJsNode;
 	rand: RandJsNode;
@@ -408,6 +425,7 @@ export interface JsNodeChildrenMap {
 	setPhysicsRBDCuboidProperty: SetPhysicsRBDCuboidPropertyJsNode;
 	setPhysicsRBDSphereProperty: SetPhysicsRBDSpherePropertyJsNode;
 	setPhysicsWorldGravity: SetPhysicsWorldGravityJsNode;
+	setPlayerInput: SetPlayerInputJsNode;
 	setSpotLightIntensity: SetSpotLightIntensityJsNode;
 	setViewer: SetViewerJsNode;
 	sign: SignJsNode;
@@ -440,7 +458,7 @@ import {SopType} from './types/Sop';
 import {NodeContext} from '../../NodeContext';
 const sopType = (type: SopType) => `${NodeContext.SOP}/${type}`;
 const ONLY_WITH_GLOBALS = {only: [sopType(SopType.SDF_BUILDER)]};
-const ONLY_ACTOR = {only: [sopType(SopType.ACTOR_JS), sopType(SopType.PHYSICS_WORLD)]};
+const ONLY_ACTOR = {only: [sopType(SopType.ACTOR_JS), sopType(SopType.PHYSICS_WORLD), sopType(SopType.PHYSICS_PLAYER)]};
 export class JsRegister {
 	static run(poly: PolyEngine) {
 		// poly.registerNode(AttributeJsNode, CATEGORY_JS.GLOBALS);
@@ -474,7 +492,7 @@ export class JsRegister {
 		poly.registerNode(ComplementJsNode, CATEGORY_JS.MATH);
 
 		poly.registerNode(ConstantJsNode, CATEGORY_JS.GLOBALS);
-		poly.registerNode(CookNodeJsNode, CATEGORY_JS.EVENTS);
+		poly.registerNode(CookNodeJsNode, CATEGORY_JS.ACTION);
 		poly.registerNode(CosJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(CrossJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(CursorJsNode, CATEGORY_JS.INPUTS, ONLY_ACTOR);
@@ -519,6 +537,7 @@ export class JsRegister {
 		poly.registerNode(GetSpherePropertyJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(GetTextureJsNode, CATEGORY_JS.GET, ONLY_ACTOR);
 		poly.registerNode(GetTrackedHandPropertyJsNode, CATEGORY_JS.COMPUTER_VISION, ONLY_ACTOR);
+		poly.registerNode(GetVideoPropertyJsNode, CATEGORY_JS.GET, ONLY_ACTOR);
 		poly.registerNode(GetWebXRTrackedMarkerPropertyJsNode, CATEGORY_JS.WEBXR, ONLY_ACTOR);
 
 		poly.registerNode(GlobalsJsNode, CATEGORY_JS.GLOBALS, ONLY_WITH_GLOBALS);
@@ -537,10 +556,11 @@ export class JsRegister {
 		poly.registerNode(NegateJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(NormalizeJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(NullJsNode, CATEGORY_JS.FLOW);
-		poly.registerNode(Object3DLocalToWorldJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
-		poly.registerNode(Object3DWorldToLocalJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
-		poly.registerNode(Object3DUpdateMatrixJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
-		poly.registerNode(Object3DUpdateWorldMatrixJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
+		poly.registerNode(Object3DLocalToWorldJsNode, CATEGORY_JS.GET, ONLY_ACTOR);
+		poly.registerNode(Object3DWorldToLocalJsNode, CATEGORY_JS.GET, ONLY_ACTOR);
+		poly.registerNode(Object3DUpdateMatrixJsNode, CATEGORY_JS.GET, ONLY_ACTOR);
+		poly.registerNode(Object3DUpdateWorldMatrixJsNode, CATEGORY_JS.GET, ONLY_ACTOR);
+		poly.registerNode(OnKeyJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
 		poly.registerNode(OnKeydownJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
 		poly.registerNode(OnKeypressJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
 		poly.registerNode(OnKeyupJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
@@ -550,18 +570,25 @@ export class JsRegister {
 		poly.registerNode(OnMapboxCameraMoveStartJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
 		poly.registerNode(OnObjectAttributeUpdateJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
 		poly.registerNode(OnObjectClickJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
+		poly.registerNode(OnObjectDispatchEventJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
 		poly.registerNode(OnObjectHoverJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
+		poly.registerNode(OnObjectPointerdownJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
+		poly.registerNode(OnObjectPointerupJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
+
 		poly.registerNode(OnPerformanceChangeJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
 		poly.registerNode(OnScenePauseJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
 		poly.registerNode(OnScenePlayJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
 		poly.registerNode(OnSceneResetJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
 		poly.registerNode(OnTickJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
+		poly.registerNode(OnVideoEventJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
+
 		poly.registerNode(OrJsNode, CATEGORY_JS.LOGIC);
 		poly.registerNode(OutputJsNode, CATEGORY_JS.GLOBALS, ONLY_WITH_GLOBALS);
 		poly.registerNode(ParamJsNode, CATEGORY_JS.GLOBALS);
 		poly.registerNode(ParticlesSystemResetJsNode, CATEGORY_JS.PARTICLES);
 		poly.registerNode(ParticlesSystemStepSimulationJsNode, CATEGORY_JS.PARTICLES);
 		poly.registerNode(PauseAudioSourceJsNode, CATEGORY_JS.AUDIO, ONLY_ACTOR);
+		poly.registerNode(PhysicsPlayerUpdateJsNode, CATEGORY_JS.PHYSICS, ONLY_ACTOR);
 		poly.registerNode(PhysicsRBDAddForceJsNode, CATEGORY_JS.PHYSICS, ONLY_ACTOR);
 		poly.registerNode(PhysicsRBDAddForceAtPointJsNode, CATEGORY_JS.PHYSICS, ONLY_ACTOR);
 		poly.registerNode(PhysicsRBDAddTorqueJsNode, CATEGORY_JS.PHYSICS, ONLY_ACTOR);
@@ -579,6 +606,7 @@ export class JsRegister {
 		poly.registerNode(PlayAnimationJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR);
 		poly.registerNode(PlayAudioSourceJsNode, CATEGORY_JS.AUDIO, ONLY_ACTOR);
 		poly.registerNode(PlayInstrumentNoteJsNode, CATEGORY_JS.AUDIO, ONLY_ACTOR);
+		poly.registerNode(PlayerUpdateJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR);
 
 		poly.registerNode(PowJsNode, CATEGORY_JS.MATH);
 
@@ -644,6 +672,7 @@ export class JsRegister {
 		poly.registerNode(SetPhysicsRBDCuboidPropertyJsNode, CATEGORY_JS.PHYSICS, ONLY_ACTOR);
 		poly.registerNode(SetPhysicsRBDSpherePropertyJsNode, CATEGORY_JS.PHYSICS, ONLY_ACTOR);
 		poly.registerNode(SetPhysicsWorldGravityJsNode, CATEGORY_JS.PHYSICS, ONLY_ACTOR);
+		poly.registerNode(SetPlayerInputJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
 		poly.registerNode(SetSpotLightIntensityJsNode, CATEGORY_JS.PHYSICS, ONLY_ACTOR);
 		poly.registerNode(SetViewerJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR);
 

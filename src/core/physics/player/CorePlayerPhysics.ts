@@ -9,6 +9,7 @@ import {CorePath} from '../../geometry/CorePath';
 import {CoreCameraControlsController, ApplicableControlsNode} from '../../camera/CoreCameraControlsController';
 import {PolyScene} from '../../../engine/scene/PolyScene';
 import {Camera} from 'three';
+import {CorePlayerInput} from '../../player/PlayerCommon';
 
 type BooleanGetter = () => boolean;
 // type SetInputData = (inputData: CorePlayerPhysicsInputData) => void;
@@ -18,23 +19,23 @@ type UpdateFunc = (
 	delta: number
 ) => void;
 
-export enum CorePlayerPhysicsInput {
-	LEFT = 'left',
-	RIGHT = 'right',
-	BACKWARD = 'backward',
-	FORWARD = 'forward',
-	RUN = 'run',
-	JUMP = 'jump',
-}
-export const CORE_PLAYER_PHYSICS_INPUTS: CorePlayerPhysicsInput[] = [
-	CorePlayerPhysicsInput.LEFT,
-	CorePlayerPhysicsInput.RIGHT,
-	CorePlayerPhysicsInput.BACKWARD,
-	CorePlayerPhysicsInput.FORWARD,
-	CorePlayerPhysicsInput.RUN,
-	CorePlayerPhysicsInput.JUMP,
-];
-export type CorePlayerPhysicsInputData = Record<CorePlayerPhysicsInput, boolean>;
+// export enum CorePlayerPhysicsInput {
+// 	LEFT = 'left',
+// 	RIGHT = 'right',
+// 	BACKWARD = 'backward',
+// 	FORWARD = 'forward',
+// 	RUN = 'run',
+// 	JUMP = 'jump',
+// }
+// export const CORE_PLAYER_PHYSICS_INPUTS: CorePlayerPhysicsInput[] = [
+// 	CorePlayerPhysicsInput.LEFT,
+// 	CorePlayerPhysicsInput.RIGHT,
+// 	CorePlayerPhysicsInput.BACKWARD,
+// 	CorePlayerPhysicsInput.FORWARD,
+// 	CorePlayerPhysicsInput.RUN,
+// 	CorePlayerPhysicsInput.JUMP,
+// ];
+export type CorePlayerPhysicsInputData = Record<CorePlayerInput, boolean>;
 
 export interface CorePlayerPhysicsComputeInputData {
 	speed: number;

@@ -12,6 +12,7 @@ import {ShadersCollectionController} from './code/utils/ShadersCollectionControl
 import {BaseOnObjectPointerEventJsNode, OnObjectHoverJsNodeOutputName} from './_BaseOnObjectPointerEvent';
 import {Poly} from '../../Poly';
 import {inputObject3D} from './_BaseObject3D';
+import {PointerEventType} from '../../../core/event/PointerEventType';
 
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
 
@@ -19,12 +20,15 @@ export class OnObjectHoverJsNode extends BaseOnObjectPointerEventJsNode {
 	static override type() {
 		return JsType.ON_OBJECT_HOVER;
 	}
-
+	// methodName(): EvaluatorMethodName {
+	// 	return JsType.ON_OBJECT_HOVER;
+	// }
 	override eventData(): EvaluatorEventData | undefined {
 		return {
-			type: 'pointermove',
+			type: PointerEventType.pointermove,
 			emitter: this.eventEmitter(),
 			jsType: JsType.ON_OBJECT_HOVER,
+			// methodName: this.methodName(),
 		};
 	}
 	override initializeNode() {

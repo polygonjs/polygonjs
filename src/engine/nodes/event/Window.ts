@@ -4,12 +4,12 @@
  *
  */
 import {EventConnectionPoint, EventConnectionPointType} from '../utils/io/connections/Event';
-import {ACCEPTED_WINDOW_EVENT_TYPES} from '../../scene/utils/events/WindowEventsController';
 import {BaseNodeType} from '../_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {TypedInputEventNode, EVENT_PARAM_OPTIONS} from './_BaseInput';
 import {EventContext} from '../../scene/utils/events/_BaseEventsController';
 import {EventInputType} from '../../poly/registers/nodes/types/Event';
+import {ACCEPTED_WINDOW_EVENT_TYPES} from '../../../core/event/WindowEventType';
 class WindowEventParamsConfig extends NodeParamsConfig {
 	/** @param toggle on to allow any event to be listened to */
 	active = ParamConfig.BOOLEAN(true, {
@@ -33,7 +33,7 @@ export class WindowEventNode extends TypedInputEventNode<WindowEventParamsConfig
 		return EventInputType.WINDOW;
 	}
 	protected acceptedEventTypes() {
-		return new Set(ACCEPTED_WINDOW_EVENT_TYPES.map((n) => `${n}`));
+		return new Set([...ACCEPTED_WINDOW_EVENT_TYPES]);
 	}
 	override initializeNode() {
 		this.io.outputs.setNamedOutputConnectionPoints(

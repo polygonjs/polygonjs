@@ -149,6 +149,15 @@ import {
 	multScalarVectorArray,
 } from '../../../functions/MultScalar';
 import {nearestPosition} from '../../../functions/NearestPosition';
+import {
+	setPlayerInput,
+	getPlayerInputDataLeft,
+	getPlayerInputDataRight,
+	getPlayerInputDataBackward,
+	getPlayerInputDataForward,
+	getPlayerInputDataJump,
+	getPlayerInputDataRun,
+} from '../../../functions/SetPlayerInput';
 import {particlesSystemReset, particlesSystemStepSimulation} from '../../../functions/ParticlesSystem';
 import {
 	// globals
@@ -202,6 +211,12 @@ import {
 	physicsRBDResetForces,
 	physicsRBDResetTorques,
 } from '../../../functions/Physics';
+import {playerPhysicsUpdate} from '../../../functions/PlayerPhysics';
+import {
+	playerSimpleUpdate,
+	getPlayerSimplePropertyOnGround,
+	getPlayerSimplePropertyVelocity,
+} from '../../../functions/PlayerSimple';
 import {
 	sizzleVec3XY,
 	sizzleVec3XZ,
@@ -270,6 +285,12 @@ import {lengthVector, lengthVectorArray} from '../../../functions/VectorLength';
 import {manhattanDistanceVector2, manhattanDistanceVector3} from '../../../functions/VectorManhattanDistance';
 import {maxLengthVector2, maxLengthVector3, maxLengthVector4} from '../../../functions/VectorMaxLength';
 import {normalizeVector2, normalizeVector3, normalizeVector4} from '../../../functions/VectorNormalize';
+import {
+	getVideoPropertyCurrentTime,
+	getVideoPropertyDuration,
+	getVideoPropertyMuted,
+	getVideoPropertyPlaying,
+} from '../../../functions/Video';
 import {setViewer} from '../../../functions/Viewer';
 import {getWebXRTrackedMarkerMatrix} from '../../../functions/WebXR';
 //
@@ -410,6 +431,14 @@ export interface NamedFunctionMap {
 	getParent: getParent;
 	getPlaneNormal: getPlaneNormal;
 	getPlaneConstant: getPlaneConstant;
+	getPlayerInputDataLeft: getPlayerInputDataLeft;
+	getPlayerInputDataRight: getPlayerInputDataRight;
+	getPlayerInputDataBackward: getPlayerInputDataBackward;
+	getPlayerInputDataForward: getPlayerInputDataForward;
+	getPlayerInputDataJump: getPlayerInputDataJump;
+	getPlayerInputDataRun: getPlayerInputDataRun;
+	getPlayerSimplePropertyOnGround: getPlayerSimplePropertyOnGround;
+	getPlayerSimplePropertyVelocity: getPlayerSimplePropertyVelocity;
 	getPhysicsRBDCapsuleHeight: getPhysicsRBDCapsuleHeight;
 	getPhysicsRBDCapsuleRadius: getPhysicsRBDCapsuleRadius;
 	getPhysicsRBDConeHeight: getPhysicsRBDConeHeight;
@@ -434,6 +463,10 @@ export interface NamedFunctionMap {
 	getTrackedHandPinkyDirection: getTrackedHandPinkyDirection;
 	getTrackedHandRingDirection: getTrackedHandRingDirection;
 	getTrackedHandThumbDirection: getTrackedHandThumbDirection;
+	getVideoPropertyCurrentTime: getVideoPropertyCurrentTime;
+	getVideoPropertyDuration: getVideoPropertyDuration;
+	getVideoPropertyMuted: getVideoPropertyMuted;
+	getVideoPropertyPlaying: getVideoPropertyPlaying;
 	getWebXRTrackedMarkerMatrix: getWebXRTrackedMarkerMatrix;
 	globalsTime: globalsTime;
 	globalsTimeDelta: globalsTimeDelta;
@@ -511,6 +544,7 @@ export interface NamedFunctionMap {
 	object3DWorldToLocal: object3DWorldToLocal;
 	objectUpdateMatrix: objectUpdateMatrix;
 	objectUpdateWorldMatrix: objectUpdateWorldMatrix;
+
 	orArrays: orArrays;
 	orBooleans: orBooleans;
 	particlesSystemReset: particlesSystemReset;
@@ -531,6 +565,8 @@ export interface NamedFunctionMap {
 	planeSet: planeSet;
 	playAnimation: playAnimation;
 	playAudioSource: playAudioSource;
+	playerPhysicsUpdate: playerPhysicsUpdate;
+	playerSimpleUpdate: playerSimpleUpdate;
 	playInstrumentNote: playInstrumentNote;
 	rand: rand;
 	raySet: raySet;
@@ -609,6 +645,7 @@ export interface NamedFunctionMap {
 	setPhysicsRBDAngularVelocity: setPhysicsRBDAngularVelocity;
 	setPhysicsRBDLinearVelocity: setPhysicsRBDLinearVelocity;
 	setPhysicsWorldGravity: setPhysicsWorldGravity;
+	setPlayerInput: setPlayerInput;
 	setSpotLightIntensity: setSpotLightIntensity;
 	sizzleVec3XY: sizzleVec3XY;
 	sizzleVec3XZ: sizzleVec3XZ;
@@ -731,6 +768,14 @@ export class AllNamedFunctionRegister {
 			getParent,
 			getPlaneNormal,
 			getPlaneConstant,
+			getPlayerSimplePropertyOnGround,
+			getPlayerSimplePropertyVelocity,
+			getPlayerInputDataLeft,
+			getPlayerInputDataRight,
+			getPlayerInputDataBackward,
+			getPlayerInputDataForward,
+			getPlayerInputDataJump,
+			getPlayerInputDataRun,
 			getPhysicsRBDCapsuleHeight,
 			getPhysicsRBDCapsuleRadius,
 			getPhysicsRBDConeHeight,
@@ -755,6 +800,10 @@ export class AllNamedFunctionRegister {
 			getTrackedHandPinkyDirection,
 			getTrackedHandRingDirection,
 			getTrackedHandThumbDirection,
+			getVideoPropertyCurrentTime,
+			getVideoPropertyDuration,
+			getVideoPropertyMuted,
+			getVideoPropertyPlaying,
 			getWebXRTrackedMarkerMatrix,
 			globalsTime,
 			globalsTimeDelta,
@@ -832,6 +881,7 @@ export class AllNamedFunctionRegister {
 			object3DWorldToLocal,
 			objectUpdateMatrix,
 			objectUpdateWorldMatrix,
+
 			orArrays,
 			orBooleans,
 			particlesSystemReset,
@@ -841,6 +891,8 @@ export class AllNamedFunctionRegister {
 			playAnimation,
 			playAudioSource,
 			playInstrumentNote,
+			playerPhysicsUpdate,
+			playerSimpleUpdate,
 			physicsRBDAddForce,
 			physicsRBDAddForceAtPoint,
 			physicsRBDAddTorque,
@@ -929,6 +981,7 @@ export class AllNamedFunctionRegister {
 			setPhysicsRBDAngularVelocity,
 			setPhysicsRBDLinearVelocity,
 			setPhysicsWorldGravity,
+			setPlayerInput,
 			setSpotLightIntensity,
 			setViewer,
 			sizzleVec3XY,

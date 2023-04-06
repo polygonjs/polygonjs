@@ -11,9 +11,10 @@ import {BaseUserInputJsNode} from './_BaseUserInput';
 import {CoreEventEmitter, EVENT_EMITTERS, EVENT_EMITTER_PARAM_MENU_OPTIONS} from '../../../core/event/CoreEventEmitter';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 import {Poly} from '../../Poly';
-// import {CoreString} from '../../../core/String';
-// import {isBooleanTrue} from '../../../core/Type';
-// import {ParamType} from '../../poly/ParamType';
+import {KeyModifierRequirement, KEY_MODIFIER_REQUIREMENTS} from '../../functions/KeyboardEventMatchesConfig';
+
+const KEY_MENU_ENTRIES = {menu: {entries: KEY_MODIFIER_REQUIREMENTS.map((name, value) => ({name, value}))}};
+const OPTIONAL_ENTRY = KEY_MODIFIER_REQUIREMENTS.indexOf(KeyModifierRequirement.OPTIONAL);
 
 class BaseOnKeyEventJsParamsConfig extends NodeParamsConfig {
 	/** @param set which element triggers the event */
@@ -24,13 +25,13 @@ class BaseOnKeyEventJsParamsConfig extends NodeParamsConfig {
 	/** @param space separated list of accepted key codes. If this is empty then any key is accepted. */
 	keyCodes = ParamConfig.STRING('Digit1 KeyE ArrowDown');
 	/** @param requires ctrlKey */
-	ctrlKey = ParamConfig.BOOLEAN(0);
+	ctrlKey = ParamConfig.INTEGER(OPTIONAL_ENTRY, KEY_MENU_ENTRIES);
 	/** @param requires altKey */
-	altKey = ParamConfig.BOOLEAN(0);
+	altKey = ParamConfig.INTEGER(OPTIONAL_ENTRY, KEY_MENU_ENTRIES);
 	/** @param requires shiftKey */
-	shiftKey = ParamConfig.BOOLEAN(0);
+	shiftKey = ParamConfig.INTEGER(OPTIONAL_ENTRY, KEY_MENU_ENTRIES);
 	/** @param requires metaKey */
-	metaKey = ParamConfig.BOOLEAN(0);
+	metaKey = ParamConfig.INTEGER(OPTIONAL_ENTRY, KEY_MENU_ENTRIES);
 }
 const ParamsConfig = new BaseOnKeyEventJsParamsConfig();
 
@@ -46,6 +47,7 @@ export abstract class BaseOnKeyEventJsNode extends BaseUserInputJsNode<BaseOnKey
 	override eventEmitter(): CoreEventEmitter {
 		return EVENT_EMITTERS[this.pv.element];
 	}
+	// abstract methodName(): EvaluatorMethodName;
 
 	override wrappedBodyLines(
 		shadersCollectionController: ShadersCollectionController,
@@ -66,7 +68,7 @@ export abstract class BaseOnKeyEventJsNode extends BaseUserInputJsNode<BaseOnKey
 
 		const methodName = this.type();
 		//
-		const wrappedLines: string = `${methodName}(event){
+		const wrappedLines: string = `${methodName}(){
 			if( !${bodyLine} ){
 				return
 			}
@@ -74,55 +76,4 @@ export abstract class BaseOnKeyEventJsNode extends BaseUserInputJsNode<BaseOnKey
 		}`;
 		return {methodNames: [methodName], wrappedLines};
 	}
-
-	// public override receiveTrigger(context: ActorNodeTriggerContext) {
-	// 	const events = this.scene().eventsDispatcher.keyboardEventsController.currentEvents();
-	// 	if (events.length == 0) {
-	// 		return;
-	// 	}
-
-	// 	const eventMatchesAtLeastOneModifier = () => {
-	// 		const ctrlKey = this._inputValueFromParam<ParamType.BOOLEAN>(this.p.ctrlKey, context);
-	// 		for (let event of events) {
-	// 			if (event.ctrlKey == isBooleanTrue(ctrlKey)) {
-	// 				return true;
-	// 			}
-	// 		}
-	// 		const altKey = this._inputValueFromParam<ParamType.BOOLEAN>(this.p.altKey, context);
-	// 		for (let event of events) {
-	// 			if (event.altKey == isBooleanTrue(altKey)) {
-	// 				return true;
-	// 			}
-	// 		}
-
-	// 		const shiftKey = this._inputValueFromParam<ParamType.BOOLEAN>(this.p.shiftKey, context);
-	// 		for (let event of events) {
-	// 			if (event.shiftKey == isBooleanTrue(shiftKey)) {
-	// 				return true;
-	// 			}
-	// 		}
-
-	// 		const metaKey = this._inputValueFromParam<ParamType.BOOLEAN>(this.p.metaKey, context);
-	// 		for (let event of events) {
-	// 			if (event.metaKey == isBooleanTrue(metaKey)) {
-	// 				return true;
-	// 			}
-	// 		}
-	// 	};
-	// 	const eventMatchesAtLeastOneKeyCode = () => {
-	// 		const keyCodes = this._inputValueFromParam<ParamType.STRING>(this.p.keyCodes, context);
-	// 		for (let event of events) {
-	// 			if (CoreString.matchMask(event.code, keyCodes)) {
-	// 				return true;
-	// 			}
-	// 		}
-	// 	};
-	// 	if (!eventMatchesAtLeastOneModifier()) {
-	// 		return;
-	// 	}
-	// 	if (!eventMatchesAtLeastOneKeyCode()) {
-	// 		return;
-	// 	}
-	// 	this.runTrigger(context);
-	// }
 }

@@ -52,7 +52,7 @@ export class PointerEventNode extends TypedInputEventNode<PointerEventParamsConf
 		return EventInputType.POINTER;
 	}
 	protected acceptedEventTypes() {
-		return new Set(ACCEPTED_POINTER_EVENT_TYPES.map((n) => `${n}`));
+		return new Set([...ACCEPTED_POINTER_EVENT_TYPES]);
 	}
 	override initializeNode() {
 		this.io.outputs.setNamedOutputConnectionPoints(

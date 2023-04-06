@@ -1,6 +1,7 @@
 import {TypedJsNode} from './_Base';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {CoreEventEmitter} from '../../../core/event/CoreEventEmitter';
+// import { EvaluatorMethodName } from './code/assemblers/actor/Evaluator';
 
 export abstract class BaseUserInputJsNode<K extends NodeParamsConfig> extends TypedJsNode<K> {
 	// override initializeNode() {
@@ -21,6 +22,7 @@ export abstract class BaseUserInputJsNode<K extends NodeParamsConfig> extends Ty
 	eventEmitter(): CoreEventEmitter {
 		return CoreEventEmitter.CANVAS;
 	}
+	// abstract methodName(): EvaluatorMethodName;
 }
 
 class BaseUserInputJsParamsConfig extends NodeParamsConfig {}

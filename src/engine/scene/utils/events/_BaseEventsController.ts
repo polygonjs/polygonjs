@@ -4,7 +4,7 @@ import {BaseNodeType} from '../../../nodes/_Base';
 import {Intersection} from 'three';
 import {BaseViewerType} from '../../../viewers/_Base';
 // import type {BaseUserInputJsNodeType} from '../../../nodes/js/_BaseUserInput';
-import {EventData} from '../../../../core/event/EventData';
+import {EventData, EventType} from '../../../../core/event/EventData';
 // import {MapUtils} from '../../../../core/MapUtils';
 import {CoreEventEmitter} from '../../../../core/event/CoreEventEmitter';
 import {MapUtils} from '../../../../core/MapUtils';
@@ -137,7 +137,7 @@ export abstract class BaseSceneEventsController<
 		};
 
 		const _actorEventDatas = () => {
-			let eventTypeByEmitter: Map<CoreEventEmitter, Set<string>> = new Map();
+			let eventTypeByEmitter: Map<CoreEventEmitter, Set<EventType>> = new Map();
 
 			this._actorEvaluatorsByEventNames.forEach((mapForEventName, eventName) => {
 				mapForEventName.forEach((nodes, emitter) => {

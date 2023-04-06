@@ -4,7 +4,6 @@
  *
  */
 import {EventConnectionPoint, EventConnectionPointType} from '../utils/io/connections/Event';
-import {ACCEPTED_DRAG_EVENT_TYPES} from '../../scene/utils/events/DragEventsController';
 import {BaseNodeType} from '../_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {TypedInputEventNode, EVENT_PARAM_OPTIONS} from './_BaseInput';
@@ -12,6 +11,7 @@ import {isBooleanTrue} from '../../../core/BooleanValue';
 import {EventContext} from '../../scene/utils/events/_BaseEventsController';
 import {EventInputType} from '../../poly/registers/nodes/types/Event';
 import {CoreEventEmitter, EVENT_EMITTERS, EVENT_EMITTER_PARAM_MENU_OPTIONS} from '../../../core/event/CoreEventEmitter';
+import {ACCEPTED_DRAG_EVENT_TYPES} from '../../../core/event/DragEventType';
 class DragEventParamsConfig extends NodeParamsConfig {
 	/** @param toggle on to allow any event to be listened to */
 	active = ParamConfig.BOOLEAN(true, {
@@ -44,7 +44,7 @@ export class DragEventNode extends TypedInputEventNode<DragEventParamsConfig> {
 		return EventInputType.DRAG;
 	}
 	protected acceptedEventTypes() {
-		return new Set(ACCEPTED_DRAG_EVENT_TYPES.map((n) => `${n}`));
+		return new Set([...ACCEPTED_DRAG_EVENT_TYPES]);
 	}
 	override initializeNode() {
 		this.io.outputs.setNamedOutputConnectionPoints(

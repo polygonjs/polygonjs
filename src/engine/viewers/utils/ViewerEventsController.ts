@@ -4,13 +4,13 @@ import {EVENT_EMITTERS} from '../../../core/event/CoreEventEmitter';
 import {ACCEPTED_KEYBOARD_EVENT_TYPES, KeyboardEventType} from '../../../core/event/KeyboardEventType';
 import {allowCanvasKeyEventsListener} from '../../../core/event/CanvasKeyFocus';
 import {getEventEmitter} from '../../../core/event/EventEmitter';
-import {EventData} from '../../../core/event/EventData';
+import {EventData, EventType} from '../../../core/event/EventData';
 type ViewerEventListener = (e: Event) => void;
 interface EventListenerWithData {
 	listener: ViewerEventListener;
 	data: EventData;
 }
-type ListenerByEventType = Map<string, EventListenerWithData>;
+type ListenerByEventType = Map<EventType, EventListenerWithData>;
 
 export class ViewerEventsController {
 	protected _bound_listener_map_by_event_controller_type: Map<string, ListenerByEventType> = new Map();

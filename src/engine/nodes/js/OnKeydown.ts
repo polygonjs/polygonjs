@@ -7,17 +7,15 @@
 import {JsType} from '../../poly/registers/nodes/types/Js';
 import {BaseOnKeyEventJsNode} from './_BaseOnKeyEvent';
 import {EvaluatorEventData} from './code/assemblers/actor/Evaluator';
+import {KeyboardEventType} from '../../../core/event/KeyboardEventType';
 
 export class OnKeydownJsNode extends BaseOnKeyEventJsNode {
 	static override type() {
 		return JsType.ON_KEYDOWN;
 	}
-	// userInputEventNames() {
-	// 	return [KeyboardEventType.keydown];
-	// }
 	override eventData(): EvaluatorEventData | undefined {
 		return {
-			type: 'keydown',
+			type: KeyboardEventType.keydown,
 			emitter: this.eventEmitter(),
 			jsType: JsType.ON_KEYDOWN,
 		};

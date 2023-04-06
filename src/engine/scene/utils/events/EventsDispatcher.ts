@@ -30,16 +30,16 @@ export class SceneEventsDispatcher {
 	private _controllers: BaseSceneEventsController<Event, BaseInputEventNodeType>[] = [];
 	constructor(public scene: PolyScene) {}
 
-	registerEvaluatorGenerator(evaluator: ActorEvaluatorGenerator) {
-		const controllers = this._findOrCreateControllerForEvaluator(evaluator);
+	registerEvaluatorGenerator(evaluatorGenerator: ActorEvaluatorGenerator) {
+		const controllers = this._findOrCreateControllerForEvaluator(evaluatorGenerator);
 		if (controllers) {
-			controllers.forEach((c) => c.registerEvaluatorGenerator(evaluator));
+			controllers.forEach((c) => c.registerEvaluatorGenerator(evaluatorGenerator));
 		}
 	}
-	unregisterEvaluatorGenerator(evaluator: ActorEvaluatorGenerator) {
-		const controllers = this._findOrCreateControllerForEvaluator(evaluator);
+	unregisterEvaluatorGenerator(evaluatorGenerator: ActorEvaluatorGenerator) {
+		const controllers = this._findOrCreateControllerForEvaluator(evaluatorGenerator);
 		if (controllers) {
-			controllers.forEach((c) => c.unregisterEvaluatorGenerator(evaluator));
+			controllers.forEach((c) => c.unregisterEvaluatorGenerator(evaluatorGenerator));
 		}
 	}
 	// updateControllersFromJsNodes() {
@@ -144,10 +144,10 @@ export class SceneEventsDispatcher {
 			case JsType.ON_POINTERUP:
 			case JsType.RAY_FROM_CURSOR:
 				return this.pointerEventsController;
+			case JsType.ON_KEY:
 			case JsType.ON_KEYDOWN:
 			case JsType.ON_KEYPRESS:
 			case JsType.ON_KEYUP:
-			case JsType.ON_PLAYER_EVENT:
 				return this.keyboardEventsController;
 		}
 		console.warn(`no event controller defined for jsType`, jsType);

@@ -2,24 +2,37 @@ import {BaseSceneEventsController, EventContext} from './_BaseEventsController';
 import {PointerEventNode} from '../../../nodes/event/Pointer';
 // import {CursorHelper} from '../../../nodes/event/utils/CursorHelper';
 import {Raycaster, Vector2} from 'three';
-// import type {PointerEventActorNode} from '../actors/ActorsPointerEventsController';
-import {ACCEPTED_POINTER_EVENT_TYPES} from '../../../../core/event/PointerEventType';
+import {ActorPointerEventsController} from '../actors/ActorsPointerEventsController';
+import {ACCEPTED_POINTER_EVENT_TYPES, PointerEventType} from '../../../../core/event/PointerEventType';
 import {ref} from '../../../../core/reactivity/CoreReactivity';
 import {CursorHelper} from '../../../nodes/event/utils/CursorHelper';
 import {createRaycaster} from '../../../../core/RaycastHelper';
-
+import {EvaluatorPointerMethod} from '../../../nodes/js/code/assemblers/actor/Evaluator';
+import {JsType} from '../../../poly/registers/nodes/types/Js';
+import {SceneEventsDispatcher} from './EventsDispatcher';
 export interface RaycasterUpdateOptions {
 	pointsThreshold: number;
 	lineThreshold: number;
 }
 
 // type PointerEventsControllerAvailableEventNames = 'pointermove' | 'pointerdown' | 'pointerup';
+const methodNameByEventType: Record<PointerEventType, EvaluatorPointerMethod> = {
+	[PointerEventType.click]: JsType.ON_OBJECT_CLICK,
+	[PointerEventType.pointerdown]: JsType.ON_OBJECT_POINTERDOWN,
+	[PointerEventType.pointermove]: JsType.ON_OBJECT_HOVER,
+	[PointerEventType.pointerup]: JsType.ON_OBJECT_POINTERUP,
+};
 
 export class PointerEventsController extends BaseSceneEventsController<
 	MouseEvent,
 	PointerEventNode
 	// PointerEventActorNode
 > {
+	private pointerEventsController: ActorPointerEventsController;
+	constructor(dispatcher: SceneEventsDispatcher) {
+		super(dispatcher);
+		this.pointerEventsController = this.dispatcher.scene.actorsManager.pointerEventsController;
+	}
 	protected override _requireCanvasEventListeners: boolean = true;
 	private _cursorHelper: CursorHelper = new CursorHelper();
 	// init to a large value so we don't get a fake intersect
@@ -31,7 +44,7 @@ export class PointerEventsController extends BaseSceneEventsController<
 		return 'pointer';
 	}
 	acceptedEventTypes() {
-		return new Set(ACCEPTED_POINTER_EVENT_TYPES.map((n) => `${n}`));
+		return new Set([...ACCEPTED_POINTER_EVENT_TYPES]);
 	}
 
 	setRaycaster(raycaster: Raycaster) {
@@ -40,11 +53,13 @@ export class PointerEventsController extends BaseSceneEventsController<
 	}
 
 	override processEvent(eventContext: EventContext<MouseEvent>) {
+		console.log('processEvent', eventContext);
 		this._cursorHelper.setCursorForCPU(eventContext, this._cursor0.value);
 		// super.processEvent(eventContext);
 
 		const {viewer, event} = eventContext;
 		if (!(event && viewer)) {
+			console.log('either event or viewer missing');
 			return;
 		}
 
@@ -58,8 +73,9 @@ export class PointerEventsController extends BaseSceneEventsController<
 		// this._raycaster = viewer.raycastersController.raycaster0();
 		// }
 
-		const eventType = event.type;
-		if (eventType == 'pointermove') {
+		const eventType = event.type as PointerEventType;
+		if (eventType == PointerEventType.pointermove) {
+			console.log('pointermove ignored');
 			// pointermove is not processed here,
 			// since callbacks such as onObjectHover
 			// should be triggered even if the pointer is not moving
@@ -70,23 +86,33 @@ export class PointerEventsController extends BaseSceneEventsController<
 
 		const mapForEvent = this._actorEvaluatorsByEventNames.get(eventType);
 		if (!mapForEvent) {
+			console.log('no map for event', eventType);
 			return;
 		}
 		const eventEmitter = eventContext.emitter;
 		if (!eventEmitter) {
+			console.log('no emitter for context', eventContext);
 			return;
 		}
 		const evaluatorGenerators = mapForEvent.get(eventEmitter);
 		if (!evaluatorGenerators) {
+			console.log('no generators for emitter', eventEmitter);
 			return;
 		}
-		evaluatorGenerators.forEach((evaluatorGenerator) => {
-			evaluatorGenerator.traverseEvaluator((evaluator) => {
-				if (evaluator.onObjectClick) {
-					evaluator.onObjectClick();
-				}
-			});
-		});
+		const methodName = methodNameByEventType[eventType];
+		this.pointerEventsController.addTriggeredEvaluators(evaluatorGenerators, methodName);
+		// console.log('evaluatorGenerators', evaluatorGenerators);
+		//
+		// evaluatorGenerators.forEach((evaluatorGenerator) => {
+		// 	evaluatorGenerator.traverseEvaluator((evaluator) => {
+		// 		console.log({evaluator}, evaluator.onObjectClick);
+		// 		if (evaluator[methodName]) {
+		// 			evaluator[methodName]!();
+		// 		} else {
+		// 			console.log('method not found on object for event type', eventType);
+		// 		}
+		// 	});
+		// });
 		// this.dispatcher.scene.actorsManager.pointerEventsController.setTriggeredNodes(nodesToTrigger);
 	}
 
