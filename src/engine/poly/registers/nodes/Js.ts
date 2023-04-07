@@ -91,6 +91,7 @@ import {Object3DLocalToWorldJsNode} from '../../../nodes/js/Object3DLocalToWorld
 import {Object3DWorldToLocalJsNode} from '../../../nodes/js/Object3DWorldToLocal';
 import {Object3DUpdateMatrixJsNode} from '../../../nodes/js/Object3DUpdateMatrix';
 import {Object3DUpdateWorldMatrixJsNode} from '../../../nodes/js/Object3DUpdateWorldMatrix';
+import {ObjectDispatchEventJsNode} from '../../../nodes/js/ObjectDispatchEvent';
 import {OnKeyJsNode} from '../../../nodes/js/OnKey';
 import {OnKeydownJsNode} from '../../../nodes/js/OnKeydown';
 import {OnKeypressJsNode} from '../../../nodes/js/OnKeypress';
@@ -106,11 +107,14 @@ import {OnObjectHoverJsNode} from '../../../nodes/js/OnObjectHover';
 import {OnObjectPointerdownJsNode} from '../../../nodes/js/OnObjectPointerdown';
 import {OnObjectPointerupJsNode} from '../../../nodes/js/OnObjectPointerup';
 import {OnPerformanceChangeJsNode} from '../../../nodes/js/OnPerformanceChange';
+import {OnPointerdownJsNode} from '../../../nodes/js/OnPointerdown';
+import {OnPointerupJsNode} from '../../../nodes/js/OnPointerup';
 import {OnScenePauseJsNode} from '../../../nodes/js/OnScenePause';
 import {OnScenePlayJsNode} from '../../../nodes/js/OnScenePlay';
 import {OnSceneResetJsNode} from '../../../nodes/js/OnSceneReset';
 import {OnTickJsNode} from '../../../nodes/js/OnTick';
 import {OnVideoEventJsNode} from '../../../nodes/js/OnVideoEvent';
+import {OnWebXRControllerEventJsNode} from '../../../nodes/js/OnWebXRControllerEvent';
 import {OrJsNode} from '../../../nodes/js/Or';
 import {OutputJsNode} from '../../../nodes/js/Output';
 import {ParamJsNode} from '../../../nodes/js/Param';
@@ -318,6 +322,7 @@ export interface JsNodeChildrenMap {
 	object3DWorldToLocal: Object3DWorldToLocalJsNode;
 	object3DUpdateMatrix: Object3DUpdateMatrixJsNode;
 	object3DUpdateWorldMatrix: Object3DUpdateWorldMatrixJsNode;
+	objectDispatchEvent: ObjectDispatchEventJsNode;
 	onKey: OnKeyJsNode;
 	onKeydown: OnKeydownJsNode;
 	onKeypress: OnKeypressJsNode;
@@ -333,11 +338,14 @@ export interface JsNodeChildrenMap {
 	onObjectPointerdown: OnObjectPointerdownJsNode;
 	onObjectPointerup: OnObjectPointerupJsNode;
 	onPerformanceChange: OnPerformanceChangeJsNode;
+	onPointerdown: OnPointerdownJsNode;
+	onPointerup: OnPointerupJsNode;
 	onScenePause: OnScenePauseJsNode;
 	onScenePlay: OnScenePlayJsNode;
 	onSceneReset: OnSceneResetJsNode;
 	onTick: OnTickJsNode;
 	onVideoEvent: OnVideoEventJsNode;
+	onWebXRControllerEvent: OnWebXRControllerEventJsNode;
 	or: OrJsNode;
 	output: OutputJsNode;
 	param: ParamJsNode;
@@ -560,6 +568,7 @@ export class JsRegister {
 		poly.registerNode(Object3DWorldToLocalJsNode, CATEGORY_JS.GET, ONLY_ACTOR);
 		poly.registerNode(Object3DUpdateMatrixJsNode, CATEGORY_JS.GET, ONLY_ACTOR);
 		poly.registerNode(Object3DUpdateWorldMatrixJsNode, CATEGORY_JS.GET, ONLY_ACTOR);
+		poly.registerNode(ObjectDispatchEventJsNode, CATEGORY_JS.GET, ONLY_ACTOR);
 		poly.registerNode(OnKeyJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
 		poly.registerNode(OnKeydownJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
 		poly.registerNode(OnKeypressJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
@@ -576,11 +585,14 @@ export class JsRegister {
 		poly.registerNode(OnObjectPointerupJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
 
 		poly.registerNode(OnPerformanceChangeJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
+		poly.registerNode(OnPointerdownJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
+		poly.registerNode(OnPointerupJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
 		poly.registerNode(OnScenePauseJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
 		poly.registerNode(OnScenePlayJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
 		poly.registerNode(OnSceneResetJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
 		poly.registerNode(OnTickJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
 		poly.registerNode(OnVideoEventJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
+		poly.registerNode(OnWebXRControllerEventJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
 
 		poly.registerNode(OrJsNode, CATEGORY_JS.LOGIC);
 		poly.registerNode(OutputJsNode, CATEGORY_JS.GLOBALS, ONLY_WITH_GLOBALS);

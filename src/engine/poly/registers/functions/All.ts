@@ -264,7 +264,11 @@ import {
 	rayIntersectSphere,
 	rayIntersectsSphere,
 } from '../../../functions/Ray';
-
+import {
+	objectDispatchEvent,
+	getObjectLastDispatchedEventName,
+	objectAddEventListeners,
+} from '../../../functions/ObjectDispatchEvent';
 import {
 	SDFUnion,
 	SDFSubtract,
@@ -292,7 +296,19 @@ import {
 	getVideoPropertyPlaying,
 } from '../../../functions/Video';
 import {setViewer} from '../../../functions/Viewer';
-import {getWebXRTrackedMarkerMatrix} from '../../../functions/WebXR';
+import {
+	getWebXRARHitDetected,
+	getWebXRARHitMatrix,
+	getWebXRARHitPosition,
+	getWebXRARHitQuaternion,
+	getWebXRControllerObject,
+	getWebXRControllerRay,
+	getWebXRControllerHasLinearVelocity,
+	getWebXRControllerLinearVelocity,
+	getWebXRControllerHasAngularVelocity,
+	getWebXRControllerAngularVelocity,
+	getWebXRTrackedMarkerMatrix,
+} from '../../../functions/WebXR';
 //
 import {keyboardEventMatchesConfig} from '../../../functions/KeyboardEventMatchesConfig';
 import {getActorNodeParamValue} from '../../../functions/GetActorNodeParamValue';
@@ -425,6 +441,7 @@ export interface NamedFunctionMap {
 	getObjectAttributeRef: getObjectAttributeRef;
 	getObjectChild: getObjectChild;
 	getObjectHoveredState: getObjectHoveredState;
+	getObjectLastDispatchedEventName: getObjectLastDispatchedEventName;
 	getObjectProperty: getObjectProperty;
 	getObjectUserData: getObjectUserData;
 	getObjectWorldPosition: getObjectWorldPosition;
@@ -467,6 +484,16 @@ export interface NamedFunctionMap {
 	getVideoPropertyDuration: getVideoPropertyDuration;
 	getVideoPropertyMuted: getVideoPropertyMuted;
 	getVideoPropertyPlaying: getVideoPropertyPlaying;
+	getWebXRARHitDetected: getWebXRARHitDetected;
+	getWebXRARHitMatrix: getWebXRARHitMatrix;
+	getWebXRARHitPosition: getWebXRARHitPosition;
+	getWebXRARHitQuaternion: getWebXRARHitQuaternion;
+	getWebXRControllerObject: getWebXRControllerObject;
+	getWebXRControllerRay: getWebXRControllerRay;
+	getWebXRControllerHasLinearVelocity: getWebXRControllerHasLinearVelocity;
+	getWebXRControllerLinearVelocity: getWebXRControllerLinearVelocity;
+	getWebXRControllerHasAngularVelocity: getWebXRControllerHasAngularVelocity;
+	getWebXRControllerAngularVelocity: getWebXRControllerAngularVelocity;
 	getWebXRTrackedMarkerMatrix: getWebXRTrackedMarkerMatrix;
 	globalsTime: globalsTime;
 	globalsTimeDelta: globalsTimeDelta;
@@ -542,9 +569,10 @@ export interface NamedFunctionMap {
 	normalizeVector4: normalizeVector4;
 	object3DLocalToWorld: object3DLocalToWorld;
 	object3DWorldToLocal: object3DWorldToLocal;
+	objectAddEventListeners: objectAddEventListeners;
+	objectDispatchEvent: objectDispatchEvent;
 	objectUpdateMatrix: objectUpdateMatrix;
 	objectUpdateWorldMatrix: objectUpdateWorldMatrix;
-
 	orArrays: orArrays;
 	orBooleans: orBooleans;
 	particlesSystemReset: particlesSystemReset;
@@ -762,6 +790,7 @@ export class AllNamedFunctionRegister {
 			getObjectAttributeRef,
 			getObjectChild,
 			getObjectHoveredState,
+			getObjectLastDispatchedEventName,
 			getObjectProperty,
 			getObjectUserData,
 			getObjectWorldPosition,
@@ -804,6 +833,16 @@ export class AllNamedFunctionRegister {
 			getVideoPropertyDuration,
 			getVideoPropertyMuted,
 			getVideoPropertyPlaying,
+			getWebXRARHitDetected,
+			getWebXRARHitMatrix,
+			getWebXRARHitPosition,
+			getWebXRARHitQuaternion,
+			getWebXRControllerObject,
+			getWebXRControllerRay,
+			getWebXRControllerHasLinearVelocity,
+			getWebXRControllerLinearVelocity,
+			getWebXRControllerHasAngularVelocity,
+			getWebXRControllerAngularVelocity,
 			getWebXRTrackedMarkerMatrix,
 			globalsTime,
 			globalsTimeDelta,
@@ -879,9 +918,10 @@ export class AllNamedFunctionRegister {
 			normalizeVector4,
 			object3DLocalToWorld,
 			object3DWorldToLocal,
+			objectAddEventListeners,
+			objectDispatchEvent,
 			objectUpdateMatrix,
 			objectUpdateWorldMatrix,
-
 			orArrays,
 			orBooleans,
 			particlesSystemReset,

@@ -45,7 +45,7 @@ export class SetObjectScaleJsNode extends TypedJsNode<SetObjectScaleJsParamsConf
 			new JsConnectionPoint(JsConnectionPointType.OBJECT_3D, JsConnectionPointType.OBJECT_3D),
 		]);
 	}
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setTriggerableLines(shadersCollectionController: ShadersCollectionController) {
 		const object3D = inputObject3D(this, shadersCollectionController);
 		const scale = this.variableForInputParam(shadersCollectionController, this.p.scale);
 		const mult = this.variableForInputParam(shadersCollectionController, this.p.mult);
@@ -54,6 +54,6 @@ export class SetObjectScaleJsNode extends TypedJsNode<SetObjectScaleJsParamsConf
 
 		const func = Poly.namedFunctionsRegister.getFunction('setObjectScale', this, shadersCollectionController);
 		const bodyLine = func.asString(object3D, scale, mult, lerp, updateMatrix);
-		shadersCollectionController.addActionBodyLines(this, [bodyLine]);
+		shadersCollectionController.addTriggerableLines(this, [bodyLine]);
 	}
 }

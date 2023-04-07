@@ -30,14 +30,17 @@ export class SetViewerJsNode extends TypedJsNode<SetViewerJsParamsConfig> {
 		this.io.inputs.setNamedInputConnectionPoints([
 			new JsConnectionPoint(TRIGGER_CONNECTION_NAME, JsConnectionPointType.TRIGGER, CONNECTION_OPTIONS),
 		]);
+		this.io.outputs.setNamedOutputConnectionPoints([
+			new JsConnectionPoint(TRIGGER_CONNECTION_NAME, JsConnectionPointType.TRIGGER),
+		]);
 	}
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setTriggerableLines(shadersCollectionController: ShadersCollectionController) {
 		const className = this.variableForInputParam(shadersCollectionController, this.p.className);
 		const set = this.variableForInputParam(shadersCollectionController, this.p.set);
 
 		const func = Poly.namedFunctionsRegister.getFunction('setViewer', this, shadersCollectionController);
 		const bodyLine = func.asString(className, set);
 
-		shadersCollectionController.addActionBodyLines(this, [bodyLine]);
+		shadersCollectionController.addTriggerableLines(this, [bodyLine]);
 	}
 }

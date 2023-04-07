@@ -18,15 +18,12 @@ export class OnObjectPointerdownJsNode extends BaseOnObjectPointerEventJsNode {
 	static override type() {
 		return JsType.ON_OBJECT_POINTERDOWN;
 	}
-	// methodName(): EvaluatorMethodName {
-	// 	return JsType.ON_OBJECT_POINTERDOWN;
-	// }
+
 	override eventData(): EvaluatorEventData | undefined {
 		return {
 			type: PointerEventType.pointerdown,
 			emitter: this.eventEmitter(),
 			jsType: JsType.ON_OBJECT_POINTERDOWN,
-			// methodName: this.methodName(),
 		};
 	}
 
@@ -49,43 +46,4 @@ export class OnObjectPointerdownJsNode extends BaseOnObjectPointerEventJsNode {
 	): WrappedBodyLines {
 		return setLinesWithHoverCheck(this, shadersCollectionController, bodyLines);
 	}
-	// private _intersectionByObject: WeakMap<Object3D, Intersection[]> = new Map();
-	// public override receiveTrigger(context: JsNodeTriggerContext) {
-	// 	const {Object3D} = context;
-
-	// 	const pointerEventsController = this.scene().eventsDispatcher.pointerEventsController;
-	// 	const raycaster = pointerEventsController.raycaster();
-	// 	pointerEventsController.updateRaycast(this.pv);
-
-	// 	let intersections = this._intersectionByObject.get(Object3D);
-	// 	if (!intersections) {
-	// 		intersections = [];
-	// 		this._intersectionByObject.set(Object3D, intersections);
-	// 	}
-	// 	intersections.length = 0;
-	// 	raycaster.value.intersectObject(Object3D, isBooleanTrue(this.pv.traverseChildren), intersections);
-	// 	this._intersectionByObject.set(Object3D, intersections);
-	// 	if (intersections.length != 0) {
-	// 		this.runTrigger(context);
-	// 	}
-	// }
-	// public override outputValue(
-	// 	context: JsNodeTriggerContext,
-	// 	outputName: string
-	// ): ReturnValueTypeByJsConnectionPointType[JsConnectionPointType] | undefined {
-	// 	const {Object3D} = context;
-	// 	switch (outputName) {
-	// 		case JsConnectionPointType.INTERSECTION: {
-	// 			const intersections = this._intersectionByObject.get(Object3D);
-	// 			if (!intersections) {
-	// 				return;
-	// 			}
-	// 			const intersection = intersections[0];
-	// 			if (!intersection) {
-	// 				return;
-	// 			}
-	// 			return intersection as ReturnValueTypeByJsConnectionPointType[JsConnectionPointType.INTERSECTION];
-	// 		}
-	// 	}
-	// }
 }

@@ -3,18 +3,22 @@ import {LineType} from './LineType';
 import {BaseNodeType} from '../../../_Base';
 import {NetworkChildNodeType} from '../../../../poly/NodeContext';
 
-const LINE_SUFFIXES = {
+const LINE_SUFFIXES: Record<LineType, string> = {
 	[LineType.MEMBER]: '',
 	[LineType.CONSTRUCTOR]: '',
 	[LineType.DEFINE]: '',
 	[LineType.BODY]: ';',
+	// [LineType.TRIGGER]: ';',
+	// [LineType.TRIGGERABLE]: ';',
 };
 
-const LINE_PREFIXES = {
+const LINE_PREFIXES: Record<LineType, string> = {
 	[LineType.MEMBER]: '',
 	[LineType.CONSTRUCTOR]: '',
 	[LineType.DEFINE]: '',
 	[LineType.BODY]: '	',
+	// [LineType.TRIGGER]: '	',
+	// [LineType.TRIGGERABLE]: '	',
 };
 const BLOCK_START_LAST_CHAR = '{';
 const BLOCK_END_LAST_CHAR = '}';

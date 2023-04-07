@@ -12,8 +12,18 @@ import {ParamConfig, NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {JsConnectionPointType, JsConnectionPointTypeFromArrayTypeMap} from '../utils/io/connections/Js';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 import {createVariable} from './code/assemblers/_BaseJsPersistedConfigUtils';
-import {PRIMITIVE_ALLOWED_TYPES} from './_Math_Arg1Operation';
 import {componentsForType} from '../../functions/_VectorUtils';
+
+const ALLOWED_TYPES = [
+	JsConnectionPointType.BOOLEAN,
+	JsConnectionPointType.INT,
+	JsConnectionPointType.COLOR,
+	JsConnectionPointType.FLOAT,
+	JsConnectionPointType.STRING,
+	JsConnectionPointType.VECTOR2,
+	JsConnectionPointType.VECTOR3,
+	JsConnectionPointType.VECTOR4,
+];
 
 export enum JsCompareTestName {
 	EQUAL = 'Equal',
@@ -102,7 +112,7 @@ export class CompareJsNode extends TypedJsNode<CompareJsParamsConfig> {
 	protected _expectedInputTypes() {
 		let first_input_type = this.io.connection_points.first_input_connection_type();
 		if (first_input_type) {
-			if (!PRIMITIVE_ALLOWED_TYPES.includes(first_input_type)) {
+			if (!ALLOWED_TYPES.includes(first_input_type)) {
 				// if the first input type is not allowed, either leave the connection point as is,
 				// or use the default if there is none
 				const first_connection = this.io.inputs.namedInputConnectionPoints()[0];

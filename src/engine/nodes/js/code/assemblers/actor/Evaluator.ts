@@ -79,7 +79,9 @@ export type EvaluatorPointerMethod =
 	| JsType.ON_OBJECT_CLICK
 	| JsType.ON_OBJECT_HOVER
 	| JsType.ON_OBJECT_POINTERDOWN
-	| JsType.ON_OBJECT_POINTERUP;
+	| JsType.ON_OBJECT_POINTERUP
+	| JsType.ON_POINTERDOWN
+	| JsType.ON_POINTERUP;
 
 export type EvaluatorMethodName =
 	| JsType.ON_KEY
@@ -97,10 +99,14 @@ export type EvaluatorMethodName =
 	| JsType.ON_OBJECT_POINTERDOWN
 	| JsType.ON_OBJECT_POINTERUP
 	| JsType.ON_PERFORMANCE_CHANGE
+	| JsType.ON_POINTERDOWN
+	| JsType.ON_POINTERUP
 	| JsType.ON_SCENE_PAUSE
 	| JsType.ON_SCENE_PLAY
 	| JsType.ON_SCENE_RESET
-	| JsType.ON_TICK;
+	| JsType.ON_TICK
+	| JsType.ON_VIDEO_EVENT
+	| JsType.ON_WEBXR_CONTROLLER_EVENT;
 export const EVALUATOR_METHOD_NAMES: Array<EvaluatorMethodName> = [
 	JsType.ON_KEY,
 	JsType.ON_KEYDOWN,
@@ -117,17 +123,21 @@ export const EVALUATOR_METHOD_NAMES: Array<EvaluatorMethodName> = [
 	JsType.ON_OBJECT_POINTERDOWN,
 	JsType.ON_OBJECT_POINTERUP,
 	JsType.ON_PERFORMANCE_CHANGE,
+	JsType.ON_POINTERDOWN,
+	JsType.ON_POINTERUP,
 	JsType.ON_SCENE_PAUSE,
 	JsType.ON_SCENE_PLAY,
 	JsType.ON_SCENE_RESET,
 	JsType.ON_TICK,
+	JsType.ON_VIDEO_EVENT,
+	JsType.ON_WEBXR_CONTROLLER_EVENT,
 ];
 
 export interface EvaluatorEventData extends EventData {
 	jsType: JsType;
 	// methodName: EvaluatorMethodName;
 }
-
+type OnDisposeCallback = () => void;
 export class ActorEvaluator {
 	protected scene: PolyScene;
 	protected timeController: TimeController;
@@ -152,10 +162,30 @@ export class ActorEvaluator {
 	onObjectPointerdown?: TriggerCallback;
 	onObjectPointerup?: TriggerCallback;
 	onPerformanceChange?: TriggerCallback;
+	onPointerdown?: TriggerCallback;
+	onPointerup?: TriggerCallback;
 	onScenePause?: TriggerCallback;
 	onScenePlay?: TriggerCallback;
 	onSceneReset?: TriggerCallback;
 	onTick?: TriggerCallback;
+	onVideoEvent?: TriggerCallback;
+	onWebXRControllerEvent?: TriggerCallback;
+
+	// dispose logic
+	_onDisposeCallbacks?: OnDisposeCallback[];
+	onDispose(callback: OnDisposeCallback) {
+		this._onDisposeCallbacks = this._onDisposeCallbacks || [];
+		this._onDisposeCallbacks.push(callback);
+	}
+	dispose() {
+		if (!this._onDisposeCallbacks) {
+			return;
+		}
+		let callback: OnDisposeCallback | undefined;
+		while ((callback = this._onDisposeCallbacks.pop())) {
+			callback();
+		}
+	}
 }
 
 export enum EvaluatorConstant {

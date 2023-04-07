@@ -20,6 +20,9 @@ export class OnObjectHoverJsNode extends BaseOnObjectPointerEventJsNode {
 	static override type() {
 		return JsType.ON_OBJECT_HOVER;
 	}
+	override isTriggering() {
+		return true;
+	}
 	// methodName(): EvaluatorMethodName {
 	// 	return JsType.ON_OBJECT_HOVER;
 	// }
@@ -56,11 +59,7 @@ export class OnObjectHoverJsNode extends BaseOnObjectPointerEventJsNode {
 		// ]);
 	}
 
-	override wrappedBodyLines(
-		shadersCollectionController: ShadersCollectionController,
-		bodyLines: string[],
-		existingMethodNames: Set<string>
-	) {
+	override setTriggeringLines(shadersCollectionController: ShadersCollectionController, triggeredMethods: string) {
 		const object3D = inputObject3D(this, shadersCollectionController);
 		const traverseChildren = this.variableForInputParam(shadersCollectionController, this.p.traverseChildren);
 		const lineThreshold = this.variableForInputParam(shadersCollectionController, this.p.lineThreshold);
@@ -73,18 +72,37 @@ export class OnObjectHoverJsNode extends BaseOnObjectPointerEventJsNode {
 		const bodyLine = func.asString(object3D, traverseChildren, lineThreshold, pointsThreshold);
 
 		const outHovered = this.jsVarName(OnObjectHoverJsNodeOutputName.hovered);
-		const methodName = this.type();
+		this._addHoveredRef(shadersCollectionController);
+		// shadersCollectionController.addComputed(this, [
+		// 	{
+		// 		dataType: JsConnectionPointType.BOOLEAN,
+		// 		varName: outHovered,
+		// 		value: 'false',
+		// 	},
+		// ]);
+
+		// const methodName = this.wrappedBodyLinesMethodName();
 		const newValue = `newHovered`;
 		const currentValue = `currentHovered`;
 		//
-		const wrappedLines: string = `${methodName}(){
-			const ${newValue} = ${bodyLine};
-			const ${currentValue} = this.${outHovered}.value;
-			this.${outHovered}.value = ${newValue};
-			if( ${newValue} != ${currentValue} ){
-				${bodyLines.join('\n')}
-			}
-		}`;
-		return {methodNames: [methodName], wrappedLines};
+		const bodyLines = [
+			`const ${newValue} = ${bodyLine};`,
+			`const ${currentValue} = this.${outHovered}.value;`,
+			`this.${outHovered}.value = ${newValue};`,
+			`if( ${newValue} != ${currentValue} ){`,
+			`${triggeredMethods}`,
+			`}`,
+		];
+		// const wrappedLines: string = `${methodName}(){
+		// 	const ${newValue} = ${bodyLine};
+		// 	const ${currentValue} = this.${outHovered}.value;
+		// 	this.${outHovered}.value = ${newValue};
+		// 	if( ${newValue} != ${currentValue} ){
+		// 		${bodyLines.join('\n')}
+		// 	}
+		// }`;
+		shadersCollectionController.addTriggeringLines(this, bodyLines);
+
+		// return {methodNames: [methodName], wrappedLines};
 	}
 }

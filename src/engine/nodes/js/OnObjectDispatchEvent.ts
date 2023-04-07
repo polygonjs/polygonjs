@@ -3,17 +3,21 @@
  *
  *
  */
-import {Object3D} from 'three';
 import {TRIGGER_CONNECTION_NAME, TypedJsNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {JsConnectionPoint, JsConnectionPointType, JS_CONNECTION_POINT_IN_NODE_DEF} from '../utils/io/connections/Js';
-// import {objectsForJsNode} from '../../scene/utils/actors/JssManagerUtils';
 import {JsType} from '../../poly/registers/nodes/types/Js';
+import {onObjectDispatchFunctionNameByEventName} from '../../functions/ObjectDispatchEvent';
+import {inputObject3D} from './_BaseObject3D';
+import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {Poly} from '../../Poly';
+import {InitFunctionJsDefinition} from './utils/JsDefinition';
+import {sanitizeName} from '../../../core/String';
 
 enum OnObjectDispatchEventJsNodeInputName {
 	eventName = 'eventName',
 }
-type Listener = () => void;
+// type Listener = () => void;
 
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
 class OnObjectDispatchEventJsParamsConfig extends NodeParamsConfig {
@@ -27,7 +31,9 @@ export class OnObjectDispatchEventJsNode extends TypedJsNode<OnObjectDispatchEve
 	static override type(): JsType.ON_OBJECT_DISPATCH_EVENT {
 		return JsType.ON_OBJECT_DISPATCH_EVENT;
 	}
-
+	override isTriggering() {
+		return true;
+	}
 	override initializeNode() {
 		super.initializeNode();
 		this.io.connection_points.spare_params.setInputlessParamNames(['eventNames']);
@@ -48,6 +54,40 @@ export class OnObjectDispatchEventJsNode extends TypedJsNode<OnObjectDispatchEve
 			),
 		]);
 	}
+	override wrappedBodyLinesMethodName() {
+		return onObjectDispatchFunctionNameByEventName(sanitizeName(this.pv.eventNames));
+	}
+	override setTriggeringLines(shadersCollectionController: ShadersCollectionController, triggeredMethods: string) {
+		const object3D = inputObject3D(this, shadersCollectionController);
+		const eventNames = this.variableForInputParam(shadersCollectionController, this.p.eventNames);
+		const func = Poly.namedFunctionsRegister.getFunction(
+			'objectAddEventListeners',
+			this,
+			shadersCollectionController
+		);
+		const bodyLine = func.asString(
+			object3D,
+			eventNames,
+			`this`,
+			`this.${this.wrappedBodyLinesMethodName()}.bind(this)`
+		);
+		// shadersCollectionController.addActionBodyLines(this, [bodyLine]);
+		shadersCollectionController.addDefinitions(this, [
+			new InitFunctionJsDefinition(
+				this,
+				shadersCollectionController,
+				JsConnectionPointType.OBJECT_3D,
+				this.path(),
+				bodyLine
+			),
+		]);
+
+		shadersCollectionController.addTriggeringLines(this, [triggeredMethods]);
+	}
+
+	// override setLines(shadersCollectionController: ShadersCollectionController) {
+
+	// }
 
 	// private _lastReceivedEventName: string | undefined;
 
@@ -58,20 +98,20 @@ export class OnObjectDispatchEventJsNode extends TypedJsNode<OnObjectDispatchEve
 	// 	return this._lastReceivedEventName || '';
 	// }
 
-	initOnPlay() {
-		this._addEventListenersToObjects();
-	}
-	disposeOnPause() {}
-	private _addEventListenersToObjects() {
-		// const eventNames = this.pv.eventNames.split(' ');
-		// const objects = objectsForJsNode(this);
-		// for (let object of objects) {
-		// 	for (let eventName of eventNames) {
-		// 		this._createEventListener(eventName, object);
-		// 	}
-		// }
-	}
-	private _listenerByObject: Map<Object3D, Map<string, Listener>> = new Map();
+	// initOnPlay() {
+	// 	this._addEventListenersToObjects();
+	// }
+	// disposeOnPause() {}
+	// private _addEventListenersToObjects() {
+	// const eventNames = this.pv.eventNames.split(' ');
+	// const objects = objectsForJsNode(this);
+	// for (let object of objects) {
+	// 	for (let eventName of eventNames) {
+	// 		this._createEventListener(eventName, object);
+	// 	}
+	// }
+	// }
+	// private _listenerByObject: Map<Object3D, Map<string, Listener>> = new Map();
 	// private _createEventListener(eventName: string, Object3D: Object3D) {
 	// 	let listenerByEventName = this._listenerByObject.get(Object3D);
 	// 	if (!listenerByEventName) {
@@ -88,11 +128,11 @@ export class OnObjectDispatchEventJsNode extends TypedJsNode<OnObjectDispatchEve
 	// 		listenerByEventName.set(eventName, listener);
 	// 	}
 	// }
-	override dispose(): void {
-		this._listenerByObject.forEach((map, Object3D) => {
-			map.forEach((listener, eventName) => {
-				Object3D.removeEventListener(eventName, listener);
-			});
-		});
-	}
+	// override dispose(): void {
+	// 	this._listenerByObject.forEach((map, Object3D) => {
+	// 		map.forEach((listener, eventName) => {
+	// 			Object3D.removeEventListener(eventName, listener);
+	// 		});
+	// 	});
+	// }
 }

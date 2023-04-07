@@ -84,6 +84,9 @@ export class TypedJsNode<K extends NodeParamsConfig> extends TypedNode<NodeConte
 	eventData(): EvaluatorEventData | Array<EvaluatorEventData> | undefined {
 		return undefined;
 	}
+	isTriggering() {
+		return false;
+	}
 
 	override initializeBaseNode() {
 		this.uiData.setLayoutHorizontal();
@@ -214,12 +217,25 @@ export class TypedJsNode<K extends NodeParamsConfig> extends TypedNode<NodeConte
 	setLines(shadersCollectionController: ShadersCollectionController) {
 		// console.warn(`setLines not defined for node '${this.path()}'`);
 	}
+	setTriggeringLines(shadersCollectionController: ShadersCollectionController, triggeredMethods: string): void {
+		if (!this.isTriggering()) {
+			console.error(`node '${this.path()}' is not triggering`);
+		}
+		shadersCollectionController.addTriggeringLines(this, [triggeredMethods]);
+	}
+	setTriggerableLines(shadersCollectionController: ShadersCollectionController): void {
+		// console.warn(`setLines not defined for node '${this.path()}'`);
+	}
+	// addConstructorInitFunctionLines(shadersCollectionController: ShadersCollectionController): void {}
+	wrappedBodyLinesMethodName() {
+		return this.type();
+	}
 	wrappedBodyLines(
 		shadersCollectionController: ShadersCollectionController,
 		bodyLines: string[],
 		existingMethodNames: Set<string>
 	): WrappedBodyLines | undefined {
-		const methodName = this.type();
+		const methodName = this.wrappedBodyLinesMethodName();
 		if (existingMethodNames.has(methodName)) {
 			return;
 		}

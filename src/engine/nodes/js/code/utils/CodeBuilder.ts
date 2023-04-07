@@ -14,12 +14,23 @@ import {NodeContext} from '../../../../poly/NodeContext';
 import {CoreGraphNodeId} from '../../../../../core/graph/CoreGraph';
 import {ArrayUtils} from '../../../../../core/ArrayUtils';
 import {BaseJsShaderAssembler} from '../assemblers/_Base';
+// import {sanitizeName} from '../../../../../core/String';
+import {ActorJsSopNode} from '../../../sop/ActorJs';
+import {connectedTriggerableNodes, nodeMethodName} from '../assemblers/actor/ActorAssemblerUtils';
+import {SetUtils} from '../../../../../core/SetUtils';
+// import {connectedTriggerableNodes} from '../assemblers/actor/ActorAssemblerUtils';
 
 type RootNodesForShaderMethod = (shader_name: ShaderName, rootNodes: BaseJsNodeType[]) => BaseJsNodeType[];
 // let nextId = 1;
 
 export interface CodeBuilderSetCodeLinesOptions {
 	otherFragmentShaderCollectionController?: ShadersCollectionController;
+	actor: {
+		triggeringNodes: Set<BaseJsNodeType>;
+		triggerableNodes: Set<BaseJsNodeType>;
+		functionNode: ActorJsSopNode;
+		// triggerNodesByType: Map<string, Set<BaseJsNodeType>>;
+	};
 }
 
 export class CodeBuilder {
@@ -95,6 +106,7 @@ export class CodeBuilder {
 			this.shaderNames()[0],
 			this._assembler
 		);
+
 		this.reset();
 		for (let shaderName of this.shaderNames()) {
 			let nodes = nodesByShaderName.get(shaderName) || [];
@@ -106,7 +118,79 @@ export class CodeBuilder {
 					node.setLines(this._shadersCollectionController);
 				}
 			}
+			if (setCodeLinesOptions?.actor) {
+				const {triggeringNodes, triggerableNodes} = setCodeLinesOptions.actor;
+				// triggering nodes
+				for (let triggeringNode of triggeringNodes) {
+					const currentTriggerableNodes = new Set<BaseJsNodeType>();
+					connectedTriggerableNodes({
+						triggeringNodes,
+						triggerableNodes: currentTriggerableNodes,
+						recursive: false,
+					});
+					const triggerableMethodNames = SetUtils.toArray(currentTriggerableNodes).map((n) =>
+						nodeMethodName(n)
+					);
+					triggeringNode.setTriggeringLines(
+						this._shadersCollectionController,
+						triggerableMethodNames.map((methodName) => `this.${methodName}()`).join('\n')
+					);
+				}
+				// triggerable nodes
+				for (let triggerableNode of triggerableNodes) {
+					triggerableNode.setTriggerableLines(this._shadersCollectionController);
+				}
+			}
+
+			//
+			//
+			// create triggerable methods
+			//
+			//
+			// if (setCodeLinesOptions) {
+			// 	const shadersCollectionController = this._shadersCollectionController;
+			// 	shadersCollectionController.withAllowActionLines(() => {
+			// 		const {functionNode, triggerNodesByType} = setCodeLinesOptions;
+			// 		const nodeMethodName = (node: BaseJsNodeType) =>
+			// 			sanitizeName(node.path().replace(functionNode.path(), ''));
+
+			// 		// const triggerableFunctionLines: string[] = [];
+			// 		triggerNodesByType.forEach((triggerNodes, nodeType) => {
+			// 			const triggerableNodes: Set<BaseJsNodeType> = new Set();
+			// 			connectedTriggerableNodes({triggerNodes, triggerableNodes, recursive: true});
+			// 			for (let node of triggerableNodes) {
+			// 				// const shadersCollectionController = new ShadersCollectionController(
+			// 				// 	this.shaderNames(),
+			// 				// 	this.shaderNames()[0],
+			// 				// 	this
+			// 				// );
+			// 				// shadersCollectionController.setAllowActionLines(true);
+			// 				node.setLines(shadersCollectionController);
+			// 				const bodyLines = shadersCollectionController.bodyLines(ShaderName.FRAGMENT, node);
+			// 				console.log(bodyLines);
+			// 				if (bodyLines) {
+			// 					const methodName = nodeMethodName(node);
+			// 					const wrappedLines = `${methodName}(){
+			// 	${bodyLines.join('\n')}
+			// }`;
+			// 					// triggerableFunctionLines.push(wrappedLines);
+			// 					console.log({wrappedLines});
+			// 					shadersCollectionController._addBodyLines(node, [wrappedLines], shaderName);
+			// 				}
+			// 			}
+			// 		});
+			// 	});
+			// }
+
+			// trigger node lines
+			// const triggerNodes = setCodeLinesOptions?.actor.triggerNodes;
+			// if (triggerNodes) {
+			// 	for (let triggerNode of triggerNodes) {
+			// 		triggerNode.addConstructorInitFunctionLines(this._shadersCollectionController);
+			// 	}
+			// }
 		}
+
 		// set param configs
 		if (this._param_configs_set_allowed) {
 			for (let param_node of paramNodes) {
@@ -188,11 +272,16 @@ export class CodeBuilder {
 				}
 			}
 
-			this._addCodeLines(nodes, shaderName, additionalDefinitions);
+			this._addCodeLines(nodes, shaderName, additionalDefinitions, options);
 		}
 	}
 
-	private _addCodeLines(nodes: BaseJsNodeType[], shaderName: ShaderName, additionalDefinitions?: BaseJsDefinition[]) {
+	private _addCodeLines(
+		nodes: BaseJsNodeType[],
+		shaderName: ShaderName,
+		additionalDefinitions?: BaseJsDefinition[],
+		options?: CodeBuilderSetCodeLinesOptions
+	) {
 		// this.addDefinitions(nodes, shaderName, JsDefinitionType.PRECISION, LineType.DEFINE, additionalDefinitions);
 		// this.addDefinitions(
 		// 	nodes,
@@ -205,13 +294,52 @@ export class CodeBuilder {
 		// this.addDefinitions(nodes, shaderName, JsDefinitionType.VARYING, LineType.DEFINE, additionalDefinitions);
 		// this.addDefinitions(nodes, shaderName, JsDefinitionType.ATTRIBUTE, LineType.DEFINE, additionalDefinitions);
 		// this.addDefinitions(nodes, shaderName, JsDefinitionType.INIT, LineType.DEFINE, additionalDefinitions);
-		this.addDefinitions(nodes, shaderName, JsDefinitionType.LOCAL_FUNCTION, LineType.DEFINE, additionalDefinitions);
-		this.addDefinitions(nodes, shaderName, JsDefinitionType.COMPUTED, LineType.MEMBER, additionalDefinitions);
-		this.addDefinitions(nodes, shaderName, JsDefinitionType.CONSTANT, LineType.MEMBER, additionalDefinitions);
-		this.addDefinitions(nodes, shaderName, JsDefinitionType.REF, LineType.MEMBER, additionalDefinitions);
-		this.addDefinitions(nodes, shaderName, JsDefinitionType.WATCH, LineType.CONSTRUCTOR, additionalDefinitions);
+		const allNodes =
+			options && options.actor
+				? nodes
+						.concat(SetUtils.toArray(options.actor.triggeringNodes))
+						.concat(SetUtils.toArray(options.actor.triggerableNodes))
+				: nodes;
 
-		this.add_code_line_for_nodes_and_line_type(nodes, shaderName, LineType.BODY);
+		this.addDefinitions(nodes, shaderName, JsDefinitionType.LOCAL_FUNCTION, LineType.DEFINE, additionalDefinitions);
+		this.addDefinitions(allNodes, shaderName, JsDefinitionType.COMPUTED, LineType.MEMBER, additionalDefinitions);
+		this.addDefinitions(nodes, shaderName, JsDefinitionType.CONSTANT, LineType.MEMBER, additionalDefinitions);
+		this.addDefinitions(allNodes, shaderName, JsDefinitionType.REF, LineType.MEMBER, additionalDefinitions);
+
+		// console.log(
+		// 	'triggerNodes',
+		// 	options?.triggerNodes?.map((n) => n.name())
+		// );
+
+		// const initFunctionNodes = nodes.concat(options?.actor.triggerNodes || []);
+		this.addDefinitions(
+			allNodes,
+			shaderName,
+			JsDefinitionType.INIT_FUNCTION,
+			LineType.CONSTRUCTOR,
+			additionalDefinitions
+		);
+		this.addDefinitions(nodes, shaderName, JsDefinitionType.WATCH, LineType.CONSTRUCTOR, additionalDefinitions);
+		if (options?.actor.triggeringNodes) {
+			this.addDefinitions(
+				SetUtils.toArray(options.actor.triggeringNodes),
+				shaderName,
+				JsDefinitionType.TRIGGERING,
+				LineType.BODY,
+				additionalDefinitions
+			);
+		}
+		if (options?.actor.triggerableNodes) {
+			this.addDefinitions(
+				SetUtils.toArray(options.actor.triggerableNodes),
+				shaderName,
+				JsDefinitionType.TRIGGERABLE,
+				LineType.BODY,
+				additionalDefinitions
+			);
+		}
+
+		this.add_code_line_for_nodes_and_line_type(allNodes, shaderName, LineType.BODY);
 	}
 
 	private addDefinitions(

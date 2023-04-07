@@ -45,20 +45,24 @@ const EVENT_MAP_LOGIC: Record<EvaluatorMethodName, EventHandlerType> = {
 	[JsType.ON_KEYPRESS]: EventHandlerType.onTick,
 	[JsType.ON_KEYUP]: EventHandlerType.onTick,
 	[JsType.ON_MANUAL_TRIGGER]: EventHandlerType.instant,
-	[JsType.ON_MAPBOX_CAMERA_MOVE]: EventHandlerType.onTick,
-	[JsType.ON_MAPBOX_CAMERA_MOVE_START]: EventHandlerType.onTick,
-	[JsType.ON_MAPBOX_CAMERA_MOVE_END]: EventHandlerType.onTick,
-	[JsType.ON_OBJECT_ATTRIBUTE_UPDATE]: EventHandlerType.onTick,
+	[JsType.ON_MAPBOX_CAMERA_MOVE]: EventHandlerType.onTick, // TODO
+	[JsType.ON_MAPBOX_CAMERA_MOVE_START]: EventHandlerType.onTick, // TODO
+	[JsType.ON_MAPBOX_CAMERA_MOVE_END]: EventHandlerType.onTick, // TODO
+	[JsType.ON_OBJECT_ATTRIBUTE_UPDATE]: EventHandlerType.onTick, // TODO
 	[JsType.ON_OBJECT_CLICK]: EventHandlerType.onTick,
-	[JsType.ON_OBJECT_DISPATCH_EVENT]: EventHandlerType.onTick,
+	[JsType.ON_OBJECT_DISPATCH_EVENT]: EventHandlerType.instant, // TODO
 	[JsType.ON_OBJECT_HOVER]: EventHandlerType.onTick,
 	[JsType.ON_OBJECT_POINTERDOWN]: EventHandlerType.onTick,
 	[JsType.ON_OBJECT_POINTERUP]: EventHandlerType.onTick,
 	[JsType.ON_PERFORMANCE_CHANGE]: EventHandlerType.instant,
+	[JsType.ON_POINTERDOWN]: EventHandlerType.onTick,
+	[JsType.ON_POINTERUP]: EventHandlerType.onTick,
 	[JsType.ON_SCENE_PAUSE]: EventHandlerType.instant,
 	[JsType.ON_SCENE_PLAY]: EventHandlerType.instant,
-	[JsType.ON_SCENE_RESET]: EventHandlerType.instant,
+	[JsType.ON_SCENE_RESET]: EventHandlerType.instant, // TODO
 	[JsType.ON_TICK]: EventHandlerType.onTick,
+	[JsType.ON_VIDEO_EVENT]: EventHandlerType.onTick, // TODO
+	[JsType.ON_WEBXR_CONTROLLER_EVENT]: EventHandlerType.onTick, // TODO
 };
 const ON_TICK_METHOD_NAMES: Set<EvaluatorMethodName> = new Set(
 	EVALUATOR_METHOD_NAMES.filter((methodName) => EVENT_MAP_LOGIC[methodName] == EventHandlerType.onTick)

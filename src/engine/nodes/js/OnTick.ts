@@ -25,7 +25,9 @@ export class OnTickJsNode extends TypedJsNode<OnTickJsParamsConfig> {
 	static override type() {
 		return JsType.ON_TICK;
 	}
-
+	override isTriggering() {
+		return true;
+	}
 	override initializeNode() {
 		this.io.outputs.setNamedOutputConnectionPoints([
 			new JsConnectionPoint(TRIGGER_CONNECTION_NAME, JsConnectionPointType.TRIGGER),

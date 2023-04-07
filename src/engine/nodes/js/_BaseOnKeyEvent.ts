@@ -66,7 +66,7 @@ export abstract class BaseOnKeyEventJsNode extends BaseUserInputJsNode<BaseOnKey
 		);
 		const bodyLine = func.asString(keyCodes, ctrlKey, altKey, shiftKey, metaKey);
 
-		const methodName = this.type();
+		const methodName = this.wrappedBodyLinesMethodName();
 		//
 		const wrappedLines: string = `${methodName}(){
 			if( !${bodyLine} ){

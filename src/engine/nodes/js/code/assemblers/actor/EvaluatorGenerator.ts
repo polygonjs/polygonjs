@@ -23,6 +23,10 @@ export class ActorEvaluatorGenerator {
 		this._evaluatorByObject.forEach(callback);
 	}
 	dispose() {
+		this._evaluatorByObject.forEach((evaluator) => {
+			evaluator.dispose();
+		});
+
 		this._evaluatorByObject.clear();
 	}
 }

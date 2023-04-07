@@ -20,17 +20,6 @@ export class JsLinesController {
 		return this._shader_name;
 	}
 
-	// merge(otherLinesController: LinesController) {
-	// 	console.log('merge start');
-	// 	otherLinesController._definitionsByNodeId.forEach((definitions, nodeId) => {
-	// 		this._addDefinitionsForNodeId(nodeId, definitions);
-	// 	});
-	// 	otherLinesController._bodyLinesByNodeId.forEach((lines, nodeId) => {
-	// 		this._addBodyLinesForNodeId(nodeId, lines);
-	// 	});
-	// 	console.log('merge end');
-	// }
-
 	addDefinitions(node: BaseJsNodeType, definitions: BaseJsDefinition[]) {
 		this._addDefinitionsForNodeId(node.graphNodeId(), definitions);
 	}

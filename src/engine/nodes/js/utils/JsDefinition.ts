@@ -2,6 +2,7 @@ import {BaseJsNodeType} from '../_Base';
 import {TypedJsDefinitionCollection} from './JsDefinitionCollection';
 import {JsConnectionPointType} from '../../utils/io/connections/Js';
 import {ShadersCollectionController} from '../code/utils/ShadersCollectionController';
+import {nodeMethodName} from '../code/assemblers/actor/ActorAssemblerUtils';
 
 export enum JsDefinitionType {
 	// ATTRIBUTE = 'attribute',
@@ -10,6 +11,9 @@ export enum JsDefinitionType {
 	CONSTANT = 'constant',
 	REF = 'ref',
 	WATCH = 'watch',
+	INIT_FUNCTION = 'initFunction',
+	TRIGGERING = 'triggering',
+	TRIGGERABLE = 'triggerable',
 }
 
 export abstract class TypedJsDefinition<T extends JsDefinitionType> {
@@ -160,6 +164,55 @@ export class WatchedValueJsDefinition extends TypedJsDefinition<JsDefinitionType
 	}
 	line() {
 		return `	watch(this.${this.name()}.value, ()=> {${this._value}})`;
+	}
+}
+export class InitFunctionJsDefinition extends TypedJsDefinition<JsDefinitionType.INIT_FUNCTION> {
+	constructor(
+		protected override _node: BaseJsNodeType,
+		protected override _shaderCollectionController: ShadersCollectionController,
+		protected override _dataType: JsConnectionPointType,
+		protected override _name: string,
+		protected _value: string
+	) {
+		super(JsDefinitionType.INIT_FUNCTION, _node, _shaderCollectionController, _dataType, _name);
+		// _shaderCollectionController.addComputedVarName(this.name());
+	}
+	line() {
+		return `	${this._value}`;
+	}
+}
+export class TriggeringJsDefinition extends TypedJsDefinition<JsDefinitionType.TRIGGERING> {
+	constructor(
+		protected override _node: BaseJsNodeType,
+		protected override _shaderCollectionController: ShadersCollectionController,
+		protected override _dataType: JsConnectionPointType,
+		protected override _name: string,
+		protected _value: string
+	) {
+		super(JsDefinitionType.TRIGGERING, _node, _shaderCollectionController, _dataType, _name);
+		// _shaderCollectionController.addComputedVarName(this.name());
+	}
+	line() {
+		return `${this._name}(){
+			${this._value}
+		}`;
+	}
+}
+export class TriggerableJsDefinition extends TypedJsDefinition<JsDefinitionType.TRIGGERABLE> {
+	constructor(
+		protected override _node: BaseJsNodeType,
+		protected override _shaderCollectionController: ShadersCollectionController,
+		protected override _dataType: JsConnectionPointType,
+		protected override _name: string,
+		protected _value: string
+	) {
+		super(JsDefinitionType.TRIGGERABLE, _node, _shaderCollectionController, _dataType, _name);
+		// _shaderCollectionController.addComputedVarName(this.name());
+	}
+	line() {
+		return `${nodeMethodName(this._node)}(){
+			${this._value}
+		}`;
 	}
 }
 

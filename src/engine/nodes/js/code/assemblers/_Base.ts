@@ -55,6 +55,8 @@ export const INSERT_MEMBERS_AFTER = '// insert members';
 export const INSERT_DEFINE_AFTER = '// insert defines';
 export const INSERT_CONSTRUCTOR_AFTER = '// insert after constructor';
 export const INSERT_BODY_AFTER = '// insert body';
+// export const INSERT_TRIGGER_AFTER = '// insert trigger';
+// export const INSERT_TRIGGERABLE_AFTER = '// insert triggerable';
 
 const INSERT_MEMBER_AFTER_MAP: Map<ShaderName, string> = new Map([
 	// [ShaderName.VERTEX, '#include <common>'],
@@ -72,6 +74,14 @@ const INSERT_BODY_AFTER_MAP: Map<ShaderName, string> = new Map([
 	// [ShaderName.VERTEX, '#include <color_vertex>'],
 	[ShaderName.FRAGMENT, INSERT_BODY_AFTER],
 ]);
+// const INSERT_TRIGGER_AFTER_MAP: Map<ShaderName, string> = new Map([
+// 	// [ShaderName.VERTEX, '#include <color_vertex>'],
+// 	[ShaderName.FRAGMENT, INSERT_TRIGGER_AFTER],
+// ]);
+// const INSERT_TRIGGERABLE_AFTER_MAP: Map<ShaderName, string> = new Map([
+// 	// [ShaderName.VERTEX, '#include <color_vertex>'],
+// 	[ShaderName.FRAGMENT, INSERT_TRIGGERABLE_AFTER],
+// ]);
 const LINES_TO_REMOVE_MAP: Map<ShaderName, string[]> = new Map([
 	// [ShaderName.VERTEX, ['#include <begin_vertex>', '#include <beginnormal_vertex>']],
 	[ShaderName.FRAGMENT, []],
@@ -490,6 +500,12 @@ export abstract class BaseJsShaderAssembler extends TypedAssembler<NodeContext.J
 	protected insertBodyAfter(shaderName: ShaderName): string | undefined {
 		return INSERT_BODY_AFTER_MAP.get(shaderName);
 	}
+	// protected insertTriggerAfter(shaderName: ShaderName): string | undefined {
+	// 	return INSERT_TRIGGER_AFTER_MAP.get(shaderName);
+	// }
+	// protected insertTriggerableAfter(shaderName: ShaderName): string | undefined {
+	// 	return INSERT_TRIGGERABLE_AFTER_MAP.get(shaderName);
+	// }
 	protected linesToRemove(shaderName: ShaderName): string[] | undefined {
 		return LINES_TO_REMOVE_MAP.get(shaderName);
 	}
@@ -503,6 +519,8 @@ export abstract class BaseJsShaderAssembler extends TypedAssembler<NodeContext.J
 	private _replaceTemplate(template: string, shaderName: ShaderName) {
 		const memberLines = this.builder_lines(shaderName, LineType.MEMBER);
 		const constructorLines = this.builder_lines(shaderName, LineType.CONSTRUCTOR);
+		// const triggerLines = this.builder_lines(shaderName, LineType.TRIGGER);
+		// const triggerableLines = this.builder_lines(shaderName, LineType.TRIGGERABLE);
 		const defineLines = this.builder_lines(shaderName, LineType.DEFINE);
 		// const define = this.builder_lines(shaderName, LineType.DEFINE);
 		// let all_define = function_declaration.concat(define);
@@ -521,10 +539,14 @@ export abstract class BaseJsShaderAssembler extends TypedAssembler<NodeContext.J
 		const lineBeforeDefine = this.insertDefineAfter(shaderName);
 		const lineBeforeConstructor = this.insertConstructorAfter(shaderName);
 		const lineBeforeBody = this.insertBodyAfter(shaderName);
+		// const lineBeforeTrigger = this.insertTriggerAfter(shaderName);
+		// const lineBeforeTriggerable = this.insertTriggerableAfter(shaderName);
 		const linesToRemove = this.linesToRemove(shaderName);
 		let lineBeforeMemberFound = false;
 		let lineBeforeDefineFound = false;
 		let lineBeforeConstructorFound = false;
+		// let lineBeforeTriggerFound = false;
+		// let lineBeforeTriggerableFound = false;
 		let lineBeforeBodyFoundOnPreviousLine = false;
 		let lineBeforeBodyFound = false;
 
@@ -547,6 +569,18 @@ export abstract class BaseJsShaderAssembler extends TypedAssembler<NodeContext.J
 				}
 				lineBeforeConstructorFound = false;
 			}
+			// if (lineBeforeTriggerFound == true) {
+			// 	if (triggerLines) {
+			// 		this._insertLines(newLines, triggerLines);
+			// 	}
+			// 	lineBeforeTriggerFound = false;
+			// }
+			// if (lineBeforeTriggerableFound == true) {
+			// 	if (triggerableLines) {
+			// 		this._insertLines(newLines, triggerableLines);
+			// 	}
+			// 	lineBeforeTriggerableFound = false;
+			// }
 			if (lineBeforeBodyFoundOnPreviousLine == true) {
 				// this._insert_default_body_declarations(new_lines, shaderName)
 				if (body) {
@@ -577,6 +611,12 @@ export abstract class BaseJsShaderAssembler extends TypedAssembler<NodeContext.J
 			if (lineBeforeConstructor && templateLine.indexOf(lineBeforeConstructor) >= 0) {
 				lineBeforeConstructorFound = true;
 			}
+			// if (lineBeforeTrigger && templateLine.indexOf(lineBeforeTrigger) >= 0) {
+			// 	lineBeforeTriggerFound = true;
+			// }
+			// if (lineBeforeTriggerable && templateLine.indexOf(lineBeforeTriggerable) >= 0) {
+			// 	lineBeforeTriggerableFound = true;
+			// }
 			if (lineBeforeMember && templateLine.indexOf(lineBeforeMember) >= 0) {
 				lineBeforeMemberFound = true;
 			}

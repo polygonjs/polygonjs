@@ -4,4 +4,6 @@ export enum LineType {
 	CONSTRUCTOR = 'constructor',
 	DEFINE = 'define',
 	BODY = 'body',
+	// TRIGGER = 'trigger',
+	// TRIGGERABLE = 'triggerable',
 }

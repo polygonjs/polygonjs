@@ -16,11 +16,11 @@ export interface RaycasterUpdateOptions {
 }
 
 // type PointerEventsControllerAvailableEventNames = 'pointermove' | 'pointerdown' | 'pointerup';
-const methodNameByEventType: Record<PointerEventType, EvaluatorPointerMethod> = {
-	[PointerEventType.click]: JsType.ON_OBJECT_CLICK,
-	[PointerEventType.pointerdown]: JsType.ON_OBJECT_POINTERDOWN,
-	[PointerEventType.pointermove]: JsType.ON_OBJECT_HOVER,
-	[PointerEventType.pointerup]: JsType.ON_OBJECT_POINTERUP,
+const methodNameByEventType: Record<PointerEventType, EvaluatorPointerMethod[]> = {
+	[PointerEventType.click]: [JsType.ON_OBJECT_CLICK],
+	[PointerEventType.pointerdown]: [JsType.ON_OBJECT_POINTERDOWN, JsType.ON_POINTERDOWN],
+	[PointerEventType.pointermove]: [JsType.ON_OBJECT_HOVER],
+	[PointerEventType.pointerup]: [JsType.ON_OBJECT_POINTERUP, JsType.ON_POINTERUP],
 };
 
 export class PointerEventsController extends BaseSceneEventsController<
@@ -53,7 +53,6 @@ export class PointerEventsController extends BaseSceneEventsController<
 	}
 
 	override processEvent(eventContext: EventContext<MouseEvent>) {
-		console.log('processEvent', eventContext);
 		this._cursorHelper.setCursorForCPU(eventContext, this._cursor0.value);
 		// super.processEvent(eventContext);
 
@@ -75,7 +74,6 @@ export class PointerEventsController extends BaseSceneEventsController<
 
 		const eventType = event.type as PointerEventType;
 		if (eventType == PointerEventType.pointermove) {
-			console.log('pointermove ignored');
 			// pointermove is not processed here,
 			// since callbacks such as onObjectHover
 			// should be triggered even if the pointer is not moving
@@ -99,8 +97,10 @@ export class PointerEventsController extends BaseSceneEventsController<
 			console.log('no generators for emitter', eventEmitter);
 			return;
 		}
-		const methodName = methodNameByEventType[eventType];
-		this.pointerEventsController.addTriggeredEvaluators(evaluatorGenerators, methodName);
+		const methodNames = methodNameByEventType[eventType];
+		for (let methodName of methodNames) {
+			this.pointerEventsController.addTriggeredEvaluators(evaluatorGenerators, methodName);
+		}
 		// console.log('evaluatorGenerators', evaluatorGenerators);
 		//
 		// evaluatorGenerators.forEach((evaluatorGenerator) => {

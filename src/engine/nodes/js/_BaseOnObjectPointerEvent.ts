@@ -37,12 +37,16 @@ export abstract class BaseOnObjectPointerEventJsNode extends BaseUserInputJsNode
 		return CoreEventEmitter.CANVAS;
 	}
 
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	protected _addHoveredRef(shadersCollectionController: ShadersCollectionController) {
 		const outHovered = this.jsVarName(OnObjectHoverJsNodeOutputName.hovered);
 
 		shadersCollectionController.addDefinitions(this, [
 			new RefJsDefinition(this, shadersCollectionController, JsConnectionPointType.BOOLEAN, outHovered, `false`),
 		]);
+	}
+
+	override setLines(shadersCollectionController: ShadersCollectionController) {
+		this._addHoveredRef(shadersCollectionController);
 	}
 
 	// this ref() is not named after the node's name
@@ -66,7 +70,7 @@ export function setLinesWithHoverCheck(
 	const func = Poly.namedFunctionsRegister.getFunction('getObjectHoveredState', node, shadersCollectionController);
 	const bodyLine = func.asString(object3D, traverseChildren, lineThreshold, pointsThreshold);
 
-	const methodName = node.type();
+	const methodName = node.wrappedBodyLinesMethodName();
 	//
 	const wrappedLines: string = `${methodName}(){
 			if( !${bodyLine} ){
