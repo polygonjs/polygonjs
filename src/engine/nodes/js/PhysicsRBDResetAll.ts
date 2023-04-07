@@ -35,12 +35,12 @@ export class PhysicsRBDResetAllJsNode extends TypedJsNode<PhysicsRBDResetAllJsPa
 			new JsConnectionPoint(JsConnectionPointType.OBJECT_3D, JsConnectionPointType.OBJECT_3D, CONNECTION_OPTIONS),
 		]);
 	}
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setTriggerableLines(shadersCollectionController: ShadersCollectionController) {
 		const object3D = inputObject3D(this, shadersCollectionController);
 		const wakeup = this.variableForInputParam(shadersCollectionController, this.p.wakeup);
 
 		const func = Poly.namedFunctionsRegister.getFunction('physicsRBDResetAll', this, shadersCollectionController);
 		const bodyLine = func.asString(object3D, wakeup);
-		shadersCollectionController.addActionBodyLines(this, [bodyLine]);
+		shadersCollectionController.addTriggerableLines(this, [bodyLine]);
 	}
 }

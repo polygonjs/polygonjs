@@ -37,6 +37,9 @@ const ParamsConfig = new BaseOnKeyEventJsParamsConfig();
 
 export abstract class BaseOnKeyEventJsNode extends BaseUserInputJsNode<BaseOnKeyEventJsParamsConfig> {
 	override readonly paramsConfig = ParamsConfig;
+	override isTriggering() {
+		return true;
+	}
 	override initializeNode() {
 		super.initializeNode();
 		this.io.connection_points.spare_params.setInputlessParamNames(['element']);

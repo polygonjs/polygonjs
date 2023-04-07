@@ -66,7 +66,7 @@ export class SetGeometryInstanceQuaternionsJsNode extends TypedJsNode<SetGeometr
 	protected _expectedInputName(index: number) {
 		return INPUT_NAMES[index];
 	}
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setTriggerableLines(shadersCollectionController: ShadersCollectionController) {
 		const object3D = inputObject3D(this, shadersCollectionController);
 		const quaternions = this.variableForInput(
 			shadersCollectionController,
@@ -84,6 +84,6 @@ export class SetGeometryInstanceQuaternionsJsNode extends TypedJsNode<SetGeometr
 			shadersCollectionController
 		);
 		const bodyLine = func.asString(object3D, quaternions, lerp, attributeNeedsUpdate);
-		shadersCollectionController.addActionBodyLines(this, [bodyLine]);
+		shadersCollectionController.addTriggerableLines(this, [bodyLine]);
 	}
 }

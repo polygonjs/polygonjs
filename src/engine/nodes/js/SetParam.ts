@@ -91,7 +91,7 @@ export class SetParamJsNode extends TypedJsNode<SetParamJsParamsConfig> {
 		}
 		this.p.type.set(index);
 	}
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setTriggerableLines(shadersCollectionController: ShadersCollectionController) {
 		const param = this.pv.param.param();
 		if (!param) {
 			return;
@@ -112,7 +112,7 @@ export class SetParamJsNode extends TypedJsNode<SetParamJsParamsConfig> {
 			return;
 		}
 
-		shadersCollectionController.addActionBodyLines(this, [bodyLine]);
+		shadersCollectionController.addTriggerableLines(this, [bodyLine]);
 	}
 	private _bodyLine(options: SetParamOptions): string | undefined {
 		const type = PARAM_CONVERTIBLE_JS_CONNECTION_POINT_TYPES[this.pv.type];

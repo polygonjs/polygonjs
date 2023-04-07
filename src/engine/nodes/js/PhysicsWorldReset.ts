@@ -13,11 +13,11 @@ export class PhysicsWorldResetJsNode extends BaseTriggerAndObjectJsNode {
 		return 'physicsWorldReset';
 	}
 
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setTriggerableLines(shadersCollectionController: ShadersCollectionController) {
 		const object3D = inputObject3D(this, shadersCollectionController);
 
 		const func = Poly.namedFunctionsRegister.getFunction('physicsWorldReset', this, shadersCollectionController);
 		const bodyLine = func.asString(object3D);
-		shadersCollectionController.addActionBodyLines(this, [bodyLine]);
+		shadersCollectionController.addTriggerableLines(this, [bodyLine]);
 	}
 }

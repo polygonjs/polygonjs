@@ -46,14 +46,18 @@ export class TrackHandJsNode extends TypedJsNode<TrackHandJsParamsConfig> {
 		]);
 	}
 
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setTriggerableLines(shadersCollectionController: ShadersCollectionController) {
 		const object3D = inputObject3D(this, shadersCollectionController);
 
 		// action
 		const texture = this.variableForInput(shadersCollectionController, JsConnectionPointType.TEXTURE);
 		const func = Poly.namedFunctionsRegister.getFunction('trackHand', this, shadersCollectionController);
 		const bodyLine = func.asString(object3D, texture);
-		shadersCollectionController.addActionBodyLines(this, [bodyLine]);
+		shadersCollectionController.addTriggerableLines(this, [bodyLine]);
+	}
+
+	override setLines(shadersCollectionController: ShadersCollectionController) {
+		const object3D = inputObject3D(this, shadersCollectionController);
 
 		// get
 		const usedOutputNames = this.io.outputs.used_output_names();

@@ -39,7 +39,7 @@ export class SetPerspectiveCameraFovJsNode extends TypedJsNode<SetPerspectiveCam
 			new JsConnectionPoint(JsConnectionPointType.OBJECT_3D, JsConnectionPointType.OBJECT_3D, CONNECTION_OPTIONS),
 		]);
 	}
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setTriggerableLines(shadersCollectionController: ShadersCollectionController) {
 		const object3D = inputObject3D(this, shadersCollectionController);
 		const fov = this.variableForInputParam(shadersCollectionController, this.p.fov);
 		const lerp = this.variableForInputParam(shadersCollectionController, this.p.lerp);
@@ -54,6 +54,6 @@ export class SetPerspectiveCameraFovJsNode extends TypedJsNode<SetPerspectiveCam
 			shadersCollectionController
 		);
 		const bodyLine = func.asString(object3D, fov, lerp, updateProjectionMatrix);
-		shadersCollectionController.addActionBodyLines(this, [bodyLine]);
+		shadersCollectionController.addTriggerableLines(this, [bodyLine]);
 	}
 }

@@ -98,7 +98,7 @@ export class SetMaterialUniformJsNode extends TypedJsNode<SetMaterialUniformJsPa
 		this.p.type.set(JS_CONNECTION_POINT_TYPES.indexOf(type));
 	}
 
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setTriggerableLines(shadersCollectionController: ShadersCollectionController) {
 		const material = this.variableForInput(shadersCollectionController, JsConnectionPointType.MATERIAL);
 		const uniformName = this.variableForInput(
 			shadersCollectionController,
@@ -129,7 +129,7 @@ export class SetMaterialUniformJsNode extends TypedJsNode<SetMaterialUniformJsPa
 		// }
 		const func = Poly.namedFunctionsRegister.getFunction(functionName, this, shadersCollectionController);
 		const bodyLine = func.asString(material, uniformName, uniformValue, lerp);
-		shadersCollectionController.addActionBodyLines(this, [bodyLine]);
+		shadersCollectionController.addTriggerableLines(this, [bodyLine]);
 	}
 
 	// public override receiveTrigger(context: ActorNodeTriggerContext) {

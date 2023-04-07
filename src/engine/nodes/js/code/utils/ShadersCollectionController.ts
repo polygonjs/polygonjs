@@ -3,6 +3,7 @@ import {
 	BaseJsDefinition,
 	ComputedValueJsDefinition,
 	TriggerableJsDefinition,
+	TriggerableJsDefinitionOptions,
 	TriggeringJsDefinition,
 } from '../../utils/JsDefinition';
 import {JsLinesController, DefinitionTraverseCallback, AddBodyLinesOptions} from './LinesController';
@@ -13,6 +14,7 @@ import {JsConnectionPointType} from '../../../utils/io/connections/Js';
 import {BaseNamedFunction} from '../../../../functions/_Base';
 import {connectedTriggerableNodes, nodeMethodName} from '../assemblers/actor/ActorAssemblerUtils';
 import {SetUtils} from '../../../../../core/SetUtils';
+import {EvaluatorMethodName, EVALUATOR_METHOD_NAMES} from '../assemblers/actor/Evaluator';
 
 export interface ComputedValueJsDefinitionData {
 	dataType: JsConnectionPointType;
@@ -86,11 +88,17 @@ export class ShadersCollectionController {
 	}
 	addTriggeringLines(node: BaseJsNodeType, triggeringLines: string[]) {
 		const value = triggeringLines.join('\n');
-		const varName = node.wrappedBodyLinesMethodName();
+		const varName = nodeMethodName(node); //.wrappedBodyLinesMethodName();
 		const dataType = JsConnectionPointType.BOOLEAN; // unused
-		this.addDefinitions(node, [new TriggeringJsDefinition(node, this, dataType, varName, value)]);
+		const evaluatorMethodName = node.type() as EvaluatorMethodName;
+		if (!EVALUATOR_METHOD_NAMES.includes(evaluatorMethodName as EvaluatorMethodName)) {
+			console.warn(`method '${evaluatorMethodName}' is not included`);
+		}
+		this.addDefinitions(node, [
+			new TriggeringJsDefinition(node, this, dataType, varName, value, evaluatorMethodName),
+		]);
 	}
-	addTriggerableLines(node: BaseJsNodeType, triggerableLines: string[]) {
+	addTriggerableLines(node: BaseJsNodeType, triggerableLines: string[], options?: TriggerableJsDefinitionOptions) {
 		const currentTriggerableNodes = new Set<BaseJsNodeType>();
 		connectedTriggerableNodes({
 			triggeringNodes: new Set([node]),
@@ -103,7 +111,7 @@ export class ShadersCollectionController {
 		const value = triggerableLines.join('\n');
 		const varName = node.name();
 		const dataType = JsConnectionPointType.BOOLEAN; // unused
-		this.addDefinitions(node, [new TriggerableJsDefinition(node, this, dataType, varName, value)]);
+		this.addDefinitions(node, [new TriggerableJsDefinition(node, this, dataType, varName, value, options)]);
 	}
 
 	//
@@ -122,7 +130,7 @@ export class ShadersCollectionController {
 		if (this._assembler.computedVariablesAllowed()) {
 			this.addComputed(node, linesData);
 		} else {
-			this.addBodyLines(
+			this._addBodyLines(
 				node,
 				linesData.map((lineData) => {
 					const {varName, value} = lineData;
@@ -168,14 +176,14 @@ export class ShadersCollectionController {
 	// all_definition_nodes(shader_name: ShaderName, scene: PolyScene) {
 	// 	return this._lines_controller_by_shader_name.get(shader_name)?.all_definition_nodes(scene) || [];
 	// }
-	addActionBodyLines(node: BaseJsNodeType, lines: string[]) {
-		// if (!this._allowActionLines) {
-		// 	return;
-		// }
-		this.addBodyLines(node, lines);
-	}
+	// addActionBodyLines(node: BaseJsNodeType, lines: string[]) {
+	// 	// if (!this._allowActionLines) {
+	// 	// 	return;
+	// 	// }
+	// 	this.addBodyLines(node, lines);
+	// }
 
-	addBodyLines(node: BaseJsNodeType, lines: string[], shaderName?: ShaderName, options?: AddBodyLinesOptions) {
+	_addBodyLines(node: BaseJsNodeType, lines: string[], shaderName?: ShaderName, options?: AddBodyLinesOptions) {
 		if (lines.length == 0) {
 			return;
 		}

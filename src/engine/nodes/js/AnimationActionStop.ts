@@ -33,11 +33,11 @@ export class AnimationActionStopJsNode extends TypedJsNode<AnimationActionStopJs
 			),
 		]);
 	}
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setTriggerableLines(shadersCollectionController: ShadersCollectionController) {
 		const action = this.variableForInput(shadersCollectionController, JsConnectionPointType.ANIMATION_ACTION);
 
 		const func = Poly.namedFunctionsRegister.getFunction('animationActionStop', this, shadersCollectionController);
 		const bodyLine = func.asString(action);
-		shadersCollectionController.addActionBodyLines(this, [bodyLine]);
+		shadersCollectionController.addTriggerableLines(this, [bodyLine]);
 	}
 }

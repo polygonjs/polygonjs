@@ -36,7 +36,7 @@ export class SetObjectReceiveShadowJsNode extends TypedJsNode<SetObjectReceiveSh
 			new JsConnectionPoint(JsConnectionPointType.OBJECT_3D, JsConnectionPointType.OBJECT_3D, CONNECTION_OPTIONS),
 		]);
 	}
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setTriggerableLines(shadersCollectionController: ShadersCollectionController) {
 		const object3D = inputObject3D(this, shadersCollectionController);
 		const receiveShadow = this.variableForInputParam(shadersCollectionController, this.p.receiveShadow);
 
@@ -46,6 +46,6 @@ export class SetObjectReceiveShadowJsNode extends TypedJsNode<SetObjectReceiveSh
 			shadersCollectionController
 		);
 		const bodyLine = func.asString(object3D, receiveShadow);
-		shadersCollectionController.addActionBodyLines(this, [bodyLine]);
+		shadersCollectionController.addTriggerableLines(this, [bodyLine]);
 	}
 }

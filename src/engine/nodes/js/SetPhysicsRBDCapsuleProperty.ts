@@ -43,7 +43,7 @@ export class SetPhysicsRBDCapsulePropertyJsNode extends TypedJsNode<SetPhysicsRB
 		]);
 	}
 
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setTriggerableLines(shadersCollectionController: ShadersCollectionController) {
 		const object3D = inputObject3D(this, shadersCollectionController);
 		const scale = this.variableForInputParam(shadersCollectionController, this.p.scale);
 		const lerp = this.variableForInputParam(shadersCollectionController, this.p.lerp);
@@ -55,6 +55,6 @@ export class SetPhysicsRBDCapsulePropertyJsNode extends TypedJsNode<SetPhysicsRB
 			shadersCollectionController
 		);
 		const bodyLine = func.asString(object3D, scale, lerp, updateMatrix);
-		shadersCollectionController.addActionBodyLines(this, [bodyLine]);
+		shadersCollectionController.addTriggerableLines(this, [bodyLine]);
 	}
 }

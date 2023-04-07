@@ -37,7 +37,7 @@ export class SetPhysicsRBDAngularVelocityJsNode extends TypedJsNode<SetPhysicsRB
 		]);
 	}
 
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setTriggerableLines(shadersCollectionController: ShadersCollectionController) {
 		const object3D = inputObject3D(this, shadersCollectionController);
 		const velocity = this.variableForInputParam(shadersCollectionController, this.p.velocity);
 		const lerp = this.variableForInputParam(shadersCollectionController, this.p.lerp);
@@ -48,6 +48,6 @@ export class SetPhysicsRBDAngularVelocityJsNode extends TypedJsNode<SetPhysicsRB
 			shadersCollectionController
 		);
 		const bodyLine = func.asString(object3D, velocity, lerp);
-		shadersCollectionController.addActionBodyLines(this, [bodyLine]);
+		shadersCollectionController.addTriggerableLines(this, [bodyLine]);
 	}
 }

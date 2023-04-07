@@ -19,6 +19,9 @@ export abstract class BaseUserInputJsNode<K extends NodeParamsConfig> extends Ty
 	// 	// });
 	// }
 	// abstract userInputEventNames(): string[];
+	override isTriggering() {
+		return true;
+	}
 	eventEmitter(): CoreEventEmitter {
 		return CoreEventEmitter.CANVAS;
 	}

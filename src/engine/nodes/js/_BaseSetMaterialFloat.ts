@@ -47,14 +47,14 @@ export abstract class BaseSetMaterialFloatJsNode extends TypedJsNode<BaseSetMate
 			new JsConnectionPoint(JsConnectionPointType.MATERIAL, JsConnectionPointType.MATERIAL, CONNECTION_OPTIONS),
 		]);
 	}
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setTriggerableLines(shadersCollectionController: ShadersCollectionController) {
 		const object3D = inputObject3D(this, shadersCollectionController);
 		const float = this.variableForInputParam(shadersCollectionController, this.p.float);
 		const lerp = this.variableForInputParam(shadersCollectionController, this.p.lerp);
 
 		const func = Poly.namedFunctionsRegister.getFunction(this._functionName(), this, shadersCollectionController);
 		const bodyLine = func.asString(object3D, float, lerp);
-		shadersCollectionController.addActionBodyLines(this, [bodyLine]);
+		shadersCollectionController.addTriggerableLines(this, [bodyLine]);
 	}
 	abstract _functionName(): 'setMaterialOpacity';
 }

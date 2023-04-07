@@ -41,7 +41,7 @@ export class SetPerspectiveCameraNearFarJsNode extends TypedJsNode<SetPerspectiv
 			new JsConnectionPoint(JsConnectionPointType.OBJECT_3D, JsConnectionPointType.OBJECT_3D, CONNECTION_OPTIONS),
 		]);
 	}
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setTriggerableLines(shadersCollectionController: ShadersCollectionController) {
 		const object3D = inputObject3D(this, shadersCollectionController);
 		const near = this.variableForInputParam(shadersCollectionController, this.p.near);
 		const far = this.variableForInputParam(shadersCollectionController, this.p.far);
@@ -57,6 +57,6 @@ export class SetPerspectiveCameraNearFarJsNode extends TypedJsNode<SetPerspectiv
 			shadersCollectionController
 		);
 		const bodyLine = func.asString(object3D, near, far, lerp, updateProjectionMatrix);
-		shadersCollectionController.addActionBodyLines(this, [bodyLine]);
+		shadersCollectionController.addTriggerableLines(this, [bodyLine]);
 	}
 }

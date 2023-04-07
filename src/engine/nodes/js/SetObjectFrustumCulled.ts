@@ -36,7 +36,7 @@ export class SetObjectFrustumCulledJsNode extends TypedJsNode<SetObjectFrustumCu
 			new JsConnectionPoint(JsConnectionPointType.OBJECT_3D, JsConnectionPointType.OBJECT_3D, CONNECTION_OPTIONS),
 		]);
 	}
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setTriggerableLines(shadersCollectionController: ShadersCollectionController) {
 		const object3D = inputObject3D(this, shadersCollectionController);
 		const frustumCulled = this.variableForInputParam(shadersCollectionController, this.p.frustumCulled);
 
@@ -46,6 +46,6 @@ export class SetObjectFrustumCulledJsNode extends TypedJsNode<SetObjectFrustumCu
 			shadersCollectionController
 		);
 		const bodyLine = func.asString(object3D, frustumCulled);
-		shadersCollectionController.addActionBodyLines(this, [bodyLine]);
+		shadersCollectionController.addTriggerableLines(this, [bodyLine]);
 	}
 }

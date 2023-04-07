@@ -37,12 +37,12 @@ export class SetObjectCastShadowJsNode extends TypedJsNode<SetObjectCastShadowJs
 		]);
 	}
 
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setTriggerableLines(shadersCollectionController: ShadersCollectionController) {
 		const object3D = inputObject3D(this, shadersCollectionController);
 		const castShadow = this.variableForInputParam(shadersCollectionController, this.p.castShadow);
 
 		const func = Poly.namedFunctionsRegister.getFunction('setObjectCastShadow', this, shadersCollectionController);
 		const bodyLine = func.asString(object3D, castShadow);
-		shadersCollectionController.addActionBodyLines(this, [bodyLine]);
+		shadersCollectionController.addTriggerableLines(this, [bodyLine]);
 	}
 }

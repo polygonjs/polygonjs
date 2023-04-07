@@ -32,7 +32,7 @@ export class CookNodeJsNode extends TypedJsNode<CookNodeJsParamsConfig> {
 		]);
 	}
 
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setTriggerableLines(shadersCollectionController: ShadersCollectionController) {
 		// const node = this.variableForInputParam(shadersCollectionController, this.p.node);
 		const node = this.pv.node.node();
 		if (!node) {
@@ -42,6 +42,6 @@ export class CookNodeJsNode extends TypedJsNode<CookNodeJsParamsConfig> {
 
 		const func = Poly.namedFunctionsRegister.getFunction('cookNode', this, shadersCollectionController);
 		const bodyLine = func.asString(nodePath);
-		shadersCollectionController.addActionBodyLines(this, [bodyLine]);
+		shadersCollectionController.addTriggerableLines(this, [bodyLine]);
 	}
 }

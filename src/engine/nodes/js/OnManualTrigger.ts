@@ -27,6 +27,9 @@ export class OnManualTriggerJsNode extends TypedJsNode<OnManualTriggerJsParamsCo
 	static override type() {
 		return JsType.ON_MANUAL_TRIGGER;
 	}
+	override isTriggering() {
+		return true;
+	}
 
 	override initializeNode() {
 		this.io.outputs.setNamedOutputConnectionPoints([

@@ -2,7 +2,7 @@ import {BaseJsNodeType} from '../../_Base';
 import {TypedNodeTraverser} from '../../../utils/shaders/NodeTraverser';
 import {MapUtils} from '../../../../../core/MapUtils';
 import {ShaderName} from '../../../utils/shaders/ShaderName';
-import {JsDefinitionType, BaseJsDefinition} from '../../utils/JsDefinition';
+import {JsDefinitionType, BaseJsDefinition, JsDefinitionTypeMap, TypedJsDefinition} from '../../utils/JsDefinition';
 import {TypedJsDefinitionCollection} from '../../utils/JsDefinitionCollection';
 import {ParamConfigsController} from '../../../../nodes/utils/code/controllers/ParamConfigsController';
 import {ShadersCollectionController} from './ShadersCollectionController';
@@ -124,17 +124,17 @@ export class CodeBuilder {
 				for (let triggeringNode of triggeringNodes) {
 					const currentTriggerableNodes = new Set<BaseJsNodeType>();
 					connectedTriggerableNodes({
-						triggeringNodes,
+						triggeringNodes: new Set([triggeringNode]),
 						triggerableNodes: currentTriggerableNodes,
 						recursive: false,
 					});
 					const triggerableMethodNames = SetUtils.toArray(currentTriggerableNodes).map((n) =>
 						nodeMethodName(n)
 					);
-					triggeringNode.setTriggeringLines(
-						this._shadersCollectionController,
-						triggerableMethodNames.map((methodName) => `this.${methodName}()`).join('\n')
-					);
+					const triggerableMethodCalls = triggerableMethodNames
+						.map((methodName) => `this.${methodName}()`)
+						.join('\n');
+					triggeringNode.setTriggeringLines(this._shadersCollectionController, triggerableMethodCalls);
 				}
 				// triggerable nodes
 				for (let triggerableNode of triggerableNodes) {
@@ -352,7 +352,7 @@ export class CodeBuilder {
 		if (!this._shadersCollectionController) {
 			return;
 		}
-		const definitions: BaseJsDefinition[] = [];
+		const definitions: TypedJsDefinition<JsDefinitionType>[] = [];
 		for (let node of nodes) {
 			let nodeDefinitions = this._shadersCollectionController.definitions(shaderName, node);
 			if (nodeDefinitions) {
@@ -370,44 +370,51 @@ export class CodeBuilder {
 				definitions.push(definition);
 			}
 		}
-
-		if (definitions.length > 0) {
-			const collection = new TypedJsDefinitionCollection<JsDefinitionType>(definitions);
-			const uniqDefinitions = collection.uniq();
-			if (collection.errored) {
-				// TODO: handle error
-				throw `code builder error: ${collection.error_message}`;
-			}
-
-			const definitions_by_node_id: Map<CoreGraphNodeId, BaseJsDefinition[]> = new Map();
-			const nodeIds: Map<CoreGraphNodeId, boolean> = new Map();
-			for (let definition of uniqDefinitions) {
-				const nodeId = definition.node().graphNodeId();
-				if (!nodeIds.has(nodeId)) {
-					nodeIds.set(nodeId, true);
-				}
-				MapUtils.pushOnArrayAtEntry(definitions_by_node_id, nodeId, definition);
-			}
-			const lines_for_shader = this._lines.get(shaderName)!;
-			nodeIds.forEach((_, nodeId) => {
-				const definitions = definitions_by_node_id.get(nodeId);
-				if (definitions) {
-					const first_definition = definitions[0];
-
-					if (first_definition) {
-						const comment = CodeFormatter.nodeComment(first_definition.node(), lineType);
-						MapUtils.pushOnArrayAtEntry(lines_for_shader, lineType, comment);
-
-						for (let definition of definitions) {
-							const line = CodeFormatter.lineWrap(first_definition.node(), definition.line(), lineType);
-							MapUtils.pushOnArrayAtEntry(lines_for_shader, lineType, line);
-						}
-						const separator = CodeFormatter.post_line_separator(lineType);
-						MapUtils.pushOnArrayAtEntry(lines_for_shader, lineType, separator);
-					}
-				}
-			});
+		if (definitions.length == 0) {
+			return;
 		}
+
+		const collection = new TypedJsDefinitionCollection<JsDefinitionType>(definitions);
+		const uniqDefinitions = collection.uniq();
+		if (collection.errored) {
+			// TODO: handle error
+			throw `code builder error: ${collection.error_message}`;
+		}
+
+		const definitions_by_node_id: Map<CoreGraphNodeId, BaseJsDefinition[]> = new Map();
+		const nodeIds: Map<CoreGraphNodeId, boolean> = new Map();
+		for (let definition of uniqDefinitions) {
+			const nodeId = definition.node().graphNodeId();
+			if (!nodeIds.has(nodeId)) {
+				nodeIds.set(nodeId, true);
+			}
+			MapUtils.pushOnArrayAtEntry(definitions_by_node_id, nodeId, definition);
+		}
+		const lines_for_shader = this._lines.get(shaderName)!;
+
+		// gather
+		const definitionClass = JsDefinitionTypeMap[definitionType];
+		definitionClass.gather(definitions, lines_for_shader, lineType);
+
+		// process definition for each node
+		nodeIds.forEach((_, nodeId) => {
+			const definitions = definitions_by_node_id.get(nodeId);
+			if (definitions) {
+				const first_definition = definitions[0];
+
+				if (first_definition) {
+					const comment = CodeFormatter.nodeComment(first_definition.node(), lineType);
+					MapUtils.pushOnArrayAtEntry(lines_for_shader, lineType, comment);
+
+					for (let definition of definitions) {
+						const line = CodeFormatter.lineWrap(first_definition.node(), definition.line(), lineType);
+						MapUtils.pushOnArrayAtEntry(lines_for_shader, lineType, line);
+					}
+					const separator = CodeFormatter.post_line_separator(lineType);
+					MapUtils.pushOnArrayAtEntry(lines_for_shader, lineType, separator);
+				}
+			}
+		});
 	}
 	add_code_line_for_nodes_and_line_type(nodes: BaseJsNodeType[], shader_name: ShaderName, line_type: LineType) {
 		nodes = nodes.filter((node) => {

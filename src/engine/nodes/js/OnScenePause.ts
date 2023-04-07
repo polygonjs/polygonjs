@@ -17,6 +17,9 @@ export class OnScenePauseJsNode extends TypedJsNode<OnScenePauseJsParamsConfig> 
 	static override type() {
 		return JsType.ON_SCENE_PAUSE;
 	}
+	override isTriggering() {
+		return true;
+	}
 
 	override initializeNode() {
 		this.io.outputs.setNamedOutputConnectionPoints([

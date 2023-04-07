@@ -38,7 +38,7 @@ export class SetPhysicsRBDPositionJsNode extends TypedJsNode<SetPhysicsRBDPositi
 		]);
 	}
 
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setTriggerableLines(shadersCollectionController: ShadersCollectionController) {
 		const object3D = inputObject3D(this, shadersCollectionController);
 		const position = this.variableForInputParam(shadersCollectionController, this.p.position);
 		const lerp = this.variableForInputParam(shadersCollectionController, this.p.lerp);
@@ -49,6 +49,6 @@ export class SetPhysicsRBDPositionJsNode extends TypedJsNode<SetPhysicsRBDPositi
 			shadersCollectionController
 		);
 		const bodyLine = func.asString(object3D, position, lerp);
-		shadersCollectionController.addActionBodyLines(this, [bodyLine]);
+		shadersCollectionController.addTriggerableLines(this, [bodyLine]);
 	}
 }

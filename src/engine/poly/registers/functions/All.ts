@@ -280,6 +280,7 @@ import {
 import {SDFRevolutionX, SDFRevolutionY, SDFRevolutionZ} from '../../../functions/SDFOperations2D';
 import {SDFBox, SDFSphere} from '../../../functions/SDFPrimitives';
 import {SDFRoundedX} from '../../../functions/SDFPrimitives2D';
+import {sleep} from '../../../functions/Sleep';
 import {sphereSet, getSphereCenter, getSphereRadius} from '../../../functions/Sphere';
 import {vector3AngleTo, vector3Project, vector3ProjectOnPlane, vector3Unproject} from '../../../functions/Vector';
 import {crossVector2, crossVector3} from '../../../functions/VectorCross';
@@ -681,6 +682,7 @@ export interface NamedFunctionMap {
 	sizzleVec4XYZ: sizzleVec4XYZ;
 	sizzleVec4WArray: sizzleVec4WArray;
 	sizzleVec4XYZArray: sizzleVec4XYZArray;
+	sleep: sleep;
 	smoothstep: smoothstep;
 	sphereSet: sphereSet;
 	subtractNumber: subtractNumber;
@@ -945,6 +947,7 @@ export class AllNamedFunctionRegister {
 			physicsRBDResetTorques,
 			physicsWorldReset,
 			physicsWorldStepSimulation,
+			pressButtonParam,
 			rand,
 			raySet,
 			rayFromCamera,
@@ -1008,7 +1011,7 @@ export class AllNamedFunctionRegister {
 			setParamVector2,
 			setParamVector3,
 			setParamVector4,
-			pressButtonParam,
+			sleep,
 			setPerspectiveCameraFov,
 			setPerspectiveCameraNearFar,
 			setPhysicsRBDCapsuleProperty,

@@ -216,6 +216,8 @@ import {SwitchJsNode} from '../../../nodes/js/Switch';
 import {TanJsNode} from '../../../nodes/js/Tan';
 import {TrackFaceJsNode} from '../../../nodes/js/TrackFace';
 import {TrackHandJsNode} from '../../../nodes/js/TrackHand';
+import {TriggerDelayJsNode} from '../../../nodes/js/TriggerDelay';
+import {TriggerFilterJsNode} from '../../../nodes/js/TriggerFilter';
 import {TwoWaySwitchJsNode} from '../../../nodes/js/TwoWaySwitch';
 import {Vector3AngleToJsNode} from '../../../nodes/js/Vector3AngleTo';
 import {Vector3ProjectJsNode} from '../../../nodes/js/Vector3Project';
@@ -446,6 +448,8 @@ export interface JsNodeChildrenMap {
 	tan: TanJsNode;
 	trackFace: TrackFaceJsNode;
 	trackHand: TrackHandJsNode;
+	triggerDelay: TriggerDelayJsNode;
+	triggerFilter: TriggerFilterJsNode;
 	vector3AngleTo: Vector3AngleToJsNode;
 	vector3Project: Vector3ProjectJsNode;
 	vector3ProjectOnPlane: Vector3ProjectOnPlaneJsNode;
@@ -698,6 +702,8 @@ export class JsRegister {
 		poly.registerNode(TanJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(TrackFaceJsNode, CATEGORY_JS.COMPUTER_VISION);
 		poly.registerNode(TrackHandJsNode, CATEGORY_JS.COMPUTER_VISION);
+		poly.registerNode(TriggerDelayJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR);
+		poly.registerNode(TriggerFilterJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR);
 		poly.registerNode(TwoWaySwitchJsNode, CATEGORY_JS.LOGIC);
 
 		poly.registerNode(Vector3AngleToJsNode, CATEGORY_JS.MATH);

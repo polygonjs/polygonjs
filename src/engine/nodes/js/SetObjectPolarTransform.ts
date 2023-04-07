@@ -51,7 +51,7 @@ export class SetObjectPolarTransformJsNode extends TypedJsNode<SetObjectPolarTra
 			new JsConnectionPoint(JsConnectionPointType.OBJECT_3D, JsConnectionPointType.OBJECT_3D, CONNECTION_OPTIONS),
 		]);
 	}
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setTriggerableLines(shadersCollectionController: ShadersCollectionController) {
 		const object3D = inputObject3D(this, shadersCollectionController);
 		const center = this.variableForInputParam(shadersCollectionController, this.p.center);
 		const latitude = this.variableForInputParam(shadersCollectionController, this.p.latitude);
@@ -64,6 +64,6 @@ export class SetObjectPolarTransformJsNode extends TypedJsNode<SetObjectPolarTra
 			shadersCollectionController
 		);
 		const bodyLine = func.asString(object3D, center, latitude, longitude, depth);
-		shadersCollectionController.addActionBodyLines(this, [bodyLine]);
+		shadersCollectionController.addTriggerableLines(this, [bodyLine]);
 	}
 }

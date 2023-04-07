@@ -3,6 +3,9 @@ import {TypedJsDefinitionCollection} from './JsDefinitionCollection';
 import {JsConnectionPointType} from '../../utils/io/connections/Js';
 import {ShadersCollectionController} from '../code/utils/ShadersCollectionController';
 import {nodeMethodName} from '../code/assemblers/actor/ActorAssemblerUtils';
+import {LineType} from '../code/utils/LineType';
+import {MapUtils} from '../../../../core/MapUtils';
+import {EvaluatorMethodName} from '../code/assemblers/actor/Evaluator';
 
 export enum JsDefinitionType {
 	// ATTRIBUTE = 'attribute',
@@ -26,6 +29,7 @@ export abstract class TypedJsDefinition<T extends JsDefinitionType> {
 	) {
 		// super(_node, _name);
 	}
+	static gather(definitions: BaseJsDefinition[], linesForShader: Map<LineType, string[]>, lineType: LineType) {}
 
 	definitionType() {
 		return this._definitionType;
@@ -187,26 +191,10 @@ export class TriggeringJsDefinition extends TypedJsDefinition<JsDefinitionType.T
 		protected override _shaderCollectionController: ShadersCollectionController,
 		protected override _dataType: JsConnectionPointType,
 		protected override _name: string,
-		protected _value: string
+		protected _value: string,
+		protected _triggeringMethodName: EvaluatorMethodName
 	) {
 		super(JsDefinitionType.TRIGGERING, _node, _shaderCollectionController, _dataType, _name);
-		// _shaderCollectionController.addComputedVarName(this.name());
-	}
-	line() {
-		return `${this._name}(){
-			${this._value}
-		}`;
-	}
-}
-export class TriggerableJsDefinition extends TypedJsDefinition<JsDefinitionType.TRIGGERABLE> {
-	constructor(
-		protected override _node: BaseJsNodeType,
-		protected override _shaderCollectionController: ShadersCollectionController,
-		protected override _dataType: JsConnectionPointType,
-		protected override _name: string,
-		protected _value: string
-	) {
-		super(JsDefinitionType.TRIGGERABLE, _node, _shaderCollectionController, _dataType, _name);
 		// _shaderCollectionController.addComputedVarName(this.name());
 	}
 	line() {
@@ -214,6 +202,71 @@ export class TriggerableJsDefinition extends TypedJsDefinition<JsDefinitionType.
 			${this._value}
 		}`;
 	}
+	static override gather(
+		_definitions: TypedJsDefinition<JsDefinitionType>[],
+		linesForShader: Map<LineType, string[]>,
+		lineType: LineType
+	) {
+		const triggeringDefinitions = _definitions as TriggeringJsDefinition[];
+		const definitionGroups = MapUtils.groupBy(
+			triggeringDefinitions,
+			(definition) => definition._triggeringMethodName
+		);
+		definitionGroups.forEach((definitions, triggeringMethodName) => {
+			const definitionMethodCalls = definitions.map((d) => `this.${nodeMethodName(d.node())}()`).join(';');
+			const line = `${triggeringMethodName}(){
+				${definitionMethodCalls}
+			}`;
+
+			MapUtils.pushOnArrayAtEntry(linesForShader, lineType, line);
+		});
+	}
 }
+export interface TriggerableJsDefinitionOptions {
+	async?: boolean;
+}
+export class TriggerableJsDefinition extends TypedJsDefinition<JsDefinitionType.TRIGGERABLE> {
+	constructor(
+		protected override _node: BaseJsNodeType,
+		protected override _shaderCollectionController: ShadersCollectionController,
+		protected override _dataType: JsConnectionPointType,
+		protected override _name: string,
+		protected _value: string,
+		protected _options?: TriggerableJsDefinitionOptions
+	) {
+		super(JsDefinitionType.TRIGGERABLE, _node, _shaderCollectionController, _dataType, _name);
+		// _shaderCollectionController.addComputedVarName(this.name());
+	}
+	line() {
+		const _async = this._options?.async == true;
+		const functionPrefix = _async ? 'async' : '';
+		return `${functionPrefix} ${nodeMethodName(this._node)}(){
+			${this._value}
+		}`;
+	}
+}
+
+// type DefinitionTypeMapGeneric = {[key in JsDefinitionType]: any};
+
+export interface DefinitionTypeMap {
+	[JsDefinitionType.LOCAL_FUNCTION]: typeof LocalFunctionJsDefinition;
+	[JsDefinitionType.COMPUTED]: typeof ComputedValueJsDefinition;
+	[JsDefinitionType.CONSTANT]: typeof ConstantJsDefinition;
+	[JsDefinitionType.REF]: typeof RefJsDefinition;
+	[JsDefinitionType.WATCH]: typeof WatchedValueJsDefinition;
+	[JsDefinitionType.INIT_FUNCTION]: typeof InitFunctionJsDefinition;
+	[JsDefinitionType.TRIGGERING]: typeof TriggeringJsDefinition;
+	[JsDefinitionType.TRIGGERABLE]: typeof TriggerableJsDefinition;
+}
+export const JsDefinitionTypeMap: DefinitionTypeMap = {
+	[JsDefinitionType.LOCAL_FUNCTION]: LocalFunctionJsDefinition,
+	[JsDefinitionType.COMPUTED]: ComputedValueJsDefinition,
+	[JsDefinitionType.CONSTANT]: ConstantJsDefinition,
+	[JsDefinitionType.REF]: RefJsDefinition,
+	[JsDefinitionType.WATCH]: WatchedValueJsDefinition,
+	[JsDefinitionType.INIT_FUNCTION]: InitFunctionJsDefinition,
+	[JsDefinitionType.TRIGGERING]: TriggeringJsDefinition,
+	[JsDefinitionType.TRIGGERABLE]: TriggerableJsDefinition,
+};
 
 export type BaseJsDefinition = TypedJsDefinition<JsDefinitionType>;

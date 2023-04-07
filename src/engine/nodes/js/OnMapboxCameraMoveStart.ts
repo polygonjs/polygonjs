@@ -17,6 +17,9 @@ export class OnMapboxCameraMoveStartJsNode extends TypedJsNode<OnMapboxCameraMov
 	static override type() {
 		return JsType.ON_MAPBOX_CAMERA_MOVE_START;
 	}
+	override isTriggering() {
+		return true;
+	}
 
 	override initializeNode() {
 		this.io.outputs.setNamedOutputConnectionPoints([

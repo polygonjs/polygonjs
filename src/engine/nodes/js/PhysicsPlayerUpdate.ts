@@ -66,7 +66,7 @@ export class PhysicsPlayerUpdateJsNode extends TypedJsNode<PhysicsPlayerUpdateJs
 			new JsConnectionPoint(TRIGGER_CONNECTION_NAME, JsConnectionPointType.TRIGGER),
 		]);
 	}
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setTriggerableLines(shadersCollectionController: ShadersCollectionController) {
 		const object3D = inputObject3D(this, shadersCollectionController);
 
 		// action
@@ -91,6 +91,6 @@ export class PhysicsPlayerUpdateJsNode extends TypedJsNode<PhysicsPlayerUpdateJs
 
 		const func = Poly.namedFunctionsRegister.getFunction('playerPhysicsUpdate', this, shadersCollectionController);
 		const bodyLine = func.asString(object3D, coreInputDict);
-		shadersCollectionController.addActionBodyLines(this, [bodyLine]);
+		shadersCollectionController.addTriggerableLines(this, [bodyLine]);
 	}
 }

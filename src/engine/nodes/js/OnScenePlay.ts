@@ -17,6 +17,9 @@ export class OnScenePlayJsNode extends TypedJsNode<OnScenePlayJsParamsConfig> {
 	static override type() {
 		return JsType.ON_SCENE_PLAY;
 	}
+	override isTriggering() {
+		return true;
+	}
 
 	override initializeNode() {
 		this.io.outputs.setNamedOutputConnectionPoints([

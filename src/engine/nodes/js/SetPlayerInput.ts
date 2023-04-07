@@ -60,6 +60,13 @@ export class SetPlayerInputJsNode extends ParamlessTypedJsNode {
 	// 	return {methodNames: [methodName], wrappedLines};
 	// }
 
+	override setTriggerableLines(shadersCollectionController: ShadersCollectionController) {
+		const object3D = inputObject3D(this, shadersCollectionController);
+
+		const func = Poly.namedFunctionsRegister.getFunction('setPlayerInput', this, shadersCollectionController);
+		const bodyLine = func.asString(object3D);
+		shadersCollectionController.addTriggerableLines(this, [bodyLine]);
+	}
 	override setLines(shadersCollectionController: ShadersCollectionController) {
 		const object3D = inputObject3D(this, shadersCollectionController);
 
@@ -70,10 +77,6 @@ export class SetPlayerInputJsNode extends ParamlessTypedJsNode {
 		// 	useArrowkeys: this.variableForInputParam(shadersCollectionController, this.p.useArrowkeys),
 		// };
 		// const optionsStr = JSON.stringify(options);
-
-		const func = Poly.namedFunctionsRegister.getFunction('setPlayerInput', this, shadersCollectionController);
-		const bodyLine = func.asString(object3D);
-		shadersCollectionController.addActionBodyLines(this, [bodyLine]);
 
 		// get
 		const usedOutputNames = this.io.outputs.used_output_names();

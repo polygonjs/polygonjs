@@ -254,7 +254,7 @@ export class JsAssemblerSDF extends BaseJsShaderAssembler {
 					// 	body_line = `diffuseColor.a = ${ThreeToGl.any(gl_var)}`;
 					// }
 					if (bodyLine) {
-						shadersCollectionController.addActionBodyLines(outputNode, [bodyLine]);
+						shadersCollectionController._addBodyLines(outputNode, [bodyLine]);
 					}
 				}
 			}
@@ -298,6 +298,6 @@ export class JsAssemblerSDF extends BaseJsShaderAssembler {
 			}
 		}
 		// shadersCollectionController.addDefinitions(globalsNode, definitions, shaderName);
-		shadersCollectionController.addActionBodyLines(globalsNode, bodyLines);
+		shadersCollectionController._addBodyLines(globalsNode, bodyLines);
 	}
 }

@@ -13,11 +13,11 @@ export class ParticlesSystemResetJsNode extends BaseTriggerAndObjectJsNode {
 		return 'particlesSystemReset';
 	}
 
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setTriggerableLines(shadersCollectionController: ShadersCollectionController) {
 		const object3D = inputObject3D(this, shadersCollectionController);
 
 		const func = Poly.namedFunctionsRegister.getFunction('particlesSystemReset', this, shadersCollectionController);
 		const bodyLine = func.asString(object3D);
-		shadersCollectionController.addActionBodyLines(this, [bodyLine]);
+		shadersCollectionController.addTriggerableLines(this, [bodyLine]);
 	}
 }

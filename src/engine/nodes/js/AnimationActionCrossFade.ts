@@ -48,7 +48,7 @@ export class AnimationActionCrossFadeJsNode extends TypedJsNode<AnimationActionC
 			),
 		]);
 	}
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setTriggerableLines(shadersCollectionController: ShadersCollectionController) {
 		const actionFrom = this.variableForInput(
 			shadersCollectionController,
 			AnimationActionCrossFadeJsNodeInputName.FROM
@@ -67,6 +67,6 @@ export class AnimationActionCrossFadeJsNode extends TypedJsNode<AnimationActionC
 			shadersCollectionController
 		);
 		const bodyLine = func.asString(actionFrom, actionTo, duration, warp, startOnFromActionEnd);
-		shadersCollectionController.addActionBodyLines(this, [bodyLine]);
+		shadersCollectionController.addTriggerableLines(this, [bodyLine]);
 	}
 }

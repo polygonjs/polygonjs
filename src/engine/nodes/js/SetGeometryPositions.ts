@@ -83,7 +83,7 @@ export class SetGeometryPositionsJsNode extends TypedJsNode<SetGeometryPositions
 		return [JsConnectionPointType.TRIGGER, JsConnectionPointType.OBJECT_3D][i];
 	}
 
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setTriggerableLines(shadersCollectionController: ShadersCollectionController) {
 		const object3D = inputObject3D(this, shadersCollectionController);
 		const values = this.variableForInput(shadersCollectionController, SetGeometryPositionsInputName.values);
 		const lerp = this.variableForInputParam(shadersCollectionController, this.p.lerp);
@@ -96,6 +96,6 @@ export class SetGeometryPositionsJsNode extends TypedJsNode<SetGeometryPositions
 
 		const func = Poly.namedFunctionsRegister.getFunction('setGeometryPositions', this, shadersCollectionController);
 		const bodyLine = func.asString(object3D, values, lerp, attributeNeedsUpdate, computeNormals, computeTangents);
-		shadersCollectionController.addActionBodyLines(this, [bodyLine]);
+		shadersCollectionController.addTriggerableLines(this, [bodyLine]);
 	}
 }

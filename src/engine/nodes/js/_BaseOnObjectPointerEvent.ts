@@ -33,6 +33,9 @@ const ParamsConfig = new OnObjectHoverJsParamsConfig();
 export abstract class BaseOnObjectPointerEventJsNode extends BaseUserInputJsNode<OnObjectHoverJsParamsConfig> {
 	override readonly paramsConfig = ParamsConfig;
 
+	override isTriggering() {
+		return true;
+	}
 	override eventEmitter() {
 		return CoreEventEmitter.CANVAS;
 	}

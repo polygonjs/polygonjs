@@ -54,7 +54,7 @@ export class PlayInstrumentNoteJsNode extends TypedJsNode<PlayInstrumentNoteJsPa
 		]);
 	}
 
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setTriggerableLines(shadersCollectionController: ShadersCollectionController) {
 		const object3D = inputObject3D(this, shadersCollectionController);
 		const note = this.variableForInputParam(shadersCollectionController, this.p.note);
 		const duration = this.variableForInputParam(shadersCollectionController, this.p.duration);
@@ -67,6 +67,6 @@ export class PlayInstrumentNoteJsNode extends TypedJsNode<PlayInstrumentNoteJsPa
 
 		const func = Poly.namedFunctionsRegister.getFunction('playInstrumentNote', this, shadersCollectionController);
 		const bodyLine = func.asString(object3D, nodePath, note, duration);
-		shadersCollectionController.addActionBodyLines(this, [bodyLine]);
+		shadersCollectionController.addTriggerableLines(this, [bodyLine]);
 	}
 }

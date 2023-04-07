@@ -52,7 +52,7 @@ export class AnimationActionFadeInJsNode extends TypedJsNode<AnimationActionFade
 			),
 		]);
 	}
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setTriggerableLines(shadersCollectionController: ShadersCollectionController) {
 		const action = this.variableForInput(shadersCollectionController, JsConnectionPointType.ANIMATION_ACTION);
 		const duration = this.variableForInputParam(shadersCollectionController, this.p.duration);
 		const fadeOutOtherActions = this.variableForInputParam(shadersCollectionController, this.p.fadeOutOtherActions);
@@ -68,6 +68,6 @@ export class AnimationActionFadeInJsNode extends TypedJsNode<AnimationActionFade
 			shadersCollectionController
 		);
 		const bodyLine = func.asString(action, duration, fadeOutOtherActions, warp, startOnFromActionEnd);
-		shadersCollectionController.addActionBodyLines(this, [bodyLine]);
+		shadersCollectionController.addTriggerableLines(this, [bodyLine]);
 	}
 }

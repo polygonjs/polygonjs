@@ -37,7 +37,7 @@ export class PhysicsRBDApplyImpulseAtPointJsNode extends TypedJsNode<PhysicsRBDA
 			new JsConnectionPoint(JsConnectionPointType.OBJECT_3D, JsConnectionPointType.OBJECT_3D, CONNECTION_OPTIONS),
 		]);
 	}
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setTriggerableLines(shadersCollectionController: ShadersCollectionController) {
 		const object3D = inputObject3D(this, shadersCollectionController);
 		const impulse = this.variableForInputParam(shadersCollectionController, this.p.impulse);
 		const point = this.variableForInputParam(shadersCollectionController, this.p.point);
@@ -48,6 +48,6 @@ export class PhysicsRBDApplyImpulseAtPointJsNode extends TypedJsNode<PhysicsRBDA
 			shadersCollectionController
 		);
 		const bodyLine = func.asString(object3D, impulse, point);
-		shadersCollectionController.addActionBodyLines(this, [bodyLine]);
+		shadersCollectionController.addTriggerableLines(this, [bodyLine]);
 	}
 }

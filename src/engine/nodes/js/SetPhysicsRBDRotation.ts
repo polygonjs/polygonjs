@@ -38,7 +38,7 @@ export class SetPhysicsRBDRotationJsNode extends TypedJsNode<SetPhysicsRBDRotati
 		]);
 	}
 
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setTriggerableLines(shadersCollectionController: ShadersCollectionController) {
 		const object3D = inputObject3D(this, shadersCollectionController);
 		const quaternion = this.variableForInputParam(shadersCollectionController, this.p.quaternion);
 		const lerp = this.variableForInputParam(shadersCollectionController, this.p.lerp);
@@ -49,6 +49,6 @@ export class SetPhysicsRBDRotationJsNode extends TypedJsNode<SetPhysicsRBDRotati
 			shadersCollectionController
 		);
 		const bodyLine = func.asString(object3D, quaternion, lerp);
-		shadersCollectionController.addActionBodyLines(this, [bodyLine]);
+		shadersCollectionController.addTriggerableLines(this, [bodyLine]);
 	}
 }

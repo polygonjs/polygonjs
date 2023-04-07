@@ -39,7 +39,7 @@ export class SetPhysicsWorldGravityJsNode extends TypedJsNode<SetPhysicsWorldGra
 		]);
 	}
 
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setTriggerableLines(shadersCollectionController: ShadersCollectionController) {
 		const object3D = inputObject3D(this, shadersCollectionController);
 		const gravity = this.variableForInputParam(shadersCollectionController, this.p.gravity);
 		const lerp = this.variableForInputParam(shadersCollectionController, this.p.lerp);
@@ -50,6 +50,6 @@ export class SetPhysicsWorldGravityJsNode extends TypedJsNode<SetPhysicsWorldGra
 			shadersCollectionController
 		);
 		const bodyLine = func.asString(object3D, gravity, lerp);
-		shadersCollectionController.addActionBodyLines(this, [bodyLine]);
+		shadersCollectionController.addTriggerableLines(this, [bodyLine]);
 	}
 }

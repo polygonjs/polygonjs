@@ -36,7 +36,7 @@ export class SetObjectMatrixAutoUpdateJsNode extends TypedJsNode<SetObjectMatrix
 			new JsConnectionPoint(JsConnectionPointType.OBJECT_3D, JsConnectionPointType.OBJECT_3D, CONNECTION_OPTIONS),
 		]);
 	}
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setTriggerableLines(shadersCollectionController: ShadersCollectionController) {
 		const object3D = inputObject3D(this, shadersCollectionController);
 		const matrixAutoUpdate = this.variableForInputParam(shadersCollectionController, this.p.matrixAutoUpdate);
 
@@ -46,6 +46,6 @@ export class SetObjectMatrixAutoUpdateJsNode extends TypedJsNode<SetObjectMatrix
 			shadersCollectionController
 		);
 		const bodyLine = func.asString(object3D, matrixAutoUpdate);
-		shadersCollectionController.addActionBodyLines(this, [bodyLine]);
+		shadersCollectionController.addTriggerableLines(this, [bodyLine]);
 	}
 }

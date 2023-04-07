@@ -36,7 +36,7 @@ export class Object3DUpdateWorldMatrixJsNode extends TypedJsNode<Object3DUpdateW
 			new JsConnectionPoint(TRIGGER_CONNECTION_NAME, JsConnectionPointType.TRIGGER),
 		]);
 	}
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setTriggerableLines(shadersCollectionController: ShadersCollectionController) {
 		const object3D = inputObject3D(this, shadersCollectionController);
 		const updateParents = this.variableForInputParam(shadersCollectionController, this.p.updateParents);
 		const updateChildren = this.variableForInputParam(shadersCollectionController, this.p.updateChildren);
@@ -47,6 +47,6 @@ export class Object3DUpdateWorldMatrixJsNode extends TypedJsNode<Object3DUpdateW
 			shadersCollectionController
 		);
 		const bodyLine = func.asString(object3D, updateParents, updateChildren);
-		shadersCollectionController.addActionBodyLines(this, [bodyLine]);
+		shadersCollectionController.addTriggerableLines(this, [bodyLine]);
 	}
 }

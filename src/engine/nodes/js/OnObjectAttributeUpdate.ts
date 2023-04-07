@@ -42,6 +42,9 @@ export class OnObjectAttributeUpdateJsNode extends TypedJsNode<OnObjectAttribute
 	static override type() {
 		return JsType.ON_OBJECT_ATTRIBUTE_UPDATE;
 	}
+	override isTriggering() {
+		return true;
+	}
 
 	static readonly OUTPUT_NEW_VAL = 'newValue';
 	static readonly OUTPUT_PREV_VAL = 'previousValue';

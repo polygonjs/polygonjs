@@ -37,12 +37,12 @@ export class SetObjectVisibleJsNode extends TypedJsNode<SetObjectVisibleJsParams
 		]);
 	}
 
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setTriggerableLines(shadersCollectionController: ShadersCollectionController) {
 		const object3D = inputObject3D(this, shadersCollectionController);
 		const visible = this.variableForInputParam(shadersCollectionController, this.p.visible);
 
 		const func = Poly.namedFunctionsRegister.getFunction('setObjectVisible', this, shadersCollectionController);
 		const bodyLine = func.asString(object3D, visible);
-		shadersCollectionController.addActionBodyLines(this, [bodyLine]);
+		shadersCollectionController.addTriggerableLines(this, [bodyLine]);
 	}
 }

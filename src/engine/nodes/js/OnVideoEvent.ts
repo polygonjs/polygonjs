@@ -39,6 +39,9 @@ export class OnVideoEventJsNode extends TypedJsNode<OnVideoEventJsParamsConfig> 
 	static override type(): JsType.ON_VIDEO_EVENT {
 		return JsType.ON_VIDEO_EVENT;
 	}
+	override isTriggering() {
+		return true;
+	}
 
 	override initializeNode() {
 		this.io.outputs.setNamedOutputConnectionPoints(

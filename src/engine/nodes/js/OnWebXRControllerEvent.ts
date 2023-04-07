@@ -29,6 +29,9 @@ export class OnWebXRControllerEventJsNode extends TypedJsNode<OnWebXRControllerE
 	static override type(): JsType.ON_WEBXR_CONTROLLER_EVENT {
 		return JsType.ON_WEBXR_CONTROLLER_EVENT;
 	}
+	override isTriggering() {
+		return true;
+	}
 
 	override initializeNode() {
 		// this.io.inputs.setNamedInputConnectionPoints([]);

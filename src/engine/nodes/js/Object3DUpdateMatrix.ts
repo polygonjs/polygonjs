@@ -31,11 +31,11 @@ export class Object3DUpdateMatrixJsNode extends TypedJsNode<Object3DUpdateMatrix
 			new JsConnectionPoint(TRIGGER_CONNECTION_NAME, JsConnectionPointType.TRIGGER),
 		]);
 	}
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setTriggerableLines(shadersCollectionController: ShadersCollectionController) {
 		const object3D = inputObject3D(this, shadersCollectionController);
 
 		const func = Poly.namedFunctionsRegister.getFunction('objectUpdateMatrix', this, shadersCollectionController);
 		const bodyLine = func.asString(object3D);
-		shadersCollectionController.addActionBodyLines(this, [bodyLine]);
+		shadersCollectionController.addTriggerableLines(this, [bodyLine]);
 	}
 }

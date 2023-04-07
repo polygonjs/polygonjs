@@ -97,7 +97,7 @@ export class SetGeometryInstanceAttributeJsNode extends TypedJsNode<SetGeometryI
 	protected _expectedInputName(index: number) {
 		return INPUT_NAMES[index];
 	}
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setTriggerableLines(shadersCollectionController: ShadersCollectionController) {
 		const object3D = inputObject3D(this, shadersCollectionController);
 		const attribName = this.pv.attribName;
 		const values = this.variableForInput(shadersCollectionController, SetGeometryInstanceAttributeInputName.values);
@@ -110,7 +110,7 @@ export class SetGeometryInstanceAttributeJsNode extends TypedJsNode<SetGeometryI
 		const functionName = this._functionName();
 		const func = Poly.namedFunctionsRegister.getFunction(functionName, this, shadersCollectionController);
 		const bodyLine = func.asString(object3D, attribName, values, lerp, attributeNeedsUpdate);
-		shadersCollectionController.addActionBodyLines(this, [bodyLine]);
+		shadersCollectionController.addTriggerableLines(this, [bodyLine]);
 	}
 	private _functionName() {
 		const type = this._expectedInputTypes()[0];

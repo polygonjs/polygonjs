@@ -29,12 +29,12 @@ export class SetObjectMaterialJsNode extends ParamlessTypedJsNode {
 		]);
 	}
 
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setTriggerableLines(shadersCollectionController: ShadersCollectionController) {
 		const object3D = inputObject3D(this, shadersCollectionController);
 		const material = this.variableForInput(shadersCollectionController, JsConnectionPointType.MATERIAL);
 
 		const func = Poly.namedFunctionsRegister.getFunction('setObjectMaterial', this, shadersCollectionController);
 		const bodyLine = func.asString(object3D, material);
-		shadersCollectionController.addActionBodyLines(this, [bodyLine]);
+		shadersCollectionController.addTriggerableLines(this, [bodyLine]);
 	}
 }

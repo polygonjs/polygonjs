@@ -23,15 +23,11 @@ export class OnObjectHoverJsNode extends BaseOnObjectPointerEventJsNode {
 	override isTriggering() {
 		return true;
 	}
-	// methodName(): EvaluatorMethodName {
-	// 	return JsType.ON_OBJECT_HOVER;
-	// }
 	override eventData(): EvaluatorEventData | undefined {
 		return {
 			type: PointerEventType.pointermove,
 			emitter: this.eventEmitter(),
 			jsType: JsType.ON_OBJECT_HOVER,
-			// methodName: this.methodName(),
 		};
 	}
 	override initializeNode() {
@@ -52,11 +48,6 @@ export class OnObjectHoverJsNode extends BaseOnObjectPointerEventJsNode {
 				CONNECTION_OPTIONS
 			),
 		]);
-		// this.io.connection_points.spare_params.setInputlessParamNames([
-		// 	'traverseChildren',
-		// 	'pointsThreshold',
-		// 	'lineThreshold',
-		// ]);
 	}
 
 	override setTriggeringLines(shadersCollectionController: ShadersCollectionController, triggeredMethods: string) {
@@ -73,15 +64,7 @@ export class OnObjectHoverJsNode extends BaseOnObjectPointerEventJsNode {
 
 		const outHovered = this.jsVarName(OnObjectHoverJsNodeOutputName.hovered);
 		this._addHoveredRef(shadersCollectionController);
-		// shadersCollectionController.addComputed(this, [
-		// 	{
-		// 		dataType: JsConnectionPointType.BOOLEAN,
-		// 		varName: outHovered,
-		// 		value: 'false',
-		// 	},
-		// ]);
 
-		// const methodName = this.wrappedBodyLinesMethodName();
 		const newValue = `newHovered`;
 		const currentValue = `currentHovered`;
 		//
@@ -93,16 +76,7 @@ export class OnObjectHoverJsNode extends BaseOnObjectPointerEventJsNode {
 			`${triggeredMethods}`,
 			`}`,
 		];
-		// const wrappedLines: string = `${methodName}(){
-		// 	const ${newValue} = ${bodyLine};
-		// 	const ${currentValue} = this.${outHovered}.value;
-		// 	this.${outHovered}.value = ${newValue};
-		// 	if( ${newValue} != ${currentValue} ){
-		// 		${bodyLines.join('\n')}
-		// 	}
-		// }`;
-		shadersCollectionController.addTriggeringLines(this, bodyLines);
 
-		// return {methodNames: [methodName], wrappedLines};
+		shadersCollectionController.addTriggeringLines(this, bodyLines);
 	}
 }

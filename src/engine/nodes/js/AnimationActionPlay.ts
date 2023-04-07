@@ -33,11 +33,11 @@ export class AnimationActionPlayJsNode extends TypedJsNode<AnimationActionPlayJs
 			),
 		]);
 	}
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setTriggerableLines(shadersCollectionController: ShadersCollectionController) {
 		const action = this.variableForInput(shadersCollectionController, JsConnectionPointType.ANIMATION_ACTION);
 
 		const func = Poly.namedFunctionsRegister.getFunction('animationActionPlay', this, shadersCollectionController);
 		const bodyLine = func.asString(action);
-		shadersCollectionController.addActionBodyLines(this, [bodyLine]);
+		shadersCollectionController.addTriggerableLines(this, [bodyLine]);
 	}
 }

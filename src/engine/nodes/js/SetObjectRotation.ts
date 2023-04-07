@@ -50,7 +50,7 @@ export class SetObjectRotationJsNode extends TypedJsNode<SetObjectRotationJsPara
 			new JsConnectionPoint(JsConnectionPointType.OBJECT_3D, JsConnectionPointType.OBJECT_3D, CONNECTION_OPTIONS),
 		]);
 	}
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setTriggerableLines(shadersCollectionController: ShadersCollectionController) {
 		const object3D = inputObject3D(this, shadersCollectionController);
 		const rotation = this.variableForInputParam(shadersCollectionController, this.p.rotation);
 		const rotationOrder = this.variableForInputParam(shadersCollectionController, this.p.rotationOrder);
@@ -59,6 +59,6 @@ export class SetObjectRotationJsNode extends TypedJsNode<SetObjectRotationJsPara
 
 		const func = Poly.namedFunctionsRegister.getFunction('setObjectRotation', this, shadersCollectionController);
 		const bodyLine = func.asString(object3D, rotation, rotationOrder, lerp, updateMatrix);
-		shadersCollectionController.addActionBodyLines(this, [bodyLine]);
+		shadersCollectionController.addTriggerableLines(this, [bodyLine]);
 	}
 }

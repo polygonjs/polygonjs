@@ -115,7 +115,7 @@ export class SetObjectAttributeJsNode extends TypedJsNode<SetObjectAttributeJsPa
 		this.p.type.set(PARAM_CONVERTIBLE_JS_CONNECTION_POINT_TYPES.indexOf(type));
 	}
 
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setTriggerableLines(shadersCollectionController: ShadersCollectionController) {
 		const object3D = inputObject3D(this, shadersCollectionController);
 		const attribName = this.variableForInput(shadersCollectionController, SetObjectAttributeInputName.attribName);
 		const lerp = this.variableForInput(shadersCollectionController, SetObjectAttributeInputName.lerp);
@@ -123,7 +123,7 @@ export class SetObjectAttributeJsNode extends TypedJsNode<SetObjectAttributeJsPa
 
 		const func = Poly.namedFunctionsRegister.getFunction('setObjectAttribute', this, shadersCollectionController);
 		const bodyLine = func.asString(object3D, attribName, lerp, newValue);
-		shadersCollectionController.addActionBodyLines(this, [bodyLine]);
+		shadersCollectionController.addTriggerableLines(this, [bodyLine]);
 	}
 
 	// public override receiveTrigger(context: ActorNodeTriggerContext) {

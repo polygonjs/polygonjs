@@ -36,7 +36,7 @@ export class SetSpotLightIntensityJsNode extends TypedJsNode<SetSpotLightIntensi
 			new JsConnectionPoint(TRIGGER_CONNECTION_NAME, JsConnectionPointType.TRIGGER),
 		]);
 	}
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setTriggerableLines(shadersCollectionController: ShadersCollectionController) {
 		const object3D = inputObject3D(this, shadersCollectionController);
 		const intensity = this.variableForInputParam(shadersCollectionController, this.p.intensity);
 		const lerp = this.variableForInputParam(shadersCollectionController, this.p.lerp);
@@ -47,6 +47,6 @@ export class SetSpotLightIntensityJsNode extends TypedJsNode<SetSpotLightIntensi
 			shadersCollectionController
 		);
 		const bodyLine = func.asString(object3D, intensity, lerp);
-		shadersCollectionController.addActionBodyLines(this, [bodyLine]);
+		shadersCollectionController.addTriggerableLines(this, [bodyLine]);
 	}
 }

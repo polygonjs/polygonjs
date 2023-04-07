@@ -18,6 +18,9 @@ export class OnObjectClickJsNode extends BaseOnObjectPointerEventJsNode {
 	static override type() {
 		return JsType.ON_OBJECT_CLICK;
 	}
+	override isTriggering() {
+		return true;
+	}
 	// methodName(): EvaluatorMethodName {
 	// 	return JsType.ON_OBJECT_CLICK;
 	// }

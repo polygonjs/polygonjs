@@ -40,7 +40,7 @@ export class SetPhysicsRBDSpherePropertyJsNode extends TypedJsNode<SetPhysicsRBD
 		]);
 	}
 
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setTriggerableLines(shadersCollectionController: ShadersCollectionController) {
 		const object3D = inputObject3D(this, shadersCollectionController);
 		const radius = this.variableForInputParam(shadersCollectionController, this.p.radius);
 		const lerp = this.variableForInputParam(shadersCollectionController, this.p.lerp);
@@ -52,6 +52,6 @@ export class SetPhysicsRBDSpherePropertyJsNode extends TypedJsNode<SetPhysicsRBD
 			shadersCollectionController
 		);
 		const bodyLine = func.asString(object3D, radius, lerp, updateMatrix);
-		shadersCollectionController.addActionBodyLines(this, [bodyLine]);
+		shadersCollectionController.addTriggerableLines(this, [bodyLine]);
 	}
 }

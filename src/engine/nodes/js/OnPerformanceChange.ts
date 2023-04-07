@@ -40,6 +40,9 @@ export class OnPerformanceChangeJsNode extends TypedJsNode<OnPerformanceChangeJs
 	static override type() {
 		return JsType.ON_PERFORMANCE_CHANGE;
 	}
+	override isTriggering() {
+		return true;
+	}
 
 	static OUTPUT_NAME_ABOVE = `${TRIGGER_CONNECTION_NAME}aboveThreshold`;
 	static OUTPUT_NAME_BELOW = `${TRIGGER_CONNECTION_NAME}belowThreshold`;

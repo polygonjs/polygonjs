@@ -34,7 +34,7 @@ export class CodeJsProcessor extends BaseCodeJsProcessor {
 			object3D + '.position.x += ' + myBool + ' ? 0.1 : -0.1;',
 			object3D + '.updateMatrix()'
 		];
-		this.addActionBodyLines(shadersCollectionController, bodyLines);
+		this.addBodyLines(shadersCollectionController, bodyLines);
 	}
 }
 `;
@@ -61,8 +61,8 @@ export class BaseCodeJsProcessor extends BaseCodeProcessor {
 	protected variableForInput(shadersCollectionController: ShadersCollectionController, inputName: string) {
 		return this.node.variableForInput(shadersCollectionController, inputName);
 	}
-	protected addActionBodyLines(shadersCollectionController: ShadersCollectionController, bodyLines: string[]) {
-		return shadersCollectionController.addActionBodyLines(this.node, bodyLines);
+	protected addBodyLines(shadersCollectionController: ShadersCollectionController, bodyLines: string[]) {
+		return shadersCollectionController._addBodyLines(this.node, bodyLines);
 	}
 }
 

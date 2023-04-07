@@ -69,7 +69,7 @@ export class SetGeometryInstanceScalesJsNode extends TypedJsNode<SetGeometryInst
 	protected _expectedInputName(index: number) {
 		return INPUT_NAMES[index];
 	}
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setTriggerableLines(shadersCollectionController: ShadersCollectionController) {
 		const object3D = inputObject3D(this, shadersCollectionController);
 		const scales = this.variableForInput(shadersCollectionController, SetGeometryInstanceScalesInputName.scale);
 		const mult = this.variableForInput(shadersCollectionController, SetGeometryInstanceScalesInputName.mult);
@@ -85,6 +85,6 @@ export class SetGeometryInstanceScalesJsNode extends TypedJsNode<SetGeometryInst
 			shadersCollectionController
 		);
 		const bodyLine = func.asString(object3D, scales, mult, lerp, attributeNeedsUpdate);
-		shadersCollectionController.addActionBodyLines(this, [bodyLine]);
+		shadersCollectionController.addTriggerableLines(this, [bodyLine]);
 	}
 }

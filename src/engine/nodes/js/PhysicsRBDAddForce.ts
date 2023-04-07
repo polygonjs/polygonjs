@@ -35,12 +35,12 @@ export class PhysicsRBDAddForceJsNode extends TypedJsNode<PhysicsRBDAddForceJsPa
 			new JsConnectionPoint(JsConnectionPointType.OBJECT_3D, JsConnectionPointType.OBJECT_3D, CONNECTION_OPTIONS),
 		]);
 	}
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setTriggerableLines(shadersCollectionController: ShadersCollectionController) {
 		const object3D = inputObject3D(this, shadersCollectionController);
 		const force = this.variableForInputParam(shadersCollectionController, this.p.force);
 
 		const func = Poly.namedFunctionsRegister.getFunction('physicsRBDAddForce', this, shadersCollectionController);
 		const bodyLine = func.asString(object3D, force);
-		shadersCollectionController.addActionBodyLines(this, [bodyLine]);
+		shadersCollectionController.addTriggerableLines(this, [bodyLine]);
 	}
 }

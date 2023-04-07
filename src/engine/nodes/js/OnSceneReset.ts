@@ -17,6 +17,9 @@ export class OnSceneResetJsNode extends TypedJsNode<OnSceneResetJsParamsConfig> 
 	static override type() {
 		return JsType.ON_SCENE_RESET;
 	}
+	override isTriggering() {
+		return true;
+	}
 
 	override initializeNode() {
 		this.io.outputs.setNamedOutputConnectionPoints([
