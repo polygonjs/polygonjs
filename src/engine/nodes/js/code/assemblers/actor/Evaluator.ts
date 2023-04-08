@@ -76,10 +76,14 @@ type TriggerCallback = () => void;
 // type KeyboardTriggerCallback = (event: KeyboardEvent) => void;
 export type EvaluatorKeyboardMethod = JsType.ON_KEY | JsType.ON_KEYDOWN | JsType.ON_KEYPRESS | JsType.ON_KEYUP;
 export type EvaluatorPointerMethod =
-	| JsType.ON_OBJECT_CLICK
-	| JsType.ON_OBJECT_HOVER
-	| JsType.ON_OBJECT_POINTERDOWN
-	| JsType.ON_OBJECT_POINTERUP
+	// | JsType.ON_OBJECT_CLICK
+	| 'onClick'
+	// | JsType.ON_OBJECT_HOVER
+	// | 'onPointerdown'
+	| 'onPointermove'
+	// | 'onPointerup'
+	// | JsType.ON_OBJECT_POINTERDOWN
+	// | JsType.ON_OBJECT_POINTERUP
 	| JsType.ON_POINTERDOWN
 	| JsType.ON_POINTERUP;
 
@@ -88,18 +92,20 @@ export type EvaluatorMethodName =
 	| JsType.ON_KEYDOWN
 	| JsType.ON_KEYPRESS
 	| JsType.ON_KEYUP
-	| JsType.ON_MANUAL_TRIGGER
+	// | JsType.ON_MANUAL_TRIGGER
 	| JsType.ON_MAPBOX_CAMERA_MOVE
 	| JsType.ON_MAPBOX_CAMERA_MOVE_START
 	| JsType.ON_MAPBOX_CAMERA_MOVE_END
 	| JsType.ON_OBJECT_ATTRIBUTE_UPDATE
-	| JsType.ON_OBJECT_CLICK
+	// | JsType.ON_OBJECT_CLICK
+	| 'onClick'
 	| JsType.ON_OBJECT_DISPATCH_EVENT
-	| JsType.ON_OBJECT_HOVER
-	| JsType.ON_OBJECT_POINTERDOWN
-	| JsType.ON_OBJECT_POINTERUP
+	// | JsType.ON_OBJECT_HOVER
+	// | JsType.ON_OBJECT_POINTERDOWN
+	// | JsType.ON_OBJECT_POINTERUP
 	| JsType.ON_PERFORMANCE_CHANGE
 	| JsType.ON_POINTERDOWN
+	| 'onPointermove'
 	| JsType.ON_POINTERUP
 	| JsType.ON_SCENE_PAUSE
 	| JsType.ON_SCENE_PLAY
@@ -112,18 +118,20 @@ export const EVALUATOR_METHOD_NAMES: Array<EvaluatorMethodName> = [
 	JsType.ON_KEYDOWN,
 	JsType.ON_KEYPRESS,
 	JsType.ON_KEYUP,
-	JsType.ON_MANUAL_TRIGGER,
+	// JsType.ON_MANUAL_TRIGGER,
 	JsType.ON_MAPBOX_CAMERA_MOVE,
 	JsType.ON_MAPBOX_CAMERA_MOVE_START,
 	JsType.ON_MAPBOX_CAMERA_MOVE_END,
 	JsType.ON_OBJECT_ATTRIBUTE_UPDATE,
-	JsType.ON_OBJECT_CLICK,
+	// JsType.ON_OBJECT_CLICK,
+	'onClick',
 	JsType.ON_OBJECT_DISPATCH_EVENT,
-	JsType.ON_OBJECT_HOVER,
-	JsType.ON_OBJECT_POINTERDOWN,
-	JsType.ON_OBJECT_POINTERUP,
+	// JsType.ON_OBJECT_HOVER,
+	// JsType.ON_OBJECT_POINTERDOWN,
+	// JsType.ON_OBJECT_POINTERUP,
 	JsType.ON_PERFORMANCE_CHANGE,
 	JsType.ON_POINTERDOWN,
+	'onPointermove',
 	JsType.ON_POINTERUP,
 	JsType.ON_SCENE_PAUSE,
 	JsType.ON_SCENE_PLAY,
@@ -151,7 +159,7 @@ export class ActorEvaluator {
 	onKeypress?: TriggerCallback;
 	onKeyup?: TriggerCallback;
 	onPlayerEvent?: TriggerCallback;
-	onManualTrigger?: TriggerCallback;
+	// onManualTrigger?: TriggerCallback;
 	onMapboxCameraMove?: TriggerCallback;
 	onMapboxCameraMoveStart?: TriggerCallback;
 	onMapboxCameraMoveEnd?: TriggerCallback;

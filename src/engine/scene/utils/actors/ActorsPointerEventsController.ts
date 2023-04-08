@@ -21,8 +21,8 @@ export class ActorPointerEventsController {
 		this._triggeredEvaluatorGeneratorsByMethodName.forEach((evaluatorGenerators, methodName) => {
 			evaluatorGenerators.forEach((evaluatorGenerator) => {
 				evaluatorGenerator.traverseEvaluator((evaluator) => {
-					if (evaluator[methodName]) {
-						evaluator[methodName]!();
+					if ((evaluator as any)[methodName]) {
+						(evaluator as any)[methodName]!();
 					}
 				});
 			});

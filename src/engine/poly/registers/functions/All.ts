@@ -282,6 +282,7 @@ import {SDFBox, SDFSphere} from '../../../functions/SDFPrimitives';
 import {SDFRoundedX} from '../../../functions/SDFPrimitives2D';
 import {sleep} from '../../../functions/Sleep';
 import {sphereSet, getSphereCenter, getSphereRadius} from '../../../functions/Sphere';
+import {triggerFilter, triggerTwoWaySwitch} from '../../../functions/Trigger';
 import {vector3AngleTo, vector3Project, vector3ProjectOnPlane, vector3Unproject} from '../../../functions/Vector';
 import {crossVector2, crossVector3} from '../../../functions/VectorCross';
 import {distanceVector2, distanceVector3} from '../../../functions/VectorDistance';
@@ -693,6 +694,8 @@ export interface NamedFunctionMap {
 	trackHand: trackHand;
 	trackHandGetNormalizedLandmarks: trackHandGetNormalizedLandmarks;
 	trackHandGetWorldLandmarks: trackHandGetWorldLandmarks;
+	triggerFilter: triggerFilter;
+	triggerTwoWaySwitch: triggerTwoWaySwitch;
 	vector3AngleTo: vector3AngleTo;
 	vector3Project: vector3Project;
 	vector3ProjectOnPlane: vector3ProjectOnPlane;
@@ -1043,6 +1046,8 @@ export class AllNamedFunctionRegister {
 			trackHand,
 			trackHandGetNormalizedLandmarks,
 			trackHandGetWorldLandmarks,
+			triggerFilter,
+			triggerTwoWaySwitch,
 			vector3AngleTo,
 			vector3Project,
 			vector3ProjectOnPlane,

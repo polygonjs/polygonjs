@@ -50,13 +50,7 @@ export abstract class BaseOnKeyEventJsNode extends BaseUserInputJsNode<BaseOnKey
 	override eventEmitter(): CoreEventEmitter {
 		return EVENT_EMITTERS[this.pv.element];
 	}
-	// abstract methodName(): EvaluatorMethodName;
-
-	override wrappedBodyLines(
-		shadersCollectionController: ShadersCollectionController,
-		bodyLines: string[],
-		existingMethodNames: Set<string>
-	) {
+	override setTriggeringLines(shadersCollectionController: ShadersCollectionController, triggeredMethods: string) {
 		const keyCodes = this.variableForInputParam(shadersCollectionController, this.p.keyCodes);
 		const ctrlKey = this.variableForInputParam(shadersCollectionController, this.p.ctrlKey);
 		const altKey = this.variableForInputParam(shadersCollectionController, this.p.altKey);
@@ -67,16 +61,30 @@ export abstract class BaseOnKeyEventJsNode extends BaseUserInputJsNode<BaseOnKey
 			this,
 			shadersCollectionController
 		);
-		const bodyLine = func.asString(keyCodes, ctrlKey, altKey, shiftKey, metaKey);
+		const condition = func.asString(keyCodes, ctrlKey, altKey, shiftKey, metaKey);
 
-		const methodName = this.wrappedBodyLinesMethodName();
+		// const methodName = this.wrappedBodyLinesMethodName();
 		//
-		const wrappedLines: string = `${methodName}(){
-			if( !${bodyLine} ){
-				return
-			}
-			${bodyLines.join('\n')}
-		}`;
-		return {methodNames: [methodName], wrappedLines};
+		const bodyLines: string[] = [`if( ${condition}==false ){return}`, triggeredMethods];
+
+		// `${methodName}(){
+		// 	if( !${condition} ){
+		// 		return
+		// 	}
+		// 	${triggeredMethods}
+		// }`;
+
+		shadersCollectionController.addTriggeringLines(this, bodyLines, {
+			gatherable: true,
+		});
 	}
+
+	// override wrappedBodyLines(
+	// 	shadersCollectionController: ShadersCollectionController,
+	// 	bodyLines: string[],
+	// 	existingMethodNames: Set<string>
+	// ) {
+
+	// 	return {methodNames: [methodName], wrappedLines};
+	// }
 }

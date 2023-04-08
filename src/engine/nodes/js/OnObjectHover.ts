@@ -13,6 +13,7 @@ import {BaseOnObjectPointerEventJsNode, OnObjectHoverJsNodeOutputName} from './_
 import {Poly} from '../../Poly';
 import {inputObject3D} from './_BaseObject3D';
 import {PointerEventType} from '../../../core/event/PointerEventType';
+import {RefJsDefinition} from './utils/JsDefinition';
 
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
 
@@ -63,7 +64,10 @@ export class OnObjectHoverJsNode extends BaseOnObjectPointerEventJsNode {
 		const bodyLine = func.asString(object3D, traverseChildren, lineThreshold, pointsThreshold);
 
 		const outHovered = this.jsVarName(OnObjectHoverJsNodeOutputName.hovered);
-		this._addHoveredRef(shadersCollectionController);
+		// this._addHoveredRef(shadersCollectionController);
+		shadersCollectionController.addDefinitions(this, [
+			new RefJsDefinition(this, shadersCollectionController, JsConnectionPointType.BOOLEAN, outHovered, `false`),
+		]);
 
 		const newValue = `newHovered`;
 		const currentValue = `currentHovered`;
@@ -77,6 +81,9 @@ export class OnObjectHoverJsNode extends BaseOnObjectPointerEventJsNode {
 			`}`,
 		];
 
-		shadersCollectionController.addTriggeringLines(this, bodyLines);
+		shadersCollectionController.addTriggeringLines(this, bodyLines, {
+			gatherable: true,
+			triggeringMethodName: 'onPointermove',
+		});
 	}
 }

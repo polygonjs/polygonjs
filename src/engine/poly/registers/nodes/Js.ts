@@ -12,6 +12,7 @@ import {AnimationActionPlayJsNode} from '../../../nodes/js/AnimationActionPlay';
 import {AnimationActionStopJsNode} from '../../../nodes/js/AnimationActionStop';
 import {AnimationMixerJsNode} from '../../../nodes/js/AnimationMixer';
 import {AnimationMixerUpdateJsNode} from '../../../nodes/js/AnimationMixerUpdate';
+import {AnyTriggerJsNode} from '../../../nodes/js/AnyTrigger';
 import {ArrayElementJsNode} from '../../../nodes/js/ArrayElement';
 import {ArrayLengthJsNode} from '../../../nodes/js/ArrayLength';
 import {AsinJsNode} from '../../../nodes/js/Asin';
@@ -218,6 +219,7 @@ import {TrackFaceJsNode} from '../../../nodes/js/TrackFace';
 import {TrackHandJsNode} from '../../../nodes/js/TrackHand';
 import {TriggerDelayJsNode} from '../../../nodes/js/TriggerDelay';
 import {TriggerFilterJsNode} from '../../../nodes/js/TriggerFilter';
+import {TriggerTwoWaySwitchJsNode} from '../../../nodes/js/TriggerTwoWaySwitch';
 import {TwoWaySwitchJsNode} from '../../../nodes/js/TwoWaySwitch';
 import {Vector3AngleToJsNode} from '../../../nodes/js/Vector3AngleTo';
 import {Vector3ProjectJsNode} from '../../../nodes/js/Vector3Project';
@@ -245,6 +247,7 @@ export interface JsNodeChildrenMap {
 	animationActionStop: AnimationActionStopJsNode;
 	animationMixer: AnimationMixerJsNode;
 	animationMixerUpdate: AnimationMixerUpdateJsNode;
+	anyTrigger: AnyTriggerJsNode;
 	arrayElement: ArrayElementJsNode;
 	arrayLength: ArrayLengthJsNode;
 	asin: AsinJsNode;
@@ -450,11 +453,12 @@ export interface JsNodeChildrenMap {
 	trackHand: TrackHandJsNode;
 	triggerDelay: TriggerDelayJsNode;
 	triggerFilter: TriggerFilterJsNode;
+	triggerTwoWaySwitch: TriggerTwoWaySwitchJsNode;
+	twoWaySwitch: TwoWaySwitchJsNode;
 	vector3AngleTo: Vector3AngleToJsNode;
 	vector3Project: Vector3ProjectJsNode;
 	vector3ProjectOnPlane: Vector3ProjectOnPlaneJsNode;
 	vector3Unproject: Vector3UnprojectJsNode;
-	twoWaySwitch: TwoWaySwitchJsNode;
 	vec2ToFloat: Vec2ToFloatJsNode;
 	vec2ToVec3: Vec2ToVec3JsNode;
 	vec3ToColor: Vec3ToColorJsNode;
@@ -486,6 +490,7 @@ export class JsRegister {
 		poly.registerNode(AnimationActionStopJsNode, CATEGORY_JS.ANIMATION, ONLY_ACTOR);
 		poly.registerNode(AnimationMixerJsNode, CATEGORY_JS.ANIMATION, ONLY_ACTOR);
 		poly.registerNode(AnimationMixerUpdateJsNode, CATEGORY_JS.ANIMATION, ONLY_ACTOR);
+		poly.registerNode(AnyTriggerJsNode, CATEGORY_JS.ANIMATION, ONLY_ACTOR);
 
 		poly.registerNode(ArrayElementJsNode, CATEGORY_JS.CONVERSION);
 		poly.registerNode(ArrayLengthJsNode, CATEGORY_JS.LOGIC);
@@ -702,8 +707,9 @@ export class JsRegister {
 		poly.registerNode(TanJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(TrackFaceJsNode, CATEGORY_JS.COMPUTER_VISION);
 		poly.registerNode(TrackHandJsNode, CATEGORY_JS.COMPUTER_VISION);
-		poly.registerNode(TriggerDelayJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR);
-		poly.registerNode(TriggerFilterJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR);
+		poly.registerNode(TriggerDelayJsNode, CATEGORY_JS.FLOW, ONLY_ACTOR);
+		poly.registerNode(TriggerFilterJsNode, CATEGORY_JS.FLOW, ONLY_ACTOR);
+		poly.registerNode(TriggerTwoWaySwitchJsNode, CATEGORY_JS.FLOW, ONLY_ACTOR);
 		poly.registerNode(TwoWaySwitchJsNode, CATEGORY_JS.LOGIC);
 
 		poly.registerNode(Vector3AngleToJsNode, CATEGORY_JS.MATH);

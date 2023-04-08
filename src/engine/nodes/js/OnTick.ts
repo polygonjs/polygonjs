@@ -36,6 +36,12 @@ export class OnTickJsNode extends TypedJsNode<OnTickJsParamsConfig> {
 		]);
 	}
 
+	override setTriggeringLines(
+		shadersCollectionController: ShadersCollectionController,
+		triggeredMethods: string
+	): void {
+		shadersCollectionController.addTriggeringLines(this, [triggeredMethods], {gatherable: true});
+	}
 	override setLines(shadersCollectionController: ShadersCollectionController) {
 		const timeVarName = this.jsVarName(OnTickJsNodeOuput.TIME);
 		const deltaVarName = this.jsVarName(OnTickJsNodeOuput.DELTA);

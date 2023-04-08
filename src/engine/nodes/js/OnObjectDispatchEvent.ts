@@ -82,7 +82,7 @@ export class OnObjectDispatchEventJsNode extends TypedJsNode<OnObjectDispatchEve
 			),
 		]);
 
-		shadersCollectionController.addTriggeringLines(this, [triggeredMethods]);
+		shadersCollectionController.addTriggeringLines(this, [triggeredMethods], {gatherable: false});
 	}
 
 	// override setLines(shadersCollectionController: ShadersCollectionController) {

@@ -218,10 +218,11 @@ export class TypedJsNode<K extends NodeParamsConfig> extends TypedNode<NodeConte
 		// console.warn(`setLines not defined for node '${this.path()}'`);
 	}
 	setTriggeringLines(shadersCollectionController: ShadersCollectionController, triggeredMethods: string): void {
-		if (!this.isTriggering()) {
-			console.error(`node '${this.path()}' is not triggering`);
-		}
-		shadersCollectionController.addTriggeringLines(this, [triggeredMethods]);
+		console.warn(`setTriggeringLines not defined for node '${this.path()}'`);
+		// if (!this.isTriggering()) {
+		// 	console.error(`node '${this.path()}' is not triggering`);
+		// }
+		// shadersCollectionController.addTriggeringLines(this, [triggeredMethods]);
 	}
 	setTriggerableLines(shadersCollectionController: ShadersCollectionController): void {
 		// console.warn(`setLines not defined for node '${this.path()}'`);

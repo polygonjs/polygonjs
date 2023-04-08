@@ -16,7 +16,7 @@ import {ArrayUtils} from '../../../../../core/ArrayUtils';
 import {BaseJsShaderAssembler} from '../assemblers/_Base';
 // import {sanitizeName} from '../../../../../core/String';
 import {ActorJsSopNode} from '../../../sop/ActorJs';
-import {connectedTriggerableNodes, nodeMethodName} from '../assemblers/actor/ActorAssemblerUtils';
+import {triggerableMethodCalls} from '../assemblers/actor/ActorAssemblerUtils';
 import {SetUtils} from '../../../../../core/SetUtils';
 // import {connectedTriggerableNodes} from '../assemblers/actor/ActorAssemblerUtils';
 
@@ -122,19 +122,20 @@ export class CodeBuilder {
 				const {triggeringNodes, triggerableNodes} = setCodeLinesOptions.actor;
 				// triggering nodes
 				for (let triggeringNode of triggeringNodes) {
-					const currentTriggerableNodes = new Set<BaseJsNodeType>();
-					connectedTriggerableNodes({
-						triggeringNodes: new Set([triggeringNode]),
-						triggerableNodes: currentTriggerableNodes,
-						recursive: false,
-					});
-					const triggerableMethodNames = SetUtils.toArray(currentTriggerableNodes).map((n) =>
-						nodeMethodName(n)
-					);
-					const triggerableMethodCalls = triggerableMethodNames
-						.map((methodName) => `this.${methodName}()`)
-						.join('\n');
-					triggeringNode.setTriggeringLines(this._shadersCollectionController, triggerableMethodCalls);
+					// const currentTriggerableNodes = new Set<BaseJsNodeType>();
+					// connectedTriggerableNodes({
+					// 	triggeringNodes: new Set([triggeringNode]),
+					// 	triggerableNodes: currentTriggerableNodes,
+					// 	recursive: false,
+					// });
+					// const triggerableMethodNames = SetUtils.toArray(currentTriggerableNodes).map((n) =>
+					// 	nodeMethodName(n)
+					// );
+					// const triggerableMethodCalls = triggerableMethodNames
+					// 	.map((methodName) => `this.${methodName}(${0})`)
+					// 	.join('\n');
+					const _triggerableMethodCalls = triggerableMethodCalls(triggeringNode);
+					triggeringNode.setTriggeringLines(this._shadersCollectionController, _triggerableMethodCalls);
 				}
 				// triggerable nodes
 				for (let triggerableNode of triggerableNodes) {

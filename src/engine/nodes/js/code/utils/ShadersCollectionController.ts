@@ -12,14 +12,20 @@ import {BaseJsShaderAssembler} from '../assemblers/_Base';
 import {RegisterableVariable} from '../assemblers/_BaseJsPersistedConfigUtils';
 import {JsConnectionPointType} from '../../../utils/io/connections/Js';
 import {BaseNamedFunction} from '../../../../functions/_Base';
-import {connectedTriggerableNodes, nodeMethodName} from '../assemblers/actor/ActorAssemblerUtils';
-import {SetUtils} from '../../../../../core/SetUtils';
-import {EvaluatorMethodName, EVALUATOR_METHOD_NAMES} from '../assemblers/actor/Evaluator';
+import {nodeMethodName, triggerableMethodCalls} from '../assemblers/actor/ActorAssemblerUtils';
+import {EvaluatorMethodName} from '../assemblers/actor/Evaluator';
 
 export interface ComputedValueJsDefinitionData {
 	dataType: JsConnectionPointType;
 	varName: string;
 	value: string;
+}
+interface TriggeringJsDefinitionOptionsExtended {
+	gatherable: boolean;
+	triggeringMethodName?: EvaluatorMethodName;
+}
+interface TriggerableJsDefinitionOptionsExtended extends TriggerableJsDefinitionOptions {
+	addTriggeredLines?: boolean;
 }
 
 export class ShadersCollectionController {
@@ -86,27 +92,43 @@ export class ShadersCollectionController {
 	addFunction(node: BaseJsNodeType, namedFunction: BaseNamedFunction) {
 		return this.assembler().addFunction(node, namedFunction);
 	}
-	addTriggeringLines(node: BaseJsNodeType, triggeringLines: string[]) {
+	addTriggeringLines(
+		node: BaseJsNodeType,
+		triggeringLines: string[],
+		options: TriggeringJsDefinitionOptionsExtended
+	) {
+		const gatherable = options?.gatherable != null ? options.gatherable : false;
+		const triggeringMethodName =
+			options?.triggeringMethodName != null ? options.triggeringMethodName : (node.type() as EvaluatorMethodName);
+
 		const value = triggeringLines.join('\n');
 		const varName = nodeMethodName(node); //.wrappedBodyLinesMethodName();
 		const dataType = JsConnectionPointType.BOOLEAN; // unused
-		const evaluatorMethodName = node.type() as EvaluatorMethodName;
-		if (!EVALUATOR_METHOD_NAMES.includes(evaluatorMethodName as EvaluatorMethodName)) {
-			console.warn(`method '${evaluatorMethodName}' is not included`);
-		}
+		// if (!EVALUATOR_METHOD_NAMES.includes(triggeringMethodName as EvaluatorMethodName)) {
+		// 	console.warn(`method '${triggeringMethodName}' is not included`);
+		// }
 		this.addDefinitions(node, [
-			new TriggeringJsDefinition(node, this, dataType, varName, value, evaluatorMethodName),
+			new TriggeringJsDefinition(node, this, dataType, varName, value, {triggeringMethodName, gatherable}),
 		]);
 	}
-	addTriggerableLines(node: BaseJsNodeType, triggerableLines: string[], options?: TriggerableJsDefinitionOptions) {
-		const currentTriggerableNodes = new Set<BaseJsNodeType>();
-		connectedTriggerableNodes({
-			triggeringNodes: new Set([node]),
-			triggerableNodes: currentTriggerableNodes,
-			recursive: false,
-		});
-		const triggerableMethodNames = SetUtils.toArray(currentTriggerableNodes).map((n) => nodeMethodName(n));
-		triggerableLines.push(...triggerableMethodNames.map((m) => `this.${m}()`));
+	addTriggerableLines(
+		node: BaseJsNodeType,
+		triggerableLines: string[],
+		options?: TriggerableJsDefinitionOptionsExtended
+	) {
+		const addTriggeredLines = options?.addTriggeredLines != null ? options.addTriggeredLines : true;
+		if (addTriggeredLines) {
+			// const currentTriggerableNodes = new Set<BaseJsNodeType>();
+			// connectedTriggerableNodes({
+			// 	triggeringNodes: new Set([node]),
+			// 	triggerableNodes: currentTriggerableNodes,
+			// 	recursive: false,
+			// });
+			// const triggerableMethodNames = SetUtils.toArray(currentTriggerableNodes).map((n) => nodeMethodName(n));
+			// triggerableLines.push(...triggerableMethodNames.map((m) => `this.${m}()`));
+			const _triggerableMethodCalls = triggerableMethodCalls(node);
+			triggerableLines.push(_triggerableMethodCalls);
+		}
 
 		const value = triggerableLines.join('\n');
 		const varName = node.name();

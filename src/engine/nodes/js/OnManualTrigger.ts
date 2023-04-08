@@ -11,6 +11,9 @@ import {BaseNodeType} from '../_Base';
 import {JsType} from '../../poly/registers/nodes/types/Js';
 import {ActorBuilderNode} from '../../scene/utils/ActorsManager';
 import {ActorJsSopNode} from '../sop/ActorJs';
+import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {nodeMethodName} from './code/assemblers/actor/ActorAssemblerUtils';
+import {EvaluatorMethodName} from './code/assemblers/actor/Evaluator';
 
 class OnManualTriggerJsParamsConfig extends NodeParamsConfig {
 	trigger = ParamConfig.BUTTON(null, {
@@ -41,6 +44,15 @@ export class OnManualTriggerJsNode extends TypedJsNode<OnManualTriggerJsParamsCo
 		node._triggerWithNode();
 	}
 
+	override setTriggeringLines(
+		shadersCollectionController: ShadersCollectionController,
+		triggeredMethods: string
+	): void {
+		shadersCollectionController.addTriggeringLines(this, [triggeredMethods], {
+			gatherable: false,
+			triggeringMethodName: nodeMethodName(this) as EvaluatorMethodName,
+		});
+	}
 	private _triggerWithNode() {
 		const functionNode = this.functionNode();
 		if (!functionNode) {
@@ -51,6 +63,6 @@ export class OnManualTriggerJsNode extends TypedJsNode<OnManualTriggerJsParamsCo
 		if (!actorNode.evaluatorGenerator()) {
 			console.warn('no evaluator found');
 		}
-		this.scene().actorsManager.manualTriggerController.runTriggerFromFunctionNode(actorNode);
+		this.scene().actorsManager.manualTriggerController.runTriggerFromFunctionNode(actorNode, nodeMethodName(this));
 	}
 }

@@ -44,16 +44,16 @@ const EVENT_MAP_LOGIC: Record<EvaluatorMethodName, EventHandlerType> = {
 	[JsType.ON_KEYDOWN]: EventHandlerType.onTick,
 	[JsType.ON_KEYPRESS]: EventHandlerType.onTick,
 	[JsType.ON_KEYUP]: EventHandlerType.onTick,
-	[JsType.ON_MANUAL_TRIGGER]: EventHandlerType.instant,
+	// [JsType.ON_MANUAL_TRIGGER]: EventHandlerType.instant,
 	[JsType.ON_MAPBOX_CAMERA_MOVE]: EventHandlerType.onTick, // TODO
 	[JsType.ON_MAPBOX_CAMERA_MOVE_START]: EventHandlerType.onTick, // TODO
 	[JsType.ON_MAPBOX_CAMERA_MOVE_END]: EventHandlerType.onTick, // TODO
 	[JsType.ON_OBJECT_ATTRIBUTE_UPDATE]: EventHandlerType.onTick, // TODO
-	[JsType.ON_OBJECT_CLICK]: EventHandlerType.onTick,
+	['onClick']: EventHandlerType.onTick,
 	[JsType.ON_OBJECT_DISPATCH_EVENT]: EventHandlerType.instant, // TODO
-	[JsType.ON_OBJECT_HOVER]: EventHandlerType.onTick,
-	[JsType.ON_OBJECT_POINTERDOWN]: EventHandlerType.onTick,
-	[JsType.ON_OBJECT_POINTERUP]: EventHandlerType.onTick,
+	['onPointermove']: EventHandlerType.onTick,
+	// [JsType.ON_OBJECT_POINTERDOWN]: EventHandlerType.onTick,
+	// [JsType.ON_OBJECT_POINTERUP]: EventHandlerType.onTick,
 	[JsType.ON_PERFORMANCE_CHANGE]: EventHandlerType.instant,
 	[JsType.ON_POINTERDOWN]: EventHandlerType.onTick,
 	[JsType.ON_POINTERUP]: EventHandlerType.onTick,
@@ -203,7 +203,7 @@ export class ActorsManager {
 		this._keyboardEventsController?.runTriggers();
 		// this.hoveredEventsController.runTriggers();
 		this.scene.threejsScene().traverse((object) => {
-			this.triggerEventNodes(object, JsType.ON_OBJECT_HOVER);
+			this.triggerEventNodes(object, 'onPointermove');
 			// this.triggerEventNodes(object, JsType.ON_OBJECT_CLICK);
 		});
 		this._runOnEventTick();
@@ -358,8 +358,8 @@ export class ActorsManager {
 		methodName: EvaluatorMethodName
 	) {
 		const evaluator = evaluatorGenerator.findOrCreateEvaluator(object);
-		if (evaluator[methodName]) {
-			evaluator[methodName]!();
+		if ((evaluator as any)[methodName]) {
+			(evaluator as any)[methodName]!();
 		}
 	}
 

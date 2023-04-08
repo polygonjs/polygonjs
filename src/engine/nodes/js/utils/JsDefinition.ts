@@ -185,6 +185,10 @@ export class InitFunctionJsDefinition extends TypedJsDefinition<JsDefinitionType
 		return `	${this._value}`;
 	}
 }
+interface TriggeringJsDefinitionOptions {
+	triggeringMethodName: EvaluatorMethodName;
+	gatherable: boolean;
+}
 export class TriggeringJsDefinition extends TypedJsDefinition<JsDefinitionType.TRIGGERING> {
 	constructor(
 		protected override _node: BaseJsNodeType,
@@ -192,7 +196,7 @@ export class TriggeringJsDefinition extends TypedJsDefinition<JsDefinitionType.T
 		protected override _dataType: JsConnectionPointType,
 		protected override _name: string,
 		protected _value: string,
-		protected _triggeringMethodName: EvaluatorMethodName
+		protected _options: TriggeringJsDefinitionOptions
 	) {
 		super(JsDefinitionType.TRIGGERING, _node, _shaderCollectionController, _dataType, _name);
 		// _shaderCollectionController.addComputedVarName(this.name());
@@ -207,10 +211,12 @@ export class TriggeringJsDefinition extends TypedJsDefinition<JsDefinitionType.T
 		linesForShader: Map<LineType, string[]>,
 		lineType: LineType
 	) {
-		const triggeringDefinitions = _definitions as TriggeringJsDefinition[];
+		const triggeringDefinitions = (
+			_definitions.filter((d) => d.definitionType() == JsDefinitionType.TRIGGERING) as TriggeringJsDefinition[]
+		).filter((d) => d._options.gatherable == true);
 		const definitionGroups = MapUtils.groupBy(
 			triggeringDefinitions,
-			(definition) => definition._triggeringMethodName
+			(definition) => definition._options.triggeringMethodName
 		);
 		definitionGroups.forEach((definitions, triggeringMethodName) => {
 			const definitionMethodCalls = definitions.map((d) => `this.${nodeMethodName(d.node())}()`).join(';');

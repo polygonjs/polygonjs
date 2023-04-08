@@ -7,7 +7,8 @@
 import {TRIGGER_CONNECTION_NAME, TypedJsNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {JsConnectionPoint, JsConnectionPointType, JS_CONNECTION_POINT_IN_NODE_DEF} from '../utils/io/connections/Js';
-// import {ParamType} from '../../poly/ParamType';
+import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {Poly} from '../../Poly';
 
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
 
@@ -32,10 +33,11 @@ export class TriggerFilterJsNode extends TypedJsNode<TriggerFilterJsParamsConfig
 		]);
 	}
 
-	// public override receiveTrigger(context: JsNodeTriggerContext) {
-	// 	const condition = this._inputValueFromParam<ParamType.BOOLEAN>(this.p.condition, context);
-	// 	if (condition == true) {
-	// 		this.runTrigger(context);
-	// 	}
-	// }
+	override setTriggerableLines(shadersCollectionController: ShadersCollectionController) {
+		const condition = this.variableForInputParam(shadersCollectionController, this.p.condition);
+
+		const func = Poly.namedFunctionsRegister.getFunction('triggerFilter', this, shadersCollectionController);
+		const bodyLine = func.asString(condition);
+		shadersCollectionController.addTriggerableLines(this, [bodyLine]);
+	}
 }
