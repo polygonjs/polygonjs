@@ -57,6 +57,7 @@ export interface BaseNodeEvent extends BaseEvent {
 	target?: BaseNodeType;
 	// [attachment: string]: any;
 }
+export type NodeEventListener = EventListener<BaseNodeEvent, string, EventDispatcher<BaseNodeEvent>>;
 export const DEFAULT_DATA_TYPE = 'default';
 
 /**
@@ -458,10 +459,10 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 	dispatchEvent(event: {type: string}) {
 		this._eventsDispatcher().dispatchEvent(event);
 	}
-	addEventListener(type: string, listener: EventListener<BaseNodeEvent, string, EventDispatcher<BaseNodeEvent>>) {
+	addEventListener(type: string, listener: NodeEventListener) {
 		this._eventsDispatcher().addEventListener(type, listener);
 	}
-	removeEventListener(type: string, listener: EventListener<BaseNodeEvent, string, EventDispatcher<BaseNodeEvent>>) {
+	removeEventListener(type: string, listener: NodeEventListener) {
 		this._eventsDispatcher().removeEventListener(type, listener);
 	}
 

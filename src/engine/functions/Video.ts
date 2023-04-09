@@ -1,9 +1,12 @@
 import {dummyReadRefVal} from '../../core/reactivity/CoreReactivity';
+import {VideoEvent, VIDEO_EVENTS} from '../../core/Video';
 import {VideoCopNode} from '../nodes/cop/Video';
+import {ActorEvaluator} from '../nodes/js/code/assemblers/actor/Evaluator';
+import {NodeEventListener} from '../nodes/_Base';
 import {NodeContext} from '../poly/NodeContext';
 import {CopType} from '../poly/registers/nodes/types/Cop';
 import {PolyScene} from '../scene/PolyScene';
-import {NamedFunction1} from './_Base';
+import {NamedFunction1, NamedFunction3} from './_Base';
 
 function _getVideoNode(scene: PolyScene, nodePath: string) {
 	const node = scene.node(nodePath);
@@ -18,6 +21,30 @@ function _getVideoNode(scene: PolyScene, nodePath: string) {
 	}
 	const videoNode = node as VideoCopNode;
 	return videoNode;
+}
+type CallbackByVideoEvent = Record<VideoEvent, NodeEventListener>;
+
+export class addVideoEventListener extends NamedFunction3<[string, CallbackByVideoEvent, ActorEvaluator]> {
+	static override type() {
+		return 'addVideoEventListener';
+	}
+	func(nodePath: string, listeners: CallbackByVideoEvent, evaluator: ActorEvaluator): void {
+		const videoNode = _getVideoNode(this.scene, nodePath);
+		if (!videoNode) {
+			return;
+		}
+		for (let eventName of VIDEO_EVENTS) {
+			const listener = listeners[eventName];
+			videoNode.addEventListener(eventName, listener);
+		}
+
+		evaluator.onDispose(() => {
+			for (let eventName of VIDEO_EVENTS) {
+				const listener = listeners[eventName];
+				videoNode.removeEventListener(eventName, listener);
+			}
+		});
+	}
 }
 
 export class getVideoPropertyCurrentTime extends NamedFunction1<[string]> {

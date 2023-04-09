@@ -4,7 +4,7 @@
  *
  */
 
-import {TypedJsNode} from './_Base';
+import {BaseJsNodeType, TypedJsNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {JsConnectionPoint, JsConnectionPointType} from '../utils/io/connections/Js';
 import {NodeContext} from '../../poly/NodeContext';
@@ -14,10 +14,22 @@ import {JsType} from '../../poly/registers/nodes/types/Js';
 // import {objectsForJsNode} from '../../scene/utils/actors/JssManagerUtils';
 // import {Object3D} from 'three';
 import {
+	VideoEvent,
 	// VideoEvent,
 	VIDEO_EVENTS,
 	//   VIDEO_EVENT_INDICES
 } from '../../../core/Video';
+import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {
+	getConnectedOutputNodes,
+	getOutputIndices,
+	nodeMethodName,
+	triggerInputIndex,
+} from './code/assemblers/actor/ActorAssemblerUtils';
+import {SetUtils} from '../../../core/SetUtils';
+import {Poly} from '../../Poly';
+import {InitFunctionJsDefinition, TriggeringJsDefinition} from './utils/JsDefinition';
+import {EvaluatorMethodName} from './code/assemblers/actor/Evaluator';
 
 // type Listener = () => void;
 // type Listeners = Record<VideoEvent, Listener>;
@@ -48,71 +60,79 @@ export class OnVideoEventJsNode extends TypedJsNode<OnVideoEventJsParamsConfig> 
 			VIDEO_EVENTS.map((triggerName) => new JsConnectionPoint(triggerName, JsConnectionPointType.TRIGGER))
 		);
 	}
+	override setTriggeringLines(
+		shadersCollectionController: ShadersCollectionController,
+		triggeredMethods: string
+	): void {
+		const node = this.pv.node.node();
+		if (!(node && node.context() == NodeContext.COP)) {
+			return;
+		}
+		const nodePath = `'${node.path()}'`;
+		const listeners: Record<VideoEvent, string> = {
+			[VideoEvent.PAUSE]: '',
+			[VideoEvent.PLAY]: '',
+			[VideoEvent.TIME_UPDATE]: '',
+			[VideoEvent.VOLUME_CHANGE]: '',
+		};
+		VIDEO_EVENTS.forEach((videoEvent) => {
+			const triggeredMethods = triggerMethod(this, videoEvent);
 
-	// initOnPlay() {
-	// 	this._addEventListenersToObjects();
-	// }
-	// disposeOnPause() {}
+			const _nodeMethodName = nodeMethodName(this, videoEvent);
+			listeners[videoEvent] = `this.${_nodeMethodName}.bind(this)`;
 
-	// private async _addEventListenersToObjects() {
-	// 	if (this.p.node.isDirty()) {
-	// 		await this.p.node.compute();
-	// 	}
-	// 	const foundNode = this.pv.node.nodeWithContext(NodeContext.COP);
-	// 	this._removeVideoNodeEventListener();
-	// 	let videoNode = undefined;
-	// 	// let videoNode: VideoCopNode | undefined;
-	// 	if (foundNode && foundNode.type() == CopType.VIDEO) {
-	// 		videoNode = foundNode as VideoCopNode;
-	// 	}
-	// 	if (!videoNode) {
-	// 		console.warn('no video node found');
-	// 		return;
-	// 	}
+			// const gatherable = options?.gatherable != null ? options.gatherable : false;
+			// const triggeringMethodName =
+			// 	options?.triggeringMethodName != null ? options.triggeringMethodName : (node.type() as EvaluatorMethodName);
 
-	// 	// const objects = objectsForJsNode(this);
-	// 	// for (let object of objects) {
-	// 	// 	this._createEventListener(videoNode, object);
-	// 	// }
-	// }
-	// private _listenerByObjectByVideoNode: Map<VideoCopNode, Map<Object3D, Listeners>> = new Map();
-	// private _createEventListener(videoNode: VideoCopNode, Object3D: Object3D) {
-	// 	let listenerByObject = this._listenerByObjectByVideoNode.get(videoNode);
-	// 	if (!listenerByObject) {
-	// 		listenerByObject = new Map();
-	// 		this._listenerByObjectByVideoNode.set(videoNode, listenerByObject);
-	// 	}
-	// 	let listeners = listenerByObject.get(Object3D);
-	// 	if (!listeners) {
-	// 		const createListener = (eventName: VideoEvent) => {
-	// 			const listener = () => {
-	// 				this.runTrigger({Object3D}, VIDEO_EVENT_INDICES.get(eventName));
-	// 			};
-	// 			return listener;
-	// 		};
-	// 		listeners = {
-	// 			[VideoEvent.PLAY]: createListener(VideoEvent.PLAY),
-	// 			[VideoEvent.PAUSE]: createListener(VideoEvent.PAUSE),
-	// 			[VideoEvent.TIME_UPDATE]: createListener(VideoEvent.TIME_UPDATE),
-	// 			[VideoEvent.VOLUME_CHANGE]: createListener(VideoEvent.VOLUME_CHANGE),
-	// 		};
-	// 		listenerByObject.set(Object3D, listeners);
-	// 		for (let eventName of VIDEO_EVENTS) {
-	// 			videoNode.addEventListener(eventName, listeners[eventName]);
-	// 		}
-	// 	}
-	// }
-	// override dispose(): void {
-	// 	this._removeVideoNodeEventListener();
-	// 	super.dispose();
-	// }
-	// private _removeVideoNodeEventListener() {
-	// 	this._listenerByObjectByVideoNode.forEach((listenerByObject, videoNode) => {
-	// 		listenerByObject.forEach((listeners, Object3D) => {
-	// 			for (let eventName of VIDEO_EVENTS) {
-	// 				videoNode.removeEventListener(eventName, listeners[eventName]);
-	// 			}
-	// 		});
-	// 	});
-	// }
+			const value = triggeredMethods; //triggeringLines.join('\n');//
+			// const varName = videoEvent; //nodeMethodName(node); //.wrappedBodyLinesMethodName();
+			const dataType = JsConnectionPointType.BOOLEAN; // unused
+			// if (!EVALUATOR_METHOD_NAMES.includes(triggeringMethodName as EvaluatorMethodName)) {
+			// 	console.warn(`method '${triggeringMethodName}' is not included`);
+			// }
+			shadersCollectionController.addDefinitions(this, [
+				new TriggeringJsDefinition(this, shadersCollectionController, dataType, _nodeMethodName, value, {
+					triggeringMethodName: videoEvent as any as EvaluatorMethodName,
+					gatherable: false,
+					nodeMethodName: _nodeMethodName,
+				}),
+			]);
+		});
+
+		const func = Poly.namedFunctionsRegister.getFunction(
+			'addVideoEventListener',
+			this,
+			shadersCollectionController
+		);
+		const bodyLine = func.asString(nodePath, JSON.stringify(listeners).replace(/\"/g, ''), `this`);
+		shadersCollectionController.addDefinitions(this, [
+			new InitFunctionJsDefinition(
+				this,
+				shadersCollectionController,
+				JsConnectionPointType.OBJECT_3D,
+				this.path(),
+				bodyLine
+			),
+		]);
+
+		// shadersCollectionController.addTriggeringLines(this, [triggeredMethods], {gatherable: false});
+	}
+}
+
+function triggerMethod(node: OnVideoEventJsNode, outputName: string): string {
+	const outputIndex = getOutputIndices(node, (c) => c.name() == outputName)[0];
+	const triggerableNodes = new Set<BaseJsNodeType>();
+	getConnectedOutputNodes({
+		node,
+		triggerOutputIndices: [outputIndex],
+		triggerableNodes,
+		recursive: false,
+	});
+	const triggerableMethodNames = SetUtils.toArray(triggerableNodes).map((triggerableNode) => {
+		const argIndex = triggerInputIndex(node, triggerableNode);
+		const m = nodeMethodName(triggerableNode);
+		return `this.${m}(${argIndex})`;
+	});
+	return `${triggerableMethodNames.join(';')}`;
 }

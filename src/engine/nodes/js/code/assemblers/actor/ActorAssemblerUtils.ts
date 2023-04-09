@@ -8,15 +8,38 @@ import {BaseJsNodeType} from '../../../_Base';
 
 type ConnectionPointCallback = (connectionPoint: BaseJsConnectionPoint) => boolean;
 
-export function nodeMethodName(node: BaseJsNodeType): string {
+export function nodeMethodName(node: BaseJsNodeType, outputName?: string): string {
 	const functionNode = node.functionNode();
 	if (functionNode == null) {
 		return node.name();
 	}
-	if (functionNode == node.parent()) {
-		return node.name();
+
+	const sanitized = sanitizeName(node.path().replace(functionNode.path(), '')).substring(1);
+	if (outputName) {
+		return `${sanitized}_${outputName}`;
+	} else {
+		return sanitized;
 	}
-	return sanitizeName(node.path().replace(functionNode.path(), ''));
+}
+interface MethodNameData {
+	outputName: string;
+	nodeName: string;
+	methodNameWithoutOutputName: string;
+}
+export function methodNameData(methodName: string): MethodNameData {
+	const elements = methodName.split('_');
+	if (elements.length > 1) {
+		const outputName = elements[elements.length - 1];
+		const nodeName = elements[elements.length - 2];
+		elements.pop();
+		const methodNameWithoutOutputName = elements.join('_');
+		return {outputName, nodeName, methodNameWithoutOutputName};
+	} else {
+		const outputName = JsConnectionPointType.TRIGGER;
+		const nodeName = elements[elements.length - 2];
+		const methodNameWithoutOutputName = methodName;
+		return {outputName, nodeName, methodNameWithoutOutputName};
+	}
 }
 
 function isTriggeringNode(node: BaseJsNodeType): boolean {

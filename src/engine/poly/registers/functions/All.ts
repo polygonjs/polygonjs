@@ -303,6 +303,7 @@ import {manhattanDistanceVector2, manhattanDistanceVector3} from '../../../funct
 import {maxLengthVector2, maxLengthVector3, maxLengthVector4} from '../../../functions/VectorMaxLength';
 import {normalizeVector2, normalizeVector3, normalizeVector4} from '../../../functions/VectorNormalize';
 import {
+	addVideoEventListener,
 	getVideoPropertyCurrentTime,
 	getVideoPropertyDuration,
 	getVideoPropertyMuted,
@@ -496,6 +497,7 @@ export interface NamedFunctionMap {
 	getTrackedHandPinkyDirection: getTrackedHandPinkyDirection;
 	getTrackedHandRingDirection: getTrackedHandRingDirection;
 	getTrackedHandThumbDirection: getTrackedHandThumbDirection;
+	addVideoEventListener: addVideoEventListener;
 	getVideoPropertyCurrentTime: getVideoPropertyCurrentTime;
 	getVideoPropertyDuration: getVideoPropertyDuration;
 	getVideoPropertyMuted: getVideoPropertyMuted;
@@ -727,6 +729,7 @@ export class AllNamedFunctionRegister {
 			addNumber,
 			addVector,
 			addVectorNumber,
+			addVideoEventListener,
 			andArrays,
 			andBooleans,
 			animationActionCrossFade,

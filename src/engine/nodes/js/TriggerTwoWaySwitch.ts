@@ -8,7 +8,12 @@ import {SetUtils} from '../../../core/SetUtils';
 import {Poly} from '../../Poly';
 import {JsConnectionPoint, JsConnectionPointType, JS_CONNECTION_POINT_IN_NODE_DEF} from '../utils/io/connections/Js';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {getConnectedOutputNodes, getOutputIndices, nodeMethodName} from './code/assemblers/actor/ActorAssemblerUtils';
+import {
+	getConnectedOutputNodes,
+	getOutputIndices,
+	nodeMethodName,
+	triggerInputIndex,
+} from './code/assemblers/actor/ActorAssemblerUtils';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 import {BaseJsNodeType, TRIGGER_CONNECTION_NAME, TypedJsNode} from './_Base';
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
@@ -67,8 +72,10 @@ function triggerMethod(node: TriggerTwoWaySwitchJsNode, outputName: string): str
 		triggerableNodes,
 		recursive: false,
 	});
-	const triggerableMethodNames = SetUtils.toArray(triggerableNodes)
-		.map((n) => nodeMethodName(n))
-		.map((methodName) => `this.${methodName}()`);
+	const triggerableMethodNames = SetUtils.toArray(triggerableNodes).map((triggerableNode) => {
+		const argIndex = triggerInputIndex(node, triggerableNode);
+		const m = nodeMethodName(triggerableNode);
+		return `this.${m}(${argIndex})`;
+	});
 	return `()=>{ ${triggerableMethodNames.join(';')} }`;
 }

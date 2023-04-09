@@ -71,7 +71,6 @@ export class OnObjectDispatchEventJsNode extends TypedJsNode<OnObjectDispatchEve
 			`this`,
 			`this.${this.wrappedBodyLinesMethodName()}.bind(this)`
 		);
-		// shadersCollectionController.addActionBodyLines(this, [bodyLine]);
 		shadersCollectionController.addDefinitions(this, [
 			new InitFunctionJsDefinition(
 				this,

@@ -205,6 +205,7 @@ export class InitFunctionJsDefinition extends TypedJsDefinition<JsDefinitionType
 interface TriggeringJsDefinitionOptions {
 	triggeringMethodName: EvaluatorMethodName;
 	gatherable: boolean;
+	nodeMethodName?: string;
 }
 export class TriggeringJsDefinition extends TypedJsDefinition<JsDefinitionType.TRIGGERING> {
 	constructor(
@@ -219,7 +220,8 @@ export class TriggeringJsDefinition extends TypedJsDefinition<JsDefinitionType.T
 		// _shaderCollectionController.addComputedVarName(this.name());
 	}
 	line() {
-		return `${nodeMethodName(this._node)}(){
+		const methodName = this._options.nodeMethodName || nodeMethodName(this._node);
+		return `${methodName}(){
 			${this._value}
 		}`;
 	}
