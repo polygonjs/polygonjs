@@ -139,7 +139,18 @@ import {
 	mathVectorArray_5,
 	MathArrayVectorElement,
 } from '../../../functions/_MathGeneric';
-import {clamp, complement, fit, fitClamp, mix, multAdd, negate, rand, smoothstep} from '../../../functions/Math';
+import {
+	clamp,
+	complement,
+	fit,
+	fitClamp,
+	mix,
+	multAdd,
+	negate,
+	rand,
+	random,
+	smoothstep,
+} from '../../../functions/Math';
 import {
 	multScalarArrayVectorArray,
 	multScalarColor,
@@ -319,6 +330,7 @@ import {getObject} from '../../../functions/GetObject';
 import {getObjectChild} from '../../../functions/GetObjectChild';
 import {getParent} from '../../../functions/GetParent';
 import {getObjectAttribute} from '../../../functions/GetObjectAttribute';
+import {getObjectAttributePrevious} from '../../../functions/GetObjectAttributePrevious';
 import {getObjectAttributeRef} from '../../../functions/GetObjectAttributeRef';
 import {getObjectHoveredState} from '../../../functions/GetObjectHoveredState';
 import {
@@ -338,6 +350,7 @@ import {
 } from '../../../functions/GetObjectProperty';
 import {getObjectUserData} from '../../../functions/GetObjectUserData';
 import {setObjectAttribute} from '../../../functions/SetObjectAttribute';
+import {setObjectAttributeRef} from '../../../functions/SetObjectAttributeRef';
 import {setObjectLookAt} from '../../../functions/SetObjectLookAt';
 import {setObjectPolarTransform} from '../../../functions/SetObjectPolarTransform';
 import {setObjectPosition} from '../../../functions/SetObjectPosition';
@@ -440,6 +453,7 @@ export interface NamedFunctionMap {
 	getMaterial: getMaterial;
 	getObject: getObject;
 	getObjectAttribute: getObjectAttribute;
+	getObjectAttributePrevious: getObjectAttributePrevious;
 	getObjectAttributeRef: getObjectAttributeRef;
 	getObjectChild: getObjectChild;
 	getObjectHoveredState: getObjectHoveredState;
@@ -599,6 +613,7 @@ export interface NamedFunctionMap {
 	playerSimpleUpdate: playerSimpleUpdate;
 	playInstrumentNote: playInstrumentNote;
 	rand: rand;
+	random: random;
 	raySet: raySet;
 	rayFromCamera: rayFromCamera;
 	rayIntersectBox3: rayIntersectBox3;
@@ -639,6 +654,7 @@ export interface NamedFunctionMap {
 	setMaterialUniformNumber: setMaterialUniformNumber;
 	setMaterialUniformVectorColor: setMaterialUniformVectorColor;
 	setObjectAttribute: setObjectAttribute;
+	setObjectAttributeRef: setObjectAttributeRef;
 	setObjectLookAt: setObjectLookAt;
 	setObjectMaterial: setObjectMaterial;
 	setObjectMaterialColor: setObjectMaterialColor;
@@ -792,6 +808,7 @@ export class AllNamedFunctionRegister {
 			getMaterial,
 			getObject,
 			getObjectAttribute,
+			getObjectAttributePrevious,
 			getObjectAttributeRef,
 			getObjectChild,
 			getObjectHoveredState,
@@ -952,6 +969,7 @@ export class AllNamedFunctionRegister {
 			physicsWorldStepSimulation,
 			pressButtonParam,
 			rand,
+			random,
 			raySet,
 			rayFromCamera,
 			rayIntersectBox3,
@@ -992,6 +1010,7 @@ export class AllNamedFunctionRegister {
 			setMaterialUniformNumber,
 			setMaterialUniformVectorColor,
 			setObjectAttribute,
+			setObjectAttributeRef,
 			setObjectLookAt,
 			setObjectMaterial,
 			setObjectMaterialColor,

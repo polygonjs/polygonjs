@@ -354,7 +354,16 @@ export const ARRAY_JS_CONNECTION_TYPES: Array<JsConnectionPointTypeArray> = [
 
 export const ARRAY_JS_CONNECTION_TYPES_SET: Set<JsConnectionPointTypeArray> = new Set(ARRAY_JS_CONNECTION_TYPES);
 
-export const PARAM_CONVERTIBLE_JS_CONNECTION_POINT_TYPES: Array<JsConnectionPointType> = [
+export type ParamConvertibleJsType =
+	| JsConnectionPointType.BOOLEAN
+	| JsConnectionPointType.COLOR
+	| JsConnectionPointType.FLOAT
+	| JsConnectionPointType.INT
+	| JsConnectionPointType.STRING
+	| JsConnectionPointType.VECTOR2
+	| JsConnectionPointType.VECTOR3
+	| JsConnectionPointType.VECTOR4;
+export const PARAM_CONVERTIBLE_JS_CONNECTION_POINT_TYPES: Array<ParamConvertibleJsType> = [
 	JsConnectionPointType.BOOLEAN,
 	JsConnectionPointType.COLOR,
 	JsConnectionPointType.FLOAT,

@@ -5,14 +5,14 @@ import {_getObjectAttributeRef} from '../../core/reactivity/ObjectAttributeReact
 import {AttribValue} from '../../types/GlobalTypes';
 import {ParamConvertibleJsType} from '../nodes/utils/io/connections/Js';
 
-export class getObjectAttribute extends ObjectNamedFunction2<[string, ParamConvertibleJsType]> {
+export class getObjectAttributePrevious extends ObjectNamedFunction2<[string, ParamConvertibleJsType]> {
 	static override type() {
-		return 'getObjectAttribute';
+		return 'getObjectAttributePrevious';
 	}
 	func(object3D: Object3D, attribName: string, type: ParamConvertibleJsType): AttribValue {
 		const _ref = _getObjectAttributeRef(object3D, attribName, type);
 		// _dummyReadAttributeRefVal(_ref.value);
-		return _ref.current.value; // CoreObject.attribValue(object3D, attribName);
+		return _ref.previous.value; // CoreObject.attribValue(object3D, attribName);
 	}
 }
 // export class getObjectAttribute extends ObjectNamedFunction1<[string]> {

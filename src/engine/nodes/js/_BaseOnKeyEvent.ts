@@ -63,28 +63,10 @@ export abstract class BaseOnKeyEventJsNode extends BaseUserInputJsNode<BaseOnKey
 		);
 		const condition = func.asString(keyCodes, ctrlKey, altKey, shiftKey, metaKey);
 
-		// const methodName = this.wrappedBodyLinesMethodName();
-		//
 		const bodyLines: string[] = [`if( ${condition}==false ){return}`, triggeredMethods];
-
-		// `${methodName}(){
-		// 	if( !${condition} ){
-		// 		return
-		// 	}
-		// 	${triggeredMethods}
-		// }`;
 
 		shadersCollectionController.addTriggeringLines(this, bodyLines, {
 			gatherable: true,
 		});
 	}
-
-	// override wrappedBodyLines(
-	// 	shadersCollectionController: ShadersCollectionController,
-	// 	bodyLines: string[],
-	// 	existingMethodNames: Set<string>
-	// ) {
-
-	// 	return {methodNames: [methodName], wrappedLines};
-	// }
 }

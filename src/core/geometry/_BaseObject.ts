@@ -9,7 +9,7 @@ import {CoreType} from '../Type';
 // import {makeAttribReactiveVector3} from './attribute/Vector3';
 // import {makeAttribReactiveVector2} from './attribute/Vector2';
 // import {makeAttribReactiveSimple} from './attribute/Simple';
-import {AttributeCallbackQueue} from './attribute/AttributeCallbackQueue';
+// import {AttributeCallbackQueue} from './attribute/AttributeCallbackQueue';
 import {SetUtils} from '../../core/SetUtils';
 import {MapUtils} from '../../core/MapUtils';
 import {ObjectContent, CoreObjectType, ObjectGeometryMap, MergeCompactOptions} from './ObjectContent';
@@ -55,6 +55,20 @@ export type AttributeDictionary = PolyDictionary<AttribValue>;
 // }
 
 // export type CoreObjectContent = Object3D|CadObject
+export function attribValueNonPrimitive(src: AttribValue) {
+	return src instanceof Vector2 || src instanceof Vector3 || src instanceof Vector4;
+}
+export function copyAttribValue(src: AttribValue, target: AttribValue) {
+	if (target instanceof Vector2 && src instanceof Vector2) {
+		target.copy(src);
+	}
+	if (target instanceof Vector3 && src instanceof Vector3) {
+		target.copy(src);
+	}
+	if (target instanceof Vector4 && src instanceof Vector4) {
+		target.copy(src);
+	}
+}
 
 export abstract class BaseCoreObject<T extends CoreObjectType> extends CoreEntity {
 	constructor(protected _object: ObjectContent<T>, index: number) {
@@ -86,27 +100,23 @@ export abstract class BaseCoreObject<T extends CoreObjectType> extends CoreEntit
 			}
 		}
 
-		const dict = this.attributesDictionary(object);
+		const dict = this._attributesDictionary(object);
+
 		const currentValue = dict[attribName];
-		if (currentValue != null) {
-			// console.log('set', object, attribName, currentRef, currentRef.value);
-			// const currentValue = currentRef.value;
-			if (CoreType.isVector(currentValue) && CoreType.isVector(value)) {
-				AttributeCallbackQueue.block();
-				if (currentValue instanceof Vector2 && value instanceof Vector2) {
-					currentValue.copy(value);
-				}
-				if (currentValue instanceof Vector3 && value instanceof Vector3) {
-					currentValue.copy(value);
-				}
-				if (currentValue instanceof Vector4 && value instanceof Vector4) {
-					currentValue.copy(value);
-				}
-				AttributeCallbackQueue.unblock();
-				return;
-			}
+
+		// if (currentValue != null) {
+		// console.log('set', object, attribName, currentRef, currentRef.value);
+		// const currentValue = currentRef.value;
+		if (attribValueNonPrimitive(currentValue) && attribValueNonPrimitive(value)) {
+			// AttributeCallbackQueue.block();
+			copyAttribValue(value, currentValue);
+			// AttributeCallbackQueue.unblock();
+			return;
+		} else {
+			dict[attribName] = value;
 		}
-		dict[attribName] = value;
+		// }
+
 		// if (CoreType.isVector(value)) {
 		// 	// make sure to clone it, otherwise editing the attrib of one object would update another object's
 		// 	dict[attribName] = value.clone();
@@ -129,8 +139,22 @@ export abstract class BaseCoreObject<T extends CoreObjectType> extends CoreEntit
 	// 	// }
 	// 	// this.coreGeometry()?.addNumericAttrib(name, size, defaultValue);
 	// }
-	static attributesDictionary<T extends CoreObjectType>(object: ObjectContent<T>) {
+	protected static _attributesDictionary<T extends CoreObjectType>(object: ObjectContent<T>) {
 		return (object.userData[ATTRIBUTES] as AttributeDictionary) || this._createAttributesDictionaryIfNone(object);
+	}
+	static attributesDictionaryEntry<T extends CoreObjectType>(
+		object: ObjectContent<T>,
+		attribName: string,
+		defaultValue?: AttribValue
+	) {
+		const dict =
+			(object.userData[ATTRIBUTES] as AttributeDictionary) || this._createAttributesDictionaryIfNone(object);
+		let entry = dict[attribName];
+		if (entry == null) {
+			entry = defaultValue || 0;
+			dict[attribName] = entry;
+		}
+		return entry;
 	}
 	// static attributesPreviousValuesDictionary<T extends CoreObjectType>(object: ObjectContent<T>) {
 	// 	return (
@@ -150,13 +174,13 @@ export abstract class BaseCoreObject<T extends CoreObjectType> extends CoreEntit
 	// }
 
 	private _attributesDictionary() {
-		return (this.constructor as typeof BaseCoreObject<CoreObjectType>).attributesDictionary(this._object);
+		return (this.constructor as typeof BaseCoreObject<CoreObjectType>)._attributesDictionary(this._object);
 	}
 	attributeNames(): string[] {
 		return this.attribNames();
 	}
 	static attribNames<T extends CoreObjectType>(object: ObjectContent<T>): string[] {
-		return Object.keys(this.attributesDictionary(object));
+		return Object.keys(this._attributesDictionary(object));
 	}
 	attribNames(): string[] {
 		return (this.constructor as typeof BaseCoreObject<CoreObjectType>).attribNames(this._object);
@@ -188,7 +212,7 @@ export abstract class BaseCoreObject<T extends CoreObjectType> extends CoreEntit
 		return (this.constructor as any as typeof BaseCoreObject<CoreObjectType>).hasAttrib(this._object, attribName);
 	}
 	static hasAttrib<T extends CoreObjectType>(object: ObjectContent<T>, attribName: string) {
-		return attribName in this.attributesDictionary(object);
+		return attribName in this._attributesDictionary(object);
 	}
 
 	renameAttrib(old_name: string, new_name: string) {
@@ -212,7 +236,7 @@ export abstract class BaseCoreObject<T extends CoreObjectType> extends CoreEntit
 		delete this._attributesDictionary()[name];
 	}
 	static deleteAttribute<T extends CoreObjectType>(object: ObjectContent<T>, attribName: string) {
-		delete this.attributesDictionary(object)[attribName];
+		delete this._attributesDictionary(object)[attribName];
 	}
 	// static position:PositionStaticMethod<CoreObjectType> = DEFAULT_POSITION_STATIC_METHOD
 	static position(object: ObjectContent<CoreObjectType>, target: Vector3) {
@@ -254,17 +278,17 @@ export abstract class BaseCoreObject<T extends CoreObjectType> extends CoreEntit
 			return index;
 		}
 		if (object.userData) {
-			const dict = this.attributesDictionary(object);
-			const val = dict[attribName];
+			const val = this.attributesDictionaryEntry(object, attribName);
+			// const val = attribRef.value; //dict[attribName];
 			if (val == null) {
 				return _attribFromProperty();
 			} else {
 				// const val = _ref.value;
 				if (CoreType.isVector(val) && target) {
-					if (val instanceof Vector3 && target instanceof Vector3) {
+					if (val instanceof Vector2 && target instanceof Vector2) {
 						return target.copy(val);
 					}
-					if (val instanceof Vector2 && target instanceof Vector2) {
+					if (val instanceof Vector3 && target instanceof Vector3) {
 						return target.copy(val);
 					}
 					if (val instanceof Vector4 && target instanceof Vector4) {

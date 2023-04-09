@@ -13,6 +13,7 @@ import {
 	JsConnectionPoint,
 	JsConnectionPointType,
 	JS_CONNECTION_POINT_IN_NODE_DEF,
+	ParamConvertibleJsType,
 	PARAM_CONVERTIBLE_JS_CONNECTION_POINT_TYPES,
 } from '../utils/io/connections/Js';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
@@ -40,7 +41,7 @@ class SetObjectAttributeJsParamsConfig extends NodeParamsConfig {
 	/** @param manual trigger */
 	// trigger = ParamConfig.BUTTON(null, JS_NODE_SELF_TRIGGER_CALLBACK);
 	/** @param attribute name */
-	attribName = ParamConfig.STRING('');
+	// attribName = ParamConfig.STRING('');
 	/** @param attribute type */
 	type = ParamConfig.INTEGER(PARAM_CONVERTIBLE_JS_CONNECTION_POINT_TYPES.indexOf(JsConnectionPointType.FLOAT), {
 		menu: {
@@ -111,7 +112,7 @@ export class SetObjectAttributeJsNode extends TypedJsNode<SetObjectAttributeJsPa
 		return connectionType || JsConnectionPointType.FLOAT;
 	}
 
-	setAttribType(type: JsConnectionPointType) {
+	setAttribType(type: ParamConvertibleJsType) {
 		this.p.type.set(PARAM_CONVERTIBLE_JS_CONNECTION_POINT_TYPES.indexOf(type));
 	}
 
@@ -122,7 +123,7 @@ export class SetObjectAttributeJsNode extends TypedJsNode<SetObjectAttributeJsPa
 		const newValue = this.variableForInput(shadersCollectionController, SetObjectAttributeJsNode.INPUT_NAME_VAL);
 
 		const func = Poly.namedFunctionsRegister.getFunction('setObjectAttribute', this, shadersCollectionController);
-		const bodyLine = func.asString(object3D, attribName, lerp, newValue);
+		const bodyLine = func.asString(object3D, attribName, lerp, newValue, `'${this._currentConnectionType()}'`);
 		shadersCollectionController.addTriggerableLines(this, [bodyLine]);
 	}
 

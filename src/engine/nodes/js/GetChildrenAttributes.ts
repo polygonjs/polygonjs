@@ -11,6 +11,7 @@ import {
 	JsConnectionPointType,
 	JsConnectionPointTypeToArrayTypeMap,
 	JS_CONNECTION_POINT_IN_NODE_DEF,
+	ParamConvertibleJsType,
 	PARAM_CONVERTIBLE_JS_CONNECTION_POINT_TYPES,
 } from '../utils/io/connections/Js';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
@@ -60,7 +61,7 @@ export class GetChildrenAttributesJsNode extends TypedJsNode<GetChildrenAttribut
 		return arrayConnectionType;
 	}
 
-	setAttribType(type: JsConnectionPointType) {
+	setAttribType(type: ParamConvertibleJsType) {
 		this.p.type.set(PARAM_CONVERTIBLE_JS_CONNECTION_POINT_TYPES.indexOf(type));
 	}
 

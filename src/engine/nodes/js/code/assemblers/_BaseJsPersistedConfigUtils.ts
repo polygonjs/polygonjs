@@ -108,6 +108,7 @@ export function createVariable(type: JsConnectionPointType) {
 			return null;
 		}
 	}
+	console.warn('createVariable not implemented with type', type);
 	TypeAssert.unreachable(type);
 }
 

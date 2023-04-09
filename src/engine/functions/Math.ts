@@ -1,5 +1,5 @@
 import {_matchArrayLength} from './_ArrayUtils';
-import {NamedFunction1, NamedFunction2, NamedFunction3, NamedFunction4, NamedFunction5} from './_Base';
+import {NamedFunction0, NamedFunction1, NamedFunction2, NamedFunction3, NamedFunction4, NamedFunction5} from './_Base';
 import {
 	clamp as _clamp,
 	smoothstep as _smoothstep,
@@ -8,6 +8,7 @@ import {
 	mix as _mix,
 	randFloat as _randFloat,
 } from '../../core/math/_Module';
+import {dummyReadRefVal} from '../../core/reactivity/CoreReactivity';
 
 export class clamp extends NamedFunction3<[number, number, number]> {
 	static override type() {
@@ -73,6 +74,15 @@ export class rand extends NamedFunction2<[number, number]> {
 	}
 	func(value0: number, value1: number): number {
 		return _randFloat(value0, value1);
+	}
+}
+export class random extends NamedFunction0 {
+	static override type() {
+		return 'random';
+	}
+	func(): number {
+		dummyReadRefVal(this.timeController.timeUniform().value);
+		return Math.random();
 	}
 }
 

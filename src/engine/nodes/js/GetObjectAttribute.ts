@@ -10,6 +10,7 @@ import {
 	JsConnectionPoint,
 	JsConnectionPointType,
 	JS_CONNECTION_POINT_IN_NODE_DEF,
+	ParamConvertibleJsType,
 	PARAM_CONVERTIBLE_JS_CONNECTION_POINT_TYPES,
 } from '../utils/io/connections/Js';
 import {inputObject3D} from './_BaseObject3D';
@@ -119,7 +120,7 @@ export class GetObjectAttributeJsNode extends TypedJsNode<GetObjectAttributeJsPa
 	// 	// we should never run this
 	// 	return this.p.boolean;
 	// }
-	setAttribType(type: JsConnectionPointType) {
+	setAttribType(type: ParamConvertibleJsType) {
 		this.p.type.set(PARAM_CONVERTIBLE_JS_CONNECTION_POINT_TYPES.indexOf(type));
 	}
 
@@ -130,7 +131,7 @@ export class GetObjectAttributeJsNode extends TypedJsNode<GetObjectAttributeJsPa
 		const dataType = PARAM_CONVERTIBLE_JS_CONNECTION_POINT_TYPES[this.pv.type];
 
 		const func = Poly.namedFunctionsRegister.getFunction('getObjectAttribute', this, shadersCollectionController);
-		const bodyLine = func.asString(object3D, attribName);
+		const bodyLine = func.asString(object3D, attribName, `'${dataType}'`);
 		shadersCollectionController.addBodyOrComputed(this, [{dataType, varName: out, value: bodyLine}]);
 	}
 

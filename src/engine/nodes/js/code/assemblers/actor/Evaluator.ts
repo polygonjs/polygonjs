@@ -10,6 +10,7 @@ import {JsType} from '../../../../../poly/registers/nodes/types/Js';
 import {EventData} from '../../../../../../core/event/EventData';
 import {ActorBuilderNode} from '../../../../../scene/utils/ActorsManager';
 import {TimeController} from '../../../../../scene/utils/TimeController';
+import {WatchStopHandle} from '@vue-reactivity/watch';
 // import {watch} from '../../../../../../core/reactivity/CoreReactivity';
 // import {getObjectAttributeRef} from '../../../../../../core/reactivity/ObjectAttributeReactivity';
 // import {ref} from '../../../../../../core/reactivity';
@@ -149,6 +150,7 @@ type OnDisposeCallback = () => void;
 export class ActorEvaluator {
 	protected scene: PolyScene;
 	protected timeController: TimeController;
+	private _watchStopHandles: WatchStopHandle[] = [];
 	constructor(public readonly node: ActorBuilderNode, public readonly object3D: Object3D) {
 		this.scene = node.scene();
 		this.timeController = this.scene.timeController;
@@ -186,13 +188,27 @@ export class ActorEvaluator {
 		this._onDisposeCallbacks.push(callback);
 	}
 	dispose() {
-		if (!this._onDisposeCallbacks) {
-			return;
-		}
-		let callback: OnDisposeCallback | undefined;
-		while ((callback = this._onDisposeCallbacks.pop())) {
-			callback();
-		}
+		const _disposeWatchEffects = () => {
+			if (!this._watchStopHandles) {
+				return;
+			}
+			let watchStopHandle: WatchStopHandle | undefined;
+			while ((watchStopHandle = this._watchStopHandles.pop())) {
+				watchStopHandle();
+			}
+		};
+
+		const _runOnDisposeCallback = () => {
+			if (!this._onDisposeCallbacks) {
+				return;
+			}
+			let callback: OnDisposeCallback | undefined;
+			while ((callback = this._onDisposeCallbacks.pop())) {
+				callback();
+			}
+		};
+		_runOnDisposeCallback();
+		_disposeWatchEffects();
 	}
 }
 

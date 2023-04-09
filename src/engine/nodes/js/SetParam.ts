@@ -9,6 +9,7 @@ import {
 	JsConnectionPoint,
 	JsConnectionPointType,
 	JS_CONNECTION_POINT_IN_NODE_DEF,
+	ParamConvertibleJsType,
 	PARAM_CONVERTIBLE_JS_CONNECTION_POINT_TYPES,
 } from '../utils/io/connections/Js';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
@@ -81,7 +82,7 @@ export class SetParamJsNode extends TypedJsNode<SetParamJsParamsConfig> {
 		}
 		return connectionType || JsConnectionPointType.FLOAT;
 	}
-	setParamType(paramType: JsConnectionPointType) {
+	setParamType(paramType: ParamConvertibleJsType) {
 		const index = PARAM_CONVERTIBLE_JS_CONNECTION_POINT_TYPES.indexOf(paramType);
 		if (index < 0) {
 			console.warn(

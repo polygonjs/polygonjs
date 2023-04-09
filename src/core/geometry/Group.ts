@@ -2,7 +2,7 @@ import {AttribValue} from './../../types/GlobalTypes';
 import {NumericAttribValue, PolyDictionary} from '../../types/GlobalTypes';
 import {Box3, BufferGeometry, LineSegments, Mesh, Points, Object3D, Vector3} from 'three';
 import {BaseCoreObject} from './_BaseObject';
-import {CoreObject, AttributeDictionary} from './Object';
+import {CoreObject} from './Object';
 import {CoreGeometry} from './Geometry';
 import {CoreAttribute} from './Attribute';
 import {CoreString} from '../String';
@@ -32,6 +32,7 @@ import {isCSGObject} from './csg/CsgCoreType';
 // import {SDF_OBJECT_TYPES_SET} from './sdf/SDFCommon';
 // import type {SDFObject} from './sdf/SDFObject';
 //
+type AttributeDictionary = PolyDictionary<AttribValue>;
 
 // import {CoreMask} from './Mask';
 export type GroupString = string;

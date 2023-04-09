@@ -10,15 +10,18 @@ import {
 	JsConnectionPoint,
 	JsConnectionPointType,
 	JS_CONNECTION_POINT_IN_NODE_DEF,
+	ParamConvertibleJsType,
 	PARAM_CONVERTIBLE_JS_CONNECTION_POINT_TYPES,
 	// ReturnValueTypeByActorConnectionPointType,
 } from '../utils/io/connections/Js';
 import {JsType} from '../../poly/registers/nodes/types/Js';
 import {inputObject3D} from './_BaseObject3D';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
-import {WatchedValueJsDefinition, ComputedValueJsDefinition} from './utils/JsDefinition';
+import {WatchedValueJsDefinition, RefJsDefinition} from './utils/JsDefinition';
 import {Poly} from '../../Poly';
-import {CoreString} from '../../../core/String';
+import {nodeMethodName} from './code/assemblers/actor/ActorAssemblerUtils';
+import {createVariable} from './code/assemblers/_BaseJsPersistedConfigUtils';
+import {StringParam} from '../../params/String';
 // import {CoreObject} from '../../../core/geometry/Object';
 enum OnObjectAttributeUpdateInputName {
 	attribName = 'attribName',
@@ -26,7 +29,7 @@ enum OnObjectAttributeUpdateInputName {
 
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
 class OnObjectAttributeUpdateJsParamsConfig extends NodeParamsConfig {
-	attribName = ParamConfig.STRING('');
+	// attribName = ParamConfig.STRING('');
 	type = ParamConfig.INTEGER(PARAM_CONVERTIBLE_JS_CONNECTION_POINT_TYPES.indexOf(JsConnectionPointType.FLOAT), {
 		menu: {
 			entries: PARAM_CONVERTIBLE_JS_CONNECTION_POINT_TYPES.map((name, i) => {
@@ -49,6 +52,7 @@ export class OnObjectAttributeUpdateJsNode extends TypedJsNode<OnObjectAttribute
 	static readonly OUTPUT_NEW_VAL = 'newValue';
 	static readonly OUTPUT_PREV_VAL = 'previousValue';
 	override initializeNode() {
+		this.io.connection_points.spare_params.setInputlessParamNames(['type']);
 		this.io.inputs.setNamedInputConnectionPoints([
 			new JsConnectionPoint(JsConnectionPointType.OBJECT_3D, JsConnectionPointType.OBJECT_3D, CONNECTION_OPTIONS),
 			new JsConnectionPoint(
@@ -86,43 +90,98 @@ export class OnObjectAttributeUpdateJsNode extends TypedJsNode<OnObjectAttribute
 		return [connectionType, connectionType];
 	}
 
-	setAttribType(type: JsConnectionPointType) {
+	setAttribType(type: ParamConvertibleJsType) {
 		this.p.type.set(PARAM_CONVERTIBLE_JS_CONNECTION_POINT_TYPES.indexOf(type));
 	}
+	attribType(): JsConnectionPointType {
+		return PARAM_CONVERTIBLE_JS_CONNECTION_POINT_TYPES[this.pv.type];
+	}
 	attributeName() {
-		return this.pv.attribName;
+		return (this.params.get(OnObjectAttributeUpdateInputName.attribName) as StringParam).value;
 	}
 
 	override setLines(shadersCollectionController: ShadersCollectionController) {
+		const type = this.attribType();
 		const object3D = inputObject3D(this, shadersCollectionController);
 		const attribName = this.variableForInput(
 			shadersCollectionController,
 			OnObjectAttributeUpdateInputName.attribName
 		);
-		console.log('A', object3D, attribName);
 
 		const out = this.jsVarName('out');
+		const prevValueRef = this.jsVarName('previousValueRef');
 		const getObjectAttributeRef = Poly.namedFunctionsRegister.getFunction(
 			'getObjectAttributeRef',
 			this,
 			shadersCollectionController
 		);
+		// const setObjectAttributeRef = Poly.namedFunctionsRegister.getFunction(
+		// 	'setObjectAttributeRef',
+		// 	this,
+		// 	shadersCollectionController
+		// );
+
 		shadersCollectionController.addDefinitions(this, [
-			new ComputedValueJsDefinition(
-				this,
-				shadersCollectionController,
-				JsConnectionPointType.FLOAT,
-				out,
-				getObjectAttributeRef.asString(object3D, attribName)
-			),
+			// new ComputedValueJsDefinition(
+			// 	this,
+			// 	shadersCollectionController,
+			// 	type,
+			// 	out,
+			// 	getObjectAttributeRef.asString(object3D, attribName)
+			// ),
 			new WatchedValueJsDefinition(
 				this,
 				shadersCollectionController,
-				JsConnectionPointType.FLOAT,
-				out,
-				`this.${this._methodName()}()`
+				type,
+				getObjectAttributeRef.asString(object3D, attribName, `'${type}'`),
+				`this.${nodeMethodName(this)}()`,
+				{
+					deep: true,
+				}
 			),
+			new RefJsDefinition(this, shadersCollectionController, type, prevValueRef, `false`),
 		]);
+
+		// outputs
+		const usedOutputNames = this.io.outputs.used_output_names();
+		const _val = (
+			propertyName: string,
+			functionName: 'getObjectAttribute' | 'getObjectAttributePrevious',
+			type: JsConnectionPointType
+		) => {
+			if (!usedOutputNames.includes(propertyName)) {
+				return;
+			}
+			const func = Poly.namedFunctionsRegister.getFunction(functionName, this, shadersCollectionController);
+			const varName = this.jsVarName(propertyName);
+			const variable = createVariable(type);
+			if (variable) {
+				shadersCollectionController.addVariable(this, out, variable);
+			}
+			shadersCollectionController.addBodyOrComputed(this, [
+				{
+					dataType: type,
+					varName,
+					value: func.asString(object3D, attribName, `'${type}'`),
+				},
+			]);
+		};
+		// const _prevVal = (propertyName: string, type: JsConnectionPointType) => {
+		// 	if (!usedOutputNames.includes(propertyName)) {
+		// 		return;
+		// 	}
+		// 	const varName = this.jsVarName(propertyName);
+		// 	shadersCollectionController.addBodyOrComputed(this, [
+		// 		{
+		// 			dataType: type,
+		// 			varName,
+		// 			value: `this.${prevValueRef}.value`,
+		// 		},
+		// 	]);
+		// };
+
+		_val(OnObjectAttributeUpdateJsNode.OUTPUT_NEW_VAL, 'getObjectAttribute', type);
+		_val(OnObjectAttributeUpdateJsNode.OUTPUT_PREV_VAL, 'getObjectAttributePrevious', type);
 
 		// const out = this.jsVarName(OUTPUT_NAME);
 
@@ -137,27 +196,33 @@ export class OnObjectAttributeUpdateJsNode extends TypedJsNode<OnObjectAttribute
 		// 	),
 		// ]);
 	}
-	private _methodName() {
-		const functionNode = this.functionNode();
-		if (!functionNode) {
-			return this.type();
-		}
-		const relativePath = this.path().replace(functionNode.path(), '');
-		const methodName = CoreString.sanitizeName(relativePath);
-		return methodName;
-	}
-	override wrappedBodyLines(
-		shadersCollectionController: ShadersCollectionController,
-		bodyLines: string[],
-		existingMethodNames: Set<string>
-	) {
-		const methodName = this._methodName();
-		//
-		const wrappedLines: string = `${methodName}(){
+	// private _methodName() {
+	// 	const functionNode = this.functionNode();
+	// 	if (!functionNode) {
+	// 		return this.type();
+	// 	}
+	// 	const relativePath = this.path().replace(functionNode.path(), '');
+	// 	const methodName = CoreString.sanitizeName(relativePath);
+	// 	return methodName;
+	// }
+	// override wrappedBodyLines(
+	// 	shadersCollectionController: ShadersCollectionController,
+	// 	bodyLines: string[],
+	// 	existingMethodNames: Set<string>
+	// ) {
+	// 	const methodName = this._methodName();
+	// 	//
+	// 	const wrappedLines: string = `${methodName}(){
 
-			${bodyLines.join('\n')}
-		}`;
-		return {methodNames: [methodName], wrappedLines};
+	// 		${bodyLines.join('\n')}
+	// 	}`;
+	// 	return {methodNames: [methodName], wrappedLines};
+	// }
+
+	override setTriggeringLines(shadersCollectionController: ShadersCollectionController, triggeredMethods: string) {
+		shadersCollectionController.addTriggeringLines(this, [triggeredMethods], {
+			gatherable: false,
+		});
 	}
 
 	// override wrappedBodyLines(

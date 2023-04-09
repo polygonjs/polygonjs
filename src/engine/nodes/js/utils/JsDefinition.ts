@@ -155,19 +155,36 @@ export class RefJsDefinition extends TypedJsDefinition<JsDefinitionType.REF> {
 		return `	${this.name()} = ref(${this._value})`;
 	}
 }
+interface WatchedValueJsDefinitionOptions {
+	// onChange: (prevVal: string) => string;
+	deep?: boolean;
+}
 export class WatchedValueJsDefinition extends TypedJsDefinition<JsDefinitionType.WATCH> {
 	constructor(
 		protected override _node: BaseJsNodeType,
 		protected override _shaderCollectionController: ShadersCollectionController,
 		protected override _dataType: JsConnectionPointType,
 		protected override _name: string,
-		protected _value: string
+		protected _value: string,
+		protected _options: WatchedValueJsDefinitionOptions
 	) {
 		super(JsDefinitionType.WATCH, _node, _shaderCollectionController, _dataType, _name);
 		_shaderCollectionController.addComputedVarName(this.name());
 	}
 	line() {
-		return `	watch(this.${this.name()}.value, ()=> {${this._value}})`;
+		const deep = this._options.deep != null ? this._options.deep : false;
+		return `
+		this._watchStopHandles.push(
+			watch(
+				${this.name()},
+				( )=> {
+					${this._value}
+				},
+				{
+					deep: ${deep}
+				}
+			)
+		)`;
 	}
 }
 export class InitFunctionJsDefinition extends TypedJsDefinition<JsDefinitionType.INIT_FUNCTION> {

@@ -8,6 +8,7 @@ import {TRIGGER_CONNECTION_NAME, TypedJsNode} from './_Base';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {JsConnectionPoint, JsConnectionPointType} from '../utils/io/connections/Js';
 import {JsType} from '../../poly/registers/nodes/types/Js';
+import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 
 class OnMapboxCameraMoveStartJsParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new OnMapboxCameraMoveStartJsParamsConfig();
@@ -25,5 +26,10 @@ export class OnMapboxCameraMoveStartJsNode extends TypedJsNode<OnMapboxCameraMov
 		this.io.outputs.setNamedOutputConnectionPoints([
 			new JsConnectionPoint(TRIGGER_CONNECTION_NAME, JsConnectionPointType.TRIGGER),
 		]);
+	}
+	override setTriggeringLines(shadersCollectionController: ShadersCollectionController, triggeredMethods: string) {
+		shadersCollectionController.addTriggeringLines(this, [triggeredMethods], {
+			gatherable: true,
+		});
 	}
 }

@@ -1,4 +1,4 @@
-import {AttribValue, NumericAttribValue, PolyDictionary} from '../../types/GlobalTypes';
+import {NumericAttribValue} from '../../types/GlobalTypes';
 import {
 	Bone,
 	SkinnedMesh,
@@ -46,7 +46,7 @@ const SPHERE_EMPTY = new Sphere(new Vector3(0, 0, 0), 0);
 // 	readonly isSkinnedMesh: boolean;
 // }
 
-export type AttributeDictionary = PolyDictionary<AttribValue>;
+// export type AttributeDictionary = PolyDictionary<AttribValue>;
 
 // export type CoreObjectContent = Object3D|CadObject
 

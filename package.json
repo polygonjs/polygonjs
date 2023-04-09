@@ -57,6 +57,7 @@
 		"@types/mapbox-gl": "2.7.10",
 		"@types/prettier": "2.7.2",
 		"@types/three": "0.149.0",
+		"@vue-reactivity/watch": "^0.2.0",
 		"@vue/reactivity": "3.2.47",
 		"chromotome": "1.20.0",
 		"gifuct-js": "2.1.2",

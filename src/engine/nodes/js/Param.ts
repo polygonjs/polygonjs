@@ -5,6 +5,7 @@ import {
 	JsConnectionPointType,
 	JsConnectionPointInitValueMap,
 	JsConnectionPointTypeToParamTypeMap,
+	ParamConvertibleJsType,
 } from '../utils/io/connections/Js';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
@@ -130,7 +131,7 @@ export class ParamJsNode extends TypedJsNode<ParamJsParamsConfig> {
 		// const varName = this.jsVarName(output_connection_point.name());
 		// return varName;
 	}
-	setJsType(type: JsConnectionPointType) {
+	setJsType(type: ParamConvertibleJsType) {
 		const index = PARAM_CONVERTIBLE_JS_CONNECTION_POINT_TYPES.indexOf(type);
 		this.p.type.set(index);
 	}

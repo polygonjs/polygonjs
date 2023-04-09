@@ -6,7 +6,7 @@ import {MapboxCameraAttribute} from './MapboxCameraAttribute';
 import {MapboxLayersController, LayersOptions} from './LayersController';
 import {ThreejsLayerRenderFunc} from './layers/MapboxThreejsLayer';
 import {MapboxViewer} from '../../../engine/viewers/Mapbox';
-import {NodeContext} from '../../../engine/poly/NodeContext';
+// import {NodeContext} from '../../../engine/poly/NodeContext';
 import {JsType} from '../../../engine/poly/registers/nodes/types/Js';
 interface CreateMapboxMapOptions {
 	camera: Camera;
@@ -149,13 +149,12 @@ class MapboxMapsControllerClass {
 	private _dispatchCameraMove(
 		type: JsType.ON_MAPBOX_CAMERA_MOVE | JsType.ON_MAPBOX_CAMERA_MOVE_START | JsType.ON_MAPBOX_CAMERA_MOVE_END
 	) {
-		// this.dispatchEvent(CAMERA_MOVE_EVENT);
 		if (!this._scene) {
 			return;
 		}
-		if (!this._scene.nodesController.hasNodesByContextAndType(NodeContext.ACTOR, type)) {
-			return;
-		}
+		// if (!this._scene.nodesController.hasNodesByContextAndType(NodeContext.ACTOR, type)) {
+		// 	return;
+		// }
 		this._scene.threejsScene().traverse((object) => {
 			this._scene?.actorsManager.triggerEventNodes(object, type);
 		});
