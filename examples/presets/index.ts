@@ -21,12 +21,17 @@ import {mapboxElevationCopPresetRegister} from './cop/MapboxElevation';
 import {mapboxSatelliteCopPresetRegister} from './cop/MapboxSatellite';
 import {SDFFromUrlCopPresetRegister} from './cop/SDFFromUrl';
 import {videoCopPresetRegister} from './cop/Video';
-// // gl
+// gl
 import {attributeGlPresetRegister} from './gl/Attribute';
 import {neighbourAttractRepulseGlPresetRegister} from './gl/NeighbourAttractRepulse';
 import {neighbourAttractGlPresetRegister, neighbourRepulseGlPresetRegister} from './gl/Neighbour';
-// // gl
+// js
+import {getChildrenAttributesJsPresetRegister} from './js/GetChildrenAttributes';
+import {getObjectAttributeJsPresetRegister} from './js/GetObjectAttribute';
+import {onChildAttributeUpdateJsPresetRegister} from './js/OnChildAttributeUpdate';
 import {onKeyJsPresetRegister} from './js/OnKey';
+import {onObjectAttributeUpdateJsPresetRegister} from './js/OnObjectAttributeUpdate';
+import {rayFromCameraJsPresetRegister} from './js/RayFromCamera';
 
 // // mat
 // import {meshSubsurfaceScatteringMatPresetRegister} from './mat/MeshSubsurfaceScattering';
@@ -98,8 +103,13 @@ class PresetLibraryClass {
 		this._registerPreset(neighbourAttractRepulseGlPresetRegister);
 		this._registerPreset(neighbourAttractGlPresetRegister);
 		this._registerPreset(neighbourRepulseGlPresetRegister);
-		//
+		// js
+		this._registerPreset(getChildrenAttributesJsPresetRegister);
+		this._registerPreset(getObjectAttributeJsPresetRegister);
+		this._registerPreset(onChildAttributeUpdateJsPresetRegister);
 		this._registerPreset(onKeyJsPresetRegister);
+		this._registerPreset(onObjectAttributeUpdateJsPresetRegister);
+		this._registerPreset(rayFromCameraJsPresetRegister);
 		// mat
 		// this._registerPreset(meshSubsurfaceScatteringMatPresetRegister);
 		this._registerPreset(codeMatPresetRegister);
