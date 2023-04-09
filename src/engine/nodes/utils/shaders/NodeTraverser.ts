@@ -160,7 +160,6 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 			accumulated_nodes.push(node);
 			node_id_used_state.set(node.graphNodeId(), true);
 		}
-
 		// if (node.type() == NetworkChildNodeType.INPUT) {
 		// 	console.log('_addNodesWithChildren', node);
 		// 	const parent = node.parent();
@@ -212,6 +211,16 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 	private _findLeavesFromRootNode(rootNode: BaseNodeByContextMap[NC]) {
 		this._graph_ids_by_shader_name.get(this._shaderName)?.set(rootNode.graphNodeId(), true);
 
+		// if rootNode is a subnet, traverse its children output nodes instead
+		if (rootNode.childrenAllowed() && this._traverseChildren()) {
+			const outputNode = rootNode.childrenController?.outputNode() as BaseNodeByContextMap[NC] | undefined;
+			if (outputNode) {
+				this._findLeavesFromRootNode(outputNode);
+				return;
+			}
+		}
+
+		//
 		const inputNames = this.inputNamesForShaderName(rootNode, this._shaderName);
 		if (inputNames) {
 			for (let inputName of inputNames) {

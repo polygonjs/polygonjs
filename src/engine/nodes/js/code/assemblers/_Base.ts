@@ -287,7 +287,8 @@ export abstract class BaseJsShaderAssembler extends TypedAssembler<NodeContext.J
 			this.shaderNames(),
 			(rootNode, shaderName) => {
 				return this.inputNamesForShaderName(rootNode, shaderName);
-			}
+			},
+			{traverseChildren: true}
 		);
 		return new CodeBuilder(
 			nodeTraverser,

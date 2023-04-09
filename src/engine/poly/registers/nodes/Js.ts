@@ -215,6 +215,9 @@ import {SinJsNode} from '../../../nodes/js/Sin';
 import {SmoothstepJsNode} from '../../../nodes/js/Smoothstep';
 import {SphereJsNode} from '../../../nodes/js/Sphere';
 import {SqrtJsNode} from '../../../nodes/js/Sqrt';
+import {SubnetJsNode} from '../../../nodes/js/Subnet';
+import {SubnetInputJsNode} from '../../../nodes/js/SubnetInput';
+import {SubnetOutputJsNode} from '../../../nodes/js/SubnetOutput';
 import {SubtractJsNode} from '../../../nodes/js/Subtract';
 import {SwitchJsNode} from '../../../nodes/js/Switch';
 import {TanJsNode} from '../../../nodes/js/Tan';
@@ -452,6 +455,9 @@ export interface JsNodeChildrenMap {
 	smoothstep: SmoothstepJsNode;
 	sphere: SphereJsNode;
 	sqrt: SqrtJsNode;
+	subnet: SubnetJsNode;
+	subnetInput: SubnetInputJsNode;
+	subnetOutput: SubnetOutputJsNode;
 	subtract: SubtractJsNode;
 	switch: SwitchJsNode;
 	tan: TanJsNode;
@@ -478,6 +484,9 @@ export interface JsNodeChildrenMap {
 import {PolyEngine} from '../../../Poly';
 import {SopType} from './types/Sop';
 import {NodeContext} from '../../NodeContext';
+const SUBNET_CHILD_OPTION = {
+	only: [`${SubnetJsNode.context()}/${SubnetJsNode.type()}`],
+};
 const sopType = (type: SopType) => `${NodeContext.SOP}/${type}`;
 const ONLY_WITH_GLOBALS = {only: [sopType(SopType.SDF_BUILDER)]};
 const ONLY_ACTOR = {only: [sopType(SopType.ACTOR_JS), sopType(SopType.PHYSICS_WORLD), sopType(SopType.PHYSICS_PLAYER)]};
@@ -712,6 +721,9 @@ export class JsRegister {
 		poly.registerNode(SmoothstepJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(SphereJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(SqrtJsNode, CATEGORY_JS.MATH);
+		poly.registerNode(SubnetJsNode, CATEGORY_JS.LOGIC);
+		poly.registerNode(SubnetInputJsNode, CATEGORY_JS.LOGIC);
+		poly.registerNode(SubnetOutputJsNode, CATEGORY_JS.LOGIC, SUBNET_CHILD_OPTION);
 		poly.registerNode(SubtractJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(SwitchJsNode, CATEGORY_JS.LOGIC);
 		poly.registerNode(TanJsNode, CATEGORY_JS.MATH);
