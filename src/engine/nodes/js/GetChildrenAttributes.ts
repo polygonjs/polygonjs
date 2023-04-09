@@ -82,7 +82,7 @@ export class GetChildrenAttributesJsNode extends TypedJsNode<GetChildrenAttribut
 			this,
 			shadersCollectionController
 		);
-		const bodyLine = func.asString(object3D, attribName, dataType, varName);
+		const bodyLine = func.asString(object3D, attribName, `'${dataType}'`, varName);
 		shadersCollectionController.addBodyOrComputed(this, [{dataType, varName, value: bodyLine}]);
 	}
 }

@@ -2,6 +2,7 @@ export enum JsType {
 	ATTRIBUTE = 'attribute',
 	CURSOR = 'cursor',
 	GLOBALS = 'globals',
+	ON_CHILD_ATTRIBUTE_UPDATE = 'onChildAttributeUpdate',
 	ON_KEY = 'onKey',
 	ON_KEYDOWN = 'onKeydown',
 	ON_KEYPRESS = 'onKeypress',

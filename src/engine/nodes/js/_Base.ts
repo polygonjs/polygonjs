@@ -228,26 +228,26 @@ export class TypedJsNode<K extends NodeParamsConfig> extends TypedNode<NodeConte
 		// console.warn(`setLines not defined for node '${this.path()}'`);
 	}
 	// addConstructorInitFunctionLines(shadersCollectionController: ShadersCollectionController): void {}
-	wrappedBodyLinesMethodName() {
-		return this.type();
-	}
-	wrappedBodyLines(
-		shadersCollectionController: ShadersCollectionController,
-		bodyLines: string[],
-		existingMethodNames: Set<string>
-	): WrappedBodyLines | undefined {
-		const methodName = this.wrappedBodyLinesMethodName();
-		if (existingMethodNames.has(methodName)) {
-			return;
-		}
-		const wrappedLines = `${methodName}(){
-			${bodyLines.join('\n')}
-		}`;
-		return {
-			methodNames: [methodName],
-			wrappedLines,
-		};
-	}
+	// wrappedBodyLinesMethodName() {
+	// 	return this.type();
+	// }
+	// wrappedBodyLines(
+	// 	shadersCollectionController: ShadersCollectionController,
+	// 	bodyLines: string[],
+	// 	existingMethodNames: Set<string>
+	// ): WrappedBodyLines | undefined {
+	// 	const methodName = this.wrappedBodyLinesMethodName();
+	// 	if (existingMethodNames.has(methodName)) {
+	// 		return;
+	// 	}
+	// 	const wrappedLines = `${methodName}(){
+	// 		${bodyLines.join('\n')}
+	// 	}`;
+	// 	return {
+	// 		methodNames: [methodName],
+	// 		wrappedLines,
+	// 	};
+	// }
 
 	reset_code() {
 		this._param_configs_controller?.reset();

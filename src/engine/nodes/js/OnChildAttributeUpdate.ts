@@ -1,5 +1,5 @@
 /**
- * sends a trigger when an object attribute has been updated
+ * sends a trigger when a child attribute has been updated
  *
  *
  */
@@ -9,26 +9,27 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {
 	JsConnectionPoint,
 	JsConnectionPointType,
+	JsConnectionPointTypeToArrayTypeMap,
 	JS_CONNECTION_POINT_IN_NODE_DEF,
 	ParamConvertibleJsType,
 	PARAM_CONVERTIBLE_JS_CONNECTION_POINT_TYPES,
-	// ReturnValueTypeByActorConnectionPointType,
 } from '../utils/io/connections/Js';
 import {JsType} from '../../poly/registers/nodes/types/Js';
-import {inputObject3D} from './_BaseObject3D';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
-import {WatchedValueJsDefinition} from './utils/JsDefinition';
+import {StringParam} from '../../params/String';
+import {inputObject3D} from './_BaseObject3D';
 import {Poly} from '../../Poly';
+import {WatchedValueJsDefinition} from './utils/JsDefinition';
 import {nodeMethodName} from './code/assemblers/actor/ActorAssemblerUtils';
 import {createVariable} from './code/assemblers/_BaseJsPersistedConfigUtils';
-import {StringParam} from '../../params/String';
-// import {CoreObject} from '../../../core/geometry/Object';
-enum OnObjectAttributeUpdateInputName {
+
+const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
+
+enum OnChildAttributeUpdateInputName {
 	attribName = 'attribName',
 }
 
-const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
-class OnObjectAttributeUpdateJsParamsConfig extends NodeParamsConfig {
+class OnChildAttributeUpdateJsParamsConfig extends NodeParamsConfig {
 	// attribName = ParamConfig.STRING('');
 	type = ParamConfig.INTEGER(PARAM_CONVERTIBLE_JS_CONNECTION_POINT_TYPES.indexOf(JsConnectionPointType.FLOAT), {
 		menu: {
@@ -38,25 +39,24 @@ class OnObjectAttributeUpdateJsParamsConfig extends NodeParamsConfig {
 		},
 	});
 }
-const ParamsConfig = new OnObjectAttributeUpdateJsParamsConfig();
+const ParamsConfig = new OnChildAttributeUpdateJsParamsConfig();
 
-export class OnObjectAttributeUpdateJsNode extends TypedJsNode<OnObjectAttributeUpdateJsParamsConfig> {
+export class OnChildAttributeUpdateJsNode extends TypedJsNode<OnChildAttributeUpdateJsParamsConfig> {
 	override readonly paramsConfig = ParamsConfig;
 	static override type() {
-		return JsType.ON_OBJECT_ATTRIBUTE_UPDATE;
+		return JsType.ON_CHILD_ATTRIBUTE_UPDATE;
 	}
 	override isTriggering() {
 		return true;
 	}
 
-	static readonly OUTPUT_NEW_VAL = 'newValue';
-	static readonly OUTPUT_PREV_VAL = 'previousValue';
+	static readonly OUTPUT_NEW_VALUES = 'newValues';
+	static readonly OUTPUT_PREV_VALUES = 'previousValues';
 	override initializeNode() {
-		this.io.connection_points.spare_params.setInputlessParamNames(['type']);
 		this.io.inputs.setNamedInputConnectionPoints([
 			new JsConnectionPoint(JsConnectionPointType.OBJECT_3D, JsConnectionPointType.OBJECT_3D, CONNECTION_OPTIONS),
 			new JsConnectionPoint(
-				OnObjectAttributeUpdateInputName.attribName,
+				OnChildAttributeUpdateInputName.attribName,
 				JsConnectionPointType.STRING,
 				CONNECTION_OPTIONS
 			),
@@ -70,8 +70,8 @@ export class OnObjectAttributeUpdateJsNode extends TypedJsNode<OnObjectAttribute
 			(index: number) =>
 				[
 					TRIGGER_CONNECTION_NAME,
-					OnObjectAttributeUpdateJsNode.OUTPUT_NEW_VAL,
-					OnObjectAttributeUpdateJsNode.OUTPUT_PREV_VAL,
+					OnChildAttributeUpdateJsNode.OUTPUT_NEW_VALUES,
+					OnChildAttributeUpdateJsNode.OUTPUT_PREV_VALUES,
 				][index]
 		);
 		this.io.connection_points.set_expected_output_types_function(() => [
@@ -87,7 +87,8 @@ export class OnObjectAttributeUpdateJsNode extends TypedJsNode<OnObjectAttribute
 		if (connectionType == null) {
 			console.warn(`${this.type()} actor node type not valid`);
 		}
-		return [connectionType, connectionType];
+		const arrayConnectionType = JsConnectionPointTypeToArrayTypeMap[connectionType];
+		return [arrayConnectionType, arrayConnectionType];
 	}
 
 	setAttribType(type: ParamConvertibleJsType) {
@@ -97,7 +98,7 @@ export class OnObjectAttributeUpdateJsNode extends TypedJsNode<OnObjectAttribute
 		return PARAM_CONVERTIBLE_JS_CONNECTION_POINT_TYPES[this.pv.type];
 	}
 	attributeName() {
-		return (this.params.get(OnObjectAttributeUpdateInputName.attribName) as StringParam).value;
+		return (this.params.get(OnChildAttributeUpdateInputName.attribName) as StringParam).value;
 	}
 
 	override setLines(shadersCollectionController: ShadersCollectionController) {
@@ -105,21 +106,26 @@ export class OnObjectAttributeUpdateJsNode extends TypedJsNode<OnObjectAttribute
 		const object3D = inputObject3D(this, shadersCollectionController);
 		const attribName = this.variableForInput(
 			shadersCollectionController,
-			OnObjectAttributeUpdateInputName.attribName
+			OnChildAttributeUpdateInputName.attribName
 		);
 
-		const getObjectAttributeRef = Poly.namedFunctionsRegister.getFunction(
-			'getObjectAttributeRef',
+		const getChildrenAttributesRef = Poly.namedFunctionsRegister.getFunction(
+			'getChildrenAttributesRef',
 			this,
 			shadersCollectionController
 		);
 
+		const varName = this.jsVarName('in');
+		const variable = createVariable(JsConnectionPointTypeToArrayTypeMap[type]);
+		if (variable) {
+			shadersCollectionController.addVariable(this, varName, variable);
+		}
 		shadersCollectionController.addDefinitions(this, [
 			new WatchedValueJsDefinition(
 				this,
 				shadersCollectionController,
 				type,
-				getObjectAttributeRef.asString(object3D, attribName, `'${type}'`),
+				getChildrenAttributesRef.asString(object3D, attribName, `'${type}'`, varName),
 				`this.${nodeMethodName(this)}()`,
 				{
 					deep: true,
@@ -131,7 +137,7 @@ export class OnObjectAttributeUpdateJsNode extends TypedJsNode<OnObjectAttribute
 		const usedOutputNames = this.io.outputs.used_output_names();
 		const _val = (
 			propertyName: string,
-			functionName: 'getObjectAttribute' | 'getObjectAttributePrevious',
+			functionName: 'getChildrenAttributes' | 'getChildrenAttributesPrevious',
 			type: JsConnectionPointType
 		) => {
 			if (!usedOutputNames.includes(propertyName)) {
@@ -139,7 +145,7 @@ export class OnObjectAttributeUpdateJsNode extends TypedJsNode<OnObjectAttribute
 			}
 			const func = Poly.namedFunctionsRegister.getFunction(functionName, this, shadersCollectionController);
 			const varName = this.jsVarName(propertyName);
-			const variable = createVariable(type);
+			const variable = createVariable(JsConnectionPointTypeToArrayTypeMap[type]);
 			if (variable) {
 				shadersCollectionController.addVariable(this, varName, variable);
 			}
@@ -147,13 +153,13 @@ export class OnObjectAttributeUpdateJsNode extends TypedJsNode<OnObjectAttribute
 				{
 					dataType: type,
 					varName,
-					value: func.asString(object3D, attribName, `'${type}'`),
+					value: func.asString(object3D, attribName, `'${type}'`, varName),
 				},
 			]);
 		};
 
-		_val(OnObjectAttributeUpdateJsNode.OUTPUT_NEW_VAL, 'getObjectAttribute', type);
-		_val(OnObjectAttributeUpdateJsNode.OUTPUT_PREV_VAL, 'getObjectAttributePrevious', type);
+		_val(OnChildAttributeUpdateJsNode.OUTPUT_NEW_VALUES, 'getChildrenAttributes', type);
+		_val(OnChildAttributeUpdateJsNode.OUTPUT_PREV_VALUES, 'getChildrenAttributesPrevious', type);
 	}
 
 	override setTriggeringLines(shadersCollectionController: ShadersCollectionController, triggeredMethods: string) {

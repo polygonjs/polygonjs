@@ -1,5 +1,5 @@
 import {AttribValue, Number3, NumericAttribValue, PolyDictionary} from '../../types/GlobalTypes';
-import {Box3, Matrix4, Sphere, Vector2, Vector3, Vector4} from 'three';
+import {Box3, Color, Matrix4, Sphere, Vector2, Vector3, Vector4} from 'three';
 import {Attribute, CoreAttribute} from './Attribute';
 import {AttribType, AttribSize} from './Constant';
 import {CoreEntity} from './Entity';
@@ -261,7 +261,7 @@ export abstract class BaseCoreObject<T extends CoreObjectType> extends CoreEntit
 		object: ObjectContent<T>,
 		attribName: string,
 		index: number = 0,
-		target?: Vector2 | Vector3 | Vector4
+		target?: Color | Vector2 | Vector3 | Vector4
 	): AttribValue | undefined {
 		const _attribFromProperty = () => {
 			if (attribName == PropertyName.NAME) {
@@ -292,6 +292,11 @@ export abstract class BaseCoreObject<T extends CoreObjectType> extends CoreEntit
 						return target.copy(val);
 					}
 					if (val instanceof Vector4 && target instanceof Vector4) {
+						return target.copy(val);
+					}
+				}
+				if (CoreType.isColor(val) && target) {
+					if (val instanceof Color && target instanceof Color) {
 						return target.copy(val);
 					}
 				}

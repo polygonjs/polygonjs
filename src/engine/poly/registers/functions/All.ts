@@ -327,6 +327,8 @@ import {
 import {keyboardEventMatchesConfig} from '../../../functions/KeyboardEventMatchesConfig';
 import {getActorNodeParamValue} from '../../../functions/GetActorNodeParamValue';
 import {getChildrenAttributes} from '../../../functions/GetChildrenAttributes';
+import {getChildrenAttributesRef} from '../../../functions/GetChildrenAttributesRef';
+import {getChildrenAttributesPrevious} from '../../../functions/GetChildrenAttributesPrevious';
 import {getObject} from '../../../functions/GetObject';
 import {getObjectChild} from '../../../functions/GetObjectChild';
 import {getParent} from '../../../functions/GetParent';
@@ -430,6 +432,8 @@ export interface NamedFunctionMap {
 	getBox3Min: getBox3Min;
 	getBox3Max: getBox3Max;
 	getChildrenAttributes: getChildrenAttributes;
+	getChildrenAttributesRef: getChildrenAttributesRef;
+	getChildrenAttributesPrevious: getChildrenAttributesPrevious;
 	getChildrenPhysicsRBDPropertiesAngularDamping: getChildrenPhysicsRBDPropertiesAngularDamping;
 	getChildrenPhysicsRBDPropertiesAngularVelocity: getChildrenPhysicsRBDPropertiesAngularVelocity;
 	getChildrenPhysicsRBDPropertiesIsMoving: getChildrenPhysicsRBDPropertiesIsMoving;
@@ -787,6 +791,8 @@ export class AllNamedFunctionRegister {
 			getBox3Min,
 			getBox3Max,
 			getChildrenAttributes,
+			getChildrenAttributesRef,
+			getChildrenAttributesPrevious,
 			getChildrenPhysicsRBDPropertiesAngularDamping,
 			getChildrenPhysicsRBDPropertiesAngularVelocity,
 			getChildrenPhysicsRBDPropertiesIsMoving,

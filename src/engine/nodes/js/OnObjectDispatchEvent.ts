@@ -54,7 +54,7 @@ export class OnObjectDispatchEventJsNode extends TypedJsNode<OnObjectDispatchEve
 			),
 		]);
 	}
-	override wrappedBodyLinesMethodName() {
+	wrappedBodyLinesMethodName() {
 		return onObjectDispatchFunctionNameByEventName(sanitizeName(this.pv.eventNames));
 	}
 	override setTriggeringLines(shadersCollectionController: ShadersCollectionController, triggeredMethods: string) {

@@ -71,6 +71,8 @@ import {GetSpherePropertyJsNode} from '../../../nodes/js/GetSphereProperty';
 import {GetTextureJsNode} from '../../../nodes/js/GetTexture';
 import {GetTrackedHandPropertyJsNode} from '../../../nodes/js/GetTrackedHandProperty';
 import {GetVideoPropertyJsNode} from '../../../nodes/js/GetVideoProperty';
+import {GetWebXRARSessionPropertyJsNode} from '../../../nodes/js/GetWebXRARSessionProperty';
+import {GetWebXRControllerPropertyJsNode} from '../../../nodes/js/GetWebXRControllerProperty';
 import {GetWebXRTrackedMarkerPropertyJsNode} from '../../../nodes/js/GetWebXRTrackedMarkerProperty';
 import {GlobalsJsNode} from '../../../nodes/js/Globals';
 import {IntToBoolJsNode} from '../../../nodes/js/IntToBool';
@@ -93,6 +95,7 @@ import {Object3DWorldToLocalJsNode} from '../../../nodes/js/Object3DWorldToLocal
 import {Object3DUpdateMatrixJsNode} from '../../../nodes/js/Object3DUpdateMatrix';
 import {Object3DUpdateWorldMatrixJsNode} from '../../../nodes/js/Object3DUpdateWorldMatrix';
 import {ObjectDispatchEventJsNode} from '../../../nodes/js/ObjectDispatchEvent';
+import {OnChildAttributeUpdateJsNode} from '../../../nodes/js/OnChildAttributeUpdate';
 import {OnKeyJsNode} from '../../../nodes/js/OnKey';
 import {OnKeydownJsNode} from '../../../nodes/js/OnKeydown';
 import {OnKeypressJsNode} from '../../../nodes/js/OnKeypress';
@@ -306,6 +309,8 @@ export interface JsNodeChildrenMap {
 	getTexture: GetTextureJsNode;
 	getTrackedHandProperty: GetTrackedHandPropertyJsNode;
 	getVideoProperty: GetVideoPropertyJsNode;
+	getWebXRARSessionProperty: GetWebXRARSessionPropertyJsNode;
+	getWebXRControllerProperty: GetWebXRControllerPropertyJsNode;
 	getWebXRTrackedMarkerProperty: GetWebXRTrackedMarkerPropertyJsNode;
 	globals: GlobalsJsNode;
 	intToBool: IntToBoolJsNode;
@@ -328,6 +333,7 @@ export interface JsNodeChildrenMap {
 	object3DUpdateMatrix: Object3DUpdateMatrixJsNode;
 	object3DUpdateWorldMatrix: Object3DUpdateWorldMatrixJsNode;
 	objectDispatchEvent: ObjectDispatchEventJsNode;
+	onChildAttributeUpdate: OnChildAttributeUpdateJsNode;
 	onKey: OnKeyJsNode;
 	onKeydown: OnKeydownJsNode;
 	onKeypress: OnKeypressJsNode;
@@ -555,6 +561,8 @@ export class JsRegister {
 		poly.registerNode(GetTextureJsNode, CATEGORY_JS.GET, ONLY_ACTOR);
 		poly.registerNode(GetTrackedHandPropertyJsNode, CATEGORY_JS.COMPUTER_VISION, ONLY_ACTOR);
 		poly.registerNode(GetVideoPropertyJsNode, CATEGORY_JS.GET, ONLY_ACTOR);
+		poly.registerNode(GetWebXRARSessionPropertyJsNode, CATEGORY_JS.WEBXR, ONLY_ACTOR);
+		poly.registerNode(GetWebXRControllerPropertyJsNode, CATEGORY_JS.WEBXR, ONLY_ACTOR);
 		poly.registerNode(GetWebXRTrackedMarkerPropertyJsNode, CATEGORY_JS.WEBXR, ONLY_ACTOR);
 
 		poly.registerNode(GlobalsJsNode, CATEGORY_JS.GLOBALS, ONLY_WITH_GLOBALS);
@@ -578,6 +586,8 @@ export class JsRegister {
 		poly.registerNode(Object3DUpdateMatrixJsNode, CATEGORY_JS.GET, ONLY_ACTOR);
 		poly.registerNode(Object3DUpdateWorldMatrixJsNode, CATEGORY_JS.GET, ONLY_ACTOR);
 		poly.registerNode(ObjectDispatchEventJsNode, CATEGORY_JS.GET, ONLY_ACTOR);
+
+		poly.registerNode(OnChildAttributeUpdateJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
 		poly.registerNode(OnKeyJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
 		poly.registerNode(OnKeydownJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
 		poly.registerNode(OnKeypressJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
