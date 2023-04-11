@@ -7,7 +7,6 @@ export class lengthVector<V extends Vector2 | Vector3 | Vector4> extends NamedFu
 		return 'lengthVector';
 	}
 	func(src: V): number {
-		console.log(src.toArray(), src.length());
 		return src.length();
 	}
 }

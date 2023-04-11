@@ -9,9 +9,10 @@ import {
 	Vector3,
 	Vector4,
 } from 'three';
+import {UNIFORM_PARAM_PREFIX} from '../../core/material/uniform';
 import {CoreType} from '../../core/Type';
 import {MaterialUserDataUniforms} from '../nodes/gl/code/assemblers/materials/OnBeforeCompile';
-import {NamedFunction3, NamedFunction4, ObjectNamedFunction1, ObjectNamedFunction2} from './_Base';
+import {NamedFunction3, NamedFunction5, ObjectNamedFunction1, ObjectNamedFunction2} from './_Base';
 
 //
 //
@@ -39,6 +40,9 @@ function _setMaterialEmissiveColor(material: Material, targetColor: Color, lerp:
 	} else {
 		color.lerp(targetColor, lerp);
 	}
+}
+function _addUniformNamePrefix(uniformName: string, addPrefix: boolean): string {
+	return addPrefix ? `${UNIFORM_PARAM_PREFIX}${uniformName}` : uniformName;
 }
 
 //
@@ -105,17 +109,20 @@ export class setMaterialOpacity extends NamedFunction3<[Material, number, number
 // SET MAT UNIFORM
 //
 //
-export class setMaterialUniformNumber extends NamedFunction4<[Material, string, number, number]> {
+export class setMaterialUniformNumber extends NamedFunction5<[Material, string, number, number, boolean]> {
 	static override type() {
 		return 'setMaterialUniformNumber';
 	}
-	func(material: Material, uniformName: string, value: number, lerp: number): void {
+	func(material: Material, uniformName: string, value: number, lerp: number, addPrefix: boolean): void {
 		const uniforms = MaterialUserDataUniforms.getUniforms(material);
 		if (!uniforms) {
+			console.warn(`uniforms not found`, material);
 			return;
 		}
+		uniformName = _addUniformNamePrefix(uniformName, addPrefix);
 		const uniform = uniforms[uniformName];
 		if (!uniform) {
+			console.warn(`uniform '${uniformName}' not found`, uniforms);
 			return;
 		}
 		if (lerp == 1) {
@@ -126,20 +133,25 @@ export class setMaterialUniformNumber extends NamedFunction4<[Material, string, 
 	}
 }
 type VectorColorUniform = Color | Vector2 | Vector3 | Vector4;
-export class setMaterialUniformVectorColor extends NamedFunction4<[Material, string, VectorColorUniform, number]> {
+export class setMaterialUniformVectorColor extends NamedFunction5<
+	[Material, string, VectorColorUniform, number, boolean]
+> {
 	static override type() {
 		return 'setMaterialUniformVectorColor';
 	}
-	func(material: Material, uniformName: string, value: VectorColorUniform, lerp: number): void {
+	func(material: Material, uniformName: string, value: VectorColorUniform, lerp: number, addPrefix: boolean): void {
 		const uniforms = MaterialUserDataUniforms.getUniforms(material);
 		if (!uniforms) {
+			console.warn(`uniforms not found`, material);
 			return;
 		}
+		uniformName = _addUniformNamePrefix(uniformName, addPrefix);
 		const uniform = uniforms[uniformName];
 		if (!uniform) {
+			console.warn(`uniform '${uniformName}' not found`, uniforms);
 			return;
 		}
-		if (lerp == 1) {
+		if (lerp >= 1) {
 			uniform.value.copy(value);
 		} else {
 			uniform.value.lerp(value, lerp);

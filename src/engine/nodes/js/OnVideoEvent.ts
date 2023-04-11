@@ -18,7 +18,7 @@ import {
 	// VideoEvent,
 	VIDEO_EVENTS,
 	//   VIDEO_EVENT_INDICES
-} from '../../../core/Video';
+} from '../../../core/VideoEvent';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 import {
 	getConnectedOutputNodes,

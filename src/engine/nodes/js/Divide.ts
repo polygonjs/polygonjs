@@ -14,4 +14,8 @@ export class DivideJsNode extends MathFunctionArgNOperationFactory('divide', {
 		// vector: 'multVector',
 		vectorScalar: 'divideVectorNumber',
 	},
-}) {}
+}) {
+	override paramDefaultValue(name: string) {
+		return 1;
+	}
+}

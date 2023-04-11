@@ -1,7 +1,7 @@
 import {TRIGGER_CONNECTION_NAME, TypedJsNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {JsConnectionPoint, JsConnectionPointType, JS_CONNECTION_POINT_IN_NODE_DEF} from '../utils/io/connections/Js';
-import {inputObject3D} from './_BaseObject3D';
+import {inputObject3DMaterial} from './_BaseObject3D';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 import {Poly} from '../../Poly';
 
@@ -30,12 +30,12 @@ export abstract class BaseSetMaterialColorJsNode extends TypedJsNode<BaseSetMate
 		]);
 	}
 	override setTriggerableLines(shadersCollectionController: ShadersCollectionController) {
-		const object3D = inputObject3D(this, shadersCollectionController);
+		const material = inputObject3DMaterial(this, shadersCollectionController);
 		const color = this.variableForInputParam(shadersCollectionController, this.p.color);
 		const lerp = this.variableForInputParam(shadersCollectionController, this.p.lerp);
 
 		const func = Poly.namedFunctionsRegister.getFunction(this._functionName(), this, shadersCollectionController);
-		const bodyLine = func.asString(object3D, color, lerp);
+		const bodyLine = func.asString(material, color, lerp);
 		shadersCollectionController.addTriggerableLines(this, [bodyLine]);
 	}
 	abstract _functionName(): 'setMaterialColor' | 'setMaterialEmissiveColor';

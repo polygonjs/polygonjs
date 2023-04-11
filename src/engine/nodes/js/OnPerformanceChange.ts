@@ -14,13 +14,30 @@
  *
  */
 
-import {TRIGGER_CONNECTION_NAME, TypedJsNode} from './_Base';
+import {BaseJsNodeType, TRIGGER_CONNECTION_NAME, TypedJsNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {JsConnectionPoint, JsConnectionPointType} from '../utils/io/connections/Js';
 import {JsType} from '../../poly/registers/nodes/types/Js';
-enum OnPerformanceChangeOutputName {
-	aboveThreshold = 'threshold',
-	performance = 'performance',
+import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {Poly} from '../../Poly';
+// import {triggerableMethodCalls} from './code/assemblers/actor/ActorAssemblerUtils';
+import {InitFunctionJsDefinition, TriggeringJsDefinition} from './utils/JsDefinition';
+import {PerformanceChangeEvent, PERFORMANCE_CHANGE_EVENTS} from '../../functions/Performance';
+import {
+	getConnectedOutputNodes,
+	getOutputIndices,
+	nodeMethodName,
+	triggerInputIndex,
+} from './code/assemblers/actor/ActorAssemblerUtils';
+import {SetUtils} from '../../../core/SetUtils';
+import {EvaluatorMethodName} from './code/assemblers/actor/Evaluator';
+// enum OnPerformanceChangeOutputName {
+// 	aboveThreshold = 'threshold',
+// 	performance = 'performance',
+// }
+
+function _outputName(eventName: PerformanceChangeEvent) {
+	return `${TRIGGER_CONNECTION_NAME}${eventName}`;
 }
 
 class OnPerformanceChangeJsParamsConfig extends NodeParamsConfig {
@@ -44,29 +61,80 @@ export class OnPerformanceChangeJsNode extends TypedJsNode<OnPerformanceChangeJs
 		return true;
 	}
 
-	static OUTPUT_NAME_ABOVE = `${TRIGGER_CONNECTION_NAME}aboveThreshold`;
-	static OUTPUT_NAME_BELOW = `${TRIGGER_CONNECTION_NAME}belowThreshold`;
-	static OUTPUT_TRIGGER_NAMES = [this.OUTPUT_NAME_ABOVE, this.OUTPUT_NAME_BELOW];
+	static OUTPUT_NAME_ABOVE = _outputName(PerformanceChangeEvent.aboveThreshold);
+	static OUTPUT_NAME_BELOW = _outputName(PerformanceChangeEvent.belowThreshold);
+	// static OUTPUT_TRIGGER_NAMES = [this.OUTPUT_NAME_ABOVE, this.OUTPUT_NAME_BELOW];
 
 	override initializeNode() {
-		this.io.connection_points.spare_params.setInputlessParamNames(['threshold', 'delay']);
+		// this.io.connection_points.spare_params.setInputlessParamNames(['threshold', 'delay']);
 		this.io.outputs.setNamedOutputConnectionPoints([
-			...OnPerformanceChangeJsNode.OUTPUT_TRIGGER_NAMES.map(
-				(triggerName) => new JsConnectionPoint(triggerName, JsConnectionPointType.TRIGGER)
-			),
-			new JsConnectionPoint(OnPerformanceChangeOutputName.aboveThreshold, JsConnectionPointType.BOOLEAN),
-			new JsConnectionPoint(OnPerformanceChangeOutputName.performance, JsConnectionPointType.FLOAT),
+			new JsConnectionPoint(OnPerformanceChangeJsNode.OUTPUT_NAME_ABOVE, JsConnectionPointType.TRIGGER),
+			new JsConnectionPoint(OnPerformanceChangeJsNode.OUTPUT_NAME_BELOW, JsConnectionPointType.TRIGGER),
+			// new JsConnectionPoint(OnPerformanceChangeOutputName.aboveThreshold, JsConnectionPointType.BOOLEAN),
+			// new JsConnectionPoint(OnPerformanceChangeOutputName.performance, JsConnectionPointType.FLOAT),
 		]);
 	}
-	initOnPlay() {
-		this._currentPerfAboveThreshold = undefined;
-		this.scene().perfMonitor.addThreshold(this.pv.threshold);
-	}
-	disposeOnPause() {
-		this.scene().perfMonitor.reset();
+
+	override setTriggeringLines(
+		shadersCollectionController: ShadersCollectionController,
+		triggeredMethods: string
+	): void {
+		const listeners: Record<PerformanceChangeEvent, string> = {
+			[PerformanceChangeEvent.aboveThreshold]: '',
+			[PerformanceChangeEvent.belowThreshold]: '',
+		};
+		PERFORMANCE_CHANGE_EVENTS.forEach((eventName) => {
+			const triggeredMethods = triggerMethod(this, _outputName(eventName));
+
+			const _nodeMethodName = nodeMethodName(this, _outputName(eventName));
+			listeners[eventName] = `this.${_nodeMethodName}.bind(this)`;
+
+			// const gatherable = options?.gatherable != null ? options.gatherable : false;
+			// const triggeringMethodName =
+			// 	options?.triggeringMethodName != null ? options.triggeringMethodName : (node.type() as EvaluatorMethodName);
+
+			const value = triggeredMethods; //triggeringLines.join('\n');//
+			// const varName = videoEvent; //nodeMethodName(node); //.wrappedBodyLinesMethodName();
+			const dataType = JsConnectionPointType.BOOLEAN; // unused
+			// if (!EVALUATOR_METHOD_NAMES.includes(triggeringMethodName as EvaluatorMethodName)) {
+			// 	console.warn(`method '${triggeringMethodName}' is not included`);
+			// }
+			shadersCollectionController.addDefinitions(this, [
+				new TriggeringJsDefinition(this, shadersCollectionController, dataType, _nodeMethodName, value, {
+					triggeringMethodName: eventName as any as EvaluatorMethodName,
+					gatherable: false,
+					nodeMethodName: _nodeMethodName,
+				}),
+			]);
+		});
+
+		const threshold = this.variableForInputParam(shadersCollectionController, this.p.threshold);
+		const func = Poly.namedFunctionsRegister.getFunction('onPerformanceChange', this, shadersCollectionController);
+		const bodyLine = func.asString(threshold, JSON.stringify(listeners).replace(/\"/g, ''), `this`);
+		shadersCollectionController.addDefinitions(this, [
+			new InitFunctionJsDefinition(
+				this,
+				shadersCollectionController,
+				JsConnectionPointType.OBJECT_3D,
+				this.path(),
+				bodyLine
+			),
+		]);
+
+		// shadersCollectionController.addTriggeringLines(this, [triggeredMethods], {
+		// 	gatherable: true,
+		// });
 	}
 
-	protected _currentPerfAboveThreshold: boolean | undefined;
+	// initOnPlay() {
+	// 	this._currentPerfAboveThreshold = undefined;
+	// 	this.scene().perfMonitor.addThreshold(this.pv.threshold);
+	// }
+	// disposeOnPause() {
+	// 	this.scene().perfMonitor.reset();
+	// }
+
+	// protected _currentPerfAboveThreshold: boolean | undefined;
 	// private _lastChangeAt: number | undefined;
 	// runTriggerIfRequired(context: JsNodeTriggerContext) {
 	// 	// const now = performance.now();
@@ -103,4 +171,21 @@ export class OnPerformanceChangeJsNode extends TypedJsNode<OnPerformanceChangeJs
 	// 	}
 	// 	TypeAssert.unreachable(outputName);
 	// }
+}
+
+function triggerMethod(node: OnPerformanceChangeJsNode, outputName: string): string {
+	const outputIndex = getOutputIndices(node, (c) => c.name() == outputName)[0];
+	const triggerableNodes = new Set<BaseJsNodeType>();
+	getConnectedOutputNodes({
+		node,
+		triggerOutputIndices: [outputIndex],
+		triggerableNodes,
+		recursive: false,
+	});
+	const triggerableMethodNames = SetUtils.toArray(triggerableNodes).map((triggerableNode) => {
+		const argIndex = triggerInputIndex(node, triggerableNode);
+		const m = nodeMethodName(triggerableNode);
+		return `this.${m}(${argIndex})`;
+	});
+	return `${triggerableMethodNames.join(';')}`;
 }

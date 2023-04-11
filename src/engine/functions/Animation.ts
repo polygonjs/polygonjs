@@ -2,6 +2,7 @@ import {Object3D} from 'three';
 import {AnimPropertyTarget} from '../../core/animation/PropertyTarget';
 import {NodeContext} from '../poly/NodeContext';
 import {ObjectNamedFunction1} from './_Base';
+import gsap from 'gsap';
 
 const EVENT_ANIMATION_STARTED = {type: 'onAnimationStarted'};
 const EVENT_ANIMATION_COMPLETED = {type: 'onAnimationCompleted'};

@@ -48,8 +48,9 @@ export function mix(num0: number, num1: number, blend: number) {
 	return (1 - blend) * num0 + blend * num1;
 }
 export const fract = (number: number) => number - Math.floor(number);
-const _vec = {x: 0, y: 136574};
-export function randFloat(x: number, y: number = 136574): number {
+const DEFAULT_Y = 136574;
+const _vec = {x: 0, y: DEFAULT_Y};
+export function randFloat(x: number, y: number = DEFAULT_Y): number {
 	_vec.x = x;
 	_vec.y = y;
 	return randVec2(_vec);

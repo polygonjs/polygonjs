@@ -20,7 +20,7 @@ import {ShaderName} from '../../../../utils/shaders/ShaderName';
 // import {ShadersCollectionController} from '../../utils/ShadersCollectionController';
 // import {UniformJsDefinition} from '../../../utils/JsDefinition';
 // import {Vector3} from 'three';
-import {ActorJsSopNode} from '../../../../sop/ActorJs';
+import {ActorSopNode} from '../../../../sop/Actor';
 import {
 	connectedTriggerableNodes,
 	findTriggeringNodes,
@@ -45,7 +45,7 @@ import {JsConnectionPointType} from '../../../../utils/io/connections/Js';
 // import { JSSDFSopNode } from '../../../../sop/JSSDF';
 
 function logBlue(message: string) {
-	console.log('%c' + message, 'color:blue; font-weight:bold;');
+	// console.log('%c' + message, 'color:blue; font-weight:bold;');
 }
 // function logGreen(message: string) {
 // 	console.log('%c' + message, 'color:green; font-weight:bold;');
@@ -130,7 +130,7 @@ export class JsAssemblerActor extends BaseJsShaderAssembler {
 		logBlue('*************');
 		this._reset();
 		//
-		const node = this.currentGlParentNode() as ActorJsSopNode;
+		const node = this.currentGlParentNode() as ActorSopNode;
 		const triggeringNodes = findTriggeringNodes(node);
 		const triggerableNodes = new Set<BaseJsNodeType>();
 		connectedTriggerableNodes({triggeringNodes, triggerableNodes, recursive: true});
@@ -155,7 +155,7 @@ export class JsAssemblerActor extends BaseJsShaderAssembler {
 		triggerableNodes: Set<BaseJsNodeType>,
 		shaderNames: ShaderName[]
 	): ActorFunctionData | undefined {
-		const functionNode = this.currentGlParentNode() as ActorJsSopNode;
+		const functionNode = this.currentGlParentNode() as ActorSopNode;
 
 		//
 		//
@@ -176,19 +176,18 @@ export class JsAssemblerActor extends BaseJsShaderAssembler {
 				}
 			});
 			const rootNodes = SetUtils.toArray(rootNodesSet).concat(additionalRootNodes);
-
 			this.set_root_nodes(rootNodes);
-			if (this._root_nodes.length > 0 || triggerableNodes.size > 0) {
-				this.buildCodeFromNodes(this._root_nodes, {
-					actor: {
-						functionNode,
-						triggeringNodes: triggeringNodes,
-						triggerableNodes: triggerableNodes,
-					},
-				});
+			// if (this._root_nodes.length > 0 || triggerableNodes.size > 0) {
+			this.buildCodeFromNodes(this._root_nodes, {
+				actor: {
+					functionNode,
+					triggeringNodes: triggeringNodes,
+					triggerableNodes: triggerableNodes,
+				},
+			});
 
-				this._buildLines();
-			}
+			this._buildLines();
+			// }
 			for (let shaderName of shaderNames) {
 				const lines = this._lines.get(shaderName);
 				if (lines) {
@@ -323,7 +322,7 @@ export class JsAssemblerActor extends BaseJsShaderAssembler {
 			return functionBody;
 		};
 		const functionBody = _buildFunctionBody();
-		console.log(functionBody);
+		// console.log(functionBody);
 		//
 		//
 		// gather function data

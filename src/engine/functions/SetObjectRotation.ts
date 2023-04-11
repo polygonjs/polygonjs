@@ -16,10 +16,10 @@ export class setObjectRotation extends ObjectNamedFunction4<[Vector3, number, nu
 		tmpEuler.set(rotation.x, rotation.y, rotation.z);
 
 		if (lerp >= 1) {
-			object3D.quaternion.setFromEuler(tmpEuler, false);
+			object3D.quaternion.setFromEuler(tmpEuler, true);
 		} else {
 			q1.copy(object3D.quaternion);
-			q2.setFromEuler(tmpEuler, false);
+			q2.setFromEuler(tmpEuler, true);
 			q1.slerp(q2, lerp);
 			object3D.quaternion.copy(q1);
 		}

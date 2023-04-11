@@ -23,7 +23,15 @@ export function findOrCreateAnimationMixer(object3D: Object3D) {
 	let animationMixer = _mixerByObject.get(object3D);
 	if (!animationMixer) {
 		animationMixer = new AnimationMixer(object3D);
+
 		_mixerByObject.set(object3D, animationMixer);
+
+		// const animations = object3D.animations;
+		// if (animations) {
+		// 	for (let animation of animations) {
+		// 		findOrCreateAnimationAction(animationMixer, animation.name, false);
+		// 	}
+		// }
 	}
 	return animationMixer;
 }
@@ -38,6 +46,7 @@ function findOrCreateAnimationAction(mixer: AnimationMixer, clipName: string, au
 		const root = mixer.getRoot();
 		const animations = (root as Object3D).animations;
 		if (!animations) {
+			console.warn('no animations');
 			return;
 		}
 		const animation = animations.find((animation) => animation.name == clipName);
@@ -75,10 +84,11 @@ export function animationClipsFromAnimationMixer(animationMixer: AnimationMixer)
 	return (root as Object3D).animations;
 }
 
-function existingAnimationActionsFromAnimationMixer(animationMixer: AnimationMixer): AnimationAction[] {
+export function existingAnimationActionsFromAnimationMixer(animationMixer: AnimationMixer): AnimationAction[] {
 	const root = animationMixer.getRoot();
 	const animations = (root as Object3D).animations;
 	if (!animations) {
+		console.warn('no animations found', root);
 		return [];
 	}
 	const animationActions: AnimationAction[] = [];
@@ -91,12 +101,12 @@ function existingAnimationActionsFromAnimationMixer(animationMixer: AnimationMix
 	return animationActions;
 }
 
-function getMostActiveAnimationActionFromMixer(animationMixer: AnimationMixer, except?: AnimationAction) {
-	const otherActions = existingAnimationActionsFromAnimationMixer(animationMixer).filter(
-		(action) => action !== except
-	);
+export function getMostActiveAnimationActionFromMixer(animationMixer: AnimationMixer, except?: AnimationAction) {
+	const existing = existingAnimationActionsFromAnimationMixer(animationMixer);
+	const otherActions = existing.filter((action) => action !== except);
 	const actionsSortedByWeight = ArrayUtils.sortBy(otherActions, (action) => -action.getEffectiveWeight());
 	const mostActiveAnimationAction = actionsSortedByWeight[0];
+
 	return {
 		otherActions,
 		mostActiveAnimationAction,
@@ -161,7 +171,8 @@ function _fadeInWhenPreviousLoopCompleted(
 	}) as EventListener<Event, 'loop', AnimationMixer>;
 	mixer.addEventListener('loop', onLoop);
 }
-function startCrossFade(actionFrom: AnimationAction, actionTo: AnimationAction, duration: number, warp: boolean) {
+type GetAnimationAction = () => AnimationAction;
+function startCrossFade(actionFrom: AnimationAction, actionToGet: GetAnimationAction, duration: number, warp: boolean) {
 	// only request animationActionTo at the last moment,
 	// in case it is set to autoPlay,
 	// as it would otherwise start playing before as soon as it is created,
@@ -170,6 +181,7 @@ function startCrossFade(actionFrom: AnimationAction, actionTo: AnimationAction, 
 	// 	AnimationActionCrossFadeActorNodeInputName.TO,
 	// 	context
 	// );
+	const actionTo = actionToGet();
 	if (!actionTo) {
 		return;
 	}
@@ -270,6 +282,7 @@ export class animationActionFadeIn extends NamedFunction5<[AnimationAction, numb
 		startOnFromActionEnd: boolean
 	): void {
 		if (!action) {
+			console.warn(`action '${action}' not found`);
 			return;
 		}
 		if (fadeOutOtherActions) {
@@ -290,15 +303,16 @@ export class animationActionFadeOut extends NamedFunction2<[AnimationAction, num
 		action.fadeOut(duration);
 	}
 }
+
 export class animationActionCrossFade extends NamedFunction5<
-	[AnimationAction, AnimationAction, number, boolean, boolean]
+	[AnimationAction, GetAnimationAction, number, boolean, boolean]
 > {
 	static override type() {
 		return 'animationActionCrossFade';
 	}
 	func(
 		actionFrom: AnimationAction,
-		actionTo: AnimationAction,
+		actionToGet: GetAnimationAction,
 		duration: number,
 		warp: boolean,
 		startOnFromActionEnd: boolean
@@ -312,12 +326,12 @@ export class animationActionCrossFade extends NamedFunction5<
 				if (event.action === actionFrom) {
 					mixer.removeEventListener('loop', onLoop);
 
-					startCrossFade(actionFrom, actionTo, duration, warp);
+					startCrossFade(actionFrom, actionToGet, duration, warp);
 				}
 			}) as EventListener<Event, 'loop', AnimationMixer>;
 			mixer.addEventListener('loop', onLoop);
 		} else {
-			startCrossFade(actionFrom, actionTo, duration, warp);
+			startCrossFade(actionFrom, actionToGet, duration, warp);
 		}
 	}
 }

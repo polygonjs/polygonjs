@@ -66,11 +66,17 @@ export function getPhysicsRBDRadius(
 		return;
 	}
 	const colliderType = CorePhysicsAttribute.getColliderType(object);
-	if (colliderType == null || colliderType != expectedType) {
+	if (colliderType == null) {
+		console.warn('no colliderType found');
+		return;
+	}
+	if (colliderType != expectedType) {
+		console.warn(`colliderType '${colliderType}' not the expected one ('${expectedType}')`);
 		return;
 	}
 	const collider = body.collider(0);
 	if (!collider) {
+		console.warn('no collider found');
 		return;
 	}
 	return currentRadius(object, collider);

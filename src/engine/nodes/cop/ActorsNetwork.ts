@@ -5,7 +5,7 @@
 
 import {ParamLessBaseNetworkCopNode} from './_BaseManager';
 import {NodeContext, NetworkNodeType} from '../../poly/NodeContext';
-import {ActorNodeChildrenMap} from '../../poly/registers/nodes/Actor';
+import {JsNodeChildrenMap} from '../../poly/registers/nodes/Js';
 import {BaseAnimNodeType} from '../anim/_Base';
 import {Constructor, valueof} from '../../../types/GlobalTypes';
 import {NodeCreateOptions} from '../utils/hierarchy/ChildrenController';
@@ -15,17 +15,17 @@ export class ActorsNetworkCopNode extends ParamLessBaseNetworkCopNode {
 		return NetworkNodeType.ACTOR;
 	}
 
-	protected override _childrenControllerContext = NodeContext.ACTOR;
+	protected override _childrenControllerContext = NodeContext.JS;
 
-	override createNode<S extends keyof ActorNodeChildrenMap>(
+	override createNode<S extends keyof JsNodeChildrenMap>(
 		node_class: S,
 		options?: NodeCreateOptions
-	): ActorNodeChildrenMap[S];
-	override createNode<K extends valueof<ActorNodeChildrenMap>>(
+	): JsNodeChildrenMap[S];
+	override createNode<K extends valueof<JsNodeChildrenMap>>(
 		node_class: Constructor<K>,
 		options?: NodeCreateOptions
 	): K;
-	override createNode<K extends valueof<ActorNodeChildrenMap>>(
+	override createNode<K extends valueof<JsNodeChildrenMap>>(
 		node_class: Constructor<K>,
 		options?: NodeCreateOptions
 	): K {
@@ -34,7 +34,7 @@ export class ActorsNetworkCopNode extends ParamLessBaseNetworkCopNode {
 	override children() {
 		return super.children() as BaseAnimNodeType[];
 	}
-	override nodesByType<K extends keyof ActorNodeChildrenMap>(type: K): ActorNodeChildrenMap[K][] {
-		return super.nodesByType(type) as ActorNodeChildrenMap[K][];
+	override nodesByType<K extends keyof JsNodeChildrenMap>(type: K): JsNodeChildrenMap[K][] {
+		return super.nodesByType(type) as JsNodeChildrenMap[K][];
 	}
 }

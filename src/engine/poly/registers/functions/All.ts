@@ -24,9 +24,15 @@ import {
 	arrayElementPrimitive,
 	arrayElementVector,
 } from '../../../functions/Array';
-import {playAudioSource, pauseAudioSource, playInstrumentNote} from '../../../functions/Audio';
+import {
+	addAudioStopEventListener,
+	playAudioSource,
+	pauseAudioSource,
+	playInstrumentNote,
+} from '../../../functions/Audio';
 import {box3Set, getBox3Min, getBox3Max} from '../../../functions/Box3';
 import {setPerspectiveCameraFov, setPerspectiveCameraNearFar, getDefaultCamera} from '../../../functions/Camera';
+import {colorSetRGB} from '../../../functions/Color';
 import {cookNode} from '../../../functions/CookNode';
 import {
 	boolToInt,
@@ -105,6 +111,7 @@ import {
 	mathColor_1,
 	mathColor_2,
 	mathColor_3,
+	mathColor_3vvf,
 	mathColor_4,
 	mathColor_5,
 	mathFloat_1,
@@ -120,16 +127,19 @@ import {
 	mathVector2_1,
 	mathVector2_2,
 	mathVector2_3,
+	mathVector2_3vvf,
 	mathVector2_4,
 	mathVector2_5,
 	mathVector3_1,
 	mathVector3_2,
 	mathVector3_3,
+	mathVector3_3vvf,
 	mathVector3_4,
 	mathVector3_5,
 	mathVector4_1,
 	mathVector4_2,
 	mathVector4_3,
+	mathVector4_3vvf,
 	mathVector4_4,
 	mathVector4_5,
 	mathVectorArray_1,
@@ -280,6 +290,7 @@ import {
 	getObjectLastDispatchedEventName,
 	objectAddEventListeners,
 } from '../../../functions/ObjectDispatchEvent';
+import {onPerformanceChange} from '../../../functions/Performance';
 import {
 	SDFUnion,
 	SDFSubtract,
@@ -335,7 +346,7 @@ import {getParent} from '../../../functions/GetParent';
 import {getObjectAttribute} from '../../../functions/GetObjectAttribute';
 import {getObjectAttributePrevious} from '../../../functions/GetObjectAttributePrevious';
 import {getObjectAttributeRef} from '../../../functions/GetObjectAttributeRef';
-import {getObjectHoveredState} from '../../../functions/GetObjectHoveredState';
+import {getObjectHoveredIntersection, getObjectHoveredState} from '../../../functions/GetObjectHoveredState';
 import {
 	getObjectProperty,
 	getObjectWorldPosition,
@@ -352,8 +363,9 @@ import {
 	getChildrenPropertiesVisible,
 } from '../../../functions/GetObjectProperty';
 import {getObjectUserData} from '../../../functions/GetObjectUserData';
+import {getSibbling} from '../../../functions/GetSibbling';
 import {setObjectAttribute} from '../../../functions/SetObjectAttribute';
-import {setObjectAttributeRef} from '../../../functions/SetObjectAttributeRef';
+// import {setObjectAttributeRef} from '../../../functions/SetObjectAttributeRef';
 import {setObjectLookAt} from '../../../functions/SetObjectLookAt';
 import {setObjectPolarTransform} from '../../../functions/SetObjectPolarTransform';
 import {setObjectPosition} from '../../../functions/SetObjectPosition';
@@ -375,6 +387,7 @@ export interface NamedFunctionMap {
 	addNumber: addNumber;
 	addVector: addVector<Vector2 | Vector3 | Vector4>;
 	addVectorNumber: addVectorNumber<Vector2 | Vector3 | Vector4>;
+	addAudioStopEventListener: addAudioStopEventListener;
 	andArrays: andArrays;
 	andBooleans: andBooleans;
 	animationActionCrossFade: animationActionCrossFade;
@@ -390,6 +403,7 @@ export interface NamedFunctionMap {
 	box3Set: box3Set;
 	catmullRomCurve3GetPoint: catmullRomCurve3GetPoint;
 	clamp: clamp;
+	colorSetRGB: colorSetRGB;
 	colorToVec3: colorToVec3;
 	complement: complement;
 	cookNode: cookNode;
@@ -461,6 +475,7 @@ export interface NamedFunctionMap {
 	getObjectAttributePrevious: getObjectAttributePrevious;
 	getObjectAttributeRef: getObjectAttributeRef;
 	getObjectChild: getObjectChild;
+	getObjectHoveredIntersection: getObjectHoveredIntersection;
 	getObjectHoveredState: getObjectHoveredState;
 	getObjectLastDispatchedEventName: getObjectLastDispatchedEventName;
 	getObjectProperty: getObjectProperty;
@@ -493,6 +508,7 @@ export interface NamedFunctionMap {
 	getPhysicsRBDIsMoving: getPhysicsRBDIsMoving;
 	getRayDirection: getRayDirection;
 	getRayOrigin: getRayOrigin;
+	getSibbling: getSibbling;
 	getSphereCenter: getSphereCenter;
 	getSphereRadius: getSphereRadius;
 	getTexture: getTexture;
@@ -538,6 +554,7 @@ export interface NamedFunctionMap {
 	mathColor_1: mathColor_1;
 	mathColor_2: mathColor_2;
 	mathColor_3: mathColor_3;
+	mathColor_3vvf: mathColor_3vvf;
 	mathColor_4: mathColor_4;
 	mathColor_5: mathColor_5;
 	mathFloat_1: mathFloat_1;
@@ -553,16 +570,19 @@ export interface NamedFunctionMap {
 	mathVector2_1: mathVector2_1;
 	mathVector2_2: mathVector2_2;
 	mathVector2_3: mathVector2_3;
+	mathVector2_3vvf: mathVector2_3vvf;
 	mathVector2_4: mathVector2_4;
 	mathVector2_5: mathVector2_5;
 	mathVector3_1: mathVector3_1;
 	mathVector3_2: mathVector3_2;
 	mathVector3_3: mathVector3_3;
+	mathVector3_3vvf: mathVector3_3vvf;
 	mathVector3_4: mathVector3_4;
 	mathVector3_5: mathVector3_5;
 	mathVector4_1: mathVector4_1;
 	mathVector4_2: mathVector4_2;
 	mathVector4_3: mathVector4_3;
+	mathVector4_3vvf: mathVector4_3vvf;
 	mathVector4_4: mathVector4_4;
 	mathVector4_5: mathVector4_5;
 	mathVectorArray_1: mathVectorArray_1<MathArrayVectorElement>;
@@ -585,7 +605,7 @@ export interface NamedFunctionMap {
 	multVectorNumber: multVectorNumber<Vector2 | Vector3 | Vector4>;
 	multAdd: multAdd;
 	nearestPosition: nearestPosition;
-	negate: negate;
+	negate: negate<boolean | number>;
 	normalizeVector2: normalizeVector2;
 	normalizeVector3: normalizeVector3;
 	normalizeVector4: normalizeVector4;
@@ -595,6 +615,7 @@ export interface NamedFunctionMap {
 	objectDispatchEvent: objectDispatchEvent;
 	objectUpdateMatrix: objectUpdateMatrix;
 	objectUpdateWorldMatrix: objectUpdateWorldMatrix;
+	onPerformanceChange: onPerformanceChange;
 	orArrays: orArrays;
 	orBooleans: orBooleans;
 	particlesSystemReset: particlesSystemReset;
@@ -660,7 +681,7 @@ export interface NamedFunctionMap {
 	setMaterialUniformNumber: setMaterialUniformNumber;
 	setMaterialUniformVectorColor: setMaterialUniformVectorColor;
 	setObjectAttribute: setObjectAttribute;
-	setObjectAttributeRef: setObjectAttributeRef;
+	// setObjectAttributeRef: setObjectAttributeRef;
 	setObjectLookAt: setObjectLookAt;
 	setObjectMaterial: setObjectMaterial;
 	setObjectMaterialColor: setObjectMaterialColor;
@@ -734,6 +755,7 @@ export class AllNamedFunctionRegister {
 			addVector,
 			addVectorNumber,
 			addVideoEventListener,
+			addAudioStopEventListener,
 			andArrays,
 			andBooleans,
 			animationActionCrossFade,
@@ -748,6 +770,7 @@ export class AllNamedFunctionRegister {
 			boolToInt,
 			box3Set,
 			clamp,
+			colorSetRGB,
 			colorToVec3,
 			catmullRomCurve3GetPoint,
 			complement,
@@ -820,6 +843,7 @@ export class AllNamedFunctionRegister {
 			getObjectAttributePrevious,
 			getObjectAttributeRef,
 			getObjectChild,
+			getObjectHoveredIntersection,
 			getObjectHoveredState,
 			getObjectLastDispatchedEventName,
 			getObjectProperty,
@@ -852,6 +876,7 @@ export class AllNamedFunctionRegister {
 			getPhysicsRBDIsMoving,
 			getRayDirection,
 			getRayOrigin,
+			getSibbling,
 			getSphereCenter,
 			getSphereRadius,
 			getTexture,
@@ -896,6 +921,7 @@ export class AllNamedFunctionRegister {
 			mathColor_1,
 			mathColor_2,
 			mathColor_3,
+			mathColor_3vvf,
 			mathColor_4,
 			mathColor_5,
 			mathFloat_1,
@@ -911,16 +937,19 @@ export class AllNamedFunctionRegister {
 			mathVector2_1,
 			mathVector2_2,
 			mathVector2_3,
+			mathVector2_3vvf,
 			mathVector2_4,
 			mathVector2_5,
 			mathVector3_1,
 			mathVector3_2,
 			mathVector3_3,
+			mathVector3_3vvf,
 			mathVector3_4,
 			mathVector3_5,
 			mathVector4_1,
 			mathVector4_2,
 			mathVector4_3,
+			mathVector4_3vvf,
 			mathVector4_4,
 			mathVector4_5,
 			mathVectorArray_1,
@@ -953,6 +982,7 @@ export class AllNamedFunctionRegister {
 			objectDispatchEvent,
 			objectUpdateMatrix,
 			objectUpdateWorldMatrix,
+			onPerformanceChange,
 			orArrays,
 			orBooleans,
 			particlesSystemReset,
@@ -1019,7 +1049,7 @@ export class AllNamedFunctionRegister {
 			setMaterialUniformNumber,
 			setMaterialUniformVectorColor,
 			setObjectAttribute,
-			setObjectAttributeRef,
+			// setObjectAttributeRef,
 			setObjectLookAt,
 			setObjectMaterial,
 			setObjectMaterialColor,

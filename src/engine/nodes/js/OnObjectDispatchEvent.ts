@@ -7,12 +7,13 @@ import {TRIGGER_CONNECTION_NAME, TypedJsNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {JsConnectionPoint, JsConnectionPointType, JS_CONNECTION_POINT_IN_NODE_DEF} from '../utils/io/connections/Js';
 import {JsType} from '../../poly/registers/nodes/types/Js';
-import {onObjectDispatchFunctionNameByEventName} from '../../functions/ObjectDispatchEvent';
+// import {onObjectDispatchFunctionNameByEventName} from '../../functions/ObjectDispatchEvent';
 import {inputObject3D} from './_BaseObject3D';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 import {Poly} from '../../Poly';
 import {InitFunctionJsDefinition} from './utils/JsDefinition';
-import {sanitizeName} from '../../../core/String';
+// import {sanitizeName} from '../../../core/String';
+import {nodeMethodName} from './code/assemblers/actor/ActorAssemblerUtils';
 
 enum OnObjectDispatchEventJsNodeInputName {
 	eventName = 'eventName',
@@ -54,9 +55,9 @@ export class OnObjectDispatchEventJsNode extends TypedJsNode<OnObjectDispatchEve
 			),
 		]);
 	}
-	wrappedBodyLinesMethodName() {
-		return onObjectDispatchFunctionNameByEventName(sanitizeName(this.pv.eventNames));
-	}
+	// wrappedBodyLinesMethodName() {
+	// 	return onObjectDispatchFunctionNameByEventName(sanitizeName(this.pv.eventNames));
+	// }
 	override setTriggeringLines(shadersCollectionController: ShadersCollectionController, triggeredMethods: string) {
 		const object3D = inputObject3D(this, shadersCollectionController);
 		const eventNames = this.variableForInputParam(shadersCollectionController, this.p.eventNames);
@@ -65,12 +66,7 @@ export class OnObjectDispatchEventJsNode extends TypedJsNode<OnObjectDispatchEve
 			this,
 			shadersCollectionController
 		);
-		const bodyLine = func.asString(
-			object3D,
-			eventNames,
-			`this`,
-			`this.${this.wrappedBodyLinesMethodName()}.bind(this)`
-		);
+		const bodyLine = func.asString(object3D, eventNames, `this`, `this.${nodeMethodName(this)}.bind(this)`);
 		shadersCollectionController.addDefinitions(this, [
 			new InitFunctionJsDefinition(
 				this,

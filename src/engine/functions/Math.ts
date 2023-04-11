@@ -9,6 +9,7 @@ import {
 	randFloat as _randFloat,
 } from '../../core/math/_Module';
 import {dummyReadRefVal} from '../../core/reactivity/CoreReactivity';
+import {isBoolean} from '../../core/Type';
 
 export class clamp extends NamedFunction3<[number, number, number]> {
 	static override type() {
@@ -60,12 +61,16 @@ export class multAdd extends NamedFunction4<[number, number, number, number]> {
 		return (value + preAdd) * mult + postAdd;
 	}
 }
-export class negate extends NamedFunction1<[number]> {
+export class negate<T extends number | boolean> extends NamedFunction1<[T]> {
 	static override type() {
 		return 'negate';
 	}
-	func(value: number): number {
-		return -value;
+	func(value: T): T {
+		if (isBoolean(value)) {
+			return !value as T;
+		} else {
+			return -value as T;
+		}
 	}
 }
 export class rand extends NamedFunction2<[number, number]> {

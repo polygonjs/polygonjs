@@ -21,7 +21,6 @@ abstract class MathNamedFunction8<ARGS extends [any, any, any, any, any, any, an
 	string[]
 > {}
 
-
 type MathFunction1 = (x: number) => number;
 type MathFunction2 = (x: number, arg1: number) => number;
 type MathFunction3 = (x: number, arg1: number, arg2: number) => number;
@@ -31,12 +30,14 @@ type MathFunction5 = (x: number, arg1: number, arg2: number, arg3: number, arg4:
 export type MathVectorFunction1 = 'mathColor_1' | 'mathVector2_1' | 'mathVector3_1' | 'mathVector4_1';
 export type MathVectorFunction2 = 'mathColor_2' | 'mathVector2_2' | 'mathVector3_2' | 'mathVector4_2';
 export type MathVectorFunction3 = 'mathColor_3' | 'mathVector2_3' | 'mathVector3_3' | 'mathVector4_3';
+export type MathVectorFunction3vvf = 'mathColor_3vvf' | 'mathVector2_3vvf' | 'mathVector3_3vvf' | 'mathVector4_3vvf';
 export type MathVectorFunction4 = 'mathColor_4' | 'mathVector2_4' | 'mathVector3_4' | 'mathVector4_4';
 export type MathVectorFunction5 = 'mathColor_5' | 'mathVector2_5' | 'mathVector3_5' | 'mathVector4_5';
 export type MathVectorFunction =
 	| MathVectorFunction1
 	| MathVectorFunction2
 	| MathVectorFunction3
+	| MathVectorFunction3vvf
 	| MathVectorFunction4
 	| MathVectorFunction5;
 export type MathFloat = 'mathFloat_1' | 'mathFloat_2' | 'mathFloat_3' | 'mathFloat_4' | 'mathFloat_5';
@@ -96,6 +97,22 @@ export const _vectorFunctionName_3: VectorFunctionName<MathVectorFunction3> = (i
 		return 'mathVector4_3';
 	}
 };
+export const _vectorFunctionName_3vvf: VectorFunctionName<MathVectorFunction3vvf> = (
+	inputType: JsConnectionPointType
+) => {
+	if (inputType == JsConnectionPointType.COLOR) {
+		return 'mathColor_3vvf';
+	}
+	if (inputType == JsConnectionPointType.VECTOR2) {
+		return 'mathVector2_3vvf';
+	}
+	if (inputType == JsConnectionPointType.VECTOR3) {
+		return 'mathVector3_3vvf';
+	}
+	if (inputType == JsConnectionPointType.VECTOR4) {
+		return 'mathVector4_3vvf';
+	}
+};
 export const _vectorFunctionName_4: VectorFunctionName<MathVectorFunction4> = (inputType: JsConnectionPointType) => {
 	if (inputType == JsConnectionPointType.COLOR) {
 		return 'mathColor_4';
@@ -138,6 +155,13 @@ type MathArrayVectorElementFunction3<T extends MathArrayVectorElement> = (
 	src: T,
 	arg1: T,
 	arg2: T,
+	target: T
+) => T;
+type MathArrayVectorElementFunction3VVF<T extends MathArrayVectorElement> = (
+	func: MathFunction3,
+	src: T,
+	arg1: T,
+	arg2: number,
 	target: T
 ) => T;
 type MathArrayVectorElementFunction4<T extends MathArrayVectorElement> = (
@@ -190,6 +214,18 @@ const COLOR_FUNC_3: MathArrayVectorElementFunction3<Color> = (
 	target.r = _func(src.r, arg1.r, arg2.r);
 	target.g = _func(src.g, arg1.g, arg2.g);
 	target.b = _func(src.b, arg1.b, arg2.b);
+	return target;
+};
+const COLOR_FUNC_3VVF: MathArrayVectorElementFunction3VVF<Color> = (
+	_func: MathFunction3,
+	src: Color,
+	arg1: Color,
+	arg2: number,
+	target: Color
+): Color => {
+	target.r = _func(src.r, arg1.r, arg2);
+	target.g = _func(src.g, arg1.g, arg2);
+	target.b = _func(src.b, arg1.b, arg2);
 	return target;
 };
 const COLOR_FUNC_4: MathArrayVectorElementFunction4<Color> = (
@@ -250,6 +286,17 @@ const VECTOR2_FUNC_3: MathArrayVectorElementFunction3<Vector2> = (
 	target.y = _func(src.y, arg1.y, arg2.y);
 	return target;
 };
+const VECTOR2_FUNC_3VVF: MathArrayVectorElementFunction3VVF<Vector2> = (
+	_func: MathFunction3,
+	src: Vector2,
+	arg1: Vector2,
+	arg2: number,
+	target: Vector2
+): Vector2 => {
+	target.x = _func(src.x, arg1.x, arg2);
+	target.y = _func(src.y, arg1.y, arg2);
+	return target;
+};
 const VECTOR2_FUNC_4: MathArrayVectorElementFunction4<Vector2> = (
 	_func: MathFunction4,
 	src: Vector2,
@@ -307,6 +354,18 @@ const VECTOR3_FUNC_3: MathArrayVectorElementFunction3<Vector3> = (
 	target.x = _func(src.x, arg1.x, arg2.x);
 	target.y = _func(src.y, arg1.y, arg2.y);
 	target.z = _func(src.z, arg1.z, arg2.z);
+	return target;
+};
+const VECTOR3_FUNC_3VVF: MathArrayVectorElementFunction3VVF<Vector3> = (
+	_func: MathFunction3,
+	src: Vector3,
+	arg1: Vector3,
+	arg2: number,
+	target: Vector3
+): Vector3 => {
+	target.x = _func(src.x, arg1.x, arg2);
+	target.y = _func(src.y, arg1.y, arg2);
+	target.z = _func(src.z, arg1.z, arg2);
 	return target;
 };
 const VECTOR3_FUNC_4: MathArrayVectorElementFunction4<Vector3> = (
@@ -371,6 +430,19 @@ const VECTOR4_FUNC_3: MathArrayVectorElementFunction3<Vector4> = (
 	target.y = _func(src.y, arg1.y, arg2.y);
 	target.z = _func(src.z, arg1.z, arg2.z);
 	target.w = _func(src.w, arg1.w, arg2.w);
+	return target;
+};
+const VECTOR4_FUNC_3VVF: MathArrayVectorElementFunction3VVF<Vector4> = (
+	_func: MathFunction3,
+	src: Vector4,
+	arg1: Vector4,
+	arg2: number,
+	target: Vector4
+): Vector4 => {
+	target.x = _func(src.x, arg1.x, arg2);
+	target.y = _func(src.y, arg1.y, arg2);
+	target.z = _func(src.z, arg1.z, arg2);
+	target.w = _func(src.w, arg1.w, arg2);
 	return target;
 };
 const VECTOR4_FUNC_4: MathArrayVectorElementFunction4<Vector4> = (
@@ -463,6 +535,12 @@ export class mathColor_3 extends MathNamedFunction5<[MathFunction2, Color, Color
 	}
 	func = COLOR_FUNC_3;
 }
+export class mathColor_3vvf extends MathNamedFunction5<[MathFunction2, Color, Color, number, Color]> {
+	static override type() {
+		return 'mathColor_3vvf';
+	}
+	func = COLOR_FUNC_3VVF;
+}
 export class mathColor_4 extends MathNamedFunction6<[MathFunction2, Color, Color, Color, Color, Color]> {
 	static override type() {
 		return 'mathColor_4';
@@ -493,6 +571,12 @@ export class mathVector2_3 extends MathNamedFunction5<[MathFunction1, Vector2, V
 		return 'mathVector2_3';
 	}
 	func = VECTOR2_FUNC_3;
+}
+export class mathVector2_3vvf extends MathNamedFunction5<[MathFunction1, Vector2, Vector2, number, Vector2]> {
+	static override type() {
+		return 'mathVector2_3vvf';
+	}
+	func = VECTOR2_FUNC_3VVF;
 }
 export class mathVector2_4 extends MathNamedFunction6<[MathFunction1, Vector2, Vector2, Vector2, Vector2, Vector2]> {
 	static override type() {
@@ -527,6 +611,12 @@ export class mathVector3_3 extends MathNamedFunction5<[MathFunction1, Vector3, V
 	}
 	func = VECTOR3_FUNC_3;
 }
+export class mathVector3_3vvf extends MathNamedFunction5<[MathFunction1, Vector3, Vector3, number, Vector3]> {
+	static override type() {
+		return 'mathVector3_3vvf';
+	}
+	func = VECTOR3_FUNC_3VVF;
+}
 export class mathVector3_4 extends MathNamedFunction6<[MathFunction1, Vector3, Vector3, Vector3, Vector3, Vector3]> {
 	static override type() {
 		return 'mathVector3_4';
@@ -559,6 +649,12 @@ export class mathVector4_3 extends MathNamedFunction5<[MathFunction1, Vector4, V
 		return 'mathVector4_3';
 	}
 	func = VECTOR4_FUNC_3;
+}
+export class mathVector4_3vvf extends MathNamedFunction5<[MathFunction1, Vector4, Vector4, number, Vector4]> {
+	static override type() {
+		return 'mathVector4_3vvf';
+	}
+	func = VECTOR4_FUNC_3VVF;
 }
 export class mathVector4_4 extends MathNamedFunction6<[MathFunction1, Vector4, Vector4, Vector4, Vector4, Vector4]> {
 	static override type() {

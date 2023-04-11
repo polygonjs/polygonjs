@@ -4,7 +4,7 @@
  *
  *
  */
-import {PolyDictionary} from '../../../types/GlobalTypes';
+import {PolyDictionary, Number3} from '../../../types/GlobalTypes';
 import {isJsConnectionPointArray, JsConnectionPointType} from '../utils/io/connections/Js';
 import {ParamlessTypedJsNode} from './_Base';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
@@ -14,9 +14,9 @@ enum DistanceJsNodeInputName {
 	VALUE0 = 'v0',
 	VALUE1 = 'v1',
 }
-const DefaultValues: PolyDictionary<number> = {
-	[DistanceJsNodeInputName.VALUE0]: 1,
-	[DistanceJsNodeInputName.VALUE1]: 1,
+const DefaultValues: PolyDictionary<Number3> = {
+	[DistanceJsNodeInputName.VALUE0]: [1, 0, 0],
+	[DistanceJsNodeInputName.VALUE1]: [0, 1, 0],
 };
 const OUTPUT_NAME = 'val';
 const ALLOWED_INPUT_TYPES: JsConnectionPointType[] = [JsConnectionPointType.VECTOR2, JsConnectionPointType.VECTOR3];

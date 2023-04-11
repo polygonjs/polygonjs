@@ -8,6 +8,7 @@ import {TypedJsNode} from './_Base';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {JsConnectionPoint, JsConnectionPointType} from '../utils/io/connections/Js';
 import {JsType} from '../../poly/registers/nodes/types/Js';
+import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 
 class OnScenePauseJsParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new OnScenePauseJsParamsConfig();
@@ -25,5 +26,13 @@ export class OnScenePauseJsNode extends TypedJsNode<OnScenePauseJsParamsConfig> 
 		this.io.outputs.setNamedOutputConnectionPoints([
 			new JsConnectionPoint(JsConnectionPointType.TRIGGER, JsConnectionPointType.TRIGGER),
 		]);
+	}
+	override setTriggeringLines(
+		shadersCollectionController: ShadersCollectionController,
+		triggeredMethods: string
+	): void {
+		shadersCollectionController.addTriggeringLines(this, [triggeredMethods], {
+			gatherable: true,
+		});
 	}
 }

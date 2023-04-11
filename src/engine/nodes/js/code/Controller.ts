@@ -79,12 +79,23 @@ export class JsAssemblerController<A extends BaseJsShaderAssembler> {
 		this._compileRequired = newState;
 	}
 	setCompilationRequiredAndDirty(triggerNode?: BaseJsNodeType) {
+		if (this.node.scene().loadingController.isLoading()) {
+			return;
+		}
+
 		this.setCompilationRequired();
-		if (this._assembler.makeFunctionNodeDirtyOnRecompileRequired()) {
-			this.node.setDirty(triggerNode);
+		if (this.node.isDirty()) {
+			// nothing
 		} else {
 			this.node.compile();
 		}
+
+		// this.setCompilationRequired();
+		// // if (this._assembler.makeFunctionNodeDirtyOnRecompileRequired()) {
+		// // 	this.node.setDirty(triggerNode);
+		// // } else {
+		// this.node.compile();
+		// //}
 	}
 	compileRequired(): boolean {
 		return this._compileRequired;

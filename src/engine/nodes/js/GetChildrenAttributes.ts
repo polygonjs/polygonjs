@@ -18,11 +18,16 @@ import {ShadersCollectionController} from './code/utils/ShadersCollectionControl
 import {inputObject3D} from './_BaseObject3D';
 import {Poly} from '../../Poly';
 import {createVariable} from './code/assemblers/_BaseJsPersistedConfigUtils';
+import {StringParam} from '../../params/String';
 
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
 
+enum GetChildrenAttributesInputName {
+	attribName = 'attribName',
+}
+
 class GetChildrenAttributesJsParamsConfig extends NodeParamsConfig {
-	attribName = ParamConfig.STRING('');
+	// attribName = ParamConfig.STRING('');
 	type = ParamConfig.INTEGER(PARAM_CONVERTIBLE_JS_CONNECTION_POINT_TYPES.indexOf(JsConnectionPointType.FLOAT), {
 		menu: {
 			entries: PARAM_CONVERTIBLE_JS_CONNECTION_POINT_TYPES.map((name, i) => {
@@ -43,6 +48,11 @@ export class GetChildrenAttributesJsNode extends TypedJsNode<GetChildrenAttribut
 	override initializeNode() {
 		this.io.inputs.setNamedInputConnectionPoints([
 			new JsConnectionPoint(JsConnectionPointType.OBJECT_3D, JsConnectionPointType.OBJECT_3D, CONNECTION_OPTIONS),
+			new JsConnectionPoint(
+				GetChildrenAttributesInputName.attribName,
+				JsConnectionPointType.STRING,
+				CONNECTION_OPTIONS
+			),
 		]);
 
 		this.io.connection_points.set_expected_input_types_function(() => []);
@@ -64,10 +74,22 @@ export class GetChildrenAttributesJsNode extends TypedJsNode<GetChildrenAttribut
 	setAttribType(type: ParamConvertibleJsType) {
 		this.p.type.set(PARAM_CONVERTIBLE_JS_CONNECTION_POINT_TYPES.indexOf(type));
 	}
+	attribType(): JsConnectionPointType {
+		return PARAM_CONVERTIBLE_JS_CONNECTION_POINT_TYPES[this.pv.type];
+	}
+	setAttribName(attribName: string) {
+		(this.params.get(GetChildrenAttributesInputName.attribName) as StringParam).set(attribName);
+	}
+	attributeName() {
+		return (this.params.get(GetChildrenAttributesInputName.attribName) as StringParam).value;
+	}
 
 	override setLines(shadersCollectionController: ShadersCollectionController) {
 		const object3D = inputObject3D(this, shadersCollectionController);
-		const attribName = this.variableForInputParam(shadersCollectionController, this.p.attribName);
+		const attribName = this.variableForInput(
+			shadersCollectionController,
+			GetChildrenAttributesInputName.attribName
+		);
 		const varName = this.jsVarName(GetChildrenAttributesJsNode.OUTPUT_NAME);
 		const dataType = PARAM_CONVERTIBLE_JS_CONNECTION_POINT_TYPES[this.pv.type];
 

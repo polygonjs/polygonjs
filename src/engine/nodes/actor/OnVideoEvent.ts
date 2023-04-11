@@ -17,7 +17,7 @@ import {
 	VideoEvent,
 	VIDEO_EVENTS,
 	//   VIDEO_EVENT_INDICES
-} from '../../../core/Video';
+} from '../../../core/VideoEvent';
 
 type Listener = () => void;
 type Listeners = Record<VideoEvent, Listener>;

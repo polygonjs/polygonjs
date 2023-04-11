@@ -26,7 +26,7 @@ class ConstantJsParamsConfig extends NodeParamsConfig {
 			}),
 		},
 	});
-	bool = ParamConfig.BOOLEAN(0, typedVisibleOptions(JsConnectionPointType.BOOLEAN));
+	boolean = ParamConfig.BOOLEAN(0, typedVisibleOptions(JsConnectionPointType.BOOLEAN));
 	color = ParamConfig.COLOR([0, 0, 0], typedVisibleOptions(JsConnectionPointType.COLOR));
 	float = ParamConfig.FLOAT(0, typedVisibleOptions(JsConnectionPointType.FLOAT));
 	int = ParamConfig.INTEGER(0, typedVisibleOptions(JsConnectionPointType.INT));
@@ -96,7 +96,7 @@ export class ConstantJsNode extends TypedJsNode<ConstantJsParamsConfig> {
 		const type = JS_CONNECTION_TYPES_FOR_CONSTANT[this.pv.type];
 		switch (type) {
 			case JsConnectionPointType.BOOLEAN: {
-				return this.p.bool;
+				return this.p.boolean;
 			}
 			case JsConnectionPointType.COLOR: {
 				return this.p.color;
@@ -122,7 +122,7 @@ export class ConstantJsNode extends TypedJsNode<ConstantJsParamsConfig> {
 		}
 		console.warn(`constant with type '${type}' not yet implemented`);
 		// we should never run this
-		return this.p.bool;
+		return this.p.boolean;
 	}
 	private _currentVarName(): string {
 		return this.jsVarName(ConstantJsNode.OUTPUT_NAME);

@@ -12,10 +12,12 @@ import {CoreType} from '../Type';
 // import {AttributeCallbackQueue} from './attribute/AttributeCallbackQueue';
 import {SetUtils} from '../../core/SetUtils';
 import {MapUtils} from '../../core/MapUtils';
-import {ObjectContent, CoreObjectType, ObjectGeometryMap, MergeCompactOptions} from './ObjectContent';
+import type {ObjectContent, CoreObjectType, ObjectGeometryMap, MergeCompactOptions} from './ObjectContent';
 import {TransformTargetType} from '../Transform';
 import {ObjectTransformSpace} from '../TransformSpace';
 import {EntityGroupCollection} from './EntityGroupCollection';
+import {_updateObjectAttribRef} from '../reactivity/ObjectAttributeReactivityUpdateRef';
+import {attribValueNonPrimitive, copyAttribValue, AttributeDictionary} from './_BaseObjectUtils';
 // import {computeBoundingBoxFromObject3D} from './BoundingBox';
 // import {setSphereFromObject} from './BoundingSphere';
 // import {ref} from '../reactivity';
@@ -47,28 +49,12 @@ const tmpN3: Number3 = [0, 0, 0];
 // 	readonly isSkinnedMesh: boolean;
 // }
 
-export type AttributeDictionary = PolyDictionary<AttribValue>;
-
 // export type PositionStaticMethod<T extends CoreObjectType> = (object: ObjectContent<T>, target: Vector3)=>void
 // function DEFAULT_POSITION_STATIC_METHOD<T extends CoreObjectType>(object: ObjectContent<T>, target: Vector3) {
 // 	target.copy(ORIGIN);
 // }
 
 // export type CoreObjectContent = Object3D|CadObject
-export function attribValueNonPrimitive(src: AttribValue) {
-	return src instanceof Vector2 || src instanceof Vector3 || src instanceof Vector4;
-}
-export function copyAttribValue(src: AttribValue, target: AttribValue) {
-	if (target instanceof Vector2 && src instanceof Vector2) {
-		target.copy(src);
-	}
-	if (target instanceof Vector3 && src instanceof Vector3) {
-		target.copy(src);
-	}
-	if (target instanceof Vector4 && src instanceof Vector4) {
-		target.copy(src);
-	}
-}
 
 export abstract class BaseCoreObject<T extends CoreObjectType> extends CoreEntity {
 	constructor(protected _object: ObjectContent<T>, index: number) {
@@ -94,7 +80,7 @@ export abstract class BaseCoreObject<T extends CoreObjectType> extends CoreEntit
 		if (CoreType.isArray(value)) {
 			const convertedValue = _convertArrayToVector(value);
 			if (!convertedValue) {
-				const message = `attribute_value invalid`;
+				const message = `value invalid`;
 				console.error(message, value);
 				throw new Error(message);
 			}
@@ -110,11 +96,12 @@ export abstract class BaseCoreObject<T extends CoreObjectType> extends CoreEntit
 		if (attribValueNonPrimitive(currentValue) && attribValueNonPrimitive(value)) {
 			// AttributeCallbackQueue.block();
 			copyAttribValue(value, currentValue);
+
 			// AttributeCallbackQueue.unblock();
-			return;
 		} else {
 			dict[attribName] = value;
 		}
+		_updateObjectAttribRef(object, attribName, value);
 		// }
 
 		// if (CoreType.isVector(value)) {
@@ -149,9 +136,9 @@ export abstract class BaseCoreObject<T extends CoreObjectType> extends CoreEntit
 	) {
 		const dict =
 			(object.userData[ATTRIBUTES] as AttributeDictionary) || this._createAttributesDictionaryIfNone(object);
-		let entry = dict[attribName];
-		if (entry == null) {
-			entry = defaultValue || 0;
+		let entry: AttribValue | undefined = dict[attribName];
+		if (entry == null && defaultValue != null) {
+			entry = defaultValue;
 			dict[attribName] = entry;
 		}
 		return entry;

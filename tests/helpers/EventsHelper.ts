@@ -2,7 +2,7 @@ interface EventPos {
 	x: number;
 	y: number;
 }
-type PointerEventName = 'pointermove' | 'pointerdown' | 'pointerup';
+type PointerEventName = 'pointermove' | 'pointerdown' | 'pointerup' | 'click';
 function triggerPointerEvent(eventName: PointerEventName, canvas: HTMLCanvasElement, options?: EventPos) {
 	const offsetX = options?.x != null ? options.x : 0;
 	const offsetY = options?.y != null ? options.y : 0;
@@ -50,6 +50,16 @@ export function triggerPointerupInMiddle(canvas: HTMLCanvasElement) {
 }
 export function triggerPointerupAside(canvas: HTMLCanvasElement) {
 	triggerPointerEventAside('pointerup', canvas);
+}
+// click
+export function triggerClick(canvas: HTMLCanvasElement, options?: EventPos) {
+	triggerPointerEvent('click', canvas, options);
+}
+export function triggerClickInMiddle(canvas: HTMLCanvasElement) {
+	triggerPointerEventInMiddle('click', canvas);
+}
+export function triggerClickAside(canvas: HTMLCanvasElement) {
+	triggerPointerEventAside('click', canvas);
 }
 
 interface KeyEventOptions {

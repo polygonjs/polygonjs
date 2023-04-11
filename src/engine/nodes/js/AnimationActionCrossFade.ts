@@ -62,11 +62,11 @@ export class AnimationActionCrossFadeJsNode extends TypedJsNode<AnimationActionC
 		);
 
 		const func = Poly.namedFunctionsRegister.getFunction(
-			'animationActionFadeIn',
+			'animationActionCrossFade',
 			this,
 			shadersCollectionController
 		);
-		const bodyLine = func.asString(actionFrom, actionTo, duration, warp, startOnFromActionEnd);
+		const bodyLine = func.asString(actionFrom, `()=>${actionTo}`, duration, warp, startOnFromActionEnd);
 		shadersCollectionController.addTriggerableLines(this, [bodyLine]);
 	}
 }

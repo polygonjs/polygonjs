@@ -4,27 +4,25 @@
  *
  */
 
-import {TypedSopNode} from './_Base';
+// import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {NetworkNodeType, NodeContext} from '../../poly/NodeContext';
-import {InputCloneMode} from '../../poly/InputCloneMode';
-import {ActorNodeChildrenMap} from '../../poly/registers/nodes/Actor';
-import {NodeCreateOptions} from '../utils/hierarchy/ChildrenController';
-import {Constructor, valueof} from '../../../types/GlobalTypes';
-import {BaseActorNodeType} from '../actor/_Base';
+import {NetworkNodeType} from '../../poly/NodeContext';
+import {CorePath} from '../../../core/geometry/CorePath';
+import {SopType} from '../../poly/registers/nodes/types/Sop';
+import {TypedActorSopNode} from './_BaseActor';
 import {isBooleanTrue} from '../../../core/Type';
 import {ActorBuilderNode} from '../../scene/utils/ActorsManager';
-// import {CorePath} from '../../../core/geometry/CorePath';
-// import {ActorsManager} from '../../../core/actor/ActorsManager';
+import {InputCloneMode} from '../../poly/InputCloneMode';
 class ActorSopParamsConfig extends NodeParamsConfig {
 	/** @param select which objects this applies the actor behavior to */
 	objectsMask = ParamConfig.STRING('', {
 		objectMask: true,
 	});
 	/** @param build actor from child nodes */
-	useThisNode = ParamConfig.BOOLEAN(1);
+	useThisNode = ParamConfig.BOOLEAN(1, {
+		separatorAfter: true,
+	});
 	/** @param actor node */
 	node = ParamConfig.NODE_PATH('', {
 		visibleIf: {useThisNode: 0},
@@ -32,39 +30,99 @@ class ActorSopParamsConfig extends NodeParamsConfig {
 			types: [NetworkNodeType.ACTOR],
 		},
 		dependentOnFoundNode: false,
+		separatorAfter: true,
 	});
 }
 const ParamsConfig = new ActorSopParamsConfig();
 
-export class ActorSopNode extends TypedSopNode<ActorSopParamsConfig> {
+export class ActorSopNode extends TypedActorSopNode<ActorSopParamsConfig> {
 	override readonly paramsConfig = ParamsConfig;
 	static override type() {
-		return 'actor';
+		return SopType.ACTOR;
 	}
 
+	//
+	// ASSEMBLERS
+	//
+	// override readonly persisted_config: ActorPersistedConfig = new ActorPersistedConfig(this);
+	// assemblerController() {
+	// 	return this._assemblerController;
+	// }
+	// public override usedAssembler(): Readonly<AssemblerName.JS_ACTOR> {
+	// 	return AssemblerName.JS_ACTOR;
+	// }
+	// protected _assemblerController = this._createAssemblerController();
+	// private _createAssemblerController(): JsAssemblerController<JsAssemblerActor> | undefined {
+	// 	return Poly.assemblersRegister.assembler(this, this.usedAssembler());
+	// }
+
+	//
+	// INIT
+	//
 	protected override initializeNode() {
 		this.io.inputs.setCount(1);
 		this.io.inputs.initInputsClonedState(InputCloneMode.FROM_NODE);
 	}
 
-	override cook(inputCoreGroups: CoreGroup[]) {
-		const coreGroup = inputCoreGroups[0];
-		// const objects = coreGroup.threejsObjects();
+	//
+	// CHILDREN
+	//
+	// protected override _childrenControllerContext = NodeContext.JS;
+	// override createNode<S extends keyof JsNodeChildrenMap>(
+	// 	node_class: S,
+	// 	options?: NodeCreateOptions
+	// ): JsNodeChildrenMap[S];
+	// override createNode<K extends valueof<JsNodeChildrenMap>>(
+	// 	node_class: Constructor<K>,
+	// 	options?: NodeCreateOptions
+	// ): K;
+	// override createNode<K extends valueof<JsNodeChildrenMap>>(
+	// 	node_class: Constructor<K>,
+	// 	options?: NodeCreateOptions
+	// ): K {
+	// 	return super.createNode(node_class, options) as K;
+	// }
+	// override children() {
+	// 	return super.children() as BaseJsNodeType[];
+	// }
+	// override nodesByType<K extends keyof JsNodeChildrenMap>(type: K): JsNodeChildrenMap[K][] {
+	// 	return super.nodesByType(type) as JsNodeChildrenMap[K][];
+	// }
+	// override childrenAllowed() {
+	// 	if (this.assemblerController()) {
+	// 		return super.childrenAllowed();
+	// 	}
+	// 	return false;
+	// }
+	// override sceneReadonly() {
+	// 	return this.assemblerController() == null;
+	// }
 
+	//
+	//
+	//
+
+	override cook(inputCoreGroups: CoreGroup[]) {
+		// compile
+		this.compileIfRequired();
+
+		//
+		const coreGroup = inputCoreGroups[0];
+		const objects = coreGroup.threejsObjects();
 		const actorNode = this._findActorNode();
 		if (actorNode) {
 			const objectsMask = this.pv.objectsMask.trim();
 			if (objectsMask == '') {
-				// for (let object of objects) {
-				// 	// this.scene().actorsManager.assignActorBuilder(object, actorNode);
-				// }
+				for (let object of objects) {
+					this.scene().actorsManager.assignActorBuilder(object, actorNode);
+				}
 			} else {
-				// for (let object of objects) {
-				// 	// const children = CorePath.objectsByMaskInObject(objectsMask, object);
-				// 	// for (let child of children) {
-				// 	// 	// this.scene().actorsManager.assignActorBuilder(child, actorNode);
-				// 	// }
-				// }
+				for (let object of objects) {
+					const children = CorePath.objectsByMaskInObject(objectsMask, object);
+					for (let child of children) {
+						this.scene().actorsManager.assignActorBuilder(child, actorNode);
+					}
+				}
 			}
 		}
 
@@ -77,32 +135,124 @@ export class ActorSopNode extends TypedSopNode<ActorSopParamsConfig> {
 			return this.pv.node.node() as ActorBuilderNode | undefined;
 		}
 	}
+	// async compileIfRequired() {
+	// 	if (this.assemblerController()?.compileRequired()) {
+	// 		await this.compile();
+	// 	}
+	// }
 
-	//
-	// CHILDREN
-	//
-	protected override _childrenControllerContext = NodeContext.ACTOR;
-	override createNode<S extends keyof ActorNodeChildrenMap>(
-		node_class: S,
-		options?: NodeCreateOptions
-	): ActorNodeChildrenMap[S];
-	override createNode<K extends valueof<ActorNodeChildrenMap>>(
-		node_class: Constructor<K>,
-		options?: NodeCreateOptions
-	): K;
-	override createNode<K extends valueof<ActorNodeChildrenMap>>(
-		node_class: Constructor<K>,
-		options?: NodeCreateOptions
-	): K {
-		return super.createNode(node_class, options) as K;
-	}
-	override children() {
-		return super.children() as BaseActorNodeType[];
-	}
-	override nodesByType<K extends keyof ActorNodeChildrenMap>(type: K): ActorNodeChildrenMap[K][] {
-		return super.nodesByType(type) as ActorNodeChildrenMap[K][];
-	}
-	override childrenAllowed() {
-		return true;
-	}
+	// private _evaluatorGenerator: ActorEvaluatorGenerator = new ActorEvaluatorGenerator(
+	// 	(object) => new ActorEvaluator(this, object)
+	// );
+	// evaluatorGenerator() {
+	// 	return this._evaluatorGenerator;
+	// }
+	// private _functionData: ActorFunctionData | undefined;
+	// functionData() {
+	// 	return this._functionData;
+	// }
+	// updateFromFunctionData(functionData: ActorFunctionData) {
+	// 	this._functionData = functionData;
+	// 	const {functionBody, variableNames, variablesByName, functionNames, functionsByName, paramConfigs, eventDatas} =
+	// 		this._functionData;
+
+	// 	const wrappedBody = `
+	// 		try {
+	// 			${functionBody}
+	// 		} catch(e) {
+	// 			console.log(e);
+	// 			_setErrorFromError(e)
+	// 			return null
+	// 		}`;
+	// 	const _setErrorFromError = (e: Error) => {
+	// 		this.states.error.set(e.message);
+	// 	};
+
+	// 	const variables: RegisterableVariable[] = [];
+	// 	const functions: Function[] = [];
+	// 	for (const variableName of variableNames) {
+	// 		const variable = variablesByName[variableName];
+	// 		variables.push(variable);
+	// 	}
+	// 	for (const functionName of functionNames) {
+	// 		const _func = functionsByName[functionName];
+	// 		functions.push(_func);
+	// 	}
+
+	// 	const paramConfigUniformNames: string[] = paramConfigs.map((pc) => pc.uniformName());
+
+	// 	paramConfigs.forEach((p) => p.applyToNode(this));
+
+	// 	const functionCreationArgs = [
+	// 		'ActorEvaluator',
+	// 		'computed',
+	// 		'ref',
+	// 		'watch',
+	// 		'_setErrorFromError',
+	// 		...variableNames,
+	// 		...functionNames,
+	// 		...paramConfigUniformNames,
+	// 		wrappedBody,
+	// 	];
+	// 	const functionEvalArgs = () => [
+	// 		ActorEvaluator,
+	// 		computed,
+	// 		ref,
+	// 		watch,
+	// 		_setErrorFromError,
+	// 		// it is currently preferable to create a unique set of variables
+	// 		// for each evaluator
+	// 		...variables.map((v) => v.clone()),
+	// 		...functions,
+	// 	];
+	// 	try {
+	// 		const _function = new Function(...functionCreationArgs);
+	// 		const evaluatorGenerator = new ActorEvaluatorGenerator((object) => {
+	// 			const evaluatorClass = _function(...functionEvalArgs()) as typeof ActorEvaluator;
+	// 			const evaluator = new evaluatorClass(this, object);
+	// 			return this.scene().dispatchController.processActorEvaluator(evaluator) || evaluator;
+	// 		});
+
+	// 		//
+	// 		//
+	// 		// add inputEvents
+	// 		//
+	// 		//
+	// 		evaluatorGenerator.eventDatas = SetUtils.fromArray(eventDatas);
+
+	// 		//
+	// 		//
+	// 		// evaluator is ready
+	// 		//
+	// 		//
+	// 		this._setEvaluatorGenerator(evaluatorGenerator);
+	// 	} catch (e) {
+	// 		console.warn(e);
+	// 		this.states.error.set('failed to compile');
+	// 	}
+	// }
+	// private _setEvaluatorGenerator(evaluatorGenerator: ActorEvaluatorGenerator) {
+	// 	this.scene().actorsManager.unregisterEvaluatorGenerator(this._evaluatorGenerator);
+	// 	this._evaluatorGenerator.dispose();
+	// 	this._evaluatorGenerator = evaluatorGenerator;
+	// 	this.scene().actorsManager.registerEvaluatorGenerator(evaluatorGenerator);
+	// }
+	// async compile() {
+	// 	const assemblerController = this.assemblerController();
+	// 	if (!assemblerController) {
+	// 		return;
+	// 	}
+
+	// 	// main compilation (just used for reset in this assembler)
+	// 	assemblerController.assembler.updateFunction();
+
+	// 	// get functionData
+	// 	const paramNodes = JsNodeFinder.findParamGeneratingNodes(this);
+	// 	const functionData = assemblerController.assembler.createFunctionData(paramNodes);
+	// 	if (!functionData) {
+	// 		return;
+	// 	}
+	// 	this.updateFromFunctionData(functionData);
+	// 	assemblerController.post_compile();
+	// }
 }

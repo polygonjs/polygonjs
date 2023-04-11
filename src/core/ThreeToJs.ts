@@ -48,6 +48,9 @@ export class ThreeToJs {
 		if (CoreType.isNumber(value)) {
 			return `${CoreString.ensureFloat(value)}`;
 		}
+		if (value == null) {
+			return 'null';
+		}
 		// if (CoreType.isArray(value)) {
 		// 	return this.numeric_array(value);
 		// }

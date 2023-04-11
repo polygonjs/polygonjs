@@ -2,15 +2,44 @@ import {Object3D} from 'three';
 import {BaseAudioNodeType} from '../nodes/audio/_Base';
 import {NodeContext} from '../poly/NodeContext';
 import {PolyScene} from '../scene/PolyScene';
-import {ObjectNamedFunction1, ObjectNamedFunction3} from './_Base';
+import {NamedFunction3, ObjectNamedFunction1, ObjectNamedFunction3} from './_Base';
 import {Player} from 'tone/build/esm/source/buffer/Player';
 import {AudioPlayerCallbacksManager} from '../../core/audio/PlayerCallbacksManager';
 import {CoreObject} from '../../core/geometry/Object';
+import {ActorEvaluator} from '../nodes/js/code/assemblers/actor/Evaluator';
 
-const AUDIO_COMPLETED_EVENT_NAME = 'onAudioCompleted';
-const EVENT_AUDIO_COMPLETED = {type: AUDIO_COMPLETED_EVENT_NAME};
+// const AUDIO_COMPLETED_EVENT_NAME = 'onAudioCompleted';
+// const EVENT_AUDIO_COMPLETED = {type: AUDIO_COMPLETED_EVENT_NAME};
 export const AUDIO_ATTRIB_NAME_LAST_INSTRUMENT_TYPE = '__lastInstrumentType__';
 export const AUDIO_ATTRIB_NAME_LAST_NOTE = '__lastNote__';
+
+type Listener = () => void;
+
+const listenersByAudioSource: Map<string, Set<Listener>> = new Map();
+function onAudioSourceStop(nodePath: string, listener: Listener) {
+	let listeners = listenersByAudioSource.get(nodePath);
+	if (!listeners) {
+		listeners = new Set();
+		listenersByAudioSource.set(nodePath, listeners);
+	}
+	listeners.add(listener);
+}
+function removeAudioSourceStopListener(nodePath: string, listener: Listener) {
+	const listeners = listenersByAudioSource.get(nodePath);
+	if (!listeners) {
+		return;
+	}
+	listeners.delete(listener);
+}
+function dispatchAudioSourceStop(nodePath: string) {
+	const listeners = listenersByAudioSource.get(nodePath);
+	if (!listeners) {
+		return;
+	}
+	listeners.forEach((listener) => {
+		listener();
+	});
+}
 
 async function getAudioSource(scene: PolyScene, nodePath: string): Promise<Player | undefined> {
 	const audioNode = scene.node(nodePath);
@@ -35,6 +64,19 @@ async function getAudioSource(scene: PolyScene, nodePath: string): Promise<Playe
 	return source;
 }
 
+export class addAudioStopEventListener extends NamedFunction3<[string, Listener, ActorEvaluator]> {
+	static override type() {
+		return 'addAudioStopEventListener';
+	}
+	func(nodePath: string, listener: Listener, evaluator: ActorEvaluator): void {
+		onAudioSourceStop(nodePath, listener);
+
+		evaluator.onDispose(() => {
+			removeAudioSourceStopListener(nodePath, listener);
+		});
+	}
+}
+
 export class playAudioSource extends ObjectNamedFunction1<[string]> {
 	static override type() {
 		return 'playAudioSource';
@@ -46,11 +88,10 @@ export class playAudioSource extends ObjectNamedFunction1<[string]> {
 			}
 			source.start();
 			AudioPlayerCallbacksManager.onStop(source, () => {
-				object3D.dispatchEvent(EVENT_AUDIO_COMPLETED);
+				dispatchAudioSourceStop(nodePath);
+				// object3D.dispatchEvent(EVENT_AUDIO_COMPLETED);
 			});
-			object3D.addEventListener(AUDIO_COMPLETED_EVENT_NAME, () => {
-				//
-			});
+			// object3D.addEventListener(AUDIO_COMPLETED_EVENT_NAME, onStop);
 		});
 	}
 }

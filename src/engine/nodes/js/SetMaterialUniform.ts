@@ -9,6 +9,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {JsConnectionPointType} from '../utils/io/connections/Js';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 import {Poly} from '../../Poly';
+import {inputObject3DMaterial} from './_BaseObject3D';
 
 type AvailableJsType =
 	| JsConnectionPointType.COLOR
@@ -27,11 +28,12 @@ export const JS_CONNECTION_POINT_TYPES: Array<AvailableJsType> = [
 	JsConnectionPointType.VECTOR4,
 ];
 const NUMBER_TYPES = new Set([JsConnectionPointType.FLOAT, JsConnectionPointType.INT]);
-const DEFAULT_PARAM_VALUES = {lerp: 1};
+const DEFAULT_PARAM_VALUES = {lerp: 1, addPrefix: 1};
 
 enum SetMaterialUniformJsNodeInputName {
 	uniformName = 'uniformName',
 	lerp = 'lerp',
+	addPrefix = 'addPrefix',
 }
 
 class SetMaterialUniformJsParamsConfig extends NodeParamsConfig {
@@ -73,6 +75,7 @@ export class SetMaterialUniformJsNode extends TypedJsNode<SetMaterialUniformJsPa
 					this.uniformType(),
 					SetMaterialUniformJsNodeInputName.uniformName,
 					SetMaterialUniformJsNodeInputName.lerp,
+					SetMaterialUniformJsNodeInputName.addPrefix,
 				][index]
 		);
 		this.io.connection_points.set_expected_input_types_function(() => this._expectedInputType());
@@ -86,6 +89,7 @@ export class SetMaterialUniformJsNode extends TypedJsNode<SetMaterialUniformJsPa
 			this.uniformType(),
 			JsConnectionPointType.STRING,
 			JsConnectionPointType.FLOAT,
+			JsConnectionPointType.BOOLEAN,
 		];
 	}
 	override paramDefaultValue(name: 'lerp') {
@@ -99,13 +103,17 @@ export class SetMaterialUniformJsNode extends TypedJsNode<SetMaterialUniformJsPa
 	}
 
 	override setTriggerableLines(shadersCollectionController: ShadersCollectionController) {
-		const material = this.variableForInput(shadersCollectionController, JsConnectionPointType.MATERIAL);
+		const material = inputObject3DMaterial(this, shadersCollectionController);
 		const uniformName = this.variableForInput(
 			shadersCollectionController,
 			SetMaterialUniformJsNodeInputName.uniformName
 		);
 		const uniformValue = this.variableForInput(shadersCollectionController, this.uniformType());
 		const lerp = this.variableForInput(shadersCollectionController, SetMaterialUniformJsNodeInputName.lerp);
+		const addPrefix = this.variableForInput(
+			shadersCollectionController,
+			SetMaterialUniformJsNodeInputName.addPrefix
+		);
 
 		const type = this.uniformType();
 		const functionName = NUMBER_TYPES.has(type) ? 'setMaterialUniformNumber' : 'setMaterialUniformVectorColor';
@@ -128,7 +136,7 @@ export class SetMaterialUniformJsNode extends TypedJsNode<SetMaterialUniformJsPa
 		// }
 		// }
 		const func = Poly.namedFunctionsRegister.getFunction(functionName, this, shadersCollectionController);
-		const bodyLine = func.asString(material, uniformName, uniformValue, lerp);
+		const bodyLine = func.asString(material, uniformName, uniformValue, lerp, addPrefix);
 		shadersCollectionController.addTriggerableLines(this, [bodyLine]);
 	}
 

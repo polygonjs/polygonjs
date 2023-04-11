@@ -96,6 +96,9 @@ export class OnObjectAttributeUpdateJsNode extends TypedJsNode<OnObjectAttribute
 	attribType(): JsConnectionPointType {
 		return PARAM_CONVERTIBLE_JS_CONNECTION_POINT_TYPES[this.pv.type];
 	}
+	setAttribName(attribName: string) {
+		(this.params.get(OnObjectAttributeUpdateInputName.attribName) as StringParam).set(attribName);
+	}
 	attributeName() {
 		return (this.params.get(OnObjectAttributeUpdateInputName.attribName) as StringParam).value;
 	}
@@ -107,25 +110,6 @@ export class OnObjectAttributeUpdateJsNode extends TypedJsNode<OnObjectAttribute
 			shadersCollectionController,
 			OnObjectAttributeUpdateInputName.attribName
 		);
-
-		const getObjectAttributeRef = Poly.namedFunctionsRegister.getFunction(
-			'getObjectAttributeRef',
-			this,
-			shadersCollectionController
-		);
-
-		shadersCollectionController.addDefinitions(this, [
-			new WatchedValueJsDefinition(
-				this,
-				shadersCollectionController,
-				type,
-				getObjectAttributeRef.asString(object3D, attribName, `'${type}'`),
-				`this.${nodeMethodName(this)}()`,
-				{
-					deep: true,
-				}
-			),
-		]);
 
 		// outputs
 		const usedOutputNames = this.io.outputs.used_output_names();
@@ -157,6 +141,32 @@ export class OnObjectAttributeUpdateJsNode extends TypedJsNode<OnObjectAttribute
 	}
 
 	override setTriggeringLines(shadersCollectionController: ShadersCollectionController, triggeredMethods: string) {
+		const type = this.attribType();
+		const object3D = inputObject3D(this, shadersCollectionController);
+		const attribName = this.variableForInput(
+			shadersCollectionController,
+			OnObjectAttributeUpdateInputName.attribName
+		);
+
+		const getObjectAttributeRef = Poly.namedFunctionsRegister.getFunction(
+			'getObjectAttributeRef',
+			this,
+			shadersCollectionController
+		);
+
+		shadersCollectionController.addDefinitions(this, [
+			new WatchedValueJsDefinition(
+				this,
+				shadersCollectionController,
+				type,
+				getObjectAttributeRef.asString(object3D, attribName, `'${type}'`),
+				`this.${nodeMethodName(this)}()`,
+				{
+					deep: true,
+				}
+			),
+		]);
+
 		shadersCollectionController.addTriggeringLines(this, [triggeredMethods], {
 			gatherable: false,
 		});

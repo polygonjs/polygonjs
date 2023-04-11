@@ -24,7 +24,7 @@ import {
 // const CLAMP_FUNCTION_BODY = `function ${CLAMP_FUNCTION_NAME}(src,min,max){
 // 	return Math.min(Math.max(src, min), max)
 // }`;
-enum SmoothstepInput {
+export enum SmoothstepInput {
 	X = 'x',
 	EDGE0 = 'edge0',
 	EDGE1 = 'edge1',

@@ -249,6 +249,7 @@ export class TriggeringJsDefinition extends TypedJsDefinition<JsDefinitionType.T
 }
 export interface TriggerableJsDefinitionOptions {
 	async?: boolean;
+	methodName?: string;
 }
 export class TriggerableJsDefinition extends TypedJsDefinition<JsDefinitionType.TRIGGERABLE> {
 	constructor(
@@ -265,7 +266,8 @@ export class TriggerableJsDefinition extends TypedJsDefinition<JsDefinitionType.
 	line() {
 		const _async = this._options?.async == true;
 		const functionPrefix = _async ? 'async' : '';
-		return `${functionPrefix} ${nodeMethodName(this._node)}(){
+		const methodName = this._options?.methodName != null ? this._options?.methodName : nodeMethodName(this._node);
+		return `${functionPrefix} ${methodName}(){
 			${this._value}
 		}`;
 	}

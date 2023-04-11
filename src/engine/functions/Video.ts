@@ -1,5 +1,5 @@
 import {dummyReadRefVal} from '../../core/reactivity/CoreReactivity';
-import {VideoEvent, VIDEO_EVENTS} from '../../core/Video';
+import {VideoEvent, VIDEO_EVENTS} from '../../core/VideoEvent';
 import {VideoCopNode} from '../nodes/cop/Video';
 import {ActorEvaluator} from '../nodes/js/code/assemblers/actor/Evaluator';
 import {NodeEventListener} from '../nodes/_Base';

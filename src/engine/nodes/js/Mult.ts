@@ -18,9 +18,9 @@ export class MultJsNode extends MathFunctionArgNOperationFactory('mult', {
 	// static override type() {
 	// 	return 'mult';
 	// }
-	// override paramDefaultValue(name: string) {
-	// 	return 1;
-	// }
+	override paramDefaultValue(name: string) {
+		return 1;
+	}
 	// protected _applyOperation<T extends number>(arg1: T, arg2: T): any {
 	// 	return arg1 * arg2;
 	// }

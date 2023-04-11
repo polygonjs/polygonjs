@@ -97,6 +97,9 @@ export class OnChildAttributeUpdateJsNode extends TypedJsNode<OnChildAttributeUp
 	attribType(): JsConnectionPointType {
 		return PARAM_CONVERTIBLE_JS_CONNECTION_POINT_TYPES[this.pv.type];
 	}
+	setAttribName(attribName: string) {
+		(this.params.get(OnChildAttributeUpdateInputName.attribName) as StringParam).set(attribName);
+	}
 	attributeName() {
 		return (this.params.get(OnChildAttributeUpdateInputName.attribName) as StringParam).value;
 	}
@@ -163,6 +166,35 @@ export class OnChildAttributeUpdateJsNode extends TypedJsNode<OnChildAttributeUp
 	}
 
 	override setTriggeringLines(shadersCollectionController: ShadersCollectionController, triggeredMethods: string) {
+		const type = this.attribType();
+		const object3D = inputObject3D(this, shadersCollectionController);
+		const attribName = this.variableForInput(
+			shadersCollectionController,
+			OnChildAttributeUpdateInputName.attribName
+		);
+		const getChildrenAttributesRef = Poly.namedFunctionsRegister.getFunction(
+			'getChildrenAttributesRef',
+			this,
+			shadersCollectionController
+		);
+		const varName = this.jsVarName('in');
+		const variable = createVariable(JsConnectionPointTypeToArrayTypeMap[type]);
+		if (variable) {
+			shadersCollectionController.addVariable(this, varName, variable);
+		}
+		shadersCollectionController.addDefinitions(this, [
+			new WatchedValueJsDefinition(
+				this,
+				shadersCollectionController,
+				type,
+				getChildrenAttributesRef.asString(object3D, attribName, `'${type}'`, varName),
+				`this.${nodeMethodName(this)}()`,
+				{
+					deep: true,
+				}
+			),
+		]);
+
 		shadersCollectionController.addTriggeringLines(this, [triggeredMethods], {
 			gatherable: false,
 		});

@@ -25,6 +25,7 @@ import {BaseParamType} from '../../params/_Base';
 import {EvaluatorEventData} from './code/assemblers/actor/Evaluator';
 import {StringParam} from '../../params/String';
 import {sanitizeJsVarName} from './code/assemblers/JsTypeUtils';
+import {Poly} from '../../Poly';
 
 export const TRIGGER_CONNECTION_NAME = 'trigger';
 
@@ -178,15 +179,36 @@ export class TypedJsNode<K extends NodeParamsConfig> extends TypedNode<NodeConte
 					const varName = this.inputVarName(inputName);
 					shadersCollectionController.addVariable(this, varName, createVariableFromParam(param));
 
-					return outputJsVarName
-						? `${varName}.copy(${wrapIfComputed(outputJsVarName, shadersCollectionController)})`
-						: `${varName}.set(${param.value.toArray().join(', ')})`;
+					const _copy = (_outputJsVarName: string) => {
+						return `${varName}.copy(${wrapIfComputed(_outputJsVarName, shadersCollectionController)})`;
+					};
+					const _set = () => {
+						if (param.type() == ParamType.COLOR) {
+							const func = Poly.namedFunctionsRegister.getFunction(
+								'colorSetRGB',
+								this,
+								shadersCollectionController
+							);
+							const {r, g, b} = (param as ColorParam).value;
+							return func.asString(varName, `${r}`, `${g}`, `${b}`);
+						} else {
+							return `${varName}.set(${param.value.toArray().join(', ')})`;
+						}
+					};
+
+					return outputJsVarName ? _copy(outputJsVarName) : _set();
 				}
 			}
 			return outputJsVarName || ThreeToJs.any(this.params.get(inputName)?.value);
 		} else {
+			if (outputJsVarName != null) {
+				return outputJsVarName;
+			}
 			const connectionPoint = this.io.inputs.namedInputConnectionPoints()[inputIndex];
-			return outputJsVarName || ThreeToJs.any(connectionPoint.init_value);
+			if (!connectionPoint) {
+				console.warn(`connectionPoint not created for index ${inputIndex} (inputName: '${inputName}')`);
+			}
+			return outputJsVarName || connectionPoint ? ThreeToJs.any(connectionPoint.init_value) : '0';
 		}
 	}
 

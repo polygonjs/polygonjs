@@ -16,6 +16,7 @@ import {
 import {inputObject3D} from './_BaseObject3D';
 import {Poly} from '../../Poly';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {StringParam} from '../../params/String';
 // import {CoreObject} from '../../../core/geometry/Object';
 // import {Vector2, Vector3, Vector4} from 'three';
 // const tmpV2 = new Vector2();
@@ -33,7 +34,7 @@ enum GetObjectAttributeInputName {
 }
 
 class GetObjectAttributeJsParamsConfig extends NodeParamsConfig {
-	attribName = ParamConfig.STRING('');
+	// attribName = ParamConfig.STRING('');
 	type = ParamConfig.INTEGER(PARAM_CONVERTIBLE_JS_CONNECTION_POINT_TYPES.indexOf(JsConnectionPointType.FLOAT), {
 		menu: {
 			entries: PARAM_CONVERTIBLE_JS_CONNECTION_POINT_TYPES.map((name, value) => ({name, value})),
@@ -122,6 +123,12 @@ export class GetObjectAttributeJsNode extends TypedJsNode<GetObjectAttributeJsPa
 	// }
 	setAttribType(type: ParamConvertibleJsType) {
 		this.p.type.set(PARAM_CONVERTIBLE_JS_CONNECTION_POINT_TYPES.indexOf(type));
+	}
+	setAttribName(attribName: string) {
+		(this.params.get(GetObjectAttributeInputName.attribName) as StringParam).set(attribName);
+	}
+	attributeName() {
+		return (this.params.get(GetObjectAttributeInputName.attribName) as StringParam).value;
 	}
 
 	override setLines(shadersCollectionController: ShadersCollectionController) {

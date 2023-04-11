@@ -23,18 +23,21 @@ const DEFAULT_TS = `
 export class CodeJsProcessor extends BaseCodeJsProcessor {
 	override initializeProcessor(){
 		this.io.inputs.setNamedInputConnectionPoints([
-			new JsConnectionPoint('myBool', JsConnectionPointType.BOOLEAN),
+			new JsConnectionPoint('myBoolParam', JsConnectionPointType.BOOLEAN),
+		]);
+		this.io.outputs.setNamedOutputConnectionPoints([
+			new JsConnectionPoint(JsConnectionPointType.TRIGGER, JsConnectionPointType.TRIGGER),
 		]);
 	}
-	override setLines(shadersCollectionController) {
+	override setTriggerableLines(shadersCollectionController) {
 		const object3D = inputObject3D(this, shadersCollectionController);
-		const myBool = this.variableForInput(shadersCollectionController, 'myBool');
+		const myBoolParam = this.variableForInput(shadersCollectionController, 'myBoolParam');
 
 		const bodyLines = [
-			object3D + '.position.x += ' + myBool + ' ? 0.1 : -0.1;',
+			object3D + '.position.y += ' + myBoolParam + ' ? -1 : 1;',
 			object3D + '.updateMatrix()'
 		];
-		this.addBodyLines(shadersCollectionController, bodyLines);
+		this.addTriggerableLines(shadersCollectionController, bodyLines);
 	}
 }
 `;
@@ -56,13 +59,13 @@ export class BaseCodeJsProcessor extends BaseCodeProcessor {
 	}
 
 	initializeProcessor() {}
-	setLines(shadersCollectionController: ShadersCollectionController) {}
+	setTriggerableLines(shadersCollectionController: ShadersCollectionController) {}
 
 	protected variableForInput(shadersCollectionController: ShadersCollectionController, inputName: string) {
 		return this.node.variableForInput(shadersCollectionController, inputName);
 	}
-	protected addBodyLines(shadersCollectionController: ShadersCollectionController, bodyLines: string[]) {
-		return shadersCollectionController._addBodyLines(this.node, bodyLines);
+	protected addTriggerableLines(shadersCollectionController: ShadersCollectionController, bodyLines: string[]) {
+		return shadersCollectionController.addTriggerableLines(this.node, bodyLines);
 	}
 }
 
@@ -108,8 +111,8 @@ export class CodeJsNode extends TypedJsNode<CodeJsParamsConfig> {
 		});
 	}
 
-	override setLines(shadersCollectionController: ShadersCollectionController) {
-		this._processor?.setLines(shadersCollectionController);
+	override setTriggerableLines(shadersCollectionController: ShadersCollectionController) {
+		this._processor?.setTriggerableLines(shadersCollectionController);
 	}
 
 	private _compile() {

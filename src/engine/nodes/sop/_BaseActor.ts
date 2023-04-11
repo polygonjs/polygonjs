@@ -137,9 +137,9 @@ export class TypedActorSopNode<K extends NodeParamsConfig> extends TypedSopNode<
 	// 		return this.pv.node.node() as ActorBuilderNode | undefined;
 	// 	}
 	// }
-	async compileIfRequired() {
+	compileIfRequired() {
 		if (this.assemblerController()?.compileRequired()) {
-			await this.compile();
+			this.compile();
 		}
 	}
 
@@ -242,7 +242,7 @@ export class TypedActorSopNode<K extends NodeParamsConfig> extends TypedSopNode<
 		this._evaluatorGenerator = evaluatorGenerator;
 		this.scene().actorsManager.registerEvaluatorGenerator(evaluatorGenerator);
 	}
-	async compile() {
+	compile() {
 		const assemblerController = this.assemblerController();
 		if (!assemblerController) {
 			return;

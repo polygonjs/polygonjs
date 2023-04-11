@@ -6,7 +6,6 @@
 import {CATEGORY_SOP} from './Category';
 
 import {ActorSopNode} from '../../../nodes/sop/Actor';
-import {ActorJsSopNode} from '../../../nodes/sop/ActorJs';
 import {AddSopNode} from '../../../nodes/sop/Add';
 import {AmbientLightSopNode} from '../../../nodes/sop/AmbientLight';
 import {AnimationCopySopNode} from '../../../nodes/sop/AnimationCopy';
@@ -281,7 +280,6 @@ import {RenderersNetworkSopNode} from '../../../nodes/sop/RenderersNetwork';
 
 export interface GeoNodeChildrenMap {
 	actor: ActorSopNode;
-	actorJs: ActorJsSopNode;
 	add: AddSopNode;
 	ambientLight: AmbientLightSopNode;
 	animationCopy: AnimationCopySopNode;
@@ -779,7 +777,6 @@ export class SopRegister {
 		// poly.registerOperation(WebXRControllerSopOperation);
 
 		poly.registerNode(ActorSopNode, CATEGORY_SOP.MODIFIER);
-		poly.registerNode(ActorJsSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(AddSopNode, CATEGORY_SOP.INPUT);
 		poly.registerNode(AmbientLightSopNode, CATEGORY_SOP.LIGHTS);
 		poly.registerNode(AnimationCopySopNode, CATEGORY_SOP.ANIMATION);

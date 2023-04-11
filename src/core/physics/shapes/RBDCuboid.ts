@@ -20,7 +20,19 @@ export enum RBDCuboidProperty {
 const tmp = new Vector3();
 let _currentSizes = new Vector3();
 let _targetSizes = new Vector3();
+let _targetHalfSizes = new Vector3();
 let _originalSizes = new Vector3();
+
+const attribSizeLiveByObject: WeakMap<Object3D, Vector3> = new WeakMap();
+function _getAttribSizeLiveByObject(object3D: Object3D) {
+	let v = attribSizeLiveByObject.get(object3D);
+	if (!v) {
+		v = new Vector3();
+		attribSizeLiveByObject.set(object3D, v);
+	}
+	return v;
+}
+
 export function createPhysicsCuboid(PhysicsLib: PhysicsLib, object: Object3D) {
 	CorePhysicsAttribute.getCuboidSizes(object, tmp);
 	const size = CorePhysicsAttribute.getCuboidSize(object);
@@ -102,7 +114,9 @@ export function _setPhysicsRBDCuboidProperty(
 			_targetSizes.lerp(_currentSizes, 1 - lerp);
 		}
 		// update radius on shape and object
-		CoreObject.setAttribute(object, attributeSizesLive, _targetSizes);
+		const v = _getAttribSizeLiveByObject(object);
+		v.copy(_targetSizes);
+		CoreObject.setAttribute(object, attributeSizesLive, v);
 		touchRBDProperty(object, RBDCuboidProperty.SIZES);
 		// update scale
 		object.scale.copy(_targetSizes).divide(_originalSizes);
@@ -110,7 +124,7 @@ export function _setPhysicsRBDCuboidProperty(
 			object.updateMatrix();
 		}
 		// update rbd in the end, so that we scale size *.5 last
-		_targetSizes.multiplyScalar(0.5);
-		collider.setHalfExtents(_targetSizes);
+		_targetHalfSizes.copy(_targetSizes).multiplyScalar(0.5);
+		collider.setHalfExtents(_targetHalfSizes);
 	}
 }

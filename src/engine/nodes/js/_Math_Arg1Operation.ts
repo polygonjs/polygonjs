@@ -49,7 +49,7 @@ interface MathArg1OperationOptions {
 	allowed_in_types?: JsConnectionPointType[];
 	// functionArg?: string;
 }
-interface FunctionData<MVF extends MathVectorFunction> {
+export interface MathFunctionData<MVF extends MathVectorFunction> {
 	vectorFunctionNameFunction: VectorFunctionName<MVF>;
 	mathFloat: MathFloat;
 	mathPrimArray: MathPrimArray;
@@ -154,7 +154,7 @@ export function MathFunctionArgXOperationFactory<MVF extends MathVectorFunction>
 		protected _coreFunction(shadersCollectionController: ShadersCollectionController) {
 			return `Math.${type}`;
 		}
-		protected _functionData(): FunctionData<MVF> {
+		protected _functionData(): MathFunctionData<MVF> {
 			return {
 				vectorFunctionNameFunction: _vectorFunctionName_1 as VectorFunctionName<MVF>,
 				mathFloat: 'mathFloat_1',
@@ -221,7 +221,7 @@ export function MathFunctionArg2OperationFactory(
 		// TODO: this should ideally be inherited from the class created by MathFunctionArgXOperationFactory
 		// and would therefore require an override statement,
 		// and would then automatically have the return type FunctionData<MathVectorFunction2>
-		protected _functionData(): FunctionData<MathVectorFunction2> {
+		protected _functionData(): MathFunctionData<MathVectorFunction2> {
 			return {
 				vectorFunctionNameFunction: _vectorFunctionName_2,
 				mathFloat: 'mathFloat_2',
@@ -240,7 +240,7 @@ export function MathFunctionArg3OperationFactory(
 		// TODO: this should ideally be inherited from the class created by MathFunctionArgXOperationFactory
 		// and would therefore require an override statement,
 		// and would then automatically have the return type FunctionData<MathVectorFunction2>
-		protected _functionData(): FunctionData<MathVectorFunction3> {
+		protected _functionData(): MathFunctionData<MathVectorFunction3> {
 			return {
 				vectorFunctionNameFunction: _vectorFunctionName_3,
 				mathFloat: 'mathFloat_3',
@@ -259,7 +259,7 @@ export function MathFunctionArg4OperationFactory(
 		// TODO: this should ideally be inherited from the class created by MathFunctionArgXOperationFactory
 		// and would therefore require an override statement,
 		// and would then automatically have the return type FunctionData<MathVectorFunction2>
-		protected _functionData(): FunctionData<MathVectorFunction4> {
+		protected _functionData(): MathFunctionData<MathVectorFunction4> {
 			return {
 				vectorFunctionNameFunction: _vectorFunctionName_4,
 				mathFloat: 'mathFloat_4',
@@ -278,7 +278,7 @@ export function MathFunctionArg5OperationFactory(
 		// TODO: this should ideally be inherited from the class created by MathFunctionArgXOperationFactory
 		// and would therefore require an override statement,
 		// and would then automatically have the return type FunctionData<MathVectorFunction2>
-		protected _functionData(): FunctionData<MathVectorFunction5> {
+		protected _functionData(): MathFunctionData<MathVectorFunction5> {
 			return {
 				vectorFunctionNameFunction: _vectorFunctionName_5,
 				mathFloat: 'mathFloat_5',

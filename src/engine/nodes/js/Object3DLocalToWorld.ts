@@ -29,7 +29,7 @@ export class Object3DLocalToWorldJsNode extends TypedJsNode<Object3DLocalToWorld
 
 		this.io.inputs.setNamedInputConnectionPoints([
 			new JsConnectionPoint(JsConnectionPointType.OBJECT_3D, JsConnectionPointType.OBJECT_3D, CONNECTION_OPTIONS),
-			new JsConnectionPoint(JsConnectionPointType.VECTOR3, JsConnectionPointType.VECTOR3, CONNECTION_OPTIONS),
+			// new JsConnectionPoint(JsConnectionPointType.VECTOR3, JsConnectionPointType.VECTOR3, CONNECTION_OPTIONS),
 		]);
 
 		this.io.outputs.setNamedOutputConnectionPoints([
@@ -39,7 +39,7 @@ export class Object3DLocalToWorldJsNode extends TypedJsNode<Object3DLocalToWorld
 	override setLines(shadersCollectionController: ShadersCollectionController) {
 		const object3D = inputObject3D(this, shadersCollectionController);
 		const position = this.variableForInputParam(shadersCollectionController, this.p.Vector3);
-		const varName = this.jsVarName(JsConnectionPointType.OBJECT_3D);
+		const varName = this.jsVarName(OUTPUT_NAME);
 
 		const variable = createVariable(JsConnectionPointType.VECTOR3);
 		if (variable) {

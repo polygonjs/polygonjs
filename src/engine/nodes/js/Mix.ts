@@ -5,9 +5,10 @@
  */
 import {PolyDictionary} from '../../../types/GlobalTypes';
 import {Poly} from '../../Poly';
+import {MathVectorFunction3vvf, _vectorFunctionName_3vvf} from '../../functions/_MathGeneric';
 import {JsConnectionPointType, JsConnectionPointTypeFromArrayTypeMap} from '../utils/io/connections/Js';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
-import {MathFunctionArg3OperationFactory, DEFAULT_ALLOWED_TYPES} from './_Math_Arg1Operation';
+import {MathFunctionArg3OperationFactory, DEFAULT_ALLOWED_TYPES, MathFunctionData} from './_Math_Arg1Operation';
 
 enum MixInput {
 	value0 = 'value0',
@@ -29,6 +30,14 @@ export class MixJsNode extends MathFunctionArg3OperationFactory('mix', {
 		Poly.namedFunctionsRegister.getFunction(FUNCTION_NAME, this, shadersCollectionController).asString('', '', '');
 
 		return FUNCTION_NAME;
+	}
+	protected _functionData(): MathFunctionData<MathVectorFunction3vvf> {
+		return {
+			vectorFunctionNameFunction: _vectorFunctionName_3vvf,
+			mathFloat: 'mathFloat_3',
+			mathPrimArray: 'mathPrimArray_3',
+			mathVectorArray: 'mathVectorArray_3',
+		};
 	}
 
 	override paramDefaultValue(name: string) {

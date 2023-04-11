@@ -51,39 +51,89 @@ export class OnObjectHoverJsNode extends BaseOnObjectPointerEventJsNode {
 		]);
 	}
 
+	override setLines(shadersCollectionController: ShadersCollectionController) {
+		const usedOutputNames = this.io.outputs.used_output_names();
+		if (usedOutputNames.includes(OnObjectHoverJsNodeOutputName.hovered)) {
+			this._addHoveredRef(shadersCollectionController);
+		}
+		if (usedOutputNames.includes(JsConnectionPointType.INTERSECTION)) {
+			this._addIntersectionRef(shadersCollectionController);
+		}
+	}
+
 	override setTriggeringLines(shadersCollectionController: ShadersCollectionController, triggeredMethods: string) {
 		const object3D = inputObject3D(this, shadersCollectionController);
 		const traverseChildren = this.variableForInputParam(shadersCollectionController, this.p.traverseChildren);
 		const lineThreshold = this.variableForInputParam(shadersCollectionController, this.p.lineThreshold);
 		const pointsThreshold = this.variableForInputParam(shadersCollectionController, this.p.pointsThreshold);
-		const func = Poly.namedFunctionsRegister.getFunction(
-			'getObjectHoveredState',
-			this,
-			shadersCollectionController
-		);
-		const bodyLine = func.asString(object3D, traverseChildren, lineThreshold, pointsThreshold);
 
-		const outHovered = this.jsVarName(OnObjectHoverJsNodeOutputName.hovered);
-		// this._addHoveredRef(shadersCollectionController);
-		shadersCollectionController.addDefinitions(this, [
-			new RefJsDefinition(this, shadersCollectionController, JsConnectionPointType.BOOLEAN, outHovered, `false`),
-		]);
+		const newHovered = `newHovered`;
+		const currentHovered = `currentHovered`;
 
-		const newValue = `newHovered`;
-		const currentValue = `currentHovered`;
+		const outIntersection = this._addIntersectionRef(shadersCollectionController);
+		const outHovered = this._addHoveredRef(shadersCollectionController);
+
+		// const _getObjectHoveredIntersection_ = () => {
+		// 	const func = Poly.namedFunctionsRegister.getFunction(
+		// 		'getObjectHoveredIntersection',
+		// 		this,
+		// 		shadersCollectionController
+		// 	);
+		// 	return func.asString(object3D);
+		// };
+
+		const _getObjectHoveredState_ = () => {
+			const func = Poly.namedFunctionsRegister.getFunction(
+				'getObjectHoveredState',
+				this,
+				shadersCollectionController
+			);
+			return func.asString(object3D, traverseChildren, lineThreshold, pointsThreshold, `this.${outIntersection}`);
+		};
+
+		//
+		// const _getObjectHoveredIntersection = _getObjectHoveredIntersection_();
+		const _getObjectHoveredState = _getObjectHoveredState_();
+
 		//
 		const bodyLines = [
-			`const ${newValue} = ${bodyLine};`,
-			`const ${currentValue} = this.${outHovered}.value;`,
-			`this.${outHovered}.value = ${newValue};`,
-			`if( ${newValue} != ${currentValue} ){`,
+			`const ${newHovered} = ${_getObjectHoveredState};`,
+			`const ${currentHovered} = this.${outHovered}.value;`,
+			`this.${outHovered}.value = ${newHovered};`,
+			`if( ${newHovered} != ${currentHovered} ){`,
 			`${triggeredMethods}`,
 			`}`,
 		];
+
+		// const usedOutputNames = this.io.outputs.used_output_names();
+		// if (usedOutputNames.includes(JsConnectionPointType.INTERSECTION)) {
+
+		// 	bodyLines.push(`this.${outIntersection}.value = ${_getObjectHoveredIntersection};`);
+		// }
 
 		shadersCollectionController.addTriggeringLines(this, bodyLines, {
 			gatherable: true,
 			triggeringMethodName: 'onPointermove',
 		});
+	}
+	private _addIntersectionRef(shadersCollectionController: ShadersCollectionController) {
+		const outIntersection = this.jsVarName(JsConnectionPointType.INTERSECTION);
+		shadersCollectionController.addDefinitions(this, [
+			new RefJsDefinition(
+				this,
+				shadersCollectionController,
+				JsConnectionPointType.INTERSECTION,
+				outIntersection,
+				`null`
+			),
+		]);
+		return outIntersection;
+	}
+	private _addHoveredRef(shadersCollectionController: ShadersCollectionController) {
+		const outHovered = this.jsVarName(OnObjectHoverJsNodeOutputName.hovered);
+		shadersCollectionController.addDefinitions(this, [
+			new RefJsDefinition(this, shadersCollectionController, JsConnectionPointType.BOOLEAN, outHovered, `false`),
+		]);
+		return outHovered;
 	}
 }

@@ -1,6 +1,7 @@
 import {Object3D} from 'three';
 import {ObjectNamedFunction3} from './_Base';
-import {_getObjectAttributeRef, _dummyReadAttributeRefVal} from '../../core/reactivity/ObjectAttributeReactivity';
+import {_dummyReadAttributeRefVal} from '../../core/reactivity/ObjectAttributeReactivity';
+import {_getOrCreateObjectAttributeRef} from '../../core/reactivity/ObjectAttributeReactivityCreateRef';
 import {_matchArrayLength, _matchArrayLengthWithType} from './_ArrayUtils';
 import {ParamConvertibleJsType} from '../nodes/utils/io/connections/Js';
 import {AttribValue} from '../../types/GlobalTypes';
@@ -15,7 +16,7 @@ export class getChildrenAttributesPrevious extends ObjectNamedFunction3<[string,
 		let i = 0;
 		const children = object3D.children;
 		for (let child of children) {
-			const _refs = _getObjectAttributeRef(child, attribName, type);
+			const _refs = _getOrCreateObjectAttributeRef(child, attribName, type);
 			values[i] = _refs.previous.value;
 			i++;
 		}

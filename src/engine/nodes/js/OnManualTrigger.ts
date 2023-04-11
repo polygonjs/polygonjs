@@ -10,7 +10,7 @@ import {JsConnectionPoint, JsConnectionPointType} from '../utils/io/connections/
 import {BaseNodeType} from '../_Base';
 import {JsType} from '../../poly/registers/nodes/types/Js';
 import {ActorBuilderNode} from '../../scene/utils/ActorsManager';
-import {ActorJsSopNode} from '../sop/ActorJs';
+import {ActorSopNode} from '../sop/Actor';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 import {nodeMethodName} from './code/assemblers/actor/ActorAssemblerUtils';
 import {EvaluatorMethodName} from './code/assemblers/actor/Evaluator';
@@ -59,7 +59,7 @@ export class OnManualTriggerJsNode extends TypedJsNode<OnManualTriggerJsParamsCo
 			console.warn('no function node found');
 			return;
 		}
-		const actorNode = functionNode as ActorJsSopNode as ActorBuilderNode;
+		const actorNode = functionNode as ActorSopNode as ActorBuilderNode;
 		if (!actorNode.evaluatorGenerator()) {
 			console.warn('no evaluator found');
 		}

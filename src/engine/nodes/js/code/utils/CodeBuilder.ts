@@ -15,7 +15,7 @@ import {CoreGraphNodeId} from '../../../../../core/graph/CoreGraph';
 import {ArrayUtils} from '../../../../../core/ArrayUtils';
 import {BaseJsShaderAssembler} from '../assemblers/_Base';
 // import {sanitizeName} from '../../../../../core/String';
-import {ActorJsSopNode} from '../../../sop/ActorJs';
+import {ActorSopNode} from '../../../sop/Actor';
 import {triggerableMethodCalls} from '../assemblers/actor/ActorAssemblerUtils';
 import {SetUtils} from '../../../../../core/SetUtils';
 // import {connectedTriggerableNodes} from '../assemblers/actor/ActorAssemblerUtils';
@@ -28,7 +28,7 @@ export interface CodeBuilderSetCodeLinesOptions {
 	actor: {
 		triggeringNodes: Set<BaseJsNodeType>;
 		triggerableNodes: Set<BaseJsNodeType>;
-		functionNode: ActorJsSopNode;
+		functionNode: ActorSopNode;
 		// triggerNodesByType: Map<string, Set<BaseJsNodeType>>;
 	};
 }
@@ -320,7 +320,7 @@ export class CodeBuilder {
 			LineType.CONSTRUCTOR,
 			additionalDefinitions
 		);
-		this.addDefinitions(nodes, shaderName, JsDefinitionType.WATCH, LineType.CONSTRUCTOR, additionalDefinitions);
+		this.addDefinitions(allNodes, shaderName, JsDefinitionType.WATCH, LineType.CONSTRUCTOR, additionalDefinitions);
 		if (options?.actor.triggeringNodes) {
 			this.addDefinitions(
 				SetUtils.toArray(options.actor.triggeringNodes),

@@ -67,6 +67,7 @@ import {GetPhysicsRBDSpherePropertyJsNode} from '../../../nodes/js/GetPhysicsRBD
 import {GetPhysicsRBDPropertyJsNode} from '../../../nodes/js/GetPhysicsRBDProperty';
 import {GetPlanePropertyJsNode} from '../../../nodes/js/GetPlaneProperty';
 import {GetRayPropertyJsNode} from '../../../nodes/js/GetRayProperty';
+import {GetSibblingJsNode} from '../../../nodes/js/GetSibbling';
 import {GetSpherePropertyJsNode} from '../../../nodes/js/GetSphereProperty';
 import {GetTextureJsNode} from '../../../nodes/js/GetTexture';
 import {GetTrackedHandPropertyJsNode} from '../../../nodes/js/GetTrackedHandProperty';
@@ -78,6 +79,7 @@ import {GlobalsJsNode} from '../../../nodes/js/Globals';
 import {IntToBoolJsNode} from '../../../nodes/js/IntToBool';
 import {IntToFloatJsNode} from '../../../nodes/js/IntToFloat';
 import {LengthJsNode} from '../../../nodes/js/Length';
+import {LerpJsNode} from '../../../nodes/js/Lerp';
 import {ManhattanDistanceJsNode} from '../../../nodes/js/ManhattanDistance';
 import {MaxJsNode} from '../../../nodes/js/Max';
 import {MaxLengthJsNode} from '../../../nodes/js/MaxLength';
@@ -159,7 +161,6 @@ import {RayIntersectPlaneJsNode} from '../../../nodes/js/RayIntersectPlane';
 import {RayIntersectsPlaneJsNode} from '../../../nodes/js/RayIntersectsPlane';
 import {RayIntersectSphereJsNode} from '../../../nodes/js/RayIntersectSphere';
 import {RayIntersectsSphereJsNode} from '../../../nodes/js/RayIntersectsSphere';
-
 import {RoundJsNode} from '../../../nodes/js/Round';
 import {SDF2DRoundedXJsNode} from '../../../nodes/js/SDF2DRoundedX';
 import {SDFBoxJsNode} from '../../../nodes/js/SDFBox';
@@ -168,13 +169,11 @@ import {SDFRevolutionJsNode} from '../../../nodes/js/SDFRevolution';
 import {SDFSphereJsNode} from '../../../nodes/js/SDFSphere';
 import {SDFSubtractJsNode} from '../../../nodes/js/SDFSubtract';
 import {SDFUnionJsNode} from '../../../nodes/js/SDFUnion';
-
 import {SetGeometryInstanceAttributeJsNode} from '../../../nodes/js/SetGeometryInstanceAttribute';
 import {SetGeometryInstancePositionsJsNode} from '../../../nodes/js/SetGeometryInstancePositions';
 import {SetGeometryInstanceQuaternionsJsNode} from '../../../nodes/js/SetGeometryInstanceQuaternions';
 import {SetGeometryInstanceScalesJsNode} from '../../../nodes/js/SetGeometryInstanceScales';
 import {SetGeometryInstanceTransformsJsNode} from '../../../nodes/js/SetGeometryInstanceTransforms';
-
 import {SetGeometryPositionsJsNode} from '../../../nodes/js/SetGeometryPositions';
 import {SetMaterialColorJsNode} from '../../../nodes/js/SetMaterialColor';
 import {SetMaterialEmissiveColorJsNode} from '../../../nodes/js/SetMaterialEmissiveColor';
@@ -308,6 +307,7 @@ export interface JsNodeChildrenMap {
 	getPhysicsRBDSphereProperty: GetPhysicsRBDSpherePropertyJsNode;
 	getPhysicsRBDProperty: GetPhysicsRBDPropertyJsNode;
 	getRayProperty: GetRayPropertyJsNode;
+	getSibbling: GetSibblingJsNode;
 	getSphereProperty: GetSpherePropertyJsNode;
 	getTexture: GetTextureJsNode;
 	getTrackedHandProperty: GetTrackedHandPropertyJsNode;
@@ -319,6 +319,7 @@ export interface JsNodeChildrenMap {
 	intToBool: IntToBoolJsNode;
 	intToFloat: IntToFloatJsNode;
 	length: LengthJsNode;
+	lerp: LerpJsNode;
 	manhattanDistance: ManhattanDistanceJsNode;
 	max: MaxJsNode;
 	maxLength: MaxLengthJsNode;
@@ -408,14 +409,12 @@ export interface JsNodeChildrenMap {
 	SDFSphere: SDFSphereJsNode;
 	SDFSubtract: SDFSubtractJsNode;
 	SDFUnion: SDFUnionJsNode;
-
 	setGeometryInstanceAttribute: SetGeometryInstanceAttributeJsNode;
 	setGeometryInstancePositions: SetGeometryInstancePositionsJsNode;
 	setGeometryInstanceQuaternions: SetGeometryInstanceQuaternionsJsNode;
 	setGeometryInstanceScales: SetGeometryInstanceScalesJsNode;
 	setGeometryInstanceTransforms: SetGeometryInstanceTransformsJsNode;
 	setGeometryPositions: SetGeometryPositionsJsNode;
-
 	setMaterialColor: SetMaterialColorJsNode;
 	setMaterialEmissiveColor: SetMaterialEmissiveColorJsNode;
 	setMaterialOpacity: SetMaterialOpacityJsNode;
@@ -483,13 +482,29 @@ export interface JsNodeChildrenMap {
 
 import {PolyEngine} from '../../../Poly';
 import {SopType} from './types/Sop';
-import {NodeContext} from '../../NodeContext';
+import {NetworkNodeType, NodeContext} from '../../NodeContext';
 const SUBNET_CHILD_OPTION = {
 	only: [`${SubnetJsNode.context()}/${SubnetJsNode.type()}`],
 };
 const sopType = (type: SopType) => `${NodeContext.SOP}/${type}`;
 const ONLY_WITH_GLOBALS = {only: [sopType(SopType.SDF_BUILDER)]};
-const ONLY_ACTOR = {only: [sopType(SopType.ACTOR_JS), sopType(SopType.PHYSICS_WORLD), sopType(SopType.PHYSICS_PLAYER)]};
+const ONLY_ACTOR = {
+	only: [
+		sopType(SopType.ACTOR),
+		sopType(SopType.PHYSICS_WORLD),
+		sopType(SopType.PHYSICS_PLAYER),
+		...[
+			NodeContext.ANIM,
+			NodeContext.COP,
+			NodeContext.EVENT,
+			NodeContext.MAT,
+			NodeContext.OBJ,
+			NodeContext.POST,
+			NodeContext.ROP,
+			NodeContext.SOP,
+		].map((c) => `${c}/${NetworkNodeType.ACTOR}`),
+	],
+};
 export class JsRegister {
 	static run(poly: PolyEngine) {
 		// poly.registerNode(AttributeJsNode, CATEGORY_JS.GLOBALS);
@@ -506,10 +521,8 @@ export class JsRegister {
 		poly.registerNode(AnimationMixerJsNode, CATEGORY_JS.ANIMATION, ONLY_ACTOR);
 		poly.registerNode(AnimationMixerUpdateJsNode, CATEGORY_JS.ANIMATION, ONLY_ACTOR);
 		poly.registerNode(AnyTriggerJsNode, CATEGORY_JS.ANIMATION, ONLY_ACTOR);
-
 		poly.registerNode(ArrayElementJsNode, CATEGORY_JS.CONVERSION);
 		poly.registerNode(ArrayLengthJsNode, CATEGORY_JS.LOGIC);
-
 		poly.registerNode(AsinJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(AtanJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(BoolToIntJsNode, CATEGORY_JS.CONVERSION);
@@ -519,22 +532,18 @@ export class JsRegister {
 		poly.registerNode(ClampJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(CodeJsNode, CATEGORY_JS.ADVANCED);
 		poly.registerNode(ColorToVec3JsNode, CATEGORY_JS.CONVERSION);
-
 		poly.registerNode(CompareJsNode, CATEGORY_JS.LOGIC);
 		poly.registerNode(ComplementJsNode, CATEGORY_JS.MATH);
-
 		poly.registerNode(ConstantJsNode, CATEGORY_JS.GLOBALS);
 		poly.registerNode(CookNodeJsNode, CATEGORY_JS.ACTION);
 		poly.registerNode(CosJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(CrossJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(CursorJsNode, CATEGORY_JS.INPUTS, ONLY_ACTOR);
-
 		poly.registerNode(DebugJsNode, CATEGORY_JS.FLOW);
 		poly.registerNode(DistanceJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(DivideJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(DotJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(EasingJsNode, CATEGORY_JS.MATH);
-
 		poly.registerNode(ElementsToArrayJsNode, CATEGORY_JS.CONVERSION);
 		poly.registerNode(FitJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(FloatToColorJsNode, CATEGORY_JS.CONVERSION);
@@ -549,7 +558,6 @@ export class JsRegister {
 		poly.registerNode(GetChildrenPropertiesJsNode, CATEGORY_JS.GET);
 		poly.registerNode(GetDefaultCameraJsNode, CATEGORY_JS.GET);
 		poly.registerNode(GetIntersectionPropertyJsNode, CATEGORY_JS.GET);
-
 		poly.registerNode(GetMaterialJsNode, CATEGORY_JS.GET);
 		poly.registerNode(GetObjectChildJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(GetObjectJsNode, CATEGORY_JS.GET, ONLY_ACTOR);
@@ -566,6 +574,7 @@ export class JsRegister {
 		poly.registerNode(GetPhysicsRBDSpherePropertyJsNode, CATEGORY_JS.PHYSICS, ONLY_ACTOR);
 		poly.registerNode(GetPhysicsRBDPropertyJsNode, CATEGORY_JS.PHYSICS, ONLY_ACTOR);
 		poly.registerNode(GetRayPropertyJsNode, CATEGORY_JS.MATH);
+		poly.registerNode(GetSibblingJsNode, CATEGORY_JS.GET);
 		poly.registerNode(GetSpherePropertyJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(GetTextureJsNode, CATEGORY_JS.GET, ONLY_ACTOR);
 		poly.registerNode(GetTrackedHandPropertyJsNode, CATEGORY_JS.COMPUTER_VISION, ONLY_ACTOR);
@@ -573,11 +582,11 @@ export class JsRegister {
 		poly.registerNode(GetWebXRARSessionPropertyJsNode, CATEGORY_JS.WEBXR, ONLY_ACTOR);
 		poly.registerNode(GetWebXRControllerPropertyJsNode, CATEGORY_JS.WEBXR, ONLY_ACTOR);
 		poly.registerNode(GetWebXRTrackedMarkerPropertyJsNode, CATEGORY_JS.WEBXR, ONLY_ACTOR);
-
 		poly.registerNode(GlobalsJsNode, CATEGORY_JS.GLOBALS, ONLY_WITH_GLOBALS);
 		poly.registerNode(IntToBoolJsNode, CATEGORY_JS.CONVERSION);
 		poly.registerNode(IntToFloatJsNode, CATEGORY_JS.CONVERSION);
 		poly.registerNode(LengthJsNode, CATEGORY_JS.MATH);
+		poly.registerNode(LerpJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(ManhattanDistanceJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(MaxJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(MaxLengthJsNode, CATEGORY_JS.MATH);
@@ -595,7 +604,6 @@ export class JsRegister {
 		poly.registerNode(Object3DUpdateMatrixJsNode, CATEGORY_JS.GET, ONLY_ACTOR);
 		poly.registerNode(Object3DUpdateWorldMatrixJsNode, CATEGORY_JS.GET, ONLY_ACTOR);
 		poly.registerNode(ObjectDispatchEventJsNode, CATEGORY_JS.GET, ONLY_ACTOR);
-
 		poly.registerNode(OnChildAttributeUpdateJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
 		poly.registerNode(OnKeyJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
 		poly.registerNode(OnKeydownJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
@@ -611,7 +619,6 @@ export class JsRegister {
 		poly.registerNode(OnObjectHoverJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
 		poly.registerNode(OnObjectPointerdownJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
 		poly.registerNode(OnObjectPointerupJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
-
 		poly.registerNode(OnPerformanceChangeJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
 		poly.registerNode(OnPointerdownJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
 		poly.registerNode(OnPointerupJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
@@ -621,7 +628,6 @@ export class JsRegister {
 		poly.registerNode(OnTickJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
 		poly.registerNode(OnVideoEventJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
 		poly.registerNode(OnWebXRControllerEventJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
-
 		poly.registerNode(OrJsNode, CATEGORY_JS.LOGIC);
 		poly.registerNode(OutputJsNode, CATEGORY_JS.GLOBALS, ONLY_WITH_GLOBALS);
 		poly.registerNode(ParamJsNode, CATEGORY_JS.GLOBALS);
@@ -639,7 +645,6 @@ export class JsRegister {
 		poly.registerNode(PhysicsRBDResetAllJsNode, CATEGORY_JS.PHYSICS, ONLY_ACTOR);
 		poly.registerNode(PhysicsRBDResetForcesJsNode, CATEGORY_JS.PHYSICS, ONLY_ACTOR);
 		poly.registerNode(PhysicsRBDResetTorquesJsNode, CATEGORY_JS.PHYSICS, ONLY_ACTOR);
-
 		poly.registerNode(PhysicsWorldResetJsNode, CATEGORY_JS.PHYSICS, ONLY_ACTOR);
 		poly.registerNode(PhysicsWorldStepSimulationJsNode, CATEGORY_JS.PHYSICS, ONLY_ACTOR);
 		poly.registerNode(PlaneJsNode, CATEGORY_JS.MATH);
@@ -647,9 +652,7 @@ export class JsRegister {
 		poly.registerNode(PlayAudioSourceJsNode, CATEGORY_JS.AUDIO, ONLY_ACTOR);
 		poly.registerNode(PlayInstrumentNoteJsNode, CATEGORY_JS.AUDIO, ONLY_ACTOR);
 		poly.registerNode(PlayerUpdateJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR);
-
 		poly.registerNode(PowJsNode, CATEGORY_JS.MATH);
-
 		poly.registerNode(PressButtonParamJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR);
 		poly.registerNode(RandJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(RandomJsNode, CATEGORY_JS.MATH);
@@ -673,14 +676,12 @@ export class JsRegister {
 		poly.registerNode(SDFSphereJsNode, CATEGORY_JS.SDF_PRIMITIVES);
 		poly.registerNode(SDFSubtractJsNode, CATEGORY_JS.SDF_MODIFIERS);
 		poly.registerNode(SDFUnionJsNode, CATEGORY_JS.SDF_MODIFIERS);
-
 		poly.registerNode(SetGeometryInstanceAttributeJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR);
 		poly.registerNode(SetGeometryInstancePositionsJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR);
 		poly.registerNode(SetGeometryInstanceQuaternionsJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR);
 		poly.registerNode(SetGeometryInstanceScalesJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR);
 		poly.registerNode(SetGeometryInstanceTransformsJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR);
 		poly.registerNode(SetGeometryPositionsJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR);
-
 		poly.registerNode(SetMaterialColorJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR);
 		poly.registerNode(SetMaterialEmissiveColorJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR);
 		poly.registerNode(SetMaterialOpacityJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR);
@@ -715,7 +716,6 @@ export class JsRegister {
 		poly.registerNode(SetPlayerInputJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
 		poly.registerNode(SetSpotLightIntensityJsNode, CATEGORY_JS.PHYSICS, ONLY_ACTOR);
 		poly.registerNode(SetViewerJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR);
-
 		poly.registerNode(SignJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(SinJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(SmoothstepJsNode, CATEGORY_JS.MATH);
@@ -733,12 +733,10 @@ export class JsRegister {
 		poly.registerNode(TriggerFilterJsNode, CATEGORY_JS.FLOW, ONLY_ACTOR);
 		poly.registerNode(TriggerTwoWaySwitchJsNode, CATEGORY_JS.FLOW, ONLY_ACTOR);
 		poly.registerNode(TwoWaySwitchJsNode, CATEGORY_JS.LOGIC);
-
 		poly.registerNode(Vector3AngleToJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(Vector3ProjectJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(Vector3ProjectOnPlaneJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(Vector3UnprojectJsNode, CATEGORY_JS.MATH);
-
 		poly.registerNode(Vec2ToFloatJsNode, CATEGORY_JS.CONVERSION);
 		poly.registerNode(Vec2ToVec3JsNode, CATEGORY_JS.CONVERSION);
 		poly.registerNode(Vec3ToFloatJsNode, CATEGORY_JS.CONVERSION);

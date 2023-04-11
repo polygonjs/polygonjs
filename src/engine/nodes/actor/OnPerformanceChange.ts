@@ -14,11 +14,11 @@
  *
  */
 
-import {TRIGGER_CONNECTION_NAME, TypedActorNode, ActorNodeTriggerContext} from './_Base';
+import {TRIGGER_CONNECTION_NAME, TypedActorNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {ActorConnectionPoint, ActorConnectionPointType} from '../utils/io/connections/Actor';
 import {ActorType} from '../../poly/registers/nodes/types/Actor';
-import {TypeAssert} from '../../poly/Assert';
+// import {TypeAssert} from '../../poly/Assert';
 enum OnPerformanceChangeOutputName {
 	aboveThreshold = 'threshold',
 	performance = 'performance',
@@ -56,49 +56,49 @@ export class OnPerformanceChangeActorNode extends TypedActorNode<OnPerformanceCh
 			new ActorConnectionPoint(OnPerformanceChangeOutputName.performance, ActorConnectionPointType.FLOAT),
 		]);
 	}
-	initOnPlay() {
-		this._currentPerfAboveThreshold = undefined;
-		this.scene().perfMonitor.addThreshold(this.pv.threshold);
-	}
-	disposeOnPause() {
-		this.scene().perfMonitor.reset();
-	}
+	// initOnPlay() {
+	// 	this._currentPerfAboveThreshold = undefined;
+	// 	this.scene().perfMonitor.addThreshold(this.pv.threshold);
+	// }
+	// disposeOnPause() {
+	// 	this.scene().perfMonitor.reset();
+	// }
 
-	private _currentPerfAboveThreshold: boolean | undefined;
+	// private _currentPerfAboveThreshold: boolean | undefined;
 	// private _lastChangeAt: number | undefined;
-	runTriggerIfRequired(context: ActorNodeTriggerContext) {
-		// const now = performance.now();
-		// if (this._lastChangeAt != null && now - this._lastChangeAt < this.pv.delay) {
-		// 	return;
-		// }
-		const perf = this.scene().perfMonitor.performance();
-		const perfAboveThreshold = perf > this.pv.threshold;
+	// runTriggerIfRequired(context: ActorNodeTriggerContext) {
+	// 	// const now = performance.now();
+	// 	// if (this._lastChangeAt != null && now - this._lastChangeAt < this.pv.delay) {
+	// 	// 	return;
+	// 	// }
+	// 	const perf = this.scene().perfMonitor.performance();
+	// 	const perfAboveThreshold = perf > this.pv.threshold;
 
-		if (perfAboveThreshold != this._currentPerfAboveThreshold) {
-			this._currentPerfAboveThreshold = perfAboveThreshold;
-			// this._lastChangeAt = now;
-			const outputIndex = OnPerformanceChangeActorNode.OUTPUT_TRIGGER_NAMES.indexOf(
-				perfAboveThreshold
-					? OnPerformanceChangeActorNode.OUTPUT_NAME_ABOVE
-					: OnPerformanceChangeActorNode.OUTPUT_NAME_BELOW
-			);
-			this.runTrigger(context, outputIndex);
-		}
-	}
+	// 	if (perfAboveThreshold != this._currentPerfAboveThreshold) {
+	// 		this._currentPerfAboveThreshold = perfAboveThreshold;
+	// 		// this._lastChangeAt = now;
+	// 		const outputIndex = OnPerformanceChangeActorNode.OUTPUT_TRIGGER_NAMES.indexOf(
+	// 			perfAboveThreshold
+	// 				? OnPerformanceChangeActorNode.OUTPUT_NAME_ABOVE
+	// 				: OnPerformanceChangeActorNode.OUTPUT_NAME_BELOW
+	// 		);
+	// 		this.runTrigger(context, outputIndex);
+	// 	}
+	// }
 
-	public override outputValue(
-		context: ActorNodeTriggerContext,
-		outputName: OnPerformanceChangeOutputName
-	): boolean | number {
-		const perf = this.scene().perfMonitor.performance();
-		switch (outputName) {
-			case OnPerformanceChangeOutputName.aboveThreshold: {
-				return this._currentPerfAboveThreshold || true;
-			}
-			case OnPerformanceChangeOutputName.performance: {
-				return perf;
-			}
-		}
-		TypeAssert.unreachable(outputName);
-	}
+	// public override outputValue(
+	// 	context: ActorNodeTriggerContext,
+	// 	outputName: OnPerformanceChangeOutputName
+	// ): boolean | number {
+	// 	const perf = this.scene().perfMonitor.performance();
+	// 	switch (outputName) {
+	// 		case OnPerformanceChangeOutputName.aboveThreshold: {
+	// 			return this._currentPerfAboveThreshold || true;
+	// 		}
+	// 		case OnPerformanceChangeOutputName.performance: {
+	// 			return perf;
+	// 		}
+	// 	}
+	// 	TypeAssert.unreachable(outputName);
+	// }
 }

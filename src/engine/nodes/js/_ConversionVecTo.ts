@@ -144,7 +144,7 @@ export class Vec3ToVec2JsNode extends TypedJsNode<Vec3ToVec2ParamsJsConfig> {
 //
 //
 class Vec2ToVec3ParamsJsConfig extends NodeParamsConfig {
-	vec2 = ParamConfig.VECTOR2([0, 0]);
+	Vector2 = ParamConfig.VECTOR2([0, 0]);
 	z = ParamConfig.FLOAT(0);
 }
 const ParamsConfig_Vec2ToVec3 = new Vec2ToVec3ParamsJsConfig();
@@ -165,7 +165,7 @@ export class Vec2ToVec3JsNode extends TypedJsNode<Vec2ToVec3ParamsJsConfig> {
 		const linesData: ComputedValueJsDefinitionData[] = [];
 
 		const out_vec3 = Vec2ToVec3JsNode.OUTPUT_NAME_VEC3;
-		const vec2 = this.variableForInputParam(shadersCollectionController, this.p.vec2);
+		const vec2 = this.variableForInputParam(shadersCollectionController, this.p.Vector2);
 		const z = this.variableForInputParam(shadersCollectionController, this.p.z);
 
 		const varName = this.jsVarName(out_vec3);

@@ -25,4 +25,10 @@ export class PauseAudioSourceJsNode extends BaseAudioSourceJsNode {
 		const bodyLine = func.asString(object3D, nodePath);
 		shadersCollectionController.addTriggerableLines(this, [bodyLine]);
 	}
+	override setTriggeringLines(
+		shadersCollectionController: ShadersCollectionController,
+		triggeredMethods: string
+	): void {
+		shadersCollectionController.addTriggeringLines(this, [triggeredMethods], {gatherable: false});
+	}
 }

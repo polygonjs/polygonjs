@@ -14,6 +14,7 @@ import {
 } from '../utils/io/connections/Js';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 import {Poly} from '../../Poly';
+import {TypeAssert} from '../../poly/Assert';
 
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
 
@@ -130,6 +131,9 @@ export class SetParamJsNode extends TypedJsNode<SetParamJsParamsConfig> {
 			case JsConnectionPointType.INT: {
 				return this._setInt(options);
 			}
+			case JsConnectionPointType.STRING: {
+				return this._setString(options);
+			}
 			case JsConnectionPointType.VECTOR2: {
 				return this._setVector2(options);
 			}
@@ -140,6 +144,7 @@ export class SetParamJsNode extends TypedJsNode<SetParamJsParamsConfig> {
 				return this._setVector4(options);
 			}
 		}
+		TypeAssert.unreachable(type);
 	}
 	private _setBoolean(options: SetParamOptions): string {
 		const {shadersCollectionController, nodePath, paramName, paramValue} = options;
@@ -160,6 +165,11 @@ export class SetParamJsNode extends TypedJsNode<SetParamJsParamsConfig> {
 		const {shadersCollectionController, nodePath, paramName, paramValue, lerp} = options;
 		const func = Poly.namedFunctionsRegister.getFunction('setParamInteger', this, shadersCollectionController);
 		return func.asString(nodePath, paramName, paramValue, lerp);
+	}
+	private _setString(options: SetParamOptions): string {
+		const {shadersCollectionController, nodePath, paramName, paramValue} = options;
+		const func = Poly.namedFunctionsRegister.getFunction('setParamString', this, shadersCollectionController);
+		return func.asString(nodePath, paramName, paramValue);
 	}
 	private _setVector2(options: SetParamOptions): string {
 		const {shadersCollectionController, nodePath, paramName, paramValue, lerp} = options;

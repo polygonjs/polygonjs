@@ -35,6 +35,7 @@ export class setObjectMatrix extends ObjectNamedFunction1<[Matrix4]> {
 	}
 	func(object3D: Object3D, matrix: Matrix4): void {
 		object3D.matrix.copy(matrix);
+		object3D.matrix.decompose(object3D.position, object3D.quaternion, object3D.scale);
 		touchObjectProperty(object3D, GetObjectPropertyJsNodeInputName.matrix);
 	}
 }

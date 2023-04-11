@@ -20,6 +20,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {inputObject3D} from './_BaseObject3D';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 import {Poly} from '../../Poly';
+import {StringParam} from '../../params/String';
 // import {CoreObject} from '../../../core/geometry/Object';
 // import {AttribValue} from '../../../types/GlobalTypes';
 // import {CoreType} from '../../../core/Type';
@@ -114,6 +115,9 @@ export class SetObjectAttributeJsNode extends TypedJsNode<SetObjectAttributeJsPa
 
 	setAttribType(type: ParamConvertibleJsType) {
 		this.p.type.set(PARAM_CONVERTIBLE_JS_CONNECTION_POINT_TYPES.indexOf(type));
+	}
+	setAttribName(attribName: string) {
+		(this.params.get(SetObjectAttributeInputName.attribName) as StringParam).set(attribName);
 	}
 
 	override setTriggerableLines(shadersCollectionController: ShadersCollectionController) {

@@ -47,24 +47,10 @@ export function MathFunctionArgNOperationFactory(
 		}
 
 		override setLines(shadersCollectionController: ShadersCollectionController) {
-			const values: string[] = [];
-			const connectionPoints = this.io.inputs.namedInputConnectionPoints();
-			for (let connectionPoint of connectionPoints) {
-				const connectionPointName = connectionPoint.name();
-				const value = this.variableForInput(shadersCollectionController, connectionPointName);
-				values.push(value);
-			}
+			// if (!firstType) {
+			// 	return;
+			// }
 
-			const firstType = this.io.connection_points.first_input_connection_type();
-			if (!firstType) {
-				return;
-			}
-			const secondInputType = this.io.connection_points.input_connection_type(1);
-			const isPrimitive = isJsConnectionPointPrimitive(firstType);
-			const isVectorScalar =
-				isJsConnectionPointVector(firstType) &&
-				secondInputType != null &&
-				isJsConnectionPointNumber(secondInputType);
 			// const line = isPrimitive
 			// 	? values.join(` ${operator.primitive} `)
 			// 	: values.join(`.${operator.vector}(`) + ')';
@@ -76,7 +62,7 @@ export function MathFunctionArgNOperationFactory(
 			// // }
 
 			// shadersCollectionController.addBodyOrComputed(this, firstType, this.jsVarName(outputName), line);
-
+			const firstType = this._expectedInputTypes()[0];
 			const out = this.jsVarName(outputName);
 			// const functionName = isPrimitive
 			// 	? operator.primitive
@@ -88,21 +74,9 @@ export function MathFunctionArgNOperationFactory(
 			// 	return;
 			// }
 			// const func = Poly.namedFunctionsRegister.getFunction(functionName, this, shadersCollectionController);
-			const funcString = isPrimitive
-				? Poly.namedFunctionsRegister
-						.getFunction(operator.primitive, this, shadersCollectionController)
-						.asString(...values)
-				: isVectorScalar
-				? Poly.namedFunctionsRegister
-						.getFunction(operator.vectorScalar, this, shadersCollectionController)
-						.asString(values[0], values[1])
-				: operator.vector
-				? Poly.namedFunctionsRegister
-						.getFunction(operator.vector, this, shadersCollectionController)
-						.asString(...values)
-				: undefined;
-
+			const funcString = this._functionString(shadersCollectionController);
 			if (!funcString) {
+				console.warn('no function found');
 				return;
 			}
 
@@ -110,80 +84,41 @@ export function MathFunctionArgNOperationFactory(
 				new ComputedValueJsDefinition(this, shadersCollectionController, firstType, out, funcString),
 			]);
 		}
+		private _functionString(shadersCollectionController: ShadersCollectionController) {
+			const values: string[] = [];
+			const connectionPoints = this.io.inputs.namedInputConnectionPoints();
+			for (let connectionPoint of connectionPoints) {
+				const connectionPointName = connectionPoint.name();
+				const value = this.variableForInput(shadersCollectionController, connectionPointName);
+				values.push(value);
+			}
+			//
+			const expectedTypes = this._expectedInputTypes();
+			const firstType = expectedTypes[0];
+			const secondInputType = expectedTypes[1];
+			const isPrimitive = isJsConnectionPointPrimitive(firstType);
 
-		// protected _applyOperation<T>(arg1: T, arg2: T): any {}
-		// private _applyOperationForVector<T extends Vector2 | Vector3 | Vector4>(arg1: T, arg2: T): T {
-		// 	if (arg1 instanceof Vector2) {
-		// 		arg1.x = this._applyOperation(arg1.x, arg2.x);
-		// 		arg1.y = this._applyOperation(arg1.y, arg2.y);
-		// 	}
-		// 	if (arg1 instanceof Vector3 && arg2 instanceof Vector3) {
-		// 		arg1.x = this._applyOperation(arg1.x, arg2.x);
-		// 		arg1.y = this._applyOperation(arg1.y, arg2.y);
-		// 		arg1.z = this._applyOperation(arg1.z, arg2.z);
-		// 	}
-		// 	if (arg1 instanceof Vector4 && arg2 instanceof Vector4) {
-		// 		arg1.x = this._applyOperation(arg1.x, arg2.x);
-		// 		arg1.y = this._applyOperation(arg1.y, arg2.y);
-		// 		arg1.z = this._applyOperation(arg1.z, arg2.z);
-		// 		arg1.w = this._applyOperation(arg1.w, arg2.w);
-		// 	}
+			if (isPrimitive) {
+				return Poly.namedFunctionsRegister
+					.getFunction(operator.primitive, this, shadersCollectionController)
+					.asString(...values);
+			}
+			const isFirstInputVector = isJsConnectionPointVector(firstType);
+			const isSecondInputScalar = secondInputType != null && isJsConnectionPointNumber(secondInputType);
+			const isVectorScalar = isFirstInputVector && isSecondInputScalar;
 
-		// 	return arg1;
-		// }
+			if (isVectorScalar) {
+				return Poly.namedFunctionsRegister
+					.getFunction(operator.vectorScalar, this, shadersCollectionController)
+					.asString(values[0], values[1]);
+			}
 
-		// private _defaultVector4 = new Vector4();
-		// private _defaultVector4Tmp = new Vector4();
-		// public override outputValue(
-		// 	context: ActorNodeTriggerContext,
-		// 	outputName: string = ''
-		// ): ReturnValueTypeByActorConnectionPointType[ActorConnectionPointType] {
-		// 	const isPrimitive = isActorConnectionPointPrimitive(this._expectedInputTypes()[0]);
-		// 	const inputsCount = this.io.inputs.namedInputConnectionPoints().length;
-		// 	if (isPrimitive) {
-		// 		let startValue = this._inputValue<ActorConnectionPointType.FLOAT>(0, context) || 0;
-
-		// 		for (let i = 1; i < inputsCount; i++) {
-		// 			const nextValue = this._inputValue<ActorConnectionPointType.FLOAT>(
-		// 				this._expectedInputName(i),
-		// 				context
-		// 			);
-		// 			startValue = this._applyOperation(startValue, nextValue);
-		// 		}
-		// 		return startValue;
-		// 	} else {
-		// 		let startValue =
-		// 			this._inputValue<
-		// 				| ActorConnectionPointType.VECTOR2
-		// 				| ActorConnectionPointType.VECTOR3
-		// 				| ActorConnectionPointType.VECTOR4
-		// 			>(0, context) || this._defaultVector4.set(0, 0, 0, 0);
-
-		// 		if (startValue instanceof Vector2) {
-		// 			tmpV2.copy(startValue);
-		// 			startValue = tmpV2;
-		// 		}
-		// 		if (startValue instanceof Vector3) {
-		// 			tmpV3.copy(startValue);
-		// 			startValue = tmpV3;
-		// 		}
-		// 		if (startValue instanceof Vector4) {
-		// 			tmpV4.copy(startValue);
-		// 			startValue = tmpV4;
-		// 		}
-
-		// 		for (let i = 1; i < inputsCount; i++) {
-		// 			const nextValue =
-		// 				this._inputValue<
-		// 					| ActorConnectionPointType.VECTOR2
-		// 					| ActorConnectionPointType.VECTOR3
-		// 					| ActorConnectionPointType.VECTOR4
-		// 				>(this._expectedInputName(i), context) || this._defaultVector4Tmp.set(0, 0, 0, 0);
-		// 			this._applyOperationForVector(startValue, nextValue);
-		// 		}
-		// 		return startValue;
-		// 	}
-		// }
+			if (operator.vector) {
+				return Poly.namedFunctionsRegister
+					.getFunction(operator.vector, this, shadersCollectionController)
+					.asString(...values);
+			}
+		}
 
 		override _expectedInputName(index: number): string {
 			return `${inputPrefix}${index}`;
@@ -208,7 +143,7 @@ export function MathFunctionArgNOperationFactory(
 
 			if (VECTOR_TYPES.includes(type)) {
 				const secondInputType = this.io.connection_points.input_connection_type(1);
-				if (secondInputType && secondInputType == JsConnectionPointType.FLOAT) {
+				if (secondInputType != null && secondInputType == JsConnectionPointType.FLOAT) {
 					const expectedInputTypes: JsConnectionPointType[] = [type, secondInputType];
 					return expectedInputTypes;
 				}
@@ -222,7 +157,7 @@ export function MathFunctionArgNOperationFactory(
 				if (i == 0) {
 					expectedInputTypes.push(type);
 				} else {
-					const nextType = operator.vector ? type : JsConnectionPointType.FLOAT;
+					const nextType = operator.vector != null ? type : JsConnectionPointType.FLOAT;
 					expectedInputTypes.push(nextType);
 				}
 			}

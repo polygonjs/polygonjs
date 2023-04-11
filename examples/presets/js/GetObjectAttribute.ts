@@ -5,6 +5,7 @@ import {
 	JsConnectionPointType,
 	PARAM_CONVERTIBLE_JS_CONNECTION_POINT_TYPES,
 } from '../../../src/engine/nodes/utils/io/connections/Js';
+import {StringParam} from '../../../src/engine/params/String';
 
 const getObjectAttributeJsNodePresetsCollectionFactory: PresetsCollectionFactory<GetObjectAttributeJsNode> = (
 	node: GetObjectAttributeJsNode
@@ -13,7 +14,9 @@ const getObjectAttributeJsNodePresetsCollectionFactory: PresetsCollectionFactory
 
 	const b = PARAM_CONVERTIBLE_JS_CONNECTION_POINT_TYPES.indexOf(JsConnectionPointType.BOOLEAN);
 
-	const hovered = new BasePreset().addEntry(node.p.attribName, ObjectAttribute.HOVERED).addEntry(node.p.type, b);
+	const hovered = new BasePreset()
+		.addEntry(node.params.get('attribName') as StringParam, ObjectAttribute.HOVERED)
+		.addEntry(node.p.type, b);
 
 	collection.setPresets({
 		hovered,

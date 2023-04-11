@@ -3,6 +3,9 @@ import {Euler, Vector2, Vector3, Vector4, Quaternion, Color} from 'three';
 export function isArray(value: any): value is any[] {
 	return Array.isArray(value);
 }
+export function isBoolean(value: any): value is boolean {
+	return value === true || value === false;
+}
 export class CoreType {
 	static isNumber(value: any): value is number {
 		return typeof value == 'number';
@@ -22,9 +25,7 @@ export class CoreType {
 	static isString(value: any): value is string {
 		return typeof value == 'string';
 	}
-	static isBoolean(value: any): value is boolean {
-		return value === true || value === false;
-	}
+	static isBoolean = isBoolean;
 	static isNaN(value: any): boolean {
 		return isNaN(value);
 	}
