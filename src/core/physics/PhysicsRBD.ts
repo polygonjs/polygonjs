@@ -14,6 +14,7 @@ import {createPhysicsTriMesh} from './shapes/RBDTrimesh';
 import {createPhysicsConvexHull} from './shapes/ConvexHull';
 import {createPhysicsHeightField} from './shapes/HeightField';
 import {touchRBDProperties, touchRBDProperty} from '../reactivity/RBDPropertyReactivity';
+import {OBJECT_TRANSFORM_PROPERTIES, touchObjectProperties} from '../reactivity/ObjectPropertyReactivity';
 
 export enum RBDProperty {
 	ANGULAR_VELOCITY = 'angVel',
@@ -259,6 +260,7 @@ const SIM_PROPERTIES = [
 ];
 function updateRBDRefs(object: Object3D) {
 	touchRBDProperties(object, SIM_PROPERTIES);
+	touchObjectProperties(object, OBJECT_TRANSFORM_PROPERTIES);
 }
 
 // impulse

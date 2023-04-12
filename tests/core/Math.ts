@@ -1,4 +1,4 @@
-import {expandTriangle, pow2Inverse} from '../../src/core/math/_Module';
+import {expandTriangle, pow2Inverse, mod} from '../../src/core/math/_Module';
 import {Triangle} from 'three';
 import {Vector3} from 'three';
 
@@ -24,4 +24,28 @@ QUnit.test('pow2Inverse', (assert) => {
 	assert.equal(pow2Inverse(4), 2);
 	assert.equal(pow2Inverse(8), 3);
 	assert.equal(pow2Inverse(16), 4);
+});
+
+QUnit.test('mod for negative numbers', (assert) => {
+	assert.equal(mod(5, 2), 1);
+	assert.equal(mod(-5, 2), 1);
+	assert.equal(mod(0, 4), 0);
+	assert.equal(mod(1, 4), 1);
+	assert.equal(mod(2, 4), 2);
+	assert.equal(mod(3, 4), 3);
+	assert.equal(mod(4, 4), 0);
+	assert.equal(mod(5, 4), 1);
+	assert.equal(mod(6, 4), 2);
+	assert.equal(mod(7, 4), 3);
+	assert.equal(mod(8, 4), 0);
+	assert.equal(mod(9, 4), 1);
+	assert.equal(mod(10, 4), 2);
+	assert.equal(mod(11, 4), 3);
+	assert.equal(mod(12, 4), 0);
+	assert.equal(mod(13, 4), 1);
+	assert.equal(mod(-1, 4), 3);
+	assert.equal(mod(-2, 4), 2);
+	assert.equal(mod(-3, 4), 1);
+	assert.equal(mod(-4, 4), 0);
+	assert.equal(mod(-5, 4), 3);
 });

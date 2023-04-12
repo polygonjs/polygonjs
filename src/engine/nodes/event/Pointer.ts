@@ -11,7 +11,8 @@ import {isBooleanTrue} from '../../../core/BooleanValue';
 import {EventContext} from '../../scene/utils/events/_BaseEventsController';
 import {EventInputType} from '../../poly/registers/nodes/types/Event';
 import {CoreEventEmitter, EVENT_EMITTERS} from '../../../core/event/CoreEventEmitter';
-import {ACCEPTED_POINTER_EVENT_TYPES} from '../../../core/event/PointerEventType';
+import {ONLY_POINTER_EVENT_TYPES} from '../../../core/event/PointerEventType';
+
 class PointerEventParamsConfig extends NodeParamsConfig {
 	/** @param toggle on to allow any event to be listened to */
 	active = ParamConfig.BOOLEAN(true, {
@@ -52,11 +53,11 @@ export class PointerEventNode extends TypedInputEventNode<PointerEventParamsConf
 		return EventInputType.POINTER;
 	}
 	protected acceptedEventTypes() {
-		return new Set([...ACCEPTED_POINTER_EVENT_TYPES]);
+		return new Set([...ONLY_POINTER_EVENT_TYPES]);
 	}
 	override initializeNode() {
 		this.io.outputs.setNamedOutputConnectionPoints(
-			ACCEPTED_POINTER_EVENT_TYPES.map((event_type) => {
+			ONLY_POINTER_EVENT_TYPES.map((event_type) => {
 				return new EventConnectionPoint(event_type, EventConnectionPointType.POINTER);
 			})
 		);

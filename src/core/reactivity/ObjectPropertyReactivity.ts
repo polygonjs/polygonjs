@@ -33,6 +33,12 @@ export const OBJECT_BOOLEAN_PROPERTIES = [
 	GetObjectPropertyJsNodeInputName.frustumCulled,
 	GetObjectPropertyJsNodeInputName.matrixAutoUpdate,
 ];
+export const OBJECT_TRANSFORM_PROPERTIES = [
+	GetObjectPropertyJsNodeInputName.position,
+	GetObjectPropertyJsNodeInputName.quaternion,
+	GetObjectPropertyJsNodeInputName.scale,
+	GetObjectPropertyJsNodeInputName.matrix,
+];
 export interface PropertyType {
 	position: Vector3;
 	quaternion: Quaternion;

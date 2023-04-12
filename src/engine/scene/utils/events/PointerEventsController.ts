@@ -54,7 +54,7 @@ export class PointerEventsController extends BaseSceneEventsController<
 
 	override processEvent(eventContext: EventContext<MouseEvent>) {
 		this._cursorHelper.setCursorForCPU(eventContext, this._cursor0.value);
-		// super.processEvent(eventContext);
+		super.processEvent(eventContext);
 
 		const {viewer, event} = eventContext;
 		if (!(event && viewer)) {
@@ -84,17 +84,17 @@ export class PointerEventsController extends BaseSceneEventsController<
 
 		const mapForEvent = this._actorEvaluatorsByEventNames.get(eventType);
 		if (!mapForEvent) {
-			console.log('no map for event', eventType);
+			// console.log('no map for eventType', eventType);
 			return;
 		}
 		const eventEmitter = eventContext.emitter;
 		if (!eventEmitter) {
-			console.log('no emitter for context', eventContext);
+			// console.log('no emitter for context', eventContext);
 			return;
 		}
 		const evaluatorGenerators = mapForEvent.get(eventEmitter);
 		if (!evaluatorGenerators) {
-			console.log('no generators for emitter', eventEmitter);
+			// console.log('no generators for emitter', eventEmitter);
 			return;
 		}
 		const methodName = methodNameByEventType[eventType];

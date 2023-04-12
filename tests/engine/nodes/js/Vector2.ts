@@ -15,15 +15,15 @@ QUnit.test('js/Vector2', async (assert) => {
 
 	const onManualTrigger1 = actor1.createNode('onManualTrigger');
 	const setObjectPosition1 = actor1.createNode('setObjectPosition');
-	const constant1 = actor1.createNode('constant');
+	const vector2_1 = actor1.createNode('vector2');
 	const vec2ToVec3_1 = actor1.createNode('vec2ToVec3');
 
 	setObjectPosition1.setInput(JsConnectionPointType.TRIGGER, onManualTrigger1);
 	setObjectPosition1.setInput('position', vec2ToVec3_1);
-	vec2ToVec3_1.setInput(0, constant1);
+	vec2ToVec3_1.setInput(0, vector2_1);
 
-	constant1.setJsType(JsConnectionPointType.VECTOR2);
-	constant1.p.vector2.set([1, 2]);
+	// constant1.setJsType(JsConnectionPointType.VECTOR2);
+	vector2_1.p.Vector2.set([1, 2]);
 
 	const container = await actor1.compute();
 	const object = container.coreContent()!.threejsObjects()[0] as Mesh;

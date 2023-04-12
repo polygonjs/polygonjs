@@ -73,6 +73,9 @@ export function round(number: number, stepSize: number): number {
 	const roundedStepsCount = number < 0 ? Math.ceil(stepsCount) : Math.floor(stepsCount);
 	return roundedStepsCount * stepSize;
 }
+export function mod(number: number, _mod: number) {
+	return ((number % _mod) + _mod) % _mod;
+}
 export function highestEven(number: number): number {
 	return 2 * Math.ceil(number * 0.5);
 }

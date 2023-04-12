@@ -45,13 +45,13 @@ QUnit.test('pointer event nodes simple', async (assert) => {
 		assert.deepEqual(viewer.eventsController().registeredEventTypes(), ['pointermove']);
 
 		message.setInput(0, pointer1, 'pointermove');
-		assert.equal(await logPrintsCount('pointermove'), 1, 'event received');
+		assert.equal(await logPrintsCount('pointermove'), 1, '1 event received');
 
 		events.removeNode(pointer1);
 		await pointer1.compute();
 		assert.deepEqual(viewer.eventsController().registeredEventTypes(), []);
 
-		assert.equal(await logPrintsCount('pointermove'), 0);
+		assert.equal(await logPrintsCount('pointermove'), 0, 'no events received');
 
 		pointer1.p.active.set(1);
 		await pointer1.compute();
@@ -61,7 +61,7 @@ QUnit.test('pointer event nodes simple', async (assert) => {
 			'setting a deleted node to active does not update the register'
 		);
 
-		assert.equal(await logPrintsCount('pointermove'), 0);
+		assert.equal(await logPrintsCount('pointermove'), 0, 'no events received');
 
 		const pointer2 = events.createNode('pointer');
 		await pointer2.compute();
@@ -72,8 +72,8 @@ QUnit.test('pointer event nodes simple', async (assert) => {
 		message.setInput(0, pointer2, 'pointermove');
 
 		// check real events are listened to
-		assert.equal(await logPrintsCount('pointermove'), 1);
-		assert.equal(await logPrintsCount('pointerdown'), 0);
+		assert.equal(await logPrintsCount('pointermove'), 1, '1 event received');
+		assert.equal(await logPrintsCount('pointerdown'), 0, 'no events received');
 
 		// creating a new viewer will set its listeners correctly as well
 		const element2 = document.createElement('div');

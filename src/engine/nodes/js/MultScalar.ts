@@ -20,7 +20,7 @@ const DefaultValues: PolyDictionary<number> = {
 	[MultScalarJsNodeInputName.VALUE]: 1,
 	[MultScalarJsNodeInputName.MULT]: 1,
 };
-const OUTPUT_NAME = 'mult';
+const OUTPUT_NAME = 'val';
 const ALLOWED_INPUT_TYPES: JsConnectionPointType[] = [
 	JsConnectionPointType.COLOR,
 	JsConnectionPointType.VECTOR2,

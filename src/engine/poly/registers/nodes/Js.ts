@@ -238,6 +238,9 @@ import {Vec3ToVec2JsNode} from '../../../nodes/js/Vec3ToVec2';
 import {Vec3ToVec4JsNode} from '../../../nodes/js/Vec3ToVec4';
 import {Vec4ToFloatJsNode} from '../../../nodes/js/Vec4ToFloat';
 import {Vec4ToVec3JsNode} from '../../../nodes/js/Vec4ToVec3';
+import {Vector2JsNode} from '../../../nodes/js/Vector2';
+import {Vector3JsNode} from '../../../nodes/js/Vector3';
+import {Vector4JsNode} from '../../../nodes/js/Vector4';
 
 export interface JsNodeChildrenMap {
 	abs: AbsJsNode;
@@ -478,6 +481,9 @@ export interface JsNodeChildrenMap {
 	vec3ToVec4: Vec3ToVec4JsNode;
 	vec4ToFloat: Vec4ToFloatJsNode;
 	vec4ToVec3: Vec4ToVec3JsNode;
+	vector2: Vector2JsNode;
+	vector3: Vector3JsNode;
+	vector4: Vector4JsNode;
 }
 
 import {PolyEngine} from '../../../Poly';
@@ -745,5 +751,8 @@ export class JsRegister {
 		poly.registerNode(Vec3ToVec4JsNode, CATEGORY_JS.CONVERSION);
 		poly.registerNode(Vec4ToFloatJsNode, CATEGORY_JS.CONVERSION);
 		poly.registerNode(Vec4ToVec3JsNode, CATEGORY_JS.CONVERSION);
+		poly.registerNode(Vector2JsNode, CATEGORY_JS.MATH);
+		poly.registerNode(Vector3JsNode, CATEGORY_JS.MATH);
+		poly.registerNode(Vector4JsNode, CATEGORY_JS.MATH);
 	}
 }

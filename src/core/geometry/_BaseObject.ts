@@ -17,7 +17,7 @@ import {TransformTargetType} from '../Transform';
 import {ObjectTransformSpace} from '../TransformSpace';
 import {EntityGroupCollection} from './EntityGroupCollection';
 import {_updateObjectAttribRef} from '../reactivity/ObjectAttributeReactivityUpdateRef';
-import {attribValueNonPrimitive, copyAttribValue, AttributeDictionary} from './_BaseObjectUtils';
+import {attribValueNonPrimitive, copyAttribValue, AttributeDictionary, cloneAttribValue} from './_BaseObjectUtils';
 // import {computeBoundingBoxFromObject3D} from './BoundingBox';
 // import {setSphereFromObject} from './BoundingSphere';
 // import {ref} from '../reactivity';
@@ -93,11 +93,20 @@ export abstract class BaseCoreObject<T extends CoreObjectType> extends CoreEntit
 		// if (currentValue != null) {
 		// console.log('set', object, attribName, currentRef, currentRef.value);
 		// const currentValue = currentRef.value;
-		if (attribValueNonPrimitive(currentValue) && attribValueNonPrimitive(value)) {
-			// AttributeCallbackQueue.block();
-			copyAttribValue(value, currentValue);
+		if (attribValueNonPrimitive(value)) {
+			if (currentValue == null) {
+				const cloned = cloneAttribValue(value);
+				if (cloned) {
+					dict[attribName] = cloned;
+				}
+			} else {
+				if (attribValueNonPrimitive(currentValue)) {
+					// AttributeCallbackQueue.block();
+					copyAttribValue(value, currentValue);
 
-			// AttributeCallbackQueue.unblock();
+					// AttributeCallbackQueue.unblock();
+				}
+			}
 		} else {
 			dict[attribName] = value;
 		}

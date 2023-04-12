@@ -60,25 +60,12 @@ export class ConstantJsNode extends TypedJsNode<ConstantJsParamsConfig> {
 			return;
 		}
 
-		// const connection_type = this._currentConnectionType();
-		// const bodyLines: string[] = [];
 		const out = this._currentVarName();
 		const varName = this.variableForInputParam(shadersCollectionController, param);
-		// if (param.components) {
-		// 	// bodyLines.push(varName);
-		// 	if (variableFromParamRequired(param)) {
-		// 		shadersCollectionController.addVariable(this, out, createVariableFromParam(param));
-		// 	}
-		// 	bodyLines.push(`${out}.copy(${varName})`);
-		// } else {
-		// 	bodyLines.push(`const ${out} = ${varName}`);
-		// }
 
 		shadersCollectionController.addDefinitions(this, [
 			new ConstantJsDefinition(this, shadersCollectionController, this._currentConnectionType(), out, varName),
 		]);
-
-		// shadersCollectionController.addBodyLines(this, bodyLines);
 	}
 
 	private _currentConnectionType() {

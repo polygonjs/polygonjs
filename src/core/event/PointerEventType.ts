@@ -6,6 +6,13 @@ export enum PointerEventType {
 	pointerup = 'pointerup',
 }
 
+export const ONLY_POINTER_EVENT_TYPES: PointerEventType[] = [
+	// PointerEventType.click, // no click for event/pointer
+	PointerEventType.pointerdown,
+	PointerEventType.pointermove,
+	PointerEventType.pointerup,
+];
+
 export const ACCEPTED_POINTER_EVENT_TYPES: PointerEventType[] = [
 	PointerEventType.click,
 	PointerEventType.pointerdown,

@@ -43,9 +43,18 @@ import {JsConnectionPointType} from '../../../../utils/io/connections/Js';
 // import {IUniformsWithTime} from '../../../../../scene/utils/UniformsController';
 // import {handleCopBuilderDependencies} from '../../../../cop/utils/BuilderUtils';
 // import { JSSDFSopNode } from '../../../../sop/JSSDF';
-
+const DEBUG = false;
 function logBlue(message: string) {
-	// console.log('%c' + message, 'color:blue; font-weight:bold;');
+	if (!DEBUG) {
+		return;
+	}
+	console.log('%c' + message, 'color:blue; font-weight:bold;');
+}
+function logDefault(message: string) {
+	if (!DEBUG) {
+		return;
+	}
+	console.log(message);
 }
 // function logGreen(message: string) {
 // 	console.log('%c' + message, 'color:green; font-weight:bold;');
@@ -127,10 +136,10 @@ export class JsAssemblerActor extends BaseJsShaderAssembler {
 	// private _triggerNodesByType: Map<string, Set<BaseJsNodeType>> = new Map();
 
 	createFunctionData(additionalRootNodes: BaseJsNodeType[]): ActorFunctionData | undefined {
-		logBlue('*************');
+		const node = this.currentGlParentNode() as ActorSopNode;
+		logBlue(`************* ${node.path()} *************`);
 		this._reset();
 		//
-		const node = this.currentGlParentNode() as ActorSopNode;
 		const triggeringNodes = findTriggeringNodes(node);
 		const triggerableNodes = new Set<BaseJsNodeType>();
 		connectedTriggerableNodes({triggeringNodes, triggerableNodes, recursive: true});
@@ -322,7 +331,7 @@ export class JsAssemblerActor extends BaseJsShaderAssembler {
 			return functionBody;
 		};
 		const functionBody = _buildFunctionBody();
-		// console.log(functionBody);
+		logDefault(functionBody);
 		//
 		//
 		// gather function data
