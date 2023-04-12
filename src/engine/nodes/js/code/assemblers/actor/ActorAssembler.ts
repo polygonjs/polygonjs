@@ -20,7 +20,7 @@ import {ShaderName} from '../../../../utils/shaders/ShaderName';
 // import {ShadersCollectionController} from '../../utils/ShadersCollectionController';
 // import {UniformJsDefinition} from '../../../utils/JsDefinition';
 // import {Vector3} from 'three';
-import {ActorSopNode} from '../../../../sop/Actor';
+// import {ActorSopNode} from '../../../../sop/Actor';
 import {
 	connectedTriggerableNodes,
 	findTriggeringNodes,
@@ -39,11 +39,12 @@ import {EvaluatorEventData} from './Evaluator';
 import {CoreType} from '../../../../../../core/Type';
 import {ParamOptions} from '../../../../../params/utils/OptionsController';
 import {JsConnectionPointType} from '../../../../utils/io/connections/Js';
+import {ActorBuilderNode} from '../../../../../scene/utils/ActorsManager';
 // import {Vector3} from 'three';
 // import {IUniformsWithTime} from '../../../../../scene/utils/UniformsController';
 // import {handleCopBuilderDependencies} from '../../../../cop/utils/BuilderUtils';
 // import { JSSDFSopNode } from '../../../../sop/JSSDF';
-const DEBUG = false;
+const DEBUG = true;
 function logBlue(message: string) {
 	if (!DEBUG) {
 		return;
@@ -136,7 +137,7 @@ export class JsAssemblerActor extends BaseJsShaderAssembler {
 	// private _triggerNodesByType: Map<string, Set<BaseJsNodeType>> = new Map();
 
 	createFunctionData(additionalRootNodes: BaseJsNodeType[]): ActorFunctionData | undefined {
-		const node = this.currentGlParentNode() as ActorSopNode;
+		const node = this.currentGlParentNode() as ActorBuilderNode;
 		logBlue(`************* ${node.path()} *************`);
 		this._reset();
 		//
@@ -164,7 +165,7 @@ export class JsAssemblerActor extends BaseJsShaderAssembler {
 		triggerableNodes: Set<BaseJsNodeType>,
 		shaderNames: ShaderName[]
 	): ActorFunctionData | undefined {
-		const functionNode = this.currentGlParentNode() as ActorSopNode;
+		const functionNode = this.currentGlParentNode() as ActorBuilderNode;
 
 		//
 		//

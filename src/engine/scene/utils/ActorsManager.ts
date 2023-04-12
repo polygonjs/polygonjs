@@ -1,5 +1,5 @@
 import {Object3D} from 'three';
-import {TypedNode} from '../../nodes/_Base';
+// import {TypedNode} from '../../nodes/_Base';
 // import {BaseActorNodeType} from '../../nodes/actor/_Base';
 // import {ActorNodeChildrenMap} from '../../poly/registers/nodes/Actor';
 // import {NodeCreateOptions} from '../../nodes/utils/hierarchy/ChildrenController';
@@ -24,11 +24,14 @@ import {ActorKeyboardEventsController} from './actors/ActorsKeyboardEventsContro
 import {JsType} from '../../poly/registers/nodes/types/Js';
 import {EvaluatorMethodName, EVALUATOR_METHOD_NAMES} from '../../nodes/js/code/assemblers/actor/Evaluator';
 import {ActorEvaluatorGenerator} from '../../nodes/js/code/assemblers/actor/EvaluatorGenerator';
-import {JsNodeChildrenMap} from '../../poly/registers/nodes/Js';
-import {NodeCreateOptions} from '../../nodes/utils/hierarchy/ChildrenController';
-import {Constructor, valueof} from '../../../types/GlobalTypes';
-import {BaseJsNodeType} from '../../nodes/js/_Base';
+// import {JsNodeChildrenMap} from '../../poly/registers/nodes/Js';
+// import {NodeCreateOptions} from '../../nodes/utils/hierarchy/ChildrenController';
+// import {Constructor, valueof} from '../../../types/GlobalTypes';
+// import {BaseJsNodeType} from '../../nodes/js/_Base';
 import {ActorPointerEventsController} from './actors/ActorsPointerEventsController';
+import {AssemblerControllerNode} from '../../nodes/js/code/Controller';
+import {JsAssemblerActor} from '../../nodes/js/code/assemblers/actor/ActorAssembler';
+import {ActorCompilationController} from '../../../core/actor/ActorCompilationController';
 // import { ActorJsSopNode } from '../../nodes/sop/ActorJs';
 // import {SopType} from '../../poly/registers/nodes/types/Sop';
 // import {EventData} from '../../../core/event/EventData';
@@ -74,45 +77,9 @@ if (0 + 0) {
 	console.log({ON_TICK_METHOD_NAMES, INSTANT_METHOD_NAMES});
 }
 
-export abstract class ActorBuilderNode extends TypedNode<any, any> {
-	// protected override _childrenControllerContext = NodeContext.JS;
-	override createNode<S extends keyof JsNodeChildrenMap>(
-		node_class: S,
-		options?: NodeCreateOptions
-	): JsNodeChildrenMap[S];
-	override createNode<K extends valueof<JsNodeChildrenMap>>(
-		node_class: Constructor<K>,
-		options?: NodeCreateOptions
-	): K;
-	override createNode<K extends valueof<JsNodeChildrenMap>>(
-		node_class: Constructor<K>,
-		options?: NodeCreateOptions
-	): K {
-		return super.createNode(node_class, options) as K;
-	}
-	override children() {
-		return super.children() as BaseJsNodeType[];
-	}
-	override nodesByType<K extends keyof JsNodeChildrenMap>(type: K): JsNodeChildrenMap[K][] {
-		return super.nodesByType(type) as JsNodeChildrenMap[K][];
-	}
-	// override childrenAllowed() {
-	// 	return true;
-	// }
-	abstract evaluatorGenerator(): ActorEvaluatorGenerator;
+export abstract class ActorBuilderNode extends AssemblerControllerNode<JsAssemblerActor> {
+	public abstract readonly compilationController: ActorCompilationController;
 }
-
-// type ActorNodeToInitOnPlay =
-// 	| ActorType.ON_PERFORMANCE_CHANGE
-// 	| ActorType.ON_OBJECT_DISPATCH_EVENT
-// 	| ActorType.ON_VIDEO_EVENT
-// 	| ActorType.ON_WEBXR_CONTROLLER_EVENT;
-// const ACTOR_TYPES_TO_INIT_ON_PLAY: Array<ActorNodeToInitOnPlay> = [
-// 	ActorType.ON_PERFORMANCE_CHANGE,
-// 	ActorType.ON_OBJECT_DISPATCH_EVENT,
-// 	ActorType.ON_VIDEO_EVENT,
-// 	ActorType.ON_WEBXR_CONTROLLER_EVENT,
-// ];
 
 export class ActorsManager {
 	private _actorNodes: Set<ActorBuilderNode> = new Set();
@@ -349,7 +316,7 @@ export class ActorsManager {
 		}
 	}
 	triggerEventNode(node: ActorBuilderNode, object: Object3D, methodName: EvaluatorMethodName) {
-		const evaluatorGenerator = node.evaluatorGenerator();
+		const evaluatorGenerator = node.compilationController.evaluatorGenerator();
 		this.triggerEvaluatorGenerator(evaluatorGenerator, object, methodName);
 	}
 	triggerEvaluatorGenerator(

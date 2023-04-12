@@ -7,6 +7,7 @@ import {EvaluatorConstant} from '../nodes/js/code/assemblers/actor/Evaluator';
 import {NodeContext} from '../poly/NodeContext';
 import {AssemblerControllerNode} from '../nodes/js/code/Controller';
 import {TimeController} from '../scene/utils/TimeController';
+import {BaseJsShaderAssembler} from '../nodes/js/code/assemblers/_Base';
 
 export abstract class BaseNamedFunction {
 	// abstract type: string;
@@ -19,7 +20,7 @@ export abstract class BaseNamedFunction {
 	}
 	public readonly scene: PolyScene;
 	public readonly jsNode?: BaseJsNodeType;
-	public readonly functionNode: AssemblerControllerNode;
+	public readonly functionNode: AssemblerControllerNode<BaseJsShaderAssembler>;
 	protected timeController: TimeController;
 	constructor(node: BaseNodeType, public readonly shadersCollectionController?: ShadersCollectionController) {
 		this.scene = node.scene();
@@ -29,7 +30,7 @@ export abstract class BaseNamedFunction {
 			this.functionNode = this.jsNode.functionNode()!;
 		} else {
 			this.jsNode = undefined;
-			this.functionNode = node as AssemblerControllerNode;
+			this.functionNode = node as AssemblerControllerNode<BaseJsShaderAssembler>;
 		}
 	}
 	abstract func(...args: any): any;

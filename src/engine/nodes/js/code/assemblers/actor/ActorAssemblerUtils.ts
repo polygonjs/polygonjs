@@ -2,7 +2,8 @@ import {MapUtils} from '../../../../../../core/MapUtils';
 import {SetUtils} from '../../../../../../core/SetUtils';
 import {sanitizeName} from '../../../../../../core/String';
 import {NodeContext} from '../../../../../poly/NodeContext';
-import {ActorSopNode} from '../../../../sop/Actor';
+import {ActorBuilderNode} from '../../../../../scene/utils/ActorsManager';
+// import {ActorSopNode} from '../../../../sop/Actor';
 import {BaseJsConnectionPoint, JsConnectionPointType} from '../../../../utils/io/connections/Js';
 import {BaseJsNodeType} from '../../../_Base';
 
@@ -74,7 +75,7 @@ function _hasTriggerOutputConnected(node: BaseJsNodeType): boolean {
 // 	return cp != null && cp.type() == JsConnectionPointType.TRIGGER;
 // }
 function evalChildren(
-	parent: ActorSopNode,
+	parent: ActorBuilderNode,
 	nodes: Set<BaseJsNodeType>,
 	testFunction: (node: BaseJsNodeType) => boolean
 ): void {
@@ -88,7 +89,7 @@ function evalChildren(
 		}
 	});
 }
-export function findTriggeringNodes(parent: ActorSopNode): Set<BaseJsNodeType> {
+export function findTriggeringNodes(parent: ActorBuilderNode): Set<BaseJsNodeType> {
 	const nodes: Set<BaseJsNodeType> = new Set();
 	evalChildren(parent, nodes, isTriggeringNode);
 	return nodes;

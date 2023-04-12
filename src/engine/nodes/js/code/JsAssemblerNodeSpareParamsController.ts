@@ -6,6 +6,7 @@ import {ParamInitValueSerialized} from '../../../params/types/ParamInitValueSeri
 import {SetUtils} from '../../../../core/SetUtils';
 import {MapUtils} from '../../../../core/MapUtils';
 import {JsParamConfig} from './utils/JsParamConfig';
+import {BaseJsShaderAssembler} from './assemblers/_Base';
 
 const DEBUG = false;
 function _paramMatchesParamConfig<T extends ParamType>(param: TypedParam<T>, paramConfig: JsParamConfig<T>) {
@@ -53,7 +54,10 @@ export class JsAssemblerNodeSpareParamsController {
 	// private _createdSpareParamNames: Set<string> = new Set();
 	private _raw_input_serialized_by_param_name: Map<string, ParamInitValueSerialized> = new Map();
 	private _init_value_serialized_by_param_name: Map<string, ParamInitValueSerialized> = new Map();
-	constructor(private _controller: JsAssemblerControllerType, private _node: AssemblerControllerNode) {}
+	constructor(
+		private _controller: JsAssemblerControllerType,
+		private _node: AssemblerControllerNode<BaseJsShaderAssembler>
+	) {}
 	get assembler() {
 		return this._controller.assembler;
 	}

@@ -15,9 +15,9 @@ import {CoreGraphNodeId} from '../../../../../core/graph/CoreGraph';
 import {ArrayUtils} from '../../../../../core/ArrayUtils';
 import {BaseJsShaderAssembler} from '../assemblers/_Base';
 // import {sanitizeName} from '../../../../../core/String';
-import {ActorSopNode} from '../../../sop/Actor';
 import {triggerableMethodCalls} from '../assemblers/actor/ActorAssemblerUtils';
 import {SetUtils} from '../../../../../core/SetUtils';
+import {ActorBuilderNode} from '../../../../scene/utils/ActorsManager';
 // import {connectedTriggerableNodes} from '../assemblers/actor/ActorAssemblerUtils';
 
 type RootNodesForShaderMethod = (shader_name: ShaderName, rootNodes: BaseJsNodeType[]) => BaseJsNodeType[];
@@ -28,7 +28,7 @@ export interface CodeBuilderSetCodeLinesOptions {
 	actor: {
 		triggeringNodes: Set<BaseJsNodeType>;
 		triggerableNodes: Set<BaseJsNodeType>;
-		functionNode: ActorSopNode;
+		functionNode: ActorBuilderNode;
 		// triggerNodesByType: Map<string, Set<BaseJsNodeType>>;
 	};
 }

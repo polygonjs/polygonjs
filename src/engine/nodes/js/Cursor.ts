@@ -46,6 +46,9 @@ export class CursorJsNode extends BaseUserInputJsNode<CursorJsParamsConfig> {
 	override eventEmitter() {
 		return EVENT_EMITTERS[this.pv.element];
 	}
+	setEventEmitter(emitter: CoreEventEmitter) {
+		this.p.element.set(EVENT_EMITTERS.indexOf(emitter));
+	}
 	override initializeNode() {
 		this.io.connection_points.spare_params.setInputlessParamNames(['element']);
 		this.io.outputs.setNamedOutputConnectionPoints([

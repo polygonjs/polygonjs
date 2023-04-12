@@ -105,12 +105,12 @@ export abstract class BaseJsShaderAssembler extends TypedAssembler<NodeContext.J
 	private _uniformsResolutionDependent: boolean = false;
 	private _computedVarNames: Set<string> = new Set();
 
-	constructor(protected _gl_parent_node: AssemblerControllerNode) {
+	constructor(protected _gl_parent_node: AssemblerControllerNode<BaseJsShaderAssembler>) {
 		super();
 	}
 
-	protected _overriden_gl_parent_node: AssemblerControllerNode | undefined;
-	setGlParentNode(gl_parent_node: AssemblerControllerNode) {
+	protected _overriden_gl_parent_node: AssemblerControllerNode<BaseJsShaderAssembler> | undefined;
+	setGlParentNode(gl_parent_node: AssemblerControllerNode<BaseJsShaderAssembler>) {
 		this._overriden_gl_parent_node = gl_parent_node;
 	}
 	currentGlParentNode() {

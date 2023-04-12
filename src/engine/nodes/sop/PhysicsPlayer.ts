@@ -146,12 +146,11 @@ export class PhysicsPlayerSopNode extends TypedActorSopNode<PhysicsPlayerSopPara
 	}
 
 	override cook(inputCoreGroups: CoreGroup[]) {
-		this.compileIfRequired();
+		this.compilationController.compileIfRequired();
 		const coreGroup0 = inputCoreGroups[0];
 		const coreGroup1 = inputCoreGroups[1];
 		const inputObjects = coreGroup0 ? coreGroup0.threejsObjects() : this._createDefaultInputObjects();
 		const playerObject = inputObjects[0];
-		// console.log(inputObjects);
 		this._updatePlayerObject(playerObject);
 		const objects = [playerObject];
 

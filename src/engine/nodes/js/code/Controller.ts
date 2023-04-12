@@ -10,7 +10,7 @@ import {BaseJsNodeType} from '../_Base';
 import {JsAssemblerNodeSpareParamsController} from './JsAssemblerNodeSpareParamsController';
 import {NodeCreateOptions} from '../../utils/hierarchy/ChildrenController';
 
-export class BaseJsParentNode extends TypedNode<any, any> {
+class BaseJsParentNode extends TypedNode<any, any> {
 	override createNode<S extends keyof JsNodeChildrenMap>(
 		node_class: S,
 		options?: NodeCreateOptions
@@ -32,8 +32,30 @@ export class BaseJsParentNode extends TypedNode<any, any> {
 		return super.nodesByType(type) as JsNodeChildrenMap[K][];
 	}
 }
-export abstract class AssemblerControllerNode extends BaseJsParentNode {
-	abstract assemblerController(): JsAssemblerController<BaseJsShaderAssembler> | undefined;
+export abstract class AssemblerControllerNode<A extends BaseJsShaderAssembler> extends BaseJsParentNode {
+	// protected override _childrenControllerContext = NodeContext.JS;
+	// override createNode<S extends keyof JsNodeChildrenMap>(
+	// 	node_class: S,
+	// 	options?: NodeCreateOptions
+	// ): JsNodeChildrenMap[S];
+	// override createNode<K extends valueof<JsNodeChildrenMap>>(
+	// 	node_class: Constructor<K>,
+	// 	options?: NodeCreateOptions
+	// ): K;
+	// override createNode<K extends valueof<JsNodeChildrenMap>>(
+	// 	node_class: Constructor<K>,
+	// 	options?: NodeCreateOptions
+	// ): K {
+	// 	return super.createNode(node_class, options) as K;
+	// }
+	// override children() {
+	// 	return super.children() as BaseJsNodeType[];
+	// }
+	// override nodesByType<K extends keyof JsNodeChildrenMap>(type: K): JsNodeChildrenMap[K][] {
+	// 	return super.nodesByType(type) as JsNodeChildrenMap[K][];
+	// }
+
+	abstract assemblerController(): JsAssemblerController<A> | undefined;
 	abstract compile(): void;
 }
 
@@ -44,7 +66,7 @@ export class JsAssemblerController<A extends BaseJsShaderAssembler> {
 	private _globalsHandler: GlobalsBaseController | undefined = new GlobalsGeometryHandler();
 	private _compileRequired: boolean = true;
 
-	constructor(private node: AssemblerControllerNode, assembler_class: BaseJsShaderAssemblerConstructor<A>) {
+	constructor(private node: AssemblerControllerNode<A>, assembler_class: BaseJsShaderAssemblerConstructor<A>) {
 		this._assembler = new assembler_class(this.node);
 		this._spareParamsController = new JsAssemblerNodeSpareParamsController(this, this.node);
 	}

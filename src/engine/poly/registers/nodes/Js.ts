@@ -501,6 +501,7 @@ const ONLY_ACTOR = {
 		sopType(SopType.PHYSICS_PLAYER),
 		...[
 			NodeContext.ANIM,
+			NodeContext.AUDIO,
 			NodeContext.COP,
 			NodeContext.EVENT,
 			NodeContext.MAT,

@@ -50,6 +50,9 @@ export abstract class BaseOnKeyEventJsNode extends BaseUserInputJsNode<BaseOnKey
 	override eventEmitter(): CoreEventEmitter {
 		return EVENT_EMITTERS[this.pv.element];
 	}
+	setEventEmitter(emitter: CoreEventEmitter) {
+		this.p.element.set(EVENT_EMITTERS.indexOf(emitter));
+	}
 	override setTriggeringLines(shadersCollectionController: ShadersCollectionController, triggeredMethods: string) {
 		const keyCodes = this.variableForInputParam(shadersCollectionController, this.p.keyCodes);
 		const ctrlKey = this.variableForInputParam(shadersCollectionController, this.p.ctrlKey);

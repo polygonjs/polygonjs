@@ -60,7 +60,7 @@ export class OnManualTriggerJsNode extends TypedJsNode<OnManualTriggerJsParamsCo
 			return;
 		}
 		const actorNode = functionNode as ActorSopNode as ActorBuilderNode;
-		if (!actorNode.evaluatorGenerator()) {
+		if (!actorNode.compilationController.evaluatorGenerator()) {
 			console.warn('no evaluator found');
 		}
 		this.scene().actorsManager.manualTriggerController.runTriggerFromFunctionNode(actorNode, nodeMethodName(this));

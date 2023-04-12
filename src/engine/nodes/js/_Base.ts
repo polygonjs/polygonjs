@@ -26,6 +26,7 @@ import {EvaluatorEventData} from './code/assemblers/actor/Evaluator';
 import {StringParam} from '../../params/String';
 import {sanitizeJsVarName} from './code/assemblers/JsTypeUtils';
 import {Poly} from '../../Poly';
+import {BaseJsShaderAssembler} from './code/assemblers/_Base';
 
 export const TRIGGER_CONNECTION_NAME = 'trigger';
 
@@ -96,25 +97,23 @@ export class TypedJsNode<K extends NodeParamsConfig> extends TypedNode<NodeConte
 		this.io.connection_points.spare_params.initializeNode();
 		this._paramsEditableStatesController.initializeNode();
 
-		// TODO: only trigger a recompile
-		// if the current node has a trigger input?
 		this.addPostDirtyHook('_setMatToRecompile', this._setFunctionNodeToRecompile.bind(this));
+		this.lifecycle.onBeforeDeleted(this._setFunctionNodeToRecompile.bind(this));
 	}
 	override cook() {
-		console.warn('js node cooking', this.path());
 		this.cookController.endCook();
 	}
 
 	protected _setFunctionNodeToRecompile() {
 		this.functionNode()?.assemblerController()?.setCompilationRequiredAndDirty(this);
 	}
-	functionNode(): AssemblerControllerNode | undefined {
+	functionNode(): AssemblerControllerNode<BaseJsShaderAssembler> | undefined {
 		const parent = this.parent();
 		if (parent) {
 			if (parent.context() == NodeContext.JS) {
 				return (parent as BaseJsNodeType)?.functionNode();
 			} else {
-				return parent as AssemblerControllerNode;
+				return parent as AssemblerControllerNode<BaseJsShaderAssembler>;
 			}
 		}
 	}

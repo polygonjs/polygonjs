@@ -1,14 +1,15 @@
 import {JsType} from './../../../../poly/registers/nodes/types/Js';
 import {NodeContext} from './../../../../poly/NodeContext';
-import {BaseJsParentNode} from '../Controller';
+import {AssemblerControllerNode} from '../Controller';
 import {BaseJsNodeType} from '../../_Base';
+import {BaseJsShaderAssembler} from '../assemblers/_Base';
 
 export class JsNodeFinder {
-	static findOutputNodes(node: BaseJsParentNode) {
+	static findOutputNodes(node: AssemblerControllerNode<BaseJsShaderAssembler>) {
 		const output_nodes = node.nodesByType(JsType.OUTPUT);
 		return output_nodes;
 	}
-	static findParamGeneratingNodes(node: BaseJsParentNode) {
+	static findParamGeneratingNodes(node: AssemblerControllerNode<BaseJsShaderAssembler>) {
 		const list: BaseJsNodeType[] = [];
 		node.childrenController?.traverseChildren(
 			(child) => {
@@ -32,7 +33,7 @@ export class JsNodeFinder {
 	// 	const nodes = node.nodesByType(JsType.VARYING_WRITE);
 	// 	return nodes;
 	// }
-	static findAttributeExportNodes(node: BaseJsParentNode) {
+	static findAttributeExportNodes(node: AssemblerControllerNode<BaseJsShaderAssembler>) {
 		const nodes = node.nodesByType(JsType.ATTRIBUTE);
 		return nodes.filter((node) => {
 			// do not use attributes that are used as an input, as export

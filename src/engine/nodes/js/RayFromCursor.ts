@@ -43,6 +43,9 @@ export class RayFromCursorJsNode extends BaseUserInputJsNode<RayFromCursorJsPara
 	override eventEmitter() {
 		return EVENT_EMITTERS[this.pv.element];
 	}
+	setEventEmitter(emitter: CoreEventEmitter) {
+		this.p.element.set(EVENT_EMITTERS.indexOf(emitter));
+	}
 	override initializeNode() {
 		this.io.connection_points.spare_params.setInputlessParamNames(['element']);
 		this.io.outputs.setNamedOutputConnectionPoints([new JsConnectionPoint(OUTPUT_NAME, JsConnectionPointType.RAY)]);

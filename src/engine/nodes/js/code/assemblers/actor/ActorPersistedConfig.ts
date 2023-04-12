@@ -8,12 +8,12 @@ import {
 	isVariableSerializable,
 	deserializeVariable,
 } from '../_BaseJsPersistedConfigUtils';
-import {BaseActorSopNodeType} from '../../../../sop/_BaseActor';
 import {Poly} from '../../../../../Poly';
 import {NamedFunctionMap} from '../../../../../poly/registers/functions/All';
 import {JsParamConfig, JsParamConfigJSON} from '../../utils/JsParamConfig';
 import {ParamType} from '../../../../../poly/ParamType';
 import {EvaluatorEventData} from './Evaluator';
+import {ActorBuilderNode} from '../../../../../scene/utils/ActorsManager';
 
 export interface ActorFunctionData extends FunctionData {
 	eventDatas: EvaluatorEventData[];
@@ -29,7 +29,7 @@ export interface PersistedConfigBaseSDFData extends PersistedConfigWithShaders {
 }
 
 export class ActorPersistedConfig extends BasePersistedConfig {
-	constructor(protected override node: BaseActorSopNodeType) {
+	constructor(protected override node: ActorBuilderNode) {
 		super(node);
 	}
 	override async toData(): Promise<PersistedConfigBaseSDFData | undefined> {
@@ -37,7 +37,7 @@ export class ActorPersistedConfig extends BasePersistedConfig {
 		if (!assemblerController) {
 			return;
 		}
-		const functionData = this.node.functionData();
+		const functionData = this.node.compilationController.functionData();
 		if (!functionData) {
 			return;
 		}
@@ -98,6 +98,6 @@ export class ActorPersistedConfig extends BasePersistedConfig {
 			paramConfigs: serializedParamConfigs.map((json) => JsParamConfig.fromJSON(json)),
 			eventDatas,
 		};
-		this.node.updateFromFunctionData(functionData);
+		this.node.compilationController.updateFromFunctionData(functionData);
 	}
 }

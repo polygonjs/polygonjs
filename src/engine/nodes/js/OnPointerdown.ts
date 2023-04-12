@@ -39,6 +39,9 @@ export class OnPointerdownJsNode extends BaseUserInputJsNode<OnPointerdownJsPara
 	override eventEmitter() {
 		return EVENT_EMITTERS[this.pv.element];
 	}
+	setEventEmitter(emitter: CoreEventEmitter) {
+		this.p.element.set(EVENT_EMITTERS.indexOf(emitter));
+	}
 
 	override initializeNode() {
 		super.initializeNode();
