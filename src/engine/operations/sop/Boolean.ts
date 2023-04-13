@@ -4,7 +4,14 @@ import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {Mesh, Line3, BufferGeometry, Float32BufferAttribute} from 'three';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
-import {SUBTRACTION, ADDITION, DIFFERENCE, INTERSECTION, Brush, Evaluator} from 'three-bvh-csg';
+import {
+	SUBTRACTION,
+	ADDITION,
+	DIFFERENCE,
+	INTERSECTION,
+	Brush,
+	Evaluator,
+} from '../../../core/thirdParty/three-bvh-csg';
 import {ObjectType} from '../../../core/geometry/Constant';
 import {CoreGeometryBuilderMerge} from '../../../core/geometry/builders/Merge';
 

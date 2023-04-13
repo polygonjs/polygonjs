@@ -1,12 +1,10 @@
 import {CoreSleep} from '../../../../src/core/Sleep';
-// import {OnScenePlayStateActorNode} from '../../../../src/engine/nodes/actor/OnScenePlayState';
 import {PhysicsWorldSopNode} from '../../../../src/engine/nodes/sop/PhysicsWorld';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 import {PhysicsRBDColliderType, PhysicsRBDType} from '../../../../src/core/physics/PhysicsAttribute';
 import {PhysicsRBDRadiusAttribute} from '../../../../src/core/physics/PhysicsAttribute';
-import {_getPhysicsRBDCapsuleRadius} from '../../../../src/core/physics/shapes/RBDCapsule';
-import {MultAddActorNodeInputName} from '../../../../src/engine/nodes/actor/MultAdd';
-import {GetPhysicsRBDCapsulePropertyActorNodeInputName} from '../../../../src/engine/nodes/actor/GetPhysicsRBDCapsuleProperty';
+import {RBDCapsuleProperty, _getPhysicsRBDCapsuleRadius} from '../../../../src/core/physics/shapes/RBDCapsule';
+import {MultAddInput} from '../../../../src/engine/nodes/js/MultAdd';
 import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Js';
 
 function createPhysicsWorldNodes(node: PhysicsWorldSopNode) {
@@ -78,11 +76,7 @@ QUnit.test('js/setPhysicsRBDCapsuleProperty simple', async (assert) => {
 		scene.batchUpdates(() => {
 			setPhysicsRBDCapsuleProperty1.setInput(setPhysicsRBDCapsuleProperty1.p.scale.name(), multAdd1);
 			setPhysicsRBDCapsuleProperty1.p.lerp.set(1);
-			multAdd1.setInput(
-				MultAddActorNodeInputName.VALUE,
-				getPhysicsRBDCapsuleProperty1,
-				GetPhysicsRBDCapsulePropertyActorNodeInputName.radius
-			);
+			multAdd1.setInput(MultAddInput.VALUE, getPhysicsRBDCapsuleProperty1, RBDCapsuleProperty.RADIUS);
 			multAdd1.params.get('mult')!.set(2);
 		});
 		await CoreSleep.sleep(50);

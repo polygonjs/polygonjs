@@ -2,8 +2,8 @@ import {Mesh, Vector3} from 'three';
 import {ASSETS_ROOT} from '../../../../src/core/loader/AssetsUtils';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {TransformTargetType} from '../../../../src/core/Transform';
-import {SetGeometryPositionsInputName} from '../../../../src/engine/nodes/actor/SetGeometryPositions';
-import {TrackFaceActorNodeOutput} from '../../../../src/engine/nodes/actor/TrackFace';
+import {SetGeometryPositionsInputName} from '../../../../src/engine/nodes/js/SetGeometryPositions';
+import {TrackFaceJsNodeOutput} from '../../../../src/engine/nodes/js/TrackFace';
 import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Js';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 
@@ -62,11 +62,7 @@ QUnit.test('js/trackFace', async (assert) => {
 
 	getTexture1.p.node.setNode(video1);
 	setGeometryPositions1.setInput(JsConnectionPointType.TRIGGER, onTick1);
-	setGeometryPositions1.setInput(
-		SetGeometryPositionsInputName.values,
-		trackFace1,
-		TrackFaceActorNodeOutput.LANDMARKS
-	);
+	setGeometryPositions1.setInput(SetGeometryPositionsInputName.values, trackFace1, TrackFaceJsNodeOutput.LANDMARKS);
 	trackFace1.setInput(JsConnectionPointType.TRIGGER, onTick1);
 	trackFace1.setInput(JsConnectionPointType.TEXTURE, getTexture1);
 

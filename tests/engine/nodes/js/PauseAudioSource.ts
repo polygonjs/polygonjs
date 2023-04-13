@@ -3,7 +3,7 @@ import {CoreSleep} from '../../../../src/core/Sleep';
 import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Js';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 import {ASSETS_ROOT} from '../../../../src/core/loader/AssetsUtils';
-import {SetParamActorNode} from '../../../../src/engine/nodes/actor/SetParam';
+import {SetParamJsNodeInputName} from '../../../../src/engine/nodes/js/SetParam';
 import {ParamConstructorMap} from '../../../../src/engine/params/types/ParamConstructorMap';
 import {ParamType} from '../../../../src/engine/poly/ParamType';
 
@@ -46,7 +46,7 @@ QUnit.test('js/pauseAudioSource', async (assert) => {
 
 	setParam1.p.param.setParam(geo1.p.t.x);
 	setParam1.setParamType(JsConnectionPointType.INT);
-	(setParam1.params.get(SetParamActorNode.INPUT_NAME_VAL)! as ParamConstructorMap[ParamType.INTEGER]).set(1);
+	(setParam1.params.get(SetParamJsNodeInputName.val)! as ParamConstructorMap[ParamType.INTEGER]).set(1);
 
 	playAudioSource1.p.node.setNode(file1);
 	pauseAudioSource1.p.node.setNode(file1);

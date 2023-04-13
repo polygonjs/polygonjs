@@ -1,13 +1,11 @@
 import {CoreSleep} from '../../../../src/core/Sleep';
-// import {OnScenePlayStateActorNode} from '../../../../src/engine/nodes/actor/OnScenePlayState';
 import {PhysicsWorldSopNode} from '../../../../src/engine/nodes/sop/PhysicsWorld';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 import {PhysicsRBDColliderType, PhysicsRBDType} from '../../../../src/core/physics/PhysicsAttribute';
 import {PhysicsRBDCuboidAttribute} from '../../../../src/core/physics/PhysicsAttribute';
-import {MultAddActorNodeInputName} from '../../../../src/engine/nodes/actor/MultAdd';
+import {MultAddInput} from '../../../../src/engine/nodes/js/MultAdd';
 import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Js';
-import {GetPhysicsRBDCuboidPropertyActorNodeInputName} from '../../../../src/engine/nodes/actor/GetPhysicsRBDCuboidProperty';
-import {_getPhysicsRBDCuboidSizes} from '../../../../src/core/physics/shapes/RBDCuboid';
+import {RBDCuboidProperty, _getPhysicsRBDCuboidSizes} from '../../../../src/core/physics/shapes/RBDCuboid';
 import {Vector3} from 'three';
 
 function createPhysicsWorldNodes(node: PhysicsWorldSopNode) {
@@ -81,11 +79,7 @@ QUnit.test('js/setPhysicsRBDCuboidProperty simple', async (assert) => {
 		await scene.batchUpdates(() => {
 			setPhysicsRBDCuboidProperty1.setInput(setPhysicsRBDCuboidProperty1.p.sizes.name(), multAdd1);
 			setPhysicsRBDCuboidProperty1.p.lerp.set(1);
-			multAdd1.setInput(
-				MultAddActorNodeInputName.VALUE,
-				getPhysicsRBDCuboidProperty1,
-				GetPhysicsRBDCuboidPropertyActorNodeInputName.sizes
-			);
+			multAdd1.setInput(MultAddInput.VALUE, getPhysicsRBDCuboidProperty1, RBDCuboidProperty.SIZES);
 			// const constant1 = actor1.createNode('constant')
 			// constant1.setJsType(JsConnectionPointType.VECTOR3)
 			multAdd1.params.get('mult')!.set([2, 2, 2]);

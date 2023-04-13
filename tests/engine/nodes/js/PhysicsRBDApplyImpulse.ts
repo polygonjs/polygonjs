@@ -1,5 +1,4 @@
 import {CoreSleep} from '../../../../src/core/Sleep';
-// import {OnScenePlayStateActorNode} from '../../../../src/engine/nodes/actor/OnScenePlayState';
 import {PhysicsWorldSopNode} from '../../../../src/engine/nodes/sop/PhysicsWorld';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 import {PhysicsRBDColliderType} from '../../../../src/core/physics/PhysicsAttribute';

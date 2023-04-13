@@ -18,7 +18,7 @@ import {TypeAssert} from '../../poly/Assert';
 
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
 
-enum SetParamJsNodeInputName {
+export enum SetParamJsNodeInputName {
 	lerp = 'lerp',
 	val = 'val',
 }

@@ -18,7 +18,7 @@ import {AbstractRenderer} from '../../engine/viewers/Common';
 import type {PathTracingRendererRopNode} from '../../engine/nodes/rop/PathTracingRenderer';
 import type {WebGLRendererRopNode} from '../../engine/nodes/rop/WebGLRenderer';
 // @ts-ignore
-import type {PathTracingRenderer} from 'three-gpu-pathtracer';
+import type {PathTracingRenderer} from '../../core/thirdParty/three-gpu-pathtracer';
 
 const UPDATE_STYLE = false;
 const SIZE_MULT = 1;

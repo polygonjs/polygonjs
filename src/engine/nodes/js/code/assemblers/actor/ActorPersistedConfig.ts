@@ -1,25 +1,22 @@
-import {BasePersistedConfig, PersistedConfigWithShaders} from '../../../../utils/BasePersistedConfig';
+import {BasePersistedConfig} from '../../../../utils/BasePersistedConfig';
 import {FunctionData} from '../_Base';
-import {
-	RegisterableVariable,
-	SerializedVariable,
-	SerializedVariableType,
-	serializeVariable,
-	isVariableSerializable,
-	deserializeVariable,
-} from '../_BaseJsPersistedConfigUtils';
-import {Poly} from '../../../../../Poly';
+import {SerializedVariable, SerializedVariableType} from '../_BaseJsPersistedConfigUtils';
 import {NamedFunctionMap} from '../../../../../poly/registers/functions/All';
 import {JsParamConfig, JsParamConfigJSON} from '../../utils/JsParamConfig';
 import {ParamType} from '../../../../../poly/ParamType';
 import {EvaluatorEventData} from './Evaluator';
 import {ActorBuilderNode} from '../../../../../scene/utils/ActorsManager';
-
+import {
+	PersistedConfigBaseJsData,
+	serializedVariablesFromFunctionData,
+	variablesByNameFromPersistedConfigData,
+	functionsByNameFromPersistedConfigData,
+} from '../_BaseJsPersistedConfig';
 export interface ActorFunctionData extends FunctionData {
 	eventDatas: EvaluatorEventData[];
 }
 
-export interface PersistedConfigBaseSDFData extends PersistedConfigWithShaders {
+export interface ActorPersistedConfigBaseJsData extends PersistedConfigBaseJsData {
 	functionBody: string;
 	variableNames: string[];
 	variables: SerializedVariable<SerializedVariableType>[];
@@ -32,7 +29,7 @@ export class ActorPersistedConfig extends BasePersistedConfig {
 	constructor(protected override node: ActorBuilderNode) {
 		super(node);
 	}
-	override async toData(): Promise<PersistedConfigBaseSDFData | undefined> {
+	override async toData(): Promise<ActorPersistedConfigBaseJsData | undefined> {
 		const assemblerController = this.node.assemblerController();
 		if (!assemblerController) {
 			return;
@@ -41,60 +38,32 @@ export class ActorPersistedConfig extends BasePersistedConfig {
 		if (!functionData) {
 			return;
 		}
-		const {functionBody, variableNames, variablesByName, functionNames, paramConfigs, eventDatas} = functionData;
+		const {functionBody, variableNames, functionNames, paramConfigs, eventDatas} = functionData;
 
-		const serializedVariables: SerializedVariable<SerializedVariableType>[] = [];
-		for (let variableName of variableNames) {
-			const variable = variablesByName[variableName];
-			if (variable != null && isVariableSerializable(variable)) {
-				const serialized = serializeVariable(variable);
-				serializedVariables.push(serialized);
-			}
-		}
-
-		const data: PersistedConfigBaseSDFData = {
+		const data: ActorPersistedConfigBaseJsData = {
 			functionBody,
 			variableNames,
-			variables: serializedVariables,
+			variables: serializedVariablesFromFunctionData(functionData),
 			functionNames,
 			serializedParamConfigs: paramConfigs.map((p) => p.toJSON()),
 			eventDatas,
 		};
 		return data;
 	}
-	override load(data: PersistedConfigBaseSDFData) {
+	override load(data: ActorPersistedConfigBaseJsData) {
 		const assemblerController = this.node.assemblerController();
 		if (assemblerController) {
 			return;
 		}
 
-		const {functionBody, variableNames, variables, functionNames, serializedParamConfigs, eventDatas} = data;
-
-		const variablesByName: Record<string, RegisterableVariable> = {};
-		let i = 0;
-		for (let variableName of variableNames) {
-			const serialized = variables[i];
-			const deserialized = deserializeVariable(serialized);
-			variablesByName[variableName] = deserialized;
-			i++;
-		}
-
-		const functionsByName: Record<string, Function> = {};
-		i = 0;
-		for (let functionName of functionNames) {
-			const namedFunction = Poly.namedFunctionsRegister.getFunction(functionName, this.node);
-			if (namedFunction) {
-				functionsByName[functionName] = namedFunction.func.bind(namedFunction);
-			}
-			i++;
-		}
+		const {functionBody, variableNames, functionNames, serializedParamConfigs, eventDatas} = data;
 
 		const functionData: ActorFunctionData = {
 			functionBody: functionBody,
 			variableNames,
-			variablesByName,
+			variablesByName: variablesByNameFromPersistedConfigData(data),
 			functionNames,
-			functionsByName,
+			functionsByName: functionsByNameFromPersistedConfigData(data, this.node),
 			paramConfigs: serializedParamConfigs.map((json) => JsParamConfig.fromJSON(json)),
 			eventDatas,
 		};

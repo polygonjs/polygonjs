@@ -3,7 +3,7 @@ import {Mesh} from 'three';
 import {AttribClass} from '../../../../src/core/geometry/Constant';
 import {CoreObject} from '../../../../src/core/geometry/Object';
 import {CoreSleep} from '../../../../src/core/Sleep';
-import {OnObjectAttributeUpdateActorNode} from '../../../../src/engine/nodes/actor/OnObjectAttributeUpdate';
+import {OnObjectAttributeUpdateJsNode} from '../../../../src/engine/nodes/js/OnObjectAttributeUpdate';
 import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Js';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 
@@ -32,13 +32,13 @@ QUnit.test('js/GetMaterial', async (assert) => {
 	const getMaterial1 = actor1.createNode('getMaterial');
 	const getMaterial2 = actor1.createNode('getMaterial');
 
-	onObjectAttributeUpdate1.p.attribName.set('selected');
+	onObjectAttributeUpdate1.setAttribName('selected');
 	onObjectAttributeUpdate1.setAttribType(JsConnectionPointType.BOOLEAN);
 
 	getMaterial1.p.node.setNode(meshBasic1);
 	getMaterial2.p.node.setNode(meshBasic2);
 
-	twoWaySwitch1.setInput(0, onObjectAttributeUpdate1, OnObjectAttributeUpdateActorNode.OUTPUT_NEW_VAL);
+	twoWaySwitch1.setInput(0, onObjectAttributeUpdate1, OnObjectAttributeUpdateJsNode.OUTPUT_NEW_VAL);
 	twoWaySwitch1.setInput(1, getMaterial1);
 	twoWaySwitch1.setInput(2, getMaterial2);
 

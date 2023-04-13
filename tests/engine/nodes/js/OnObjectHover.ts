@@ -1,6 +1,6 @@
 import {CoreSleep} from '../../../../src/core/Sleep';
-import {GetIntersectionPropertyActorNodeOutputName} from '../../../../src/engine/nodes/actor/GetIntersectionProperty';
-import {SetParamActorNode} from '../../../../src/engine/nodes/actor/SetParam';
+import {GetIntersectionPropertyJsNodeOutputName} from '../../../../src/engine/nodes/js/GetIntersectionProperty';
+import {SetParamJsNodeInputName} from '../../../../src/engine/nodes/js/SetParam';
 import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Js';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 import {triggerPointermove, triggerPointermoveInMiddle, triggerPointermoveAside} from '../../../helpers/EventsHelper';
@@ -31,9 +31,9 @@ QUnit.test('js/OnObjectHover', async (assert) => {
 	getIntersectionProperty1.setInput(0, onObjectHover1, JsConnectionPointType.INTERSECTION);
 	setParam1.setInput(JsConnectionPointType.TRIGGER, onObjectHover1);
 	setParam1.setInput(
-		SetParamActorNode.INPUT_NAME_VAL,
+		SetParamJsNodeInputName.val,
 		getIntersectionProperty1,
-		GetIntersectionPropertyActorNodeOutputName.distance
+		GetIntersectionPropertyJsNodeOutputName.distance
 	);
 	setParam1.setParamType(JsConnectionPointType.FLOAT);
 	setParam1.p.param.setParam(geo2.p.scale);
@@ -73,9 +73,9 @@ QUnit.test('js/OnObjectHover', async (assert) => {
 		// test intersection: point
 		// scene.batchUpdates(() => {
 		setParam1.setInput(
-			SetParamActorNode.INPUT_NAME_VAL,
+			SetParamJsNodeInputName.val,
 			getIntersectionProperty1,
-			GetIntersectionPropertyActorNodeOutputName.point
+			GetIntersectionPropertyJsNodeOutputName.point
 		);
 		setParam1.setParamType(JsConnectionPointType.VECTOR3);
 		await CoreSleep.sleep(50);
@@ -96,9 +96,9 @@ QUnit.test('js/OnObjectHover', async (assert) => {
 		await CoreSleep.sleep(200);
 		// scene.batchUpdates(() => {
 		setParam1.setInput(
-			SetParamActorNode.INPUT_NAME_VAL,
+			SetParamJsNodeInputName.val,
 			getIntersectionProperty1,
-			GetIntersectionPropertyActorNodeOutputName.uv
+			GetIntersectionPropertyJsNodeOutputName.uv
 		);
 		setParam1.setParamType(JsConnectionPointType.VECTOR2);
 		await CoreSleep.sleep(50);

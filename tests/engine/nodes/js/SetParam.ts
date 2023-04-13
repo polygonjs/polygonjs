@@ -4,7 +4,7 @@ import {JsConnectionPointType, ParamConvertibleJsType} from '../../../../src/eng
 import {RendererUtils} from '../../../helpers/RendererUtils';
 import {ParamType} from '../../../../src/engine/poly/ParamType';
 import {ParamInitValuesTypeMap} from '../../../../src/engine/params/types/ParamInitValuesTypeMap';
-import {SetParamActorNode} from '../../../../src/engine/nodes/actor/SetParam';
+import {SetParamJsNodeInputName} from '../../../../src/engine/nodes/js/SetParam';
 import {ParamConstructorMap} from '../../../../src/engine/params/types/ParamConstructorMap';
 import {CoreType} from '../../../../src/core/Type';
 import {Number3} from '../../../../src/types/GlobalTypes';
@@ -39,7 +39,7 @@ async function setParamAndCheck<T extends ParamType>(options: Options<T>) {
 	setParam1.setInput(JsConnectionPointType.TRIGGER, onManualTrigger1);
 	setParam1.p.param.setParam(param);
 	setParam1.setParamType(jsType);
-	(setParam1.params.get(SetParamActorNode.INPUT_NAME_VAL)! as ParamConstructorMap[T]).set(targetValue as never);
+	(setParam1.params.get(SetParamJsNodeInputName.val)! as ParamConstructorMap[T]).set(targetValue as never);
 	setParam1.params.get('lerp')!.set(lerp);
 
 	await actor1.compute();

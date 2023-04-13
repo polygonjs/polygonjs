@@ -1,6 +1,6 @@
 import {CoreSleep} from '../../../../src/core/Sleep';
-import {ActorCompareTestName} from '../../../../src/engine/nodes/actor/Compare';
-import {OnTickActorNodeOuput} from '../../../../src/engine/nodes/actor/OnTick';
+import {JsCompareTestName} from '../../../../src/engine/nodes/js/Compare';
+import {OnTickJsNodeOuput} from '../../../../src/engine/nodes/js/OnTick';
 import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Js';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 
@@ -23,8 +23,8 @@ QUnit.test('js/compare', async (assert) => {
 	const floatToVec3_1 = actor1.createNode('floatToVec3');
 	const setObjectPosition1 = actor1.createNode('setObjectPosition');
 
-	compare1.setInput(0, onTick1, OnTickActorNodeOuput.TIME);
-	compare1.setTestName(ActorCompareTestName.GREATER_THAN);
+	compare1.setInput(0, onTick1, OnTickJsNodeOuput.TIME);
+	compare1.setTestName(JsCompareTestName.GREATER_THAN);
 	compare1.params.get('value1')!.set(1);
 
 	twoWaySwitch1.setInput(0, compare1);

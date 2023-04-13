@@ -4,10 +4,10 @@ import {CoreObject} from '../../../../src/core/geometry/Object';
 import {ASSETS_ROOT} from '../../../../src/core/loader/AssetsUtils';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {TransformTargetType} from '../../../../src/core/Transform';
-import {GetTrackedHandPropertyActorNodeInputName} from '../../../../src/engine/nodes/actor/GetTrackedHandProperty';
-import {SetGeometryPositionsInputName} from '../../../../src/engine/nodes/actor/SetGeometryPositions';
-import {SetObjectAttributeActorNode} from '../../../../src/engine/nodes/actor/SetObjectAttribute';
-import {TrackHandActorNodeOutput} from '../../../../src/engine/nodes/actor/TrackHand';
+import {GetTrackedHandPropertyJsNodeInputName} from '../../../../src/engine/nodes/js/GetTrackedHandProperty';
+import {SetGeometryPositionsInputName} from '../../../../src/engine/nodes/js/SetGeometryPositions';
+import {SetObjectAttributeJsNode} from '../../../../src/engine/nodes/js/SetObjectAttribute';
+import {TrackHandJsNodeOutput} from '../../../../src/engine/nodes/js/TrackHand';
 import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Js';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 
@@ -94,22 +94,22 @@ QUnit.test('js/trackHand', async (assert) => {
 	setGeometryPositions1.setInput(
 		SetGeometryPositionsInputName.values,
 		trackHand1,
-		TrackHandActorNodeOutput.WORLD_LANDMARKS
+		TrackHandJsNodeOutput.WORLD_LANDMARKS
 	);
 	trackHand1.setInput(JsConnectionPointType.TRIGGER, onTick1);
 	trackHand1.setInput(JsConnectionPointType.TEXTURE, getTexture1);
-	getTrackedHandProperty1.setInput(0, trackHand1, TrackHandActorNodeOutput.NORMALIZED_LANDMARKS);
+	getTrackedHandProperty1.setInput(0, trackHand1, TrackHandJsNodeOutput.NORMALIZED_LANDMARKS);
 	setObjectAttribute1.setInput(JsConnectionPointType.TRIGGER, onTick1);
 	setObjectAttribute1.setInput(JsConnectionPointType.OBJECT_3D, getObject1);
 	setObjectAttribute1.setInput(
-		SetObjectAttributeActorNode.INPUT_NAME_VAL,
+		SetObjectAttributeJsNode.INPUT_NAME_VAL,
 		getTrackedHandProperty1,
-		GetTrackedHandPropertyActorNodeInputName.indexDirection
+		GetTrackedHandPropertyJsNodeInputName.indexDirection
 	);
 
 	getObject1.p.getCurrentObject.set(false);
 	getObject1.p.mask.set(`*/${directionAttribObjectName}`);
-	setObjectAttribute1.p.attribName.set(attribName);
+	setObjectAttribute1.setAttribName(attribName);
 	setObjectAttribute1.setAttribType(JsConnectionPointType.VECTOR3);
 
 	const container = await merge1.compute();

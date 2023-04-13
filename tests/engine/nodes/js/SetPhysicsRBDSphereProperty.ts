@@ -1,13 +1,12 @@
 import {CoreSleep} from '../../../../src/core/Sleep';
-// import {OnScenePlayStateActorNode} from '../../../../src/engine/nodes/actor/OnScenePlayState';
 import {PhysicsWorldSopNode} from '../../../../src/engine/nodes/sop/PhysicsWorld';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 import {PhysicsRBDColliderType, PhysicsRBDType} from '../../../../src/core/physics/PhysicsAttribute';
 import {PhysicsRBDRadiusAttribute} from '../../../../src/core/physics/PhysicsAttribute';
 import {_getPhysicsRBDSphereRadius} from '../../../../src/core/physics/shapes/RBDSphere';
-import {MultAddActorNodeInputName} from '../../../../src/engine/nodes/actor/MultAdd';
-import {GetPhysicsRBDSpherePropertyActorNodeInputName} from '../../../../src/engine/nodes/actor/GetPhysicsRBDSphereProperty';
+import {MultAddInput} from '../../../../src/engine/nodes/js/MultAdd';
 import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Js';
+import {RBDCommonProperty} from '../../../../src/core/physics/shapes/_CommonHeightRadius';
 
 function createPhysicsWorldNodes(node: PhysicsWorldSopNode) {
 	// const physicsWorldReset = node.createNode('physicsWorldReset');
@@ -78,11 +77,7 @@ QUnit.test('js/setPhysicsRBDSphereProperty simple', async (assert) => {
 		scene.batchUpdates(() => {
 			setPhysicsRBDSphereProperty1.setInput(setPhysicsRBDSphereProperty1.p.radius.name(), multAdd1);
 			setPhysicsRBDSphereProperty1.p.lerp.set(1);
-			multAdd1.setInput(
-				MultAddActorNodeInputName.VALUE,
-				getPhysicsRBDSphereProperty1,
-				GetPhysicsRBDSpherePropertyActorNodeInputName.radius
-			);
+			multAdd1.setInput(MultAddInput.VALUE, getPhysicsRBDSphereProperty1, RBDCommonProperty.RADIUS);
 			multAdd1.params.get('mult')!.set(2);
 		});
 		await CoreSleep.sleep(50);

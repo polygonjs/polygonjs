@@ -1,7 +1,7 @@
 import {BufferAttribute, Mesh, Vector3} from 'three';
 import {Attribute} from '../../../../src/core/geometry/Attribute';
 import {CoreSleep} from '../../../../src/core/Sleep';
-import {SetGeometryPositionsInputName} from '../../../../src/engine/nodes/actor/SetGeometryPositions';
+import {SetGeometryPositionsInputName} from '../../../../src/engine/nodes/js/SetGeometryPositions';
 import {ConstantJsNode} from '../../../../src/engine/nodes/js/Constant';
 import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Js';
 import {RendererUtils} from '../../../helpers/RendererUtils';

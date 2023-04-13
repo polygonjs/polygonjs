@@ -1,5 +1,5 @@
 import {CoreSleep} from '../../../../src/core/Sleep';
-import {TwoWaySwitchActorNodeInputName} from '../../../../src/engine/nodes/actor/TwoWaySwitch';
+import {TwoWaySwitchJsNodeInputName} from '../../../../src/engine/nodes/js/TwoWaySwitch';
 import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Js';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 
@@ -30,9 +30,9 @@ QUnit.test('js/rayIntersectsBox', async (assert) => {
 	setObjectPosition1.setInput('position', twoWaySwitch1);
 	rayIntersectsBox1.setInput(JsConnectionPointType.RAY, ray1);
 	rayIntersectsBox1.setInput(JsConnectionPointType.BOX3, box3_1);
-	twoWaySwitch1.setInput(TwoWaySwitchActorNodeInputName.CONDITION, rayIntersectsBox1);
-	twoWaySwitch1.setInput(TwoWaySwitchActorNodeInputName.IF_TRUE, constant1);
-	twoWaySwitch1.setInput(TwoWaySwitchActorNodeInputName.IF_FALSE, constant2);
+	twoWaySwitch1.setInput(TwoWaySwitchJsNodeInputName.CONDITION, rayIntersectsBox1);
+	twoWaySwitch1.setInput(TwoWaySwitchJsNodeInputName.IF_TRUE, constant1);
+	twoWaySwitch1.setInput(TwoWaySwitchJsNodeInputName.IF_FALSE, constant2);
 
 	constant1.setJsType(JsConnectionPointType.VECTOR3);
 	constant2.setJsType(JsConnectionPointType.VECTOR3);

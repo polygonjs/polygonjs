@@ -20,7 +20,7 @@ import {DEFAULT_MATERIALS, ObjectType} from '../../../core/geometry/Constant';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 import {ThreeMeshBVHHelper} from '../../../core/geometry/bvh/ThreeMeshBVHHelper';
 import {isBooleanTrue} from '../../../core/Type';
-import {SUBTRACTION, Brush, Evaluator} from 'three-bvh-csg';
+import {SUBTRACTION, Brush, Evaluator} from '../../../core/thirdParty/three-bvh-csg';
 import {CoreTransform} from '../../../core/Transform';
 import {CoreGeometry} from '../../../core/geometry/Geometry';
 import {CoreGeometryBuilderMesh} from '../../../core/geometry/builders/Mesh';

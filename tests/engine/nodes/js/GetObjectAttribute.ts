@@ -25,7 +25,7 @@ QUnit.test('js/GetObjectAttribute', async (assert) => {
 	const floatToVec3_1 = actor1.createNode('floatToVec3');
 	const getObjectAttribute1 = actor1.createNode('getObjectAttribute');
 
-	getObjectAttribute1.p.attribName.set('height');
+	getObjectAttribute1.setAttribName('height');
 	getObjectAttribute1.setAttribType(JsConnectionPointType.FLOAT);
 
 	floatToVec3_1.setInput(1, getObjectAttribute1);

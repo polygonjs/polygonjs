@@ -1,7 +1,7 @@
 import {PolyDictionary} from './../../../../types/GlobalTypes';
 import {PolyNodeDefinition} from './../../../nodes/utils/poly/PolyNodeDefinition';
 import {PolyScene} from '../../../scene/PolyScene';
-import {NodeJsonExporterData, NodeJsonExporterUIData, NodeJSONShadersData} from './Node';
+import {NodeJsonExporterData, NodeJsonExporterUIData, NodeJSONFunctionBodiesData, NodeJSONShadersData} from './Node';
 import {JsonExportDispatcher} from './Dispatcher';
 import {TimeController} from '../../../scene/utils/TimeController';
 
@@ -22,6 +22,7 @@ export interface SceneJsonExporterData {
 	root?: NodeJsonExporterData;
 	ui?: NodeJsonExporterUIData;
 	shaders?: NodeJSONShadersData;
+	jsFunctionBodies?: NodeJSONFunctionBodiesData;
 	embeddedPolyNodes?: PolyDictionary<PolyNodeDefinition>;
 }
 
@@ -36,7 +37,8 @@ export class SceneJsonExporter {
 		const nodesData = await rootExporter.data();
 		const uiData = rootExporter.uiData();
 		const shadersData: NodeJSONShadersData = {};
-		await rootExporter.shaders(shadersData);
+		const jsFunctionBodiesData: NodeJSONFunctionBodiesData = {};
+		await rootExporter.persistedConfigData(shadersData, jsFunctionBodiesData);
 
 		this._data = {
 			properties: {
@@ -50,6 +52,7 @@ export class SceneJsonExporter {
 			root: nodesData,
 			ui: uiData,
 			shaders: shadersData,
+			jsFunctionBodies: jsFunctionBodiesData,
 		};
 
 		return this._data;

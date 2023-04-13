@@ -9,7 +9,7 @@ import {JsConnectionPointType, JsConnectionPointTypeFromArrayTypeMap} from '../u
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 import {MathFunctionArg4OperationFactory, DEFAULT_ALLOWED_TYPES} from './_Math_Arg1Operation';
 
-enum MultAddInput {
+export enum MultAddInput {
 	VALUE = 'value',
 	PRE_ADD = 'preAdd',
 	MULT = 'mult',

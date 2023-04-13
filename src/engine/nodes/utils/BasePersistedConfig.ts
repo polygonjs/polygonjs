@@ -68,7 +68,9 @@ export interface PersistedConfigWithShaders extends DataObjectWithoutShaders {
 	// when a particle system is saved without having been computed
 	// it will not have shaders, and this can therefore be undefined
 	shaders?: PolyDictionary<string>;
+	functionBody?: string;
 }
+const ENTRY_NAMES_TO_REMOVE: Set<string> = new Set(['shaders', 'functionBody']);
 export abstract class BasePersistedConfig {
 	constructor(protected node: BaseNodeType) {}
 	abstract toData(): Promise<PersistedConfigWithShaders | void>;
@@ -82,7 +84,7 @@ export abstract class BasePersistedConfig {
 		const dataWithoutShaders: DataObjectWithoutShaders = {};
 		const entryNames = Object.keys(data);
 		for (let entryName of entryNames) {
-			if (entryName != 'shaders') {
+			if (!ENTRY_NAMES_TO_REMOVE.has(entryName)) {
 				(dataWithoutShaders as any)[entryName] = (data as any)[entryName];
 			}
 		}

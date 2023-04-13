@@ -1,5 +1,5 @@
 import {CoreSleep} from '../../../../src/core/Sleep';
-import {TwoWaySwitchActorNodeInputName} from '../../../../src/engine/nodes/actor/TwoWaySwitch';
+import {TwoWaySwitchJsNodeInputName} from '../../../../src/engine/nodes/js/TwoWaySwitch';
 import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Js';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 
@@ -30,9 +30,9 @@ QUnit.test('js/rayIntersectsSphere', async (assert) => {
 	setObjectPosition1.setInput('position', twoWaySwitch1);
 	rayIntersectsSphere1.setInput(JsConnectionPointType.RAY, ray1);
 	rayIntersectsSphere1.setInput(JsConnectionPointType.SPHERE, sphere1);
-	twoWaySwitch1.setInput(TwoWaySwitchActorNodeInputName.CONDITION, rayIntersectsSphere1);
-	twoWaySwitch1.setInput(TwoWaySwitchActorNodeInputName.IF_TRUE, constant1);
-	twoWaySwitch1.setInput(TwoWaySwitchActorNodeInputName.IF_FALSE, constant2);
+	twoWaySwitch1.setInput(TwoWaySwitchJsNodeInputName.CONDITION, rayIntersectsSphere1);
+	twoWaySwitch1.setInput(TwoWaySwitchJsNodeInputName.IF_TRUE, constant1);
+	twoWaySwitch1.setInput(TwoWaySwitchJsNodeInputName.IF_FALSE, constant2);
 	sphere1.p.center.set([0, 0, 0]);
 	sphere1.p.radius.set(1);
 

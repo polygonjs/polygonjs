@@ -1,20 +1,18 @@
-import {BasePersistedConfig, PersistedConfigWithShaders} from '../../../../utils/BasePersistedConfig';
+import {BasePersistedConfig} from '../../../../utils/BasePersistedConfig';
 import {FunctionData} from '../_Base';
-import {
-	RegisterableVariable,
-	SerializedVariable,
-	SerializedVariableType,
-	isVariableSerializable,
-	serializeVariable,
-	deserializeVariable,
-} from '../_BaseJsPersistedConfigUtils';
+import {SerializedVariable, SerializedVariableType} from '../_BaseJsPersistedConfigUtils';
 import {SDFBuilderSopNode} from '../../../../sop/SDFBuilder';
-import {Poly} from '../../../../../Poly';
 import {NamedFunctionMap} from '../../../../../poly/registers/functions/All';
 import {JsParamConfig, JsParamConfigJSON} from '../../utils/JsParamConfig';
 import {ParamType} from '../../../../../poly/ParamType';
+import {
+	PersistedConfigBaseJsData,
+	serializedVariablesFromFunctionData,
+	variablesByNameFromPersistedConfigData,
+	functionsByNameFromPersistedConfigData,
+} from '../_BaseJsPersistedConfig';
 
-export interface PersistedConfigBaseSDFData extends PersistedConfigWithShaders {
+export interface SDFPersistedConfigBaseJsData extends PersistedConfigBaseJsData {
 	functionBody: string;
 	variableNames: string[];
 	variables: SerializedVariable<SerializedVariableType>[];
@@ -26,7 +24,7 @@ export class SDFPersistedConfig extends BasePersistedConfig {
 	constructor(protected override node: SDFBuilderSopNode) {
 		super(node);
 	}
-	override async toData(): Promise<PersistedConfigBaseSDFData | undefined> {
+	override async toData(): Promise<SDFPersistedConfigBaseJsData | undefined> {
 		const assemblerController = this.node.assemblerController();
 		if (!assemblerController) {
 			return;
@@ -35,59 +33,31 @@ export class SDFPersistedConfig extends BasePersistedConfig {
 		if (!functionData) {
 			return;
 		}
-		const {functionBody, variableNames, variablesByName, functionNames, paramConfigs} = functionData;
+		const {functionBody, variableNames, functionNames, paramConfigs} = functionData;
 
-		const serializedVariables: SerializedVariable<SerializedVariableType>[] = [];
-		for (let variableName of variableNames) {
-			const variable = variablesByName[variableName];
-			if (variable != null && isVariableSerializable(variable)) {
-				const serialized = serializeVariable(variable);
-				serializedVariables.push(serialized);
-			}
-		}
-
-		const data: PersistedConfigBaseSDFData = {
+		const data: SDFPersistedConfigBaseJsData = {
 			functionBody,
 			variableNames,
-			variables: serializedVariables,
+			variables: serializedVariablesFromFunctionData(functionData),
 			functionNames,
 			serializedParamConfigs: paramConfigs.map((p) => p.toJSON()),
 		};
 		return data;
 	}
-	override load(data: PersistedConfigBaseSDFData) {
+	override load(data: SDFPersistedConfigBaseJsData) {
 		const assemblerController = this.node.assemblerController();
 		if (assemblerController) {
 			return;
 		}
 
-		const {functionBody, variableNames, variables, functionNames, serializedParamConfigs} = data;
-
-		const variablesByName: Record<string, RegisterableVariable> = {};
-		let i = 0;
-		for (let variableName of variableNames) {
-			const serialized = variables[i];
-			const deserialized = deserializeVariable(serialized);
-			variablesByName[variableName] = deserialized;
-			i++;
-		}
-
-		const functionsByName: Record<string, Function> = {};
-		i = 0;
-		for (let functionName of functionNames) {
-			const namedFunction = Poly.namedFunctionsRegister.getFunction(functionName, this.node);
-			if (namedFunction) {
-				functionsByName[functionName] = namedFunction.func.bind(namedFunction);
-			}
-			i++;
-		}
+		const {functionBody, variableNames, functionNames, serializedParamConfigs} = data;
 
 		const functionData: FunctionData = {
 			functionBody: functionBody,
 			variableNames,
-			variablesByName,
+			variablesByName: variablesByNameFromPersistedConfigData(data),
 			functionNames,
-			functionsByName,
+			functionsByName: functionsByNameFromPersistedConfigData(data, this.node),
 			paramConfigs: serializedParamConfigs.map((json) => JsParamConfig.fromJSON(json)),
 		};
 		this.node.updateFromFunctionData(functionData);

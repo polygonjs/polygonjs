@@ -33,7 +33,7 @@ QUnit.test('js/GetChildrenAttributes', async (assert) => {
 	const getChildrenAttributes1 = actor1.createNode('getChildrenAttributes');
 
 	twoWaySwitch1.params.get('ifTrue')!.set(1);
-	getChildrenAttributes1.p.attribName.set('selected');
+	getChildrenAttributes1.setAttribName('selected');
 	getChildrenAttributes1.setAttribType(JsConnectionPointType.BOOLEAN);
 
 	setObjectPosition1.setInput(JsConnectionPointType.TRIGGER, onManualTrigger1);

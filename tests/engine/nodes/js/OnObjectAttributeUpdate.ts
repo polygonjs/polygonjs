@@ -2,7 +2,7 @@ import {Mesh, Vector2, Vector3, Vector4} from 'three';
 import {AttribClass, AttribType} from '../../../../src/core/geometry/Constant';
 import {CoreObject} from '../../../../src/core/geometry/Object';
 import {CoreSleep} from '../../../../src/core/Sleep';
-import {OnObjectAttributeUpdateActorNode} from '../../../../src/engine/nodes/actor/OnObjectAttributeUpdate';
+import {OnObjectAttributeUpdateJsNode} from '../../../../src/engine/nodes/js/OnObjectAttributeUpdate';
 import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Js';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 
@@ -26,9 +26,9 @@ QUnit.test('js/onObjectAttributeUpdate with number', async (assert) => {
 	const floatToVec3_1 = actor1.createNode('floatToVec3');
 	const getObjectAttribute1 = actor1.createNode('getObjectAttribute');
 
-	onObjectAttributeUpdate1.p.attribName.set('height');
+	onObjectAttributeUpdate1.setAttribName('height');
 
-	getObjectAttribute1.p.attribName.set('height');
+	getObjectAttribute1.setAttribName('height');
 	getObjectAttribute1.setAttribType(JsConnectionPointType.FLOAT);
 
 	floatToVec3_1.setInput(1, getObjectAttribute1);
@@ -80,12 +80,12 @@ QUnit.test('js/onObjectAttributeUpdate with string', async (assert) => {
 	const setObjectAttribute1 = actor1.createNode('setObjectAttribute');
 	const getObjectAttribute1 = actor1.createNode('getObjectAttribute');
 
-	onObjectAttributeUpdate1.p.attribName.set('height');
+	onObjectAttributeUpdate1.setAttribName('height');
 
-	getObjectAttribute1.p.attribName.set('height');
+	getObjectAttribute1.setAttribName('height');
 	getObjectAttribute1.setAttribType(JsConnectionPointType.STRING);
 
-	setObjectAttribute1.p.attribName.set('height2');
+	setObjectAttribute1.setAttribName('height2');
 	setObjectAttribute1.setInput(JsConnectionPointType.TRIGGER, onObjectAttributeUpdate1);
 	setObjectAttribute1.setInput('val', getObjectAttribute1);
 	setObjectAttribute1.setAttribType(JsConnectionPointType.STRING);
@@ -135,7 +135,7 @@ QUnit.test('js/onObjectAttributeUpdate with vector2', async (assert) => {
 	const floatToVec3_1 = actor1.createNode('floatToVec3');
 	const vec2ToFloat_1 = actor1.createNode('vec2ToFloat');
 
-	onObjectAttributeUpdate1.p.attribName.set('statePos');
+	onObjectAttributeUpdate1.setAttribName('statePos');
 	onObjectAttributeUpdate1.setAttribType(JsConnectionPointType.VECTOR2);
 
 	setObjectPosition1.setInput(JsConnectionPointType.TRIGGER, onObjectAttributeUpdate1);
@@ -143,7 +143,7 @@ QUnit.test('js/onObjectAttributeUpdate with vector2', async (assert) => {
 
 	floatToVec3_1.setInput(0, vec2ToFloat_1, 'x');
 	floatToVec3_1.setInput(1, vec2ToFloat_1, 'y');
-	vec2ToFloat_1.setInput(0, onObjectAttributeUpdate1, OnObjectAttributeUpdateActorNode.OUTPUT_NEW_VAL);
+	vec2ToFloat_1.setInput(0, onObjectAttributeUpdate1, OnObjectAttributeUpdateJsNode.OUTPUT_NEW_VAL);
 
 	const container = await actor1.compute();
 	const object = container.coreContent()!.threejsObjects()[0] as Mesh;
@@ -192,11 +192,11 @@ QUnit.test('js/onObjectAttributeUpdate with vector3', async (assert) => {
 	const onObjectAttributeUpdate1 = actor1.createNode('onObjectAttributeUpdate');
 	const setObjectPosition1 = actor1.createNode('setObjectPosition');
 
-	onObjectAttributeUpdate1.p.attribName.set('statePos');
+	onObjectAttributeUpdate1.setAttribName('statePos');
 	onObjectAttributeUpdate1.setAttribType(JsConnectionPointType.VECTOR3);
 
 	setObjectPosition1.setInput(JsConnectionPointType.TRIGGER, onObjectAttributeUpdate1);
-	setObjectPosition1.setInput('position', onObjectAttributeUpdate1, OnObjectAttributeUpdateActorNode.OUTPUT_NEW_VAL);
+	setObjectPosition1.setInput('position', onObjectAttributeUpdate1, OnObjectAttributeUpdateJsNode.OUTPUT_NEW_VAL);
 
 	const container = await actor1.compute();
 	const object = container.coreContent()!.threejsObjects()[0] as Mesh;
@@ -247,7 +247,7 @@ QUnit.test('js/onObjectAttributeUpdate with vector4', async (assert) => {
 	const floatToVec3_1 = actor1.createNode('floatToVec3');
 	const vec4ToFloat_1 = actor1.createNode('vec4ToFloat');
 
-	onObjectAttributeUpdate1.p.attribName.set('statePos');
+	onObjectAttributeUpdate1.setAttribName('statePos');
 	onObjectAttributeUpdate1.setAttribType(JsConnectionPointType.VECTOR4);
 
 	setObjectPosition1.setInput(JsConnectionPointType.TRIGGER, onObjectAttributeUpdate1);
@@ -256,7 +256,7 @@ QUnit.test('js/onObjectAttributeUpdate with vector4', async (assert) => {
 	floatToVec3_1.setInput(0, vec4ToFloat_1, 'x');
 	floatToVec3_1.setInput(1, vec4ToFloat_1, 'y');
 	floatToVec3_1.setInput(2, vec4ToFloat_1, 'z');
-	vec4ToFloat_1.setInput(0, onObjectAttributeUpdate1, OnObjectAttributeUpdateActorNode.OUTPUT_NEW_VAL);
+	vec4ToFloat_1.setInput(0, onObjectAttributeUpdate1, OnObjectAttributeUpdateJsNode.OUTPUT_NEW_VAL);
 
 	const container = await actor1.compute();
 	const object = container.coreContent()!.threejsObjects()[0] as Mesh;

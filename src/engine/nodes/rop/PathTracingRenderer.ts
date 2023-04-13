@@ -22,7 +22,7 @@ import {
 	PhysicalSpotLight,
 	IESLoader,
 	// @ts-ignore
-} from 'three-gpu-pathtracer';
+} from '../../core/thirdParty/three-gpu-pathtracer';
 import {PathTracingRendererContainer} from './utils/pathTracing/PathTracingRendererContainer';
 import {BaseNodeType} from '../_Base';
 import {CoreSceneObjectsFactory} from '../../../core/CoreSceneObjectsFactory';

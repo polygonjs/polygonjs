@@ -1,6 +1,6 @@
 import {Mesh} from 'three';
 import {CoreSleep} from '../../../../src/core/Sleep';
-import {OnPerformanceChangeActorNode} from '../../../../src/engine/nodes/actor/OnPerformanceChange';
+import {OnPerformanceChangeJsNode} from '../../../../src/engine/nodes/js/OnPerformanceChange';
 import {GeoObjNode} from '../../../../src/engine/nodes/obj/Geo';
 import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Js';
 import {RendererUtils} from '../../../helpers/RendererUtils';
@@ -38,12 +38,12 @@ QUnit.test('js/onPerformanceChange', async (assert) => {
 	setObjectPosition1.setInput(
 		JsConnectionPointType.TRIGGER,
 		onPerformanceChange1,
-		OnPerformanceChangeActorNode.OUTPUT_NAME_BELOW
+		OnPerformanceChangeJsNode.OUTPUT_NAME_BELOW
 	);
 	setObjectPosition2.setInput(
 		JsConnectionPointType.TRIGGER,
 		onPerformanceChange1,
-		OnPerformanceChangeActorNode.OUTPUT_NAME_ABOVE
+		OnPerformanceChangeJsNode.OUTPUT_NAME_ABOVE
 	);
 
 	setObjectPosition1.p.position.set([0, 1, 0]);

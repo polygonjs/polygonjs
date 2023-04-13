@@ -3,9 +3,9 @@ import {Scene, Camera, MeshBasicMaterial} from 'three';
 import {FullScreenQuad} from 'three/examples/jsm/postprocessing/Pass';
 import {AbstractRenderer} from '../../../../viewers/Common';
 // @ts-ignore
-import type {PathTracingRenderer} from 'three-gpu-pathtracer';
+import type {PathTracingRenderer} from '../../core/thirdParty/three-gpu-pathtracer';
 // @ts-ignore
-import {PathTracingSceneWorker} from 'three-gpu-pathtracer/src/workers/PathTracingSceneWorker.js';
+import {PathTracingSceneWorker} from '../../core/thirdParty/three-gpu-pathtracer';
 
 export class PathTracingRendererContainer implements AbstractRenderer {
 	public samplesPerFrame = 1;

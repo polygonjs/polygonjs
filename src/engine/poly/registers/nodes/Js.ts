@@ -437,8 +437,8 @@ export interface JsNodeChildrenMap {
 	setObjectScale: SetObjectScaleJsNode;
 	setObjectVisible: SetObjectVisibleJsNode;
 	setParam: SetParamJsNode;
-	setPerspectiveCameraFovJsNode: SetPerspectiveCameraFovJsNode;
-	setPerspectiveCameraNearFarJsNode: SetPerspectiveCameraNearFarJsNode;
+	setPerspectiveCameraFov: SetPerspectiveCameraFovJsNode;
+	setPerspectiveCameraNearFar: SetPerspectiveCameraNearFarJsNode;
 	setPhysicsRBDAngularVelocity: SetPhysicsRBDAngularVelocityJsNode;
 	setPhysicsRBDLinearVelocity: SetPhysicsRBDLinearVelocityJsNode;
 	setPhysicsRBDPosition: SetPhysicsRBDPositionJsNode;

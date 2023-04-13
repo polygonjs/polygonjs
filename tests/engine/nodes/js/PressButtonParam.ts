@@ -1,6 +1,6 @@
 import {IntegerParam} from './../../../../src/engine/params/Integer';
 import {CoreSleep} from '../../../../src/core/Sleep';
-import {SetParamActorNode} from '../../../../src/engine/nodes/actor/SetParam';
+import {SetParamJsNodeInputName} from '../../../../src/engine/nodes/js/SetParam';
 import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Js';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 
@@ -20,7 +20,7 @@ QUnit.test('js/pressButtonParam', async (assert) => {
 	const setParam1 = actor1.createNode('setParam');
 	setParam1.p.param.setParam(checkedParam);
 	setParam1.setParamType(JsConnectionPointType.INT);
-	(setParam1.params.get(SetParamActorNode.INPUT_NAME_VAL)! as IntegerParam).set(2);
+	(setParam1.params.get(SetParamJsNodeInputName.val)! as IntegerParam).set(2);
 	setParam1.setInput(JsConnectionPointType.TRIGGER, onManualTrigger2);
 
 	const onManualTrigger1 = actor1.createNode('onManualTrigger');

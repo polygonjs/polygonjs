@@ -1,6 +1,6 @@
 import {ASSETS_ROOT} from '../../../../src/core/loader/AssetsUtils';
 import {CoreSleep} from '../../../../src/core/Sleep';
-import {GetVideoPropertyActorNodeOutputName} from '../../../../src/engine/nodes/actor/GetVideoProperty';
+import {GetVideoPropertyJsNodeOutputName} from '../../../../src/engine/nodes/js/GetVideoProperty';
 import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Js';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 
@@ -34,7 +34,7 @@ QUnit.test('js/GetVideoProperty', async (assert) => {
 	getVideoProperty1.p.node.setNode(video1);
 
 	setObjectVisible1.setInput(JsConnectionPointType.TRIGGER, onTick1);
-	setObjectVisible1.setInput('visible', getVideoProperty1, GetVideoPropertyActorNodeOutputName.playing);
+	setObjectVisible1.setInput('visible', getVideoProperty1, GetVideoPropertyJsNodeOutputName.playing);
 
 	const container = await actor1.compute();
 	const object = container.coreContent()!.threejsObjects()[0];
@@ -62,7 +62,7 @@ QUnit.test('js/GetVideoProperty', async (assert) => {
 		assert.equal(object.visible, true, 'visible');
 
 		// check muted prop
-		setObjectVisible1.setInput('visible', getVideoProperty1, GetVideoPropertyActorNodeOutputName.muted);
+		setObjectVisible1.setInput('visible', getVideoProperty1, GetVideoPropertyJsNodeOutputName.muted);
 		await CoreSleep.sleep(100);
 		assert.equal(object.visible, true, 'visible');
 

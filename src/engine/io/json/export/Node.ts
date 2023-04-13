@@ -54,6 +54,7 @@ export interface NodeJsonExporterUIData {
 	nodes?: PolyDictionary<NodeJsonExporterUIData>;
 }
 export type NodeJSONShadersData = PolyDictionary<PolyDictionary<string>>;
+export type NodeJSONFunctionBodiesData = PolyDictionary<string>;
 
 type BaseNodeTypeWithIO = TypedNode<NodeContext, any>;
 
@@ -216,22 +217,47 @@ export class NodeJsonExporter<T extends BaseNodeTypeWithIO> {
 		}
 		return data;
 	}
-	async shaders(data: NodeJSONShadersData, options: JSONExporterDataRequestOption = {}): Promise<void> {
+	async persistedConfigData(
+		shadersData: NodeJSONShadersData,
+		jsFunctionBodiesData: NodeJSONFunctionBodiesData,
+		options: JSONExporterDataRequestOption = {}
+	): Promise<void> {
 		const children = this._node.children();
 		if (children.length > 0) {
 			for (let child of children) {
 				const node_exporter = this.dispatcher.dispatchNode(child);
-				await node_exporter.shaders(data);
+				await node_exporter.persistedConfigData(shadersData, jsFunctionBodiesData, options);
 			}
 		}
 
 		if (this._node.persisted_config) {
 			const persisted_config_data = await this._node.persisted_config.toData();
 			if (persisted_config_data) {
-				data[this._node.path()] = persisted_config_data.shaders || {};
+				if (persisted_config_data.shaders) {
+					shadersData[this._node.path()] = persisted_config_data.shaders;
+				}
+				if (persisted_config_data.functionBody) {
+					jsFunctionBodiesData[this._node.path()] = persisted_config_data.functionBody;
+				}
 			}
 		}
 	}
+	// async jsFunctionBodies(data: NodeJSONFunctionBodiesData, options: JSONExporterDataRequestOption = {}): Promise<void> {
+	// 	const children = this._node.children();
+	// 	if (children.length > 0) {
+	// 		for (let child of children) {
+	// 			const node_exporter = this.dispatcher.dispatchNode(child);
+	// 			await node_exporter.jsFunctionBodies(data);
+	// 		}
+	// 	}
+
+	// 	if (this._node.persisted_config) {
+	// 		const persisted_config_data = await this._node.persisted_config.toData();
+	// 		if (persisted_config_data && persisted_config_data.functionBody) {
+	// 			data[this._node.path()] = persisted_config_data.functionBody
+	// 		}
+	// 	}
+	// }
 
 	private _isRoot() {
 		return this._node.parent() === null && this._node.graphNodeId() == this._node.root().graphNodeId();
