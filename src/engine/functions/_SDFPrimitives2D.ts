@@ -1,6 +1,6 @@
 import {Vector2} from 'three';
 import {absV2} from './_VectorUtils';
-import {_sizzleVec3XY, _sizzleVec3XZ, _sizzleVec3YZ} from './Sizzle';
+import {_sizzleVec3XY, _sizzleVec3XZ, _sizzleVec3YZ} from './_Sizzle';
 import {NamedFunction4} from './_Base';
 // float sdBox( in vec2 p, in vec2 b )
 // {

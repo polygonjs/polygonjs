@@ -11,7 +11,7 @@ import {BaseUserInputJsNode} from './_BaseUserInput';
 import {CoreEventEmitter, EVENT_EMITTERS, EVENT_EMITTER_PARAM_MENU_OPTIONS} from '../../../core/event/CoreEventEmitter';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 import {Poly} from '../../Poly';
-import {KeyModifierRequirement, KEY_MODIFIER_REQUIREMENTS} from '../../functions/KeyboardEventMatchesConfig';
+import {KeyModifierRequirement, KEY_MODIFIER_REQUIREMENTS} from '../../functions/_KeyboardEventMatchesConfig';
 
 const KEY_MENU_ENTRIES = {menu: {entries: KEY_MODIFIER_REQUIREMENTS.map((name, value) => ({name, value}))}};
 const OPTIONAL_ENTRY = KEY_MODIFIER_REQUIREMENTS.indexOf(KeyModifierRequirement.OPTIONAL);

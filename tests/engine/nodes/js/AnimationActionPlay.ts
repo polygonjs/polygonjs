@@ -6,7 +6,7 @@ import {AnimationActionJsNode} from '../../../../src/engine/nodes/js/AnimationAc
 import {
 	findOrCreateAnimationMixer,
 	getMostActiveAnimationActionFromMixer,
-} from '../../../../src/engine/functions/AnimationMixer';
+} from '../../../../src/engine/functions/_AnimationMixer';
 
 QUnit.test('js/animationActionPlay', async (assert) => {
 	const scene = window.scene;

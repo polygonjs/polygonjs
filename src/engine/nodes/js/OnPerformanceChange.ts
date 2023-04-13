@@ -22,7 +22,7 @@ import {ShadersCollectionController} from './code/utils/ShadersCollectionControl
 import {Poly} from '../../Poly';
 // import {triggerableMethodCalls} from './code/assemblers/actor/ActorAssemblerUtils';
 import {InitFunctionJsDefinition, TriggeringJsDefinition} from './utils/JsDefinition';
-import {PerformanceChangeEvent, PERFORMANCE_CHANGE_EVENTS} from '../../functions/Performance';
+import {PerformanceChangeEvent, PERFORMANCE_CHANGE_EVENTS} from '../../functions/_Performance';
 import {
 	getConnectedOutputNodes,
 	getOutputIndices,

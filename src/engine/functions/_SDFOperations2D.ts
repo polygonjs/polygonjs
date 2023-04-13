@@ -1,5 +1,5 @@
 import {Vector2, Vector3} from 'three';
-import {_sizzleVec3XY, _sizzleVec3XZ, _sizzleVec3YZ} from './Sizzle';
+import {_sizzleVec3XY, _sizzleVec3XZ, _sizzleVec3YZ} from './_Sizzle';
 import {NamedFunction4} from './_Base';
 
 // float SDFExtrudeX( in vec3 p, in float sdf, in float h )

@@ -10,7 +10,7 @@ import {BackgroundMode} from '../../../../src/engine/nodes/manager/utils/Scene/B
 import {
 	findOrCreateAnimationMixer,
 	getMostActiveAnimationActionFromMixer,
-} from '../../../../src/engine/functions/AnimationMixer';
+} from '../../../../src/engine/functions/_AnimationMixer';
 
 function addReflector(scene: PolyScene) {
 	const geo2 = scene.root().createNode('geo');

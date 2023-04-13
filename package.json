@@ -47,7 +47,8 @@
 		"bundle_types_mid": "rm -f public/bundled_types.d.ts && node_modules/dts-bundle-generator/dist/bin/dts-bundle-generator.js --config config/dts_bundle/dts_bundle.config.json",
 		"bundle_types_post": "node config/dts_bundle/dts_bundle_post.js",
 		"bundle_types": "yarn bundle_types_pre && yarn bundle_types_mid; yarn bundle_types_post",
-		"build_opencascade": "cd src/core/geometry/cad/config && docker run --rm -it -v \"$(pwd):/src\" -u \"$(id -u):$(id -g)\" donalffons/opencascade.js config.yml && mv ./polygonjs-occt.* ../build && cd ../../../../../ && xmessage 'opencascade custom build completed'"
+		"build_opencascade": "cd src/core/geometry/cad/config && docker run --rm -it -v \"$(pwd):/src\" -u \"$(id -u):$(id -g)\" donalffons/opencascade.js config.yml && mv ./polygonjs-occt.* ../build && cd ../../../../../ && xmessage 'opencascade custom build completed'",
+		"create_functions_import_file": "esbuild config/functions/createImportFile.ts --platform=node --bundle --outfile=config/functions/createImportFile.js && node config/functions/createImportFile.js"
 	},
 	"dependencies": {
 		"@dimforge/rapier3d-compat": "0.11.1",

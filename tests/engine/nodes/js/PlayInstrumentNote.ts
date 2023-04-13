@@ -2,7 +2,7 @@ import {Object3D} from 'three';
 import {AttribClass} from '../../../../src/core/geometry/Constant';
 import {CoreObject} from '../../../../src/core/geometry/Object';
 import {CoreSleep} from '../../../../src/core/Sleep';
-import {AUDIO_ATTRIB_NAME_LAST_NOTE} from '../../../../src/engine/functions/Audio';
+import {AUDIO_ATTRIB_NAME_LAST_NOTE} from '../../../../src/engine/functions/_Audio';
 import {AMSynthAudioNode} from '../../../../src/engine/nodes/audio/AMSynth';
 import {EnvelopeAudioNode} from '../../../../src/engine/nodes/audio/Envelope';
 import {NullAudioNode} from '../../../../src/engine/nodes/audio/Null';

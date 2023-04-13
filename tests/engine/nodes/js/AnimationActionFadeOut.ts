@@ -6,7 +6,7 @@ import {AnimationActionJsNode} from '../../../../src/engine/nodes/js/AnimationAc
 import {
 	findOrCreateAnimationMixer,
 	existingAnimationActionsFromAnimationMixer,
-} from '../../../../src/engine/functions/AnimationMixer';
+} from '../../../../src/engine/functions/_AnimationMixer';
 
 QUnit.test('js/animationActionFadeOut', async (assert) => {
 	const scene = window.scene;

@@ -10,7 +10,7 @@ import {PolyScene} from '../../../../src/engine/scene/PolyScene';
 import {
 	findOrCreateAnimationMixer,
 	getMostActiveAnimationActionFromMixer,
-} from '../../../../src/engine/functions/AnimationMixer';
+} from '../../../../src/engine/functions/_AnimationMixer';
 
 function addWater(scene: PolyScene) {
 	const geo2 = scene.root().createNode('geo');
