@@ -152,6 +152,9 @@ export class SceneJsonImporter {
 	shadersData() {
 		return this._data['shaders'];
 	}
+	jsFunctionBodiesData() {
+		return this._data['jsFunctionBodies'];
+	}
 
 	//
 	//

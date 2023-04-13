@@ -57,6 +57,7 @@ export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 
 		if (data.persisted_config) {
 			const shadersData = scene_importer.shadersData();
+			const jsFunctionBodiesData = scene_importer.jsFunctionBodiesData();
 			if (shadersData) {
 				let shaders = shadersData[this._node.path()];
 				// make sure this is never undefined
@@ -64,6 +65,12 @@ export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 					shaders = {};
 				}
 				data.persisted_config.shaders = shaders;
+			}
+			if (jsFunctionBodiesData) {
+				const jsFunctionBodyData = jsFunctionBodiesData[this._node.path()];
+				if (jsFunctionBodyData) {
+					data.persisted_config.functionBody = jsFunctionBodyData;
+				}
 			}
 			this.set_persisted_config(data.persisted_config);
 		}

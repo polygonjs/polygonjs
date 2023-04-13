@@ -203,6 +203,7 @@ export class SceneDataManifestImporter {
 			properties: assembleData.properties,
 			ui: assembleData.ui,
 			shaders: assembleData.shaders,
+			jsFunctionBodies: assembleData.jsFunctionBodies,
 		};
 
 		for (let i = 0; i < manifestNodes.length; i++) {

@@ -4,6 +4,7 @@ import prettier from 'prettier/standalone';
 import parserBabel from 'prettier/parser-babel';
 
 import {FUNCTION_NAME_BY_FILE_NAME} from './FunctionsDict';
+import {FUNCTION_TEMPLATE_BY_FUNCTION_NAME} from './FunctionsTemplateTypes';
 
 const ALL_REGISTER_FILE_PATH = 'src/engine/poly/registers/functions/All.ts';
 const FUNCTIONS_FOLDER_PATH = 'src/engine/functions';
@@ -22,7 +23,7 @@ function formatJs(JSContent: string) {
 }
 
 const PRINT = true;
-const PERFORM = false;
+const PERFORM = true;
 function createFileForFunction(functionName: string, originalFileName: string) {
 	const fileContent = formatJs(`import { ${functionName} } from './_${originalFileName}'
 	export { ${functionName} }
@@ -57,8 +58,12 @@ function createFunctionsRegisterAll() {
 		for (const functionName of functionNames) {
 			createFileForFunction(functionName, originalFileName);
 
+			const templateElement = FUNCTION_TEMPLATE_BY_FUNCTION_NAME[functionName];
+			const functionNameWithTemplate =
+				templateElement != null ? `${functionName}<${templateElement}>` : functionName;
+
 			const importLine = `import { ${functionName} } from '../../../functions/${functionName}'`;
-			const typeLine = ` ${functionName}:${functionName} `;
+			const typeLine = ` ${functionName}:${functionNameWithTemplate} `;
 			if (fileLines.names.has(functionName)) {
 				throw `${functionName} already listed`;
 			}
@@ -76,6 +81,12 @@ function createFunctionsRegisterAll() {
 
 	// create file content
 	const fileContent = formatJs(`
+import type {PolyEngine} from '../../../Poly';
+import type {Color, Vector2, Vector3, Vector4} from 'three';
+import type {PrimitiveArrayElement, VectorArrayElement} from '../../../nodes/utils/io/connections/Js';
+import type { MathArrayVectorElement } from '../../../functions/_MathGeneric';
+//
+
 ${fileLines.import.join(';\n')}
 
 export interface NamedFunctionMap {

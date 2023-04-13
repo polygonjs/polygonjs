@@ -160,7 +160,6 @@ export const FUNCTION_NAME_BY_FILE_NAME: Record<string, string[]> = {
 		'mathVectorArray_3',
 		'mathVectorArray_4',
 		'mathVectorArray_5',
-		'MathArrayVectorElement',
 	],
 	Math: ['clamp', 'complement', 'fit', 'fitClamp', 'mix', 'multAdd', 'negate', 'rand', 'random', 'smoothstep'],
 	Mult: ['multNumber', 'multVector', 'multVectorNumber'],
