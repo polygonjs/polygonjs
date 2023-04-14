@@ -7,7 +7,7 @@ import {PolyDictionary} from '../../../types/GlobalTypes';
 import {MathVectorFunction3vvf, _vectorFunctionName_3vvf} from '../../functions/_MathGeneric';
 import {Poly} from '../../Poly';
 import {JsConnectionPointType, JsConnectionPointTypeFromArrayTypeMap} from '../utils/io/connections/Js';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {MathFunctionArg3OperationFactory, DEFAULT_ALLOWED_TYPES, MathFunctionData} from './_Math_Arg1Operation';
 
 enum LerpInput {
@@ -26,7 +26,7 @@ export class LerpJsNode extends MathFunctionArg3OperationFactory('lerp', {
 	inputPrefix: 'in',
 	out: 'lerp',
 }) {
-	protected _coreFunction(shadersCollectionController: ShadersCollectionController) {
+	protected _coreFunction(shadersCollectionController: JsLinesCollectionController) {
 		Poly.namedFunctionsRegister.getFunction(FUNCTION_NAME, this, shadersCollectionController).asString('', '', '');
 
 		return FUNCTION_NAME;

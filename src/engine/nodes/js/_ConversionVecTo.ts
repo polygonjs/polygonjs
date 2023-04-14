@@ -3,7 +3,7 @@ import {TypedJsNode} from './_Base';
 import {ParamType} from '../../poly/ParamType';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {JsConnectionPointType, JsConnectionPoint} from '../utils/io/connections/Js';
-import {ShadersCollectionController, ComputedValueJsDefinitionData} from './code/utils/ShadersCollectionController';
+import {JsLinesCollectionController, ComputedValueJsDefinitionData} from './code/utils/JsLinesCollectionController';
 import {Color, Vector2, Vector3, Vector4} from 'three';
 import {Poly} from '../../Poly';
 
@@ -38,7 +38,7 @@ function VecToJsFactory(type: string, options: VecToJsOptions): typeof BaseVecTo
 			this.addParam(param_type, 'vec', components.map((c) => 0) as Number2);
 		}
 
-		override setLines(shadersCollectionController: ShadersCollectionController) {
+		override setLines(shadersCollectionController: JsLinesCollectionController) {
 			// const body_lines: string[] = [];
 
 			const vec = this.variableForInput(shadersCollectionController, 'vec');
@@ -106,7 +106,7 @@ export class Vec3ToVec2JsNode extends TypedJsNode<Vec3ToVec2ParamsJsConfig> {
 		]);
 	}
 
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setLines(shadersCollectionController: JsLinesCollectionController) {
 		const linesData: ComputedValueJsDefinitionData[] = [];
 
 		const out_vec2 = Vec3ToVec2JsNode.OUTPUT_NAME_VEC2;
@@ -161,7 +161,7 @@ export class Vec2ToVec3JsNode extends TypedJsNode<Vec2ToVec3ParamsJsConfig> {
 		]);
 	}
 
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setLines(shadersCollectionController: JsLinesCollectionController) {
 		const linesData: ComputedValueJsDefinitionData[] = [];
 
 		const out_vec3 = Vec2ToVec3JsNode.OUTPUT_NAME_VEC3;
@@ -214,7 +214,7 @@ export class Vec3ToVec4JsNode extends TypedJsNode<Vec3ToVec4ParamsJsConfig> {
 		]);
 	}
 
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setLines(shadersCollectionController: JsLinesCollectionController) {
 		const linesData: ComputedValueJsDefinitionData[] = [];
 
 		// const in_vec3 = this.variableForInputParam(shadersCollectionController, this.p.Vector3);
@@ -261,7 +261,7 @@ export class Vec3ToColorJsNode extends TypedJsNode<Vec3ToColorParamsJsConfig> {
 		]);
 	}
 
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setLines(shadersCollectionController: JsLinesCollectionController) {
 		const linesData: ComputedValueJsDefinitionData[] = [];
 
 		const vec3 = this.variableForInputParam(shadersCollectionController, this.p.vec3);
@@ -302,7 +302,7 @@ export class ColorToVec3JsNode extends TypedJsNode<ColorToVec3ParamsJsConfig> {
 		]);
 	}
 
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setLines(shadersCollectionController: JsLinesCollectionController) {
 		const linesData: ComputedValueJsDefinitionData[] = [];
 
 		const color = this.variableForInputParam(shadersCollectionController, this.p.color);

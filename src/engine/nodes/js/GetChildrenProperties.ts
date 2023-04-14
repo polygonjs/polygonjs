@@ -7,7 +7,7 @@
 import {ParamlessTypedJsNode} from './_Base';
 import {JsConnectionPoint, JsConnectionPointType, JS_CONNECTION_POINT_IN_NODE_DEF} from '../utils/io/connections/Js';
 import {inputObject3D} from './_BaseObject3D';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {Poly} from '../../Poly';
 import {PrimitiveArray, VectorArray} from './code/assemblers/_BaseJsPersistedConfigUtils';
 import {Quaternion, Vector3} from 'three';
@@ -151,7 +151,7 @@ export class GetChildrenPropertiesJsNode extends ParamlessTypedJsNode {
 		]);
 	}
 
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setLines(shadersCollectionController: JsLinesCollectionController) {
 		const usedOutputNames = this.io.outputs.used_output_names();
 		const object3D = inputObject3D(this, shadersCollectionController);
 		const _v3 = (

@@ -12,19 +12,23 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {GlConnectionPointType, GlConnectionPoint} from '../utils/io/connections/Gl';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 
-enum SDFRevolutionAxis {
+enum SDFRevolutionGlAxis {
 	X = 'X',
 	Y = 'Y',
 	Z = 'Z',
 }
-const SDF_REVOLUTION_AXISES: SDFRevolutionAxis[] = [SDFRevolutionAxis.X, SDFRevolutionAxis.Y, SDFRevolutionAxis.Z];
+const SDF_REVOLUTION_AXISES: SDFRevolutionGlAxis[] = [
+	SDFRevolutionGlAxis.X,
+	SDFRevolutionGlAxis.Y,
+	SDFRevolutionGlAxis.Z,
+];
 
 const OUTPUT_NAME = 'p';
 class SDFRevolutionGlParamsConfig extends NodeParamsConfig {
 	position = ParamConfig.VECTOR3([0, 0, 0], {hidden: true});
 	center = ParamConfig.VECTOR3([0, 0, 0]);
 	radius = ParamConfig.FLOAT(1);
-	axis = ParamConfig.INTEGER(SDF_REVOLUTION_AXISES.indexOf(SDFRevolutionAxis.Y), {
+	axis = ParamConfig.INTEGER(SDF_REVOLUTION_AXISES.indexOf(SDFRevolutionGlAxis.Y), {
 		menu: {
 			entries: SDF_REVOLUTION_AXISES.map((name, value) => ({name, value})),
 		},
@@ -43,7 +47,7 @@ export class SDFRevolutionGlNode extends BaseSDFGlNode<SDFRevolutionGlParamsConf
 			new GlConnectionPoint(OUTPUT_NAME, GlConnectionPointType.VEC2),
 		]);
 	}
-	setAxis(axis: SDFRevolutionAxis) {
+	setAxis(axis: SDFRevolutionGlAxis) {
 		this.p.axis.set(SDF_REVOLUTION_AXISES.indexOf(axis));
 	}
 

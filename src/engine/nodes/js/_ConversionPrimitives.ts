@@ -6,7 +6,7 @@
 import {TypedJsNode} from './_Base';
 import {JsConnectionPointType, JsConnectionPoint} from '../utils/io/connections/Js';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {Poly} from '../../Poly';
 
 //
@@ -29,7 +29,7 @@ export class IntToBoolJsNode extends TypedJsNode<IntToBoolJsParamsConfig> {
 			new JsConnectionPoint(JsConnectionPointType.BOOLEAN, JsConnectionPointType.BOOLEAN),
 		]);
 	}
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setLines(shadersCollectionController: JsLinesCollectionController) {
 		const arg0 = this.variableForInputParam(shadersCollectionController, this.p.int);
 		const varName = this.jsVarName(JsConnectionPointType.BOOLEAN);
 		const func = Poly.namedFunctionsRegister.getFunction('intToBool', this, shadersCollectionController);
@@ -60,7 +60,7 @@ export class BoolToIntJsNode extends TypedJsNode<BoolToIntJsParamsConfig> {
 			new JsConnectionPoint(JsConnectionPointType.INT, JsConnectionPointType.INT),
 		]);
 	}
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setLines(shadersCollectionController: JsLinesCollectionController) {
 		const arg0 = this.variableForInputParam(shadersCollectionController, this.p.bool);
 		const varName = this.jsVarName(JsConnectionPointType.INT);
 		const func = Poly.namedFunctionsRegister.getFunction('boolToInt', this, shadersCollectionController);
@@ -91,7 +91,7 @@ export class IntToFloatJsNode extends TypedJsNode<IntToFloatJsParamsConfig> {
 			new JsConnectionPoint(JsConnectionPointType.FLOAT, JsConnectionPointType.FLOAT),
 		]);
 	}
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setLines(shadersCollectionController: JsLinesCollectionController) {
 		const arg0 = this.variableForInputParam(shadersCollectionController, this.p.int);
 		const varName = this.jsVarName(JsConnectionPointType.FLOAT);
 		const func = Poly.namedFunctionsRegister.getFunction('intToFloat', this, shadersCollectionController);
@@ -122,7 +122,7 @@ export class FloatToIntJsNode extends TypedJsNode<FloatToIntJsParamsConfig> {
 			new JsConnectionPoint(JsConnectionPointType.INT, JsConnectionPointType.INT),
 		]);
 	}
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setLines(shadersCollectionController: JsLinesCollectionController) {
 		const arg0 = this.variableForInputParam(shadersCollectionController, this.p.float);
 		const varName = this.jsVarName(JsConnectionPointType.INT);
 		const func = Poly.namedFunctionsRegister.getFunction('floatToInt', this, shadersCollectionController);

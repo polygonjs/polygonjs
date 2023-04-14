@@ -7,7 +7,7 @@
 import {JsConnectionPointType} from '../utils/io/connections/Js';
 import {TypedJsNode} from './_Base';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 
 class NullJsParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new NullJsParamsConfig();
@@ -40,7 +40,7 @@ export class NullJsNode extends TypedJsNode<NullJsParamsConfig> {
 		const firstType = this._expectedInputTypes()[0];
 		return [firstType];
 	}
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setLines(shadersCollectionController: JsLinesCollectionController) {
 		const inputValue = this.variableForInput(shadersCollectionController, this._expectedInputName(0));
 		const dataType = this._expectedInputTypes()[0];
 		const varName = this.jsVarName(this._expectedOutputName(0));

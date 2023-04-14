@@ -6,7 +6,7 @@
 import {TypedJsNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {JsConnectionPoint, JsConnectionPointType, JS_CONNECTION_POINT_IN_NODE_DEF} from '../utils/io/connections/Js';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {Poly} from '../../Poly';
 import {inputObject3D} from './_BaseObject3D';
 
@@ -40,7 +40,7 @@ export class GetObjectJsNode extends TypedJsNode<GetObjectJsParamsConfig> {
 			new JsConnectionPoint(JsConnectionPointType.OBJECT_3D, JsConnectionPointType.OBJECT_3D),
 		]);
 	}
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setLines(shadersCollectionController: JsLinesCollectionController) {
 		const object3D = inputObject3D(this, shadersCollectionController);
 		const getCurrentObject = this.variableForInputParam(shadersCollectionController, this.p.getCurrentObject);
 		const mask = this.variableForInputParam(shadersCollectionController, this.p.mask);

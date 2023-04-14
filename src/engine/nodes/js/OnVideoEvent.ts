@@ -19,7 +19,7 @@ import {
 	VIDEO_EVENTS,
 	//   VIDEO_EVENT_INDICES
 } from '../../../core/VideoEvent';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {
 	getConnectedOutputNodes,
 	getOutputIndices,
@@ -61,7 +61,7 @@ export class OnVideoEventJsNode extends TypedJsNode<OnVideoEventJsParamsConfig> 
 		);
 	}
 	override setTriggeringLines(
-		shadersCollectionController: ShadersCollectionController,
+		shadersCollectionController: JsLinesCollectionController,
 		triggeredMethods: string
 	): void {
 		const node = this.pv.node.node();

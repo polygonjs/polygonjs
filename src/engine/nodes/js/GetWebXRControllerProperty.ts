@@ -8,7 +8,7 @@ import {TypedJsNode} from './_Base';
 import {JsConnectionPoint, JsConnectionPointType} from '../utils/io/connections/Js';
 import {Ray, Vector3} from 'three';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {Poly} from '../../Poly';
 import {inputObject3D} from './_BaseObject3D';
 
@@ -60,7 +60,7 @@ export class GetWebXRControllerPropertyJsNode extends TypedJsNode<GetWebXRContro
 			),
 		]);
 	}
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setLines(shadersCollectionController: JsLinesCollectionController) {
 		const usedOutputNames = this.io.outputs.used_output_names();
 		const object3D = inputObject3D(this, shadersCollectionController);
 		const controllerIndex = this.variableForInputParam(shadersCollectionController, this.p.controllerIndex);

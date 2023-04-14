@@ -5,7 +5,7 @@
  *
  */
 import {JsConnectionPointType} from '../utils/io/connections/Js';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {ParamlessTypedJsNode} from './_Base';
 
 const OUTPUT_NAME = 'val';
@@ -55,7 +55,7 @@ export class TwoWaySwitchJsNode extends ParamlessTypedJsNode {
 		return [type];
 	}
 
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setLines(shadersCollectionController: JsLinesCollectionController) {
 		const condition = this.variableForInput(shadersCollectionController, TwoWaySwitchJsNodeInputName.CONDITION);
 		const ifTrue = this.variableForInput(shadersCollectionController, TwoWaySwitchJsNodeInputName.IF_TRUE);
 		const ifFalse = this.variableForInput(shadersCollectionController, TwoWaySwitchJsNodeInputName.IF_FALSE);

@@ -5,7 +5,7 @@ import {ShaderName} from '../../../utils/shaders/ShaderName';
 import {JsDefinitionType, BaseJsDefinition, JsDefinitionTypeMap, TypedJsDefinition} from '../../utils/JsDefinition';
 import {TypedJsDefinitionCollection} from '../../utils/JsDefinitionCollection';
 import {ParamConfigsController} from '../../../../nodes/utils/code/controllers/ParamConfigsController';
-import {ShadersCollectionController} from './ShadersCollectionController';
+import {JsLinesCollectionController} from './JsLinesCollectionController';
 import {CodeFormatter} from './CodeFormatter';
 import {LineType} from './LineType';
 import {JsParamConfig} from './JsParamConfig';
@@ -20,11 +20,11 @@ import {SetUtils} from '../../../../../core/SetUtils';
 import {ActorBuilderNode} from '../../../../scene/utils/ActorsManager';
 // import {connectedTriggerableNodes} from '../assemblers/actor/ActorAssemblerUtils';
 
-type RootNodesForShaderMethod = (shader_name: ShaderName, rootNodes: BaseJsNodeType[]) => BaseJsNodeType[];
+type RootNodesForJsFunctionMethod = (shader_name: ShaderName, rootNodes: BaseJsNodeType[]) => BaseJsNodeType[];
 // let nextId = 1;
 
 export interface CodeBuilderSetCodeLinesOptions {
-	otherFragmentShaderCollectionController?: ShadersCollectionController;
+	otherFragmentShaderCollectionController?: JsLinesCollectionController;
 	actor: {
 		triggeringNodes: Set<BaseJsNodeType>;
 		triggerableNodes: Set<BaseJsNodeType>;
@@ -33,18 +33,18 @@ export interface CodeBuilderSetCodeLinesOptions {
 	};
 }
 
-export class CodeBuilder {
+export class JsCodeBuilder {
 	// private _id = (nextId += 1);
 	private _param_configs_controller: ParamConfigsController<JsParamConfig<ParamType>> = new ParamConfigsController();
 	private _param_configs_set_allowed: boolean = true;
 
-	private _shadersCollectionController: ShadersCollectionController | undefined;
+	private _shadersCollectionController: JsLinesCollectionController | undefined;
 	private _lines: Map<ShaderName, Map<LineType, string[]>> = new Map();
 	// _function_declared: Map<ShaderName, Map<string, boolean>> = new Map();
 
 	constructor(
 		private _nodeTraverser: TypedNodeTraverser<NodeContext.JS>,
-		private _rootNodesByShaderName: RootNodesForShaderMethod,
+		private _rootNodesByShaderName: RootNodesForJsFunctionMethod,
 		private _assembler: BaseJsShaderAssembler
 	) {}
 	nodeTraverser() {
@@ -101,7 +101,7 @@ export class CodeBuilder {
 		// })
 		// await Promise.all(param_promises)
 
-		this._shadersCollectionController = new ShadersCollectionController(
+		this._shadersCollectionController = new JsLinesCollectionController(
 			this.shaderNames(),
 			this.shaderNames()[0],
 			this._assembler

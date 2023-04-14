@@ -9,7 +9,7 @@
 // import {ThreeToGl} from '../../../core/ThreeToGl';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {JsConnectionPointType, JsConnectionPoint} from '../utils/io/connections/Js';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {BaseSDF2DJsNode} from './_BaseSDF2D';
 import {Poly} from '../../Poly';
 
@@ -35,7 +35,7 @@ export class SDF2DRoundedXJsNode extends BaseSDF2DJsNode<SDF2DRoundedXJsParamsCo
 		]);
 	}
 
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setLines(shadersCollectionController: JsLinesCollectionController) {
 		const position = this.variableForInputParam(shadersCollectionController, this.p.position);
 		const center = this.variableForInputParam(shadersCollectionController, this.p.center);
 		const length = this.variableForInputParam(shadersCollectionController, this.p.length);

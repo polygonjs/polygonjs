@@ -14,7 +14,7 @@ import {StringParamLanguage} from '../../params/utils/OptionsController';
 import {TranspiledFilter} from '../utils/code/controllers/TranspiledFilter';
 import {Poly} from '../../Poly';
 import {BaseCodeProcessor, buildCodeNodeFunction} from '../../../core/code/FunctionBuilderUtils';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {inputObject3D} from './_BaseObject3D';
 
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
@@ -29,15 +29,15 @@ export class CodeJsProcessor extends BaseCodeJsProcessor {
 			new JsConnectionPoint(JsConnectionPointType.TRIGGER, JsConnectionPointType.TRIGGER),
 		]);
 	}
-	override setTriggerableLines(shadersCollectionController) {
-		const object3D = inputObject3D(this, shadersCollectionController);
-		const myBoolParam = this.variableForInput(shadersCollectionController, 'myBoolParam');
+	override setTriggerableLines(controller: JsLinesCollectionController) {
+		const object3D = this.inputObject3D(this, controller);
+		const myBoolParam = this.variableForInput(controller, 'myBoolParam');
 
 		const bodyLines = [
 			object3D + '.position.y += ' + myBoolParam + ' ? -1 : 1;',
 			object3D + '.updateMatrix()'
 		];
-		this.addTriggerableLines(shadersCollectionController, bodyLines);
+		this.addTriggerableLines(controller, bodyLines);
 	}
 }
 `;
@@ -59,13 +59,17 @@ export class BaseCodeJsProcessor extends BaseCodeProcessor {
 	}
 
 	initializeProcessor() {}
-	setTriggerableLines(shadersCollectionController: ShadersCollectionController) {}
+	setTriggerableLines(controller: JsLinesCollectionController) {}
 
-	protected variableForInput(shadersCollectionController: ShadersCollectionController, inputName: string) {
-		return this.node.variableForInput(shadersCollectionController, inputName);
+	inputObject3D(processor: BaseCodeJsProcessor, controller: JsLinesCollectionController) {
+		return inputObject3D(this.node, controller);
 	}
-	protected addTriggerableLines(shadersCollectionController: ShadersCollectionController, bodyLines: string[]) {
-		return shadersCollectionController.addTriggerableLines(this.node, bodyLines);
+
+	protected variableForInput(controller: JsLinesCollectionController, inputName: string) {
+		return this.node.variableForInput(controller, inputName);
+	}
+	protected addTriggerableLines(controller: JsLinesCollectionController, bodyLines: string[]) {
+		return controller.addTriggerableLines(this.node, bodyLines);
 	}
 }
 
@@ -111,8 +115,8 @@ export class CodeJsNode extends TypedJsNode<CodeJsParamsConfig> {
 		});
 	}
 
-	override setTriggerableLines(shadersCollectionController: ShadersCollectionController) {
-		this._processor?.setTriggerableLines(shadersCollectionController);
+	override setTriggerableLines(controller: JsLinesCollectionController) {
+		this._processor?.setTriggerableLines(controller);
 	}
 
 	private _compile() {
@@ -131,7 +135,6 @@ export class CodeJsNode extends TypedJsNode<CodeJsParamsConfig> {
 				{
 					['JsConnectionPoint']: JsConnectionPoint,
 					['JsConnectionPointType']: JsConnectionPointType,
-					['inputObject3D']: inputObject3D,
 				}
 			);
 			if (ProcessorClass) {

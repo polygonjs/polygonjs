@@ -11,7 +11,7 @@ import {BaseNodeType} from '../_Base';
 import {JsType} from '../../poly/registers/nodes/types/Js';
 import {ActorBuilderNode} from '../../scene/utils/ActorsManager';
 import {ActorSopNode} from '../sop/Actor';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {nodeMethodName} from './code/assemblers/actor/ActorAssemblerUtils';
 import {EvaluatorMethodName} from './code/assemblers/actor/Evaluator';
 
@@ -45,7 +45,7 @@ export class OnManualTriggerJsNode extends TypedJsNode<OnManualTriggerJsParamsCo
 	}
 
 	override setTriggeringLines(
-		shadersCollectionController: ShadersCollectionController,
+		shadersCollectionController: JsLinesCollectionController,
 		triggeredMethods: string
 	): void {
 		shadersCollectionController.addTriggeringLines(this, [triggeredMethods], {

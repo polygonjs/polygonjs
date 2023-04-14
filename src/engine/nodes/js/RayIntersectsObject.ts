@@ -8,7 +8,7 @@
 
 import {BaseRayObjectJsNode} from './_BaseRayObject';
 import {JsConnectionPoint, JsConnectionPointType, JS_CONNECTION_POINT_IN_NODE_DEF} from '../utils/io/connections/Js';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 // import { Vector3 } from 'three';
 import {Poly} from '../../Poly';
 import {inputObject3D} from './_BaseObject3D';
@@ -26,7 +26,7 @@ export class RayIntersectsObjectJsNode extends BaseRayObjectJsNode {
 			new JsConnectionPoint(OUTPUT_NAME, JsConnectionPointType.BOOLEAN, CONNECTION_OPTIONS),
 		]);
 	}
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setLines(shadersCollectionController: JsLinesCollectionController) {
 		const object3D = inputObject3D(this, shadersCollectionController);
 		const ray = this.variableForInput(shadersCollectionController, JsConnectionPointType.RAY);
 		const out = this.jsVarName(OUTPUT_NAME);

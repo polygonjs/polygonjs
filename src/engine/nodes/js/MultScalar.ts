@@ -7,7 +7,7 @@
 import {PolyDictionary} from '../../../types/GlobalTypes';
 import {JsConnectionPointType} from '../utils/io/connections/Js';
 import {ParamlessTypedJsNode} from './_Base';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {Poly} from '../../Poly';
 import {createVariable} from './code/assemblers/_BaseJsPersistedConfigUtils';
 // import {Color, Vector2, Vector3, Vector4} from 'three';
@@ -56,7 +56,7 @@ export class MultScalarJsNode extends ParamlessTypedJsNode {
 		this.io.connection_points.set_output_name_function(this._expectedOutputName.bind(this));
 	}
 
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setLines(shadersCollectionController: JsLinesCollectionController) {
 		const input = this.variableForInput(shadersCollectionController, this._expectedInputName(0));
 		const scalar = this.variableForInput(shadersCollectionController, this._expectedInputName(1));
 		const varName = this.jsVarName(this._expectedOutputName(0));

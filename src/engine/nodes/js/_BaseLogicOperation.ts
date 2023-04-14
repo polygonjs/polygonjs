@@ -1,6 +1,6 @@
 import {Poly} from '../../Poly';
 import {JsConnectionPointType} from '../utils/io/connections/Js';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {ParamlessTypedJsNode} from './_Base';
 
 // const OUTPUT_NAME = 'val';
@@ -42,7 +42,7 @@ export abstract class BaseLogicOperationJsNode extends ParamlessTypedJsNode {
 	protected abstract _expectedOutputName(index: number): string;
 	protected abstract _functionName(firstType: AllowedType): 'orBooleans' | 'orArrays' | 'andBooleans' | 'andArrays';
 
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setLines(shadersCollectionController: JsLinesCollectionController) {
 		const inputValuesCount = this._expectedInputTypes().length - 1; // -1 as we don't take the last one
 		const inputArgs: string[] = [];
 		for (let i = 0; i < inputValuesCount; i++) {

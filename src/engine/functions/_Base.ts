@@ -2,7 +2,7 @@ import {Object3D} from 'three';
 import {PolyScene} from '../scene/PolyScene';
 import {BaseNodeType} from '../nodes/_Base';
 import {BaseJsNodeType} from '../nodes/js/_Base';
-import {ShadersCollectionController} from '../nodes/js/code/utils/ShadersCollectionController';
+import {JsLinesCollectionController} from '../nodes/js/code/utils/JsLinesCollectionController';
 import {EvaluatorConstant} from '../nodes/js/code/assemblers/actor/Evaluator';
 import {NodeContext} from '../poly/NodeContext';
 import {AssemblerControllerNode} from '../nodes/js/code/Controller';
@@ -22,7 +22,7 @@ export abstract class BaseNamedFunction {
 	public readonly jsNode?: BaseJsNodeType;
 	public readonly functionNode: AssemblerControllerNode<BaseJsShaderAssembler>;
 	protected timeController: TimeController;
-	constructor(node: BaseNodeType, public readonly shadersCollectionController?: ShadersCollectionController) {
+	constructor(node: BaseNodeType, public readonly shadersCollectionController?: JsLinesCollectionController) {
 		this.scene = node.scene();
 		this.timeController = this.scene.timeController;
 		if (node.context() == NodeContext.JS) {

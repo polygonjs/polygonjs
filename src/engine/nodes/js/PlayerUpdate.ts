@@ -9,7 +9,7 @@ import {JsConnectionPoint, JsConnectionPointType, JS_CONNECTION_POINT_IN_NODE_DE
 import {Vector3} from 'three';
 import {CORE_PLAYER_INPUTS} from '../../../core/player/PlayerCommon';
 import {CapsuleSopOperation} from '../../operations/sop/Capsule';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {inputObject3D} from './_BaseObject3D';
 import {Poly} from '../../Poly';
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
@@ -89,7 +89,7 @@ export class PlayerUpdateJsNode extends TypedJsNode<PlayerUpdateJsParamsConfig> 
 		]);
 	}
 
-	override setTriggerableLines(shadersCollectionController: ShadersCollectionController) {
+	override setTriggerableLines(shadersCollectionController: JsLinesCollectionController) {
 		const object3D = inputObject3D(this, shadersCollectionController);
 
 		// action
@@ -105,7 +105,7 @@ export class PlayerUpdateJsNode extends TypedJsNode<PlayerUpdateJsParamsConfig> 
 		shadersCollectionController.addTriggerableLines(this, [bodyLine]);
 	}
 
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setLines(shadersCollectionController: JsLinesCollectionController) {
 		const object3D = inputObject3D(this, shadersCollectionController);
 
 		// get

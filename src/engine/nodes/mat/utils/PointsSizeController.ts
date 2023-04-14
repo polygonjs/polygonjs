@@ -27,7 +27,7 @@ function isValidMaterial(material?: Material): material is PointsMaterial {
 	}
 	return (material as PointsMaterial).size != null;
 }
-class PointsMatNode extends TypedMatNode<PointsMaterial, PointsParamsConfig> {
+class PointsSizeMatNode extends TypedMatNode<PointsMaterial, PointsParamsConfig> {
 	async material() {
 		const container = await this.compute();
 		return container.material() as PointsMaterial | undefined;
@@ -36,10 +36,10 @@ class PointsMatNode extends TypedMatNode<PointsMaterial, PointsParamsConfig> {
 }
 
 export class PointsSizeController extends BaseController {
-	constructor(protected override node: PointsMatNode) {
+	constructor(protected override node: PointsSizeMatNode) {
 		super(node);
 	}
-	static async update(node: PointsMatNode) {
+	static async update(node: PointsSizeMatNode) {
 		const material = await node.material();
 		if (!isValidMaterial(material)) {
 			return;

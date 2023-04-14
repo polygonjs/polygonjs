@@ -9,7 +9,7 @@ import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {JsConnectionPoint, JsConnectionPointType, JS_CONNECTION_POINT_IN_NODE_DEF} from '../utils/io/connections/Js';
 import {_setPhysicsRBDSphereProperty} from '../../../core/physics/shapes/RBDSphere';
 import {inputObject3D} from './_BaseObject3D';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {Poly} from '../../Poly';
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
 
@@ -40,7 +40,7 @@ export class SetPhysicsRBDSpherePropertyJsNode extends TypedJsNode<SetPhysicsRBD
 		]);
 	}
 
-	override setTriggerableLines(shadersCollectionController: ShadersCollectionController) {
+	override setTriggerableLines(shadersCollectionController: JsLinesCollectionController) {
 		const object3D = inputObject3D(this, shadersCollectionController);
 		const radius = this.variableForInputParam(shadersCollectionController, this.p.radius);
 		const lerp = this.variableForInputParam(shadersCollectionController, this.p.lerp);

@@ -1,8 +1,8 @@
 import {Constructor, valueof} from '../../../../types/GlobalTypes';
 import {TypedNode} from '../../_Base';
 import {BaseJsShaderAssembler} from './assemblers/_Base';
-import {GlobalsBaseController} from './globals/_Base';
-import {GlobalsGeometryHandler} from './globals/Geometry';
+import {GlobalsJsBaseController} from './globals/_Base';
+import {GlobalsJsGeometryHandler} from './globals/Geometry';
 import {OutputJsNode} from '../Output';
 import {GlobalsJsNode} from '../Globals';
 import {JsNodeChildrenMap} from '../../../poly/registers/nodes/Js';
@@ -63,14 +63,14 @@ type BaseJsShaderAssemblerConstructor<A extends BaseJsShaderAssembler> = new (..
 export class JsAssemblerController<A extends BaseJsShaderAssembler> {
 	protected _assembler!: A;
 	private _spareParamsController!: JsAssemblerNodeSpareParamsController;
-	private _globalsHandler: GlobalsBaseController | undefined = new GlobalsGeometryHandler();
+	private _globalsHandler: GlobalsJsBaseController | undefined = new GlobalsJsGeometryHandler();
 	private _compileRequired: boolean = true;
 
 	constructor(private node: AssemblerControllerNode<A>, assembler_class: BaseJsShaderAssemblerConstructor<A>) {
 		this._assembler = new assembler_class(this.node);
 		this._spareParamsController = new JsAssemblerNodeSpareParamsController(this, this.node);
 	}
-	setAssemblerGlobalsHandler(globalsHandler: GlobalsBaseController) {
+	setAssemblerGlobalsHandler(globalsHandler: GlobalsJsBaseController) {
 		const current_id = this._globalsHandler ? this._globalsHandler.id() : null;
 		const new_id = globalsHandler ? globalsHandler.id() : null;
 

@@ -1,6 +1,6 @@
 import {ShaderAssemblerStandard} from './Standard';
 import originalTransmissionFragment from 'three/src/renderers/shaders/ShaderChunk/transmission_fragment.glsl';
-import {AssemblerControllerNode} from '../../Controller';
+import {AssemblerGlControllerNode} from '../../Controller';
 import {MeshPhysicalMaterial} from 'three';
 function addPolyTransmission(fragment: string) {
 	const transmission = 'material.transmission = transmission;';
@@ -22,7 +22,7 @@ function addPolyTransmission(fragment: string) {
 }
 
 export class ShaderAssemblerPhysical extends ShaderAssemblerStandard {
-	constructor(protected override _gl_parent_node: AssemblerControllerNode) {
+	constructor(protected override _gl_parent_node: AssemblerGlControllerNode) {
 		super(_gl_parent_node);
 
 		this._addFilterFragmentShaderCallback(

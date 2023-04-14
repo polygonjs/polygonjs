@@ -15,7 +15,7 @@ import {
 } from '../utils/io/connections/Js';
 import {inputObject3D} from './_BaseObject3D';
 import {Poly} from '../../Poly';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {StringParam} from '../../params/String';
 // import {CoreObject} from '../../../core/geometry/Object';
 // import {Vector2, Vector3, Vector4} from 'three';
@@ -131,7 +131,7 @@ export class GetObjectAttributeJsNode extends TypedJsNode<GetObjectAttributeJsPa
 		return (this.params.get(GetObjectAttributeInputName.attribName) as StringParam).value;
 	}
 
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setLines(shadersCollectionController: JsLinesCollectionController) {
 		const object3D = inputObject3D(this, shadersCollectionController);
 		const attribName = this.variableForInput(shadersCollectionController, GetObjectAttributeInputName.attribName);
 		const out = this.jsVarName(GetObjectAttributeJsNode.OUTPUT_NAME);

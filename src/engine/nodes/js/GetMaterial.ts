@@ -8,7 +8,7 @@ import {TypedJsNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {JsConnectionPoint, JsConnectionPointType} from '../utils/io/connections/Js';
 import {NodeContext} from '../../poly/NodeContext';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {Poly} from '../../Poly';
 class GetMaterialJsParamsConfig extends NodeParamsConfig {
 	/** @param the material node */
@@ -34,7 +34,7 @@ export class GetMaterialJsNode extends TypedJsNode<GetMaterialJsParamsConfig> {
 		]);
 	}
 
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setLines(shadersCollectionController: JsLinesCollectionController) {
 		const node = this.pv.node.node();
 		if (!(node && node.context() == NodeContext.MAT)) {
 			return;

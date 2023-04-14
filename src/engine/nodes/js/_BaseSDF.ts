@@ -3,7 +3,7 @@
 import {TypedJsNode} from './_Base';
 // import {ThreeToGl} from '../../../../src/core/ThreeToGl';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {Vector3} from 'three';
 import {CoreString} from '../../../core/String';
 // import SDFMethodsCommon from './js/sdf/sdfCommon.ts';
@@ -18,14 +18,14 @@ class BaseSDFJsParamsConfig extends NodeParamsConfig {
 }
 
 export class BaseSDFJsNode<K extends BaseSDFJsParamsConfig> extends TypedJsNode<K> {
-	protected position(shadersCollectionController: ShadersCollectionController) {
+	protected position(shadersCollectionController: JsLinesCollectionController) {
 		const inputPosition = this.io.inputs.named_input(this.p.position.name());
 		const position = inputPosition
 			? this.variableForInputParam(shadersCollectionController, this.p.position)
 			: this._defaultPosition(shadersCollectionController);
 		return position;
 	}
-	private _defaultPosition(shadersCollectionController: ShadersCollectionController): string {
+	private _defaultPosition(shadersCollectionController: JsLinesCollectionController): string {
 		const sanitizedNodePath = CoreString.sanitizeName(this.path());
 		const varName = `${sanitizedNodePath}_${this.p.position.name()}`;
 		shadersCollectionController.addVariable(this, varName, new Vector3());

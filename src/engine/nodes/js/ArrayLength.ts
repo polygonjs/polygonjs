@@ -11,7 +11,7 @@ import {
 } from '../utils/io/connections/Js';
 import {TypedJsNode} from './_Base';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {Poly} from '../../Poly';
 
 const ALLOWED_INPUT_TYPES = ARRAY_JS_CONNECTION_TYPES_SET;
@@ -51,7 +51,7 @@ export class ArrayLengthJsNode extends TypedJsNode<ArrayLengthJsParamsConfig> {
 	protected _expectedOutputTypes() {
 		return [JsConnectionPointType.INT];
 	}
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setLines(shadersCollectionController: JsLinesCollectionController) {
 		const array = this.variableForInput(shadersCollectionController, this._expectedInputName(0));
 		const dataType = this._expectedInputTypes()[0];
 		const varName = this.jsVarName(this._expectedOutputName(0));

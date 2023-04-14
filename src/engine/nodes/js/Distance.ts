@@ -7,7 +7,7 @@
 import {PolyDictionary, Number3} from '../../../types/GlobalTypes';
 import {isJsConnectionPointArray, JsConnectionPointType} from '../utils/io/connections/Js';
 import {ParamlessTypedJsNode} from './_Base';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {Poly} from '../../Poly';
 
 enum DistanceJsNodeInputName {
@@ -43,7 +43,7 @@ export class DistanceJsNode extends ParamlessTypedJsNode {
 		this.io.connection_points.set_output_name_function(this._expectedOutputName.bind(this));
 	}
 
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setLines(shadersCollectionController: JsLinesCollectionController) {
 		const value0 = this.variableForInput(shadersCollectionController, DistanceJsNodeInputName.VALUE0);
 		const value1 = this.variableForInput(shadersCollectionController, DistanceJsNodeInputName.VALUE1);
 		const varName = this.jsVarName(this._expectedOutputName(0));

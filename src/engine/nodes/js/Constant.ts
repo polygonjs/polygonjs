@@ -7,7 +7,7 @@ import {TypedJsNode} from './_Base';
 import {ThreeToGl} from '../../../core/ThreeToGl';
 // import {BaseParamType} from '../../params/_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {CoreType} from '../../../core/Type';
 import {PolyDictionary} from '../../../types/GlobalTypes';
 import {JsConnectionPointType, JS_CONNECTION_TYPES_FOR_CONSTANT} from '../utils/io/connections/Js';
@@ -48,7 +48,7 @@ export class ConstantJsNode extends TypedJsNode<ConstantJsParamsConfig> {
 		this.io.connection_points.set_expected_output_types_function(() => [this._currentConnectionType()]);
 	}
 
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setLines(shadersCollectionController: JsLinesCollectionController) {
 		const param = this.currentParam();
 		if (!param) {
 			console.warn(`no param found for constant node for type '${this.pv.type}'`);

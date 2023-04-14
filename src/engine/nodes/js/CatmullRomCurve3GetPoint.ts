@@ -10,7 +10,7 @@ import {JsConnectionPoint, JsConnectionPointType, JS_CONNECTION_POINT_IN_NODE_DE
 import {Vector3} from 'three';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {TypedJsNode} from './_Base';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {Poly} from '../../Poly';
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
 const T_NAME = 't';
@@ -43,7 +43,7 @@ export class CatmullRomCurve3GetPointJsNode extends TypedJsNode<CatmullRomCurve3
 			new JsConnectionPoint(OUTPUT_NAME, JsConnectionPointType.VECTOR3),
 		]);
 	}
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setLines(shadersCollectionController: JsLinesCollectionController) {
 		const inputCurve = this.variableForInput(shadersCollectionController, JsConnectionPointType.CATMULL_ROM_CURVE3);
 		const t = this.variableForInputParam(shadersCollectionController, this.p.t);
 		const varName = this.jsVarName(OUTPUT_NAME);

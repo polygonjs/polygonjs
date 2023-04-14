@@ -1,7 +1,7 @@
 import {TypedJsNode} from './_Base';
 import {JsConnectionPointType, JsConnectionPoint} from '../utils/io/connections/Js';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {Color, Vector2, Vector3, Vector4} from 'three';
 import {Poly} from '../../Poly';
 
@@ -28,7 +28,7 @@ export class FloatToColorJsNode extends TypedJsNode<FloatToColorJsParamsConfig> 
 			new JsConnectionPoint(FloatToVec3JsNode.OUTPUT_NAME, JsConnectionPointType.COLOR),
 		]);
 	}
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setLines(shadersCollectionController: JsLinesCollectionController) {
 		// const bodyLines: string[] = [];
 
 		const r = this.variableForInputParam(shadersCollectionController, this.p.r);
@@ -71,7 +71,7 @@ export class FloatToVec2JsNode extends TypedJsNode<FloatToVec2JsParamsConfig> {
 			new JsConnectionPoint(FloatToVec2JsNode.OUTPUT_NAME, JsConnectionPointType.VECTOR2),
 		]);
 	}
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setLines(shadersCollectionController: JsLinesCollectionController) {
 		// const bodyLines: string[] = [];
 
 		const x = this.variableForInputParam(shadersCollectionController, this.p.x);
@@ -114,7 +114,7 @@ export class FloatToVec3JsNode extends TypedJsNode<FloatToVec3JsParamsConfig> {
 			new JsConnectionPoint(FloatToVec3JsNode.OUTPUT_NAME, JsConnectionPointType.VECTOR3),
 		]);
 	}
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setLines(shadersCollectionController: JsLinesCollectionController) {
 		// const bodyLines: string[] = [];
 
 		const x = this.variableForInputParam(shadersCollectionController, this.p.x);
@@ -159,7 +159,7 @@ export class FloatToVec4JsNode extends TypedJsNode<FloatToVec4JsParamsConfig> {
 			new JsConnectionPoint(FloatToVec3JsNode.OUTPUT_NAME, JsConnectionPointType.VECTOR4),
 		]);
 	}
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setLines(shadersCollectionController: JsLinesCollectionController) {
 		// const bodyLines: string[] = [];
 
 		const x = this.variableForInputParam(shadersCollectionController, this.p.x);

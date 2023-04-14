@@ -9,6 +9,7 @@ import {animBuilderCommonVars} from '../Common';
 import {animBuilderStartTimeline} from '../StartTimeline';
 import {AnimBuilderWithOp} from '../WithOp';
 import {Operation} from '../AnimBuilderTypes';
+import {GsapTweenVars} from '../../../thirdParty/gsap';
 
 export function populateVarsForParamColor(
 	param: ColorParam,
@@ -41,7 +42,7 @@ export function populateVarsForParamColor(
 }
 
 interface PopulateVarsForVector {
-	vars: gsap.TweenVars;
+	vars: GsapTweenVars;
 	targetValue: Color;
 	targetProperty: Color;
 	propertyNames: string[];

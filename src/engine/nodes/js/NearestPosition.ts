@@ -8,7 +8,7 @@ import {TypedJsNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {JsConnectionPoint, JsConnectionPointType, JS_CONNECTION_POINT_IN_NODE_DEF} from '../utils/io/connections/Js';
 import {createVariable} from './code/assemblers/_BaseJsPersistedConfigUtils';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {Poly} from '../../Poly';
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
 
@@ -39,7 +39,7 @@ export class NearestPositionJsNode extends TypedJsNode<NearestPositionJsParamsCo
 			new JsConnectionPoint(OUTPUT_NAME, JsConnectionPointType.VECTOR3),
 		]);
 	}
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setLines(shadersCollectionController: JsLinesCollectionController) {
 		const v3 = this.variableForInputParam(shadersCollectionController, this.p.Vector3);
 		const positions = this.variableForInput(shadersCollectionController, JsConnectionPointType.VECTOR3_ARRAY);
 		const varName = this.jsVarName(OUTPUT_NAME);

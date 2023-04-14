@@ -1,7 +1,7 @@
 import {ShaderMaterial} from 'three';
 import {LineType} from '../utils/LineType';
 import {VariableConfig} from '../configs/VariableConfig';
-import {CodeBuilder, CodeBuilderSetCodeLinesOptions} from '../utils/CodeBuilder';
+import {JsCodeBuilder, CodeBuilderSetCodeLinesOptions} from '../utils/CodeBuilder';
 import {BaseJsNodeType} from '../../_Base';
 import {ShaderConfig} from '../configs/ShaderConfig';
 // import {GlobalsGeometryHandler} from '../globals/Geometry';
@@ -13,8 +13,8 @@ import {JsConnectionPoint, JsConnectionPointType} from '../../../utils/io/connec
 import {GlobalsJsNode} from '../../Globals';
 import {AttributeJsNode} from '../../Attribute';
 import {AssemblerControllerNode} from '../Controller';
-import {GlobalsBaseController} from '../globals/_Base';
-import {ShadersCollectionController} from '../utils/ShadersCollectionController';
+import {GlobalsJsBaseController} from '../globals/_Base';
+import {JsLinesCollectionController} from '../utils/JsLinesCollectionController';
 import {IUniforms} from '../../../../../core/geometry/Material';
 // import {ParamJsNode} from '../../Param';
 import {NodeContext} from '../../../../poly/NodeContext';
@@ -35,7 +35,7 @@ import {JsParamConfig} from '../utils/JsParamConfig';
 import {ParamType} from '../../../../poly/ParamType';
 import {ParamOptions} from '../../../../params/utils/OptionsController';
 
-type StringArrayByShaderName = Map<ShaderName, string[]>;
+type StringArrayByJsFunctionName = Map<ShaderName, string[]>;
 
 export interface FunctionData {
 	functionBody: string;
@@ -91,9 +91,9 @@ const SPACED_LINES = 3;
 
 export abstract class BaseJsShaderAssembler extends TypedAssembler<NodeContext.JS> {
 	protected _shaders_by_name: Map<ShaderName, string> = new Map();
-	protected _lines: StringArrayByShaderName = new Map();
-	protected _codeBuilder: CodeBuilder | undefined;
-	private _param_config_owner: CodeBuilder | undefined;
+	protected _lines: StringArrayByJsFunctionName = new Map();
+	protected _codeBuilder: JsCodeBuilder | undefined;
+	private _param_config_owner: JsCodeBuilder | undefined;
 	protected _root_nodes: BaseJsNodeType[] = [];
 	protected _leaf_nodes: BaseJsNodeType[] = [];
 	protected _material: ShaderMaterial | undefined;
@@ -151,7 +151,7 @@ export abstract class BaseJsShaderAssembler extends TypedAssembler<NodeContext.J
 		}
 	}
 
-	globalsHandler(): GlobalsBaseController | undefined {
+	globalsHandler(): GlobalsJsBaseController | undefined {
 		return this.currentGlParentNode().assemblerController()?.globalsHandler();
 	}
 	compileAllowed(): boolean {
@@ -265,11 +265,11 @@ export abstract class BaseJsShaderAssembler extends TypedAssembler<NodeContext.J
 	// 	}
 	// 	return list;
 	// }
-	set_node_lines_globals(globals_node: GlobalsJsNode, shaders_collection_controller: ShadersCollectionController) {}
-	set_node_lines_output(output_node: OutputJsNode, shaders_collection_controller: ShadersCollectionController) {}
+	set_node_lines_globals(globals_node: GlobalsJsNode, shaders_collection_controller: JsLinesCollectionController) {}
+	set_node_lines_output(output_node: OutputJsNode, shaders_collection_controller: JsLinesCollectionController) {}
 	setNodeLinesAttribute(
 		attribute_node: AttributeJsNode,
-		shaders_collection_controller: ShadersCollectionController
+		shaders_collection_controller: JsLinesCollectionController
 	) {}
 
 	//
@@ -290,7 +290,7 @@ export abstract class BaseJsShaderAssembler extends TypedAssembler<NodeContext.J
 			},
 			{traverseChildren: true}
 		);
-		return new CodeBuilder(
+		return new JsCodeBuilder(
 			nodeTraverser,
 			(shaderName, rootNodes) => {
 				return this.rootNodesByShaderName(shaderName, rootNodes);
@@ -321,7 +321,7 @@ export abstract class BaseJsShaderAssembler extends TypedAssembler<NodeContext.J
 		const code_builder = this._param_config_owner || this.codeBuilder();
 		return code_builder.param_configs();
 	}
-	set_param_configs_owner(param_config_owner: CodeBuilder) {
+	set_param_configs_owner(param_config_owner: JsCodeBuilder) {
 		this._param_config_owner = param_config_owner;
 		if (this._param_config_owner) {
 			this.codeBuilder().disallow_new_param_configs();

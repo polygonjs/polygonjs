@@ -1,11 +1,11 @@
 import {Ray, Raycaster, Vector2} from 'three';
-import {ShadersCollectionController} from '../nodes/js/code/utils/ShadersCollectionController';
+import {JsLinesCollectionController} from '../nodes/js/code/utils/JsLinesCollectionController';
 import {BaseNodeType} from '../nodes/_Base';
 import {PointerEventsController} from '../scene/utils/events/PointerEventsController';
 import {NamedFunction0} from './_Base';
 
 abstract class GlobalsTimeFunction0 extends NamedFunction0 {
-	constructor(node: BaseNodeType, shadersCollectionController?: ShadersCollectionController) {
+	constructor(node: BaseNodeType, shadersCollectionController?: JsLinesCollectionController) {
 		super(node, shadersCollectionController);
 		this.timeController = node.scene().timeController;
 	}
@@ -13,14 +13,14 @@ abstract class GlobalsTimeFunction0 extends NamedFunction0 {
 
 // abstract class EventsTimeFunction0 extends NamedFunction0 {
 // 	protected eventsDispatcher: SceneEventsDispatcher
-// 	constructor( node: BaseNodeType,  shadersCollectionController?: ShadersCollectionController) {
+// 	constructor( node: BaseNodeType,  shadersCollectionController?: JsLinesCollectionController) {
 // 		super(node,shadersCollectionController);
 // 		this.eventsDispatcher = node.scene().eventsDispatcher;
 // 	}
 // }
 abstract class PointerEventsTimeFunction0 extends NamedFunction0 {
 	protected pointerEventsController: PointerEventsController;
-	constructor(node: BaseNodeType, shadersCollectionController?: ShadersCollectionController) {
+	constructor(node: BaseNodeType, shadersCollectionController?: JsLinesCollectionController) {
 		super(node, shadersCollectionController);
 		this.pointerEventsController = node.scene().eventsDispatcher.pointerEventsController;
 	}

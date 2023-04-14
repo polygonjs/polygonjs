@@ -12,7 +12,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 // import {ParamType} from '../../poly/ParamType';
 // import {UniformJsDefinition} from './utils/JsDefinition';
 import {ParamConfigsController} from '../utils/code/controllers/ParamConfigsController';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {JsParamConfig} from './code/utils/JsParamConfig';
 import {Poly} from '../../Poly';
 // import {ComputedValueJsDefinition} from './utils/JsDefinition';
@@ -49,7 +49,7 @@ export class ParamJsNode extends TypedJsNode<ParamJsParamsConfig> {
 		]);
 	}
 
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setLines(shadersCollectionController: JsLinesCollectionController) {
 		const out = this.jsVarName(ParamJsNode.OUTPUT_NAME);
 
 		const _func = Poly.namedFunctionsRegister.getFunction(

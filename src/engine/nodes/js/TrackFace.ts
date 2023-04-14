@@ -9,7 +9,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {JsConnectionPoint, JsConnectionPointType, JS_CONNECTION_POINT_IN_NODE_DEF} from '../utils/io/connections/Js';
 
 import {inputObject3D} from './_BaseObject3D';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {Poly} from '../../Poly';
 import {VectorArray} from './code/assemblers/_BaseJsPersistedConfigUtils';
 import {faceTrackingVector4Array} from '../../../core/computerVision/face/Data';
@@ -45,7 +45,7 @@ export class TrackFaceJsNode extends TypedJsNode<TrackFaceJsParamsConfig> {
 		]);
 	}
 
-	override setTriggerableLines(shadersCollectionController: ShadersCollectionController) {
+	override setTriggerableLines(shadersCollectionController: JsLinesCollectionController) {
 		const object3D = inputObject3D(this, shadersCollectionController);
 
 		// action
@@ -55,7 +55,7 @@ export class TrackFaceJsNode extends TypedJsNode<TrackFaceJsParamsConfig> {
 		shadersCollectionController.addTriggerableLines(this, [bodyLine]);
 	}
 
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setLines(shadersCollectionController: JsLinesCollectionController) {
 		const object3D = inputObject3D(this, shadersCollectionController);
 
 		// get

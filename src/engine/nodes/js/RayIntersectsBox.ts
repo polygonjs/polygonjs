@@ -8,7 +8,7 @@
 
 import {BaseRayBox3JsNode} from './_BaseRayBox3';
 import {JsConnectionPoint, JsConnectionPointType, JS_CONNECTION_POINT_IN_NODE_DEF} from '../utils/io/connections/Js';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {Poly} from '../../Poly';
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
 
@@ -23,7 +23,7 @@ export class RayIntersectsBoxJsNode extends BaseRayBox3JsNode {
 			new JsConnectionPoint(OUTPUT_NAME, JsConnectionPointType.VECTOR3, CONNECTION_OPTIONS),
 		]);
 	}
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setLines(shadersCollectionController: JsLinesCollectionController) {
 		const ray = this.variableForInput(shadersCollectionController, JsConnectionPointType.RAY);
 		const box3 = this.variableForInput(shadersCollectionController, JsConnectionPointType.BOX3);
 		const out = this.jsVarName(OUTPUT_NAME);

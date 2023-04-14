@@ -7,7 +7,7 @@
 import {TypedJsNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {JsConnectionPointType} from '../utils/io/connections/Js';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 
 class AnyTriggerJsParamsConfig extends NodeParamsConfig {
 	/** @param audio node */
@@ -43,7 +43,7 @@ export class AnyTriggerJsNode extends TypedJsNode<AnyTriggerJsParamsConfig> {
 	protected _expectedOutputName(index: number): string {
 		return JsConnectionPointType.TRIGGER;
 	}
-	override setTriggerableLines(shadersCollectionController: ShadersCollectionController) {
+	override setTriggerableLines(shadersCollectionController: JsLinesCollectionController) {
 		shadersCollectionController.addTriggerableLines(this, []);
 	}
 }

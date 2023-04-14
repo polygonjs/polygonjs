@@ -13,7 +13,7 @@ import {
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {TRIGGER_CONNECTION_NAME} from './_Base';
 import {JsConnectionPoint, JsConnectionPointType, JS_CONNECTION_POINT_IN_NODE_DEF} from '../utils/io/connections/Js';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {Poly} from '../../Poly';
 // import {ParamType} from '../../poly/ParamType';
 // import {getMostActiveAnimationActionFromMixer} from '../../../core/actor/AnimationMixerUtils';
@@ -52,7 +52,7 @@ export class AnimationActionFadeInJsNode extends TypedJsNode<AnimationActionFade
 			),
 		]);
 	}
-	override setTriggerableLines(shadersCollectionController: ShadersCollectionController) {
+	override setTriggerableLines(shadersCollectionController: JsLinesCollectionController) {
 		const action = this.variableForInput(shadersCollectionController, JsConnectionPointType.ANIMATION_ACTION);
 		const duration = this.variableForInputParam(shadersCollectionController, this.p.duration);
 		const fadeOutOtherActions = this.variableForInputParam(shadersCollectionController, this.p.fadeOutOtherActions);

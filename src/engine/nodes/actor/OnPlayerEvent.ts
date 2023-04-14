@@ -56,7 +56,7 @@ interface JumpRunEvents {
 	ShiftRight: EventFunction;
 	Space: EventFunction;
 }
-class BaseOnKeyEventActorParamsConfig extends NodeParamsConfig {
+class OnPlayerEventActorParamsConfig extends NodeParamsConfig {
 	/** @param set which element triggers the event */
 	element = ParamConfig.INTEGER(EVENT_EMITTERS.indexOf(CoreEventEmitter.CANVAS), {
 		...EVENT_EMITTER_PARAM_MENU_OPTIONS,
@@ -69,9 +69,9 @@ class BaseOnKeyEventActorParamsConfig extends NodeParamsConfig {
 	/** @param prevent event propagation */
 	stopPropagation = ParamConfig.BOOLEAN(1);
 }
-const ParamsConfig = new BaseOnKeyEventActorParamsConfig();
+const ParamsConfig = new OnPlayerEventActorParamsConfig();
 
-export class OnPlayerEventActorNode extends BaseUserInputActorNode<BaseOnKeyEventActorParamsConfig> {
+export class OnPlayerEventActorNode extends BaseUserInputActorNode<OnPlayerEventActorParamsConfig> {
 	override readonly paramsConfig = ParamsConfig;
 	static override type() {
 		return ActorType.ON_PLAYER_EVENT;

@@ -7,7 +7,7 @@
 import {ParamlessTypedJsNode} from './_Base';
 import {JsConnectionPoint, JsConnectionPointType, JS_CONNECTION_POINT_IN_NODE_DEF} from '../utils/io/connections/Js';
 import {inputObject3D} from './_BaseObject3D';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {createVariable} from './code/assemblers/_BaseJsPersistedConfigUtils';
 import {Poly} from '../../Poly';
 
@@ -31,7 +31,7 @@ export class GetObjectWorldPositionJsNode extends ParamlessTypedJsNode {
 			new JsConnectionPoint(GetObjectWorldPositionJsNodeInputName.worldPosition, JsConnectionPointType.VECTOR3),
 		]);
 	}
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setLines(shadersCollectionController: JsLinesCollectionController) {
 		const object3D = inputObject3D(this, shadersCollectionController);
 		const varName = this.jsVarName(JsConnectionPointType.OBJECT_3D);
 

@@ -8,7 +8,7 @@ import {TRIGGER_CONNECTION_NAME} from './_Base';
 import {JsConnectionPoint, JsConnectionPointType, JS_CONNECTION_POINT_IN_NODE_DEF} from '../utils/io/connections/Js';
 import {JsType} from '../../poly/registers/nodes/types/Js';
 import {EvaluatorEventData} from './code/assemblers/actor/Evaluator';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {BaseOnObjectPointerEventJsNode, OnObjectHoverJsNodeOutputName} from './_BaseOnObjectPointerEvent';
 import {Poly} from '../../Poly';
 import {inputObject3D} from './_BaseObject3D';
@@ -51,7 +51,7 @@ export class OnObjectHoverJsNode extends BaseOnObjectPointerEventJsNode {
 		]);
 	}
 
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setLines(shadersCollectionController: JsLinesCollectionController) {
 		const usedOutputNames = this.io.outputs.used_output_names();
 		if (usedOutputNames.includes(OnObjectHoverJsNodeOutputName.hovered)) {
 			this._addHoveredRef(shadersCollectionController);
@@ -61,7 +61,7 @@ export class OnObjectHoverJsNode extends BaseOnObjectPointerEventJsNode {
 		}
 	}
 
-	override setTriggeringLines(shadersCollectionController: ShadersCollectionController, triggeredMethods: string) {
+	override setTriggeringLines(shadersCollectionController: JsLinesCollectionController, triggeredMethods: string) {
 		const object3D = inputObject3D(this, shadersCollectionController);
 		const traverseChildren = this.variableForInputParam(shadersCollectionController, this.p.traverseChildren);
 		const lineThreshold = this.variableForInputParam(shadersCollectionController, this.p.lineThreshold);
@@ -116,7 +116,7 @@ export class OnObjectHoverJsNode extends BaseOnObjectPointerEventJsNode {
 			triggeringMethodName: 'onPointermove',
 		});
 	}
-	private _addIntersectionRef(shadersCollectionController: ShadersCollectionController) {
+	private _addIntersectionRef(shadersCollectionController: JsLinesCollectionController) {
 		const outIntersection = this.jsVarName(JsConnectionPointType.INTERSECTION);
 		shadersCollectionController.addDefinitions(this, [
 			new RefJsDefinition(
@@ -129,7 +129,7 @@ export class OnObjectHoverJsNode extends BaseOnObjectPointerEventJsNode {
 		]);
 		return outIntersection;
 	}
-	private _addHoveredRef(shadersCollectionController: ShadersCollectionController) {
+	private _addHoveredRef(shadersCollectionController: JsLinesCollectionController) {
 		const outHovered = this.jsVarName(OnObjectHoverJsNodeOutputName.hovered);
 		shadersCollectionController.addDefinitions(this, [
 			new RefJsDefinition(this, shadersCollectionController, JsConnectionPointType.BOOLEAN, outHovered, `false`),

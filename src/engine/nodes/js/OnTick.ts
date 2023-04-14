@@ -8,7 +8,7 @@ import {TRIGGER_CONNECTION_NAME, TypedJsNode} from './_Base';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {JsConnectionPoint, JsConnectionPointType} from '../utils/io/connections/Js';
 import {JsType} from '../../poly/registers/nodes/types/Js';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {ComputedValueJsDefinition} from './utils/JsDefinition';
 import {Poly} from '../../Poly';
 
@@ -37,12 +37,12 @@ export class OnTickJsNode extends TypedJsNode<OnTickJsParamsConfig> {
 	}
 
 	override setTriggeringLines(
-		shadersCollectionController: ShadersCollectionController,
+		shadersCollectionController: JsLinesCollectionController,
 		triggeredMethods: string
 	): void {
 		shadersCollectionController.addTriggeringLines(this, [triggeredMethods], {gatherable: true});
 	}
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setLines(shadersCollectionController: JsLinesCollectionController) {
 		const timeVarName = this.jsVarName(OnTickJsNodeOuput.TIME);
 		const deltaVarName = this.jsVarName(OnTickJsNodeOuput.DELTA);
 

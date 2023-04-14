@@ -1,9 +1,10 @@
+import {GsapTweenVars} from '../../thirdParty/gsap';
 import {AnimNodeEasing} from '../Constant';
 import {TimelineBuilder} from '../TimelineBuilder';
 
 export function animBuilderCommonVars(timelineBuilder: TimelineBuilder) {
 	const duration = timelineBuilder.duration();
-	const vars: gsap.TweenVars = {duration: duration};
+	const vars: GsapTweenVars = {duration: duration};
 
 	// easing
 	const easing = timelineBuilder.easing() || AnimNodeEasing.NONE;

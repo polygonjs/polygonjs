@@ -5,7 +5,7 @@ import {
 	isJsConnectionPointVector,
 	isJsConnectionPointNumber,
 } from '../utils/io/connections/Js';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {Poly} from '../../Poly';
 import {ComputedValueJsDefinition} from './utils/JsDefinition';
 // import {Vector2, Vector3, Vector4} from 'three';
@@ -46,7 +46,7 @@ export function MathFunctionArgNOperationFactory(
 			this.io.connection_points.set_expected_output_types_function(this._expectedOutputTypes.bind(this));
 		}
 
-		override setLines(shadersCollectionController: ShadersCollectionController) {
+		override setLines(shadersCollectionController: JsLinesCollectionController) {
 			// if (!firstType) {
 			// 	return;
 			// }
@@ -84,7 +84,7 @@ export function MathFunctionArgNOperationFactory(
 				new ComputedValueJsDefinition(this, shadersCollectionController, firstType, out, funcString),
 			]);
 		}
-		private _functionString(shadersCollectionController: ShadersCollectionController) {
+		private _functionString(shadersCollectionController: JsLinesCollectionController) {
 			const values: string[] = [];
 			const connectionPoints = this.io.inputs.namedInputConnectionPoints();
 			for (let connectionPoint of connectionPoints) {

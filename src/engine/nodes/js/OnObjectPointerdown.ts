@@ -7,7 +7,7 @@
 import {TRIGGER_CONNECTION_NAME} from './_Base';
 import {JsConnectionPoint, JsConnectionPointType, JS_CONNECTION_POINT_IN_NODE_DEF} from '../utils/io/connections/Js';
 import {JsType} from '../../poly/registers/nodes/types/Js';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {EvaluatorEventData} from './code/assemblers/actor/Evaluator';
 import {BaseOnObjectPointerEventJsNode} from './_BaseOnObjectPointerEvent';
 import {PointerEventType} from '../../../core/event/PointerEventType';
@@ -43,14 +43,14 @@ export class OnObjectPointerdownJsNode extends BaseOnObjectPointerEventJsNode {
 		this.io.connection_points.spare_params.setInputlessParamNames(['pointsThreshold', 'lineThreshold', 'element']);
 	}
 
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setLines(shadersCollectionController: JsLinesCollectionController) {
 		const usedOutputNames = this.io.outputs.used_output_names();
 		if (usedOutputNames.includes(JsConnectionPointType.INTERSECTION)) {
 			this._addIntersectionRef(shadersCollectionController);
 		}
 	}
 
-	override setTriggeringLines(shadersCollectionController: ShadersCollectionController, triggeredMethods: string) {
+	override setTriggeringLines(shadersCollectionController: JsLinesCollectionController, triggeredMethods: string) {
 		const object3D = inputObject3D(this, shadersCollectionController);
 		const traverseChildren = this.variableForInputParam(shadersCollectionController, this.p.traverseChildren);
 		const lineThreshold = this.variableForInputParam(shadersCollectionController, this.p.lineThreshold);
@@ -79,7 +79,7 @@ export class OnObjectPointerdownJsNode extends BaseOnObjectPointerEventJsNode {
 		});
 	}
 
-	private _addIntersectionRef(shadersCollectionController: ShadersCollectionController) {
+	private _addIntersectionRef(shadersCollectionController: JsLinesCollectionController) {
 		const outIntersection = this.jsVarName(JsConnectionPointType.INTERSECTION);
 		shadersCollectionController.addDefinitions(this, [
 			new RefJsDefinition(

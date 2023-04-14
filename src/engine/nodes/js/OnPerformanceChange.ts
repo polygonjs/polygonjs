@@ -18,7 +18,7 @@ import {BaseJsNodeType, TRIGGER_CONNECTION_NAME, TypedJsNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {JsConnectionPoint, JsConnectionPointType} from '../utils/io/connections/Js';
 import {JsType} from '../../poly/registers/nodes/types/Js';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {Poly} from '../../Poly';
 // import {triggerableMethodCalls} from './code/assemblers/actor/ActorAssemblerUtils';
 import {InitFunctionJsDefinition, TriggeringJsDefinition} from './utils/JsDefinition';
@@ -76,7 +76,7 @@ export class OnPerformanceChangeJsNode extends TypedJsNode<OnPerformanceChangeJs
 	}
 
 	override setTriggeringLines(
-		shadersCollectionController: ShadersCollectionController,
+		shadersCollectionController: JsLinesCollectionController,
 		triggeredMethods: string
 	): void {
 		const listeners: Record<PerformanceChangeEvent, string> = {

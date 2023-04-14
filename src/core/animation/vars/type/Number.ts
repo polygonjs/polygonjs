@@ -1,6 +1,7 @@
 import {FloatParam} from '../../../../engine/params/Float';
 import {IntegerParam} from '../../../../engine/params/Integer';
 import {Poly} from '../../../../engine/Poly';
+import {GsapTweenVars} from '../../../thirdParty/gsap';
 import {CoreType} from '../../../Type';
 import {NodeParamProxiesRegister} from '../../NodeParamProxiesRegister';
 import {FloatParamProxy, IntegerParamProxy} from '../../ParamProxy';
@@ -44,7 +45,7 @@ export function populateVarsForSingleNumber(
 }
 
 interface PopulateVarsForNumber {
-	vars: gsap.TweenVars;
+	vars: GsapTweenVars;
 	targetValue: number;
 	targetProperty: number;
 	propertyNames: string[];

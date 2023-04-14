@@ -8,7 +8,7 @@
 import {TypedJsNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {JsConnectionPoint, JsConnectionPointType} from '../utils/io/connections/Js';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 
 const OUTPUT_NAME = JsConnectionPointType.VECTOR3;
 class Vector2JsParamsConfig extends NodeParamsConfig {
@@ -29,7 +29,7 @@ export class Vector2JsNode extends TypedJsNode<Vector2JsParamsConfig> {
 		]);
 	}
 
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setLines(shadersCollectionController: JsLinesCollectionController) {
 		const inputValue = this.variableForInputParam(shadersCollectionController, this.p.Vector2);
 		const varName = this.jsVarName(OUTPUT_NAME);
 		shadersCollectionController.addBodyOrComputed(this, [

@@ -6,7 +6,7 @@
 
 import {ParamlessTypedJsNode} from './_Base';
 import {JsConnectionPoint, JsConnectionPointType, JS_CONNECTION_POINT_IN_NODE_DEF} from '../utils/io/connections/Js';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {
 	GetObjectPropertyJsNodeInputName,
 	OBJECT_VECTOR3_PROPERTIES,
@@ -42,7 +42,7 @@ export class GetObjectPropertyJsNode extends ParamlessTypedJsNode {
 			new JsConnectionPoint(GetObjectPropertyJsNodeInputName.material, JsConnectionPointType.MATERIAL),
 		]);
 	}
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setLines(shadersCollectionController: JsLinesCollectionController) {
 		const usedOutputNames = this.io.outputs.used_output_names();
 		const object3D = inputObject3D(this, shadersCollectionController);
 

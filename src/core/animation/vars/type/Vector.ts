@@ -1,10 +1,11 @@
 import {Vector2, Vector3, Vector4} from 'three';
+import { GsapTweenVars } from '../../../thirdParty/gsap';
 import {Operation} from '../AnimBuilderTypes';
 import {AnimBuilderWithOp} from '../WithOp';
 
 type Vector = Vector2 | Vector3 | Vector4;
 interface PopulateVarsForVector {
-	vars: gsap.TweenVars;
+	vars: GsapTweenVars;
 	targetValue: Vector;
 	targetProperty: Vector;
 	propertyNames: string[];

@@ -7,7 +7,7 @@ import {ParamConfig} from '../utils/params/ParamsConfig';
 import {TRIGGER_CONNECTION_NAME, TypedJsNode} from './_Base';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {JsConnectionPoint, JsConnectionPointType, JS_CONNECTION_POINT_IN_NODE_DEF} from '../utils/io/connections/Js';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {inputObject3D} from './_BaseObject3D';
 import {Poly} from '../../Poly';
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
@@ -41,7 +41,7 @@ export class SetPhysicsRBDCylinderPropertyJsNode extends TypedJsNode<SetPhysicsR
 		]);
 	}
 
-	override setTriggerableLines(shadersCollectionController: ShadersCollectionController) {
+	override setTriggerableLines(shadersCollectionController: JsLinesCollectionController) {
 		const object3D = inputObject3D(this, shadersCollectionController);
 		const radius = this.variableForInputParam(shadersCollectionController, this.p.radius);
 		const height = this.variableForInputParam(shadersCollectionController, this.p.height);

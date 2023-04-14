@@ -9,7 +9,7 @@
 import {TypedJsNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {JsConnectionPoint, JsConnectionPointType, JS_CONNECTION_POINT_IN_NODE_DEF} from '../utils/io/connections/Js';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {Sphere} from 'three';
 import {Poly} from '../../Poly';
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
@@ -36,7 +36,7 @@ export class SphereJsNode extends TypedJsNode<SphereJsParamsConfig> {
 			new JsConnectionPoint(JsConnectionPointType.SPHERE, JsConnectionPointType.SPHERE, CONNECTION_OPTIONS),
 		]);
 	}
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setLines(shadersCollectionController: JsLinesCollectionController) {
 		const center = this.variableForInputParam(shadersCollectionController, this.p.center);
 		const radius = this.variableForInputParam(shadersCollectionController, this.p.radius);
 		const out = this.jsVarName(JsConnectionPointType.SPHERE);

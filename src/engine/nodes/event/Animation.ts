@@ -9,7 +9,7 @@ import {EventConnectionPoint, EventConnectionPointType} from '../utils/io/connec
 import {BaseNodeType} from '../_Base';
 import {NodeContext} from '../../poly/NodeContext';
 import {TimelineBuilder} from '../../../core/animation/TimelineBuilder';
-import gsap from 'gsap';
+import {gsapTimeline} from '../../../core/thirdParty/gsap';
 
 enum AnimationEventInput {
 	START = 'start',
@@ -23,6 +23,7 @@ export enum AnimationEventOutput {
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {isBooleanTrue} from '../../../core/Type';
+import {GsapCoreTimeline} from '../../../core/thirdParty/gsap';
 class AnimationEventParamsConfig extends NodeParamsConfig {
 	/** @parm animation node */
 	animation = ParamConfig.NODE_PATH('', {
@@ -53,7 +54,7 @@ export class AnimationEventNode extends TypedEventNode<AnimationEventParamsConfi
 	}
 
 	private _timelineBuilder: TimelineBuilder | undefined;
-	private _timeline: gsap.core.Timeline | undefined;
+	private _timeline: GsapCoreTimeline | undefined;
 
 	override initializeNode() {
 		this.io.inputs.setNamedInputConnectionPoints([
@@ -98,7 +99,7 @@ export class AnimationEventNode extends TypedEventNode<AnimationEventParamsConfi
 		if (this._timeline && isBooleanTrue(this.pv.stopsPreviousAnim)) {
 			this._timeline.kill();
 		}
-		this._timeline = gsap.timeline();
+		this._timeline = gsapTimeline();
 
 		this._timelineBuilder.populate(this._timeline, {registerproperties: true});
 		this._timeline.vars.onStart = () => {

@@ -1,7 +1,7 @@
 import {TypedJsNode} from './_Base';
 
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {JsType} from '../../poly/registers/nodes/types/Js';
 class GlobalsJsParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new GlobalsJsParamsConfig();
@@ -20,7 +20,7 @@ export class GlobalsJsNode extends TypedJsNode<GlobalsJsParamsConfig> {
 		});
 	}
 
-	override setLines(linesController: ShadersCollectionController) {
+	override setLines(linesController: JsLinesCollectionController) {
 		this.functionNode()?.assemblerController()?.assembler.set_node_lines_globals(this, linesController);
 	}
 }

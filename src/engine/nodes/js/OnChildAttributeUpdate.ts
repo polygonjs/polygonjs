@@ -15,7 +15,7 @@ import {
 	PARAM_CONVERTIBLE_JS_CONNECTION_POINT_TYPES,
 } from '../utils/io/connections/Js';
 import {JsType} from '../../poly/registers/nodes/types/Js';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {StringParam} from '../../params/String';
 import {inputObject3D} from './_BaseObject3D';
 import {Poly} from '../../Poly';
@@ -104,7 +104,7 @@ export class OnChildAttributeUpdateJsNode extends TypedJsNode<OnChildAttributeUp
 		return (this.params.get(OnChildAttributeUpdateInputName.attribName) as StringParam).value;
 	}
 
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setLines(shadersCollectionController: JsLinesCollectionController) {
 		const type = this.attribType();
 		const object3D = inputObject3D(this, shadersCollectionController);
 		const attribName = this.variableForInput(
@@ -165,7 +165,7 @@ export class OnChildAttributeUpdateJsNode extends TypedJsNode<OnChildAttributeUp
 		_val(OnChildAttributeUpdateJsNode.OUTPUT_PREV_VALUES, 'getChildrenAttributesPrevious', type);
 	}
 
-	override setTriggeringLines(shadersCollectionController: ShadersCollectionController, triggeredMethods: string) {
+	override setTriggeringLines(shadersCollectionController: JsLinesCollectionController, triggeredMethods: string) {
 		const type = this.attribType();
 		const object3D = inputObject3D(this, shadersCollectionController);
 		const attribName = this.variableForInput(

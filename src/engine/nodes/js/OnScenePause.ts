@@ -8,7 +8,7 @@ import {TypedJsNode} from './_Base';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {JsConnectionPoint, JsConnectionPointType} from '../utils/io/connections/Js';
 import {JsType} from '../../poly/registers/nodes/types/Js';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 
 class OnScenePauseJsParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new OnScenePauseJsParamsConfig();
@@ -28,7 +28,7 @@ export class OnScenePauseJsNode extends TypedJsNode<OnScenePauseJsParamsConfig> 
 		]);
 	}
 	override setTriggeringLines(
-		shadersCollectionController: ShadersCollectionController,
+		shadersCollectionController: JsLinesCollectionController,
 		triggeredMethods: string
 	): void {
 		shadersCollectionController.addTriggeringLines(this, [triggeredMethods], {

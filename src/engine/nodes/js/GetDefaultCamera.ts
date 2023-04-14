@@ -6,7 +6,7 @@
 import {TypedJsNode} from './_Base';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {JsConnectionPoint, JsConnectionPointType} from '../utils/io/connections/Js';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {Poly} from '../../Poly';
 
 class GetDefaultCameraJsParamsConfig extends NodeParamsConfig {}
@@ -25,7 +25,7 @@ export class GetDefaultCameraJsNode extends TypedJsNode<GetDefaultCameraJsParams
 			new JsConnectionPoint(JsConnectionPointType.CAMERA, JsConnectionPointType.CAMERA),
 		]);
 	}
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setLines(shadersCollectionController: JsLinesCollectionController) {
 		const varName = this.jsVarName(JsConnectionPointType.CAMERA);
 		const func = Poly.namedFunctionsRegister.getFunction('getDefaultCamera', this, shadersCollectionController);
 		shadersCollectionController.addBodyOrComputed(this, [

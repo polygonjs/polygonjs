@@ -9,7 +9,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {TypedJsNode} from './_Base';
 import {EASING_NAMES} from '../../../core/math/Easing';
 import {createVariable} from './code/assemblers/_BaseJsPersistedConfigUtils';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {Poly} from '../../Poly';
 import {_vectorFunctionName_1} from '../../functions/_MathGeneric';
 
@@ -78,7 +78,7 @@ export class EasingJsNode extends TypedJsNode<EasingJsParamsConfig> {
 		return OUTPUT_NAME;
 	}
 
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setLines(shadersCollectionController: JsLinesCollectionController) {
 		const varName = this.jsVarName(this._expectedOutputName(0));
 
 		const inputType = this._expectedInputTypes()[0];

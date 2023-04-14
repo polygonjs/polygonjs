@@ -7,7 +7,7 @@
 import {TypedJsNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {JsConnectionPointType} from '../utils/io/connections/Js';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {inputObject3D} from './_BaseObject3D';
 import {Poly} from '../../Poly';
 
@@ -83,7 +83,7 @@ export class SetGeometryPositionsJsNode extends TypedJsNode<SetGeometryPositions
 		return [JsConnectionPointType.TRIGGER, JsConnectionPointType.OBJECT_3D][i];
 	}
 
-	override setTriggerableLines(shadersCollectionController: ShadersCollectionController) {
+	override setTriggerableLines(shadersCollectionController: JsLinesCollectionController) {
 		const object3D = inputObject3D(this, shadersCollectionController);
 		const values = this.variableForInput(shadersCollectionController, SetGeometryPositionsInputName.values);
 		const lerp = this.variableForInputParam(shadersCollectionController, this.p.lerp);

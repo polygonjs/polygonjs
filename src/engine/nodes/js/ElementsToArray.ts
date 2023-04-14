@@ -12,7 +12,7 @@ import {
 } from '../utils/io/connections/Js';
 import {TypedJsNode} from './_Base';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {
 	RegisterableVariable,
 	createPrimitiveArray,
@@ -26,7 +26,7 @@ interface SetLinesOptions {
 	inputElements: string;
 	dataType: ArrayableConnectionPointType;
 	varName: string;
-	shadersCollectionController: ShadersCollectionController;
+	shadersCollectionController: JsLinesCollectionController;
 }
 
 class ElementsToArrayJsParamsConfig extends NodeParamsConfig {}
@@ -74,7 +74,7 @@ export class ElementsToArrayJsNode extends TypedJsNode<ElementsToArrayJsParamsCo
 		const outputType = JsConnectionPointTypeToArrayTypeMap[firstType] || JsConnectionPointType.FLOAT_ARRAY;
 		return [outputType];
 	}
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setLines(shadersCollectionController: JsLinesCollectionController) {
 		const inputValuesCount = this._expectedInputTypes().length - 1;
 		const inputArgs: string[] = [];
 		for (let i = 0; i < inputValuesCount; i++) {

@@ -4,7 +4,7 @@ import {AssemblerControllerNode} from './code/Controller';
 import {NodeContext} from '../../poly/NodeContext';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {ParamConfigsController} from '../utils/code/controllers/ParamConfigsController';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 // import {ParamInitValueSerialized} from '../../params/types/ParamInitValueSerialized';
 import {JsParamConfig} from './code/utils/JsParamConfig';
 import {ParamType} from '../../poly/ParamType';
@@ -38,7 +38,7 @@ export interface WrappedBodyLines {
 function wrapComputed(varName: string): string {
 	return `this.${varName}.value`;
 }
-function wrapIfComputed(varName: string, shadersCollectionController: ShadersCollectionController): string {
+function wrapIfComputed(varName: string, shadersCollectionController: JsLinesCollectionController): string {
 	if (shadersCollectionController.registeredAsComputed(varName)) {
 		return wrapComputed(varName);
 	} else {
@@ -133,7 +133,7 @@ export class TypedJsNode<K extends NodeParamsConfig> extends TypedNode<NodeConte
 	}
 
 	variableForInputParam(
-		shadersCollectionController: ShadersCollectionController,
+		shadersCollectionController: JsLinesCollectionController,
 		param:
 			| IntegerParam
 			| FloatParam
@@ -146,11 +146,11 @@ export class TypedJsNode<K extends NodeParamsConfig> extends TypedNode<NodeConte
 	) {
 		return this.variableForInput(shadersCollectionController, param.name());
 	}
-	variableForInput(shadersCollectionController: ShadersCollectionController, inputName: string): string {
+	variableForInput(shadersCollectionController: JsLinesCollectionController, inputName: string): string {
 		const varName = this._variableForInput(shadersCollectionController, inputName);
 		return wrapIfComputed(varName, shadersCollectionController);
 	}
-	private _variableForInput(shadersCollectionController: ShadersCollectionController, inputName: string): string {
+	private _variableForInput(shadersCollectionController: JsLinesCollectionController, inputName: string): string {
 		const inputIndex = this.io.inputs.getInputIndex(inputName);
 		const connection = this.io.connections.inputConnection(inputIndex);
 		let outputJsVarName: string | undefined;
@@ -235,17 +235,17 @@ export class TypedJsNode<K extends NodeParamsConfig> extends TypedNode<NodeConte
 	// // ADDED LINES
 	// //
 	// //
-	setLines(shadersCollectionController: ShadersCollectionController) {
+	setLines(shadersCollectionController: JsLinesCollectionController) {
 		// console.warn(`setLines not defined for node '${this.path()}'`);
 	}
-	setTriggeringLines(shadersCollectionController: ShadersCollectionController, triggeredMethods: string): void {
+	setTriggeringLines(shadersCollectionController: JsLinesCollectionController, triggeredMethods: string): void {
 		console.warn(`setTriggeringLines not defined for node '${this.path()}'`);
 		// if (!this.isTriggering()) {
 		// 	console.error(`node '${this.path()}' is not triggering`);
 		// }
 		// shadersCollectionController.addTriggeringLines(this, [triggeredMethods]);
 	}
-	setTriggerableLines(shadersCollectionController: ShadersCollectionController): void {
+	setTriggerableLines(shadersCollectionController: JsLinesCollectionController): void {
 		// console.warn(`setLines not defined for node '${this.path()}'`);
 	}
 	// addConstructorInitFunctionLines(shadersCollectionController: ShadersCollectionController): void {}

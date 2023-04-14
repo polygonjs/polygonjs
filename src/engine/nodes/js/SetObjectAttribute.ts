@@ -18,7 +18,7 @@ import {
 } from '../utils/io/connections/Js';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {inputObject3D} from './_BaseObject3D';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {Poly} from '../../Poly';
 import {StringParam} from '../../params/String';
 // import {CoreObject} from '../../../core/geometry/Object';
@@ -120,7 +120,7 @@ export class SetObjectAttributeJsNode extends TypedJsNode<SetObjectAttributeJsPa
 		(this.params.get(SetObjectAttributeInputName.attribName) as StringParam).set(attribName);
 	}
 
-	override setTriggerableLines(shadersCollectionController: ShadersCollectionController) {
+	override setTriggerableLines(shadersCollectionController: JsLinesCollectionController) {
 		const object3D = inputObject3D(this, shadersCollectionController);
 		const attribName = this.variableForInput(shadersCollectionController, SetObjectAttributeInputName.attribName);
 		const lerp = this.variableForInput(shadersCollectionController, SetObjectAttributeInputName.lerp);

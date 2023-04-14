@@ -7,7 +7,7 @@
 import {Poly} from '../../Poly';
 import {JsConnectionPoint, JsConnectionPointType, JS_CONNECTION_POINT_IN_NODE_DEF} from '../utils/io/connections/Js';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {TRIGGER_CONNECTION_NAME} from './_Base';
 import {TypedJsNode} from './_Base';
 
@@ -33,7 +33,7 @@ export class AnimationActionPlayJsNode extends TypedJsNode<AnimationActionPlayJs
 			),
 		]);
 	}
-	override setTriggerableLines(shadersCollectionController: ShadersCollectionController) {
+	override setTriggerableLines(shadersCollectionController: JsLinesCollectionController) {
 		const action = this.variableForInput(shadersCollectionController, JsConnectionPointType.ANIMATION_ACTION);
 
 		const func = Poly.namedFunctionsRegister.getFunction('animationActionPlay', this, shadersCollectionController);

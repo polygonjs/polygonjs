@@ -9,7 +9,7 @@
 // import {ThreeToGl} from '../../../../src/core/ThreeToGl';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {JsConnectionPointType, JsConnectionPoint} from '../utils/io/connections/Js';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {TypedJsNode} from './_Base';
 import {isBooleanTrue} from '../../../core/Type';
 import {Poly} from '../../Poly';
@@ -38,7 +38,7 @@ export class SDFUnionJsNode extends TypedJsNode<SDFUnionJsParamsConfig> {
 		]);
 	}
 
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setLines(shadersCollectionController: JsLinesCollectionController) {
 		const sdf0 = this.variableForInputParam(shadersCollectionController, this.p.sdf0);
 		const sdf1 = this.variableForInputParam(shadersCollectionController, this.p.sdf1);
 		// const smooth = this.variableForInputParam(shadersCollectionController, this.p.smooth);

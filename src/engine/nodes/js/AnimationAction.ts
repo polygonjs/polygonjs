@@ -7,7 +7,7 @@ import {TypedJsNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {JsConnectionPoint, JsConnectionPointType, JS_CONNECTION_POINT_IN_NODE_DEF} from '../utils/io/connections/Js';
 import {Poly} from '../../Poly';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
 
@@ -37,7 +37,7 @@ export class AnimationActionJsNode extends TypedJsNode<AnimationActionJsParamsCo
 			new JsConnectionPoint(JsConnectionPointType.ANIMATION_ACTION, JsConnectionPointType.ANIMATION_ACTION),
 		]);
 	}
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setLines(shadersCollectionController: JsLinesCollectionController) {
 		const mixer = this.variableForInput(shadersCollectionController, JsConnectionPointType.ANIMATION_MIXER);
 		const clipName = this.variableForInputParam(shadersCollectionController, this.p.clipName);
 		const autoPlay = this.variableForInputParam(shadersCollectionController, this.p.autoPlay);

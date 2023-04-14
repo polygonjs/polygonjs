@@ -10,7 +10,7 @@ import {
 	JsConnectionPointType,
 	JsConnectionPointTypeFromArrayTypeMap,
 } from '../utils/io/connections/Js';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 // import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 // import {LocalFunctionJsDefinition} from './utils/JsDefinition';
 import {
@@ -40,7 +40,7 @@ export class SmoothstepJsNode extends MathFunctionArg3OperationFactory('smoothst
 	inputPrefix: 'in',
 	out: 'smoothstep',
 }) {
-	protected _coreFunction(shadersCollectionController: ShadersCollectionController) {
+	protected _coreFunction(shadersCollectionController: JsLinesCollectionController) {
 		const mainArg = 'x';
 		const _min = this.variableForInput(shadersCollectionController, SmoothstepInput.EDGE0);
 		const _max = this.variableForInput(shadersCollectionController, SmoothstepInput.EDGE1);

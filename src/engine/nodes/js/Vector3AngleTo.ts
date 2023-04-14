@@ -8,7 +8,7 @@
 import {TypedJsNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {JsConnectionPoint, JsConnectionPointType} from '../utils/io/connections/Js';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {Poly} from '../../Poly';
 
 const OUTPUT_NAME = 'radians';
@@ -31,7 +31,7 @@ export class Vector3AngleToJsNode extends TypedJsNode<Vector3AngleToJsParamsConf
 			new JsConnectionPoint(OUTPUT_NAME, JsConnectionPointType.FLOAT),
 		]);
 	}
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setLines(shadersCollectionController: JsLinesCollectionController) {
 		const v1 = this.variableForInputParam(shadersCollectionController, this.p.v1);
 		const v2 = this.variableForInputParam(shadersCollectionController, this.p.v2);
 		const out = this.jsVarName(OUTPUT_NAME);

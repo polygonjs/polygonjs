@@ -1,7 +1,5 @@
 import {Object3D, Quaternion, Vector3} from 'three';
-import {ShadersCollectionController} from '../nodes/js/code/utils/ShadersCollectionController';
 import {getPhysicsWorldNodeFromWorldObject} from '../nodes/sop/PhysicsWorld';
-import {BaseNodeType} from '../nodes/_Base';
 import {
 	ObjectNamedFunction0,
 	ObjectNamedFunction1,
@@ -74,9 +72,6 @@ export class physicsWorldReset extends ObjectNamedFunction0 {
 }
 
 export class physicsWorldStepSimulation extends ObjectNamedFunction0 {
-	constructor(node: BaseNodeType, shadersCollectionController?: ShadersCollectionController) {
-		super(node, shadersCollectionController);
-	}
 	static override type() {
 		return 'physicsWorldStepSimulation';
 	}

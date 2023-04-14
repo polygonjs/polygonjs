@@ -2,7 +2,7 @@ import {TypedParam} from './../../../params/_Base';
 import {ParamsUpdateOptions} from '../../utils/params/ParamsController';
 import {ParamOptions} from '../../../params/utils/OptionsController';
 import {ParamType} from '../../../poly/ParamType';
-import {GlAssemblerControllerType, AssemblerControllerNode} from './Controller';
+import {GlAssemblerControllerType, AssemblerGlControllerNode} from './Controller';
 import {ParamInitValueSerialized} from '../../../params/types/ParamInitValueSerialized';
 import {SetUtils} from '../../../../core/SetUtils';
 import {MapUtils} from '../../../../core/MapUtils';
@@ -54,7 +54,7 @@ export class GlAssemblerNodeSpareParamsController {
 	// private _createdSpareParamNames: Set<string> = new Set();
 	private _raw_input_serialized_by_param_name: Map<string, ParamInitValueSerialized> = new Map();
 	private _init_value_serialized_by_param_name: Map<string, ParamInitValueSerialized> = new Map();
-	constructor(private _controller: GlAssemblerControllerType, private _node: AssemblerControllerNode) {}
+	constructor(private _controller: GlAssemblerControllerType, private _node: AssemblerGlControllerNode) {}
 	get assembler() {
 		return this._controller.assembler;
 	}

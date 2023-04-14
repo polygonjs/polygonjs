@@ -9,7 +9,7 @@ import {TypedJsNode} from './_Base';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {NetworkChildNodeType} from '../../poly/NodeContext';
 import {SubnetJsNode} from './Subnet';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 class SubnetOutputJsParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new SubnetOutputJsParamsConfig();
 
@@ -39,7 +39,7 @@ export class SubnetOutputJsNode extends TypedJsNode<SubnetOutputJsParamsConfig> 
 		return parent?.childExpectedOutputConnectionPointTypes() || [];
 	}
 
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setLines(shadersCollectionController: JsLinesCollectionController) {
 		const inputTypes = this._expectedInputTypes();
 		let i = 0;
 

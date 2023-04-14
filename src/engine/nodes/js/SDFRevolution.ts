@@ -9,31 +9,35 @@
 import {BaseSDFJsNode} from './_BaseSDF';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {JsConnectionPointType, JsConnectionPoint} from '../utils/io/connections/Js';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {TypeAssert} from '../../poly/Assert';
 import {Vector2} from 'three';
 import {Poly} from '../../Poly';
 
-enum SDFRevolutionAxis {
+enum SDFRevolutionJsAxis {
 	X = 'X',
 	Y = 'Y',
 	Z = 'Z',
 }
-const SDF_REVOLUTION_AXISES: SDFRevolutionAxis[] = [SDFRevolutionAxis.X, SDFRevolutionAxis.Y, SDFRevolutionAxis.Z];
+const SDF_REVOLUTION_AXISES: SDFRevolutionJsAxis[] = [
+	SDFRevolutionJsAxis.X,
+	SDFRevolutionJsAxis.Y,
+	SDFRevolutionJsAxis.Z,
+];
 
 const OUTPUT_NAME = 'p';
-class SDFRevolutionGlParamsConfig extends NodeParamsConfig {
+class SDFRevolutionJsParamsConfig extends NodeParamsConfig {
 	position = ParamConfig.VECTOR3([0, 0, 0], {hidden: true});
 	center = ParamConfig.VECTOR3([0, 0, 0]);
 	radius = ParamConfig.FLOAT(1);
-	axis = ParamConfig.INTEGER(SDF_REVOLUTION_AXISES.indexOf(SDFRevolutionAxis.Y), {
+	axis = ParamConfig.INTEGER(SDF_REVOLUTION_AXISES.indexOf(SDFRevolutionJsAxis.Y), {
 		menu: {
 			entries: SDF_REVOLUTION_AXISES.map((name, value) => ({name, value})),
 		},
 	});
 }
-const ParamsConfig = new SDFRevolutionGlParamsConfig();
-export class SDFRevolutionJsNode extends BaseSDFJsNode<SDFRevolutionGlParamsConfig> {
+const ParamsConfig = new SDFRevolutionJsParamsConfig();
+export class SDFRevolutionJsNode extends BaseSDFJsNode<SDFRevolutionJsParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
 		return 'SDFRevolution';
@@ -45,11 +49,11 @@ export class SDFRevolutionJsNode extends BaseSDFJsNode<SDFRevolutionGlParamsConf
 			new JsConnectionPoint(OUTPUT_NAME, JsConnectionPointType.VECTOR2),
 		]);
 	}
-	setAxis(axis: SDFRevolutionAxis) {
+	setAxis(axis: SDFRevolutionJsAxis) {
 		this.p.axis.set(SDF_REVOLUTION_AXISES.indexOf(axis));
 	}
 
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setLines(shadersCollectionController: JsLinesCollectionController) {
 		const position = this.position(shadersCollectionController);
 		const center = this.variableForInputParam(shadersCollectionController, this.p.center);
 		const radius = this.variableForInputParam(shadersCollectionController, this.p.radius);
@@ -69,13 +73,13 @@ export class SDFRevolutionJsNode extends BaseSDFJsNode<SDFRevolutionGlParamsConf
 	private _functionName() {
 		const axis = SDF_REVOLUTION_AXISES[this.pv.axis];
 		switch (axis) {
-			case SDFRevolutionAxis.X: {
+			case SDFRevolutionJsAxis.X: {
 				return 'SDFRevolutionX';
 			}
-			case SDFRevolutionAxis.Y: {
+			case SDFRevolutionJsAxis.Y: {
 				return 'SDFRevolutionY';
 			}
-			case SDFRevolutionAxis.Z: {
+			case SDFRevolutionJsAxis.Z: {
 				return 'SDFRevolutionZ';
 			}
 		}

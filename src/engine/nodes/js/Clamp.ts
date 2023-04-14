@@ -6,7 +6,7 @@
 import {PolyDictionary} from '../../../types/GlobalTypes';
 import {Poly} from '../../Poly';
 import {JsConnectionPointType, JsConnectionPointTypeFromArrayTypeMap} from '../utils/io/connections/Js';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {MathFunctionArg3OperationFactory, DEFAULT_ALLOWED_TYPES} from './_Math_Arg1Operation';
 
 enum ClampInput {
@@ -25,7 +25,7 @@ export class ClampJsNode extends MathFunctionArg3OperationFactory('clamp', {
 	inputPrefix: 'in',
 	out: 'clamped',
 }) {
-	protected _coreFunction(shadersCollectionController: ShadersCollectionController) {
+	protected _coreFunction(shadersCollectionController: JsLinesCollectionController) {
 		Poly.namedFunctionsRegister.getFunction(FUNCTION_NAME, this, shadersCollectionController).asString('', '', '');
 
 		return FUNCTION_NAME;

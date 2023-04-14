@@ -13,8 +13,8 @@ import {
 } from '../utils/io/connections/Actor';
 import {NodeContext} from '../../poly/NodeContext';
 import {AnimPropertyTarget} from '../../../core/animation/PropertyTarget';
-import gsap from 'gsap';
 import {BaseNodeType} from '../_Base';
+import {gsapTimeline} from '../../../core/thirdParty/gsap';
 
 const CONNECTION_OPTIONS = ACTOR_CONNECTION_POINT_IN_NODE_DEF;
 export enum AnimationActorOutput {
@@ -80,7 +80,7 @@ export class PlayAnimationActorNode extends TypedActorNode<PlayAnimationActorPar
 		// if (this._timeline && isBooleanTrue(this.pv.stopsPreviousAnim)) {
 		// 	this._timeline.kill();
 		// }
-		const timeline = gsap.timeline();
+		const timeline = gsapTimeline();
 
 		const propertyTarget = new AnimPropertyTarget(this.scene(), {object: {list: [context.Object3D]}});
 		timelineBuilder.populate(timeline, {registerproperties: true, propertyTarget: propertyTarget});

@@ -11,7 +11,7 @@ import {
 	_getPhysicsRBDCapsuleHeight,
 	RBDCapsuleProperty,
 } from '../../../core/physics/shapes/RBDCapsule';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {inputObject3D} from './_BaseObject3D';
 import {Poly} from '../../Poly';
 
@@ -33,7 +33,7 @@ export class GetPhysicsRBDCapsulePropertyJsNode extends ParamlessTypedJsNode {
 		]);
 	}
 
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setLines(shadersCollectionController: JsLinesCollectionController) {
 		const usedOutputNames = this.io.outputs.used_output_names();
 		const object3D = inputObject3D(this, shadersCollectionController);
 

@@ -5,7 +5,7 @@
  */
 import {BaseTriggerAndObjectJsNode} from './_BaseTriggerAndObject';
 import {inputObject3D} from './_BaseObject3D';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {Poly} from '../../Poly';
 
 export class PhysicsWorldResetJsNode extends BaseTriggerAndObjectJsNode {
@@ -13,7 +13,7 @@ export class PhysicsWorldResetJsNode extends BaseTriggerAndObjectJsNode {
 		return 'physicsWorldReset';
 	}
 
-	override setTriggerableLines(shadersCollectionController: ShadersCollectionController) {
+	override setTriggerableLines(shadersCollectionController: JsLinesCollectionController) {
 		const object3D = inputObject3D(this, shadersCollectionController);
 
 		const func = Poly.namedFunctionsRegister.getFunction('physicsWorldReset', this, shadersCollectionController);

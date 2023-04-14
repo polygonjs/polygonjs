@@ -7,7 +7,7 @@
 import {Poly} from '../../Poly';
 import {JsConnectionPointType} from '../utils/io/connections/Js';
 import {nodeMethodName, triggerableMethodCalls} from './code/assemblers/actor/ActorAssemblerUtils';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {InitFunctionJsDefinition, TriggerableJsDefinition} from './utils/JsDefinition';
 import {BaseAudioSourceJsNode} from './_BaseAudioSource';
 import {inputObject3D} from './_BaseObject3D';
@@ -23,7 +23,7 @@ export class PlayAudioSourceJsNode extends BaseAudioSourceJsNode {
 		const nodePath = `'${node.path()}'`;
 		return nodePath;
 	}
-	override setTriggerableLines(shadersCollectionController: ShadersCollectionController) {
+	override setTriggerableLines(shadersCollectionController: JsLinesCollectionController) {
 		const nodePath = this._targetNodePath();
 		if (!nodePath) {
 			return;

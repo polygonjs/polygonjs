@@ -2,7 +2,7 @@ import {Object3D} from 'three';
 import {AnimPropertyTarget} from '../../core/animation/PropertyTarget';
 import {NodeContext} from '../poly/NodeContext';
 import {ObjectNamedFunction1} from './_Base';
-import gsap from 'gsap';
+import {gsapTimeline} from '../../core/thirdParty/gsap';
 
 const EVENT_ANIMATION_STARTED = {type: 'onAnimationStarted'};
 const EVENT_ANIMATION_COMPLETED = {type: 'onAnimationCompleted'};
@@ -33,7 +33,7 @@ export class playAnimation extends ObjectNamedFunction1<[string]> {
 			// if (this._timeline && isBooleanTrue(this.pv.stopsPreviousAnim)) {
 			// 	this._timeline.kill();
 			// }
-			const timeline = gsap.timeline();
+			const timeline = gsapTimeline();
 
 			const propertyTarget = new AnimPropertyTarget(this.scene, {object: {list: [object3D]}});
 			timelineBuilder.populate(timeline, {registerproperties: true, propertyTarget: propertyTarget});

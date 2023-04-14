@@ -4,7 +4,7 @@
  *
  */
 import {Poly} from '../../Poly';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {BaseAudioSourceJsNode} from './_BaseAudioSource';
 import {inputObject3D} from './_BaseObject3D';
 
@@ -12,7 +12,7 @@ export class PauseAudioSourceJsNode extends BaseAudioSourceJsNode {
 	static override type() {
 		return 'pauseAudioSource';
 	}
-	override setTriggerableLines(shadersCollectionController: ShadersCollectionController) {
+	override setTriggerableLines(shadersCollectionController: JsLinesCollectionController) {
 		const object3D = inputObject3D(this, shadersCollectionController);
 
 		const node = this.pv.node.node();
@@ -26,7 +26,7 @@ export class PauseAudioSourceJsNode extends BaseAudioSourceJsNode {
 		shadersCollectionController.addTriggerableLines(this, [bodyLine]);
 	}
 	override setTriggeringLines(
-		shadersCollectionController: ShadersCollectionController,
+		shadersCollectionController: JsLinesCollectionController,
 		triggeredMethods: string
 	): void {
 		shadersCollectionController.addTriggeringLines(this, [triggeredMethods], {gatherable: false});

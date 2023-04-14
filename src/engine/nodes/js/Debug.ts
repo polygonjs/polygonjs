@@ -7,7 +7,7 @@
 import {JsConnectionPointType} from '../utils/io/connections/Js';
 import {TypedJsNode} from './_Base';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {Poly} from '../../Poly';
 import {inputObject3D} from './_BaseObject3D';
 
@@ -42,7 +42,7 @@ export class DebugJsNode extends TypedJsNode<DebugJsParamsConfig> {
 	protected _expectedOutputTypes() {
 		return this._expectedInputTypes();
 	}
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setLines(shadersCollectionController: JsLinesCollectionController) {
 		const object3D = inputObject3D(this, shadersCollectionController);
 		const nodePath = `'${this.path()}'`;
 		const inputValue = this.variableForInput(shadersCollectionController, this._expectedInputName(0));

@@ -1,7 +1,7 @@
 import {BaseJsNodeType} from '../_Base';
 import {TypedJsDefinitionCollection} from './JsDefinitionCollection';
 import {JsConnectionPointType} from '../../utils/io/connections/Js';
-import {ShadersCollectionController} from '../code/utils/ShadersCollectionController';
+import {JsLinesCollectionController} from '../code/utils/JsLinesCollectionController';
 import {nodeMethodName} from '../code/assemblers/actor/ActorAssemblerUtils';
 import {LineType} from '../code/utils/LineType';
 import {MapUtils} from '../../../../core/MapUtils';
@@ -23,7 +23,7 @@ export abstract class TypedJsDefinition<T extends JsDefinitionType> {
 	constructor(
 		protected _definitionType: T,
 		protected _node: BaseJsNodeType,
-		protected _shaderCollectionController: ShadersCollectionController,
+		protected _shaderCollectionController: JsLinesCollectionController,
 		protected _dataType: JsConnectionPointType,
 		protected _name: string
 	) {
@@ -66,7 +66,7 @@ export abstract class TypedJsDefinition<T extends JsDefinitionType> {
 export class LocalFunctionJsDefinition extends TypedJsDefinition<JsDefinitionType.LOCAL_FUNCTION> {
 	constructor(
 		protected override _node: BaseJsNodeType,
-		protected override _shaderCollectionController: ShadersCollectionController,
+		protected override _shaderCollectionController: JsLinesCollectionController,
 		protected override _dataType: JsConnectionPointType,
 		protected override _name: string,
 		protected _functionDefinition: string
@@ -113,7 +113,7 @@ export class LocalFunctionJsDefinition extends TypedJsDefinition<JsDefinitionTyp
 export class ComputedValueJsDefinition extends TypedJsDefinition<JsDefinitionType.COMPUTED> {
 	constructor(
 		protected override _node: BaseJsNodeType,
-		protected override _shaderCollectionController: ShadersCollectionController,
+		protected override _shaderCollectionController: JsLinesCollectionController,
 		protected override _dataType: JsConnectionPointType,
 		protected override _name: string,
 		protected _value: string
@@ -128,7 +128,7 @@ export class ComputedValueJsDefinition extends TypedJsDefinition<JsDefinitionTyp
 export class ConstantJsDefinition extends TypedJsDefinition<JsDefinitionType.CONSTANT> {
 	constructor(
 		protected override _node: BaseJsNodeType,
-		protected override _shaderCollectionController: ShadersCollectionController,
+		protected override _shaderCollectionController: JsLinesCollectionController,
 		protected override _dataType: JsConnectionPointType,
 		protected override _name: string,
 		protected _value: string
@@ -143,7 +143,7 @@ export class ConstantJsDefinition extends TypedJsDefinition<JsDefinitionType.CON
 export class RefJsDefinition extends TypedJsDefinition<JsDefinitionType.REF> {
 	constructor(
 		protected override _node: BaseJsNodeType,
-		protected override _shaderCollectionController: ShadersCollectionController,
+		protected override _shaderCollectionController: JsLinesCollectionController,
 		protected override _dataType: JsConnectionPointType,
 		protected override _name: string,
 		protected _value: string
@@ -162,7 +162,7 @@ interface WatchedValueJsDefinitionOptions {
 export class WatchedValueJsDefinition extends TypedJsDefinition<JsDefinitionType.WATCH> {
 	constructor(
 		protected override _node: BaseJsNodeType,
-		protected override _shaderCollectionController: ShadersCollectionController,
+		protected override _shaderCollectionController: JsLinesCollectionController,
 		protected override _dataType: JsConnectionPointType,
 		protected override _name: string,
 		protected _value: string,
@@ -190,7 +190,7 @@ export class WatchedValueJsDefinition extends TypedJsDefinition<JsDefinitionType
 export class InitFunctionJsDefinition extends TypedJsDefinition<JsDefinitionType.INIT_FUNCTION> {
 	constructor(
 		protected override _node: BaseJsNodeType,
-		protected override _shaderCollectionController: ShadersCollectionController,
+		protected override _shaderCollectionController: JsLinesCollectionController,
 		protected override _dataType: JsConnectionPointType,
 		protected override _name: string,
 		protected _value: string
@@ -210,7 +210,7 @@ interface TriggeringJsDefinitionOptions {
 export class TriggeringJsDefinition extends TypedJsDefinition<JsDefinitionType.TRIGGERING> {
 	constructor(
 		protected override _node: BaseJsNodeType,
-		protected override _shaderCollectionController: ShadersCollectionController,
+		protected override _shaderCollectionController: JsLinesCollectionController,
 		protected override _dataType: JsConnectionPointType,
 		protected override _name: string,
 		protected _value: string,
@@ -254,7 +254,7 @@ export interface TriggerableJsDefinitionOptions {
 export class TriggerableJsDefinition extends TypedJsDefinition<JsDefinitionType.TRIGGERABLE> {
 	constructor(
 		protected override _node: BaseJsNodeType,
-		protected override _shaderCollectionController: ShadersCollectionController,
+		protected override _shaderCollectionController: JsLinesCollectionController,
 		protected override _dataType: JsConnectionPointType,
 		protected override _name: string,
 		protected _value: string,

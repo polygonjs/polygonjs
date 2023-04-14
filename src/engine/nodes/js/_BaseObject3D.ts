@@ -1,5 +1,5 @@
 import {BaseJsNodeType} from './_Base';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {JsConnectionPointType} from '../utils/io/connections/Js';
 import {EvaluatorConstant} from './code/assemblers/actor/Evaluator';
 
@@ -10,9 +10,7 @@ function _defaultObject3DMaterial(): string {
 	return EvaluatorConstant.MATERIAL;
 }
 
-
-
-export function inputObject3D(node: BaseJsNodeType, shadersCollectionController: ShadersCollectionController) {
+export function inputObject3D(node: BaseJsNodeType, shadersCollectionController: JsLinesCollectionController) {
 	const inputObject3D = node.io.inputs.named_input(JsConnectionPointType.OBJECT_3D);
 	const object3D = inputObject3D
 		? node.variableForInput(shadersCollectionController, JsConnectionPointType.OBJECT_3D)
@@ -20,7 +18,7 @@ export function inputObject3D(node: BaseJsNodeType, shadersCollectionController:
 	return object3D;
 }
 
-export function inputObject3DMaterial(node: BaseJsNodeType, shadersCollectionController: ShadersCollectionController) {
+export function inputObject3DMaterial(node: BaseJsNodeType, shadersCollectionController: JsLinesCollectionController) {
 	const inputMaterial = node.io.inputs.named_input(JsConnectionPointType.MATERIAL);
 	const material = inputMaterial
 		? node.variableForInput(shadersCollectionController, JsConnectionPointType.MATERIAL)

@@ -6,7 +6,7 @@
 import {TypedJsNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {JsConnectionPointType} from '../utils/io/connections/Js';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {Vector3} from 'three';
 import {Poly} from '../../Poly';
 import {PrimitiveArray, VectorArray} from './code/assemblers/_BaseJsPersistedConfigUtils';
@@ -69,7 +69,7 @@ export class Vec4ToVec3JsNode extends TypedJsNode<Vec4ToVec3ParamsJsConfig> {
 		}
 	}
 
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setLines(shadersCollectionController: JsLinesCollectionController) {
 		const firstType = this._expectedInputTypes()[0];
 		switch (firstType) {
 			case JsConnectionPointType.VECTOR4: {
@@ -81,7 +81,7 @@ export class Vec4ToVec3JsNode extends TypedJsNode<Vec4ToVec3ParamsJsConfig> {
 		}
 	}
 
-	private _setLinesAsVector4(shadersCollectionController: ShadersCollectionController) {
+	private _setLinesAsVector4(shadersCollectionController: JsLinesCollectionController) {
 		const usedOutputNames = this.io.outputs.used_output_names();
 		const vec4 = this.variableForInput(shadersCollectionController, this._expectedInputName(0));
 		const _v3 = (propertyName: OutputName, functionName: 'sizzleVec4XYZ', type: JsConnectionPointType) => {
@@ -116,7 +116,7 @@ export class Vec4ToVec3JsNode extends TypedJsNode<Vec4ToVec3ParamsJsConfig> {
 		_f(OutputName.w, JsConnectionPointType.FLOAT);
 	}
 
-	private _setLinesAsVector4Array(shadersCollectionController: ShadersCollectionController) {
+	private _setLinesAsVector4Array(shadersCollectionController: JsLinesCollectionController) {
 		const usedOutputNames = this.io.outputs.used_output_names();
 		const vec4 = this.variableForInput(shadersCollectionController, this._expectedInputName(0));
 		const _v3 = (propertyName: OutputName, functionName: 'sizzleVec4XYZArray', type: JsConnectionPointType) => {

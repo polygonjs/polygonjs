@@ -14,7 +14,7 @@ import {
 	ParamConvertibleJsType,
 	PARAM_CONVERTIBLE_JS_CONNECTION_POINT_TYPES,
 } from '../utils/io/connections/Js';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {inputObject3D} from './_BaseObject3D';
 import {Poly} from '../../Poly';
 import {createVariable} from './code/assemblers/_BaseJsPersistedConfigUtils';
@@ -84,7 +84,7 @@ export class GetChildrenAttributesJsNode extends TypedJsNode<GetChildrenAttribut
 		return (this.params.get(GetChildrenAttributesInputName.attribName) as StringParam).value;
 	}
 
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setLines(shadersCollectionController: JsLinesCollectionController) {
 		const object3D = inputObject3D(this, shadersCollectionController);
 		const attribName = this.variableForInput(
 			shadersCollectionController,

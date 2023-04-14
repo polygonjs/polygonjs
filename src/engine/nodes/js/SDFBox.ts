@@ -9,7 +9,7 @@
 // import {ThreeToGl} from '../../../../src/core/ThreeToGl';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {JsConnectionPointType, JsConnectionPoint} from '../utils/io/connections/Js';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {BaseSDFJsNode} from './_BaseSDF';
 import {Poly} from '../../Poly';
 const OUTPUT_NAME = 'float';
@@ -34,7 +34,7 @@ export class SDFBoxJsNode extends BaseSDFJsNode<SDFBoxJsParamsConfig> {
 		]);
 	}
 
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setLines(shadersCollectionController: JsLinesCollectionController) {
 		const position = this.position(shadersCollectionController);
 		const center = this.variableForInputParam(shadersCollectionController, this.p.center);
 		const size = this.variableForInputParam(shadersCollectionController, this.p.size);

@@ -18,7 +18,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {JsConnectionPoint, JsConnectionPointType, JS_CONNECTION_POINT_IN_NODE_DEF} from '../utils/io/connections/Js';
 import {JsType} from '../../poly/registers/nodes/types/Js';
 import {Ray} from 'three';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {Poly} from '../../Poly';
 
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
@@ -52,7 +52,7 @@ export class RayFromCameraJsNode extends TypedJsNode<RayFromCameraJsParamsConfig
 		]);
 	}
 
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setLines(shadersCollectionController: JsLinesCollectionController) {
 		const camera = this.variableForInput(shadersCollectionController, JsConnectionPointType.CAMERA);
 		const x = this.variableForInputParam(shadersCollectionController, this.p.x);
 		const y = this.variableForInputParam(shadersCollectionController, this.p.y);

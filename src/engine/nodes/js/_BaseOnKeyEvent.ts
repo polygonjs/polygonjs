@@ -9,7 +9,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {JsConnectionPoint, JsConnectionPointType} from '../utils/io/connections/Js';
 import {BaseUserInputJsNode} from './_BaseUserInput';
 import {CoreEventEmitter, EVENT_EMITTERS, EVENT_EMITTER_PARAM_MENU_OPTIONS} from '../../../core/event/CoreEventEmitter';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {Poly} from '../../Poly';
 import {KeyModifierRequirement, KEY_MODIFIER_REQUIREMENTS} from '../../functions/_KeyboardEventMatchesConfig';
 
@@ -53,7 +53,7 @@ export abstract class BaseOnKeyEventJsNode extends BaseUserInputJsNode<BaseOnKey
 	setEventEmitter(emitter: CoreEventEmitter) {
 		this.p.element.set(EVENT_EMITTERS.indexOf(emitter));
 	}
-	override setTriggeringLines(shadersCollectionController: ShadersCollectionController, triggeredMethods: string) {
+	override setTriggeringLines(shadersCollectionController: JsLinesCollectionController, triggeredMethods: string) {
 		const keyCodes = this.variableForInputParam(shadersCollectionController, this.p.keyCodes);
 		const ctrlKey = this.variableForInputParam(shadersCollectionController, this.p.ctrlKey);
 		const altKey = this.variableForInputParam(shadersCollectionController, this.p.altKey);

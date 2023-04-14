@@ -14,7 +14,7 @@ import {
 	nodeMethodName,
 	triggerInputIndex,
 } from './code/assemblers/actor/ActorAssemblerUtils';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {BaseJsNodeType, TRIGGER_CONNECTION_NAME, TypedJsNode} from './_Base';
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
 
@@ -52,7 +52,7 @@ export class TriggerTwoWaySwitchJsNode extends TypedJsNode<TriggerTwoWaySwitchJs
 		]);
 	}
 
-	override setTriggerableLines(shadersCollectionController: ShadersCollectionController) {
+	override setTriggerableLines(shadersCollectionController: JsLinesCollectionController) {
 		const condition = this.variableForInputParam(shadersCollectionController, this.p.condition);
 		const methodNamesIfTrue = triggerMethod(this, TriggerTwoWaySwitchJsNode.OUTPUT_NAME_IF_TRUE);
 		const methodNamesIfFalse = triggerMethod(this, TriggerTwoWaySwitchJsNode.OUTPUT_NAME_IF_FALSE);

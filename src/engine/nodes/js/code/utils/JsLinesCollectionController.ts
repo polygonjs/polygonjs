@@ -28,7 +28,7 @@ interface TriggerableJsDefinitionOptionsExtended extends TriggerableJsDefinition
 	addTriggeredLines?: boolean;
 }
 
-export class ShadersCollectionController {
+export class JsLinesCollectionController {
 	private _linesControllerByShaderName: Map<ShaderName, JsLinesController> = new Map();
 
 	constructor(

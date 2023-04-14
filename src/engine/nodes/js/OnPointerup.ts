@@ -12,7 +12,7 @@ import {BaseUserInputJsNode} from './_BaseUserInput';
 import {CoreEventEmitter, EVENT_EMITTERS, EVENT_EMITTER_PARAM_MENU_OPTIONS} from '../../../core/event/CoreEventEmitter';
 import {PointerEventType} from '../../../core/event/PointerEventType';
 import {EvaluatorEventData} from './code/assemblers/actor/Evaluator';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
 class OnPointerupJsParamsConfig extends NodeParamsConfig {
@@ -49,7 +49,7 @@ export class OnPointerupJsNode extends BaseUserInputJsNode<OnPointerupJsParamsCo
 			new JsConnectionPoint(TRIGGER_CONNECTION_NAME, JsConnectionPointType.TRIGGER, CONNECTION_OPTIONS),
 		]);
 	}
-	override setTriggeringLines(shadersCollectionController: ShadersCollectionController, triggeredMethods: string) {
+	override setTriggeringLines(shadersCollectionController: JsLinesCollectionController, triggeredMethods: string) {
 		shadersCollectionController.addTriggeringLines(this, [triggeredMethods], {
 			gatherable: true,
 		});

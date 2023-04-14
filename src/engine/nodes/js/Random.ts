@@ -6,7 +6,7 @@
 import {Poly} from '../../Poly';
 import {JsConnectionPoint, JsConnectionPointType} from '../utils/io/connections/Js';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {TypedJsNode} from './_Base';
 
 const OUTPUT_NAME = 'random';
@@ -27,7 +27,7 @@ export class RandomJsNode extends TypedJsNode<RandomJsParamsConfig> {
 		]);
 	}
 
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setLines(shadersCollectionController: JsLinesCollectionController) {
 		const varName = this.jsVarName(OUTPUT_NAME);
 
 		const _func = Poly.namedFunctionsRegister.getFunction('random', this, shadersCollectionController).asString();

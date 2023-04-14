@@ -6,7 +6,7 @@ import {
 	isJsConnectionPointArray,
 	JsConnectionPointTypeFromArrayTypeMap,
 } from '../utils/io/connections/Js';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 // import {LocalFunctionJsDefinition} from './utils/JsDefinition';
 // import {PolyDictionary} from '../../../types/GlobalTypes';
 // import {createVariable} from './code/assemblers/_BaseJsPersistedConfigUtils';
@@ -89,7 +89,7 @@ export function MathFunctionArgXOperationFactory<MVF extends MathVectorFunction>
 			this.io.connection_points.set_expected_output_types_function(this._expectedOutputTypes.bind(this));
 		}
 
-		override setLines(shadersCollectionController: ShadersCollectionController) {
+		override setLines(shadersCollectionController: JsLinesCollectionController) {
 			const varName = this.jsVarName(this._expectedOutputName(0));
 			const inputType = this._expectedInputTypes()[0];
 			const variable = createVariable(inputType);
@@ -104,7 +104,7 @@ export function MathFunctionArgXOperationFactory<MVF extends MathVectorFunction>
 
 			shadersCollectionController.addBodyOrComputed(this, [{dataType: inputType, varName, value: mainFunction}]);
 		}
-		private _mainFunction(shadersCollectionController: ShadersCollectionController, varName: string) {
+		private _mainFunction(shadersCollectionController: JsLinesCollectionController, varName: string) {
 			const functionData = this._functionData();
 			const {vectorFunctionNameFunction, mathFloat, mathPrimArray, mathVectorArray} = functionData;
 
@@ -151,7 +151,7 @@ export function MathFunctionArgXOperationFactory<MVF extends MathVectorFunction>
 			}
 		}
 
-		protected _coreFunction(shadersCollectionController: ShadersCollectionController) {
+		protected _coreFunction(shadersCollectionController: JsLinesCollectionController) {
 			return `Math.${type}`;
 		}
 		protected _functionData(): MathFunctionData<MVF> {
@@ -168,7 +168,7 @@ export function MathFunctionArgXOperationFactory<MVF extends MathVectorFunction>
 			const inputValuesCount = inputTypes.length;
 			return inputValuesCount;
 		}
-		private _inputArgs(shadersCollectionController: ShadersCollectionController) {
+		private _inputArgs(shadersCollectionController: JsLinesCollectionController) {
 			const inputValuesCount = this._inputValuesCount();
 			const inputArgs: string[] = [];
 			for (let i = 0; i < inputValuesCount; i++) {

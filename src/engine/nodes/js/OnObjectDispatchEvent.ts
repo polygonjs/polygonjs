@@ -9,7 +9,7 @@ import {JsConnectionPoint, JsConnectionPointType, JS_CONNECTION_POINT_IN_NODE_DE
 import {JsType} from '../../poly/registers/nodes/types/Js';
 // import {onObjectDispatchFunctionNameByEventName} from '../../functions/ObjectDispatchEvent';
 import {inputObject3D} from './_BaseObject3D';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {Poly} from '../../Poly';
 import {InitFunctionJsDefinition} from './utils/JsDefinition';
 // import {sanitizeName} from '../../../core/String';
@@ -58,7 +58,7 @@ export class OnObjectDispatchEventJsNode extends TypedJsNode<OnObjectDispatchEve
 	// wrappedBodyLinesMethodName() {
 	// 	return onObjectDispatchFunctionNameByEventName(sanitizeName(this.pv.eventNames));
 	// }
-	override setTriggeringLines(shadersCollectionController: ShadersCollectionController, triggeredMethods: string) {
+	override setTriggeringLines(shadersCollectionController: JsLinesCollectionController, triggeredMethods: string) {
 		const object3D = inputObject3D(this, shadersCollectionController);
 		const eventNames = this.variableForInputParam(shadersCollectionController, this.p.eventNames);
 		const func = Poly.namedFunctionsRegister.getFunction(

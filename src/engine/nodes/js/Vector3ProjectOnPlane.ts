@@ -8,7 +8,7 @@ import {TypedJsNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {JsConnectionPoint, JsConnectionPointType} from '../utils/io/connections/Js';
 import {Vector3} from 'three';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {Poly} from '../../Poly';
 
 const OUTPUT_NAME = 'position';
@@ -31,7 +31,7 @@ export class Vector3ProjectOnPlaneJsNode extends TypedJsNode<Vector3ProjectOnPla
 			new JsConnectionPoint(OUTPUT_NAME, JsConnectionPointType.VECTOR3),
 		]);
 	}
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setLines(shadersCollectionController: JsLinesCollectionController) {
 		const vector3 = this.variableForInputParam(shadersCollectionController, this.p.Vector3);
 		const planeNormal = this.variableForInputParam(shadersCollectionController, this.p.planeNormal);
 		const out = this.jsVarName(OUTPUT_NAME);

@@ -9,7 +9,7 @@ import {JsConnectionPoint, JsConnectionPointType, JS_CONNECTION_POINT_IN_NODE_DE
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {NodeContext} from '../../poly/NodeContext';
 import {CopType} from '../../poly/registers/nodes/types/Cop';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {Poly} from '../../Poly';
 
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
@@ -49,7 +49,7 @@ export class GetVideoPropertyJsNode extends TypedJsNode<GetVideoPropertyJsParams
 			new JsConnectionPoint(GetVideoPropertyJsNodeOutputName.muted, JsConnectionPointType.BOOLEAN),
 		]);
 	}
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setLines(shadersCollectionController: JsLinesCollectionController) {
 		const usedOutputNames = this.io.outputs.used_output_names();
 
 		const node = this.pv.node.node();

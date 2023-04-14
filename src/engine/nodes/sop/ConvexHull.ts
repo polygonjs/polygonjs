@@ -8,10 +8,10 @@ import {CoreGroup} from '../../../core/geometry/Group';
 import {ConvexHullSopOperation} from '../../operations/sop/ConvexHull';
 
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
-class BoxSopParamsConfig extends NodeParamsConfig {}
-const ParamsConfig = new BoxSopParamsConfig();
+class ConvexHullSopParamsConfig extends NodeParamsConfig {}
+const ParamsConfig = new ConvexHullSopParamsConfig();
 
-export class ConvexHullSopNode extends TypedSopNode<BoxSopParamsConfig> {
+export class ConvexHullSopNode extends TypedSopNode<ConvexHullSopParamsConfig> {
 	override readonly paramsConfig = ParamsConfig;
 	static override type() {
 		return 'convexHull';

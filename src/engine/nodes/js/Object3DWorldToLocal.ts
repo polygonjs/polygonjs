@@ -10,7 +10,7 @@ import {JsConnectionPoint, JsConnectionPointType, JS_CONNECTION_POINT_IN_NODE_DE
 import {inputObject3D} from './_BaseObject3D';
 import {createVariable} from './code/assemblers/_BaseJsPersistedConfigUtils';
 import {Poly} from '../../Poly';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
 
 const OUTPUT_NAME = 'local';
@@ -36,7 +36,7 @@ export class Object3DWorldToLocalJsNode extends TypedJsNode<Object3DWorldToLocal
 			new JsConnectionPoint(OUTPUT_NAME, JsConnectionPointType.VECTOR3),
 		]);
 	}
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setLines(shadersCollectionController: JsLinesCollectionController) {
 		const object3D = inputObject3D(this, shadersCollectionController);
 		const position = this.variableForInputParam(shadersCollectionController, this.p.Vector3);
 		const varName = this.jsVarName(OUTPUT_NAME);

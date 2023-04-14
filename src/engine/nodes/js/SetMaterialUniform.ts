@@ -7,7 +7,7 @@
 import {TRIGGER_CONNECTION_NAME, TypedJsNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {JsConnectionPointType} from '../utils/io/connections/Js';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {Poly} from '../../Poly';
 import {inputObject3DMaterial} from './_BaseObject3D';
 
@@ -102,7 +102,7 @@ export class SetMaterialUniformJsNode extends TypedJsNode<SetMaterialUniformJsPa
 		this.p.type.set(JS_CONNECTION_POINT_TYPES.indexOf(type));
 	}
 
-	override setTriggerableLines(shadersCollectionController: ShadersCollectionController) {
+	override setTriggerableLines(shadersCollectionController: JsLinesCollectionController) {
 		const material = inputObject3DMaterial(this, shadersCollectionController);
 		const uniformName = this.variableForInput(
 			shadersCollectionController,

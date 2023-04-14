@@ -1,7 +1,7 @@
 import {TypedNode} from '../_Base';
 import {ThreeToGl} from '../../../core/ThreeToGl';
 import {BaseGlShaderAssembler} from './code/assemblers/_Base';
-import {AssemblerControllerNode} from './code/Controller';
+import {AssemblerGlControllerNode} from './code/Controller';
 import {NodeContext} from '../../poly/NodeContext';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {ParamConfigsController} from '../utils/code/controllers/ParamConfigsController';
@@ -50,13 +50,13 @@ export class TypedGlNode<K extends NodeParamsConfig> extends TypedNode<NodeConte
 	protected _setMatToRecompile() {
 		this.materialNode()?.assemblerController()?.setCompilationRequiredAndDirty(this);
 	}
-	materialNode(): AssemblerControllerNode | undefined {
+	materialNode(): AssemblerGlControllerNode | undefined {
 		const parent = this.parent();
 		if (parent) {
 			if (parent.context() == NodeContext.GL) {
 				return (parent as BaseGlNodeType)?.materialNode();
 			} else {
-				return parent as AssemblerControllerNode;
+				return parent as AssemblerGlControllerNode;
 			}
 		}
 	}

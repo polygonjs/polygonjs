@@ -13,7 +13,7 @@ import {
 } from '../utils/io/connections/Js';
 import {NodeContext} from '../../poly/NodeContext';
 import {Poly} from '../../Poly';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 class GetTextureJsParamsConfig extends NodeParamsConfig {
 	/** @param the material node */
 	node = ParamConfig.NODE_PATH('', {
@@ -38,7 +38,7 @@ export class GetTextureJsNode extends TypedJsNode<GetTextureJsParamsConfig> {
 		]);
 	}
 
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setLines(shadersCollectionController: JsLinesCollectionController) {
 		const node = this.pv.node.node();
 		if (!(node && node.context() == NodeContext.COP)) {
 			return;

@@ -16,7 +16,7 @@ import {
 } from '../utils/io/connections/Js';
 import {JsType} from '../../poly/registers/nodes/types/Js';
 import {inputObject3D} from './_BaseObject3D';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {WatchedValueJsDefinition} from './utils/JsDefinition';
 import {Poly} from '../../Poly';
 import {nodeMethodName} from './code/assemblers/actor/ActorAssemblerUtils';
@@ -103,7 +103,7 @@ export class OnObjectAttributeUpdateJsNode extends TypedJsNode<OnObjectAttribute
 		return (this.params.get(OnObjectAttributeUpdateInputName.attribName) as StringParam).value;
 	}
 
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setLines(shadersCollectionController: JsLinesCollectionController) {
 		const type = this.attribType();
 		const object3D = inputObject3D(this, shadersCollectionController);
 		const attribName = this.variableForInput(
@@ -140,7 +140,7 @@ export class OnObjectAttributeUpdateJsNode extends TypedJsNode<OnObjectAttribute
 		_val(OnObjectAttributeUpdateJsNode.OUTPUT_PREV_VAL, 'getObjectAttributePrevious', type);
 	}
 
-	override setTriggeringLines(shadersCollectionController: ShadersCollectionController, triggeredMethods: string) {
+	override setTriggeringLines(shadersCollectionController: JsLinesCollectionController, triggeredMethods: string) {
 		const type = this.attribType();
 		const object3D = inputObject3D(this, shadersCollectionController);
 		const attribName = this.variableForInput(

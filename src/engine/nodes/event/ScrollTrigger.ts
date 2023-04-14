@@ -45,8 +45,8 @@ import {isBooleanTrue} from '../../../core/Type';
 import {VisibleIfParamOptions} from '../../params/utils/OptionsController';
 
 import ScrollTrigger from 'gsap/ScrollTrigger';
-import gsap from 'gsap';
 import {BaseNodeType} from '../_Base';
+import {gsap} from '../../../core/thirdParty/gsap';
 gsap.registerPlugin(ScrollTrigger);
 
 enum ScrollTriggerNodeInput {

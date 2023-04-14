@@ -9,7 +9,7 @@ import {ShaderName} from '../../../../utils/shaders/ShaderName';
 import {OutputJsNode} from '../../../Output';
 import {GlobalsJsNode} from '../../../Globals';
 import {JsConnectionPointType, JsConnectionPoint} from '../../../../utils/io/connections/Js';
-import {ShadersCollectionController} from '../../utils/ShadersCollectionController';
+import {JsLinesCollectionController} from '../../utils/JsLinesCollectionController';
 // import {UniformJsDefinition} from '../../../utils/JsDefinition';
 import {Vector3} from 'three';
 import {NamedFunctionMap} from '../../../../../poly/registers/functions/All';
@@ -237,7 +237,7 @@ export class JsAssemblerSDF extends BaseJsShaderAssembler {
 	// 	}
 	// }
 
-	override set_node_lines_output(outputNode: OutputJsNode, shadersCollectionController: ShadersCollectionController) {
+	override set_node_lines_output(outputNode: OutputJsNode, shadersCollectionController: JsLinesCollectionController) {
 		const inputNames = this.inputNamesForShaderName(outputNode, shadersCollectionController.currentShaderName());
 		if (inputNames) {
 			for (const inputName of inputNames) {
@@ -263,7 +263,7 @@ export class JsAssemblerSDF extends BaseJsShaderAssembler {
 
 	override set_node_lines_globals(
 		globalsNode: GlobalsJsNode,
-		shadersCollectionController: ShadersCollectionController
+		shadersCollectionController: JsLinesCollectionController
 	) {
 		const shaderName = shadersCollectionController.currentShaderName();
 		const shaderConfig = this.shader_config(shaderName);

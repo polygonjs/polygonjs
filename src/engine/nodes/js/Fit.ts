@@ -6,7 +6,7 @@
 import {PolyDictionary} from '../../../types/GlobalTypes';
 import {Poly} from '../../Poly';
 import {JsConnectionPointType, JsConnectionPointTypeFromArrayTypeMap} from '../utils/io/connections/Js';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {MathFunctionArg5OperationFactory, DEFAULT_ALLOWED_TYPES} from './_Math_Arg1Operation';
 
 enum FitInput {
@@ -33,7 +33,7 @@ export class FitJsNode extends MathFunctionArg5OperationFactory('fit', {
 	inputPrefix: 'in',
 	out: 'val',
 }) {
-	protected _coreFunction(shadersCollectionController: ShadersCollectionController) {
+	protected _coreFunction(shadersCollectionController: JsLinesCollectionController) {
 		FUNCTION_NAMES.forEach((functionName) => {
 			Poly.namedFunctionsRegister
 				.getFunction(functionName, this, shadersCollectionController)

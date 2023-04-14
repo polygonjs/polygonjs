@@ -12,7 +12,7 @@ import {
 	ParamConvertibleJsType,
 	PARAM_CONVERTIBLE_JS_CONNECTION_POINT_TYPES,
 } from '../utils/io/connections/Js';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {Poly} from '../../Poly';
 import {TypeAssert} from '../../poly/Assert';
 
@@ -24,7 +24,7 @@ export enum SetParamJsNodeInputName {
 }
 
 interface SetParamOptions {
-	shadersCollectionController: ShadersCollectionController;
+	controller: JsLinesCollectionController;
 	nodePath: string;
 	paramName: string;
 	paramValue: string;
@@ -93,18 +93,18 @@ export class SetParamJsNode extends TypedJsNode<SetParamJsParamsConfig> {
 		}
 		this.p.type.set(index);
 	}
-	override setTriggerableLines(shadersCollectionController: ShadersCollectionController) {
+	override setTriggerableLines(controller: JsLinesCollectionController) {
 		const param = this.pv.param.param();
 		if (!param) {
 			return;
 		}
 		const nodePath = `'${param.node.path()}'`;
 		const paramName = `'${param.name()}'`;
-		const paramValue = this.variableForInput(shadersCollectionController, SetParamJsNodeInputName.val);
-		const lerp = this.variableForInput(shadersCollectionController, SetParamJsNodeInputName.lerp);
+		const paramValue = this.variableForInput(controller, SetParamJsNodeInputName.val);
+		const lerp = this.variableForInput(controller, SetParamJsNodeInputName.lerp);
 
 		const bodyLine = this._bodyLine({
-			shadersCollectionController,
+			controller,
 			nodePath,
 			paramName,
 			paramValue,
@@ -114,7 +114,7 @@ export class SetParamJsNode extends TypedJsNode<SetParamJsParamsConfig> {
 			return;
 		}
 
-		shadersCollectionController.addTriggerableLines(this, [bodyLine]);
+		controller.addTriggerableLines(this, [bodyLine]);
 	}
 	private _bodyLine(options: SetParamOptions): string | undefined {
 		const type = PARAM_CONVERTIBLE_JS_CONNECTION_POINT_TYPES[this.pv.type];
@@ -147,43 +147,43 @@ export class SetParamJsNode extends TypedJsNode<SetParamJsParamsConfig> {
 		TypeAssert.unreachable(type);
 	}
 	private _setBoolean(options: SetParamOptions): string {
-		const {shadersCollectionController, nodePath, paramName, paramValue} = options;
-		const func = Poly.namedFunctionsRegister.getFunction('setParamBoolean', this, shadersCollectionController);
+		const {controller, nodePath, paramName, paramValue} = options;
+		const func = Poly.namedFunctionsRegister.getFunction('setParamBoolean', this, controller);
 		return func.asString(nodePath, paramName, paramValue);
 	}
 	private _setColor(options: SetParamOptions): string {
-		const {shadersCollectionController, nodePath, paramName, paramValue, lerp} = options;
-		const func = Poly.namedFunctionsRegister.getFunction('setParamColor', this, shadersCollectionController);
+		const {controller, nodePath, paramName, paramValue, lerp} = options;
+		const func = Poly.namedFunctionsRegister.getFunction('setParamColor', this, controller);
 		return func.asString(nodePath, paramName, paramValue, lerp);
 	}
 	private _setFloat(options: SetParamOptions): string {
-		const {shadersCollectionController, nodePath, paramName, paramValue, lerp} = options;
-		const func = Poly.namedFunctionsRegister.getFunction('setParamFloat', this, shadersCollectionController);
+		const {controller, nodePath, paramName, paramValue, lerp} = options;
+		const func = Poly.namedFunctionsRegister.getFunction('setParamFloat', this, controller);
 		return func.asString(nodePath, paramName, paramValue, lerp);
 	}
 	private _setInt(options: SetParamOptions): string {
-		const {shadersCollectionController, nodePath, paramName, paramValue, lerp} = options;
-		const func = Poly.namedFunctionsRegister.getFunction('setParamInteger', this, shadersCollectionController);
+		const {controller, nodePath, paramName, paramValue, lerp} = options;
+		const func = Poly.namedFunctionsRegister.getFunction('setParamInteger', this, controller);
 		return func.asString(nodePath, paramName, paramValue, lerp);
 	}
 	private _setString(options: SetParamOptions): string {
-		const {shadersCollectionController, nodePath, paramName, paramValue} = options;
-		const func = Poly.namedFunctionsRegister.getFunction('setParamString', this, shadersCollectionController);
+		const {controller, nodePath, paramName, paramValue} = options;
+		const func = Poly.namedFunctionsRegister.getFunction('setParamString', this, controller);
 		return func.asString(nodePath, paramName, paramValue);
 	}
 	private _setVector2(options: SetParamOptions): string {
-		const {shadersCollectionController, nodePath, paramName, paramValue, lerp} = options;
-		const func = Poly.namedFunctionsRegister.getFunction('setParamVector2', this, shadersCollectionController);
+		const {controller, nodePath, paramName, paramValue, lerp} = options;
+		const func = Poly.namedFunctionsRegister.getFunction('setParamVector2', this, controller);
 		return func.asString(nodePath, paramName, paramValue, lerp);
 	}
 	private _setVector3(options: SetParamOptions): string {
-		const {shadersCollectionController, nodePath, paramName, paramValue, lerp} = options;
-		const func = Poly.namedFunctionsRegister.getFunction('setParamVector3', this, shadersCollectionController);
+		const {controller, nodePath, paramName, paramValue, lerp} = options;
+		const func = Poly.namedFunctionsRegister.getFunction('setParamVector3', this, controller);
 		return func.asString(nodePath, paramName, paramValue, lerp);
 	}
 	private _setVector4(options: SetParamOptions): string {
-		const {shadersCollectionController, nodePath, paramName, paramValue, lerp} = options;
-		const func = Poly.namedFunctionsRegister.getFunction('setParamVector4', this, shadersCollectionController);
+		const {controller, nodePath, paramName, paramValue, lerp} = options;
+		const func = Poly.namedFunctionsRegister.getFunction('setParamVector4', this, controller);
 		return func.asString(nodePath, paramName, paramValue, lerp);
 	}
 }

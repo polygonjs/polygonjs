@@ -8,7 +8,7 @@
 import {TypedJsNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {JsConnectionPoint, JsConnectionPointType} from '../utils/io/connections/Js';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {Plane} from 'three';
 import {Poly} from '../../Poly';
 
@@ -35,7 +35,7 @@ export class PlaneJsNode extends TypedJsNode<PlaneJsParamsConfig> {
 			new JsConnectionPoint(OUTPUT_NAME, JsConnectionPointType.PLANE),
 		]);
 	}
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setLines(shadersCollectionController: JsLinesCollectionController) {
 		const normal = this.variableForInputParam(shadersCollectionController, this.p.normal);
 		const constant = this.variableForInputParam(shadersCollectionController, this.p.constant);
 		const out = this.jsVarName(OUTPUT_NAME);

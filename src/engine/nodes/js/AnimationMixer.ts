@@ -7,7 +7,7 @@
 import {TypedJsNode} from './_Base';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {JsConnectionPoint, JsConnectionPointType, JS_CONNECTION_POINT_IN_NODE_DEF} from '../utils/io/connections/Js';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {inputObject3D} from './_BaseObject3D';
 import {Poly} from '../../Poly';
 
@@ -33,7 +33,7 @@ export class AnimationMixerJsNode extends TypedJsNode<AnimationMixerJsParamsConf
 			new JsConnectionPoint(JsConnectionPointType.ANIMATION_MIXER, JsConnectionPointType.ANIMATION_MIXER),
 		]);
 	}
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setLines(shadersCollectionController: JsLinesCollectionController) {
 		const object3D = inputObject3D(this, shadersCollectionController);
 
 		const varName = this.jsVarName(JsConnectionPointType.ANIMATION_MIXER);

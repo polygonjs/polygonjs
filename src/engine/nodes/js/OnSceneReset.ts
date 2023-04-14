@@ -8,7 +8,7 @@ import {TRIGGER_CONNECTION_NAME, TypedJsNode} from './_Base';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {JsConnectionPoint, JsConnectionPointType} from '../utils/io/connections/Js';
 import {JsType} from '../../poly/registers/nodes/types/Js';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 
 class OnSceneResetJsParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new OnSceneResetJsParamsConfig();
@@ -28,7 +28,7 @@ export class OnSceneResetJsNode extends TypedJsNode<OnSceneResetJsParamsConfig> 
 		]);
 	}
 	override setTriggeringLines(
-		shadersCollectionController: ShadersCollectionController,
+		shadersCollectionController: JsLinesCollectionController,
 		triggeredMethods: string
 	): void {
 		shadersCollectionController.addTriggeringLines(this, [triggeredMethods], {

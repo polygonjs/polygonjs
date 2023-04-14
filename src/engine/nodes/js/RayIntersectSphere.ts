@@ -9,7 +9,7 @@
 import {Vector3} from 'three';
 import {BaseRaySphereJsNode} from './_BaseRaySphere';
 import {JsConnectionPoint, JsConnectionPointType, JS_CONNECTION_POINT_IN_NODE_DEF} from '../utils/io/connections/Js';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {Poly} from '../../Poly';
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
 
@@ -24,7 +24,7 @@ export class RayIntersectSphereJsNode extends BaseRaySphereJsNode {
 			new JsConnectionPoint(OUTPUT_NAME, JsConnectionPointType.VECTOR3, CONNECTION_OPTIONS),
 		]);
 	}
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setLines(shadersCollectionController: JsLinesCollectionController) {
 		const ray = this.variableForInput(shadersCollectionController, JsConnectionPointType.RAY);
 		const sphere = this.variableForInput(shadersCollectionController, JsConnectionPointType.SPHERE);
 		const out = this.jsVarName(OUTPUT_NAME);

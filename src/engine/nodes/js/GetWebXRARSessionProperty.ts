@@ -8,7 +8,7 @@ import {TypedJsNode} from './_Base';
 import {JsConnectionPoint, JsConnectionPointType} from '../utils/io/connections/Js';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {Matrix4, Quaternion, Vector3} from 'three';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {Poly} from '../../Poly';
 
 export enum GetARSessionPropertyJsNodeOutputName {
@@ -37,7 +37,7 @@ export class GetWebXRARSessionPropertyJsNode extends TypedJsNode<GetWebXRARSessi
 			new JsConnectionPoint(GetARSessionPropertyJsNodeOutputName.hitQuaternion, JsConnectionPointType.QUATERNION),
 		]);
 	}
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setLines(shadersCollectionController: JsLinesCollectionController) {
 		const usedOutputNames = this.io.outputs.used_output_names();
 
 		const _b = (

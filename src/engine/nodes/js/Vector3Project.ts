@@ -8,7 +8,7 @@ import {TypedJsNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {JsConnectionPoint, JsConnectionPointType, JS_CONNECTION_POINT_IN_NODE_DEF} from '../utils/io/connections/Js';
 import {Vector3} from 'three';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {Poly} from '../../Poly';
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
 
@@ -35,7 +35,7 @@ export class Vector3ProjectJsNode extends TypedJsNode<Vector3ProjectJsParamsConf
 			new JsConnectionPoint(OUTPUT_NAME, JsConnectionPointType.VECTOR3),
 		]);
 	}
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setLines(shadersCollectionController: JsLinesCollectionController) {
 		const vector3 = this.variableForInputParam(shadersCollectionController, this.p.Vector3);
 		const camera = this.variableForInput(shadersCollectionController, JsConnectionPointType.CAMERA);
 		const out = this.jsVarName(OUTPUT_NAME);

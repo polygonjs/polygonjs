@@ -9,7 +9,7 @@ import {JsConnectionPoint, JsConnectionPointType} from '../utils/io/connections/
 import {Matrix4} from 'three';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {Poly} from '../../Poly';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 
 enum GetWebXRTrackedMarkerJsNodeInputName {
 	matrix = 'matrix',
@@ -31,7 +31,7 @@ export class GetWebXRTrackedMarkerPropertyJsNode extends TypedJsNode<GetWebXRTra
 			new JsConnectionPoint(GetWebXRTrackedMarkerJsNodeInputName.matrix, JsConnectionPointType.MATRIX4),
 		]);
 	}
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setLines(shadersCollectionController: JsLinesCollectionController) {
 		const usedOutputNames = this.io.outputs.used_output_names();
 
 		const _m4 = (

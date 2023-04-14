@@ -10,7 +10,7 @@
 import {TypedJsNode} from './_Base';
 import {ParamConfig, NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {JsConnectionPointType, JsConnectionPointTypeFromArrayTypeMap} from '../utils/io/connections/Js';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {createVariable} from './code/assemblers/_BaseJsPersistedConfigUtils';
 import {componentsForType} from '../../functions/_VectorUtils';
 
@@ -132,7 +132,7 @@ export class CompareJsNode extends TypedJsNode<CompareJsParamsConfig> {
 		return OUTPUT_NAME;
 	}
 
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setLines(shadersCollectionController: JsLinesCollectionController) {
 		const varName = this.jsVarName(this._expectedOutputName(0));
 
 		const inputType = this._expectedInputTypes()[0];

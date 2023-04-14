@@ -12,7 +12,7 @@ import {
 } from '../utils/io/connections/Js';
 import {TypedJsNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {RegisterableVariable, createVariable} from './code/assemblers/_BaseJsPersistedConfigUtils';
 import {Poly} from '../../Poly';
 
@@ -64,7 +64,7 @@ export class ArrayElementJsNode extends TypedJsNode<ArrayElementJsParamsConfig> 
 		const outputType = JsConnectionPointTypeFromArrayTypeMap[firstType] || JsConnectionPointType.FLOAT;
 		return [outputType];
 	}
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setLines(shadersCollectionController: JsLinesCollectionController) {
 		const firstType = this._expectedInputTypes()[0];
 		switch (firstType) {
 			case JsConnectionPointType.BOOLEAN_ARRAY:
@@ -89,7 +89,7 @@ export class ArrayElementJsNode extends TypedJsNode<ArrayElementJsParamsConfig> 
 			}
 		}
 	}
-	private _setLinesAsPrimitive(shadersCollectionController: ShadersCollectionController) {
+	private _setLinesAsPrimitive(shadersCollectionController: JsLinesCollectionController) {
 		const array = this.variableForInput(shadersCollectionController, this._expectedInputName(0));
 		const index = this.variableForInputParam(shadersCollectionController, this.p.index);
 		const dataType = this._expectedInputTypes()[0];
@@ -107,7 +107,7 @@ export class ArrayElementJsNode extends TypedJsNode<ArrayElementJsParamsConfig> 
 			},
 		]);
 	}
-	private _setLinesAsVector(shadersCollectionController: ShadersCollectionController) {
+	private _setLinesAsVector(shadersCollectionController: JsLinesCollectionController) {
 		const array = this.variableForInput(shadersCollectionController, this._expectedInputName(0));
 		const index = this.variableForInputParam(shadersCollectionController, this.p.index);
 		const dataType = this._expectedInputTypes()[0];
@@ -123,10 +123,10 @@ export class ArrayElementJsNode extends TypedJsNode<ArrayElementJsParamsConfig> 
 			},
 		]);
 	}
-	private _setLinesAsIntersection(shadersCollectionController: ShadersCollectionController) {
+	private _setLinesAsIntersection(shadersCollectionController: JsLinesCollectionController) {
 		console.warn('not implemented');
 	}
-	private _setLinesAsTexture(shadersCollectionController: ShadersCollectionController) {
+	private _setLinesAsTexture(shadersCollectionController: JsLinesCollectionController) {
 		console.warn('not implemented');
 	}
 }

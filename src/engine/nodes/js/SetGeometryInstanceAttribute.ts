@@ -8,7 +8,7 @@ import {TypedJsNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {JsConnectionPoint, JsConnectionPointType, JS_CONNECTION_POINT_IN_NODE_DEF} from '../utils/io/connections/Js';
 import {inputObject3D} from './_BaseObject3D';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {Poly} from '../../Poly';
 
 // import {updateInstancePositions} from './utils/JsInstance';
@@ -97,7 +97,7 @@ export class SetGeometryInstanceAttributeJsNode extends TypedJsNode<SetGeometryI
 	protected _expectedInputName(index: number) {
 		return INPUT_NAMES[index];
 	}
-	override setTriggerableLines(shadersCollectionController: ShadersCollectionController) {
+	override setTriggerableLines(shadersCollectionController: JsLinesCollectionController) {
 		const object3D = inputObject3D(this, shadersCollectionController);
 		const attribName = this.pv.attribName;
 		const values = this.variableForInput(shadersCollectionController, SetGeometryInstanceAttributeInputName.values);

@@ -1,4 +1,4 @@
-import {GlobalsBaseController} from './_Base';
+import {GlobalsJsBaseController} from './_Base';
 import {GlobalsJsNode} from '../../Globals';
 import {AttributeJsNode} from '../../Attribute';
 // import {Definition} from '../../Definition/_Module';
@@ -10,14 +10,14 @@ import {JsConnectionPointType} from '../../../utils/io/connections/Js';
 // import {MapUtils} from '../../../../../core/MapUtils';
 // import {ShaderName} from '../../../utils/shaders/ShaderName';
 import {BaseJsNodeType} from '../../_Base';
-import {ShadersCollectionController} from '../utils/ShadersCollectionController';
+import {JsLinesCollectionController} from '../utils/JsLinesCollectionController';
 import {PolyDictionary} from '../../../../../types/GlobalTypes';
 
 const VARIABLE_CONFIG_DEFAULT_BY_NAME: PolyDictionary<string> = {
 	position: 'vec3( position )',
 };
 
-export class GlobalsGeometryHandler extends GlobalsBaseController {
+export class GlobalsJsGeometryHandler extends GlobalsJsBaseController {
 	// static PRE_DEFINED_ATTRIBUTES = [
 	// 	'position',
 	// 	'color',
@@ -39,7 +39,7 @@ export class GlobalsGeometryHandler extends GlobalsBaseController {
 	override handle_globals_node(
 		globals_node: GlobalsJsNode,
 		output_name: string,
-		linesController: ShadersCollectionController
+		linesController: JsLinesCollectionController
 		// definitions_by_shader_name: Map<ShaderName, BaseGLDefinition[]>,
 		// body_lines_by_shader_name: Map<ShaderName, string[]>,
 		// body_lines: string[],
@@ -58,7 +58,7 @@ export class GlobalsGeometryHandler extends GlobalsBaseController {
 		globals_node: BaseJsNodeType,
 		output_name: string,
 		jsType: JsConnectionPointType,
-		linesController: ShadersCollectionController
+		linesController: JsLinesCollectionController
 	): void {
 		// const var_name = globals_node.jsVarName(output_name);
 		// const definition = new VaryingGLDefinition(globals_node, glType, var_name);
@@ -112,7 +112,7 @@ export class GlobalsGeometryHandler extends GlobalsBaseController {
 		return VARIABLE_CONFIG_DEFAULT_BY_NAME[variable_name];
 	}
 	variable_config_default(variable_name: string): string | undefined {
-		return GlobalsGeometryHandler.variable_config_default(variable_name);
+		return GlobalsJsGeometryHandler.variable_config_default(variable_name);
 	}
 	// variable_config_required_definitions(variable_name:string):DefinitionBaseConfig[]{
 	// 	return null
@@ -121,16 +121,16 @@ export class GlobalsGeometryHandler extends GlobalsBaseController {
 		node: BaseJsNodeType,
 		jsType: JsConnectionPointType,
 		attribName: string,
-		linesController: ShadersCollectionController
+		linesController: JsLinesCollectionController
 	) {
-		return GlobalsGeometryHandler.readAttribute(node, jsType, attribName, linesController);
+		return GlobalsJsGeometryHandler.readAttribute(node, jsType, attribName, linesController);
 	}
 
 	static readAttribute(
 		node: BaseJsNodeType,
 		jsType: JsConnectionPointType,
 		attribName: string,
-		linesController: ShadersCollectionController
+		linesController: JsLinesCollectionController
 	): string | undefined {
 		return undefined;
 		// if (GlobalsGeometryHandler.PRE_DEFINED_ATTRIBUTES.indexOf(attrib_name) < 0) {
@@ -227,8 +227,8 @@ export class GlobalsGeometryHandler extends GlobalsBaseController {
 		node: AttributeJsNode,
 		jsType: JsConnectionPointType,
 		attribName: string,
-		linesController: ShadersCollectionController
+		linesController: JsLinesCollectionController
 	) {
-		return GlobalsGeometryHandler.readAttribute(node, jsType, attribName, linesController);
+		return GlobalsJsGeometryHandler.readAttribute(node, jsType, attribName, linesController);
 	}
 }

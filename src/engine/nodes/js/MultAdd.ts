@@ -6,7 +6,7 @@
 import {PolyDictionary} from '../../../types/GlobalTypes';
 import {Poly} from '../../Poly';
 import {JsConnectionPointType, JsConnectionPointTypeFromArrayTypeMap} from '../utils/io/connections/Js';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {MathFunctionArg4OperationFactory, DEFAULT_ALLOWED_TYPES} from './_Math_Arg1Operation';
 
 export enum MultAddInput {
@@ -27,7 +27,7 @@ export class MultAddJsNode extends MathFunctionArg4OperationFactory('multAdd', {
 	inputPrefix: 'in',
 	out: 'val',
 }) {
-	protected _coreFunction(shadersCollectionController: ShadersCollectionController) {
+	protected _coreFunction(shadersCollectionController: JsLinesCollectionController) {
 		Poly.namedFunctionsRegister
 			.getFunction(FUNCTION_NAME, this, shadersCollectionController)
 			.asString('', '', '', '');

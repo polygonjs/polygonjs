@@ -1,7 +1,8 @@
 import {Quaternion} from 'three';
+import {GsapTweenVars} from '../../../thirdParty/gsap';
 
 interface PopulateVarsForVector {
-	vars: gsap.TweenVars;
+	vars: GsapTweenVars;
 	targetValue: Quaternion;
 	targetProperty: Quaternion;
 }

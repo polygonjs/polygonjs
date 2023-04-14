@@ -9,7 +9,7 @@ import {TypedJsNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {JsConnectionPoint, JsConnectionPointType} from '../utils/io/connections/Js';
 import {Ray} from 'three';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {Poly} from '../../Poly';
 
 class RayJsParamsConfig extends NodeParamsConfig {
@@ -32,7 +32,7 @@ export class RayJsNode extends TypedJsNode<RayJsParamsConfig> {
 		]);
 	}
 
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setLines(shadersCollectionController: JsLinesCollectionController) {
 		const origin = this.variableForInputParam(shadersCollectionController, this.p.origin);
 		const direction = this.variableForInputParam(shadersCollectionController, this.p.direction);
 		const out = this.jsVarName(JsConnectionPointType.RAY);

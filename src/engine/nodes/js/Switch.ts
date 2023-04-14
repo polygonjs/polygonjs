@@ -5,7 +5,7 @@
  *
  */
 import {JsConnectionPointType} from '../utils/io/connections/Js';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {ParamlessTypedJsNode} from './_Base';
 import {ThreeToJs} from '../../../core/ThreeToJs';
 
@@ -76,7 +76,7 @@ export class SwitchJsNode extends ParamlessTypedJsNode {
 		return [type];
 	}
 
-	override setLines(shadersCollectionController: ShadersCollectionController) {
+	override setLines(shadersCollectionController: JsLinesCollectionController) {
 		const inputIndex = ThreeToJs.integer(
 			this.variableForInput(shadersCollectionController, SwitchJsNode.INPUT_INDEX_NAME)
 		);
