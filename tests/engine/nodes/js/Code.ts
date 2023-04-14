@@ -54,15 +54,15 @@ QUnit.test('js/code modified with new input', async (assert) => {
 				new JsConnectionPoint('myBoolParam', JsConnectionPointType.BOOLEAN),
 			]);
 		}
-		 setTriggerableLines(shadersCollectionController) {
-			const object3D = inputObject3D(this, shadersCollectionController);
-			const myBoolParam = this.variableForInput(shadersCollectionController, 'myBoolParam');
+		 setTriggerableLines(controller) {
+			const object3D = this.inputObject3D(this, controller);
+			const myBoolParam = this.variableForInput(controller, 'myBoolParam');
 	
 			const bodyLines = [
 				object3D + '.position.y = ' + myBoolParam + '? 1 : 0',
 				object3D + '.updateMatrix()'
 			];
-			this.addTriggerableLines(shadersCollectionController, bodyLines);
+			this.addTriggerableLines(controller, bodyLines);
 		}
 	}
 `;

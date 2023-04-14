@@ -106,11 +106,18 @@ export class JsAssemblerController<A extends BaseJsShaderAssembler> {
 		}
 
 		this.setCompilationRequired();
-		if (this.node.isDirty()) {
-			// nothing
-		} else {
-			this.node.compile();
+
+		if(this._assembler.makeFunctionNodeDirtyOnChange()){
+			this.node.setDirty()
+		}else{
+			if (this.node.isDirty()) {
+				// nothing
+			} else {
+				this.node.compile();
+			}
+	
 		}
+
 
 		// this.setCompilationRequired();
 		// // if (this._assembler.makeFunctionNodeDirtyOnRecompileRequired()) {

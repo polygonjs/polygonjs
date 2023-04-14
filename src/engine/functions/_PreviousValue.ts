@@ -37,7 +37,6 @@ export class previousValuePrimitive<T extends boolean | number | string> extends
 			array[i] = array[i + 1];
 		}
 		array[arrayLength - 1] = newValue;
-		console.log(array);
 		return array[0];
 	}
 }

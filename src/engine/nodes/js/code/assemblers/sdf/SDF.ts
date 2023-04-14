@@ -33,7 +33,9 @@ export class JsAssemblerSDF extends BaseJsShaderAssembler {
 	// private _function: Function | undefined;
 	// private _uniforms: IUniforms | undefined;
 	// private _functionsByName: Map<string, Function> = new Map();
-
+	makeFunctionNodeDirtyOnChange() {
+		return true;
+	}
 	override templateShader() {
 		return {
 			fragmentShader: TEMPLATE,

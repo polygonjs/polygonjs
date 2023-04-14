@@ -116,9 +116,7 @@ export abstract class BaseJsShaderAssembler extends TypedAssembler<NodeContext.J
 	currentGlParentNode() {
 		return this._overriden_gl_parent_node || this._gl_parent_node;
 	}
-	// makeFunctionNodeDirtyOnRecompileRequired() {
-	// 	return true;
-	// }
+	abstract makeFunctionNodeDirtyOnChange(): boolean;
 	addComputedVarName(varName: string) {
 		this._computedVarNames.add(varName);
 	}

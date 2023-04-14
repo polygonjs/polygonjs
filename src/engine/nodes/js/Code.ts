@@ -41,7 +41,7 @@ export class CodeJsProcessor extends BaseCodeJsProcessor {
 	}
 }
 `;
-const DEFAULT_JS = DEFAULT_TS.replace(/\:\sJsNodeTriggerContext/g, '').replace(/override\s/g, '');
+const DEFAULT_JS = DEFAULT_TS.replace(/\:\sJsLinesCollectionController/g, '').replace(/override\s/g, '');
 
 export class BaseCodeJsProcessor extends BaseCodeProcessor {
 	constructor(protected override node: CodeJsNode) {

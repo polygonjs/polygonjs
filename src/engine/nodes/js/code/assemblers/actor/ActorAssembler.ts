@@ -77,9 +77,9 @@ return CustomActorEvaluator;`;
 export class JsAssemblerActor extends BaseJsShaderAssembler {
 	// private _function: Function | undefined;
 	// private _uniforms: IUniforms | undefined;
-	// override makeFunctionNodeDirtyOnRecompileRequired() {
-	// 	return false;
-	// }
+	makeFunctionNodeDirtyOnChange() {
+		return false;
+	}
 	override templateShader() {
 		return {
 			fragmentShader: TEMPLATE,
