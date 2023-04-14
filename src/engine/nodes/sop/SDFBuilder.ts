@@ -1,12 +1,13 @@
+/**
+ * Creates a mesh from an SDF function.
+ *
+ *
+ */
 import {Constructor, Number3, valueof} from '../../../types/GlobalTypes';
-// import {ShaderAssemblerParticles} from '../gl/code/assemblers/particles/Particles';
-// import {InputCloneMode} from '../../poly/InputCloneMode';
 import {NodeContext} from '../../poly/NodeContext';
 import {CoreGroup} from '../../../core/geometry/Group';
-// import {GlAssemblerController} from '../gl/code/Controller';
 import {JsNodeChildrenMap} from '../../poly/registers/nodes/Js';
 import {BaseJsNodeType} from '../js/_Base';
-
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {NodeCreateOptions} from '../utils/hierarchy/ChildrenController';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
@@ -25,8 +26,6 @@ import {TypedSopNode} from './_Base';
 import {ModuleName} from '../../poly/registers/modules/Common';
 import {SDFObject} from '../../../core/geometry/sdf/SDFObject';
 import {CoreType} from '../../../core/Type';
-// import {JsParamConfig} from '../js/code/utils/JsParamConfig';
-// import {ParamType} from '../../poly/ParamType';
 import {SDFPersistedConfig} from '../js/code/assemblers/sdf/SDFPersistedConfig';
 import {ParamType} from '../../poly/ParamType';
 import {JsParamConfig} from '../js/code/utils/JsParamConfig';

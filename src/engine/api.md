@@ -40,12 +40,12 @@ Here is the list of documented classes.
 ### Nodes
 
 -   [TypedNode](/docs/api/TypedNode)
--   [TypedActorNode](/docs/api/TypedActorNode)
 -   [TypedAnimNode](/docs/api/TypedAnimNode)
 -   [TypedAudioNode](/docs/api/TypedAudioNode)
 -   [TypedCopNode](/docs/api/TypedCopNode)
 -   [TypedEventNode](/docs/api/TypedEventNode)
 -   [TypedGlNode](/docs/api/TypedGlNode)
+-   [TypedJsNode](/docs/api/TypedJsNode)
 -   [TypedMatNode](/docs/api/TypedMatNode)
 -   [TypedObjNode](/docs/api/TypedObjNode)
 -   [TypedPostNode](/docs/api/TypedPostNode)
