@@ -4,7 +4,7 @@ import {NodeEvent} from '../../../src/engine/poly/NodeEvent';
 import {PolyScene} from '../../../src/engine/scene/PolyScene';
 import {SceneEvent} from '../../../src/engine/poly/SceneEvent';
 import {ActorEvaluator} from '../../../src/engine/nodes/js/code/assemblers/actor/Evaluator';
-import {ActorEvaluatorDebugOptions} from '../../../src/engine/scene/utils/DispatchController';
+import {DebugLinesContainer} from '../../../src/engine/scene/utils/DispatchController';
 
 QUnit.test('sets the node to update if set value', async (assert) => {
 	const geo1 = window.geo1;
@@ -80,7 +80,7 @@ class EventsListener {
 	processActorEvaluator(evaluator: ActorEvaluator) {
 		return evaluator;
 	}
-	actorEvaluatorDebug(options: ActorEvaluatorDebugOptions) {}
+	actorEvaluatorDebug(options: DebugLinesContainer) {}
 }
 
 QUnit.test('emit only the minimum times', (assert) => {

@@ -1,3 +1,8 @@
+/**
+ * Creates a param on the container node, which allows to control the js function without recompiling it
+ *
+ *
+ */
 import {TypedJsNode} from './_Base';
 import {
 	PARAM_CONVERTIBLE_JS_CONNECTION_POINT_TYPES,

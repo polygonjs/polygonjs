@@ -8,7 +8,7 @@ import {MathFunctionArgNOperationFactory} from './_Math_ArgNOperation';
 
 export class DivideJsNode extends MathFunctionArgNOperationFactory('divide', {
 	inputPrefix: 'div',
-	out: 'division',
+	out: 'divide',
 	operator: {
 		primitive: 'divideNumber',
 		// vector: 'multVector',

@@ -15,6 +15,9 @@ export class getWebXRARHitDetected extends NamedFunction0 {
 		return 'getWebXRARHitDetected';
 	}
 	func(): boolean {
+		// not yet reactive, so we depend on time
+		dummyReadRefVal(this.timeController.timeUniform().value);
+		//
 		const arController = this.scene.webXR.activeARController();
 		return arController?.hitDetected() || false;
 	}
@@ -24,6 +27,9 @@ export class getWebXRARHitMatrix extends NamedFunction1<[Matrix4]> {
 		return 'getWebXRARHitMatrix';
 	}
 	func(target: Matrix4): Matrix4 {
+		// not yet reactive, so we depend on time
+		dummyReadRefVal(this.timeController.timeUniform().value);
+		//
 		const arController = this.scene.webXR.activeARController();
 		arController?.hitMatrix(target);
 		return target;
@@ -34,6 +40,9 @@ export class getWebXRARHitPosition extends NamedFunction1<[Vector3]> {
 		return 'getWebXRARHitPosition';
 	}
 	func(target: Vector3): Vector3 {
+		// not yet reactive, so we depend on time
+		dummyReadRefVal(this.timeController.timeUniform().value);
+		//
 		const arController = this.scene.webXR.activeARController();
 		arController?.hitPosition(target);
 		return target;
@@ -44,6 +53,9 @@ export class getWebXRARHitQuaternion extends NamedFunction1<[Quaternion]> {
 		return 'getWebXRARHitQuaternion';
 	}
 	func(target: Quaternion): Quaternion {
+		// not yet reactive, so we depend on time
+		dummyReadRefVal(this.timeController.timeUniform().value);
+		//
 		const arController = this.scene.webXR.activeARController();
 		arController?.hitQuaternion(target);
 		return target;
@@ -60,6 +72,9 @@ export class getWebXRControllerObject extends ObjectNamedFunction1<[number]> {
 		return 'getWebXRControllerObject';
 	}
 	func(object3D: Object3D, controllerIndex: number): Object3D {
+		// not yet reactive, so we depend on time
+		dummyReadRefVal(this.timeController.timeUniform().value);
+		//
 		const xrController = this.scene.webXR.activeXRController();
 		return xrController?.getController(controllerIndex).controller || object3D;
 	}
@@ -69,6 +84,9 @@ export class getWebXRControllerRay extends ObjectNamedFunction2<[number, Ray]> {
 		return 'getWebXRControllerRay';
 	}
 	func(object3D: Object3D, controllerIndex: number, target: Ray): Ray {
+		// not yet reactive, so we depend on time
+		dummyReadRefVal(this.timeController.timeUniform().value);
+		//
 		const xrController = this.scene.webXR.activeXRController();
 		const ray = xrController?.getController(controllerIndex).ray;
 		if (ray) {
@@ -82,6 +100,9 @@ export class getWebXRControllerHasAngularVelocity extends ObjectNamedFunction1<[
 		return 'getWebXRControllerHasAngularVelocity';
 	}
 	func(object3D: Object3D, controllerIndex: number): boolean {
+		// not yet reactive, so we depend on time
+		dummyReadRefVal(this.timeController.timeUniform().value);
+		//
 		const xrController = this.scene.webXR.activeXRController();
 		return xrController?.getController(controllerIndex).controller.hasAngularVelocity || false;
 	}
@@ -91,6 +112,9 @@ export class getWebXRControllerAngularVelocity extends ObjectNamedFunction2<[num
 		return 'getWebXRControllerAngularVelocity';
 	}
 	func(object3D: Object3D, controllerIndex: number, target: Vector3): Vector3 {
+		// not yet reactive, so we depend on time
+		dummyReadRefVal(this.timeController.timeUniform().value);
+		//
 		const xrController = this.scene.webXR.activeXRController();
 		const angularVelocity = xrController?.getController(controllerIndex).controller.angularVelocity;
 		if (angularVelocity) {
@@ -104,6 +128,9 @@ export class getWebXRControllerHasLinearVelocity extends ObjectNamedFunction1<[n
 		return 'getWebXRControllerHasLinearVelocity';
 	}
 	func(object3D: Object3D, controllerIndex: number): boolean {
+		// not yet reactive, so we depend on time
+		dummyReadRefVal(this.timeController.timeUniform().value);
+		//
 		const xrController = this.scene.webXR.activeXRController();
 		return xrController?.getController(controllerIndex).controller.hasLinearVelocity || false;
 	}
@@ -113,6 +140,9 @@ export class getWebXRControllerLinearVelocity extends ObjectNamedFunction2<[numb
 		return 'getWebXRControllerLinearVelocity';
 	}
 	func(object3D: Object3D, controllerIndex: number, target: Vector3): Vector3 {
+		// not yet reactive, so we depend on time
+		dummyReadRefVal(this.timeController.timeUniform().value);
+		//
 		const xrController = this.scene.webXR.activeXRController();
 		const linearVelocity = xrController?.getController(controllerIndex).controller.linearVelocity;
 		if (linearVelocity) {
@@ -132,6 +162,9 @@ export class getWebXRTrackedMarkerMatrix extends NamedFunction1<[Matrix4]> {
 		return 'getWebXRTrackedMarkerMatrix';
 	}
 	func(target: Matrix4): Matrix4 {
+		// not yet reactive, so we depend on time
+		dummyReadRefVal(this.timeController.timeUniform().value);
+		//
 		const controller = Poly.thirdParty.markerTracking().controller();
 		if (controller) {
 			dummyReadRefVal(getOrCreateWebXRTrackerRef(0).value);

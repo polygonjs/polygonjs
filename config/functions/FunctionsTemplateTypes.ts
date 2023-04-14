@@ -18,6 +18,7 @@ export const FUNCTION_TEMPLATE_BY_FUNCTION_NAME: Record<string, string> = {
 	multVector: 'Vector2 | Vector3 | Vector4',
 	multVectorNumber: 'Vector2 | Vector3 | Vector4',
 	negate: 'boolean | number',
+	previousValuePrimitive: 'boolean | number | string',
 	subtractVector: 'Vector2 | Vector3 | Vector4',
 	subtractVectorNumber: 'Vector2 | Vector3 | Vector4',
 };

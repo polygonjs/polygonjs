@@ -188,6 +188,13 @@ export const FUNCTION_NAME_BY_FILE_NAME: Record<string, string[]> = {
 	ParticlesSystem: ['particlesSystemReset', 'particlesSystemStepSimulation'],
 	Performance: ['onPerformanceChange'],
 	Plane: ['planeSet', 'getPlaneNormal', 'getPlaneConstant'],
+	PreviousValue: [
+		'previousValuePrimitive',
+		'previousValueColor',
+		'previousValueVector2',
+		'previousValueVector3',
+		'previousValueVector4',
+	],
 	Ray: [
 		'raySet',
 		'rayFromCamera',

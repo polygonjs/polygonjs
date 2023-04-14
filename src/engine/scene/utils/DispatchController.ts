@@ -1,22 +1,19 @@
 import {PolyScene} from '../PolyScene';
-
 import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
 import {SceneEvent} from '../../poly/SceneEvent';
 import {NodeEvent} from '../../poly/NodeEvent';
 import {ParamEvent} from '../../poly/ParamEvent';
 import {ActorEvaluator} from '../../nodes/js/code/assemblers/actor/Evaluator';
-import {Object3D} from 'three';
-import {JsDataType} from '../../nodes/utils/io/connections/Js';
+import {DebugLine} from '../../functions/_Debug';
 
-export interface ActorEvaluatorDebugOptions {
-	object3D: Object3D;
-	nodePath: string;
-	value: JsDataType;
+export interface DebugLinesContainer {
+	nodePath:string
+	debugLines:DebugLine[]
 }
 export interface EventsListener {
 	processEvents: (emitter: CoreGraphNode, event: SceneEvent | NodeEvent | ParamEvent, data?: any) => void;
 	processActorEvaluator(evaluator: ActorEvaluator): ActorEvaluator;
-	actorEvaluatorDebug(options: ActorEvaluatorDebugOptions): void;
+	actorEvaluatorDebug(options: DebugLinesContainer): void;
 }
 type OnAddListenerCallback = () => void;
 
@@ -67,7 +64,7 @@ export class DispatchController {
 	processActorEvaluator(evaluator: ActorEvaluator) {
 		return this._eventsListener?.processActorEvaluator(evaluator);
 	}
-	actorEvaluatorDebug(options: ActorEvaluatorDebugOptions) {
+	actorEvaluatorDebug(options: DebugLinesContainer) {
 		return this._eventsListener?.actorEvaluatorDebug(options);
 	}
 }

@@ -147,6 +147,7 @@ import {PlayerUpdateJsNode} from '../../../nodes/js/PlayerUpdate';
 import {PlayInstrumentNoteJsNode} from '../../../nodes/js/PlayInstrumentNote';
 import {PowJsNode} from '../../../nodes/js/Pow';
 import {PressButtonParamJsNode} from '../../../nodes/js/PressButtonParam';
+import {PreviousValueJsNode} from '../../../nodes/js/PreviousValue';
 import {RandJsNode} from '../../../nodes/js/Rand';
 import {RandomJsNode} from '../../../nodes/js/Random';
 import {RayJsNode} from '../../../nodes/js/Ray';
@@ -390,6 +391,7 @@ export interface JsNodeChildrenMap {
 	playerUpdate: PlayerUpdateJsNode;
 	pow: PowJsNode;
 	pressButtonParam: PressButtonParamJsNode;
+	previousValue: PreviousValueJsNode;
 	rand: RandJsNode;
 	random: RandomJsNode;
 	ray: RayJsNode;
@@ -661,6 +663,7 @@ export class JsRegister {
 		poly.registerNode(PlayerUpdateJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR);
 		poly.registerNode(PowJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(PressButtonParamJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR);
+		poly.registerNode(PreviousValueJsNode, CATEGORY_JS.ADVANCED, ONLY_ACTOR);
 		poly.registerNode(RandJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(RandomJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(RayJsNode, CATEGORY_JS.MATH);
