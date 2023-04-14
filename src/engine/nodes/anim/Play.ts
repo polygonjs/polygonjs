@@ -9,7 +9,7 @@ import {BaseNodeType} from '../_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {Poly} from '../../Poly';
-import {GsapCoreTimeline, gsapTimeline} from '../../../core/thirdParty/gsap';
+import {GsapCoreTimeline, gsapTimeline, gsap} from '../../../core/thirdParty/gsap';
 
 const DISPLAY_INPUT_NAMES = ['from', 'to'];
 

@@ -113,11 +113,23 @@ export class SetObjectAttributeJsNode extends TypedJsNode<SetObjectAttributeJsPa
 		return connectionType || JsConnectionPointType.FLOAT;
 	}
 
+	private _nextAttribName: string = '';
+	override paramDefaultValue(name: SetObjectAttributeInputName) {
+		return {
+			[SetObjectAttributeInputName.attribName]: this._nextAttribName,
+			[SetObjectAttributeInputName.lerp]: 1,
+		}[name];
+	}
 	setAttribType(type: ParamConvertibleJsType) {
 		this.p.type.set(PARAM_CONVERTIBLE_JS_CONNECTION_POINT_TYPES.indexOf(type));
 	}
 	setAttribName(attribName: string) {
-		(this.params.get(SetObjectAttributeInputName.attribName) as StringParam).set(attribName);
+		const param = this.params.get(SetObjectAttributeInputName.attribName) as StringParam | undefined;
+		if (param) {
+			param.set(attribName);
+		} else {
+			this._nextAttribName = attribName;
+		}
 	}
 
 	override setTriggerableLines(shadersCollectionController: JsLinesCollectionController) {

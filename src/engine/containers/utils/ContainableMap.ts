@@ -5,7 +5,6 @@ import {AudioBuilder} from '../../../core/audio/AudioBuilder';
 import {NodeContext} from '../../poly/NodeContext';
 
 export interface ContainableMap {
-	[NodeContext.ACTOR]: string;
 	[NodeContext.ANIM]: TimelineBuilder;
 	[NodeContext.AUDIO]: AudioBuilder;
 	[NodeContext.COP]: Texture;
@@ -21,7 +20,6 @@ export interface ContainableMap {
 }
 
 export const ContainableClassMap = {
-	[NodeContext.ACTOR]: String,
 	[NodeContext.ANIM]: TimelineBuilder,
 	[NodeContext.AUDIO]: AudioBuilder,
 	[NodeContext.COP]: Texture,

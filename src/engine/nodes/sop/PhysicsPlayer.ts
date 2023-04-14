@@ -237,32 +237,4 @@ export class PhysicsPlayerSopNode extends TypedActorSopNode<PhysicsPlayerSopPara
 		// 	return this.pv.node.node() as ActorBuilderNode | undefined;
 		// }
 	}
-
-	//
-	// CHILDREN
-	//
-	// protected override _childrenControllerContext = NodeContext.ACTOR;
-	// override createNode<S extends keyof ActorNodeChildrenMap>(
-	// 	node_class: S,
-	// 	options?: NodeCreateOptions
-	// ): ActorNodeChildrenMap[S];
-	// override createNode<K extends valueof<ActorNodeChildrenMap>>(
-	// 	node_class: Constructor<K>,
-	// 	options?: NodeCreateOptions
-	// ): K;
-	// override createNode<K extends valueof<ActorNodeChildrenMap>>(
-	// 	node_class: Constructor<K>,
-	// 	options?: NodeCreateOptions
-	// ): K {
-	// 	return super.createNode(node_class, options) as K;
-	// }
-	// override children() {
-	// 	return super.children() as BaseActorNodeType[];
-	// }
-	// override nodesByType<K extends keyof ActorNodeChildrenMap>(type: K): ActorNodeChildrenMap[K][] {
-	// 	return super.nodesByType(type) as ActorNodeChildrenMap[K][];
-	// }
-	// override childrenAllowed() {
-	// 	return true;
-	// }
 }

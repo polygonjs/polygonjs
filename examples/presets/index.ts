@@ -1,11 +1,5 @@
 import {NodeContext} from '../../src/engine/poly/NodeContext';
 
-// actor
-import {getObjectAttributeActorPresetRegister} from './actor/GetObjectAttribute';
-import {getChildrenAttributesActorPresetRegister} from './actor/GetChildrenAttributes';
-import {onChildAttributeUpdateActorPresetRegister} from './actor/OnEventChildAttributeUpdated';
-import {onObjectAttributeUpdateActorPresetRegister} from './actor/OnEventObjectAttributeUpdated';
-import {rayFromCameraActorPresetRegister} from './actor/RayFromCamera';
 // anim
 import {propertyNameAnimPresetRegister} from './anim/PropertyName';
 // audio
@@ -77,12 +71,6 @@ class PresetLibraryClass {
 	static _instance: PresetLibraryClass | undefined;
 	private _presetsByContextAndType: Map<NodeContext, Map<string, PresetRegister<any, any>>> = new Map();
 	private constructor() {
-		// actor
-		this._registerPreset(getObjectAttributeActorPresetRegister);
-		this._registerPreset(getChildrenAttributesActorPresetRegister);
-		this._registerPreset(onChildAttributeUpdateActorPresetRegister);
-		this._registerPreset(onObjectAttributeUpdateActorPresetRegister);
-		this._registerPreset(rayFromCameraActorPresetRegister);
 		// anim
 		this._registerPreset(propertyNameAnimPresetRegister);
 		// audio

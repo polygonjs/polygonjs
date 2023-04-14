@@ -4,7 +4,6 @@ import {BasePolyObjNode} from '../../obj/Poly';
 
 type PolyNodeClassByContextMapGeneric = {[key in NodeContext]: any};
 export interface PolyNodeClassByContext extends PolyNodeClassByContextMapGeneric {
-	[NodeContext.ACTOR]: undefined;
 	[NodeContext.ANIM]: undefined;
 	[NodeContext.AUDIO]: undefined;
 	[NodeContext.COP]: undefined;

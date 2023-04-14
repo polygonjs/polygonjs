@@ -8,7 +8,7 @@ import {
 } from '../../../../../src/core/particles/CoreParticles';
 import {GeoObjNode} from '../../../../../src/engine/nodes/obj/Geo';
 import {ActorSopNode} from '../../../../../src/engine/nodes/sop/Actor';
-import {ActorConnectionPointType} from '../../../../../src/engine/nodes/utils/io/connections/Actor';
+import {JsConnectionPointType} from '../../../../../src/engine/nodes/utils/io/connections/Js';
 import {CoreSleep} from '../../../../../src/core/Sleep';
 export function createActorNodeChildren(actorNode: ActorSopNode) {
 	const particlesSystemReset = actorNode.createNode('particlesSystemReset');
@@ -17,7 +17,7 @@ export function createActorNodeChildren(actorNode: ActorSopNode) {
 	const onTick = actorNode.createNode('onTick');
 
 	particlesSystemReset.setInput(0, onScenePause);
-	particlesSystemStepSimulation.setInput(ActorConnectionPointType.TRIGGER, onTick);
+	particlesSystemStepSimulation.setInput(JsConnectionPointType.TRIGGER, onTick);
 
 	onScenePause.uiData.setPosition(-100, -100);
 	particlesSystemReset.uiData.setPosition(100, -100);

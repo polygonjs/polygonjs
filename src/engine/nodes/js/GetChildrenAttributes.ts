@@ -70,6 +70,13 @@ export class GetChildrenAttributesJsNode extends TypedJsNode<GetChildrenAttribut
 		const arrayConnectionType = JsConnectionPointTypeToArrayTypeMap[connectionType];
 		return arrayConnectionType;
 	}
+	// this is used to allow setting attribName before the parameter is created
+	private _nextAttribName: string = '';
+	override paramDefaultValue(name: GetChildrenAttributesInputName) {
+		return {
+			[GetChildrenAttributesInputName.attribName]: this._nextAttribName,
+		}[name];
+	}
 
 	setAttribType(type: ParamConvertibleJsType) {
 		this.p.type.set(PARAM_CONVERTIBLE_JS_CONNECTION_POINT_TYPES.indexOf(type));
@@ -78,9 +85,14 @@ export class GetChildrenAttributesJsNode extends TypedJsNode<GetChildrenAttribut
 		return PARAM_CONVERTIBLE_JS_CONNECTION_POINT_TYPES[this.pv.type];
 	}
 	setAttribName(attribName: string) {
-		(this.params.get(GetChildrenAttributesInputName.attribName) as StringParam).set(attribName);
+		const param = this.params.get(GetChildrenAttributesInputName.attribName) as StringParam | undefined;
+		if (param) {
+			param.set(attribName);
+		} else {
+			this._nextAttribName = attribName;
+		}
 	}
-	attributeName() {
+	attribName() {
 		return (this.params.get(GetChildrenAttributesInputName.attribName) as StringParam).value;
 	}
 

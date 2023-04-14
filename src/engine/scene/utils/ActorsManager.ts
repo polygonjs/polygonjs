@@ -1,40 +1,14 @@
 import {Object3D} from 'three';
-// import {TypedNode} from '../../nodes/_Base';
-// import {BaseActorNodeType} from '../../nodes/actor/_Base';
-// import {ActorNodeChildrenMap} from '../../poly/registers/nodes/Actor';
-// import {NodeCreateOptions} from '../../nodes/utils/hierarchy/ChildrenController';
-// import {
-// 	AttribValue,
-// 	// Constructor,
-// 	//  valueof
-// 	} from '../../../types/GlobalTypes';
-// import {ActorType} from '../../poly/registers/nodes/types/Actor';
 import {PolyScene} from '../PolyScene';
-// import {CoreObject} from '../../../core/geometry/Object';
-// import {MapUtils} from '../../../core/MapUtils';
 import {ActorManualTriggersController} from './actors/ManualTriggersController';
-// import {NodeContext} from '../../poly/NodeContext';
-// import {ActorPointerEventsController} from './actors/ActorsPointerEventsController';
-// import {ActorHoveredEventsController} from './actors/ActorsHoveredEventsController';
 import {ActorKeyboardEventsController} from './actors/ActorsKeyboardEventsController';
-// import {AttributeProxy} from '../../../core/geometry/attribute/_Base';
-// import {OnScenePlayStateActorNode} from '../../nodes/actor/OnScenePlayState';
-// import {ActorNodeTriggerContext} from '../../nodes/actor/_Base';
-// import {CoreObjectType} from '../../../core/geometry/ObjectContent';
 import {JsType} from '../../poly/registers/nodes/types/Js';
 import {EvaluatorMethodName, EVALUATOR_METHOD_NAMES} from '../../nodes/js/code/assemblers/actor/Evaluator';
 import {ActorEvaluatorGenerator} from '../../nodes/js/code/assemblers/actor/EvaluatorGenerator';
-// import {JsNodeChildrenMap} from '../../poly/registers/nodes/Js';
-// import {NodeCreateOptions} from '../../nodes/utils/hierarchy/ChildrenController';
-// import {Constructor, valueof} from '../../../types/GlobalTypes';
-// import {BaseJsNodeType} from '../../nodes/js/_Base';
 import {ActorPointerEventsController} from './actors/ActorsPointerEventsController';
 import {AssemblerControllerNode} from '../../nodes/js/code/Controller';
 import {JsAssemblerActor} from '../../nodes/js/code/assemblers/actor/ActorAssembler';
 import {ActorCompilationController} from '../../../core/actor/ActorCompilationController';
-// import { ActorJsSopNode } from '../../nodes/sop/ActorJs';
-// import {SopType} from '../../poly/registers/nodes/types/Sop';
-// import {EventData} from '../../../core/event/EventData';
 
 const ACTOR_BUILDER_NODE_IDS_KEY = 'actorBuilderNodeIds';
 
@@ -101,25 +75,6 @@ export class ActorsManager {
 		this.scene.eventsDispatcher.unregisterEvaluatorGenerator(evaluatorGenerator);
 	}
 
-	// private _eventDatas: Set<EventData> = new Set();
-	// eventDatas() {
-	// 	return this._eventDatas;
-	// }
-	// updateEvaluatorInputEvents() {
-	// 	const functionNodes = this.scene.nodesController.nodesByContextAndType(NodeContext.SOP, SopType.ACTOR_JS);
-	// 	this._eventDatas.clear();
-	// 	for (let functionNode of functionNodes) {
-	// 		const evaluator = functionNode.evaluator();
-	// 		const eventDatas = evaluator.eventDatas;
-	// 		if (eventDatas) {
-	// 			for (let eventData of eventDatas) {
-	// 				this._eventDatas.add(eventData);
-	// 			}
-	// 		}
-	// 	}
-	// 	this.scene.eventsDispatcher.updateControllersFromJsNodes();
-	// }
-
 	assignActorBuilder(object: Object3D, node: ActorBuilderNode) {
 		let ids = this.objectActorNodeIds(object);
 		if (!ids) {
@@ -154,10 +109,6 @@ export class ActorsManager {
 		return (this._pointerEventsController =
 			this._pointerEventsController || new ActorPointerEventsController(this));
 	}
-	// get hoveredEventsController() {
-	// 	return (this._hoveredEventsController =
-	// 		this._hoveredEventsController || new ActorHoveredEventsController(this));
-	// }
 
 	/*
 	 *
@@ -180,24 +131,8 @@ export class ActorsManager {
 	}
 	runOnEventScenePlay() {
 		this._onEventScenePlayTraverse();
-
-		// any caching goes here
-		// for (let type of ACTOR_TYPES_TO_INIT_ON_PLAY) {
-		// 	const nodes = this.scene.nodesController.nodesByContextAndType(NodeContext.ACTOR, type);
-		// 	for (let node of nodes) {
-		// 		node.initOnPlay();
-		// 	}
-		// }
-
-		// this._makeRequiredObjectAttributesReactive();
 	}
 	runOnEventScenePause() {
-		// for (let type of ACTOR_TYPES_TO_INIT_ON_PLAY) {
-		// 	const nodes = this.scene.nodesController.nodesByContextAndType(NodeContext.ACTOR, type);
-		// 	for (let node of nodes) {
-		// 		node.disposeOnPause();
-		// 	}
-		// }
 		this._onEventScenePauseTraverse();
 	}
 	runOnEventPerformanceChange() {
@@ -219,9 +154,6 @@ export class ActorsManager {
 		this.triggerEventNodes(object, JsType.ON_TICK);
 	}
 	private _onEventTickTraverse() {
-		// if (!this.scene.nodesController.hasNodesByContextAndType(NodeContext.ACTOR, ActorType.ON_TICK)) {
-		// 	return;
-		// }
 		this.scene.threejsScene().traverse(this._onEventTickBound);
 	}
 	// reset
@@ -230,79 +162,34 @@ export class ActorsManager {
 		this.triggerEventNodes(object, JsType.ON_SCENE_RESET);
 	}
 	private _onEventSceneResetTraverse() {
-		// if (!this.scene.nodesController.hasNodesByContextAndType(NodeContext.ACTOR, ActorType.ON_SCENE_RESET)) {
-		// 	return;
-		// }
 		this.scene.threejsScene().traverse(this._onEventSceneResetBound);
 	}
 	// play
 	private _onEventScenePlayBound = this._onEventScenePlay.bind(this);
 	private _onEventScenePlay(object: Object3D) {
-		this.triggerEventNodes(
-			object,
-			JsType.ON_SCENE_PLAY
-			// OnScenePlayStateActorNode.OUTPUT_TRIGGER_NAMES.indexOf(OnScenePlayStateActorNode.OUTPUT_NAME_PLAY)
-		);
+		this.triggerEventNodes(object, JsType.ON_SCENE_PLAY);
 	}
 	private _onEventScenePlayTraverse() {
-		// if (!this.scene.nodesController.hasNodesByContextAndType(NodeContext.ACTOR, ActorType.ON_SCENE_PLAY_STATE)) {
-		// 	return;
-		// }
 		this.scene.threejsScene().traverse(this._onEventScenePlayBound);
 	}
 	// pause
 	private _onEventScenePauseBound = this._onEventScenePause.bind(this);
 	private _onEventScenePause(object: Object3D) {
-		this.triggerEventNodes(
-			object,
-			JsType.ON_SCENE_PAUSE
-			// OnScenePlayStateActorNode.OUTPUT_TRIGGER_NAMES.indexOf(OnScenePlayStateActorNode.OUTPUT_NAME_PAUSE)
-		);
+		this.triggerEventNodes(object, JsType.ON_SCENE_PAUSE);
 	}
 	private _onEventScenePauseTraverse() {
-		// if (!this.scene.nodesController.hasNodesByContextAndType(NodeContext.ACTOR, ActorType.ON_SCENE_PLAY_STATE)) {
-		// 	return;
-		// }
 		this.scene.threejsScene().traverse(this._onEventScenePauseBound);
 	}
 	// performanceChange
 	private _onEventPerformanceChangeBound = this._onEventPerformanceChange.bind(this);
 	private _onEventPerformanceChange(object: Object3D) {
 		this.triggerEventNodes(object, JsType.ON_PERFORMANCE_CHANGE);
-		// // const actorType = ActorType.ON_PERFORMANCE_CHANGE;
-		// const nodeIds = this.objectActorNodeIds(object);
-		// if (!nodeIds) {
-		// 	return;
-		// }
-
-		// this._context.Object3D = object
-		// for (let nodeId of nodeIds) {
-		// 	const node = this.scene.graph.nodeFromId(nodeId) as ActorBuilderNode | undefined;
-		// 	if (node) {
-		// 		const callback = node.evaluator().onPerformanceChange
-		// 		if(callback){
-		// 			callback(this._context)
-		// 		}
-		// 		// const onEventNodes = node.nodesByType(actorType);
-		// 		// for (let onEventNode of onEventNodes) {
-		// 		// 	let context = this._contextByObject.get(object);
-		// 		// 	if (!context) {
-		// 		// 		context = {Object3D: object};
-		// 		// 		this._contextByObject.set(object, context);
-		// 		// 	}
-		// 		// 	onEventNode.runTriggerIfRequired(context);
-		// 		// }
-		// 	}
-		// }
 	}
 	private _onEventPerformanceChangeTraverse() {
-		// if (!this.scene.nodesController.hasNodesByContextAndType(NodeContext.ACTOR, ActorType.ON_PERFORMANCE_CHANGE)) {
-		// 	return;
-		// }
 		this.scene.threejsScene().traverse(this._onEventPerformanceChangeBound);
 	}
 	//
-	triggerEventNodes(object: Object3D, methodName: EvaluatorMethodName /*, __outputIndex__: number = 0*/) {
+	triggerEventNodes(object: Object3D, methodName: EvaluatorMethodName) {
 		const nodeIds = this.objectActorNodeIds(object);
 		if (!nodeIds) {
 			return;
@@ -329,152 +216,4 @@ export class ActorsManager {
 			(evaluator as any)[methodName]!();
 		}
 	}
-
-	// param
-
-	// video
-	// onEventVideoPlayTraverse(videoNode: VideoCopNode) {
-	// 	if (
-	// 		this.scene.nodesController.nodesByContextAndType(NodeContext.ACTOR, ActorType.ON_VIDEO_PLAY_STATE).length ==
-	// 		0
-	// 	) {
-	// 		return;
-	// 	}
-	// 	this.scene.threejsScene().traverse((object) => {
-	// 		this._triggerVideoEventNodes(
-	// 			object,
-	// 			videoNode,
-	// 			OnVideoPlayStateActorNode.OUTPUT_TRIGGER_NAMES.indexOf(OnVideoPlayStateActorNode.OUTPUT_NAME_PLAY)
-	// 		);
-	// 	});
-	// }
-	// onEventVideoPauseTraverse(videoNode: VideoCopNode) {
-	// 	if (
-	// 		this.scene.nodesController.nodesByContextAndType(NodeContext.ACTOR, ActorType.ON_VIDEO_PLAY_STATE).length ==
-	// 		0
-	// 	) {
-	// 		return;
-	// 	}
-	// 	this.scene.threejsScene().traverse((object) => {
-	// 		this._triggerVideoEventNodes(
-	// 			object,
-	// 			videoNode,
-	// 			OnVideoPlayStateActorNode.OUTPUT_TRIGGER_NAMES.indexOf(OnVideoPlayStateActorNode.OUTPUT_NAME_PAUSE)
-	// 		);
-	// 	});
-	// }
-	// private _triggerVideoEventNodes(object: Object3D, videoNode: VideoCopNode, outputIndex: number = 0) {
-	// 	const nodeIds = this.objectActorNodeIds(object);
-	// 	if (!nodeIds) {
-	// 		return;
-	// 	}
-
-	// 	for (let nodeId of nodeIds) {
-	// 		const node = this.scene.graph.nodeFromId(nodeId) as ActorBuilderNode | undefined;
-	// 		if (node) {
-	// 			const onEventNodes = node.nodesByType(ActorType.ON_VIDEO_PLAY_STATE);
-	// 			for (let onEventNode of onEventNodes) {
-	// 				if (onEventNode.listensToVideoNode(videoNode)) {
-	// 					onEventNode.runTrigger({Object3D: object}, outputIndex);
-	// 				}
-	// 			}
-	// 		}
-	// 	}
-	// }
-
-	// private _makeRequiredObjectAttributesReactive() {
-	// 	// this.scene.threejsScene().traverse((object) => {
-	// 	// 	const getNodesByAttribName = () => {
-	// 	// 		const nodeIds = this.objectActorNodeIds(object);
-	// 	// 		if (!nodeIds) {
-	// 	// 			return;
-	// 	// 		}
-	// 	// 		// check nodes listening to this object
-	// 	// 		const actorBuilderNodes = nodeIds
-	// 	// 			.map((nodeId) => this.scene.graph.nodeFromId(nodeId) as ActorBuilderNode)
-	// 	// 			.filter((node) => node);
-	// 	// 		const onEventObjectAttributeUpdatedNodes = actorBuilderNodes
-	// 	// 			.map((node) => node.nodesByType(ActorType.ON_OBJECT_ATTRIBUTE_UPDATE))
-	// 	// 			.flat();
-	// 	// 		const nodesByAttribName = MapUtils.groupBy(onEventObjectAttributeUpdatedNodes, (node) =>
-	// 	// 			node.attributeName()
-	// 	// 		);
-	// 	// 		return nodesByAttribName;
-	// 	// 	};
-	// 	// 	// check nodes listening to this parent
-	// 	// 	const getParentNodesByAttribName = () => {
-	// 	// 		const parent = object.parent;
-	// 	// 		if (!parent) {
-	// 	// 			return;
-	// 	// 		}
-	// 	// 		const nodeIds = parent.userData[ACTOR_BUILDER_NODE_IDS_KEY] as number[] | undefined;
-	// 	// 		if (!nodeIds) {
-	// 	// 			return;
-	// 	// 		}
-	// 	// 		// check nodes listening to this object
-	// 	// 		const actorBuilderNodes = nodeIds
-	// 	// 			.map((nodeId) => this.scene.graph.nodeFromId(nodeId) as ActorBuilderNode)
-	// 	// 			.filter((node) => node);
-	// 	// 		const onEventChildAttributeUpdatedNodes = actorBuilderNodes
-	// 	// 			.map((node) => node.nodesByType(ActorType.ON_CHILD_ATTRIBUTE_UPDATE))
-	// 	// 			.flat();
-	// 	// 		const nodesByAttribName = MapUtils.groupBy(onEventChildAttributeUpdatedNodes, (node) =>
-	// 	// 			node.attributeName()
-	// 	// 		);
-	// 	// 		return nodesByAttribName;
-	// 	// 	};
-	// 	// 	const nodesByAttribName = getNodesByAttribName();
-	// 	// 	const parentNodesByAttribName = getParentNodesByAttribName();
-	// 	// 	if (!(nodesByAttribName || parentNodesByAttribName)) {
-	// 	// 		return;
-	// 	// 	}
-	// 	// 	const reactiveAttributeNames: Set<string> = new Set();
-	// 	// 	nodesByAttribName?.forEach((nodes, attributeName) => {
-	// 	// 		reactiveAttributeNames.add(attributeName);
-	// 	// 	});
-	// 	// 	parentNodesByAttribName?.forEach((nodes, attributeName) => {
-	// 	// 		reactiveAttributeNames.add(attributeName);
-	// 	// 	});
-	// 	// 	reactiveAttributeNames.forEach((attributeName) => {
-	// 	// 		const directActorNodes = nodesByAttribName?.get(attributeName);
-	// 	// 		const parentNodes = parentNodesByAttribName?.get(attributeName);
-	// 	// 		// apply callback
-	// 	// 		CoreObject.makeAttribReactive<AttribValue, CoreObjectType>(
-	// 	// 			object,
-	// 	// 			attributeName,
-	// 	// 			(proxy: AttributeProxy<AttribValue>) => {
-	// 	// 				// console.log('callback', object);
-	// 	// 				// if (proxy.callbackRanAtFrame >= this.scene.frame()) {
-	// 	// 				// 	console.log('already reacted at frame', this.scene.frame());
-	// 	// 				// 	return;
-	// 	// 				// }
-	// 	// 				// proxy.callbackRanAtFrame = this.scene.frame();
-	// 	// 				let context = this._contextByObject.get(object);
-	// 	// 				if (!context) {
-	// 	// 					context = {Object3D: object};
-	// 	// 					this._contextByObject.set(object, context);
-	// 	// 				}
-	// 	// 				if (directActorNodes) {
-	// 	// 					for (let node of directActorNodes) {
-	// 	// 						node.runTrigger(context);
-	// 	// 					}
-	// 	// 				}
-	// 	// 				if (parentNodes) {
-	// 	// 					const parent = object.parent;
-	// 	// 					if (parent) {
-	// 	// 						const parentContext = {Object3D: parent};
-	// 	// 						for (let parentNode of parentNodes) {
-	// 	// 							parentNode.runTrigger(parentContext);
-	// 	// 						}
-	// 	// 					}
-	// 	// 				}
-	// 	// 			}
-	// 	// 		);
-	// 	// 	});
-	// 	// });
-	// }
-
-	// parentActorBuilderNode(node: BaseActorNodeType) {
-	// 	return node.parentController.findParent((parent) => parent.childrenControllerContext() == NodeContext.ACTOR);
-	// }
 }

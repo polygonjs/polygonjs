@@ -33,7 +33,7 @@ export class GetObjectWorldPositionJsNode extends ParamlessTypedJsNode {
 	}
 	override setLines(shadersCollectionController: JsLinesCollectionController) {
 		const object3D = inputObject3D(this, shadersCollectionController);
-		const varName = this.jsVarName(JsConnectionPointType.OBJECT_3D);
+		const varName = this.jsVarName(GetObjectWorldPositionJsNodeInputName.worldPosition);
 
 		const variable = createVariable(JsConnectionPointType.VECTOR3);
 		if (variable) {

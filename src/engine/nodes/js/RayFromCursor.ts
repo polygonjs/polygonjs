@@ -58,7 +58,7 @@ export class RayFromCursorJsNode extends BaseUserInputJsNode<RayFromCursorJsPara
 			new ComputedValueJsDefinition(
 				this,
 				shadersCollectionController,
-				JsConnectionPointType.RAY,
+				JsConnectionPointType.VECTOR2,
 				out,
 				_ray.asString()
 			),

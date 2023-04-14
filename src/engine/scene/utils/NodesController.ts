@@ -169,10 +169,6 @@ export class NodesController {
 		return list;
 	}
 
-	nodesByContextAndType<T extends keyof NodeChildrenMapByContext[NodeContext.ACTOR]>(
-		context: NodeContext.ACTOR,
-		node_type: T
-	): NodeChildrenMapByContext[NodeContext.ACTOR][T][];
 	nodesByContextAndType<T extends keyof NodeChildrenMapByContext[NodeContext.ANIM]>(
 		context: NodeContext.ANIM,
 		node_type: T

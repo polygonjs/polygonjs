@@ -74,6 +74,12 @@ function _displayableValue(value: JsDataType): string {
 	}
 }
 
+function _flushDebugNode(nodePath: string, debugLines: DebugLine[]) {
+	logBlue('------------');
+	console.log(`${nodePath}:`);
+	console.table(tableContent(debugLines));
+	logBlue('------------');
+}
 export function optionsToDebugLines(
 	scene: PolyScene,
 	options: ActorEvaluatorDebugOptions,
@@ -81,6 +87,12 @@ export function optionsToDebugLines(
 ) {
 	const currentFrame = scene.frame();
 	if (currentFrame != debugDataController.lastProcessedFrame) {
+		// flush
+		const nodePaths = Object.keys(debugDataController.debugContentByFrameByNodePath.value);
+		for (const nodePath of nodePaths) {
+			const debugLines = debugDataController.debugContentByFrameByNodePath.value[nodePath];
+			_flushDebugNode(nodePath, debugLines);
+		}
 		// reset
 		debugDataController.debugContentByFrameByNodePath.value = {};
 		debugDataController.lastProcessedFrame = currentFrame;
@@ -129,12 +141,7 @@ export class debug<T extends JsDataType> extends ObjectNamedFunction2<[string, T
 			options.value = input;
 			this.scene.dispatchController.actorEvaluatorDebug(options);
 
-			//
-			const debugLines = _optionsToDebugLines(this.scene, options);
-			logBlue('------------');
-			console.log(`${nodePath}:`);
-			console.table(tableContent(debugLines));
-			logBlue('------------');
+			_optionsToDebugLines(this.scene, options);
 		}
 		return input;
 	}

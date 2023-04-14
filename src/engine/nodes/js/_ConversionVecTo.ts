@@ -15,12 +15,12 @@ class BaseVecToJsNode extends TypedJsNode<VecToParamsJsConfig> {
 
 interface VecToJsOptions {
 	components: string[];
-	param_type: ParamType;
+	paramType: ParamType;
+	inputName: string;
 }
 
 function VecToJsFactory(type: string, options: VecToJsOptions): typeof BaseVecToJsNode {
-	const components = options.components;
-	const param_type = options.param_type;
+	const {components, paramType, inputName} = options;
 
 	return class VecToJsNode extends BaseVecToJsNode {
 		static override type() {
@@ -35,13 +35,13 @@ function VecToJsFactory(type: string, options: VecToJsOptions): typeof BaseVecTo
 			);
 		}
 		override createParams() {
-			this.addParam(param_type, 'vec', components.map((c) => 0) as Number2);
+			this.addParam(paramType, inputName, components.map((c) => 0) as Number2);
 		}
 
 		override setLines(shadersCollectionController: JsLinesCollectionController) {
 			// const body_lines: string[] = [];
 
-			const vec = this.variableForInput(shadersCollectionController, 'vec');
+			const vec = this.variableForInput(shadersCollectionController, inputName);
 
 			this.io.outputs.used_output_names().forEach((c) => {
 				const varName = this.jsVarName(c);
@@ -65,15 +65,18 @@ const components_v4 = ['x', 'y', 'z', 'w'];
 
 export class Vec2ToFloatJsNode extends VecToJsFactory('vec2ToFloat', {
 	components: components_v2,
-	param_type: ParamType.VECTOR2,
+	paramType: ParamType.VECTOR2,
+	inputName: 'vec2',
 }) {}
 export class Vec3ToFloatJsNode extends VecToJsFactory('vec3ToFloat', {
 	components: components_v3,
-	param_type: ParamType.VECTOR3,
+	paramType: ParamType.VECTOR3,
+	inputName: 'vec3',
 }) {}
 export class Vec4ToFloatJsNode extends VecToJsFactory('vec4ToFloat', {
 	components: components_v4,
-	param_type: ParamType.VECTOR4,
+	paramType: ParamType.VECTOR4,
+	inputName: 'vec4',
 }) {}
 
 //

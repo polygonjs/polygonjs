@@ -121,11 +121,23 @@ export class GetObjectAttributeJsNode extends TypedJsNode<GetObjectAttributeJsPa
 	// 	// we should never run this
 	// 	return this.p.boolean;
 	// }
+	// this is used to allow setting attribName before the parameter is created
+	private _nextAttribName: string = '';
+	override paramDefaultValue(name: GetObjectAttributeInputName) {
+		return {
+			[GetObjectAttributeInputName.attribName]: this._nextAttribName,
+		}[name];
+	}
 	setAttribType(type: ParamConvertibleJsType) {
 		this.p.type.set(PARAM_CONVERTIBLE_JS_CONNECTION_POINT_TYPES.indexOf(type));
 	}
 	setAttribName(attribName: string) {
-		(this.params.get(GetObjectAttributeInputName.attribName) as StringParam).set(attribName);
+		const param = this.params.get(GetObjectAttributeInputName.attribName) as StringParam | undefined;
+		if (param) {
+			param.set(attribName);
+		} else {
+			this._nextAttribName = attribName;
+		}
 	}
 	attributeName() {
 		return (this.params.get(GetObjectAttributeInputName.attribName) as StringParam).value;

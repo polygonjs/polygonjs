@@ -23,6 +23,11 @@ export class getObjectWorldPosition extends ObjectNamedFunction1<[Vector3]> {
 		return 'getObjectWorldPosition';
 	}
 	func(object3D: Object3D, target: Vector3): Vector3 {
+		// this can't just depend on the matrix,
+		// so we need to depend on time for now
+		dummyReadRefVal(this.timeController.timeUniform().value);
+
+		//
 		object3D.getWorldPosition(target);
 		return target;
 	}
@@ -33,6 +38,11 @@ export class object3DLocalToWorld extends ObjectNamedFunction2<[Vector3, Vector3
 		return 'object3DLocalToWorld';
 	}
 	func(object3D: Object3D, position: Vector3, target: Vector3): Vector3 {
+		// this can't just depend on the matrix,
+		// so we need to depend on time for now
+		dummyReadRefVal(this.timeController.timeUniform().value);
+
+		//
 		target.copy(position);
 		object3D.localToWorld(target);
 		return target;
@@ -43,6 +53,11 @@ export class object3DWorldToLocal extends ObjectNamedFunction2<[Vector3, Vector3
 		return 'object3DWorldToLocal';
 	}
 	func(object3D: Object3D, position: Vector3, target: Vector3): Vector3 {
+		// this can't just depend on the matrix,
+		// so we need to depend on time for now
+		dummyReadRefVal(this.timeController.timeUniform().value);
+
+		//
 		target.copy(position);
 		object3D.worldToLocal(target);
 		return target;

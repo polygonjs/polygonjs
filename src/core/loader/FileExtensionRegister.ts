@@ -11,7 +11,6 @@ import {
 	FontExtension,
 } from '../FileTypeController';
 export const EXTENSIONS_BY_NODE_TYPE_BY_CONTEXT: Record<NodeContext, Record<string, string[]>> = {
-	[NodeContext.ACTOR]: {},
 	[NodeContext.ANIM]: {},
 	[NodeContext.AUDIO]: {
 		[AudioType.FILE]: [...AUDIO_EXTENSIONS],

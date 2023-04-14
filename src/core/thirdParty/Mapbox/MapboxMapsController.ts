@@ -152,9 +152,7 @@ class MapboxMapsControllerClass {
 		if (!this._scene) {
 			return;
 		}
-		// if (!this._scene.nodesController.hasNodesByContextAndType(NodeContext.ACTOR, type)) {
-		// 	return;
-		// }
+
 		this._scene.threejsScene().traverse((object) => {
 			this._scene?.actorsManager.triggerEventNodes(object, type);
 		});

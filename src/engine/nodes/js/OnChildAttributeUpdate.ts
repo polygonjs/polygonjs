@@ -91,6 +91,12 @@ export class OnChildAttributeUpdateJsNode extends TypedJsNode<OnChildAttributeUp
 		return [arrayConnectionType, arrayConnectionType];
 	}
 
+	private _nextAttribName: string = '';
+	override paramDefaultValue(name: OnChildAttributeUpdateInputName) {
+		return {
+			[OnChildAttributeUpdateInputName.attribName]: this._nextAttribName,
+		}[name];
+	}
 	setAttribType(type: ParamConvertibleJsType) {
 		this.p.type.set(PARAM_CONVERTIBLE_JS_CONNECTION_POINT_TYPES.indexOf(type));
 	}
@@ -98,7 +104,12 @@ export class OnChildAttributeUpdateJsNode extends TypedJsNode<OnChildAttributeUp
 		return PARAM_CONVERTIBLE_JS_CONNECTION_POINT_TYPES[this.pv.type];
 	}
 	setAttribName(attribName: string) {
-		(this.params.get(OnChildAttributeUpdateInputName.attribName) as StringParam).set(attribName);
+		const param = this.params.get(OnChildAttributeUpdateInputName.attribName) as StringParam | undefined;
+		if (param) {
+			param.set(attribName);
+		} else {
+			this._nextAttribName = attribName;
+		}
 	}
 	attributeName() {
 		return (this.params.get(OnChildAttributeUpdateInputName.attribName) as StringParam).value;
