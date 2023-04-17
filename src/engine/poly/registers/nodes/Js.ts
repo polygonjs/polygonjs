@@ -23,6 +23,8 @@ import {Box3JsNode} from '../../../nodes/js/Box3';
 import {CatmullRomCurve3GetPointJsNode} from '../../../nodes/js/CatmullRomCurve3GetPoint';
 import {CeilJsNode} from '../../../nodes/js/Ceil';
 import {ClampJsNode} from '../../../nodes/js/Clamp';
+import {ClothSolverResetJsNode} from '../../../nodes/js/ClothSolverReset';
+import {ClothSolverStepSimulationJsNode} from '../../../nodes/js/ClothSolverStepSimulation';
 import {CodeJsNode} from '../../../nodes/js/Code';
 import {ColorToVec3JsNode} from '../../../nodes/js/ColorToVec3';
 import {CompareJsNode} from '../../../nodes/js/Compare';
@@ -267,6 +269,8 @@ export interface JsNodeChildrenMap {
 	catmullRomCurve3GetPoint: CatmullRomCurve3GetPointJsNode;
 	ceil: CeilJsNode;
 	clamp: ClampJsNode;
+	clothSolverReset: ClothSolverResetJsNode;
+	clothSolverStepSimulation: ClothSolverStepSimulationJsNode;
 	code: CodeJsNode;
 	compare: CompareJsNode;
 	complement: ComplementJsNode;
@@ -499,6 +503,7 @@ const ONLY_WITH_GLOBALS = {only: [sopType(SopType.SDF_BUILDER)]};
 const ONLY_ACTOR = {
 	only: [
 		sopType(SopType.ACTOR),
+		sopType(SopType.CLOTH_SOLVER),
 		sopType(SopType.PHYSICS_WORLD),
 		sopType(SopType.PHYSICS_PLAYER),
 		...[
@@ -539,6 +544,8 @@ export class JsRegister {
 		poly.registerNode(CatmullRomCurve3GetPointJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(CeilJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(ClampJsNode, CATEGORY_JS.MATH);
+		poly.registerNode(ClothSolverResetJsNode, CATEGORY_JS.PHYSICS);
+		poly.registerNode(ClothSolverStepSimulationJsNode, CATEGORY_JS.PHYSICS);
 		poly.registerNode(CodeJsNode, CATEGORY_JS.ADVANCED);
 		poly.registerNode(ColorToVec3JsNode, CATEGORY_JS.CONVERSION);
 		poly.registerNode(CompareJsNode, CATEGORY_JS.LOGIC);

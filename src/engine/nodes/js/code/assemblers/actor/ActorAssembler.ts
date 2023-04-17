@@ -3,35 +3,14 @@ import {
 	INSERT_DEFINE_AFTER,
 	INSERT_CONSTRUCTOR_AFTER,
 	INSERT_BODY_AFTER,
-	// INSERT_TRIGGER_AFTER,
-	// INSERT_TRIGGERABLE_AFTER,
 	INSERT_MEMBERS_AFTER,
 } from '../_Base';
 import {RegisterableVariable} from '../_BaseJsPersistedConfigUtils';
-// import {IUniforms} from '../../../../../../core/geometry/Material';
-// import {ThreeToGl} from '../../../../../../core/ThreeToGl';
-// import TemplateDefault from '../../templates/textures/Default.frag.glsl';
 import {ShaderConfig} from '../../configs/ShaderConfig';
-// import {VariableConfig} from '../../configs/VariableConfig';
 import {ShaderName} from '../../../../utils/shaders/ShaderName';
-// import {OutputJsNode} from '../../../Output';
-// import {GlobalsJsNode} from '../../../Globals';
-// import {JsConnectionPointType, JsConnectionPoint} from '../../../../utils/io/connections/Js';
-// import {ShadersCollectionController} from '../../utils/ShadersCollectionController';
-// import {UniformJsDefinition} from '../../../utils/JsDefinition';
-// import {Vector3} from 'three';
-// import {ActorSopNode} from '../../../../sop/Actor';
-import {
-	connectedTriggerableNodes,
-	findTriggeringNodes,
-	// groupNodesByType,
-	inputNodesExceptTrigger,
-} from './ActorAssemblerUtils';
+import {connectedTriggerableNodes, findTriggeringNodes, inputNodesExceptTrigger} from './ActorAssemblerUtils';
 import {BaseJsNodeType} from '../../../_Base';
 import {SetUtils} from '../../../../../../core/SetUtils';
-// import {JsConnectionPointType} from '../../../../utils/io/connections/Js';
-// import {ShadersCollectionController} from '../../utils/ShadersCollectionController';
-// import {CoreString} from '../../../../../../core/String';
 import {PrettierController} from '../../../../../../core/code/PrettierController';
 import {NamedFunctionMap} from '../../../../../poly/registers/functions/All';
 import {ActorFunctionData} from './ActorPersistedConfig';
@@ -40,11 +19,8 @@ import {CoreType} from '../../../../../../core/Type';
 import {ParamOptions} from '../../../../../params/utils/OptionsController';
 import {JsConnectionPointType} from '../../../../utils/io/connections/Js';
 import {ActorBuilderNode} from '../../../../../scene/utils/ActorsManager';
-// import {Vector3} from 'three';
-// import {IUniformsWithTime} from '../../../../../scene/utils/UniformsController';
-// import {handleCopBuilderDependencies} from '../../../../cop/utils/BuilderUtils';
-// import { JSSDFSopNode } from '../../../../sop/JSSDF';
-const DEBUG = true;
+
+const DEBUG = false;
 function logBlue(message: string) {
 	if (!DEBUG) {
 		return;
@@ -57,9 +33,6 @@ function logDefault(message: string) {
 	}
 	console.log(message);
 }
-// function logGreen(message: string) {
-// 	console.log('%c' + message, 'color:green; font-weight:bold;');
-// }
 
 const TEMPLATE = `
 ${INSERT_DEFINE_AFTER}
@@ -75,8 +48,6 @@ const CLOSE_CLASS_DEFINITION = `};
 return CustomActorEvaluator;`;
 
 export class JsAssemblerActor extends BaseJsShaderAssembler {
-	// private _function: Function | undefined;
-	// private _uniforms: IUniforms | undefined;
 	makeFunctionNodeDirtyOnChange() {
 		return false;
 	}

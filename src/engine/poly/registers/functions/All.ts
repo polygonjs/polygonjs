@@ -24,6 +24,8 @@ import { boolToInt } from "../../../functions/boolToInt";
 import { box3Set } from "../../../functions/box3Set";
 import { catmullRomCurve3GetPoint } from "../../../functions/catmullRomCurve3GetPoint";
 import { clamp } from "../../../functions/clamp";
+import { clothSolverReset } from "../../../functions/clothSolverReset";
+import { clothSolverStepSimulation } from "../../../functions/clothSolverStepSimulation";
 import { colorSetRGB } from "../../../functions/colorSetRGB";
 import { colorToVec3 } from "../../../functions/colorToVec3";
 import { complement } from "../../../functions/complement";
@@ -392,6 +394,8 @@ export interface NamedFunctionMap {
   box3Set: box3Set;
   catmullRomCurve3GetPoint: catmullRomCurve3GetPoint;
   clamp: clamp;
+  clothSolverReset: clothSolverReset;
+  clothSolverStepSimulation: clothSolverStepSimulation;
   colorSetRGB: colorSetRGB;
   colorToVec3: colorToVec3;
   complement: complement;
@@ -763,6 +767,8 @@ export class AllNamedFunctionRegister {
       box3Set,
       catmullRomCurve3GetPoint,
       clamp,
+      clothSolverReset,
+      clothSolverStepSimulation,
       colorSetRGB,
       colorToVec3,
       complement,

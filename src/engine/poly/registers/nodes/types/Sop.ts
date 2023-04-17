@@ -49,6 +49,7 @@ export enum SopType {
 	CAPSULE = 'capsule',
 	CIRCLE = 'circle',
 	CIRCLE_3_POINTS = 'circle3Points',
+	CLOTH_SOLVER = 'clothSolver',
 	CONE = 'cone',
 	COPY = 'copy',
 	CURVE_FROM_POINTS = 'curveFromPoints',

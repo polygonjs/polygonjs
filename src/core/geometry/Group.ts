@@ -9,7 +9,7 @@ import {CoreString} from '../String';
 import {AttribClass, AttribSize, ObjectData, objectTypeFromConstructor, AttribType, ObjectType} from './Constant';
 import {CoreType} from '../Type';
 import {ArrayUtils} from '../ArrayUtils';
-import {CoreFace} from './Face';
+import {CoreFace} from './CoreFace';
 import {Poly} from '../../engine/Poly';
 import {CoreEntity} from './Entity';
 import {CoreObjectType, ObjectContent, isObject3D} from './ObjectContent';
