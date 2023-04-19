@@ -20,7 +20,7 @@ import {ParamOptions} from '../../../../../params/utils/OptionsController';
 import {JsConnectionPointType} from '../../../../utils/io/connections/Js';
 import {ActorBuilderNode} from '../../../../../scene/utils/ActorsManager';
 
-const DEBUG = false;
+const DEBUG = true;
 function logBlue(message: string) {
 	if (!DEBUG) {
 		return;

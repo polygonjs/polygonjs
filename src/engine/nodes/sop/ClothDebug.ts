@@ -44,11 +44,11 @@ export class ClothDebugSopNode extends TypedActorSopNode<ClothDebugSopParamsConf
 	}
 
 	private _debugMesh(mesh: Mesh) {
-		const controller = new ClothGeometryInitController(mesh.geometry);
+		const controller = new ClothGeometryInitController(mesh);
 		// controller.mergeTolerance = this.pv.dist;
 		// controller.detail = this.pv.detail;
-		controller.populateAdjacency = this.pv.populateAdjacency;
-		controller.process();
+		// controller.populateAdjacency = this.pv.populateAdjacency;
+		// controller.process();
 		mesh.geometry = controller.geometry;
 		console.warn('computed', this.path());
 

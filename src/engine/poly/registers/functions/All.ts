@@ -87,6 +87,17 @@ import { getChildrenPropertiesScale } from "../../../functions/getChildrenProper
 import { getChildrenPropertiesUp } from "../../../functions/getChildrenPropertiesUp";
 import { getChildrenPropertiesVisible } from "../../../functions/getChildrenPropertiesVisible";
 import { getDefaultCamera } from "../../../functions/getDefaultCamera";
+import { getIntersectionAttributeColorInterpolated } from "../../../functions/getIntersectionAttributeColorInterpolated";
+import { getIntersectionAttributeColorNearest } from "../../../functions/getIntersectionAttributeColorNearest";
+import { getIntersectionAttributeNumberInterpolated } from "../../../functions/getIntersectionAttributeNumberInterpolated";
+import { getIntersectionAttributeNumberNearest } from "../../../functions/getIntersectionAttributeNumberNearest";
+import { getIntersectionAttributeStringNearest } from "../../../functions/getIntersectionAttributeStringNearest";
+import { getIntersectionAttributeVector2Interpolated } from "../../../functions/getIntersectionAttributeVector2Interpolated";
+import { getIntersectionAttributeVector2Nearest } from "../../../functions/getIntersectionAttributeVector2Nearest";
+import { getIntersectionAttributeVector3Interpolated } from "../../../functions/getIntersectionAttributeVector3Interpolated";
+import { getIntersectionAttributeVector3Nearest } from "../../../functions/getIntersectionAttributeVector3Nearest";
+import { getIntersectionAttributeVector4Interpolated } from "../../../functions/getIntersectionAttributeVector4Interpolated";
+import { getIntersectionAttributeVector4Nearest } from "../../../functions/getIntersectionAttributeVector4Nearest";
 import { getIntersectionPropertyDistance } from "../../../functions/getIntersectionPropertyDistance";
 import { getIntersectionPropertyNormal } from "../../../functions/getIntersectionPropertyNormal";
 import { getIntersectionPropertyObject } from "../../../functions/getIntersectionPropertyObject";
@@ -457,6 +468,17 @@ export interface NamedFunctionMap {
   getChildrenPropertiesUp: getChildrenPropertiesUp;
   getChildrenPropertiesVisible: getChildrenPropertiesVisible;
   getDefaultCamera: getDefaultCamera;
+  getIntersectionAttributeColorInterpolated: getIntersectionAttributeColorInterpolated;
+  getIntersectionAttributeColorNearest: getIntersectionAttributeColorNearest;
+  getIntersectionAttributeNumberInterpolated: getIntersectionAttributeNumberInterpolated;
+  getIntersectionAttributeNumberNearest: getIntersectionAttributeNumberNearest;
+  getIntersectionAttributeStringNearest: getIntersectionAttributeStringNearest;
+  getIntersectionAttributeVector2Interpolated: getIntersectionAttributeVector2Interpolated;
+  getIntersectionAttributeVector2Nearest: getIntersectionAttributeVector2Nearest;
+  getIntersectionAttributeVector3Interpolated: getIntersectionAttributeVector3Interpolated;
+  getIntersectionAttributeVector3Nearest: getIntersectionAttributeVector3Nearest;
+  getIntersectionAttributeVector4Interpolated: getIntersectionAttributeVector4Interpolated;
+  getIntersectionAttributeVector4Nearest: getIntersectionAttributeVector4Nearest;
   getIntersectionPropertyDistance: getIntersectionPropertyDistance;
   getIntersectionPropertyNormal: getIntersectionPropertyNormal;
   getIntersectionPropertyObject: getIntersectionPropertyObject;
@@ -830,6 +852,17 @@ export class AllNamedFunctionRegister {
       getChildrenPropertiesUp,
       getChildrenPropertiesVisible,
       getDefaultCamera,
+      getIntersectionAttributeColorInterpolated,
+      getIntersectionAttributeColorNearest,
+      getIntersectionAttributeNumberInterpolated,
+      getIntersectionAttributeNumberNearest,
+      getIntersectionAttributeStringNearest,
+      getIntersectionAttributeVector2Interpolated,
+      getIntersectionAttributeVector2Nearest,
+      getIntersectionAttributeVector3Interpolated,
+      getIntersectionAttributeVector3Nearest,
+      getIntersectionAttributeVector4Interpolated,
+      getIntersectionAttributeVector4Nearest,
       getIntersectionPropertyDistance,
       getIntersectionPropertyNormal,
       getIntersectionPropertyObject,

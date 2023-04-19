@@ -12,17 +12,7 @@ uniform sampler2D tDistancesB;
 uniform sampler2D tAdjacentsA;
 uniform sampler2D tAdjacentsB;
 
-// get vec2 tex coordinate from index
-vec2 getUV( float id ) { 
 
-	vec2 coords = vec2(
-		floor( mod( ( id + 0.5 ), tSize.x ) ),
-		floor( ( id + 0.5 ) / tSize.x )
-	) + 0.5;
-
-	return coords / tSize;
-
-}
 
 // compute offset based on current distance and spring rest distance
 vec3 getDisplacement( vec3 point0, vec3 point1, float restDistance ) {
@@ -32,20 +22,8 @@ vec3 getDisplacement( vec3 point0, vec3 point1, float restDistance ) {
 	
 }
 
-// pack float16 position into float32
-vec3 packPosition( vec2 uv ) {
+// *** ADD COMMON ***
 
-	return ( texture2D( tPosition0, uv ).xyz + texture2D( tPosition1, uv ).xyz ) / 1024.0;
-
-}
-
-vec3 unpackPosition( vec3 pos ) {
-
-	pos *= 1024.0;
-
-	return ( order > 0.0 ) ? floor( pos ) : fract( pos );
-
-}
 
 void main() {
 	
@@ -103,6 +81,6 @@ void main() {
 
 	p0 += 0.08 * displacement / count;
 
-	gl_FragColor = vec4( unpackPosition( p0 ), 1.0 );
+	gl_FragColor = vec4( unpackPosition( p0, order ), 1.0 );
 
 }

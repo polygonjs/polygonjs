@@ -323,7 +323,11 @@ export class JsCodeBuilder {
 		this.addDefinitions(allNodes, shaderName, JsDefinitionType.WATCH, LineType.CONSTRUCTOR, additionalDefinitions);
 		if (options?.actor.triggeringNodes) {
 			this.addDefinitions(
-				SetUtils.toArray(options.actor.triggeringNodes),
+				// we currently add all nodes here,
+				// so that nodes which have an intersection output
+				// can have their triggering method added,
+				// even if only the intersection output is used
+				allNodes, //SetUtils.toArray(options.actor.triggeringNodes),
 				shaderName,
 				JsDefinitionType.TRIGGERING,
 				LineType.BODY,

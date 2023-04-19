@@ -1,7 +1,7 @@
 import {Object3D, Raycaster, Mesh} from 'three';
 import {MeshBVH, acceleratedRaycast, BufferGeometryWithBVH, CENTER, RaycasterForBVH} from './three-mesh-bvh';
 
-interface ThreeMeshBVHHelperOptions {
+export interface ThreeMeshBVHHelperOptions {
 	strategy: number;
 	maxLeafTris: number;
 	maxDepth: number;

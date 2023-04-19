@@ -62,13 +62,13 @@ export class CorePoint extends CoreEntity {
 		return (this._geometry = this._geometry || this._coreGeometry.geometry());
 	}
 
-	attribSize(name: string): number {
-		name = CoreAttribute.remapName(name);
-		return this._geometry.getAttribute(name).itemSize;
+	attribSize(attribName: string): number {
+		attribName = CoreAttribute.remapName(attribName);
+		return this._geometry.getAttribute(attribName).itemSize;
 	}
 
-	hasAttrib(name: string): boolean {
-		const remapped_name = CoreAttribute.remapName(name);
+	hasAttrib(attribName: string): boolean {
+		const remapped_name = CoreAttribute.remapName(attribName);
 		return this._coreGeometry.hasAttrib(remapped_name);
 	}
 	static attribValue(
@@ -205,39 +205,42 @@ export class CorePoint extends CoreEntity {
 		// 	}
 		// }
 	}
-	attribValueNumber(name: string) {
-		const remapedName = CoreAttribute.remapName(name);
+	attribValueNumber(attribName: string) {
+		const remapedName = CoreAttribute.remapName(attribName);
 		const attrib = this._geometry.getAttribute(remapedName) as BufferAttribute;
 		return attrib.array[this._index];
 	}
-	attribValueVector2(name: string, target: Vector2) {
-		const remapedName = CoreAttribute.remapName(name);
+	attribValueVector2(attribName: string, target: Vector2) {
+		const remapedName = CoreAttribute.remapName(attribName);
 		const attrib = this._geometry.getAttribute(remapedName) as BufferAttribute;
 		target.fromArray(attrib.array, this._index * 2);
 		return target;
 	}
-	attribValueVector3(name: string, target: Vector3) {
-		const remapedName = CoreAttribute.remapName(name);
+	attribValueVector3(attribName: string, target: Vector3) {
+		const remapedName = CoreAttribute.remapName(attribName);
 		const attrib = this._geometry.getAttribute(remapedName) as BufferAttribute;
 		target.fromArray(attrib.array, this._index * 3);
 		return target;
 	}
-	attribValueVector4(name: string, target: Vector4) {
-		const remapedName = CoreAttribute.remapName(name);
+	attribValueVector4(attribName: string, target: Vector4) {
+		const remapedName = CoreAttribute.remapName(attribName);
 		const attrib = this._geometry.getAttribute(remapedName) as BufferAttribute;
 		target.fromArray(attrib.array, this._index * 4);
 		return target;
 	}
 	static indexedAttribValue(geometry: BufferGeometry, index: number, attribName: string): string {
-		const value_index = this.attribValueIndex(geometry, index, attribName); //attrib.value()
-		return CoreGeometry.userDataAttrib(geometry, attribName)[value_index];
+		const valueIndex = this.attribValueIndex(geometry, index, attribName); //attrib.value()
+		return CoreGeometry.userDataAttrib(geometry, attribName)[valueIndex];
 	}
-	indexedAttribValue(name: string): string {
-		const value_index = this.attribValueIndex(name); //attrib.value()
-		return this._coreGeometry.userDataAttrib(name)[value_index];
+	indexedAttribValue(attribName: string): string {
+		const valueIndex = this.attribValueIndex(attribName); //attrib.value()
+		return this._coreGeometry.userDataAttrib(attribName)[valueIndex];
 	}
-	stringAttribValue(name: string) {
-		return this.indexedAttribValue(name);
+	static stringAttribValue(geometry: BufferGeometry, index: number, attribName: string) {
+		return this.indexedAttribValue(geometry, index, attribName);
+	}
+	stringAttribValue(attribName: string) {
+		return this.indexedAttribValue(attribName);
 	}
 	static attribValueIndex(geometry: BufferGeometry, index: number, attribName: string): number {
 		if (CoreGeometry.isAttribIndexed(geometry, attribName)) {
@@ -254,8 +257,8 @@ export class CorePoint extends CoreEntity {
 		// 	return -1;
 		// }
 	}
-	isAttribIndexed(name: string) {
-		return this._coreGeometry.isAttribIndexed(name);
+	isAttribIndexed(attribName: string) {
+		return this._coreGeometry.isAttribIndexed(attribName);
 	}
 
 	position() {

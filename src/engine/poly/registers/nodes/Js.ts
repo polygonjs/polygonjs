@@ -52,6 +52,7 @@ import {GetChildrenAttributesJsNode} from '../../../nodes/js/GetChildrenAttribut
 import {GetChildrenPhysicsRBDPropertiesJsNode} from '../../../nodes/js/GetChildrenPhysicsRBDProperties';
 import {GetChildrenPropertiesJsNode} from '../../../nodes/js/GetChildrenProperties';
 import {GetDefaultCameraJsNode} from '../../../nodes/js/GetDefaultCamera';
+import {GetIntersectionAttributeJsNode} from '../../../nodes/js/GetIntersectionAttribute';
 import {GetIntersectionPropertyJsNode} from '../../../nodes/js/GetIntersectionProperty';
 import {GetMaterialJsNode} from '../../../nodes/js/GetMaterial';
 import {GetObjectJsNode} from '../../../nodes/js/GetObject';
@@ -298,6 +299,7 @@ export interface JsNodeChildrenMap {
 	getChildrenPhysicsRBDProperties: GetChildrenPhysicsRBDPropertiesJsNode;
 	getChildrenProperties: GetChildrenPropertiesJsNode;
 	getDefaultCamera: GetDefaultCameraJsNode;
+	getIntersectionAttribute: GetIntersectionAttributeJsNode;
 	getIntersectionProperty: GetIntersectionPropertyJsNode;
 	getMaterial: GetMaterialJsNode;
 	getObject: GetObjectJsNode;
@@ -573,6 +575,7 @@ export class JsRegister {
 		poly.registerNode(GetChildrenPhysicsRBDPropertiesJsNode, CATEGORY_JS.PHYSICS);
 		poly.registerNode(GetChildrenPropertiesJsNode, CATEGORY_JS.GET);
 		poly.registerNode(GetDefaultCameraJsNode, CATEGORY_JS.GET);
+		poly.registerNode(GetIntersectionAttributeJsNode, CATEGORY_JS.GET);
 		poly.registerNode(GetIntersectionPropertyJsNode, CATEGORY_JS.GET);
 		poly.registerNode(GetMaterialJsNode, CATEGORY_JS.GET);
 		poly.registerNode(GetObjectChildJsNode, CATEGORY_JS.MATH);

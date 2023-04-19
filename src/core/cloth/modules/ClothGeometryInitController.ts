@@ -1,5 +1,6 @@
-import {Vector3, BufferGeometry, BufferAttribute} from 'three';
-import {ArrayUtils} from '../../ArrayUtils';
+import {Vector3, BufferGeometry, BufferAttribute, Mesh} from 'three';
+import {ThreeMeshBVHHelper} from '../../geometry/bvh/ThreeMeshBVHHelper';
+// import {ArrayUtils} from '../../ArrayUtils';
 // import type {ClothController} from '../ClothController';
 // import {IcosahedronBufferGeometry} from '../../geometry/operation/Icosahedron';
 // import {mergeVertices} from 'three/examples/jsm/utils/BufferGeometryUtils';
@@ -11,16 +12,22 @@ interface Face {
 }
 
 const v0 = new Vector3();
+// interface ClothGeometryInitControllerOptions {
+// 	populateAdjacency:boolean
+// }
 
 export class ClothGeometryInitController {
 	// public readonly geometry: BufferGeometry;
 	public readonly vertices: Vector3[] = [];
 	public adjacency: number[][] = [];
 	// public detail = 31;
-	// public mergeTolerance = 0.01;
-	public populateAdjacency: boolean = true;
-	constructor(public geometry: BufferGeometry) {}
-	process() {
+	// public mergeTolerance = 0.0001;
+	// public populateAdjacency: boolean = true;
+	public geometry: BufferGeometry;
+	public readonly resolution;
+	constructor(public mesh: Mesh) {
+		this.geometry = mesh.geometry;
+
 		// console.log('process', this.geometry.uuid);
 		// this.geometry = this.mainController.clothObject.geometry;
 		// console.log('pre merge', this.geometry);
@@ -35,14 +42,21 @@ export class ClothGeometryInitController {
 
 		// this.geometry.scale(0.00095, 0.00095, 0.00095);
 
+		// console.log({merged: this.geometry.getAttribute('position').count});
+
+		ThreeMeshBVHHelper.assignDefaultBVHIfNone(this.mesh);
+
 		this.populateVertices();
+		this.resolution = Math.ceil(Math.sqrt(this.vertices.length));
+		// console.log({resolution: this.resolution});
+
 		const faces = this._groupFaces();
 		if (!faces) {
 			return;
 		}
-		if (this.populateAdjacency) {
-			this._populateAdjacency(faces);
-		}
+		// if (this.populateAdjacency) {
+		this._populateAdjacency(faces);
+		// }
 	}
 
 	private populateVertices(): Vector3[] | undefined {
@@ -86,7 +100,7 @@ export class ClothGeometryInitController {
 			faces[c].push(face);
 		}
 		// console.log(indexCount, verticesCount, faces.length);
-		console.log({faces});
+		// console.log({faces});
 		return faces;
 	}
 
@@ -120,21 +134,21 @@ export class ClothGeometryInitController {
 			}
 		}
 
-		console.log({adjacency});
-		console.log(ArrayUtils.uniq(adjacency.map((a) => a.length)));
-		const countByLength: Map<number, number> = new Map();
-		for (let elem of adjacency) {
-			const count = elem.length;
-			const currentCount = countByLength.get(count);
-			if (currentCount == null) {
-				countByLength.set(count, 1);
-			} else {
-				countByLength.set(count, currentCount + 1);
-			}
-		}
-		countByLength.forEach((count, length) => {
-			console.log(`${length} -> ${count}`);
-		});
+		// console.log({adjacency});
+		// console.log(ArrayUtils.uniq(adjacency.map((a) => a.length)));
+		// const countByLength: Map<number, number> = new Map();
+		// for (let elem of adjacency) {
+		// 	const count = elem.length;
+		// 	const currentCount = countByLength.get(count);
+		// 	if (currentCount == null) {
+		// 		countByLength.set(count, 1);
+		// 	} else {
+		// 		countByLength.set(count, currentCount + 1);
+		// 	}
+		// }
+		// countByLength.forEach((count, length) => {
+		// 	console.log(`${length} -> ${count}`);
+		// });
 	}
 }
 

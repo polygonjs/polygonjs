@@ -15,8 +15,7 @@ export class ClothController {
 
 	constructor(public clothObject: Mesh) {
 		this.materials = new ClothMaterialController(this);
-		this.geometryInit = new ClothGeometryInitController(this.clothObject.geometry);
-		this.geometryInit.process();
+		this.geometryInit = new ClothGeometryInitController(this.clothObject);
 		this.inputs = new ClothInputsController(this);
 		this.onBeforeRender = new ClothOnBeforeRenderController(this);
 		this.fbo = new ClothFBOController(this);
@@ -25,14 +24,11 @@ export class ClothController {
 	}
 
 	init(renderer: WebGLRenderer) {
-		console.log('init', this.clothObject.uuid);
 		this.fbo.init(renderer);
 		this.onBeforeRender.init(this.clothObject);
 	}
 
 	update(camera: Camera) {
-		console.log('update', this.clothObject.uuid);
-
 		this.fbo.update(camera);
 	}
 }

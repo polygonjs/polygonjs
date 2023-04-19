@@ -19,6 +19,7 @@ import {CPUIntersectWith, CPU_INTERSECT_WITH_OPTIONS} from './CpuConstants';
 import {isBooleanTrue} from '../../../../../core/BooleanValue';
 import {IntersectDataEventNode} from '../../IntersectData';
 import {BaseRaycastController} from './BaseRaycastController';
+import {resolveIntersectGeometryAttribute} from '../../../../../core/geometry/intersect/CoreIntersect';
 
 export class RaycastCPUController extends BaseRaycastController {
 	// private _offset: CursorOffset = {offsetX: 0, offsetY: 0};
@@ -152,11 +153,7 @@ export class RaycastCPUController extends BaseRaycastController {
 		const attribType = ATTRIBUTE_TYPES[this._node.pv.geoAttributeType];
 		let attribValue = IntersectDataEventNode.resolveObjectAttribute(intersection, this._node.pv.geoAttributeName);
 		if (attribValue == null) {
-			attribValue = IntersectDataEventNode.resolveGeometryAttribute(
-				intersection,
-				this._node.pv.geoAttributeName,
-				attribType
-			);
+			attribValue = resolveIntersectGeometryAttribute(intersection, this._node.pv.geoAttributeName, attribType);
 		}
 		if (attribValue != null) {
 			switch (attribType) {

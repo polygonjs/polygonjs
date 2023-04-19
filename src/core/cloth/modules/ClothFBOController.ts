@@ -52,7 +52,7 @@ export class ClothFBOController {
 	public renderer: WebGLRenderer | undefined;
 
 	constructor(public readonly mainController: ClothController) {
-		this.RESOLUTION = Math.ceil(Math.sqrt(this.mainController.geometryInit.vertices.length));
+		this.RESOLUTION = this.mainController.geometryInit.resolution;
 		this.tSize.set(this.RESOLUTION, this.RESOLUTION);
 		// geometry
 		const geometry = new BufferGeometry();
@@ -372,5 +372,5 @@ function analyzeData(dataName: string, data: Float32Array) {
 		}
 		i++;
 	}
-	console.log(dataName, {min, max, indicesWithZero, indicesBelowThreshold});
+	// console.log(dataName, {min, max, indicesWithZero, indicesBelowThreshold});
 }

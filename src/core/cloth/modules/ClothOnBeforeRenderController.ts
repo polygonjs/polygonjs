@@ -21,7 +21,7 @@ export class ClothOnBeforeRenderController {
 		}
 		// console.log('ClothOnBeforeRenderController.init');
 		this._initialized = true;
-		const RESOLUTION = Math.ceil(Math.sqrt(this.mainController.geometryInit.vertices.length));
+		const RESOLUTION = this.mainController.geometryInit.resolution;
 		const fbo = this.mainController.fbo;
 		const geometryInit = this.mainController.geometryInit;
 

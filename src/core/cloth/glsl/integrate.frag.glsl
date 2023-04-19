@@ -11,13 +11,7 @@ uniform sampler2D tPosition1;
 
 #define dt2 0.000256
 
-vec3 unpackPosition( vec3 pos ) {
-
-	pos *= 1024.0;
-
-	return ( order > 0.0 ) ? floor( pos ) : fract( pos );
-
-}
+// *** ADD COMMON ***
 
 void main() {
 
@@ -30,6 +24,6 @@ void main() {
 	vec3 offset = ( org - pos ) * 18.5 * dt2 * 8.33333;
 	vec3 disp = ( pos - prv ) * 0.94 + pos;
 
-	gl_FragColor = vec4( unpackPosition( disp + offset ), 1.0 );
+	gl_FragColor = vec4( unpackPosition( disp + offset, order ), 1.0 );
 
 }

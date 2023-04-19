@@ -1,9 +1,27 @@
-import through_vert from '../glsl/through.vert.glsl';
-import constraints_frag from '../glsl/constraints.frag.glsl';
-import integrate_frag from '../glsl/integrate.frag.glsl';
-import mouse_frag from '../glsl/mouse.frag.glsl';
-import normals_frag from '../glsl/normals.frag.glsl';
-import through_frag from '../glsl/through.frag.glsl';
+// common
+import COMMON_GET_UV from '../glsl/common/getUV.glsl';
+import COMMON_PACK_POSITION from '../glsl/common/packPosition.glsl';
+import COMMON_UNPACK_POSITION from '../glsl/common/unpackPosition.glsl';
+
+// main
+import THROUGH_VERT from '../glsl/through.vert.glsl';
+import CORE_THROUGH_FRAG from '../glsl/through.frag.glsl';
+import CORE_CONTRAINTS_FRAG from '../glsl/constraints.frag.glsl';
+import CORE_INTEGRATE_FRAG from '../glsl/integrate.frag.glsl';
+import CORE_MOUSE_FRAG from '../glsl/mouse.frag.glsl';
+import CORE_NORMALS_FRAG from '../glsl/normals.frag.glsl';
+
+const LINE_BREAK = '\n';
+const ADD_COMMON_LINE = '// *** ADD COMMON ***';
+function _addCommon(core: string, commonFunctions: string[]) {
+	const common = commonFunctions.join(LINE_BREAK);
+	return core.replace(ADD_COMMON_LINE, common);
+}
+const THROUGH_FRAG = _addCommon(CORE_THROUGH_FRAG, [COMMON_UNPACK_POSITION]);
+const CONTRAINTS_FRAG = _addCommon(CORE_CONTRAINTS_FRAG, [COMMON_GET_UV, COMMON_PACK_POSITION, COMMON_UNPACK_POSITION]);
+const INTEGRATE_FRAG = _addCommon(CORE_INTEGRATE_FRAG, [COMMON_UNPACK_POSITION]);
+const MOUSE_FRAG = _addCommon(CORE_MOUSE_FRAG, [COMMON_GET_UV, COMMON_PACK_POSITION, COMMON_UNPACK_POSITION]);
+const NORMALS_FRAG = _addCommon(CORE_NORMALS_FRAG, [COMMON_GET_UV, COMMON_PACK_POSITION, COMMON_UNPACK_POSITION]);
 
 import {RawShaderMaterial, Vector2, Vector3, IUniform} from 'three';
 import {ClothController} from '../ClothController';
@@ -32,7 +50,7 @@ interface IntegrationUniforms extends RawMaterialUniforms {
 	tPosition1: IUniformTexture;
 }
 interface MouseUniforms extends RawMaterialUniforms {
-	vertices: IUniformNArray
+	vertices: IUniformNArray;
 	coordinates: IUniformV3Array;
 	order: IUniformN;
 	tSize: IUniformV2;
@@ -80,8 +98,8 @@ function createRawMaterial() {
 			tSize: {value: new Vector2()},
 			texture: {value: null},
 		},
-		vertexShader: through_vert,
-		fragmentShader: through_frag,
+		vertexShader: THROUGH_VERT,
+		fragmentShader: THROUGH_FRAG,
 		fog: false,
 		lights: false,
 		depthWrite: false,
@@ -103,7 +121,7 @@ export class ClothMaterialController {
 	public readonly normalsShader: NormalsMaterial = createRawMaterial() as NormalsMaterial;
 
 	constructor(public readonly mainController: ClothController) {
-		this.integrateShader.fragmentShader = integrate_frag;
+		this.integrateShader.fragmentShader = INTEGRATE_FRAG;
 		this.integrateShader.uniforms = {
 			dt: {value: 0},
 			tSize: {value: new Vector2()},
@@ -114,7 +132,7 @@ export class ClothMaterialController {
 			tPosition0: {value: null},
 			tPosition1: {value: null},
 		};
-		this.mouseShader.fragmentShader = mouse_frag;
+		this.mouseShader.fragmentShader = MOUSE_FRAG;
 		this.mouseShader.uniforms = {
 			vertices: {value: []},
 			coordinates: {value: [new Vector3()]},
@@ -125,7 +143,7 @@ export class ClothMaterialController {
 			tPosition1: {value: null},
 		};
 
-		this.constraintsShader.fragmentShader = constraints_frag;
+		this.constraintsShader.fragmentShader = CONTRAINTS_FRAG;
 		this.constraintsShader.uniforms = {
 			tSize: {value: new Vector2()},
 			order: {value: -1},
@@ -137,7 +155,7 @@ export class ClothMaterialController {
 			tDistancesB: {value: null},
 		};
 
-		this.normalsShader.fragmentShader = normals_frag;
+		this.normalsShader.fragmentShader = NORMALS_FRAG;
 		this.normalsShader.uniforms = {
 			tSize: {value: new Vector2()},
 			tPosition0: {value: null},

@@ -58,6 +58,10 @@ export class OnObjectHoverJsNode extends BaseOnObjectPointerEventJsNode {
 		}
 		if (usedOutputNames.includes(JsConnectionPointType.INTERSECTION)) {
 			this._addIntersectionRef(shadersCollectionController);
+
+			if (!usedOutputNames.includes(JsConnectionPointType.TRIGGER)) {
+				this.setTriggeringLines(shadersCollectionController, '');
+			}
 		}
 	}
 
@@ -69,18 +73,8 @@ export class OnObjectHoverJsNode extends BaseOnObjectPointerEventJsNode {
 
 		const newHovered = `newHovered`;
 		const currentHovered = `currentHovered`;
-
 		const outIntersection = this._addIntersectionRef(shadersCollectionController);
 		const outHovered = this._addHoveredRef(shadersCollectionController);
-
-		// const _getObjectHoveredIntersection_ = () => {
-		// 	const func = Poly.namedFunctionsRegister.getFunction(
-		// 		'getObjectHoveredIntersection',
-		// 		this,
-		// 		shadersCollectionController
-		// 	);
-		// 	return func.asString(object3D);
-		// };
 
 		const _getObjectHoveredState_ = () => {
 			const func = Poly.namedFunctionsRegister.getFunction(
@@ -91,11 +85,8 @@ export class OnObjectHoverJsNode extends BaseOnObjectPointerEventJsNode {
 			return func.asString(object3D, traverseChildren, lineThreshold, pointsThreshold, `this.${outIntersection}`);
 		};
 
-		//
-		// const _getObjectHoveredIntersection = _getObjectHoveredIntersection_();
 		const _getObjectHoveredState = _getObjectHoveredState_();
 
-		//
 		const bodyLines = [
 			`const ${newHovered} = ${_getObjectHoveredState};`,
 			`const ${currentHovered} = this.${outHovered}.value;`,
@@ -104,12 +95,6 @@ export class OnObjectHoverJsNode extends BaseOnObjectPointerEventJsNode {
 			`${triggeredMethods}`,
 			`}`,
 		];
-
-		// const usedOutputNames = this.io.outputs.used_output_names();
-		// if (usedOutputNames.includes(JsConnectionPointType.INTERSECTION)) {
-
-		// 	bodyLines.push(`this.${outIntersection}.value = ${_getObjectHoveredIntersection};`);
-		// }
 
 		shadersCollectionController.addTriggeringLines(this, bodyLines, {
 			gatherable: true,
