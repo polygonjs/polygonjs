@@ -18,6 +18,7 @@ import {inputObject3D} from './_BaseObject3D';
 import {JsAssemblerActor} from './code/assemblers/actor/ActorAssembler';
 import {ShaderName} from '../utils/shaders/ShaderName';
 import {JsType} from '../../poly/registers/nodes/types/Js';
+import {BaseNodeType} from '../_Base';
 // import {BaseNodeType} from '../_Base';
 
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
@@ -53,7 +54,6 @@ const DEFAULT_JS = JS_CODE_DEFAULT_TS.replace(/\:\sJsLinesCollectionController/g
 export class BaseCodeJsProcessor extends BaseCodeProcessor {
 	constructor(protected override node: CodeJsNode) {
 		super(node);
-		this.initializeProcessor();
 	}
 	get pv() {
 		return this.node.pv;
@@ -94,10 +94,10 @@ class CodeJsParamsConfig extends NodeParamsConfig {
 	});
 	codeJavascript = ParamConfig.STRING(DEFAULT_JS, {
 		hidden: true,
-		// cook: false,
-		// callback: (node: BaseNodeType) => {
-		// 	CodeJsNode.PARAM_CALLBACK_requestCompile(node as CodeJsNode);
-		// },
+		cook: false,
+		callback: (node: BaseNodeType) => {
+			CodeJsNode.PARAM_CALLBACK_requestCompile(node as CodeJsNode);
+		},
 	});
 }
 const ParamsConfig = new CodeJsParamsConfig();
@@ -123,37 +123,59 @@ export class CodeJsNode extends TypedJsNode<CodeJsParamsConfig> {
 		this.params.onParamsCreated('compile', () => {
 			this.compile({triggerFunctionNode: false});
 		});
+		// this.addPostDirtyHook('compile', () => {
+		// 	this.compile({triggerFunctionNode: true});
+		// });
 	}
-	override cook() {
-		// try {
+	// override cook() {
+	// 	// try {
 
-		// }catch(err){
+	// 	// }catch(err){
 
-		// }
-		this.compile({triggerFunctionNode: true});
-		this.cookController.endCook();
-	}
+	// 	// }
+	// 	this.compile({triggerFunctionNode: false});
+	// 	console.log('COOK: this.compiled()', this.compiled());
+	// 	// if (this.compiled()) {
+
+	// 	// } // else {
+	// 	//	this.states.error.set(`cannot generate function`);
+	// 	//}
+	// 	this.cookController.endCook();
+	// }
 
 	override setTriggerableLines(controller: JsLinesCollectionController) {
 		this._processor?.setTriggerableLines(controller);
 	}
 
 	private _lastCompiledCode: string | undefined;
-	// private _compilationSuccessful=false
+	private _compilationSuccessful = false;
 	compiled(): boolean {
-		return this._processor != null;
+		return this._compilationSuccessful;
 	}
 	compile(options: CompileOptions) {
-		if (this._lastCompiledCode == this.pv.codeJavascript) {
+		const content = TranspiledFilter.filter(this.pv.codeJavascript);
+		if (this._lastCompiledCode == content) {
 			console.log('compile not needed');
 			return;
 		}
 
+		this._compilationSuccessful = false;
+		this._lastCompiledCode = undefined;
 		this._processor = undefined;
-		// this.states.error.clear();
+		this.states.error.clear();
+
+		const _preventSelfCompilation = () => {
+			this._setFunctionNodeToRecompileAllowed(false);
+			this.dirtyController.setForbiddenTriggerNodes([this, this.io.inputs.graphNode()]);
+		};
+		const _restore = () => {
+			this._setFunctionNodeToRecompileAllowed(true);
+			this.dirtyController.setForbiddenTriggerNodes([]);
+		};
+
 		try {
 			const functionBody = `try {
-	${TranspiledFilter.filter(this.pv.codeJavascript)}
+	${content}
 } catch(e) {
 		states.error.set(e);
 }`;
@@ -170,9 +192,15 @@ export class CodeJsNode extends TypedJsNode<CodeJsParamsConfig> {
 			});
 			if (!ProcessorClass) {
 				throw new Error(`cannot generate function`);
+				// this.states.error.set(`cannot generate function (${e})`);
+				// return
 			}
 			if (ProcessorClass) {
 				this._processor = new ProcessorClass(this);
+
+				_preventSelfCompilation();
+
+				this._processor.initializeProcessor();
 
 				// test the generated processor
 				const dummyAssembler = new JsAssemblerActor(this.functionNode()!);
@@ -183,14 +211,13 @@ export class CodeJsNode extends TypedJsNode<CodeJsParamsConfig> {
 				);
 				this._processor.setTriggerableLines(dummyShadersCollectionController);
 
-				this._lastCompiledCode = this.pv.codeJavascript;
-				console.log('this._processor', this._processor);
-				// private
-				// return;
-				// console.log('set dirty');
+				_restore();
 
+				this._compilationSuccessful = true;
+				this._lastCompiledCode = content;
+
+				this.states.error.clear();
 				if (options.triggerFunctionNode) {
-					this.states.error.clear();
 					this._setFunctionNodeToRecompile();
 				}
 			} // else {
@@ -199,38 +226,16 @@ export class CodeJsNode extends TypedJsNode<CodeJsParamsConfig> {
 			//}
 			// console.log('BADDD');
 		} catch (e) {
-			console.log('compilation failed');
+			_restore();
 			// Poly.warn(e);
 			this.states.error.set(`cannot generate function (${e})`);
+			if (options.triggerFunctionNode) {
+				this._setFunctionNodeToRecompile();
+			}
 			// throw new Error(`cannot generate function`);
 		}
 	}
-	// static PARAM_CALLBACK_requestCompile(node: CodeJsNode) {
-	// 	node._setFunctionNodeToRecompile();
-	// 	// try {
-	// 	// node._compile();
-	// 	// 	console.log('set dirty');
-	// 	// 	node._setFunctionNodeToRecompile();
-	// 	// } catch (err) {
-	// 	// 	node.states.error.set(`cannot generate function`);
-	// 	// }
-	// }
-
-	/*
-	 *
-	 * hooks for the processor
-	 *
-	 */
-	// public _processorHookInputValueFromParam<T extends ParamType>(
-	// 	param: JsNodeParamConstructorMap[T],
-	// 	context: JsNodeTriggerContext
-	// ): ParamValuesTypeMap[T] {
-	// 	return this._inputValueFromParam(param, context);
-	// }
-	// public _processorHookInputValue<T extends JsConnectionPointType>(
-	// 	inputNameOrIndex: string | number,
-	// 	context: JsNodeTriggerContext
-	// ): ReturnValueTypeByJsConnectionPointType[T] | undefined {
-	// 	return this._inputValue(inputNameOrIndex, context);
-	// }
+	static PARAM_CALLBACK_requestCompile(node: CodeJsNode) {
+		node.compile({triggerFunctionNode: true});
+	}
 }

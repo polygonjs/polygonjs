@@ -5,7 +5,7 @@ import {CoreSleep} from '../../../../src/core/Sleep';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 // import {ActorSopNode} from '../../../../src/engine/nodes/sop/Actor';
 import {AssemblersUtils} from '../../../helpers/AssemblersUtils';
-import {SceneJsonImporter} from '../../../../src/engine/index_all';
+import {SceneJsonImporter} from '../../../../src/engine/io/json/import/Scene';
 import {SceneJsonExporter} from '../../../../src/engine/io/json/export/Scene';
 import {PerspectiveCameraObjNode} from '../../../../src/engine/nodes/obj/PerspectiveCamera';
 import {FloatParam} from '../../../../src/engine/params/Float';

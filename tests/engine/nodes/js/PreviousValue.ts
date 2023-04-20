@@ -43,7 +43,7 @@ QUnit.test('js/PreviousValue with primitive', async (assert) => {
 		assert.equal(scene.time(), 0);
 		assert.equal(object.position.y, 0);
 		currentValueParam.set(1);
-		await CoreSleep.sleep(200);
+		await CoreSleep.sleep(500);
 		assert.in_delta(scene.time(), 0.5, 0.25, 'time is 0.5 sec');
 		assert.equal(object.position.y, 0);
 

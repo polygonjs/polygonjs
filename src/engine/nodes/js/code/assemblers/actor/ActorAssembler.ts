@@ -40,10 +40,7 @@ import {CoreType} from '../../../../../../core/Type';
 import {ParamOptions} from '../../../../../params/utils/OptionsController';
 import {JsConnectionPointType} from '../../../../utils/io/connections/Js';
 import {ActorBuilderNode} from '../../../../../scene/utils/ActorsManager';
-// import {Vector3} from 'three';
-// import {IUniformsWithTime} from '../../../../../scene/utils/UniformsController';
-// import {handleCopBuilderDependencies} from '../../../../cop/utils/BuilderUtils';
-// import { JSSDFSopNode } from '../../../../sop/JSSDF';
+
 const DEBUG = true;
 function logBlue(message: string) {
 	if (!DEBUG) {
@@ -136,7 +133,7 @@ export class JsAssemblerActor extends BaseJsShaderAssembler {
 	// private _triggerNodes: Set<BaseJsNodeType> = new Set();
 	// private _triggerNodesByType: Map<string, Set<BaseJsNodeType>> = new Map();
 
-	async createFunctionData(additionalRootNodes: BaseJsNodeType[]): Promise<ActorFunctionData | undefined> {
+	createFunctionData(additionalRootNodes: BaseJsNodeType[]): ActorFunctionData | undefined {
 		const node = this.currentGlParentNode() as ActorBuilderNode;
 		logBlue(`************* ${node.path()} *************`);
 		this._reset();
@@ -148,7 +145,7 @@ export class JsAssemblerActor extends BaseJsShaderAssembler {
 
 		const shaderNames = this.shaderNames();
 
-		const functionData = await this._createFunctionData(
+		const functionData = this._createFunctionData(
 			// nodeType as EvaluatorMethodName,
 			additionalRootNodes,
 			triggeringNodes,
@@ -158,13 +155,13 @@ export class JsAssemblerActor extends BaseJsShaderAssembler {
 
 		return functionData;
 	}
-	private async _createFunctionData(
+	private _createFunctionData(
 		// nodeType: EvaluatorMethodName,
 		additionalRootNodes: BaseJsNodeType[],
 		triggeringNodes: Set<BaseJsNodeType>,
 		triggerableNodes: Set<BaseJsNodeType>,
 		shaderNames: ShaderName[]
-	): Promise<ActorFunctionData | undefined> {
+	): ActorFunctionData | undefined {
 		const functionNode = this.currentGlParentNode() as ActorBuilderNode;
 
 		//
@@ -172,7 +169,7 @@ export class JsAssemblerActor extends BaseJsShaderAssembler {
 		// create computed props
 		//
 		//
-		const _addComputedProps = async () => {
+		const _addComputedProps = () => {
 			// const triggerableNodes: Set<BaseJsNodeType> = new Set();
 			// triggerableNodes.clear();
 			// connectedTriggerableNodes({triggeringNodes, triggerableNodes, recursive: true});
@@ -188,7 +185,7 @@ export class JsAssemblerActor extends BaseJsShaderAssembler {
 			const rootNodes = SetUtils.toArray(rootNodesSet).concat(additionalRootNodes);
 			this.set_root_nodes(rootNodes);
 			// if (this._root_nodes.length > 0 || triggerableNodes.size > 0) {
-			await this.buildCodeFromNodes(this._root_nodes, {
+			this.buildCodeFromNodes(this._root_nodes, {
 				actor: {
 					functionNode,
 					triggeringNodes: triggeringNodes,
@@ -205,7 +202,7 @@ export class JsAssemblerActor extends BaseJsShaderAssembler {
 				}
 			}
 		};
-		await _addComputedProps();
+		_addComputedProps();
 
 		// //
 		// //

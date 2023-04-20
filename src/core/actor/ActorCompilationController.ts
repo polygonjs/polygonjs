@@ -10,9 +10,9 @@ import {ActorBuilderNode} from '../../engine/scene/utils/ActorsManager';
 export class ActorCompilationController {
 	constructor(protected node: ActorBuilderNode) {}
 
-	async compileIfRequired() {
+	compileIfRequired() {
 		if (this.node.assemblerController()?.compileRequired()) {
-			await this.compile();
+			this.compile();
 		}
 	}
 
@@ -25,6 +25,12 @@ export class ActorCompilationController {
 	private _functionData: ActorFunctionData | undefined;
 	functionData() {
 		return this._functionData;
+	}
+	private _resetFunctionData() {
+		this._functionData = undefined;
+		// if (!this.node.isDirty()) {
+		// 	this.node.setDirty();
+		// }
 	}
 	updateFromFunctionData(functionData: ActorFunctionData) {
 		this._functionData = functionData;
@@ -115,22 +121,30 @@ export class ActorCompilationController {
 		this._evaluatorGenerator = evaluatorGenerator;
 		this.node.scene().actorsManager.registerEvaluatorGenerator(evaluatorGenerator);
 	}
-	async compile() {
+	compile() {
 		const assemblerController = this.node.assemblerController();
 		if (!assemblerController) {
 			return;
 		}
 
+		this.node.states.error.clear();
 		// main compilation (just used for reset in this assembler)
 		assemblerController.assembler.updateFunction();
 
 		// get functionData
 		const paramNodes = JsNodeFinder.findParamGeneratingNodes(this.node);
-		const functionData = await assemblerController.assembler.createFunctionData(paramNodes);
-		if (!functionData) {
-			return;
+		try {
+			const functionData = assemblerController.assembler.createFunctionData(paramNodes);
+			if (!functionData) {
+				this._resetFunctionData();
+				return;
+			}
+			this.updateFromFunctionData(functionData);
+			assemblerController.post_compile();
+		} catch (err) {
+			console.log(err);
+			this._resetFunctionData();
+			// throw new Error(err);
 		}
-		this.updateFromFunctionData(functionData);
-		assemblerController.post_compile();
 	}
 }

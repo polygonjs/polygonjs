@@ -104,7 +104,14 @@ export class TypedJsNode<K extends NodeParamsConfig> extends TypedNode<NodeConte
 		this.cookController.endCook();
 	}
 
+	private __setFunctionNodeToRecompileAllowed = true;
+	protected _setFunctionNodeToRecompileAllowed(state: boolean) {
+		this.__setFunctionNodeToRecompileAllowed = state;
+	}
 	protected _setFunctionNodeToRecompile() {
+		if (this.__setFunctionNodeToRecompileAllowed == false) {
+			return;
+		}
 		this.functionNode()?.assemblerController()?.setCompilationRequiredAndDirty(this);
 	}
 	functionNode(): AssemblerControllerNode<BaseJsShaderAssembler> | undefined {

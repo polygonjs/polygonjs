@@ -95,8 +95,8 @@ export class JsAssemblerSDF extends BaseJsShaderAssembler {
 	// 	}
 	// }
 
-	override async updateFunction() {
-		await super.updateFunction();
+	override updateFunction() {
+		super.updateFunction();
 		this._lines = new Map();
 		this._shaders_by_name = new Map();
 		// this._functionsByName.clear();
@@ -108,7 +108,7 @@ export class JsAssemblerSDF extends BaseJsShaderAssembler {
 		// 	}
 		// }
 		if (this._root_nodes.length > 0) {
-			await this.buildCodeFromNodes(this._root_nodes);
+			this.buildCodeFromNodes(this._root_nodes);
 			this._buildLines();
 		}
 

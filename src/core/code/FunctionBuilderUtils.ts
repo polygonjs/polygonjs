@@ -32,6 +32,5 @@ export function buildCodeNodeFunction<T extends BaseCodeProcessor>(options: Buil
 	});
 	const processorCreatorFunction = new Function(...variableNames, functionBody);
 	const ProcessorClass: typeof BaseCodeProcessor | undefined = processorCreatorFunction(...sortedVariables);
-	console.log(`code generated successfully for node '${node.path()}'`);
 	return ProcessorClass;
 }

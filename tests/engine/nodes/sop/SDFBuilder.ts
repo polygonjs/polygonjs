@@ -1,5 +1,5 @@
 import {Box3, Vector3} from 'three';
-import {SceneJsonImporter} from '../../../../src/engine/index_all';
+import {SceneJsonImporter} from '../../../../src/engine/io/json/import/Scene';
 import {SceneJsonExporter} from '../../../../src/engine/io/json/export/Scene';
 import {SDFBuilderSopNode} from '../../../../src/engine/nodes/sop/SDFBuilder';
 import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Js';
@@ -33,7 +33,8 @@ QUnit.test('sop/SDFBuilder simple', async (assert) => {
 	SDFSphere1.p.radius.set(0.4);
 
 	async function getBbox() {
-		return await _getBbox(SDFBuilder1);
+		const result = await _getBbox(SDFBuilder1);
+		return result;
 	}
 	assert.in_delta((await getBbox()).y, 0.8, 0.02);
 

@@ -9,7 +9,7 @@ export class NodeErrorState<NC extends NodeContext> extends NodeBaseState<NC> {
 	set(message: string | undefined) {
 		if (this._message != message) {
 			if (message) {
-				Poly.error(`[${this.node.path()}] error: '${message}'`);
+				Poly.error(`[${this.node.path()}] error: '${message}' (from '${this._message}')`);
 			} else {
 				Poly.warn(`[${this.node.path()}] clear error`);
 			}

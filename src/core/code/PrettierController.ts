@@ -8,6 +8,7 @@ export class PrettierController {
 				parser: 'babel',
 				plugins: [parserBabel],
 				printWidth: 120,
+				useTabs: true,
 			});
 		} catch (err) {
 			console.log(err);

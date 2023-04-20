@@ -55,7 +55,7 @@ export class JsCodeBuilder {
 	shaderNames() {
 		return this._nodeTraverser.shaderNames();
 	}
-	async buildFromNodes(
+	buildFromNodes(
 		rootNodes: BaseJsNodeType[],
 		paramNodes: BaseJsNodeType[],
 		setCodeLinesOptions?: CodeBuilderSetCodeLinesOptions
@@ -106,19 +106,26 @@ export class JsCodeBuilder {
 			nodesToBeComputed.push(...triggeringNodes, ...triggerableNodes);
 		}
 		const codeNodes = nodesToBeComputed.filter((n) => n.type() == JsType.CODE) as CodeJsNode[];
-		console.log({codeNodes});
 		for (let node of codeNodes) {
 			if (!node.compiled()) {
-				try {
-					node.functionNode()?.dirtyController.setForbiddenTriggerNodes([node]);
-					node.compile({triggerFunctionNode: false});
-					node.functionNode()?.dirtyController.setForbiddenTriggerNodes([]);
-					console.log('OK');
-				} catch (err) {
-					console.log('NOT OK', node.path(), node.states.error.active());
-					node.states.error.set(`failed to generated code`);
-					node.functionNode()?.states.error.set(`node ${node.path()} failed to generated code`);
-				}
+				// try {
+				node.functionNode()?.dirtyController.setForbiddenTriggerNodes([node]);
+				node.compile({triggerFunctionNode: false});
+				node.functionNode()?.dirtyController.setForbiddenTriggerNodes([]);
+				if (node.states.error.active() || !node.compiled()) {
+					const message = `failed to generated code (see node ${node.path()})`;
+					// node.functionNode()?.states.error.set(message);
+					// this._setCodeLines([], setCodeLinesOptions);
+					throw new Error(message);
+					// return;
+				} // else {
+				//	console.log('OK');
+				//}
+				// } catch (err) {
+				// 	console.log('NOT OK', node.path(), node.states.error.active());
+				// 	node.states.error.set(`failed to generated code`);
+				// 	node.functionNode()?.states.error.set(`node ${node.path()} failed to generated code`);
+				// }
 			}
 		}
 
