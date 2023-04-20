@@ -11,7 +11,11 @@ export class ClothController {
 	// public readonly inputs: ClothInputsController;
 	public readonly fbo: ClothFBOController;
 	public readonly onBeforeRender: ClothOnBeforeRenderController;
+	//
 	public stepsCount = 40;
+	public selectedVertexInfluence = 0.1;
+	public viscosity = 0.1;
+	public spring = 1;
 
 	constructor(public clothObject: Mesh) {
 		this.materials = new ClothMaterialController(this);
@@ -26,8 +30,8 @@ export class ClothController {
 		this.onBeforeRender.init(this.clothObject);
 	}
 
-	update() {
-		this.fbo.update();
+	update(delta: number) {
+		this.fbo.update(delta);
 	}
 
 	private _selectedVertexIndex = -1;

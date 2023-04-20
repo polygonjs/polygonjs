@@ -6,7 +6,7 @@
 import {Object3D, WebGLRenderer} from 'three';
 import {TypedActorSopNode} from './_BaseActor';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {NodeContext} from '../../poly/NodeContext';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
@@ -15,18 +15,12 @@ import {CoreType} from '../../../core/Type';
 import {BaseNodeType} from '../_Base';
 import {Poly} from '../../Poly';
 import {CoreObject} from '../../../core/geometry/Object';
-import {ClothIdAttribute, ClothSolverAttribute} from '../../../core/cloth/ClothAttribute';
+import {ClothIdAttribute} from '../../../core/cloth/ClothAttribute';
 import {
 	createOrFindClothController,
 	clothControllerNodeIdFromObject,
 } from '../../../core/cloth/ClothControllerRegister';
-class ClothSolverSopParamsConfig extends NodeParamsConfig {
-	/** @param steps */
-	steps = ParamConfig.INTEGER(40, {
-		range: [6, 50],
-		rangeLocked: [true, false],
-	});
-}
+class ClothSolverSopParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new ClothSolverSopParamsConfig();
 
 export class ClothSolverSopNode extends TypedActorSopNode<ClothSolverSopParamsConfig> {
@@ -53,7 +47,7 @@ export class ClothSolverSopNode extends TypedActorSopNode<ClothSolverSopParamsCo
 		const actorNode = this._findActorNode();
 		for (let object of objects) {
 			CoreObject.addAttribute(object, ClothIdAttribute.OBJECT, this.graphNodeId());
-			CoreObject.addAttribute(object, ClothSolverAttribute.STEPS_COUNT, this.pv.steps);
+			// CoreObject.addAttribute(object, ClothSolverAttribute.STEPS_COUNT, this.pv.steps);
 			this.scene().actorsManager.assignActorBuilder(object, actorNode);
 		}
 

@@ -3,8 +3,8 @@ import {
 	MeshDepthMaterial,
 	// BufferGeometry,
 	// BufferAttribute,
-	// Material,
-	MeshPhysicalMaterial,
+	Material,
+	// MeshPhysicalMaterial,
 } from 'three';
 import {ClothController} from '../ClothController';
 //
@@ -38,19 +38,19 @@ export class ClothOnBeforeRenderController {
 		// bmp.wrapT = THREE.RepeatWrapping;
 		// bmp.repeat.set(2.5, 2.5);
 
-		const material = new MeshPhysicalMaterial({
-			color: 0xffffff,
-			// bumpMap: bmp,
-			// bumpScale: 0.012,
-			// metalness: 0.1,
-			// roughness: 0.6,
-			// clearcoat: 0.8,
-			// clearcoatRoughness: 0.35,
-			// sheen: new THREE.Color(0.2, 0.2, 1).multiplyScalar(1 / 6),
-			// dithering: true,
-			wireframe: false,
-		});
-		// const material = mesh.material as Material;
+		// const material = new MeshPhysicalMaterial({
+		// 	color: 0xffffff,
+		// 	// bumpMap: bmp,
+		// 	// bumpScale: 0.012,
+		// 	// metalness: 0.1,
+		// 	// roughness: 0.6,
+		// 	// clearcoat: 0.8,
+		// 	// clearcoatRoughness: 0.35,
+		// 	// sheen: new THREE.Color(0.2, 0.2, 1).multiplyScalar(1 / 6),
+		// 	// dithering: true,
+		// 	wireframe: false,
+		// });
+		const material = (mesh.material as Material).clone();
 		// console.log(material.onBeforeCompile);
 
 		// update cloth material with computed position and normals

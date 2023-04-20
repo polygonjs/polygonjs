@@ -99,7 +99,7 @@ export class ClothFBOController {
 		renderer.setRenderTarget(originalRenderTarget);
 
 		// update once, to have the geometry properly display the normals
-		this.update();
+		this.update(1 / 60);
 	}
 
 	private copyTexture(input: TextureContainer, output: WebGLRenderTarget, order: boolean, renderer: WebGLRenderer) {
@@ -132,7 +132,7 @@ export class ClothFBOController {
 		this.originalRT = tmp;
 	}
 
-	update() {
+	update(delta: number) {
 		const renderer = this.renderer;
 		if (!(renderer && this._initialized)) {
 			return;
@@ -141,7 +141,7 @@ export class ClothFBOController {
 		const originalRenderTarget = renderer.getRenderTarget();
 
 		// start update
-		this.integrate(renderer);
+		this.integrate(delta, renderer);
 
 		// const mouseUpdating = this.mainController.inputs.updating(camera);
 		const selectedVertexIndex = this.mainController.selectedVertexIndex();
@@ -232,10 +232,13 @@ export class ClothFBOController {
 		// console.log('data:', data);
 	}
 
-	private integrate(renderer: WebGLRenderer) {
+	private integrate(delta: number, renderer: WebGLRenderer) {
 		const integrateShader = this.mainController.materials.integrateShader;
 
 		this.mesh.material = integrateShader;
+		integrateShader.uniforms.timeDelta.value = delta;
+		integrateShader.uniforms.viscosity.value = this.mainController.viscosity;
+		integrateShader.uniforms.spring.value = this.mainController.spring;
 		integrateShader.uniforms.tSize.value.copy(this.tSize);
 		integrateShader.uniforms.tOriginal.value = this.originalRT.texture;
 		integrateShader.uniforms.tPrevious0.value = this.previousRT[0].texture;
@@ -268,6 +271,7 @@ export class ClothFBOController {
 	protected solveConstraints(renderer: WebGLRenderer) {
 		const constraintsShader = this.mainController.materials.constraintsShader;
 		this.mesh.material = constraintsShader;
+		constraintsShader.uniforms.selectedVertexInfluence.value = this.mainController.selectedVertexInfluence;
 		constraintsShader.uniforms.tSize.value.copy(this.tSize);
 		constraintsShader.uniforms.tPosition0.value = this.positionRT[0].texture;
 		constraintsShader.uniforms.tPosition1.value = this.positionRT[1].texture;

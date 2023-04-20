@@ -8,8 +8,11 @@ uniform sampler2D tPrevious0;
 uniform sampler2D tPrevious1;
 uniform sampler2D tPosition0;
 uniform sampler2D tPosition1;
+uniform float timeDelta;
+uniform float viscosity;
+uniform float spring;
 
-#define dt2 0.000256
+// #define dt2 0.000256
 
 // *** ADD COMMON ***
 
@@ -21,8 +24,8 @@ void main() {
 	vec3 prv = ( texture2D( tPrevious0, uv ).xyz + texture2D( tPrevious1, uv ).xyz ) / 1024.0;
 	vec3 pos = ( texture2D( tPosition0, uv ).xyz + texture2D( tPosition1, uv ).xyz ) / 1024.0;
 
-	vec3 offset = ( org - pos ) * 18.5 * dt2 * 8.33333;
-	vec3 disp = ( pos - prv ) * 0.94 + pos;
+	vec3 offset = ( org - pos ) * timeDelta * spring;//18.5 * dt2 * 8.33333;
+	vec3 disp = ( pos - prv ) * ( 1.0 - viscosity ) + pos;
 
 	gl_FragColor = vec4( unpackPosition( disp + offset, order ), 1.0 );
 

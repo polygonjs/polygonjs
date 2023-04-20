@@ -2,7 +2,7 @@ import {Mesh, Object3D} from 'three';
 import {CoreGraphNodeId} from '../graph/CoreGraph';
 // import {BaseNodeType} from '../../engine/nodes/_Base';
 import {CoreObject} from '../geometry/Object';
-import {ClothIdAttribute, ClothSolverAttribute} from './ClothAttribute';
+import {ClothIdAttribute} from './ClothAttribute';
 import {ClothController} from './ClothController';
 
 const clothControllerByGraphNodeId: Map<string, ClothController> = new Map();
@@ -16,8 +16,8 @@ export function createOrFindClothController(clothObject: Object3D) {
 		controller = new ClothController(clothObject);
 		clothControllerByGraphNodeId.set(clothObject.uuid, controller);
 
-		const stepsCount = (CoreObject.attribValue(clothObject, ClothSolverAttribute.STEPS_COUNT) as number) || 5;
-		controller.stepsCount = stepsCount;
+		// const stepsCount = (CoreObject.attribValue(clothObject, ClothSolverAttribute.STEPS_COUNT) as number) || 5;
+		// controller.stepsCount = stepsCount;
 	}
 
 	return {controller};

@@ -34,7 +34,9 @@ interface CopyUniforms extends RawMaterialUniforms {
 	texture: IUniformTexture;
 }
 interface IntegrationUniforms extends RawMaterialUniforms {
-	dt: IUniformN;
+	timeDelta: IUniformN;
+	viscosity: IUniformN;
+	spring: IUniformN;
 	tSize: IUniformV2;
 	order: IUniformN;
 	tOriginal: IUniformTexture;
@@ -55,6 +57,7 @@ interface MouseUniforms extends RawMaterialUniforms {
 interface ConstraintsUniforms extends RawMaterialUniforms {
 	tSize: IUniformV2;
 	order: IUniformN;
+	selectedVertexInfluence: IUniformN;
 	tPosition0: IUniformTexture;
 	tPosition1: IUniformTexture;
 	tAdjacentsA: IUniformTexture;
@@ -117,7 +120,9 @@ export class ClothMaterialController {
 	constructor(public readonly mainController: ClothController) {
 		this.integrateShader.fragmentShader = INTEGRATE_FRAG;
 		this.integrateShader.uniforms = {
-			dt: {value: 0},
+			timeDelta: {value: 0},
+			viscosity: {value: 0.1},
+			spring: {value: 1},
 			tSize: {value: new Vector2()},
 			order: {value: -1},
 			tOriginal: {value: null},
@@ -141,6 +146,7 @@ export class ClothMaterialController {
 		this.constraintsShader.uniforms = {
 			tSize: {value: new Vector2()},
 			order: {value: -1},
+			selectedVertexInfluence: {value: 0},
 			tPosition0: {value: null},
 			tPosition1: {value: null},
 			tAdjacentsA: {value: null},

@@ -1,6 +1,6 @@
 import {Object3D, Vector3} from 'three';
 import {getClothControllerNodeFromWorldObject} from '../nodes/sop/ClothSolver';
-import {ObjectNamedFunction0, ObjectNamedFunction1} from './_Base';
+import {ObjectNamedFunction0, ObjectNamedFunction1, ObjectNamedFunction4} from './_Base';
 import {clothSolverStepSimulation as _clothSolverStepSimulation} from '../../core/cloth/ClothSolver';
 import {_getPhysicsRBDSphereRadius, _setPhysicsRBDSphereProperty} from '../../core/physics/shapes/RBDSphere';
 import {_matchArrayLength} from './_ArrayUtils';
@@ -25,12 +25,19 @@ export class clothSolverReset extends ObjectNamedFunction0 {
 	}
 }
 
-export class clothSolverStepSimulation extends ObjectNamedFunction0 {
+export class clothSolverStepSimulation extends ObjectNamedFunction4<[number, number, number, number]> {
 	static override type() {
 		return 'clothSolverStepSimulation';
 	}
-	func(object3D: Object3D): void {
-		_clothSolverStepSimulation(object3D);
+	func(
+		object3D: Object3D,
+		stepsCount: number,
+		selectedVertexInfluence: number,
+		viscosity: number,
+		spring: number
+	): void {
+		const delta = this.scene.timeController.delta();
+		_clothSolverStepSimulation(object3D, delta, stepsCount, selectedVertexInfluence, viscosity, spring);
 	}
 }
 
