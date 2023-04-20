@@ -136,7 +136,7 @@ export class JsAssemblerActor extends BaseJsShaderAssembler {
 	// private _triggerNodes: Set<BaseJsNodeType> = new Set();
 	// private _triggerNodesByType: Map<string, Set<BaseJsNodeType>> = new Map();
 
-	createFunctionData(additionalRootNodes: BaseJsNodeType[]): ActorFunctionData | undefined {
+	async createFunctionData(additionalRootNodes: BaseJsNodeType[]): Promise<ActorFunctionData | undefined> {
 		const node = this.currentGlParentNode() as ActorBuilderNode;
 		logBlue(`************* ${node.path()} *************`);
 		this._reset();
@@ -148,7 +148,7 @@ export class JsAssemblerActor extends BaseJsShaderAssembler {
 
 		const shaderNames = this.shaderNames();
 
-		const functionData = this._createFunctionData(
+		const functionData = await this._createFunctionData(
 			// nodeType as EvaluatorMethodName,
 			additionalRootNodes,
 			triggeringNodes,
@@ -158,13 +158,13 @@ export class JsAssemblerActor extends BaseJsShaderAssembler {
 
 		return functionData;
 	}
-	private _createFunctionData(
+	private async _createFunctionData(
 		// nodeType: EvaluatorMethodName,
 		additionalRootNodes: BaseJsNodeType[],
 		triggeringNodes: Set<BaseJsNodeType>,
 		triggerableNodes: Set<BaseJsNodeType>,
 		shaderNames: ShaderName[]
-	): ActorFunctionData | undefined {
+	): Promise<ActorFunctionData | undefined> {
 		const functionNode = this.currentGlParentNode() as ActorBuilderNode;
 
 		//
@@ -172,7 +172,7 @@ export class JsAssemblerActor extends BaseJsShaderAssembler {
 		// create computed props
 		//
 		//
-		const _addComputedProps = () => {
+		const _addComputedProps = async () => {
 			// const triggerableNodes: Set<BaseJsNodeType> = new Set();
 			// triggerableNodes.clear();
 			// connectedTriggerableNodes({triggeringNodes, triggerableNodes, recursive: true});
@@ -188,7 +188,7 @@ export class JsAssemblerActor extends BaseJsShaderAssembler {
 			const rootNodes = SetUtils.toArray(rootNodesSet).concat(additionalRootNodes);
 			this.set_root_nodes(rootNodes);
 			// if (this._root_nodes.length > 0 || triggerableNodes.size > 0) {
-			this.buildCodeFromNodes(this._root_nodes, {
+			await this.buildCodeFromNodes(this._root_nodes, {
 				actor: {
 					functionNode,
 					triggeringNodes: triggeringNodes,
@@ -205,7 +205,7 @@ export class JsAssemblerActor extends BaseJsShaderAssembler {
 				}
 			}
 		};
-		_addComputedProps();
+		await _addComputedProps();
 
 		// //
 		// //

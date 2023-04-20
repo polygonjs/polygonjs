@@ -18,6 +18,8 @@ import {BaseJsShaderAssembler} from '../assemblers/_Base';
 import {triggerableMethodCalls} from '../assemblers/actor/ActorAssemblerUtils';
 import {SetUtils} from '../../../../../core/SetUtils';
 import {ActorBuilderNode} from '../../../../scene/utils/ActorsManager';
+import {JsType} from '../../../../poly/registers/nodes/types/Js';
+import {CodeJsNode} from '../../Code';
 // import {connectedTriggerableNodes} from '../assemblers/actor/ActorAssemblerUtils';
 
 type RootNodesForJsFunctionMethod = (shader_name: ShaderName, rootNodes: BaseJsNodeType[]) => BaseJsNodeType[];
@@ -53,7 +55,7 @@ export class JsCodeBuilder {
 	shaderNames() {
 		return this._nodeTraverser.shaderNames();
 	}
-	buildFromNodes(
+	async buildFromNodes(
 		rootNodes: BaseJsNodeType[],
 		paramNodes: BaseJsNodeType[],
 		setCodeLinesOptions?: CodeBuilderSetCodeLinesOptions
@@ -92,9 +94,33 @@ export class JsCodeBuilder {
 		for (let node of paramNodes) {
 			node.reset_code();
 		}
-		// for (let node of sorted_nodes) {
-		// 	await node.params.eval_all();
-		// }
+
+		// compile code nodes
+		// compiling code nodes here cannot work,
+		// as this may recreate new connections on the node,
+		// which will in turn retrigger this function,
+		// which easily becomes an infinite loop
+		const nodesToBeComputed = [...sortedNodes];
+		if (setCodeLinesOptions?.actor) {
+			const {triggeringNodes, triggerableNodes} = setCodeLinesOptions.actor;
+			nodesToBeComputed.push(...triggeringNodes, ...triggerableNodes);
+		}
+		const codeNodes = nodesToBeComputed.filter((n) => n.type() == JsType.CODE) as CodeJsNode[];
+		console.log({codeNodes});
+		for (let node of codeNodes) {
+			if (!node.compiled()) {
+				try {
+					node.functionNode()?.dirtyController.setForbiddenTriggerNodes([node]);
+					node.compile({triggerFunctionNode: false});
+					node.functionNode()?.dirtyController.setForbiddenTriggerNodes([]);
+					console.log('OK');
+				} catch (err) {
+					console.log('NOT OK', node.path(), node.states.error.active());
+					node.states.error.set(`failed to generated code`);
+					node.functionNode()?.states.error.set(`node ${node.path()} failed to generated code`);
+				}
+			}
+		}
 
 		// const param_promises = sorted_nodes.map(node=>{
 		// 	return node.eval_all_params()
@@ -139,7 +165,12 @@ export class JsCodeBuilder {
 				}
 				// triggerable nodes
 				for (let triggerableNode of triggerableNodes) {
-					triggerableNode.setTriggerableLines(this._shadersCollectionController);
+					try {
+						triggerableNode.setTriggerableLines(this._shadersCollectionController);
+					} catch (err) {
+						triggerableNode.states.error.set(`failed to generate code`);
+						throw new Error(`node ${triggerableNode.path()} failed to generated code`);
+					}
 				}
 			}
 

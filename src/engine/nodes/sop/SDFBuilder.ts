@@ -212,7 +212,7 @@ export class SDFBuilderSopNode extends TypedSopNode<SDFBuilderSopParamsConfig> {
 			assemblerController.assembler.set_root_nodes(rootNodes);
 
 			// main compilation
-			assemblerController.assembler.updateFunction();
+			await assemblerController.assembler.updateFunction();
 
 			// get functionData
 			const functionData = assemblerController.assembler.functionData();

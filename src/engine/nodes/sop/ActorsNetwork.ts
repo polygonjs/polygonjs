@@ -76,8 +76,8 @@ export class ActorsNetworkSopNode extends ParamLessBaseNetworkSopNode {
 	compile() {
 		this.compilationController.compile();
 	}
-	override cook() {
-		this.compilationController.compileIfRequired();
+	override async cook() {
+		await this.compilationController.compileIfRequired();
 		this.cookController.endCook();
 	}
 }

@@ -10,9 +10,9 @@ import {ActorBuilderNode} from '../../engine/scene/utils/ActorsManager';
 export class ActorCompilationController {
 	constructor(protected node: ActorBuilderNode) {}
 
-	compileIfRequired() {
+	async compileIfRequired() {
 		if (this.node.assemblerController()?.compileRequired()) {
-			this.compile();
+			await this.compile();
 		}
 	}
 
@@ -115,7 +115,7 @@ export class ActorCompilationController {
 		this._evaluatorGenerator = evaluatorGenerator;
 		this.node.scene().actorsManager.registerEvaluatorGenerator(evaluatorGenerator);
 	}
-	compile() {
+	async compile() {
 		const assemblerController = this.node.assemblerController();
 		if (!assemblerController) {
 			return;
@@ -126,7 +126,7 @@ export class ActorCompilationController {
 
 		// get functionData
 		const paramNodes = JsNodeFinder.findParamGeneratingNodes(this.node);
-		const functionData = assemblerController.assembler.createFunctionData(paramNodes);
+		const functionData = await assemblerController.assembler.createFunctionData(paramNodes);
 		if (!functionData) {
 			return;
 		}

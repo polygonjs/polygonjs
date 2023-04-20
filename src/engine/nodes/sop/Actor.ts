@@ -48,7 +48,7 @@ export class ActorSopNode extends TypedActorSopNode<ActorSopParamsConfig> {
 
 	override async cook(inputCoreGroups: CoreGroup[]) {
 		// compile
-		this.compilationController.compileIfRequired();
+		await this.compilationController.compileIfRequired();
 
 		//
 		const coreGroup = inputCoreGroups[0];

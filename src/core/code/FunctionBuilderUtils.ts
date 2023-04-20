@@ -6,25 +6,32 @@ export class BaseCodeProcessor {
 	constructor(protected node: BaseNodeType) {}
 }
 
-export function buildCodeNodeFunction<T extends BaseCodeProcessor>(
-	BaseCodeProcessor: Constructor<T>,
-	BaseCodeProcessorName: string,
-	functionBody: string,
-	otherVariables: PolyDictionary<any> = {}
-) {
+interface BuildCodeNodeFunctionOptions<T extends BaseCodeProcessor> {
+	BaseCodeProcessor: Constructor<T>;
+	BaseCodeProcessorName: string;
+	node: BaseNodeType;
+	functionBody: string;
+	otherVariables?: PolyDictionary<any>;
+}
+
+export function buildCodeNodeFunction<T extends BaseCodeProcessor>(options: BuildCodeNodeFunctionOptions<T>) {
+	const {BaseCodeProcessor, BaseCodeProcessorName, node, functionBody, otherVariables} = options;
+
 	const availableVariables: PolyDictionary<any> = {
 		[BaseCodeProcessorName]: BaseCodeProcessor,
 		...THREE,
+		states: node.states,
 	};
-	const variableNames = Object.keys(availableVariables).concat(Object.keys(otherVariables));
+	const variableNames = Object.keys(availableVariables).concat(Object.keys(otherVariables || {}));
 	const sortedVariables = variableNames.map((varName) => {
 		let varValue = availableVariables[varName];
 		if (varValue == null) {
-			varValue = otherVariables[varName];
+			varValue = (otherVariables || {})[varName];
 		}
 		return varValue;
 	});
 	const processorCreatorFunction = new Function(...variableNames, functionBody);
 	const ProcessorClass: typeof BaseCodeProcessor | undefined = processorCreatorFunction(...sortedVariables);
+	console.log(`code generated successfully for node '${node.path()}'`);
 	return ProcessorClass;
 }

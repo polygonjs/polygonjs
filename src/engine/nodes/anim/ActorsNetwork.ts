@@ -77,8 +77,8 @@ export class ActorsNetworkAnimNode extends ParamLessBaseNetworkAnimNode {
 	compile() {
 		this.compilationController.compile();
 	}
-	override cook() {
-		this.compilationController.compileIfRequired();
+	override async cook() {
+		await this.compilationController.compileIfRequired();
 		this.cookController.endCook();
 	}
 }

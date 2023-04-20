@@ -188,7 +188,7 @@ export abstract class BaseJsShaderAssembler extends TypedAssembler<NodeContext.J
 		this._computedVarNames.clear();
 	}
 
-	updateFunction() {
+	async updateFunction() {
 		this._reset();
 	}
 
@@ -296,9 +296,12 @@ export abstract class BaseJsShaderAssembler extends TypedAssembler<NodeContext.J
 			this
 		);
 	}
-	protected buildCodeFromNodes(rootNodes: BaseJsNodeType[], codeBuilderOptions?: CodeBuilderSetCodeLinesOptions) {
+	protected async buildCodeFromNodes(
+		rootNodes: BaseJsNodeType[],
+		codeBuilderOptions?: CodeBuilderSetCodeLinesOptions
+	) {
 		const paramNodes = JsNodeFinder.findParamGeneratingNodes(this.currentGlParentNode());
-		this.codeBuilder().buildFromNodes(rootNodes, paramNodes, codeBuilderOptions);
+		await this.codeBuilder().buildFromNodes(rootNodes, paramNodes, codeBuilderOptions);
 	}
 	allow_new_param_configs() {
 		this.codeBuilder().allow_new_param_configs();
