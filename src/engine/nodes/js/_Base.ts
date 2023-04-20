@@ -83,7 +83,7 @@ export class TypedJsNode<K extends NodeParamsConfig> extends TypedNode<NodeConte
 	protected _param_configs_controller: ParamConfigsController<JsParamConfig<ParamType>> | undefined;
 	// protected _assembler: BaseJsFunctionAssembler | undefined;
 	private _paramsEditableStatesController = new ParamsEditableStateController(this);
-	eventData(): EvaluatorEventData | Array<EvaluatorEventData> | undefined {
+	eventData(): EvaluatorEventData | EvaluatorEventData[] | undefined {
 		return undefined;
 	}
 	isTriggering() {

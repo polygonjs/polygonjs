@@ -8,12 +8,7 @@ import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {JsConnectionPoint, JsConnectionPointType, JS_CONNECTION_POINT_IN_NODE_DEF} from '../utils/io/connections/Js';
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
 
-class BaseTriggerAndObjectJsParamsConfig extends NodeParamsConfig {}
-const ParamsConfig = new BaseTriggerAndObjectJsParamsConfig();
-
-export abstract class BaseTriggerAndObjectJsNode extends TypedJsNode<BaseTriggerAndObjectJsParamsConfig> {
-	override readonly paramsConfig = ParamsConfig;
-
+export abstract class BaseTriggerAndObjectJsNode<K extends NodeParamsConfig> extends TypedJsNode<K> {
 	override initializeNode() {
 		this.io.inputs.setNamedInputConnectionPoints([
 			new JsConnectionPoint(TRIGGER_CONNECTION_NAME, JsConnectionPointType.TRIGGER, CONNECTION_OPTIONS),
@@ -25,4 +20,9 @@ export abstract class BaseTriggerAndObjectJsNode extends TypedJsNode<BaseTrigger
 			new JsConnectionPoint(JsConnectionPointType.OBJECT_3D, JsConnectionPointType.OBJECT_3D),
 		]);
 	}
+}
+class BaseTriggerAndObjectJsParamsConfig extends NodeParamsConfig {}
+const ParamsConfig = new BaseTriggerAndObjectJsParamsConfig();
+export abstract class ParamlessBaseTriggerAndObjectJsNode extends BaseTriggerAndObjectJsNode<BaseTriggerAndObjectJsParamsConfig> {
+	override readonly paramsConfig = ParamsConfig;
 }

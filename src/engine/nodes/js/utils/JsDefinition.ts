@@ -6,6 +6,7 @@ import {nodeMethodName} from '../code/assemblers/actor/ActorAssemblerUtils';
 import {LineType} from '../code/utils/LineType';
 import {MapUtils} from '../../../../core/MapUtils';
 import {EvaluatorMethodName} from '../code/assemblers/actor/Evaluator';
+import {ArrayUtils} from '../../../../core/ArrayUtils';
 
 export enum JsDefinitionType {
 	// ATTRIBUTE = 'attribute',
@@ -238,7 +239,9 @@ export class TriggeringJsDefinition extends TypedJsDefinition<JsDefinitionType.T
 			(definition) => definition._options.triggeringMethodName
 		);
 		definitionGroups.forEach((definitions, triggeringMethodName) => {
-			const definitionMethodCalls = definitions.map((d) => `this.${nodeMethodName(d.node())}()`).join(';');
+			const definitionMethodCalls = ArrayUtils.uniq(
+				definitions.map((d) => `this.${nodeMethodName(d.node())}()`)
+			).join(';');
 			const line = `${triggeringMethodName}(){
 				${definitionMethodCalls}
 			}`;

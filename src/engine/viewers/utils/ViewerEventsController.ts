@@ -11,6 +11,7 @@ interface EventListenerWithData {
 	data: EventData;
 }
 type ListenerByEventType = Map<EventType, EventListenerWithData>;
+const DEBUG = true;
 
 export class ViewerEventsController {
 	protected _bound_listener_map_by_event_controller_type: Map<string, ListenerByEventType> = new Map();
@@ -18,6 +19,9 @@ export class ViewerEventsController {
 	constructor(protected viewer: BaseViewerType) {}
 
 	updateEvents(eventsController: BaseSceneEventsControllerType) {
+		if (DEBUG) {
+			console.log('------------ updateEvents START:');
+		}
 		const canvas = this.canvas();
 		if (!canvas) {
 			console.warn('no canvas found');
@@ -60,6 +64,9 @@ export class ViewerEventsController {
 			const listener = (event: Event) => {
 				_processEvent(event, eventsController /*, canvas*/);
 			};
+			if (DEBUG) {
+				console.log('- add event:', eventType, eventEmitter);
+			}
 			eventEmitter.addEventListener(eventType, listener);
 
 			// if the event being added is a keyboard type,
@@ -71,6 +78,9 @@ export class ViewerEventsController {
 			}
 
 			map.set(eventData.type, {listener, data: eventData});
+		}
+		if (DEBUG) {
+			console.log('------------ updateEvents DONE:');
 		}
 	}
 

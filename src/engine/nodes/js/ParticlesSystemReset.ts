@@ -3,12 +3,12 @@
  *
  *
  */
-import {BaseTriggerAndObjectJsNode} from './_BaseTriggerAndObject';
+import {ParamlessBaseTriggerAndObjectJsNode} from './_BaseTriggerAndObject';
 import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {inputObject3D} from './_BaseObject3D';
 import {Poly} from '../../Poly';
 
-export class ParticlesSystemResetJsNode extends BaseTriggerAndObjectJsNode {
+export class ParticlesSystemResetJsNode extends ParamlessBaseTriggerAndObjectJsNode {
 	static override type() {
 		return 'particlesSystemReset';
 	}

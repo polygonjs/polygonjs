@@ -25,13 +25,7 @@ const NORMALS_FRAG = _addCommon(CORE_NORMALS_FRAG, [COMMON_GET_UV, COMMON_PACK_P
 
 import {RawShaderMaterial, Vector2, Vector3, IUniform} from 'three';
 import {ClothController} from '../ClothController';
-import {
-	IUniformN,
-	IUniformV2,
-	IUniformTexture,
-	IUniformNArray,
-	IUniformV3Array,
-} from '../../../engine/nodes/utils/code/gl/Uniforms';
+import {IUniformN, IUniformV2, IUniformTexture, IUniformV3} from '../../../engine/nodes/utils/code/gl/Uniforms';
 
 type RawMaterialUniforms = {[uniform: string]: IUniform};
 interface CopyUniforms extends RawMaterialUniforms {
@@ -50,8 +44,8 @@ interface IntegrationUniforms extends RawMaterialUniforms {
 	tPosition1: IUniformTexture;
 }
 interface MouseUniforms extends RawMaterialUniforms {
-	vertices: IUniformNArray;
-	coordinates: IUniformV3Array;
+	vertex: IUniformN;
+	coordinates: IUniformV3;
 	order: IUniformN;
 	tSize: IUniformV2;
 	tOriginal: IUniformTexture;
@@ -134,8 +128,8 @@ export class ClothMaterialController {
 		};
 		this.mouseShader.fragmentShader = MOUSE_FRAG;
 		this.mouseShader.uniforms = {
-			vertices: {value: []},
-			coordinates: {value: [new Vector3()]},
+			vertex: {value: -1},
+			coordinates: {value: new Vector3()},
 			order: {value: -1},
 			tSize: {value: new Vector2()},
 			tOriginal: {value: null},

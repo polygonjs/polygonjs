@@ -33,12 +33,19 @@ export class RayFromCursorJsNode extends BaseUserInputJsNode<RayFromCursorJsPara
 	// userInputEventNames() {
 	// 	return ['pointermove'];
 	// }
-	override eventData(): EvaluatorEventData | undefined {
-		return {
-			type: PointerEventType.pointermove,
-			emitter: this.eventEmitter(),
-			jsType: JsType.RAY_FROM_CURSOR,
-		};
+	override eventData(): EvaluatorEventData[] | undefined {
+		return [
+			{
+				type: PointerEventType.pointermove,
+				emitter: this.eventEmitter(),
+				jsType: JsType.RAY_FROM_CURSOR,
+			},
+			{
+				type: PointerEventType.touchmove,
+				emitter: this.eventEmitter(),
+				jsType: JsType.RAY_FROM_CURSOR,
+			},
+		];
 	}
 	override eventEmitter() {
 		return EVENT_EMITTERS[this.pv.element];

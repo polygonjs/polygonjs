@@ -25,6 +25,8 @@ import {CeilJsNode} from '../../../nodes/js/Ceil';
 import {ClampJsNode} from '../../../nodes/js/Clamp';
 import {ClothSolverResetJsNode} from '../../../nodes/js/ClothSolverReset';
 import {ClothSolverStepSimulationJsNode} from '../../../nodes/js/ClothSolverStepSimulation';
+import {ClothSolverSetSelectedVertexIndexJsNode} from '../../../nodes/js/ClothSolverSetSelectedVertexIndex';
+import {ClothSolverSetSelectedVertexPositionJsNode} from '../../../nodes/js/ClothSolverSetSelectedVertexPosition';
 import {CodeJsNode} from '../../../nodes/js/Code';
 import {ColorToVec3JsNode} from '../../../nodes/js/ColorToVec3';
 import {CompareJsNode} from '../../../nodes/js/Compare';
@@ -272,6 +274,8 @@ export interface JsNodeChildrenMap {
 	clamp: ClampJsNode;
 	clothSolverReset: ClothSolverResetJsNode;
 	clothSolverStepSimulation: ClothSolverStepSimulationJsNode;
+	clothSolverSetSelectedVertexIndexJsNode: ClothSolverSetSelectedVertexIndexJsNode;
+	clothSolverSetSelectedVertexPositionJsNode: ClothSolverSetSelectedVertexPositionJsNode;
 	code: CodeJsNode;
 	compare: CompareJsNode;
 	complement: ComplementJsNode;
@@ -548,6 +552,8 @@ export class JsRegister {
 		poly.registerNode(ClampJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(ClothSolverResetJsNode, CATEGORY_JS.PHYSICS);
 		poly.registerNode(ClothSolverStepSimulationJsNode, CATEGORY_JS.PHYSICS);
+		poly.registerNode(ClothSolverSetSelectedVertexIndexJsNode, CATEGORY_JS.PHYSICS);
+		poly.registerNode(ClothSolverSetSelectedVertexPositionJsNode, CATEGORY_JS.PHYSICS);
 		poly.registerNode(CodeJsNode, CATEGORY_JS.ADVANCED);
 		poly.registerNode(ColorToVec3JsNode, CATEGORY_JS.CONVERSION);
 		poly.registerNode(CompareJsNode, CATEGORY_JS.LOGIC);

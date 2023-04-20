@@ -21,10 +21,13 @@ const methodNameByEventType: Record<PointerEventType, EvaluatorPointerMethod> = 
 	[PointerEventType.pointerdown]: JsType.ON_POINTERDOWN,
 	[PointerEventType.pointermove]: 'onPointermove',
 	[PointerEventType.pointerup]: JsType.ON_POINTERUP,
+	[PointerEventType.touchstart]: JsType.ON_POINTERDOWN,
+	[PointerEventType.touchmove]: 'onPointermove',
+	[PointerEventType.touchend]: JsType.ON_POINTERUP,
 };
 
 export class PointerEventsController extends BaseSceneEventsController<
-	MouseEvent,
+	MouseEvent | TouchEvent,
 	PointerEventNode
 	// PointerEventActorNode
 > {
@@ -52,7 +55,7 @@ export class PointerEventsController extends BaseSceneEventsController<
 		this._raycaster0.value = raycaster;
 	}
 
-	override processEvent(eventContext: EventContext<MouseEvent>) {
+	override processEvent(eventContext: EventContext<MouseEvent | TouchEvent>) {
 		this._cursorHelper.setCursorForCPU(eventContext, this._cursor0.value);
 		super.processEvent(eventContext);
 

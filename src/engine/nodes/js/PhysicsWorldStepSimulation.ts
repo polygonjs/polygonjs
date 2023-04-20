@@ -3,12 +3,12 @@
  *
  *
  */
-import {BaseTriggerAndObjectJsNode} from './_BaseTriggerAndObject';
+import {ParamlessBaseTriggerAndObjectJsNode} from './_BaseTriggerAndObject';
 import {inputObject3D} from './_BaseObject3D';
 import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {Poly} from '../../Poly';
 
-export class PhysicsWorldStepSimulationJsNode extends BaseTriggerAndObjectJsNode {
+export class PhysicsWorldStepSimulationJsNode extends ParamlessBaseTriggerAndObjectJsNode {
 	static override type() {
 		return 'physicsWorldStepSimulation';
 	}

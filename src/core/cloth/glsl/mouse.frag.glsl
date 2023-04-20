@@ -1,8 +1,8 @@
 precision highp float;
 precision highp sampler2D;
 
-uniform float vertices[3];
-uniform vec3 coordinates[3];
+uniform float vertex;
+uniform vec3 coordinates;
 
 uniform vec2 tSize;
 uniform float order;
@@ -20,13 +20,11 @@ void main() {
 	vec3 org = texture2D( tOriginal, uv ).xyz;
 
 	vec3 ref, diff, proj, offset;
-	
-	for ( int i = 0; i < 3; ++i ) {
 
-		if ( vertices[ i ] == - 1.0 ) continue;
+	if ( vertex != - 1.0 ){
 
-		ref = texture2D( tOriginal, getUV( vertices[ i ] ) ).xyz;
-		offset = coordinates[ i ] - ref;
+		ref = texture2D( tOriginal, getUV( vertex ) ).xyz;
+		offset = coordinates - ref;
 
 		if ( distance( org, ref ) <= 0.1 ) {
 
@@ -37,7 +35,6 @@ void main() {
 			pos = org + proj + offset;
 
 		}
-
 	}
 
 	gl_FragColor = vec4( unpackPosition( pos, order ), 1.0 );

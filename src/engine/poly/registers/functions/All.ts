@@ -25,6 +25,8 @@ import { box3Set } from "../../../functions/box3Set";
 import { catmullRomCurve3GetPoint } from "../../../functions/catmullRomCurve3GetPoint";
 import { clamp } from "../../../functions/clamp";
 import { clothSolverReset } from "../../../functions/clothSolverReset";
+import { clothSolverSetSelectedVertexIndex } from "../../../functions/clothSolverSetSelectedVertexIndex";
+import { clothSolverSetSelectedVertexPosition } from "../../../functions/clothSolverSetSelectedVertexPosition";
 import { clothSolverStepSimulation } from "../../../functions/clothSolverStepSimulation";
 import { colorSetRGB } from "../../../functions/colorSetRGB";
 import { colorToVec3 } from "../../../functions/colorToVec3";
@@ -406,6 +408,8 @@ export interface NamedFunctionMap {
   catmullRomCurve3GetPoint: catmullRomCurve3GetPoint;
   clamp: clamp;
   clothSolverReset: clothSolverReset;
+  clothSolverSetSelectedVertexIndex: clothSolverSetSelectedVertexIndex;
+  clothSolverSetSelectedVertexPosition: clothSolverSetSelectedVertexPosition;
   clothSolverStepSimulation: clothSolverStepSimulation;
   colorSetRGB: colorSetRGB;
   colorToVec3: colorToVec3;
@@ -790,6 +794,8 @@ export class AllNamedFunctionRegister {
       catmullRomCurve3GetPoint,
       clamp,
       clothSolverReset,
+      clothSolverSetSelectedVertexIndex,
+      clothSolverSetSelectedVertexPosition,
       clothSolverStepSimulation,
       colorSetRGB,
       colorToVec3,

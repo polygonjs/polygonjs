@@ -1,9 +1,10 @@
-import {Object3D} from 'three';
+import {Object3D, Vector3} from 'three';
 import {getClothControllerNodeFromWorldObject} from '../nodes/sop/ClothSolver';
-import {ObjectNamedFunction0} from './_Base';
+import {ObjectNamedFunction0, ObjectNamedFunction1} from './_Base';
 import {clothSolverStepSimulation as _clothSolverStepSimulation} from '../../core/cloth/ClothSolver';
 import {_getPhysicsRBDSphereRadius, _setPhysicsRBDSphereProperty} from '../../core/physics/shapes/RBDSphere';
 import {_matchArrayLength} from './_ArrayUtils';
+import {clothControllerFromObject} from '../../core/cloth/ClothControllerRegister';
 
 //
 //
@@ -29,11 +30,29 @@ export class clothSolverStepSimulation extends ObjectNamedFunction0 {
 		return 'clothSolverStepSimulation';
 	}
 	func(object3D: Object3D): void {
-		const camera = this.scene.camerasController.cameraObjects()[0];
-		if (!camera) {
-			console.log('no camera');
-			return;
+		_clothSolverStepSimulation(object3D);
+	}
+}
+
+export class clothSolverSetSelectedVertexIndex extends ObjectNamedFunction1<[number]> {
+	static override type() {
+		return 'clothSolverSetSelectedVertexIndex';
+	}
+	func(object3D: Object3D, index: number): void {
+		const controller = clothControllerFromObject(object3D);
+		if (controller) {
+			controller.setSelectedVertexIndex(index);
 		}
-		_clothSolverStepSimulation(object3D, camera);
+	}
+}
+export class clothSolverSetSelectedVertexPosition extends ObjectNamedFunction1<[Vector3]> {
+	static override type() {
+		return 'clothSolverSetSelectedVertexPosition';
+	}
+	func(object3D: Object3D, position: Vector3): void {
+		const controller = clothControllerFromObject(object3D);
+		if (controller) {
+			controller.setSelectedVertexPosition(position);
+		}
 	}
 }

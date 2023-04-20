@@ -13,6 +13,7 @@ import {
 	HalfFloatType,
 	FloatType,
 	DataTexture,
+	Vector3,
 } from 'three';
 import {ClothController} from '../ClothController';
 
@@ -96,6 +97,9 @@ export class ClothFBOController {
 
 		// restore renderer
 		renderer.setRenderTarget(originalRenderTarget);
+
+		// update once, to have the geometry properly display the normals
+		this.update();
 	}
 
 	private copyTexture(input: TextureContainer, output: WebGLRenderTarget, order: boolean, renderer: WebGLRenderer) {
@@ -128,7 +132,7 @@ export class ClothFBOController {
 		this.originalRT = tmp;
 	}
 
-	update(camera: Camera) {
+	update() {
 		const renderer = this.renderer;
 		if (!(renderer && this._initialized)) {
 			return;
@@ -139,11 +143,12 @@ export class ClothFBOController {
 		// start update
 		this.integrate(renderer);
 
-		const mouseUpdating = this.mainController.inputs.updating(camera);
+		// const mouseUpdating = this.mainController.inputs.updating(camera);
+		const selectedVertexIndex = this.mainController.selectedVertexIndex();
 
 		const steps = this.mainController.stepsCount;
 		for (let i = 0; i < steps; i++) {
-			if (mouseUpdating && i < steps - 5) {
+			if (selectedVertexIndex >= 0 && i < steps - 5) {
 				this.mouseOffset(renderer);
 			}
 			this.solveConstraints(renderer);
@@ -291,13 +296,19 @@ export class ClothFBOController {
 		this.targetRT[1] = tmp;
 	}
 
+	private _coordinate = new Vector3();
+	// private _coordinates = [this._coordinate];
 	protected mouseOffset(renderer: WebGLRenderer) {
 		const mouseShader = this.mainController.materials.mouseShader;
-		const inputs = this.mainController.inputs;
+		// const inputs = this.mainController.inputs;
+
+		this.mainController.selectedVertexPosition(this._coordinate);
+
 		this.mesh.material = mouseShader;
 		mouseShader.uniforms.tSize.value.copy(this.tSize);
-		mouseShader.uniforms.vertices.value = inputs.vertices;
-		mouseShader.uniforms.coordinates.value = inputs.coordinates;
+		mouseShader.uniforms.vertex.value = this.mainController.selectedVertexIndex(); //inputs.vertices;
+		this.mainController.selectedVertexPosition(mouseShader.uniforms.coordinates.value);
+		// .copythis._coordinate]; //inputs.coordinates;
 		mouseShader.uniforms.tOriginal.value = this.originalRT.texture;
 		mouseShader.uniforms.tPosition0.value = this.positionRT[0].texture;
 		mouseShader.uniforms.tPosition1.value = this.positionRT[1].texture;

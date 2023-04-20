@@ -29,12 +29,19 @@ export class OnPointerupJsNode extends BaseUserInputJsNode<OnPointerupJsParamsCo
 	static override type() {
 		return JsType.ON_POINTERUP;
 	}
-	override eventData(): EvaluatorEventData | undefined {
-		return {
-			type: PointerEventType.pointerup,
-			emitter: this.eventEmitter(),
-			jsType: JsType.ON_POINTERUP,
-		};
+	override eventData(): EvaluatorEventData[] | undefined {
+		return [
+			{
+				type: PointerEventType.pointerup,
+				emitter: this.eventEmitter(),
+				jsType: JsType.ON_POINTERUP,
+			},
+			{
+				type: PointerEventType.touchend,
+				emitter: this.eventEmitter(),
+				jsType: JsType.ON_POINTERUP,
+			},
+		];
 	}
 	override eventEmitter() {
 		return EVENT_EMITTERS[this.pv.element];

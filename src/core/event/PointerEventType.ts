@@ -4,6 +4,9 @@ export enum PointerEventType {
 	pointerdown = 'pointerdown',
 	pointermove = 'pointermove',
 	pointerup = 'pointerup',
+	touchstart = 'touchstart',
+	touchmove = 'touchmove',
+	touchend = 'touchend',
 }
 
 export const ONLY_POINTER_EVENT_TYPES: PointerEventType[] = [

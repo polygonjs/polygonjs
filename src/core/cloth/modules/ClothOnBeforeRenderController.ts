@@ -1,12 +1,19 @@
 import {
 	Mesh,
 	MeshDepthMaterial,
-	BufferGeometry,
-	BufferAttribute,
+	// BufferGeometry,
+	// BufferAttribute,
 	// Material,
 	MeshPhysicalMaterial,
 } from 'three';
 import {ClothController} from '../ClothController';
+//
+import COMMON_GET_UV from '../glsl/common/getUV.glsl';
+//
+import MAIN_VERTEX_PREFIX from '../glsl/render/main/vertexPrefix.glsl';
+import MAIN_BEGINNORMAL_VERTEX from '../glsl/render/main/beginnormal_vertex.glsl';
+import DEPTH_VERTEX_PREFIX from '../glsl/render/depth/vertexPrefix.glsl';
+import DEPTH_BEGINNORMAL_VERTEX from '../glsl/render/depth/begin_vertex.glsl';
 
 export class ClothOnBeforeRenderController {
 	// 	let RESOLUTION:number
@@ -21,9 +28,10 @@ export class ClothOnBeforeRenderController {
 		}
 		// console.log('ClothOnBeforeRenderController.init');
 		this._initialized = true;
-		const RESOLUTION = this.mainController.geometryInit.resolution;
+
+		// const RESOLUTION = this.mainController.geometryInit.resolution;
 		const fbo = this.mainController.fbo;
-		const geometryInit = this.mainController.geometryInit;
+		// const geometryInit = this.mainController.geometryInit;
 
 		// const bmp = new THREE.TextureLoader().load('./src/textures/bmpMap.png');
 		// bmp.wrapS = THREE.RepeatWrapping;
@@ -46,19 +54,13 @@ export class ClothOnBeforeRenderController {
 		// console.log(material.onBeforeCompile);
 
 		// update cloth material with computed position and normals
-		material.onBeforeCompile = function (shader) {
+		material.onBeforeCompile = (shader) => {
 			shader.uniforms.tPosition0 = {value: fbo.positionRT[0].texture};
 			shader.uniforms.tPosition1 = {value: fbo.positionRT[1].texture};
 			shader.uniforms.tNormal = {value: fbo.normalsRT.texture};
-			shader.vertexShader =
-				'precision highp sampler2D;\nuniform sampler2D tPosition0;\nuniform sampler2D tPosition1;\nuniform sampler2D tNormal;\n' +
-				shader.vertexShader;
-			shader.vertexShader = shader.vertexShader.replace(
-				'#include <beginnormal_vertex>',
-				`vec3 transformed = ( texture2D( tPosition0, position.xy ).xyz + texture2D( tPosition1, position.xy ).xyz ) / 1024.0;
-				 vec3 objectNormal = normalize( texture2D( tNormal, position.xy ).xyz );
-				`
-			);
+			shader.uniforms.tSize = {value: this.mainController.fbo.tSize};
+			shader.vertexShader = MAIN_VERTEX_PREFIX + COMMON_GET_UV + shader.vertexShader;
+			shader.vertexShader = shader.vertexShader.replace('#include <beginnormal_vertex>', MAIN_BEGINNORMAL_VERTEX);
 			shader.vertexShader = shader.vertexShader.replace('#include <begin_vertex>', '');
 		};
 
@@ -67,34 +69,33 @@ export class ClothOnBeforeRenderController {
 		depthMaterial.onBeforeCompile = function (shader) {
 			shader.uniforms.tPosition0 = {value: fbo.positionRT[0].texture};
 			shader.uniforms.tPosition1 = {value: fbo.positionRT[1].texture};
-			shader.vertexShader =
-				'precision highp sampler2D;\nuniform sampler2D tPosition0;\nuniform sampler2D tPosition1;\n' +
-				shader.vertexShader;
-			shader.vertexShader = shader.vertexShader.replace(
-				'#include <begin_vertex>',
-				`vec3 transformed = ( texture2D( tPosition0, position.xy ).xyz + texture2D( tPosition1, position.xy ).xyz ) / 1024.0;`
-			);
+			shader.vertexShader = DEPTH_VERTEX_PREFIX + shader.vertexShader;
+			shader.vertexShader = shader.vertexShader.replace('#include <begin_vertex>', DEPTH_BEGINNORMAL_VERTEX);
 		};
 
-		// fill position with associated texture sampling coordinate
-		const position = new Float32Array(RESOLUTION * RESOLUTION * 3);
-		for (let i = 0, il = RESOLUTION * RESOLUTION; i < il; i++) {
-			const i3 = i * 3;
-			position[i3 + 0] = (i % RESOLUTION) / RESOLUTION + 0.5 / RESOLUTION;
-			position[i3 + 1] = ~~(i / RESOLUTION) / RESOLUTION + 0.5 / RESOLUTION;
-		}
+		mesh.material = material;
+		mesh.customDepthMaterial = depthMaterial;
 
+		// fill position with associated texture sampling coordinate
+		// const position = new Float32Array(RESOLUTION * RESOLUTION * 3);
+		// for (let i = 0, il = RESOLUTION * RESOLUTION; i < il; i++) {
+		// 	const i3 = i * 3;
+		// 	position[i3 + 0] = (i % RESOLUTION) / RESOLUTION + 0.5 / RESOLUTION;
+		// 	position[i3 + 1] = ~~(i / RESOLUTION) / RESOLUTION + 0.5 / RESOLUTION;
+		// }
+
+		// if (1 + 1) return;
 		// TODO: clarify which mesh ends up being displayed, if it is the one given as input, or this one
-		const geometry = new BufferGeometry();
-		geometry.setIndex(geometryInit.geometry.index);
-		geometry.setAttribute('position', new BufferAttribute(position, 3));
-		geometry.setAttribute('uv', geometryInit.geometry.attributes.uv);
+		// const geometry = mesh.geometry;
+		// const geometry = new BufferGeometry();
+		// geometry.setIndex(geometryInit.geometry.index);
+		// geometry.setAttribute('position', new BufferAttribute(position, 3));
+		// geometry.setAttribute('uv', geometryInit.geometry.attributes.uv);
 
 		// console.log({geometry});
 		// const mesh = new Mesh(geometry, material);
-		mesh.geometry = geometry;
-		mesh.material = material;
-		mesh.customDepthMaterial = depthMaterial;
+		// mesh.geometry = geometry;
+
 		// mesh.castShadow = true;
 
 		// scene.add(mesh);

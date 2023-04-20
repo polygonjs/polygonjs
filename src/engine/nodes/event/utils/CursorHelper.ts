@@ -73,7 +73,11 @@ export class CursorHelper {
 			event instanceof TouchEvent
 		) {
 			const touch = event.touches[0];
-			MouseHelper.setEventOffset(touch, canvas, _offset);
+			console.log(touch);
+			// no touch for touchend events
+			if (touch) {
+				MouseHelper.setEventOffset(touch, canvas, _offset);
+			}
 		}
 		this._updateFromCursor(canvas, target);
 	}

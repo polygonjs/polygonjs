@@ -21,7 +21,12 @@ export const FUNCTION_NAME_BY_FILE_NAME: Record<string, string[]> = {
 	Audio: ['addAudioStopEventListener', 'playAudioSource', 'pauseAudioSource', 'playInstrumentNote'],
 	Box3: ['box3Set', 'getBox3Min', 'getBox3Max'],
 	Camera: ['setPerspectiveCameraFov', 'setPerspectiveCameraNearFar', 'getDefaultCamera'],
-	Cloth: ['clothSolverReset', 'clothSolverStepSimulation'],
+	Cloth: [
+		'clothSolverReset',
+		'clothSolverSetSelectedVertexIndex',
+		'clothSolverSetSelectedVertexPosition',
+		'clothSolverStepSimulation',
+	],
 	Color: ['colorSetRGB'],
 	CookNode: ['cookNode'],
 	Conversion: [
