@@ -16,6 +16,9 @@ class ClothDebugSopParamsConfig extends NodeParamsConfig {
 	// });
 	// dist = ParamConfig.FLOAT(0.1);
 	populateAdjacency = ParamConfig.BOOLEAN(1);
+	neighboursCount = ParamConfig.BOOLEAN(1);
+	adjacency = ParamConfig.BOOLEAN(1);
+	adjacencyDistance = ParamConfig.BOOLEAN(1);
 }
 const ParamsConfig = new ClothDebugSopParamsConfig();
 
@@ -52,11 +55,17 @@ export class ClothDebugSopNode extends TypedActorSopNode<ClothDebugSopParamsConf
 		mesh.geometry = controller.geometry;
 		console.warn('computed', this.path());
 
-		this.createNeighboursCount(controller, mesh.geometry);
-		this.createAdjacentsAttribute(controller, mesh.geometry, 0);
-		this.createAdjacentsAttribute(controller, mesh.geometry, 1);
-		this.createDistancesAttribute(controller, mesh.geometry, 0);
-		this.createDistancesAttribute(controller, mesh.geometry, 1);
+		if (this.pv.neighboursCount) {
+			this.createNeighboursCount(controller, mesh.geometry);
+		}
+		if (this.pv.adjacency) {
+			this.createAdjacentsAttribute(controller, mesh.geometry, 0);
+			this.createAdjacentsAttribute(controller, mesh.geometry, 1);
+		}
+		if (this.pv.adjacencyDistance) {
+			this.createDistancesAttribute(controller, mesh.geometry, 0);
+			this.createDistancesAttribute(controller, mesh.geometry, 1);
+		}
 	}
 
 	private createNeighboursCount(controller: ClothGeometryInitController, geometry: BufferGeometry) {

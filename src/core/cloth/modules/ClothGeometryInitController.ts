@@ -104,7 +104,7 @@ export class ClothGeometryInitController {
 		return faces;
 	}
 
-	private _populateAdjacency(faces: Face[][]) {
+	protected _populateAdjacency(faces: Face[][]) {
 		const vertices = this.vertices;
 
 		this.adjacency = Array.from({length: vertices.length}, () => new Array());
@@ -115,6 +115,7 @@ export class ClothGeometryInitController {
 			let n = faces[r][0];
 
 			// cycle in a fan, through all faces of the vertex
+			let i = 0;
 			while (true) {
 				if (n.a == r) {
 					adjacency[r].push(n.c);
@@ -131,6 +132,11 @@ export class ClothGeometryInitController {
 
 				// back to the start - end
 				if (n == faces[r][0]) break;
+
+				i++;
+				if (i == 8) {
+					break;
+				}
 			}
 		}
 
