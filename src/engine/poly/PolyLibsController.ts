@@ -82,4 +82,13 @@ export class PolyLibsController {
 	ManifoldPath() {
 		return this._ManifoldPath;
 	}
+	//
+	//
+	// IFC
+	//
+	//
+	private _WebIFCPath: string | null = '/web-ifc';
+	webIFCPath() {
+		return this._WebIFCPath;
+	}
 }

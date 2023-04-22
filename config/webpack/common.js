@@ -105,6 +105,12 @@ module.exports = (options = {}) => {
 		experiments: {
 			asyncWebAssembly: true, // wasm (rapier physics)
 		},
+		ignoreWarnings: [
+			{
+				module: /web-ifc/,
+				message: /require function is used in a way in which dependencies cannot be statically extracted/,
+			},
+		],
 	};
 
 	config.module.rules.push(html);

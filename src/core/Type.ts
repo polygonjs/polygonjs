@@ -6,6 +6,9 @@ export function isArray(value: any): value is any[] {
 export function isBoolean(value: any): value is boolean {
 	return value === true || value === false;
 }
+export function isPromise<T extends any>(value: any): value is Promise<T> {
+	return value instanceof Promise;
+}
 export class CoreType {
 	static isNumber(value: any): value is number {
 		return typeof value == 'number';

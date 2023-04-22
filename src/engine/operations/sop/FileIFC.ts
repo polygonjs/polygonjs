@@ -10,12 +10,14 @@ type IFCModel = Object3D;
 interface FileIFCSopParams extends DefaultOperationParams {
 	url: string;
 	matrixAutoUpdate: boolean;
+	coordinateToOrigin: boolean;
 }
 
 export class FileIFCSopOperation extends BaseFileSopOperation<IFCModel> {
 	static override readonly DEFAULT_PARAMS: FileIFCSopParams = {
-		url: sanitizeUrl(`${ASSETS_ROOT}/models/resources/ifc/basic.ifc`),
+		url: sanitizeUrl(`${ASSETS_ROOT}/models/ifc/rac_advanced_sample_project.ifc`),
 		matrixAutoUpdate: false,
+		coordinateToOrigin: true,
 	};
 	static override type(): Readonly<SopTypeFile.FILE_IFC> {
 		return SopTypeFile.FILE_IFC;
@@ -28,6 +30,7 @@ export class FileIFCSopOperation extends BaseFileSopOperation<IFCModel> {
 		if (this._node) {
 			return await loader.load({
 				node: this._node,
+				...params,
 			});
 		}
 	}

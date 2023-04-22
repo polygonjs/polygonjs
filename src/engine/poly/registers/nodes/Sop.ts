@@ -167,6 +167,7 @@ import {HierarchySopNode} from '../../../nodes/sop/Hierarchy';
 import {HeightMapSopNode} from '../../../nodes/sop/HeightMap';
 import {HemisphereLightSopNode} from '../../../nodes/sop/HemisphereLight';
 import {IcosahedronSopNode} from '../../../nodes/sop/Icosahedron';
+import {IFCFilterCategoriesSopNode} from '../../../nodes/sop/IFCFilterCategories';
 import {InstanceSopNode} from '../../../nodes/sop/Instance';
 import {InstanceUpdateSopNode} from '../../../nodes/sop/InstanceUpdate';
 import {InstancesCountSopNode} from '../../../nodes/sop/InstancesCount';
@@ -443,6 +444,7 @@ export interface GeoNodeChildrenMap {
 	hierarchy: HierarchySopNode;
 	hemisphereLight: HemisphereLightSopNode;
 	icosahedron: IcosahedronSopNode;
+	IFCFilterCategories: IFCFilterCategoriesSopNode;
 	instance: InstanceSopNode;
 	instanceUpdate: InstanceUpdateSopNode;
 	instancesCount: InstancesCountSopNode;
@@ -944,6 +946,7 @@ export class SopRegister {
 		poly.registerNode(HexagonsSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.registerNode(HierarchySopNode, CATEGORY_SOP.MISC);
 		poly.registerNode(IcosahedronSopNode, CATEGORY_SOP.PRIMITIVES);
+		poly.registerNode(IFCFilterCategoriesSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(InstanceSopNode, CATEGORY_SOP.RENDER);
 		poly.registerNode(InstanceUpdateSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(InstancesCountSopNode, CATEGORY_SOP.RENDER);
