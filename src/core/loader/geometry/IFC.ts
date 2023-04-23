@@ -43,14 +43,17 @@ export class IFCLoaderHandler extends BaseObject3DLoaderHandler<IFCModel> {
 				error: `failed to load IFC libraries. Make sure to install them to load .ifc files (${LIBRARY_INSTALL_HINT})`,
 			});
 
-			const workerFilePath = sanitizeUrl([filesRoot, workerFileName].join('/'));
+			// const workerFilePath =
+			// sanitizeUrl([filesRoot, workerFileName].join('/')) + `?v=${Poly.version().replace(/\./g, '-')}`;
 			// it seems that the wasm path needs to be set before the worker
 			await (loader.ifcManager.state.api as any).SetWasmPath(filesRoot, true);
 			// worker
-			await loader.ifcManager.useWebWorkers(true, workerFilePath);
+			// do not use worker for now, as setting it up seems inconsistent depending if
+			// it is called from the web editor or the local one.
+			// await loader.ifcManager.useWebWorkers(true, workerFilePath);
 			// set the wasm again, which seems necessary when using the local app
 			// (as the path appears to be modified internally when setting the worker)
-			await (loader.ifcManager.state.api as any).SetWasmPath(filesRoot, true);
+			// await (loader.ifcManager.state.api as any).SetWasmPath(filesRoot, true);
 		}
 
 		await loader.ifcManager.parser.setupOptionalCategories({

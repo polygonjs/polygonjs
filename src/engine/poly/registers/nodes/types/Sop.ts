@@ -88,6 +88,9 @@ export enum SopType {
 	DATA = 'data',
 	DATA_URL = 'dataUrl',
 	ICOSAHEDRON = 'icosahedron',
+	//
+	IFC_FILTER_CATEGORIES = 'IFCFilterCategories',
+	//
 	INSTANCE = 'instance',
 	// JS_SDF = 'JSSDF',
 	MAPBOX_TRANSFORM = 'mapboxTransform',

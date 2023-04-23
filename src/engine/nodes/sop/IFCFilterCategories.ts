@@ -16,6 +16,7 @@ import {IFCAttribute, getIFCModelCategories, ifcCategoryIds, ifcElementIds} from
 import type {SubsetConfig} from 'web-ifc-three/IFC/BaseDefinitions';
 import {IFCLoaderHandler} from '../../../core/loader/geometry/IFC';
 import {CoreObject} from '../../../core/geometry/Object';
+import {SopType} from '../../poly/registers/nodes/types/Sop';
 
 class IFCFilterCategoriesSopParamsConfig extends NodeParamsConfig {
 	/** @param get categories in the file */
@@ -30,7 +31,7 @@ const ParamsConfig = new IFCFilterCategoriesSopParamsConfig();
 export class IFCFilterCategoriesSopNode extends TypedSopNode<IFCFilterCategoriesSopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'IFCFilterCategories';
+		return SopType.IFC_FILTER_CATEGORIES;
 	}
 
 	override initializeNode() {
