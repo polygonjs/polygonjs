@@ -17,6 +17,7 @@ import {
 	Ray,
 	Sphere,
 	Texture,
+	Euler,
 } from 'three';
 import {ParamInitValuesTypeMap} from '../../../../params/types/ParamInitValuesTypeMap';
 import {ParamType} from '../../../../poly/ParamType';
@@ -31,6 +32,8 @@ export enum JsConnectionPointType {
 	CATMULL_ROM_CURVE3 = 'CatmullRomCurve3',
 	COLOR = 'Color',
 	COLOR_ARRAY = 'Color[]',
+	EULER = 'Euler',
+	EULER_ARRAY = 'Euler[]',
 	FLOAT = 'float',
 	FLOAT_ARRAY = 'float[]',
 	INT = 'int',
@@ -112,6 +115,8 @@ export const JS_CONNECTION_POINT_TYPES: Array<JsConnectionPointType> = [
 	JsConnectionPointType.CATMULL_ROM_CURVE3,
 	JsConnectionPointType.COLOR,
 	JsConnectionPointType.COLOR_ARRAY,
+	JsConnectionPointType.EULER,
+	JsConnectionPointType.EULER_ARRAY,
 	JsConnectionPointType.FLOAT,
 	JsConnectionPointType.FLOAT_ARRAY,
 	JsConnectionPointType.INT,
@@ -153,6 +158,8 @@ export interface JsIConnectionPointTypeToArrayTypeMap extends JsConnectionPointT
 	[JsConnectionPointType.CATMULL_ROM_CURVE3]: JsConnectionPointType.CATMULL_ROM_CURVE3;
 	[JsConnectionPointType.COLOR]: JsConnectionPointType.COLOR_ARRAY;
 	[JsConnectionPointType.COLOR_ARRAY]: JsConnectionPointType.COLOR_ARRAY;
+	[JsConnectionPointType.EULER]: JsConnectionPointType.EULER_ARRAY;
+	[JsConnectionPointType.EULER_ARRAY]: JsConnectionPointType.EULER_ARRAY;
 	[JsConnectionPointType.FLOAT]: JsConnectionPointType.FLOAT_ARRAY;
 	[JsConnectionPointType.FLOAT_ARRAY]: JsConnectionPointType.FLOAT_ARRAY;
 	[JsConnectionPointType.INT]: JsConnectionPointType.INT_ARRAY;
@@ -190,6 +197,8 @@ export const JsConnectionPointTypeToArrayTypeMap: JsIConnectionPointTypeToArrayT
 	[JsConnectionPointType.CATMULL_ROM_CURVE3]: JsConnectionPointType.CATMULL_ROM_CURVE3,
 	[JsConnectionPointType.COLOR]: JsConnectionPointType.COLOR_ARRAY,
 	[JsConnectionPointType.COLOR_ARRAY]: JsConnectionPointType.COLOR_ARRAY,
+	[JsConnectionPointType.EULER]: JsConnectionPointType.EULER_ARRAY,
+	[JsConnectionPointType.EULER_ARRAY]: JsConnectionPointType.EULER_ARRAY,
 	[JsConnectionPointType.FLOAT]: JsConnectionPointType.FLOAT_ARRAY,
 	[JsConnectionPointType.FLOAT_ARRAY]: JsConnectionPointType.FLOAT_ARRAY,
 	[JsConnectionPointType.INT]: JsConnectionPointType.INT_ARRAY,
@@ -230,6 +239,8 @@ export interface JsIConnectionPointTypeFromArrayTypeMap extends JsConnectionPoin
 	[JsConnectionPointType.CATMULL_ROM_CURVE3]: JsConnectionPointType.CATMULL_ROM_CURVE3;
 	[JsConnectionPointType.COLOR]: JsConnectionPointType.COLOR;
 	[JsConnectionPointType.COLOR_ARRAY]: JsConnectionPointType.COLOR;
+	[JsConnectionPointType.EULER]: JsConnectionPointType.EULER;
+	[JsConnectionPointType.EULER_ARRAY]: JsConnectionPointType.EULER;
 	[JsConnectionPointType.FLOAT]: JsConnectionPointType.FLOAT;
 	[JsConnectionPointType.FLOAT_ARRAY]: JsConnectionPointType.FLOAT;
 	[JsConnectionPointType.INT]: JsConnectionPointType.INT;
@@ -267,6 +278,8 @@ export const JsConnectionPointTypeFromArrayTypeMap: JsIConnectionPointTypeFromAr
 	[JsConnectionPointType.CATMULL_ROM_CURVE3]: JsConnectionPointType.CATMULL_ROM_CURVE3,
 	[JsConnectionPointType.COLOR]: JsConnectionPointType.COLOR,
 	[JsConnectionPointType.COLOR_ARRAY]: JsConnectionPointType.COLOR,
+	[JsConnectionPointType.EULER]: JsConnectionPointType.EULER,
+	[JsConnectionPointType.EULER_ARRAY]: JsConnectionPointType.EULER,
 	[JsConnectionPointType.FLOAT]: JsConnectionPointType.FLOAT,
 	[JsConnectionPointType.FLOAT_ARRAY]: JsConnectionPointType.FLOAT,
 	[JsConnectionPointType.INT]: JsConnectionPointType.INT,
@@ -389,6 +402,8 @@ export type JsDataType =
 	| Box3
 	| Camera
 	| CatmullRomCurve3
+	| Euler
+	| Euler[]
 	| Intersection
 	| Array<Intersection>
 	| Material
@@ -409,6 +424,8 @@ export interface JsIConnectionPointTypeToDataTypeMap extends JSConnectionPointTy
 	[JsConnectionPointType.CATMULL_ROM_CURVE3]: CatmullRomCurve3;
 	[JsConnectionPointType.COLOR]: Color;
 	[JsConnectionPointType.COLOR_ARRAY]: Color[];
+	[JsConnectionPointType.EULER]: Euler;
+	[JsConnectionPointType.EULER_ARRAY]: Euler[];
 	[JsConnectionPointType.FLOAT]: number;
 	[JsConnectionPointType.FLOAT_ARRAY]: number[];
 	[JsConnectionPointType.INT]: number;
@@ -492,6 +509,8 @@ export interface JsIConnectionPointTypeToParamTypeMap extends JSConnectionPointT
 	[JsConnectionPointType.CATMULL_ROM_CURVE3]: ParamType.BUTTON;
 	[JsConnectionPointType.COLOR]: ParamType.COLOR;
 	[JsConnectionPointType.COLOR_ARRAY]: ParamType.BUTTON;
+	[JsConnectionPointType.EULER]: ParamType.BUTTON;
+	[JsConnectionPointType.EULER_ARRAY]: ParamType.BUTTON;
 	[JsConnectionPointType.FLOAT]: ParamType.FLOAT;
 	[JsConnectionPointType.FLOAT_ARRAY]: ParamType.BUTTON;
 	[JsConnectionPointType.INT]: ParamType.INTEGER;
@@ -531,6 +550,8 @@ export const JsConnectionPointTypeToParamTypeMap: JsIConnectionPointTypeToParamT
 	[JsConnectionPointType.CATMULL_ROM_CURVE3]: ParamType.BUTTON,
 	[JsConnectionPointType.COLOR]: ParamType.COLOR,
 	[JsConnectionPointType.COLOR_ARRAY]: ParamType.BUTTON,
+	[JsConnectionPointType.EULER]: ParamType.BUTTON,
+	[JsConnectionPointType.EULER_ARRAY]: ParamType.BUTTON,
 	[JsConnectionPointType.FLOAT]: ParamType.FLOAT,
 	[JsConnectionPointType.FLOAT_ARRAY]: ParamType.BUTTON,
 	[JsConnectionPointType.INT]: ParamType.INTEGER,
@@ -618,6 +639,8 @@ export const JsConnectionPointInitValueMap: ConnectionPointInitValueMapGeneric =
 	[JsConnectionPointType.CATMULL_ROM_CURVE3]: null,
 	[JsConnectionPointType.COLOR]: [1, 1, 1],
 	[JsConnectionPointType.COLOR_ARRAY]: null,
+	[JsConnectionPointType.EULER]: null,
+	[JsConnectionPointType.EULER_ARRAY]: null,
 	[JsConnectionPointType.FLOAT]: 0,
 	[JsConnectionPointType.FLOAT_ARRAY]: null,
 	[JsConnectionPointType.INT]: 0,
@@ -666,6 +689,8 @@ export const GlConnectionPointComponentsCountMap: ConnectionPointComponentsCount
 	[JsConnectionPointType.CATMULL_ROM_CURVE3]: 1,
 	[JsConnectionPointType.COLOR]: 3,
 	[JsConnectionPointType.COLOR_ARRAY]: 1,
+	[JsConnectionPointType.EULER]: 3,
+	[JsConnectionPointType.EULER_ARRAY]: 1,
 	[JsConnectionPointType.FLOAT]: 1,
 	[JsConnectionPointType.FLOAT_ARRAY]: 1,
 	[JsConnectionPointType.INT]: 1,

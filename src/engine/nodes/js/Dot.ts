@@ -54,7 +54,7 @@ export class DotJsNode extends ParamlessTypedJsNode {
 			// only create a variable if the input is an array
 			const variable = createVariable(inputType);
 			if (variable) {
-				shadersCollectionController.addVariable(this, varName, variable);
+				shadersCollectionController.addVariable(this, variable);
 			}
 		}
 

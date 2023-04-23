@@ -37,9 +37,9 @@ export class RayJsNode extends TypedJsNode<RayJsParamsConfig> {
 		const direction = this.variableForInputParam(shadersCollectionController, this.p.direction);
 		const out = this.jsVarName(JsConnectionPointType.RAY);
 
-		shadersCollectionController.addVariable(this, out, new Ray());
+		const tmpVarName = shadersCollectionController.addVariable(this, new Ray());
 		const func = Poly.namedFunctionsRegister.getFunction('raySet', this, shadersCollectionController);
-		const bodyLine = func.asString(origin, direction, out);
+		const bodyLine = func.asString(origin, direction, tmpVarName);
 		shadersCollectionController.addBodyOrComputed(this, [
 			{dataType: JsConnectionPointType.RAY, varName: out, value: bodyLine},
 		]);

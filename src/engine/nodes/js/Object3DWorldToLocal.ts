@@ -42,13 +42,13 @@ export class Object3DWorldToLocalJsNode extends TypedJsNode<Object3DWorldToLocal
 		const varName = this.jsVarName(OUTPUT_NAME);
 
 		const variable = createVariable(JsConnectionPointType.VECTOR3);
-		if (variable) {
-			shadersCollectionController.addVariable(this, varName, variable);
+		const tmpVarName = variable ? shadersCollectionController.addVariable(this, variable) : undefined;
+		if (!tmpVarName) {
+			return;
 		}
-
 		const func = Poly.namedFunctionsRegister.getFunction('object3DWorldToLocal', this, shadersCollectionController);
 		shadersCollectionController.addBodyOrComputed(this, [
-			{dataType: JsConnectionPointType.PLANE, varName, value: func.asString(object3D, position, varName)},
+			{dataType: JsConnectionPointType.PLANE, varName, value: func.asString(object3D, position, tmpVarName)},
 		]);
 	}
 }

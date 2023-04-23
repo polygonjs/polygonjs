@@ -7,7 +7,7 @@ import {
 } from '../utils/io/connections/Js';
 import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {Poly} from '../../Poly';
-import {ComputedValueJsDefinition} from './utils/JsDefinition';
+// import {ComputedValueJsDefinition} from './utils/JsDefinition';
 // import {Vector2, Vector3, Vector4} from 'three';
 
 interface MathArgNOperationOptions {
@@ -46,7 +46,7 @@ export function MathFunctionArgNOperationFactory(
 			this.io.connection_points.set_expected_output_types_function(this._expectedOutputTypes.bind(this));
 		}
 
-		override setLines(shadersCollectionController: JsLinesCollectionController) {
+		override setLines(linesController: JsLinesCollectionController) {
 			// if (!firstType) {
 			// 	return;
 			// }
@@ -63,7 +63,7 @@ export function MathFunctionArgNOperationFactory(
 
 			// shadersCollectionController.addBodyOrComputed(this, firstType, this.jsVarName(outputName), line);
 			const firstType = this._expectedInputTypes()[0];
-			const out = this.jsVarName(outputName);
+			const varName = this.jsVarName(outputName);
 			// const functionName = isPrimitive
 			// 	? operator.primitive
 			// 	: isVectorScalar
@@ -74,22 +74,26 @@ export function MathFunctionArgNOperationFactory(
 			// 	return;
 			// }
 			// const func = Poly.namedFunctionsRegister.getFunction(functionName, this, shadersCollectionController);
-			const funcString = this._functionString(shadersCollectionController);
+			const funcString = this._functionString(linesController);
 			if (!funcString) {
 				console.warn('no function found');
 				return;
 			}
 
-			shadersCollectionController.addDefinitions(this, [
-				new ComputedValueJsDefinition(this, shadersCollectionController, firstType, out, funcString),
+			linesController.addBodyOrComputed(this, [
+				{
+					dataType: firstType,
+					varName,
+					value: funcString,
+				},
 			]);
 		}
-		private _functionString(shadersCollectionController: JsLinesCollectionController) {
+		private _functionString(linesController: JsLinesCollectionController) {
 			const values: string[] = [];
 			const connectionPoints = this.io.inputs.namedInputConnectionPoints();
 			for (let connectionPoint of connectionPoints) {
 				const connectionPointName = connectionPoint.name();
-				const value = this.variableForInput(shadersCollectionController, connectionPointName);
+				const value = this.variableForInput(linesController, connectionPointName);
 				values.push(value);
 			}
 			//
@@ -100,7 +104,7 @@ export function MathFunctionArgNOperationFactory(
 
 			if (isPrimitive) {
 				return Poly.namedFunctionsRegister
-					.getFunction(operator.primitive, this, shadersCollectionController)
+					.getFunction(operator.primitive, this, linesController)
 					.asString(...values);
 			}
 			const isFirstInputVector = isJsConnectionPointVector(firstType);
@@ -109,13 +113,13 @@ export function MathFunctionArgNOperationFactory(
 
 			if (isVectorScalar) {
 				return Poly.namedFunctionsRegister
-					.getFunction(operator.vectorScalar, this, shadersCollectionController)
+					.getFunction(operator.vectorScalar, this, linesController)
 					.asString(values[0], values[1]);
 			}
 
 			if (operator.vector) {
 				return Poly.namedFunctionsRegister
-					.getFunction(operator.vector, this, shadersCollectionController)
+					.getFunction(operator.vector, this, linesController)
 					.asString(...values);
 			}
 		}

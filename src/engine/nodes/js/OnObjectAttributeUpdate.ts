@@ -125,7 +125,7 @@ export class OnObjectAttributeUpdateJsNode extends TypedJsNode<OnObjectAttribute
 			const varName = this.jsVarName(propertyName);
 			const variable = createVariable(type);
 			if (variable) {
-				shadersCollectionController.addVariable(this, varName, variable);
+				shadersCollectionController.addVariable(this, variable);
 			}
 			shadersCollectionController.addBodyOrComputed(this, [
 				{

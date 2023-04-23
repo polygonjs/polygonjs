@@ -36,13 +36,13 @@ export class Vector3ProjectOnPlaneJsNode extends TypedJsNode<Vector3ProjectOnPla
 		const planeNormal = this.variableForInputParam(shadersCollectionController, this.p.planeNormal);
 		const out = this.jsVarName(OUTPUT_NAME);
 
-		shadersCollectionController.addVariable(this, out, new Vector3());
+		const tmpVarName = shadersCollectionController.addVariable(this, new Vector3());
 		const func = Poly.namedFunctionsRegister.getFunction(
 			'vector3ProjectOnPlane',
 			this,
 			shadersCollectionController
 		);
-		const bodyLine = func.asString(vector3, planeNormal, out);
+		const bodyLine = func.asString(vector3, planeNormal, tmpVarName);
 		shadersCollectionController.addBodyOrComputed(this, [
 			{dataType: JsConnectionPointType.VECTOR3, varName: out, value: bodyLine},
 		]);

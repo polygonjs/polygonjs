@@ -107,8 +107,9 @@ export class GetChildrenAttributesJsNode extends TypedJsNode<GetChildrenAttribut
 
 		const arrayType = JsConnectionPointTypeToArrayTypeMap[dataType];
 		const variable = createVariable(arrayType);
-		if (variable) {
-			shadersCollectionController.addVariable(this, varName, variable);
+		const tmpVarName = variable ? shadersCollectionController.addVariable(this, variable) : undefined;
+		if (!tmpVarName) {
+			return;
 		}
 
 		const func = Poly.namedFunctionsRegister.getFunction(
@@ -116,7 +117,7 @@ export class GetChildrenAttributesJsNode extends TypedJsNode<GetChildrenAttribut
 			this,
 			shadersCollectionController
 		);
-		const bodyLine = func.asString(object3D, attribName, `'${dataType}'`, varName);
+		const bodyLine = func.asString(object3D, attribName, `'${dataType}'`, tmpVarName);
 		shadersCollectionController.addBodyOrComputed(this, [{dataType, varName, value: bodyLine}]);
 	}
 }

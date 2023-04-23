@@ -28,10 +28,10 @@ export class RayIntersectSphereJsNode extends BaseRaySphereJsNode {
 		const ray = this.variableForInput(shadersCollectionController, JsConnectionPointType.RAY);
 		const sphere = this.variableForInput(shadersCollectionController, JsConnectionPointType.SPHERE);
 		const out = this.jsVarName(OUTPUT_NAME);
-		shadersCollectionController.addVariable(this, out, new Vector3());
+		const tmpVarName = shadersCollectionController.addVariable(this, new Vector3());
 
 		const func = Poly.namedFunctionsRegister.getFunction('rayIntersectSphere', this, shadersCollectionController);
-		const bodyLine = func.asString(ray, sphere, out);
+		const bodyLine = func.asString(ray, sphere, tmpVarName);
 		shadersCollectionController.addBodyOrComputed(this, [
 			{dataType: JsConnectionPointType.VECTOR3, varName: out, value: bodyLine},
 		]);

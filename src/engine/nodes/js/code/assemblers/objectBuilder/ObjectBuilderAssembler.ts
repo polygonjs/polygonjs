@@ -1,8 +1,11 @@
-import {BaseJsShaderAssembler, INSERT_DEFINE_AFTER, INSERT_BODY_AFTER, FunctionData} from '../_Base';
+import {
+	BaseJsShaderAssembler,
+	INSERT_DEFINE_AFTER,
+	INSERT_BODY_AFTER,
+	FunctionData,
+	INSERT_MEMBERS_AFTER,
+} from '../_Base';
 import {RegisterableVariable} from '../_BaseJsPersistedConfigUtils';
-// import {IUniforms} from '../../../../../../core/geometry/Material';
-import {ThreeToGl} from '../../../../../../core/ThreeToGl';
-// import TemplateDefault from '../../templates/textures/Default.frag.glsl';
 import {ShaderConfig} from '../../configs/ShaderConfig';
 import {VariableConfig} from '../../configs/VariableConfig';
 import {ShaderName} from '../../../../utils/shaders/ShaderName';
@@ -10,26 +13,38 @@ import {OutputJsNode} from '../../../Output';
 import {GlobalsJsNode} from '../../../Globals';
 import {JsConnectionPointType, JsConnectionPoint} from '../../../../utils/io/connections/Js';
 import {JsLinesCollectionController} from '../../utils/JsLinesCollectionController';
-// import {UniformJsDefinition} from '../../../utils/JsDefinition';
-import {Vector3} from 'three';
+import {Object3D, Vector3} from 'three';
 import {NamedFunctionMap} from '../../../../../poly/registers/functions/All';
 import {ParamOptions} from '../../../../../params/utils/OptionsController';
-// import {Vector3} from 'three';
-// import {IUniformsWithTime} from '../../../../../scene/utils/UniformsController';
-// import {handleCopBuilderDependencies} from '../../../../cop/utils/BuilderUtils';
-// import { JSSDFSopNode } from '../../../../sop/JSSDF';
 
-enum SDFVariable {
-	D = 'd',
+export enum FunctionConstant {
+	OBJECT_CONTAINER = 'objectContainer',
+	OBJECT_3D = 'objectContainer.Object3D',
+	INDEX = 'objectContainer.objnum',
+}
+export interface ObjectContainer {
+	Object3D: Object3D;
+	objnum: number;
+}
+
+enum ObjectVariable {
+	OBJECT_3D = 'Object3D',
+	POSITION = 'position',
+	ROTATION = 'rotation',
+	QUATERNION = 'quaternion',
+	SCALE = 'scale',
+	VISIBLE = 'visible',
+	OBJ_NUM = 'objnum',
 }
 
 const TEMPLATE = `
 ${INSERT_DEFINE_AFTER}
+${INSERT_MEMBERS_AFTER}
 
 ${INSERT_BODY_AFTER}
 `;
 
-export class JsAssemblerSDF extends BaseJsShaderAssembler {
+export class JsAssemblerObjectBuilder extends BaseJsShaderAssembler {
 	// private _function: Function | undefined;
 	// private _uniforms: IUniforms | undefined;
 	// private _functionsByName: Map<string, Function> = new Map();
@@ -172,13 +187,22 @@ export class JsAssemblerSDF extends BaseJsShaderAssembler {
 		// output_child.add_param(ParamType.COLOR, 'color', [1, 1, 1], {hidden: true});
 		// output_child.add_param(ParamType.FLOAT, 'alpha', 1, {hidden: true});
 		output_child.io.inputs.setNamedInputConnectionPoints([
-			new JsConnectionPoint(SDFVariable.D, JsConnectionPointType.FLOAT),
-			// new JsConnectionPoint('alpha', JsConnectionPointType.FLOAT),
+			new JsConnectionPoint(ObjectVariable.POSITION, JsConnectionPointType.VECTOR3),
+			new JsConnectionPoint(ObjectVariable.ROTATION, JsConnectionPointType.EULER),
+			new JsConnectionPoint(ObjectVariable.QUATERNION, JsConnectionPointType.QUATERNION),
+			new JsConnectionPoint(ObjectVariable.SCALE, JsConnectionPointType.VECTOR3),
+			new JsConnectionPoint(ObjectVariable.VISIBLE, JsConnectionPointType.BOOLEAN),
 		]);
 	}
 	override add_globals_outputs(globals_node: GlobalsJsNode) {
 		globals_node.io.outputs.setNamedOutputConnectionPoints([
-			new JsConnectionPoint('position', JsConnectionPointType.VECTOR3),
+			new JsConnectionPoint(ObjectVariable.OBJECT_3D, JsConnectionPointType.OBJECT_3D),
+			new JsConnectionPoint(ObjectVariable.POSITION, JsConnectionPointType.VECTOR3),
+			new JsConnectionPoint(ObjectVariable.ROTATION, JsConnectionPointType.EULER),
+			new JsConnectionPoint(ObjectVariable.QUATERNION, JsConnectionPointType.QUATERNION),
+			new JsConnectionPoint(ObjectVariable.SCALE, JsConnectionPointType.VECTOR3),
+			new JsConnectionPoint(ObjectVariable.VISIBLE, JsConnectionPointType.BOOLEAN),
+			new JsConnectionPoint(ObjectVariable.OBJ_NUM, JsConnectionPointType.INT),
 			// new JsConnectionPoint('gl_FragCoord', JsConnectionPointType.VEC4),
 			// new JsConnectionPoint('resolution', JsConnectionPointType.VEC2),
 			// new JsConnectionPoint('time', JsConnectionPointType.FLOAT),
@@ -192,11 +216,11 @@ export class JsAssemblerSDF extends BaseJsShaderAssembler {
 	//
 	//
 	override create_shader_configs() {
-		return [new ShaderConfig(ShaderName.FRAGMENT, [SDFVariable.D], [])];
+		return [new ShaderConfig(ShaderName.FRAGMENT, [ObjectVariable.POSITION], [])];
 	}
 	override create_variable_configs() {
 		return [
-			new VariableConfig(SDFVariable.D, {
+			new VariableConfig(ObjectVariable.POSITION, {
 				prefix: 'return ',
 			}),
 			// new VariableConfig('alpha', {
@@ -239,35 +263,32 @@ export class JsAssemblerSDF extends BaseJsShaderAssembler {
 	// 	}
 	// }
 
-	override set_node_lines_output(outputNode: OutputJsNode, shadersCollectionController: JsLinesCollectionController) {
-		const inputNames = this.inputNamesForShaderName(outputNode, shadersCollectionController.currentShaderName());
+	override set_node_lines_output(outputNode: OutputJsNode, linesController: JsLinesCollectionController) {
+		const inputNames = this.inputNamesForShaderName(outputNode, linesController.currentShaderName());
 		if (inputNames) {
 			for (const inputName of inputNames) {
 				const input = outputNode.io.inputs.named_input(inputName);
 
 				if (input) {
-					const gl_var = outputNode.variableForInput(shadersCollectionController, inputName);
+					const varName = outputNode.variableForInput(linesController, inputName);
 
 					let bodyLine: string | undefined;
-					if (inputName == SDFVariable.D) {
-						bodyLine = `return ${ThreeToGl.any(gl_var)}`;
+					if (inputName == ObjectVariable.POSITION) {
+						bodyLine = `${FunctionConstant.OBJECT_3D}.position.copy(${varName})`;
 					}
 					// if (input_name == 'alpha') {
 					// 	body_line = `diffuseColor.a = ${ThreeToGl.any(gl_var)}`;
 					// }
 					if (bodyLine) {
-						shadersCollectionController._addBodyLines(outputNode, [bodyLine]);
+						linesController._addBodyLines(outputNode, [bodyLine]);
 					}
 				}
 			}
 		}
 	}
 
-	override set_node_lines_globals(
-		globalsNode: GlobalsJsNode,
-		shadersCollectionController: JsLinesCollectionController
-	) {
-		const shaderName = shadersCollectionController.currentShaderName();
+	override set_node_lines_globals(globalsNode: GlobalsJsNode, linesController: JsLinesCollectionController) {
+		const shaderName = linesController.currentShaderName();
 		const shaderConfig = this.shader_config(shaderName);
 		if (!shaderConfig) {
 			return;
@@ -278,12 +299,13 @@ export class JsAssemblerSDF extends BaseJsShaderAssembler {
 		const usedOutputNames = globalsNode.io.outputs.used_output_names();
 		for (const outputName of usedOutputNames) {
 			const varName = globalsNode.jsVarName(outputName);
+			// console.log({outputName, varName});
 
 			switch (outputName) {
 				case 'position':
 					// definitions.push(new UniformJsDefinition(globals_node, JsConnectionPointType.FLOAT, output_name));
-					shadersCollectionController.addVariable(globalsNode, new Vector3(), varName);
-					bodyLines.push(`${varName}.copy(${outputName})`);
+					linesController.addVariable(globalsNode, new Vector3(), varName);
+					bodyLines.push(`${varName}.copy(${FunctionConstant.OBJECT_3D}.${outputName})`);
 
 					// this.setUniformsTimeDependent();
 					break;
@@ -300,6 +322,6 @@ export class JsAssemblerSDF extends BaseJsShaderAssembler {
 			}
 		}
 		// shadersCollectionController.addDefinitions(globalsNode, definitions, shaderName);
-		shadersCollectionController._addBodyLines(globalsNode, bodyLines);
+		linesController._addBodyLines(globalsNode, bodyLines);
 	}
 }

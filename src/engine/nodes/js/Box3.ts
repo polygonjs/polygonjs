@@ -40,9 +40,9 @@ export class Box3JsNode extends TypedJsNode<Box3JsParamsConfig> {
 		const max = this.variableForInputParam(shadersCollectionController, this.p.max);
 		const out = this.jsVarName(JsConnectionPointType.BOX3);
 
-		shadersCollectionController.addVariable(this, out, new Box3());
+		const tmpVarName = shadersCollectionController.addVariable(this, new Box3());
 		const func = Poly.namedFunctionsRegister.getFunction('box3Set', this, shadersCollectionController);
-		const bodyLine = func.asString(min, max, out);
+		const bodyLine = func.asString(min, max, tmpVarName);
 		shadersCollectionController.addBodyOrComputed(this, [
 			{dataType: JsConnectionPointType.PLANE, varName: out, value: bodyLine},
 		]);

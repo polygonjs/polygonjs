@@ -119,7 +119,10 @@ export class ElementsToArrayJsNode extends TypedJsNode<ElementsToArrayJsParamsCo
 	private _setLinesAsPrimitive(options: SetLinesOptions) {
 		const {shadersCollectionController, varName, dataType, inputElements} = options;
 
-		shadersCollectionController.addVariable(this, varName, createPrimitiveArray(dataType) as RegisterableVariable);
+		const tmpVarName = shadersCollectionController.addVariable(
+			this,
+			createPrimitiveArray(dataType) as RegisterableVariable
+		);
 		const func = Poly.namedFunctionsRegister.getFunction(
 			'elementsToArrayPrimitive',
 			this,
@@ -129,14 +132,17 @@ export class ElementsToArrayJsNode extends TypedJsNode<ElementsToArrayJsParamsCo
 			{
 				dataType,
 				varName,
-				value: func.asString(inputElements, varName),
+				value: func.asString(inputElements, tmpVarName),
 			},
 		]);
 	}
 	private _setLinesAsVector(options: SetLinesOptions) {
 		const {shadersCollectionController, varName, dataType, inputElements} = options;
 
-		shadersCollectionController.addVariable(this, varName, createVectorArray(dataType) as RegisterableVariable);
+		const tmpVarName = shadersCollectionController.addVariable(
+			this,
+			createVectorArray(dataType) as RegisterableVariable
+		);
 		const func = Poly.namedFunctionsRegister.getFunction(
 			'elementsToArrayPrimitive',
 			this,
@@ -146,7 +152,7 @@ export class ElementsToArrayJsNode extends TypedJsNode<ElementsToArrayJsParamsCo
 			{
 				dataType,
 				varName,
-				value: func.asString(inputElements, varName),
+				value: func.asString(inputElements, tmpVarName),
 			},
 		]);
 	}

@@ -89,13 +89,13 @@ export class Vec4ToVec3JsNode extends TypedJsNode<Vec4ToVec3ParamsJsConfig> {
 				return;
 			}
 			const varName = this.jsVarName(propertyName);
-			shadersCollectionController.addVariable(this, varName, new Vector3());
+			const tmpVarName = shadersCollectionController.addVariable(this, new Vector3());
 			const func = Poly.namedFunctionsRegister.getFunction(functionName, this, shadersCollectionController);
 			shadersCollectionController.addBodyOrComputed(this, [
 				{
 					dataType: type,
 					varName,
-					value: func.asString(vec4, varName),
+					value: func.asString(vec4, tmpVarName),
 				},
 			]);
 		};
@@ -124,13 +124,13 @@ export class Vec4ToVec3JsNode extends TypedJsNode<Vec4ToVec3ParamsJsConfig> {
 				return;
 			}
 			const varName = this.jsVarName(propertyName);
-			shadersCollectionController.addVariable(this, varName, new VectorArray([new Vector3()]));
+			const tmpVarName = shadersCollectionController.addVariable(this, new VectorArray([new Vector3()]));
 			const func = Poly.namedFunctionsRegister.getFunction(functionName, this, shadersCollectionController);
 			shadersCollectionController.addBodyOrComputed(this, [
 				{
 					dataType: type,
 					varName,
-					value: func.asString(vec4, varName),
+					value: func.asString(vec4, tmpVarName),
 				},
 			]);
 		};
@@ -139,13 +139,13 @@ export class Vec4ToVec3JsNode extends TypedJsNode<Vec4ToVec3ParamsJsConfig> {
 				return;
 			}
 			const varName = this.jsVarName(propertyName);
-			shadersCollectionController.addVariable(this, varName, new PrimitiveArray([0]));
+			const tmpVarName = shadersCollectionController.addVariable(this, new PrimitiveArray([0]));
 			const func = Poly.namedFunctionsRegister.getFunction(functionName, this, shadersCollectionController);
 			shadersCollectionController.addBodyOrComputed(this, [
 				{
 					dataType: type,
 					varName,
-					value: func.asString(vec4, varName),
+					value: func.asString(vec4, tmpVarName),
 				},
 			]);
 		};

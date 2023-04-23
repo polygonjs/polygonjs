@@ -29,10 +29,10 @@ export class RayIntersectBoxJsNode extends BaseRayBox3JsNode {
 		const ray = this.variableForInput(shadersCollectionController, JsConnectionPointType.RAY);
 		const box3 = this.variableForInput(shadersCollectionController, JsConnectionPointType.BOX3);
 		const out = this.jsVarName(OUTPUT_NAME);
-		shadersCollectionController.addVariable(this, out, new Vector3());
+		const tmpVarName =shadersCollectionController.addVariable(this, new Vector3());
 
 		const func = Poly.namedFunctionsRegister.getFunction('rayIntersectBox3', this, shadersCollectionController);
-		const bodyLine = func.asString(ray, box3, out);
+		const bodyLine = func.asString(ray, box3, tmpVarName);
 		shadersCollectionController.addBodyOrComputed(this, [
 			{dataType: JsConnectionPointType.VECTOR3, varName: out, value: bodyLine},
 		]);

@@ -62,16 +62,14 @@ export class MultScalarJsNode extends ParamlessTypedJsNode {
 		const varName = this.jsVarName(this._expectedOutputName(0));
 		const inputType = this._expectedInputTypes()[0];
 		const variable = createVariable(inputType);
-		if (variable) {
-			shadersCollectionController.addVariable(this, varName, variable);
-		}
+		const tmpVarName = variable ? shadersCollectionController.addVariable(this, variable) : undefined;
 
 		// color / vector
 		const functionName = functionNameByType(inputType);
-		if (functionName) {
+		if (functionName && tmpVarName) {
 			const func = Poly.namedFunctionsRegister.getFunction(functionName, this, shadersCollectionController);
 			shadersCollectionController.addBodyOrComputed(this, [
-				{dataType: inputType, varName, value: func.asString(input, scalar, varName)},
+				{dataType: inputType, varName, value: func.asString(input, scalar, tmpVarName)},
 			]);
 			return;
 		}

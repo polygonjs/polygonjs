@@ -41,9 +41,9 @@ export class SphereJsNode extends TypedJsNode<SphereJsParamsConfig> {
 		const radius = this.variableForInputParam(shadersCollectionController, this.p.radius);
 		const out = this.jsVarName(JsConnectionPointType.SPHERE);
 
-		shadersCollectionController.addVariable(this, out, new Sphere());
+		const tmpVarName = shadersCollectionController.addVariable(this, new Sphere());
 		const func = Poly.namedFunctionsRegister.getFunction('sphereSet', this, shadersCollectionController);
-		const bodyLine = func.asString(center, radius, out);
+		const bodyLine = func.asString(center, radius, tmpVarName);
 		shadersCollectionController.addBodyOrComputed(this, [
 			{dataType: JsConnectionPointType.SPHERE, varName: out, value: bodyLine},
 		]);

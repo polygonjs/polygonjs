@@ -43,13 +43,13 @@ export class GetWebXRTrackedMarkerPropertyJsNode extends TypedJsNode<GetWebXRTra
 				return;
 			}
 			const varName = this.jsVarName(propertyName);
-			shadersCollectionController.addVariable(this, varName, new Matrix4());
+			const tmpVarName = shadersCollectionController.addVariable(this, new Matrix4());
 			const func = Poly.namedFunctionsRegister.getFunction(functionName, this, shadersCollectionController);
 			shadersCollectionController.addBodyOrComputed(this, [
 				{
 					dataType: type,
 					varName,
-					value: func.asString(varName),
+					value: func.asString(tmpVarName),
 				},
 			]);
 		};

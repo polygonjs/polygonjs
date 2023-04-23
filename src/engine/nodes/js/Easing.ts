@@ -83,9 +83,8 @@ export class EasingJsNode extends TypedJsNode<EasingJsParamsConfig> {
 
 		const inputType = this._expectedInputTypes()[0];
 		const variable = createVariable(inputType);
-		if (variable) {
-			shadersCollectionController.addVariable(this, varName, variable);
-		}
+		const tmpVarName = variable ? shadersCollectionController.addVariable(this, variable) : undefined;
+
 		const inputValue = this.variableForInput(shadersCollectionController, INPUT_NAME);
 		const functionName = EASING_NAMES[this.pv.type];
 		const func = Poly.namedFunctionsRegister.getFunction(functionName, this, shadersCollectionController);
@@ -102,7 +101,7 @@ export class EasingJsNode extends TypedJsNode<EasingJsParamsConfig> {
 		// color / vector
 		const vectorFunctionName = _vectorFunctionName_1(inputType);
 		console.log('vectorFunctionName', inputType, vectorFunctionName);
-		if (vectorFunctionName) {
+		if (vectorFunctionName && tmpVarName) {
 			func.asString('');
 			const vectorFunc = Poly.namedFunctionsRegister.getFunction(
 				vectorFunctionName,
@@ -113,7 +112,7 @@ export class EasingJsNode extends TypedJsNode<EasingJsParamsConfig> {
 				{
 					dataType: JsConnectionPointType.FLOAT,
 					varName,
-					value: vectorFunc.asString(...[functionName, inputValue, varName]),
+					value: vectorFunc.asString(...[functionName, inputValue, tmpVarName]),
 				},
 			]);
 		}

@@ -45,13 +45,13 @@ export class GetBox3PropertyJsNode extends ParamlessTypedJsNode {
 				return;
 			}
 			const out = this.jsVarName(propertyName);
-			shadersCollectionController.addVariable(this, out, new Vector3());
+			const tmpVarName = shadersCollectionController.addVariable(this, new Vector3());
 			const func = Poly.namedFunctionsRegister.getFunction(functionName, this, shadersCollectionController);
 			shadersCollectionController.addBodyOrComputed(this, [
 				{
 					dataType: type,
-					varName: this.jsVarName(propertyName),
-					value: func.asString(box3, out),
+					varName: out,
+					value: func.asString(box3, tmpVarName),
 				},
 			]);
 		};

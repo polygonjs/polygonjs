@@ -93,18 +93,16 @@ export function MathFunctionArgXOperationFactory<MVF extends MathVectorFunction>
 			const varName = this.jsVarName(this._expectedOutputName(0));
 			const inputType = this._expectedInputTypes()[0];
 			const variable = createVariable(inputType);
-			if (variable) {
-				shadersCollectionController.addVariable(this, varName, variable);
-			}
+			const tmpVarName = variable != null ? shadersCollectionController.addVariable(this, variable) : undefined;
 
-			const mainFunction = this._mainFunction(shadersCollectionController, varName);
+			const mainFunction = this._mainFunction(shadersCollectionController, tmpVarName);
 			if (!mainFunction) {
 				return;
 			}
 
 			shadersCollectionController.addBodyOrComputed(this, [{dataType: inputType, varName, value: mainFunction}]);
 		}
-		private _mainFunction(shadersCollectionController: JsLinesCollectionController, varName: string) {
+		private _mainFunction(shadersCollectionController: JsLinesCollectionController, tmpVarName?: string) {
 			const functionData = this._functionData();
 			const {vectorFunctionNameFunction, mathFloat, mathPrimArray, mathVectorArray} = functionData;
 
@@ -120,13 +118,16 @@ export function MathFunctionArgXOperationFactory<MVF extends MathVectorFunction>
 					.getFunction(mathFloat, this, shadersCollectionController)
 					.asString(...[coreFunction, ...args]);
 			}
+			if (!tmpVarName) {
+				return;
+			}
 
 			// color / vector
 			const vectorFunctionName = vectorFunctionNameFunction(inputType);
 			if (vectorFunctionName) {
 				return Poly.namedFunctionsRegister
 					.getFunction(vectorFunctionName, this, shadersCollectionController)
-					.asString(...[coreFunction, ...args, varName]);
+					.asString(...[coreFunction, ...args, tmpVarName]);
 			}
 
 			// array
@@ -141,12 +142,12 @@ export function MathFunctionArgXOperationFactory<MVF extends MathVectorFunction>
 						.asString('', '', '');
 					return Poly.namedFunctionsRegister
 						.getFunction(mathVectorArray, this, shadersCollectionController)
-						.asString(...[coreFunction, vectorElementInputFunctionName, ...args, varName]);
+						.asString(...[coreFunction, vectorElementInputFunctionName, ...args, tmpVarName]);
 				} else {
 					// array primitive
 					return Poly.namedFunctionsRegister
 						.getFunction(mathPrimArray, this, shadersCollectionController)
-						.asString(...[coreFunction, ...args, varName]);
+						.asString(...[coreFunction, ...args, tmpVarName]);
 				}
 			}
 		}

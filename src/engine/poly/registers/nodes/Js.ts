@@ -495,7 +495,9 @@ const SUBNET_CHILD_OPTION = {
 	only: [`${SubnetJsNode.context()}/${SubnetJsNode.type()}`],
 };
 const sopType = (type: SopType) => `${NodeContext.SOP}/${type}`;
-const ONLY_WITH_GLOBALS = {only: [sopType(SopType.SDF_BUILDER)]};
+const ONLY_WITH_GLOBALS = {
+	only: [sopType(SopType.OBJECT_BUILDER), sopType(SopType.POINT_BUILDER), sopType(SopType.SDF_BUILDER)],
+};
 const ONLY_ACTOR = {
 	only: [
 		sopType(SopType.ACTOR),

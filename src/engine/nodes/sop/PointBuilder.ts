@@ -1,109 +1,61 @@
 /**
- * Creates a mesh from an SDF function.
+ * Updates points with JS nodes
  *
  *
  */
-import {Constructor, Number3, valueof} from '../../../types/GlobalTypes';
-import {NodeContext} from '../../poly/NodeContext';
+import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {JsNodeChildrenMap} from '../../poly/registers/nodes/Js';
-import {BaseJsNodeType} from '../js/_Base';
-import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {NodeCreateOptions} from '../utils/hierarchy/ChildrenController';
+import {InputCloneMode} from '../../poly/InputCloneMode';
+import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
+import {PointBuilderPersistedConfig} from '../js/code/assemblers/pointBuilder/PointBuilderPersistedConfig';
 import {AssemblerName} from '../../poly/registers/assemblers/_BaseRegister';
-import {Poly} from '../../Poly';
 import {JsAssemblerController} from '../js/code/Controller';
-import {JsAssemblerSDF} from '../js/code/assemblers/sdf/SDF';
-import {JsNodeFinder} from '../js/code/utils/NodeFinder';
-import {Box3, Vector3} from 'three';
+import {
+	JsAssemblerPointBuilder,
+	PointContainer,
+	FunctionConstant,
+} from '../js/code/assemblers/pointBuilder/PointBuilderAssembler';
+import {Poly} from '../../Poly';
+import {NodeContext} from '../../poly/NodeContext';
+import {JsNodeChildrenMap} from '../../poly/registers/nodes/Js';
+import {NodeCreateOptions} from '../utils/hierarchy/ChildrenController';
+import {Constructor, valueof} from '../../../types/GlobalTypes';
+import {BaseJsNodeType} from '../js/_Base';
+import {JsParamConfig} from '../js/code/utils/JsParamConfig';
+import {ParamType} from '../../poly/ParamType';
 import {FunctionData} from '../js/code/assemblers/_Base';
 import {RegisterableVariable} from '../js/code/assemblers/_BaseJsPersistedConfigUtils';
-import {InputCloneMode} from '../../poly/InputCloneMode';
-import {SDFLoader} from '../../../core/geometry/sdf/SDFLoader';
-import {Box} from '../../../core/geometry/sdf/SDFCommon';
-import {TypedSopNode} from './_Base';
-import {ModuleName} from '../../poly/registers/modules/Common';
-import {SDFObject} from '../../../core/geometry/sdf/SDFObject';
+import {JsNodeFinder} from '../js/code/utils/NodeFinder';
 import {CoreType} from '../../../core/Type';
-import {SDFPersistedConfig} from '../js/code/assemblers/sdf/SDFPersistedConfig';
-import {ParamType} from '../../poly/ParamType';
-import {JsParamConfig} from '../js/code/utils/JsParamConfig';
-const _box3 = new Box3();
-const box: Box = {min: [-1, -1, -1], max: [1, 1, 1]};
-type SDFFunction = Function; //(p: any) => number;
+import {BufferAttribute, Object3D, Vector3} from 'three';
+import {CoreGeometry} from '../../../core/geometry/Geometry';
+import {Attribute} from '../../../core/geometry/Attribute';
 
-class SDFBuilderSopParamsConfig extends NodeParamsConfig {
-	/** @param stepSize */
-	stepSize = ParamConfig.FLOAT(0.1, {
-		range: [0.01, 1],
-		rangeLocked: [true, false],
-	});
-	/** @param level */
-	level = ParamConfig.FLOAT(0, {
-		range: [-1, 1],
-		rangeLocked: [false, false],
-	});
-	/** @param min bound */
-	min = ParamConfig.VECTOR3([-1, -1, -1]);
-	/** @param max bound */
-	max = ParamConfig.VECTOR3([1, 1, 1]);
-	/** @param linear Tolerance */
-	facetAngle = ParamConfig.FLOAT(45, {
-		range: [0.01, 180],
-		rangeLocked: [true, false],
-	});
-	/** @param meshes color */
-	meshesColor = ParamConfig.COLOR([1, 1, 1]);
-	/** @param wireframe */
-	wireframe = ParamConfig.BOOLEAN(false, {
-		// we need the separator for spare params
-		separatorAfter: true,
-	});
-}
-const ParamsConfig = new SDFBuilderSopParamsConfig();
-export class SDFBuilderSopNode extends TypedSopNode<SDFBuilderSopParamsConfig> {
+type PointFunction = Function; //(object:Object3D)=>Object3D
+
+class PointBuilderSopParamsConfig extends NodeParamsConfig {}
+const ParamsConfig = new PointBuilderSopParamsConfig();
+
+export class PointBuilderSopNode extends TypedSopNode<PointBuilderSopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return SopType.SDF_BUILDER;
+		return SopType.POINT_BUILDER;
 	}
-	override requiredModules() {
-		return [ModuleName.SDF];
-	}
-	override readonly persisted_config: SDFPersistedConfig = new SDFPersistedConfig(this);
+
+	override readonly persisted_config: PointBuilderPersistedConfig = new PointBuilderPersistedConfig(this);
 	assemblerController() {
 		return this._assemblerController;
 	}
-	public override usedAssembler(): Readonly<AssemblerName.JS_SDF> {
-		return AssemblerName.JS_SDF;
+	public override usedAssembler(): Readonly<AssemblerName.JS_POINT_BUILDER> {
+		return AssemblerName.JS_POINT_BUILDER;
 	}
 	protected _assemblerController = this._createAssemblerController();
-	private _createAssemblerController(): JsAssemblerController<JsAssemblerSDF> | undefined {
+	private _createAssemblerController(): JsAssemblerController<JsAssemblerPointBuilder> | undefined {
 		return Poly.assemblersRegister.assembler(this, this.usedAssembler());
 	}
 
-	// static PARAM_CALLBACK_reset(node: ParticlesSystemGpuSopNode) {
-	// 	node.PARAM_CALLBACK_reset();
-	// }
-	// PARAM_CALLBACK_reset() {
-	// 	// this.gpu_controller.reset_gpu_compute_and_set_dirty();
-	// }
-
-	// private _reset_material_if_dirty_bound = this._reset_material_if_dirty.bind(this);
 	protected override _childrenControllerContext = NodeContext.JS;
-	// private _on_create_prepare_material_bound = this._on_create_prepare_material.bind(this);
-	override initializeNode() {
-		this.io.inputs.setCount(0, 1);
-		// set to never at the moment
-		// otherwise the input is cloned on every frame inside cook_main()
-		this.io.inputs.initInputsClonedState(InputCloneMode.NEVER);
-
-		// this.addPostDirtyHook('_reset_material_if_dirty', this._reset_material_if_dirty_bound);
-
-		// this.lifecycle.onCreated(this.assembler_controller.on_create.bind(this.assembler_controller));
-		// this.lifecycle.onCreated(this._on_create_prepare_material_bound);
-		// this.children_controller?.init({dependent: false});
-	}
 
 	override createNode<S extends keyof JsNodeChildrenMap>(
 		node_class: S,
@@ -135,19 +87,13 @@ export class SDFBuilderSopNode extends TypedSopNode<SDFBuilderSopParamsConfig> {
 		return this.assemblerController() == null;
 	}
 
-	override async cook(inputCoreGroups: CoreGroup[]) {
-		const manifold = await SDFLoader.core();
+	override initializeNode() {
+		this.io.inputs.setCount(1);
+		this.io.inputs.initInputsClonedState(InputCloneMode.FROM_NODE);
+	}
 
-		// bbox
+	override async cook(inputCoreGroups: CoreGroup[]) {
 		const coreGroup = inputCoreGroups[0];
-		if (coreGroup) {
-			coreGroup.boundingBox(_box3);
-			_box3.min.toArray(box.min);
-			_box3.max.toArray(box.max);
-		} else {
-			this.pv.min.toArray(box.min);
-			this.pv.max.toArray(box.max);
-		}
 
 		// compile
 		this.compileIfRequired();
@@ -156,38 +102,79 @@ export class SDFBuilderSopNode extends TypedSopNode<SDFBuilderSopParamsConfig> {
 		const _func = this._function;
 		if (_func) {
 			const args = this.functionEvalArgsWithParamConfigs();
-			const convertedFunction = (p: Number3) => {
-				this._position.fromArray(p);
-				return -1 * _func(...args);
-			};
-			const geometry = manifold.levelSet(convertedFunction, box, this.pv.stepSize, this.pv.level);
-			const sdfObject = new SDFObject(geometry);
-			const results = sdfObject.toObject3D(this.pv);
-			if (results) {
-				if (CoreType.isArray(results)) {
-					this.setObjects(results);
-				} else {
-					this.setObjects([results]);
+			const inputObjects = coreGroup.threejsObjectsWithGeo();
+			// const convertedFunction = () => {
+			// 	return _func(...args);
+			// };
+			const newObjects: Object3D[] = [];
+			let objnum = 0;
+			for (const inputObject of inputObjects) {
+				this._pointIndexContainer.objnum = objnum;
+				const geometry = inputObject.geometry;
+				const pointsCount = CoreGeometry.pointsCount(geometry);
+				const positionAttrib = geometry.getAttribute(Attribute.POSITION) as BufferAttribute;
+				const normalAttrib = geometry.getAttribute(Attribute.NORMAL) as BufferAttribute;
+				const hasPosition = positionAttrib != null;
+				const hasNormal = normalAttrib != null;
+				if (!hasPosition) {
+					this._pointIndexContainer.position.set(0, 0, 0);
 				}
-			} else {
-				this.setObjects([]);
+				if (!hasNormal) {
+					this._pointIndexContainer.normal.set(0, 1, 0);
+				}
+				for (let ptnum = 0; ptnum < pointsCount; ptnum++) {
+					this._pointIndexContainer.ptnum = ptnum;
+					if (hasPosition) {
+						this._pointIndexContainer.position.fromBufferAttribute(positionAttrib, ptnum);
+					}
+					if (hasNormal) {
+						this._pointIndexContainer.normal.fromBufferAttribute(normalAttrib, ptnum);
+					}
+					_func(...args);
+					if (hasPosition) {
+						positionAttrib.setXYZ(
+							ptnum,
+							this._pointIndexContainer.position.x,
+							this._pointIndexContainer.position.y,
+							this._pointIndexContainer.position.z
+						);
+					}
+					if (hasNormal) {
+						normalAttrib.setXYZ(
+							ptnum,
+							this._pointIndexContainer.normal.x,
+							this._pointIndexContainer.normal.y,
+							this._pointIndexContainer.normal.z
+						);
+					}
+					// convertedFunction(inputObject, i);
+				}
+				newObjects.push(inputObject);
+				objnum++;
 			}
+
+			this.setObjects(newObjects);
 		} else {
 			this.setObjects([]);
 		}
 	}
+
 	compileIfRequired() {
 		if (this.assemblerController()?.compileRequired()) {
 			this.compile();
 		}
 	}
-	private _position = new Vector3();
+	private _pointIndexContainer: PointContainer = {
+		position: new Vector3(),
+		normal: new Vector3(),
+		ptnum: -1,
+		objnum: -1,
+	};
 	private _paramConfigs: JsParamConfig<ParamType>[] = [];
-	// private _paramConfigNames: string[] = [];
 	private _functionData: FunctionData | undefined;
 	private _functionCreationArgs: string[] = [];
-	private _functionEvalArgs: (Function | RegisterableVariable)[] = [];
-	private _function: SDFFunction | undefined;
+	private _functionEvalArgs: (PointContainer | Function | RegisterableVariable)[] = [];
+	private _function: PointFunction | undefined;
 	functionData() {
 		return this._functionData;
 	}
@@ -258,7 +245,7 @@ export class SDFBuilderSopNode extends TypedSopNode<SDFBuilderSopParamsConfig> {
 		paramConfigs.forEach((p) => p.applyToNode(this));
 
 		this._functionCreationArgs = [
-			'position',
+			FunctionConstant.POINT_CONTAINER,
 			'_setErrorFromError',
 			...variableNames,
 			...functionNames,
@@ -266,14 +253,14 @@ export class SDFBuilderSopNode extends TypedSopNode<SDFBuilderSopParamsConfig> {
 			wrappedBody,
 		];
 		this._functionEvalArgs = [
-			this._position,
+			this._pointIndexContainer,
 			_setErrorFromError,
 			...variables,
 			...functions,
 			// paramConfigs are added dynamically during cook
 		];
 		try {
-			this._function = new Function(...this._functionCreationArgs) as SDFFunction;
+			this._function = new Function(...this._functionCreationArgs) as PointFunction;
 		} catch (e) {
 			console.warn(e);
 			this.states.error.set('failed to compile');
@@ -281,7 +268,9 @@ export class SDFBuilderSopNode extends TypedSopNode<SDFBuilderSopParamsConfig> {
 	}
 
 	functionEvalArgsWithParamConfigs() {
-		const list: Array<Function | RegisterableVariable | number | boolean> = [...this._functionEvalArgs];
+		const list: Array<PointContainer | Function | RegisterableVariable | number | boolean> = [
+			...this._functionEvalArgs,
+		];
 		for (const paramConfig of this._paramConfigs) {
 			const paramName = paramConfig.name();
 			const spareParam = this.params.get(paramName);

@@ -71,13 +71,16 @@ export class TrackHandJsNode extends TypedJsNode<TrackHandJsParamsConfig> {
 				return;
 			}
 			const varName = this.jsVarName(propertyName);
-			shadersCollectionController.addVariable(this, varName, new VectorArray(handTrackingVector4Array()));
+			const tmpVarName = shadersCollectionController.addVariable(
+				this,
+				new VectorArray(handTrackingVector4Array())
+			);
 			const func = Poly.namedFunctionsRegister.getFunction(functionName, this, shadersCollectionController);
 			shadersCollectionController.addBodyOrComputed(this, [
 				{
 					dataType: type,
 					varName,
-					value: func.asString(object3D, handIndex, varName),
+					value: func.asString(object3D, handIndex, tmpVarName),
 				},
 			]);
 		};

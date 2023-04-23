@@ -120,12 +120,12 @@ export class Vec3ToVec2JsNode extends TypedJsNode<Vec3ToVec2ParamsJsConfig> {
 
 		if (used_output_names.indexOf(out_vec2) >= 0) {
 			const varName = this.jsVarName(out_vec2);
-			shadersCollectionController.addVariable(this, varName, new Vector2());
+			const tmpVar = shadersCollectionController.addVariable(this, new Vector2());
 			const func = Poly.namedFunctionsRegister.getFunction('sizzleVec3XY', this, shadersCollectionController);
 			linesData.push({
 				dataType: JsConnectionPointType.VECTOR2,
 				varName,
-				value: func.asString(vec, varName),
+				value: func.asString(vec, tmpVar),
 			});
 			// body_lines.push(`${func.asString(vec, out)}`);
 		}
@@ -173,13 +173,13 @@ export class Vec2ToVec3JsNode extends TypedJsNode<Vec2ToVec3ParamsJsConfig> {
 
 		const varName = this.jsVarName(out_vec3);
 
-		shadersCollectionController.addVariable(this, varName, new Vector3());
+		const tmpVar = shadersCollectionController.addVariable(this, new Vector3());
 		const func = Poly.namedFunctionsRegister.getFunction('vec2ToVec3', this, shadersCollectionController);
 		// body_lines.push(`${func.asString(vec2, z, varName)}`);
 		linesData.push({
 			dataType: JsConnectionPointType.VECTOR3,
 			varName,
-			value: func.asString(vec2, z, varName),
+			value: func.asString(vec2, z, tmpVar),
 		});
 
 		// body_lines.push(`vec3 ${var_name} = vec3(${vec2}.xy, ${z})`);
@@ -228,14 +228,14 @@ export class Vec3ToVec4JsNode extends TypedJsNode<Vec3ToVec4ParamsJsConfig> {
 
 		const varName = this.jsVarName(out_vec4);
 
-		shadersCollectionController.addVariable(this, varName, new Vector4());
+		const tmpVar = shadersCollectionController.addVariable(this, new Vector4());
 		const func = Poly.namedFunctionsRegister.getFunction('vec3ToVec4', this, shadersCollectionController);
 
 		// body_lines.push(`${func.asString(vec3, w, varName)}`);
 		linesData.push({
 			dataType: JsConnectionPointType.VECTOR4,
 			varName,
-			value: func.asString(vec3, w, varName),
+			value: func.asString(vec3, w, tmpVar),
 		});
 		// body_lines.push(`vec4 ${var_name} = vec4(${vec3}.xyz, ${w})`);
 
@@ -271,13 +271,13 @@ export class Vec3ToColorJsNode extends TypedJsNode<Vec3ToColorParamsJsConfig> {
 
 		const varName = this.jsVarName(JsConnectionPointType.COLOR);
 
-		shadersCollectionController.addVariable(this, varName, new Color());
+		const tmpVar = shadersCollectionController.addVariable(this, new Color());
 		const func = Poly.namedFunctionsRegister.getFunction('vec3ToColor', this, shadersCollectionController);
 
 		linesData.push({
 			dataType: JsConnectionPointType.COLOR,
 			varName,
-			value: func.asString(vec3, varName),
+			value: func.asString(vec3, tmpVar),
 		});
 
 		shadersCollectionController.addBodyOrComputed(this, linesData);
@@ -312,13 +312,13 @@ export class ColorToVec3JsNode extends TypedJsNode<ColorToVec3ParamsJsConfig> {
 
 		const varName = this.jsVarName(JsConnectionPointType.VECTOR3);
 
-		shadersCollectionController.addVariable(this, varName, new Vector3());
+		const tmpVar = shadersCollectionController.addVariable(this, new Vector3());
 		const func = Poly.namedFunctionsRegister.getFunction('colorToVec3', this, shadersCollectionController);
 
 		linesData.push({
 			dataType: JsConnectionPointType.COLOR,
 			varName,
-			value: func.asString(color, varName),
+			value: func.asString(color, tmpVar),
 		});
 
 		shadersCollectionController.addBodyOrComputed(this, linesData);

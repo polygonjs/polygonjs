@@ -28,10 +28,10 @@ export class RayIntersectPlaneJsNode extends BaseRayPlaneJsNode {
 		const ray = this.variableForInput(shadersCollectionController, JsConnectionPointType.RAY);
 		const plane = this.variableForInput(shadersCollectionController, JsConnectionPointType.PLANE);
 		const out = this.jsVarName(OUTPUT_NAME);
-		shadersCollectionController.addVariable(this, out, new Vector3());
+		const tmpVarName =shadersCollectionController.addVariable(this,  new Vector3());
 
 		const func = Poly.namedFunctionsRegister.getFunction('rayIntersectPlane', this, shadersCollectionController);
-		const bodyLine = func.asString(ray, plane, out);
+		const bodyLine = func.asString(ray, plane, tmpVarName);
 		shadersCollectionController.addBodyOrComputed(this, [
 			{dataType: JsConnectionPointType.VECTOR3, varName: out, value: bodyLine},
 		]);

@@ -35,16 +35,16 @@ export class FloatToColorJsNode extends TypedJsNode<FloatToColorJsParamsConfig> 
 		const g = this.variableForInputParam(shadersCollectionController, this.p.g);
 		const b = this.variableForInputParam(shadersCollectionController, this.p.b);
 
-		const varName = this.jsVarName(FloatToVec3JsNode.OUTPUT_NAME);
+		const out = this.jsVarName(FloatToVec3JsNode.OUTPUT_NAME);
 
-		shadersCollectionController.addVariable(this, varName, new Color());
+		const tmpVarName = shadersCollectionController.addVariable(this, new Color());
 		const func = Poly.namedFunctionsRegister.getFunction('floatToColor', this, shadersCollectionController);
 		// bodyLines.push(`${func.asString(x, y, z, varName)}`);
 
 		// body_lines.push(`vec3 ${var_name} = vec3(${vec2}.xy, ${z})`);
 		// shadersCollectionController.addBodyLines(this, bodyLines);
 		shadersCollectionController.addBodyOrComputed(this, [
-			{dataType: JsConnectionPointType.VECTOR3, varName, value: func.asString(r, g, b, varName)},
+			{dataType: JsConnectionPointType.VECTOR3, varName: out, value: func.asString(r, g, b, tmpVarName)},
 		]);
 	}
 }
@@ -79,14 +79,14 @@ export class FloatToVec2JsNode extends TypedJsNode<FloatToVec2JsParamsConfig> {
 
 		const varName = this.jsVarName(FloatToVec2JsNode.OUTPUT_NAME);
 
-		shadersCollectionController.addVariable(this, varName, new Vector2());
+		const tmpVarName = shadersCollectionController.addVariable(this, new Vector2());
 		const func = Poly.namedFunctionsRegister.getFunction('floatToVec2', this, shadersCollectionController);
 		// bodyLines.push(`${func.asString(x, y, z, varName)}`);
 
 		// body_lines.push(`vec3 ${var_name} = vec3(${vec2}.xy, ${z})`);
 		// shadersCollectionController.addBodyLines(this, bodyLines);
 		shadersCollectionController.addBodyOrComputed(this, [
-			{dataType: JsConnectionPointType.VECTOR3, varName, value: func.asString(x, y, varName)},
+			{dataType: JsConnectionPointType.VECTOR3, varName, value: func.asString(x, y, tmpVarName)},
 		]);
 	}
 }
@@ -121,16 +121,16 @@ export class FloatToVec3JsNode extends TypedJsNode<FloatToVec3JsParamsConfig> {
 		const y = this.variableForInputParam(shadersCollectionController, this.p.y);
 		const z = this.variableForInputParam(shadersCollectionController, this.p.z);
 
-		const varName = this.jsVarName(FloatToVec3JsNode.OUTPUT_NAME);
+		const out = this.jsVarName(FloatToVec3JsNode.OUTPUT_NAME);
 
-		shadersCollectionController.addVariable(this, varName, new Vector3());
+		const tmpVarName = shadersCollectionController.addVariable(this, new Vector3());
 		const func = Poly.namedFunctionsRegister.getFunction('floatToVec3', this, shadersCollectionController);
 		// bodyLines.push(`${func.asString(x, y, z, varName)}`);
 
 		// body_lines.push(`vec3 ${var_name} = vec3(${vec2}.xy, ${z})`);
 		// shadersCollectionController.addBodyLines(this, bodyLines);
 		shadersCollectionController.addBodyOrComputed(this, [
-			{dataType: JsConnectionPointType.VECTOR3, varName, value: func.asString(x, y, z, varName)},
+			{dataType: JsConnectionPointType.VECTOR3, varName: out, value: func.asString(x, y, z, tmpVarName)},
 		]);
 	}
 }
@@ -169,14 +169,14 @@ export class FloatToVec4JsNode extends TypedJsNode<FloatToVec4JsParamsConfig> {
 
 		const varName = this.jsVarName(FloatToVec3JsNode.OUTPUT_NAME);
 
-		shadersCollectionController.addVariable(this, varName, new Vector4());
+		const tmpVarName = shadersCollectionController.addVariable(this, new Vector4());
 		const func = Poly.namedFunctionsRegister.getFunction('floatToVec4', this, shadersCollectionController);
 		// bodyLines.push(`${func.asString(x, y, z, varName)}`);
 
 		// body_lines.push(`vec3 ${var_name} = vec3(${vec2}.xy, ${z})`);
 		// shadersCollectionController.addBodyLines(this, bodyLines);
 		shadersCollectionController.addBodyOrComputed(this, [
-			{dataType: JsConnectionPointType.VECTOR3, varName, value: func.asString(x, y, z, w, varName)},
+			{dataType: JsConnectionPointType.VECTOR3, varName, value: func.asString(x, y, z, w, tmpVarName)},
 		]);
 	}
 }

@@ -96,7 +96,10 @@ export class SwitchJsNode extends ParamlessTypedJsNode {
 				inputArgs.push(inputArg);
 			}
 		}
-		const value = `[${inputArgs.join(', ')}][${inputIndex}].value`;
+		const arrayElement = `[${inputArgs.join(', ')}][${inputIndex}]`;
+		const value = shadersCollectionController.assembler().computedVariablesAllowed()
+			? `${arrayElement}.value`
+			: arrayElement;
 
 		const varName = this.jsVarName(SwitchJsNode.OUTPUT_NAME);
 

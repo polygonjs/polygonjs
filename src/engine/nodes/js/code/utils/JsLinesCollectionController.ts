@@ -81,8 +81,8 @@ export class JsLinesCollectionController {
 	// REGISTERED VARIABLES
 	//
 	//
-	addVariable(node: BaseJsNodeType, varName: string, variable: RegisterableVariable) {
-		return this.assembler().addVariable(node, varName, variable);
+	addVariable(node: BaseJsNodeType, variable: RegisterableVariable, varName?: string) {
+		return this.assembler().addVariable(node, variable, varName);
 	}
 	//
 	//
