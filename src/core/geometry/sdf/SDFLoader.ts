@@ -22,7 +22,7 @@ export class SDFLoader {
 			_importStarted = true;
 
 			const onError = () => {
-				const message = `failed to load Manifold library. Make sure to install it to use SDF nodes (${LIBRARY_INSTALL_HINT})`;
+				const message = `failed to load Manifold library. Make sure to install it to use the SDFBuilder node (${LIBRARY_INSTALL_HINT})`;
 
 				reject(new Error(message));
 			};
