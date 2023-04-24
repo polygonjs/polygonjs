@@ -25,6 +25,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {GlParamConfig} from './code/utils/GLParamConfig';
 import {isBooleanTrue} from '../../../core/Type';
 import {ParamOptions} from '../../params/utils/OptionsController';
+import {UNIFORM_TEXTURE_PREFIX} from '../../../core/material/uniform';
 
 const blurParamVisibility: ParamOptions = {
 	visibleIf: {tblur: 1},
@@ -116,6 +117,6 @@ export class TextureGlNode extends TypedGlNode<TextureGlParamsConfig> {
 	// 	return `v_POLY_texture_${this.pv.paramName}`;
 	// }
 	uniformName() {
-		return `v_POLY_texture_${this.pv.paramName}`;
+		return `${UNIFORM_TEXTURE_PREFIX}${this.pv.paramName}`;
 	}
 }

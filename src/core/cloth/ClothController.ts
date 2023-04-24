@@ -1,8 +1,8 @@
 // import {ClothInputsController} from './modules/ClothInputsController';
 import {ClothMaterialController} from './modules/ClothMaterialsController';
 import {ClothGeometryInitController} from './modules/ClothGeometryInitController';
-import {ClothFBOController} from './modules/ClothFBOController';
-import {ClothOnBeforeRenderController} from './modules/ClothOnBeforeRenderController';
+import {ClothFBOController, ClothMaterialUniformConfigRef} from './modules/ClothFBOController';
+// import {ClothOnBeforeRenderController} from './modules/ClothOnBeforeRenderController';
 import {WebGLRenderer, Mesh, Vector3} from 'three';
 
 export class ClothController {
@@ -10,7 +10,7 @@ export class ClothController {
 	public readonly geometryInit: ClothGeometryInitController;
 	// public readonly inputs: ClothInputsController;
 	public readonly fbo: ClothFBOController;
-	public readonly onBeforeRender: ClothOnBeforeRenderController;
+	// public readonly onBeforeRender: ClothOnBeforeRenderController;
 	//
 	public stepsCount = 40;
 	public selectedVertexInfluence = 0.1;
@@ -21,17 +21,17 @@ export class ClothController {
 		this.materials = new ClothMaterialController(this);
 		this.geometryInit = new ClothGeometryInitController(this.clothObject);
 		// this.inputs = new ClothInputsController(this);
-		this.onBeforeRender = new ClothOnBeforeRenderController(this);
+		// this.onBeforeRender = new ClothOnBeforeRenderController(this);
 		this.fbo = new ClothFBOController(this);
 	}
 
 	init(renderer: WebGLRenderer) {
 		this.fbo.init(renderer);
-		this.onBeforeRender.init(this.clothObject);
+		// this.onBeforeRender.init(this.clothObject);
 	}
 
-	update(delta: number) {
-		this.fbo.update(delta);
+	update(delta: number, config: ClothMaterialUniformConfigRef) {
+		this.fbo.update(delta, config);
 	}
 
 	private _selectedVertexIndex = -1;

@@ -11,7 +11,7 @@ interface EventListenerWithData {
 	data: EventData;
 }
 type ListenerByEventType = Map<EventType, EventListenerWithData>;
-const DEBUG = true;
+const DEBUG = false;
 
 export class ViewerEventsController {
 	protected _bound_listener_map_by_event_controller_type: Map<string, ListenerByEventType> = new Map();

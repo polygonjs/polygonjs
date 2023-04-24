@@ -25,6 +25,10 @@ vec3 getDisplacement( vec3 point0, vec3 point1, float restDistance ) {
 
 // *** ADD COMMON ***
 
+vec2 getUV( float id ) { 
+	return getClothSolverUV( id, tSize );
+}
+
 
 void main() {
 	

@@ -1,5 +1,6 @@
 export enum JsType {
 	ATTRIBUTE = 'attribute',
+	CODE = 'code',
 	CURSOR = 'cursor',
 	GLOBALS = 'globals',
 	ON_CHILD_ATTRIBUTE_UPDATE = 'onChildAttributeUpdate',

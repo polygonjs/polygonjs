@@ -14,8 +14,32 @@ import {
 	FloatType,
 	DataTexture,
 	Vector3,
+	// ShaderMaterial,
+	Texture,
 } from 'three';
 import {ClothController} from '../ClothController';
+// import {UNIFORM_PARAM_PREFIX, UNIFORM_TEXTURE_PREFIX} from '../../material/uniform';
+// import {MaterialUserDataUniforms} from '../../../engine/nodes/gl/code/assemblers/materials/OnBeforeCompile';
+import {Ref} from '@vue/reactivity';
+
+export interface ClothMaterialUniformConfigRef {
+	tSize: Ref<Vector2>;
+	tPosition0: Ref<Texture>;
+	tPosition1: Ref<Texture>;
+	tNormal: Ref<Texture>;
+}
+export interface ClothMaterialUniformConfig {
+	tSize: Vector2;
+	tPosition0: Texture;
+	tPosition1: Texture;
+	tNormal: Texture;
+}
+export interface ClothMaterialUniformNameConfig {
+	tSize: string;
+	tPosition0: string;
+	tPosition1: string;
+	tNormal: string;
+}
 
 interface TextureContainer {
 	texture: DataTexture | null;
@@ -23,8 +47,9 @@ interface TextureContainer {
 
 export class ClothFBOController {
 	public readonly tSize = new Vector2();
-	public readonly scene = new Scene();
-	public readonly camera = new Camera();
+	public readonly fboScene = new Scene();
+	public readonly fboCamera = new Camera();
+	public readonly fboMesh: Mesh;
 
 	public RESOLUTION = -1;
 	public originalRT: TextureContainer = {texture: null};
@@ -49,7 +74,7 @@ export class ClothFBOController {
 		TextureContainer,
 		TextureContainer
 	];
-	public readonly mesh: Mesh;
+
 	public renderer: WebGLRenderer | undefined;
 
 	constructor(public readonly mainController: ClothController) {
@@ -61,12 +86,10 @@ export class ClothFBOController {
 
 		geometry.setAttribute('position', new BufferAttribute(positions, 2));
 		// mesh
-		// TODO: check what I should do in a larger scene here
-		this.mesh = new Mesh(geometry, this.mainController.materials.copyShader);
-		this.mesh.frustumCulled = false;
-		this.scene.add(this.mesh);
-		// TODO: can I still patch the scene, or should I have a sub scene?
-		this.scene.updateMatrixWorld = function () {};
+		this.fboMesh = new Mesh(geometry, this.mainController.materials.copyShader);
+		this.fboMesh.frustumCulled = false;
+		this.fboScene.add(this.fboMesh);
+		this.fboScene.updateMatrixWorld = function () {};
 
 		this.normalsRT = createRenderTarget(this.RESOLUTION);
 	}
@@ -98,19 +121,20 @@ export class ClothFBOController {
 		// restore renderer
 		renderer.setRenderTarget(originalRenderTarget);
 
-		// update once, to have the geometry properly display the normals
-		this.update(1 / 60);
+		// update once, to have the geometry properly display the normals.
+		// UPDATE: this doesn't work anymore since the material first needs to be rendered and compiled.
+		// this.update(1 / 60);
 	}
 
 	private copyTexture(input: TextureContainer, output: WebGLRenderTarget, order: boolean, renderer: WebGLRenderer) {
 		const copyShader = this.mainController.materials.copyShader;
-		this.mesh.material = copyShader;
+		this.fboMesh.material = copyShader;
 		copyShader.uniforms.order.value = order ? 1 : -1;
 		copyShader.uniforms.tSize.value = this.tSize;
 		copyShader.uniforms.texture.value = input.texture;
 
 		renderer.setRenderTarget(output);
-		renderer.render(this.scene, this.camera);
+		renderer.render(this.fboScene, this.fboCamera);
 	}
 	private createPositionTexture() {
 		const data = new Float32Array(this.RESOLUTION * this.RESOLUTION * 4);
@@ -132,7 +156,7 @@ export class ClothFBOController {
 		this.originalRT = tmp;
 	}
 
-	update(delta: number) {
+	update(delta: number, config?: ClothMaterialUniformConfigRef) {
 		const renderer = this.renderer;
 		if (!(renderer && this._initialized)) {
 			return;
@@ -158,6 +182,28 @@ export class ClothFBOController {
 
 		// restore renderer
 		renderer.setRenderTarget(originalRenderTarget);
+
+		if (config) {
+			this._updateTextureRefs(config);
+		}
+	}
+	private _updateTextureRefs(config: ClothMaterialUniformConfigRef) {
+		config.tSize.value = this.mainController.fbo.tSize;
+		config.tPosition0.value = this.positionRT[0].texture;
+		config.tPosition1.value = this.positionRT[1].texture;
+		config.tNormal.value = this.normalsRT.texture;
+
+		// dummy
+		// const clothObject = this.mainController.clothObject;
+		// const material = clothObject.material as ShaderMaterial;
+		// const uniforms = MaterialUserDataUniforms.getUniforms(material); //material.uniforms;
+		// if (!uniforms) {
+		// 	return;
+		// }
+		// uniforms[_addTexturePrefix('tPosition0')].value = this.positionRT[0].texture;
+		// uniforms[_addTexturePrefix('tPosition1')].value = this.positionRT[1].texture;
+		// uniforms[_addTexturePrefix('tNormal')].value = this.normalsRT.texture;
+		// uniforms[_addParamPrefix('tSize')].value.copy(this.mainController.fbo.tSize);
 	}
 
 	private createAdjacentsTexture(k: number) {
@@ -235,7 +281,7 @@ export class ClothFBOController {
 	private integrate(delta: number, renderer: WebGLRenderer) {
 		const integrateShader = this.mainController.materials.integrateShader;
 
-		this.mesh.material = integrateShader;
+		this.fboMesh.material = integrateShader;
 		integrateShader.uniforms.timeDelta.value = delta;
 		integrateShader.uniforms.viscosity.value = this.mainController.viscosity;
 		integrateShader.uniforms.spring.value = this.mainController.spring;
@@ -249,12 +295,12 @@ export class ClothFBOController {
 		// integer-part
 		integrateShader.uniforms.order.value = 1;
 		renderer.setRenderTarget(this.targetRT[0]);
-		renderer.render(this.scene, this.camera);
+		renderer.render(this.fboScene, this.fboCamera);
 
 		// fraction-part
 		integrateShader.uniforms.order.value = -1;
 		renderer.setRenderTarget(this.targetRT[1]);
-		renderer.render(this.scene, this.camera);
+		renderer.render(this.fboScene, this.fboCamera);
 
 		// swap framebuffers
 		let tmp = this.previousRT[0];
@@ -270,7 +316,7 @@ export class ClothFBOController {
 
 	protected solveConstraints(renderer: WebGLRenderer) {
 		const constraintsShader = this.mainController.materials.constraintsShader;
-		this.mesh.material = constraintsShader;
+		this.fboMesh.material = constraintsShader;
 		constraintsShader.uniforms.selectedVertexInfluence.value = this.mainController.selectedVertexInfluence;
 		constraintsShader.uniforms.tSize.value.copy(this.tSize);
 		constraintsShader.uniforms.tPosition0.value = this.positionRT[0].texture;
@@ -283,12 +329,12 @@ export class ClothFBOController {
 		// integer-part
 		constraintsShader.uniforms.order.value = 1;
 		renderer.setRenderTarget(this.targetRT[0]);
-		renderer.render(this.scene, this.camera);
+		renderer.render(this.fboScene, this.fboCamera);
 
 		// fraction-part
 		constraintsShader.uniforms.order.value = -1;
 		renderer.setRenderTarget(this.targetRT[1]);
-		renderer.render(this.scene, this.camera);
+		renderer.render(this.fboScene, this.fboCamera);
 
 		// swap framebuffers
 		let tmp = this.positionRT[0];
@@ -308,7 +354,7 @@ export class ClothFBOController {
 
 		this.mainController.selectedVertexPosition(this._coordinate);
 
-		this.mesh.material = mouseShader;
+		this.fboMesh.material = mouseShader;
 		mouseShader.uniforms.tSize.value.copy(this.tSize);
 		mouseShader.uniforms.vertex.value = this.mainController.selectedVertexIndex(); //inputs.vertices;
 		this.mainController.selectedVertexPosition(mouseShader.uniforms.coordinates.value);
@@ -320,12 +366,12 @@ export class ClothFBOController {
 		// integer-part
 		mouseShader.uniforms.order.value = 1;
 		renderer.setRenderTarget(this.targetRT[0]);
-		renderer.render(this.scene, this.camera);
+		renderer.render(this.fboScene, this.fboCamera);
 
 		// fraction-part
 		mouseShader.uniforms.order.value = -1;
 		renderer.setRenderTarget(this.targetRT[1]);
-		renderer.render(this.scene, this.camera);
+		renderer.render(this.fboScene, this.fboCamera);
 
 		// swap framebuffers
 		let tmp = this.positionRT[0];
@@ -339,7 +385,7 @@ export class ClothFBOController {
 
 	protected computeVertexNormals(renderer: WebGLRenderer) {
 		const normalsShader = this.mainController.materials.normalsShader;
-		this.mesh.material = normalsShader;
+		this.fboMesh.material = normalsShader;
 		normalsShader.uniforms.tSize.value.copy(this.tSize);
 		normalsShader.uniforms.tPosition0.value = this.positionRT[0].texture;
 		normalsShader.uniforms.tPosition1.value = this.positionRT[1].texture;
@@ -347,7 +393,7 @@ export class ClothFBOController {
 		normalsShader.uniforms.tAdjacentsB.value = this.adjacentsRT[1].texture;
 
 		renderer.setRenderTarget(this.normalsRT);
-		renderer.render(this.scene, this.camera);
+		renderer.render(this.fboScene, this.fboCamera);
 	}
 }
 

@@ -28,6 +28,7 @@ import { clothSolverReset } from "../../../functions/clothSolverReset";
 import { clothSolverSetSelectedVertexIndex } from "../../../functions/clothSolverSetSelectedVertexIndex";
 import { clothSolverSetSelectedVertexPosition } from "../../../functions/clothSolverSetSelectedVertexPosition";
 import { clothSolverStepSimulation } from "../../../functions/clothSolverStepSimulation";
+import { clothSolverUpdateMaterial } from "../../../functions/clothSolverUpdateMaterial";
 import { colorSetRGB } from "../../../functions/colorSetRGB";
 import { colorToVec3 } from "../../../functions/colorToVec3";
 import { complement } from "../../../functions/complement";
@@ -411,6 +412,7 @@ export interface NamedFunctionMap {
   clothSolverSetSelectedVertexIndex: clothSolverSetSelectedVertexIndex;
   clothSolverSetSelectedVertexPosition: clothSolverSetSelectedVertexPosition;
   clothSolverStepSimulation: clothSolverStepSimulation;
+  clothSolverUpdateMaterial: clothSolverUpdateMaterial;
   colorSetRGB: colorSetRGB;
   colorToVec3: colorToVec3;
   complement: complement;
@@ -797,6 +799,7 @@ export class AllNamedFunctionRegister {
       clothSolverSetSelectedVertexIndex,
       clothSolverSetSelectedVertexPosition,
       clothSolverStepSimulation,
+      clothSolverUpdateMaterial,
       colorSetRGB,
       colorToVec3,
       complement,

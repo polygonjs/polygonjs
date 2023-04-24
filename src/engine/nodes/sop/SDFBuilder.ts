@@ -154,6 +154,7 @@ export class SDFBuilderSopNode extends TypedSopNode<SDFBuilderSopParamsConfig> {
 
 		// eval
 		const _func = this._function;
+		console.log({_func});
 		if (_func) {
 			const args = this.functionEvalArgsWithParamConfigs();
 			const convertedFunction = (p: Number3) => {
@@ -176,9 +177,9 @@ export class SDFBuilderSopNode extends TypedSopNode<SDFBuilderSopParamsConfig> {
 			this.setObjects([]);
 		}
 	}
-	async compileIfRequired() {
+	compileIfRequired() {
 		if (this.assemblerController()?.compileRequired()) {
-			await this.compile();
+			this.compile();
 		}
 	}
 	private _position = new Vector3();
@@ -191,7 +192,7 @@ export class SDFBuilderSopNode extends TypedSopNode<SDFBuilderSopParamsConfig> {
 	functionData() {
 		return this._functionData;
 	}
-	async compile() {
+	compile() {
 		const assemblerController = this.assemblerController();
 		if (!assemblerController) {
 			return;

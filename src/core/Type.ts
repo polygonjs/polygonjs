@@ -38,6 +38,10 @@ export function isFunction(value: any): value is Function {
 	var type = typeof value;
 	return value != null && type == 'function';
 }
+export function isPromise<T extends any>(value: any): value is Promise<T> {
+	return value instanceof Promise;
+}
+
 // a simple way to test the type and value of a param value
 export function isBooleanTrue(value: boolean) {
 	return value;

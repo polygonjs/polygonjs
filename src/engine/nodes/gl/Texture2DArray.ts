@@ -22,6 +22,7 @@ import {ParamType} from '../../poly/ParamType';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {GlParamConfig} from './code/utils/GLParamConfig';
+import {UNIFORM_TEXTURE_PREFIX} from '../../../core/material/uniform';
 
 class Texture2DArrayGlParamsConfig extends NodeParamsConfig {
 	paramName = ParamConfig.STRING('texture3D1');
@@ -87,6 +88,6 @@ export class Texture2DArrayGlNode extends TypedGlNode<Texture2DArrayGlParamsConf
 	// 	return `v_POLY_texture_${this.pv.paramName}`;
 	// }
 	uniformName() {
-		return `v_POLY_texture_${this.pv.paramName}`;
+		return `${UNIFORM_TEXTURE_PREFIX}${this.pv.paramName}`;
 	}
 }

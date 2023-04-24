@@ -26,6 +26,12 @@ export class ActorCompilationController {
 	functionData() {
 		return this._functionData;
 	}
+	private _resetFunctionData() {
+		this._functionData = undefined;
+		// if (!this.node.isDirty()) {
+		// 	this.node.setDirty();
+		// }
+	}
 	updateFromFunctionData(functionData: ActorFunctionData) {
 		this._functionData = functionData;
 		const {functionBody, variableNames, variablesByName, functionNames, functionsByName, paramConfigs, eventDatas} =
@@ -121,16 +127,24 @@ export class ActorCompilationController {
 			return;
 		}
 
+		this.node.states.error.clear();
 		// main compilation (just used for reset in this assembler)
 		assemblerController.assembler.updateFunction();
 
 		// get functionData
 		const paramNodes = JsNodeFinder.findParamGeneratingNodes(this.node);
-		const functionData = assemblerController.assembler.createFunctionData(paramNodes);
-		if (!functionData) {
-			return;
+		try {
+			const functionData = assemblerController.assembler.createFunctionData(paramNodes);
+			if (!functionData) {
+				this._resetFunctionData();
+				return;
+			}
+			this.updateFromFunctionData(functionData);
+			assemblerController.post_compile();
+		} catch (err) {
+			console.log(err);
+			this._resetFunctionData();
+			// throw new Error(err);
 		}
-		this.updateFromFunctionData(functionData);
-		assemblerController.post_compile();
 	}
 }

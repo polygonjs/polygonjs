@@ -108,6 +108,12 @@ export abstract class ObjectNamedFunction6<ARGS extends [any, any, any, any, any
 	ARGS,
 	[string, string, string, string, string, string, string]
 > {}
+export abstract class ObjectNamedFunction7<
+	ARGS extends [any, any, any, any, any, any, any]
+> extends ObjectNamedFunction<ARGS, [string, string, string, string, string, string, string, string]> {}
+export abstract class ObjectNamedFunction8<
+	ARGS extends [any, any, any, any, any, any, any, any]
+> extends ObjectNamedFunction<ARGS, [string, string, string, string, string, string, string, string, string]> {}
 
 //
 //

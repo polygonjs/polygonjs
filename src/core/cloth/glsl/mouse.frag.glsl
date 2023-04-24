@@ -12,6 +12,10 @@ uniform sampler2D tOriginal;
 
 // *** ADD COMMON ***
 
+vec2 getUV( float id ) { 
+	return getClothSolverUV( id, tSize );
+}
+
 void main() {
 
 	vec2 uv = gl_FragCoord.xy / tSize.xy;

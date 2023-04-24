@@ -26,6 +26,7 @@ export const FUNCTION_NAME_BY_FILE_NAME: Record<string, string[]> = {
 		'clothSolverSetSelectedVertexIndex',
 		'clothSolverSetSelectedVertexPosition',
 		'clothSolverStepSimulation',
+		'clothSolverUpdateMaterial',
 	],
 	Color: ['colorSetRGB'],
 	CookNode: ['cookNode'],
