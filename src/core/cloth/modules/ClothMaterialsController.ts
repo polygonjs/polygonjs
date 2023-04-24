@@ -44,6 +44,7 @@ interface IntegrationUniforms extends RawMaterialUniforms {
 	tPrevious1: IUniformTexture;
 	tPosition0: IUniformTexture;
 	tPosition1: IUniformTexture;
+	tViscositySpring: IUniformTexture;
 }
 interface MouseUniforms extends RawMaterialUniforms {
 	vertex: IUniformN;
@@ -130,6 +131,7 @@ export class ClothMaterialController {
 			tPrevious1: {value: null},
 			tPosition0: {value: null},
 			tPosition1: {value: null},
+			tViscositySpring: {value: null},
 		};
 		this.mouseShader.fragmentShader = MOUSE_FRAG;
 		this.mouseShader.uniforms = {

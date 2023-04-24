@@ -12,3 +12,8 @@ export enum ClothSolverUniformName {
 	POSITION1 = 'tPosition1',
 	NORMAL = 'tNormal',
 }
+
+export enum ClothGeometryAttributeName {
+	VISCOSITY = 'viscosity',
+	SPRING = 'spring',
+}

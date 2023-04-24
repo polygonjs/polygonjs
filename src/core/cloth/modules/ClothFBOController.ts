@@ -11,7 +11,6 @@ import {
 	NearestFilter,
 	RGBAFormat,
 	HalfFloatType,
-	FloatType,
 	DataTexture,
 	Vector3,
 	// ShaderMaterial,
@@ -21,6 +20,7 @@ import {ClothController} from '../ClothController';
 // import {UNIFORM_PARAM_PREFIX, UNIFORM_TEXTURE_PREFIX} from '../../material/uniform';
 // import {MaterialUserDataUniforms} from '../../../engine/nodes/gl/code/assemblers/materials/OnBeforeCompile';
 import {Ref} from '@vue/reactivity';
+import {adjacencyTexture, distancesTexture, positionTexture, viscositySpringTexture} from './ClothAttributeToTexture';
 
 export interface ClothMaterialUniformConfigRef {
 	tSize: Ref<Vector2>;
@@ -53,6 +53,7 @@ export class ClothFBOController {
 
 	public RESOLUTION = -1;
 	public originalRT: TextureContainer = {texture: null};
+	public viscositySpringT: TextureContainer = {texture: null};
 	public readonly previousRT: [WebGLRenderTarget, WebGLRenderTarget] = new Array(2) as [
 		WebGLRenderTarget,
 		WebGLRenderTarget
@@ -104,6 +105,7 @@ export class ClothFBOController {
 		const originalRenderTarget = renderer.getRenderTarget();
 		// prepare
 		this.createPositionTexture();
+		this.createViscositySpringTexture();
 
 		// setup relaxed vertices conditions
 		for (let i = 0; i < 2; i++) {
@@ -136,26 +138,53 @@ export class ClothFBOController {
 		renderer.setRenderTarget(output);
 		renderer.render(this.fboScene, this.fboCamera);
 	}
+
+	//
+	//
+	// create textures
+	//
+	//
 	private createPositionTexture() {
-		const data = new Float32Array(this.RESOLUTION * this.RESOLUTION * 4);
-		const geoVertices = this.mainController.geometryInit.vertices;
-		const length = geoVertices.length;
-
-		for (let i = 0; i < length; i++) {
-			const i4 = i * 4;
-
-			data[i4 + 0] = geoVertices[i].x;
-			data[i4 + 1] = geoVertices[i].y;
-			data[i4 + 2] = geoVertices[i].z;
-		}
-
-		const tmp: TextureContainer = {texture: null};
-		tmp.texture = new DataTexture(data, this.RESOLUTION, this.RESOLUTION, RGBAFormat, FloatType);
-		tmp.texture.needsUpdate = true;
-
-		this.originalRT = tmp;
+		this.originalRT = {
+			texture: positionTexture(
+				this.mainController.geometryInit.geometry,
+				this.mainController.geometryInit.vertices,
+				this.RESOLUTION
+			),
+		};
+	}
+	private createViscositySpringTexture() {
+		this.viscositySpringT = {
+			texture: viscositySpringTexture(this.mainController.geometryInit.geometry, this.RESOLUTION),
+		};
+	}
+	private createAdjacentsTexture(k: number) {
+		this.adjacentsRT[k] = {
+			texture: adjacencyTexture(
+				this.mainController.geometryInit.geometry,
+				this.RESOLUTION,
+				this.mainController.geometryInit.adjacency,
+				k
+			),
+		};
+	}
+	private createDistancesTexture(k: number) {
+		this.distancesRT[k] = {
+			texture: distancesTexture(
+				this.mainController.geometryInit.geometry,
+				this.mainController.geometryInit.vertices,
+				this.RESOLUTION,
+				this.mainController.geometryInit.adjacency,
+				k
+			),
+		};
 	}
 
+	//
+	//
+	// update
+	//
+	//
 	update(delta: number, config?: ClothMaterialUniformConfigRef) {
 		const renderer = this.renderer;
 		if (!(renderer && this._initialized)) {
@@ -206,78 +235,6 @@ export class ClothFBOController {
 		// uniforms[_addParamPrefix('tSize')].value.copy(this.mainController.fbo.tSize);
 	}
 
-	private createAdjacentsTexture(k: number) {
-		const data = new Float32Array(this.RESOLUTION * this.RESOLUTION * 4);
-		const geoVertices = this.mainController.geometryInit.vertices;
-		const adjacency = this.mainController.geometryInit.adjacency;
-		const length = geoVertices.length;
-
-		for (let i = 0; i < length; i++) {
-			const i4 = i * 4;
-			const adj = adjacency[i];
-			// const len = adj.length - 1;
-
-			// for (let j = 0; j < 4; j++) data[i4 + j] = len < k * 4 + j ? -1 : adj[k * 4 + j];
-			for (let j = 0; j < 4; j++) {
-				const adjacentIndex = adj[k * 4 + j];
-				if (adjacentIndex != null) {
-					data[i4 + j] = adjacentIndex;
-				} else {
-					data[i4 + j] = -1;
-				}
-			}
-		}
-
-		// console.log('createAdjacentsTexture', k, data);
-		const tmp: TextureContainer = {texture: null};
-		tmp.texture = new DataTexture(data, this.RESOLUTION, this.RESOLUTION, RGBAFormat, FloatType);
-		tmp.texture.needsUpdate = true;
-
-		this.adjacentsRT[k] = tmp;
-	}
-
-	private createDistancesTexture(k: number) {
-		const data = new Float32Array(this.RESOLUTION * this.RESOLUTION * 4).fill(-1);
-		const geoVertices = this.mainController.geometryInit.vertices;
-		const adjacency = this.mainController.geometryInit.adjacency;
-		const length = geoVertices.length;
-
-		for (let i = 0; i < length; i++) {
-			const i4 = i * 4;
-			const adj = adjacency[i];
-			const len = adj.length - 1;
-
-			const v = geoVertices[i];
-
-			// for (let j = 0; j < 4; j++) data[i4 + j] = len < k * 4 + j ? -1 : v.distanceTo(geoVertices[adj[k * 4 + j]]);
-			for (let j = 0; j < 4; j++) {
-				if (len < k * 4 + j) {
-					data[i4 + j] = -1;
-				} else {
-					const adjacentIndex = adj[k * 4 + j];
-					if (adjacentIndex < 0) {
-						data[i4 + j] = -1;
-					} else {
-						const neighbourPosition = geoVertices[adjacentIndex];
-						const dist = v.distanceTo(neighbourPosition);
-						data[i4 + j] = dist;
-						if (dist < 0.0001) {
-							console.log('bad dist');
-						}
-					}
-				}
-			}
-		}
-
-		const tmp: TextureContainer = {texture: null};
-		tmp.texture = new DataTexture(data, this.RESOLUTION, this.RESOLUTION, RGBAFormat, FloatType);
-		tmp.texture.needsUpdate = true;
-
-		this.distancesRT[k] = tmp;
-		analyzeData(`distance: ${k}:`, data);
-		// console.log('data:', data);
-	}
-
 	private integrate(delta: number, renderer: WebGLRenderer) {
 		const integrateShader = this.mainController.materials.integrateShader;
 
@@ -291,6 +248,7 @@ export class ClothFBOController {
 		integrateShader.uniforms.tPrevious1.value = this.previousRT[1].texture;
 		integrateShader.uniforms.tPosition0.value = this.positionRT[0].texture;
 		integrateShader.uniforms.tPosition1.value = this.positionRT[1].texture;
+		integrateShader.uniforms.tViscositySpring.value = this.viscositySpringT.texture;
 
 		// integer-part
 		integrateShader.uniforms.order.value = 1;
@@ -412,26 +370,26 @@ function createRenderTarget(resolution: number) {
 	});
 }
 
-function analyzeData(dataName: string, data: Float32Array) {
-	let min = 10000;
-	let max = -10000;
-	let i = 0;
-	const minThreshold = 2 * 0.0076568;
-	const indicesWithZero = new Set<number>();
-	const indicesBelowThreshold = new Set<number>();
-	for (let elem of data) {
-		if (elem < min && elem > -1) {
-			min = elem;
-		} else if (elem > max) {
-			max = elem;
-		}
-		if (elem == 0) {
-			indicesWithZero.add(i);
-		}
-		if (elem < minThreshold) {
-			indicesBelowThreshold.add(i);
-		}
-		i++;
-	}
-	// console.log(dataName, {min, max, indicesWithZero, indicesBelowThreshold});
-}
+// function analyzeData(dataName: string, data: Float32Array) {
+// 	let min = 10000;
+// 	let max = -10000;
+// 	let i = 0;
+// 	const minThreshold = 2 * 0.0076568;
+// 	const indicesWithZero = new Set<number>();
+// 	const indicesBelowThreshold = new Set<number>();
+// 	for (let elem of data) {
+// 		if (elem < min && elem > -1) {
+// 			min = elem;
+// 		} else if (elem > max) {
+// 			max = elem;
+// 		}
+// 		if (elem == 0) {
+// 			indicesWithZero.add(i);
+// 		}
+// 		if (elem < minThreshold) {
+// 			indicesBelowThreshold.add(i);
+// 		}
+// 		i++;
+// 	}
+// 	// console.log(dataName, {min, max, indicesWithZero, indicesBelowThreshold});
+// }
