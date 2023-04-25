@@ -3,10 +3,13 @@ import {NamedFunction0, NamedFunction1, NamedFunction2, NamedFunction3, NamedFun
 import {
 	clamp as _clamp,
 	smoothstep as _smoothstep,
+	smootherstep as _smootherstep,
 	fit as _fit,
 	fitClamp as _fitClamp,
 	mix as _mix,
 	randFloat as _randFloat,
+	degToRad as _degToRad,
+	radToDeg as _radToDeg,
 } from '../../core/math/_Module';
 import {dummyReadRefVal} from '../../core/reactivity/CoreReactivity';
 import {isBoolean} from '../../core/Type';
@@ -25,6 +28,23 @@ export class complement extends NamedFunction1<[number]> {
 	}
 	func(value: number): number {
 		return 1 - value;
+	}
+}
+
+export class degToRad extends NamedFunction1<[number]> {
+	static override type() {
+		return 'degToRad';
+	}
+	func(value: number): number {
+		return _degToRad(value);
+	}
+}
+export class radToDeg extends NamedFunction1<[number]> {
+	static override type() {
+		return 'radToDeg';
+	}
+	func(value: number): number {
+		return _radToDeg(value);
 	}
 }
 
@@ -96,6 +116,14 @@ export class smoothstep extends NamedFunction3<[number, number, number]> {
 		return 'smoothstep';
 	}
 	func(value: number, min: number, max: number): number {
-		return _smoothstep(min, max, value);
+		return _smoothstep(value, min, max);
+	}
+}
+export class smootherstep extends NamedFunction3<[number, number, number]> {
+	static override type() {
+		return 'smootherstep';
+	}
+	func(value: number, min: number, max: number): number {
+		return _smootherstep(value, min, max);
 	}
 }

@@ -37,6 +37,10 @@ export enum ObjectVariable {
 	SCALE = 'scale',
 	MATRIX = 'matrix',
 	VISIBLE = 'visible',
+	MATRIX_AUTO_UPDATE = 'matrixAutoUpdate',
+	CAST_SHADOW = 'castShadow',
+	RECEIVE_SHADOW = 'receiveShadow',
+	FRUSTUM_CULLED = 'frustumCulled',
 	OBJ_NUM = 'objnum',
 }
 
@@ -196,6 +200,10 @@ export class JsAssemblerObjectBuilder extends BaseJsShaderAssembler {
 			new JsConnectionPoint(ObjectVariable.SCALE, JsConnectionPointType.VECTOR3),
 			new JsConnectionPoint(ObjectVariable.MATRIX, JsConnectionPointType.MATRIX4),
 			new JsConnectionPoint(ObjectVariable.VISIBLE, JsConnectionPointType.BOOLEAN),
+			new JsConnectionPoint(ObjectVariable.MATRIX_AUTO_UPDATE, JsConnectionPointType.BOOLEAN),
+			new JsConnectionPoint(ObjectVariable.CAST_SHADOW, JsConnectionPointType.BOOLEAN),
+			new JsConnectionPoint(ObjectVariable.RECEIVE_SHADOW, JsConnectionPointType.BOOLEAN),
+			new JsConnectionPoint(ObjectVariable.FRUSTUM_CULLED, JsConnectionPointType.BOOLEAN),
 		]);
 	}
 	override add_globals_outputs(globals_node: GlobalsJsNode) {
@@ -207,6 +215,10 @@ export class JsAssemblerObjectBuilder extends BaseJsShaderAssembler {
 			new JsConnectionPoint(ObjectVariable.SCALE, JsConnectionPointType.VECTOR3),
 			new JsConnectionPoint(ObjectVariable.MATRIX, JsConnectionPointType.MATRIX4),
 			new JsConnectionPoint(ObjectVariable.VISIBLE, JsConnectionPointType.BOOLEAN),
+			new JsConnectionPoint(ObjectVariable.MATRIX_AUTO_UPDATE, JsConnectionPointType.BOOLEAN),
+			new JsConnectionPoint(ObjectVariable.CAST_SHADOW, JsConnectionPointType.BOOLEAN),
+			new JsConnectionPoint(ObjectVariable.RECEIVE_SHADOW, JsConnectionPointType.BOOLEAN),
+			new JsConnectionPoint(ObjectVariable.FRUSTUM_CULLED, JsConnectionPointType.BOOLEAN),
 			new JsConnectionPoint(ObjectVariable.OBJ_NUM, JsConnectionPointType.INT),
 			// new JsConnectionPoint('gl_FragCoord', JsConnectionPointType.VEC4),
 			// new JsConnectionPoint('resolution', JsConnectionPointType.VEC2),
@@ -311,7 +323,11 @@ export class JsAssemblerObjectBuilder extends BaseJsShaderAssembler {
 							break;
 						}
 
-						case ObjectVariable.VISIBLE: {
+						case ObjectVariable.VISIBLE:
+						case ObjectVariable.MATRIX_AUTO_UPDATE:
+						case ObjectVariable.CAST_SHADOW:
+						case ObjectVariable.RECEIVE_SHADOW:
+						case ObjectVariable.FRUSTUM_CULLED: {
 							bodyLines.push(`${FunctionConstant.OBJECT_3D}.${inputName} = ${varName}`);
 							break;
 						}
@@ -336,6 +352,10 @@ export class JsAssemblerObjectBuilder extends BaseJsShaderAssembler {
 			const varName = globalsNode.jsVarName(outputName);
 
 			switch (outputName) {
+				case ObjectVariable.OBJECT_3D: {
+					bodyLines.push(`${varName} = ${FunctionConstant.OBJECT_3D}`);
+					break;
+				}
 				case ObjectVariable.POSITION:
 				case ObjectVariable.SCALE: {
 					linesController.addVariable(globalsNode, new Vector3(), varName);
@@ -357,7 +377,11 @@ export class JsAssemblerObjectBuilder extends BaseJsShaderAssembler {
 					bodyLines.push(`${varName}.copy(${FunctionConstant.OBJECT_3D}.${outputName})`);
 					break;
 				}
-				case ObjectVariable.VISIBLE: {
+				case ObjectVariable.VISIBLE:
+				case ObjectVariable.MATRIX_AUTO_UPDATE:
+				case ObjectVariable.CAST_SHADOW:
+				case ObjectVariable.RECEIVE_SHADOW:
+				case ObjectVariable.FRUSTUM_CULLED: {
 					linesController.addVariable(globalsNode, new Vector3(), varName);
 					bodyLines.push(`${varName} = ${FunctionConstant.OBJECT_3D}.${outputName}`);
 					break;

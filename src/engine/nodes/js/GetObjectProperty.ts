@@ -28,6 +28,7 @@ export class GetObjectPropertyJsNode extends ParamlessTypedJsNode {
 
 		this.io.outputs.setNamedOutputConnectionPoints([
 			new JsConnectionPoint(GetObjectPropertyJsNodeInputName.position, JsConnectionPointType.VECTOR3),
+			new JsConnectionPoint(GetObjectPropertyJsNodeInputName.rotation, JsConnectionPointType.EULER),
 			new JsConnectionPoint(GetObjectPropertyJsNodeInputName.quaternion, JsConnectionPointType.QUATERNION),
 			new JsConnectionPoint(GetObjectPropertyJsNodeInputName.scale, JsConnectionPointType.VECTOR3),
 			new JsConnectionPoint(GetObjectPropertyJsNodeInputName.matrix, JsConnectionPointType.MATRIX4),
@@ -70,6 +71,7 @@ export class GetObjectPropertyJsNode extends ParamlessTypedJsNode {
 		OBJECT_BOOLEAN_PROPERTIES.forEach((propertyName) => {
 			_f(propertyName, JsConnectionPointType.BOOLEAN);
 		});
+		_f('rotation', JsConnectionPointType.EULER);
 		_f('quaternion', JsConnectionPointType.QUATERNION);
 		_f('matrix', JsConnectionPointType.MATRIX4);
 		_f('material', JsConnectionPointType.MATERIAL);

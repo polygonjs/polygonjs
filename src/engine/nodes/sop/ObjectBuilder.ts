@@ -26,7 +26,7 @@ import {JsParamConfig} from '../js/code/utils/JsParamConfig';
 import {ParamType} from '../../poly/ParamType';
 import {FunctionData} from '../js/code/assemblers/_Base';
 import {RegisterableVariable} from '../js/code/assemblers/_BaseJsPersistedConfigUtils';
-import {Object3D} from 'three';
+import {Group, Object3D} from 'three';
 import {JsNodeFinder} from '../js/code/utils/NodeFinder';
 import {CoreType} from '../../../core/Type';
 
@@ -87,6 +87,7 @@ export class ObjectBuilderSopNode extends TypedSopNode<ObjectBuilderSopParamsCon
 		return this.assemblerController() == null;
 	}
 
+	private _tmpParent = new Group();
 	override initializeNode() {
 		this.io.inputs.setCount(1);
 		this.io.inputs.initInputsClonedState(InputCloneMode.FROM_NODE);
@@ -103,12 +104,20 @@ export class ObjectBuilderSopNode extends TypedSopNode<ObjectBuilderSopParamsCon
 		if (_func) {
 			const args = this.functionEvalArgsWithParamConfigs();
 			const inputObjects = coreGroup.threejsObjects();
+			// we add a temporary parent to the objects, so that nodes like getSiblings can work
+			for (const inputObject of inputObjects) {
+				this._tmpParent.add(inputObject);
+			}
 			let objnum = 0;
 			for (const inputObject of inputObjects) {
 				this._objectContainer.Object3D = inputObject;
 				this._objectContainer.objnum = objnum;
 				_func(...args);
+				inputObject.updateMatrix();
 				objnum++;
+			}
+			for (const inputObject of inputObjects) {
+				this._tmpParent.remove(inputObject);
 			}
 
 			this.setObjects(inputObjects);

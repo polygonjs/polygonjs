@@ -13,18 +13,18 @@ import {Poly} from '../../Poly';
 
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
 
-class SetObjectRotationJsParamsConfig extends NodeParamsConfig {
+class SetObjectQuaternionJsParamsConfig extends NodeParamsConfig {
 	/** @param lerp factor */
 	lerp = ParamConfig.FLOAT(1);
 	/** @param sets if the matrix should be updated as the animation progresses */
 	updateMatrix = ParamConfig.BOOLEAN(1);
 }
-const ParamsConfig = new SetObjectRotationJsParamsConfig();
+const ParamsConfig = new SetObjectQuaternionJsParamsConfig();
 
-export class SetObjectRotationJsNode extends TypedJsNode<SetObjectRotationJsParamsConfig> {
+export class SetObjectQuaternionJsNode extends TypedJsNode<SetObjectQuaternionJsParamsConfig> {
 	override readonly paramsConfig = ParamsConfig;
 	static override type() {
-		return 'setObjectRotation';
+		return 'setObjectQuaternion';
 	}
 
 	override initializeNode() {
@@ -32,7 +32,11 @@ export class SetObjectRotationJsNode extends TypedJsNode<SetObjectRotationJsPara
 		this.io.inputs.setNamedInputConnectionPoints([
 			new JsConnectionPoint(TRIGGER_CONNECTION_NAME, JsConnectionPointType.TRIGGER, CONNECTION_OPTIONS),
 			new JsConnectionPoint(JsConnectionPointType.OBJECT_3D, JsConnectionPointType.OBJECT_3D, CONNECTION_OPTIONS),
-			new JsConnectionPoint(JsConnectionPointType.EULER, JsConnectionPointType.EULER, CONNECTION_OPTIONS),
+			new JsConnectionPoint(
+				JsConnectionPointType.QUATERNION,
+				JsConnectionPointType.QUATERNION,
+				CONNECTION_OPTIONS
+			),
 		]);
 
 		this.io.outputs.setNamedOutputConnectionPoints([
@@ -42,12 +46,12 @@ export class SetObjectRotationJsNode extends TypedJsNode<SetObjectRotationJsPara
 	}
 	override setTriggerableLines(shadersCollectionController: JsLinesCollectionController) {
 		const object3D = inputObject3D(this, shadersCollectionController);
-		const euler = this.variableForInput(shadersCollectionController, JsConnectionPointType.EULER);
+		const quaternion = this.variableForInput(shadersCollectionController, JsConnectionPointType.QUATERNION);
 		const lerp = this.variableForInputParam(shadersCollectionController, this.p.lerp);
 		const updateMatrix = this.variableForInputParam(shadersCollectionController, this.p.updateMatrix);
 
-		const func = Poly.namedFunctionsRegister.getFunction('setObjectRotation', this, shadersCollectionController);
-		const bodyLine = func.asString(object3D, euler, lerp, updateMatrix);
+		const func = Poly.namedFunctionsRegister.getFunction('setObjectQuaternion', this, shadersCollectionController);
+		const bodyLine = func.asString(object3D, quaternion, lerp, updateMatrix);
 		shadersCollectionController.addTriggerableLines(this, [bodyLine]);
 	}
 }
