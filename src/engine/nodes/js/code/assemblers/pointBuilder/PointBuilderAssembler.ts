@@ -25,7 +25,7 @@ export interface PointContainer {
 	objnum: number;
 }
 
-enum PointVariable {
+export enum PointVariable {
 	POSITION = 'position',
 	NORMAL = 'normal',
 	PTNUM = 'ptnum',
@@ -245,7 +245,7 @@ export class JsAssemblerPointBuilder extends BaseJsShaderAssembler {
 	// 	}
 	// }
 
-	override set_node_lines_output(outputNode: OutputJsNode, linesController: JsLinesCollectionController) {
+	override setNodeLinesOutput(outputNode: OutputJsNode, linesController: JsLinesCollectionController) {
 		const inputNames = this.inputNamesForShaderName(outputNode, linesController.currentShaderName());
 		if (inputNames) {
 			for (const inputName of inputNames) {
@@ -269,7 +269,7 @@ export class JsAssemblerPointBuilder extends BaseJsShaderAssembler {
 		}
 	}
 
-	override set_node_lines_globals(globalsNode: GlobalsJsNode, linesController: JsLinesCollectionController) {
+	override setNodeLinesGlobals(globalsNode: GlobalsJsNode, linesController: JsLinesCollectionController) {
 		const shaderName = linesController.currentShaderName();
 		const shaderConfig = this.shader_config(shaderName);
 		if (!shaderConfig) {

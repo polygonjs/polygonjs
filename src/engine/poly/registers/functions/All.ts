@@ -54,6 +54,8 @@ import { easeSinIO } from "../../../functions/easeSinIO";
 import { easeSinO } from "../../../functions/easeSinO";
 import { elementsToArrayPrimitive } from "../../../functions/elementsToArrayPrimitive";
 import { elementsToArrayVector } from "../../../functions/elementsToArrayVector";
+import { eulerSetFromQuaternion } from "../../../functions/eulerSetFromQuaternion";
+import { eulerSetFromVector3 } from "../../../functions/eulerSetFromVector3";
 import { fit } from "../../../functions/fit";
 import { fitClamp } from "../../../functions/fitClamp";
 import { floatToColor } from "../../../functions/floatToColor";
@@ -210,6 +212,9 @@ import { mathVectorArray_2 } from "../../../functions/mathVectorArray_2";
 import { mathVectorArray_3 } from "../../../functions/mathVectorArray_3";
 import { mathVectorArray_4 } from "../../../functions/mathVectorArray_4";
 import { mathVectorArray_5 } from "../../../functions/mathVectorArray_5";
+import { matrix4LookAt } from "../../../functions/matrix4LookAt";
+import { matrix4MakeTranslation } from "../../../functions/matrix4MakeTranslation";
+import { matrix4Multiply } from "../../../functions/matrix4Multiply";
 import { maxLengthVector2 } from "../../../functions/maxLengthVector2";
 import { maxLengthVector3 } from "../../../functions/maxLengthVector3";
 import { maxLengthVector4 } from "../../../functions/maxLengthVector4";
@@ -265,6 +270,10 @@ import { previousValuePrimitive } from "../../../functions/previousValuePrimitiv
 import { previousValueVector2 } from "../../../functions/previousValueVector2";
 import { previousValueVector3 } from "../../../functions/previousValueVector3";
 import { previousValueVector4 } from "../../../functions/previousValueVector4";
+import { quaternionAngleTo } from "../../../functions/quaternionAngleTo";
+import { quaternionSetFromAxisAngle } from "../../../functions/quaternionSetFromAxisAngle";
+import { quaternionSetFromEuler } from "../../../functions/quaternionSetFromEuler";
+import { quaternionSlerp } from "../../../functions/quaternionSlerp";
 import { rand } from "../../../functions/rand";
 import { random } from "../../../functions/random";
 import { rayDistanceToPlane } from "../../../functions/rayDistanceToPlane";
@@ -422,6 +431,8 @@ export interface NamedFunctionMap {
   easeSinO: easeSinO;
   elementsToArrayPrimitive: elementsToArrayPrimitive<PrimitiveArrayElement>;
   elementsToArrayVector: elementsToArrayVector<VectorArrayElement>;
+  eulerSetFromQuaternion: eulerSetFromQuaternion;
+  eulerSetFromVector3: eulerSetFromVector3;
   fit: fit;
   fitClamp: fitClamp;
   floatToColor: floatToColor;
@@ -578,6 +589,9 @@ export interface NamedFunctionMap {
   mathVectorArray_3: mathVectorArray_3<MathArrayVectorElement>;
   mathVectorArray_4: mathVectorArray_4<MathArrayVectorElement>;
   mathVectorArray_5: mathVectorArray_5<MathArrayVectorElement>;
+  matrix4LookAt: matrix4LookAt;
+  matrix4MakeTranslation: matrix4MakeTranslation;
+  matrix4Multiply: matrix4Multiply;
   maxLengthVector2: maxLengthVector2;
   maxLengthVector3: maxLengthVector3;
   maxLengthVector4: maxLengthVector4;
@@ -633,6 +647,10 @@ export interface NamedFunctionMap {
   previousValueVector2: previousValueVector2;
   previousValueVector3: previousValueVector3;
   previousValueVector4: previousValueVector4;
+  quaternionAngleTo: quaternionAngleTo;
+  quaternionSetFromAxisAngle: quaternionSetFromAxisAngle;
+  quaternionSetFromEuler: quaternionSetFromEuler;
+  quaternionSlerp: quaternionSlerp;
   rand: rand;
   random: random;
   rayDistanceToPlane: rayDistanceToPlane;
@@ -793,6 +811,8 @@ export class AllNamedFunctionRegister {
       easeSinO,
       elementsToArrayPrimitive,
       elementsToArrayVector,
+      eulerSetFromQuaternion,
+      eulerSetFromVector3,
       fit,
       fitClamp,
       floatToColor,
@@ -949,6 +969,9 @@ export class AllNamedFunctionRegister {
       mathVectorArray_3,
       mathVectorArray_4,
       mathVectorArray_5,
+      matrix4LookAt,
+      matrix4MakeTranslation,
+      matrix4Multiply,
       maxLengthVector2,
       maxLengthVector3,
       maxLengthVector4,
@@ -1004,6 +1027,10 @@ export class AllNamedFunctionRegister {
       previousValueVector2,
       previousValueVector3,
       previousValueVector4,
+      quaternionAngleTo,
+      quaternionSetFromAxisAngle,
+      quaternionSetFromEuler,
+      quaternionSlerp,
       rand,
       random,
       rayDistanceToPlane,

@@ -13,26 +13,29 @@ import {OutputJsNode} from '../../../Output';
 import {GlobalsJsNode} from '../../../Globals';
 import {JsConnectionPointType, JsConnectionPoint} from '../../../../utils/io/connections/Js';
 import {JsLinesCollectionController} from '../../utils/JsLinesCollectionController';
-import {Object3D, Vector3} from 'three';
+import {Euler, Matrix4, Object3D, Quaternion, Vector3} from 'three';
 import {NamedFunctionMap} from '../../../../../poly/registers/functions/All';
 import {ParamOptions} from '../../../../../params/utils/OptionsController';
+import {AttributeJsNode} from '../../../Attribute';
+import {Poly} from '../../../../../Poly';
 
 export enum FunctionConstant {
 	OBJECT_CONTAINER = 'objectContainer',
 	OBJECT_3D = 'objectContainer.Object3D',
-	INDEX = 'objectContainer.objnum',
+	OBJ_NUM = 'objectContainer.objnum',
 }
 export interface ObjectContainer {
 	Object3D: Object3D;
 	objnum: number;
 }
 
-enum ObjectVariable {
+export enum ObjectVariable {
 	OBJECT_3D = 'Object3D',
 	POSITION = 'position',
 	ROTATION = 'rotation',
 	QUATERNION = 'quaternion',
 	SCALE = 'scale',
+	MATRIX = 'matrix',
 	VISIBLE = 'visible',
 	OBJ_NUM = 'objnum',
 }
@@ -191,6 +194,7 @@ export class JsAssemblerObjectBuilder extends BaseJsShaderAssembler {
 			new JsConnectionPoint(ObjectVariable.ROTATION, JsConnectionPointType.EULER),
 			new JsConnectionPoint(ObjectVariable.QUATERNION, JsConnectionPointType.QUATERNION),
 			new JsConnectionPoint(ObjectVariable.SCALE, JsConnectionPointType.VECTOR3),
+			new JsConnectionPoint(ObjectVariable.MATRIX, JsConnectionPointType.MATRIX4),
 			new JsConnectionPoint(ObjectVariable.VISIBLE, JsConnectionPointType.BOOLEAN),
 		]);
 	}
@@ -201,6 +205,7 @@ export class JsAssemblerObjectBuilder extends BaseJsShaderAssembler {
 			new JsConnectionPoint(ObjectVariable.ROTATION, JsConnectionPointType.EULER),
 			new JsConnectionPoint(ObjectVariable.QUATERNION, JsConnectionPointType.QUATERNION),
 			new JsConnectionPoint(ObjectVariable.SCALE, JsConnectionPointType.VECTOR3),
+			new JsConnectionPoint(ObjectVariable.MATRIX, JsConnectionPointType.MATRIX4),
 			new JsConnectionPoint(ObjectVariable.VISIBLE, JsConnectionPointType.BOOLEAN),
 			new JsConnectionPoint(ObjectVariable.OBJ_NUM, JsConnectionPointType.INT),
 			// new JsConnectionPoint('gl_FragCoord', JsConnectionPointType.VEC4),
@@ -216,7 +221,22 @@ export class JsAssemblerObjectBuilder extends BaseJsShaderAssembler {
 	//
 	//
 	override create_shader_configs() {
-		return [new ShaderConfig(ShaderName.FRAGMENT, [ObjectVariable.POSITION], [])];
+		return [
+			new ShaderConfig(
+				ShaderName.FRAGMENT,
+				[
+					ObjectVariable.POSITION,
+					ObjectVariable.ROTATION,
+					ObjectVariable.QUATERNION,
+					ObjectVariable.SCALE,
+					ObjectVariable.MATRIX,
+					ObjectVariable.VISIBLE,
+					// attribute
+					AttributeJsNode.INPUT_NAME,
+				],
+				[]
+			),
+		];
 	}
 	override create_variable_configs() {
 		return [
@@ -263,8 +283,9 @@ export class JsAssemblerObjectBuilder extends BaseJsShaderAssembler {
 	// 	}
 	// }
 
-	override set_node_lines_output(outputNode: OutputJsNode, linesController: JsLinesCollectionController) {
+	override setNodeLinesOutput(outputNode: OutputJsNode, linesController: JsLinesCollectionController) {
 		const inputNames = this.inputNamesForShaderName(outputNode, linesController.currentShaderName());
+		const bodyLines: string[] = [];
 		if (inputNames) {
 			for (const inputName of inputNames) {
 				const input = outputNode.io.inputs.named_input(inputName);
@@ -272,22 +293,36 @@ export class JsAssemblerObjectBuilder extends BaseJsShaderAssembler {
 				if (input) {
 					const varName = outputNode.variableForInput(linesController, inputName);
 
-					let bodyLine: string | undefined;
-					if (inputName == ObjectVariable.POSITION) {
-						bodyLine = `${FunctionConstant.OBJECT_3D}.position.copy(${varName})`;
-					}
-					// if (input_name == 'alpha') {
-					// 	body_line = `diffuseColor.a = ${ThreeToGl.any(gl_var)}`;
-					// }
-					if (bodyLine) {
-						linesController._addBodyLines(outputNode, [bodyLine]);
+					switch (inputName) {
+						case ObjectVariable.POSITION:
+						case ObjectVariable.ROTATION:
+						case ObjectVariable.QUATERNION:
+						case ObjectVariable.SCALE: {
+							bodyLines.push(`${FunctionConstant.OBJECT_3D}.${inputName}.copy(${varName})`);
+							break;
+						}
+						case ObjectVariable.MATRIX: {
+							bodyLines.push(`${FunctionConstant.OBJECT_3D}.${inputName}.copy(${varName})`);
+							bodyLines.push(`${FunctionConstant.OBJECT_3D}.${inputName}.decompose(
+								${FunctionConstant.OBJECT_3D}.position,
+								${FunctionConstant.OBJECT_3D}.quaternion,
+								${FunctionConstant.OBJECT_3D}.scale
+							)`);
+							break;
+						}
+
+						case ObjectVariable.VISIBLE: {
+							bodyLines.push(`${FunctionConstant.OBJECT_3D}.${inputName} = ${varName}`);
+							break;
+						}
 					}
 				}
 			}
 		}
+		linesController._addBodyLines(outputNode, bodyLines);
 	}
 
-	override set_node_lines_globals(globalsNode: GlobalsJsNode, linesController: JsLinesCollectionController) {
+	override setNodeLinesGlobals(globalsNode: GlobalsJsNode, linesController: JsLinesCollectionController) {
 		const shaderName = linesController.currentShaderName();
 		const shaderConfig = this.shader_config(shaderName);
 		if (!shaderConfig) {
@@ -299,16 +334,38 @@ export class JsAssemblerObjectBuilder extends BaseJsShaderAssembler {
 		const usedOutputNames = globalsNode.io.outputs.used_output_names();
 		for (const outputName of usedOutputNames) {
 			const varName = globalsNode.jsVarName(outputName);
-			// console.log({outputName, varName});
 
 			switch (outputName) {
-				case 'position':
-					// definitions.push(new UniformJsDefinition(globals_node, JsConnectionPointType.FLOAT, output_name));
+				case ObjectVariable.POSITION:
+				case ObjectVariable.SCALE: {
 					linesController.addVariable(globalsNode, new Vector3(), varName);
 					bodyLines.push(`${varName}.copy(${FunctionConstant.OBJECT_3D}.${outputName})`);
-
-					// this.setUniformsTimeDependent();
 					break;
+				}
+				case ObjectVariable.ROTATION: {
+					linesController.addVariable(globalsNode, new Euler(), varName);
+					bodyLines.push(`${varName}.copy(${FunctionConstant.OBJECT_3D}.${outputName})`);
+					break;
+				}
+				case ObjectVariable.QUATERNION: {
+					linesController.addVariable(globalsNode, new Quaternion(), varName);
+					bodyLines.push(`${varName}.copy(${FunctionConstant.OBJECT_3D}.${outputName})`);
+					break;
+				}
+				case ObjectVariable.MATRIX: {
+					linesController.addVariable(globalsNode, new Matrix4(), varName);
+					bodyLines.push(`${varName}.copy(${FunctionConstant.OBJECT_3D}.${outputName})`);
+					break;
+				}
+				case ObjectVariable.VISIBLE: {
+					linesController.addVariable(globalsNode, new Vector3(), varName);
+					bodyLines.push(`${varName} = ${FunctionConstant.OBJECT_3D}.${outputName}`);
+					break;
+				}
+				case ObjectVariable.OBJ_NUM: {
+					bodyLines.push(`${varName} = ${FunctionConstant.OBJ_NUM}`);
+					break;
+				}
 
 				// case 'uv':
 				// 	this._handleUV(body_lines, shader_name, var_name);
@@ -323,5 +380,77 @@ export class JsAssemblerObjectBuilder extends BaseJsShaderAssembler {
 		}
 		// shadersCollectionController.addDefinitions(globalsNode, definitions, shaderName);
 		linesController._addBodyLines(globalsNode, bodyLines);
+	}
+	override setNodeLinesAttribute(attributeNode: AttributeJsNode, linesController: JsLinesCollectionController) {
+		const shaderName = linesController.currentShaderName();
+		const shaderConfig = this.shader_config(shaderName);
+		if (!shaderConfig) {
+			return;
+		}
+		const bodyLines: string[] = [];
+		const attribName = attributeNode.attributeName();
+		const dataType = attributeNode.jsType();
+
+		// export
+		if (attributeNode.isExporting()) {
+			bodyLines.push(``);
+			const func = Poly.namedFunctionsRegister.getFunction('setObjectAttribute', attributeNode, linesController);
+			const exportedValue = attributeNode.variableForInput(linesController, AttributeJsNode.INPUT_NAME);
+			const bodyLine = func.asString(
+				FunctionConstant.OBJECT_3D,
+				`'${attribName}'`,
+				`1`,
+				exportedValue,
+				`'${dataType}'`
+			);
+			bodyLines.push(bodyLine);
+		}
+
+		// output
+		const usedOutputNames = attributeNode.io.outputs.used_output_names();
+
+		for (const outputName of usedOutputNames) {
+			const varName = attributeNode.jsVarName(outputName);
+
+			const func = Poly.namedFunctionsRegister.getFunction('getObjectAttribute', attributeNode, linesController);
+			const bodyLine =
+				`${varName} = ` + func.asString(FunctionConstant.OBJECT_3D, `'${attribName}'`, `'${dataType}'`);
+			bodyLines.push(bodyLine);
+
+			// switch (outputName) {
+			// 	case ObjectVariable.POSITION:
+			// 	case ObjectVariable.SCALE: {
+			// 		linesController.addVariable(attributeNode, new Vector3(), varName);
+			// 		bodyLines.push(`${varName}.copy(${FunctionConstant.OBJECT_3D}.${outputName})`);
+			// 		break;
+			// 	}
+			// 	case ObjectVariable.ROTATION: {
+			// 		linesController.addVariable(attributeNode, new Euler(), varName);
+			// 		bodyLines.push(`${varName}.copy(${FunctionConstant.OBJECT_3D}.${outputName})`);
+			// 		break;
+			// 	}
+			// 	case ObjectVariable.QUATERNION: {
+			// 		linesController.addVariable(attributeNode, new Quaternion(), varName);
+			// 		bodyLines.push(`${varName}.copy(${FunctionConstant.OBJECT_3D}.${outputName})`);
+			// 		break;
+			// 	}
+			// 	case ObjectVariable.MATRIX: {
+			// 		linesController.addVariable(attributeNode, new Matrix4(), varName);
+			// 		bodyLines.push(`${varName}.copy(${FunctionConstant.OBJECT_3D}.${outputName})`);
+			// 		break;
+			// 	}
+			// 	case ObjectVariable.VISIBLE: {
+			// 		linesController.addVariable(attributeNode, new Vector3(), varName);
+			// 		bodyLines.push(`${varName} = ${FunctionConstant.OBJECT_3D}.${outputName}`);
+			// 		break;
+			// 	}
+			// 	case ObjectVariable.OBJ_NUM: {
+			// 		bodyLines.push(`${varName} = ${FunctionConstant.OBJ_NUM}`);
+			// 		break;
+			// 	}
+
+			// }
+		}
+		linesController._addBodyLines(attributeNode, bodyLines);
 	}
 }

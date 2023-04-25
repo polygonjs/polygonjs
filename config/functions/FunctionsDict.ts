@@ -57,6 +57,7 @@ export const FUNCTION_NAME_BY_FILE_NAME: Record<string, string[]> = {
 		'easeElasticO',
 		'easeElasticIO',
 	],
+	Euler: ['eulerSetFromVector3', 'eulerSetFromQuaternion'],
 	Geometry: ['setGeometryPositions'],
 	GetActorNodeParamValue: ['getActorNodeParamValue'],
 	GetChildrenAttributes: ['getChildrenAttributes'],
@@ -162,6 +163,7 @@ export const FUNCTION_NAME_BY_FILE_NAME: Record<string, string[]> = {
 		'mathVectorArray_5',
 	],
 	Math: ['clamp', 'complement', 'fit', 'fitClamp', 'mix', 'multAdd', 'negate', 'rand', 'random', 'smoothstep'],
+	Matrix4: ['matrix4LookAt', 'matrix4MakeTranslation', 'matrix4Multiply'],
 	Mult: ['multNumber', 'multVector', 'multVectorNumber'],
 	MultScalar: [
 		'multScalarArrayVectorArray',
@@ -263,6 +265,7 @@ export const FUNCTION_NAME_BY_FILE_NAME: Record<string, string[]> = {
 	],
 	PlayerPhysics: ['playerPhysicsUpdate'],
 	PlayerSimple: ['playerSimpleUpdate', 'getPlayerSimplePropertyOnGround', 'getPlayerSimplePropertyVelocity'],
+	Quaternion: ['quaternionSetFromEuler', 'quaternionSetFromAxisAngle', 'quaternionAngleTo', 'quaternionSlerp'],
 	Sizzle: ['sizzleVec3XY', 'sizzleVec3XZ', 'sizzleVec3YZ', 'sizzleVec4XYZ', 'sizzleVec4WArray', 'sizzleVec4XYZArray'],
 	Subtract: ['subtractNumber', 'subtractVector', 'subtractVectorNumber'],
 	SDFOperations: [

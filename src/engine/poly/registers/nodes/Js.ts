@@ -38,6 +38,8 @@ import {DivideJsNode} from '../../../nodes/js/Divide';
 import {DotJsNode} from '../../../nodes/js/Dot';
 import {EasingJsNode} from '../../../nodes/js/Easing';
 import {ElementsToArrayJsNode} from '../../../nodes/js/ElementsToArray';
+import {EulerJsNode} from '../../../nodes/js/Euler';
+import {EulerFromQuaternionJsNode} from '../../../nodes/js/EulerFromQuaternion';
 import {FitJsNode} from '../../../nodes/js/Fit';
 import {FloatToColorJsNode} from '../../../nodes/js/FloatToColor';
 import {FloatToIntJsNode} from '../../../nodes/js/FloatToInt';
@@ -81,6 +83,9 @@ import {IntToFloatJsNode} from '../../../nodes/js/IntToFloat';
 import {LengthJsNode} from '../../../nodes/js/Length';
 import {LerpJsNode} from '../../../nodes/js/Lerp';
 import {ManhattanDistanceJsNode} from '../../../nodes/js/ManhattanDistance';
+import {Matrix4LookAtJsNode} from '../../../nodes/js/Matrix4LookAt';
+import {Matrix4MakeTranslationJsNode} from '../../../nodes/js/Matrix4MakeTranslation';
+import {Matrix4MultiplyJsNode} from '../../../nodes/js/Matrix4Multiply';
 import {MaxJsNode} from '../../../nodes/js/Max';
 import {MaxLengthJsNode} from '../../../nodes/js/MaxLength';
 import {MinJsNode} from '../../../nodes/js/Min';
@@ -148,6 +153,9 @@ import {PlayInstrumentNoteJsNode} from '../../../nodes/js/PlayInstrumentNote';
 import {PowJsNode} from '../../../nodes/js/Pow';
 import {PressButtonParamJsNode} from '../../../nodes/js/PressButtonParam';
 import {PreviousValueJsNode} from '../../../nodes/js/PreviousValue';
+import {QuaternionJsNode} from '../../../nodes/js/Quaternion';
+import {QuaternionAngleToJsNode} from '../../../nodes/js/QuaternionAngleTo';
+import {QuaternionSlerpJsNode} from '../../../nodes/js/QuaternionSlerp';
 import {RandJsNode} from '../../../nodes/js/Rand';
 import {RandomJsNode} from '../../../nodes/js/Random';
 import {RayJsNode} from '../../../nodes/js/Ray';
@@ -282,6 +290,8 @@ export interface JsNodeChildrenMap {
 	divide: DivideJsNode;
 	easing: EasingJsNode;
 	elementsToArray: ElementsToArrayJsNode;
+	euler: EulerJsNode;
+	eulerFromQuaternion: EulerFromQuaternionJsNode;
 	fit: FitJsNode;
 	floatToColor: FloatToColorJsNode;
 	floatToInt: FloatToIntJsNode;
@@ -325,6 +335,9 @@ export interface JsNodeChildrenMap {
 	length: LengthJsNode;
 	lerp: LerpJsNode;
 	manhattanDistance: ManhattanDistanceJsNode;
+	matrix4LookAt: Matrix4LookAtJsNode;
+	matrix4MakeTranslation: Matrix4MakeTranslationJsNode;
+	matrix4Multiply: Matrix4MultiplyJsNode;
 	max: MaxJsNode;
 	maxLength: MaxLengthJsNode;
 	min: MinJsNode;
@@ -392,6 +405,9 @@ export interface JsNodeChildrenMap {
 	pow: PowJsNode;
 	pressButtonParam: PressButtonParamJsNode;
 	previousValue: PreviousValueJsNode;
+	quaternion: QuaternionJsNode;
+	quaternionAngleTo: QuaternionAngleToJsNode;
+	quaternionSlerp: QuaternionSlerpJsNode;
 	rand: RandJsNode;
 	random: RandomJsNode;
 	ray: RayJsNode;
@@ -498,6 +514,9 @@ const sopType = (type: SopType) => `${NodeContext.SOP}/${type}`;
 const ONLY_WITH_GLOBALS = {
 	only: [sopType(SopType.OBJECT_BUILDER), sopType(SopType.POINT_BUILDER), sopType(SopType.SDF_BUILDER)],
 };
+const ONLY_POINT_OR_OBJECT_BUILDER = {
+	only: [sopType(SopType.OBJECT_BUILDER), sopType(SopType.POINT_BUILDER)],
+};
 const ONLY_ACTOR = {
 	only: [
 		sopType(SopType.ACTOR),
@@ -518,7 +537,7 @@ const ONLY_ACTOR = {
 };
 export class JsRegister {
 	static run(poly: PolyEngine) {
-		// poly.registerNode(AttributeJsNode, CATEGORY_JS.GLOBALS);
+		poly.registerNode(AttributeJsNode, CATEGORY_JS.GLOBALS, ONLY_POINT_OR_OBJECT_BUILDER);
 		poly.registerNode(AbsJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(AcosJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(AddJsNode, CATEGORY_JS.MATH);
@@ -556,6 +575,8 @@ export class JsRegister {
 		poly.registerNode(DotJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(EasingJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(ElementsToArrayJsNode, CATEGORY_JS.CONVERSION);
+		poly.registerNode(EulerJsNode, CATEGORY_JS.MATH);
+		poly.registerNode(EulerFromQuaternionJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(FitJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(FloatToColorJsNode, CATEGORY_JS.CONVERSION);
 		poly.registerNode(FloatToIntJsNode, CATEGORY_JS.CONVERSION);
@@ -599,6 +620,9 @@ export class JsRegister {
 		poly.registerNode(LengthJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(LerpJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(ManhattanDistanceJsNode, CATEGORY_JS.MATH);
+		poly.registerNode(Matrix4LookAtJsNode, CATEGORY_JS.MATH);
+		poly.registerNode(Matrix4MakeTranslationJsNode, CATEGORY_JS.MATH);
+		poly.registerNode(Matrix4MultiplyJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(MaxJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(MaxLengthJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(MinJsNode, CATEGORY_JS.MATH);
@@ -666,6 +690,9 @@ export class JsRegister {
 		poly.registerNode(PowJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(PressButtonParamJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR);
 		poly.registerNode(PreviousValueJsNode, CATEGORY_JS.ADVANCED, ONLY_ACTOR);
+		poly.registerNode(QuaternionJsNode, CATEGORY_JS.MATH);
+		poly.registerNode(QuaternionAngleToJsNode, CATEGORY_JS.MATH);
+		poly.registerNode(QuaternionSlerpJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(RandJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(RandomJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(RayJsNode, CATEGORY_JS.MATH);

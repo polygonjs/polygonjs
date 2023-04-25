@@ -26,6 +26,6 @@ export class OutputJsNode extends TypedJsNode<OutputJsParamsConfig> {
 	}
 
 	override setLines(linesController: JsLinesCollectionController) {
-		this.functionNode()?.assemblerController()?.assembler.set_node_lines_output(this, linesController);
+		this.functionNode()?.assemblerController()?.assembler.setNodeLinesOutput(this, linesController);
 	}
 }

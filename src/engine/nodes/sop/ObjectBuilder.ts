@@ -148,7 +148,8 @@ export class ObjectBuilderSopNode extends TypedSopNode<ObjectBuilderSopParamsCon
 		const outputNode = outputNodes[0];
 		if (outputNode) {
 			const paramNodes = JsNodeFinder.findParamGeneratingNodes(this);
-			const rootNodes = outputNodes.concat(paramNodes);
+			const attributeExportNodes = JsNodeFinder.findAttributeExportNodes(this);
+			const rootNodes = outputNodes.concat(paramNodes).concat(attributeExportNodes);
 			assemblerController.assembler.set_root_nodes(rootNodes);
 
 			// main compilation

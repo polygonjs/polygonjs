@@ -242,6 +242,7 @@ export abstract class BaseJsShaderAssembler extends TypedAssembler<NodeContext.J
 				// 	break;
 				// }
 				case JsType.ATTRIBUTE: {
+					list.push(node);
 					break;
 				}
 				// case VaryingWriteGlNode.type(): {
@@ -267,12 +268,9 @@ export abstract class BaseJsShaderAssembler extends TypedAssembler<NodeContext.J
 	// 	}
 	// 	return list;
 	// }
-	set_node_lines_globals(globals_node: GlobalsJsNode, shaders_collection_controller: JsLinesCollectionController) {}
-	set_node_lines_output(output_node: OutputJsNode, shaders_collection_controller: JsLinesCollectionController) {}
-	setNodeLinesAttribute(
-		attribute_node: AttributeJsNode,
-		shaders_collection_controller: JsLinesCollectionController
-	) {}
+	setNodeLinesGlobals(globalsNode: GlobalsJsNode, linesController: JsLinesCollectionController) {}
+	setNodeLinesOutput(outputNode: OutputJsNode, linesController: JsLinesCollectionController) {}
+	setNodeLinesAttribute(attributeNode: AttributeJsNode, linesController: JsLinesCollectionController) {}
 
 	//
 	//
