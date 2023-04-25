@@ -37,6 +37,7 @@ import {CookNodeJsNode} from '../../../nodes/js/CookNode';
 import {CosJsNode} from '../../../nodes/js/Cos';
 import {CrossJsNode} from '../../../nodes/js/Cross';
 import {CursorJsNode} from '../../../nodes/js/Cursor';
+import {CursorToUvJsNode} from '../../../nodes/js/CursorToUv';
 import {DebugJsNode} from '../../../nodes/js/Debug';
 import {DistanceJsNode} from '../../../nodes/js/Distance';
 import {DivideJsNode} from '../../../nodes/js/Divide';
@@ -168,6 +169,7 @@ import {RayIntersectPlaneJsNode} from '../../../nodes/js/RayIntersectPlane';
 import {RayIntersectsPlaneJsNode} from '../../../nodes/js/RayIntersectsPlane';
 import {RayIntersectSphereJsNode} from '../../../nodes/js/RayIntersectSphere';
 import {RayIntersectsSphereJsNode} from '../../../nodes/js/RayIntersectsSphere';
+import {RenderPixelJsNode} from '../../../nodes/js/RenderPixel';
 import {RoundJsNode} from '../../../nodes/js/Round';
 import {SDF2DRoundedXJsNode} from '../../../nodes/js/SDF2DRoundedX';
 import {SDFBoxJsNode} from '../../../nodes/js/SDFBox';
@@ -285,6 +287,7 @@ export interface JsNodeChildrenMap {
 	cos: CosJsNode;
 	cross: CrossJsNode;
 	cursor: CursorJsNode;
+	cursorToUv: CursorToUvJsNode;
 	colorToVec3: ColorToVec3JsNode;
 	constant: ConstantJsNode;
 	debug: DebugJsNode;
@@ -418,6 +421,7 @@ export interface JsNodeChildrenMap {
 	rayIntersectsPlane: RayIntersectsPlaneJsNode;
 	rayIntersectSphere: RayIntersectSphereJsNode;
 	rayIntersectsSphere: RayIntersectsSphereJsNode;
+	renderPixel: RenderPixelJsNode;
 	round: RoundJsNode;
 	SDF2DRoundedX: SDF2DRoundedXJsNode;
 	SDFBox: SDFBoxJsNode;
@@ -566,6 +570,7 @@ export class JsRegister {
 		poly.registerNode(CosJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(CrossJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(CursorJsNode, CATEGORY_JS.INPUTS, ONLY_ACTOR);
+		poly.registerNode(CursorToUvJsNode, CATEGORY_JS.INPUTS);
 		poly.registerNode(DebugJsNode, CATEGORY_JS.FLOW);
 		poly.registerNode(DistanceJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(DivideJsNode, CATEGORY_JS.MATH);
@@ -697,6 +702,7 @@ export class JsRegister {
 		poly.registerNode(RayIntersectsPlaneJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(RayIntersectSphereJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(RayIntersectsSphereJsNode, CATEGORY_JS.MATH);
+		poly.registerNode(RenderPixelJsNode, CATEGORY_JS.ADVANCED);
 		poly.registerNode(RoundJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(SDF2DRoundedXJsNode, CATEGORY_JS.SDF_PRIMITIVES_2D);
 		poly.registerNode(SDFBoxJsNode, CATEGORY_JS.SDF_PRIMITIVES);

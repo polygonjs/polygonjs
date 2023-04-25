@@ -1,6 +1,6 @@
-import {Object3D, Texture, Vector2, Vector3} from 'three';
+import {Material, Object3D, Texture, Vector2, Vector3} from 'three';
 import {getClothControllerNodeFromWorldObject} from '../nodes/sop/ClothSolver';
-import {ObjectNamedFunction0, ObjectNamedFunction1, ObjectNamedFunction8} from './_Base';
+import {NamedFunction9, ObjectNamedFunction0, ObjectNamedFunction1, ObjectNamedFunction8} from './_Base';
 import {
 	clothSolverStepSimulation as _clothSolverStepSimulation,
 	clothSolverUpdateMaterial as _clothSolverUpdateMaterial,
@@ -73,14 +73,14 @@ export class clothSolverStepSimulation extends ObjectNamedFunction8<
 		);
 	}
 }
-export class clothSolverUpdateMaterial extends ObjectNamedFunction8<
-	[string, string, string, string, Vector2, Texture, Texture, Texture]
+export class clothSolverUpdateMaterial extends NamedFunction9<
+	[Material, string, string, string, string, Vector2, Texture, Texture, Texture]
 > {
 	static override type() {
 		return 'clothSolverUpdateMaterial';
 	}
 	func(
-		object3D: Object3D,
+		material: Material,
 		tSizeName: string,
 		tPosition0Name: string,
 		tPosition1Name: string,
@@ -107,7 +107,7 @@ export class clothSolverUpdateMaterial extends ObjectNamedFunction8<
 		uniformNameConfig.tPosition1 = tPosition1Name;
 		uniformNameConfig.tNormal = tNormalName;
 
-		_clothSolverUpdateMaterial(object3D, uniformConfig, uniformNameConfig);
+		_clothSolverUpdateMaterial(material, uniformConfig, uniformNameConfig);
 	}
 }
 

@@ -73,6 +73,18 @@ export abstract class NamedFunction6<ARGS extends [any, any, any, any, any, any]
 	ARGS,
 	[string, string, string, string, string, string]
 > {}
+export abstract class NamedFunction7<ARGS extends [any, any, any, any, any, any, any]> extends NamedFunction<
+	ARGS,
+	[string, string, string, string, string, string, string]
+> {}
+export abstract class NamedFunction8<ARGS extends [any, any, any, any, any, any, any, any]> extends NamedFunction<
+	ARGS,
+	[string, string, string, string, string, string, string, string]
+> {}
+export abstract class NamedFunction9<ARGS extends [any, any, any, any, any, any, any, any, any]> extends NamedFunction<
+	ARGS,
+	[string, string, string, string, string, string, string, string, string]
+> {}
 
 //
 //

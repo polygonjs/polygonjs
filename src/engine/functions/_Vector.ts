@@ -1,5 +1,6 @@
 import {Object3D, OrthographicCamera, PerspectiveCamera, Vector3} from 'three';
 import {NamedFunction2, NamedFunction3} from './_Base';
+import {dummyReadRefVal} from '../../core/reactivity/CoreReactivity';
 
 export class vector3AngleTo extends NamedFunction2<[Vector3, Vector3]> {
 	static override type() {
@@ -27,6 +28,10 @@ export class vector3Project extends NamedFunction3<[Vector3, Object3D, Vector3]>
 		if (!(object3D instanceof PerspectiveCamera || object3D instanceof OrthographicCamera)) {
 			return target;
 		}
+		// this can't just depend on the matrix,
+		// so we need to depend on time for now
+		dummyReadRefVal(this.timeController.timeUniform().value);
+		//
 		target.copy(src);
 		target.project(object3D);
 		return target;
@@ -40,6 +45,10 @@ export class vector3Unproject extends NamedFunction3<[Vector3, Object3D, Vector3
 		if (!(object3D instanceof PerspectiveCamera || object3D instanceof OrthographicCamera)) {
 			return target;
 		}
+		// this can't just depend on the matrix,
+		// so we need to depend on time for now
+		dummyReadRefVal(this.timeController.timeUniform().value);
+		//
 		target.copy(src);
 		target.unproject(object3D);
 		return target;

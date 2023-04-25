@@ -35,6 +35,7 @@ import { complement } from "../../../functions/complement";
 import { cookNode } from "../../../functions/cookNode";
 import { crossVector2 } from "../../../functions/crossVector2";
 import { crossVector3 } from "../../../functions/crossVector3";
+import { cursorToUv } from "../../../functions/cursorToUv";
 import { debug } from "../../../functions/debug";
 import { distanceVector2 } from "../../../functions/distanceVector2";
 import { distanceVector3 } from "../../../functions/distanceVector3";
@@ -294,6 +295,7 @@ import { rayIntersectSphere } from "../../../functions/rayIntersectSphere";
 import { rayIntersectsPlane } from "../../../functions/rayIntersectsPlane";
 import { rayIntersectsSphere } from "../../../functions/rayIntersectsSphere";
 import { raySet } from "../../../functions/raySet";
+import { renderPixel } from "../../../functions/renderPixel";
 import { SDFBox } from "../../../functions/SDFBox";
 import { SDFIntersect } from "../../../functions/SDFIntersect";
 import { SDFRevolutionX } from "../../../functions/SDFRevolutionX";
@@ -419,6 +421,7 @@ export interface NamedFunctionMap {
   cookNode: cookNode;
   crossVector2: crossVector2;
   crossVector3: crossVector3;
+  cursorToUv: cursorToUv;
   debug: debug<any>;
   distanceVector2: distanceVector2;
   distanceVector3: distanceVector3;
@@ -678,6 +681,7 @@ export interface NamedFunctionMap {
   rayIntersectsPlane: rayIntersectsPlane;
   rayIntersectsSphere: rayIntersectsSphere;
   raySet: raySet;
+  renderPixel: renderPixel;
   SDFBox: SDFBox;
   SDFIntersect: SDFIntersect;
   SDFRevolutionX: SDFRevolutionX;
@@ -806,6 +810,7 @@ export class AllNamedFunctionRegister {
       cookNode,
       crossVector2,
       crossVector3,
+      cursorToUv,
       debug,
       distanceVector2,
       distanceVector3,
@@ -1065,6 +1070,7 @@ export class AllNamedFunctionRegister {
       rayIntersectsPlane,
       rayIntersectsSphere,
       raySet,
+      renderPixel,
       SDFBox,
       SDFIntersect,
       SDFRevolutionX,

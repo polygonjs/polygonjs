@@ -4,7 +4,7 @@
  *
  */
 import {TRIGGER_CONNECTION_NAME, TypedJsNode} from './_Base';
-import {inputObject3D} from './_BaseObject3D';
+import {inputObject3DMaterial} from './_BaseObject3D';
 import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {Poly} from '../../Poly';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
@@ -34,7 +34,7 @@ export class ClothSolverUpdateMaterialJsNode extends TypedJsNode<ClothSolverUpda
 	override initializeNode() {
 		this.io.inputs.setNamedInputConnectionPoints([
 			new JsConnectionPoint(TRIGGER_CONNECTION_NAME, JsConnectionPointType.TRIGGER, CONNECTION_OPTIONS),
-			new JsConnectionPoint(JsConnectionPointType.OBJECT_3D, JsConnectionPointType.OBJECT_3D, CONNECTION_OPTIONS),
+			new JsConnectionPoint(JsConnectionPointType.MATERIAL, JsConnectionPointType.MATERIAL, CONNECTION_OPTIONS),
 			new JsConnectionPoint(
 				ClothSolverUpdateMaterialInput.TEXTURE_SIZE,
 				JsConnectionPointType.VECTOR2,
@@ -59,12 +59,12 @@ export class ClothSolverUpdateMaterialJsNode extends TypedJsNode<ClothSolverUpda
 
 		this.io.outputs.setNamedOutputConnectionPoints([
 			new JsConnectionPoint(TRIGGER_CONNECTION_NAME, JsConnectionPointType.TRIGGER),
-			new JsConnectionPoint(JsConnectionPointType.OBJECT_3D, JsConnectionPointType.OBJECT_3D),
+			new JsConnectionPoint(JsConnectionPointType.MATERIAL, JsConnectionPointType.MATERIAL, CONNECTION_OPTIONS),
 		]);
 	}
 
 	override setTriggerableLines(linesController: JsLinesCollectionController) {
-		const object3D = inputObject3D(this, linesController);
+		const material = inputObject3DMaterial(this, linesController);
 
 		const tSizeName = this.variableForInputParam(linesController, this.p.tSizeName);
 		const tPosition0Name = this.variableForInputParam(linesController, this.p.tPosition0Name);
@@ -79,7 +79,7 @@ export class ClothSolverUpdateMaterialJsNode extends TypedJsNode<ClothSolverUpda
 		const func = Poly.namedFunctionsRegister.getFunction('clothSolverUpdateMaterial', this, linesController);
 
 		const bodyLine = func.asString(
-			object3D,
+			material,
 			tSizeName,
 			tPosition0Name,
 			tPosition1Name,

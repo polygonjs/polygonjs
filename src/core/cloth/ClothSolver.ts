@@ -1,4 +1,4 @@
-import {Object3D, Mesh} from 'three';
+import {Object3D, Material} from 'three';
 import {clothControllerFromObject} from './ClothControllerRegister';
 import {
 	ClothMaterialUniformConfig,
@@ -6,7 +6,6 @@ import {
 	ClothMaterialUniformNameConfig,
 } from './modules/ClothFBOController';
 import {MaterialUserDataUniforms} from '../../engine/nodes/gl/code/assemblers/materials/OnBeforeCompile';
-import {isArray} from '../Type';
 import {UNIFORM_PARAM_PREFIX, UNIFORM_TEXTURE_PREFIX} from '../material/uniform';
 
 function _addParamPrefix(uniformName: string): string {
@@ -38,17 +37,10 @@ export function clothSolverStepSimulation(
 	controller.update(delta, uniformConfig);
 }
 export function clothSolverUpdateMaterial(
-	clothObject: Object3D,
+	material: Material,
 	uniformConfig: ClothMaterialUniformConfig,
 	uniformNameConfig: ClothMaterialUniformNameConfig
 ) {
-	const material = (clothObject as Mesh).material;
-	if (!material) {
-		return;
-	}
-	if (isArray(material)) {
-		return;
-	}
 	const uniforms = MaterialUserDataUniforms.getUniforms(material);
 	if (!uniforms) {
 		return;
