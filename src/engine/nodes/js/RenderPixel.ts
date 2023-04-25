@@ -19,6 +19,7 @@ enum RenderPixelJsNodeOutputName {
 
 class RenderPixelJsParamsConfig extends NodeParamsConfig {
 	uv = ParamConfig.VECTOR2([0, 0]);
+	backgroundColor = ParamConfig.COLOR([0, 0, 0]);
 }
 const ParamsConfig = new RenderPixelJsParamsConfig();
 
@@ -60,12 +61,13 @@ export class RenderPixelJsNode extends TypedJsNode<RenderPixelJsParamsConfig> {
 		const object3D = inputObject3D(this, linesController);
 		const material = this.variableForInput(linesController, JsConnectionPointType.MATERIAL);
 		const camera = this.variableForInput(linesController, JsConnectionPointType.CAMERA);
+		const backgroundColor = this.variableForInputParam(linesController, this.p.backgroundColor);
 		const uv = this.variableForInputParam(linesController, this.p.uv);
 
 		const refValue = this._addValueRef(linesController);
 
 		const func = Poly.namedFunctionsRegister.getFunction('renderPixel', this, linesController);
-		const bodyLine = func.asString(object3D, material, camera, uv, `this.${refValue}.value`);
+		const bodyLine = func.asString(object3D, material, camera, backgroundColor, uv, `this.${refValue}.value`);
 		linesController.addTriggerableLines(this, [bodyLine]);
 	}
 

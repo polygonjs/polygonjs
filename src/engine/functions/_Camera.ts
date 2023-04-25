@@ -1,6 +1,7 @@
 import {Camera, Object3D, PerspectiveCamera} from 'three';
 import {isBooleanTrue} from '../../core/Type';
 import {NamedFunction0, ObjectNamedFunction3, ObjectNamedFunction4} from './_Base';
+import {dummyReadRefVal} from '../../core/reactivity/CoreReactivity';
 
 export class setPerspectiveCameraFov extends ObjectNamedFunction3<[number, number, boolean]> {
 	static override type() {
@@ -43,6 +44,10 @@ export class getDefaultCamera extends NamedFunction0 {
 		return 'getDefaultCamera';
 	}
 	func(): Camera {
+		// this can't just depend on the matrix,
+		// so we need to depend on time for now
+		dummyReadRefVal(this.timeController.timeUniform().value);
+		//
 		return (
 			this.scene.root().mainCameraController.cameraSync() ||
 			this.scene.viewersRegister.lastRenderedViewer()?.camera() ||

@@ -13,8 +13,9 @@ import {
 	Scene,
 	NoToneMapping,
 	LinearEncoding,
+	Color,
 } from 'three';
-import {NamedFunction2, ObjectNamedFunction4} from './_Base';
+import {NamedFunction2, ObjectNamedFunction5} from './_Base';
 
 export class cursorToUv extends NamedFunction2<[Vector2, Vector2]> {
 	static override type() {
@@ -45,7 +46,7 @@ interface RestoreContext {
 	renderer: RendererRestoreContext;
 }
 
-export class renderPixel extends ObjectNamedFunction4<[Material, Camera, Vector2, Vector4]> {
+export class renderPixel extends ObjectNamedFunction5<[Material, Camera, Color, Vector2, Vector4]> {
 	private _renderTarget: WebGLRenderTarget = new WebGLRenderTarget(1, 1, {
 		minFilter: LinearFilter,
 		magFilter: NearestFilter,
@@ -69,7 +70,14 @@ export class renderPixel extends ObjectNamedFunction4<[Material, Camera, Vector2
 	static override type() {
 		return 'renderPixel';
 	}
-	func(object3D: Object3D, material: Material, camera: Camera, uv: Vector2, target: Vector4): Vector4 {
+	func(
+		object3D: Object3D,
+		material: Material,
+		camera: Camera,
+		backgroundColor: Color,
+		uv: Vector2,
+		target: Vector4
+	): Vector4 {
 		const renderer = this.scene.renderersRegister.lastRegisteredRenderer();
 		if (!renderer) {
 			return target;
@@ -79,20 +87,21 @@ export class renderPixel extends ObjectNamedFunction4<[Material, Camera, Vector2
 			return target;
 		}
 
-		this._prepare(object3D, material, renderer);
+		this._prepare(object3D, material, backgroundColor, renderer);
 		this._render(uv, camera, renderer, target);
 		this._restore(object3D, material, renderer);
 
 		return target;
 	}
 
-	private _prepare(object3D: Object3D, material: Material, renderer: WebGLRenderer) {
+	private _prepare(object3D: Object3D, material: Material, backgroundColor: Color, renderer: WebGLRenderer) {
 		// save context
 		this._restoreContext.renderer.outputEncoding = renderer.outputEncoding;
 		this._restoreContext.renderer.toneMapping = renderer.toneMapping;
 		this._restoreContext.object.parent = object3D.parent;
 
 		// set context
+		this._renderScene.background = backgroundColor;
 		this._renderScene.overrideMaterial = material;
 		this._renderScene.attach(object3D);
 		renderer.toneMapping = NoToneMapping;

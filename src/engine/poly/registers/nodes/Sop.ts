@@ -872,9 +872,7 @@ export class SopRegister {
 		poly.registerNode(CircleSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.registerNode(Circle3PointsSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.registerNode(ClipSopNode, CATEGORY_SOP.MODIFIER);
-		if (process.env.NODE_ENV == 'development') {
-			poly.registerNode(ClothDebugSopNode, CATEGORY_SOP.PHYSICS);
-		}
+		poly.registerNode(ClothDebugSopNode, CATEGORY_SOP.PHYSICS);
 		poly.registerNode(ClothSolverSopNode, CATEGORY_SOP.PHYSICS);
 		poly.registerNode(CodeSopNode, CATEGORY_SOP.ADVANCED);
 		poly.registerNode(ColorSopNode, CATEGORY_SOP.MODIFIER);

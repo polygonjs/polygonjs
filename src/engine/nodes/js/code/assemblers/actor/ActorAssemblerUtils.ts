@@ -14,8 +14,14 @@ export function nodeMethodName(node: BaseJsNodeType, outputName?: string): strin
 	if (functionNode == null) {
 		return node.name();
 	}
-
-	const sanitized = sanitizeName(node.path().replace(functionNode.path(), '')).substring(1);
+	const pathWithoutParentPath = node.path().replace(functionNode.path(), '');
+	const sanitizedPath = sanitizeName(pathWithoutParentPath);
+	const pathWithoutForwardSlash = sanitizedPath.substring(1);
+	// we remove the underscore inside the name,
+	// so that we can find the method and highlight it in the editor,
+	// without assuming that what's after the underscore is the name of the output
+	const pathWithoutUnderscore = pathWithoutForwardSlash.replace(/_/g, '');
+	const sanitized = pathWithoutUnderscore;
 	if (outputName) {
 		return `${sanitized}_${outputName}`;
 	} else {
