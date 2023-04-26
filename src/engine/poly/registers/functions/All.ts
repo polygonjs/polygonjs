@@ -231,6 +231,7 @@ import { maxLengthVector2 } from "../../../functions/maxLengthVector2";
 import { maxLengthVector3 } from "../../../functions/maxLengthVector3";
 import { maxLengthVector4 } from "../../../functions/maxLengthVector4";
 import { mix } from "../../../functions/mix";
+import { mod } from "../../../functions/mod";
 import { multAdd } from "../../../functions/multAdd";
 import { multNumber } from "../../../functions/multNumber";
 import { multScalarArrayVectorArray } from "../../../functions/multScalarArrayVectorArray";
@@ -617,6 +618,7 @@ export interface NamedFunctionMap {
   maxLengthVector3: maxLengthVector3;
   maxLengthVector4: maxLengthVector4;
   mix: mix;
+  mod: mod;
   multAdd: multAdd;
   multNumber: multNumber;
   multScalarArrayVectorArray: multScalarArrayVectorArray<Color | Vector2 | Vector3 | Vector4>;
@@ -1006,6 +1008,7 @@ export class AllNamedFunctionRegister {
       maxLengthVector3,
       maxLengthVector4,
       mix,
+      mod,
       multAdd,
       multNumber,
       multScalarArrayVectorArray,

@@ -181,7 +181,7 @@ export const FUNCTION_NAME_BY_FILE_NAME: Record<string, string[]> = {
 		'mathVectorArray_4',
 		'mathVectorArray_5',
 	],
-	Math: ['clamp', 'complement', 'fit', 'fitClamp', 'mix', 'multAdd', 'negate', 'rand', 'random', 'smoothstep'],
+	Math: ['clamp', 'complement', 'fit', 'fitClamp', 'mix', 'mod', 'multAdd', 'negate', 'rand', 'random', 'smoothstep'],
 	Mult: ['multNumber', 'multVector', 'multVectorNumber'],
 	MultScalar: [
 		'multScalarArrayVectorArray',

@@ -8,6 +8,10 @@ import {TypedAudioNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {AudioBuilder} from '../../../core/audio/AudioBuilder';
 import {BaseNodeType} from '../_Base';
+import {NodeEvent} from '../../poly/NodeEvent';
+import {AudioType} from '../../poly/registers/nodes/types/Audio';
+
+const DEFAULT_INPUTS_COUNT = 4;
 class SwitchAudioParamsConfig extends NodeParamsConfig {
 	/** @param sets which input is used */
 	input = ParamConfig.INTEGER(0, {
@@ -17,13 +21,22 @@ class SwitchAudioParamsConfig extends NodeParamsConfig {
 			SwitchAudioNode.PARAM_CALLBACK_setInputsEvaluation(node as SwitchAudioNode);
 		},
 	});
+	/** @param number of inputs that this node can merge geometries from */
+	inputsCount = ParamConfig.INTEGER(DEFAULT_INPUTS_COUNT, {
+		range: [1, 32],
+		rangeLocked: [true, false],
+		separatorBefore: true,
+		callback: (node: BaseNodeType) => {
+			SwitchAudioNode.PARAM_CALLBACK_setInputsCount(node as SwitchAudioNode);
+		},
+	});
 }
 const ParamsConfig = new SwitchAudioParamsConfig();
 
 export class SwitchAudioNode extends TypedAudioNode<SwitchAudioParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'switch';
+		return AudioType.SWITCH;
 	}
 
 	override initializeNode() {
@@ -31,6 +44,9 @@ export class SwitchAudioNode extends TypedAudioNode<SwitchAudioParamsConfig> {
 
 		this.io.inputs.onEnsureListenToSingleInputIndexUpdated(async () => {
 			await this._callbackUpdateInputsEvaluation();
+		});
+		this.params.onParamsCreated('update inputs', () => {
+			this._callbackUpdateInputsCount();
 		});
 	}
 
@@ -59,5 +75,13 @@ export class SwitchAudioNode extends TypedAudioNode<SwitchAudioParamsConfig> {
 	}
 	static PARAM_CALLBACK_setInputsEvaluation(node: SwitchAudioNode) {
 		node._callbackUpdateInputsEvaluation();
+	}
+
+	private _callbackUpdateInputsCount() {
+		this.io.inputs.setCount(1, this.pv.inputsCount);
+		this.emit(NodeEvent.INPUTS_UPDATED);
+	}
+	static PARAM_CALLBACK_setInputsCount(node: SwitchAudioNode) {
+		node._callbackUpdateInputsCount();
 	}
 }

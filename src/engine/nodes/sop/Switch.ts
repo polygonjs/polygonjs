@@ -10,15 +10,26 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {BaseNodeType} from '../_Base';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
+import {NodeEvent} from '../../poly/NodeEvent';
 
 const INPUT_NAME = 'geometry to switch to';
+const DEFAULT_INPUTS_COUNT = 4;
 class SwitchSopParamsConfig extends NodeParamsConfig {
 	/** @param sets which input is used */
 	input = ParamConfig.INTEGER(0, {
 		range: [0, 3],
-		rangeLocked: [true, true],
+		rangeLocked: [true, false],
 		callback: (node: BaseNodeType) => {
 			SwitchSopNode.PARAM_CALLBACK_setInputsEvaluation(node as SwitchSopNode);
+		},
+	});
+	/** @param number of inputs that this node can merge geometries from */
+	inputsCount = ParamConfig.INTEGER(DEFAULT_INPUTS_COUNT, {
+		range: [1, 32],
+		rangeLocked: [true, false],
+		separatorBefore: true,
+		callback: (node: BaseNodeType) => {
+			SwitchSopNode.PARAM_CALLBACK_setInputsCount(node as SwitchSopNode);
 		},
 	});
 }
@@ -41,6 +52,9 @@ export class SwitchSopNode extends TypedSopNode<SwitchSopParamsConfig> {
 
 		this.io.inputs.onEnsureListenToSingleInputIndexUpdated(async () => {
 			await this._callbackUpdateInputsEvaluation();
+		});
+		this.params.onParamsCreated('update inputs', () => {
+			this._callbackUpdateInputsCount();
 		});
 	}
 
@@ -76,5 +90,12 @@ export class SwitchSopNode extends TypedSopNode<SwitchSopParamsConfig> {
 	}
 	static PARAM_CALLBACK_setInputsEvaluation(node: SwitchSopNode) {
 		node._callbackUpdateInputsEvaluation();
+	}
+	private _callbackUpdateInputsCount() {
+		this.io.inputs.setCount(1, this.pv.inputsCount);
+		this.emit(NodeEvent.INPUTS_UPDATED);
+	}
+	static PARAM_CALLBACK_setInputsCount(node: SwitchSopNode) {
+		node._callbackUpdateInputsCount();
 	}
 }

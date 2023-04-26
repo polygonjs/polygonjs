@@ -5,6 +5,7 @@ import {
 	smoothstep as _smoothstep,
 	fit as _fit,
 	fitClamp as _fitClamp,
+	mod as _mod,
 	mix as _mix,
 	randFloat as _randFloat,
 } from '../../core/math/_Module';
@@ -51,6 +52,14 @@ export class mix extends NamedFunction3<[number, number, number]> {
 	}
 	func(value0: number, value1: number, blend: number): number {
 		return _mix(value0, value1, blend);
+	}
+}
+export class mod extends NamedFunction2<[number, number]> {
+	static override type() {
+		return 'mod';
+	}
+	func(v1: number, v2: number): number {
+		return _mod(v1, v2);
 	}
 }
 export class multAdd extends NamedFunction4<[number, number, number, number]> {

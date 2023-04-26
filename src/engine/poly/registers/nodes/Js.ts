@@ -92,6 +92,7 @@ import {MaxJsNode} from '../../../nodes/js/Max';
 import {MaxLengthJsNode} from '../../../nodes/js/MaxLength';
 import {MinJsNode} from '../../../nodes/js/Min';
 import {MixJsNode} from '../../../nodes/js/Mix';
+import {ModJsNode} from '../../../nodes/js/Mod';
 import {MultJsNode} from '../../../nodes/js/Mult';
 import {MultAddJsNode} from '../../../nodes/js/MultAdd';
 import {MultScalarJsNode} from '../../../nodes/js/MultScalar';
@@ -344,6 +345,7 @@ export interface JsNodeChildrenMap {
 	maxLength: MaxLengthJsNode;
 	min: MinJsNode;
 	mix: MixJsNode;
+	mod: ModJsNode;
 	mult: MultJsNode;
 	multAdd: MultAddJsNode;
 	multScalar: MultScalarJsNode;
@@ -625,6 +627,7 @@ export class JsRegister {
 		poly.registerNode(MaxLengthJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(MinJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(MixJsNode, CATEGORY_JS.MATH);
+		poly.registerNode(ModJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(MultJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(MultAddJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(MultScalarJsNode, CATEGORY_JS.MATH);
