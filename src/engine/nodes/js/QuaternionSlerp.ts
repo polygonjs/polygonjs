@@ -6,7 +6,7 @@
  *
  */
 import {TypedJsNode} from './_Base';
-import {NodeParamsConfig} from '../utils/params/ParamsConfig';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {JS_CONNECTION_POINT_IN_NODE_DEF, JsConnectionPoint, JsConnectionPointType} from '../utils/io/connections/Js';
 import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {Poly} from '../../Poly';
@@ -16,10 +16,11 @@ const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
 enum QuaternionSlerpInputName {
 	q1 = 'q1',
 	q2 = 'q2',
-	lerp = 'lerp',
 }
 
-class QuaternionSlerpJsParamsConfig extends NodeParamsConfig {}
+class QuaternionSlerpJsParamsConfig extends NodeParamsConfig {
+	lerp = ParamConfig.FLOAT(0.5);
+}
 const ParamsConfig = new QuaternionSlerpJsParamsConfig();
 export class QuaternionSlerpJsNode extends TypedJsNode<QuaternionSlerpJsParamsConfig> {
 	override paramsConfig = ParamsConfig;
@@ -32,7 +33,7 @@ export class QuaternionSlerpJsNode extends TypedJsNode<QuaternionSlerpJsParamsCo
 		this.io.inputs.setNamedInputConnectionPoints([
 			new JsConnectionPoint(QuaternionSlerpInputName.q1, JsConnectionPointType.QUATERNION, CONNECTION_OPTIONS),
 			new JsConnectionPoint(QuaternionSlerpInputName.q2, JsConnectionPointType.QUATERNION, CONNECTION_OPTIONS),
-			new JsConnectionPoint(QuaternionSlerpInputName.lerp, JsConnectionPointType.FLOAT, CONNECTION_OPTIONS),
+			// new JsConnectionPoint(QuaternionSlerpInputName.lerp, JsConnectionPointType.FLOAT, CONNECTION_OPTIONS),
 		]);
 		this.io.outputs.setNamedOutputConnectionPoints([
 			new JsConnectionPoint(JsConnectionPointType.QUATERNION, JsConnectionPointType.QUATERNION),
@@ -42,7 +43,7 @@ export class QuaternionSlerpJsNode extends TypedJsNode<QuaternionSlerpJsParamsCo
 	override setLines(linesController: JsLinesCollectionController) {
 		const q1 = this.variableForInput(linesController, QuaternionSlerpInputName.q1);
 		const q2 = this.variableForInput(linesController, QuaternionSlerpInputName.q2);
-		const lerp = this.variableForInput(linesController, QuaternionSlerpInputName.lerp);
+		const lerp = this.variableForInputParam(linesController, this.p.lerp);
 		const varName = this.jsVarName(JsConnectionPointType.QUATERNION);
 		const tmpVarName = linesController.addVariable(this, new Quaternion());
 

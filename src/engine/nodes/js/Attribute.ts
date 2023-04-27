@@ -14,6 +14,7 @@ const ATTRIBUTE_NODE_AVAILABLE_JS_TYPES = [
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {isBooleanTrue} from '../../../core/Type';
+import {PointBuilderFunctionDataAttributeDataItem} from './code/assemblers/pointBuilder/PointBuilderPersistedConfig';
 class AttributeJsParamsConfig extends NodeParamsConfig {
 	name = ParamConfig.STRING('');
 	type = ParamConfig.INTEGER(0, {
@@ -71,7 +72,12 @@ export class AttributeJsNode extends TypedJsNode<AttributeJsParamsConfig> {
 		this.functionNode()?.assemblerController()?.assembler.setNodeLinesAttribute(this, linesController);
 		// }
 	}
-
+	attribData(): PointBuilderFunctionDataAttributeDataItem {
+		return {
+			attribName: this.attributeName(),
+			attribType: this.jsType(),
+		};
+	}
 	attributeName(): string {
 		return this.pv.name.trim();
 	}

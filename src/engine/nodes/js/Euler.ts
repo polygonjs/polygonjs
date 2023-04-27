@@ -11,12 +11,19 @@ import {JsConnectionPoint, JsConnectionPointType} from '../utils/io/connections/
 import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {Euler} from 'three';
 import {Poly} from '../../Poly';
+import {ROTATION_ORDERS, RotationOrder} from '../../../core/Transform';
 
 class EulerJsParamsConfig extends NodeParamsConfig {
 	/** @param euler value */
 	Euler = ParamConfig.VECTOR3([0, 0, 0]);
 	/** @param rotation order */
-	order = ParamConfig.STRING('XYZ');
+	order = ParamConfig.INTEGER(ROTATION_ORDERS.indexOf(RotationOrder.XYZ), {
+		menu: {
+			entries: ROTATION_ORDERS.map((order, v) => {
+				return {name: order, value: v};
+			}),
+		},
+	});
 }
 const ParamsConfig = new EulerJsParamsConfig();
 export class EulerJsNode extends TypedJsNode<EulerJsParamsConfig> {

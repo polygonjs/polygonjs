@@ -121,7 +121,6 @@ export abstract class BaseJsShaderAssembler extends TypedAssembler<NodeContext.J
 		if (!this.computedVariablesAllowed()) {
 			return;
 		}
-		console.warn('addComputedVarName', varName);
 		this._computedVarNames.add(varName);
 	}
 	registeredAsComputed(varName: string): boolean {

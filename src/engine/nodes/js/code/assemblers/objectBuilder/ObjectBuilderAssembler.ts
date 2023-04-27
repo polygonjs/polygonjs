@@ -417,7 +417,6 @@ export class JsAssemblerObjectBuilder extends BaseJsShaderAssembler {
 
 		// export
 		if (attributeNode.isExporting()) {
-			bodyLines.push(``);
 			const func = Poly.namedFunctionsRegister.getFunction('setObjectAttribute', attributeNode, linesController);
 			const exportedValue = attributeNode.variableForInput(linesController, AttributeJsNode.INPUT_NAME);
 			const bodyLine = func.asString(
@@ -440,40 +439,6 @@ export class JsAssemblerObjectBuilder extends BaseJsShaderAssembler {
 			const bodyLine =
 				`${varName} = ` + func.asString(FunctionConstant.OBJECT_3D, `'${attribName}'`, `'${dataType}'`);
 			bodyLines.push(bodyLine);
-
-			// switch (outputName) {
-			// 	case ObjectVariable.POSITION:
-			// 	case ObjectVariable.SCALE: {
-			// 		linesController.addVariable(attributeNode, new Vector3(), varName);
-			// 		bodyLines.push(`${varName}.copy(${FunctionConstant.OBJECT_3D}.${outputName})`);
-			// 		break;
-			// 	}
-			// 	case ObjectVariable.ROTATION: {
-			// 		linesController.addVariable(attributeNode, new Euler(), varName);
-			// 		bodyLines.push(`${varName}.copy(${FunctionConstant.OBJECT_3D}.${outputName})`);
-			// 		break;
-			// 	}
-			// 	case ObjectVariable.QUATERNION: {
-			// 		linesController.addVariable(attributeNode, new Quaternion(), varName);
-			// 		bodyLines.push(`${varName}.copy(${FunctionConstant.OBJECT_3D}.${outputName})`);
-			// 		break;
-			// 	}
-			// 	case ObjectVariable.MATRIX: {
-			// 		linesController.addVariable(attributeNode, new Matrix4(), varName);
-			// 		bodyLines.push(`${varName}.copy(${FunctionConstant.OBJECT_3D}.${outputName})`);
-			// 		break;
-			// 	}
-			// 	case ObjectVariable.VISIBLE: {
-			// 		linesController.addVariable(attributeNode, new Vector3(), varName);
-			// 		bodyLines.push(`${varName} = ${FunctionConstant.OBJECT_3D}.${outputName}`);
-			// 		break;
-			// 	}
-			// 	case ObjectVariable.OBJ_NUM: {
-			// 		bodyLines.push(`${varName} = ${FunctionConstant.OBJ_NUM}`);
-			// 		break;
-			// 	}
-
-			// }
 		}
 		linesController._addBodyLines(attributeNode, bodyLines);
 	}

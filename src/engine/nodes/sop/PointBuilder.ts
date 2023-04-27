@@ -8,7 +8,10 @@ import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
-import {PointBuilderPersistedConfig} from '../js/code/assemblers/pointBuilder/PointBuilderPersistedConfig';
+import {
+	PointBuilderFunctionData,
+	PointBuilderPersistedConfig,
+} from '../js/code/assemblers/pointBuilder/PointBuilderPersistedConfig';
 import {AssemblerName} from '../../poly/registers/assemblers/_BaseRegister';
 import {JsAssemblerController} from '../js/code/Controller';
 import {
@@ -24,15 +27,17 @@ import {Constructor, valueof} from '../../../types/GlobalTypes';
 import {BaseJsNodeType} from '../js/_Base';
 import {JsParamConfig} from '../js/code/utils/JsParamConfig';
 import {ParamType} from '../../poly/ParamType';
-import {FunctionData} from '../js/code/assemblers/_Base';
-import {RegisterableVariable} from '../js/code/assemblers/_BaseJsPersistedConfigUtils';
+import {RegisterableVariable, createVariable} from '../js/code/assemblers/_BaseJsPersistedConfigUtils';
 import {JsNodeFinder} from '../js/code/utils/NodeFinder';
-import {CoreType} from '../../../core/Type';
-import {BufferAttribute, Object3D, Vector3} from 'three';
+import {CoreType, isColor, isVector, isNumber} from '../../../core/Type';
+import {BufferAttribute, BufferGeometry, Color, Vector2, Vector3, Vector4} from 'three';
 import {CoreGeometry} from '../../../core/geometry/Geometry';
 import {Attribute} from '../../../core/geometry/Attribute';
+import {JsConnectionPointComponentsCountMap, JsConnectionPointType} from '../utils/io/connections/Js';
 
 type PointFunction = Function; //(object:Object3D)=>Object3D
+type AttributeItem = boolean | number | string | Color | Vector2 | Vector3 | Vector4;
+type AttributesDict = Map<string, AttributeItem>;
 
 class PointBuilderSopParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new PointBuilderSopParamsConfig();
@@ -103,14 +108,19 @@ export class PointBuilderSopNode extends TypedSopNode<PointBuilderSopParamsConfi
 		if (_func) {
 			const args = this.functionEvalArgsWithParamConfigs();
 			const inputObjects = coreGroup.threejsObjectsWithGeo();
-			// const convertedFunction = () => {
-			// 	return _func(...args);
-			// };
-			const newObjects: Object3D[] = [];
+
 			let objnum = 0;
 			for (const inputObject of inputObjects) {
 				this._pointIndexContainer.objnum = objnum;
 				const geometry = inputObject.geometry;
+				const readAttributeOptions = this._checkRequiredReadAttributes(geometry);
+				const writeAttributeOptions = this._checkRequiredWriteAttributes(geometry);
+				const readAttribNames = readAttributeOptions ? readAttributeOptions.attribNames : [];
+				const readAttributeByName = readAttributeOptions ? readAttributeOptions.attributeByName : new Map();
+				const attribTypeByName = readAttributeOptions ? readAttributeOptions.attribTypeByName : new Map();
+				const writeAttribNames = writeAttributeOptions ? writeAttributeOptions.attribNames : [];
+				const writeAttributeByName = writeAttributeOptions ? writeAttributeOptions.attributeByName : new Map();
+				this._resetRequiredAttributes();
 				const pointsCount = CoreGeometry.pointsCount(geometry);
 				const positionAttrib = geometry.getAttribute(Attribute.POSITION) as BufferAttribute;
 				const normalAttrib = geometry.getAttribute(Attribute.NORMAL) as BufferAttribute;
@@ -124,13 +134,17 @@ export class PointBuilderSopNode extends TypedSopNode<PointBuilderSopParamsConfi
 				}
 				for (let ptnum = 0; ptnum < pointsCount; ptnum++) {
 					this._pointIndexContainer.ptnum = ptnum;
+					// read attributes
 					if (hasPosition) {
 						this._pointIndexContainer.position.fromBufferAttribute(positionAttrib, ptnum);
 					}
 					if (hasNormal) {
 						this._pointIndexContainer.normal.fromBufferAttribute(normalAttrib, ptnum);
 					}
+					this._readRequiredAttributes(ptnum, readAttribNames, readAttributeByName, attribTypeByName);
+					// eval function
 					_func(...args);
+					// write back
 					if (hasPosition) {
 						positionAttrib.setXYZ(
 							ptnum,
@@ -147,15 +161,118 @@ export class PointBuilderSopNode extends TypedSopNode<PointBuilderSopParamsConfi
 							this._pointIndexContainer.normal.z
 						);
 					}
-					// convertedFunction(inputObject, i);
+					this._writeRequiredAttributes(ptnum, writeAttribNames, writeAttributeByName);
 				}
-				newObjects.push(inputObject);
 				objnum++;
 			}
 
-			this.setObjects(newObjects);
+			this.setObjects(inputObjects);
 		} else {
 			this.setObjects([]);
+		}
+	}
+	private _resetRequiredAttributes() {
+		this._attributesDict.clear();
+	}
+	private _checkRequiredReadAttributes(geometry: BufferGeometry) {
+		const readAttributesData = this._functionData?.attributesData.read;
+		if (!readAttributesData) {
+			return;
+		}
+		for (const attribData of readAttributesData) {
+			const attribute = geometry.getAttribute(attribData.attribName);
+			if (!attribute) {
+				this.states.error.set(`attribute ${attribData.attribName} is missing`);
+				throw 'error';
+			} else {
+				const expectedAttribSize = JsConnectionPointComponentsCountMap[attribData.attribType];
+				if (attribute.itemSize != expectedAttribSize) {
+					this.states.error.set('attribute size mismatch');
+				}
+			}
+		}
+
+		const attribNames: string[] = [];
+		const attributeByName = new Map<string, BufferAttribute>();
+		const attribTypeByName = new Map<string, JsConnectionPointType>();
+		for (const attribData of readAttributesData) {
+			const attribName = attribData.attribName;
+			const attribute = geometry.getAttribute(attribName) as BufferAttribute;
+			if (attribute) {
+				attribNames.push(attribName);
+				attributeByName.set(attribName, attribute);
+				attribTypeByName.set(attribName, attribData.attribType);
+			}
+		}
+		return {attribNames, attributeByName, attribTypeByName};
+	}
+	private _checkRequiredWriteAttributes(geometry: BufferGeometry) {
+		const writeAttributesData = this._functionData?.attributesData.write;
+		if (!writeAttributesData) {
+			return;
+		}
+		for (const attribData of writeAttributesData) {
+			let attribute = geometry.getAttribute(attribData.attribName);
+			const expectedAttribSize = JsConnectionPointComponentsCountMap[attribData.attribType];
+			if (!attribute) {
+				const pointsCount = geometry.getAttribute(Attribute.POSITION).count;
+				const newArray: number[] = new Array(pointsCount * expectedAttribSize).fill(0);
+				attribute = new BufferAttribute(new Float32Array(newArray), expectedAttribSize);
+				geometry.setAttribute(attribData.attribName, attribute);
+			}
+			if (attribute.itemSize != expectedAttribSize) {
+				this.states.error.set('attribute size mismatch');
+			}
+		}
+
+		const attribNames: string[] = [];
+		const attributeByName = new Map<string, BufferAttribute>();
+		const attribTypeByName = new Map<string, JsConnectionPointType>();
+		for (const attribData of writeAttributesData) {
+			const attribName = attribData.attribName;
+			const attribute = geometry.getAttribute(attribName) as BufferAttribute;
+			if (attribute) {
+				attribNames.push(attribName);
+				attributeByName.set(attribName, attribute);
+				attribTypeByName.set(attribName, attribData.attribType);
+			}
+		}
+		return {attribNames, attributeByName, attribTypeByName};
+	}
+	private _readRequiredAttributes(
+		ptnum: number,
+		attribNames: string[],
+		attributeByName: Map<string, BufferAttribute>,
+		attribTypeByName: Map<string, JsConnectionPointType>
+	) {
+		for (const attribName of attribNames) {
+			const attribute = attributeByName.get(attribName)!;
+			const attribType = attribTypeByName.get(attribName)!;
+			const variable = createVariable(attribType);
+			if (!variable) {
+				const attribValue = attribute.array[ptnum * attribute.itemSize];
+				this._attributesDict.set(attribName, attribValue);
+			} else if (isVector(variable) || isColor(variable)) {
+				variable.fromBufferAttribute(attribute, ptnum);
+				this._attributesDict.set(attribName, variable);
+			}
+		}
+	}
+	private _writeRequiredAttributes(
+		ptnum: number,
+		attribNames: string[],
+		attributeByName: Map<string, BufferAttribute>
+	) {
+		for (const attribName of attribNames) {
+			const attribute = attributeByName.get(attribName)!;
+			const variable = this._attributesDict.get(attribName);
+			if (isVector(variable) || isColor(variable)) {
+				variable.toArray(attribute.array, ptnum * attribute.itemSize);
+			} else {
+				if (isNumber(variable)) {
+					(attribute.array as number[])[ptnum] = variable;
+				}
+			}
 		}
 	}
 
@@ -171,10 +288,11 @@ export class PointBuilderSopNode extends TypedSopNode<PointBuilderSopParamsConfi
 		objnum: -1,
 	};
 	private _paramConfigs: JsParamConfig<ParamType>[] = [];
-	private _functionData: FunctionData | undefined;
+	private _functionData: PointBuilderFunctionData | undefined;
 	private _functionCreationArgs: string[] = [];
-	private _functionEvalArgs: (PointContainer | Function | RegisterableVariable)[] = [];
+	private _functionEvalArgs: (PointContainer | Function | RegisterableVariable | AttributesDict)[] = [];
 	private _function: PointFunction | undefined;
+	private _attributesDict: AttributesDict = new Map();
 	functionData() {
 		return this._functionData;
 	}
@@ -195,7 +313,8 @@ export class PointBuilderSopNode extends TypedSopNode<PointBuilderSopParamsConfi
 		const outputNode = outputNodes[0];
 		if (outputNode) {
 			const paramNodes = JsNodeFinder.findParamGeneratingNodes(this);
-			const rootNodes = outputNodes.concat(paramNodes);
+			const attributeExportNodes = JsNodeFinder.findAttributeExportNodes(this);
+			const rootNodes = outputNodes.concat(paramNodes).concat(attributeExportNodes);
 			assemblerController.assembler.set_root_nodes(rootNodes);
 
 			// main compilation
@@ -212,7 +331,7 @@ export class PointBuilderSopNode extends TypedSopNode<PointBuilderSopParamsConfi
 
 		assemblerController.post_compile();
 	}
-	updateFromFunctionData(functionData: FunctionData) {
+	updateFromFunctionData(functionData: PointBuilderFunctionData) {
 		this._functionData = functionData;
 
 		const {functionBody, variableNames, variablesByName, functionNames, functionsByName, paramConfigs} =
@@ -249,6 +368,7 @@ export class PointBuilderSopNode extends TypedSopNode<PointBuilderSopParamsConfi
 			'_setErrorFromError',
 			...variableNames,
 			...functionNames,
+			FunctionConstant.ATTRIBUTES_DICT,
 			...paramConfigNames,
 			wrappedBody,
 		];
@@ -257,6 +377,7 @@ export class PointBuilderSopNode extends TypedSopNode<PointBuilderSopParamsConfi
 			_setErrorFromError,
 			...variables,
 			...functions,
+			this._attributesDict,
 			// paramConfigs are added dynamically during cook
 		];
 		try {
@@ -268,7 +389,7 @@ export class PointBuilderSopNode extends TypedSopNode<PointBuilderSopParamsConfi
 	}
 
 	functionEvalArgsWithParamConfigs() {
-		const list: Array<PointContainer | Function | RegisterableVariable | number | boolean> = [
+		const list: Array<PointContainer | Function | RegisterableVariable | number | boolean | AttributesDict> = [
 			...this._functionEvalArgs,
 		];
 		for (const paramConfig of this._paramConfigs) {

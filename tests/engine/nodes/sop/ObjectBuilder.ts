@@ -5,6 +5,8 @@ import {SceneJsonExporter} from '../../../../src/engine/io/json/export/Scene';
 import {FloatParam} from '../../../../src/engine/params/Float';
 import {ParamType} from '../../../../src/engine/poly/ParamType';
 import {AssemblersUtils} from '../../../helpers/AssemblersUtils';
+import {AttribClass} from '../../../../src/core/geometry/Constant';
+import {CoreObject} from '../../../../src/core/geometry/Object';
 
 QUnit.test('sop/ObjectBuilder simple', async (assert) => {
 	const scene = window.scene;
@@ -83,4 +85,43 @@ QUnit.test('sop/ObjectBuilder simple', async (assert) => {
 		assert.equal(await getX2(), 2);
 		assert.equal(await getY2(), 1);
 	});
+});
+
+QUnit.test('sop/ObjectBuilder get set attributes', async (assert) => {
+	const geo1 = window.geo1;
+	const box1 = geo1.createNode('box');
+	const attribCreate1 = geo1.createNode('attribCreate');
+	const objectBuilder1 = geo1.createNode('objectBuilder');
+	attribCreate1.setInput(0, box1);
+	objectBuilder1.setInput(0, attribCreate1);
+	//
+	attribCreate1.setAttribClass(AttribClass.OBJECT);
+	attribCreate1.p.name.set('test');
+	attribCreate1.p.value1.set(1);
+	//
+	const attribute1 = objectBuilder1.createNode('attribute');
+	const attribute2 = objectBuilder1.createNode('attribute');
+	const add1 = objectBuilder1.createNode('add');
+	objectBuilder1.createNode('output');
+
+	[attribute1, attribute2].forEach((attribNode) => {
+		attribNode.setJsType(JsConnectionPointType.FLOAT);
+		attribNode.p.name.set('test');
+	});
+	attribute2.p.exportWhenConnected.set(true);
+	attribute2.setInput(0, add1);
+	add1.setInput(0, attribute1);
+
+	async function getAttribValue(): Promise<number> {
+		const container = await objectBuilder1.compute();
+		const object = container.coreContent()!.threejsObjectsWithGeo()[0];
+		return CoreObject.attribValue(object, 'test') as number;
+	}
+
+	// no addition
+	assert.equal(await getAttribValue(), 1);
+
+	// with addition
+	add1.params.get('add1')!.set(1);
+	assert.equal(await getAttribValue(), 2);
 });

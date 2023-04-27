@@ -4,7 +4,7 @@ import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/conne
 import {RendererUtils} from '../../../helpers/RendererUtils';
 import {Quaternion} from 'three';
 
-QUnit.test('js/setObjectRotation', async (assert) => {
+QUnit.test('js/setObjectQuaternion', async (assert) => {
 	const scene = window.scene;
 	const perspective_camera1 = window.perspective_camera1;
 	const geo1 = window.geo1;
@@ -15,12 +15,13 @@ QUnit.test('js/setObjectRotation', async (assert) => {
 	actor1.flags.display.set(true);
 
 	const onManualTrigger1 = actor1.createNode('onManualTrigger');
-	const setObjectRotation1 = actor1.createNode('setObjectRotation');
-	const euler1 = actor1.createNode('euler');
+	const setObjectQuaternion1 = actor1.createNode('setObjectQuaternion');
+	const quaternion1 = actor1.createNode('quaternion');
 
-	setObjectRotation1.setInput(JsConnectionPointType.TRIGGER, onManualTrigger1);
-	setObjectRotation1.setInput(JsConnectionPointType.EULER, euler1);
-	euler1.p.Euler.set([0, 1, 0]);
+	setObjectQuaternion1.setInput(JsConnectionPointType.TRIGGER, onManualTrigger1);
+	setObjectQuaternion1.setInput(JsConnectionPointType.QUATERNION, quaternion1);
+	quaternion1.p.axis.set([0, 1, 0]);
+	quaternion1.p.angle.set(0.5 * Math.PI);
 
 	const container = await actor1.compute();
 	const object = container.coreContent()!.threejsObjects()[0] as Mesh;
@@ -36,7 +37,7 @@ QUnit.test('js/setObjectRotation', async (assert) => {
 		assert.equal(object.quaternion.angleTo(quat0), 0);
 
 		onManualTrigger1.p.trigger.pressButton();
-		await CoreSleep.sleep(200);
-		assert.in_delta(object.quaternion.angleTo(quat0), 1, 0.05);
+		await CoreSleep.sleep(100);
+		assert.in_delta(object.quaternion.angleTo(quat0), 1.57, 0.05);
 	});
 });

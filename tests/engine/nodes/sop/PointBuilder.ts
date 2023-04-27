@@ -1,4 +1,4 @@
-import {Box3, Vector3} from 'three';
+import {Box3, BufferAttribute, Vector3} from 'three';
 import {PointBuilderSopNode} from '../../../../src/engine/nodes/sop/PointBuilder';
 import {SceneJsonImporter} from '../../../../src/engine/io/json/import/Scene';
 import {SceneJsonExporter} from '../../../../src/engine/io/json/export/Scene';
@@ -6,6 +6,7 @@ import {FloatParam} from '../../../../src/engine/params/Float';
 import {ParamType} from '../../../../src/engine/poly/ParamType';
 import {AssemblersUtils} from '../../../helpers/AssemblersUtils';
 import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Js';
+import {AttributeJsNode} from '../../../../src/engine/nodes/js/Attribute';
 
 const bbox = new Box3();
 const size = new Vector3();
@@ -98,4 +99,77 @@ QUnit.test('sop/pointBuilder simple', async (assert) => {
 		offset2.set(2);
 		assert.equal(await getX2(), 2);
 	});
+});
+
+QUnit.test('sop/pointBuilder read attributes', async (assert) => {
+	const geo1 = window.geo1;
+	const plane1 = geo1.createNode('plane');
+	const pointBuilder1 = geo1.createNode('pointBuilder');
+
+	pointBuilder1.setInput(0, plane1);
+
+	const globals = pointBuilder1.createNode('globals');
+	const output = pointBuilder1.createNode('output');
+	const add1 = pointBuilder1.createNode('add');
+	const attribute1 = pointBuilder1.createNode('attribute');
+	const colorToVec3_1 = pointBuilder1.createNode('colorToVec3');
+
+	output.setInput('position', add1);
+	add1.setInput(0, globals, 'position');
+	add1.setInput(1, colorToVec3_1);
+	colorToVec3_1.setInput(0, attribute1, AttributeJsNode.OUTPUT_NAME);
+
+	attribute1.setJsType(JsConnectionPointType.COLOR);
+	attribute1.p.name.set('color');
+
+	await pointBuilder1.compute();
+	assert.ok(pointBuilder1.states.error.active());
+	assert.equal(pointBuilder1.states.error.message(), 'attribute color is missing');
+
+	const color1 = geo1.createNode('color');
+	color1.setInput(0, plane1);
+	pointBuilder1.setInput(0, color1);
+
+	const container = await pointBuilder1.compute();
+	assert.notOk(pointBuilder1.states.error.active());
+	assert.equal(pointBuilder1.states.error.message(), null);
+
+	const geometry = container.coreContent()!.threejsObjectsWithGeo()[0].geometry;
+	const newPos = (geometry.getAttribute('position') as BufferAttribute).array;
+	const expectedMatch = [0.5, 1, 0.5, 1.5, 1, 0.5, 0.5, 1, 1.5, 1.5, 1, 1.5];
+	for (let i = 0; i < newPos.length; i++) {
+		assert.in_delta(newPos[i], expectedMatch[i], 0.001, `${i}`);
+	}
+});
+
+QUnit.test('sop/pointBuilder write attributes', async (assert) => {
+	const geo1 = window.geo1;
+	const plane1 = geo1.createNode('plane');
+	const pointBuilder1 = geo1.createNode('pointBuilder');
+
+	pointBuilder1.setInput(0, plane1);
+
+	const globals = pointBuilder1.createNode('globals');
+	const output = pointBuilder1.createNode('output');
+	const attribute1 = pointBuilder1.createNode('attribute');
+	const vec3ToColor_1 = pointBuilder1.createNode('vec3ToColor');
+
+	output.setInput('position', globals, 'position');
+	vec3ToColor_1.setInput(0, globals, 'position');
+	attribute1.setInput(0, vec3ToColor_1);
+
+	attribute1.setJsType(JsConnectionPointType.COLOR);
+	attribute1.p.name.set('color');
+	attribute1.p.exportWhenConnected.set(true);
+
+	const container = await pointBuilder1.compute();
+	assert.notOk(pointBuilder1.states.error.active());
+	assert.equal(pointBuilder1.states.error.message(), null);
+
+	const geometry = container.coreContent()!.threejsObjectsWithGeo()[0].geometry;
+	const color = (geometry.getAttribute('color') as BufferAttribute).array;
+	const expectedMatch = [-0.5, 0, -0.5, 0.5, 0, -0.5, -0.5, 0, 0.5, 0.5, 0, 0.5];
+	for (let i = 0; i < color.length; i++) {
+		assert.in_delta(color[i], expectedMatch[i], 0.001, `${i}`);
+	}
 });

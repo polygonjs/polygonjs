@@ -1,4 +1,4 @@
-import {BaseJsShaderAssembler, INSERT_DEFINE_AFTER, INSERT_BODY_AFTER, FunctionData} from '../_Base';
+import {BaseJsShaderAssembler, INSERT_DEFINE_AFTER, INSERT_BODY_AFTER} from '../_Base';
 import {RegisterableVariable} from '../_BaseJsPersistedConfigUtils';
 import {ShaderConfig} from '../../configs/ShaderConfig';
 import {VariableConfig} from '../../configs/VariableConfig';
@@ -10,6 +10,10 @@ import {JsLinesCollectionController} from '../../utils/JsLinesCollectionControll
 import {Vector3} from 'three';
 import {NamedFunctionMap} from '../../../../../poly/registers/functions/All';
 import {ParamOptions} from '../../../../../params/utils/OptionsController';
+import {AttributeJsNode} from '../../../Attribute';
+import {NodeContext} from '../../../../../poly/NodeContext';
+import {JsType} from '../../../../../poly/registers/nodes/types/Js';
+import {PointBuilderFunctionData, PointBuilderFunctionDataAttributeDataItem} from './PointBuilderPersistedConfig';
 
 export enum FunctionConstant {
 	POINT_CONTAINER = 'pointContainer',
@@ -17,6 +21,7 @@ export enum FunctionConstant {
 	NORMAL = 'pointContainer.normal',
 	PTNUM = 'pointContainer.ptnum',
 	OBJNUM = 'pointContainer.objnum',
+	ATTRIBUTES_DICT = 'attributesDict',
 }
 export interface PointContainer {
 	position: Vector3;
@@ -39,9 +44,6 @@ ${INSERT_BODY_AFTER}
 `;
 
 export class JsAssemblerPointBuilder extends BaseJsShaderAssembler {
-	// private _function: Function | undefined;
-	// private _uniforms: IUniforms | undefined;
-	// private _functionsByName: Map<string, Function> = new Map();
 	makeFunctionNodeDirtyOnChange() {
 		return true;
 	}
@@ -65,7 +67,7 @@ export class JsAssemblerPointBuilder extends BaseJsShaderAssembler {
 		return _options;
 	}
 
-	functionData(): FunctionData | undefined {
+	functionData(): PointBuilderFunctionData | undefined {
 		const functionBody = this._shaders_by_name.get(ShaderName.FRAGMENT);
 		if (!functionBody) {
 			return;
@@ -82,6 +84,21 @@ export class JsAssemblerPointBuilder extends BaseJsShaderAssembler {
 			functionNames.push(namedFunction.type() as keyof NamedFunctionMap);
 			functionsByName[namedFunction.type()] = namedFunction.func.bind(namedFunction);
 		});
+
+		// gather attribute data
+		const attribNodes: AttributeJsNode[] = [];
+		this._gl_parent_node.childrenController?.traverseChildren((child) => {
+			if (child.context() == NodeContext.JS && child.type() == JsType.ATTRIBUTE) {
+				attribNodes.push(child as AttributeJsNode);
+			}
+		});
+		const attributesRead: PointBuilderFunctionDataAttributeDataItem[] = attribNodes
+			.filter((n) => n.isImporting())
+			.map((attribNode) => attribNode.attribData());
+		const attributesWrite: PointBuilderFunctionDataAttributeDataItem[] = attribNodes
+			.filter((n) => n.isExporting())
+			.map((attribNode) => attribNode.attribData());
+
 		// const paramConfigs = this.param_configs();
 		const paramConfigs = this.param_configs();
 		return {
@@ -91,85 +108,30 @@ export class JsAssemblerPointBuilder extends BaseJsShaderAssembler {
 			functionNames,
 			functionsByName,
 			paramConfigs: [...paramConfigs],
+			attributesData: {
+				read: attributesRead,
+				write: attributesWrite,
+			},
 		};
 	}
-
-	// uniforms() {
-	// 	return this._uniforms;
-	// }
-
-	// evalFunction(position: Vector3) {
-	// 	if (this._function) {
-	// 		return this._function(position);
-	// 	}
-	// }
 
 	override updateFunction() {
 		super.updateFunction();
 		this._lines = new Map();
 		this._shaders_by_name = new Map();
-		// this._functionsByName.clear();
 		const shaderNames = this.shaderNames();
-		// for (let shader_name of shaderNames) {
-		// 	if (shader_name == ShaderName.FRAGMENT) {
-		// 		const template = this.templateShader().fragmentShader;
-		// 		this._lines.set(shader_name, template.split('\n'));
-		// 	}
-		// }
+
 		if (this._root_nodes.length > 0) {
 			this.buildCodeFromNodes(this._root_nodes);
 			this._buildLines();
 		}
 
-		// this._uniforms = this._uniforms || {};
-		// this._gl_parent_node.scene().uniformsController.addUniforms(this._uniforms, {
-		// 	paramConfigs: this.param_configs(),
-		// 	additionalTextureUniforms: {},
-		// 	timeDependent: this.uniformsTimeDependent(),
-		// 	resolutionDependent: this.uniformsResolutionDependent(),
-		// 	raymarchingLightsWorldCoordsDependent: this._raymarchingLightsWorldCoordsDependent(),
-		// });
-
 		for (let shaderName of shaderNames) {
 			const lines = this._lines.get(shaderName);
 			if (lines) {
-				// const body = lines.join('\n');
-				// // if (this.function_main_string) {
-				// try {
-				// 	this._function = new Function(
-				// 		'position',
-				// 		// 'Core',
-				// 		// 'CoreType',
-				// 		// 'param',
-				// 		// 'methods',
-				// 		// '_set_error_from_error',
-				// 		`
-				// 		try {
-				// 			${body}
-				// 		} catch(e) {
-				// 			_set_error_from_error(e)
-				// 			return 0;
-				// 		}`
-				// 	);
-				// } catch (e) {
-				// 	console.warn(e);
-				// 	// this.set_error('cannot generate function');
-				// }
-				//} //else {
-				// this.set_error('cannot generate function body');
-				// }
-
 				this._shaders_by_name.set(shaderName, lines.join('\n'));
 			}
 		}
-
-		// ShadersCollectionController;
-
-		// handleCopBuilderDependencies({
-		// 	node: this.currentGlParentNode() as JSSDFSopNode,
-		// 	timeDependent: this.uniformsTimeDependent(),
-		// 	uniforms: this._uniforms as IUniformsWithTime,
-		// });
 	}
 
 	//
@@ -198,52 +160,26 @@ export class JsAssemblerPointBuilder extends BaseJsShaderAssembler {
 	//
 	//
 	override create_shader_configs() {
-		return [new ShaderConfig(ShaderName.FRAGMENT, [PointVariable.POSITION, PointVariable.NORMAL], [])];
+		return [
+			new ShaderConfig(
+				ShaderName.FRAGMENT,
+				[
+					PointVariable.POSITION,
+					PointVariable.NORMAL,
+					// attribute
+					AttributeJsNode.INPUT_NAME,
+				],
+				[]
+			),
+		];
 	}
 	override create_variable_configs() {
 		return [
 			new VariableConfig(PointVariable.POSITION, {
 				prefix: 'return ',
 			}),
-			// new VariableConfig('alpha', {
-			// 	prefix: 'diffuseColor.a = ',
-			// 	default: '1.0',
-			// }),
 		];
 	}
-
-	//
-	//
-	// TEMPLATE HOOKS
-	//
-	//
-	// protected override insertDefineAfter(shader_name: ShaderName) {
-	// 	return '// INSERT DEFINE';
-	// }
-	// protected override insertBodyAfter(shader_name: ShaderName) {
-	// 	return '// INSERT BODY';
-	// }
-	// protected override linesToRemove(shader_name: ShaderName) {
-	// 	return ['// INSERT DEFINE', '// INSERT BODY'];
-	// }
-
-	// private _handle_gl_FragCoord(body_lines: string[], shaderName: ShaderName, var_name: string) {
-	// 	if (shaderName == ShaderName.FRAGMENT) {
-	// 		body_lines.push(`vec4 ${var_name} = gl_FragCoord`);
-	// 	}
-	// }
-	// private _handle_resolution(bodyLines: string[], shaderName: ShaderName, var_name: string) {
-	// 	if (shaderName == ShaderName.FRAGMENT) {
-	// 		bodyLines.push(`vec2 ${var_name} = resolution`);
-	// 	}
-	// }
-	// private _handleUV(bodyLines: string[], shaderName: ShaderName, var_name: string) {
-	// 	if (shaderName == ShaderName.FRAGMENT) {
-	// 		bodyLines.push(
-	// 			`vec2 ${var_name} = vec2(gl_FragCoord.x / (resolution.x-1.), gl_FragCoord.y / (resolution.y-1.))`
-	// 		);
-	// 	}
-	// }
 
 	override setNodeLinesOutput(outputNode: OutputJsNode, linesController: JsLinesCollectionController) {
 		const inputNames = this.inputNamesForShaderName(outputNode, linesController.currentShaderName());
@@ -258,9 +194,7 @@ export class JsAssemblerPointBuilder extends BaseJsShaderAssembler {
 					if (inputName == PointVariable.POSITION) {
 						bodyLine = `${FunctionConstant.POSITION}.copy(${varName})`;
 					}
-					// if (input_name == 'alpha') {
-					// 	body_line = `diffuseColor.a = ${ThreeToGl.any(gl_var)}`;
-					// }
+
 					if (bodyLine) {
 						linesController._addBodyLines(outputNode, [bodyLine]);
 					}
@@ -276,7 +210,6 @@ export class JsAssemblerPointBuilder extends BaseJsShaderAssembler {
 			return;
 		}
 		const bodyLines: string[] = [];
-		// const definitions: UniformJsDefinition[] = [];
 
 		const usedOutputNames = globalsNode.io.outputs.used_output_names();
 		for (const outputName of usedOutputNames) {
@@ -284,25 +217,39 @@ export class JsAssemblerPointBuilder extends BaseJsShaderAssembler {
 
 			switch (outputName) {
 				case 'position':
-					// definitions.push(new UniformJsDefinition(globals_node, JsConnectionPointType.FLOAT, output_name));
 					linesController.addVariable(globalsNode, new Vector3(), varName);
 					bodyLines.push(`${varName}.copy(${FunctionConstant.POINT_CONTAINER}.${outputName})`);
-
-					// this.setUniformsTimeDependent();
 					break;
-
-				// case 'uv':
-				// 	this._handleUV(body_lines, shader_name, var_name);
-				// 	break;
-				// case 'gl_FragCoord':
-				// 	this._handle_gl_FragCoord(body_lines, shader_name, var_name);
-				// 	break;
-				// case 'resolution':
-				// 	this._handle_resolution(body_lines, shader_name, var_name);
-				// 	break;
 			}
 		}
-		// shadersCollectionController.addDefinitions(globalsNode, definitions, shaderName);
 		linesController._addBodyLines(globalsNode, bodyLines);
+	}
+	override setNodeLinesAttribute(attributeNode: AttributeJsNode, linesController: JsLinesCollectionController) {
+		const shaderName = linesController.currentShaderName();
+		const shaderConfig = this.shader_config(shaderName);
+		if (!shaderConfig) {
+			return;
+		}
+		const bodyLines: string[] = [];
+		const attribName = attributeNode.attributeName();
+		// const dataType = attributeNode.jsType();
+
+		// export
+		if (attributeNode.isExporting()) {
+			const exportedValue = attributeNode.variableForInput(linesController, AttributeJsNode.INPUT_NAME);
+			const bodyLine = `${FunctionConstant.ATTRIBUTES_DICT}.set('${attribName}', ${exportedValue})`;
+			bodyLines.push(bodyLine);
+		}
+
+		// output
+		const usedOutputNames = attributeNode.io.outputs.used_output_names();
+
+		for (const outputName of usedOutputNames) {
+			const varName = attributeNode.jsVarName(outputName);
+
+			const bodyLine = `${varName} = ${FunctionConstant.ATTRIBUTES_DICT}.get('${attribName}')`;
+			bodyLines.push(bodyLine);
+		}
+		linesController._addBodyLines(attributeNode, bodyLines);
 	}
 }

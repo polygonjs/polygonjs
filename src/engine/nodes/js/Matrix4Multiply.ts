@@ -13,7 +13,7 @@ import {Poly} from '../../Poly';
 import {Matrix4} from 'three';
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
 
-enum Matrix4MultiplyInputName {
+export enum Matrix4MultiplyInputName {
 	m1 = 'm1',
 	m2 = 'm2',
 }

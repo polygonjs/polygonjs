@@ -679,7 +679,7 @@ export const JsConnectionPointInitValueMap: ConnectionPointInitValueMapGeneric =
 export type ConnectionPointComponentsCountMapGeneric = {
 	[key in JsConnectionPointType]: number;
 };
-export const GlConnectionPointComponentsCountMap: ConnectionPointComponentsCountMapGeneric = {
+export const JsConnectionPointComponentsCountMap: ConnectionPointComponentsCountMapGeneric = {
 	[JsConnectionPointType.ANIMATION_ACTION]: 1,
 	[JsConnectionPointType.ANIMATION_MIXER]: 1,
 	[JsConnectionPointType.BOOLEAN]: 1,

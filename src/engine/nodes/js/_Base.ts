@@ -36,7 +36,6 @@ export interface WrappedBodyLines {
 }
 
 function wrapComputed(varName: string): string {
-	console.warn('wrapComputed', varName);
 	return `this.${varName}.value`;
 }
 function wrapIfComputed(varName: string, shadersCollectionController: JsLinesCollectionController): string {

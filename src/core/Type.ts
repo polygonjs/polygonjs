@@ -9,25 +9,29 @@ export function isBoolean(value: any): value is boolean {
 export function isPromise<T extends any>(value: any): value is Promise<T> {
 	return value instanceof Promise;
 }
+export function isNumber(value: any): value is number {
+	return typeof value == 'number';
+}
+export function isString(value: any): value is string {
+	return typeof value == 'string';
+}
+export function isColor(value: any): value is Color {
+	return value instanceof Color;
+}
+export function isVector(value: any): value is Vector2 | Vector3 | Vector4 {
+	return value instanceof Vector2 || value instanceof Vector3 || value instanceof Vector4;
+}
 export class CoreType {
-	static isNumber(value: any): value is number {
-		return typeof value == 'number';
-	}
-	static isVector(value: any): value is Vector2 | Vector3 | Vector4 {
-		return value instanceof Vector2 || value instanceof Vector3 || value instanceof Vector4;
-	}
-	static isColor(value: any): value is Color {
-		return value instanceof Color;
-	}
+	static isNumber = isNumber;
+	static isVector = isVector;
+	static isColor = isColor;
 	static isEuler(value: any): value is Euler {
 		return value instanceof Euler;
 	}
 	static isQuaternion(value: any): value is Quaternion {
 		return value instanceof Quaternion;
 	}
-	static isString(value: any): value is string {
-		return typeof value == 'string';
-	}
+	static isString = isString;
 	static isBoolean = isBoolean;
 	static isNaN(value: any): boolean {
 		return isNaN(value);

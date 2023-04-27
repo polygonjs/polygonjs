@@ -11,6 +11,19 @@ import {
 	variablesByNameFromPersistedConfigData,
 	functionsByNameFromPersistedConfigData,
 } from '../_BaseJsPersistedConfig';
+import {JsConnectionPointType} from '../../../../utils/io/connections/Js';
+
+export interface PointBuilderFunctionDataAttributeDataItem {
+	attribName: string;
+	attribType: JsConnectionPointType;
+}
+export interface PointBuilderFunctionDataAttributeDataReadWrite {
+	read: PointBuilderFunctionDataAttributeDataItem[];
+	write: PointBuilderFunctionDataAttributeDataItem[];
+}
+export interface PointBuilderFunctionData extends FunctionData {
+	attributesData: PointBuilderFunctionDataAttributeDataReadWrite;
+}
 
 export interface PointBuilderPersistedConfigBaseJsData extends PersistedConfigBaseJsData {
 	functionBody: string;
@@ -18,6 +31,7 @@ export interface PointBuilderPersistedConfigBaseJsData extends PersistedConfigBa
 	variables: SerializedVariable<SerializedVariableType>[];
 	functionNames: Array<keyof NamedFunctionMap>;
 	serializedParamConfigs: JsParamConfigJSON<ParamType>[];
+	attributesData: PointBuilderFunctionDataAttributeDataReadWrite;
 }
 
 export class PointBuilderPersistedConfig extends BasePersistedConfig {
@@ -33,7 +47,7 @@ export class PointBuilderPersistedConfig extends BasePersistedConfig {
 		if (!functionData) {
 			return;
 		}
-		const {functionBody, variableNames, functionNames, paramConfigs} = functionData;
+		const {functionBody, variableNames, functionNames, paramConfigs, attributesData} = functionData;
 
 		const data: PointBuilderPersistedConfigBaseJsData = {
 			functionBody,
@@ -41,6 +55,7 @@ export class PointBuilderPersistedConfig extends BasePersistedConfig {
 			variables: serializedVariablesFromFunctionData(functionData),
 			functionNames,
 			serializedParamConfigs: paramConfigs.map((p) => p.toJSON()),
+			attributesData,
 		};
 		return data;
 	}
@@ -50,15 +65,16 @@ export class PointBuilderPersistedConfig extends BasePersistedConfig {
 			return;
 		}
 
-		const {functionBody, variableNames, functionNames, serializedParamConfigs} = data;
+		const {functionBody, variableNames, functionNames, serializedParamConfigs, attributesData} = data;
 
-		const functionData: FunctionData = {
+		const functionData: PointBuilderFunctionData = {
 			functionBody: functionBody,
 			variableNames,
 			variablesByName: variablesByNameFromPersistedConfigData(data),
 			functionNames,
 			functionsByName: functionsByNameFromPersistedConfigData(data, this.node),
 			paramConfigs: serializedParamConfigs.map((json) => JsParamConfig.fromJSON(json)),
+			attributesData,
 		};
 		this.node.updateFromFunctionData(functionData);
 	}
