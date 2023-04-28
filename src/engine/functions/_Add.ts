@@ -33,7 +33,6 @@ export class addVectorNumber<V extends AvailableItem> extends NamedFunction2<[V,
 		return 'addVectorNumber';
 	}
 	func(vector: V, number: number): V {
-		console.log({vector, number});
 		return vector.addScalar(number) as V;
 	}
 }

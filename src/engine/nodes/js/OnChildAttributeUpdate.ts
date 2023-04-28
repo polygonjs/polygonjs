@@ -131,21 +131,21 @@ export class OnChildAttributeUpdateJsNode extends TypedJsNode<OnChildAttributeUp
 
 		const varName = this.jsVarName('in');
 		const variable = createVariable(JsConnectionPointTypeToArrayTypeMap[type]);
-		if (variable) {
-			shadersCollectionController.addVariable(this, varName, variable);
+		const tmpVarName = variable ? shadersCollectionController.addVariable(this, variable, varName) : undefined;
+		if (tmpVarName) {
+			shadersCollectionController.addDefinitions(this, [
+				new WatchedValueJsDefinition(
+					this,
+					shadersCollectionController,
+					type,
+					getChildrenAttributesRef.asString(object3D, attribName, `'${type}'`, tmpVarName),
+					`this.${nodeMethodName(this)}()`,
+					{
+						deep: true,
+					}
+				),
+			]);
 		}
-		shadersCollectionController.addDefinitions(this, [
-			new WatchedValueJsDefinition(
-				this,
-				shadersCollectionController,
-				type,
-				getChildrenAttributesRef.asString(object3D, attribName, `'${type}'`, varName),
-				`this.${nodeMethodName(this)}()`,
-				{
-					deep: true,
-				}
-			),
-		]);
 
 		// outputs
 		const usedOutputNames = this.io.outputs.used_output_names();
@@ -160,16 +160,16 @@ export class OnChildAttributeUpdateJsNode extends TypedJsNode<OnChildAttributeUp
 			const func = Poly.namedFunctionsRegister.getFunction(functionName, this, shadersCollectionController);
 			const varName = this.jsVarName(propertyName);
 			const variable = createVariable(JsConnectionPointTypeToArrayTypeMap[type]);
-			if (variable) {
-				shadersCollectionController.addVariable(this, varName, variable);
+			const tmpVarName = variable ? shadersCollectionController.addVariable(this, variable, varName) : undefined;
+			if (tmpVarName) {
+				shadersCollectionController.addBodyOrComputed(this, [
+					{
+						dataType: type,
+						varName,
+						value: func.asString(object3D, attribName, `'${type}'`, tmpVarName),
+					},
+				]);
 			}
-			shadersCollectionController.addBodyOrComputed(this, [
-				{
-					dataType: type,
-					varName,
-					value: func.asString(object3D, attribName, `'${type}'`, varName),
-				},
-			]);
 		};
 
 		_val(OnChildAttributeUpdateJsNode.OUTPUT_NEW_VALUES, 'getChildrenAttributes', type);
@@ -190,21 +190,21 @@ export class OnChildAttributeUpdateJsNode extends TypedJsNode<OnChildAttributeUp
 		);
 		const varName = this.jsVarName('in');
 		const variable = createVariable(JsConnectionPointTypeToArrayTypeMap[type]);
-		if (variable) {
-			shadersCollectionController.addVariable(this, varName, variable);
+		const tmpVarName = variable ? shadersCollectionController.addVariable(this, variable, varName) : undefined;
+		if (tmpVarName) {
+			shadersCollectionController.addDefinitions(this, [
+				new WatchedValueJsDefinition(
+					this,
+					shadersCollectionController,
+					type,
+					getChildrenAttributesRef.asString(object3D, attribName, `'${type}'`, tmpVarName),
+					`this.${nodeMethodName(this)}()`,
+					{
+						deep: true,
+					}
+				),
+			]);
 		}
-		shadersCollectionController.addDefinitions(this, [
-			new WatchedValueJsDefinition(
-				this,
-				shadersCollectionController,
-				type,
-				getChildrenAttributesRef.asString(object3D, attribName, `'${type}'`, varName),
-				`this.${nodeMethodName(this)}()`,
-				{
-					deep: true,
-				}
-			),
-		]);
 
 		shadersCollectionController.addTriggeringLines(this, [triggeredMethods], {
 			gatherable: false,

@@ -47,7 +47,7 @@ export class CatmullRomCurve3GetPointJsNode extends TypedJsNode<CatmullRomCurve3
 		const inputCurve = this.variableForInput(shadersCollectionController, JsConnectionPointType.CATMULL_ROM_CURVE3);
 		const t = this.variableForInputParam(shadersCollectionController, this.p.t);
 		const varName = this.jsVarName(OUTPUT_NAME);
-		shadersCollectionController.addVariable(this, varName, new Vector3());
+		const tmpVarName = shadersCollectionController.addVariable(this, new Vector3());
 		const func = Poly.namedFunctionsRegister.getFunction(
 			'catmullRomCurve3GetPoint',
 			this,
@@ -57,7 +57,7 @@ export class CatmullRomCurve3GetPointJsNode extends TypedJsNode<CatmullRomCurve3
 			{
 				dataType: JsConnectionPointType.VECTOR3,
 				varName,
-				value: func.asString(inputCurve, t, varName),
+				value: func.asString(inputCurve, t, tmpVarName),
 			},
 		]);
 	}

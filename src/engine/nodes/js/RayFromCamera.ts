@@ -58,9 +58,9 @@ export class RayFromCameraJsNode extends TypedJsNode<RayFromCameraJsParamsConfig
 		const y = this.variableForInputParam(shadersCollectionController, this.p.y);
 		const out = this.jsVarName(JsConnectionPointType.RAY);
 
-		shadersCollectionController.addVariable(this, out, new Ray());
+		const tmpVarName = shadersCollectionController.addVariable(this, new Ray());
 		const func = Poly.namedFunctionsRegister.getFunction('rayFromCamera', this, shadersCollectionController);
-		const bodyLine = func.asString(camera, x, y, out);
+		const bodyLine = func.asString(camera, x, y, tmpVarName);
 		shadersCollectionController.addBodyOrComputed(this, [
 			{dataType: JsConnectionPointType.FLOAT, varName: out, value: bodyLine},
 		]);

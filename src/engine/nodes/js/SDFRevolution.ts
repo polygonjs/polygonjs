@@ -59,14 +59,14 @@ export class SDFRevolutionJsNode extends BaseSDFJsNode<SDFRevolutionJsParamsConf
 		const radius = this.variableForInputParam(shadersCollectionController, this.p.radius);
 
 		const out = this.jsVarName(OUTPUT_NAME);
-		shadersCollectionController.addVariable(this, out, new Vector2());
+		const tmpVarName = shadersCollectionController.addVariable(this, new Vector2());
 		const func = Poly.namedFunctionsRegister.getFunction(this._functionName(), this, shadersCollectionController);
 		// const bodyLine = `${func.asString(position, center, radius, out)}`;
 		shadersCollectionController.addBodyOrComputed(this, [
 			{
 				dataType: JsConnectionPointType.VECTOR2,
 				varName: out,
-				value: func.asString(position, center, radius, out),
+				value: func.asString(position, center, radius, tmpVarName),
 			},
 		]);
 	}

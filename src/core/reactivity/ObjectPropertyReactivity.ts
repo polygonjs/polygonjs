@@ -1,9 +1,10 @@
-import {Object3D, Vector3, Quaternion, Matrix4, Material} from 'three';
+import {Object3D, Vector3, Quaternion, Matrix4, Material, Euler} from 'three';
 import {Ref} from '@vue/reactivity';
 import {incrementRefSafely, ref} from '../../core/reactivity/CoreReactivity';
 
 export enum GetObjectPropertyJsNodeInputName {
 	position = 'position',
+	rotation = 'rotation',
 	quaternion = 'quaternion',
 	scale = 'scale',
 	matrix = 'matrix',
@@ -41,6 +42,7 @@ export const OBJECT_TRANSFORM_PROPERTIES = [
 ];
 export interface PropertyType {
 	position: Vector3;
+	rotation: Euler;
 	quaternion: Quaternion;
 	scale: Vector3;
 	matrix: Matrix4;

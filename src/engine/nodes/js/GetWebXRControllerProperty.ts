@@ -92,13 +92,13 @@ export class GetWebXRControllerPropertyJsNode extends TypedJsNode<GetWebXRContro
 				return;
 			}
 			const varName = this.jsVarName(propertyName);
-			shadersCollectionController.addVariable(this, varName, new Ray());
+			const tmpVarName = shadersCollectionController.addVariable(this, new Ray());
 			const func = Poly.namedFunctionsRegister.getFunction(functionName, this, shadersCollectionController);
 			shadersCollectionController.addBodyOrComputed(this, [
 				{
 					dataType: type,
 					varName,
-					value: func.asString(object3D, controllerIndex, varName),
+					value: func.asString(object3D, controllerIndex, tmpVarName),
 				},
 			]);
 		};
@@ -129,13 +129,13 @@ export class GetWebXRControllerPropertyJsNode extends TypedJsNode<GetWebXRContro
 				return;
 			}
 			const varName = this.jsVarName(propertyName);
-			shadersCollectionController.addVariable(this, varName, new Vector3());
+			const tmpVarName = shadersCollectionController.addVariable(this, new Vector3());
 			const func = Poly.namedFunctionsRegister.getFunction(functionName, this, shadersCollectionController);
 			shadersCollectionController.addBodyOrComputed(this, [
 				{
 					dataType: type,
 					varName,
-					value: func.asString(object3D, controllerIndex, varName),
+					value: func.asString(object3D, controllerIndex, tmpVarName),
 				},
 			]);
 		};

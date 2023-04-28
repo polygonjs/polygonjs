@@ -239,7 +239,7 @@ export class JsAssemblerSDF extends BaseJsShaderAssembler {
 	// 	}
 	// }
 
-	override set_node_lines_output(outputNode: OutputJsNode, shadersCollectionController: JsLinesCollectionController) {
+	override setNodeLinesOutput(outputNode: OutputJsNode, shadersCollectionController: JsLinesCollectionController) {
 		const inputNames = this.inputNamesForShaderName(outputNode, shadersCollectionController.currentShaderName());
 		if (inputNames) {
 			for (const inputName of inputNames) {
@@ -263,10 +263,7 @@ export class JsAssemblerSDF extends BaseJsShaderAssembler {
 		}
 	}
 
-	override set_node_lines_globals(
-		globalsNode: GlobalsJsNode,
-		shadersCollectionController: JsLinesCollectionController
-	) {
+	override setNodeLinesGlobals(globalsNode: GlobalsJsNode, shadersCollectionController: JsLinesCollectionController) {
 		const shaderName = shadersCollectionController.currentShaderName();
 		const shaderConfig = this.shader_config(shaderName);
 		if (!shaderConfig) {
@@ -282,7 +279,7 @@ export class JsAssemblerSDF extends BaseJsShaderAssembler {
 			switch (outputName) {
 				case 'position':
 					// definitions.push(new UniformJsDefinition(globals_node, JsConnectionPointType.FLOAT, output_name));
-					shadersCollectionController.addVariable(globalsNode, varName, new Vector3());
+					shadersCollectionController.addVariable(globalsNode, new Vector3(), varName);
 					bodyLines.push(`${varName}.copy(${outputName})`);
 
 					// this.setUniformsTimeDependent();

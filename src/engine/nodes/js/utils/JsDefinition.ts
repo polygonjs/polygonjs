@@ -135,10 +135,16 @@ export class ConstantJsDefinition extends TypedJsDefinition<JsDefinitionType.CON
 		protected _value: string
 	) {
 		super(JsDefinitionType.CONSTANT, _node, _shaderCollectionController, _dataType, _name);
-		_shaderCollectionController.addComputedVarName(this.name());
+		if (this._shaderCollectionController.assembler().computedVariablesAllowed()) {
+			_shaderCollectionController.addComputedVarName(this.name());
+		}
 	}
 	line() {
-		return `	${this.name()} = {value:${this._value}}`;
+		if (this._shaderCollectionController.assembler().computedVariablesAllowed()) {
+			return `	${this.name()} = {value:${this._value}}`;
+		} else {
+			return `	${this.name()} = ${this._value}`;
+		}
 	}
 }
 export class RefJsDefinition extends TypedJsDefinition<JsDefinitionType.REF> {

@@ -154,7 +154,6 @@ export class SDFBuilderSopNode extends TypedSopNode<SDFBuilderSopParamsConfig> {
 
 		// eval
 		const _func = this._function;
-		console.log({_func});
 		if (_func) {
 			const args = this.functionEvalArgsWithParamConfigs();
 			const convertedFunction = (p: Number3) => {

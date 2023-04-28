@@ -16,9 +16,11 @@ QUnit.test('js/setObjectRotation', async (assert) => {
 
 	const onManualTrigger1 = actor1.createNode('onManualTrigger');
 	const setObjectRotation1 = actor1.createNode('setObjectRotation');
+	const euler1 = actor1.createNode('euler');
 
 	setObjectRotation1.setInput(JsConnectionPointType.TRIGGER, onManualTrigger1);
-	setObjectRotation1.p.rotation.set([0, 1, 0]);
+	setObjectRotation1.setInput(JsConnectionPointType.EULER, euler1);
+	euler1.p.Euler.set([0, 1, 0]);
 
 	const container = await actor1.compute();
 	const object = container.coreContent()!.threejsObjects()[0] as Mesh;

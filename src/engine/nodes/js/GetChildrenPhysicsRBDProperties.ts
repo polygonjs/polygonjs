@@ -77,13 +77,13 @@ export class GetChildrenPhysicsRBDPropertiesJsNode extends ParamlessTypedJsNode 
 				return;
 			}
 			const varName = this.jsVarName(propertyName);
-			shadersCollectionController.addVariable(this, varName, new VectorArray([new Vector3()]));
+			const tmpVarName = shadersCollectionController.addVariable(this, new VectorArray([new Vector3()]));
 			const func = Poly.namedFunctionsRegister.getFunction(functionName, this, shadersCollectionController);
 			shadersCollectionController.addBodyOrComputed(this, [
 				{
 					dataType: type,
 					varName,
-					value: func.asString(object3D, varName),
+					value: func.asString(object3D, tmpVarName),
 				},
 			]);
 		};
@@ -98,13 +98,13 @@ export class GetChildrenPhysicsRBDPropertiesJsNode extends ParamlessTypedJsNode 
 				return;
 			}
 			const varName = this.jsVarName(propertyName);
-			shadersCollectionController.addVariable(this, varName, new PrimitiveArray([0]));
+			const tmpVarName = shadersCollectionController.addVariable(this, new PrimitiveArray([0]));
 			const func = Poly.namedFunctionsRegister.getFunction(functionName, this, shadersCollectionController);
 			shadersCollectionController.addBodyOrComputed(this, [
 				{
 					dataType: type,
 					varName,
-					value: func.asString(object3D, varName),
+					value: func.asString(object3D, tmpVarName),
 				},
 			]);
 		};
@@ -117,13 +117,13 @@ export class GetChildrenPhysicsRBDPropertiesJsNode extends ParamlessTypedJsNode 
 				return;
 			}
 			const varName = this.jsVarName(propertyName);
-			shadersCollectionController.addVariable(this, varName, new PrimitiveArray([0]));
+			const tmpVarName = shadersCollectionController.addVariable(this, new PrimitiveArray([0]));
 			const func = Poly.namedFunctionsRegister.getFunction(functionName, this, shadersCollectionController);
 			shadersCollectionController.addBodyOrComputed(this, [
 				{
 					dataType: type,
 					varName,
-					value: func.asString(object3D, varName),
+					value: func.asString(object3D, tmpVarName),
 				},
 			]);
 		};

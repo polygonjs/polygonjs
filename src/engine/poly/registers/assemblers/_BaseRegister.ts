@@ -18,6 +18,8 @@ export enum AssemblerName {
 	GL_VOLUME = 'GL_VOLUME',
 	//
 	JS_ACTOR = 'JS_ACTOR',
+	JS_OBJECT_BUILDER = 'JS_OBJECT_BUILDER',
+	JS_POINT_BUILDER = 'JS_POINT_BUILDER',
 	JS_SDF = 'JS_SDF',
 }
 

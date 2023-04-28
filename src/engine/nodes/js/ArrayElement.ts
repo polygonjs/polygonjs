@@ -113,13 +113,16 @@ export class ArrayElementJsNode extends TypedJsNode<ArrayElementJsParamsConfig> 
 		const dataType = this._expectedInputTypes()[0];
 		const varName = this.jsVarName(this._expectedOutputName(0));
 		const elementType = JsConnectionPointTypeFromArrayTypeMap[dataType];
-		shadersCollectionController.addVariable(this, varName, createVariable(elementType) as RegisterableVariable);
+		const tmpVarName = shadersCollectionController.addVariable(
+			this,
+			createVariable(elementType) as RegisterableVariable
+		);
 		const func = Poly.namedFunctionsRegister.getFunction('arrayElementVector', this, shadersCollectionController);
 		shadersCollectionController.addBodyOrComputed(this, [
 			{
 				dataType,
 				varName,
-				value: func.asString(array, index, varName),
+				value: func.asString(array, index, tmpVarName),
 			},
 		]);
 	}

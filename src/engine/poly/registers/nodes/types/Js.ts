@@ -31,6 +31,10 @@ export enum JsType {
 	PARAM = 'param',
 	RAY_FROM_CURSOR = 'rayFromCursor',
 	RAY_FROM_CAMERA = 'rayFromCamera',
+	// SDF
+	SDF_BOX = 'SDFBox',
+	SDF_SPHERE = 'SDFSphere',
+	// set
 	SET_OBJECT_LOOK_AT = 'setObjectLookAt',
 	SET_OBJECT_POSITION = 'setObjectPosition',
 	SET_OBJECT_ROTATION = 'setObjectRotation',

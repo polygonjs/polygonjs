@@ -70,13 +70,13 @@ export class TrackFaceJsNode extends TypedJsNode<TrackFaceJsParamsConfig> {
 				return;
 			}
 			const varName = this.jsVarName(propertyName);
-			shadersCollectionController.addVariable(this, varName, new VectorArray(faceTrackingVector4Array()));
+			const tmpVarName =shadersCollectionController.addVariable(this,  new VectorArray(faceTrackingVector4Array()));
 			const func = Poly.namedFunctionsRegister.getFunction(functionName, this, shadersCollectionController);
 			shadersCollectionController.addBodyOrComputed(this, [
 				{
 					dataType: type,
 					varName,
-					value: func.asString(object3D, faceIndex, varName),
+					value: func.asString(object3D, faceIndex, tmpVarName),
 				},
 			]);
 		};

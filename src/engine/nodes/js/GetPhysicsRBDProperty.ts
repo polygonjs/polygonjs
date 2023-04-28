@@ -47,13 +47,13 @@ export class GetPhysicsRBDPropertyJsNode extends ParamlessTypedJsNode {
 				return;
 			}
 			const out = this.jsVarName(propertyName);
-			shadersCollectionController.addVariable(this, out, new Vector3());
+			const tmpVarName = shadersCollectionController.addVariable(this, new Vector3());
 			const func = Poly.namedFunctionsRegister.getFunction(functionName, this, shadersCollectionController);
 			shadersCollectionController.addBodyOrComputed(this, [
 				{
 					dataType: type,
-					varName: this.jsVarName(propertyName),
-					value: func.asString(object3D, out),
+					varName: out,
+					value: func.asString(object3D, tmpVarName),
 				},
 			]);
 		};

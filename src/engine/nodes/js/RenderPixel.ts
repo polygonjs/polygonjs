@@ -73,9 +73,9 @@ export class RenderPixelJsNode extends TypedJsNode<RenderPixelJsParamsConfig> {
 
 	private _addValueRef(linesController: JsLinesCollectionController) {
 		const outValue = this.jsVarName(RenderPixelJsNodeOutputName.value);
-		linesController.addVariable(this, outValue, new Vector4());
+		const tmpVarName = linesController.addVariable(this, new Vector4());
 		linesController.addDefinitions(this, [
-			new RefJsDefinition(this, linesController, JsConnectionPointType.BOOLEAN, outValue, outValue),
+			new RefJsDefinition(this, linesController, JsConnectionPointType.BOOLEAN, outValue, tmpVarName),
 		]);
 		return outValue;
 	}

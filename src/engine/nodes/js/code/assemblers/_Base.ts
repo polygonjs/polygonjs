@@ -2,7 +2,7 @@ import {ShaderMaterial} from 'three';
 import {LineType} from '../utils/LineType';
 import {VariableConfig} from '../configs/VariableConfig';
 import {JsCodeBuilder, CodeBuilderSetCodeLinesOptions} from '../utils/CodeBuilder';
-import {BaseJsNodeType} from '../../_Base';
+import {BaseJsNodeType, TypedJsNode} from '../../_Base';
 import {ShaderConfig} from '../configs/ShaderConfig';
 // import {GlobalsGeometryHandler} from '../globals/Geometry';
 import {TypedAssembler} from '../../../utils/shaders/BaseAssembler';
@@ -118,6 +118,9 @@ export abstract class BaseJsShaderAssembler extends TypedAssembler<NodeContext.J
 	}
 	abstract makeFunctionNodeDirtyOnChange(): boolean;
 	addComputedVarName(varName: string) {
+		if (!this.computedVariablesAllowed()) {
+			return;
+		}
 		this._computedVarNames.add(varName);
 	}
 	registeredAsComputed(varName: string): boolean {
@@ -238,6 +241,7 @@ export abstract class BaseJsShaderAssembler extends TypedAssembler<NodeContext.J
 				// 	break;
 				// }
 				case JsType.ATTRIBUTE: {
+					list.push(node);
 					break;
 				}
 				// case VaryingWriteGlNode.type(): {
@@ -263,12 +267,9 @@ export abstract class BaseJsShaderAssembler extends TypedAssembler<NodeContext.J
 	// 	}
 	// 	return list;
 	// }
-	set_node_lines_globals(globals_node: GlobalsJsNode, shaders_collection_controller: JsLinesCollectionController) {}
-	set_node_lines_output(output_node: OutputJsNode, shaders_collection_controller: JsLinesCollectionController) {}
-	setNodeLinesAttribute(
-		attribute_node: AttributeJsNode,
-		shaders_collection_controller: JsLinesCollectionController
-	) {}
+	setNodeLinesGlobals(globalsNode: GlobalsJsNode, linesController: JsLinesCollectionController) {}
+	setNodeLinesOutput(outputNode: OutputJsNode, linesController: JsLinesCollectionController) {}
+	setNodeLinesAttribute(attributeNode: AttributeJsNode, linesController: JsLinesCollectionController) {}
 
 	//
 	//
@@ -673,17 +674,22 @@ export abstract class BaseJsShaderAssembler extends TypedAssembler<NodeContext.J
 	//
 	//
 	private _registeredVariables: Map<string, RegisterableVariable> = new Map();
-	addVariable(node: BaseJsNodeType, varName: string, variable: RegisterableVariable) {
+	private _registeredVariablesCountByNode: Map<BaseJsNodeType, number> = new Map();
+	addVariable(node: BaseJsNodeType, variable: RegisterableVariable, varName?: string): string {
 		// const nodeSanitizedPath = CoreString.sanitizeName(node.path());
 		// const varFullName = `${nodeSanitizedPath}_${varName}`;
-		this._registeredVariables.set(varName, variable);
-		// return varFullName;
+		const count = this._registeredVariablesCountByNode.get(node) || 0;
+		this._registeredVariablesCountByNode.set(node, count + 1);
+		const varFullName = varName ? varName : 'VAR_' + TypedJsNode.inputVarName(node, count == 0 ? '' : `_${count}`);
+		this._registeredVariables.set(varFullName, variable);
+		return varFullName;
 	}
 	traverseRegisteredVariables(callback: (variable: RegisterableVariable, varName: string) => void) {
 		this._registeredVariables.forEach(callback);
 	}
 	protected _resetRegisteredVariables() {
 		this._registeredVariables.clear();
+		this._registeredVariablesCountByNode.clear();
 	}
 	//
 	//

@@ -6,7 +6,6 @@
 
 import {TRIGGER_CONNECTION_NAME, TypedJsNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {ROTATION_ORDERS, RotationOrder} from '../../../core/Transform';
 import {JsConnectionPoint, JsConnectionPointType, JS_CONNECTION_POINT_IN_NODE_DEF} from '../utils/io/connections/Js';
 import {inputObject3D} from './_BaseObject3D';
 import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
@@ -15,16 +14,6 @@ import {Poly} from '../../Poly';
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
 
 class SetObjectRotationJsParamsConfig extends NodeParamsConfig {
-	/** @param rotation order */
-	rotationOrder = ParamConfig.INTEGER(ROTATION_ORDERS.indexOf(RotationOrder.XYZ), {
-		menu: {
-			entries: ROTATION_ORDERS.map((order, v) => {
-				return {name: order, value: v};
-			}),
-		},
-	});
-	/** @param rotation */
-	rotation = ParamConfig.VECTOR3([0, 0, 0]);
 	/** @param lerp factor */
 	lerp = ParamConfig.FLOAT(1);
 	/** @param sets if the matrix should be updated as the animation progresses */
@@ -43,6 +32,7 @@ export class SetObjectRotationJsNode extends TypedJsNode<SetObjectRotationJsPara
 		this.io.inputs.setNamedInputConnectionPoints([
 			new JsConnectionPoint(TRIGGER_CONNECTION_NAME, JsConnectionPointType.TRIGGER, CONNECTION_OPTIONS),
 			new JsConnectionPoint(JsConnectionPointType.OBJECT_3D, JsConnectionPointType.OBJECT_3D, CONNECTION_OPTIONS),
+			new JsConnectionPoint(JsConnectionPointType.EULER, JsConnectionPointType.EULER, CONNECTION_OPTIONS),
 		]);
 
 		this.io.outputs.setNamedOutputConnectionPoints([
@@ -52,13 +42,12 @@ export class SetObjectRotationJsNode extends TypedJsNode<SetObjectRotationJsPara
 	}
 	override setTriggerableLines(shadersCollectionController: JsLinesCollectionController) {
 		const object3D = inputObject3D(this, shadersCollectionController);
-		const rotation = this.variableForInputParam(shadersCollectionController, this.p.rotation);
-		const rotationOrder = this.variableForInputParam(shadersCollectionController, this.p.rotationOrder);
+		const euler = this.variableForInput(shadersCollectionController, JsConnectionPointType.EULER);
 		const lerp = this.variableForInputParam(shadersCollectionController, this.p.lerp);
 		const updateMatrix = this.variableForInputParam(shadersCollectionController, this.p.updateMatrix);
 
 		const func = Poly.namedFunctionsRegister.getFunction('setObjectRotation', this, shadersCollectionController);
-		const bodyLine = func.asString(object3D, rotation, rotationOrder, lerp, updateMatrix);
+		const bodyLine = func.asString(object3D, euler, lerp, updateMatrix);
 		shadersCollectionController.addTriggerableLines(this, [bodyLine]);
 	}
 }

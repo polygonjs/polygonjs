@@ -1,4 +1,4 @@
-import {Box3, Color, Vector2, Vector3, Vector4, Plane, Ray, Sphere, Quaternion, Matrix4} from 'three';
+import {Box3, Color, Vector2, Vector3, Vector4, Plane, Ray, Sphere, Quaternion, Matrix4, Euler} from 'three';
 import {CoreType} from '../../../../../core/Type';
 import {Number2, Number3, Number4, Number16} from '../../../../../types/GlobalTypes';
 import {TypeAssert} from '../../../../poly/Assert';
@@ -11,6 +11,7 @@ import {
 export type RegisterableVariable =
 	| Box3
 	| Color
+	| Euler
 	| Plane
 	| Quaternion
 	| Matrix4
@@ -59,6 +60,9 @@ export function createVariable(type: JsConnectionPointType) {
 		case JsConnectionPointType.COLOR: {
 			return new Color();
 		}
+		case JsConnectionPointType.EULER: {
+			return new Euler();
+		}
 		case JsConnectionPointType.MATRIX4: {
 			return new Matrix4();
 		}
@@ -75,15 +79,16 @@ export function createVariable(type: JsConnectionPointType) {
 			return new Vector4();
 		}
 		case JsConnectionPointType.BOOLEAN_ARRAY:
-		case JsConnectionPointType.COLOR_ARRAY:
 		case JsConnectionPointType.FLOAT_ARRAY:
-		case JsConnectionPointType.INT_ARRAY: {
+		case JsConnectionPointType.INT_ARRAY:
+		case JsConnectionPointType.STRING_ARRAY: {
 			return createPrimitiveArray(type);
 		}
 		case JsConnectionPointType.MATRIX4_ARRAY:
 		case JsConnectionPointType.QUATERNION_ARRAY:
-		case JsConnectionPointType.STRING_ARRAY:
 		case JsConnectionPointType.TEXTURE_ARRAY:
+		case JsConnectionPointType.COLOR_ARRAY:
+		case JsConnectionPointType.EULER_ARRAY:
 		case JsConnectionPointType.VECTOR2_ARRAY:
 		case JsConnectionPointType.VECTOR3_ARRAY:
 		case JsConnectionPointType.VECTOR4_ARRAY: {

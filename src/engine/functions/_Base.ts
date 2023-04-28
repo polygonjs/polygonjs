@@ -85,7 +85,6 @@ export abstract class NamedFunction9<ARGS extends [any, any, any, any, any, any,
 	ARGS,
 	[string, string, string, string, string, string, string, string, string]
 > {}
-
 //
 //
 // OBJECT

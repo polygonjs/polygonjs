@@ -74,8 +74,10 @@ QUnit.test('js/code modified with new input', async (assert) => {
 	code1.setInput('myBoolParam', constant1);
 
 	const setObjectRotation1 = actor1.createNode('setObjectRotation');
-	setObjectRotation1.p.rotation.set([0, 0.5 * Math.PI, 0]);
+	const euler1 = actor1.createNode('euler');
 	setObjectRotation1.setInput(JsConnectionPointType.TRIGGER, code1);
+	setObjectRotation1.setInput(JsConnectionPointType.EULER, euler1);
+	euler1.p.Euler.set([0, 0.5 * Math.PI, 0]);
 
 	const container = await actor1.compute();
 	const object = container.coreContent()!.threejsObjects()[0];

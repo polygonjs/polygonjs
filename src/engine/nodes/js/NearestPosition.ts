@@ -46,13 +46,13 @@ export class NearestPositionJsNode extends TypedJsNode<NearestPositionJsParamsCo
 
 		// create target var
 		const variable = createVariable(JsConnectionPointType.VECTOR3);
-		if (variable) {
-			shadersCollectionController.addVariable(this, varName, variable);
+		const tmpVarName = variable ? shadersCollectionController.addVariable(this, variable) : undefined;
+		if (!tmpVarName) {
+			return;
 		}
-
 		const func = Poly.namedFunctionsRegister.getFunction('nearestPosition', this, shadersCollectionController);
 		shadersCollectionController.addBodyOrComputed(this, [
-			{dataType: JsConnectionPointType.VECTOR3, varName, value: func.asString(v3, positions, varName)},
+			{dataType: JsConnectionPointType.VECTOR3, varName, value: func.asString(v3, positions, tmpVarName)},
 		]);
 	}
 }

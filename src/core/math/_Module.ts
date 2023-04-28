@@ -1,20 +1,15 @@
 import {LngLatLike, Vector2Like} from '../../types/GlobalTypes';
-import {Vector3} from 'three';
-import {Triangle} from 'three';
+import {Vector3, Triangle, MathUtils} from 'three';
 import {Easing} from './Easing';
 import {CoreType} from '../Type';
 
-const RAD_DEG_RATIO = Math.PI / 180;
 const RAND_A = 12.9898;
 const RAND_B = 78.233;
 const RAND_C = 43758.5453;
 
-export function degToRad(deg: number): number {
-	return deg * RAD_DEG_RATIO;
-}
-export function radToDeg(rad: number): number {
-	return rad / RAD_DEG_RATIO;
-}
+export const degToRad = MathUtils.degToRad;
+export const radToDeg = MathUtils.radToDeg;
+
 export function clamp(val: number, min: number, max: number): number {
 	if (val < min) {
 		return min;
@@ -24,10 +19,8 @@ export function clamp(val: number, min: number, max: number): number {
 		return val;
 	}
 }
-export function smoothstep(edge0: number, edge1: number, value: number) {
-	const x = Math.max(0, Math.min(1, (value - edge0) / (edge1 - edge0)));
-	return x * x * (3 - 2 * x);
-}
+export const smoothstep = MathUtils.smoothstep;
+export const smootherstep = MathUtils.smootherstep;
 export function fit(val: number, srcMin: number, srcMax: number, destMin: number, destMax: number): number {
 	const src_range = srcMax - srcMin;
 	const dest_range = destMax - destMin;

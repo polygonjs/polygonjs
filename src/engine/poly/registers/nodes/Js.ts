@@ -20,6 +20,7 @@ import {AtanJsNode} from '../../../nodes/js/Atan';
 import {AttributeJsNode} from '../../../nodes/js/Attribute';
 import {BoolToIntJsNode} from '../../../nodes/js/BoolToInt';
 import {Box3JsNode} from '../../../nodes/js/Box3';
+import {Box3SetFromObjectJsNode} from '../../../nodes/js/Box3SetFromObject';
 import {CatmullRomCurve3GetPointJsNode} from '../../../nodes/js/CatmullRomCurve3GetPoint';
 import {CeilJsNode} from '../../../nodes/js/Ceil';
 import {ClampJsNode} from '../../../nodes/js/Clamp';
@@ -39,11 +40,14 @@ import {CrossJsNode} from '../../../nodes/js/Cross';
 import {CursorJsNode} from '../../../nodes/js/Cursor';
 import {CursorToUvJsNode} from '../../../nodes/js/CursorToUv';
 import {DebugJsNode} from '../../../nodes/js/Debug';
+import {DegToRadJsNode} from '../../../nodes/js/DegToRad';
 import {DistanceJsNode} from '../../../nodes/js/Distance';
 import {DivideJsNode} from '../../../nodes/js/Divide';
 import {DotJsNode} from '../../../nodes/js/Dot';
 import {EasingJsNode} from '../../../nodes/js/Easing';
 import {ElementsToArrayJsNode} from '../../../nodes/js/ElementsToArray';
+import {EulerJsNode} from '../../../nodes/js/Euler';
+import {EulerFromQuaternionJsNode} from '../../../nodes/js/EulerFromQuaternion';
 import {FitJsNode} from '../../../nodes/js/Fit';
 import {FloatToColorJsNode} from '../../../nodes/js/FloatToColor';
 import {FloatToIntJsNode} from '../../../nodes/js/FloatToInt';
@@ -88,6 +92,9 @@ import {IntToFloatJsNode} from '../../../nodes/js/IntToFloat';
 import {LengthJsNode} from '../../../nodes/js/Length';
 import {LerpJsNode} from '../../../nodes/js/Lerp';
 import {ManhattanDistanceJsNode} from '../../../nodes/js/ManhattanDistance';
+import {Matrix4LookAtJsNode} from '../../../nodes/js/Matrix4LookAt';
+import {Matrix4MakeTranslationJsNode} from '../../../nodes/js/Matrix4MakeTranslation';
+import {Matrix4MultiplyJsNode} from '../../../nodes/js/Matrix4Multiply';
 import {MaxJsNode} from '../../../nodes/js/Max';
 import {MaxLengthJsNode} from '../../../nodes/js/MaxLength';
 import {MinJsNode} from '../../../nodes/js/Min';
@@ -98,6 +105,8 @@ import {MultAddJsNode} from '../../../nodes/js/MultAdd';
 import {MultScalarJsNode} from '../../../nodes/js/MultScalar';
 import {NearestPositionJsNode} from '../../../nodes/js/NearestPosition';
 import {NegateJsNode} from '../../../nodes/js/Negate';
+import {NoiseImprovedJsNode} from '../../../nodes/js/NoiseImproved';
+import {NoiseSimplexJsNode} from '../../../nodes/js/NoiseSimplex';
 import {NormalizeJsNode} from '../../../nodes/js/Normalize';
 import {NullJsNode} from '../../../nodes/js/Null';
 import {Object3DLocalToWorldJsNode} from '../../../nodes/js/Object3DLocalToWorld';
@@ -156,6 +165,10 @@ import {PlayInstrumentNoteJsNode} from '../../../nodes/js/PlayInstrumentNote';
 import {PowJsNode} from '../../../nodes/js/Pow';
 import {PressButtonParamJsNode} from '../../../nodes/js/PressButtonParam';
 import {PreviousValueJsNode} from '../../../nodes/js/PreviousValue';
+import {QuaternionJsNode} from '../../../nodes/js/Quaternion';
+import {QuaternionAngleToJsNode} from '../../../nodes/js/QuaternionAngleTo';
+import {QuaternionSlerpJsNode} from '../../../nodes/js/QuaternionSlerp';
+import {RadToDegJsNode} from '../../../nodes/js/RadToDeg';
 import {RandJsNode} from '../../../nodes/js/Rand';
 import {RandomJsNode} from '../../../nodes/js/Random';
 import {RayJsNode} from '../../../nodes/js/Ray';
@@ -200,6 +213,7 @@ import {SetObjectMatrixAutoUpdateJsNode} from '../../../nodes/js/SetObjectMatrix
 import {SetObjectPositionJsNode} from '../../../nodes/js/SetObjectPosition';
 import {SetObjectReceiveShadowJsNode} from '../../../nodes/js/SetObjectReceiveShadow';
 import {SetObjectRotationJsNode} from '../../../nodes/js/SetObjectRotation';
+import {SetObjectQuaternionJsNode} from '../../../nodes/js/SetObjectQuaternion';
 import {SetObjectPolarTransformJsNode} from '../../../nodes/js/SetObjectPolarTransform';
 import {SetObjectScaleJsNode} from '../../../nodes/js/SetObjectScale';
 import {SetObjectVisibleJsNode} from '../../../nodes/js/SetObjectVisible';
@@ -222,6 +236,7 @@ import {SetViewerJsNode} from '../../../nodes/js/SetViewer';
 import {SignJsNode} from '../../../nodes/js/Sign';
 import {SinJsNode} from '../../../nodes/js/Sin';
 import {SmoothstepJsNode} from '../../../nodes/js/Smoothstep';
+import {SmootherstepJsNode} from '../../../nodes/js/Smootherstep';
 import {SphereJsNode} from '../../../nodes/js/Sphere';
 import {SqrtJsNode} from '../../../nodes/js/Sqrt';
 import {SubnetJsNode} from '../../../nodes/js/Subnet';
@@ -273,6 +288,7 @@ export interface JsNodeChildrenMap {
 	attribute: AttributeJsNode;
 	boolToInt: BoolToIntJsNode;
 	box3: Box3JsNode;
+	box3SetFromObject: Box3SetFromObjectJsNode;
 	catmullRomCurve3GetPoint: CatmullRomCurve3GetPointJsNode;
 	ceil: CeilJsNode;
 	clamp: ClampJsNode;
@@ -292,11 +308,14 @@ export interface JsNodeChildrenMap {
 	colorToVec3: ColorToVec3JsNode;
 	constant: ConstantJsNode;
 	debug: DebugJsNode;
+	degToRad: DegToRadJsNode;
 	dot: DotJsNode;
 	distance: DistanceJsNode;
 	divide: DivideJsNode;
 	easing: EasingJsNode;
 	elementsToArray: ElementsToArrayJsNode;
+	euler: EulerJsNode;
+	eulerFromQuaternion: EulerFromQuaternionJsNode;
 	fit: FitJsNode;
 	floatToColor: FloatToColorJsNode;
 	floatToInt: FloatToIntJsNode;
@@ -341,6 +360,9 @@ export interface JsNodeChildrenMap {
 	length: LengthJsNode;
 	lerp: LerpJsNode;
 	manhattanDistance: ManhattanDistanceJsNode;
+	matrix4LookAt: Matrix4LookAtJsNode;
+	matrix4MakeTranslation: Matrix4MakeTranslationJsNode;
+	matrix4Multiply: Matrix4MultiplyJsNode;
 	max: MaxJsNode;
 	maxLength: MaxLengthJsNode;
 	min: MinJsNode;
@@ -351,6 +373,8 @@ export interface JsNodeChildrenMap {
 	multScalar: MultScalarJsNode;
 	nearestPosition: NearestPositionJsNode;
 	negate: NegateJsNode;
+	noiseImproved: NoiseImprovedJsNode;
+	noiseSimplex: NoiseSimplexJsNode;
 	normalize: NormalizeJsNode;
 	null: NullJsNode;
 	object3DLocalToWorld: Object3DLocalToWorldJsNode;
@@ -409,6 +433,10 @@ export interface JsNodeChildrenMap {
 	pow: PowJsNode;
 	pressButtonParam: PressButtonParamJsNode;
 	previousValue: PreviousValueJsNode;
+	quaternion: QuaternionJsNode;
+	quaternionAngleTo: QuaternionAngleToJsNode;
+	quaternionSlerp: QuaternionSlerpJsNode;
+	radToDeg: RadToDegJsNode;
 	rand: RandJsNode;
 	random: RandomJsNode;
 	ray: RayJsNode;
@@ -452,6 +480,7 @@ export interface JsNodeChildrenMap {
 	setObjectMatrixAutoUpdate: SetObjectMatrixAutoUpdateJsNode;
 	setObjectPosition: SetObjectPositionJsNode;
 	setObjectPolarTransform: SetObjectPolarTransformJsNode;
+	setObjectQuaternion: SetObjectQuaternionJsNode;
 	setObjectRotation: SetObjectRotationJsNode;
 	setObjectReceiveShadow: SetObjectReceiveShadowJsNode;
 	setObjectScale: SetObjectScaleJsNode;
@@ -475,6 +504,7 @@ export interface JsNodeChildrenMap {
 	sign: SignJsNode;
 	sin: SinJsNode;
 	smoothstep: SmoothstepJsNode;
+	smootherstep: SmootherstepJsNode;
 	sphere: SphereJsNode;
 	sqrt: SqrtJsNode;
 	subnet: SubnetJsNode;
@@ -513,7 +543,12 @@ const SUBNET_CHILD_OPTION = {
 	only: [`${SubnetJsNode.context()}/${SubnetJsNode.type()}`],
 };
 const sopType = (type: SopType) => `${NodeContext.SOP}/${type}`;
-const ONLY_WITH_GLOBALS = {only: [sopType(SopType.SDF_BUILDER)]};
+const ONLY_WITH_GLOBALS = {
+	only: [sopType(SopType.OBJECT_BUILDER), sopType(SopType.POINT_BUILDER), sopType(SopType.SDF_BUILDER)],
+};
+const ONLY_POINT_OR_OBJECT_BUILDER = {
+	only: [sopType(SopType.OBJECT_BUILDER), sopType(SopType.POINT_BUILDER)],
+};
 const ONLY_ACTOR = {
 	only: [
 		sopType(SopType.ACTOR),
@@ -535,7 +570,7 @@ const ONLY_ACTOR = {
 };
 export class JsRegister {
 	static run(poly: PolyEngine) {
-		// poly.registerNode(AttributeJsNode, CATEGORY_JS.GLOBALS);
+		poly.registerNode(AttributeJsNode, CATEGORY_JS.GLOBALS, ONLY_POINT_OR_OBJECT_BUILDER);
 		poly.registerNode(AbsJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(AcosJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(AddJsNode, CATEGORY_JS.MATH);
@@ -555,6 +590,7 @@ export class JsRegister {
 		poly.registerNode(AtanJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(BoolToIntJsNode, CATEGORY_JS.CONVERSION);
 		poly.registerNode(Box3JsNode, CATEGORY_JS.MATH);
+		poly.registerNode(Box3SetFromObjectJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(CatmullRomCurve3GetPointJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(CeilJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(ClampJsNode, CATEGORY_JS.MATH);
@@ -568,17 +604,20 @@ export class JsRegister {
 		poly.registerNode(CompareJsNode, CATEGORY_JS.LOGIC);
 		poly.registerNode(ComplementJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(ConstantJsNode, CATEGORY_JS.GLOBALS);
-		poly.registerNode(CookNodeJsNode, CATEGORY_JS.ACTION);
+		poly.registerNode(CookNodeJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR);
 		poly.registerNode(CosJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(CrossJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(CursorJsNode, CATEGORY_JS.INPUTS, ONLY_ACTOR);
 		poly.registerNode(CursorToUvJsNode, CATEGORY_JS.INPUTS);
-		poly.registerNode(DebugJsNode, CATEGORY_JS.FLOW);
+		poly.registerNode(DebugJsNode, CATEGORY_JS.FLOW, ONLY_ACTOR);
+		poly.registerNode(DegToRadJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(DistanceJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(DivideJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(DotJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(EasingJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(ElementsToArrayJsNode, CATEGORY_JS.CONVERSION);
+		poly.registerNode(EulerJsNode, CATEGORY_JS.MATH);
+		poly.registerNode(EulerFromQuaternionJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(FitJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(FloatToColorJsNode, CATEGORY_JS.CONVERSION);
 		poly.registerNode(FloatToIntJsNode, CATEGORY_JS.CONVERSION);
@@ -587,17 +626,17 @@ export class JsRegister {
 		poly.registerNode(FloatToVec4JsNode, CATEGORY_JS.CONVERSION);
 		poly.registerNode(FloorJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(GetBox3PropertyJsNode, CATEGORY_JS.MATH);
-		poly.registerNode(GetChildrenAttributesJsNode, CATEGORY_JS.GET);
-		poly.registerNode(GetChildrenPhysicsRBDPropertiesJsNode, CATEGORY_JS.PHYSICS);
-		poly.registerNode(GetChildrenPropertiesJsNode, CATEGORY_JS.GET);
-		poly.registerNode(GetDefaultCameraJsNode, CATEGORY_JS.GET);
+		poly.registerNode(GetChildrenAttributesJsNode, CATEGORY_JS.GET, ONLY_ACTOR);
+		poly.registerNode(GetChildrenPhysicsRBDPropertiesJsNode, CATEGORY_JS.PHYSICS, ONLY_ACTOR);
+		poly.registerNode(GetChildrenPropertiesJsNode, CATEGORY_JS.GET, ONLY_ACTOR);
+		poly.registerNode(GetDefaultCameraJsNode, CATEGORY_JS.GET, ONLY_ACTOR);
 		poly.registerNode(GetIntersectionAttributeJsNode, CATEGORY_JS.GET);
 		poly.registerNode(GetIntersectionPropertyJsNode, CATEGORY_JS.GET);
-		poly.registerNode(GetMaterialJsNode, CATEGORY_JS.GET);
-		poly.registerNode(GetObjectChildJsNode, CATEGORY_JS.MATH);
+		poly.registerNode(GetMaterialJsNode, CATEGORY_JS.GET, ONLY_ACTOR);
+		poly.registerNode(GetObjectChildJsNode, CATEGORY_JS.GET, ONLY_ACTOR);
 		poly.registerNode(GetObjectJsNode, CATEGORY_JS.GET, ONLY_ACTOR);
 		poly.registerNode(GetObjectAttributeJsNode, CATEGORY_JS.GET, ONLY_ACTOR);
-		poly.registerNode(GetObjectPropertyJsNode, CATEGORY_JS.GET, ONLY_ACTOR);
+		poly.registerNode(GetObjectPropertyJsNode, CATEGORY_JS.GET);
 		poly.registerNode(GetObjectUserDataJsNode, CATEGORY_JS.GET, ONLY_ACTOR);
 		poly.registerNode(GetObjectWorldPositionJsNode, CATEGORY_JS.GET, ONLY_ACTOR);
 		poly.registerNode(GetParentJsNode, CATEGORY_JS.GET, ONLY_ACTOR);
@@ -623,6 +662,9 @@ export class JsRegister {
 		poly.registerNode(LengthJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(LerpJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(ManhattanDistanceJsNode, CATEGORY_JS.MATH);
+		poly.registerNode(Matrix4LookAtJsNode, CATEGORY_JS.MATH);
+		poly.registerNode(Matrix4MakeTranslationJsNode, CATEGORY_JS.MATH);
+		poly.registerNode(Matrix4MultiplyJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(MaxJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(MaxLengthJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(MinJsNode, CATEGORY_JS.MATH);
@@ -633,6 +675,8 @@ export class JsRegister {
 		poly.registerNode(MultScalarJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(NearestPositionJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(NegateJsNode, CATEGORY_JS.MATH);
+		poly.registerNode(NoiseImprovedJsNode, CATEGORY_JS.MATH);
+		poly.registerNode(NoiseSimplexJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(NormalizeJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(NullJsNode, CATEGORY_JS.FLOW);
 		poly.registerNode(Object3DLocalToWorldJsNode, CATEGORY_JS.GET, ONLY_ACTOR);
@@ -667,8 +711,8 @@ export class JsRegister {
 		poly.registerNode(OrJsNode, CATEGORY_JS.LOGIC);
 		poly.registerNode(OutputJsNode, CATEGORY_JS.GLOBALS, ONLY_WITH_GLOBALS);
 		poly.registerNode(ParamJsNode, CATEGORY_JS.GLOBALS);
-		poly.registerNode(ParticlesSystemResetJsNode, CATEGORY_JS.PARTICLES);
-		poly.registerNode(ParticlesSystemStepSimulationJsNode, CATEGORY_JS.PARTICLES);
+		poly.registerNode(ParticlesSystemResetJsNode, CATEGORY_JS.PARTICLES, ONLY_ACTOR);
+		poly.registerNode(ParticlesSystemStepSimulationJsNode, CATEGORY_JS.PARTICLES, ONLY_ACTOR);
 		poly.registerNode(PauseAudioSourceJsNode, CATEGORY_JS.AUDIO, ONLY_ACTOR);
 		poly.registerNode(PhysicsPlayerUpdateJsNode, CATEGORY_JS.PHYSICS, ONLY_ACTOR);
 		poly.registerNode(PhysicsRBDAddForceJsNode, CATEGORY_JS.PHYSICS, ONLY_ACTOR);
@@ -691,6 +735,10 @@ export class JsRegister {
 		poly.registerNode(PowJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(PressButtonParamJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR);
 		poly.registerNode(PreviousValueJsNode, CATEGORY_JS.ADVANCED, ONLY_ACTOR);
+		poly.registerNode(QuaternionJsNode, CATEGORY_JS.MATH);
+		poly.registerNode(QuaternionAngleToJsNode, CATEGORY_JS.MATH);
+		poly.registerNode(QuaternionSlerpJsNode, CATEGORY_JS.MATH);
+		poly.registerNode(RadToDegJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(RandJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(RandomJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(RayJsNode, CATEGORY_JS.MATH);
@@ -734,6 +782,7 @@ export class JsRegister {
 		poly.registerNode(SetObjectMatrixAutoUpdateJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR);
 		poly.registerNode(SetObjectPositionJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR);
 		poly.registerNode(SetObjectPolarTransformJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR);
+		poly.registerNode(SetObjectQuaternionJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR);
 		poly.registerNode(SetObjectReceiveShadowJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR);
 		poly.registerNode(SetObjectRotationJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR);
 		poly.registerNode(SetObjectScaleJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR);
@@ -757,6 +806,7 @@ export class JsRegister {
 		poly.registerNode(SignJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(SinJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(SmoothstepJsNode, CATEGORY_JS.MATH);
+		poly.registerNode(SmootherstepJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(SphereJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(SqrtJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(SubnetJsNode, CATEGORY_JS.LOGIC);

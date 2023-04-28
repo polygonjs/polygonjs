@@ -55,16 +55,16 @@ export class NormalizeJsNode extends ParamlessTypedJsNode {
 		const inputType = this._expectedInputTypes()[0];
 
 		const variable = createVariable(inputType);
-		if (variable) {
-			shadersCollectionController.addVariable(this, varName, variable);
+		const tmpVarName = variable ? shadersCollectionController.addVariable(this, variable) : undefined;
+		if (!tmpVarName) {
+			return;
 		}
-
 		// color / vector
 		const functionName = functionNameByType(inputType);
 		if (functionName) {
 			const func = Poly.namedFunctionsRegister.getFunction(functionName, this, shadersCollectionController);
 			shadersCollectionController.addBodyOrComputed(this, [
-				{dataType: inputType, varName, value: func.asString(input, varName)},
+				{dataType: inputType, varName, value: func.asString(input, tmpVarName)},
 			]);
 			return;
 		}

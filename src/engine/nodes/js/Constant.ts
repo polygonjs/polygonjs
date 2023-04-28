@@ -60,7 +60,7 @@ export class ConstantJsNode extends TypedJsNode<ConstantJsParamsConfig> {
 			return;
 		}
 
-		const out = this._currentVarName();
+		const out = this.jsVarName(ConstantJsNode.OUTPUT_NAME);
 		const varName = this.variableForInputParam(shadersCollectionController, param);
 
 		shadersCollectionController.addDefinitions(this, [
@@ -111,9 +111,9 @@ export class ConstantJsNode extends TypedJsNode<ConstantJsParamsConfig> {
 		// we should never run this
 		return this.p.boolean;
 	}
-	private _currentVarName(): string {
-		return this.jsVarName(ConstantJsNode.OUTPUT_NAME);
-	}
+	// private _currentVarName(): string {
+	// 	return this.jsVarName(ConstantJsNode.OUTPUT_NAME);
+	// }
 	currentValue() {
 		const param = this.currentParam();
 		if (param) {

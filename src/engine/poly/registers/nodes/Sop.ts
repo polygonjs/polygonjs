@@ -193,6 +193,7 @@ import {NoiseSopNode} from '../../../nodes/sop/Noise';
 import {NormalsSopNode} from '../../../nodes/sop/Normals';
 import {NormalsHelperSopNode} from '../../../nodes/sop/NormalsHelper';
 import {NullSopNode} from '../../../nodes/sop/Null';
+import {ObjectBuilderSopNode} from '../../../nodes/sop/ObjectBuilder';
 import {ObjectMergeSopNode} from '../../../nodes/sop/ObjectMerge';
 import {ObjectPropertiesSopNode} from '../../../nodes/sop/ObjectProperties';
 import {ObjectsLayoutSopNode} from '../../../nodes/sop/ObjectsLayout';
@@ -210,6 +211,7 @@ import {PhysicsRBDAttributesSopNode} from '../../../nodes/sop/PhysicsRBDAttribut
 import {PhysicsWorldSopNode} from '../../../nodes/sop/PhysicsWorld';
 import {PlaneSopNode} from '../../../nodes/sop/Plane';
 import {PlaneHelperSopNode} from '../../../nodes/sop/PlaneHelper';
+import {PointBuilderSopNode} from '../../../nodes/sop/PointBuilder';
 import {PointSopNode} from '../../../nodes/sop/Point';
 import {PointLightSopNode} from '../../../nodes/sop/PointLight';
 import {PolarTransformSopNode} from '../../../nodes/sop/PolarTransform';
@@ -473,6 +475,7 @@ export interface GeoNodeChildrenMap {
 	normals: NormalsSopNode;
 	normalsHelper: NormalsHelperSopNode;
 	null: NullSopNode;
+	objectBuilder: ObjectBuilderSopNode;
 	objectMerge: ObjectMergeSopNode;
 	objectProperties: ObjectPropertiesSopNode;
 	objectsLayout: ObjectsLayoutSopNode;
@@ -494,6 +497,7 @@ export interface GeoNodeChildrenMap {
 	pointLight: PointLightSopNode;
 	polarTransform: PolarTransformSopNode;
 	polywire: PolywireSopNode;
+	pointBuilder: PointBuilderSopNode;
 	ray: RaySopNode;
 	reflector: ReflectorSopNode;
 	resample: ResampleSopNode;
@@ -976,6 +980,7 @@ export class SopRegister {
 		poly.registerNode(NormalsSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(NormalsHelperSopNode, CATEGORY_SOP.HELPERS);
 		poly.registerNode(NullSopNode, CATEGORY_SOP.FLOW);
+		poly.registerNode(ObjectBuilderSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(ObjectMergeSopNode, CATEGORY_SOP.INPUT);
 		poly.registerNode(ObjectPropertiesSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(ObjectsLayoutSopNode, CATEGORY_SOP.MODIFIER);
@@ -994,6 +999,7 @@ export class SopRegister {
 		poly.registerNode(PlaneSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.registerNode(PlaneHelperSopNode, CATEGORY_SOP.HELPERS);
 		poly.registerNode(PolarTransformSopNode, CATEGORY_SOP.MODIFIER);
+		poly.registerNode(PointBuilderSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(PointSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(PointLightSopNode, CATEGORY_SOP.LIGHTS);
 		poly.registerNode(PolywireSopNode, CATEGORY_SOP.MODIFIER);

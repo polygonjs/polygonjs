@@ -28,7 +28,7 @@ export class BaseSDFJsNode<K extends BaseSDFJsParamsConfig> extends TypedJsNode<
 	private _defaultPosition(shadersCollectionController: JsLinesCollectionController): string {
 		const sanitizedNodePath = CoreString.sanitizeName(this.path());
 		const varName = `${sanitizedNodePath}_${this.p.position.name()}`;
-		shadersCollectionController.addVariable(this, varName, new Vector3());
+		shadersCollectionController.addVariable(this, new Vector3(), varName);
 		return `${varName}.copy(${VARS.position})`;
 	}
 

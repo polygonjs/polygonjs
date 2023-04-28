@@ -77,13 +77,13 @@ export class GetIntersectionPropertyJsNode extends ParamlessTypedJsNode {
 				return;
 			}
 			const varName = this.jsVarName(propertyName);
-			shadersCollectionController.addVariable(this, varName, new Vector2());
+			const tmpVarName = shadersCollectionController.addVariable(this, new Vector2());
 			const func = Poly.namedFunctionsRegister.getFunction(functionName, this, shadersCollectionController);
 			shadersCollectionController.addBodyOrComputed(this, [
 				{
 					dataType: type,
 					varName,
-					value: func.asString(intersection, varName),
+					value: func.asString(intersection, tmpVarName),
 				},
 			]);
 		};
@@ -96,13 +96,13 @@ export class GetIntersectionPropertyJsNode extends ParamlessTypedJsNode {
 				return;
 			}
 			const varName = this.jsVarName(propertyName);
-			shadersCollectionController.addVariable(this, varName, new Vector3());
+			const tmpVarName = shadersCollectionController.addVariable(this, new Vector3());
 			const func = Poly.namedFunctionsRegister.getFunction(functionName, this, shadersCollectionController);
 			shadersCollectionController.addBodyOrComputed(this, [
 				{
 					dataType: type,
 					varName,
-					value: func.asString(intersection, varName),
+					value: func.asString(intersection, tmpVarName),
 				},
 			]);
 		};

@@ -1,25 +1,20 @@
-import {Object3D, Vector3, Euler, Quaternion} from 'three';
+import {Object3D, Euler, Quaternion} from 'three';
 import {touchObjectProperty, GetObjectPropertyJsNodeInputName} from '../../core/reactivity/ObjectPropertyReactivity';
-import {ObjectNamedFunction4} from './_Base';
-import {ROTATION_ORDERS} from '../../core/Transform';
+import {ObjectNamedFunction3} from './_Base';
 import {isBooleanTrue} from '../../core/Type';
 
-const tmpEuler = new Euler();
 const q1 = new Quaternion();
 const q2 = new Quaternion();
-export class setObjectRotation extends ObjectNamedFunction4<[Vector3, number, number, boolean]> {
+export class setObjectRotation extends ObjectNamedFunction3<[Euler, number, boolean]> {
 	static override type() {
 		return 'setObjectRotation';
 	}
-	func(object3D: Object3D, rotation: Vector3, rotationOrder: number, lerp: number, updateMatrix: boolean): void {
-		tmpEuler.order = ROTATION_ORDERS[rotationOrder];
-		tmpEuler.set(rotation.x, rotation.y, rotation.z);
-
+	func(object3D: Object3D, euler: Euler, lerp: number, updateMatrix: boolean): void {
 		if (lerp >= 1) {
-			object3D.quaternion.setFromEuler(tmpEuler, true);
+			object3D.quaternion.setFromEuler(euler, true);
 		} else {
 			q1.copy(object3D.quaternion);
-			q2.setFromEuler(tmpEuler, true);
+			q2.setFromEuler(euler, true);
 			q1.slerp(q2, lerp);
 			object3D.quaternion.copy(q1);
 		}

@@ -12,6 +12,7 @@ import {JsConnectionPointType, JsConnectionPoint} from '../utils/io/connections/
 import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {BaseSDFJsNode} from './_BaseSDF';
 import {Poly} from '../../Poly';
+import {JsType} from '../../poly/registers/nodes/types/Js';
 const OUTPUT_NAME = 'float';
 class SDFBoxJsParamsConfig extends NodeParamsConfig {
 	position = ParamConfig.VECTOR3([0, 0, 0], {hidden: true});
@@ -23,7 +24,7 @@ const ParamsConfig = new SDFBoxJsParamsConfig();
 export class SDFBoxJsNode extends BaseSDFJsNode<SDFBoxJsParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'SDFBox';
+		return JsType.SDF_BOX;
 	}
 
 	override initializeNode() {

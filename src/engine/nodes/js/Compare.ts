@@ -138,8 +138,9 @@ export class CompareJsNode extends TypedJsNode<CompareJsParamsConfig> {
 		const inputType = this._expectedInputTypes()[0];
 		const variable = createVariable(inputType);
 		if (variable) {
-			shadersCollectionController.addVariable(this, varName, variable);
+			shadersCollectionController.addVariable(this, variable);
 		}
+
 		const operation = this.operator();
 		const value0 = this.variableForInput(shadersCollectionController, CompareInputName.VALUE0);
 		const value1 = this.variableForInput(shadersCollectionController, CompareInputName.VALUE1);

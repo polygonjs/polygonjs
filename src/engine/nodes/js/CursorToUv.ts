@@ -35,10 +35,10 @@ export class CursorToUvJsNode extends TypedJsNode<CursorToUvJsParamsConfig> {
 	override setLines(linesController: JsLinesCollectionController) {
 		const cursor = this.variableForInputParam(linesController, this.p.cursor);
 		const varName = this.jsVarName(CursorToUvJsNodeOutputName.uv);
-		linesController.addVariable(this, varName, new Vector2());
+		const tmpVarName = linesController.addVariable(this, new Vector2());
 		const func = Poly.namedFunctionsRegister.getFunction('cursorToUv', this, linesController);
 		linesController.addBodyOrComputed(this, [
-			{dataType: JsConnectionPointType.VECTOR2, varName, value: func.asString(cursor, varName)},
+			{dataType: JsConnectionPointType.VECTOR2, varName, value: func.asString(cursor, tmpVarName)},
 		]);
 	}
 }

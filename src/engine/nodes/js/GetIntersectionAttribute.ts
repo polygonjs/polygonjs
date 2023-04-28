@@ -89,11 +89,12 @@ export class GetIntersectionAttributeJsNode extends TypedJsNode<GetIntersectionA
 		const varName = this.jsVarName(GetIntersectionAttributeJsNode.OUTPUT_NAME);
 		const dataType = this.attribType();
 
-		const bodyLine = this._getBodyLine(shadersCollectionController, varName);
-
-		shadersCollectionController.addBodyOrComputed(this, [{dataType, varName, value: bodyLine}]);
+		const bodyLine = this._getBodyLine(shadersCollectionController);
+		if (bodyLine) {
+			shadersCollectionController.addBodyOrComputed(this, [{dataType, varName, value: bodyLine}]);
+		}
 	}
-	private _getBodyLine(shadersCollectionController: JsLinesCollectionController, varName: string) {
+	private _getBodyLine(shadersCollectionController: JsLinesCollectionController) {
 		const intersection = this.variableForInput(shadersCollectionController, JsConnectionPointType.INTERSECTION);
 		const attribName = this.variableForInput(
 			shadersCollectionController,
@@ -123,14 +124,16 @@ export class GetIntersectionAttributeJsNode extends TypedJsNode<GetIntersectionA
 				const func = Poly.namedFunctionsRegister.getFunction(functionName, this, shadersCollectionController);
 				const variable = createVariable(dataType);
 				if (variable) {
-					shadersCollectionController.addVariable(this, varName, variable);
+					const tmpVarName = shadersCollectionController.addVariable(this, variable);
+					func.asString(intersection, attribName, notFoundValue, tmpVarName);
 				}
-				return func.asString(intersection, attribName, notFoundValue, varName);
+				return;
 			}
 			case JsConnectionPointType.STRING: {
 				const functionName = 'getIntersectionAttributeStringNearest';
 				const func = Poly.namedFunctionsRegister.getFunction(functionName, this, shadersCollectionController);
-				return func.asString(intersection, attribName);
+				func.asString(intersection, attribName);
+				return;
 			}
 			case JsConnectionPointType.VECTOR2: {
 				const functionName = interpolated
@@ -139,9 +142,10 @@ export class GetIntersectionAttributeJsNode extends TypedJsNode<GetIntersectionA
 				const func = Poly.namedFunctionsRegister.getFunction(functionName, this, shadersCollectionController);
 				const variable = createVariable(dataType);
 				if (variable) {
-					shadersCollectionController.addVariable(this, varName, variable);
+					const tmpVarName = shadersCollectionController.addVariable(this, variable);
+					func.asString(intersection, attribName, notFoundValue, tmpVarName);
 				}
-				return func.asString(intersection, attribName, notFoundValue, varName);
+				return;
 			}
 			case JsConnectionPointType.VECTOR3: {
 				const functionName = interpolated
@@ -150,9 +154,10 @@ export class GetIntersectionAttributeJsNode extends TypedJsNode<GetIntersectionA
 				const func = Poly.namedFunctionsRegister.getFunction(functionName, this, shadersCollectionController);
 				const variable = createVariable(dataType);
 				if (variable) {
-					shadersCollectionController.addVariable(this, varName, variable);
+					const tmpVarName = shadersCollectionController.addVariable(this, variable);
+					func.asString(intersection, attribName, notFoundValue, tmpVarName);
 				}
-				return func.asString(intersection, attribName, notFoundValue, varName);
+				return;
 			}
 			case JsConnectionPointType.VECTOR4: {
 				const functionName = interpolated
@@ -161,9 +166,10 @@ export class GetIntersectionAttributeJsNode extends TypedJsNode<GetIntersectionA
 				const func = Poly.namedFunctionsRegister.getFunction(functionName, this, shadersCollectionController);
 				const variable = createVariable(dataType);
 				if (variable) {
-					shadersCollectionController.addVariable(this, varName, variable);
+					const tmpVarName = shadersCollectionController.addVariable(this, variable);
+					func.asString(intersection, attribName, notFoundValue, tmpVarName);
 				}
-				return func.asString(intersection, attribName, notFoundValue, varName);
+				return;
 			}
 		}
 

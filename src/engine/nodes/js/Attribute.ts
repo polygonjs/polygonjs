@@ -4,7 +4,9 @@ import {JsConnectionPointType, BaseJsConnectionPoint} from '../utils/io/connecti
 import {JsType} from '../../poly/registers/nodes/types/Js';
 
 const ATTRIBUTE_NODE_AVAILABLE_JS_TYPES = [
+	JsConnectionPointType.COLOR,
 	JsConnectionPointType.FLOAT,
+	JsConnectionPointType.INT,
 	JsConnectionPointType.VECTOR2,
 	JsConnectionPointType.VECTOR3,
 	JsConnectionPointType.VECTOR4,
@@ -12,6 +14,7 @@ const ATTRIBUTE_NODE_AVAILABLE_JS_TYPES = [
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {isBooleanTrue} from '../../../core/Type';
+import {PointBuilderFunctionDataAttributeDataItem} from './code/assemblers/pointBuilder/PointBuilderPersistedConfig';
 class AttributeJsParamsConfig extends NodeParamsConfig {
 	name = ParamConfig.STRING('');
 	type = ParamConfig.INTEGER(0, {
@@ -21,10 +24,8 @@ class AttributeJsParamsConfig extends NodeParamsConfig {
 			}),
 		},
 	});
-	/** @param allows to export the attribute to a material (when used inside a particles system) */
-	texportWhenConnected = ParamConfig.BOOLEAN(0, {hidden: true});
-	/** @param allows to export the attribute to a material (when used inside a particles system) */
-	exportWhenConnected = ParamConfig.BOOLEAN(0, {visibleIf: {texportWhenConnected: 1}});
+	/** @param allows to export the attribute */
+	exportWhenConnected = ParamConfig.BOOLEAN(0);
 }
 const ParamsConfig = new AttributeJsParamsConfig();
 
@@ -41,10 +42,9 @@ export class AttributeJsNode extends TypedJsNode<AttributeJsParamsConfig> {
 		// this.addPostDirtyHook('_setMatToRecompile', this._setMatToRecompile.bind(this));
 		this.io.connection_points.initializeNode();
 
-		this.io.connection_points.set_expected_input_types_function(() => []);
-		this.io.connection_points.set_expected_output_types_function(() => [
-			ATTRIBUTE_NODE_AVAILABLE_JS_TYPES[this.pv.type],
-		]);
+		this.io.connection_points.set_expected_input_types_function(() => this._expectedInputTypes());
+		this.io.connection_points.set_input_name_function((index: number) => this.inputName());
+		this.io.connection_points.set_expected_output_types_function(() => [this._expectedOutputType()]);
 		// this.params.add_on_scene_load_hook('_update_signature_if_required', this._update_signature_if_required_bound);
 		// this.params.set_post_create_params_hook(this._update_signature_if_required_bound);
 		// this.addPostDirtyHook('_update_signature_if_required', this._update_signature_if_required_bound);
@@ -53,6 +53,12 @@ export class AttributeJsNode extends TypedJsNode<AttributeJsParamsConfig> {
 	// inputless_params_names(): string[] {
 	// 	return ['type'];
 	// }
+	private _expectedInputTypes() {
+		return this.pv.exportWhenConnected ? [this._expectedOutputType()] : [];
+	}
+	private _expectedOutputType() {
+		return ATTRIBUTE_NODE_AVAILABLE_JS_TYPES[this.pv.type];
+	}
 
 	inputName() {
 		return AttributeJsNode.INPUT_NAME;
@@ -66,14 +72,19 @@ export class AttributeJsNode extends TypedJsNode<AttributeJsParamsConfig> {
 		this.functionNode()?.assemblerController()?.assembler.setNodeLinesAttribute(this, linesController);
 		// }
 	}
-
+	attribData(): PointBuilderFunctionDataAttributeDataItem {
+		return {
+			attribName: this.attributeName(),
+			attribType: this.jsType(),
+		};
+	}
 	attributeName(): string {
 		return this.pv.name.trim();
 	}
-	glType() {
+	jsType() {
 		return this.io.outputs.namedOutputConnectionPoints()[0].type();
 	}
-	setGlType(type: JsConnectionPointType) {
+	setJsType(type: JsConnectionPointType) {
 		this.p.type.set(ATTRIBUTE_NODE_AVAILABLE_JS_TYPES.indexOf(type));
 	}
 	//
@@ -99,8 +110,8 @@ export class AttributeJsNode extends TypedJsNode<AttributeJsParamsConfig> {
 	}
 	isExporting(): boolean {
 		if (isBooleanTrue(this.pv.exportWhenConnected)) {
-			const input_node = this.io.inputs.named_input(AttributeJsNode.INPUT_NAME);
-			return input_node != null;
+			const inputNode = this.io.inputs.named_input(AttributeJsNode.INPUT_NAME);
+			return inputNode != null;
 		} else {
 			return false;
 		}

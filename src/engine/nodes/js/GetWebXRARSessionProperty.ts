@@ -67,13 +67,13 @@ export class GetWebXRARSessionPropertyJsNode extends TypedJsNode<GetWebXRARSessi
 				return;
 			}
 			const varName = this.jsVarName(propertyName);
-			shadersCollectionController.addVariable(this, varName, new Vector3());
+			const tmpVarName = shadersCollectionController.addVariable(this, new Vector3());
 			const func = Poly.namedFunctionsRegister.getFunction(functionName, this, shadersCollectionController);
 			shadersCollectionController.addBodyOrComputed(this, [
 				{
 					dataType: type,
 					varName,
-					value: func.asString(varName),
+					value: func.asString(tmpVarName),
 				},
 			]);
 		};
@@ -86,13 +86,13 @@ export class GetWebXRARSessionPropertyJsNode extends TypedJsNode<GetWebXRARSessi
 				return;
 			}
 			const varName = this.jsVarName(propertyName);
-			shadersCollectionController.addVariable(this, varName, new Matrix4());
+			const tmpVarName = shadersCollectionController.addVariable(this, new Matrix4());
 			const func = Poly.namedFunctionsRegister.getFunction(functionName, this, shadersCollectionController);
 			shadersCollectionController.addBodyOrComputed(this, [
 				{
 					dataType: type,
 					varName,
-					value: func.asString(varName),
+					value: func.asString(tmpVarName),
 				},
 			]);
 		};
@@ -105,13 +105,13 @@ export class GetWebXRARSessionPropertyJsNode extends TypedJsNode<GetWebXRARSessi
 				return;
 			}
 			const varName = this.jsVarName(propertyName);
-			shadersCollectionController.addVariable(this, varName, new Quaternion());
+			const tmpVarName = shadersCollectionController.addVariable(this, new Quaternion());
 			const func = Poly.namedFunctionsRegister.getFunction(functionName, this, shadersCollectionController);
 			shadersCollectionController.addBodyOrComputed(this, [
 				{
 					dataType: type,
 					varName,
-					value: func.asString(varName),
+					value: func.asString(tmpVarName),
 				},
 			]);
 		};

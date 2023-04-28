@@ -22,6 +22,7 @@ import { arrayElementVector } from "../../../functions/arrayElementVector";
 import { arrayLength } from "../../../functions/arrayLength";
 import { boolToInt } from "../../../functions/boolToInt";
 import { box3Set } from "../../../functions/box3Set";
+import { box3SetFromObject } from "../../../functions/box3SetFromObject";
 import { catmullRomCurve3GetPoint } from "../../../functions/catmullRomCurve3GetPoint";
 import { clamp } from "../../../functions/clamp";
 import { clothSolverReset } from "../../../functions/clothSolverReset";
@@ -37,6 +38,7 @@ import { crossVector2 } from "../../../functions/crossVector2";
 import { crossVector3 } from "../../../functions/crossVector3";
 import { cursorToUv } from "../../../functions/cursorToUv";
 import { debug } from "../../../functions/debug";
+import { degToRad } from "../../../functions/degToRad";
 import { distanceVector2 } from "../../../functions/distanceVector2";
 import { distanceVector3 } from "../../../functions/distanceVector3";
 import { divideNumber } from "../../../functions/divideNumber";
@@ -60,6 +62,8 @@ import { easeSinIO } from "../../../functions/easeSinIO";
 import { easeSinO } from "../../../functions/easeSinO";
 import { elementsToArrayPrimitive } from "../../../functions/elementsToArrayPrimitive";
 import { elementsToArrayVector } from "../../../functions/elementsToArrayVector";
+import { eulerSetFromQuaternion } from "../../../functions/eulerSetFromQuaternion";
+import { eulerSetFromVector3 } from "../../../functions/eulerSetFromVector3";
 import { fit } from "../../../functions/fit";
 import { fitClamp } from "../../../functions/fitClamp";
 import { floatToColor } from "../../../functions/floatToColor";
@@ -227,6 +231,9 @@ import { mathVectorArray_2 } from "../../../functions/mathVectorArray_2";
 import { mathVectorArray_3 } from "../../../functions/mathVectorArray_3";
 import { mathVectorArray_4 } from "../../../functions/mathVectorArray_4";
 import { mathVectorArray_5 } from "../../../functions/mathVectorArray_5";
+import { matrix4LookAt } from "../../../functions/matrix4LookAt";
+import { matrix4MakeTranslation } from "../../../functions/matrix4MakeTranslation";
+import { matrix4Multiply } from "../../../functions/matrix4Multiply";
 import { maxLengthVector2 } from "../../../functions/maxLengthVector2";
 import { maxLengthVector3 } from "../../../functions/maxLengthVector3";
 import { maxLengthVector4 } from "../../../functions/maxLengthVector4";
@@ -244,6 +251,10 @@ import { multVector } from "../../../functions/multVector";
 import { multVectorNumber } from "../../../functions/multVectorNumber";
 import { nearestPosition } from "../../../functions/nearestPosition";
 import { negate } from "../../../functions/negate";
+import { noiseImprovedVector3 } from "../../../functions/noiseImprovedVector3";
+import { noiseSimplexVector2 } from "../../../functions/noiseSimplexVector2";
+import { noiseSimplexVector3 } from "../../../functions/noiseSimplexVector3";
+import { noiseSimplexVector4 } from "../../../functions/noiseSimplexVector4";
 import { normalizeVector2 } from "../../../functions/normalizeVector2";
 import { normalizeVector3 } from "../../../functions/normalizeVector3";
 import { normalizeVector4 } from "../../../functions/normalizeVector4";
@@ -283,6 +294,11 @@ import { previousValuePrimitive } from "../../../functions/previousValuePrimitiv
 import { previousValueVector2 } from "../../../functions/previousValueVector2";
 import { previousValueVector3 } from "../../../functions/previousValueVector3";
 import { previousValueVector4 } from "../../../functions/previousValueVector4";
+import { quaternionAngleTo } from "../../../functions/quaternionAngleTo";
+import { quaternionSetFromAxisAngle } from "../../../functions/quaternionSetFromAxisAngle";
+import { quaternionSetFromEuler } from "../../../functions/quaternionSetFromEuler";
+import { quaternionSlerp } from "../../../functions/quaternionSlerp";
+import { radToDeg } from "../../../functions/radToDeg";
 import { rand } from "../../../functions/rand";
 import { random } from "../../../functions/random";
 import { rayDistanceToPlane } from "../../../functions/rayDistanceToPlane";
@@ -335,6 +351,7 @@ import { setObjectMatrix } from "../../../functions/setObjectMatrix";
 import { setObjectMatrixAutoUpdate } from "../../../functions/setObjectMatrixAutoUpdate";
 import { setObjectPolarTransform } from "../../../functions/setObjectPolarTransform";
 import { setObjectPosition } from "../../../functions/setObjectPosition";
+import { setObjectQuaternion } from "../../../functions/setObjectQuaternion";
 import { setObjectReceiveShadow } from "../../../functions/setObjectReceiveShadow";
 import { setObjectRotation } from "../../../functions/setObjectRotation";
 import { setObjectScale } from "../../../functions/setObjectScale";
@@ -370,6 +387,7 @@ import { sizzleVec4WArray } from "../../../functions/sizzleVec4WArray";
 import { sizzleVec4XYZ } from "../../../functions/sizzleVec4XYZ";
 import { sizzleVec4XYZArray } from "../../../functions/sizzleVec4XYZArray";
 import { sleep } from "../../../functions/sleep";
+import { smootherstep } from "../../../functions/smootherstep";
 import { smoothstep } from "../../../functions/smoothstep";
 import { sphereSet } from "../../../functions/sphereSet";
 import { subtractNumber } from "../../../functions/subtractNumber";
@@ -409,6 +427,7 @@ export interface NamedFunctionMap {
   arrayLength: arrayLength;
   boolToInt: boolToInt;
   box3Set: box3Set;
+  box3SetFromObject: box3SetFromObject;
   catmullRomCurve3GetPoint: catmullRomCurve3GetPoint;
   clamp: clamp;
   clothSolverReset: clothSolverReset;
@@ -424,6 +443,7 @@ export interface NamedFunctionMap {
   crossVector3: crossVector3;
   cursorToUv: cursorToUv;
   debug: debug<any>;
+  degToRad: degToRad;
   distanceVector2: distanceVector2;
   distanceVector3: distanceVector3;
   divideNumber: divideNumber;
@@ -447,6 +467,8 @@ export interface NamedFunctionMap {
   easeSinO: easeSinO;
   elementsToArrayPrimitive: elementsToArrayPrimitive<PrimitiveArrayElement>;
   elementsToArrayVector: elementsToArrayVector<VectorArrayElement>;
+  eulerSetFromQuaternion: eulerSetFromQuaternion;
+  eulerSetFromVector3: eulerSetFromVector3;
   fit: fit;
   fitClamp: fitClamp;
   floatToColor: floatToColor;
@@ -614,6 +636,9 @@ export interface NamedFunctionMap {
   mathVectorArray_3: mathVectorArray_3<MathArrayVectorElement>;
   mathVectorArray_4: mathVectorArray_4<MathArrayVectorElement>;
   mathVectorArray_5: mathVectorArray_5<MathArrayVectorElement>;
+  matrix4LookAt: matrix4LookAt;
+  matrix4MakeTranslation: matrix4MakeTranslation;
+  matrix4Multiply: matrix4Multiply;
   maxLengthVector2: maxLengthVector2;
   maxLengthVector3: maxLengthVector3;
   maxLengthVector4: maxLengthVector4;
@@ -631,6 +656,10 @@ export interface NamedFunctionMap {
   multVectorNumber: multVectorNumber<Vector2 | Vector3 | Vector4>;
   nearestPosition: nearestPosition;
   negate: negate<boolean | number>;
+  noiseImprovedVector3: noiseImprovedVector3;
+  noiseSimplexVector2: noiseSimplexVector2;
+  noiseSimplexVector3: noiseSimplexVector3;
+  noiseSimplexVector4: noiseSimplexVector4;
   normalizeVector2: normalizeVector2;
   normalizeVector3: normalizeVector3;
   normalizeVector4: normalizeVector4;
@@ -670,6 +699,11 @@ export interface NamedFunctionMap {
   previousValueVector2: previousValueVector2;
   previousValueVector3: previousValueVector3;
   previousValueVector4: previousValueVector4;
+  quaternionAngleTo: quaternionAngleTo;
+  quaternionSetFromAxisAngle: quaternionSetFromAxisAngle;
+  quaternionSetFromEuler: quaternionSetFromEuler;
+  quaternionSlerp: quaternionSlerp;
+  radToDeg: radToDeg;
   rand: rand;
   random: random;
   rayDistanceToPlane: rayDistanceToPlane;
@@ -722,6 +756,7 @@ export interface NamedFunctionMap {
   setObjectMatrixAutoUpdate: setObjectMatrixAutoUpdate;
   setObjectPolarTransform: setObjectPolarTransform;
   setObjectPosition: setObjectPosition;
+  setObjectQuaternion: setObjectQuaternion;
   setObjectReceiveShadow: setObjectReceiveShadow;
   setObjectRotation: setObjectRotation;
   setObjectScale: setObjectScale;
@@ -757,6 +792,7 @@ export interface NamedFunctionMap {
   sizzleVec4XYZ: sizzleVec4XYZ;
   sizzleVec4XYZArray: sizzleVec4XYZArray;
   sleep: sleep;
+  smootherstep: smootherstep;
   smoothstep: smoothstep;
   sphereSet: sphereSet;
   subtractNumber: subtractNumber;
@@ -799,6 +835,7 @@ export class AllNamedFunctionRegister {
       arrayLength,
       boolToInt,
       box3Set,
+      box3SetFromObject,
       catmullRomCurve3GetPoint,
       clamp,
       clothSolverReset,
@@ -814,6 +851,7 @@ export class AllNamedFunctionRegister {
       crossVector3,
       cursorToUv,
       debug,
+      degToRad,
       distanceVector2,
       distanceVector3,
       divideNumber,
@@ -837,6 +875,8 @@ export class AllNamedFunctionRegister {
       easeSinO,
       elementsToArrayPrimitive,
       elementsToArrayVector,
+      eulerSetFromQuaternion,
+      eulerSetFromVector3,
       fit,
       fitClamp,
       floatToColor,
@@ -1004,6 +1044,9 @@ export class AllNamedFunctionRegister {
       mathVectorArray_3,
       mathVectorArray_4,
       mathVectorArray_5,
+      matrix4LookAt,
+      matrix4MakeTranslation,
+      matrix4Multiply,
       maxLengthVector2,
       maxLengthVector3,
       maxLengthVector4,
@@ -1021,6 +1064,10 @@ export class AllNamedFunctionRegister {
       multVectorNumber,
       nearestPosition,
       negate,
+      noiseImprovedVector3,
+      noiseSimplexVector2,
+      noiseSimplexVector3,
+      noiseSimplexVector4,
       normalizeVector2,
       normalizeVector3,
       normalizeVector4,
@@ -1060,6 +1107,11 @@ export class AllNamedFunctionRegister {
       previousValueVector2,
       previousValueVector3,
       previousValueVector4,
+      quaternionAngleTo,
+      quaternionSetFromAxisAngle,
+      quaternionSetFromEuler,
+      quaternionSlerp,
+      radToDeg,
       rand,
       random,
       rayDistanceToPlane,
@@ -1112,6 +1164,7 @@ export class AllNamedFunctionRegister {
       setObjectMatrixAutoUpdate,
       setObjectPolarTransform,
       setObjectPosition,
+      setObjectQuaternion,
       setObjectReceiveShadow,
       setObjectRotation,
       setObjectScale,
@@ -1147,6 +1200,7 @@ export class AllNamedFunctionRegister {
       sizzleVec4XYZ,
       sizzleVec4XYZArray,
       sleep,
+      smootherstep,
       smoothstep,
       sphereSet,
       subtractNumber,

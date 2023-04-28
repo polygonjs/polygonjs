@@ -56,16 +56,14 @@ export class CrossJsNode extends ParamlessTypedJsNode {
 		const inputType = this._expectedInputTypes()[0];
 
 		const variable = createVariable(inputType);
-		if (variable) {
-			shadersCollectionController.addVariable(this, varName, variable);
-		}
+		const tmpVarName = variable ? shadersCollectionController.addVariable(this, variable) : undefined;
 
 		// color / vector
 		const functionName = functionNameByType(inputType);
-		if (functionName) {
+		if (functionName && tmpVarName) {
 			const func = Poly.namedFunctionsRegister.getFunction(functionName, this, shadersCollectionController);
 			shadersCollectionController.addBodyOrComputed(this, [
-				{dataType: inputType, varName, value: func.asString(value0, value1, varName)},
+				{dataType: inputType, varName, value: func.asString(value0, value1, tmpVarName)},
 			]);
 			return;
 		}

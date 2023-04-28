@@ -40,9 +40,9 @@ export class Vector3ProjectJsNode extends TypedJsNode<Vector3ProjectJsParamsConf
 		const camera = this.variableForInput(shadersCollectionController, JsConnectionPointType.CAMERA);
 		const out = this.jsVarName(OUTPUT_NAME);
 
-		shadersCollectionController.addVariable(this, out, new Vector3());
+		const tmpVarName =shadersCollectionController.addVariable(this, new Vector3());
 		const func = Poly.namedFunctionsRegister.getFunction('vector3Project', this, shadersCollectionController);
-		const bodyLine = func.asString(vector3, camera, out);
+		const bodyLine = func.asString(vector3, camera, tmpVarName);
 		shadersCollectionController.addBodyOrComputed(this, [
 			{dataType: JsConnectionPointType.VECTOR3, varName: out, value: bodyLine},
 		]);

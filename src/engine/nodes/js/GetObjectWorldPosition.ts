@@ -36,17 +36,17 @@ export class GetObjectWorldPositionJsNode extends ParamlessTypedJsNode {
 		const varName = this.jsVarName(GetObjectWorldPositionJsNodeInputName.worldPosition);
 
 		const variable = createVariable(JsConnectionPointType.VECTOR3);
-		if (variable) {
-			shadersCollectionController.addVariable(this, varName, variable);
+		const tmpVarName = variable ? shadersCollectionController.addVariable(this, variable) : undefined;
+		if (!tmpVarName) {
+			return;
 		}
-
 		const func = Poly.namedFunctionsRegister.getFunction(
 			'getObjectWorldPosition',
 			this,
 			shadersCollectionController
 		);
 		shadersCollectionController.addBodyOrComputed(this, [
-			{dataType: JsConnectionPointType.PLANE, varName, value: func.asString(object3D, varName)},
+			{dataType: JsConnectionPointType.PLANE, varName, value: func.asString(object3D, tmpVarName)},
 		]);
 	}
 }

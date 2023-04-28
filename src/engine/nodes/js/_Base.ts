@@ -20,7 +20,7 @@ import {BooleanParam} from '../../params/Boolean';
 import {ThreeToJs} from '../../../core/ThreeToJs';
 import {ParamsEditableStateController} from '../utils/io/ParamsEditableStateController';
 import {Color, Quaternion, Vector2, Vector3, Vector4} from 'three';
-import {CoreString} from '../../../core/String';
+import {sanitizeName} from '../../../core/String';
 import {BaseParamType} from '../../params/_Base';
 import {EvaluatorEventData} from './code/assemblers/actor/Evaluator';
 import {StringParam} from '../../params/String';
@@ -133,8 +133,14 @@ export class TypedJsNode<K extends NodeParamsConfig> extends TypedNode<NodeConte
 	jsVarName(name: string) {
 		return sanitizeJsVarName(`v_POLY_${this.name()}_${name}`);
 	}
-	inputVarName(inputName: string) {
-		const sanitizedNodePath = CoreString.sanitizeName(this.path().replace(this.functionNode()?.path() || '', ''));
+	inputVarName(inputName: string): string {
+		return TypedJsNode.inputVarName(this, inputName);
+		// const sanitizedNodePath = sanitizeName(this.path().replace(this.functionNode()?.path() || '', ''));
+		// const varName = `${sanitizedNodePath}_${inputName}`;
+		// return varName;
+	}
+	static inputVarName(node: BaseJsNodeType, inputName: string) {
+		const sanitizedNodePath = sanitizeName(node.path().replace(node.functionNode()?.path() || '', ''));
 		const varName = `${sanitizedNodePath}_${inputName}`;
 		return varName;
 	}
@@ -182,8 +188,8 @@ export class TypedJsNode<K extends NodeParamsConfig> extends TypedNode<NodeConte
 					return outputJsVarName != null ? outputJsVarName : `'${param.value}'`;
 				}
 				if (variableFromParamRequired(param)) {
-					const varName = this.inputVarName(inputName);
-					shadersCollectionController.addVariable(this, varName, createVariableFromParam(param));
+					const varName = `VAR_` + this.inputVarName(inputName);
+					shadersCollectionController.addVariable(this, createVariableFromParam(param), varName);
 
 					const _copy = (_outputJsVarName: string) => {
 						return `${varName}.copy(${wrapIfComputed(_outputJsVarName, shadersCollectionController)})`;
