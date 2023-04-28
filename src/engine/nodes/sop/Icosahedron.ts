@@ -15,7 +15,7 @@ class IcosahedronSopParamsConfig extends NodeParamsConfig {
 	radius = ParamConfig.FLOAT(DEFAULT.radius);
 	/** @param resolution of the icosahedron */
 	detail = ParamConfig.INTEGER(DEFAULT.detail, {
-		range: [0, 10],
+		range: [0, 32],
 		rangeLocked: [true, false],
 	});
 	/** @param do not create polygons, only points. */

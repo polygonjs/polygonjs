@@ -216,10 +216,16 @@ export class JsAssemblerPointBuilder extends BaseJsShaderAssembler {
 			const varName = globalsNode.jsVarName(outputName);
 
 			switch (outputName) {
-				case 'position':
+				case PointVariable.POSITION:
+				case PointVariable.NORMAL: {
 					linesController.addVariable(globalsNode, new Vector3(), varName);
 					bodyLines.push(`${varName}.copy(${FunctionConstant.POINT_CONTAINER}.${outputName})`);
 					break;
+				}
+				case PointVariable.OBJNUM:
+				case PointVariable.PTNUM: {
+					bodyLines.push(`${varName}= ${FunctionConstant.POINT_CONTAINER}.${outputName}`);
+				}
 			}
 		}
 		linesController._addBodyLines(globalsNode, bodyLines);

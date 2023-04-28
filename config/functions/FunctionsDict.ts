@@ -188,6 +188,8 @@ export const FUNCTION_NAME_BY_FILE_NAME: Record<string, string[]> = {
 		'multScalarVectorArray',
 	],
 	NearestPosition: ['nearestPosition'],
+	NoiseSimplex: ['noiseSimplexVector2', 'noiseSimplexVector3', 'noiseSimplexVector4'],
+	NoiseImproved: ['noiseImprovedVector3'],
 	ObjectDispatchEvent: ['objectDispatchEvent', 'getObjectLastDispatchedEventName', 'objectAddEventListeners'],
 	Param: [
 		'setParamBoolean',

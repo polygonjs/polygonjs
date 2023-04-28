@@ -97,6 +97,8 @@ import {MultAddJsNode} from '../../../nodes/js/MultAdd';
 import {MultScalarJsNode} from '../../../nodes/js/MultScalar';
 import {NearestPositionJsNode} from '../../../nodes/js/NearestPosition';
 import {NegateJsNode} from '../../../nodes/js/Negate';
+import {NoiseImprovedJsNode} from '../../../nodes/js/NoiseImproved';
+import {NoiseSimplexJsNode} from '../../../nodes/js/NoiseSimplex';
 import {NormalizeJsNode} from '../../../nodes/js/Normalize';
 import {NullJsNode} from '../../../nodes/js/Null';
 import {Object3DLocalToWorldJsNode} from '../../../nodes/js/Object3DLocalToWorld';
@@ -354,6 +356,8 @@ export interface JsNodeChildrenMap {
 	multScalar: MultScalarJsNode;
 	nearestPosition: NearestPositionJsNode;
 	negate: NegateJsNode;
+	noiseImproved: NoiseImprovedJsNode;
+	noiseSimplex: NoiseSimplexJsNode;
 	normalize: NormalizeJsNode;
 	null: NullJsNode;
 	object3DLocalToWorld: Object3DLocalToWorldJsNode;
@@ -644,6 +648,8 @@ export class JsRegister {
 		poly.registerNode(MultScalarJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(NearestPositionJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(NegateJsNode, CATEGORY_JS.MATH);
+		poly.registerNode(NoiseImprovedJsNode, CATEGORY_JS.MATH);
+		poly.registerNode(NoiseSimplexJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(NormalizeJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(NullJsNode, CATEGORY_JS.FLOW);
 		poly.registerNode(Object3DLocalToWorldJsNode, CATEGORY_JS.GET, ONLY_ACTOR);

@@ -225,6 +225,8 @@ import './engine/nodes/js/MultAdd';
 import './engine/nodes/js/MultScalar';
 import './engine/nodes/js/NearestPosition';
 import './engine/nodes/js/Negate';
+import './engine/nodes/js/NoiseSimplex';
+import './engine/nodes/js/NoiseImproved';
 import './engine/nodes/js/Normalize';
 import './engine/nodes/js/ObjectDispatchEvent';
 import './engine/nodes/js/Object3DLocalToWorld';

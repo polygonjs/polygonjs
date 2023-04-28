@@ -233,6 +233,10 @@ import { multVector } from "../../../functions/multVector";
 import { multVectorNumber } from "../../../functions/multVectorNumber";
 import { nearestPosition } from "../../../functions/nearestPosition";
 import { negate } from "../../../functions/negate";
+import { noiseImprovedVector3 } from "../../../functions/noiseImprovedVector3";
+import { noiseSimplexVector2 } from "../../../functions/noiseSimplexVector2";
+import { noiseSimplexVector3 } from "../../../functions/noiseSimplexVector3";
+import { noiseSimplexVector4 } from "../../../functions/noiseSimplexVector4";
 import { normalizeVector2 } from "../../../functions/normalizeVector2";
 import { normalizeVector3 } from "../../../functions/normalizeVector3";
 import { normalizeVector4 } from "../../../functions/normalizeVector4";
@@ -615,6 +619,10 @@ export interface NamedFunctionMap {
   multVectorNumber: multVectorNumber<Vector2 | Vector3 | Vector4>;
   nearestPosition: nearestPosition;
   negate: negate<boolean | number>;
+  noiseImprovedVector3: noiseImprovedVector3;
+  noiseSimplexVector2: noiseSimplexVector2;
+  noiseSimplexVector3: noiseSimplexVector3;
+  noiseSimplexVector4: noiseSimplexVector4;
   normalizeVector2: normalizeVector2;
   normalizeVector3: normalizeVector3;
   normalizeVector4: normalizeVector4;
@@ -1000,6 +1008,10 @@ export class AllNamedFunctionRegister {
       multVectorNumber,
       nearestPosition,
       negate,
+      noiseImprovedVector3,
+      noiseSimplexVector2,
+      noiseSimplexVector3,
+      noiseSimplexVector4,
       normalizeVector2,
       normalizeVector3,
       normalizeVector4,
