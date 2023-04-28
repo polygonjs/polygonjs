@@ -753,7 +753,7 @@ export class JsRegister {
 		poly.registerNode(RayIntersectsPlaneJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(RayIntersectSphereJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(RayIntersectsSphereJsNode, CATEGORY_JS.MATH);
-		poly.registerNode(RenderPixelJsNode, CATEGORY_JS.ADVANCED);
+		poly.registerNode(RenderPixelJsNode, CATEGORY_JS.ADVANCED, ONLY_ACTOR);
 		poly.registerNode(RoundJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(SDF2DRoundedXJsNode, CATEGORY_JS.SDF_PRIMITIVES_2D);
 		poly.registerNode(SDFBoxJsNode, CATEGORY_JS.SDF_PRIMITIVES);

@@ -13,7 +13,7 @@ import {Vector4} from 'three';
 import {RefJsDefinition} from './utils/JsDefinition';
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
 
-enum RenderPixelJsNodeOutputName {
+export enum RenderPixelJsNodeOutputName {
 	value = 'value',
 }
 
