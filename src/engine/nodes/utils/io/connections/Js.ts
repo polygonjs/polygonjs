@@ -64,7 +64,7 @@ export enum JsConnectionPointType {
 	// MAT4 = 'mat4',
 }
 export type PrimitiveArrayElement = boolean | number | string;
-export type VectorArrayElement = Color | Matrix4 | Quaternion | Vector2 | Vector3 | Vector4;
+export type VectorArrayElement = Color | Euler | Matrix4 | Quaternion | Vector2 | Vector3 | Vector4;
 const NUMBER_JS_CONNECTION_TYPES = new Set([JsConnectionPointType.FLOAT, JsConnectionPointType.INT]);
 const PRIMITIVE_JS_CONNECTION_TYPES = new Set([
 	JsConnectionPointType.BOOLEAN,

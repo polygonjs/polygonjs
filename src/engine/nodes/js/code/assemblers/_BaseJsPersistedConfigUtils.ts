@@ -1,4 +1,17 @@
-import {Box3, Color, Vector2, Vector3, Vector4, Plane, Ray, Sphere, Quaternion, Matrix4, Euler} from 'three';
+import {
+	Box3,
+	Color,
+	Vector2,
+	Vector3,
+	Vector4,
+	Plane,
+	Ray,
+	Sphere,
+	Quaternion,
+	Matrix4,
+	Euler,
+	EulerOrder,
+} from 'three';
 import {CoreType} from '../../../../../core/Type';
 import {Number2, Number3, Number4, Number16} from '../../../../../types/GlobalTypes';
 import {TypeAssert} from '../../../../poly/Assert';
@@ -142,6 +155,9 @@ export function createVectorArray<V extends VectorArrayElement>(type: JsConnecti
 		case JsConnectionPointType.COLOR: {
 			return new VectorArray([new Color()]) as VectorArray<V>;
 		}
+		case JsConnectionPointType.EULER: {
+			return new VectorArray([new Euler()]) as VectorArray<V>;
+		}
 		case JsConnectionPointType.MATRIX4: {
 			return new VectorArray([new Matrix4()]) as VectorArray<V>;
 		}
@@ -165,6 +181,7 @@ export function createVectorArray<V extends VectorArrayElement>(type: JsConnecti
 export enum SerializedVariableType {
 	Box3 = 'Box3',
 	Color = 'Color',
+	Euler = 'Euler',
 	Matrix4 = 'Matrix4',
 	Plane = 'Plane',
 	Quaternion = 'Quaternion',
@@ -179,6 +196,7 @@ export enum SerializedVariableType {
 	string_Array = 'string[]',
 	// vector array
 	Color_Array = 'Color[]',
+	Euler_Array = 'Euler[]',
 	// Intersection_Array = 'Intersection[]',
 	Matrix4_Array = 'Matrix4[]',
 	Quaternion_Array = 'Quaternion[]',
@@ -187,10 +205,14 @@ export enum SerializedVariableType {
 	Vector3_Array = 'Vector3[]',
 	Vector4_Array = 'Vector4[]',
 }
-
+interface EulerSerialized {
+	rotation: Number3;
+	rotationOrder: EulerOrder;
+}
 interface SerializedDataByType {
 	[SerializedVariableType.Box3]: {min: Number3; max: Number3};
 	[SerializedVariableType.Color]: Number3;
+	[SerializedVariableType.Euler]: EulerSerialized;
 	[SerializedVariableType.Matrix4]: Number16;
 	[SerializedVariableType.Plane]: {normal: Number3; constant: number};
 	[SerializedVariableType.Quaternion]: Number4;
@@ -205,6 +227,7 @@ interface SerializedDataByType {
 	[SerializedVariableType.string_Array]: string[];
 	// vector array
 	[SerializedVariableType.Color_Array]: Number3[];
+	[SerializedVariableType.Euler_Array]: EulerSerialized[];
 	[SerializedVariableType.Matrix4_Array]: Number16[];
 	[SerializedVariableType.Quaternion_Array]: Number4[];
 	[SerializedVariableType.Vector2_Array]: Number2[];
@@ -214,6 +237,7 @@ interface SerializedDataByType {
 interface VariableByType {
 	[SerializedVariableType.Box3]: Box3;
 	[SerializedVariableType.Color]: Color;
+	[SerializedVariableType.Euler]: Euler;
 	[SerializedVariableType.Matrix4]: Matrix4;
 	[SerializedVariableType.Plane]: Plane;
 	[SerializedVariableType.Quaternion]: Quaternion;
@@ -228,13 +252,25 @@ interface VariableByType {
 	[SerializedVariableType.string_Array]: PrimitiveArray<string>;
 	// vector array
 	[SerializedVariableType.Color_Array]: VectorArray<Color>;
+	[SerializedVariableType.Euler_Array]: VectorArray<Euler>;
 	[SerializedVariableType.Matrix4_Array]: VectorArray<Matrix4>;
 	[SerializedVariableType.Quaternion_Array]: VectorArray<Quaternion>;
 	[SerializedVariableType.Vector2_Array]: VectorArray<Vector2>;
 	[SerializedVariableType.Vector3_Array]: VectorArray<Vector3>;
 	[SerializedVariableType.Vector4_Array]: VectorArray<Vector4>;
 }
-type SerializableVariable = Box3 | Color | Matrix4 | Plane | Quaternion | Ray | Sphere | Vector2 | Vector3 | Vector4;
+type SerializableVariable =
+	| Box3
+	| Color
+	| Euler
+	| Matrix4
+	| Plane
+	| Quaternion
+	| Ray
+	| Sphere
+	| Vector2
+	| Vector3
+	| Vector4;
 
 export interface SerializedVariable<T extends SerializedVariableType> {
 	type: SerializedVariableType;
@@ -245,6 +281,7 @@ export function isVariableSerializable(variable: any): variable is SerializableV
 	if (
 		variable instanceof Box3 ||
 		variable instanceof Color ||
+		variable instanceof Euler ||
 		variable instanceof Matrix4 ||
 		variable instanceof Plane ||
 		variable instanceof Quaternion ||
@@ -280,6 +317,16 @@ export function serializeVariable<T extends SerializedVariableType>(
 		const data: SerializedVariable<SerializedVariableType.Color> = {
 			type: SerializedVariableType.Color,
 			data: variable.toArray() as Number3,
+		};
+		return data as SerializedVariable<T>;
+	}
+	if (variable instanceof Euler) {
+		const data: SerializedVariable<SerializedVariableType.Euler> = {
+			type: SerializedVariableType.Euler,
+			data: {
+				rotation: variable.toArray() as Number3,
+				rotationOrder: variable.order,
+			},
 		};
 		return data as SerializedVariable<T>;
 	}
@@ -381,6 +428,16 @@ export function serializeVariable<T extends SerializedVariableType>(
 			};
 			return data as SerializedVariable<T>;
 		}
+		if (firstElement instanceof Euler) {
+			const data: SerializedVariable<SerializedVariableType.Euler_Array> = {
+				type: SerializedVariableType.Euler_Array,
+				data: variable.elements().map((v) => ({
+					rotation: v.toArray() as Number3,
+					rotationOrder: (v as Euler).order,
+				})),
+			};
+			return data as SerializedVariable<T>;
+		}
 		if (firstElement instanceof Matrix4) {
 			const data: SerializedVariable<SerializedVariableType.Matrix4_Array> = {
 				type: SerializedVariableType.Matrix4_Array,
@@ -446,6 +503,11 @@ export function deserializeVariable<T extends SerializedVariableType>(
 			color.g = data[1];
 			color.b = data[2];
 			return color as VariableByType[T];
+		}
+		case SerializedVariableType.Euler: {
+			const data = (serialized as SerializedVariable<SerializedVariableType.Euler>).data;
+			const euler = new Euler(data.rotation[0], data.rotation[1], data.rotation[2], data.rotationOrder);
+			return euler as VariableByType[T];
 		}
 		case SerializedVariableType.Matrix4: {
 			const data = (serialized as SerializedVariable<SerializedVariableType.Matrix4>).data;
@@ -528,6 +590,15 @@ export function deserializeVariable<T extends SerializedVariableType>(
 				return color;
 			});
 			const vectorArray = new VectorArray(vectors);
+			return vectorArray as VariableByType[T];
+		}
+		case SerializedVariableType.Euler_Array: {
+			const data = (serialized as SerializedVariable<SerializedVariableType.Euler_Array>).data;
+			const eulers = data.map((d) => {
+				const euler = new Euler(d.rotation[0], d.rotation[1], d.rotation[2], d.rotationOrder);
+				return euler;
+			});
+			const vectorArray = new VectorArray(eulers);
 			return vectorArray as VariableByType[T];
 		}
 		case SerializedVariableType.Matrix4_Array: {

@@ -122,7 +122,18 @@ export class renderPixel extends ObjectNamedFunction5<[Material, Camera, Color, 
 		renderer.render(this._renderScene, camera);
 		renderer.setRenderTarget(null);
 		(camera as any).clearViewOffset();
+
+		// There are some cases where .readRenderTargetPixels is slow,
+		// and this seems to be due to the calls to _gl.getParameters.
+		// Here we are bypassing it.
+		// Note: this attempt to bypass needs "properties", which is internal to WebGLRenderer.
+		// const context = renderer.getContext();
+		// const textureFormat = context.RGBA; // RGBAFormat see three/WebGLUtils.js
+		// const textureType = context.FLOAT; // FloatType see three/WebGLUtils.js
+		// context.readPixels(0, 0, 1, 1, textureFormat, textureType, this._read);
 		renderer.readRenderTargetPixels(this._renderTarget, 0, 0, 1, 1, this._read);
+
+		// read buffer into target vector
 		target.fromArray(this._read);
 	}
 	private _restore(object3D: Object3D, material: Material, renderer: WebGLRenderer) {
