@@ -227,6 +227,7 @@ export const FUNCTION_NAME_BY_FILE_NAME: Record<string, string[]> = {
 	ParticlesSystem: ['particlesSystemReset', 'particlesSystemStepSimulation'],
 	Performance: ['onPerformanceChange'],
 	Plane: ['planeSet', 'getPlaneNormal', 'getPlaneConstant'],
+	Poly: ['playerMode'],
 	PreviousValue: [
 		'previousValuePrimitive',
 		'previousValueColor',
@@ -304,8 +305,7 @@ export const FUNCTION_NAME_BY_FILE_NAME: Record<string, string[]> = {
 	PlayerPhysics: ['playerPhysicsUpdate'],
 	PlayerSimple: ['playerSimpleUpdate', 'getPlayerSimplePropertyOnGround', 'getPlayerSimplePropertyVelocity'],
 	Quaternion: ['quaternionSetFromEuler', 'quaternionSetFromAxisAngle', 'quaternionAngleTo', 'quaternionSlerp'],
-	Sizzle: ['sizzleVec3XY', 'sizzleVec3XZ', 'sizzleVec3YZ', 'sizzleVec4XYZ', 'sizzleVec4WArray', 'sizzleVec4XYZArray'],
-	Subtract: ['subtractNumber', 'subtractVector', 'subtractVectorNumber'],
+	Scroll: ['createScrollListener'],
 	SDFOperations: [
 		'SDFUnion',
 		'SDFSubtract',
@@ -343,8 +343,10 @@ export const FUNCTION_NAME_BY_FILE_NAME: Record<string, string[]> = {
 		'getPlayerInputDataJump',
 		'getPlayerInputDataRun',
 	],
+	Sizzle: ['sizzleVec3XY', 'sizzleVec3XZ', 'sizzleVec3YZ', 'sizzleVec4XYZ', 'sizzleVec4WArray', 'sizzleVec4XYZArray'],
 	Sleep: ['sleep'],
 	Sphere: ['sphereSet', 'getSphereCenter', 'getSphereRadius'],
+	Subtract: ['subtractNumber', 'subtractVector', 'subtractVectorNumber'],
 	TrackingFace: ['trackFace', 'trackFaceGetLandmarks'],
 	TrackingHand: [
 		'trackHand',

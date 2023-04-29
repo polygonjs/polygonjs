@@ -24,7 +24,7 @@ import {TransformedParamConfig, TransformController} from './utils/TransformCont
 import {ObjTesselationParamConfig} from './utils/TesselationParams';
 import {addCADTesselationParamsCallback} from '../../../core/geometry/cad/utils/TesselationParamsConfig';
 import {addCSGTesselationParamsCallback} from '../../../core/geometry/csg/utils/TesselationParamsConfig';
-import {addSDFTesselationParamsCallback} from '../../../core/geometry/sdf/utils/TesselationParamsConfig';
+// import {addSDFTesselationParamsCallback} from '../../../core/geometry/sdf/utils/TesselationParamsConfig';
 
 export function GeoParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
@@ -80,7 +80,7 @@ export class GeoObjNode extends TypedObjNode<Group, GeoObjParamConfig> {
 		};
 		addCADTesselationParamsCallback(this, _updateSpecializedChildren);
 		addCSGTesselationParamsCallback(this, _updateSpecializedChildren);
-		addSDFTesselationParamsCallback(this, _updateSpecializedChildren);
+		// addSDFTesselationParamsCallback(this, _updateSpecializedChildren);
 	}
 
 	// override isDisplayNodeCooking(): boolean {

@@ -135,6 +135,7 @@ import {OnPointerupJsNode} from '../../../nodes/js/OnPointerup';
 import {OnScenePauseJsNode} from '../../../nodes/js/OnScenePause';
 import {OnScenePlayJsNode} from '../../../nodes/js/OnScenePlay';
 import {OnSceneResetJsNode} from '../../../nodes/js/OnSceneReset';
+import {OnScrollJsNode} from '../../../nodes/js/OnScroll';
 import {OnTickJsNode} from '../../../nodes/js/OnTick';
 import {OnVideoEventJsNode} from '../../../nodes/js/OnVideoEvent';
 import {OnWebXRControllerEventJsNode} from '../../../nodes/js/OnWebXRControllerEvent';
@@ -160,6 +161,7 @@ import {PhysicsWorldStepSimulationJsNode} from '../../../nodes/js/PhysicsWorldSt
 import {PlaneJsNode} from '../../../nodes/js/Plane';
 import {PlayAnimationJsNode} from '../../../nodes/js/PlayAnimation';
 import {PlayAudioSourceJsNode} from '../../../nodes/js/PlayAudioSource';
+import {PlayerModeJsNode} from '../../../nodes/js/PlayerMode';
 import {PlayerUpdateJsNode} from '../../../nodes/js/PlayerUpdate';
 import {PlayInstrumentNoteJsNode} from '../../../nodes/js/PlayInstrumentNote';
 import {PowJsNode} from '../../../nodes/js/Pow';
@@ -403,6 +405,7 @@ export interface JsNodeChildrenMap {
 	onScenePause: OnScenePauseJsNode;
 	onScenePlay: OnScenePlayJsNode;
 	onSceneReset: OnSceneResetJsNode;
+	onScroll: OnScrollJsNode;
 	onTick: OnTickJsNode;
 	onVideoEvent: OnVideoEventJsNode;
 	onWebXRControllerEvent: OnWebXRControllerEventJsNode;
@@ -428,6 +431,7 @@ export interface JsNodeChildrenMap {
 	plane: PlaneJsNode;
 	playAnimation: PlayAnimationJsNode;
 	playAudioSource: PlayAudioSourceJsNode;
+	playerMode: PlayerModeJsNode;
 	playInstrumentNote: PlayInstrumentNoteJsNode;
 	playerUpdate: PlayerUpdateJsNode;
 	pow: PowJsNode;
@@ -705,6 +709,7 @@ export class JsRegister {
 		poly.registerNode(OnScenePauseJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
 		poly.registerNode(OnScenePlayJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
 		poly.registerNode(OnSceneResetJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
+		poly.registerNode(OnScrollJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
 		poly.registerNode(OnTickJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
 		poly.registerNode(OnVideoEventJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
 		poly.registerNode(OnWebXRControllerEventJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
@@ -731,6 +736,7 @@ export class JsRegister {
 		poly.registerNode(PlayAnimationJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR);
 		poly.registerNode(PlayAudioSourceJsNode, CATEGORY_JS.AUDIO, ONLY_ACTOR);
 		poly.registerNode(PlayInstrumentNoteJsNode, CATEGORY_JS.AUDIO, ONLY_ACTOR);
+		poly.registerNode(PlayerModeJsNode, CATEGORY_JS.LOGIC);
 		poly.registerNode(PlayerUpdateJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR);
 		poly.registerNode(PowJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(PressButtonParamJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR);

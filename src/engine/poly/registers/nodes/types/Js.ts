@@ -22,6 +22,7 @@ export enum JsType {
 	ON_SCENE_PAUSE = 'onScenePause',
 	ON_SCENE_PLAY = 'onScenePlay',
 	ON_SCENE_RESET = 'onSceneReset',
+	ON_SCROLL = 'onScroll',
 	ON_MANUAL_TRIGGER = 'onManualTrigger',
 	ON_TICK = 'onTick',
 	ON_PERFORMANCE_CHANGE = 'onPerformanceChange',

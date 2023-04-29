@@ -3,8 +3,8 @@ import {CoreGroup} from '../../core/geometry/Group';
 import {BaseSopNodeType} from '../nodes/sop/_Base';
 import type {CSGOBJTesselationParams} from '../../core/geometry/csg/CsgCommon';
 import type {CADOBJTesselationParams} from '../../core/geometry/cad/CadCommon';
-import type {SDFOBJTesselationParams} from '../../core/geometry/sdf/SDFCommon';
-interface Params extends CSGOBJTesselationParams, CADOBJTesselationParams, SDFOBJTesselationParams {}
+// import type {SDFOBJTesselationParams} from '../../core/geometry/sdf/SDFCommon';
+interface Params extends CSGOBJTesselationParams, CADOBJTesselationParams /*, SDFOBJTesselationParams*/ {}
 
 export type SpecializedChildrenHook = (
 	displayNode: BaseSopNodeType,

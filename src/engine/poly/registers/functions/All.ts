@@ -34,6 +34,7 @@ import { colorSetRGB } from "../../../functions/colorSetRGB";
 import { colorToVec3 } from "../../../functions/colorToVec3";
 import { complement } from "../../../functions/complement";
 import { cookNode } from "../../../functions/cookNode";
+import { createScrollListener } from "../../../functions/createScrollListener";
 import { crossVector2 } from "../../../functions/crossVector2";
 import { crossVector3 } from "../../../functions/crossVector3";
 import { cursorToUv } from "../../../functions/cursorToUv";
@@ -285,6 +286,7 @@ import { physicsWorldStepSimulation } from "../../../functions/physicsWorldStepS
 import { planeSet } from "../../../functions/planeSet";
 import { playAnimation } from "../../../functions/playAnimation";
 import { playAudioSource } from "../../../functions/playAudioSource";
+import { playerMode } from "../../../functions/playerMode";
 import { playerPhysicsUpdate } from "../../../functions/playerPhysicsUpdate";
 import { playerSimpleUpdate } from "../../../functions/playerSimpleUpdate";
 import { playInstrumentNote } from "../../../functions/playInstrumentNote";
@@ -439,6 +441,7 @@ export interface NamedFunctionMap {
   colorToVec3: colorToVec3;
   complement: complement;
   cookNode: cookNode;
+  createScrollListener: createScrollListener;
   crossVector2: crossVector2;
   crossVector3: crossVector3;
   cursorToUv: cursorToUv;
@@ -690,6 +693,7 @@ export interface NamedFunctionMap {
   planeSet: planeSet;
   playAnimation: playAnimation;
   playAudioSource: playAudioSource;
+  playerMode: playerMode;
   playerPhysicsUpdate: playerPhysicsUpdate;
   playerSimpleUpdate: playerSimpleUpdate;
   playInstrumentNote: playInstrumentNote;
@@ -847,6 +851,7 @@ export class AllNamedFunctionRegister {
       colorToVec3,
       complement,
       cookNode,
+      createScrollListener,
       crossVector2,
       crossVector3,
       cursorToUv,
@@ -1098,6 +1103,7 @@ export class AllNamedFunctionRegister {
       planeSet,
       playAnimation,
       playAudioSource,
+      playerMode,
       playerPhysicsUpdate,
       playerSimpleUpdate,
       playInstrumentNote,
