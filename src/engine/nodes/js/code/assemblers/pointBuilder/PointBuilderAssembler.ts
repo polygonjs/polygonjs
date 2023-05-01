@@ -1,4 +1,4 @@
-import {BaseJsShaderAssembler, INSERT_DEFINE_AFTER, INSERT_BODY_AFTER} from '../_Base';
+import {BaseJsShaderAssembler, INSERT_DEFINE_AFTER, INSERT_BODY_AFTER, INSERT_MEMBERS_AFTER} from '../_Base';
 import {RegisterableVariable} from '../_BaseJsPersistedConfigUtils';
 import {ShaderConfig} from '../../configs/ShaderConfig';
 import {VariableConfig} from '../../configs/VariableConfig';
@@ -39,6 +39,7 @@ export enum PointVariable {
 
 const TEMPLATE = `
 ${INSERT_DEFINE_AFTER}
+${INSERT_MEMBERS_AFTER}
 
 ${INSERT_BODY_AFTER}
 `;

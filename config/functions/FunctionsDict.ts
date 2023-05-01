@@ -116,6 +116,7 @@ export const FUNCTION_NAME_BY_FILE_NAME: Record<string, string[]> = {
 	GetSceneObject: ['getMaterial', 'getTexture'],
 	GetSibbling: ['getSibbling'],
 	Globals: ['globalsTime', 'globalsTimeDelta', 'globalsRaycaster', 'globalsRayFromCursor', 'globalsCursor'],
+	Keyframes: ['cubicBezierCurveChannel', 'getCubicBezierCurveChannelValue'],
 	Instance: [
 		'setGeometryInstancePositions',
 		'setGeometryInstanceQuaternions',

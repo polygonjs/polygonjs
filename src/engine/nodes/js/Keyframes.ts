@@ -1,121 +1,268 @@
-// /**
-//  * allows to set up complex animations using keyframes
-//  *
-//  *
-//  */
-// import {Vector2} from 'three';
-// import {ChannelData, cubicBezierCurveFromKeyframes, getPointFromCurves} from './../../../core/animation/Keyframe';
-// import {StringParamLanguage} from './../../params/utils/OptionsController';
-// import {NodeParamsConfig, ParamConfig} from './../utils/params/ParamsConfig';
-// import {ActorNodeTriggerContext, TypedActorNode} from './_Base';
-// import {
-// 	ActorConnectionPoint,
-// 	ActorConnectionPointType,
-// 	ACTOR_CONNECTION_POINT_IN_NODE_DEF,
-// 	ReturnValueTypeByActorConnectionPointType,
-// } from '../utils/io/connections/Actor';
-// import {CubicBezierCurve} from 'three';
-// import {ChannelsData} from '../../../core/animation/Keyframe';
-// import {ParamType} from '../../poly/ParamType';
+/**
+ * allows to set up complex animations using keyframes
+ *
+ *
+ */
 
-// const CONNECTION_OPTIONS = ACTOR_CONNECTION_POINT_IN_NODE_DEF;
-// const tmp = new Vector2();
+import {NodeParamsConfig, ParamConfig} from './../utils/params/ParamsConfig';
+import {TypedJsNode} from './_Base';
+import {JsConnectionPointType} from '../utils/io/connections/Js';
+import {ChannelData, ChannelsData} from '../../../core/keyframes/KeyframeCommon';
+import {ArrayUtils} from '../../../core/ArrayUtils';
+import {IntegerParam} from '../../params/Integer';
+import {StringParam} from '../../params/String';
+import {ConstantJsDefinition} from './utils/JsDefinition';
+import {Poly} from '../../Poly';
+import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
+
+const SAMPLE_DATA: ChannelData = [
+	{
+		pos: 0,
+		value: 0,
+		tan: {x: 0.5, y: 0.1},
+	},
+	{
+		pos: 1,
+		value: 1,
+		tan: {x: 0.5, y: 0},
+	},
+	{
+		pos: 2,
+		value: 0,
+		tan: {x: 0.25, y: 0},
+	},
+];
 
 // const INIT_DATA: ChannelsData = {
-// 	depth: [
-// 		{
-// 			pos: 0,
-// 			value: 0,
-// 			tan: {x: 0, y: 1},
-// 		},
-// 		{
-// 			pos: 0.2,
-// 			value: 1,
-// 			tan: {x: 1, y: 0},
-// 		},
-// 		{
-// 			pos: 1,
-// 			value: 0,
-// 			tan: {x: 1, y: 0},
-// 		},
-// 	],
+// 	depth: SAMPLE_DATA
 // };
+enum KeyframesJsNodeInputName {
+	time = 'time',
+}
 
-// class KeyframesActorParamsConfig extends NodeParamsConfig {
-// 	t = ParamConfig.FLOAT(0, {
-// 		step: 0.001,
-// 	});
-// 	data = ParamConfig.STRING(JSON.stringify(INIT_DATA, null, 2), {
-// 		language: StringParamLanguage.JSON,
-// 	});
-// }
-// const ParamsConfig = new KeyframesActorParamsConfig();
+const AVAILABLE_JS_CONNECTION_POINT_TYPES: JsConnectionPointType[] = [
+	JsConnectionPointType.FLOAT,
+	JsConnectionPointType.VECTOR2,
+	JsConnectionPointType.VECTOR3,
+	JsConnectionPointType.VECTOR4,
+];
 
-// export class KeyframesActorNode extends TypedActorNode<KeyframesActorParamsConfig> {
-// 	override readonly paramsConfig = ParamsConfig;
-// 	static override type() {
-// 		return 'keyframes';
-// 	}
+function visibleIfChannelsCountAtLeast(index: number) {
+	return {
+		visibleIf: ArrayUtils.range(index + 1, 10).map((i) => ({channelsCount: i})),
+	};
+}
+function channelTypeParam(index: number) {
+	return ParamConfig.INTEGER(AVAILABLE_JS_CONNECTION_POINT_TYPES.indexOf(JsConnectionPointType.FLOAT), {
+		menu: {
+			entries: AVAILABLE_JS_CONNECTION_POINT_TYPES.map((name, i) => {
+				return {name: name, value: i};
+			}),
+		},
+		separatorBefore: true,
+		...visibleIfChannelsCountAtLeast(index),
+	});
+}
+function channelNameParam(index: number) {
+	return ParamConfig.STRING(`channel${index}`, {
+		...visibleIfChannelsCountAtLeast(index),
+	});
+}
+function channelDataParam(index: number) {
+	return ParamConfig.STRING(JSON.stringify(SAMPLE_DATA), {
+		...visibleIfChannelsCountAtLeast(index),
+	});
+}
+export function channelDataInputName(index: number) {
+	return `data${index}`;
+}
+class KeyframesJsParamsConfig extends NodeParamsConfig {
+	// main = ParamConfig.FOLDER();
+	// time = ParamConfig.FLOAT(0, {
+	// 	step: 0.001,
+	// });
+	channels = ParamConfig.FOLDER();
+	channelsCount = ParamConfig.INTEGER(1, {
+		range: [0, 10],
+		rangeLocked: [true, true],
+	});
+	channelType0 = channelTypeParam(0);
+	channelName0 = channelNameParam(0);
+	data0 = channelDataParam(0);
+	channelType1 = channelTypeParam(1);
+	channelName1 = channelNameParam(1);
+	data1 = channelDataParam(1);
+	channelType2 = channelTypeParam(2);
+	channelName2 = channelNameParam(2);
+	data2 = channelDataParam(2);
+	channelType3 = channelTypeParam(3);
+	channelName3 = channelNameParam(3);
+	data3 = channelDataParam(3);
+	channelType4 = channelTypeParam(4);
+	channelName4 = channelNameParam(4);
+	data4 = channelDataParam(4);
+	channelType5 = channelTypeParam(5);
+	channelName5 = channelNameParam(5);
+	data5 = channelDataParam(5);
+	channelType6 = channelTypeParam(6);
+	channelName6 = channelNameParam(6);
+	data6 = channelDataParam(6);
+	channelType7 = channelTypeParam(7);
+	channelName7 = channelNameParam(7);
+	data7 = channelDataParam(7);
+	channelType8 = channelTypeParam(8);
+	channelName8 = channelNameParam(8);
+	data8 = channelDataParam(8);
+	channelType9 = channelTypeParam(9);
+	channelName9 = channelNameParam(9);
+	data9 = channelDataParam(9);
+	spare = ParamConfig.FOLDER();
+}
+const ParamsConfig = new KeyframesJsParamsConfig();
 
-// 	override initializeNode() {
-// 		this.io.inputs.setNamedInputConnectionPoints([
-// 			new ActorConnectionPoint('t', ActorConnectionPointType.FLOAT, CONNECTION_OPTIONS),
-// 		]);
+export class KeyframesJsNode extends TypedJsNode<KeyframesJsParamsConfig> {
+	override readonly paramsConfig = ParamsConfig;
+	static override type() {
+		return 'keyframes';
+	}
 
-// 		this.io.outputs.setNamedOutputConnectionPoints([
-// 			new ActorConnectionPoint('center', ActorConnectionPointType.VECTOR3),
-// 			new ActorConnectionPoint('longitude', ActorConnectionPointType.FLOAT),
-// 			new ActorConnectionPoint('latitude', ActorConnectionPointType.FLOAT),
-// 			new ActorConnectionPoint('depth', ActorConnectionPointType.FLOAT),
-// 		]);
-// 	}
+	override initializeNode() {
+		super.initializeNode();
 
-// 	public override outputValue(
-// 		context: ActorNodeTriggerContext,
-// 		outputName: string
-// 	): ReturnValueTypeByActorConnectionPointType[ActorConnectionPointType] | undefined {
-// 		this._buildCurvesIfRequired();
-// 		const curves = this._curvesByChannelName.get(outputName);
-// 		if (!curves) {
-// 			console.warn(`no curve for output ${outputName}`);
-// 			return -1;
-// 		}
-// 		const t = this._inputValueFromParam<ParamType.FLOAT>(this.p.t, context);
-// 		let cachedValuesForOutput = this._valuesByTByChannelName.get(outputName);
-// 		if (!cachedValuesForOutput) {
-// 			cachedValuesForOutput = new Map();
-// 			this._valuesByTByChannelName.set(outputName, cachedValuesForOutput);
-// 		}
-// 		let cachedValue = cachedValuesForOutput.get(t);
-// 		if (cachedValue == null) {
-// 			getPointFromCurves(t, curves, tmp);
-// 			cachedValue = tmp.y;
-// 			cachedValuesForOutput.set(t, cachedValue);
-// 		}
-// 		return cachedValue;
-// 	}
-// 	private _curvesByChannelName: Map<string, CubicBezierCurve[]> = new Map();
-// 	private _valuesByTByChannelName: Map<string, Map<number, number>> = new Map();
-// 	private _curvesBuiltWithData: string = '';
-// 	private _buildCurvesIfRequired() {
-// 		if (this._curvesBuiltWithData == this.pv.data) {
-// 			return;
-// 		}
-// 		console.log('build curves');
-// 		this._curvesByChannelName.clear();
-// 		this._valuesByTByChannelName.clear();
-// 		try {
-// 			const data = JSON.parse(this.pv.data) as ChannelsData;
-// 			const channelNames = Object.keys(data);
-// 			for (let channelName of channelNames) {
-// 				const channelData = data[channelName] as ChannelData;
-// 				const curves = cubicBezierCurveFromKeyframes(channelData);
-// 				this._curvesByChannelName.set(channelName, curves);
-// 			}
-// 		} catch (e) {
-// 			this.states.error.set('failed to parse');
-// 		}
+		this.io.connection_points.set_input_name_function(this._expectedInputName.bind(this));
+		this.io.connection_points.set_expected_input_types_function(this._expectedInputTypes.bind(this));
+		this.io.connection_points.set_expected_output_types_function(this._expectedOutputTypes.bind(this));
+		this.io.connection_points.set_output_name_function(this._expectedOutputName.bind(this));
+	}
 
-// 		this._curvesBuiltWithData = this.pv.data;
-// 	}
-// }
+	protected _channelTypeParams(): IntegerParam[] {
+		return [
+			this.p.channelType0,
+			this.p.channelType1,
+			this.p.channelType2,
+			this.p.channelType3,
+			this.p.channelType4,
+			this.p.channelType5,
+			this.p.channelType6,
+			this.p.channelType7,
+			this.p.channelType8,
+			this.p.channelType9,
+		];
+	}
+	protected _channelNameParams(): StringParam[] {
+		return [
+			this.p.channelName0,
+			this.p.channelName1,
+			this.p.channelName2,
+			this.p.channelName3,
+			this.p.channelName4,
+			this.p.channelName5,
+			this.p.channelName6,
+			this.p.channelName7,
+			this.p.channelName8,
+			this.p.channelName9,
+		];
+	}
+	protected _channelDataParams(): StringParam[] {
+		return [
+			this.p.data0,
+			this.p.data1,
+			this.p.data2,
+			this.p.data3,
+			this.p.data4,
+			this.p.data5,
+			this.p.data6,
+			this.p.data7,
+			this.p.data8,
+			this.p.data9,
+		];
+	}
+	dataParam(channelName: string) {
+		const paramIndex = this._channelNameParams().findIndex((param) => param.value === channelName);
+		return this._channelDataParams()[paramIndex];
+	}
+
+	channelsData(): ChannelsData {
+		const data: ChannelsData = {};
+
+		const count = this.pv.channelsCount;
+		for (let i = 0; i < count; i++) {
+			const channelName = this._channelNameParams()[i].value;
+			const channelData = JSON.parse(this._channelDataParams()[i].value);
+			data[channelName] = channelData;
+		}
+		return data;
+	}
+
+	setInputType(index: number, type: JsConnectionPointType) {
+		const param = this._channelTypeParams()[index];
+		if (!param) {
+			return;
+		}
+		param.set(AVAILABLE_JS_CONNECTION_POINT_TYPES.indexOf(type));
+	}
+	setInputName(index: number, inputName: string) {
+		const param = this._channelNameParams()[index];
+		if (!param) {
+			return;
+		}
+		param.set(inputName);
+	}
+
+	protected _expectedInputsCount(): number {
+		return this.pv.channelsCount;
+	}
+
+	protected _expectedInputTypes(): JsConnectionPointType[] {
+		// const count = this.pv.channelsCount;
+		return [JsConnectionPointType.FLOAT]; //, ...ArrayUtils.range(0, count).map(() => JsConnectionPointType.STRING)];
+	}
+	protected _expectedInputName(index: number) {
+		// const count = this.pv.channelsCount;
+		// const dataNames: string[] = ArrayUtils.range(0, count).map((i) =>
+		// 	channelDataInputName(this._expectedOutputName(i))
+		// );
+		return [KeyframesJsNodeInputName.time][index];
+	}
+
+	protected _expectedOutputTypes() {
+		const count = this.pv.channelsCount;
+		const params: IntegerParam[] = this._channelTypeParams();
+		return ArrayUtils.range(0, count).map((value, i) => AVAILABLE_JS_CONNECTION_POINT_TYPES[params[i].value]);
+	}
+
+	protected _expectedOutputName(index: number) {
+		const params: StringParam[] = this._channelNameParams();
+		return params[index].value;
+	}
+
+	override setLines(linesController: JsLinesCollectionController) {
+		const time = this.variableForInput(linesController, KeyframesJsNodeInputName.time);
+		const funcCurve = Poly.namedFunctionsRegister.getFunction('cubicBezierCurveChannel', this, linesController);
+		const funcCurveValue = Poly.namedFunctionsRegister.getFunction(
+			'getCubicBezierCurveChannelValue',
+			this,
+			linesController
+		);
+		const curve = this.jsVarName('depth_CURVE');
+		const out = this.jsVarName('depth');
+
+		linesController.addDefinitions(this, [
+			new ConstantJsDefinition(
+				this,
+				linesController,
+				JsConnectionPointType.BOOLEAN,
+				curve,
+				funcCurve.asString(this.pv.data0)
+			),
+		]);
+
+		linesController.addBodyOrComputed(this, [
+			{
+				dataType: JsConnectionPointType.FLOAT,
+				varName: out,
+				value: funcCurveValue.asString(`this.${curve}`, time),
+			},
+		]);
+	}
+}

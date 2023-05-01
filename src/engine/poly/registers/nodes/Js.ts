@@ -89,6 +89,7 @@ import {GetWebXRTrackedMarkerPropertyJsNode} from '../../../nodes/js/GetWebXRTra
 import {GlobalsJsNode} from '../../../nodes/js/Globals';
 import {IntToBoolJsNode} from '../../../nodes/js/IntToBool';
 import {IntToFloatJsNode} from '../../../nodes/js/IntToFloat';
+import {KeyframesJsNode} from '../../../nodes/js/Keyframes';
 import {LengthJsNode} from '../../../nodes/js/Length';
 import {LerpJsNode} from '../../../nodes/js/Lerp';
 import {ManhattanDistanceJsNode} from '../../../nodes/js/ManhattanDistance';
@@ -359,6 +360,7 @@ export interface JsNodeChildrenMap {
 	globals: GlobalsJsNode;
 	intToBool: IntToBoolJsNode;
 	intToFloat: IntToFloatJsNode;
+	keyframes: KeyframesJsNode;
 	length: LengthJsNode;
 	lerp: LerpJsNode;
 	manhattanDistance: ManhattanDistanceJsNode;
@@ -663,6 +665,7 @@ export class JsRegister {
 		poly.registerNode(GlobalsJsNode, CATEGORY_JS.GLOBALS, ONLY_WITH_GLOBALS);
 		poly.registerNode(IntToBoolJsNode, CATEGORY_JS.CONVERSION);
 		poly.registerNode(IntToFloatJsNode, CATEGORY_JS.CONVERSION);
+		poly.registerNode(KeyframesJsNode, CATEGORY_JS.ANIMATION);
 		poly.registerNode(LengthJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(LerpJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(ManhattanDistanceJsNode, CATEGORY_JS.MATH);

@@ -37,6 +37,7 @@ import { cookNode } from "../../../functions/cookNode";
 import { createScrollListener } from "../../../functions/createScrollListener";
 import { crossVector2 } from "../../../functions/crossVector2";
 import { crossVector3 } from "../../../functions/crossVector3";
+import { cubicBezierCurveChannel } from "../../../functions/cubicBezierCurveChannel";
 import { cursorToUv } from "../../../functions/cursorToUv";
 import { debug } from "../../../functions/debug";
 import { degToRad } from "../../../functions/degToRad";
@@ -95,6 +96,7 @@ import { getChildrenPropertiesReceiveShadow } from "../../../functions/getChildr
 import { getChildrenPropertiesScale } from "../../../functions/getChildrenPropertiesScale";
 import { getChildrenPropertiesUp } from "../../../functions/getChildrenPropertiesUp";
 import { getChildrenPropertiesVisible } from "../../../functions/getChildrenPropertiesVisible";
+import { getCubicBezierCurveChannelValue } from "../../../functions/getCubicBezierCurveChannelValue";
 import { getDefaultCamera } from "../../../functions/getDefaultCamera";
 import { getIntersectionAttributeColorInterpolated } from "../../../functions/getIntersectionAttributeColorInterpolated";
 import { getIntersectionAttributeColorNearest } from "../../../functions/getIntersectionAttributeColorNearest";
@@ -444,6 +446,7 @@ export interface NamedFunctionMap {
   createScrollListener: createScrollListener;
   crossVector2: crossVector2;
   crossVector3: crossVector3;
+  cubicBezierCurveChannel: cubicBezierCurveChannel;
   cursorToUv: cursorToUv;
   debug: debug<any>;
   degToRad: degToRad;
@@ -502,6 +505,7 @@ export interface NamedFunctionMap {
   getChildrenPropertiesScale: getChildrenPropertiesScale;
   getChildrenPropertiesUp: getChildrenPropertiesUp;
   getChildrenPropertiesVisible: getChildrenPropertiesVisible;
+  getCubicBezierCurveChannelValue: getCubicBezierCurveChannelValue;
   getDefaultCamera: getDefaultCamera;
   getIntersectionAttributeColorInterpolated: getIntersectionAttributeColorInterpolated;
   getIntersectionAttributeColorNearest: getIntersectionAttributeColorNearest;
@@ -854,6 +858,7 @@ export class AllNamedFunctionRegister {
       createScrollListener,
       crossVector2,
       crossVector3,
+      cubicBezierCurveChannel,
       cursorToUv,
       debug,
       degToRad,
@@ -912,6 +917,7 @@ export class AllNamedFunctionRegister {
       getChildrenPropertiesScale,
       getChildrenPropertiesUp,
       getChildrenPropertiesVisible,
+      getCubicBezierCurveChannelValue,
       getDefaultCamera,
       getIntersectionAttributeColorInterpolated,
       getIntersectionAttributeColorNearest,

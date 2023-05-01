@@ -20,6 +20,7 @@ import {attributeGlPresetRegister} from './gl/Attribute';
 import {neighbourAttractRepulseGlPresetRegister} from './gl/NeighbourAttractRepulse';
 import {neighbourAttractGlPresetRegister, neighbourRepulseGlPresetRegister} from './gl/Neighbour';
 // js
+import {attributeJsPresetRegister} from './js/Attribute';
 import {getChildrenAttributesJsPresetRegister} from './js/GetChildrenAttributes';
 import {getObjectAttributeJsPresetRegister} from './js/GetObjectAttribute';
 import {onChildAttributeUpdateJsPresetRegister} from './js/OnChildAttributeUpdate';
@@ -92,6 +93,7 @@ class PresetLibraryClass {
 		this._registerPreset(neighbourAttractGlPresetRegister);
 		this._registerPreset(neighbourRepulseGlPresetRegister);
 		// js
+		this._registerPreset(attributeJsPresetRegister);
 		this._registerPreset(getChildrenAttributesJsPresetRegister);
 		this._registerPreset(getObjectAttributeJsPresetRegister);
 		this._registerPreset(onChildAttributeUpdateJsPresetRegister);

@@ -31,6 +31,6 @@ export class ThreeMeshBVHHelper {
 		}
 	}
 	static updateRaycaster(raycaster: Raycaster) {
-		(raycaster as any as RaycasterForBVH).firstHitOnly = true;
+		(raycaster as RaycasterForBVH).firstHitOnly = true;
 	}
 }

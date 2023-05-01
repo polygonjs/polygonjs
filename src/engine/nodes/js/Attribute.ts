@@ -3,7 +3,7 @@ import {JsLinesCollectionController} from './code/utils/JsLinesCollectionControl
 import {JsConnectionPointType, BaseJsConnectionPoint} from '../utils/io/connections/Js';
 import {JsType} from '../../poly/registers/nodes/types/Js';
 
-const ATTRIBUTE_NODE_AVAILABLE_JS_TYPES = [
+export const ATTRIBUTE_NODE_AVAILABLE_JS_TYPES = [
 	JsConnectionPointType.COLOR,
 	JsConnectionPointType.FLOAT,
 	JsConnectionPointType.INT,
