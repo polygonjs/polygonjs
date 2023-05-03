@@ -665,7 +665,9 @@ export class JsRegister {
 		poly.registerNode(GlobalsJsNode, CATEGORY_JS.GLOBALS, ONLY_WITH_GLOBALS);
 		poly.registerNode(IntToBoolJsNode, CATEGORY_JS.CONVERSION);
 		poly.registerNode(IntToFloatJsNode, CATEGORY_JS.CONVERSION);
-		poly.registerNode(KeyframesJsNode, CATEGORY_JS.ANIMATION);
+		if (process.env.NODE_ENV == 'development') {
+			poly.registerNode(KeyframesJsNode, CATEGORY_JS.ANIMATION);
+		}
 		poly.registerNode(LengthJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(LerpJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(ManhattanDistanceJsNode, CATEGORY_JS.MATH);
