@@ -1,5 +1,5 @@
 /**
- * return degrees * (Math.PI / 180);
+ * converts degrees to radians
  *
  *
  */

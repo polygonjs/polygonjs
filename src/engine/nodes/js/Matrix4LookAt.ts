@@ -1,5 +1,5 @@
 /**
- * gets the angle between 2 quaternions
+ * rotates a matrix4 to look at a target
  *
  * @remarks
  *

@@ -1,5 +1,5 @@
 /**
- * created a 3D box
+ * creates a 3D box
  *
  * @remarks
  *
