@@ -7,31 +7,35 @@
 import {NodeParamsConfig, ParamConfig} from './../utils/params/ParamsConfig';
 import {TypedJsNode} from './_Base';
 import {JsConnectionPointType} from '../utils/io/connections/Js';
-import {ChannelData, ChannelsData} from '../../../core/keyframes/KeyframeCommon';
+import {ChannelData, ChannelsData, ChannelInterpolation} from '../../../core/keyframes/KeyframeCommon';
 import {ArrayUtils} from '../../../core/ArrayUtils';
 import {IntegerParam} from '../../params/Integer';
 import {StringParam} from '../../params/String';
 import {ConstantJsDefinition} from './utils/JsDefinition';
 import {Poly} from '../../Poly';
 import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
+import {JsType} from '../../poly/registers/nodes/types/Js';
 
-const SAMPLE_DATA: ChannelData = [
-	{
-		pos: 0,
-		value: 0,
-		tan: {x: 0.5, y: 0.1},
-	},
-	{
-		pos: 1,
-		value: 1,
-		tan: {x: 0.5, y: 0},
-	},
-	{
-		pos: 2,
-		value: 0,
-		tan: {x: 0.25, y: 0},
-	},
-];
+const SAMPLE_DATA: ChannelData = {
+	keyframes: [
+		{
+			pos: 0,
+			value: 0,
+			inOut: {x: 50, y: 0.1},
+		},
+		{
+			pos: 100,
+			value: 1,
+			inOut: {x: 50, y: 0},
+		},
+		{
+			pos: 200,
+			value: 0,
+			inOut: {x: 12.5, y: 0},
+		},
+	],
+	interpolation: ChannelInterpolation.CUBIC,
+};
 
 // const INIT_DATA: ChannelsData = {
 // 	depth: SAMPLE_DATA
@@ -123,7 +127,7 @@ const ParamsConfig = new KeyframesJsParamsConfig();
 export class KeyframesJsNode extends TypedJsNode<KeyframesJsParamsConfig> {
 	override readonly paramsConfig = ParamsConfig;
 	static override type() {
-		return 'keyframes';
+		return JsType.KEYFRAMES;
 	}
 
 	override initializeNode() {
@@ -238,12 +242,8 @@ export class KeyframesJsNode extends TypedJsNode<KeyframesJsParamsConfig> {
 
 	override setLines(linesController: JsLinesCollectionController) {
 		const time = this.variableForInput(linesController, KeyframesJsNodeInputName.time);
-		const funcCurve = Poly.namedFunctionsRegister.getFunction('cubicBezierCurveChannel', this, linesController);
-		const funcCurveValue = Poly.namedFunctionsRegister.getFunction(
-			'getCubicBezierCurveChannelValue',
-			this,
-			linesController
-		);
+		const funcCurve = Poly.namedFunctionsRegister.getFunction('channel', this, linesController);
+		const funcCurveValue = Poly.namedFunctionsRegister.getFunction('channelValue', this, linesController);
 		const curve = this.jsVarName('depth_CURVE');
 		const out = this.jsVarName('depth');
 

@@ -336,7 +336,6 @@ export class PointBuilderSopNode extends TypedSopNode<PointBuilderSopParamsConfi
 
 		const {functionBody, variableNames, variablesByName, functionNames, functionsByName, paramConfigs} =
 			this._functionData;
-		console.log(functionBody);
 
 		const wrappedBody = `
 		try {

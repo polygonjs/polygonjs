@@ -1,0 +1,94 @@
+import {Box2, CubicBezierCurve, Vector2} from 'three';
+import {ChannelData, KeyframeData} from './KeyframeCommon';
+import {findTForX, setCubicBezierCurveFromKeyframePair} from './channel/CubicBezierCurveChannel';
+import {mix} from '../math/_Module';
+
+interface KeyframePair {
+	start: KeyframeData;
+	end: KeyframeData;
+}
+const _v2 = new Vector2();
+const curve = new CubicBezierCurve(new Vector2(), new Vector2(), new Vector2(), new Vector2());
+
+export class Channel {
+	private _valuesByPos: Map<number, number> = new Map();
+	public readonly data: ChannelData;
+	constructor(unvalidatedData: ChannelData) {
+		this.data = this.validate(unvalidatedData);
+		this.compute();
+	}
+	static fromJSON(data: ChannelData) {
+		return new Channel(data);
+	}
+	value(t: number): number {
+		if (t == Math.floor(t)) {
+			const value = this._valuesByPos.get(t);
+			if (value != null) {
+				return value;
+			}
+			const keyframes = this.data.keyframes;
+			const firstPos = keyframes[0].pos;
+			const lastPos = keyframes[keyframes.length - 1].pos;
+			if (t < firstPos) {
+				return this._valuesByPos.get(firstPos) || 0;
+			}
+			if (t > lastPos) {
+				return this._valuesByPos.get(lastPos) || 0;
+			}
+		}
+		const t0 = Math.floor(t);
+		const t1 = Math.ceil(t);
+		const v0 = this._valuesByPos.get(t0) || 0;
+		const v1 = this._valuesByPos.get(t1) || 0;
+		return mix(v0, v1, t - t0);
+	}
+	validate(data: ChannelData): ChannelData {
+		return {
+			keyframes: data.keyframes.sort((k1, k2) => k1.pos - k2.pos),
+			interpolation: data.interpolation,
+		};
+	}
+	computeBounds(target: Box2) {
+		const keyframes = this.data.keyframes;
+		const firstPos = keyframes[0].pos;
+		const lastPos = keyframes[keyframes.length - 1].pos;
+		target.min.set(firstPos, -Infinity);
+		target.max.set(lastPos, Infinity);
+		let minValue = Infinity;
+		let maxValue = -Infinity;
+		for (let pos = firstPos; pos <= lastPos; pos++) {
+			const value = this.value(pos);
+			minValue = Math.min(minValue, value);
+			maxValue = Math.max(maxValue, value);
+		}
+		target.min.y = minValue;
+		target.max.y = maxValue;
+	}
+	compute() {
+		const keyframes = this.data.keyframes;
+		const firstPos = keyframes[0].pos;
+		const lastPos = keyframes[keyframes.length - 1].pos;
+		this._valuesByPos.clear();
+
+		let segmentIndex = 0;
+		const keyframePair: KeyframePair = {start: keyframes[0], end: keyframes[1]};
+
+		setCubicBezierCurveFromKeyframePair(keyframePair.start, keyframePair.end, curve);
+		for (let pos = firstPos; pos <= lastPos; pos++) {
+			if (pos > keyframePair.end.pos) {
+				segmentIndex++;
+				keyframePair.start = keyframePair.end;
+				keyframePair.end = keyframes[segmentIndex + 1];
+				setCubicBezierCurveFromKeyframePair(keyframePair.start, keyframePair.end, curve);
+			}
+			const value = this._computeValue(pos, curve);
+			this._valuesByPos.set(pos, value);
+		}
+	}
+	private _computeValue(pos: number, curve: CubicBezierCurve): number {
+		const t = findTForX(pos, curve);
+		curve.getPoint(t, _v2);
+
+		return _v2.y;
+	}
+}

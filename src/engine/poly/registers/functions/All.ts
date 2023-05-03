@@ -24,6 +24,8 @@ import { boolToInt } from "../../../functions/boolToInt";
 import { box3Set } from "../../../functions/box3Set";
 import { box3SetFromObject } from "../../../functions/box3SetFromObject";
 import { catmullRomCurve3GetPoint } from "../../../functions/catmullRomCurve3GetPoint";
+import { channel } from "../../../functions/channel";
+import { channelValue } from "../../../functions/channelValue";
 import { clamp } from "../../../functions/clamp";
 import { clothSolverReset } from "../../../functions/clothSolverReset";
 import { clothSolverSetSelectedVertexIndex } from "../../../functions/clothSolverSetSelectedVertexIndex";
@@ -37,7 +39,6 @@ import { cookNode } from "../../../functions/cookNode";
 import { createScrollListener } from "../../../functions/createScrollListener";
 import { crossVector2 } from "../../../functions/crossVector2";
 import { crossVector3 } from "../../../functions/crossVector3";
-import { cubicBezierCurveChannel } from "../../../functions/cubicBezierCurveChannel";
 import { cursorToUv } from "../../../functions/cursorToUv";
 import { debug } from "../../../functions/debug";
 import { degToRad } from "../../../functions/degToRad";
@@ -96,7 +97,6 @@ import { getChildrenPropertiesReceiveShadow } from "../../../functions/getChildr
 import { getChildrenPropertiesScale } from "../../../functions/getChildrenPropertiesScale";
 import { getChildrenPropertiesUp } from "../../../functions/getChildrenPropertiesUp";
 import { getChildrenPropertiesVisible } from "../../../functions/getChildrenPropertiesVisible";
-import { getCubicBezierCurveChannelValue } from "../../../functions/getCubicBezierCurveChannelValue";
 import { getDefaultCamera } from "../../../functions/getDefaultCamera";
 import { getIntersectionAttributeColorInterpolated } from "../../../functions/getIntersectionAttributeColorInterpolated";
 import { getIntersectionAttributeColorNearest } from "../../../functions/getIntersectionAttributeColorNearest";
@@ -433,6 +433,8 @@ export interface NamedFunctionMap {
   box3Set: box3Set;
   box3SetFromObject: box3SetFromObject;
   catmullRomCurve3GetPoint: catmullRomCurve3GetPoint;
+  channel: channel;
+  channelValue: channelValue;
   clamp: clamp;
   clothSolverReset: clothSolverReset;
   clothSolverSetSelectedVertexIndex: clothSolverSetSelectedVertexIndex;
@@ -446,7 +448,6 @@ export interface NamedFunctionMap {
   createScrollListener: createScrollListener;
   crossVector2: crossVector2;
   crossVector3: crossVector3;
-  cubicBezierCurveChannel: cubicBezierCurveChannel;
   cursorToUv: cursorToUv;
   debug: debug<any>;
   degToRad: degToRad;
@@ -505,7 +506,6 @@ export interface NamedFunctionMap {
   getChildrenPropertiesScale: getChildrenPropertiesScale;
   getChildrenPropertiesUp: getChildrenPropertiesUp;
   getChildrenPropertiesVisible: getChildrenPropertiesVisible;
-  getCubicBezierCurveChannelValue: getCubicBezierCurveChannelValue;
   getDefaultCamera: getDefaultCamera;
   getIntersectionAttributeColorInterpolated: getIntersectionAttributeColorInterpolated;
   getIntersectionAttributeColorNearest: getIntersectionAttributeColorNearest;
@@ -845,6 +845,8 @@ export class AllNamedFunctionRegister {
       box3Set,
       box3SetFromObject,
       catmullRomCurve3GetPoint,
+      channel,
+      channelValue,
       clamp,
       clothSolverReset,
       clothSolverSetSelectedVertexIndex,
@@ -858,7 +860,6 @@ export class AllNamedFunctionRegister {
       createScrollListener,
       crossVector2,
       crossVector3,
-      cubicBezierCurveChannel,
       cursorToUv,
       debug,
       degToRad,
@@ -917,7 +918,6 @@ export class AllNamedFunctionRegister {
       getChildrenPropertiesScale,
       getChildrenPropertiesUp,
       getChildrenPropertiesVisible,
-      getCubicBezierCurveChannelValue,
       getDefaultCamera,
       getIntersectionAttributeColorInterpolated,
       getIntersectionAttributeColorNearest,
