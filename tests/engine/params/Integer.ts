@@ -44,28 +44,28 @@ QUnit.test('a range will limit the result of an expression', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
 
-	const switch1 = geo1.createNode('switch');
-	const param = switch1.p.input;
+	const lod1 = geo1.createNode('lod');
+	const param = lod1.p.hysteresis;
 
 	param.set(1);
 	assert.equal(param.value, 1);
 	param.set(-1);
 	assert.equal(param.value, 0);
 	param.set(5);
-	assert.equal(param.value, 3);
+	assert.equal(param.value, 1);
 
-	param.set('1+1');
+	param.set('0.1+0.1');
 	await param.compute();
-	assert.equal(param.value, 2);
+	assert.equal(param.value, 0.2);
 
-	scene.setFrame(1);
+	scene.setFrame(0);
 	param.set('$F');
 	await param.compute();
-	assert.equal(param.value, 1);
+	assert.equal(param.value, 0);
 
 	scene.setFrame(5);
 	await param.compute();
-	assert.equal(param.value, 3);
+	assert.equal(param.value, 1);
 });
 QUnit.test('integer param can take an expression returning a boolean', async (assert) => {
 	const scene = window.scene;
