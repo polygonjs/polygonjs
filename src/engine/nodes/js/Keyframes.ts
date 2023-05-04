@@ -7,7 +7,7 @@
 import {NodeParamsConfig, ParamConfig} from './../utils/params/ParamsConfig';
 import {TypedJsNode} from './_Base';
 import {JsConnectionPointType} from '../utils/io/connections/Js';
-import {ChannelData, ChannelsData, ChannelInterpolation} from '../../../core/keyframes/KeyframeCommon';
+import {ChannelData, ChannelInterpolation} from '../../../core/keyframes/KeyframeCommon';
 import {ArrayUtils} from '../../../core/ArrayUtils';
 import {IntegerParam} from '../../params/Integer';
 import {StringParam} from '../../params/String';
@@ -153,7 +153,7 @@ export class KeyframesJsNode extends TypedJsNode<KeyframesJsParamsConfig> {
 			this.p.channelType9,
 		];
 	}
-	protected _channelNameParams(): StringParam[] {
+	channelNameParams(): StringParam[] {
 		return [
 			this.p.channelName0,
 			this.p.channelName1,
@@ -167,7 +167,7 @@ export class KeyframesJsNode extends TypedJsNode<KeyframesJsParamsConfig> {
 			this.p.channelName9,
 		];
 	}
-	protected _channelDataParams(): StringParam[] {
+	channelDataParams(): StringParam[] {
 		return [
 			this.p.data0,
 			this.p.data1,
@@ -181,22 +181,25 @@ export class KeyframesJsNode extends TypedJsNode<KeyframesJsParamsConfig> {
 			this.p.data9,
 		];
 	}
-	dataParam(channelName: string) {
-		const paramIndex = this._channelNameParams().findIndex((param) => param.value === channelName);
-		return this._channelDataParams()[paramIndex];
-	}
+	// dataParam(channelName: string) {
+	// 	const paramIndex = this.channelNameParams().findIndex((param) => param.value === channelName);
+	// 	return this.channelDataParams()[paramIndex];
+	// }
 
-	channelsData(): ChannelsData {
-		const data: ChannelsData = {};
+	// channelsData(target: ChannelsData) {
+	// 	// const data: ChannelsData = {};
+	// 	const existingChannelNames = Object.keys(target);
+	// 	for (const channelName of existingChannelNames) {
+	// 		delete target[channelName];
+	// 	}
 
-		const count = this.pv.channelsCount;
-		for (let i = 0; i < count; i++) {
-			const channelName = this._channelNameParams()[i].value;
-			const channelData = JSON.parse(this._channelDataParams()[i].value);
-			data[channelName] = channelData;
-		}
-		return data;
-	}
+	// 	const count = this.pv.channelsCount;
+	// 	for (let i = 0; i < count; i++) {
+	// 		const channelName = this._channelNameParams()[i].value;
+	// 		const channelData = JSON.parse(this.channelDataParams()[i].value);
+	// 		target[channelName] = channelData;
+	// 	}
+	// }
 
 	setInputType(index: number, type: JsConnectionPointType) {
 		const param = this._channelTypeParams()[index];
@@ -206,7 +209,7 @@ export class KeyframesJsNode extends TypedJsNode<KeyframesJsParamsConfig> {
 		param.set(AVAILABLE_JS_CONNECTION_POINT_TYPES.indexOf(type));
 	}
 	setInputName(index: number, inputName: string) {
-		const param = this._channelNameParams()[index];
+		const param = this.channelNameParams()[index];
 		if (!param) {
 			return;
 		}
@@ -236,7 +239,7 @@ export class KeyframesJsNode extends TypedJsNode<KeyframesJsParamsConfig> {
 	}
 
 	protected _expectedOutputName(index: number) {
-		const params: StringParam[] = this._channelNameParams();
+		const params: StringParam[] = this.channelNameParams();
 		return params[index].value;
 	}
 

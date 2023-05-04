@@ -12,9 +12,8 @@ const curve = new CubicBezierCurve(new Vector2(), new Vector2(), new Vector2(), 
 
 export class Channel {
 	private _valuesByPos: Map<number, number> = new Map();
-	public readonly data: ChannelData;
-	constructor(unvalidatedData: ChannelData) {
-		this.data = this.validate(unvalidatedData);
+	constructor(public readonly data: ChannelData) {
+		Channel.validate(this.data);
 		this.compute();
 	}
 	static fromJSON(data: ChannelData) {
@@ -42,11 +41,19 @@ export class Channel {
 		const v1 = this._valuesByPos.get(t1) || 0;
 		return mix(v0, v1, t - t0);
 	}
-	validate(data: ChannelData): ChannelData {
-		return {
-			keyframes: data.keyframes.sort((k1, k2) => k1.pos - k2.pos),
-			interpolation: data.interpolation,
-		};
+	static validate(data: ChannelData) {
+		const sortedKeyframes = data.keyframes.sort((k1, k2) => k1.pos - k2.pos);
+		const sortedPos = sortedKeyframes.map((k) => k.pos);
+		const sortedValues = sortedKeyframes.map((k) => k.value);
+
+		// sort by replacing the values, not just swapping the keyframe data objects
+		const keyframes = data.keyframes;
+		let i = 0;
+		for (let keyframe of keyframes) {
+			keyframe.pos = sortedPos[i];
+			keyframe.value = sortedValues[i];
+			i++;
+		}
 	}
 	computeBounds(target: Box2) {
 		const keyframes = this.data.keyframes;
@@ -65,6 +72,7 @@ export class Channel {
 		target.max.y = maxValue;
 	}
 	compute() {
+		Channel.validate(this.data);
 		const keyframes = this.data.keyframes;
 		const firstPos = keyframes[0].pos;
 		const lastPos = keyframes[keyframes.length - 1].pos;

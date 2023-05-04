@@ -29,7 +29,7 @@ export type ChannelData = {
 	keyframes: KeyframeData[];
 	interpolation: ChannelInterpolation;
 };
-export type ChannelsData = Record<string, ChannelData>;
+export type ChannelDataByName = Record<string, ChannelData>;
 
 export function getTangent(keyframe: KeyframeData, isInTangent: boolean): Vector2Like {
 	if ((keyframe as KeyframeDataBasic).inOut) {
