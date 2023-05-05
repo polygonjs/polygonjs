@@ -24,6 +24,24 @@ export function copykeyframeData(src: KeyframeData, target: KeyframeData) {
 		delete (target as any)['inOut'];
 	}
 }
+export function keyframeTangentSplit(keyframe: KeyframeData) {
+	if ((keyframe as KeyframeDataBasic).inOut) {
+		const inOut = (keyframe as KeyframeDataBasic).inOut;
+		delete (keyframe as any)['inOut'];
+		(keyframe as KeyframeDataSplit).in = {x: inOut.x, y: inOut.y};
+		(keyframe as KeyframeDataSplit).out = {x: inOut.x, y: inOut.y};
+	}
+}
+export function keyframeTangentMerge(keyframe: KeyframeData) {
+	if ((keyframe as KeyframeDataBasic).inOut) {
+		return;
+	}
+	const _in = (keyframe as KeyframeDataSplit).in;
+	const _out = (keyframe as KeyframeDataSplit).out;
+	delete (keyframe as any)['in'];
+	delete (keyframe as any)['out'];
+	(keyframe as KeyframeDataBasic).inOut = {x: (_in.x + _out.x) * 0.5, y: (_in.y + _out.y) * 0.5};
+}
 export function createKeyframeData() {
 	return {pos: 0, value: 0, inOut: {x: 1, y: 0}};
 }
