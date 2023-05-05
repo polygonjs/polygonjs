@@ -24,6 +24,9 @@ export function copykeyframeData(src: KeyframeData, target: KeyframeData) {
 		delete (target as any)['inOut'];
 	}
 }
+export function createKeyframeData() {
+	return {pos: 0, value: 0, inOut: {x: 1, y: 0}};
+}
 
 export function copyChannelData(src: ChannelData, target: ChannelData) {
 	target.interpolation = src.interpolation;
@@ -36,8 +39,7 @@ export function copyChannelData(src: ChannelData, target: ChannelData) {
 	for (const srcKeyframe of srcKeyframes) {
 		let targetKeyframe = target.keyframes[i];
 		if (!targetKeyframe) {
-			console.log('creating new keyframe');
-			targetKeyframe = {pos: 0, value: 0, inOut: {x: 1, y: 0}};
+			targetKeyframe = createKeyframeData();
 			target.keyframes[i] = targetKeyframe;
 		}
 		copykeyframeData(srcKeyframe, targetKeyframe);

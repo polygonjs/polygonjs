@@ -26,6 +26,9 @@ export class Channel {
 				return value;
 			}
 			const keyframes = this.data.keyframes;
+			if (keyframes.length == 0) {
+				return 0;
+			}
 			const firstPos = keyframes[0].pos;
 			const lastPos = keyframes[keyframes.length - 1].pos;
 			if (t < firstPos) {
@@ -77,6 +80,14 @@ export class Channel {
 		const firstPos = keyframes[0].pos;
 		const lastPos = keyframes[keyframes.length - 1].pos;
 		this._valuesByPos.clear();
+
+		if (keyframes.length == 0) {
+			return;
+		}
+		if (keyframes.length == 1) {
+			this._valuesByPos.set(keyframes[0].pos, keyframes[0].value);
+			return;
+		}
 
 		let segmentIndex = 0;
 		const keyframePair: KeyframePair = {start: keyframes[0], end: keyframes[1]};
