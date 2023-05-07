@@ -1,13 +1,32 @@
+import {isArray} from '../Type';
 import {ChannelData, KeyframeData, KeyframeDataBasic, KeyframeDataSplit} from './KeyframeCommon';
 
-export function channelDataFromString(content: string, target: ChannelData) {
+export function channelDataFromString(content: string, target: ChannelData[]) {
 	try {
-		const json = JSON.parse(content);
-		copyChannelData(json, target);
-	} catch (e) {}
+		let json = JSON.parse(content);
+		if (isArray(json)) {
+			let i = 0;
+			for (let targetSubElement of target) {
+				const jsonElement = json[i] || json[0];
+				copyChannelData(jsonElement, targetSubElement);
+				i++;
+			}
+		} else {
+			for (let targetSubElement of target) {
+				copyChannelData(json, targetSubElement);
+			}
+		}
+	} catch (e) {
+		console.warn('invalid channel data');
+		console.log(e);
+		console.log(target);
+	}
 }
 
-export function channelDataToString(data: ChannelData): string {
+export function channelDataToString(data: ChannelData[]): string {
+	if (data.length == 1) {
+		return JSON.stringify(data[0]);
+	}
 	return JSON.stringify(data);
 }
 

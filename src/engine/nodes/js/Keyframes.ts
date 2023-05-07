@@ -15,8 +15,9 @@ import {ConstantJsDefinition} from './utils/JsDefinition';
 import {Poly} from '../../Poly';
 import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {JsType} from '../../poly/registers/nodes/types/Js';
+import {channelDataToString} from '../../../core/keyframes/KeyframeSerialize';
 
-const SAMPLE_DATA: ChannelData = {
+const SAMPLE_DATA0: ChannelData = {
 	keyframes: [
 		{
 			pos: 0,
@@ -36,6 +37,7 @@ const SAMPLE_DATA: ChannelData = {
 	],
 	interpolation: ChannelInterpolation.CUBIC,
 };
+const SAMPLE_DATA: ChannelData[] = [SAMPLE_DATA0];
 
 // const INIT_DATA: ChannelsData = {
 // 	depth: SAMPLE_DATA
@@ -44,12 +46,24 @@ enum KeyframesJsNodeInputName {
 	time = 'time',
 }
 
-const AVAILABLE_JS_CONNECTION_POINT_TYPES: JsConnectionPointType[] = [
+type AvailableJsConnectionType =
+	| JsConnectionPointType.FLOAT
+	| JsConnectionPointType.VECTOR2
+	| JsConnectionPointType.VECTOR3
+	| JsConnectionPointType.VECTOR4;
+export const AVAILABLE_JS_CONNECTION_POINT_TYPES: AvailableJsConnectionType[] = [
 	JsConnectionPointType.FLOAT,
 	JsConnectionPointType.VECTOR2,
 	JsConnectionPointType.VECTOR3,
 	JsConnectionPointType.VECTOR4,
 ];
+export const ARRAY_SIZE_BY_TYPE: Record<AvailableJsConnectionType, number> = {
+	[JsConnectionPointType.FLOAT]: 1,
+	[JsConnectionPointType.VECTOR2]: 2,
+	[JsConnectionPointType.VECTOR3]: 3,
+	[JsConnectionPointType.VECTOR4]: 4,
+};
+export const CHANNEL_SUFFIX_BY_CHANNEL_INDEX: string[] = ['x', 'y', 'z', 'w'];
 
 function visibleIfChannelsCountAtLeast(index: number) {
 	return {
@@ -73,7 +87,7 @@ function channelNameParam(index: number) {
 	});
 }
 function channelDataParam(index: number) {
-	return ParamConfig.STRING(JSON.stringify(SAMPLE_DATA), {
+	return ParamConfig.STRING(channelDataToString(SAMPLE_DATA), {
 		...visibleIfChannelsCountAtLeast(index),
 	});
 }
@@ -139,7 +153,7 @@ export class KeyframesJsNode extends TypedJsNode<KeyframesJsParamsConfig> {
 		this.io.connection_points.set_output_name_function(this._expectedOutputName.bind(this));
 	}
 
-	protected _channelTypeParams(): IntegerParam[] {
+	channelTypeParams(): IntegerParam[] {
 		return [
 			this.p.channelType0,
 			this.p.channelType1,
@@ -201,8 +215,8 @@ export class KeyframesJsNode extends TypedJsNode<KeyframesJsParamsConfig> {
 	// 	}
 	// }
 
-	setInputType(index: number, type: JsConnectionPointType) {
-		const param = this._channelTypeParams()[index];
+	setInputType(index: number, type: AvailableJsConnectionType) {
+		const param = this.channelTypeParams()[index];
 		if (!param) {
 			return;
 		}
@@ -234,7 +248,7 @@ export class KeyframesJsNode extends TypedJsNode<KeyframesJsParamsConfig> {
 
 	protected _expectedOutputTypes() {
 		const count = this.pv.channelsCount;
-		const params: IntegerParam[] = this._channelTypeParams();
+		const params: IntegerParam[] = this.channelTypeParams();
 		return ArrayUtils.range(0, count).map((value, i) => AVAILABLE_JS_CONNECTION_POINT_TYPES[params[i].value]);
 	}
 

@@ -60,6 +60,9 @@ export class Channel {
 	}
 	computeBounds(target: Box2) {
 		const keyframes = this.data.keyframes;
+		if (keyframes.length == 0) {
+			return;
+		}
 		const firstPos = keyframes[0].pos;
 		const lastPos = keyframes[keyframes.length - 1].pos;
 		target.min.set(firstPos, -Infinity);
@@ -77,6 +80,10 @@ export class Channel {
 	compute() {
 		Channel.validate(this.data);
 		const keyframes = this.data.keyframes;
+		if (keyframes.length == 0) {
+			return;
+		}
+
 		const firstPos = keyframes[0].pos;
 		const lastPos = keyframes[keyframes.length - 1].pos;
 		this._valuesByPos.clear();
