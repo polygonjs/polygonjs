@@ -1,17 +1,19 @@
-import {Box2, CubicBezierCurve, Vector2} from 'three';
-import {ChannelData, KeyframeData} from './KeyframeCommon';
-import {findTForX, setCubicBezierCurveFromKeyframePair} from './channel/CubicBezierCurveChannel';
+import {Box2} from 'three';
+import {ChannelData, KeyframeData, ChannelInterpolation, SetCurveCallback, GetValueCallback} from './KeyframeCommon';
+import {setCurveFromKeyframePairCubic, getValueCubic} from './channel/Cubic';
+import {setCurveFromKeyframePairLinear, getValueLinear} from './channel/Linear';
 import {mix} from '../math/_Module';
 
 interface KeyframePair {
 	start: KeyframeData;
 	end: KeyframeData;
 }
-const _v2 = new Vector2();
-const curve = new CubicBezierCurve(new Vector2(), new Vector2(), new Vector2(), new Vector2());
+// const _v2 = new Vector2();
 
 export class Channel {
 	private _valuesByPos: Map<number, number> = new Map();
+	protected _setCurveCallback: SetCurveCallback = setCurveFromKeyframePairLinear;
+	protected _getValueCallback: GetValueCallback = getValueLinear;
 	constructor(public readonly data: ChannelData) {
 		Channel.validate(this.data);
 		this.compute();
@@ -77,12 +79,27 @@ export class Channel {
 		target.min.y = minValue;
 		target.max.y = maxValue;
 	}
+	private _setCallbacks() {
+		switch (this.data.interpolation) {
+			case ChannelInterpolation.CUBIC: {
+				this._setCurveCallback = setCurveFromKeyframePairCubic;
+				this._getValueCallback = getValueCubic;
+				return;
+			}
+			case ChannelInterpolation.LINEAR: {
+				this._setCurveCallback = setCurveFromKeyframePairLinear;
+				this._getValueCallback = getValueLinear;
+				return;
+			}
+		}
+	}
 	compute() {
 		Channel.validate(this.data);
 		const keyframes = this.data.keyframes;
 		if (keyframes.length == 0) {
 			return;
 		}
+		this._setCallbacks();
 
 		const firstPos = keyframes[0].pos;
 		const lastPos = keyframes[keyframes.length - 1].pos;
@@ -99,22 +116,23 @@ export class Channel {
 		let segmentIndex = 0;
 		const keyframePair: KeyframePair = {start: keyframes[0], end: keyframes[1]};
 
-		setCubicBezierCurveFromKeyframePair(keyframePair.start, keyframePair.end, curve);
+		this._setCurveCallback(keyframePair.start, keyframePair.end);
 		for (let pos = firstPos; pos <= lastPos; pos++) {
 			if (pos > keyframePair.end.pos) {
 				segmentIndex++;
 				keyframePair.start = keyframePair.end;
 				keyframePair.end = keyframes[segmentIndex + 1];
-				setCubicBezierCurveFromKeyframePair(keyframePair.start, keyframePair.end, curve);
+				this._setCurveCallback(keyframePair.start, keyframePair.end);
 			}
-			const value = this._computeValue(pos, curve);
+			const value = this._getValueCallback(pos);
 			this._valuesByPos.set(pos, value);
 		}
 	}
-	private _computeValue(pos: number, curve: CubicBezierCurve): number {
-		const t = findTForX(pos, curve);
-		curve.getPoint(t, _v2);
+	// private _computeValue(pos: number, curve: CubicBezierCurve): number {
+	// 	const t = this._findTForXCallback(pos, curve);
+	// 	curve.getPoint(t, _v2);
+	// 	console.log(pos, t, _v2.x, _v2.y);
 
-		return _v2.y;
-	}
+	// 	return _v2.y;
+	// }
 }

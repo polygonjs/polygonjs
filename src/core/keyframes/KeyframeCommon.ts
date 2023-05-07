@@ -1,4 +1,5 @@
 import {Vector2Like} from './../../types/GlobalTypes';
+import {CubicBezierCurve, LineCurve} from 'three';
 
 export interface SearchRange {
 	min: number;
@@ -30,6 +31,10 @@ export type ChannelData = {
 	interpolation: ChannelInterpolation;
 };
 export type ChannelDataByName = Record<string, ChannelData>;
+
+export type InterpolationCurve = CubicBezierCurve | LineCurve;
+export type SetCurveCallback = (keyframeStart: KeyframeData, keyframeEnd: KeyframeData) => void;
+export type GetValueCallback = (pos: number) => number;
 
 export function getTangent(keyframe: KeyframeData, isInTangent: boolean): Vector2Like {
 	if ((keyframe as KeyframeDataBasic).inOut) {

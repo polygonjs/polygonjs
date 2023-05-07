@@ -34,12 +34,15 @@ export function copykeyframeData(src: KeyframeData, target: KeyframeData) {
 	target.pos = src.pos;
 	target.value = src.value;
 	if ((src as KeyframeDataBasic).inOut) {
-		(target as KeyframeDataBasic).inOut = (src as KeyframeDataBasic).inOut;
+		(target as KeyframeDataBasic).inOut.x = (src as KeyframeDataBasic).inOut.x;
+		(target as KeyframeDataBasic).inOut.y = (src as KeyframeDataBasic).inOut.y;
 		delete (target as any)['in'];
 		delete (target as any)['out'];
 	} else {
-		(target as KeyframeDataSplit).in = (src as KeyframeDataSplit).in;
-		(target as KeyframeDataSplit).out = (src as KeyframeDataSplit).out;
+		(target as KeyframeDataSplit).in.x = (src as KeyframeDataSplit).in.x;
+		(target as KeyframeDataSplit).in.y = (src as KeyframeDataSplit).in.y;
+		(target as KeyframeDataSplit).out.x = (src as KeyframeDataSplit).out.x;
+		(target as KeyframeDataSplit).out.y = (src as KeyframeDataSplit).out.y;
 		delete (target as any)['inOut'];
 	}
 }
