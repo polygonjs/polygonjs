@@ -1,25 +1,28 @@
 import {CubicBezierCurve, Vector2} from 'three';
-import {KeyframeData, getTangent, SearchRange, SetCurveCallback} from '../KeyframeCommon';
+import {KeyframeData, SearchRange, SetCurveCallback} from '../KeyframeCommon';
+import {keyframeTangentToEndPoint} from '../KeyframeTangent';
 
 const _v2 = new Vector2();
+const _endPt0 = new Vector2();
+const _endPt1 = new Vector2();
 export const curve = new CubicBezierCurve(new Vector2(), new Vector2(), new Vector2(), new Vector2());
 
 export const setCurveFromKeyframePairCubic: SetCurveCallback = (
 	keyframeStart: KeyframeData,
 	keyframeEnd: KeyframeData
 ) => {
-	const tangentStart = getTangent(keyframeStart, false);
-	const tangentEnd = getTangent(keyframeEnd, true);
+	keyframeTangentToEndPoint(keyframeStart, false, _endPt0);
+	keyframeTangentToEndPoint(keyframeEnd, true, _endPt1);
 	// keyframe 1
 	curve.v0.x = keyframeStart.pos;
 	curve.v0.y = keyframeStart.value;
-	curve.v1.x = keyframeStart.pos + tangentStart.x;
-	curve.v1.y = keyframeStart.value + tangentStart.y;
+	curve.v1.x = keyframeStart.pos + _endPt0.x;
+	curve.v1.y = keyframeStart.value + _endPt0.y;
 	// keyframe 2
 	curve.v3.x = keyframeEnd.pos;
 	curve.v3.y = keyframeEnd.value;
-	curve.v2.x = keyframeEnd.pos - tangentEnd.x;
-	curve.v2.y = keyframeEnd.value - tangentEnd.y;
+	curve.v2.x = keyframeEnd.pos - _endPt1.x;
+	curve.v2.y = keyframeEnd.value - _endPt1.y;
 };
 
 function getX(t: number, curve: CubicBezierCurve) {

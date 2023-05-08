@@ -22,17 +22,17 @@ const SAMPLE_DATA0: ChannelData = {
 		{
 			pos: 0,
 			value: 0,
-			inOut: {x: 50, y: 0.1},
+			in: {slope: 0, accel: 20},
 		},
 		{
 			pos: 100,
 			value: 1,
-			inOut: {x: 50, y: 0},
+			in: {slope: 0, accel: 20},
 		},
 		{
 			pos: 200,
 			value: 0,
-			inOut: {x: 12.5, y: 0},
+			in: {slope: 0, accel: 20},
 		},
 	],
 	interpolation: ChannelInterpolation.CUBIC,

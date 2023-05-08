@@ -1,5 +1,10 @@
 import {isArray} from '../Type';
-import {ChannelData, KeyframeData, KeyframeDataBasic, KeyframeDataSplit} from './KeyframeCommon';
+import {ChannelData, KeyframeData} from './KeyframeCommon';
+import {createKeyframeTangent, copyKeyframeTangent} from './KeyframeTangent';
+
+export function createKeyframeData(): KeyframeData {
+	return {pos: 0, value: 0, in: {slope: 0, accel: 0}};
+}
 
 export function channelDataFromString(content: string, target: ChannelData[]) {
 	try {
@@ -30,42 +35,18 @@ export function channelDataToString(data: ChannelData[]): string {
 	return JSON.stringify(data);
 }
 
-export function copykeyframeData(src: KeyframeData, target: KeyframeData) {
+export function copyKeyframeData(src: KeyframeData, target: KeyframeData) {
 	target.pos = src.pos;
 	target.value = src.value;
-	if ((src as KeyframeDataBasic).inOut) {
-		(target as KeyframeDataBasic).inOut.x = (src as KeyframeDataBasic).inOut.x;
-		(target as KeyframeDataBasic).inOut.y = (src as KeyframeDataBasic).inOut.y;
-		delete (target as any)['in'];
-		delete (target as any)['out'];
+	copyKeyframeTangent(src.in, target.in);
+	if (src.out) {
+		if (!target.out) {
+			target.out = createKeyframeTangent();
+		}
+		copyKeyframeTangent(src.out, target.out);
 	} else {
-		(target as KeyframeDataSplit).in.x = (src as KeyframeDataSplit).in.x;
-		(target as KeyframeDataSplit).in.y = (src as KeyframeDataSplit).in.y;
-		(target as KeyframeDataSplit).out.x = (src as KeyframeDataSplit).out.x;
-		(target as KeyframeDataSplit).out.y = (src as KeyframeDataSplit).out.y;
-		delete (target as any)['inOut'];
+		delete target.out;
 	}
-}
-export function keyframeTangentSplit(keyframe: KeyframeData) {
-	if ((keyframe as KeyframeDataBasic).inOut) {
-		const inOut = (keyframe as KeyframeDataBasic).inOut;
-		delete (keyframe as any)['inOut'];
-		(keyframe as KeyframeDataSplit).in = {x: inOut.x, y: inOut.y};
-		(keyframe as KeyframeDataSplit).out = {x: inOut.x, y: inOut.y};
-	}
-}
-export function keyframeTangentMerge(keyframe: KeyframeData) {
-	if ((keyframe as KeyframeDataBasic).inOut) {
-		return;
-	}
-	const _in = (keyframe as KeyframeDataSplit).in;
-	const _out = (keyframe as KeyframeDataSplit).out;
-	delete (keyframe as any)['in'];
-	delete (keyframe as any)['out'];
-	(keyframe as KeyframeDataBasic).inOut = {x: (_in.x + _out.x) * 0.5, y: (_in.y + _out.y) * 0.5};
-}
-export function createKeyframeData() {
-	return {pos: 0, value: 0, inOut: {x: 1, y: 0}};
 }
 
 export function copyChannelData(src: ChannelData, target: ChannelData) {
@@ -82,7 +63,7 @@ export function copyChannelData(src: ChannelData, target: ChannelData) {
 			targetKeyframe = createKeyframeData();
 			target.keyframes[i] = targetKeyframe;
 		}
-		copykeyframeData(srcKeyframe, targetKeyframe);
+		copyKeyframeData(srcKeyframe, targetKeyframe);
 
 		i++;
 	}

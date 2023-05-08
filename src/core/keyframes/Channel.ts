@@ -3,6 +3,8 @@ import {ChannelData, KeyframeData, ChannelInterpolation, SetCurveCallback, GetVa
 import {setCurveFromKeyframePairCubic, getValueCubic} from './channel/Cubic';
 import {setCurveFromKeyframePairLinear, getValueLinear} from './channel/Linear';
 import {mix} from '../math/_Module';
+import {MapUtils} from '../MapUtils';
+import {copyKeyframeData, createKeyframeData} from './KeyframeSerialize';
 
 interface KeyframePair {
 	start: KeyframeData;
@@ -47,16 +49,39 @@ export class Channel {
 		return mix(v0, v1, t - t0);
 	}
 	static validate(data: ChannelData) {
-		const sortedKeyframes = data.keyframes.sort((k1, k2) => k1.pos - k2.pos);
-		const sortedPos = sortedKeyframes.map((k) => k.pos);
-		const sortedValues = sortedKeyframes.map((k) => k.value);
+		let keyframes = data.keyframes;
+
+		const keyframesByPos: Map<number, KeyframeData[]> = new Map();
+		for (const keyframe of keyframes) {
+			MapUtils.pushOnArrayAtEntry(keyframesByPos, keyframe.pos, keyframe);
+		}
+
+		// if we have keyframes that need to be merged, adjust the sizes of the arrays
+		if (keyframes.length != keyframesByPos.size) {
+			const expectedSize = keyframesByPos.size;
+			const keptKeyframes: KeyframeData[] = new Array(expectedSize);
+			let i = 0;
+			keyframesByPos.forEach((keyframes, pos) => {
+				keptKeyframes[i] = keyframes[0];
+				i++;
+			});
+			keyframes = keptKeyframes;
+			data.keyframes.splice(expectedSize, data.keyframes.length - expectedSize);
+		}
 
 		// sort by replacing the values, not just swapping the keyframe data objects
-		const keyframes = data.keyframes;
+		const sortedKeyframes = keyframes
+			.sort((k1, k2) => k1.pos - k2.pos)
+			.map((k) => {
+				const target = createKeyframeData();
+				copyKeyframeData(k, target);
+				return target;
+			});
+		// const sortedPos = sortedKeyframes.map((k) => k.pos);
+		// const sortedValues = sortedKeyframes.map((k) => k.value);
 		let i = 0;
-		for (let keyframe of keyframes) {
-			keyframe.pos = sortedPos[i];
-			keyframe.value = sortedValues[i];
+		for (let keyframe of sortedKeyframes) {
+			copyKeyframeData(keyframe, data.keyframes[i]);
 			i++;
 		}
 	}
