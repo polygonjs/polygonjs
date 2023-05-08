@@ -29,6 +29,22 @@ import {RegisterableVariable} from '../js/code/assemblers/_BaseJsPersistedConfig
 import {Group, Object3D} from 'three';
 import {JsNodeFinder} from '../js/code/utils/NodeFinder';
 import {CoreType} from '../../../core/Type';
+import {logBlue as _logBlue} from '../../../core/logger/Console';
+import {PointBuilderEvaluator} from '../js/code/assemblers/pointBuilder/PointBuilderEvaluator';
+
+const DEBUG = true;
+function logBlue(message: string) {
+	if (!DEBUG) {
+		return;
+	}
+	_logBlue(message);
+}
+function logDefault(message: string) {
+	if (!DEBUG) {
+		return;
+	}
+	console.log(message);
+}
 
 type ObjectFunction = Function; //(object:Object3D)=>Object3D
 
@@ -103,6 +119,7 @@ export class ObjectBuilderSopNode extends TypedSopNode<ObjectBuilderSopParamsCon
 		const _func = this._function;
 		if (_func) {
 			const args = this.functionEvalArgsWithParamConfigs();
+			const evaluator = _func(...args) as PointBuilderEvaluator;
 			const inputObjects = coreGroup.threejsObjects();
 			// we add a temporary parent to the objects, so that nodes like getSiblings can work
 			for (const inputObject of inputObjects) {
@@ -112,7 +129,7 @@ export class ObjectBuilderSopNode extends TypedSopNode<ObjectBuilderSopParamsCon
 			for (const inputObject of inputObjects) {
 				this._objectContainer.Object3D = inputObject;
 				this._objectContainer.objnum = objnum;
-				_func(...args);
+				evaluator();
 				inputObject.updateMatrix();
 				objnum++;
 			}
@@ -180,7 +197,7 @@ export class ObjectBuilderSopNode extends TypedSopNode<ObjectBuilderSopParamsCon
 
 		const {functionBody, variableNames, variablesByName, functionNames, functionsByName, paramConfigs} =
 			this._functionData;
-		console.log(functionBody);
+		logBlue('*****************');
 
 		const wrappedBody = `
 		try {
@@ -189,7 +206,7 @@ export class ObjectBuilderSopNode extends TypedSopNode<ObjectBuilderSopParamsCon
 			_setErrorFromError(e)
 			return 0;
 		}`;
-		console.log(wrappedBody);
+		logDefault(wrappedBody);
 		const _setErrorFromError = (e: Error) => {
 			this.states.error.set(e.message);
 		};

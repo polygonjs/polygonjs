@@ -7,7 +7,7 @@
 import {JsType} from '../../poly/registers/nodes/types/Js';
 import {KeyboardEventType} from '../../../core/event/KeyboardEventType';
 import {BaseOnKeyEventJsNode} from './_BaseOnKeyEvent';
-import {EvaluatorEventData} from './code/assemblers/actor/Evaluator';
+import {EvaluatorEventData} from './code/assemblers/actor/ActorEvaluator';
 
 export class OnKeypressJsNode extends BaseOnKeyEventJsNode {
 	static override type() {

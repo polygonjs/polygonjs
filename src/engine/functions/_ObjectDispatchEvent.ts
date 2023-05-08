@@ -2,7 +2,7 @@ import {Ref} from '@vue/reactivity';
 import {Object3D} from 'three';
 import {ObjectNamedFunction0, ObjectNamedFunction1, ObjectNamedFunction3} from './_Base';
 import {ref} from '../../core/reactivity/CoreReactivity';
-import {ActorEvaluator} from '../nodes/js/code/assemblers/actor/Evaluator';
+import {ActorEvaluator} from '../nodes/js/code/assemblers/actor/ActorEvaluator';
 
 type Listener = () => void;
 const EVENT = {type: ''};

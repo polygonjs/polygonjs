@@ -1,7 +1,7 @@
 import {PolyScene} from '../../PolyScene';
 import {ActorsManager} from '../ActorsManager';
-import {ActorEvaluatorGenerator} from '../../../nodes/js/code/assemblers/actor/EvaluatorGenerator';
-import {EvaluatorPointerMethod} from '../../../nodes/js/code/assemblers/actor/Evaluator';
+import {ActorEvaluatorGenerator} from '../../../nodes/js/code/assemblers/actor/ActorEvaluatorGenerator';
+import {EvaluatorPointerMethod} from '../../../nodes/js/code/assemblers/actor/ActorEvaluator';
 import {MapUtils} from '../../../../core/MapUtils';
 
 export class ActorPointerEventsController {

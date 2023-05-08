@@ -11,7 +11,7 @@ import {JsType} from '../../poly/registers/nodes/types/Js';
 import {BaseUserInputJsNode} from './_BaseUserInput';
 import {CoreEventEmitter, EVENT_EMITTERS, EVENT_EMITTER_PARAM_MENU_OPTIONS} from '../../../core/event/CoreEventEmitter';
 import {PointerEventType} from '../../../core/event/PointerEventType';
-import {EvaluatorEventData} from './code/assemblers/actor/Evaluator';
+import {EvaluatorEventData} from './code/assemblers/actor/ActorEvaluator';
 import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;

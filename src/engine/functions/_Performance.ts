@@ -1,5 +1,5 @@
 import {computed, ref, watch} from '../../core/reactivity/CoreReactivity';
-import {ActorEvaluator} from '../nodes/js/code/assemblers/actor/Evaluator';
+import {ActorEvaluator} from '../nodes/js/code/assemblers/actor/ActorEvaluator';
 import {NamedFunction3} from './_Base';
 
 export enum PerformanceChangeEvent {

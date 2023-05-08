@@ -1,4 +1,4 @@
-import {EvaluatorMethodName} from '../../../nodes/js/code/assemblers/actor/Evaluator';
+import {EvaluatorMethodName} from '../../../nodes/js/code/assemblers/actor/ActorEvaluator';
 import {PolyScene} from '../../PolyScene';
 import {ActorsManager, ActorBuilderNode} from '../ActorsManager';
 

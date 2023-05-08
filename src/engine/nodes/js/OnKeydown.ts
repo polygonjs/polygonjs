@@ -6,7 +6,7 @@
 
 import {JsType} from '../../poly/registers/nodes/types/Js';
 import {BaseOnKeyEventJsNode} from './_BaseOnKeyEvent';
-import {EvaluatorEventData} from './code/assemblers/actor/Evaluator';
+import {EvaluatorEventData} from './code/assemblers/actor/ActorEvaluator';
 import {KeyboardEventType} from '../../../core/event/KeyboardEventType';
 
 export class OnKeydownJsNode extends BaseOnKeyEventJsNode {

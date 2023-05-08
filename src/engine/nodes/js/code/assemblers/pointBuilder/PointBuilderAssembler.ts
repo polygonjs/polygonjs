@@ -1,4 +1,10 @@
-import {BaseJsShaderAssembler, INSERT_DEFINE_AFTER, INSERT_BODY_AFTER, INSERT_MEMBERS_AFTER} from '../_Base';
+import {
+	BaseJsShaderAssembler,
+	INSERT_DEFINE_AFTER,
+	INSERT_BODY_AFTER,
+	INSERT_MEMBERS_AFTER,
+	INSERT_CONSTRUCTOR_AFTER,
+} from '../_Base';
 import {RegisterableVariable} from '../_BaseJsPersistedConfigUtils';
 import {ShaderConfig} from '../../configs/ShaderConfig';
 import {VariableConfig} from '../../configs/VariableConfig';
@@ -14,6 +20,7 @@ import {AttributeJsNode} from '../../../Attribute';
 import {NodeContext} from '../../../../../poly/NodeContext';
 import {JsType} from '../../../../../poly/registers/nodes/types/Js';
 import {PointBuilderFunctionData, PointBuilderFunctionDataAttributeDataItem} from './PointBuilderPersistedConfig';
+import {PrettierController} from '../../../../../../core/code/PrettierController';
 
 export enum FunctionConstant {
 	POINT_CONTAINER = 'pointContainer',
@@ -40,9 +47,12 @@ export enum PointVariable {
 const TEMPLATE = `
 ${INSERT_DEFINE_AFTER}
 ${INSERT_MEMBERS_AFTER}
-
-${INSERT_BODY_AFTER}
+${INSERT_CONSTRUCTOR_AFTER}
+const CustomPointBuilderEvaluator = function(){
+	${INSERT_BODY_AFTER}
 `;
+const CLOSE_CLASS_DEFINITION = `};
+return CustomPointBuilderEvaluator;`;
 
 export class JsAssemblerPointBuilder extends BaseJsShaderAssembler {
 	makeFunctionNodeDirtyOnChange() {
@@ -69,7 +79,19 @@ export class JsAssemblerPointBuilder extends BaseJsShaderAssembler {
 	}
 
 	functionData(): PointBuilderFunctionData | undefined {
-		const functionBody = this._shaders_by_name.get(ShaderName.FRAGMENT);
+		// const functionBody = this._shaders_by_name.get(ShaderName.FRAGMENT);
+		const _buildFunctionBody = () => {
+			const bodyLines = this._shaders_by_name.get(ShaderName.FRAGMENT) || TEMPLATE;
+			const functionBodyElements = [
+				bodyLines,
+				// triggerableFunctionLines.join('\n'),
+				// triggerFunctionLines.join('\n'),
+				CLOSE_CLASS_DEFINITION,
+			];
+			const functionBody = PrettierController.formatJs(functionBodyElements.join('\n'));
+			return functionBody;
+		};
+		const functionBody = _buildFunctionBody();
 		if (!functionBody) {
 			return;
 		}

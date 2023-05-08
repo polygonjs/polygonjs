@@ -4,7 +4,7 @@ gsap.registerPlugin(ScrollTrigger);
 //
 import {Ref} from '@vue/reactivity';
 import {NamedFunction4} from './_Base';
-import {ActorEvaluator} from '../nodes/js/code/assemblers/actor/Evaluator';
+import {ActorEvaluator} from '../nodes/js/code/assemblers/actor/ActorEvaluator';
 
 export enum ScrollEvent {
 	onUpdate = 'onUpdate',

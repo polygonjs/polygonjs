@@ -77,8 +77,6 @@ export class Channel {
 				copyKeyframeData(k, target);
 				return target;
 			});
-		// const sortedPos = sortedKeyframes.map((k) => k.pos);
-		// const sortedValues = sortedKeyframes.map((k) => k.value);
 		let i = 0;
 		for (let keyframe of sortedKeyframes) {
 			copyKeyframeData(keyframe, data.keyframes[i]);

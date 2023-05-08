@@ -13,7 +13,7 @@ import {BaseUserInputJsNode} from './_BaseUserInput';
 import {CoreEventEmitter, EVENT_EMITTERS, EVENT_EMITTER_PARAM_MENU_OPTIONS} from '../../../core/event/CoreEventEmitter';
 import {ComputedValueJsDefinition} from './utils/JsDefinition';
 import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
-import {EvaluatorEventData} from './code/assemblers/actor/Evaluator';
+import {EvaluatorEventData} from './code/assemblers/actor/ActorEvaluator';
 import {Poly} from '../../Poly';
 import {PointerEventType} from '../../../core/event/PointerEventType';
 

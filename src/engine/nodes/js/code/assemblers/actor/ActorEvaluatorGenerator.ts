@@ -1,5 +1,5 @@
 import {Object3D} from 'three';
-import {EvaluatorEventData, ActorEvaluator} from './Evaluator';
+import {EvaluatorEventData, ActorEvaluator} from './ActorEvaluator';
 
 type GeneratorFunction = (object3D: Object3D) => ActorEvaluator;
 type EvaluatorCallback = (evaluator: ActorEvaluator) => void;

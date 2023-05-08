@@ -16,7 +16,7 @@ import {EventInputType} from '../../../poly/registers/nodes/types/Event';
 // import {BaseUserInputJsNodeType} from '../../../nodes/js/_BaseUserInput';
 // import {JsType} from '../../../poly/registers/nodes/types/Js';
 import {Raycaster} from 'three';
-import {ActorEvaluatorGenerator} from '../../../nodes/js/code/assemblers/actor/EvaluatorGenerator';
+import {ActorEvaluatorGenerator} from '../../../nodes/js/code/assemblers/actor/ActorEvaluatorGenerator';
 import {JsType} from '../../../poly/registers/nodes/types/Js';
 
 export class SceneEventsDispatcher {

@@ -22,7 +22,7 @@ import {ParamsEditableStateController} from '../utils/io/ParamsEditableStateCont
 import {Color, Quaternion, Vector2, Vector3, Vector4} from 'three';
 import {sanitizeName} from '../../../core/String';
 import {BaseParamType} from '../../params/_Base';
-import {EvaluatorEventData} from './code/assemblers/actor/Evaluator';
+import {EvaluatorEventData} from './code/assemblers/actor/ActorEvaluator';
 import {StringParam} from '../../params/String';
 import {sanitizeJsVarName} from './code/assemblers/JsTypeUtils';
 import {Poly} from '../../Poly';

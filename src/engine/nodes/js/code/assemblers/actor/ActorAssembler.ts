@@ -14,18 +14,19 @@ import {SetUtils} from '../../../../../../core/SetUtils';
 import {PrettierController} from '../../../../../../core/code/PrettierController';
 import {NamedFunctionMap} from '../../../../../poly/registers/functions/All';
 import {ActorFunctionData} from './ActorPersistedConfig';
-import {EvaluatorEventData} from './Evaluator';
+import {EvaluatorEventData} from './ActorEvaluator';
 import {CoreType} from '../../../../../../core/Type';
 import {ParamOptions} from '../../../../../params/utils/OptionsController';
 import {JsConnectionPointType} from '../../../../utils/io/connections/Js';
 import {ActorBuilderNode} from '../../../../../scene/utils/ActorsManager';
+import {logBlue as _logBlue} from '../../../../../../core/logger/Console';
 
 const DEBUG = true;
 function logBlue(message: string) {
 	if (!DEBUG) {
 		return;
 	}
-	console.log('%c' + message, 'color:blue; font-weight:bold;');
+	_logBlue(message);
 }
 function logDefault(message: string) {
 	if (!DEBUG) {

@@ -13,7 +13,7 @@ import {RegisterableVariable} from '../assemblers/_BaseJsPersistedConfigUtils';
 import {JsConnectionPointType} from '../../../utils/io/connections/Js';
 import {BaseNamedFunction} from '../../../../functions/_Base';
 import {nodeMethodName, triggerableMethodCalls} from '../assemblers/actor/ActorAssemblerUtils';
-import {EvaluatorMethodName} from '../assemblers/actor/Evaluator';
+import {EvaluatorMethodName} from '../assemblers/actor/ActorEvaluator';
 
 export interface ComputedValueJsDefinitionData {
 	dataType: JsConnectionPointType;

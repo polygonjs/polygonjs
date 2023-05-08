@@ -10,7 +10,7 @@ import {JsConnectionPoint, JsConnectionPointType, JS_CONNECTION_POINT_IN_NODE_DE
 import {JsType} from '../../poly/registers/nodes/types/Js';
 import {BaseUserInputJsNode} from './_BaseUserInput';
 import {CoreEventEmitter, EVENT_EMITTERS, EVENT_EMITTER_PARAM_MENU_OPTIONS} from '../../../core/event/CoreEventEmitter';
-import {EvaluatorEventData} from './code/assemblers/actor/Evaluator';
+import {EvaluatorEventData} from './code/assemblers/actor/ActorEvaluator';
 import {PointerEventType} from '../../../core/event/PointerEventType';
 import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 

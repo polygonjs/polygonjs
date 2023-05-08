@@ -7,7 +7,7 @@ import {ACCEPTED_POINTER_EVENT_TYPES, PointerEventType} from '../../../../core/e
 import {ref} from '../../../../core/reactivity/CoreReactivity';
 import {CursorHelper} from '../../../nodes/event/utils/CursorHelper';
 import {createRaycaster} from '../../../../core/RaycastHelper';
-import {EvaluatorPointerMethod} from '../../../nodes/js/code/assemblers/actor/Evaluator';
+import {EvaluatorPointerMethod} from '../../../nodes/js/code/assemblers/actor/ActorEvaluator';
 import {JsType} from '../../../poly/registers/nodes/types/Js';
 import {SceneEventsDispatcher} from './EventsDispatcher';
 export interface RaycasterUpdateOptions {

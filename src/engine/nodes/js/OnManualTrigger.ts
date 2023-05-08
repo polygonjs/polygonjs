@@ -13,7 +13,7 @@ import {ActorBuilderNode} from '../../scene/utils/ActorsManager';
 import {ActorSopNode} from '../sop/Actor';
 import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {nodeMethodName} from './code/assemblers/actor/ActorAssemblerUtils';
-import {EvaluatorMethodName} from './code/assemblers/actor/Evaluator';
+import {EvaluatorMethodName} from './code/assemblers/actor/ActorEvaluator';
 
 class OnManualTriggerJsParamsConfig extends NodeParamsConfig {
 	trigger = ParamConfig.BUTTON(null, {

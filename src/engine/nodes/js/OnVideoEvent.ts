@@ -29,7 +29,7 @@ import {
 import {SetUtils} from '../../../core/SetUtils';
 import {Poly} from '../../Poly';
 import {InitFunctionJsDefinition, TriggeringJsDefinition} from './utils/JsDefinition';
-import {EvaluatorMethodName} from './code/assemblers/actor/Evaluator';
+import {EvaluatorMethodName} from './code/assemblers/actor/ActorEvaluator';
 
 // type Listener = () => void;
 // type Listeners = Record<VideoEvent, Listener>;

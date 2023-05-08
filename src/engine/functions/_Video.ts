@@ -1,7 +1,7 @@
 import {dummyReadRefVal} from '../../core/reactivity/CoreReactivity';
 import {VideoEvent, VIDEO_EVENTS} from '../../core/VideoEvent';
 import {VideoCopNode} from '../nodes/cop/Video';
-import {ActorEvaluator} from '../nodes/js/code/assemblers/actor/Evaluator';
+import {ActorEvaluator} from '../nodes/js/code/assemblers/actor/ActorEvaluator';
 import {NodeEventListener} from '../nodes/_Base';
 import {NodeContext} from '../poly/NodeContext';
 import {CopType} from '../poly/registers/nodes/types/Cop';

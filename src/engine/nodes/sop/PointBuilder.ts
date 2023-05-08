@@ -34,6 +34,22 @@ import {BufferAttribute, BufferGeometry, Color, Vector2, Vector3, Vector4} from 
 import {CoreGeometry} from '../../../core/geometry/Geometry';
 import {Attribute} from '../../../core/geometry/Attribute';
 import {JsConnectionPointComponentsCountMap, JsConnectionPointType} from '../utils/io/connections/Js';
+import {logBlue as _logBlue} from '../../../core/logger/Console';
+import {PointBuilderEvaluator} from '../js/code/assemblers/pointBuilder/PointBuilderEvaluator';
+
+const DEBUG = true;
+function logBlue(message: string) {
+	if (!DEBUG) {
+		return;
+	}
+	_logBlue(message);
+}
+function logDefault(message: string) {
+	if (!DEBUG) {
+		return;
+	}
+	console.log(message);
+}
 
 type PointFunction = Function; //(object:Object3D)=>Object3D
 type AttributeItem = boolean | number | string | Color | Vector2 | Vector3 | Vector4;
@@ -107,6 +123,9 @@ export class PointBuilderSopNode extends TypedSopNode<PointBuilderSopParamsConfi
 		const _func = this._function;
 		if (_func) {
 			const args = this.functionEvalArgsWithParamConfigs();
+
+			const evaluator = _func(...args) as PointBuilderEvaluator;
+
 			const inputObjects = coreGroup.threejsObjectsWithGeo();
 
 			let objnum = 0;
@@ -143,7 +162,7 @@ export class PointBuilderSopNode extends TypedSopNode<PointBuilderSopParamsConfi
 					}
 					this._readRequiredAttributes(ptnum, readAttribNames, readAttributeByName, attribTypeByName);
 					// eval function
-					_func(...args);
+					evaluator();
 					// write back
 					if (hasPosition) {
 						positionAttrib.setXYZ(
@@ -337,6 +356,8 @@ export class PointBuilderSopNode extends TypedSopNode<PointBuilderSopParamsConfi
 		const {functionBody, variableNames, variablesByName, functionNames, functionsByName, paramConfigs} =
 			this._functionData;
 
+		logBlue('*****************');
+
 		const wrappedBody = `
 		try {
 			${functionBody}
@@ -344,6 +365,7 @@ export class PointBuilderSopNode extends TypedSopNode<PointBuilderSopParamsConfi
 			_setErrorFromError(e)
 			return 0;
 		}`;
+		logDefault(wrappedBody);
 		const _setErrorFromError = (e: Error) => {
 			this.states.error.set(e.message);
 		};

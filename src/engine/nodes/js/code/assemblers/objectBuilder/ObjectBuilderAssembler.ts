@@ -4,6 +4,7 @@ import {
 	INSERT_BODY_AFTER,
 	FunctionData,
 	INSERT_MEMBERS_AFTER,
+	INSERT_CONSTRUCTOR_AFTER,
 } from '../_Base';
 import {RegisterableVariable} from '../_BaseJsPersistedConfigUtils';
 import {ShaderConfig} from '../../configs/ShaderConfig';
@@ -18,6 +19,7 @@ import {NamedFunctionMap} from '../../../../../poly/registers/functions/All';
 import {ParamOptions} from '../../../../../params/utils/OptionsController';
 import {AttributeJsNode} from '../../../Attribute';
 import {Poly} from '../../../../../Poly';
+import {PrettierController} from '../../../../../../core/code/PrettierController';
 
 export enum FunctionConstant {
 	OBJECT_CONTAINER = 'objectContainer',
@@ -47,10 +49,12 @@ export enum ObjectVariable {
 const TEMPLATE = `
 ${INSERT_DEFINE_AFTER}
 ${INSERT_MEMBERS_AFTER}
-
-${INSERT_BODY_AFTER}
+${INSERT_CONSTRUCTOR_AFTER}
+const CustomPointBuilderEvaluator = function(){
+	${INSERT_BODY_AFTER}
 `;
-
+const CLOSE_CLASS_DEFINITION = `};
+return CustomPointBuilderEvaluator;`;
 export class JsAssemblerObjectBuilder extends BaseJsShaderAssembler {
 	// private _function: Function | undefined;
 	// private _uniforms: IUniforms | undefined;
@@ -79,7 +83,19 @@ export class JsAssemblerObjectBuilder extends BaseJsShaderAssembler {
 	}
 
 	functionData(): FunctionData | undefined {
-		const functionBody = this._shaders_by_name.get(ShaderName.FRAGMENT);
+		// const functionBody = this._shaders_by_name.get(ShaderName.FRAGMENT);
+		const _buildFunctionBody = () => {
+			const bodyLines = this._shaders_by_name.get(ShaderName.FRAGMENT) || TEMPLATE;
+			const functionBodyElements = [
+				bodyLines,
+				// triggerableFunctionLines.join('\n'),
+				// triggerFunctionLines.join('\n'),
+				CLOSE_CLASS_DEFINITION,
+			];
+			const functionBody = PrettierController.formatJs(functionBodyElements.join('\n'));
+			return functionBody;
+		};
+		const functionBody = _buildFunctionBody();
 		if (!functionBody) {
 			return;
 		}

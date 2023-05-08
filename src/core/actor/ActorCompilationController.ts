@@ -1,6 +1,6 @@
 import {JsNodeFinder} from '../../engine/nodes/js/code/utils/NodeFinder';
-import {ActorEvaluator} from '../../engine/nodes/js/code/assemblers/actor/Evaluator';
-import {ActorEvaluatorGenerator} from '../../engine/nodes/js/code/assemblers/actor/EvaluatorGenerator';
+import {ActorEvaluator} from '../../engine/nodes/js/code/assemblers/actor/ActorEvaluator';
+import {ActorEvaluatorGenerator} from '../../engine/nodes/js/code/assemblers/actor/ActorEvaluatorGenerator';
 import {ActorFunctionData} from '../../engine/nodes/js/code/assemblers/actor/ActorPersistedConfig';
 import {computed, ref, watch} from '../reactivity/CoreReactivity';
 import {RegisterableVariable} from '../../engine/nodes/js/code/assemblers/_BaseJsPersistedConfigUtils';

@@ -230,7 +230,7 @@ export class KeyframesJsNode extends TypedJsNode<KeyframesJsParamsConfig> {
 		param.set(inputName);
 	}
 
-	protected _expectedInputsCount(): number {
+	protected _channelsCount(): number {
 		return this.pv.channelsCount;
 	}
 
@@ -247,7 +247,7 @@ export class KeyframesJsNode extends TypedJsNode<KeyframesJsParamsConfig> {
 	}
 
 	protected _expectedOutputTypes() {
-		const count = this.pv.channelsCount;
+		const count = this._channelsCount();
 		const params: IntegerParam[] = this.channelTypeParams();
 		return ArrayUtils.range(0, count).map((value, i) => AVAILABLE_JS_CONNECTION_POINT_TYPES[params[i].value]);
 	}
@@ -261,25 +261,53 @@ export class KeyframesJsNode extends TypedJsNode<KeyframesJsParamsConfig> {
 		const time = this.variableForInput(linesController, KeyframesJsNodeInputName.time);
 		const funcCurve = Poly.namedFunctionsRegister.getFunction('channel', this, linesController);
 		const funcCurveValue = Poly.namedFunctionsRegister.getFunction('channelValue', this, linesController);
-		const curve = this.jsVarName('depth_CURVE');
-		const out = this.jsVarName('depth');
 
-		linesController.addDefinitions(this, [
-			new ConstantJsDefinition(
-				this,
-				linesController,
-				JsConnectionPointType.BOOLEAN,
-				curve,
-				funcCurve.asString(this.pv.data0)
-			),
-		]);
+		const usedOutputNames = this.io.outputs.used_output_names();
 
-		linesController.addBodyOrComputed(this, [
-			{
-				dataType: JsConnectionPointType.FLOAT,
-				varName: out,
-				value: funcCurveValue.asString(`this.${curve}`, time),
-			},
-		]);
+		const _f = (outputName: string) => {
+			if (!usedOutputNames.includes(outputName)) {
+				return;
+			}
+			const curve = this.jsVarName(`${outputName}_CURVE`);
+			const out = this.jsVarName(outputName);
+			linesController.addDefinitions(this, [
+				new ConstantJsDefinition(
+					this,
+					linesController,
+					JsConnectionPointType.FLOAT,
+					curve,
+					funcCurve.asString(this.pv.data0)
+				),
+			]);
+
+			linesController.addBodyOrComputed(this, [
+				{
+					dataType: JsConnectionPointType.FLOAT,
+					varName: out,
+					value: funcCurveValue.asString(`this.${curve}`, time),
+				},
+			]);
+		};
+
+		const channelsCount = this._channelsCount();
+		for (let channelIndex = 0; channelIndex < channelsCount; channelIndex++) {
+			const outputName = this._expectedOutputName(channelIndex);
+			const channelType = this._expectedOutputTypes()[channelIndex];
+			switch (channelType) {
+				case JsConnectionPointType.FLOAT: {
+					_f(outputName);
+					break;
+				}
+				case JsConnectionPointType.VECTOR2: {
+					break;
+				}
+				case JsConnectionPointType.VECTOR3: {
+					break;
+				}
+				case JsConnectionPointType.VECTOR4: {
+					break;
+				}
+			}
+		}
 	}
 }

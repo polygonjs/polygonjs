@@ -3,7 +3,7 @@ import {CoreGraphNode} from '../../../src/core/graph/CoreGraphNode';
 import {NodeEvent} from '../../../src/engine/poly/NodeEvent';
 import {PolyScene} from '../../../src/engine/scene/PolyScene';
 import {SceneEvent} from '../../../src/engine/poly/SceneEvent';
-import {ActorEvaluator} from '../../../src/engine/nodes/js/code/assemblers/actor/Evaluator';
+import {ActorEvaluator} from '../../../src/engine/nodes/js/code/assemblers/actor/ActorEvaluator';
 import {DebugLinesContainer} from '../../../src/engine/scene/utils/DispatchController';
 
 QUnit.test('sets the node to update if set value', async (assert) => {

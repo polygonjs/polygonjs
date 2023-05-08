@@ -6,7 +6,7 @@ import {SceneEventsDispatcher} from './EventsDispatcher';
 import {TimeController} from '../TimeController';
 // import {TimeController} from '../TimeController';
 import {ActorKeyboardEventsController} from '../actors/ActorsKeyboardEventsController';
-import {EvaluatorKeyboardMethod} from '../../../nodes/js/code/assemblers/actor/Evaluator';
+import {EvaluatorKeyboardMethod} from '../../../nodes/js/code/assemblers/actor/ActorEvaluator';
 import {JsType} from '../../../poly/registers/nodes/types/Js';
 
 const methodNameByEventType: Record<KeyboardEventType, EvaluatorKeyboardMethod[]> = {

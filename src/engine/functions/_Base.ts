@@ -3,7 +3,7 @@ import {PolyScene} from '../scene/PolyScene';
 import {BaseNodeType} from '../nodes/_Base';
 import {BaseJsNodeType} from '../nodes/js/_Base';
 import {JsLinesCollectionController} from '../nodes/js/code/utils/JsLinesCollectionController';
-import {EvaluatorConstant} from '../nodes/js/code/assemblers/actor/Evaluator';
+import {EvaluatorConstant} from '../nodes/js/code/assemblers/actor/ActorEvaluator';
 import {NodeContext} from '../poly/NodeContext';
 import {AssemblerControllerNode} from '../nodes/js/code/Controller';
 import {TimeController} from '../scene/utils/TimeController';

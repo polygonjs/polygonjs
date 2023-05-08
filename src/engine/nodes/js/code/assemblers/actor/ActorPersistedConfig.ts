@@ -4,7 +4,7 @@ import {SerializedVariable, SerializedVariableType} from '../_BaseJsPersistedCon
 import {NamedFunctionMap} from '../../../../../poly/registers/functions/All';
 import {JsParamConfig, JsParamConfigJSON} from '../../utils/JsParamConfig';
 import {ParamType} from '../../../../../poly/ParamType';
-import {EvaluatorEventData} from './Evaluator';
+import {EvaluatorEventData} from './ActorEvaluator';
 import {ActorBuilderNode} from '../../../../../scene/utils/ActorsManager';
 import {
 	PersistedConfigBaseJsData,

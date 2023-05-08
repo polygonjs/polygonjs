@@ -5,7 +5,7 @@ import {JsLinesCollectionController} from '../code/utils/JsLinesCollectionContro
 import {nodeMethodName} from '../code/assemblers/actor/ActorAssemblerUtils';
 import {LineType} from '../code/utils/LineType';
 import {MapUtils} from '../../../../core/MapUtils';
-import {EvaluatorMethodName} from '../code/assemblers/actor/Evaluator';
+import {EvaluatorMethodName} from '../code/assemblers/actor/ActorEvaluator';
 import {ArrayUtils} from '../../../../core/ArrayUtils';
 
 export enum JsDefinitionType {

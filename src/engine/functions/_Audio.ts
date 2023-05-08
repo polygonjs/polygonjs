@@ -6,7 +6,7 @@ import {NamedFunction3, ObjectNamedFunction1, ObjectNamedFunction3} from './_Bas
 import {Player} from 'tone/build/esm/source/buffer/Player';
 import {AudioPlayerCallbacksManager} from '../../core/audio/PlayerCallbacksManager';
 import {CoreObject} from '../../core/geometry/Object';
-import {ActorEvaluator} from '../nodes/js/code/assemblers/actor/Evaluator';
+import {ActorEvaluator} from '../nodes/js/code/assemblers/actor/ActorEvaluator';
 
 // const AUDIO_COMPLETED_EVENT_NAME = 'onAudioCompleted';
 // const EVENT_AUDIO_COMPLETED = {type: AUDIO_COMPLETED_EVENT_NAME};

@@ -30,7 +30,7 @@ import {
 	triggerInputIndex,
 } from './code/assemblers/actor/ActorAssemblerUtils';
 import {SetUtils} from '../../../core/SetUtils';
-import {EvaluatorMethodName} from './code/assemblers/actor/Evaluator';
+import {EvaluatorMethodName} from './code/assemblers/actor/ActorEvaluator';
 // enum OnPerformanceChangeOutputName {
 // 	aboveThreshold = 'threshold',
 // 	performance = 'performance',

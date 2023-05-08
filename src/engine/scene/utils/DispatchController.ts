@@ -3,12 +3,12 @@ import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
 import {SceneEvent} from '../../poly/SceneEvent';
 import {NodeEvent} from '../../poly/NodeEvent';
 import {ParamEvent} from '../../poly/ParamEvent';
-import {ActorEvaluator} from '../../nodes/js/code/assemblers/actor/Evaluator';
+import {ActorEvaluator} from '../../nodes/js/code/assemblers/actor/ActorEvaluator';
 import {DebugLine} from '../../functions/_Debug';
 
 export interface DebugLinesContainer {
-	nodePath:string
-	debugLines:DebugLine[]
+	nodePath: string;
+	debugLines: DebugLine[];
 }
 export interface EventsListener {
 	processEvents: (emitter: CoreGraphNode, event: SceneEvent | NodeEvent | ParamEvent, data?: any) => void;

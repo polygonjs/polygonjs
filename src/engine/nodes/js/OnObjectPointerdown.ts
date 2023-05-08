@@ -8,7 +8,7 @@ import {TRIGGER_CONNECTION_NAME} from './_Base';
 import {JsConnectionPoint, JsConnectionPointType, JS_CONNECTION_POINT_IN_NODE_DEF} from '../utils/io/connections/Js';
 import {JsType} from '../../poly/registers/nodes/types/Js';
 import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
-import {EvaluatorEventData} from './code/assemblers/actor/Evaluator';
+import {EvaluatorEventData} from './code/assemblers/actor/ActorEvaluator';
 import {BaseOnObjectPointerEventJsNode} from './_BaseOnObjectPointerEvent';
 import {PointerEventType} from '../../../core/event/PointerEventType';
 import {inputObject3D} from './_BaseObject3D';

@@ -1,7 +1,7 @@
 import {BaseJsNodeType} from './_Base';
 import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {JsConnectionPointType} from '../utils/io/connections/Js';
-import {EvaluatorConstant} from './code/assemblers/actor/Evaluator';
+import {EvaluatorConstant} from './code/assemblers/actor/ActorEvaluator';
 
 function _defaultObject3D(): string {
 	return EvaluatorConstant.OBJECT_3D;

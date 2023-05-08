@@ -8,7 +8,7 @@ import {EventData, EventType} from '../../../../core/event/EventData';
 // import {MapUtils} from '../../../../core/MapUtils';
 import {CoreEventEmitter} from '../../../../core/event/CoreEventEmitter';
 import {MapUtils} from '../../../../core/MapUtils';
-import {ActorEvaluatorGenerator} from '../../../nodes/js/code/assemblers/actor/EvaluatorGenerator';
+import {ActorEvaluatorGenerator} from '../../../nodes/js/code/assemblers/actor/ActorEvaluatorGenerator';
 
 interface EventContextValue {
 	node?: BaseNodeType; // for node_cook

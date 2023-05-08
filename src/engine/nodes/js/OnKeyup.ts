@@ -5,7 +5,7 @@
  */
 
 import {JsType} from '../../poly/registers/nodes/types/Js';
-import {EvaluatorEventData} from './code/assemblers/actor/Evaluator';
+import {EvaluatorEventData} from './code/assemblers/actor/ActorEvaluator';
 import {KeyboardEventType} from '../../../core/event/KeyboardEventType';
 import {BaseOnKeyEventJsNode} from './_BaseOnKeyEvent';
 
