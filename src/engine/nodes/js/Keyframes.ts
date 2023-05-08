@@ -16,6 +16,7 @@ import {Poly} from '../../Poly';
 import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {JsType} from '../../poly/registers/nodes/types/Js';
 import {channelDataToString} from '../../../core/keyframes/KeyframeSerialize';
+import {createVariable} from './code/assemblers/_BaseJsPersistedConfigUtils';
 
 const SAMPLE_DATA0: ChannelData = {
 	keyframes: [
@@ -38,6 +39,13 @@ const SAMPLE_DATA0: ChannelData = {
 	interpolation: ChannelInterpolation.CUBIC,
 };
 const SAMPLE_DATA: ChannelData[] = [SAMPLE_DATA0];
+
+interface VectorLinesOptions {
+	outputName: string;
+	dataType: JsConnectionPointType.VECTOR2 | JsConnectionPointType.VECTOR3 | JsConnectionPointType.VECTOR4;
+	channelCreate: 'channelVector2' | 'channelVector3' | 'channelVector4';
+	channelGetValue: 'channelValueVector2' | 'channelValueVector3' | 'channelValueVector4';
+}
 
 // const INIT_DATA: ChannelsData = {
 // 	depth: SAMPLE_DATA
@@ -259,15 +267,14 @@ export class KeyframesJsNode extends TypedJsNode<KeyframesJsParamsConfig> {
 
 	override setLines(linesController: JsLinesCollectionController) {
 		const time = this.variableForInput(linesController, KeyframesJsNodeInputName.time);
-		const funcCurve = Poly.namedFunctionsRegister.getFunction('channel', this, linesController);
-		const funcCurveValue = Poly.namedFunctionsRegister.getFunction('channelValue', this, linesController);
-
 		const usedOutputNames = this.io.outputs.used_output_names();
 
 		const _f = (outputName: string) => {
 			if (!usedOutputNames.includes(outputName)) {
 				return;
 			}
+			const funcCurve = Poly.namedFunctionsRegister.getFunction('channelFloat', this, linesController);
+			const funcCurveValue = Poly.namedFunctionsRegister.getFunction('channelValueFloat', this, linesController);
 			const curve = this.jsVarName(`${outputName}_CURVE`);
 			const out = this.jsVarName(outputName);
 			linesController.addDefinitions(this, [
@@ -288,6 +295,31 @@ export class KeyframesJsNode extends TypedJsNode<KeyframesJsParamsConfig> {
 				},
 			]);
 		};
+		const _v = (options: VectorLinesOptions) => {
+			const {outputName, dataType, channelCreate, channelGetValue} = options;
+			if (!usedOutputNames.includes(outputName)) {
+				return;
+			}
+			const funcCurve = Poly.namedFunctionsRegister.getFunction(channelCreate, this, linesController);
+			const funcCurveValue = Poly.namedFunctionsRegister.getFunction(channelGetValue, this, linesController);
+			const variable = createVariable(dataType);
+
+			const curve = this.jsVarName(`${outputName}_CURVE`);
+			const out = this.jsVarName(outputName);
+			linesController.addDefinitions(this, [
+				new ConstantJsDefinition(this, linesController, dataType, curve, funcCurve.asString(this.pv.data0)),
+			]);
+			if (variable) {
+				const tmpVarName = linesController.addVariable(this, variable);
+				linesController.addBodyOrComputed(this, [
+					{
+						dataType,
+						varName: out,
+						value: funcCurveValue.asString(`this.${curve}`, time, tmpVarName),
+					},
+				]);
+			}
+		};
 
 		const channelsCount = this._channelsCount();
 		for (let channelIndex = 0; channelIndex < channelsCount; channelIndex++) {
@@ -299,12 +331,30 @@ export class KeyframesJsNode extends TypedJsNode<KeyframesJsParamsConfig> {
 					break;
 				}
 				case JsConnectionPointType.VECTOR2: {
+					_v({
+						outputName,
+						dataType: channelType,
+						channelCreate: 'channelVector2',
+						channelGetValue: 'channelValueVector2',
+					});
 					break;
 				}
 				case JsConnectionPointType.VECTOR3: {
+					_v({
+						outputName,
+						dataType: channelType,
+						channelCreate: 'channelVector3',
+						channelGetValue: 'channelValueVector3',
+					});
 					break;
 				}
 				case JsConnectionPointType.VECTOR4: {
+					_v({
+						outputName,
+						dataType: channelType,
+						channelCreate: 'channelVector4',
+						channelGetValue: 'channelValueVector4',
+					});
 					break;
 				}
 			}

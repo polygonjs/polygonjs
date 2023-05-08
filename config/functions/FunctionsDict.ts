@@ -116,7 +116,16 @@ export const FUNCTION_NAME_BY_FILE_NAME: Record<string, string[]> = {
 	GetSceneObject: ['getMaterial', 'getTexture'],
 	GetSibbling: ['getSibbling'],
 	Globals: ['globalsTime', 'globalsTimeDelta', 'globalsRaycaster', 'globalsRayFromCursor', 'globalsCursor'],
-	Keyframes: ['channel', 'channelValue'],
+	Keyframes: [
+		'channelFloat',
+		'channelValueFloat',
+		'channelVector2',
+		'channelValueVector2',
+		'channelVector3',
+		'channelValueVector3',
+		'channelVector4',
+		'channelValueVector4',
+	],
 	Instance: [
 		'setGeometryInstancePositions',
 		'setGeometryInstanceQuaternions',

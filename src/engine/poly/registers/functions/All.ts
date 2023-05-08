@@ -24,8 +24,14 @@ import { boolToInt } from "../../../functions/boolToInt";
 import { box3Set } from "../../../functions/box3Set";
 import { box3SetFromObject } from "../../../functions/box3SetFromObject";
 import { catmullRomCurve3GetPoint } from "../../../functions/catmullRomCurve3GetPoint";
-import { channel } from "../../../functions/channel";
-import { channelValue } from "../../../functions/channelValue";
+import { channelFloat } from "../../../functions/channelFloat";
+import { channelValueFloat } from "../../../functions/channelValueFloat";
+import { channelValueVector2 } from "../../../functions/channelValueVector2";
+import { channelValueVector3 } from "../../../functions/channelValueVector3";
+import { channelValueVector4 } from "../../../functions/channelValueVector4";
+import { channelVector2 } from "../../../functions/channelVector2";
+import { channelVector3 } from "../../../functions/channelVector3";
+import { channelVector4 } from "../../../functions/channelVector4";
 import { clamp } from "../../../functions/clamp";
 import { clothSolverReset } from "../../../functions/clothSolverReset";
 import { clothSolverSetSelectedVertexIndex } from "../../../functions/clothSolverSetSelectedVertexIndex";
@@ -433,8 +439,14 @@ export interface NamedFunctionMap {
   box3Set: box3Set;
   box3SetFromObject: box3SetFromObject;
   catmullRomCurve3GetPoint: catmullRomCurve3GetPoint;
-  channel: channel;
-  channelValue: channelValue;
+  channelFloat: channelFloat;
+  channelValueFloat: channelValueFloat;
+  channelValueVector2: channelValueVector2;
+  channelValueVector3: channelValueVector3;
+  channelValueVector4: channelValueVector4;
+  channelVector2: channelVector2;
+  channelVector3: channelVector3;
+  channelVector4: channelVector4;
   clamp: clamp;
   clothSolverReset: clothSolverReset;
   clothSolverSetSelectedVertexIndex: clothSolverSetSelectedVertexIndex;
@@ -845,8 +857,14 @@ export class AllNamedFunctionRegister {
       box3Set,
       box3SetFromObject,
       catmullRomCurve3GetPoint,
-      channel,
-      channelValue,
+      channelFloat,
+      channelValueFloat,
+      channelValueVector2,
+      channelValueVector3,
+      channelValueVector4,
+      channelVector2,
+      channelVector3,
+      channelVector4,
       clamp,
       clothSolverReset,
       clothSolverSetSelectedVertexIndex,
