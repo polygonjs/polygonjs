@@ -37,7 +37,7 @@ import {JsConnectionPointComponentsCountMap, JsConnectionPointType} from '../uti
 import {logBlue as _logBlue} from '../../../core/logger/Console';
 import {PointBuilderEvaluator} from '../js/code/assemblers/pointBuilder/PointBuilderEvaluator';
 
-const DEBUG = true;
+const DEBUG = false;
 function logBlue(message: string) {
 	if (!DEBUG) {
 		return;

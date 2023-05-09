@@ -1,4 +1,3 @@
-import {Box2} from 'three';
 import {ChannelData, KeyframeData, ChannelInterpolation, SetCurveCallback, GetValueCallback} from './KeyframeCommon';
 import {setCurveFromKeyframePairCubic, getValueCubic} from './channel/Cubic';
 import {setCurveFromKeyframePairLinear, getValueLinear} from './channel/Linear';
@@ -83,25 +82,7 @@ export class Channel {
 			i++;
 		}
 	}
-	computeBounds(target: Box2) {
-		const keyframes = this.data.keyframes;
-		if (keyframes.length == 0) {
-			return;
-		}
-		const firstPos = keyframes[0].pos;
-		const lastPos = keyframes[keyframes.length - 1].pos;
-		target.min.set(firstPos, -Infinity);
-		target.max.set(lastPos, Infinity);
-		let minValue = Infinity;
-		let maxValue = -Infinity;
-		for (let pos = firstPos; pos <= lastPos; pos++) {
-			const value = this.value(pos);
-			minValue = Math.min(minValue, value);
-			maxValue = Math.max(maxValue, value);
-		}
-		target.min.y = minValue;
-		target.max.y = maxValue;
-	}
+
 	private _setCallbacks() {
 		switch (this.data.interpolation) {
 			case ChannelInterpolation.CUBIC: {
