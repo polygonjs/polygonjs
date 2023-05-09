@@ -15,7 +15,9 @@ import {SopType} from '../../poly/registers/nodes/types/Sop';
 const DEFAULT = BoxLinesSopOperation.DEFAULT_PARAMS;
 class BoxLinesSopParamsConfig extends NodeParamsConfig {
 	/** @param size of the box */
-	size = ParamConfig.FLOAT(DEFAULT.size);
+	size = ParamConfig.FLOAT(DEFAULT.size, {
+		range: [0, 2],
+	});
 	/** @param sizes on each axis */
 	sizes = ParamConfig.VECTOR3(DEFAULT.sizes);
 	/** @param divisions on each axis */

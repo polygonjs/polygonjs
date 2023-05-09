@@ -5,6 +5,7 @@ import {ASSETS_ROOT} from '../../../core/loader/AssetsUtils';
 import {CoreSVGLoader} from '../../../core/loader/SVG';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 import {SopTypeFile} from '../../poly/registers/nodes/types/Sop';
+import {sanitizeUrl} from '../../../core/UrlHelper';
 
 interface SvgSopParams extends DefaultOperationParams {
 	url: string;
@@ -23,7 +24,7 @@ interface SvgSopParams extends DefaultOperationParams {
 	// noHoles: boolean;
 }
 
-const DEFAULT_URL = `${ASSETS_ROOT}/models/svg/tiger.svg`;
+const DEFAULT_URL = sanitizeUrl(`${ASSETS_ROOT}/models/svg/tiger.svg`);
 export class FileSVGSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: SvgSopParams = {
 		url: DEFAULT_URL,

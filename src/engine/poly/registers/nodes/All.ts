@@ -1,4 +1,3 @@
-import {ActorRegister, ActorNodeChildrenMap} from './Actor';
 import {AnimRegister, AnimNodeChildrenMap} from './Anim';
 import {AudioRegister, AudioNodeChildrenMap} from './Audio';
 // import {CadRegister, CadNodeChildrenMap} from './Cad';
@@ -29,12 +28,9 @@ import {PolyEngine} from '../../../Poly';
 import {NodeContext} from '../../NodeContext';
 
 export interface NodeChildrenMapByContext {
-	[NodeContext.ACTOR]: ActorNodeChildrenMap;
 	[NodeContext.ANIM]: AnimNodeChildrenMap;
 	[NodeContext.AUDIO]: AudioNodeChildrenMap;
-	// [NodeContext.CAD]: CadNodeChildrenMap;
 	[NodeContext.COP]: CopNodeChildrenMap;
-	// [NodeContext.CSG]: CsgNodeChildrenMap;
 	[NodeContext.EVENT]: EventNodeChildrenMap;
 	[NodeContext.GL]: GlNodeChildrenMap;
 	[NodeContext.JS]: JsNodeChildrenMap;
@@ -48,12 +44,9 @@ export interface NodeChildrenMapByContext {
 
 export class AllNodesRegister {
 	static async run(poly: PolyEngine) {
-		ActorRegister.run(poly);
 		AnimRegister.run(poly);
 		AudioRegister.run(poly);
-		// CadRegister.run(poly);
 		CopRegister.run(poly);
-		// CsgRegister.run(poly);
 		EventRegister.run(poly);
 		GlRegister.run(poly);
 		JsRegister.run(poly);

@@ -4,27 +4,25 @@
  *
  */
 
-import {TypedSopNode} from './_Base';
+// import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {NetworkNodeType, NodeContext} from '../../poly/NodeContext';
-import {InputCloneMode} from '../../poly/InputCloneMode';
-import {ActorNodeChildrenMap} from '../../poly/registers/nodes/Actor';
-import {NodeCreateOptions} from '../utils/hierarchy/ChildrenController';
-import {Constructor, valueof} from '../../../types/GlobalTypes';
-import {BaseActorNodeType} from '../actor/_Base';
+import {NetworkNodeType} from '../../poly/NodeContext';
+import {CorePath} from '../../../core/geometry/CorePath';
+import {SopType} from '../../poly/registers/nodes/types/Sop';
+import {TypedActorSopNode} from './_BaseActor';
 import {isBooleanTrue} from '../../../core/Type';
 import {ActorBuilderNode} from '../../scene/utils/ActorsManager';
-import {CorePath} from '../../../core/geometry/CorePath';
-// import {ActorsManager} from '../../../core/actor/ActorsManager';
+import {InputCloneMode} from '../../poly/InputCloneMode';
 class ActorSopParamsConfig extends NodeParamsConfig {
 	/** @param select which objects this applies the actor behavior to */
 	objectsMask = ParamConfig.STRING('', {
 		objectMask: true,
 	});
 	/** @param build actor from child nodes */
-	useThisNode = ParamConfig.BOOLEAN(1);
+	useThisNode = ParamConfig.BOOLEAN(1, {
+		separatorAfter: true,
+	});
 	/** @param actor node */
 	node = ParamConfig.NODE_PATH('', {
 		visibleIf: {useThisNode: 0},
@@ -32,14 +30,15 @@ class ActorSopParamsConfig extends NodeParamsConfig {
 			types: [NetworkNodeType.ACTOR],
 		},
 		dependentOnFoundNode: false,
+		separatorAfter: true,
 	});
 }
 const ParamsConfig = new ActorSopParamsConfig();
 
-export class ActorSopNode extends TypedSopNode<ActorSopParamsConfig> {
+export class ActorSopNode extends TypedActorSopNode<ActorSopParamsConfig> {
 	override readonly paramsConfig = ParamsConfig;
 	static override type() {
-		return 'actor';
+		return SopType.ACTOR;
 	}
 
 	protected override initializeNode() {
@@ -47,11 +46,14 @@ export class ActorSopNode extends TypedSopNode<ActorSopParamsConfig> {
 		this.io.inputs.initInputsClonedState(InputCloneMode.FROM_NODE);
 	}
 
-	override cook(inputCoreGroups: CoreGroup[]) {
+	override async cook(inputCoreGroups: CoreGroup[]) {
+		// compile
+		this.compilationController.compileIfRequired();
+
+		//
 		const coreGroup = inputCoreGroups[0];
 		const objects = coreGroup.threejsObjects();
-
-		const actorNode = this._findActorNode();
+		const actorNode = await this._findActorNode();
 		if (actorNode) {
 			const objectsMask = this.pv.objectsMask.trim();
 			if (objectsMask == '') {
@@ -70,39 +72,15 @@ export class ActorSopNode extends TypedSopNode<ActorSopParamsConfig> {
 
 		this.setCoreGroup(coreGroup);
 	}
-	private _findActorNode() {
+	private async _findActorNode() {
 		if (isBooleanTrue(this.pv.useThisNode)) {
 			return this;
 		} else {
-			return this.pv.node.node() as ActorBuilderNode | undefined;
+			const node = this.pv.node.node() as ActorBuilderNode | undefined;
+			if (node) {
+				await node.compute();
+			}
+			return node;
 		}
-	}
-
-	//
-	// CHILDREN
-	//
-	protected override _childrenControllerContext = NodeContext.ACTOR;
-	override createNode<S extends keyof ActorNodeChildrenMap>(
-		node_class: S,
-		options?: NodeCreateOptions
-	): ActorNodeChildrenMap[S];
-	override createNode<K extends valueof<ActorNodeChildrenMap>>(
-		node_class: Constructor<K>,
-		options?: NodeCreateOptions
-	): K;
-	override createNode<K extends valueof<ActorNodeChildrenMap>>(
-		node_class: Constructor<K>,
-		options?: NodeCreateOptions
-	): K {
-		return super.createNode(node_class, options) as K;
-	}
-	override children() {
-		return super.children() as BaseActorNodeType[];
-	}
-	override nodesByType<K extends keyof ActorNodeChildrenMap>(type: K): ActorNodeChildrenMap[K][] {
-		return super.nodesByType(type) as ActorNodeChildrenMap[K][];
-	}
-	override childrenAllowed() {
-		return true;
 	}
 }

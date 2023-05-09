@@ -11,3 +11,10 @@ export class ConsoleLogger extends BaseCoreLogger {
 		console.error(...args);
 	}
 }
+
+export function logBlue(message: string) {
+	console.log('%c' + message, 'color:blue; font-weight:bold;');
+}
+export function logDefault(message: string) {
+	console.log(message);
+}

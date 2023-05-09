@@ -7,8 +7,8 @@ import {ArrayUtils} from '../../ArrayUtils';
 import {PolyDictionary} from '../../../types/GlobalTypes';
 
 export abstract class CoreGeometryBuilderBase {
-	from_points(points: CorePoint[]) {
-		points = this._filter_points(points);
+	fromPoints(points: CorePoint[]) {
+		points = this._filterPoints(points);
 		const geometry = new BufferGeometry();
 		const core_geometry = new CoreGeometry(geometry);
 
@@ -23,7 +23,7 @@ export abstract class CoreGeometryBuilderBase {
 				new_index_by_old_index[points[i].index()] = i;
 			}
 
-			const indices = this._indices_from_points(new_index_by_old_index, old_geometry);
+			const indices = this._indicesFromPoints(new_index_by_old_index, old_geometry);
 			if (indices) {
 				geometry.setIndex(indices);
 			}
@@ -79,8 +79,8 @@ export abstract class CoreGeometryBuilderBase {
 		return geometry;
 	}
 
-	protected abstract _filter_points(points: CorePoint[]): CorePoint[];
-	protected abstract _indices_from_points(
+	protected abstract _filterPoints(points: CorePoint[]): CorePoint[];
+	protected abstract _indicesFromPoints(
 		new_index_by_old_index: PolyDictionary<number>,
 		old_geometry: BufferGeometry
 	): number[] | undefined;

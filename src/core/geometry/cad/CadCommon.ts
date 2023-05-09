@@ -27,6 +27,8 @@ import type {
 	gp_Dir,
 	gp_XYZ,
 	TopAbs_ShapeEnum,
+	TopExp,
+	TopTools_IndexedMapOfShape,
 	TopLoc_Location,
 	Message_ProgressRange,
 	TopTools_ListOfShape,
@@ -59,6 +61,9 @@ export type {
 	gp_Ax2,
 	gp_Dir,
 	gp_XYZ,
+	TopAbs_ShapeEnum,
+	TopExp,
+	TopTools_IndexedMapOfShape,
 	TopLoc_Location,
 	Message_ProgressRange,
 	TopTools_ListOfShape,
@@ -190,6 +195,12 @@ export interface CachedCADTesselationParams {
 	curveAbscissa: number;
 	curveTolerance: number;
 }
+export interface CachedCADOBJTesselationParams {
+	CADLinearTolerance: number;
+	CADAngularTolerance: number;
+	CADCurveAbscissa: number;
+	CADCurveTolerance: number;
+}
 
 export interface CADTesselationParams extends CachedCADTesselationParams {
 	wireframe: boolean;
@@ -197,6 +208,13 @@ export interface CADTesselationParams extends CachedCADTesselationParams {
 	displayEdges: boolean;
 	meshesColor: Color;
 	edgesColor: Color;
+}
+export interface CADOBJTesselationParams extends CachedCADOBJTesselationParams {
+	CADWireframe: boolean;
+	CADDisplayMeshes: boolean;
+	CADDisplayEdges: boolean;
+	CADMeshesColor: Color;
+	CADEdgesColor: Color;
 }
 
 export interface FaceData {

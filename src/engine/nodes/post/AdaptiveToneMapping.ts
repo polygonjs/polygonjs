@@ -4,7 +4,7 @@
 //  *
 //  */
 // import {TypedPostNode, TypedPostNodeContext, PostParamOptions} from './_Base';
-// import {AdaptiveToneMappingPass} from '../../../modules/three/examples/jsm/postprocessing/AdaptiveToneMappingPass';
+// import {AdaptiveToneMappingPass} from 'three/examples/jsm/postprocessing/AdaptiveToneMappingPass';
 
 // // import VERTEX_SHADER from './gl/Adaptive.vert.glsl'
 // // import FRAGMENT_SHADER from './gl/Adaptive.frag.glsl'

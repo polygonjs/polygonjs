@@ -4,13 +4,13 @@
  *
  */
 import {EventConnectionPoint, EventConnectionPointType} from '../utils/io/connections/Event';
-import {ACCEPTED_TOUCH_EVENT_TYPES} from '../../scene/utils/events/TouchEventsController';
 import {BaseNodeType} from '../_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {TypedInputEventNode, EVENT_PARAM_OPTIONS} from './_BaseInput';
 import {EventContext} from '../../scene/utils/events/_BaseEventsController';
 import {EventInputType} from '../../poly/registers/nodes/types/Event';
 import {CoreEventEmitter, EVENT_EMITTERS, EVENT_EMITTER_PARAM_MENU_OPTIONS} from '../../../core/event/CoreEventEmitter';
+import {ACCEPTED_TOUCH_EVENT_TYPES} from '../../../core/event/TouchEventType';
 class TouchEventParamsConfig extends NodeParamsConfig {
 	/** @param toggle on to allow any event to be listened to */
 	active = ParamConfig.BOOLEAN(true, {
@@ -40,7 +40,7 @@ export class TouchEventNode extends TypedInputEventNode<TouchEventParamsConfig> 
 		return EventInputType.TOUCH;
 	}
 	protected acceptedEventTypes() {
-		return new Set(ACCEPTED_TOUCH_EVENT_TYPES.map((n) => `${n}`));
+		return new Set([...ACCEPTED_TOUCH_EVENT_TYPES]);
 	}
 	override initializeNode() {
 		this.io.outputs.setNamedOutputConnectionPoints(

@@ -2,6 +2,7 @@ import {PolyEngine} from '../../../Poly';
 import {CADModule} from './entryPoints/CAD';
 import {CSGModule} from './entryPoints/CSG';
 import {PBRModule} from './entryPoints/PBR';
+import {SDFModule} from './entryPoints/SDF';
 // import {EXRLoaderModule} from './entry_points/EXRLoader';
 // import {FBXLoaderModule} from './entry_points/FBXLoader';
 // import {GLTFLoaderModule} from './entry_points/GLTFLoader';
@@ -20,6 +21,7 @@ export class AllModulesRegister {
 		poly.registerModule(CADModule);
 		poly.registerModule(CSGModule);
 		poly.registerModule(PBRModule);
+		poly.registerModule(SDFModule);
 		// poly.registerModule(EXRLoaderModule);
 		// poly.registerModule(FBXLoaderModule);
 		// poly.registerModule(GLTFLoaderModule);

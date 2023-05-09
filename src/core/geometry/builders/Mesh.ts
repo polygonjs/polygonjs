@@ -4,7 +4,7 @@ import {CorePoint} from '../Point';
 import {PolyDictionary} from '../../../types/GlobalTypes';
 
 export class CoreGeometryBuilderMesh extends CoreGeometryBuilderBase {
-	protected _filter_points(points: CorePoint[]) {
+	protected _filterPoints(points: CorePoint[]) {
 		// ensures we only keep points that form a full face.
 		// if a single point from a face is discarded, we remove all 3
 
@@ -41,7 +41,7 @@ export class CoreGeometryBuilderMesh extends CoreGeometryBuilderBase {
 		return [];
 	}
 
-	protected _indices_from_points(new_index_by_old_index: PolyDictionary<number>, old_geometry: BufferGeometry) {
+	protected _indicesFromPoints(new_index_by_old_index: PolyDictionary<number>, old_geometry: BufferGeometry) {
 		const index_attrib = old_geometry.index;
 		if (index_attrib != null) {
 			const old_indices = index_attrib.array;

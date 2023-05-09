@@ -24,8 +24,8 @@ export function FogParamConfig<TBase extends Constructor>(Base: TBase) {
 	};
 }
 
-class FogParamsConfig extends FogParamConfig(NodeParamsConfig) {}
-type FoggableMaterial =
+class FogUniformsParamsConfig extends FogParamConfig(NodeParamsConfig) {}
+type FoggableUniformsMaterial =
 	| ShaderMaterial
 	| PointsMaterial
 	| MeshStandardMaterial
@@ -33,14 +33,14 @@ type FoggableMaterial =
 	| MeshPhongMaterial
 	| MeshLambertMaterial
 	| MeshBasicMaterial;
-function isValidFogMaterial(material?: Material): material is FoggableMaterial {
+function isValidFogMaterial(material?: Material): material is FoggableUniformsMaterial {
 	if (!material) {
 		return false;
 	}
 	return (material as PointsMaterial).fog != null;
 }
 
-abstract class FogMatNode extends TypedMatNode<FoggableMaterial, FogParamsConfig> {
+abstract class FogUniformsMatNode extends TypedMatNode<FoggableUniformsMaterial, FogUniformsParamsConfig> {
 	// createMaterial() {
 	// 	return new Material();
 	// }
@@ -48,22 +48,22 @@ abstract class FogMatNode extends TypedMatNode<FoggableMaterial, FogParamsConfig
 }
 
 export class UniformFogController extends BaseController {
-	constructor(protected override node: FogMatNode) {
+	constructor(protected override node: FogUniformsMatNode) {
 		super(node);
 	}
-	static async update(node: FogMatNode) {
+	static async update(node: FogUniformsMatNode) {
 		const material = await node.material();
 		if (!isValidFogMaterial(material)) {
 			return;
 		}
 		node.controllers.uniformFog.updateMaterial(material);
 	}
-	override updateMaterial(material: FoggableMaterial) {
+	override updateMaterial(material: FoggableUniformsMaterial) {
 		const pv = this.node.pv;
 		material.fog = isBooleanTrue(pv.useFog);
 	}
-	override getTextures(material: FoggableMaterial, record: MaterialTexturesRecord) {}
-	override setParamsFromMaterial(material: FoggableMaterial, record: SetParamsTextureNodesRecord) {
+	override getTextures(material: FoggableUniformsMaterial, record: MaterialTexturesRecord) {}
+	override setParamsFromMaterial(material: FoggableUniformsMaterial, record: SetParamsTextureNodesRecord) {
 		this.node.p.useFog.set(material.fog);
 	}
 }

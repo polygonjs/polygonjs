@@ -115,6 +115,7 @@ type PhysicsAttribute =
 	| PhysicsJointAttribute;
 
 export function physicsAttribNameLive(attribute: PhysicsAttribute): string {
+	// return attribute;
 	return `${attribute}-live`;
 }
 

@@ -9,6 +9,12 @@ import {
 } from '../PhysicsAttribute';
 import {_getRBD} from '../PhysicsRBD';
 import {CoreObject} from '../../geometry/Object';
+import {touchRBDProperty} from '../../reactivity/RBDPropertyReactivity';
+
+export enum RBDCommonProperty {
+	RADIUS = 'radius',
+	HEIGHT = 'height',
+}
 
 const attributeHeightLive = physicsAttribNameLive(PhysicsRBDHeightAttribute.HEIGHT);
 const attributeRadiusLive = physicsAttribNameLive(PhysicsRBDRadiusAttribute.RADIUS);
@@ -60,11 +66,17 @@ export function getPhysicsRBDRadius(
 		return;
 	}
 	const colliderType = CorePhysicsAttribute.getColliderType(object);
-	if (colliderType == null || colliderType != expectedType) {
+	if (colliderType == null) {
+		console.warn('no colliderType found');
+		return;
+	}
+	if (colliderType != expectedType) {
+		console.warn(`colliderType '${colliderType}' not the expected one ('${expectedType}')`);
 		return;
 	}
 	const collider = body.collider(0);
 	if (!collider) {
+		console.warn('no collider found');
 		return;
 	}
 	return currentRadius(object, collider);
@@ -106,6 +118,8 @@ export function setPhysicsRBDHeightRadiusProperty(
 		collider.setRadius(targetRadius);
 		CoreObject.setAttribute(object, attributeHeightLive, targetHeight);
 		CoreObject.setAttribute(object, attributeRadiusLive, targetRadius);
+		touchRBDProperty(object, RBDCommonProperty.HEIGHT);
+		touchRBDProperty(object, RBDCommonProperty.RADIUS);
 		// update scale
 		const scaleXZ = targetRadius / originalRadiusAttrib;
 		object.scale.set(scaleXZ, targetHeight / originalHeightAttrib, scaleXZ);

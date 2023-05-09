@@ -58,7 +58,7 @@ export class KeyboardEventNode extends TypedInputEventNode<KeyboardEventParamsCo
 		return EventInputType.KEYBOARD;
 	}
 	protected acceptedEventTypes() {
-		return new Set(ACCEPTED_KEYBOARD_EVENT_TYPES.map((n) => `${n}`));
+		return new Set([...ACCEPTED_KEYBOARD_EVENT_TYPES]);
 	}
 	override initializeNode() {
 		this.io.outputs.setNamedOutputConnectionPoints(

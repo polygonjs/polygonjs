@@ -53,7 +53,7 @@ QUnit.test('fuse on simple mesh', async (assert) => {
 	transform1.p.t.set([0.96, 0, 0]);
 
 	fuse1.p.dist.set(0.3);
-	assert.deepEqual(await getIndex(fuse1), [1, 2, 0]);
+	assert.deepEqual(await getIndex(fuse1), [0, 1, 2]);
 	assert.deepEqual((await getPosition(fuse1)).length, 9);
 
 	fuse1.p.dist.set(2);

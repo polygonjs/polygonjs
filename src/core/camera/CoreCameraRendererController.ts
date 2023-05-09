@@ -18,7 +18,8 @@ import {AbstractRenderer} from '../../engine/viewers/Common';
 import type {PathTracingRendererRopNode} from '../../engine/nodes/rop/PathTracingRenderer';
 import type {WebGLRendererRopNode} from '../../engine/nodes/rop/WebGLRenderer';
 // @ts-ignore
-import type {PathTracingRenderer} from 'three-gpu-pathtracer';
+import type {PathTracingRenderer} from '../../core/thirdParty/three-gpu-pathtracer';
+import {PathTracingRendererContainer} from '../../engine/nodes/rop/utils/pathTracing/PathTracingRendererContainer';
 
 const UPDATE_STYLE = false;
 const SIZE_MULT = 1;
@@ -46,7 +47,7 @@ interface RendererConfigWebGL {
 	rendererNode?: WebGLRendererRopNode;
 }
 interface RendererConfigPathtracing {
-	renderer: PathTracingRenderer;
+	renderer: PathTracingRendererContainer;
 	rendererNode?: PathTracingRendererRopNode;
 }
 export type AvailableRenderConfig = RendererConfigWebGL | RendererConfigPathtracing;
@@ -98,7 +99,7 @@ export class CoreCameraRendererController {
 		}
 		// }
 		if (!renderer) {
-			renderer = this._defaultRendererByContext.get(gl);
+			renderer = this._defaultRendererByContext.get(gl) as A['renderer'] | undefined;
 			if (!renderer) {
 				renderer = CoreCameraRendererController.createDefaultRenderer(canvas, gl);
 				this._defaultRendererByContext.set(gl, renderer);

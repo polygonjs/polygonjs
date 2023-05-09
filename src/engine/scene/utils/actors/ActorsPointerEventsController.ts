@@ -1,59 +1,33 @@
-import {BaseUserInputActorNodeType} from '../../../nodes/actor/_BaseUserInput';
 import {PolyScene} from '../../PolyScene';
 import {ActorsManager} from '../ActorsManager';
+import {ActorEvaluatorGenerator} from '../../../nodes/js/code/assemblers/actor/ActorEvaluatorGenerator';
+import {EvaluatorPointerMethod} from '../../../nodes/js/code/assemblers/actor/ActorEvaluator';
+import {MapUtils} from '../../../../core/MapUtils';
 
-import type {OnObjectClickActorNode} from '../../../nodes/actor/OnObjectClick';
-import type {OnObjectHoverActorNode} from '../../../nodes/actor/OnObjectHover';
-import type {OnObjectPointerdownActorNode} from '../../../nodes/actor/OnObjectPointerdown';
-import type {OnObjectPointerupActorNode} from '../../../nodes/actor/OnObjectPointerup';
-import type {OnPointerdownActorNode} from '../../../nodes/actor/OnPointerdown';
-import type {OnPointerupActorNode} from '../../../nodes/actor/OnPointerup';
-import type {RayFromCursorActorNode} from '../../../nodes/actor/RayFromCursor';
-export type PointerEventActorNode =
-	| OnObjectClickActorNode
-	| OnObjectHoverActorNode
-	| OnObjectPointerdownActorNode
-	| OnObjectPointerupActorNode
-	| OnPointerdownActorNode
-	| OnPointerupActorNode
-	| RayFromCursorActorNode;
 export class ActorPointerEventsController {
-	private _scene: PolyScene;
-	private _triggeredNodes: Set<PointerEventActorNode> = new Set();
+	protected _scene: PolyScene;
+	private _triggeredEvaluatorGeneratorsByMethodName: Map<EvaluatorPointerMethod, Set<ActorEvaluatorGenerator>> =
+		new Map();
 	constructor(protected actorsManager: ActorsManager) {
 		this._scene = actorsManager.scene;
 	}
 
-	setTriggeredNodes(nodes: Set<PointerEventActorNode>) {
-		nodes.forEach((node) => {
-			this._triggeredNodes.add(node);
+	addTriggeredEvaluators(evaluatorGenerators: Set<ActorEvaluatorGenerator>, methodName: EvaluatorPointerMethod) {
+		evaluatorGenerators.forEach((evaluatorGenerator) => {
+			MapUtils.addToSetAtEntry(this._triggeredEvaluatorGeneratorsByMethodName, methodName, evaluatorGenerator);
 		});
 	}
-
 	runTriggers() {
-		this._triggeredNodes.forEach((triggeredNode) => {
-			const triggeredNodeParent = this._triggeredNodeParent(triggeredNode);
-			if (!triggeredNodeParent) {
-				return;
-			}
-
-			const nodeParentId = triggeredNodeParent.graphNodeId();
-			this._scene.threejsScene().traverse((object) => {
-				const nodeIds = this.actorsManager.objectActorNodeIds(object);
-				if (!nodeIds) {
-					return;
-				}
-				if (!nodeIds.includes(nodeParentId)) {
-					return;
-				}
-				triggeredNode.receiveTrigger({Object3D: object});
+		this._triggeredEvaluatorGeneratorsByMethodName.forEach((evaluatorGenerators, methodName) => {
+			evaluatorGenerators.forEach((evaluatorGenerator) => {
+				evaluatorGenerator.traverseEvaluator((evaluator) => {
+					if ((evaluator as any)[methodName]) {
+						(evaluator as any)[methodName]!();
+					}
+				});
 			});
 		});
 
-		this._triggeredNodes.clear();
-	}
-
-	private _triggeredNodeParent(node: BaseUserInputActorNodeType) {
-		return this.actorsManager.parentActorBuilderNode(node);
+		this._triggeredEvaluatorGeneratorsByMethodName.clear();
 	}
 }

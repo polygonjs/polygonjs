@@ -12,7 +12,7 @@ import {VariableConfig} from '../../configs/VariableConfig';
 import VERTEX from '../../../gl/raymarching/vert.glsl';
 import FRAGMENT from '../../../gl/raymarching/frag.glsl';
 import {RAYMARCHING_UNIFORMS} from '../../../gl/raymarching/uniforms';
-import {AssemblerControllerNode} from '../../Controller';
+import {AssemblerGlControllerNode} from '../../Controller';
 import {ShaderAssemblerRayMarchingApplyMaterial} from './RayMarchingApplyMaterial';
 
 const INSERT_BODY_AFTER_MAP: Map<ShaderName, string> = new Map([
@@ -28,7 +28,7 @@ const LINES_TO_REMOVE_MAP: Map<ShaderName, string[]> = new Map([[ShaderName.FRAG
 const SDF_CONTEXT_INPUT_NAME = GlConnectionPointType.SDF_CONTEXT;
 
 export class BaseShaderAssemblerRayMarchingRendered extends BaseShaderAssemblerRayMarchingAbstract {
-	constructor(protected override _gl_parent_node: AssemblerControllerNode) {
+	constructor(protected override _gl_parent_node: AssemblerGlControllerNode) {
 		super(_gl_parent_node);
 
 		this._addFilterFragmentShaderCallback('applyMaterialAssembler', (fragmentShader) =>
@@ -135,7 +135,7 @@ export class BaseShaderAssemblerRayMarchingRendered extends BaseShaderAssemblerR
 	private _applyMaterialAssembler: ShaderAssemblerRayMarchingApplyMaterial =
 		new ShaderAssemblerRayMarchingApplyMaterial(this._gl_parent_node);
 	private _applyMaterialMaterial = new ShaderMaterial();
-	override setGlParentNode(gl_parent_node: AssemblerControllerNode) {
+	override setGlParentNode(gl_parent_node: AssemblerGlControllerNode) {
 		super.setGlParentNode(gl_parent_node);
 		this._applyMaterialAssembler.setGlParentNode(gl_parent_node);
 	}

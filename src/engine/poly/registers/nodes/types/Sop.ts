@@ -1,4 +1,5 @@
 export enum SopType {
+	ACTOR = 'actor',
 	ADD = 'add',
 	ATTRIB_ADD_MULT = 'attribAddMult',
 	ATTRIB_COPY = 'attribCopy',
@@ -21,6 +22,7 @@ export enum SopType {
 	CAD_CURVE_TRIM = 'CADCurveTrim',
 	CAD_ELLIPSE = 'CADEllipse',
 	CAD_ELLIPSE_2D = 'CADEllipse2D',
+	CAD_EXPORTER_STEP = 'CADExporterSTEP',
 	CAD_EXTRUDE = 'CADExtrude',
 	CAD_FILE_STEP = 'CADFileSTEP',
 	CAD_FILLET = 'CADFillet',
@@ -47,6 +49,7 @@ export enum SopType {
 	CAPSULE = 'capsule',
 	CIRCLE = 'circle',
 	CIRCLE_3_POINTS = 'circle3Points',
+	CLOTH_SOLVER = 'clothSolver',
 	CONE = 'cone',
 	COPY = 'copy',
 	CURVE_FROM_POINTS = 'curveFromPoints',
@@ -86,21 +89,39 @@ export enum SopType {
 	DATA = 'data',
 	DATA_URL = 'dataUrl',
 	ICOSAHEDRON = 'icosahedron',
+	//
+	IFC_FILTER_CATEGORIES = 'IFCFilterCategories',
+	//
 	INSTANCE = 'instance',
+	// JS_SDF = 'JSSDF',
 	MAPBOX_TRANSFORM = 'mapboxTransform',
 	MATERIAL = 'material',
 	NOISE = 'noise',
+	OBJECT_BUILDER = 'objectBuilder',
 	PARTICLES_SYSTEM_GPU = 'particlesSystemGpu',
 	PHYSICS_GROUND = 'physicsGround',
 	PHYSICS_RBD_ATTRIBUTES = 'physicsRBDAttributes',
 	PHYSICS_WORLD = 'physicsWorld',
 	PHYSICS_PLAYER = 'physicsPlayer',
 	PLANE = 'plane',
+	POINT_BUILDER = 'pointBuilder',
 	POLAR_TRANSFORM = 'polarTransform',
 	POLYWIRE = 'polywire',
 	RAY = 'ray',
 	RING = 'ring',
 	ROUNDED_BOX = 'roundedBox',
+	// SDF
+	// SDF_BOOLEAN = 'SDFBoolean',
+	// SDF_BOX = 'SDFBox',
+	SDF_BUILDER = 'SDFBuilder',
+	// SDF_EXTRUDE = 'SDFExtrude',
+	// SDF_REFINE = 'SDFRefine',
+	// SDF_LEVEL_SET = 'SDFLevelSet',
+	// SDF_SMOOTH = 'SDFSmooth',
+	// SDF_SPHERE = 'SDFSphere',
+	// SDF_TRIANGULATE = 'SDFTriangulate',
+	// SDF_TUBE = 'SDFTube',
+	//
 	SHEAR = 'shear',
 	SPHERE = 'sphere',
 	SUBDIVIDE = 'subdivide',
@@ -122,6 +143,7 @@ export enum SopTypeFile {
 	FILE_FBX = 'fileFBX',
 	FILE_GEOJSON = 'fileGEOJSON',
 	FILE_GLTF = 'fileGLTF',
+	FILE_IFC = 'fileIFC',
 	FILE_JSON = 'fileJSON',
 	FILE_MPD = 'fileMPD',
 	FILE_OBJ = 'fileOBJ',
@@ -129,6 +151,7 @@ export enum SopTypeFile {
 	FILE_PLY = 'filePLY',
 	FILE_STL = 'fileSTL',
 	FILE_SVG = 'fileSVG',
+	FILE_USDZ = 'fileUSDZ',
 }
 
 export enum SopTypeFileMulti {
@@ -142,4 +165,12 @@ export enum SopTypeFileMulti {
 	FILE_PLY = 'fileMultiPLY',
 	FILE_STL = 'fileMultiSTL',
 	FILE_SVG = 'fileMultiSVG',
+}
+
+export enum SopExporter {
+	EXPORTER_GLTF = 'exporterGLTF',
+	EXPORTER_OBJ = 'exporterOBJ',
+	EXPORTER_PLY = 'exporterPLY',
+	EXPORTER_STL = 'exporterSTL',
+	EXPORTER_USDZ = 'exporterUSDZ',
 }

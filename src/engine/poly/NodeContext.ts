@@ -26,7 +26,6 @@ import {TypedNode} from '../nodes/_Base';
 // import { JsNodeChildrenMap } from './registers/nodes/Js';
 
 export enum NodeContext {
-	ACTOR = 'actor',
 	ANIM = 'anim',
 	AUDIO = 'audio',
 	// CAD = 'cad',
@@ -44,7 +43,6 @@ export enum NodeContext {
 }
 
 export type NodeContextUnion =
-	| NodeContext.ACTOR
 	| NodeContext.ANIM
 	| NodeContext.AUDIO
 	// | NodeContext.CAD

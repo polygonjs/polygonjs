@@ -24,6 +24,7 @@ interface SceneJSONImporterOptions {
 }
 
 interface MigrateHelper {
+	migrateData: (data: SceneJsonExporterData) => SceneJsonExporterData;
 	migrateNodeType: (parentNode: BaseNodeType, nodeData: NodeJsonExporterData) => string;
 	migrateParams: (parentNode: BaseNodeType, nodeData: NodeJsonExporterData) => void;
 }
@@ -52,6 +53,10 @@ export class SceneJsonImporter {
 	}
 
 	scene(): PolyScene {
+		if (this._migrateHelper) {
+			this._data = this._migrateHelper.migrateData(this._data);
+		}
+
 		if (CoreFeaturesController.debugLoadProgress()) {
 			console.log(`polygonjs version:${this.oldPolygonjsSceneVersion()}`);
 		}
@@ -151,6 +156,9 @@ export class SceneJsonImporter {
 	}
 	shadersData() {
 		return this._data['shaders'];
+	}
+	jsFunctionBodiesData() {
+		return this._data['jsFunctionBodies'];
 	}
 
 	//

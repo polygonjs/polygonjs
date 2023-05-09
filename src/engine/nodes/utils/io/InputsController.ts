@@ -176,14 +176,17 @@ export class NodeInputsController<NC extends NodeContext> {
 		}
 	}
 	private _createGraphNodeInput(index: number): CoreGraphNode {
-		const graph_input_node = new CoreGraphNode(this.node.scene(), `input_${index}`);
-		// graph_input_node.setScene(this.node.scene);
-		if (!this._graphNode) {
-			this._graphNode = new CoreGraphNode(this.node.scene(), 'inputs');
-			this.node.addGraphInput(this._graphNode, false);
-		}
-		this._graphNode.addGraphInput(graph_input_node, false);
-		return graph_input_node;
+		const graphInputNode = new CoreGraphNode(this.node.scene(), `input_${index}`);
+		this.graphNode().addGraphInput(graphInputNode, false);
+		return graphInputNode;
+	}
+	graphNode() {
+		return (this._graphNode = this._graphNode || this._createGraphNode());
+	}
+	private _createGraphNode() {
+		const graphNode = new CoreGraphNode(this.node.scene(), 'inputs');
+		this.node.addGraphInput(graphNode, false);
+		return graphNode;
 	}
 
 	maxInputsCount(): number {

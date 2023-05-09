@@ -7,7 +7,11 @@ var common_1 = require("./common");
 var TS_IGNORE = '// @ts-ignore';
 function copyMissingDtsFiles() {
     fs.copyFileSync(path.join(common_1.polygonjsRoot, 'src/engine/nodes/sop/utils/ParticlesSystemGPU/GPUComputationRenderer.d.ts'), path.join(common_1.polygonjsDist, 'src/engine/nodes/sop/utils/ParticlesSystemGPU/GPUComputationRenderer.d.ts'));
-    fs.copyFileSync(path.join(common_1.polygonjsRoot, 'src/engine/operations/sop/utils/Bvh/three-mesh-bvh.d.ts'), path.join(common_1.polygonjsDist, 'src/engine/operations/sop/utils/Bvh/three-mesh-bvh.d.ts'));
+    fs.copyFileSync(path.join(common_1.polygonjsRoot, 'src/core/particles/gpuCompute/GPUComputationRenderer.d.ts'), path.join(common_1.polygonjsDist, 'src/core/particles/gpuCompute/GPUComputationRenderer.d.ts'));
+    // fs.copyFileSync(
+    // 	path.join(polygonjsRoot, 'src/core/geometry/cad/build/polygonjs-occt.d.ts'),
+    // 	path.join(polygonjsDist, 'src/core/geometry/cad/build/polygonjs-occt.d.ts')
+    // );
     fs.copyFileSync(path.join(common_1.polygonjsRoot, 'src/modules/core/controls/OrbitControls.d.ts'), path.join(common_1.polygonjsDist, 'src/modules/core/controls/OrbitControls.d.ts'));
 }
 function setTsIgnoreToParamAccessorFiles() {
@@ -82,6 +86,46 @@ function fixGsap() {
     replaceGsapTypesByAny();
     addTsIgnoreToGsapImport();
 }
+function fixOpencascade() {
+    // in file dist/src/core/geometry/cad/CadCommon.d.ts
+    // add @ts-ignore to lines containing 'from './build/polygonjs-occt';'
+    var filePath = path.join(common_1.polygonjsDist, 'src/core/geometry/cad/CadCommon.d.ts');
+    var content = fs.readFileSync(filePath, 'utf-8');
+    var lines = content.split('\n');
+    var newLines = [];
+    for (var _i = 0, lines_4 = lines; _i < lines_4.length; _i++) {
+        var line = lines_4[_i];
+        if (line.includes("from './build/polygonjs-occt';")) {
+            newLines.push("// @ts-ignore");
+            newLines.push(line);
+        }
+        else {
+            newLines.push(line);
+        }
+    }
+    fs.writeFileSync(filePath, newLines.join('\n'));
+}
+function fixManifold() {
+    // in file dist/src/core/geometry/sdf/SDFCommon.d.ts
+    // add @ts-ignore to lines containing 'from './manifold/manifold';'
+    var filePath = path.join(common_1.polygonjsDist, 'src/core/geometry/sdf/SDFCommon.d.ts');
+    var content = fs.readFileSync(filePath, 'utf-8');
+    var lines = content.split('\n');
+    var newLines = [];
+    for (var _i = 0, lines_5 = lines; _i < lines_5.length; _i++) {
+        var line = lines_5[_i];
+        if (line.includes("from './manifold/manifold'")) {
+            newLines.push("// @ts-ignore");
+            newLines.push(line);
+        }
+        else {
+            newLines.push(line);
+        }
+    }
+    fs.writeFileSync(filePath, newLines.join('\n'));
+}
 copyMissingDtsFiles();
 setTsIgnoreToParamAccessorFiles();
 fixGsap();
+fixOpencascade();
+fixManifold();

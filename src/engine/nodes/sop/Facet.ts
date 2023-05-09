@@ -7,7 +7,7 @@ import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {toCreasedNormals} from '../../../modules/three/examples/jsm/utils/BufferGeometryUtils';
+import {toCreasedNormals} from 'three/examples/jsm/utils/BufferGeometryUtils';
 import {MathUtils} from 'three';
 const {degToRad} = MathUtils;
 

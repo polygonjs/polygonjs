@@ -21,7 +21,15 @@ class ClipSopParamsConfig extends NodeParamsConfig {
 		rangeLocked: [false, false],
 	});
 	/** @param direction */
-	direction = ParamConfig.VECTOR3(DEFAULT.direction);
+	direction = ParamConfig.VECTOR3(DEFAULT.direction, {
+		separatorAfter: true,
+	});
+	/** @param intersectionEdges */
+	intersectionEdges = ParamConfig.BOOLEAN(DEFAULT.intersectionEdges);
+	/** @param keepBelowPlane */
+	keepBelowPlane = ParamConfig.BOOLEAN(DEFAULT.keepBelowPlane);
+	/** @param keepAbovePlane */
+	keepAbovePlane = ParamConfig.BOOLEAN(DEFAULT.keepAbovePlane);
 }
 const ParamsConfig = new ClipSopParamsConfig();
 
@@ -37,9 +45,9 @@ export class ClipSopNode extends TypedSopNode<ClipSopParamsConfig> {
 	}
 
 	private _operation: ClipSopOperation | undefined;
-	override cook(input_contents: CoreGroup[]) {
+	override cook(inputCoreGroups: CoreGroup[]) {
 		this._operation = this._operation || new ClipSopOperation(this._scene, this.states);
-		const core_group = this._operation.cook(input_contents, this.pv);
-		this.setCoreGroup(core_group);
+		const coreGroup = this._operation.cook(inputCoreGroups, this.pv);
+		this.setCoreGroup(coreGroup);
 	}
 }

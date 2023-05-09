@@ -3,7 +3,7 @@
 //  *
 //  *
 //  */
-// import {Pass, FullScreenQuad} from '../../../modules/three/examples/jsm/postprocessing/Pass';
+// import {Pass, FullScreenQuad} from 'three/examples/jsm/postprocessing/Pass';
 // // import {EffectComposer} from '../../../modules/core/post_process/EffectComposer';
 // import type {EffectComposer} from 'postprocessing';
 // import {WebGLRenderer} from 'three';

@@ -12,24 +12,12 @@ import {
 	JsParamTypeToConnectionPointTypeMap,
 } from './Js';
 import {BaseEventConnectionPoint, EventConnectionPoint, EventConnectionPointType} from './Event';
-import {
-	ActorConnectionPoint,
-	ActorConnectionPointType,
-	ActorParamTypeToConnectionPointTypeMap,
-	BaseActorConnectionPoint,
-} from './Actor';
 
 type ConnectionPointTypeMapGeneric = {
-	[key in NodeContext]:
-		| BaseActorConnectionPoint
-		| BaseEventConnectionPoint
-		| BaseGlConnectionPoint
-		| BaseJsConnectionPoint
-		| undefined;
+	[key in NodeContext]: BaseEventConnectionPoint | BaseGlConnectionPoint | BaseJsConnectionPoint | undefined;
 };
 
 export interface ConnectionPointTypeMap extends ConnectionPointTypeMapGeneric {
-	[NodeContext.ACTOR]: BaseActorConnectionPoint;
 	[NodeContext.ANIM]: undefined;
 	[NodeContext.AUDIO]: undefined;
 	// [NodeContext.CAD]: undefined;
@@ -46,16 +34,10 @@ export interface ConnectionPointTypeMap extends ConnectionPointTypeMapGeneric {
 	[NodeContext.SOP]: undefined;
 }
 type ConnectionPointEnumMapGeneric = {
-	[key in NodeContext]:
-		| ActorConnectionPointType
-		| EventConnectionPointType
-		| GlConnectionPointType
-		| JsConnectionPointType
-		| undefined;
+	[key in NodeContext]: EventConnectionPointType | GlConnectionPointType | JsConnectionPointType | undefined;
 };
 
 export interface ConnectionPointEnumMap extends ConnectionPointEnumMapGeneric {
-	[NodeContext.ACTOR]: ActorConnectionPointType;
 	[NodeContext.ANIM]: undefined;
 	[NodeContext.AUDIO]: undefined;
 	// [NodeContext.CAD]: undefined;
@@ -75,7 +57,6 @@ export interface ConnectionPointEnumMap extends ConnectionPointEnumMapGeneric {
 type IConnectionPointEnumMap = {[key in NodeContextUnion]: ConnectionPointEnumMap[key]};
 
 export const DEFAULT_CONNECTION_POINT_ENUM_MAP: IConnectionPointEnumMap = {
-	[NodeContext.ACTOR]: ActorConnectionPointType.TRIGGER,
 	[NodeContext.ANIM]: undefined,
 	[NodeContext.AUDIO]: undefined,
 	// [NodeContext.CAD]: undefined,
@@ -98,9 +79,6 @@ export function create_connection_point<NC extends NodeContext>(
 	type: ConnectionPointEnumMap[NC]
 ) {
 	switch (context) {
-		case NodeContext.ACTOR: {
-			return new ActorConnectionPoint(name, type as ActorConnectionPointType);
-		}
 		case NodeContext.EVENT: {
 			return new EventConnectionPoint(name, type as EventConnectionPointType);
 		}
@@ -118,9 +96,6 @@ export function create_connection_point<NC extends NodeContext>(
 
 export function param_type_to_connection_point_type_map<NC extends NodeContext>(context: NC) {
 	switch (context) {
-		case NodeContext.ACTOR: {
-			return ActorParamTypeToConnectionPointTypeMap;
-		}
 		case NodeContext.EVENT: {
 			return undefined;
 		}

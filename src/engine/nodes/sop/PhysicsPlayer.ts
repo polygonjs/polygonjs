@@ -4,15 +4,9 @@
  *
  */
 
-import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {NodeContext} from '../../poly/NodeContext';
 import {InputCloneMode} from '../../poly/InputCloneMode';
-import {ActorNodeChildrenMap} from '../../poly/registers/nodes/Actor';
-import {NodeCreateOptions} from '../utils/hierarchy/ChildrenController';
-import {Constructor, valueof} from '../../../types/GlobalTypes';
-import {BaseActorNodeType} from '../actor/_Base';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 import {CorePhysicsAttribute, PhysicsRBDColliderType, PhysicsRBDType} from '../../../core/physics/PhysicsAttribute';
 import {PhysicsPlayerType} from '../../../core/physics/player/PhysicsPlayer';
@@ -22,6 +16,7 @@ import {CorePath} from '../../../core/geometry/CorePath';
 // import {CoreObject} from '../../../core/geometry/Object';
 import {BaseSopOperation} from '../../operations/sop/_Base';
 import {Vector3, Object3D} from 'three';
+import {TypedActorSopNode} from './_BaseActor';
 // import {CameraAttribute} from '../../../core/camera/CoreCamera';
 
 // Note that the default used for torque player
@@ -135,7 +130,7 @@ class PhysicsPlayerSopParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new PhysicsPlayerSopParamsConfig();
 
-export class PhysicsPlayerSopNode extends TypedSopNode<PhysicsPlayerSopParamsConfig> {
+export class PhysicsPlayerSopNode extends TypedActorSopNode<PhysicsPlayerSopParamsConfig> {
 	override readonly paramsConfig = ParamsConfig;
 	static override type(): SopType.PHYSICS_PLAYER {
 		return SopType.PHYSICS_PLAYER;
@@ -151,11 +146,11 @@ export class PhysicsPlayerSopNode extends TypedSopNode<PhysicsPlayerSopParamsCon
 	}
 
 	override cook(inputCoreGroups: CoreGroup[]) {
+		this.compilationController.compileIfRequired();
 		const coreGroup0 = inputCoreGroups[0];
 		const coreGroup1 = inputCoreGroups[1];
 		const inputObjects = coreGroup0 ? coreGroup0.threejsObjects() : this._createDefaultInputObjects();
 		const playerObject = inputObjects[0];
-		// console.log(inputObjects);
 		this._updatePlayerObject(playerObject);
 		const objects = [playerObject];
 
@@ -241,33 +236,5 @@ export class PhysicsPlayerSopNode extends TypedSopNode<PhysicsPlayerSopParamsCon
 		// } else {
 		// 	return this.pv.node.node() as ActorBuilderNode | undefined;
 		// }
-	}
-
-	//
-	// CHILDREN
-	//
-	protected override _childrenControllerContext = NodeContext.ACTOR;
-	override createNode<S extends keyof ActorNodeChildrenMap>(
-		node_class: S,
-		options?: NodeCreateOptions
-	): ActorNodeChildrenMap[S];
-	override createNode<K extends valueof<ActorNodeChildrenMap>>(
-		node_class: Constructor<K>,
-		options?: NodeCreateOptions
-	): K;
-	override createNode<K extends valueof<ActorNodeChildrenMap>>(
-		node_class: Constructor<K>,
-		options?: NodeCreateOptions
-	): K {
-		return super.createNode(node_class, options) as K;
-	}
-	override children() {
-		return super.children() as BaseActorNodeType[];
-	}
-	override nodesByType<K extends keyof ActorNodeChildrenMap>(type: K): ActorNodeChildrenMap[K][] {
-		return super.nodesByType(type) as ActorNodeChildrenMap[K][];
-	}
-	override childrenAllowed() {
-		return true;
 	}
 }

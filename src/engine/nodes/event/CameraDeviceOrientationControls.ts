@@ -7,7 +7,7 @@
 //  */
 // import {Camera} from 'three';
 // import {TypedCameraControlsEventNode, CameraControls} from './_BaseCameraControls';
-// import {DeviceOrientationControls} from '../../../modules/three/examples/jsm/controls/DeviceOrientationControls';
+// import {DeviceOrientationControls} from 'three/examples/jsm/controls/DeviceOrientationControls';
 // import {CameraControlsNodeType} from '../../poly/NodeContext';
 
 // import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';

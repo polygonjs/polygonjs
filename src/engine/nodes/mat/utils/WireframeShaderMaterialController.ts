@@ -23,8 +23,8 @@ export function WireframeShaderMaterialParamsConfig<TBase extends Constructor>(B
 	};
 }
 
-class WireframeParamsConfig extends WireframeShaderMaterialParamsConfig(NodeParamsConfig) {}
-class WireframedMatNode extends TypedMatNode<Material, WireframeParamsConfig> {
+class WireframeShaderParamsConfig extends WireframeShaderMaterialParamsConfig(NodeParamsConfig) {}
+class WireframedShaderMatNode extends TypedMatNode<Material, WireframeShaderParamsConfig> {
 	async material() {
 		const container = await this.compute();
 		return container.material() as Material | undefined;
@@ -33,10 +33,10 @@ class WireframedMatNode extends TypedMatNode<Material, WireframeParamsConfig> {
 }
 
 export class WireframeShaderMaterialController extends BaseController {
-	constructor(protected override node: WireframedMatNode) {
+	constructor(protected override node: WireframedShaderMatNode) {
 		super(node);
 	}
-	static async update(node: WireframedMatNode) {
+	static async update(node: WireframedShaderMatNode) {
 		const material = await node.material();
 		if (!material) {
 			return;

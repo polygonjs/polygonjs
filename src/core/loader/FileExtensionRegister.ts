@@ -1,7 +1,7 @@
 import {CameraSopNodeType, NodeContext} from '../../engine/poly/NodeContext';
 import {AudioType} from '../../engine/poly/registers/nodes/types/Audio';
 import {CopType, CopTypeImage} from '../../engine/poly/registers/nodes/types/Cop';
-import {SopType, SopTypeFile, SopTypeFileMulti} from '../../engine/poly/registers/nodes/types/Sop';
+import {SopType, SopTypeFile, SopExporter, SopTypeFileMulti} from '../../engine/poly/registers/nodes/types/Sop';
 import {
 	GeometryExtension,
 	AUDIO_EXTENSIONS,
@@ -11,7 +11,6 @@ import {
 	FontExtension,
 } from '../FileTypeController';
 export const EXTENSIONS_BY_NODE_TYPE_BY_CONTEXT: Record<NodeContext, Record<string, string[]>> = {
-	[NodeContext.ACTOR]: {},
 	[NodeContext.ANIM]: {},
 	[NodeContext.AUDIO]: {
 		[AudioType.FILE]: [...AUDIO_EXTENSIONS],
@@ -45,9 +44,15 @@ export const EXTENSIONS_BY_NODE_TYPE_BY_CONTEXT: Record<NodeContext, Record<stri
 			ImageExtension.WEBP,
 			...VIDEO_EXTENSIONS,
 		],
+		[SopType.CAD_EXPORTER_STEP]: [GeometryExtension.STEP],
 		[SopType.CAD_FILE_STEP]: [GeometryExtension.STEP],
 		[SopType.DATA_URL]: [GeometryExtension.JSON],
+		[SopExporter.EXPORTER_GLTF]: [GeometryExtension.GLB],
+		[SopExporter.EXPORTER_OBJ]: [GeometryExtension.OBJ],
+		[SopExporter.EXPORTER_PLY]: [GeometryExtension.PLY],
+		[SopExporter.EXPORTER_STL]: [GeometryExtension.STL],
 		[SopTypeFile.FILE_GLTF]: [GeometryExtension.GLB, GeometryExtension.GLTF],
+		[SopTypeFile.FILE_IFC]: [GeometryExtension.IFC],
 		[SopTypeFile.FILE_DRC]: [GeometryExtension.DRC],
 		[SopTypeFile.FILE_FBX]: [GeometryExtension.FBX],
 		[SopTypeFile.FILE_GEOJSON]: [GeometryExtension.GEOJSON],
@@ -60,6 +65,7 @@ export const EXTENSIONS_BY_NODE_TYPE_BY_CONTEXT: Record<NodeContext, Record<stri
 		[SopTypeFile.FILE_PLY]: [GeometryExtension.PLY],
 		[SopTypeFile.FILE_STL]: [GeometryExtension.STL],
 		[SopTypeFile.FILE_SVG]: [GeometryExtension.SVG],
+		[SopTypeFile.FILE_USDZ]: [GeometryExtension.USDZ],
 		[SopType.TEXT]: [FontExtension.TTF, FontExtension.JSON],
 	},
 };

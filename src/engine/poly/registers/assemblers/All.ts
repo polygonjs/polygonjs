@@ -1,5 +1,7 @@
 import {AssemblerName, ControllerAssemblerPair} from './_BaseRegister';
 import {GlAssemblerController} from '../../../nodes/gl/code/Controller';
+import {JsAssemblerController} from '../../../nodes/js/code/Controller';
+
 import {ShaderAssemblerBasic} from '../../../nodes/gl/code/assemblers/materials/Basic';
 import {ShaderAssemblerLambert} from '../../../nodes/gl/code/assemblers/materials/Lambert';
 import {ShaderAssemblerPhong} from '../../../nodes/gl/code/assemblers/materials/Phong';
@@ -15,7 +17,11 @@ import {ShaderAssemblerTexture2DArray} from '../../../nodes/gl/code/assemblers/t
 import {ShaderAssemblerVolume} from '../../../nodes/gl/code/assemblers/materials/Volume';
 import {ShaderAssemblerCustomMeshDepthForRender} from '../../../nodes/gl/code/assemblers/materials/custom/mesh/CustomMeshDepth';
 import {ShaderAssemblerCustomMeshDistanceForRender} from '../../../nodes/gl/code/assemblers/materials/custom/mesh/CustomMeshDistance';
-
+//
+import {JsAssemblerActor} from '../../../nodes/js/code/assemblers/actor/ActorAssembler';
+import {JsAssemblerObjectBuilder} from '../../../nodes/js/code/assemblers/objectBuilder/ObjectBuilderAssembler';
+import {JsAssemblerPointBuilder} from '../../../nodes/js/code/assemblers/pointBuilder/PointBuilderAssembler';
+import {JsAssemblerSDF} from '../../../nodes/js/code/assemblers/sdf/SDF';
 export interface AssemblersMap extends PolyDictionary<ControllerAssemblerPair> {
 	[AssemblerName.GL_MESH_BASIC]: {
 		controller: GlAssemblerController<ShaderAssemblerBasic>;
@@ -77,10 +83,28 @@ export interface AssemblersMap extends PolyDictionary<ControllerAssemblerPair> {
 		controller: GlAssemblerController<ShaderAssemblerVolume>;
 		assembler: typeof ShaderAssemblerVolume;
 	};
+	//
+	[AssemblerName.JS_ACTOR]: {
+		controller: JsAssemblerController<JsAssemblerActor>;
+		assembler: typeof JsAssemblerActor;
+	};
+	[AssemblerName.JS_OBJECT_BUILDER]: {
+		controller: JsAssemblerController<JsAssemblerObjectBuilder>;
+		assembler: typeof JsAssemblerObjectBuilder;
+	};
+	[AssemblerName.JS_POINT_BUILDER]: {
+		controller: JsAssemblerController<JsAssemblerPointBuilder>;
+		assembler: typeof JsAssemblerPointBuilder;
+	};
+	[AssemblerName.JS_SDF]: {
+		controller: JsAssemblerController<JsAssemblerSDF>;
+		assembler: typeof JsAssemblerSDF;
+	};
 }
 
 import {PolyEngine} from '../../../Poly';
 import {PolyDictionary} from '../../../../types/GlobalTypes';
+
 export class AllAssemblersRegister {
 	static run(poly: PolyEngine) {
 		poly.assemblersRegister.register(AssemblerName.GL_MESH_BASIC, GlAssemblerController, ShaderAssemblerBasic);
@@ -122,5 +146,18 @@ export class AllAssemblersRegister {
 			ShaderAssemblerTexture2DArray
 		);
 		poly.assemblersRegister.register(AssemblerName.GL_VOLUME, GlAssemblerController, ShaderAssemblerVolume);
+		//
+		poly.assemblersRegister.register(AssemblerName.JS_ACTOR, JsAssemblerController, JsAssemblerActor);
+		poly.assemblersRegister.register(
+			AssemblerName.JS_OBJECT_BUILDER,
+			JsAssemblerController,
+			JsAssemblerObjectBuilder
+		);
+		poly.assemblersRegister.register(
+			AssemblerName.JS_POINT_BUILDER,
+			JsAssemblerController,
+			JsAssemblerPointBuilder
+		);
+		poly.assemblersRegister.register(AssemblerName.JS_SDF, JsAssemblerController, JsAssemblerSDF);
 	}
 }

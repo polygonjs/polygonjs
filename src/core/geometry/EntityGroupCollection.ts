@@ -1,3 +1,7 @@
+import {
+	CoreEntitySelectionState,
+	selectedIndicesFromSelectionStates,
+} from '../../engine/nodes/sop/utils/group/GroupCommon';
 import {TypeAssert} from '../../engine/poly/Assert';
 import {SetUtils} from '../SetUtils';
 // import {CoreEntity} from './Entity';
@@ -16,23 +20,24 @@ export const GROUP_OPERATIONS: GroupOperation[] = [
 	GroupOperation.INTERSECT,
 ];
 
-interface GroupData {
+export interface GroupData {
 	name: string;
 	entitiesCount: number;
 }
 type GroupsDataForType = GroupData[];
-type AllGroupsData = Record<string, GroupsDataForType>;
+export type GroupCollectionData = Record<string, GroupsDataForType>;
 
 export enum EntityGroupType {
-	POINT = 'points',
-	OBJECT = 'objects',
-	EDGE = 'edges',
-	FACE = 'faces',
+	POINT = 'point',
+	OBJECT = 'object',
+	EDGE = 'edge',
+	FACE = 'face',
 }
 export interface UpdateGroupOptions {
 	type: EntityGroupType;
 	groupName: string;
 	operation: GroupOperation;
+	invert: boolean;
 }
 
 const USER_DATA_KEY_GROUPS = 'groups';
@@ -83,10 +88,10 @@ export class EntityGroupCollection {
 			}
 		}
 	}
-	data(): AllGroupsData {
-		const dict = this.attributesDictionary();
+	static data<T extends CoreObjectType>(object: ObjectContent<T>): GroupCollectionData {
+		const dict = this.attributesDictionary(object);
 		const types = Object.keys(dict);
-		const data: AllGroupsData = {};
+		const data: GroupCollectionData = {};
 		for (let type of types) {
 			const dataForType: GroupsDataForType = [];
 			data[type] = dataForType;
@@ -119,11 +124,11 @@ export class EntityGroupCollection {
 	// 	const set = SetUtils.fromArray(indices);
 	// 	return entities.filter((e) => set.has(e.index()));
 	// }
-	updateGroup(options: UpdateGroupOptions, selectedIndices: Set<number>) {
-		const {type, groupName, operation} = options;
+	private selectedIndices: Set<number> = new Set();
+	updateGroup(options: UpdateGroupOptions, selectionStates: CoreEntitySelectionState) {
+		const {type, groupName, operation, invert} = options;
 		const currentIndices = this.findOrCreateGroup(type, groupName);
-
-		const updateGroup = (newIndicesSet: Set<number>) => {
+		const _updateGroup = (newIndicesSet: Set<number>) => {
 			const dict = this.attributesDictionary();
 			let groupsByName = dict[type];
 			if (!groupsByName) {
@@ -132,28 +137,29 @@ export class EntityGroupCollection {
 			}
 			groupsByName[groupName] = SetUtils.toArray(newIndicesSet);
 		};
-
+		this.selectedIndices.clear();
+		selectedIndicesFromSelectionStates(selectionStates, this.selectedIndices, invert);
 		switch (operation) {
 			case GroupOperation.SET: {
-				updateGroup(selectedIndices);
+				_updateGroup(this.selectedIndices);
 				return;
 			}
 			case GroupOperation.UNION: {
 				const currentIndicesSet = SetUtils.fromArray(currentIndices);
-				const newIndicesSet = SetUtils.union(currentIndicesSet, selectedIndices);
-				updateGroup(newIndicesSet);
+				const newIndicesSet = SetUtils.union(currentIndicesSet, this.selectedIndices);
+				_updateGroup(newIndicesSet);
 				return;
 			}
 			case GroupOperation.SUBTRACT: {
 				const currentIndicesSet = SetUtils.fromArray(currentIndices);
-				const newIndicesSet = SetUtils.difference(currentIndicesSet, selectedIndices);
-				updateGroup(newIndicesSet);
+				const newIndicesSet = SetUtils.difference(currentIndicesSet, this.selectedIndices);
+				_updateGroup(newIndicesSet);
 				return;
 			}
 			case GroupOperation.INTERSECT: {
 				const currentIndicesSet = SetUtils.fromArray(currentIndices);
-				const newIndicesSet = SetUtils.intersection(currentIndicesSet, selectedIndices);
-				updateGroup(newIndicesSet);
+				const newIndicesSet = SetUtils.intersection(currentIndicesSet, this.selectedIndices);
+				_updateGroup(newIndicesSet);
 				return;
 			}
 		}

@@ -4,7 +4,7 @@ import {Mesh, BufferGeometry, Object3D} from 'three';
 import {DefaultOperationParams} from '../../../../../core/operations/_Base';
 import {Poly} from '../../../../Poly';
 import type {BaseGeoLoaderOutput} from '../../../../../core/loader/geometry/Common';
-import {BaseGeoLoaderHandler} from '../../../../../core/loader/geometry/_BaseLoaderHandler';
+import {BaseObject3DLoaderHandler} from '../../../../../core/loader/geometry/_BaseLoaderHandler';
 
 export interface BaseFileSopParams extends DefaultOperationParams {
 	url: string;
@@ -17,7 +17,7 @@ export abstract class BaseFileSopOperation<O extends BaseGeoLoaderOutput> extend
 		matrixAutoUpdate: false,
 	};
 
-	protected abstract _createGeoLoaderHandler(params: BaseFileSopParams): BaseGeoLoaderHandler<O>;
+	protected abstract _createGeoLoaderHandler(params: BaseFileSopParams): BaseObject3DLoaderHandler<O>;
 
 	override async cook(inputCoreGroups: CoreGroup[], params: BaseFileSopParams): Promise<CoreGroup> {
 		if (this._node) {
@@ -31,7 +31,7 @@ export abstract class BaseFileSopOperation<O extends BaseGeoLoaderOutput> extend
 		}
 		return this.createCoreGroupFromObjects([]);
 	}
-	protected async _load(loader: BaseGeoLoaderHandler<O>, params: BaseFileSopParams) {
+	protected async _load(loader: BaseObject3DLoaderHandler<O>, params: BaseFileSopParams) {
 		if (this._node) {
 			return await loader.load({
 				node: this._node,

@@ -1,16 +1,16 @@
 import {ApplicableControlsNode} from './../../core/camera/CoreCameraControlsController';
+import {createRaycaster} from './../../core/RaycastHelper';
 import {ViewerCamerasController} from './utils/ViewerCamerasController';
 import {ViewerControlsController} from './utils/ViewerControlsController';
 import {ViewerEventsController} from './utils/ViewerEventsController';
 import {ViewerWebGLController} from './utils/ViewerWebglController';
 import {ViewerAudioController} from './utils/ViewerAudioController';
-import {Camera, Object3D, Raycaster} from 'three';
+import {Camera, Object3D} from 'three';
 import {PolyScene} from '../scene/PolyScene';
 import {Poly, PolyEngine} from '../Poly';
 import {AbstractRenderer} from './Common';
 import {ViewerRaycastersController} from './utils/ViewerRaycastersController';
 import {ViewerPerformanceMonitor} from './utils/ViewerPerformanceMonitor';
-import {ThreeMeshBVHHelper} from '../../core/geometry/bvh/ThreeMeshBVHHelper';
 
 const HOVERED_CLASS_NAME = 'hovered';
 
@@ -82,14 +82,15 @@ export abstract class TypedViewer<C extends Camera> {
 		}
 		this.updateCameraAspect = options.updateCameraAspect;
 		this.scene().viewersRegister.registerViewer(this);
+
+		// init in constructor to ensure scene is present in viewer
+		this.raycastersController = new ViewerRaycastersController(this);
 	}
 	private static _nextId() {
 		return `${TypedViewer._nextViewerId++}`;
 	}
 	createRaycaster() {
-		const raycaster = new Raycaster();
-		ThreeMeshBVHHelper.updateRaycaster(raycaster);
-		return raycaster;
+		return createRaycaster();
 	}
 	abstract renderer(): AbstractRenderer | undefined;
 
@@ -207,7 +208,7 @@ export abstract class TypedViewer<C extends Camera> {
 	audioController(): ViewerAudioController {
 		return (this._audioController = this._audioController || new ViewerAudioController(this));
 	}
-	public readonly raycastersController: ViewerRaycastersController = new ViewerRaycastersController(this);
+	public readonly raycastersController: ViewerRaycastersController;
 	public readonly performanceMonitor: ViewerPerformanceMonitor = new ViewerPerformanceMonitor(this);
 
 	domElement() {

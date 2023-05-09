@@ -12,7 +12,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {ASSETS_ROOT} from '../../../core/loader/AssetsUtils';
 import {GLTFLoaderHandler} from '../../../core/loader/geometry/GLTF';
 import {FileGLTFSopOperation} from '../../operations/sop/FileGLTF';
-import {GLTF} from '../../../modules/three/examples/jsm/loaders/GLTFLoader';
+import {GLTF} from 'three/examples/jsm/loaders/GLTFLoader';
 import {EXTENSIONS_BY_NODE_TYPE_BY_CONTEXT} from '../../../core/loader/FileExtensionRegister';
 import {NodeContext} from '../../poly/NodeContext';
 const DEFAULT = FileGLTFSopOperation.DEFAULT_PARAMS;

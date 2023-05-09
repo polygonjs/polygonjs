@@ -1,8 +1,9 @@
 import {Matrix4, Box3, Sphere, Vector3} from 'three';
 import {CsgObject} from './CsgObject';
-import {CsgGeometryType, csgIsGeom2, csgIsGeom3} from './CsgCommon';
+import {CsgGeometryType} from './CsgCommon';
+import {csgIsGeom2, csgIsGeom3} from './CsgCoreType';
 import {BaseCoreObject} from '../_BaseObject';
-import {CoreObjectType, MergeCompactOptions} from '../ObjectContent';
+import {CoreObjectType, MergeCompactOptions, objectContentCopyProperties} from '../ObjectContent';
 import {TransformTargetType} from '../../Transform';
 import {ObjectTransformSpace} from '../../TransformSpace';
 import {TypeAssert} from '../../../engine/poly/Assert';
@@ -43,9 +44,13 @@ export class CsgCoreObject<T extends CsgGeometryType> extends BaseCoreObject<Cor
 		TypeAssert.unreachable(transformTargetType);
 	}
 	static override mergeCompact<T extends CsgGeometryType>(options: MergeCompactOptions) {
-		const {objects, materialsByObjectType, mergedObjects, onError} = options;
+		const {objects, material, mergedObjects, onError} = options;
 		try {
 			const csgObjects = objects as CsgObject<T>[];
+			const firstObject = csgObjects[0];
+			if (!firstObject) {
+				return;
+			}
 			const geometries = csgObjects.map((o) => o.csgGeometry());
 			const geom2s: geometries.geom2.Geom2[] = [];
 			const geom3s: geometries.geom3.Geom3[] = [];
@@ -65,7 +70,7 @@ export class CsgCoreObject<T extends CsgGeometryType> extends BaseCoreObject<Cor
 				typedGeometries.forEach(csgApplyTransform);
 				const mergedGeom = union(typedGeometries as Array<geometries.geom2.Geom2>);
 				const newObject = new CsgObject(mergedGeom);
-				const material = materialsByObjectType.get(newObject.type);
+				objectContentCopyProperties(firstObject, newObject);
 				if (material) {
 					newObject.material = material;
 				}

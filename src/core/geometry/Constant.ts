@@ -18,6 +18,7 @@ import {
 	Scene,
 	SpotLight,
 } from 'three';
+import {GroupCollectionData} from './EntityGroupCollection';
 
 // import {Poly} from '../../engine/Poly';
 
@@ -104,6 +105,7 @@ export interface ObjectData {
 	name: string | null;
 	childrenCount: number;
 	pointsCount: number;
+	groupData: GroupCollectionData;
 }
 
 // Zexport interface ObjectConstructorByObjectType {

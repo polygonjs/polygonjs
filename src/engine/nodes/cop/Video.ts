@@ -29,7 +29,7 @@ import {CopType} from '../../poly/registers/nodes/types/Cop';
 import {FileTypeCheckCopParamConfig} from './utils/CheckFileType';
 import {Poly} from '../../Poly';
 import {CoreVideoTextureLoader} from '../../../core/loader/texture/Video';
-import {VideoEvent, VIDEO_EVENTS} from '../../../core/Video';
+import {VideoEvent, VIDEO_EVENTS} from '../../../core/VideoEvent';
 import {EXTENSIONS_BY_NODE_TYPE_BY_CONTEXT} from '../../../core/loader/FileExtensionRegister';
 import {CoreDomUtils} from '../../../core/DomUtils';
 import {NodeContext} from '../../poly/NodeContext';

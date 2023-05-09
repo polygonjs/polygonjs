@@ -46,7 +46,6 @@ export class TorusSopOperation extends BaseSopOperation {
 		return 'torus';
 	}
 
-	private _core_transform = new CoreTransform();
 	override cook(input_contents: CoreGroup[], params: TorusSopParams) {
 		const arc = isBooleanTrue(params.open) ? params.arc : Math.PI * 2;
 		const cap: boolean = isBooleanTrue(params.open) ? params.cap : false;
@@ -155,7 +154,7 @@ export class TorusSopOperation extends BaseSopOperation {
 		geometry.setAttribute(Attribute.UV, new Float32BufferAttribute(uvs, 2));
 
 		geometry.translate(params.center.x, params.center.y, params.center.z);
-		this._core_transform.rotateGeometry(geometry, DEFAULT_UP, params.direction);
+		CoreTransform.rotateGeometry(geometry, DEFAULT_UP, params.direction);
 
 		return this.createCoreGroupFromGeometry(geometry);
 	}

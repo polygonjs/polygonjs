@@ -22,13 +22,13 @@ export class TypedJsDefinitionCollection<T extends JsDefinitionType> {
 				const name = definition.name();
 				const existing = definitions_by_name.get(name);
 				if (existing) {
-					if (existing.data_type != definition.data_type) {
+					if (existing.dataType() != definition.dataType()) {
 						this._errored = true;
-						this._error_message = `attempt to create '${definition.name()}' with types '${
-							definition.data_type
-						}' by node '${definition.node.path()}', when there is already an existing with type ${
-							existing.data_type
-						} from node '${existing.node.path()}'`;
+						this._error_message = `attempt to create '${definition.name()}' with types '${definition.dataType()}' by node '${definition
+							.node()
+							.path()}', when there is already an existing with type ${existing.dataType()} from node '${existing
+							.node()
+							.path()}'`;
 						console.warn('emitting error message:', this._error_message);
 					}
 				} else {

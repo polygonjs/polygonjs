@@ -4,12 +4,12 @@
  */
 import {TypedAnimNode} from './_Base';
 import {TimelineBuilder} from '../../../core/animation/TimelineBuilder';
-import gsap from 'gsap';
 import {BaseNodeType} from '../_Base';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {Poly} from '../../Poly';
+import {GsapCoreTimeline, gsapTimeline, gsap} from '../../../core/thirdParty/gsap';
 
 const DISPLAY_INPUT_NAMES = ['from', 'to'];
 
@@ -71,7 +71,7 @@ export class PlayAnimNode extends TypedAnimNode<PlayAnimParamsConfig> {
 	}
 
 	// private _timelineBuilder: TimelineBuilder | undefined;
-	private _timeline: gsap.core.Timeline | undefined;
+	private _timeline: GsapCoreTimeline | undefined;
 	async timelineBuilder(inputIndex: number) {
 		const inputNode = this.io.inputs.input(inputIndex);
 		if (!inputNode) {
@@ -103,7 +103,7 @@ export class PlayAnimNode extends TypedAnimNode<PlayAnimParamsConfig> {
 			if (!timelineBuilder) {
 				return;
 			}
-			this._timeline = gsap.timeline({onComplete: resolveOnce});
+			this._timeline = gsapTimeline({onComplete: resolveOnce});
 			timelineBuilder.populate(this._timeline, {registerproperties: true});
 		});
 	}
@@ -131,13 +131,13 @@ export class PlayAnimNode extends TypedAnimNode<PlayAnimParamsConfig> {
 			return;
 		}
 		// reset
-		const timeline0 = gsap.timeline({paused: true});
+		const timeline0 = gsapTimeline({paused: true});
 		timelineBuilder0.populate(timeline0, {registerproperties: false});
 		timeline0.seek(timeline0.duration());
 		timeline0.kill();
 
 		// seek
-		const timeline1 = gsap.timeline({paused: true});
+		const timeline1 = gsapTimeline({paused: true});
 		timelineBuilder1.populate(timeline1, {registerproperties: false});
 		timeline1.seek(this.pv.seek * timeline1.duration(), false);
 		timeline1.kill();

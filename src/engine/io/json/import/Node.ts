@@ -28,6 +28,10 @@ export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 	) {}
 
 	process_data(scene_importer: SceneJsonImporter, data: NodeJsonExporterData) {
+		if (this._node.sceneReadonly()) {
+			scene_importer.report.markAsLoadedWithoutAssemblers();
+		}
+
 		this.set_connection_points(data['connection_points']);
 
 		// rather than having the children creation dependent on the persisted config and player mode, use the childrenAllowed() method
@@ -53,6 +57,7 @@ export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 
 		if (data.persisted_config) {
 			const shadersData = scene_importer.shadersData();
+			const jsFunctionBodiesData = scene_importer.jsFunctionBodiesData();
 			if (shadersData) {
 				let shaders = shadersData[this._node.path()];
 				// make sure this is never undefined
@@ -60,6 +65,12 @@ export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 					shaders = {};
 				}
 				data.persisted_config.shaders = shaders;
+			}
+			if (jsFunctionBodiesData) {
+				const jsFunctionBodyData = jsFunctionBodiesData[this._node.path()];
+				if (jsFunctionBodyData) {
+					data.persisted_config.functionBody = jsFunctionBodyData;
+				}
 			}
 			this.set_persisted_config(data.persisted_config);
 		}
@@ -121,9 +132,6 @@ export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 	) {
 		if (!data) {
 			return;
-		}
-		if (this._node.sceneReadonly()) {
-			scene_importer.report.markAsLoadedWithoutAssemblers();
 		}
 
 		// const nodes_importer = new NodesJsonImporter(this._node);

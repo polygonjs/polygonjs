@@ -17,7 +17,7 @@ class PlaneSopParamsConfig extends NodeParamsConfig {
 	useSegmentsCount = ParamConfig.BOOLEAN(DEFAULT.useSegmentsCount);
 	/** @param step size */
 	stepSize = ParamConfig.FLOAT(DEFAULT.stepSize, {
-		range: [0.001, 1],
+		range: [0.001, 2],
 		rangeLocked: [false, false],
 		visibleIf: {useSegmentsCount: 0},
 	});

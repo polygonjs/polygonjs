@@ -32,6 +32,10 @@ export interface SetParamsFromMatrixOptions {
 }
 
 const eulerArray: Number3 = [0, 0, 0];
+const _m = new Matrix4();
+const _q = new Quaternion();
+const _rotateDirOrigin = new Vector3();
+const _rotateDirDest = new Vector3();
 export class CoreTransform {
 	private static set_params_from_matrix_position = new Vector3();
 	private static set_params_from_matrix_quaternion = new Quaternion();
@@ -111,25 +115,21 @@ export class CoreTransform {
 		return this._matrix;
 	}
 
-	private _m = new Matrix4();
-	private _q = new Quaternion();
-	private _rotateDirOrigin = new Vector3();
-	private _rotateDirDest = new Vector3();
-	rotateGeometry(geometry: BufferGeometry, dirOrigin: Vector3, dirDest: Vector3) {
-		this._rotateDirDest.copy(dirDest).normalize();
-		this._rotateDirOrigin.copy(dirOrigin).normalize();
-		this._q.setFromUnitVectors(this._rotateDirOrigin, this._rotateDirDest);
+	static rotateGeometry(geometry: BufferGeometry, dirOrigin: Vector3, dirDest: Vector3) {
+		_rotateDirDest.copy(dirDest).normalize();
+		_rotateDirOrigin.copy(dirOrigin).normalize();
+		_q.setFromUnitVectors(_rotateDirOrigin, _rotateDirDest);
 		// this._rotate_geometry_m.identity(); // not entirely sure this is necessary
-		this._m.makeRotationFromQuaternion(this._q);
-		geometry.applyMatrix4(this._m);
+		_m.makeRotationFromQuaternion(_q);
+		geometry.applyMatrix4(_m);
 	}
-	rotateObject(object: Object3D, dirOrigin: Vector3, dirDest: Vector3) {
-		this._rotateDirDest.copy(dirDest).normalize();
-		this._rotateDirOrigin.copy(dirOrigin).normalize();
-		this._q.setFromUnitVectors(this._rotateDirOrigin, this._rotateDirDest);
+	static rotateObject(object: Object3D, dirOrigin: Vector3, dirDest: Vector3) {
+		_rotateDirDest.copy(dirDest).normalize();
+		_rotateDirOrigin.copy(dirOrigin).normalize();
+		_q.setFromUnitVectors(_rotateDirOrigin, _rotateDirDest);
 		// this._rotate_geometry_m.identity(); // not entirely sure this is necessary
-		this._m.makeRotationFromQuaternion(this._q);
-		object.matrix.multiply(this._m);
+		_m.makeRotationFromQuaternion(_q);
+		object.matrix.multiply(_m);
 		// object.updateMatrix();
 		object.matrix.decompose(object.position, object.quaternion, object.scale);
 	}

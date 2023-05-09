@@ -9,13 +9,30 @@ import {
 import {_getRBD} from '../PhysicsRBD';
 import {PhysicsLib} from '../CorePhysics';
 import {CoreObject} from '../../geometry/Object';
+import {touchRBDProperty} from '../../reactivity/RBDPropertyReactivity';
 
 const EXPECTED_TYPE = PhysicsRBDColliderType.CUBOID;
+
+export enum RBDCuboidProperty {
+	SIZES = 'sizes',
+}
 
 const tmp = new Vector3();
 let _currentSizes = new Vector3();
 let _targetSizes = new Vector3();
+let _targetHalfSizes = new Vector3();
 let _originalSizes = new Vector3();
+
+const attribSizeLiveByObject: WeakMap<Object3D, Vector3> = new WeakMap();
+function _getAttribSizeLiveByObject(object3D: Object3D) {
+	let v = attribSizeLiveByObject.get(object3D);
+	if (!v) {
+		v = new Vector3();
+		attribSizeLiveByObject.set(object3D, v);
+	}
+	return v;
+}
+
 export function createPhysicsCuboid(PhysicsLib: PhysicsLib, object: Object3D) {
 	CorePhysicsAttribute.getCuboidSizes(object, tmp);
 	const size = CorePhysicsAttribute.getCuboidSize(object);
@@ -48,7 +65,7 @@ export function currentSizes(object: Object3D, collider: Collider, target: Vecto
 	}
 }
 
-export function getPhysicsRBDCuboidSizes(object: Object3D, target: Vector3): void {
+export function _getPhysicsRBDCuboidSizes(object: Object3D, target: Vector3): void {
 	const body = _getRBD(object);
 	if (!body) {
 		console.warn('no rbd found');
@@ -65,7 +82,7 @@ export function getPhysicsRBDCuboidSizes(object: Object3D, target: Vector3): voi
 	currentSizes(object, collider, target);
 }
 
-export function setPhysicsRBDCuboidProperty(
+export function _setPhysicsRBDCuboidProperty(
 	object: Object3D,
 	targetSizes: Vector3,
 	targetSize: number,
@@ -97,14 +114,17 @@ export function setPhysicsRBDCuboidProperty(
 			_targetSizes.lerp(_currentSizes, 1 - lerp);
 		}
 		// update radius on shape and object
-		CoreObject.setAttribute(object, attributeSizesLive, _targetSizes);
+		const v = _getAttribSizeLiveByObject(object);
+		v.copy(_targetSizes);
+		CoreObject.setAttribute(object, attributeSizesLive, v);
+		touchRBDProperty(object, RBDCuboidProperty.SIZES);
 		// update scale
 		object.scale.copy(_targetSizes).divide(_originalSizes);
 		if (updateObjectMatrix) {
 			object.updateMatrix();
 		}
 		// update rbd in the end, so that we scale size *.5 last
-		_targetSizes.multiplyScalar(0.5);
-		collider.setHalfExtents(_targetSizes);
+		_targetHalfSizes.copy(_targetSizes).multiplyScalar(0.5);
+		collider.setHalfExtents(_targetHalfSizes);
 	}
 }

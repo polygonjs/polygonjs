@@ -5,7 +5,7 @@ import {Triangle} from 'three';
 // import {CoreMapboxTransform} from '../Transform';
 import mapboxgl from 'mapbox-gl';
 import {CoreGeometry} from '../../../geometry/Geometry';
-import {CoreMath} from '../../../math/_Module';
+import {expandTriangle} from '../../../math/_Module';
 import {CorePoint} from '../../../geometry/Point';
 import {Vector2Like} from '../../../../types/GlobalTypes';
 import {CoreGeometryBuilderMesh} from '../../..//geometry/builders/Mesh';
@@ -68,8 +68,8 @@ export class MapboxPlaneFrustumController {
 		this._triangle_b.a.copy(positions[2]);
 		this._triangle_b.b.copy(positions[3]);
 		this._triangle_b.c.copy(positions[1]);
-		CoreMath.expandTriangle(this._triangle_a, margin);
-		CoreMath.expandTriangle(this._triangle_b, margin);
+		expandTriangle(this._triangle_a, margin);
+		expandTriangle(this._triangle_b, margin);
 		const kept_points: CorePoint[] = [];
 		for (let point of points) {
 			point.getPosition(this._point_pos);
@@ -81,6 +81,6 @@ export class MapboxPlaneFrustumController {
 			}
 		}
 
-		return new CoreGeometryBuilderMesh().from_points(kept_points);
+		return new CoreGeometryBuilderMesh().fromPoints(kept_points);
 	}
 }

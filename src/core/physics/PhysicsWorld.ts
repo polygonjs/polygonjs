@@ -116,7 +116,7 @@ function _clearWorld(world: World) {
 export function stepWorld(worldObject: Object3D) {
 	const world = physicsWorldFromObject(worldObject);
 	if (!world) {
-		// if it is not the word, maybe it is the debug object
+		// if it is not the world, maybe it is the debug object
 		// const pair = physicsDebugPairFromDebugObject(worldObject);
 		// if (!pair) {
 		// 	return;

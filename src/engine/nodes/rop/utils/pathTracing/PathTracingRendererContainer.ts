@@ -12,8 +12,9 @@ import {
 	WebGLRenderTarget,
 } from 'three';
 import {Scene, Camera, MeshBasicMaterial} from 'three';
-import {FullScreenQuad} from '../../../../../modules/three/examples/jsm/postprocessing/Pass';
+import {FullScreenQuad} from 'three/examples/jsm/postprocessing/Pass';
 import {AbstractRenderer} from '../../../../viewers/Common';
+// <<<<<<< HEAD
 import {CoreType} from '../../../../../core/Type';
 import {CoreSleep} from '../../../../../core/Sleep';
 import {
@@ -38,6 +39,10 @@ import {
 // 	requestAnimationFrame?: RequestAnimationFrame;
 // }
 // const USE_DYNAMIC_GENERATOR = false;
+// =======
+// import type {PathTracingRenderer} from '../../../../../core/thirdParty/three-gpu-pathtracer';
+// import {BlurredEnvMapGenerator, PathTracingSceneWorker} from '../../../../../core/thirdParty/three-gpu-pathtracer';
+// >>>>>>> master
 
 export class PathTracingRendererContainer implements AbstractRenderer {
 	public displayDebug = true;

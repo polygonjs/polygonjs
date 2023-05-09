@@ -11,7 +11,7 @@ import {OutputGlNode} from '../../../Output';
 import {ShaderName} from '../../../../utils/shaders/ShaderName';
 import {GlConnectionPoint, GlConnectionPointType} from '../../../../utils/io/connections/Gl';
 import sss_default from '../../../gl/sss/init.glsl';
-import {AssemblerControllerNode} from '../../Controller';
+import {AssemblerGlControllerNode} from '../../Controller';
 import {VaryingWriteGlNode} from '../../../VaryingWrite';
 import {MeshStandardMaterial} from 'three';
 import {includeSSSDeclarations} from './common/SSS';
@@ -21,7 +21,7 @@ export class ShaderAssemblerStandard extends ShaderAssemblerMesh {
 	isPhysical() {
 		return false;
 	}
-	constructor(protected override _gl_parent_node: AssemblerControllerNode) {
+	constructor(protected override _gl_parent_node: AssemblerGlControllerNode) {
 		super(_gl_parent_node);
 
 		this._addFilterFragmentShaderCallback(

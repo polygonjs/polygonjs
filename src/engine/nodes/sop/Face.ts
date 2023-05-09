@@ -13,7 +13,7 @@ import {InputCloneMode} from '../../poly/InputCloneMode';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CorePoint} from '../../../core/geometry/Point';
-import {CoreFace} from '../../../core/geometry/Face';
+import {CoreFace} from '../../../core/geometry/CoreFace';
 import {ArrayUtils} from '../../../core/ArrayUtils';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 class FaceSopParamsConfig extends NodeParamsConfig {

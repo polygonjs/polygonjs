@@ -1,4 +1,4 @@
-import {NodeJSONShadersData} from './../Node';
+import {NodeJSONFunctionBodiesData, NodeJSONShadersData} from './../Node';
 import {NodeJsonExporter, NodeJsonExporterUIData, JSONExporterDataRequestOption} from '../Node';
 
 export class PolyNodeJsonExporter extends NodeJsonExporter<any> {
@@ -16,9 +16,13 @@ export class PolyNodeJsonExporter extends NodeJsonExporter<any> {
 			return this.ui_data_without_children();
 		}
 	}
-	override async shaders(data: NodeJSONShadersData, options: JSONExporterDataRequestOption = {}): Promise<void> {
+	override async persistedConfigData(
+		shadersData: NodeJSONShadersData,
+		jsFunctionBodiesData: NodeJSONFunctionBodiesData,
+		options: JSONExporterDataRequestOption = {}
+	): Promise<void> {
 		if (options.showPolyNodesData || !this._node.polyNodeController?.locked()) {
-			return await super.shaders(data, options);
+			return await super.persistedConfigData(shadersData, jsFunctionBodiesData, options);
 		}
 	}
 }

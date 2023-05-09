@@ -4,7 +4,7 @@ import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {CubeTexture, LightProbe} from 'three';
 import {LightProbeParams, DEFAULT_LIGHT_PROBE_PARAMS} from '../../../core/lights/LightProbe';
 import {NodeContext} from '../../poly/NodeContext';
-import {LightProbeGenerator} from '../../../modules/three/examples/jsm/lights/LightProbeGenerator';
+import {LightProbeGenerator} from 'three/examples/jsm/lights/LightProbeGenerator';
 import {ObjectType, registerObjectType} from '../../../core/geometry/Constant';
 // import { CopType } from '../../poly/registers/nodes/types/Cop';
 // import { CubeMapFromSceneCopNode } from '../../nodes/cop/CubeMapFromScene';

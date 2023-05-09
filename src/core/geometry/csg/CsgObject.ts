@@ -1,5 +1,6 @@
 import {Object3D, Material, Matrix4, Box3, Sphere, Vector3} from 'three';
-import {CsgGeometryType, CsgTypeMap, CSGTesselationParams, csgGeometryTypeFromGeometry} from './CsgCommon';
+import {CsgGeometryType, CsgTypeMap, CSGTesselationParams} from './CsgCommon';
+import {csgGeometryTypeFromGeometry} from './CsgCoreType';
 import {ObjectContent, CoreObjectType, ObjectGeometryMap, objectContentCopyProperties} from '../ObjectContent';
 import {path2ToObject3D} from './toObject3D/CsgPath2ToObject3D';
 import {geom2ToObject3D} from './toObject3D/CsgGeom2ToObject3D';
@@ -35,6 +36,7 @@ export class CsgObject<T extends CsgGeometryType> implements ObjectContent<CoreO
 	}
 
 	setGeometry<TE extends CsgGeometryType>(geometry: CsgTypeMap[TE]) {
+		this._geometry = geometry as CsgTypeMap[T];
 		this._validate();
 	}
 	private _validate() {

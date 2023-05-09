@@ -4,11 +4,11 @@
  */
 import {TypedAnimNode} from './_Base';
 import {TimelineBuilder} from '../../../core/animation/TimelineBuilder';
-import gsap from 'gsap';
 import {BaseNodeType} from '../_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {Poly} from '../../Poly';
+import {gsapTimeline, GsapCoreTimeline} from '../../../core/thirdParty/gsap';
 
 class NullAnimParamsConfig extends NodeParamsConfig {
 	/** @param play the animations */
@@ -50,7 +50,7 @@ export class NullAnimNode extends TypedAnimNode<NullAnimParamsConfig> {
 	}
 
 	// private _timelineBuilder: TimelineBuilder | undefined;
-	private _timeline: gsap.core.Timeline | undefined;
+	private _timeline: GsapCoreTimeline | undefined;
 	async timelineBuilder() {
 		const container = await this.compute();
 		if (!container) {
@@ -79,7 +79,7 @@ export class NullAnimNode extends TypedAnimNode<NullAnimParamsConfig> {
 			if (!timelineBuilder) {
 				return;
 			}
-			this._timeline = gsap.timeline({onComplete: resolveOnce});
+			this._timeline = gsapTimeline({onComplete: resolveOnce});
 			timelineBuilder.populate(this._timeline, {registerproperties: true});
 			// if the timeline is empty, we resolve the promise now
 			// not needed since gsap 3.7.0 ( https://github.com/greensock/GSAP/issues/448 )

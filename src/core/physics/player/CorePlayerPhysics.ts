@@ -3,12 +3,13 @@ import {PhysicsLib} from '../CorePhysics';
 import {Object3D, Vector3} from 'three';
 import {PhysicsPlayerType} from './PhysicsPlayer';
 import {createCharacterController} from './CharacterController';
-import {physicsRBDResetAll} from '../PhysicsRBD';
+import {_physicsRBDResetAll} from '../PhysicsRBD';
 import {CorePhysicsAttribute} from '../PhysicsAttribute';
 import {CorePath} from '../../geometry/CorePath';
 import {CoreCameraControlsController, ApplicableControlsNode} from '../../camera/CoreCameraControlsController';
 import {PolyScene} from '../../../engine/scene/PolyScene';
 import {Camera} from 'three';
+import {CorePlayerInput} from '../../player/PlayerCommon';
 
 type BooleanGetter = () => boolean;
 // type SetInputData = (inputData: CorePlayerPhysicsInputData) => void;
@@ -18,23 +19,23 @@ type UpdateFunc = (
 	delta: number
 ) => void;
 
-export enum CorePlayerPhysicsInput {
-	LEFT = 'left',
-	RIGHT = 'right',
-	BACKWARD = 'backward',
-	FORWARD = 'forward',
-	RUN = 'run',
-	JUMP = 'jump',
-}
-export const CORE_PLAYER_PHYSICS_INPUTS: CorePlayerPhysicsInput[] = [
-	CorePlayerPhysicsInput.LEFT,
-	CorePlayerPhysicsInput.RIGHT,
-	CorePlayerPhysicsInput.BACKWARD,
-	CorePlayerPhysicsInput.FORWARD,
-	CorePlayerPhysicsInput.RUN,
-	CorePlayerPhysicsInput.JUMP,
-];
-export type CorePlayerPhysicsInputData = Record<CorePlayerPhysicsInput, boolean>;
+// export enum CorePlayerPhysicsInput {
+// 	LEFT = 'left',
+// 	RIGHT = 'right',
+// 	BACKWARD = 'backward',
+// 	FORWARD = 'forward',
+// 	RUN = 'run',
+// 	JUMP = 'jump',
+// }
+// export const CORE_PLAYER_PHYSICS_INPUTS: CorePlayerPhysicsInput[] = [
+// 	CorePlayerPhysicsInput.LEFT,
+// 	CorePlayerPhysicsInput.RIGHT,
+// 	CorePlayerPhysicsInput.BACKWARD,
+// 	CorePlayerPhysicsInput.FORWARD,
+// 	CorePlayerPhysicsInput.RUN,
+// 	CorePlayerPhysicsInput.JUMP,
+// ];
+export type CorePlayerPhysicsInputData = Record<CorePlayerInput, boolean>;
 
 export interface CorePlayerPhysicsComputeInputData {
 	speed: number;
@@ -247,7 +248,7 @@ export class CorePlayerPhysics {
 		// reset if below threshold
 		if (computeInputData.resetIfBelowThreshold) {
 			if (this.body.translation().y < computeInputData.resetThreshold) {
-				physicsRBDResetAll(this.object, true);
+				_physicsRBDResetAll(this.object, true);
 				this.body.setTranslation(this.startPosition, true);
 			}
 		}

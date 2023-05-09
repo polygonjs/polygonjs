@@ -32,6 +32,8 @@ import {TypeAssert} from '../../../engine/poly/Assert';
 import {cadShapeToObject3D} from './toObject3D/CadShape';
 import {Object3D, Material, Matrix4, Box3, Vector3, Quaternion, Euler} from 'three';
 import {cadGeometryTransform} from './operations/CadTransform';
+import {BaseSopNodeType} from '../../../engine/nodes/sop/_Base';
+import {cadCompoundToObject3D} from './toObject3D/CadCompound';
 const t = new Vector3();
 const q = new Quaternion();
 const s = new Vector3();
@@ -125,14 +127,18 @@ export class CadObject<T extends CadGeometryType> implements ObjectContent<CoreO
 		objectContentCopyProperties(this, clone);
 		return clone;
 	}
-	toObject3D(tesselationParams: CADTesselationParams): Object3D | Object3D[] | undefined {
-		return CadObject.toObject3D(this, this.type, tesselationParams);
+	toObject3D(
+		tesselationParams: CADTesselationParams,
+		displayNode: BaseSopNodeType
+	): Object3D | Object3D[] | undefined {
+		return CadObject.toObject3D(this, this.type, tesselationParams, displayNode);
 	}
 
 	static toObject3D<T extends CadGeometryType>(
 		cadObject: CadObject<T>,
 		type: T,
-		tesselationParams: CADTesselationParams
+		tesselationParams: CADTesselationParams,
+		displayNode: BaseSopNodeType
 	): Object3D | Object3D[] | undefined {
 		switch (type) {
 			case CadGeometryType.POINT_2D: {
@@ -156,9 +162,15 @@ export class CadObject<T extends CadGeometryType> implements ObjectContent<CoreO
 			case CadGeometryType.FACE:
 			case CadGeometryType.SHELL:
 			case CadGeometryType.SOLID:
-			case CadGeometryType.COMPSOLID:
+			case CadGeometryType.COMPSOLID: {
+				return cadShapeToObject3D(cadObject as CadObject<CadGeometryTypeShape>, tesselationParams, displayNode);
+			}
 			case CadGeometryType.COMPOUND: {
-				return cadShapeToObject3D(cadObject as CadObject<CadGeometryTypeShape>, tesselationParams);
+				return cadCompoundToObject3D(
+					cadObject as CadObject<CadGeometryType.COMPOUND>,
+					tesselationParams,
+					displayNode
+				);
 			}
 		}
 		TypeAssert.unreachable(type);

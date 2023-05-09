@@ -4,7 +4,7 @@ import {ShaderName} from '../../../../../../utils/shaders/ShaderName';
 import TemplateFragment from '../../../../templates/custom/mesh/CustomMeshDistance.frag.glsl';
 import {MeshDistanceMaterial} from 'three';
 import {includeSSSDeclarations} from '../../common/SSS';
-import {AssemblerControllerNode} from '../../../../Controller';
+import {AssemblerGlControllerNode} from '../../../../Controller';
 
 const INSERT_BODY_AFTER_MAP: Map<ShaderName, string> = new Map([
 	[ShaderName.VERTEX, '#include <begin_vertex>'],
@@ -12,7 +12,7 @@ const INSERT_BODY_AFTER_MAP: Map<ShaderName, string> = new Map([
 ]);
 
 export class ShaderAssemblerCustomMeshDistance extends ShaderAssemblerMaterial {
-	constructor(protected override _gl_parent_node: AssemblerControllerNode) {
+	constructor(protected override _gl_parent_node: AssemblerGlControllerNode) {
 		super(_gl_parent_node);
 
 		this._addFilterFragmentShaderCallback('MeshStandardBuilderMatNode', includeSSSDeclarations);

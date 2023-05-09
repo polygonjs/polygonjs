@@ -9,15 +9,11 @@ import {
 	physicsWorldNodeIdFromObject,
 	PHYSICS_GRAVITY_DEFAULT,
 } from './../../../core/physics/PhysicsWorld';
-import {TypedSopNode} from './_Base';
+import {TypedActorSopNode} from './_BaseActor';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {NodeContext} from '../../poly/NodeContext';
 import {InputCloneMode} from '../../poly/InputCloneMode';
-import {ActorNodeChildrenMap} from '../../poly/registers/nodes/Actor';
-import {NodeCreateOptions} from '../utils/hierarchy/ChildrenController';
-import {Constructor, valueof} from '../../../types/GlobalTypes';
-import {BaseActorNodeType} from '../actor/_Base';
 import {createOrFindPhysicsWorld} from '../../../core/physics/PhysicsWorld';
 import {physicsCreateDebugObject, updatePhysicsDebugObject} from '../../../core/physics/PhysicsDebug';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
@@ -45,7 +41,7 @@ class PhysicsWorldSopParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new PhysicsWorldSopParamsConfig();
 
-export class PhysicsWorldSopNode extends TypedSopNode<PhysicsWorldSopParamsConfig> {
+export class PhysicsWorldSopNode extends TypedActorSopNode<PhysicsWorldSopParamsConfig> {
 	override readonly paramsConfig = ParamsConfig;
 	static override type(): SopType.PHYSICS_WORLD {
 		return SopType.PHYSICS_WORLD;
@@ -60,6 +56,7 @@ export class PhysicsWorldSopNode extends TypedSopNode<PhysicsWorldSopParamsConfi
 
 	// private _PhysicsLib: PhysicsLib | undefined;
 	override async cook(inputCoreGroups: CoreGroup[]) {
+		this.compilationController.compileIfRequired();
 		await CorePhysics();
 		Poly.onObjectsAddedHooks.registerHook(this.type(), this.traverseObjectOnSopGroupAdd.bind(this));
 		const coreGroup = inputCoreGroups[0];
@@ -147,30 +144,30 @@ export class PhysicsWorldSopNode extends TypedSopNode<PhysicsWorldSopParamsConfi
 	//
 	// CHILDREN
 	//
-	protected override _childrenControllerContext = NodeContext.ACTOR;
-	override createNode<S extends keyof ActorNodeChildrenMap>(
-		node_class: S,
-		options?: NodeCreateOptions
-	): ActorNodeChildrenMap[S];
-	override createNode<K extends valueof<ActorNodeChildrenMap>>(
-		node_class: Constructor<K>,
-		options?: NodeCreateOptions
-	): K;
-	override createNode<K extends valueof<ActorNodeChildrenMap>>(
-		node_class: Constructor<K>,
-		options?: NodeCreateOptions
-	): K {
-		return super.createNode(node_class, options) as K;
-	}
-	override children() {
-		return super.children() as BaseActorNodeType[];
-	}
-	override nodesByType<K extends keyof ActorNodeChildrenMap>(type: K): ActorNodeChildrenMap[K][] {
-		return super.nodesByType(type) as ActorNodeChildrenMap[K][];
-	}
-	override childrenAllowed() {
-		return true;
-	}
+	// protected override _childrenControllerContext = NodeContext.JS;
+	// override createNode<S extends keyof JsNodeChildrenMap>(
+	// 	node_class: S,
+	// 	options?: NodeCreateOptions
+	// ): JsNodeChildrenMap[S];
+	// override createNode<K extends valueof<JsNodeChildrenMap>>(
+	// 	node_class: Constructor<K>,
+	// 	options?: NodeCreateOptions
+	// ): K;
+	// override createNode<K extends valueof<JsNodeChildrenMap>>(
+	// 	node_class: Constructor<K>,
+	// 	options?: NodeCreateOptions
+	// ): K {
+	// 	return super.createNode(node_class, options) as K;
+	// }
+	// override children() {
+	// 	return super.children() as BaseJsNodeType[];
+	// }
+	// override nodesByType<K extends keyof JsNodeChildrenMap>(type: K): JsNodeChildrenMap[K][] {
+	// 	return super.nodesByType(type) as JsNodeChildrenMap[K][];
+	// }
+	// override childrenAllowed() {
+	// 	return true;
+	// }
 }
 
 export function getPhysicsWorldNodeFromWorldObject(

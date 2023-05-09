@@ -13,33 +13,41 @@ import {TouchEventsController} from './TouchEventsController';
 
 import {SceneConnectionTriggerDispatcher} from './ConnectionTriggerDispatcher';
 import {EventInputType} from '../../../poly/registers/nodes/types/Event';
-import {BaseUserInputActorNodeType} from '../../../nodes/actor/_BaseUserInput';
-import {ActorType} from '../../../poly/registers/nodes/types/Actor';
+// import {BaseUserInputJsNodeType} from '../../../nodes/js/_BaseUserInput';
+// import {JsType} from '../../../poly/registers/nodes/types/Js';
 import {Raycaster} from 'three';
+import {ActorEvaluatorGenerator} from '../../../nodes/js/code/assemblers/actor/ActorEvaluatorGenerator';
+import {JsType} from '../../../poly/registers/nodes/types/Js';
 
 export class SceneEventsDispatcher {
 	public readonly sceneEventsController = new SceneEventsController();
-	private _keyboardEventsController: KeyboardEventsController | undefined;
-	private _mouseEventsController: MouseEventsController | undefined;
-	private _dragEventsController: DragEventsController | undefined;
-	private _pointerEventsController: PointerEventsController | undefined;
-	private _windowEventsController: WindowEventsController | undefined;
-	private _touchEventsController: TouchEventsController | undefined;
-	private _controllers: BaseSceneEventsController<Event, BaseInputEventNodeType, BaseUserInputActorNodeType>[] = [];
+	private _keyboardEventsController?: KeyboardEventsController;
+	private _mouseEventsController?: MouseEventsController;
+	private _dragEventsController?: DragEventsController;
+	private _pointerEventsController?: PointerEventsController;
+	private _windowEventsController?: WindowEventsController;
+	private _touchEventsController?: TouchEventsController;
+	private _controllers: BaseSceneEventsController<Event, BaseInputEventNodeType>[] = [];
 	constructor(public scene: PolyScene) {}
 
-	registerActorNode(node: BaseUserInputActorNodeType) {
-		const controller = this._findOrCreateControllerForActorNode(node);
-		if (controller) {
-			controller.registerActorNode(node);
+	registerEvaluatorGenerator(evaluatorGenerator: ActorEvaluatorGenerator) {
+		const controllers = this._findOrCreateControllerForEvaluator(evaluatorGenerator);
+		if (controllers) {
+			controllers.forEach((c) => c.registerEvaluatorGenerator(evaluatorGenerator));
 		}
 	}
-	unregisterActorNode(node: BaseUserInputActorNodeType) {
-		const controller = this._findOrCreateControllerForActorNode(node);
-		if (controller) {
-			controller.unregisterActorNode(node);
+	unregisterEvaluatorGenerator(evaluatorGenerator: ActorEvaluatorGenerator) {
+		const controllers = this._findOrCreateControllerForEvaluator(evaluatorGenerator);
+		if (controllers) {
+			controllers.forEach((c) => c.unregisterEvaluatorGenerator(evaluatorGenerator));
 		}
 	}
+	// updateControllersFromJsNodes() {
+	// 	const eventDatas = this.scene.actorsManager.eventDatas();
+	// 	eventDatas.forEach((type) => {
+	// 		this._findOrCreateControllerForEventInputType(type);
+	// 	});
+	// }
 
 	registerEventNode(node: BaseInputEventNodeType) {
 		const controller = this._findOrCreateControllerForEventNode(node);
@@ -59,11 +67,7 @@ export class SceneEventsDispatcher {
 			controller.updateViewerEventListeners();
 		}
 	}
-	traverseControllers(
-		callback: (
-			controller: BaseSceneEventsController<Event, BaseInputEventNodeType, BaseUserInputActorNodeType>
-		) => void
-	) {
+	traverseControllers(callback: (controller: BaseSceneEventsController<Event, BaseInputEventNodeType>) => void) {
 		for (let controller of this._controllers) {
 			callback(controller);
 		}
@@ -88,8 +92,31 @@ export class SceneEventsDispatcher {
 
 	private _findOrCreateControllerForEventNode<T extends BaseEventNodeType>(
 		node: T
-	): BaseSceneEventsController<Event, BaseInputEventNodeType, BaseUserInputActorNodeType> | undefined {
-		switch (node.type()) {
+	): BaseSceneEventsController<Event, BaseInputEventNodeType> | undefined {
+		return this._findOrCreateControllerForEventInputType(node.type() as EventInputType);
+	}
+
+	private _findOrCreateControllerForEvaluator(
+		evaluator: ActorEvaluatorGenerator
+	): Set<BaseSceneEventsController<Event, BaseInputEventNodeType>> | undefined {
+		const eventDatas = evaluator.eventDatas;
+		if (!eventDatas) {
+			return;
+		}
+		const controllers: Set<BaseSceneEventsController<Event, BaseInputEventNodeType>> = new Set();
+		eventDatas.forEach((eventData) => {
+			const controller = this._findOrCreateControllerForJsType(eventData.jsType);
+			if (controller) {
+				controllers.add(controller);
+			}
+		});
+
+		return controllers;
+	}
+	private _findOrCreateControllerForEventInputType(
+		type: EventInputType
+	): BaseSceneEventsController<Event, BaseInputEventNodeType> | undefined {
+		switch (type) {
 			case EventInputType.KEYBOARD:
 				return this.keyboardEventsController;
 			case EventInputType.MOUSE:
@@ -104,26 +131,26 @@ export class SceneEventsDispatcher {
 				return this.windowEventsController;
 		}
 	}
-	private _findOrCreateControllerForActorNode<T extends BaseUserInputActorNodeType>(
-		node: T
-	): BaseSceneEventsController<Event, BaseInputEventNodeType, BaseUserInputActorNodeType> | undefined {
-		switch (node.type()) {
-			case ActorType.CURSOR:
-			case ActorType.ON_OBJECT_CLICK:
-			case ActorType.ON_OBJECT_HOVER:
-			case ActorType.ON_OBJECT_POINTERDOWN:
-			case ActorType.ON_OBJECT_POINTERUP:
-			case ActorType.ON_POINTERDOWN:
-			case ActorType.ON_POINTERUP:
-			case ActorType.RAY_FROM_CURSOR:
+	private _findOrCreateControllerForJsType(
+		jsType: JsType
+	): BaseSceneEventsController<Event, BaseInputEventNodeType> | undefined {
+		switch (jsType) {
+			case JsType.CURSOR:
+			case JsType.ON_OBJECT_CLICK:
+			case JsType.ON_OBJECT_HOVER:
+			case JsType.ON_OBJECT_POINTERDOWN:
+			case JsType.ON_OBJECT_POINTERUP:
+			case JsType.ON_POINTERDOWN:
+			case JsType.ON_POINTERUP:
+			case JsType.RAY_FROM_CURSOR:
 				return this.pointerEventsController;
-			case ActorType.ON_KEYDOWN:
-			case ActorType.ON_KEYPRESS:
-			case ActorType.ON_KEYUP:
-			case ActorType.ON_PLAYER_EVENT:
+			case JsType.ON_KEY:
+			case JsType.ON_KEYDOWN:
+			case JsType.ON_KEYPRESS:
+			case JsType.ON_KEYUP:
 				return this.keyboardEventsController;
 		}
-		console.warn(`no event controller defined for node`, node);
+		console.warn(`no event controller defined for jsType`, jsType);
 	}
 
 	get keyboardEventsController() {

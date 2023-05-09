@@ -1,4 +1,4 @@
-import {AttribValue, NumericAttribValue, PolyDictionary} from '../../types/GlobalTypes';
+import {NumericAttribValue} from '../../types/GlobalTypes';
 import {
 	Bone,
 	SkinnedMesh,
@@ -24,7 +24,7 @@ import {ObjectUtils} from '../ObjectUtils';
 import {ArrayUtils} from '../ArrayUtils';
 import {ThreeMeshBVHHelper} from './bvh/ThreeMeshBVHHelper';
 import {CoreGeometryBuilderMerge} from './builders/Merge';
-import {CoreObjectType, MergeCompactOptions} from './ObjectContent';
+import {CoreObjectType, MergeCompactOptions, objectContentCopyProperties} from './ObjectContent';
 import {BaseCoreObject} from './_BaseObject';
 import {TransformTargetType} from '../Transform';
 import {TypeAssert} from '../../engine/poly/Assert';
@@ -46,7 +46,7 @@ const SPHERE_EMPTY = new Sphere(new Vector3(0, 0, 0), 0);
 // 	readonly isSkinnedMesh: boolean;
 // }
 
-export type AttributeDictionary = PolyDictionary<AttribValue>;
+// export type AttributeDictionary = PolyDictionary<AttribValue>;
 
 // export type CoreObjectContent = Object3D|CadObject
 
@@ -108,6 +108,19 @@ export class CoreObject extends BaseCoreObject<CoreObjectType.THREEJS> {
 	}
 	override boundingBox(target: Box3) {
 		target.setFromObject(this._object, COMPUTE_PRECISE_BOUNDS);
+	}
+	override geometryBoundingBox(target: Box3) {
+		const geometry = this.geometry();
+		if (geometry) {
+			if (!geometry.boundingBox) {
+				geometry.computeBoundingBox();
+			}
+			if (geometry.boundingBox) {
+				target.copy(geometry.boundingBox);
+			}
+		} else {
+			target.makeEmpty();
+		}
 	}
 	override boundingSphere(target: Sphere) {
 		const geometry = (this._object as Mesh).geometry;
@@ -230,8 +243,11 @@ export class CoreObject extends BaseCoreObject<CoreObjectType.THREEJS> {
 		TypeAssert.unreachable(transformTargetType);
 	}
 	static override mergeCompact(options: MergeCompactOptions) {
-		const {objects, materialsByObjectType, objectType, mergedObjects, onError} = options;
-
+		const {objects, material, objectType, mergedObjects, onError} = options;
+		const firstObject = objects[0];
+		if (!firstObject) {
+			return;
+		}
 		const geometries: BufferGeometry[] = [];
 		for (let object of objects) {
 			const geometry = (object as Mesh).geometry;
@@ -244,10 +260,9 @@ export class CoreObject extends BaseCoreObject<CoreObjectType.THREEJS> {
 		try {
 			const mergedGeometry = CoreGeometryBuilderMerge.merge(geometries);
 			if (mergedGeometry) {
-				const material = materialsByObjectType.get(objectType);
-				const object = BaseSopOperation.createObject(mergedGeometry, objectType as ObjectType, material);
-				object.matrixAutoUpdate = false;
-				mergedObjects.push(object as Object3DWithGeometry);
+				const newObject = BaseSopOperation.createObject(mergedGeometry, objectType as ObjectType, material);
+				objectContentCopyProperties(firstObject, newObject);
+				mergedObjects.push(newObject as Object3DWithGeometry);
 			} else {
 				onError('merge failed, check that input geometries have the same attributes');
 			}

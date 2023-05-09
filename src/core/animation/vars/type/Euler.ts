@@ -1,9 +1,10 @@
 import {Euler, Vector3} from 'three';
+import {GsapTweenVars} from '../../../thirdParty/gsap';
 import {Operation} from '../AnimBuilderTypes';
 import {AnimBuilderWithOp} from '../WithOp';
 
 interface PopulateVarsForVector {
-	vars: gsap.TweenVars;
+	vars: GsapTweenVars;
 	targetValue: Vector3;
 	targetProperty: Euler;
 	propertyNames: string[];

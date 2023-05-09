@@ -1,6 +1,6 @@
 import {Group} from 'three';
-import {LDrawLoader} from '../../../modules/three/examples/jsm/loaders/LDrawLoader';
-import {BaseGeoLoaderHandler, BaseGeoLoader} from './_BaseLoaderHandler';
+import {LDrawLoader} from 'three/examples/jsm/loaders/LDrawLoader';
+import {BaseObject3DLoaderHandler, BaseGeoLoader} from './_BaseLoaderHandler';
 import {CoreObject} from '../../geometry/Object';
 import {CoreType} from '../../Type';
 
@@ -23,7 +23,7 @@ import {CoreType} from '../../Type';
 // ];
 // const attributesSet: Set<string> = new Set(MPD_ATTRIBUTES);
 
-export class MPDLoaderHandler extends BaseGeoLoaderHandler<Group> {
+export class MPDLoaderHandler extends BaseObject3DLoaderHandler<Group> {
 	protected async _getLoader(): Promise<BaseGeoLoader<Group>> {
 		return (this._loader = this._loader || (await new LDrawLoader(this.loadingManager)));
 	}

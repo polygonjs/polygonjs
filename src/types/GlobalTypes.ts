@@ -36,6 +36,24 @@ export type Boolean4 = [boolean, boolean, boolean, boolean];
 export type Number2 = [number, number];
 export type Number3 = [number, number, number];
 export type Number4 = [number, number, number, number];
+export type Number16 = [
+	number,
+	number,
+	number,
+	number,
+	number,
+	number,
+	number,
+	number,
+	number,
+	number,
+	number,
+	number,
+	number,
+	number,
+	number,
+	number
+];
 
 export type StringOrNumber2 = [StringOrNumber, StringOrNumber];
 export type StringOrNumber3 = [StringOrNumber, StringOrNumber, StringOrNumber];

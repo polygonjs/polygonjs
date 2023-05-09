@@ -36,8 +36,6 @@ export class HexagonsSopOperation extends BaseSopOperation {
 		return 'hexagons';
 	}
 
-	private _coreTransform = new CoreTransform();
-
 	override cook(inputCoreGroups: CoreGroup[], params: HexagonsSopParams) {
 		const coreGroup = inputCoreGroups[0];
 		if (coreGroup) {
@@ -50,7 +48,7 @@ export class HexagonsSopOperation extends BaseSopOperation {
 		if (params.hexagonRadius > 0) {
 			const geometry = this._createHexagons(params.size, params);
 
-			this._coreTransform.rotateGeometry(geometry, DEFAULT_UP, params.direction);
+			CoreTransform.rotateGeometry(geometry, DEFAULT_UP, params.direction);
 
 			return this.createCoreGroupFromObjects([this._createHexagonsObjects(geometry, params)]);
 		} else {
@@ -90,7 +88,7 @@ export class HexagonsSopOperation extends BaseSopOperation {
 		const size2d = new Vector2(tmpSize.x, tmpSize.y);
 		const geometry = this._createHexagons(size2d, params);
 
-		this._coreTransform.rotateGeometry(geometry, DEFAULT_UP, params.direction);
+		CoreTransform.rotateGeometry(geometry, DEFAULT_UP, params.direction);
 		geometry.translate(tmpCenter.x, tmpCenter.y, tmpCenter.z);
 
 		const object = this._createHexagonsObjects(geometry, params);

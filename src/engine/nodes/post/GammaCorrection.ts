@@ -4,8 +4,8 @@
 //  *
 //  */
 // import {TypedPostNode, TypedPostNodeContext} from './_Base';
-// import {GammaCorrectionShader} from '../../../modules/three/examples/jsm/shaders/GammaCorrectionShader';
-// import {ShaderPass} from '../../../modules/three/examples/jsm/postprocessing/ShaderPass';
+// import {GammaCorrectionShader} from 'three/examples/jsm/shaders/GammaCorrectionShader';
+// import {ShaderPass} from 'three/examples/jsm/postprocessing/ShaderPass';
 
 // import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 // class GammaCorrectionPostParamsConfig extends NodeParamsConfig {}

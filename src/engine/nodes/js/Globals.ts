@@ -1,21 +1,26 @@
-// import {TypedJsNode} from './_Base';
+import {TypedJsNode} from './_Base';
 
-// import {NodeParamsConfig} from '../utils/params/ParamsConfig';
-// import {JsLinesController} from './code/utils/LinesController';
-// class GlobalsJsParamsConfig extends NodeParamsConfig {}
-// const ParamsConfig = new GlobalsJsParamsConfig();
+import {NodeParamsConfig} from '../utils/params/ParamsConfig';
+import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
+import {JsType} from '../../poly/registers/nodes/types/Js';
+class GlobalsJsParamsConfig extends NodeParamsConfig {}
+const ParamsConfig = new GlobalsJsParamsConfig();
 
-// export class GlobalsJsNode extends TypedJsNode<GlobalsJsParamsConfig> {
-// 	override paramsConfig = ParamsConfig;
-// 	static override type() {
-// 		return 'globals';
-// 	}
+export class GlobalsJsNode extends TypedJsNode<GlobalsJsParamsConfig> {
+	override paramsConfig = ParamsConfig;
+	static override type() {
+		return JsType.GLOBALS;
+	}
 
-// 	override createParams() {
-// 		this.function_node?.assembler_controller.add_globals_outputs(this);
-// 	}
+	override initializeNode() {
+		super.initializeNode();
 
-// 	override setLines(lines_controller: JsLinesController) {
-// 		this.function_node?.assembler_controller?.assembler.set_node_lines_globals(this, lines_controller);
-// 	}
-// }
+		this.lifecycle.onAfterAdded(() => {
+			this.functionNode()?.assemblerController()?.add_globals_outputs(this);
+		});
+	}
+
+	override setLines(linesController: JsLinesCollectionController) {
+		this.functionNode()?.assemblerController()?.assembler.setNodeLinesGlobals(this, linesController);
+	}
+}

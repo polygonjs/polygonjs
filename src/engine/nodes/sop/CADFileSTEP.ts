@@ -13,12 +13,7 @@ import {ParamEvent} from '../../poly/ParamEvent';
 import {Poly} from '../../Poly';
 import {EXTENSIONS_BY_NODE_TYPE_BY_CONTEXT} from '../../../core/loader/FileExtensionRegister';
 import {NodeContext} from '../../poly/NodeContext';
-import {CadLoader} from '../../../core/geometry/cad/CadLoader';
-import {MathUtils} from 'three';
-import {CadLoaderSync} from '../../../core/geometry/cad/CadLoaderSync';
-import {CadGeometryType, cadGeometryTypeFromShape} from '../../../core/geometry/cad/CadCommon';
-import {CadObject} from '../../../core/geometry/cad/CadObject';
-import {isBooleanTrue} from '../../../core/Type';
+import {STEPLoaderHandler} from '../../../core/loader/geometry/STEP';
 
 class CADFileSTEPSopParamsConfig extends NodeParamsConfig {
 	/** @param url to load the geometry from */
@@ -47,39 +42,22 @@ export class CADFileSTEPSopNode extends CADSopNode<CADFileSTEPSopParamsConfig> {
 	}
 
 	override async cook(inputCoreGroups: CoreGroup[]) {
-		const oc = await CadLoader.core(this);
-		const newObjects: CadObject<CadGeometryType>[] = [];
-
-		// TODO: refactor to make it work with blob controller
-		const reader = new oc.STEPControl_Reader_1();
-
-		const url = this.pv.url;
-		const response = await fetch(url);
-		const text = await response.text();
-		const fileNameShort = MathUtils.generateUUID();
-		const FSfileName: string = `file.${fileNameShort}`;
-		const canRead = true;
-		const canWrite = true;
-		const canOwn = true;
-		oc.FS.createDataFile('/', FSfileName, text, canRead, canWrite, canOwn);
-		const result = reader.ReadFile(FSfileName);
-		const isDone = result == oc.IFSelect_ReturnStatus.IFSelect_RetDone;
-		if (isDone) {
-			reader.TransferRoots(CadLoaderSync.Message_ProgressRange);
-			const shape = reader.OneShape();
-
-			const type = cadGeometryTypeFromShape(oc, shape);
-			if (type) {
-				const newObject = new CadObject(shape, type);
-
-				newObject.traverse((child) => {
-					child.matrixAutoUpdate = isBooleanTrue(this.pv.matrixAutoUpdate);
+		Poly.blobs.clearBlobsForNode(this);
+		const loader = this._createGeoLoaderHandler(this.pv.url);
+		const result = await loader.load({node: this});
+		if (result) {
+			const matrixAutoUpdate: boolean = this.pv.matrixAutoUpdate;
+			for (let object of result) {
+				object.traverse((child) => {
+					child.matrixAutoUpdate = matrixAutoUpdate;
 				});
-
-				newObjects.push(newObject);
 			}
+			return this.setCADObjects(result);
 		}
-		this.setCADObjects(newObjects);
+		return this.setCADObjects([]);
+	}
+	protected _createGeoLoaderHandler(url: string) {
+		return new STEPLoaderHandler(url, this);
 	}
 
 	static PARAM_CALLBACK_reload(node: CADFileSTEPSopNode) {

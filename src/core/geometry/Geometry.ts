@@ -12,7 +12,7 @@ import {Float32BufferAttribute} from 'three';
 import {BufferGeometry} from 'three';
 import {Box3} from 'three';
 import {CorePoint} from './Point';
-import {CoreFace} from './Face';
+import {CoreFace} from './CoreFace';
 import {AttribType, AttribSize} from './Constant';
 import {Attribute, CoreAttribute} from './Attribute';
 import {CoreAttributeData} from './AttributeData';

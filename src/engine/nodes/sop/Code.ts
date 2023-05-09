@@ -102,14 +102,16 @@ export class CodeSopNode extends TypedSopNode<CodeSopParamsConfig> {
 			const functionBody = `try {
 				${TranspiledFilter.filter(this.pv.codeJavascript)}
 			} catch(e) {
-				this.states.error.set(e)
+				console.log(states);
+				states.error.set(e);
 			}`;
 
-			const ProcessorClass = buildCodeNodeFunction<BaseCodeSopProcessor>(
-				BaseCodeSopProcessor,
-				'BaseCodeSopProcessor',
-				functionBody
-			);
+			const ProcessorClass = buildCodeNodeFunction<BaseCodeSopProcessor>({
+				BaseCodeProcessor: BaseCodeSopProcessor,
+				BaseCodeProcessorName: 'BaseCodeSopProcessor',
+				node: this,
+				functionBody,
+			});
 			if (ProcessorClass) {
 				this._processor = new ProcessorClass(this);
 				this._lastCompiledCode = this.pv.codeJavascript;

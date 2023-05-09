@@ -3,11 +3,11 @@ import type {Vector2} from 'three';
 export class EventHelper {
 	constructor(private element: HTMLElement) {}
 
-	set_element(element: HTMLElement) {
+	setElement(element: HTMLElement) {
 		this.element = element;
 	}
 
-	static element_position(event: TouchEvent | MouseEvent | PointerEvent, element: HTMLElement, position: Vector2) {
+	static elementPosition(event: TouchEvent | MouseEvent | PointerEvent, element: HTMLElement, position: Vector2) {
 		const dim = element.getBoundingClientRect();
 
 		if ((event as TouchEvent).changedTouches) {
@@ -29,8 +29,8 @@ export class EventHelper {
 	// 	return new Vector2(x, y);
 	// }
 
-	static normalized_position(event: TouchEvent | MouseEvent | PointerEvent, element: HTMLElement, position: Vector2) {
-		this.element_position(event, element, position);
+	static normalizedPosition(event: TouchEvent | MouseEvent | PointerEvent, element: HTMLElement, position: Vector2) {
+		this.elementPosition(event, element, position);
 
 		const dim = element.getBoundingClientRect();
 
@@ -44,7 +44,7 @@ export class EventHelper {
 		element: HTMLElement,
 		position: Vector2
 	) {
-		this.element_position(event, element, position);
+		this.elementPosition(event, element, position);
 
 		const dim = element.getBoundingClientRect();
 
@@ -54,14 +54,14 @@ export class EventHelper {
 		// return mouse;
 	}
 
-	element_position(event: TouchEvent | MouseEvent | PointerEvent, position: Vector2) {
-		EventHelper.element_position(event, this.element, position);
+	elementPosition(event: TouchEvent | MouseEvent | PointerEvent, position: Vector2) {
+		EventHelper.elementPosition(event, this.element, position);
 	}
 	// element_position_old(event: MouseEvent) {
 	// 	return EventHelper.element_position_old(event, this.element);
 	// }
 
-	normalized_position(event: TouchEvent | MouseEvent | PointerEvent, position: Vector2) {
-		EventHelper.normalized_position(event, this.element, position);
+	normalizedPosition(event: TouchEvent | MouseEvent | PointerEvent, position: Vector2) {
+		EventHelper.normalizedPosition(event, this.element, position);
 	}
 }

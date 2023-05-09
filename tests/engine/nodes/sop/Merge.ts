@@ -6,8 +6,10 @@ import {MergeSopNode} from '../../../../src/engine/nodes/sop/Merge';
 import {AddSopNode} from '../../../../src/engine/nodes/sop/Add';
 import {PlaneSopNode} from '../../../../src/engine/nodes/sop/Plane';
 import {GeoObjNode} from '../../../../src/engine/nodes/obj/Geo';
+import {CadObject} from '../../../../src/core/geometry/cad/CadObject';
+import {CadGeometryType} from '../../../../src/core/geometry/cad/CadCommon';
 
-QUnit.test('merge simple', async (assert) => {
+QUnit.test('sop/merge simple', async (assert) => {
 	const geo1 = window.geo1;
 
 	const tube1 = geo1.createNode('tube');
@@ -23,7 +25,7 @@ QUnit.test('merge simple', async (assert) => {
 	assert.equal(container.pointsCount(), 100);
 });
 
-QUnit.skip('merge geos with different attributes', async (assert) => {
+QUnit.skip('sop/merge geos with different attributes', async (assert) => {
 	const geo1 = window.geo1;
 
 	const sphere1 = geo1.createNode('sphere');
@@ -50,7 +52,7 @@ QUnit.skip('merge geos with different attributes', async (assert) => {
 	assert.equal(core_group.pointsCount(), 12);
 });
 
-QUnit.test('sop merge has predictable order in assembled objects', async (assert) => {
+QUnit.test('sop/merge has predictable order in assembled objects', async (assert) => {
 	const geo1 = window.geo1;
 
 	const add1 = geo1.createNode('add');
@@ -67,7 +69,7 @@ QUnit.test('sop merge has predictable order in assembled objects', async (assert
 	assert.equal(objects[1].constructor, Mesh);
 });
 
-QUnit.test('sop merge can have missing inputs, save and load again', async (assert) => {
+QUnit.test('sop/merge can have missing inputs, save and load again', async (assert) => {
 	const geo1 = window.geo1;
 	const scene = window.scene;
 
@@ -103,7 +105,7 @@ QUnit.test('sop merge can have missing inputs, save and load again', async (asse
 	assert.equal(objects[1].constructor, Mesh);
 });
 
-QUnit.test('sop merge can update its inputs count', async (assert) => {
+QUnit.test('sop/merge can update its inputs count', async (assert) => {
 	const geo1 = window.geo1;
 	const scene = window.scene;
 
@@ -140,7 +142,7 @@ QUnit.test('sop merge can update its inputs count', async (assert) => {
 	assert.equal(objects[1].constructor, Mesh);
 });
 
-QUnit.test('sop merge maintains its inputs count when nothing is connected to it', async (assert) => {
+QUnit.test('sop/merge maintains its inputs count when nothing is connected to it', async (assert) => {
 	const geo1 = window.geo1;
 	const scene = window.scene;
 
@@ -164,4 +166,121 @@ QUnit.test('sop merge maintains its inputs count when nothing is connected to it
 		merge2.setInput(i, plane1);
 	}
 	assert.equal(merge2.io.inputs.inputs()[19]?.graphNodeId(), plane1.graphNodeId());
+});
+
+QUnit.test('sop/merge compact preserves object properties', async (assert) => {
+	const geo1 = window.geo1;
+
+	const box1 = geo1.createNode('box');
+	const objectProperties1 = geo1.createNode('objectProperties');
+	const merge1 = geo1.createNode('merge');
+	objectProperties1.setInput(0, box1);
+	merge1.setInput(0, objectProperties1);
+
+	objectProperties1.p.tcastShadow.set(true);
+	objectProperties1.p.castShadow.set(false);
+	merge1.setCompactMode(true);
+
+	async function getObjectPropertyProperty() {
+		const container = await objectProperties1.compute();
+		const object = container.coreContent()?.threejsObjects()[0]!;
+		return object.castShadow;
+	}
+	async function getMergeProperty() {
+		const container = await merge1.compute();
+		const object = container.coreContent()?.threejsObjects()[0]!;
+		return object.castShadow;
+	}
+
+	assert.equal(await getObjectPropertyProperty(), false);
+	assert.equal(await getMergeProperty(), false);
+
+	objectProperties1.p.castShadow.set(true);
+	assert.equal(await getObjectPropertyProperty(), true);
+	assert.equal(await getMergeProperty(), true);
+
+	objectProperties1.p.castShadow.set(false);
+	assert.equal(await getObjectPropertyProperty(), false);
+	assert.equal(await getMergeProperty(), false);
+});
+
+QUnit.test('sop/merge with preserveMaterials', async (assert) => {
+	const geo1 = window.geo1;
+	const MAT = window.MAT;
+
+	const meshBasic1 = MAT.createNode('meshBasic');
+	const meshBasic2 = MAT.createNode('meshBasic');
+
+	const box1 = geo1.createNode('box');
+	const box2 = geo1.createNode('box');
+	const box3 = geo1.createNode('box');
+	const material1 = geo1.createNode('material');
+	const material2 = geo1.createNode('material');
+	const material3 = geo1.createNode('material');
+	const merge1 = geo1.createNode('merge');
+
+	material1.setInput(0, box1);
+	material2.setInput(0, box2);
+	material3.setInput(0, box3);
+
+	material1.p.material.setNode(meshBasic1);
+	material2.p.material.setNode(meshBasic2);
+	material3.p.material.setNode(meshBasic2);
+	merge1.setInput(0, material1);
+	merge1.setInput(1, material2);
+	merge1.setInput(2, material3);
+
+	async function getObjectsCount() {
+		const container = await merge1.compute();
+		const objects = container.coreContent()?.threejsObjects()!;
+		return objects.length;
+	}
+
+	assert.equal(await getObjectsCount(), 3);
+
+	merge1.setCompactMode(true);
+	assert.equal(await getObjectsCount(), 2);
+
+	merge1.p.preserveMaterials.set(false);
+	assert.equal(await getObjectsCount(), 1);
+});
+
+QUnit.test('sop/merge cad', async (assert) => {
+	const geo1 = window.geo1;
+
+	const CADPoint1 = geo1.createNode('CADPoint');
+	const CADPoint2 = geo1.createNode('CADPoint');
+	const transform1 = geo1.createNode('transform');
+	const transform2 = geo1.createNode('transform');
+	const CADSegment1 = geo1.createNode('CADSegment');
+	const merge1 = geo1.createNode('merge');
+
+	CADSegment1.setInput(0, CADPoint1);
+	transform1.setInput(0, CADPoint2);
+	CADSegment1.setInput(1, transform1);
+	transform2.setInput(0, CADSegment1);
+	merge1.setInput(0, CADSegment1);
+
+	transform1.p.t.y.set(1);
+	transform2.p.t.y.set(1);
+
+	async function getObjectsCount() {
+		const container = await merge1.compute();
+		const objects = container.coreContent()?.cadObjects()!;
+		return {
+			count: objects.length,
+			types: objects.map((o: CadObject<CadGeometryType>) => o.type),
+		};
+	}
+
+	assert.equal((await getObjectsCount()).count, 1);
+	assert.deepEqual((await getObjectsCount()).types, ['CADEdge']);
+
+	merge1.setInput(1, transform2);
+	assert.equal((await getObjectsCount()).count, 2);
+	assert.deepEqual((await getObjectsCount()).types, ['CADEdge', 'CADEdge']);
+
+	merge1.setCompactMode(true);
+	assert.equal((await getObjectsCount()).count, 1);
+	assert.deepEqual((await getObjectsCount()).types, ['CADWire']);
 });

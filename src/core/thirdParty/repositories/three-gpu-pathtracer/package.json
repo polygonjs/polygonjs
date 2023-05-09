@@ -1,0 +1,73 @@
+{
+  "name": "three-gpu-pathtracer",
+  "version": "0.0.14",
+  "description": "Path tracing renderer and utilities for three.js built on top of three-mesh-bvh.",
+  "module": "src/index.js",
+  "main": "build/index.umd.cjs",
+  "type": "module",
+  "sideEffects": false,
+  "files": [
+    "src/*",
+    "build/*"
+  ],
+  "keywords": [
+    "webgl",
+    "threejs",
+    "performance",
+    "geometry",
+    "graphics",
+    "mesh",
+    "renderer",
+    "raytracing",
+    "bvh",
+    "three-js",
+    "path-tracing",
+    "three-mesh-bvh",
+    "rtx",
+    "path-tracer",
+    "path",
+    "tracer"
+  ],
+  "dependencies": {
+    "three-mesh-bvh": "^0.5.19"
+  },
+  "devDependencies": {
+    "@lookingglass/webxr": "^0.3.1",
+    "canvas-capture": "^2.0.5",
+    "eslint": "^7.32.0",
+    "eslint-config-mdcs": "^5.0.0",
+    "node-fetch": "^3.2.9",
+    "parcel": "^2.4.0",
+    "pixelmatch": "^5.3.0",
+    "pngjs": "^6.0.0",
+    "process": "^0.11.10",
+    "puppeteer": "^15.4.0",
+    "rollup": "^2.70.0",
+    "simple-git": "^3.10.0",
+    "three": "^0.147.0",
+    "yargs": "^17.5.1"
+  },
+  "peerDependencies": {
+    "three": ">=0.139.2",
+    "xatlas-web": "^0.1.0"
+  },
+  "scripts": {
+    "start": "cd example && parcel serve ./*.html --dist-dir ./dev-bundle/ --no-cache --no-hmr",
+    "build-examples": "cd example && parcel build ./*.html --dist-dir ./bundle/ --public-url . --no-cache --no-content-hash",
+    "update-screenshots": "node ./scripts/push-screenshots.js",
+    "screenshot-diff": "node ./scripts/regression-test.js",
+    "build": "rollup -c",
+    "lint": "eslint \"./src/**/*.{js,ts}\" \"./example/*.js\"",
+    "prepublishOnly": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gkjohnson/three-gpu-pathtracer.git"
+  },
+  "author": "Garrett Johnson <garrett.kjohnson@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/gkjohnson/three-gpu-pathtracer/issues"
+  },
+  "homepage": "https://github.com/gkjohnson/three-gpu-pathtracer#readme"
+}

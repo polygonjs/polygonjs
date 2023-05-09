@@ -1,0 +1,36 @@
+// import {TypedJsNode} from './_Base';
+// import {NodeParamsConfig} from '../utils/params/ParamsConfig';
+// import {AnimationAction} from 'three';
+// import {AnimationMixer} from 'three';
+// import {EventListener, Event} from 'three';
+
+// export type AnimationActionLoopEvent = Event & {
+// 	type: 'loop';
+// } & {
+// 	target: AnimationMixer;
+// } & {
+// 	action: AnimationAction;
+// };
+
+// export type AnimationActionEventListenerExtended = EventListener<Event, 'loop', AnimationMixer> &
+// 	((e: AnimationActionLoopEvent) => void);
+
+// /*
+//  *
+//  * COMMON
+//  *
+//  */
+// export abstract class AnimationActionBaseJsNode<K extends NodeParamsConfig> extends TypedJsNode<K> {
+// 	// protected _setAnimationActionWeight(action: AnimationAction, weight: number) {
+// 	// 	action.enabled = true;
+// 	// 	action.setEffectiveTimeScale(1);
+// 	// 	action.setEffectiveWeight(weight);
+// 	// }
+// 	// protected _crossFade(from: AnimationAction, to: AnimationAction, duration: number, warp: boolean) {
+// 	// 	this._setAnimationActionWeight(to, 1);
+// 	// 	// animationActionTo.time = 0;
+// 	// 	to.syncWith(from);
+// 	// 	to.play();
+// 	// 	from.crossFadeTo(to, duration, warp);
+// 	// }
+// }

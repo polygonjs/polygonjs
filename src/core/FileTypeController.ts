@@ -25,6 +25,7 @@ export enum GeometryExtension {
 	GEOJSON = 'geojson',
 	GLTF = 'gltf',
 	GLB = 'glb',
+	IFC = 'ifc',
 	JSON = 'json',
 	MPD = 'mpd',
 	OBJ = 'obj',
@@ -33,6 +34,7 @@ export enum GeometryExtension {
 	STEP = 'step',
 	STL = 'stl',
 	SVG = 'svg',
+	USDZ = 'usdz',
 }
 export const GEOMETRY_EXTENSIONS: string[] = [
 	GeometryExtension.DRC,
@@ -40,6 +42,7 @@ export const GEOMETRY_EXTENSIONS: string[] = [
 	GeometryExtension.GEOJSON,
 	GeometryExtension.GLTF,
 	GeometryExtension.GLB,
+	GeometryExtension.IFC,
 	GeometryExtension.JSON,
 	GeometryExtension.MPD,
 	GeometryExtension.OBJ,
@@ -48,6 +51,7 @@ export const GEOMETRY_EXTENSIONS: string[] = [
 	GeometryExtension.STEP,
 	GeometryExtension.STL,
 	GeometryExtension.SVG,
+	GeometryExtension.USDZ,
 ];
 export enum SDFExtension {
 	BIN = 'bin',

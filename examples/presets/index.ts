@@ -1,11 +1,5 @@
 import {NodeContext} from '../../src/engine/poly/NodeContext';
 
-// actor
-import {getObjectAttributeActorPresetRegister} from './actor/GetObjectAttribute';
-import {getChildrenAttributesActorPresetRegister} from './actor/GetChildrenAttributes';
-import {onChildAttributeUpdateActorPresetRegister} from './actor/OnEventChildAttributeUpdated';
-import {onObjectAttributeUpdateActorPresetRegister} from './actor/OnEventObjectAttributeUpdated';
-import {rayFromCameraActorPresetRegister} from './actor/RayFromCamera';
 // anim
 import {propertyNameAnimPresetRegister} from './anim/PropertyName';
 // audio
@@ -21,10 +15,18 @@ import {mapboxElevationCopPresetRegister} from './cop/MapboxElevation';
 import {mapboxSatelliteCopPresetRegister} from './cop/MapboxSatellite';
 import {SDFFromUrlCopPresetRegister} from './cop/SDFFromUrl';
 import {videoCopPresetRegister} from './cop/Video';
-// // gl
+// gl
 import {attributeGlPresetRegister} from './gl/Attribute';
 import {neighbourAttractRepulseGlPresetRegister} from './gl/NeighbourAttractRepulse';
 import {neighbourAttractGlPresetRegister, neighbourRepulseGlPresetRegister} from './gl/Neighbour';
+// js
+import {attributeJsPresetRegister} from './js/Attribute';
+import {getChildrenAttributesJsPresetRegister} from './js/GetChildrenAttributes';
+import {getObjectAttributeJsPresetRegister} from './js/GetObjectAttribute';
+import {onChildAttributeUpdateJsPresetRegister} from './js/OnChildAttributeUpdate';
+import {onKeyJsPresetRegister} from './js/OnKey';
+import {onObjectAttributeUpdateJsPresetRegister} from './js/OnObjectAttributeUpdate';
+import {rayFromCameraJsPresetRegister} from './js/RayFromCamera';
 
 // // mat
 // import {meshSubsurfaceScatteringMatPresetRegister} from './mat/MeshSubsurfaceScattering';
@@ -33,6 +35,7 @@ import {codeMatPresetRegister} from './mat/Code';
 // sop
 import {attribCreateSopPresetRegister} from './sop/AttribCreate';
 import {attribPromoteSopPresetRegister} from './sop/AttribPromote';
+import {cadFileSTEPSopPresetRegister} from './sop/CADFileSTEP';
 import {cameraWebXRARMarkerTrackingSopPresetRegister} from './sop/CameraWebXRARMarkerTracking';
 import {capsuleSopPresetRegister} from './sop/Capsule';
 import {codeSopPresetRegister} from './sop/Code';
@@ -69,12 +72,6 @@ class PresetLibraryClass {
 	static _instance: PresetLibraryClass | undefined;
 	private _presetsByContextAndType: Map<NodeContext, Map<string, PresetRegister<any, any>>> = new Map();
 	private constructor() {
-		// actor
-		this._registerPreset(getObjectAttributeActorPresetRegister);
-		this._registerPreset(getChildrenAttributesActorPresetRegister);
-		this._registerPreset(onChildAttributeUpdateActorPresetRegister);
-		this._registerPreset(onObjectAttributeUpdateActorPresetRegister);
-		this._registerPreset(rayFromCameraActorPresetRegister);
 		// anim
 		this._registerPreset(propertyNameAnimPresetRegister);
 		// audio
@@ -95,12 +92,21 @@ class PresetLibraryClass {
 		this._registerPreset(neighbourAttractRepulseGlPresetRegister);
 		this._registerPreset(neighbourAttractGlPresetRegister);
 		this._registerPreset(neighbourRepulseGlPresetRegister);
+		// js
+		this._registerPreset(attributeJsPresetRegister);
+		this._registerPreset(getChildrenAttributesJsPresetRegister);
+		this._registerPreset(getObjectAttributeJsPresetRegister);
+		this._registerPreset(onChildAttributeUpdateJsPresetRegister);
+		this._registerPreset(onKeyJsPresetRegister);
+		this._registerPreset(onObjectAttributeUpdateJsPresetRegister);
+		this._registerPreset(rayFromCameraJsPresetRegister);
 		// mat
 		// this._registerPreset(meshSubsurfaceScatteringMatPresetRegister);
 		this._registerPreset(codeMatPresetRegister);
 		// sop
 		this._registerPreset(attribCreateSopPresetRegister);
 		this._registerPreset(attribPromoteSopPresetRegister);
+		this._registerPreset(cadFileSTEPSopPresetRegister);
 		this._registerPreset(cameraWebXRARMarkerTrackingSopPresetRegister);
 		this._registerPreset(capsuleSopPresetRegister);
 		this._registerPreset(codeSopPresetRegister);

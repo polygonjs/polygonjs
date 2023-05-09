@@ -45,7 +45,20 @@ module.exports = (options = {}) => {
 	const config = {
 		context: path.resolve(__dirname, '../../'), // to automatically find tsconfig.json
 		entry: {
-			all: './src/engine/index_all.ts',
+			all: {
+				import: './src/engine/index_all.ts',
+				dependOn: 'shared',
+			},
+			shared: [
+				//'jscad',// no jscad here, as it makes it easier to track if it is included by CoreGroup or not
+				'gsap',
+				'mapbox-gl',
+				'postprocessing',
+				'three',
+				'three-bvh-csg',
+				'three-gpu-pathtracer',
+				'three-mesh-bvh',
+			],
 		},
 		plugins: plugins,
 
@@ -92,11 +105,20 @@ module.exports = (options = {}) => {
 		experiments: {
 			asyncWebAssembly: true, // wasm (rapier physics)
 		},
+		ignoreWarnings: [
+			{
+				module: /web-ifc/,
+				message: /require function is used in a way in which dependencies cannot be statically extracted/,
+			},
+		],
 	};
 
 	config.module.rules.push(html);
 	if (options.createExamples) {
-		config.entry.example = './src/engine/example.ts';
+		config.entry.example = {
+			import: './src/engine/example.ts',
+			dependOn: 'shared',
+		};
 		config.plugins.push(
 			new HtmlWebpackPlugin({
 				title: 'Example',
@@ -107,7 +129,10 @@ module.exports = (options = {}) => {
 		);
 	}
 	if (options.registerAll) {
-		config.entry.registerAll = './src/engine/registerAll.ts';
+		config.entry.registerAll = {
+			import: './src/engine/registerAll.ts',
+			dependOn: 'shared',
+		};
 		config.plugins.push(
 			new HtmlWebpackPlugin({
 				title: 'registerAll',

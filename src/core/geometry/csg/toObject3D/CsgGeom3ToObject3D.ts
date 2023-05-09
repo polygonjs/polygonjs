@@ -5,7 +5,7 @@ import {ObjectType} from '../../Constant';
 import {BaseSopOperation} from '../../../../engine/operations/sop/_Base';
 import {csgMaterialMesh} from '../CsgConstant';
 import {CSGTesselationParams} from '../CsgCommon';
-import {toCreasedNormals} from '../../../../modules/three/examples/jsm/utils/BufferGeometryUtils';
+import {toCreasedNormals} from 'three/examples/jsm/utils/BufferGeometryUtils';
 
 // interface Geom3ToObject3DOptions {
 // 	facet?: {

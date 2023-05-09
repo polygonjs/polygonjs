@@ -21,14 +21,14 @@ export function createPhysicsCone(PhysicsLib: PhysicsLib, object: Object3D) {
 	}
 }
 
-export function getPhysicsRBDConeHeight(object: Object3D): number | undefined {
+export function _getPhysicsRBDConeHeight(object: Object3D): number | undefined {
 	return getPhysicsRBDHeight(EXPECTED_TYPE, object);
 }
-export function getPhysicsRBDConeRadius(object: Object3D): number | undefined {
+export function _getPhysicsRBDConeRadius(object: Object3D): number | undefined {
 	return getPhysicsRBDRadius(EXPECTED_TYPE, object);
 }
 
-export function setPhysicsRBDConeProperty(
+export function _setPhysicsRBDConeProperty(
 	object: Object3D,
 	targetRadius: number,
 	targetHeight: number,

@@ -148,7 +148,7 @@ export class ChildrenDisplayController {
 				// add CAD objects
 				checkObjectsAreDifferent();
 				this._newSpecializedObjects.length = 0;
-				this._addSpecializedObjects(coreGroup, this._newSpecializedObjects);
+				this._addSpecializedObjects(displayNode, coreGroup, this._newSpecializedObjects);
 
 				// update hierarchy if different
 				if (this._newObjectsAreDifferent) {
@@ -184,7 +184,7 @@ export class ChildrenDisplayController {
 	private _notifyCamerasController() {
 		this.node.scene().camerasController.updateFromChangeInObject(this._sopGroup);
 	}
-	protected _addSpecializedObjects(coreGroup: CoreGroup, newObjects: Object3D[]) {}
+	protected _addSpecializedObjects(displayNode: BaseSopNodeType, coreGroup: CoreGroup, newObjects: Object3D[]) {}
 
 	//
 	//

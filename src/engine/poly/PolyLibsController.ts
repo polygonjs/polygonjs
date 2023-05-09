@@ -54,7 +54,7 @@ export class PolyLibsController {
 	}
 	//
 	//
-	// XATLAS GLTF
+	// XATLAS
 	//
 	//
 	private _XATLASPath: string | null = '/xatlas';
@@ -66,11 +66,29 @@ export class PolyLibsController {
 	}
 	//
 	//
-	// OCCT GLTF
+	// OCCT
 	//
 	//
 	private _OCCTPath: string | null = '/occt';
 	OCCTPath() {
 		return this._OCCTPath;
+	}
+	//
+	//
+	// MANIFOLD
+	//
+	//
+	private _ManifoldPath: string | null = '/manifold';
+	ManifoldPath() {
+		return this._ManifoldPath;
+	}
+	//
+	//
+	// IFC
+	//
+	//
+	private _WebIFCPath: string | null = '/web-ifc';
+	webIFCPath() {
+		return this._WebIFCPath;
 	}
 }

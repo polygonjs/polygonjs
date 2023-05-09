@@ -4,7 +4,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {ParamOptions} from '../../params/utils/OptionsController';
 import {BaseNodeType} from '../_Base';
 import {EVENT_EMITTERS, EVENT_EMITTER_PARAM_MENU_OPTIONS} from '../../../core/event/CoreEventEmitter';
-import {EventData} from '../../../core/event/EventData';
+import {EventData, EventType} from '../../../core/event/EventData';
 
 export const EVENT_PARAM_OPTIONS: ParamOptions = {
 	visibleIf: {active: 1},
@@ -64,7 +64,7 @@ export abstract class TypedInputEventNode<K extends BaseInputEventParamsConfig> 
 			});
 		}
 	}
-	protected abstract acceptedEventTypes(): Set<string>;
+	protected abstract acceptedEventTypes(): Set<EventType>;
 	activeEventDatas() {
 		return this._activeEventDatas;
 	}
@@ -82,6 +82,6 @@ class BaseInputEventParamsConfig extends NodeParamsConfig {
 export type BaseInputEventNodeType = TypedInputEventNode<BaseInputEventParamsConfig>;
 export class BaseInputEventNodeClass extends TypedInputEventNode<BaseInputEventParamsConfig> {
 	acceptedEventTypes() {
-		return new Set<string>();
+		return new Set<EventType>();
 	}
 }

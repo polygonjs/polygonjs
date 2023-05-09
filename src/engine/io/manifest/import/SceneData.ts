@@ -1,4 +1,4 @@
-import {NodeJSONShadersData} from './../../json/export/Node';
+import {NodeJSONShadersData, NodeJSONFunctionBodiesData} from './../../json/export/Node';
 import {sanitizeUrl} from '../../../../core/UrlHelper';
 import {PolyDictionary} from '../../../../types/GlobalTypes';
 import {PolyEventsDispatcher} from '../../common/EventsDispatcher';
@@ -9,11 +9,13 @@ import {SelfContainedFileName} from '../../self_contained/Common';
 
 export type ManifestNodesData = PolyDictionary<string>;
 export type NodeJSONShadersTimestampData = PolyDictionary<PolyDictionary<string>>;
+export type JsFunctionBodyDataTimestampData = PolyDictionary<string>;
 export interface ManifestContent {
 	properties: string;
 	root: string;
 	nodes: ManifestNodesData;
 	shaders: NodeJSONShadersTimestampData;
+	jsFunctionBodies: JsFunctionBodyDataTimestampData;
 }
 
 type ProgressCallback = (ratio: number) => void;
@@ -30,6 +32,7 @@ export interface SceneDataElements {
 	properties: SceneJsonExporterDataProperties;
 	ui?: NodeJsonExporterUIData;
 	shaders?: NodeJSONShadersData;
+	jsFunctionBodies?: NodeJSONFunctionBodiesData;
 }
 
 interface ShaderUrlOptionsBasic {
@@ -37,12 +40,23 @@ interface ShaderUrlOptionsBasic {
 	shaderName: string;
 	timestamp: string;
 }
+interface JsFunctionBodyUrlOptionsBasic {
+	nodePath: string;
+	timestamp: string;
+}
 interface ShaderUrlOptions extends ShaderUrlOptionsBasic {
+	urlPrefix: string;
+}
+interface JsFunctionBodyUrlOptions extends JsFunctionBodyUrlOptionsBasic {
 	urlPrefix: string;
 }
 function _shaderUrl(options: ShaderUrlOptions) {
 	const {urlPrefix, nodePath, shaderName, timestamp} = options;
 	return `${urlPrefix}/root/${nodePath}.${shaderName}.glsl?t=${timestamp}`;
+}
+function _jsFunctionBodyUrl(options: JsFunctionBodyUrlOptions) {
+	const {urlPrefix, nodePath, timestamp} = options;
+	return `${urlPrefix}/root/${nodePath}.txt?t=${timestamp}`;
 }
 function _iterateShaders(manifest: ManifestContent, callback: (options: ShaderUrlOptionsBasic) => void) {
 	const shaderNodePaths = Object.keys(manifest.shaders);
@@ -53,6 +67,13 @@ function _iterateShaders(manifest: ManifestContent, callback: (options: ShaderUr
 			const timestamp = nodeShaders[shaderName];
 			callback({nodePath, shaderName, timestamp});
 		}
+	}
+}
+function _iterateFunctionBodies(manifest: ManifestContent, callback: (options: JsFunctionBodyUrlOptionsBasic) => void) {
+	const nodePaths = Object.keys(manifest.jsFunctionBodies);
+	for (let nodePath of nodePaths) {
+		const timestamp = manifest.jsFunctionBodies[nodePath];
+		callback({nodePath, timestamp});
 	}
 }
 
@@ -92,9 +113,16 @@ export class SceneDataManifestImporter {
 			allUrls.push(shaderUrl);
 			shaderUrls.push(shaderUrl);
 		});
+		// add all function bodies
+		const jsFunctionBodiesUrls: string[] = [];
+		_iterateFunctionBodies(manifest, (options) => {
+			const jsFunctionBodyUrl = _jsFunctionBodyUrl({urlPrefix, ...options});
+			allUrls.push(jsFunctionBodyUrl);
+			jsFunctionBodiesUrls.push(jsFunctionBodyUrl);
+		});
 
 		let count = 0;
-		const jsonPayloadsCount = allUrls.length - shaderUrls.length;
+		const jsonPayloadsCount = allUrls.length - (shaderUrls.length + jsFunctionBodiesUrls.length);
 		const total = allUrls.length;
 
 		function _incrementCount() {
@@ -134,11 +162,19 @@ export class SceneDataManifestImporter {
 			shadersData[nodePath][shaderName] = text;
 			textIndex++;
 		});
+		const jsFunctionBodiesData: NodeJSONFunctionBodiesData = {};
+		_iterateFunctionBodies(manifest, (options) => {
+			const text = texts[textIndex];
+			const {nodePath} = options;
+			jsFunctionBodiesData[nodePath] = text;
+			textIndex++;
+		});
 
 		const assembleData: SceneDataElements = {
 			root: jsons[0],
 			properties: jsons[1],
 			shaders: shadersData,
+			jsFunctionBodies: jsFunctionBodiesData,
 		};
 		let responseOffset = 2;
 		if (importData.editorMode) {
@@ -167,6 +203,7 @@ export class SceneDataManifestImporter {
 			properties: assembleData.properties,
 			ui: assembleData.ui,
 			shaders: assembleData.shaders,
+			jsFunctionBodies: assembleData.jsFunctionBodies,
 		};
 
 		for (let i = 0; i < manifestNodes.length; i++) {

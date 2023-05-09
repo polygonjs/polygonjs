@@ -1,14 +1,24 @@
 import {BaseSceneEventsController, EventContext} from './_BaseEventsController';
 import {KeyboardEventNode} from '../../../nodes/event/Keyboard';
-import type {KeyboardEventActorNode} from '../actors/ActorsKeyboardEventsController';
-import {ACCEPTED_KEYBOARD_EVENT_TYPES} from '../../../../core/event/KeyboardEventType';
+// import type {KeyboardEventActorNode} from '../actors/ActorsKeyboardEventsController';
+import {ACCEPTED_KEYBOARD_EVENT_TYPES, KeyboardEventType} from '../../../../core/event/KeyboardEventType';
 import {SceneEventsDispatcher} from './EventsDispatcher';
 import {TimeController} from '../TimeController';
+// import {TimeController} from '../TimeController';
 import {ActorKeyboardEventsController} from '../actors/ActorsKeyboardEventsController';
+import {EvaluatorKeyboardMethod} from '../../../nodes/js/code/assemblers/actor/ActorEvaluator';
+import {JsType} from '../../../poly/registers/nodes/types/Js';
+
+const methodNameByEventType: Record<KeyboardEventType, EvaluatorKeyboardMethod[]> = {
+	[KeyboardEventType.keydown]: [JsType.ON_KEY, JsType.ON_KEYDOWN],
+	[KeyboardEventType.keypress]: [JsType.ON_KEYPRESS],
+	[KeyboardEventType.keyup]: [JsType.ON_KEY, JsType.ON_KEYUP],
+};
+
 export class KeyboardEventsController extends BaseSceneEventsController<
 	KeyboardEvent,
-	KeyboardEventNode,
-	KeyboardEventActorNode
+	KeyboardEventNode
+	// KeyboardEventActorNode
 > {
 	private timeController: TimeController;
 	private keyboardEventsController: ActorKeyboardEventsController;
@@ -34,31 +44,22 @@ export class KeyboardEventsController extends BaseSceneEventsController<
 	override processEvent(eventContext: EventContext<KeyboardEvent>) {
 		super.processEvent(eventContext);
 
-		const eventEmitter = eventContext.emitter;
-		if (!eventEmitter) {
-			return;
-		}
-		// if (this._actorEventNames.size == 0) {
+		// const eventEmitter = eventContext.emitter;
+		// if (!eventEmitter) {
 		// 	return;
 		// }
-		const {viewer, event} = eventContext;
-		if (!(event && viewer)) {
+
+		const {event} = eventContext;
+		if (!event) {
 			return;
 		}
-		const eventType = event.type;
-		const mapForEvent = this._actorNodesByEventNames.get(eventType);
+		const eventType = event.type as KeyboardEventType;
+
+		const mapForEvent = this._actorEvaluatorsByEventNames.get(eventType);
 		if (!mapForEvent) {
 			return;
 		}
-		const nodesToTrigger = mapForEvent.get(eventEmitter);
-		if (!nodesToTrigger) {
-			return;
-		}
-		// if (!this._actorEventNames.has(eventType)) {
-		// 	return;
-		// }
-		// const nodesToTrigger = this._actorNodesByEventNames.get(eventType);
-		// if (nodesToTrigger) {
+
 		if (this.timeController.playing()) {
 			const frame = this.timeController.frame();
 			if (frame != this._lastProcessedFrame) {
@@ -66,30 +67,43 @@ export class KeyboardEventsController extends BaseSceneEventsController<
 				this._currentEvents.length = 0;
 			}
 			this._currentEvents.push(event);
-			this.keyboardEventsController.setTriggeredNodes(nodesToTrigger);
+			// this.keyboardEventsController.setTriggeredNodes(nodesToTrigger);
 		} else {
 			this._currentEvents[0] = event;
 		}
 
-		// }
+		const eventEmitter = eventContext.emitter;
+		if (!eventEmitter) {
+			return;
+		}
+		const evaluatorGenerators = mapForEvent.get(eventEmitter);
+		if (!evaluatorGenerators) {
+			return;
+		}
+		const methodNames = methodNameByEventType[eventType];
+		if (!methodNames) {
+			return;
+		}
+		for (let methodName of methodNames) {
+			this.keyboardEventsController.addTriggeredEvaluators(evaluatorGenerators, methodName);
+		}
+		// evaluatorGenerators.forEach((evaluatorGenerator) => {
+		// 	this.keyboardEventsController.setTriggeredNodes(nodesToTrigger);
+		// 	// evaluatorGenerator.traverseEvaluator((evaluator) => {
+		// 	// 	if (evaluator[methodName]) {
+		// 	// 		evaluator[methodName]!();
+		// 	// 	}
+		// 	// });
+		// });
+
+		// const eventType = event.type;
+		// // const mapForEvent = this._actorNodesByEventNames.get(eventType);
+		// // if (!mapForEvent) {
+		// // 	return;
+		// // }
+		// // const nodesToTrigger = mapForEvent.get(eventEmitter);
+		// // if (!nodesToTrigger) {
+		// // 	return;
+		// // }
 	}
-
-	// protected override _actorEventDatas(): EventData[] | undefined {
-	// 	const eventDatas: EventData[] = [];
-
-	// 	this._actorEventNamesByNode.forEach((_, node) => {
-	// 		const eventNames = node.userInputEventNames();
-	// 		const emitter = EVENT_EMITTERS[node.pv.element];
-
-	// 		for (let type of eventNames) {
-	// 			const eventData: EventData = {
-	// 				type,
-	// 				emitter,
-	// 			};
-	// 			eventDatas.push(eventData);
-	// 		}
-	// 	});
-
-	// 	return eventDatas;
-	// }
 }

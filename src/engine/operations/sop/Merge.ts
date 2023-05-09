@@ -5,17 +5,23 @@ import {MapUtils} from '../../../core/MapUtils';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
-import {CoreObjectType, ObjectContent} from '../../../core/geometry/ObjectContent';
+import {CoreObjectType, MergeCompactOptions, ObjectContent} from '../../../core/geometry/ObjectContent';
 import {coreObjectFactory} from '../../../core/geometry/CoreObjectFactory';
+import {SetUtils} from '../../../core/SetUtils';
+import {NodeErrorState} from '../../nodes/utils/states/Error';
+import {NodeContext} from '../../poly/NodeContext';
 
-interface MergeSopParams extends DefaultOperationParams {
+interface PreserveMaterialOptions {
+	preserveMaterials: boolean;
+}
+interface MergeSopParams extends PreserveMaterialOptions, DefaultOperationParams {
 	compact: boolean;
 }
 
 export class MergeSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: MergeSopParams = {
 		compact: false,
-		keepHierarchy: false,
+		preserveMaterials: true,
 	};
 	static override readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
 	static override type(): Readonly<'merge'> {
@@ -46,17 +52,19 @@ export class MergeSopOperation extends BaseSopOperation {
 			}
 		}
 		if (isBooleanTrue(params.compact)) {
-			allObjects = this._makeCompact(allObjects);
+			allObjects = MergeSopOperation.makeCompact(allObjects, params);
 		}
 
 		return this.createCoreGroupFromObjects(allObjects);
 	}
-	private _makeCompact(allObjects: ObjectContent<CoreObjectType>[]): ObjectContent<CoreObjectType>[] {
+	static makeCompact(
+		allObjects: ObjectContent<CoreObjectType>[],
+		options: PreserveMaterialOptions,
+		errorState?: NodeErrorState<NodeContext>
+	): ObjectContent<CoreObjectType>[] {
+		const {preserveMaterials} = options;
 		const materialsByObjectType: Map<string, Material> = new Map();
 		const objectsByType: Map<string, ObjectContent<CoreObjectType>[]> = new Map();
-		// objects_by_type.set(ObjectType.MESH, []);
-		// objects_by_type.set(ObjectType.POINTS, []);
-		// objects_by_type.set(ObjectType.LINE_SEGMENTS, []);
 		const orderedObjectTypes: string[] = [];
 		for (let object of allObjects) {
 			object.traverse((object3d) => {
@@ -71,8 +79,8 @@ export class MergeSopOperation extends BaseSopOperation {
 						orderedObjectTypes.push(objectType);
 					}
 					if (objectType) {
-						const found_mat = materialsByObjectType.get(objectType);
-						if (!found_mat) {
+						const foundMat = materialsByObjectType.get(objectType);
+						if (!foundMat) {
 							materialsByObjectType.set(objectType, (object as Mesh).material as Material);
 						}
 						MapUtils.pushOnArrayAtEntry(objectsByType, objectType, object);
@@ -82,6 +90,8 @@ export class MergeSopOperation extends BaseSopOperation {
 		}
 		const mergedObjects: ObjectContent<CoreObjectType>[] = [];
 		orderedObjectTypes.forEach((objectType) => {
+			const material = materialsByObjectType.get(objectType);
+
 			const objects = objectsByType.get(objectType);
 			if (objects && objects.length != 0) {
 				// even with just 1 geometry,
@@ -92,20 +102,51 @@ export class MergeSopOperation extends BaseSopOperation {
 				// if (objects.length == 1) {
 				// 	mergedObjects.push(objects[0]);
 				// } else {
-				const coreObjectClass = coreObjectFactory(objects[0]);
-				coreObjectClass.mergeCompact({
-					objects,
-					materialsByObjectType,
-					objectType,
-					mergedObjects,
-					onError: (message) => {
-						this._node?.states.error.set(message);
-					},
-				});
-				// }
+
+				if (isBooleanTrue(preserveMaterials)) {
+					_makeCompactWithPreservedMaterials({
+						objects,
+						material,
+						objectType,
+						mergedObjects,
+						onError: (message) => {
+							errorState?.set(message);
+						},
+					});
+				} else {
+					const coreObjectClass = coreObjectFactory(objects[0]);
+					coreObjectClass.mergeCompact({
+						objects,
+						material,
+						objectType,
+						mergedObjects,
+						onError: (message) => {
+							errorState?.set(message);
+						},
+					});
+				}
 			}
 		});
 
 		return mergedObjects;
 	}
+}
+
+const objectsByMaterial: Map<Material, Set<ObjectContent<CoreObjectType>>> = new Map();
+function _makeCompactWithPreservedMaterials(options: MergeCompactOptions) {
+	const {objects, objectType, mergedObjects, onError} = options;
+	const coreObjectClass = coreObjectFactory(objects[0]);
+	objectsByMaterial.clear();
+	for (let object of objects) {
+		MapUtils.addToSetAtEntry(objectsByMaterial, object.material, object);
+	}
+	objectsByMaterial.forEach((objectSet, material) => {
+		coreObjectClass.mergeCompact({
+			objects: SetUtils.toArray(objectSet),
+			material,
+			objectType,
+			mergedObjects,
+			onError,
+		});
+	});
 }

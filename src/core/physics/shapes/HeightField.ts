@@ -1,19 +1,16 @@
-import {Mesh, Object3D, Vector3, Raycaster} from 'three';
+import {Mesh, Object3D, Vector3} from 'three';
 import {_getRBD} from '../PhysicsRBD';
 import {PhysicsLib} from '../CorePhysics';
 import {ThreeMeshBVHHelper} from '../../../core/geometry/bvh/ThreeMeshBVHHelper';
 import {CoreMath} from '../../math/_Module';
 import {CorePhysicsAttribute} from '../PhysicsAttribute';
+import {createRaycaster} from '../../RaycastHelper';
 
 const bboxSize = new Vector3();
 const bboxCenter = new Vector3();
 const scale = new Vector3();
-function _createRaycaster() {
-	const raycaster = new Raycaster();
-	ThreeMeshBVHHelper.updateRaycaster(raycaster);
-	return raycaster;
-}
-const raycaster = _createRaycaster();
+
+const raycaster = createRaycaster();
 export function createPhysicsHeightField(PhysicsLib: PhysicsLib, object: Object3D) {
 	const geometry = (object as Mesh).geometry;
 	if (!geometry) {

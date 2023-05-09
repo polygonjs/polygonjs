@@ -5,6 +5,7 @@ import {IntegerParam} from '../../engine/params/Integer';
 import {Vector2Param} from '../../engine/params/Vector2';
 import {Vector3Param} from '../../engine/params/Vector3';
 import {Vector4Param} from '../../engine/params/Vector4';
+import {TimelineData} from '../thirdParty/gsap';
 
 interface SceneGraphProperty {
 	object: Object3D;
@@ -19,11 +20,6 @@ export type RegisterableProperty =
 	| Vector3Param
 	| Vector4Param
 	| ColorParam;
-
-interface TimelineData {
-	timeline: gsap.core.Timeline;
-	stoppable: boolean;
-}
 
 class AnimatedPropertiesRegisterClass {
 	private static _instance: AnimatedPropertiesRegisterClass;

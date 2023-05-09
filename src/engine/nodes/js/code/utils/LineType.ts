@@ -1,5 +1,9 @@
-// export enum JsLineType {
-// 	FUNCTION_DECLARATION = 'function_declaration',
-// 	DEFINE = 'define',
-// 	BODY = 'body',
-// }
+export enum LineType {
+	// FUNCTION_DECLARATION = 'function_declaration',
+	MEMBER = 'member',
+	CONSTRUCTOR = 'constructor',
+	DEFINE = 'define',
+	BODY = 'body',
+	// TRIGGER = 'trigger',
+	// TRIGGERABLE = 'triggerable',
+}

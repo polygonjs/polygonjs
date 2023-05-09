@@ -1,3 +1,4 @@
+import {GsapTweenVars, GsapCoreTimeline} from '../../thirdParty/gsap';
 import {RegisterableProperty} from '../AnimatedPropertiesRegister';
 import {AnimPropertyTarget} from '../PropertyTarget';
 import {TimelineBuilder} from '../TimelineBuilder';
@@ -8,15 +9,15 @@ export interface RegisterOptions {
 }
 export interface StartOptions extends RegisterOptions {
 	timelineBuilder: TimelineBuilder;
-	timeline: gsap.core.Timeline;
-	vars: gsap.TweenVars;
+	timeline: GsapCoreTimeline;
+	vars: GsapTweenVars;
 	target: object;
 	registerableProp: RegisterableProperty;
 }
 
 export interface AddToTimelineOptions extends RegisterOptions {
 	timelineBuilder: TimelineBuilder;
-	timeline: gsap.core.Timeline;
+	timeline: GsapCoreTimeline;
 	target: AnimPropertyTarget;
 }
 

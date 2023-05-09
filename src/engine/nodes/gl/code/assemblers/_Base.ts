@@ -12,7 +12,7 @@ import {OutputGlNode} from '../../Output';
 import {GlConnectionPoint, GlConnectionPointType} from '../../../utils/io/connections/Gl';
 import {GlobalsGlNode} from '../../Globals';
 import {AttributeGlNode} from '../../Attribute';
-import {AssemblerControllerNode} from '../Controller';
+import {AssemblerGlControllerNode} from '../Controller';
 import {GlobalsBaseController} from '../globals/_Base';
 import {ShadersCollectionController} from '../utils/ShadersCollectionController';
 import {CustomMaterialName, IUniforms} from '../../../../../core/geometry/Material';
@@ -63,12 +63,12 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 	private _uniformsTimeDependent: boolean = false;
 	private _uniformsResolutionDependent: boolean = false;
 
-	constructor(protected _gl_parent_node: AssemblerControllerNode) {
+	constructor(protected _gl_parent_node: AssemblerGlControllerNode) {
 		super();
 	}
 
-	protected _overriden_gl_parent_node: AssemblerControllerNode | undefined;
-	setGlParentNode(gl_parent_node: AssemblerControllerNode) {
+	protected _overriden_gl_parent_node: AssemblerGlControllerNode | undefined;
+	setGlParentNode(gl_parent_node: AssemblerGlControllerNode) {
 		this._overriden_gl_parent_node = gl_parent_node;
 	}
 	currentGlParentNode() {

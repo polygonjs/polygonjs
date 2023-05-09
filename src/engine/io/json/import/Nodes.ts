@@ -45,7 +45,7 @@ export class NodesJsonImporter<T extends BaseNodeTypeWithIO> {
 						return node;
 					}
 				} catch (e) {
-					// console.error(`error importing node: cannot create with type ${nodeType}`, e);
+					console.error(`error importing node: cannot create with type ${nodeType}`, e);
 				}
 			};
 			let node = loadNodeAttempt(nodeType, nodeCreateOptions);

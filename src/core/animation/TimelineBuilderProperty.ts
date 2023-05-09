@@ -26,6 +26,7 @@ import {populateVarsForNumber, populateVarsForSingleNumber} from './vars/type/Nu
 import {populateVarsForVector} from './vars/type/Vector';
 import {populateVarsAndCreateProxyForQuaternion} from './vars/type/Quaternion';
 import {populateVarsForEuler} from './vars/type/Euler';
+import {GsapTweenVars} from '../thirdParty/gsap';
 
 export type AnimPropertyTargetValue = number | Vector2 | Vector3 | Color | Vector4 | Quaternion;
 
@@ -35,7 +36,7 @@ interface Object3DProps {
 	propertyNames: string[];
 }
 interface PopulateVarsOptions {
-	vars: gsap.TweenVars;
+	vars: GsapTweenVars;
 	targetValue: AnimPropertyTargetValue;
 	targetProperty: AnimPropertyTargetValue;
 	propertyNames: string[];

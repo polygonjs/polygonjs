@@ -13,8 +13,21 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {Poly} from '../../Poly';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {DEFAULT_PARAMS} from './WebGLRenderer';
+// <<<<<<< HEAD
 import {FullScreenQuad} from '../../../modules/three/examples/jsm/postprocessing/Pass';
 import {PathTracingRenderer, PhysicalPathTracingMaterial} from '../../../core/render/PBR/three-gpu-pathtracer';
+// =======
+// import {FullScreenQuad} from 'three/examples/jsm/postprocessing/Pass';
+// import {
+// 	PathTracingRenderer,
+// 	PhysicalPathTracingMaterial,
+// 	PhysicalCamera,
+// 	ShapedAreaLight,
+// 	PhysicalSpotLight,
+// 	IESLoader,
+// 	// @ts-ignore
+// } from '../../core/thirdParty/three-gpu-pathtracer';
+// >>>>>>> master
 import {PathTracingRendererContainer} from './utils/pathTracing/PathTracingRendererContainer';
 import {BaseNodeType} from '../_Base';
 import {ModuleName} from '../../poly/registers/modules/Common';
@@ -33,6 +46,7 @@ class PathTracingRendererRopParamsConfig extends NodeParamsConfig {
 	resolutionScale = ParamConfig.FLOAT(0.5, {
 		range: [0.1, 1],
 		rangeLocked: [true, true],
+		step: 0.01,
 		separatorAfter: true,
 	});
 	/** @param bounces */

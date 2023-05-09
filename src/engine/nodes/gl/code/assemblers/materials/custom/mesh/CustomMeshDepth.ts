@@ -4,7 +4,7 @@ import {ShaderAssemblerMaterial} from '../../_BaseMaterial';
 import {ShaderName} from '../../../../../../utils/shaders/ShaderName';
 import TemplateFragment from '../../../../templates/custom/mesh/CustomMeshDepth.frag.glsl';
 import {MeshDepthMaterial} from 'three';
-import {AssemblerControllerNode} from '../../../../Controller';
+import {AssemblerGlControllerNode} from '../../../../Controller';
 import {includeSSSDeclarations} from '../../common/SSS';
 
 const INSERT_BODY_AFTER_MAP: Map<ShaderName, string> = new Map([
@@ -13,7 +13,7 @@ const INSERT_BODY_AFTER_MAP: Map<ShaderName, string> = new Map([
 ]);
 
 export class ShaderAssemblerCustomMeshDepth extends ShaderAssemblerMaterial {
-	constructor(protected override _gl_parent_node: AssemblerControllerNode) {
+	constructor(protected override _gl_parent_node: AssemblerGlControllerNode) {
 		super(_gl_parent_node);
 
 		this._addFilterFragmentShaderCallback('MeshStandardBuilderMatNode', includeSSSDeclarations);

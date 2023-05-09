@@ -3,7 +3,8 @@ import {DefaultOperationParams} from '../../../core/operations/_Base';
 import {GLTFLoaderHandler} from '../../../core/loader/geometry/GLTF';
 import {SopTypeFile} from '../../poly/registers/nodes/types/Sop';
 import {BaseFileSopOperation, BaseFileSopParams} from './utils/File/_BaseFileOperation';
-import {GLTF} from '../../../modules/three/examples/jsm/loaders/GLTFLoader';
+import {GLTF} from 'three/examples/jsm/loaders/GLTFLoader';
+import {sanitizeUrl} from '../../../core/UrlHelper';
 interface FileGLTFSopParams extends DefaultOperationParams {
 	url: string;
 	draco: boolean;
@@ -13,7 +14,7 @@ interface FileGLTFSopParams extends DefaultOperationParams {
 
 export class FileGLTFSopOperation extends BaseFileSopOperation<GLTF> {
 	static override readonly DEFAULT_PARAMS: FileGLTFSopParams = {
-		url: `${ASSETS_ROOT}/models/resources/threedscans.com/eagle.glb`,
+		url: sanitizeUrl(`${ASSETS_ROOT}/models/resources/threedscans.com/eagle.glb`),
 		draco: true,
 		ktx2: false,
 		matrixAutoUpdate: false,

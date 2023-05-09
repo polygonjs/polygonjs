@@ -12,9 +12,13 @@ function copyMissingDtsFiles() {
 		path.join(polygonjsDist, 'src/engine/nodes/sop/utils/ParticlesSystemGPU/GPUComputationRenderer.d.ts')
 	);
 	fs.copyFileSync(
-		path.join(polygonjsRoot, 'src/engine/operations/sop/utils/Bvh/three-mesh-bvh.d.ts'),
-		path.join(polygonjsDist, 'src/engine/operations/sop/utils/Bvh/three-mesh-bvh.d.ts')
+		path.join(polygonjsRoot, 'src/core/particles/gpuCompute/GPUComputationRenderer.d.ts'),
+		path.join(polygonjsDist, 'src/core/particles/gpuCompute/GPUComputationRenderer.d.ts')
 	);
+	// fs.copyFileSync(
+	// 	path.join(polygonjsRoot, 'src/core/geometry/cad/build/polygonjs-occt.d.ts'),
+	// 	path.join(polygonjsDist, 'src/core/geometry/cad/build/polygonjs-occt.d.ts')
+	// );
 	fs.copyFileSync(
 		path.join(polygonjsRoot, 'src/modules/core/controls/OrbitControls.d.ts'),
 		path.join(polygonjsDist, 'src/modules/core/controls/OrbitControls.d.ts')
@@ -91,6 +95,43 @@ function fixGsap() {
 	addTsIgnoreToGsapImport();
 }
 
+function fixOpencascade() {
+	// in file dist/src/core/geometry/cad/CadCommon.d.ts
+	// add @ts-ignore to lines containing 'from './build/polygonjs-occt';'
+	const filePath = path.join(polygonjsDist, 'src/core/geometry/cad/CadCommon.d.ts');
+	const content = fs.readFileSync(filePath, 'utf-8');
+	const lines = content.split('\n');
+	const newLines: string[] = [];
+	for (const line of lines) {
+		if (line.includes(`from './build/polygonjs-occt';`)) {
+			newLines.push(`// @ts-ignore`);
+			newLines.push(line);
+		} else {
+			newLines.push(line);
+		}
+	}
+	fs.writeFileSync(filePath, newLines.join('\n'));
+}
+function fixManifold() {
+	// in file dist/src/core/geometry/sdf/SDFCommon.d.ts
+	// add @ts-ignore to lines containing 'from './manifold/manifold';'
+	const filePath = path.join(polygonjsDist, 'src/core/geometry/sdf/SDFCommon.d.ts');
+	const content = fs.readFileSync(filePath, 'utf-8');
+	const lines = content.split('\n');
+	const newLines: string[] = [];
+	for (const line of lines) {
+		if (line.includes(`from './manifold/manifold'`)) {
+			newLines.push(`// @ts-ignore`);
+			newLines.push(line);
+		} else {
+			newLines.push(line);
+		}
+	}
+	fs.writeFileSync(filePath, newLines.join('\n'));
+}
+
 copyMissingDtsFiles();
 setTsIgnoreToParamAccessorFiles();
 fixGsap();
+fixOpencascade();
+fixManifold();

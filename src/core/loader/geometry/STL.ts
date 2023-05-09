@@ -1,10 +1,10 @@
 import {BufferGeometry, Mesh, MeshLambertMaterial, Object3D} from 'three';
-import {STLLoader} from '../../../modules/three/examples/jsm/loaders/STLLoader';
-import {BaseGeoLoaderHandler, BaseGeoLoader} from './_BaseLoaderHandler';
+import {STLLoader} from 'three/examples/jsm/loaders/STLLoader';
+import {BaseObject3DLoaderHandler, BaseGeoLoader} from './_BaseLoaderHandler';
 
 const matMesh = new MeshLambertMaterial();
 
-export class STLLoaderHandler extends BaseGeoLoaderHandler<BufferGeometry> {
+export class STLLoaderHandler extends BaseObject3DLoaderHandler<BufferGeometry> {
 	protected async _getLoader(): Promise<BaseGeoLoader<BufferGeometry>> {
 		return (this._loader = this._loader || (await new STLLoader(this.loadingManager)));
 	}

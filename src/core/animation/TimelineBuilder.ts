@@ -2,9 +2,9 @@ import {TimelineBuilderProperty, AnimPropertyTargetValue} from './TimelineBuilde
 import {AnimPropertyTarget} from './PropertyTarget';
 import {AnimationPosition} from './Position';
 import {AnimationUpdateCallback} from './UpdateCallback';
-import gsap from 'gsap';
 import {RampValue} from '../../engine/params/ramp/RampValue';
 import {AnimationRepeatParams, Operation, RegisterOptions} from './vars/AnimBuilderTypes';
+import {GsapCoreTimeline, gsap} from '../thirdParty/gsap';
 
 export class TimelineBuilder {
 	private _timelineBuilders: TimelineBuilder[] = [];
@@ -203,7 +203,7 @@ export class TimelineBuilder {
 		return this._property?.targetValue();
 	}
 
-	populate(timeline: gsap.core.Timeline, options: RegisterOptions) {
+	populate(timeline: GsapCoreTimeline, options: RegisterOptions) {
 		this._printDebug(['populate', this, timeline, this._timelineBuilders]);
 		for (let timelineBuilder of this._timelineBuilders) {
 			const subTimeline = gsap.timeline();

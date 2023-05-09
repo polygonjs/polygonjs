@@ -1,7 +1,7 @@
 import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
-import {RectAreaLightUniformsLib} from '../../../modules/three/examples/jsm/lights/RectAreaLightUniformsLib';
+import {RectAreaLightUniformsLib} from 'three/examples/jsm/lights/RectAreaLightUniformsLib';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {Group, RectAreaLight} from 'three';
 import {AreaLightParams, CoreRectAreaLightHelper, DEFAULT_AREA_LIGHT_PARAMS} from '../../../core/lights/AreaLight';

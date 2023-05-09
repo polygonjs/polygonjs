@@ -2,14 +2,15 @@ import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {BufferAttribute, Matrix4, Mesh, Triangle, Vector3} from 'three';
-import {Raycaster, Intersection} from 'three';
+import {Intersection} from 'three';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {MatDoubleSideTmpSetter} from '../../../core/render/MatDoubleSideTmpSetter';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 import {TypeAssert} from '../../poly/Assert';
 import {HitPointInfo} from 'three-mesh-bvh';
+import {BufferGeometryWithBVH} from '../../../core/geometry/bvh/three-mesh-bvh';
 import {ThreeMeshBVHHelper} from '../../../core/geometry/bvh/ThreeMeshBVHHelper';
-import {RaycasterForBVH, BufferGeometryWithBVH} from '../../../core/geometry/bvh/three-mesh-bvh';
+import {createRaycaster} from '../../../core/RaycastHelper';
 
 export enum RaySopMode {
 	PROJECT_RAY = 'project rays',
@@ -27,12 +28,6 @@ interface RaySopParams extends DefaultOperationParams {
 }
 
 const DIST_ATTRIB_NAME = 'dist';
-
-function createRaycaster() {
-	const raycaster = new Raycaster() as RaycasterForBVH;
-	raycaster.firstHitOnly = true;
-	return raycaster;
-}
 
 const objectWorldMat = new Matrix4();
 const objectWorldMatInverse = new Matrix4();

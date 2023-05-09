@@ -1,7 +1,12 @@
-import {CadGeometryType, CAD_GEOMETRY_TYPES_SET_SHAPE} from './CadCommon';
+import {CadGeometryType, CAD_GEOMETRY_TYPES_SET, CAD_GEOMETRY_TYPES_SET_SHAPE} from './CadCommon';
 import type {CadGeometryTypeShape, CadTypeMap, CadShape} from './CadCommon';
 import {CoreType} from '../../Type';
 import type {CadObject} from './CadObject';
+import {CoreObjectType, ObjectContent} from '../ObjectContent';
+
+export function isCADObject(o: ObjectContent<CoreObjectType>) {
+	return CAD_GEOMETRY_TYPES_SET.has(o.type as CadGeometryType);
+}
 export class CoreCadType {
 	static isPoint2d(object: CadObject<CadGeometryType>): object is CadObject<CadGeometryType.POINT_2D> {
 		return object.type == CadGeometryType.POINT_2D;

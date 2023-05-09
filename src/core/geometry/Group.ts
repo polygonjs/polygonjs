@@ -2,14 +2,14 @@ import {AttribValue} from './../../types/GlobalTypes';
 import {NumericAttribValue, PolyDictionary} from '../../types/GlobalTypes';
 import {Box3, BufferGeometry, LineSegments, Mesh, Points, Object3D, Vector3} from 'three';
 import {BaseCoreObject} from './_BaseObject';
-import {CoreObject, AttributeDictionary} from './Object';
+import {CoreObject} from './Object';
 import {CoreGeometry} from './Geometry';
 import {CoreAttribute} from './Attribute';
 import {CoreString} from '../String';
 import {AttribClass, AttribSize, ObjectData, objectTypeFromConstructor, AttribType, ObjectType} from './Constant';
 import {CoreType} from '../Type';
 import {ArrayUtils} from '../ArrayUtils';
-import {CoreFace} from './Face';
+import {CoreFace} from './CoreFace';
 import {Poly} from '../../engine/Poly';
 import {CoreEntity} from './Entity';
 import {CoreObjectType, ObjectContent, isObject3D} from './ObjectContent';
@@ -18,15 +18,21 @@ import {coreObjectFactory, coreObjectInstanceFactory} from './CoreObjectFactory'
 
 // CAD
 import type {CadGeometryType, CadGeometryTypeShape} from './cad/CadCommon';
-import {CAD_GEOMETRY_TYPES_SET} from './cad/CadCommon';
 import type {CadObject} from './cad/CadObject';
-import {CoreCadType} from './cad/CadCoreType';
+import {CoreCadType, isCADObject} from './cad/CadCoreType';
 //
 // CSG
 import type {CsgGeometryType} from './csg/CsgCommon';
-import {CSG_GEOMETRY_TYPES_SET} from './csg/CsgCommon';
 import type {CsgObject} from './csg/CsgObject';
+import {EntityGroupCollection} from './EntityGroupCollection';
+import {isCSGObject} from './csg/CsgCoreType';
 //
+// SDF
+// import type {SDFObjectType} from './sdf/SDFCommon';
+// import {SDF_OBJECT_TYPES_SET} from './sdf/SDFCommon';
+// import type {SDFObject} from './sdf/SDFObject';
+//
+type AttributeDictionary = PolyDictionary<AttribValue>;
 
 // import {CoreMask} from './Mask';
 export type GroupString = string;
@@ -47,11 +53,13 @@ function objectData<T extends CoreObjectType>(object: ObjectContent<T>): ObjectD
 	// 	points_count = CoreGeometry.pointsCount((object as Mesh).geometry as BufferGeometry);
 	// }
 	const objectType = isObject3D(object) ? objectTypeFromConstructor(object.constructor) : (object.type as ObjectType);
+	const groupData = EntityGroupCollection.data(object);
 	return {
 		type: objectType,
 		name: object.name,
 		childrenCount,
 		pointsCount,
+		groupData,
 	};
 }
 function objectTotalPointsCount(object: Object3D) {
@@ -155,8 +163,7 @@ export class CoreGroup extends CoreEntity {
 	//
 	//
 	cadObjects() {
-		const list =
-			this._allObjects?.filter((o) => CAD_GEOMETRY_TYPES_SET.has(o.type as CadGeometryType)) || undefined;
+		const list = this._allObjects?.filter(isCADObject) || undefined;
 		return list as CadObject<CadGeometryType>[] | undefined;
 	}
 	cadObjectsWithShape() {
@@ -173,13 +180,24 @@ export class CoreGroup extends CoreEntity {
 	//
 	//
 	csgObjects() {
-		const list =
-			this._allObjects?.filter((o) => CSG_GEOMETRY_TYPES_SET.has(o.type as CsgGeometryType)) || undefined;
+		const list = this._allObjects?.filter(isCSGObject) || undefined;
 		return list as CsgObject<CsgGeometryType>[] | undefined;
 	}
 	csgCoreObjects() {
 		return this.csgObjects()?.map((o, i) => coreObjectInstanceFactory(o, i));
 	}
+	//
+	//
+	// SDF OBJECTS
+	//
+	//
+	// SDFObjects() {
+	// 	const list = this._allObjects?.filter((o) => SDF_OBJECT_TYPES_SET.has(o.type as SDFObjectType)) || undefined;
+	// 	return list as SDFObject[] | undefined;
+	// }
+	// SDFCoreObjects() {
+	// 	return this.csgObjects()?.map((o, i) => coreObjectInstanceFactory(o, i));
+	// }
 	//
 	//
 	// THREEJS OBJECTS

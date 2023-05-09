@@ -132,14 +132,15 @@ export class CodeEventNode extends TypedEventNode<CodeEventParamsConfig> {
 			const functionBody = `try {
 				${TranspiledFilter.filter(this.pv.codeJavascript)}
 			} catch(e) {
-				this.states.error.set(e)
+				states.error.set(e)
 			}`;
 
-			const ProcessorClass = buildCodeNodeFunction<BaseCodeEventProcessor>(
-				BaseCodeEventProcessor,
-				'BaseCodeEventProcessor',
-				functionBody
-			);
+			const ProcessorClass = buildCodeNodeFunction<BaseCodeEventProcessor>({
+				BaseCodeProcessor: BaseCodeEventProcessor,
+				BaseCodeProcessorName: 'BaseCodeEventProcessor',
+				node: this,
+				functionBody,
+			});
 			if (ProcessorClass) {
 				this._processor = new ProcessorClass(this);
 				this._lastCompiledCode = this.pv.codeJavascript;

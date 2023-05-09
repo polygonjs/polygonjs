@@ -13,7 +13,7 @@ import {InputCloneMode} from '../../poly/InputCloneMode';
 import {MapUtils} from '../../../core/MapUtils';
 import {ObjectType, objectTypeFromConstructor} from '../../../core/geometry/Constant';
 import {ArrayUtils} from '../../../core/ArrayUtils';
-import {isBooleanTrue} from '../../../core/Type';
+import {mergeFaces} from '../../../core/geometry/operation/Fuse';
 
 const roundedPosition = new Vector3();
 const vector2 = new Vector2();
@@ -66,58 +66,11 @@ export class FuseSopNode extends TypedSopNode<FuseSopParamsConfig> {
 
 		const newObjects: Object3D[] = [];
 		for (let object of inputCoreGroup.threejsObjects()) {
-			const geometry = (object as Mesh).geometry;
-			this._fuseGeometry(geometry);
 			this._filterObject(object);
 			newObjects.push(object);
 		}
-
 		this.setObjects(newObjects);
 	}
-
-	// private _fuseCoreObject(coreObject: CoreObject) {
-	// 	const object = coreObject.object();
-	// 	if (!object) {
-	// 		return;
-	// 	}
-	// 	const points = coreObject.points();
-
-	// 	const precision = this.pv.dist;
-	// 	const pointsByPosition: Map<string, CorePoint[]> = new Map();
-	// 	for (let point of points) {
-	// 		const position = point.position();
-	// 		roundedPosition.set(
-	// 			Math.round(position.x / precision),
-	// 			Math.round(position.y / precision),
-	// 			Math.round(position.z / precision)
-	// 		);
-	// 		const key = rounded_position.toArray().join('-');
-	// 		MapUtils.pushOnArrayAtEntry(pointsByPosition, key, point);
-	// 	}
-
-	// 	const keptPoints: CorePoint[] = [];
-	// 	pointsByPosition.forEach((points, key) => {
-	// 		keptPoints.push(points[0]);
-	// 	});
-
-	// 	(object as Mesh).geometry.dispose();
-	// 	if (keptPoints.length > 0) {
-	// 		const objectType = objectTypeFromConstructor(object.constructor);
-	// 		if (objectType) {
-	// 			const builder = geometryBuilder(objectType);
-	// 			if (builder) {
-	// 				const geometry = builder.from_points(keptPoints);
-	// 				if (geometry) {
-	// 					(object as Mesh).geometry = geometry;
-	// 				}
-	// 			}
-	// 		}
-	// 		return object;
-	// 	} else {
-	// 		// if(object.material){ object.material.dispose() }
-	// 		// if(object.parent){ object.parent.remove(object) }
-	// 	}
-	// }
 
 	private _filterObject(object: Object3D) {
 		const objectType = objectTypeFromConstructor(object.constructor);
@@ -126,9 +79,11 @@ export class FuseSopNode extends TypedSopNode<FuseSopParamsConfig> {
 				return this._filterMesh(object as Mesh);
 			}
 			case ObjectType.LINE_SEGMENTS: {
+				this._fuseGeometry((object as Mesh).geometry);
 				return this._filterLineSegments(object as LineSegments);
 			}
 			case ObjectType.POINTS: {
+				this._fuseGeometry((object as Mesh).geometry);
 				return this._filterPoints(object as Points);
 			}
 		}
@@ -140,27 +95,7 @@ export class FuseSopNode extends TypedSopNode<FuseSopParamsConfig> {
 		if (!index) {
 			return;
 		}
-		const newIndices: number[] = [];
-		const indexArray = index.array as number[];
-		const facesCount = indexArray.length / 3;
-		for (let i = 0; i < facesCount; i++) {
-			vector3.fromArray(indexArray, i * 3);
-			const a = vector3.x;
-			const b = vector3.y;
-			const c = vector3.z;
-			const isFaceSnapped = a == b || a == c || b == c;
-			if (!isFaceSnapped) {
-				vector3.toArray(newIndices, newIndices.length);
-			}
-		}
-		geometry.setIndex(newIndices);
-
-		if (newIndices.length == 0) {
-			clearAttributes(geometry);
-		}
-		if (isBooleanTrue(this.pv.computeNormals)) {
-			geometry.computeVertexNormals();
-		}
+		mergeFaces(geometry, this.pv.dist);
 	}
 	private _filterLineSegments(object: LineSegments) {
 		const geometry = object.geometry;

@@ -2,6 +2,7 @@ import {AllNodesRegister} from './nodes/All';
 import {AllExpressionsRegister} from './expressions/All';
 import {AllAssemblersRegister} from './assemblers/All';
 import {AllCamerasRegister} from './cameras/All';
+import {AllNamedFunctionRegister} from './functions/All';
 import {Poly} from '../../Poly';
 import {CoreFeaturesController} from '../../../core/FeaturesController';
 import {AllModulesRegister} from './modules/All';
@@ -16,6 +17,7 @@ export class AllRegister {
 		AllNodesRegister.run(Poly);
 		AllCamerasRegister.run(Poly);
 		AllExpressionsRegister.run(Poly);
+		AllNamedFunctionRegister.run(Poly);
 
 		const noAssemblers = CoreFeaturesController.noAssemblers();
 		if (!noAssemblers) {

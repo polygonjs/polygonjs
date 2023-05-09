@@ -1,6 +1,6 @@
 // import {TypedPostNode, TypedPostNodeContext, PostParamOptions} from './_Base';
-// import {CopyShader} from '../../../modules/three/examples/jsm/shaders/CopyShader';
-// import {ShaderPass} from '../../../modules/three/examples/jsm/postprocessing/ShaderPass';
+// import {CopyShader} from 'three/examples/jsm/shaders/CopyShader';
+// import {ShaderPass} from 'three/examples/jsm/postprocessing/ShaderPass';
 // import {IUniformN} from '../utils/code/gl/Uniforms';
 // interface CopyPassWithUniforms extends ShaderPass {
 // 	uniforms: {

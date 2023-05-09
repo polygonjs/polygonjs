@@ -85,9 +85,9 @@ function createScene(root: RootManagerNode) {
 			var physicsWorld1 = ground.createNode('physicsWorld');
 			physicsWorld1.setName('physicsWorld1');
 			const physicsWorld1_nodes: ReturnedNodeDataDict = {};
-			function create_onScenePlayState1(physicsWorld1: PhysicsWorldSopNode) {
-				var onScenePlayState1 = physicsWorld1.createNode('onScenePlayState');
-				onScenePlayState1.setName('onScenePlayState1');
+			function create_onScenePause(physicsWorld1: PhysicsWorldSopNode) {
+				var onScenePlayState1 = physicsWorld1.createNode('onScenePause');
+				onScenePlayState1.setName('onScenePause1');
 				const onScenePlayState1_nodes: ReturnedNodeDataDict = {};
 				onScenePlayState1.uiData.setPosition(-100, -100);
 				onScenePlayState1.params.postCreateSpareParams();
@@ -121,14 +121,13 @@ function createScene(root: RootManagerNode) {
 				physicsWorldStepSimulation1.params.runOnSceneLoadHooks();
 				return {node: physicsWorldStepSimulation1, children: physicsWorldStepSimulation1_nodes};
 			}
-			physicsWorld1_nodes['onScenePlayState1'] = create_onScenePlayState1(physicsWorld1);
+			physicsWorld1_nodes['onScenePause'] = create_onScenePause(physicsWorld1);
 			physicsWorld1_nodes['onTick1'] = create_onTick1(physicsWorld1);
 			physicsWorld1_nodes['physicsWorldReset1'] = create_physicsWorldReset1(physicsWorld1);
 			physicsWorld1_nodes['physicsWorldStepSimulation1'] = create_physicsWorldStepSimulation1(physicsWorld1);
 			physicsWorld1_nodes['physicsWorldReset1'].node.setInput(
 				'trigger',
-				physicsWorld1_nodes['onScenePlayState1'].node,
-				'triggerPause'
+				physicsWorld1_nodes['onScenePause'].node
 			);
 			physicsWorld1_nodes['physicsWorldStepSimulation1'].node.setInput(
 				'trigger',

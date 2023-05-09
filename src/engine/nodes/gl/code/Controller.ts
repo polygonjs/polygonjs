@@ -32,7 +32,7 @@ export class BaseGlParentNode extends TypedNode<any, any> {
 		return super.nodesByType(type) as GlNodeChildrenMap[K][];
 	}
 }
-export abstract class AssemblerControllerNode extends BaseGlParentNode {
+export abstract class AssemblerGlControllerNode extends BaseGlParentNode {
 	abstract assemblerController(): GlAssemblerController<BaseGlShaderAssembler> | undefined;
 }
 
@@ -43,7 +43,7 @@ export class GlAssemblerController<A extends BaseGlShaderAssembler> {
 	private _globalsHandler: GlobalsBaseController | undefined = new GlobalsGeometryHandler();
 	private _compile_required: boolean = true;
 
-	constructor(private node: AssemblerControllerNode, assembler_class: BaseGlShaderAssemblerConstructor<A>) {
+	constructor(private node: AssemblerGlControllerNode, assembler_class: BaseGlShaderAssemblerConstructor<A>) {
 		this._assembler = new assembler_class(this.node);
 		this._spareParamsController = new GlAssemblerNodeSpareParamsController(this, this.node);
 	}

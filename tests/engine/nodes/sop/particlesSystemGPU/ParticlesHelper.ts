@@ -8,19 +8,18 @@ import {
 } from '../../../../../src/core/particles/CoreParticles';
 import {GeoObjNode} from '../../../../../src/engine/nodes/obj/Geo';
 import {ActorSopNode} from '../../../../../src/engine/nodes/sop/Actor';
-import {OnScenePlayStateActorNode} from '../../../../../src/engine/nodes/actor/OnScenePlayState';
-import {ActorConnectionPointType} from '../../../../../src/engine/nodes/utils/io/connections/Actor';
+import {JsConnectionPointType} from '../../../../../src/engine/nodes/utils/io/connections/Js';
 import {CoreSleep} from '../../../../../src/core/Sleep';
 export function createActorNodeChildren(actorNode: ActorSopNode) {
 	const particlesSystemReset = actorNode.createNode('particlesSystemReset');
-	const onScenePlayState = actorNode.createNode('onScenePlayState');
+	const onScenePause = actorNode.createNode('onScenePause');
 	const particlesSystemStepSimulation = actorNode.createNode('particlesSystemStepSimulation');
 	const onTick = actorNode.createNode('onTick');
 
-	particlesSystemReset.setInput(0, onScenePlayState, OnScenePlayStateActorNode.OUTPUT_NAME_PAUSE);
-	particlesSystemStepSimulation.setInput(ActorConnectionPointType.TRIGGER, onTick);
+	particlesSystemReset.setInput(0, onScenePause);
+	particlesSystemStepSimulation.setInput(JsConnectionPointType.TRIGGER, onTick);
 
-	onScenePlayState.uiData.setPosition(-100, -100);
+	onScenePause.uiData.setPosition(-100, -100);
 	particlesSystemReset.uiData.setPosition(100, -100);
 	onTick.uiData.setPosition(-100, 100);
 	particlesSystemStepSimulation.uiData.setPosition(100, 100);

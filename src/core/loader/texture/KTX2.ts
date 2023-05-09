@@ -2,7 +2,7 @@ import {LIBRARY_INSTALL_HINT} from './../common';
 import {BaseNodeType} from '../../../engine/nodes/_Base';
 import {ASSETS_ROOT} from './../AssetsUtils';
 import {BaseCoreImageLoader, TextureLoadOptions} from './_BaseImageLoader';
-import {KTX2Loader} from '../../../modules/three/examples/jsm/loaders/KTX2Loader';
+import {KTX2Loader} from 'three/examples/jsm/loaders/KTX2Loader';
 import {Poly} from '../../../engine/Poly';
 import {BaseLoaderLoadOptions, CoreBaseLoader} from '../_Base';
 import {sanitizeUrl} from '../../UrlHelper';

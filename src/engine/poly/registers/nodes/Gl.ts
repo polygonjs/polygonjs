@@ -56,6 +56,7 @@ import {AlignGlNode} from '../../../nodes/gl/Align';
 import {AttributeGlNode} from '../../../nodes/gl/Attribute';
 import {CartesianToPolarGlNode} from '../../../nodes/gl/CartesianToPolar';
 import {CheckersGlNode} from '../../../nodes/gl/Checkers';
+import {ClothSolverPositionGlNode} from '../../../nodes/gl/ClothSolverPosition';
 import {ColorCorrectGlNode} from '../../../nodes/gl/ColorCorrect';
 import {CompareGlNode} from '../../../nodes/gl/Compare';
 import {ComplementGlNode} from '../../../nodes/gl/Complement';
@@ -194,6 +195,7 @@ export interface GlNodeChildrenMap {
 	ceil: CeilGlNode;
 	clamp: ClampGlNode;
 	checkers: CheckersGlNode;
+	clothSolverPosition: ClothSolverPositionGlNode;
 	colorCorrect: ColorCorrectGlNode;
 	compare: CompareGlNode;
 	complement: ComplementGlNode;
@@ -392,6 +394,7 @@ export class GlRegister {
 		poly.registerNode(CeilGlNode, CATEGORY_GL.MATH);
 		poly.registerNode(ClampGlNode, CATEGORY_GL.MATH);
 		poly.registerNode(CheckersGlNode, CATEGORY_GL.GEOMETRY);
+		poly.registerNode(ClothSolverPositionGlNode, CATEGORY_GL.ADVANCED);
 		poly.registerNode(ColorCorrectGlNode, CATEGORY_GL.COLOR);
 		poly.registerNode(CompareGlNode, CATEGORY_GL.LOGIC);
 		poly.registerNode(ComplementGlNode, CATEGORY_GL.MATH);

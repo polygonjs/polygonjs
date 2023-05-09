@@ -120,7 +120,7 @@ export class PolywireSopOperation extends BaseSopOperation {
 			}
 
 			const newCircle = circleTemplate.clone();
-			this._coreTransform.rotateGeometry(newCircle, DEFAULT_DIR, delta);
+			CoreTransform.rotateGeometry(newCircle, DEFAULT_DIR, delta);
 			const matrix = this._coreTransform.matrix(currentPos, DEFAULT_R, DEFAULT_S, scale, DEFAULT_ROTATION_ORDER);
 			newCircle.applyMatrix4(matrix);
 
