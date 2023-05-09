@@ -165,6 +165,7 @@ import {PlayAudioSourceJsNode} from '../../../nodes/js/PlayAudioSource';
 import {PlayerModeJsNode} from '../../../nodes/js/PlayerMode';
 import {PlayerUpdateJsNode} from '../../../nodes/js/PlayerUpdate';
 import {PlayInstrumentNoteJsNode} from '../../../nodes/js/PlayInstrumentNote';
+import {PolarTransformJsNode} from '../../../nodes/js/PolarTransform';
 import {PowJsNode} from '../../../nodes/js/Pow';
 import {PressButtonParamJsNode} from '../../../nodes/js/PressButtonParam';
 import {PreviousValueJsNode} from '../../../nodes/js/PreviousValue';
@@ -436,6 +437,7 @@ export interface JsNodeChildrenMap {
 	playerMode: PlayerModeJsNode;
 	playInstrumentNote: PlayInstrumentNoteJsNode;
 	playerUpdate: PlayerUpdateJsNode;
+	polarTransform: PolarTransformJsNode;
 	pow: PowJsNode;
 	pressButtonParam: PressButtonParamJsNode;
 	previousValue: PreviousValueJsNode;
@@ -743,6 +745,7 @@ export class JsRegister {
 		poly.registerNode(PlayInstrumentNoteJsNode, CATEGORY_JS.AUDIO, ONLY_ACTOR);
 		poly.registerNode(PlayerModeJsNode, CATEGORY_JS.LOGIC);
 		poly.registerNode(PlayerUpdateJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR);
+		poly.registerNode(PolarTransformJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(PowJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(PressButtonParamJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR);
 		poly.registerNode(PreviousValueJsNode, CATEGORY_JS.ADVANCED, ONLY_ACTOR);

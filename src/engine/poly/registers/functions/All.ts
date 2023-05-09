@@ -298,6 +298,7 @@ import { playerMode } from "../../../functions/playerMode";
 import { playerPhysicsUpdate } from "../../../functions/playerPhysicsUpdate";
 import { playerSimpleUpdate } from "../../../functions/playerSimpleUpdate";
 import { playInstrumentNote } from "../../../functions/playInstrumentNote";
+import { polarTransform } from "../../../functions/polarTransform";
 import { pressButtonParam } from "../../../functions/pressButtonParam";
 import { previousValueColor } from "../../../functions/previousValueColor";
 import { previousValuePrimitive } from "../../../functions/previousValuePrimitive";
@@ -713,6 +714,7 @@ export interface NamedFunctionMap {
   playerPhysicsUpdate: playerPhysicsUpdate;
   playerSimpleUpdate: playerSimpleUpdate;
   playInstrumentNote: playInstrumentNote;
+  polarTransform: polarTransform;
   pressButtonParam: pressButtonParam;
   previousValueColor: previousValueColor;
   previousValuePrimitive: previousValuePrimitive<boolean | number | string>;
@@ -1131,6 +1133,7 @@ export class AllNamedFunctionRegister {
       playerPhysicsUpdate,
       playerSimpleUpdate,
       playInstrumentNote,
+      polarTransform,
       pressButtonParam,
       previousValueColor,
       previousValuePrimitive,

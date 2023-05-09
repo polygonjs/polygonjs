@@ -32,7 +32,7 @@ import {CoreType} from '../../../core/Type';
 import {logBlue as _logBlue} from '../../../core/logger/Console';
 import {PointBuilderEvaluator} from '../js/code/assemblers/pointBuilder/PointBuilderEvaluator';
 
-const DEBUG = false;
+const DEBUG = true;
 function logBlue(message: string) {
 	if (!DEBUG) {
 		return;

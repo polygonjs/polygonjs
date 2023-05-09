@@ -1,2 +1,2 @@
-import { setObjectPolarTransform } from "./_SetObjectPolarTransform";
+import { setObjectPolarTransform } from "./_PolarTransform";
 export { setObjectPolarTransform };

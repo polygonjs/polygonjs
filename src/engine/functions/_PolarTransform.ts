@@ -1,6 +1,6 @@
 import {Object3D, Vector3, Matrix4} from 'three';
 import {GetObjectPropertyJsNodeInputName, touchObjectProperties} from '../../core/reactivity/ObjectPropertyReactivity';
-import {ObjectNamedFunction4} from './_Base';
+import {NamedFunction5, ObjectNamedFunction4} from './_Base';
 import {CorePolarTransform, PolarTransformMatrixParams} from '../../core/PolarTransform';
 
 const fullMatrix = new Matrix4();
@@ -29,5 +29,21 @@ export class setObjectPolarTransform extends ObjectNamedFunction4<[Vector3, numb
 		CorePolarTransform.applyMatrixToObject(object3D, fullMatrix);
 
 		touchObjectProperties(object3D, PROPERTIES);
+	}
+}
+
+export class polarTransform extends NamedFunction5<[Vector3, number, number, number, Matrix4]> {
+	static override type() {
+		return 'polarTransform';
+	}
+	func(center: Vector3, longitude: number, latitude: number, depth: number, target: Matrix4): Matrix4 {
+		params.center.copy(center);
+		params.longitude = longitude;
+		params.latitude = latitude;
+		params.depth = depth;
+
+		CorePolarTransform.matrix(params, target);
+
+		return target;
 	}
 }

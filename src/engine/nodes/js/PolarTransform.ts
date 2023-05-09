@@ -1,18 +1,18 @@
 /**
- * applies a polar transform to the object
+ * computes a transformation matrix from longitude, latitude and depth
  *
  *
  */
-import {TRIGGER_CONNECTION_NAME, TypedJsNode} from './_Base';
+import {TypedJsNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {JsConnectionPoint, JsConnectionPointType, JS_CONNECTION_POINT_IN_NODE_DEF} from '../utils/io/connections/Js';
-import {inputObject3D} from './_BaseObject3D';
 import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {Poly} from '../../Poly';
+import {Matrix4} from 'three';
 
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
 
-class SetObjectPolarTransformJsParamsConfig extends NodeParamsConfig {
+class PolarTransformJsParamsConfig extends NodeParamsConfig {
 	/** @param center of the transform */
 	center = ParamConfig.VECTOR3([0, 0, 0]);
 	/** @param moves the objects along the longitude, which is equivalent to a rotation on the y axis */
@@ -32,34 +32,35 @@ class SetObjectPolarTransformJsParamsConfig extends NodeParamsConfig {
 	/** @param sets if the matrix should be updated as the animation progresses */
 	// updateMatrix = ParamConfig.BOOLEAN(1);
 }
-const ParamsConfig = new SetObjectPolarTransformJsParamsConfig();
+const ParamsConfig = new PolarTransformJsParamsConfig();
 
-export class SetObjectPolarTransformJsNode extends TypedJsNode<SetObjectPolarTransformJsParamsConfig> {
+export class PolarTransformJsNode extends TypedJsNode<PolarTransformJsParamsConfig> {
 	override readonly paramsConfig = ParamsConfig;
 	static override type() {
-		return 'setObjectPolarTransform';
+		return 'polarTransform';
 	}
 
 	override initializeNode() {
-		this.io.inputs.setNamedInputConnectionPoints([
-			new JsConnectionPoint(TRIGGER_CONNECTION_NAME, JsConnectionPointType.TRIGGER, CONNECTION_OPTIONS),
-			new JsConnectionPoint(JsConnectionPointType.OBJECT_3D, JsConnectionPointType.OBJECT_3D, CONNECTION_OPTIONS),
-		]);
-
 		this.io.outputs.setNamedOutputConnectionPoints([
-			new JsConnectionPoint(TRIGGER_CONNECTION_NAME, JsConnectionPointType.TRIGGER),
-			new JsConnectionPoint(JsConnectionPointType.OBJECT_3D, JsConnectionPointType.OBJECT_3D, CONNECTION_OPTIONS),
+			new JsConnectionPoint(JsConnectionPointType.MATRIX4, JsConnectionPointType.MATRIX4, CONNECTION_OPTIONS),
 		]);
 	}
-	override setTriggerableLines(linesController: JsLinesCollectionController) {
-		const object3D = inputObject3D(this, linesController);
+	override setLines(linesController: JsLinesCollectionController) {
 		const center = this.variableForInputParam(linesController, this.p.center);
 		const latitude = this.variableForInputParam(linesController, this.p.latitude);
 		const longitude = this.variableForInputParam(linesController, this.p.longitude);
 		const depth = this.variableForInputParam(linesController, this.p.depth);
 
-		const func = Poly.namedFunctionsRegister.getFunction('setObjectPolarTransform', this, linesController);
-		const bodyLine = func.asString(object3D, center, latitude, longitude, depth);
-		linesController.addTriggerableLines(this, [bodyLine]);
+		const varName = this.jsVarName(JsConnectionPointType.MATRIX4);
+		const tmpVarName = linesController.addVariable(this, new Matrix4());
+
+		const func = Poly.namedFunctionsRegister.getFunction('polarTransform', this, linesController);
+		linesController.addBodyOrComputed(this, [
+			{
+				dataType: JsConnectionPointType.MATRIX4,
+				varName,
+				value: func.asString(center, latitude, longitude, depth, tmpVarName),
+			},
+		]);
 	}
 }
