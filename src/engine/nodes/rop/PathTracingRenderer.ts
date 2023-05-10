@@ -32,14 +32,22 @@ import {PathTracingRendererContainer} from './utils/pathTracing/PathTracingRende
 import {BaseNodeType} from '../_Base';
 import {ModuleName} from '../../poly/registers/modules/Common';
 
+const updateWithoutCook = {
+	cook: false,
+	callback: (node: BaseNodeType) => {
+		PathTracingRendererRopNode.PARAM_CALLBACK_update(node as PathTracingRendererRopNode);
+	},
+};
+
 class PathTracingRendererRopParamsConfig extends NodeParamsConfig {
 	realtime = ParamConfig.FOLDER();
 	/** @param display samples count */
 	displayDebug = ParamConfig.BOOLEAN(1);
 	/** @param samples */
-	samplesPerFrame = ParamConfig.INTEGER(1, {
-		range: [1, 10],
+	maxSamplesCount = ParamConfig.INTEGER(2 ** 12, {
+		range: [1, 2 ** 12],
 		rangeLocked: [true, false],
+		step: 1,
 	});
 
 	/** @param resolutionScale */
@@ -53,56 +61,83 @@ class PathTracingRendererRopParamsConfig extends NodeParamsConfig {
 	bounces = ParamConfig.INTEGER(3, {
 		range: [1, 10],
 		rangeLocked: [true, false],
+		...updateWithoutCook,
 	});
 	/** @param bounces inside transmissive material */
 	transmissiveBounces = ParamConfig.INTEGER(3, {
 		range: [1, 10],
 		rangeLocked: [true, false],
+		...updateWithoutCook,
 	});
 	/** @param stableNoise*/
-	stableNoise = ParamConfig.BOOLEAN(1);
+	stableNoise = ParamConfig.BOOLEAN(1, {
+		...updateWithoutCook,
+	});
 	/** @param multipleImportanceSampling */
-	multipleImportanceSampling = ParamConfig.BOOLEAN(1);
+	multipleImportanceSampling = ParamConfig.BOOLEAN(1, {
+		...updateWithoutCook,
+	});
 	/** @param filterGlossyFactor */
 	filterGlossyFactor = ParamConfig.FLOAT(0.5, {
 		range: [0, 1],
 		rangeLocked: [true, true],
+		...updateWithoutCook,
 	});
 	/** @param backgroundBlur*/
-	backgroundBlur = ParamConfig.FLOAT(0);
+	backgroundBlur = ParamConfig.FLOAT(0, {
+		// ...updateWithoutCook,
+	});
 	/** @param environmentIntensity*/
 	environmentIntensity = ParamConfig.FLOAT(1, {
 		range: [0, 1],
 		rangeLocked: [true, false],
 		separatorAfter: true,
+		...updateWithoutCook,
 	});
 	/** @param toggle on to have alpha on (change requires page reload) */
 	alpha = ParamConfig.BOOLEAN(1);
 	/** @param toggle on to have antialias on (change requires page reload) */
 	antialias = ParamConfig.BOOLEAN(1);
 	/** @param tiles */
-	tiles = ParamConfig.VECTOR2([2, 2]);
+	tiles = ParamConfig.VECTOR2([2, 2], {
+		...updateWithoutCook,
+	});
 	/** @param force update */
-	generate = ParamConfig.BUTTON(null, {
-		callback: (node: BaseNodeType) => {
-			PathTracingRendererRopNode.PARAM_CALLBACK_generate(node as PathTracingRendererRopNode);
-		},
+	// generate = ParamConfig.BUTTON(null, {
+	// 	callback: (node: BaseNodeType) => {
+	// 		PathTracingRendererRopNode.PARAM_CALLBACK_generate(node as PathTracingRendererRopNode);
+	// 	},
+	// });
+	// /** @param reset */
+	// reset = ParamConfig.BUTTON(null, {
+	// 	callback: (node: BaseNodeType) => {
+	// 		PathTracingRendererRopNode.PARAM_CALLBACK_reset(node as PathTracingRendererRopNode);
+	// 	},
+	// });
+	sequenceRender = ParamConfig.FOLDER();
+	/** @param frame range */
+	f = ParamConfig.VECTOR2([0, 100], {
+		label: 'Frame Range',
+		...updateWithoutCook,
 	});
-	/** @param reset */
-	reset = ParamConfig.BUTTON(null, {
-		callback: (node: BaseNodeType) => {
-			PathTracingRendererRopNode.PARAM_CALLBACK_reset(node as PathTracingRendererRopNode);
-		},
-	});
-	videoRender = ParamConfig.FOLDER();
 	/** @param samples */
 	samplesPerAnimationFrame = ParamConfig.INTEGER(20, {
 		range: [1, 1000],
 		rangeLocked: [true, false],
+		...updateWithoutCook,
 	});
-	/** @param frame range */
-	f = ParamConfig.VECTOR2([0, 100], {
-		label: 'Frame Range',
+	/** @param resolution */
+	resolution = ParamConfig.VECTOR2([512, 512], {
+		...updateWithoutCook,
+	});
+	/** @param fileName */
+	fileName = ParamConfig.STRING('`$OS`', {
+		...updateWithoutCook,
+	});
+	framePadding = ParamConfig.INTEGER(4, {
+		range: [2, 6],
+		rangeLocked: [true, false],
+		...updateWithoutCook,
 	});
 }
 const ParamsConfig = new PathTracingRendererRopParamsConfig();
@@ -164,6 +199,7 @@ export class PathTracingRendererRopNode extends TypedRopNode<PathTracingRenderer
 		});
 		const fsQuad = new FullScreenQuad(fsQuadMat);
 		const pathTracingRendererContainer = new PathTracingRendererContainer(
+			this,
 			this._webGLRenderer,
 			pathTracingRenderer,
 			fsQuad,
@@ -185,41 +221,55 @@ export class PathTracingRendererRopNode extends TypedRopNode<PathTracingRenderer
 	}
 
 	override cook() {
-		if (this._pathTracingRenderer) {
-			this._updateRenderer(this._pathTracingRenderer);
-		}
+		this._paramCallbackUpdate();
 		this.cookController.endCook();
 	}
 
 	private _updateRenderer(rendererContainer: PathTracingRendererContainer) {
-		const {pathTracingRenderer} = rendererContainer;
-		let resetRequired = true;
-		let generateRequired = false;
+		// const {pathTracingRenderer} = rendererContainer;
+		// let resetRequired = true;
+		// let generateRequired = false;
 
-		rendererContainer.samplesPerFrame = this.pv.samplesPerFrame;
-		rendererContainer.samplesPerAnimationFrame = this.pv.samplesPerAnimationFrame;
-		rendererContainer.resolutionScale = this.pv.resolutionScale;
-		rendererContainer.displayDebug = this.pv.displayDebug;
-		rendererContainer.frameRange.copy(this.pv.f);
-		pathTracingRenderer.material.bounces = this.pv.bounces;
-		pathTracingRenderer.material.transmissiveBounces = this.pv.transmissiveBounces;
-		pathTracingRenderer.stableNoise = this.pv.stableNoise;
-		pathTracingRenderer.material.filterGlossyFactor = this.pv.filterGlossyFactor;
-		if (rendererContainer.backgroundBlur != this.pv.backgroundBlur) {
-			// pathTracingRenderer.material.backgroundBlur = this.pv.backgroundBlur;
-			rendererContainer.backgroundBlur = this.pv.backgroundBlur;
-			generateRequired = true;
-		}
-		pathTracingRenderer.material.environmentIntensity = this.pv.environmentIntensity;
-		pathTracingRenderer.tiles.set(this.pv.tiles.x, this.pv.tiles.y);
+		rendererContainer.update({
+			resolutionScale: this.pv.resolutionScale,
+			displayDebug: this.pv.displayDebug,
+			bounces: this.pv.bounces,
+			transmissiveBounces: this.pv.transmissiveBounces,
+			stableNoise: this.pv.stableNoise,
+			filterGlossyFactor: this.pv.filterGlossyFactor,
+			backgroundBlur: this.pv.backgroundBlur,
+			environmentIntensity: this.pv.environmentIntensity,
+			tiles: this.pv.tiles,
+			multipleImportanceSampling: this.pv.multipleImportanceSampling,
+			//
+			maxSamplesCount: this.pv.maxSamplesCount,
+			samplesPerAnimationFrame: this.pv.samplesPerAnimationFrame,
+			f: this.pv.f,
+		});
+		// rendererContainer.maxSamplesCount = this.pv.maxSamplesCount;
+		// rendererContainer.samplesPerAnimationFrame = this.pv.samplesPerAnimationFrame;
+		// rendererContainer.resolutionScale = this.pv.resolutionScale;
+		// rendererContainer.displayDebug = this.pv.displayDebug;
+		// rendererContainer.frameRange.copy(this.pv.f);
+		// pathTracingRenderer.material.bounces = this.pv.bounces;
+		// pathTracingRenderer.material.transmissiveBounces = this.pv.transmissiveBounces;
+		// pathTracingRenderer.stableNoise = this.pv.stableNoise;
+		// pathTracingRenderer.material.filterGlossyFactor = this.pv.filterGlossyFactor;
+		// if (rendererContainer.backgroundBlur != this.pv.backgroundBlur) {
+		// 	rendererContainer.backgroundBlur = this.pv.backgroundBlur;
+		// 	generateRequired = true;
+		// }
+		// pathTracingRenderer.material.environmentIntensity = this.pv.environmentIntensity;
+		// pathTracingRenderer.tiles.set(this.pv.tiles.x, this.pv.tiles.y);
 
-		pathTracingRenderer.material.setDefine('FEATURE_MIS', Number(this.pv.multipleImportanceSampling));
+		// const newMIS = Number(this.pv.multipleImportanceSampling);
+		// pathTracingRenderer.material.setDefine('FEATURE_MIS', newMIS);
 
-		if (generateRequired) {
-			rendererContainer.markAsNotGenerated();
-		} else if (resetRequired) {
-			rendererContainer.reset();
-		}
+		// if (generateRequired) {
+		// 	rendererContainer.markAsNotGenerated();
+		// } else if (resetRequired) {
+		// 	rendererContainer.reset();
+		// }
 	}
 	static PARAM_CALLBACK_generate(node: PathTracingRendererRopNode) {
 		node._paramCallbackGenerate();
@@ -228,10 +278,18 @@ export class PathTracingRendererRopNode extends TypedRopNode<PathTracingRenderer
 		const scene = this.scene().threejsScene();
 		this._pathTracingRenderer?.generate(scene);
 	}
-	static PARAM_CALLBACK_reset(node: PathTracingRendererRopNode) {
-		node._paramCallbackReset();
+	static PARAM_CALLBACK_update(node: PathTracingRendererRopNode) {
+		node._paramCallbackUpdate();
 	}
-	private _paramCallbackReset() {
-		this._pathTracingRenderer?.reset();
+	private _paramCallbackUpdate() {
+		if (this._pathTracingRenderer) {
+			this._updateRenderer(this._pathTracingRenderer);
+		}
 	}
+	// static PARAM_CALLBACK_reset(node: PathTracingRendererRopNode) {
+	// 	node._paramCallbackReset();
+	// }
+	// private _paramCallbackReset() {
+	// 	this._pathTracingRenderer?.reset();
+	// }
 }

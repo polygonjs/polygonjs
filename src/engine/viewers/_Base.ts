@@ -11,6 +11,7 @@ import {Poly, PolyEngine} from '../Poly';
 import {AbstractRenderer} from './Common';
 import {ViewerRaycastersController} from './utils/ViewerRaycastersController';
 import {ViewerPerformanceMonitor} from './utils/ViewerPerformanceMonitor';
+import {AvailableRenderConfig} from '../../core/camera/CoreCameraRendererController';
 
 const HOVERED_CLASS_NAME = 'hovered';
 
@@ -93,6 +94,7 @@ export abstract class TypedViewer<C extends Camera> {
 		return createRaycaster();
 	}
 	abstract renderer(): AbstractRenderer | undefined;
+	abstract rendererConfig(): AvailableRenderConfig | undefined;
 
 	protected _mounted = false;
 	/**

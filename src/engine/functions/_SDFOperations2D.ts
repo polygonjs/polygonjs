@@ -23,35 +23,38 @@ export class SDFRevolutionX extends NamedFunction4<[Vector3, Vector3, number, Ve
 	static override type() {
 		return 'SDFRevolutionX';
 	}
-	func(p: Vector3, center: Vector3, o: number, target: Vector2): void {
+	func(p: Vector3, center: Vector3, o: number, target: Vector2): Vector2 {
 		p.sub(center);
 		_sizzleVec3YZ(p, _sizzle2);
 		const l = _sizzle2.length();
 		target.x = l - o;
 		target.y = p.x;
+		return target;
 	}
 }
 export class SDFRevolutionY extends NamedFunction4<[Vector3, Vector3, number, Vector2]> {
 	static override type() {
 		return 'SDFRevolutionY';
 	}
-	func(p: Vector3, center: Vector3, o: number, target: Vector2): void {
+	func(p: Vector3, center: Vector3, o: number, target: Vector2): Vector2 {
 		p.sub(center);
 		_sizzleVec3XZ(p, _sizzle2);
 		const l = _sizzle2.length();
 		target.x = l - o;
 		target.y = p.y;
+		return target;
 	}
 }
 export class SDFRevolutionZ extends NamedFunction4<[Vector3, Vector3, number, Vector2]> {
 	static override type() {
 		return 'SDFRevolutionZ';
 	}
-	func(p: Vector3, center: Vector3, o: number, target: Vector2): void {
+	func(p: Vector3, center: Vector3, o: number, target: Vector2): Vector2 {
 		p.sub(center);
 		_sizzleVec3XY(p, _sizzle2);
 		const l = _sizzle2.length();
 		target.x = l - o;
 		target.y = p.z;
+		return target;
 	}
 }

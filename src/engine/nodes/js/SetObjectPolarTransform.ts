@@ -54,12 +54,12 @@ export class SetObjectPolarTransformJsNode extends TypedJsNode<SetObjectPolarTra
 	override setTriggerableLines(linesController: JsLinesCollectionController) {
 		const object3D = inputObject3D(this, linesController);
 		const center = this.variableForInputParam(linesController, this.p.center);
-		const latitude = this.variableForInputParam(linesController, this.p.latitude);
 		const longitude = this.variableForInputParam(linesController, this.p.longitude);
+		const latitude = this.variableForInputParam(linesController, this.p.latitude);
 		const depth = this.variableForInputParam(linesController, this.p.depth);
 
 		const func = Poly.namedFunctionsRegister.getFunction('setObjectPolarTransform', this, linesController);
-		const bodyLine = func.asString(object3D, center, latitude, longitude, depth);
+		const bodyLine = func.asString(object3D, center, longitude, latitude, depth);
 		linesController.addTriggerableLines(this, [bodyLine]);
 	}
 }

@@ -24,7 +24,8 @@ import {IES_PROFILE_LM_63_1995} from '../../lights/spotlight/ies/lm_63_1995';
 const PHYSICAL_CAMERA_UPDATE: PerspectiveCameraUpdate<PhysicalCamera> = (
 	options: PerspectiveCameraUpdateOptions<PhysicalCamera>
 ) => {
-	const {camera, apertureBlades, fStop, focusDistance, apertureRotation, anamorphicRatio} = options;
+	const {camera, params} = options;
+	const {apertureBlades, fStop, focusDistance, apertureRotation, anamorphicRatio} = params;
 	camera.apertureBlades = apertureBlades;
 	camera.fStop = fStop;
 	camera.focusDistance = focusDistance;

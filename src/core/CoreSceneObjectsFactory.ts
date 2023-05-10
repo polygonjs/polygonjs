@@ -10,11 +10,13 @@ export interface PerspectiveCameraOptions {
 type PerspectiveCameraConstructor = (options: PerspectiveCameraOptions) => PerspectiveCamera;
 export interface PerspectiveCameraUpdateOptions<C extends PerspectiveCamera> {
 	camera: C;
-	apertureBlades: number;
-	fStop: number;
-	focusDistance: number;
-	apertureRotation: number;
-	anamorphicRatio: number;
+	params: {
+		apertureBlades: number;
+		fStop: number;
+		focusDistance: number;
+		apertureRotation: number;
+		anamorphicRatio: number;
+	};
 }
 export type PerspectiveCameraUpdate<C extends PerspectiveCamera> = (options: PerspectiveCameraUpdateOptions<C>) => void;
 

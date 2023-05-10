@@ -75,9 +75,17 @@ export class PerspectiveCameraSopOperation extends BaseSopOperation {
 
 		PerspectiveCameraSopOperation.setCameraAttributes(camera, params);
 
-		CoreSceneObjectsFactory.generator(GeneratorName.PERSPECTIVE_CAMERA_UPDATE)({
+		const pbrUpdateFunc = CoreSceneObjectsFactory.generator(GeneratorName.PERSPECTIVE_CAMERA_UPDATE);
+
+		pbrUpdateFunc({
 			camera,
-			...params,
+			params: {
+				apertureBlades: params.apertureBlades,
+				fStop: params.fStop,
+				focusDistance: params.focusDistance,
+				apertureRotation: params.apertureRotation,
+				anamorphicRatio: params.anamorphicRatio,
+			},
 		});
 
 		const objects: Object3D[] = [camera];

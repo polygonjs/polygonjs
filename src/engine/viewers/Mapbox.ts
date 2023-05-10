@@ -79,6 +79,9 @@ export class MapboxViewer extends TypedViewer<MapboxPerspectiveCamera> {
 
 		// this._container.style.height = '100%'; // this should be app specific
 	}
+	rendererConfig() {
+		return undefined;
+	}
 	override createRaycaster() {
 		const raycaster = new MapboxRaycaster();
 		ThreeMeshBVHHelper.updateRaycaster(raycaster);

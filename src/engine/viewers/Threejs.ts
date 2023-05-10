@@ -67,6 +67,9 @@ export class ThreejsViewer<C extends Camera> extends TypedViewer<C> {
 		this._setupFunctions(options);
 		// this._container.style.height = '100%'; // this should be app specific
 	}
+	rendererConfig() {
+		return this._rendererConfig;
+	}
 	protected _setupFunctions(options: ThreejsViewerOptions<C>): ThreejsViewerSetupData<C> | void {
 		const camera = this.camera();
 		const scene = this.scene();

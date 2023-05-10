@@ -47,8 +47,8 @@ export class PolarTransformJsNode extends TypedJsNode<PolarTransformJsParamsConf
 	}
 	override setLines(linesController: JsLinesCollectionController) {
 		const center = this.variableForInputParam(linesController, this.p.center);
-		const latitude = this.variableForInputParam(linesController, this.p.latitude);
 		const longitude = this.variableForInputParam(linesController, this.p.longitude);
+		const latitude = this.variableForInputParam(linesController, this.p.latitude);
 		const depth = this.variableForInputParam(linesController, this.p.depth);
 
 		const varName = this.jsVarName(JsConnectionPointType.MATRIX4);
@@ -59,7 +59,7 @@ export class PolarTransformJsNode extends TypedJsNode<PolarTransformJsParamsConf
 			{
 				dataType: JsConnectionPointType.MATRIX4,
 				varName,
-				value: func.asString(center, latitude, longitude, depth, tmpVarName),
+				value: func.asString(center, longitude, latitude, depth, tmpVarName),
 			},
 		]);
 	}

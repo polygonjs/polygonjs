@@ -39,18 +39,14 @@ export class PathTracingViewer<C extends PhysicalCamera> extends ThreejsViewer<P
 						if (renderer.pbrRenderAllowed()) {
 							renderer.render(renderScene, camera);
 							this.updateDebugDisplay();
-							if (renderer.samplesCount() > this._recordingSamplesPerFrame && this._onFrameCompleted) {
+
+							if (renderer.samplesCount() >= this._recordingSamplesPerFrame && this._onFrameCompleted) {
 								renderer.markAsNotGenerated();
 								this._onFrameCompleted();
 							}
 						}
 					} else {
-						// if (this._rendering) {
-						// 	return;
-						// }
-						// this._rendering = true;
 						renderer.render(renderScene, camera);
-						// this._rendering = false;
 						this.updateDebugDisplay();
 					}
 				};
@@ -94,6 +90,7 @@ export class PathTracingViewer<C extends PhysicalCamera> extends ThreejsViewer<P
 			options.recordingSamplesPerFrame != null
 				? options.recordingSamplesPerFrame
 				: this._recordingSamplesPerFrame;
+		this._renderer?.reset();
 	}
 	updateDebugDisplay() {
 		if (!this._debugElement) {

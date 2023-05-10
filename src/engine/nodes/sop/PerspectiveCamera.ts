@@ -51,12 +51,12 @@ class PerspectiveCameraSopParamsConfig extends NodeParamsConfig {
 	PBR = ParamConfig.FOLDER();
 	/** @param apertureBlades */
 	apertureBlades = ParamConfig.INTEGER(6, {
-		range: [0, 12],
+		range: [0, 10],
 		rangeLocked: [true, false],
 	});
 	/** @param apertureBlades */
 	fStop = ParamConfig.FLOAT(0.5, {
-		range: [0, 1],
+		range: [0.02, 20],
 		rangeLocked: [true, false],
 	});
 	/** @param focusDistance */
@@ -66,12 +66,12 @@ class PerspectiveCameraSopParamsConfig extends NodeParamsConfig {
 	});
 	/** @param apertureRotation */
 	apertureRotation = ParamConfig.FLOAT(0, {
-		range: [0, 1],
+		range: [0, 12.5],
 		rangeLocked: [true, false],
 	});
 	/** @param anamorphicRatio */
 	anamorphicRatio = ParamConfig.FLOAT(1, {
-		range: [0, 2],
+		range: [0.1, 10],
 		rangeLocked: [true, false],
 	});
 }

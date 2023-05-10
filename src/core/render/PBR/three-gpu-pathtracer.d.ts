@@ -25,6 +25,9 @@ export class PhysicalCamera extends PerspectiveCamera {
 	public anamorphicRatio: number;
 	constructor(fov?: number, aspect?: number, near?: number, far?: number);
 }
+export class PhysicalCameraUniform {
+	updateFrom(other: PhysicalCamera): void;
+}
 
 export class IESTexture {}
 export class IESLoader extends Loader {
@@ -78,6 +81,7 @@ export class PhysicalPathTracingMaterial {
 	public transmissiveBounces: number;
 	public filterGlossyFactor: number;
 	public environmentIntensity: number;
+	public physicalCamera: PhysicalCameraUniform;
 	bvh: MeshBVHUniformStruct;
 	attributesArray: {
 		updateFrom(

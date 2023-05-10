@@ -8,6 +8,7 @@ import {Object3D} from 'three';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
 import {BaseNodeType} from '../../_Base';
 import {isBooleanTrue} from '../../../../core/BooleanValue';
+import {Poly} from '../../../Poly';
 
 interface TransformedParamConfigDefaultParams {
 	matrixAutoUpdate?: boolean;
@@ -83,6 +84,7 @@ export class TransformController {
 		this.update_transform_with_matrix();
 		const object = this.node.object;
 		object.matrixAutoUpdate = isBooleanTrue(this.node.pv.matrixAutoUpdate);
+		Poly.onSceneUpdatedHooks.runHooks();
 	}
 
 	update_transform_with_matrix(matrix?: Matrix4) {

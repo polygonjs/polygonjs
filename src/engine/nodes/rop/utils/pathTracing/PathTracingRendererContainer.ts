@@ -21,7 +21,9 @@ import {
 	PathTracingRenderer,
 	PathTracingSceneWorker,
 	BlurredEnvMapGenerator,
+	PhysicalCamera,
 } from '../../../../../core/render/PBR/three-gpu-pathtracer';
+import type {PathTracingRendererRopNode} from '../../PathTracingRenderer';
 
 // type OnSampleCompleted = () => void;
 // type OnFrameCompleted = () => Promise<void>;
@@ -44,11 +46,29 @@ import {
 // import {BlurredEnvMapGenerator, PathTracingSceneWorker} from '../../../../../core/thirdParty/three-gpu-pathtracer';
 // >>>>>>> master
 
+interface UpdateOptions {
+	//
+	resolutionScale: number;
+	displayDebug: boolean;
+	bounces: number;
+	transmissiveBounces: number;
+	stableNoise: boolean;
+	filterGlossyFactor: number;
+	backgroundBlur: number;
+	environmentIntensity: number;
+	tiles: Vector2;
+	multipleImportanceSampling: boolean;
+	//
+	maxSamplesCount: number;
+	samplesPerAnimationFrame: number;
+	f: Vector2;
+}
 export class PathTracingRendererContainer implements AbstractRenderer {
 	public displayDebug = true;
 	public backgroundBlur = 0.1;
-	public samplesPerFrame = 1;
+	public maxSamplesCount = 1;
 	public samplesPerAnimationFrame = 1;
+	// public sequenceFrameFileName: string = 'frame';
 	public frameRange = new Vector2();
 	public resolutionScale = 0.5;
 	public domElement: HTMLCanvasElement;
@@ -63,13 +83,82 @@ export class PathTracingRendererContainer implements AbstractRenderer {
 	// private _requestAnimationFrame: RequestAnimationFrame | undefined;
 
 	constructor(
-		public webGLRenderer: WebGLRenderer,
-		public pathTracingRenderer: PathTracingRenderer,
-		public fsQuad: FullScreenQuad,
-		public fsQuadMat: MeshBasicMaterial
+		public readonly node: PathTracingRendererRopNode,
+		public readonly webGLRenderer: WebGLRenderer,
+		public readonly pathTracingRenderer: PathTracingRenderer,
+		public readonly fsQuad: FullScreenQuad,
+		public readonly fsQuadMat: MeshBasicMaterial
 	) {
 		this.domElement = this.webGLRenderer.domElement;
 	}
+	private _multipleImportanceSampling: boolean = true;
+	update(options: UpdateOptions) {
+		const {pathTracingRenderer} = this;
+
+		let resetRequired = false;
+		let generateRequired = false;
+
+		if (this.resolutionScale != options.resolutionScale) {
+			this.resolutionScale = options.resolutionScale;
+			resetRequired = true;
+		}
+		if (this.displayDebug != options.displayDebug) {
+			this.displayDebug = options.displayDebug;
+			resetRequired = true;
+		}
+		if (pathTracingRenderer.material.bounces != options.bounces) {
+			pathTracingRenderer.material.bounces = options.bounces;
+			resetRequired = true;
+		}
+		if (pathTracingRenderer.material.transmissiveBounces != options.transmissiveBounces) {
+			pathTracingRenderer.material.transmissiveBounces = options.transmissiveBounces;
+			resetRequired = true;
+		}
+		if (pathTracingRenderer.stableNoise != options.stableNoise) {
+			pathTracingRenderer.stableNoise = options.stableNoise;
+			resetRequired = true;
+		}
+		if (pathTracingRenderer.material.filterGlossyFactor != options.filterGlossyFactor) {
+			pathTracingRenderer.material.filterGlossyFactor = options.filterGlossyFactor;
+			resetRequired = true;
+		}
+		if (this.backgroundBlur != options.backgroundBlur) {
+			this.backgroundBlur = options.backgroundBlur;
+			generateRequired = true;
+		}
+		if (pathTracingRenderer.material.environmentIntensity != options.environmentIntensity) {
+			pathTracingRenderer.material.environmentIntensity = options.environmentIntensity;
+			resetRequired = true;
+		}
+		if (!pathTracingRenderer.tiles.equals(options.tiles)) {
+			pathTracingRenderer.tiles.set(options.tiles.x, options.tiles.y);
+			resetRequired = true;
+		}
+		if (this._multipleImportanceSampling != options.multipleImportanceSampling) {
+			this._multipleImportanceSampling = options.multipleImportanceSampling;
+			pathTracingRenderer.material.setDefine('FEATURE_MIS', Number(options.multipleImportanceSampling));
+			resetRequired = true;
+		}
+
+		// for progressive render only, no reset/generate required
+		if (this.maxSamplesCount > options.maxSamplesCount) {
+			// do a reset if the new max samples count is lower than the current one
+			resetRequired = true;
+		}
+		this.maxSamplesCount = options.maxSamplesCount;
+
+		// for sequence render only, no reset/generate required
+		this.samplesPerAnimationFrame = options.samplesPerAnimationFrame;
+		this.frameRange.copy(options.f);
+
+		// reset/generate if required
+		if (generateRequired) {
+			this.markAsNotGenerated();
+		} else if (resetRequired) {
+			this.reset();
+		}
+	}
+
 	// async sleep(duration: number) {
 	// 	// console.log('sleep', duration, this._sleepCallback);
 	// 	if (this._sleepCallback) {
@@ -107,7 +196,7 @@ export class PathTracingRendererContainer implements AbstractRenderer {
 	// 	// console.log('switch', this._isRecording, this.render);
 	// }
 	// render = this.renderRealtime.bind(this);
-	render(scene: Scene, camera: Camera) {
+	render(scene: Scene, camera: PhysicalCamera) {
 		// if (this._isRecording) {
 		// 	 this.renderRecording(scene, camera);
 		// } else {
@@ -150,7 +239,7 @@ export class PathTracingRendererContainer implements AbstractRenderer {
 	markAsNotGenerated() {
 		this._generated = false;
 	}
-	renderRealtime(scene: Scene, camera: Camera) {
+	renderRealtime(scene: Scene, camera: PhysicalCamera) {
 		if (!this.pbrRenderAllowed()) {
 			this.webGLRenderer.render(scene, camera);
 			// if (!this._generating) {
@@ -158,13 +247,20 @@ export class PathTracingRendererContainer implements AbstractRenderer {
 			// }
 			return;
 		}
+		const maxSamplesCount = this.maxSamplesCount;
+		if (this.pathTracingRenderer.samples >= maxSamplesCount) {
+			return;
+		}
+
+		this.pathTracingRenderer.material.physicalCamera.updateFrom(camera);
 		this._preRender(camera);
 
-		const maxCount = 1; //this.samplesPerFrame;
-		for (let i = 0; i < maxCount; i++) {
-			this.pathTracingRenderer.update();
-			// await this.sleep(1);
-		}
+		// for (let i = 0; i < maxCount; i++) {
+
+		// console.log(Math.round(this.pathTracingRenderer.samples));
+		this.pathTracingRenderer.update();
+		// await this.sleep(1);
+		// }
 
 		if (this.pathTracingRenderer.samples < 1) {
 			this.webGLRenderer.render(scene, camera);
@@ -254,15 +350,16 @@ export class PathTracingRendererContainer implements AbstractRenderer {
 			this._generateRequired = true;
 			return;
 		}
-		// console.warn('GENERATOR START');
+		console.log('GENERATOR START');
 		this._generated = false;
 		this._generating = true;
+		const timeStart = performance.now();
 
 		const _restartIfRequired = () => {
 			if (this._generateRequired) {
 				this._generateRequired = false;
 				this._generating = false;
-				// console.log('GENERATOR RESTART...');
+				console.log('GENERATOR RESTART...');
 				const _this = this;
 				function generate() {
 					_this.generate(scene);
@@ -358,7 +455,7 @@ export class PathTracingRendererContainer implements AbstractRenderer {
 		this._generating = false;
 		this._generated = true;
 		this.reset();
-		// console.log('GENERATOR DONE');
+		console.log('GENERATOR DONE', performance.now() - timeStart);
 		// } catch (err) {
 		// 	console.log(err);
 		// 	this._generating = false;
@@ -371,7 +468,11 @@ export class PathTracingRendererContainer implements AbstractRenderer {
 		// if (this._isRecording) {
 		// 	return;
 		// }
-		// console.warn('reset');
+
+		//
+		// in order to avoid too frequent .reset() calls,
+		// make sure to toggle damping off on the camera orbit controls
+		//
 		this.pathTracingRenderer.reset();
 	}
 
