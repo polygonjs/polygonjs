@@ -42,6 +42,7 @@ const SAMPLE_DATA: ChannelData[] = [SAMPLE_DATA0];
 
 interface VectorLinesOptions {
 	outputName: string;
+	channelIndex: number;
 	dataType: JsConnectionPointType.VECTOR2 | JsConnectionPointType.VECTOR3 | JsConnectionPointType.VECTOR4;
 	channelCreate: 'channelVector2' | 'channelVector3' | 'channelVector4';
 	channelGetValue: 'channelValueVector2' | 'channelValueVector3' | 'channelValueVector4';
@@ -269,7 +270,7 @@ export class KeyframesJsNode extends TypedJsNode<KeyframesJsParamsConfig> {
 		const time = this.variableForInput(linesController, KeyframesJsNodeInputName.time);
 		const usedOutputNames = this.io.outputs.used_output_names();
 
-		const _f = (outputName: string) => {
+		const _f = (outputName: string, channelIndex: number) => {
 			if (!usedOutputNames.includes(outputName)) {
 				return;
 			}
@@ -283,7 +284,7 @@ export class KeyframesJsNode extends TypedJsNode<KeyframesJsParamsConfig> {
 					linesController,
 					JsConnectionPointType.FLOAT,
 					curve,
-					funcCurve.asString(this.pv.data0)
+					funcCurve.asString(this.channelDataParams()[channelIndex].value)
 				),
 			]);
 
@@ -296,7 +297,7 @@ export class KeyframesJsNode extends TypedJsNode<KeyframesJsParamsConfig> {
 			]);
 		};
 		const _v = (options: VectorLinesOptions) => {
-			const {outputName, dataType, channelCreate, channelGetValue} = options;
+			const {outputName, channelIndex, dataType, channelCreate, channelGetValue} = options;
 			if (!usedOutputNames.includes(outputName)) {
 				return;
 			}
@@ -307,7 +308,13 @@ export class KeyframesJsNode extends TypedJsNode<KeyframesJsParamsConfig> {
 			const curve = this.jsVarName(`${outputName}_CURVE`);
 			const out = this.jsVarName(outputName);
 			linesController.addDefinitions(this, [
-				new ConstantJsDefinition(this, linesController, dataType, curve, funcCurve.asString(this.pv.data0)),
+				new ConstantJsDefinition(
+					this,
+					linesController,
+					dataType,
+					curve,
+					funcCurve.asString(this.channelDataParams()[channelIndex].value)
+				),
 			]);
 			if (variable) {
 				const tmpVarName = linesController.addVariable(this, variable);
@@ -327,12 +334,13 @@ export class KeyframesJsNode extends TypedJsNode<KeyframesJsParamsConfig> {
 			const channelType = this._expectedOutputTypes()[channelIndex];
 			switch (channelType) {
 				case JsConnectionPointType.FLOAT: {
-					_f(outputName);
+					_f(outputName, channelIndex);
 					break;
 				}
 				case JsConnectionPointType.VECTOR2: {
 					_v({
 						outputName,
+						channelIndex,
 						dataType: channelType,
 						channelCreate: 'channelVector2',
 						channelGetValue: 'channelValueVector2',
@@ -342,6 +350,7 @@ export class KeyframesJsNode extends TypedJsNode<KeyframesJsParamsConfig> {
 				case JsConnectionPointType.VECTOR3: {
 					_v({
 						outputName,
+						channelIndex,
 						dataType: channelType,
 						channelCreate: 'channelVector3',
 						channelGetValue: 'channelValueVector3',
@@ -351,6 +360,7 @@ export class KeyframesJsNode extends TypedJsNode<KeyframesJsParamsConfig> {
 				case JsConnectionPointType.VECTOR4: {
 					_v({
 						outputName,
+						channelIndex,
 						dataType: channelType,
 						channelCreate: 'channelVector4',
 						channelGetValue: 'channelValueVector4',

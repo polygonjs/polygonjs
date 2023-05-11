@@ -206,10 +206,8 @@ export class JsAssemblerObjectBuilder extends BaseJsShaderAssembler {
 	// CHILDREN NODES PARAMS
 	//
 	//
-	override add_output_inputs(output_child: OutputJsNode) {
-		// output_child.add_param(ParamType.COLOR, 'color', [1, 1, 1], {hidden: true});
-		// output_child.add_param(ParamType.FLOAT, 'alpha', 1, {hidden: true});
-		output_child.io.inputs.setNamedInputConnectionPoints([
+	override add_output_inputs(outputNode: OutputJsNode) {
+		outputNode.io.inputs.setNamedInputConnectionPoints([
 			new JsConnectionPoint(ObjectVariable.POSITION, JsConnectionPointType.VECTOR3),
 			new JsConnectionPoint(ObjectVariable.ROTATION, JsConnectionPointType.EULER),
 			new JsConnectionPoint(ObjectVariable.QUATERNION, JsConnectionPointType.QUATERNION),
@@ -236,10 +234,6 @@ export class JsAssemblerObjectBuilder extends BaseJsShaderAssembler {
 			new JsConnectionPoint(ObjectVariable.RECEIVE_SHADOW, JsConnectionPointType.BOOLEAN),
 			new JsConnectionPoint(ObjectVariable.FRUSTUM_CULLED, JsConnectionPointType.BOOLEAN),
 			new JsConnectionPoint(ObjectVariable.OBJ_NUM, JsConnectionPointType.INT),
-			// new JsConnectionPoint('gl_FragCoord', JsConnectionPointType.VEC4),
-			// new JsConnectionPoint('resolution', JsConnectionPointType.VEC2),
-			// new JsConnectionPoint('time', JsConnectionPointType.FLOAT),
-			// new Connection.Vec2('resolution'),
 		]);
 	}
 

@@ -6,8 +6,10 @@ import {BaseJsShaderAssembler} from '../assemblers/_Base';
 
 export class JsNodeFinder {
 	static findOutputNodes(node: AssemblerControllerNode<BaseJsShaderAssembler>) {
-		const output_nodes = node.nodesByType(JsType.OUTPUT);
-		return output_nodes;
+		const output = node.nodesByType(JsType.OUTPUT);
+		const outputAreaLight = node.nodesByType(JsType.OUTPUT_AREA_LIGHT);
+
+		return output.concat(outputAreaLight);
 	}
 	static findParamGeneratingNodes(node: AssemblerControllerNode<BaseJsShaderAssembler>) {
 		const list: BaseJsNodeType[] = [];

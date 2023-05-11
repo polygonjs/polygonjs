@@ -167,10 +167,10 @@ export class ObjectBuilderSopNode extends TypedSopNode<ObjectBuilderSopParamsCon
 			this.states.error.set('one output node is required');
 			return;
 		}
-		if (outputNodes.length > 1) {
-			this.states.error.set('only one output node allowed');
-			return;
-		}
+		// if (outputNodes.length > 1) {
+		// 	this.states.error.set('only one output node allowed');
+		// 	return;
+		// }
 		const outputNode = outputNodes[0];
 		if (outputNode) {
 			const paramNodes = JsNodeFinder.findParamGeneratingNodes(this);

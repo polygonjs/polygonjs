@@ -232,6 +232,10 @@ export abstract class BaseJsShaderAssembler extends TypedAssembler<NodeContext.J
 					list.push(node);
 					break;
 				}
+				case JsType.OUTPUT_AREA_LIGHT: {
+					list.push(node);
+					break;
+				}
 				// case SubnetOutputGlNode.type(): {
 				// 	list.push(node);
 				// 	break;
@@ -456,8 +460,8 @@ export abstract class BaseJsShaderAssembler extends TypedAssembler<NodeContext.J
 		this._variable_configs = undefined;
 		this.variable_configs();
 	}
-	inputNamesForShaderName(root_node: BaseJsNodeType, shader_name: ShaderName) {
-		return this.shader_config(shader_name)?.input_names() || [];
+	inputNamesForShaderName(rootNode: BaseJsNodeType, _: ShaderName) {
+		return rootNode.io.inputs.namedInputConnectionPoints().map((c) => c.name()); //this.shader_config(shader_name)?.input_names() || [];
 	}
 
 	// time dependency

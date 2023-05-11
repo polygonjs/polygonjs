@@ -87,6 +87,7 @@ import {GetWebXRARSessionPropertyJsNode} from '../../../nodes/js/GetWebXRARSessi
 import {GetWebXRControllerPropertyJsNode} from '../../../nodes/js/GetWebXRControllerProperty';
 import {GetWebXRTrackedMarkerPropertyJsNode} from '../../../nodes/js/GetWebXRTrackedMarkerProperty';
 import {GlobalsJsNode} from '../../../nodes/js/Globals';
+import {GlobalsAreaLightJsNode} from '../../../nodes/js/GlobalsAreaLight';
 import {IntToBoolJsNode} from '../../../nodes/js/IntToBool';
 import {IntToFloatJsNode} from '../../../nodes/js/IntToFloat';
 import {KeyframesJsNode} from '../../../nodes/js/Keyframes';
@@ -142,6 +143,7 @@ import {OnVideoEventJsNode} from '../../../nodes/js/OnVideoEvent';
 import {OnWebXRControllerEventJsNode} from '../../../nodes/js/OnWebXRControllerEvent';
 import {OrJsNode} from '../../../nodes/js/Or';
 import {OutputJsNode} from '../../../nodes/js/Output';
+import {OutputAreaLightJsNode} from '../../../nodes/js/OutputAreaLight';
 import {ParamJsNode} from '../../../nodes/js/Param';
 import {ParticlesSystemResetJsNode} from '../../../nodes/js/ParticlesSystemReset';
 import {ParticlesSystemStepSimulationJsNode} from '../../../nodes/js/ParticlesSystemStepSimulation';
@@ -359,6 +361,7 @@ export interface JsNodeChildrenMap {
 	getWebXRControllerProperty: GetWebXRControllerPropertyJsNode;
 	getWebXRTrackedMarkerProperty: GetWebXRTrackedMarkerPropertyJsNode;
 	globals: GlobalsJsNode;
+	globalsAreaLight: GlobalsAreaLightJsNode;
 	intToBool: IntToBoolJsNode;
 	intToFloat: IntToFloatJsNode;
 	keyframes: KeyframesJsNode;
@@ -414,6 +417,7 @@ export interface JsNodeChildrenMap {
 	onWebXRControllerEvent: OnWebXRControllerEventJsNode;
 	or: OrJsNode;
 	output: OutputJsNode;
+	outputAreaLight: OutputAreaLightJsNode;
 	param: ParamJsNode;
 	particlesSystemReset: ParticlesSystemResetJsNode;
 	particlesSystemStepSimulation: ParticlesSystemStepSimulationJsNode;
@@ -554,6 +558,9 @@ const sopType = (type: SopType) => `${NodeContext.SOP}/${type}`;
 const ONLY_WITH_GLOBALS = {
 	only: [sopType(SopType.OBJECT_BUILDER), sopType(SopType.POINT_BUILDER), sopType(SopType.SDF_BUILDER)],
 };
+const ONLY_OBJECT_BUILDER = {
+	only: [sopType(SopType.OBJECT_BUILDER)],
+};
 const ONLY_POINT_OR_OBJECT_BUILDER = {
 	only: [sopType(SopType.OBJECT_BUILDER), sopType(SopType.POINT_BUILDER)],
 };
@@ -665,6 +672,7 @@ export class JsRegister {
 		poly.registerNode(GetWebXRControllerPropertyJsNode, CATEGORY_JS.WEBXR, ONLY_ACTOR);
 		poly.registerNode(GetWebXRTrackedMarkerPropertyJsNode, CATEGORY_JS.WEBXR, ONLY_ACTOR);
 		poly.registerNode(GlobalsJsNode, CATEGORY_JS.GLOBALS, ONLY_WITH_GLOBALS);
+		poly.registerNode(GlobalsAreaLightJsNode, CATEGORY_JS.GLOBALS, ONLY_OBJECT_BUILDER);
 		poly.registerNode(IntToBoolJsNode, CATEGORY_JS.CONVERSION);
 		poly.registerNode(IntToFloatJsNode, CATEGORY_JS.CONVERSION);
 		// if (process.env.NODE_ENV == 'development') {
@@ -722,6 +730,7 @@ export class JsRegister {
 		poly.registerNode(OnWebXRControllerEventJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
 		poly.registerNode(OrJsNode, CATEGORY_JS.LOGIC);
 		poly.registerNode(OutputJsNode, CATEGORY_JS.GLOBALS, ONLY_WITH_GLOBALS);
+		poly.registerNode(OutputAreaLightJsNode, CATEGORY_JS.GLOBALS, ONLY_OBJECT_BUILDER);
 		poly.registerNode(ParamJsNode, CATEGORY_JS.GLOBALS);
 		poly.registerNode(ParticlesSystemResetJsNode, CATEGORY_JS.PARTICLES, ONLY_ACTOR);
 		poly.registerNode(ParticlesSystemStepSimulationJsNode, CATEGORY_JS.PARTICLES, ONLY_ACTOR);
