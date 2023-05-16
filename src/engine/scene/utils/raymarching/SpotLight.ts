@@ -1,7 +1,13 @@
 import {IUniform, SpotLight} from 'three';
-import {PenumbraUniformElement, UniformsUpdateFunction, updateUserDataPenumbra} from './_Base';
+import {
+	PenumbraUniformElement,
+	ShadowUniformElement,
+	UniformsUpdateFunction,
+	updateUserDataPenumbra,
+	updateUserDataShadowBias,
+} from './_Base';
 
-export interface SpotLightRayMarchingUniformElement extends PenumbraUniformElement {}
+export interface SpotLightRayMarchingUniformElement extends PenumbraUniformElement, ShadowUniformElement {}
 interface SpotLightRayMarchingUniforms extends Array<SpotLightRayMarchingUniformElement> {
 	needsUpdate?: boolean;
 }
@@ -11,6 +17,8 @@ export interface SpotLightRayMarchingUniform extends IUniform {
 export function _createSpotLightUniform(): SpotLightRayMarchingUniformElement {
 	return {
 		penumbra: 0,
+		shadowBiasAngle: 0,
+		shadowBiasDistance: 0,
 	};
 }
 
@@ -36,6 +44,7 @@ export const _updateUniformsWithSpotLight: UniformsUpdateFunction<SpotLight> = (
 ) => {
 	// updateSpotLightPenumbra(object, spotLightsRayMarching, spotLightIndex, _createSpotLightUniform);
 	updateUserDataPenumbra(object as SpotLight, spotLightsRayMarching, spotLightIndex, _createSpotLightUniform);
+	updateUserDataShadowBias(object as SpotLight, spotLightsRayMarching, spotLightIndex, _createSpotLightUniform);
 	spotLightIndex++;
 };
 export function _resetSpotLightIndex() {

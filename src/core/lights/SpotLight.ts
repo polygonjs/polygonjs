@@ -41,6 +41,8 @@ export interface SpotLightParams extends DefaultOperationParams {
 	volAnglePower: number;
 	//
 	raymarchingPenumbra: number;
+	raymarchingShadowBiasAngle: number;
+	raymarchingShadowBiasDistance: number;
 }
 
 export const DEFAULT_SPOT_LIGHT_PARAMS: SpotLightParams = {
@@ -71,6 +73,8 @@ export const DEFAULT_SPOT_LIGHT_PARAMS: SpotLightParams = {
 	volAnglePower: 10,
 	//
 	raymarchingPenumbra: 0, // keep as 0 by default since it's more performant
+	raymarchingShadowBiasAngle: 0.01,
+	raymarchingShadowBiasDistance: 0.1,
 };
 const DEFAULT = DEFAULT_SPOT_LIGHT_PARAMS;
 
@@ -87,13 +91,25 @@ export function SpotLightParamConfig<TBase extends Constructor>(Base: TBase) {
 			rangeLocked: [true, false],
 		});
 		/** @param angle */
-		angle = ParamConfig.FLOAT(DEFAULT.angle, {range: [0, 180]});
+		angle = ParamConfig.FLOAT(DEFAULT.angle, {
+			range: [0, 180],
+			rangeLocked: [true, false],
+		});
 		/** @param penumbra */
-		penumbra = ParamConfig.FLOAT(DEFAULT.penumbra);
+		penumbra = ParamConfig.FLOAT(DEFAULT.penumbra, {
+			range: [0, 1],
+			rangeLocked: [true, true],
+		});
 		/** @param decay */
-		decay = ParamConfig.FLOAT(DEFAULT.decay, {range: [0, 10]});
+		decay = ParamConfig.FLOAT(DEFAULT.decay, {
+			range: [0, 10],
+			rangeLocked: [true, false],
+		});
 		/** @param distance */
-		distance = ParamConfig.FLOAT(DEFAULT.distance, {range: [0, 100]});
+		distance = ParamConfig.FLOAT(DEFAULT.distance, {
+			range: [0, 100],
+			rangeLocked: [true, false],
+		});
 
 		// helper
 		/** @param toggle on to show helper */
@@ -167,6 +183,16 @@ export function SpotLightParamConfig<TBase extends Constructor>(Base: TBase) {
 		raymarching = ParamConfig.FOLDER();
 		/** @param this affects the shadows cast inside raymarchingBuilder materials */
 		raymarchingPenumbra = ParamConfig.FLOAT(DEFAULT.raymarchingPenumbra);
+		/** @param shadow bias */
+		raymarchingShadowBiasAngle = ParamConfig.FLOAT(DEFAULT.raymarchingShadowBiasAngle, {
+			range: [0, 1],
+			rangeLocked: [true, false],
+		});
+		/** @param shadow bias */
+		raymarchingShadowBiasDistance = ParamConfig.FLOAT(DEFAULT.raymarchingShadowBiasDistance, {
+			range: [0, 1],
+			rangeLocked: [true, false],
+		});
 	};
 }
 

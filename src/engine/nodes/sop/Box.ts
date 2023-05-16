@@ -15,7 +15,10 @@ import {SopType} from '../../poly/registers/nodes/types/Sop';
 const DEFAULT = BoxSopOperation.DEFAULT_PARAMS;
 class BoxSopParamsConfig extends NodeParamsConfig {
 	/** @param size of the box */
-	size = ParamConfig.FLOAT(DEFAULT.size);
+	size = ParamConfig.FLOAT(DEFAULT.size, {
+		range: [0, 2],
+		rangeLocked: [true, false],
+	});
 	/** @param sizes on each axis */
 	sizes = ParamConfig.VECTOR3(DEFAULT.sizes);
 	/** @param number of segments on each axis */

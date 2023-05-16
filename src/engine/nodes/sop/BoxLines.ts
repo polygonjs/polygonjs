@@ -17,6 +17,7 @@ class BoxLinesSopParamsConfig extends NodeParamsConfig {
 	/** @param size of the box */
 	size = ParamConfig.FLOAT(DEFAULT.size, {
 		range: [0, 2],
+		rangeLocked: [true, false],
 	});
 	/** @param sizes on each axis */
 	sizes = ParamConfig.VECTOR3(DEFAULT.sizes);

@@ -41,6 +41,8 @@ varying mat4 VViewMatrix;
 #if NUM_SPOT_LIGHTS > 0
 	struct SpotLightRayMarching {
 		float penumbra;
+		float shadowBiasAngle;
+		float shadowBiasDistance;
 	};
 	uniform SpotLightRayMarching spotLightsRayMarching[ NUM_SPOT_LIGHTS ];
 	#if NUM_SPOT_LIGHT_COORDS > 0
@@ -52,6 +54,8 @@ varying mat4 VViewMatrix;
 #if NUM_DIR_LIGHTS > 0
 	struct DirectionalLightRayMarching {
 		float penumbra;
+		float shadowBiasAngle;
+		float shadowBiasDistance;
 	};
 	uniform DirectionalLightRayMarching directionalLightsRayMarching[ NUM_DIR_LIGHTS ];
 	#if NUM_DIR_LIGHT_SHADOWS > 0
@@ -63,6 +67,8 @@ varying mat4 VViewMatrix;
 #if NUM_POINT_LIGHTS > 0
 	struct PointLightRayMarching {
 		float penumbra;
+		float shadowBiasAngle;
+		float shadowBiasDistance;
 	};
 	uniform PointLightRayMarching pointLightsRayMarching[ NUM_POINT_LIGHTS ];
 	#if NUM_POINT_LIGHT_SHADOWS > 0
@@ -191,7 +197,7 @@ vec3 GetLight(vec3 _p, vec3 _n, inout SDFContext sdfContext) {
 				spotLightRayMarching = spotLightsRayMarching[ i ];
 				spotLight = spotLights[ i ];
 				getSpotLightInfo( spotLight, geometry, directLight );
-				
+
 				// #if defined( USE_SHADOWMAP ) && ( UNROLLED_LOOP_INDEX < NUM_SPOT_LIGHT_SHADOWS )
 				// 	spotLightShadow = spotLightShadows[ i ];
 				// 	vec4 spotLightShadowCoord = spotLightMatrix[ i ] * vec4(pWorld+SHADOW_BIAS*nWorld, 1.0);
@@ -208,17 +214,21 @@ vec3 GetLight(vec3 _p, vec3 _n, inout SDFContext sdfContext) {
 				lightDir = normalize(lightPos-geometry.position);
 				worldLightDir = inverseTransformDirection(lightDir, VViewMatrix);
 				objectSpaceLightDir = inverseTransformDirection(worldLightDir, vModelMatrix);
-				spotLightSdfShadow = calcSoftshadow(
-					_p,
-					objectSpaceLightDir,
-					10.*SURF_DIST,
-					distance(geometry.position,lightPos),
-					1./max(spotLightRayMarching.penumbra*0.2,0.001),
-					sdfContext
-				);
-				lighDif = directLight.color * clamp(dot(geometry.normal, lightDir), 0., 1.) * spotLightSdfShadow;
-				
-				dif += lighDif;
+				float lightDistance = distance(geometry.position,lightPos);
+				spotLightSdfShadow =
+					dot( _n, objectSpaceLightDir ) < spotLightRayMarching.shadowBiasAngle
+					? 1.
+					: calcSoftshadow(
+						_p,
+						objectSpaceLightDir,
+						spotLightRayMarching.shadowBiasDistance,
+						distance(geometry.position,lightPos),
+						1./max(spotLightRayMarching.penumbra*0.2,0.001),
+						sdfContext
+					);
+				float dotNL = saturate( dot( geometry.normal, directLight.direction ) );
+				vec3 directDiffuse = dotNL * directLight.color * BRDF_Lambert( vec3(1.) );
+				dif += directDiffuse * spotLightSdfShadow;
 			}
 			#pragma unroll_loop_end
 		#endif
@@ -251,17 +261,22 @@ vec3 GetLight(vec3 _p, vec3 _n, inout SDFContext sdfContext) {
 				lightDir = directionalLight.direction;
 				worldLightDir = inverseTransformDirection(lightDir, VViewMatrix);
 				objectSpaceLightDir = inverseTransformDirection(worldLightDir, vModelMatrix);
-				dirLightSdfShadow = calcSoftshadow(
-					_p,
-					objectSpaceLightDir,
-					10.*SURF_DIST,
-					MAX_DIST,//distance(geometry.position,lightPos),
-					1./max(directionalLightRayMarching.penumbra*0.2,0.001),
-					sdfContext
-				);
-				lighDif = directLight.color * clamp(dot(geometry.normal, lightDir), 0., 1.) * dirLightSdfShadow;
-
-				dif += lighDif;
+				dirLightSdfShadow =
+					dot( _n, objectSpaceLightDir ) < directionalLightRayMarching.shadowBiasAngle
+					? 1.
+					:
+					calcSoftshadow(
+						_p,
+						objectSpaceLightDir,
+						directionalLightRayMarching.shadowBiasDistance,
+						MAX_DIST,//distance(geometry.position,lightPos),
+						1./max(directionalLightRayMarching.penumbra*0.2,0.001),
+						sdfContext
+					);
+				float dotNL = saturate( dot( geometry.normal, directLight.direction ) );
+				// lighDif = directLight.color * dotNL * dirLightSdfShadow;
+				vec3 directDiffuse = dotNL * directLight.color * BRDF_Lambert( vec3(1.) );
+				dif += directDiffuse * dirLightSdfShadow;
 			}
 			#pragma unroll_loop_end
 		#endif
@@ -272,7 +287,7 @@ vec3 GetLight(vec3 _p, vec3 _n, inout SDFContext sdfContext) {
 			HemisphereLight hemiLight;
 			for ( int i = 0; i < NUM_HEMI_LIGHTS; i ++ ) {
 				hemiLight = hemisphereLights[ i ];
-				dif += getHemisphereLightIrradiance( hemiLight, geometry.normal );
+				dif += getHemisphereLightIrradiance( hemiLight, geometry.normal ) * BRDF_Lambert( vec3(1.) );
 
 			}
 			#pragma unroll_loop_end
@@ -311,17 +326,21 @@ vec3 GetLight(vec3 _p, vec3 _n, inout SDFContext sdfContext) {
 				lightDir = normalize(lightPos-geometry.position);
 				worldLightDir = inverseTransformDirection(lightDir, VViewMatrix);
 				objectSpaceLightDir = inverseTransformDirection(worldLightDir, vModelMatrix);
-				pointLightSdfShadow = calcSoftshadow(
+				pointLightSdfShadow =
+					dot( _n, objectSpaceLightDir ) < pointLightRayMarching.shadowBiasAngle
+					? 1.
+					:
+					calcSoftshadow(
 					_p,
 					objectSpaceLightDir,
-					10.*SURF_DIST,
+					pointLightRayMarching.shadowBiasDistance,
 					distance(geometry.position,lightPos),
 					1./max(pointLightRayMarching.penumbra*0.2,0.001),
 					sdfContext
 				);
-				lighDif = directLight.color * clamp(dot(geometry.normal, lightDir), 0., 1.) * pointLightSdfShadow;
-
-				dif += lighDif;
+				float dotNL = saturate( dot( geometry.normal, directLight.direction ) );
+				vec3 directDiffuse = dotNL * directLight.color * BRDF_Lambert( vec3(1.) );
+				dif += directDiffuse * pointLightSdfShadow;
 			}
 			#pragma unroll_loop_end
 		#endif
@@ -374,7 +393,7 @@ vec4 applyShading(vec3 rayOrigin, vec3 rayDir, inout SDFContext sdfContext){
 	}
 		
 	// gamma
-	col = pow( col, vec3(0.4545) ); 
+	//col = pow( col, vec3(0.4545) ); // this gamma leads to a different look than standard materials
 	return vec4(col, 1.);
 }
 
@@ -412,6 +431,10 @@ void main()	{
 
 	if( sdfContext.d < MAX_DIST ){
 		gl_FragColor = applyShading(rayOrigin, rayDir, sdfContext);
+		#if defined( TONE_MAPPING )
+			gl_FragColor.rgb = toneMapping( gl_FragColor.rgb );
+		#endif
+		gl_FragColor = linearToOutputTexel( gl_FragColor );
 	} else {
 		gl_FragColor = vec4(0.);
 	}

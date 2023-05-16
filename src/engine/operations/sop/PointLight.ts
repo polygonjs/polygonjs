@@ -1,4 +1,8 @@
-import {LIGHT_USER_DATA_RAYMARCHING_PENUMBRA} from './../../../core/lights/Common';
+import {
+	LIGHT_USER_DATA_RAYMARCHING_PENUMBRA,
+	LIGHT_USER_DATA_RAYMARCHING_SHADOW_BIAS_ANGLE,
+	LIGHT_USER_DATA_RAYMARCHING_SHADOW_BIAS_DISTANCE,
+} from './../../../core/lights/Common';
 import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
@@ -67,6 +71,8 @@ export class PointLightSopOperation extends BaseSopOperation {
 		light.distance = params.distance;
 
 		light.userData[LIGHT_USER_DATA_RAYMARCHING_PENUMBRA] = params.raymarchingPenumbra;
+		light.userData[LIGHT_USER_DATA_RAYMARCHING_SHADOW_BIAS_ANGLE] = params.raymarchingShadowBiasAngle;
+		light.userData[LIGHT_USER_DATA_RAYMARCHING_SHADOW_BIAS_DISTANCE] = params.raymarchingShadowBiasDistance;
 	}
 	updateShadowParams(light: PointLight, params: PointLightParams) {
 		light.castShadow = isBooleanTrue(params.castShadow);

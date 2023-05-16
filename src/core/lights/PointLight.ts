@@ -25,6 +25,8 @@ export interface PointLightParams extends DefaultOperationParams {
 	helperSize: number;
 	//
 	raymarchingPenumbra: number;
+	raymarchingShadowBiasAngle: number;
+	raymarchingShadowBiasDistance: number;
 }
 
 export const DEFAULT_POINT_LIGHT_PARAMS: PointLightParams = {
@@ -47,6 +49,8 @@ export const DEFAULT_POINT_LIGHT_PARAMS: PointLightParams = {
 	helperSize: 1,
 	//
 	raymarchingPenumbra: 0, // keep as 0 by default since it's more performant
+	raymarchingShadowBiasAngle: 0.01,
+	raymarchingShadowBiasDistance: 0.1,
 };
 const DEFAULT = DEFAULT_POINT_LIGHT_PARAMS;
 
@@ -113,6 +117,16 @@ export function PointLightParamConfig<TBase extends Constructor>(Base: TBase) {
 		raymarching = ParamConfig.FOLDER();
 		/** @param this affects the shadows cast inside raymarchingBuilder materials */
 		raymarchingPenumbra = ParamConfig.FLOAT(DEFAULT.raymarchingPenumbra);
+		/** @param shadow bias */
+		raymarchingShadowBiasAngle = ParamConfig.FLOAT(DEFAULT.raymarchingShadowBiasAngle, {
+			range: [0, 1],
+			rangeLocked: [true, false],
+		});
+		/** @param shadow bias */
+		raymarchingShadowBiasDistance = ParamConfig.FLOAT(DEFAULT.raymarchingShadowBiasDistance, {
+			range: [0, 1],
+			rangeLocked: [true, false],
+		});
 	};
 }
 

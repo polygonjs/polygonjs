@@ -34,6 +34,8 @@ export interface DirectionalLightParams extends DefaultOperationParams {
 	// debugShadow: boolean; // removed (see spotlight for explanation)
 	//
 	raymarchingPenumbra: number;
+	raymarchingShadowBiasAngle: number;
+	raymarchingShadowBiasDistance: number;
 }
 
 export const DEFAULT_DIRECTIONAL_LIGHT_PARAMS: DirectionalLightParams = {
@@ -54,6 +56,8 @@ export const DEFAULT_DIRECTIONAL_LIGHT_PARAMS: DirectionalLightParams = {
 	debugShadow: false,
 	//
 	raymarchingPenumbra: 0, // keep as 0 by default since it's more performant
+	raymarchingShadowBiasAngle: 0.01,
+	raymarchingShadowBiasDistance: 0.1,
 };
 const DEFAULT = DEFAULT_DIRECTIONAL_LIGHT_PARAMS;
 
@@ -120,6 +124,16 @@ export function DirectionalLightParamConfig<TBase extends Constructor>(Base: TBa
 		raymarching = ParamConfig.FOLDER();
 		/** @param this affects the shadows cast inside raymarchingBuilder materials */
 		raymarchingPenumbra = ParamConfig.FLOAT(DEFAULT.raymarchingPenumbra);
+		/** @param shadow bias */
+		raymarchingShadowBiasAngle = ParamConfig.FLOAT(DEFAULT.raymarchingShadowBiasAngle, {
+			range: [0, 1],
+			rangeLocked: [true, false],
+		});
+		/** @param shadow bias */
+		raymarchingShadowBiasDistance = ParamConfig.FLOAT(DEFAULT.raymarchingShadowBiasDistance, {
+			range: [0, 1],
+			rangeLocked: [true, false],
+		});
 	};
 }
 

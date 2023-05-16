@@ -11,6 +11,7 @@ import {ThreeToGl} from '../../../../src/core/ThreeToGl';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {GlConnectionPointType, GlConnectionPoint} from '../utils/io/connections/Gl';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {GlType} from '../../poly/registers/nodes/types/Gl';
 
 const OUTPUT_NAME = 'float';
 class SDFPlaneGlParamsConfig extends NodeParamsConfig {
@@ -26,7 +27,7 @@ const ParamsConfig = new SDFPlaneGlParamsConfig();
 export class SDFPlaneGlNode extends BaseSDFGlNode<SDFPlaneGlParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'SDFPlane';
+		return GlType.SDF_PLANE;
 	}
 
 	override initializeNode() {

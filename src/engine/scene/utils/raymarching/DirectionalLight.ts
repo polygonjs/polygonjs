@@ -1,7 +1,13 @@
 import {IUniform, DirectionalLight} from 'three';
-import {PenumbraUniformElement, updateUserDataPenumbra, UniformsUpdateFunction} from './_Base';
+import {
+	PenumbraUniformElement,
+	updateUserDataPenumbra,
+	UniformsUpdateFunction,
+	ShadowUniformElement,
+	updateUserDataShadowBias,
+} from './_Base';
 
-export interface DirectionalLightRayMarchingUniformElement extends PenumbraUniformElement {}
+export interface DirectionalLightRayMarchingUniformElement extends PenumbraUniformElement, ShadowUniformElement {}
 interface DirectionalLightRayMarchingUniforms extends Array<DirectionalLightRayMarchingUniformElement> {
 	needsUpdate?: boolean;
 }
@@ -11,6 +17,8 @@ export interface DirectionalLightRayMarchingUniform extends IUniform {
 export function _createDirectionalLightUniform(): DirectionalLightRayMarchingUniformElement {
 	return {
 		penumbra: 0,
+		shadowBiasAngle: 0,
+		shadowBiasDistance: 0,
 	};
 }
 
@@ -20,6 +28,12 @@ export const _updateUniformsWithDirectionalLight: UniformsUpdateFunction<Directi
 	directionalLightsRayMarching: DirectionalLightRayMarchingUniform
 ) => {
 	updateUserDataPenumbra(
+		object as DirectionalLight,
+		directionalLightsRayMarching,
+		directionalLightIndex,
+		_createDirectionalLightUniform
+	);
+	updateUserDataShadowBias(
 		object as DirectionalLight,
 		directionalLightsRayMarching,
 		directionalLightIndex,

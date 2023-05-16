@@ -1,5 +1,9 @@
 import {Vector3, IUniform, Light, SpotLight, DirectionalLight, HemisphereLight, PointLight} from 'three';
-import {LIGHT_USER_DATA_RAYMARCHING_PENUMBRA} from './../../../../core/lights/Common';
+import {
+	LIGHT_USER_DATA_RAYMARCHING_PENUMBRA,
+	LIGHT_USER_DATA_RAYMARCHING_SHADOW_BIAS_ANGLE,
+	LIGHT_USER_DATA_RAYMARCHING_SHADOW_BIAS_DISTANCE,
+} from './../../../../core/lights/Common';
 export interface WorldPosUniformElement {
 	worldPos: Vector3;
 }
@@ -8,6 +12,10 @@ export interface DirectionUniformElement {
 }
 export interface PenumbraUniformElement {
 	penumbra: number;
+}
+export interface ShadowUniformElement {
+	shadowBiasAngle: number;
+	shadowBiasDistance: number;
 }
 
 interface UniformWithWorldPosArray extends Array<WorldPosUniformElement> {
@@ -26,8 +34,14 @@ export interface UniformsWithDirection extends IUniform {
 interface UniformWithPenumbraArray extends Array<PenumbraUniformElement> {
 	needsUpdate?: boolean;
 }
+interface UniformWithShadowBiasArray extends Array<ShadowUniformElement> {
+	needsUpdate?: boolean;
+}
 export interface UniformsWithPenumbra extends IUniform {
 	value: UniformWithPenumbraArray;
+}
+export interface UniformsWithShadowBias extends IUniform {
+	value: UniformWithShadowBiasArray;
 }
 
 export enum LightType {
@@ -103,7 +117,7 @@ export function getLightType(object: Light): LightType | undefined {
 // }
 
 export function updateUserDataPenumbra(
-	object: PointLight | DirectionalLight,
+	object: SpotLight | PointLight | DirectionalLight,
 	uniforms: UniformsWithPenumbra,
 	index: number,
 	defaultUniformCreate: () => PenumbraUniformElement
@@ -111,6 +125,22 @@ export function updateUserDataPenumbra(
 	uniforms.value[index] = uniforms.value[index] || defaultUniformCreate();
 	if (uniforms.value[index].penumbra != object.userData[LIGHT_USER_DATA_RAYMARCHING_PENUMBRA]) {
 		uniforms.value[index].penumbra = object.userData[LIGHT_USER_DATA_RAYMARCHING_PENUMBRA];
+		uniforms.value.needsUpdate = true;
+	}
+}
+export function updateUserDataShadowBias(
+	object: SpotLight | PointLight | DirectionalLight,
+	uniforms: UniformsWithShadowBias,
+	index: number,
+	defaultUniformCreate: () => ShadowUniformElement
+) {
+	uniforms.value[index] = uniforms.value[index] || defaultUniformCreate();
+	if (uniforms.value[index].shadowBiasAngle != object.userData[LIGHT_USER_DATA_RAYMARCHING_SHADOW_BIAS_ANGLE]) {
+		uniforms.value[index].shadowBiasAngle = object.userData[LIGHT_USER_DATA_RAYMARCHING_SHADOW_BIAS_ANGLE];
+		uniforms.value.needsUpdate = true;
+	}
+	if (uniforms.value[index].shadowBiasDistance != object.userData[LIGHT_USER_DATA_RAYMARCHING_SHADOW_BIAS_DISTANCE]) {
+		uniforms.value[index].shadowBiasDistance = object.userData[LIGHT_USER_DATA_RAYMARCHING_SHADOW_BIAS_DISTANCE];
 		uniforms.value.needsUpdate = true;
 	}
 }
