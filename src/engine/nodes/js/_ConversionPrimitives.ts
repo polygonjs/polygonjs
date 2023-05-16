@@ -108,7 +108,7 @@ export class IntToFloatJsNode extends TypedJsNode<IntToFloatJsParamsConfig> {
 //
 //
 class FloatToIntJsParamsConfig extends NodeParamsConfig {
-	float = ParamConfig.INTEGER(0);
+	float = ParamConfig.FLOAT(0);
 }
 const ParamsConfig_FloatToInt = new FloatToIntJsParamsConfig();
 export class FloatToIntJsNode extends TypedJsNode<FloatToIntJsParamsConfig> {

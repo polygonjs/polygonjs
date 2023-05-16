@@ -188,6 +188,7 @@ import { globalsRaycaster } from "../../../functions/globalsRaycaster";
 import { globalsRayFromCursor } from "../../../functions/globalsRayFromCursor";
 import { globalsTime } from "../../../functions/globalsTime";
 import { globalsTimeDelta } from "../../../functions/globalsTimeDelta";
+import { hsvToRgb } from "../../../functions/hsvToRgb";
 import { intToBool } from "../../../functions/intToBool";
 import { intToFloat } from "../../../functions/intToFloat";
 import { keyboardEventMatchesConfig } from "../../../functions/keyboardEventMatchesConfig";
@@ -604,6 +605,7 @@ export interface NamedFunctionMap {
   globalsRayFromCursor: globalsRayFromCursor;
   globalsTime: globalsTime;
   globalsTimeDelta: globalsTimeDelta;
+  hsvToRgb: hsvToRgb;
   intToBool: intToBool;
   intToFloat: intToFloat;
   keyboardEventMatchesConfig: keyboardEventMatchesConfig;
@@ -1023,6 +1025,7 @@ export class AllNamedFunctionRegister {
       globalsRayFromCursor,
       globalsTime,
       globalsTimeDelta,
+      hsvToRgb,
       intToBool,
       intToFloat,
       keyboardEventMatchesConfig,

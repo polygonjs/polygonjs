@@ -28,7 +28,7 @@ export const FUNCTION_NAME_BY_FILE_NAME: Record<string, string[]> = {
 		'clothSolverStepSimulation',
 		'clothSolverUpdateMaterial',
 	],
-	Color: ['colorSetRGB'],
+	Color: ['colorSetRGB', 'hsvToRgb'],
 	CookNode: ['cookNode'],
 	Conversion: [
 		'boolToInt',

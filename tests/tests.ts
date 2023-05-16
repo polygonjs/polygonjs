@@ -211,6 +211,7 @@ import './engine/nodes/js/GetObjectUserData';
 import './engine/nodes/js/GetParent';
 import './engine/nodes/js/GetSibbling';
 import './engine/nodes/js/GetVideoProperty';
+import './engine/nodes/js/HsvToRgb';
 import './engine/nodes/js/Length';
 import './engine/nodes/js/Lerp';
 import './engine/nodes/js/Math_Arg1';

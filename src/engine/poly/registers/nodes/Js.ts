@@ -93,6 +93,7 @@ import {GlobalsDirectionalLightJsNode} from '../../../nodes/js/GlobalsDirectiona
 import {GlobalsHemisphereLightJsNode} from '../../../nodes/js/GlobalsHemisphereLight';
 import {GlobalsPointLightJsNode} from '../../../nodes/js/GlobalsPointLight';
 import {GlobalsSpotLightJsNode} from '../../../nodes/js/GlobalsSpotLight';
+import {HsvToRgbJsNode} from '../../../nodes/js/HsvToRgb';
 import {IntToBoolJsNode} from '../../../nodes/js/IntToBool';
 import {IntToFloatJsNode} from '../../../nodes/js/IntToFloat';
 import {KeyframesJsNode} from '../../../nodes/js/Keyframes';
@@ -377,6 +378,7 @@ export interface JsNodeChildrenMap {
 	globalsHemisphereLight: GlobalsHemisphereLightJsNode;
 	globalsPointLight: GlobalsPointLightJsNode;
 	globalsSpotLight: GlobalsSpotLightJsNode;
+	hsvToRgb: HsvToRgbJsNode;
 	intToBool: IntToBoolJsNode;
 	intToFloat: IntToFloatJsNode;
 	keyframes: KeyframesJsNode;
@@ -698,6 +700,7 @@ export class JsRegister {
 		poly.registerNode(GlobalsHemisphereLightJsNode, CATEGORY_JS.GLOBALS, ONLY_OBJECT_BUILDER);
 		poly.registerNode(GlobalsPointLightJsNode, CATEGORY_JS.GLOBALS, ONLY_OBJECT_BUILDER);
 		poly.registerNode(GlobalsSpotLightJsNode, CATEGORY_JS.GLOBALS, ONLY_OBJECT_BUILDER);
+		poly.registerNode(HsvToRgbJsNode, CATEGORY_JS.CONVERSION);
 		poly.registerNode(IntToBoolJsNode, CATEGORY_JS.CONVERSION);
 		poly.registerNode(IntToFloatJsNode, CATEGORY_JS.CONVERSION);
 		// if (process.env.NODE_ENV == 'development') {
