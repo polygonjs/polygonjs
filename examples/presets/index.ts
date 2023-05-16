@@ -44,6 +44,7 @@ import {CSS2DObjectPresetRegister} from './sop/CSS2DObject';
 import {dataSopPresetRegister} from './sop/Data';
 import {dataUrlSopPresetRegister} from './sop/DataUrl';
 import {deleteSopPresetRegister} from './sop/Delete';
+import {directionalLightSopPresetRegister} from './sop/DirectionalLight';
 import {
 	fileDRCSopPresetRegister,
 	fileFBXSopPresetRegister,
@@ -62,6 +63,7 @@ import {normalsSopPresetRegister} from './sop/Normals';
 import {pointSopPresetRegister} from './sop/Point';
 import {roundedBoxSopPresetRegister} from './sop/RoundedBox';
 import {scatterSopPresetRegister} from './sop/Scatter';
+import {spotLightSopPresetRegister} from './sop/SpotLight';
 import {transformSopPresetRegister} from './sop/Transform';
 import {textSopPresetRegister} from './sop/Text';
 
@@ -115,6 +117,7 @@ class PresetLibraryClass {
 		this._registerPreset(dataSopPresetRegister);
 		this._registerPreset(dataUrlSopPresetRegister);
 		this._registerPreset(deleteSopPresetRegister);
+		this._registerPreset(directionalLightSopPresetRegister);
 		this._registerPreset(fileDRCSopPresetRegister);
 		this._registerPreset(fileFBXSopPresetRegister);
 		this._registerPreset(fileGEOJSONSopPresetRegister);
@@ -131,6 +134,7 @@ class PresetLibraryClass {
 		this._registerPreset(pointSopPresetRegister);
 		this._registerPreset(roundedBoxSopPresetRegister);
 		this._registerPreset(scatterSopPresetRegister);
+		this._registerPreset(spotLightSopPresetRegister);
 		this._registerPreset(textSopPresetRegister);
 		this._registerPreset(transformSopPresetRegister);
 	}
