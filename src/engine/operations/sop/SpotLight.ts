@@ -8,11 +8,7 @@ import {
 	SpotLightContainer,
 	SpotLightContainerParams,
 } from '../../../core/lights/SpotLight';
-import {
-	LIGHT_USER_DATA_RAYMARCHING_PENUMBRA,
-	LIGHT_USER_DATA_RAYMARCHING_SHADOW_BIAS_ANGLE,
-	LIGHT_USER_DATA_RAYMARCHING_SHADOW_BIAS_DISTANCE,
-} from '../../../core/lights/Common';
+import {LightUserDataRaymarching} from '../../../core/lights/Common';
 
 export class SpotLightSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: SpotLightParams = DEFAULT_SPOT_LIGHT_PARAMS;
@@ -61,9 +57,9 @@ export class SpotLightSopOperation extends BaseSopOperation {
 
 		// this._helperController.update();
 		// this._volumetricController.update();
-		light.userData[LIGHT_USER_DATA_RAYMARCHING_PENUMBRA] = params.raymarchingPenumbra;
-		light.userData[LIGHT_USER_DATA_RAYMARCHING_SHADOW_BIAS_ANGLE] = params.raymarchingShadowBiasAngle;
-		light.userData[LIGHT_USER_DATA_RAYMARCHING_SHADOW_BIAS_DISTANCE] = params.raymarchingShadowBiasDistance;
+		light.userData[LightUserDataRaymarching.PENUMBRA] = params.raymarchingPenumbra;
+		light.userData[LightUserDataRaymarching.SHADOW_BIAS_ANGLE] = params.raymarchingShadowBiasAngle;
+		light.userData[LightUserDataRaymarching.SHADOW_BIAS_DISTANCE] = params.raymarchingShadowBiasDistance;
 	}
 	updateShadowParams(container: SpotLightContainer, params: SpotLightParams) {
 		const light = container.light();

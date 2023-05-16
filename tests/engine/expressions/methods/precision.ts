@@ -3,18 +3,18 @@ QUnit.test('expression precision works on a float', async (assert) => {
 
 	const box1 = geo1.createNode('box');
 
-	box1.p.size.set('precision(-5.12657, 2)');
+	box1.p.center.y.set('precision(-5.12657, 2)');
 
-	await box1.p.size.compute();
-	assert.in_delta(box1.p.size.value, -5.12, 0.001);
+	await box1.p.center.y.compute();
+	assert.in_delta(box1.p.center.y.value, -5.12, 0.001);
 
-	box1.p.size.set('precision(5, 2)');
-	await box1.p.size.compute();
-	assert.equal(box1.p.size.value, 5);
+	box1.p.center.y.set('precision(5, 2)');
+	await box1.p.center.y.compute();
+	assert.equal(box1.p.center.y.value, 5);
 
-	box1.p.size.set('precision(-5*3.1+0.1, 2)');
-	await box1.p.size.compute();
-	assert.equal(box1.p.size.value, -15.4);
+	box1.p.center.y.set('precision(-5*3.1+0.1, 2)');
+	await box1.p.center.y.compute();
+	assert.equal(box1.p.center.y.value, -15.4);
 });
 
 QUnit.test('expression precision works on a string', async (assert) => {

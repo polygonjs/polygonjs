@@ -1,5 +1,6 @@
 import {Mesh} from 'three';
 import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Js';
+import {FloatParam} from '../../../../src/engine/params/Float';
 
 QUnit.test('js/box3SetFromObject', async (assert) => {
 	const geo1 = window.geo1;
@@ -21,7 +22,13 @@ QUnit.test('js/box3SetFromObject', async (assert) => {
 		return object.position.y;
 	}
 
-	assert.equal(await getPosY(), 0);
+	assert.equal(await getPosY(), 0.5);
 	box3SetFromObject1.setInput(JsConnectionPointType.OBJECT_3D, globals1);
 	assert.equal(await getPosY(), 0.5);
+
+	const multAdd1 = objectBuilder1.createNode('multAdd');
+	multAdd1.setInput(0, getBox3Property1, 'max');
+	output1.setInput('position', multAdd1);
+	(multAdd1.params.get('mult') as FloatParam).set(2);
+	assert.equal(await getPosY(), 1);
 });

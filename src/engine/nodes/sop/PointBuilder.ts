@@ -4,9 +4,9 @@
  *
  */
 import {TypedSopNode} from './_Base';
-import {CoreGroup} from '../../../core/geometry/Group';
+import {CoreGroup, Object3DWithGeometry} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../poly/InputCloneMode';
-import {NodeParamsConfig} from '../utils/params/ParamsConfig';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 import {
 	PointBuilderFunctionData,
@@ -14,11 +14,11 @@ import {
 } from '../js/code/assemblers/pointBuilder/PointBuilderPersistedConfig';
 import {AssemblerName} from '../../poly/registers/assemblers/_BaseRegister';
 import {JsAssemblerController} from '../js/code/Controller';
+import {JsAssemblerPointBuilder} from '../js/code/assemblers/pointBuilder/PointBuilderAssembler';
 import {
-	JsAssemblerPointBuilder,
 	PointContainer,
-	FunctionConstant,
-} from '../js/code/assemblers/pointBuilder/PointBuilderAssembler';
+	PointBuilderAssemblerConstant,
+} from '../js/code/assemblers/pointBuilder/PointBuilderAssemblerCommon';
 import {Poly} from '../../Poly';
 import {NodeContext} from '../../poly/NodeContext';
 import {JsNodeChildrenMap} from '../../poly/registers/nodes/Js';
@@ -36,6 +36,8 @@ import {Attribute} from '../../../core/geometry/Attribute';
 import {JsConnectionPointComponentsCountMap, JsConnectionPointType} from '../utils/io/connections/Js';
 import {logBlue as _logBlue} from '../../../core/logger/Console';
 import {PointBuilderEvaluator} from '../js/code/assemblers/pointBuilder/PointBuilderEvaluator';
+import {CoreMask} from '../../../core/geometry/Mask';
+import {object3DHasGeometry} from '../../../core/geometry/GeometryUtils';
 
 const DEBUG = false;
 function logBlue(message: string) {
@@ -55,7 +57,14 @@ type PointFunction = Function; //(object:Object3D)=>Object3D
 type AttributeItem = boolean | number | string | Color | Vector2 | Vector3 | Vector4;
 type AttributesDict = Map<string, AttributeItem>;
 
-class PointBuilderSopParamsConfig extends NodeParamsConfig {}
+class PointBuilderSopParamsConfig extends NodeParamsConfig {
+	/** @param group to assign the material to */
+	group = ParamConfig.STRING('', {
+		objectMask: true,
+	});
+	/** @param toggle on to apply recursively to children */
+	applyToChildren = ParamConfig.BOOLEAN(0);
+}
 const ParamsConfig = new PointBuilderSopParamsConfig();
 
 export class PointBuilderSopNode extends TypedSopNode<PointBuilderSopParamsConfig> {
@@ -126,7 +135,7 @@ export class PointBuilderSopNode extends TypedSopNode<PointBuilderSopParamsConfi
 
 			const evaluator = _func(...args) as PointBuilderEvaluator;
 
-			const inputObjects = coreGroup.threejsObjectsWithGeo();
+			const inputObjects = this._getObjects(coreGroup);
 
 			let objnum = 0;
 			for (const inputObject of inputObjects) {
@@ -189,6 +198,9 @@ export class PointBuilderSopNode extends TypedSopNode<PointBuilderSopParamsConfi
 		} else {
 			this.setObjects([]);
 		}
+	}
+	private _getObjects(coreGroup: CoreGroup): Object3DWithGeometry[] {
+		return CoreMask.filterObjects(coreGroup, this.pv).filter(object3DHasGeometry);
 	}
 	private _resetRequiredAttributes() {
 		this._attributesDict.clear();
@@ -385,11 +397,11 @@ export class PointBuilderSopNode extends TypedSopNode<PointBuilderSopParamsConfi
 		paramConfigs.forEach((p) => p.applyToNode(this));
 
 		this._functionCreationArgs = [
-			FunctionConstant.POINT_CONTAINER,
+			PointBuilderAssemblerConstant.POINT_CONTAINER,
 			'_setErrorFromError',
 			...variableNames,
 			...functionNames,
-			FunctionConstant.ATTRIBUTES_DICT,
+			PointBuilderAssemblerConstant.ATTRIBUTES_DICT,
 			...paramConfigNames,
 			wrappedBody,
 		];

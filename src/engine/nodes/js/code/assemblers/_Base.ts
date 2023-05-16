@@ -134,6 +134,9 @@ export abstract class BaseJsShaderAssembler extends TypedAssembler<NodeContext.J
 
 	compile() {}
 
+	abstract defaultObject3DVariable(): string;
+	abstract defaultObject3DMaterialVariable(): string;
+
 	// private get material() {
 	// 	return (this._material = this._material || this._createMaterial());
 	// }

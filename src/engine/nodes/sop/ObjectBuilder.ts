@@ -6,16 +6,16 @@
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../poly/InputCloneMode';
-import {NodeParamsConfig} from '../utils/params/ParamsConfig';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 import {ObjectBuilderPersistedConfig} from '../js/code/assemblers/objectBuilder/ObjectBuilderPersistedConfig';
 import {AssemblerName} from '../../poly/registers/assemblers/_BaseRegister';
 import {JsAssemblerController} from '../js/code/Controller';
+import {JsAssemblerObjectBuilder} from '../js/code/assemblers/objectBuilder/ObjectBuilderAssembler';
 import {
-	JsAssemblerObjectBuilder,
-	FunctionConstant,
+	ObjectBuilderAssemblerConstant,
 	ObjectContainer,
-} from '../js/code/assemblers/objectBuilder/ObjectBuilderAssembler';
+} from '../js/code/assemblers/objectBuilder/ObjectBuilderAssemblerCommon';
 import {Poly} from '../../Poly';
 import {NodeContext} from '../../poly/NodeContext';
 import {JsNodeChildrenMap} from '../../poly/registers/nodes/Js';
@@ -31,6 +31,7 @@ import {JsNodeFinder} from '../js/code/utils/NodeFinder';
 import {CoreType} from '../../../core/Type';
 import {logBlue as _logBlue} from '../../../core/logger/Console';
 import {PointBuilderEvaluator} from '../js/code/assemblers/pointBuilder/PointBuilderEvaluator';
+import {CoreMask} from '../../../core/geometry/Mask';
 
 const DEBUG = true;
 function logBlue(message: string) {
@@ -50,7 +51,14 @@ type ObjectFunction = Function; //(object:Object3D)=>Object3D
 
 const DUMMY = new Object3D();
 
-class ObjectBuilderSopParamsConfig extends NodeParamsConfig {}
+class ObjectBuilderSopParamsConfig extends NodeParamsConfig {
+	/** @param group to assign the material to */
+	group = ParamConfig.STRING('', {
+		objectMask: true,
+	});
+	/** @param toggle on to apply recursively to children */
+	applyToChildren = ParamConfig.BOOLEAN(0);
+}
 const ParamsConfig = new ObjectBuilderSopParamsConfig();
 
 export class ObjectBuilderSopNode extends TypedSopNode<ObjectBuilderSopParamsConfig> {
@@ -120,10 +128,13 @@ export class ObjectBuilderSopNode extends TypedSopNode<ObjectBuilderSopParamsCon
 		if (_func) {
 			const args = this.functionEvalArgsWithParamConfigs();
 			const evaluator = _func(...args) as PointBuilderEvaluator;
-			const inputObjects = coreGroup.threejsObjects();
+			const inputObjects = this._getObjects(coreGroup);
+
 			// we add a temporary parent to the objects, so that nodes like getSiblings can work
 			for (const inputObject of inputObjects) {
-				this._tmpParent.add(inputObject);
+				if (inputObject.parent == null) {
+					this._tmpParent.add(inputObject);
+				}
 			}
 			let objnum = 0;
 			for (const inputObject of inputObjects) {
@@ -133,14 +144,18 @@ export class ObjectBuilderSopNode extends TypedSopNode<ObjectBuilderSopParamsCon
 				inputObject.updateMatrix();
 				objnum++;
 			}
-			for (const inputObject of inputObjects) {
+			const tmpChildren = [...this._tmpParent.children];
+			for (const inputObject of tmpChildren) {
 				this._tmpParent.remove(inputObject);
 			}
 
-			this.setObjects(inputObjects);
+			this.setCoreGroup(coreGroup);
 		} else {
 			this.setObjects([]);
 		}
+	}
+	private _getObjects(coreGroup: CoreGroup) {
+		return CoreMask.filterObjects(coreGroup, this.pv);
 	}
 
 	compileIfRequired() {
@@ -226,7 +241,7 @@ export class ObjectBuilderSopNode extends TypedSopNode<ObjectBuilderSopParamsCon
 		paramConfigs.forEach((p) => p.applyToNode(this));
 
 		this._functionCreationArgs = [
-			FunctionConstant.OBJECT_CONTAINER,
+			ObjectBuilderAssemblerConstant.OBJECT_CONTAINER,
 			'_setErrorFromError',
 			...variableNames,
 			...functionNames,

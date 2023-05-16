@@ -1,8 +1,4 @@
-import {
-	LIGHT_USER_DATA_RAYMARCHING_PENUMBRA,
-	LIGHT_USER_DATA_RAYMARCHING_SHADOW_BIAS_ANGLE,
-	LIGHT_USER_DATA_RAYMARCHING_SHADOW_BIAS_DISTANCE,
-} from './../../../core/lights/Common';
+import {LightUserDataRaymarching} from './../../../core/lights/Common';
 import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
@@ -54,9 +50,9 @@ export class DirectionalLightSopOperation extends BaseSopOperation {
 		light.intensity = params.intensity;
 		light.shadow.camera.far = params.distance;
 
-		light.userData[LIGHT_USER_DATA_RAYMARCHING_PENUMBRA] = params.raymarchingPenumbra;
-		light.userData[LIGHT_USER_DATA_RAYMARCHING_SHADOW_BIAS_ANGLE] = params.raymarchingShadowBiasAngle;
-		light.userData[LIGHT_USER_DATA_RAYMARCHING_SHADOW_BIAS_DISTANCE] = params.raymarchingShadowBiasDistance;
+		light.userData[LightUserDataRaymarching.PENUMBRA] = params.raymarchingPenumbra;
+		light.userData[LightUserDataRaymarching.SHADOW_BIAS_ANGLE] = params.raymarchingShadowBiasAngle;
+		light.userData[LightUserDataRaymarching.SHADOW_BIAS_DISTANCE] = params.raymarchingShadowBiasDistance;
 	}
 	updateShadowParams<NC extends NodeContext>(container: DirectionalLightContainer, params: DirectionalLightParams) {
 		const light = container.light();

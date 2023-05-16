@@ -28,9 +28,9 @@ QUnit.test('expression centroid works with path', async (assert) => {
 	await box2.p.size.compute();
 	assert.equal(box2.p.size.value, 5);
 
-	box2.p.size.set("centroid('../transform1', 'z')");
+	box2.p.size.set("- centroid('../transform1', 'z')");
 	await box2.p.size.compute();
-	assert.equal(box2.p.size.value, -10);
+	assert.equal(box2.p.size.value, 10);
 
 	transform1.p.t.x.set(4);
 	transform2.p.t.x.set('-$CEX');

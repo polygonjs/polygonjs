@@ -174,9 +174,3 @@ export class ActorEvaluator extends BaseEvaluator {
 	onVideoEvent?: TriggerCallback;
 	onWebXRControllerEvent?: TriggerCallback;
 }
-
-export enum EvaluatorConstant {
-	OBJECT_3D = 'this.object3D',
-	MATERIAL = 'this.object3D.material',
-	SCENE = 'this.scene',
-}

@@ -26,6 +26,7 @@ import type {CsgGeometryType} from './csg/CsgCommon';
 import type {CsgObject} from './csg/CsgObject';
 import {EntityGroupCollection} from './EntityGroupCollection';
 import {isCSGObject} from './csg/CsgCoreType';
+import {object3DHasGeometry} from './GeometryUtils';
 //
 // SDF
 // import type {SDFObjectType} from './sdf/SDFCommon';
@@ -206,8 +207,8 @@ export class CoreGroup extends CoreEntity {
 	threejsObjects(): Object3D[] {
 		return this._allObjects ? this._allObjects.filter(isObject3D) : [];
 	}
-	threejsObjectsWithGeo() {
-		return this.threejsObjects().filter((o) => (o as Mesh).geometry != null) as Object3DWithGeometry[];
+	threejsObjectsWithGeo(): Object3DWithGeometry[] {
+		return this.threejsObjects().filter(object3DHasGeometry);
 	}
 	threejsCoreObjects() {
 		return this.threejsObjects().map((o, i) => new CoreObject(o, i));

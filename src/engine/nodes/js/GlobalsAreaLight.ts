@@ -1,11 +1,10 @@
 import {TypedJsNode} from './_Base';
-
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {JsType} from '../../poly/registers/nodes/types/Js';
 import {JsConnectionPoint, JsConnectionPointType} from '../utils/io/connections/Js';
-import {ObjectVariableAreaLight} from './code/assemblers/objectBuilder/ObjectVariables';
-import {FunctionConstant} from './code/assemblers/objectBuilder/ObjectBuilderAssembler';
+import {ObjectVariableAreaLight, ObjectVariableLight} from './code/assemblers/objectBuilder/ObjectVariables';
+import {ObjectBuilderAssemblerConstant} from './code/assemblers/objectBuilder/ObjectBuilderAssemblerCommon';
 import {Color} from 'three';
 
 class GlobalsAreaLightJsParamsConfig extends NodeParamsConfig {}
@@ -21,8 +20,10 @@ export class GlobalsAreaLightJsNode extends TypedJsNode<GlobalsAreaLightJsParams
 		super.initializeNode();
 
 		this.io.outputs.setNamedOutputConnectionPoints([
-			new JsConnectionPoint(ObjectVariableAreaLight.INTENSITY, JsConnectionPointType.FLOAT),
-			new JsConnectionPoint(ObjectVariableAreaLight.COLOR, JsConnectionPointType.COLOR),
+			new JsConnectionPoint(ObjectVariableLight.INTENSITY, JsConnectionPointType.FLOAT),
+			new JsConnectionPoint(ObjectVariableLight.COLOR, JsConnectionPointType.COLOR),
+			new JsConnectionPoint(ObjectVariableAreaLight.WIDTH, JsConnectionPointType.FLOAT),
+			new JsConnectionPoint(ObjectVariableAreaLight.HEIGHT, JsConnectionPointType.FLOAT),
 		]);
 	}
 
@@ -34,13 +35,21 @@ export class GlobalsAreaLightJsNode extends TypedJsNode<GlobalsAreaLightJsParams
 			const varName = this.jsVarName(outputName);
 
 			switch (outputName) {
-				case ObjectVariableAreaLight.INTENSITY: {
-					bodyLines.push(`${varName} = ${FunctionConstant.OBJECT_3D}.${outputName}`);
+				case ObjectVariableLight.INTENSITY:
+				case ObjectVariableAreaLight.WIDTH:
+				case ObjectVariableAreaLight.HEIGHT: {
+					bodyLines.push(`if( ${ObjectBuilderAssemblerConstant.OBJECT_3D}.${outputName} != null ){
+						${varName} = ${ObjectBuilderAssemblerConstant.OBJECT_3D}.${outputName}
+					} else {
+						${varName} = 0;
+					}`);
 					break;
 				}
-				case ObjectVariableAreaLight.COLOR: {
+				case ObjectVariableLight.COLOR: {
 					linesController.addVariable(this, new Color(), varName);
-					bodyLines.push(`${varName}.copy(${FunctionConstant.OBJECT_3D}.${outputName})`);
+					bodyLines.push(`if( ${ObjectBuilderAssemblerConstant.OBJECT_3D}.${outputName} != null ){
+						${varName}.copy(${ObjectBuilderAssemblerConstant.OBJECT_3D}.${outputName})
+					}`);
 					break;
 				}
 			}

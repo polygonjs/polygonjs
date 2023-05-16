@@ -36,6 +36,12 @@ export class JsAssemblerSDF extends BaseJsShaderAssembler {
 	makeFunctionNodeDirtyOnChange() {
 		return true;
 	}
+	defaultObject3DVariable(): string {
+		return 'null';
+	}
+	defaultObject3DMaterialVariable(): string {
+		return 'null';
+	}
 	override templateShader() {
 		return {
 			fragmentShader: TEMPLATE,

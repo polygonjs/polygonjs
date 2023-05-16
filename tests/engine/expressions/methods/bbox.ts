@@ -11,10 +11,10 @@ QUnit.test('expression bbox works with path', async (assert) => {
 	assert.equal(box1.name(), 'box1');
 	const box2 = geo1.createNode('box');
 
-	box2.p.size.set(`bbox('../${box1.name()}', 'min', 'x')`);
+	box2.p.size.set(`3*bbox('../${box1.name()}', 'max', 'x')`);
 
 	await box2.p.size.compute();
-	assert.equal(box2.p.size.value, -0.5);
+	assert.equal(box2.p.size.value, 1.5);
 });
 
 QUnit.test('expression bbox works with index', async (assert) => {

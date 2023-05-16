@@ -3,7 +3,6 @@ import {PolyScene} from '../scene/PolyScene';
 import {BaseNodeType} from '../nodes/_Base';
 import {BaseJsNodeType} from '../nodes/js/_Base';
 import {JsLinesCollectionController} from '../nodes/js/code/utils/JsLinesCollectionController';
-import {EvaluatorConstant} from '../nodes/js/code/assemblers/actor/ActorEvaluator';
 import {NodeContext} from '../poly/NodeContext';
 import {AssemblerControllerNode} from '../nodes/js/code/Controller';
 import {TimeController} from '../scene/utils/TimeController';
@@ -131,11 +130,11 @@ export abstract class ObjectNamedFunction8<
 // SCENE
 //
 //
-abstract class SceneNamedFunction<ARGS extends Array<any>, ARGS_STR extends Array<string>> extends BaseNamedFunction {
-	abstract override func(object: PolyScene, ...args: ARGS): any;
-	override asString(...args: ARGS_STR): string {
-		super.asString(...args);
-		return `${this.type()}(${EvaluatorConstant.SCENE}, ${args.join(', ')})`;
-	}
-}
-export abstract class SceneNamedFunction0 extends SceneNamedFunction<[], []> {}
+// abstract class SceneNamedFunction<ARGS extends Array<any>, ARGS_STR extends Array<string>> extends BaseNamedFunction {
+// 	abstract override func(object: PolyScene, ...args: ARGS): any;
+// 	override asString(...args: ARGS_STR): string {
+// 		super.asString(...args);
+// 		return `${this.type()}(${EvaluatorConstant.SCENE}, ${args.join(', ')})`;
+// 	}
+// }
+// export abstract class SceneNamedFunction0 extends SceneNamedFunction<[], []> {}

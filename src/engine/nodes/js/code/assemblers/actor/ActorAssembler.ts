@@ -15,6 +15,7 @@ import {PrettierController} from '../../../../../../core/code/PrettierController
 import {NamedFunctionMap} from '../../../../../poly/registers/functions/All';
 import {ActorFunctionData} from './ActorPersistedConfig';
 import {EvaluatorEventData} from './ActorEvaluator';
+import {ActorAssemblerConstant} from './ActorAssemblerCommon';
 import {CoreType} from '../../../../../../core/Type';
 import {ParamOptions} from '../../../../../params/utils/OptionsController';
 import {JsConnectionPointType} from '../../../../utils/io/connections/Js';
@@ -81,6 +82,12 @@ export class JsAssemblerActor extends BaseJsShaderAssembler {
 			// },
 		};
 		return _options;
+	}
+	defaultObject3DVariable(): string {
+		return ActorAssemblerConstant.OBJECT_3D;
+	}
+	defaultObject3DMaterialVariable(): string {
+		return ActorAssemblerConstant.MATERIAL;
 	}
 
 	// functionData(): FunctionData | undefined {

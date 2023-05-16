@@ -1,4 +1,5 @@
-import {BufferAttribute, BufferGeometry} from 'three';
+import {BufferAttribute, BufferGeometry, Object3D, Mesh} from 'three';
+import {Object3DWithGeometry} from './Group';
 
 export function bufferGeometryMaxGroupEnd(geometry: BufferGeometry): number {
 	const groups = geometry.groups;
@@ -25,4 +26,8 @@ export function truncateBufferGeometry(geometry: BufferGeometry, maxCount: numbe
 		// }
 		geometry.setAttribute(attributeName, new BufferAttribute(new Float32Array(newArray), itemSize));
 	}
+}
+
+export function object3DHasGeometry(o: Object3D): o is Object3DWithGeometry {
+	return (o as Mesh).geometry != null;
 }

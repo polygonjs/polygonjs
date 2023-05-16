@@ -22,7 +22,7 @@ QUnit.test('float hasExpression() returns false when removing the expression', a
 	const geo1 = window.geo1;
 
 	const box1 = geo1.createNode('box');
-	const param = box1.p.size;
+	const param = box1.p.center.y;
 
 	param.set(2);
 	assert.notOk(param.hasExpression());

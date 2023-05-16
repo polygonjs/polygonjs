@@ -14,37 +14,13 @@ import {OutputJsNode} from '../../../Output';
 import {GlobalsJsNode} from '../../../Globals';
 import {JsConnectionPointType, JsConnectionPoint} from '../../../../utils/io/connections/Js';
 import {JsLinesCollectionController} from '../../utils/JsLinesCollectionController';
-import {Euler, Matrix4, Object3D, Quaternion, Vector3} from 'three';
+import {Euler, Matrix4, Quaternion, Vector3} from 'three';
 import {NamedFunctionMap} from '../../../../../poly/registers/functions/All';
 import {ParamOptions} from '../../../../../params/utils/OptionsController';
 import {AttributeJsNode} from '../../../Attribute';
 import {Poly} from '../../../../../Poly';
 import {PrettierController} from '../../../../../../core/code/PrettierController';
-
-export enum FunctionConstant {
-	OBJECT_CONTAINER = 'objectContainer',
-	OBJECT_3D = 'objectContainer.Object3D',
-	OBJ_NUM = 'objectContainer.objnum',
-}
-export interface ObjectContainer {
-	Object3D: Object3D;
-	objnum: number;
-}
-
-export enum ObjectVariable {
-	OBJECT_3D = 'Object3D',
-	POSITION = 'position',
-	ROTATION = 'rotation',
-	QUATERNION = 'quaternion',
-	SCALE = 'scale',
-	MATRIX = 'matrix',
-	VISIBLE = 'visible',
-	MATRIX_AUTO_UPDATE = 'matrixAutoUpdate',
-	CAST_SHADOW = 'castShadow',
-	RECEIVE_SHADOW = 'receiveShadow',
-	FRUSTUM_CULLED = 'frustumCulled',
-	OBJ_NUM = 'objnum',
-}
+import {ObjectBuilderAssemblerConstant, ObjectVariable} from './ObjectBuilderAssemblerCommon';
 
 const TEMPLATE = `
 ${INSERT_DEFINE_AFTER}
@@ -132,6 +108,12 @@ export class JsAssemblerObjectBuilder extends BaseJsShaderAssembler {
 	// 		return this._function(position);
 	// 	}
 	// }
+	defaultObject3DVariable(): string {
+		return ObjectBuilderAssemblerConstant.OBJECT_3D;
+	}
+	defaultObject3DMaterialVariable(): string {
+		return ObjectBuilderAssemblerConstant.MATERIAL;
+	}
 
 	override updateFunction() {
 		super.updateFunction();
@@ -320,15 +302,15 @@ export class JsAssemblerObjectBuilder extends BaseJsShaderAssembler {
 						case ObjectVariable.ROTATION:
 						case ObjectVariable.QUATERNION:
 						case ObjectVariable.SCALE: {
-							bodyLines.push(`${FunctionConstant.OBJECT_3D}.${inputName}.copy(${varName})`);
+							bodyLines.push(`${ObjectBuilderAssemblerConstant.OBJECT_3D}.${inputName}.copy(${varName})`);
 							break;
 						}
 						case ObjectVariable.MATRIX: {
-							bodyLines.push(`${FunctionConstant.OBJECT_3D}.${inputName}.copy(${varName})`);
-							bodyLines.push(`${FunctionConstant.OBJECT_3D}.${inputName}.decompose(
-								${FunctionConstant.OBJECT_3D}.position,
-								${FunctionConstant.OBJECT_3D}.quaternion,
-								${FunctionConstant.OBJECT_3D}.scale
+							bodyLines.push(`${ObjectBuilderAssemblerConstant.OBJECT_3D}.${inputName}.copy(${varName})`);
+							bodyLines.push(`${ObjectBuilderAssemblerConstant.OBJECT_3D}.${inputName}.decompose(
+								${ObjectBuilderAssemblerConstant.OBJECT_3D}.position,
+								${ObjectBuilderAssemblerConstant.OBJECT_3D}.quaternion,
+								${ObjectBuilderAssemblerConstant.OBJECT_3D}.scale
 							)`);
 							break;
 						}
@@ -338,7 +320,7 @@ export class JsAssemblerObjectBuilder extends BaseJsShaderAssembler {
 						case ObjectVariable.CAST_SHADOW:
 						case ObjectVariable.RECEIVE_SHADOW:
 						case ObjectVariable.FRUSTUM_CULLED: {
-							bodyLines.push(`${FunctionConstant.OBJECT_3D}.${inputName} = ${varName}`);
+							bodyLines.push(`${ObjectBuilderAssemblerConstant.OBJECT_3D}.${inputName} = ${varName}`);
 							break;
 						}
 					}
@@ -363,28 +345,28 @@ export class JsAssemblerObjectBuilder extends BaseJsShaderAssembler {
 
 			switch (outputName) {
 				case ObjectVariable.OBJECT_3D: {
-					bodyLines.push(`${varName} = ${FunctionConstant.OBJECT_3D}`);
+					bodyLines.push(`${varName} = ${ObjectBuilderAssemblerConstant.OBJECT_3D}`);
 					break;
 				}
 				case ObjectVariable.POSITION:
 				case ObjectVariable.SCALE: {
 					linesController.addVariable(globalsNode, new Vector3(), varName);
-					bodyLines.push(`${varName}.copy(${FunctionConstant.OBJECT_3D}.${outputName})`);
+					bodyLines.push(`${varName}.copy(${ObjectBuilderAssemblerConstant.OBJECT_3D}.${outputName})`);
 					break;
 				}
 				case ObjectVariable.ROTATION: {
 					linesController.addVariable(globalsNode, new Euler(), varName);
-					bodyLines.push(`${varName}.copy(${FunctionConstant.OBJECT_3D}.${outputName})`);
+					bodyLines.push(`${varName}.copy(${ObjectBuilderAssemblerConstant.OBJECT_3D}.${outputName})`);
 					break;
 				}
 				case ObjectVariable.QUATERNION: {
 					linesController.addVariable(globalsNode, new Quaternion(), varName);
-					bodyLines.push(`${varName}.copy(${FunctionConstant.OBJECT_3D}.${outputName})`);
+					bodyLines.push(`${varName}.copy(${ObjectBuilderAssemblerConstant.OBJECT_3D}.${outputName})`);
 					break;
 				}
 				case ObjectVariable.MATRIX: {
 					linesController.addVariable(globalsNode, new Matrix4(), varName);
-					bodyLines.push(`${varName}.copy(${FunctionConstant.OBJECT_3D}.${outputName})`);
+					bodyLines.push(`${varName}.copy(${ObjectBuilderAssemblerConstant.OBJECT_3D}.${outputName})`);
 					break;
 				}
 				case ObjectVariable.VISIBLE:
@@ -393,11 +375,11 @@ export class JsAssemblerObjectBuilder extends BaseJsShaderAssembler {
 				case ObjectVariable.RECEIVE_SHADOW:
 				case ObjectVariable.FRUSTUM_CULLED: {
 					linesController.addVariable(globalsNode, new Vector3(), varName);
-					bodyLines.push(`${varName} = ${FunctionConstant.OBJECT_3D}.${outputName}`);
+					bodyLines.push(`${varName} = ${ObjectBuilderAssemblerConstant.OBJECT_3D}.${outputName}`);
 					break;
 				}
 				case ObjectVariable.OBJ_NUM: {
-					bodyLines.push(`${varName} = ${FunctionConstant.OBJ_NUM}`);
+					bodyLines.push(`${varName} = ${ObjectBuilderAssemblerConstant.OBJ_NUM}`);
 					break;
 				}
 
@@ -430,7 +412,7 @@ export class JsAssemblerObjectBuilder extends BaseJsShaderAssembler {
 			const func = Poly.namedFunctionsRegister.getFunction('setObjectAttribute', attributeNode, linesController);
 			const exportedValue = attributeNode.variableForInput(linesController, AttributeJsNode.INPUT_NAME);
 			const bodyLine = func.asString(
-				FunctionConstant.OBJECT_3D,
+				ObjectBuilderAssemblerConstant.OBJECT_3D,
 				`'${attribName}'`,
 				`1`,
 				exportedValue,
@@ -447,7 +429,8 @@ export class JsAssemblerObjectBuilder extends BaseJsShaderAssembler {
 
 			const func = Poly.namedFunctionsRegister.getFunction('getObjectAttribute', attributeNode, linesController);
 			const bodyLine =
-				`${varName} = ` + func.asString(FunctionConstant.OBJECT_3D, `'${attribName}'`, `'${dataType}'`);
+				`${varName} = ` +
+				func.asString(ObjectBuilderAssemblerConstant.OBJECT_3D, `'${attribName}'`, `'${dataType}'`);
 			bodyLines.push(bodyLine);
 		}
 		linesController._addBodyLines(attributeNode, bodyLines);

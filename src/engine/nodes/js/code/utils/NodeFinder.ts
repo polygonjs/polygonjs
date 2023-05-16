@@ -7,9 +7,20 @@ import {BaseJsShaderAssembler} from '../assemblers/_Base';
 export class JsNodeFinder {
 	static findOutputNodes(node: AssemblerControllerNode<BaseJsShaderAssembler>) {
 		const output = node.nodesByType(JsType.OUTPUT);
+		const outputAmbientLight = node.nodesByType(JsType.OUTPUT_AMBIENT_LIGHT);
 		const outputAreaLight = node.nodesByType(JsType.OUTPUT_AREA_LIGHT);
+		const outputDirectionalLight = node.nodesByType(JsType.OUTPUT_DIRECTIONAL_LIGHT);
+		const outputHemisphereLight = node.nodesByType(JsType.OUTPUT_HEMISPHERE_LIGHT);
+		const outputPointLight = node.nodesByType(JsType.OUTPUT_POINT_LIGHT);
+		const outputSpotLight = node.nodesByType(JsType.OUTPUT_SPOT_LIGHT);
 
-		return output.concat(outputAreaLight);
+		return output
+			.concat(outputAmbientLight)
+			.concat(outputAreaLight)
+			.concat(outputDirectionalLight)
+			.concat(outputHemisphereLight)
+			.concat(outputPointLight)
+			.concat(outputSpotLight);
 	}
 	static findParamGeneratingNodes(node: AssemblerControllerNode<BaseJsShaderAssembler>) {
 		const list: BaseJsNodeType[] = [];

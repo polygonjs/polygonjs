@@ -1,9 +1,5 @@
 import {Vector3, IUniform, Light, SpotLight, DirectionalLight, HemisphereLight, PointLight} from 'three';
-import {
-	LIGHT_USER_DATA_RAYMARCHING_PENUMBRA,
-	LIGHT_USER_DATA_RAYMARCHING_SHADOW_BIAS_ANGLE,
-	LIGHT_USER_DATA_RAYMARCHING_SHADOW_BIAS_DISTANCE,
-} from './../../../../core/lights/Common';
+import {LightUserDataRaymarching} from './../../../../core/lights/Common';
 export interface WorldPosUniformElement {
 	worldPos: Vector3;
 }
@@ -123,8 +119,9 @@ export function updateUserDataPenumbra(
 	defaultUniformCreate: () => PenumbraUniformElement
 ) {
 	uniforms.value[index] = uniforms.value[index] || defaultUniformCreate();
-	if (uniforms.value[index].penumbra != object.userData[LIGHT_USER_DATA_RAYMARCHING_PENUMBRA]) {
-		uniforms.value[index].penumbra = object.userData[LIGHT_USER_DATA_RAYMARCHING_PENUMBRA];
+	const uniformName = LightUserDataRaymarching.PENUMBRA;
+	if (uniforms.value[index].penumbra != object.userData[uniformName]) {
+		uniforms.value[index].penumbra = object.userData[uniformName];
 		uniforms.value.needsUpdate = true;
 	}
 }
@@ -135,12 +132,12 @@ export function updateUserDataShadowBias(
 	defaultUniformCreate: () => ShadowUniformElement
 ) {
 	uniforms.value[index] = uniforms.value[index] || defaultUniformCreate();
-	if (uniforms.value[index].shadowBiasAngle != object.userData[LIGHT_USER_DATA_RAYMARCHING_SHADOW_BIAS_ANGLE]) {
-		uniforms.value[index].shadowBiasAngle = object.userData[LIGHT_USER_DATA_RAYMARCHING_SHADOW_BIAS_ANGLE];
+	if (uniforms.value[index].shadowBiasAngle != object.userData[LightUserDataRaymarching.SHADOW_BIAS_ANGLE]) {
+		uniforms.value[index].shadowBiasAngle = object.userData[LightUserDataRaymarching.SHADOW_BIAS_ANGLE];
 		uniforms.value.needsUpdate = true;
 	}
-	if (uniforms.value[index].shadowBiasDistance != object.userData[LIGHT_USER_DATA_RAYMARCHING_SHADOW_BIAS_DISTANCE]) {
-		uniforms.value[index].shadowBiasDistance = object.userData[LIGHT_USER_DATA_RAYMARCHING_SHADOW_BIAS_DISTANCE];
+	if (uniforms.value[index].shadowBiasDistance != object.userData[LightUserDataRaymarching.SHADOW_BIAS_DISTANCE]) {
+		uniforms.value[index].shadowBiasDistance = object.userData[LightUserDataRaymarching.SHADOW_BIAS_DISTANCE];
 		uniforms.value.needsUpdate = true;
 	}
 }

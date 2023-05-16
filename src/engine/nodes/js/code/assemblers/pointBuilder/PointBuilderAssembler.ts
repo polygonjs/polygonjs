@@ -21,28 +21,7 @@ import {NodeContext} from '../../../../../poly/NodeContext';
 import {JsType} from '../../../../../poly/registers/nodes/types/Js';
 import {PointBuilderFunctionData, PointBuilderFunctionDataAttributeDataItem} from './PointBuilderPersistedConfig';
 import {PrettierController} from '../../../../../../core/code/PrettierController';
-
-export enum FunctionConstant {
-	POINT_CONTAINER = 'pointContainer',
-	POSITION = 'pointContainer.position',
-	NORMAL = 'pointContainer.normal',
-	PTNUM = 'pointContainer.ptnum',
-	OBJNUM = 'pointContainer.objnum',
-	ATTRIBUTES_DICT = 'attributesDict',
-}
-export interface PointContainer {
-	position: Vector3;
-	normal: Vector3;
-	ptnum: number;
-	objnum: number;
-}
-
-export enum PointVariable {
-	POSITION = 'position',
-	NORMAL = 'normal',
-	PTNUM = 'ptnum',
-	OBJNUM = 'objnum',
-}
+import {PointBuilderAssemblerConstant, PointVariable} from './PointBuilderAssemblerCommon';
 
 const TEMPLATE = `
 ${INSERT_DEFINE_AFTER}
@@ -76,6 +55,12 @@ export class JsAssemblerPointBuilder extends BaseJsShaderAssembler {
 			dependentOnFoundNode: true,
 		};
 		return _options;
+	}
+	defaultObject3DVariable(): string {
+		return PointBuilderAssemblerConstant.OBJECT_3D;
+	}
+	defaultObject3DMaterialVariable(): string {
+		return PointBuilderAssemblerConstant.MATERIAL;
 	}
 
 	functionData(): PointBuilderFunctionData | undefined {
@@ -215,7 +200,7 @@ export class JsAssemblerPointBuilder extends BaseJsShaderAssembler {
 
 					let bodyLine: string | undefined;
 					if (inputName == PointVariable.POSITION) {
-						bodyLine = `${FunctionConstant.POSITION}.copy(${varName})`;
+						bodyLine = `${PointBuilderAssemblerConstant.POSITION}.copy(${varName})`;
 					}
 
 					if (bodyLine) {
@@ -242,12 +227,12 @@ export class JsAssemblerPointBuilder extends BaseJsShaderAssembler {
 				case PointVariable.POSITION:
 				case PointVariable.NORMAL: {
 					linesController.addVariable(globalsNode, new Vector3(), varName);
-					bodyLines.push(`${varName}.copy(${FunctionConstant.POINT_CONTAINER}.${outputName})`);
+					bodyLines.push(`${varName}.copy(${PointBuilderAssemblerConstant.POINT_CONTAINER}.${outputName})`);
 					break;
 				}
 				case PointVariable.OBJNUM:
 				case PointVariable.PTNUM: {
-					bodyLines.push(`${varName}= ${FunctionConstant.POINT_CONTAINER}.${outputName}`);
+					bodyLines.push(`${varName}= ${PointBuilderAssemblerConstant.POINT_CONTAINER}.${outputName}`);
 				}
 			}
 		}
@@ -266,7 +251,7 @@ export class JsAssemblerPointBuilder extends BaseJsShaderAssembler {
 		// export
 		if (attributeNode.isExporting()) {
 			const exportedValue = attributeNode.variableForInput(linesController, AttributeJsNode.INPUT_NAME);
-			const bodyLine = `${FunctionConstant.ATTRIBUTES_DICT}.set('${attribName}', ${exportedValue})`;
+			const bodyLine = `${PointBuilderAssemblerConstant.ATTRIBUTES_DICT}.set('${attribName}', ${exportedValue})`;
 			bodyLines.push(bodyLine);
 		}
 
@@ -276,7 +261,7 @@ export class JsAssemblerPointBuilder extends BaseJsShaderAssembler {
 		for (const outputName of usedOutputNames) {
 			const varName = attributeNode.jsVarName(outputName);
 
-			const bodyLine = `${varName} = ${FunctionConstant.ATTRIBUTES_DICT}.get('${attribName}')`;
+			const bodyLine = `${varName} = ${PointBuilderAssemblerConstant.ATTRIBUTES_DICT}.get('${attribName}')`;
 			bodyLines.push(bodyLine);
 		}
 		linesController._addBodyLines(attributeNode, bodyLines);

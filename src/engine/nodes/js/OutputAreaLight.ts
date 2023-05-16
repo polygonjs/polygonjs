@@ -3,8 +3,8 @@ import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {JsType} from '../../poly/registers/nodes/types/Js';
 import {JS_CONNECTION_POINT_IN_NODE_DEF, JsConnectionPoint, JsConnectionPointType} from '../utils/io/connections/Js';
-import {ObjectVariableAreaLight} from './code/assemblers/objectBuilder/ObjectVariables';
-import {FunctionConstant} from './code/assemblers/objectBuilder/ObjectBuilderAssembler';
+import {ObjectVariableAreaLight, ObjectVariableLight} from './code/assemblers/objectBuilder/ObjectVariables';
+import {ObjectBuilderAssemblerConstant} from './code/assemblers/objectBuilder/ObjectBuilderAssemblerCommon';
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
 class OutputAreaLightJsParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new OutputAreaLightJsParamsConfig();
@@ -18,8 +18,10 @@ export class OutputAreaLightJsNode extends TypedJsNode<OutputAreaLightJsParamsCo
 	override initializeNode() {
 		super.initializeNode();
 		this.io.inputs.setNamedInputConnectionPoints([
-			new JsConnectionPoint(ObjectVariableAreaLight.INTENSITY, JsConnectionPointType.FLOAT, CONNECTION_OPTIONS),
-			new JsConnectionPoint(ObjectVariableAreaLight.COLOR, JsConnectionPointType.COLOR, CONNECTION_OPTIONS),
+			new JsConnectionPoint(ObjectVariableLight.INTENSITY, JsConnectionPointType.FLOAT, CONNECTION_OPTIONS),
+			new JsConnectionPoint(ObjectVariableLight.COLOR, JsConnectionPointType.COLOR, CONNECTION_OPTIONS),
+			new JsConnectionPoint(ObjectVariableAreaLight.WIDTH, JsConnectionPointType.FLOAT, CONNECTION_OPTIONS),
+			new JsConnectionPoint(ObjectVariableAreaLight.HEIGHT, JsConnectionPointType.FLOAT, CONNECTION_OPTIONS),
 		]);
 	}
 
@@ -34,12 +36,18 @@ export class OutputAreaLightJsNode extends TypedJsNode<OutputAreaLightJsParamsCo
 					const varName = this.variableForInput(linesController, inputName);
 
 					switch (inputName) {
-						case ObjectVariableAreaLight.INTENSITY: {
-							bodyLines.push(`${FunctionConstant.OBJECT_3D}.${inputName} = ${varName}`);
+						case ObjectVariableLight.INTENSITY:
+						case ObjectVariableAreaLight.WIDTH:
+						case ObjectVariableAreaLight.HEIGHT: {
+							bodyLines.push(`${ObjectBuilderAssemblerConstant.OBJECT_3D}.${inputName} = ${varName}`);
 							break;
 						}
-						case ObjectVariableAreaLight.COLOR: {
-							bodyLines.push(`${FunctionConstant.OBJECT_3D}.${inputName}.copy(${varName})`);
+						case ObjectVariableLight.COLOR: {
+							// we need to test the presence of the property, as we might not be processing only area lights
+							bodyLines.push(`
+								if(${ObjectBuilderAssemblerConstant.OBJECT_3D}.${inputName} != null){
+									${ObjectBuilderAssemblerConstant.OBJECT_3D}.${inputName}.copy(${varName})
+								}`);
 							break;
 						}
 					}
