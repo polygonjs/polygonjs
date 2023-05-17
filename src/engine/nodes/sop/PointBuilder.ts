@@ -39,7 +39,7 @@ import {PointBuilderEvaluator} from '../js/code/assemblers/pointBuilder/PointBui
 import {CoreMask} from '../../../core/geometry/Mask';
 import {object3DHasGeometry} from '../../../core/geometry/GeometryUtils';
 
-const DEBUG = false;
+const DEBUG = true;
 function logBlue(message: string) {
 	if (!DEBUG) {
 		return;

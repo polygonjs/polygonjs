@@ -28,8 +28,8 @@ const paramCallback = (node: BaseNodeType) => {
 class PitchShiftAudioParamsConfig extends NodeParamsConfig {
 	/** @param The interval to transpose the incoming signal by */
 	pitch = ParamConfig.FLOAT(DEFAULTS.pitch, {
-		range: [0, 10],
-		rangeLocked: [true, false],
+		range: [-10, 10],
+		rangeLocked: [false, false],
 		...effectParamsOptions(paramCallback),
 	});
 }

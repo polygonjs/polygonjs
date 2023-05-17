@@ -1,5 +1,6 @@
 import {NamedFunction1, NamedFunction2, NamedFunction3} from './_Base';
 import {ChannelData} from '../../core/keyframes/KeyframeCommon';
+import {sampleData0} from '../../core/keyframes/KeyframeSamples';
 import {Channel} from '../../core/keyframes/Channel';
 import {Vector2, Vector3, Vector4} from 'three';
 
@@ -11,6 +12,14 @@ type ChannelData4 = [ChannelData, ChannelData, ChannelData, ChannelData];
 type Channel2 = {x: Channel; y: Channel};
 type Channel3 = {x: Channel; y: Channel; z: Channel};
 type Channel4 = {x: Channel; y: Channel; z: Channel; w: Channel};
+
+function _getChannelByIndexOrFirst(data: ChannelData[], index: number): ChannelData {
+	if (data.length > index) {
+		return data[index];
+	} else {
+		return data[0] || sampleData0();
+	}
+}
 
 export class channelFloat extends NamedFunction1<[ChannelData1]> {
 	static override type() {
@@ -26,8 +35,8 @@ export class channelVector2 extends NamedFunction1<[ChannelData2]> {
 	}
 	func(data: ChannelData2): Channel2 {
 		return {
-			x: new Channel(data[0]),
-			y: new Channel(data[1]),
+			x: new Channel(_getChannelByIndexOrFirst(data, 0)),
+			y: new Channel(_getChannelByIndexOrFirst(data, 1)),
 		};
 	}
 }
@@ -37,9 +46,9 @@ export class channelVector3 extends NamedFunction1<[ChannelData3]> {
 	}
 	func(data: ChannelData3): Channel3 {
 		return {
-			x: new Channel(data[0]),
-			y: new Channel(data[1]),
-			z: new Channel(data[2]),
+			x: new Channel(_getChannelByIndexOrFirst(data, 0)),
+			y: new Channel(_getChannelByIndexOrFirst(data, 1)),
+			z: new Channel(_getChannelByIndexOrFirst(data, 2)),
 		};
 	}
 }
@@ -50,10 +59,10 @@ export class channelVector4 extends NamedFunction1<[ChannelData4]> {
 	}
 	func(data: ChannelData4): Channel4 {
 		return {
-			x: new Channel(data[0]),
-			y: new Channel(data[1]),
-			z: new Channel(data[2]),
-			w: new Channel(data[3]),
+			x: new Channel(_getChannelByIndexOrFirst(data, 0)),
+			y: new Channel(_getChannelByIndexOrFirst(data, 1)),
+			z: new Channel(_getChannelByIndexOrFirst(data, 2)),
+			w: new Channel(_getChannelByIndexOrFirst(data, 3)),
 		};
 	}
 }

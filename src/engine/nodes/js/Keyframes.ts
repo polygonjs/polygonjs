@@ -7,7 +7,8 @@
 import {NodeParamsConfig, ParamConfig} from './../utils/params/ParamsConfig';
 import {TypedJsNode} from './_Base';
 import {JsConnectionPointType} from '../utils/io/connections/Js';
-import {ChannelData, ChannelInterpolation} from '../../../core/keyframes/KeyframeCommon';
+import {ChannelData} from '../../../core/keyframes/KeyframeCommon';
+import {sampleData, sampleData0} from '../../../core/keyframes/KeyframeSamples';
 import {ArrayUtils} from '../../../core/ArrayUtils';
 import {IntegerParam} from '../../params/Integer';
 import {StringParam} from '../../params/String';
@@ -17,28 +18,8 @@ import {JsLinesCollectionController} from './code/utils/JsLinesCollectionControl
 import {JsType} from '../../poly/registers/nodes/types/Js';
 import {channelDataToString} from '../../../core/keyframes/KeyframeSerialize';
 import {createVariable} from './code/assemblers/_BaseJsPersistedConfigUtils';
-
-const SAMPLE_DATA0: ChannelData = {
-	keyframes: [
-		{
-			pos: 0,
-			value: 0,
-			in: {slope: 0, accel: 20},
-		},
-		{
-			pos: 100,
-			value: 1,
-			in: {slope: 0, accel: 20},
-		},
-		{
-			pos: 200,
-			value: 0,
-			in: {slope: 0, accel: 20},
-		},
-	],
-	interpolation: ChannelInterpolation.CUBIC,
-};
-const SAMPLE_DATA: ChannelData[] = [SAMPLE_DATA0];
+import {isArray} from '../../../core/Type';
+import {_setArrayLength} from '../../functions/_ArrayUtils';
 
 interface VectorLinesOptions {
 	outputName: string;
@@ -96,7 +77,7 @@ function channelNameParam(index: number) {
 	});
 }
 function channelDataParam(index: number) {
-	return ParamConfig.STRING(channelDataToString(SAMPLE_DATA), {
+	return ParamConfig.STRING(channelDataToString(sampleData()), {
 		...visibleIfChannelsCountAtLeast(index),
 	});
 }
@@ -224,19 +205,60 @@ export class KeyframesJsNode extends TypedJsNode<KeyframesJsParamsConfig> {
 	// 	}
 	// }
 
-	setInputType(index: number, type: AvailableJsConnectionType) {
+	setChannelType(index: number, type: AvailableJsConnectionType) {
 		const param = this.channelTypeParams()[index];
 		if (!param) {
 			return;
 		}
 		param.set(AVAILABLE_JS_CONNECTION_POINT_TYPES.indexOf(type));
 	}
-	setInputName(index: number, inputName: string) {
+	setChannelName(index: number, inputName: string) {
 		const param = this.channelNameParams()[index];
 		if (!param) {
 			return;
 		}
 		param.set(inputName);
+	}
+	setChannelData(index: number, data: ChannelData[]) {
+		const param = this.channelDataParams()[index];
+		if (!param) {
+			return;
+		}
+		const expectedArraySize = ARRAY_SIZE_BY_TYPE[this._expectedOutputTypes()[index]];
+		if (expectedArraySize > 1) {
+			param.set(JSON.stringify(data));
+		} else {
+			const firstElem = data[0];
+			param.set(JSON.stringify(firstElem));
+		}
+	}
+	channelData(index: number): ChannelData | ChannelData[] | undefined {
+		const param = this.channelDataParams()[index];
+		if (!param) {
+			return;
+		}
+		const data = JSON.parse(param.value) as ChannelData | ChannelData[];
+		const expectedArraySize = ARRAY_SIZE_BY_TYPE[this._expectedOutputTypes()[index]];
+		if (expectedArraySize > 1) {
+			// make array if not already one
+			if (isArray(data)) {
+				if (data.length != expectedArraySize) {
+					_setArrayLength(data, expectedArraySize, sampleData0);
+				}
+				return data as ChannelData[];
+			} else {
+				const newData = [data];
+				_setArrayLength(newData, expectedArraySize, sampleData0);
+				return newData;
+			}
+		} else {
+			// use first element if array
+			if (isArray(data)) {
+				return data[0];
+			} else {
+				return data;
+			}
+		}
 	}
 
 	protected _channelsCount(): number {
@@ -292,7 +314,7 @@ export class KeyframesJsNode extends TypedJsNode<KeyframesJsParamsConfig> {
 				{
 					dataType: JsConnectionPointType.FLOAT,
 					varName: out,
-					value: funcCurveValue.asString(`this.${curve}`, time),
+					value: funcCurveValue.asString(linesController.assembler().memberReference(curve), time),
 				},
 			]);
 		};
@@ -322,7 +344,11 @@ export class KeyframesJsNode extends TypedJsNode<KeyframesJsParamsConfig> {
 					{
 						dataType,
 						varName: out,
-						value: funcCurveValue.asString(`this.${curve}`, time, tmpVarName),
+						value: funcCurveValue.asString(
+							linesController.assembler().memberReference(curve),
+							time,
+							tmpVarName
+						),
 					},
 				]);
 			}

@@ -129,6 +129,13 @@ export abstract class BaseJsShaderAssembler extends TypedAssembler<NodeContext.J
 	computedVariablesAllowed(): boolean {
 		return false;
 	}
+	memberReference(varName: string): string {
+		if (this.computedVariablesAllowed()) {
+			return `this.${varName}.value`;
+		} else {
+			return `this.${varName}`;
+		}
+	}
 
 	abstract spareParamsOptions(): ParamOptions;
 
