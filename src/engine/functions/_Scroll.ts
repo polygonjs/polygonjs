@@ -77,7 +77,6 @@ function _createScrollListener(
 		listener();
 	};
 	const scrollTrigger = ScrollTrigger.create(options);
-	console.log(options, scrollTrigger);
 	return scrollTrigger;
 }
 
