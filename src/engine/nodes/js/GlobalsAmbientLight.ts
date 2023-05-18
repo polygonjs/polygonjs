@@ -1,3 +1,8 @@
+/**
+ * gets globals properties of an ambient light
+ *
+ *
+ */
 import {TypedJsNode} from './_Base';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';

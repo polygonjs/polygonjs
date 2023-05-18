@@ -1,3 +1,9 @@
+/**
+ * convert HSV color to RGB
+ *
+ *
+ */
+
 import {Color} from 'three';
 import {JsConnectionPoint, JsConnectionPointType} from '../utils/io/connections/Js';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';

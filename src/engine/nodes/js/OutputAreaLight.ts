@@ -1,3 +1,8 @@
+/**
+ * sets globals properties of the current area light
+ *
+ *
+ */
 import {TypedJsNode} from './_Base';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';

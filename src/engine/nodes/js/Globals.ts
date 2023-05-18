@@ -1,5 +1,9 @@
+/**
+ * gets globals properties of the current object or point
+ *
+ *
+ */
 import {TypedJsNode} from './_Base';
-
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {JsType} from '../../poly/registers/nodes/types/Js';
