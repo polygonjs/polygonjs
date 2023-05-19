@@ -10,8 +10,6 @@ export class EquirectCamera extends Camera {
 	copy(source, recursive) {
 		super.copy(source, recursive);
 
-		this.isEquirectCamera = source.isEquirectCamera;
-
 		return this;
 	}
 }

@@ -22,7 +22,7 @@ export class IESLoader extends Loader {
 }
 
 export class EquirectCamera extends Camera {
-	public isEquirectCamera: boolean;
+	public readonly isEquirectCamera: boolean;
 }
 
 export class PhysicalCamera extends PerspectiveCamera {

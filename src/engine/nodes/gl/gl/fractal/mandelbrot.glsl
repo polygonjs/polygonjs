@@ -13,6 +13,10 @@ struct MandelbrotArgs {
 	float externalBoundingRadius;
 };
 
+#ifndef SURF_DIST
+	#define SURF_DIST 0.001
+#endif
+
 ////////////////////////////////////////////////////////////
 
 float mandelbrot(vec3 P, out float AO, MandelbrotArgs args) {
