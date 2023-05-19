@@ -16,6 +16,15 @@ import type {
 } from 'three';
 import type {MeshBVH, MeshBVHUniformStruct} from '../../geometry/bvh/three-mesh-bvh';
 
+export class IESTexture {}
+export class IESLoader extends Loader {
+	parse(content: string): IESTexture;
+}
+
+export class EquirectCamera extends Camera {
+	public isEquirectCamera: boolean;
+}
+
 export class PhysicalCamera extends PerspectiveCamera {
 	public bokehSize: number;
 	public fStop: number;
@@ -25,19 +34,18 @@ export class PhysicalCamera extends PerspectiveCamera {
 	public anamorphicRatio: number;
 	constructor(fov?: number, aspect?: number, near?: number, far?: number);
 }
+export class PhysicalSpotLight extends SpotLight {
+	public iesTexture: IESTexture;
+	public radius: number;
+}
+
+export class ShapedAreaLight extends RectAreaLight {
+	public isCircular: boolean;
+}
 export class PhysicalCameraUniform {
 	updateFrom(other: PhysicalCamera): void;
 }
 
-export class IESTexture {}
-export class IESLoader extends Loader {
-	parse(content: string): IESTexture;
-}
-
-export class PhysicalSpotLight extends SpotLight {
-	public iesTexture: IESTexture;
-}
-export class ShapedAreaLight extends RectAreaLight {}
 interface Updatable {
 	updateFrom(
 		normal: BufferAttribute | InterleavedBufferAttribute | GLBufferAttribute,
