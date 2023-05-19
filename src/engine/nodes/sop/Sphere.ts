@@ -24,7 +24,10 @@ class SphereSopParamsConfig extends NodeParamsConfig {
 		},
 	});
 	/** @param radius of the sphere when the type is default */
-	radius = ParamConfig.FLOAT(DEFAULT.radius);
+	radius = ParamConfig.FLOAT(DEFAULT.radius, {
+		range: [0, 2],
+		rangeLocked: [true, false],
+	});
 	/** @param resolution - number of segments in x and y */
 	resolution = ParamConfig.VECTOR2(DEFAULT.resolution, {visibleIf: {type: SPHERE_TYPE.default}});
 	/** @param if set to 1, you can then set the phiStart, phi_end, thetaStart and theta_end */
