@@ -1,3 +1,8 @@
+/**
+ * reads or writes a position or geometry attribute
+ *
+ *
+ */
 import {TypedJsNode, BaseJsNodeType} from './_Base';
 import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {JsConnectionPointType, BaseJsConnectionPoint} from '../utils/io/connections/Js';
