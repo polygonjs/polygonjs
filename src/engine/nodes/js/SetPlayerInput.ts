@@ -15,6 +15,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
 
 class SetPlayerInputParamsConfig extends NodeParamsConfig {
+	/** @param stopEventsPropagation: even though this node can intercept keydown and keyup events, you may encounter situations where pressing spare or arrow keys would trigger a page scroll. This node currently does not handle those situation, and it is recommended to manually intercept those and call event.stopImmediatePropagation() and event.stopPropagation() on keypress events */
 	stopEventsPropagation = ParamConfig.BOOLEAN(1);
 }
 const ParamsConfig = new SetPlayerInputParamsConfig();

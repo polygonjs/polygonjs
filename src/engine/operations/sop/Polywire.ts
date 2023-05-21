@@ -1,14 +1,11 @@
 import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {Vector3} from 'three';
+import {Vector3, Matrix4, LineSegments, BufferGeometry} from 'three';
 import {ObjectType} from '../../../core/geometry/Constant';
 import {CoreGeometry} from '../../../core/geometry/Geometry';
-import {CoreTransform, DEFAULT_ROTATION_ORDER} from '../../../core/Transform';
 import {CircleCreateOptions, CoreGeometryUtilCircle} from '../../../core/geometry/util/Circle';
 import {CoreGeometryUtilCurve} from '../../../core/geometry/util/Curve';
 import {CoreGeometryOperationSkin} from '../../../core/geometry/operation/Skin';
-import {LineSegments} from 'three';
-import {BufferGeometry} from 'three';
 import {CorePoint} from '../../../core/geometry/Point';
 import {isBooleanTrue} from '../../../core/Type';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
@@ -21,10 +18,11 @@ interface PolywireSopParams extends DefaultOperationParams {
 	closed: boolean;
 	attributesToCopy: string;
 }
-const DEFAULT_R = new Vector3(0, 0, 0);
-const DEFAULT_S = new Vector3(1, 1, 1);
-const DEFAULT_DIR = new Vector3(0, 0, 1);
+const ORIGIN = new Vector3(0, 0, 0);
+const UP = new Vector3(0, 1, 0);
 
+const lookAtMat = new Matrix4();
+const translateMat = new Matrix4();
 const currentPos = new Vector3();
 const prevPos = new Vector3();
 const nextPos = new Vector3();
@@ -43,7 +41,7 @@ export class PolywireSopOperation extends BaseSopOperation {
 		return 'polywire';
 	}
 
-	private _coreTransform = new CoreTransform();
+	// private _coreTransform = new CoreTransform();
 	private _geometries: BufferGeometry[] = [];
 	override cook(inputCoreGroups: CoreGroup[], params: PolywireSopParams) {
 		const coreGroup = inputCoreGroups[0];
@@ -95,7 +93,7 @@ export class PolywireSopOperation extends BaseSopOperation {
 		};
 		const circleTemplate = CoreGeometryUtilCircle.create(options);
 		const circles: BufferGeometry[] = [];
-		const scale = 1;
+		// const scale = 1;
 		let i = 0;
 		for (let point of points) {
 			point.getPosition(currentPos);
@@ -119,10 +117,14 @@ export class PolywireSopOperation extends BaseSopOperation {
 				}
 			}
 
+			lookAtMat.identity();
+			lookAtMat.lookAt(ORIGIN, delta.multiplyScalar(-1), UP);
+			translateMat.identity();
+			translateMat.makeTranslation(currentPos.x, currentPos.y, currentPos.z);
+
 			const newCircle = circleTemplate.clone();
-			CoreTransform.rotateGeometry(newCircle, DEFAULT_DIR, delta);
-			const matrix = this._coreTransform.matrix(currentPos, DEFAULT_R, DEFAULT_S, scale, DEFAULT_ROTATION_ORDER);
-			newCircle.applyMatrix4(matrix);
+			newCircle.applyMatrix4(lookAtMat);
+			newCircle.applyMatrix4(translateMat);
 
 			// remove position before transfering the attribute
 			const positionIndex = attributeNames.indexOf('position');
