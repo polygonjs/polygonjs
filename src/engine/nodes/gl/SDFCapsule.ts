@@ -11,6 +11,7 @@ import {ThreeToGl} from '../../../core/ThreeToGl';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {GlConnectionPointType, GlConnectionPoint} from '../utils/io/connections/Gl';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {GlType} from '../../poly/registers/nodes/types/Gl';
 
 const OUTPUT_NAME = 'float';
 class SDFCapsuleGlParamsConfig extends NodeParamsConfig {
@@ -28,7 +29,7 @@ const ParamsConfig = new SDFCapsuleGlParamsConfig();
 export class SDFCapsuleGlNode extends BaseSDFGlNode<SDFCapsuleGlParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'SDFCapsule';
+		return GlType.SDF_CAPSULE;
 	}
 
 	override initializeNode() {

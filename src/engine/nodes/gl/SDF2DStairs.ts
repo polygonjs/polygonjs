@@ -11,6 +11,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {GlConnectionPointType, GlConnectionPoint} from '../utils/io/connections/Gl';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 import {BaseSDF2DGlNode} from './_BaseSDF2D';
+import {GlType} from '../../poly/registers/nodes/types/Gl';
 
 const OUTPUT_NAME = 'float';
 class SDF2DStairsGlParamsConfig extends NodeParamsConfig {
@@ -27,7 +28,7 @@ const ParamsConfig = new SDF2DStairsGlParamsConfig();
 export class SDF2DStairsGlNode extends BaseSDF2DGlNode<SDF2DStairsGlParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'SDF2DStairs';
+		return GlType.SDF_2D_STAIRS;
 	}
 
 	override initializeNode() {

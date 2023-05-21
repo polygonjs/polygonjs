@@ -12,6 +12,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {GlConnectionPointType, GlConnectionPoint} from '../utils/io/connections/Gl';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 import {BaseSDF2DGlNode} from './_BaseSDF2D';
+import {GlType} from '../../poly/registers/nodes/types/Gl';
 
 const OUTPUT_NAME = 'float';
 class SDF2DCircleGlParamsConfig extends NodeParamsConfig {
@@ -23,7 +24,7 @@ const ParamsConfig = new SDF2DCircleGlParamsConfig();
 export class SDF2DCircleGlNode extends BaseSDF2DGlNode<SDF2DCircleGlParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'SDF2DCircle';
+		return GlType.SDF_2D_CIRCLE;
 	}
 
 	override initializeNode() {

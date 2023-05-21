@@ -11,6 +11,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {GlConnectionPointType, GlConnectionPoint} from '../utils/io/connections/Gl';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 import {BaseSDFGlNode} from './_BaseSDF';
+import {GlType} from '../../poly/registers/nodes/types/Gl';
 
 const OUTPUT_NAME = 'float';
 class SDFHorseShoeGlParamsConfig extends NodeParamsConfig {
@@ -30,7 +31,7 @@ const ParamsConfig = new SDFHorseShoeGlParamsConfig();
 export class SDFHorseShoeGlNode extends BaseSDFGlNode<SDFHorseShoeGlParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'SDFHorseShoe';
+		return GlType.SDF_HORSE_SHOE;
 	}
 
 	override initializeNode() {

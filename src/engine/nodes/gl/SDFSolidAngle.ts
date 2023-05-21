@@ -11,6 +11,7 @@ import {ThreeToGl} from '../../../../src/core/ThreeToGl';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {GlConnectionPointType, GlConnectionPoint} from '../utils/io/connections/Gl';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {GlType} from '../../poly/registers/nodes/types/Gl';
 
 const OUTPUT_NAME = 'float';
 class SDFSolidAngleGlParamsConfig extends NodeParamsConfig {
@@ -27,7 +28,7 @@ const ParamsConfig = new SDFSolidAngleGlParamsConfig();
 export class SDFSolidAngleGlNode extends BaseSDFGlNode<SDFSolidAngleGlParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'SDFSolidAngle';
+		return GlType.SDF_SOLID_ANGLE;
 	}
 
 	override initializeNode() {

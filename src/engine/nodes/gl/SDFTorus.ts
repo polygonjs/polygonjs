@@ -12,6 +12,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {GlConnectionPointType, GlConnectionPoint} from '../utils/io/connections/Gl';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 import {isBooleanTrue} from '../../../core/Type';
+import {GlType} from '../../poly/registers/nodes/types/Gl';
 
 const OUTPUT_NAME = 'float';
 class SDFTorusGlParamsConfig extends NodeParamsConfig {
@@ -31,7 +32,7 @@ const ParamsConfig = new SDFTorusGlParamsConfig();
 export class SDFTorusGlNode extends BaseSDFGlNode<SDFTorusGlParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'SDFTorus';
+		return GlType.SDF_TORUS;
 	}
 
 	override initializeNode() {

@@ -11,6 +11,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {GlConnectionPointType, GlConnectionPoint} from '../utils/io/connections/Gl';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 import {BaseSDFGlNode} from './_BaseSDF';
+import {GlType} from '../../poly/registers/nodes/types/Gl';
 
 const OUTPUT_NAME = 'float';
 class SDFSphereHollowGlParamsConfig extends NodeParamsConfig {
@@ -30,7 +31,7 @@ const ParamsConfig = new SDFSphereHollowGlParamsConfig();
 export class SDFSphereHollowGlNode extends BaseSDFGlNode<SDFSphereHollowGlParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'SDFSphereHollow';
+		return GlType.SDF_SPHERE_HOLLOW
 	}
 
 	override initializeNode() {

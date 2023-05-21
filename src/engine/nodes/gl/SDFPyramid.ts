@@ -11,6 +11,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {GlConnectionPointType, GlConnectionPoint} from '../utils/io/connections/Gl';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 import {BaseSDFGlNode} from './_BaseSDF';
+import {GlType} from '../../poly/registers/nodes/types/Gl';
 
 const OUTPUT_NAME = 'float';
 class SDFPyramidGlParamsConfig extends NodeParamsConfig {
@@ -22,7 +23,7 @@ const ParamsConfig = new SDFPyramidGlParamsConfig();
 export class SDFPyramidGlNode extends BaseSDFGlNode<SDFPyramidGlParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'SDFPyramid';
+		return GlType.SDF_PYRAMID;
 	}
 
 	override initializeNode() {

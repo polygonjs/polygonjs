@@ -11,6 +11,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {GlConnectionPointType, GlConnectionPoint} from '../utils/io/connections/Gl';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 import {BaseSDFGlNode} from './_BaseSDF';
+import {GlType} from '../../poly/registers/nodes/types/Gl';
 
 const OUTPUT_NAME = 'float';
 class SDFTriangularPrismGlParamsConfig extends NodeParamsConfig {
@@ -23,7 +24,7 @@ const ParamsConfig = new SDFTriangularPrismGlParamsConfig();
 export class SDFTriangularPrismGlNode extends BaseSDFGlNode<SDFTriangularPrismGlParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'SDFTriangularPrism';
+		return GlType.SDF_TRIANGULAR_PRISM
 	}
 
 	override initializeNode() {

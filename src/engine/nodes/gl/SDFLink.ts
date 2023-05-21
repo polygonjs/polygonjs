@@ -11,6 +11,7 @@ import {ThreeToGl} from '../../../../src/core/ThreeToGl';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {GlConnectionPointType, GlConnectionPoint} from '../utils/io/connections/Gl';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {GlType} from '../../poly/registers/nodes/types/Gl';
 
 const OUTPUT_NAME = 'float';
 class SDFLinkGlParamsConfig extends NodeParamsConfig {
@@ -24,7 +25,7 @@ const ParamsConfig = new SDFLinkGlParamsConfig();
 export class SDFLinkGlNode extends BaseSDFGlNode<SDFLinkGlParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'SDFLink';
+		return GlType.SDF_LINK;
 	}
 
 	override initializeNode() {

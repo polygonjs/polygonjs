@@ -11,6 +11,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {GlConnectionPointType, GlConnectionPoint} from '../utils/io/connections/Gl';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 import {BaseSDFGlNode} from './_BaseSDF';
+import {GlType} from '../../poly/registers/nodes/types/Gl';
 
 const OUTPUT_NAME = 'float';
 class SDFTriangleGlParamsConfig extends NodeParamsConfig {
@@ -25,7 +26,7 @@ const ParamsConfig = new SDFTriangleGlParamsConfig();
 export class SDFTriangleGlNode extends BaseSDFGlNode<SDFTriangleGlParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'SDFTriangle';
+		return GlType.SDF_TRIANGLE
 	}
 
 	override initializeNode() {

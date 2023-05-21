@@ -13,6 +13,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {GlConnectionPointType, GlConnectionPoint} from '../utils/io/connections/Gl';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 import {FunctionGLDefinition} from './utils/GLDefinition';
+import {GlType} from '../../poly/registers/nodes/types/Gl';
 
 const OUTPUT_NAME = 'float';
 class SDFRhombusGlParamsConfig extends NodeParamsConfig {
@@ -27,7 +28,7 @@ const ParamsConfig = new SDFRhombusGlParamsConfig();
 export class SDFRhombusGlNode extends BaseSDFGlNode<SDFRhombusGlParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'SDFRhombus';
+		return GlType.SDF_RHOMBUS;
 	}
 
 	override initializeNode() {

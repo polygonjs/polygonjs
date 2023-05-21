@@ -11,6 +11,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {GlConnectionPointType, GlConnectionPoint} from '../utils/io/connections/Gl';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 import {BaseSDFGlNode} from './_BaseSDF';
+import {GlType} from '../../poly/registers/nodes/types/Gl';
 
 const OUTPUT_NAME = 'float';
 class SDFHexagonalPrismGlParamsConfig extends NodeParamsConfig {
@@ -23,7 +24,7 @@ const ParamsConfig = new SDFHexagonalPrismGlParamsConfig();
 export class SDFHexagonalPrismGlNode extends BaseSDFGlNode<SDFHexagonalPrismGlParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'SDFHexagonalPrism';
+		return GlType.SDF_HEXAGONAL_PRISM;
 	}
 
 	override initializeNode() {

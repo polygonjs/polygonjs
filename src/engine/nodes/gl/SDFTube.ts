@@ -12,6 +12,7 @@ import {GlConnectionPointType, GlConnectionPoint} from '../utils/io/connections/
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 import {BaseSDFGlNode} from './_BaseSDF';
 import {isBooleanTrue} from '../../../core/Type';
+import {GlType} from '../../poly/registers/nodes/types/Gl';
 
 const OUTPUT_NAME = 'float';
 class SDFTubeGlParamsConfig extends NodeParamsConfig {
@@ -27,7 +28,7 @@ const ParamsConfig = new SDFTubeGlParamsConfig();
 export class SDFTubeGlNode extends BaseSDFGlNode<SDFTubeGlParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'SDFTube';
+		return GlType.SDF_TUBE
 	}
 
 	override initializeNode() {

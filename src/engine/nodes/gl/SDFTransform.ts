@@ -14,6 +14,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {GlConnectionPointType, GlConnectionPoint} from '../utils/io/connections/Gl';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 import {FunctionGLDefinition} from './utils/GLDefinition';
+import {GlType} from '../../poly/registers/nodes/types/Gl';
 
 const OUTPUT_NAME = 'p';
 class SDFTransformGlParamsConfig extends NodeParamsConfig {
@@ -25,7 +26,7 @@ const ParamsConfig = new SDFTransformGlParamsConfig();
 export class SDFTransformGlNode extends BaseSDFGlNode<SDFTransformGlParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'SDFTransform';
+		return GlType.SDF_TRANSFORM;
 	}
 
 	override initializeNode() {

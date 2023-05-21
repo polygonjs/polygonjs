@@ -15,6 +15,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {GlConnectionPointType, GlConnectionPoint} from '../utils/io/connections/Gl';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 import {FunctionGLDefinition} from './utils/GLDefinition';
+import {GlType} from '../../poly/registers/nodes/types/Gl';
 
 const OUTPUT_NAME = 'float';
 class SDFRhombusTriacontahedronGlParamsConfig extends NodeParamsConfig {
@@ -30,7 +31,7 @@ const ParamsConfig = new SDFRhombusTriacontahedronGlParamsConfig();
 export class SDFRhombusTriacontahedronGlNode extends BaseSDFGlNode<SDFRhombusTriacontahedronGlParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'SDFRhombusTriacontahedron';
+		return GlType.SDF_RHOMBUS_TRIACONTAHEDRON;
 	}
 
 	override initializeNode() {

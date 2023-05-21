@@ -11,6 +11,7 @@ import {ThreeToGl} from '../../../../src/core/ThreeToGl';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {GlConnectionPointType, GlConnectionPoint} from '../utils/io/connections/Gl';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {GlType} from '../../poly/registers/nodes/types/Gl';
 
 const OUTPUT_NAME = 'float';
 class SDFOctahedronGlParamsConfig extends NodeParamsConfig {
@@ -22,7 +23,7 @@ const ParamsConfig = new SDFOctahedronGlParamsConfig();
 export class SDFOctahedronGlNode extends BaseSDFGlNode<SDFOctahedronGlParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'SDFOctahedron';
+		return GlType.SDF_OCTAHEDRON;
 	}
 
 	override initializeNode() {

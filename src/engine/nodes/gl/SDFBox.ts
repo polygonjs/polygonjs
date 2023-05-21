@@ -11,7 +11,7 @@ import {ThreeToGl} from '../../../../src/core/ThreeToGl';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {GlConnectionPointType, GlConnectionPoint} from '../utils/io/connections/Gl';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
-
+import {GlType} from '../../poly/registers/nodes/types/Gl';
 const OUTPUT_NAME = 'float';
 class SDFBoxGlParamsConfig extends NodeParamsConfig {
 	position = ParamConfig.VECTOR3([0, 0, 0], {hidden: true});
@@ -23,7 +23,7 @@ const ParamsConfig = new SDFBoxGlParamsConfig();
 export class SDFBoxGlNode extends BaseSDFGlNode<SDFBoxGlParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'SDFBox';
+		return GlType.SDF_BOX;
 	}
 
 	override initializeNode() {

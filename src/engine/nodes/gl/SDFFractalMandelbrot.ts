@@ -14,6 +14,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {GlConnectionPoint, GlConnectionPointType} from '../utils/io/connections/Gl';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 import {FunctionGLDefinition} from './utils/GLDefinition';
+import {GlType} from '../../poly/registers/nodes/types/Gl';
 
 enum OutputName {
 	D = 'd',
@@ -45,7 +46,7 @@ const ParamsConfig = new SDFFractalMandelbrotGlParamsConfig();
 export class SDFFractalMandelbrotGlNode extends BaseSDFGlNode<SDFFractalMandelbrotGlParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'SDFFractalMandelbrot';
+		return GlType.SDF_FRACTAL_MANDELBROT;
 	}
 
 	override initializeNode() {

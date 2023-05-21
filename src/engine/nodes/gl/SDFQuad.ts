@@ -11,6 +11,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {GlConnectionPointType, GlConnectionPoint} from '../utils/io/connections/Gl';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 import {BaseSDFGlNode} from './_BaseSDF';
+import {GlType} from '../../poly/registers/nodes/types/Gl';
 
 const OUTPUT_NAME = 'float';
 class SDFQuadGlParamsConfig extends NodeParamsConfig {
@@ -26,7 +27,7 @@ const ParamsConfig = new SDFQuadGlParamsConfig();
 export class SDFQuadGlNode extends BaseSDFGlNode<SDFQuadGlParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'SDFQuad';
+		return GlType.SDF_QUAD;
 	}
 
 	override initializeNode() {
