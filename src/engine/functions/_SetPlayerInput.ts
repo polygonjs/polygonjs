@@ -1,8 +1,7 @@
 import {Object3D} from 'three';
 import {ref} from '../../core/reactivity/CoreReactivity';
 import {Ref} from '@vue/reactivity';
-// import {isBooleanTrue} from '../../core/Type';
-import {ObjectNamedFunction0} from './_Base';
+import {ObjectNamedFunction0, ObjectNamedFunction1} from './_Base';
 
 type EventFunction = () => void;
 interface onEvent {
@@ -222,13 +221,14 @@ function _findOrCreateHandler(object3D: Object3D): InputDataHandler {
 // 	// useArrowkeys: string;
 // }
 
-export class setPlayerInput extends ObjectNamedFunction0 {
+export class setPlayerInput extends ObjectNamedFunction1<[boolean]> {
 	static override type() {
 		return 'setPlayerInput';
 	}
-	func(object3D: Object3D): void {
+	func(object3D: Object3D, stopEventsPropagation: boolean): void {
 		// const {stopPropagation, useWASDkeys, useArrowkeys} = options;
 		const events = this.scene.eventsDispatcher.keyboardEventsController.currentEvents();
+
 		if (events.length == 0) {
 			return;
 		}
@@ -253,11 +253,11 @@ export class setPlayerInput extends ObjectNamedFunction0 {
 			const callback = callbackMethod(event.code);
 			if (callback) {
 				callback();
-				// if (isBooleanTrue(stopPropagation)) {
-				// 	event.stopImmediatePropagation();
-				// 	event.stopPropagation();
-				// 	event.preventDefault();
-				// }
+				if (stopEventsPropagation == true) {
+					event.stopImmediatePropagation();
+					event.stopPropagation();
+					event.preventDefault();
+				}
 			}
 		}
 	}

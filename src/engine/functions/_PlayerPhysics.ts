@@ -22,19 +22,23 @@ function _createComputeData(): CorePlayerPhysicsComputeInputData {
 	};
 }
 interface Element {
-	player?: CorePlayerPhysics;
+	player: CorePlayerPhysics;
 	inputData: CorePlayerPhysicsInputData;
 	computeData: CorePlayerPhysicsComputeInputData;
 }
 const _elementByObject3D: WeakMap<Object3D, Element> = new WeakMap();
 
-function _findOrCreateElement(object3D: Object3D): Element {
+function _findOrCreateElement(object3D: Object3D): Element | undefined {
 	let element = _elementByObject3D.get(object3D);
 	if (element) {
 		return element;
 	}
+	const player = findPhysicsPlayer(object3D);
+	if (!player) {
+		return;
+	}
 	element = {
-		player: findPhysicsPlayer(object3D),
+		player,
 		inputData: _createInputData(),
 		computeData: _createComputeData(),
 	};
@@ -80,10 +84,11 @@ export class playerPhysicsUpdate extends ObjectNamedFunction1<[PlayerUpdateOptio
 			jump,
 		} = options;
 
-		const {player, inputData, computeData} = _findOrCreateElement(object3D);
-		if (!player) {
+		const element = _findOrCreateElement(object3D);
+		if (!element) {
 			return;
 		}
+		const {player, inputData, computeData} = element;
 
 		//
 		computeData.speed = speed;

@@ -6,7 +6,7 @@ import {CorePlayerPhysics} from './CorePlayerPhysics';
 import {PhysicsLib} from '../CorePhysics';
 import {PolyScene} from '../../../engine/scene/PolyScene';
 
-const physicsCharacterControllerById: Map<string, CorePlayerPhysics> = new Map();
+const physicsCharacterControllerByIdByObjectUuid: Map<string, Map<string, CorePlayerPhysics>> = new Map();
 
 export enum PhysicsPlayerType {
 	CHARACTER_CONTROLLER = 'characterController',
@@ -14,11 +14,14 @@ export enum PhysicsPlayerType {
 }
 
 export function clearPhysicsPlayers() {
-	physicsCharacterControllerById.forEach((player, id) => {
-		player.dispose();
+	physicsCharacterControllerByIdByObjectUuid.forEach((map, id) => {
+		map.forEach((player) => {
+			player.dispose();
+		});
+		map.clear();
 	});
 
-	physicsCharacterControllerById.clear();
+	physicsCharacterControllerByIdByObjectUuid.clear();
 }
 interface CreateOrFindPhysicsPlayerOptions {
 	scene: PolyScene;
@@ -55,7 +58,13 @@ export function createOrFindPhysicsPlayer(options: CreateOrFindPhysicsPlayerOpti
 			collider,
 			type: PhysicsPlayerType.TORQUE,
 		});
-		physicsCharacterControllerById.set(characterControllerId, player);
+
+		let map = physicsCharacterControllerByIdByObjectUuid.get(characterControllerId);
+		if (!map) {
+			map = new Map();
+			physicsCharacterControllerByIdByObjectUuid.set(characterControllerId, map);
+		}
+		map.set(object.uuid, player);
 	}
 	// CoreObject.addAttribute(pair.object, PhysicsIdAttribute.DEBUG, nodeId);
 	return player;
@@ -65,5 +74,5 @@ export function findPhysicsPlayer(object: Object3D) {
 	if (!characterControllerId) {
 		return;
 	}
-	return physicsCharacterControllerById.get(characterControllerId);
+	return physicsCharacterControllerByIdByObjectUuid.get(characterControllerId)?.get(object.uuid);
 }

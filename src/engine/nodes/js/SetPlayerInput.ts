@@ -10,10 +10,16 @@ import {CORE_PLAYER_INPUTS, CorePlayerInput} from '../../../core/player/PlayerCo
 import {inputObject3D} from './_BaseObject3D';
 import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {Poly} from '../../Poly';
-import {ParamlessTypedJsNode} from './_Base';
+import {TypedJsNode} from './_Base';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
 
-export class SetPlayerInputJsNode extends ParamlessTypedJsNode {
+class SetPlayerInputParamsConfig extends NodeParamsConfig {
+	stopEventsPropagation = ParamConfig.BOOLEAN(1);
+}
+const ParamsConfig = new SetPlayerInputParamsConfig();
+export class SetPlayerInputJsNode extends TypedJsNode<SetPlayerInputParamsConfig> {
+	override paramsConfig = ParamsConfig;
 	static override type() {
 		return JsType.SET_PLAYER_INPUT;
 	}
@@ -62,9 +68,13 @@ export class SetPlayerInputJsNode extends ParamlessTypedJsNode {
 
 	override setTriggerableLines(shadersCollectionController: JsLinesCollectionController) {
 		const object3D = inputObject3D(this, shadersCollectionController);
+		const stopEventsPropagation = this.variableForInputParam(
+			shadersCollectionController,
+			this.p.stopEventsPropagation
+		);
 
 		const func = Poly.namedFunctionsRegister.getFunction('setPlayerInput', this, shadersCollectionController);
-		const bodyLine = func.asString(object3D);
+		const bodyLine = func.asString(object3D, stopEventsPropagation);
 		shadersCollectionController.addTriggerableLines(this, [bodyLine]);
 	}
 	override setLines(shadersCollectionController: JsLinesCollectionController) {

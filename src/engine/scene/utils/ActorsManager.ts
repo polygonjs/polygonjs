@@ -204,14 +204,15 @@ export class ActorsManager {
 	}
 	triggerEventNode(node: ActorBuilderNode, object: Object3D, methodName: EvaluatorMethodName) {
 		const evaluatorGenerator = node.compilationController.evaluatorGenerator();
-		this.triggerEvaluatorGenerator(evaluatorGenerator, object, methodName);
+		this._triggerEvaluatorGenerator(evaluatorGenerator, object, methodName);
 	}
-	triggerEvaluatorGenerator(
+	private _triggerEvaluatorGenerator(
 		evaluatorGenerator: ActorEvaluatorGenerator,
 		object: Object3D,
 		methodName: EvaluatorMethodName
 	) {
 		const evaluator = evaluatorGenerator.findOrCreateEvaluator(object);
+
 		if ((evaluator as any)[methodName]) {
 			(evaluator as any)[methodName]!();
 		}

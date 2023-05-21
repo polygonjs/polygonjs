@@ -14,6 +14,9 @@ export class ActorCompilationController {
 		if (this.node.assemblerController()?.compileRequired()) {
 			this.compile();
 		}
+		// always clear objects,
+		// so that we don't try and traverse physics objects that are not in the tree anymore
+		this._evaluatorGenerator.clearObjects();
 	}
 
 	private _evaluatorGenerator: ActorEvaluatorGenerator = new ActorEvaluatorGenerator(
@@ -117,7 +120,7 @@ export class ActorCompilationController {
 	}
 	private _setEvaluatorGenerator(evaluatorGenerator: ActorEvaluatorGenerator) {
 		this.node.scene().actorsManager.unregisterEvaluatorGenerator(this._evaluatorGenerator);
-		this._evaluatorGenerator.dispose();
+		this._evaluatorGenerator.clearObjects();
 		this._evaluatorGenerator = evaluatorGenerator;
 		this.node.scene().actorsManager.registerEvaluatorGenerator(evaluatorGenerator);
 	}

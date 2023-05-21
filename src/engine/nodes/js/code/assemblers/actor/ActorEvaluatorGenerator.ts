@@ -22,7 +22,7 @@ export class ActorEvaluatorGenerator {
 	traverseEvaluator(callback: EvaluatorCallback) {
 		this._evaluatorByObject.forEach(callback);
 	}
-	dispose() {
+	clearObjects() {
 		this._evaluatorByObject.forEach((evaluator) => {
 			evaluator.dispose();
 		});
