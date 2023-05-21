@@ -4218,10 +4218,10 @@ three-bvh-csg@0.0.5:
   resolved "https://registry.yarnpkg.com/three-bvh-csg/-/three-bvh-csg-0.0.5.tgz#db8254a0b9472edecc10a836c98adc6286ff1dca"
   integrity sha512-gxqmaV3HlGHUGB857AV8oLoNxx5Q0T7io1DUs5nrCwmmFqjWZT3a8ue7WapE394wY8awFVAMr+YvdSrzqswpFA==
 
-three-gpu-pathtracer@0.0.14:
-  version "0.0.14"
-  resolved "https://registry.yarnpkg.com/three-gpu-pathtracer/-/three-gpu-pathtracer-0.0.14.tgz#0544e55f182652165303f06d686b0a283bb0af12"
-  integrity sha512-DNOTMKu7FcFSniG5hEr9OR530WqwCDanVtwKcGdqIqg55ocUSmfsguGMZYUbmeYnOXhNveDL45P3SMQFW3FClQ==
+three-gpu-pathtracer@0.0.15:
+  version "0.0.15"
+  resolved "https://registry.yarnpkg.com/three-gpu-pathtracer/-/three-gpu-pathtracer-0.0.15.tgz#34631c44f1c5e99fc669a1503f45bd09dbfac9aa"
+  integrity sha512-Ww8QD82/phEikea0itZ+zQ2zs7qDTZMlKoDsWz3MYyaMK8yzVeHylqIuznWJK28HQOhic1tBPbCxenP9kcXP2A==
   dependencies:
     three-mesh-bvh "^0.5.19"
 

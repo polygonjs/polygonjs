@@ -74,7 +74,7 @@
 		"potpack": "2.0.0",
 		"prettier": "2.8.6",
 		"three": "0.150.0",
-		"three-gpu-pathtracer": "0.0.14",
+		"three-gpu-pathtracer": "0.0.15",
 		"three-bvh-csg": "0.0.5",
 		"three-mesh-bvh": "0.5.23",
 		"three-subdivide": "1.1.2",
