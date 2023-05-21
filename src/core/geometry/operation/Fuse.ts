@@ -1,7 +1,9 @@
-import {BufferGeometry, BufferAttribute, Vector3} from 'three';
+import {BufferGeometry, BufferAttribute, Vector2, Vector3, Vector4} from 'three';
 import {MapUtils} from '../../MapUtils';
 
+const tmpV2 = new Vector2();
 const tmpV3 = new Vector3();
+const tmpV4 = new Vector4();
 
 class Position {
 	public readonly originalPosition: Vector3 = new Vector3();
@@ -16,14 +18,23 @@ class Position {
 		const attribute = geometry.getAttribute(attribName) as BufferAttribute;
 		switch (attribute.itemSize) {
 			case 1: {
+				const val = attribute.getX(this.index);
+				targetArray.push(val);
 				break;
 			}
 			case 2: {
+				tmpV2.fromBufferAttribute(attribute, this.index);
+				tmpV2.toArray(targetArray, targetArray.length);
 				break;
 			}
 			case 3: {
 				tmpV3.fromBufferAttribute(attribute, this.index);
 				tmpV3.toArray(targetArray, targetArray.length);
+				break;
+			}
+			case 4: {
+				tmpV4.fromBufferAttribute(attribute, this.index);
+				tmpV4.toArray(targetArray, targetArray.length);
 				break;
 			}
 		}
