@@ -18,6 +18,7 @@ type GetTargetFunction = (target: Vector3) => void;
 type SetTargetFunction = (target: Vector3) => void;
 
 export interface ApplicableControlsNode {
+	type(): string;
 	applyControls: (camera: Camera, viewer: BaseViewerType) => Promise<CameraControls>;
 	target?: GetTargetFunction;
 	setTarget?: SetTargetFunction;
