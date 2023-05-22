@@ -28,36 +28,42 @@ export interface ColorLike {
 	g: number;
 	b: number;
 }
+export type Tuple1<T> = [T];
+export type Tuple2<T> = [T, T];
+export type Tuple3<T> = [T, T, T];
+export type Tuple4<T> = [T, T, T, T];
+export type Tuple5<T> = [T, T, T, T, T];
+export type Tuple6<T> = [T, T, T, T, T, T];
+export type Tuple7<T> = [T, T, T, T, T, T, T];
+export type Tuple8<T> = [T, T, T, T, T, T, T, T];
+export type Tuple9<T> = [T, T, T, T, T, T, T, T, T];
+export type Tuple10<T> = [T, T, T, T, T, T, T, T, T, T];
+export type Tuple11<T> = [T, T, T, T, T, T, T, T, T, T, T];
+export type Tuple12<T> = [T, T, T, T, T, T, T, T, T, T, T, T];
+export type Tuple13<T> = [T, T, T, T, T, T, T, T, T, T, T, T, T];
+export type Tuple14<T> = [T, T, T, T, T, T, T, T, T, T, T, T, T, T];
+export type Tuple15<T> = [T, T, T, T, T, T, T, T, T, T, T, T, T, T, T];
+export type Tuple16<T> = [T, T, T, T, T, T, T, T, T, T, T, T, T, T, T, T];
+export type Tuple17<T> = [T, T, T, T, T, T, T, T, T, T, T, T, T, T, T, T, T];
+export type Tuple18<T> = [T, T, T, T, T, T, T, T, T, T, T, T, T, T, T, T, T, T];
+export type Tuple19<T> = [T, T, T, T, T, T, T, T, T, T, T, T, T, T, T, T, T, T, T];
+export type Tuple20<T> = [T, T, T, T, T, T, T, T, T, T, T, T, T, T, T, T, T, T, T, T];
+export type Tuple21<T> = [T, T, T, T, T, T, T, T, T, T, T, T, T, T, T, T, T, T, T, T, T];
+export type Tuple22<T> = [T, T, T, T, T, T, T, T, T, T, T, T, T, T, T, T, T, T, T, T, T, T];
+
 // type BooleanAsNumber = 0 | 1;
 export type StringOrNumber = string | number;
-export type Boolean2 = [boolean, boolean];
-export type Boolean3 = [boolean, boolean, boolean];
-export type Boolean4 = [boolean, boolean, boolean, boolean];
-export type Number2 = [number, number];
-export type Number3 = [number, number, number];
-export type Number4 = [number, number, number, number];
-export type Number16 = [
-	number,
-	number,
-	number,
-	number,
-	number,
-	number,
-	number,
-	number,
-	number,
-	number,
-	number,
-	number,
-	number,
-	number,
-	number,
-	number
-];
+export type Boolean2 = Tuple2<boolean>;
+export type Boolean3 = Tuple3<boolean>;
+export type Boolean4 = Tuple4<boolean>;
+export type Number2 = Tuple2<number>;
+export type Number3 = Tuple3<number>;
+export type Number4 = Tuple4<number>;
+export type Number16 = Tuple16<number>;
 
-export type StringOrNumber2 = [StringOrNumber, StringOrNumber];
-export type StringOrNumber3 = [StringOrNumber, StringOrNumber, StringOrNumber];
-export type StringOrNumber4 = [StringOrNumber, StringOrNumber, StringOrNumber, StringOrNumber];
+export type StringOrNumber2 = Tuple2<StringOrNumber>;
+export type StringOrNumber3 = Tuple3<StringOrNumber>;
+export type StringOrNumber4 = Tuple4<StringOrNumber>;
 
 // attrib
 export type NumericAttribValueAsArray = Number2 | Number3 | Number4;

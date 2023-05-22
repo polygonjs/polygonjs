@@ -35,6 +35,7 @@ interface CopyUniforms extends RawMaterialUniforms {
 }
 interface IntegrationUniforms extends RawMaterialUniforms {
 	timeDelta: IUniformN;
+	time: IUniformN;
 	viscosity: IUniformN;
 	spring: IUniformN;
 	tSize: IUniformV2;
@@ -47,6 +48,7 @@ interface IntegrationUniforms extends RawMaterialUniforms {
 	tViscositySpring: IUniformTexture;
 }
 interface MouseUniforms extends RawMaterialUniforms {
+	time: IUniformN;
 	vertex: IUniformN;
 	coordinates: IUniformV3;
 	order: IUniformN;
@@ -121,7 +123,8 @@ export class ClothMaterialController {
 	constructor(public readonly mainController: ClothController) {
 		this.integrateShader.fragmentShader = INTEGRATE_FRAG;
 		this.integrateShader.uniforms = {
-			timeDelta: {value: 0},
+			timeDelta: this.mainController.scene.timeController.timeDeltaUniform(),
+			time: this.mainController.scene.timeController.timeUniform(),
 			viscosity: {value: 0.1},
 			spring: {value: 1},
 			tSize: {value: new Vector2()},
@@ -135,6 +138,7 @@ export class ClothMaterialController {
 		};
 		this.mouseShader.fragmentShader = MOUSE_FRAG;
 		this.mouseShader.uniforms = {
+			time: this.mainController.scene.timeController.timeUniform(),
 			vertex: {value: -1},
 			coordinates: {value: new Vector3()},
 			order: {value: -1},

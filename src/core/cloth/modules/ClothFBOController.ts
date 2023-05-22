@@ -27,6 +27,27 @@ export interface ClothMaterialUniformConfigRef {
 	tPosition0: Ref<Texture>;
 	tPosition1: Ref<Texture>;
 	tNormal: Ref<Texture>;
+	//
+	tOriginalRT: Ref<Texture>;
+	tViscositySpringT: Ref<Texture>;
+	tPreviousRT0: Ref<Texture>;
+	tPreviousRT1: Ref<Texture>;
+	tTargetRT0: Ref<Texture>;
+	tTargetRT1: Ref<Texture>;
+	tNormalsRT: Ref<Texture>;
+	tPositionRT0: Ref<Texture>;
+	tPositionRT1: Ref<Texture>;
+	tAdjacentsRT0: Ref<Texture>;
+	tAdjacentsRT1: Ref<Texture>;
+	tDistanceRT0: Ref<Texture>;
+	tDistanceRT1: Ref<Texture>;
+}
+export type ClothMaterialUniformConfigRefString = Record<keyof ClothMaterialUniformConfigRef, string>;
+export function clothMaterialCopyConfigRef(
+	src: ClothMaterialUniformConfigRef,
+	target: ClothMaterialUniformConfigRef
+): void {
+	target.tSize.value.copy(src.tSize.value);
 }
 export interface ClothMaterialUniformConfig {
 	tSize: Vector2;
@@ -43,6 +64,11 @@ export interface ClothMaterialUniformNameConfig {
 
 interface TextureContainer {
 	texture: DataTexture | null;
+}
+function textureContainerToRef(src: TextureContainer, ref: Ref<Texture>) {
+	if (src.texture) {
+		ref.value = src.texture;
+	}
 }
 
 export class ClothFBOController {
@@ -185,7 +211,7 @@ export class ClothFBOController {
 	// update
 	//
 	//
-	update(delta: number, config?: ClothMaterialUniformConfigRef) {
+	update(config?: ClothMaterialUniformConfigRef) {
 		const renderer = this.renderer;
 		if (!(renderer && this._initialized)) {
 			return;
@@ -194,7 +220,7 @@ export class ClothFBOController {
 		const originalRenderTarget = renderer.getRenderTarget();
 
 		// start update
-		this.integrate(delta, renderer);
+		this.integrate(renderer);
 
 		// const mouseUpdating = this.mainController.inputs.updating(camera);
 		const selectedVertexIndex = this.mainController.selectedVertexIndex();
@@ -221,25 +247,31 @@ export class ClothFBOController {
 		config.tPosition0.value = this.positionRT[0].texture;
 		config.tPosition1.value = this.positionRT[1].texture;
 		config.tNormal.value = this.normalsRT.texture;
+		//
+		textureContainerToRef(this.originalRT, config.tOriginalRT);
+		textureContainerToRef(this.viscositySpringT, config.tViscositySpringT);
 
-		// dummy
-		// const clothObject = this.mainController.clothObject;
-		// const material = clothObject.material as ShaderMaterial;
-		// const uniforms = MaterialUserDataUniforms.getUniforms(material); //material.uniforms;
-		// if (!uniforms) {
-		// 	return;
-		// }
-		// uniforms[_addTexturePrefix('tPosition0')].value = this.positionRT[0].texture;
-		// uniforms[_addTexturePrefix('tPosition1')].value = this.positionRT[1].texture;
-		// uniforms[_addTexturePrefix('tNormal')].value = this.normalsRT.texture;
-		// uniforms[_addParamPrefix('tSize')].value.copy(this.mainController.fbo.tSize);
+		config.tPreviousRT0.value = this.previousRT[0].texture;
+		config.tPreviousRT1.value = this.previousRT[1].texture;
+		config.tTargetRT0.value = this.targetRT[0].texture;
+		config.tTargetRT1.value = this.targetRT[1].texture;
+
+		config.tNormalsRT.value = this.normalsRT.texture;
+
+		config.tPositionRT0.value = this.positionRT[0].texture;
+		config.tPositionRT1.value = this.positionRT[1].texture;
+
+		textureContainerToRef(this.adjacentsRT[0], config.tAdjacentsRT0);
+		textureContainerToRef(this.adjacentsRT[1], config.tAdjacentsRT1);
+		textureContainerToRef(this.distancesRT[0], config.tDistanceRT0);
+		textureContainerToRef(this.distancesRT[1], config.tDistanceRT1);
 	}
 
-	private integrate(delta: number, renderer: WebGLRenderer) {
+	private integrate(renderer: WebGLRenderer) {
 		const integrateShader = this.mainController.materials.integrateShader;
 
 		this.fboMesh.material = integrateShader;
-		integrateShader.uniforms.timeDelta.value = delta;
+		// integrateShader.uniforms.timeDelta.value = delta;
 		integrateShader.uniforms.viscosity.value = this.mainController.viscosity;
 		integrateShader.uniforms.spring.value = this.mainController.spring;
 		integrateShader.uniforms.tSize.value.copy(this.tSize);

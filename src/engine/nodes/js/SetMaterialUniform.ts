@@ -10,11 +10,13 @@ import {JsConnectionPointType} from '../utils/io/connections/Js';
 import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {Poly} from '../../Poly';
 import {inputObject3DMaterial} from './_BaseObject3D';
+import {ArrayUtils} from '../../../core/ArrayUtils';
 
 type AvailableJsType =
 	| JsConnectionPointType.COLOR
 	| JsConnectionPointType.FLOAT
 	| JsConnectionPointType.INT
+	| JsConnectionPointType.TEXTURE
 	| JsConnectionPointType.VECTOR2
 	| JsConnectionPointType.VECTOR3
 	| JsConnectionPointType.VECTOR4;
@@ -23,11 +25,18 @@ export const JS_CONNECTION_POINT_TYPES: Array<AvailableJsType> = [
 	JsConnectionPointType.COLOR,
 	JsConnectionPointType.FLOAT,
 	JsConnectionPointType.INT,
+	JsConnectionPointType.TEXTURE,
 	JsConnectionPointType.VECTOR2,
 	JsConnectionPointType.VECTOR3,
 	JsConnectionPointType.VECTOR4,
 ];
 const NUMBER_TYPES = new Set([JsConnectionPointType.FLOAT, JsConnectionPointType.INT]);
+const VECTOR_COLOR_TYPES = new Set([
+	JsConnectionPointType.COLOR,
+	JsConnectionPointType.VECTOR2,
+	JsConnectionPointType.VECTOR3,
+	JsConnectionPointType.VECTOR4,
+]);
 const DEFAULT_PARAM_VALUES = {lerp: 1, addPrefix: 1};
 
 enum SetMaterialUniformJsNodeInputName {
@@ -69,28 +78,28 @@ export class SetMaterialUniformJsNode extends TypedJsNode<SetMaterialUniformJsPa
 		this.io.connection_points.spare_params.setInputlessParamNames(['type']);
 		this.io.connection_points.set_input_name_function(
 			(index: number) =>
-				[
+				ArrayUtils.compact([
 					TRIGGER_CONNECTION_NAME,
 					JsConnectionPointType.MATERIAL,
 					this.uniformType(),
 					SetMaterialUniformJsNodeInputName.uniformName,
-					SetMaterialUniformJsNodeInputName.lerp,
+					this._lerpAllowed() ? SetMaterialUniformJsNodeInputName.lerp : null,
 					SetMaterialUniformJsNodeInputName.addPrefix,
-				][index]
+				])[index]
 		);
 		this.io.connection_points.set_expected_input_types_function(() => this._expectedInputType());
 		this.io.connection_points.set_output_name_function((index: number) => TRIGGER_CONNECTION_NAME);
 		this.io.connection_points.set_expected_output_types_function(() => [JsConnectionPointType.TRIGGER]);
 	}
 	private _expectedInputType() {
-		return [
+		return ArrayUtils.compact([
 			JsConnectionPointType.TRIGGER,
 			JsConnectionPointType.MATERIAL,
 			this.uniformType(),
 			JsConnectionPointType.STRING,
-			JsConnectionPointType.FLOAT,
+			this._lerpAllowed() ? JsConnectionPointType.FLOAT : null,
 			JsConnectionPointType.BOOLEAN,
-		];
+		]);
 	}
 	override paramDefaultValue(name: 'lerp') {
 		return DEFAULT_PARAM_VALUES[name];
@@ -98,6 +107,7 @@ export class SetMaterialUniformJsNode extends TypedJsNode<SetMaterialUniformJsPa
 	uniformType() {
 		return JS_CONNECTION_POINT_TYPES[this.pv.type] || JsConnectionPointType.FLOAT;
 	}
+
 	setUniformType(type: AvailableJsType) {
 		this.p.type.set(JS_CONNECTION_POINT_TYPES.indexOf(type));
 	}
@@ -115,85 +125,35 @@ export class SetMaterialUniformJsNode extends TypedJsNode<SetMaterialUniformJsPa
 			SetMaterialUniformJsNodeInputName.addPrefix
 		);
 
-		const type = this.uniformType();
-		const functionName = NUMBER_TYPES.has(type) ? 'setMaterialUniformNumber' : 'setMaterialUniformVectorColor';
-		// if (NUMBER_TYPES.has(type)) {
-		// 	const func = Poly.namedFunctionsRegister.g1etFunction(
-		// 		'setMaterialUniformNumber',
-		// 		this,
-		// 		shadersCollectionController
-		// 	);
-		// 	const bodyLine = func.asString(material, uniformName, uniformValue,lerp);
-		// 	shadersCollectionController.addActionBodyLines(this, [bodyLine]);
-		// } else {
-		// 	const func = Poly.namedFunctionsRegister.getFunction(
-		// 		'setMaterialUniformVectorColor',
-		// 		this,
-		// 		shadersCollectionController
-		// 	);
-		// 	const bodyLine = func.asString(object3D, color, lerp);
-		// 	shadersCollectionController.addActionBodyLines(this, [bodyLine]);
-		// }
-		// }
-		const func = Poly.namedFunctionsRegister.getFunction(functionName, this, shadersCollectionController);
-		const bodyLine = func.asString(material, uniformName, uniformValue, lerp, addPrefix);
-		shadersCollectionController.addTriggerableLines(this, [bodyLine]);
+		if (this._isUniformNumber()) {
+			const functionName = 'setMaterialUniformNumber';
+			const func = Poly.namedFunctionsRegister.getFunction(functionName, this, shadersCollectionController);
+			const bodyLine = func.asString(material, uniformName, uniformValue, lerp, addPrefix);
+			shadersCollectionController.addTriggerableLines(this, [bodyLine]);
+			return;
+		}
+		if (this._isUniformVectorColor()) {
+			const functionName = 'setMaterialUniformVectorColor';
+			const func = Poly.namedFunctionsRegister.getFunction(functionName, this, shadersCollectionController);
+			const bodyLine = func.asString(material, uniformName, uniformValue, lerp, addPrefix);
+			shadersCollectionController.addTriggerableLines(this, [bodyLine]);
+			return;
+		} else {
+			const functionName = 'setMaterialUniformTexture';
+			const func = Poly.namedFunctionsRegister.getFunction(functionName, this, shadersCollectionController);
+			const bodyLine = func.asString(material, uniformName, uniformValue, addPrefix);
+			shadersCollectionController.addTriggerableLines(this, [bodyLine]);
+			return;
+		}
 	}
 
-	// public override receiveTrigger(context: ActorNodeTriggerContext) {
-	// 	const material =
-	// 		this._inputValue<ActorConnectionPointType.MATERIAL>(ActorConnectionPointType.MATERIAL, context) ||
-	// 		(context.Object3D as Mesh).material;
-
-	// 	if (material) {
-	// 		const lerp = this._inputValue<ActorConnectionPointType.FLOAT>('lerp', context) || 1;
-	// 		const uniformNameWithoutPrefix =
-	// 			this._inputValue<ActorConnectionPointType.STRING>('uniformName', context) || '';
-	// 		const prefix = isBooleanTrue(this.pv.addPrefix) ? UNIFORM_PARAM_PREFIX : ``;
-	// 		const uniformName = `${prefix}${uniformNameWithoutPrefix}`;
-	// 		const paramValue = this._inputValue<any>(this.uniformType(), context);
-
-	// 		if (CoreType.isArray(material)) {
-	// 			for (let mat of material) {
-	// 				this._updateMaterial(mat, uniformName, paramValue, lerp);
-	// 			}
-	// 		} else {
-	// 			this._updateMaterial(material, uniformName, paramValue, lerp);
-	// 		}
-	// 	}
-
-	// 	this.runTrigger(context);
-	// }
-
-	// private _updateMaterial(material: Material, uniformName: string, paramValue: any, lerp: number) {
-	// 	const uniforms = MaterialUserDataUniforms.getUniforms(material);
-	// 	if (!uniforms) {
-	// 		return;
-	// 	}
-	// 	const uniform = uniforms[uniformName];
-	// 	if (!uniform) {
-	// 		return;
-	// 	}
-	// 	if (CoreType.isNumber(paramValue) && CoreType.isNumber(uniform.value)) {
-	// 		if (lerp == 1) {
-	// 			return (uniform.value = paramValue);
-	// 		} else {
-	// 			uniform.value = lerp * paramValue + (1 - lerp) * uniform.value;
-	// 		}
-	// 	}
-	// 	if (CoreType.isVector(paramValue) && CoreType.isVector(uniform.value)) {
-	// 		if (lerp == 1) {
-	// 			return uniform.value.copy(paramValue as any);
-	// 		} else {
-	// 			return uniform.value.lerp(paramValue as any, lerp);
-	// 		}
-	// 	}
-	// 	if (CoreType.isColor(paramValue) && CoreType.isColor(uniform.value)) {
-	// 		if (lerp == 1) {
-	// 			return uniform.value.copy(paramValue);
-	// 		} else {
-	// 			return uniform.value.lerp(paramValue, lerp);
-	// 		}
-	// 	}
-	// }
+	private _isUniformNumber() {
+		return NUMBER_TYPES.has(this.uniformType());
+	}
+	private _isUniformVectorColor() {
+		return VECTOR_COLOR_TYPES.has(this.uniformType());
+	}
+	private _lerpAllowed() {
+		return this._isUniformNumber() || this._isUniformVectorColor();
+	}
 }

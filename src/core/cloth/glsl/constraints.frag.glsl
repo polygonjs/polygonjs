@@ -18,20 +18,20 @@ uniform sampler2D tAdjacentsB;
 // compute offset based on current distance and spring rest distance
 vec3 getDisplacement( vec3 point0, vec3 point1, float restDistance ) {
 
-    float curDistance = distance( point0, point1 );
+	float curDistance = distance( point0, point1 );
 	return selectedVertexInfluence * ( curDistance - restDistance ) * ( point1 - point0 ) / curDistance;
-	
+
 }
 
 // *** ADD COMMON ***
 
-vec2 getUV( float id ) { 
+vec2 getUV( float id ) {
 	return getClothSolverUV( id, tSize );
 }
 
 
 void main() {
-	
+
 	vec3 displacement;
 	vec2 uv = gl_FragCoord.xy / tSize.xy;
 
@@ -47,16 +47,16 @@ void main() {
 	vec3 p0 = packPosition( uv );
 
 	// adjacent vertices positions
-    vec3 p1 = packPosition( getUV( adjacentA.x ) );
-    vec3 p2 = packPosition( getUV( adjacentA.y ) );
-    vec3 p3 = packPosition( getUV( adjacentA.z ) );
-    vec3 p4 = packPosition( getUV( adjacentA.w ) );
-	
+	vec3 p1 = packPosition( getUV( adjacentA.x ) );
+	vec3 p2 = packPosition( getUV( adjacentA.y ) );
+	vec3 p3 = packPosition( getUV( adjacentA.z ) );
+	vec3 p4 = packPosition( getUV( adjacentA.w ) );
+
 	// spring-based displacement
-    displacement += getDisplacement( p0, p1, distancesA.x );
-    displacement += getDisplacement( p0, p2, distancesA.y );
-    displacement += getDisplacement( p0, p3, distancesA.z );
-    displacement += getDisplacement( p0, p4, distancesA.w );
+	displacement += getDisplacement( p0, p1, distancesA.x );
+	displacement += getDisplacement( p0, p2, distancesA.y );
+	displacement += getDisplacement( p0, p3, distancesA.z );
+	displacement += getDisplacement( p0, p4, distancesA.w );
 	float count = 4.0;
 
 	float Bx = adjacentB.x;

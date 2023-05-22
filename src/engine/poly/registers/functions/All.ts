@@ -352,6 +352,7 @@ import { setMaterialColor } from "../../../functions/setMaterialColor";
 import { setMaterialEmissiveColor } from "../../../functions/setMaterialEmissiveColor";
 import { setMaterialOpacity } from "../../../functions/setMaterialOpacity";
 import { setMaterialUniformNumber } from "../../../functions/setMaterialUniformNumber";
+import { setMaterialUniformTexture } from "../../../functions/setMaterialUniformTexture";
 import { setMaterialUniformVectorColor } from "../../../functions/setMaterialUniformVectorColor";
 import { setObjectAttribute } from "../../../functions/setObjectAttribute";
 import { setObjectCastShadow } from "../../../functions/setObjectCastShadow";
@@ -769,6 +770,7 @@ export interface NamedFunctionMap {
   setMaterialEmissiveColor: setMaterialEmissiveColor;
   setMaterialOpacity: setMaterialOpacity;
   setMaterialUniformNumber: setMaterialUniformNumber;
+  setMaterialUniformTexture: setMaterialUniformTexture;
   setMaterialUniformVectorColor: setMaterialUniformVectorColor;
   setObjectAttribute: setObjectAttribute;
   setObjectCastShadow: setObjectCastShadow;
@@ -1189,6 +1191,7 @@ export class AllNamedFunctionRegister {
       setMaterialEmissiveColor,
       setMaterialOpacity,
       setMaterialUniformNumber,
+      setMaterialUniformTexture,
       setMaterialUniformVectorColor,
       setObjectAttribute,
       setObjectCastShadow,

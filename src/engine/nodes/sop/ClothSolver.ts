@@ -61,7 +61,7 @@ export class ClothSolverSopNode extends TypedActorSopNode<ClothSolverSopParamsCo
 				return;
 			}
 			const clothObject = object;
-			const result = createOrFindClothController(clothObject);
+			const result = createOrFindClothController(this.scene(), clothObject);
 			if (!result) {
 				return;
 			}

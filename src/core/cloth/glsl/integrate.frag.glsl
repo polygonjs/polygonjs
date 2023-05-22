@@ -9,11 +9,10 @@ uniform sampler2D tPrevious1;
 uniform sampler2D tPosition0;
 uniform sampler2D tPosition1;
 uniform sampler2D tViscositySpring;
+uniform float time;
 uniform float timeDelta;
 uniform float viscosity;
 uniform float spring;
-
-// #define dt2 0.000256
 
 // *** ADD COMMON ***
 
@@ -28,7 +27,7 @@ void main() {
 	float viscosityMult = viscosity * viscositySpring.x;
 	float springMult = spring * viscositySpring.y;
 
-	vec3 offset = ( org - pos ) * timeDelta * springMult;//18.5 * dt2 * 8.33333;
+	vec3 offset = ( org - pos ) * timeDelta * springMult;// + vec3(.01*sin(50.*time+50.*org.x));
 	vec3 disp = ( pos - prv ) * ( 1.0 - viscosityMult ) + pos;
 
 	gl_FragColor = vec4( unpackPosition( disp + offset, order ), 1.0 );

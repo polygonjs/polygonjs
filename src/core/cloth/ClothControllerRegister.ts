@@ -4,16 +4,17 @@ import {CoreGraphNodeId} from '../graph/CoreGraph';
 import {CoreObject} from '../geometry/Object';
 import {ClothIdAttribute} from './ClothAttribute';
 import {ClothController} from './ClothController';
+import {PolyScene} from '../../engine/scene/PolyScene';
 
 const clothControllerByGraphNodeId: Map<string, ClothController> = new Map();
-export function createOrFindClothController(clothObject: Object3D) {
+export function createOrFindClothController(scene: PolyScene, clothObject: Object3D) {
 	// const nodeId = node.graphNodeId();
 	let controller = clothControllerByGraphNodeId.get(clothObject.uuid);
 	if (!controller) {
 		if (!(clothObject instanceof Mesh)) {
 			return;
 		}
-		controller = new ClothController(clothObject);
+		controller = new ClothController(scene, clothObject);
 		clothControllerByGraphNodeId.set(clothObject.uuid, controller);
 
 		// const stepsCount = (CoreObject.attribValue(clothObject, ClothSolverAttribute.STEPS_COUNT) as number) || 5;

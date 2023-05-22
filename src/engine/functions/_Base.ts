@@ -7,6 +7,30 @@ import {NodeContext} from '../poly/NodeContext';
 import {AssemblerControllerNode} from '../nodes/js/code/Controller';
 import {TimeController} from '../scene/utils/TimeController';
 import {BaseJsShaderAssembler} from '../nodes/js/code/assemblers/_Base';
+import {
+	Tuple1,
+	Tuple2,
+	Tuple3,
+	Tuple4,
+	Tuple5,
+	Tuple6,
+	Tuple7,
+	Tuple8,
+	Tuple9,
+	Tuple10,
+	Tuple11,
+	Tuple12,
+	Tuple13,
+	Tuple14,
+	Tuple15,
+	Tuple16,
+	Tuple17,
+	Tuple18,
+	Tuple19,
+	Tuple20,
+	Tuple21,
+	Tuple22,
+} from '../../types/GlobalTypes';
 
 export abstract class BaseNamedFunction {
 	// abstract type: string;
@@ -54,36 +78,15 @@ export abstract class NamedFunction<ARGS extends Array<any>, ARGS_STR extends Ar
 
 export abstract class NamedFunction0 extends NamedFunction<[], []> {}
 
-export abstract class NamedFunction1<ARGS extends [any]> extends NamedFunction<ARGS, [string]> {}
-export abstract class NamedFunction2<ARGS extends [any, any]> extends NamedFunction<ARGS, [string, string]> {}
-export abstract class NamedFunction3<ARGS extends [any, any, any]> extends NamedFunction<
-	ARGS,
-	[string, string, string]
-> {}
-export abstract class NamedFunction4<ARGS extends [any, any, any, any]> extends NamedFunction<
-	ARGS,
-	[string, string, string, string]
-> {}
-export abstract class NamedFunction5<ARGS extends [any, any, any, any, any]> extends NamedFunction<
-	ARGS,
-	[string, string, string, string, string]
-> {}
-export abstract class NamedFunction6<ARGS extends [any, any, any, any, any, any]> extends NamedFunction<
-	ARGS,
-	[string, string, string, string, string, string]
-> {}
-export abstract class NamedFunction7<ARGS extends [any, any, any, any, any, any, any]> extends NamedFunction<
-	ARGS,
-	[string, string, string, string, string, string, string]
-> {}
-export abstract class NamedFunction8<ARGS extends [any, any, any, any, any, any, any, any]> extends NamedFunction<
-	ARGS,
-	[string, string, string, string, string, string, string, string]
-> {}
-export abstract class NamedFunction9<ARGS extends [any, any, any, any, any, any, any, any, any]> extends NamedFunction<
-	ARGS,
-	[string, string, string, string, string, string, string, string, string]
-> {}
+export abstract class NamedFunction1<ARGS extends Tuple1<any>> extends NamedFunction<ARGS, Tuple1<any>> {}
+export abstract class NamedFunction2<ARGS extends Tuple2<any>> extends NamedFunction<ARGS, Tuple2<string>> {}
+export abstract class NamedFunction3<ARGS extends Tuple3<any>> extends NamedFunction<ARGS, Tuple3<string>> {}
+export abstract class NamedFunction4<ARGS extends Tuple4<any>> extends NamedFunction<ARGS, Tuple4<string>> {}
+export abstract class NamedFunction5<ARGS extends Tuple5<any>> extends NamedFunction<ARGS, Tuple5<string>> {}
+export abstract class NamedFunction6<ARGS extends Tuple6<any>> extends NamedFunction<ARGS, Tuple6<string>> {}
+export abstract class NamedFunction7<ARGS extends Tuple7<any>> extends NamedFunction<ARGS, Tuple7<string>> {}
+export abstract class NamedFunction8<ARGS extends Tuple8<any>> extends NamedFunction<ARGS, Tuple8<string>> {}
+export abstract class NamedFunction9<ARGS extends Tuple9<any>> extends NamedFunction<ARGS, Tuple9<string>> {}
 //
 //
 // OBJECT
@@ -96,34 +99,91 @@ abstract class ObjectNamedFunction<ARGS extends Array<any>, ARGS_STR extends Arr
 		return `${this.type()}(${args.join(', ')})`;
 	}
 }
-export abstract class ObjectNamedFunction0 extends ObjectNamedFunction<[], [string]> {}
-export abstract class ObjectNamedFunction1<ARGS extends [any]> extends ObjectNamedFunction<ARGS, [string, string]> {}
-export abstract class ObjectNamedFunction2<ARGS extends [any, any]> extends ObjectNamedFunction<
+export abstract class ObjectNamedFunction0 extends ObjectNamedFunction<[], Tuple1<string>> {}
+export abstract class ObjectNamedFunction1<ARGS extends Tuple1<any>> extends ObjectNamedFunction<
 	ARGS,
-	[string, string, string]
+	Tuple2<string>
 > {}
-export abstract class ObjectNamedFunction3<ARGS extends [any, any, any]> extends ObjectNamedFunction<
+export abstract class ObjectNamedFunction2<ARGS extends Tuple2<any>> extends ObjectNamedFunction<
 	ARGS,
-	[string, string, string, string]
+	Tuple3<string>
 > {}
-export abstract class ObjectNamedFunction4<ARGS extends [any, any, any, any]> extends ObjectNamedFunction<
+export abstract class ObjectNamedFunction3<ARGS extends Tuple3<any>> extends ObjectNamedFunction<
 	ARGS,
-	[string, string, string, string, string]
+	Tuple4<string>
 > {}
-export abstract class ObjectNamedFunction5<ARGS extends [any, any, any, any, any]> extends ObjectNamedFunction<
+export abstract class ObjectNamedFunction4<ARGS extends Tuple4<any>> extends ObjectNamedFunction<
 	ARGS,
-	[string, string, string, string, string, string]
+	Tuple5<string>
 > {}
-export abstract class ObjectNamedFunction6<ARGS extends [any, any, any, any, any, any]> extends ObjectNamedFunction<
+export abstract class ObjectNamedFunction5<ARGS extends Tuple5<any>> extends ObjectNamedFunction<
 	ARGS,
-	[string, string, string, string, string, string, string]
+	Tuple6<string>
 > {}
-export abstract class ObjectNamedFunction7<
-	ARGS extends [any, any, any, any, any, any, any]
-> extends ObjectNamedFunction<ARGS, [string, string, string, string, string, string, string, string]> {}
-export abstract class ObjectNamedFunction8<
-	ARGS extends [any, any, any, any, any, any, any, any]
-> extends ObjectNamedFunction<ARGS, [string, string, string, string, string, string, string, string, string]> {}
+export abstract class ObjectNamedFunction6<ARGS extends Tuple6<any>> extends ObjectNamedFunction<
+	ARGS,
+	Tuple7<string>
+> {}
+export abstract class ObjectNamedFunction7<ARGS extends Tuple7<any>> extends ObjectNamedFunction<
+	ARGS,
+	Tuple8<string>
+> {}
+export abstract class ObjectNamedFunction8<ARGS extends Tuple8<any>> extends ObjectNamedFunction<
+	ARGS,
+	Tuple9<string>
+> {}
+export abstract class ObjectNamedFunction9<ARGS extends Tuple9<any>> extends ObjectNamedFunction<
+	ARGS,
+	Tuple10<string>
+> {}
+export abstract class ObjectNamedFunction10<ARGS extends Tuple10<any>> extends ObjectNamedFunction<
+	ARGS,
+	Tuple11<string>
+> {}
+export abstract class ObjectNamedFunction11<ARGS extends Tuple11<any>> extends ObjectNamedFunction<
+	ARGS,
+	Tuple12<string>
+> {}
+export abstract class ObjectNamedFunction12<ARGS extends Tuple12<any>> extends ObjectNamedFunction<
+	ARGS,
+	Tuple13<string>
+> {}
+export abstract class ObjectNamedFunction13<ARGS extends Tuple13<any>> extends ObjectNamedFunction<
+	ARGS,
+	Tuple14<string>
+> {}
+export abstract class ObjectNamedFunction14<ARGS extends Tuple14<any>> extends ObjectNamedFunction<
+	ARGS,
+	Tuple15<string>
+> {}
+export abstract class ObjectNamedFunction15<ARGS extends Tuple15<any>> extends ObjectNamedFunction<
+	ARGS,
+	Tuple16<string>
+> {}
+export abstract class ObjectNamedFunction16<ARGS extends Tuple16<any>> extends ObjectNamedFunction<
+	ARGS,
+	Tuple17<string>
+> {}
+export abstract class ObjectNamedFunction17<ARGS extends Tuple17<any>> extends ObjectNamedFunction<
+	ARGS,
+	Tuple18<string>
+> {}
+export abstract class ObjectNamedFunction18<ARGS extends Tuple18<any>> extends ObjectNamedFunction<
+	ARGS,
+	Tuple19<string>
+> {}
+export abstract class ObjectNamedFunction19<ARGS extends Tuple19<any>> extends ObjectNamedFunction<
+	ARGS,
+	Tuple20<string>
+> {}
+export abstract class ObjectNamedFunction20<ARGS extends Tuple20<any>> extends ObjectNamedFunction<
+	ARGS,
+	Tuple21<string>
+> {}
+export abstract class ObjectNamedFunction21<ARGS extends Tuple21<any>> extends ObjectNamedFunction<
+	ARGS,
+	Tuple22<string>
+> {}
 
 //
 //

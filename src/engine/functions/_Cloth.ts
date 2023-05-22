@@ -1,6 +1,6 @@
 import {Material, Object3D, Texture, Vector2, Vector3} from 'three';
 import {getClothControllerNodeFromWorldObject} from '../nodes/sop/ClothSolver';
-import {NamedFunction9, ObjectNamedFunction0, ObjectNamedFunction1, ObjectNamedFunction8} from './_Base';
+import {NamedFunction9, ObjectNamedFunction0, ObjectNamedFunction1, ObjectNamedFunction5} from './_Base';
 import {
 	clothSolverStepSimulation as _clothSolverStepSimulation,
 	clothSolverUpdateMaterial as _clothSolverUpdateMaterial,
@@ -8,7 +8,7 @@ import {
 import {_getPhysicsRBDSphereRadius, _setPhysicsRBDSphereProperty} from '../../core/physics/shapes/RBDSphere';
 import {_matchArrayLength} from './_ArrayUtils';
 import {clothControllerFromObject} from '../../core/cloth/ClothControllerRegister';
-import {Ref} from '@vue/reactivity';
+// import {Ref} from '@vue/reactivity';
 import {
 	ClothMaterialUniformConfig,
 	ClothMaterialUniformConfigRef,
@@ -35,10 +35,10 @@ export class clothSolverReset extends ObjectNamedFunction0 {
 }
 
 let uniformConfig: ClothMaterialUniformConfig | undefined;
-let uniformConfigRef: ClothMaterialUniformConfigRef | undefined;
+// let uniformConfigRef: ClothMaterialUniformConfigRef | undefined;
 let uniformNameConfig: ClothMaterialUniformNameConfig | undefined;
-export class clothSolverStepSimulation extends ObjectNamedFunction8<
-	[number, number, number, number, Ref<Vector2>, Ref<Texture>, Ref<Texture>, Ref<Texture>]
+export class clothSolverStepSimulation extends ObjectNamedFunction5<
+	[number, number, number, number, ClothMaterialUniformConfigRef]
 > {
 	static override type() {
 		return 'clothSolverStepSimulation';
@@ -49,28 +49,24 @@ export class clothSolverStepSimulation extends ObjectNamedFunction8<
 		selectedVertexInfluence: number,
 		viscosity: number,
 		spring: number,
-		tSize: Ref<Vector2>,
-		tPosition0: Ref<Texture>,
-		tPosition1: Ref<Texture>,
-		tNormal: Ref<Texture>
+		// tSize: Ref<Vector2>,
+		// tPosition0: Ref<Texture>,
+		// tPosition1: Ref<Texture>,
+		// tNormal: Ref<Texture>,
+		//
+		uniformConfigRef: ClothMaterialUniformConfigRef
 	): void {
-		const delta = this.scene.timeController.delta();
+		// const delta = this.scene.timeController.delta();
 
-		uniformConfigRef = uniformConfigRef || {tSize, tPosition0, tPosition1, tNormal};
-		uniformConfigRef.tSize = tSize;
-		uniformConfigRef.tPosition0 = tPosition0;
-		uniformConfigRef.tPosition1 = tPosition1;
-		uniformConfigRef.tNormal = tNormal;
+		// uniformConfigRef = uniformConfigRef || {tSize, tPosition0, tPosition1, tNormal, tTargetRT0, tTargetRT1};
+		// uniformConfigRef.tSize = tSize;
+		// uniformConfigRef.tPosition0 = tPosition0;
+		// uniformConfigRef.tPosition1 = tPosition1;
+		// uniformConfigRef.tNormal = tNormal;
+		// uniformConfigRef.tTargetRT0 = tTargetRT0;
+		// uniformConfigRef.tTargetRT1 = tTargetRT1;
 
-		_clothSolverStepSimulation(
-			object3D,
-			delta,
-			stepsCount,
-			selectedVertexInfluence,
-			viscosity,
-			spring,
-			uniformConfigRef
-		);
+		_clothSolverStepSimulation(object3D, stepsCount, selectedVertexInfluence, viscosity, spring, uniformConfigRef);
 	}
 }
 export class clothSolverUpdateMaterial extends NamedFunction9<

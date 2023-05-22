@@ -4,6 +4,7 @@ import {ClothGeometryInitController} from './modules/ClothGeometryInitController
 import {ClothFBOController, ClothMaterialUniformConfigRef} from './modules/ClothFBOController';
 // import {ClothOnBeforeRenderController} from './modules/ClothOnBeforeRenderController';
 import {WebGLRenderer, Mesh, Vector3} from 'three';
+import {PolyScene} from '../../engine/scene/PolyScene';
 
 export class ClothController {
 	public readonly materials: ClothMaterialController;
@@ -17,7 +18,7 @@ export class ClothController {
 	public viscosity = 0.1;
 	public spring = 1;
 
-	constructor(public clothObject: Mesh) {
+	constructor(public scene: PolyScene, public clothObject: Mesh) {
 		this.materials = new ClothMaterialController(this);
 		this.geometryInit = new ClothGeometryInitController(this.clothObject);
 		// this.inputs = new ClothInputsController(this);
@@ -30,8 +31,8 @@ export class ClothController {
 		// this.onBeforeRender.init(this.clothObject);
 	}
 
-	update(delta: number, config: ClothMaterialUniformConfigRef) {
-		this.fbo.update(delta, config);
+	update(config: ClothMaterialUniformConfigRef) {
+		this.fbo.update(config);
 	}
 
 	private _selectedVertexIndex = -1;

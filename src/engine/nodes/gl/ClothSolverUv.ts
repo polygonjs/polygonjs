@@ -14,62 +14,57 @@ import {ParamConfigsController} from '../utils/code/controllers/ParamConfigsCont
 import {ParamType} from '../../poly/ParamType';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {GlParamConfig} from './code/utils/GLParamConfig';
-import {UNIFORM_PARAM_PREFIX, UNIFORM_TEXTURE_PREFIX} from '../../../core/material/uniform';
+import {UNIFORM_PARAM_PREFIX} from '../../../core/material/uniform';
 import GET_UV from '../../../core/cloth/glsl/common/getUV.glsl';
 import CLOTH_SOLVER_POSITION from '../../../core/cloth/glsl/render/ClothSolverPosition.glsl';
 import {ClothSolverUniformName} from '../../../core/cloth/ClothAttribute';
 
-enum ClothSolverPositionOutputName {
-	POSITION = 'position',
-	NORMAL = 'normal',
+enum ClothSolverUvOutputName {
+	UV = 'uv',
 }
 
-class ClothSolverPositionGlParamsConfig extends NodeParamsConfig {
+class ClothSolverUvGlParamsConfig extends NodeParamsConfig {
 	id = ParamConfig.FLOAT(0);
 	size = ParamConfig.STRING(ClothSolverUniformName.SIZE);
-	position0 = ParamConfig.STRING(ClothSolverUniformName.POSITION0);
-	position1 = ParamConfig.STRING(ClothSolverUniformName.POSITION1);
-	normal = ParamConfig.STRING(ClothSolverUniformName.NORMAL);
 }
-const ParamsConfig = new ClothSolverPositionGlParamsConfig();
-export class ClothSolverPositionGlNode extends TypedGlNode<ClothSolverPositionGlParamsConfig> {
+const ParamsConfig = new ClothSolverUvGlParamsConfig();
+export class ClothSolverUvGlNode extends TypedGlNode<ClothSolverUvGlParamsConfig> {
 	override paramsConfig = ParamsConfig;
-	static override type(): Readonly<'clothSolverPosition'> {
-		return 'clothSolverPosition';
+	static override type(): Readonly<'clothSolverUv'> {
+		return 'clothSolverUv';
 	}
 	override initializeNode() {
 		this.addPostDirtyHook('_setMatToRecompile', this._setMatToRecompile.bind(this));
 		this.lifecycle.onAfterAdded(this._setMatToRecompile.bind(this));
 		this.lifecycle.onBeforeDeleted(this._setMatToRecompile.bind(this));
 		this.io.outputs.setNamedOutputConnectionPoints([
-			new GlConnectionPoint(ClothSolverPositionOutputName.POSITION, GlConnectionPointType.VEC3),
-			new GlConnectionPoint(ClothSolverPositionOutputName.NORMAL, GlConnectionPointType.VEC3),
+			new GlConnectionPoint(ClothSolverUvOutputName.UV, GlConnectionPointType.VEC2),
 		]);
 	}
 
 	override setLines(shaders_collection_controller: ShadersCollectionController) {
 		const id = ThreeToGl.vector2(this.variableForInputParam(this.p.id));
 
-		const uv = this.glVarName('clothSolverUv');
-		const position = this.glVarName(ClothSolverPositionOutputName.POSITION);
-		const normal = this.glVarName(ClothSolverPositionOutputName.NORMAL);
+		// const uv = this.glVarName('clothSolverUv');
+		const uv = this.glVarName(ClothSolverUvOutputName.UV);
+		// const normal = this.glVarName(ClothSolverPositionOutputName.NORMAL);
 		const uniformSize = this.uniformNameSize();
-		const uniformPosition0 = this.uniformNamePosition0();
-		const uniformPosition1 = this.uniformNamePosition1();
-		const uniformNormal = this.uniformNameNormal();
+		// const uniformPosition0 = this.uniformNamePosition0();
+		// const uniformPosition1 = this.uniformNamePosition1();
+		// const uniformNormal = this.uniformNameNormal();
 		const definitions: BaseGLDefinition[] = [
 			new UniformGLDefinition(this, GlConnectionPointType.VEC2, uniformSize),
-			new UniformGLDefinition(this, GlConnectionPointType.SAMPLER_2D, uniformPosition0),
-			new UniformGLDefinition(this, GlConnectionPointType.SAMPLER_2D, uniformPosition1),
-			new UniformGLDefinition(this, GlConnectionPointType.SAMPLER_2D, uniformNormal),
+			// new UniformGLDefinition(this, GlConnectionPointType.SAMPLER_2D, uniformPosition0),
+			// new UniformGLDefinition(this, GlConnectionPointType.SAMPLER_2D, uniformPosition1),
+			// new UniformGLDefinition(this, GlConnectionPointType.SAMPLER_2D, uniformNormal),
 			new FunctionGLDefinition(this, GET_UV),
 			new FunctionGLDefinition(this, CLOTH_SOLVER_POSITION),
 		];
 
 		const bodyLines: string[] = [];
 		bodyLines.push(`vec2 ${uv} = getClothSolverUV(${id}, ${uniformSize})`);
-		bodyLines.push(`vec3 ${position} = clothSolverPosition(${uniformPosition0}, ${uniformPosition1}, ${uv})`);
-		bodyLines.push(`vec3 ${normal} = clothSolverNormal(${uniformNormal}, ${uv})`);
+		// bodyLines.push(`vec3 ${position} = clothSolverPosition(${uniformPosition0}, ${uniformPosition1}, ${uv})`);
+		// bodyLines.push(`vec3 ${normal} = clothSolverNormal(${uniformNormal}, ${uv})`);
 
 		shaders_collection_controller.addDefinitions(this, definitions);
 		shaders_collection_controller.addBodyLines(this, bodyLines);
@@ -83,24 +78,24 @@ export class ClothSolverPositionGlNode extends TypedGlNode<ClothSolverPositionGl
 		this._param_configs_controller.reset();
 
 		const size = new GlParamConfig(ParamType.VECTOR2, this.pv.size, [1, 1], this.uniformNameSize());
-		const position0 = new GlParamConfig(ParamType.NODE_PATH, this.pv.position0, '', this.uniformNamePosition0());
-		const position1 = new GlParamConfig(ParamType.NODE_PATH, this.pv.position1, '', this.uniformNamePosition1());
-		const normal = new GlParamConfig(ParamType.NODE_PATH, this.pv.normal, '', this.uniformNameNormal());
+		// const position0 = new GlParamConfig(ParamType.NODE_PATH, this.pv.position0, '', this.uniformNamePosition0());
+		// const position1 = new GlParamConfig(ParamType.NODE_PATH, this.pv.position1, '', this.uniformNamePosition1());
+		// const normal = new GlParamConfig(ParamType.NODE_PATH, this.pv.normal, '', this.uniformNameNormal());
 		this._param_configs_controller.push(size);
-		this._param_configs_controller.push(position0);
-		this._param_configs_controller.push(position1);
-		this._param_configs_controller.push(normal);
+		// this._param_configs_controller.push(position0);
+		// this._param_configs_controller.push(position1);
+		// this._param_configs_controller.push(normal);
 	}
 	uniformNameSize() {
 		return `${UNIFORM_PARAM_PREFIX}${this.pv.size}`;
 	}
-	uniformNamePosition0() {
-		return `${UNIFORM_TEXTURE_PREFIX}${this.pv.position0}`;
-	}
-	uniformNamePosition1() {
-		return `${UNIFORM_TEXTURE_PREFIX}${this.pv.position1}`;
-	}
-	uniformNameNormal() {
-		return `${UNIFORM_TEXTURE_PREFIX}${this.pv.normal}`;
-	}
+	// uniformNamePosition0() {
+	// 	return `${UNIFORM_TEXTURE_PREFIX}${this.pv.position0}`;
+	// }
+	// uniformNamePosition1() {
+	// 	return `${UNIFORM_TEXTURE_PREFIX}${this.pv.position1}`;
+	// }
+	// uniformNameNormal() {
+	// 	return `${UNIFORM_TEXTURE_PREFIX}${this.pv.normal}`;
+	// }
 }
