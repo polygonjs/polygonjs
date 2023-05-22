@@ -107,6 +107,7 @@ export abstract class TypedViewer<C extends Camera> {
 		this._domElement.viewer = this;
 		this._domElement.scene = this._scene;
 		this._domElement.Poly = Poly;
+		this.updateAutoRenderOnIntersectionChange({playPauseScene: true});
 		this.controlsController().mount();
 		this._mounted = true;
 	}
@@ -279,6 +280,7 @@ export abstract class TypedViewer<C extends Camera> {
 	// Visibility detection
 	//
 	//
+	private _observer: IntersectionObserver | undefined;
 	/**
 	 * This sets the viewer to detect if it is visible, and to pause/unpause itself when its visibility changes.
 	 * This can be very useful to improve performance.
@@ -314,8 +316,22 @@ export abstract class TypedViewer<C extends Camera> {
 				}
 			});
 		};
-		let observer = new IntersectionObserver(onObserverChange, observerOptions);
-		observer.observe(this._domElement);
+		this.disableUpdateAutoRenderOnIntersectionChange();
+		this._observer = new IntersectionObserver(onObserverChange, observerOptions);
+		this._observer.observe(this._domElement);
+	}
+	/**
+	 * Cancels the listening of the viewer's visibility.
+	 *
+	 */
+	disableUpdateAutoRenderOnIntersectionChange() {
+		if (!this._domElement) {
+			return;
+		}
+		if (!this._observer) {
+			return;
+		}
+		this._observer.unobserve(this._domElement);
 	}
 
 	//
