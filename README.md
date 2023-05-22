@@ -60,17 +60,17 @@ or
 
 The nodes are grouped in contexts, each for a specific type of task:
 
--   [ACTOR](https://polygonjs.com/docs/nodes/actor) nodes add state and events to scene objects.
--   [ANIM](https://polygonjs.com/docs/nodes/anim) nodes are to create animations.
--   [AUDIO](https://polygonjs.com/docs/nodes/audio) nodes are to generate and modify audio.
--   [COP](https://polygonjs.com/docs/nodes/cop) nodes can import and update textures.
--   [EVENT](https://polygonjs.com/docs/nodes/event) nodes are to trigger or react to scene events.
--   [GL](https://polygonjs.com/docs/nodes/gl) nodes help you create GLSL shaders.
--   [MAT](https://polygonjs.com/docs/nodes/mat) nodes are to create materials.
--   [OBJ](https://polygonjs.com/docs/nodes/obj) are to add objects to your scene.
--   [POST](https://polygonjs.com/docs/nodes/post) nodes are to set up post processing.
--   [ROP](https://polygonjs.com/docs/nodes/rop) nodes allow you to set up the renderers.
--   [SOP](https://polygonjs.com/docs/nodes/sop) nodes are to manipulate geometries.
+-   [ANIM](https://polygonjs.com/docs/nodes/anim) nodes create animations.
+-   [AUDIO](https://polygonjs.com/docs/nodes/audio) nodes generate and modify audio.
+-   [COP](https://polygonjs.com/docs/nodes/cop) nodes import and update textures.
+-   [EVENT](https://polygonjs.com/docs/nodes/event) nodes trigger or react to scene events.
+-   [GL](https://polygonjs.com/docs/nodes/gl) nodes create GLSL shaders.
+-   [JS](https://polygonjs.com/docs/nodes/js) nodes add state & events to scene objects.
+-   [MAT](https://polygonjs.com/docs/nodes/mat) nodes create materials.
+-   [OBJ](https://polygonjs.com/docs/nodes/obj) nodes add objects to your scene.
+-   [POST](https://polygonjs.com/docs/nodes/post) nodes set up post processing.
+-   [ROP](https://polygonjs.com/docs/nodes/rop) nodes set up the renderers.
+-   [SOP](https://polygonjs.com/docs/nodes/sop) nodes handle procedural modelling.
 
 ## Plugins
 
