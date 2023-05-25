@@ -10,7 +10,7 @@ import {JsConnectionPoint, JsConnectionPointType, JS_CONNECTION_POINT_IN_NODE_DE
 import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {JsType} from '../../poly/registers/nodes/types/Js';
 import {Poly} from '../../Poly';
-import {inputObject3D} from './_BaseObject3D';
+import {inputObject3D, setObject3DOutputLine} from './_BaseObject3D';
 
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
 
@@ -40,6 +40,9 @@ export class SetObjectPositionJsNode extends TypedJsNode<SetObjectPositionJsPara
 			new JsConnectionPoint(TRIGGER_CONNECTION_NAME, JsConnectionPointType.TRIGGER),
 			new JsConnectionPoint(JsConnectionPointType.OBJECT_3D, JsConnectionPointType.OBJECT_3D),
 		]);
+	}
+	override setLines(linesController: JsLinesCollectionController) {
+		setObject3DOutputLine(this, linesController);
 	}
 	override setTriggerableLines(shadersCollectionController: JsLinesCollectionController) {
 		const object3D = inputObject3D(this, shadersCollectionController);

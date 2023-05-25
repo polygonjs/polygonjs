@@ -1,7 +1,7 @@
 import {TRIGGER_CONNECTION_NAME, TypedJsNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {JsConnectionPoint, JsConnectionPointType, JS_CONNECTION_POINT_IN_NODE_DEF} from '../utils/io/connections/Js';
-import {inputObject3DMaterial} from './_BaseObject3D';
+import {inputObject3DMaterial, setObject3DOutputLine} from './_BaseObject3D';
 import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {Poly} from '../../Poly';
 
@@ -28,6 +28,9 @@ export abstract class BaseSetMaterialColorJsNode extends TypedJsNode<BaseSetMate
 			new JsConnectionPoint(TRIGGER_CONNECTION_NAME, JsConnectionPointType.TRIGGER),
 			new JsConnectionPoint(JsConnectionPointType.MATERIAL, JsConnectionPointType.MATERIAL, CONNECTION_OPTIONS),
 		]);
+	}
+	override setLines(linesController: JsLinesCollectionController) {
+		setObject3DOutputLine(this, linesController);
 	}
 	override setTriggerableLines(shadersCollectionController: JsLinesCollectionController) {
 		const material = inputObject3DMaterial(this, shadersCollectionController);

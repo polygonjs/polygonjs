@@ -46,7 +46,7 @@ export function assignUniformViaUserData(material: Material, uniformName: string
 
 export class MaterialUserDataUniforms {
 	static getUniforms(material: Material): PolyDictionary<IUniform> | undefined {
-		return material.userData?.uniforms;
+		return material.userData?.uniforms || (material as ShaderMaterial).uniforms;
 	}
 	static setUniforms(material: Material, uniforms: PolyDictionary<IUniform>) {
 		material.userData.uniforms = uniforms;

@@ -24,3 +24,12 @@ export function inputObject3DMaterial(node: BaseJsNodeType, linesController: JsL
 		: _defaultObject3DMaterial(linesController);
 	return material;
 }
+
+export function setObject3DOutputLine(node: BaseJsNodeType, linesController: JsLinesCollectionController) {
+	const object3D = inputObject3D(node, linesController);
+	const out = node.jsVarName(JsConnectionPointType.OBJECT_3D);
+
+	linesController.addBodyOrComputed(node, [
+		{dataType: JsConnectionPointType.OBJECT_3D, varName: out, value: object3D},
+	]);
+}

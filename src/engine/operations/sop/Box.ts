@@ -11,7 +11,7 @@ const tmpCenter = new Vector3();
 interface BoxSopParams extends DefaultOperationParams {
 	sizes: Vector3;
 	size: number;
-	divisions: number;
+	divisions: Vector3;
 	center: Vector3;
 }
 
@@ -22,7 +22,7 @@ export class BoxSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: BoxSopParams = {
 		sizes: new Vector3(1, 1, 1),
 		size: 1,
-		divisions: 1,
+		divisions: new Vector3(1, 1, 1),
 		center: new Vector3(0, 0, 0),
 	};
 	static override readonly INPUT_CLONED_STATE = InputCloneMode.NEVER;
@@ -47,9 +47,9 @@ export class BoxSopOperation extends BaseSopOperation {
 			size * sizes.x,
 			size * sizes.y,
 			size * sizes.z,
-			divisions,
-			divisions,
-			divisions
+			divisions.x,
+			divisions.y,
+			divisions.z
 		);
 		geometry.translate(params.center.x, params.center.y, params.center.z);
 		geometry.computeVertexNormals();
@@ -62,7 +62,7 @@ export class BoxSopOperation extends BaseSopOperation {
 		tmpBox.getCenter(tmpCenter);
 
 		const divisions = params.divisions;
-		const geometry = new BoxGeometry(tmpSize.x, tmpSize.y, tmpSize.z, divisions, divisions, divisions);
+		const geometry = new BoxGeometry(tmpSize.x, tmpSize.y, tmpSize.z, divisions.x, divisions.y, divisions.z);
 		const matrix = this._coreTransform.translationMatrix(tmpCenter);
 		geometry.applyMatrix4(matrix);
 		return geometry;

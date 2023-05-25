@@ -218,7 +218,9 @@ export class TypedJsNode<K extends NodeParamsConfig> extends TypedNode<NodeConte
 			}
 			const connectionPoint = this.io.inputs.namedInputConnectionPoints()[inputIndex];
 			if (!connectionPoint) {
-				console.warn(`connectionPoint not created for index ${inputIndex} (inputName: '${inputName}')`);
+				console.warn(
+					`connectionPoint not created for index ${inputIndex} (inputName: '${inputName}', node: ${this.path()})`
+				);
 			}
 			return outputJsVarName || connectionPoint ? ThreeToJs.any(connectionPoint.init_value) : '0';
 		}

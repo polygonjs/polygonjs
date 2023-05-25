@@ -8,7 +8,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {JS_CONNECTION_POINT_IN_NODE_DEF, JsConnectionPoint, JsConnectionPointType} from '../utils/io/connections/Js';
 import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {Poly} from '../../Poly';
-import {inputObject3D} from './_BaseObject3D';
+import {inputObject3D, setObject3DOutputLine} from './_BaseObject3D';
 import {Vector4} from 'three';
 import {RefJsDefinition} from './utils/JsDefinition';
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
@@ -45,16 +45,17 @@ export class RenderPixelJsNode extends TypedJsNode<RenderPixelJsParamsConfig> {
 		]);
 	}
 
-	override setLines(shadersCollectionController: JsLinesCollectionController) {
+	override setLines(linesController: JsLinesCollectionController) {
 		const usedOutputNames = this.io.outputs.used_output_names();
 
 		if (usedOutputNames.includes(RenderPixelJsNodeOutputName.value)) {
-			this._addValueRef(shadersCollectionController);
+			this._addValueRef(linesController);
 
 			if (!usedOutputNames.includes(JsConnectionPointType.TRIGGER)) {
-				this.setTriggeringLines(shadersCollectionController, '');
+				this.setTriggeringLines(linesController, '');
 			}
 		}
+		setObject3DOutputLine(this, linesController);
 	}
 
 	override setTriggerableLines(linesController: JsLinesCollectionController) {

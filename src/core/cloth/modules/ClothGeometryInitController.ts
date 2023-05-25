@@ -1,5 +1,7 @@
 import {Vector3, BufferGeometry, BufferAttribute, Mesh} from 'three';
 import {ThreeMeshBVHHelper} from '../../geometry/bvh/ThreeMeshBVHHelper';
+import {adjacencyGroupFaces, adjacencyVertices, populateAdjacency} from '../../geometry/operation/Adjacency';
+import {textureFromAttributeSize} from '../../geometry/operation/TextureFromAttribute';
 // import {ArrayUtils} from '../../ArrayUtils';
 // import type {ClothController} from '../ClothController';
 // import {IcosahedronBufferGeometry} from '../../geometry/operation/Icosahedron';
@@ -11,7 +13,6 @@ interface Face {
 	c: number;
 }
 
-const v0 = new Vector3();
 // interface ClothGeometryInitControllerOptions {
 // 	populateAdjacency:boolean
 // }
@@ -47,7 +48,7 @@ export class ClothGeometryInitController {
 		ThreeMeshBVHHelper.assignDefaultBVHIfNone(this.mesh);
 
 		this.populateVertices();
-		this.resolution = Math.ceil(Math.sqrt(this.vertices.length));
+		this.resolution = textureFromAttributeSize(this.geometry) || 1; //Math.ceil(Math.sqrt(this.vertices.length));
 		// console.log({resolution: this.resolution});
 
 		const faces = this._groupFaces();
@@ -66,11 +67,14 @@ export class ClothGeometryInitController {
 			return;
 		}
 
-		const vertices = this.vertices;
-		for (let i = 0, il = position.count; i < il; i++) {
-			v0.fromBufferAttribute(position, i);
-			vertices.push(v0.clone());
-		}
+		adjacencyVertices(this.geometry, this.vertices);
+		return this.vertices;
+
+		// const vertices = this.vertices;
+		// for (let i = 0, il = position.count; i < il; i++) {
+		// 	v0.fromBufferAttribute(position, i);
+		// 	vertices.push(v0.clone());
+		// }
 	}
 
 	private _groupFaces() {
@@ -79,66 +83,69 @@ export class ClothGeometryInitController {
 			console.warn('no index');
 			return;
 		}
-		const vertices = this.vertices;
-		const verticesCount = vertices.length;
-		const indexCount = index.count / 3;
-		const faces: Face[][] = Array.from({length: verticesCount}, () => new Array());
+		return adjacencyGroupFaces(this.geometry, this.vertices);
 
-		// compute all faces for set vertex
+		// const vertices = this.vertices;
+		// const verticesCount = vertices.length;
+		// const indexCount = index.count / 3;
+		// const faces: Face[][] = Array.from({length: verticesCount}, () => new Array());
 
-		for (let i = 0, il = indexCount; i < il; i++) {
-			const i3 = i * 3;
-			const a = index.getX(i3 + 0);
-			const b = index.getX(i3 + 1);
-			const c = index.getX(i3 + 2);
+		// // compute all faces for set vertex
 
-			const face: Face = {a, b, c};
+		// for (let i = 0, il = indexCount; i < il; i++) {
+		// 	const i3 = i * 3;
+		// 	const a = index.getX(i3 + 0);
+		// 	const b = index.getX(i3 + 1);
+		// 	const c = index.getX(i3 + 2);
 
-			// console.log(i, a, b, c, indexCount, verticesCount);
-			faces[a].push(face);
-			faces[b].push(face);
-			faces[c].push(face);
-		}
-		// console.log(indexCount, verticesCount, faces.length);
-		// console.log({faces});
-		return faces;
+		// 	const face: Face = {a, b, c};
+
+		// 	// console.log(i, a, b, c, indexCount, verticesCount);
+		// 	faces[a].push(face);
+		// 	faces[b].push(face);
+		// 	faces[c].push(face);
+		// }
+		// // console.log(indexCount, verticesCount, faces.length);
+		// // console.log({faces});
+		// return faces;
 	}
 
 	protected _populateAdjacency(faces: Face[][]) {
-		const vertices = this.vertices;
+		// const vertices = this.vertices;
 
-		this.adjacency = Array.from({length: vertices.length}, () => new Array());
-		const adjacency = this.adjacency;
+		this.adjacency = populateAdjacency(faces, this.vertices);
+		// this.adjacency = Array.from({length: vertices.length}, () => new Array());
+		// const adjacency = this.adjacency;
 
-		// compute sorted adjacency list for every vertex
-		for (let r = 0; r < faces.length; r++) {
-			let n = faces[r][0];
+		// // compute sorted adjacency list for every vertex
+		// for (let r = 0; r < faces.length; r++) {
+		// 	let n = faces[r][0];
 
-			// cycle in a fan, through all faces of the vertex
-			let i = 0;
-			while (true) {
-				if (n.a == r) {
-					adjacency[r].push(n.c);
-					n = getFace(faces[r], r, n.c); // face with reverse winding order ( a ) -> ( c )
-				} else if (n.b == r) {
-					adjacency[r].push(n.a);
-					n = getFace(faces[r], r, n.a); // face with reverse winding order ( b ) -> ( a )
-				} else {
-					// n.c == r
+		// 	// cycle in a fan, through all faces of the vertex
+		// 	let i = 0;
+		// 	while (true) {
+		// 		if (n.a == r) {
+		// 			adjacency[r].push(n.c);
+		// 			n = getFace(faces[r], r, n.c); // face with reverse winding order ( a ) -> ( c )
+		// 		} else if (n.b == r) {
+		// 			adjacency[r].push(n.a);
+		// 			n = getFace(faces[r], r, n.a); // face with reverse winding order ( b ) -> ( a )
+		// 		} else {
+		// 			// n.c == r
 
-					adjacency[r].push(n.b);
-					n = getFace(faces[r], r, n.b); // face with reverse winding order ( c ) -> ( b )
-				}
+		// 			adjacency[r].push(n.b);
+		// 			n = getFace(faces[r], r, n.b); // face with reverse winding order ( c ) -> ( b )
+		// 		}
 
-				// back to the start - end
-				if (n == faces[r][0]) break;
+		// 		// back to the start - end
+		// 		if (n == faces[r][0]) break;
 
-				i++;
-				if (i == 8) {
-					break;
-				}
-			}
-		}
+		// 		i++;
+		// 		if (i == 8) {
+		// 			break;
+		// 		}
+		// 	}
+		// }
 
 		// console.log({adjacency});
 		// console.log(ArrayUtils.uniq(adjacency.map((a) => a.length)));
@@ -159,13 +166,13 @@ export class ClothGeometryInitController {
 }
 
 // support function - find face with winding order ( first ) -> ( next )
-function getFace(arr: Face[], first: number, next: number) {
-	for (let r = 0; r < arr.length; r++) {
-		var n = arr[r];
+// function getFace(arr: Face[], first: number, next: number) {
+// 	for (let r = 0; r < arr.length; r++) {
+// 		var n = arr[r];
 
-		if ((n.a === first && n.b === next) || (n.b === first && n.c === next) || (n.c === first && n.a === next))
-			return n;
-	}
+// 		if ((n.a === first && n.b === next) || (n.b === first && n.c === next) || (n.c === first && n.a === next))
+// 			return n;
+// 	}
 
-	throw new Error("populateAdjacency: shouldn't reach here.");
-}
+// 	throw new Error("populateAdjacency: shouldn't reach here.");
+// }

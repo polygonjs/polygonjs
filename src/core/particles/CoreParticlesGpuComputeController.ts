@@ -10,25 +10,18 @@ import {
 	HalfFloatType,
 	ShaderMaterial,
 	Object3D,
-	// MathUtils,
 } from 'three';
-// import {CoreGroup} from '../geometry/Group';
 import {CoreGeometry} from '../geometry/Geometry';
 import {GlConstant} from '../geometry/GlConstant';
-// import {CoreMath} from '../math/_Module';
 import {GlobalsTextureHandler} from '../../engine/nodes/gl/code/globals/Texture';
 import {GPUComputationRenderer, GPUComputationRendererVariable} from './gpuCompute/GPUComputationRenderer';
-// import {ParticlesSystemGpuSopNode} from '../../ParticlesSystemGpu';
 import {CorePoint} from '../geometry/Point';
 import {ShaderName} from '../../engine/nodes/utils/shaders/ShaderName';
 import {TextureAllocationsController} from '../../engine/nodes/gl/code/utils/TextureAllocationsController';
 import {GlParamConfig} from '../../engine/nodes/gl/code/utils/GLParamConfig';
-// import {CoreGraphNode} from '../../../../../core/graph/CoreGraphNode';
-// import {isBooleanTrue} from '../BooleanValue';
 import {TextureAllocation} from '../../engine/nodes/gl/code/utils/TextureAllocation';
 import {CoreUserAgent} from '../UserAgent';
-// import {AbstractRenderer} from '../../engine/viewers/Common';
-import {CoreParticlesController} from './CoreParticlesController';
+import type {CoreParticlesController} from './CoreParticlesController';
 import {CoreParticlesAttribute} from './CoreParticlesAttribute';
 import {isBooleanTrue} from '../Type';
 import {CoreMath} from '../math/_Module';
@@ -48,7 +41,6 @@ const DATA_TYPE_BY_ENUM = {
 	[ParticlesDataType.FLOAT]: FloatType,
 	[ParticlesDataType.HALF_FLOAT]: HalfFloatType,
 };
-// const maxTexturesSize = new Vector2()
 
 function dataType(object: Object3D) {
 	const dataType = CoreParticlesAttribute.getDataType(object);

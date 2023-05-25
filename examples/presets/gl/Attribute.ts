@@ -1,5 +1,6 @@
 import {Attribute} from '../../../src/core/geometry/Attribute';
 import {InstanceAttrib} from '../../../src/core/geometry/Instancer';
+import {AttribAdjacency} from '../../../src/core/geometry/operation/Adjacency';
 import {AttributeGlNode, ATTRIBUTE_NODE_AVAILABLE_GL_TYPES} from '../../../src/engine/nodes/gl/Attribute';
 import {GlConnectionPointType} from '../../../src/engine/nodes/utils/io/connections/Gl';
 import {BasePreset, NodePresetsCollection, PresetRegister, PresetsCollectionFactory} from '../BasePreset';
@@ -30,6 +31,8 @@ const attributeGlNodePresetsCollectionFactory: PresetsCollectionFactory<Attribut
 	const restP = new BasePreset().addEntry(node.p.name, `restP`).addEntry(node.p.type, v3);
 	const restN = new BasePreset().addEntry(node.p.name, `restN`).addEntry(node.p.type, v3);
 	const velocity = new BasePreset().addEntry(node.p.name, `velocity`).addEntry(node.p.type, v3);
+	const attribLookupId = new BasePreset().addEntry(node.p.name, AttribAdjacency.ID).addEntry(node.p.type, f);
+	const attribLookupUv = new BasePreset().addEntry(node.p.name, AttribAdjacency.UV).addEntry(node.p.type, v2);
 
 	collection.setPresets({
 		color,
@@ -48,6 +51,8 @@ const attributeGlNodePresetsCollectionFactory: PresetsCollectionFactory<Attribut
 		restN,
 		// randomId,
 		velocity,
+		attribLookupId,
+		attribLookupUv,
 	});
 
 	return collection;

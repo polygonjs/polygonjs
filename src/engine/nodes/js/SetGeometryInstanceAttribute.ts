@@ -7,7 +7,7 @@
 import {TypedJsNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {JsConnectionPoint, JsConnectionPointType, JS_CONNECTION_POINT_IN_NODE_DEF} from '../utils/io/connections/Js';
-import {inputObject3D} from './_BaseObject3D';
+import {inputObject3D, setObject3DOutputLine} from './_BaseObject3D';
 import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {Poly} from '../../Poly';
 
@@ -94,6 +94,9 @@ export class SetGeometryInstanceAttributeJsNode extends TypedJsNode<SetGeometryI
 	// protected _expectedOutputTypes() {
 	// 	return [JsConnectionPointType.TRIGGER];
 	// }
+	override setLines(linesController: JsLinesCollectionController) {
+		setObject3DOutputLine(this, linesController);
+	}
 	protected _expectedInputName(index: number) {
 		return INPUT_NAMES[index];
 	}

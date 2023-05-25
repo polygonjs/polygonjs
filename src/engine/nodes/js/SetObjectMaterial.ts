@@ -6,7 +6,7 @@
 
 import {ParamlessTypedJsNode, TRIGGER_CONNECTION_NAME} from './_Base';
 import {JsConnectionPoint, JsConnectionPointType, JS_CONNECTION_POINT_IN_NODE_DEF} from '../utils/io/connections/Js';
-import {inputObject3D} from './_BaseObject3D';
+import {inputObject3D, setObject3DOutputLine} from './_BaseObject3D';
 import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {Poly} from '../../Poly';
 
@@ -28,7 +28,9 @@ export class SetObjectMaterialJsNode extends ParamlessTypedJsNode {
 			new JsConnectionPoint(TRIGGER_CONNECTION_NAME, JsConnectionPointType.TRIGGER),
 		]);
 	}
-
+	override setLines(linesController: JsLinesCollectionController) {
+		setObject3DOutputLine(this, linesController);
+	}
 	override setTriggerableLines(shadersCollectionController: JsLinesCollectionController) {
 		const object3D = inputObject3D(this, shadersCollectionController);
 		const material = this.variableForInput(shadersCollectionController, JsConnectionPointType.MATERIAL);

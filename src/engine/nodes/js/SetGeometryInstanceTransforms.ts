@@ -7,7 +7,7 @@
 import {TypedJsNode} from './_Base';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {JsConnectionPointType} from '../utils/io/connections/Js';
-import {inputObject3D} from './_BaseObject3D';
+import {inputObject3D, setObject3DOutputLine} from './_BaseObject3D';
 import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {Poly} from '../../Poly';
 
@@ -74,6 +74,9 @@ export class SetGeometryInstanceTransformsJsNode extends TypedJsNode<SetGeometry
 	}
 	protected _expectedInputName(index: number) {
 		return INPUT_NAMES[index];
+	}
+	override setLines(linesController: JsLinesCollectionController) {
+		setObject3DOutputLine(this, linesController);
 	}
 	override setTriggerableLines(shadersCollectionController: JsLinesCollectionController) {
 		const object3D = inputObject3D(this, shadersCollectionController);

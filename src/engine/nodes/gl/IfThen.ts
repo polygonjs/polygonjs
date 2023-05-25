@@ -11,7 +11,7 @@ import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 import {ThreeToGl} from '../../../core/ThreeToGl';
 // import {SubnetInputGlNode} from './SubnetInput';
-import {ArrayUtils} from '../../../core/ArrayUtils';
+// import {ArrayUtils} from '../../../core/ArrayUtils';
 import {SubnetInputGlNode} from './SubnetInput';
 
 const CONDITION_INPUT_NAME = 'condition';
@@ -25,10 +25,10 @@ export class IfThenGlNode extends TypedSubnetGlNode<IfThenGlParamsConfig> {
 		return 'ifThen';
 	}
 
-	protected override _expectedInputsCount() {
-		const current_connections = this.io.connections.inputConnections();
-		return current_connections ? Math.max(ArrayUtils.compact(current_connections).length + 1, 2) : 2;
-	}
+	// protected override _expectedInputsCount() {
+	// 	const current_connections = this.io.connections.inputConnections();
+	// 	return current_connections ? Math.max(ArrayUtils.compact(current_connections).length + 1, 2) : 2;
+	// }
 
 	protected override _expectedInputTypes(): GlConnectionPointType[] {
 		return [GlConnectionPointType.BOOL, ...super._expectedInputTypes()];

@@ -7,6 +7,7 @@ import {CATEGORY_SOP} from './Category';
 
 import {ActorSopNode} from '../../../nodes/sop/Actor';
 import {AddSopNode} from '../../../nodes/sop/Add';
+import {AdjacencySopNode} from '../../../nodes/sop/Adjacency';
 import {AmbientLightSopNode} from '../../../nodes/sop/AmbientLight';
 import {AnimationCopySopNode} from '../../../nodes/sop/AnimationCopy';
 // import {AnimationMixerSopNode} from '../../../nodes/sop/AnimationMixer';
@@ -287,6 +288,7 @@ import {RenderersNetworkSopNode} from '../../../nodes/sop/RenderersNetwork';
 export interface GeoNodeChildrenMap {
 	actor: ActorSopNode;
 	add: AddSopNode;
+	adjacency: AdjacencySopNode;
 	ambientLight: AmbientLightSopNode;
 	animationCopy: AnimationCopySopNode;
 	// animationMixer: AnimationMixerSopNode;
@@ -569,6 +571,7 @@ export interface GeoNodeChildrenMap {
 }
 
 import {AddSopOperation} from '../../../operations/sop/Add';
+import {AdjacencySopOperation} from '../../../operations/sop/Adjacency';
 import {AmbientLightSopOperation} from '../../../operations/sop/AmbientLight';
 import {AreaLightSopOperation} from '../../../operations/sop/AreaLight';
 import {AttribAddMultSopOperation} from '../../../operations/sop/AttribAddMult';
@@ -682,6 +685,7 @@ import {PolyEngine} from '../../../Poly';
 export class SopRegister {
 	static run(poly: PolyEngine) {
 		poly.registerOperation(AddSopOperation);
+		poly.registerOperation(AdjacencySopOperation);
 		poly.registerOperation(AmbientLightSopOperation);
 		poly.registerOperation(AreaLightSopOperation);
 		poly.registerOperation(AttribAddMultSopOperation);
@@ -792,6 +796,7 @@ export class SopRegister {
 
 		poly.registerNode(ActorSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(AddSopNode, CATEGORY_SOP.INPUT);
+		poly.registerNode(AdjacencySopNode, CATEGORY_SOP.ADVANCED);
 		poly.registerNode(AmbientLightSopNode, CATEGORY_SOP.LIGHTS);
 		poly.registerNode(AnimationCopySopNode, CATEGORY_SOP.ANIMATION);
 		// poly.registerNode(AnimationMixerSopNode, CATEGORY_SOP.ANIMATION);

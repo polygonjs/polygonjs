@@ -1,6 +1,7 @@
 // import {BaseNodeType} from '../../../nodes/_Base';
 
 export enum AssemblerName {
+	GL_CLOTH = 'GL_CLOTH',
 	GL_MESH_BASIC = 'GL_MESH_BASIC',
 	GL_MESH_LAMBERT = 'GL_MESH_LAMBERT',
 	GL_MESH_STANDARD = 'GL_MESH_STANDARD',

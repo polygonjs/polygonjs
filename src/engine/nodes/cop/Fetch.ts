@@ -17,7 +17,7 @@ class FetchCopParamsConfig extends NodeParamsConfig {
 			context: NodeContext.SOP,
 		},
 	});
-	/** @param group to assign the material to */
+	/** @param group to read the material from */
 	group = ParamConfig.STRING('', {
 		objectMask: true,
 	});

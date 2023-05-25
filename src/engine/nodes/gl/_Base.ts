@@ -18,7 +18,11 @@ import {ColorParam} from '../../params/Color';
 import {BooleanParam} from '../../params/Boolean';
 import {ParamsEditableStateController} from '../utils/io/ParamsEditableStateController';
 
-const REGEX_PATH_SANITIZE = /\/+/g;
+// const REGEX_PATH_SANITIZE = /\/+/g;
+const GL_VAR_NAME_PREFIX = 'v_POLY';
+// function _wrapGlVarName(nodesGlVarName:string[], varName:string):string{
+// 	return `${GL_VAR_NAME_PREFIX}_${nodesGlVarName}_${varName}`
+// }
 
 /**
  *
@@ -66,9 +70,25 @@ export class TypedGlNode<K extends NodeParamsConfig> extends TypedNode<NodeConte
 	// VARIABLES
 	//
 	//
-	glVarName(name: string) {
-		const path_sanitized = this.path(this.materialNode()).replace(REGEX_PATH_SANITIZE, '_');
-		return `v_POLY_${path_sanitized}_${name}`;
+	glVarName(varName: string) {
+		const nodes: BaseGlNodeType[] = [this];
+		let currentNode: BaseGlNodeType = this;
+		while (currentNode.parent() && currentNode.parent() != this.materialNode()) {
+			const parent = currentNode.parent() as BaseGlNodeType;
+			if (parent) {
+				nodes.unshift(parent);
+				currentNode = parent;
+			}
+		}
+		const baseGlVarNames = nodes.map((node) => node._glVarNameBase());
+		// if(this.parent()==this.materialNode()){
+		// 	return `${GL_VAR_NAME_PREFIX}_${this.name()}`
+		// }
+		// const pathSanitized = this.path(this.materialNode()).replace(REGEX_PATH_SANITIZE, '_');
+		return `${GL_VAR_NAME_PREFIX}_${baseGlVarNames.join('_')}_${varName}`;
+	}
+	protected _glVarNameBase() {
+		return this.name();
 	}
 
 	variableForInputParam(

@@ -17,12 +17,7 @@ import {TypedSopNode} from './_Base';
 import {GlobalsTextureHandler, GlobalsTextureHandlerPurpose} from '../gl/code/globals/Texture';
 
 import {InputCloneMode} from '../../poly/InputCloneMode';
-// import {BaseNodeType} from '../_Base';
-// import {BaseParamType} from '../../params/_Base';
-import {
-	// NetworkNodeType,
-	NodeContext,
-} from '../../poly/NodeContext';
+import {NodeContext} from '../../poly/NodeContext';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {CoreParticlesAttribute} from '../../../core/particles/CoreParticlesAttribute';
 import {
@@ -38,39 +33,18 @@ import {
 
 import {GlNodeChildrenMap} from '../../poly/registers/nodes/Gl';
 import {BaseGlNodeType} from '../gl/_Base';
-// import {ParticlesSystemGpuRenderController} from './utils/ParticlesSystemGPU/ParticlesSystemGpuRenderController';
-// import {
-// 	ParticlesSystemGpuComputeController,
-// 	PARTICLE_DATA_TYPES,
-// } from './utils/ParticlesSystemGPU/GPUComputeController';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {ShaderName} from '../utils/shaders/ShaderName';
 import {GlNodeFinder} from '../gl/code/utils/NodeFinder';
 import {AssemblerName} from '../../poly/registers/assemblers/_BaseRegister';
 import {Poly} from '../../Poly';
 import {ParticlesPersistedConfig} from '../gl/code/assemblers/particles/ParticlesPersistedConfig';
-// import {TimeController} from '../../scene/utils/TimeController';
 import {NodeCreateOptions} from '../utils/hierarchy/ChildrenController';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 import {GlAssemblerController} from '../gl/code/Controller';
 import {ShaderAssemblerParticles} from '../gl/code/assemblers/particles/Particles';
-// import {ActorBuilderNode} from '../../scene/utils/ActorsManager';
 import {isBooleanTrue} from '../../../core/Type';
-// import {CoreMath} from '../../../core/math/_Module';
-
-// const _usedTexturesSize = new Vector2();
 class ParticlesSystemGpuSopParamsConfig extends NodeParamsConfig {
-	/** @param frame the particles simulation starts */
-	// startFrame = ParamConfig.FLOAT(TimeController.START_FRAME, {
-	// 	range: [0, 1000],
-	// 	rangeLocked: [true, false],
-	// });
-	// /** @param set active to true to continue simulation */
-	// active = ParamConfig.BOOLEAN(1, {
-	// 	// active should be set to not trigger cook
-	// 	// otherwise, it will force the particles to be reset
-	// 	cook: false,
-	// });
 	/** @param auto sets the resolution of the textures used by the GPU shaders */
 	autoTexturesSize = ParamConfig.BOOLEAN(1);
 	/** @param max texture size. This is important to set a limit, as some systems may not handle large textures for particle sims */
@@ -90,12 +64,6 @@ class ParticlesSystemGpuSopParamsConfig extends NodeParamsConfig {
 		range: [0, 100],
 		rangeLocked: [true, false],
 	});
-	/** @param resets the sim */
-	// reset = ParamConfig.BUTTON(null, {
-	// 	callback: (node: BaseNodeType, param: BaseParamType) => {
-	// 		ParticlesSystemGpuSopNode.PARAM_CALLBACK_reset(node as ParticlesSystemGpuSopNode);
-	// 	},
-	// });
 
 	/** @param material used to render the particles */
 	material = ParamConfig.NODE_PATH('', {
@@ -106,12 +74,6 @@ class ParticlesSystemGpuSopParamsConfig extends NodeParamsConfig {
 		dependentOnFoundNode: false,
 		separatorAfter: true,
 	});
-	/** @param actor node */
-	// actor = ParamConfig.NODE_PATH('', {
-	// 	nodeSelection: {
-	// 		types: [NetworkNodeType.ACTOR],
-	// 	},
-	// });
 }
 const ParamsConfig = new ParticlesSystemGpuSopParamsConfig();
 export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSopParamsConfig> {
@@ -153,15 +115,12 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 		return ['points to emit particles from'];
 	}
 
-	// private _resetMaterialIfDirtyBound = this._resetMaterialIfDirty.bind(this);
 	protected override _childrenControllerContext = NodeContext.GL;
 	override initializeNode() {
 		this.io.inputs.setCount(1);
 		// set to never at the moment
 		// otherwise the input is cloned on every frame inside cook_main()
 		this.io.inputs.initInputsClonedState(InputCloneMode.ALWAYS);
-
-		// this.addPostDirtyHook('_resetMaterialIfDirty', this._resetMaterialIfDirtyBound);
 	}
 
 	override createNode<S extends keyof GlNodeChildrenMap>(
@@ -194,28 +153,12 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 		return this.assemblerController() == null;
 	}
 
-	// private async _resetMaterialIfDirty() {
-	// 	if (this.p.material.isDirty()) {
-	// 		this.renderController.resetRenderMaterial();
-	// 		// if (!this.isOnStartFrame()) {
-	// 		this.debugMessage('particles:this.renderController.initRenderMaterial START');
-	// 		await this.renderController.initRenderMaterial();
-	// 		this.debugMessage('particles:this.renderController.initRenderMaterial END');
-	// 		// }
-	// 	}
-	// }
-
-	// isOnStartFrame(): boolean {
-	// 	return this.scene().frame() == this.pv.startFrame;
-	// }
-
-	// private _coreGroupSet: boolean = false;
-	override async cook(inputContents: CoreGroup[]) {
+	override async cook(inputCoreGroups: CoreGroup[]) {
 		Poly.onObjectsAddedHooks.registerHook(this.type(), this.traverseObjectOnSopGroupAdd.bind(this));
 
 		this.compileIfRequired();
 
-		const coreGroup = inputContents[0];
+		const coreGroup = inputCoreGroups[0];
 
 		const objects = coreGroup.threejsObjects();
 		const object = objects[0];
@@ -239,21 +182,12 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 				);
 				return;
 			}
-			// _usedTexturesSize.copy(this.pv.texturesSize);
 		}
 
-		// this.gpuController.setRestartNotRequired();
-
-		// const actorNode = this._findActorNode();
-		// if (actorNode) {
-		// 	// for (let object of objects) {
 		const existingActorIds = this.scene().actorsManager.objectActorNodeIds(object);
 		if (existingActorIds == null || existingActorIds.length == 0) {
 			this.states.error.set(`the input objects requires an actor node assigned to it`);
 		}
-		// this.scene().actorsManager.assignActorBuilder(object, actorNode);
-		// 	// }
-		// }
 		const renderer = await this.scene().renderersRegister.waitForRenderer();
 		setParticleRenderer(this.graphNodeId(), renderer);
 		CoreParticlesAttribute.setParticlesNodeId(object, this.graphNodeId());

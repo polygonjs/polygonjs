@@ -13,14 +13,18 @@ import {
 	HalfFloatType,
 	DataTexture,
 	Vector3,
-	// ShaderMaterial,
 	Texture,
+	Material,
 } from 'three';
 import {ClothController} from '../ClothController';
-// import {UNIFORM_PARAM_PREFIX, UNIFORM_TEXTURE_PREFIX} from '../../material/uniform';
-// import {MaterialUserDataUniforms} from '../../../engine/nodes/gl/code/assemblers/materials/OnBeforeCompile';
 import {Ref} from '@vue/reactivity';
-import {adjacencyTexture, distancesTexture, positionTexture, viscositySpringTexture} from './ClothAttributeToTexture';
+import {
+	adjacencyTexture,
+	distancesTexture,
+	positionTexture,
+	viscositySpringTexture,
+	createTexturesFromAllocation,
+} from './ClothAttributeToTexture';
 
 export interface ClothMaterialUniformConfigRef {
 	tSize: Ref<Vector2>;
@@ -41,6 +45,8 @@ export interface ClothMaterialUniformConfigRef {
 	tAdjacentsRT1: Ref<Texture>;
 	tDistanceRT0: Ref<Texture>;
 	tDistanceRT1: Ref<Texture>;
+	//
+	integrationMat: Ref<Material>;
 }
 export type ClothMaterialUniformConfigRefString = Record<keyof ClothMaterialUniformConfigRef, string>;
 export function clothMaterialCopyConfigRef(
@@ -132,6 +138,7 @@ export class ClothFBOController {
 		// prepare
 		this.createPositionTexture();
 		this.createViscositySpringTexture();
+		this.createTexturesFromAllocation();
 
 		// setup relaxed vertices conditions
 		for (let i = 0; i < 2; i++) {
@@ -184,6 +191,18 @@ export class ClothFBOController {
 			texture: viscositySpringTexture(this.mainController.geometryInit.geometry, this.RESOLUTION),
 		};
 	}
+	private createTexturesFromAllocation() {
+		const allocation = this.mainController.textureAllocationsController();
+		if (!allocation) {
+			return;
+		}
+		const textures = createTexturesFromAllocation(
+			this.mainController.geometryInit.geometry,
+			this.RESOLUTION,
+			allocation
+		);
+		this.mainController.assignReadonlyTextures(this.mainController.materials.integrateShader, textures);
+	}
 	private createAdjacentsTexture(k: number) {
 		this.adjacentsRT[k] = {
 			texture: adjacencyTexture(
@@ -230,7 +249,7 @@ export class ClothFBOController {
 			if (selectedVertexIndex >= 0 && i < steps - 5) {
 				this.mouseOffset(renderer);
 			}
-			this.solveConstraints(renderer);
+			this.solveConstraints(renderer, i == steps - 1 ? 1 : 0);
 		}
 
 		this.computeVertexNormals(renderer);
@@ -265,6 +284,8 @@ export class ClothFBOController {
 		textureContainerToRef(this.adjacentsRT[1], config.tAdjacentsRT1);
 		textureContainerToRef(this.distancesRT[0], config.tDistanceRT0);
 		textureContainerToRef(this.distancesRT[1], config.tDistanceRT1);
+
+		config.integrationMat.value = this.mainController.materials.integrateShader;
 	}
 
 	private integrate(renderer: WebGLRenderer) {
@@ -304,7 +325,7 @@ export class ClothFBOController {
 		this.targetRT[1] = tmp;
 	}
 
-	protected solveConstraints(renderer: WebGLRenderer) {
+	protected solveConstraints(renderer: WebGLRenderer, secondaryMotionMult: number) {
 		const constraintsShader = this.mainController.materials.constraintsShader;
 		this.fboMesh.material = constraintsShader;
 		constraintsShader.uniforms.selectedVertexInfluence.value = this.mainController.selectedVertexInfluence;
@@ -315,6 +336,7 @@ export class ClothFBOController {
 		constraintsShader.uniforms.tAdjacentsB.value = this.adjacentsRT[1].texture;
 		constraintsShader.uniforms.tDistancesA.value = this.distancesRT[0].texture;
 		constraintsShader.uniforms.tDistancesB.value = this.distancesRT[1].texture;
+		constraintsShader.uniforms.secondaryMotionMult.value = secondaryMotionMult;
 
 		// integer-part
 		constraintsShader.uniforms.order.value = 1;

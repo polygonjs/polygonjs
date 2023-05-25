@@ -171,7 +171,7 @@ export class ForLoopGlNode extends TypedSubnetGlNode<ForLoopGlParamsConfig> {
 		const start_str = convertMethod(start);
 		const max_str = convertMethod(max);
 		const step_str = convertMethod(step);
-		const iterator_name = this.glVarName('i');
+		const iterator_name = this.glVarName(ForLoopInput.I);
 		const open_for_loop_line = `for(${glType} ${iterator_name} = ${start_str}; ${iterator_name} < ${max_str}; ${iterator_name}+= ${step_str}){`;
 		body_lines.push(open_for_loop_line);
 

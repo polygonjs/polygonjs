@@ -10,7 +10,7 @@ import {JsConnectionPoint, JsConnectionPointType, JS_CONNECTION_POINT_IN_NODE_DE
 import {JsType} from '../../poly/registers/nodes/types/Js';
 import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {Poly} from '../../Poly';
-import {inputObject3D} from './_BaseObject3D';
+import {inputObject3D, setObject3DOutputLine} from './_BaseObject3D';
 
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
 
@@ -45,16 +45,19 @@ export class SetObjectLookAtJsNode extends TypedJsNode<SetObjectLookAtJsParamsCo
 			new JsConnectionPoint(JsConnectionPointType.OBJECT_3D, JsConnectionPointType.OBJECT_3D),
 		]);
 	}
-	override setTriggerableLines(shadersCollectionController: JsLinesCollectionController) {
-		const object3D = inputObject3D(this, shadersCollectionController);
-		const targetPosition = this.variableForInputParam(shadersCollectionController, this.p.targetPosition);
-		const up = this.variableForInputParam(shadersCollectionController, this.p.up);
-		const lerp = this.variableForInputParam(shadersCollectionController, this.p.lerp);
-		const invertDirection = this.variableForInputParam(shadersCollectionController, this.p.invertDirection);
-		const updateMatrix = this.variableForInputParam(shadersCollectionController, this.p.updateMatrix);
+	override setLines(linesController: JsLinesCollectionController) {
+		setObject3DOutputLine(this, linesController);
+	}
+	override setTriggerableLines(linesController: JsLinesCollectionController) {
+		const object3D = inputObject3D(this, linesController);
+		const targetPosition = this.variableForInputParam(linesController, this.p.targetPosition);
+		const up = this.variableForInputParam(linesController, this.p.up);
+		const lerp = this.variableForInputParam(linesController, this.p.lerp);
+		const invertDirection = this.variableForInputParam(linesController, this.p.invertDirection);
+		const updateMatrix = this.variableForInputParam(linesController, this.p.updateMatrix);
 
-		const func = Poly.namedFunctionsRegister.getFunction('setObjectLookAt', this, shadersCollectionController);
+		const func = Poly.namedFunctionsRegister.getFunction('setObjectLookAt', this, linesController);
 		const bodyLine = func.asString(object3D, targetPosition, up, lerp, invertDirection, updateMatrix);
-		shadersCollectionController.addTriggerableLines(this, [bodyLine]);
+		linesController.addTriggerableLines(this, [bodyLine]);
 	}
 }

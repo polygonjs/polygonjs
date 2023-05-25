@@ -4,7 +4,7 @@
  *
  */
 import {TRIGGER_CONNECTION_NAME, TypedJsNode} from './_Base';
-import {inputObject3D} from './_BaseObject3D';
+import {inputObject3D, setObject3DOutputLine} from './_BaseObject3D';
 import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {Poly} from '../../Poly';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
@@ -32,6 +32,8 @@ enum ClothSolverStepSimulationOutput {
 	TEXTURE_ADJACENT_RT1 = 'tAdjacentsRT1',
 	TEXTURE_DISTANCE_RT0 = 'tDistanceRT0',
 	TEXTURE_DISTANCE_RT1 = 'tDistanceRT1',
+	//
+	MATERIAL_INTEGRATION = 'integrationMat',
 }
 // const ADDITIONAL_TEXTURE_OUTPUTS: ClothSolverStepSimulationOutput[] = [
 // 	ClothSolverStepSimulationOutput.TEXTURE_ORIGINAL_RT,
@@ -91,6 +93,7 @@ export class ClothSolverStepSimulationJsNode extends TypedJsNode<ClothSolverStep
 			new JsConnectionPoint(ClothSolverStepSimulationOutput.TEXTURE_POSITION0, JsConnectionPointType.TEXTURE),
 			new JsConnectionPoint(ClothSolverStepSimulationOutput.TEXTURE_POSITION1, JsConnectionPointType.TEXTURE),
 			new JsConnectionPoint(ClothSolverStepSimulationOutput.TEXTURE_NORMAL, JsConnectionPointType.TEXTURE),
+			new JsConnectionPoint(ClothSolverStepSimulationOutput.MATERIAL_INTEGRATION, JsConnectionPointType.MATERIAL),
 			//
 			// ...ADDITIONAL_TEXTURE_OUTPUTS.map(
 			// 	(outputName) => new JsConnectionPoint(outputName, JsConnectionPointType.TEXTURE)
@@ -100,6 +103,7 @@ export class ClothSolverStepSimulationJsNode extends TypedJsNode<ClothSolverStep
 
 	override setLines(linesController: JsLinesCollectionController) {
 		this._addRefs(linesController);
+		setObject3DOutputLine(this, linesController);
 	}
 
 	override setTriggerableLines(linesController: JsLinesCollectionController) {
@@ -154,6 +158,8 @@ export class ClothSolverStepSimulationJsNode extends TypedJsNode<ClothSolverStep
 		const tDistanceRT0 = this.jsVarName(ClothSolverStepSimulationOutput.TEXTURE_DISTANCE_RT0);
 		const tDistanceRT1 = this.jsVarName(ClothSolverStepSimulationOutput.TEXTURE_DISTANCE_RT1);
 
+		const integrationMat = this.jsVarName(ClothSolverStepSimulationOutput.MATERIAL_INTEGRATION);
+
 		// If those are Ref<>, it seems to not update the uniforms later,
 		// so we have constants for now
 		linesController.addDefinitions(this, [
@@ -179,9 +185,16 @@ export class ClothSolverStepSimulationJsNode extends TypedJsNode<ClothSolverStep
 			tDistanceRT0,
 			tDistanceRT1,
 		];
+		const materials = [integrationMat];
 		for (const texture of textures) {
 			linesController.addDefinitions(this, [
 				new ConstantJsDefinition(this, linesController, JsConnectionPointType.TEXTURE, texture, `null`),
+			]);
+		}
+
+		for (const material of materials) {
+			linesController.addDefinitions(this, [
+				new ConstantJsDefinition(this, linesController, JsConnectionPointType.MATERIAL, material, `null`),
 			]);
 		}
 
@@ -203,6 +216,7 @@ export class ClothSolverStepSimulationJsNode extends TypedJsNode<ClothSolverStep
 			tAdjacentsRT1,
 			tDistanceRT0,
 			tDistanceRT1,
+			integrationMat,
 		};
 		return ref;
 	}

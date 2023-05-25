@@ -63,7 +63,8 @@ export class ObjectPropertiesSopOperation extends BaseSopOperation {
 	override cook(inputCoreGroups: CoreGroup[], params: ObjectPropertiesSopParams) {
 		const coreGroup = inputCoreGroups[0];
 
-		for (let object of coreGroup.allObjects()) {
+		const objects = coreGroup.allObjects();
+		for (let object of objects) {
 			if (isBooleanTrue(params.applyToChildren)) {
 				object.traverse((child) => {
 					this._updateObject(child, params);

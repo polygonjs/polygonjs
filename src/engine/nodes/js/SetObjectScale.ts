@@ -9,7 +9,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {JsConnectionPoint, JsConnectionPointType, JS_CONNECTION_POINT_IN_NODE_DEF} from '../utils/io/connections/Js';
 import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {Poly} from '../../Poly';
-import {inputObject3D} from './_BaseObject3D';
+import {inputObject3D, setObject3DOutputLine} from './_BaseObject3D';
 
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
 
@@ -45,15 +45,18 @@ export class SetObjectScaleJsNode extends TypedJsNode<SetObjectScaleJsParamsConf
 			new JsConnectionPoint(JsConnectionPointType.OBJECT_3D, JsConnectionPointType.OBJECT_3D),
 		]);
 	}
-	override setTriggerableLines(shadersCollectionController: JsLinesCollectionController) {
-		const object3D = inputObject3D(this, shadersCollectionController);
-		const scale = this.variableForInputParam(shadersCollectionController, this.p.scale);
-		const mult = this.variableForInputParam(shadersCollectionController, this.p.mult);
-		const lerp = this.variableForInputParam(shadersCollectionController, this.p.lerp);
-		const updateMatrix = this.variableForInputParam(shadersCollectionController, this.p.updateMatrix);
+	override setLines(linesController: JsLinesCollectionController) {
+		setObject3DOutputLine(this, linesController);
+	}
+	override setTriggerableLines(linesController: JsLinesCollectionController) {
+		const object3D = inputObject3D(this, linesController);
+		const scale = this.variableForInputParam(linesController, this.p.scale);
+		const mult = this.variableForInputParam(linesController, this.p.mult);
+		const lerp = this.variableForInputParam(linesController, this.p.lerp);
+		const updateMatrix = this.variableForInputParam(linesController, this.p.updateMatrix);
 
-		const func = Poly.namedFunctionsRegister.getFunction('setObjectScale', this, shadersCollectionController);
+		const func = Poly.namedFunctionsRegister.getFunction('setObjectScale', this, linesController);
 		const bodyLine = func.asString(object3D, scale, mult, lerp, updateMatrix);
-		shadersCollectionController.addTriggerableLines(this, [bodyLine]);
+		linesController.addTriggerableLines(this, [bodyLine]);
 	}
 }

@@ -9,7 +9,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {JsConnectionPointType} from '../utils/io/connections/Js';
 import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {Poly} from '../../Poly';
-import {inputObject3DMaterial} from './_BaseObject3D';
+import {inputObject3DMaterial, setObject3DOutputLine} from './_BaseObject3D';
 import {ArrayUtils} from '../../../core/ArrayUtils';
 
 type AvailableJsType =
@@ -111,7 +111,9 @@ export class SetMaterialUniformJsNode extends TypedJsNode<SetMaterialUniformJsPa
 	setUniformType(type: AvailableJsType) {
 		this.p.type.set(JS_CONNECTION_POINT_TYPES.indexOf(type));
 	}
-
+	override setLines(linesController: JsLinesCollectionController) {
+		setObject3DOutputLine(this, linesController);
+	}
 	override setTriggerableLines(shadersCollectionController: JsLinesCollectionController) {
 		const material = inputObject3DMaterial(this, shadersCollectionController);
 		const uniformName = this.variableForInput(
@@ -119,25 +121,27 @@ export class SetMaterialUniformJsNode extends TypedJsNode<SetMaterialUniformJsPa
 			SetMaterialUniformJsNodeInputName.uniformName
 		);
 		const uniformValue = this.variableForInput(shadersCollectionController, this.uniformType());
-		const lerp = this.variableForInput(shadersCollectionController, SetMaterialUniformJsNodeInputName.lerp);
+
 		const addPrefix = this.variableForInput(
 			shadersCollectionController,
 			SetMaterialUniformJsNodeInputName.addPrefix
 		);
-
-		if (this._isUniformNumber()) {
-			const functionName = 'setMaterialUniformNumber';
-			const func = Poly.namedFunctionsRegister.getFunction(functionName, this, shadersCollectionController);
-			const bodyLine = func.asString(material, uniformName, uniformValue, lerp, addPrefix);
-			shadersCollectionController.addTriggerableLines(this, [bodyLine]);
-			return;
-		}
-		if (this._isUniformVectorColor()) {
-			const functionName = 'setMaterialUniformVectorColor';
-			const func = Poly.namedFunctionsRegister.getFunction(functionName, this, shadersCollectionController);
-			const bodyLine = func.asString(material, uniformName, uniformValue, lerp, addPrefix);
-			shadersCollectionController.addTriggerableLines(this, [bodyLine]);
-			return;
+		if (this._isUniformNumber() || this._isUniformVectorColor()) {
+			const lerp = this.variableForInput(shadersCollectionController, SetMaterialUniformJsNodeInputName.lerp);
+			if (this._isUniformNumber()) {
+				const functionName = 'setMaterialUniformNumber';
+				const func = Poly.namedFunctionsRegister.getFunction(functionName, this, shadersCollectionController);
+				const bodyLine = func.asString(material, uniformName, uniformValue, lerp, addPrefix);
+				shadersCollectionController.addTriggerableLines(this, [bodyLine]);
+				return;
+			}
+			if (this._isUniformVectorColor()) {
+				const functionName = 'setMaterialUniformVectorColor';
+				const func = Poly.namedFunctionsRegister.getFunction(functionName, this, shadersCollectionController);
+				const bodyLine = func.asString(material, uniformName, uniformValue, lerp, addPrefix);
+				shadersCollectionController.addTriggerableLines(this, [bodyLine]);
+				return;
+			}
 		} else {
 			const functionName = 'setMaterialUniformTexture';
 			const func = Poly.namedFunctionsRegister.getFunction(functionName, this, shadersCollectionController);

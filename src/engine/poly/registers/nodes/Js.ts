@@ -636,7 +636,7 @@ export class JsRegister {
 		poly.registerNode(ClothSolverSetSelectedVertexIndexJsNode, CATEGORY_JS.PHYSICS);
 		poly.registerNode(ClothSolverSetSelectedVertexPositionJsNode, CATEGORY_JS.PHYSICS);
 		poly.registerNode(ClothSolverUpdateMaterialJsNode, CATEGORY_JS.PHYSICS);
-		poly.registerNode(CodeJsNode, CATEGORY_JS.ADVANCED);
+		poly.registerNode(CodeJsNode, CATEGORY_JS.ADVANCED, ONLY_ACTOR);
 		poly.registerNode(ColorToVec3JsNode, CATEGORY_JS.CONVERSION);
 		poly.registerNode(CompareJsNode, CATEGORY_JS.LOGIC);
 		poly.registerNode(ComplementJsNode, CATEGORY_JS.MATH);

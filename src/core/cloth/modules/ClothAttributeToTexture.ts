@@ -1,6 +1,7 @@
 import {RGBAFormat, FloatType, DataTexture, BufferGeometry, Vector3, BufferAttribute} from 'three';
 import {Attribute} from '../../geometry/Attribute';
 import {ClothGeometryAttributeName} from '../ClothAttribute';
+import {TextureAllocationsController} from '../../../engine/nodes/gl/code/utils/TextureAllocationsController';
 
 // const _v1 = new Vector3();
 // const _v2 = new Vector3();
@@ -124,4 +125,37 @@ export function viscositySpringTexture(geometry: BufferGeometry, resolution: num
 	const texture = new DataTexture(data, resolution, resolution, RGBAFormat, FloatType);
 	texture.needsUpdate = true;
 	return texture;
+}
+export function createTexturesFromAllocation(
+	geometry: BufferGeometry,
+	resolution: number,
+	allocationsController: TextureAllocationsController
+): Record<string, DataTexture> {
+	const data: Record<string, DataTexture> = {};
+
+	const positionAttribute = geometry.getAttribute(Attribute.POSITION) as BufferAttribute;
+	const pointsCount = positionAttribute.count;
+
+	allocationsController.readonlyAllocations().forEach((allocation) => {
+		const textureData = new Float32Array(resolution * resolution * 4);
+		allocation.variables()?.forEach((variable) => {
+			const attribName = variable.name();
+			const attribSize = variable.size();
+			const attribute = geometry.getAttribute(attribName) as BufferAttribute | undefined;
+			if (attribute) {
+				const array = attribute.array;
+				for (let i = 0; i < pointsCount; i++) {
+					const i4 = i * 4;
+					for (let j = 0; j < attribSize; j++) {
+						textureData[i4 + j] = array[i * attribSize + j];
+					}
+				}
+				const texture = new DataTexture(textureData, resolution, resolution, RGBAFormat, FloatType);
+				texture.needsUpdate = true;
+				data[attribName] = texture;
+			}
+		});
+	});
+
+	return data;
 }

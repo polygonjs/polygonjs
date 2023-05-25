@@ -10,7 +10,7 @@ export function SopBlend() {
 	const box = geo.createNode('box');
 	const sphere = geo.createNode('sphere');
 	box.p.size.set(1);
-	box.p.divisions.set(10);
+	box.p.divisions.set([10, 10, 10]);
 
 	// use a normals SOP to have the normals pointing outwards like a sphere
 	const normals = geo.createNode('normals');

@@ -40,15 +40,15 @@ export class GetObjectJsNode extends TypedJsNode<GetObjectJsParamsConfig> {
 			new JsConnectionPoint(JsConnectionPointType.OBJECT_3D, JsConnectionPointType.OBJECT_3D),
 		]);
 	}
-	override setLines(shadersCollectionController: JsLinesCollectionController) {
-		const object3D = inputObject3D(this, shadersCollectionController);
-		const getCurrentObject = this.variableForInputParam(shadersCollectionController, this.p.getCurrentObject);
-		const mask = this.variableForInputParam(shadersCollectionController, this.p.mask);
+	override setLines(linesController: JsLinesCollectionController) {
+		const object3D = inputObject3D(this, linesController);
+		const getCurrentObject = this.variableForInputParam(linesController, this.p.getCurrentObject);
+		const mask = this.variableForInputParam(linesController, this.p.mask);
 		const out = this.jsVarName(JsConnectionPointType.OBJECT_3D);
 
-		const func = Poly.namedFunctionsRegister.getFunction('getObject', this, shadersCollectionController);
+		const func = Poly.namedFunctionsRegister.getFunction('getObject', this, linesController);
 		const bodyLine = func.asString(object3D, getCurrentObject, mask);
-		shadersCollectionController.addBodyOrComputed(this, [
+		linesController.addBodyOrComputed(this, [
 			{dataType: JsConnectionPointType.PLANE, varName: out, value: bodyLine},
 		]);
 	}

@@ -20,8 +20,8 @@ void main() {
 
 	vec2 uv = gl_FragCoord.xy / tSize.xy;
 
-	vec3 pos = packPosition( uv );
-	vec3 org = texture2D( tOriginal, uv ).xyz;
+	vec3 position = packPosition( uv );
+	vec3 original = texture2D( tOriginal, uv ).xyz;
 
 	vec3 ref, diff, proj, offset;
 
@@ -30,17 +30,17 @@ void main() {
 		ref = texture2D( tOriginal, getUV( vertex ) ).xyz;
 		offset = coordinates - ref;
 
-		if ( distance( org, ref ) <= 0.1 ) {
+		if ( distance( original, ref ) <= 0.1 ) {
 
-			diff = ref - org;
+			diff = ref - original;
 
-			proj = dot( diff, offset ) / dot( offset, offset ) * org;
+			proj = dot( diff, offset ) / dot( offset, offset ) * original;
 
-			pos = org + proj + offset;
+			position = original + proj + offset;
 
 		}
 	}
 
-	gl_FragColor = vec4( unpackPosition( pos, order ), 1.0 );
+	gl_FragColor = vec4( unpackPosition( position, order ), 1.0 );
 
 }

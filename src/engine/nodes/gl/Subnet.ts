@@ -27,7 +27,7 @@ import {CodeFormatter} from './code/utils/CodeFormatter';
 import {ShaderName} from '../utils/shaders/ShaderName';
 import {AddBodyLinesOptions} from './code/utils/LinesController';
 
-const ADD_BODY_LINES_OPTIONS: AddBodyLinesOptions = {
+export const ADD_BODY_LINES_OPTIONS: AddBodyLinesOptions = {
 	makeUniq: false,
 };
 
@@ -164,7 +164,7 @@ export class AbstractTypedSubnetGlNode<K extends NodeParamsConfig> extends Typed
 	//
 	//
 	protected _setLinesPreBlock(shadersCollectionController: ShadersCollectionController) {
-		const body_lines: string[] = [];
+		const bodyLines: string[] = [];
 		const connection_points = this.io.inputs.namedInputConnectionPoints();
 		for (let i = 0; i < connection_points.length; i++) {
 			const connection_point = connection_points[i];
@@ -172,20 +172,23 @@ export class AbstractTypedSubnetGlNode<K extends NodeParamsConfig> extends Typed
 			const out = this.glVarName(connection_point.name());
 			const in_value = ThreeToGl.any(this.variableForInput(connection_point.name()));
 			const body_line = `${gl_type} ${out} = ${in_value}`;
-			body_lines.push(body_line);
+			bodyLines.push(body_line);
 		}
 
-		shadersCollectionController.addBodyLines(this, body_lines);
+		shadersCollectionController.addBodyLines(this, bodyLines);
 	}
 	protected setLinesBlockStart(shadersCollectionController: ShadersCollectionController) {
 		shadersCollectionController.addBodyLines(this, [`if(true){`]);
+	}
+	protected setLinesBlockEnd(shadersCollectionController: ShadersCollectionController) {
+		shadersCollectionController.addBodyLines(this, ['}']);
 	}
 	setSubnetInputLines(shadersCollectionController: ShadersCollectionController, childNode: SubnetInputGlNode) {
 		const connections = this.io.connections.inputConnections();
 		if (!connections) {
 			return;
 		}
-		const body_lines: string[] = [];
+		const bodyLines: string[] = [];
 		for (let connection of connections) {
 			if (connection) {
 				const connection_point = connection.dest_connection_point();
@@ -193,17 +196,17 @@ export class AbstractTypedSubnetGlNode<K extends NodeParamsConfig> extends Typed
 				const gl_type = connection_point.type();
 				const out = childNode.glVarName(connection_point.name());
 				const body_line = `	${gl_type} ${out} = ${in_value}`;
-				body_lines.push(body_line);
+				bodyLines.push(body_line);
 			}
 		}
-		shadersCollectionController.addBodyLines(childNode, body_lines);
+		shadersCollectionController.addBodyLines(childNode, bodyLines, undefined, ADD_BODY_LINES_OPTIONS);
 	}
-	setSubnetOutputLines(shadersCollectionController: ShadersCollectionController, childNode: SubnetOutputGlNode) {
+	protected subnetOutputLines(childNode: SubnetOutputGlNode): string[] {
 		const connections = childNode.io.connections.inputConnections();
 		if (!connections) {
-			return;
+			return [];
 		}
-		const body_lines: string[] = [];
+		const bodyLines: string[] = [];
 
 		for (let connection of connections) {
 			if (connection) {
@@ -214,11 +217,14 @@ export class AbstractTypedSubnetGlNode<K extends NodeParamsConfig> extends Typed
 				// const body_line = `${gl_type} ${out} = ${in_value}`;
 				// do not use the type, to avoid re-defining a variable that should be defined in the parent node
 				const body_line = `	${out} = ${in_value}`;
-				body_lines.push(body_line);
+				bodyLines.push(body_line);
 			}
 		}
-
-		shadersCollectionController.addBodyLines(childNode, body_lines);
+		return bodyLines;
+	}
+	setSubnetOutputLines(shadersCollectionController: ShadersCollectionController, childNode: SubnetOutputGlNode) {
+		const bodyLines: string[] = this.subnetOutputLines(childNode);
+		shadersCollectionController.addBodyLines(childNode, bodyLines, undefined, ADD_BODY_LINES_OPTIONS);
 	}
 
 	// set_lines_block_end(shadersCollectionController: ShadersCollectionController, childNode: SubnetOutputGlNode) {
@@ -226,22 +232,26 @@ export class AbstractTypedSubnetGlNode<K extends NodeParamsConfig> extends Typed
 	// }
 
 	override setLines(shadersCollectionController: ShadersCollectionController) {
+		this._setLinesPreBlock(shadersCollectionController);
+		this.setLinesBlockStart(shadersCollectionController);
+		this._setLinesBlockContent(shadersCollectionController);
+		this.setLinesBlockEnd(shadersCollectionController);
+	}
+	protected linesBlockContent(shadersCollectionController: ShadersCollectionController) {
 		const codeBuilder = this._runCodeBuilder(shadersCollectionController);
 		if (!codeBuilder) {
 			return;
 		}
 		const shadername = shadersCollectionController.currentShaderName();
 		const bodyLines = codeBuilder.lines(shadername, LineType.BODY);
-		this._setLinesPreBlock(shadersCollectionController);
-		this.setLinesBlockStart(shadersCollectionController);
-		shadersCollectionController.addBodyLines(
-			this,
-			this._sanitizeBodyLines(bodyLines),
-			undefined,
-			ADD_BODY_LINES_OPTIONS
-		);
-
-		shadersCollectionController.addBodyLines(this, ['}']);
+		return this._sanitizeBodyLines(bodyLines);
+	}
+	private _setLinesBlockContent(shadersCollectionController: ShadersCollectionController) {
+		const bodyLines = this.linesBlockContent(shadersCollectionController);
+		if (!bodyLines) {
+			return;
+		}
+		shadersCollectionController.addBodyLines(this, bodyLines, undefined, ADD_BODY_LINES_OPTIONS);
 	}
 	protected _runCodeBuilder(shadersCollectionController: ShadersCollectionController) {
 		// I potentially could look for attribute nodes to use as output,
@@ -317,7 +327,7 @@ export class AbstractTypedSubnetGlNode<K extends NodeParamsConfig> extends Typed
 					bodyLines.push(...linesForNode);
 				}
 			}
-			shadersCollectionController.addBodyLines(this, bodyLines, ShaderName.VERTEX);
+			shadersCollectionController.addBodyLines(this, bodyLines, ShaderName.VERTEX, ADD_BODY_LINES_OPTIONS);
 		}
 	}
 

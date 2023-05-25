@@ -61,6 +61,7 @@ import {ClothSolverUvGlNode} from '../../../nodes/gl/ClothSolverUv';
 import {ColorCorrectGlNode} from '../../../nodes/gl/ColorCorrect';
 import {CompareGlNode} from '../../../nodes/gl/Compare';
 import {ComplementGlNode} from '../../../nodes/gl/Complement';
+import {ComputeNormalsGlNode} from '../../../nodes/gl/ComputeNormals';
 import {ConstantGlNode} from '../../../nodes/gl/Constant';
 import {CrossGlNode} from '../../../nodes/gl/Cross';
 import {CycleGlNode} from '../../../nodes/gl/Cycle';
@@ -71,6 +72,7 @@ import {FitGlNode, FitTo01GlNode, FitFrom01GlNode, FitFrom01ToVarianceGlNode} fr
 import {FogGlNode} from '../../../nodes/gl/Fog';
 import {ForLoopGlNode} from '../../../nodes/gl/ForLoop';
 import {FresnelGlNode} from '../../../nodes/gl/Fresnel';
+import {GeometryAttributeLookupUvGlNode} from '../../../nodes/gl/GeometryAttributeLookupUv';
 import {GlobalsGlNode} from '../../../nodes/gl/Globals';
 import {GridGlNode} from '../../../nodes/gl/Grid';
 import {HsluvToRgbGlNode} from '../../../nodes/gl/HsluvToRgb';
@@ -201,6 +203,7 @@ export interface GlNodeChildrenMap {
 	colorCorrect: ColorCorrectGlNode;
 	compare: CompareGlNode;
 	complement: ComplementGlNode;
+	computeNormals: ComputeNormalsGlNode;
 	constant: ConstantGlNode;
 	cos: CosGlNode;
 	cross: CrossGlNode;
@@ -228,6 +231,7 @@ export interface GlNodeChildrenMap {
 	fresnel: FresnelGlNode;
 	fog: FogGlNode;
 	forLoop: ForLoopGlNode;
+	geometryAttributeLookupUv: GeometryAttributeLookupUvGlNode;
 	globals: GlobalsGlNode;
 	grid: GridGlNode;
 	hsluvToRgb: HsluvToRgbGlNode;
@@ -374,6 +378,7 @@ import {SopType} from './types/Sop';
 
 const SUBNET_CHILD_OPTION = {
 	only: [
+		`${ComputeNormalsGlNode.context()}/${ComputeNormalsGlNode.type()}`,
 		`${IfThenGlNode.context()}/${IfThenGlNode.type()}`,
 		`${SubnetGlNode.context()}/${SubnetGlNode.type()}`,
 		`${ForLoopGlNode.context()}/${ForLoopGlNode.type()}`,
@@ -401,6 +406,7 @@ export class GlRegister {
 		poly.registerNode(ColorCorrectGlNode, CATEGORY_GL.COLOR);
 		poly.registerNode(CompareGlNode, CATEGORY_GL.LOGIC);
 		poly.registerNode(ComplementGlNode, CATEGORY_GL.MATH);
+		poly.registerNode(ComputeNormalsGlNode, CATEGORY_GL.GEOMETRY);
 		poly.registerNode(ConstantGlNode, CATEGORY_GL.GLOBALS);
 		poly.registerNode(CosGlNode, CATEGORY_GL.TRIGO);
 		poly.registerNode(CrossGlNode, CATEGORY_GL.GEOMETRY);
@@ -437,6 +443,7 @@ export class GlRegister {
 		poly.registerNode(ForLoopGlNode, CATEGORY_GL.LOGIC);
 		poly.registerNode(FractGlNode, CATEGORY_GL.MATH);
 		poly.registerNode(FresnelGlNode, CATEGORY_GL.ADVANCED);
+		poly.registerNode(GeometryAttributeLookupUvGlNode, CATEGORY_GL.ADVANCED);
 		poly.registerNode(GlobalsGlNode, CATEGORY_GL.GLOBALS);
 		poly.registerNode(GridGlNode, CATEGORY_GL.GEOMETRY);
 		poly.registerNode(HsluvToRgbGlNode, CATEGORY_GL.COLOR);

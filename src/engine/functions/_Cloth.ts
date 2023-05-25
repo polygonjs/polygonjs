@@ -49,23 +49,8 @@ export class clothSolverStepSimulation extends ObjectNamedFunction5<
 		selectedVertexInfluence: number,
 		viscosity: number,
 		spring: number,
-		// tSize: Ref<Vector2>,
-		// tPosition0: Ref<Texture>,
-		// tPosition1: Ref<Texture>,
-		// tNormal: Ref<Texture>,
-		//
 		uniformConfigRef: ClothMaterialUniformConfigRef
 	): void {
-		// const delta = this.scene.timeController.delta();
-
-		// uniformConfigRef = uniformConfigRef || {tSize, tPosition0, tPosition1, tNormal, tTargetRT0, tTargetRT1};
-		// uniformConfigRef.tSize = tSize;
-		// uniformConfigRef.tPosition0 = tPosition0;
-		// uniformConfigRef.tPosition1 = tPosition1;
-		// uniformConfigRef.tNormal = tNormal;
-		// uniformConfigRef.tTargetRT0 = tTargetRT0;
-		// uniformConfigRef.tTargetRT1 = tTargetRT1;
-
 		_clothSolverStepSimulation(object3D, stepsCount, selectedVertexInfluence, viscosity, spring, uniformConfigRef);
 	}
 }

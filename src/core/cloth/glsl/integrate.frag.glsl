@@ -20,15 +20,18 @@ void main() {
 
 	vec2 uv = gl_FragCoord.xy / tSize.xy;
 
-	vec3 org = texture2D( tOriginal, uv ).xyz;
-	vec3 prv = ( texture2D( tPrevious0, uv ).xyz + texture2D( tPrevious1, uv ).xyz ) / 1024.0;
-	vec3 pos = ( texture2D( tPosition0, uv ).xyz + texture2D( tPosition1, uv ).xyz ) / 1024.0;
-	vec2 viscositySpring = texture2D( tViscositySpring, uv ).xy;
+	vec3 original = texture2D( tOriginal, uv ).xyz;
+	vec3 previous = ( texture2D( tPrevious0, uv ).xyz + texture2D( tPrevious1, uv ).xyz ) / 1024.0;
+	vec3 position = ( texture2D( tPosition0, uv ).xyz + texture2D( tPosition1, uv ).xyz ) / 1024.0;
+	vec3 viscositySpring = texture2D( tViscositySpring, uv ).xyz;
 	float viscosityMult = viscosity * viscositySpring.x;
 	float springMult = spring * viscositySpring.y;
+	float lipsMult = viscositySpring.z;
 
-	vec3 offset = ( org - pos ) * timeDelta * springMult;// + vec3(.01*sin(50.*time+50.*org.x));
-	vec3 disp = ( pos - prv ) * ( 1.0 - viscosityMult ) + pos;
+	position.y += lipsMult * 1.*sin(-50.*time+50.*original.x) * timeDelta;
+
+	vec3 offset = ( original - position ) * timeDelta * springMult;
+	vec3 disp = ( position - previous ) * ( 1.0 - viscosityMult ) + position;
 
 	gl_FragColor = vec4( unpackPosition( disp + offset, order ), 1.0 );
 

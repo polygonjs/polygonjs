@@ -17,6 +17,9 @@ interface TubeSopParams extends DefaultOperationParams {
 	cap: boolean;
 	center: Vector3;
 	direction: Vector3;
+	open: boolean;
+	thetaStart: number;
+	thetaLength: number;
 }
 
 export class TubeSopOperation extends BaseSopOperation {
@@ -29,20 +32,34 @@ export class TubeSopOperation extends BaseSopOperation {
 		cap: true,
 		center: new Vector3(0, 0, 0),
 		direction: new Vector3(0, 0, 1),
+		open: false,
+		thetaStart: 0,
+		thetaLength: Math.PI,
 	};
 	static override readonly INPUT_CLONED_STATE = InputCloneMode.NEVER;
 	static override type(): Readonly<'tube'> {
 		return 'tube';
 	}
 	override cook(input_contents: CoreGroup[], params: TubeSopParams) {
-		const geometry = new CylinderGeometry(
-			params.radiusTop,
-			params.radiusBottom,
-			params.height,
-			params.segmentsRadial,
-			params.segmentsHeight,
-			!isBooleanTrue(params.cap)
-		);
+		const geometry = isBooleanTrue(params.open)
+			? new CylinderGeometry(
+					params.radiusTop,
+					params.radiusBottom,
+					params.height,
+					params.segmentsRadial,
+					params.segmentsHeight,
+					!isBooleanTrue(params.cap),
+					params.thetaStart,
+					params.thetaLength
+			  )
+			: new CylinderGeometry(
+					params.radiusTop,
+					params.radiusBottom,
+					params.height,
+					params.segmentsRadial,
+					params.segmentsHeight,
+					!isBooleanTrue(params.cap)
+			  );
 
 		CoreTransform.rotateGeometry(geometry, DEFAULT_UP, params.direction);
 		geometry.translate(params.center.x, params.center.y, params.center.z);

@@ -7,7 +7,7 @@ import {ParamConfig} from '../utils/params/ParamsConfig';
 import {TRIGGER_CONNECTION_NAME, TypedJsNode} from './_Base';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {JsConnectionPoint, JsConnectionPointType, JS_CONNECTION_POINT_IN_NODE_DEF} from '../utils/io/connections/Js';
-import {inputObject3D} from './_BaseObject3D';
+import {inputObject3D, setObject3DOutputLine} from './_BaseObject3D';
 import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {Poly} from '../../Poly';
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
@@ -38,9 +38,12 @@ export class SetPhysicsRBDCuboidPropertyJsNode extends TypedJsNode<SetPhysicsRBD
 
 		this.io.outputs.setNamedOutputConnectionPoints([
 			new JsConnectionPoint(TRIGGER_CONNECTION_NAME, JsConnectionPointType.TRIGGER),
+			new JsConnectionPoint(JsConnectionPointType.OBJECT_3D, JsConnectionPointType.OBJECT_3D, CONNECTION_OPTIONS),
 		]);
 	}
-
+	override setLines(linesController: JsLinesCollectionController) {
+		setObject3DOutputLine(this, linesController);
+	}
 	override setTriggerableLines(shadersCollectionController: JsLinesCollectionController) {
 		const object3D = inputObject3D(this, shadersCollectionController);
 		const sizes = this.variableForInputParam(shadersCollectionController, this.p.sizes);

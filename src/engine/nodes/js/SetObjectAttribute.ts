@@ -17,7 +17,7 @@ import {
 	PARAM_CONVERTIBLE_JS_CONNECTION_POINT_TYPES,
 } from '../utils/io/connections/Js';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {inputObject3D} from './_BaseObject3D';
+import {inputObject3D, setObject3DOutputLine} from './_BaseObject3D';
 import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {Poly} from '../../Poly';
 import {StringParam} from '../../params/String';
@@ -131,7 +131,9 @@ export class SetObjectAttributeJsNode extends TypedJsNode<SetObjectAttributeJsPa
 			this._nextAttribName = attribName;
 		}
 	}
-
+	override setLines(linesController: JsLinesCollectionController) {
+		setObject3DOutputLine(this, linesController);
+	}
 	override setTriggerableLines(shadersCollectionController: JsLinesCollectionController) {
 		const object3D = inputObject3D(this, shadersCollectionController);
 		const attribName = this.variableForInput(shadersCollectionController, SetObjectAttributeInputName.attribName);
