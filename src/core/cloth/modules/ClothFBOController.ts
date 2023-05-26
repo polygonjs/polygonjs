@@ -83,7 +83,7 @@ export class ClothFBOController {
 	public readonly fboCamera = new Camera();
 	public readonly fboMesh: Mesh;
 
-	public RESOLUTION = -1;
+	public RESOLUTION = new Vector2();
 	public originalRT: TextureContainer = {texture: null};
 	public viscositySpringT: TextureContainer = {texture: null};
 	public readonly previousRT: [WebGLRenderTarget, WebGLRenderTarget] = new Array(2) as [
@@ -111,8 +111,8 @@ export class ClothFBOController {
 	public renderer: WebGLRenderer | undefined;
 
 	constructor(public readonly mainController: ClothController) {
-		this.RESOLUTION = this.mainController.geometryInit.resolution;
-		this.tSize.set(this.RESOLUTION, this.RESOLUTION);
+		this.RESOLUTION.copy(this.mainController.geometryInit.resolution);
+		this.tSize.set(this.RESOLUTION.x, this.RESOLUTION.y);
 		// geometry
 		const geometry = new BufferGeometry();
 		const positions = new Float32Array([-1.0, -1.0, 3.0, -1.0, -1.0, 3.0]);
@@ -187,9 +187,12 @@ export class ClothFBOController {
 		};
 	}
 	private createViscositySpringTexture() {
-		this.viscositySpringT = {
-			texture: viscositySpringTexture(this.mainController.geometryInit.geometry, this.RESOLUTION),
-		};
+		const texture = viscositySpringTexture(this.mainController.geometryInit.geometry, this.RESOLUTION);
+		if (texture) {
+			this.viscositySpringT = {
+				texture,
+			};
+		}
 	}
 	private createTexturesFromAllocation() {
 		const allocation = this.mainController.textureAllocationsController();
@@ -409,8 +412,8 @@ export class ClothFBOController {
 	}
 }
 
-function createRenderTarget(resolution: number) {
-	return new WebGLRenderTarget(resolution, resolution, {
+function createRenderTarget(resolution: Vector2) {
+	return new WebGLRenderTarget(resolution.x, resolution.y, {
 		wrapS: ClampToEdgeWrapping,
 		wrapT: ClampToEdgeWrapping,
 		minFilter: NearestFilter,

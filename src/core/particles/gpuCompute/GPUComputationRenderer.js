@@ -108,6 +108,7 @@ import {
 	ShaderMaterial,
 	WebGLRenderTarget,
 } from 'three';
+import {ref} from '@vue/reactivity';
 
 var GPUComputationRenderer = function (sizeX, sizeY, renderer) {
 	this.variables = [];
@@ -180,8 +181,11 @@ var GPUComputationRenderer = function (sizeX, sizeY, renderer) {
 			return 'No support for vertex shader textures.';
 		}
 
-		for (var i = 0; i < this.variables.length; i++) {
-			var variable = this.variables[i];
+		const configRef = {};
+		for (let i = 0; i < this.variables.length; i++) {
+			const variable = this.variables[i];
+
+			configRef[variable.name] = ref(null);
 
 			// Creates rendertargets and initialize them with input texture
 			variable.renderTargets[0] = this.createRenderTarget(
@@ -222,12 +226,13 @@ var GPUComputationRenderer = function (sizeX, sizeY, renderer) {
 						}
 
 						if (!found) {
-							return (
+							console.warn(
 								'Variable dependency not found. Variable=' +
-								variable.name +
-								', dependency=' +
-								depVar.name
+									variable.name +
+									', dependency=' +
+									depVar.name
 							);
+							return;
 						}
 					}
 
@@ -240,10 +245,10 @@ var GPUComputationRenderer = function (sizeX, sizeY, renderer) {
 
 		this.currentTextureIndex = 0;
 
-		return null;
+		return configRef;
 	};
 
-	this.compute = function () {
+	this.compute = function (configRef) {
 		var currentTextureIndex = this.currentTextureIndex;
 		var nextTextureIndex = this.currentTextureIndex === 0 ? 1 : 0;
 
@@ -261,7 +266,13 @@ var GPUComputationRenderer = function (sizeX, sizeY, renderer) {
 			}
 
 			// Performs the computation for this variable
-			this.doRenderTarget(variable.material, variable.renderTargets[nextTextureIndex]);
+			const renderTarget = variable.renderTargets[nextTextureIndex];
+			this.doRenderTarget(variable.material, renderTarget);
+			if (configRef[variable.name]) {
+				configRef[variable.name].value = renderTarget.texture;
+			} // else {
+			//	console.log('variable not found', variable.name);
+			//}
 		}
 
 		this.currentTextureIndex = nextTextureIndex;

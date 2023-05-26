@@ -11,8 +11,6 @@ interface Face {
 const v0 = new Vector3();
 
 export enum AttribAdjacency {
-	ID = 'attribLookupId',
-	UV = 'attribLookupUv',
 	BASE_NAME = 'adjacency',
 	COUNT = 'adjacencyCount',
 }
@@ -134,7 +132,7 @@ export function populateAdjacency2(faces: Face[][], vertices: Vector3[]) {
 	for (let r = 0; r < faces.length; r++) {
 		const pointFaces = faces[r];
 		if (pointFaces.length == 0) {
-			console.log(`${r}: no faces`);
+			console.warn(`point ${r} has no face`);
 		}
 
 		pointSet.clear();

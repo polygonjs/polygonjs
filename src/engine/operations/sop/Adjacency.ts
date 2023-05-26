@@ -1,7 +1,7 @@
 import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
-import {BufferAttribute, Mesh, Object3D, Vector2, Vector3} from 'three';
+import {BufferAttribute, Mesh, Object3D, Vector3} from 'three';
 import {isBooleanTrue} from '../../../core/Type';
 import {
 	adjacencyVertices,
@@ -12,9 +12,10 @@ import {
 } from '../../../core/geometry/operation/Adjacency';
 // import {CoreGeometry} from '../../../core/geometry/Geometry';
 import {CoreObject} from '../../../core/geometry/Object';
-import {textureFromAttributeSize} from '../../../core/geometry/operation/TextureFromAttribute';
-
-const _uv = new Vector2();
+import {
+	textureFromAttribLookupId,
+	textureFromAttribLookupUv,
+} from '../../../core/geometry/operation/TextureFromAttribute';
 
 interface AdjacencySopParams extends DefaultOperationParams {
 	applyToChildren: boolean;
@@ -114,36 +115,34 @@ export class AdjacencySopOperation extends BaseSopOperation {
 			}
 		};
 
-		const _addUv = () => {
-			const textureSize = textureFromAttributeSize(geometry);
-			const uvSize = 2;
-			const values = new Array(pointsCount * uvSize);
-			if (!textureSize) {
-				return;
-			}
-			for (let pointIndex = 0; pointIndex < pointsCount; pointIndex++) {
-				_uv.x = pointIndex % textureSize;
-				_uv.y = Math.floor(pointIndex / textureSize);
-				_uv.addScalar(0.5);
-				_uv.divideScalar(textureSize);
-				_uv.toArray(values, pointIndex * uvSize);
-			}
-			const uvArray = new Float32Array(values);
-			geometry.setAttribute(AttribAdjacency.UV, new BufferAttribute(uvArray, attribSize));
-		};
+		// const _addUv = () => {
+		// 	textureFromAttributeSize(geometry, _textureSize);
+		// 	const uvSize = 2;
+		// 	const values = new Array(pointsCount * uvSize);
 
-		const _addId = () => {
-			const idSize = 1;
-			const values = new Array(pointsCount * idSize);
-			for (let pointIndex = 0; pointIndex < pointsCount; pointIndex++) {
-				values[pointIndex] = pointIndex;
-			}
-			const idArray = new Float32Array(values);
-			geometry.setAttribute(AttribAdjacency.ID, new BufferAttribute(idArray, idSize));
-		};
+		// 	for (let pointIndex = 0; pointIndex < pointsCount; pointIndex++) {
+		// 		_uv.x = pointIndex % _textureSize.x;
+		// 		_uv.y = Math.floor(pointIndex / _textureSize.x);
+		// 		_uv.addScalar(0.5);
+		// 		_uv.divide(_textureSize);
+		// 		_uv.toArray(values, pointIndex * uvSize);
+		// 	}
+		// 	const uvArray = new Float32Array(values);
+		// 	geometry.setAttribute(AttribAdjacency.UV, new BufferAttribute(uvArray, attribSize));
+		// };
+
+		// const _addId = () => {
+		// 	const idSize = 1;
+		// 	const values = new Array(pointsCount * idSize);
+		// 	for (let pointIndex = 0; pointIndex < pointsCount; pointIndex++) {
+		// 		values[pointIndex] = pointIndex;
+		// 	}
+		// 	const idArray = new Float32Array(values);
+		// 	geometry.setAttribute(AttribAdjacency.ID, new BufferAttribute(idArray, idSize));
+		// };
 
 		_addAdjacencyAttributes();
-		_addUv();
-		_addId();
+		textureFromAttribLookupUv(geometry);
+		textureFromAttribLookupId(geometry);
 	}
 }

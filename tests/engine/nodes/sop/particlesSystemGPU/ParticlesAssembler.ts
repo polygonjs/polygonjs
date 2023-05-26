@@ -49,6 +49,8 @@ QUnit.test('ParticlesSystemGPU: displays ok on first frame without assemblers', 
 	scene.setFrame(0);
 	await particles1.compute();
 	await waitForParticlesComputedAndMounted(particles1);
+	const configRef = (await resetParticles(particles1))!;
+	assert.ok(configRef, 'configRef ok');
 	await pointsBuilder1.compute();
 
 	const render_material = renderController(particles1).material();
@@ -69,7 +71,7 @@ QUnit.test('ParticlesSystemGPU: displays ok on first frame without assemblers', 
 	renderer1.readRenderTargetPixels(render_target1, 0, 0, buffer_width, buffer_height, pixelBuffer);
 	assert.deepEqual(AssertUtils.arrayWithPrecision(pixelBuffer), [-0.5, 0.1, -0.5, 0].join(':'), 'point start pos');
 
-	stepParticlesSimulation(particles1);
+	stepParticlesSimulation(particles1, configRef);
 	let render_target2 = gpuController(particles1).getCurrentRenderTarget('position' as ShaderName)!;
 	assert.notEqual(render_target2.texture.uuid, render_target1.texture.uuid);
 	assert.equal(uniform.value.uuid, render_target2.texture.uuid, 'uniform has expected texture');
@@ -80,7 +82,7 @@ QUnit.test('ParticlesSystemGPU: displays ok on first frame without assemblers', 
 		'point moved up on frame 1'
 	);
 
-	stepParticlesSimulation(particles1);
+	stepParticlesSimulation(particles1, configRef);
 	assert.equal(uniform.value.uuid, render_target1.texture.uuid, 'uniform has expected texture');
 	renderer1.readRenderTargetPixels(render_target1, 0, 0, buffer_width, buffer_height, pixelBuffer);
 	assert.deepEqual(
@@ -104,7 +106,8 @@ QUnit.test('ParticlesSystemGPU: displays ok on first frame without assemblers', 
 			assert.ok(new_particles1.persisted_config, 'persistedConfig ok');
 
 			assert.equal(scene2.frame(), 0, 'start at frame 0');
-			await resetParticles(new_particles1);
+			const configRef2 = (await resetParticles(new_particles1))!;
+			assert.ok(configRef2, 'configRef2 ok');
 			await new_particles1.compute();
 			await waitForParticlesComputedAndMounted(new_particles1);
 			assert.notOk(new_particles1.states.error.message(), 'no error');
@@ -121,7 +124,7 @@ QUnit.test('ParticlesSystemGPU: displays ok on first frame without assemblers', 
 			renderer2.readRenderTargetPixels(render_target1, 0, 0, buffer_width, buffer_height, pixelBuffer);
 			assert.deepEqual(AssertUtils.arrayWithPrecision(pixelBuffer), [-0.5, 0.1, -0.5, 0].join(':'), 'start pos');
 
-			stepParticlesSimulation(new_particles1);
+			stepParticlesSimulation(new_particles1, configRef2);
 			render_target2 = gpuController(new_particles1).getCurrentRenderTarget('position' as ShaderName)!;
 			assert.ok(render_target2, 'render_target2 ok');
 			renderer2.readRenderTargetPixels(render_target2, 0, 0, buffer_width, buffer_height, pixelBuffer);

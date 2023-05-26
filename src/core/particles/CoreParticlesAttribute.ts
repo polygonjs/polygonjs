@@ -4,9 +4,9 @@ export enum ParticlesAttribute {
 	PARTICLES_NODE_ID = 'particles_nodeId',
 	MATERIAL_NODE_ID = 'particles_materialNodeId',
 	DATA_TYPE = 'particles_dataType',
-	AUTO_TEXTURE_SIZE = 'particles_autoTexturesSize',
-	MAX_TEXTURE_SIZE = 'particles_maxTexturesSize',
-	TEXTURE_SIZE = 'particles_texturesSize',
+	// AUTO_TEXTURE_SIZE = 'particles_autoTexturesSize',
+	// MAX_TEXTURE_SIZE = 'particles_maxTexturesSize',
+	// TEXTURE_SIZE = 'particles_texturesSize',
 	PRE_ROLL_FRAMES_COUNT = 'particles_preRollFramesCount',
 }
 
@@ -65,24 +65,24 @@ export class CoreParticlesAttribute extends CoreParticlesBaseAttribute {
 	static getDataType(object: Object3D) {
 		return this._getNumber(object, ParticlesAttribute.DATA_TYPE, 0);
 	}
-	static setAutoTextureSize(object: Object3D, value: boolean) {
-		this._setBoolean(object, ParticlesAttribute.AUTO_TEXTURE_SIZE, value);
-	}
-	static getAutoTextureSize(object: Object3D) {
-		return this._getBoolean(object, ParticlesAttribute.AUTO_TEXTURE_SIZE, true);
-	}
-	static setMaxTextureSize(object: Object3D, value: Vector2) {
-		this._setVector2(object, ParticlesAttribute.MAX_TEXTURE_SIZE, value);
-	}
-	static getMaxTextureSize(object: Object3D, target: Vector2) {
-		return this._getVector2(object, ParticlesAttribute.MAX_TEXTURE_SIZE, target);
-	}
-	static setTextureSize(object: Object3D, value: Vector2) {
-		this._setVector2(object, ParticlesAttribute.TEXTURE_SIZE, value);
-	}
-	static getTextureSize(object: Object3D, target: Vector2) {
-		return this._getVector2(object, ParticlesAttribute.TEXTURE_SIZE, target);
-	}
+	// static setAutoTextureSize(object: Object3D, value: boolean) {
+	// 	this._setBoolean(object, ParticlesAttribute.AUTO_TEXTURE_SIZE, value);
+	// }
+	// static getAutoTextureSize(object: Object3D) {
+	// 	return this._getBoolean(object, ParticlesAttribute.AUTO_TEXTURE_SIZE, true);
+	// }
+	// static setMaxTextureSize(object: Object3D, value: Vector2) {
+	// 	this._setVector2(object, ParticlesAttribute.MAX_TEXTURE_SIZE, value);
+	// }
+	// static getMaxTextureSize(object: Object3D, target: Vector2) {
+	// 	return this._getVector2(object, ParticlesAttribute.MAX_TEXTURE_SIZE, target);
+	// }
+	// static setTextureSize(object: Object3D, value: Vector2) {
+	// 	this._setVector2(object, ParticlesAttribute.TEXTURE_SIZE, value);
+	// }
+	// static getTextureSize(object: Object3D, target: Vector2) {
+	// 	return this._getVector2(object, ParticlesAttribute.TEXTURE_SIZE, target);
+	// }
 	static setPreRollFramesCount(object: Object3D, value: number) {
 		this._setNumber(object, ParticlesAttribute.PRE_ROLL_FRAMES_COUNT, value);
 	}

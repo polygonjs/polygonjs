@@ -25,8 +25,8 @@ export enum GlobalsTextureHandlerPurpose {
 export class GlobalsTextureHandler extends GlobalsBaseController {
 	private _textureAllocationsController: TextureAllocationsController | undefined;
 
-	static UV_ATTRIB = 'particles_sim_uv_attrib';
-	static UV_VARYING = 'particles_sim_uv_varying';
+	static PARTICLES_SIM_UV_ATTRIB = 'particlesSimUv';
+	static UV_VARYING = 'particlesSimUvVarying';
 	static PARTICLE_SIM_UV = 'particleUV';
 
 	private globals_geometry_handler: GlobalsGeometryHandler | undefined;
@@ -65,88 +65,9 @@ export class GlobalsTextureHandler extends GlobalsBaseController {
 			shaders_collection_controller.addBodyLines(globals_node, [body_line]);
 		} else {
 			this.globals_geometry_handler = this.globals_geometry_handler || new GlobalsGeometryHandler();
-			this.globals_geometry_handler.handle_globals_node(
-				globals_node,
-				output_name,
-				shaders_collection_controller
-				// definitions_by_shader_name,
-				// body_lines_by_shader_name,
-				// body_lines,
-				// dependencies,
-				// shader_name
-			);
+			this.globals_geometry_handler.handle_globals_node(globals_node, output_name, shaders_collection_controller);
 		}
-
-		// definitions
-		// const gl_type = named_output.gl_type()
-		// const definition = new Definition.Varying(globals_node, gl_type, var_name)
-		// definitions_by_shader_name[shader_name].push(definition)
-
-		// const new_value = this.read_attribute(globals_node, gl_type, output_name)
-		// const body_line = `${var_name} = ${new_value}`
-		// if(allocation){
-		// 	const var_name_texture = allocation.texture_name()
-		// 	// add another definition if a texture was allocated by ParticlesSystemGPU
-		// 	const texture_definition = new Definition.Uniform(globals_node, 'sampler2D', var_name_texture)
-		// 	definitions_by_shader_name[shader_name].push(texture_definition)
-
-		// 	// const particles_sim_uv_definition = new Definition.Attribute(globals_node, 'vec2', GlobalsTextureHandler.UV_ATTRIB)
-		// 	// definitions_by_shader_name['vertex'].push(particles_sim_uv_definition)
-		// 	// this.add_particles_sim_uv_attribute(globals_node)
-
-		// 	const new_value = this.read_attribute(globals_node, gl_type, output_name, shader_name)
-		// 	body_line = `${var_name} = ${new_value}`
-
-		// } else {
-		// 	body_line = `${var_name} = vec3(${output_name})`
-		// }
-
-		// const new_body_lines = [
-		// 	// `${var_name} = vec3(${output_name})`,
-		// 	`vec3 ${var_name} = texture2D( ${var_name_texture}, uv ).xyz;`
-		// ]
-		// const body_line = `vec3 ${var_name} = texture2D( ${var_name_texture}, uv ).xyz`
-
-		// for(let dependency of dependencies){
-		// 	definitions_by_shader_name[dependency].push(definition)
-		// 	body_lines_by_shader_name[dependency].push(body_line)
-		// }
-		// if(dependencies.length == 0){
-		// 	body_lines.push(body_line)
-		// }
 	}
-	// variable_config_default(variable_name: string): string {
-	// 	// const allocation = this._texture_allocations_controller.allocation_for_variable(variable_name)
-	// 	// if(allocation){
-	// 	// 	return `texture2D( texture_${allocation.name()}, ${GlobalsTextureHandler.UV_VARYING} ).xyz`
-	// 	// } else {
-	// 	// 	GlobalsGeometryHandler.variable_config_default(variable_name)
-	// 	// }
-	// 	throw 'do I go through here?';
-	// 	return this.read_attribute(variable_name);
-	// }
-	// variable_config_required_definitions(variable_name:string):DefinitionBaseConfig[]{
-	// 	const allocation = this._texture_allocations_controller.allocation_for_variable(variable_name)
-	// 	if(allocation){
-	// 		return [
-	// 			new AttributeConfig('vec2', GlobalsTextureHandler.UV_ATTRIB),
-	// 			new UniformConfig('sampler2D', `texture_${allocation.name()}`)
-	// 		]
-	// 	}
-	// }
-
-	// static remap_instance_attribute(name:string):string{
-	// 	if(name == 'instancePosition'){
-	// 		return 'position'
-	// 	}
-	// 	return name
-	// }
-	// static variable_name_to_instance_attrib(name:string):string{
-	// 	if(name == 'position'){
-	// 		return 'instancePosition'
-	// 	}
-	// 	return name
-	// }
 
 	private _textureVariableUsable(textureVariable: TextureVariable) {
 		switch (this._purpose) {
@@ -194,12 +115,7 @@ export class GlobalsTextureHandler extends GlobalsBaseController {
 
 		const textureVariable = this._textureAllocationsController.variable(attribName);
 		if (textureVariable && this._textureVariableUsable(textureVariable)) {
-			this.add_particles_sim_uv_attribute(node, shadersCollectionController);
-			// const texture_variable = allocation.variable(attrib_name)
-			// if(!texture_variable){
-			// 	console.error(`no tex var found for ${attrib_name}`)
-			// 	this._texture_allocations_controller.print(node.scene())
-			// }
+			this.addParticlesSimUvAttribute(node, shadersCollectionController);
 
 			const textureData = this.attribTextureData(attribName);
 			if (textureData) {
@@ -209,9 +125,6 @@ export class GlobalsTextureHandler extends GlobalsBaseController {
 
 				shadersCollectionController.addDefinitions(node, [texture_definition]);
 
-				// const particles_sim_uv_definition = new Definition.Attribute(globals_node, 'vec2', 'particles_sim_uv')
-				// definitions_by_shader_name['vertex'].push(particles_sim_uv_definition)
-
 				const body_line = `texture2D( ${textureName}, ${uvName} ).${component}`;
 				return body_line;
 			}
@@ -220,7 +133,7 @@ export class GlobalsTextureHandler extends GlobalsBaseController {
 		}
 	}
 
-	add_particles_sim_uv_attribute(node: BaseGlNodeType, shaders_collection_controller: ShadersCollectionController) {
+	addParticlesSimUvAttribute(node: BaseGlNodeType, shaders_collection_controller: ShadersCollectionController) {
 		// const shader_names = ['vertex', 'fragment'];
 		// const definitions_by_shader_name:Map<ShaderName, BaseGLDefinition[]> = new Map();
 		// definitions_by_shader_name.set(ShaderName.VERTEX, [])
@@ -229,12 +142,12 @@ export class GlobalsTextureHandler extends GlobalsBaseController {
 		// 	definitions_by_shader_name[shader_name] = [];
 		// }
 
-		const particles_sim_uv_attrib_definition = new AttributeGLDefinition(
+		const particlesSimUvAttribDefinition = new AttributeGLDefinition(
 			node,
 			GlConnectionPointType.VEC2,
-			GlobalsTextureHandler.UV_ATTRIB
+			GlobalsTextureHandler.PARTICLES_SIM_UV_ATTRIB
 		);
-		const particles_sim_uv_varying_definition = new VaryingGLDefinition(
+		const particlesSimUvVaryingDefinition = new VaryingGLDefinition(
 			node,
 			GlConnectionPointType.VEC2,
 			GlobalsTextureHandler.UV_VARYING
@@ -242,14 +155,14 @@ export class GlobalsTextureHandler extends GlobalsBaseController {
 
 		shaders_collection_controller.addDefinitions(
 			node,
-			[particles_sim_uv_attrib_definition, particles_sim_uv_varying_definition],
+			[particlesSimUvAttribDefinition, particlesSimUvVaryingDefinition],
 			ShaderName.VERTEX
 		);
-		shaders_collection_controller.addDefinitions(node, [particles_sim_uv_varying_definition], ShaderName.FRAGMENT);
+		shaders_collection_controller.addDefinitions(node, [particlesSimUvVaryingDefinition], ShaderName.FRAGMENT);
 
 		shaders_collection_controller.addBodyLines(
 			node,
-			[`${GlobalsTextureHandler.UV_VARYING} = ${GlobalsTextureHandler.UV_ATTRIB}`],
+			[`${GlobalsTextureHandler.UV_VARYING} = ${GlobalsTextureHandler.PARTICLES_SIM_UV_ATTRIB}`],
 			ShaderName.VERTEX
 		);
 	}

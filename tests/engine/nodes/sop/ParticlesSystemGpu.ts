@@ -60,6 +60,8 @@ QUnit.test('ParticlesSystemGPU simple', async (assert) => {
 
 	particles1.p.preRollFramesCount.set(2);
 	await waitForParticlesComputedAndMounted(particles1);
+	const configRef = (await resetParticles(particles1))!;
+	assert.ok(configRef, 'configRef created');
 
 	await RendererUtils.compile(pointsBuilder1, renderer);
 	const render_material = renderController(particles1).material()!;
@@ -76,19 +78,19 @@ QUnit.test('ParticlesSystemGPU simple', async (assert) => {
 	renderer.readRenderTargetPixels(render_target1, 0, 0, buffer_width, buffer_height, pixelBuffer);
 	assert.deepEqual(roundPixelBuffer(pixelBuffer), joinArray([-1, 2, -1, 0]), 'point moved up');
 
-	stepParticlesSimulation(particles1);
+	stepParticlesSimulation(particles1, configRef);
 	let render_target2 = gpuController(particles1).getCurrentRenderTarget('position' as ShaderName)!;
 	assert.notEqual(render_target2.texture.uuid, render_target1.texture.uuid);
 	assert.equal(uniform.value.uuid, render_target2.texture.uuid, 'uniform has expected texture');
 	renderer.readRenderTargetPixels(render_target2, 0, 0, buffer_width, buffer_height, pixelBuffer);
 	assert.deepEqual(pixelBuffer.join(':'), [-1, 3, -1, 0].join(':'), 'point moved up');
 
-	stepParticlesSimulation(particles1);
+	stepParticlesSimulation(particles1, configRef);
 	assert.equal(uniform.value.uuid, render_target1.texture.uuid, 'uniform has expected texture');
 	renderer.readRenderTargetPixels(render_target1, 0, 0, buffer_width, buffer_height, pixelBuffer);
 	assert.deepEqual(pixelBuffer.join(':'), [-1, 4, -1, 0].join(':'), 'point moved up');
 
-	stepParticlesSimulation(particles1);
+	stepParticlesSimulation(particles1, configRef);
 	assert.equal(uniform.value.uuid, render_target2.texture.uuid, 'uniform has expected texture');
 	renderer.readRenderTargetPixels(render_target2, 0, 0, buffer_width, buffer_height, pixelBuffer);
 	assert.deepEqual(pixelBuffer.join(':'), [-1, 5, -1, 0].join(':'), 'point moved up');
@@ -125,6 +127,8 @@ QUnit.test('ParticlesSystemGPU attributes are used without needing to be set as 
 	// first we test when nothing is plugged into the output node
 	particles1.p.preRollFramesCount.set(0);
 	await waitForParticlesComputedAndMounted(particles1);
+	const configRef = (await resetParticles(particles1))!;
+	assert.ok(configRef, 'configRef created');
 
 	let gpuMaterial = gpuController(particles1).materials()[0];
 	assert.notOk(gpuMaterial, 'no material created yet');
@@ -204,7 +208,7 @@ QUnit.test('ParticlesSystemGPU attributes are used without needing to be set as 
 	const param_uniform = variable.material.uniforms.v_POLY_param_test_param;
 	assert.deepEqual(param_uniform.value.toArray(), [0, 1, 0], 'param uniform set to the expected value');
 
-	stepParticlesSimulation(particles1);
+	stepParticlesSimulation(particles1, configRef);
 	const buffer_width = 1;
 	const buffer_height = 1;
 	let render_target1 = gpuController(particles1).getCurrentRenderTarget('position' as ShaderName)!;
@@ -213,7 +217,7 @@ QUnit.test('ParticlesSystemGPU attributes are used without needing to be set as 
 	renderer1.readRenderTargetPixels(render_target1, 0, 0, buffer_width, buffer_height, pixelBuffer);
 	assert.deepEqual(pixelBuffer.join(':'), [-2, 1, -2, 0].join(':'), 'point moved');
 
-	stepParticlesSimulation(particles1);
+	stepParticlesSimulation(particles1, configRef);
 	let render_target2 = gpuController(particles1).getCurrentRenderTarget('position' as ShaderName)!;
 	assert.notEqual(render_target2.texture.uuid, render_target1.texture.uuid);
 
@@ -221,25 +225,25 @@ QUnit.test('ParticlesSystemGPU attributes are used without needing to be set as 
 	renderer1.readRenderTargetPixels(render_target2, 0, 0, buffer_width, buffer_height, pixelBuffer);
 	assert.deepEqual(pixelBuffer.join(':'), [-3, 2, -3, 0].join(':'), 'point moved');
 
-	stepParticlesSimulation(particles1);
+	stepParticlesSimulation(particles1, configRef);
 	assert.equal(uniform.value.uuid, render_target1.texture.uuid, 'uniform has expected texture');
 	renderer1.readRenderTargetPixels(render_target1, 0, 0, buffer_width, buffer_height, pixelBuffer);
 	assert.deepEqual(pixelBuffer.join(':'), [-4, 3, -4, 0].join(':'), 'point moved up');
 
 	test_param.set([0, 0.5, 0]);
-	stepParticlesSimulation(particles1);
+	stepParticlesSimulation(particles1, configRef);
 	assert.equal(uniform.value.uuid, render_target2.texture.uuid, 'uniform has expected texture');
 	renderer1.readRenderTargetPixels(render_target2, 0, 0, buffer_width, buffer_height, pixelBuffer);
 	assert.deepEqual(pixelBuffer.join(':'), [-5, 3.5, -5, 0].join(':'), 'point moved up');
 
 	test_param.set([0, 2, 0]);
-	stepParticlesSimulation(particles1);
+	stepParticlesSimulation(particles1, configRef);
 	assert.equal(uniform.value.uuid, render_target1.texture.uuid, 'uniform has expected texture');
 	renderer1.readRenderTargetPixels(render_target1, 0, 0, buffer_width, buffer_height, pixelBuffer);
 	assert.deepEqual(pixelBuffer.join(':'), [-6, 5.5, -6, 0].join(':'), 'point moved up');
 
 	test_param.set([1, 0, 0]);
-	stepParticlesSimulation(particles1);
+	stepParticlesSimulation(particles1, configRef);
 	assert.equal(uniform.value.uuid, render_target2.texture.uuid, 'uniform has expected texture');
 	renderer1.readRenderTargetPixels(render_target2, 0, 0, buffer_width, buffer_height, pixelBuffer);
 	assert.deepEqual(pixelBuffer.join(':'), [-6, 5.5, -7, 0].join(':'), 'point moved up');
@@ -263,10 +267,11 @@ QUnit.test('ParticlesSystemGPU attributes are used without needing to be set as 
 		assert.deepEqual(test_param2.value.toArray(), [1, 0, 0], 'test param is read back with expected value');
 
 		assert.equal(scene2.frame(), 0);
-		await resetParticles(new_particles1);
 		await waitForParticlesComputedAndMounted(new_particles1);
+		const configRef2 = (await resetParticles(new_particles1))!;
+		assert.ok(configRef2, 'configRef2 ok');
 
-		stepParticlesSimulation(new_particles1);
+		stepParticlesSimulation(new_particles1, configRef2);
 		render_target1 = gpuController(new_particles1).getCurrentRenderTarget('position' as ShaderName)!;
 		renderer2.readRenderTargetPixels(render_target1, 0, 0, buffer_width, buffer_height, pixelBuffer);
 		assert.deepEqual(
@@ -275,8 +280,8 @@ QUnit.test('ParticlesSystemGPU attributes are used without needing to be set as 
 			'point with persisted config moved x (1)'
 		);
 
-		stepParticlesSimulation(new_particles1);
-		stepParticlesSimulation(new_particles1);
+		stepParticlesSimulation(new_particles1, configRef2);
+		stepParticlesSimulation(new_particles1, configRef2);
 		render_target2 = gpuController(new_particles1).getCurrentRenderTarget('position' as ShaderName)!;
 		renderer2.readRenderTargetPixels(render_target2, 0, 0, buffer_width, buffer_height, pixelBuffer);
 		assert.deepEqual(
@@ -286,7 +291,7 @@ QUnit.test('ParticlesSystemGPU attributes are used without needing to be set as 
 		);
 
 		test_param2.set([0, 2, 0]);
-		stepParticlesSimulation(new_particles1);
+		stepParticlesSimulation(new_particles1, configRef2);
 		render_target1 = gpuController(new_particles1).getCurrentRenderTarget('position' as ShaderName)!;
 		renderer2.readRenderTargetPixels(render_target1, 0, 0, buffer_width, buffer_height, pixelBuffer);
 		assert.deepEqual(
@@ -296,7 +301,7 @@ QUnit.test('ParticlesSystemGPU attributes are used without needing to be set as 
 		);
 
 		// and if we set the active param to 0, nothing moves
-		stepParticlesSimulation(new_particles1);
+		stepParticlesSimulation(new_particles1, configRef2);
 		render_target1 = gpuController(new_particles1).getCurrentRenderTarget('position' as ShaderName)!;
 		renderer2.readRenderTargetPixels(render_target1, 0, 0, buffer_width, buffer_height, pixelBuffer);
 		assert.deepEqual(AssertUtils.arrayWithPrecision(pixelBuffer), [-3, 4, -6, 0].join(':'), 'active still on');
@@ -311,7 +316,7 @@ QUnit.test('ParticlesSystemGPU attributes are used without needing to be set as 
 		// assert.deepEqual(AssertUtils.arrayWithPrecision(pixelBuffer), [-3, 4, -6, 0].join(':'), 'active still off');
 		// and if we set the active param back to 1, particles move again
 		setParticlesActive(new_particles1, true);
-		stepParticlesSimulation(new_particles1);
+		stepParticlesSimulation(new_particles1, configRef2);
 		render_target1 = gpuController(new_particles1).getCurrentRenderTarget('position' as ShaderName)!;
 		renderer2.readRenderTargetPixels(render_target1, 0, 0, buffer_width, buffer_height, pixelBuffer);
 		assert.deepEqual(
@@ -319,7 +324,7 @@ QUnit.test('ParticlesSystemGPU attributes are used without needing to be set as 
 			[-4, 6, -7, 0].join(':'),
 			'point with persisted config moved y'
 		);
-		stepParticlesSimulation(new_particles1);
+		stepParticlesSimulation(new_particles1, configRef2);
 		render_target1 = gpuController(new_particles1).getCurrentRenderTarget('position' as ShaderName)!;
 		renderer2.readRenderTargetPixels(render_target1, 0, 0, buffer_width, buffer_height, pixelBuffer);
 		assert.deepEqual(
@@ -616,6 +621,8 @@ QUnit.test('ParticlesSystemGPU attributes can be used from inside a subnet', asy
 	// scene.setFrame(1);
 	await particles1.compute();
 	await waitForParticlesComputedAndMounted(particles1);
+	const configRef = (await resetParticles(particles1))!;
+	assert.ok(configRef, 'configRef ok');
 	await RendererUtils.compile(pointsBuilder1, renderer);
 	const render_material = renderController(particles1).material()!;
 	const uniform = MaterialUserDataUniforms.getUniforms(render_material)!.texture_position;
@@ -625,26 +632,26 @@ QUnit.test('ParticlesSystemGPU attributes can be used from inside a subnet', asy
 
 	const buffer_width = 1;
 	const buffer_height = 1;
-	stepParticlesSimulation(particles1);
+	stepParticlesSimulation(particles1, configRef);
 	let render_target1 = gpuController(particles1).getCurrentRenderTarget('position' as ShaderName)!;
 	assert.equal(uniform.value.uuid, render_target1.texture.uuid, 'uniform has expected texture on frame 1');
 	let pixelBuffer = new Float32Array(buffer_width * buffer_height * 4);
 	renderer.readRenderTargetPixels(render_target1, 0, 0, buffer_width, buffer_height, pixelBuffer);
 	assert.deepEqual(pixelBuffer.join(':'), [3, 1.5, 0.75, 0].join(':'), 'point moved sideways frame 1');
 
-	stepParticlesSimulation(particles1);
+	stepParticlesSimulation(particles1, configRef);
 	let render_target2 = gpuController(particles1).getCurrentRenderTarget('position' as ShaderName)!;
 	assert.notEqual(render_target2.texture.uuid, render_target1.texture.uuid);
 	assert.equal(uniform.value.uuid, render_target2.texture.uuid, 'uniform has expected texture on frame 2');
 	renderer.readRenderTargetPixels(render_target2, 0, 0, buffer_width, buffer_height, pixelBuffer);
 	assert.deepEqual(pixelBuffer.join(':'), [4, 2, 1, 0].join(':'), 'point moved sideways frame 2');
 
-	stepParticlesSimulation(particles1);
+	stepParticlesSimulation(particles1, configRef);
 	assert.equal(uniform.value.uuid, render_target1.texture.uuid, 'uniform has expected texture on frame 3');
 	renderer.readRenderTargetPixels(render_target1, 0, 0, buffer_width, buffer_height, pixelBuffer);
 	assert.deepEqual(pixelBuffer.join(':'), [5, 2.5, 1.25, 0].join(':'), 'point moved sideways frame 3');
 
-	stepParticlesSimulation(particles1);
+	stepParticlesSimulation(particles1, configRef);
 	assert.equal(uniform.value.uuid, render_target2.texture.uuid, 'uniform has expected texture on frame 4');
 	renderer.readRenderTargetPixels(render_target2, 0, 0, buffer_width, buffer_height, pixelBuffer);
 	assert.deepEqual(pixelBuffer.join(':'), [6, 3, 1.5, 0].join(':'), 'point moved sideways frame 4');
@@ -692,6 +699,8 @@ QUnit.test('ParticlesSystemGPU params can be used from inside a subnet', async (
 	// scene.setFrame(1);
 	await particles1.compute();
 	await waitForParticlesComputedAndMounted(particles1);
+	const configRef = (await resetParticles(particles1))!;
+	assert.ok(configRef, 'configRef ok');
 
 	const spareParam = particles1.params.get('myCustomParam')! as Vector3Param;
 	assert.ok(spareParam);
@@ -713,7 +722,7 @@ QUnit.test('ParticlesSystemGPU params can be used from inside a subnet', async (
 	assert.deepEqual(pixelBuffer.join(':'), [1, 0.5, 0.25, 0].join(':'), 'point moved sideways frame 1');
 
 	spareParam.set([3, 5, 6]);
-	stepParticlesSimulation(particles1);
+	stepParticlesSimulation(particles1, configRef);
 	let render_target2 = gpuController(particles1).getCurrentRenderTarget('position' as ShaderName)!;
 	assert.notEqual(render_target2.texture.uuid, render_target1.texture.uuid);
 	assert.equal(uniform.value.uuid, render_target2.texture.uuid, 'uniform has expected texture');
@@ -721,13 +730,13 @@ QUnit.test('ParticlesSystemGPU params can be used from inside a subnet', async (
 	assert.deepEqual(pixelBuffer.join(':'), [4, 5.5, 6.25, 0].join(':'), 'point moved sideways frame 2');
 
 	spareParam.set([7, 0.5, 33]);
-	stepParticlesSimulation(particles1);
+	stepParticlesSimulation(particles1, configRef);
 	assert.equal(uniform.value.uuid, render_target1.texture.uuid, 'uniform has expected texture');
 	renderer.readRenderTargetPixels(render_target1, 0, 0, buffer_width, buffer_height, pixelBuffer);
 	assert.deepEqual(pixelBuffer.join(':'), [11, 6, 39.25, 0].join(':'), 'point moved sideways frame 3');
 
 	spareParam.set([27, 123, 4033]);
-	stepParticlesSimulation(particles1);
+	stepParticlesSimulation(particles1, configRef);
 	assert.equal(uniform.value.uuid, render_target2.texture.uuid, 'uniform has expected texture');
 	renderer.readRenderTargetPixels(render_target2, 0, 0, buffer_width, buffer_height, pixelBuffer);
 	assert.deepEqual(pixelBuffer.join(':'), [38, 129, 4072.25, 0].join(':'), 'point moved sideways frame 4');

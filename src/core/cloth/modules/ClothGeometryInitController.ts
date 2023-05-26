@@ -1,4 +1,4 @@
-import {Vector3, BufferGeometry, BufferAttribute, Mesh} from 'three';
+import {Vector3, BufferGeometry, BufferAttribute, Mesh, Vector2} from 'three';
 import {ThreeMeshBVHHelper} from '../../geometry/bvh/ThreeMeshBVHHelper';
 import {adjacencyGroupFaces, adjacencyVertices, populateAdjacency} from '../../geometry/operation/Adjacency';
 import {textureFromAttributeSize} from '../../geometry/operation/TextureFromAttribute';
@@ -25,7 +25,7 @@ export class ClothGeometryInitController {
 	// public mergeTolerance = 0.0001;
 	// public populateAdjacency: boolean = true;
 	public geometry: BufferGeometry;
-	public readonly resolution;
+	public readonly resolution = new Vector2();
 	constructor(public mesh: Mesh) {
 		this.geometry = mesh.geometry;
 
@@ -48,7 +48,7 @@ export class ClothGeometryInitController {
 		ThreeMeshBVHHelper.assignDefaultBVHIfNone(this.mesh);
 
 		this.populateVertices();
-		this.resolution = textureFromAttributeSize(this.geometry) || 1; //Math.ceil(Math.sqrt(this.vertices.length));
+		textureFromAttributeSize(this.geometry, this.resolution); //Math.ceil(Math.sqrt(this.vertices.length));
 		// console.log({resolution: this.resolution});
 
 		const faces = this._groupFaces();

@@ -1,13 +1,14 @@
-import {RGBAFormat, FloatType, DataTexture, BufferGeometry, Vector3, BufferAttribute} from 'three';
+import {RGBAFormat, FloatType, DataTexture, BufferGeometry, Vector3, BufferAttribute, Vector2} from 'three';
 import {Attribute} from '../../geometry/Attribute';
 import {ClothGeometryAttributeName} from '../ClothAttribute';
 import {TextureAllocationsController} from '../../../engine/nodes/gl/code/utils/TextureAllocationsController';
+import {textureFromAttributes} from '../../geometry/operation/TextureFromAttribute';
 
 // const _v1 = new Vector3();
 // const _v2 = new Vector3();
 
-export function positionTexture(geometry: BufferGeometry, vertices: Vector3[], resolution: number): DataTexture {
-	const data = new Float32Array(resolution * resolution * 4);
+export function positionTexture(geometry: BufferGeometry, vertices: Vector3[], resolution: Vector2): DataTexture {
+	const data = new Float32Array(resolution.x * resolution.y * 4);
 	const positionAttribute = geometry.getAttribute(Attribute.POSITION) as BufferAttribute;
 	const pointsCount = positionAttribute.count;
 
@@ -21,18 +22,18 @@ export function positionTexture(geometry: BufferGeometry, vertices: Vector3[], r
 		// data[i4 + 2] = geoVertices[i].z;
 	}
 
-	const texture = new DataTexture(data, resolution, resolution, RGBAFormat, FloatType);
+	const texture = new DataTexture(data, resolution.x, resolution.y, RGBAFormat, FloatType);
 	texture.needsUpdate = true;
 	return texture;
 }
 
 export function adjacencyTexture(
 	geometry: BufferGeometry,
-	resolution: number,
+	resolution: Vector2,
 	adjacency: number[][],
 	k: number
 ): DataTexture {
-	const data = new Float32Array(resolution * resolution * 4);
+	const data = new Float32Array(resolution.x * resolution.y * 4);
 	// const geoVertices = this.mainController.geometryInit.vertices;
 	// const adjacency = this.mainController.geometryInit.adjacency;
 	// const length = geoVertices.length;
@@ -56,7 +57,7 @@ export function adjacencyTexture(
 	}
 
 	// console.log('createAdjacentsTexture', k, data);
-	const texture = new DataTexture(data, resolution, resolution, RGBAFormat, FloatType);
+	const texture = new DataTexture(data, resolution.x, resolution.y, RGBAFormat, FloatType);
 	texture.needsUpdate = true;
 	return texture;
 }
@@ -64,11 +65,11 @@ export function adjacencyTexture(
 export function distancesTexture(
 	geometry: BufferGeometry,
 	vertices: Vector3[],
-	resolution: number,
+	resolution: Vector2,
 	adjacency: number[][],
 	k: number
 ) {
-	const data = new Float32Array(resolution * resolution * 4).fill(-1);
+	const data = new Float32Array(resolution.x * resolution.y * 4).fill(-1);
 	// const geoVertices = this.mainController.geometryInit.vertices;
 	const positionAttribute = geometry.getAttribute(Attribute.POSITION) as BufferAttribute;
 	const pointsCount = positionAttribute.count;
@@ -100,35 +101,40 @@ export function distancesTexture(
 		}
 	}
 
-	const texture = new DataTexture(data, resolution, resolution, RGBAFormat, FloatType);
+	const texture = new DataTexture(data, resolution.x, resolution.y, RGBAFormat, FloatType);
 	texture.needsUpdate = true;
 	return texture;
 }
 
-export function viscositySpringTexture(geometry: BufferGeometry, resolution: number): DataTexture {
-	const data = new Float32Array(resolution * resolution * 4);
-	const positionAttribute = geometry.getAttribute(Attribute.POSITION) as BufferAttribute;
-	const pointsCount = positionAttribute.count;
-	const viscosityAttribute = geometry.getAttribute(ClothGeometryAttributeName.VISCOSITY) as
-		| BufferAttribute
-		| undefined;
-	const springAttribute = geometry.getAttribute(ClothGeometryAttributeName.SPRING) as BufferAttribute | undefined;
-	const viscosityArray = viscosityAttribute ? viscosityAttribute.array : undefined;
-	const springArray = springAttribute ? springAttribute.array : undefined;
+export function viscositySpringTexture(geometry: BufferGeometry, resolution: Vector2): DataTexture | undefined {
+	return textureFromAttributes(geometry, [ClothGeometryAttributeName.VISCOSITY, ClothGeometryAttributeName.SPRING]);
+	// console.log(t);
+	// // return t;
+	// // console.log(t);
+	// const data = new Float32Array(resolution.x * resolution.y * 4);
+	// const positionAttribute = geometry.getAttribute(Attribute.POSITION) as BufferAttribute;
+	// const pointsCount = positionAttribute.count;
+	// const viscosityAttribute = geometry.getAttribute(ClothGeometryAttributeName.VISCOSITY) as
+	// 	| BufferAttribute
+	// 	| undefined;
+	// const springAttribute = geometry.getAttribute(ClothGeometryAttributeName.SPRING) as BufferAttribute | undefined;
+	// const viscosityArray = viscosityAttribute ? viscosityAttribute.array : undefined;
+	// const springArray = springAttribute ? springAttribute.array : undefined;
 
-	for (let i = 0; i < pointsCount; i++) {
-		const i4 = i * 4;
-		data[i4] = viscosityArray ? viscosityArray[i] : 1;
-		data[i4 + 1] = springArray ? springArray[i] : 1;
-	}
+	// for (let i = 0; i < pointsCount; i++) {
+	// 	const i4 = i * 4;
+	// 	data[i4] = viscosityArray ? viscosityArray[i] : 1;
+	// 	data[i4 + 1] = springArray ? springArray[i] : 1;
+	// }
 
-	const texture = new DataTexture(data, resolution, resolution, RGBAFormat, FloatType);
-	texture.needsUpdate = true;
-	return texture;
+	// const texture = new DataTexture(data, resolution.x, resolution.y, RGBAFormat, FloatType);
+	// texture.needsUpdate = true;
+	// console.log(texture);
+	// return texture;
 }
 export function createTexturesFromAllocation(
 	geometry: BufferGeometry,
-	resolution: number,
+	resolution: Vector2,
 	allocationsController: TextureAllocationsController
 ): Record<string, DataTexture> {
 	const data: Record<string, DataTexture> = {};
@@ -137,7 +143,7 @@ export function createTexturesFromAllocation(
 	const pointsCount = positionAttribute.count;
 
 	allocationsController.readonlyAllocations().forEach((allocation) => {
-		const textureData = new Float32Array(resolution * resolution * 4);
+		const textureData = new Float32Array(resolution.x * resolution.y * 4);
 		allocation.variables()?.forEach((variable) => {
 			const attribName = variable.name();
 			const attribSize = variable.size();
@@ -150,7 +156,7 @@ export function createTexturesFromAllocation(
 						textureData[i4 + j] = array[i * attribSize + j];
 					}
 				}
-				const texture = new DataTexture(textureData, resolution, resolution, RGBAFormat, FloatType);
+				const texture = new DataTexture(textureData, resolution.x, resolution.y, RGBAFormat, FloatType);
 				texture.needsUpdate = true;
 				data[attribName] = texture;
 			}

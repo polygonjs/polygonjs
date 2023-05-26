@@ -16,6 +16,7 @@ import {BaseGlShaderAssembler} from './code/assemblers/_Base';
 import {TypeAssert} from '../../poly/Assert';
 import GET_UV from './gl/geometryAttributes/geometryAttributesLookupUv.glsl';
 import {FunctionGLDefinition} from './utils/GLDefinition';
+import {AttribLookup} from '../../../core/geometry/operation/TextureFromAttribute';
 // import {SubnetOutputGlNode} from './SubnetOutput';
 
 enum ComputeNormalsInput {
@@ -146,7 +147,7 @@ export class ComputeNormalsGlNode extends TypedSubnetGlNode<ComputeNormalsGlPara
 	private _adjacencyLookupId() {
 		switch (this._variableLookupMode) {
 			case VariablesLookupMode.CURRENT_POINT: {
-				return AttribAdjacency.ID;
+				return AttribLookup.ID;
 			}
 			case VariablesLookupMode.ADJACENT_POINT: {
 				return this.glVarName(ForLoopVar.CURRENT_ADJACENT_ID);
@@ -157,7 +158,7 @@ export class ComputeNormalsGlNode extends TypedSubnetGlNode<ComputeNormalsGlPara
 	private _adjacencyLookupUv() {
 		switch (this._variableLookupMode) {
 			case VariablesLookupMode.CURRENT_POINT: {
-				return AttribAdjacency.UV;
+				return AttribLookup.UV;
 			}
 			case VariablesLookupMode.ADJACENT_POINT: {
 				const id = this._adjacencyLookupId();
@@ -209,10 +210,10 @@ export class ComputeNormalsGlNode extends TypedSubnetGlNode<ComputeNormalsGlPara
 				bodyLines.push(`${GlConnectionPointType.VEC3} ${this.glVarName(ComputeNormalsInput.P)} = ${varNameP};`);
 				bodyLines.push(`${GlConnectionPointType.VEC3} ${this.glVarName(ComputeNormalsInput.N)} = ${varNameN};`);
 				bodyLines.push(
-					`${GlConnectionPointType.VEC2} ${this.glVarName(ComputeNormalsInput.UV)} = ${AttribAdjacency.UV};`
+					`${GlConnectionPointType.VEC2} ${this.glVarName(ComputeNormalsInput.UV)} = ${AttribLookup.UV};`
 				);
 				bodyLines.push(
-					`${GlConnectionPointType.INT} ${this.glVarName(ComputeNormalsInput.ID)} = ${AttribAdjacency.ID};`
+					`${GlConnectionPointType.INT} ${this.glVarName(ComputeNormalsInput.ID)} = ${AttribLookup.ID};`
 				);
 				traverseInputs((inputType, inputName, varName) => {
 					bodyLines.push(`${inputType} ${this.glVarName(inputName)} = ${varNamesForInputs[inputName]};`);
@@ -330,14 +331,14 @@ export class ComputeNormalsGlNode extends TypedSubnetGlNode<ComputeNormalsGlPara
 		};
 		const _declareUv = () => {
 			const glType = GlConnectionPointType.VEC2;
-			const attribName = AttribAdjacency.UV;
+			const attribName = AttribLookup.UV;
 			/*const newVar =*/ assembler.globalsHandler()?.readAttribute(this, glType, attribName, linesController);
 			// const varName = this.glVarName(attribName);
 			// bodyLines.push(`${glType} ${varName} = ${newVar}`);
 		};
 		const _declareId = () => {
 			const glType = GlConnectionPointType.INT;
-			const attribName = AttribAdjacency.ID;
+			const attribName = AttribLookup.ID;
 			/*const newVar =*/ assembler.globalsHandler()?.readAttribute(this, glType, attribName, linesController);
 			// const varName = this.glVarName(attribName);
 			// bodyLines.push(`${glType} ${varName} = ${newVar}`);

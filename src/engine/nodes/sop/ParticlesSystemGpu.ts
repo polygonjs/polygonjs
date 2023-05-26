@@ -11,7 +11,7 @@
 // - simulation shaders should update the particles at any frame, and resimulate accordingly when at later frames
 // - render material should update at any frame, without having to resimulate
 // - changing the input will recompute, when on first frame only (otherwise an animated geo could make it recompute all the time)
-import {Object3D, MathUtils} from 'three';
+import {Object3D, Mesh, Vector2} from 'three';
 import {Constructor, valueof} from '../../../types/GlobalTypes';
 import {TypedSopNode} from './_Base';
 import {GlobalsTextureHandler, GlobalsTextureHandlerPurpose} from '../gl/code/globals/Texture';
@@ -26,10 +26,8 @@ import {
 	setParticleRenderer,
 } from '../../../core/particles/CoreParticles';
 import {CoreParticlesController} from '../../../core/particles/CoreParticlesController';
-import {
-	PARTICLE_DATA_TYPES,
-	coreParticlesGpuComputeControllerPointsCount,
-} from '../../../core/particles/CoreParticlesGpuComputeController';
+import {PARTICLE_DATA_TYPES} from '../../../core/particles/CoreParticlesGpuComputeController';
+import {coreParticlesInitParticlesUVs} from '../../../core/particles/CoreParticlesInit';
 
 import {GlNodeChildrenMap} from '../../poly/registers/nodes/Gl';
 import {BaseGlNodeType} from '../gl/_Base';
@@ -43,14 +41,10 @@ import {NodeCreateOptions} from '../utils/hierarchy/ChildrenController';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 import {GlAssemblerController} from '../gl/code/Controller';
 import {ShaderAssemblerParticles} from '../gl/code/assemblers/particles/Particles';
-import {isBooleanTrue} from '../../../core/Type';
+import {textureFromAttributeSize} from '../../../core/geometry/operation/TextureFromAttribute';
+
+const textureSize = new Vector2();
 class ParticlesSystemGpuSopParamsConfig extends NodeParamsConfig {
-	/** @param auto sets the resolution of the textures used by the GPU shaders */
-	autoTexturesSize = ParamConfig.BOOLEAN(1);
-	/** @param max texture size. This is important to set a limit, as some systems may not handle large textures for particle sims */
-	maxTexturesSize = ParamConfig.VECTOR2([1024, 1024], {visibleIf: {autoTexturesSize: 1}});
-	/** @param sets the texture size manually */
-	texturesSize = ParamConfig.VECTOR2([64, 64], {visibleIf: {autoTexturesSize: 0}});
 	/** @param data type used by the solver */
 	dataType = ParamConfig.INTEGER(0, {
 		menu: {
@@ -164,25 +158,29 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 		const object = objects[0];
 
 		// get texture size
-		if (!isBooleanTrue(this.pv.autoTexturesSize)) {
-			// const nearest_power_of_two = CoreMath.nearestPower2(Math.sqrt(pointsCount));
-			// _usedTexturesSize.x = Math.min(nearest_power_of_two, this.pv.maxTexturesSize.x);
-			// _usedTexturesSize.y = Math.min(nearest_power_of_two, this.pv.maxTexturesSize.y);
-			// } else {
-			if (!(MathUtils.isPowerOfTwo(this.pv.texturesSize.x) && MathUtils.isPowerOfTwo(this.pv.texturesSize.y))) {
-				this.states.error.set('texture size must be a power of 2');
-				return;
-			}
+		// if (!isBooleanTrue(this.pv.autoTexturesSize)) {
+		// const nearest_power_of_two = CoreMath.nearestPower2(Math.sqrt(pointsCount));
+		// _usedTexturesSize.x = Math.min(nearest_power_of_two, this.pv.maxTexturesSize.x);
+		// _usedTexturesSize.y = Math.min(nearest_power_of_two, this.pv.maxTexturesSize.y);
+		// } else {
+		// if (!(MathUtils.isPowerOfTwo(this.pv.texturesSize.x) && MathUtils.isPowerOfTwo(this.pv.texturesSize.y))) {
+		// 	this.states.error.set('texture size must be a power of 2');
+		// 	return;
+		// }
 
-			const pointsCount = coreParticlesGpuComputeControllerPointsCount(object);
-			const maxParticlesCount = this.pv.texturesSize.x * this.pv.texturesSize.y;
-			if (pointsCount > maxParticlesCount) {
-				this.states.error.set(
-					`max particles is set to (${this.pv.texturesSize.x}x${this.pv.texturesSize.y}=) ${maxParticlesCount}`
-				);
-				return;
-			}
+		const geometry = (object as Mesh).geometry;
+		if (!geometry) {
+			return;
 		}
+		// const pointsCount = textureFromAttributePointsCount(geometry);
+		// const maxParticlesCount = this.pv.texturesSize.x * this.pv.texturesSize.y;
+		// if (pointsCount > maxParticlesCount) {
+		// 	this.states.error.set(
+		// 		`max particles is set to (${this.pv.texturesSize.x}x${this.pv.texturesSize.y}=) ${maxParticlesCount}`
+		// 	);
+		// 	return;
+		// }
+		// }
 
 		const existingActorIds = this.scene().actorsManager.objectActorNodeIds(object);
 		if (existingActorIds == null || existingActorIds.length == 0) {
@@ -192,10 +190,13 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 		setParticleRenderer(this.graphNodeId(), renderer);
 		CoreParticlesAttribute.setParticlesNodeId(object, this.graphNodeId());
 		CoreParticlesAttribute.setDataType(object, this.pv.dataType);
-		CoreParticlesAttribute.setAutoTextureSize(object, this.pv.autoTexturesSize);
-		CoreParticlesAttribute.setMaxTextureSize(object, this.pv.maxTexturesSize);
-		CoreParticlesAttribute.setTextureSize(object, this.pv.texturesSize);
+		// CoreParticlesAttribute.setAutoTextureSize(object, this.pv.autoTexturesSize);
+		// CoreParticlesAttribute.setMaxTextureSize(object, this.pv.maxTexturesSize);
+		// CoreParticlesAttribute.setTextureSize(object, this.pv.texturesSize);
 		CoreParticlesAttribute.setPreRollFramesCount(object, this.pv.preRollFramesCount);
+
+		textureFromAttributeSize(geometry, textureSize);
+		coreParticlesInitParticlesUVs(object, textureSize);
 
 		const matNode = this.pv.material.nodeWithContext(NodeContext.MAT, this.states?.error);
 		if (matNode) {

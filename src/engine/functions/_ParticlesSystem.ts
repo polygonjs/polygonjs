@@ -1,6 +1,7 @@
 import {Object3D} from 'three';
 import {resetParticles, stepParticles} from '../../core/particles/CoreParticles';
-import {ObjectNamedFunction0} from './_Base';
+import {ObjectNamedFunction0, ObjectNamedFunction1} from './_Base';
+import {GPUComputationConfigRef} from '../../core/particles/gpuCompute/GPUComputationRenderer';
 
 export class particlesSystemReset extends ObjectNamedFunction0 {
 	static override type() {
@@ -11,11 +12,11 @@ export class particlesSystemReset extends ObjectNamedFunction0 {
 	}
 }
 
-export class particlesSystemStepSimulation extends ObjectNamedFunction0 {
+export class particlesSystemStepSimulation extends ObjectNamedFunction1<[GPUComputationConfigRef]> {
 	static override type() {
 		return 'particlesSystemStepSimulation';
 	}
-	func(object3D: Object3D): void {
-		stepParticles(object3D, this.timeController.delta());
+	func(object3D: Object3D, configRef: GPUComputationConfigRef): void {
+		stepParticles(object3D, this.timeController.delta(), configRef);
 	}
 }

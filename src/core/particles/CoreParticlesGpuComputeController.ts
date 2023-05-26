@@ -1,20 +1,11 @@
-import {
-	BufferAttribute,
-	DataTexture,
-	InstancedBufferAttribute,
-	Mesh,
-	Vector2,
-	Vector3,
-	Vector4,
-	FloatType,
-	HalfFloatType,
-	ShaderMaterial,
-	Object3D,
-} from 'three';
+import {DataTexture, Mesh, Vector2, Vector3, Vector4, FloatType, HalfFloatType, ShaderMaterial, Object3D} from 'three';
 import {CoreGeometry} from '../geometry/Geometry';
 import {GlConstant} from '../geometry/GlConstant';
-import {GlobalsTextureHandler} from '../../engine/nodes/gl/code/globals/Texture';
-import {GPUComputationRenderer, GPUComputationRendererVariable} from './gpuCompute/GPUComputationRenderer';
+import {
+	GPUComputationConfigRef,
+	GPUComputationRenderer,
+	GPUComputationRendererVariable,
+} from './gpuCompute/GPUComputationRenderer';
 import {CorePoint} from '../geometry/Point';
 import {ShaderName} from '../../engine/nodes/utils/shaders/ShaderName';
 import {TextureAllocationsController} from '../../engine/nodes/gl/code/utils/TextureAllocationsController';
@@ -23,8 +14,8 @@ import {TextureAllocation} from '../../engine/nodes/gl/code/utils/TextureAllocat
 import {CoreUserAgent} from '../UserAgent';
 import type {CoreParticlesController} from './CoreParticlesController';
 import {CoreParticlesAttribute} from './CoreParticlesAttribute';
-import {isBooleanTrue} from '../Type';
-import {CoreMath} from '../math/_Module';
+import {coreParticlesInitParticlesUVs} from './CoreParticlesInit';
+import {textureFromAttributePointsCount, textureFromAttributeSize} from '../geometry/operation/TextureFromAttribute';
 
 export enum ParticlesDataType {
 	AUTO = 'Auto',
@@ -51,68 +42,7 @@ const tmpV2 = new Vector2();
 const tmpV3 = new Vector3();
 const tmpV4 = new Vector4();
 
-export function coreParticlesGpuComputeControllerPointsCount(object: Object3D): number {
-	// let geometries = coreGroup.coreGeometries();
-	// const firstGeometry = geometries[0];
-	const geometry = (object as Mesh).geometry;
-
-	if (geometry) {
-		return CoreGeometry.pointsCount(geometry);
-		// const type = CoreGeometry.markedAsInstance(geometry);
-		// const attribute =
-		// const selectedGeometry:BufferGeometry|undefined;
-		// for (let geometry of geometries) {
-		// 	if (geometry.markedAsInstance() == type) {
-		// 		selectedGeometries.push(geometry);
-		// 	}
-		// }
-		// // TODO: refactor
-		// // const selectedGeometry = selectedGeometries[0];
-		// return selectedGeometry.points().length;
-		// let count=0
-		// // for (let geometry of selectedGeometries) {
-		// 	const points = selectedGeometry.points()
-		// 	for (let point of points) {
-		// 		// points.push(point);
-		// 	}
-		// // }
-		// return points;
-	} else {
-		return 0;
-	}
-}
 // const _autoTexturesSize = new Vector2()
-const _maxTexturesSize = new Vector2();
-const _texturesSize = new Vector2();
-function getTextureSize(object: Object3D, target: Vector2) {
-	const pointsCount = coreParticlesGpuComputeControllerPointsCount(object);
-
-	const autoTexturesSize = CoreParticlesAttribute.getAutoTextureSize(object);
-	CoreParticlesAttribute.getMaxTextureSize(object, _maxTexturesSize);
-	CoreParticlesAttribute.getTextureSize(object, _texturesSize);
-
-	// get texture size
-	if (isBooleanTrue(autoTexturesSize)) {
-		const nearest_power_of_two = CoreMath.nearestPower2(Math.sqrt(pointsCount));
-		target.x = Math.min(nearest_power_of_two, _maxTexturesSize.x);
-		target.y = Math.min(nearest_power_of_two, _maxTexturesSize.y);
-	} else {
-		// if (!(MathUtils.isPowerOfTwo(_texturesSize.x) && MathUtils.isPowerOfTwo(this.pv.texturesSize.y))) {
-		// 	this.states.error.set('texture size must be a power of 2');
-		// 	return;
-		// }
-
-		const maxParticlesCount = _texturesSize.x * _texturesSize.y;
-		if (pointsCount > maxParticlesCount) {
-			console.warn(
-				`max particles is set to (${_texturesSize.x}x${_texturesSize.y}=) ${maxParticlesCount}, which is less than the points count of the input (${pointsCount})`
-			);
-
-			return;
-		}
-		target.copy(_texturesSize);
-	}
-}
 
 export class CoreParticlesGpuComputeController {
 	protected _gpuCompute: GPUComputationRenderer | undefined;
@@ -184,7 +114,7 @@ export class CoreParticlesGpuComputeController {
 	init() {
 		this._initPoints();
 		// this.node.debugMessage('GPUComputeController: this.createGPUCompute() START');
-		this.createGPUCompute();
+		return this.createGPUCompute();
 		// this.node.debugMessage('GPUComputeController: this.createGPUCompute() END');
 	}
 
@@ -196,35 +126,7 @@ export class CoreParticlesGpuComputeController {
 		// this._points = this._getPoints() || [];
 	}
 	private _initParticlesUVs(object: Object3D) {
-		const pointsCount = coreParticlesGpuComputeControllerPointsCount(object);
-		var uvs = new Float32Array(pointsCount * 2);
-
-		let p = 0;
-		var cmptr = 0;
-		for (var j = 0; j < this._texturesSize.x; j++) {
-			for (var i = 0; i < this._texturesSize.y; i++) {
-				uvs[p++] = i / (this._texturesSize.x - 1);
-				uvs[p++] = j / (this._texturesSize.y - 1);
-
-				cmptr += 2;
-				if (cmptr >= uvs.length) {
-					break;
-				}
-			}
-		}
-
-		const uv_attrib_name = GlobalsTextureHandler.UV_ATTRIB;
-		const geometry = (object as Mesh).geometry;
-		const attribute_constructor = CoreGeometry.markedAsInstance(geometry)
-			? InstancedBufferAttribute
-			: BufferAttribute;
-		// if (this._particlesCoreGroup) {
-		// for (let core_geometry of this._particlesCoreGroup.coreGeometries()) {
-		// const geometry = core_geometry.geometry();
-
-		geometry.setAttribute(uv_attrib_name, new attribute_constructor(uvs, 2));
-		// }
-		// }
+		coreParticlesInitParticlesUVs(object, this._texturesSize);
 	}
 	// computeSimulationIfRequired(delta: number) {
 	// 	console.warn('computeSimulationIfRequired');
@@ -254,10 +156,14 @@ export class CoreParticlesGpuComputeController {
 		if (!(object && renderer)) {
 			return;
 		}
+		const geometry = (object as Mesh).geometry;
+		if (!geometry) {
+			return;
+		}
 		// const autoTexturesSize = CoreParticlesAttribute.getAutoTextureSize(this.object)
 		// CoreParticlesAttribute.getMaxTextureSize(this.object,maxTexturesSize)
 		// CoreParticlesAttribute.getTextureSize(object, this._texturesSize);
-		getTextureSize(object, this._texturesSize);
+		textureFromAttributeSize(geometry, this._texturesSize);
 		// if (isBooleanTrue(autoTexturesSize)) {
 		// 	const nearest_power_of_two = CoreMath.nearestPower2(Math.sqrt(this._points.length));
 		// 	this._usedTexturesSize.x = Math.min(nearest_power_of_two, maxTexturesSize.x);
@@ -340,12 +246,13 @@ export class CoreParticlesGpuComputeController {
 		this._fillTextures(object);
 		this._createSimulationMaterialUniforms();
 
-		var error = this._gpuCompute.init();
+		const configRef = this._gpuCompute.init();
 
-		if (error !== null) {
-			console.error(error);
-			this.mainController.setError(error);
+		if (!configRef) {
+			// console.error(error);
+			this.mainController.setError(`failed to generate the simulation shader`);
 		}
+		return configRef;
 	}
 
 	// private _graph_node: CoreGraphNode | undefined;
@@ -374,12 +281,12 @@ export class CoreParticlesGpuComputeController {
 	// 	}
 	// }
 
-	public computeSimulation(delta: number) {
+	public computeSimulation(delta: number, configRef: GPUComputationConfigRef) {
 		if (!this._gpuCompute /* || this._lastSimulatedTime == null*/) {
 			return;
 		}
 
-		this._gpuCompute.compute();
+		this._gpuCompute.compute(configRef);
 		this.mainController.renderController.updateRenderMaterialUniforms();
 		this._updateSimulationMaterialUniforms(delta);
 	}
@@ -490,7 +397,7 @@ export class CoreParticlesGpuComputeController {
 		if (!geometry) {
 			return;
 		}
-		const pointsCount = coreParticlesGpuComputeControllerPointsCount(object);
+		const pointsCount = textureFromAttributePointsCount(geometry);
 		const texture_allocations_controller = this._textureAllocationsController();
 		if (!texture_allocations_controller) {
 			return;

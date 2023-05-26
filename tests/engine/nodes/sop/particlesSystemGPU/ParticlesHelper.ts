@@ -10,6 +10,7 @@ import {GeoObjNode} from '../../../../../src/engine/nodes/obj/Geo';
 import {ActorSopNode} from '../../../../../src/engine/nodes/sop/Actor';
 import {JsConnectionPointType} from '../../../../../src/engine/nodes/utils/io/connections/Js';
 import {CoreSleep} from '../../../../../src/core/Sleep';
+import {GPUComputationConfigRef} from '../../../../../src/core/particles/gpuCompute/GPUComputationRenderer';
 export function createActorNodeChildren(actorNode: ActorSopNode) {
 	const particlesSystemReset = actorNode.createNode('particlesSystemReset');
 	const onScenePause = actorNode.createNode('onScenePause');
@@ -52,11 +53,11 @@ export async function waitForParticlesComputedAndMounted(node: ParticlesSystemGp
 }
 
 export async function resetParticles(node: ParticlesSystemGpuSopNode) {
-	coreParticlesControllerFromNode(node)?.reset();
+	return await coreParticlesControllerFromNode(node)?.reset();
 	// await node.p.reset.pressButton();
 }
-export async function stepParticlesSimulation(node: ParticlesSystemGpuSopNode) {
-	coreParticlesControllerFromNode(node)?.stepSimulation(1 / 60);
+export async function stepParticlesSimulation(node: ParticlesSystemGpuSopNode, configRef: GPUComputationConfigRef) {
+	coreParticlesControllerFromNode(node)?.stepSimulation(1 / 60, configRef);
 	// await node.p.reset.pressButton();
 }
 

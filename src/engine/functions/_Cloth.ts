@@ -35,7 +35,6 @@ export class clothSolverReset extends ObjectNamedFunction0 {
 }
 
 let uniformConfig: ClothMaterialUniformConfig | undefined;
-// let uniformConfigRef: ClothMaterialUniformConfigRef | undefined;
 let uniformNameConfig: ClothMaterialUniformNameConfig | undefined;
 export class clothSolverStepSimulation extends ObjectNamedFunction5<
 	[number, number, number, number, ClothMaterialUniformConfigRef]

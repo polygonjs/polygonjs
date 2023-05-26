@@ -7,6 +7,7 @@ import type {PolyScene} from '../../engine/scene/PolyScene';
 import {ShaderName} from '../../engine/nodes/utils/shaders/ShaderName';
 import {ParticlesSystemGpuSopNode} from '../../engine/nodes/sop/ParticlesSystemGpu';
 import {TextureAllocationsController} from '../../engine/nodes/gl/code/utils/TextureAllocationsController';
+import {GPUComputationConfigRef} from './gpuCompute/GPUComputationRenderer';
 // import {CoreGroup} from '../geometry/Group';
 
 export class CoreParticlesController {
@@ -49,7 +50,10 @@ export class CoreParticlesController {
 
 		// if (!this.gpuController.initialized()) {
 		// this.debugMessage('particles:this.gpuController.init(coreGroup) START');
-		this.gpuController.init();
+		const configRef = this.gpuController.init();
+		if (!configRef) {
+			return;
+		}
 		// this.debugMessage('particles:this.gpuController.init(coreGroup) END');
 		// }
 
@@ -66,17 +70,18 @@ export class CoreParticlesController {
 		const preRollFramesCount = CoreParticlesAttribute.getPreRollFramesCount(this._object);
 
 		for (let i = 0; i < preRollFramesCount; i++) {
-			this.gpuController.computeSimulation(1 / 60);
+			this.gpuController.computeSimulation(1 / 60, configRef);
 		}
+		return configRef;
 	}
-	stepSimulation(delta: number) {
-		this.gpuController.computeSimulation(delta);
+	stepSimulation(delta: number, configRef: GPUComputationConfigRef) {
+		this.gpuController.computeSimulation(delta, configRef);
 	}
-	reset() {
+	async reset() {
 		this.gpuController.reset();
 		this.renderController.reset();
 		if (this._object && this._renderer) {
-			this.init(this._object, this._renderer);
+			return await this.init(this._object, this._renderer);
 		}
 	}
 	setError(message: string) {

@@ -1,7 +1,7 @@
 // For PI declaration:
 #include <common>
 
-attribute vec2 particles_sim_uv_attrib;
+attribute vec2 particlesSimUv;
 uniform sampler2D texture_position;
 // uniform sampler2D textureVelocity;
 
@@ -19,7 +19,7 @@ uniform sampler2D texture_position;
 void main() {
 
 
-	vec3 P = texture2D( texture_position, particles_sim_uv_attrib ).xyz;
+	vec3 P = texture2D( texture_position, particlesSimUv ).xyz;
 
 	// vec4 velTemp = texture2D( textureVelocity, uv );
 	// vec3 vel = velTemp.xyz;

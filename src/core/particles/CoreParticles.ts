@@ -5,6 +5,7 @@ import type {PolyScene} from '../../engine/scene/PolyScene';
 import {CoreGraphNodeId} from '../graph/CoreGraph';
 import {ParticlesSystemGpuSopNode} from '../../engine/nodes/sop/ParticlesSystemGpu';
 import {AbstractRenderer} from '../../engine/viewers/Common';
+import {GPUComputationConfigRef} from './gpuCompute/GPUComputationRenderer';
 
 const coreParticlesControllerByNodeId: Map<CoreGraphNodeId, CoreParticlesController> = new Map();
 const rendererByNodeId: Map<CoreGraphNodeId, AbstractRenderer> = new Map();
@@ -32,8 +33,8 @@ export async function createOrFindParticlesController(object: Object3D, scene: P
 export function setParticleRenderer(nodeId: CoreGraphNodeId, renderer: AbstractRenderer) {
 	rendererByNodeId.set(nodeId, renderer);
 }
-export function stepParticles(object: Object3D, delta: number) {
-	coreParticlesControllerFromObject(object)?.stepSimulation(delta);
+export function stepParticles(object: Object3D, delta: number, configRef: GPUComputationConfigRef) {
+	coreParticlesControllerFromObject(object)?.stepSimulation(delta, configRef);
 }
 export function resetParticles(object: Object3D) {
 	coreParticlesControllerFromObject(object)?.reset();
