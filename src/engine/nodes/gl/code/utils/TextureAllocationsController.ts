@@ -6,13 +6,19 @@ import {TextureVariable} from './TextureVariable';
 import {ShaderConfig} from '../configs/ShaderConfig';
 import {ShaderName} from '../../../utils/shaders/ShaderName';
 import {PolyScene} from '../../../../scene/PolyScene';
-import {GlConnectionPointComponentsCountMap, BaseGlConnectionPoint} from '../../../utils/io/connections/Gl';
+import {
+	GlConnectionPointComponentsCountMap,
+	BaseGlConnectionPoint,
+	GlConnectionPointType,
+} from '../../../utils/io/connections/Gl';
 import {AttributeGlNode} from '../../Attribute';
 import {GlobalsGlNode} from '../../Globals';
 import {OutputGlNode} from '../../Output';
 import {ArrayUtils} from '../../../../../core/ArrayUtils';
 import {PolyDictionary} from '../../../../../types/GlobalTypes';
 import {MapUtils} from '../../../../../core/MapUtils';
+import {GlType} from '../../../../poly/registers/nodes/types/Gl';
+import {AdjacentPointsAttribSmoothGlNode} from '../../AdjacentPointsAttribSmooth';
 
 export type TextureAllocationsControllerData = {
 	writable: PolyDictionary<TextureAllocationData>[];
@@ -56,13 +62,13 @@ export class TextureAllocationsController {
 		return sortedRootNodes;
 	}
 
-	allocateConnectionsFromRootNodes(root_nodes: BaseGlNodeType[], leaf_nodes: BaseGlNodeType[]) {
+	allocateConnectionsFromRootNodes(rootNodes: BaseGlNodeType[], leafNodes: BaseGlNodeType[]) {
 		const variables = [];
 
-		root_nodes = TextureAllocationsController._sortNodes(root_nodes);
-		leaf_nodes = TextureAllocationsController._sortNodes(leaf_nodes);
+		rootNodes = TextureAllocationsController._sortNodes(rootNodes);
+		leafNodes = TextureAllocationsController._sortNodes(leafNodes);
 
-		for (let node of root_nodes) {
+		for (let node of rootNodes) {
 			const node_id = node.graphNodeId();
 			switch (node.type()) {
 				case OutputGlNode.type(): {
@@ -98,9 +104,23 @@ export class TextureAllocationsController {
 					}
 					break;
 				}
+				case GlType.ADJACENT_POINTS_ATTRIB_SMOOTH: {
+					const adjacentPointsAttribSmoothNode = node as AdjacentPointsAttribSmoothGlNode;
+					const data = adjacentPointsAttribSmoothNode.textureAllocationData();
+					for (let attribName of data) {
+						const variable = new TextureVariable(
+							attribName,
+							GlConnectionPointComponentsCountMap[GlConnectionPointType.VEC2]
+						);
+						variable.setReadonly(true);
+						variable.addGraphNodeId(node_id);
+						variables.push(variable);
+					}
+					break;
+				}
 			}
 		}
-		for (let node of leaf_nodes) {
+		for (let node of leafNodes) {
 			const node_id = node.graphNodeId();
 			switch (node.type()) {
 				case GlobalsGlNode.type(): {

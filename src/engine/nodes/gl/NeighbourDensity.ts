@@ -15,19 +15,11 @@ import {FunctionGLDefinition} from './utils/GLDefinition';
 import {BaseGlShaderAssembler} from './code/assemblers/_Base';
 import {GlobalsTextureHandler} from './code/globals/Texture';
 
-const OUTPUT_NAME = 'force';
+const OUTPUT_NAME = 'density';
 
 class NeighbourDensityGlParamsConfig extends NodeParamsConfig {
 	positionAttribName = ParamConfig.STRING('position');
 	position = ParamConfig.VECTOR3([0, 0, 0]);
-	amount = ParamConfig.FLOAT(1, {
-		range: [0, 1],
-		rangeLocked: [true, false],
-	});
-	minDist = ParamConfig.FLOAT(1, {
-		range: [0, 10],
-		rangeLocked: [true, false],
-	});
 	maxDist = ParamConfig.FLOAT(2, {
 		range: [0, 10],
 		rangeLocked: [true, false],
@@ -43,7 +35,7 @@ export class NeighbourDensityGlNode extends TypedGlNode<NeighbourDensityGlParams
 		super.initializeNode();
 
 		this.io.outputs.setNamedOutputConnectionPoints([
-			new GlConnectionPoint(OUTPUT_NAME, GlConnectionPointType.VEC3),
+			new GlConnectionPoint(OUTPUT_NAME, GlConnectionPointType.FLOAT),
 		]);
 	}
 
@@ -51,8 +43,6 @@ export class NeighbourDensityGlNode extends TypedGlNode<NeighbourDensityGlParams
 		const bodyLines: string[] = [];
 
 		const position = ThreeToGl.vector3(this.variableForInputParam(this.p.position));
-		const amount = ThreeToGl.float(this.variableForInputParam(this.p.amount));
-		const minDist = ThreeToGl.float(this.variableForInputParam(this.p.minDist));
 		const maxDist = ThreeToGl.float(this.variableForInputParam(this.p.maxDist));
 
 		// TODO:
@@ -72,23 +62,21 @@ export class NeighbourDensityGlNode extends TypedGlNode<NeighbourDensityGlParams
 					textureName,
 					uvName,
 					position,
-					// repulse
-					amount,
-					minDist,
+					// density
 					maxDist,
 				].join(', ');
 
-				const {functionName, functionDeclaration} = this._templateFunctionDefinition(component, uvName);
+				const {functionName, functionDeclaration} = this._templateFunctionDefinition(component);
 				shadersCollectionController.addDefinitions(this, [new FunctionGLDefinition(this, functionDeclaration)]);
 
-				bodyLines.push(`vec3 ${out} = ${functionName}(${args})`);
+				bodyLines.push(`float ${out} = ${functionName}(${args})`);
 			}
 		}
 
 		shadersCollectionController.addBodyLines(this, bodyLines);
 	}
 
-	private _templateFunctionDefinition(component: string, uvName: string) {
+	private _templateFunctionDefinition(component: string) {
 		const functionName = `${this.type()}${this.graphNodeId()}`;
 		const functionDeclaration = Density.replace('__FUNCTION__NAME__', functionName).replace(
 			'__COMPONENT__',

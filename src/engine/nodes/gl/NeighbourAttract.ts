@@ -84,7 +84,7 @@ export class NeighbourAttractGlNode extends TypedGlNode<NeighbourAttractGlParams
 					endDist,
 				].join(', ');
 
-				const {functionName, functionDeclaration} = this._templateFunctionDefinition(component, uvName);
+				const {functionName, functionDeclaration} = this._templateFunctionDefinition(component);
 				shadersCollectionController.addDefinitions(this, [new FunctionGLDefinition(this, functionDeclaration)]);
 
 				bodyLines.push(`vec3 ${out} = ${functionName}(${args})`);
@@ -94,7 +94,7 @@ export class NeighbourAttractGlNode extends TypedGlNode<NeighbourAttractGlParams
 		shadersCollectionController.addBodyLines(this, bodyLines);
 	}
 
-	private _templateFunctionDefinition(component: string, uvName: string) {
+	private _templateFunctionDefinition(component: string) {
 		const functionName = `${this.type()}${this.graphNodeId()}`;
 		const functionDeclaration = Attract.replace('__FUNCTION__NAME__', functionName).replace(
 			'__COMPONENT__',

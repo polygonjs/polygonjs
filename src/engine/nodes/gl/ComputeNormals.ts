@@ -64,7 +64,12 @@ export class ComputeNormalsGlNode extends TypedSubnetGlNode<ComputeNormalsGlPara
 	}
 
 	protected override _expectedOutputTypes(): GlConnectionPointType[] {
-		return [GlConnectionPointType.VEC3, GlConnectionPointType.VEC3, ...super._expectedOutputTypes()];
+		return [
+			GlConnectionPointType.VEC3,
+			GlConnectionPointType.VEC3,
+			GlConnectionPointType.VEC2,
+			...super._expectedOutputTypes(),
+		];
 	}
 
 	protected override _expectedInputTypes(): GlConnectionPointType[] {

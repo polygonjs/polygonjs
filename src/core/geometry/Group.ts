@@ -261,7 +261,7 @@ export class CoreGroup extends CoreEntity {
 			.flat();
 	}
 	pointsCount() {
-		return ArrayUtils.sum(this.coreGeometries().map((g) => g.pointsCount()));
+		return ArrayUtils.sum(this.geometries().map((g) => CoreGeometry.pointsCount(g)));
 	}
 	totalPointsCount() {
 		const threejsObjects = this.threejsObjects();

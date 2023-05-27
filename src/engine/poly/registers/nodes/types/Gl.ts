@@ -1,4 +1,5 @@
 export enum GlType {
+	ADJACENT_POINTS_ATTRIB_SMOOTH = 'adjacentPointsAttribSmooth',
 	ATTRIBUTE = 'attribute',
 	GLOBALS = 'globals',
 	NOISE = 'noise',

@@ -78,7 +78,7 @@ export class NeighbourRepulseGlNode extends TypedGlNode<NeighbourRepulseGlParams
 					maxDist,
 				].join(', ');
 
-				const {functionName, functionDeclaration} = this._templateFunctionDefinition(component, uvName);
+				const {functionName, functionDeclaration} = this._templateFunctionDefinition(component);
 				shadersCollectionController.addDefinitions(this, [new FunctionGLDefinition(this, functionDeclaration)]);
 
 				bodyLines.push(`vec3 ${out} = ${functionName}(${args})`);
@@ -88,7 +88,7 @@ export class NeighbourRepulseGlNode extends TypedGlNode<NeighbourRepulseGlParams
 		shadersCollectionController.addBodyLines(this, bodyLines);
 	}
 
-	private _templateFunctionDefinition(component: string, uvName: string) {
+	private _templateFunctionDefinition(component: string) {
 		const functionName = `${this.type()}${this.graphNodeId()}`;
 		const functionDeclaration = Repulse.replace('__FUNCTION__NAME__', functionName).replace(
 			'__COMPONENT__',

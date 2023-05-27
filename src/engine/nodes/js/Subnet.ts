@@ -152,7 +152,6 @@ export class TypedSubnetJsNode<K extends TypedSubnetJsParamsConfig> extends Abst
 		super.initializeNode();
 
 		this.io.connection_points.set_input_name_function(this._expectedInputName.bind(this));
-
 		this.io.connection_points.set_expected_input_types_function(this._expectedInputTypes.bind(this));
 		this.io.connection_points.set_expected_output_types_function(this._expectedOutputTypes.bind(this));
 		this.io.connection_points.set_output_name_function(this._expectedOutputName.bind(this));

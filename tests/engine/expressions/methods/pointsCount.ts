@@ -34,7 +34,7 @@ QUnit.test('expression pointsCount updates when dependency changes', async (asse
 	const sphere1 = geo1.createNode('sphere');
 	sphere1.flags.display.set(true);
 
-	box1.p.divisions.set(1);
+	box1.p.divisions.x.set(1);
 
 	box2.p.size.set("pointsCount('../box1')");
 
@@ -46,12 +46,12 @@ QUnit.test('expression pointsCount updates when dependency changes', async (asse
 	assert.ok(!box2.isDirty(), 'box is dirty');
 
 	// check that bbox2 is set to dirty if box1 changes
-	box1.p.divisions.set(2);
+	box1.p.divisions.x.set(2);
 	assert.ok(box2.p.size.isDirty());
 	assert.ok(box2.isDirty());
 
 	await box2.p.size.compute();
-	assert.equal(box2.p.size.value, 54);
+	assert.equal(box2.p.size.value, 32);
 
 	// check that bbox2 is NOT set to dirty if box1 changes after the expression is removed
 	assert.equal(box1.graphSuccessors().length, 1, 'successors');
@@ -61,7 +61,7 @@ QUnit.test('expression pointsCount updates when dependency changes', async (asse
 	assert.ok(box2.isDirty());
 	await box2.compute();
 	assert.ok(!box2.isDirty());
-	box1.p.divisions.set(3);
+	box1.p.divisions.x.set(3);
 
 	assert.equal(box1.graphSuccessors().length, 0);
 
@@ -206,7 +206,7 @@ QUnit.test('pointsCount: if dependent is deleted, node becomes dirty', async (as
 	await box2.compute();
 	assert.ok(!box2.isDirty());
 
-	assert.equal(box2.p.size.graphAllPredecessors().length, 14, 'has 14 predecessors');
+	assert.equal(box2.p.size.graphAllPredecessors().length, 17, 'has 17 predecessors');
 	assert.equal(box2.p.size.graphPredecessors().length, 1);
 	assert.equal(box2.p.size.graphPredecessors()[0].name(), 'box1');
 
@@ -255,22 +255,22 @@ QUnit.test('pointsCount: if the points count of input changes, the param gets up
 	param.set('pointsCount(0)');
 
 	box2.setInput(0, box1);
-	assert.equal(box1.p.divisions.value, 1);
+	assert.equal(box1.p.divisions.x.value, 1);
 
 	assert.ok(param.isDirty());
 	await param.compute();
 	assert.ok(!param.isDirty());
 	assert.equal(param.value, 24);
 
-	box1.p.divisions.set(2);
+	box1.p.divisions.x.set(2);
 	assert.ok(param.isDirty());
 	await param.compute();
 	assert.ok(!param.isDirty());
-	assert.equal(param.value, 54);
+	assert.equal(param.value, 32);
 
-	box1.p.divisions.set(3);
+	box1.p.divisions.x.set(3);
 	assert.ok(param.isDirty());
 	await param.compute();
 	assert.ok(!param.isDirty());
-	assert.equal(param.value, 96);
+	assert.equal(param.value, 40);
 });

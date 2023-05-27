@@ -27,10 +27,10 @@ import {CustomMaterialName} from '../../../core/geometry/Material';
 import {Material} from 'three';
 import {GlAssemblerController} from '../gl/code/Controller';
 import {MatType} from '../../poly/registers/nodes/types/Mat';
-// import {
-// 	CustomMaterialLineParamConfig,
-// 	materialLineAssemblerCustomMaterialRequested,
-// } from './utils/customMaterials/CustomMaterialLine';
+import {
+	CustomMaterialLineParamConfig,
+	materialLineAssemblerCustomMaterialRequested,
+} from './utils/customMaterials/CustomMaterialLine';
 
 interface LineBasicBuilderControllers extends AdvancedCommonControllers, UniformsTransparencyControllers {}
 interface LineBasicBuilderMaterial extends LineBasicMaterial {
@@ -41,10 +41,12 @@ interface LineBasicBuilderMaterial extends LineBasicMaterial {
 	};
 }
 
-class LineBasicBuilderMatParamsConfig extends AdvancedCommonParamConfig(
-	BaseBuilderParamConfig(
-		/* advanced */ AdvancedFolderParamConfig(
-			UniformsTransparencyParamConfig(DefaultFolderParamConfig(NodeParamsConfig))
+class LineBasicBuilderMatParamsConfig extends CustomMaterialLineParamConfig(
+	AdvancedCommonParamConfig(
+		BaseBuilderParamConfig(
+			/* advanced */ AdvancedFolderParamConfig(
+				UniformsTransparencyParamConfig(DefaultFolderParamConfig(NodeParamsConfig))
+			)
 		)
 	)
 ) {
@@ -70,9 +72,9 @@ export class LineBasicBuilderMatNode extends TypedBuilderMatNode<
 	protected _createAssemblerController(): GlAssemblerController<ShaderAssemblerLine> | undefined {
 		return Poly.assemblersRegister.assembler(this, this.usedAssembler());
 	}
-	// public override customMaterialRequested(customName: CustomMaterialName): boolean {
-	// 	return materialLineAssemblerCustomMaterialRequested(this, customName);
-	// }
+	public override customMaterialRequested(customName: CustomMaterialName): boolean {
+		return materialLineAssemblerCustomMaterialRequested(this, customName);
+	}
 	readonly controllers: LineBasicBuilderControllers = {
 		advancedCommon: new AdvancedCommonController(this),
 		uniformTransparency: new UniformsTransparencyController(this),

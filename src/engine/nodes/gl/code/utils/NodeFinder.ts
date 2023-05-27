@@ -40,4 +40,8 @@ export class GlNodeFinder {
 			return node.isExporting();
 		});
 	}
+	static findAjacencyNodes(node: BaseGlParentNode) {
+		const nodes = node.nodesByType(GlType.ADJACENT_POINTS_ATTRIB_SMOOTH);
+		return nodes;
+	}
 }

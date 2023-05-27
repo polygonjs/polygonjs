@@ -26,10 +26,10 @@ QUnit.test('expression bbox works with index', async (assert) => {
 	const box2 = geo1.createNode('box');
 	box2.setInput(0, box1);
 
-	box2.p.divisions.set(`2*bbox(0, 'max', 'x')`);
+	box2.p.divisions.x.set(`2*bbox(0, 'max', 'x')`);
 
-	await box2.p.divisions.compute();
-	assert.equal(box2.p.divisions.value, 10);
+	await box2.p.divisions.x.compute();
+	assert.equal(box2.p.divisions.x.value, 10);
 });
 
 QUnit.test('expression bbox works without component', async (assert) => {
@@ -41,10 +41,10 @@ QUnit.test('expression bbox works without component', async (assert) => {
 	const box2 = geo1.createNode('box');
 	box2.setInput(0, box1);
 
-	box2.p.divisions.set(`2*bbox(0, 'max').x`);
+	box2.p.divisions.x.set(`2*bbox(0, 'max').x`);
 
-	await box2.p.divisions.compute();
-	assert.equal(box2.p.divisions.value, 25);
+	await box2.p.divisions.x.compute();
+	assert.equal(box2.p.divisions.x.value, 25);
 });
 
 QUnit.test('expression bbox works without vector name', async (assert) => {
@@ -56,10 +56,10 @@ QUnit.test('expression bbox works without vector name', async (assert) => {
 	const box2 = geo1.createNode('box');
 	box2.setInput(0, box1);
 
-	box2.p.divisions.set(`2*bbox(0).max.x`);
+	box2.p.divisions.x.set(`2*bbox(0).max.x`);
 
-	await box2.p.divisions.compute();
-	assert.equal(box2.p.divisions.value, 15);
+	await box2.p.divisions.x.compute();
+	assert.equal(box2.p.divisions.x.value, 15);
 });
 
 function _url(path: string) {

@@ -14,6 +14,7 @@ import {GlobalsTextureHandler} from '../../globals/Texture';
 import {ShadersCollectionController} from '../../utils/ShadersCollectionController';
 import {NodeContext} from '../../../../../poly/NodeContext';
 import {SubnetOutputGlNode} from '../../../SubnetOutput';
+// import {GlType} from '../../../../../poly/registers/nodes/types/Gl';
 
 export class ShaderAssemblerParticles extends BaseGlShaderAssembler {
 	private _textureAllocationsController: TextureAllocationsController | undefined;
@@ -58,6 +59,10 @@ export class ShaderAssemblerParticles extends BaseGlShaderAssembler {
 					}
 					break;
 				}
+				// case GlType.ADJACENT_POINTS_ATTRIB_SMOOTH: {
+				// 	list.push(node);
+				// 	break;
+				// }
 			}
 		}
 		return list;

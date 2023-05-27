@@ -33,15 +33,17 @@ import {logBlue as _logBlue} from '../../../core/logger/Console';
 import {PointBuilderEvaluator} from '../js/code/assemblers/pointBuilder/PointBuilderEvaluator';
 import {CoreMask} from '../../../core/geometry/Mask';
 
-const DEBUG = true;
+function _debug() {
+	return !Poly.playerMode();
+}
 function logBlue(message: string) {
-	if (!DEBUG) {
+	if (!_debug()) {
 		return;
 	}
 	_logBlue(message);
 }
 function logDefault(message: string) {
-	if (!DEBUG) {
+	if (!_debug()) {
 		return;
 	}
 	console.log(message);

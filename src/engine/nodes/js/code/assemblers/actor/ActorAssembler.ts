@@ -21,16 +21,19 @@ import {ParamOptions} from '../../../../../params/utils/OptionsController';
 import {JsConnectionPointType} from '../../../../utils/io/connections/Js';
 import {ActorBuilderNode} from '../../../../../scene/utils/ActorsManager';
 import {logBlue as _logBlue} from '../../../../../../core/logger/Console';
+import {Poly} from '../../../../../Poly';
 
-const DEBUG = true;
+function _debug() {
+	return !Poly.playerMode();
+}
 function logBlue(message: string) {
-	if (!DEBUG) {
+	if (!_debug()) {
 		return;
 	}
 	_logBlue(message);
 }
 function logDefault(message: string) {
-	if (!DEBUG) {
+	if (!_debug()) {
 		return;
 	}
 	console.log(message);

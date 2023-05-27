@@ -49,8 +49,16 @@ export class RendererUtils {
 	}
 
 	static async withViewer(options: WithViewerOptions, callback: WithViewerCallback) {
+		// no viewer auto render on intersection change,
+		// so that the scene does not play automatically on start,
+		// as this messes up with tests like cop/builder
+		const updateAutoRenderOnIntersectionChange = false;
 		await this.withViewerContainer(async (element) => {
-			const viewer = (options.viewer || (await options.cameraNode?.createViewer({element})))!;
+			const viewer = (options.viewer ||
+				(await options.cameraNode?.createViewer({
+					element,
+					updateAutoRenderOnIntersectionChange,
+				})))!;
 			const canvas = viewer.canvas();
 			const renderer = viewer.renderer();
 
@@ -59,7 +67,9 @@ export class RendererUtils {
 				mount = options.mount;
 			}
 			if (mount) {
-				viewer.mount(element);
+				viewer.mount(element, {
+					updateAutoRenderOnIntersectionChange,
+				});
 			}
 
 			// options.cameraNode.scene().viewersRegister.viewerWithCamera(options.cameraNode)

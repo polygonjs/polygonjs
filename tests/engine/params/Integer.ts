@@ -3,8 +3,9 @@ import {ParamType} from '../../../src/engine/poly/ParamType';
 QUnit.test('int eval correctly when set to different values', async (assert) => {
 	const geo1 = window.geo1;
 
-	const box1 = geo1.createNode('box');
-	const param = box1.p.divisions;
+	const switch1 = geo1.createNode('switch');
+	const param = switch1.p.input;
+	assert.equal(param.type(), ParamType.INTEGER);
 
 	param.set(2);
 	await param.compute();
@@ -22,8 +23,8 @@ QUnit.test('int eval correctly when set to different values', async (assert) => 
 QUnit.test('int hasExpression() returns false when removing the expression', async (assert) => {
 	const geo1 = window.geo1;
 
-	const box1 = geo1.createNode('box');
-	const param = box1.p.divisions;
+	const switch1 = geo1.createNode('switch');
+	const param = switch1.p.input;
 	assert.equal(param.type(), ParamType.INTEGER);
 
 	param.set(2);
@@ -37,7 +38,7 @@ QUnit.test('int hasExpression() returns false when removing the expression', asy
 
 	param.set('-2');
 	assert.notOk(param.hasExpression());
-	assert.equal(param.value, 1); // set to 1 because of the param range constraints
+	assert.equal(param.value, 0);
 });
 
 QUnit.test('a range will limit the result of an expression', async (assert) => {

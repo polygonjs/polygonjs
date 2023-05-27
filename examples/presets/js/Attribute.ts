@@ -1,5 +1,7 @@
 import {Attribute} from '../../../src/core/geometry/Attribute';
 import {InstanceAttrib} from '../../../src/core/geometry/Instancer';
+import {AttribLookup} from '../../../src/core/geometry/operation/TextureFromAttribute';
+import {GlobalsTextureHandler} from '../../../src/engine/nodes/gl/code/globals/Texture';
 import {AttributeJsNode, ATTRIBUTE_NODE_AVAILABLE_JS_TYPES} from '../../../src/engine/nodes/js/Attribute';
 import {JsConnectionPointType} from '../../../src/engine/nodes/utils/io/connections/Js';
 import {BasePreset, NodePresetsCollection, PresetRegister, PresetsCollectionFactory} from '../BasePreset';
@@ -30,6 +32,9 @@ const attributeJsNodePresetsCollectionFactory: PresetsCollectionFactory<Attribut
 	const restP = new BasePreset().addEntry(node.p.name, `restP`).addEntry(node.p.type, v3);
 	const restN = new BasePreset().addEntry(node.p.name, `restN`).addEntry(node.p.type, v3);
 	const velocity = new BasePreset().addEntry(node.p.name, `velocity`).addEntry(node.p.type, v3);
+	const attribLookupId = new BasePreset().addEntry(node.p.name, AttribLookup.ID).addEntry(node.p.type, f);
+	const attribLookupUv = new BasePreset().addEntry(node.p.name, AttribLookup.UV).addEntry(node.p.type, v2);
+	const particlesSimUv = new BasePreset().addEntry(node.p.name, GlobalsTextureHandler.PARTICLES_SIM_UV_ATTRIB);
 
 	collection.setPresets({
 		color,
@@ -48,6 +53,9 @@ const attributeJsNodePresetsCollectionFactory: PresetsCollectionFactory<Attribut
 		restN,
 		// randomId,
 		velocity,
+		attribLookupId,
+		attribLookupUv,
+		particlesSimUv,
 	});
 
 	return collection;

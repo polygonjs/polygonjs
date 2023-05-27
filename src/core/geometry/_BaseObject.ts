@@ -18,6 +18,8 @@ import {ObjectTransformSpace} from '../TransformSpace';
 import {EntityGroupCollection} from './EntityGroupCollection';
 import {_updateObjectAttribRef} from '../reactivity/ObjectAttributeReactivityUpdateRef';
 import {attribValueNonPrimitive, copyAttribValue, AttributeDictionary, cloneAttribValue} from './_BaseObjectUtils';
+import {_getOrCreateObjectAttributeRef} from '../reactivity/ObjectAttributeReactivityCreateRef';
+import {ParamConvertibleJsType} from '../../engine/nodes/utils/io/connections/Js';
 // import {computeBoundingBoxFromObject3D} from './BoundingBox';
 // import {setSphereFromObject} from './BoundingSphere';
 // import {ref} from '../reactivity';
@@ -72,7 +74,20 @@ export abstract class BaseCoreObject<T extends CoreObjectType> extends CoreEntit
 	geometry(): ObjectGeometryMap[T] | null {
 		return this._object.geometry || null; //(this._object as Mesh).geometry as BufferGeometry | null;
 	}
-
+	static attributeRef<T extends CoreObjectType>(
+		object: ObjectContent<T>,
+		attribName: string,
+		type: ParamConvertibleJsType
+	) {
+		return _getOrCreateObjectAttributeRef(object, attribName, type);
+	}
+	attributeRef(attribName: string, type: ParamConvertibleJsType) {
+		return (this.constructor as any as typeof BaseCoreObject<CoreObjectType>).attributeRef(
+			this._object,
+			attribName,
+			type
+		);
+	}
 	static setAttribute<T extends CoreObjectType>(object: ObjectContent<T>, attribName: string, value: AttribValue) {
 		this.addAttribute(object, attribName, value);
 	}

@@ -8,9 +8,9 @@
 
 void main() {
 
-	vec2 particleUV = (gl_FragCoord.xy / resolution.xy);
-	// vec3 velocity = texture2D( texture_velocity, particleUV ).xyz;
-	// vec3 acceleration = texture2D( texture_acceleration, particleUV ).xyz;
+	vec2 particleUv = (gl_FragCoord.xy / resolution.xy);
+	// vec3 velocity = texture2D( texture_velocity, particleUv ).xyz;
+	// vec3 acceleration = texture2D( texture_acceleration, particleUv ).xyz;
 	// gl_FragColor.xyz = velocity + TIME_INCREMENT * acceleration;
 
 	// INSERT BODY

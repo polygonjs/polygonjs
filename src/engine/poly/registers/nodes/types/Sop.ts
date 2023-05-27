@@ -99,6 +99,8 @@ export enum SopType {
 	NOISE = 'noise',
 	OBJECT_BUILDER = 'objectBuilder',
 	PARTICLES_SYSTEM_GPU = 'particlesSystemGpu',
+	PARTICLES_SYSTEM_GPU_ATTRIBUTES = 'particlesSystemGpuAttributes',
+	PARTICLES_SYSTEM_GPU_MATERIAL = 'particlesSystemGpuMaterial',
 	PHYSICS_GROUND = 'physicsGround',
 	PHYSICS_RBD_ATTRIBUTES = 'physicsRBDAttributes',
 	PHYSICS_WORLD = 'physicsWorld',

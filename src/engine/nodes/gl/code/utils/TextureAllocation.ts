@@ -6,7 +6,8 @@ import {AttributeGlNode} from '../../Attribute';
 import {ShaderName} from '../../../utils/shaders/ShaderName';
 export type TextureAllocationData = TextureVariableData[];
 
-const TEXTURE_PREFIX = 'texture_';
+export const TEXTURE_ALLOCATION_PREFIX = 'texture_';
+export const TEXTURE_ALLOCATION_NAMES_SEPARATOR = '_x_';
 
 export class TextureAllocation {
 	private _variables: TextureVariable[] | undefined;
@@ -29,10 +30,10 @@ export class TextureAllocation {
 	shaderName() {
 		// return this._shader_name; //this._variables[0].name()
 		const names = this.variables()?.map((v) => v.name()) || ['no_variables_allocated'];
-		return names.join('_SEPARATOR_') as ShaderName;
+		return names.join(TEXTURE_ALLOCATION_NAMES_SEPARATOR) as ShaderName;
 	}
 	textureName(): string {
-		return `${TEXTURE_PREFIX}${this.shaderName()}`;
+		return `${TEXTURE_ALLOCATION_PREFIX}${this.shaderName()}`;
 	}
 
 	variables(): TextureVariable[] | undefined {

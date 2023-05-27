@@ -131,7 +131,7 @@ export class NeighbourAttractRepulseGlNode extends TypedGlNode<NeighbourAttractR
 					attractEndDist,
 				].join(', ');
 
-				const {functionName, functionDeclaration} = this._templateFlocking(component, uvName);
+				const {functionName, functionDeclaration} = this._templateFlocking(component, );
 				shadersCollectionController.addDefinitions(this, [new FunctionGLDefinition(this, functionDeclaration)]);
 
 				bodyLines.push(`vec3 ${out} = ${functionName}(${args})`);
@@ -141,7 +141,7 @@ export class NeighbourAttractRepulseGlNode extends TypedGlNode<NeighbourAttractR
 		shadersCollectionController.addBodyLines(this, bodyLines);
 	}
 
-	private _templateFlocking(component: string, uvName: string) {
+	private _templateFlocking(component: string) {
 		const functionName = `flocking${this.graphNodeId()}`;
 		const functionDeclaration = AttractRepulse.replace('__FUNCTION__NAME__', functionName).replace(
 			'__COMPONENT__',

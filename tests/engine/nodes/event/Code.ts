@@ -13,10 +13,10 @@ QUnit.test('event code simple', async (assert) => {
 	code1.setInput(0, button1);
 	setParam1.setInput(0, code1);
 
-	setParam1.p.param.setParam(box1.p.divisions);
+	setParam1.p.param.setParam(box1.p.divisions.x);
 	setParam1.p.number.set(10);
 
 	button1.p.dispatch.pressButton();
 	await CoreSleep.sleep(200);
-	assert.equal(box1.p.divisions.value, 10);
+	assert.equal(box1.p.divisions.x.value, 10);
 });

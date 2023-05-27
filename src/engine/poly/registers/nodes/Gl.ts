@@ -52,6 +52,7 @@ import {AddGlNode, DivideGlNode, MultGlNode, SubtractGlNode} from '../../../node
 
 import {AndGlNode, OrGlNode} from '../../../nodes/gl/_Math_Arg2Boolean';
 import {AccelerationGlNode} from '../../../nodes/gl/Acceleration';
+import {AdjacentPointsAttribSmoothGlNode} from '../../../nodes/gl/AdjacentPointsAttribSmooth';
 import {AlignGlNode} from '../../../nodes/gl/Align';
 import {AttributeGlNode} from '../../../nodes/gl/Attribute';
 import {CartesianToPolarGlNode} from '../../../nodes/gl/CartesianToPolar';
@@ -94,6 +95,7 @@ import {MultScalarGlNode} from '../../../nodes/gl/MultScalar';
 import {NegateGlNode} from '../../../nodes/gl/Negate';
 import {NeighbourAttractGlNode} from '../../../nodes/gl/NeighbourAttract';
 import {NeighbourAttractRepulseGlNode} from '../../../nodes/gl/NeighbourAttractRepulse';
+import {NeighbourAttribSmoothGlNode} from '../../../nodes/gl/NeighbourAttribSmooth';
 import {NeighbourDensityGlNode} from '../../../nodes/gl/NeighbourDensity';
 import {NeighbourRepulseGlNode} from '../../../nodes/gl/NeighbourRepulse';
 import {NoiseGlNode} from '../../../nodes/gl/Noise';
@@ -188,6 +190,7 @@ export interface GlNodeChildrenMap {
 	acceleration: AccelerationGlNode;
 	acos: AcosGlNode;
 	add: AddGlNode;
+	adjacentPointsAttribSmooth: AdjacentPointsAttribSmoothGlNode;
 	align: AlignGlNode;
 	and: AndGlNode;
 	asin: AsinGlNode;
@@ -262,6 +265,7 @@ export interface GlNodeChildrenMap {
 	negate: NegateGlNode;
 	neighbourAttract: NeighbourAttractGlNode;
 	neighbourAttractRepulse: NeighbourAttractRepulseGlNode;
+	neighbourAttribSmooth: NeighbourAttribSmoothGlNode;
 	neighbourDensity: NeighbourDensityGlNode;
 	neighbourRepulse: NeighbourRepulseGlNode;
 	noise: NoiseGlNode;
@@ -385,12 +389,16 @@ const SUBNET_CHILD_OPTION = {
 		`${SDFGradientGlNode.context()}/${SDFGradientGlNode.type()}`,
 	],
 };
+const particlesOnlyOption = {
+	only: [`${NodeContext.SOP}/${SopType.PARTICLES_SYSTEM_GPU}`],
+};
 export class GlRegister {
 	static run(poly: PolyEngine) {
 		poly.registerNode(AbsGlNode, CATEGORY_GL.MATH);
 		poly.registerNode(AccelerationGlNode, CATEGORY_GL.PHYSICS);
 		poly.registerNode(AcosGlNode, CATEGORY_GL.TRIGO);
 		poly.registerNode(AddGlNode, CATEGORY_GL.MATH);
+		poly.registerNode(AdjacentPointsAttribSmoothGlNode, CATEGORY_GL.ADVANCED, particlesOnlyOption);
 		poly.registerNode(AlignGlNode, CATEGORY_GL.TRIGO);
 		poly.registerNode(AndGlNode, CATEGORY_GL.LOGIC);
 		poly.registerNode(AsinGlNode, CATEGORY_GL.TRIGO);
@@ -421,15 +429,7 @@ export class GlRegister {
 		poly.registerNode(ExpGlNode, CATEGORY_GL.MATH);
 		poly.registerNode(Exp2GlNode, CATEGORY_GL.MATH);
 		poly.registerNode(FaceforwardGlNode, CATEGORY_GL.GEOMETRY);
-		const particlesOnlyOption = {
-			only: [`${NodeContext.SOP}/${SopType.PARTICLES_SYSTEM_GPU}`],
-		};
-		poly.registerNode(NeighbourAttractGlNode, CATEGORY_GL.ADVANCED, particlesOnlyOption);
-		poly.registerNode(NeighbourAttractRepulseGlNode, CATEGORY_GL.ADVANCED, particlesOnlyOption);
-		if (process.env.NODE_ENV == 'development') {
-			poly.registerNode(NeighbourDensityGlNode, CATEGORY_GL.ADVANCED, particlesOnlyOption);
-		}
-		poly.registerNode(NeighbourRepulseGlNode, CATEGORY_GL.ADVANCED, particlesOnlyOption);
+
 		poly.registerNode(FitGlNode, CATEGORY_GL.MATH);
 		poly.registerNode(FitTo01GlNode, CATEGORY_GL.MATH);
 		poly.registerNode(FitFrom01GlNode, CATEGORY_GL.MATH);
@@ -472,6 +472,11 @@ export class GlRegister {
 		poly.registerNode(MultAddGlNode, CATEGORY_GL.MATH);
 		poly.registerNode(MultScalarGlNode, CATEGORY_GL.MATH);
 		poly.registerNode(NegateGlNode, CATEGORY_GL.MATH);
+		poly.registerNode(NeighbourAttractGlNode, CATEGORY_GL.ADVANCED, particlesOnlyOption);
+		poly.registerNode(NeighbourAttractRepulseGlNode, CATEGORY_GL.ADVANCED, particlesOnlyOption);
+		poly.registerNode(NeighbourAttribSmoothGlNode, CATEGORY_GL.ADVANCED, particlesOnlyOption);
+		poly.registerNode(NeighbourDensityGlNode, CATEGORY_GL.ADVANCED, particlesOnlyOption);
+		poly.registerNode(NeighbourRepulseGlNode, CATEGORY_GL.ADVANCED, particlesOnlyOption);
 		poly.registerNode(NullGlNode, CATEGORY_GL.UTIL);
 		poly.registerNode(NoiseGlNode, CATEGORY_GL.GEOMETRY);
 		poly.registerNode(NormalizeGlNode, CATEGORY_GL.MATH);

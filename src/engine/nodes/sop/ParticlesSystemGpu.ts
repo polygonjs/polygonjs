@@ -11,7 +11,7 @@
 // - simulation shaders should update the particles at any frame, and resimulate accordingly when at later frames
 // - render material should update at any frame, without having to resimulate
 // - changing the input will recompute, when on first frame only (otherwise an animated geo could make it recompute all the time)
-import {Object3D, Mesh, Vector2} from 'three';
+import {Object3D} from 'three';
 import {Constructor, valueof} from '../../../types/GlobalTypes';
 import {TypedSopNode} from './_Base';
 import {GlobalsTextureHandler, GlobalsTextureHandlerPurpose} from '../gl/code/globals/Texture';
@@ -27,8 +27,6 @@ import {
 } from '../../../core/particles/CoreParticles';
 import {CoreParticlesController} from '../../../core/particles/CoreParticlesController';
 import {PARTICLE_DATA_TYPES} from '../../../core/particles/CoreParticlesGpuComputeController';
-import {coreParticlesInitParticlesUVs} from '../../../core/particles/CoreParticlesInit';
-
 import {GlNodeChildrenMap} from '../../poly/registers/nodes/Gl';
 import {BaseGlNodeType} from '../gl/_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
@@ -41,10 +39,25 @@ import {NodeCreateOptions} from '../utils/hierarchy/ChildrenController';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 import {GlAssemblerController} from '../gl/code/Controller';
 import {ShaderAssemblerParticles} from '../gl/code/assemblers/particles/Particles';
-import {textureFromAttributeSize} from '../../../core/geometry/operation/TextureFromAttribute';
+import {ParticlesSystemGpuAttributesSopOperation} from '../../operations/sop/ParticlesSystemGpuAttributes';
+import {ParticlesSystemGpuMaterialSopOperation} from '../../operations/sop/ParticlesSystemGpuMaterial';
+import {CoreMask} from '../../../core/geometry/Mask';
 
-const textureSize = new Vector2();
+interface OperationContainer {
+	attributes: ParticlesSystemGpuAttributesSopOperation;
+	material: ParticlesSystemGpuMaterialSopOperation;
+}
+const DEFAULT = ParticlesSystemGpuAttributesSopOperation.DEFAULT_PARAMS;
+
 class ParticlesSystemGpuSopParamsConfig extends NodeParamsConfig {
+	/** @param group to assign the material to */
+	group = ParamConfig.STRING(DEFAULT.group, {
+		objectMask: true,
+	});
+	/** @param toggle on to also assign the material to children */
+	applyToChildren = ParamConfig.BOOLEAN(DEFAULT.applyToChildren, {
+		separatorAfter: true,
+	});
 	/** @param data type used by the solver */
 	dataType = ParamConfig.INTEGER(0, {
 		menu: {
@@ -147,110 +160,35 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 		return this.assemblerController() == null;
 	}
 
+	private _operation: OperationContainer | undefined;
 	override async cook(inputCoreGroups: CoreGroup[]) {
+		this._operation = this._operation || {
+			attributes: new ParticlesSystemGpuAttributesSopOperation(this._scene, this.states, this),
+			material: new ParticlesSystemGpuMaterialSopOperation(this._scene, this.states, this),
+		};
+
 		Poly.onObjectsAddedHooks.registerHook(this.type(), this.traverseObjectOnSopGroupAdd.bind(this));
 
 		this.compileIfRequired();
 
 		const coreGroup = inputCoreGroups[0];
 
-		const objects = coreGroup.threejsObjects();
-		const object = objects[0];
-
-		// get texture size
-		// if (!isBooleanTrue(this.pv.autoTexturesSize)) {
-		// const nearest_power_of_two = CoreMath.nearestPower2(Math.sqrt(pointsCount));
-		// _usedTexturesSize.x = Math.min(nearest_power_of_two, this.pv.maxTexturesSize.x);
-		// _usedTexturesSize.y = Math.min(nearest_power_of_two, this.pv.maxTexturesSize.y);
-		// } else {
-		// if (!(MathUtils.isPowerOfTwo(this.pv.texturesSize.x) && MathUtils.isPowerOfTwo(this.pv.texturesSize.y))) {
-		// 	this.states.error.set('texture size must be a power of 2');
-		// 	return;
-		// }
-
-		const geometry = (object as Mesh).geometry;
-		if (!geometry) {
-			return;
-		}
-		// const pointsCount = textureFromAttributePointsCount(geometry);
-		// const maxParticlesCount = this.pv.texturesSize.x * this.pv.texturesSize.y;
-		// if (pointsCount > maxParticlesCount) {
-		// 	this.states.error.set(
-		// 		`max particles is set to (${this.pv.texturesSize.x}x${this.pv.texturesSize.y}=) ${maxParticlesCount}`
-		// 	);
-		// 	return;
-		// }
-		// }
-
-		const existingActorIds = this.scene().actorsManager.objectActorNodeIds(object);
-		if (existingActorIds == null || existingActorIds.length == 0) {
-			this.states.error.set(`the input objects requires an actor node assigned to it`);
-		}
-		const renderer = await this.scene().renderersRegister.waitForRenderer();
-		setParticleRenderer(this.graphNodeId(), renderer);
-		CoreParticlesAttribute.setParticlesNodeId(object, this.graphNodeId());
-		CoreParticlesAttribute.setDataType(object, this.pv.dataType);
-		// CoreParticlesAttribute.setAutoTextureSize(object, this.pv.autoTexturesSize);
-		// CoreParticlesAttribute.setMaxTextureSize(object, this.pv.maxTexturesSize);
-		// CoreParticlesAttribute.setTextureSize(object, this.pv.texturesSize);
-		CoreParticlesAttribute.setPreRollFramesCount(object, this.pv.preRollFramesCount);
-
-		textureFromAttributeSize(geometry, textureSize);
-		coreParticlesInitParticlesUVs(object, textureSize);
-
-		const matNode = this.pv.material.nodeWithContext(NodeContext.MAT, this.states?.error);
-		if (matNode) {
-			const material = await matNode.material();
-			// const baseBuilderMatNode = materialNode as BaseBuilderMatNodeType;
-			// if (baseBuilderMatNode.assemblerController) {
-			// 	baseBuilderMatNode.assemblerController()?.setAssemblerGlobalsHandler(this._globalsHandler);
-			// }
-			CoreParticlesAttribute.setMaterialNodeId(object, matNode.graphNodeId());
-
-			if (!material) {
-				this.states?.error.set(`material invalid. (error: '${matNode.states.error.message()}')`);
+		const selectedObjects = CoreMask.filterObjects(coreGroup, this.pv);
+		for (let object of selectedObjects) {
+			const existingActorIds = this.scene().actorsManager.objectActorNodeIds(object);
+			if (existingActorIds == null || existingActorIds.length == 0) {
+				this.states.error.set(`the input objects requires an actor node assigned to it`);
 			}
-		} else {
-			this.states?.error.set(`no material node found`);
+			const renderer = await this.scene().renderersRegister.waitForRenderer();
+			setParticleRenderer(this.graphNodeId(), renderer);
+			CoreParticlesAttribute.setParticlesNodeId(object, this.graphNodeId());
+			CoreParticlesAttribute.setDataType(object, this.pv.dataType);
+			CoreParticlesAttribute.setPreRollFramesCount(object, this.pv.preRollFramesCount);
 		}
-		// if (node.p.material.isDirty()) {
-		// 	this.mainController.debugMessage('renderController: this.node.p.material.compute() START');
-		// 	await node.p.material.compute();
-		// 	this.mainController.debugMessage('renderController: this.node.p.material.compute() END');
-		// }
-		// const matNode = node.pv.material.nodeWithContext(NodeContext.MAT, node.states.error) as BaseBuilderMatNodeType;
-		this.setObject(object);
 
-		// // const isOnStartFrame = this.isOnStartFrame();
-
-		// // if (isOnStartFrame) {
-		// this._coreGroupSet = false;
-		// this.gpuController.resetParticleGroups();
-		// // }
-
-		// if (!this.gpuController.initialized()) {
-		// 	this.debugMessage('particles:this.gpuController.init(coreGroup) START');
-		// 	await this.gpuController.init(coreGroup);
-		// 	this.debugMessage('particles:this.gpuController.init(coreGroup) END');
-		// }
-
-		// if (!this.renderController.initialized()) {
-		// 	this.renderController.initCoreGroup(coreGroup);
-		// 	this.debugMessage('particles:this.renderController.initRenderMaterial() START');
-		// 	await this.renderController.initRenderMaterial();
-		// 	this.debugMessage('particles:this.renderController.initRenderMaterial() END');
-		// }
-
-		// console.warn('cook');
-		// this.gpuController.restartSimulationIfRequired();
-		// // this.gpuController.computeSimulationIfRequired(0);
-		// if (!this._coreGroupSet) {
-		// 	this._coreGroupSet = true;
-		// 	this.debugMessage('particles:setCoreGroup');
-		// 	this.setCoreGroup(coreGroup);
-		// } else {
-		// 	this.cookController.endCook();
-		// }
+		this._operation.attributes.cook(inputCoreGroups, this.pv);
+		await this._operation.material.cook(inputCoreGroups, this.pv);
+		this.setObjects(selectedObjects);
 	}
 	traverseObjectOnSopGroupAdd(object: Object3D) {
 		const particlesNodeId = CoreParticlesAttribute.getParticlesNodeId(object);
@@ -280,11 +218,11 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 		if (!assemblerController) {
 			return;
 		}
-		const export_nodes = this._findExportNodes();
-		if (export_nodes.length > 0) {
-			const root_nodes = export_nodes;
+		const exportNodes = this._findExportNodes();
+		if (exportNodes.length > 0) {
+			const rootNodes = exportNodes.concat(GlNodeFinder.findAjacencyNodes(this));
 			assemblerController.setAssemblerGlobalsHandler(this._particlesGlobalsHandler);
-			assemblerController.assembler.set_root_nodes(root_nodes);
+			assemblerController.assembler.set_root_nodes(rootNodes);
 
 			assemblerController.assembler.compile();
 			assemblerController.post_compile();
@@ -296,12 +234,6 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 
 	private _setShaderNames(shadersByName: Map<ShaderName, string>) {
 		this._shadersByName = shadersByName;
-
-		// this.gpuController.setShadersByName(this._shaders_by_name);
-		// this.renderController.setShadersByName(this._shaders_by_name);
-
-		// this.gpuController.resetGpuCompute();
-		// this.gpuController.resetParticleGroups();
 	}
 
 	init_with_persisted_config() {
@@ -323,26 +255,18 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 
 	private _findExportNodes() {
 		const nodes: BaseGlNodeType[] = GlNodeFinder.findAttributeExportNodes(this);
-		const output_nodes = GlNodeFinder.findOutputNodes(this);
-		if (output_nodes.length == 0) {
+		const outputNodes = GlNodeFinder.findOutputNodes(this);
+		if (outputNodes.length == 0) {
 			this.states.error.set('one output node is required');
 		}
-		if (output_nodes.length > 1) {
+		if (outputNodes.length > 1) {
 			this.states.error.set('only one output node is allowed');
 			return [];
 		}
-		const output_node = output_nodes[0];
-		if (output_node) {
-			nodes.push(output_node);
+		const outputNode = outputNodes[0];
+		if (outputNode) {
+			nodes.push(outputNode);
 		}
 		return nodes;
 	}
-
-	// private _findActorNode() {
-	// 	// if (isBooleanTrue(this.pv.useThisNode)) {
-	// 	// 	return this;
-	// 	// } else {
-	// 	return this.pv.actor.node() as ActorBuilderNode | undefined;
-	// 	// }
-	// }
 }

@@ -1,23 +1,18 @@
 
 
-vec3 __FUNCTION__NAME__(
+float __FUNCTION__NAME__(
 	sampler2D texturePosition,
 	vec2 particleUv,
 	vec3 currentPosition,
-	// attract
-	float amount,
-	float startDist,
-	float midDist,
-	float endDist
+	// density
+	float maxDist
 	){
 
-	vec3 otherPosition, otherVelocity, dir;
-	float distSquared, dist;
-	vec3 attractForce = vec3( 0.0, 0.0, 0.0);
-	int attractorsCount = 0;
+	vec3 otherPosition;
+	float dist;
 
-	float range0 = abs(midDist - startDist);
-	float range1 = abs(endDist - midDist);
+	float density = 0.;
+	float range = abs(maxDist);
 
 	const float width = resolution.x;
 	const float height = resolution.y;
@@ -30,27 +25,15 @@ vec3 __FUNCTION__NAME__(
 			vec2 ref = vec2( x + 0.5, y + 0.5 ) / resolution.xy;
 			otherPosition = texture2D( texturePosition, ref ).__COMPONENT__;
 
-			dir = otherPosition - currentPosition;
-			dist = length( dir );
+			dist = distance( otherPosition, currentPosition );
 
-			if( dist > startDist && dist < midDist ){
-				float attractRatio0 = (dist - startDist) / range0;
-				attractForce += amount * attractRatio0 * dir;
-				attractorsCount++;
-			} else {
-				if( dist > midDist && dist < endDist ){
-					float attractRatio1 = (dist - midDist) / range1;
-					attractForce += amount * (1.0-attractRatio1) * dir;
-					attractorsCount++;
-				}
+			if(dist < maxDist){
+				float weight = 1.0 - dist / range;
+				density += weight;
 			}
 		}
 	}
 
-	vec3 force = vec3( 0.0, 0.0, 0.0);
-	if(attractorsCount > 0){
-		force += attractForce / float(attractorsCount);
-	}
-	return force;
+	return density;
 
 }

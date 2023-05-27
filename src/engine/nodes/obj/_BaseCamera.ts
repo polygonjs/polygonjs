@@ -126,6 +126,7 @@ export class BaseThreejsCameraObjParamsConfig extends CameraPostProcessParamConf
 
 export interface BaseViewerOptions {
 	element?: HTMLElement;
+	updateAutoRenderOnIntersectionChange?: boolean;
 }
 
 export abstract class TypedCameraObjNode<
@@ -339,14 +340,18 @@ export class TypedThreejsCameraObjNode<
 			| undefined;
 		let element: HTMLElement | undefined;
 
+		let updateAutoRenderOnIntersectionChange: boolean | undefined;
 		if (options && options instanceof HTMLElement) {
 			element = options;
 		} else {
 			element = options?.element;
+			updateAutoRenderOnIntersectionChange = options?.updateAutoRenderOnIntersectionChange;
 		}
 		if (viewer) {
 			if (element) {
-				viewer.mount(element);
+				viewer.mount(element, {
+					updateAutoRenderOnIntersectionChange,
+				});
 			}
 		}
 		return viewer;

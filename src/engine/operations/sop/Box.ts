@@ -14,7 +14,9 @@ interface BoxSopParams extends DefaultOperationParams {
 	divisions: Vector3;
 	center: Vector3;
 }
-
+function _roundDivision(division: number) {
+	return Math.max(1, Math.floor(division));
+}
 // const _size = new Vector3();
 // const _center = new Vector3();
 
@@ -47,9 +49,9 @@ export class BoxSopOperation extends BaseSopOperation {
 			size * sizes.x,
 			size * sizes.y,
 			size * sizes.z,
-			divisions.x,
-			divisions.y,
-			divisions.z
+			_roundDivision(divisions.x),
+			_roundDivision(divisions.y),
+			_roundDivision(divisions.z)
 		);
 		geometry.translate(params.center.x, params.center.y, params.center.z);
 		geometry.computeVertexNormals();
@@ -62,7 +64,14 @@ export class BoxSopOperation extends BaseSopOperation {
 		tmpBox.getCenter(tmpCenter);
 
 		const divisions = params.divisions;
-		const geometry = new BoxGeometry(tmpSize.x, tmpSize.y, tmpSize.z, divisions.x, divisions.y, divisions.z);
+		const geometry = new BoxGeometry(
+			tmpSize.x,
+			tmpSize.y,
+			tmpSize.z,
+			_roundDivision(divisions.x),
+			_roundDivision(divisions.y),
+			_roundDivision(divisions.z)
+		);
 		const matrix = this._coreTransform.translationMatrix(tmpCenter);
 		geometry.applyMatrix4(matrix);
 		return geometry;

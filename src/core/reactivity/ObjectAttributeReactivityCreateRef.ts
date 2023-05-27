@@ -2,7 +2,7 @@ import {ObjectXD, _getObjectAttributeRef_, refByObjectUuidByAttribName, AttribRe
 import {Color, Vector2, Vector3, Vector4} from 'three';
 import {JsConnectionPointType, ParamConvertibleJsType} from '../../engine/nodes/utils/io/connections/Js';
 import {TypeAssert} from '../../engine/poly/Assert';
-import {CoreObject} from '../geometry/Object';
+import {BaseCoreObject} from '../geometry/_BaseObject';
 import type {AttribValue} from '../../types/GlobalTypes';
 
 import {ref} from './CoreReactivity';
@@ -51,8 +51,8 @@ export function _getOrCreateObjectAttributeRef(
 	if (!refForAttribName) {
 		let _defaultValue = defaultValue(type);
 		let _previousValue = defaultValue(type);
-		const currentValue = CoreObject.attribValue(object3D, attribName, 0, _defaultValue as any as Vector2);
-		const previousValue = CoreObject.attribValue(object3D, attribName, 0, _previousValue as any as Vector2);
+		const currentValue = BaseCoreObject.attribValue(object3D, attribName, 0, _defaultValue as any as Vector2);
+		const previousValue = BaseCoreObject.attribValue(object3D, attribName, 0, _previousValue as any as Vector2);
 		if (currentValue == null || previousValue == null) {
 			refForAttribName = {
 				current: ref(defaultValue(type)),

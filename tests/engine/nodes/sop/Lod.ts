@@ -13,9 +13,9 @@ QUnit.test('LOD simple', async (assert) => {
 	const box2 = geo1.createNode('box');
 	const LOD1 = geo1.createNode('lod');
 
-	box0.p.divisions.set(10);
-	box1.p.divisions.set(5);
-	box2.p.divisions.set(2);
+	box0.p.divisions.set([10, 10, 10]);
+	box1.p.divisions.set([5, 5, 5]);
+	box2.p.divisions.set([2, 2, 2]);
 	LOD1.p.distance0.set(5);
 	LOD1.p.distance1.set(10);
 

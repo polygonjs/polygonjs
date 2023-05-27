@@ -21,13 +21,18 @@ export enum GlobalsTextureHandlerPurpose {
 	PARTICLES_SHADER = 'particles_shader',
 	MATERIAL = 'material',
 }
+export interface GlobalsTextureHandlerData {
+	textureName: string;
+	component: string;
+	uvName: string;
+}
 
 export class GlobalsTextureHandler extends GlobalsBaseController {
 	private _textureAllocationsController: TextureAllocationsController | undefined;
 
 	static PARTICLES_SIM_UV_ATTRIB = 'particlesSimUv';
 	static UV_VARYING = 'particlesSimUvVarying';
-	static PARTICLE_SIM_UV = 'particleUV';
+	static PARTICLE_SIM_UV = 'particleUv';
 
 	private globals_geometry_handler: GlobalsGeometryHandler | undefined;
 
@@ -81,7 +86,7 @@ export class GlobalsTextureHandler extends GlobalsBaseController {
 		TypeAssert.unreachable(this._purpose);
 	}
 
-	attribTextureData(attribName: string) {
+	attribTextureData(attribName: string): GlobalsTextureHandlerData | undefined {
 		if (!this._textureAllocationsController) {
 			console.warn('no texture allocation controller');
 			return;

@@ -51,6 +51,9 @@ export interface TypedViewerInterectionObserverChangeOptions {
 	playPauseScene?: boolean;
 	onChange?: (isIntersecting: boolean) => void;
 }
+export interface BaseViewerMountOptions {
+	updateAutoRenderOnIntersectionChange?: boolean;
+}
 
 /**
  *
@@ -102,12 +105,19 @@ export abstract class TypedViewer<C extends Camera> {
 	 *
 	 *
 	 */
-	mount(element: HTMLElement) {
+	mount(element: HTMLElement, options?: BaseViewerMountOptions) {
+		let updateAutoRenderOnIntersectionChange = true;
+		if (options && options.updateAutoRenderOnIntersectionChange != null) {
+			updateAutoRenderOnIntersectionChange = options.updateAutoRenderOnIntersectionChange;
+		}
+
 		this._domElement = element as HTMLElementWithViewer<C>;
 		this._domElement.viewer = this;
 		this._domElement.scene = this._scene;
 		this._domElement.Poly = Poly;
-		this.updateAutoRenderOnIntersectionChange({playPauseScene: true});
+		if (updateAutoRenderOnIntersectionChange) {
+			this.updateAutoRenderOnIntersectionChange({playPauseScene: true});
+		}
 		this.controlsController().mount();
 		this._mounted = true;
 	}

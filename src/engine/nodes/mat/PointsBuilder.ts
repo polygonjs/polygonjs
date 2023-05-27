@@ -28,10 +28,10 @@ import {Material} from 'three';
 import {PointsMaterial} from 'three';
 import {PointsSizeController, PointsParamConfig, PointsSizeControllers} from './utils/PointsSizeController';
 import {MatType} from '../../poly/registers/nodes/types/Mat';
-// import {
-// 	CustomMaterialPointsParamConfig,
-// 	materialPointsAssemblerCustomMaterialRequested,
-// } from './utils/customMaterials/CustomMaterialPoints';
+import {
+	CustomMaterialPointsParamConfig,
+	materialPointsAssemblerCustomMaterialRequested,
+} from './utils/customMaterials/CustomMaterialPoints';
 
 interface PointsBuilderControllers
 	extends AdvancedCommonControllers,
@@ -46,11 +46,13 @@ interface PointsBuilderMaterial extends PointsMaterial {
 	};
 }
 
-class PointsBuilderMatParamsConfig extends FogParamConfig(
-	AdvancedCommonParamConfig(
-		BaseBuilderParamConfig(
-			/* advanced */ AdvancedFolderParamConfig(
-				UniformsTransparencyParamConfig(PointsParamConfig(DefaultFolderParamConfig(NodeParamsConfig)))
+class PointsBuilderMatParamsConfig extends CustomMaterialPointsParamConfig(
+	FogParamConfig(
+		AdvancedCommonParamConfig(
+			BaseBuilderParamConfig(
+				/* advanced */ AdvancedFolderParamConfig(
+					UniformsTransparencyParamConfig(PointsParamConfig(DefaultFolderParamConfig(NodeParamsConfig)))
+				)
 			)
 		)
 	)
@@ -72,9 +74,9 @@ export class PointsBuilderMatNode extends TypedBuilderMatNode<
 	protected _createAssemblerController() {
 		return Poly.assemblersRegister.assembler(this, this.usedAssembler());
 	}
-	// public override customMaterialRequested(customName: CustomMaterialName): boolean {
-	// 	return materialPointsAssemblerCustomMaterialRequested(this, customName);
-	// }
+	public override customMaterialRequested(customName: CustomMaterialName): boolean {
+		return materialPointsAssemblerCustomMaterialRequested(this, customName);
+	}
 	readonly controllers: PointsBuilderControllers = {
 		advancedCommon: new AdvancedCommonController(this),
 		pointsSize: new PointsSizeController(this),

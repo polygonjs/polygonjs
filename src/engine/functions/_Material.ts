@@ -126,7 +126,7 @@ export class setMaterialUniformNumber extends NamedFunction5<[Material, string, 
 		uniformName = _addParamUniformNamePrefix(uniformName, addPrefix);
 		const uniform = uniforms[uniformName];
 		if (!uniform) {
-			console.warn(`uniform '${uniformName}' not found`, uniforms);
+			console.warn(`uniform '${uniformName}' not found`, material, uniforms);
 			return;
 		}
 		if (lerp == 1) {
@@ -152,7 +152,7 @@ export class setMaterialUniformVectorColor extends NamedFunction5<
 		uniformName = _addParamUniformNamePrefix(uniformName, addPrefix);
 		const uniform = uniforms[uniformName];
 		if (!uniform) {
-			console.warn(`uniform '${uniformName}' not found`, uniforms);
+			console.warn(`uniform '${uniformName}' not found`, material, uniforms);
 			return;
 		}
 		if (lerp >= 1) {
@@ -176,7 +176,7 @@ export class setMaterialUniformTexture extends NamedFunction4<[Material, string,
 		uniformName = _addTextureUniformNamePrefix(uniformName, addPrefix);
 		const uniform = uniforms[uniformName];
 		if (!uniform) {
-			console.warn(`uniform '${uniformName}' not found`, uniforms);
+			console.warn(`uniform '${uniformName}' not found`, material, uniforms);
 			return;
 		}
 		uniform.value = value;

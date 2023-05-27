@@ -17,7 +17,7 @@ uniform vec3 v_POLY_param_test_param;
 
 void main() {
 
-	vec2 particleUV = (gl_FragCoord.xy / resolution.xy);
+	vec2 particleUv = (gl_FragCoord.xy / resolution.xy);
 
 // removed:
 //	// INSERT BODY
@@ -25,7 +25,7 @@ void main() {
 
 
 	// /geo1/particlesSystemGpu1/globals1
-	vec3 v_POLY_globals1_position = texture2D( texture_position, particleUV ).xyz;
+	vec3 v_POLY_globals1_position = texture2D( texture_position, particleUv ).xyz;
 	
 	// /geo1/particlesSystemGpu1/param1
 	vec3 v_POLY_param1_val = v_POLY_param_test_param;

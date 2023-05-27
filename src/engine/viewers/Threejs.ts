@@ -1,5 +1,5 @@
 import {Camera, WebGLRenderer, Scene} from 'three';
-import {TypedViewer, TypedViewerOptions} from './_Base';
+import {TypedViewer, TypedViewerOptions, BaseViewerMountOptions} from './_Base';
 // import {Poly} from '../Poly';
 // import {ViewerLogoController} from './utils/logo/ViewerLogoController';
 import {AvailableRenderConfig, CoreCameraRendererController} from '../../core/camera/CoreCameraRendererController';
@@ -145,8 +145,8 @@ export class ThreejsViewer<C extends Camera> extends TypedViewer<C> {
 	 *
 	 *
 	 */
-	override mount(element: HTMLElement) {
-		super.mount(element);
+	override mount(element: HTMLElement, options?: BaseViewerMountOptions) {
+		super.mount(element, options);
 		const canvas = this.canvas();
 		this._domElement?.appendChild(canvas);
 		this._domElement?.classList.add(CSS_CLASS);

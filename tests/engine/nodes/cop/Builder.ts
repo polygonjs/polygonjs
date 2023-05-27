@@ -108,6 +108,7 @@ QUnit.test('COP/builder simple with data texture', async (assert) => {
 		scene.setFrame(60);
 		assert.equal(scene.time(), 1);
 		await CoreSleep.sleep(10);
+		assert.equal(scene.time(), 1);
 		assert.deepEqual(pixelBuffer.slice(0, 4).join(':'), [1.0, 0, 0, 1].join(':'));
 	});
 });

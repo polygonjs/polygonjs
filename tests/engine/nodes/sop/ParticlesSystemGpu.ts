@@ -438,11 +438,11 @@ QUnit.test('material can use a float attribute also used in simulation in readon
 	// with attrib exported from particles
 	assert.includes(
 		material.vertexShader,
-		'vec3 transformed = texture2D( texture_position_SEPARATOR_randomId, particles_sim_uv_varying ).xyz;'
+		'vec3 transformed = texture2D( texture_position_SEPARATOR_randomId, particlesSimUvVarying ).xyz;'
 	);
 	assert.includes(
 		material.fragmentShader,
-		'float v_POLY_attribute1_val = texture2D( texture_position_SEPARATOR_randomId, particles_sim_uv_varying ).w;'
+		'float v_POLY_attribute1_val = texture2D( texture_position_SEPARATOR_randomId, particlesSimUvVarying ).w;'
 	);
 	assert.deepEqual(
 		(await particlesSystemGpu1.persisted_config.toData())?.texture_allocations,
@@ -475,11 +475,11 @@ QUnit.test('material can use a float attribute also used in simulation in readon
 	await RendererUtils.compile(pointsBuilder1, renderer);
 	assert.includes(
 		material.vertexShader,
-		'vec3 transformed = texture2D( texture_position, particles_sim_uv_varying ).xyz;'
+		'vec3 transformed = texture2D( texture_position, particlesSimUvVarying ).xyz;'
 	);
 	assert.not_includes(
 		material.fragmentShader,
-		'float v_POLY_attribute1_val = texture2D( texture_position_SEPARATOR_randomId, particles_sim_uv_varying ).w;'
+		'float v_POLY_attribute1_val = texture2D( texture_position_SEPARATOR_randomId, particlesSimUvVarying ).w;'
 	);
 	assert.includes(material.fragmentShader, `float v_POLY_attribute1_val = v_POLY_attribute_randomId;`);
 	assert.deepEqual((await particlesSystemGpu1.persisted_config.toData())?.texture_allocations, {
@@ -533,11 +533,11 @@ QUnit.test('material can use a float attribute also used in simulation in readon
 	);
 	assert.includes(
 		material.vertexShader,
-		`vec3 transformed = texture2D( texture_position_SEPARATOR_randomId, particles_sim_uv_varying ).xyz;`
+		`vec3 transformed = texture2D( texture_position_SEPARATOR_randomId, particlesSimUvVarying ).xyz;`
 	);
 	assert.includes(
 		material.fragmentShader,
-		`float v_POLY_attribute1_val = texture2D( texture_position_SEPARATOR_randomId, particles_sim_uv_varying ).w;`
+		`float v_POLY_attribute1_val = texture2D( texture_position_SEPARATOR_randomId, particlesSimUvVarying ).w;`
 	);
 
 	// change name
@@ -572,7 +572,7 @@ QUnit.test('material can use a float attribute also used in simulation in readon
 	);
 	assert.includes(
 		material.vertexShader,
-		`vec3 transformed = texture2D( texture_position_SEPARATOR_otherAttrib, particles_sim_uv_varying ).xyz;`
+		`vec3 transformed = texture2D( texture_position_SEPARATOR_otherAttrib, particlesSimUvVarying ).xyz;`
 	);
 	assert.includes(material.fragmentShader, `float v_POLY_attribute1_val = v_POLY_attribute_randomId;`);
 
@@ -788,10 +788,10 @@ QUnit.test('ParticlesSystemGPU: 2 gl/attribute with same attrib name do not trig
 		material.fragmentShader,
 		`
 	// /geo1/particlesSystemGpu1/attribute1
-	vec3 v_POLY_attribute1_val = texture2D( texture_test, particleUV ).xyz;
+	vec3 v_POLY_attribute1_val = texture2D( texture_test, particleUv ).xyz;
 	
 	// /geo1/particlesSystemGpu1/attribute2
-	vec3 v_POLY_attribute2_val = texture2D( texture_test, particleUV ).xyz;
+	vec3 v_POLY_attribute2_val = texture2D( texture_test, particleUv ).xyz;
 `
 	);
 

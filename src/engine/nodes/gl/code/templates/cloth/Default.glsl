@@ -20,12 +20,12 @@ uniform float spring;
 
 void main() {
 
-	vec2 particleUV = gl_FragCoord.xy / tSize.xy;
+	vec2 particleUv = gl_FragCoord.xy / tSize.xy;
 
-	vec3 original = texture2D( tOriginal, particleUV ).xyz;
-	vec3 previous = ( texture2D( tPrevious0, particleUV ).xyz + texture2D( tPrevious1, particleUV ).xyz ) / 1024.0;
-	vec3 position = ( texture2D( tPosition0, particleUV ).xyz + texture2D( tPosition1, particleUV ).xyz ) / 1024.0;
-	vec3 viscositySpring = texture2D( tViscositySpring, particleUV ).xyz;
+	vec3 original = texture2D( tOriginal, particleUv ).xyz;
+	vec3 previous = ( texture2D( tPrevious0, particleUv ).xyz + texture2D( tPrevious1, particleUv ).xyz ) / 1024.0;
+	vec3 position = ( texture2D( tPosition0, particleUv ).xyz + texture2D( tPosition1, particleUv ).xyz ) / 1024.0;
+	vec3 viscositySpring = texture2D( tViscositySpring, particleUv ).xyz;
 	float viscosityMult = viscosity * viscositySpring.x;
 	float springMult = spring * viscositySpring.y;
 	float lipsMult = viscositySpring.z;

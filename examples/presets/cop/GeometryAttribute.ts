@@ -2,6 +2,7 @@ import {Attribute} from '../../../src/core/geometry/Attribute';
 import {InstanceAttrib} from '../../../src/core/geometry/Instancer';
 import {AttribLookup} from '../../../src/core/geometry/operation/TextureFromAttribute';
 import {GeometryAttributeCopNode} from '../../../src/engine/nodes/cop/GeometryAttribute';
+import {GlobalsTextureHandler} from '../../../src/engine/nodes/gl/code/globals/Texture';
 import {BasePreset, NodePresetsCollection, PresetRegister, PresetsCollectionFactory} from '../BasePreset';
 
 const GeometryAttributeCopNodePresetsCollectionFactory: PresetsCollectionFactory<GeometryAttributeCopNode> = (
@@ -27,6 +28,7 @@ const GeometryAttributeCopNodePresetsCollectionFactory: PresetsCollectionFactory
 	const velocity = new BasePreset().addEntry(node.p.attribute, `velocity`);
 	const attribLookupId = new BasePreset().addEntry(node.p.attribute, AttribLookup.ID);
 	const attribLookupUv = new BasePreset().addEntry(node.p.attribute, AttribLookup.UV);
+	const particlesSimUv = new BasePreset().addEntry(node.p.attribute, GlobalsTextureHandler.PARTICLES_SIM_UV_ATTRIB);
 
 	collection.setPresets({
 		color,
@@ -47,6 +49,7 @@ const GeometryAttributeCopNodePresetsCollectionFactory: PresetsCollectionFactory
 		velocity,
 		attribLookupId,
 		attribLookupUv,
+		particlesSimUv,
 	});
 
 	return collection;
