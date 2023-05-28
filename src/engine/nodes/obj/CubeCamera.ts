@@ -9,17 +9,23 @@
  */
 
 import {Constructor} from '../../../types/GlobalTypes';
-import {Group, WebGLRenderer} from 'three';
-import {Object3D} from 'three';
-import {CubeCamera} from 'three';
-import {sRGBEncoding} from 'three';
-import {WebGLCubeRenderTarget} from 'three';
+import {
+	AxesHelper,
+	Group,
+	WebGLRenderer,
+	Object3D,
+	CubeCamera,
+	SRGBColorSpace,
+	WebGLCubeRenderTarget,
+	MinificationTextureFilter,
+	MagnificationTextureFilter,
+	ColorSpace,
+} from 'three';
 import {TransformController, TransformedParamConfig} from './utils/TransformController';
 import {TypedObjNode} from './_Base';
 import {PerspectiveCamera} from 'three';
 import {BaseNodeType} from '../_Base';
 import {ObjType} from '../../poly/registers/nodes/types/Obj';
-import {AxesHelper} from 'three';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {HierarchyController} from './utils/HierarchyController';
 import {FlagsControllerD} from '../utils/FlagsController';
@@ -30,7 +36,7 @@ import {
 	MIN_FILTER_MENU_ENTRIES,
 } from '../../../core/cop/Filter';
 import {isBooleanTrue} from '../../../core/BooleanValue';
-import {ENCODINGS} from '../../../core/cop/Encoding';
+import {COLOR_SPACES, COLOR_SPACE_NAME_BY_COLOR_SPACE} from '../../../core/cop/ColorSpace';
 
 export function CubeCameraParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
@@ -60,18 +66,16 @@ export function CubeCameraParamConfig<TBase extends Constructor>(Base: TBase) {
 		});
 
 		renderTarget = ParamConfig.FOLDER();
-		/** @param toggle on to allow updating the texture encoding */
-		tencoding = ParamConfig.BOOLEAN(0);
-		/** @param sets the texture encoding */
-		encoding = ParamConfig.INTEGER(sRGBEncoding, {
+		/** @param toggle on to allow updating the texture color space */
+		tcolorSpace = ParamConfig.BOOLEAN(0);
+		/** @param sets the texture color space */
+		colorSpace = ParamConfig.STRING(SRGBColorSpace, {
 			visibleIf: {tencoding: 1},
-			menu: {
-				entries: ENCODINGS.map((m) => {
-					return {
-						name: Object.keys(m)[0],
-						value: Object.values(m)[0] as number,
-					};
-				}),
+			menuString: {
+				entries: COLOR_SPACES.map((colorSpace) => ({
+					name: COLOR_SPACE_NAME_BY_COLOR_SPACE[colorSpace],
+					value: colorSpace,
+				})),
 			},
 		});
 
@@ -171,9 +175,11 @@ export class CubeCameraObjNode extends TypedObjNode<Group, CubeCameraObjParamsCo
 
 	private _createCubeCamera() {
 		const renderTarget = new WebGLCubeRenderTarget(this.pv.resolution, {
-			encoding: isBooleanTrue(this.pv.tencoding) ? this.pv.encoding : sRGBEncoding,
-			minFilter: isBooleanTrue(this.pv.tminFilter) ? this.pv.minFilter : undefined,
-			magFilter: isBooleanTrue(this.pv.tmagFilter) ? this.pv.magFilter : undefined,
+			colorSpace: isBooleanTrue(this.pv.tcolorSpace) ? (this.pv.colorSpace as ColorSpace) : SRGBColorSpace,
+			minFilter: isBooleanTrue(this.pv.tminFilter) ? (this.pv.minFilter as MinificationTextureFilter) : undefined,
+			magFilter: isBooleanTrue(this.pv.tmagFilter)
+				? (this.pv.magFilter as MagnificationTextureFilter)
+				: undefined,
 		});
 		this._cubeCamera = new CubeCamera(this.pv.near, this.pv.far, renderTarget);
 		this._cubeCamera.matrixAutoUpdate = true;

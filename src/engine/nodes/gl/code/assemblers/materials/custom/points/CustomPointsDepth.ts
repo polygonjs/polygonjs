@@ -1,4 +1,4 @@
-import {UniformsUtils} from 'three';
+import {DepthPackingStrategies, UniformsUtils} from 'three';
 import {ShaderMaterial} from 'three';
 import {ShaderLib} from 'three';
 import {RGBADepthPacking} from 'three';
@@ -41,7 +41,7 @@ export class ShaderAssemblerCustomPointsDepth extends ShaderAssemblerMaterial {
 	protected override insertBodyAfter(shader_name: ShaderName) {
 		return INSERT_BODY_AFTER_MAP.get(shader_name);
 	}
-	protected depthPacking() {
+	protected depthPacking(): DepthPackingStrategies {
 		return RGBADepthPacking;
 	}
 

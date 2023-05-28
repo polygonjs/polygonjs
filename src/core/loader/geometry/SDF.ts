@@ -68,7 +68,7 @@ export interface SDFDataContainer {
 	data: Float32Array;
 }
 export function addSDFMetadataToContainer(texture: Data3DTexture, options: MetadataOptions) {
-	const dataContainer = texture?.image as SDFDataContainer;
+	const dataContainer = texture?.image as unknown as SDFDataContainer;
 	if (!dataContainer) {
 		throw new Error('the input must be a 3D texture');
 		return;
@@ -84,7 +84,7 @@ export function addSDFMetadataToContainer(texture: Data3DTexture, options: Metad
 	dataContainer.resolutionz = options.resolution.z;
 }
 export function readSDFMetadataFromContainer(texture: Data3DTexture) {
-	const dataContainer = texture?.image as SDFDataContainer;
+	const dataContainer = texture?.image as unknown as SDFDataContainer;
 	if (!dataContainer) {
 		throw new Error('the input must be a 3D texture');
 		return;
@@ -163,7 +163,7 @@ function loadSDFMetadata(arrayBuffer: ArrayBuffer): Data3DTexture {
 		dataWithoutMetadata[i] = float32Array[i + metadataLength];
 	}
 
-	const dataContainer = texture.image as SDFDataContainer;
+	const dataContainer = texture.image as unknown as SDFDataContainer;
 	dataContainer.boundMinx = boundMinx;
 	dataContainer.boundMiny = boundMiny;
 	dataContainer.boundMinz = boundMinz;

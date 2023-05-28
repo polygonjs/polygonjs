@@ -1,5 +1,5 @@
 import {Shape, ShapeGeometry} from 'three';
-import {mergeBufferGeometries} from 'three/examples/jsm/utils/BufferGeometryUtils';
+import {mergeGeometries} from 'three/examples/jsm/utils/BufferGeometryUtils';
 interface TextFlatsParams {
 	shapes?: Array<Array<Shape>>;
 }
@@ -15,5 +15,5 @@ function createGeometryFromTypeFlat(params: TextFlatParams) {
 	if (geometries == null || geometries.length == 0) {
 		return;
 	}
-	return mergeBufferGeometries(geometries);
+	return mergeGeometries(geometries);
 }

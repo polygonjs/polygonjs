@@ -4,7 +4,7 @@
  */
 import {Constructor} from '../../../types/GlobalTypes';
 import {TypedCopNode} from './_Base';
-import {VideoTexture, Texture, sRGBEncoding} from 'three';
+import {VideoTexture, Texture, SRGBColorSpace} from 'three';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {TextureParamsController, TextureParamConfig} from './utils/TextureParamsController';
 import {InputCloneMode} from '../../poly/InputCloneMode';
@@ -29,8 +29,8 @@ export function WebCamCopParamConfig<TBase extends Constructor>(Base: TBase) {
 	};
 }
 class WebCamCopParamsConfig extends TextureParamConfig(WebCamCopParamConfig(NodeParamsConfig), {
-	tencoding: true,
-	encoding: sRGBEncoding,
+	tcolorSpace: true,
+	colorSpace: SRGBColorSpace,
 }) {}
 
 const ParamsConfig = new WebCamCopParamsConfig();

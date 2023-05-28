@@ -5,7 +5,7 @@
  * This node can be useful when you want to use what a camera sees as a texture.
  *
  */
-import {WebGLRenderer, WebGLRenderTarget} from 'three';
+import {ColorSpace, WebGLRenderer, WebGLRenderTarget} from 'three';
 import {FloatType, HalfFloatType, RGBAFormat, NearestFilter, LinearFilter, ClampToEdgeWrapping} from 'three';
 import {TypedCopNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
@@ -92,9 +92,9 @@ export class RenderCopNode extends TypedCopNode<RenderCopParamConfig> {
 		}
 
 		const prevTarget = renderer.getRenderTarget();
-		const prevEncoding = renderer.outputEncoding;
+		const prevColorSpace = renderer.outputColorSpace;
 		renderer.setRenderTarget(this._renderTarget);
-		renderer.outputEncoding = this.pv.encoding;
+		renderer.outputColorSpace = this.pv.colorSpace as ColorSpace;
 		// this._texture_camera.updateMatrix();
 		// this._texture_camera.updateMatrixWorld();
 		// this._texture_camera.updateWorldMatrix(true, true);
@@ -103,7 +103,7 @@ export class RenderCopNode extends TypedCopNode<RenderCopParamConfig> {
 		renderer.clear();
 		renderer.render(this.scene().threejsScene(), this._textureCamera);
 		renderer.setRenderTarget(prevTarget);
-		renderer.outputEncoding = prevEncoding;
+		renderer.outputColorSpace = prevColorSpace;
 
 		if (this._renderTarget.texture) {
 			if (isBooleanTrue(this.pv.useDataTexture)) {

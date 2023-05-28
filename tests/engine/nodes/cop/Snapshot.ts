@@ -1,4 +1,4 @@
-import {sRGBEncoding} from 'three';
+import {SRGBColorSpace} from 'three';
 import {ASSETS_ROOT} from '../../../../src/core/loader/AssetsUtils';
 import {CoreSleep} from '../../../../src/core/Sleep';
 
@@ -8,8 +8,8 @@ QUnit.test('COP snapshot from video', async (assert) => {
 	const video1 = COP.createNode('video');
 	video1.p.url1.set(`${ASSETS_ROOT}/textures/sintel.mp4`);
 	video1.p.url2.set(`${ASSETS_ROOT}/textures/sintel.ogv`);
-	video1.p.tencoding.set(true);
-	video1.p.encoding.set(sRGBEncoding);
+	video1.p.tcolorSpace.set(true);
+	video1.p.colorSpace.set(SRGBColorSpace);
 
 	const snapshot1 = COP.createNode('snapshot');
 	snapshot1.setInput(0, video1);
@@ -37,8 +37,8 @@ QUnit.test('COP snapshot from webcam', async (assert) => {
 	const COP = window.COP;
 
 	const webcam1 = COP.createNode('webCam');
-	webcam1.p.tencoding.set(true);
-	webcam1.p.encoding.set(sRGBEncoding);
+	webcam1.p.tcolorSpace.set(true);
+	webcam1.p.colorSpace.set(SRGBColorSpace);
 
 	const snapshot1 = COP.createNode('snapshot');
 	snapshot1.setInput(0, webcam1);

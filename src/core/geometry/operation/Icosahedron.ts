@@ -52,7 +52,7 @@ export class IcosahedronBufferGeometry extends PolyhedronBufferGeometry {
 
 		super(vertices, indices, radius, detail, points_only);
 
-		this.type = 'IcosahedronBufferGeometry';
+		(this as any).type = 'IcosahedronBufferGeometry';
 
 		this.parameters = {
 			radius: radius,

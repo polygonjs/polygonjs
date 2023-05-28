@@ -16,7 +16,6 @@ varying vec3 v_POLY_globals1_position;
 #include <dithering_pars_fragment>
 #include <color_pars_fragment>
 #include <uv_pars_fragment>
-#include <uv2_pars_fragment>
 #include <map_pars_fragment>
 #include <alphamap_pars_fragment>
 #include <alphatest_pars_fragment>
@@ -91,7 +90,7 @@ void main() {
 	#include <specularmap_fragment>
 	ReflectedLight reflectedLight = ReflectedLight( vec3( 0.0 ), vec3( 0.0 ), vec3( 0.0 ), vec3( 0.0 ) );
 	#ifdef USE_LIGHTMAP
-		vec4 lightMapTexel = texture2D( lightMap, vUv2 );
+		vec4 lightMapTexel = texture2D( lightMap, vLightMapUv );
 		reflectedLight.indirectDiffuse += lightMapTexel.rgb * lightMapIntensity * RECIPROCAL_PI;
 	#else
 		reflectedLight.indirectDiffuse += vec3( 1.0 );

@@ -55,7 +55,7 @@ export class SDFFromUrlCopNode extends TypedCopNode<SDFFromUrlCopParamsConfig> {
 		const loader = new SDFLoader(url, this);
 		loader.load(
 			(texture) => {
-				const dataContainer = texture.image as SDFDataContainer;
+				const dataContainer = texture.image as unknown as SDFDataContainer;
 				this.p.resolution.set([
 					dataContainer.resolutionx,
 					dataContainer.resolutiony,

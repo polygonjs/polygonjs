@@ -1,11 +1,18 @@
 import {Constructor} from '../../../../types/GlobalTypes';
-import {Material} from 'three';
+import {
+	Material,
+	Blending,
+	NoBlending,
+	NormalBlending,
+	AdditiveBlending,
+	SubtractiveBlending,
+	MultiplyBlending,
+} from 'three';
 import {TypedMatNode} from '../_Base';
 import {BaseController, SetParamsTextureNodesRecord} from './_BaseController';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
 import {BaseNodeType} from '../../_Base';
 import {BaseParamType} from '../../../params/_Base';
-import {NoBlending, NormalBlending, AdditiveBlending, SubtractiveBlending, MultiplyBlending} from 'three';
 import {updateMaterialSideWithShadow, updateNodeSideWithShadow} from './helpers/MaterialSideHelper';
 const BLENDING_VALUES = {
 	NoBlending,
@@ -102,7 +109,7 @@ export class AdvancedCommonController extends BaseController {
 		material.colorWrite = pv.colorWrite;
 		material.depthWrite = pv.depthWrite;
 		material.depthTest = pv.depthTest;
-		material.blending = pv.blending;
+		material.blending = pv.blending as Blending;
 		material.premultipliedAlpha = pv.premultipliedAlpha;
 		material.dithering = pv.dithering;
 		material.polygonOffset = pv.polygonOffset;

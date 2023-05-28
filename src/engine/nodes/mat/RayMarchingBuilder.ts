@@ -21,6 +21,7 @@ import {TexturesFolderParamConfig} from './utils/TexturesFolder';
 import {AdvancedFolderParamConfig} from './utils/AdvancedFolder';
 import {Constructor} from '../../../types/GlobalTypes';
 import {updateMaterialSide} from './utils/helpers/MaterialSideHelper';
+import {FogParamConfig, UniformFogController, UniformFogControllers} from './utils/UniformsFogController';
 import {
 	CustomMaterialRayMarchingParamConfig,
 	materialRayMarchingAssemblerCustomMaterialRequested,
@@ -41,12 +42,14 @@ export function AdvancedCommonParamConfig<TBase extends Constructor>(Base: TBase
 }
 class RayMarchingBuilderMatParamsConfig extends RayMarchingDebugParamConfig(
 	CustomMaterialRayMarchingParamConfig(
-		AdvancedCommonParamConfig(
-			BaseBuilderParamConfig(
-				AdvancedFolderParamConfig(
-					RayMarchingEnvMapParamConfig(
-						TexturesFolderParamConfig(
-							RayMarchingMainParamConfig(DefaultFolderParamConfig(NodeParamsConfig))
+		FogParamConfig(
+			AdvancedCommonParamConfig(
+				BaseBuilderParamConfig(
+					AdvancedFolderParamConfig(
+						RayMarchingEnvMapParamConfig(
+							TexturesFolderParamConfig(
+								RayMarchingMainParamConfig(DefaultFolderParamConfig(NodeParamsConfig))
+							)
 						)
 					)
 				)
@@ -78,11 +81,16 @@ export class RayMarchingBuilderMatNode extends TypedBuilderMatNode<
 	private _rayMarchingController = new RayMarchingController(this);
 
 	override initializeNode() {}
+	public controllers: UniformFogControllers = {
+		uniformFog: new UniformFogController(this),
+	};
 	override async cook() {
 		this._material = this._material || this.createMaterial();
 		this._rayMarchingController.updateUniformsFromParams(this._material);
 
 		this.compileIfRequired(this._material);
+
+		UniformFogController.update(this);
 
 		updateMaterialSide(this._material, this.pv);
 		this.setMaterial(this._material);

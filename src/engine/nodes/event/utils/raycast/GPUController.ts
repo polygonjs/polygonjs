@@ -14,7 +14,9 @@ import {
 	RGBAFormat,
 	FloatType,
 	NoToneMapping,
-	LinearEncoding,
+	NoColorSpace,
+	ToneMapping,
+	ColorSpace,
 } from 'three';
 import {Number2, Number3} from '../../../../../types/GlobalTypes';
 import {isBooleanTrue} from '../../../../../core/Type';
@@ -25,8 +27,8 @@ interface SceneRestoreContext {
 	background: Color | Texture | null;
 }
 interface RendererRestoreContext {
-	toneMapping: number;
-	outputEncoding: number;
+	toneMapping: ToneMapping;
+	outputColorSpace: ColorSpace;
 }
 interface RestoreContext {
 	scene: SceneRestoreContext;
@@ -41,8 +43,8 @@ export class RaycastGPUController extends BaseRaycastController {
 			background: null,
 		},
 		renderer: {
-			toneMapping: -1,
-			outputEncoding: -1,
+			toneMapping: NoToneMapping,
+			outputColorSpace: NoColorSpace,
 		},
 	};
 	// private _mouse: Vector2 = new Vector2();
@@ -139,7 +141,7 @@ export class RaycastGPUController extends BaseRaycastController {
 	private _modifySceneAndRenderer(scene: Scene, renderer: WebGLRenderer) {
 		this._restoreContext.scene.overrideMaterial = scene.overrideMaterial;
 		this._restoreContext.scene.background = scene.background;
-		this._restoreContext.renderer.outputEncoding = renderer.outputEncoding;
+		this._restoreContext.renderer.outputColorSpace = renderer.outputColorSpace;
 		this._restoreContext.renderer.toneMapping = renderer.toneMapping;
 
 		if (isBooleanTrue(this._node.pv.overrideMaterial)) {
@@ -151,12 +153,12 @@ export class RaycastGPUController extends BaseRaycastController {
 		scene.background = null;
 
 		renderer.toneMapping = NoToneMapping;
-		renderer.outputEncoding = LinearEncoding;
+		renderer.outputColorSpace = NoColorSpace;
 	}
 	private _restoreSceneAndRenderer(scene: Scene, renderer: WebGLRenderer) {
 		scene.overrideMaterial = this._restoreContext.scene.overrideMaterial;
 		scene.background = this._restoreContext.scene.background;
-		renderer.outputEncoding = this._restoreContext.renderer.outputEncoding;
+		renderer.outputColorSpace = this._restoreContext.renderer.outputColorSpace;
 		renderer.toneMapping = this._restoreContext.renderer.toneMapping;
 	}
 

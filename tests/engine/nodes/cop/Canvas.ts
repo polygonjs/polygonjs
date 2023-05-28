@@ -1,4 +1,4 @@
-import {sRGBEncoding, WebGLRenderer} from 'three';
+import {SRGBColorSpace, WebGLRenderer} from 'three';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 
@@ -84,7 +84,7 @@ QUnit.test('COP canvas simple', async (assert) => {
 		// start test
 		const canvas1 = COP.createNode('canvas');
 		canvas1.p.canvasId.set(canvasId);
-		canvas1.p.encoding.set(sRGBEncoding);
+		canvas1.p.colorSpace.set(SRGBColorSpace);
 		meshBasic.p.useMap.set(true);
 		meshBasic.p.map.setNode(canvas1);
 

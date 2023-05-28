@@ -1,4 +1,11 @@
-import {UniformsUtils, ShaderMaterial, ShaderLib, RGBADepthPacking, BasicDepthPacking} from 'three';
+import {
+	UniformsUtils,
+	ShaderMaterial,
+	ShaderLib,
+	RGBADepthPacking,
+	BasicDepthPacking,
+	DepthPackingStrategies,
+} from 'three';
 import {ShaderAssemblerMaterial} from '../../_BaseMaterial';
 import TemplateVertex from '../../../../templates/custom/line/CustomLineDepth.vert.glsl';
 import TemplateFragment from '../../../../templates/custom/mesh/CustomMeshDepth.frag.glsl';
@@ -42,7 +49,7 @@ export class ShaderAssemblerCustomLineDepth extends ShaderAssemblerMaterial {
 	protected override linesToRemove(shader_name: ShaderName) {
 		return LINES_TO_REMOVE_MAP.get(shader_name);
 	}
-	protected depthPacking() {
+	protected depthPacking(): DepthPackingStrategies {
 		return RGBADepthPacking;
 	}
 

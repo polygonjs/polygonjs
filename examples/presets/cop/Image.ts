@@ -1,4 +1,4 @@
-import {sRGBEncoding, LinearEncoding} from 'three';
+import {SRGBColorSpace, NoColorSpace} from 'three';
 import {DEMO_ASSETS_ROOT_URL} from '../../../src/core/Assets';
 import {ImageCopNode} from '../../../src/engine/nodes/cop/Image';
 import {PolyDictionary} from '../../../src/types/GlobalTypes';
@@ -18,22 +18,22 @@ const imageCopNodePresetsCollectionFactory: PresetsCollectionFactory<ImageCopNod
 	function sRGBImage(fileName: string) {
 		return new BasePreset()
 			.addEntry(node.p.url, `${DEMO_ASSETS_ROOT_URL}/textures/${fileName}`)
-			.addEntry(node.p.tencoding, 1)
-			.addEntry(node.p.encoding, sRGBEncoding);
+			.addEntry(node.p.tcolorSpace, 1)
+			.addEntry(node.p.colorSpace, SRGBColorSpace);
 	}
 	function linearImage(fileName: string) {
 		return new BasePreset()
 			.addEntry(node.p.url, `${DEMO_ASSETS_ROOT_URL}/textures/${fileName}`)
-			.addEntry(node.p.tencoding, 0)
-			.addEntry(node.p.encoding, LinearEncoding);
+			.addEntry(node.p.tcolorSpace, 0)
+			.addEntry(node.p.colorSpace, NoColorSpace);
 	}
 	const asphalt = sRGBImage(`asphalt.jpg`);
 	const scratches = sRGBImage(`lens-dirt/scratches.jpg`);
 	const bunny_SSS_thickness = new BasePreset()
 		.addEntry(node.p.url, `${DEMO_ASSETS_ROOT_URL}/models/fbx/bunny_thickness.jpg`)
-		.addEntry(node.p.tencoding, 0)
-		.addEntry(node.p.encoding, LinearEncoding)
-		.addEntry(node.p.encoding, LinearEncoding);
+		.addEntry(node.p.tcolorSpace, 0)
+		.addEntry(node.p.colorSpace, NoColorSpace)
+		.addEntry(node.p.colorSpace, NoColorSpace);
 	const disk = linearImage(`disk.png`);
 	// const envMap = linearImage(`piz_compressed.exr`);
 	const uv = sRGBImage(`uv.jpg`);
@@ -47,8 +47,8 @@ const imageCopNodePresetsCollectionFactory: PresetsCollectionFactory<ImageCopNod
 				.addEntry(node.p.useRendererMaxAnisotropy, 1)
 				.addEntry(node.p.tminFilter, 1)
 				.addEntry(node.p.tmagFilter, 1)
-				.addEntry(node.p.tencoding, 1)
-				.addEntry(node.p.encoding, sRGBEncoding);
+				.addEntry(node.p.tcolorSpace, 1)
+				.addEntry(node.p.colorSpace, SRGBColorSpace);
 		}
 		return {
 			'all-his-own': artvee('all-his-own-by-John-Samuel-Pughe.jpg'),
@@ -70,9 +70,9 @@ const imageCopNodePresetsCollectionFactory: PresetsCollectionFactory<ImageCopNod
 				.addEntry(node.p.tmagFilter, 1);
 
 			if (options && options.sRGB) {
-				preset.addEntry(node.p.tencoding, 1).addEntry(node.p.encoding, sRGBEncoding);
+				preset.addEntry(node.p.tcolorSpace, 1).addEntry(node.p.colorSpace, SRGBColorSpace);
 			} else {
-				preset.addEntry(node.p.tencoding, 0).addEntry(node.p.encoding, LinearEncoding);
+				preset.addEntry(node.p.tcolorSpace, 0).addEntry(node.p.colorSpace, NoColorSpace);
 			}
 
 			return preset;
@@ -118,8 +118,8 @@ const imageCopNodePresetsCollectionFactory: PresetsCollectionFactory<ImageCopNod
 				.addEntry(node.p.useRendererMaxAnisotropy, 1)
 				.addEntry(node.p.tminFilter, 1)
 				.addEntry(node.p.tmagFilter, 1)
-				.addEntry(node.p.tencoding, 1)
-				.addEntry(node.p.encoding, sRGBEncoding);
+				.addEntry(node.p.tcolorSpace, 1)
+				.addEntry(node.p.colorSpace, SRGBColorSpace);
 		}
 		const dict: Record<string, BasePreset> = {
 			'claudio-testa': _unsplash('claudio-testa--SO3JtE3gZo-unsplash.jpg'),

@@ -1,5 +1,5 @@
 import {CoreUserAgent} from './../../../../core/UserAgent';
-import {WebGLRenderer} from 'three';
+import {Mapping, PixelFormat, WebGLRenderer} from 'three';
 import {WebGLRenderTarget} from 'three';
 import {DataTexture} from 'three';
 import {TypeAssert} from '../../../poly/Assert';
@@ -75,15 +75,15 @@ export class DataTextureController {
 			pixelBuffer,
 			image.width,
 			image.height,
-			texture.format,
+			texture.format as PixelFormat,
 			texture.type,
-			texture.mapping,
+			texture.mapping as Mapping,
 			texture.wrapS,
 			texture.wrapT,
 			texture.magFilter,
 			texture.minFilter,
 			texture.anisotropy,
-			texture.encoding
+			texture.colorSpace
 		);
 		return dataTexture;
 	}

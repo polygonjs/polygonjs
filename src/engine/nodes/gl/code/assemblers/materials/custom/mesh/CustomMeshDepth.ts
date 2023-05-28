@@ -1,4 +1,4 @@
-import {RGBADepthPacking, BasicDepthPacking} from 'three';
+import {RGBADepthPacking, BasicDepthPacking, DepthPackingStrategies} from 'three';
 import {ShaderLib} from 'three';
 import {ShaderAssemblerMaterial} from '../../_BaseMaterial';
 import {ShaderName} from '../../../../../../utils/shaders/ShaderName';
@@ -31,7 +31,7 @@ export class ShaderAssemblerCustomMeshDepth extends ShaderAssemblerMaterial {
 		return INSERT_BODY_AFTER_MAP.get(shaderName);
 	}
 
-	protected depthPacking() {
+	protected depthPacking(): DepthPackingStrategies {
 		// surprisingly, even though the mesh depth material looks better with
 		// BasicDepthPacking when used to be rendered,
 		// it seems here we need to use RGBADepthPacking

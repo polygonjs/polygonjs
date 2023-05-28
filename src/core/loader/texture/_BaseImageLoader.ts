@@ -1,4 +1,4 @@
-import {Texture} from 'three';
+import {Texture, TextureDataType} from 'three';
 import {BaseNodeType} from '../../../engine/nodes/_Base';
 import {Poly} from '../../../engine/Poly';
 import {CoreLoaderTexture} from '../Texture';
@@ -6,7 +6,7 @@ import {BaseTextureLoader} from './_BaseTextureLoader';
 
 export interface TextureLoadOptions {
 	tdataType: boolean;
-	dataType: number;
+	dataType: TextureDataType;
 }
 
 type OnSuccess = (o: Texture) => void;

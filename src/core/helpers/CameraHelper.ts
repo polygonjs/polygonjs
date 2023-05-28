@@ -1,14 +1,18 @@
-import {BufferAttribute, Camera, PerspectiveCamera} from 'three';
-import {Vector3} from 'three';
-import {LineSegments} from 'three';
-import {Color} from 'three';
-import {LineBasicMaterial} from 'three';
-import {BufferGeometry} from 'three';
-import {Float32BufferAttribute} from 'three';
+import {
+	BufferAttribute,
+	Camera,
+	PerspectiveCamera,
+	Vector3,
+	LineSegments,
+	Color,
+	LineBasicMaterial,
+	BufferGeometry,
+	Float32BufferAttribute,
+} from 'three';
 import {PolyDictionary} from '../../types/GlobalTypes';
 
 const _vector = /*@__PURE__*/ new Vector3();
-const _camera = /*@__PURE__*/ new Camera();
+const _camera = /*@__PURE__*/ new PerspectiveCamera();
 
 /*
 The CameraHelper is a modified version of the one shipped with Three.js.
@@ -122,7 +126,7 @@ class CameraHelper extends LineSegments {
 		}
 
 		this.name = 'CameraHelper';
-		this.type = 'CameraHelper';
+		(this as any).type = 'CameraHelper';
 		this.matrixAutoUpdate = false;
 
 		const {geometry, pointMap} = _createGeometry();

@@ -1,4 +1,4 @@
-import {sRGBEncoding} from 'three';
+import {SRGBColorSpace} from 'three';
 import {DEMO_ASSETS_ROOT_URL} from '../../../src/core/Assets';
 import {
 	CubeMapCopNode,
@@ -40,16 +40,16 @@ const cubeMapCopNodePresetsCollectionFactory: PresetsCollectionFactory<CubeMapCo
 		new BasePreset()
 			.addEntry(node.p.prefix, `${DEMO_ASSETS_ROOT_URL}/textures/cube/pisa/`)
 			.addEntry(node.p.suffix, `.png`)
-			.addEntry(node.p.tencoding, 1)
-			.addEntry(node.p.encoding, sRGBEncoding)
+			.addEntry(node.p.tcolorSpace, 1)
+			.addEntry(node.p.colorSpace, SRGBColorSpace)
 	);
 
 	const bridge = posNegUrls(
 		new BasePreset()
 			.addEntry(node.p.prefix, `${DEMO_ASSETS_ROOT_URL}/textures/cube/Bridge2/`)
 			.addEntry(node.p.suffix, `.jpg`)
-			.addEntry(node.p.tencoding, 1)
-			.addEntry(node.p.encoding, sRGBEncoding)
+			.addEntry(node.p.tcolorSpace, 1)
+			.addEntry(node.p.colorSpace, SRGBColorSpace)
 	);
 
 	collection.setPresets({

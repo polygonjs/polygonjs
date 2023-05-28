@@ -178,8 +178,11 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 			const existingActorIds = this.scene().actorsManager.objectActorNodeIds(object);
 			if (existingActorIds == null || existingActorIds.length == 0) {
 				this.states.error.set(`the input objects requires an actor node assigned to it`);
+				return;
 			}
-			const renderer = await this.scene().renderersRegister.waitForRenderer();
+		}
+		const renderer = await this.scene().renderersRegister.waitForRenderer();
+		for (let object of selectedObjects) {
 			setParticleRenderer(this.graphNodeId(), renderer);
 			CoreParticlesAttribute.setParticlesNodeId(object, this.graphNodeId());
 			CoreParticlesAttribute.setDataType(object, this.pv.dataType);

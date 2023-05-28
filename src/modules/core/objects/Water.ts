@@ -1,19 +1,22 @@
-import {Color} from 'three';
-import {FrontSide} from 'three';
-import {Matrix4} from 'three';
-import {ShaderMaterial} from 'three';
-import {UniformsLib} from 'three';
-import {UniformsUtils} from 'three';
-import {Vector3} from 'three';
-import {BufferGeometry} from 'three';
-import {Texture} from 'three';
+import {
+	Color,
+	FrontSide,
+	Matrix4,
+	ShaderMaterial,
+	UniformsLib,
+	UniformsUtils,
+	Vector3,
+	BufferGeometry,
+	Texture,
+	WebGLRenderer,
+	Scene,
+	Camera,
+	Side,
+} from 'three';
 import {IUniformColor, IUniformN, IUniformTexture, IUniformV3} from '../../../engine/nodes/utils/code/gl/Uniforms';
 import {BaseReflector, BaseReflectorOptions} from './_BaseReflector';
 import VERTEX from './water/vert.glsl';
 import FRAGMENT from './water/frag.glsl';
-import {WebGLRenderer} from 'three';
-import {Scene} from 'three';
-import {Camera} from 'three';
 import {PolyScene} from '../../../engine/scene/PolyScene';
 /**
  * Work based on :
@@ -59,7 +62,7 @@ export interface WaterOptions extends BaseReflectorOptions {
 	waterNormals?: Texture;
 	distortionScale?: number;
 	normalBias?: number;
-	side?: number;
+	side?: Side;
 	useFog?: boolean;
 }
 

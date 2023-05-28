@@ -16,7 +16,7 @@ attribute float randomid;
 
 
 
-
+#include <uv_pars_vertex>
 #include <color_pars_vertex>
 #include <fog_pars_vertex>
 #include <morphtarget_pars_vertex>
@@ -26,7 +26,7 @@ attribute float randomid;
 void main() {
 
 	vLineDistance = scale * lineDistance;
-
+	#include <uv_vertex>
 	#include <color_vertex>
 
 

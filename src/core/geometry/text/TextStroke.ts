@@ -1,7 +1,7 @@
-import {Shape, Path, Vector3, BufferGeometry} from 'three';
+import {Shape, Path, BufferGeometry} from 'three';
 import {CoreLoaderFont} from '../../loader/font/CoreFontLoader';
 import {SVGLoader} from 'three/examples/jsm/loaders/SVGLoader';
-import {mergeBufferGeometries} from 'three/examples/jsm/utils/BufferGeometryUtils';
+import {mergeGeometries} from 'three/examples/jsm/utils/BufferGeometryUtils';
 
 interface TextStrokesParams {
 	shapes?: Array<Array<Shape | Path>>;
@@ -35,14 +35,14 @@ function createGeometryFromTypeStroke(params: TextStrokeParams) {
 
 	for (let i = 0; i < params.shapes.length; i++) {
 		const shape = params.shapes[i];
-		const points = shape.getPoints();
+		const points = shape.getPoints(); //.map((point) => new Vector3(point.x, point.y, 0));
 		const arcDivisions = 12;
 		const minDistance = 0.001;
-		const geometry = params.loader.pointsToStroke((<unknown>points) as Vector3[], style, arcDivisions, minDistance);
+		const geometry = params.loader.pointsToStroke(points, style, arcDivisions, minDistance);
 		geometries.push(geometry);
 	}
 	if (geometries.length > 0) {
-		const mergedGeometry = mergeBufferGeometries(geometries);
+		const mergedGeometry = mergeGeometries(geometries);
 		return mergedGeometry;
 	}
 }

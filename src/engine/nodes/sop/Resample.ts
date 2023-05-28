@@ -6,7 +6,7 @@ import {LineSegments} from 'three';
 import {Float32BufferAttribute} from 'three';
 import {BufferGeometry} from 'three';
 import {CatmullRomCurve3} from 'three';
-import {mergeBufferGeometries} from 'three/examples/jsm/utils/BufferGeometryUtils';
+import {mergeGeometries} from 'three/examples/jsm/utils/BufferGeometryUtils';
 import {TypedSopNode} from './_Base';
 import {ObjectType} from '../../../core/geometry/Constant';
 import {CoreGeometryUtilCurve} from '../../../core/geometry/util/Curve';
@@ -119,8 +119,8 @@ export class ResampleSopNode extends TypedSopNode<ResampleSopParamsConfig> {
 				geometries.push(geometry);
 			}
 		}
-		const merged_geometry = mergeBufferGeometries(geometries);
-		const object = this.createObject(merged_geometry, ObjectType.LINE_SEGMENTS);
+		const mergedGeometry = mergeGeometries(geometries);
+		const object = this.createObject(mergedGeometry, ObjectType.LINE_SEGMENTS);
 		return object;
 	}
 

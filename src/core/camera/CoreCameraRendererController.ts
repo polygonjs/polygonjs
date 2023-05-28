@@ -2,7 +2,7 @@ import {Camera, Vector2, WebGLRenderer, WebGLRendererParameters} from 'three';
 import {PolyScene} from '../../engine/scene/PolyScene';
 import {Poly} from '../../engine/Poly';
 import {
-	DEFAULT_OUTPUT_ENCODING,
+	DEFAULT_OUTPUT_COLOR_SPACE,
 	DEFAULT_SHADOW_MAP_TYPE,
 	DEFAULT_TONE_MAPPING,
 } from '../../engine/nodes/rop/WebGLRenderer';
@@ -166,7 +166,7 @@ export class CoreCameraRendererController {
 		// // TODO: find a way to have those accessible via params
 		renderer.toneMapping = DEFAULT_TONE_MAPPING;
 		renderer.toneMappingExposure = 1;
-		renderer.outputEncoding = DEFAULT_OUTPUT_ENCODING;
+		renderer.outputColorSpace = DEFAULT_OUTPUT_COLOR_SPACE;
 
 		if (Poly.renderersController.printDebug()) {
 			Poly.renderersController.printDebugMessage('create default renderer');

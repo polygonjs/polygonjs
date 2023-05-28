@@ -247,7 +247,7 @@ export abstract class BaseReflector<TGeometry extends BufferGeometry, TMaterial 
 
 		// Render
 
-		this.renderTarget.texture.encoding = renderer.outputEncoding;
+		this.renderTarget.texture.colorSpace = renderer.outputColorSpace;
 
 		this.visible = false;
 

@@ -1,5 +1,5 @@
 import {ExtrudeGeometry, ExtrudeGeometryOptions, Shape} from 'three';
-import {mergeBufferGeometries} from 'three/examples/jsm/utils/BufferGeometryUtils';
+import {mergeGeometries} from 'three/examples/jsm/utils/BufferGeometryUtils';
 
 export interface BevelParams {
 	bevelEnabled: boolean;
@@ -38,5 +38,5 @@ function createGeometryFromTypeMesh(params: TextMeshParams) {
 	if (geometries == null || geometries.length == 0) {
 		return;
 	}
-	return mergeBufferGeometries(geometries);
+	return mergeGeometries(geometries);
 }

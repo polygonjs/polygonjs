@@ -1,7 +1,20 @@
 import {Constructor} from '../../../../types/GlobalTypes';
 import {TypedCopNode} from '../_Base';
-import {Texture} from 'three';
-import {RGBAFormat, UnsignedByteType, LinearEncoding, UVMapping, RepeatWrapping, LinearFilter} from 'three';
+import {ColorSpace, Texture} from 'three';
+import {
+	RGBAFormat,
+	UnsignedByteType,
+	NoColorSpace,
+	UVMapping,
+	RepeatWrapping,
+	LinearFilter,
+	AnyPixelFormat,
+	TextureDataType,
+	AnyMapping,
+	Wrapping,
+	MinificationTextureFilter,
+	MagnificationTextureFilter,
+} from 'three';
 import {
 	MAG_FILTERS,
 	MAG_FILTER_DEFAULT_VALUE,
@@ -16,7 +29,7 @@ import {CopRendererController} from './RendererController';
 import {BaseNodeType} from '../../_Base';
 import {isBooleanTrue} from '../../../../core/BooleanValue';
 import {ParamsValueAccessorType} from '../../utils/params/ParamsValueAccessor';
-import {ENCODINGS} from '../../../../core/cop/Encoding';
+import {COLOR_SPACES, COLOR_SPACE_NAME_BY_COLOR_SPACE} from '../../../../core/cop/ColorSpace';
 import {WRAPPINGS} from '../../../../core/cop/Wrapping';
 import {MAPPINGS} from '../../../../core/cop/Mapping';
 import {TEXTURE_TYPES} from '../../../../core/cop/Type';
@@ -48,7 +61,7 @@ function callbackParams(method: AvailableCallbackMethod) {
 }
 
 const DEFAULT = {
-	ENCODING: LinearEncoding,
+	COLOR_SPACE: NoColorSpace,
 	FORMAT: RGBAFormat,
 	MAPPING: UVMapping,
 	MIN_FILTER: LinearFilter,
@@ -71,25 +84,23 @@ const CALLBACK_PARAMS_TRANSFORM_CENTER = callbackParams('PARAM_CALLBACK_update_c
 const CALLBACK_PARAMS_ADVANCED = callbackParams('PARAM_CALLBACK_update_advanced');
 
 interface TextureParamConfigDefaults {
-	tencoding: boolean | number;
-	encoding: number;
+	tcolorSpace: boolean | number;
+	colorSpace: string;
 }
 export function TextureParamConfig<TBase extends Constructor>(Base: TBase, defaults?: TextureParamConfigDefaults) {
 	return class Mixin extends Base {
 		/** @param toggle on to allow updating the texture encoding */
-		tencoding = ParamConfig.BOOLEAN(defaults?.tencoding || 0, {
+		tcolorSpace = ParamConfig.BOOLEAN(defaults?.tcolorSpace || 0, {
 			...CALLBACK_PARAMS_ENCODING,
 		});
 		/** @param sets the texture encoding */
-		encoding = ParamConfig.INTEGER(defaults?.encoding || DEFAULT.ENCODING, {
-			visibleIf: {tencoding: 1},
-			menu: {
-				entries: ENCODINGS.map((m) => {
-					return {
-						name: Object.keys(m)[0],
-						value: Object.values(m)[0] as number,
-					};
-				}),
+		colorSpace = ParamConfig.STRING(defaults?.colorSpace || DEFAULT.COLOR_SPACE, {
+			visibleIf: {tcolorSpace: 1},
+			menuString: {
+				entries: COLOR_SPACES.map((colorSpace) => ({
+					name: COLOR_SPACE_NAME_BY_COLOR_SPACE[colorSpace],
+					value: colorSpace,
+				})),
 			},
 			...CALLBACK_PARAMS_ENCODING,
 		});
@@ -281,7 +292,7 @@ export class TextureParamsController {
 	constructor(protected node: TextureCopNode) {}
 	async update(texture: Texture) {
 		const pv = this.node.pv;
-		this._updateEncoding(texture, pv);
+		this._updateColorSpace(texture, pv);
 		this._updateAdvanced(texture, pv);
 		this._updateMapping(texture, pv);
 		this._updateWrap(texture, pv);
@@ -290,23 +301,23 @@ export class TextureParamsController {
 		await this._updateAnisotropy(texture, pv);
 		this._updateTransform(texture);
 	}
-	private _updateEncoding(texture: Texture, pv: ParamsValueAccessorType<CopTextureParamsConfig>) {
-		if (isBooleanTrue(pv.tencoding)) {
-			texture.encoding = pv.encoding;
+	private _updateColorSpace(texture: Texture, pv: ParamsValueAccessorType<CopTextureParamsConfig>) {
+		if (isBooleanTrue(pv.tcolorSpace)) {
+			texture.colorSpace = pv.colorSpace as ColorSpace;
 		} else {
-			texture.encoding = DEFAULT.ENCODING;
+			texture.colorSpace = DEFAULT.COLOR_SPACE;
 		}
 		texture.needsUpdate = true;
 	}
 	private _updateAdvanced(texture: Texture, pv: ParamsValueAccessorType<CopTextureParamsConfig>) {
 		if (isBooleanTrue(pv.tadvanced)) {
 			if (isBooleanTrue(pv.tformat)) {
-				texture.format = pv.format;
+				texture.format = pv.format as AnyPixelFormat;
 			} else {
 				texture.format = DEFAULT.FORMAT;
 			}
 			if (isBooleanTrue(pv.ttype)) {
-				texture.type = pv.type;
+				texture.type = pv.type as TextureDataType;
 			} else {
 				texture.type = DEFAULT.TYPE;
 			}
@@ -315,7 +326,7 @@ export class TextureParamsController {
 	}
 	private _updateMapping(texture: Texture, pv: ParamsValueAccessorType<CopTextureParamsConfig>) {
 		if (isBooleanTrue(pv.tmapping)) {
-			texture.mapping = pv.mapping;
+			texture.mapping = pv.mapping as AnyMapping;
 		} else {
 			texture.mapping = DEFAULT.MAPPING;
 		}
@@ -323,8 +334,8 @@ export class TextureParamsController {
 	}
 	private _updateWrap(texture: Texture, pv: ParamsValueAccessorType<CopTextureParamsConfig>) {
 		if (isBooleanTrue(pv.twrap)) {
-			texture.wrapS = pv.wrapS;
-			texture.wrapT = pv.wrapT;
+			texture.wrapS = pv.wrapS as Wrapping;
+			texture.wrapT = pv.wrapT as Wrapping;
 		} else {
 			texture.wrapS = DEFAULT.WRAPPING;
 			texture.wrapT = DEFAULT.WRAPPING;
@@ -333,7 +344,7 @@ export class TextureParamsController {
 	}
 	private _updateFilter(texture: Texture, pv: ParamsValueAccessorType<CopTextureParamsConfig>) {
 		if (isBooleanTrue(pv.tminFilter)) {
-			texture.minFilter = pv.minFilter;
+			texture.minFilter = pv.minFilter as MinificationTextureFilter;
 		} else {
 			// It makes more sense to:
 			// - use LinearFilter by default when tfilter is off
@@ -344,7 +355,7 @@ export class TextureParamsController {
 			texture.minFilter = LinearFilter;
 		}
 		if (isBooleanTrue(pv.tmagFilter)) {
-			texture.magFilter = pv.magFilter;
+			texture.magFilter = pv.magFilter as MagnificationTextureFilter;
 		} else {
 			texture.magFilter = LinearFilter;
 		}
@@ -435,7 +446,7 @@ export class TextureParamsController {
 		if (!texture) {
 			return;
 		}
-		node.textureParamsController._updateEncoding(texture, node.pv);
+		node.textureParamsController._updateColorSpace(texture, node.pv);
 	}
 	static PARAM_CALLBACK_update_mapping(node: TextureCopNode) {
 		const texture = node.containerController.container().texture();
@@ -520,7 +531,7 @@ export class TextureParamsController {
 	//
 	//
 	static copyTextureAttributes(texture: Texture, inputTexture: Texture) {
-		texture.encoding = inputTexture.encoding;
+		texture.colorSpace = inputTexture.colorSpace;
 		texture.mapping = inputTexture.mapping;
 		texture.wrapS = inputTexture.wrapS;
 		texture.wrapT = inputTexture.wrapT;
@@ -540,9 +551,9 @@ export class TextureParamsController {
 	paramLabelsParams() {
 		const p = this.node.p;
 		return [
-			// encoding
-			p.tencoding,
-			p.encoding,
+			// colorSpace
+			p.tcolorSpace,
+			p.colorSpace,
 			// mapping
 			p.tmapping,
 			p.mapping,
@@ -563,12 +574,10 @@ export class TextureParamsController {
 	paramLabels() {
 		const labels: string[] = [];
 		const pv = this.node.pv;
-		if (isBooleanTrue(pv.tencoding)) {
-			for (let encoding of ENCODINGS) {
-				const encodingName = Object.keys(encoding)[0];
-				const encodingValue = (encoding as any)[encodingName];
-				if (encodingValue == pv.encoding) {
-					labels.push(`encoding: ${encodingName}`);
+		if (isBooleanTrue(pv.tcolorSpace)) {
+			for (let colorSpace of COLOR_SPACES) {
+				if (colorSpace == pv.colorSpace) {
+					labels.push(`colorSpace: ${colorSpace}`);
 				}
 			}
 		}

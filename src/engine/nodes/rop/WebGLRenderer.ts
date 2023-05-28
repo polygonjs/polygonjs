@@ -10,18 +10,21 @@ import {RopType} from '../../poly/registers/nodes/types/Rop';
 import {WebGLRenderer, WebGLRendererParameters} from 'three';
 import {
 	Mesh,
-	// encoding
-	LinearEncoding,
-	sRGBEncoding,
-	// BasicDepthPacking,
-	// RGBADepthPacking,
+	// color space
+	ColorSpace,
+	NoColorSpace,
+	SRGBColorSpace,
+	LinearSRGBColorSpace,
+	DisplayP3ColorSpace,
 	// tone mapping
+	ToneMapping,
 	NoToneMapping,
 	LinearToneMapping,
 	ReinhardToneMapping,
 	CineonToneMapping,
 	ACESFilmicToneMapping,
 	// shadow map
+	ShadowMapType,
 	BasicShadowMap,
 	PCFShadowMap,
 	PCFSoftShadowMap,
@@ -36,32 +39,28 @@ import {defaultPixelRatio} from '../../../core/render/defaultPixelRatio';
 import {PowerPreference, POWER_PREFERENCES} from '../../../core/render/Common';
 import {BaseNodeType} from '../_Base';
 import {WebGLRendererWithTypes} from '../../../core/camera/CoreCameraRendererController';
-enum EncodingName {
-	Linear = 'Linear',
-	sRGB = 'sRGB',
-	RGBM7 = 'RGBM7',
-	// BasicDepth = 'BasicDepth',
-	// RGBADepth = 'RGBADepth',
-}
-enum EncodingValue {
-	Linear = LinearEncoding as number,
-	sRGB = sRGBEncoding as number,
-	// BasicDepth = BasicDepthPacking as number,
-	// RGBADepth = RGBADepthPacking as number,
-}
-const ENCODING_NAMES: EncodingName[] = [
-	EncodingName.Linear,
-	EncodingName.sRGB,
-	// EncodingName.BasicDepth,
-	// EncodingName.RGBADepth,
-];
-const ENCODING_VALUES: EncodingValue[] = [
-	EncodingValue.Linear,
-	EncodingValue.sRGB,
-	// EncodingValue.BasicDepth,
-	// EncodingValue.RGBADepth,
-];
-export const DEFAULT_OUTPUT_ENCODING = EncodingValue.sRGB as number;
+import {COLOR_SPACE_NAME_BY_COLOR_SPACE} from '../../../core/cop/ColorSpace';
+// enum EncodingName {
+// 	Linear = 'Linear',
+// 	sRGB = 'sRGB',
+// 	RGBM7 = 'RGBM7',
+// 	// BasicDepth = 'BasicDepth',
+// 	// RGBADepth = 'RGBADepth',
+// }
+// enum ColorSpaceValue {
+// 	Linear = NoColorSpace as string,
+// 	sRGB = SRGBColorSpace as string,
+// 	BasicDepth = LinearSRGBColorSpace as string,
+// 	RGBADepth = DisplayP3ColorSpace as string,
+// }
+const COLOR_SPACES: ColorSpace[] = [NoColorSpace, SRGBColorSpace, LinearSRGBColorSpace, DisplayP3ColorSpace];
+// const ENCODING_VALUES: EncodingValue[] = [
+// 	EncodingValue.Linear,
+// 	EncodingValue.sRGB,
+// 	// EncodingValue.BasicDepth,
+// 	// EncodingValue.RGBADepth,
+// ];
+export const DEFAULT_OUTPUT_COLOR_SPACE = SRGBColorSpace;
 
 enum ToneMappingName {
 	No = 'No',
@@ -91,7 +90,7 @@ const TONE_MAPPING_VALUES: ToneMappingValue[] = [
 	ToneMappingValue.Cineon,
 	ToneMappingValue.ACESFilmic,
 ];
-export const DEFAULT_TONE_MAPPING = ToneMappingValue.ACESFilmic as number;
+export const DEFAULT_TONE_MAPPING = ToneMappingValue.ACESFilmic as ToneMapping;
 const TONE_MAPPING_MENU_ENTRIES = TONE_MAPPING_NAMES.map((name, i) => {
 	return {
 		name: name,
@@ -136,7 +135,7 @@ const SHADOW_MAP_TYPE_VALUES: ShadowMapTypeValue[] = [
 	ShadowMapTypeValue.VSM,
 ];
 export const SHADOW_MAP_TYPES = [BasicShadowMap, PCFShadowMap, PCFSoftShadowMap, VSMShadowMap];
-export const DEFAULT_SHADOW_MAP_TYPE = ShadowMapTypeValue.PCFSoft as number;
+export const DEFAULT_SHADOW_MAP_TYPE = ShadowMapTypeValue.PCFSoft as ShadowMapType;
 
 // TODO: set debug.checkShaderErrors to false in prod
 export const DEFAULT_PARAMS: WebGLRendererParameters = {
@@ -176,19 +175,17 @@ class WebGLRendererRopParamsConfig extends NodeParamsConfig {
 			WebGLRendererRopNode.PARAM_CALLBACK_updateToneMappingExposure(node as WebGLRendererRopNode);
 		},
 	});
-	/** @param output encoding */
-	outputEncoding = ParamConfig.INTEGER(DEFAULT_OUTPUT_ENCODING, {
-		menu: {
-			entries: ENCODING_NAMES.map((name, i) => {
-				return {
-					name: name,
-					value: ENCODING_VALUES[i],
-				};
-			}),
+	/** @param output color space */
+	outputColorSpace = ParamConfig.STRING(DEFAULT_OUTPUT_COLOR_SPACE, {
+		menuString: {
+			entries: COLOR_SPACES.map((colorSpace) => ({
+				name: COLOR_SPACE_NAME_BY_COLOR_SPACE[colorSpace],
+				value: colorSpace,
+			})),
 		},
 		cook: false,
 		callback: (node: BaseNodeType) => {
-			WebGLRendererRopNode.PARAM_CALLBACK_updateOutputEncoding(node as WebGLRendererRopNode);
+			WebGLRendererRopNode.PARAM_CALLBACK_updateOutputColorSpace(node as WebGLRendererRopNode);
 		},
 	});
 	/** @param physically correct lights */
@@ -373,7 +370,7 @@ export class WebGLRendererRopNode extends TypedRopNode<WebGLRendererRopParamsCon
 	private _updateRenderer(renderer: WebGLRenderer) {
 		// this._renderer.setClearAlpha(this.pv.alpha);
 		this._updateRendererPhysicallyCorrect(renderer);
-		this._updateRendererOutputEncoding(renderer);
+		this._updateRendererOutputColorSpace(renderer);
 		this._updateRendererToneMapping(renderer);
 		this._updateRendererToneMappingExposure(renderer);
 		this._updateRendererShadow(renderer);
@@ -411,9 +408,9 @@ export class WebGLRendererRopNode extends TypedRopNode<WebGLRendererRopParamsCon
 			node._updateRendererToneMappingExposure(renderer);
 		});
 	}
-	static PARAM_CALLBACK_updateOutputEncoding(node: WebGLRendererRopNode) {
+	static PARAM_CALLBACK_updateOutputColorSpace(node: WebGLRendererRopNode) {
 		node._rendererByCanvas.forEach((renderer, canvas) => {
-			node._updateRendererOutputEncoding(renderer);
+			node._updateRendererOutputColorSpace(renderer);
 		});
 	}
 	static PARAM_CALLBACK_updateShadow(node: WebGLRendererRopNode) {
@@ -440,19 +437,19 @@ export class WebGLRendererRopNode extends TypedRopNode<WebGLRendererRopParamsCon
 	//
 	//
 	private _updateRendererToneMapping(renderer: WebGLRenderer) {
-		renderer.toneMapping = this.pv.toneMapping;
+		renderer.toneMapping = this.pv.toneMapping as ToneMapping;
 	}
 	private _updateRendererToneMappingExposure(renderer: WebGLRenderer) {
 		renderer.toneMappingExposure = this.pv.toneMappingExposure;
 	}
-	private _updateRendererOutputEncoding(renderer: WebGLRenderer) {
-		renderer.outputEncoding = this.pv.outputEncoding;
+	private _updateRendererOutputColorSpace(renderer: WebGLRenderer) {
+		renderer.outputColorSpace = this.pv.outputColorSpace as ColorSpace;
 	}
 	private _updateRendererShadow(renderer: WebGLRenderer) {
 		renderer.shadowMap.enabled = this.pv.tshadowMap;
 		renderer.shadowMap.autoUpdate = this.pv.shadowMapAutoUpdate;
 		renderer.shadowMap.needsUpdate = this.pv.shadowMapNeedsUpdate;
-		renderer.shadowMap.type = this.pv.shadowMapType;
+		renderer.shadowMap.type = this.pv.shadowMapType as ShadowMapType;
 	}
 	private _updateRendererSortObjects(renderer: WebGLRenderer): void {
 		renderer.sortObjects = this.pv.sortObjects;

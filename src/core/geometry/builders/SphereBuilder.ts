@@ -15,7 +15,7 @@ interface SphereBuilderParams {
 export class SphereBuilder {
 	static create(parameters: SphereBuilderParams) {
 		const geometry = new BufferGeometry();
-		geometry.type = 'SphereBuilder';
+		(geometry as any).type = 'SphereBuilder';
 
 		let {radius, widthSegments, heightSegments, phiStart, phiLength, thetaStart, thetaLength, asLines, open} =
 			parameters;

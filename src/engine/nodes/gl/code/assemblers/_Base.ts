@@ -560,9 +560,9 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 
 	static expandShader(shader_string: string) {
 		function parseIncludes(string: string) {
-			var pattern = /^[ \t]*#include +<([\w\d./]+)>/gm;
+			const pattern = /^[ \t]*#include +<([\w\d./]+)>/gm;
 			function replace(match: string, include: string): string {
-				var replace = ShaderChunk[include];
+				const replace = ShaderChunk[include as keyof typeof ShaderChunk];
 
 				if (replace === undefined) {
 					throw new Error('Can not resolve #include <' + include + '>');

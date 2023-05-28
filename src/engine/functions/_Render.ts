@@ -12,8 +12,10 @@ import {
 	WebGLRenderer,
 	Scene,
 	NoToneMapping,
-	LinearEncoding,
+	NoColorSpace,
 	Color,
+	ColorSpace,
+	ToneMapping,
 } from 'three';
 import {NamedFunction2, ObjectNamedFunction5} from './_Base';
 
@@ -37,8 +39,8 @@ interface Object3DRestoreContext {
 // 	// background: Color | Texture | null;
 // }
 interface RendererRestoreContext {
-	toneMapping: number;
-	outputEncoding: number;
+	toneMapping: ToneMapping;
+	outputColorSpace: ColorSpace;
 }
 interface RestoreContext {
 	object: Object3DRestoreContext;
@@ -62,8 +64,8 @@ export class renderPixel extends ObjectNamedFunction5<[Material, Camera, Color, 
 		// 	overrideMaterial: null,
 		// },
 		renderer: {
-			toneMapping: -1,
-			outputEncoding: -1,
+			toneMapping: NoToneMapping,
+			outputColorSpace: NoColorSpace,
 		},
 	};
 	private _read = new Float32Array(4);
@@ -96,7 +98,7 @@ export class renderPixel extends ObjectNamedFunction5<[Material, Camera, Color, 
 
 	private _prepare(object3D: Object3D, material: Material, backgroundColor: Color, renderer: WebGLRenderer) {
 		// save context
-		this._restoreContext.renderer.outputEncoding = renderer.outputEncoding;
+		this._restoreContext.renderer.outputColorSpace = renderer.outputColorSpace;
 		this._restoreContext.renderer.toneMapping = renderer.toneMapping;
 		this._restoreContext.object.parent = object3D.parent;
 
@@ -105,7 +107,7 @@ export class renderPixel extends ObjectNamedFunction5<[Material, Camera, Color, 
 		this._renderScene.overrideMaterial = material;
 		this._renderScene.attach(object3D);
 		renderer.toneMapping = NoToneMapping;
-		renderer.outputEncoding = LinearEncoding;
+		renderer.outputColorSpace = NoColorSpace;
 	}
 	private _render(uv: Vector2, camera: Camera, renderer: WebGLRenderer, target: Vector4) {
 		(camera as any).setViewOffset(
@@ -137,7 +139,7 @@ export class renderPixel extends ObjectNamedFunction5<[Material, Camera, Color, 
 		target.fromArray(this._read);
 	}
 	private _restore(object3D: Object3D, material: Material, renderer: WebGLRenderer) {
-		renderer.outputEncoding = this._restoreContext.renderer.outputEncoding;
+		renderer.outputColorSpace = this._restoreContext.renderer.outputColorSpace;
 		renderer.toneMapping = this._restoreContext.renderer.toneMapping;
 		this._restoreContext.object.parent?.attach(object3D);
 	}

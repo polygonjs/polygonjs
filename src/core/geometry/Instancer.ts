@@ -193,7 +193,7 @@ export class CoreInstancer {
 		// geometry.attributes.uv = geometry_to_instance.attributes.uv
 
 		const geometry = new InstancedBufferGeometry();
-		geometry.copy(geometryToInstance);
+		geometry.copy(geometryToInstance as InstancedBufferGeometry);
 		geometry.instanceCount = Infinity;
 
 		const instancesCount = instancePts.length;

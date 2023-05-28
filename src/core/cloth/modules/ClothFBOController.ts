@@ -1,6 +1,5 @@
 import {
 	Vector2,
-	Camera,
 	Scene,
 	WebGLRenderer,
 	BufferGeometry,
@@ -15,6 +14,7 @@ import {
 	Vector3,
 	Texture,
 	Material,
+	OrthographicCamera,
 } from 'three';
 import {ClothController} from '../ClothController';
 import {Ref} from '@vue/reactivity';
@@ -80,7 +80,7 @@ function textureContainerToRef(src: TextureContainer, ref: Ref<Texture>) {
 export class ClothFBOController {
 	public readonly tSize = new Vector2();
 	public readonly fboScene = new Scene();
-	public readonly fboCamera = new Camera();
+	public readonly fboCamera = new OrthographicCamera();
 	public readonly fboMesh: Mesh;
 
 	public RESOLUTION = new Vector2();

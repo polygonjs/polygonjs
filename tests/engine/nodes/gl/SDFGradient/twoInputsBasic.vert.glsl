@@ -321,7 +321,6 @@ varying vec2 v_POLY_globals1_uv;
 
 
 #include <uv_pars_vertex>
-#include <uv2_pars_vertex>
 #include <envmap_pars_vertex>
 #include <color_pars_vertex>
 #include <fog_pars_vertex>
@@ -331,7 +330,6 @@ varying vec2 v_POLY_globals1_uv;
 #include <clipping_planes_pars_vertex>
 void main() {
 	#include <uv_vertex>
-	#include <uv2_vertex>
 	#include <color_vertex>
 
 

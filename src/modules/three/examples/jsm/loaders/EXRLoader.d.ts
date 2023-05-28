@@ -1,11 +1,12 @@
-import { LoadingManager, DataTextureLoader, TextureDataType, PixelFormat } from 'three';
+import { DataTextureLoader, LoadingManager, PixelFormat, TextureDataType, TextureEncoding } from 'three';
 
 export interface EXR {
     header: object;
     width: number;
     height: number;
-    data: Float32Array;
+    data: Float32Array | Uint16Array;
     format: PixelFormat;
+    encoding: TextureEncoding;
     type: TextureDataType;
 }
 

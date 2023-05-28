@@ -72,6 +72,8 @@ QUnit.test('gl texture updates it particle system with new spare parameters', as
 	assert.ok(renderer, 'renderer created');
 
 	const geo1 = window.geo1;
+	const box1 = geo1.createNode('box');
+	box1.flags.display.set(true);
 	const particlesSystemGpu1 = geo1.createNode('particlesSystemGpu');
 	const plane = geo1.createNode('plane');
 	particlesSystemGpu1.setInput(0, plane);

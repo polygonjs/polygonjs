@@ -26,7 +26,7 @@ export class PolyhedronBufferGeometry extends BufferGeometry {
 	constructor(vertices: number[], indices: number[], radius: number, detail: number, points_only: boolean) {
 		super();
 
-		this.type = 'PolyhedronBufferGeometry';
+		(this as any).type = 'PolyhedronBufferGeometry';
 
 		this.parameters = {
 			vertices: vertices,

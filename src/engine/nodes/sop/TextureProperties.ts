@@ -10,7 +10,7 @@ import {TexturePropertiesSopOperation} from '../../operations/sop/TexturePropert
 
 import {MAG_FILTER_MENU_ENTRIES, MIN_FILTER_MENU_ENTRIES} from '../../../core/cop/Filter';
 
-import {ENCODINGS} from '../../../core/cop/Encoding';
+import {COLOR_SPACES, COLOR_SPACE_NAME_BY_COLOR_SPACE} from '../../../core/cop/ColorSpace';
 import {MAPPINGS} from '../../../core/cop/Mapping';
 import {WRAPPINGS} from '../../../core/cop/Wrapping';
 
@@ -20,18 +20,16 @@ class TexturePropertiesSopParamsConfig extends NodeParamsConfig {
 	/** @param sets if this node should search through the materials inside the whole hierarchy */
 	applyToChildren = ParamConfig.BOOLEAN(DEFAULT.applyToChildren, {separatorAfter: true});
 
-	/** @param toggle on to allow updating the texture encoding */
-	tencoding = ParamConfig.BOOLEAN(DEFAULT.tencoding);
+	/** @param toggle on to allow updating the texture color space */
+	tcolorSpace = ParamConfig.BOOLEAN(DEFAULT.tcolorSpace);
 	/** @param sets the texture encoding */
-	encoding = ParamConfig.INTEGER(DEFAULT.encoding, {
-		visibleIf: {tencoding: 1},
-		menu: {
-			entries: ENCODINGS.map((m) => {
-				return {
-					name: Object.keys(m)[0],
-					value: Object.values(m)[0] as number,
-				};
-			}),
+	colorSpace = ParamConfig.STRING(DEFAULT.colorSpace, {
+		visibleIf: {tcolorSpace: 1},
+		menuString: {
+			entries: COLOR_SPACES.map((colorSpace) => ({
+				name: COLOR_SPACE_NAME_BY_COLOR_SPACE[colorSpace],
+				value: colorSpace,
+			})),
 		},
 	});
 
@@ -130,9 +128,9 @@ export class TexturePropertiesSopNode extends TypedSopNode<TexturePropertiesSopP
 	}
 
 	private _operation: TexturePropertiesSopOperation | undefined;
-	override async cook(input_contents: CoreGroup[]) {
+	override async cook(inputCoreGroups: CoreGroup[]) {
 		this._operation = this._operation || new TexturePropertiesSopOperation(this.scene(), this.states);
-		const core_group = await this._operation.cook(input_contents, this.pv);
-		this.setCoreGroup(core_group);
+		const coreGroup = await this._operation.cook(inputCoreGroups, this.pv);
+		this.setCoreGroup(coreGroup);
 	}
 }

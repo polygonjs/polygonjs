@@ -304,7 +304,6 @@ vec3 v_POLY_SDFGradient1_gradientFunction( in vec3 p )
 
 
 #include <uv_pars_vertex>
-#include <uv2_pars_vertex>
 #include <envmap_pars_vertex>
 #include <color_pars_vertex>
 #include <fog_pars_vertex>
@@ -314,7 +313,6 @@ vec3 v_POLY_SDFGradient1_gradientFunction( in vec3 p )
 #include <clipping_planes_pars_vertex>
 void main() {
 	#include <uv_vertex>
-	#include <uv2_vertex>
 	#include <color_vertex>
 
 

@@ -15,9 +15,12 @@ import {
 	RGBAFormat,
 	LinearFilter,
 	NearestFilter,
-	LinearEncoding,
 	NoToneMapping,
 	WebGLArrayRenderTarget,
+	NoColorSpace,
+	ColorSpace,
+	ToneMapping,
+	OrthographicCamera,
 } from 'three';
 import {Number2} from '../../../types/GlobalTypes';
 import {Constructor, valueof} from '../../../types/GlobalTypes';
@@ -56,7 +59,7 @@ function Builder2DArrayCopParamConfig<TBase extends Constructor>(Base: TBase) {
 			range: [2, 32],
 			rangeLocked: [true, false],
 		});
-		/** @param use the main camera renderer. This can save memory, but can also lead to colors being affected by the renderer.outputEncoding */
+		/** @param use the main camera renderer. This can save memory, but can also lead to colors being affected by the renderer's output color space */
 		useCameraRenderer = ParamConfig.BOOLEAN(1, {
 			callback: (node: BaseNodeType) => {
 				Builder2DArrayCopNode.PARAM_CALLBACK_render(node as Builder2DArrayCopNode);
@@ -110,7 +113,7 @@ export class Builder2DArrayCopNode extends TypedCopNode<Builder2DArrayCopParamsC
 		fragmentShader: FRAGMENT_SHADER,
 	});
 	private _textureScene: Scene = new Scene();
-	private _textureCamera: Camera = new Camera();
+	private _textureCamera: Camera = new OrthographicCamera();
 	private _renderTarget: WebGLArrayRenderTarget | undefined;
 	private _dataTextureController: DataTextureController | undefined;
 	private _rendererController: CopRendererController | undefined;
@@ -322,11 +325,11 @@ export class Builder2DArrayCopNode extends TypedCopNode<Builder2DArrayCopParamsC
 		}
 	}
 	private _prevTarget: WebGLRenderTarget | null = null;
-	private _prevOutputEncoding: number = -1;
-	private _prevToneMapping: number = -1;
+	private _prevOutputColorSpace: ColorSpace = NoColorSpace;
+	private _prevToneMapping: ToneMapping = NoToneMapping;
 	private _saveRendererState(renderer: WebGLRenderer) {
 		this._prevTarget = renderer.getRenderTarget();
-		this._prevOutputEncoding = renderer.outputEncoding;
+		this._prevOutputColorSpace = renderer.outputColorSpace;
 		this._prevToneMapping = renderer.toneMapping;
 	}
 	private _prepareRenderer(renderer: WebGLRenderer) {
@@ -334,7 +337,7 @@ export class Builder2DArrayCopNode extends TypedCopNode<Builder2DArrayCopParamsC
 			console.warn('no render target');
 			return;
 		}
-		renderer.outputEncoding = LinearEncoding;
+		renderer.outputColorSpace = NoColorSpace;
 		renderer.toneMapping = NoToneMapping;
 	}
 	private _setRenderLayer(renderer: WebGLRenderer, layer: number) {
@@ -347,7 +350,7 @@ export class Builder2DArrayCopNode extends TypedCopNode<Builder2DArrayCopParamsC
 	}
 	private _restoreRendererState(renderer: WebGLRenderer) {
 		renderer.setRenderTarget(this._prevTarget);
-		renderer.outputEncoding = this._prevOutputEncoding;
+		renderer.outputColorSpace = this._prevOutputColorSpace;
 		renderer.toneMapping = this._prevToneMapping;
 	}
 	/*

@@ -10,7 +10,7 @@ export class TetrahedronBufferGeometry extends PolyhedronBufferGeometry {
 
 		super(vertices, indices, radius, detail, points_only);
 
-		this.type = 'TetrahedronBufferGeometry';
+		(this as any).type = 'TetrahedronBufferGeometry';
 
 		this.parameters = {
 			radius: radius,

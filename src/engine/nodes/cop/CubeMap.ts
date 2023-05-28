@@ -3,7 +3,7 @@
  *
  *
  */
-import {Texture} from 'three';
+import {Texture, TextureDataType} from 'three';
 import {TypedCopNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CopType} from '../../poly/registers/nodes/types/Cop';
@@ -107,7 +107,7 @@ export class CubeMapCopNode extends TypedCopNode<CubeMapCopParamsConfig> {
 			const loader = new CoreCubeTextureLoader(urls, this);
 			texture = await loader.loadImage({
 				tdataType: this.pv.ttype && this.pv.tadvanced,
-				dataType: this.pv.type,
+				dataType: this.pv.type as TextureDataType,
 			});
 			if (texture) {
 				texture.matrixAutoUpdate = false;

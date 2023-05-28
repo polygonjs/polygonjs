@@ -183,7 +183,7 @@ export class SDFFromObjectCopNode extends TypedCopNode<SDFFromObjectCopParamsCon
 		const boundsTree = object.geometry.boundsTree;
 
 		const texture = this._dataTexture(resolution);
-		const data = texture.image.data as Float32Array;
+		const data = texture.image.data;
 		const pos = new Vector3();
 		const distanceResult: HitPointInfo = {
 			point: new Vector3(),

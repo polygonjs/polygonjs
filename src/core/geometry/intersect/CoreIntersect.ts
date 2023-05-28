@@ -42,7 +42,16 @@ function resolveGeometryAttributeForMesh(intersection: Intersection, attribName:
 						_uvA.fromBufferAttribute(attribute, intersection.face.a);
 						_uvB.fromBufferAttribute(attribute, intersection.face.b);
 						_uvC.fromBufferAttribute(attribute, intersection.face.c);
-						intersection.uv = Triangle.getUV(intersection.point, _vA, _vB, _vC, _uvA, _uvB, _uvC, _hitUV);
+						intersection.uv = Triangle.getInterpolation(
+							intersection.point,
+							_vA,
+							_vB,
+							_vC,
+							_uvA,
+							_uvB,
+							_uvC,
+							_hitUV
+						);
 						return _hitUV.x;
 					}
 					return;

@@ -1,6 +1,6 @@
 import {ParamEvent} from './../../../../poly/ParamEvent';
 import {Constructor} from '../../../../../types/GlobalTypes';
-import {Texture} from 'three';
+import {Texture, TextureDataType} from 'three';
 import {TypedCopNode} from './../../_Base';
 import {BaseNodeType} from '../../../_Base';
 import {NodeParamsConfig, ParamConfig} from '../../../utils/params/ParamsConfig';
@@ -129,7 +129,7 @@ export function copImageNodeFactoryFactory(
 				const loader = this._loader();
 				texture = await loader.loadImage({
 					tdataType: this.pv.ttype && this.pv.tadvanced,
-					dataType: this.pv.type,
+					dataType: this.pv.type as TextureDataType,
 				});
 				if (texture) {
 					texture.matrixAutoUpdate = false;

@@ -3,7 +3,7 @@ import {ArrayUtils} from '../../ArrayUtils';
 import {ObjectType} from '../Constant';
 import {CoreObject} from '../Object';
 import {isBooleanTrue} from '../../Type';
-import {mergeBufferGeometries} from 'three/examples/jsm/utils/BufferGeometryUtils';
+import {mergeGeometries} from 'three/examples/jsm/utils/BufferGeometryUtils';
 import {TransformResetSopOperation} from '../../../engine/operations/sop/TransformReset';
 import {TypedSopNode} from '../../../engine/nodes/sop/_Base';
 import {applyJustifyModeToGeometries, TextJustifiyParams} from './TextJustify';
@@ -76,7 +76,7 @@ function _mergeOrSplit(params: TextMergeAllLettersOptions) {
 		try {
 			const geometries = ArrayUtils.compact(params.geometries);
 			if (geometries.length > 0) {
-				const mergedGeometry = mergeBufferGeometries(geometries);
+				const mergedGeometry = mergeGeometries(geometries);
 				return [TypedSopNode.createObject(mergedGeometry, objectType)];
 			}
 		} catch (err) {

@@ -1,20 +1,27 @@
 import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {Mesh} from 'three';
-import {Material} from 'three';
-import {Texture} from 'three';
+import {
+	Mesh,
+	Material,
+	Texture,
+	NoColorSpace,
+	UVMapping,
+	RepeatWrapping,
+	ColorSpace,
+	MagnificationTextureFilter,
+	MinificationTextureFilter,
+	AnyMapping,
+	Wrapping,
+} from 'three';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
-
-import {LinearEncoding, UVMapping, RepeatWrapping} from 'three';
-
 import {MAG_FILTER_DEFAULT_VALUE, MIN_FILTER_DEFAULT_VALUE} from '../../../core/cop/Filter';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 interface TexturePropertiesSopParams extends DefaultOperationParams {
 	applyToChildren: boolean;
 	// encoding
-	tencoding: boolean;
-	encoding: number;
+	tcolorSpace: boolean;
+	colorSpace: string;
 	// mapping
 	tmapping: boolean;
 	mapping: number;
@@ -37,8 +44,8 @@ export class TexturePropertiesSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: TexturePropertiesSopParams = {
 		applyToChildren: false,
 		// anisotropy
-		tencoding: false,
-		encoding: LinearEncoding,
+		tcolorSpace: false,
+		colorSpace: NoColorSpace,
 		// mapping
 		tmapping: false,
 		mapping: UVMapping,
@@ -94,29 +101,29 @@ export class TexturePropertiesSopOperation extends BaseSopOperation {
 		}
 	}
 	private async _update_texture(texture: Texture, params: TexturePropertiesSopParams) {
-		this._updateEncoding(texture, params);
+		this._updateColorSpace(texture, params);
 		this._updateMapping(texture, params);
 		this._updateWrap(texture, params);
 		await this._updateAnisotropy(texture, params);
 		this._updateFilter(texture, params);
 	}
 
-	private _updateEncoding(texture: Texture, pv: TexturePropertiesSopParams) {
-		if (!isBooleanTrue(pv.tencoding)) {
+	private _updateColorSpace(texture: Texture, pv: TexturePropertiesSopParams) {
+		if (!isBooleanTrue(pv.tcolorSpace)) {
 			return;
 		}
-		texture.encoding = pv.encoding;
+		texture.colorSpace = pv.colorSpace as ColorSpace;
 		texture.needsUpdate = true;
 	}
 	private _updateMapping(texture: Texture, pv: TexturePropertiesSopParams) {
 		if (isBooleanTrue(pv.tmapping)) {
-			texture.mapping = pv.mapping;
+			texture.mapping = pv.mapping as AnyMapping;
 		}
 	}
 	private _updateWrap(texture: Texture, pv: TexturePropertiesSopParams) {
 		if (isBooleanTrue(pv.twrap)) {
-			texture.wrapS = pv.wrapS;
-			texture.wrapT = pv.wrapT;
+			texture.wrapS = pv.wrapS as Wrapping;
+			texture.wrapT = pv.wrapT as Wrapping;
 		}
 	}
 
@@ -137,10 +144,10 @@ export class TexturePropertiesSopOperation extends BaseSopOperation {
 	}
 	private _updateFilter(texture: Texture, params: TexturePropertiesSopParams) {
 		if (isBooleanTrue(params.tminFilter)) {
-			texture.minFilter = params.minFilter;
+			texture.minFilter = params.minFilter as MinificationTextureFilter;
 		}
 		if (isBooleanTrue(params.tmagFilter)) {
-			texture.magFilter = params.magFilter;
+			texture.magFilter = params.magFilter as MagnificationTextureFilter;
 		}
 	}
 }

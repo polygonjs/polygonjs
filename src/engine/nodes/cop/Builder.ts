@@ -17,8 +17,11 @@ import {
 	ClampToEdgeWrapping,
 	LinearFilter,
 	NearestFilter,
-	LinearEncoding,
 	NoToneMapping,
+	NoColorSpace,
+	ColorSpace,
+	ToneMapping,
+	OrthographicCamera,
 } from 'three';
 import {Constructor, valueof, Number2} from '../../../types/GlobalTypes';
 import {TypedCopNode} from './_Base';
@@ -53,7 +56,7 @@ function BuilderCopParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		/** @param texture resolution */
 		resolution = ParamConfig.VECTOR2(RESOLUTION_DEFAULT);
-		/** @param use the main camera renderer. This can save memory, but can also lead to colors being affected by the renderer.outputEncoding */
+		/** @param use the main camera renderer. This can save memory, but can also lead to colors being affected by the renderer's output color space */
 		useCameraRenderer = ParamConfig.BOOLEAN(1, {
 			callback: (node: BaseNodeType) => {
 				BuilderCopNode.PARAM_CALLBACK_render(node as BuilderCopNode);
@@ -107,7 +110,7 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 		fragmentShader: FRAGMENT_SHADER,
 	});
 	private _textureScene: Scene = new Scene();
-	private _textureCamera: Camera = new Camera();
+	private _textureCamera: Camera = new OrthographicCamera();
 	private _renderTarget: WebGLRenderTarget | undefined;
 	private _dataTextureController: DataTextureController | undefined;
 	private _rendererController: CopRendererController | undefined;
@@ -313,11 +316,11 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 		}
 	}
 	private _prevTarget: WebGLRenderTarget | null = null;
-	private _prevOutputEncoding: number = -1;
-	private _prevToneMapping: number = -1;
+	private _prevOutputColorSpace: ColorSpace = NoColorSpace;
+	private _prevToneMapping: ToneMapping = NoToneMapping;
 	private _saveRendererState(renderer: WebGLRenderer) {
 		this._prevTarget = renderer.getRenderTarget();
-		this._prevOutputEncoding = renderer.outputEncoding;
+		this._prevOutputColorSpace = renderer.outputColorSpace;
 		this._prevToneMapping = renderer.toneMapping;
 	}
 	private _prepareRenderer(renderer: WebGLRenderer) {
@@ -326,13 +329,13 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 			return;
 		}
 		renderer.setRenderTarget(this._renderTarget);
-		renderer.outputEncoding = LinearEncoding;
+		renderer.outputColorSpace = NoColorSpace;
 		renderer.toneMapping = NoToneMapping;
 		renderer.clear();
 	}
 	private _restoreRendererState(renderer: WebGLRenderer) {
 		renderer.setRenderTarget(this._prevTarget);
-		renderer.outputEncoding = this._prevOutputEncoding;
+		renderer.outputColorSpace = this._prevOutputColorSpace;
 		renderer.toneMapping = this._prevToneMapping;
 	}
 	/*

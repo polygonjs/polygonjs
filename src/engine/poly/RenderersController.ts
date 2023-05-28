@@ -3,9 +3,8 @@ import {
 	WebGLRendererParameters,
 	WebGLRenderTarget,
 	WebGLRenderTargetOptions,
-	LinearEncoding,
+	NoColorSpace,
 	NoToneMapping,
-	ColorManagement,
 } from 'three';
 import {AbstractRenderer} from '../viewers/Common';
 
@@ -69,7 +68,6 @@ export class RenderersController {
 	}
 
 	createWebGLRenderer(params: WebGLRendererParameters) {
-		(ColorManagement as any).enabled = true;
 		const renderer = new WebGLRenderer(params);
 
 		this.assignIdToRenderer(renderer);
@@ -235,7 +233,7 @@ export class RenderersController {
 			canvas,
 			context: gl,
 		});
-		renderer.outputEncoding = LinearEncoding;
+		renderer.outputColorSpace = NoColorSpace;
 		renderer.toneMapping = NoToneMapping;
 		return renderer;
 	}

@@ -1,4 +1,4 @@
-import {LinearEncoding, NoToneMapping, WebGLRenderer} from 'three';
+import {NoColorSpace, NoToneMapping, WebGLRenderer} from 'three';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {BackgroundMode} from '../../../../src/engine/nodes/manager/utils/Scene/Background';
 import {RendererUtils} from '../../../helpers/RendererUtils';
@@ -19,7 +19,7 @@ QUnit.test('COP render simple', async (assert) => {
 	const ropNetwork = camera.createNode('renderersNetwork');
 	const webglRendererNode = ropNetwork.createNode('WebGLRenderer');
 	webglRendererNode.p.toneMapping.set(NoToneMapping);
-	webglRendererNode.p.outputEncoding.set(LinearEncoding);
+	webglRendererNode.p.outputColorSpace.set(NoColorSpace);
 	camera.p.setRenderer.set(true);
 	camera.p.renderer.setNode(webglRendererNode);
 	await camera.compute();
@@ -34,7 +34,7 @@ QUnit.test('COP render simple', async (assert) => {
 
 		assert.ok(renderer);
 		assert.equal(renderer.toneMapping, NoToneMapping);
-		assert.equal(renderer.outputEncoding, LinearEncoding);
+		assert.equal(renderer.outputColorSpace, NoColorSpace);
 
 		// setup scene
 		scene.createNode('ambientLight');
@@ -53,8 +53,8 @@ QUnit.test('COP render simple', async (assert) => {
 		render1.p.useDataTexture.set(1);
 		render1.p.resolution.set([16, 16]);
 		render1.p.camera.setNode(camera);
-		render1.p.tencoding.set(true);
-		render1.p.encoding.set(LinearEncoding);
+		render1.p.tcolorSpace.set(true);
+		render1.p.colorSpace.set(NoColorSpace);
 
 		let container = await render1.compute();
 		assert.ok(!render1.states.error.message());
