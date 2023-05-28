@@ -88,6 +88,7 @@ export enum SopType {
 	CSS3D_OBJECT = 'CSS3DObject',
 	DATA = 'data',
 	DATA_URL = 'dataUrl',
+	GROUND_PROJECTED_SKYBOX = 'groundProjectedSkybox',
 	ICOSAHEDRON = 'icosahedron',
 	//
 	IFC_FILTER_CATEGORIES = 'IFCFilterCategories',

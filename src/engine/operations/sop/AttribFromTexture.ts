@@ -31,20 +31,20 @@ export class AttribFromTextureSopOperation extends BaseSopOperation {
 		return 'attribFromTexture';
 	}
 
-	override async cook(input_contents: CoreGroup[], params: AttribFromTextureSopParams) {
-		const core_group = input_contents[0];
+	override async cook(inputCoreGroups: CoreGroup[], params: AttribFromTextureSopParams) {
+		const coreGroup = inputCoreGroups[0];
 
-		const texture_node = params.texture.nodeWithContext(NodeContext.COP, this.states?.error);
-		if (!texture_node) {
-			return core_group;
+		const textureNode = params.texture.nodeWithContext(NodeContext.COP, this.states?.error);
+		if (!textureNode) {
+			return coreGroup;
 		}
-		const container = await texture_node.compute();
+		const container = await textureNode.compute();
 		const texture = container.texture();
-		for (let core_object of core_group.threejsCoreObjects()) {
+		for (let core_object of coreGroup.threejsCoreObjects()) {
 			this._set_position_from_data_texture(core_object, texture, params);
 		}
 
-		return core_group;
+		return coreGroup;
 	}
 	private _set_position_from_data_texture(
 		core_object: CoreObject,

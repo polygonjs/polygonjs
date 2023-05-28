@@ -5,7 +5,7 @@
  */
 import {TypedPostNode, TypedPostNodeContext, PostParamOptions} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {BlendFunction, EffectPass, PredicationMode, SMAAEffect, TextureEffect} from 'postprocessing';
+import {BlendFunction, EffectPass, PredicationMode, SMAAEffect, TextureEffect, SMAAPreset} from 'postprocessing';
 class AntialiasingPostParamsConfig extends NodeParamsConfig {
 	/** @param opacity */
 	opacity = ParamConfig.FLOAT(1, {
@@ -23,7 +23,9 @@ export class AntialiasingPostNode extends TypedPostNode<EffectPass, Antialiasing
 
 	override createPass(context: TypedPostNodeContext) {
 		const smaaEffect = new SMAAEffect(
-			{}
+			{
+				preset: SMAAPreset.ULTRA,
+			}
 			// assets.get("smaa-search"),
 			// assets.get("smaa-area"),
 			// SMAAPreset.HIGH,

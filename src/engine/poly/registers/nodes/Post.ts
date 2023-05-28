@@ -31,6 +31,8 @@ import {OutlinePostNode} from '../../../nodes/post/Outline';
 import {PixelPostNode} from '../../../nodes/post/Pixel';
 import {RenderPostNode} from '../../../nodes/post/Render';
 import {ScreenSpaceAmbientOcclusionPostNode} from '../../../nodes/post/ScreenSpaceAmbientOcclusion';
+// import {ScreenSpaceGlobalIlluminationPostNode} from '../../../nodes/post/ScreenSpaceGlobalIllumination';
+// import {ScreenSpaceReflectionsPostNode} from '../../../nodes/post/ScreenSpaceReflections';
 import {SepiaPostNode} from '../../../nodes/post/Sepia';
 import {SequencePostNode} from '../../../nodes/post/Sequence';
 import {TexturePostNode} from '../../../nodes/post/Texture';
@@ -78,6 +80,8 @@ export interface PostNodeChildrenMap {
 	pixel: PixelPostNode;
 	render: RenderPostNode;
 	screenSpaceAmbientOcclusion: ScreenSpaceAmbientOcclusionPostNode;
+	// screenSpaceGlobalIllumination: ScreenSpaceGlobalIlluminationPostNode;
+	// screenSpaceReflections: ScreenSpaceReflectionsPostNode;
 	sepia: SepiaPostNode;
 	sequence: SequencePostNode;
 	texture: TexturePostNode;
@@ -128,6 +132,8 @@ export class PostRegister {
 		poly.registerNode(PixelPostNode, CATEGORY_POST.EFFECT);
 		poly.registerNode(RenderPostNode, CATEGORY_POST.MISC);
 		poly.registerNode(ScreenSpaceAmbientOcclusionPostNode, CATEGORY_POST.EFFECT);
+		// poly.registerNode(ScreenSpaceGlobalIlluminationPostNode, CATEGORY_POST.EFFECT);
+		// poly.registerNode(ScreenSpaceReflectionsPostNode, CATEGORY_POST.EFFECT);
 		poly.registerNode(SepiaPostNode, CATEGORY_POST.COLOR);
 		poly.registerNode(SequencePostNode, CATEGORY_POST.MISC);
 		poly.registerNode(TexturePostNode, CATEGORY_POST.MISC);

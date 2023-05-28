@@ -165,6 +165,7 @@ import {FileSTLSopNode} from '../../../nodes/sop/FileSTL';
 import {FileSVGSopNode} from '../../../nodes/sop/FileSVG';
 import {FileUSDZSopNode} from '../../../nodes/sop/FileUSDZ';
 import {FuseSopNode} from '../../../nodes/sop/Fuse';
+import {GroundProjectedSkyboxSopNode} from '../../../nodes/sop/GroundProjectedSkybox';
 import {HexagonsSopNode} from '../../../nodes/sop/Hexagons';
 import {HierarchySopNode} from '../../../nodes/sop/Hierarchy';
 import {HeightMapSopNode} from '../../../nodes/sop/HeightMap';
@@ -449,6 +450,7 @@ export interface GeoNodeChildrenMap {
 	fileSVG: FileSVGSopNode;
 	fileUSDZ: FileUSDZSopNode;
 	fuse: FuseSopNode;
+	groundProjectedSkybox: GroundProjectedSkyboxSopNode;
 	heightMap: HeightMapSopNode;
 	hexagons: HexagonsSopNode;
 	hierarchy: HierarchySopNode;
@@ -966,6 +968,7 @@ export class SopRegister {
 		poly.registerNode(FileSVGSopNode, CATEGORY_SOP.INPUT);
 		poly.registerNode(FileUSDZSopNode, CATEGORY_SOP.INPUT);
 		poly.registerNode(FuseSopNode, CATEGORY_SOP.MODIFIER);
+		poly.registerNode(GroundProjectedSkyboxSopNode, CATEGORY_SOP.INPUT);
 		poly.registerNode(HemisphereLightSopNode, CATEGORY_SOP.LIGHTS);
 		poly.registerNode(HeightMapSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(HexagonsSopNode, CATEGORY_SOP.PRIMITIVES);

@@ -3297,6 +3297,11 @@ murmurhash-js@^1.0.0:
   resolved "https://registry.yarnpkg.com/murmurhash-js/-/murmurhash-js-1.0.0.tgz#b06278e21fc6c37fa5313732b0412bcb6ae15f51"
   integrity sha512-TvmkNhkv8yct0SVBSy+o8wYzXjE4Zz3PCesbfs8HiCXXdcTuocApFv11UWlNFWKYsP2okqrhb7JNlSm9InBhIw==
 
+n8ao@1.4.3:
+  version "1.4.3"
+  resolved "https://registry.yarnpkg.com/n8ao/-/n8ao-1.4.3.tgz#c6a3b39b8660f24e12be0c9c54ea6a4dca39e10c"
+  integrity sha512-O148n25UEbQAMiFKDi2pK8/kVMrqqArIQymOyrx7SWNjBXEERed6iZgn3AHMvekAB2KD8rXhNEJpqIbXMLhubg==
+
 natural-compare@^1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/natural-compare/-/natural-compare-1.4.0.tgz#4abebfeed7541f2c27acfb29bdbbd15c8d5ba4f7"
@@ -3742,6 +3747,11 @@ readdirp@~3.6.0:
   dependencies:
     picomatch "^2.2.1"
 
+realism-effects@^1.1.2:
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/realism-effects/-/realism-effects-1.1.2.tgz#14b844b45267b1afe661ad9b31251a63b0429fdd"
+  integrity sha512-dHI++mxZNYJ/k8UO+TUE/PHiNiZcUSkrNlSEwVT48c4d4PHjSz9sjdkH2QlzbmOaI4wYJEmcc9VzI6BZNgpx1A==
+
 rechoir@^0.7.0:
   version "0.7.1"
   resolved "https://registry.yarnpkg.com/rechoir/-/rechoir-0.7.1.tgz#9478a96a1ca135b5e88fc027f03ee92d6c645686"
@@ -3898,6 +3908,11 @@ schema-utils@^4.0.0:
     ajv "^8.8.0"
     ajv-formats "^2.1.1"
     ajv-keywords "^5.0.0"
+
+screen-space-reflections@^2.5.0:
+  version "2.5.0"
+  resolved "https://registry.yarnpkg.com/screen-space-reflections/-/screen-space-reflections-2.5.0.tgz#2a6ea982da96f9c35f34a361b2555439f9fbb1f6"
+  integrity sha512-fWSDMhJS0xwD3LTxRRch7Lb9NzxsR66sCmtDmAA7i+OGnghUrBBsrha85ng7StnCBaLq/BKmZ97dLxWd1XgWdQ==
 
 select-hose@^2.0.0:
   version "2.0.0"
