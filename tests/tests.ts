@@ -112,6 +112,7 @@ import './engine/nodes/cop/Color';
 import './engine/nodes/cop/CubeMap';
 import './engine/nodes/cop/CubeMapFromScene';
 import './engine/nodes/cop/EnvMap';
+import './engine/nodes/cop/GeometryAttribute';
 import './engine/nodes/cop/Gif';
 import './engine/nodes/cop/Image';
 // import './engine/nodes/cop/ImageSequence';

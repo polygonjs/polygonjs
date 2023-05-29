@@ -19,7 +19,7 @@ import {FunctionGLDefinition} from './utils/GLDefinition';
 import {AttribLookup} from '../../../core/geometry/operation/TextureFromAttribute';
 // import {SubnetOutputGlNode} from './SubnetOutput';
 
-enum ComputeNormalsInput {
+export enum ComputeNormalsInput {
 	P = 'P',
 	N = 'N',
 	TEXTURE_SIZE = 'textureSize',
