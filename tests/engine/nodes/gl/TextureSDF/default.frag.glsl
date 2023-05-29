@@ -18,6 +18,7 @@ uniform float debugMaxDepth;
 #include <lights_pars_begin>
 #include <lights_physical_pars_fragment>
 #include <shadowmap_pars_fragment>
+#include <fog_pars_fragment>
 #if defined( SHADOW_DISTANCE )
 	uniform float shadowDistanceMin;
 	uniform float shadowDistanceMax;
@@ -413,8 +414,8 @@ vec3 GetLight(vec3 _p, vec3 _n, inout SDFContext sdfContext) {
 
 		IncidentLight directLight;
 		ReflectedLight reflectedLight;
-		vec3 lightPos, lightDir, worldLightDir, objectSpaceLightDir;//, l;
-		vec3 lighDif;
+		vec3 lightPos, lightDir, worldLightDir, objectSpaceLightDir, lighDif, directDiffuse;
+		float dotNL, lightDistance;
 		#if NUM_SPOT_LIGHTS > 0
 			SpotLightRayMarching spotLightRayMarching;
 			SpotLight spotLight;
@@ -444,7 +445,7 @@ vec3 GetLight(vec3 _p, vec3 _n, inout SDFContext sdfContext) {
 				lightDir = normalize(lightPos-geometry.position);
 				worldLightDir = inverseTransformDirection(lightDir, VViewMatrix);
 				objectSpaceLightDir = inverseTransformDirection(worldLightDir, vModelMatrix);
-				float lightDistance = distance(geometry.position,lightPos);
+				lightDistance = distance(geometry.position,lightPos);
 				spotLightSdfShadow =
 					dot( _n, objectSpaceLightDir ) < spotLightRayMarching.shadowBiasAngle
 					? 1.
@@ -456,8 +457,8 @@ vec3 GetLight(vec3 _p, vec3 _n, inout SDFContext sdfContext) {
 						1./max(spotLightRayMarching.penumbra*0.2,0.001),
 						sdfContext
 					);
-				float dotNL = saturate( dot( geometry.normal, directLight.direction ) );
-				vec3 directDiffuse = dotNL * directLight.color * BRDF_Lambert( vec3(1.) );
+				dotNL = saturate( dot( geometry.normal, directLight.direction ) );
+				directDiffuse = dotNL * directLight.color * BRDF_Lambert( vec3(1.) );
 				dif += directDiffuse * spotLightSdfShadow;
 			}
 			#pragma unroll_loop_end
@@ -503,9 +504,9 @@ vec3 GetLight(vec3 _p, vec3 _n, inout SDFContext sdfContext) {
 						1./max(directionalLightRayMarching.penumbra*0.2,0.001),
 						sdfContext
 					);
-				float dotNL = saturate( dot( geometry.normal, directLight.direction ) );
+				dotNL = saturate( dot( geometry.normal, directLight.direction ) );
 				// lighDif = directLight.color * dotNL * dirLightSdfShadow;
-				vec3 directDiffuse = dotNL * directLight.color * BRDF_Lambert( vec3(1.) );
+				directDiffuse = dotNL * directLight.color * BRDF_Lambert( vec3(1.) );
 				dif += directDiffuse * dirLightSdfShadow;
 			}
 			#pragma unroll_loop_end
@@ -568,8 +569,8 @@ vec3 GetLight(vec3 _p, vec3 _n, inout SDFContext sdfContext) {
 					1./max(pointLightRayMarching.penumbra*0.2,0.001),
 					sdfContext
 				);
-				float dotNL = saturate( dot( geometry.normal, directLight.direction ) );
-				vec3 directDiffuse = dotNL * directLight.color * BRDF_Lambert( vec3(1.) );
+				dotNL = saturate( dot( geometry.normal, directLight.direction ) );
+				directDiffuse = dotNL * directLight.color * BRDF_Lambert( vec3(1.) );
 				dif += directDiffuse * pointLightSdfShadow;
 			}
 			#pragma unroll_loop_end
@@ -759,6 +760,18 @@ void main()	{
 			gl_FragColor.rgb = toneMapping( gl_FragColor.rgb );
 		#endif
 		gl_FragColor = linearToOutputTexel( gl_FragColor );
+
+		#ifdef USE_FOG
+			float vFogDepth = sdfContext.d;
+			#ifdef FOG_EXP2
+				float fogFactor = 1.0 - exp( - fogDensity * fogDensity * vFogDepth * vFogDepth );
+			#else
+				float fogFactor = smoothstep( fogNear, fogFar, vFogDepth );
+			#endif
+			gl_FragColor.rgb = mix( gl_FragColor.rgb, fogColor, fogFactor );
+		#endif
+		#include <premultiplied_alpha_fragment>
+		#include <dithering_fragment>
 	} else {
 		gl_FragColor = vec4(0.);
 	}

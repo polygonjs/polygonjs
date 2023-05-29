@@ -350,7 +350,7 @@ export class PathTracingRendererContainer implements AbstractRenderer {
 			this._generateRequired = true;
 			return;
 		}
-		console.log('GENERATOR START');
+		console.warn('GENERATOR START');
 		this._generated = false;
 		this._generating = true;
 		const timeStart = performance.now();

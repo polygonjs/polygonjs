@@ -100,6 +100,7 @@ export class PathTracingViewer<C extends PhysicalCamera> extends ThreejsViewer<P
 		this._debugElement.innerText = `${samples}`.padStart(3, '0');
 	}
 	override dispose() {
+		this._renderer?.dispose();
 		super.dispose();
 		this._debugElement?.remove();
 	}

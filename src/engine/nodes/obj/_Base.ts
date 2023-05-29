@@ -50,9 +50,9 @@ export class TypedObjNode<O extends Object3D, K extends NodeParamsConfig> extend
 	attachableToHierarchy() {
 		return this._attachableToHierarchy;
 	}
-	protected _used_in_scene: boolean = true;
+	protected _usedInScene: boolean = true;
 	usedInScene() {
-		return this._used_in_scene;
+		return this._usedInScene && this.disposed == false;
 	}
 	// TODO call set_used_in_scene(false) when node is deleted
 	// set_used_in_scene(state: boolean) {

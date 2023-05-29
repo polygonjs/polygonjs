@@ -1,20 +1,17 @@
 import {TypedObjNode, ObjNodeRenderOrder} from './_Base';
-import {Object3D} from 'three';
-import {Color} from 'three';
+import {Object3D, Group} from 'three';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {FlagsControllerD} from '../utils/FlagsController';
-import {Group} from 'three';
 
 export abstract class TypedLightObjNode<L extends Object3D, K extends NodeParamsConfig> extends TypedObjNode<Group, K> {
 	public override readonly flags: FlagsControllerD = new FlagsControllerD(this);
 	public override readonly renderOrder: number = ObjNodeRenderOrder.LIGHT;
-	protected _color_with_intensity = new Color(0x00000);
 	protected _light!: L;
 	get light() {
 		return this._light;
 	}
 	protected abstract createLight(): L;
-	protected override _used_in_scene: boolean = true;
+	protected override _usedInScene: boolean = true;
 	override initializeBaseNode() {
 		super.initializeBaseNode();
 

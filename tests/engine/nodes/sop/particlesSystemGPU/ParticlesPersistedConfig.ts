@@ -31,7 +31,7 @@ QUnit.test('ParticlesSystemGPU with param and persisted_config', async (assert) 
 	const delete1 = geo1.createNode('delete');
 	const particles1 = geo1.createNode('particlesSystemGpu');
 	assert.equal(particles1.children().length, 0);
-	const {output1, globals1, pointsBuilder1} = createRequiredNodesForParticles(particles1);
+	const {output1, globals1, actor1, pointsBuilder1} = createRequiredNodesForParticles(particles1);
 	assert.equal(particles1.children().length, 2);
 	const add1 = particles1.createNode('add');
 	const param1 = particles1.createNode('param');
@@ -47,12 +47,13 @@ QUnit.test('ParticlesSystemGPU with param and persisted_config', async (assert) 
 	delete1.p.byExpression.set(1);
 	delete1.p.keepPoints.set(1);
 	delete1.setInput(0, plane1);
-	particles1.setInput(0, delete1);
+	actor1.setInput(0, delete1);
 
 	scene.setFrame(1);
 	particles1.p.preRollFramesCount.set(1);
 	await particles1.compute();
 	await waitForParticlesComputedAndMounted(particles1);
+	assert.notOk(particles1.states.error.message(), 'no error (1)');
 	const test_param = particles1.params.get('test_param')!;
 	assert.ok(test_param, 'test_param is created');
 	test_param.set([0, 1, 0]);
@@ -61,6 +62,7 @@ QUnit.test('ParticlesSystemGPU with param and persisted_config', async (assert) 
 
 	await particles1.compute();
 	await waitForParticlesComputedAndMounted(particles1);
+	assert.notOk(particles1.states.error.message(), 'no error (2)');
 
 	const render_material = renderController(particles1).material()!;
 	await RendererUtils.compile(pointsBuilder1, renderer1);

@@ -24,6 +24,8 @@ export function createActorNodeChildren(actorNode: ActorSopNode) {
 	particlesSystemReset.uiData.setPosition(100, -100);
 	onTick.uiData.setPosition(-100, 100);
 	particlesSystemStepSimulation.uiData.setPosition(100, 100);
+
+	return {particlesSystemStepSimulation};
 }
 export function createRequiredNodesForParticles(particles1: ParticlesSystemGpuSopNode) {
 	// create output and globals
@@ -38,12 +40,12 @@ export function createRequiredNodesForParticles(particles1: ParticlesSystemGpuSo
 	// actor
 	const parent = particles1.parent()! as GeoObjNode;
 	const actor1 = parent.createNode('actor');
-	createActorNodeChildren(actor1);
+	const actorChildren = createActorNodeChildren(actor1);
 	const existingInput = particles1.io.inputs.input(0);
 	actor1.setInput(0, existingInput);
 	particles1.setInput(0, actor1);
 
-	return {output1, globals1, pointsBuilder1, actor1};
+	return {output1, globals1, pointsBuilder1, actor1, actorChildren};
 }
 
 export async function waitForParticlesComputedAndMounted(node: ParticlesSystemGpuSopNode) {

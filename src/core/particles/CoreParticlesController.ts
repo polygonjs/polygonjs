@@ -52,6 +52,7 @@ export class CoreParticlesController {
 		// this.debugMessage('particles:this.gpuController.init(coreGroup) START');
 		const configRef = this.gpuController.init();
 		if (!configRef) {
+			console.warn('no configRef created');
 			return;
 		}
 		// this.debugMessage('particles:this.gpuController.init(coreGroup) END');
@@ -82,6 +83,8 @@ export class CoreParticlesController {
 		this.renderController.reset();
 		if (this._object && this._renderer) {
 			return await this.init(this._object, this._renderer);
+		} else {
+			console.log('no object or renderer', this._object, this._renderer);
 		}
 	}
 	setError(message: string) {

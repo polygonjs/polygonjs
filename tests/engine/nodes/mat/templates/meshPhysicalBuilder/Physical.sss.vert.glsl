@@ -23,7 +23,6 @@ uniform float time;
 
 
 #include <uv_pars_vertex>
-#include <uv2_pars_vertex>
 #include <displacementmap_pars_vertex>
 #include <color_pars_vertex>
 #include <fog_pars_vertex>
@@ -37,7 +36,6 @@ uniform float time;
 void main() {
 
 	#include <uv_vertex>
-	#include <uv2_vertex>
 	#include <color_vertex>
 
 

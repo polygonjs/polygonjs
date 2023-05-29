@@ -281,8 +281,11 @@ export class NodeInputsController<NC extends NodeContext> {
 		return existing_input_indices;
 	}
 
-	async evalRequiredInputs() {
+	async evalRequiredInputs(): Promise<Array<ContainerMap[NC] | null | undefined>> {
 		let containers: Array<ContainerMap[NC] | null | undefined> = [];
+		if (this.node.disposed == true) {
+			return containers;
+		}
 		if (this._maxInputsCount > 0) {
 			const existingInputIndices = this._existingInputIndices();
 			if (existingInputIndices.length < this._minInputsCount) {
@@ -357,7 +360,7 @@ export class NodeInputsController<NC extends NodeContext> {
 			// const input_node = this.input(input_index);
 			if (inputNode) {
 				const inputErrorMessage = inputNode.states.error.message();
-				if (inputErrorMessage) {
+				if (inputErrorMessage && this.node.disposed == false) {
 					this.node.states.error.set(`input ${inputIndex} is invalid (error: ${inputErrorMessage})`);
 				}
 			}

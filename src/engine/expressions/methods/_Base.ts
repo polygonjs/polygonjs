@@ -139,6 +139,9 @@ export class BaseMethod {
 	}
 
 	protected createDependencyFromIndexOrPath(args: BaseMethodFindDependencyArgs): MethodDependency | null {
+		if (this.param.disposed == true) {
+			return null;
+		}
 		const {indexOrPath} = args;
 		const decomposedPath = new DecomposedPath();
 		const node = indexOrPath != null ? this.findReferencedGraphNode(indexOrPath, decomposedPath) : args.node;

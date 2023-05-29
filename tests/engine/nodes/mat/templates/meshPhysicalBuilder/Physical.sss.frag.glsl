@@ -3,7 +3,7 @@
 
 #ifdef PHYSICAL
 	#define IOR
-	#define SPECULAR
+	#define USE_SPECULAR
 #endif
 
 uniform vec3 diffuse;
@@ -16,16 +16,16 @@ uniform float opacity;
 	uniform float ior;
 #endif
 
-#ifdef SPECULAR
+#ifdef USE_SPECULAR
 	uniform float specularIntensity;
 	uniform vec3 specularColor;
 
-	#ifdef USE_SPECULARINTENSITYMAP
-		uniform sampler2D specularIntensityMap;
+	#ifdef USE_SPECULAR_COLORMAP
+		uniform sampler2D specularColorMap;
 	#endif
 
-	#ifdef USE_SPECULARCOLORMAP
-		uniform sampler2D specularColorMap;
+	#ifdef USE_SPECULAR_INTENSITYMAP
+		uniform sampler2D specularIntensityMap;
 	#endif
 #endif
 
@@ -45,11 +45,11 @@ uniform float opacity;
 	uniform vec3 sheenColor;
 	uniform float sheenRoughness;
 
-	#ifdef USE_SHEENCOLORMAP
+	#ifdef USE_SHEEN_COLORMAP
 		uniform sampler2D sheenColorMap;
 	#endif
 
-	#ifdef USE_SHEENROUGHNESSMAP
+	#ifdef USE_SHEEN_ROUGHNESSMAP
 		uniform sampler2D sheenRoughnessMap;
 	#endif
 #endif
@@ -73,14 +73,12 @@ uniform float time;
 #include <dithering_pars_fragment>
 #include <color_pars_fragment>
 #include <uv_pars_fragment>
-#include <uv2_pars_fragment>
 #include <map_pars_fragment>
 #include <alphamap_pars_fragment>
 #include <alphatest_pars_fragment>
 #include <aomap_pars_fragment>
 #include <lightmap_pars_fragment>
 #include <emissivemap_pars_fragment>
-#include <bsdfs>
 #include <iridescence_fragment>
 #include <cube_uv_reflection_fragment>
 #include <envmap_common_pars_fragment>
@@ -223,10 +221,10 @@ if(POLY_SSSModel.isActive){
 	material.attenuationDistance = attenuationDistance;
 	material.attenuationColor = attenuationColor;
 	#ifdef USE_TRANSMISSIONMAP
-		material.transmission *= texture2D( transmissionMap, vUv ).r;
+		material.transmission *= texture2D( transmissionMap, vTransmissionMapUv ).r;
 	#endif
 	#ifdef USE_THICKNESSMAP
-		material.thickness *= texture2D( thicknessMap, vUv ).g;
+		material.thickness *= texture2D( thicknessMap, vThicknessMapUv ).g;
 	#endif
 	vec3 pos = vWorldPosition;
 	vec3 v = normalize( cameraPosition - pos );

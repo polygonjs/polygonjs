@@ -29,6 +29,7 @@ import {
 	roundPixelBuffer,
 	joinArray,
 } from './particlesSystemGPU/ParticlesHelper';
+import {CoreSleep} from '../../../../src/core/Sleep';
 
 QUnit.test('ParticlesSystemGPU simple', async (assert) => {
 	const geo1 = window.geo1;
@@ -128,6 +129,7 @@ QUnit.test('ParticlesSystemGPU attributes are used without needing to be set as 
 	particles1.p.preRollFramesCount.set(0);
 	await waitForParticlesComputedAndMounted(particles1);
 	const configRef = (await resetParticles(particles1))!;
+	assert.notOk(particles1.states.error.message(), 'no error');
 	assert.ok(configRef, 'configRef created');
 
 	let gpuMaterial = gpuController(particles1).materials()[0];
@@ -169,7 +171,7 @@ QUnit.test('ParticlesSystemGPU attributes are used without needing to be set as 
 	restAttributes.p.tposition.set(true);
 	restAttributes.p.tnormal.set(false);
 	restAttributes.setInput(0, delete1);
-	particles1.setInput(0, restAttributes);
+	actor1.setInput(0, restAttributes);
 
 	const restPAttribute = particles1.createNode('attribute');
 	restPAttribute.p.name.set('restP');
@@ -177,6 +179,7 @@ QUnit.test('ParticlesSystemGPU attributes are used without needing to be set as 
 	add1.setInput(2, restPAttribute);
 
 	await waitForParticlesComputedAndMounted(particles1);
+	assert.notOk(particles1.states.error.message(), 'no error');
 	test_param = particles1.params.get('test_param')!;
 	assert.ok(test_param, 'test_param is created');
 	test_param.set([0, 1, 0]);
@@ -253,9 +256,10 @@ QUnit.test('ParticlesSystemGPU attributes are used without needing to be set as 
 	disposeParticlesFromNode(particles1);
 	await AssemblersUtils.withUnregisteredAssembler(particles1.usedAssembler(), async () => {
 		// console.log('************ LOAD **************');
+
 		const scene2 = await SceneJsonImporter.loadData(data);
-		await scene2.waitForCooksCompleted();
 		const rendererData2 = await RendererUtils.waitForRenderer(scene2);
+		await scene2.waitForCooksCompleted();
 		const renderer2 = rendererData2.renderer;
 
 		const new_particles1 = scene2.node('/geo1/particlesSystemGpu1') as ParticlesSystemGpuSopNode;
@@ -402,7 +406,7 @@ QUnit.test('texture allocation works as expected wih pos, vel, normal and bby fl
 		],
 		readonly: [
 			{
-				normal_SEPARATOR_bby: [
+				normal_x_bby: [
 					{
 						name: 'normal',
 						size: 3,
@@ -421,160 +425,177 @@ QUnit.test('texture allocation works as expected wih pos, vel, normal and bby fl
 });
 
 QUnit.test('material can use a float attribute also used in simulation in readonly', async (assert) => {
+	const scene = window.scene;
+	const cameraNode = window.perspective_camera1;
+	// lights & camera
+	cameraNode.p.t.z.set(15);
+	cameraNode.p.t.y.set(1);
+
+	//
 	const {particlesSystemGpu1, pointsBuilder1, attribute_randomId_read, attribute_randomId_export} =
 		ParticlesSceneSetup1();
 
-	const scene = window.scene;
-	await scene.waitForCooksCompleted();
-	const {renderer} = await RendererUtils.waitForRenderer(scene);
-	assert.ok(renderer);
+	particlesSystemGpu1.p.material.setNode(pointsBuilder1, {relative: true});
+	particlesSystemGpu1.p.preRollFramesCount.set(4);
+	particlesSystemGpu1.flags.display.set(true);
+	assert.notOk(particlesSystemGpu1.states.error.message(), 'no error (1)');
 
-	await particlesSystemGpu1.compute();
-	await waitForParticlesComputedAndMounted(particlesSystemGpu1);
-	const material = await pointsBuilder1.material();
-	await RendererUtils.compile(pointsBuilder1, renderer);
-	await waitForParticlesComputedAndMounted(particlesSystemGpu1);
+	await RendererUtils.withViewer({cameraNode}, async ({viewer, element}) => {
+		scene.play();
+		await CoreSleep.sleep(200);
 
-	// with attrib exported from particles
-	assert.includes(
-		material.vertexShader,
-		'vec3 transformed = texture2D( texture_position_SEPARATOR_randomId, particlesSimUvVarying ).xyz;'
-	);
-	assert.includes(
-		material.fragmentShader,
-		'float v_POLY_attribute1_val = texture2D( texture_position_SEPARATOR_randomId, particlesSimUvVarying ).w;'
-	);
-	assert.deepEqual(
-		(await particlesSystemGpu1.persisted_config.toData())?.texture_allocations,
-		{
-			writable: [
-				{
-					position_SEPARATOR_randomId: [
-						{
-							name: 'position',
-							size: 3,
-							nodes: ['/geo1/particlesSystemGpu1/output1', '/geo1/particlesSystemGpu1/globals1'],
-						},
-						{
-							name: 'randomId',
-							size: 1,
-							nodes: ['/geo1/particlesSystemGpu1/attribute3', '/geo1/particlesSystemGpu1/attribute1'],
-						},
-					],
-				},
-			],
-			readonly: [{normal: [{name: 'normal', size: 3, nodes: ['/geo1/particlesSystemGpu1/attribute2']}]}],
-		},
-		'texture allocation ok'
-	);
+		await scene.waitForCooksCompleted();
+		const {renderer} = await RendererUtils.waitForRenderer(scene);
+		assert.ok(renderer);
 
-	// with attrib exported from particles
-	attribute_randomId_export.setInput(0, null);
-	await particlesSystemGpu1.compute();
-	await waitForParticlesComputedAndMounted(particlesSystemGpu1);
-	await RendererUtils.compile(pointsBuilder1, renderer);
-	assert.includes(
-		material.vertexShader,
-		'vec3 transformed = texture2D( texture_position, particlesSimUvVarying ).xyz;'
-	);
-	assert.not_includes(
-		material.fragmentShader,
-		'float v_POLY_attribute1_val = texture2D( texture_position_SEPARATOR_randomId, particlesSimUvVarying ).w;'
-	);
-	assert.includes(material.fragmentShader, `float v_POLY_attribute1_val = v_POLY_attribute_randomId;`);
-	assert.deepEqual((await particlesSystemGpu1.persisted_config.toData())?.texture_allocations, {
-		writable: [
+		await particlesSystemGpu1.compute();
+		await waitForParticlesComputedAndMounted(particlesSystemGpu1);
+		const material = await pointsBuilder1.material();
+		await RendererUtils.compile(pointsBuilder1, renderer);
+		await waitForParticlesComputedAndMounted(particlesSystemGpu1);
+		assert.notOk(particlesSystemGpu1.states.error.message(), 'no error (2)');
+
+		// with attrib exported from particles
+		assert.includes(
+			material.vertexShader,
+			'vec3 transformed = texture2D( texture_position_x_randomId, particlesSimUvVarying ).xyz;'
+		);
+		assert.includes(
+			material.fragmentShader,
+			'float v_POLY_attribute1_val = texture2D( texture_position_x_randomId, particlesSimUvVarying ).w;'
+		);
+		assert.deepEqual(
+			(await particlesSystemGpu1.persisted_config.toData())?.texture_allocations,
 			{
-				position: [
+				writable: [
 					{
-						name: 'position',
-						size: 3,
-						nodes: ['/geo1/particlesSystemGpu1/output1', '/geo1/particlesSystemGpu1/globals1'],
+						position_x_randomId: [
+							{
+								name: 'position',
+								size: 3,
+								nodes: ['/geo1/particlesSystemGpu1/output1', '/geo1/particlesSystemGpu1/globals1'],
+							},
+							{
+								name: 'randomId',
+								size: 1,
+								nodes: ['/geo1/particlesSystemGpu1/attribute3', '/geo1/particlesSystemGpu1/attribute1'],
+							},
+						],
 					},
 				],
+				readonly: [{normal: [{name: 'normal', size: 3, nodes: ['/geo1/particlesSystemGpu1/attribute2']}]}],
 			},
-		],
-		readonly: [
-			{
-				normal_SEPARATOR_randomId: [
-					{name: 'normal', size: 3, nodes: ['/geo1/particlesSystemGpu1/attribute2']},
-					{name: 'randomId', size: 1, nodes: ['/geo1/particlesSystemGpu1/attribute1']},
-				],
-			},
-		],
-	});
+			'texture allocation ok'
+		);
 
-	// re setInput
-	attribute_randomId_export.setInput(0, attribute_randomId_read);
-	await particlesSystemGpu1.compute();
-	await RendererUtils.compile(pointsBuilder1, renderer);
-	assert.deepEqual(
-		(await particlesSystemGpu1.persisted_config.toData())?.texture_allocations,
-		{
+		// with attrib exported from particles
+		attribute_randomId_export.setInput(0, null);
+		await particlesSystemGpu1.compute();
+		await waitForParticlesComputedAndMounted(particlesSystemGpu1);
+		await RendererUtils.compile(pointsBuilder1, renderer);
+		assert.includes(
+			material.vertexShader,
+			'vec3 transformed = texture2D( texture_position, particlesSimUvVarying ).xyz;'
+		);
+		assert.not_includes(
+			material.fragmentShader,
+			'float v_POLY_attribute1_val = texture2D( texture_position_x_randomId, particlesSimUvVarying ).w;'
+		);
+		assert.includes(material.fragmentShader, `float v_POLY_attribute1_val = v_POLY_attribute_randomId;`);
+		assert.deepEqual((await particlesSystemGpu1.persisted_config.toData())?.texture_allocations, {
 			writable: [
 				{
-					position_SEPARATOR_randomId: [
+					position: [
 						{
 							name: 'position',
 							size: 3,
 							nodes: ['/geo1/particlesSystemGpu1/output1', '/geo1/particlesSystemGpu1/globals1'],
 						},
-						{
-							name: 'randomId',
-							size: 1,
-							nodes: ['/geo1/particlesSystemGpu1/attribute3', '/geo1/particlesSystemGpu1/attribute1'],
-						},
-					],
-				},
-			],
-			readonly: [{normal: [{name: 'normal', size: 3, nodes: ['/geo1/particlesSystemGpu1/attribute2']}]}],
-		},
-		'texture allocation ok after setInput again'
-	);
-	assert.includes(
-		material.vertexShader,
-		`vec3 transformed = texture2D( texture_position_SEPARATOR_randomId, particlesSimUvVarying ).xyz;`
-	);
-	assert.includes(
-		material.fragmentShader,
-		`float v_POLY_attribute1_val = texture2D( texture_position_SEPARATOR_randomId, particlesSimUvVarying ).w;`
-	);
-
-	// change name
-	attribute_randomId_export.p.name.set('otherAttrib');
-	await particlesSystemGpu1.compute();
-	await RendererUtils.compile(pointsBuilder1, renderer);
-	assert.deepEqual(
-		(await particlesSystemGpu1.persisted_config.toData())?.texture_allocations,
-		{
-			writable: [
-				{
-					position_SEPARATOR_otherAttrib: [
-						{
-							name: 'position',
-							size: 3,
-							nodes: ['/geo1/particlesSystemGpu1/output1', '/geo1/particlesSystemGpu1/globals1'],
-						},
-						{name: 'otherAttrib', size: 1, nodes: ['/geo1/particlesSystemGpu1/attribute3']},
 					],
 				},
 			],
 			readonly: [
 				{
-					normal_SEPARATOR_randomId: [
+					normal_x_randomId: [
 						{name: 'normal', size: 3, nodes: ['/geo1/particlesSystemGpu1/attribute2']},
 						{name: 'randomId', size: 1, nodes: ['/geo1/particlesSystemGpu1/attribute1']},
 					],
 				},
 			],
-		},
-		'texture allocation ok after attrib name change'
-	);
-	assert.includes(
-		material.vertexShader,
-		`vec3 transformed = texture2D( texture_position_SEPARATOR_otherAttrib, particlesSimUvVarying ).xyz;`
-	);
-	assert.includes(material.fragmentShader, `float v_POLY_attribute1_val = v_POLY_attribute_randomId;`);
+		});
+
+		// re setInput
+		attribute_randomId_export.setInput(0, attribute_randomId_read);
+		await particlesSystemGpu1.compute();
+		await RendererUtils.compile(pointsBuilder1, renderer);
+		assert.deepEqual(
+			(await particlesSystemGpu1.persisted_config.toData())?.texture_allocations,
+			{
+				writable: [
+					{
+						position_x_randomId: [
+							{
+								name: 'position',
+								size: 3,
+								nodes: ['/geo1/particlesSystemGpu1/output1', '/geo1/particlesSystemGpu1/globals1'],
+							},
+							{
+								name: 'randomId',
+								size: 1,
+								nodes: ['/geo1/particlesSystemGpu1/attribute3', '/geo1/particlesSystemGpu1/attribute1'],
+							},
+						],
+					},
+				],
+				readonly: [{normal: [{name: 'normal', size: 3, nodes: ['/geo1/particlesSystemGpu1/attribute2']}]}],
+			},
+			'texture allocation ok after setInput again'
+		);
+		assert.includes(
+			material.vertexShader,
+			`vec3 transformed = texture2D( texture_position, particlesSimUvVarying ).xyz;`
+		);
+		assert.includes(material.fragmentShader, `float v_POLY_attribute1_val = v_POLY_attribute_randomId;`);
+
+		// change name
+		attribute_randomId_export.p.name.set('otherAttrib');
+		await particlesSystemGpu1.compute();
+		await RendererUtils.compile(pointsBuilder1, renderer);
+		assert.deepEqual(
+			(await particlesSystemGpu1.persisted_config.toData())?.texture_allocations,
+			{
+				writable: [
+					{
+						position_x_otherAttrib: [
+							{
+								name: 'position',
+								size: 3,
+								nodes: ['/geo1/particlesSystemGpu1/output1', '/geo1/particlesSystemGpu1/globals1'],
+							},
+							{name: 'otherAttrib', size: 1, nodes: ['/geo1/particlesSystemGpu1/attribute3']},
+						],
+					},
+				],
+				readonly: [
+					{
+						normal_x_randomId: [
+							{name: 'normal', size: 3, nodes: ['/geo1/particlesSystemGpu1/attribute2']},
+							{name: 'randomId', size: 1, nodes: ['/geo1/particlesSystemGpu1/attribute1']},
+						],
+					},
+				],
+			},
+			'texture allocation ok after attrib name change'
+		);
+		assert.includes(
+			material.vertexShader,
+			`vec3 transformed = texture2D( texture_position_x_randomId, particlesSimUvVarying ).xyz;`
+		);
+		assert.includes(
+			material.fragmentShader,
+			`float v_POLY_attribute1_val = texture2D( texture_position_x_randomId, particlesSimUvVarying ).w;`
+		);
+	});
 
 	RendererUtils.dispose();
 	disposeParticlesFromNode(particlesSystemGpu1);
@@ -593,14 +614,18 @@ QUnit.test('ParticlesSystemGPU attributes can be used from inside a subnet', asy
 	const restAttributes1 = geo1.createNode('restAttributes');
 	const particles1 = geo1.createNode('particlesSystemGpu');
 	assert.equal(particles1.children().length, 0, 'no children');
-	const {output1, globals1, pointsBuilder1} = createRequiredNodesForParticles(particles1);
+	const {output1, globals1, pointsBuilder1, actor1, actorChildren} = createRequiredNodesForParticles(particles1);
 	assert.equal(particles1.children().length, 2, '2 children');
 
 	sopadd1.p.createPoint.set(1);
 	sopadd1.p.position.set([1, 0.5, 0.25]);
 	restAttributes1.setInput(0, sopadd1);
-	particles1.setInput(0, restAttributes1);
+	actor1.setInput(0, restAttributes1);
+	particles1.setInput(0, actor1);
 	particles1.p.preRollFramesCount.set(1);
+
+	actorChildren.particlesSystemStepSimulation.p.texturesCount.set(1);
+	actorChildren.particlesSystemStepSimulation.p.textureName0.set('restP');
 
 	// we set up an attribute inside a subnet
 	const subnet1 = particles1.createNode('subnet');
@@ -621,8 +646,10 @@ QUnit.test('ParticlesSystemGPU attributes can be used from inside a subnet', asy
 	// scene.setFrame(1);
 	await particles1.compute();
 	await waitForParticlesComputedAndMounted(particles1);
+	assert.notOk(particles1.states.error.message(), 'no error message (1)');
 	const configRef = (await resetParticles(particles1))!;
-	assert.ok(configRef, 'configRef ok');
+	assert.notOk(particles1.states.error.message(), 'no error message (2)');
+	assert.ok(configRef, 'configRef 1 ok');
 	await RendererUtils.compile(pointsBuilder1, renderer);
 	const render_material = renderController(particles1).material()!;
 	const uniform = MaterialUserDataUniforms.getUniforms(render_material)!.texture_position;
@@ -672,13 +699,13 @@ QUnit.test('ParticlesSystemGPU params can be used from inside a subnet', async (
 	const sopadd1 = geo1.createNode('add');
 	const particles1 = geo1.createNode('particlesSystemGpu');
 	assert.equal(particles1.children().length, 0, 'no children');
-	const {output1, globals1, pointsBuilder1} = createRequiredNodesForParticles(particles1);
+	const {output1, globals1, actor1, pointsBuilder1} = createRequiredNodesForParticles(particles1);
 	assert.equal(particles1.children().length, 2, '2 children');
 	particles1.p.preRollFramesCount.set(2);
 
 	sopadd1.p.createPoint.set(1);
 	sopadd1.p.position.set([1, 0.5, 0.25]);
-	particles1.setInput(0, sopadd1);
+	actor1.setInput(0, sopadd1);
 
 	// we set up an attribute inside a subnet
 	const subnet1 = particles1.createNode('subnet');
@@ -699,6 +726,7 @@ QUnit.test('ParticlesSystemGPU params can be used from inside a subnet', async (
 	// scene.setFrame(1);
 	await particles1.compute();
 	await waitForParticlesComputedAndMounted(particles1);
+	assert.notOk(particles1.states.error.message(), 'no error message (1)');
 	const configRef = (await resetParticles(particles1))!;
 	assert.ok(configRef, 'configRef ok');
 
@@ -757,12 +785,12 @@ QUnit.test('ParticlesSystemGPU: 2 gl/attribute with same attrib name do not trig
 	const sopadd1 = geo1.createNode('add');
 	const particles1 = geo1.createNode('particlesSystemGpu');
 	assert.equal(particles1.children().length, 0, 'no children');
-	const {output1} = createRequiredNodesForParticles(particles1);
+	const {output1, actor1} = createRequiredNodesForParticles(particles1);
 	assert.equal(particles1.children().length, 2, '2 children');
 
 	sopadd1.p.createPoint.set(1);
 	sopadd1.p.position.set([1, 0.5, 0.25]);
-	particles1.setInput(0, sopadd1);
+	actor1.setInput(0, sopadd1);
 	particles1.p.preRollFramesCount.set(1);
 
 	// we set up an attribute inside a subnet
@@ -780,6 +808,7 @@ QUnit.test('ParticlesSystemGPU: 2 gl/attribute with same attrib name do not trig
 	scene.setFrame(1);
 	await particles1.compute();
 	await waitForParticlesComputedAndMounted(particles1);
+	assert.notOk(particles1.states.error.message(), 'no error message (1)');
 
 	const materials = gpuController(particles1).materials();
 	assert.equal(materials.length, 1);

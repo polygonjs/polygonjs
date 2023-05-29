@@ -176,7 +176,6 @@ varying vec3 v_POLY_globals1_position;
 
 
 #include <uv_pars_vertex>
-#include <uv2_pars_vertex>
 #include <displacementmap_pars_vertex>
 #include <color_pars_vertex>
 #include <fog_pars_vertex>
@@ -190,7 +189,6 @@ varying vec3 v_POLY_globals1_position;
 void main() {
 
 	#include <uv_vertex>
-	#include <uv2_vertex>
 	#include <color_vertex>
 
 

@@ -91,14 +91,25 @@ export class ChildrenDisplayController {
 	}
 
 	usedInScene(): boolean {
-		const has_active_param = this.node.params.has(DISPLAY_PARAM_NAME);
-		const is_active_param_on = this.node.params.boolean(DISPLAY_PARAM_NAME);
+		const node = this.node;
+		if (node.disposed == true) {
+			return false;
+		}
 
-		const used_in_scene = this.node.usedInScene();
-		const display_flag_on = this.node.flags?.display?.active() || false;
-		const param_active_on = !has_active_param || is_active_param_on;
+		const usedInScene = node.usedInScene();
+		if (!usedInScene) {
+			return false;
+		}
+		const displayFlagOn = node.flags?.display?.active() || false;
+		if (!displayFlagOn) {
+			return false;
+		}
+		const params = node.params;
+		const hasActiveParam = params.has(DISPLAY_PARAM_NAME);
+		const isActiveParamOn = node.params.boolean(DISPLAY_PARAM_NAME);
+		const paramActiveOn = !hasActiveParam || isActiveParamOn;
 
-		return used_in_scene && display_flag_on && param_active_on;
+		return paramActiveOn;
 	}
 
 	async requestDisplayNodeContainer() {

@@ -13,7 +13,7 @@ varying vec3 v_POLY_globals1_position;
 
 
 
-
+#include <uv_pars_vertex>
 #include <color_pars_vertex>
 #include <fog_pars_vertex>
 #include <morphtarget_pars_vertex>
@@ -24,6 +24,7 @@ void main() {
 
 	vLineDistance = scale * lineDistance;
 
+	#include <uv_vertex>
 	#include <color_vertex>
 
 

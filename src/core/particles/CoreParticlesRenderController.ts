@@ -119,12 +119,14 @@ export class CoreParticlesRenderController {
 	async init() {
 		const object = this.mainController.object();
 		if (!object) {
+			console.warn('no object');
 			return;
 		}
 		const node = this.mainController.node();
 		const assembler = node.assemblerController()?.assembler;
 
 		if (this._renderMaterial) {
+			console.warn('no render material');
 			return;
 		}
 		// TODO: try and find a way so that the material can be found without accessing the node

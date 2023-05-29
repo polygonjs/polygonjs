@@ -33,11 +33,11 @@ export class NodesController {
 		}
 
 		for (let node of nodes) {
-			callback(node);
-
 			if (node.childrenController) {
 				this._traverseNode(node, callback);
 			}
+
+			callback(node);
 		}
 	}
 	traverseNodes(callback: (node: BaseNodeType) => void) {

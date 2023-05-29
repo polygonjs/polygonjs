@@ -206,12 +206,15 @@ export function ParticlesSceneSetup1() {
 	const attribCreate1 = create_attribCreate1(parentNode);
 	const sphere1 = create_sphere1(parentNode);
 	const scatter1 = create_scatter1(parentNode);
-	particlesSystemGpu1.setInput(0, attribCreate1);
+
 	attribCreate1.setInput(0, scatter1);
 	scatter1.setInput(0, sphere1);
 
 	const actor1 = parentNode.createNode('actor');
 	createActorNodeChildren(actor1);
+
+	actor1.setInput(0, attribCreate1);
+	particlesSystemGpu1.setInput(0, actor1);
 
 	return {particlesSystemGpu1, pointsBuilder1, attribute_randomId_read, attribute_randomId_export, actor1};
 }
