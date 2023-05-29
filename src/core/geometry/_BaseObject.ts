@@ -4,12 +4,6 @@ import {Attribute, CoreAttribute} from './Attribute';
 import {AttribType, AttribSize} from './Constant';
 import {CoreEntity} from './Entity';
 import {CoreType} from '../Type';
-// import {makeAttribReactiveVector4} from './attribute/Vector4';
-// import {AttributeReactiveCallback} from './attribute/_Base';
-// import {makeAttribReactiveVector3} from './attribute/Vector3';
-// import {makeAttribReactiveVector2} from './attribute/Vector2';
-// import {makeAttribReactiveSimple} from './attribute/Simple';
-// import {AttributeCallbackQueue} from './attribute/AttributeCallbackQueue';
 import {SetUtils} from '../../core/SetUtils';
 import {MapUtils} from '../../core/MapUtils';
 import type {ObjectContent, CoreObjectType, ObjectGeometryMap, MergeCompactOptions} from './ObjectContent';
@@ -19,10 +13,10 @@ import {EntityGroupCollection} from './EntityGroupCollection';
 import {_updateObjectAttribRef} from '../reactivity/ObjectAttributeReactivityUpdateRef';
 import {attribValueNonPrimitive, copyAttribValue, AttributeDictionary, cloneAttribValue} from './_BaseObjectUtils';
 import {_getOrCreateObjectAttributeRef} from '../reactivity/ObjectAttributeReactivityCreateRef';
-import {ParamConvertibleJsType} from '../../engine/nodes/utils/io/connections/Js';
+import {JsIConnectionPointTypeToDataTypeMap, ParamConvertibleJsType} from '../../engine/nodes/utils/io/connections/Js';
 // import {computeBoundingBoxFromObject3D} from './BoundingBox';
 // import {setSphereFromObject} from './BoundingSphere';
-// import {ref} from '../reactivity';
+import {watch} from '../reactivity/CoreReactivity';
 // import {Ref} from '@vue/reactivity';
 
 enum PropertyName {
@@ -57,6 +51,10 @@ const tmpN3: Number3 = [0, 0, 0];
 // }
 
 // export type CoreObjectContent = Object3D|CadObject
+type OnAttribChange<T extends ParamConvertibleJsType> = (
+	newValue: JsIConnectionPointTypeToDataTypeMap[T],
+	oldValue: JsIConnectionPointTypeToDataTypeMap[T]
+) => void;
 
 export abstract class BaseCoreObject<T extends CoreObjectType> extends CoreEntity {
 	constructor(protected _object: ObjectContent<T>, index: number) {
@@ -74,10 +72,10 @@ export abstract class BaseCoreObject<T extends CoreObjectType> extends CoreEntit
 	geometry(): ObjectGeometryMap[T] | null {
 		return this._object.geometry || null; //(this._object as Mesh).geometry as BufferGeometry | null;
 	}
-	static attributeRef<T extends CoreObjectType>(
-		object: ObjectContent<T>,
+	static attributeRef<OT extends CoreObjectType, T extends ParamConvertibleJsType>(
+		object: ObjectContent<OT>,
 		attribName: string,
-		type: ParamConvertibleJsType
+		type: T
 	) {
 		return _getOrCreateObjectAttributeRef(object, attribName, type);
 	}
@@ -86,6 +84,23 @@ export abstract class BaseCoreObject<T extends CoreObjectType> extends CoreEntit
 			this._object,
 			attribName,
 			type
+		);
+	}
+	static onAttribChange<OT extends CoreObjectType, T extends ParamConvertibleJsType>(
+		object: ObjectContent<OT>,
+		attribName: string,
+		type: T,
+		callback: OnAttribChange<T>
+	) {
+		const ref = this.attributeRef(object, attribName, type);
+		return watch(ref.current, callback);
+	}
+	onAttribChange<T extends ParamConvertibleJsType>(attribName: string, type: T, callback: OnAttribChange<T>) {
+		return (this.constructor as any as typeof BaseCoreObject<CoreObjectType>).onAttribChange(
+			this._object,
+			attribName,
+			type,
+			callback
 		);
 	}
 	static setAttribute<T extends CoreObjectType>(object: ObjectContent<T>, attribName: string, value: AttribValue) {

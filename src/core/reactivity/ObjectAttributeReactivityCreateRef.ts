@@ -1,67 +1,80 @@
 import {ObjectXD, _getObjectAttributeRef_, refByObjectUuidByAttribName, AttribRefs} from './ObjectAttributeReactivity';
 import {Color, Vector2, Vector3, Vector4} from 'three';
-import {JsConnectionPointType, ParamConvertibleJsType} from '../../engine/nodes/utils/io/connections/Js';
+import {
+	JsConnectionPointType,
+	JsIConnectionPointTypeToDataTypeMap,
+	ParamConvertibleJsType,
+} from '../../engine/nodes/utils/io/connections/Js';
 import {TypeAssert} from '../../engine/poly/Assert';
 import {BaseCoreObject} from '../geometry/_BaseObject';
 import type {AttribValue} from '../../types/GlobalTypes';
-
 import {ref} from './CoreReactivity';
+import {Ref} from '@vue/reactivity';
 
-function defaultValue(type: ParamConvertibleJsType) {
+function defaultValue<T extends ParamConvertibleJsType>(type: T): JsIConnectionPointTypeToDataTypeMap[T] {
 	switch (type) {
 		case JsConnectionPointType.BOOLEAN: {
-			return false;
+			return false as JsIConnectionPointTypeToDataTypeMap[T];
 		}
 		case JsConnectionPointType.COLOR: {
-			return new Color();
+			return new Color() as JsIConnectionPointTypeToDataTypeMap[T];
 		}
 		case JsConnectionPointType.FLOAT: {
-			return 0;
+			return 0 as JsIConnectionPointTypeToDataTypeMap[T];
 		}
 		case JsConnectionPointType.INT: {
-			return 0;
+			return 0 as JsIConnectionPointTypeToDataTypeMap[T];
 		}
 		case JsConnectionPointType.STRING: {
-			return '';
+			return '' as JsIConnectionPointTypeToDataTypeMap[T];
 		}
 		case JsConnectionPointType.VECTOR2: {
-			return new Vector2();
+			return new Vector2() as JsIConnectionPointTypeToDataTypeMap[T];
 		}
 		case JsConnectionPointType.VECTOR3: {
-			return new Vector3();
+			return new Vector3() as JsIConnectionPointTypeToDataTypeMap[T];
 		}
 		case JsConnectionPointType.VECTOR4: {
-			return new Vector4();
+			return new Vector4() as JsIConnectionPointTypeToDataTypeMap[T];
 		}
 	}
 	TypeAssert.unreachable(type);
 }
 
-export function _getOrCreateObjectAttributeRef(
+export function _getOrCreateObjectAttributeRef<T extends ParamConvertibleJsType>(
 	object3D: ObjectXD,
 	attribName: string,
-	type: ParamConvertibleJsType
-): AttribRefs {
+	type: T
+): AttribRefs<T> {
 	let mapForObject = refByObjectUuidByAttribName.get(object3D);
 	if (!mapForObject) {
 		mapForObject = new Map();
 		refByObjectUuidByAttribName.set(object3D, mapForObject);
 	}
-	let refForAttribName = mapForObject.get(attribName);
+	let refForAttribName: AttribRefs<T> = mapForObject.get(attribName) as AttribRefs<T>;
 	if (!refForAttribName) {
 		let _defaultValue = defaultValue(type);
 		let _previousValue = defaultValue(type);
-		const currentValue = BaseCoreObject.attribValue(object3D, attribName, 0, _defaultValue as any as Vector2);
-		const previousValue = BaseCoreObject.attribValue(object3D, attribName, 0, _previousValue as any as Vector2);
+		const currentValue = BaseCoreObject.attribValue(
+			object3D,
+			attribName,
+			0,
+			_defaultValue as unknown as Vector2
+		) as JsIConnectionPointTypeToDataTypeMap[T] | undefined;
+		const previousValue = BaseCoreObject.attribValue(object3D, attribName, 0, _previousValue as any as Vector2) as
+			| JsIConnectionPointTypeToDataTypeMap[T]
+			| undefined;
 		if (currentValue == null || previousValue == null) {
 			refForAttribName = {
-				current: ref(defaultValue(type)),
-				previous: ref(defaultValue(type)),
+				current: ref(defaultValue(type)) as Ref<JsIConnectionPointTypeToDataTypeMap[T]>,
+				previous: ref<JsIConnectionPointTypeToDataTypeMap[T]>(defaultValue(type)) as Ref<
+					JsIConnectionPointTypeToDataTypeMap[T]
+				>,
 			};
 		} else {
 			refForAttribName = {
-				current: ref(currentValue),
-				previous: ref(previousValue),
+				current: ref(currentValue) as Ref<JsIConnectionPointTypeToDataTypeMap[T]>,
+				previous: ref(previousValue) as Ref<JsIConnectionPointTypeToDataTypeMap[T]>,
 			};
 		}
 		mapForObject.set(attribName, refForAttribName);

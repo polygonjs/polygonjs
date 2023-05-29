@@ -6,20 +6,24 @@ import type {Ref} from '@vue/reactivity';
 import type {AttribValue} from '../../types/GlobalTypes';
 
 import type {CoreObjectType, ObjectContent} from '../geometry/ObjectContent';
+import {JsIConnectionPointTypeToDataTypeMap, ParamConvertibleJsType} from '../../engine/nodes/utils/io/connections/Js';
 
-export interface AttribRefs {
-	current: Ref<AttribValue>;
-	previous: Ref<AttribValue>;
+export interface AttribRefs<T extends ParamConvertibleJsType> {
+	current: Ref<JsIConnectionPointTypeToDataTypeMap[T]>;
+	previous: Ref<JsIConnectionPointTypeToDataTypeMap[T]>;
 }
 
 export type ObjectXD = ObjectContent<CoreObjectType>;
-export const refByObjectUuidByAttribName: WeakMap<ObjectXD, Map<string, AttribRefs>> = new WeakMap();
+export const refByObjectUuidByAttribName: WeakMap<
+	ObjectXD,
+	Map<string, AttribRefs<ParamConvertibleJsType>>
+> = new WeakMap();
 
 export function _getObjectAttributeRef_(
 	object3D: ObjectXD,
 	attribName: string
 	// type: ParamConvertibleJsType
-): AttribRefs | undefined {
+): AttribRefs<ParamConvertibleJsType> | undefined {
 	return refByObjectUuidByAttribName.get(object3D)?.get(attribName);
 }
 
