@@ -127,8 +127,8 @@ const container = await plane.compute();
 // the container is an envelope that contains a coreGroup
 const coreGroup = container.coreContent();
 // and we can now get an array of THREE.Object3D:
-const objects = coreGroup.objects();
-// and we can use threejsjs Api:
+const objects = coreGroup.threejsObjects();
+// and we can use threejs API:
 const object = objects[0];
 object.position.set(0, 1, 0);
 object.updateMatrix();
