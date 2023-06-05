@@ -47,6 +47,9 @@ export class DisplayNodeController {
 	displayNode() {
 		return this._displayNode;
 	}
+	firstNonBypassedDisplayNode() {
+		return this.displayNode()?.containerController.firstNonBypassedNode();
+	}
 
 	initializeNode() {
 		if (this._initialized) {

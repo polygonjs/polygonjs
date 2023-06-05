@@ -88,7 +88,8 @@ export class RootLoadProgressController {
 		const scene = this.node.scene();
 		const nodes = scene.nodesController.nodesFromMask(mask || '');
 
-		return ArrayUtils.uniq(nodes.concat(await this._loadDisplayNodes()));
+		const nodeDisplayNodes = await this._loadDisplayNodes();
+		return ArrayUtils.uniq(nodes.concat(nodeDisplayNodes));
 	}
 	private async _loadDisplayNodes() {
 		const scene = this.node.scene();
@@ -105,9 +106,9 @@ export class RootLoadProgressController {
 		return ArrayUtils.uniq(nodes);
 	}
 	private _displayNodes() {
-		const objNodesWithDisplayNodeController = this._objectNodesWithDisplayNodeController();
+		const objNodesWithDisplayNodeController = this._objectNodesWithDisplayNodeController() as GeoObjNode[];
 		const displayNodes = ArrayUtils.compact(
-			objNodesWithDisplayNodeController.map((node) => (node as GeoObjNode).displayNodeController.displayNode())
+			objNodesWithDisplayNodeController.map((node) => node.displayNodeController.firstNonBypassedDisplayNode())
 		);
 		return displayNodes;
 	}
@@ -156,7 +157,8 @@ export class RootLoadProgressController {
 
 	async watchNodesProgress(callback: OnProgressUpdateCallback) {
 		this._onProgressUpdateCallback = callback;
-		const nodesToCook = (await this.resolvedNodes()).filter((node) => node.isDirty());
+		const resolvedNodes = await this.resolvedNodes();
+		const nodesToCook = resolvedNodes.filter((node) => node.isDirty());
 		this._debug({nodesToCook});
 		const nodesToUpdateSopGroup = this._objectNodesWithDisplayNodeController()
 			.filter((node) => {

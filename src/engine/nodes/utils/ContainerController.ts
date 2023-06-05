@@ -30,6 +30,15 @@ export class TypedContainerController<NC extends NodeContext> {
 		return container;
 	}
 
+	firstNonBypassedNode() {
+		if (this.node.flags?.bypass?.active()) {
+			const inputNode = (<unknown>this.node.io.inputs.input(0)) as TypedNode<NC, any>;
+			return inputNode;
+		} else {
+			return this.node;
+		}
+	}
+
 	containerUnlessBypassed(): ContainerMap[NC] | undefined {
 		if (this.node.flags?.bypass?.active()) {
 			this.node.states.error.clear();
