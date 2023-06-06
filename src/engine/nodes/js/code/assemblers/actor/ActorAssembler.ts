@@ -23,7 +23,11 @@ import {ActorBuilderNode} from '../../../../../scene/utils/ActorsManager';
 import {logBlue as _logBlue} from '../../../../../../core/logger/Console';
 import {Poly} from '../../../../../Poly';
 
+let FORCE_DEBUG: boolean | undefined; // = false;
 function _debug() {
+	if (FORCE_DEBUG != undefined) {
+		return FORCE_DEBUG;
+	}
 	return !Poly.playerMode();
 }
 function logBlue(message: string) {

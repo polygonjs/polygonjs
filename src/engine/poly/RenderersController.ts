@@ -136,69 +136,6 @@ export class RenderersController {
 		return gl as WebGLRenderingContext | null;
 	}
 
-	// _registerRenderer(renderer: WebGLRenderer, scene: PolyScene) {
-	// 	// if ((renderer as POLYWebGLRenderer)._polygonId) {
-	// 	// 	throw new Error('render already registered');
-	// 	// }
-
-	// 	// this._renderers.set(nextId, renderer);
-
-	// 	// if (this._renderers.size == 1) {
-	// 	// 	this._flushCallbacksWithRenderer(renderer);
-	// 	// }
-	// 	this._updateCache();
-	// }
-	// _deregisterRenderer(renderer: WebGLRenderer) {
-	// 	// const id = (renderer as POLYWebGLRenderer)._polygonId;
-	// 	// this._renderers.delete(id);
-	// 	// renderer.dispose();
-	// 	this._updateCache();
-	// }
-
-	// private _updateCache() {
-	// 	// this._firstRenderer = null;
-	// 	// this._lastRenderer = null;
-	// 	// this._renderers.forEach((renderer) => {
-	// 	// 	this._firstRenderer = this._firstRenderer || renderer;
-	// 	// 	this._lastRenderer = renderer;
-	// 	// });
-	// }
-	// firstRenderer(): WebGLRenderer | null {
-	// 	return this._firstRenderer;
-	// }
-	// lastRenderer(): WebGLRenderer | null {
-	// 	return this._lastRenderer;
-	// }
-	// renderers(): WebGLRenderer[] {
-	// 	return Object.values(this._renderers);
-	// }
-
-	// private _flushCallbacksWithRenderer(renderer: WebGLRenderer) {
-	// 	const callbacks: Callback[] = [];
-	// 	for (let r of this._resolves) {
-	// 		callbacks.push(r);
-	// 	}
-	// 	this._resolves = [];
-	// 	for (let c of callbacks) {
-	// 		c(renderer);
-	// 	}
-	// }
-
-	// async waitForRenderer(): Promise<WebGLRenderer | void> {
-	// 	const lastScene = Poly.scenesRegister.lastRegisteredScene();
-	// 	if (lastScene) {
-	// 		return await lastScene.renderersRegister.waitForRenderer();
-	// 	}
-	// 	// const renderer = this.lastRenderer();
-	// 	// if (renderer) {
-	// 	// 	return renderer;
-	// 	// } else {
-	// 	// 	return new Promise((resolve, reject) => {
-	// 	// 		this._resolves.push(resolve);
-	// 	// 	});
-	// 	// }
-	// }
-
 	renderTarget(width: number, height: number, parameters: WebGLRenderTargetOptions) {
 		if (this.webGL2Available()) {
 			const multiSampleRenderTarget = new WebGLRenderTarget(width, height, parameters);

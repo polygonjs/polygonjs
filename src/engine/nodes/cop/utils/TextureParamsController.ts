@@ -391,9 +391,12 @@ export class TextureParamsController {
 		}
 		texture.needsUpdate = true;
 	}
-	private async _maxRendererAnisotropy() {
+	private async _maxRendererAnisotropy(): Promise<number> {
 		this._rendererController = this._rendererController || new CopRendererController(this.node);
 		const renderer = await this._rendererController.waitForRenderer();
+		if (!renderer) {
+			return 1;
+		}
 		const maxAnisotropy = renderer.capabilities.getMaxAnisotropy();
 		return maxAnisotropy;
 	}

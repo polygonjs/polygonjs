@@ -39,7 +39,11 @@ import {PointBuilderEvaluator} from '../js/code/assemblers/pointBuilder/PointBui
 import {CoreMask} from '../../../core/geometry/Mask';
 import {object3DHasGeometry} from '../../../core/geometry/GeometryUtils';
 
+let FORCE_DEBUG: boolean | undefined; // = false;
 function _debug() {
+	if (FORCE_DEBUG != undefined) {
+		return FORCE_DEBUG;
+	}
 	return !Poly.playerMode();
 }
 function logBlue(message: string) {

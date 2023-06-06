@@ -27,8 +27,11 @@ const SIZE_MULT = 1;
 export interface WebGLRendererWithTypes extends WebGLRenderer {
 	useLegacyLights: boolean;
 }
-
-interface CreateRendererOptions {
+interface RendererRopOptions {
+	camera: Camera;
+	scene: PolyScene;
+}
+interface RendererConfigOptions {
 	camera: Camera;
 	scene: PolyScene;
 	canvas: HTMLCanvasElement;
@@ -65,8 +68,17 @@ export class CoreCameraRendererController {
 		return this._renderersByCanvas.get(canvas);
 	}
 
-	static rendererConfig<A extends AvailableRenderConfig>(options: CreateRendererOptions): A | undefined {
-		const {camera, canvas, scene} = options;
+	static rendererNode(options: RendererRopOptions) {
+		const {scene, camera} = options;
+		const rendererROPId = CoreObject.attribValue(camera, CameraAttribute.RENDERER_NODE_ID);
+		if (rendererROPId && CoreType.isNumber(rendererROPId)) {
+			const rendererROP = scene.graph.nodeFromId(rendererROPId);
+			return rendererROP;
+		}
+	}
+
+	static rendererConfig<A extends AvailableRenderConfig>(options: RendererConfigOptions): A | undefined {
+		const {canvas, scene} = options;
 		const gl = Poly.renderersController.getRenderingContext(canvas);
 		if (!gl) {
 			console.error('failed to create webgl context');
@@ -78,22 +90,19 @@ export class CoreCameraRendererController {
 		// if (isBooleanTrue(this.node.pv.setRenderer)) {
 		// await this._updateRenderer();
 
-		const rendererROPId = CoreObject.attribValue(camera, CameraAttribute.RENDERER_NODE_ID);
-		if (rendererROPId && CoreType.isNumber(rendererROPId)) {
-			const rendererROP = scene.graph.nodeFromId(rendererROPId);
-			if (rendererROP != null && rendererROP instanceof TypedNode && rendererROP.context() == NodeContext.ROP) {
-				const type = rendererROP.type();
-				switch (type) {
-					case RopType.WEBGL: {
-						renderer = (rendererROP as WebGLRendererRopNode).createRenderer(canvas, gl);
-						rendererNode = rendererROP as WebGLRendererRopNode;
-						break;
-					}
-					case RopType.PATH_TRACING: {
-						renderer = (rendererROP as PathTracingRendererRopNode).createRenderer(canvas, gl);
-						rendererNode = rendererROP as PathTracingRendererRopNode;
-						break;
-					}
+		const rendererROP = this.rendererNode(options);
+		if (rendererROP != null && rendererROP instanceof TypedNode && rendererROP.context() == NodeContext.ROP) {
+			const type = rendererROP.type();
+			switch (type) {
+				case RopType.WEBGL: {
+					renderer = (rendererROP as WebGLRendererRopNode).createRenderer(canvas, gl);
+					rendererNode = rendererROP as WebGLRendererRopNode;
+					break;
+				}
+				case RopType.PATH_TRACING: {
+					renderer = (rendererROP as PathTracingRendererRopNode).createRenderer(canvas, gl);
+					rendererNode = rendererROP as PathTracingRendererRopNode;
+					break;
 				}
 			}
 		}

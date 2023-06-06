@@ -182,6 +182,10 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 			}
 		}
 		const renderer = await this.scene().renderersRegister.waitForRenderer();
+		if (!renderer) {
+			this.states.error.set(`no renderer found`);
+			return;
+		}
 		for (let object of selectedObjects) {
 			setParticleRenderer(this.graphNodeId(), renderer);
 			CoreParticlesAttribute.setParticlesNodeId(object, this.graphNodeId());

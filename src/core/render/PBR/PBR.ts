@@ -59,14 +59,18 @@ export function onPBRModuleRegister(poly: PolyEngine) {
 		(options: ViewerCallbackOptions<PhysicalCamera | PerspectiveCamera>) => {
 			const {camera, scene, canvas} = options;
 
-			const rendererConfig = canvas
-				? CoreCameraRendererController.rendererConfig({
+			// calling .rendererNode() is preferred to
+			// .rendererConfig() as this would create the renderer
+			// which in some conditions leads to 2 renderers being created
+			// (one now, and one in the viewwer).
+			// And this can create issues as an env map may pick up the first renderer
+			// and therefore not be available in the second renderer.
+			const rendererNode = canvas
+				? CoreCameraRendererController.rendererNode({
 						camera,
 						scene,
-						canvas,
 				  })
 				: undefined;
-			const rendererNode = rendererConfig?.rendererNode;
 
 			if (rendererNode instanceof PathTracingRendererRopNode) {
 				const viewer = new PathTracingViewer<PhysicalCamera>({

@@ -46,7 +46,6 @@ import {isBooleanTrue} from '../../../core/Type';
 import FRAGMENT_SHADER from '../gl/code/templates/textures/Default.frag.glsl';
 import VERTEX_SHADER from '../gl/code/templates/textures/Default.vert.glsl';
 import {handleCopBuilderDependencies} from './utils/BuilderUtils';
-import type {PathTracingRendererContainer} from '../rop/utils/pathTracing/PathTracingRendererContainer';
 import {GlAssemblerController} from '../gl/code/Controller';
 import {ShaderAssemblerTexture} from '../gl/code/assemblers/textures/Texture';
 
@@ -355,11 +354,7 @@ export class BuilderCopNode extends TypedCopNode<BuilderCopParamsConfig> {
 			if (foundRenderer instanceof WebGLRenderer) {
 				this._renderer = foundRenderer;
 			} else {
-				if ((foundRenderer as PathTracingRendererContainer).isPathTracingRendererContainer) {
-					this._renderer = (foundRenderer as PathTracingRendererContainer).webGLRenderer;
-				} else {
-					console.warn('found renderer is not a WebGLRenderer', foundRenderer);
-				}
+				console.warn('found renderer is not a WebGLRenderer', foundRenderer);
 			}
 		} else {
 			this._renderer = Poly.renderersController.linearRenderer();

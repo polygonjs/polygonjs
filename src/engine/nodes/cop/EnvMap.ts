@@ -14,7 +14,6 @@ import {isBooleanTrue} from '../../../core/BooleanValue';
 
 import {CubeUVReflectionMapping} from 'three';
 import {CopType} from '../../poly/registers/nodes/types/Cop';
-import type {PathTracingRendererContainer} from '../rop/utils/pathTracing/PathTracingRendererContainer';
 
 // enum MapMode {
 // 	REFLECTION = 'reflection',
@@ -52,31 +51,29 @@ export class EnvMapCopNode extends TypedCopNode<EnvMapCopParamsConfig> {
 
 	override async cook(inputTextures: Texture[]) {
 		const texture = inputTextures[0];
-		this._convertTextureToEnvMap(texture);
+		await this._convertTextureToEnvMap(texture);
 	}
 
 	private async _convertTextureToEnvMap(inputTexture: Texture) {
 		this._rendererController = this._rendererController || new CopRendererController(this);
-		let renderer = await this._rendererController.waitForRenderer();
+
+		const renderer = await this._rendererController.waitForRenderer();
 
 		if (!renderer) {
 			this.states.error.set('no renderer found to convert the texture to an env map');
 			return this.cookController.endCook();
 		}
-		if (!(renderer instanceof WebGLRenderer)) {
-			const webGLRenderer = (renderer as PathTracingRendererContainer).webGLRenderer;
-			if (webGLRenderer && webGLRenderer instanceof WebGLRenderer) {
-				renderer = webGLRenderer;
-			}
-		}
+
 		if (!(renderer instanceof WebGLRenderer)) {
 			this.states.error.set('renderer found is not WebGLRenderer');
-			console.log(renderer);
+			console.log({renderer});
 			return this.cookController.endCook();
 		}
 
+		console.log('PMREMGenerator START');
 		const pmremGenerator = new PMREMGenerator(renderer);
 		const exrCubeRenderTarget = pmremGenerator.fromEquirectangular(inputTexture);
+		console.log('PMREMGenerator READY', exrCubeRenderTarget);
 
 		// pmremGenerator.dispose();
 		// texture.dispose();

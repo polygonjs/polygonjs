@@ -26,7 +26,7 @@ export class LightProbeSopOperation extends BaseSopOperation {
 	createLight() {
 		registerObjectType({type: ObjectType.LIGHT_PROBE, ctor: LightProbe, humanName: 'LightProbe'});
 		const light = new LightProbe();
-		light.name = `HemisphereLight_${this._node?.name() || ''}`;
+		light.name = `LightProbe_${this._node?.name() || ''}`;
 		light.matrixAutoUpdate = false;
 		light.updateMatrix();
 

@@ -1,6 +1,8 @@
 import {PolyScene} from '../PolyScene';
 import {Poly} from '../../Poly';
 import {AbstractRenderer} from '../../viewers/Common';
+import {WebGLRenderer} from 'three';
+import type {PathTracingRendererContainer} from '../../nodes/rop/utils/pathTracing/PathTracingRendererContainer';
 
 type SceneRenderersRegisterCallback = (value: AbstractRenderer) => void;
 
@@ -88,13 +90,28 @@ export class SceneRenderersRegister {
 		}
 	}
 
-	async waitForRenderer(): Promise<AbstractRenderer> {
+	async waitForAbstractRenderer(): Promise<AbstractRenderer> {
 		if (this._lastRegisteredRenderer) {
 			return this._lastRegisteredRenderer;
 		} else {
 			return new Promise((resolve, reject) => {
 				this._resolves.push(resolve);
 			});
+		}
+	}
+	async waitForRenderer(): Promise<WebGLRenderer | undefined> {
+		let renderer = await this.waitForAbstractRenderer();
+		if (renderer instanceof WebGLRenderer) {
+			return renderer;
+		}
+		renderer = (renderer as PathTracingRendererContainer).webGLRenderer;
+		if (renderer && renderer instanceof WebGLRenderer) {
+			return renderer;
+		}
+		if (renderer) {
+			if (!(renderer instanceof WebGLRenderer)) {
+				console.log('unexpected renderer:', {renderer});
+			}
 		}
 	}
 }
