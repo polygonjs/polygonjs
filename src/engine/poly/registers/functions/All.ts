@@ -348,8 +348,13 @@ import { setGeometryInstanceQuaternions } from "../../../functions/setGeometryIn
 import { setGeometryInstanceScales } from "../../../functions/setGeometryInstanceScales";
 import { setGeometryInstanceTransforms } from "../../../functions/setGeometryInstanceTransforms";
 import { setGeometryPositions } from "../../../functions/setGeometryPositions";
+import { setMaterialAlphaMap } from "../../../functions/setMaterialAlphaMap";
+import { setMaterialAOMap } from "../../../functions/setMaterialAOMap";
 import { setMaterialColor } from "../../../functions/setMaterialColor";
 import { setMaterialEmissiveColor } from "../../../functions/setMaterialEmissiveColor";
+import { setMaterialEmissiveMap } from "../../../functions/setMaterialEmissiveMap";
+import { setMaterialEnvMap } from "../../../functions/setMaterialEnvMap";
+import { setMaterialMap } from "../../../functions/setMaterialMap";
 import { setMaterialOpacity } from "../../../functions/setMaterialOpacity";
 import { setMaterialUniformNumber } from "../../../functions/setMaterialUniformNumber";
 import { setMaterialUniformTexture } from "../../../functions/setMaterialUniformTexture";
@@ -766,8 +771,13 @@ export interface NamedFunctionMap {
   setGeometryInstanceScales: setGeometryInstanceScales;
   setGeometryInstanceTransforms: setGeometryInstanceTransforms;
   setGeometryPositions: setGeometryPositions;
+  setMaterialAlphaMap: setMaterialAlphaMap;
+  setMaterialAOMap: setMaterialAOMap;
   setMaterialColor: setMaterialColor;
   setMaterialEmissiveColor: setMaterialEmissiveColor;
+  setMaterialEmissiveMap: setMaterialEmissiveMap;
+  setMaterialEnvMap: setMaterialEnvMap;
+  setMaterialMap: setMaterialMap;
   setMaterialOpacity: setMaterialOpacity;
   setMaterialUniformNumber: setMaterialUniformNumber;
   setMaterialUniformTexture: setMaterialUniformTexture;
@@ -1187,8 +1197,13 @@ export class AllNamedFunctionRegister {
       setGeometryInstanceScales,
       setGeometryInstanceTransforms,
       setGeometryPositions,
+      setMaterialAlphaMap,
+      setMaterialAOMap,
       setMaterialColor,
       setMaterialEmissiveColor,
+      setMaterialEmissiveMap,
+      setMaterialEnvMap,
+      setMaterialMap,
       setMaterialOpacity,
       setMaterialUniformNumber,
       setMaterialUniformTexture,

@@ -1,4 +1,4 @@
-import {
+import type {
 	Object3D,
 	Mesh,
 	Color,
@@ -10,10 +10,18 @@ import {
 	Vector4,
 	Texture,
 } from 'three';
+
 import {UNIFORM_PARAM_PREFIX, UNIFORM_TEXTURE_PREFIX} from '../../core/material/uniform';
 import {CoreType} from '../../core/Type';
 import {MaterialUserDataUniforms} from '../nodes/gl/code/assemblers/materials/OnBeforeCompile';
-import {NamedFunction3, NamedFunction4, NamedFunction5, ObjectNamedFunction1, ObjectNamedFunction2} from './_Base';
+import {
+	NamedFunction2,
+	NamedFunction3,
+	NamedFunction4,
+	NamedFunction5,
+	ObjectNamedFunction1,
+	ObjectNamedFunction2,
+} from './_Base';
 
 //
 //
@@ -81,7 +89,7 @@ export class setObjectMaterialColor extends ObjectNamedFunction2<[Color, number]
 
 //
 //
-// SET MAT
+// SET MAT COLOR
 //
 //
 export class setMaterialColor extends NamedFunction3<[Material, Color, number]> {
@@ -100,6 +108,46 @@ export class setMaterialEmissiveColor extends NamedFunction3<[Material, Color, n
 		_setMaterialEmissiveColor(material, color, lerp);
 	}
 }
+
+//
+//
+// SET MAT TEXTURE
+//
+//
+interface SetMaterialTextureFactoryOptions {
+	type: string;
+	mapName: 'map' | 'alphaMap' | 'aoMap' | 'envMap' | 'emissiveMap';
+}
+function setMaterialTextureFactory(options: SetMaterialTextureFactoryOptions) {
+	const {type, mapName} = options;
+	return class setMaterialTexture extends NamedFunction2<[Material, Texture]> {
+		static override type() {
+			return type;
+		}
+		func(material: Material, texture: Texture): void {
+			(material as MeshStandardMaterial)[mapName] = texture;
+			material.needsUpdate = true;
+		}
+	};
+}
+
+export class setMaterialMap extends setMaterialTextureFactory({type: 'setMaterialMap', mapName: 'map'}) {}
+export class setMaterialAlphaMap extends setMaterialTextureFactory({
+	type: 'setMaterialAlphaMap',
+	mapName: 'alphaMap',
+}) {}
+export class setMaterialAOMap extends setMaterialTextureFactory({type: 'setMaterialAOMap', mapName: 'aoMap'}) {}
+export class setMaterialEnvMap extends setMaterialTextureFactory({type: 'setMaterialEnvMap', mapName: 'envMap'}) {}
+export class setMaterialEmissiveMap extends setMaterialTextureFactory({
+	type: 'setMaterialEmissiveMap',
+	mapName: 'emissiveMap',
+}) {}
+
+//
+//
+// SET MAT FLOAT VALUE
+//
+//
 export class setMaterialOpacity extends NamedFunction3<[Material, number, number]> {
 	static override type() {
 		return 'setMaterialOpacity';

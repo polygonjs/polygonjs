@@ -7,7 +7,6 @@ import {NamedFunction0} from './_Base';
 abstract class GlobalsTimeFunction0 extends NamedFunction0 {
 	constructor(node: BaseNodeType, shadersCollectionController?: JsLinesCollectionController) {
 		super(node, shadersCollectionController);
-		this.timeController = node.scene().timeController;
 	}
 }
 

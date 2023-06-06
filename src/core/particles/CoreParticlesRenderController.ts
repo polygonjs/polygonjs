@@ -12,6 +12,10 @@ import {ShaderAssemblerMaterial} from '../../engine/nodes/gl/code/assemblers/mat
 import {IUniformTexture} from '../../engine/nodes/utils/code/gl/Uniforms';
 import {CoreParticlesController} from './CoreParticlesController';
 import {CoreParticlesAttribute} from './CoreParticlesAttribute';
+import {
+	OnBeforeCompileDataHandler,
+	assignOnBeforeCompileDataAndFunction,
+} from '../../engine/nodes/gl/code/assemblers/materials/OnBeforeCompile';
 
 export class CoreParticlesRenderController {
 	private _renderMaterial: Material | undefined;
@@ -51,10 +55,12 @@ export class CoreParticlesRenderController {
 	// }
 	assignRenderMaterial() {
 		if (!this._renderMaterial) {
+			console.warn('no renderMaterial');
 			return;
 		}
 		const object = this.mainController.object();
 		if (!object) {
+			console.warn('no object');
 			return;
 		}
 		// for (let object3d of this._particlesGroupObjects) {
@@ -70,14 +76,16 @@ export class CoreParticlesRenderController {
 		// we need to:
 		// - mark the material as needsUpdate (to ensure it gets recompiled by the renderer)
 		// - update the uniforms (to ensure the material gets the right values, as the uniforms have been reset)
-		this._renderMaterial.needsUpdate = true;
 		this.updateRenderMaterialUniforms();
+		this._renderMaterial.needsUpdate = true;
 	}
 	updateRenderMaterialUniforms() {
 		if (!this._renderMaterial) {
 			console.warn('no renderMaterial');
 			return;
 		}
+
+		const data = OnBeforeCompileDataHandler.getData(this._renderMaterial);
 
 		let uniformName: string;
 		let shaderName: ShaderName;
@@ -98,9 +106,20 @@ export class CoreParticlesRenderController {
 			// fails to render when adding outputs later.
 			// At least until the scene is fully reloaded
 			// texture.needsUpdate = true;
+			// UPDATE:
+			// instead of needsUpdate, we need to force a recompilation
+			// with assignOnBeforeCompileDataAndFunction below
+			// after having added the new uniforms to the data from OnBeforeCompileDataHandler.getData
 			CoreMaterial.assignUniforms(this._renderMaterial, uniformName, uniform, this._matNodeAssembler);
+			if (data) {
+				data.additionalTextureUniforms[uniformName] = uniform;
+			}
+
 			// this._renderMaterial.uniforms[uniformName].value = texture;
 			// CoreMaterial.assignCustomUniforms(this._renderMaterial, uniformName, texture);
+		}
+		if (data) {
+			assignOnBeforeCompileDataAndFunction(this.mainController.scene, this._renderMaterial, data);
 		}
 	}
 

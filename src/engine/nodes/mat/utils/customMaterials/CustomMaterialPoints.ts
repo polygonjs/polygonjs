@@ -36,11 +36,11 @@ export function materialPointsAssemblerCustomMaterialRequested(
 	node: CustomMaterialMatNode<any>,
 	customName: CustomMaterialName
 ): boolean {
-	// const param = node.p.overrideCustomMaterials;
-	// if (!param) {
-	// 	console.warn(`param overrideCustomMaterials not found on ${node.path()}, creating all customMaterials`);
-	// 	return true;
-	// }
+	const param = node.p.overrideCustomMaterials;
+	if (!param) {
+		console.warn(`param overrideCustomMaterials not found on ${node.path()}, creating all customMaterials`);
+		return true;
+	}
 	if (!isBooleanTrue(node.pv.overrideCustomMaterials)) {
 		return true;
 	}

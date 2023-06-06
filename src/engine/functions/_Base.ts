@@ -44,7 +44,7 @@ export abstract class BaseNamedFunction {
 	public readonly scene: PolyScene;
 	public readonly jsNode?: BaseJsNodeType;
 	public readonly functionNode: AssemblerControllerNode<BaseJsShaderAssembler>;
-	protected timeController: TimeController;
+	public readonly timeController: TimeController;
 	constructor(node: BaseNodeType, public readonly shadersCollectionController?: JsLinesCollectionController) {
 		this.scene = node.scene();
 		this.timeController = this.scene.timeController;
