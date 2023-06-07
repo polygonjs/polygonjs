@@ -36,7 +36,7 @@ function clearAttributes(geometry: BufferGeometry) {
 
 class FuseSopParamsConfig extends NodeParamsConfig {
 	/** @param distance threshold */
-	dist = ParamConfig.FLOAT(0.1, {
+	dist = ParamConfig.FLOAT(0.001, {
 		range: [0, 1],
 		rangeLocked: [true, false],
 		step: 0.001,

@@ -346,6 +346,7 @@ import './engine/nodes/mat/MeshBasicBuilder';
 import './engine/nodes/mat/MeshLambertBuilder';
 import './engine/nodes/mat/MeshStandardBuilder';
 import './engine/nodes/mat/MeshPhysicalBuilder';
+import './engine/nodes/mat/MeshToonBuilder';
 import './engine/nodes/mat/MeshDepthMaterial';
 import './engine/nodes/mat/PointsBuilder';
 import './engine/nodes/mat/RayMarchingBuilder';

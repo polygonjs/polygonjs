@@ -1,7 +1,7 @@
 import {Constructor} from '../../../../types/GlobalTypes';
 import {BaseController, MaterialTexturesRecord, SetParamsTextureNodesRecord} from './_BaseController';
 import {TypedMatNode} from '../_Base';
-import {
+import type {
 	PointsMaterial,
 	ShaderMaterial,
 	MeshStandardMaterial,
@@ -9,6 +9,7 @@ import {
 	MeshPhongMaterial,
 	MeshLambertMaterial,
 	MeshBasicMaterial,
+	MeshToonMaterial,
 	Material,
 } from 'three';
 import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
@@ -32,7 +33,8 @@ type FoggableUniformsMaterial =
 	| MeshPhysicalMaterial
 	| MeshPhongMaterial
 	| MeshLambertMaterial
-	| MeshBasicMaterial;
+	| MeshBasicMaterial
+	| MeshToonMaterial;
 function isValidFogMaterial(material?: Material): material is FoggableUniformsMaterial {
 	if (!material) {
 		return false;

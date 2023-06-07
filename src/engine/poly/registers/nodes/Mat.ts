@@ -22,6 +22,7 @@ import {MeshPhysicalBuilderMatNode} from '../../../nodes/mat/MeshPhysicalBuilder
 import {MeshStandardMatNode} from '../../../nodes/mat/MeshStandard';
 import {MeshStandardBuilderMatNode} from '../../../nodes/mat/MeshStandardBuilder';
 import {MeshToonMatNode} from '../../../nodes/mat/MeshToon';
+import {MeshToonBuilderMatNode} from '../../../nodes/mat/MeshToonBuilder';
 import {PointsMatNode} from '../../../nodes/mat/Points';
 import {PointsBuilderMatNode} from '../../../nodes/mat/PointsBuilder';
 // import {RayMarchingMatNode} from '../../../nodes/mat/RayMarching';
@@ -64,6 +65,7 @@ export interface MatNodeChildrenMap {
 	meshStandard: MeshStandardMatNode;
 	meshStandardBuilder: MeshStandardBuilderMatNode;
 	meshToon: MeshToonMatNode;
+	meshToonBuilder: MeshToonBuilderMatNode;
 	points: PointsMatNode;
 	pointsBuilder: PointsBuilderMatNode;
 	// rayMarching: RayMarchingMatNode;
@@ -112,6 +114,7 @@ export class MatRegister {
 		poly.registerNode(MeshStandardMatNode, CATEGORY_MAT.MESH);
 		poly.registerNode(MeshStandardBuilderMatNode, CATEGORY_MAT.ADVANCED);
 		poly.registerNode(MeshToonMatNode, CATEGORY_MAT.MESH);
+		poly.registerNode(MeshToonBuilderMatNode, CATEGORY_MAT.ADVANCED);
 		poly.registerNode(PointsMatNode, CATEGORY_MAT.POINTS);
 		poly.registerNode(PointsBuilderMatNode, CATEGORY_MAT.ADVANCED);
 		// if (process.env.NODE_ENV == 'development') {

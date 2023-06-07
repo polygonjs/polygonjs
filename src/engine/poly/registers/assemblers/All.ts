@@ -5,16 +5,17 @@ import {JsAssemblerController} from '../../../nodes/js/code/Controller';
 import {ShaderAssemblerBasic} from '../../../nodes/gl/code/assemblers/materials/Basic';
 import {ShaderAssemblerCloth} from '../../../nodes/gl/code/assemblers/cloth/ClothAssembler';
 import {ShaderAssemblerLambert} from '../../../nodes/gl/code/assemblers/materials/Lambert';
-import {ShaderAssemblerPhong} from '../../../nodes/gl/code/assemblers/materials/Phong';
-import {ShaderAssemblerStandard} from '../../../nodes/gl/code/assemblers/materials/Standard';
-import {ShaderAssemblerPhysical} from '../../../nodes/gl/code/assemblers/materials/Physical';
-import {ShaderAssemblerPoints} from '../../../nodes/gl/code/assemblers/materials/Points';
 import {ShaderAssemblerLine} from '../../../nodes/gl/code/assemblers/materials/Line';
 import {ShaderAssemblerParticles} from '../../../nodes/gl/code/assemblers/particles/Particles';
+import {ShaderAssemblerPhong} from '../../../nodes/gl/code/assemblers/materials/Phong';
+import {ShaderAssemblerPhysical} from '../../../nodes/gl/code/assemblers/materials/Physical';
+import {ShaderAssemblerPoints} from '../../../nodes/gl/code/assemblers/materials/Points';
 import {ShaderAssemblerPost} from '../../../nodes/gl/code/assemblers/post/Post';
 import {ShaderAssemblerRayMarching} from '../../../nodes/gl/code/assemblers/materials/RayMarching';
+import {ShaderAssemblerStandard} from '../../../nodes/gl/code/assemblers/materials/Standard';
 import {ShaderAssemblerTexture} from '../../../nodes/gl/code/assemblers/textures/Texture';
 import {ShaderAssemblerTexture2DArray} from '../../../nodes/gl/code/assemblers/textures/Texture2DArray';
+import {ShaderAssemblerToon} from '../../../nodes/gl/code/assemblers/materials/Toon';
 import {ShaderAssemblerVolume} from '../../../nodes/gl/code/assemblers/materials/Volume';
 import {ShaderAssemblerCustomMeshDepthForRender} from '../../../nodes/gl/code/assemblers/materials/custom/mesh/CustomMeshDepth';
 import {ShaderAssemblerCustomMeshDistanceForRender} from '../../../nodes/gl/code/assemblers/materials/custom/mesh/CustomMeshDistance';
@@ -47,6 +48,10 @@ export interface AssemblersMap extends PolyDictionary<ControllerAssemblerPair> {
 	[AssemblerName.GL_MESH_PHYSICAL]: {
 		controller: GlAssemblerController<ShaderAssemblerPhysical>;
 		assembler: typeof ShaderAssemblerPhysical;
+	};
+	[AssemblerName.GL_MESH_TOON]: {
+		controller: GlAssemblerController<ShaderAssemblerToon>;
+		assembler: typeof ShaderAssemblerToon;
 	};
 	[AssemblerName.GL_MESH_DEPTH]: {
 		controller: GlAssemblerController<ShaderAssemblerCustomMeshDepthForRender>;
@@ -116,6 +121,7 @@ export class AllAssemblersRegister {
 		poly.assemblersRegister.register(AssemblerName.GL_CLOTH, GlAssemblerController, ShaderAssemblerCloth);
 		poly.assemblersRegister.register(AssemblerName.GL_MESH_LAMBERT, GlAssemblerController, ShaderAssemblerLambert);
 		poly.assemblersRegister.register(AssemblerName.GL_MESH_PHONG, GlAssemblerController, ShaderAssemblerPhong);
+		poly.assemblersRegister.register(AssemblerName.GL_MESH_TOON, GlAssemblerController, ShaderAssemblerToon);
 		poly.assemblersRegister.register(
 			AssemblerName.GL_MESH_STANDARD,
 			GlAssemblerController,

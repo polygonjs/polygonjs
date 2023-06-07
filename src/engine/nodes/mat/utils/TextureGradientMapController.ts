@@ -8,7 +8,10 @@ import {MaterialTexturesRecord, SetParamsTextureNodesRecord} from './_BaseContro
 export function GradientMapParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		/** @param toggle if you want to use a gradient map */
-		useGradientMap = ParamConfig.BOOLEAN(0, BooleanParamOptions(TextureGradientMapController));
+		useGradientMap = ParamConfig.BOOLEAN(0, {
+			...BooleanParamOptions(TextureGradientMapController),
+			separatorBefore: true,
+		});
 		/** Gradient map for toon shading. It's required to set Texture.minFilter and Texture.magFilter to THREE.NearestFilter when using this type of texture */
 		gradientMap = ParamConfig.NODE_PATH('', NodePathOptions(TextureGradientMapController, 'useGradientMap'));
 	};

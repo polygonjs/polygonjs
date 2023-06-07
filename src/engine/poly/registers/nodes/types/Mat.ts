@@ -14,6 +14,7 @@ export enum MatType {
 	MESH_STANDARD = 'meshStandard',
 	MESH_STANDARD_BUILDER = 'meshStandardBuilder',
 	MESH_TOON = 'meshToon',
+	MESH_TOON_BUILDER = 'meshToonBuilder',
 	POINTS = 'points',
 	POINTS_BUILDER = 'pointsBuilder',
 	RAY_MARCHING_BUILDER = 'rayMarchingBuilder',
