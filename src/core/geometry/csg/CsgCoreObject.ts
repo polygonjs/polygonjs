@@ -5,7 +5,7 @@ import {csgIsGeom2, csgIsGeom3} from './CsgCoreType';
 import {BaseCoreObject} from '../_BaseObject';
 import {CoreObjectType, MergeCompactOptions, objectContentCopyProperties} from '../ObjectContent';
 import {TransformTargetType} from '../../Transform';
-import {ObjectTransformSpace} from '../../TransformSpace';
+import {ObjectTransformMode, ObjectTransformSpace} from '../../TransformSpace';
 import {TypeAssert} from '../../../engine/poly/Assert';
 import {csgApplyTransform, csgApplyMatrix4} from './math/CsgMat4';
 import {booleans, geometries} from '@jscad/modeling';
@@ -31,7 +31,8 @@ export class CsgCoreObject<T extends CsgGeometryType> extends BaseCoreObject<Cor
 		object: CsgObject<T>,
 		matrix: Matrix4,
 		transformTargetType: TransformTargetType,
-		transformSpace: ObjectTransformSpace
+		transformSpace: ObjectTransformSpace,
+		transformMode: ObjectTransformMode
 	) {
 		switch (transformTargetType) {
 			case TransformTargetType.GEOMETRY: {

@@ -36,7 +36,12 @@ export class CodeFormatter {
 	}
 	static lineWrap(node: BaseGlNodeType, line: string, lineType: LineType) {
 		let add_suffix = true;
-		if (line.includes('#if') || line.includes('#endif') || line.includes('#pragma unroll_loop_')) {
+		if (
+			line.includes('#if') ||
+			line.includes('#else') ||
+			line.includes('#endif') ||
+			line.includes('#pragma unroll_loop_')
+		) {
 			add_suffix = false;
 		}
 		let prefix: string = LINE_PREFIXES[lineType];

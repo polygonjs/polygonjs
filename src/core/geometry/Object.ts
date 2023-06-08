@@ -28,7 +28,7 @@ import {CoreObjectType, MergeCompactOptions, objectContentCopyProperties} from '
 import {BaseCoreObject} from './_BaseObject';
 import {TransformTargetType} from '../Transform';
 import {TypeAssert} from '../../engine/poly/Assert';
-import {applyTransformWithSpaceToObject, ObjectTransformSpace} from '../TransformSpace';
+import {applyTransformWithSpaceToObject, ObjectTransformMode, ObjectTransformSpace} from '../TransformSpace';
 import {BaseSopOperation} from '../../engine/operations/sop/_Base';
 // import {computeBoundingBoxFromObject3D} from './BoundingBox';
 // import {setSphereFromObject} from './BoundingSphere';
@@ -224,11 +224,12 @@ export class CoreObject extends BaseCoreObject<CoreObjectType.THREEJS> {
 		object: Object3D,
 		matrix: Matrix4,
 		transformTargetType: TransformTargetType,
-		transformSpace: ObjectTransformSpace
+		transformSpace: ObjectTransformSpace,
+		transformMode: ObjectTransformMode
 	) {
 		switch (transformTargetType) {
 			case TransformTargetType.OBJECT: {
-				applyTransformWithSpaceToObject(object, matrix, transformSpace);
+				applyTransformWithSpaceToObject(object, matrix, transformSpace, transformMode);
 				// this._applyMatrixToObject(object, matrix);
 				return;
 			}

@@ -70,10 +70,8 @@ export class EnvMapCopNode extends TypedCopNode<EnvMapCopParamsConfig> {
 			return this.cookController.endCook();
 		}
 
-		console.log('PMREMGenerator START');
 		const pmremGenerator = new PMREMGenerator(renderer);
 		const exrCubeRenderTarget = pmremGenerator.fromEquirectangular(inputTexture);
-		console.log('PMREMGenerator READY', exrCubeRenderTarget);
 
 		// pmremGenerator.dispose();
 		// texture.dispose();

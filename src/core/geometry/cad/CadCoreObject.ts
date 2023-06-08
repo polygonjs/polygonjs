@@ -30,7 +30,7 @@ import {CadObject} from './CadObject';
 import {CoreObjectType, MergeCompactOptions, objectContentCopyProperties} from '../ObjectContent';
 import {Box3, Matrix4, Sphere, Vector3} from 'three';
 import {TransformTargetType} from '../../Transform';
-import {ObjectTransformSpace} from '../../TransformSpace';
+import {ObjectTransformMode, ObjectTransformSpace} from '../../TransformSpace';
 import {cadMergeCompact} from './utils/CadMerge';
 // import { CadLoaderSync } from './CadLoaderSync';
 // import {Object3D, Vector3} from 'three'
@@ -80,7 +80,8 @@ export class CadCoreObject<T extends CadGeometryType> extends BaseCoreObject<Cor
 		object: CadObject<T>,
 		matrix: Matrix4,
 		transformTargetType: TransformTargetType,
-		transformSpace: ObjectTransformSpace
+		transformSpace: ObjectTransformSpace,
+		transformMode: ObjectTransformMode
 	) {
 		object.applyMatrix4(matrix);
 	}

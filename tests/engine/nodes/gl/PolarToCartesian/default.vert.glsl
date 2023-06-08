@@ -1,11 +1,11 @@
 #include <common>
-varying vec3 v_POLY_globals1_position;
 #include <uv_pars_vertex>
 #include <envmap_pars_vertex>
 #include <color_pars_vertex>
 #include <fog_pars_vertex>
 #include <morphtarget_pars_vertex>
 #include <skinning_pars_vertex>
+varying vec3 v_POLY_globals1_position;
 #include <logdepthbuf_pars_vertex>
 #include <clipping_planes_pars_vertex>
 void main() {

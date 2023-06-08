@@ -1,5 +1,5 @@
 import {TransformTargetType} from '../../../../src/core/Transform';
-import {TransformObjectMode} from '../../../../src/engine/operations/sop/Transform';
+import { ObjectTransformMode } from '../../../../src/core/TransformSpace';
 
 QUnit.test('transform copy simple', async (assert) => {
 	const geo1 = window.geo1;
@@ -14,7 +14,7 @@ QUnit.test('transform copy simple', async (assert) => {
 	transform_copy1.setInput(1, transform1);
 
 	transform1.setApplyOn(TransformTargetType.OBJECT);
-	transform1.setObjectMode(TransformObjectMode.MULT);
+	transform1.setObjectMode(ObjectTransformMode.MULT);
 	transform1.p.t.x.set(2);
 	transform1.p.r.y.set(Math.PI);
 

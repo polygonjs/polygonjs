@@ -6,7 +6,7 @@
  *
  *
  */
-import {ObjectTransformSpace} from './../../../core/TransformSpace';
+import {ObjectTransformMode, ObjectTransformSpace} from './../../../core/TransformSpace';
 import {SopType} from './../../poly/registers/nodes/types/Sop';
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
@@ -308,7 +308,8 @@ export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 			object,
 			matrix,
 			TRANSFORM_TARGET_TYPES[this.pv.transformMode],
-			OBJECT_TRANSFORM_SPACES[this.pv.objectTransformSpace]
+			OBJECT_TRANSFORM_SPACES[this.pv.objectTransformSpace],
+			ObjectTransformMode.MULT
 		);
 		// if (isObject3D(object)) {
 		// 	this._applyMatrixToObjectOrGeometry(object, this._transformAccumulatedMatrix);

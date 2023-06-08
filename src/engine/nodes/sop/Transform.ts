@@ -7,10 +7,14 @@
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {ROTATION_ORDERS, TransformTargetType, TRANSFORM_TARGET_TYPES} from '../../../core/Transform';
-import {TransformSopOperation, TRANSFORM_OBJECT_MODES, TransformObjectMode} from '../../operations/sop/Transform';
+import {TransformSopOperation} from '../../operations/sop/Transform';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
-import {OBJECT_TRANSFORM_SPACE_MENU_ENTRIES} from '../../../core/TransformSpace';
+import {
+	OBJECT_TRANSFORM_MODES,
+	OBJECT_TRANSFORM_SPACE_MENU_ENTRIES,
+	ObjectTransformMode,
+} from '../../../core/TransformSpace';
 const DEFAULT = TransformSopOperation.DEFAULT_PARAMS;
 class TransformSopParamConfig extends NodeParamsConfig {
 	/** @param sets if this node should transform objects or geometries */
@@ -23,7 +27,7 @@ class TransformSopParamConfig extends NodeParamsConfig {
 	objectMode = ParamConfig.INTEGER(DEFAULT.objectMode, {
 		visibleIf: {applyOn: TRANSFORM_TARGET_TYPES.indexOf(TransformTargetType.OBJECT)},
 		menu: {
-			entries: TRANSFORM_OBJECT_MODES.map((name, value) => {
+			entries: OBJECT_TRANSFORM_MODES.map((name, value) => {
 				return {name, value};
 			}),
 		},
@@ -32,7 +36,7 @@ class TransformSopParamConfig extends NodeParamsConfig {
 	objectTransformSpace = ParamConfig.INTEGER(0, {
 		visibleIf: {
 			applyOn: TRANSFORM_TARGET_TYPES.indexOf(TransformTargetType.OBJECT),
-			objectMode: TRANSFORM_OBJECT_MODES.indexOf(TransformObjectMode.MULT),
+			objectMode: OBJECT_TRANSFORM_MODES.indexOf(ObjectTransformMode.MULT),
 		},
 		menu: {
 			entries: OBJECT_TRANSFORM_SPACE_MENU_ENTRIES,
@@ -93,8 +97,8 @@ export class TransformSopNode extends TypedSopNode<TransformSopParamConfig> {
 	applyOn() {
 		return TRANSFORM_TARGET_TYPES[this.pv.applyOn];
 	}
-	setObjectMode(mode: TransformObjectMode) {
-		this.p.objectMode.set(TRANSFORM_OBJECT_MODES.indexOf(mode));
+	setObjectMode(mode: ObjectTransformMode) {
+		this.p.objectMode.set(OBJECT_TRANSFORM_MODES.indexOf(mode));
 	}
 
 	private _operation: TransformSopOperation | undefined;

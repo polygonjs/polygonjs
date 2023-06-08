@@ -8,7 +8,7 @@ import {BaseSetMaterialTextureJsNode} from './_BaseSetMaterialTexture';
 
 export class SetMaterialAOMapJsNode extends BaseSetMaterialTextureJsNode {
 	static override type() {
-		return 'setMaterialAOMapJsNode';
+		return 'setMaterialAOMap';
 	}
 	_functionName(): 'setMaterialAOMap' {
 		return 'setMaterialAOMap';

@@ -1,5 +1,5 @@
 /**
- * multiplies an input vector by the modelViewMatrix
+ * multiplies an input vector by the modelMatrix
  *
  *
  *
@@ -14,14 +14,14 @@ import {ThreeToGl} from '../../../core/ThreeToGl';
 
 const OUTPUT_NAME = 'mvMult';
 
-class ModelViewMatrixMultGlParamsConfig extends NodeParamsConfig {
+class ModelMatrixMultGlParamsConfig extends NodeParamsConfig {
 	vector = ParamConfig.VECTOR3([0, 0, 0]);
 }
-const ParamsConfig = new ModelViewMatrixMultGlParamsConfig();
-export class ModelViewMatrixMultGlNode extends TypedGlNode<ModelViewMatrixMultGlParamsConfig> {
+const ParamsConfig = new ModelMatrixMultGlParamsConfig();
+export class ModelMatrixMultGlNode extends TypedGlNode<ModelMatrixMultGlParamsConfig> {
 	override paramsConfig = ParamsConfig;
-	static override type(): Readonly<'modelViewMatrixMult'> {
-		return 'modelViewMatrixMult';
+	static override type(): Readonly<'modelMatrixMult'> {
+		return 'modelMatrixMult';
 	}
 
 	override initializeNode() {
@@ -35,7 +35,7 @@ export class ModelViewMatrixMultGlNode extends TypedGlNode<ModelViewMatrixMultGl
 		if (linesController.currentShaderName() == ShaderName.VERTEX) {
 			const input = ThreeToGl.vector3(this.variableForInputParam(this.p.vector));
 			const outValue = this.glVarName(OUTPUT_NAME);
-			const bodyLine = `vec4 ${outValue} = modelViewMatrix * vec4(${input}, 1.0)`;
+			const bodyLine = `vec4 ${outValue} = modelMatrix * vec4(${input}, 1.0)`;
 			linesController.addBodyLines(this, [bodyLine], ShaderName.VERTEX);
 		}
 	}

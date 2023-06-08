@@ -6,6 +6,7 @@ import TemplateFragment from '../../../../templates/custom/mesh/CustomMeshDepth.
 import {MeshDepthMaterial} from 'three';
 import {AssemblerGlControllerNode} from '../../../../Controller';
 import {includeSSSDeclarations} from '../../common/SSS';
+import {INSERT_DEFINE_AFTER_MAPF_FOR_MESH} from '../../_BaseMesh';
 
 const INSERT_BODY_AFTER_MAP: Map<ShaderName, string> = new Map([
 	[ShaderName.VERTEX, '#include <begin_vertex>'],
@@ -26,6 +27,9 @@ export class ShaderAssemblerCustomMeshDepth extends ShaderAssemblerMaterial {
 			fragmentShader: TemplateFragment,
 			uniforms: template.uniforms,
 		};
+	}
+	protected override insertDefineAfter(shaderName: ShaderName): string | undefined {
+		return INSERT_DEFINE_AFTER_MAPF_FOR_MESH.get(shaderName);
 	}
 	protected override insertBodyAfter(shaderName: ShaderName) {
 		return INSERT_BODY_AFTER_MAP.get(shaderName);

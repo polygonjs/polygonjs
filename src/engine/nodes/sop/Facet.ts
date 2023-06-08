@@ -9,9 +9,17 @@ import {InputCloneMode} from '../../poly/InputCloneMode';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {toCreasedNormals} from 'three/examples/jsm/utils/BufferGeometryUtils';
 import {MathUtils} from 'three';
+import {CoreMask} from '../../../core/geometry/Mask';
+import {object3DHasGeometry} from '../../../core/geometry/GeometryUtils';
 const {degToRad} = MathUtils;
 
 class FacetSopParamsConfig extends NodeParamsConfig {
+	/** @param group to assign the material to */
+	group = ParamConfig.STRING('', {
+		objectMask: true,
+	});
+	/** @param applyToChildren */
+	applyToChildren = ParamConfig.BOOLEAN(true, {separatorAfter: true});
 	/** @param angle threshold to separate vertices */
 	angle = ParamConfig.FLOAT(20, {
 		range: [0, 90],
@@ -37,12 +45,12 @@ export class FacetSopNode extends TypedSopNode<FacetSopParamsConfig> {
 	override cook(inputCoreGroups: CoreGroup[]) {
 		const inputCoreGroup = inputCoreGroups[0];
 
-		const objects = inputCoreGroup.threejsObjectsWithGeo();
+		const selectedObjects = CoreMask.filterObjects(inputCoreGroup, this.pv).filter(object3DHasGeometry);
 		const rad = degToRad(this.pv.angle);
-		for (let object of objects) {
+		for (let object of selectedObjects) {
 			object.geometry = toCreasedNormals(object.geometry, rad);
 			// this._applyCusp(object.geometry);
 		}
-		this.setObjects(objects);
+		this.setCoreGroup(inputCoreGroup);
 	}
 }

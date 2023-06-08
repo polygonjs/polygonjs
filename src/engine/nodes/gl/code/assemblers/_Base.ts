@@ -294,14 +294,17 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 			// as those could add computation overhead when always present in the shader.
 			// But hopefully in the soon future, they will only be added when the code builder
 			// adds lines based on connections, as opposed to the whole node
-			new GlConnectionPoint('worldPosition', GlConnectionPointType.VEC4), // vec4 worldPosition = modelMatrix * vec4( position, 1.0 );
-			new GlConnectionPoint('worldNormal', GlConnectionPointType.VEC3), // vec3 worldNormal = normalize( mat3( modelMatrix[0].xyz, modelMatrix[1].xyz, modelMatrix[2].xyz ) * normal );
+			new GlConnectionPoint(GlobalsOutput.WORLD_POSITION, GlConnectionPointType.VEC4), // vec4 worldPosition = modelMatrix * vec4( position, 1.0 );
+			new GlConnectionPoint(GlobalsOutput.WORLD_NORMAL, GlConnectionPointType.VEC3), // vec3 worldNormal = normalize( mat3( modelMatrix[0].xyz, modelMatrix[1].xyz, modelMatrix[2].xyz ) * normal );
 			// new GlConnectionPoint('I', GlConnectionPointType.VEC3), // vec3 I = worldPosition.xyz - cameraPosition;
 			new GlConnectionPoint(GlobalsOutput.GL_POSITION, GlConnectionPointType.VEC4),
 			new GlConnectionPoint(GlobalsOutput.GL_FRAGCOORD, GlConnectionPointType.VEC4),
 			new GlConnectionPoint('cameraPosition', GlConnectionPointType.VEC3),
 			new GlConnectionPoint(GlobalsOutput.RESOLUTION, GlConnectionPointType.VEC2),
 			new GlConnectionPoint(GlobalsOutput.TIME, GlConnectionPointType.FLOAT),
+			new GlConnectionPoint(GlobalsOutput.MODEL_MATRIX, GlConnectionPointType.MAT4),
+			new GlConnectionPoint(GlobalsOutput.MODEL_VIEW_MATRIX, GlConnectionPointType.MAT4),
+			new GlConnectionPoint(GlobalsOutput.NORMAL_MATRIX, GlConnectionPointType.MAT3),
 		];
 	}
 	create_globals_node_output_connections() {

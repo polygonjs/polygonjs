@@ -1,5 +1,5 @@
 /**
- * multiplies an input vector by the modelViewMatrix
+ * position from local to world
  *
  *
  *
@@ -12,16 +12,16 @@ import {ShadersCollectionController} from './code/utils/ShadersCollectionControl
 import {ShaderName} from '../utils/shaders/ShaderName';
 import {ThreeToGl} from '../../../core/ThreeToGl';
 
-const OUTPUT_NAME = 'mvMult';
+const OUTPUT_NAME = 'worldPosition';
 
-class ModelViewMatrixMultGlParamsConfig extends NodeParamsConfig {
-	vector = ParamConfig.VECTOR3([0, 0, 0]);
+class PositionToWorldGlParamsConfig extends NodeParamsConfig {
+	position = ParamConfig.VECTOR3([0, 1, 0]);
 }
-const ParamsConfig = new ModelViewMatrixMultGlParamsConfig();
-export class ModelViewMatrixMultGlNode extends TypedGlNode<ModelViewMatrixMultGlParamsConfig> {
+const ParamsConfig = new PositionToWorldGlParamsConfig();
+export class PositionToWorldGlNode extends TypedGlNode<PositionToWorldGlParamsConfig> {
 	override paramsConfig = ParamsConfig;
-	static override type(): Readonly<'modelViewMatrixMult'> {
-		return 'modelViewMatrixMult';
+	static override type(): Readonly<'positionToWorld'> {
+		return 'positionToWorld';
 	}
 
 	override initializeNode() {
@@ -33,9 +33,9 @@ export class ModelViewMatrixMultGlNode extends TypedGlNode<ModelViewMatrixMultGl
 
 	override setLines(linesController: ShadersCollectionController) {
 		if (linesController.currentShaderName() == ShaderName.VERTEX) {
-			const input = ThreeToGl.vector3(this.variableForInputParam(this.p.vector));
+			const input = ThreeToGl.vector3(this.variableForInputParam(this.p.position));
 			const outValue = this.glVarName(OUTPUT_NAME);
-			const bodyLine = `vec4 ${outValue} = modelViewMatrix * vec4(${input}, 1.0)`;
+			const bodyLine = `vec4 ${outValue} = modelMatrix * vec4(${input}, 1.0)`;
 			linesController.addBodyLines(this, [bodyLine], ShaderName.VERTEX);
 		}
 	}

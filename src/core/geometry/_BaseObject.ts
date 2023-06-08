@@ -8,7 +8,7 @@ import {SetUtils} from '../../core/SetUtils';
 import {MapUtils} from '../../core/MapUtils';
 import type {ObjectContent, CoreObjectType, ObjectGeometryMap, MergeCompactOptions} from './ObjectContent';
 import {TransformTargetType} from '../Transform';
-import {ObjectTransformSpace} from '../TransformSpace';
+import {ObjectTransformMode, ObjectTransformSpace} from '../TransformSpace';
 import {EntityGroupCollection} from './EntityGroupCollection';
 import {_updateObjectAttribRef} from '../reactivity/ObjectAttributeReactivityUpdateRef';
 import {attribValueNonPrimitive, copyAttribValue, AttributeDictionary, cloneAttribValue} from './_BaseObjectUtils';
@@ -550,7 +550,8 @@ export abstract class BaseCoreObject<T extends CoreObjectType> extends CoreEntit
 		object: ObjectContent<CoreObjectType>,
 		matrix: Matrix4,
 		transformTargetType: TransformTargetType,
-		transformSpace: ObjectTransformSpace
+		transformSpace: ObjectTransformSpace,
+		transformMode: ObjectTransformMode
 	) {
 		console.warn('applyMatrix.override required', this);
 	}

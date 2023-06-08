@@ -4,6 +4,7 @@ import {ShaderAssemblerCustomMeshDistance} from './custom/mesh/CustomMeshDistanc
 import {ShaderAssemblerCustomMeshDepth} from './custom/mesh/CustomMeshDepth';
 import {ShaderAssemblerCustomMeshDepthDOF} from './custom/mesh/CustomMeshDepthDOF';
 import {CustomMaterialName} from '../../../../../../core/geometry/Material';
+import {ShaderName} from '../../../../utils/shaders/ShaderName';
 
 const ASSEMBLER_MAP: CustomAssemblerMap = new Map([
 	// [CustomMaterialName.DISTANCE, ShaderAssemblerCustomMeshDistance],
@@ -13,11 +14,19 @@ const ASSEMBLER_MAP: CustomAssemblerMap = new Map([
 ASSEMBLER_MAP.set(CustomMaterialName.DEPTH, ShaderAssemblerCustomMeshDepth); // for spot lights and directional
 ASSEMBLER_MAP.set(CustomMaterialName.DISTANCE, ShaderAssemblerCustomMeshDistance); // for point lights
 ASSEMBLER_MAP.set(CustomMaterialName.DEPTH_DOF, ShaderAssemblerCustomMeshDepthDOF); // for CoreScene.withOverridenMaterial
+
+export const INSERT_DEFINE_AFTER_MAPF_FOR_MESH: Map<ShaderName, string> = new Map([
+	[ShaderName.VERTEX, '#include <skinning_pars_vertex>'],
+	[ShaderName.FRAGMENT, '#include <common>'],
+]);
 export abstract class ShaderAssemblerMesh extends ShaderAssemblerMaterial {
 	// TODO: I've noticed a case where instances would not display when those shadow shaders were exported
 	// But the objects display fine if those are not assigned
 	// so it could be a bug at render time (not sure if my code, threejs or hardware)
 	override customAssemblerClassByCustomName(): CustomAssemblerMap | undefined {
 		return ASSEMBLER_MAP;
+	}
+	protected override insertDefineAfter(shaderName: ShaderName): string | undefined {
+		return INSERT_DEFINE_AFTER_MAPF_FOR_MESH.get(shaderName);
 	}
 }

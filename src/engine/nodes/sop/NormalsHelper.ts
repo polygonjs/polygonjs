@@ -12,8 +12,16 @@ import {InputCloneMode} from '../../poly/InputCloneMode';
 import {VertexNormalsHelper} from 'three/examples/jsm/helpers/VertexNormalsHelper';
 import {isBooleanTrue} from '../../../core/Type';
 import {Object3D} from 'three';
+import {CoreMask} from '../../../core/geometry/Mask';
+import {object3DHasGeometry} from '../../../core/geometry/GeometryUtils';
 
 class NormalsHelperSopParamsConfig extends NodeParamsConfig {
+	/** @param group to assign the material to */
+	group = ParamConfig.STRING('', {
+		objectMask: true,
+	});
+	/** @param applyToChildren */
+	applyToChildren = ParamConfig.BOOLEAN(true, {separatorAfter: true});
 	/** @param keep input */
 	keepInput = ParamConfig.BOOLEAN(1);
 	/** @param size of the box */
@@ -42,9 +50,10 @@ export class NormalsHelperSopNode extends TypedSopNode<NormalsHelperSopParamsCon
 
 	override cook(inputCoreGroups: CoreGroup[]) {
 		const inputCoreGroup = inputCoreGroups[0];
-		const objects = inputCoreGroup.threejsObjectsWithGeo();
+
+		const selectedObjects = CoreMask.filterObjects(inputCoreGroup, this.pv).filter(object3DHasGeometry);
 		const newObjects: Object3D[] = [];
-		for (let object of objects) {
+		for (let object of selectedObjects) {
 			const helper = new VertexNormalsHelper(object, this.pv.size);
 			if (isBooleanTrue(this.pv.keepInput)) {
 				newObjects.push(object);

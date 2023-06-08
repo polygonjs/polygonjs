@@ -3,7 +3,7 @@ import {SDFObject} from './SDFObject';
 import {BaseCoreObject} from '../_BaseObject';
 import {CoreObjectType, MergeCompactOptions} from '../ObjectContent';
 import {TransformTargetType} from '../../Transform';
-import {ObjectTransformSpace} from '../../TransformSpace';
+import {ObjectTransformMode, ObjectTransformSpace} from '../../TransformSpace';
 import {SDFLoaderSync} from './SDFLoaderSync';
 import {SDFGeometry} from './SDFCommon';
 
@@ -27,7 +27,8 @@ export class SDFCoreObject extends BaseCoreObject<CoreObjectType.SDF> {
 		object: SDFObject,
 		matrix: Matrix4,
 		transformTargetType: TransformTargetType,
-		transformSpace: ObjectTransformSpace
+		transformSpace: ObjectTransformSpace,
+		transformMode: ObjectTransformMode
 	) {
 		object.applyMatrix4(matrix);
 	}

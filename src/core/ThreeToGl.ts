@@ -1,5 +1,5 @@
 import {CoreString} from './String';
-import {Color, Vector2, Vector3, Vector4} from 'three';
+import {Color, Matrix3, Matrix4, Vector2, Vector3, Vector4} from 'three';
 import {CoreType} from './Type';
 import {GlConnectionPointType} from '../engine/nodes/utils/io/connections/Gl';
 
@@ -10,6 +10,8 @@ export const COMPONENTS_BY_GL_TYPE = {
 	[GlConnectionPointType.VEC2]: ['x', 'y'],
 	[GlConnectionPointType.VEC3]: ['x', 'y', 'z'],
 	[GlConnectionPointType.VEC4]: ['x', 'y', 'z', 'w'],
+	[GlConnectionPointType.MAT3]: undefined,
+	[GlConnectionPointType.MAT4]: undefined,
 	[GlConnectionPointType.SAMPLER_2D]: undefined,
 	[GlConnectionPointType.SAMPLER_2D_ARRAY]: undefined,
 	[GlConnectionPointType.SAMPLER_3D]: undefined,
@@ -69,6 +71,24 @@ export class ThreeToGl {
 		}
 		const gl_type = `vec${values.length}`;
 		return `${gl_type}(${values_str.join(', ')})`;
+	}
+	static mat4(vec: Matrix4 | string): string {
+		if (CoreType.isString(vec)) {
+			return vec;
+		}
+		const values = vec.toArray().map((v) => {
+			return `${CoreString.ensureFloat(v)}`;
+		});
+		return `mat4(${values.join(', ')})`;
+	}
+	static mat3(vec: Matrix3 | string): string {
+		if (CoreType.isString(vec)) {
+			return vec;
+		}
+		const values = vec.toArray().map((v) => {
+			return `${CoreString.ensureFloat(v)}`;
+		});
+		return `mat3(${values.join(', ')})`;
 	}
 	static vector4(vec: Vector4 | string): string {
 		if (CoreType.isString(vec)) {

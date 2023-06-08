@@ -16,6 +16,8 @@ import {MathUtils, Vector3, Object3D, Matrix4, Euler, Quaternion} from 'three';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 import {
 	OBJECT_TRANSFORM_SPACES,
+	OBJECT_TRANSFORM_MODES,
+	ObjectTransformMode,
 	ObjectTransformSpace,
 	applyTransformWithSpaceToObject,
 } from '../../../core/TransformSpace';
@@ -30,12 +32,6 @@ const _euler = new Euler();
 const _q = new Quaternion();
 const _s = new Vector3();
 const _mat4 = new Matrix4();
-
-export enum TransformObjectMode {
-	SET = 'set matrix',
-	MULT = 'multiply matrix',
-}
-export const TRANSFORM_OBJECT_MODES: TransformObjectMode[] = [TransformObjectMode.SET, TransformObjectMode.MULT];
 
 interface TransformSopParams extends DefaultOperationParams {
 	applyOn: number;
@@ -53,7 +49,7 @@ interface TransformSopParams extends DefaultOperationParams {
 export class TransformSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: TransformSopParams = {
 		applyOn: TRANSFORM_TARGET_TYPES.indexOf(TransformTargetType.GEOMETRY),
-		objectMode: TRANSFORM_OBJECT_MODES.indexOf(TransformObjectMode.SET),
+		objectMode: OBJECT_TRANSFORM_MODES.indexOf(ObjectTransformMode.SET),
 		objectTransformSpace: OBJECT_TRANSFORM_SPACES.indexOf(ObjectTransformSpace.PARENT),
 		group: '',
 		rotationOrder: ROTATION_ORDERS.indexOf(RotationOrder.XYZ),
@@ -139,12 +135,12 @@ export class TransformSopOperation extends BaseSopOperation {
 	}
 
 	private _updateObject(object: ObjectContent<CoreObjectType>, params: TransformSopParams) {
-		const objectMode = TRANSFORM_OBJECT_MODES[params.objectMode];
+		const objectMode = OBJECT_TRANSFORM_MODES[params.objectMode];
 		switch (objectMode) {
-			case TransformObjectMode.SET: {
+			case ObjectTransformMode.SET: {
 				return this._setMatrix(object, params);
 			}
-			case TransformObjectMode.MULT: {
+			case ObjectTransformMode.MULT: {
 				return this._multMatrix(object, params);
 			}
 		}
@@ -162,7 +158,8 @@ export class TransformSopOperation extends BaseSopOperation {
 			object,
 			_mat4,
 			TRANSFORM_TARGET_TYPES[params.applyOn],
-			ObjectTransformSpace.LOCAL
+			ObjectTransformSpace.LOCAL,
+			ObjectTransformMode.SET
 		);
 	}
 
@@ -171,7 +168,7 @@ export class TransformSopOperation extends BaseSopOperation {
 		const matrix = this._matrix(params);
 		const transformSpace = OBJECT_TRANSFORM_SPACES[params.objectTransformSpace];
 		// for (let object of objects) {
-		applyTransformWithSpaceToObject(object, matrix, transformSpace);
+		applyTransformWithSpaceToObject(object, matrix, transformSpace, ObjectTransformMode.MULT);
 		// // center to origin
 		// // this._objectPosition.copy(object.position);
 		// // object.position.set(0, 0, 0);

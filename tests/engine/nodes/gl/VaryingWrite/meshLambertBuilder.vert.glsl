@@ -1,13 +1,6 @@
 #define LAMBERT
 varying vec3 vViewPosition;
 #include <common>
-vec3 hsv2rgb(vec3 c) {
-	vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
-	vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);
-	return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
-}
-varying vec3 ptColor;
-attribute float randomId;
 #include <uv_pars_vertex>
 #include <displacementmap_pars_vertex>
 #include <envmap_pars_vertex>
@@ -16,6 +9,13 @@ attribute float randomId;
 #include <normal_pars_vertex>
 #include <morphtarget_pars_vertex>
 #include <skinning_pars_vertex>
+vec3 hsv2rgb(vec3 c) {
+	vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
+	vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);
+	return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
+}
+varying vec3 ptColor;
+attribute float randomId;
 #include <shadowmap_pars_vertex>
 #include <logdepthbuf_pars_vertex>
 #include <clipping_planes_pars_vertex>

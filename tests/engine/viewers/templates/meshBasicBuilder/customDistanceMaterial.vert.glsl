@@ -4,7 +4,10 @@
 varying vec3 vWorldPosition;
 
 #include <common>
-
+#include <uv_pars_vertex>
+#include <displacementmap_pars_vertex>
+#include <morphtarget_pars_vertex>
+#include <skinning_pars_vertex>
 
 
 // /MAT/meshBasicBuilder1/param1
@@ -16,10 +19,6 @@ varying vec3 v_POLY_globals1_position;
 
 
 
-#include <uv_pars_vertex>
-#include <displacementmap_pars_vertex>
-#include <morphtarget_pars_vertex>
-#include <skinning_pars_vertex>
 #include <clipping_planes_pars_vertex>
 
 void main() {

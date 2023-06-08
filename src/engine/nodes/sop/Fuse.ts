@@ -14,6 +14,7 @@ import {MapUtils} from '../../../core/MapUtils';
 import {ObjectType, objectTypeFromConstructor} from '../../../core/geometry/Constant';
 import {ArrayUtils} from '../../../core/ArrayUtils';
 import {mergeFaces} from '../../../core/geometry/operation/Fuse';
+import {CoreMask} from '../../../core/geometry/Mask';
 
 const roundedPosition = new Vector3();
 const vector2 = new Vector2();
@@ -35,6 +36,12 @@ function clearAttributes(geometry: BufferGeometry) {
 }
 
 class FuseSopParamsConfig extends NodeParamsConfig {
+	/** @param group to assign the material to */
+	group = ParamConfig.STRING('', {
+		objectMask: true,
+	});
+	/** @param applyToChildren */
+	applyToChildren = ParamConfig.BOOLEAN(true, {separatorAfter: true});
 	/** @param distance threshold */
 	dist = ParamConfig.FLOAT(0.001, {
 		range: [0, 1],
@@ -64,12 +71,14 @@ export class FuseSopNode extends TypedSopNode<FuseSopParamsConfig> {
 	override cook(inputCoreGroups: CoreGroup[]) {
 		const inputCoreGroup = inputCoreGroups[0];
 
-		const newObjects: Object3D[] = [];
-		for (let object of inputCoreGroup.threejsObjects()) {
+		const selectedObjects = CoreMask.filterObjects(inputCoreGroup, this.pv);
+
+		// const newObjects: Object3D[] = [];
+		for (let object of selectedObjects) {
 			this._filterObject(object);
-			newObjects.push(object);
+			// newObjects.push(object);
 		}
-		this.setObjects(newObjects);
+		this.setCoreGroup(inputCoreGroup);
 	}
 
 	private _filterObject(object: Object3D) {

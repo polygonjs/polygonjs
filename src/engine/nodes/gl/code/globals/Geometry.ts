@@ -12,6 +12,7 @@ import {ShaderName} from '../../../utils/shaders/ShaderName';
 import {BaseGlNodeType} from '../../_Base';
 import {ShadersCollectionController} from '../utils/ShadersCollectionController';
 import {PolyDictionary} from '../../../../../types/GlobalTypes';
+import {GlobalsOutput} from '../assemblers/materials/common/GlobalOutput';
 
 const VARIABLE_CONFIG_DEFAULT_BY_NAME: PolyDictionary<string> = {
 	position: 'vec3( position )',
@@ -81,11 +82,11 @@ export class GlobalsGeometryHandler extends GlobalsBaseController {
 		const worldNormalLine = `${var_name} = normalize( mat3( modelMatrix[0].xyz, modelMatrix[1].xyz, modelMatrix[2].xyz ) * normal )`;
 		// const ILine = `${var_name} = worldPosition.xyz - cameraPosition`;
 		switch (output_name) {
-			case 'worldPosition': {
+			case GlobalsOutput.WORLD_POSITION: {
 				body_lines.push(worldPositionLine);
 				break;
 			}
-			case 'worldNormal': {
+			case GlobalsOutput.WORLD_NORMAL: {
 				body_lines.push(worldNormalLine);
 				break;
 			}

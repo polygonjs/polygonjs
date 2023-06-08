@@ -23,6 +23,8 @@ export enum GlConnectionPointType {
 	// IVEC3 = 'ivec3',
 	// IVEC4 = 'ivec4',
 	FLOAT = 'float',
+	MAT3 = 'mat3',
+	MAT4 = 'mat4',
 	VEC2 = 'vec2',
 	VEC3 = 'vec3',
 	VEC4 = 'vec4',
@@ -96,6 +98,8 @@ export const GL_CONNECTION_POINT_TYPES: Array<GlConnectionPointType> = [
 	GlConnectionPointType.VEC2,
 	GlConnectionPointType.VEC3,
 	GlConnectionPointType.VEC4,
+	GlConnectionPointType.MAT3,
+	GlConnectionPointType.MAT4,
 	GlConnectionPointType.SAMPLER_2D,
 	GlConnectionPointType.SSS_MODEL,
 	GlConnectionPointType.SDF_CONTEXT,
@@ -121,6 +125,8 @@ export interface GlIConnectionPointTypeToParamTypeMap extends GlConnectionPointT
 	[GlConnectionPointType.VEC2]: ParamType.VECTOR2;
 	[GlConnectionPointType.VEC3]: ParamType.VECTOR3;
 	[GlConnectionPointType.VEC4]: ParamType.VECTOR4;
+	[GlConnectionPointType.MAT3]: ParamType.BUTTON;
+	[GlConnectionPointType.MAT4]: ParamType.BUTTON;
 }
 export const GlConnectionPointTypeToParamTypeMap: GlIConnectionPointTypeToParamTypeMap = {
 	[GlConnectionPointType.BOOL]: ParamType.BOOLEAN,
@@ -135,6 +141,8 @@ export const GlConnectionPointTypeToParamTypeMap: GlIConnectionPointTypeToParamT
 	[GlConnectionPointType.VEC2]: ParamType.VECTOR2,
 	[GlConnectionPointType.VEC3]: ParamType.VECTOR3,
 	[GlConnectionPointType.VEC4]: ParamType.VECTOR4,
+	[GlConnectionPointType.MAT3]: ParamType.BUTTON,
+	[GlConnectionPointType.MAT4]: ParamType.BUTTON,
 
 	[GlConnectionPointType.SAMPLER_2D]: ParamType.RAMP,
 	[GlConnectionPointType.SAMPLER_2D_ARRAY]: ParamType.RAMP,
@@ -217,6 +225,8 @@ export const GlConnectionPointInitValueMap: GlConnectionPointInitValueMapGeneric
 	[GlConnectionPointType.VEC2]: [0, 0],
 	[GlConnectionPointType.VEC3]: [0, 0, 0],
 	[GlConnectionPointType.VEC4]: [0, 0, 0, 0],
+	[GlConnectionPointType.MAT3]: null,
+	[GlConnectionPointType.MAT4]: null,
 
 	[GlConnectionPointType.SAMPLER_2D]: RampParam.DEFAULT_VALUE_JSON,
 	[GlConnectionPointType.SAMPLER_2D_ARRAY]: RampParam.DEFAULT_VALUE_JSON,
@@ -248,6 +258,8 @@ export const GlConnectionPointComponentsCountMap: ConnectionPointComponentsCount
 	[GlConnectionPointType.VEC2]: 2,
 	[GlConnectionPointType.VEC3]: 3,
 	[GlConnectionPointType.VEC4]: 4,
+	[GlConnectionPointType.MAT3]: 9,
+	[GlConnectionPointType.MAT4]: 16,
 	[GlConnectionPointType.SAMPLER_2D]: 1,
 	[GlConnectionPointType.SAMPLER_2D_ARRAY]: 1,
 	[GlConnectionPointType.SAMPLER_3D]: 1,
