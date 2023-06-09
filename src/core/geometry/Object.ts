@@ -81,8 +81,29 @@ export class CoreObject extends BaseCoreObject<CoreObjectType.THREEJS> {
 		// 	return null
 		// }
 	}
+	static points(object: Object3D) {
+		const geometry = (object as Mesh).geometry;
+		if (geometry) {
+			return CoreGeometry.points(geometry) || [];
+		} else {
+			return [];
+		}
+	}
 	points() {
 		return this.coreGeometry()?.points() || [];
+	}
+	static pointsFromGroup(object: Object3D, group: GroupString): CorePoint[] {
+		if (group) {
+			const indices = CoreString.indices(group);
+			if (indices) {
+				const points = this.points(object);
+				return ArrayUtils.compact(indices.map((i) => points[i]));
+			} else {
+				return [];
+			}
+		} else {
+			return this.points(object);
+		}
 	}
 	pointsFromGroup(group: GroupString): CorePoint[] {
 		if (group) {

@@ -157,7 +157,7 @@ export class ObjectBuilderSopNode extends TypedSopNode<ObjectBuilderSopParamsCon
 		}
 	}
 	private _getObjects(coreGroup: CoreGroup) {
-		return CoreMask.filterObjects(coreGroup, this.pv);
+		return CoreMask.filterThreejsObjects(coreGroup, this.pv);
 	}
 
 	compileIfRequired() {

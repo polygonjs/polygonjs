@@ -80,7 +80,7 @@ export class MaterialSopOperation extends BaseSopOperation {
 			return;
 		}
 
-		const selectedObjects = CoreMask.filterObjects(coreGroup, params);
+		const selectedObjects = CoreMask.filterThreejsObjects(coreGroup, params);
 
 		for (let selectedObject of selectedObjects) {
 			this._applyMaterial(selectedObject, material, params);

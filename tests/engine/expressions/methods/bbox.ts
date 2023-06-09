@@ -89,5 +89,6 @@ QUnit.test('expression bbox works on hierarchy', async (assert) => {
 	assert.in_delta((await getSize()).x, 1, 0.001, 'bbox');
 
 	transform1.setApplyOn(TransformTargetType.OBJECT);
+	transform1.p.applyToChildren.set(false);
 	assert.in_delta((await getSize()).x, 1, 0.0001, 'bbox');
 });

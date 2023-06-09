@@ -57,8 +57,11 @@ export class CoreGeometry {
 		return CoreGeometry.markedAsInstance(this._geometry);
 	}
 	positionAttribName() {
+		return CoreGeometry.positionAttribName(this._geometry);
+	}
+	static positionAttribName(geometry: BufferGeometry) {
 		let name = 'position';
-		if (this.markedAsInstance()) {
+		if (this.markedAsInstance(geometry)) {
 			name = 'instancePosition';
 		}
 		return name;
@@ -337,14 +340,20 @@ export class CoreGeometry {
 		// when the points are updated internaly
 		return this.pointsFromGeometry();
 	}
+	static points(geometry:BufferGeometry): CorePoint[] {
+		return CoreGeometry.pointsFromGeometry(geometry);
+	}
 	pointsFromGeometry(): CorePoint[] {
+		return CoreGeometry.pointsFromGeometry(this._geometry);
+	}
+	static pointsFromGeometry(geometry:BufferGeometry): CorePoint[] {
 		const points = [];
-		const positionAttrib = this._geometry.getAttribute(this.positionAttribName()) as BufferAttribute;
+		const positionAttrib = geometry.getAttribute(this.positionAttribName(geometry)) as BufferAttribute;
 
 		if (positionAttrib != null) {
 			const count = positionAttrib.array.length / 3;
 			for (let i = 0; i < count; i++) {
-				const point = new CorePoint(this, i);
+				const point = new CorePoint(geometry, i);
 
 				points.push(point);
 			}

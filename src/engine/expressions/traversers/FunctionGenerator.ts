@@ -234,6 +234,7 @@ const ARGUMENTS_SEPARATOR = ', ';
 const ATTRIBUTE_PREFIX = '@';
 import {VARIABLE_PREFIX} from './_Base';
 import {CorePoint} from '../../../core/geometry/Point';
+import {CoreGeometry} from '../../../core/geometry/Geometry';
 
 const PROPERTY_OFFSETS: AnyDictionary = {
 	x: 0,
@@ -300,6 +301,7 @@ export class FunctionGenerator extends BaseTraverser {
 					const body = this._functionBody();
 					this.function = new Function(
 						'CorePoint',
+						'CoreGeometry',
 						'Core',
 						'CoreType',
 						'param',
@@ -412,6 +414,7 @@ export class FunctionGenerator extends BaseTraverser {
 
 			const result = this.function(
 				CorePoint,
+				CoreGeometry,
 				Core,
 				CoreType,
 				this.param,

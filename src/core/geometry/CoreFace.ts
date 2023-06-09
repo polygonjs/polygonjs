@@ -45,9 +45,9 @@ export class CoreFace {
 		const indexArray = this._geometry.index?.array || [];
 		const start = this._index * 3;
 		return [
-			new CorePoint(this._coreGeometry, indexArray[start + 0]),
-			new CorePoint(this._coreGeometry, indexArray[start + 1]),
-			new CorePoint(this._coreGeometry, indexArray[start + 2]),
+			new CorePoint(this._geometry, indexArray[start + 0]),
+			new CorePoint(this._geometry, indexArray[start + 1]),
+			new CorePoint(this._geometry, indexArray[start + 2]),
 		];
 	}
 	positions() {

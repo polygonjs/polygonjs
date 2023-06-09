@@ -15,7 +15,6 @@ import {ObjectType, objectTypeFromConstructor} from '../../../core/geometry/Cons
 import {ArrayUtils} from '../../../core/ArrayUtils';
 import {mergeFaces} from '../../../core/geometry/operation/Fuse';
 import {CoreMask} from '../../../core/geometry/Mask';
-
 const roundedPosition = new Vector3();
 const vector2 = new Vector2();
 const vector3 = new Vector3();
@@ -71,12 +70,10 @@ export class FuseSopNode extends TypedSopNode<FuseSopParamsConfig> {
 	override cook(inputCoreGroups: CoreGroup[]) {
 		const inputCoreGroup = inputCoreGroups[0];
 
-		const selectedObjects = CoreMask.filterObjects(inputCoreGroup, this.pv);
+		const selectedObjects = CoreMask.filterThreejsObjects(inputCoreGroup, this.pv);
 
-		// const newObjects: Object3D[] = [];
 		for (let object of selectedObjects) {
 			this._filterObject(object);
-			// newObjects.push(object);
 		}
 		this.setCoreGroup(inputCoreGroup);
 	}

@@ -43,23 +43,18 @@ const COMPONENT_INDICES = {
 const DOT = '.';
 
 export class CorePoint extends CoreEntity {
-	_geometry: BufferGeometry;
 	_position: Vector3 | undefined;
 	_normal: Vector3 | undefined;
 
-	constructor(private _coreGeometry: CoreGeometry, _index: number) {
+	constructor(private _geometry: BufferGeometry, _index: number) {
 		super(_index);
-		this._geometry = this._coreGeometry.geometry();
 	}
 	applyMatrix4(matrix: Matrix4) {
 		this.position().applyMatrix4(matrix);
 	}
 
-	coreGeometry() {
-		return this._coreGeometry;
-	}
 	geometry() {
-		return (this._geometry = this._geometry || this._coreGeometry.geometry());
+		return this._geometry;
 	}
 
 	attribSize(attribName: string): number {
@@ -69,7 +64,7 @@ export class CorePoint extends CoreEntity {
 
 	hasAttrib(attribName: string): boolean {
 		const remapped_name = CoreAttribute.remapName(attribName);
-		return this._coreGeometry.hasAttrib(remapped_name);
+		return CoreGeometry.hasAttrib(this._geometry, remapped_name);
 	}
 	static attribValue(
 		geometry: BufferGeometry,
@@ -234,7 +229,7 @@ export class CorePoint extends CoreEntity {
 	}
 	indexedAttribValue(attribName: string): string {
 		const valueIndex = this.attribValueIndex(attribName); //attrib.value()
-		return this._coreGeometry.userDataAttrib(attribName)[valueIndex];
+		return CoreGeometry.userDataAttrib(this._geometry, attribName)[valueIndex];
 	}
 	static stringAttribValue(geometry: BufferGeometry, index: number, attribName: string) {
 		return this.indexedAttribValue(geometry, index, attribName);
@@ -258,7 +253,7 @@ export class CorePoint extends CoreEntity {
 		// }
 	}
 	isAttribIndexed(attribName: string) {
-		return this._coreGeometry.isAttribIndexed(attribName);
+		return CoreGeometry.isAttribIndexed(this._geometry, attribName);
 	}
 
 	position() {

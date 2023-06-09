@@ -49,7 +49,7 @@ QUnit.test('fuse on simple mesh', async (assert) => {
 	transform1.setInput(0, plane1);
 	fuse1.setInput(0, transform1);
 
-	transform1.p.group.set('0');
+	transform1.p.pointGroup.set('0');
 	transform1.p.t.set([0.96, 0, 0]);
 
 	fuse1.p.dist.set(0.3);

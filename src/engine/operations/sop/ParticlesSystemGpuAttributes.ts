@@ -28,7 +28,7 @@ export class ParticlesSystemGpuAttributesSopOperation extends BaseSopOperation {
 	override cook(inputCoreGroups: CoreGroup[], params: ParticlesSystemGpuAttributesSopParams) {
 		const coreGroup = inputCoreGroups[0];
 
-		const selectedObjects = CoreMask.filterObjects(coreGroup, params);
+		const selectedObjects = CoreMask.filterThreejsObjects(coreGroup, params);
 		for (let selectedObject of selectedObjects) {
 			this._applyAttributes(selectedObject, params);
 		}

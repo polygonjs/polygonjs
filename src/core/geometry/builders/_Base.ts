@@ -14,8 +14,7 @@ export abstract class CoreGeometryBuilderBase {
 
 		const first_point = points[0];
 		if (first_point != null) {
-			const old_geometry = first_point.geometry();
-			const old_core_geometry = first_point.coreGeometry();
+			const oldGeometry = first_point.geometry();
 
 			// index
 			const new_index_by_old_index: PolyDictionary<number> = {};
@@ -23,16 +22,16 @@ export abstract class CoreGeometryBuilderBase {
 				new_index_by_old_index[points[i].index()] = i;
 			}
 
-			const indices = this._indicesFromPoints(new_index_by_old_index, old_geometry);
+			const indices = this._indicesFromPoints(new_index_by_old_index, oldGeometry);
 			if (indices) {
 				geometry.setIndex(indices);
 			}
 
 			// attributes
-			const {attributes} = old_geometry;
+			const {attributes} = oldGeometry;
 			// const new_attributes = {}
 			for (let attribute_name of Object.keys(attributes)) {
-				const attrib_values = old_core_geometry.userDataAttribs()[attribute_name];
+				const attrib_values = CoreGeometry.userDataAttribs(oldGeometry)[attribute_name];
 				const is_attrib_indexed = attrib_values != null;
 
 				if (is_attrib_indexed) {

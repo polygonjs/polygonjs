@@ -53,18 +53,18 @@ export function coreObjectFactory(object: ObjectContent<CoreObjectType>): BaseCo
 	return CoreObject;
 }
 
-export function coreObjectInstanceFactory(
-	object: ObjectContent<CoreObjectType>,
+export function coreObjectInstanceFactory<T extends CoreObjectType>(
+	object: ObjectContent<T>,
 	index = 0
-): BaseCoreObject<CoreObjectType> {
+): BaseCoreObject<T> {
 	for (let checkFunction of coreObjectCheckFunctions) {
 		const result = checkFunction.instance(object, index);
 		if (result) {
-			return result;
+			return result as BaseCoreObject<T>;
 		}
 	}
 	//
-	return new CoreObject(object as Object3D, index);
+	return new CoreObject(object as Object3D, index) as any as BaseCoreObject<T>;
 
 	// TODO: make this driven by the modules register
 	// if (isObject3D(object)) {

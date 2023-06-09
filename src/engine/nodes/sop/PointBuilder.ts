@@ -206,7 +206,7 @@ export class PointBuilderSopNode extends TypedSopNode<PointBuilderSopParamsConfi
 		}
 	}
 	private _getObjects(coreGroup: CoreGroup): Object3DWithGeometry[] {
-		return CoreMask.filterObjects(coreGroup, this.pv).filter(object3DHasGeometry);
+		return CoreMask.filterThreejsObjects(coreGroup, this.pv).filter(object3DHasGeometry);
 	}
 	private _resetRequiredAttributes() {
 		this._attributesDict.clear();

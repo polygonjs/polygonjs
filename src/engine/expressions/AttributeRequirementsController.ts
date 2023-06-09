@@ -1,5 +1,6 @@
 export const VAR_ARE_ENTITY_CORE_POINT = `areEntitiesCorePoint`;
-const VAR_CORE_GEOMETRY = `coreGeometry`;
+const VAR_GEOMETRY = `geometry`;
+const CLASS_CORE_GEOMETRY = `CoreGeometry`;
 
 export class AttributeRequirementsController {
 	private _attributeNames: Set<string> | undefined;
@@ -25,8 +26,8 @@ export class AttributeRequirementsController {
 		if (this._attributeNames) {
 			const lines: string[] = [];
 			if (this._attributeNames.size > 0) {
-				const coreGeoLine = `const ${VAR_CORE_GEOMETRY} = entities[0].coreGeometry();`;
-				lines.push(coreGeoLine);
+				const geoLine = `const ${VAR_GEOMETRY} = entities[0].geometry();`;
+				lines.push(geoLine);
 			}
 			for (let attribName of this._attributeNames) {
 				lines.push(AttributeRequirementsController.assignItemSizeLine(attribName));
@@ -69,7 +70,7 @@ export class AttributeRequirementsController {
 	static assignArrayLine(attribName: string) {
 		const varAttribute = this._varAttribute(attribName);
 		const varArray = this._varArray(attribName);
-		const isIndexedCondition = `(${VAR_ARE_ENTITY_CORE_POINT} && ${VAR_CORE_GEOMETRY}.isAttribIndexed('${attribName}'))`;
+		const isIndexedCondition = `(${VAR_ARE_ENTITY_CORE_POINT} && ${CLASS_CORE_GEOMETRY}.isAttribIndexed(${VAR_GEOMETRY}, '${attribName}'))`;
 		const indexedArray = `entities.map(e=>e.indexedAttribValue('${attribName}'))`;
 		const nonIndexedArray = `${varAttribute}.array`;
 		return `const ${varArray} = ${isIndexedCondition} ? ${indexedArray} : ${nonIndexedArray}`;

@@ -45,7 +45,7 @@ export class FacetSopNode extends TypedSopNode<FacetSopParamsConfig> {
 	override cook(inputCoreGroups: CoreGroup[]) {
 		const inputCoreGroup = inputCoreGroups[0];
 
-		const selectedObjects = CoreMask.filterObjects(inputCoreGroup, this.pv).filter(object3DHasGeometry);
+		const selectedObjects = CoreMask.filterThreejsObjects(inputCoreGroup, this.pv).filter(object3DHasGeometry);
 		const rad = degToRad(this.pv.angle);
 		for (let object of selectedObjects) {
 			object.geometry = toCreasedNormals(object.geometry, rad);

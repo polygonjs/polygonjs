@@ -173,7 +173,7 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 
 		const coreGroup = inputCoreGroups[0];
 
-		const selectedObjects = CoreMask.filterObjects(coreGroup, this.pv);
+		const selectedObjects = CoreMask.filterThreejsObjects(coreGroup, this.pv);
 		for (let object of selectedObjects) {
 			const existingActorIds = this.scene().actorsManager.objectActorNodeIds(object);
 			if (existingActorIds == null || existingActorIds.length == 0) {

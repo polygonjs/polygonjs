@@ -22,9 +22,8 @@ import {
 	applyTransformWithSpaceToObject,
 } from '../../../core/TransformSpace';
 import {CoreObjectType, isObject3D, ObjectContent} from '../../../core/geometry/ObjectContent';
-// import type { CadCoreObject } from '../../../core/geometry/cad/CadCoreObject';
-// import type{ CadGeometryType } from '../../../core/geometry/cad/CadCommon';
-// import { cadTransform } from '../../../core/geometry/cad/operations/CadTransform';
+import {CoreMask} from '../../../core/geometry/Mask';
+import {CoreObject} from '../../../core/geometry/Object';
 
 // const _t = new Vector3();
 const _r = new Vector3();
@@ -35,9 +34,12 @@ const _mat4 = new Matrix4();
 
 interface TransformSopParams extends DefaultOperationParams {
 	applyOn: number;
+	group: string;
+	applyToChildren: boolean;
+	//
 	objectMode: number;
 	objectTransformSpace: number;
-	group: string;
+	pointGroup: string;
 	rotationOrder: number;
 	t: Vector3;
 	r: Vector3;
@@ -49,9 +51,11 @@ interface TransformSopParams extends DefaultOperationParams {
 export class TransformSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: TransformSopParams = {
 		applyOn: TRANSFORM_TARGET_TYPES.indexOf(TransformTargetType.GEOMETRY),
+		group: '',
+		applyToChildren: true,
 		objectMode: OBJECT_TRANSFORM_MODES.indexOf(ObjectTransformMode.SET),
 		objectTransformSpace: OBJECT_TRANSFORM_SPACES.indexOf(ObjectTransformSpace.PARENT),
-		group: '',
+		pointGroup: '',
 		rotationOrder: ROTATION_ORDERS.indexOf(RotationOrder.XYZ),
 		t: new Vector3(0, 0, 0),
 		r: new Vector3(0, 0, 0),
@@ -68,13 +72,24 @@ export class TransformSopOperation extends BaseSopOperation {
 	override cook(inputCoreGroups: CoreGroup[], params: TransformSopParams) {
 		const coreGroup = inputCoreGroups[0];
 
-		const inputObjects = coreGroup.allObjects();
-		for (let inputObject of inputObjects) {
+		const selectedObjects = this._selectedObjects(coreGroup, params);
+		for (let inputObject of selectedObjects) {
 			this._applyTransform(inputObject, coreGroup, params);
 		}
-		// this._applyCadTransform(coreGroup.cadCoreObjects(), params);
 		coreGroup.resetBoundingBox();
 		return coreGroup;
+	}
+	private _selectedObjects(coreGroup: CoreGroup, params: TransformSopParams) {
+		const mode = TRANSFORM_TARGET_TYPES[params.applyOn];
+		switch (mode) {
+			case TransformTargetType.GEOMETRY: {
+				return CoreMask.filterObjects(coreGroup, params);
+			}
+			case TransformTargetType.OBJECT: {
+				return CoreMask.filterObjects(coreGroup, params);
+			}
+		}
+		TypeAssert.unreachable(mode);
 	}
 	private _applyTransform(object: ObjectContent<CoreObjectType>, coreGroup: CoreGroup, params: TransformSopParams) {
 		if (isObject3D(object)) {
@@ -93,7 +108,7 @@ export class TransformSopOperation extends BaseSopOperation {
 		const mode = TRANSFORM_TARGET_TYPES[params.applyOn];
 		switch (mode) {
 			case TransformTargetType.GEOMETRY: {
-				return this._updateGeometry(object, coreGroup, params);
+				return this._updateGeometry(object, params);
 			}
 			case TransformTargetType.OBJECT: {
 				return this._updateObject(object, params);
@@ -111,21 +126,22 @@ export class TransformSopOperation extends BaseSopOperation {
 	// }
 
 	private _point_pos = new Vector3();
-	private _updateGeometry(object: Object3D, coreGroup: CoreGroup, params: TransformSopParams) {
+	private _updateGeometry(object: Object3D, params: TransformSopParams) {
 		const matrix = this._matrix(params);
 
-		if (params.group.trim() === '') {
-			object.traverse((childObject) => {
-				const geometry = (childObject as Object3DWithGeometry).geometry;
-				if (geometry) {
-					geometry.translate(-params.pivot.x, -params.pivot.y, -params.pivot.z);
-					geometry.applyMatrix4(matrix);
-					geometry.translate(params.pivot.x, params.pivot.y, params.pivot.z);
-				}
-			});
+		const pointGroup = params.pointGroup;
+		if (pointGroup.trim() === '') {
+			// object.traverse((childObject) => {
+			const geometry = (object as Object3DWithGeometry).geometry;
+			if (geometry) {
+				geometry.translate(-params.pivot.x, -params.pivot.y, -params.pivot.z);
+				geometry.applyMatrix4(matrix);
+				geometry.translate(params.pivot.x, params.pivot.y, params.pivot.z);
+			}
+			// });
 		} else {
 			// const coreGroup = CoreGroup._fromObjects(objects);
-			const points = coreGroup.pointsFromGroup(params.group);
+			const points = CoreObject.pointsFromGroup(object, pointGroup);
 			for (let point of points) {
 				const position = point.getPosition(this._point_pos).sub(params.pivot);
 				position.applyMatrix4(matrix);

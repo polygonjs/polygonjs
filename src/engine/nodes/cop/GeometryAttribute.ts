@@ -54,7 +54,7 @@ export class GeometryAttributeCopNode extends TypedCopNode<GeometryAttributeCopP
 			this.states.error.set(`geometry invalid`);
 			return;
 		}
-		const selectedObjects = CoreMask.filterObjects(coreGroup, this.pv);
+		const selectedObjects = CoreMask.filterThreejsObjects(coreGroup, this.pv);
 		if (selectedObjects.length == 0) {
 			this.states.error.set(`no object matching group`);
 			return;

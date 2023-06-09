@@ -45,7 +45,7 @@ export class MaterialPropertiesSopOperation extends BaseSopOperation {
 	override cook(inputCoreGroups: CoreGroup[], params: MaterialPropertiesSopParams) {
 		const coreGroup = inputCoreGroups[0];
 
-		const selectedObjects = CoreMask.filterObjects(coreGroup, params);
+		const selectedObjects = CoreMask.filterThreejsObjects(coreGroup, params);
 
 		for (let selectedObject of selectedObjects) {
 			this._updateObject(selectedObject, params);

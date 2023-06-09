@@ -51,7 +51,7 @@ export class NormalsHelperSopNode extends TypedSopNode<NormalsHelperSopParamsCon
 	override cook(inputCoreGroups: CoreGroup[]) {
 		const inputCoreGroup = inputCoreGroups[0];
 
-		const selectedObjects = CoreMask.filterObjects(inputCoreGroup, this.pv).filter(object3DHasGeometry);
+		const selectedObjects = CoreMask.filterThreejsObjects(inputCoreGroup, this.pv).filter(object3DHasGeometry);
 		const newObjects: Object3D[] = [];
 		for (let object of selectedObjects) {
 			const helper = new VertexNormalsHelper(object, this.pv.size);
