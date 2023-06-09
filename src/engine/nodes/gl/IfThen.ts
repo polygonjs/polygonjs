@@ -13,6 +13,7 @@ import {ThreeToGl} from '../../../core/ThreeToGl';
 // import {SubnetInputGlNode} from './SubnetInput';
 // import {ArrayUtils} from '../../../core/ArrayUtils';
 import {SubnetInputGlNode} from './SubnetInput';
+import { GlType } from '../../poly/registers/nodes/types/Gl';
 
 const CONDITION_INPUT_NAME = 'condition';
 
@@ -21,8 +22,8 @@ const ParamsConfig = new IfThenGlParamsConfig();
 
 export class IfThenGlNode extends TypedSubnetGlNode<IfThenGlParamsConfig> {
 	override paramsConfig = ParamsConfig;
-	static override type(): Readonly<'ifThen'> {
-		return 'ifThen';
+	static override type(): Readonly<GlType.IF_THEN> {
+		return GlType.IF_THEN;
 	}
 
 	// protected override _expectedInputsCount() {

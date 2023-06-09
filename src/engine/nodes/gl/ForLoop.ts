@@ -14,6 +14,7 @@ import {SubnetInputGlNode} from './SubnetInput';
 import {PolyDictionary} from '../../../types/GlobalTypes';
 import {GlConnectionPointType} from '../utils/io/connections/Gl';
 import {isBooleanTrue} from '../../../core/Type';
+import {GlType} from '../../poly/registers/nodes/types/Gl';
 // import {ArrayUtils} from '../../../core/ArrayUtils';
 
 enum ForLoopInput {
@@ -48,7 +49,7 @@ const ParamsConfig = new ForLoopGlParamsConfig();
 export class ForLoopGlNode extends TypedSubnetGlNode<ForLoopGlParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'forLoop';
+		return GlType.FOR_LOOP;
 	}
 
 	override paramDefaultValue(name: string) {

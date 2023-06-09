@@ -17,6 +17,7 @@ import {inputObject3D} from './_BaseObject3D';
 import {Poly} from '../../Poly';
 import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {StringParam} from '../../params/String';
+import {JsType} from '../../poly/registers/nodes/types/Js';
 // import {CoreObject} from '../../../core/geometry/Object';
 // import {Vector2, Vector3, Vector4} from 'three';
 // const tmpV2 = new Vector2();
@@ -53,7 +54,7 @@ const ParamsConfig = new GetObjectAttributeJsParamsConfig();
 export class GetObjectAttributeJsNode extends TypedJsNode<GetObjectAttributeJsParamsConfig> {
 	override readonly paramsConfig = ParamsConfig;
 	static override type() {
-		return 'getObjectAttribute';
+		return JsType.GET_OBJECT_ATTRIBUTE;
 	}
 
 	static readonly OUTPUT_NAME = 'val';

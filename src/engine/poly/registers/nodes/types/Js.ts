@@ -1,7 +1,11 @@
 export enum JsType {
+	ANIMATION_MIXER = 'animationMixer',
+	ANIMATION_MIXER_UPDATE = 'animationMixerUpdate',
 	ATTRIBUTE = 'attribute',
 	CODE = 'code',
 	CURSOR = 'cursor',
+	GET_OBJECT_ATTRIBUTE = 'getObjectAttribute',
+	GET_OBJECT_USER_DATA = 'getObjectUserData',
 	GLOBALS = 'globals',
 	GLOBALS_AMBIENT_LIGHT = 'globalsAmbientLight',
 	GLOBALS_AREA_LIGHT = 'globalsAreaLight',
@@ -49,6 +53,7 @@ export enum JsType {
 	SDF_BOX = 'SDFBox',
 	SDF_SPHERE = 'SDFSphere',
 	// set
+	SET_OBJECT_ATTRIBUTE = 'setObjectAttribute',
 	SET_OBJECT_LOOK_AT = 'setObjectLookAt',
 	SET_OBJECT_POSITION = 'setObjectPosition',
 	SET_OBJECT_ROTATION = 'setObjectRotation',

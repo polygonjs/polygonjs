@@ -44,6 +44,7 @@ export type RegisterableVariable =
 // | VectorArray<Vector4>;
 
 export class PrimitiveArray<V extends PrimitiveArrayElement> {
+	public readonly isPrimitiveArray = true;
 	constructor(protected _elements: V[]) {}
 	elements() {
 		return this._elements;
@@ -53,6 +54,7 @@ export class PrimitiveArray<V extends PrimitiveArrayElement> {
 	}
 }
 export class VectorArray<V extends VectorArrayElement> {
+	public readonly isVectorArray = true;
 	constructor(protected _elements: V[]) {}
 	elements() {
 		return this._elements;
@@ -395,43 +397,45 @@ export function serializeVariable<T extends SerializedVariableType>(
 		};
 		return data as SerializedVariable<T>;
 	}
-	if (variable instanceof PrimitiveArray<any>) {
-		const firstElement = variable.elements()[0];
+	if ((variable as PrimitiveArray<any>).isPrimitiveArray) {
+		const elements = variable.elements();
+		const firstElement = elements[0];
 		if (CoreType.isBoolean(firstElement)) {
 			const data: SerializedVariable<SerializedVariableType.boolean_Array> = {
 				type: SerializedVariableType.boolean_Array,
-				data: variable.elements().map((v) => v as boolean),
+				data: elements.map((v) => v as boolean),
 			};
 			return data as SerializedVariable<T>;
 		}
 		if (CoreType.isNumber(firstElement)) {
 			const data: SerializedVariable<SerializedVariableType.number_Array> = {
 				type: SerializedVariableType.number_Array,
-				data: variable.elements().map((v) => v as number),
+				data: elements.map((v) => v as number),
 			};
 			return data as SerializedVariable<T>;
 		}
 		if (CoreType.isString(firstElement)) {
 			const data: SerializedVariable<SerializedVariableType.string_Array> = {
 				type: SerializedVariableType.string_Array,
-				data: variable.elements().map((v) => v as string),
+				data: elements.map((v) => v as string),
 			};
 			return data as SerializedVariable<T>;
 		}
 	}
-	if (variable instanceof VectorArray<any>) {
-		const firstElement = variable.elements()[0];
+	if ((variable as VectorArray<any>).isVectorArray) {
+		const elements = (variable as VectorArray<any>).elements();
+		const firstElement = elements[0];
 		if (firstElement instanceof Color) {
 			const data: SerializedVariable<SerializedVariableType.Color_Array> = {
 				type: SerializedVariableType.Color_Array,
-				data: variable.elements().map((v) => v.toArray() as Number3),
+				data: elements.map((v) => v.toArray() as Number3),
 			};
 			return data as SerializedVariable<T>;
 		}
 		if (firstElement instanceof Euler) {
 			const data: SerializedVariable<SerializedVariableType.Euler_Array> = {
 				type: SerializedVariableType.Euler_Array,
-				data: variable.elements().map((v) => ({
+				data: elements.map((v) => ({
 					rotation: v.toArray() as Number3,
 					rotationOrder: (v as Euler).order,
 				})),
@@ -441,35 +445,35 @@ export function serializeVariable<T extends SerializedVariableType>(
 		if (firstElement instanceof Matrix4) {
 			const data: SerializedVariable<SerializedVariableType.Matrix4_Array> = {
 				type: SerializedVariableType.Matrix4_Array,
-				data: variable.elements().map((v) => v.toArray() as Number16),
+				data: elements.map((v) => v.toArray() as Number16),
 			};
 			return data as SerializedVariable<T>;
 		}
 		if (firstElement instanceof Quaternion) {
 			const data: SerializedVariable<SerializedVariableType.Quaternion_Array> = {
 				type: SerializedVariableType.Quaternion_Array,
-				data: variable.elements().map((v) => v.toArray() as Number4),
+				data: elements.map((v) => v.toArray() as Number4),
 			};
 			return data as SerializedVariable<T>;
 		}
 		if (firstElement instanceof Vector2) {
 			const data: SerializedVariable<SerializedVariableType.Vector2_Array> = {
 				type: SerializedVariableType.Vector2_Array,
-				data: variable.elements().map((v) => v.toArray() as Number2),
+				data: elements.map((v) => v.toArray() as Number2),
 			};
 			return data as SerializedVariable<T>;
 		}
 		if (firstElement instanceof Vector3) {
 			const data: SerializedVariable<SerializedVariableType.Vector3_Array> = {
 				type: SerializedVariableType.Vector3_Array,
-				data: variable.elements().map((v) => v.toArray() as Number3),
+				data: elements.map((v) => v.toArray() as Number3),
 			};
 			return data as SerializedVariable<T>;
 		}
 		if (firstElement instanceof Vector4) {
 			const data: SerializedVariable<SerializedVariableType.Vector4_Array> = {
 				type: SerializedVariableType.Vector4_Array,
-				data: variable.elements().map((v) => v.toArray() as Number4),
+				data: elements.map((v) => v.toArray() as Number4),
 			};
 			return data as SerializedVariable<T>;
 		}

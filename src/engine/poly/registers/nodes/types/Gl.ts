@@ -1,10 +1,15 @@
 export enum GlType {
 	ADJACENT_POINTS_ATTRIB_SMOOTH = 'adjacentPointsAttribSmooth',
 	ATTRIBUTE = 'attribute',
+	COMPUTE_NORMALS = 'computeNormals',
+	CONSTANT = 'constant',
+	FOR_LOOP = 'forLoop',
+	IF_THEN = 'ifThen',
 	GLOBALS = 'globals',
 	NOISE = 'noise',
 	OUTPUT = 'output',
 	PARAM = 'param',
+	RAMP = 'ramp',
 	// SDF
 	SDF_2D_BOX = 'SDF2DBox',
 	SDF_2D_CIRCLE = 'SDF2DCircle',
@@ -20,6 +25,7 @@ export enum GlType {
 	SDF_CONE = 'SDFCone',
 	SDF_CONE_ROUND = 'SDFConeRound',
 	SDF_FRACTAL_MANDELBROT = 'SDFFractalMandelbrot',
+	SDF_GRADIENT = 'SDFGradient',
 	SDF_HEXAGONAL_PRISM = 'SDFHexagonalPrism',
 	SDF_HORSE_SHOE = 'SDFHorseShoe',
 	SDF_LINK = 'SDFLink',
@@ -45,5 +51,8 @@ export enum GlType {
 	SDF_CONTEXT = 'SDFContext',
 	SDF_MATERIAL = 'SDFMaterial',
 	//
+	TEXTURE = 'texture',
+	TEXTURE_SDF = 'textureSDF',
+	VARYING_READ = 'varyingRead',
 	VARYING_WRITE = 'varyingWrite',
 }

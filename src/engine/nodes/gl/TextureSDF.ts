@@ -15,6 +15,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {GlParamConfig} from './code/utils/GLParamConfig';
 import {BaseSDFGlNode} from './_BaseSDF';
 import {isBooleanTrue} from '../../../core/Type';
+import { GlType } from '../../poly/registers/nodes/types/Gl';
 
 class TextureSDFGlParamsConfig extends NodeParamsConfig {
 	paramName = ParamConfig.STRING('texture1');
@@ -33,8 +34,8 @@ class TextureSDFGlParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new TextureSDFGlParamsConfig();
 export class TextureSDFGlNode extends BaseSDFGlNode<TextureSDFGlParamsConfig> {
 	override paramsConfig = ParamsConfig;
-	static override type(): Readonly<'textureSDF'> {
-		return 'textureSDF';
+	static override type(): Readonly<GlType.TEXTURE_SDF> {
+		return GlType.TEXTURE_SDF;
 	}
 	static readonly OUTPUT_NAME = 'd';
 	override initializeNode() {

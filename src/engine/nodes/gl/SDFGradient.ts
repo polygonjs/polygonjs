@@ -18,6 +18,7 @@ import {FunctionGLDefinition} from './utils/GLDefinition';
 import {LineType} from './code/utils/LineType';
 import {SubnetOutputGlNode} from './SubnetOutput';
 import {SubnetInputGlNode} from './SubnetInput';
+import {GlType} from '../../poly/registers/nodes/types/Gl';
 
 const POSITION_INPUT_NAME = 'position';
 const GRADIENT_OUTPUT_NAME = 'gradient';
@@ -81,8 +82,8 @@ const ParamsConfig = new SDFGradientGlParamsConfig();
 
 export class SDFGradientGlNode extends TypedSubnetGlNode<SDFGradientGlParamsConfig> {
 	override paramsConfig = ParamsConfig;
-	static override type(): Readonly<'SDFGradient'> {
-		return 'SDFGradient';
+	static override type(): Readonly<GlType.SDF_GRADIENT> {
+		return GlType.SDF_GRADIENT;
 	}
 
 	protected override _expectedInputsCount() {

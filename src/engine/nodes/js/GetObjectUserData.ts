@@ -15,6 +15,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {inputObject3D} from './_BaseObject3D';
 import {Poly} from '../../Poly';
+import {JsType} from '../../poly/registers/nodes/types/Js';
 
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
 
@@ -33,7 +34,7 @@ const ParamsConfig = new GetObjectUserDataJsParamsConfig();
 export class GetObjectUserDataJsNode extends TypedJsNode<GetObjectUserDataJsParamsConfig> {
 	override readonly paramsConfig = ParamsConfig;
 	static override type() {
-		return 'getObjectUserData';
+		return JsType.GET_OBJECT_USER_DATA;
 	}
 
 	static readonly OUTPUT_NAME = 'val';

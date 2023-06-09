@@ -4,8 +4,10 @@ import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 import {CoreObjectType, ObjectContent} from '../../../core/geometry/ObjectContent';
+import {CoreMask} from '../../../core/geometry/Mask';
 
 interface ObjectPropertiesSopParams extends DefaultOperationParams {
+	group: string;
 	applyToChildren: boolean;
 	// name
 	tname: boolean;
@@ -32,6 +34,7 @@ interface ObjectPropertiesSopParams extends DefaultOperationParams {
 
 export class ObjectPropertiesSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: ObjectPropertiesSopParams = {
+		group: '',
 		applyToChildren: false,
 		// name
 		tname: false,
@@ -63,15 +66,9 @@ export class ObjectPropertiesSopOperation extends BaseSopOperation {
 	override cook(inputCoreGroups: CoreGroup[], params: ObjectPropertiesSopParams) {
 		const coreGroup = inputCoreGroups[0];
 
-		const objects = coreGroup.allObjects();
-		for (let object of objects) {
-			if (isBooleanTrue(params.applyToChildren)) {
-				object.traverse((child) => {
-					this._updateObject(child, params);
-				});
-			} else {
-				this._updateObject(object, params);
-			}
+		const selectedObjects = CoreMask.filterObjects(coreGroup, params);
+		for (let object of selectedObjects) {
+			this._updateObject(object, params);
 		}
 
 		return coreGroup;

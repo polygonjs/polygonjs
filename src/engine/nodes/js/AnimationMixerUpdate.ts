@@ -4,12 +4,13 @@
  *
  */
 
-import {TRIGGER_CONNECTION_NAME, TypedJsNode} from './_Base';
+import {TypedJsNode} from './_Base';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {JsConnectionPoint, JsConnectionPointType, JS_CONNECTION_POINT_IN_NODE_DEF} from '../utils/io/connections/Js';
 import {inputObject3D} from './_BaseObject3D';
 import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {Poly} from '../../Poly';
+import {JsType} from '../../poly/registers/nodes/types/Js';
 // import {Object3D} from 'three';
 
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
@@ -20,23 +21,14 @@ const ParamsConfig = new AnimationMixerUpdateJsParamsConfig();
 export class AnimationMixerUpdateJsNode extends TypedJsNode<AnimationMixerUpdateJsParamsConfig> {
 	override readonly paramsConfig = ParamsConfig;
 	static override type() {
-		return 'animationMixerUpdate';
+		return JsType.ANIMATION_MIXER_UPDATE;
 	}
 
-	static readonly OUTPUT_NAME = 'val';
-	static readonly INPUT_NAMES = {
-		TRIGGER: TRIGGER_CONNECTION_NAME,
-		ANIMATION_MIXER: JsConnectionPointType.ANIMATION_MIXER,
-	};
 	override initializeNode() {
 		this.io.inputs.setNamedInputConnectionPoints([
+			new JsConnectionPoint(JsConnectionPointType.TRIGGER, JsConnectionPointType.TRIGGER, CONNECTION_OPTIONS),
 			new JsConnectionPoint(
-				AnimationMixerUpdateJsNode.INPUT_NAMES.TRIGGER,
-				JsConnectionPointType.TRIGGER,
-				CONNECTION_OPTIONS
-			),
-			new JsConnectionPoint(
-				AnimationMixerUpdateJsNode.INPUT_NAMES.ANIMATION_MIXER,
+				JsConnectionPointType.ANIMATION_MIXER,
 				JsConnectionPointType.ANIMATION_MIXER,
 				CONNECTION_OPTIONS
 			),

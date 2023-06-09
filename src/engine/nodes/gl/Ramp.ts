@@ -18,6 +18,7 @@ const OUTPUT_NAME = 'val';
 import {GlParamConfig} from './code/utils/GLParamConfig';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import { GlType } from '../../poly/registers/nodes/types/Gl';
 class RampGlParamsConfig extends NodeParamsConfig {
 	name = ParamConfig.STRING('ramp1');
 	input = ParamConfig.FLOAT(0);
@@ -25,8 +26,8 @@ class RampGlParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new RampGlParamsConfig();
 export class RampGlNode extends TypedGlNode<RampGlParamsConfig> {
 	override paramsConfig = ParamsConfig;
-	static override type(): Readonly<'ramp'> {
-		return 'ramp';
+	static override type(): Readonly<GlType.RAMP> {
+		return GlType.RAMP;
 	}
 	override initializeNode() {
 		super.initializeNode();

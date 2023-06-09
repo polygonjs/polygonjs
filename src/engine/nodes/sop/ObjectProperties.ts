@@ -15,9 +15,15 @@ import {StringParam} from '../../params/String';
 import {BooleanParam} from '../../params/Boolean';
 import {IntegerParam} from '../../params/Integer';
 import {FloatParam} from '../../params/Float';
-import {isObject3D} from '../../../core/geometry/ObjectContent';
+import {CoreObjectType} from '../../../core/geometry/ObjectContent';
+import {CoreMask} from '../../../core/geometry/Mask';
+import {BaseCoreObject} from '../../../core/geometry/_BaseObject';
 const DEFAULT = ObjectPropertiesSopOperation.DEFAULT_PARAMS;
 class ObjectPropertiesSopParamsConfig extends NodeParamsConfig {
+	/** @param group to assign the material to */
+	group = ParamConfig.STRING(DEFAULT.group, {
+		objectMask: true,
+	});
 	/** @param toggle on to apply recursively to children */
 	applyToChildren = ParamConfig.BOOLEAN(DEFAULT.applyToChildren, {
 		separatorAfter: true,
@@ -120,19 +126,20 @@ export class ObjectPropertiesSopNode extends TypedSopNode<ObjectPropertiesSopPar
 		}
 	}
 	private async _cookWithExpressions(coreGroup: CoreGroup) {
-		await this._cookWithExpressionsForCoreGroup(coreGroup);
-		if (isBooleanTrue(this.pv.applyToChildren)) {
-			const objects = coreGroup.allObjects();
-			for (let object of objects) {
-				if (isObject3D(object)) {
-					const subCoreGroup = CoreGroup._fromObjects(object.children);
-					await this._cookWithExpressionsForCoreGroup(subCoreGroup);
-				}
-			}
-		}
+		const selectedCoreObjects = CoreMask.filterCoreObjects(coreGroup, this.pv);
+		await this._cookWithExpressionsForCoreObjects(selectedCoreObjects);
+		// await this._cookWithExpressionsForCoreGroup(coreGroup);
+		// if (isBooleanTrue(this.pv.applyToChildren)) {
+		// 	const objects = coreGroup.allObjects();
+		// 	for (let object of objects) {
+		// 		if (isObject3D(object)) {
+		// 			const subCoreGroup = CoreGroup._fromObjects(object.children);
+		// 			await this._cookWithExpressionsForCoreGroup(subCoreGroup);
+		// 		}
+		// 	}
+		// }
 	}
-	private async _cookWithExpressionsForCoreGroup(coreGroup: CoreGroup) {
-		const entities = coreGroup.allCoreObjects();
+	private async _cookWithExpressionsForCoreObjects<T extends CoreObjectType>(entities: BaseCoreObject<T>[]) {
 		const p = this.p;
 
 		async function applyStringParam(booleanParam: BooleanParam, valueParam: StringParam, property: 'name') {

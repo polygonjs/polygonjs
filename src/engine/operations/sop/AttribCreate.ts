@@ -6,8 +6,8 @@ import {Vector4} from 'three';
 import {ATTRIBUTE_CLASSES, AttribClass, AttribType, ATTRIBUTE_TYPES} from '../../../core/geometry/Constant';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {TypeAssert} from '../../../engine/poly/Assert';
-import {BaseCoreObject,} from '../../../core/geometry/_BaseObject';
-import { CoreObject} from '../../../core/geometry/Object';
+import {BaseCoreObject} from '../../../core/geometry/_BaseObject';
+import {CoreObject} from '../../../core/geometry/Object';
 import {CoreAttribute} from '../../../core/geometry/Attribute';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 import {CoreMask} from '../../../core/geometry/Mask';
@@ -89,7 +89,7 @@ export class AttribCreateSopOperation extends BaseSopOperation {
 		TypeAssert.unreachable(attribType);
 	}
 	private _addObjectAttribute(attribType: AttribType, coreGroup: CoreGroup, params: AttribCreateSopParams) {
-		const coreObjects = CoreMask.filterCoreObjects(params.group, coreGroup.allCoreObjects());
+		const coreObjects = CoreMask.filterCoreObjects(coreGroup, params, coreGroup.allCoreObjects());
 
 		// add attrib if non existent
 		const attribName = params.name;

@@ -11,6 +11,7 @@ import {ShadersCollectionController} from './code/utils/ShadersCollectionControl
 import {CoreType, isBooleanTrue} from '../../../core/Type';
 import {PolyDictionary} from '../../../types/GlobalTypes';
 import {GlConnectionPointType, GL_CONNECTION_POINT_TYPES} from '../utils/io/connections/Gl';
+import {GlType} from '../../poly/registers/nodes/types/Gl';
 
 function typedVisibleOptions(type: GlConnectionPointType, otherParamVal: PolyDictionary<number | boolean> = {}) {
 	const val = GL_CONNECTION_POINT_TYPES.indexOf(type);
@@ -39,7 +40,7 @@ const ParamsConfig = new ConstantGlParamsConfig();
 export class ConstantGlNode extends TypedGlNode<ConstantGlParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'constant';
+		return GlType.CONSTANT;
 	}
 	static readonly OUTPUT_NAME = 'val';
 	override initializeNode() {

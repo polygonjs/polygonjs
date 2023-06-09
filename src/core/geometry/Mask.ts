@@ -19,10 +19,11 @@ export class CoreMask {
 		coreGroup: CoreGroup,
 		options: CoreMaskFilterOptions,
 		coreObjects?: BaseCoreObject<T>[]
-	) {
-		const selectedTopObjects = this.filterCoreObjects(options.group, coreObjects || coreGroup.allCoreObjects()).map(
-			(o) => o.object()
-		);
+	): ObjectContent<CoreObjectType>[] {
+		const selectedTopObjects = this._filterCoreObjects(
+			options.group,
+			coreObjects || coreGroup.allCoreObjects()
+		).map((o) => o.object());
 
 		// check if children should be included
 		const selectedObjects: Set<ObjectContent<CoreObjectType>> = new Set();
@@ -38,6 +39,35 @@ export class CoreMask {
 			}
 		}
 
+		return SetUtils.toArray(selectedObjects);
+	}
+	static filterCoreObjects<T extends CoreObjectType>(
+		coreGroup: CoreGroup,
+		options: CoreMaskFilterOptions,
+		coreObjects?: BaseCoreObject<T>[]
+	): BaseCoreObject<CoreObjectType>[] {
+		const selectedTopObjects = this._filterCoreObjects(options.group, coreObjects || coreGroup.allCoreObjects());
+
+		// check if children should be included
+		const selectedObjects: Set<BaseCoreObject<CoreObjectType>> = new Set();
+		if (options.applyToChildren != null && isBooleanTrue(options.applyToChildren)) {
+			for (const selectedTopObject of selectedTopObjects) {
+				selectedObjects.add(selectedTopObject);
+				const object = selectedTopObject.object();
+				let childIndex = 0;
+				object.traverse((child) => {
+					if (child != object) {
+						const childCoreObject = coreObjectInstanceFactory<CoreObjectType>(child, childIndex);
+						selectedObjects.add(childCoreObject);
+						childIndex++;
+					}
+				});
+			}
+		} else {
+			for (const selectedTopObject of selectedTopObjects) {
+				selectedObjects.add(selectedTopObject);
+			}
+		}
 		return SetUtils.toArray(selectedObjects);
 	}
 	static filterThreejsObjects(coreGroup: CoreGroup, options: CoreMaskFilterOptions) {
@@ -67,7 +97,7 @@ export class CoreMask {
 		}
 		return false;
 	}
-	static filterCoreObjects<T extends CoreObjectType>(
+	private static _filterCoreObjects<T extends CoreObjectType>(
 		groupString: string,
 		coreObjects: BaseCoreObject<T>[]
 	): BaseCoreObject<T>[] {

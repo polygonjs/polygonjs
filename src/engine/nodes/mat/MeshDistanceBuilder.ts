@@ -23,6 +23,7 @@ import {Material} from 'three';
 import {MeshDistanceMaterial} from 'three';
 import {CustomMaterialName, IUniforms} from '../../../core/geometry/Material';
 import {ShaderAssemblerCustomMeshDistance} from '../gl/code/assemblers/materials/custom/mesh/CustomMeshDistance';
+import {MatType} from '../../poly/registers/nodes/types/Mat';
 interface MeshDistanceBuilderControllers extends AdvancedCommonControllers, UniformsTransparencyControllers {}
 interface MeshDistanceBuilderMaterial extends MeshDistanceMaterial {
 	vertexShader: string;
@@ -45,7 +46,7 @@ export class MeshDistanceBuilderMatNode extends TypedBuilderMatNode<
 > {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'meshDistanceBuilder';
+		return MatType.MESH_DISTANCE_BUILDER;
 	}
 	public override usedAssembler(): Readonly<AssemblerName.GL_MESH_DISTANCE> {
 		return AssemblerName.GL_MESH_DISTANCE;

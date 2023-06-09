@@ -167,7 +167,7 @@ export class AttribCreateSopNode extends TypedSopNode<AttribCreateSopParamsConfi
 		TypeAssert.unreachable(attribType);
 	}
 	private async _addObjectAttribute(attribType: AttribType, coreGroup: CoreGroup) {
-		const coreObjects = CoreMask.filterCoreObjects(this.pv.group, coreGroup.allCoreObjects());
+		const coreObjects = CoreMask.filterCoreObjects(coreGroup, this.pv, coreGroup.allCoreObjects());
 
 		// add attrib if non existent
 		const attribName = this.pv.name;

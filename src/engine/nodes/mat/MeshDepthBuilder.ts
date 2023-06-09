@@ -23,6 +23,7 @@ import {MeshDepthMaterial} from 'three';
 import {CustomMaterialName, IUniforms} from '../../../core/geometry/Material';
 import {Material} from 'three';
 import {ShaderAssemblerCustomMeshDepth} from '../gl/code/assemblers/materials/custom/mesh/CustomMeshDepth';
+import {MatType} from '../../poly/registers/nodes/types/Mat';
 interface MeshDepthBuilderControllers extends AdvancedCommonControllers, UniformsTransparencyControllers {}
 interface MeshDepthBuilderMaterial extends MeshDepthMaterial {
 	vertexShader: string;
@@ -45,7 +46,7 @@ export class MeshDepthBuilderMatNode extends TypedBuilderMatNode<
 > {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'meshDepthBuilder';
+		return MatType.MESH_DEPTH_BUILDER;
 	}
 	public override usedAssembler(): Readonly<AssemblerName.GL_MESH_DEPTH> {
 		return AssemblerName.GL_MESH_DEPTH;

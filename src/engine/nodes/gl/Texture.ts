@@ -26,6 +26,7 @@ import {GlParamConfig} from './code/utils/GLParamConfig';
 import {isBooleanTrue} from '../../../core/Type';
 import {ParamOptions} from '../../params/utils/OptionsController';
 import {UNIFORM_TEXTURE_PREFIX} from '../../../core/material/uniform';
+import {GlType} from '../../poly/registers/nodes/types/Gl';
 
 const blurParamVisibility: ParamOptions = {
 	visibleIf: {tblur: 1},
@@ -50,8 +51,8 @@ class TextureGlParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new TextureGlParamsConfig();
 export class TextureGlNode extends TypedGlNode<TextureGlParamsConfig> {
 	override paramsConfig = ParamsConfig;
-	static override type(): Readonly<'texture'> {
-		return 'texture';
+	static override type(): Readonly<GlType.TEXTURE> {
+		return GlType.TEXTURE;
 	}
 	static readonly OUTPUT_NAME = 'rgba';
 	override initializeNode() {

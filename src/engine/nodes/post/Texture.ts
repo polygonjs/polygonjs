@@ -9,6 +9,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {BlendFunction, EffectPass, TextureEffect} from 'postprocessing';
 import {BLEND_FUNCTION_MENU_OPTIONS} from '../../../core/post/BlendFunction';
 import {NodeContext} from '../../poly/NodeContext';
+import {PostType} from '../../poly/registers/nodes/types/Post';
 
 const tmpTexture = new Texture();
 class TexturePostParamsConfig extends NodeParamsConfig {
@@ -36,7 +37,7 @@ const ParamsConfig = new TexturePostParamsConfig();
 export class TexturePostNode extends TypedPostNode<EffectPass, TexturePostParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'texture';
+		return PostType.TEXTURE;
 	}
 
 	private _rendererSize = new Vector2();

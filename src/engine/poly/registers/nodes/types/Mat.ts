@@ -3,6 +3,8 @@ export enum MatType {
 	LINE_BASIC_BUILDER = 'lineBasicBuilder',
 	MESH_BASIC = 'meshBasic',
 	MESH_BASIC_BUILDER = 'meshBasicBuilder',
+	MESH_DEPTH_BUILDER = 'meshDepthBuilder',
+	MESH_DISTANCE_BUILDER = 'meshDistanceBuilder',
 	MESH_LAMBERT = 'meshLambert',
 	MESH_LAMBERT_BUILDER = 'meshLambertBuilder',
 	MESH_MATCAP = 'meshMatcap',

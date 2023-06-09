@@ -21,6 +21,7 @@ import {inputObject3D, setObject3DOutputLine} from './_BaseObject3D';
 import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {Poly} from '../../Poly';
 import {StringParam} from '../../params/String';
+import {JsType} from '../../poly/registers/nodes/types/Js';
 // import {CoreObject} from '../../../core/geometry/Object';
 // import {AttribValue} from '../../../types/GlobalTypes';
 // import {CoreType} from '../../../core/Type';
@@ -70,7 +71,7 @@ const ParamsConfig = new SetObjectAttributeJsParamsConfig();
 export class SetObjectAttributeJsNode extends TypedJsNode<SetObjectAttributeJsParamsConfig> {
 	override readonly paramsConfig = ParamsConfig;
 	static override type() {
-		return 'setObjectAttribute';
+		return JsType.SET_OBJECT_ATTRIBUTE;
 	}
 	static INPUT_NAME_VAL = 'val';
 

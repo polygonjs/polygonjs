@@ -10,6 +10,7 @@ import {JsConnectionPoint, JsConnectionPointType, JS_CONNECTION_POINT_IN_NODE_DE
 import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {inputObject3D} from './_BaseObject3D';
 import {Poly} from '../../Poly';
+import {JsType} from '../../poly/registers/nodes/types/Js';
 
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
 
@@ -19,7 +20,7 @@ const ParamsConfig = new AnimationMixerJsParamsConfig();
 export class AnimationMixerJsNode extends TypedJsNode<AnimationMixerJsParamsConfig> {
 	override readonly paramsConfig = ParamsConfig;
 	static override type() {
-		return 'animationMixer';
+		return JsType.ANIMATION_MIXER;
 	}
 
 	static readonly OUTPUT_NAME = 'val';

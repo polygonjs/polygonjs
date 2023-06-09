@@ -17,6 +17,7 @@ import {TypeAssert} from '../../poly/Assert';
 import GET_UV from './gl/geometryAttributes/geometryAttributesLookupUv.glsl';
 import {FunctionGLDefinition} from './utils/GLDefinition';
 import {AttribLookup} from '../../../core/geometry/operation/TextureFromAttribute';
+import {GlType} from '../../poly/registers/nodes/types/Gl';
 // import {SubnetOutputGlNode} from './SubnetOutput';
 
 export enum ComputeNormalsInput {
@@ -60,7 +61,7 @@ const ParamsConfig = new ComputeNormalsGlParamsConfig();
 export class ComputeNormalsGlNode extends TypedSubnetGlNode<ComputeNormalsGlParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'computeNormals';
+		return GlType.COMPUTE_NORMALS;
 	}
 
 	protected override _expectedOutputTypes(): GlConnectionPointType[] {

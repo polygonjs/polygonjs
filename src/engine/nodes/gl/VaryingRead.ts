@@ -11,6 +11,7 @@ import {GlConnectionPointType} from '../utils/io/connections/Gl';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 import {ShaderName} from '../utils/shaders/ShaderName';
 import {VaryingGLDefinition} from './utils/GLDefinition';
+import {GlType} from '../../poly/registers/nodes/types/Gl';
 
 const VARYING_NODE_AVAILABLE_GL_TYPES = [
 	GlConnectionPointType.FLOAT,
@@ -32,8 +33,8 @@ class VaryingReadGlParamsConfig extends NodeParamsConfig {
 const ParamsConfig = new VaryingReadGlParamsConfig();
 export class VaryingReadGlNode extends TypedGlNode<VaryingReadGlParamsConfig> {
 	override paramsConfig = ParamsConfig;
-	static override type(): Readonly<'varyingRead'> {
-		return 'varyingRead';
+	static override type(): Readonly<GlType.VARYING_READ> {
+		return GlType.VARYING_READ;
 	}
 	static readonly OUTPUT_NAME = 'fragment';
 
