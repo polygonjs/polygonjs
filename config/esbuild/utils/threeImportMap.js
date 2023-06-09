@@ -1,5 +1,5 @@
 "use strict";
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", { value: true });
 exports.threeImportMapsOnResolvePlugin = void 0;
 var path = require("path");
 var currentPath = path.resolve(__dirname, '../../..');
@@ -24,5 +24,5 @@ exports.threeImportMapsOnResolvePlugin = {
         //   build.onResolve({ filter: /^https?:\/\// }, (args:any) => {
         // 	return { path: args.path, external: true }
         //   })
-    }
+    },
 };

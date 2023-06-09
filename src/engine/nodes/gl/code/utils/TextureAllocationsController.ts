@@ -239,16 +239,6 @@ export class TextureAllocationsController {
 
 	shaderNames(): ShaderName[] {
 		const explicit_shader_names = this._writableAllocations.map((a) => a.shaderName());
-
-		// include dependencies if needed
-		// TODO: typescript - do I need those?
-		// if (lodash_includes(explicit_shader_names, 'acceleration')) {
-		// 	explicit_shader_names.push('velocity');
-		// }
-		// if (lodash_includes(explicit_shader_names, 'velocity')) {
-		// 	explicit_shader_names.push('position');
-		// }
-
 		return ArrayUtils.uniq(explicit_shader_names);
 	}
 	createShaderConfigs(): ShaderConfig[] {

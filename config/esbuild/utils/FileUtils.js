@@ -1,5 +1,5 @@
 "use strict";
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", { value: true });
 exports.has_allowed_extension = void 0;
 var disallowed_long_extensions = ['d.ts'];
 var allowed_extensions = ['js', 'ts', 'glsl'];

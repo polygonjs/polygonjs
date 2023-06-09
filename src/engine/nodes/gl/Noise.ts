@@ -362,7 +362,7 @@ float ${this.fbmMethodName()}(in ${inputType} st) {
 		// add other args if required
 		// const input_type = INPUT_TYPES_BY_NOISE_NAME[noise_name];
 		// if (CoreType.isArray(input_constructor)) {
-		// 	const properties = lodash_clone(input_constructor);
+		// 	const properties = clone(input_constructor);
 		// 	properties.shift(); // remove position
 		// 	properties.forEach((property) => {
 		// 		const arg_name = Object.keys(property)[0];

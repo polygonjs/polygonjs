@@ -5,12 +5,11 @@ import {ParamEvent} from '../../poly/ParamEvent';
 import {NodeContext} from '../../poly/NodeContext';
 import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
 import {ColorConversion} from '../../../core/Color';
-import {CoreType} from '../../../core/Type';
+import {CoreType, isFunction} from '../../../core/Type';
 import {ArrayUtils} from '../../../core/ArrayUtils';
 import {ObjectUtils} from '../../../core/ObjectUtils';
 import {PolyScene} from '../../scene/PolyScene';
 import {Boolean2, Number2, PolyDictionary} from '../../../types/GlobalTypes';
-import isFunction from 'lodash-es/isFunction';
 
 const CALLBACK_OPTION = 'callback';
 const CALLBACK_STRING_OPTION = 'callbackString';
@@ -259,9 +258,7 @@ export class OptionsController {
 	private _programaticVisibleState: boolean = true;
 	private _options!: ParamOptions;
 	private _default_options!: ParamOptions;
-	constructor(private _param: BaseParamType) {
-		// this._options = lodash_cloneDeep(this._default_options);
-	}
+	constructor(private _param: BaseParamType) {}
 	dispose() {
 		try {
 			// there is a bug where the _options is just a string

@@ -37,17 +37,7 @@ export class NodeSerializer {
 
 	dispose() {}
 
-	// serialize() {
-	// 	return this.toJSON();
-	// }
-
-	// TODO: find a way to not re-create a json everytime
-	toJSON(include_param_components: boolean = false): NodeSerializerData {
-		// const spare_params_json_by_name = {};
-		// lodash_each(this.node.spare_param_names(), param_name=> {
-		// 	const param = this.node.spare_param(param_name);
-		// 	spare_params_json_by_name[param_name] = param.graphNodeId();
-		// });
+		toJSON(include_param_components: boolean = false): NodeSerializerData {
 
 		const data: NodeSerializerData = {
 			name: this.node.name(),

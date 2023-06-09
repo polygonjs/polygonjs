@@ -1,5 +1,5 @@
 "use strict";
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", { value: true });
 exports.walk = void 0;
 var path = require('path');
 var fs = require('fs');

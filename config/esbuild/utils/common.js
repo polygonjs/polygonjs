@@ -1,5 +1,5 @@
 "use strict";
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", { value: true });
 exports.getOptions = exports.POLYGONJS_VERSION = exports.outdir = exports.esbuild_entries = exports.srcPath = void 0;
 var FileUtils_1 = require("./FileUtils");
 var ts_1 = require("./ts");
@@ -39,12 +39,14 @@ function getOptions() {
         // external: ['require', 'fs', 'path'],
         define: {
             __POLYGONJS_VERSION__: exports.POLYGONJS_VERSION,
-            'process.env.NODE_ENV': '"production"'
+            'process.env.NODE_ENV': '"production"',
         },
         loader: {
-            '.glsl': 'text'
+            '.glsl': 'text',
         },
-        plugins: [threeImportMap_1.threeImportMapsOnResolvePlugin]
+        plugins: [threeImportMap_1.threeImportMapsOnResolvePlugin],
+        // options to debug threejs build
+        // bundle: true,
     };
     return options;
 }

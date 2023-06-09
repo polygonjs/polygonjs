@@ -46,7 +46,7 @@ export class TypedGLDefinitionCollection<T extends GLDefinitionType> {
 			}
 		}
 		// sorting may make dependencies be declared after the function calling them
-		// const sorted_definitions = lodash_sortBy(uniq_definitions, (d)=>d.name())
+		// const sorted_definitions = sortBy(uniq_definitions, (d)=>d.name())
 		return uniq_definitions;
 	}
 }

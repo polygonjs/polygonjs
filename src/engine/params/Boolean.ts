@@ -59,36 +59,4 @@ export class BooleanParam extends TypedNumericParam<ParamType.BOOLEAN> {
 		}
 		return null;
 	}
-	// convert_value(v: ParamInputValue): boolean {
-	// 	return this.value_to_boolean(v)
-	// }
-	// convert_default_value(v: ParamInputValue): number {
-	// 	if (CoreType.isString(v)) {
-	// 		return v
-	// 	} else {
-	// 		return this.value_to_boolean(v) // ? 1 : 0
-	// 	}
-	// }
-	// is_value_expression(v: ParamInputValue): boolean {
-	// 	return !lodash_includes([true, false, 0, 1, '0', '1'], v)
-	// }
-
-	// value_to_boolean(v: ParamInputValue): boolean {
-	// 	if (CoreType.isBoolean(v)) {
-	// 		return v
-	// 	} else {
-	// 		if (CoreType.isNumber(v)) {
-	// 			return v > 0
-	// 		} else {
-	// 			return parseInt(v) > 0
-	// 		}
-	// 	}
-	// }
-
-	// eval(callback) {
-	// 	return this.eval_raw((val) => {
-	// 		const boolean_result = this.value_to_boolean(val)
-	// 		return callback(boolean_result)
-	// 	})
-	// }
 }
