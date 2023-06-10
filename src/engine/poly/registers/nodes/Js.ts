@@ -41,6 +41,7 @@ import {CursorJsNode} from '../../../nodes/js/Cursor';
 import {CursorToUvJsNode} from '../../../nodes/js/CursorToUv';
 import {DebugJsNode} from '../../../nodes/js/Debug';
 import {DegToRadJsNode} from '../../../nodes/js/DegToRad';
+import {DeviceOrientationJsNode} from '../../../nodes/js/DeviceOrientation';
 import {DistanceJsNode} from '../../../nodes/js/Distance';
 import {DivideJsNode} from '../../../nodes/js/Divide';
 import {DotJsNode} from '../../../nodes/js/Dot';
@@ -331,6 +332,7 @@ export interface JsNodeChildrenMap {
 	constant: ConstantJsNode;
 	debug: DebugJsNode;
 	degToRad: DegToRadJsNode;
+	deviceOrientation: DeviceOrientationJsNode;
 	dot: DotJsNode;
 	distance: DistanceJsNode;
 	divide: DivideJsNode;
@@ -658,6 +660,7 @@ export class JsRegister {
 		poly.registerNode(CursorToUvJsNode, CATEGORY_JS.INPUTS);
 		poly.registerNode(DebugJsNode, CATEGORY_JS.FLOW, ONLY_ACTOR);
 		poly.registerNode(DegToRadJsNode, CATEGORY_JS.MATH);
+		poly.registerNode(DeviceOrientationJsNode, CATEGORY_JS.GLOBALS, ONLY_ACTOR);
 		poly.registerNode(DistanceJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(DivideJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(DotJsNode, CATEGORY_JS.MATH);

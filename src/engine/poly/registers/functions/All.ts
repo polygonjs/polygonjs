@@ -48,6 +48,7 @@ import { crossVector3 } from "../../../functions/crossVector3";
 import { cursorToUv } from "../../../functions/cursorToUv";
 import { debug } from "../../../functions/debug";
 import { degToRad } from "../../../functions/degToRad";
+import { deviceOrientation } from "../../../functions/deviceOrientation";
 import { distanceVector2 } from "../../../functions/distanceVector2";
 import { distanceVector3 } from "../../../functions/distanceVector3";
 import { divideNumber } from "../../../functions/divideNumber";
@@ -471,6 +472,7 @@ export interface NamedFunctionMap {
   cursorToUv: cursorToUv;
   debug: debug<any>;
   degToRad: degToRad;
+  deviceOrientation: deviceOrientation;
   distanceVector2: distanceVector2;
   distanceVector3: distanceVector3;
   divideNumber: divideNumber;
@@ -897,6 +899,7 @@ export class AllNamedFunctionRegister {
       cursorToUv,
       debug,
       degToRad,
+      deviceOrientation,
       distanceVector2,
       distanceVector3,
       divideNumber,

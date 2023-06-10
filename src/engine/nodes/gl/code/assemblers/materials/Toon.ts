@@ -1,6 +1,5 @@
-import {ShaderLib} from 'three';
+import {ShaderLib, MeshToonMaterial} from 'three';
 import {ShaderAssemblerMesh} from './_BaseMesh';
-import {MeshToonMaterial} from 'three';
 
 export class ShaderAssemblerToon extends ShaderAssemblerMesh {
 	override templateShader() {
