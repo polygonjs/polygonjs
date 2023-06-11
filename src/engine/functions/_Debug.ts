@@ -104,6 +104,7 @@ function optionsToDebugLines(
 	const {object3D, nodePath, value} = options;
 	const displayableValue = _displayableValue(value);
 	const objectName = object3D.name || 'no name';
+	const currentFrame = scene.frame();
 
 	let currentValue = debugDataController.debugContentByFrameByNodePath.value[nodePath];
 	if (!currentValue) {
@@ -112,7 +113,13 @@ function optionsToDebugLines(
 		debugDataController.debugContentByFrameByNodePath.value[nodePath] = currentValue;
 	}
 
-	const currentFrame = scene.frame();
+	currentValue.push({
+		objectName,
+		value,
+		displayableValue,
+	});
+
+	// console.log({options, displayableValue, objectName, currentValue, currentFrame});
 	const lastProcessedFrame = debugDataController.lastProcessedFrameByNodePath.get(nodePath) || -1;
 	if (!lastProcessedFrame) {
 		debugDataController.lastProcessedFrameByNodePath.set(nodePath, lastProcessedFrame);
@@ -128,12 +135,6 @@ function optionsToDebugLines(
 
 		debugDataController.lastProcessedFrameByNodePath.set(nodePath, currentFrame);
 	}
-
-	currentValue.push({
-		objectName,
-		value,
-		displayableValue,
-	});
 
 	return currentValue;
 }

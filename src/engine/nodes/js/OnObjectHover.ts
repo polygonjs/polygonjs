@@ -9,7 +9,7 @@ import {JsConnectionPoint, JsConnectionPointType, JS_CONNECTION_POINT_IN_NODE_DE
 import {JsType} from '../../poly/registers/nodes/types/Js';
 import {EvaluatorEventData} from './code/assemblers/actor/ActorEvaluator';
 import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
-import {BaseOnObjectPointerEventJsNode, OnObjectHoverJsNodeOutputName} from './_BaseOnObjectPointerEvent';
+import {BaseOnObjectPointerEventJsNode} from './_BaseOnObjectPointerEvent';
 import {Poly} from '../../Poly';
 import {inputObject3D} from './_BaseObject3D';
 import {PointerEventType} from '../../../core/event/PointerEventType';
@@ -17,6 +17,9 @@ import {RefJsDefinition} from './utils/JsDefinition';
 
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
 
+enum OnObjectHoverJsNodeOutputName {
+	hovered = 'hovered',
+}
 export class OnObjectHoverJsNode extends BaseOnObjectPointerEventJsNode {
 	static override type() {
 		return JsType.ON_OBJECT_HOVER;
