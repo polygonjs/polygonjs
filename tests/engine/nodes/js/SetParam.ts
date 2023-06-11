@@ -37,7 +37,7 @@ async function setParamAndCheck<T extends ParamType>(options: Options<T>) {
 	const setParam1 = actor1.createNode('setParam');
 
 	setParam1.setInput(JsConnectionPointType.TRIGGER, onManualTrigger1);
-	setParam1.p.param.setParam(param);
+	setParam1.setParamParam(param);
 	setParam1.setParamType(jsType);
 	(setParam1.params.get(SetParamJsNodeInputName.val)! as ParamConstructorMap[T]).set(targetValue as never);
 	setParam1.params.get('lerp')!.set(lerp);

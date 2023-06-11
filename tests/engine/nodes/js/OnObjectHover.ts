@@ -29,14 +29,14 @@ QUnit.test('js/OnObjectHover', async (assert) => {
 	setObjectPosition1.setInput(JsConnectionPointType.TRIGGER, onObjectHover1);
 	setObjectPosition1.p.position.set([0, 0, 1]);
 	getIntersectionProperty1.setInput(0, onObjectHover1, JsConnectionPointType.INTERSECTION);
-	setParam1.setInput(JsConnectionPointType.TRIGGER, onObjectHover1);
+	setParam1.setInput(JsConnectionPointType.TRIGGER, setObjectPosition1, JsConnectionPointType.TRIGGER);
 	setParam1.setInput(
 		SetParamJsNodeInputName.val,
 		getIntersectionProperty1,
 		GetIntersectionPropertyJsNodeOutputName.distance
 	);
 	setParam1.setParamType(JsConnectionPointType.FLOAT);
-	setParam1.p.param.setParam(geo2.p.scale);
+	setParam1.setParamParam(geo2.p.scale);
 
 	const container = await actor1.compute();
 	const object = container.coreContent()!.threejsObjects()[0];
@@ -55,7 +55,7 @@ QUnit.test('js/OnObjectHover', async (assert) => {
 		triggerPointermoveInMiddle(canvas);
 		await CoreSleep.sleep(200);
 		assert.deepEqual(object.position.toArray(), [0, 0, 1]);
-		assert.in_delta(geo2.p.scale.value, 4.5, 0.001, 'scale');
+		assert.in_delta(geo2.p.scale.value, 3.5, 0.001, 'scale');
 		object.position.set(0, 0, 0);
 
 		// hover out of the object will also throw an event since it is a state change
@@ -79,7 +79,7 @@ QUnit.test('js/OnObjectHover', async (assert) => {
 		);
 		setParam1.setParamType(JsConnectionPointType.VECTOR3);
 		await CoreSleep.sleep(50);
-		setParam1.p.param.setParam(geo2.p.s);
+		setParam1.setParamParam(geo2.p.s);
 		// });
 		await CoreSleep.sleep(100);
 		triggerPointermove(canvas, {x: 0.01, y: 0.01});
@@ -102,7 +102,7 @@ QUnit.test('js/OnObjectHover', async (assert) => {
 		);
 		setParam1.setParamType(JsConnectionPointType.VECTOR2);
 		await CoreSleep.sleep(50);
-		setParam1.p.param.setParam(sphere1.p.resolution);
+		setParam1.setParamParam(sphere1.p.resolution);
 		// });
 		await CoreSleep.sleep(100);
 		triggerPointermove(canvas, {x: 0.01, y: 0.01});

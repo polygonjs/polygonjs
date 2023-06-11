@@ -6,6 +6,7 @@ export enum JsType {
 	CURSOR = 'cursor',
 	GET_OBJECT_ATTRIBUTE = 'getObjectAttribute',
 	GET_OBJECT_USER_DATA = 'getObjectUserData',
+	GET_PARAM = 'getParam',
 	GLOBALS = 'globals',
 	GLOBALS_AMBIENT_LIGHT = 'globalsAmbientLight',
 	GLOBALS_AREA_LIGHT = 'globalsAreaLight',
@@ -57,6 +58,7 @@ export enum JsType {
 	SET_OBJECT_LOOK_AT = 'setObjectLookAt',
 	SET_OBJECT_POSITION = 'setObjectPosition',
 	SET_OBJECT_ROTATION = 'setObjectRotation',
+	SET_PARAM = 'setParam',
 	SET_PHYSICS_RBD_POSITION = 'setPhysicsRBDPosition',
 	SET_PLAYER_INPUT = 'setPlayerInput',
 }

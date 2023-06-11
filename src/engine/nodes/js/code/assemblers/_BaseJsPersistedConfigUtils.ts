@@ -118,6 +118,7 @@ export function createVariable(type: JsConnectionPointType) {
 		case JsConnectionPointType.INTERSECTION_ARRAY:
 		case JsConnectionPointType.MATERIAL:
 		case JsConnectionPointType.OBJECT_3D:
+		case JsConnectionPointType.PARAM:
 		case JsConnectionPointType.PLANE:
 		case JsConnectionPointType.RAY:
 		case JsConnectionPointType.SPHERE:

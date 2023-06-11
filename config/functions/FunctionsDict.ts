@@ -237,6 +237,7 @@ export const FUNCTION_NAME_BY_FILE_NAME: Record<string, string[]> = {
 	NoiseImproved: ['noiseImprovedVector3'],
 	ObjectDispatchEvent: ['objectDispatchEvent', 'getObjectLastDispatchedEventName', 'objectAddEventListeners'],
 	Param: [
+		'getParam',
 		'setParamBoolean',
 		'setParamBooleanToggle',
 		'setParamColor',

@@ -133,6 +133,7 @@ import { getObjectLastDispatchedEventName } from "../../../functions/getObjectLa
 import { getObjectProperty } from "../../../functions/getObjectProperty";
 import { getObjectUserData } from "../../../functions/getObjectUserData";
 import { getObjectWorldPosition } from "../../../functions/getObjectWorldPosition";
+import { getParam } from "../../../functions/getParam";
 import { getParent } from "../../../functions/getParent";
 import { getPhysicsRBDAngularDamping } from "../../../functions/getPhysicsRBDAngularDamping";
 import { getPhysicsRBDAngularVelocity } from "../../../functions/getPhysicsRBDAngularVelocity";
@@ -560,6 +561,7 @@ export interface NamedFunctionMap {
   getObjectProperty: getObjectProperty;
   getObjectUserData: getObjectUserData;
   getObjectWorldPosition: getObjectWorldPosition;
+  getParam: getParam;
   getParent: getParent;
   getPhysicsRBDAngularDamping: getPhysicsRBDAngularDamping;
   getPhysicsRBDAngularVelocity: getPhysicsRBDAngularVelocity;
@@ -990,6 +992,7 @@ export class AllNamedFunctionRegister {
       getObjectProperty,
       getObjectUserData,
       getObjectWorldPosition,
+      getParam,
       getParent,
       getPhysicsRBDAngularDamping,
       getPhysicsRBDAngularVelocity,

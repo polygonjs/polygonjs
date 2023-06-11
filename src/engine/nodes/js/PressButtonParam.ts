@@ -3,18 +3,20 @@
  *
  *
  */
-import {TRIGGER_CONNECTION_NAME, TypedJsNode} from './_Base';
+import {TypedJsNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {JsConnectionPoint, JsConnectionPointType, JS_CONNECTION_POINT_IN_NODE_DEF} from '../utils/io/connections/Js';
-import {ParamType} from '../../poly/ParamType';
 import {Poly} from '../../Poly';
 import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
+import {inputParam} from './_BaseObject3D';
+import {BaseParamType} from '../../params/_Base';
+import {ParamType} from '../../poly/ParamType';
 
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
 
 class PressButtonParamJsParamsConfig extends NodeParamsConfig {
 	/** @param the parameter to update */
-	param = ParamConfig.PARAM_PATH('', {
+	Param = ParamConfig.PARAM_PATH('', {
 		dependentOnFoundParam: false,
 		paramSelection: ParamType.BUTTON,
 		computeOnDirty: true,
@@ -30,25 +32,25 @@ export class PressButtonParamJsNode extends TypedJsNode<PressButtonParamJsParams
 
 	override initializeNode() {
 		this.io.inputs.setNamedInputConnectionPoints([
-			new JsConnectionPoint(TRIGGER_CONNECTION_NAME, JsConnectionPointType.TRIGGER, CONNECTION_OPTIONS),
+			new JsConnectionPoint(JsConnectionPointType.TRIGGER, JsConnectionPointType.TRIGGER, CONNECTION_OPTIONS),
 		]);
 
 		this.io.outputs.setNamedOutputConnectionPoints([
-			new JsConnectionPoint(TRIGGER_CONNECTION_NAME, JsConnectionPointType.TRIGGER),
+			new JsConnectionPoint(JsConnectionPointType.TRIGGER, JsConnectionPointType.TRIGGER),
 		]);
 	}
+	setParamPath(paramPath: string) {
+		this.p.Param.set(paramPath);
+	}
+	setParamParam(param: BaseParamType) {
+		this.p.Param.setParam(param);
+	}
 
-	override setTriggerableLines(shadersCollectionController: JsLinesCollectionController) {
-		const param = this.pv.param.param();
-		if (!param) {
-			return;
-		}
-		const nodePath = `'${param.node.path()}'`;
-		const paramName = `'${param.name()}'`;
+	override setTriggerableLines(linesController: JsLinesCollectionController) {
+		const param = inputParam(this, linesController);
+		const func = Poly.namedFunctionsRegister.getFunction('pressButtonParam', this, linesController);
+		const bodyLine = func.asString(param);
 
-		const func = Poly.namedFunctionsRegister.getFunction('pressButtonParam', this, shadersCollectionController);
-		const bodyLine = func.asString(nodePath, paramName);
-
-		shadersCollectionController.addTriggerableLines(this, [bodyLine]);
+		linesController.addTriggerableLines(this, [bodyLine]);
 	}
 }

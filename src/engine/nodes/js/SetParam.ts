@@ -15,6 +15,10 @@ import {
 import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {Poly} from '../../Poly';
 import {TypeAssert} from '../../poly/Assert';
+import {ParamPathParam} from '../../params/ParamPath';
+import {JsType} from '../../poly/registers/nodes/types/Js';
+import {inputParam} from './_BaseObject3D';
+import {BaseParamType} from '../../params/_Base';
 
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
 
@@ -25,19 +29,13 @@ export enum SetParamJsNodeInputName {
 
 interface SetParamOptions {
 	controller: JsLinesCollectionController;
-	nodePath: string;
-	paramName: string;
+	param: string;
+	// paramName: string;
 	paramValue: string;
 	lerp: string;
 }
 
 class SetParamJsParamsConfig extends NodeParamsConfig {
-	/** @param  parameter to update */
-	param = ParamConfig.PARAM_PATH('', {
-		dependentOnFoundParam: false,
-		paramSelection: true,
-		computeOnDirty: true,
-	});
 	/** @param type of the parameter to update */
 	type = ParamConfig.INTEGER(PARAM_CONVERTIBLE_JS_CONNECTION_POINT_TYPES.indexOf(JsConnectionPointType.FLOAT), {
 		menu: {
@@ -52,12 +50,13 @@ const ParamsConfig = new SetParamJsParamsConfig();
 export class SetParamJsNode extends TypedJsNode<SetParamJsParamsConfig> {
 	override readonly paramsConfig = ParamsConfig;
 	static override type() {
-		return 'setParam';
+		return JsType.SET_PARAM;
 	}
 
 	override initializeNode() {
 		this.io.inputs.setNamedInputConnectionPoints([
-			new JsConnectionPoint(TRIGGER_CONNECTION_NAME, JsConnectionPointType.TRIGGER, CONNECTION_OPTIONS),
+			new JsConnectionPoint(JsConnectionPointType.TRIGGER, JsConnectionPointType.TRIGGER, CONNECTION_OPTIONS),
+			new JsConnectionPoint(JsConnectionPointType.PARAM, JsConnectionPointType.PARAM, CONNECTION_OPTIONS),
 			new JsConnectionPoint<JsConnectionPointType.FLOAT>(
 				SetParamJsNodeInputName.lerp,
 				JsConnectionPointType.FLOAT,
@@ -93,20 +92,20 @@ export class SetParamJsNode extends TypedJsNode<SetParamJsParamsConfig> {
 		}
 		this.p.type.set(index);
 	}
+	setParamPath(paramPath: string) {
+		(this.params.get(JsConnectionPointType.PARAM) as ParamPathParam).set(paramPath);
+	}
+	setParamParam(param: BaseParamType) {
+		(this.params.get(JsConnectionPointType.PARAM) as ParamPathParam).setParam(param);
+	}
 	override setTriggerableLines(controller: JsLinesCollectionController) {
-		const param = this.pv.param.param();
-		if (!param) {
-			return;
-		}
-		const nodePath = `'${param.node.path()}'`;
-		const paramName = `'${param.name()}'`;
+		const param = inputParam(this, controller);
 		const paramValue = this.variableForInput(controller, SetParamJsNodeInputName.val);
 		const lerp = this.variableForInput(controller, SetParamJsNodeInputName.lerp);
 
 		const bodyLine = this._bodyLine({
 			controller,
-			nodePath,
-			paramName,
+			param,
 			paramValue,
 			lerp,
 		});
@@ -147,43 +146,43 @@ export class SetParamJsNode extends TypedJsNode<SetParamJsParamsConfig> {
 		TypeAssert.unreachable(type);
 	}
 	private _setBoolean(options: SetParamOptions): string {
-		const {controller, nodePath, paramName, paramValue} = options;
+		const {controller, param, paramValue} = options;
 		const func = Poly.namedFunctionsRegister.getFunction('setParamBoolean', this, controller);
-		return func.asString(nodePath, paramName, paramValue);
+		return func.asString(param, paramValue);
 	}
 	private _setColor(options: SetParamOptions): string {
-		const {controller, nodePath, paramName, paramValue, lerp} = options;
+		const {controller, param, paramValue, lerp} = options;
 		const func = Poly.namedFunctionsRegister.getFunction('setParamColor', this, controller);
-		return func.asString(nodePath, paramName, paramValue, lerp);
+		return func.asString(param, paramValue, lerp);
 	}
 	private _setFloat(options: SetParamOptions): string {
-		const {controller, nodePath, paramName, paramValue, lerp} = options;
+		const {controller, param, paramValue, lerp} = options;
 		const func = Poly.namedFunctionsRegister.getFunction('setParamFloat', this, controller);
-		return func.asString(nodePath, paramName, paramValue, lerp);
+		return func.asString(param, paramValue, lerp);
 	}
 	private _setInt(options: SetParamOptions): string {
-		const {controller, nodePath, paramName, paramValue, lerp} = options;
+		const {controller, param, paramValue, lerp} = options;
 		const func = Poly.namedFunctionsRegister.getFunction('setParamInteger', this, controller);
-		return func.asString(nodePath, paramName, paramValue, lerp);
+		return func.asString(param, paramValue, lerp);
 	}
 	private _setString(options: SetParamOptions): string {
-		const {controller, nodePath, paramName, paramValue} = options;
+		const {controller, param, paramValue} = options;
 		const func = Poly.namedFunctionsRegister.getFunction('setParamString', this, controller);
-		return func.asString(nodePath, paramName, paramValue);
+		return func.asString(param, paramValue);
 	}
 	private _setVector2(options: SetParamOptions): string {
-		const {controller, nodePath, paramName, paramValue, lerp} = options;
+		const {controller, param, paramValue, lerp} = options;
 		const func = Poly.namedFunctionsRegister.getFunction('setParamVector2', this, controller);
-		return func.asString(nodePath, paramName, paramValue, lerp);
+		return func.asString(param, paramValue, lerp);
 	}
 	private _setVector3(options: SetParamOptions): string {
-		const {controller, nodePath, paramName, paramValue, lerp} = options;
+		const {controller, param, paramValue, lerp} = options;
 		const func = Poly.namedFunctionsRegister.getFunction('setParamVector3', this, controller);
-		return func.asString(nodePath, paramName, paramValue, lerp);
+		return func.asString(param, paramValue, lerp);
 	}
 	private _setVector4(options: SetParamOptions): string {
-		const {controller, nodePath, paramName, paramValue, lerp} = options;
+		const {controller, param, paramValue, lerp} = options;
 		const func = Poly.namedFunctionsRegister.getFunction('setParamVector4', this, controller);
-		return func.asString(nodePath, paramName, paramValue, lerp);
+		return func.asString(param, paramValue, lerp);
 	}
 }

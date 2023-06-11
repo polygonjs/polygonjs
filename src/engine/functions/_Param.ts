@@ -2,16 +2,21 @@ import {Color, Vector2, Vector3, Vector4} from 'three';
 import {PolyScene} from '../scene/PolyScene';
 import {ParamConstructorMap} from '../params/types/ParamConstructorMap';
 import {ParamType} from '../poly/ParamType';
-import {touchParamRef} from '../../core/reactivity/ParamReactivity';
-import {NamedFunction2, NamedFunction3, NamedFunction4} from './_Base';
-import {BaseNodeType} from '../nodes/_Base';
+import {touchParamRefFromParam} from '../../core/reactivity/ParamReactivity';
+import {NamedFunction1, NamedFunction2, NamedFunction3} from './_Base';
+// import {BaseNodeType} from '../nodes/_Base';
 import {Number2, Number3, Number4} from '../../types/GlobalTypes';
+import {BaseParamType} from '../params/_Base';
+import type {BooleanParam} from '../params/Boolean';
+import type {ColorParam} from '../params/Color';
+import type {FloatParam} from '../params/Float';
+import type {IntegerParam} from '../params/Integer';
+import type {StringParam} from '../params/String';
+import type {Vector2Param} from '../params/Vector2';
+import type {Vector3Param} from '../params/Vector3';
+import type {Vector4Param} from '../params/Vector4';
+import type {ButtonParam} from '../params/Button';
 
-interface GetParamReturn<T extends ParamType> {
-	node: BaseNodeType | undefined;
-	param: ParamConstructorMap[T] | undefined;
-}
-const EMPTY_RETURN: GetParamReturn<ParamType> = {node: undefined, param: undefined};
 const tmpColor = new Color();
 const tmpV2 = new Vector2();
 const tmpV3 = new Vector3();
@@ -20,49 +25,61 @@ const tmpN2: Number2 = [0, 0];
 const tmpN3: Number3 = [0, 0, 0];
 const tmpN4: Number4 = [0, 0, 0, 0];
 
-function _getParam<T extends ParamType>(scene: PolyScene, nodePath: string, paramName: string): GetParamReturn<T> {
+function _getParam<T extends ParamType>(scene: PolyScene, paramPath: string): ParamConstructorMap[T] | void {
+	const elements = paramPath.split('/');
+	const paramName = elements.pop() as string;
+	const nodePath = elements.join('/');
 	const node = scene.node(nodePath);
 	if (!node) {
-		return EMPTY_RETURN as GetParamReturn<T>;
+		return;
 	}
 	const param = node.params.get(paramName);
 	if (!param) {
-		return EMPTY_RETURN as GetParamReturn<T>;
+		return;
 	}
-	return {node, param: param as ParamConstructorMap[T]};
+	return param as ParamConstructorMap[T];
+}
+export class getParam extends NamedFunction1<[string]> {
+	static override type() {
+		return 'getParam';
+	}
+	func(paramPath: string): BaseParamType {
+		return _getParam<ParamType.BOOLEAN>(this.scene, paramPath)!;
+	}
 }
 
-export class setParamBoolean extends NamedFunction3<[string, string, boolean]> {
+export class setParamBoolean extends NamedFunction2<[BooleanParam, boolean]> {
 	static override type() {
 		return 'setParamBoolean';
 	}
-	func(nodePath: string, paramName: string, value: boolean): void {
-		const {node, param} = _getParam<ParamType.BOOLEAN>(this.scene, nodePath, paramName);
-		if (node && param) {
+	func(param: BooleanParam, value: boolean): void {
+		if (param) {
 			param.set(value);
-			touchParamRef(node, paramName);
+			touchParamRefFromParam(param);
+		} else {
+			console.warn(`setParamBoolean: no param`);
 		}
 	}
 }
-export class setParamBooleanToggle extends NamedFunction2<[string, string]> {
+export class setParamBooleanToggle extends NamedFunction1<[BooleanParam]> {
 	static override type() {
 		return 'setParamBooleanToggle';
 	}
-	func(nodePath: string, paramName: string): void {
-		const {node, param} = _getParam<ParamType.BOOLEAN>(this.scene, nodePath, paramName);
-		if (node && param) {
+	func(param: BooleanParam): void {
+		if (param) {
 			param.set(!param.value);
-			touchParamRef(node, paramName);
+			touchParamRefFromParam(param);
+		} else {
+			console.warn(`setParamBooleanToggle: no param`);
 		}
 	}
 }
-export class setParamColor extends NamedFunction4<[string, string, Color, number]> {
+export class setParamColor extends NamedFunction3<[ColorParam, Color, number]> {
 	static override type() {
 		return 'setParamColor';
 	}
-	func(nodePath: string, paramName: string, value: Color, lerp: number): void {
-		const {node, param} = _getParam<ParamType.COLOR>(this.scene, nodePath, paramName);
-		if (node && param) {
+	func(param: ColorParam, value: Color, lerp: number): void {
+		if (param) {
 			if (lerp >= 1) {
 				param.set(value);
 			} else {
@@ -71,61 +88,65 @@ export class setParamColor extends NamedFunction4<[string, string, Color, number
 				tmpColor.toArray(tmpN3);
 				param.set(tmpN3);
 			}
-			touchParamRef(node, paramName);
+			touchParamRefFromParam(param);
+		} else {
+			console.warn(`setParamColor: no param`);
 		}
 	}
 }
-export class setParamFloat extends NamedFunction4<[string, string, number, number]> {
+export class setParamFloat extends NamedFunction3<[FloatParam, number, number]> {
 	static override type() {
 		return 'setParamFloat';
 	}
-	func(nodePath: string, paramName: string, value: number, lerp: number): void {
-		const {node, param} = _getParam<ParamType.FLOAT>(this.scene, nodePath, paramName);
-		if (node && param) {
+	func(param: FloatParam, value: number, lerp: number): void {
+		if (param) {
 			if (lerp >= 1) {
 				param.set(value);
 			} else {
 				param.set(value * lerp + (1 - lerp) * param.value);
 			}
-			touchParamRef(node, paramName);
+			touchParamRefFromParam(param);
+		} else {
+			console.warn(`setParamFloat: no param`);
 		}
 	}
 }
-export class setParamInteger extends NamedFunction4<[string, string, number, number]> {
+export class setParamInteger extends NamedFunction3<[IntegerParam, number, number]> {
 	static override type() {
 		return 'setParamInteger';
 	}
-	func(nodePath: string, paramName: string, value: number, lerp: number): void {
-		const {node, param} = _getParam<ParamType.INTEGER>(this.scene, nodePath, paramName);
-		if (node && param) {
+	func(param: IntegerParam, value: number, lerp: number): void {
+		if (param) {
 			if (lerp >= 1) {
 				param.set(value);
 			} else {
 				param.set(value * lerp + (1 - lerp) * param.value);
 			}
-			touchParamRef(node, paramName);
+			touchParamRefFromParam(param);
+		} else {
+			console.warn(`setParamInteger: no param`);
 		}
 	}
 }
-export class setParamString extends NamedFunction3<[string, string, string]> {
+export class setParamString extends NamedFunction2<[StringParam, string]> {
 	static override type() {
 		return 'setParamString';
 	}
-	func(nodePath: string, paramName: string, value: string): void {
-		const {node, param} = _getParam<ParamType.STRING>(this.scene, nodePath, paramName);
-		if (node && param) {
+	func(param: StringParam, value: string): void {
+		if (param) {
 			param.set(value);
-			touchParamRef(node, paramName);
+			touchParamRefFromParam(param);
+		} else {
+			console.warn(`setParamString: no param`);
 		}
 	}
 }
-export class setParamVector2 extends NamedFunction4<[string, string, Vector2, number]> {
+export class setParamVector2 extends NamedFunction3<[Vector2Param, Vector2, number]> {
 	static override type() {
 		return 'setParamVector2';
 	}
-	func(nodePath: string, paramName: string, value: Vector2, lerp: number): void {
-		const {node, param} = _getParam<ParamType.VECTOR2>(this.scene, nodePath, paramName);
-		if (node && param) {
+	func(param: Vector2Param, value: Vector2, lerp: number): void {
+		if (param) {
 			if (lerp >= 1) {
 				param.set(value);
 			} else {
@@ -134,17 +155,18 @@ export class setParamVector2 extends NamedFunction4<[string, string, Vector2, nu
 				tmpV2.toArray(tmpN2);
 				param.set(tmpN2);
 			}
-			touchParamRef(node, paramName);
+			touchParamRefFromParam(param);
+		} else {
+			console.warn(`setParamVector2: no param`);
 		}
 	}
 }
-export class setParamVector3 extends NamedFunction4<[string, string, Vector3, number]> {
+export class setParamVector3 extends NamedFunction3<[Vector3Param, Vector3, number]> {
 	static override type() {
 		return 'setParamVector3';
 	}
-	func(nodePath: string, paramName: string, value: Vector3, lerp: number): void {
-		const {node, param} = _getParam<ParamType.VECTOR3>(this.scene, nodePath, paramName);
-		if (node && param) {
+	func(param: Vector3Param, value: Vector3, lerp: number): void {
+		if (param) {
 			if (lerp >= 1) {
 				param.set(value);
 			} else {
@@ -153,17 +175,18 @@ export class setParamVector3 extends NamedFunction4<[string, string, Vector3, nu
 				tmpV3.toArray(tmpN3);
 				param.set(tmpN3);
 			}
-			touchParamRef(node, paramName);
+			touchParamRefFromParam(param);
+		} else {
+			console.warn(`setParamVector3: no param`);
 		}
 	}
 }
-export class setParamVector4 extends NamedFunction4<[string, string, Vector4, number]> {
+export class setParamVector4 extends NamedFunction3<[Vector4Param, Vector4, number]> {
 	static override type() {
 		return 'setParamVector4';
 	}
-	func(nodePath: string, paramName: string, value: Vector4, lerp: number): void {
-		const {node, param} = _getParam<ParamType.VECTOR4>(this.scene, nodePath, paramName);
-		if (node && param) {
+	func(param: Vector4Param, value: Vector4, lerp: number): void {
+		if (param) {
 			if (lerp >= 1) {
 				param.set(value);
 			} else {
@@ -172,19 +195,22 @@ export class setParamVector4 extends NamedFunction4<[string, string, Vector4, nu
 				tmpV4.toArray(tmpN4);
 				param.set(tmpN4);
 			}
-			touchParamRef(node, paramName);
+			touchParamRefFromParam(param);
+		} else {
+			console.warn(`setParamVector4: no param`);
 		}
 	}
 }
-export class pressButtonParam extends NamedFunction2<[string, string]> {
+export class pressButtonParam extends NamedFunction1<[ButtonParam]> {
 	static override type() {
 		return 'pressButtonParam';
 	}
-	func(nodePath: string, paramName: string): void {
-		const {node, param} = _getParam<ParamType.BUTTON>(this.scene, nodePath, paramName);
-		if (node && param) {
+	func(param: ButtonParam): void {
+		if (param) {
 			param.pressButton();
-			touchParamRef(node, paramName);
+			touchParamRefFromParam(param);
+		} else {
+			console.warn(`pressButtonParam: no param`);
 		}
 	}
 }

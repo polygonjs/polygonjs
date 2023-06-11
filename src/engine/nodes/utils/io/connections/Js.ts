@@ -21,6 +21,8 @@ import {
 } from 'three';
 import {ParamInitValuesTypeMap} from '../../../../params/types/ParamInitValuesTypeMap';
 import {ParamType} from '../../../../poly/ParamType';
+import {BaseConnectionPoint} from './_Base';
+import {BaseParamType} from '../../../../params/_Base';
 
 export enum JsConnectionPointType {
 	ANIMATION_MIXER = 'AnimationMixer',
@@ -44,6 +46,7 @@ export enum JsConnectionPointType {
 	MATRIX4 = 'Matrix4',
 	MATRIX4_ARRAY = 'Matrix4[]',
 	OBJECT_3D = 'Object3D',
+	PARAM = 'Param',
 	PLANE = 'Plane',
 	QUATERNION = 'Quaternion',
 	QUATERNION_ARRAY = 'Quaternion[]',
@@ -127,6 +130,7 @@ export const JS_CONNECTION_POINT_TYPES: Array<JsConnectionPointType> = [
 	JsConnectionPointType.MATRIX4,
 	JsConnectionPointType.MATRIX4_ARRAY,
 	JsConnectionPointType.OBJECT_3D,
+	JsConnectionPointType.PARAM,
 	JsConnectionPointType.PLANE,
 	JsConnectionPointType.QUATERNION,
 	JsConnectionPointType.QUATERNION_ARRAY,
@@ -170,6 +174,7 @@ export interface JsIConnectionPointTypeToArrayTypeMap extends JsConnectionPointT
 	[JsConnectionPointType.MATRIX4]: JsConnectionPointType.MATRIX4_ARRAY; //
 	[JsConnectionPointType.MATRIX4_ARRAY]: JsConnectionPointType.MATRIX4_ARRAY; //
 	[JsConnectionPointType.OBJECT_3D]: JsConnectionPointType.OBJECT_3D; //
+	[JsConnectionPointType.PARAM]: JsConnectionPointType.PARAM; //
 	[JsConnectionPointType.PLANE]: JsConnectionPointType.PLANE; //
 	[JsConnectionPointType.QUATERNION]: JsConnectionPointType.QUATERNION_ARRAY; //
 	[JsConnectionPointType.QUATERNION_ARRAY]: JsConnectionPointType.QUATERNION_ARRAY; //
@@ -209,6 +214,7 @@ export const JsConnectionPointTypeToArrayTypeMap: JsIConnectionPointTypeToArrayT
 	[JsConnectionPointType.MATRIX4]: JsConnectionPointType.MATRIX4_ARRAY,
 	[JsConnectionPointType.MATRIX4_ARRAY]: JsConnectionPointType.MATRIX4_ARRAY,
 	[JsConnectionPointType.OBJECT_3D]: JsConnectionPointType.OBJECT_3D,
+	[JsConnectionPointType.PARAM]: JsConnectionPointType.PARAM,
 	[JsConnectionPointType.PLANE]: JsConnectionPointType.PLANE,
 	[JsConnectionPointType.QUATERNION]: JsConnectionPointType.QUATERNION_ARRAY,
 	[JsConnectionPointType.QUATERNION_ARRAY]: JsConnectionPointType.QUATERNION_ARRAY,
@@ -251,6 +257,7 @@ export interface JsIConnectionPointTypeFromArrayTypeMap extends JsConnectionPoin
 	[JsConnectionPointType.MATRIX4]: JsConnectionPointType.MATRIX4; //
 	[JsConnectionPointType.MATRIX4_ARRAY]: JsConnectionPointType.MATRIX4; //
 	[JsConnectionPointType.OBJECT_3D]: JsConnectionPointType.OBJECT_3D; //
+	[JsConnectionPointType.PARAM]: JsConnectionPointType.PARAM; //
 	[JsConnectionPointType.PLANE]: JsConnectionPointType.PLANE; //
 	[JsConnectionPointType.QUATERNION]: JsConnectionPointType.QUATERNION; //
 	[JsConnectionPointType.QUATERNION_ARRAY]: JsConnectionPointType.QUATERNION; //
@@ -290,6 +297,7 @@ export const JsConnectionPointTypeFromArrayTypeMap: JsIConnectionPointTypeFromAr
 	[JsConnectionPointType.MATRIX4]: JsConnectionPointType.MATRIX4,
 	[JsConnectionPointType.MATRIX4_ARRAY]: JsConnectionPointType.MATRIX4,
 	[JsConnectionPointType.OBJECT_3D]: JsConnectionPointType.OBJECT_3D,
+	[JsConnectionPointType.PARAM]: JsConnectionPointType.PARAM,
 	[JsConnectionPointType.PLANE]: JsConnectionPointType.PLANE,
 	[JsConnectionPointType.QUATERNION]: JsConnectionPointType.QUATERNION,
 	[JsConnectionPointType.QUATERNION_ARRAY]: JsConnectionPointType.QUATERNION,
@@ -412,6 +420,7 @@ export type JsDataType =
 	| Sphere
 	| Texture
 	| Array<Texture>
+	| BaseParamType
 	| null;
 type JSConnectionPointTypeToDataTypeMapGeneric = {[key in JsConnectionPointType]: JsDataType};
 export interface JsIConnectionPointTypeToDataTypeMap extends JSConnectionPointTypeToDataTypeMapGeneric {
@@ -436,6 +445,7 @@ export interface JsIConnectionPointTypeToDataTypeMap extends JSConnectionPointTy
 	[JsConnectionPointType.MATRIX4]: Matrix4;
 	[JsConnectionPointType.MATRIX4_ARRAY]: Matrix4[];
 	[JsConnectionPointType.OBJECT_3D]: Object3D;
+	[JsConnectionPointType.PARAM]: BaseParamType;
 	[JsConnectionPointType.PLANE]: Plane;
 	[JsConnectionPointType.QUATERNION]: Quaternion;
 	[JsConnectionPointType.QUATERNION_ARRAY]: Quaternion[];
@@ -521,6 +531,7 @@ export interface JsIConnectionPointTypeToParamTypeMap extends JSConnectionPointT
 	[JsConnectionPointType.MATRIX4]: ParamType.BUTTON;
 	[JsConnectionPointType.MATRIX4_ARRAY]: ParamType.BUTTON;
 	[JsConnectionPointType.OBJECT_3D]: ParamType.BUTTON;
+	[JsConnectionPointType.PARAM]: ParamType.PARAM_PATH;
 	[JsConnectionPointType.PLANE]: ParamType.BUTTON;
 	[JsConnectionPointType.QUATERNION]: ParamType.BUTTON;
 	[JsConnectionPointType.QUATERNION_ARRAY]: ParamType.BUTTON;
@@ -562,6 +573,7 @@ export const JsConnectionPointTypeToParamTypeMap: JsIConnectionPointTypeToParamT
 	[JsConnectionPointType.MATRIX4]: ParamType.BUTTON,
 	[JsConnectionPointType.MATRIX4_ARRAY]: ParamType.BUTTON,
 	[JsConnectionPointType.OBJECT_3D]: ParamType.BUTTON,
+	[JsConnectionPointType.PARAM]: ParamType.PARAM_PATH,
 	[JsConnectionPointType.PLANE]: ParamType.BUTTON,
 	[JsConnectionPointType.QUATERNION]: ParamType.BUTTON,
 	[JsConnectionPointType.QUATERNION_ARRAY]: ParamType.BUTTON,
@@ -599,7 +611,7 @@ export interface IJsParamTypeToConnectionPointTypeMap extends JsParamTypeToConne
 	[ParamType.VECTOR4]: JsConnectionPointType.VECTOR4;
 	[ParamType.BUTTON]: undefined;
 	// [ParamType.OPERATOR_PATH]: undefined;
-	[ParamType.PARAM_PATH]: undefined;
+	[ParamType.PARAM_PATH]: JsConnectionPointType.PARAM;
 	[ParamType.NODE_PATH]: undefined;
 	[ParamType.RAMP]: undefined;
 	[ParamType.STRING]: JsConnectionPointType.STRING;
@@ -615,7 +627,7 @@ export const JsParamTypeToConnectionPointTypeMap: IJsParamTypeToConnectionPointT
 	[ParamType.VECTOR4]: JsConnectionPointType.VECTOR4,
 	[ParamType.BUTTON]: undefined,
 	// [ParamType.OPERATOR_PATH]: undefined,
-	[ParamType.PARAM_PATH]: undefined,
+	[ParamType.PARAM_PATH]: JsConnectionPointType.PARAM,
 	[ParamType.NODE_PATH]: undefined,
 	[ParamType.RAMP]: undefined,
 	[ParamType.STRING]: JsConnectionPointType.STRING,
@@ -651,6 +663,7 @@ export const JsConnectionPointInitValueMap: ConnectionPointInitValueMapGeneric =
 	[JsConnectionPointType.MATRIX4]: null,
 	[JsConnectionPointType.MATRIX4_ARRAY]: null,
 	[JsConnectionPointType.OBJECT_3D]: null,
+	[JsConnectionPointType.PARAM]: '',
 	[JsConnectionPointType.PLANE]: null,
 	[JsConnectionPointType.QUATERNION]: null,
 	[JsConnectionPointType.QUATERNION_ARRAY]: null,
@@ -701,6 +714,7 @@ export const JsConnectionPointComponentsCountMap: ConnectionPointComponentsCount
 	[JsConnectionPointType.MATRIX4]: 1,
 	[JsConnectionPointType.MATRIX4_ARRAY]: 1,
 	[JsConnectionPointType.OBJECT_3D]: 1,
+	[JsConnectionPointType.PARAM]: 1,
 	[JsConnectionPointType.PLANE]: 1,
 	[JsConnectionPointType.QUATERNION]: 1,
 	[JsConnectionPointType.QUATERNION_ARRAY]: 1,
@@ -725,7 +739,6 @@ export interface JsConnectionPointData<T extends JsConnectionPointType> {
 	isArray?: boolean;
 }
 
-import {BaseConnectionPoint} from './_Base';
 interface JsConnectionPointOptions<T extends JsConnectionPointType> {
 	inNodeDefinition?: boolean;
 	init_value?: ConnectionPointInitValueMapGeneric[T];

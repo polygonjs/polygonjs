@@ -70,6 +70,7 @@ import {GetObjectChildJsNode} from '../../../nodes/js/GetObjectChild';
 import {GetObjectPropertyJsNode} from '../../../nodes/js/GetObjectProperty';
 import {GetObjectUserDataJsNode} from '../../../nodes/js/GetObjectUserData';
 import {GetObjectWorldPositionJsNode} from '../../../nodes/js/GetObjectWorldPosition';
+import {GetParamJsNode} from '../../../nodes/js/GetParam';
 import {GetParentJsNode} from '../../../nodes/js/GetParent';
 import {GetPhysicsRBDConePropertyJsNode} from '../../../nodes/js/GetPhysicsRBDConeProperty';
 import {GetPhysicsRBDCapsulePropertyJsNode} from '../../../nodes/js/GetPhysicsRBDCapsuleProperty';
@@ -364,6 +365,7 @@ export interface JsNodeChildrenMap {
 	getObjectProperty: GetObjectPropertyJsNode;
 	getObjectUserData: GetObjectUserDataJsNode;
 	getObjectWorldPosition: GetObjectWorldPositionJsNode;
+	getParam: GetParamJsNode;
 	getParent: GetParentJsNode;
 	getPlaneProperty: GetPlanePropertyJsNode;
 	getPhysicsRBDCapsuleProperty: GetPhysicsRBDCapsulePropertyJsNode;
@@ -695,6 +697,7 @@ export class JsRegister {
 		poly.registerNode(GetObjectPropertyJsNode, CATEGORY_JS.GET);
 		poly.registerNode(GetObjectUserDataJsNode, CATEGORY_JS.GET, ONLY_ACTOR);
 		poly.registerNode(GetObjectWorldPositionJsNode, CATEGORY_JS.GET, ONLY_ACTOR);
+		poly.registerNode(GetParamJsNode, CATEGORY_JS.GET, ONLY_ACTOR);
 		poly.registerNode(GetParentJsNode, CATEGORY_JS.GET, ONLY_ACTOR);
 		poly.registerNode(GetPlanePropertyJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(GetPhysicsRBDCapsulePropertyJsNode, CATEGORY_JS.PHYSICS, ONLY_ACTOR);

@@ -55,7 +55,7 @@ QUnit.test('js/onObjectClick', async (assert) => {
 		GetIntersectionPropertyJsNodeOutputName.distance
 	);
 	setParam1.setParamType(JsConnectionPointType.FLOAT);
-	setParam1.p.param.setParam(geo2.p.scale);
+	setParam1.setParamParam(geo2.p.scale);
 
 	const container = await actor1.compute();
 	const object = container.coreContent()!.threejsObjects()[0];
@@ -94,7 +94,7 @@ QUnit.test('js/onObjectClick', async (assert) => {
 				GetIntersectionPropertyJsNodeOutputName.point
 			);
 			setParam1.setParamType(JsConnectionPointType.VECTOR3);
-			setParam1.p.param.setParam(geo2.p.s);
+			setParam1.setParamParam(geo2.p.s);
 		});
 		await CoreSleep.sleep(100);
 		triggerClick(canvas, {x: 0.01, y: 0.01});
@@ -119,7 +119,7 @@ QUnit.test('js/onObjectClick', async (assert) => {
 		// so that the param type change is taken into account
 		// when the node recompiles
 		await CoreSleep.sleep(50);
-		setParam1.p.param.setParam(sphere1.p.resolution);
+		setParam1.setParamParam(sphere1.p.resolution);
 		// });
 		await CoreSleep.sleep(100);
 		triggerClick(canvas, {x: 0.01, y: 0.01});

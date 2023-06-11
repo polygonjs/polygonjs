@@ -4,7 +4,7 @@ import {SetParamJsNodeInputName} from '../../../../src/engine/nodes/js/SetParam'
 import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Js';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 
-QUnit.test('js/pressButtonParam', async (assert) => {
+QUnit.test('js/getParam', async (assert) => {
 	const scene = window.scene;
 	const perspective_camera1 = window.perspective_camera1;
 	const geo1 = window.geo1;
@@ -18,6 +18,7 @@ QUnit.test('js/pressButtonParam', async (assert) => {
 
 	const onManualTrigger2 = actor1.createNode('onManualTrigger');
 	const setParam1 = actor1.createNode('setParam');
+	const getParam1 = actor1.createNode('getParam');
 	setParam1.setParamParam(checkedParam);
 	setParam1.setParamType(JsConnectionPointType.INT);
 	(setParam1.params.get(SetParamJsNodeInputName.val)! as IntegerParam).set(2);
@@ -27,7 +28,8 @@ QUnit.test('js/pressButtonParam', async (assert) => {
 	const pressButtonParam1 = actor1.createNode('pressButtonParam');
 
 	pressButtonParam1.setInput(JsConnectionPointType.TRIGGER, onManualTrigger1);
-	pressButtonParam1.setParamParam(onManualTrigger2.p.trigger);
+	pressButtonParam1.setInput(JsConnectionPointType.PARAM, getParam1);
+	getParam1.p.Param.setParam(onManualTrigger2.p.trigger);
 
 	await actor1.compute();
 

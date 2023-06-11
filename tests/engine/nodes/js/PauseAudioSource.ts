@@ -44,7 +44,7 @@ QUnit.test('js/pauseAudioSource', async (assert) => {
 	pauseAudioSource1.setInput(JsConnectionPointType.TRIGGER, onManualTrigger2);
 	setParam1.setInput(JsConnectionPointType.TRIGGER, playAudioSource1);
 
-	setParam1.p.param.setParam(geo1.p.t.x);
+	setParam1.setParamParam(geo1.p.t.x);
 	setParam1.setParamType(JsConnectionPointType.INT);
 	(setParam1.params.get(SetParamJsNodeInputName.val)! as ParamConstructorMap[ParamType.INTEGER]).set(1);
 

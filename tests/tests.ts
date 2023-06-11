@@ -209,6 +209,7 @@ import './engine/nodes/js/GetObject';
 import './engine/nodes/js/GetObjectAttribute';
 import './engine/nodes/js/GetObjectChild';
 import './engine/nodes/js/GetObjectUserData';
+import './engine/nodes/js/GetParam';
 import './engine/nodes/js/GetParent';
 import './engine/nodes/js/GetSibbling';
 import './engine/nodes/js/GetVideoProperty';
