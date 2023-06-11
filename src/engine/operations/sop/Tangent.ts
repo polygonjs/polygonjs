@@ -10,7 +10,6 @@ import {CoreAttribute} from '../../../core/geometry/Attribute';
 interface TangentSopParams extends DefaultOperationParams {
 	closed: boolean;
 	tangentName: string;
-	// attributesToInterpolate: string;
 }
 const tangent = new Vector3();
 const currentPosition = new Vector3();
@@ -22,7 +21,7 @@ export class TangentSopOperation extends BaseSopOperation {
 		closed: false,
 		tangentName: 'tangent',
 	};
-	static override readonly INPUT_CLONED_STATE = InputCloneMode.NEVER;
+	static override readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
 	static override type(): Readonly<SopType.TANGENT> {
 		return SopType.TANGENT;
 	}

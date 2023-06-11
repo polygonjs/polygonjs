@@ -145,15 +145,22 @@ export const FUNCTION_NAME_BY_FILE_NAME: Record<string, string[]> = {
 	Logic: ['andArrays', 'andBooleans', 'orArrays', 'orBooleans'],
 	Material: [
 		'setObjectMaterial',
+		// color
 		'setObjectMaterialColor',
 		'setMaterialColor',
 		'setMaterialEmissiveColor',
+		// map
 		'setMaterialMap',
 		'setMaterialAlphaMap',
 		'setMaterialAOMap',
+		'setMaterialDisplacementMap',
 		'setMaterialEnvMap',
 		'setMaterialEmissiveMap',
+		'setMaterialMetalnessMap',
+		'setMaterialRoughnessMap',
+		// number
 		'setMaterialOpacity',
+		// uniforms
 		'setMaterialUniformNumber',
 		'setMaterialUniformTexture',
 		'setMaterialUniformVectorColor',

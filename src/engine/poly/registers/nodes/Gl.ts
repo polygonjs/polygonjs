@@ -180,6 +180,7 @@ import {SubnetOutputGlNode} from '../../../nodes/gl/SubnetOutput';
 import {SwitchGlNode} from '../../../nodes/gl/Switch';
 import {TextureGlNode} from '../../../nodes/gl/Texture';
 import {Texture2DArrayGlNode} from '../../../nodes/gl/Texture2DArray';
+import {TextureDisplacementGlNode} from '../../../nodes/gl/TextureDisplacement';
 import {TextureSDFGlNode} from '../../../nodes/gl/TextureSDF';
 import {TileUvGlNode} from '../../../nodes/gl/TileUv';
 import {ToWorldSpaceGlNode} from '../../../nodes/gl/ToWorldSpace';
@@ -368,6 +369,7 @@ export interface GlNodeChildrenMap {
 	tan: TanGlNode;
 	texture: TextureGlNode;
 	texture2DArray: Texture2DArrayGlNode;
+	textureDisplacement: TextureDisplacementGlNode;
 	textureSDF: TextureSDFGlNode;
 	tileUv: TileUvGlNode;
 	toWorldSpace: ToWorldSpaceGlNode;
@@ -585,6 +587,7 @@ export class GlRegister {
 		poly.registerNode(TanGlNode, CATEGORY_GL.TRIGO);
 		poly.registerNode(TextureGlNode, CATEGORY_GL.COLOR);
 		poly.registerNode(Texture2DArrayGlNode, CATEGORY_GL.COLOR);
+		poly.registerNode(TextureDisplacementGlNode, CATEGORY_GL.COLOR);
 		poly.registerNode(TextureSDFGlNode, CATEGORY_GL.COLOR);
 		poly.registerNode(TileUvGlNode, CATEGORY_GL.UTIL);
 		poly.registerNode(ToWorldSpaceGlNode, CATEGORY_GL.GLOBALS);

@@ -34,7 +34,9 @@ const attributeGlNodePresetsCollectionFactory: PresetsCollectionFactory<Attribut
 	const velocity = new BasePreset().addEntry(node.p.name, `velocity`).addEntry(node.p.type, v3);
 	const attribLookupId = new BasePreset().addEntry(node.p.name, AttribLookup.ID).addEntry(node.p.type, f);
 	const attribLookupUv = new BasePreset().addEntry(node.p.name, AttribLookup.UV).addEntry(node.p.type, v2);
-	const particlesSimUv = new BasePreset().addEntry(node.p.name, GlobalsTextureHandler.PARTICLES_SIM_UV_ATTRIB);
+	const particlesSimUv = new BasePreset()
+		.addEntry(node.p.name, GlobalsTextureHandler.PARTICLES_SIM_UV_ATTRIB)
+		.addEntry(node.p.type, v2);
 
 	collection.setPresets({
 		color,

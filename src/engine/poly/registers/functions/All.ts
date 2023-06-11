@@ -352,11 +352,14 @@ import { setGeometryPositions } from "../../../functions/setGeometryPositions";
 import { setMaterialAlphaMap } from "../../../functions/setMaterialAlphaMap";
 import { setMaterialAOMap } from "../../../functions/setMaterialAOMap";
 import { setMaterialColor } from "../../../functions/setMaterialColor";
+import { setMaterialDisplacementMap } from "../../../functions/setMaterialDisplacementMap";
 import { setMaterialEmissiveColor } from "../../../functions/setMaterialEmissiveColor";
 import { setMaterialEmissiveMap } from "../../../functions/setMaterialEmissiveMap";
 import { setMaterialEnvMap } from "../../../functions/setMaterialEnvMap";
 import { setMaterialMap } from "../../../functions/setMaterialMap";
+import { setMaterialMetalnessMap } from "../../../functions/setMaterialMetalnessMap";
 import { setMaterialOpacity } from "../../../functions/setMaterialOpacity";
+import { setMaterialRoughnessMap } from "../../../functions/setMaterialRoughnessMap";
 import { setMaterialUniformNumber } from "../../../functions/setMaterialUniformNumber";
 import { setMaterialUniformTexture } from "../../../functions/setMaterialUniformTexture";
 import { setMaterialUniformVectorColor } from "../../../functions/setMaterialUniformVectorColor";
@@ -776,11 +779,14 @@ export interface NamedFunctionMap {
   setMaterialAlphaMap: setMaterialAlphaMap;
   setMaterialAOMap: setMaterialAOMap;
   setMaterialColor: setMaterialColor;
+  setMaterialDisplacementMap: setMaterialDisplacementMap;
   setMaterialEmissiveColor: setMaterialEmissiveColor;
   setMaterialEmissiveMap: setMaterialEmissiveMap;
   setMaterialEnvMap: setMaterialEnvMap;
   setMaterialMap: setMaterialMap;
+  setMaterialMetalnessMap: setMaterialMetalnessMap;
   setMaterialOpacity: setMaterialOpacity;
+  setMaterialRoughnessMap: setMaterialRoughnessMap;
   setMaterialUniformNumber: setMaterialUniformNumber;
   setMaterialUniformTexture: setMaterialUniformTexture;
   setMaterialUniformVectorColor: setMaterialUniformVectorColor;
@@ -1203,11 +1209,14 @@ export class AllNamedFunctionRegister {
       setMaterialAlphaMap,
       setMaterialAOMap,
       setMaterialColor,
+      setMaterialDisplacementMap,
       setMaterialEmissiveColor,
       setMaterialEmissiveMap,
       setMaterialEnvMap,
       setMaterialMap,
+      setMaterialMetalnessMap,
       setMaterialOpacity,
+      setMaterialRoughnessMap,
       setMaterialUniformNumber,
       setMaterialUniformTexture,
       setMaterialUniformVectorColor,

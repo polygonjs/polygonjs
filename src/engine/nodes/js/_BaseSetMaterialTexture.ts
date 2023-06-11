@@ -40,6 +40,9 @@ export abstract class BaseSetMaterialTextureJsNode extends TypedJsNode<BaseSetMa
 		| 'setMaterialMap'
 		| 'setMaterialAlphaMap'
 		| 'setMaterialAOMap'
+		| 'setMaterialDisplacementMap'
 		| 'setMaterialEnvMap'
-		| 'setMaterialEmissiveMap';
+		| 'setMaterialEmissiveMap'
+		| 'setMaterialMetalnessMap'
+		| 'setMaterialRoughnessMap';
 }

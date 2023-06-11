@@ -52,6 +52,7 @@ export enum GlType {
 	SDF_MATERIAL = 'SDFMaterial',
 	//
 	TEXTURE = 'texture',
+	TEXTURE_DISPLACEMENT = 'textureDisplacement',
 	TEXTURE_SDF = 'textureSDF',
 	VARYING_READ = 'varyingRead',
 	VARYING_WRITE = 'varyingWrite',

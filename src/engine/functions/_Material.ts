@@ -116,7 +116,15 @@ export class setMaterialEmissiveColor extends NamedFunction3<[Material, Color, n
 //
 interface SetMaterialTextureFactoryOptions {
 	type: string;
-	mapName: 'map' | 'alphaMap' | 'aoMap' | 'envMap' | 'emissiveMap';
+	mapName:
+		| 'map'
+		| 'alphaMap'
+		| 'aoMap'
+		| 'displacementMap'
+		| 'envMap'
+		| 'emissiveMap'
+		| 'metalnessMap'
+		| 'roughnessMap';
 }
 function setMaterialTextureFactory(options: SetMaterialTextureFactoryOptions) {
 	const {type, mapName} = options;
@@ -137,10 +145,22 @@ export class setMaterialAlphaMap extends setMaterialTextureFactory({
 	mapName: 'alphaMap',
 }) {}
 export class setMaterialAOMap extends setMaterialTextureFactory({type: 'setMaterialAOMap', mapName: 'aoMap'}) {}
+export class setMaterialDisplacementMap extends setMaterialTextureFactory({
+	type: 'setMaterialDisplacementMap',
+	mapName: 'displacementMap',
+}) {}
 export class setMaterialEnvMap extends setMaterialTextureFactory({type: 'setMaterialEnvMap', mapName: 'envMap'}) {}
 export class setMaterialEmissiveMap extends setMaterialTextureFactory({
 	type: 'setMaterialEmissiveMap',
 	mapName: 'emissiveMap',
+}) {}
+export class setMaterialMetalnessMap extends setMaterialTextureFactory({
+	type: 'setMaterialMetalnessMap',
+	mapName: 'metalnessMap',
+}) {}
+export class setMaterialRoughnessMap extends setMaterialTextureFactory({
+	type: 'setMaterialRoughnessMap',
+	mapName: 'roughnessMap',
 }) {}
 
 //
