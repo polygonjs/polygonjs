@@ -163,6 +163,15 @@ export class ConnectionPointsSpareParamsController<NC extends NodeContext> {
 							options: {
 								spare: true,
 								editable: !isConnected,
+								// computeOnDirty should be false for PARAM_PATH
+								// so that js/setParam and js/getParam can link to a parameter
+								// without having their parent node actor being recooked
+								computeOnDirty: paramType != ParamType.PARAM_PATH,
+								// dependentOnFoundParam should be false for PARAM_PATH
+								// so that js/setParam and js/getParam can link to a parameter
+								// without having their parent node actor being recooked
+								dependentOnFoundParam: false,
+								// dependentOnFoundNode: true,
 							},
 						});
 					}

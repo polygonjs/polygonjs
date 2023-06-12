@@ -136,8 +136,9 @@ export class JsAssemblerNodeSpareParamsController {
 		// this.within_param_folder('spare_params', () => {
 		for (let paramConfig of paramConfigs) {
 			if (spare_param_names_to_add.has(paramConfig.name())) {
+				const type = paramConfig.type();
 				// const config_options = ObjectUtils.clone(paramConfig.paramOptions());
-				const options = this.assembler.spareParamsOptions();
+				const options = this.assembler.spareParamsOptions({type});
 				// const options = ObjectUtils.merge(config_options, default_options);
 
 				// set init_value and raw_input to the previous param's
@@ -150,7 +151,6 @@ export class JsAssemblerNodeSpareParamsController {
 					raw_input = paramConfig.defaultValue() as any;
 				}
 
-				const type = paramConfig.type();
 				if (type != ParamType.BUTTON) {
 					paramsUpdateOptions.toAdd = paramsUpdateOptions.toAdd || [];
 					paramsUpdateOptions.toAdd.push({

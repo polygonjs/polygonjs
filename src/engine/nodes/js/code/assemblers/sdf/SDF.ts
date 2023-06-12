@@ -1,4 +1,4 @@
-import {BaseJsShaderAssembler, INSERT_DEFINE_AFTER, INSERT_BODY_AFTER, FunctionData} from '../_Base';
+import {BaseJsShaderAssembler, INSERT_DEFINE_AFTER, INSERT_BODY_AFTER, FunctionData, SpareParamOptions} from '../_Base';
 import {RegisterableVariable} from '../_BaseJsPersistedConfigUtils';
 // import {IUniforms} from '../../../../../../core/geometry/Material';
 import {ThreeToGl} from '../../../../../../core/ThreeToGl';
@@ -50,7 +50,7 @@ export class JsAssemblerSDF extends BaseJsShaderAssembler {
 		};
 	}
 
-	override spareParamsOptions() {
+	override spareParamsOptions(options: SpareParamOptions) {
 		const _options: ParamOptions = {
 			spare: true,
 			// computeOnDirty: true, // not needed if cook option is not set

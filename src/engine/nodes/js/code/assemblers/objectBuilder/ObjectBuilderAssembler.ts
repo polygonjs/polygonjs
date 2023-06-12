@@ -4,7 +4,7 @@ import {
 	INSERT_BODY_AFTER,
 	FunctionData,
 	INSERT_MEMBERS_AFTER,
-	INSERT_CONSTRUCTOR_AFTER,
+	INSERT_CONSTRUCTOR_AFTER,SpareParamOptions
 } from '../_Base';
 import {RegisterableVariable} from '../_BaseJsPersistedConfigUtils';
 import {ShaderConfig} from '../../configs/ShaderConfig';
@@ -46,7 +46,7 @@ export class JsAssemblerObjectBuilder extends BaseJsShaderAssembler {
 		};
 	}
 
-	override spareParamsOptions() {
+	override spareParamsOptions(options:SpareParamOptions) {
 		const _options: ParamOptions = {
 			spare: true,
 			// computeOnDirty: true, // not needed if cook option is not set

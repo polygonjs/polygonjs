@@ -18,7 +18,7 @@ class GetParamJsParamsConfig extends NodeParamsConfig {
 	Param = ParamConfig.PARAM_PATH('', {
 		dependentOnFoundParam: false,
 		paramSelection: true,
-		computeOnDirty: true,
+		computeOnDirty: false,
 	});
 }
 const ParamsConfig = new GetParamJsParamsConfig();

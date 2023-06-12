@@ -36,6 +36,9 @@ import {ParamType} from '../../../../poly/ParamType';
 import {ParamOptions} from '../../../../params/utils/OptionsController';
 
 type StringArrayByJsFunctionName = Map<ShaderName, string[]>;
+export interface SpareParamOptions {
+	type: ParamType;
+}
 
 export interface FunctionData {
 	functionBody: string;
@@ -137,7 +140,7 @@ export abstract class BaseJsShaderAssembler extends TypedAssembler<NodeContext.J
 		}
 	}
 
-	abstract spareParamsOptions(): ParamOptions;
+	abstract spareParamsOptions(options: SpareParamOptions): ParamOptions;
 
 	compile() {}
 

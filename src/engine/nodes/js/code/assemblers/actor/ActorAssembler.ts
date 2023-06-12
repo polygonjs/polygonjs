@@ -4,6 +4,7 @@ import {
 	INSERT_CONSTRUCTOR_AFTER,
 	INSERT_BODY_AFTER,
 	INSERT_MEMBERS_AFTER,
+	SpareParamOptions,
 } from '../_Base';
 import {RegisterableVariable} from '../_BaseJsPersistedConfigUtils';
 import {ShaderConfig} from '../../configs/ShaderConfig';
@@ -22,6 +23,7 @@ import {JsConnectionPointType} from '../../../../utils/io/connections/Js';
 import {ActorBuilderNode} from '../../../../../scene/utils/ActorsManager';
 import {logBlue as _logBlue} from '../../../../../../core/logger/Console';
 import {Poly} from '../../../../../Poly';
+import {ParamType} from '../../../../../poly/ParamType';
 
 let FORCE_DEBUG: boolean | undefined; // = false;
 function _debug() {
@@ -76,10 +78,11 @@ export class JsAssemblerActor extends BaseJsShaderAssembler {
 	override computedVariablesAllowed(): boolean {
 		return true;
 	}
-	override spareParamsOptions() {
+	override spareParamsOptions(options: SpareParamOptions) {
+		const {type} = options;
 		const _options: ParamOptions = {
 			spare: true,
-			computeOnDirty: true,
+			computeOnDirty: type != ParamType.PARAM_PATH,
 			cook: false,
 			// dependentOnFoundNode: true,
 			// there is no point in setting the callback option here,
