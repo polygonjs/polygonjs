@@ -35,7 +35,6 @@ class DeviceOrientationControlsHandler {
 
 	constructor(public readonly scene: PolyScene) {
 		this._controls = new DeviceOrientationControls(this._dummyObject);
-		alert(compensateRotation);
 	}
 	update() {
 		const currentFrame = this.scene.frame();
