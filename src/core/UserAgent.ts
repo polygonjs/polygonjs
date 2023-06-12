@@ -37,4 +37,10 @@ export class CoreUserAgent {
 		// but this does work on android
 		return (this._isTouchDevice = this._isTouchDevice || document.documentElement.ontouchstart != null);
 	}
+	static isPortrait(): boolean {
+		return window.innerHeight > window.innerWidth;
+	}
+	static isLandscape(): boolean {
+		return !this.isPortrait();
+	}
 }
