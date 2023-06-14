@@ -329,6 +329,7 @@ export const FUNCTION_NAME_BY_FILE_NAME: Record<string, string[]> = {
 	],
 	PlayerPhysics: ['playerPhysicsUpdate'],
 	PlayerSimple: ['playerSimpleUpdate', 'getPlayerSimplePropertyOnGround', 'getPlayerSimplePropertyVelocity'],
+	PolarTransform: ['setObjectPolarTransform', 'polarTransform'],
 	Quaternion: ['quaternionSetFromEuler', 'quaternionSetFromAxisAngle', 'quaternionAngleTo', 'quaternionSlerp'],
 	Scroll: ['createScrollListener'],
 	SDFOperations: [
@@ -344,7 +345,6 @@ export const FUNCTION_NAME_BY_FILE_NAME: Record<string, string[]> = {
 	SDFPrimitives2D: ['SDFRoundedX'],
 	SetObjectAttribute: ['setObjectAttribute'],
 	SetObjectLookAt: ['setObjectLookAt'],
-	PolarTransform: ['setObjectPolarTransform', 'polarTransform'],
 	SetObjectPosition: ['setObjectPosition'],
 	SetObjectProperty: [
 		'setObjectCastShadow',
@@ -370,6 +370,12 @@ export const FUNCTION_NAME_BY_FILE_NAME: Record<string, string[]> = {
 	],
 	Sizzle: ['sizzleVec3XY', 'sizzleVec3XZ', 'sizzleVec3YZ', 'sizzleVec4XYZ', 'sizzleVec4WArray', 'sizzleVec4XYZArray'],
 	Sleep: ['sleep'],
+	SoftBody: [
+		'softBodySolverStepSimulation',
+		'setSoftBodySolverGravity',
+		'setSoftBodySelectedVertexIndex',
+		'setSoftBodySelectedVertexPosition',
+	],
 	Sphere: ['sphereSet', 'getSphereCenter', 'getSphereRadius'],
 	Subtract: ['subtractNumber', 'subtractVector', 'subtractVectorNumber'],
 	TrackingFace: ['trackFace', 'trackFaceGetLandmarks'],

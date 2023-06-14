@@ -126,10 +126,12 @@ export enum SopType {
 	// SDF_TUBE = 'SDFTube',
 	//
 	SHEAR = 'shear',
+	SOFT_BODY_SOLVER = 'softBodySolver',
 	SPHERE = 'sphere',
 	SUBDIVIDE = 'subdivide',
 	SWITCH = 'switch',
 	TANGENT = 'tangent',
+	TETRAHEDRALIZE = 'tetrahedralize',
 	TETRAHEDRON = 'tetrahedron',
 	TEXT = 'text',
 	TORUS = 'torus',

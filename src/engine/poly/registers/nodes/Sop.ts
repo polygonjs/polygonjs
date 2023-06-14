@@ -244,6 +244,7 @@ import {SetGeometrySopNode} from '../../../nodes/sop/SetGeometry';
 import {ShearSopNode} from '../../../nodes/sop/Shear';
 import {SkeletonHelperSopNode} from '../../../nodes/sop/SkeletonHelper';
 import {SkinSopNode} from '../../../nodes/sop/Skin';
+import {SoftBodySolverSopNode} from '../../../nodes/sop/SoftBodySolver';
 import {SortSopNode} from '../../../nodes/sop/Sort';
 import {SolverSopNode} from '../../../nodes/sop/Solver';
 import {SolverPreviousFrameSopNode} from '../../../nodes/sop/SolverPreviousFrame';
@@ -256,6 +257,7 @@ import {SubnetInputSopNode} from '../../../nodes/sop/SubnetInput';
 import {SubnetOutputSopNode} from '../../../nodes/sop/SubnetOutput';
 import {SwitchSopNode} from '../../../nodes/sop/Switch';
 import {TangentSopNode} from '../../../nodes/sop/Tangent';
+import {TetrahedralizeSopNode} from '../../../nodes/sop/Tetrahedralize';
 import {TetrahedronSopNode} from '../../../nodes/sop/Tetrahedron';
 import {TextSopNode} from '../../../nodes/sop/Text';
 import {TextureCopySopNode} from '../../../nodes/sop/TextureCopy';
@@ -530,6 +532,7 @@ export interface GeoNodeChildrenMap {
 	shear: ShearSopNode;
 	skin: SkinSopNode;
 	skeletonHelper: SkeletonHelperSopNode;
+	softBodySolver: SoftBodySolverSopNode;
 	solver: SolverSopNode;
 	solverPreviousFrame: SolverPreviousFrameSopNode;
 	sort: SortSopNode;
@@ -542,6 +545,7 @@ export interface GeoNodeChildrenMap {
 	subnetOutput: SubnetOutputSopNode;
 	switch: SwitchSopNode;
 	tangent: TangentSopNode;
+	tetrahedralize: TetrahedralizeSopNode;
 	tetrahedron: TetrahedronSopNode;
 	text: TextSopNode;
 	textureCopy: TextureCopySopNode;
@@ -1047,6 +1051,7 @@ export class SopRegister {
 		poly.registerNode(SkeletonHelperSopNode, CATEGORY_SOP.HELPERS);
 		poly.registerNode(SkinSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(ShearSopNode, CATEGORY_SOP.MODIFIER);
+		poly.registerNode(SoftBodySolverSopNode, CATEGORY_SOP.PHYSICS);
 		poly.registerNode(SolverSopNode, CATEGORY_SOP.ADVANCED);
 		poly.registerNode(SolverPreviousFrameSopNode, CATEGORY_SOP.ADVANCED);
 		poly.registerNode(SortSopNode, CATEGORY_SOP.MODIFIER);
@@ -1070,6 +1075,7 @@ export class SopRegister {
 		);
 		poly.registerNode(SwitchSopNode, CATEGORY_SOP.FLOW);
 		poly.registerNode(TangentSopNode, CATEGORY_SOP.ATTRIBUTE);
+		poly.registerNode(TetrahedralizeSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.registerNode(TetrahedronSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.registerNode(TextSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.registerNode(TextureCopySopNode, CATEGORY_SOP.MODIFIER);

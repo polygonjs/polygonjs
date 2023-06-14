@@ -401,6 +401,9 @@ import { setPhysicsRBDRotation } from "../../../functions/setPhysicsRBDRotation"
 import { setPhysicsRBDSphereProperty } from "../../../functions/setPhysicsRBDSphereProperty";
 import { setPhysicsWorldGravity } from "../../../functions/setPhysicsWorldGravity";
 import { setPlayerInput } from "../../../functions/setPlayerInput";
+import { setSoftBodySelectedVertexIndex } from "../../../functions/setSoftBodySelectedVertexIndex";
+import { setSoftBodySelectedVertexPosition } from "../../../functions/setSoftBodySelectedVertexPosition";
+import { setSoftBodySolverGravity } from "../../../functions/setSoftBodySolverGravity";
 import { setSpotLightIntensity } from "../../../functions/setSpotLightIntensity";
 import { setViewer } from "../../../functions/setViewer";
 import { sizzleVec3XY } from "../../../functions/sizzleVec3XY";
@@ -412,6 +415,7 @@ import { sizzleVec4XYZArray } from "../../../functions/sizzleVec4XYZArray";
 import { sleep } from "../../../functions/sleep";
 import { smootherstep } from "../../../functions/smootherstep";
 import { smoothstep } from "../../../functions/smoothstep";
+import { softBodySolverStepSimulation } from "../../../functions/softBodySolverStepSimulation";
 import { sphereSet } from "../../../functions/sphereSet";
 import { subtractNumber } from "../../../functions/subtractNumber";
 import { subtractVector } from "../../../functions/subtractVector";
@@ -829,6 +833,9 @@ export interface NamedFunctionMap {
   setPhysicsRBDSphereProperty: setPhysicsRBDSphereProperty;
   setPhysicsWorldGravity: setPhysicsWorldGravity;
   setPlayerInput: setPlayerInput;
+  setSoftBodySelectedVertexIndex: setSoftBodySelectedVertexIndex;
+  setSoftBodySelectedVertexPosition: setSoftBodySelectedVertexPosition;
+  setSoftBodySolverGravity: setSoftBodySolverGravity;
   setSpotLightIntensity: setSpotLightIntensity;
   setViewer: setViewer;
   sizzleVec3XY: sizzleVec3XY;
@@ -840,6 +847,7 @@ export interface NamedFunctionMap {
   sleep: sleep;
   smootherstep: smootherstep;
   smoothstep: smoothstep;
+  softBodySolverStepSimulation: softBodySolverStepSimulation;
   sphereSet: sphereSet;
   subtractNumber: subtractNumber;
   subtractVector: subtractVector<Vector2 | Vector3 | Vector4>;
@@ -1260,6 +1268,9 @@ export class AllNamedFunctionRegister {
       setPhysicsRBDSphereProperty,
       setPhysicsWorldGravity,
       setPlayerInput,
+      setSoftBodySelectedVertexIndex,
+      setSoftBodySelectedVertexPosition,
+      setSoftBodySolverGravity,
       setSpotLightIntensity,
       setViewer,
       sizzleVec3XY,
@@ -1271,6 +1282,7 @@ export class AllNamedFunctionRegister {
       sleep,
       smootherstep,
       smoothstep,
+      softBodySolverStepSimulation,
       sphereSet,
       subtractNumber,
       subtractVector,

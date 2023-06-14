@@ -258,12 +258,15 @@ import {SetPhysicsRBDCuboidPropertyJsNode} from '../../../nodes/js/SetPhysicsRBD
 import {SetPhysicsRBDSpherePropertyJsNode} from '../../../nodes/js/SetPhysicsRBDSphereProperty';
 import {SetPhysicsWorldGravityJsNode} from '../../../nodes/js/SetPhysicsWorldGravity';
 import {SetPlayerInputJsNode} from '../../../nodes/js/SetPlayerInput';
+import {SetSoftBodySelectedVertexIndexJsNode} from '../../../nodes/js/SetSoftBodySelectedVertexIndex';
+import {SetSoftBodySelectedVertexPositionJsNode} from '../../../nodes/js/SetSoftBodySelectedVertexPosition';
 import {SetSpotLightIntensityJsNode} from '../../../nodes/js/SetSpotLightIntensity';
 import {SetViewerJsNode} from '../../../nodes/js/SetViewer';
 import {SignJsNode} from '../../../nodes/js/Sign';
 import {SinJsNode} from '../../../nodes/js/Sin';
 import {SmoothstepJsNode} from '../../../nodes/js/Smoothstep';
 import {SmootherstepJsNode} from '../../../nodes/js/Smootherstep';
+import {SoftBodySolverStepSimulationJsNode} from '../../../nodes/js/SoftBodySolverStepSimulation';
 import {SphereJsNode} from '../../../nodes/js/Sphere';
 import {SqrtJsNode} from '../../../nodes/js/Sqrt';
 import {SubnetJsNode} from '../../../nodes/js/Subnet';
@@ -553,12 +556,15 @@ export interface JsNodeChildrenMap {
 	setPhysicsRBDSphereProperty: SetPhysicsRBDSpherePropertyJsNode;
 	setPhysicsWorldGravity: SetPhysicsWorldGravityJsNode;
 	setPlayerInput: SetPlayerInputJsNode;
+	setSoftBodySelectedVertexIndex: SetSoftBodySelectedVertexIndexJsNode;
+	setSoftBodySelectedVertexPosition: SetSoftBodySelectedVertexPositionJsNode;
 	setSpotLightIntensity: SetSpotLightIntensityJsNode;
 	setViewer: SetViewerJsNode;
 	sign: SignJsNode;
 	sin: SinJsNode;
 	smoothstep: SmoothstepJsNode;
 	smootherstep: SmootherstepJsNode;
+	softBodySolverStepSimulation: SoftBodySolverStepSimulationJsNode;
 	sphere: SphereJsNode;
 	sqrt: SqrtJsNode;
 	subnet: SubnetJsNode;
@@ -612,6 +618,7 @@ const ONLY_ACTOR = {
 		sopType(SopType.CLOTH_SOLVER),
 		sopType(SopType.PHYSICS_WORLD),
 		sopType(SopType.PHYSICS_PLAYER),
+		sopType(SopType.SOFT_BODY_SOLVER),
 		...[
 			NodeContext.ANIM,
 			NodeContext.AUDIO,
@@ -887,12 +894,15 @@ export class JsRegister {
 		poly.registerNode(SetPhysicsRBDSpherePropertyJsNode, CATEGORY_JS.PHYSICS, ONLY_ACTOR);
 		poly.registerNode(SetPhysicsWorldGravityJsNode, CATEGORY_JS.PHYSICS, ONLY_ACTOR);
 		poly.registerNode(SetPlayerInputJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
+		poly.registerNode(SetSoftBodySelectedVertexIndexJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
+		poly.registerNode(SetSoftBodySelectedVertexPositionJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
 		poly.registerNode(SetSpotLightIntensityJsNode, CATEGORY_JS.PHYSICS, ONLY_ACTOR);
 		poly.registerNode(SetViewerJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR);
 		poly.registerNode(SignJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(SinJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(SmoothstepJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(SmootherstepJsNode, CATEGORY_JS.MATH);
+		poly.registerNode(SoftBodySolverStepSimulationJsNode, CATEGORY_JS.PHYSICS);
 		poly.registerNode(SphereJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(SqrtJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(SubnetJsNode, CATEGORY_JS.LOGIC);
