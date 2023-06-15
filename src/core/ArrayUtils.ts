@@ -2,6 +2,20 @@ import {MapUtils} from './MapUtils';
 import {SetUtils} from './SetUtils';
 import {CoreType} from './Type';
 
+export function range(start: number, end?: number, step: number = 1): number[] {
+	if (end == null) {
+		end = start;
+		start = 0;
+	}
+	const length = Math.floor((end - start) / step);
+	const array: number[] = new Array(length);
+
+	for (let i = 0; i < array.length; i++) {
+		array[i] = start + i * step;
+	}
+	return array;
+}
+
 export class ArrayUtils {
 	static shallowClone<T>(array: Array<T>): Array<T> {
 		// https://stackoverflow.com/questions/3978492/fastest-way-to-duplicate-an-array-in-javascript-slice-vs-for-loop
@@ -177,19 +191,7 @@ export class ArrayUtils {
 		return sorted_elements;
 	}
 
-	static range(start: number, end?: number, step: number = 1): number[] {
-		if (end == null) {
-			end = start;
-			start = 0;
-		}
-		const length = Math.floor((end - start) / step);
-		const array: number[] = new Array(length);
-
-		for (let i = 0; i < array.length; i++) {
-			array[i] = start + i * step;
-		}
-		return array;
-	}
+	static range = range;
 }
 
 const MAX_ITEMS_LENGTH = 1024;

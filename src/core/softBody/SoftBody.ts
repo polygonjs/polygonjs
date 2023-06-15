@@ -244,7 +244,7 @@ export class SoftBody {
 			this.invMass[index] = 0.0;
 			// vecCopy(this.pos, this.grabId, p, 0);
 		} else {
-			// this._endGrab();
+			this._endGrab();
 		}
 
 		this.grabId = index;

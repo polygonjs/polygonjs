@@ -7,6 +7,9 @@ export interface ThreeMeshBVHHelperOptions {
 	maxDepth: number;
 	verbose: boolean;
 }
+export interface MeshWithBVHGeometry extends Mesh {
+	geometry: BufferGeometryWithBVH;
+}
 export class ThreeMeshBVHHelper {
 	static assignBVH(mesh: Mesh, bvh: MeshBVH) {
 		mesh.raycast = acceleratedRaycast;

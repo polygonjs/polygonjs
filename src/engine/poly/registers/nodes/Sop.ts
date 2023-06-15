@@ -681,6 +681,7 @@ import {SphereSopOperation} from '../../../operations/sop/Sphere';
 import {SpotLightSopOperation} from '../../../operations/sop/SpotLight';
 import {SubdivideSopOperation} from '../../../operations/sop/Subdivide';
 import {TangentSopOperation} from '../../../operations/sop/Tangent';
+import {TetrahedralizeSopOperation} from '../../../operations/sop/Tetrahedralize';
 import {TextureCopySopOperation} from '../../../operations/sop/TextureCopy';
 import {TexturePropertiesSopOperation} from '../../../operations/sop/TextureProperties';
 import {TorusSopOperation} from '../../../operations/sop/Torus';
@@ -796,6 +797,7 @@ export class SopRegister {
 		poly.registerOperation(SpotLightSopOperation);
 		poly.registerOperation(SubdivideSopOperation);
 		poly.registerOperation(TangentSopOperation);
+		poly.registerOperation(TetrahedralizeSopOperation);
 		poly.registerOperation(TextureCopySopOperation);
 		poly.registerOperation(TexturePropertiesSopOperation);
 		poly.registerOperation(TorusSopOperation);
