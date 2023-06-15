@@ -3,12 +3,14 @@ import {ObjectUtils} from '../ObjectUtils';
 import type {CadGeometry} from './cad/CadCommon';
 import type {CsgGeometry} from './csg/CsgCommon';
 import type {SDFGeometry} from './sdf/SDFCommon';
+import type {TetGeometry} from './tet/TetGeometry';
 
 export enum CoreObjectType {
 	THREEJS = 'Object3D',
 	CAD = 'CADObject',
 	CSG = 'CSGObject',
 	SDF = 'SDFObject',
+	TET = 'TetObject',
 }
 
 export interface ObjectGeometryMap {
@@ -16,6 +18,7 @@ export interface ObjectGeometryMap {
 	[CoreObjectType.CAD]: CadGeometry;
 	[CoreObjectType.CSG]: CsgGeometry;
 	[CoreObjectType.SDF]: SDFGeometry;
+	[CoreObjectType.TET]: TetGeometry;
 }
 export interface ObjectContent<T extends CoreObjectType> {
 	type: string;

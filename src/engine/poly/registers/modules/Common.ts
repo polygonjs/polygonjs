@@ -3,6 +3,7 @@ export enum ModuleName {
 	CSG = 'CSG',
 	PBR = 'PBR',
 	SDF = 'SDF',
+	TET = 'TET',
 	// EXRLoader = 'EXRLoader',
 	// FBXLoader = 'FBXLoader',
 	// GLTFLoader = 'GLTFLoader',

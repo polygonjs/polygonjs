@@ -14,20 +14,20 @@ export class CSGSopNode<K extends NodeParamsConfig> extends TypedSopNode<K> {
 	}
 	setCSGGeometry<T extends CsgGeometryType>(geometry: CsgTypeMap[T]) {
 		const objects = [new CsgObject(geometry)];
-		this._setContainerCadObjects(objects);
+		this._setContainerCsgObjects(objects);
 	}
 	setCSGGeometries(geometries: CsgGeometry[]) {
 		const objects = geometries.map((g) => new CsgObject(g));
-		this._setContainerCadObjects(objects);
+		this._setContainerCsgObjects(objects);
 	}
 	setCSGObjects(csgObjects: CsgObject<CsgGeometryType>[]) {
-		this._setContainerCadObjects(csgObjects);
+		this._setContainerCsgObjects(csgObjects);
 	}
 	setCSGObject(csgObject: CsgObject<CsgGeometryType>) {
-		this._setContainerCadObjects([csgObject]);
+		this._setContainerCsgObjects([csgObject]);
 	}
 
-	protected _setContainerCadObjects(objects: CsgObject<CsgGeometryType>[] /*, message: MESSAGE*/) {
+	protected _setContainerCsgObjects(objects: CsgObject<CsgGeometryType>[] /*, message: MESSAGE*/) {
 		const coreGroup = this.containerController.container().coreContent() || new CoreGroup();
 		coreGroup.setAllObjects(objects);
 		this._setContainer(coreGroup);

@@ -131,8 +131,13 @@ export enum SopType {
 	SUBDIVIDE = 'subdivide',
 	SWITCH = 'switch',
 	TANGENT = 'tangent',
+	//
+	TET = 'tet',
+	TET_TRIANGULATE = 'tetTriangulate',
+	TET_QUALITY = 'tetQuality',
 	TETRAHEDRALIZE = 'tetrahedralize',
 	TETRAHEDRON = 'tetrahedron',
+	//
 	TEXT = 'text',
 	TORUS = 'torus',
 	TORUS_KNOT = 'torusKnot',

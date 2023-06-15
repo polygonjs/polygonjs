@@ -14,6 +14,7 @@ interface CreateTetsOptions {
 	//
 	stage: TetCreationStage;
 	subStage: number;
+	removeOutsideTets: boolean;
 }
 const POS_INF = Number.POSITIVE_INFINITY;
 const NEG_INF = Number.NEGATIVE_INFINITY;
@@ -68,7 +69,7 @@ export function _createPointsGeometry(options: CreatePointsGeometryOptions) {
 }
 
 export function createTets(options: CreateTetsOptions) {
-	const {mesh, resolution, minQuality, oneFacePerTet, scale, stage, subStage} = options;
+	const {mesh, resolution, minQuality, oneFacePerTet, scale, stage, subStage, removeOutsideTets} = options;
 
 	// tetMesh = bpy.data.meshes.new('Tets');
 	// bm = bmesh.new();
@@ -85,8 +86,8 @@ export function createTets(options: CreateTetsOptions) {
 	invMat.copy(mesh.matrixWorld).invert();
 	const geometry = mesh.geometry;
 	const positionAttrib = geometry.attributes.position;
-	const pointsCount = positionAttrib.count;
-	for (let i = 0; i < pointsCount; i += 3) {
+	const srcPointsCount = positionAttrib.count;
+	for (let i = 0; i < srcPointsCount; i += 3) {
 		const pos = new Vector3();
 		pos.fromArray(positionAttrib.array, i);
 		pos.x += randEps();
@@ -181,6 +182,7 @@ export function createTets(options: CreateTetsOptions) {
 		minQuality,
 		stage,
 		subStage,
+		removeOutsideTets,
 	});
 	const faces = result.tetIds;
 	console.log({faces, tetVerts});
@@ -193,16 +195,17 @@ export function createTets(options: CreateTetsOptions) {
 	const newGeometryIndices: number[] = [];
 
 	if (oneFacePerTet) {
-		const numSrcPoints = pointsCount;
 		const numPoints = tetVerts.length - 4;
 		// copy src points without distortion
-		for (let i = 0; i < numSrcPoints; i++) {
-			_p.fromBufferAttribute(positionAttrib, i);
-			newGeometryPositions.push(_p.x, _p.y, _p.z);
-		}
-		for (let i = numSrcPoints; i < numPoints; i++) {
+		// for (let i = 0; i < srcPointsCount; i++) {
+		// 	_p.fromBufferAttribute(positionAttrib, i);
+		// 	newGeometryPositions.push(_p.x, _p.y, _p.z);
+		// 	// newGeometryIndices.push(newGeometryIndices.length);
+		// }
+		for (let i = srcPointsCount; i < numPoints; i++) {
 			const p = tetVerts[i];
 			newGeometryPositions.push(p.x, p.y, p.z);
+			// newGeometryIndices.push(newGeometryIndices.length);
 			// bm.verts.new((p.x, p.y, p.z));
 		}
 	} else {
@@ -217,9 +220,9 @@ export function createTets(options: CreateTetsOptions) {
 			// console.log(i, center.toArray(), i4, faces[i4], tetVerts[faces[i4]]);
 			for (let j = 0; j < 4; j++) {
 				for (let k = 0; k < 3; k++) {
-					const tetId = faces[i4 + TET_FACES[j][k]];
-					console.log({j, k, tetId});
-					_p.copy(tetVerts[tetId]).sub(center).multiplyScalar(scale).add(center);
+					const vertexId = faces[i4 + TET_FACES[j][k]];
+					// console.log({j, k, vertexId});
+					_p.copy(tetVerts[vertexId]).sub(center).multiplyScalar(scale).add(center);
 					// _p.copy(center).add(p.sub(center).multiplyScalar(scale));
 					newGeometryPositions.push(_p.x, _p.y, _p.z);
 					newGeometryIndices.push(newGeometryIndices.length);
@@ -238,14 +241,27 @@ export function createTets(options: CreateTetsOptions) {
 
 	if (oneFacePerTet) {
 		for (let i = 0; i < numTets; i++) {
-			if (i < subStage) {
-				const id0 = faces[4 * i];
-				const id1 = faces[4 * i + 1];
-				const id2 = faces[4 * i + 2];
-				const id3 = faces[4 * i + 3];
-				newGeometryIndices.push(id0, id1, id2);
-				newGeometryIndices.push(id3, id2, id1);
-				// bm.faces.new([bm.verts[id0], bm.verts[id1], bm.verts[id2], bm.verts[id3]])
+			// if (i < subStage) {
+			// const id0 = faces[4 * i];
+			// const id1 = faces[4 * i + 1];
+			// const id2 = faces[4 * i + 2];
+			// const id3 = faces[4 * i + 3];
+			// newGeometryIndices.push(id0, id1, id2);
+			// newGeometryIndices.push(id3, id2, id1);
+			// bm.faces.new([bm.verts[id0], bm.verts[id1], bm.verts[id2], bm.verts[id3]])
+			// }
+			const i4 = 4 * i;
+			for (let j = 0; j < 4; j++) {
+				for (let k = 0; k < 3; k++) {
+					const vertexId = faces[i4 + TET_FACES[j][k]];
+					// console.log({j, k, vertexId});
+					console.log({j, k, vertexId});
+					_p.copy(tetVerts[vertexId]);
+					// _p.copy(center).add(p.sub(center).multiplyScalar(scale));
+					newGeometryPositions.push(_p.x, _p.y, _p.z);
+					newGeometryIndices.push(newGeometryIndices.length);
+					// newGeometryIndices.push(id0, id1, id2);
+				}
 			}
 		}
 	} else {

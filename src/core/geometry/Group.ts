@@ -27,6 +27,8 @@ import type {CsgObject} from './csg/CsgObject';
 import {EntityGroupCollection} from './EntityGroupCollection';
 import {isCSGObject} from './csg/CsgCoreType';
 import {object3DHasGeometry} from './GeometryUtils';
+import {isTetObject} from './tet/TetCoreType';
+import {TetObject} from './tet/TetObject';
 //
 // SDF
 // import type {SDFObjectType} from './sdf/SDFCommon';
@@ -199,6 +201,20 @@ export class CoreGroup extends CoreEntity {
 	// SDFCoreObjects() {
 	// 	return this.csgObjects()?.map((o, i) => coreObjectInstanceFactory(o, i));
 	// }
+
+	//
+	//
+	// TET OBJECTS
+	//
+	//
+	tetObjects() {
+		const list = this._allObjects?.filter(isTetObject) || undefined;
+		return list as TetObject[] | undefined;
+	}
+	tetCoreObjects() {
+		return this.tetObjects()?.map((o, i) => coreObjectInstanceFactory(o, i));
+	}
+
 	//
 	//
 	// THREEJS OBJECTS

@@ -171,6 +171,7 @@ export const CATEGORY_SOP = {
 	RENDER: 'render',
 	SDF: 'SDF',
 	SUBNET: 'subnet',
+	TET: 'tet',
 	WEBXR: 'webXR',
 };
 export const CATEGORY_POST = {

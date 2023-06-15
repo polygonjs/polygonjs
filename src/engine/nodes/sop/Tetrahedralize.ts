@@ -37,6 +37,7 @@ class TetrahedralizeSopParamsConfig extends NodeParamsConfig {
 		range: [0, 100],
 		rangeLocked: [true, false],
 	});
+	removeOutsideTets = ParamConfig.BOOLEAN(DEFAULT.removeOutsideTets);
 }
 const ParamsConfig = new TetrahedralizeSopParamsConfig();
 

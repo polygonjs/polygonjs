@@ -26,6 +26,7 @@ interface TetrahedralizeSopParams extends DefaultOperationParams {
 	tetScale: number;
 	stage: number;
 	subStage: number;
+	removeOutsideTets: boolean;
 }
 
 export class TetrahedralizeSopOperation extends BaseSopOperation {
@@ -36,6 +37,7 @@ export class TetrahedralizeSopOperation extends BaseSopOperation {
 		tetScale: 0.8,
 		stage: 0,
 		subStage: 0,
+		removeOutsideTets: false,
 	};
 	static override type(): Readonly<'tetrahedralize'> {
 		return 'tetrahedralize';
@@ -64,6 +66,7 @@ export class TetrahedralizeSopOperation extends BaseSopOperation {
 				//
 				stage: stage,
 				subStage: params.subStage,
+				removeOutsideTets: params.removeOutsideTets,
 			});
 			const objectType = params.stage == 0 ? ObjectType.POINTS : ObjectType.MESH;
 			newObjects.push(this.createObject(tetGeometry, objectType));

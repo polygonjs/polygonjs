@@ -5,6 +5,7 @@ import {NodeParamsConfig, ParamConfig} from '../../utils/params/ParamsConfig';
 import {OBJCADTesselationParamConfig} from '../../../../core/geometry/cad/utils/TesselationParamsConfig';
 import {OBJCSGTesselationParamConfig} from '../../../../core/geometry/csg/utils/TesselationParamsConfig';
 // import {OBJSDFTesselationParamConfig} from '../../../../core/geometry/sdf/utils/TesselationParamsConfig';
+import {OBJTetTesselationParamConfig} from '../../../../core/geometry/tet/utils/TesselationParamsConfig';
 
 export function ObjCADTesselationFolderParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
@@ -21,13 +22,24 @@ export function ObjCSGTesselationFolderParamConfig<TBase extends Constructor>(Ba
 // 		SDF = ParamConfig.FOLDER();
 // 	};
 // }
+export function ObjTetTesselationFolderParamConfig<TBase extends Constructor>(Base: TBase) {
+	return class Mixin extends Base {
+		TET = ParamConfig.FOLDER();
+	};
+}
 export function ObjTesselationParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin //OBJSDFTesselationParamConfig(
 		//ObjSDFTesselationFolderParamConfig(
-		extends OBJCSGTesselationParamConfig(
-			ObjCSGTesselationFolderParamConfig(OBJCADTesselationParamConfig(ObjCADTesselationFolderParamConfig(Base)))
-			//		)
-			//)
+		extends OBJTetTesselationParamConfig(
+			ObjTetTesselationFolderParamConfig(
+				OBJCSGTesselationParamConfig(
+					ObjCSGTesselationFolderParamConfig(
+						OBJCADTesselationParamConfig(ObjCADTesselationFolderParamConfig(Base))
+					)
+					//		)
+					//)
+				)
+			)
 		) {};
 }
 class TesselationParamParamsConfig extends ObjTesselationParamConfig(NodeParamsConfig) {}
