@@ -4,6 +4,8 @@ import {CoreType} from '../../Type';
 import {TetGeometry} from './TetGeometry';
 import {TetTesselationParams} from './TetCommon';
 import {tetToMesh} from './toObject3D/tetToMesh';
+import {tetToLines} from './toObject3D/tetToLines';
+import {tetSharedFacesToLines} from './toObject3D/tetSharedFacesToLine';
 
 export class TetObject implements ObjectContent<CoreObjectType.TET> {
 	public visible = true;
@@ -63,7 +65,17 @@ export class TetObject implements ObjectContent<CoreObjectType.TET> {
 		tetObject: TetObject,
 		tesselationParams: TetTesselationParams
 	): Object3D | Object3D[] | undefined {
-		return tetToMesh(tetObject.tetGeometry(), tesselationParams);
+		const objects: Object3D[] = [];
+		if (tesselationParams.displayMesh) {
+			objects.push(tetToMesh(tetObject.tetGeometry(), tesselationParams));
+		}
+		if (tesselationParams.displayLines) {
+			objects.push(tetToLines(tetObject.tetGeometry(), tesselationParams));
+		}
+		if (tesselationParams.displaySharedFaces) {
+			objects.push(tetSharedFacesToLines(tetObject.tetGeometry(), tesselationParams));
+		}
+		return objects;
 	}
 
 	boundingBox(target: Box3): void {

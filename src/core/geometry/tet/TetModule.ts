@@ -17,10 +17,16 @@ import {TetObject} from './TetObject';
 import {isTetObject} from './TetCoreType';
 
 const TET_TESSELATION_PARAMS: TetTesselationParams = {
-	scale: 0.8,
+	scale: 1,
+	displayMesh: true,
+	displayLines: false,
+	displaySharedFaces: false,
 };
 function updateTetTesselationParams(params: TetOBJTesselationParams) {
 	TET_TESSELATION_PARAMS.scale = params.TetScale;
+	TET_TESSELATION_PARAMS.displayMesh = params.TetDisplayMesh;
+	TET_TESSELATION_PARAMS.displayLines = params.TetDisplayLines;
+	TET_TESSELATION_PARAMS.displaySharedFaces = params.TetDisplaySharedFaces;
 }
 const onAddSpecializedChildren: SpecializedChildrenHook = (
 	displayNode: BaseSopNodeType,

@@ -1,9 +1,10 @@
 import {BufferGeometry, Float32BufferAttribute, Matrix4, Vector3} from 'three';
 import {randEps, isInside, IsInsideOptions} from './TetrahedronUtils';
 import {createTetIds} from './TetrahedronCreateTetId';
-import {TET_FACES, TetCreationStage} from './TetrahedronConstant';
+import {TetCreationStage} from './TetrahedronConstant';
 import {MeshWithBVHGeometry} from '../bvh/ThreeMeshBVHHelper';
 import {range} from '../../ArrayUtils';
+import {TET_FACE_POINT_INDICES} from '../tet/TetCommon';
 
 interface CreateTetsOptions {
 	mesh: MeshWithBVHGeometry;
@@ -220,7 +221,7 @@ export function createTets(options: CreateTetsOptions) {
 			// console.log(i, center.toArray(), i4, faces[i4], tetVerts[faces[i4]]);
 			for (let j = 0; j < 4; j++) {
 				for (let k = 0; k < 3; k++) {
-					const vertexId = faces[i4 + TET_FACES[j][k]];
+					const vertexId = faces[i4 + TET_FACE_POINT_INDICES[j][k]];
 					// console.log({j, k, vertexId});
 					_p.copy(tetVerts[vertexId]).sub(center).multiplyScalar(scale).add(center);
 					// _p.copy(center).add(p.sub(center).multiplyScalar(scale));
@@ -253,7 +254,7 @@ export function createTets(options: CreateTetsOptions) {
 			const i4 = 4 * i;
 			for (let j = 0; j < 4; j++) {
 				for (let k = 0; k < 3; k++) {
-					const vertexId = faces[i4 + TET_FACES[j][k]];
+					const vertexId = faces[i4 + TET_FACE_POINT_INDICES[j][k]];
 					// console.log({j, k, vertexId});
 					console.log({j, k, vertexId});
 					_p.copy(tetVerts[vertexId]);

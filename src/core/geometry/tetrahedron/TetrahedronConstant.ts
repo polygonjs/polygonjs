@@ -11,13 +11,6 @@ export const DIRS = [
 	new Vector3(0.0, 0.0, -1.0),
 ];
 
-export const TET_FACES = [
-	[2, 1, 0],
-	[0, 1, 3],
-	[1, 2, 3],
-	[2, 0, 3],
-];
-
 export enum TetCreationStage {
 	POINTS_INSIDE = 'pointsInside',
 	TETS = 'tets',

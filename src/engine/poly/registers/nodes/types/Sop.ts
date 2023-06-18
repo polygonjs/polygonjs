@@ -133,6 +133,9 @@ export enum SopType {
 	TANGENT = 'tangent',
 	//
 	TET = 'tet',
+	TET_BOX = 'tetBox',
+	TET_GROW = 'tetGrow',
+	TET_MIRROR = 'tetMirror',
 	TET_TRIANGULATE = 'tetTriangulate',
 	TET_QUALITY = 'tetQuality',
 	TETRAHEDRALIZE = 'tetrahedralize',

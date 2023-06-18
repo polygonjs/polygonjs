@@ -1,5 +1,5 @@
 import {Matrix4, Vector3} from 'three';
-import {TET_FACES, TetCreationStage, TetEdge} from './TetrahedronConstant';
+import {TetCreationStage, TetEdge} from './TetrahedronConstant';
 import {MeshWithBVHGeometry} from '../bvh/ThreeMeshBVHHelper';
 
 import {_findContainingTet} from './utils/TetIdFindContainingTet';
@@ -7,6 +7,7 @@ import {_visitNeighbours} from './utils/TetIdVisitNeighbours';
 import {_fixNeighbours} from './utils/TetIdFixNeighbours';
 import {_removeOutsideTets} from './utils/TetIdRemoveOutsideTets';
 import {_findViolatingTets} from './utils/TetIdFindViolatingTets';
+import {TET_FACE_POINT_INDICES} from '../tet/TetCommon';
 
 const _p = new Vector3();
 const _p0 = new Vector3();
@@ -64,9 +65,9 @@ export function createTetIds(options: CreateTetIdsOptions): CreateTetIdsResult {
 	//     planesD.append(p0.dot(n))
 	for (let i = 0; i < 4; i++) {
 		neighbors.push(-1);
-		_p0.copy(verts[firstBig + TET_FACES[i][0]]);
-		_p1.copy(verts[firstBig + TET_FACES[i][1]]);
-		_p2.copy(verts[firstBig + TET_FACES[i][2]]);
+		_p0.copy(verts[firstBig + TET_FACE_POINT_INDICES[i][0]]);
+		_p1.copy(verts[firstBig + TET_FACE_POINT_INDICES[i][1]]);
+		_p2.copy(verts[firstBig + TET_FACE_POINT_INDICES[i][2]]);
 		_p1.sub(_p0);
 		_p2.sub(_p0);
 		const n = new Vector3().copy(_p1).cross(_p2);

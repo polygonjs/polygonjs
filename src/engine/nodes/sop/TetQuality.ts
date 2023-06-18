@@ -46,7 +46,6 @@ export class TetQualitySopNode extends TetSopNode<TetQualitySopParamsConfig> {
 			const tet = tetrahedrons[i];
 
 			const quality = tetQuality(points[tet[0]], points[tet[1]], points[tet[2]], points[tet[3]]);
-			console.log(quality);
 			if (quality < this.pv.threshold) {
 				tetrahedrons.splice(i, 1);
 			}

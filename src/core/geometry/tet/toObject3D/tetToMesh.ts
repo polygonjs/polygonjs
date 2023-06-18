@@ -2,8 +2,8 @@ import {Vector3, BufferGeometry, Float32BufferAttribute} from 'three';
 import {TetGeometry} from '../TetGeometry';
 import {BaseSopOperation} from '../../../../engine/operations/sop/_Base';
 import {ObjectType} from '../../Constant';
-import {TetTesselationParams} from '../TetCommon';
-import {TET_FACES} from '../../tetrahedron/TetrahedronConstant';
+import {TET_FACE_POINT_INDICES, TetTesselationParams} from '../TetCommon';
+import {tetCenter} from '../utils/tetCenter';
 
 const _center = new Vector3();
 const _p = new Vector3();
@@ -13,20 +13,16 @@ export function tetToMesh(tetGeometry: TetGeometry, tesselationParams: TetTessel
 	const {points, tetrahedrons} = tetGeometry;
 	const newGeometry = new BufferGeometry();
 	const positions: number[] = new Array(points.length * 3);
-	const indices: number[] = new Array(tetrahedrons.length * 3 * 4);
+	const indices: number[] = new Array(tetrahedrons.length * 4 * 3);
 
 	let positionsCount = 0;
 	let indicesCount = 0;
+	let tetIndex = 0;
 	for (let tet of tetrahedrons) {
 		// get center
-		_center.set(0, 0, 0);
-		for (let pointIndex of tet) {
-			const point = points[pointIndex];
-			_center.add(point);
-		}
-		_center.multiplyScalar(0.25);
+		tetCenter(tetGeometry, tetIndex, _center);
 
-		for (let face of TET_FACES) {
+		for (let face of TET_FACE_POINT_INDICES) {
 			for (let facePointIndex of face) {
 				const pointIndex = tet[facePointIndex];
 				_p.copy(points[pointIndex]).sub(_center).multiplyScalar(scale).add(_center);
@@ -38,6 +34,7 @@ export function tetToMesh(tetGeometry: TetGeometry, tesselationParams: TetTessel
 			indices[indicesCount + 2] = indicesCount + 2;
 			indicesCount += 3;
 		}
+		tetIndex++;
 	}
 
 	newGeometry.setAttribute('position', new Float32BufferAttribute(positions, 3));

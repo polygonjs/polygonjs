@@ -258,6 +258,9 @@ import {SubnetOutputSopNode} from '../../../nodes/sop/SubnetOutput';
 import {SwitchSopNode} from '../../../nodes/sop/Switch';
 import {TangentSopNode} from '../../../nodes/sop/Tangent';
 import {TetSopNode} from '../../../nodes/sop/Tet';
+import {TetBoxSopNode} from '../../../nodes/sop/TetBox';
+import {TetGrowSopNode} from '../../../nodes/sop/TetGrow';
+import {TetMirrorSopNode} from '../../../nodes/sop/TetMirror';
 import {TetQualitySopNode} from '../../../nodes/sop/TetQuality';
 import {TetTriangulateSopNode} from '../../../nodes/sop/TetTriangulate';
 import {TetrahedralizeSopNode} from '../../../nodes/sop/Tetrahedralize';
@@ -549,6 +552,9 @@ export interface GeoNodeChildrenMap {
 	switch: SwitchSopNode;
 	tangent: TangentSopNode;
 	tet: TetSopNode;
+	tetBox: TetBoxSopNode;
+	tetGrow: TetGrowSopNode;
+	tetMirror: TetMirrorSopNode;
 	tetQuality: TetQualitySopNode;
 	tetTriangulate: TetTriangulateSopNode;
 	tetrahedralize: TetrahedralizeSopNode;
@@ -1083,9 +1089,14 @@ export class SopRegister {
 		);
 		poly.registerNode(SwitchSopNode, CATEGORY_SOP.FLOW);
 		poly.registerNode(TangentSopNode, CATEGORY_SOP.ATTRIBUTE);
+		//
 		poly.registerNode(TetSopNode, CATEGORY_SOP.TET);
+		poly.registerNode(TetBoxSopNode, CATEGORY_SOP.TET);
+		poly.registerNode(TetGrowSopNode, CATEGORY_SOP.TET);
+		poly.registerNode(TetMirrorSopNode, CATEGORY_SOP.TET);
 		poly.registerNode(TetQualitySopNode, CATEGORY_SOP.TET);
 		poly.registerNode(TetTriangulateSopNode, CATEGORY_SOP.TET);
+		//
 		poly.registerNode(TetrahedralizeSopNode, CATEGORY_SOP.TET);
 		poly.registerNode(TetrahedronSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.registerNode(TextSopNode, CATEGORY_SOP.PRIMITIVES);

@@ -250,8 +250,8 @@ export class CoreString {
 		);
 	}
 
-	static indices(indices_string: string): number[] {
-		const elements = indices_string.split(INDICES_LIST_SEPARATOR);
+	static indices(indicesString: string): number[] {
+		const elements = indicesString.split(INDICES_LIST_SEPARATOR);
 		if (elements.length > 1) {
 			const indices: number[] = elements.flatMap((element) => this.indices(element));
 			return ArrayUtils.uniq(indices).sort((a, b) => a - b);

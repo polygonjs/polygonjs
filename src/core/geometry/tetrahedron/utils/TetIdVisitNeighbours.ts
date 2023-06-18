@@ -1,5 +1,6 @@
 import {Vector3} from 'three';
-import {TET_FACES, TetEdge} from '../TetrahedronConstant';
+import {TetEdge} from '../TetrahedronConstant';
+import {TET_FACE_POINT_INDICES} from '../../tet/TetCommon';
 
 const _p0 = new Vector3();
 const _p1 = new Vector3();
@@ -50,9 +51,9 @@ export function _visitNeighbours(options: VisitNeighboursOptions): VisitNeighbou
 				planesD.push(0.0);
 			}
 		}
-		const id0 = ids[TET_FACES[k][2]];
-		const id1 = ids[TET_FACES[k][1]];
-		const id2 = ids[TET_FACES[k][0]];
+		const id0 = ids[TET_FACE_POINT_INDICES[k][2]];
+		const id1 = ids[TET_FACE_POINT_INDICES[k][1]];
+		const id2 = ids[TET_FACE_POINT_INDICES[k][0]];
 
 		tetIds[4 * newTetNr] = id0;
 		tetIds[4 * newTetNr + 1] = id1;
@@ -76,9 +77,9 @@ export function _visitNeighbours(options: VisitNeighboursOptions): VisitNeighbou
 		neighbors[4 * newTetNr + 3] = -1;
 
 		for (let l = 0; l < 4; l++) {
-			_p0.copy(verts[tetIds[4 * newTetNr + TET_FACES[l][0]]]);
-			_p1.copy(verts[tetIds[4 * newTetNr + TET_FACES[l][1]]]);
-			_p2.copy(verts[tetIds[4 * newTetNr + TET_FACES[l][2]]]);
+			_p0.copy(verts[tetIds[4 * newTetNr + TET_FACE_POINT_INDICES[l][0]]]);
+			_p1.copy(verts[tetIds[4 * newTetNr + TET_FACE_POINT_INDICES[l][1]]]);
+			_p2.copy(verts[tetIds[4 * newTetNr + TET_FACE_POINT_INDICES[l][2]]]);
 			_p1.sub(_p0);
 			_p2.sub(_p0);
 			const newN = new Vector3().copy(_p1).cross(_p2);
