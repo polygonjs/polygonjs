@@ -4,6 +4,7 @@ export enum JsType {
 	ATTRIBUTE = 'attribute',
 	CODE = 'code',
 	CURSOR = 'cursor',
+	GEOLOCATION_CURRENT_POSITION = 'geolocationCurrentPosition',
 	GET_OBJECT_ATTRIBUTE = 'getObjectAttribute',
 	GET_OBJECT_USER_DATA = 'getObjectUserData',
 	GET_PARAM = 'getParam',

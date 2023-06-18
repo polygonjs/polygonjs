@@ -56,6 +56,7 @@ import {FloatToVec2JsNode} from '../../../nodes/js/FloatToVec2';
 import {FloatToVec3JsNode} from '../../../nodes/js/FloatToVec3';
 import {FloatToVec4JsNode} from '../../../nodes/js/FloatToVec4';
 import {FloorJsNode} from '../../../nodes/js/Floor';
+import {GeolocationCurrentPositionJsNode} from '../../../nodes/js/GeolocationCurrentPosition';
 import {GetBox3PropertyJsNode} from '../../../nodes/js/GetBox3Property';
 import {GetChildrenAttributesJsNode} from '../../../nodes/js/GetChildrenAttributes';
 import {GetChildrenPhysicsRBDPropertiesJsNode} from '../../../nodes/js/GetChildrenPhysicsRBDProperties';
@@ -351,6 +352,7 @@ export interface JsNodeChildrenMap {
 	floatToVec3: FloatToVec3JsNode;
 	floatToVec4: FloatToVec4JsNode;
 	floor: FloorJsNode;
+	geolocationCurrentPosition: GeolocationCurrentPositionJsNode;
 	getBox3Property: GetBox3PropertyJsNode;
 	getChildrenAttributes: GetChildrenAttributesJsNode;
 	getChildrenPhysicsRBDProperties: GetChildrenPhysicsRBDPropertiesJsNode;
@@ -683,6 +685,7 @@ export class JsRegister {
 		poly.registerNode(FloatToVec3JsNode, CATEGORY_JS.CONVERSION);
 		poly.registerNode(FloatToVec4JsNode, CATEGORY_JS.CONVERSION);
 		poly.registerNode(FloorJsNode, CATEGORY_JS.MATH);
+		poly.registerNode(GeolocationCurrentPositionJsNode, CATEGORY_JS.GLOBALS, ONLY_ACTOR);
 		poly.registerNode(GetBox3PropertyJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(GetChildrenAttributesJsNode, CATEGORY_JS.GET, ONLY_ACTOR);
 		poly.registerNode(GetChildrenPhysicsRBDPropertiesJsNode, CATEGORY_JS.PHYSICS, ONLY_ACTOR);

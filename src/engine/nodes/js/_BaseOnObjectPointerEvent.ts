@@ -8,9 +8,6 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {BaseUserInputJsNode} from './_BaseUserInput';
 import {CoreEventEmitter} from '../../../core/event/CoreEventEmitter';
 
-export enum OnObjectHoverJsNodeOutputName {
-	hovered = 'hovered',
-}
 class OnObjectHoverJsParamsConfig extends NodeParamsConfig {
 	/** @param include children */
 	traverseChildren = ParamConfig.BOOLEAN(1);

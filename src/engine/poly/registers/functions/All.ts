@@ -81,6 +81,10 @@ import { floatToInt } from "../../../functions/floatToInt";
 import { floatToVec2 } from "../../../functions/floatToVec2";
 import { floatToVec3 } from "../../../functions/floatToVec3";
 import { floatToVec4 } from "../../../functions/floatToVec4";
+import { geolocationCurrentPositionRef } from "../../../functions/geolocationCurrentPositionRef";
+import { geolocationGetCurrentPosition } from "../../../functions/geolocationGetCurrentPosition";
+import { geolocationLatitude } from "../../../functions/geolocationLatitude";
+import { geolocationLongitude } from "../../../functions/geolocationLongitude";
 import { getActorNodeParamValue } from "../../../functions/getActorNodeParamValue";
 import { getAnimationAction } from "../../../functions/getAnimationAction";
 import { getAnimationMixer } from "../../../functions/getAnimationMixer";
@@ -432,863 +436,871 @@ import { vector3ProjectOnPlane } from "../../../functions/vector3ProjectOnPlane"
 import { vector3Unproject } from "../../../functions/vector3Unproject";
 
 export interface NamedFunctionMap {
-  addAudioStopEventListener: addAudioStopEventListener;
-  addNumber: addNumber;
-  addVector: addVector<Vector2 | Vector3 | Vector4>;
-  addVectorNumber: addVectorNumber<Vector2 | Vector3 | Vector4>;
-  addVideoEventListener: addVideoEventListener;
-  andArrays: andArrays;
-  andBooleans: andBooleans;
-  animationActionCrossFade: animationActionCrossFade;
-  animationActionFadeIn: animationActionFadeIn;
-  animationActionFadeOut: animationActionFadeOut;
-  animationActionPlay: animationActionPlay;
-  animationActionStop: animationActionStop;
-  animationMixerUpdate: animationMixerUpdate;
-  arrayElementPrimitive: arrayElementPrimitive<PrimitiveArrayElement>;
-  arrayElementVector: arrayElementVector;
-  arrayLength: arrayLength;
-  boolToInt: boolToInt;
-  box3Set: box3Set;
-  box3SetFromObject: box3SetFromObject;
-  catmullRomCurve3GetPoint: catmullRomCurve3GetPoint;
-  channelFloat: channelFloat;
-  channelValueFloat: channelValueFloat;
-  channelValueVector2: channelValueVector2;
-  channelValueVector3: channelValueVector3;
-  channelValueVector4: channelValueVector4;
-  channelVector2: channelVector2;
-  channelVector3: channelVector3;
-  channelVector4: channelVector4;
-  clamp: clamp;
-  clothSolverReset: clothSolverReset;
-  clothSolverSetSelectedVertexIndex: clothSolverSetSelectedVertexIndex;
-  clothSolverSetSelectedVertexPosition: clothSolverSetSelectedVertexPosition;
-  clothSolverStepSimulation: clothSolverStepSimulation;
-  clothSolverUpdateMaterial: clothSolverUpdateMaterial;
-  colorSetRGB: colorSetRGB;
-  colorToVec3: colorToVec3;
-  complement: complement;
-  cookNode: cookNode;
-  createScrollListener: createScrollListener;
-  crossVector2: crossVector2;
-  crossVector3: crossVector3;
-  cursorToUv: cursorToUv;
-  debug: debug<any>;
-  degToRad: degToRad;
-  deviceOrientation: deviceOrientation;
-  distanceVector2: distanceVector2;
-  distanceVector3: distanceVector3;
-  divideNumber: divideNumber;
-  divideVectorNumber: divideVectorNumber<Vector2 | Vector3 | Vector4>;
-  dotVector2: dotVector2;
-  dotVector3: dotVector3;
-  easeElasticI: easeElasticI;
-  easeElasticIO: easeElasticIO;
-  easeElasticO: easeElasticO;
-  easeI2: easeI2;
-  easeI3: easeI3;
-  easeI4: easeI4;
-  easeIO2: easeIO2;
-  easeIO3: easeIO3;
-  easeIO4: easeIO4;
-  easeO2: easeO2;
-  easeO3: easeO3;
-  easeO4: easeO4;
-  easeSinI: easeSinI;
-  easeSinIO: easeSinIO;
-  easeSinO: easeSinO;
-  elementsToArrayPrimitive: elementsToArrayPrimitive<PrimitiveArrayElement>;
-  elementsToArrayVector: elementsToArrayVector<VectorArrayElement>;
-  eulerSetFromQuaternion: eulerSetFromQuaternion;
-  eulerSetFromVector3: eulerSetFromVector3;
-  fit: fit;
-  fitClamp: fitClamp;
-  floatToColor: floatToColor;
-  floatToInt: floatToInt;
-  floatToVec2: floatToVec2;
-  floatToVec3: floatToVec3;
-  floatToVec4: floatToVec4;
-  getActorNodeParamValue: getActorNodeParamValue;
-  getAnimationAction: getAnimationAction;
-  getAnimationMixer: getAnimationMixer;
-  getBox3Max: getBox3Max;
-  getBox3Min: getBox3Min;
-  getChildrenAttributes: getChildrenAttributes;
-  getChildrenAttributesPrevious: getChildrenAttributesPrevious;
-  getChildrenAttributesRef: getChildrenAttributesRef;
-  getChildrenPhysicsRBDPropertiesAngularDamping: getChildrenPhysicsRBDPropertiesAngularDamping;
-  getChildrenPhysicsRBDPropertiesAngularVelocity: getChildrenPhysicsRBDPropertiesAngularVelocity;
-  getChildrenPhysicsRBDPropertiesIsMoving: getChildrenPhysicsRBDPropertiesIsMoving;
-  getChildrenPhysicsRBDPropertiesIsSleeping: getChildrenPhysicsRBDPropertiesIsSleeping;
-  getChildrenPhysicsRBDPropertiesLinearDamping: getChildrenPhysicsRBDPropertiesLinearDamping;
-  getChildrenPhysicsRBDPropertiesLinearVelocity: getChildrenPhysicsRBDPropertiesLinearVelocity;
-  getChildrenPropertiesCastShadow: getChildrenPropertiesCastShadow;
-  getChildrenPropertiesFrustumCulled: getChildrenPropertiesFrustumCulled;
-  getChildrenPropertiesMatrixAutoUpdate: getChildrenPropertiesMatrixAutoUpdate;
-  getChildrenPropertiesPosition: getChildrenPropertiesPosition;
-  getChildrenPropertiesQuaternion: getChildrenPropertiesQuaternion;
-  getChildrenPropertiesReceiveShadow: getChildrenPropertiesReceiveShadow;
-  getChildrenPropertiesScale: getChildrenPropertiesScale;
-  getChildrenPropertiesUp: getChildrenPropertiesUp;
-  getChildrenPropertiesVisible: getChildrenPropertiesVisible;
-  getDefaultCamera: getDefaultCamera;
-  getIntersectionAttributeColorInterpolated: getIntersectionAttributeColorInterpolated;
-  getIntersectionAttributeColorNearest: getIntersectionAttributeColorNearest;
-  getIntersectionAttributeNumberInterpolated: getIntersectionAttributeNumberInterpolated;
-  getIntersectionAttributeNumberNearest: getIntersectionAttributeNumberNearest;
-  getIntersectionAttributeStringNearest: getIntersectionAttributeStringNearest;
-  getIntersectionAttributeVector2Interpolated: getIntersectionAttributeVector2Interpolated;
-  getIntersectionAttributeVector2Nearest: getIntersectionAttributeVector2Nearest;
-  getIntersectionAttributeVector3Interpolated: getIntersectionAttributeVector3Interpolated;
-  getIntersectionAttributeVector3Nearest: getIntersectionAttributeVector3Nearest;
-  getIntersectionAttributeVector4Interpolated: getIntersectionAttributeVector4Interpolated;
-  getIntersectionAttributeVector4Nearest: getIntersectionAttributeVector4Nearest;
-  getIntersectionPropertyDistance: getIntersectionPropertyDistance;
-  getIntersectionPropertyNormal: getIntersectionPropertyNormal;
-  getIntersectionPropertyObject: getIntersectionPropertyObject;
-  getIntersectionPropertyPoint: getIntersectionPropertyPoint;
-  getIntersectionPropertyUv: getIntersectionPropertyUv;
-  getMaterial: getMaterial;
-  getObject: getObject;
-  getObjectAttribute: getObjectAttribute;
-  getObjectAttributePrevious: getObjectAttributePrevious;
-  getObjectAttributeRef: getObjectAttributeRef;
-  getObjectChild: getObjectChild;
-  getObjectHoveredIntersection: getObjectHoveredIntersection;
-  getObjectHoveredState: getObjectHoveredState;
-  getObjectLastDispatchedEventName: getObjectLastDispatchedEventName;
-  getObjectProperty: getObjectProperty;
-  getObjectUserData: getObjectUserData;
-  getObjectWorldPosition: getObjectWorldPosition;
-  getParam: getParam;
-  getParent: getParent;
-  getPhysicsRBDAngularDamping: getPhysicsRBDAngularDamping;
-  getPhysicsRBDAngularVelocity: getPhysicsRBDAngularVelocity;
-  getPhysicsRBDCapsuleHeight: getPhysicsRBDCapsuleHeight;
-  getPhysicsRBDCapsuleRadius: getPhysicsRBDCapsuleRadius;
-  getPhysicsRBDConeHeight: getPhysicsRBDConeHeight;
-  getPhysicsRBDConeRadius: getPhysicsRBDConeRadius;
-  getPhysicsRBDCuboidSizes: getPhysicsRBDCuboidSizes;
-  getPhysicsRBDCylinderHeight: getPhysicsRBDCylinderHeight;
-  getPhysicsRBDCylinderRadius: getPhysicsRBDCylinderRadius;
-  getPhysicsRBDIsMoving: getPhysicsRBDIsMoving;
-  getPhysicsRBDIsSleeping: getPhysicsRBDIsSleeping;
-  getPhysicsRBDLinearDamping: getPhysicsRBDLinearDamping;
-  getPhysicsRBDLinearVelocity: getPhysicsRBDLinearVelocity;
-  getPhysicsRBDSphereRadius: getPhysicsRBDSphereRadius;
-  getPlaneConstant: getPlaneConstant;
-  getPlaneNormal: getPlaneNormal;
-  getPlayerInputDataBackward: getPlayerInputDataBackward;
-  getPlayerInputDataForward: getPlayerInputDataForward;
-  getPlayerInputDataJump: getPlayerInputDataJump;
-  getPlayerInputDataLeft: getPlayerInputDataLeft;
-  getPlayerInputDataRight: getPlayerInputDataRight;
-  getPlayerInputDataRun: getPlayerInputDataRun;
-  getPlayerSimplePropertyOnGround: getPlayerSimplePropertyOnGround;
-  getPlayerSimplePropertyVelocity: getPlayerSimplePropertyVelocity;
-  getRayDirection: getRayDirection;
-  getRayOrigin: getRayOrigin;
-  getSibbling: getSibbling;
-  getSphereCenter: getSphereCenter;
-  getSphereRadius: getSphereRadius;
-  getTexture: getTexture;
-  getTrackedHandIndexDirection: getTrackedHandIndexDirection;
-  getTrackedHandMiddleDirection: getTrackedHandMiddleDirection;
-  getTrackedHandPinkyDirection: getTrackedHandPinkyDirection;
-  getTrackedHandRingDirection: getTrackedHandRingDirection;
-  getTrackedHandThumbDirection: getTrackedHandThumbDirection;
-  getVideoPropertyCurrentTime: getVideoPropertyCurrentTime;
-  getVideoPropertyDuration: getVideoPropertyDuration;
-  getVideoPropertyMuted: getVideoPropertyMuted;
-  getVideoPropertyPlaying: getVideoPropertyPlaying;
-  getWebXRARHitDetected: getWebXRARHitDetected;
-  getWebXRARHitMatrix: getWebXRARHitMatrix;
-  getWebXRARHitPosition: getWebXRARHitPosition;
-  getWebXRARHitQuaternion: getWebXRARHitQuaternion;
-  getWebXRControllerAngularVelocity: getWebXRControllerAngularVelocity;
-  getWebXRControllerHasAngularVelocity: getWebXRControllerHasAngularVelocity;
-  getWebXRControllerHasLinearVelocity: getWebXRControllerHasLinearVelocity;
-  getWebXRControllerLinearVelocity: getWebXRControllerLinearVelocity;
-  getWebXRControllerObject: getWebXRControllerObject;
-  getWebXRControllerRay: getWebXRControllerRay;
-  getWebXRTrackedMarkerMatrix: getWebXRTrackedMarkerMatrix;
-  globalsCursor: globalsCursor;
-  globalsRaycaster: globalsRaycaster;
-  globalsRayFromCursor: globalsRayFromCursor;
-  globalsTime: globalsTime;
-  globalsTimeDelta: globalsTimeDelta;
-  hsvToRgb: hsvToRgb;
-  intToBool: intToBool;
-  intToFloat: intToFloat;
-  keyboardEventMatchesConfig: keyboardEventMatchesConfig;
-  lengthVector: lengthVector<Vector2 | Vector3 | Vector4>;
-  lengthVectorArray: lengthVectorArray<Vector2 | Vector3 | Vector4>;
-  lerpColor: lerpColor;
-  lerpNumber: lerpNumber;
-  lerpQuaternion: lerpQuaternion;
-  lerpVector2: lerpVector2;
-  lerpVector3: lerpVector3;
-  lerpVector4: lerpVector4;
-  manhattanDistanceVector2: manhattanDistanceVector2;
-  manhattanDistanceVector3: manhattanDistanceVector3;
-  mathColor_1: mathColor_1;
-  mathColor_2: mathColor_2;
-  mathColor_3: mathColor_3;
-  mathColor_3vvf: mathColor_3vvf;
-  mathColor_4: mathColor_4;
-  mathColor_5: mathColor_5;
-  mathFloat_1: mathFloat_1;
-  mathFloat_2: mathFloat_2;
-  mathFloat_3: mathFloat_3;
-  mathFloat_4: mathFloat_4;
-  mathFloat_5: mathFloat_5;
-  mathPrimArray_1: mathPrimArray_1;
-  mathPrimArray_2: mathPrimArray_2;
-  mathPrimArray_3: mathPrimArray_3;
-  mathPrimArray_4: mathPrimArray_4;
-  mathPrimArray_5: mathPrimArray_5;
-  mathVector2_1: mathVector2_1;
-  mathVector2_2: mathVector2_2;
-  mathVector2_3: mathVector2_3;
-  mathVector2_3vvf: mathVector2_3vvf;
-  mathVector2_4: mathVector2_4;
-  mathVector2_5: mathVector2_5;
-  mathVector3_1: mathVector3_1;
-  mathVector3_2: mathVector3_2;
-  mathVector3_3: mathVector3_3;
-  mathVector3_3vvf: mathVector3_3vvf;
-  mathVector3_4: mathVector3_4;
-  mathVector3_5: mathVector3_5;
-  mathVector4_1: mathVector4_1;
-  mathVector4_2: mathVector4_2;
-  mathVector4_3: mathVector4_3;
-  mathVector4_3vvf: mathVector4_3vvf;
-  mathVector4_4: mathVector4_4;
-  mathVector4_5: mathVector4_5;
-  mathVectorArray_1: mathVectorArray_1<MathArrayVectorElement>;
-  mathVectorArray_2: mathVectorArray_2<MathArrayVectorElement>;
-  mathVectorArray_3: mathVectorArray_3<MathArrayVectorElement>;
-  mathVectorArray_4: mathVectorArray_4<MathArrayVectorElement>;
-  mathVectorArray_5: mathVectorArray_5<MathArrayVectorElement>;
-  matrix4LookAt: matrix4LookAt;
-  matrix4MakeTranslation: matrix4MakeTranslation;
-  matrix4Multiply: matrix4Multiply;
-  maxLengthVector2: maxLengthVector2;
-  maxLengthVector3: maxLengthVector3;
-  maxLengthVector4: maxLengthVector4;
-  mix: mix;
-  mod: mod;
-  multAdd: multAdd;
-  multNumber: multNumber;
-  multScalarArrayVectorArray: multScalarArrayVectorArray<Color | Vector2 | Vector3 | Vector4>;
-  multScalarColor: multScalarColor;
-  multScalarVector2: multScalarVector2;
-  multScalarVector3: multScalarVector3;
-  multScalarVector4: multScalarVector4;
-  multScalarVectorArray: multScalarVectorArray<Color | Vector2 | Vector3 | Vector4>;
-  multVector: multVector<Vector2 | Vector3 | Vector4>;
-  multVectorNumber: multVectorNumber<Vector2 | Vector3 | Vector4>;
-  nearestPosition: nearestPosition;
-  negate: negate<boolean | number>;
-  noiseImprovedVector3: noiseImprovedVector3;
-  noiseSimplexVector2: noiseSimplexVector2;
-  noiseSimplexVector3: noiseSimplexVector3;
-  noiseSimplexVector4: noiseSimplexVector4;
-  normalizeVector2: normalizeVector2;
-  normalizeVector3: normalizeVector3;
-  normalizeVector4: normalizeVector4;
-  object3DLocalToWorld: object3DLocalToWorld;
-  object3DWorldToLocal: object3DWorldToLocal;
-  objectAddEventListeners: objectAddEventListeners;
-  objectDispatchEvent: objectDispatchEvent;
-  objectUpdateMatrix: objectUpdateMatrix;
-  objectUpdateWorldMatrix: objectUpdateWorldMatrix;
-  onPerformanceChange: onPerformanceChange;
-  orArrays: orArrays;
-  orBooleans: orBooleans;
-  particlesSystemReset: particlesSystemReset;
-  particlesSystemStepSimulation: particlesSystemStepSimulation;
-  pauseAudioSource: pauseAudioSource;
-  physicsRBDAddForce: physicsRBDAddForce;
-  physicsRBDAddForceAtPoint: physicsRBDAddForceAtPoint;
-  physicsRBDAddTorque: physicsRBDAddTorque;
-  physicsRBDApplyImpulse: physicsRBDApplyImpulse;
-  physicsRBDApplyImpulseAtPoint: physicsRBDApplyImpulseAtPoint;
-  physicsRBDApplyTorqueImpulse: physicsRBDApplyTorqueImpulse;
-  physicsRBDRemove: physicsRBDRemove;
-  physicsRBDResetAll: physicsRBDResetAll;
-  physicsRBDResetForces: physicsRBDResetForces;
-  physicsRBDResetTorques: physicsRBDResetTorques;
-  physicsWorldReset: physicsWorldReset;
-  physicsWorldStepSimulation: physicsWorldStepSimulation;
-  planeSet: planeSet;
-  playAnimation: playAnimation;
-  playAudioSource: playAudioSource;
-  playerMode: playerMode;
-  playerPhysicsUpdate: playerPhysicsUpdate;
-  playerSimpleUpdate: playerSimpleUpdate;
-  playInstrumentNote: playInstrumentNote;
-  polarTransform: polarTransform;
-  pressButtonParam: pressButtonParam;
-  previousValueColor: previousValueColor;
-  previousValuePrimitive: previousValuePrimitive<boolean | number | string>;
-  previousValueVector2: previousValueVector2;
-  previousValueVector3: previousValueVector3;
-  previousValueVector4: previousValueVector4;
-  quaternionAngleTo: quaternionAngleTo;
-  quaternionSetFromAxisAngle: quaternionSetFromAxisAngle;
-  quaternionSetFromEuler: quaternionSetFromEuler;
-  quaternionSlerp: quaternionSlerp;
-  radToDeg: radToDeg;
-  rand: rand;
-  random: random;
-  rayDistanceToPlane: rayDistanceToPlane;
-  rayFromCamera: rayFromCamera;
-  rayIntersectBox3: rayIntersectBox3;
-  rayIntersectObject3D: rayIntersectObject3D;
-  rayIntersectPlane: rayIntersectPlane;
-  rayIntersectsBox3: rayIntersectsBox3;
-  rayIntersectsObject3D: rayIntersectsObject3D;
-  rayIntersectSphere: rayIntersectSphere;
-  rayIntersectsPlane: rayIntersectsPlane;
-  rayIntersectsSphere: rayIntersectsSphere;
-  raySet: raySet;
-  renderPixel: renderPixel;
-  SDFBox: SDFBox;
-  SDFIntersect: SDFIntersect;
-  SDFRevolutionX: SDFRevolutionX;
-  SDFRevolutionY: SDFRevolutionY;
-  SDFRevolutionZ: SDFRevolutionZ;
-  SDFRoundedX: SDFRoundedX;
-  SDFSmoothIntersect: SDFSmoothIntersect;
-  SDFSmoothSubtract: SDFSmoothSubtract;
-  SDFSmoothUnion: SDFSmoothUnion;
-  SDFSphere: SDFSphere;
-  SDFSubtract: SDFSubtract;
-  SDFUnion: SDFUnion;
-  setGeometryInstanceAttributeColor: setGeometryInstanceAttributeColor;
-  setGeometryInstanceAttributeFloat: setGeometryInstanceAttributeFloat;
-  setGeometryInstanceAttributeQuaternion: setGeometryInstanceAttributeQuaternion;
-  setGeometryInstanceAttributeVector2: setGeometryInstanceAttributeVector2;
-  setGeometryInstanceAttributeVector3: setGeometryInstanceAttributeVector3;
-  setGeometryInstanceAttributeVector4: setGeometryInstanceAttributeVector4;
-  setGeometryInstancePositions: setGeometryInstancePositions;
-  setGeometryInstanceQuaternions: setGeometryInstanceQuaternions;
-  setGeometryInstanceScales: setGeometryInstanceScales;
-  setGeometryInstanceTransforms: setGeometryInstanceTransforms;
-  setGeometryPositions: setGeometryPositions;
-  setMaterialAlphaMap: setMaterialAlphaMap;
-  setMaterialAOMap: setMaterialAOMap;
-  setMaterialColor: setMaterialColor;
-  setMaterialDisplacementMap: setMaterialDisplacementMap;
-  setMaterialEmissiveColor: setMaterialEmissiveColor;
-  setMaterialEmissiveMap: setMaterialEmissiveMap;
-  setMaterialEnvMap: setMaterialEnvMap;
-  setMaterialMap: setMaterialMap;
-  setMaterialMetalnessMap: setMaterialMetalnessMap;
-  setMaterialOpacity: setMaterialOpacity;
-  setMaterialRoughnessMap: setMaterialRoughnessMap;
-  setMaterialUniformNumber: setMaterialUniformNumber;
-  setMaterialUniformTexture: setMaterialUniformTexture;
-  setMaterialUniformVectorColor: setMaterialUniformVectorColor;
-  setObjectAttribute: setObjectAttribute;
-  setObjectCastShadow: setObjectCastShadow;
-  setObjectFrustumCulled: setObjectFrustumCulled;
-  setObjectLookAt: setObjectLookAt;
-  setObjectMaterial: setObjectMaterial;
-  setObjectMaterialColor: setObjectMaterialColor;
-  setObjectMatrix: setObjectMatrix;
-  setObjectMatrixAutoUpdate: setObjectMatrixAutoUpdate;
-  setObjectPolarTransform: setObjectPolarTransform;
-  setObjectPosition: setObjectPosition;
-  setObjectQuaternion: setObjectQuaternion;
-  setObjectReceiveShadow: setObjectReceiveShadow;
-  setObjectRotation: setObjectRotation;
-  setObjectScale: setObjectScale;
-  setObjectVisible: setObjectVisible;
-  setParamBoolean: setParamBoolean;
-  setParamBooleanToggle: setParamBooleanToggle;
-  setParamColor: setParamColor;
-  setParamFloat: setParamFloat;
-  setParamInteger: setParamInteger;
-  setParamString: setParamString;
-  setParamVector2: setParamVector2;
-  setParamVector3: setParamVector3;
-  setParamVector4: setParamVector4;
-  setPerspectiveCameraFov: setPerspectiveCameraFov;
-  setPerspectiveCameraNearFar: setPerspectiveCameraNearFar;
-  setPhysicsRBDAngularVelocity: setPhysicsRBDAngularVelocity;
-  setPhysicsRBDCapsuleProperty: setPhysicsRBDCapsuleProperty;
-  setPhysicsRBDConeProperty: setPhysicsRBDConeProperty;
-  setPhysicsRBDCuboidProperty: setPhysicsRBDCuboidProperty;
-  setPhysicsRBDCylinderProperty: setPhysicsRBDCylinderProperty;
-  setPhysicsRBDLinearVelocity: setPhysicsRBDLinearVelocity;
-  setPhysicsRBDPosition: setPhysicsRBDPosition;
-  setPhysicsRBDRotation: setPhysicsRBDRotation;
-  setPhysicsRBDSphereProperty: setPhysicsRBDSphereProperty;
-  setPhysicsWorldGravity: setPhysicsWorldGravity;
-  setPlayerInput: setPlayerInput;
-  setSpotLightIntensity: setSpotLightIntensity;
-  setViewer: setViewer;
-  sizzleVec3XY: sizzleVec3XY;
-  sizzleVec3XZ: sizzleVec3XZ;
-  sizzleVec3YZ: sizzleVec3YZ;
-  sizzleVec4WArray: sizzleVec4WArray;
-  sizzleVec4XYZ: sizzleVec4XYZ;
-  sizzleVec4XYZArray: sizzleVec4XYZArray;
-  sleep: sleep;
-  smootherstep: smootherstep;
-  smoothstep: smoothstep;
-  sphereSet: sphereSet;
-  subtractNumber: subtractNumber;
-  subtractVector: subtractVector<Vector2 | Vector3 | Vector4>;
-  subtractVectorNumber: subtractVectorNumber<Vector2 | Vector3 | Vector4>;
-  trackFace: trackFace;
-  trackFaceGetLandmarks: trackFaceGetLandmarks;
-  trackHand: trackHand;
-  trackHandGetNormalizedLandmarks: trackHandGetNormalizedLandmarks;
-  trackHandGetWorldLandmarks: trackHandGetWorldLandmarks;
-  triggerFilter: triggerFilter;
-  triggerTwoWaySwitch: triggerTwoWaySwitch;
-  vec2ToVec3: vec2ToVec3;
-  vec3ToColor: vec3ToColor;
-  vec3ToVec4: vec3ToVec4;
-  vector3AngleTo: vector3AngleTo;
-  vector3Project: vector3Project;
-  vector3ProjectOnPlane: vector3ProjectOnPlane;
-  vector3Unproject: vector3Unproject;
+	addAudioStopEventListener: addAudioStopEventListener;
+	addNumber: addNumber;
+	addVector: addVector<Vector2 | Vector3 | Vector4>;
+	addVectorNumber: addVectorNumber<Vector2 | Vector3 | Vector4>;
+	addVideoEventListener: addVideoEventListener;
+	andArrays: andArrays;
+	andBooleans: andBooleans;
+	animationActionCrossFade: animationActionCrossFade;
+	animationActionFadeIn: animationActionFadeIn;
+	animationActionFadeOut: animationActionFadeOut;
+	animationActionPlay: animationActionPlay;
+	animationActionStop: animationActionStop;
+	animationMixerUpdate: animationMixerUpdate;
+	arrayElementPrimitive: arrayElementPrimitive<PrimitiveArrayElement>;
+	arrayElementVector: arrayElementVector;
+	arrayLength: arrayLength;
+	boolToInt: boolToInt;
+	box3Set: box3Set;
+	box3SetFromObject: box3SetFromObject;
+	catmullRomCurve3GetPoint: catmullRomCurve3GetPoint;
+	channelFloat: channelFloat;
+	channelValueFloat: channelValueFloat;
+	channelValueVector2: channelValueVector2;
+	channelValueVector3: channelValueVector3;
+	channelValueVector4: channelValueVector4;
+	channelVector2: channelVector2;
+	channelVector3: channelVector3;
+	channelVector4: channelVector4;
+	clamp: clamp;
+	clothSolverReset: clothSolverReset;
+	clothSolverSetSelectedVertexIndex: clothSolverSetSelectedVertexIndex;
+	clothSolverSetSelectedVertexPosition: clothSolverSetSelectedVertexPosition;
+	clothSolverStepSimulation: clothSolverStepSimulation;
+	clothSolverUpdateMaterial: clothSolverUpdateMaterial;
+	colorSetRGB: colorSetRGB;
+	colorToVec3: colorToVec3;
+	complement: complement;
+	cookNode: cookNode;
+	createScrollListener: createScrollListener;
+	crossVector2: crossVector2;
+	crossVector3: crossVector3;
+	cursorToUv: cursorToUv;
+	debug: debug<any>;
+	degToRad: degToRad;
+	deviceOrientation: deviceOrientation;
+	distanceVector2: distanceVector2;
+	distanceVector3: distanceVector3;
+	divideNumber: divideNumber;
+	divideVectorNumber: divideVectorNumber<Vector2 | Vector3 | Vector4>;
+	dotVector2: dotVector2;
+	dotVector3: dotVector3;
+	easeElasticI: easeElasticI;
+	easeElasticIO: easeElasticIO;
+	easeElasticO: easeElasticO;
+	easeI2: easeI2;
+	easeI3: easeI3;
+	easeI4: easeI4;
+	easeIO2: easeIO2;
+	easeIO3: easeIO3;
+	easeIO4: easeIO4;
+	easeO2: easeO2;
+	easeO3: easeO3;
+	easeO4: easeO4;
+	easeSinI: easeSinI;
+	easeSinIO: easeSinIO;
+	easeSinO: easeSinO;
+	elementsToArrayPrimitive: elementsToArrayPrimitive<PrimitiveArrayElement>;
+	elementsToArrayVector: elementsToArrayVector<VectorArrayElement>;
+	eulerSetFromQuaternion: eulerSetFromQuaternion;
+	eulerSetFromVector3: eulerSetFromVector3;
+	fit: fit;
+	fitClamp: fitClamp;
+	floatToColor: floatToColor;
+	floatToInt: floatToInt;
+	floatToVec2: floatToVec2;
+	floatToVec3: floatToVec3;
+	floatToVec4: floatToVec4;
+	geolocationCurrentPositionRef: geolocationCurrentPositionRef;
+	geolocationGetCurrentPosition: geolocationGetCurrentPosition;
+	geolocationLatitude: geolocationLatitude;
+	geolocationLongitude: geolocationLongitude;
+	getActorNodeParamValue: getActorNodeParamValue;
+	getAnimationAction: getAnimationAction;
+	getAnimationMixer: getAnimationMixer;
+	getBox3Max: getBox3Max;
+	getBox3Min: getBox3Min;
+	getChildrenAttributes: getChildrenAttributes;
+	getChildrenAttributesPrevious: getChildrenAttributesPrevious;
+	getChildrenAttributesRef: getChildrenAttributesRef;
+	getChildrenPhysicsRBDPropertiesAngularDamping: getChildrenPhysicsRBDPropertiesAngularDamping;
+	getChildrenPhysicsRBDPropertiesAngularVelocity: getChildrenPhysicsRBDPropertiesAngularVelocity;
+	getChildrenPhysicsRBDPropertiesIsMoving: getChildrenPhysicsRBDPropertiesIsMoving;
+	getChildrenPhysicsRBDPropertiesIsSleeping: getChildrenPhysicsRBDPropertiesIsSleeping;
+	getChildrenPhysicsRBDPropertiesLinearDamping: getChildrenPhysicsRBDPropertiesLinearDamping;
+	getChildrenPhysicsRBDPropertiesLinearVelocity: getChildrenPhysicsRBDPropertiesLinearVelocity;
+	getChildrenPropertiesCastShadow: getChildrenPropertiesCastShadow;
+	getChildrenPropertiesFrustumCulled: getChildrenPropertiesFrustumCulled;
+	getChildrenPropertiesMatrixAutoUpdate: getChildrenPropertiesMatrixAutoUpdate;
+	getChildrenPropertiesPosition: getChildrenPropertiesPosition;
+	getChildrenPropertiesQuaternion: getChildrenPropertiesQuaternion;
+	getChildrenPropertiesReceiveShadow: getChildrenPropertiesReceiveShadow;
+	getChildrenPropertiesScale: getChildrenPropertiesScale;
+	getChildrenPropertiesUp: getChildrenPropertiesUp;
+	getChildrenPropertiesVisible: getChildrenPropertiesVisible;
+	getDefaultCamera: getDefaultCamera;
+	getIntersectionAttributeColorInterpolated: getIntersectionAttributeColorInterpolated;
+	getIntersectionAttributeColorNearest: getIntersectionAttributeColorNearest;
+	getIntersectionAttributeNumberInterpolated: getIntersectionAttributeNumberInterpolated;
+	getIntersectionAttributeNumberNearest: getIntersectionAttributeNumberNearest;
+	getIntersectionAttributeStringNearest: getIntersectionAttributeStringNearest;
+	getIntersectionAttributeVector2Interpolated: getIntersectionAttributeVector2Interpolated;
+	getIntersectionAttributeVector2Nearest: getIntersectionAttributeVector2Nearest;
+	getIntersectionAttributeVector3Interpolated: getIntersectionAttributeVector3Interpolated;
+	getIntersectionAttributeVector3Nearest: getIntersectionAttributeVector3Nearest;
+	getIntersectionAttributeVector4Interpolated: getIntersectionAttributeVector4Interpolated;
+	getIntersectionAttributeVector4Nearest: getIntersectionAttributeVector4Nearest;
+	getIntersectionPropertyDistance: getIntersectionPropertyDistance;
+	getIntersectionPropertyNormal: getIntersectionPropertyNormal;
+	getIntersectionPropertyObject: getIntersectionPropertyObject;
+	getIntersectionPropertyPoint: getIntersectionPropertyPoint;
+	getIntersectionPropertyUv: getIntersectionPropertyUv;
+	getMaterial: getMaterial;
+	getObject: getObject;
+	getObjectAttribute: getObjectAttribute;
+	getObjectAttributePrevious: getObjectAttributePrevious;
+	getObjectAttributeRef: getObjectAttributeRef;
+	getObjectChild: getObjectChild;
+	getObjectHoveredIntersection: getObjectHoveredIntersection;
+	getObjectHoveredState: getObjectHoveredState;
+	getObjectLastDispatchedEventName: getObjectLastDispatchedEventName;
+	getObjectProperty: getObjectProperty;
+	getObjectUserData: getObjectUserData;
+	getObjectWorldPosition: getObjectWorldPosition;
+	getParam: getParam;
+	getParent: getParent;
+	getPhysicsRBDAngularDamping: getPhysicsRBDAngularDamping;
+	getPhysicsRBDAngularVelocity: getPhysicsRBDAngularVelocity;
+	getPhysicsRBDCapsuleHeight: getPhysicsRBDCapsuleHeight;
+	getPhysicsRBDCapsuleRadius: getPhysicsRBDCapsuleRadius;
+	getPhysicsRBDConeHeight: getPhysicsRBDConeHeight;
+	getPhysicsRBDConeRadius: getPhysicsRBDConeRadius;
+	getPhysicsRBDCuboidSizes: getPhysicsRBDCuboidSizes;
+	getPhysicsRBDCylinderHeight: getPhysicsRBDCylinderHeight;
+	getPhysicsRBDCylinderRadius: getPhysicsRBDCylinderRadius;
+	getPhysicsRBDIsMoving: getPhysicsRBDIsMoving;
+	getPhysicsRBDIsSleeping: getPhysicsRBDIsSleeping;
+	getPhysicsRBDLinearDamping: getPhysicsRBDLinearDamping;
+	getPhysicsRBDLinearVelocity: getPhysicsRBDLinearVelocity;
+	getPhysicsRBDSphereRadius: getPhysicsRBDSphereRadius;
+	getPlaneConstant: getPlaneConstant;
+	getPlaneNormal: getPlaneNormal;
+	getPlayerInputDataBackward: getPlayerInputDataBackward;
+	getPlayerInputDataForward: getPlayerInputDataForward;
+	getPlayerInputDataJump: getPlayerInputDataJump;
+	getPlayerInputDataLeft: getPlayerInputDataLeft;
+	getPlayerInputDataRight: getPlayerInputDataRight;
+	getPlayerInputDataRun: getPlayerInputDataRun;
+	getPlayerSimplePropertyOnGround: getPlayerSimplePropertyOnGround;
+	getPlayerSimplePropertyVelocity: getPlayerSimplePropertyVelocity;
+	getRayDirection: getRayDirection;
+	getRayOrigin: getRayOrigin;
+	getSibbling: getSibbling;
+	getSphereCenter: getSphereCenter;
+	getSphereRadius: getSphereRadius;
+	getTexture: getTexture;
+	getTrackedHandIndexDirection: getTrackedHandIndexDirection;
+	getTrackedHandMiddleDirection: getTrackedHandMiddleDirection;
+	getTrackedHandPinkyDirection: getTrackedHandPinkyDirection;
+	getTrackedHandRingDirection: getTrackedHandRingDirection;
+	getTrackedHandThumbDirection: getTrackedHandThumbDirection;
+	getVideoPropertyCurrentTime: getVideoPropertyCurrentTime;
+	getVideoPropertyDuration: getVideoPropertyDuration;
+	getVideoPropertyMuted: getVideoPropertyMuted;
+	getVideoPropertyPlaying: getVideoPropertyPlaying;
+	getWebXRARHitDetected: getWebXRARHitDetected;
+	getWebXRARHitMatrix: getWebXRARHitMatrix;
+	getWebXRARHitPosition: getWebXRARHitPosition;
+	getWebXRARHitQuaternion: getWebXRARHitQuaternion;
+	getWebXRControllerAngularVelocity: getWebXRControllerAngularVelocity;
+	getWebXRControllerHasAngularVelocity: getWebXRControllerHasAngularVelocity;
+	getWebXRControllerHasLinearVelocity: getWebXRControllerHasLinearVelocity;
+	getWebXRControllerLinearVelocity: getWebXRControllerLinearVelocity;
+	getWebXRControllerObject: getWebXRControllerObject;
+	getWebXRControllerRay: getWebXRControllerRay;
+	getWebXRTrackedMarkerMatrix: getWebXRTrackedMarkerMatrix;
+	globalsCursor: globalsCursor;
+	globalsRaycaster: globalsRaycaster;
+	globalsRayFromCursor: globalsRayFromCursor;
+	globalsTime: globalsTime;
+	globalsTimeDelta: globalsTimeDelta;
+	hsvToRgb: hsvToRgb;
+	intToBool: intToBool;
+	intToFloat: intToFloat;
+	keyboardEventMatchesConfig: keyboardEventMatchesConfig;
+	lengthVector: lengthVector<Vector2 | Vector3 | Vector4>;
+	lengthVectorArray: lengthVectorArray<Vector2 | Vector3 | Vector4>;
+	lerpColor: lerpColor;
+	lerpNumber: lerpNumber;
+	lerpQuaternion: lerpQuaternion;
+	lerpVector2: lerpVector2;
+	lerpVector3: lerpVector3;
+	lerpVector4: lerpVector4;
+	manhattanDistanceVector2: manhattanDistanceVector2;
+	manhattanDistanceVector3: manhattanDistanceVector3;
+	mathColor_1: mathColor_1;
+	mathColor_2: mathColor_2;
+	mathColor_3: mathColor_3;
+	mathColor_3vvf: mathColor_3vvf;
+	mathColor_4: mathColor_4;
+	mathColor_5: mathColor_5;
+	mathFloat_1: mathFloat_1;
+	mathFloat_2: mathFloat_2;
+	mathFloat_3: mathFloat_3;
+	mathFloat_4: mathFloat_4;
+	mathFloat_5: mathFloat_5;
+	mathPrimArray_1: mathPrimArray_1;
+	mathPrimArray_2: mathPrimArray_2;
+	mathPrimArray_3: mathPrimArray_3;
+	mathPrimArray_4: mathPrimArray_4;
+	mathPrimArray_5: mathPrimArray_5;
+	mathVector2_1: mathVector2_1;
+	mathVector2_2: mathVector2_2;
+	mathVector2_3: mathVector2_3;
+	mathVector2_3vvf: mathVector2_3vvf;
+	mathVector2_4: mathVector2_4;
+	mathVector2_5: mathVector2_5;
+	mathVector3_1: mathVector3_1;
+	mathVector3_2: mathVector3_2;
+	mathVector3_3: mathVector3_3;
+	mathVector3_3vvf: mathVector3_3vvf;
+	mathVector3_4: mathVector3_4;
+	mathVector3_5: mathVector3_5;
+	mathVector4_1: mathVector4_1;
+	mathVector4_2: mathVector4_2;
+	mathVector4_3: mathVector4_3;
+	mathVector4_3vvf: mathVector4_3vvf;
+	mathVector4_4: mathVector4_4;
+	mathVector4_5: mathVector4_5;
+	mathVectorArray_1: mathVectorArray_1<MathArrayVectorElement>;
+	mathVectorArray_2: mathVectorArray_2<MathArrayVectorElement>;
+	mathVectorArray_3: mathVectorArray_3<MathArrayVectorElement>;
+	mathVectorArray_4: mathVectorArray_4<MathArrayVectorElement>;
+	mathVectorArray_5: mathVectorArray_5<MathArrayVectorElement>;
+	matrix4LookAt: matrix4LookAt;
+	matrix4MakeTranslation: matrix4MakeTranslation;
+	matrix4Multiply: matrix4Multiply;
+	maxLengthVector2: maxLengthVector2;
+	maxLengthVector3: maxLengthVector3;
+	maxLengthVector4: maxLengthVector4;
+	mix: mix;
+	mod: mod;
+	multAdd: multAdd;
+	multNumber: multNumber;
+	multScalarArrayVectorArray: multScalarArrayVectorArray<Color | Vector2 | Vector3 | Vector4>;
+	multScalarColor: multScalarColor;
+	multScalarVector2: multScalarVector2;
+	multScalarVector3: multScalarVector3;
+	multScalarVector4: multScalarVector4;
+	multScalarVectorArray: multScalarVectorArray<Color | Vector2 | Vector3 | Vector4>;
+	multVector: multVector<Vector2 | Vector3 | Vector4>;
+	multVectorNumber: multVectorNumber<Vector2 | Vector3 | Vector4>;
+	nearestPosition: nearestPosition;
+	negate: negate<boolean | number>;
+	noiseImprovedVector3: noiseImprovedVector3;
+	noiseSimplexVector2: noiseSimplexVector2;
+	noiseSimplexVector3: noiseSimplexVector3;
+	noiseSimplexVector4: noiseSimplexVector4;
+	normalizeVector2: normalizeVector2;
+	normalizeVector3: normalizeVector3;
+	normalizeVector4: normalizeVector4;
+	object3DLocalToWorld: object3DLocalToWorld;
+	object3DWorldToLocal: object3DWorldToLocal;
+	objectAddEventListeners: objectAddEventListeners;
+	objectDispatchEvent: objectDispatchEvent;
+	objectUpdateMatrix: objectUpdateMatrix;
+	objectUpdateWorldMatrix: objectUpdateWorldMatrix;
+	onPerformanceChange: onPerformanceChange;
+	orArrays: orArrays;
+	orBooleans: orBooleans;
+	particlesSystemReset: particlesSystemReset;
+	particlesSystemStepSimulation: particlesSystemStepSimulation;
+	pauseAudioSource: pauseAudioSource;
+	physicsRBDAddForce: physicsRBDAddForce;
+	physicsRBDAddForceAtPoint: physicsRBDAddForceAtPoint;
+	physicsRBDAddTorque: physicsRBDAddTorque;
+	physicsRBDApplyImpulse: physicsRBDApplyImpulse;
+	physicsRBDApplyImpulseAtPoint: physicsRBDApplyImpulseAtPoint;
+	physicsRBDApplyTorqueImpulse: physicsRBDApplyTorqueImpulse;
+	physicsRBDRemove: physicsRBDRemove;
+	physicsRBDResetAll: physicsRBDResetAll;
+	physicsRBDResetForces: physicsRBDResetForces;
+	physicsRBDResetTorques: physicsRBDResetTorques;
+	physicsWorldReset: physicsWorldReset;
+	physicsWorldStepSimulation: physicsWorldStepSimulation;
+	planeSet: planeSet;
+	playAnimation: playAnimation;
+	playAudioSource: playAudioSource;
+	playerMode: playerMode;
+	playerPhysicsUpdate: playerPhysicsUpdate;
+	playerSimpleUpdate: playerSimpleUpdate;
+	playInstrumentNote: playInstrumentNote;
+	polarTransform: polarTransform;
+	pressButtonParam: pressButtonParam;
+	previousValueColor: previousValueColor;
+	previousValuePrimitive: previousValuePrimitive<boolean | number | string>;
+	previousValueVector2: previousValueVector2;
+	previousValueVector3: previousValueVector3;
+	previousValueVector4: previousValueVector4;
+	quaternionAngleTo: quaternionAngleTo;
+	quaternionSetFromAxisAngle: quaternionSetFromAxisAngle;
+	quaternionSetFromEuler: quaternionSetFromEuler;
+	quaternionSlerp: quaternionSlerp;
+	radToDeg: radToDeg;
+	rand: rand;
+	random: random;
+	rayDistanceToPlane: rayDistanceToPlane;
+	rayFromCamera: rayFromCamera;
+	rayIntersectBox3: rayIntersectBox3;
+	rayIntersectObject3D: rayIntersectObject3D;
+	rayIntersectPlane: rayIntersectPlane;
+	rayIntersectsBox3: rayIntersectsBox3;
+	rayIntersectsObject3D: rayIntersectsObject3D;
+	rayIntersectSphere: rayIntersectSphere;
+	rayIntersectsPlane: rayIntersectsPlane;
+	rayIntersectsSphere: rayIntersectsSphere;
+	raySet: raySet;
+	renderPixel: renderPixel;
+	SDFBox: SDFBox;
+	SDFIntersect: SDFIntersect;
+	SDFRevolutionX: SDFRevolutionX;
+	SDFRevolutionY: SDFRevolutionY;
+	SDFRevolutionZ: SDFRevolutionZ;
+	SDFRoundedX: SDFRoundedX;
+	SDFSmoothIntersect: SDFSmoothIntersect;
+	SDFSmoothSubtract: SDFSmoothSubtract;
+	SDFSmoothUnion: SDFSmoothUnion;
+	SDFSphere: SDFSphere;
+	SDFSubtract: SDFSubtract;
+	SDFUnion: SDFUnion;
+	setGeometryInstanceAttributeColor: setGeometryInstanceAttributeColor;
+	setGeometryInstanceAttributeFloat: setGeometryInstanceAttributeFloat;
+	setGeometryInstanceAttributeQuaternion: setGeometryInstanceAttributeQuaternion;
+	setGeometryInstanceAttributeVector2: setGeometryInstanceAttributeVector2;
+	setGeometryInstanceAttributeVector3: setGeometryInstanceAttributeVector3;
+	setGeometryInstanceAttributeVector4: setGeometryInstanceAttributeVector4;
+	setGeometryInstancePositions: setGeometryInstancePositions;
+	setGeometryInstanceQuaternions: setGeometryInstanceQuaternions;
+	setGeometryInstanceScales: setGeometryInstanceScales;
+	setGeometryInstanceTransforms: setGeometryInstanceTransforms;
+	setGeometryPositions: setGeometryPositions;
+	setMaterialAlphaMap: setMaterialAlphaMap;
+	setMaterialAOMap: setMaterialAOMap;
+	setMaterialColor: setMaterialColor;
+	setMaterialDisplacementMap: setMaterialDisplacementMap;
+	setMaterialEmissiveColor: setMaterialEmissiveColor;
+	setMaterialEmissiveMap: setMaterialEmissiveMap;
+	setMaterialEnvMap: setMaterialEnvMap;
+	setMaterialMap: setMaterialMap;
+	setMaterialMetalnessMap: setMaterialMetalnessMap;
+	setMaterialOpacity: setMaterialOpacity;
+	setMaterialRoughnessMap: setMaterialRoughnessMap;
+	setMaterialUniformNumber: setMaterialUniformNumber;
+	setMaterialUniformTexture: setMaterialUniformTexture;
+	setMaterialUniformVectorColor: setMaterialUniformVectorColor;
+	setObjectAttribute: setObjectAttribute;
+	setObjectCastShadow: setObjectCastShadow;
+	setObjectFrustumCulled: setObjectFrustumCulled;
+	setObjectLookAt: setObjectLookAt;
+	setObjectMaterial: setObjectMaterial;
+	setObjectMaterialColor: setObjectMaterialColor;
+	setObjectMatrix: setObjectMatrix;
+	setObjectMatrixAutoUpdate: setObjectMatrixAutoUpdate;
+	setObjectPolarTransform: setObjectPolarTransform;
+	setObjectPosition: setObjectPosition;
+	setObjectQuaternion: setObjectQuaternion;
+	setObjectReceiveShadow: setObjectReceiveShadow;
+	setObjectRotation: setObjectRotation;
+	setObjectScale: setObjectScale;
+	setObjectVisible: setObjectVisible;
+	setParamBoolean: setParamBoolean;
+	setParamBooleanToggle: setParamBooleanToggle;
+	setParamColor: setParamColor;
+	setParamFloat: setParamFloat;
+	setParamInteger: setParamInteger;
+	setParamString: setParamString;
+	setParamVector2: setParamVector2;
+	setParamVector3: setParamVector3;
+	setParamVector4: setParamVector4;
+	setPerspectiveCameraFov: setPerspectiveCameraFov;
+	setPerspectiveCameraNearFar: setPerspectiveCameraNearFar;
+	setPhysicsRBDAngularVelocity: setPhysicsRBDAngularVelocity;
+	setPhysicsRBDCapsuleProperty: setPhysicsRBDCapsuleProperty;
+	setPhysicsRBDConeProperty: setPhysicsRBDConeProperty;
+	setPhysicsRBDCuboidProperty: setPhysicsRBDCuboidProperty;
+	setPhysicsRBDCylinderProperty: setPhysicsRBDCylinderProperty;
+	setPhysicsRBDLinearVelocity: setPhysicsRBDLinearVelocity;
+	setPhysicsRBDPosition: setPhysicsRBDPosition;
+	setPhysicsRBDRotation: setPhysicsRBDRotation;
+	setPhysicsRBDSphereProperty: setPhysicsRBDSphereProperty;
+	setPhysicsWorldGravity: setPhysicsWorldGravity;
+	setPlayerInput: setPlayerInput;
+	setSpotLightIntensity: setSpotLightIntensity;
+	setViewer: setViewer;
+	sizzleVec3XY: sizzleVec3XY;
+	sizzleVec3XZ: sizzleVec3XZ;
+	sizzleVec3YZ: sizzleVec3YZ;
+	sizzleVec4WArray: sizzleVec4WArray;
+	sizzleVec4XYZ: sizzleVec4XYZ;
+	sizzleVec4XYZArray: sizzleVec4XYZArray;
+	sleep: sleep;
+	smootherstep: smootherstep;
+	smoothstep: smoothstep;
+	sphereSet: sphereSet;
+	subtractNumber: subtractNumber;
+	subtractVector: subtractVector<Vector2 | Vector3 | Vector4>;
+	subtractVectorNumber: subtractVectorNumber<Vector2 | Vector3 | Vector4>;
+	trackFace: trackFace;
+	trackFaceGetLandmarks: trackFaceGetLandmarks;
+	trackHand: trackHand;
+	trackHandGetNormalizedLandmarks: trackHandGetNormalizedLandmarks;
+	trackHandGetWorldLandmarks: trackHandGetWorldLandmarks;
+	triggerFilter: triggerFilter;
+	triggerTwoWaySwitch: triggerTwoWaySwitch;
+	vec2ToVec3: vec2ToVec3;
+	vec3ToColor: vec3ToColor;
+	vec3ToVec4: vec3ToVec4;
+	vector3AngleTo: vector3AngleTo;
+	vector3Project: vector3Project;
+	vector3ProjectOnPlane: vector3ProjectOnPlane;
+	vector3Unproject: vector3Unproject;
 }
 
 export class AllNamedFunctionRegister {
-  static run(poly: PolyEngine) {
-    [
-      addAudioStopEventListener,
-      addNumber,
-      addVector,
-      addVectorNumber,
-      addVideoEventListener,
-      andArrays,
-      andBooleans,
-      animationActionCrossFade,
-      animationActionFadeIn,
-      animationActionFadeOut,
-      animationActionPlay,
-      animationActionStop,
-      animationMixerUpdate,
-      arrayElementPrimitive,
-      arrayElementVector,
-      arrayLength,
-      boolToInt,
-      box3Set,
-      box3SetFromObject,
-      catmullRomCurve3GetPoint,
-      channelFloat,
-      channelValueFloat,
-      channelValueVector2,
-      channelValueVector3,
-      channelValueVector4,
-      channelVector2,
-      channelVector3,
-      channelVector4,
-      clamp,
-      clothSolverReset,
-      clothSolverSetSelectedVertexIndex,
-      clothSolverSetSelectedVertexPosition,
-      clothSolverStepSimulation,
-      clothSolverUpdateMaterial,
-      colorSetRGB,
-      colorToVec3,
-      complement,
-      cookNode,
-      createScrollListener,
-      crossVector2,
-      crossVector3,
-      cursorToUv,
-      debug,
-      degToRad,
-      deviceOrientation,
-      distanceVector2,
-      distanceVector3,
-      divideNumber,
-      divideVectorNumber,
-      dotVector2,
-      dotVector3,
-      easeElasticI,
-      easeElasticIO,
-      easeElasticO,
-      easeI2,
-      easeI3,
-      easeI4,
-      easeIO2,
-      easeIO3,
-      easeIO4,
-      easeO2,
-      easeO3,
-      easeO4,
-      easeSinI,
-      easeSinIO,
-      easeSinO,
-      elementsToArrayPrimitive,
-      elementsToArrayVector,
-      eulerSetFromQuaternion,
-      eulerSetFromVector3,
-      fit,
-      fitClamp,
-      floatToColor,
-      floatToInt,
-      floatToVec2,
-      floatToVec3,
-      floatToVec4,
-      getActorNodeParamValue,
-      getAnimationAction,
-      getAnimationMixer,
-      getBox3Max,
-      getBox3Min,
-      getChildrenAttributes,
-      getChildrenAttributesPrevious,
-      getChildrenAttributesRef,
-      getChildrenPhysicsRBDPropertiesAngularDamping,
-      getChildrenPhysicsRBDPropertiesAngularVelocity,
-      getChildrenPhysicsRBDPropertiesIsMoving,
-      getChildrenPhysicsRBDPropertiesIsSleeping,
-      getChildrenPhysicsRBDPropertiesLinearDamping,
-      getChildrenPhysicsRBDPropertiesLinearVelocity,
-      getChildrenPropertiesCastShadow,
-      getChildrenPropertiesFrustumCulled,
-      getChildrenPropertiesMatrixAutoUpdate,
-      getChildrenPropertiesPosition,
-      getChildrenPropertiesQuaternion,
-      getChildrenPropertiesReceiveShadow,
-      getChildrenPropertiesScale,
-      getChildrenPropertiesUp,
-      getChildrenPropertiesVisible,
-      getDefaultCamera,
-      getIntersectionAttributeColorInterpolated,
-      getIntersectionAttributeColorNearest,
-      getIntersectionAttributeNumberInterpolated,
-      getIntersectionAttributeNumberNearest,
-      getIntersectionAttributeStringNearest,
-      getIntersectionAttributeVector2Interpolated,
-      getIntersectionAttributeVector2Nearest,
-      getIntersectionAttributeVector3Interpolated,
-      getIntersectionAttributeVector3Nearest,
-      getIntersectionAttributeVector4Interpolated,
-      getIntersectionAttributeVector4Nearest,
-      getIntersectionPropertyDistance,
-      getIntersectionPropertyNormal,
-      getIntersectionPropertyObject,
-      getIntersectionPropertyPoint,
-      getIntersectionPropertyUv,
-      getMaterial,
-      getObject,
-      getObjectAttribute,
-      getObjectAttributePrevious,
-      getObjectAttributeRef,
-      getObjectChild,
-      getObjectHoveredIntersection,
-      getObjectHoveredState,
-      getObjectLastDispatchedEventName,
-      getObjectProperty,
-      getObjectUserData,
-      getObjectWorldPosition,
-      getParam,
-      getParent,
-      getPhysicsRBDAngularDamping,
-      getPhysicsRBDAngularVelocity,
-      getPhysicsRBDCapsuleHeight,
-      getPhysicsRBDCapsuleRadius,
-      getPhysicsRBDConeHeight,
-      getPhysicsRBDConeRadius,
-      getPhysicsRBDCuboidSizes,
-      getPhysicsRBDCylinderHeight,
-      getPhysicsRBDCylinderRadius,
-      getPhysicsRBDIsMoving,
-      getPhysicsRBDIsSleeping,
-      getPhysicsRBDLinearDamping,
-      getPhysicsRBDLinearVelocity,
-      getPhysicsRBDSphereRadius,
-      getPlaneConstant,
-      getPlaneNormal,
-      getPlayerInputDataBackward,
-      getPlayerInputDataForward,
-      getPlayerInputDataJump,
-      getPlayerInputDataLeft,
-      getPlayerInputDataRight,
-      getPlayerInputDataRun,
-      getPlayerSimplePropertyOnGround,
-      getPlayerSimplePropertyVelocity,
-      getRayDirection,
-      getRayOrigin,
-      getSibbling,
-      getSphereCenter,
-      getSphereRadius,
-      getTexture,
-      getTrackedHandIndexDirection,
-      getTrackedHandMiddleDirection,
-      getTrackedHandPinkyDirection,
-      getTrackedHandRingDirection,
-      getTrackedHandThumbDirection,
-      getVideoPropertyCurrentTime,
-      getVideoPropertyDuration,
-      getVideoPropertyMuted,
-      getVideoPropertyPlaying,
-      getWebXRARHitDetected,
-      getWebXRARHitMatrix,
-      getWebXRARHitPosition,
-      getWebXRARHitQuaternion,
-      getWebXRControllerAngularVelocity,
-      getWebXRControllerHasAngularVelocity,
-      getWebXRControllerHasLinearVelocity,
-      getWebXRControllerLinearVelocity,
-      getWebXRControllerObject,
-      getWebXRControllerRay,
-      getWebXRTrackedMarkerMatrix,
-      globalsCursor,
-      globalsRaycaster,
-      globalsRayFromCursor,
-      globalsTime,
-      globalsTimeDelta,
-      hsvToRgb,
-      intToBool,
-      intToFloat,
-      keyboardEventMatchesConfig,
-      lengthVector,
-      lengthVectorArray,
-      lerpColor,
-      lerpNumber,
-      lerpQuaternion,
-      lerpVector2,
-      lerpVector3,
-      lerpVector4,
-      manhattanDistanceVector2,
-      manhattanDistanceVector3,
-      mathColor_1,
-      mathColor_2,
-      mathColor_3,
-      mathColor_3vvf,
-      mathColor_4,
-      mathColor_5,
-      mathFloat_1,
-      mathFloat_2,
-      mathFloat_3,
-      mathFloat_4,
-      mathFloat_5,
-      mathPrimArray_1,
-      mathPrimArray_2,
-      mathPrimArray_3,
-      mathPrimArray_4,
-      mathPrimArray_5,
-      mathVector2_1,
-      mathVector2_2,
-      mathVector2_3,
-      mathVector2_3vvf,
-      mathVector2_4,
-      mathVector2_5,
-      mathVector3_1,
-      mathVector3_2,
-      mathVector3_3,
-      mathVector3_3vvf,
-      mathVector3_4,
-      mathVector3_5,
-      mathVector4_1,
-      mathVector4_2,
-      mathVector4_3,
-      mathVector4_3vvf,
-      mathVector4_4,
-      mathVector4_5,
-      mathVectorArray_1,
-      mathVectorArray_2,
-      mathVectorArray_3,
-      mathVectorArray_4,
-      mathVectorArray_5,
-      matrix4LookAt,
-      matrix4MakeTranslation,
-      matrix4Multiply,
-      maxLengthVector2,
-      maxLengthVector3,
-      maxLengthVector4,
-      mix,
-      mod,
-      multAdd,
-      multNumber,
-      multScalarArrayVectorArray,
-      multScalarColor,
-      multScalarVector2,
-      multScalarVector3,
-      multScalarVector4,
-      multScalarVectorArray,
-      multVector,
-      multVectorNumber,
-      nearestPosition,
-      negate,
-      noiseImprovedVector3,
-      noiseSimplexVector2,
-      noiseSimplexVector3,
-      noiseSimplexVector4,
-      normalizeVector2,
-      normalizeVector3,
-      normalizeVector4,
-      object3DLocalToWorld,
-      object3DWorldToLocal,
-      objectAddEventListeners,
-      objectDispatchEvent,
-      objectUpdateMatrix,
-      objectUpdateWorldMatrix,
-      onPerformanceChange,
-      orArrays,
-      orBooleans,
-      particlesSystemReset,
-      particlesSystemStepSimulation,
-      pauseAudioSource,
-      physicsRBDAddForce,
-      physicsRBDAddForceAtPoint,
-      physicsRBDAddTorque,
-      physicsRBDApplyImpulse,
-      physicsRBDApplyImpulseAtPoint,
-      physicsRBDApplyTorqueImpulse,
-      physicsRBDRemove,
-      physicsRBDResetAll,
-      physicsRBDResetForces,
-      physicsRBDResetTorques,
-      physicsWorldReset,
-      physicsWorldStepSimulation,
-      planeSet,
-      playAnimation,
-      playAudioSource,
-      playerMode,
-      playerPhysicsUpdate,
-      playerSimpleUpdate,
-      playInstrumentNote,
-      polarTransform,
-      pressButtonParam,
-      previousValueColor,
-      previousValuePrimitive,
-      previousValueVector2,
-      previousValueVector3,
-      previousValueVector4,
-      quaternionAngleTo,
-      quaternionSetFromAxisAngle,
-      quaternionSetFromEuler,
-      quaternionSlerp,
-      radToDeg,
-      rand,
-      random,
-      rayDistanceToPlane,
-      rayFromCamera,
-      rayIntersectBox3,
-      rayIntersectObject3D,
-      rayIntersectPlane,
-      rayIntersectsBox3,
-      rayIntersectsObject3D,
-      rayIntersectSphere,
-      rayIntersectsPlane,
-      rayIntersectsSphere,
-      raySet,
-      renderPixel,
-      SDFBox,
-      SDFIntersect,
-      SDFRevolutionX,
-      SDFRevolutionY,
-      SDFRevolutionZ,
-      SDFRoundedX,
-      SDFSmoothIntersect,
-      SDFSmoothSubtract,
-      SDFSmoothUnion,
-      SDFSphere,
-      SDFSubtract,
-      SDFUnion,
-      setGeometryInstanceAttributeColor,
-      setGeometryInstanceAttributeFloat,
-      setGeometryInstanceAttributeQuaternion,
-      setGeometryInstanceAttributeVector2,
-      setGeometryInstanceAttributeVector3,
-      setGeometryInstanceAttributeVector4,
-      setGeometryInstancePositions,
-      setGeometryInstanceQuaternions,
-      setGeometryInstanceScales,
-      setGeometryInstanceTransforms,
-      setGeometryPositions,
-      setMaterialAlphaMap,
-      setMaterialAOMap,
-      setMaterialColor,
-      setMaterialDisplacementMap,
-      setMaterialEmissiveColor,
-      setMaterialEmissiveMap,
-      setMaterialEnvMap,
-      setMaterialMap,
-      setMaterialMetalnessMap,
-      setMaterialOpacity,
-      setMaterialRoughnessMap,
-      setMaterialUniformNumber,
-      setMaterialUniformTexture,
-      setMaterialUniformVectorColor,
-      setObjectAttribute,
-      setObjectCastShadow,
-      setObjectFrustumCulled,
-      setObjectLookAt,
-      setObjectMaterial,
-      setObjectMaterialColor,
-      setObjectMatrix,
-      setObjectMatrixAutoUpdate,
-      setObjectPolarTransform,
-      setObjectPosition,
-      setObjectQuaternion,
-      setObjectReceiveShadow,
-      setObjectRotation,
-      setObjectScale,
-      setObjectVisible,
-      setParamBoolean,
-      setParamBooleanToggle,
-      setParamColor,
-      setParamFloat,
-      setParamInteger,
-      setParamString,
-      setParamVector2,
-      setParamVector3,
-      setParamVector4,
-      setPerspectiveCameraFov,
-      setPerspectiveCameraNearFar,
-      setPhysicsRBDAngularVelocity,
-      setPhysicsRBDCapsuleProperty,
-      setPhysicsRBDConeProperty,
-      setPhysicsRBDCuboidProperty,
-      setPhysicsRBDCylinderProperty,
-      setPhysicsRBDLinearVelocity,
-      setPhysicsRBDPosition,
-      setPhysicsRBDRotation,
-      setPhysicsRBDSphereProperty,
-      setPhysicsWorldGravity,
-      setPlayerInput,
-      setSpotLightIntensity,
-      setViewer,
-      sizzleVec3XY,
-      sizzleVec3XZ,
-      sizzleVec3YZ,
-      sizzleVec4WArray,
-      sizzleVec4XYZ,
-      sizzleVec4XYZArray,
-      sleep,
-      smootherstep,
-      smoothstep,
-      sphereSet,
-      subtractNumber,
-      subtractVector,
-      subtractVectorNumber,
-      trackFace,
-      trackFaceGetLandmarks,
-      trackHand,
-      trackHandGetNormalizedLandmarks,
-      trackHandGetWorldLandmarks,
-      triggerFilter,
-      triggerTwoWaySwitch,
-      vec2ToVec3,
-      vec3ToColor,
-      vec3ToVec4,
-      vector3AngleTo,
-      vector3Project,
-      vector3ProjectOnPlane,
-      vector3Unproject,
-    ].forEach((f) => poly.registerNamedFunction(f));
-  }
+	static run(poly: PolyEngine) {
+		[
+			addAudioStopEventListener,
+			addNumber,
+			addVector,
+			addVectorNumber,
+			addVideoEventListener,
+			andArrays,
+			andBooleans,
+			animationActionCrossFade,
+			animationActionFadeIn,
+			animationActionFadeOut,
+			animationActionPlay,
+			animationActionStop,
+			animationMixerUpdate,
+			arrayElementPrimitive,
+			arrayElementVector,
+			arrayLength,
+			boolToInt,
+			box3Set,
+			box3SetFromObject,
+			catmullRomCurve3GetPoint,
+			channelFloat,
+			channelValueFloat,
+			channelValueVector2,
+			channelValueVector3,
+			channelValueVector4,
+			channelVector2,
+			channelVector3,
+			channelVector4,
+			clamp,
+			clothSolverReset,
+			clothSolverSetSelectedVertexIndex,
+			clothSolverSetSelectedVertexPosition,
+			clothSolverStepSimulation,
+			clothSolverUpdateMaterial,
+			colorSetRGB,
+			colorToVec3,
+			complement,
+			cookNode,
+			createScrollListener,
+			crossVector2,
+			crossVector3,
+			cursorToUv,
+			debug,
+			degToRad,
+			deviceOrientation,
+			distanceVector2,
+			distanceVector3,
+			divideNumber,
+			divideVectorNumber,
+			dotVector2,
+			dotVector3,
+			easeElasticI,
+			easeElasticIO,
+			easeElasticO,
+			easeI2,
+			easeI3,
+			easeI4,
+			easeIO2,
+			easeIO3,
+			easeIO4,
+			easeO2,
+			easeO3,
+			easeO4,
+			easeSinI,
+			easeSinIO,
+			easeSinO,
+			elementsToArrayPrimitive,
+			elementsToArrayVector,
+			eulerSetFromQuaternion,
+			eulerSetFromVector3,
+			fit,
+			fitClamp,
+			floatToColor,
+			floatToInt,
+			floatToVec2,
+			floatToVec3,
+			floatToVec4,
+			geolocationCurrentPositionRef,
+			geolocationGetCurrentPosition,
+			geolocationLatitude,
+			geolocationLongitude,
+			getActorNodeParamValue,
+			getAnimationAction,
+			getAnimationMixer,
+			getBox3Max,
+			getBox3Min,
+			getChildrenAttributes,
+			getChildrenAttributesPrevious,
+			getChildrenAttributesRef,
+			getChildrenPhysicsRBDPropertiesAngularDamping,
+			getChildrenPhysicsRBDPropertiesAngularVelocity,
+			getChildrenPhysicsRBDPropertiesIsMoving,
+			getChildrenPhysicsRBDPropertiesIsSleeping,
+			getChildrenPhysicsRBDPropertiesLinearDamping,
+			getChildrenPhysicsRBDPropertiesLinearVelocity,
+			getChildrenPropertiesCastShadow,
+			getChildrenPropertiesFrustumCulled,
+			getChildrenPropertiesMatrixAutoUpdate,
+			getChildrenPropertiesPosition,
+			getChildrenPropertiesQuaternion,
+			getChildrenPropertiesReceiveShadow,
+			getChildrenPropertiesScale,
+			getChildrenPropertiesUp,
+			getChildrenPropertiesVisible,
+			getDefaultCamera,
+			getIntersectionAttributeColorInterpolated,
+			getIntersectionAttributeColorNearest,
+			getIntersectionAttributeNumberInterpolated,
+			getIntersectionAttributeNumberNearest,
+			getIntersectionAttributeStringNearest,
+			getIntersectionAttributeVector2Interpolated,
+			getIntersectionAttributeVector2Nearest,
+			getIntersectionAttributeVector3Interpolated,
+			getIntersectionAttributeVector3Nearest,
+			getIntersectionAttributeVector4Interpolated,
+			getIntersectionAttributeVector4Nearest,
+			getIntersectionPropertyDistance,
+			getIntersectionPropertyNormal,
+			getIntersectionPropertyObject,
+			getIntersectionPropertyPoint,
+			getIntersectionPropertyUv,
+			getMaterial,
+			getObject,
+			getObjectAttribute,
+			getObjectAttributePrevious,
+			getObjectAttributeRef,
+			getObjectChild,
+			getObjectHoveredIntersection,
+			getObjectHoveredState,
+			getObjectLastDispatchedEventName,
+			getObjectProperty,
+			getObjectUserData,
+			getObjectWorldPosition,
+			getParam,
+			getParent,
+			getPhysicsRBDAngularDamping,
+			getPhysicsRBDAngularVelocity,
+			getPhysicsRBDCapsuleHeight,
+			getPhysicsRBDCapsuleRadius,
+			getPhysicsRBDConeHeight,
+			getPhysicsRBDConeRadius,
+			getPhysicsRBDCuboidSizes,
+			getPhysicsRBDCylinderHeight,
+			getPhysicsRBDCylinderRadius,
+			getPhysicsRBDIsMoving,
+			getPhysicsRBDIsSleeping,
+			getPhysicsRBDLinearDamping,
+			getPhysicsRBDLinearVelocity,
+			getPhysicsRBDSphereRadius,
+			getPlaneConstant,
+			getPlaneNormal,
+			getPlayerInputDataBackward,
+			getPlayerInputDataForward,
+			getPlayerInputDataJump,
+			getPlayerInputDataLeft,
+			getPlayerInputDataRight,
+			getPlayerInputDataRun,
+			getPlayerSimplePropertyOnGround,
+			getPlayerSimplePropertyVelocity,
+			getRayDirection,
+			getRayOrigin,
+			getSibbling,
+			getSphereCenter,
+			getSphereRadius,
+			getTexture,
+			getTrackedHandIndexDirection,
+			getTrackedHandMiddleDirection,
+			getTrackedHandPinkyDirection,
+			getTrackedHandRingDirection,
+			getTrackedHandThumbDirection,
+			getVideoPropertyCurrentTime,
+			getVideoPropertyDuration,
+			getVideoPropertyMuted,
+			getVideoPropertyPlaying,
+			getWebXRARHitDetected,
+			getWebXRARHitMatrix,
+			getWebXRARHitPosition,
+			getWebXRARHitQuaternion,
+			getWebXRControllerAngularVelocity,
+			getWebXRControllerHasAngularVelocity,
+			getWebXRControllerHasLinearVelocity,
+			getWebXRControllerLinearVelocity,
+			getWebXRControllerObject,
+			getWebXRControllerRay,
+			getWebXRTrackedMarkerMatrix,
+			globalsCursor,
+			globalsRaycaster,
+			globalsRayFromCursor,
+			globalsTime,
+			globalsTimeDelta,
+			hsvToRgb,
+			intToBool,
+			intToFloat,
+			keyboardEventMatchesConfig,
+			lengthVector,
+			lengthVectorArray,
+			lerpColor,
+			lerpNumber,
+			lerpQuaternion,
+			lerpVector2,
+			lerpVector3,
+			lerpVector4,
+			manhattanDistanceVector2,
+			manhattanDistanceVector3,
+			mathColor_1,
+			mathColor_2,
+			mathColor_3,
+			mathColor_3vvf,
+			mathColor_4,
+			mathColor_5,
+			mathFloat_1,
+			mathFloat_2,
+			mathFloat_3,
+			mathFloat_4,
+			mathFloat_5,
+			mathPrimArray_1,
+			mathPrimArray_2,
+			mathPrimArray_3,
+			mathPrimArray_4,
+			mathPrimArray_5,
+			mathVector2_1,
+			mathVector2_2,
+			mathVector2_3,
+			mathVector2_3vvf,
+			mathVector2_4,
+			mathVector2_5,
+			mathVector3_1,
+			mathVector3_2,
+			mathVector3_3,
+			mathVector3_3vvf,
+			mathVector3_4,
+			mathVector3_5,
+			mathVector4_1,
+			mathVector4_2,
+			mathVector4_3,
+			mathVector4_3vvf,
+			mathVector4_4,
+			mathVector4_5,
+			mathVectorArray_1,
+			mathVectorArray_2,
+			mathVectorArray_3,
+			mathVectorArray_4,
+			mathVectorArray_5,
+			matrix4LookAt,
+			matrix4MakeTranslation,
+			matrix4Multiply,
+			maxLengthVector2,
+			maxLengthVector3,
+			maxLengthVector4,
+			mix,
+			mod,
+			multAdd,
+			multNumber,
+			multScalarArrayVectorArray,
+			multScalarColor,
+			multScalarVector2,
+			multScalarVector3,
+			multScalarVector4,
+			multScalarVectorArray,
+			multVector,
+			multVectorNumber,
+			nearestPosition,
+			negate,
+			noiseImprovedVector3,
+			noiseSimplexVector2,
+			noiseSimplexVector3,
+			noiseSimplexVector4,
+			normalizeVector2,
+			normalizeVector3,
+			normalizeVector4,
+			object3DLocalToWorld,
+			object3DWorldToLocal,
+			objectAddEventListeners,
+			objectDispatchEvent,
+			objectUpdateMatrix,
+			objectUpdateWorldMatrix,
+			onPerformanceChange,
+			orArrays,
+			orBooleans,
+			particlesSystemReset,
+			particlesSystemStepSimulation,
+			pauseAudioSource,
+			physicsRBDAddForce,
+			physicsRBDAddForceAtPoint,
+			physicsRBDAddTorque,
+			physicsRBDApplyImpulse,
+			physicsRBDApplyImpulseAtPoint,
+			physicsRBDApplyTorqueImpulse,
+			physicsRBDRemove,
+			physicsRBDResetAll,
+			physicsRBDResetForces,
+			physicsRBDResetTorques,
+			physicsWorldReset,
+			physicsWorldStepSimulation,
+			planeSet,
+			playAnimation,
+			playAudioSource,
+			playerMode,
+			playerPhysicsUpdate,
+			playerSimpleUpdate,
+			playInstrumentNote,
+			polarTransform,
+			pressButtonParam,
+			previousValueColor,
+			previousValuePrimitive,
+			previousValueVector2,
+			previousValueVector3,
+			previousValueVector4,
+			quaternionAngleTo,
+			quaternionSetFromAxisAngle,
+			quaternionSetFromEuler,
+			quaternionSlerp,
+			radToDeg,
+			rand,
+			random,
+			rayDistanceToPlane,
+			rayFromCamera,
+			rayIntersectBox3,
+			rayIntersectObject3D,
+			rayIntersectPlane,
+			rayIntersectsBox3,
+			rayIntersectsObject3D,
+			rayIntersectSphere,
+			rayIntersectsPlane,
+			rayIntersectsSphere,
+			raySet,
+			renderPixel,
+			SDFBox,
+			SDFIntersect,
+			SDFRevolutionX,
+			SDFRevolutionY,
+			SDFRevolutionZ,
+			SDFRoundedX,
+			SDFSmoothIntersect,
+			SDFSmoothSubtract,
+			SDFSmoothUnion,
+			SDFSphere,
+			SDFSubtract,
+			SDFUnion,
+			setGeometryInstanceAttributeColor,
+			setGeometryInstanceAttributeFloat,
+			setGeometryInstanceAttributeQuaternion,
+			setGeometryInstanceAttributeVector2,
+			setGeometryInstanceAttributeVector3,
+			setGeometryInstanceAttributeVector4,
+			setGeometryInstancePositions,
+			setGeometryInstanceQuaternions,
+			setGeometryInstanceScales,
+			setGeometryInstanceTransforms,
+			setGeometryPositions,
+			setMaterialAlphaMap,
+			setMaterialAOMap,
+			setMaterialColor,
+			setMaterialDisplacementMap,
+			setMaterialEmissiveColor,
+			setMaterialEmissiveMap,
+			setMaterialEnvMap,
+			setMaterialMap,
+			setMaterialMetalnessMap,
+			setMaterialOpacity,
+			setMaterialRoughnessMap,
+			setMaterialUniformNumber,
+			setMaterialUniformTexture,
+			setMaterialUniformVectorColor,
+			setObjectAttribute,
+			setObjectCastShadow,
+			setObjectFrustumCulled,
+			setObjectLookAt,
+			setObjectMaterial,
+			setObjectMaterialColor,
+			setObjectMatrix,
+			setObjectMatrixAutoUpdate,
+			setObjectPolarTransform,
+			setObjectPosition,
+			setObjectQuaternion,
+			setObjectReceiveShadow,
+			setObjectRotation,
+			setObjectScale,
+			setObjectVisible,
+			setParamBoolean,
+			setParamBooleanToggle,
+			setParamColor,
+			setParamFloat,
+			setParamInteger,
+			setParamString,
+			setParamVector2,
+			setParamVector3,
+			setParamVector4,
+			setPerspectiveCameraFov,
+			setPerspectiveCameraNearFar,
+			setPhysicsRBDAngularVelocity,
+			setPhysicsRBDCapsuleProperty,
+			setPhysicsRBDConeProperty,
+			setPhysicsRBDCuboidProperty,
+			setPhysicsRBDCylinderProperty,
+			setPhysicsRBDLinearVelocity,
+			setPhysicsRBDPosition,
+			setPhysicsRBDRotation,
+			setPhysicsRBDSphereProperty,
+			setPhysicsWorldGravity,
+			setPlayerInput,
+			setSpotLightIntensity,
+			setViewer,
+			sizzleVec3XY,
+			sizzleVec3XZ,
+			sizzleVec3YZ,
+			sizzleVec4WArray,
+			sizzleVec4XYZ,
+			sizzleVec4XYZArray,
+			sleep,
+			smootherstep,
+			smoothstep,
+			sphereSet,
+			subtractNumber,
+			subtractVector,
+			subtractVectorNumber,
+			trackFace,
+			trackFaceGetLandmarks,
+			trackHand,
+			trackHandGetNormalizedLandmarks,
+			trackHandGetWorldLandmarks,
+			triggerFilter,
+			triggerTwoWaySwitch,
+			vec2ToVec3,
+			vec3ToColor,
+			vec3ToVec4,
+			vector3AngleTo,
+			vector3Project,
+			vector3ProjectOnPlane,
+			vector3Unproject,
+		].forEach((f) => poly.registerNamedFunction(f));
+	}
 }

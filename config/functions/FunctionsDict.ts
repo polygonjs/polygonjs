@@ -66,6 +66,12 @@ export const FUNCTION_NAME_BY_FILE_NAME: Record<string, string[]> = {
 		'easeElasticIO',
 	],
 	Euler: ['eulerSetFromVector3', 'eulerSetFromQuaternion'],
+	Geolocation: [
+		'geolocationCurrentPositionRef',
+		'geolocationGetCurrentPosition',
+		'geolocationLatitude',
+		'geolocationLongitude',
+	],
 	Geometry: ['setGeometryPositions'],
 	GetActorNodeParamValue: ['getActorNodeParamValue'],
 	GetChildrenAttributes: ['getChildrenAttributes'],
