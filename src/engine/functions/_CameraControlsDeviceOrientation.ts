@@ -13,9 +13,9 @@ ios + chrome:		| yes				| no							| yes
 
 */
 
-import {Quaternion, Object3D, Vector3} from 'three';
+import {Quaternion, Vector3} from 'three';
 import {NamedFunction1} from './_Base';
-import {DeviceOrientationControls} from '../../core/thirdParty/threejs/DeviceOrientationControls';
+import {DeviceOrientationControls} from '../../core/camera/controls/DeviceOrientationControls';
 import {PolyScene} from '../scene/PolyScene';
 import {dummyReadRefVal} from '../../core/reactivity/CoreReactivity';
 import {CoreUserAgent} from '../../core/UserAgent';
@@ -28,13 +28,13 @@ const compensateQuat = new Quaternion().setFromAxisAngle(new Vector3(0, 1, 0), M
 // but only if we are in landscape, and NOT in android + chrome
 const compensateRotation = CoreUserAgent.isLandscape() && !(CoreUserAgent.isAndroid() && CoreUserAgent.isChrome());
 class DeviceOrientationControlsHandler {
-	private _dummyObject = new Object3D();
+	// private _dummyObject = new Object3D();
 	private _lastUpdatedFrame = -1;
 	private _controls: DeviceOrientationControls;
 	// private previousMagicWindowYaw: number | undefined;
 
 	constructor(public readonly scene: PolyScene) {
-		this._controls = new DeviceOrientationControls(this._dummyObject);
+		this._controls = new DeviceOrientationControls();
 	}
 	update() {
 		const currentFrame = this.scene.frame();
@@ -51,7 +51,7 @@ class DeviceOrientationControlsHandler {
 	}
 	quaternion(target: Quaternion) {
 		this.update();
-		target.copy(this._dummyObject.quaternion);
+		target.copy(this._controls.quaternion);
 		if (compensateRotation) {
 			target.premultiply(compensateQuat);
 			// target.setFromEuler(magicWindowDeltaEuler, false);
