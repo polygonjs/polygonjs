@@ -116,6 +116,7 @@ export class CoreMath {
 	static radToDeg = radToDeg; // used in expressions
 	static clamp = clamp; // used in expressions
 	static smoothstep = smoothstep;
+	static smootherstep = smootherstep;
 	static fit01 = fit01; // used in expressions
 	static fit = fit; // used in expressions
 	static fitClamp = fitClamp; // used in expressions

@@ -1,6 +1,6 @@
 {
 	"name": "@polygonjs/polygonjs",
-	"version": "1.4.22",
+	"version": "1.4.23",
 	"engines": {
 		"node": ">=16.13.1",
 		"yarn": ">=1.22.15"
@@ -75,7 +75,7 @@
 		"potpack": "2.0.0",
 		"prettier": "2.8.8",
 		"three": "0.152.2",
-		"three-bvh-csg": "0.0.5",
+		"three-bvh-csg": "0.0.7",
 		"three-gpu-pathtracer": "0.0.15",
 		"three-mesh-bvh": "0.6.0",
 		"three-subdivide": "1.1.2",
