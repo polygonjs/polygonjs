@@ -26,10 +26,15 @@ export interface TetrahedronPoint {
 	id: number;
 	position: Vector3;
 }
+export interface TetrahedronSphere {
+	center: Vector3;
+	radius: number;
+}
 export interface Tetrahedron {
 	id: number;
 	pointIds: TetPointIds;
 	neighbours: TetNeighbourDatas;
+	sphere: TetrahedronSphere;
 }
 export interface TetTesselationParams {
 	scale: number;

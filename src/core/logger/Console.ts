@@ -22,7 +22,14 @@ export function logBlueBg(message: string) {
 		fontWeight: 'bold',
 		padding: {x: 10, y: 5},
 	});
-	// console.log('%c' + message, 'background-color:blue; color: white; font-weight:bold; padding: 5px 10px');
+}
+export function logGreenBg(message: string) {
+	logStyled(message, {
+		backgroundColor: 'green',
+		color: 'white',
+		fontWeight: 'bold',
+		padding: {x: 10, y: 5},
+	});
 }
 interface LogStyle {
 	backgroundColor?: string;

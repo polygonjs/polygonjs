@@ -12,8 +12,10 @@ import {CoreObject} from '../../../core/geometry/Object';
 import {TetObject} from '../../../core/geometry/tet/TetObject';
 import {findTetContainingPosition} from '../../../core/geometry/tet/utils/findTetContainingPosition';
 import {TET_FACE_POINT_INDICES, TetNeighbourDataWithSource} from '../../../core/geometry/tet/TetCommon';
+import {tetCenter} from '../../../core/geometry/tet/utils/tetCenter';
 
 const _pos = new Vector3();
+const _rayOrigin = new Vector3();
 const sharedFacesNeighbourData: Set<TetNeighbourDataWithSource> = new Set();
 
 class TetSplitSopParamsConfig extends NodeParamsConfig {
@@ -61,7 +63,9 @@ export class TetSplitSopNode extends TetSopNode<TetSplitSopParamsConfig> {
 		if (firstId == null) {
 			return;
 		}
-		const tetId = findTetContainingPosition(tetGeometry, position, firstId);
+		tetCenter(tetGeometry, firstId, _rayOrigin);
+		console.log({_rayOrigin});
+		const tetId = findTetContainingPosition(tetGeometry, position, _rayOrigin, firstId);
 		console.log({tetId});
 
 		// 2. remove tetrahedron

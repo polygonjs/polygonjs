@@ -8,7 +8,7 @@ import {TetSopNode} from './_BaseTet';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {TET_CREATION_STAGES, tetrahedralize} from '../../../core/geometry/tet/utils/tetrahedralize';
+import {tetrahedralize} from '../../../core/geometry/tet/utils/tetrahedralize';
 import {TetGeometry} from '../../../core/geometry/tet/TetGeometry';
 import {MeshWithBVHGeometry, ThreeMeshBVHHelper} from '../../../core/geometry/bvh/ThreeMeshBVHHelper';
 import {Mesh} from 'three';
@@ -23,15 +23,13 @@ class TetrahedralizeSopParamsConfig extends NodeParamsConfig {
 		range: [-4, 0],
 		rangeLocked: [true, true],
 	});
-	stage = ParamConfig.INTEGER(0, {
-		menu: {
-			entries: TET_CREATION_STAGES.map((name, value) => ({name, value})),
-		},
+	stepByStep = ParamConfig.BOOLEAN(0, {
 		separatorBefore: true,
 	});
-	subStage = ParamConfig.INTEGER(0, {
-		range: [0, 100],
+	stage = ParamConfig.INTEGER(-1, {
+		range: [-1, 100],
 		rangeLocked: [true, false],
+		visibleIf: {stepByStep: 1},
 	});
 }
 const ParamsConfig = new TetrahedralizeSopParamsConfig();
@@ -60,8 +58,8 @@ export class TetrahedralizeSopNode extends TetSopNode<TetrahedralizeSopParamsCon
 				// oneFacePerTet: params.oneFacePerTet,
 				// scale: params.tetScale,
 				//
-				stage: TET_CREATION_STAGES[this.pv.stage],
-				subStage: this.pv.subStage,
+				// stage: TET_CREATION_STAGES[this.pv.stage],
+				stage: this.pv.stepByStep ? (this.pv.stage >= 0 ? this.pv.stage : null) : null,
 				// removeOutsideTets: params.removeOutsideTets,
 			});
 			tetGeometries.push(tetGeometry);

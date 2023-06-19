@@ -1,4 +1,5 @@
 import {Number4} from '../../../types/GlobalTypes';
+import {mapFirstKey} from '../../MapUtils';
 import {
 	TetrahedronPoint,
 	Tetrahedron,
@@ -8,6 +9,7 @@ import {
 } from './TetCommon';
 import {updateTetNeighboursFromNewTet} from './utils/tetNeighboursHelper';
 import {Vector3} from 'three';
+import {circumSphere} from './utils/tetSphere';
 
 export class TetGeometry {
 	public readonly tetrahedrons: Map<number, Tetrahedron> = new Map();
@@ -17,6 +19,7 @@ export class TetGeometry {
 	private _nextTetId = -1;
 	private _pointsCount = 0;
 	private _tetsCount = 0;
+	private _lastAddedTetId: number | null = null;
 
 	addPoint(x: number, y: number, z: number) {
 		this._nextPointId++;
@@ -39,9 +42,10 @@ export class TetGeometry {
 	}
 
 	firstTetId() {
-		for (let [tetId] of this.tetrahedrons) {
-			return tetId;
-		}
+		return mapFirstKey(this.tetrahedrons);
+	}
+	lastAddedTetId() {
+		return this._lastAddedTetId;
 	}
 
 	addTetrahedron(p0: number, p1: number, p2: number, p3: number) {
@@ -51,13 +55,17 @@ export class TetGeometry {
 		}
 		this._nextTetId++;
 		const id = this._nextTetId;
+		const _circumSphere = {center: new Vector3(), radius: 0};
+		circumSphere(this, p0, p1, p2, p3, _circumSphere);
 		const tetrahedron: Tetrahedron = {
 			id,
 			pointIds: [p0, p1, p2, p3],
 			neighbours: [null, null, null, null],
+			sphere: _circumSphere,
 		};
 		this.tetrahedrons.set(tetrahedron.id, tetrahedron);
 		this._tetsCount++;
+		this._lastAddedTetId = tetrahedron.id;
 
 		// update point keys
 		for (let p of tetrahedron.pointIds) {
@@ -133,6 +141,10 @@ export class TetGeometry {
 					};
 					return tetNeighbourData;
 				}) as TetNeighbourDatas,
+				sphere: {
+					center: tetrahedron.sphere.center.clone(),
+					radius: tetrahedron.sphere.radius,
+				},
 			});
 		});
 		this.tetrahedronsByPointId.forEach((tetrahedrons, id) => {

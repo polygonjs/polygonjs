@@ -1,5 +1,10 @@
 type GroupByCallback<T, K> = (arg: T) => K;
 
+export function mapFirstKey<K>(map: Map<K, any>): K | undefined {
+	for (let [k] of map) {
+		return k;
+	}
+}
 export class MapUtils {
 	static arrayFromValues<K, V>(map: Map<K, V>): Array<V> {
 		const array: Array<V> = [];
@@ -90,4 +95,5 @@ export class MapUtils {
 		map.set(key, entry);
 		return entry;
 	}
+	static firstKey = mapFirstKey;
 }

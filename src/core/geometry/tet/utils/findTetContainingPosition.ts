@@ -55,33 +55,39 @@ function findNextFaceIndex(
 
 const MAX_ITERATIONS = 10;
 // const rayOrigin = new Vector3()
-export function findTetContainingPosition(tetGeometry: TetGeometry, position: Vector3, currentTetId: number) {
-	// let foundTetId: number | null = null;
+export function findTetContainingPosition(
+	tetGeometry: TetGeometry,
+	position: Vector3,
+	rayOrigin: Vector3,
+	tetIdOrigin: number
+) {
+	let foundTetId: number = tetIdOrigin;
 	let i = 0;
-	tetCenter(tetGeometry, currentTetId, _ray.origin);
+	// tetCenter(tetGeometry, currentTetId, _ray.origin);
+	_ray.origin.copy(rayOrigin);
 	_ray.direction.copy(position).sub(_ray.origin);
 	while (i < MAX_ITERATIONS) {
-		const nextFaceIndex = findNextFaceIndex(tetGeometry, currentTetId, _ray, _intersectionTarget);
+		const nextFaceIndex = findNextFaceIndex(tetGeometry, foundTetId, _ray, _intersectionTarget);
 		if (nextFaceIndex == null) {
 			// foundTetId = currentTetId;
 			break;
 		}
 
-		const nextTetId = tetNeighbour(tetGeometry, currentTetId, nextFaceIndex);
+		const nextTetId = tetNeighbour(tetGeometry, foundTetId, nextFaceIndex);
 		if (nextTetId == null) {
 			// foundTetId = currentTetId;
 			break;
 		}
-		currentTetId = nextTetId;
+		foundTetId = nextTetId;
 
 		// update ray
-		tetCenter(tetGeometry, currentTetId, _ray.origin);
+		tetCenter(tetGeometry, foundTetId, _ray.origin);
 		// _ray.origin.copy(_intersectionTarget);
 		_ray.direction.copy(position).sub(_ray.origin);
 
 		i++;
 	}
 
-	console.log('end', {i, currentTetId});
-	return currentTetId;
+	// console.log('end', {i, foundTetId});
+	return foundTetId;
 }
