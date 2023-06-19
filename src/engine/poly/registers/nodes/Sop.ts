@@ -262,6 +262,7 @@ import {TetBoxSopNode} from '../../../nodes/sop/TetBox';
 import {TetGrowSopNode} from '../../../nodes/sop/TetGrow';
 import {TetMirrorSopNode} from '../../../nodes/sop/TetMirror';
 import {TetQualitySopNode} from '../../../nodes/sop/TetQuality';
+import {TetSplitSopNode} from '../../../nodes/sop/TetSplit';
 import {TetTriangulateSopNode} from '../../../nodes/sop/TetTriangulate';
 import {TetrahedralizeSopNode} from '../../../nodes/sop/Tetrahedralize';
 import {TetrahedronSopNode} from '../../../nodes/sop/Tetrahedron';
@@ -556,6 +557,7 @@ export interface GeoNodeChildrenMap {
 	tetGrow: TetGrowSopNode;
 	tetMirror: TetMirrorSopNode;
 	tetQuality: TetQualitySopNode;
+	tetSplit: TetSplitSopNode;
 	tetTriangulate: TetTriangulateSopNode;
 	tetrahedralize: TetrahedralizeSopNode;
 	tetrahedron: TetrahedronSopNode;
@@ -693,7 +695,6 @@ import {SphereSopOperation} from '../../../operations/sop/Sphere';
 import {SpotLightSopOperation} from '../../../operations/sop/SpotLight';
 import {SubdivideSopOperation} from '../../../operations/sop/Subdivide';
 import {TangentSopOperation} from '../../../operations/sop/Tangent';
-import {TetrahedralizeSopOperation} from '../../../operations/sop/Tetrahedralize';
 import {TextureCopySopOperation} from '../../../operations/sop/TextureCopy';
 import {TexturePropertiesSopOperation} from '../../../operations/sop/TextureProperties';
 import {TorusSopOperation} from '../../../operations/sop/Torus';
@@ -809,7 +810,6 @@ export class SopRegister {
 		poly.registerOperation(SpotLightSopOperation);
 		poly.registerOperation(SubdivideSopOperation);
 		poly.registerOperation(TangentSopOperation);
-		poly.registerOperation(TetrahedralizeSopOperation);
 		poly.registerOperation(TextureCopySopOperation);
 		poly.registerOperation(TexturePropertiesSopOperation);
 		poly.registerOperation(TorusSopOperation);
@@ -1095,6 +1095,7 @@ export class SopRegister {
 		poly.registerNode(TetGrowSopNode, CATEGORY_SOP.TET);
 		poly.registerNode(TetMirrorSopNode, CATEGORY_SOP.TET);
 		poly.registerNode(TetQualitySopNode, CATEGORY_SOP.TET);
+		poly.registerNode(TetSplitSopNode, CATEGORY_SOP.TET);
 		poly.registerNode(TetTriangulateSopNode, CATEGORY_SOP.TET);
 		//
 		poly.registerNode(TetrahedralizeSopNode, CATEGORY_SOP.TET);

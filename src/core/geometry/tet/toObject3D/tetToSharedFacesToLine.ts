@@ -8,14 +8,38 @@ import {tetCenter} from '../utils/tetCenter';
 const _center0 = new Vector3();
 const _center1 = new Vector3();
 
+const idPairs: Map<number, Set<number>> = new Map();
+
 export function tetSharedFacesToLines(tetGeometry: TetGeometry, tesselationParams: TetTesselationParams) {
+	idPairs.clear();
 	let facesCount = 0;
-	tetGeometry.faces.forEach((face) => {
-		if (face[0] != -1 && face[1] != -1) {
-			facesCount++;
+	tetGeometry.tetrahedrons.forEach((tet) => {
+		for (let i = 0; i < 4; i++) {
+			const neighbour = tet.neighbours[i];
+			if (neighbour != null) {
+				const neighbourId = neighbour.id;
+				const neighbourTet = tetGeometry.tetrahedrons.get(neighbourId);
+				if (neighbourTet) {
+					const key = tet.id < neighbourId ? tet.id : neighbourId;
+					const value = tet.id < neighbourId ? neighbourId : tet.id;
+					let set = idPairs.get(key);
+					if (!set) {
+						set = new Set();
+						idPairs.set(key, set);
+					}
+					if (!set.has(value)) {
+						facesCount++;
+					}
+					set.add(value);
+				}
+			}
 		}
 	});
-	console.log({facesCount});
+	// tetGeometry.faces.forEach((face) => {
+	// 	if (face[0] != null && face[1] != null) {
+	// 		facesCount++;
+	// 	}
+	// });
 
 	const newGeometry = new BufferGeometry();
 	const positions: number[] = new Array(facesCount * 2 * 3); // 2 points per line, 3 coordinates per point
@@ -24,11 +48,10 @@ export function tetSharedFacesToLines(tetGeometry: TetGeometry, tesselationParam
 	let positionsCount = 0;
 	let indicesCount = 0;
 	let indexCount = 0;
-	tetGeometry.faces.forEach((face) => {
-		if (face[0] != -1 && face[1] != -1) {
-			facesCount++;
-			tetCenter(tetGeometry, face[0], _center0);
-			tetCenter(tetGeometry, face[1], _center1);
+	idPairs.forEach((neighbourIds, tetId) => {
+		neighbourIds.forEach((neighbourId) => {
+			tetCenter(tetGeometry, tetId, _center0);
+			tetCenter(tetGeometry, neighbourId, _center1);
 
 			// line 0
 			indices[indicesCount] = indexCount;
@@ -45,11 +68,15 @@ export function tetSharedFacesToLines(tetGeometry: TetGeometry, tesselationParam
 			//
 			indicesCount += 2;
 			indexCount += 2;
-		}
+		});
 	});
+	// 	if (face[0] != null && face[1] != null) {
+	// 		facesCount++;
+
+	// 	}
+	// });
 
 	newGeometry.setAttribute('position', new Float32BufferAttribute(positions, 3));
 	newGeometry.setIndex(indices);
-	console.log(newGeometry);
 	return BaseSopOperation.createObject(newGeometry, ObjectType.LINE_SEGMENTS);
 }

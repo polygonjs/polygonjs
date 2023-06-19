@@ -12,30 +12,31 @@ export function tetToMesh(tetGeometry: TetGeometry, tesselationParams: TetTessel
 	const {scale} = tesselationParams;
 	const {points, tetrahedrons} = tetGeometry;
 	const newGeometry = new BufferGeometry();
-	const positions: number[] = new Array(points.length * 3);
-	const indices: number[] = new Array(tetrahedrons.length * 4 * 3);
+	const positions: number[] = new Array(tetGeometry.pointsCount() * 3);
+	const indices: number[] = new Array(tetGeometry.tetsCount() * 4 * 3);
 
 	let positionsCount = 0;
 	let indicesCount = 0;
-	let tetIndex = 0;
-	for (let tet of tetrahedrons) {
+	tetrahedrons.forEach((tet) => {
 		// get center
-		tetCenter(tetGeometry, tetIndex, _center);
+		tetCenter(tetGeometry, tet.id, _center);
 
 		for (let face of TET_FACE_POINT_INDICES) {
 			for (let facePointIndex of face) {
-				const pointIndex = tet[facePointIndex];
-				_p.copy(points[pointIndex]).sub(_center).multiplyScalar(scale).add(_center);
-				_p.toArray(positions, positionsCount);
-				positionsCount += 3;
+				const pointId = tet.pointIds[facePointIndex];
+				const point = points.get(pointId);
+				if (point) {
+					_p.copy(point.position).sub(_center).multiplyScalar(scale).add(_center);
+					_p.toArray(positions, positionsCount);
+					positionsCount += 3;
+				}
 			}
 			indices[indicesCount] = indicesCount;
 			indices[indicesCount + 1] = indicesCount + 1;
 			indices[indicesCount + 2] = indicesCount + 2;
 			indicesCount += 3;
 		}
-		tetIndex++;
-	}
+	});
 
 	newGeometry.setAttribute('position', new Float32BufferAttribute(positions, 3));
 	newGeometry.setIndex(indices);

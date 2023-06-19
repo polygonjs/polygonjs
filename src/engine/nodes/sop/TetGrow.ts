@@ -40,8 +40,8 @@ export class TetGrowSopNode extends TetSopNode<TetGrowSopParamsConfig> {
 		}
 	}
 	_growTets(tetObject: TetObject) {
-		const {tetrahedrons} = tetObject.tetGeometry();
-		const tetsCount = tetrahedrons.length;
-		for (let i = tetsCount - 1; i >= 0; i--) {}
+		// const {tetrahedrons} = tetObject.tetGeometry();
+		// const tetsCount = tetrahedrons.length;
+		// for (let i = tetsCount - 1; i >= 0; i--) {}
 	}
 }

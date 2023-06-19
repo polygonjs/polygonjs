@@ -3,17 +3,47 @@
 import {Vector3} from 'three';
 import {Number3, Number4} from '../../../types/GlobalTypes';
 
+export type String3 = [string, string, string];
+export interface TetNeighbourData {
+	id: number;
+	faceIndex: number;
+}
+type TetPointIds = Number4;
+
+export type TetNeighbourDataOrNull = TetNeighbourData | null;
+export type TetNeighbourDatas = [
+	TetNeighbourDataOrNull,
+	TetNeighbourDataOrNull,
+	TetNeighbourDataOrNull,
+	TetNeighbourDataOrNull
+];
+export interface TetNeighbourDataWithSource {
+	tetPointIds: TetPointIds;
+	faceIndex: number;
+	neighbourData: TetNeighbourDataOrNull;
+}
+export interface TetrahedronPoint {
+	id: number;
+	position: Vector3;
+}
+export interface Tetrahedron {
+	id: number;
+	pointIds: TetPointIds;
+	neighbours: TetNeighbourDatas;
+}
 export interface TetTesselationParams {
 	scale: number;
 	displayMesh: boolean;
 	displayLines: boolean;
 	displaySharedFaces: boolean;
+	displayCenter: boolean;
 }
 export interface TetOBJTesselationParams {
 	TetScale: number;
 	TetDisplayMesh: boolean;
 	TetDisplayLines: boolean;
 	TetDisplaySharedFaces: boolean;
+	TetDisplayCenter: boolean;
 }
 
 type Number3_4 = [Number3, Number3, Number3, Number3];

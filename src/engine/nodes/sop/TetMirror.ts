@@ -10,6 +10,7 @@ import {SopType} from '../../poly/registers/nodes/types/Sop';
 import {TetObject} from '../../../core/geometry/tet/TetObject';
 import {CoreString} from '../../../core/String';
 import {tetMirrorOnPlane} from '../../../core/geometry/tet/utils/tetMirror';
+import {tetNeighbour} from '../../../core/geometry/tet/utils/tetNeighboursHelper';
 
 class TetMirrorSopParamsConfig extends NodeParamsConfig {
 	/** @param group */
@@ -54,23 +55,23 @@ export class TetMirrorSopNode extends TetSopNode<TetMirrorSopParamsConfig> {
 	_mirrorTets(tetObject: TetObject) {
 		const tetGeometry = tetObject.tetGeometry();
 		const {face0, face1, face2, face3, scale} = this.pv;
-		const tetrahedrons = tetGeometry.tetrahedrons;
-		const tetsCount = tetrahedrons.length;
+		// const tetrahedrons = tetGeometry.tetrahedrons;
+		const tetsCount = tetGeometry.tetsCount();
 
 		const group = this.pv.group.trim();
 		const indices = group.length ? CoreString.indices(group) : null;
 
 		const processTet = (i: number) => {
-			if (face0 && tetGeometry.neighbourTet(i, 0) === -1) {
+			if (face0 && tetNeighbour(tetGeometry, i, 0) == null) {
 				tetMirrorOnPlane(tetGeometry, i, 0, scale);
 			}
-			if (face1 && tetGeometry.neighbourTet(i, 1) === -1) {
+			if (face1 && tetNeighbour(tetGeometry, i, 1) == null) {
 				tetMirrorOnPlane(tetGeometry, i, 1, scale);
 			}
-			if (face2 && tetGeometry.neighbourTet(i, 2) === -1) {
+			if (face2 && tetNeighbour(tetGeometry, i, 2) == null) {
 				tetMirrorOnPlane(tetGeometry, i, 2, scale);
 			}
-			if (face3 && tetGeometry.neighbourTet(i, 3) === -1) {
+			if (face3 && tetNeighbour(tetGeometry, i, 3) == null) {
 				tetMirrorOnPlane(tetGeometry, i, 3, scale);
 			}
 		};

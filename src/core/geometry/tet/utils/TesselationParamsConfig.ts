@@ -7,6 +7,7 @@ const DEFAULT = {
 	displayMesh: true,
 	displayLines: false,
 	displaySharedFaces: false,
+	displayCenter: false,
 };
 export function SOPTetTesselationParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
@@ -19,8 +20,10 @@ export function SOPTetTesselationParamConfig<TBase extends Constructor>(Base: TB
 		displayMesh = ParamConfig.BOOLEAN(DEFAULT.displayMesh);
 		/** @param display lines */
 		displayLines = ParamConfig.BOOLEAN(DEFAULT.displayLines);
-		/** @param display lines */
+		/** @param display shared faces */
 		displaySharedFaces = ParamConfig.BOOLEAN(DEFAULT.displaySharedFaces);
+		/** @param display centers */
+		displayCenter = ParamConfig.BOOLEAN(DEFAULT.displayCenter);
 	};
 }
 
@@ -37,6 +40,8 @@ export function OBJTetTesselationParamConfig<TBase extends Constructor>(Base: TB
 		TetDisplayLines = ParamConfig.BOOLEAN(DEFAULT.displayLines);
 		/** @param display lines */
 		TetDisplaySharedFaces = ParamConfig.BOOLEAN(DEFAULT.displaySharedFaces);
+		/** @param display center */
+		TetDisplayCenter = ParamConfig.BOOLEAN(DEFAULT.displayCenter);
 	};
 }
 
@@ -45,6 +50,7 @@ export const TESSELATION_PARAM_NAMES = new Set<string>([
 	'TetDisplayMesh',
 	'TetDisplayLines',
 	'TetDisplaySharedFaces',
+	'TetDisplayCenter',
 ]);
 
 export function addTetTesselationParamsCallback(node: BaseNodeType, callback: () => void) {

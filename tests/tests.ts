@@ -4,6 +4,7 @@ QUnit.module('core');
 import './core/ArrayUtils';
 import './core/Math';
 import './core/ObjectUtils';
+import './core/Sort';
 import './core/String';
 import './core/ThreeToGl';
 import './core/Walker';

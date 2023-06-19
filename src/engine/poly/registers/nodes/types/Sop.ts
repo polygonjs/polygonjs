@@ -136,6 +136,7 @@ export enum SopType {
 	TET_BOX = 'tetBox',
 	TET_GROW = 'tetGrow',
 	TET_MIRROR = 'tetMirror',
+	TET_SPLIT = 'tetSplit',
 	TET_TRIANGULATE = 'tetTriangulate',
 	TET_QUALITY = 'tetQuality',
 	TETRAHEDRALIZE = 'tetrahedralize',

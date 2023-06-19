@@ -21,12 +21,14 @@ const TET_TESSELATION_PARAMS: TetTesselationParams = {
 	displayMesh: true,
 	displayLines: false,
 	displaySharedFaces: false,
+	displayCenter: false,
 };
 function updateTetTesselationParams(params: TetOBJTesselationParams) {
 	TET_TESSELATION_PARAMS.scale = params.TetScale;
 	TET_TESSELATION_PARAMS.displayMesh = params.TetDisplayMesh;
 	TET_TESSELATION_PARAMS.displayLines = params.TetDisplayLines;
 	TET_TESSELATION_PARAMS.displaySharedFaces = params.TetDisplaySharedFaces;
+	TET_TESSELATION_PARAMS.displayCenter = params.TetDisplayCenter;
 }
 const onAddSpecializedChildren: SpecializedChildrenHook = (
 	displayNode: BaseSopNodeType,
