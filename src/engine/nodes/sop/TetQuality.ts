@@ -9,7 +9,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 import {TetObject} from '../../../core/geometry/tet/TetObject';
-// import {tetQuality} from '../../../core/geometry/tet/utils/tetQuality';
+import {tetQuality} from '../../../core/geometry/tet/utils/tetQuality';
 class TetQualitySopParamsConfig extends NodeParamsConfig {
 	threshold = ParamConfig.FLOAT(0.5, {
 		range: [0, 1],
@@ -40,14 +40,22 @@ export class TetQualitySopNode extends TetSopNode<TetQualitySopParamsConfig> {
 		}
 	}
 	_filterTets(tetObject: TetObject) {
-		// const {tetrahedrons, points} = tetObject.tetGeometry();
-		// const tetsCount = tetrahedrons.length;
-		// for (let i = tetsCount - 1; i >= 0; i--) {
-		// 	const tet = tetrahedrons[i];
-		// 	const quality = tetQuality(points[tet[0]], points[tet[1]], points[tet[2]], points[tet[3]]);
-		// 	if (quality < this.pv.threshold) {
-		// 		tetrahedrons.splice(i, 1);
-		// 	}
-		// }
+		const geometry = tetObject.geometry;
+		const {tetrahedrons, points} = geometry;
+		const badQualityIds: number[] = [];
+		tetrahedrons.forEach((tet, i) => {
+			const pt0 = points.get(tet.pointIds[0]);
+			const pt1 = points.get(tet.pointIds[1]);
+			const pt2 = points.get(tet.pointIds[2]);
+			const pt3 = points.get(tet.pointIds[3]);
+			if (!(pt0 && pt1 && pt2 && pt3)) {
+				return;
+			}
+			const quality = tetQuality(pt0.position, pt1.position, pt2.position, pt3.position);
+			if (quality < this.pv.threshold) {
+				badQualityIds.push(tet.id);
+			}
+		});
+		geometry.removeTets(badQualityIds);
 	}
 }

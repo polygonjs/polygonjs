@@ -62,16 +62,5 @@ export function tetNeighbour(tetGeometry: TetGeometry, tetId: number, faceIndex:
 	if (!tetrahedron) {
 		return;
 	}
-	console.log('neighbours', tetId, tetrahedron.neighbours, tetrahedron.neighbours[faceIndex]);
 	return tetrahedron.neighbours[faceIndex]?.id;
-	// sortedIndices(tetrahedron, TET_FACE_POINT_INDICES[faceIndex], _sortedIndices);
-	// const key = string3ToStr(_sortedIndices[0], _sortedIndices[1], _sortedIndices[2]);
-	// const faceNeighbour = this.faces.get(key);
-	// if (!faceNeighbour) {
-	// 	return null;
-	// }
-	// if (faceNeighbour[0] == tetIndex) {
-	// 	return faceNeighbour[1];
-	// }
-	// faceNeighbour[0];
 }

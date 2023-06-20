@@ -11,7 +11,7 @@ import {Vector3} from 'three';
 import {CoreObject} from '../../../core/geometry/Object';
 import {TetObject} from '../../../core/geometry/tet/TetObject';
 import {findTetContainingPosition} from '../../../core/geometry/tet/utils/findTetContainingPosition';
-import {TET_FACE_POINT_INDICES, TetNeighbourDataWithSource} from '../../../core/geometry/tet/TetCommon';
+import {TetNeighbourDataWithSource} from '../../../core/geometry/tet/TetCommon';
 import {tetCenter} from '../../../core/geometry/tet/utils/tetCenter';
 
 const _pos = new Vector3();
@@ -72,15 +72,15 @@ export class TetSplitSopNode extends TetSopNode<TetSplitSopParamsConfig> {
 		if (tetId == null) {
 			return;
 		}
-		tetGeometry.removeTet(tetId, sharedFacesNeighbourData);
+		tetGeometry.removeTets([tetId], sharedFacesNeighbourData);
 
 		// 3. replace with new tetrahedrons
 		const pointId = tetGeometry.addPoint(position.x, position.y, position.z);
 		sharedFacesNeighbourData.forEach((neighbourDataWithSource) => {
-			const pointIndices = TET_FACE_POINT_INDICES[neighbourDataWithSource.faceIndex];
-			const id0 = neighbourDataWithSource.tetPointIds[pointIndices[0]];
-			const id1 = neighbourDataWithSource.tetPointIds[pointIndices[1]];
-			const id2 = neighbourDataWithSource.tetPointIds[pointIndices[2]];
+			// const pointIndices = TET_FACE_POINT_INDICES[neighbourDataWithSource.faceIndex];
+			const id0 = neighbourDataWithSource.pointIds[0];
+			const id1 = neighbourDataWithSource.pointIds[1];
+			const id2 = neighbourDataWithSource.pointIds[2];
 			tetGeometry.addTetrahedron(pointId, id0, id1, id2);
 		});
 	}

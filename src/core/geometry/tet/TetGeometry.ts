@@ -6,6 +6,7 @@ import {
 	TetNeighbourData,
 	TetNeighbourDatas,
 	TetNeighbourDataWithSource,
+	TET_FACE_POINT_INDICES,
 } from './TetCommon';
 import {updateTetNeighboursFromNewTet} from './utils/tetNeighboursHelper';
 import {Vector3} from 'three';
@@ -79,43 +80,64 @@ export class TetGeometry {
 		// update neighbours
 		updateTetNeighboursFromNewTet(this, tetrahedron);
 	}
-	removeTet(tetId: number, sharedFacesNeighbourData: Set<TetNeighbourDataWithSource>) {
-		const tetrahedron = this.tetrahedrons.get(tetId);
-		if (!tetrahedron) {
-			return;
-		}
+	removeTets(tetIds: number[], sharedFacesNeighbourData?: Set<TetNeighbourDataWithSource>) {
+		sharedFacesNeighbourData?.clear();
 
-		// update point keys
-		for (let p of tetrahedron.pointIds) {
-			const tetrahedrons = this.tetrahedronsByPointId.get(p);
-			if (tetrahedrons) {
-				tetrahedrons.delete(tetrahedron.id);
+		// 1. store neighbours for future tet reconstruction
+		for (let tetId of tetIds) {
+			const tetrahedron = this.tetrahedrons.get(tetId);
+			if (!tetrahedron) {
+				return;
+			}
+			let faceIndex = 0;
+			for (let neighbourData of tetrahedron.neighbours) {
+				// if the neighbour is not one of the removed tets,
+				// we can add it
+				if (neighbourData == null || !tetIds.includes(neighbourData.id)) {
+					const pointIndices = TET_FACE_POINT_INDICES[faceIndex];
+					sharedFacesNeighbourData?.add({
+						pointIds: [
+							tetrahedron.pointIds[pointIndices[0]],
+							tetrahedron.pointIds[pointIndices[1]],
+							tetrahedron.pointIds[pointIndices[2]],
+						],
+					});
+				}
+				faceIndex++;
 			}
 		}
 
-		// remove neighbours
-		sharedFacesNeighbourData.clear();
-		let faceIndex = 0;
-		for (let neighbourData of tetrahedron.neighbours) {
-			if (neighbourData != null) {
-				const neighbourTet = this.tetrahedrons.get(neighbourData.id);
-				if (neighbourTet) {
-					const neighbourFaceIndex = neighbourData.faceIndex;
-					// remove from neighbour
-					neighbourTet.neighbours[neighbourFaceIndex] = null;
+		// 2. remove tets
+		for (let tetId of tetIds) {
+			const tetrahedron = this.tetrahedrons.get(tetId);
+			if (!tetrahedron) {
+				return;
+			}
+
+			// update point keys
+			for (let p of tetrahedron.pointIds) {
+				const tetrahedrons = this.tetrahedronsByPointId.get(p);
+				if (tetrahedrons) {
+					tetrahedrons.delete(tetrahedron.id);
 				}
 			}
-			sharedFacesNeighbourData.add({
-				tetPointIds: tetrahedron.pointIds,
-				faceIndex,
-				neighbourData,
-			});
-			faceIndex++;
-		}
 
-		// remove
-		this.tetrahedrons.delete(tetId);
-		this._tetsCount--;
+			// remove neighbours
+			for (let neighbourData of tetrahedron.neighbours) {
+				if (neighbourData != null) {
+					const neighbourTet = this.tetrahedrons.get(neighbourData.id);
+					if (neighbourTet) {
+						const neighbourFaceIndex = neighbourData.faceIndex;
+						// remove from neighbour
+						neighbourTet.neighbours[neighbourFaceIndex] = null;
+					}
+				}
+			}
+
+			// remove
+			this.tetrahedrons.delete(tetId);
+			this._tetsCount--;
+		}
 	}
 
 	clone(): this {
@@ -154,6 +176,7 @@ export class TetGeometry {
 		newGeometry._nextTetId = this._nextTetId;
 		newGeometry._pointsCount = this._pointsCount;
 		newGeometry._tetsCount = this._tetsCount;
+		newGeometry._lastAddedTetId = this._lastAddedTetId;
 
 		return newGeometry as this;
 	}

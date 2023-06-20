@@ -79,7 +79,6 @@ export function mergeFaces(geometry: BufferGeometry, tolerance: number) {
 	const positionAttribute = geometry.getAttribute('position') as BufferAttribute;
 	const positionsCount = positionAttribute.count;
 	const facesCount = indexArray.length / 3;
-	console.log(positionsCount, geometry, facesCount);
 
 	const positions: Position[] = new Array(positionsCount);
 	const faces: Face[] = new Array(facesCount);

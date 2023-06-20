@@ -1,19 +1,24 @@
 import {TetGeometry} from '../TetGeometry';
 import {TetTesselationParams} from '../TetCommon';
-import {BufferGeometry, Float32BufferAttribute, Vector3} from 'three';
+import {BufferGeometry, Color, Float32BufferAttribute, Vector3} from 'three';
 import {ObjectType} from '../../Constant';
 import {BaseSopOperation} from '../../../../engine/operations/sop/_Base';
 import {tetCenter} from '../utils/tetCenter';
+import {tetMaterialLine} from '../TetMaterial';
+import {rand} from '../../../math/_Module';
 
 const _center = new Vector3();
 const _p = new Vector3();
+const _color = new Color();
 
 export function tetToLines(tetGeometry: TetGeometry, tesselationParams: TetTesselationParams) {
 	const {scale} = tesselationParams;
 	const {points, tetrahedrons} = tetGeometry;
+	const lastAddedTetId = tetGeometry.lastAddedTetId();
 
 	const newGeometry = new BufferGeometry();
 	const positions: number[] = new Array(tetGeometry.tetsCount() * 4 * 3); // 4 points per tetrahedron, 3 coordinates per point
+	const colors: number[] = new Array(tetGeometry.tetsCount() * 4 * 3); // 4 points per tetrahedron, 3 coordinates per point
 	const indices: number[] = new Array(tetGeometry.tetsCount() * 6 * 2); // 6 lines per tetrahedron, 2 indices per line
 
 	let positionsCount = 0;
@@ -21,6 +26,8 @@ export function tetToLines(tetGeometry: TetGeometry, tesselationParams: TetTesse
 	let indexCount = 0;
 	tetrahedrons.forEach((tet) => {
 		tetCenter(tetGeometry, tet.id, _center);
+		const h = rand(tet.id);
+		_color.setHSL(h, lastAddedTetId == tet.id ? 0.1 : 1, lastAddedTetId == tet.id ? 1 : 0.5);
 
 		// line 0
 		indices[indicesCount] = indexCount;
@@ -47,6 +54,8 @@ export function tetToLines(tetGeometry: TetGeometry, tesselationParams: TetTesse
 			if (point) {
 				_p.copy(point.position).sub(_center).multiplyScalar(scale).add(_center);
 				_p.toArray(positions, positionsCount);
+				_color.toArray(colors, positionsCount);
+
 				positionsCount += 3;
 			}
 		}
@@ -57,6 +66,7 @@ export function tetToLines(tetGeometry: TetGeometry, tesselationParams: TetTesse
 	});
 
 	newGeometry.setAttribute('position', new Float32BufferAttribute(positions, 3));
+	newGeometry.setAttribute('color', new Float32BufferAttribute(colors, 3));
 	newGeometry.setIndex(indices);
-	return BaseSopOperation.createObject(newGeometry, ObjectType.LINE_SEGMENTS);
+	return BaseSopOperation.createObject(newGeometry, ObjectType.LINE_SEGMENTS, tetMaterialLine());
 }

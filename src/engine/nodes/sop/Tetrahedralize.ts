@@ -15,10 +15,6 @@ import {Mesh} from 'three';
 import {mergeFaces} from '../../../core/geometry/operation/Fuse';
 
 class TetrahedralizeSopParamsConfig extends NodeParamsConfig {
-	resolution = ParamConfig.INTEGER(10, {
-		range: [0, 100],
-		rangeLocked: [true, false],
-	});
 	minQualityExp = ParamConfig.FLOAT(-2, {
 		range: [-4, 0],
 		rangeLocked: [true, true],

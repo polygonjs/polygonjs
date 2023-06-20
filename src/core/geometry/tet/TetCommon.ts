@@ -18,9 +18,10 @@ export type TetNeighbourDatas = [
 	TetNeighbourDataOrNull
 ];
 export interface TetNeighbourDataWithSource {
-	tetPointIds: TetPointIds;
-	faceIndex: number;
-	neighbourData: TetNeighbourDataOrNull;
+	pointIds: Number3;
+	// tetPointIds: TetPointIds;
+	// faceIndex: number;
+	// neighbourData: TetNeighbourDataOrNull;
 }
 export interface TetrahedronPoint {
 	id: number;
