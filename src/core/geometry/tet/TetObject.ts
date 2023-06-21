@@ -6,7 +6,9 @@ import {TetTesselationParams} from './TetCommon';
 import {tetToMesh} from './toObject3D/tetToMesh';
 import {tetToLines} from './toObject3D/tetToLines';
 import {tetSharedFacesToLines} from './toObject3D/tetToSharedFacesToLine';
+import {tetToPoints} from './toObject3D/tetToPoints';
 import {tetToCenter} from './toObject3D/tetToCenter';
+import {tetToSphere} from './toObject3D/tetToSphere';
 
 export class TetObject implements ObjectContent<CoreObjectType.TET> {
 	public visible = true;
@@ -76,8 +78,17 @@ export class TetObject implements ObjectContent<CoreObjectType.TET> {
 		if (tesselationParams.displaySharedFaces) {
 			objects.push(tetSharedFacesToLines(tetObject.tetGeometry(), tesselationParams));
 		}
+		if (tesselationParams.displayPoints) {
+			objects.push(tetToPoints(tetObject.tetGeometry(), tesselationParams));
+		}
 		if (tesselationParams.displayCenter) {
 			objects.push(tetToCenter(tetObject.tetGeometry(), tesselationParams));
+		}
+		if (tesselationParams.displaySphere) {
+			const spheres = tetToSphere(tetObject.tetGeometry(), tesselationParams);
+			if (spheres) {
+				objects.push(spheres);
+			}
 		}
 		return objects;
 	}

@@ -12,7 +12,7 @@ export function tetToMesh(tetGeometry: TetGeometry, tesselationParams: TetTessel
 	const {scale} = tesselationParams;
 	const {points, tetrahedrons} = tetGeometry;
 	const newGeometry = new BufferGeometry();
-	const positions: number[] = new Array(tetGeometry.pointsCount() * 3);
+	const positions: number[] = new Array(tetGeometry.tetsCount() * 4 * 3);
 	const indices: number[] = new Array(tetGeometry.tetsCount() * 4 * 3);
 
 	let positionsCount = 0;

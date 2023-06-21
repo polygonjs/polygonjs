@@ -621,7 +621,7 @@ export class OptionsController {
 		return this._options[AS_QUATERNION] == true;
 	}
 
-	private rangeLocked(): Boolean2 {
+	rangeLocked(): Boolean2 {
 		// if(this.self.has_menu() && this.self.menu_entries()){
 		// 	return [true, true]
 		// } else {

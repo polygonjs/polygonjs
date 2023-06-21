@@ -18,6 +18,7 @@ export type TetNeighbourDatas = [
 	TetNeighbourDataOrNull
 ];
 export interface TetNeighbourDataWithSource {
+	// faceIndex: number;
 	pointIds: Number3;
 	// tetPointIds: TetPointIds;
 	// faceIndex: number;
@@ -36,20 +37,25 @@ export interface Tetrahedron {
 	pointIds: TetPointIds;
 	neighbours: TetNeighbourDatas;
 	sphere: TetrahedronSphere;
+	disposed: boolean;
 }
 export interface TetTesselationParams {
 	scale: number;
 	displayMesh: boolean;
 	displayLines: boolean;
 	displaySharedFaces: boolean;
+	displayPoints: boolean;
 	displayCenter: boolean;
+	displaySphere: boolean;
 }
 export interface TetOBJTesselationParams {
 	TetScale: number;
 	TetDisplayMesh: boolean;
 	TetDisplayLines: boolean;
 	TetDisplaySharedFaces: boolean;
+	TetDisplayPoints: boolean;
 	TetDisplayCenter: boolean;
+	TetDisplaySphere: boolean;
 }
 
 type Number3_4 = [Number3, Number3, Number3, Number3];

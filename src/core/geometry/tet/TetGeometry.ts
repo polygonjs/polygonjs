@@ -9,8 +9,13 @@ import {
 	TET_FACE_POINT_INDICES,
 } from './TetCommon';
 import {updateTetNeighboursFromNewTet} from './utils/tetNeighboursHelper';
-import {Vector3} from 'three';
+import {Vector3, Triangle} from 'three';
 import {circumSphere} from './utils/tetSphere';
+import {tetFaceTriangle} from './utils/tetTriangle';
+import {logRedBg} from '../../logger/Console';
+const _triangle = new Triangle();
+const _triangleNormal = new Vector3();
+const _newPointDelta = new Vector3();
 
 export class TetGeometry {
 	public readonly tetrahedrons: Map<number, Tetrahedron> = new Map();
@@ -63,6 +68,7 @@ export class TetGeometry {
 			pointIds: [p0, p1, p2, p3],
 			neighbours: [null, null, null, null],
 			sphere: _circumSphere,
+			disposed: false,
 		};
 		this.tetrahedrons.set(tetrahedron.id, tetrahedron);
 		this._tetsCount++;
@@ -79,31 +85,52 @@ export class TetGeometry {
 		}
 		// update neighbours
 		updateTetNeighboursFromNewTet(this, tetrahedron);
+		return id;
 	}
-	removeTets(tetIds: number[], sharedFacesNeighbourData?: Set<TetNeighbourDataWithSource>) {
-		sharedFacesNeighbourData?.clear();
+	removeTets(
+		tetIds: number[],
+		sharedFacesNeighbourData?: Set<TetNeighbourDataWithSource>,
+		newPointPosition?: Vector3
+	) {
+		if (sharedFacesNeighbourData && newPointPosition) {
+			sharedFacesNeighbourData.clear();
 
-		// 1. store neighbours for future tet reconstruction
-		for (let tetId of tetIds) {
-			const tetrahedron = this.tetrahedrons.get(tetId);
-			if (!tetrahedron) {
-				return;
-			}
-			let faceIndex = 0;
-			for (let neighbourData of tetrahedron.neighbours) {
-				// if the neighbour is not one of the removed tets,
-				// we can add it
-				if (neighbourData == null || !tetIds.includes(neighbourData.id)) {
-					const pointIndices = TET_FACE_POINT_INDICES[faceIndex];
-					sharedFacesNeighbourData?.add({
-						pointIds: [
-							tetrahedron.pointIds[pointIndices[0]],
-							tetrahedron.pointIds[pointIndices[1]],
-							tetrahedron.pointIds[pointIndices[2]],
-						],
-					});
+			// 1. store neighbours for future tet reconstruction
+			for (let tetId of tetIds) {
+				const tetrahedron = this.tetrahedrons.get(tetId);
+				if (!tetrahedron) {
+					continue;
 				}
-				faceIndex++;
+				let faceIndex = 0;
+				for (let neighbourData of tetrahedron.neighbours) {
+					// if the neighbour is not one of the removed tets,
+					// we can add it
+					if (neighbourData == null || !tetIds.includes(neighbourData.id)) {
+						let faceAvailableOnSideOfNewPoint = true;
+						if (neighbourData && neighbourData.id != null) {
+							tetFaceTriangle(this, neighbourData.id, neighbourData.faceIndex, _triangle);
+							_triangle.getNormal(_triangleNormal);
+							_newPointDelta.copy(_triangle.a).sub(newPointPosition);
+							if (_triangleNormal.dot(_newPointDelta) > 0) {
+								// logRedBg(`nope:${tetId}`);
+								faceAvailableOnSideOfNewPoint = false;
+							}
+						}
+
+						if (faceAvailableOnSideOfNewPoint) {
+							const pointIndices = TET_FACE_POINT_INDICES[faceIndex];
+							sharedFacesNeighbourData.add({
+								// faceIndex,
+								pointIds: [
+									tetrahedron.pointIds[pointIndices[0]],
+									tetrahedron.pointIds[pointIndices[1]],
+									tetrahedron.pointIds[pointIndices[2]],
+								],
+							});
+						}
+					}
+					faceIndex++;
+				}
 			}
 		}
 
@@ -111,7 +138,9 @@ export class TetGeometry {
 		for (let tetId of tetIds) {
 			const tetrahedron = this.tetrahedrons.get(tetId);
 			if (!tetrahedron) {
-				return;
+				logRedBg(`tet not found:${tetId} (${tetIds})`);
+				throw `tet not found ${tetId}`;
+				continue;
 			}
 
 			// update point keys
@@ -135,6 +164,7 @@ export class TetGeometry {
 			}
 
 			// remove
+			tetrahedron.disposed = true;
 			this.tetrahedrons.delete(tetId);
 			this._tetsCount--;
 		}
@@ -167,6 +197,7 @@ export class TetGeometry {
 					center: tetrahedron.sphere.center.clone(),
 					radius: tetrahedron.sphere.radius,
 				},
+				disposed: tetrahedron.disposed,
 			});
 		});
 		this.tetrahedronsByPointId.forEach((tetrahedrons, id) => {

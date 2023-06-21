@@ -259,6 +259,7 @@ import {SwitchSopNode} from '../../../nodes/sop/Switch';
 import {TangentSopNode} from '../../../nodes/sop/Tangent';
 import {TetSopNode} from '../../../nodes/sop/Tet';
 import {TetBoxSopNode} from '../../../nodes/sop/TetBox';
+import {TetDeleteSopNode} from '../../../nodes/sop/TetDelete';
 import {TetGrowSopNode} from '../../../nodes/sop/TetGrow';
 import {TetMirrorSopNode} from '../../../nodes/sop/TetMirror';
 import {TetQualitySopNode} from '../../../nodes/sop/TetQuality';
@@ -554,6 +555,7 @@ export interface GeoNodeChildrenMap {
 	tangent: TangentSopNode;
 	tet: TetSopNode;
 	tetBox: TetBoxSopNode;
+	tetDelete: TetDeleteSopNode;
 	tetGrow: TetGrowSopNode;
 	tetMirror: TetMirrorSopNode;
 	tetQuality: TetQualitySopNode;
@@ -1092,6 +1094,7 @@ export class SopRegister {
 		//
 		poly.registerNode(TetSopNode, CATEGORY_SOP.TET);
 		poly.registerNode(TetBoxSopNode, CATEGORY_SOP.TET);
+		poly.registerNode(TetDeleteSopNode, CATEGORY_SOP.TET);
 		poly.registerNode(TetGrowSopNode, CATEGORY_SOP.TET);
 		poly.registerNode(TetMirrorSopNode, CATEGORY_SOP.TET);
 		poly.registerNode(TetQualitySopNode, CATEGORY_SOP.TET);

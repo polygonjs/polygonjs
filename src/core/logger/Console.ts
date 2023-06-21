@@ -15,9 +15,9 @@ export class ConsoleLogger extends BaseCoreLogger {
 export function logBlue(message: string) {
 	console.log('%c' + message, 'color:blue; font-weight:bold;');
 }
-export function logBlueBg(message: string) {
+export function logRedBg(message: string) {
 	logStyled(message, {
-		backgroundColor: 'blue',
+		backgroundColor: 'red',
 		color: 'white',
 		fontWeight: 'bold',
 		padding: {x: 10, y: 5},
@@ -26,6 +26,14 @@ export function logBlueBg(message: string) {
 export function logGreenBg(message: string) {
 	logStyled(message, {
 		backgroundColor: 'green',
+		color: 'white',
+		fontWeight: 'bold',
+		padding: {x: 10, y: 5},
+	});
+}
+export function logBlueBg(message: string) {
+	logStyled(message, {
+		backgroundColor: 'blue',
 		color: 'white',
 		fontWeight: 'bold',
 		padding: {x: 10, y: 5},

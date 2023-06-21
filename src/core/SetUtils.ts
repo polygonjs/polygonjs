@@ -1,4 +1,11 @@
+export function setFirstValue<K>(set: Set<K>): K | undefined {
+	for (let k of set) {
+		return k;
+	}
+}
+
 export class SetUtils {
+	static setFirstValue = setFirstValue;
 	static toArray<T>(set: Set<T>) {
 		const array: Array<T> = [];
 		set.forEach((elem) => {

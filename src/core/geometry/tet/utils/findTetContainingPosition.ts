@@ -1,7 +1,7 @@
 import {Vector3, Ray, Triangle} from 'three';
 import {TetGeometry} from '../TetGeometry';
 import {tetCenter} from './tetCenter';
-import {tetFaceTriangle} from './tetFaceTriangle';
+import {tetFaceTriangle} from './tetTriangle';
 import {tetNeighbour} from './tetNeighboursHelper';
 
 const _ray = new Ray();
@@ -53,20 +53,35 @@ function findNextFaceIndex(
 // 	}
 // }
 
-const MAX_ITERATIONS = 10;
+function selectRandomUnvisitedTet(tetGeometry: TetGeometry, visitedTets: Set<number>) {
+	let selectedTetId: number | null = null;
+	tetGeometry.tetrahedrons.forEach((tet, tetId) => {
+		if (!visitedTets.has(tetId)) {
+			selectedTetId = tetId;
+		}
+	});
+	return selectedTetId;
+}
+
+// const MAX_ITERATIONS = 100;
 // const rayOrigin = new Vector3()
+const _stack = new Set<number>();
 export function findTetContainingPosition(
 	tetGeometry: TetGeometry,
 	position: Vector3,
 	rayOrigin: Vector3,
 	tetIdOrigin: number
+	// maxIterations:number
 ) {
+	_stack.clear();
 	let foundTetId: number = tetIdOrigin;
+	_stack.add(foundTetId);
 	let i = 0;
 	// tetCenter(tetGeometry, currentTetId, _ray.origin);
 	_ray.origin.copy(rayOrigin);
 	_ray.direction.copy(position).sub(_ray.origin);
-	while (i < MAX_ITERATIONS) {
+	const maxIterations = tetGeometry.tetsCount();
+	while (i < maxIterations) {
 		const nextFaceIndex = findNextFaceIndex(tetGeometry, foundTetId, _ray, _intersectionTarget);
 		if (nextFaceIndex == null) {
 			// foundTetId = currentTetId;
@@ -75,10 +90,17 @@ export function findTetContainingPosition(
 
 		const nextTetId = tetNeighbour(tetGeometry, foundTetId, nextFaceIndex);
 		if (nextTetId == null) {
-			// foundTetId = currentTetId;
-			break;
+			// if we reach a tet that has no neighbour,
+			// we restart from a random other tet
+			// that has not yet been visited
+			const selectedTetId = selectRandomUnvisitedTet(tetGeometry, _stack);
+			if (selectedTetId != null) {
+				foundTetId = selectedTetId;
+			}
+		} else {
+			foundTetId = nextTetId;
 		}
-		foundTetId = nextTetId;
+		_stack.add(foundTetId);
 
 		// update ray
 		tetCenter(tetGeometry, foundTetId, _ray.origin);

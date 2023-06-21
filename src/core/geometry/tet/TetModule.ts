@@ -21,7 +21,9 @@ const TET_TESSELATION_PARAMS: TetTesselationParams = {
 	displayMesh: true,
 	displayLines: false,
 	displaySharedFaces: false,
+	displayPoints: false,
 	displayCenter: false,
+	displaySphere: false,
 };
 function updateTetTesselationParams(params: TetOBJTesselationParams) {
 	TET_TESSELATION_PARAMS.scale = params.TetScale;
@@ -29,6 +31,9 @@ function updateTetTesselationParams(params: TetOBJTesselationParams) {
 	TET_TESSELATION_PARAMS.displayLines = params.TetDisplayLines;
 	TET_TESSELATION_PARAMS.displaySharedFaces = params.TetDisplaySharedFaces;
 	TET_TESSELATION_PARAMS.displayCenter = params.TetDisplayCenter;
+	TET_TESSELATION_PARAMS.displayPoints = params.TetDisplayPoints;
+	TET_TESSELATION_PARAMS.displayCenter = params.TetDisplayCenter;
+	TET_TESSELATION_PARAMS.displaySphere = params.TetDisplaySphere;
 }
 const onAddSpecializedChildren: SpecializedChildrenHook = (
 	displayNode: BaseSopNodeType,

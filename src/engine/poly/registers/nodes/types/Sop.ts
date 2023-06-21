@@ -134,6 +134,7 @@ export enum SopType {
 	//
 	TET = 'tet',
 	TET_BOX = 'tetBox',
+	TET_DELETE = 'tetDelete',
 	TET_GROW = 'tetGrow',
 	TET_MIRROR = 'tetMirror',
 	TET_SPLIT = 'tetSplit',

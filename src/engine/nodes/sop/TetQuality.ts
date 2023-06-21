@@ -15,6 +15,7 @@ class TetQualitySopParamsConfig extends NodeParamsConfig {
 		range: [0, 1],
 		rangeLocked: [true, true],
 	});
+	invert = ParamConfig.BOOLEAN(0);
 }
 const ParamsConfig = new TetQualitySopParamsConfig();
 
@@ -40,6 +41,7 @@ export class TetQualitySopNode extends TetSopNode<TetQualitySopParamsConfig> {
 		}
 	}
 	_filterTets(tetObject: TetObject) {
+		const {invert, threshold} = this.pv;
 		const geometry = tetObject.geometry;
 		const {tetrahedrons, points} = geometry;
 		const badQualityIds: number[] = [];
@@ -52,8 +54,14 @@ export class TetQualitySopNode extends TetSopNode<TetQualitySopParamsConfig> {
 				return;
 			}
 			const quality = tetQuality(pt0.position, pt1.position, pt2.position, pt3.position);
-			if (quality < this.pv.threshold) {
-				badQualityIds.push(tet.id);
+			if (invert) {
+				if (quality >= threshold) {
+					badQualityIds.push(tet.id);
+				}
+			} else {
+				if (quality < threshold) {
+					badQualityIds.push(tet.id);
+				}
 			}
 		});
 		geometry.removeTets(badQualityIds);

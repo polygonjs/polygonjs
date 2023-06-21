@@ -23,7 +23,8 @@ export function isPositionInsideMesh(pos: Vector3, mesh: MeshWithBVHGeometry, mi
 		// raycaster.ray.applyMatrix4(invMat);
 		const hit = bvh.raycastFirst(_raycaster.ray, BackSide);
 		if (hit) {
-			const {normal, distance} = hit;
+			const {normal} = hit;
+
 			if (normal) {
 				normal.applyMatrix4(mesh.matrixWorld);
 				// we test that the normal is facing the other way as the ray,
@@ -33,11 +34,11 @@ export function isPositionInsideMesh(pos: Vector3, mesh: MeshWithBVHGeometry, mi
 				if (normal.dot(dir) <= 0.0) {
 					numIn++;
 				}
-				if (minDist > 0.0 && distance < minDist) {
-					return false;
-				}
+				// if (minDist > 0.0 && distance < minDist) {
+				// 	return false;
+				// }
 			}
 		}
 	}
-	return numIn > 3;
+	return numIn > 4;
 }
