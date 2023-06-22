@@ -3,12 +3,8 @@ import {MeshWithBVHGeometry} from '../../bvh/ThreeMeshBVHHelper';
 import {TetGeometry} from '../TetGeometry';
 import {TET_VERTICES_V_BASE, TetNeighbourDataWithSource} from '../TetCommon';
 import {findTetContainingPosition} from './findTetContainingPosition';
-import {logRedBg} from './../../../logger/Console';
 import {tetCenter} from './tetCenter';
-import {
-	findNonDelaunayTetsFromSinglePointCheck,
-	findNonDelaunayTetsFromMultiplePointsCheck,
-} from './findNonDelaunayTets';
+import {findNonDelaunayTetsFromSinglePointCheck} from './findNonDelaunayTets';
 import {isPositionInsideMesh} from './tetInsideMesh';
 import {setFirstValue} from '../../../SetUtils';
 
@@ -33,23 +29,11 @@ export const POINTS_TRAVERSAL_METHODS: PointsTraversalMethod[] = [
 	PointsTraversalMethod.ADDITIONAL_FIRST,
 ];
 
-// export enum TetCreationStage {
-// 	POINTS_INSIDE = 'pointsInside',
-// 	TETS = 'tets',
-// }
-// export const TET_CREATION_STAGES: TetCreationStage[] = [TetCreationStage.POINTS_INSIDE, TetCreationStage.TETS];
-
 interface TetrahedralizeOptions {
 	traversalMethod: PointsTraversalMethod;
 	axisSort: Vector3;
 	mesh: MeshWithBVHGeometry;
 	additionalPoints: Vector3[];
-	// resolution: Vector3,
-	// minQuality: number;
-	// oneFacePerTet: params.oneFacePerTet,
-	// scale: params.tetScale,
-	//
-	// stage: TetCreationStage;
 	stage: number | null;
 	deleteOutsideTets: boolean;
 }
@@ -61,7 +45,6 @@ function addPoint(
 	tetIdOrigin: number,
 	stage: number | null
 ) {
-	// logGreenBg(`--- adding point ${tetGeometry.pointsCount() + 1} (stage: ${_stage}) ---`);
 	// 1. find tetrahedron containing the point
 	const tetId = findTetContainingPosition(tetGeometry, newPointPosition, searchStartPosition, tetIdOrigin);
 	if (tetId == null) {
@@ -69,22 +52,10 @@ function addPoint(
 	}
 
 	// 2. find tetrahedrons that violate delaunay condition
-	// if (0 + 0) {
 	findNonDelaunayTetsFromSinglePointCheck(tetGeometry, tetId, newPointPosition, invalidTets);
-	// } else {
-	// findNonDelaunayTetsFromMultiplePointsCheck(tetGeometry, invalidTets);
-	// }
 
 	// 3. remove tetrahedrons
-	// console.log(
-	// 	`removing ${invalidTets.length} tets`,
-	// 	tetId,
-	// 	[...invalidTets].sort((a, b) => (a > b ? 1 : -1)).join(', '),
-	// 	_stage
-	// 	// `(${tetGeometry.tetsCount()} tets)`
-	// );
 	tetGeometry.removeTets(invalidTets, sharedFacesNeighbourData, newPointPosition);
-	// console.log(`after remove: ${tetGeometry.tetsCount()} tets`);
 	_stage++;
 	if (stage != null && _stage > stage) {
 		return tetGeometry;
@@ -93,7 +64,6 @@ function addPoint(
 	// 4. replace with new tetrahedrons
 	const pointId = tetGeometry.addPoint(newPointPosition.x, newPointPosition.y, newPointPosition.z);
 
-	// let addedTetsCount = 0;
 	sharedFacesNeighbourData.forEach((sharedFacesNeighbourData) => {
 		_stage++;
 		if (stage != null && _stage > stage) {
@@ -118,23 +88,10 @@ function addPoint(
 			} else {
 				tetGeometry.addTetrahedron(pointId, id0, id1, id2);
 			}
-			// addedTetsCount++;
 		}
 	});
-	// console.log('added ', addedTetsCount);
 	if (stage != null && _stage > stage) {
 		return tetGeometry;
-	}
-
-	// 5. another pass
-	findNonDelaunayTetsFromMultiplePointsCheck(tetGeometry, invalidTets);
-
-	if (invalidTets.length > 0) {
-		logRedBg(
-			`found ${invalidTets.length} invalid tets (point: ${tetGeometry.pointsCount()}):${[...invalidTets].join(
-				', '
-			)}`
-		);
 	}
 }
 
@@ -156,7 +113,6 @@ function removeOutsideTets(
 		}
 	});
 	tetGeometry.removeTets(outsideIds);
-	console.log('final stage', _stage);
 	return tetGeometry;
 }
 
@@ -204,12 +160,6 @@ function prepareInputPoints(options: TetrahedralizeOptions): Vector3[] {
 		}
 	}
 
-	// let i = 0;
-	// for (let array of inputPoints) {
-	// 	inputPoints[i] = array.sort((a, b) => (a.dot(axisSort) < b.dot(axisSort) ? -1 : 1));
-	// 	i++;
-	// }
-
 	return inputPoints;
 }
 function getNearestPoint(inputPoints: Set<Vector3>, inputPoint: Vector3) {
@@ -227,7 +177,6 @@ function getNearestPoint(inputPoints: Set<Vector3>, inputPoint: Vector3) {
 
 let _stage = 0;
 export function tetrahedralize(options: TetrahedralizeOptions): TetGeometry {
-	// logBlueBg('tetrahedralize');
 	_stage = 0;
 	const {mesh, stage, deleteOutsideTets} = options;
 	const {geometry} = mesh;
@@ -262,12 +211,8 @@ export function tetrahedralize(options: TetrahedralizeOptions): TetGeometry {
 	tetCenter(tetGeometry, firstTetId, _containingTetSearchRayOrigin);
 	let tetIdOrigin = firstTetId;
 
-	// const geoPositionAttribute = geometry.attributes.position;
-	// const pointsCount = geoPositionAttribute.count;
 	let inputPoint = setFirstValue(inputPoints);
 	while (inputPoint != null) {
-		// logGreenBg(`addPoint ${_stage}`);
-		// _pointPos.fromBufferAttribute(geoPositionAttribute, i);
 		addPoint(tetGeometry, inputPoint, _containingTetSearchRayOrigin, tetIdOrigin, stage);
 
 		// use center of last added tet as ray origin for next search
@@ -285,24 +230,6 @@ export function tetrahedralize(options: TetrahedralizeOptions): TetGeometry {
 		inputPoints.delete(inputPoint);
 		inputPoint = getNearestPoint(inputPoints, inputPoint);
 	}
-
-	// for (let inputPoint of inputPoints) {
-	// 		// logGreenBg(`addPoint ${_stage}`);
-	// 		// _pointPos.fromBufferAttribute(geoPositionAttribute, i);
-	// 		addPoint(tetGeometry, inputPoint, _containingTetSearchRayOrigin, tetIdOrigin, stage);
-
-	// 		// use center of last added tet as ray origin for next search
-	// 		const lastAddedTetId = tetGeometry.lastAddedTetId();
-	// 		if (lastAddedTetId != null) {
-	// 			tetCenter(tetGeometry, lastAddedTetId, _containingTetSearchRayOrigin);
-	// 			tetIdOrigin = lastAddedTetId;
-	// 		}
-
-	// 		_stage++;
-	// 		if (stage != null && _stage > stage) {
-	// 			return removeOutsideTets(tetGeometry, mesh, deleteOutsideTets);
-	// 		}
-	// }
 
 	return removeOutsideTets(tetGeometry, mesh, deleteOutsideTets);
 }
