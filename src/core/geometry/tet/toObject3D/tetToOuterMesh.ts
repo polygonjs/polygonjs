@@ -63,7 +63,6 @@ export function tetToOuterMesh(tetGeometry: TetGeometry, tesselationParams: TetT
 	newGeometry.setAttribute('position', new Float32BufferAttribute(positions, 3));
 	newGeometry.setIndex(indices);
 	newGeometry.computeVertexNormals();
-	console.log(newGeometry);
 
 	return BaseSopOperation.createObject(newGeometry, ObjectType.MESH);
 }

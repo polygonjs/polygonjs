@@ -15,17 +15,38 @@ import {BaseNodeType} from '../_Base';
 import {Poly} from '../../Poly';
 import {CoreObject} from '../../../core/geometry/Object';
 import {DEFAULT as DEFAULT_TESSELATION_PARAMS} from '../../../core/geometry/tet/utils/TesselationParamsConfig';
-import {SoftBodyIdAttribute} from '../../../core/softBody/SoftBodyAttribute';
+import {SoftBodyIdAttribute, CoreSoftBodyAttribute} from '../../../core/softBody/SoftBodyAttribute';
 import {
 	createOrFindSoftBodyController,
 	softBodyControllerNodeIdFromObject,
 } from '../../../core/softBody/SoftBodyControllerRegister';
 import {TetSopNode} from './_BaseTet';
-import {TetObject} from '../../../core/geometry/tet/TetObject';
+import {TetEmbed} from '../../../core/softBody/Common';
 
 class TetSoftBodySolverSopParamsConfig extends NodeParamsConfig {
 	/** @param gravity */
 	gravity = ParamConfig.VECTOR3([0.0, -9.8, 0.0]);
+
+	/** @param edgeCompliance */
+	edgeCompliance = ParamConfig.FLOAT(10, {
+		range: [0, 100],
+		rangeLocked: [true, false],
+	});
+	/** @param volumeCompliance */
+	volumeCompliance = ParamConfig.FLOAT(0, {
+		range: [0, 1],
+		rangeLocked: [true, false],
+	});
+	/** @param highRes Skinning Lookup Spacing */
+	highResSkinningLookupSpacing = ParamConfig.FLOAT(0.05, {
+		range: [0, 0.5],
+		rangeLocked: [true, false],
+	});
+	/** @param highRes Skinning Lookup Padding */
+	highResSkinningLookupPadding = ParamConfig.FLOAT(0.05, {
+		range: [0, 0.5],
+		rangeLocked: [true, false],
+	});
 }
 const ParamsConfig = new TetSoftBodySolverSopParamsConfig();
 
@@ -36,31 +57,27 @@ export class TetSoftBodySolverSopNode extends TetSopNode<TetSoftBodySolverSopPar
 	}
 
 	private _nextId = 0;
-	private _tetObjectByThreejsObjectEphemeralId: Map<number, TetObject> = new Map();
+	private _tetEmbedByThreejsObjectEphemeralId: Map<number, TetEmbed> = new Map();
+
+	static override displayedInputNames(): string[] {
+		return ['tetrahedrons', 'high res geometry'];
+	}
 
 	protected override initializeNode() {
-		this.io.inputs.setCount(1);
+		this.io.inputs.setCount(1, 2);
 		// set to always clone, so that we reset the solver
 		// by simply setting this node to dirty
 		this.io.inputs.initInputsClonedState(InputCloneMode.ALWAYS);
 	}
 
 	override async cook(inputCoreGroups: CoreGroup[]) {
-		// this.compilationController.compileIfRequired();
 		Poly.onObjectsAddedHooks.registerHook(this.type(), this.traverseObjectOnSopGroupAdd.bind(this));
 
-		// const solverObject = new Group();
-		// solverObject.name = this.name();
-		// solverObject.matrixAutoUpdate = false;
-		// CoreObject.addAttribute(solverObject, SoftBodyIdAttribute.OBJECT, this.graphNodeId());
-		// actor
-		// const actorNode = this._findActorNode();
-		// this.scene().actorsManager.assignActorBuilder(solverObject, actorNode);
-		// add input objects as children
-		const coreGroup = inputCoreGroups[0];
-		const inputTetObjects = coreGroup.tetObjects();
+		const inputTetObjects = inputCoreGroups[0].tetObjects();
 		if (inputTetObjects) {
 			const newThreejsObjects: Object3D[] = [];
+			const inputHighResObjects = inputCoreGroups[1]?.threejsObjects();
+			let i = 0;
 			for (let tetObject of inputTetObjects) {
 				const threejsObjectsFromTetObject = tetObject.toObject3D({
 					...DEFAULT_TESSELATION_PARAMS,
@@ -68,17 +85,37 @@ export class TetSoftBodySolverSopNode extends TetSopNode<TetSoftBodySolverSopPar
 					displayOuterMesh: true,
 				});
 				if (threejsObjectsFromTetObject) {
-					const threejsObject = isArray(threejsObjectsFromTetObject)
+					const lowResObject = isArray(threejsObjectsFromTetObject)
 						? threejsObjectsFromTetObject[0]
 						: threejsObjectsFromTetObject;
-					newThreejsObjects.push(threejsObject);
-					CoreObject.addAttribute(threejsObject, SoftBodyIdAttribute.SOLVER_NODE, this.graphNodeId());
+					const highResObject = inputHighResObjects ? inputHighResObjects[i] : undefined;
+					const displayedObject = highResObject ? highResObject : lowResObject;
+					CoreObject.addAttribute(displayedObject, SoftBodyIdAttribute.SOLVER_NODE, this.graphNodeId());
 					const nextId = this._nextId++;
-					CoreObject.addAttribute(threejsObject, SoftBodyIdAttribute.EPHEMERAL_ID, nextId);
-					this._tetObjectByThreejsObjectEphemeralId.set(nextId, tetObject);
+					CoreObject.addAttribute(displayedObject, SoftBodyIdAttribute.EPHEMERAL_ID, nextId);
+					CoreSoftBodyAttribute.setGravity(displayedObject, this.pv.gravity);
+					// CoreSoftBodyAttribute.setSubSteps(threejsObject, this.pv.subSteps);
+					CoreSoftBodyAttribute.setEdgeCompliance(displayedObject, this.pv.edgeCompliance);
+					CoreSoftBodyAttribute.setVolumeCompliance(displayedObject, this.pv.volumeCompliance);
+					CoreSoftBodyAttribute.setHighResSkinningLookupSpacing(
+						displayedObject,
+						this.pv.highResSkinningLookupSpacing
+					);
+					CoreSoftBodyAttribute.setHighResSkinningLookupPadding(
+						displayedObject,
+						this.pv.highResSkinningLookupPadding
+					);
+
+					const tetEmbed: TetEmbed = {
+						tetObject,
+						lowResObject,
+						highResObject,
+					};
+					this._tetEmbedByThreejsObjectEphemeralId.set(nextId, tetEmbed);
+					newThreejsObjects.push(displayedObject);
 				}
 
-				// solverObject.add(inputObject);
+				i++;
 			}
 			this.setObjects(newThreejsObjects);
 		} else {
@@ -97,24 +134,17 @@ export class TetSoftBodySolverSopNode extends TetSopNode<TetSoftBodySolverSopPar
 			if (ephemeralId == null) {
 				console.error('no ephemeralId found on object', object);
 			}
-			const tetObject = this._tetObjectByThreejsObjectEphemeralId.get(ephemeralId);
-			if (!tetObject) {
+			const tetEmbed = this._tetEmbedByThreejsObjectEphemeralId.get(ephemeralId);
+			if (!tetEmbed) {
 				console.error('no tetObject found from object', object);
 				return;
 			}
 			createOrFindSoftBodyController(this.scene(), this, {
-				tetObject,
-				threejsObject: object,
+				tetEmbed,
+				threejsObjectInSceneTree: object,
 			});
 		}
 	}
-	// private _findActorNode() {
-	// 	// if (isBooleanTrue(this.pv.useThisNode)) {
-	// 	return this;
-	// 	// } else {
-	// 	// 	return this.pv.node.node() as ActorBuilderNode | undefined;
-	// 	// }
-	// }
 }
 
 export function getSoftBodyControllerNodeFromSolverObject(

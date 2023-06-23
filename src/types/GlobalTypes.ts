@@ -59,6 +59,7 @@ export type Boolean4 = Tuple4<boolean>;
 export type Number2 = Tuple2<number>;
 export type Number3 = Tuple3<number>;
 export type Number4 = Tuple4<number>;
+export type Number9 = Tuple9<number>;
 export type Number16 = Tuple16<number>;
 
 export type StringOrNumber2 = Tuple2<StringOrNumber>;

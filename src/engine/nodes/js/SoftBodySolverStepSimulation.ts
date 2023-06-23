@@ -37,7 +37,7 @@ const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
 // }
 
 class SoftBodySolverStepSimulationJsParamsConfig extends NodeParamsConfig {
-	stepsCount = ParamConfig.INTEGER(10, {
+	subSteps = ParamConfig.INTEGER(10, {
 		range: [1, 100],
 		rangeLocked: [true, false],
 	});
@@ -89,7 +89,7 @@ export class SoftBodySolverStepSimulationJsNode extends TypedJsNode<SoftBodySolv
 
 	override setTriggerableLines(linesController: JsLinesCollectionController) {
 		const object3D = inputObject3D(this, linesController);
-		const stepsCount = this.variableForInputParam(linesController, this.p.stepsCount);
+		const subSteps = this.variableForInputParam(linesController, this.p.subSteps);
 		// const selectedVertexInfluence = this.variableForInputParam(linesController, this.p.selectedVertexInfluence);
 		// const viscosity = this.variableForInputParam(linesController, this.p.viscosity);
 		// const spring = this.variableForInputParam(linesController, this.p.spring);
@@ -100,7 +100,7 @@ export class SoftBodySolverStepSimulationJsNode extends TypedJsNode<SoftBodySolv
 
 		const bodyLine = func.asString(
 			object3D,
-			stepsCount
+			subSteps
 			// selectedVertexInfluence,
 			// viscosity,
 			// spring,

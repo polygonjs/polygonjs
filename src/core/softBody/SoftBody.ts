@@ -1,6 +1,7 @@
 import {VOL_ID_ORDER} from './Common';
-import {Mesh, BufferGeometry, Object3D, Vector3} from 'three';
+import {Mesh, BufferGeometry, Vector3} from 'three';
 import {
+	vecSetZero,
 	vecAdd,
 	vecCopy,
 	vecDistSquared,
@@ -9,24 +10,26 @@ import {
 	vecScale,
 	vecSetCross,
 	vecSetDiff,
+	matSetMult,
+	matSetInverse,
 } from './SoftBodyMath';
-import {TetObject} from '../geometry/tet/TetObject';
 import {TetGeometry} from '../geometry/tet/TetGeometry';
 import {tetSortPoints} from '../geometry/tet/utils/tetSortPoints';
-import {Number2} from '../../types/GlobalTypes';
-
-export interface TetAndThreejsPair {
-	tetObject: TetObject;
-	threejsObject: Object3D;
-}
+import {Number2, Number3, Number9} from '../../types/GlobalTypes';
+import {TetEmbed} from './Common';
+import {Hash} from '../Hash';
 
 interface SoftBodyOptions {
-	pair: TetAndThreejsPair;
+	tetEmbed: TetEmbed;
 	// tetObject:TetObject;
 	// tetMesh: TetMesh;
 	// bufferGeometry: BufferGeometry;
-	edgeCompliance?: number;
-	volCompliance?: number;
+	edgeCompliance: number;
+	volumeCompliance: number;
+	highResSkinning: {
+		lookupSpacing: number;
+		lookupPadding: number;
+	};
 }
 
 function buildTetIds(tetGeometry: TetGeometry, newOrderByPoint: Map<number, number>) {
@@ -105,17 +108,17 @@ export class SoftBody {
 	public readonly grads: Float32Array;
 	public grabId: number;
 	public grabInvMass: number;
-	public readonly bufferGeometry: BufferGeometry;
-	constructor(private _options: SoftBodyOptions) {
-		if (this._options.edgeCompliance == null) {
-			this._options.edgeCompliance = 1.0;
-		}
-		if (this._options.volCompliance == null) {
-			this._options.volCompliance = 0.0;
-		}
-		console.log(this._options);
-		const {tetObject, threejsObject} = this._options.pair;
-		this.bufferGeometry = (threejsObject as Mesh).geometry;
+	private readonly bufferGeometry: BufferGeometry;
+	//
+	private numVisVerts: number;
+	private skinningInfo: Float32Array;
+	private highResGeometry: BufferGeometry | undefined;
+	private highResObjectPosition: number[];
+
+	constructor(private options: SoftBodyOptions) {
+		const {tetEmbed, edgeCompliance, volumeCompliance} = this.options;
+		const {tetObject, lowResObject, highResObject} = tetEmbed;
+		this.bufferGeometry = (lowResObject as Mesh).geometry;
 		// physics
 
 		this.numParticles = tetObject.geometry.pointsCount(); //tetMesh.verts.length / 3;
@@ -132,8 +135,8 @@ export class SoftBody {
 		this.edgeLengths = new Float32Array(this.edgeIds.length / 2);
 		this.invMass = new Float32Array(this.numParticles);
 
-		this.edgeCompliance = this._options.edgeCompliance;
-		this.volCompliance = this._options.volCompliance;
+		this.edgeCompliance = edgeCompliance;
+		this.volCompliance = volumeCompliance;
 
 		this.temp = new Float32Array(4 * 3);
 		this.grads = new Float32Array(4 * 3);
@@ -143,17 +146,30 @@ export class SoftBody {
 
 		this.initPhysics();
 
+		// high res object
+		this.highResGeometry = highResObject ? (highResObject as Mesh).geometry : undefined;
+		this.highResObjectPosition = this.highResGeometry
+			? (this.highResGeometry.attributes.position.array as number[])
+			: [];
+		const visVerts = this.highResObjectPosition;
+		this.numVisVerts = visVerts.length / 3;
+		console.log({numVisVerts: this.numVisVerts});
+		this.skinningInfo = new Float32Array(4 * this.numVisVerts);
+		if (highResObject) {
+			this._computeSkinningInfo(visVerts);
+		}
+
 		// this.translate(0, 1, 0);
 
-		console.log({
-			numParticles: this.numParticles,
-			numTets: this.numTets,
-			pos: this.pos,
-			prevPos: this.prevPos,
-			vel: this.vel,
-			tetIds: this.tetIds,
-			edgeIds: this.edgeIds,
-		});
+		// console.log({
+		// 	numParticles: this.numParticles,
+		// 	numTets: this.numTets,
+		// 	pos: this.pos,
+		// 	prevPos: this.prevPos,
+		// 	vel: this.vel,
+		// 	tetIds: this.tetIds,
+		// 	edgeIds: this.edgeIds,
+		// });
 
 		// surface tri mesh
 
@@ -176,11 +192,125 @@ export class SoftBody {
 	// 		vecAdd(this.prevPos, i, [x, y, z], 0);
 	// 	}
 	// }
+	private _computeSkinningInfo(visVerts: number[]) {
+		// create a hash for all vertices of the visual mesh
 
-	updateMeshes() {
+		const hash = new Hash({
+			spacing: this.options.highResSkinning.lookupSpacing,
+			maxNumObjects: this.numVisVerts,
+		});
+		hash.create(visVerts);
+
+		this.skinningInfo.fill(-1.0); // undefined
+
+		const minDist = new Float32Array(this.numVisVerts);
+		minDist.fill(Number.MAX_VALUE);
+		const border = this.options.highResSkinning.lookupPadding;
+
+		// each tet searches for containing vertices
+
+		const tetCenter = new Float32Array(3) as any as Number3;
+		const mat = new Float32Array(9) as any as Number9;
+		const bary = new Float32Array(4);
+
+		for (let i = 0; i < this.numTets; i++) {
+			// compute bounding sphere of tet
+
+			tetCenter.fill(0.0);
+			for (let j = 0; j < 4; j++) vecAdd(tetCenter, 0, this.pos, this.tetIds[4 * i + j], 0.25);
+
+			let rMax = 0.0;
+			for (let j = 0; j < 4; j++) {
+				const r2 = vecDistSquared(tetCenter, 0, this.pos, this.tetIds[4 * i + j]);
+				rMax = Math.max(rMax, Math.sqrt(r2));
+			}
+
+			rMax += border;
+
+			hash.query(tetCenter, 0, rMax);
+			if (hash.queryIds.length == 0) continue;
+
+			const id0 = this.tetIds[4 * i];
+			const id1 = this.tetIds[4 * i + 1];
+			const id2 = this.tetIds[4 * i + 2];
+			const id3 = this.tetIds[4 * i + 3];
+
+			vecSetDiff(mat, 0, this.pos, id0, this.pos, id3);
+			vecSetDiff(mat, 1, this.pos, id1, this.pos, id3);
+			vecSetDiff(mat, 2, this.pos, id2, this.pos, id3);
+
+			matSetInverse(mat);
+
+			for (let j = 0; j < hash.queryIds.length; j++) {
+				const id = hash.queryIds[j];
+
+				// we already have skinning info
+
+				if (minDist[id] <= 0.0) continue;
+
+				if (vecDistSquared(visVerts, id, tetCenter, 0) > rMax * rMax) continue;
+
+				// compute barycentric coords for candidate
+
+				vecSetDiff(bary, 0, visVerts, id, this.pos, id3);
+				matSetMult(mat, bary, 0, bary, 0);
+				bary[3] = 1.0 - bary[0] - bary[1] - bary[2];
+
+				let dist = 0.0;
+				for (let k = 0; k < 4; k++) dist = Math.max(dist, -bary[k]);
+
+				if (dist < minDist[id]) {
+					minDist[id] = dist;
+					this.skinningInfo[4 * id] = i;
+					this.skinningInfo[4 * id + 1] = bary[0];
+					this.skinningInfo[4 * id + 2] = bary[1];
+					this.skinningInfo[4 * id + 3] = bary[2];
+				}
+			}
+		}
+	}
+
+	private _updateMeshes() {
+		this._updateLowResObject();
+		this._updateHighResMesh();
+	}
+	private _updateLowResObject() {
+		if (this.highResGeometry) {
+			return;
+		}
 		this.bufferGeometry.computeVertexNormals();
 		this.bufferGeometry.attributes.position.needsUpdate = true;
 		this.bufferGeometry.computeBoundingSphere();
+	}
+	private _updateHighResMesh() {
+		if (!this.highResGeometry) {
+			return;
+		}
+		const positions = this.highResObjectPosition;
+		let nr = 0;
+		for (let i = 0; i < this.numVisVerts; i++) {
+			let tetNr = this.skinningInfo[nr++] * 4;
+			if (tetNr < 0) {
+				nr += 3;
+				continue;
+			}
+			const b0 = this.skinningInfo[nr++];
+			const b1 = this.skinningInfo[nr++];
+			const b2 = this.skinningInfo[nr++];
+			const b3 = 1.0 - b0 - b1 - b2;
+			const id0 = this.tetIds[tetNr++];
+			const id1 = this.tetIds[tetNr++];
+			const id2 = this.tetIds[tetNr++];
+			const id3 = this.tetIds[tetNr++];
+			vecSetZero(positions, i);
+			vecAdd(positions, i, this.pos, id0, b0);
+			vecAdd(positions, i, this.pos, id1, b1);
+			vecAdd(positions, i, this.pos, id2, b2);
+			vecAdd(positions, i, this.pos, id3, b3);
+		}
+		this.highResGeometry.computeVertexNormals();
+		this.highResGeometry.attributes.position.needsUpdate = true;
+		this.highResGeometry.computeBoundingSphere();
 	}
 
 	getTetVolume(nr: number) {
@@ -239,7 +369,7 @@ export class SoftBody {
 			if (this.invMass[i] == 0.0) continue;
 			vecSetDiff(this.vel, i, this.pos, i, this.prevPos, i, 1.0 / dt);
 		}
-		this.updateMeshes();
+		this._updateMeshes();
 	}
 
 	solveEdges(compliance: number, dt: number) {

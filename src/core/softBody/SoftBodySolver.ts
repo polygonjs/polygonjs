@@ -2,18 +2,18 @@ import {Object3D, Vector3} from 'three';
 import {softBodyControllerFromObject, softBodyFromObject} from './SoftBodyControllerRegister';
 
 export function softBodySolverStepSimulation(
-	solverObject: Object3D,
-	stepsCount: number
+	softBodyObject: Object3D,
+	subSteps: number
 	// selectedVertexInfluence: number,
 	// viscosity: number,
 	// spring: number,
 ) {
-	const controller = softBodyControllerFromObject(solverObject);
+	const controller = softBodyControllerFromObject(softBodyObject);
 	if (!controller) {
-		console.log('no controller for', solverObject.uuid);
+		console.log('no controller for', softBodyObject.uuid, softBodyObject);
 		return;
 	}
-	controller.stepsCount = stepsCount;
+	controller.setSubSteps(subSteps);
 	// controller.selectedVertexInfluence = selectedVertexInfluence;
 	// controller.viscosity = viscosity;
 	// controller.spring = spring;
@@ -21,10 +21,10 @@ export function softBodySolverStepSimulation(
 	controller.step();
 }
 
-export function setSoftBodySolverGravity(solverObject: Object3D, gravity: Vector3, lerp: number) {
-	const controller = softBodyControllerFromObject(solverObject);
+export function setSoftBodySolverGravity(softBodyObject: Object3D, gravity: Vector3, lerp: number) {
+	const controller = softBodyControllerFromObject(softBodyObject);
 	if (!controller) {
-		console.log('no controller for', solverObject.uuid);
+		console.log('no controller for', softBodyObject.uuid);
 		return;
 	}
 	console.warn('setGravity not implemented');
