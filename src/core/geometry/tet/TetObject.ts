@@ -3,7 +3,8 @@ import {ObjectContent, CoreObjectType, ObjectGeometryMap, objectContentCopyPrope
 import {CoreType} from '../../Type';
 import {TetGeometry} from './TetGeometry';
 import {TetTesselationParams} from './TetCommon';
-import {tetToMesh} from './toObject3D/tetToMesh';
+import {tetToOuterMesh} from './toObject3D/tetToOuterMesh';
+import {tetToTetMesh} from './toObject3D/tetToTetMesh';
 import {tetToLines} from './toObject3D/tetToLines';
 import {tetSharedFacesToLines} from './toObject3D/tetToSharedFacesToLine';
 import {tetToPoints} from './toObject3D/tetToPoints';
@@ -18,6 +19,8 @@ export class TetObject implements ObjectContent<CoreObjectType.TET> {
 	get type() {
 		return CoreObjectType.TET;
 	}
+	parent = null;
+	children = [];
 	userData = {};
 	name = '';
 	castShadow = true;
@@ -69,8 +72,11 @@ export class TetObject implements ObjectContent<CoreObjectType.TET> {
 		tesselationParams: TetTesselationParams
 	): Object3D | Object3D[] | undefined {
 		const objects: Object3D[] = [];
-		if (tesselationParams.displayMesh) {
-			objects.push(tetToMesh(tetObject.tetGeometry(), tesselationParams));
+		if (tesselationParams.displayOuterMesh) {
+			objects.push(tetToOuterMesh(tetObject.tetGeometry(), tesselationParams));
+		}
+		if (tesselationParams.displayTetMesh) {
+			objects.push(tetToTetMesh(tetObject.tetGeometry(), tesselationParams));
 		}
 		if (tesselationParams.displayLines) {
 			objects.push(tetToLines(tetObject.tetGeometry(), tesselationParams));

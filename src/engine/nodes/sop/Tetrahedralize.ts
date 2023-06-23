@@ -8,28 +8,27 @@ import {TetSopNode} from './_BaseTet';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {
-	tetrahedralize,
-	POINTS_TRAVERSAL_METHODS,
-	PointsTraversalMethod,
-} from '../../../core/geometry/tet/utils/tetrahedralize';
+import {tetrahedralize} from '../../../core/geometry/tet/utils/tetrahedralize';
 import {TetGeometry} from '../../../core/geometry/tet/TetGeometry';
 import {MeshWithBVHGeometry, ThreeMeshBVHHelper} from '../../../core/geometry/bvh/ThreeMeshBVHHelper';
 import {Mesh, Vector3} from 'three';
 import {mergeFaces} from '../../../core/geometry/operation/Fuse';
-import {CoreGeometry} from '../../../core/geometry/Geometry';
+// import {CoreGeometry} from '../../../core/geometry/Geometry';
 import {jitterPositions} from '../../../core/geometry/operation/Jitter';
 
 const jitterMult = new Vector3(1, 1, 1);
 class TetrahedralizeSopParamsConfig extends NodeParamsConfig {
 	fuseDist = ParamConfig.FLOAT(0.001);
 	jitter = ParamConfig.FLOAT(0.001);
-	traversalMethod = ParamConfig.INTEGER(POINTS_TRAVERSAL_METHODS.indexOf(PointsTraversalMethod.MERGE), {
-		menu: {
-			entries: POINTS_TRAVERSAL_METHODS.map((name, value) => ({name, value})),
-		},
+	innerPointsResolution = ParamConfig.INTEGER(5, {
+		range: [0, 10],
 	});
-	axisSort = ParamConfig.VECTOR3([1, 1, 1], {});
+	// traversalMethod = ParamConfig.INTEGER(POINTS_TRAVERSAL_METHODS.indexOf(PointsTraversalMethod.MERGE), {
+	// 	menu: {
+	// 		entries: POINTS_TRAVERSAL_METHODS.map((name, value) => ({name, value})),
+	// 	},
+	// });
+	// axisSort = ParamConfig.VECTOR3([1, 1, 1], {});
 	// minQualityExp = ParamConfig.FLOAT(-2, {
 	// 	range: [-4, 0],
 	// 	rangeLocked: [true, true],
@@ -54,17 +53,14 @@ export class TetrahedralizeSopNode extends TetSopNode<TetrahedralizeSopParamsCon
 		return SopType.TETRAHEDRALIZE;
 	}
 
-	static override displayedInputNames(): string[] {
-		return ['input mesh', 'additional point (optional)'];
-	}
 	override initializeNode() {
-		this.io.inputs.setCount(1, 2);
+		this.io.inputs.setCount(1);
 	}
 
 	override cook(inputCoreGroups: CoreGroup[]) {
 		const coreGroup = inputCoreGroups[0];
 		const inputMeshes = coreGroup.threejsObjectsWithGeo() as Mesh[];
-		const additionalPointsObjects = inputCoreGroups[1]?.threejsObjects();
+		// const additionalPointsObjects = inputCoreGroups[1]?.threejsObjects();
 
 		for (let inputMesh of inputMeshes) {
 			mergeFaces(inputMesh.geometry, this.pv.fuseDist);
@@ -76,26 +72,28 @@ export class TetrahedralizeSopNode extends TetSopNode<TetrahedralizeSopParamsCon
 		});
 
 		const tetGeometries: TetGeometry[] = [];
-		let i = 0;
+		// let i = 0;
 		for (let inputMesh of inputMeshes) {
-			const additionalPointsObject = additionalPointsObjects ? additionalPointsObjects[i] : null;
-			const additionalPoints =
-				additionalPointsObject && (additionalPointsObject as Mesh).geometry
-					? CoreGeometry.points((additionalPointsObject as Mesh).geometry).map((p) => p.position())
-					: [];
+			// const additionalPointsObject = additionalPointsObjects ? additionalPointsObjects[i] : null;
+			// const additionalPoints =
+			// 	additionalPointsObject && (additionalPointsObject as Mesh).geometry
+			// 		? CoreGeometry.points((additionalPointsObject as Mesh).geometry).map((p) => p.position())
+			// 		: [];
 
 			ThreeMeshBVHHelper.assignDefaultBVHIfNone(inputMesh);
 			const tetGeometry = tetrahedralize({
-				traversalMethod: POINTS_TRAVERSAL_METHODS[this.pv.traversalMethod],
-				axisSort: this.pv.axisSort,
+				// traversalMethod: POINTS_TRAVERSAL_METHODS[this.pv.traversalMethod],
+				// axisSort: this.pv.axisSort,
 				mesh: inputMesh as MeshWithBVHGeometry,
-				additionalPoints: additionalPoints,
+				innerPointsResolution: this.pv.innerPointsResolution,
+				jitterAmount: this.pv.jitter,
+				// additionalPoints: additionalPoints,
 				// minQuality: Math.pow(10.0, this.pv.minQualityExp),
 				stage: this.pv.stepByStep ? (this.pv.step >= 0 ? this.pv.step : null) : null,
 				deleteOutsideTets: this.pv.stepByStep ? this.pv.deleteOutsideTets : true,
 			});
 			tetGeometries.push(tetGeometry);
-			i++;
+			// i++;
 		}
 
 		this.setTetGeometries(tetGeometries);

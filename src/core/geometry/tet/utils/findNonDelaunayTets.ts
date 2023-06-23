@@ -24,7 +24,7 @@ export function findNonDelaunayTetsFromSinglePointCheck(
 		const tet = tetGeometry.tetrahedrons.get(tetId);
 
 		if (!tet) {
-			throw 'tet not found';
+			throw `findNonDelaunayTetsFromSinglePointCheck: tet not found (${tetId})`;
 			continue;
 		}
 		invalidTets.push(tetId);

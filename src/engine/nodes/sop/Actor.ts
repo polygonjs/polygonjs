@@ -52,7 +52,7 @@ export class ActorSopNode extends TypedActorSopNode<ActorSopParamsConfig> {
 
 		//
 		const coreGroup = inputCoreGroups[0];
-		const objects = coreGroup.threejsObjects();
+		const objects = coreGroup.allObjects();
 		const actorNode = await this._findActorNode();
 		if (actorNode) {
 			const objectsMask = this.pv.objectsMask.trim();

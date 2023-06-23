@@ -10,8 +10,9 @@ import {CoreGroup} from '../../../core/geometry/Group';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 import {TetObject} from '../../../core/geometry/tet/TetObject';
 import {tetQuality} from '../../../core/geometry/tet/utils/tetQuality';
+import {tetRemoveUnusedPoints} from '../../../core/geometry/tet/utils/tetRemoveUnusedPoints';
 class TetQualitySopParamsConfig extends NodeParamsConfig {
-	threshold = ParamConfig.FLOAT(0.5, {
+	minQuality = ParamConfig.FLOAT(0.1, {
 		range: [0, 1],
 		rangeLocked: [true, true],
 	});
@@ -41,7 +42,7 @@ export class TetQualitySopNode extends TetSopNode<TetQualitySopParamsConfig> {
 		}
 	}
 	_filterTets(tetObject: TetObject) {
-		const {invert, threshold} = this.pv;
+		const {invert, minQuality} = this.pv;
 		const geometry = tetObject.geometry;
 		const {tetrahedrons, points} = geometry;
 		const badQualityIds: number[] = [];
@@ -55,15 +56,16 @@ export class TetQualitySopNode extends TetSopNode<TetQualitySopParamsConfig> {
 			}
 			const quality = tetQuality(pt0.position, pt1.position, pt2.position, pt3.position);
 			if (invert) {
-				if (quality >= threshold) {
+				if (quality >= minQuality) {
 					badQualityIds.push(tet.id);
 				}
 			} else {
-				if (quality < threshold) {
+				if (quality < minQuality) {
 					badQualityIds.push(tet.id);
 				}
 			}
 		});
 		geometry.removeTets(badQualityIds);
+		tetRemoveUnusedPoints(geometry);
 	}
 }

@@ -7,33 +7,40 @@ import {tetCenter} from './tetCenter';
 import {findNonDelaunayTetsFromSinglePointCheck} from './findNonDelaunayTets';
 import {isPositionInsideMesh} from './tetInsideMesh';
 import {setFirstValue} from '../../../SetUtils';
+import {tetRemoveUnusedPoints} from './tetRemoveUnusedPoints';
+import {jitterOffset} from '../../operation/Jitter';
 
 const _v = new Vector3();
+const _jitterOffset = new Vector3();
+const _bboxSize = new Vector3();
 const _triangle = new Triangle();
 const _faceNormal = new Vector3();
 const _newPtDelta = new Vector3();
 const _containingTetSearchRayOrigin = new Vector3();
 const sharedFacesNeighbourData: Set<TetNeighbourDataWithSource> = new Set();
 const invalidTets: number[] = [];
+const jitterMult = new Vector3(1, 1, 1);
 
 export type TetEdge = [number, number, number, number];
 
-export enum PointsTraversalMethod {
-	MERGE = 'merge',
-	MESH_FIRST = 'mesh first',
-	ADDITIONAL_FIRST = 'additional first',
-}
-export const POINTS_TRAVERSAL_METHODS: PointsTraversalMethod[] = [
-	PointsTraversalMethod.MERGE,
-	PointsTraversalMethod.MESH_FIRST,
-	PointsTraversalMethod.ADDITIONAL_FIRST,
-];
+// export enum PointsTraversalMethod {
+// 	MERGE = 'merge',
+// 	MESH_FIRST = 'mesh first',
+// 	ADDITIONAL_FIRST = 'additional first',
+// }
+// export const POINTS_TRAVERSAL_METHODS: PointsTraversalMethod[] = [
+// 	PointsTraversalMethod.MERGE,
+// 	PointsTraversalMethod.MESH_FIRST,
+// 	PointsTraversalMethod.ADDITIONAL_FIRST,
+// ];
 
 interface TetrahedralizeOptions {
-	traversalMethod: PointsTraversalMethod;
-	axisSort: Vector3;
+	// traversalMethod: PointsTraversalMethod;
+	// axisSort: Vector3;
 	mesh: MeshWithBVHGeometry;
-	additionalPoints: Vector3[];
+	innerPointsResolution: number;
+	jitterAmount: number;
+	// additionalPoints: Vector3[];
 	stage: number | null;
 	deleteOutsideTets: boolean;
 }
@@ -102,7 +109,7 @@ function removeOutsideTets(
 	deleteOutsideTets: boolean
 ): TetGeometry {
 	if (!deleteOutsideTets) {
-		return tetGeometry;
+		return tetRemoveUnusedPoints(tetGeometry);
 	}
 	const outsideIds: number[] = [];
 	tetGeometry.tetrahedrons.forEach((tet, tetId) => {
@@ -113,52 +120,85 @@ function removeOutsideTets(
 		}
 	});
 	tetGeometry.removeTets(outsideIds);
-	return tetGeometry;
+	return tetRemoveUnusedPoints(tetGeometry);
 }
 
 function prepareInputPoints(options: TetrahedralizeOptions): Vector3[] {
-	const {traversalMethod, mesh, additionalPoints} = options;
+	const {mesh, innerPointsResolution, jitterAmount} = options;
 	const {geometry} = mesh;
 	const inputPoints: Vector3[] = [];
 
-	switch (traversalMethod) {
-		case PointsTraversalMethod.MERGE: {
-			const geoPositionAttribute = geometry.attributes.position;
-			const pointsCount = geoPositionAttribute.count;
-			for (let i = 0; i < pointsCount; i++) {
-				const newPos = new Vector3();
-				newPos.fromBufferAttribute(geoPositionAttribute, i);
-				inputPoints.push(newPos);
-			}
-			inputPoints.push(...additionalPoints);
-			break;
-		}
-		case PointsTraversalMethod.MESH_FIRST: {
-			const geoPositionAttribute = geometry.attributes.position;
-			const pointsCount = geoPositionAttribute.count;
-			for (let i = 0; i < pointsCount; i++) {
-				const newPos = new Vector3();
-				newPos.fromBufferAttribute(geoPositionAttribute, i);
-				inputPoints.push(newPos);
-			}
-			//
-			inputPoints.push(...additionalPoints);
-			break;
-		}
-		case PointsTraversalMethod.ADDITIONAL_FIRST: {
-			inputPoints.push(...additionalPoints);
-			//
-			const geoPositionAttribute = geometry.attributes.position;
-			const pointsCount = geoPositionAttribute.count;
-			for (let i = 0; i < pointsCount; i++) {
-				const newPos = new Vector3();
-				newPos.fromBufferAttribute(geoPositionAttribute, i);
-				inputPoints.push(newPos);
-			}
+	const geoPositionAttribute = geometry.attributes.position;
+	const pointsCount = geoPositionAttribute.count;
+	for (let i = 0; i < pointsCount; i++) {
+		const newPos = new Vector3();
+		newPos.fromBufferAttribute(geoPositionAttribute, i);
+		inputPoints.push(newPos);
+	}
 
-			break;
+	geometry.computeBoundingBox();
+	if (!geometry.boundingBox) {
+		return inputPoints;
+	}
+	const {min} = geometry.boundingBox;
+	geometry.boundingBox.getSize(_bboxSize);
+
+	const minDim = Math.min(_bboxSize.x, _bboxSize.y, _bboxSize.z);
+	const minStep = minDim / innerPointsResolution;
+
+	let i = 0;
+	for (let xi = 0; xi < innerPointsResolution; xi++) {
+		for (let yi = 0; yi < innerPointsResolution; yi++) {
+			for (let zi = 0; zi < innerPointsResolution; zi++) {
+				jitterOffset(i, 11, jitterMult, jitterAmount, _jitterOffset);
+				_v.set(xi, yi, zi).divideScalar(innerPointsResolution).multiply(_bboxSize).add(min).add(_jitterOffset);
+
+				if (isPositionInsideMesh(_v, mesh, minStep)) {
+					inputPoints.push(_v.clone());
+				}
+				i++;
+			}
 		}
 	}
+
+	// switch (traversalMethod) {
+	// 	case PointsTraversalMethod.MERGE: {
+	// 		const geoPositionAttribute = geometry.attributes.position;
+	// 		const pointsCount = geoPositionAttribute.count;
+	// 		for (let i = 0; i < pointsCount; i++) {
+	// 			const newPos = new Vector3();
+	// 			newPos.fromBufferAttribute(geoPositionAttribute, i);
+	// 			inputPoints.push(newPos);
+	// 		}
+	// 		inputPoints.push(...additionalPoints);
+	// 		break;
+	// 	}
+	// 	case PointsTraversalMethod.MESH_FIRST: {
+	// 		const geoPositionAttribute = geometry.attributes.position;
+	// 		const pointsCount = geoPositionAttribute.count;
+	// 		for (let i = 0; i < pointsCount; i++) {
+	// 			const newPos = new Vector3();
+	// 			newPos.fromBufferAttribute(geoPositionAttribute, i);
+	// 			inputPoints.push(newPos);
+	// 		}
+	// 		//
+	// 		inputPoints.push(...additionalPoints);
+	// 		break;
+	// 	}
+	// 	case PointsTraversalMethod.ADDITIONAL_FIRST: {
+	// 		inputPoints.push(...additionalPoints);
+	// 		//
+	// 		const geoPositionAttribute = geometry.attributes.position;
+	// 		const pointsCount = geoPositionAttribute.count;
+	// 		for (let i = 0; i < pointsCount; i++) {
+	// 			const newPos = new Vector3();
+	// 			newPos.fromBufferAttribute(geoPositionAttribute, i);
+	// 			inputPoints.push(newPos);
+	// 		}
+
+	// 		break;
+	// 	}
+	// }
 
 	return inputPoints;
 }

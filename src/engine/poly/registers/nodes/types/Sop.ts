@@ -126,7 +126,7 @@ export enum SopType {
 	// SDF_TUBE = 'SDFTube',
 	//
 	SHEAR = 'shear',
-	SOFT_BODY_SOLVER = 'softBodySolver',
+
 	SPHERE = 'sphere',
 	SUBDIVIDE = 'subdivide',
 	SWITCH = 'switch',
@@ -137,6 +137,7 @@ export enum SopType {
 	TET_DELETE = 'tetDelete',
 	TET_GROW = 'tetGrow',
 	TET_MIRROR = 'tetMirror',
+	TET_SOFT_BODY_SOLVER = 'tetSoftBodySolver',
 	TET_SPLIT = 'tetSplit',
 	TET_TRIANGULATE = 'tetTriangulate',
 	TET_QUALITY = 'tetQuality',

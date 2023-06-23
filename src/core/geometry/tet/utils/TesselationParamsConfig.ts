@@ -2,9 +2,10 @@ import {ParamConfig} from '../../../../engine/nodes/utils/params/ParamsConfig';
 import {BaseNodeType} from '../../../../engine/nodes/_Base';
 import {Constructor} from '../../../../types/GlobalTypes';
 
-const DEFAULT = {
+export const DEFAULT = {
 	scale: 1,
-	displayMesh: true,
+	displayOuterMesh: false,
+	displayTetMesh: true,
 	displayLines: false,
 	displaySharedFaces: false,
 	displayPoints: false,
@@ -18,8 +19,10 @@ export function SOPTetTesselationParamConfig<TBase extends Constructor>(Base: TB
 			range: [0, 1],
 			rangeLocked: [true, true],
 		});
-		/** @param display mesh */
-		displayMesh = ParamConfig.BOOLEAN(DEFAULT.displayMesh);
+		/** @param display outer mesh */
+		displayOuterMesh = ParamConfig.BOOLEAN(DEFAULT.displayOuterMesh);
+		/** @param display tet mesh */
+		displayTetMesh = ParamConfig.BOOLEAN(DEFAULT.displayTetMesh);
 		/** @param display lines */
 		displayLines = ParamConfig.BOOLEAN(DEFAULT.displayLines);
 		/** @param display shared faces */
@@ -40,8 +43,10 @@ export function OBJTetTesselationParamConfig<TBase extends Constructor>(Base: TB
 			range: [0, 1],
 			rangeLocked: [true, true],
 		});
-		/** @param display mesh */
-		TetDisplayMesh = ParamConfig.BOOLEAN(DEFAULT.displayMesh);
+		/** @param display outer mesh */
+		TetDisplayOuterMesh = ParamConfig.BOOLEAN(DEFAULT.displayOuterMesh);
+		/** @param display tet mesh */
+		TetDisplayTetMesh = ParamConfig.BOOLEAN(DEFAULT.displayTetMesh);
 		/** @param display lines */
 		TetDisplayLines = ParamConfig.BOOLEAN(DEFAULT.displayLines);
 		/** @param display lines */

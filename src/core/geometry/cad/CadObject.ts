@@ -55,6 +55,8 @@ export class CadObject<T extends CadGeometryType> implements ObjectContent<CoreO
 	get type() {
 		return this._type;
 	}
+	parent = null;
+	children = [];
 	userData = {};
 	name = '';
 	castShadow = true;

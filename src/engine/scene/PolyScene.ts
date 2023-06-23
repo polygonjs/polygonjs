@@ -31,12 +31,13 @@ import {BaseNodeType} from '../nodes/_Base';
 import {ObjNodeChildrenMap} from '../poly/registers/nodes/Obj';
 import {ParamsInitData} from '../nodes/utils/io/IOController';
 import {Constructor, valueof} from '../../types/GlobalTypes';
-import {Object3D, Raycaster, Scene, WebGLRenderer} from 'three';
+import {Raycaster, Scene, WebGLRenderer} from 'three';
 import {CoreString} from '../../core/String';
 import {SceneRenderersRegister, RegisterRendererOptions} from './utils/SceneRenderersRegister';
 import {Poly} from '../Poly';
 import {NodeCreateOptions} from '../nodes/utils/hierarchy/ChildrenController';
 import {SceneWebXRController} from './utils/WebXREventsController';
+import {CoreObjectType, ObjectContent} from '../../core/geometry/ObjectContent';
 
 interface PolySceneCreateOptions {
 	root: NodeCreateOptions;
@@ -219,14 +220,14 @@ export class PolyScene {
 	 * returns a THREE.Object3D whose name matches the mask
 	 *
 	 */
-	findObjectByMask(mask: string): Object3D | undefined {
+	findObjectByMask<T extends CoreObjectType>(mask: string): ObjectContent<T> | undefined {
 		return this._objectsController.findObjectByMask(mask);
 	}
 	/**
 	 * returns a list THREE.Object3Ds whose names matche the mask
 	 *
 	 */
-	objectsByMask(mask: string, parent?: Object3D): Object3D[] {
+	objectsByMask<T extends CoreObjectType>(mask: string, parent?: ObjectContent<T>): ObjectContent<T>[] {
 		return this._objectsController.objectsByMask(mask, parent);
 	}
 

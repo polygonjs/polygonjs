@@ -8,7 +8,7 @@ import {tetCenter} from '../utils/tetCenter';
 const _center = new Vector3();
 const _p = new Vector3();
 
-export function tetToMesh(tetGeometry: TetGeometry, tesselationParams: TetTesselationParams) {
+export function tetToTetMesh(tetGeometry: TetGeometry, tesselationParams: TetTesselationParams) {
 	const {scale} = tesselationParams;
 	const {points, tetrahedrons} = tetGeometry;
 	const newGeometry = new BufferGeometry();

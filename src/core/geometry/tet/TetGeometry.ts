@@ -39,6 +39,11 @@ export class TetGeometry {
 
 		return id;
 	}
+	removePoint(pointId: number) {
+		this.points.delete(pointId);
+		this.tetrahedronsByPointId.delete(pointId);
+		this._pointsCount--;
+	}
 
 	pointsCount() {
 		return this._pointsCount;
@@ -139,15 +144,20 @@ export class TetGeometry {
 			const tetrahedron = this.tetrahedrons.get(tetId);
 			if (!tetrahedron) {
 				logRedBg(`tet not found:${tetId} (${tetIds})`);
-				throw `tet not found ${tetId}`;
+				throw `removeTets: tet not found ${tetId}`;
 				continue;
 			}
 
 			// update point keys
-			for (let p of tetrahedron.pointIds) {
-				const tetrahedrons = this.tetrahedronsByPointId.get(p);
+			for (let pointId of tetrahedron.pointIds) {
+				const tetrahedrons = this.tetrahedronsByPointId.get(pointId);
 				if (tetrahedrons) {
 					tetrahedrons.delete(tetrahedron.id);
+					// DO not remove points here,
+					// as they are still needed later
+					// if (tetrahedrons.size == 0) {
+					// 	this._removePoint(pointId);
+					// }
 				}
 			}
 

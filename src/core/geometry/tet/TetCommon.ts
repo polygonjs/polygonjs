@@ -41,7 +41,8 @@ export interface Tetrahedron {
 }
 export interface TetTesselationParams {
 	scale: number;
-	displayMesh: boolean;
+	displayOuterMesh: boolean;
+	displayTetMesh: boolean;
 	displayLines: boolean;
 	displaySharedFaces: boolean;
 	displayPoints: boolean;
@@ -50,7 +51,8 @@ export interface TetTesselationParams {
 }
 export interface TetOBJTesselationParams {
 	TetScale: number;
-	TetDisplayMesh: boolean;
+	TetDisplayOuterMesh: boolean;
+	TetDisplayTetMesh: boolean;
 	TetDisplayLines: boolean;
 	TetDisplaySharedFaces: boolean;
 	TetDisplayPoints: boolean;

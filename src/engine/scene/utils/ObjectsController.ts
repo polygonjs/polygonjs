@@ -1,23 +1,24 @@
 import {PolyScene} from '../PolyScene';
 import {Object3D} from 'three';
 import {CorePath, CorePathObjCallback} from '../../../core/geometry/CorePath';
+import {CoreObjectType, ObjectContent} from '../../../core/geometry/ObjectContent';
 
 export const ROOT_NAME = '/';
 
 export class ObjectsController {
 	constructor(private scene: PolyScene) {}
 
-	findObjectByMask(mask: string): Object3D | undefined {
+	findObjectByMask<T extends CoreObjectType>(mask: string): ObjectContent<T> | undefined {
 		return CorePath.findObjectByMask(mask, this.scene.threejsScene());
 	}
 
-	objectsByMask(mask: string, parent?: Object3D): Object3D[] {
+	objectsByMask<T extends CoreObjectType>(mask: string, parent?: ObjectContent<T>): ObjectContent<T>[] {
 		return CorePath.objectsByMask(mask, parent || this.scene.threejsScene());
 	}
 
-	traverseObjectsWithMask(
+	traverseObjectsWithMask<T extends CoreObjectType>(
 		mask: string,
-		callback: CorePathObjCallback,
+		callback: CorePathObjCallback<T>,
 		object: Object3D | undefined,
 		invertMask: boolean = false
 	) {

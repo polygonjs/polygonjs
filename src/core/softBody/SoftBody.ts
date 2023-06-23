@@ -1,5 +1,5 @@
-import {TetMesh, VOL_ID_ORDER} from './Common';
-import {BufferAttribute, BufferGeometry, Vector3} from 'three';
+import {VOL_ID_ORDER} from './Common';
+import {Mesh, BufferGeometry, Object3D, Vector3} from 'three';
 import {
 	vecAdd,
 	vecCopy,
@@ -10,12 +10,82 @@ import {
 	vecSetCross,
 	vecSetDiff,
 } from './SoftBodyMath';
+import {TetObject} from '../geometry/tet/TetObject';
+import {TetGeometry} from '../geometry/tet/TetGeometry';
+import {tetSortPoints} from '../geometry/tet/utils/tetSortPoints';
+import {Number2} from '../../types/GlobalTypes';
+
+export interface TetAndThreejsPair {
+	tetObject: TetObject;
+	threejsObject: Object3D;
+}
 
 interface SoftBodyOptions {
-	tetMesh: TetMesh;
-	bufferGeometry: BufferGeometry;
+	pair: TetAndThreejsPair;
+	// tetObject:TetObject;
+	// tetMesh: TetMesh;
+	// bufferGeometry: BufferGeometry;
 	edgeCompliance?: number;
 	volCompliance?: number;
+}
+
+function buildTetIds(tetGeometry: TetGeometry, newOrderByPoint: Map<number, number>) {
+	const tetIds: number[] = new Array<number>(tetGeometry.tetsCount() * 4);
+	let pointIndex = 0;
+	tetGeometry.tetrahedrons.forEach((tet) => {
+		for (let i = 0; i < 4; i++) {
+			const id = tet.pointIds[i];
+			const index = newOrderByPoint.get(id);
+			if (index == null) {
+				throw 'id not found';
+			}
+			tetIds[pointIndex] = index;
+			pointIndex++;
+		}
+	});
+	return tetIds;
+}
+const EDGE_INDICES: Number2[] = [
+	[0, 1],
+	[0, 2],
+	[0, 3],
+	[1, 2],
+	[1, 3],
+	[2, 3],
+];
+function buildTetEdgeIds(tetGeometry: TetGeometry, newOrderByPoint: Map<number, number>) {
+	const edgeEndsByStart: Map<number, Set<number>> = new Map();
+	let edgesCount = 0;
+	tetGeometry.tetrahedrons.forEach((tet) => {
+		for (const edgeIndices of EDGE_INDICES) {
+			const id0 = tet.pointIds[edgeIndices[0]];
+			const id1 = tet.pointIds[edgeIndices[1]];
+			const index0 = newOrderByPoint.get(id0);
+			const index1 = newOrderByPoint.get(id1);
+			if (index0 == null || index1 == null) {
+				throw 'id not found';
+			}
+			let edgeEnds = edgeEndsByStart.get(index0);
+			if (!edgeEnds) {
+				edgeEnds = new Set();
+				edgeEndsByStart.set(index0, edgeEnds);
+			}
+			if (!edgeEnds.has(index1)) {
+				edgeEnds.add(index1);
+				edgesCount++;
+			}
+		}
+	});
+	const edgeIds: number[] = new Array<number>(edgesCount * 2);
+	let i = 0;
+	edgeEndsByStart.forEach((endIds, startId) => {
+		endIds.forEach((endId) => {
+			edgeIds[i] = startId;
+			edgeIds[i + 1] = endId;
+			i += 2;
+		});
+	});
+	return edgeIds;
 }
 
 export class SoftBody {
@@ -38,23 +108,26 @@ export class SoftBody {
 	public readonly bufferGeometry: BufferGeometry;
 	constructor(private _options: SoftBodyOptions) {
 		if (this._options.edgeCompliance == null) {
-			this._options.edgeCompliance = 100.0;
+			this._options.edgeCompliance = 1.0;
 		}
 		if (this._options.volCompliance == null) {
 			this._options.volCompliance = 0.0;
 		}
-		const tetMesh = this._options.tetMesh;
-		this.bufferGeometry = this._options.bufferGeometry;
+		console.log(this._options);
+		const {tetObject, threejsObject} = this._options.pair;
+		this.bufferGeometry = (threejsObject as Mesh).geometry;
 		// physics
 
-		this.numParticles = tetMesh.verts.length / 3;
-		this.numTets = tetMesh.tetIds.length / 4;
-		this.pos = new Float32Array(tetMesh.verts);
-		this.prevPos = tetMesh.verts.slice();
+		this.numParticles = tetObject.geometry.pointsCount(); //tetMesh.verts.length / 3;
+		this.numTets = tetObject.geometry.tetsCount(); //tetMesh.tetIds.length / 4;
+		this.pos = this.bufferGeometry.attributes.position.array! as Float32Array; //new Float32Array(tetMesh.verts);
+		this.prevPos = (this.bufferGeometry.attributes.position.array as number[]).slice();
 		this.vel = new Float32Array(3 * this.numParticles);
 
-		this.tetIds = tetMesh.tetIds;
-		this.edgeIds = tetMesh.tetEdgeIds;
+		const newOrderByPoint: Map<number, number> = new Map();
+		tetSortPoints(tetObject.geometry, newOrderByPoint);
+		this.tetIds = buildTetIds(tetObject.geometry, newOrderByPoint); //tetMesh.tetIds;
+		this.edgeIds = buildTetEdgeIds(tetObject.geometry, newOrderByPoint); //tetMesh.tetEdgeIds;
 		this.restVol = new Float32Array(this.numTets);
 		this.edgeLengths = new Float32Array(this.edgeIds.length / 2);
 		this.invMass = new Float32Array(this.numParticles);
@@ -70,13 +143,24 @@ export class SoftBody {
 
 		this.initPhysics();
 
-		this.translate(0, 1, 0);
+		// this.translate(0, 1, 0);
+
+		console.log({
+			numParticles: this.numParticles,
+			numTets: this.numTets,
+			pos: this.pos,
+			prevPos: this.prevPos,
+			vel: this.vel,
+			tetIds: this.tetIds,
+			edgeIds: this.edgeIds,
+		});
 
 		// surface tri mesh
 
 		// const geometry = new BufferGeometry();
-		this.bufferGeometry.setAttribute('position', new BufferAttribute(this.pos, 3));
-		this.bufferGeometry.setIndex(tetMesh.tetSurfaceTriIds);
+		// console.log(this.bufferGeometry);
+		// this.bufferGeometry.setAttribute('position', new BufferAttribute(this.pos, 3));
+		// this.bufferGeometry.setIndex(tetMesh.tetSurfaceTriIds);
 		// const material = new MeshPhongMaterial({color: 0xf02000});
 		// material.flatShading = true;
 		// this.surfaceMesh = new Mesh(geometry, material);
@@ -86,12 +170,12 @@ export class SoftBody {
 		// scene.add(this.surfaceMesh);
 	}
 
-	translate(x: number, y: number, z: number) {
-		for (let i = 0; i < this.numParticles; i++) {
-			vecAdd(this.pos, i, [x, y, z], 0);
-			vecAdd(this.prevPos, i, [x, y, z], 0);
-		}
-	}
+	// translate(x: number, y: number, z: number) {
+	// 	for (let i = 0; i < this.numParticles; i++) {
+	// 		vecAdd(this.pos, i, [x, y, z], 0);
+	// 		vecAdd(this.prevPos, i, [x, y, z], 0);
+	// 	}
+	// }
 
 	updateMeshes() {
 		this.bufferGeometry.computeVertexNormals();

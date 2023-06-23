@@ -433,7 +433,7 @@ export class ContactShadowObjNode extends TypedObjNode<Group, ContactShadowObjPa
 	}
 	private _updateObjectsList() {
 		if (this.pv.include != '') {
-			this._includedObjects = this.scene().objectsByMask(this.pv.include);
+			this._includedObjects = this.scene().objectsByMask(this.pv.include)  as Object3D[];
 		} else {
 			this._includedObjects = [];
 		}
@@ -452,7 +452,7 @@ export class ContactShadowObjNode extends TypedObjNode<Group, ContactShadowObjPa
 
 		// add excluded
 		if (this.pv.exclude != '') {
-			this._excludedObjects = this.scene().objectsByMask(this.pv.exclude);
+			this._excludedObjects = this.scene().objectsByMask(this.pv.exclude)  as Object3D[];
 		} else {
 			this._excludedObjects = [];
 		}

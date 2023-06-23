@@ -22,6 +22,8 @@ export interface ObjectGeometryMap {
 }
 export interface ObjectContent<T extends CoreObjectType> {
 	type: string;
+	parent: ObjectContent<T> | null;
+	children: ObjectContent<T>[];
 	geometry?: ObjectGeometryMap[T];
 	userData: {[key: string]: any};
 	name: string;

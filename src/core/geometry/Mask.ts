@@ -116,7 +116,7 @@ export class CoreMask {
 		for (const rootObject of coreObjects) {
 			const object = rootObject.object();
 			if (object instanceof Object3D) {
-				const objectsInMask = CorePath.objectsByMask(groupString, object);
+				const objectsInMask = CorePath.objectsByMask(groupString, object) as Object3D[];
 				for (const objectInMask of objectsInMask) {
 					const coreObject = coreObjectInstanceFactory<T>(objectInMask);
 					selectedCoreObjects.push(coreObject);

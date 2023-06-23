@@ -1,31 +1,32 @@
 import {CoreString} from '../String';
-import {Object3D} from 'three';
+// import {Object3D} from 'three';
+import {ObjectContent, CoreObjectType} from './ObjectContent';
 
 export const ROOT_NAME = '/';
 
-export type CorePathObjCallback = (obj: Object3D) => void;
+export type CorePathObjCallback<T extends CoreObjectType> = (obj: ObjectContent<T>) => void;
 const REGEX_PATH_SANITIZE = /\/+/g;
 
 export class CorePath {
-	static findObjectByMask(mask: string, parent: Object3D): Object3D | undefined {
+	static findObjectByMask<T extends CoreObjectType>(mask: string, parent: ObjectContent<T>): ObjectContent<T> | undefined {
 		return this.findObjectByMaskInObject(mask, parent);
 	}
-	static findObjectByMaskInObject(mask: string, object: Object3D, objectPath: string = ''): Object3D | undefined {
+	static findObjectByMaskInObject<T extends CoreObjectType>(mask: string, object: ObjectContent<T>, objectPath: string = ''): ObjectContent<T> | undefined {
 		for (let child of object.children) {
 			const childName = this.sanitizePath(child.name);
 			const path = this.sanitizePath(`${objectPath}/${childName}`);
 			if (CoreString.matchMask(path, mask)) {
 				return child;
 			}
-			const grandChild = this.findObjectByMaskInObject(mask, child, path);
+			const grandChild = this.findObjectByMaskInObject<T>(mask, child, path);
 			if (grandChild) {
 				return grandChild;
 			}
 		}
 	}
 
-	static objectsByMask(mask: string, parent: Object3D): Object3D[] {
-		const list: Object3D[] = [];
+	static objectsByMask<T extends CoreObjectType>(mask: string, parent: ObjectContent<T>):  ObjectContent<T>[] {
+		const list:  ObjectContent<T>[] = [];
 		this.traverseObjectsWithMask(
 			mask,
 			(obj) => {
@@ -35,7 +36,7 @@ export class CorePath {
 		);
 		return list;
 	}
-	static objectsByMaskInObject(mask: string, object: Object3D, list: Object3D[] = [], objectPath: string = '') {
+	static objectsByMaskInObject<T extends CoreObjectType>(mask: string, object:  ObjectContent<T>, list:  ObjectContent<T>[] = [], objectPath: string = '') {
 		this.traverseObjectsWithMask(
 			mask,
 			(obj) => {
@@ -46,18 +47,18 @@ export class CorePath {
 		return list;
 	}
 
-	static traverseObjectsWithMask(
+	static traverseObjectsWithMask<T extends CoreObjectType>(
 		mask: string,
-		callback: CorePathObjCallback,
-		object: Object3D,
+		callback: CorePathObjCallback<T>,
+		object: ObjectContent<T>,
 		invertMask: boolean = false
 	) {
 		this.traverseObjectsWithMaskInObject(mask, object, callback, invertMask);
 	}
-	static traverseObjectsWithMaskInObject(
+	static traverseObjectsWithMaskInObject<T extends CoreObjectType>(
 		mask: string,
-		object: Object3D,
-		callback: CorePathObjCallback,
+		object: ObjectContent<T>,
+		callback: CorePathObjCallback<T>,
 		invertMask: boolean,
 		objectPath?: string
 	) {
@@ -75,7 +76,7 @@ export class CorePath {
 			this.traverseObjectsWithMaskInObject(mask, child, callback, invertMask, path);
 		}
 	}
-	static objectPath(object: Object3D, topParent?: Object3D): string {
+	static objectPath<T extends CoreObjectType>(object: ObjectContent<T>, topParent?: ObjectContent<T>): string {
 		const parent = object.parent;
 		if (parent && object != topParent) {
 			const parentPath = this.objectPath(parent, topParent);

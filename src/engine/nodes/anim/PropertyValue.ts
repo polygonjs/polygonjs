@@ -160,7 +160,7 @@ export class PropertyValueAnimNode extends TypedAnimNode<PropertyValueAnimParams
 			return;
 		}
 
-		const foundObject = this._foundObjectFromSceneGraph();
+		const foundObject = this._foundObjectFromSceneGraph() as Object3D | undefined;
 		if (foundObject) {
 			const value: any = foundObject[propertyName as keyof Object3D];
 			if (value) {

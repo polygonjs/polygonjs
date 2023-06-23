@@ -34,7 +34,7 @@ const LIGHT_TYPES: LightType[] = [LightType.DIRECTIONAL, LightType.POINT];
 
 function _findLightSource(scene: PolyScene, objectMask: string, lightType: LightType) {
 	let foundLigthObject: GodRaysVolumetricAcceptedLightType | undefined = undefined;
-	const objects: Object3D[] = scene.objectsByMask(objectMask);
+	const objects: Object3D[] = scene.objectsByMask(objectMask) as Object3D[];
 
 	function _isExpectedLightType(object: Object3D): boolean {
 		switch (lightType) {

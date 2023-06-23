@@ -88,7 +88,7 @@ export class TimelineBuilderProperty {
 
 	addToTimeline(options: AddToTimelineOptions) {
 		const target = options.propertyTarget || options.target;
-		const objects = target.objects();
+		const objects = target.objects() as Object3D[];
 		const node = target.node();
 		this._printDebug(['addToTimeline', target, objects, node]);
 		if (objects) {

@@ -16,6 +16,7 @@ import {tetCenter} from '../../../core/geometry/tet/utils/tetCenter';
 import {isPositionInsideMesh} from '../../../core/geometry/tet/utils/tetInsideMesh';
 import {MeshWithBVHGeometry, ThreeMeshBVHHelper} from '../../../core/geometry/bvh/ThreeMeshBVHHelper';
 import {findNonDelaunayTetsFromMultiplePointsCheck} from '../../../core/geometry/tet/utils/findNonDelaunayTets';
+import {tetRemoveUnusedPoints} from '../../../core/geometry/tet/utils/tetRemoveUnusedPoints';
 
 const _tetCenter = new Vector3();
 
@@ -112,6 +113,7 @@ export class TetDeleteSopNode extends TetSopNode<TetDeleteSopParamsConfig> {
 		} else {
 			tetObject.geometry.removeTets(selectedIds);
 		}
+		tetRemoveUnusedPoints(tetObject.geometry);
 	}
 
 	private _findTetsById(selectedIds: number[]) {

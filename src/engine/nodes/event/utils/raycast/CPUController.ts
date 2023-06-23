@@ -250,7 +250,7 @@ export class RaycastCPUController extends BaseRaycastController {
 		}
 	}
 	private _updateTargetFromSceneGraph() {
-		const objects: Object3D[] = this._node.scene().objectsByMask(this._node.pv.objectMask);
+		const objects: Object3D[] = this._node.scene().objectsByMask(this._node.pv.objectMask) as Object3D[];
 		if (objects.length > 0) {
 			this._resolvedTargets = objects;
 		} else {

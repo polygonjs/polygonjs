@@ -23,7 +23,7 @@ function _updateLightSourceMaterial(material: Material) {
 }
 function _findLightSource(scene: PolyScene, objectMask: string) {
 	let foundObject: Mesh | Points | undefined = undefined;
-	const objects: Object3D[] = scene.objectsByMask(objectMask);
+	const objects: Object3D[] = scene.objectsByMask(objectMask) as Object3D[];
 	for (let object of objects) {
 		if ((object as Mesh).isMesh || (object as Points).isPoints) {
 			foundObject = object as Mesh;

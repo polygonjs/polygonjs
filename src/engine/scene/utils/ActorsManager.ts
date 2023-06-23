@@ -9,6 +9,7 @@ import {ActorPointerEventsController} from './actors/ActorsPointerEventsControll
 import {AssemblerControllerNode} from '../../nodes/js/code/Controller';
 import {JsAssemblerActor} from '../../nodes/js/code/assemblers/actor/ActorAssembler';
 import {ActorCompilationController} from '../../../core/actor/ActorCompilationController';
+import {ObjectContent, CoreObjectType} from '../../../core/geometry/ObjectContent';
 
 const ACTOR_BUILDER_NODE_IDS_KEY = 'actorBuilderNodeIds';
 
@@ -75,7 +76,7 @@ export class ActorsManager {
 		this.scene.eventsDispatcher.unregisterEvaluatorGenerator(evaluatorGenerator);
 	}
 
-	assignActorBuilder(object: Object3D, node: ActorBuilderNode) {
+	assignActorBuilder(object: ObjectContent<CoreObjectType>, node: ActorBuilderNode) {
 		let ids = this.objectActorNodeIds(object);
 		if (!ids) {
 			ids = [];
@@ -89,7 +90,7 @@ export class ActorsManager {
 		this._actorNodes.add(node);
 		// this._findSceneEvents(node);
 	}
-	objectActorNodeIds(object: Object3D) {
+	objectActorNodeIds(object: ObjectContent<CoreObjectType>) {
 		return object.userData[ACTOR_BUILDER_NODE_IDS_KEY] as number[] | undefined;
 	}
 	/*

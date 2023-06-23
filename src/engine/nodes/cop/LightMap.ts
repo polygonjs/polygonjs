@@ -158,7 +158,7 @@ export class LightMapCopNode extends TypedCopNode<LightMapCopParamConfig> {
 		this._includedObjects = [];
 		const lightsByUuid: WeakSet<Object3D> = new WeakSet();
 		if (this.pv.lightsMask != '') {
-			matchedLights = this.scene().objectsByMask(this.pv.lightsMask);
+			matchedLights = this.scene().objectsByMask(this.pv.lightsMask) as Object3D[];
 			for (let matchedLight of matchedLights) {
 				if (matchedLight instanceof Light) {
 					this._includedLights.push(matchedLight);
@@ -167,7 +167,7 @@ export class LightMapCopNode extends TypedCopNode<LightMapCopParamConfig> {
 			}
 		}
 		if (this.pv.objectsMask != '') {
-			matchedObjects = this.scene().objectsByMask(this.pv.objectsMask);
+			matchedObjects = this.scene().objectsByMask(this.pv.objectsMask) as Object3D[];
 			for (let matchedObject of matchedObjects) {
 				if (!(matchedObject instanceof Light)) {
 					if (!lightsByUuid.has(matchedObject) && matchedObject instanceof Mesh) {

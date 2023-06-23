@@ -61,6 +61,8 @@ export class SDFObject implements ObjectContent<CoreObjectType.SDF> {
 	get type() {
 		return this._type;
 	}
+	parent = null;
+	children = [];
 	userData = {};
 	name = '';
 	castShadow = true;

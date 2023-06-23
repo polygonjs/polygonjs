@@ -1,6 +1,6 @@
 import {Object3D} from 'three';
 
-type Hook = (object: Object3D) => void;
+type Hook = (object: Object3D, parent: Object3D) => void;
 type HookByName = Map<string, Hook>;
 
 export class PolyOnObjectsAddedHooksController {
@@ -8,9 +8,10 @@ export class PolyOnObjectsAddedHooksController {
 	registerHook(hookName: string, hook: Hook) {
 		this._map.set(hookName, hook);
 	}
-	runHooks(objects: Object3D[]) {
-		for (let object of objects) {
-			this._map.forEach((hook) => hook(object));
+	runHooks(sopGroup: Object3D) {
+		const children = sopGroup.children;
+		for (let child of children) {
+			this._map.forEach((hook) => hook(child, sopGroup));
 		}
 	}
 }

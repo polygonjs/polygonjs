@@ -620,7 +620,7 @@ const ONLY_ACTOR = {
 		sopType(SopType.CLOTH_SOLVER),
 		sopType(SopType.PHYSICS_WORLD),
 		sopType(SopType.PHYSICS_PLAYER),
-		sopType(SopType.SOFT_BODY_SOLVER),
+		// sopType(SopType.TET_SOFT_BODY_SOLVER),
 		...[
 			NodeContext.ANIM,
 			NodeContext.AUDIO,

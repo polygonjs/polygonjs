@@ -1,5 +1,5 @@
 import {Object3D, Vector3} from 'three';
-import {getSoftBodyControllerNodeFromSolverObject} from '../nodes/sop/SoftBodySolver';
+import {getSoftBodyControllerNodeFromSolverObject} from '../nodes/sop/TetSoftBodySolver';
 import {ObjectNamedFunction0, ObjectNamedFunction1, ObjectNamedFunction2} from './_Base';
 import {
 	softBodySolverStepSimulation as _softBodySolverStepSimulation,

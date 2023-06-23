@@ -244,7 +244,6 @@ import {SetGeometrySopNode} from '../../../nodes/sop/SetGeometry';
 import {ShearSopNode} from '../../../nodes/sop/Shear';
 import {SkeletonHelperSopNode} from '../../../nodes/sop/SkeletonHelper';
 import {SkinSopNode} from '../../../nodes/sop/Skin';
-import {SoftBodySolverSopNode} from '../../../nodes/sop/SoftBodySolver';
 import {SortSopNode} from '../../../nodes/sop/Sort';
 import {SolverSopNode} from '../../../nodes/sop/Solver';
 import {SolverPreviousFrameSopNode} from '../../../nodes/sop/SolverPreviousFrame';
@@ -259,10 +258,12 @@ import {SwitchSopNode} from '../../../nodes/sop/Switch';
 import {TangentSopNode} from '../../../nodes/sop/Tangent';
 import {TetSopNode} from '../../../nodes/sop/Tet';
 import {TetBoxSopNode} from '../../../nodes/sop/TetBox';
+import {TetBunnySopNode} from '../../../nodes/sop/TetBunny';
 import {TetDeleteSopNode} from '../../../nodes/sop/TetDelete';
 import {TetGrowSopNode} from '../../../nodes/sop/TetGrow';
 import {TetMirrorSopNode} from '../../../nodes/sop/TetMirror';
 import {TetQualitySopNode} from '../../../nodes/sop/TetQuality';
+import {TetSoftBodySolverSopNode} from '../../../nodes/sop/TetSoftBodySolver';
 import {TetSplitSopNode} from '../../../nodes/sop/TetSplit';
 import {TetTriangulateSopNode} from '../../../nodes/sop/TetTriangulate';
 import {TetrahedralizeSopNode} from '../../../nodes/sop/Tetrahedralize';
@@ -540,7 +541,6 @@ export interface GeoNodeChildrenMap {
 	shear: ShearSopNode;
 	skin: SkinSopNode;
 	skeletonHelper: SkeletonHelperSopNode;
-	softBodySolver: SoftBodySolverSopNode;
 	solver: SolverSopNode;
 	solverPreviousFrame: SolverPreviousFrameSopNode;
 	sort: SortSopNode;
@@ -555,10 +555,12 @@ export interface GeoNodeChildrenMap {
 	tangent: TangentSopNode;
 	tet: TetSopNode;
 	tetBox: TetBoxSopNode;
+	tetBunny: TetBunnySopNode;
 	tetDelete: TetDeleteSopNode;
 	tetGrow: TetGrowSopNode;
 	tetMirror: TetMirrorSopNode;
 	tetQuality: TetQualitySopNode;
+	tetSoftBodySolver: TetSoftBodySolverSopNode;
 	tetSplit: TetSplitSopNode;
 	tetTriangulate: TetTriangulateSopNode;
 	tetrahedralize: TetrahedralizeSopNode;
@@ -1067,7 +1069,6 @@ export class SopRegister {
 		poly.registerNode(SkeletonHelperSopNode, CATEGORY_SOP.HELPERS);
 		poly.registerNode(SkinSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(ShearSopNode, CATEGORY_SOP.MODIFIER);
-		poly.registerNode(SoftBodySolverSopNode, CATEGORY_SOP.PHYSICS);
 		poly.registerNode(SolverSopNode, CATEGORY_SOP.ADVANCED);
 		poly.registerNode(SolverPreviousFrameSopNode, CATEGORY_SOP.ADVANCED);
 		poly.registerNode(SortSopNode, CATEGORY_SOP.MODIFIER);
@@ -1094,10 +1095,12 @@ export class SopRegister {
 		//
 		poly.registerNode(TetSopNode, CATEGORY_SOP.TET);
 		poly.registerNode(TetBoxSopNode, CATEGORY_SOP.TET);
+		poly.registerNode(TetBunnySopNode, CATEGORY_SOP.TET);
 		poly.registerNode(TetDeleteSopNode, CATEGORY_SOP.TET);
 		poly.registerNode(TetGrowSopNode, CATEGORY_SOP.TET);
 		poly.registerNode(TetMirrorSopNode, CATEGORY_SOP.TET);
 		poly.registerNode(TetQualitySopNode, CATEGORY_SOP.TET);
+		poly.registerNode(TetSoftBodySolverSopNode, CATEGORY_SOP.TET);
 		poly.registerNode(TetSplitSopNode, CATEGORY_SOP.TET);
 		poly.registerNode(TetTriangulateSopNode, CATEGORY_SOP.TET);
 		//

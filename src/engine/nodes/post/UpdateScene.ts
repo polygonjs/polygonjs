@@ -10,8 +10,9 @@ import {TypedPostNode, TypedPostNodeContext, PostParamOptions} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {isBooleanTrue} from '../../../core/Type';
 import {BaseNodeType} from '../_Base';
-import {Object3D, Mesh, Material, MeshBasicMaterial, Color} from 'three';
+import {Mesh, Material, MeshBasicMaterial, Color} from 'three';
 import {UpdateScenePass} from './utils/effects/UpdateScenePass';
+import {CoreObjectType, ObjectContent} from '../../../core/geometry/ObjectContent';
 
 const MATTE_MATERIAL = new MeshBasicMaterial({color: new Color(0, 0, 0)});
 
@@ -187,13 +188,13 @@ export class UpdateScenePostNode extends TypedPostNode<UpdateScenePass, UpdateSc
 	// 		});
 	// 	}
 	// }
-	private _objectsList: Object3D[] = [];
+	private _objectsList: ObjectContent<CoreObjectType>[] = [];
 	objectsList() {
 		return this._objectsList;
 	}
 	private _materialByMesh: Map<Mesh, Material | Material[]> = new Map();
 	// private _parentByObject: Map<Object3D, Object3D | null> = new Map();
-	private _visibleByObject: Map<Object3D, boolean> = new Map();
+	private _visibleByObject: Map<ObjectContent<CoreObjectType>, boolean> = new Map();
 	applyChanges() {
 		const changeNeeded = isBooleanTrue(this.pv.setMatteMaterial) || isBooleanTrue(this.pv.setVisible);
 		if (changeNeeded) {
@@ -224,7 +225,7 @@ export class UpdateScenePostNode extends TypedPostNode<UpdateScenePass, UpdateSc
 		this._visibleByObject.clear();
 	}
 	private _updateObjectBound = this._updateObject.bind(this);
-	private _updateObject(obj: Object3D) {
+	private _updateObject(obj: ObjectContent<CoreObjectType>) {
 		this._objectsList.push(obj);
 		if (isBooleanTrue(this.pv.setMatteMaterial)) {
 			const mesh = obj as Mesh;

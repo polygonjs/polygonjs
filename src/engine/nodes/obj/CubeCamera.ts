@@ -225,7 +225,7 @@ export class CubeCameraObjNode extends TypedObjNode<Group, CubeCameraObjParamsCo
 	}
 
 	private _resolveObjects() {
-		const objectsMatchingMask = this.scene().objectsByMask(this.pv.excludedObjects);
+		const objectsMatchingMask = this.scene().objectsByMask(this.pv.excludedObjects)  as Object3D[];
 		const objectsByUuid: Map<string, Object3D> = new Map();
 		for (let object of objectsMatchingMask) {
 			objectsByUuid.set(object.uuid, object);

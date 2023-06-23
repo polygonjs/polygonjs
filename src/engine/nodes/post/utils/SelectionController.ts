@@ -6,7 +6,7 @@ export class SelectionController {
 	private _map: Map<string, Object3D> = new Map();
 	private _resolvedObjects: Object3D[] = [];
 	updateSelection(scene: PolyScene, objectsMask: string, selection: Selection) {
-		const foundObjects = scene.objectsByMask(objectsMask);
+		const foundObjects = scene.objectsByMask(objectsMask) as Object3D[];
 
 		// Ensure that we only give the top most parents to the pass.
 		// Meaning that if foundObjects contains a node A and one of its children B,
