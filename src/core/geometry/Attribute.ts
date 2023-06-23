@@ -20,6 +20,7 @@ export enum Attribute {
 	UV = 'uv',
 	SCALE = 'scale',
 	TANGENT = 'tangent',
+	ID = 'id',
 }
 export enum ObjectAttribute {
 	HOVERED = 'hovered',

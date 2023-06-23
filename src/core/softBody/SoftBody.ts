@@ -18,6 +18,7 @@ import {tetSortPoints} from '../geometry/tet/utils/tetSortPoints';
 import {Number2, Number3, Number9} from '../../types/GlobalTypes';
 import {TetEmbed} from './Common';
 import {Hash} from '../Hash';
+import {ObjectUserData} from '../UserData';
 
 interface SoftBodyOptions {
 	tetEmbed: TetEmbed;
@@ -27,8 +28,10 @@ interface SoftBodyOptions {
 	edgeCompliance: number;
 	volumeCompliance: number;
 	highResSkinning: {
-		lookupSpacing: number;
-		lookupPadding: number;
+		lookup: {
+			spacing: number;
+			padding: number;
+		};
 	};
 }
 
@@ -153,10 +156,10 @@ export class SoftBody {
 			: [];
 		const visVerts = this.highResObjectPosition;
 		this.numVisVerts = visVerts.length / 3;
-		console.log({numVisVerts: this.numVisVerts});
 		this.skinningInfo = new Float32Array(4 * this.numVisVerts);
 		if (highResObject) {
 			this._computeSkinningInfo(visVerts);
+			highResObject.userData[ObjectUserData.LOW_RES_SOFT_BODY_MESH] = lowResObject;
 		}
 
 		// this.translate(0, 1, 0);
@@ -196,7 +199,7 @@ export class SoftBody {
 		// create a hash for all vertices of the visual mesh
 
 		const hash = new Hash({
-			spacing: this.options.highResSkinning.lookupSpacing,
+			spacing: this.options.highResSkinning.lookup.spacing,
 			maxNumObjects: this.numVisVerts,
 		});
 		hash.create(visVerts);
@@ -205,7 +208,7 @@ export class SoftBody {
 
 		const minDist = new Float32Array(this.numVisVerts);
 		minDist.fill(Number.MAX_VALUE);
-		const border = this.options.highResSkinning.lookupPadding;
+		const border = this.options.highResSkinning.lookup.padding;
 
 		// each tet searches for containing vertices
 
@@ -275,9 +278,12 @@ export class SoftBody {
 		this._updateHighResMesh();
 	}
 	private _updateLowResObject() {
-		if (this.highResGeometry) {
-			return;
-		}
+		// we still need to update the low res mesh
+		// event if we only display the high res one,
+		// as it may be used for raycasting
+		// if (this.highResGeometry) {
+		// 	return;
+		// }
 		this.bufferGeometry.computeVertexNormals();
 		this.bufferGeometry.attributes.position.needsUpdate = true;
 		this.bufferGeometry.computeBoundingSphere();

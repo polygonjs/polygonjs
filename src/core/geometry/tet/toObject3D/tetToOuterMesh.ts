@@ -4,6 +4,7 @@ import {BaseSopOperation} from '../../../../engine/operations/sop/_Base';
 import {ObjectType} from '../../Constant';
 import {TET_FACE_POINT_INDICES, TetTesselationParams} from '../TetCommon';
 import {tetSortPoints} from '../utils/tetSortPoints';
+import {Attribute} from '../../Attribute';
 
 const _p = new Vector3();
 
@@ -23,6 +24,7 @@ export function tetToOuterMesh(tetGeometry: TetGeometry, tesselationParams: TetT
 		}
 	});
 	const positions: number[] = new Array(tetGeometry.pointsCount() * 3);
+	const ids: number[] = new Array(tetGeometry.pointsCount() * 1);
 	const indices: number[] = new Array(facesCount * 3);
 
 	// let positionsCount = 0;
@@ -34,6 +36,7 @@ export function tetToOuterMesh(tetGeometry: TetGeometry, tesselationParams: TetT
 			throw 'pointIndex is null';
 		}
 		_p.toArray(positions, pointIndex * 3);
+		ids[pointIndex] = pointIndex;
 		// positionsCount += 3;
 	});
 
@@ -60,7 +63,8 @@ export function tetToOuterMesh(tetGeometry: TetGeometry, tesselationParams: TetT
 		}
 	});
 
-	newGeometry.setAttribute('position', new Float32BufferAttribute(positions, 3));
+	newGeometry.setAttribute(Attribute.POSITION, new Float32BufferAttribute(positions, 3));
+	newGeometry.setAttribute(Attribute.ID, new Float32BufferAttribute(ids, 1));
 	newGeometry.setIndex(indices);
 	newGeometry.computeVertexNormals();
 

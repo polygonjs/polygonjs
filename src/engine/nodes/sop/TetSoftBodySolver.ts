@@ -24,6 +24,7 @@ import {TetSopNode} from './_BaseTet';
 import {TetEmbed} from '../../../core/softBody/Common';
 
 class TetSoftBodySolverSopParamsConfig extends NodeParamsConfig {
+	main = ParamConfig.FOLDER();
 	/** @param gravity */
 	gravity = ParamConfig.VECTOR3([0.0, -9.8, 0.0]);
 
@@ -37,13 +38,14 @@ class TetSoftBodySolverSopParamsConfig extends NodeParamsConfig {
 		range: [0, 1],
 		rangeLocked: [true, false],
 	});
+	highresSkinning = ParamConfig.FOLDER();
 	/** @param highRes Skinning Lookup Spacing */
-	highResSkinningLookupSpacing = ParamConfig.FLOAT(0.05, {
+	lookupSpacing = ParamConfig.FLOAT(0.05, {
 		range: [0, 0.5],
 		rangeLocked: [true, false],
 	});
 	/** @param highRes Skinning Lookup Padding */
-	highResSkinningLookupPadding = ParamConfig.FLOAT(0.05, {
+	lookupPadding = ParamConfig.FLOAT(0.05, {
 		range: [0, 0.5],
 		rangeLocked: [true, false],
 	});
@@ -97,14 +99,8 @@ export class TetSoftBodySolverSopNode extends TetSopNode<TetSoftBodySolverSopPar
 					// CoreSoftBodyAttribute.setSubSteps(threejsObject, this.pv.subSteps);
 					CoreSoftBodyAttribute.setEdgeCompliance(displayedObject, this.pv.edgeCompliance);
 					CoreSoftBodyAttribute.setVolumeCompliance(displayedObject, this.pv.volumeCompliance);
-					CoreSoftBodyAttribute.setHighResSkinningLookupSpacing(
-						displayedObject,
-						this.pv.highResSkinningLookupSpacing
-					);
-					CoreSoftBodyAttribute.setHighResSkinningLookupPadding(
-						displayedObject,
-						this.pv.highResSkinningLookupPadding
-					);
+					CoreSoftBodyAttribute.setHighResSkinningLookupSpacing(displayedObject, this.pv.lookupSpacing);
+					CoreSoftBodyAttribute.setHighResSkinningLookupPadding(displayedObject, this.pv.lookupPadding);
 
 					const tetEmbed: TetEmbed = {
 						tetObject,

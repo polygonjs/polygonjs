@@ -14,6 +14,7 @@ import {DefaultOperationParams} from '../../../core/operations/_Base';
 import {ObjectType} from '../../../core/geometry/Constant';
 import {CoreObject} from '../../../core/geometry/Object';
 import {SPLINE_CURVE_TYPES} from '../../../core/geometry/Curve';
+import {ObjectUserData} from '../../../core/UserData';
 
 interface CurveFromPointsSopParams extends DefaultOperationParams {
 	pointsCount: number;
@@ -167,7 +168,7 @@ export class CurveFromPointsSopOperation extends BaseSopOperation {
 
 		// add curve as userData to the object, to make it possible to use the curve from actor nodes
 		const object = BaseSopOperation.createObject(geometry, ObjectType.LINE_SEGMENTS);
-		object.userData['path'] = curve;
+		object.userData[ObjectUserData.PATH] = curve;
 
 		return object;
 	}

@@ -83,8 +83,10 @@ export function createOrFindSoftBody(scene: PolyScene, tetEmbed: TetEmbed) {
 			edgeCompliance,
 			volumeCompliance,
 			highResSkinning: {
-				lookupSpacing: highResSkinningLookupSpacing,
-				lookupPadding: highResSkinningLookupPadding,
+				lookup: {
+					spacing: highResSkinningLookupSpacing,
+					padding: highResSkinningLookupPadding,
+				},
 			},
 		});
 		softBodies.set(threejsObjectInSceneTree, softBody);
