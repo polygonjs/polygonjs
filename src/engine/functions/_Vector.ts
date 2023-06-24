@@ -1,6 +1,7 @@
 import {Object3D, OrthographicCamera, PerspectiveCamera, Vector3} from 'three';
 import {NamedFunction2, NamedFunction3} from './_Base';
 import {dummyReadRefVal} from '../../core/reactivity/CoreReactivity';
+import {getDefaultCamera} from './_Camera';
 
 export class vector3AngleTo extends NamedFunction2<[Vector3, Vector3]> {
 	static override type() {
@@ -24,7 +25,13 @@ export class vector3Project extends NamedFunction3<[Vector3, Object3D, Vector3]>
 	static override type() {
 		return 'vector3Project';
 	}
+	private _getDefaultCamera: getDefaultCamera | undefined;
 	func(src: Vector3, object3D: Object3D, target: Vector3): Vector3 {
+		if (object3D == null) {
+			this._getDefaultCamera =
+				this._getDefaultCamera || new getDefaultCamera(this.node, this.shadersCollectionController);
+			object3D = this._getDefaultCamera.func();
+		}
 		if (!(object3D instanceof PerspectiveCamera || object3D instanceof OrthographicCamera)) {
 			return target;
 		}
@@ -41,7 +48,13 @@ export class vector3Unproject extends NamedFunction3<[Vector3, Object3D, Vector3
 	static override type() {
 		return 'vector3Unproject';
 	}
+	private _getDefaultCamera: getDefaultCamera | undefined;
 	func(src: Vector3, object3D: Object3D, target: Vector3): Vector3 {
+		if (object3D == null) {
+			this._getDefaultCamera =
+				this._getDefaultCamera || new getDefaultCamera(this.node, this.shadersCollectionController);
+			object3D = this._getDefaultCamera.func();
+		}
 		if (!(object3D instanceof PerspectiveCamera || object3D instanceof OrthographicCamera)) {
 			return target;
 		}

@@ -18,6 +18,7 @@ import {
 	ToneMapping,
 } from 'three';
 import {NamedFunction2, ObjectNamedFunction5} from './_Base';
+import {getDefaultCamera} from './_Camera';
 
 export class cursorToUv extends NamedFunction2<[Vector2, Vector2]> {
 	static override type() {
@@ -69,6 +70,7 @@ export class renderPixel extends ObjectNamedFunction5<[Material, Camera, Color, 
 		},
 	};
 	private _read = new Float32Array(4);
+	private _getDefaultCamera: getDefaultCamera | undefined;
 	static override type() {
 		return 'renderPixel';
 	}
@@ -87,6 +89,11 @@ export class renderPixel extends ObjectNamedFunction5<[Material, Camera, Color, 
 		if (!(renderer instanceof WebGLRenderer)) {
 			console.log('renderPixel: renderer found is not WebGLRenderer');
 			return target;
+		}
+		if (camera == null) {
+			this._getDefaultCamera =
+				this._getDefaultCamera || new getDefaultCamera(this.node, this.shadersCollectionController);
+			camera = this._getDefaultCamera.func();
 		}
 
 		this._prepare(object3D, material, backgroundColor, renderer);

@@ -343,6 +343,7 @@ import { SDFSmoothUnion } from "../../../functions/SDFSmoothUnion";
 import { SDFSphere } from "../../../functions/SDFSphere";
 import { SDFSubtract } from "../../../functions/SDFSubtract";
 import { SDFUnion } from "../../../functions/SDFUnion";
+import { setCSSObjectClass } from "../../../functions/setCSSObjectClass";
 import { setGeometryInstanceAttributeColor } from "../../../functions/setGeometryInstanceAttributeColor";
 import { setGeometryInstanceAttributeFloat } from "../../../functions/setGeometryInstanceAttributeFloat";
 import { setGeometryInstanceAttributeQuaternion } from "../../../functions/setGeometryInstanceAttributeQuaternion";
@@ -775,6 +776,7 @@ export interface NamedFunctionMap {
 	SDFSphere: SDFSphere;
 	SDFSubtract: SDFSubtract;
 	SDFUnion: SDFUnion;
+	setCSSObjectClass: setCSSObjectClass;
 	setGeometryInstanceAttributeColor: setGeometryInstanceAttributeColor;
 	setGeometryInstanceAttributeFloat: setGeometryInstanceAttributeFloat;
 	setGeometryInstanceAttributeQuaternion: setGeometryInstanceAttributeQuaternion;
@@ -1210,6 +1212,7 @@ export class AllNamedFunctionRegister {
 			SDFSphere,
 			SDFSubtract,
 			SDFUnion,
+			setCSSObjectClass,
 			setGeometryInstanceAttributeColor,
 			setGeometryInstanceAttributeFloat,
 			setGeometryInstanceAttributeQuaternion,

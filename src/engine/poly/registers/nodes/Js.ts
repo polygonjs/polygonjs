@@ -212,6 +212,7 @@ import {SDFRevolutionJsNode} from '../../../nodes/js/SDFRevolution';
 import {SDFSphereJsNode} from '../../../nodes/js/SDFSphere';
 import {SDFSubtractJsNode} from '../../../nodes/js/SDFSubtract';
 import {SDFUnionJsNode} from '../../../nodes/js/SDFUnion';
+import {SetCSSObjectClassJsNode} from '../../../nodes/js/SetCSSObjectClass';
 import {SetGeometryInstanceAttributeJsNode} from '../../../nodes/js/SetGeometryInstanceAttribute';
 import {SetGeometryInstancePositionsJsNode} from '../../../nodes/js/SetGeometryInstancePositions';
 import {SetGeometryInstanceQuaternionsJsNode} from '../../../nodes/js/SetGeometryInstanceQuaternions';
@@ -508,6 +509,7 @@ export interface JsNodeChildrenMap {
 	SDFSphere: SDFSphereJsNode;
 	SDFSubtract: SDFSubtractJsNode;
 	SDFUnion: SDFUnionJsNode;
+	setCSSObjectClass: SetCSSObjectClassJsNode;
 	setGeometryInstanceAttribute: SetGeometryInstanceAttributeJsNode;
 	setGeometryInstancePositions: SetGeometryInstancePositionsJsNode;
 	setGeometryInstanceQuaternions: SetGeometryInstanceQuaternionsJsNode;
@@ -843,6 +845,7 @@ export class JsRegister {
 		poly.registerNode(SDFSphereJsNode, CATEGORY_JS.SDF_PRIMITIVES);
 		poly.registerNode(SDFSubtractJsNode, CATEGORY_JS.SDF_MODIFIERS);
 		poly.registerNode(SDFUnionJsNode, CATEGORY_JS.SDF_MODIFIERS);
+		poly.registerNode(SetCSSObjectClassJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR);
 		poly.registerNode(SetGeometryInstanceAttributeJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR);
 		poly.registerNode(SetGeometryInstancePositionsJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR);
 		poly.registerNode(SetGeometryInstanceQuaternionsJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR);
