@@ -73,7 +73,7 @@ export const DEFAULT_CONNECTION_POINT_ENUM_MAP: IConnectionPointEnumMap = {
 	[NodeContext.SOP]: undefined,
 };
 
-export function create_connection_point<NC extends NodeContext>(
+export function createConnectionPoint<NC extends NodeContext>(
 	context: NC,
 	name: string,
 	type: ConnectionPointEnumMap[NC]
@@ -94,7 +94,7 @@ export function create_connection_point<NC extends NodeContext>(
 	}
 }
 
-export function param_type_to_connection_point_type_map<NC extends NodeContext>(context: NC) {
+export function paramTypeToConnectionPointTypeMap<NC extends NodeContext>(context: NC) {
 	switch (context) {
 		case NodeContext.EVENT: {
 			return undefined;

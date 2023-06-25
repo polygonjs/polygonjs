@@ -1,63 +1,89 @@
-import {AttribType} from '../../../../src/core/geometry/Constant';
-import {CSS2DObject} from 'three/examples/jsm/renderers/CSS2DRenderer';
+import {CoreSleep} from '../../../../src/core/Sleep';
+import {AttribClass, AttribType} from '../../../../src/core/geometry/Constant';
+import {CSS2DObject} from '../../../../src/core/render/CSSRenderers/CSS2DObject';
+import {CSSObjectAttribute} from '../../../../src/core/render/CSSRenderers/CSSObjectAttribute';
+import {PolyScene} from '../../../../src/engine/scene/PolyScene';
+
+export function findCSS2DObjects(_scene: PolyScene) {
+	const threejsScene = _scene.threejsScene();
+	const CSSObjects: CSS2DObject[] = [];
+	threejsScene.traverse((obj) => {
+		if ((obj as CSS2DObject).element) {
+			CSSObjects.push(obj as CSS2DObject);
+		}
+	});
+	return CSSObjects;
+}
 
 QUnit.test('CSS2DObject simple', async (assert) => {
+	const scene = window.scene;
 	const geo1 = window.geo1;
-	geo1.flags.display.set(false); // cancels geo node displayNodeController
+
+	geo1.flags.display.set(false); // cancels geo node displayNodeController while nodes are being created
 
 	const plane1 = geo1.createNode('plane');
+	const copy1 = geo1.createNode('copy');
 	const attribCreate_id = geo1.createNode('attribCreate');
 	const attribCreate_class = geo1.createNode('attribCreate');
 	const attribCreate_html = geo1.createNode('attribCreate');
 	const CSS2DObject1 = geo1.createNode('CSS2DObject');
-	attribCreate_id.setInput(0, plane1);
+	copy1.setInput(0, plane1);
+	attribCreate_id.setInput(0, copy1);
 	attribCreate_class.setInput(0, attribCreate_id);
 	attribCreate_html.setInput(0, attribCreate_class);
 	CSS2DObject1.setInput(0, attribCreate_html);
+	CSS2DObject1.flags.display.set(true);
 
-	attribCreate_id.p.name.set('id');
+	copy1.p.count.set(4);
+	const attribCreateNodes = [attribCreate_id, attribCreate_class, attribCreate_html];
+	for (const attribCreateNode of attribCreateNodes) {
+		attribCreateNode.setAttribClass(AttribClass.OBJECT);
+	}
+	attribCreate_id.p.name.set(CSSObjectAttribute.ID);
 	attribCreate_id.setAttribType(AttribType.STRING);
 	attribCreate_id.p.string.set('myId`@ptnum`');
-	attribCreate_class.p.name.set('class');
+	attribCreate_class.p.name.set(CSSObjectAttribute.CLASS);
 	attribCreate_class.setAttribType(AttribType.STRING);
-	attribCreate_class.p.string.set('myClass`@ptnum*3`');
-	attribCreate_html.p.name.set('html');
+	attribCreate_class.p.string.set('myClass`@objnum*3`');
+	attribCreate_html.p.name.set(CSSObjectAttribute.HTML);
 	attribCreate_html.setAttribType(AttribType.STRING);
-	attribCreate_html.p.string.set('This is the content `@ptnum*10` (`@class`)');
+	attribCreate_html.p.string.set(`This is the content \`@objnum*10\` (\`@${CSSObjectAttribute.CLASS}\`)`);
+
+	geo1.flags.display.set(true); // ensures hook is run
 
 	async function CSS2DObjects() {
-		let container = await CSS2DObject1.compute();
-		const core_group = container.coreContent()!;
-		const objects = core_group?.threejsObjects() as CSS2DObject[];
-		return objects;
+		await CSS2DObject1.compute();
+		await CoreSleep.sleep(50);
+		return findCSS2DObjects(scene);
 	}
+
 	let objects = await CSS2DObjects();
-	assert.equal(objects.length, 4);
+	assert.equal(objects.length, 4, '4 objects (1)');
 	let element = objects[0].element;
 	assert.equal(element.id, 'myCSSObject');
 	assert.equal(element.className, 'CSS2DObject');
 
-	CSS2DObject1.p.useClassAttrib.set(true);
+	CSS2DObject1.p.overrideClassName.set(false);
 	objects = await CSS2DObjects();
-	assert.equal(objects.length, 4);
+	assert.equal(objects.length, 4, '4 objects (2)');
 	assert.equal(objects[0].element.id, 'myCSSObject');
 	assert.equal(objects[0].element.className, 'myClass0');
 	assert.equal(objects[0].element.innerText, 'default html');
 	assert.equal(objects[1].element.id, 'myCSSObject');
 	assert.equal(objects[1].element.className, 'myClass3');
 
-	CSS2DObject1.p.useIdAttrib.set(true);
+	CSS2DObject1.p.overrideId.set(false);
 	objects = await CSS2DObjects();
-	assert.equal(objects.length, 4);
+	assert.equal(objects.length, 4, '4 objects (3)');
 	assert.equal(objects[0].element.id, 'myId0');
 	assert.equal(objects[0].element.className, 'myClass0');
 	assert.equal(objects[0].element.innerText, 'default html');
 	assert.equal(objects[1].element.id, 'myId1');
 	assert.equal(objects[1].element.className, 'myClass3');
 
-	CSS2DObject1.p.useHTMLAttrib.set(true);
+	CSS2DObject1.p.overrideHTML.set(false);
 	objects = await CSS2DObjects();
-	assert.equal(objects.length, 4);
+	assert.equal(objects.length, 4, '4 objects (4)');
 	assert.equal(objects[0].element.id, 'myId0');
 	assert.equal(objects[0].element.className, 'myClass0');
 	assert.equal(objects[0].element.innerText, 'This is the content 0 (myClass0)');

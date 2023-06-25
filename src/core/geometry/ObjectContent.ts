@@ -29,6 +29,8 @@ export interface ObjectContent<T extends CoreObjectType> {
 	frustumCulled: boolean;
 	matrixAutoUpdate: boolean;
 	material?: Material | Material[];
+	children: ObjectContent<CoreObjectType>[];
+	parent: ObjectContent<CoreObjectType> | null;
 	clone: () => ObjectContent<T>;
 	dispose?: () => void;
 	traverse(callback: (object: ObjectContent<T>) => any): void;

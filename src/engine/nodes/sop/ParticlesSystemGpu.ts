@@ -167,8 +167,6 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 			material: new ParticlesSystemGpuMaterialSopOperation(this._scene, this.states, this),
 		};
 
-		Poly.onObjectsAddedHooks.registerHook(this.type(), this.traverseObjectOnSopGroupAdd.bind(this));
-
 		this.compileIfRequired();
 
 		const coreGroup = inputCoreGroups[0];
@@ -187,6 +185,7 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 			return;
 		}
 		for (let object of selectedObjects) {
+			Poly.onObjectsAddedHooks.assignHookHandler(object, this);
 			setParticleRenderer(this.graphNodeId(), renderer);
 			CoreParticlesAttribute.setParticlesNodeId(object, this.graphNodeId());
 			CoreParticlesAttribute.setDataType(object, this.pv.dataType);
@@ -197,7 +196,7 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 		await this._operation.material.cook(inputCoreGroups, this.pv);
 		this.setObjects(selectedObjects);
 	}
-	traverseObjectOnSopGroupAdd(object: Object3D) {
+	public override updateObjectOnAdd(object: Object3D) {
 		const particlesNodeId = CoreParticlesAttribute.getParticlesNodeId(object);
 		if (particlesNodeId == null) {
 			return;

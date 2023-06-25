@@ -29,6 +29,8 @@ export class CsgObject<T extends CsgGeometryType> implements ObjectContent<CoreO
 	frustumCulled = true;
 	matrixAutoUpdate = false;
 	material: Material | undefined;
+	children: ObjectContent<CoreObjectType>[] = [];
+	parent: ObjectContent<CoreObjectType> | null = null;
 	private _type: T;
 	constructor(private _geometry: CsgTypeMap[T]) {
 		this._type = csgGeometryTypeFromGeometry(this._geometry);

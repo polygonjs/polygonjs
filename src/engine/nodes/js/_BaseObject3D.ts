@@ -41,16 +41,18 @@ export function inputParam(node: BaseJsNodeType, linesController: JsLinesCollect
 
 	const _getParam = (linesController: JsLinesCollectionController) => {
 		const paramPathParam = node.params.get(JsConnectionPointType.PARAM) as ParamPathParam;
-		const foundParam = paramPathParam.value.param();
+		// const foundParam = paramPathParam.value.param();
 
 		const out = node.jsVarName('getParamSinceNoInput');
-		if (foundParam) {
-			const func = Poly.namedFunctionsRegister.getFunction('getParam', node, linesController);
-			const bodyLine = func.asString(`'${foundParam.path()}'`);
-			linesController.addBodyOrComputed(node, [
-				{dataType: JsConnectionPointType.PARAM, varName: out, value: bodyLine},
-			]);
-		}
+		// if (foundParam) {
+		// do not create the variable only if param has been found,
+		// as we also need to handle cases where it will be found later
+		const func = Poly.namedFunctionsRegister.getFunction('getParam', node, linesController);
+		const bodyLine = func.asString(`'${paramPathParam}'`);
+		linesController.addBodyOrComputed(node, [
+			{dataType: JsConnectionPointType.PARAM, varName: out, value: bodyLine},
+		]);
+		// }
 		return wrapIfComputed(out, linesController);
 	};
 

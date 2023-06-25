@@ -615,8 +615,6 @@ import {ClipSopOperation} from '../../../operations/sop/Clip';
 import {ConvexHullSopOperation} from '../../../operations/sop/ConvexHull';
 import {CurveFromPointsSopOperation} from '../../../operations/sop/CurveFromPoints';
 import {CurveGetPointSopOperation} from '../../../operations/sop/CurveGetPoint';
-import {CSS2DObjectSopOperation} from '../../../operations/sop/CSS2DObject';
-import {CSS3DObjectSopOperation} from '../../../operations/sop/CSS3DObject';
 import {DecalSopOperation} from '../../../operations/sop/Decal';
 import {DirectionalLightSopOperation} from '../../../operations/sop/DirectionalLight';
 import {EmptyObjectSopOperation} from '../../../operations/sop/EmptyObject';
@@ -731,8 +729,6 @@ export class SopRegister {
 		poly.registerOperation(ConvexHullSopOperation);
 		poly.registerOperation(CurveFromPointsSopOperation);
 		poly.registerOperation(CurveGetPointSopOperation);
-		poly.registerOperation(CSS2DObjectSopOperation);
-		poly.registerOperation(CSS3DObjectSopOperation);
 		poly.registerOperation(DecalSopOperation);
 		poly.registerOperation(DirectionalLightSopOperation);
 		poly.registerOperation(EmptyObjectSopOperation);

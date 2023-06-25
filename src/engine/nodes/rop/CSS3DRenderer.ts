@@ -7,7 +7,7 @@
  * Note that the CSS3DRenderer currently requires the WebGLRenderer to have a pixelRatio of 1. Since the default is 2 for desktop, you would need to assign your own WebGLRenderer node to the camera and set its pixelRatio to 1.
  *
  */
-import {DEFAULT_CSS3DOBJECT_CLASS} from './../../operations/sop/CSS3DObject';
+import {DEFAULT_CSS3DOBJECT} from './../../../core/render/CSSRenderers/CSSObjectAttribute';
 import {TypedRopNode} from './_Base';
 import {CSS3DRenderer} from '../../../core/render/CSSRenderers/CSS3DRenderer';
 import {RopType} from '../../poly/registers/nodes/types/Rop';
@@ -15,7 +15,7 @@ import {RopType} from '../../poly/registers/nodes/types/Rop';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {StringParamLanguage} from '../../params/utils/OptionsController';
 
-const DEFAULT_CSS = `.${DEFAULT_CSS3DOBJECT_CLASS} {
+const DEFAULT_CSS = `.${DEFAULT_CSS3DOBJECT.className} {
 	will-change: transform;
 	color: white;
 	background-color: black;
@@ -24,6 +24,10 @@ const DEFAULT_CSS = `.${DEFAULT_CSS3DOBJECT_CLASS} {
 	border-radius: 5px;
 	pointer-events: auto;
 	user-select: none;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	text-rendering: optimizeLegibility;
+	font-smooth: always;
 }`;
 
 class CSS3DRendererRopParamsConfig extends NodeParamsConfig {

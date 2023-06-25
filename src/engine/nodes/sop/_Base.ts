@@ -132,6 +132,9 @@ export class TypedSopNode<K extends NodeParamsConfig> extends TypedNode<NodeCont
 	protected _createIndexIfNone(geometry: BufferGeometry) {
 		TypedSopNode.createIndexIfNone(geometry);
 	}
+
+	// public traverseObjectOnSopGroupAddBound = this.traverseObjectOnSopGroupAdd.bind(this);
+	public updateObjectOnAdd(object: ObjectContent<CoreObjectType>, parent: ObjectContent<CoreObjectType>) {}
 }
 
 export type BaseSopNodeType = TypedSopNode<NodeParamsConfig>;

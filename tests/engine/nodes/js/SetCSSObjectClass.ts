@@ -1,8 +1,8 @@
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Js';
 import {RendererUtils} from '../../../helpers/RendererUtils';
-import type {CSS2DObject} from '../../../../src/core/render/CSSRenderers/CSS2DObject';
-import type {CSS3DObject} from '../../../../src/core/render/CSSRenderers/CSS3DObject';
+import {findCSS2DObjects} from '../sop/CSS2DObject';
+import {findCSS3DObjects} from '../sop/CSS3DObject';
 
 QUnit.test('js/setCSSObjectClass CSS2DObject', async (assert) => {
 	const scene = window.scene;
@@ -27,22 +27,27 @@ QUnit.test('js/setCSSObjectClass CSS2DObject', async (assert) => {
 	setCSSObjectClass1.p.addRemove.set(true);
 	setCSSObjectClass2.p.addRemove.set(false);
 
-	const container = await actor1.compute();
-	const object = container.coreContent()!.threejsObjects()[0] as CSS2DObject;
+	await actor1.compute();
+	// const object = container.coreContent()!.threejsObjects()[0] as CSS2DObject;
 
 	// wait to make sure objects are mounted to the scene
 	await CoreSleep.sleep(150);
+	const CSSObject = findCSS2DObjects(scene)[0];
+	assert.ok(CSSObject, 'CSSObject ok');
 
 	await RendererUtils.withViewer({cameraNode: perspective_camera1}, async (args) => {
-		assert.notOk(object.element.classList.contains('active'), 'no active class');
+		if (!CSSObject) {
+			return;
+		}
+		assert.notOk(CSSObject.element.classList.contains('active'), 'no active class');
 		scene.play();
 		assert.equal(scene.time(), 0);
 		await CoreSleep.sleep(100);
-		assert.ok(object.element.classList.contains('active'), 'active class added');
+		assert.ok(CSSObject.element.classList.contains('active'), 'active class added');
 
 		scene.pause();
 		await CoreSleep.sleep(100);
-		assert.notOk(object.element.classList.contains('active'), 'active class removed');
+		assert.notOk(CSSObject.element.classList.contains('active'), 'active class removed');
 	});
 });
 
@@ -69,21 +74,26 @@ QUnit.test('js/setCSSObjectClass CSS3DObject', async (assert) => {
 	setCSSObjectClass1.p.addRemove.set(true);
 	setCSSObjectClass2.p.addRemove.set(false);
 
-	const container = await actor1.compute();
-	const object = container.coreContent()!.threejsObjects()[0] as CSS3DObject;
+	await actor1.compute();
+	// const object = container.coreContent()!.threejsObjects()[0] as CSS3DObject;
 
 	// wait to make sure objects are mounted to the scene
 	await CoreSleep.sleep(150);
+	const CSSObject = findCSS3DObjects(scene)[0];
+	assert.ok(CSSObject, 'CSSObject ok');
 
 	await RendererUtils.withViewer({cameraNode: perspective_camera1}, async (args) => {
-		assert.notOk(object.element.classList.contains('active'), 'no active class');
+		if (!CSSObject) {
+			return;
+		}
+		assert.notOk(CSSObject.element.classList.contains('active'), 'no active class');
 		scene.play();
 		assert.equal(scene.time(), 0);
 		await CoreSleep.sleep(100);
-		assert.ok(object.element.classList.contains('active'), 'active class added');
+		assert.ok(CSSObject.element.classList.contains('active'), 'active class added');
 
 		scene.pause();
 		await CoreSleep.sleep(100);
-		assert.notOk(object.element.classList.contains('active'), 'active class removed');
+		assert.notOk(CSSObject.element.classList.contains('active'), 'active class removed');
 	});
 });

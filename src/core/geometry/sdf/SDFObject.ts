@@ -69,6 +69,8 @@ export class SDFObject implements ObjectContent<CoreObjectType.SDF> {
 	frustumCulled = true;
 	matrixAutoUpdate = false;
 	material: Material | undefined;
+	children: ObjectContent<CoreObjectType>[] = [];
+	parent: ObjectContent<CoreObjectType> | null = null;
 	private _type: SDFObjectType;
 	constructor(private _geometry: SDFGeometry) {
 		this._type = SDFObjectType.DEFAULT;
