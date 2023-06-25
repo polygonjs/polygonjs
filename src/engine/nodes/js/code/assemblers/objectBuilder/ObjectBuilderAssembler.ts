@@ -4,7 +4,8 @@ import {
 	INSERT_BODY_AFTER,
 	FunctionData,
 	INSERT_MEMBERS_AFTER,
-	INSERT_CONSTRUCTOR_AFTER,SpareParamOptions
+	INSERT_CONSTRUCTOR_AFTER,
+	SpareParamOptions,
 } from '../_Base';
 import {RegisterableVariable} from '../_BaseJsPersistedConfigUtils';
 import {ShaderConfig} from '../../configs/ShaderConfig';
@@ -26,11 +27,11 @@ const TEMPLATE = `
 ${INSERT_DEFINE_AFTER}
 ${INSERT_MEMBERS_AFTER}
 ${INSERT_CONSTRUCTOR_AFTER}
-const CustomPointBuilderEvaluator = function(){
+const CustomObjectBuilderEvaluator = function(){
 	${INSERT_BODY_AFTER}
 `;
 const CLOSE_CLASS_DEFINITION = `};
-return CustomPointBuilderEvaluator;`;
+return CustomObjectBuilderEvaluator;`;
 export class JsAssemblerObjectBuilder extends BaseJsShaderAssembler {
 	// private _function: Function | undefined;
 	// private _uniforms: IUniforms | undefined;
@@ -46,7 +47,7 @@ export class JsAssemblerObjectBuilder extends BaseJsShaderAssembler {
 		};
 	}
 
-	override spareParamsOptions(options:SpareParamOptions) {
+	override spareParamsOptions(options: SpareParamOptions) {
 		const _options: ParamOptions = {
 			spare: true,
 			// computeOnDirty: true, // not needed if cook option is not set
