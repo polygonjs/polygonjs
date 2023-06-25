@@ -364,6 +364,7 @@ export class ParamsController {
 				}
 			}
 			param.dispose();
+			param.scene().graphNodesController.notifyParamPathChanged(param);
 
 			// const name_index = this._param_names.indexOf(param_name)
 			// if(name_index >= 0){
@@ -463,6 +464,7 @@ export class ParamsController {
 
 			this._params_added_since_last_params_eval = true;
 
+			param.scene().graphNodesController.notifyParamPathChanged(param);
 			return param;
 		}
 	}

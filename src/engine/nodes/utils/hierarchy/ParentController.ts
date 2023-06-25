@@ -45,9 +45,9 @@ export class HierarchyParentController {
 	}
 
 	path(relativeToParent?: BaseNodeType): string {
-		if (this.node.disposed) {
-			console.warn('.path() called from a disposed node, this may return an invalid path', this.node);
-		}
+		// if (this.node.disposed) {
+		// 	console.warn('.path() called from a disposed node, this may return an invalid path', this.node);
+		// }
 
 		const separator = CoreWalker.SEPARATOR;
 		if (this._parent != null) {

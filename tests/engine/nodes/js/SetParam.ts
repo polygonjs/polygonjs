@@ -18,10 +18,11 @@ interface Options<T extends ParamType> {
 	targetValue: ParamInitValuesTypeMap[T];
 	expectedValue: ParamInitValuesTypeMap[T];
 	lerp: number;
+	relativePath: boolean;
 }
 
 async function setParamAndCheck<T extends ParamType>(options: Options<T>) {
-	const {assert, jsType, param, initValue, targetValue, expectedValue, lerp} = options;
+	const {assert, jsType, param, initValue, targetValue, expectedValue, lerp, relativePath} = options;
 
 	const scene = window.scene;
 	const perspective_camera1 = window.perspective_camera1;
@@ -37,7 +38,11 @@ async function setParamAndCheck<T extends ParamType>(options: Options<T>) {
 	const setParam1 = actor1.createNode('setParam');
 
 	setParam1.setInput(JsConnectionPointType.TRIGGER, onManualTrigger1);
-	setParam1.setParamParam(param);
+	if (relativePath == true) {
+		setParam1.setParamPath(param.pathRelativeTo(setParam1));
+	} else {
+		setParam1.setParamParam(param);
+	}
 	setParam1.setParamType(jsType);
 	(setParam1.params.get(SetParamJsNodeInputName.val)! as ParamConstructorMap[T]).set(targetValue as never);
 	setParam1.params.get('lerp')!.set(lerp);
@@ -107,6 +112,7 @@ QUnit.test('js/setParam boolean lerp 1', async (assert) => {
 		targetValue: true,
 		expectedValue: true,
 		lerp: 1,
+		relativePath: false,
 	});
 });
 
@@ -122,9 +128,10 @@ QUnit.test('js/setParam boolean lerp 0.5', async (assert) => {
 		targetValue: true,
 		expectedValue: true,
 		lerp: 0.5,
+		relativePath: false,
 	});
 });
-QUnit.test('js/setParam color lerp 1', async (assert) => {
+QUnit.test('js/setParam color lerp 1 not relative', async (assert) => {
 	const geo1 = window.geo1;
 	const color1 = geo1.createNode('color');
 	await setParamAndCheck({
@@ -136,6 +143,22 @@ QUnit.test('js/setParam color lerp 1', async (assert) => {
 		targetValue: [4, 2, 3],
 		expectedValue: [4, 2, 3],
 		lerp: 1,
+		relativePath: false,
+	});
+});
+QUnit.test('js/setParam color lerp 1 relative', async (assert) => {
+	const geo1 = window.geo1;
+	const color1 = geo1.createNode('color');
+	await setParamAndCheck({
+		assert,
+		paramType: ParamType.COLOR,
+		jsType: JsConnectionPointType.COLOR,
+		param: color1.p.color,
+		initValue: [1, 1, 1],
+		targetValue: [4, 2, 3],
+		expectedValue: [4, 2, 3],
+		lerp: 1,
+		relativePath: true,
 	});
 });
 QUnit.test('js/setParam color lerp 0.5', async (assert) => {
@@ -150,6 +173,7 @@ QUnit.test('js/setParam color lerp 0.5', async (assert) => {
 		targetValue: [4, 2, 3],
 		expectedValue: [2.5, 1.5, 2],
 		lerp: 0.5,
+		relativePath: false,
 	});
 });
 
@@ -163,6 +187,7 @@ QUnit.test('js/setParam float lerp 1', async (assert) => {
 		targetValue: 2,
 		expectedValue: 2,
 		lerp: 1,
+		relativePath: false,
 	});
 });
 QUnit.test('js/setParam float lerp 0.5', async (assert) => {
@@ -175,6 +200,7 @@ QUnit.test('js/setParam float lerp 0.5', async (assert) => {
 		targetValue: 2,
 		expectedValue: 1.5,
 		lerp: 0.5,
+		relativePath: false,
 	});
 });
 QUnit.test('js/setParam integer lerp 1', async (assert) => {
@@ -189,6 +215,7 @@ QUnit.test('js/setParam integer lerp 1', async (assert) => {
 		targetValue: 3,
 		expectedValue: 3,
 		lerp: 1,
+		relativePath: false,
 	});
 });
 QUnit.test('js/setParam integer lerp 0.5', async (assert) => {
@@ -203,6 +230,7 @@ QUnit.test('js/setParam integer lerp 0.5', async (assert) => {
 		targetValue: 3,
 		expectedValue: 2,
 		lerp: 0.5,
+		relativePath: false,
 	});
 });
 
@@ -218,6 +246,7 @@ QUnit.test('js/setParam string lerp 1', async (assert) => {
 		targetValue: 'test',
 		expectedValue: 'test',
 		lerp: 1,
+		relativePath: false,
 	});
 });
 QUnit.test('js/setParam vector2 lerp 1', async (assert) => {
@@ -232,6 +261,7 @@ QUnit.test('js/setParam vector2 lerp 1', async (assert) => {
 		targetValue: [1, 2],
 		expectedValue: [1, 2],
 		lerp: 1,
+		relativePath: false,
 	});
 });
 QUnit.test('js/setParam vector2 lerp 0.5', async (assert) => {
@@ -246,6 +276,7 @@ QUnit.test('js/setParam vector2 lerp 0.5', async (assert) => {
 		targetValue: [1, 2],
 		expectedValue: [0.5, 1],
 		lerp: 0.5,
+		relativePath: false,
 	});
 });
 QUnit.test('js/setParam vector3 lerp 1', async (assert) => {
@@ -260,6 +291,7 @@ QUnit.test('js/setParam vector3 lerp 1', async (assert) => {
 		targetValue: [1, 2, 3],
 		expectedValue: [1, 2, 3],
 		lerp: 1,
+		relativePath: false,
 	});
 });
 QUnit.test('js/setParam vector3 lerp 0.5', async (assert) => {
@@ -274,6 +306,7 @@ QUnit.test('js/setParam vector3 lerp 0.5', async (assert) => {
 		targetValue: [1, 2, 3],
 		expectedValue: [0.5, 1, 1.5],
 		lerp: 0.5,
+		relativePath: false,
 	});
 });
 QUnit.test('js/setParam vector4 lerp 1', async (assert) => {
@@ -288,6 +321,7 @@ QUnit.test('js/setParam vector4 lerp 1', async (assert) => {
 		targetValue: [1, 2, 3, 4],
 		expectedValue: [1, 2, 3, 4],
 		lerp: 1,
+		relativePath: false,
 	});
 });
 QUnit.test('js/setParam vector4 lerp 0.5', async (assert) => {
@@ -302,5 +336,6 @@ QUnit.test('js/setParam vector4 lerp 0.5', async (assert) => {
 		targetValue: [1, 2, 3, 4],
 		expectedValue: [0.5, 1, 1.5, 2],
 		lerp: 0.5,
+		relativePath: false,
 	});
 });

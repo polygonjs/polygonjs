@@ -96,7 +96,6 @@ export class RenderersController {
 	}
 
 	getRenderingContext(canvas: HTMLCanvasElement): WebGLRenderingContext | null {
-		console.log({canvas});
 		let gl: WebGLRenderingContext | null = null;
 		// if (this._require_webgl2) {
 		gl = this._getRenderingContextWebgl(canvas, true);

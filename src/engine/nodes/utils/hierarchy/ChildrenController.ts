@@ -96,6 +96,7 @@ export class HierarchyChildrenController {
 			node.nameController.updateNameFromParent(newName);
 
 			this.node.scene().nodesController.addToInstanciatedNode(node);
+			this.node.scene().graphNodesController.notifyNodePathChanged(node);
 		}
 	}
 	private _nextAvailableChildName(nodeName: string): string {
@@ -294,6 +295,7 @@ export class HierarchyChildrenController {
 			childNode.lifecycle.runOnDeleteCallbacks();
 			childNode.dispose();
 			childNode.emit(NodeEvent.DELETED, {parent_id: this.node.graphNodeId()});
+			this.node.scene().graphNodesController.notifyNodePathChanged(childNode);
 		}
 	}
 

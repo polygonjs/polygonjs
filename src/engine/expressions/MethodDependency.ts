@@ -26,8 +26,8 @@ export class MethodDependency extends CoreGraphNode {
 	private _updateFromNameChange(trigger?: CoreGraphNode) {
 		if (trigger && this.decomposedPath) {
 			const node = trigger as BaseNodeType;
-			this.decomposedPath.update_from_name_change(node);
-			const new_path = this.decomposedPath.to_path();
+			this.decomposedPath.updateFromNameChange(node);
+			const new_path = this.decomposedPath.toPath();
 
 			const literal = this.jsep_node as jsep.Literal;
 			const {indexOrPath} = this.pathArgs;
@@ -46,7 +46,7 @@ export class MethodDependency extends CoreGraphNode {
 
 	listen_for_name_changes() {
 		if (this.jsep_node && this.decomposedPath) {
-			for (let node_in_path of this.decomposedPath.named_nodes()) {
+			for (let node_in_path of this.decomposedPath.namedNodes()) {
 				if (node_in_path) {
 					const node = node_in_path as BaseNodeType;
 					if (node.nameController) {
