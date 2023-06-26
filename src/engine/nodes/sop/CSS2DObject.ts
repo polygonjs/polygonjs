@@ -122,6 +122,7 @@ export class CSS2DObjectSopNode extends TypedSopNode<CSS2DObjectSopParamsConfig>
 		// unpredictable.
 		const index = parent.children.indexOf(object);
 		parent.children[index] = CSSObject;
+		CSSObject.parent = parent;
 		// parent.remove(object);
 		// parent.add(CSSObject);
 	}

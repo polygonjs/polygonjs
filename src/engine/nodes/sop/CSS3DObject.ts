@@ -128,6 +128,7 @@ export class CSS3DObjectSopNode extends TypedSopNode<CSS3DObjectSopParamsConfig>
 		// unpredictable.
 		const index = parent.children.indexOf(object);
 		parent.children[index] = CSSObject;
+		CSSObject.parent = parent;
 		// parent.remove(object);
 		// parent.add(CSSObject);
 	}

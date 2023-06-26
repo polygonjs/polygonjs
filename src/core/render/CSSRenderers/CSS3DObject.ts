@@ -70,6 +70,11 @@ export function createCSS3DObject(options: CSS3DObjectOptions) {
 			object: options.object,
 			CSSObject,
 		});
+		// ensure children are also copied
+		let child: Object3D | undefined;
+		while ((child = options.object.children.pop())) {
+			CSSObject.add(child);
+		}
 		CSSObject.position.copy(options.object.position);
 		CSSObject.quaternion.copy(options.object.quaternion);
 		CSSObject.scale.copy(options.object.scale);
