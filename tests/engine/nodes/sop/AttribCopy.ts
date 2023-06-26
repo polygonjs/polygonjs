@@ -1,7 +1,8 @@
 import {BufferAttribute} from 'three';
 import {BaseSopNodeType} from '../../../../src/engine/nodes/sop/_Base';
+import {AttribClass} from '../../../../src/core/geometry/Constant';
 
-QUnit.test('attribcopy latitude to position', async (assert) => {
+QUnit.test('sop/attribCopy vertex latitude to position', async (assert) => {
 	const geo1 = window.geo1;
 	const plane1 = geo1.createNode('plane');
 
@@ -81,7 +82,7 @@ async function requestAttribArray(assert: Assert, node: BaseSopNodeType, attribN
 	return (geometry.getAttribute(attribName) as BufferAttribute).array;
 }
 
-QUnit.test('attribcopy from input 2', async (assert) => {
+QUnit.test('sop/attribCopy vertex from input 2', async (assert) => {
 	const geo1 = window.geo1;
 	const box = geo1.createNode('box');
 	box.p.size.set(1.1); // non integer to allow the noise to have any effect
@@ -115,7 +116,7 @@ QUnit.test('attribcopy from input 2', async (assert) => {
 	assert.deepEqual(attribCopyP, boxP);
 });
 
-QUnit.test('attribcopy multiple from input 2 and rename', async (assert) => {
+QUnit.test('sop/attribCopy vertex multiple from input 2 and rename', async (assert) => {
 	const geo1 = window.geo1;
 	const box = geo1.createNode('box');
 	box.p.size.set(1.1); // non integer to allow the noise to have any effect
@@ -147,4 +148,55 @@ QUnit.test('attribcopy multiple from input 2 and rename', async (assert) => {
 	assert.equal(geometry.getAttribute('restP2').itemSize, 3);
 	assert.equal(geometry.getAttribute('restN2').itemSize, 3);
 	assert.equal(geometry.getAttribute('pti2').itemSize, 1);
+});
+
+QUnit.test('sop/attribCopy object', async (assert) => {
+	const geo1 = window.geo1;
+	const box1 = geo1.createNode('box');
+	const box2 = geo1.createNode('box');
+	const attribCreate1 = geo1.createNode('attribCreate');
+	const attribCopy = geo1.createNode('attribCopy');
+	attribCreate1.setInput(0, box1);
+	attribCreate1.setAttribClass(AttribClass.OBJECT);
+	attribCreate1.p.name.set('pti');
+	attribCreate1.p.value1.set(2);
+
+	attribCopy.setInput(0, box2);
+	attribCopy.setInput(1, attribCreate1);
+	attribCopy.setAttribClass(AttribClass.OBJECT);
+	attribCopy.p.name.set('pti');
+	attribCopy.p.tnewName.set(true);
+	attribCopy.p.newName.set('pti2');
+
+	let container = await attribCopy.compute();
+	assert.notOk(attribCopy.states.error.message());
+	let coreGroup = container.coreContent()!;
+	let coreObject = coreGroup.allCoreObjects()[0];
+	assert.notOk(coreObject.attribValue('pti'), 'no pti');
+	assert.equal(coreObject.attribValue('pti2'), 2);
+});
+
+QUnit.test('sop/attribCopy coreGroup', async (assert) => {
+	const geo1 = window.geo1;
+	const box1 = geo1.createNode('box');
+	const box2 = geo1.createNode('box');
+	const attribCreate1 = geo1.createNode('attribCreate');
+	const attribCopy = geo1.createNode('attribCopy');
+	attribCreate1.setInput(0, box1);
+	attribCreate1.setAttribClass(AttribClass.CORE_GROUP);
+	attribCreate1.p.name.set('pti');
+	attribCreate1.p.value1.set(2);
+
+	attribCopy.setInput(0, box2);
+	attribCopy.setInput(1, attribCreate1);
+	attribCopy.setAttribClass(AttribClass.CORE_GROUP);
+	attribCopy.p.name.set('pti');
+	attribCopy.p.tnewName.set(true);
+	attribCopy.p.newName.set('pti2');
+
+	let container = await attribCopy.compute();
+	assert.notOk(attribCopy.states.error.message());
+	let coreGroup = container.coreContent()!;
+	assert.notOk(coreGroup.attribValue('pti'), 'no pti');
+	assert.equal(coreGroup.attribValue('pti2'), 2);
 });
