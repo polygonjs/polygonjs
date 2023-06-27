@@ -55,8 +55,6 @@ export class CadObject<T extends CadGeometryType> implements ObjectContent<CoreO
 	get type() {
 		return this._type;
 	}
-	parent = null;
-	children = [];
 	userData = {};
 	name = '';
 	castShadow = true;
@@ -65,6 +63,8 @@ export class CadObject<T extends CadGeometryType> implements ObjectContent<CoreO
 	frustumCulled = true;
 	matrixAutoUpdate = false;
 	material: Material | undefined;
+	children: ObjectContent<CoreObjectType.CAD>[] = [];
+	parent: ObjectContent<CoreObjectType.CAD> | null = null;
 	constructor(private _geometry: CadTypeMap[T], private _type: T) {
 		this._validate();
 	}

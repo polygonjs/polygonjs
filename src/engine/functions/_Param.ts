@@ -17,6 +17,11 @@ import type {Vector3Param} from '../params/Vector3';
 import type {Vector4Param} from '../params/Vector4';
 import type {ButtonParam} from '../params/Button';
 
+export function dummyReadRefVal(value: number | null) {
+	// we just need this method to force a call to .value
+	// and ensure that we have a dependency with the ref()
+}
+
 const tmpColor = new Color();
 const tmpV2 = new Vector2();
 const tmpV3 = new Vector3();
@@ -26,6 +31,7 @@ const tmpN3: Number3 = [0, 0, 0];
 const tmpN4: Number4 = [0, 0, 0, 0];
 
 function _getParam<T extends ParamType>(scene: PolyScene, paramPath: string): ParamConstructorMap[T] | void {
+	dummyReadRefVal(scene.graphNodesController.pathRef(paramPath).value);
 	const elements = paramPath.split('/');
 	const paramName = elements.pop() as string;
 	const nodePath = elements.join('/');

@@ -89,8 +89,8 @@ export class TypedParamPathParamValue extends GraphNodePathParamValue<BaseParamT
 		return this.param()?.path();
 	}
 
-	resolve(nodeStart: BaseNodeType) {
-		this._graphNode = CoreWalker.findParam(nodeStart, this._path);
+	resolve(nodeStart: BaseNodeType, decomposedPath?: DecomposedPath) {
+		this._graphNode = CoreWalker.findParam(nodeStart, this._path, decomposedPath);
 	}
 
 	paramWithType<T extends ParamType>(
@@ -127,75 +127,69 @@ export class CoreWalker {
 		return {parent: parent_path, child: child_path};
 	}
 
-	static findNode(node_src: BaseNodeType, path: string, decomposedPath?: DecomposedPath): BaseNodeType | null {
-		if (!node_src) {
+	static findNode(nodeSrc: BaseNodeType, path: string, decomposedPath?: DecomposedPath): BaseNodeType | null {
+		if (!nodeSrc) {
 			return null;
 		}
 
 		const elements: string[] = path.split(CoreWalker.SEPARATOR).filter((e) => e.length > 0);
-		const first_element = elements[0];
+		const firstElement = elements[0];
 
-		let next_node: BaseNodeType | null = null;
+		let nextNode: BaseNodeType | null = null;
 		if (path[0] === CoreWalker.SEPARATOR) {
-			const path_from_root = path.substring(1);
-			next_node = this.findNode(node_src.root(), path_from_root, decomposedPath);
+			const pathFromRoot = path.substring(1);
+			nextNode = this.findNode(nodeSrc.root(), pathFromRoot, decomposedPath);
 		} else {
-			switch (first_element) {
+			switch (firstElement) {
 				case CoreWalker.PARENT:
-					decomposedPath?.add_path_element(first_element);
-					next_node = node_src.parent();
+					nextNode = nodeSrc.parent();
+					if (nextNode) {
+						decomposedPath?.addPathElement({path: firstElement, node: nextNode});
+					}
 					break;
 				case CoreWalker.CURRENT:
-					decomposedPath?.add_path_element(first_element);
-					next_node = node_src;
+					nextNode = nodeSrc;
+					decomposedPath?.addPathElement({path: firstElement, node: nextNode});
 					break;
 				default:
-					// TODO: What does .node means?? in which case is this not a node? (it is for nodes which cannot have children - but I'd like to unify the api)
-					// console.error("rethink this method Walker.find_node")
-					// if (node_src.node != null) {
-					next_node = node_src.node(first_element);
-					if (next_node) {
-						decomposedPath?.add_node(first_element, next_node);
+					nextNode = nodeSrc.node(firstElement);
+					if (nextNode) {
+						decomposedPath?.addNamedNode({name: firstElement, node: nextNode});
 					}
-
-				// if (next_node == null) { this.find_node_warning(node_src, first_element); }
-				// return next_node;
-				// break
-				// }
 			}
 
-			if (next_node != null && elements.length > 1) {
+			if (nextNode != null && elements.length > 1) {
 				const remainder = elements.slice(1).join(CoreWalker.SEPARATOR);
-				next_node = this.findNode(next_node, remainder, decomposedPath);
+				nextNode = this.findNode(nextNode, remainder, decomposedPath);
 			}
-			return next_node;
+			return nextNode;
 		}
 
-		return next_node;
+		return nextNode;
 	}
 
-	static findParam(node_src: BaseNodeType, path: string, decomposedPath?: DecomposedPath): BaseParamType | null {
-		if (!node_src) {
+	static findParam(nodeSrc: BaseNodeType, path: string, decomposedPath?: DecomposedPath): BaseParamType | null {
+		if (!nodeSrc) {
 			return null;
 		}
 
 		const elements = path.split(CoreWalker.SEPARATOR);
 
 		if (elements.length === 1) {
-			return node_src.params.get(elements[0]);
+			return nodeSrc.params.get(elements[0]);
 		} else {
 			let node: BaseNodeType | null = null;
 			if (path[0] === CoreWalker.SEPARATOR && elements.length == 2) {
-				node = node_src.root();
+				node = nodeSrc.root();
 			} else {
-				const node_path = elements.slice(0, +(elements.length - 2) + 1 || undefined).join(CoreWalker.SEPARATOR);
-				node = this.findNode(node_src, node_path, decomposedPath);
+				const nodePath = elements.slice(0, +(elements.length - 2) + 1 || undefined).join(CoreWalker.SEPARATOR);
+				node = this.findNode(nodeSrc, nodePath, decomposedPath);
 			}
 			if (node != null) {
-				const param_name = elements[elements.length - 1];
-				const param = node.params.get(param_name);
+				const paramName = elements[elements.length - 1];
+				const param = node.params.get(paramName);
 				if (decomposedPath && param) {
-					decomposedPath.add_node(param_name, param);
+					decomposedPath.addNamedNode({name: paramName, node: param});
 				}
 				return param;
 			} else {
@@ -204,12 +198,12 @@ export class CoreWalker {
 			}
 		}
 	}
-	static relativePath(src_graph_node: Readonly<BaseNodeType>, dest_graph_node: Readonly<BaseNodeType>): string {
-		const parent = this.closestCommonParent(src_graph_node, dest_graph_node);
+	static relativePath(srcGraphNode: Readonly<BaseNodeType>, destGraphNode: Readonly<BaseNodeType>): string {
+		const parent = this.closestCommonParent(srcGraphNode, destGraphNode);
 		if (!parent) {
-			return dest_graph_node.path();
+			return destGraphNode.path();
 		} else {
-			const distance = this.distanceToParent(src_graph_node, parent);
+			const distance = this.distanceToParent(srcGraphNode, parent);
 			let up = '';
 			if (distance > 0) {
 				let i = 0;
@@ -224,7 +218,7 @@ export class CoreWalker {
 				.path()
 				.split(CoreWalker.SEPARATOR)
 				.filter((e) => e.length > 0);
-			const dest_path_elements = dest_graph_node
+			const dest_path_elements = destGraphNode
 				.path()
 				.split(CoreWalker.SEPARATOR)
 				.filter((e) => e.length > 0);
@@ -245,40 +239,40 @@ export class CoreWalker {
 	}
 
 	static closestCommonParent(
-		graph_node1: Readonly<BaseNodeType>,
-		graph_node2: Readonly<BaseNodeType>
+		graphNode1: Readonly<BaseNodeType>,
+		graphNode2: Readonly<BaseNodeType>
 	): Readonly<BaseNodeType> | null {
-		const parents1 = this.parents(graph_node1).reverse().concat([graph_node1]);
-		const parents2 = this.parents(graph_node2).reverse().concat([graph_node2]);
+		const parents1 = this.parents(graphNode1).reverse().concat([graphNode1]);
+		const parents2 = this.parents(graphNode2).reverse().concat([graphNode2]);
 
-		const min_depth = Math.min(parents1.length, parents2.length);
-		let found_parent = null;
+		const minDepth = Math.min(parents1.length, parents2.length);
+		let foundParent = null;
 
-		for (let i = 0; i < min_depth; i++) {
+		for (let i = 0; i < minDepth; i++) {
 			if (parents1[i].graphNodeId() == parents2[i].graphNodeId()) {
-				found_parent = parents1[i];
+				foundParent = parents1[i];
 			}
 		}
-		return found_parent;
+		return foundParent;
 	}
-	static parents(graph_node: Readonly<NodeOrParam>): Readonly<BaseNodeType>[] {
+	static parents(graphNode: Readonly<NodeOrParam>): Readonly<BaseNodeType>[] {
 		const parents = [];
-		let parent = graph_node.parent();
+		let parent = graphNode.parent();
 		while (parent) {
 			parents.push(parent);
 			parent = parent.parent();
 		}
 		return parents;
 	}
-	static distanceToParent(graph_node: Readonly<NodeOrParam>, dest: Readonly<BaseNodeType>): number {
+	static distanceToParent(graphNode: Readonly<NodeOrParam>, dest: Readonly<BaseNodeType>): number {
 		let distance = 0;
-		let current: Readonly<NodeOrParam | null> = graph_node;
-		const dest_id = dest.graphNodeId();
-		while (current && current.graphNodeId() != dest_id) {
+		let current: Readonly<NodeOrParam | null> = graphNode;
+		const destId = dest.graphNodeId();
+		while (current && current.graphNodeId() != destId) {
 			distance += 1;
 			current = current.parent();
 		}
-		if (current && current.graphNodeId() == dest_id) {
+		if (current && current.graphNodeId() == destId) {
 			return distance;
 		} else {
 			return -1;

@@ -3,7 +3,7 @@ import {
 	ConnectionPointTypeMap,
 	ConnectionPointEnumMap,
 	DEFAULT_CONNECTION_POINT_ENUM_MAP,
-	create_connection_point,
+	createConnectionPoint,
 } from './connections/ConnectionMap';
 import {TypedNode} from '../../_Base';
 import {ConnectionPointsSpareParamsController} from './ConnectionPointsSpareParamsController';
@@ -49,8 +49,8 @@ export class ConnectionPointsController<NC extends NodeContext> {
 	protected default_connection_type(): ConnectionPointEnumMap[NC] {
 		return DEFAULT_CONNECTION_POINT_ENUM_MAP[this._context];
 	}
-	protected create_connection_point(name: string, type: ConnectionPointEnumMap[NC]): ConnectionPointTypeMap[NC] {
-		return create_connection_point(this._context, name, type) as ConnectionPointTypeMap[NC];
+	protected createConnectionPoint(name: string, type: ConnectionPointEnumMap[NC]): ConnectionPointTypeMap[NC] {
+		return createConnectionPoint(this._context, name, type) as ConnectionPointTypeMap[NC];
 	}
 
 	functions_overridden(): boolean {
@@ -184,13 +184,13 @@ export class ConnectionPointsController<NC extends NodeContext> {
 		const named_input_connection_points: ConnectionPointTypeMap[NC][] = [];
 		for (let i = 0; i < expected_input_types.length; i++) {
 			const type = expected_input_types[i];
-			const point = this.create_connection_point(this._wrapped_input_name_function(i), type);
+			const point = this.createConnectionPoint(this._wrapped_input_name_function(i), type);
 			named_input_connection_points.push(point);
 		}
 		const named_output_connect_points: ConnectionPointTypeMap[NC][] = [];
 		for (let i = 0; i < expected_output_types.length; i++) {
 			const type = expected_output_types[i];
-			const point = this.create_connection_point(this._wrapped_output_name_function(i), type);
+			const point = this.createConnectionPoint(this._wrapped_output_name_function(i), type);
 			named_output_connect_points.push(point);
 		}
 

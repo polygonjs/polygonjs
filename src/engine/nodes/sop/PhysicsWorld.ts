@@ -54,16 +54,15 @@ export class PhysicsWorldSopNode extends TypedActorSopNode<PhysicsWorldSopParams
 		this.io.inputs.initInputsClonedState(InputCloneMode.ALWAYS);
 	}
 
-	// private _PhysicsLib: PhysicsLib | undefined;
 	override async cook(inputCoreGroups: CoreGroup[]) {
 		this.compilationController.compileIfRequired();
 		await CorePhysics();
-		Poly.onObjectsAddedHooks.registerHook(this.type(), this.traverseObjectOnSopGroupAdd.bind(this));
 		const coreGroup = inputCoreGroups[0];
 
 		const worldObject = new Group();
 		worldObject.name = this.name();
 		worldObject.matrixAutoUpdate = false;
+		Poly.onObjectsAddedHooks.assignHookHandler(worldObject, this);
 		CoreObject.addAttribute(worldObject, PhysicsIdAttribute.WORLD, this.graphNodeId());
 
 		const inputObjects = coreGroup.threejsObjects();
@@ -94,7 +93,7 @@ export class PhysicsWorldSopNode extends TypedActorSopNode<PhysicsWorldSopParams
 
 		this.setObjects(objects);
 	}
-	traverseObjectOnSopGroupAdd(object: Object3D) {
+	public override updateObjectOnAdd(object: Object3D) {
 		// if (!this._PhysicsLib) {
 		// 	return;
 		// }

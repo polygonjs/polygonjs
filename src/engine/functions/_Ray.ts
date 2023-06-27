@@ -12,6 +12,7 @@ import {
 	Vector2,
 } from 'three';
 import {ObjectNamedFunction3, NamedFunction2, NamedFunction3} from './_Base';
+import {getDefaultCamera} from './_Camera';
 
 const raycaster = new Raycaster();
 const DEFAULT_POS = new Vector3();
@@ -42,7 +43,14 @@ export class rayFromCamera extends ObjectNamedFunction3<[number, number, Ray]> {
 	static override type() {
 		return 'rayFromCamera';
 	}
+	private _getDefaultCamera: getDefaultCamera | undefined;
 	func(object3D: Object3D, x: number, y: number, target: Ray): Ray {
+		if (object3D == null) {
+			this._getDefaultCamera =
+				this._getDefaultCamera || new getDefaultCamera(this.node, this.shadersCollectionController);
+			object3D = this._getDefaultCamera.func();
+		}
+
 		if (!(object3D instanceof PerspectiveCamera || object3D instanceof OrthographicCamera)) {
 			return target;
 		}

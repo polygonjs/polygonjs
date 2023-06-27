@@ -162,8 +162,8 @@ export class ParamPathParam extends TypedPathParam<ParamType.PARAM_PATH> {
 	// }
 
 	notifyPathRebuildRequired(param: BaseParamType) {
-		this.decomposedPath.update_from_name_change(param);
-		const new_path = this.decomposedPath.to_path();
+		this.decomposedPath.updateFromNameChange(param);
+		const new_path = this.decomposedPath.toPath();
 		this.set(new_path);
 	}
 	notifyTargetParamOwnerParamsUpdated(node: BaseNodeType) {

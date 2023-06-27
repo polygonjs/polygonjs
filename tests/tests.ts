@@ -285,6 +285,7 @@ import './engine/nodes/js/RayIntersectsObject';
 import './engine/nodes/js/RayIntersectsPlane';
 import './engine/nodes/js/RayIntersectsSphere';
 import './engine/nodes/js/RenderPixel';
+import './engine/nodes/js/SetCSSObjectClass';
 import './engine/nodes/js/SetGeometryPositions';
 import './engine/nodes/js/SetMaterialColor';
 import './engine/nodes/js/SetMaterialEmissiveColor';

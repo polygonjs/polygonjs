@@ -43,7 +43,7 @@ QUnit.test('COP audioAnalyser with FFT', async (assert) => {
 		for (let i = 0; i < texture.image.width; i++) {
 			sum += texture.image.data[i * 4 + 0];
 		}
-		assert.in_delta(sum, 0.13, 0.12);
+		assert.in_delta(sum, 0.13, 0.12, `sum (${sum})`);
 
 		null1.setInput(0, null);
 

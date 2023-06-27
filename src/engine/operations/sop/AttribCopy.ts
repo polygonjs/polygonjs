@@ -1,13 +1,16 @@
 import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-
 import {BufferGeometry} from 'three';
 import {BufferAttribute, Float32BufferAttribute} from 'three';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 import {CoreString} from '../../../core/String';
+import {ATTRIBUTE_CLASSES, AttribClass} from '../../../core/geometry/Constant';
+import {TypeAssert} from '../../../engine/poly/Assert';
+import {CoreObject} from '../../../core/geometry/Object';
 interface AttribCopySopParams extends DefaultOperationParams {
+	class: number;
 	name: string;
 	tnewName: boolean;
 	newName: string;
@@ -38,6 +41,7 @@ interface CopyBetweenGeometriesArgs extends CopyArgs {
 
 export class AttribCopySopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: AttribCopySopParams = {
+		class: ATTRIBUTE_CLASSES.indexOf(AttribClass.VERTEX),
 		name: '',
 		tnewName: false,
 		newName: '',
@@ -52,30 +56,62 @@ export class AttribCopySopOperation extends BaseSopOperation {
 	override cook(inputCoreGroups: CoreGroup[], params: AttribCopySopParams) {
 		const coreGroupDest = inputCoreGroups[0];
 		const coreGroupSrc = inputCoreGroups[1] || coreGroupDest;
-
-		const srcAttribNames = coreGroupSrc.geoAttribNamesMatchingMask(params.name);
+		const attribClass = ATTRIBUTE_CLASSES[params.class];
 		const newNames = CoreString.attribNames(params.newName);
-		for (let i = 0; i < srcAttribNames.length; i++) {
-			const srcAttribName = srcAttribNames[i];
-			let destAttribName = isBooleanTrue(params.tnewName) ? newNames[i] : srcAttribName;
-			if (!destAttribName) {
-				this.states?.error.set(`no matching new attribute name of ${srcAttribName}`);
-				return coreGroupDest;
+
+		if (attribClass == AttribClass.VERTEX) {
+			// for geometry attributes, first iterate over the existing attributes
+			const srcAttribNames = coreGroupSrc.geoAttribNamesMatchingMask(params.name);
+			for (let i = 0; i < srcAttribNames.length; i++) {
+				const srcAttribName = srcAttribNames[i];
+				let destAttribName = isBooleanTrue(params.tnewName) ? newNames[i] : srcAttribName;
+				if (!destAttribName) {
+					this.states?.error.set(`no matching new attribute name of ${srcAttribName}`);
+					return coreGroupDest;
+				}
+				this._copyAttributeBetweenCoreGroups(attribClass, {
+					attribName: {
+						src: srcAttribName,
+						dest: destAttribName,
+					},
+					params,
+					coreGroup: {src: coreGroupSrc, dest: coreGroupDest},
+				});
 			}
-			this._copyPointAttributeBetweenCoreGroups({
-				attribName: {
-					src: srcAttribName,
-					dest: destAttribName,
-				},
-				params,
-				coreGroup: {src: coreGroupSrc, dest: coreGroupDest},
-			});
+		} else {
+			// for object attributes, first iterate over the existing attributes
+			const attribNames = CoreString.attribNames(params.name);
+			for (let i = 0; i < attribNames.length; i++) {
+				const destAttribName = isBooleanTrue(params.tnewName) ? newNames[i] : attribNames[i];
+				this._copyAttributeBetweenCoreGroups(attribClass, {
+					attribName: {
+						src: attribNames[i],
+						dest: destAttribName,
+					},
+					params,
+					coreGroup: {src: coreGroupSrc, dest: coreGroupDest},
+				});
+			}
 		}
 
 		return coreGroupDest;
 	}
 
-	private _copyPointAttributeBetweenCoreGroups(copyArgs: CopyBetweenCoreGroupsArgs) {
+	private _copyAttributeBetweenCoreGroups(attribClass: AttribClass, copyArgs: CopyBetweenCoreGroupsArgs) {
+		switch (attribClass) {
+			case AttribClass.VERTEX:
+				this._copyAttributesBetweenGeometries(copyArgs);
+				return;
+			case AttribClass.OBJECT:
+				this._copyAttributesBetweenObjects(copyArgs);
+				return;
+			case AttribClass.CORE_GROUP:
+				this._copyAttributesBetweenCoreGroups(copyArgs);
+				return;
+		}
+		TypeAssert.unreachable(attribClass);
+	}
+	private _copyAttributesBetweenGeometries(copyArgs: CopyBetweenCoreGroupsArgs) {
 		const {coreGroup, attribName, params} = copyArgs;
 		const srcObjects = coreGroup.src.threejsObjectsWithGeo();
 		const destObjects = coreGroup.dest.threejsObjectsWithGeo();
@@ -94,6 +130,35 @@ export class AttribCopySopOperation extends BaseSopOperation {
 			}
 		}
 	}
+	private _copyAttributesBetweenObjects(copyArgs: CopyBetweenCoreGroupsArgs) {
+		const {coreGroup, attribName} = copyArgs;
+		const srcObjects = coreGroup.src.allObjects();
+		const destObjects = coreGroup.dest.allObjects();
+
+		if (destObjects.length > srcObjects.length) {
+			this.states?.error.set('second input does not have enough objects to copy attributes from');
+		} else {
+			for (let i = 0; i < destObjects.length; i++) {
+				const destObject = destObjects[i];
+				const srcObject = srcObjects[i];
+				const srcAttribValue = CoreObject.attribValue(srcObject, attribName.src);
+				if (srcAttribValue != null) {
+					CoreObject.setAttribute(destObject, attribName.dest, srcAttribValue);
+				}
+			}
+		}
+	}
+	private _copyAttributesBetweenCoreGroups(copyArgs: CopyBetweenCoreGroupsArgs) {
+		const {coreGroup, attribName} = copyArgs;
+		const srcCoreGroup = coreGroup.src;
+		const destCoreGroup = coreGroup.dest;
+
+		const srcAttribValue = srcCoreGroup.attribValue(attribName.src);
+		if (srcAttribValue != null) {
+			destCoreGroup.setAttribValue(attribName.dest, srcAttribValue);
+		}
+	}
+
 	private _copyPointAttributesBetweenGeometries(copyArgs: CopyBetweenGeometriesArgs) {
 		const {geo, attribName, params} = copyArgs;
 		const srcAttrib = geo.src.getAttribute(attribName.src) as BufferAttribute | undefined;

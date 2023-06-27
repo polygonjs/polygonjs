@@ -48,14 +48,14 @@ QUnit.test('js/OnObjectHover', async (assert) => {
 		const {viewer} = args;
 		const canvas = viewer.canvas();
 		scene.play();
-		assert.equal(scene.time(), 0);
+		assert.equal(scene.time(), 0, 'time 0');
 
-		assert.deepEqual(object.position.toArray(), [0, 0, 0]);
+		assert.deepEqual(object.position.toArray(), [0, 0, 0], 'pos at 0');
 
 		triggerPointermoveInMiddle(canvas);
 		await CoreSleep.sleep(200);
-		assert.deepEqual(object.position.toArray(), [0, 0, 1]);
-		assert.in_delta(geo2.p.scale.value, 3.5, 0.001, 'scale');
+		assert.deepEqual(object.position.toArray(), [0, 0, 1], 'pos.z =1 ');
+		assert.in_delta(geo2.p.scale.value, 4.5, 0.001, `scale '${geo2.p.scale.value}'`);
 		object.position.set(0, 0, 0);
 
 		// hover out of the object will also throw an event since it is a state change

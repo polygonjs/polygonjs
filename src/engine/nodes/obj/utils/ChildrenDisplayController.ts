@@ -5,6 +5,7 @@ import {Group} from 'three';
 import {BaseSopNodeType} from '../../sop/_Base';
 import {Poly} from '../../../Poly';
 import {CoreGroup} from '../../../../core/geometry/Group';
+import {PolyScene} from '../../../scene/PolyScene';
 // import {TesselationParams} from '../../../../core/geometry/cad/CadCommon';
 
 const DISPLAY_PARAM_NAME = 'display';
@@ -20,7 +21,10 @@ export class ChildrenDisplayController {
 	protected _sopGroup = this._createSopGroup();
 	protected _newObjectsAreDifferent = false;
 	protected _newSpecializedObjects: Object3D[] = [];
-	constructor(protected node: BaseObjNodeClassWithDisplayNode) {}
+	private _scene: PolyScene;
+	constructor(protected node: BaseObjNodeClassWithDisplayNode) {
+		this._scene = this.node.scene();
+	}
 
 	private _createSopGroup() {
 		// This may need to be a Mesh for the rivet to update correctly
@@ -113,7 +117,7 @@ export class ChildrenDisplayController {
 	}
 
 	async requestDisplayNodeContainer() {
-		if (!this.node.scene().loadingController.loaded()) {
+		if (!this._scene.loadingController.loaded()) {
 			return;
 		}
 		if (this.usedInScene()) {
@@ -179,8 +183,8 @@ export class ChildrenDisplayController {
 				}
 				this._notifyCamerasController();
 				this._runOnSopGroupUpdatedHooks();
-				if (this.node.scene().loadingController.loaded()) {
-					Poly.onObjectsAddedHooks.runHooks(this._sopGroup);
+				if (this._scene.loadingController.loaded()) {
+					Poly.onObjectsAddedHooks.runHooks(this._scene, this._sopGroup);
 					Poly.onSceneUpdatedHooks.runHooks();
 				}
 				return;
@@ -188,12 +192,12 @@ export class ChildrenDisplayController {
 		}
 		this.removeChildren();
 		this._runOnSopGroupUpdatedHooks();
-		if (this.node.scene().loadingController.loaded()) {
+		if (this._scene.loadingController.loaded()) {
 			Poly.onSceneUpdatedHooks.runHooks();
 		}
 	}
 	private _notifyCamerasController() {
-		this.node.scene().camerasController.updateFromChangeInObject(this._sopGroup);
+		this._scene.camerasController.updateFromChangeInObject(this._sopGroup);
 	}
 	protected _addSpecializedObjects(displayNode: BaseSopNodeType, coreGroup: CoreGroup, newObjects: Object3D[]) {}
 

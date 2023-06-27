@@ -7,7 +7,7 @@
  * Note that the CSS2DRenderer currently requires the WebGLRenderer to have a pixelRatio of 1. Since the default is 2 for desktop, you would need to assign your own WebGLRenderer node to the camera and set its pixelRatio to 1.
  *
  */
-import {DEFAULT_CSS2DOBJECT_CLASS} from './../../operations/sop/CSS2DObject';
+import {DEFAULT_CSS2DOBJECT} from './../../../core/render/CSSRenderers/CSSObjectAttribute';
 import {TypedRopNode} from './_Base';
 import {CSS2DRenderer} from '../../../core/render/CSSRenderers/CSS2DRenderer';
 import {RopType} from '../../poly/registers/nodes/types/Rop';
@@ -15,7 +15,7 @@ import {RopType} from '../../poly/registers/nodes/types/Rop';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {StringParamLanguage} from '../../params/utils/OptionsController';
 
-const DEFAULT_CSS = `.${DEFAULT_CSS2DOBJECT_CLASS} {
+const DEFAULT_CSS = `.${DEFAULT_CSS2DOBJECT.className} {
 	color: white;
 	background-color: black;
 	padding: 5px 10px;

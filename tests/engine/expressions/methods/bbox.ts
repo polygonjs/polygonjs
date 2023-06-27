@@ -78,7 +78,7 @@ QUnit.test('expression bbox works on hierarchy', async (assert) => {
 	transform1.p.scale.set(`1 / bbox(0,"size").x`);
 
 	await transform1.p.scale.compute();
-	assert.in_delta(transform1.pv.scale, 0.24, 0.001, 'scale');
+	assert.in_delta(transform1.pv.scale, 0.24, 0.001, `scale (${transform1.pv.scale})`);
 
 	async function getSize() {
 		const container = await transform1.compute();
@@ -86,9 +86,10 @@ QUnit.test('expression bbox works on hierarchy', async (assert) => {
 		tmpBox3.getSize(tmpV3);
 		return tmpV3;
 	}
-	assert.in_delta((await getSize()).x, 1, 0.001, 'bbox');
+	transform1.p.applyToChildren.set(true);
+	assert.in_delta((await getSize()).x, 1, 0.001, `bbox (${(await getSize()).x})`);
 
 	transform1.setApplyOn(TransformTargetType.OBJECT);
 	transform1.p.applyToChildren.set(false);
-	assert.in_delta((await getSize()).x, 1, 0.0001, 'bbox');
+	assert.in_delta((await getSize()).x, 1, 0.0001, `bbox (${(await getSize()).x})`);
 });

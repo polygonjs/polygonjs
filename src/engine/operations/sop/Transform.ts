@@ -52,7 +52,7 @@ export class TransformSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: TransformSopParams = {
 		applyOn: TRANSFORM_TARGET_TYPES.indexOf(TransformTargetType.GEOMETRY),
 		group: '',
-		applyToChildren: true,
+		applyToChildren: false,
 		objectMode: OBJECT_TRANSFORM_MODES.indexOf(ObjectTransformMode.SET),
 		objectTransformSpace: OBJECT_TRANSFORM_SPACES.indexOf(ObjectTransformSpace.PARENT),
 		pointGroup: '',

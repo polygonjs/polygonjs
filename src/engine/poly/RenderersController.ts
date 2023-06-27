@@ -107,6 +107,11 @@ export class RenderersController {
 			gl = this._getRenderingContextWebgl(canvas, false);
 		}
 
+		if (!gl) {
+			console.error('failed to create webgl context');
+			return null;
+		}
+
 		if ((gl as any).contextId == null) {
 			(gl as any).contextId = RenderersController._nextGlContextId++;
 		}

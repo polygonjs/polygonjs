@@ -57,7 +57,7 @@ export abstract class ActorBuilderNode extends AssemblerControllerNode<JsAssembl
 }
 
 export class ActorsManager {
-	private _actorNodes: Set<ActorBuilderNode> = new Set();
+	// private _actorNodes: Set<ActorBuilderNode> = new Set();
 	private _keyboardEventsController: ActorKeyboardEventsController | undefined;
 	private _manualTriggerController: ActorManualTriggersController | undefined;
 	private _pointerEventsController: ActorPointerEventsController | undefined;
@@ -87,7 +87,7 @@ export class ActorsManager {
 			ids.push(id);
 		}
 
-		this._actorNodes.add(node);
+		// this._actorNodes.add(node);
 		// this._findSceneEvents(node);
 	}
 	objectActorNodeIds(object: ObjectContent<CoreObjectType>) {

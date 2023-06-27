@@ -122,15 +122,20 @@ export class CSS2DRenderer {
 				(object as any).onAfterRender(this, scene, camera);
 			}
 
-			const objectData = {
-				distanceToCameraSquared: this.getDistanceToSquared(camera, object),
-			};
-
-			this.dataByObject.set(object, objectData);
+			let objectData = this.dataByObject.get(object);
+			const distanceToCameraSquared = this.getDistanceToSquared(camera, object);
+			if (!objectData) {
+				objectData = {
+					distanceToCameraSquared,
+				};
+				this.dataByObject.set(object, objectData);
+			} else {
+				objectData.distanceToCameraSquared = distanceToCameraSquared;
+			}
 		}
 
-		for (let i = 0, l = object.children.length; i < l; i++) {
-			this.renderObject(object.children[i], scene, camera);
+		for (const child of object.children) {
+			this.renderObject(child, scene, camera);
 		}
 	}
 

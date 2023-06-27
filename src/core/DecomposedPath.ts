@@ -4,44 +4,57 @@ import {CoreWalker} from './Walker';
 import {CoreGraphNodeId} from './graph/CoreGraph';
 type NodeOrParam = BaseNodeType | BaseParamType;
 
+interface PathElement {
+	path: string;
+	node: NodeOrParam;
+}
+interface NamedNode {
+	name: string;
+	node: NodeOrParam;
+}
 export class DecomposedPath {
 	private _index = -1;
-	private _path_elements: (string | null)[] = [];
-	private _named_nodes: (NodeOrParam | null)[] = [];
-	private _graph_node_ids: CoreGraphNodeId[] = [];
-	private _node_element_by_graph_node_id: Map<CoreGraphNodeId, string> = new Map();
+	private _pathElements: Array<PathElement | null> = [];
+	private _namedNodes: Array<NamedNode | null> = [];
+	private _graphNodeIds: CoreGraphNodeId[] = [];
+	private _nodeElementByGraphNodeId: Map<CoreGraphNodeId, string> = new Map();
+	private _absolutePath: string = '/';
 
 	constructor() {}
 	reset() {
 		this._index = -1;
-		this._path_elements = [];
-		this._named_nodes = [];
-		this._graph_node_ids = [];
-		this._node_element_by_graph_node_id.clear();
+		this._pathElements = [];
+		this._namedNodes = [];
+		this._graphNodeIds = [];
+		this._nodeElementByGraphNodeId.clear();
 	}
 
-	add_node(name: string, node: NodeOrParam) {
+	addNamedNode(namedNode: NamedNode) {
 		this._index += 1;
-		if (name == node.name()) {
-			this._named_nodes[this._index] = node;
+		if (namedNode.name == namedNode.node.name()) {
+			this._namedNodes[this._index] = namedNode;
 		}
 
-		this._graph_node_ids[this._index] = node.graphNodeId();
-		this._node_element_by_graph_node_id.set(node.graphNodeId(), name);
+		this._graphNodeIds[this._index] = namedNode.node.graphNodeId();
+		this._nodeElementByGraphNodeId.set(namedNode.node.graphNodeId(), namedNode.name);
+		this._absolutePath = [this._absolutePath, namedNode.name].join(CoreWalker.SEPARATOR);
 	}
-	add_path_element(path_element: string) {
+	addPathElement(pathElement: PathElement) {
 		this._index += 1;
-		this._path_elements[this._index] = path_element;
+		this._pathElements[this._index] = pathElement;
+		if (pathElement.node) {
+			this._absolutePath = pathElement.node.path();
+		}
 	}
 
-	named_graph_nodes() {
-		return this._named_nodes;
+	namedGraphNodes() {
+		return this._namedNodes;
 	}
-	named_nodes() {
+	namedNodes() {
 		const nodes: BaseNodeType[] = [];
-		for (let graph_node of this._named_nodes) {
-			if (graph_node) {
-				const node = graph_node as BaseNodeType;
+		for (const namedNode of this._namedNodes) {
+			if (namedNode) {
+				const node = namedNode.node as BaseNodeType;
 				if (node.nameController) {
 					nodes.push(node);
 				}
@@ -50,39 +63,42 @@ export class DecomposedPath {
 		return nodes;
 	}
 
-	update_from_name_change(node: NodeOrParam) {
-		const named_graph_node_ids = this._named_nodes.map((n) => n?.graphNodeId());
+	updateFromNameChange(node: NodeOrParam) {
+		const namedGraphNodeIds = this._namedNodes.map((n) => n?.node.graphNodeId());
 
-		if (named_graph_node_ids.includes(node.graphNodeId())) {
-			this._node_element_by_graph_node_id.set(node.graphNodeId(), node.name());
+		if (namedGraphNodeIds.includes(node.graphNodeId())) {
+			this._nodeElementByGraphNodeId.set(node.graphNodeId(), node.name());
 		}
 	}
 
-	to_path(): string {
+	toPath(): string {
 		const elements = new Array<string>(this._index);
 		for (let i = 0; i <= this._index; i++) {
-			const node = this._named_nodes[i];
-			if (node) {
-				const node_name = this._node_element_by_graph_node_id.get(node.graphNodeId());
-				if (node_name) {
-					elements[i] = node_name;
+			const namedNode = this._namedNodes[i];
+			if (namedNode) {
+				const nodeName = this._nodeElementByGraphNodeId.get(namedNode.node.graphNodeId());
+				if (nodeName) {
+					elements[i] = nodeName;
 				}
 			} else {
-				const path_element = this._path_elements[i];
-				if (path_element) {
-					elements[i] = path_element;
+				const pathElement = this._pathElements[i];
+				if (pathElement) {
+					elements[i] = pathElement.path;
 				}
 			}
 		}
 
-		let joined_path = elements.join(CoreWalker.SEPARATOR);
+		let joinedPath = elements.join(CoreWalker.SEPARATOR);
 		// if the first character is a letter, we need to prefix with /
-		const first_char = joined_path[0];
-		if (first_char) {
-			if (!CoreWalker.NON_LETTER_PREFIXES.includes(first_char)) {
-				joined_path = `${CoreWalker.SEPARATOR}${joined_path}`;
+		const firstChar = joinedPath[0];
+		if (firstChar) {
+			if (!CoreWalker.NON_LETTER_PREFIXES.includes(firstChar)) {
+				joinedPath = `${CoreWalker.SEPARATOR}${joinedPath}`;
 			}
 		}
-		return joined_path;
+		return joinedPath;
+	}
+	toAbsolutePath(): string {
+		return this._absolutePath;
 	}
 }

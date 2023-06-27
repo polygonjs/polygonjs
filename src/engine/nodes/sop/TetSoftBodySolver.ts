@@ -73,8 +73,6 @@ export class TetSoftBodySolverSopNode extends TetSopNode<TetSoftBodySolverSopPar
 	}
 
 	override async cook(inputCoreGroups: CoreGroup[]) {
-		Poly.onObjectsAddedHooks.registerHook(this.type(), this.traverseObjectOnSopGroupAdd.bind(this));
-
 		const inputTetObjects = inputCoreGroups[0].tetObjects();
 		if (inputTetObjects) {
 			const newThreejsObjects: Object3D[] = [];
@@ -108,6 +106,7 @@ export class TetSoftBodySolverSopNode extends TetSopNode<TetSoftBodySolverSopPar
 						highResObject,
 					};
 					this._tetEmbedByThreejsObjectEphemeralId.set(nextId, tetEmbed);
+					Poly.onObjectsAddedHooks.assignHookHandler(displayedObject, this);
 					newThreejsObjects.push(displayedObject);
 				}
 
@@ -119,7 +118,7 @@ export class TetSoftBodySolverSopNode extends TetSopNode<TetSoftBodySolverSopPar
 			this.setObjects([]);
 		}
 	}
-	traverseObjectOnSopGroupAdd(object: Object3D, parent: Object3D) {
+	public override updateObjectOnAdd(object: Object3D, parent: Object3D) {
 		//
 		const solverNodeId = CoreObject.attribValue(object, SoftBodyIdAttribute.SOLVER_NODE);
 		if (solverNodeId != null) {

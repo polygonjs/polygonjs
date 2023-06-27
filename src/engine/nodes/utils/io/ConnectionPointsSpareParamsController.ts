@@ -2,8 +2,8 @@ import {Number2} from '../../../../types/GlobalTypes';
 import {
 	ConnectionPointTypeMap,
 	ConnectionPointEnumMap,
-	param_type_to_connection_point_type_map,
-	create_connection_point,
+	paramTypeToConnectionPointTypeMap,
+	createConnectionPoint,
 } from './connections/ConnectionMap';
 import {ParamType} from '../../../poly/ParamType';
 import {ParamsUpdateOptions} from '../params/ParamsController';
@@ -18,7 +18,7 @@ GlNodeSpareParamsController creates spare params from inputs on gl nodes
 */
 export class ConnectionPointsSpareParamsController<NC extends NodeContext> {
 	// private _allow_inputs_created_from_params: boolean = true;
-	private _inputless_param_names: string[] | undefined;
+	private _inputlessParamNames: string[] | undefined;
 	private _raw_input_serialized_by_param_name: Map<string, ParamInitValueSerialized> = new Map();
 	private _default_value_serialized_by_param_name: Map<string, ParamInitValueSerialized> = new Map();
 	constructor(private node: TypedNode<NC, any>, private _context: NC) {}
@@ -44,45 +44,45 @@ export class ConnectionPointsSpareParamsController<NC extends NodeContext> {
 		// if (!this._allow_inputs_created_from_params) {
 		// 	return;
 		// }
-		const connection_type_map = param_type_to_connection_point_type_map(this._context);
-		if (!connection_type_map) {
+		const connectionTypeMap = paramTypeToConnectionPointTypeMap(this._context);
+		if (!connectionTypeMap) {
 			return;
 		}
 
-		const connection_points: ConnectionPointTypeMap[NC][] = [];
-		for (let param_name of this.node.params.names) {
-			let add_input = true;
+		const connectionPoints: ConnectionPointTypeMap[NC][] = [];
+		for (let paramName of this.node.params.names) {
+			let addInput = true;
 			if (
-				this._inputless_param_names &&
-				this._inputless_param_names.length > 0 &&
-				this._inputless_param_names.includes(param_name)
+				this._inputlessParamNames &&
+				this._inputlessParamNames.length > 0 &&
+				this._inputlessParamNames.includes(paramName)
 			) {
-				add_input = false;
+				addInput = false;
 			}
-			if (add_input) {
-				if (this.node.params.has(param_name)) {
-					const param = this.node.params.get(param_name);
+			if (addInput) {
+				if (this.node.params.has(paramName)) {
+					const param = this.node.params.get(paramName);
 					if (param && !param.parentParam()) {
-						const connection_type = connection_type_map[param.type()] as ConnectionPointEnumMap[NC];
-						if (connection_type) {
-							const connection_point = create_connection_point(
+						const connectionType = connectionTypeMap[param.type()] as ConnectionPointEnumMap[NC];
+						if (connectionType) {
+							const connectionPoint = createConnectionPoint(
 								this._context,
 								param.name(),
-								connection_type
+								connectionType
 							) as ConnectionPointTypeMap[NC];
-							if (connection_point) {
-								connection_points.push(connection_point);
+							if (connectionPoint) {
+								connectionPoints.push(connectionPoint);
 							}
 						}
 					}
 				}
 			}
 		}
-		this.node.io.inputs.setNamedInputConnectionPoints(connection_points);
+		this.node.io.inputs.setNamedInputConnectionPoints(connectionPoints);
 	}
 
 	setInputlessParamNames(names: string[]) {
-		return (this._inputless_param_names = names);
+		return (this._inputlessParamNames = names);
 	}
 
 	//

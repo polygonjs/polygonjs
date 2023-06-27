@@ -61,8 +61,6 @@ export class SDFObject implements ObjectContent<CoreObjectType.SDF> {
 	get type() {
 		return this._type;
 	}
-	parent = null;
-	children = [];
 	userData = {};
 	name = '';
 	castShadow = true;
@@ -71,6 +69,8 @@ export class SDFObject implements ObjectContent<CoreObjectType.SDF> {
 	frustumCulled = true;
 	matrixAutoUpdate = false;
 	material: Material | undefined;
+	children: ObjectContent<CoreObjectType.SDF>[] = [];
+	parent: ObjectContent<CoreObjectType.SDF> | null = null;
 	private _type: SDFObjectType;
 	constructor(private _geometry: SDFGeometry) {
 		this._type = SDFObjectType.DEFAULT;

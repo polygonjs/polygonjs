@@ -258,6 +258,7 @@ import {SwitchSopNode} from '../../../nodes/sop/Switch';
 import {TangentSopNode} from '../../../nodes/sop/Tangent';
 import {TetSopNode} from '../../../nodes/sop/Tet';
 import {TetBoxSopNode} from '../../../nodes/sop/TetBox';
+import {TetBunnySopNode} from '../../../nodes/sop/TetBunny';
 import {TetDeleteSopNode} from '../../../nodes/sop/TetDelete';
 import {TetGrowSopNode} from '../../../nodes/sop/TetGrow';
 import {TetMirrorSopNode} from '../../../nodes/sop/TetMirror';
@@ -554,6 +555,7 @@ export interface GeoNodeChildrenMap {
 	tangent: TangentSopNode;
 	tet: TetSopNode;
 	tetBox: TetBoxSopNode;
+	tetBunny: TetBunnySopNode;
 	tetDelete: TetDeleteSopNode;
 	tetGrow: TetGrowSopNode;
 	tetMirror: TetMirrorSopNode;
@@ -635,8 +637,6 @@ import {ClipSopOperation} from '../../../operations/sop/Clip';
 import {ConvexHullSopOperation} from '../../../operations/sop/ConvexHull';
 import {CurveFromPointsSopOperation} from '../../../operations/sop/CurveFromPoints';
 import {CurveGetPointSopOperation} from '../../../operations/sop/CurveGetPoint';
-import {CSS2DObjectSopOperation} from '../../../operations/sop/CSS2DObject';
-import {CSS3DObjectSopOperation} from '../../../operations/sop/CSS3DObject';
 import {DecalSopOperation} from '../../../operations/sop/Decal';
 import {DirectionalLightSopOperation} from '../../../operations/sop/DirectionalLight';
 import {EmptyObjectSopOperation} from '../../../operations/sop/EmptyObject';
@@ -751,8 +751,6 @@ export class SopRegister {
 		poly.registerOperation(ConvexHullSopOperation);
 		poly.registerOperation(CurveFromPointsSopOperation);
 		poly.registerOperation(CurveGetPointSopOperation);
-		poly.registerOperation(CSS2DObjectSopOperation);
-		poly.registerOperation(CSS3DObjectSopOperation);
 		poly.registerOperation(DecalSopOperation);
 		poly.registerOperation(DirectionalLightSopOperation);
 		poly.registerOperation(EmptyObjectSopOperation);
@@ -1093,6 +1091,7 @@ export class SopRegister {
 		//
 		poly.registerNode(TetSopNode, CATEGORY_SOP.TET);
 		poly.registerNode(TetBoxSopNode, CATEGORY_SOP.TET);
+		poly.registerNode(TetBunnySopNode, CATEGORY_SOP.TET);
 		poly.registerNode(TetDeleteSopNode, CATEGORY_SOP.TET);
 		poly.registerNode(TetGrowSopNode, CATEGORY_SOP.TET);
 		poly.registerNode(TetMirrorSopNode, CATEGORY_SOP.TET);

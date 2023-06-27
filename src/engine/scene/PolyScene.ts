@@ -9,6 +9,7 @@ import {ExpressionsController} from './utils/ExpressionsController';
 import {SceneLifeCycleController} from './utils/LifeCycleController';
 import {LoadingController} from './utils/LoadingController';
 import {MissingReferencesController} from './utils/missingReferences/MissingReferencesController';
+import {GraphNodesController} from './utils/GraphNodesController';
 import {NodesController} from './utils/NodesController';
 import {PolySceneSerializer} from './utils/Serializer';
 import {SceneEventsDispatcher} from './utils/events/EventsDispatcher';
@@ -178,6 +179,10 @@ export class PolyScene {
 	protected _nodesController = new NodesController(this);
 	get nodesController() {
 		return this._nodesController;
+	}
+	protected _graphNodesController = new GraphNodesController(this);
+	get graphNodesController() {
+		return this._graphNodesController;
 	}
 
 	public readonly renderersRegister = new SceneRenderersRegister(this);

@@ -3,6 +3,7 @@ import {JsLinesCollectionController} from './code/utils/JsLinesCollectionControl
 import {JsConnectionPointType} from '../utils/io/connections/Js';
 import {ParamPathParam} from '../../params/ParamPath';
 import {Poly} from '../../Poly';
+import {DecomposedPath} from '../../../core/DecomposedPath';
 
 function _defaultObject3D(linesController: JsLinesCollectionController): string {
 	return linesController.assembler().defaultObject3DVariable();
@@ -41,16 +42,24 @@ export function inputParam(node: BaseJsNodeType, linesController: JsLinesCollect
 
 	const _getParam = (linesController: JsLinesCollectionController) => {
 		const paramPathParam = node.params.get(JsConnectionPointType.PARAM) as ParamPathParam;
-		const foundParam = paramPathParam.value.param();
+
+		// instead of using the path of the found param,
+		// or the value of the param,
+		// we use the resolved absolute path,
+		// so that it works when the js node is not created from the player
+		const decomposedPath = new DecomposedPath();
+		paramPathParam.value.resolve(node, decomposedPath);
+		const absolutePath = decomposedPath.toAbsolutePath();
 
 		const out = node.jsVarName('getParamSinceNoInput');
-		if (foundParam) {
-			const func = Poly.namedFunctionsRegister.getFunction('getParam', node, linesController);
-			const bodyLine = func.asString(`'${foundParam.path()}'`);
-			linesController.addBodyOrComputed(node, [
-				{dataType: JsConnectionPointType.PARAM, varName: out, value: bodyLine},
-			]);
-		}
+		// if (foundParam) {
+		// do not create the variable only if param has been found,
+		// as we also need to handle cases where it will be found later
+		const func = Poly.namedFunctionsRegister.getFunction('getParam', node, linesController);
+		const bodyLine = func.asString(`'${absolutePath}'`);
+		linesController.addBodyOrComputed(node, [
+			{dataType: JsConnectionPointType.PARAM, varName: out, value: bodyLine},
+		]);
 		return wrapIfComputed(out, linesController);
 	};
 

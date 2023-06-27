@@ -18,12 +18,19 @@
  */
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-
 import {AttribCopySopOperation} from '../../operations/sop/AttribCopy';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
+import {ATTRIBUTE_CLASSES, AttribClass, AttribClassMenuEntries} from '../../../core/geometry/Constant';
+
 const DEFAULT = AttribCopySopOperation.DEFAULT_PARAMS;
 class AttribCopySopParamsConfig extends NodeParamsConfig {
+	/** @param the attribute class (geometry or object) */
+	class = ParamConfig.INTEGER(DEFAULT.class, {
+		menu: {
+			entries: AttribClassMenuEntries,
+		},
+	});
 	/** @param name of the attribute to copy */
 	name = ParamConfig.STRING(DEFAULT.name);
 	/** @param toggle if you want to copy to another name */
@@ -35,11 +42,13 @@ class AttribCopySopParamsConfig extends NodeParamsConfig {
 	srcOffset = ParamConfig.INTEGER(DEFAULT.srcOffset, {
 		range: [0, 3],
 		rangeLocked: [true, true],
+		visibleIf: {class: ATTRIBUTE_CLASSES.indexOf(AttribClass.VERTEX)},
 	});
 	/** @param this defines which component the attribute is copied to */
 	destOffset = ParamConfig.INTEGER(DEFAULT.destOffset, {
 		range: [0, 3],
 		rangeLocked: [true, true],
+		visibleIf: {class: ATTRIBUTE_CLASSES.indexOf(AttribClass.VERTEX)},
 	});
 }
 const ParamsConfig = new AttribCopySopParamsConfig();
@@ -65,5 +74,11 @@ export class AttribCopySopNode extends TypedSopNode<AttribCopySopParamsConfig> {
 		this._operation = this._operation || new AttribCopySopOperation(this.scene(), this.states);
 		const core_group = this._operation.cook(input_contents, this.pv);
 		this.setCoreGroup(core_group);
+	}
+	setAttribClass(attribClass: AttribClass) {
+		this.p.class.set(ATTRIBUTE_CLASSES.indexOf(attribClass));
+	}
+	attribClass() {
+		return ATTRIBUTE_CLASSES[this.pv.class];
 	}
 }

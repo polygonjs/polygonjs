@@ -1,3 +1,5 @@
+import {ATTRIBUTE_CLASSES, AttribClass, ATTRIBUTE_TYPES, AttribType} from '../../../src/core/geometry/Constant';
+import {CSSObjectAttribute} from '../../../src/core/render/CSSRenderers/CSSObjectAttribute';
 import {AttribCreateSopNode} from '../../../src/engine/nodes/sop/AttribCreate';
 import {BasePreset, NodePresetsCollection, PresetRegister, PresetsCollectionFactory} from '../BasePreset';
 
@@ -6,11 +8,26 @@ const attribCreateSopNodePresetsCollectionFactory: PresetsCollectionFactory<Attr
 ) => {
 	const collection = new NodePresetsCollection();
 
+	function _makeSize1(preset: BasePreset) {
+		return preset.addEntry(node.p.size, 1);
+	}
+	function _makeSize3(preset: BasePreset) {
+		return preset.addEntry(node.p.size, 3);
+	}
+	function _makeAttribClassObject(preset: BasePreset) {
+		return preset.addEntry(node.p.class, ATTRIBUTE_CLASSES.indexOf(AttribClass.OBJECT));
+	}
+	function _makeString(preset: BasePreset) {
+		return preset.addEntry(node.p.type, ATTRIBUTE_TYPES.indexOf(AttribType.STRING));
+	}
 	function _size1() {
-		return new BasePreset().addEntry(node.p.size, 1);
+		return _makeSize1(new BasePreset());
 	}
 	function _size3() {
-		return new BasePreset().addEntry(node.p.size, 3);
+		return _makeSize3(new BasePreset());
+	}
+	function CSSObject(attribName: CSSObjectAttribute) {
+		return _makeAttribClassObject(_makeString(new BasePreset()).addEntry(node.p.name, attribName));
 	}
 
 	const id = _size1().addEntry(node.p.name, 'id').addEntry(node.p.value1, '@ptnum');
@@ -29,6 +46,12 @@ const attribCreateSopNodePresetsCollectionFactory: PresetsCollectionFactory<Attr
 		.addEntry(node.p.value1, `10000 * rand(@ptnum * 124.543)`);
 	const up = _size3().addEntry(node.p.name, 'up').addEntry(node.p.value3, [0, 1, 0]);
 
+	const html = {
+		id: CSSObject(CSSObjectAttribute.ID),
+		class: CSSObject(CSSObjectAttribute.CLASS),
+		html: CSSObject(CSSObjectAttribute.HTML),
+	};
+
 	collection.setPresets({
 		id,
 		pti,
@@ -37,6 +60,9 @@ const attribCreateSopNodePresetsCollectionFactory: PresetsCollectionFactory<Attr
 		bbz,
 		randomId,
 		up,
+		'html/id': html.id,
+		'html/class': html.class,
+		'html/html': html.html,
 	});
 
 	return collection;

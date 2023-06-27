@@ -486,7 +486,7 @@ export class CoreGroup extends CoreEntity {
 		return this._attributes;
 	}
 	// override
-	setAttribValue(attribName: string, attribValue: NumericAttribValue | string) {
+	setAttribValue(attribName: string, attribValue: AttribValue | string) {
 		this.addAttribute(attribName, attribValue);
 	}
 

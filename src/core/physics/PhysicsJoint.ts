@@ -9,10 +9,19 @@ import type {
 } from '@dimforge/rapier3d-compat';
 import {Object3D, Vector4, Vector3, Vector2} from 'three';
 import {PhysicsLib} from './CorePhysics';
-import {CorePhysicsBaseAttribute} from './PhysicsAttribute';
 import {physicsWorldNodeIdFromObject} from './PhysicsWorld';
 import {TypeAssert} from './../../engine/poly/Assert';
 import {CoreGraphNodeId} from '../graph/CoreGraph';
+import {
+	getObjectVector2,
+	setObjectVector2,
+	getObjectVector3,
+	setObjectVector3,
+	getObjectVector4,
+	setObjectVector4,
+	getObjectString,
+	setObjectString,
+} from '../geometry/AttributeUtils';
 export enum PhysicsJointType {
 	FIXED = 'fixed',
 	SPHERICAL = 'spherical',
@@ -65,61 +74,61 @@ export interface JointData {
 	};
 }
 
-export class CorePhysicsJoinAttribute extends CorePhysicsBaseAttribute {
+export class CorePhysicsJoinAttribute {
 	// common
 	static setJoinType(object: Object3D, value: PhysicsJointType) {
-		this._setString(object, PhysicsJointAttribute.JOIN_TYPE, value);
+		setObjectString(object, PhysicsJointAttribute.JOIN_TYPE, value);
 	}
 	static getJoinType(object: Object3D): PhysicsJointType {
-		return this._getString(object, PhysicsJointAttribute.JOIN_TYPE) as PhysicsJointType;
+		return getObjectString(object, PhysicsJointAttribute.JOIN_TYPE) as PhysicsJointType;
 	}
 	static setRBDId1(object: Object3D, value: string) {
-		this._setString(object, PhysicsJointAttribute.RBD_ID1, value);
+		setObjectString(object, PhysicsJointAttribute.RBD_ID1, value);
 	}
 	static getRBDId1(object: Object3D): string {
-		return this._getString(object, PhysicsJointAttribute.RBD_ID1) as string;
+		return getObjectString(object, PhysicsJointAttribute.RBD_ID1) as string;
 	}
 	static setRBDId2(object: Object3D, value: string) {
-		this._setString(object, PhysicsJointAttribute.RBD_ID2, value);
+		setObjectString(object, PhysicsJointAttribute.RBD_ID2, value);
 	}
 	static getRBDId2(object: Object3D): string {
-		return this._getString(object, PhysicsJointAttribute.RBD_ID2) as string;
+		return getObjectString(object, PhysicsJointAttribute.RBD_ID2) as string;
 	}
 	static setAnchor1(object: Object3D, value: Vector3) {
-		this._setVector3(object, PhysicsJointAttribute.ANCHOR1, value);
+		setObjectVector3(object, PhysicsJointAttribute.ANCHOR1, value);
 	}
 	static getAnchor1(object: Object3D, value: Vector3): void {
-		return this._getVector3(object, PhysicsJointAttribute.ANCHOR1, value);
+		return getObjectVector3(object, PhysicsJointAttribute.ANCHOR1, value);
 	}
 	static setAnchor2(object: Object3D, value: Vector3) {
-		this._setVector3(object, PhysicsJointAttribute.ANCHOR2, value);
+		setObjectVector3(object, PhysicsJointAttribute.ANCHOR2, value);
 	}
 	static getAnchor2(object: Object3D, value: Vector3): void {
-		return this._getVector3(object, PhysicsJointAttribute.ANCHOR2, value);
+		return getObjectVector3(object, PhysicsJointAttribute.ANCHOR2, value);
 	}
 	static setLimit(object: Object3D, value: Vector2) {
-		this._setVector2(object, PhysicsJointAttribute.LIMIT, value);
+		setObjectVector2(object, PhysicsJointAttribute.LIMIT, value);
 	}
 	static getLimit(object: Object3D, value: Vector2): void {
-		return this._getVector2(object, PhysicsJointAttribute.LIMIT, value);
+		return getObjectVector2(object, PhysicsJointAttribute.LIMIT, value);
 	}
 	static setAxis(object: Object3D, value: Vector3) {
-		this._setVector3(object, PhysicsJointAttribute.AXIS, value);
+		setObjectVector3(object, PhysicsJointAttribute.AXIS, value);
 	}
 	static getAxis(object: Object3D, value: Vector3): void {
-		return this._getVector3(object, PhysicsJointAttribute.AXIS, value);
+		return getObjectVector3(object, PhysicsJointAttribute.AXIS, value);
 	}
 	static setFrame1(object: Object3D, value: Vector4) {
-		this._setVector4(object, PhysicsJointAttribute.FRAME1, value);
+		setObjectVector4(object, PhysicsJointAttribute.FRAME1, value);
 	}
 	static getFrame1(object: Object3D, value: Vector4): void {
-		return this._getVector4(object, PhysicsJointAttribute.FRAME1, value);
+		return getObjectVector4(object, PhysicsJointAttribute.FRAME1, value);
 	}
 	static setFrame2(object: Object3D, value: Vector4) {
-		this._setVector4(object, PhysicsJointAttribute.FRAME2, value);
+		setObjectVector4(object, PhysicsJointAttribute.FRAME2, value);
 	}
 	static getFrame2(object: Object3D, value: Vector4): void {
-		return this._getVector4(object, PhysicsJointAttribute.FRAME2, value);
+		return getObjectVector4(object, PhysicsJointAttribute.FRAME2, value);
 	}
 }
 

@@ -28,6 +28,15 @@ export function sanitizeName(word: string): string {
 	return word;
 }
 
+export function stringToAttribNames(word: string): string[] {
+	return ArrayUtils.uniq(
+		word
+			.split(ATTRIB_NAMES_SEPARATOR)
+			.map((w) => w.trim())
+			.filter((w) => w.length > 0)
+	);
+}
+
 export class CoreString {
 	// static has_tail_digits(word: string): boolean {
 	// 	const match = word.match(TAIL_DIGIT_MATCH_REGEXP)
@@ -241,14 +250,7 @@ export class CoreString {
 		return matches_one_mask;
 	}
 
-	static attribNames(word: string): string[] {
-		return ArrayUtils.uniq(
-			word
-				.split(ATTRIB_NAMES_SEPARATOR)
-				.map((w) => w.trim())
-				.filter((w) => w.length > 0)
-		);
-	}
+	static attribNames = stringToAttribNames
 
 	static indices(indicesString: string): number[] {
 		const elements = indicesString.split(INDICES_LIST_SEPARATOR);

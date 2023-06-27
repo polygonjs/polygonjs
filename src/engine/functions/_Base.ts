@@ -45,7 +45,10 @@ export abstract class BaseNamedFunction {
 	public readonly jsNode?: BaseJsNodeType;
 	public readonly functionNode: AssemblerControllerNode<BaseJsShaderAssembler>;
 	public readonly timeController: TimeController;
-	constructor(node: BaseNodeType, public readonly shadersCollectionController?: JsLinesCollectionController) {
+	constructor(
+		public readonly node: BaseNodeType,
+		public readonly shadersCollectionController?: JsLinesCollectionController
+	) {
 		this.scene = node.scene();
 		this.timeController = this.scene.timeController;
 		if (node.context() == NodeContext.JS) {

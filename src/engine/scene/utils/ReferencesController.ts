@@ -27,7 +27,7 @@ export class ReferencesController {
 		);
 	}
 	setNamedNodesFromParam(src_param: BasePathParam) {
-		const named_nodes: BaseNodeType[] = src_param.decomposedPath.named_nodes();
+		const named_nodes: BaseNodeType[] = src_param.decomposedPath.namedNodes();
 
 		for (let named_node of named_nodes) {
 			MapUtils.pushOnArrayAtEntry(
@@ -45,7 +45,7 @@ export class ReferencesController {
 				referenced_node.graphNodeId(),
 				src_param
 			);
-			const named_nodes: BaseNodeType[] = src_param.decomposedPath.named_nodes();
+			const named_nodes: BaseNodeType[] = src_param.decomposedPath.namedNodes();
 			for (let named_node of named_nodes) {
 				MapUtils.popFromArrayAtEntry(
 					this._referencing_params_by_all_named_node_ids,

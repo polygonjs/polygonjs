@@ -100,8 +100,6 @@ export class ClothSolverSopNode extends TypedSopNode<ClothSolverSopParamsConfig>
 	}
 
 	override async cook(inputCoreGroups: CoreGroup[]) {
-		Poly.onObjectsAddedHooks.registerHook(this.type(), this.traverseObjectOnSopGroupAdd.bind(this));
-
 		this.compileIfRequired();
 
 		const coreGroup = inputCoreGroups[0];
@@ -136,6 +134,7 @@ export class ClothSolverSopNode extends TypedSopNode<ClothSolverSopParamsConfig>
 		}
 		// const renderer = await this.scene().renderersRegister.waitForRenderer();
 		CoreObject.addAttribute(object, ClothIdAttribute.OBJECT, this.graphNodeId());
+		Poly.onObjectsAddedHooks.assignHookHandler(object, this);
 		// setParticleRenderer(this.graphNodeId(), renderer);
 		// CoreParticlesAttribute.setParticlesNodeId(object, this.graphNodeId());
 		// CoreParticlesAttribute.setDataType(object, this.pv.dataType);
@@ -183,7 +182,7 @@ export class ClothSolverSopNode extends TypedSopNode<ClothSolverSopParamsConfig>
 
 		// this.setObjects(objects);
 	}
-	traverseObjectOnSopGroupAdd(object: Object3D) {
+	public override updateObjectOnAdd(object: Object3D) {
 		//
 		const clothSolverNodeId = CoreObject.attribValue(object, ClothIdAttribute.OBJECT);
 		if (clothSolverNodeId != null) {

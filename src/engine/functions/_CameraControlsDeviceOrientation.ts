@@ -30,17 +30,23 @@ const compensateRotation = CoreUserAgent.isLandscape() && !(CoreUserAgent.isAndr
 class DeviceOrientationControlsHandler {
 	// private _dummyObject = new Object3D();
 	private _lastUpdatedFrame = -1;
-	private _controls: DeviceOrientationControls;
+	private _controls: DeviceOrientationControls | undefined;
 	// private previousMagicWindowYaw: number | undefined;
 
 	constructor(public readonly scene: PolyScene) {
-		this._controls = new DeviceOrientationControls();
+		// this._controls = new DeviceOrientationControls();
 	}
 	update() {
 		const currentFrame = this.scene.frame();
 		if (currentFrame == this._lastUpdatedFrame) {
 			return;
 		}
+		// the controls are created in the update method,
+		// instead of the constructor, so that
+		// it does not get created until the scene plays.
+		// This allows loading the scene with autoPlay=false,
+		// and only start playing once DeviceOrientationEvent permission has been granted.
+		this._controls = this._controls || new DeviceOrientationControls();
 		if (this._controls.enabled) {
 			this._controls.update();
 			// if (compensateRotation) {
@@ -50,6 +56,9 @@ class DeviceOrientationControlsHandler {
 		this._lastUpdatedFrame = currentFrame;
 	}
 	quaternion(target: Quaternion) {
+		if (!this._controls) {
+			return;
+		}
 		this.update();
 		target.copy(this._controls.quaternion);
 		if (compensateRotation) {
@@ -60,18 +69,18 @@ class DeviceOrientationControlsHandler {
 		}
 	}
 	// from aframe look-controls .updateMagicWindowOrientation()
-	protected _compensate() {
-		// magicWindowAbsoluteEuler.setFromQuaternion(this._dummyObject.quaternion, ROTATION_ORDER);
-		// if (!this.previousMagicWindowYaw && magicWindowAbsoluteEuler.y !== 0) {
-		// 	this.previousMagicWindowYaw = magicWindowAbsoluteEuler.y;
-		// }
-		// if (this.previousMagicWindowYaw) {
-		// 	magicWindowDeltaEuler.x = magicWindowAbsoluteEuler.x;
-		// 	magicWindowDeltaEuler.y += magicWindowAbsoluteEuler.y - this.previousMagicWindowYaw;
-		// 	magicWindowDeltaEuler.z = magicWindowAbsoluteEuler.z;
-		// 	this.previousMagicWindowYaw = magicWindowAbsoluteEuler.y;
-		// }
-	}
+	// protected _compensate() {
+	// magicWindowAbsoluteEuler.setFromQuaternion(this._dummyObject.quaternion, ROTATION_ORDER);
+	// if (!this.previousMagicWindowYaw && magicWindowAbsoluteEuler.y !== 0) {
+	// 	this.previousMagicWindowYaw = magicWindowAbsoluteEuler.y;
+	// }
+	// if (this.previousMagicWindowYaw) {
+	// 	magicWindowDeltaEuler.x = magicWindowAbsoluteEuler.x;
+	// 	magicWindowDeltaEuler.y += magicWindowAbsoluteEuler.y - this.previousMagicWindowYaw;
+	// 	magicWindowDeltaEuler.z = magicWindowAbsoluteEuler.z;
+	// 	this.previousMagicWindowYaw = magicWindowAbsoluteEuler.y;
+	// }
+	// }
 }
 let _handler: DeviceOrientationControlsHandler | undefined;
 

@@ -45,6 +45,7 @@ export const FUNCTION_NAME_BY_FILE_NAME: Record<string, string[]> = {
 		'vec3ToColor',
 		'vec3ToVec4',
 	],
+	CSSObject: ['setCSSObjectClass'],
 	Curve: ['catmullRomCurve3GetPoint'],
 	Debug: ['debug'],
 	Divide: ['divideNumber', 'divideVectorNumber'],
