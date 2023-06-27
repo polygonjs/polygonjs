@@ -6,14 +6,17 @@ import {TypedNodePathParamValue} from '../../../core/Walker';
 import {CoreObject} from '../../../core/geometry/Object';
 import {CameraAttribute} from '../../../core/camera/CoreCamera';
 import {CameraSopNodeType} from '../../poly/NodeContext';
-import {Object3D} from 'three';
 import {BaseNodeType} from '../../nodes/_Base';
+import {CoreObjectType, ObjectContent} from '../../../core/geometry/ObjectContent';
+import {CoreMask} from '../../../core/geometry/Mask';
 
 interface CameraRenderSceneSopParams extends DefaultOperationParams {
+	group: string;
+	applyToChildren: boolean;
 	node: TypedNodePathParamValue;
 }
 interface UpdateObjectOptions {
-	objects: Object3D[];
+	objects: ObjectContent<CoreObjectType>[];
 	params: CameraRenderSceneSopParams;
 	node: BaseNodeType;
 	active: boolean;
@@ -21,6 +24,8 @@ interface UpdateObjectOptions {
 
 export class CameraRenderSceneSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: CameraRenderSceneSopParams = {
+		group: '',
+		applyToChildren: true,
 		node: new TypedNodePathParamValue(''),
 	};
 	static override readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
@@ -28,13 +33,14 @@ export class CameraRenderSceneSopOperation extends BaseSopOperation {
 		return CameraSopNodeType.RENDER_SCENE;
 	}
 	override cook(inputCoreGroups: CoreGroup[], params: CameraRenderSceneSopParams) {
-		const objects = inputCoreGroups[0].threejsObjects();
+		const coreGroup = inputCoreGroups[0];
+		const objects = CoreMask.filterObjects(coreGroup, params);
 
 		if (this._node) {
 			CameraRenderSceneSopOperation.updateObject({objects, params, node: this._node, active: true});
 		}
 
-		return this.createCoreGroupFromObjects(objects);
+		return coreGroup;
 	}
 	static updateObject(options: UpdateObjectOptions) {
 		const {objects, params, node, active} = options;

@@ -3,7 +3,6 @@ import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 import {CameraSopNodeType} from '../../poly/NodeContext';
-import {Object3D} from 'three';
 import {PolyScene} from '../../scene/PolyScene';
 import {CoreObject} from '../../../core/geometry/Object';
 import {CameraAttribute} from '../../../core/camera/CoreCamera';
@@ -14,8 +13,12 @@ import {
 	MARKER_TRACKING_SOURCE_MODES,
 } from '../../../core/webXR/markerTracking/Common';
 import {Poly} from '../../Poly';
+import {CoreObjectType, ObjectContent} from '../../../core/geometry/ObjectContent';
+import {CoreMask} from '../../../core/geometry/Mask';
 
 interface CameraWebXRARMarkerTrackingSopParams extends DefaultOperationParams {
+	group: string;
+	applyToChildren: boolean;
 	sourceMode: number;
 	sourceUrl: string;
 	transformMode: number;
@@ -27,13 +30,15 @@ interface CameraWebXRARMarkerTrackingSopParams extends DefaultOperationParams {
 
 interface UpdateObjectOptions {
 	scene: PolyScene;
-	objects: Object3D[];
+	objects: ObjectContent<CoreObjectType>[];
 	params: CameraWebXRARMarkerTrackingSopParams;
 	active: boolean;
 }
 
 export class CameraWebXRARMarkerTrackingSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: CameraWebXRARMarkerTrackingSopParams = {
+		group: '',
+		applyToChildren: true,
 		sourceMode: MARKER_TRACKING_SOURCE_MODES.indexOf(MarkerTrackingSourceMode.WEBCAM),
 		sourceUrl: '',
 		transformMode: MARKER_TRACKING_TRANSFORM_MODES.indexOf(MarkerTrackingTransformMode.CAMERA),
@@ -47,7 +52,8 @@ export class CameraWebXRARMarkerTrackingSopOperation extends BaseSopOperation {
 		return CameraSopNodeType.WEBXR_AR_MARKER_TRACKING;
 	}
 	override cook(inputCoreGroups: CoreGroup[], params: CameraWebXRARMarkerTrackingSopParams) {
-		const objects = inputCoreGroups[0].threejsObjects();
+		const coreGroup = inputCoreGroups[0];
+		const objects = CoreMask.filterObjects(coreGroup, params);
 
 		if (Poly.thirdParty.markerTracking().hasController()) {
 			if (this._node) {
@@ -64,7 +70,7 @@ export class CameraWebXRARMarkerTrackingSopOperation extends BaseSopOperation {
 			);
 		}
 
-		return this.createCoreGroupFromObjects(objects);
+		return coreGroup;
 	}
 	static updateObject(options: UpdateObjectOptions) {
 		const {objects, params, active} = options;

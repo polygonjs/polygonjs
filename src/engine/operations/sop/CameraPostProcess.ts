@@ -8,14 +8,17 @@ import {CameraAttribute} from '../../../core/camera/CoreCamera';
 import {isBooleanTrue} from '../../../core/Type';
 import {CameraSopNodeType} from '../../poly/NodeContext';
 import {BaseNodeType} from '../../nodes/_Base';
-import {Object3D} from 'three';
+import {CoreObjectType, ObjectContent} from '../../../core/geometry/ObjectContent';
+import {CoreMask} from '../../../core/geometry/Mask';
 
 interface CameraPostProcessSopParams extends DefaultOperationParams {
+	group: string;
+	applyToChildren: boolean;
 	useOtherNode: boolean;
 	node: TypedNodePathParamValue;
 }
 interface UpdateObjectOptions {
-	objects: Object3D[];
+	objects: ObjectContent<CoreObjectType>[];
 	params: CameraPostProcessSopParams;
 	node: BaseNodeType;
 	active: boolean;
@@ -23,6 +26,8 @@ interface UpdateObjectOptions {
 
 export class CameraPostProcessSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: CameraPostProcessSopParams = {
+		group: '',
+		applyToChildren: true,
 		useOtherNode: false,
 		node: new TypedNodePathParamValue(''),
 	};
@@ -31,7 +36,8 @@ export class CameraPostProcessSopOperation extends BaseSopOperation {
 		return CameraSopNodeType.POST_PROCESS;
 	}
 	override cook(inputCoreGroups: CoreGroup[], params: CameraPostProcessSopParams) {
-		const objects = inputCoreGroups[0].threejsObjects();
+		const coreGroup = inputCoreGroups[0];
+		const objects = CoreMask.filterObjects(coreGroup, params);
 
 		const relativeOrAbsolutePath = params.node.path();
 		const node = isBooleanTrue(params.useOtherNode) ? this._node?.node(relativeOrAbsolutePath) : this._node;
@@ -42,7 +48,7 @@ export class CameraPostProcessSopOperation extends BaseSopOperation {
 			}
 		}
 
-		return this.createCoreGroupFromObjects(objects);
+		return coreGroup;
 	}
 	static updateObject(options: UpdateObjectOptions) {
 		const {objects, params, node, active} = options;

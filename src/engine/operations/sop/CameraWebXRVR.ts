@@ -5,7 +5,7 @@ import {DefaultOperationParams} from '../../../core/operations/_Base';
 import {CoreObject} from '../../../core/geometry/Object';
 import {CameraAttribute} from '../../../core/camera/CoreCamera';
 import {CameraSopNodeType} from '../../poly/NodeContext';
-import {Camera, Object3D, WebGLRenderer} from 'three';
+import {Camera, WebGLRenderer} from 'three';
 import {isBooleanTrue} from '../../../core/Type';
 import {CoreWebXRVRControllerOptions, WebXRVRFeature} from '../../../core/webXR/webXRVR/CommonVR';
 import type {PolyScene} from '../../scene/PolyScene';
@@ -18,8 +18,12 @@ import {
 	WEBXR_REFERENCE_SPACE_TYPES,
 } from '../../../core/webXR/Common';
 import {TypeAssert} from '../../poly/Assert';
+import {CoreObjectType, ObjectContent} from '../../../core/geometry/ObjectContent';
+import {CoreMask} from '../../../core/geometry/Mask';
 
 interface CameraWebXRVRSopParams extends DefaultOperationParams {
+	group: string;
+	applyToChildren: boolean;
 	localFloor: number;
 	boundedFloor: number;
 	handTracking: number;
@@ -30,13 +34,15 @@ interface CameraWebXRVRSopParams extends DefaultOperationParams {
 
 interface UpdateObjectOptions {
 	scene: PolyScene;
-	objects: Object3D[];
+	objects: ObjectContent<CoreObjectType>[];
 	params: CameraWebXRVRSopParams;
 	active: boolean;
 }
 
 export class CameraWebXRVRSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: CameraWebXRVRSopParams = {
+		group: '',
+		applyToChildren: true,
 		localFloor: WEBXR_FEATURE_STATUS_OPTIONAL_INDEX,
 		boundedFloor: WEBXR_FEATURE_STATUS_OPTIONAL_INDEX,
 		handTracking: WEBXR_FEATURE_STATUS_OPTIONAL_INDEX,
@@ -49,13 +55,14 @@ export class CameraWebXRVRSopOperation extends BaseSopOperation {
 		return CameraSopNodeType.WEBXR_VR;
 	}
 	override cook(inputCoreGroups: CoreGroup[], params: CameraWebXRVRSopParams) {
-		const objects = inputCoreGroups[0].threejsObjects();
+		const coreGroup = inputCoreGroups[0];
+		const objects = CoreMask.filterObjects(coreGroup, params);
 
 		if (this._node) {
 			CameraWebXRVRSopOperation.updateObject({scene: this._node.scene(), objects, params, active: true});
 		}
 
-		return this.createCoreGroupFromObjects(objects);
+		return coreGroup;
 	}
 	static updateObject(options: UpdateObjectOptions) {
 		const {scene, objects, params, active} = options;

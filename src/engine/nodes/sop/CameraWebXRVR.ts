@@ -7,10 +7,23 @@
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {CameraWebXRVRSopOperation} from '../../operations/sop/CameraWebXRVR';
-import {NodeParamsConfig} from '../utils/params/ParamsConfig';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CameraSopNodeType} from '../../poly/NodeContext';
 import {CoreCameraWebXRVRParamConfig} from '../../../core/camera/webXR/CoreCameraWebXRVR';
-class CameraWebXRVRSopParamsConfig extends CoreCameraWebXRVRParamConfig(NodeParamsConfig) {}
+import {Constructor} from '../../../types/GlobalTypes';
+const DEFAULT = CameraWebXRVRSopOperation.DEFAULT_PARAMS;
+
+export function ParamsConfigBase<TBase extends Constructor>(Base: TBase) {
+	return class Mixin extends Base {
+		/** @param group to assign the material to */
+		group = ParamConfig.STRING(DEFAULT.group, {
+			objectMask: true,
+		});
+		/** @param sets if this node should search through the materials inside the whole hierarchy */
+		applyToChildren = ParamConfig.BOOLEAN(DEFAULT.applyToChildren, {separatorAfter: true});
+	};
+}
+class CameraWebXRVRSopParamsConfig extends CoreCameraWebXRVRParamConfig(ParamsConfigBase(NodeParamsConfig)) {}
 const ParamsConfig = new CameraWebXRVRSopParamsConfig();
 
 export class CameraWebXRVRSopNode extends TypedSopNode<CameraWebXRVRSopParamsConfig> {

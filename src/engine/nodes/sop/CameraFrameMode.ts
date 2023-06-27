@@ -7,11 +7,18 @@
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {CameraFrameModeSopOperation} from '../../operations/sop/CameraFrameMode';
-
-import {NodeParamsConfig} from '../utils/params/ParamsConfig';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CameraSopNodeType} from '../../poly/NodeContext';
 import {CoreCameraFrameParamConfig} from '../../../core/camera/CoreCameraFrameMode';
-class CameraFrameModeSopParamsConfig extends CoreCameraFrameParamConfig(NodeParamsConfig) {}
+const DEFAULT = CameraFrameModeSopOperation.DEFAULT_PARAMS;
+class CameraFrameModeSopParamsConfig extends CoreCameraFrameParamConfig(NodeParamsConfig) {
+	/** @param group to assign the material to */
+	group = ParamConfig.STRING(DEFAULT.group, {
+		objectMask: true,
+	});
+	/** @param sets if this node should search through the materials inside the whole hierarchy */
+	applyToChildren = ParamConfig.BOOLEAN(DEFAULT.applyToChildren, {separatorAfter: true});
+}
 const ParamsConfig = new CameraFrameModeSopParamsConfig();
 
 export class CameraFrameModeSopNode extends TypedSopNode<CameraFrameModeSopParamsConfig> {

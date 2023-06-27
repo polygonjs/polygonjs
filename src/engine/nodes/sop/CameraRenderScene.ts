@@ -10,7 +10,14 @@ import {CameraRenderSceneSopOperation} from '../../operations/sop/CameraRenderSc
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CameraSopNodeType, NodeContext} from '../../poly/NodeContext';
 import {ObjType} from '../../poly/registers/nodes/types/Obj';
+const DEFAULT = CameraRenderSceneSopOperation.DEFAULT_PARAMS;
 class CameraRenderSceneSopParamsConfig extends NodeParamsConfig {
+	/** @param group to assign the material to */
+	group = ParamConfig.STRING(DEFAULT.group, {
+		objectMask: true,
+	});
+	/** @param sets if this node should search through the materials inside the whole hierarchy */
+	applyToChildren = ParamConfig.BOOLEAN(DEFAULT.applyToChildren, {separatorAfter: true});
 	/** @param renderer */
 	node = ParamConfig.NODE_PATH('', {
 		nodeSelection: {

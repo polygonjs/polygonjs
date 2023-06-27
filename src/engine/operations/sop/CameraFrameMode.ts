@@ -5,20 +5,25 @@ import {DefaultOperationParams} from '../../../core/operations/_Base';
 import {CoreObject} from '../../../core/geometry/Object';
 import {CameraAttribute} from '../../../core/camera/CoreCamera';
 import {CameraSopNodeType} from '../../poly/NodeContext';
-import {Object3D} from 'three';
 import {CameraFrameMode, CAMERA_FRAME_MODES} from '../../../core/camera/CoreCameraFrameMode';
+import {CoreObjectType, ObjectContent} from '../../../core/geometry/ObjectContent';
+import {CoreMask} from '../../../core/geometry/Mask';
 
 interface CameraFrameModeSopParams extends DefaultOperationParams {
+	group: string;
+	applyToChildren: boolean;
 	frameMode: number;
 	expectedAspectRatio: number;
 }
 interface UpdateObjectOptions {
-	objects: Object3D[];
+	objects: ObjectContent<CoreObjectType>[];
 	params: CameraFrameModeSopParams;
 }
 
 export class CameraFrameModeSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: CameraFrameModeSopParams = {
+		group: '',
+		applyToChildren: true,
 		frameMode: CAMERA_FRAME_MODES.indexOf(CameraFrameMode.DEFAULT),
 		expectedAspectRatio: 16 / 9,
 	};
@@ -27,13 +32,14 @@ export class CameraFrameModeSopOperation extends BaseSopOperation {
 		return CameraSopNodeType.FRAME_MODE;
 	}
 	override cook(inputCoreGroups: CoreGroup[], params: CameraFrameModeSopParams) {
-		const objects = inputCoreGroups[0].threejsObjects();
+		const coreGroup = inputCoreGroups[0];
+		const objects = CoreMask.filterObjects(coreGroup, params);
 
 		if (this._node) {
 			CameraFrameModeSopOperation.updateObject({objects, params});
 		}
 
-		return this.createCoreGroupFromObjects(objects);
+		return coreGroup;
 	}
 	static updateObject(options: UpdateObjectOptions) {
 		const {objects, params} = options;

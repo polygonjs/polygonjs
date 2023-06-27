@@ -7,14 +7,20 @@
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {CameraRendererSopOperation} from '../../operations/sop/CameraRenderer';
-
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CameraSopNodeType, NodeContext} from '../../poly/NodeContext';
 import {RopNodeChildrenMap} from '../../poly/registers/nodes/Rop';
 import {NodeCreateOptions} from '../utils/hierarchy/ChildrenController';
 import {Constructor, valueof} from '../../../types/GlobalTypes';
 import {BaseRopNodeType} from '../rop/_Base';
+const DEFAULT = CameraRendererSopOperation.DEFAULT_PARAMS;
 class CameraRendererSopParamsConfig extends NodeParamsConfig {
+	/** @param group to assign the material to */
+	group = ParamConfig.STRING(DEFAULT.group, {
+		objectMask: true,
+	});
+	/** @param sets if this node should search through the materials inside the whole hierarchy */
+	applyToChildren = ParamConfig.BOOLEAN(DEFAULT.applyToChildren, {separatorAfter: true});
 	/** @param renderer */
 	node = ParamConfig.NODE_PATH('', {
 		nodeSelection: {
@@ -39,8 +45,8 @@ export class CameraRendererSopNode extends TypedSopNode<CameraRendererSopParamsC
 	private _operation: CameraRendererSopOperation | undefined;
 	override cook(inputCoreGroups: CoreGroup[]) {
 		this._operation = this._operation || new CameraRendererSopOperation(this._scene, this.states, this);
-		const core_group = this._operation.cook(inputCoreGroups, this.pv);
-		this.setCoreGroup(core_group);
+		const coreGroup = this._operation.cook(inputCoreGroups, this.pv);
+		this.setCoreGroup(coreGroup);
 	}
 
 	/*

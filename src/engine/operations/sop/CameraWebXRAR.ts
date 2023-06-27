@@ -5,7 +5,7 @@ import {DefaultOperationParams} from '../../../core/operations/_Base';
 import {CoreObject} from '../../../core/geometry/Object';
 import {CameraAttribute} from '../../../core/camera/CoreCamera';
 import {CameraSopNodeType} from '../../poly/NodeContext';
-import {Camera, Object3D, WebGLRenderer} from 'three';
+import {Camera, WebGLRenderer} from 'three';
 import {PolyScene} from '../../scene/PolyScene';
 import {CoreWebXRARController} from '../../../core/webXR/webXRAR/CoreWebXRARController';
 import {CoreWebXRARControllerOptions, WebXRARFeature} from '../../../core/webXR/webXRAR/CommonAR';
@@ -18,8 +18,12 @@ import {
 } from '../../../core/webXR/Common';
 import {TypeAssert} from '../../poly/Assert';
 import {isBooleanTrue} from '../../../core/Type';
+import {CoreObjectType, ObjectContent} from '../../../core/geometry/ObjectContent';
+import {CoreMask} from '../../../core/geometry/Mask';
 
 interface CameraWebXRARSopParams extends DefaultOperationParams {
+	group: string;
+	applyToChildren: boolean;
 	hitTest: number;
 	lightEstimation: number;
 	cameraAccess: number;
@@ -29,13 +33,15 @@ interface CameraWebXRARSopParams extends DefaultOperationParams {
 
 interface UpdateObjectOptions {
 	scene: PolyScene;
-	objects: Object3D[];
+	objects: ObjectContent<CoreObjectType>[];
 	params: CameraWebXRARSopParams;
 	active: boolean;
 }
 
 export class CameraWebXRARSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: CameraWebXRARSopParams = {
+		group: '',
+		applyToChildren: true,
 		hitTest: WEBXR_FEATURE_STATUS_OPTIONAL_INDEX,
 		lightEstimation: WEBXR_FEATURE_STATUS_OPTIONAL_INDEX,
 		cameraAccess: WEBXR_FEATURE_STATUS_OPTIONAL_INDEX,
@@ -47,13 +53,14 @@ export class CameraWebXRARSopOperation extends BaseSopOperation {
 		return CameraSopNodeType.WEBXR_AR;
 	}
 	override cook(inputCoreGroups: CoreGroup[], params: CameraWebXRARSopParams) {
-		const objects = inputCoreGroups[0].threejsObjects();
+		const coreGroup = inputCoreGroups[0];
+		const objects = CoreMask.filterObjects(coreGroup, params);
 
 		if (this._node) {
 			CameraWebXRARSopOperation.updateObject({scene: this._node.scene(), objects, params, active: true});
 		}
 
-		return this.createCoreGroupFromObjects(objects);
+		return coreGroup;
 	}
 	static updateObject(options: UpdateObjectOptions) {
 		const {scene, objects, params, active} = options;

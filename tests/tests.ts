@@ -434,8 +434,17 @@ import './engine/nodes/sop/CADTube';
 import './engine/nodes/sop/CADUnpack';
 import './engine/nodes/sop/CADWedge';
 //
+import './engine/nodes/sop/CameraControls';
+import './engine/nodes/sop/CameraFrameMode';
 import './engine/nodes/sop/CameraPlane';
+import './engine/nodes/sop/CameraPostProcess';
 import './engine/nodes/sop/CameraProject';
+import './engine/nodes/sop/CameraCSSRenderer';
+import './engine/nodes/sop/CameraRenderer';
+import './engine/nodes/sop/CameraRenderScene';
+import './engine/nodes/sop/CameraWebXRAR';
+import './engine/nodes/sop/CameraWebXRARMarkerTracking';
+import './engine/nodes/sop/CameraWebXRVR';
 import './engine/nodes/sop/Capsule';
 import './engine/nodes/sop/Center';
 import './engine/nodes/sop/Circle';

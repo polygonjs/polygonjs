@@ -261,40 +261,64 @@ export class TypedThreejsCameraObjNode<
 
 		const objects = [this._object];
 		const node = this;
+		const hierachyParams = {
+			group: '',
+			applyToChildren: true,
+		};
 		CameraControlsSopOperation.updateObject({
 			objects,
-			params: {node: this.pv.controls},
+			params: {
+				node: this.pv.controls,
+				...hierachyParams,
+			},
 			node,
 			active: true,
 			errorIfNodeNotFound: false,
 		});
 		CameraRendererSopOperation.updateObject({
 			objects,
-			params: {node: this.pv.renderer},
+			params: {
+				node: this.pv.renderer,
+				...hierachyParams,
+			},
 			node,
 			active: this.pv.setRenderer,
 		});
 		CameraCSSRendererSopOperation.updateObject({
 			objects,
-			params: {node: this.pv.CSSRenderer},
+			params: {
+				node: this.pv.CSSRenderer,
+				...hierachyParams,
+			},
 			node,
 			active: this.pv.setCSSRenderer,
 		});
 		CameraPostProcessSopOperation.updateObject({
 			objects,
-			params: {node: this.pv.postProcessNode, useOtherNode: false},
+			params: {
+				node: this.pv.postProcessNode,
+				useOtherNode: false,
+				...hierachyParams,
+			},
 			node,
 			active: this.pv.doPostProcess,
 		});
 		CameraRenderSceneSopOperation.updateObject({
 			objects,
-			params: {node: this.pv.scene},
+			params: {
+				node: this.pv.scene,
+				...hierachyParams,
+			},
 			node,
 			active: this.pv.setScene,
 		});
 		CameraFrameModeSopOperation.updateObject({
 			objects,
-			params: {frameMode: this.pv.frameMode, expectedAspectRatio: this.pv.expectedAspectRatio},
+			params: {
+				frameMode: this.pv.frameMode,
+				expectedAspectRatio: this.pv.expectedAspectRatio,
+				...hierachyParams,
+			},
 		});
 
 		// TODO: ideally the update transform and update camera
