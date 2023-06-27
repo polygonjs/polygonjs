@@ -27,7 +27,6 @@ export function tetToOuterMesh(tetGeometry: TetGeometry, tesselationParams: TetT
 	const ids: number[] = new Array(tetGeometry.pointsCount() * 1);
 	const indices: number[] = new Array(facesCount * 3);
 
-	// let positionsCount = 0;
 	let indicesCount = 0;
 	points.forEach((point) => {
 		_p.copy(point.position);
@@ -37,7 +36,6 @@ export function tetToOuterMesh(tetGeometry: TetGeometry, tesselationParams: TetT
 		}
 		_p.toArray(positions, pointIndex * 3);
 		ids[pointIndex] = pointIndex;
-		// positionsCount += 3;
 	});
 
 	tetrahedrons.forEach((tet) => {

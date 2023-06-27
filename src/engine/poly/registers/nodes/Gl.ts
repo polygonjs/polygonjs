@@ -53,6 +53,7 @@ import {AddGlNode, DivideGlNode, MultGlNode, SubtractGlNode} from '../../../node
 import {AndGlNode, OrGlNode} from '../../../nodes/gl/_Math_Arg2Boolean';
 import {AccelerationGlNode} from '../../../nodes/gl/Acceleration';
 import {AdjacentPointsAttribSmoothGlNode} from '../../../nodes/gl/AdjacentPointsAttribSmooth';
+import {AdjacentUvAttribSmoothGlNode} from '../../../nodes/gl/AdjacentUvAttribSmooth';
 import {AlignGlNode} from '../../../nodes/gl/Align';
 import {AttributeGlNode} from '../../../nodes/gl/Attribute';
 import {CartesianToPolarGlNode} from '../../../nodes/gl/CartesianToPolar';
@@ -199,6 +200,7 @@ export interface GlNodeChildrenMap {
 	acos: AcosGlNode;
 	add: AddGlNode;
 	adjacentPointsAttribSmooth: AdjacentPointsAttribSmoothGlNode;
+	adjacentUvAttribSmooth: AdjacentUvAttribSmoothGlNode;
 	align: AlignGlNode;
 	and: AndGlNode;
 	asin: AsinGlNode;
@@ -415,6 +417,7 @@ export class GlRegister {
 		poly.registerNode(AcosGlNode, CATEGORY_GL.TRIGO);
 		poly.registerNode(AddGlNode, CATEGORY_GL.MATH);
 		poly.registerNode(AdjacentPointsAttribSmoothGlNode, CATEGORY_GL.ADVANCED, particlesOnlyOption);
+		poly.registerNode(AdjacentUvAttribSmoothGlNode, CATEGORY_GL.ADVANCED, particlesOnlyOption);
 		poly.registerNode(AlignGlNode, CATEGORY_GL.TRIGO);
 		poly.registerNode(AndGlNode, CATEGORY_GL.LOGIC);
 		poly.registerNode(AsinGlNode, CATEGORY_GL.TRIGO);
