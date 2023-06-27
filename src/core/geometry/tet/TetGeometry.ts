@@ -9,7 +9,7 @@ import {
 	TET_FACE_POINT_INDICES,
 } from './TetCommon';
 import {updateTetNeighboursFromNewTet} from './utils/tetNeighboursHelper';
-import {Vector3, Triangle} from 'three';
+import {Vector3, Triangle, Matrix4, Box3, Sphere} from 'three';
 import {circumSphere} from './utils/tetSphere';
 import {tetFaceTriangle} from './utils/tetTriangle';
 import {logRedBg} from '../../logger/Console';
@@ -220,5 +220,31 @@ export class TetGeometry {
 		newGeometry._lastAddedTetId = this._lastAddedTetId;
 
 		return newGeometry as this;
+	}
+
+	applyMatrix4(matrix: Matrix4) {
+		this.points.forEach((point) => {
+			point.position.applyMatrix4(matrix);
+		});
+		this.tetrahedrons.forEach((tetrahedron) => {
+			circumSphere(
+				this,
+				tetrahedron.pointIds[0],
+				tetrahedron.pointIds[1],
+				tetrahedron.pointIds[2],
+				tetrahedron.pointIds[3],
+				tetrahedron.sphere
+			);
+		});
+	}
+	boundingBox(target: Box3): void {
+		this.points.forEach((point) => {
+			target.expandByPoint(point.position);
+		});
+	}
+	boundingSphere(target: Sphere): void {
+		this.points.forEach((point) => {
+			target.expandByPoint(point.position);
+		});
 	}
 }

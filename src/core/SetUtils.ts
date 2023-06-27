@@ -3,16 +3,17 @@ export function setFirstValue<K>(set: Set<K>): K | undefined {
 		return k;
 	}
 }
+export function setToArray<T>(set: Set<T>) {
+	const array: Array<T> = [];
+	set.forEach((elem) => {
+		array.push(elem);
+	});
+	return array;
+}
 
 export class SetUtils {
 	static setFirstValue = setFirstValue;
-	static toArray<T>(set: Set<T>) {
-		const array: Array<T> = [];
-		set.forEach((elem) => {
-			array.push(elem);
-		});
-		return array;
-	}
+	static toArray = setToArray;
 	static fromArray<T>(array: T[], target?: Set<T>): Set<T> {
 		if (target) {
 			target.clear();

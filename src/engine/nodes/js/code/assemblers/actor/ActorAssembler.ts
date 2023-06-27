@@ -25,7 +25,7 @@ import {logBlue as _logBlue} from '../../../../../../core/logger/Console';
 import {Poly} from '../../../../../Poly';
 import {ParamType} from '../../../../../poly/ParamType';
 
-let FORCE_DEBUG: boolean | undefined; // = false;
+let FORCE_DEBUG: boolean | undefined = false;
 function _debug() {
 	if (FORCE_DEBUG != undefined) {
 		return FORCE_DEBUG;

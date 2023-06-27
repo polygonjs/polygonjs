@@ -28,7 +28,7 @@ export class TetCoreObject extends BaseCoreObject<CoreObjectType.TET> {
 		transformSpace: ObjectTransformSpace,
 		transformMode: ObjectTransformMode
 	) {
-		console.warn('applyMatrix4 not implemented');
+		object.applyMatrix4(matrix);
 		// switch (transformTargetType) {
 		// 	case TransformTargetType.GEOMETRY: {
 		// 		return csgApplyMatrix4(object.csgGeometry(), matrix);

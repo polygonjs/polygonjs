@@ -39,8 +39,7 @@ export class TetObject implements ObjectContent<CoreObjectType.TET> {
 	}
 	dispose() {}
 	applyMatrix4(matrix: Matrix4) {
-		console.warn('applyMatrix4 not implemented');
-		// matrix4ToMat4(matrix, this.tetGeometry().transforms);
+		this.geometry.applyMatrix4(matrix);
 	}
 	traverse(callback: (object: TetObject) => any) {
 		callback(this);
@@ -100,9 +99,9 @@ export class TetObject implements ObjectContent<CoreObjectType.TET> {
 	}
 
 	boundingBox(target: Box3): void {
-		console.warn('boundingBox not implemented');
+		this.geometry.boundingBox(target);
 	}
 	boundingSphere(target: Sphere): void {
-		console.warn('boundingSphere not implemented');
+		this.geometry.boundingSphere(target);
 	}
 }

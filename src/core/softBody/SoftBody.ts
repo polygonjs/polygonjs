@@ -13,18 +13,15 @@ import {
 	matSetMult,
 	matSetInverse,
 } from './SoftBodyMath';
-import {TetGeometry} from '../geometry/tet/TetGeometry';
 import {tetSortPoints} from '../geometry/tet/utils/tetSortPoints';
-import {Number2, Number3, Number9} from '../../types/GlobalTypes';
+import {buildTetIds, buildTetEdgeIds} from '../geometry/tet/utils/tetSoftBodyUtils';
+import {Number3, Number9} from '../../types/GlobalTypes';
 import {TetEmbed} from './Common';
 import {Hash} from '../Hash';
 import {ObjectUserData} from '../UserData';
 
 interface SoftBodyOptions {
 	tetEmbed: TetEmbed;
-	// tetObject:TetObject;
-	// tetMesh: TetMesh;
-	// bufferGeometry: BufferGeometry;
 	edgeCompliance: number;
 	volumeCompliance: number;
 	highResSkinning: {
@@ -33,65 +30,6 @@ interface SoftBodyOptions {
 			padding: number;
 		};
 	};
-}
-
-function buildTetIds(tetGeometry: TetGeometry, newOrderByPoint: Map<number, number>) {
-	const tetIds: number[] = new Array<number>(tetGeometry.tetsCount() * 4);
-	let pointIndex = 0;
-	tetGeometry.tetrahedrons.forEach((tet) => {
-		for (let i = 0; i < 4; i++) {
-			const id = tet.pointIds[i];
-			const index = newOrderByPoint.get(id);
-			if (index == null) {
-				throw 'id not found';
-			}
-			tetIds[pointIndex] = index;
-			pointIndex++;
-		}
-	});
-	return tetIds;
-}
-const EDGE_INDICES: Number2[] = [
-	[0, 1],
-	[0, 2],
-	[0, 3],
-	[1, 2],
-	[1, 3],
-	[2, 3],
-];
-function buildTetEdgeIds(tetGeometry: TetGeometry, newOrderByPoint: Map<number, number>) {
-	const edgeEndsByStart: Map<number, Set<number>> = new Map();
-	let edgesCount = 0;
-	tetGeometry.tetrahedrons.forEach((tet) => {
-		for (const edgeIndices of EDGE_INDICES) {
-			const id0 = tet.pointIds[edgeIndices[0]];
-			const id1 = tet.pointIds[edgeIndices[1]];
-			const index0 = newOrderByPoint.get(id0);
-			const index1 = newOrderByPoint.get(id1);
-			if (index0 == null || index1 == null) {
-				throw 'id not found';
-			}
-			let edgeEnds = edgeEndsByStart.get(index0);
-			if (!edgeEnds) {
-				edgeEnds = new Set();
-				edgeEndsByStart.set(index0, edgeEnds);
-			}
-			if (!edgeEnds.has(index1)) {
-				edgeEnds.add(index1);
-				edgesCount++;
-			}
-		}
-	});
-	const edgeIds: number[] = new Array<number>(edgesCount * 2);
-	let i = 0;
-	edgeEndsByStart.forEach((endIds, startId) => {
-		endIds.forEach((endId) => {
-			edgeIds[i] = startId;
-			edgeIds[i + 1] = endId;
-			i += 2;
-		});
-	});
-	return edgeIds;
 }
 
 export class SoftBody {
@@ -134,6 +72,7 @@ export class SoftBody {
 		tetSortPoints(tetObject.geometry, newOrderByPoint);
 		this.tetIds = buildTetIds(tetObject.geometry, newOrderByPoint); //tetMesh.tetIds;
 		this.edgeIds = buildTetEdgeIds(tetObject.geometry, newOrderByPoint); //tetMesh.tetEdgeIds;
+
 		this.restVol = new Float32Array(this.numTets);
 		this.edgeLengths = new Float32Array(this.edgeIds.length / 2);
 		this.invMass = new Float32Array(this.numParticles);
@@ -161,40 +100,8 @@ export class SoftBody {
 			this._computeSkinningInfo(visVerts);
 			highResObject.userData[ObjectUserData.LOW_RES_SOFT_BODY_MESH] = lowResObject;
 		}
-
-		// this.translate(0, 1, 0);
-
-		// console.log({
-		// 	numParticles: this.numParticles,
-		// 	numTets: this.numTets,
-		// 	pos: this.pos,
-		// 	prevPos: this.prevPos,
-		// 	vel: this.vel,
-		// 	tetIds: this.tetIds,
-		// 	edgeIds: this.edgeIds,
-		// });
-
-		// surface tri mesh
-
-		// const geometry = new BufferGeometry();
-		// console.log(this.bufferGeometry);
-		// this.bufferGeometry.setAttribute('position', new BufferAttribute(this.pos, 3));
-		// this.bufferGeometry.setIndex(tetMesh.tetSurfaceTriIds);
-		// const material = new MeshPhongMaterial({color: 0xf02000});
-		// material.flatShading = true;
-		// this.surfaceMesh = new Mesh(geometry, material);
-		// this.surfaceMesh.geometry.computeVertexNormals();
-		// this.surfaceMesh.userData = this;
-		// this.surfaceMesh.layers.enable(1);
-		// scene.add(this.surfaceMesh);
 	}
 
-	// translate(x: number, y: number, z: number) {
-	// 	for (let i = 0; i < this.numParticles; i++) {
-	// 		vecAdd(this.pos, i, [x, y, z], 0);
-	// 		vecAdd(this.prevPos, i, [x, y, z], 0);
-	// 	}
-	// }
 	private _computeSkinningInfo(visVerts: number[]) {
 		// create a hash for all vertices of the visual mesh
 
