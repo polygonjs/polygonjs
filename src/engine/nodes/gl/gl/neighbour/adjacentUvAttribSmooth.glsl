@@ -36,9 +36,9 @@ float __FUNCTION__NAME__(
 	offset += __SUB_FUNCTION__NAME__( particleUv, textureSize, textureAttribute, currentAttributeValue, deltaThreshold, smoothAmount, vec2(0., -1.));
 	offset += __SUB_FUNCTION__NAME__( particleUv, textureSize, textureAttribute, currentAttributeValue, deltaThreshold, smoothAmount, vec2(1., -1.));
 	offset += __SUB_FUNCTION__NAME__( particleUv, textureSize, textureAttribute, currentAttributeValue, deltaThreshold, smoothAmount, vec2(1., 0.));
-	offset += __SUB_FUNCTION__NAME__( particleUv, textureSize, textureAttribute, currentAttributeValue, deltaThreshold, smoothAmount, vec2(1., -1.));
-	offset += __SUB_FUNCTION__NAME__( particleUv, textureSize, textureAttribute, currentAttributeValue, deltaThreshold, smoothAmount, vec2(0., -1.));
-	offset += __SUB_FUNCTION__NAME__( particleUv, textureSize, textureAttribute, currentAttributeValue, deltaThreshold, smoothAmount, vec2(-1., -1.));
+	offset += __SUB_FUNCTION__NAME__( particleUv, textureSize, textureAttribute, currentAttributeValue, deltaThreshold, smoothAmount, vec2(1., 1.));
+	offset += __SUB_FUNCTION__NAME__( particleUv, textureSize, textureAttribute, currentAttributeValue, deltaThreshold, smoothAmount, vec2(0., 1.));
+	offset += __SUB_FUNCTION__NAME__( particleUv, textureSize, textureAttribute, currentAttributeValue, deltaThreshold, smoothAmount, vec2(-1., 1.));
 
 	return currentAttributeValue + offset;
 }
