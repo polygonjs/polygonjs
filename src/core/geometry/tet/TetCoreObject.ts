@@ -1,9 +1,10 @@
 import {Matrix4, Box3, Sphere, Vector3} from 'three';
 import {BaseCoreObject} from '../_BaseObject';
-import {CoreObjectType, MergeCompactOptions} from '../ObjectContent';
+import {CoreObjectType, MergeCompactOptions, ObjectContent} from '../ObjectContent';
 import {TransformTargetType} from '../../Transform';
 import {ObjectTransformMode, ObjectTransformSpace} from '../../TransformSpace';
 import {TetObject} from './TetObject';
+import {ObjectData} from '../Constant';
 
 const _bbox = new Box3();
 export class TetCoreObject extends BaseCoreObject<CoreObjectType.TET> {
@@ -19,6 +20,16 @@ export class TetCoreObject extends BaseCoreObject<CoreObjectType.TET> {
 	}
 	override boundingSphere(target: Sphere) {
 		this._object.boundingSphere(target);
+	}
+
+	static override objectData<T extends CoreObjectType>(object: ObjectContent<T>): ObjectData {
+		const data = BaseCoreObject.objectData(object);
+
+		const tetObject = object as any as TetObject;
+		data.tetsCount = tetObject.geometry.tetsCount();
+		data.pointsCount = tetObject.geometry.pointsCount();
+
+		return data;
 	}
 
 	static override applyMatrix(

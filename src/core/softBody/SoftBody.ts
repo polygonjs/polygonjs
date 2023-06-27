@@ -1,5 +1,5 @@
 import {VOL_ID_ORDER} from './Common';
-import {Mesh, BufferGeometry, Vector3} from 'three';
+import {Mesh, BufferGeometry} from 'three';
 import {
 	vecSetZero,
 	vecAdd,
@@ -19,6 +19,7 @@ import {Number3, Number9} from '../../types/GlobalTypes';
 import {TetEmbed} from './Common';
 import {Hash} from '../Hash';
 import {ObjectUserData} from '../UserData';
+import {SoftBodyConstraint} from './SoftBodyConstraint';
 
 interface SoftBodyOptions {
 	tetEmbed: TetEmbed;
@@ -47,8 +48,9 @@ export class SoftBody {
 	public readonly volCompliance: number;
 	public readonly temp: Float32Array;
 	public readonly grads: Float32Array;
-	public grabId: number;
-	public grabInvMass: number;
+	public readonly constraintsById: Map<number, SoftBodyConstraint> = new Map();
+	// public grabId: number;
+	// public grabInvMass: number;
 	private readonly bufferGeometry: BufferGeometry;
 	//
 	private numVisVerts: number;
@@ -83,8 +85,8 @@ export class SoftBody {
 		this.temp = new Float32Array(4 * 3);
 		this.grads = new Float32Array(4 * 3);
 
-		this.grabId = -1;
-		this.grabInvMass = 0.0;
+		// this.grabId = -1;
+		// this.grabInvMass = 0.0;
 
 		this.initPhysics();
 
@@ -365,17 +367,47 @@ export class SoftBody {
 	// 		vecCopy(this.pos, this.grabId, p, 0);
 	// 	}
 	// }
-	setSelectedVertexIndex(index: number) {
-		if (index >= 0) {
-			this.grabInvMass = this.invMass[index];
-			this.invMass[index] = 0.0;
-			// vecCopy(this.pos, this.grabId, p, 0);
-		} else {
-			this._endGrab();
+	createConstraint(index: number) {
+		const constraint = new SoftBodyConstraint(this, index);
+		this.constraintsById.set(constraint.id, constraint);
+		constraint.invMass = this.invMass[index];
+		this.invMass[index] = 0.0;
+		return constraint;
+	}
+	private _constraintVel: Number3 = [0, 0, 0];
+	deleteConstraint(constraintId: number) {
+		// const constraint = this.constraintsById.get(constraintId);
+		// if(constraint){
+		// 	this.invMass[constraint.index] = constraint.invMass;
+		// 	this.constraintsById.delete(constraintId);
+		// }
+		const constraint = this.constraintsById.get(constraintId);
+		if (!constraint) {
+			return;
 		}
 
-		this.grabId = index;
+		if (constraint.pointIndex >= 0) {
+			this.invMass[constraint.pointIndex] = constraint.invMass;
+			constraint.velocity(this._constraintVel);
+			// const vel = this._selectedVertexVelocity;
+			// const v = [vel.x, vel.y, vel.z];
+			vecCopy(this.vel, constraint.pointIndex, this._constraintVel, 0);
+		}
+		// this.grabId = -1;
+		// this._selectedVertexVelocity.set(0, 0, 0);
+		this.constraintsById.delete(constraintId);
 	}
+	// setSelectedVertexIndex(index: number) {
+	// 	if (index >= 0) {
+	// 		this.grabInvMass = this.invMass[index];
+	// 		this.invMass[index] = 0.0;
+	// 		// vecCopy(this.pos, this.grabId, p, 0);
+	// 	} else {
+	// 		this._endGrab();
+	// 	}
+
+	// 	this.grabId = index;
+	// }
 
 	// moveGrabbed(pos: Vector3) {
 	// 	if (this.grabId >= 0) {
@@ -383,27 +415,27 @@ export class SoftBody {
 	// 		vecCopy(this.pos, this.grabId, p, 0);
 	// 	}
 	// }
-	private _selectedVertexPreviousPosition = new Vector3();
-	private _selectedVertexVelocity = new Vector3();
-	setSelectedVertexPosition(pos: Vector3, dt: number) {
-		if (this.grabId < 0) {
-			return;
-		}
-		this._selectedVertexVelocity.copy(pos).sub(this._selectedVertexPreviousPosition).divideScalar(dt);
+	// private _selectedVertexPreviousPosition = new Vector3();
+	// private _selectedVertexVelocity = new Vector3();
+	// setSelectedVertexPosition(pos: Vector3, dt: number) {
+	// 	if (this.grabId < 0) {
+	// 		return;
+	// 	}
+	// 	this._selectedVertexVelocity.copy(pos).sub(this._selectedVertexPreviousPosition).divideScalar(dt);
 
-		const p = [pos.x, pos.y, pos.z];
-		vecCopy(this.pos, this.grabId, p, 0);
-		this._selectedVertexPreviousPosition.copy(pos);
-	}
+	// 	const p = [pos.x, pos.y, pos.z];
+	// 	vecCopy(this.pos, this.grabId, p, 0);
+	// 	this._selectedVertexPreviousPosition.copy(pos);
+	// }
 
-	protected _endGrab() {
-		if (this.grabId >= 0) {
-			this.invMass[this.grabId] = this.grabInvMass;
-			const vel = this._selectedVertexVelocity;
-			const v = [vel.x, vel.y, vel.z];
-			vecCopy(this.vel, this.grabId, v, 0);
-		}
-		this.grabId = -1;
-		this._selectedVertexVelocity.set(0, 0, 0);
-	}
+	// protected _endGrab() {
+	// 	if (this.grabId >= 0) {
+	// 		this.invMass[this.grabId] = this.grabInvMass;
+	// 		const vel = this._selectedVertexVelocity;
+	// 		const v = [vel.x, vel.y, vel.z];
+	// 		vecCopy(this.vel, this.grabId, v, 0);
+	// 	}
+	// 	this.grabId = -1;
+	// 	this._selectedVertexVelocity.set(0, 0, 0);
+	// }
 }

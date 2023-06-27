@@ -1,12 +1,12 @@
 import {AttribValue, Number3, NumericAttribValue, PolyDictionary} from '../../types/GlobalTypes';
 import {Box3, Color, Matrix4, Sphere, Vector2, Vector3, Vector4} from 'three';
 import {Attribute, CoreAttribute} from './Attribute';
-import {AttribType, AttribSize} from './Constant';
+import {AttribType, AttribSize, ObjectData, objectTypeFromConstructor, ObjectType} from './Constant';
 import {CoreEntity} from './Entity';
 import {CoreType} from '../Type';
 import {SetUtils} from '../../core/SetUtils';
 import {MapUtils} from '../../core/MapUtils';
-import type {ObjectContent, CoreObjectType, ObjectGeometryMap, MergeCompactOptions} from './ObjectContent';
+import {ObjectContent, CoreObjectType, ObjectGeometryMap, MergeCompactOptions, isObject3D} from './ObjectContent';
 import {TransformTargetType} from '../Transform';
 import {ObjectTransformMode, ObjectTransformSpace} from '../TransformSpace';
 import {EntityGroupCollection} from './EntityGroupCollection';
@@ -534,6 +534,25 @@ export abstract class BaseCoreObject<T extends CoreObjectType> extends CoreEntit
 			sizesByName[attribName] = SetUtils.toArray(attribSizes);
 		});
 		return sizesByName;
+	}
+
+	static objectData<T extends CoreObjectType>(object: ObjectContent<T>): ObjectData {
+		const childrenCount = isObject3D(object) ? object.children.length : 0;
+		// if ((object as Mesh).geometry) {
+		// 	points_count = CoreGeometry.pointsCount((object as Mesh).geometry as BufferGeometry);
+		// }
+		const objectType = isObject3D(object)
+			? objectTypeFromConstructor(object.constructor)
+			: (object.type as ObjectType);
+		const groupData = EntityGroupCollection.data(object);
+		return {
+			type: objectType,
+			name: object.name,
+			childrenCount,
+			groupData,
+			pointsCount: 0,
+			tetsCount: null,
+		};
 	}
 
 	clone(): BaseCoreObject<T> {

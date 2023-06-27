@@ -1,5 +1,6 @@
 import {Object3D, Vector3} from 'three';
 import {softBodyControllerFromObject, softBodyFromObject} from './SoftBodyControllerRegister';
+import {getSoftBodyConstraintById} from './SoftBodyConstraint';
 
 export function softBodySolverStepSimulation(
 	softBodyObject: Object3D,
@@ -30,19 +31,28 @@ export function setSoftBodySolverGravity(softBodyObject: Object3D, gravity: Vect
 	console.warn('setGravity not implemented');
 }
 
-export function setSoftBodySelectedVertexIndex(softBodyObject: Object3D, index: number) {
+export function softBodyConstraintCreate(softBodyObject: Object3D, index: number) {
 	const softBody = softBodyFromObject(softBodyObject);
 	if (!softBody) {
 		console.log('no softBody for', softBodyObject.uuid);
 		return;
 	}
-	softBody.setSelectedVertexIndex(index);
+	return softBody.createConstraint(index);
 }
-export function setSoftBodySelectedVertexPosition(softBodyObject: Object3D, pos: Vector3, delta: number) {
-	const softBody = softBodyFromObject(softBodyObject);
-	if (!softBody) {
-		console.log('no softBody for', softBodyObject.uuid);
+export function softBodyConstraintSetPosition(constraintId: number, pos: Vector3, lerp: number, delta: number) {
+	const constraint = getSoftBodyConstraintById(constraintId);
+	if (!constraint) {
+		// console.log('no softBody constraint with id', constraintId);
 		return;
 	}
-	softBody.setSelectedVertexPosition(pos, delta);
+	constraint.setPosition(pos, lerp, delta);
+}
+
+export function softBodyConstraintDelete(constraintId: number) {
+	const constraint = getSoftBodyConstraintById(constraintId);
+	if (!constraint) {
+		// console.log('no softBody constraint with id', constraintId);
+		return;
+	}
+	constraint.delete();
 }

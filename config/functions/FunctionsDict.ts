@@ -380,8 +380,9 @@ export const FUNCTION_NAME_BY_FILE_NAME: Record<string, string[]> = {
 	SoftBody: [
 		'softBodySolverStepSimulation',
 		'setSoftBodySolverGravity',
-		'setSoftBodySelectedVertexIndex',
-		'setSoftBodySelectedVertexPosition',
+		'softBodyConstraintCreate',
+		'softBodyConstraintSetPosition',
+		'softBodyConstraintDelete',
 	],
 	Sphere: ['sphereSet', 'getSphereCenter', 'getSphereRadius'],
 	Subtract: ['subtractNumber', 'subtractVector', 'subtractVectorNumber'],

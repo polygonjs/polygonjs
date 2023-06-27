@@ -16,7 +16,7 @@ import {
 import {CoreGeometry} from './Geometry';
 import {GroupString, Object3DWithGeometry} from './Group';
 import {CoreAttribute} from './Attribute';
-import {dataFromConstructor, ObjectType} from './Constant';
+import {dataFromConstructor, ObjectData, ObjectType} from './Constant';
 import {CorePoint} from './Point';
 import {CoreMaterial, MaterialWithCustomMaterials} from './Material';
 import {CoreString} from '../String';
@@ -24,7 +24,7 @@ import {ObjectUtils} from '../ObjectUtils';
 import {ArrayUtils} from '../ArrayUtils';
 import {ThreeMeshBVHHelper} from './bvh/ThreeMeshBVHHelper';
 import {CoreGeometryBuilderMerge} from './builders/Merge';
-import {CoreObjectType, MergeCompactOptions, objectContentCopyProperties} from './ObjectContent';
+import {CoreObjectType, MergeCompactOptions, isObject3D, objectContentCopyProperties} from './ObjectContent';
 import {BaseCoreObject} from './_BaseObject';
 import {TransformTargetType} from '../Transform';
 import {TypeAssert} from '../../engine/poly/Assert';
@@ -124,6 +124,22 @@ export class CoreObject extends BaseCoreObject<CoreObjectType.THREEJS> {
 		}
 		this.coreGeometry()?.addNumericAttrib(name, size, defaultValue);
 	}
+	static override objectData(object: Object3D): ObjectData {
+		const data = BaseCoreObject.objectData(object);
+
+		data.pointsCount =
+			isObject3D(object) && (object as Mesh).geometry
+				? CoreGeometry.pointsCount((object as Mesh).geometry as BufferGeometry)
+				: 0;
+		// const childrenCount = isObject3D(object) ? object.children.length : 0;
+		// if ((object as Mesh).geometry) {
+		// 	points_count = CoreGeometry.pointsCount((object as Mesh).geometry as BufferGeometry);
+		// }
+		// data.type = isObject3D(object) ? objectTypeFromConstructor(object.constructor) : ((object as any).type as ObjectType);
+		// const groupData = EntityGroupCollection.data(object);
+		return data;
+	}
+
 	static override position(object: Object3D, target: Vector3) {
 		target.copy(object.position);
 	}

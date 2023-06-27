@@ -34,10 +34,10 @@ class TetSoftBodySolverSopParamsConfig extends NodeParamsConfig {
 		rangeLocked: [true, false],
 	});
 	/** @param volumeCompliance */
-	volumeCompliance = ParamConfig.FLOAT(0, {
-		range: [0, 1],
-		rangeLocked: [true, false],
-	});
+	// volumeCompliance = ParamConfig.FLOAT(0, {
+	// 	range: [0, 1],
+	// 	rangeLocked: [true, false],
+	// });
 	highresSkinning = ParamConfig.FOLDER();
 	/** @param highRes Skinning Lookup Spacing */
 	lookupSpacing = ParamConfig.FLOAT(0.05, {
@@ -96,7 +96,7 @@ export class TetSoftBodySolverSopNode extends TetSopNode<TetSoftBodySolverSopPar
 					CoreSoftBodyAttribute.setGravity(displayedObject, this.pv.gravity);
 					// CoreSoftBodyAttribute.setSubSteps(threejsObject, this.pv.subSteps);
 					CoreSoftBodyAttribute.setEdgeCompliance(displayedObject, this.pv.edgeCompliance);
-					CoreSoftBodyAttribute.setVolumeCompliance(displayedObject, this.pv.volumeCompliance);
+					CoreSoftBodyAttribute.setVolumeCompliance(displayedObject, 0 /*this.pv.volumeCompliance*/);
 					CoreSoftBodyAttribute.setHighResSkinningLookupSpacing(displayedObject, this.pv.lookupSpacing);
 					CoreSoftBodyAttribute.setHighResSkinningLookupPadding(displayedObject, this.pv.lookupPadding);
 

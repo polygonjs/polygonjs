@@ -406,8 +406,6 @@ import { setPhysicsRBDRotation } from "../../../functions/setPhysicsRBDRotation"
 import { setPhysicsRBDSphereProperty } from "../../../functions/setPhysicsRBDSphereProperty";
 import { setPhysicsWorldGravity } from "../../../functions/setPhysicsWorldGravity";
 import { setPlayerInput } from "../../../functions/setPlayerInput";
-import { setSoftBodySelectedVertexIndex } from "../../../functions/setSoftBodySelectedVertexIndex";
-import { setSoftBodySelectedVertexPosition } from "../../../functions/setSoftBodySelectedVertexPosition";
 import { setSoftBodySolverGravity } from "../../../functions/setSoftBodySolverGravity";
 import { setSpotLightIntensity } from "../../../functions/setSpotLightIntensity";
 import { setViewer } from "../../../functions/setViewer";
@@ -420,6 +418,9 @@ import { sizzleVec4XYZArray } from "../../../functions/sizzleVec4XYZArray";
 import { sleep } from "../../../functions/sleep";
 import { smootherstep } from "../../../functions/smootherstep";
 import { smoothstep } from "../../../functions/smoothstep";
+import { softBodyConstraintCreate } from "../../../functions/softBodyConstraintCreate";
+import { softBodyConstraintDelete } from "../../../functions/softBodyConstraintDelete";
+import { softBodyConstraintSetPosition } from "../../../functions/softBodyConstraintSetPosition";
 import { softBodySolverStepSimulation } from "../../../functions/softBodySolverStepSimulation";
 import { sphereSet } from "../../../functions/sphereSet";
 import { subtractNumber } from "../../../functions/subtractNumber";
@@ -843,8 +844,6 @@ export interface NamedFunctionMap {
 	setPhysicsRBDSphereProperty: setPhysicsRBDSphereProperty;
 	setPhysicsWorldGravity: setPhysicsWorldGravity;
 	setPlayerInput: setPlayerInput;
-	setSoftBodySelectedVertexIndex: setSoftBodySelectedVertexIndex;
-	setSoftBodySelectedVertexPosition: setSoftBodySelectedVertexPosition;
 	setSoftBodySolverGravity: setSoftBodySolverGravity;
 	setSpotLightIntensity: setSpotLightIntensity;
 	setViewer: setViewer;
@@ -857,6 +856,9 @@ export interface NamedFunctionMap {
 	sleep: sleep;
 	smootherstep: smootherstep;
 	smoothstep: smoothstep;
+	softBodyConstraintCreate: softBodyConstraintCreate;
+	softBodyConstraintDelete: softBodyConstraintDelete;
+	softBodyConstraintSetPosition: softBodyConstraintSetPosition;
 	softBodySolverStepSimulation: softBodySolverStepSimulation;
 	sphereSet: sphereSet;
 	subtractNumber: subtractNumber;
@@ -1283,8 +1285,6 @@ export class AllNamedFunctionRegister {
 			setPhysicsRBDSphereProperty,
 			setPhysicsWorldGravity,
 			setPlayerInput,
-			setSoftBodySelectedVertexIndex,
-			setSoftBodySelectedVertexPosition,
 			setSoftBodySolverGravity,
 			setSpotLightIntensity,
 			setViewer,
@@ -1297,6 +1297,9 @@ export class AllNamedFunctionRegister {
 			sleep,
 			smootherstep,
 			smoothstep,
+			softBodyConstraintCreate,
+			softBodyConstraintDelete,
+			softBodyConstraintSetPosition,
 			softBodySolverStepSimulation,
 			sphereSet,
 			subtractNumber,

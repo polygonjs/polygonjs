@@ -6,7 +6,7 @@ import {CoreObject} from './Object';
 import {CoreGeometry} from './Geometry';
 import {CoreAttribute} from './Attribute';
 import {CoreString} from '../String';
-import {AttribClass, AttribSize, ObjectData, objectTypeFromConstructor, AttribType, ObjectType} from './Constant';
+import {AttribClass, AttribSize, ObjectData, AttribType} from './Constant';
 import {CoreType} from '../Type';
 import {ArrayUtils} from '../ArrayUtils';
 import {CoreFace} from './CoreFace';
@@ -24,7 +24,6 @@ import {CoreCadType, isCADObject} from './cad/CadCoreType';
 // CSG
 import type {CsgGeometryType} from './csg/CsgCommon';
 import type {CsgObject} from './csg/CsgObject';
-import {EntityGroupCollection} from './EntityGroupCollection';
 import {isCSGObject} from './csg/CsgCoreType';
 import {object3DHasGeometry} from './GeometryUtils';
 import {isTetObject} from './tet/TetCoreType';
@@ -46,25 +45,26 @@ export interface Object3DWithGeometry extends Object3D {
 	geometry: BufferGeometry;
 }
 
-function objectData<T extends CoreObjectType>(object: ObjectContent<T>): ObjectData {
-	const pointsCount: number =
-		isObject3D(object) && (object as Mesh).geometry
-			? CoreGeometry.pointsCount((object as Mesh).geometry as BufferGeometry)
-			: 0;
-	const childrenCount = isObject3D(object) ? object.children.length : 0;
-	// if ((object as Mesh).geometry) {
-	// 	points_count = CoreGeometry.pointsCount((object as Mesh).geometry as BufferGeometry);
-	// }
-	const objectType = isObject3D(object) ? objectTypeFromConstructor(object.constructor) : (object.type as ObjectType);
-	const groupData = EntityGroupCollection.data(object);
-	return {
-		type: objectType,
-		name: object.name,
-		childrenCount,
-		pointsCount,
-		groupData,
-	};
-}
+// function objectData<T extends CoreObjectType>(object: ObjectContent<T>): ObjectData {
+// 	const pointsCount: number =
+// 		isObject3D(object) && (object as Mesh).geometry
+// 			? CoreGeometry.pointsCount((object as Mesh).geometry as BufferGeometry)
+// 			: 0;
+// 	const childrenCount = isObject3D(object) ? object.children.length : 0;
+// 	// if ((object as Mesh).geometry) {
+// 	// 	points_count = CoreGeometry.pointsCount((object as Mesh).geometry as BufferGeometry);
+// 	// }
+// 	const objectType = isObject3D(object) ? objectTypeFromConstructor(object.constructor) : (object.type as ObjectType);
+// 	const groupData = EntityGroupCollection.data(object);
+// 	return {
+// 		type: objectType,
+// 		name: object.name,
+// 		childrenCount,
+// 		pointsCount,
+// 		groupData,
+// 		tetrahedronsCount: 0,
+// 	};
+// }
 function objectTotalPointsCount(object: Object3D) {
 	let sum = 0;
 	object.traverse((child) => {
@@ -309,7 +309,7 @@ export class CoreGroup extends CoreEntity {
 	//
 	//
 	objectsData(): ObjectData[] {
-		return this._allObjects?.map(objectData) || [];
+		return this._allObjects?.map((o) => coreObjectFactory(o).objectData(o)) || [];
 	}
 	boundingBox(target: Box3) {
 		target.makeEmpty();
