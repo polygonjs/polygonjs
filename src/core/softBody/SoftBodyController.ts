@@ -17,13 +17,13 @@ interface SoftBodyControllerOptions {
 
 export class SoftBodyController {
 	private _stepsCount: number = 10;
-	private _softBodies: SoftBody[] = [];
-	private _gravity: Number3;
+	private _softBody: SoftBody|undefined
+	private _gravity: Number3=[0, 0, 0];
 	constructor(public readonly scene: PolyScene, options: SoftBodyControllerOptions) {
-		this._gravity = options.gravity.toArray();
+		options.gravity.toArray(this._gravity);
 		// this._stepsCount = options.subSteps;
 		// console.log('create subSteps:', options.subSteps, this._stepsCount);
-		this._softBodies.length = 0;
+		// this._softBodies.length = 0;
 	}
 	// init() {
 	// 	const body = new SoftBody(bunnyMesh, gThreeScene);
@@ -33,32 +33,49 @@ export class SoftBodyController {
 	setSubSteps(subSteps: number) {
 		this._stepsCount = subSteps;
 	}
+	setEdgeCompliance(edgeCompliance:number){
+		if(this._softBody){
+			this._softBody.edgeCompliance=edgeCompliance
+		}
+	}
+	setVolumeCompliance(volumeCompliance:number){
+		if(this._softBody){
+			this._softBody.volumeCompliance=volumeCompliance
+		}
+	}
 	addSoftBody(softBody: SoftBody) {
-		this._softBodies.push(softBody);
+		// this._softBodies.push(softBody);
+		this._softBody= softBody;
 	}
 	clearSoftBodies() {
-		this._softBodies.length = 0;
+		// this._softBodies.length = 0;
+		this._softBody= undefined;
 	}
 	step() {
+		const softBody = this._softBody;
+		if(!softBody){
+			return
+		}
+
 		const delta = this.scene.timeController.delta();
 		// if (gPhysicsScene.paused) return;
 		const stepsCount = this._stepsCount;
 
 		const sdt = delta / stepsCount;
-		const softBodies = this._softBodies;
+		// const softBodies = this._softBodies;
 
 		for (let step = 0; step < stepsCount; step++) {
-			for (const softBody of softBodies) {
+			// for (const softBody of softBodies) {
 				softBody.preSolve(sdt, this._gravity);
-			}
+			// }
 
-			for (const softBody of softBodies) {
+			// for (const softBody of softBodies) {
 				softBody.solve(sdt);
-			}
+			// }
 
-			for (const softBody of softBodies) {
+			// for (const softBody of softBodies) {
 				softBody.postSolve(sdt);
-			}
+			// }
 		}
 
 		// gGrabber.increaseTime(gPhysicsScene.dt);

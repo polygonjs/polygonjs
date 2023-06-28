@@ -333,6 +333,7 @@ import { raySet } from "../../../functions/raySet";
 import { renderPixel } from "../../../functions/renderPixel";
 import { SDFBox } from "../../../functions/SDFBox";
 import { SDFIntersect } from "../../../functions/SDFIntersect";
+import { SDFPlane } from "../../../functions/SDFPlane";
 import { SDFRevolutionX } from "../../../functions/SDFRevolutionX";
 import { SDFRevolutionY } from "../../../functions/SDFRevolutionY";
 import { SDFRevolutionZ } from "../../../functions/SDFRevolutionZ";
@@ -771,6 +772,7 @@ export interface NamedFunctionMap {
 	renderPixel: renderPixel;
 	SDFBox: SDFBox;
 	SDFIntersect: SDFIntersect;
+	SDFPlane: SDFPlane;
 	SDFRevolutionX: SDFRevolutionX;
 	SDFRevolutionY: SDFRevolutionY;
 	SDFRevolutionZ: SDFRevolutionZ;
@@ -1212,6 +1214,7 @@ export class AllNamedFunctionRegister {
 			renderPixel,
 			SDFBox,
 			SDFIntersect,
+			SDFPlane,
 			SDFRevolutionX,
 			SDFRevolutionY,
 			SDFRevolutionZ,

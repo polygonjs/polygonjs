@@ -38,7 +38,7 @@ class TetDeleteSopParamsConfig extends NodeParamsConfig {
 		separatorBefore: true,
 	});
 	index = ParamConfig.INTEGER(-1, {
-		range: [-1, 100],
+		range: [0, 100],
 		rangeLocked: [true, false],
 		visibleIf: {byIndex: 1},
 	});

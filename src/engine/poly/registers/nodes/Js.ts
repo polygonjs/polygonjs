@@ -210,6 +210,7 @@ import {RoundJsNode} from '../../../nodes/js/Round';
 import {SDF2DRoundedXJsNode} from '../../../nodes/js/SDF2DRoundedX';
 import {SDFBoxJsNode} from '../../../nodes/js/SDFBox';
 import {SDFIntersectJsNode} from '../../../nodes/js/SDFIntersect';
+import {SDFPlaneJsNode} from '../../../nodes/js/SDFPlane';
 import {SDFRevolutionJsNode} from '../../../nodes/js/SDFRevolution';
 import {SDFSphereJsNode} from '../../../nodes/js/SDFSphere';
 import {SDFSubtractJsNode} from '../../../nodes/js/SDFSubtract';
@@ -511,6 +512,7 @@ export interface JsNodeChildrenMap {
 	SDF2DRoundedX: SDF2DRoundedXJsNode;
 	SDFBox: SDFBoxJsNode;
 	SDFIntersect: SDFIntersectJsNode;
+	SDFPlane: SDFPlaneJsNode;
 	SDFRevolution: SDFRevolutionJsNode;
 	SDFSphere: SDFSphereJsNode;
 	SDFSubtract: SDFSubtractJsNode;
@@ -852,6 +854,7 @@ export class JsRegister {
 		poly.registerNode(SDF2DRoundedXJsNode, CATEGORY_JS.SDF_PRIMITIVES_2D);
 		poly.registerNode(SDFBoxJsNode, CATEGORY_JS.SDF_PRIMITIVES);
 		poly.registerNode(SDFIntersectJsNode, CATEGORY_JS.SDF_MODIFIERS);
+		poly.registerNode(SDFPlaneJsNode, CATEGORY_JS.SDF_PRIMITIVES);
 		poly.registerNode(SDFRevolutionJsNode, CATEGORY_JS.SDF_MODIFIERS);
 		poly.registerNode(SDFSphereJsNode, CATEGORY_JS.SDF_PRIMITIVES);
 		poly.registerNode(SDFSubtractJsNode, CATEGORY_JS.SDF_MODIFIERS);

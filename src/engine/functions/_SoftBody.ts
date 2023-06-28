@@ -2,10 +2,10 @@ import {Object3D, Vector3} from 'three';
 import {getSoftBodyControllerNodeFromSolverObject} from '../nodes/sop/TetSoftBodySolver';
 import {
 	ObjectNamedFunction0,
-	ObjectNamedFunction1,
 	ObjectNamedFunction2,
 	NamedFunction1,
-NamedFunction3,
+	NamedFunction3,
+	ObjectNamedFunction3,
 } from './_Base';
 import {
 	softBodySolverStepSimulation as _softBodySolverStepSimulation,
@@ -30,12 +30,12 @@ export class softBodySolverReset extends ObjectNamedFunction0 {
 	}
 }
 
-export class softBodySolverStepSimulation extends ObjectNamedFunction1<[number]> {
+export class softBodySolverStepSimulation extends ObjectNamedFunction3<[number, number, number]> {
 	static override type() {
 		return 'softBodySolverStepSimulation';
 	}
-	func(object3D: Object3D, stepsCount: number): void {
-		_softBodySolverStepSimulation(object3D, stepsCount);
+	func(object3D: Object3D, stepsCount: number, edgeCompliance: number, volumeCompliance: number): void {
+		_softBodySolverStepSimulation(object3D, stepsCount, edgeCompliance, volumeCompliance);
 	}
 }
 
@@ -62,7 +62,7 @@ export class softBodyConstraintSetPosition extends NamedFunction3<[number, Vecto
 	static override type() {
 		return 'softBodyConstraintSetPosition';
 	}
-	func(constraintId: number, position: Vector3, lerp:number): void {
+	func(constraintId: number, position: Vector3, lerp: number): void {
 		const delta = this.scene.timeController.delta();
 		_softBodyConstraintSetPosition(constraintId, position, lerp, delta);
 	}

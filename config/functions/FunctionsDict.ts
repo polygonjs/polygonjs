@@ -348,7 +348,7 @@ export const FUNCTION_NAME_BY_FILE_NAME: Record<string, string[]> = {
 		'SDFSmoothIntersect',
 	],
 	SDFOperations2D: ['SDFRevolutionX', 'SDFRevolutionY', 'SDFRevolutionZ'],
-	SDFPrimitives: ['SDFSphere', 'SDFBox'],
+	SDFPrimitives: ['SDFBox', 'SDFPlane', 'SDFSphere'],
 	SDFPrimitives2D: ['SDFRoundedX'],
 	SetObjectAttribute: ['setObjectAttribute'],
 	SetObjectLookAt: ['setObjectLookAt'],

@@ -41,18 +41,28 @@ class SoftBodySolverStepSimulationJsParamsConfig extends NodeParamsConfig {
 		range: [1, 100],
 		rangeLocked: [true, false],
 	});
-	selectedVertexInfluence = ParamConfig.FLOAT(0.1, {
-		range: [0, 2],
+	/** @param edgeCompliance */
+	edgeCompliance = ParamConfig.FLOAT(10, {
+		range: [0, 100],
 		rangeLocked: [true, false],
 	});
-	viscosity = ParamConfig.FLOAT(0.1, {
+	/** @param volumeCompliance */
+	volumeCompliance = ParamConfig.FLOAT(0, {
 		range: [0, 1],
 		rangeLocked: [true, false],
 	});
-	spring = ParamConfig.FLOAT(1, {
-		range: [0, 1],
-		rangeLocked: [true, false],
-	});
+	// selectedVertexInfluence = ParamConfig.FLOAT(0.1, {
+	// 	range: [0, 2],
+	// 	rangeLocked: [true, false],
+	// });
+	// viscosity = ParamConfig.FLOAT(0.1, {
+	// 	range: [0, 1],
+	// 	rangeLocked: [true, false],
+	// });
+	// spring = ParamConfig.FLOAT(1, {
+	// 	range: [0, 1],
+	// 	rangeLocked: [true, false],
+	// });
 }
 const ParamsConfig = new SoftBodySolverStepSimulationJsParamsConfig();
 export class SoftBodySolverStepSimulationJsNode extends TypedJsNode<SoftBodySolverStepSimulationJsParamsConfig> {
@@ -90,8 +100,8 @@ export class SoftBodySolverStepSimulationJsNode extends TypedJsNode<SoftBodySolv
 	override setTriggerableLines(linesController: JsLinesCollectionController) {
 		const object3D = inputObject3D(this, linesController);
 		const subSteps = this.variableForInputParam(linesController, this.p.subSteps);
-		// const selectedVertexInfluence = this.variableForInputParam(linesController, this.p.selectedVertexInfluence);
-		// const viscosity = this.variableForInputParam(linesController, this.p.viscosity);
+		const edgeCompliance = this.variableForInputParam(linesController, this.p.edgeCompliance);
+		const volumeCompliance = this.variableForInputParam(linesController, this.p.volumeCompliance);
 		// const spring = this.variableForInputParam(linesController, this.p.spring);
 
 		// const configRef = this._addRefs(linesController);
@@ -100,7 +110,9 @@ export class SoftBodySolverStepSimulationJsNode extends TypedJsNode<SoftBodySolv
 
 		const bodyLine = func.asString(
 			object3D,
-			subSteps
+			subSteps,
+			edgeCompliance,
+			volumeCompliance
 			// selectedVertexInfluence,
 			// viscosity,
 			// spring,

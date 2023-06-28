@@ -53,6 +53,7 @@ export enum JsType {
 	RAY_FROM_CAMERA = 'rayFromCamera',
 	// SDF
 	SDF_BOX = 'SDFBox',
+	SDF_PLANE = 'SDFPlane',
 	SDF_SPHERE = 'SDFSphere',
 	// set
 	SET_OBJECT_ATTRIBUTE = 'setObjectAttribute',

@@ -1,5 +1,5 @@
 import {VOL_ID_ORDER} from './Common';
-import {Mesh, BufferGeometry} from 'three';
+import {Mesh, BufferGeometry, Vector3} from 'three';
 import {
 	vecSetZero,
 	vecAdd,
@@ -20,6 +20,21 @@ import {TetEmbed} from './Common';
 import {Hash} from '../Hash';
 import {ObjectUserData} from '../UserData';
 import {SoftBodyConstraint} from './SoftBodyConstraint';
+import {
+	_SDFBox,
+	// _SDFPlane
+} from '../../engine/functions/_SDFPrimitives';
+
+const _boxCenter = new Vector3(0, 0, 0);
+const _boxSizes = new Vector3(1, 1, 1);
+// const _planeCenter = new Vector3(0, 0, 0);
+// const _planeNormal = new Vector3(0, 1, 0);
+// const planeOffset = 0;
+function collisionSDF(p: Vector3) {
+	// const plane = _SDFPlane(p, _planeCenter, _planeNormal, planeOffset);
+	return -_SDFBox(p, _boxCenter, _boxSizes, 5);
+	// return Math.min(plane, box);
+}
 
 interface SoftBodyOptions {
 	tetEmbed: TetEmbed;
@@ -44,8 +59,8 @@ export class SoftBody {
 	public readonly restVol: Float32Array;
 	public readonly edgeLengths: Float32Array;
 	public readonly invMass: Float32Array;
-	public readonly edgeCompliance: number;
-	public readonly volCompliance: number;
+	public edgeCompliance: number;
+	public volumeCompliance: number;
 	public readonly temp: Float32Array;
 	public readonly grads: Float32Array;
 	public readonly constraintsById: Map<number, SoftBodyConstraint> = new Map();
@@ -80,7 +95,7 @@ export class SoftBody {
 		this.invMass = new Float32Array(this.numParticles);
 
 		this.edgeCompliance = edgeCompliance;
-		this.volCompliance = volumeCompliance;
+		this.volumeCompliance = volumeCompliance;
 
 		this.temp = new Float32Array(4 * 3);
 		this.grads = new Float32Array(4 * 3);
@@ -260,23 +275,49 @@ export class SoftBody {
 		}
 	}
 
+	private _pos = new Vector3(0, 0, 0);
+	private _vel = new Vector3(0, 0, 0);
 	preSolve(dt: number, gravity: number[]) {
+		// console.log('---- preseolve');
 		for (let i = 0; i < this.numParticles; i++) {
 			if (this.invMass[i] == 0.0) continue;
 			vecAdd(this.vel, i, gravity, 0, dt);
 			vecCopy(this.prevPos, i, this.pos, i);
-			vecAdd(this.pos, i, this.vel, i, dt);
-			const y = this.pos[3 * i + 1];
-			if (y < 0.0) {
+
+			// if (true) {
+			this._pos.fromArray(this.pos, i * 3);
+			const speed = this._vel
+				.fromArray(this.vel, i * 3)
+				.multiplyScalar(dt)
+				.length();
+			const dist = collisionSDF(this._pos);
+			if (dist < speed) {
+				// handle collision
+				// 1. set prevPos
+				vecAdd(this.pos, i, this.vel, i, dt);
 				vecCopy(this.pos, i, this.prevPos, i);
-				this.pos[3 * i + 1] = 0.0;
+				// 2. update pos
+				this._vel.normalize().multiplyScalar(dist);
+				this._pos.add(this._vel);
+				this._pos.toArray(this.pos, i * 3);
+			} else {
+				// no collision
+				vecAdd(this.pos, i, this.vel, i, dt);
 			}
+			// } else {
+			// 	vecAdd(this.pos, i, this.vel, i, dt);
+			// 	const y = this.pos[3 * i + 1];
+			// 	if (y < 0.0) {
+			// 		vecCopy(this.pos, i, this.prevPos, i);
+			// 		this.pos[3 * i + 1] = 0.0;
+			// 	}
+			// }
 		}
 	}
 
 	solve(dt: number) {
 		this.solveEdges(this.edgeCompliance, dt);
-		this.solveVolumes(this.volCompliance, dt);
+		this.solveVolumes(this.volumeCompliance, dt);
 	}
 
 	postSolve(dt: number) {

@@ -4,7 +4,9 @@ import {getSoftBodyConstraintById} from './SoftBodyConstraint';
 
 export function softBodySolverStepSimulation(
 	softBodyObject: Object3D,
-	subSteps: number
+	subSteps: number,
+	edgeCompliance: number,
+	volumeCompliance: number
 	// selectedVertexInfluence: number,
 	// viscosity: number,
 	// spring: number,
@@ -15,6 +17,8 @@ export function softBodySolverStepSimulation(
 		return;
 	}
 	controller.setSubSteps(subSteps);
+	controller.setEdgeCompliance(edgeCompliance);
+	controller.setVolumeCompliance(volumeCompliance);
 	// controller.selectedVertexInfluence = selectedVertexInfluence;
 	// controller.viscosity = viscosity;
 	// controller.spring = spring;
