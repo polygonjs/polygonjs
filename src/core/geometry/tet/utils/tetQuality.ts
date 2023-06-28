@@ -1,4 +1,5 @@
 import {Vector3} from 'three';
+import { TetGeometry } from '../TetGeometry';
 
 const d0 = new Vector3();
 const d1 = new Vector3();
@@ -6,7 +7,23 @@ const d2 = new Vector3();
 const d3 = new Vector3();
 const d4 = new Vector3();
 const d5 = new Vector3();
-export function tetQuality(p0: Vector3, p1: Vector3, p2: Vector3, p3: Vector3) {
+export function tetQuality(tetGeometry:TetGeometry, tetId:number):number {
+	const tet = tetGeometry.tetrahedrons.get(tetId);
+	if(!tet){
+		return 0
+	}
+	const pt0 = tetGeometry.points.get(tet.pointIds[0]);
+			const pt1 = tetGeometry.points.get(tet.pointIds[1]);
+			const pt2 = tetGeometry.points.get(tet.pointIds[2]);
+			const pt3 = tetGeometry.points.get(tet.pointIds[3]);
+			if (!(pt0 && pt1 && pt2 && pt3)) {
+				return 0;
+			}
+			return tetQualityFromPoints(pt0.position, pt1.position, pt2.position, pt3.position);
+}
+
+
+export function tetQualityFromPoints(p0: Vector3, p1: Vector3, p2: Vector3, p3: Vector3) {
 	d0.copy(p1).sub(p0);
 	d1.copy(p2).sub(p0);
 	d2.copy(p3).sub(p0);

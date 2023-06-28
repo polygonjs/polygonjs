@@ -262,7 +262,7 @@ import {TangentSopNode} from '../../../nodes/sop/Tangent';
 import {TetDeleteSopNode} from '../../../nodes/sop/TetDelete';
 // import {TetGrowSopNode} from '../../../nodes/sop/TetGrow';
 // import {TetMirrorSopNode} from '../../../nodes/sop/TetMirror';
-import {TetQualitySopNode} from '../../../nodes/sop/TetQuality';
+// import {TetQualitySopNode} from '../../../nodes/sop/TetQuality';
 import {TetSoftBodySolverSopNode} from '../../../nodes/sop/TetSoftBodySolver';
 // import {TetSplitSopNode} from '../../../nodes/sop/TetSplit';
 import {TetTriangulateSopNode} from '../../../nodes/sop/TetTriangulate';
@@ -559,7 +559,7 @@ export interface GeoNodeChildrenMap {
 	tetDelete: TetDeleteSopNode;
 	// tetGrow: TetGrowSopNode;
 	// tetMirror: TetMirrorSopNode;
-	tetQuality: TetQualitySopNode;
+	// tetQuality: TetQualitySopNode;
 	tetSoftBodySolver: TetSoftBodySolverSopNode;
 	// tetSplit: TetSplitSopNode;
 	tetTriangulate: TetTriangulateSopNode;
@@ -1096,7 +1096,7 @@ export class SopRegister {
 			poly.registerNode(TetDeleteSopNode, CATEGORY_SOP.TET);
 			// poly.registerNode(TetGrowSopNode, CATEGORY_SOP.TET);
 			// poly.registerNode(TetMirrorSopNode, CATEGORY_SOP.TET);
-			poly.registerNode(TetQualitySopNode, CATEGORY_SOP.TET);
+			// poly.registerNode(TetQualitySopNode, CATEGORY_SOP.TET);
 			poly.registerNode(TetSoftBodySolverSopNode, CATEGORY_SOP.TET);
 			// poly.registerNode(TetSplitSopNode, CATEGORY_SOP.TET);
 			poly.registerNode(TetTriangulateSopNode, CATEGORY_SOP.TET);

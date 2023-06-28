@@ -17,11 +17,20 @@ import {isPositionInsideMesh} from '../../../core/geometry/tet/utils/tetInsideMe
 import {MeshWithBVHGeometry, ThreeMeshBVHHelper} from '../../../core/geometry/bvh/ThreeMeshBVHHelper';
 import {findNonDelaunayTetsFromMultiplePointsCheck} from '../../../core/geometry/tet/utils/findNonDelaunayTets';
 import {tetRemoveUnusedPoints} from '../../../core/geometry/tet/utils/tetRemoveUnusedPoints';
+import {tetQuality} from '../../../core/geometry/tet/utils/tetQuality';
 
 const _tetCenter = new Vector3();
 
 class TetDeleteSopParamsConfig extends NodeParamsConfig {
-	byIds = ParamConfig.BOOLEAN(0);
+	byQuality = ParamConfig.BOOLEAN(0);
+	minQuality = ParamConfig.FLOAT(0.5, {
+		range: [0, 1],
+		rangeLocked: [true, true],
+		visibleIf: {byQuality: 1},
+	});
+	byIds = ParamConfig.BOOLEAN(0, {
+		separatorBefore: true,
+	});
 	ids = ParamConfig.STRING('0', {
 		visibleIf: {byIds: 1},
 	});
@@ -81,6 +90,9 @@ export class TetDeleteSopNode extends TetSopNode<TetDeleteSopParamsConfig> {
 	}
 	_deleteTets(tetObject: TetObject, inputCoreGroups: CoreGroup[]) {
 		const selectedIds: number[] = [];
+		if (isBooleanTrue(this.pv.byQuality)) {
+			this._findTetsByQuality(tetObject, selectedIds);
+		}
 		if (isBooleanTrue(this.pv.byIds)) {
 			this._findTetsById(selectedIds);
 		}
@@ -115,7 +127,13 @@ export class TetDeleteSopNode extends TetSopNode<TetDeleteSopParamsConfig> {
 		}
 		tetRemoveUnusedPoints(tetObject.geometry);
 	}
-
+	private _findTetsByQuality(tetObject: TetObject, selectedIds: number[]) {
+		tetObject.geometry.tetrahedrons.forEach((_, tetId) => {
+			if (tetQuality(tetObject.geometry, tetId) < this.pv.minQuality) {
+				selectedIds.push(tetId);
+			}
+		});
+	}
 	private _findTetsById(selectedIds: number[]) {
 		const ids = CoreString.indices(this.pv.ids);
 		selectedIds.push(...ids);
