@@ -23,9 +23,9 @@ import {ActorBuilderNode} from '../../../../../scene/utils/ActorsManager';
 import {logBlue as _logBlue} from '../../../../../../core/logger/Console';
 import {Poly} from '../../../../../Poly';
 import {ParamType} from '../../../../../poly/ParamType';
-import { JsShaderConfig } from '../../configs/ShaderConfig';
+import {JsShaderConfig} from '../../configs/ShaderConfig';
 
-let FORCE_DEBUG: boolean | undefined = true;
+let FORCE_DEBUG: boolean | undefined = false;
 function _debug() {
 	if (FORCE_DEBUG != undefined) {
 		return FORCE_DEBUG;

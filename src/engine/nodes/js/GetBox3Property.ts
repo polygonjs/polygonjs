@@ -14,6 +14,7 @@ const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
 enum GetBox3PropertyJsNodeInputName {
 	min = 'min',
 	max = 'max',
+	center = 'center',
 }
 
 export class GetBox3PropertyJsNode extends ParamlessTypedJsNode {
@@ -29,6 +30,7 @@ export class GetBox3PropertyJsNode extends ParamlessTypedJsNode {
 		this.io.outputs.setNamedOutputConnectionPoints([
 			new JsConnectionPoint(GetBox3PropertyJsNodeInputName.min, JsConnectionPointType.VECTOR3),
 			new JsConnectionPoint(GetBox3PropertyJsNodeInputName.max, JsConnectionPointType.VECTOR3),
+			new JsConnectionPoint(GetBox3PropertyJsNodeInputName.center, JsConnectionPointType.VECTOR3),
 		]);
 	}
 
@@ -38,7 +40,7 @@ export class GetBox3PropertyJsNode extends ParamlessTypedJsNode {
 
 		const _f = (
 			propertyName: GetBox3PropertyJsNodeInputName,
-			functionName: 'getBox3Min' | 'getBox3Max',
+			functionName: 'getBox3Center' | 'getBox3Min' | 'getBox3Max',
 			type: JsConnectionPointType
 		) => {
 			if (!usedOutputNames.includes(propertyName)) {
@@ -58,5 +60,6 @@ export class GetBox3PropertyJsNode extends ParamlessTypedJsNode {
 
 		_f(GetBox3PropertyJsNodeInputName.min, 'getBox3Min', JsConnectionPointType.VECTOR3);
 		_f(GetBox3PropertyJsNodeInputName.max, 'getBox3Max', JsConnectionPointType.VECTOR3);
+		_f(GetBox3PropertyJsNodeInputName.center, 'getBox3Center', JsConnectionPointType.VECTOR3);
 	}
 }

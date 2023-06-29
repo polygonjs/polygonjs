@@ -20,6 +20,8 @@ import {AtanJsNode} from '../../../nodes/js/Atan';
 import {AttributeJsNode} from '../../../nodes/js/Attribute';
 import {BoolToIntJsNode} from '../../../nodes/js/BoolToInt';
 import {Box3JsNode} from '../../../nodes/js/Box3';
+import {Box3ContainsPointJsNode} from '../../../nodes/js/Box3ContainsPoint';
+import {Box3IntersectsBox3JsNode} from '../../../nodes/js/Box3IntersectsBox3';
 import {Box3SetFromObjectJsNode} from '../../../nodes/js/Box3SetFromObject';
 import {CatmullRomCurve3GetPointJsNode} from '../../../nodes/js/CatmullRomCurve3GetPoint';
 import {CeilJsNode} from '../../../nodes/js/Ceil';
@@ -64,6 +66,8 @@ import {GetChildrenAttributesJsNode} from '../../../nodes/js/GetChildrenAttribut
 import {GetChildrenPhysicsRBDPropertiesJsNode} from '../../../nodes/js/GetChildrenPhysicsRBDProperties';
 import {GetChildrenPropertiesJsNode} from '../../../nodes/js/GetChildrenProperties';
 import {GetDefaultCameraJsNode} from '../../../nodes/js/GetDefaultCamera';
+import {GetGeometryBoundingBoxJsNode} from '../../../nodes/js/GetGeometryBoundingBox';
+import {GetGeometryPositionsJsNode} from '../../../nodes/js/GetGeometryPositions';
 import {GetIntersectionAttributeJsNode} from '../../../nodes/js/GetIntersectionAttribute';
 import {GetIntersectionPropertyJsNode} from '../../../nodes/js/GetIntersectionProperty';
 import {GetMaterialJsNode} from '../../../nodes/js/GetMaterial';
@@ -322,6 +326,8 @@ export interface JsNodeChildrenMap {
 	attribute: AttributeJsNode;
 	boolToInt: BoolToIntJsNode;
 	box3: Box3JsNode;
+	box3ContainsPoint: Box3ContainsPointJsNode;
+	box3IntersectsBox3: Box3IntersectsBox3JsNode;
 	box3SetFromObject: Box3SetFromObjectJsNode;
 	catmullRomCurve3GetPoint: CatmullRomCurve3GetPointJsNode;
 	ceil: CeilJsNode;
@@ -366,6 +372,8 @@ export interface JsNodeChildrenMap {
 	getChildrenPhysicsRBDProperties: GetChildrenPhysicsRBDPropertiesJsNode;
 	getChildrenProperties: GetChildrenPropertiesJsNode;
 	getDefaultCamera: GetDefaultCameraJsNode;
+	getGeometryBoundingBox: GetGeometryBoundingBoxJsNode;
+	getGeometryPositions: GetGeometryPositionsJsNode;
 	getIntersectionAttribute: GetIntersectionAttributeJsNode;
 	getIntersectionProperty: GetIntersectionPropertyJsNode;
 	getMaterial: GetMaterialJsNode;
@@ -668,6 +676,8 @@ export class JsRegister {
 		poly.registerNode(AtanJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(BoolToIntJsNode, CATEGORY_JS.CONVERSION);
 		poly.registerNode(Box3JsNode, CATEGORY_JS.MATH);
+		poly.registerNode(Box3ContainsPointJsNode, CATEGORY_JS.MATH);
+		poly.registerNode(Box3IntersectsBox3JsNode, CATEGORY_JS.MATH);
 		poly.registerNode(Box3SetFromObjectJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(CatmullRomCurve3GetPointJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(CeilJsNode, CATEGORY_JS.MATH);
@@ -712,6 +722,8 @@ export class JsRegister {
 		poly.registerNode(GetChildrenPhysicsRBDPropertiesJsNode, CATEGORY_JS.PHYSICS, ONLY_ACTOR);
 		poly.registerNode(GetChildrenPropertiesJsNode, CATEGORY_JS.GET, ONLY_ACTOR);
 		poly.registerNode(GetDefaultCameraJsNode, CATEGORY_JS.GET, ONLY_ACTOR);
+		poly.registerNode(GetGeometryBoundingBoxJsNode, CATEGORY_JS.GET, ONLY_ACTOR);
+		poly.registerNode(GetGeometryPositionsJsNode, CATEGORY_JS.GET, ONLY_ACTOR);
 		poly.registerNode(GetIntersectionAttributeJsNode, CATEGORY_JS.GET);
 		poly.registerNode(GetIntersectionPropertyJsNode, CATEGORY_JS.GET);
 		poly.registerNode(GetMaterialJsNode, CATEGORY_JS.GET, ONLY_ACTOR);

@@ -190,6 +190,8 @@ import './engine/nodes/js/AnimationActionStop';
 import './engine/nodes/js/AnimationMixer';
 import './engine/nodes/js/AnyTrigger';
 import './engine/nodes/js/Box3';
+import './engine/nodes/js/Box3ContainsPoint';
+import './engine/nodes/js/Box3IntersectsBox3';
 import './engine/nodes/js/Box3SetFromObject';
 import './engine/nodes/js/CatmullRomCurve3GetPoint';
 import './engine/nodes/js/Clamp';

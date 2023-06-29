@@ -6,7 +6,7 @@ import {CoreSleep} from '../../../../src/core/Sleep';
 import {TransformTargetType} from '../../../../src/core/Transform';
 import {GetTrackedHandPropertyJsNodeInputName} from '../../../../src/engine/nodes/js/GetTrackedHandProperty';
 import {SetGeometryPositionsInputName} from '../../../../src/engine/nodes/js/SetGeometryPositions';
-import {SetObjectAttributeJsNode} from '../../../../src/engine/nodes/js/SetObjectAttribute';
+import {SetObjectAttributeInputName} from '../../../../src/engine/nodes/js/SetObjectAttribute';
 import {TrackHandJsNodeOutput} from '../../../../src/engine/nodes/js/TrackHand';
 import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Js';
 import {RendererUtils} from '../../../helpers/RendererUtils';
@@ -102,7 +102,7 @@ QUnit.test('js/trackHand', async (assert) => {
 	setObjectAttribute1.setInput(JsConnectionPointType.TRIGGER, onTick1);
 	setObjectAttribute1.setInput(JsConnectionPointType.OBJECT_3D, getObject1);
 	setObjectAttribute1.setInput(
-		SetObjectAttributeJsNode.INPUT_NAME_VAL,
+		SetObjectAttributeInputName.val,
 		getTrackedHandProperty1,
 		GetTrackedHandPropertyJsNodeInputName.indexDirection
 	);

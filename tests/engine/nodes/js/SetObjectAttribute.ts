@@ -1,7 +1,7 @@
 import {AttribClass} from '../../../../src/core/geometry/Constant';
 import {CoreObject} from '../../../../src/core/geometry/Object';
 import {CoreSleep} from '../../../../src/core/Sleep';
-import {SetObjectAttributeJsNode} from '../../../../src/engine/nodes/js/SetObjectAttribute';
+import {SetObjectAttributeInputName} from '../../../../src/engine/nodes/js/SetObjectAttribute';
 import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Js';
 import {triggerClickAside, triggerClickInMiddle} from '../../../helpers/EventsHelper';
 import {RendererUtils} from '../../../helpers/RendererUtils';
@@ -32,7 +32,7 @@ QUnit.test('js/setObjectAttribute', async (assert) => {
 	setObjectAttribute1.setInput(JsConnectionPointType.TRIGGER, onObjectClick1);
 	setObjectAttribute1.setAttribType(JsConnectionPointType.INT);
 	setObjectAttribute1.setAttribName('increment');
-	setObjectAttribute1.setInput(SetObjectAttributeJsNode.INPUT_NAME_VAL, add1);
+	setObjectAttribute1.setInput(SetObjectAttributeInputName.val, add1);
 
 	getObjectAttribute1.setAttribType(JsConnectionPointType.INT);
 	getObjectAttribute1.setAttribName('increment');

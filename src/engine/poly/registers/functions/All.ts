@@ -21,6 +21,8 @@ import { arrayElementPrimitive } from "../../../functions/arrayElementPrimitive"
 import { arrayElementVector } from "../../../functions/arrayElementVector";
 import { arrayLength } from "../../../functions/arrayLength";
 import { boolToInt } from "../../../functions/boolToInt";
+import { box3ContainsPoint } from "../../../functions/box3ContainsPoint";
+import { box3IntersectsBox3 } from "../../../functions/box3IntersectsBox3";
 import { box3Set } from "../../../functions/box3Set";
 import { box3SetFromObject } from "../../../functions/box3SetFromObject";
 import { catmullRomCurve3GetPoint } from "../../../functions/catmullRomCurve3GetPoint";
@@ -88,6 +90,7 @@ import { geolocationLongitude } from "../../../functions/geolocationLongitude";
 import { getActorNodeParamValue } from "../../../functions/getActorNodeParamValue";
 import { getAnimationAction } from "../../../functions/getAnimationAction";
 import { getAnimationMixer } from "../../../functions/getAnimationMixer";
+import { getBox3Center } from "../../../functions/getBox3Center";
 import { getBox3Max } from "../../../functions/getBox3Max";
 import { getBox3Min } from "../../../functions/getBox3Min";
 import { getChildrenAttributes } from "../../../functions/getChildrenAttributes";
@@ -109,6 +112,8 @@ import { getChildrenPropertiesScale } from "../../../functions/getChildrenProper
 import { getChildrenPropertiesUp } from "../../../functions/getChildrenPropertiesUp";
 import { getChildrenPropertiesVisible } from "../../../functions/getChildrenPropertiesVisible";
 import { getDefaultCamera } from "../../../functions/getDefaultCamera";
+import { getGeometryBoundingBox } from "../../../functions/getGeometryBoundingBox";
+import { getGeometryPositions } from "../../../functions/getGeometryPositions";
 import { getIntersectionAttributeColorInterpolated } from "../../../functions/getIntersectionAttributeColorInterpolated";
 import { getIntersectionAttributeColorNearest } from "../../../functions/getIntersectionAttributeColorNearest";
 import { getIntersectionAttributeNumberInterpolated } from "../../../functions/getIntersectionAttributeNumberInterpolated";
@@ -460,6 +465,8 @@ export interface NamedFunctionMap {
 	arrayElementVector: arrayElementVector;
 	arrayLength: arrayLength;
 	boolToInt: boolToInt;
+	box3ContainsPoint: box3ContainsPoint;
+	box3IntersectsBox3: box3IntersectsBox3;
 	box3Set: box3Set;
 	box3SetFromObject: box3SetFromObject;
 	catmullRomCurve3GetPoint: catmullRomCurve3GetPoint;
@@ -527,6 +534,7 @@ export interface NamedFunctionMap {
 	getActorNodeParamValue: getActorNodeParamValue;
 	getAnimationAction: getAnimationAction;
 	getAnimationMixer: getAnimationMixer;
+	getBox3Center: getBox3Center;
 	getBox3Max: getBox3Max;
 	getBox3Min: getBox3Min;
 	getChildrenAttributes: getChildrenAttributes;
@@ -548,6 +556,8 @@ export interface NamedFunctionMap {
 	getChildrenPropertiesUp: getChildrenPropertiesUp;
 	getChildrenPropertiesVisible: getChildrenPropertiesVisible;
 	getDefaultCamera: getDefaultCamera;
+	getGeometryBoundingBox: getGeometryBoundingBox;
+	getGeometryPositions: getGeometryPositions;
 	getIntersectionAttributeColorInterpolated: getIntersectionAttributeColorInterpolated;
 	getIntersectionAttributeColorNearest: getIntersectionAttributeColorNearest;
 	getIntersectionAttributeNumberInterpolated: getIntersectionAttributeNumberInterpolated;
@@ -902,6 +912,8 @@ export class AllNamedFunctionRegister {
 			arrayElementVector,
 			arrayLength,
 			boolToInt,
+			box3ContainsPoint,
+			box3IntersectsBox3,
 			box3Set,
 			box3SetFromObject,
 			catmullRomCurve3GetPoint,
@@ -969,6 +981,7 @@ export class AllNamedFunctionRegister {
 			getActorNodeParamValue,
 			getAnimationAction,
 			getAnimationMixer,
+			getBox3Center,
 			getBox3Max,
 			getBox3Min,
 			getChildrenAttributes,
@@ -990,6 +1003,8 @@ export class AllNamedFunctionRegister {
 			getChildrenPropertiesUp,
 			getChildrenPropertiesVisible,
 			getDefaultCamera,
+			getGeometryBoundingBox,
+			getGeometryPositions,
 			getIntersectionAttributeColorInterpolated,
 			getIntersectionAttributeColorNearest,
 			getIntersectionAttributeNumberInterpolated,

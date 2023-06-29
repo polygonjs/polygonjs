@@ -28,9 +28,10 @@ import {JsType} from '../../poly/registers/nodes/types/Js';
 // import {Color, Vector3} from 'three';
 // import {PolyDictionary} from '../../../types/GlobalTypes';
 // import {BaseParamType} from '../../params/_Base';
-enum SetObjectAttributeInputName {
+export enum SetObjectAttributeInputName {
 	attribName = 'attribName',
 	lerp = 'lerp',
+	val = 'val',
 }
 
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
@@ -73,7 +74,6 @@ export class SetObjectAttributeJsNode extends TypedJsNode<SetObjectAttributeJsPa
 	static override type() {
 		return JsType.SET_OBJECT_ATTRIBUTE;
 	}
-	static INPUT_NAME_VAL = 'val';
 
 	override initializeNode() {
 		// this.io.connection_points.spare_params.setInputlessParamNames([ 'type']);
@@ -93,7 +93,7 @@ export class SetObjectAttributeJsNode extends TypedJsNode<SetObjectAttributeJsPa
 		]);
 
 		// this.io.connection_points.set_output_name_function((index: number) => ConstantActorNode.OUTPUT_NAME);
-		this.io.connection_points.set_input_name_function(() => SetObjectAttributeJsNode.INPUT_NAME_VAL);
+		this.io.connection_points.set_input_name_function(() => SetObjectAttributeInputName.val);
 		this.io.connection_points.set_expected_input_types_function(() => [this._currentConnectionType()]);
 		this.io.connection_points.set_output_name_function(
 			(i) => [TRIGGER_CONNECTION_NAME, JsConnectionPointType.OBJECT_3D][i]
@@ -119,6 +119,7 @@ export class SetObjectAttributeJsNode extends TypedJsNode<SetObjectAttributeJsPa
 		return {
 			[SetObjectAttributeInputName.attribName]: this._nextAttribName,
 			[SetObjectAttributeInputName.lerp]: 1,
+			[SetObjectAttributeInputName.val]: 0,
 		}[name];
 	}
 	setAttribType(type: ParamConvertibleJsType) {
@@ -139,7 +140,7 @@ export class SetObjectAttributeJsNode extends TypedJsNode<SetObjectAttributeJsPa
 		const object3D = inputObject3D(this, shadersCollectionController);
 		const attribName = this.variableForInput(shadersCollectionController, SetObjectAttributeInputName.attribName);
 		const lerp = this.variableForInput(shadersCollectionController, SetObjectAttributeInputName.lerp);
-		const newValue = this.variableForInput(shadersCollectionController, SetObjectAttributeJsNode.INPUT_NAME_VAL);
+		const newValue = this.variableForInput(shadersCollectionController, SetObjectAttributeInputName.val);
 
 		const func = Poly.namedFunctionsRegister.getFunction('setObjectAttribute', this, shadersCollectionController);
 		const bodyLine = func.asString(object3D, attribName, lerp, newValue, `'${this._currentConnectionType()}'`);
