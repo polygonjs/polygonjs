@@ -153,8 +153,8 @@ export class TorusSopOperation extends BaseSopOperation {
 		geometry.setAttribute(Attribute.NORMAL, new Float32BufferAttribute(normals, 3));
 		geometry.setAttribute(Attribute.UV, new Float32BufferAttribute(uvs, 2));
 
-		geometry.translate(params.center.x, params.center.y, params.center.z);
 		CoreTransform.rotateGeometry(geometry, DEFAULT_UP, params.direction);
+		geometry.translate(params.center.x, params.center.y, params.center.z);
 
 		return this.createCoreGroupFromGeometry(geometry);
 	}

@@ -6,8 +6,6 @@ import {vecCopy} from './SoftBodyMath';
 let nextId = 0;
 const _p: Number3 = [0, 0, 0];
 
-const constraintById = new Map();
-
 export class SoftBodyConstraint {
 	public readonly id = nextId++;
 	public invMass = 0;
@@ -15,8 +13,6 @@ export class SoftBodyConstraint {
 	private _position = new Vector3();
 	private _velocity = new Vector3();
 	constructor(private _softBody: SoftBody | null, public readonly pointIndex: number) {
-		constraintById.set(this.id, this);
-
 		// init position
 		if (!this._softBody) {
 			return;
@@ -26,13 +22,7 @@ export class SoftBodyConstraint {
 		this._previousPosition.copy(this._position);
 	}
 
-	delete() {
-		this._softBody?.deleteConstraint(this.id);
-		this._dispose();
-	}
-
-	private _dispose() {
-		constraintById.delete(this.id);
+	dispose() {
 		this._softBody = null;
 	}
 
@@ -51,8 +41,4 @@ export class SoftBodyConstraint {
 	velocity(target: Number3) {
 		this._velocity.toArray(target);
 	}
-}
-
-export function getSoftBodyConstraintById(id: number): SoftBodyConstraint {
-	return constraintById.get(id);
 }

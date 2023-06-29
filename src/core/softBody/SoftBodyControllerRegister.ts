@@ -39,11 +39,12 @@ export function createOrFindSoftBodyController(
 		// console.log({subSteps});
 		CoreSoftBodyAttribute.getGravity(threejsObjectInSceneTree, gravity);
 		controller = new SoftBodyController(scene, {
+			node,
 			gravity,
 			// subSteps,
 		});
 		controllers.set(threejsObjectInSceneTree, controller);
-		const {softBody} = createOrFindSoftBody(scene, tetEmbed);
+		const {softBody} = createOrFindSoftBody(node, tetEmbed);
 		if (softBody) {
 			controller.addSoftBody(softBody);
 		} else {
@@ -62,7 +63,7 @@ export function createOrFindSoftBodyController(
 
 	return {controller};
 }
-export function createOrFindSoftBody(scene: PolyScene, tetEmbed: TetEmbed) {
+export function createOrFindSoftBody(node: TetSoftBodySolverSopNode, tetEmbed: TetEmbed) {
 	const {threejsObjectInSceneTree} = tetEmbed;
 	if (!threejsObjectInSceneTree) {
 		throw 'createOrFindSoftBody: threejsObjectInSceneTree is null';
@@ -79,6 +80,7 @@ export function createOrFindSoftBody(scene: PolyScene, tetEmbed: TetEmbed) {
 		// if ((softBodyObject as Mesh).isMesh) {
 		// const mesh = softBodyObject as Mesh;
 		softBody = new SoftBody({
+			node,
 			tetEmbed,
 			edgeCompliance,
 			volumeCompliance,

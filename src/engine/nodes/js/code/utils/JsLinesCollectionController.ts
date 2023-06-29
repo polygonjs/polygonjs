@@ -1,4 +1,4 @@
-import {ShaderName} from '../../../utils/shaders/ShaderName';
+import {JsFunctionName} from '../../../utils/shaders/ShaderName';
 import {
 	BaseJsDefinition,
 	ComputedValueJsDefinition,
@@ -29,11 +29,11 @@ interface TriggerableJsDefinitionOptionsExtended extends TriggerableJsDefinition
 }
 
 export class JsLinesCollectionController {
-	private _linesControllerByShaderName: Map<ShaderName, JsLinesController> = new Map();
+	private _linesControllerByShaderName: Map<JsFunctionName, JsLinesController> = new Map();
 
 	constructor(
-		private _shaderNames: ShaderName[],
-		private _currentShaderName: ShaderName,
+		private _shaderNames: JsFunctionName[],
+		private _currentShaderName: JsFunctionName,
 		private _assembler: BaseJsShaderAssembler
 	) {
 		for (let shaderName of this._shaderNames) {
@@ -62,7 +62,7 @@ export class JsLinesCollectionController {
 		return this._assembler;
 	}
 
-	linesController(shaderName: ShaderName) {
+	linesController(shaderName: JsFunctionName) {
 		return this._linesControllerByShaderName.get(shaderName);
 	}
 
@@ -70,7 +70,7 @@ export class JsLinesCollectionController {
 		return this._shaderNames;
 	}
 
-	setCurrentShaderName(shaderName: ShaderName) {
+	setCurrentShaderName(shaderName: JsFunctionName) {
 		this._currentShaderName = shaderName;
 	}
 	currentShaderName() {
@@ -172,7 +172,7 @@ export class JsLinesCollectionController {
 		);
 	}
 
-	addDefinitions(node: BaseJsNodeType, definitions: BaseJsDefinition[], shaderName?: ShaderName) {
+	addDefinitions(node: BaseJsNodeType, definitions: BaseJsDefinition[], shaderName?: JsFunctionName) {
 		if (definitions.length == 0) {
 			return;
 		}
@@ -183,13 +183,13 @@ export class JsLinesCollectionController {
 			linesController.addDefinitions(node, definitions);
 		}
 	}
-	definitions(shaderName: ShaderName, node: BaseJsNodeType) {
+	definitions(shaderName: JsFunctionName, node: BaseJsNodeType) {
 		const linesController = this._linesControllerByShaderName.get(shaderName);
 		if (linesController) {
 			return linesController.definitions(node);
 		}
 	}
-	traverseDefinitions(shaderName: ShaderName, callback: DefinitionTraverseCallback) {
+	traverseDefinitions(shaderName: JsFunctionName, callback: DefinitionTraverseCallback) {
 		const linesController = this._linesControllerByShaderName.get(shaderName);
 		if (linesController) {
 			linesController.traverseDefinitions(callback);
@@ -205,7 +205,7 @@ export class JsLinesCollectionController {
 	// 	this.addBodyLines(node, lines);
 	// }
 
-	_addBodyLines(node: BaseJsNodeType, lines: string[], shaderName?: ShaderName, options?: AddBodyLinesOptions) {
+	_addBodyLines(node: BaseJsNodeType, lines: string[], shaderName?: JsFunctionName, options?: AddBodyLinesOptions) {
 		if (lines.length == 0) {
 			return;
 		}
@@ -215,7 +215,7 @@ export class JsLinesCollectionController {
 			linesController.addBodyLines(node, lines, options);
 		}
 	}
-	bodyLines(shaderName: ShaderName, node: BaseJsNodeType) {
+	bodyLines(shaderName: JsFunctionName, node: BaseJsNodeType) {
 		const linesController = this._linesControllerByShaderName.get(shaderName);
 		if (linesController) {
 			return linesController.bodyLines(node);

@@ -17,7 +17,7 @@ import {JsAssemblerController} from '../js/code/Controller';
 import {JsAssemblerSDF} from '../js/code/assemblers/sdf/SDF';
 import {JsNodeFinder} from '../js/code/utils/NodeFinder';
 import {Box3, Vector3} from 'three';
-import {FunctionData} from '../js/code/assemblers/_Base';
+import {SingleBodyFunctionData} from '../js/code/assemblers/_Base';
 import {RegisterableVariable} from '../js/code/assemblers/_BaseJsPersistedConfigUtils';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {SDFLoader} from '../../../core/geometry/sdf/SDFLoader';
@@ -184,7 +184,7 @@ export class SDFBuilderSopNode extends TypedSopNode<SDFBuilderSopParamsConfig> {
 	private _position = new Vector3();
 	private _paramConfigs: JsParamConfig<ParamType>[] = [];
 	// private _paramConfigNames: string[] = [];
-	private _functionData: FunctionData | undefined;
+	private _functionData: SingleBodyFunctionData | undefined;
 	private _functionCreationArgs: string[] = [];
 	private _functionEvalArgs: (Function | RegisterableVariable)[] = [];
 	private _function: SDFFunction | undefined;
@@ -225,7 +225,7 @@ export class SDFBuilderSopNode extends TypedSopNode<SDFBuilderSopParamsConfig> {
 
 		assemblerController.post_compile();
 	}
-	updateFromFunctionData(functionData: FunctionData) {
+	updateFromFunctionData(functionData: SingleBodyFunctionData) {
 		this._functionData = functionData;
 
 		const {functionBody, variableNames, variablesByName, functionNames, functionsByName, paramConfigs} =

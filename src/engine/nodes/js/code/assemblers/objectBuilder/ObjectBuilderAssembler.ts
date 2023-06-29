@@ -2,15 +2,15 @@ import {
 	BaseJsShaderAssembler,
 	INSERT_DEFINE_AFTER,
 	INSERT_BODY_AFTER,
-	FunctionData,
+	SingleBodyFunctionData,
 	INSERT_MEMBERS_AFTER,
 	INSERT_CONSTRUCTOR_AFTER,
 	SpareParamOptions,
 } from '../_Base';
 import {RegisterableVariable} from '../_BaseJsPersistedConfigUtils';
-import {ShaderConfig} from '../../configs/ShaderConfig';
+import {JsShaderConfig} from '../../configs/ShaderConfig';
 import {VariableConfig} from '../../configs/VariableConfig';
-import {ShaderName} from '../../../../utils/shaders/ShaderName';
+import {JsFunctionName} from '../../../../utils/shaders/ShaderName';
 import {OutputJsNode} from '../../../Output';
 import {GlobalsJsNode} from '../../../Globals';
 import {JsConnectionPointType, JsConnectionPoint} from '../../../../utils/io/connections/Js';
@@ -41,9 +41,7 @@ export class JsAssemblerObjectBuilder extends BaseJsShaderAssembler {
 	}
 	override templateShader() {
 		return {
-			fragmentShader: TEMPLATE,
-			vertexShader: undefined,
-			uniforms: undefined,
+			main: TEMPLATE,
 		};
 	}
 
@@ -59,10 +57,10 @@ export class JsAssemblerObjectBuilder extends BaseJsShaderAssembler {
 		return _options;
 	}
 
-	functionData(): FunctionData | undefined {
+	functionData(): SingleBodyFunctionData | undefined {
 		// const functionBody = this._shaders_by_name.get(ShaderName.FRAGMENT);
 		const _buildFunctionBody = () => {
-			const bodyLines = this._shaders_by_name.get(ShaderName.FRAGMENT) || TEMPLATE;
+			const bodyLines = this._shaders_by_name.get(JsFunctionName.MAIN) || TEMPLATE;
 			const functionBodyElements = [
 				bodyLines,
 				// triggerableFunctionLines.join('\n'),
@@ -227,8 +225,8 @@ export class JsAssemblerObjectBuilder extends BaseJsShaderAssembler {
 	//
 	override create_shader_configs() {
 		return [
-			new ShaderConfig(
-				ShaderName.FRAGMENT,
+			new JsShaderConfig(
+				JsFunctionName.MAIN,
 				[
 					ObjectVariable.POSITION,
 					ObjectVariable.ROTATION,

@@ -1,12 +1,12 @@
 import {BasePersistedConfig} from '../../../../utils/BasePersistedConfig';
-import {FunctionData} from '../_Base';
+import {SingleBodyFunctionData} from '../_Base';
 import {SerializedVariable, SerializedVariableType} from '../_BaseJsPersistedConfigUtils';
 import {PointBuilderSopNode} from '../../../../sop/PointBuilder';
 import {NamedFunctionMap} from '../../../../../poly/registers/functions/All';
 import {JsParamConfig, JsParamConfigJSON} from '../../utils/JsParamConfig';
 import {ParamType} from '../../../../../poly/ParamType';
 import {
-	PersistedConfigBaseJsData,
+	SingleBodyPersistedConfigBaseJsData,
 	serializedVariablesFromFunctionData,
 	variablesByNameFromPersistedConfigData,
 	functionsByNameFromPersistedConfigData,
@@ -21,11 +21,11 @@ export interface PointBuilderFunctionDataAttributeDataReadWrite {
 	read: PointBuilderFunctionDataAttributeDataItem[];
 	write: PointBuilderFunctionDataAttributeDataItem[];
 }
-export interface PointBuilderFunctionData extends FunctionData {
+export interface PointBuilderFunctionData extends SingleBodyFunctionData {
 	attributesData: PointBuilderFunctionDataAttributeDataReadWrite;
 }
 
-export interface PointBuilderPersistedConfigBaseJsData extends PersistedConfigBaseJsData {
+export interface PointBuilderPersistedConfigBaseJsData extends SingleBodyPersistedConfigBaseJsData {
 	functionBody: string;
 	variableNames: string[];
 	variables: SerializedVariable<SerializedVariableType>[];

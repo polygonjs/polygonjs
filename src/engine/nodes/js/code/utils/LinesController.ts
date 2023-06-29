@@ -1,4 +1,4 @@
-import {ShaderName} from '../../../utils/shaders/ShaderName';
+import {JsFunctionName} from '../../../utils/shaders/ShaderName';
 import {BaseJsDefinition} from '../../utils/JsDefinition';
 import {BaseJsNodeType} from '../../_Base';
 import {MapUtils} from '../../../../../core/MapUtils';
@@ -14,7 +14,7 @@ export class JsLinesController {
 	private _definitionsByNodeId: Map<CoreGraphNodeId, BaseJsDefinition[]> = new Map();
 	private _bodyLinesByNodeId: Map<CoreGraphNodeId, string[]> = new Map();
 
-	constructor(private _shader_name: ShaderName) {}
+	constructor(private _shader_name: JsFunctionName) {}
 
 	get shader_name() {
 		return this._shader_name;

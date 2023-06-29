@@ -24,19 +24,25 @@ import {
 	_SDFBox,
 	// _SDFPlane
 } from '../../engine/functions/_SDFPrimitives';
+import {
+	TetSoftBodySolverSopNode,
+	EvalArgsWithParamConfigs,
+	MultiFunctionDefined,
+} from '../../engine/nodes/sop/TetSoftBodySolver';
 
-const _boxCenter = new Vector3(0, 0, 0);
-const _boxSizes = new Vector3(1, 1, 1);
+// const _boxCenter = new Vector3(0, 0, 0);
+// const _boxSizes = new Vector3(1, 1, 1);
 // const _planeCenter = new Vector3(0, 0, 0);
 // const _planeNormal = new Vector3(0, 1, 0);
 // const planeOffset = 0;
-function collisionSDF(p: Vector3) {
-	// const plane = _SDFPlane(p, _planeCenter, _planeNormal, planeOffset);
-	return -_SDFBox(p, _boxCenter, _boxSizes, 5);
-	// return Math.min(plane, box);
-}
+// function collisionSDF(p: Vector3) {
+// 	// const plane = _SDFPlane(p, _planeCenter, _planeNormal, planeOffset);
+// 	return -_SDFBox(p, _boxCenter, _boxSizes, 5);
+// 	// return Math.min(plane, box);
+// }
 
 interface SoftBodyOptions {
+	node: TetSoftBodySolverSopNode;
 	tetEmbed: TetEmbed;
 	edgeCompliance: number;
 	volumeCompliance: number;
@@ -72,8 +78,11 @@ export class SoftBody {
 	private skinningInfo: Float32Array;
 	private highResGeometry: BufferGeometry | undefined;
 	private highResObjectPosition: number[];
+	//
+	private _node: TetSoftBodySolverSopNode;
 
 	constructor(private options: SoftBodyOptions) {
+		this._node = options.node;
 		const {tetEmbed, edgeCompliance, volumeCompliance} = this.options;
 		const {tetObject, lowResObject, highResObject} = tetEmbed;
 		this.bufferGeometry = (lowResObject as Mesh).geometry;
@@ -197,22 +206,24 @@ export class SoftBody {
 		}
 	}
 
-	private _updateMeshes() {
-		this._updateLowResObject();
-		this._updateHighResMesh();
-	}
-	private _updateLowResObject() {
+	// updateMeshes() {
+	// 	this.updateLowResObject();
+	// 	this.updateHighResMesh();
+	// }
+	updateLowResObject() {
 		// we still need to update the low res mesh
 		// event if we only display the high res one,
 		// as it may be used for raycasting
 		// if (this.highResGeometry) {
 		// 	return;
 		// }
-		this.bufferGeometry.computeVertexNormals();
+		if (!this.highResGeometry) {
+			this.bufferGeometry.computeVertexNormals();
+		}
 		this.bufferGeometry.attributes.position.needsUpdate = true;
 		this.bufferGeometry.computeBoundingSphere();
 	}
-	private _updateHighResMesh() {
+	updateHighResMesh() {
 		if (!this.highResGeometry) {
 			return;
 		}
@@ -277,33 +288,44 @@ export class SoftBody {
 
 	private _pos = new Vector3(0, 0, 0);
 	private _vel = new Vector3(0, 0, 0);
-	preSolve(dt: number, gravity: number[]) {
-		// console.log('---- preseolve');
+	preSolve(dt: number, gravity: number[], args: EvalArgsWithParamConfigs, functions: MultiFunctionDefined) {
 		for (let i = 0; i < this.numParticles; i++) {
 			if (this.invMass[i] == 0.0) continue;
-			vecAdd(this.vel, i, gravity, 0, dt);
+			this._pos.fromArray(this.pos, i * 3);
+			this._vel.fromArray(this.vel, i * 3);
+			this._node.setPointGlobals(this._pos, this._vel);
+
+			const computedVel: Vector3 = functions.velocity(...args.velocity);
+			computedVel.toArray(this.vel, i * 3);
+
+			// vecAdd(this.vel, i, gravity, 0, dt);
 			vecCopy(this.prevPos, i, this.pos, i);
 
 			// if (true) {
-			this._pos.fromArray(this.pos, i * 3);
-			const speed = this._vel
+
+			const stepMagnitude = this._vel
 				.fromArray(this.vel, i * 3)
 				.multiplyScalar(dt)
 				.length();
-			const dist = collisionSDF(this._pos);
-			if (dist < speed) {
+
+			// console.log(colliderFunc);
+			// const args = this._node.functionEvalArgsWithParamConfigs().collider;
+			const distToCollider: number = functions.collider(...args.collider);
+			// const dist = collisionSDF(this._pos);
+			if (stepMagnitude > distToCollider) {
 				// handle collision
 				// 1. set prevPos
 				vecAdd(this.pos, i, this.vel, i, dt);
 				vecCopy(this.pos, i, this.prevPos, i);
 				// 2. update pos
-				this._vel.normalize().multiplyScalar(dist);
+				this._vel.normalize().multiplyScalar(distToCollider);
 				this._pos.add(this._vel);
 				this._pos.toArray(this.pos, i * 3);
 			} else {
 				// no collision
 				vecAdd(this.pos, i, this.vel, i, dt);
 			}
+
 			// } else {
 			// 	vecAdd(this.pos, i, this.vel, i, dt);
 			// 	const y = this.pos[3 * i + 1];
@@ -325,7 +347,6 @@ export class SoftBody {
 			if (this.invMass[i] == 0.0) continue;
 			vecSetDiff(this.vel, i, this.pos, i, this.prevPos, i, 1.0 / dt);
 		}
-		this._updateMeshes();
 	}
 
 	solveEdges(compliance: number, dt: number) {
@@ -383,31 +404,11 @@ export class SoftBody {
 		}
 	}
 
-	// squash() {
-	// 	for (let i = 0; i < this.numParticles; i++) {
-	// 		this.pos[3 * i + 1] = 0.5;
-	// 	}
-	// 	this.updateMeshes();
-	// }
-
-	// startGrab(pos: Vector3) {
-	// 	const p = [pos.x, pos.y, pos.z];
-	// 	let minD2 = Number.MAX_VALUE;
-	// 	this.grabId = -1;
-	// 	for (let i = 0; i < this.numParticles; i++) {
-	// 		const d2 = vecDistSquared(p, 0, this.pos, i);
-	// 		if (d2 < minD2) {
-	// 			minD2 = d2;
-	// 			this.grabId = i;
-	// 		}
-	// 	}
-
-	// 	if (this.grabId >= 0) {
-	// 		this.grabInvMass = this.invMass[this.grabId];
-	// 		this.invMass[this.grabId] = 0.0;
-	// 		vecCopy(this.pos, this.grabId, p, 0);
-	// 	}
-	// }
+	//
+	//
+	// constraints
+	//
+	//
 	createConstraint(index: number) {
 		const constraint = new SoftBodyConstraint(this, index);
 		this.constraintsById.set(constraint.id, constraint);
@@ -415,13 +416,11 @@ export class SoftBody {
 		this.invMass[index] = 0.0;
 		return constraint;
 	}
+	getConstraint(constraintId: number) {
+		return this.constraintsById.get(constraintId);
+	}
 	private _constraintVel: Number3 = [0, 0, 0];
 	deleteConstraint(constraintId: number) {
-		// const constraint = this.constraintsById.get(constraintId);
-		// if(constraint){
-		// 	this.invMass[constraint.index] = constraint.invMass;
-		// 	this.constraintsById.delete(constraintId);
-		// }
 		const constraint = this.constraintsById.get(constraintId);
 		if (!constraint) {
 			return;
@@ -430,53 +429,9 @@ export class SoftBody {
 		if (constraint.pointIndex >= 0) {
 			this.invMass[constraint.pointIndex] = constraint.invMass;
 			constraint.velocity(this._constraintVel);
-			// const vel = this._selectedVertexVelocity;
-			// const v = [vel.x, vel.y, vel.z];
 			vecCopy(this.vel, constraint.pointIndex, this._constraintVel, 0);
 		}
-		// this.grabId = -1;
-		// this._selectedVertexVelocity.set(0, 0, 0);
 		this.constraintsById.delete(constraintId);
+		constraint.dispose();
 	}
-	// setSelectedVertexIndex(index: number) {
-	// 	if (index >= 0) {
-	// 		this.grabInvMass = this.invMass[index];
-	// 		this.invMass[index] = 0.0;
-	// 		// vecCopy(this.pos, this.grabId, p, 0);
-	// 	} else {
-	// 		this._endGrab();
-	// 	}
-
-	// 	this.grabId = index;
-	// }
-
-	// moveGrabbed(pos: Vector3) {
-	// 	if (this.grabId >= 0) {
-	// 		const p = [pos.x, pos.y, pos.z];
-	// 		vecCopy(this.pos, this.grabId, p, 0);
-	// 	}
-	// }
-	// private _selectedVertexPreviousPosition = new Vector3();
-	// private _selectedVertexVelocity = new Vector3();
-	// setSelectedVertexPosition(pos: Vector3, dt: number) {
-	// 	if (this.grabId < 0) {
-	// 		return;
-	// 	}
-	// 	this._selectedVertexVelocity.copy(pos).sub(this._selectedVertexPreviousPosition).divideScalar(dt);
-
-	// 	const p = [pos.x, pos.y, pos.z];
-	// 	vecCopy(this.pos, this.grabId, p, 0);
-	// 	this._selectedVertexPreviousPosition.copy(pos);
-	// }
-
-	// protected _endGrab() {
-	// 	if (this.grabId >= 0) {
-	// 		this.invMass[this.grabId] = this.grabInvMass;
-	// 		const vel = this._selectedVertexVelocity;
-	// 		const v = [vel.x, vel.y, vel.z];
-	// 		vecCopy(this.vel, this.grabId, v, 0);
-	// 	}
-	// 	this.grabId = -1;
-	// 	this._selectedVertexVelocity.set(0, 0, 0);
-	// }
 }

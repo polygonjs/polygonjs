@@ -5,16 +5,14 @@ import {TextureAllocationsController} from '../../utils/TextureAllocationsContro
 import {ThreeToGl} from '../../../../../../core/ThreeToGl';
 import {BaseGlNodeType} from '../../../_Base';
 import {GlobalsGlNode} from '../../../Globals';
-import {TypedNodeTraverser} from '../../../../utils/shaders/NodeTraverser';
 import {ShaderName} from '../../../../utils/shaders/ShaderName';
 import {OutputGlNode} from '../../../Output';
 import {GlConnectionPointType, GlConnectionPoint} from '../../../../utils/io/connections/Gl';
 import {UniformGLDefinition} from '../../../utils/GLDefinition';
 import {GlobalsTextureHandler} from '../../globals/Texture';
 import {ShadersCollectionController} from '../../utils/ShadersCollectionController';
-import {NodeContext} from '../../../../../poly/NodeContext';
 import {SubnetOutputGlNode} from '../../../SubnetOutput';
-// import {GlType} from '../../../../../poly/registers/nodes/types/Gl';
+import {GlNodeTraverser} from '../../../../utils/shaders/GlNodeTraverser';
 
 export class ShaderAssemblerParticles extends BaseGlShaderAssembler {
 	private _textureAllocationsController: TextureAllocationsController | undefined;
@@ -98,14 +96,14 @@ export class ShaderAssemblerParticles extends BaseGlShaderAssembler {
 		// and is necessary to find the attribute nodes that may be inside subnets
 		// so that we can allocate the texture variables
 
-		const node_traverser_shallow = new TypedNodeTraverser<NodeContext.GL>(
+		const node_traverser_shallow = new GlNodeTraverser(
 			this.currentGlParentNode(),
 			this.shaderNames(),
 			(root_node, shader_name) => {
 				return this.inputNamesForShaderName(root_node, shader_name);
 			}
 		);
-		const node_traverser_deep = new TypedNodeTraverser<NodeContext.GL>(
+		const node_traverser_deep = new GlNodeTraverser(
 			this.currentGlParentNode(),
 			this.shaderNames(),
 			(root_node, shader_name) => {

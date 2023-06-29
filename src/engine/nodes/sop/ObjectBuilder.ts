@@ -24,7 +24,7 @@ import {Constructor, valueof} from '../../../types/GlobalTypes';
 import {BaseJsNodeType} from '../js/_Base';
 import {JsParamConfig} from '../js/code/utils/JsParamConfig';
 import {ParamType} from '../../poly/ParamType';
-import {FunctionData} from '../js/code/assemblers/_Base';
+import {SingleBodyFunctionData} from '../js/code/assemblers/_Base';
 import {RegisterableVariable} from '../js/code/assemblers/_BaseJsPersistedConfigUtils';
 import {Group, Object3D} from 'three';
 import {JsNodeFinder} from '../js/code/utils/NodeFinder';
@@ -167,7 +167,7 @@ export class ObjectBuilderSopNode extends TypedSopNode<ObjectBuilderSopParamsCon
 	}
 	private _objectContainer: ObjectContainer = {Object3D: DUMMY, objnum: -1};
 	private _paramConfigs: JsParamConfig<ParamType>[] = [];
-	private _functionData: FunctionData | undefined;
+	private _functionData: SingleBodyFunctionData | undefined;
 	private _functionCreationArgs: string[] = [];
 	private _functionEvalArgs: (ObjectContainer | Function | RegisterableVariable)[] = [];
 	private _function: ObjectFunction | undefined;
@@ -209,7 +209,7 @@ export class ObjectBuilderSopNode extends TypedSopNode<ObjectBuilderSopParamsCon
 
 		assemblerController.post_compile();
 	}
-	updateFromFunctionData(functionData: FunctionData) {
+	updateFromFunctionData(functionData: SingleBodyFunctionData) {
 		this._functionData = functionData;
 
 		const {functionBody, variableNames, variablesByName, functionNames, functionsByName, paramConfigs} =

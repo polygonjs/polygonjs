@@ -3,10 +3,10 @@ import {LineType} from '../utils/LineType';
 import {VariableConfig} from '../configs/VariableConfig';
 import {JsCodeBuilder, CodeBuilderSetCodeLinesOptions} from '../utils/CodeBuilder';
 import {BaseJsNodeType, TypedJsNode} from '../../_Base';
-import {ShaderConfig} from '../configs/ShaderConfig';
+import {JsShaderConfig} from '../configs/ShaderConfig';
 // import {GlobalsGeometryHandler} from '../globals/Geometry';
 import {TypedAssembler} from '../../../utils/shaders/BaseAssembler';
-import {ShaderName} from '../../../utils/shaders/ShaderName';
+import {JsFunctionName} from '../../../utils/shaders/ShaderName';
 import {OutputJsNode} from '../../Output';
 // import {ParamType} from '../../../../poly/ParamType';
 import {JsConnectionPoint, JsConnectionPointType} from '../../../utils/io/connections/Js';
@@ -15,7 +15,7 @@ import {AttributeJsNode} from '../../Attribute';
 import {AssemblerControllerNode} from '../Controller';
 import {GlobalsJsBaseController} from '../globals/_Base';
 import {JsLinesCollectionController} from '../utils/JsLinesCollectionController';
-import {IUniforms} from '../../../../../core/geometry/Material';
+// import {IUniforms} from '../../../../../core/geometry/Material';
 // import {ParamJsNode} from '../../Param';
 import {NodeContext} from '../../../../poly/NodeContext';
 // import {ShaderChunk} from 'three';
@@ -35,24 +35,30 @@ import {JsParamConfig} from '../utils/JsParamConfig';
 import {ParamType} from '../../../../poly/ParamType';
 import {ParamOptions} from '../../../../params/utils/OptionsController';
 
-type StringArrayByJsFunctionName = Map<ShaderName, string[]>;
+type StringArrayByJsFunctionName = Map<JsFunctionName, string[]>;
 export interface SpareParamOptions {
 	type: ParamType;
 }
 
-export interface FunctionData {
-	functionBody: string;
+export interface BaseFunctionData {
 	variableNames: string[];
 	variablesByName: Record<string, RegisterableVariable>;
 	functionNames: Array<keyof NamedFunctionMap>;
 	functionsByName: Record<string, Function>;
 	paramConfigs: JsParamConfig<ParamType>[];
-	// paramConfigs: readonly JsParamConfig<ParamType>[];
 }
-interface ITemplateShader {
-	vertexShader?: string;
-	fragmentShader?: string;
-	uniforms?: IUniforms;
+export interface SingleBodyFunctionData extends BaseFunctionData {
+	functionBody: string;
+}
+export interface VelocityColliderFunctionData extends BaseFunctionData {
+	functionBodyVelocity: string;
+	functionBodyCollider: string;
+}
+interface JsTemplateShader {
+	main?: string;
+	velocity?: string;
+	collider?: string;
+	// uniforms?: IUniforms;
 }
 export const INSERT_MEMBERS_AFTER = '// insert members';
 export const INSERT_DEFINE_AFTER = '// insert defines';
@@ -61,21 +67,29 @@ export const INSERT_BODY_AFTER = '// insert body';
 // export const INSERT_TRIGGER_AFTER = '// insert trigger';
 // export const INSERT_TRIGGERABLE_AFTER = '// insert triggerable';
 
-const INSERT_MEMBER_AFTER_MAP: Map<ShaderName, string> = new Map([
+const INSERT_MEMBER_AFTER_MAP: Map<JsFunctionName, string> = new Map([
 	// [ShaderName.VERTEX, '#include <common>'],
-	[ShaderName.FRAGMENT, INSERT_MEMBERS_AFTER],
+	[JsFunctionName.MAIN, INSERT_MEMBERS_AFTER],
+	[JsFunctionName.VELOCITY, INSERT_MEMBERS_AFTER],
+	[JsFunctionName.COLLIDER, INSERT_MEMBERS_AFTER],
 ]);
-const INSERT_DEFINE_AFTER_MAP: Map<ShaderName, string> = new Map([
+const INSERT_DEFINE_AFTER_MAP: Map<JsFunctionName, string> = new Map([
 	// [ShaderName.VERTEX, '#include <common>'],
-	[ShaderName.FRAGMENT, INSERT_DEFINE_AFTER],
+	[JsFunctionName.MAIN, INSERT_DEFINE_AFTER],
+	[JsFunctionName.VELOCITY, INSERT_DEFINE_AFTER],
+	[JsFunctionName.COLLIDER, INSERT_DEFINE_AFTER],
 ]);
-const INSERT_CONSTRUCTOR_AFTER_MAP: Map<ShaderName, string> = new Map([
+const INSERT_CONSTRUCTOR_AFTER_MAP: Map<JsFunctionName, string> = new Map([
 	// [ShaderName.VERTEX, '#include <common>'],
-	[ShaderName.FRAGMENT, INSERT_CONSTRUCTOR_AFTER],
+	[JsFunctionName.MAIN, INSERT_CONSTRUCTOR_AFTER],
+	[JsFunctionName.VELOCITY, INSERT_CONSTRUCTOR_AFTER],
+	[JsFunctionName.COLLIDER, INSERT_CONSTRUCTOR_AFTER],
 ]);
-const INSERT_BODY_AFTER_MAP: Map<ShaderName, string> = new Map([
+const INSERT_BODY_AFTER_MAP: Map<JsFunctionName, string> = new Map([
 	// [ShaderName.VERTEX, '#include <color_vertex>'],
-	[ShaderName.FRAGMENT, INSERT_BODY_AFTER],
+	[JsFunctionName.MAIN, INSERT_BODY_AFTER],
+	[JsFunctionName.VELOCITY, INSERT_BODY_AFTER],
+	[JsFunctionName.COLLIDER, INSERT_BODY_AFTER],
 ]);
 // const INSERT_TRIGGER_AFTER_MAP: Map<ShaderName, string> = new Map([
 // 	// [ShaderName.VERTEX, '#include <color_vertex>'],
@@ -85,15 +99,17 @@ const INSERT_BODY_AFTER_MAP: Map<ShaderName, string> = new Map([
 // 	// [ShaderName.VERTEX, '#include <color_vertex>'],
 // 	[ShaderName.FRAGMENT, INSERT_TRIGGERABLE_AFTER],
 // ]);
-const LINES_TO_REMOVE_MAP: Map<ShaderName, string[]> = new Map([
+const LINES_TO_REMOVE_MAP: Map<JsFunctionName, string[]> = new Map([
 	// [ShaderName.VERTEX, ['#include <begin_vertex>', '#include <beginnormal_vertex>']],
-	[ShaderName.FRAGMENT, []],
+	[JsFunctionName.MAIN, []],
+	[JsFunctionName.VELOCITY, []],
+	[JsFunctionName.COLLIDER, []],
 ]);
 
 const SPACED_LINES = 3;
 
 export abstract class BaseJsShaderAssembler extends TypedAssembler<NodeContext.JS> {
-	protected _shaders_by_name: Map<ShaderName, string> = new Map();
+	protected _shaders_by_name: Map<JsFunctionName, string> = new Map();
 	protected _lines: StringArrayByJsFunctionName = new Map();
 	protected _codeBuilder: JsCodeBuilder | undefined;
 	private _param_config_owner: JsCodeBuilder | undefined;
@@ -101,7 +117,7 @@ export abstract class BaseJsShaderAssembler extends TypedAssembler<NodeContext.J
 	protected _leaf_nodes: BaseJsNodeType[] = [];
 	protected _material: ShaderMaterial | undefined;
 
-	private _shader_configs: ShaderConfig[] | undefined;
+	private _shader_configs: JsShaderConfig[] | undefined;
 	private _variable_configs: VariableConfig[] | undefined;
 
 	private _uniformsTimeDependent: boolean = false;
@@ -156,12 +172,14 @@ export abstract class BaseJsShaderAssembler extends TypedAssembler<NodeContext.J
 	// 	await this._update_material(/*master_assembler*/);
 	// 	return this._material;
 	// }
-	protected _template_shader_for_shader_name(shader_name: ShaderName): string | undefined {
-		switch (shader_name) {
-			case ShaderName.VERTEX:
-				return this.templateShader()?.vertexShader;
-			case ShaderName.FRAGMENT:
-				return this.templateShader()?.fragmentShader;
+	protected _template_shader_for_shader_name(shaderName: JsFunctionName): string | undefined {
+		switch (shaderName) {
+			case JsFunctionName.MAIN:
+				return this.templateShader()?.main;
+			case JsFunctionName.VELOCITY:
+				return this.templateShader()?.velocity;
+			case JsFunctionName.COLLIDER:
+				return this.templateShader()?.collider;
 		}
 	}
 
@@ -195,7 +213,7 @@ export abstract class BaseJsShaderAssembler extends TypedAssembler<NodeContext.J
 	set_root_nodes(root_nodes: BaseJsNodeType[]) {
 		this._root_nodes = root_nodes;
 	}
-	protected templateShader(): ITemplateShader | undefined {
+	protected templateShader(): JsTemplateShader | undefined {
 		return undefined;
 	}
 	protected _reset() {
@@ -232,7 +250,7 @@ export abstract class BaseJsShaderAssembler extends TypedAssembler<NodeContext.J
 	// ROOT NODES AND SHADER NAMES
 	//
 	//
-	rootNodesByShaderName(shaderName: ShaderName, rootNodes: BaseJsNodeType[]): BaseJsNodeType[] {
+	rootNodesByShaderName(shaderName: JsFunctionName, rootNodes: BaseJsNodeType[]): BaseJsNodeType[] {
 		// return this._root_nodes
 		const list = [];
 		for (let node of rootNodes) {
@@ -245,7 +263,12 @@ export abstract class BaseJsShaderAssembler extends TypedAssembler<NodeContext.J
 					list.push(node);
 					break;
 				}
-				case JsType.OUTPUT_AREA_LIGHT: {
+				case JsType.OUTPUT_AMBIENT_LIGHT:
+				case JsType.OUTPUT_AREA_LIGHT:
+				case JsType.OUTPUT_DIRECTIONAL_LIGHT:
+				case JsType.OUTPUT_HEMISPHERE_LIGHT:
+				case JsType.OUTPUT_POINT_LIGHT:
+				case JsType.OUTPUT_SPOT_LIGHT: {
 					list.push(node);
 					break;
 				}
@@ -327,7 +350,7 @@ export abstract class BaseJsShaderAssembler extends TypedAssembler<NodeContext.J
 	builder_param_configs() {
 		return this.codeBuilder().param_configs();
 	}
-	builder_lines(shader_name: ShaderName, line_type: LineType) {
+	builder_lines(shader_name: JsFunctionName, line_type: LineType) {
 		return this.codeBuilder().lines(shader_name, line_type);
 	}
 	all_builder_lines() {
@@ -409,22 +432,22 @@ export abstract class BaseJsShaderAssembler extends TypedAssembler<NodeContext.J
 	shaderConfigs() {
 		return (this._shader_configs = this._shader_configs || this.create_shader_configs());
 	}
-	set_shader_configs(shader_configs: ShaderConfig[]) {
+	set_shader_configs(shader_configs: JsShaderConfig[]) {
 		this._shader_configs = shader_configs;
 	}
-	shaderNames(): ShaderName[] {
+	shaderNames(): JsFunctionName[] {
 		return this.shaderConfigs()?.map((sc) => sc.name()) || [];
 	}
 	protected _reset_shader_configs() {
 		this._shader_configs = undefined;
 	}
-	create_shader_configs(): ShaderConfig[] {
+	create_shader_configs(): JsShaderConfig[] {
 		return [
 			// new ShaderConfig(ShaderName.VERTEX, ['position', 'normal', 'uv', VaryingWriteGlNode.INPUT_NAME], []),
-			new ShaderConfig(ShaderName.FRAGMENT, ['color', 'alpha'], [ShaderName.VERTEX]),
+			new JsShaderConfig(JsFunctionName.MAIN, ['color', 'alpha'], []),
 		];
 	}
-	shader_config(name: string): ShaderConfig | undefined {
+	shader_config(name: string): JsShaderConfig | undefined {
 		return this.shaderConfigs()?.filter((sc) => {
 			return sc.name() == name;
 		})[0];
@@ -473,8 +496,17 @@ export abstract class BaseJsShaderAssembler extends TypedAssembler<NodeContext.J
 		this._variable_configs = undefined;
 		this.variable_configs();
 	}
-	inputNamesForShaderName(rootNode: BaseJsNodeType, _: ShaderName) {
-		return rootNode.io.inputs.namedInputConnectionPoints().map((c) => c.name()); //this.shader_config(shader_name)?.input_names() || [];
+	inputNamesForShaderName(rootNode: BaseJsNodeType, shaderName: JsFunctionName) {
+		// for simplicity,
+		// and to make it work with objectBuilder,
+		// without having to specify each output node's input names (especially for the light outputs)
+		// we just return all the input names
+		// if we are in JsFunctionName.MAIN
+		if (shaderName == JsFunctionName.MAIN) {
+			return rootNode.io.inputs.namedInputConnectionPoints().map((c) => c.name()); //this.shader_config(shader_name)?.input_names() || [];
+		} else {
+			return this.shader_config(shaderName)?.input_names() || [];
+		}
 	}
 
 	// time dependency
@@ -505,16 +537,16 @@ export abstract class BaseJsShaderAssembler extends TypedAssembler<NodeContext.J
 	// TEMPLATE HOOKS
 	//
 	//
-	protected insertMemberAfter(shaderName: ShaderName): string | undefined {
+	protected insertMemberAfter(shaderName: JsFunctionName): string | undefined {
 		return INSERT_MEMBER_AFTER_MAP.get(shaderName);
 	}
-	protected insertDefineAfter(shaderName: ShaderName): string | undefined {
+	protected insertDefineAfter(shaderName: JsFunctionName): string | undefined {
 		return INSERT_DEFINE_AFTER_MAP.get(shaderName);
 	}
-	protected insertConstructorAfter(shaderName: ShaderName): string | undefined {
+	protected insertConstructorAfter(shaderName: JsFunctionName): string | undefined {
 		return INSERT_CONSTRUCTOR_AFTER_MAP.get(shaderName);
 	}
-	protected insertBodyAfter(shaderName: ShaderName): string | undefined {
+	protected insertBodyAfter(shaderName: JsFunctionName): string | undefined {
 		return INSERT_BODY_AFTER_MAP.get(shaderName);
 	}
 	// protected insertTriggerAfter(shaderName: ShaderName): string | undefined {
@@ -523,7 +555,7 @@ export abstract class BaseJsShaderAssembler extends TypedAssembler<NodeContext.J
 	// protected insertTriggerableAfter(shaderName: ShaderName): string | undefined {
 	// 	return INSERT_TRIGGERABLE_AFTER_MAP.get(shaderName);
 	// }
-	protected linesToRemove(shaderName: ShaderName): string[] | undefined {
+	protected linesToRemove(shaderName: JsFunctionName): string[] | undefined {
 		return LINES_TO_REMOVE_MAP.get(shaderName);
 	}
 
@@ -533,7 +565,7 @@ export abstract class BaseJsShaderAssembler extends TypedAssembler<NodeContext.J
 	//
 	//
 
-	private _replaceTemplate(template: string, shaderName: ShaderName) {
+	private _replaceTemplate(template: string, shaderName: JsFunctionName) {
 		const memberLines = this.builder_lines(shaderName, LineType.MEMBER);
 		const constructorLines = this.builder_lines(shaderName, LineType.CONSTRUCTOR);
 		// const triggerLines = this.builder_lines(shaderName, LineType.TRIGGER);

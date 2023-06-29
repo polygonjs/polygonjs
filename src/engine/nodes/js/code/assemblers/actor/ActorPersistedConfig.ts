@@ -1,5 +1,5 @@
 import {BasePersistedConfig} from '../../../../utils/BasePersistedConfig';
-import {FunctionData} from '../_Base';
+import {SingleBodyFunctionData} from '../_Base';
 import {SerializedVariable, SerializedVariableType} from '../_BaseJsPersistedConfigUtils';
 import {NamedFunctionMap} from '../../../../../poly/registers/functions/All';
 import {JsParamConfig, JsParamConfigJSON} from '../../utils/JsParamConfig';
@@ -12,7 +12,7 @@ import {
 	variablesByNameFromPersistedConfigData,
 	functionsByNameFromPersistedConfigData,
 } from '../_BaseJsPersistedConfig';
-export interface ActorFunctionData extends FunctionData {
+export interface ActorFunctionData extends SingleBodyFunctionData {
 	eventDatas: EvaluatorEventData[];
 }
 

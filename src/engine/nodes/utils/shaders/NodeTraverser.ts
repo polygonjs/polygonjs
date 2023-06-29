@@ -1,7 +1,7 @@
 import {BaseGlConnectionPoint} from './../io/connections/Gl';
 import {CoreGraph} from '../../../../core/graph/CoreGraph';
 import {MapUtils} from '../../../../core/MapUtils';
-import {ShaderName} from './ShaderName';
+import {ShaderNameByContextMap} from './ShaderName';
 import {TypedNode} from '../../_Base';
 import {NodeContext, BaseNodeByContextMap, NetworkChildNodeType} from '../../../poly/NodeContext';
 // import {NodeTypeMap} from '../../../containers/utils/ContainerMap';
@@ -13,29 +13,29 @@ type NumberByCoreGraphNodeId = Map<CoreGraphNodeId, number>;
 // type BaseNodeTypeByString = Map<string, BaseNodeType>;
 // type BooleanByString = Map<string, boolean>;
 type BooleanByCoreGraphNodeId = Map<CoreGraphNodeId, boolean>;
-type BooleanByStringByShaderName = Map<ShaderName, BooleanByCoreGraphNodeId>;
+type BooleanByStringByShaderName<NC extends NodeContext> = Map<ShaderNameByContextMap[NC], BooleanByCoreGraphNodeId>;
 type StringArrayByString = Map<CoreGraphNodeId, CoreGraphNodeId[]>;
 type InputNamesByShaderNameMethod<NC extends NodeContext> = (
 	root_node: BaseNodeByContextMap[NC],
-	shader_name: ShaderName
+	shader_name: ShaderNameByContextMap[NC]
 ) => string[];
 
 interface NodeTraverserOptions {
 	traverseChildren?: boolean;
 }
 export class TypedNodeTraverser<NC extends NodeContext> {
-	private _leaves_graph_id: BooleanByStringByShaderName = new Map();
-	private _graph_ids_by_shader_name: BooleanByStringByShaderName = new Map();
+	protected _leaves_graph_id: BooleanByStringByShaderName<NC> = new Map();
+	protected _graph_ids_by_shader_name: BooleanByStringByShaderName<NC> = new Map();
 	private _outputs_by_graph_id: StringArrayByString = new Map();
 	private _depth_by_graph_id: NumberByCoreGraphNodeId = new Map();
 	private _graph_id_by_depth: Map<number, CoreGraphNodeId[]> = new Map();
-	private _graph: CoreGraph;
-	private _shaderName!: ShaderName;
+	protected _graph: CoreGraph;
+	protected _shaderName!: ShaderNameByContextMap[NC];
 	// private _subnets_by_id: BaseNodeTypeByString = new Map();
 
 	constructor(
 		private _parent_node: TypedNode<NC, any>,
-		private _shader_names: ShaderName[],
+		private _shader_names: ShaderNameByContextMap[NC][],
 		private _inputNamesForShaderNameMethod: InputNamesByShaderNameMethod<NC>,
 		private _options?: NodeTraverserOptions
 	) {
@@ -61,7 +61,7 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 	shaderNames() {
 		return this._shader_names;
 	}
-	inputNamesForShaderName(root_node: BaseNodeByContextMap[NC], shader_name: ShaderName) {
+	inputNamesForShaderName(root_node: BaseNodeByContextMap[NC], shader_name: ShaderNameByContextMap[NC]) {
 		return this._inputNamesForShaderNameMethod(root_node, shader_name);
 	}
 
@@ -90,22 +90,7 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 		});
 	}
 
-	leavesFromNodes(nodes: BaseNodeByContextMap[NC][]) {
-		this._shaderName = ShaderName.LEAVES_FROM_NODES_SHADER;
-		this._graph_ids_by_shader_name.set(this._shaderName, new Map());
-		this._leaves_graph_id.set(this._shaderName, new Map());
-		for (let node of nodes) {
-			this._findLeaves(node);
-		}
-
-		const node_ids: CoreGraphNodeId[] = [];
-		this._leaves_graph_id.get(this._shaderName)?.forEach((value: boolean, key: CoreGraphNodeId) => {
-			node_ids.push(key);
-		});
-		return this._graph.nodesFromIds(node_ids) as BaseNodeByContextMap[NC][];
-	}
-
-	nodesForShaderName(shaderName: ShaderName) {
+	nodesForShaderName(shaderName: ShaderNameByContextMap[NC]) {
 		const depths: number[] = [];
 		this._graph_id_by_depth.forEach((value: CoreGraphNodeId[], key: number) => {
 			depths.push(key);
@@ -242,7 +227,7 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 		this._blockedInputNames.set(nodeType, inputNames);
 	}
 
-	private _findLeaves(node: BaseNodeByContextMap[NC]) {
+	protected _findLeaves(node: BaseNodeByContextMap[NC]) {
 		this._graph_ids_by_shader_name.get(this._shaderName)?.set(node.graphNodeId(), true);
 
 		const inputs = this._findInputs(node) as BaseNodeByContextMap[NC][];

@@ -1,5 +1,5 @@
 import {BasePersistedConfig} from '../../../../utils/BasePersistedConfig';
-import {FunctionData} from '../_Base';
+import {SingleBodyFunctionData} from '../_Base';
 import {SerializedVariable, SerializedVariableType} from '../_BaseJsPersistedConfigUtils';
 import {SDFBuilderSopNode} from '../../../../sop/SDFBuilder';
 import {NamedFunctionMap} from '../../../../../poly/registers/functions/All';
@@ -52,7 +52,7 @@ export class SDFPersistedConfig extends BasePersistedConfig {
 
 		const {functionBody, variableNames, functionNames, serializedParamConfigs} = data;
 
-		const functionData: FunctionData = {
+		const functionData: SingleBodyFunctionData = {
 			functionBody: functionBody,
 			variableNames,
 			variablesByName: variablesByNameFromPersistedConfigData(data),

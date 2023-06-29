@@ -1,12 +1,6 @@
 import {Object3D, Vector3} from 'three';
 import {getSoftBodyControllerNodeFromSolverObject} from '../nodes/sop/TetSoftBodySolver';
-import {
-	ObjectNamedFunction0,
-	ObjectNamedFunction2,
-	NamedFunction1,
-	NamedFunction3,
-	ObjectNamedFunction3,
-} from './_Base';
+import {ObjectNamedFunction0, ObjectNamedFunction2, ObjectNamedFunction1, ObjectNamedFunction3} from './_Base';
 import {
 	softBodySolverStepSimulation as _softBodySolverStepSimulation,
 	setSoftBodySolverGravity as _setSoftBodySolverGravity,
@@ -58,20 +52,20 @@ export class softBodyConstraintCreate extends ObjectNamedFunction2<[number, Ref<
 		}
 	}
 }
-export class softBodyConstraintSetPosition extends NamedFunction3<[number, Vector3, number]> {
+export class softBodyConstraintSetPosition extends ObjectNamedFunction3<[number, Vector3, number]> {
 	static override type() {
 		return 'softBodyConstraintSetPosition';
 	}
-	func(constraintId: number, position: Vector3, lerp: number): void {
+	func(object3D: Object3D, constraintId: number, position: Vector3, lerp: number): void {
 		const delta = this.scene.timeController.delta();
-		_softBodyConstraintSetPosition(constraintId, position, lerp, delta);
+		_softBodyConstraintSetPosition(object3D, constraintId, position, lerp, delta);
 	}
 }
-export class softBodyConstraintDelete extends NamedFunction1<[number]> {
+export class softBodyConstraintDelete extends ObjectNamedFunction1<[number]> {
 	static override type() {
 		return 'softBodyConstraintDelete';
 	}
-	func(constraintId: number): void {
-		_softBodyConstraintDelete(constraintId);
+	func(object3D: Object3D, constraintId: number): void {
+		_softBodyConstraintDelete(object3D, constraintId);
 	}
 }

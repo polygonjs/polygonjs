@@ -7,8 +7,7 @@ import {
 	SpareParamOptions,
 } from '../_Base';
 import {RegisterableVariable} from '../_BaseJsPersistedConfigUtils';
-import {ShaderConfig} from '../../configs/ShaderConfig';
-import {ShaderName} from '../../../../utils/shaders/ShaderName';
+import {JsFunctionName} from '../../../../utils/shaders/ShaderName';
 import {connectedTriggerableNodes, findTriggeringNodes, inputNodesExceptTrigger} from './ActorAssemblerUtils';
 import {BaseJsNodeType} from '../../../_Base';
 import {SetUtils} from '../../../../../../core/SetUtils';
@@ -24,6 +23,7 @@ import {ActorBuilderNode} from '../../../../../scene/utils/ActorsManager';
 import {logBlue as _logBlue} from '../../../../../../core/logger/Console';
 import {Poly} from '../../../../../Poly';
 import {ParamType} from '../../../../../poly/ParamType';
+import { JsShaderConfig } from '../../configs/ShaderConfig';
 
 let FORCE_DEBUG: boolean | undefined = true;
 function _debug() {
@@ -64,12 +64,10 @@ export class JsAssemblerActor extends BaseJsShaderAssembler {
 	}
 	override templateShader() {
 		return {
-			fragmentShader: TEMPLATE,
-			vertexShader: undefined,
-			uniforms: undefined,
+			main: TEMPLATE,
 		};
 	}
-	override inputNamesForShaderName(rootNode: BaseJsNodeType, shaderName: ShaderName) {
+	override inputNamesForShaderName(rootNode: BaseJsNodeType, shaderName: JsFunctionName) {
 		return rootNode.io.inputs
 			.namedInputConnectionPoints()
 			.filter((cp) => cp.type() != JsConnectionPointType.TRIGGER)
@@ -152,7 +150,7 @@ export class JsAssemblerActor extends BaseJsShaderAssembler {
 		additionalRootNodes: BaseJsNodeType[],
 		triggeringNodes: Set<BaseJsNodeType>,
 		triggerableNodes: Set<BaseJsNodeType>,
-		shaderNames: ShaderName[]
+		shaderNames: JsFunctionName[]
 	): ActorFunctionData | undefined {
 		const functionNode = this.currentGlParentNode() as ActorBuilderNode;
 
@@ -310,7 +308,7 @@ export class JsAssemblerActor extends BaseJsShaderAssembler {
 		//
 		//
 		const _buildFunctionBody = () => {
-			const bodyLines = this._shaders_by_name.get(ShaderName.FRAGMENT) || TEMPLATE;
+			const bodyLines = this._shaders_by_name.get(JsFunctionName.MAIN) || TEMPLATE;
 			const functionBodyElements = [
 				bodyLines,
 				// triggerableFunctionLines.join('\n'),
@@ -385,7 +383,7 @@ export class JsAssemblerActor extends BaseJsShaderAssembler {
 		};
 		return functionData;
 	}
-	override rootNodesByShaderName(shaderName: ShaderName, rootNodes: BaseJsNodeType[]): BaseJsNodeType[] {
+	override rootNodesByShaderName(shaderName: JsFunctionName, rootNodes: BaseJsNodeType[]): BaseJsNodeType[] {
 		return rootNodes;
 	}
 
@@ -505,7 +503,7 @@ export class JsAssemblerActor extends BaseJsShaderAssembler {
 	//
 	//
 	override create_shader_configs() {
-		return [new ShaderConfig(ShaderName.FRAGMENT, [], [])];
+		return [new JsShaderConfig(JsFunctionName.MAIN, [], [])];
 	}
 	override create_variable_configs() {
 		return [];

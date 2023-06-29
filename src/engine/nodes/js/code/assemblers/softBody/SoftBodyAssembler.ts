@@ -3,13 +3,11 @@ import {
 	INSERT_DEFINE_AFTER,
 	INSERT_BODY_AFTER,
 	INSERT_MEMBERS_AFTER,
-	SingleBodyFunctionData,
+	VelocityColliderFunctionData,
 	SpareParamOptions,
 } from '../_Base';
 import {RegisterableVariable} from '../_BaseJsPersistedConfigUtils';
-// import {IUniforms} from '../../../../../../core/geometry/Material';
 import {ThreeToGl} from '../../../../../../core/ThreeToGl';
-// import TemplateDefault from '../../templates/textures/Default.frag.glsl';
 import {JsShaderConfig} from '../../configs/ShaderConfig';
 import {VariableConfig} from '../../configs/VariableConfig';
 import {JsFunctionName} from '../../../../utils/shaders/ShaderName';
@@ -17,17 +15,33 @@ import {OutputJsNode} from '../../../Output';
 import {GlobalsJsNode} from '../../../Globals';
 import {JsConnectionPointType, JsConnectionPoint} from '../../../../utils/io/connections/Js';
 import {JsLinesCollectionController} from '../../utils/JsLinesCollectionController';
-// import {UniformJsDefinition} from '../../../utils/JsDefinition';
 import {Vector3} from 'three';
 import {NamedFunctionMap} from '../../../../../poly/registers/functions/All';
 import {ParamOptions} from '../../../../../params/utils/OptionsController';
-// import {Vector3} from 'three';
-// import {IUniformsWithTime} from '../../../../../scene/utils/UniformsController';
-// import {handleCopBuilderDependencies} from '../../../../cop/utils/BuilderUtils';
-// import { JSSDFSopNode } from '../../../../sop/JSSDF';
+import {Poly} from '../../../../../Poly';
 
-enum SDFVariable {
-	D = 'd',
+let FORCE_DEBUG: boolean | undefined = true;
+function _debug() {
+	if (FORCE_DEBUG != undefined) {
+		return FORCE_DEBUG;
+	}
+	return !Poly.playerMode();
+}
+
+function logDefault(message: string) {
+	if (!_debug()) {
+		return;
+	}
+	console.log(message);
+}
+
+enum SoftBodyVariable {
+	P = 'position',
+	V = 'velocity',
+	COLLISION_SDF = 'collisionSDF',
+	//
+	TIME = 'time',
+	DELTA = 'delta',
 }
 
 const TEMPLATE = `
@@ -37,10 +51,7 @@ ${INSERT_MEMBERS_AFTER}
 ${INSERT_BODY_AFTER}
 `;
 
-export class JsAssemblerSDF extends BaseJsShaderAssembler {
-	// private _function: Function | undefined;
-	// private _uniforms: IUniforms | undefined;
-	// private _functionsByName: Map<string, Function> = new Map();
+export class JsAssemblerSoftBody extends BaseJsShaderAssembler {
 	makeFunctionNodeDirtyOnChange() {
 		return true;
 	}
@@ -52,7 +63,8 @@ export class JsAssemblerSDF extends BaseJsShaderAssembler {
 	}
 	override templateShader() {
 		return {
-			main: TEMPLATE,
+			velocity: TEMPLATE,
+			collider: TEMPLATE,
 		};
 	}
 
@@ -68,11 +80,14 @@ export class JsAssemblerSDF extends BaseJsShaderAssembler {
 		return _options;
 	}
 
-	functionData(): SingleBodyFunctionData | undefined {
-		const functionBody = this._shaders_by_name.get(JsFunctionName.MAIN);
-		if (!functionBody) {
+	functionData(): VelocityColliderFunctionData | undefined {
+		const functionBodyVelocity = this._shaders_by_name.get(JsFunctionName.VELOCITY);
+		const functionBodyCollider = this._shaders_by_name.get(JsFunctionName.COLLIDER);
+		if (!(functionBodyVelocity && functionBodyCollider)) {
 			return;
 		}
+		logDefault(functionBodyVelocity);
+		logDefault(functionBodyCollider);
 		const variableNames: string[] = [];
 		const functionNames: Array<keyof NamedFunctionMap> = [];
 		const variablesByName: Record<string, RegisterableVariable> = {};
@@ -85,10 +100,10 @@ export class JsAssemblerSDF extends BaseJsShaderAssembler {
 			functionNames.push(namedFunction.type() as keyof NamedFunctionMap);
 			functionsByName[namedFunction.type()] = namedFunction.func.bind(namedFunction);
 		});
-		// const paramConfigs = this.param_configs();
 		const paramConfigs = this.param_configs();
 		return {
-			functionBody,
+			functionBodyVelocity,
+			functionBodyCollider,
 			variableNames,
 			variablesByName,
 			functionNames,
@@ -97,82 +112,23 @@ export class JsAssemblerSDF extends BaseJsShaderAssembler {
 		};
 	}
 
-	// uniforms() {
-	// 	return this._uniforms;
-	// }
-
-	// evalFunction(position: Vector3) {
-	// 	if (this._function) {
-	// 		return this._function(position);
-	// 	}
-	// }
-
 	override updateFunction() {
 		super.updateFunction();
 		this._lines = new Map();
 		this._shaders_by_name = new Map();
-		// this._functionsByName.clear();
 		const shaderNames = this.shaderNames();
-		// for (let shader_name of shaderNames) {
-		// 	if (shader_name == ShaderName.FRAGMENT) {
-		// 		const template = this.templateShader().fragmentShader;
-		// 		this._lines.set(shader_name, template.split('\n'));
-		// 	}
-		// }
+
 		if (this._root_nodes.length > 0) {
 			this.buildCodeFromNodes(this._root_nodes);
 			this._buildLines();
 		}
 
-		// this._uniforms = this._uniforms || {};
-		// this._gl_parent_node.scene().uniformsController.addUniforms(this._uniforms, {
-		// 	paramConfigs: this.param_configs(),
-		// 	additionalTextureUniforms: {},
-		// 	timeDependent: this.uniformsTimeDependent(),
-		// 	resolutionDependent: this.uniformsResolutionDependent(),
-		// 	raymarchingLightsWorldCoordsDependent: this._raymarchingLightsWorldCoordsDependent(),
-		// });
-
 		for (let shaderName of shaderNames) {
 			const lines = this._lines.get(shaderName);
 			if (lines) {
-				// const body = lines.join('\n');
-				// // if (this.function_main_string) {
-				// try {
-				// 	this._function = new Function(
-				// 		'position',
-				// 		// 'Core',
-				// 		// 'CoreType',
-				// 		// 'param',
-				// 		// 'methods',
-				// 		// '_set_error_from_error',
-				// 		`
-				// 		try {
-				// 			${body}
-				// 		} catch(e) {
-				// 			_set_error_from_error(e)
-				// 			return 0;
-				// 		}`
-				// 	);
-				// } catch (e) {
-				// 	console.warn(e);
-				// 	// this.set_error('cannot generate function');
-				// }
-				//} //else {
-				// this.set_error('cannot generate function body');
-				// }
-
 				this._shaders_by_name.set(shaderName, lines.join('\n'));
 			}
 		}
-
-		// ShadersCollectionController;
-
-		// handleCopBuilderDependencies({
-		// 	node: this.currentGlParentNode() as JSSDFSopNode,
-		// 	timeDependent: this.uniformsTimeDependent(),
-		// 	uniforms: this._uniforms as IUniformsWithTime,
-		// });
 	}
 
 	//
@@ -181,20 +137,17 @@ export class JsAssemblerSDF extends BaseJsShaderAssembler {
 	//
 	//
 	override add_output_inputs(output_child: OutputJsNode) {
-		// output_child.add_param(ParamType.COLOR, 'color', [1, 1, 1], {hidden: true});
-		// output_child.add_param(ParamType.FLOAT, 'alpha', 1, {hidden: true});
 		output_child.io.inputs.setNamedInputConnectionPoints([
-			new JsConnectionPoint(SDFVariable.D, JsConnectionPointType.FLOAT),
-			// new JsConnectionPoint('alpha', JsConnectionPointType.FLOAT),
+			new JsConnectionPoint(SoftBodyVariable.V, JsConnectionPointType.VECTOR3),
+			new JsConnectionPoint(SoftBodyVariable.COLLISION_SDF, JsConnectionPointType.FLOAT),
 		]);
 	}
 	override add_globals_outputs(globals_node: GlobalsJsNode) {
 		globals_node.io.outputs.setNamedOutputConnectionPoints([
-			new JsConnectionPoint('position', JsConnectionPointType.VECTOR3),
-			// new JsConnectionPoint('gl_FragCoord', JsConnectionPointType.VEC4),
-			// new JsConnectionPoint('resolution', JsConnectionPointType.VEC2),
-			// new JsConnectionPoint('time', JsConnectionPointType.FLOAT),
-			// new Connection.Vec2('resolution'),
+			new JsConnectionPoint(SoftBodyVariable.P, JsConnectionPointType.VECTOR3),
+			new JsConnectionPoint(SoftBodyVariable.V, JsConnectionPointType.VECTOR3),
+			new JsConnectionPoint(SoftBodyVariable.TIME, JsConnectionPointType.FLOAT),
+			new JsConnectionPoint(SoftBodyVariable.DELTA, JsConnectionPointType.FLOAT),
 		]);
 	}
 
@@ -204,52 +157,21 @@ export class JsAssemblerSDF extends BaseJsShaderAssembler {
 	//
 	//
 	override create_shader_configs() {
-		return [new JsShaderConfig(JsFunctionName.MAIN, [SDFVariable.D], [])];
+		return [
+			new JsShaderConfig(JsFunctionName.VELOCITY, [SoftBodyVariable.V], []),
+			new JsShaderConfig(JsFunctionName.COLLIDER, [SoftBodyVariable.COLLISION_SDF], []),
+		];
 	}
 	override create_variable_configs() {
 		return [
-			new VariableConfig(SDFVariable.D, {
+			new VariableConfig(SoftBodyVariable.V, {
 				prefix: 'return ',
 			}),
-			// new VariableConfig('alpha', {
-			// 	prefix: 'diffuseColor.a = ',
-			// 	default: '1.0',
-			// }),
+			new VariableConfig(SoftBodyVariable.COLLISION_SDF, {
+				prefix: 'return ',
+			}),
 		];
 	}
-
-	//
-	//
-	// TEMPLATE HOOKS
-	//
-	//
-	// protected override insertDefineAfter(shader_name: ShaderName) {
-	// 	return '// INSERT DEFINE';
-	// }
-	// protected override insertBodyAfter(shader_name: ShaderName) {
-	// 	return '// INSERT BODY';
-	// }
-	// protected override linesToRemove(shader_name: ShaderName) {
-	// 	return ['// INSERT DEFINE', '// INSERT BODY'];
-	// }
-
-	// private _handle_gl_FragCoord(body_lines: string[], shaderName: ShaderName, var_name: string) {
-	// 	if (shaderName == ShaderName.FRAGMENT) {
-	// 		body_lines.push(`vec4 ${var_name} = gl_FragCoord`);
-	// 	}
-	// }
-	// private _handle_resolution(bodyLines: string[], shaderName: ShaderName, var_name: string) {
-	// 	if (shaderName == ShaderName.FRAGMENT) {
-	// 		bodyLines.push(`vec2 ${var_name} = resolution`);
-	// 	}
-	// }
-	// private _handleUV(bodyLines: string[], shaderName: ShaderName, var_name: string) {
-	// 	if (shaderName == ShaderName.FRAGMENT) {
-	// 		bodyLines.push(
-	// 			`vec2 ${var_name} = vec2(gl_FragCoord.x / (resolution.x-1.), gl_FragCoord.y / (resolution.y-1.))`
-	// 		);
-	// 	}
-	// }
 
 	override setNodeLinesOutput(outputNode: OutputJsNode, shadersCollectionController: JsLinesCollectionController) {
 		const inputNames = this.inputNamesForShaderName(outputNode, shadersCollectionController.currentShaderName());
@@ -258,15 +180,15 @@ export class JsAssemblerSDF extends BaseJsShaderAssembler {
 				const input = outputNode.io.inputs.named_input(inputName);
 
 				if (input) {
-					const gl_var = outputNode.variableForInput(shadersCollectionController, inputName);
+					const glVar = outputNode.variableForInput(shadersCollectionController, inputName);
 
 					let bodyLine: string | undefined;
-					if (inputName == SDFVariable.D) {
-						bodyLine = `return ${ThreeToGl.any(gl_var)}`;
+					if (inputName == SoftBodyVariable.V) {
+						bodyLine = `return ${ThreeToGl.any(glVar)}`;
 					}
-					// if (input_name == 'alpha') {
-					// 	body_line = `diffuseColor.a = ${ThreeToGl.any(gl_var)}`;
-					// }
+					if (inputName == SoftBodyVariable.COLLISION_SDF) {
+						bodyLine = `return ${ThreeToGl.any(glVar)}`;
+					}
 					if (bodyLine) {
 						shadersCollectionController._addBodyLines(outputNode, [bodyLine]);
 					}
@@ -282,7 +204,6 @@ export class JsAssemblerSDF extends BaseJsShaderAssembler {
 			return;
 		}
 		const bodyLines: string[] = [];
-		// const definitions: UniformJsDefinition[] = [];
 
 		const usedOutputNames = globalsNode.io.outputs.used_output_names();
 		for (const outputName of usedOutputNames) {
@@ -296,7 +217,21 @@ export class JsAssemblerSDF extends BaseJsShaderAssembler {
 
 					// this.setUniformsTimeDependent();
 					break;
+				case SoftBodyVariable.V:
+					shadersCollectionController.addVariable(globalsNode, new Vector3(), varName);
+					bodyLines.push(`${varName}.copy(${outputName})`);
 
+					// this.setUniformsTimeDependent();
+					break;
+				case SoftBodyVariable.TIME:
+					bodyLines.push(`const ${varName} = ${SoftBodyVariable.TIME}`);
+					// this.setUniformsTimeDependent();
+					break;
+				case SoftBodyVariable.DELTA:
+					bodyLines.push(`const ${varName} = ${SoftBodyVariable.DELTA}`);
+
+					// this.setUniformsTimeDependent();
+					break;
 				// case 'uv':
 				// 	this._handleUV(body_lines, shader_name, var_name);
 				// 	break;

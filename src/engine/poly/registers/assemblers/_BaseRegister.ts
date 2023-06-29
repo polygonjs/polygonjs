@@ -23,6 +23,7 @@ export enum AssemblerName {
 	JS_OBJECT_BUILDER = 'JS_OBJECT_BUILDER',
 	JS_POINT_BUILDER = 'JS_POINT_BUILDER',
 	JS_SDF = 'JS_SDF',
+	JS_SOFT_BODY = 'JS_SOFT_BODY',
 }
 
 export interface ControllerAssemblerPair {

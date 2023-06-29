@@ -1,7 +1,7 @@
 import {BasePersistedConfig} from '../../../../utils/BasePersistedConfig';
-import {SingleBodyFunctionData} from '../_Base';
+import {VelocityColliderFunctionData} from '../_Base';
 import {SerializedVariable, SerializedVariableType} from '../_BaseJsPersistedConfigUtils';
-import {ObjectBuilderSopNode} from '../../../../sop/ObjectBuilder';
+import {TetSoftBodySolverSopNode} from '../../../../sop/TetSoftBodySolver';
 import {NamedFunctionMap} from '../../../../../poly/registers/functions/All';
 import {JsParamConfig, JsParamConfigJSON} from '../../utils/JsParamConfig';
 import {ParamType} from '../../../../../poly/ParamType';
@@ -12,19 +12,20 @@ import {
 	functionsByNameFromPersistedConfigData,
 } from '../_BaseJsPersistedConfig';
 
-export interface ObjectBuilderPersistedConfigBaseJsData extends PersistedConfigBaseJsData {
-	functionBody: string;
+export interface SoftBodyPersistedConfigBaseJsData extends PersistedConfigBaseJsData {
+	functionBodyCollider: string;
+	functionBodyVelocity: string;
 	variableNames: string[];
 	variables: SerializedVariable<SerializedVariableType>[];
 	functionNames: Array<keyof NamedFunctionMap>;
 	serializedParamConfigs: JsParamConfigJSON<ParamType>[];
 }
 
-export class ObjectBuilderPersistedConfig extends BasePersistedConfig {
-	constructor(protected override node: ObjectBuilderSopNode) {
+export class SoftBodyPersistedConfig extends BasePersistedConfig {
+	constructor(protected override node: TetSoftBodySolverSopNode) {
 		super(node);
 	}
-	override async toData(): Promise<ObjectBuilderPersistedConfigBaseJsData | undefined> {
+	override async toData(): Promise<SoftBodyPersistedConfigBaseJsData | undefined> {
 		const assemblerController = this.node.assemblerController();
 		if (!assemblerController) {
 			return;
@@ -33,10 +34,11 @@ export class ObjectBuilderPersistedConfig extends BasePersistedConfig {
 		if (!functionData) {
 			return;
 		}
-		const {functionBody, variableNames, functionNames, paramConfigs} = functionData;
+		const {functionBodyVelocity, functionBodyCollider, variableNames, functionNames, paramConfigs} = functionData;
 
-		const data: ObjectBuilderPersistedConfigBaseJsData = {
-			functionBody,
+		const data: SoftBodyPersistedConfigBaseJsData = {
+			functionBodyVelocity,
+			functionBodyCollider,
 			variableNames,
 			variables: serializedVariablesFromFunctionData(functionData),
 			functionNames,
@@ -44,16 +46,17 @@ export class ObjectBuilderPersistedConfig extends BasePersistedConfig {
 		};
 		return data;
 	}
-	override load(data: ObjectBuilderPersistedConfigBaseJsData) {
+	override load(data: SoftBodyPersistedConfigBaseJsData) {
 		const assemblerController = this.node.assemblerController();
 		if (assemblerController) {
 			return;
 		}
 
-		const {functionBody, variableNames, functionNames, serializedParamConfigs} = data;
+		const {functionBodyVelocity, functionBodyCollider, variableNames, functionNames, serializedParamConfigs} = data;
 
-		const functionData: SingleBodyFunctionData = {
-			functionBody: functionBody,
+		const functionData: VelocityColliderFunctionData = {
+			functionBodyVelocity,
+			functionBodyCollider,
 			variableNames,
 			variablesByName: variablesByNameFromPersistedConfigData(data),
 			functionNames,

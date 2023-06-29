@@ -1,5 +1,5 @@
 import {PersistedConfigWithShaders} from '../../.././utils/BasePersistedConfig';
-import {BaseJsShaderAssembler, FunctionData} from './_Base';
+import {BaseJsShaderAssembler, BaseFunctionData} from './_Base';
 import {
 	RegisterableVariable,
 	SerializedVariable,
@@ -16,14 +16,16 @@ import {ParamType} from '../../../../poly/ParamType';
 import {AssemblerControllerNode} from '../Controller';
 
 export interface PersistedConfigBaseJsData extends PersistedConfigWithShaders {
-	functionBody: string;
 	variableNames: string[];
 	variables: SerializedVariable<SerializedVariableType>[];
 	functionNames: Array<keyof NamedFunctionMap>;
 	serializedParamConfigs: JsParamConfigJSON<ParamType>[];
 }
+export interface SingleBodyPersistedConfigBaseJsData extends PersistedConfigBaseJsData {
+	functionBody: string;
+}
 
-export function serializedVariablesFromFunctionData(functionData: FunctionData) {
+export function serializedVariablesFromFunctionData(functionData: BaseFunctionData) {
 	const {variableNames, variablesByName} = functionData;
 	const serializedVariables: SerializedVariable<SerializedVariableType>[] = [];
 	for (let variableName of variableNames) {

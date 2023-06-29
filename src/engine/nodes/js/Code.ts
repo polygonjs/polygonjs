@@ -16,7 +16,7 @@ import {BaseCodeProcessor, buildCodeNodeFunction} from '../../../core/code/Funct
 import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {inputObject3D} from './_BaseObject3D';
 import {JsAssemblerActor} from './code/assemblers/actor/ActorAssembler';
-import {ShaderName} from '../utils/shaders/ShaderName';
+import {JsFunctionName} from '../utils/shaders/ShaderName';
 import {JsType} from '../../poly/registers/nodes/types/Js';
 import {BaseNodeType} from '../_Base';
 // import {BaseNodeType} from '../_Base';
@@ -205,8 +205,8 @@ export class CodeJsNode extends TypedJsNode<CodeJsParamsConfig> {
 				// test the generated processor
 				const dummyAssembler = new JsAssemblerActor(this.functionNode()!);
 				const dummyShadersCollectionController = new JsLinesCollectionController(
-					[ShaderName.FRAGMENT],
-					ShaderName.FRAGMENT,
+					[JsFunctionName.MAIN],
+					JsFunctionName.MAIN,
 					dummyAssembler
 				);
 				this._processor.setTriggerableLines(dummyShadersCollectionController);

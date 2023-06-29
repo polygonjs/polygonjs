@@ -24,6 +24,7 @@ import {JsAssemblerActor} from '../../../nodes/js/code/assemblers/actor/ActorAss
 import {JsAssemblerObjectBuilder} from '../../../nodes/js/code/assemblers/objectBuilder/ObjectBuilderAssembler';
 import {JsAssemblerPointBuilder} from '../../../nodes/js/code/assemblers/pointBuilder/PointBuilderAssembler';
 import {JsAssemblerSDF} from '../../../nodes/js/code/assemblers/sdf/SDF';
+import {JsAssemblerSoftBody} from '../../../nodes/js/code/assemblers/softBody/SoftBodyAssembler';
 export interface AssemblersMap extends PolyDictionary<ControllerAssemblerPair> {
 	[AssemblerName.GL_MESH_BASIC]: {
 		controller: GlAssemblerController<ShaderAssemblerBasic>;
@@ -110,6 +111,10 @@ export interface AssemblersMap extends PolyDictionary<ControllerAssemblerPair> {
 		controller: JsAssemblerController<JsAssemblerSDF>;
 		assembler: typeof JsAssemblerSDF;
 	};
+	[AssemblerName.JS_SOFT_BODY]: {
+		controller: JsAssemblerController<JsAssemblerSoftBody>;
+		assembler: typeof JsAssemblerSoftBody;
+	};
 }
 
 import {PolyEngine} from '../../../Poly';
@@ -171,5 +176,6 @@ export class AllAssemblersRegister {
 			JsAssemblerPointBuilder
 		);
 		poly.assemblersRegister.register(AssemblerName.JS_SDF, JsAssemblerController, JsAssemblerSDF);
+		poly.assemblersRegister.register(AssemblerName.JS_SOFT_BODY, JsAssemblerController, JsAssemblerSoftBody);
 	}
 }

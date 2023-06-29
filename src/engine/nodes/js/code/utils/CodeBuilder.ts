@@ -1,7 +1,7 @@
 import {BaseJsNodeType} from '../../_Base';
 import {TypedNodeTraverser} from '../../../utils/shaders/NodeTraverser';
 import {MapUtils} from '../../../../../core/MapUtils';
-import {ShaderName} from '../../../utils/shaders/ShaderName';
+import {JsFunctionName} from '../../../utils/shaders/ShaderName';
 import {JsDefinitionType, BaseJsDefinition, JsDefinitionTypeMap, TypedJsDefinition} from '../../utils/JsDefinition';
 import {TypedJsDefinitionCollection} from '../../utils/JsDefinitionCollection';
 import {ParamConfigsController} from '../../../../nodes/utils/code/controllers/ParamConfigsController';
@@ -22,7 +22,7 @@ import {JsType} from '../../../../poly/registers/nodes/types/Js';
 import {CodeJsNode} from '../../Code';
 // import {connectedTriggerableNodes} from '../assemblers/actor/ActorAssemblerUtils';
 
-type RootNodesForJsFunctionMethod = (shader_name: ShaderName, rootNodes: BaseJsNodeType[]) => BaseJsNodeType[];
+type RootNodesForJsFunctionMethod = (shader_name: JsFunctionName, rootNodes: BaseJsNodeType[]) => BaseJsNodeType[];
 // let nextId = 1;
 
 export interface CodeBuilderSetCodeLinesOptions {
@@ -41,7 +41,7 @@ export class JsCodeBuilder {
 	private _param_configs_set_allowed: boolean = true;
 
 	private _shadersCollectionController: JsLinesCollectionController | undefined;
-	private _lines: Map<ShaderName, Map<LineType, string[]>> = new Map();
+	private _lines: Map<JsFunctionName, Map<LineType, string[]>> = new Map();
 	// _function_declared: Map<ShaderName, Map<string, boolean>> = new Map();
 
 	constructor(
@@ -62,7 +62,7 @@ export class JsCodeBuilder {
 	) {
 		this._nodeTraverser.traverse(rootNodes);
 
-		const nodesByShaderName: Map<ShaderName, BaseJsNodeType[]> = new Map();
+		const nodesByShaderName: Map<JsFunctionName, BaseJsNodeType[]> = new Map();
 		for (let shaderName of this.shaderNames()) {
 			const nodes = this._nodeTraverser.nodesForShaderName(shaderName);
 			nodesByShaderName.set(shaderName, nodes);
@@ -145,7 +145,6 @@ export class JsCodeBuilder {
 			let nodes = nodesByShaderName.get(shaderName) || [];
 			nodes = ArrayUtils.uniq(nodes);
 			this._shadersCollectionController.setCurrentShaderName(shaderName);
-
 			if (nodes) {
 				for (let node of nodes) {
 					node.setLines(this._shadersCollectionController);
@@ -246,7 +245,6 @@ export class JsCodeBuilder {
 		}
 
 		// finalize
-
 		this._setCodeLines(sortedNodes, setCodeLinesOptions);
 	}
 
@@ -275,7 +273,7 @@ export class JsCodeBuilder {
 	param_configs() {
 		return this._param_configs_controller.list() || [];
 	}
-	lines(shader_name: ShaderName, line_type: LineType) {
+	lines(shader_name: JsFunctionName, line_type: LineType) {
 		return this._lines.get(shader_name)?.get(line_type) || [];
 	}
 	all_lines() {
@@ -297,19 +295,19 @@ export class JsCodeBuilder {
 	private _setCodeLines(nodes: BaseJsNodeType[], options?: CodeBuilderSetCodeLinesOptions) {
 		for (let shaderName of this.shaderNames()) {
 			const additionalDefinitions: BaseJsDefinition[] = [];
-			if (shaderName == ShaderName.FRAGMENT) {
-				if (this._shadersCollectionController && options && options.otherFragmentShaderCollectionController) {
-					// for (let shaderName of options.otherShadersCollectionController.shaderNames()) {
-					// this._linesControllerByShaderName.set(shaderName, new LinesController(shaderName));
-					options.otherFragmentShaderCollectionController.traverseDefinitions(
-						ShaderName.FRAGMENT,
-						(definition: BaseJsDefinition) => {
-							additionalDefinitions.push(definition);
-						}
-					);
-					// }
-				}
+			// if (shaderName == JsFunctionName.MAIN) {
+			if (this._shadersCollectionController && options && options.otherFragmentShaderCollectionController) {
+				// for (let shaderName of options.otherShadersCollectionController.shaderNames()) {
+				// this._linesControllerByShaderName.set(shaderName, new LinesController(shaderName));
+				options.otherFragmentShaderCollectionController.traverseDefinitions(
+					shaderName,
+					(definition: BaseJsDefinition) => {
+						additionalDefinitions.push(definition);
+					}
+				);
+				// }
 			}
+			// }
 
 			this._addCodeLines(nodes, shaderName, additionalDefinitions, options);
 		}
@@ -317,7 +315,7 @@ export class JsCodeBuilder {
 
 	private _addCodeLines(
 		nodes: BaseJsNodeType[],
-		shaderName: ShaderName,
+		shaderName: JsFunctionName,
 		additionalDefinitions?: BaseJsDefinition[],
 		options?: CodeBuilderSetCodeLinesOptions
 	) {
@@ -387,7 +385,7 @@ export class JsCodeBuilder {
 
 	private addDefinitions(
 		nodes: BaseJsNodeType[],
-		shaderName: ShaderName,
+		shaderName: JsFunctionName,
 		definitionType: JsDefinitionType,
 		lineType: LineType,
 		additionalDefinitions?: BaseJsDefinition[]
@@ -459,10 +457,10 @@ export class JsCodeBuilder {
 			}
 		});
 	}
-	add_code_line_for_nodes_and_line_type(nodes: BaseJsNodeType[], shader_name: ShaderName, line_type: LineType) {
+	add_code_line_for_nodes_and_line_type(nodes: BaseJsNodeType[], shaderName: JsFunctionName, lineType: LineType) {
 		nodes = nodes.filter((node) => {
 			if (this._shadersCollectionController) {
-				const lines = this._shadersCollectionController.bodyLines(shader_name, node);
+				const lines = this._shadersCollectionController.bodyLines(shaderName, node);
 				return lines && lines.length > 0;
 			}
 		});
@@ -470,31 +468,31 @@ export class JsCodeBuilder {
 		var nodesCount = nodes.length;
 		for (let i = 0; i < nodesCount; i++) {
 			const isLast = i == nodes.length - 1;
-			this.add_code_line_for_node_and_line_type(nodes[i], shader_name, line_type, isLast);
+			this.add_code_line_for_node_and_line_type(nodes[i], shaderName, lineType, isLast);
 		}
 	}
 	add_code_line_for_node_and_line_type(
 		node: BaseJsNodeType,
-		shader_name: ShaderName,
-		line_type: LineType,
+		shaderName: JsFunctionName,
+		lineType: LineType,
 		isLast: boolean
 	): void {
 		if (!this._shadersCollectionController) {
 			return;
 		}
-		const lines = this._shadersCollectionController.bodyLines(shader_name, node);
+		const lines = this._shadersCollectionController.bodyLines(shaderName, node);
 
 		if (lines && lines.length > 0) {
-			const lines_for_shader = this._lines.get(shader_name)!;
-			const comment = CodeFormatter.nodeComment(node, line_type);
-			MapUtils.pushOnArrayAtEntry(lines_for_shader, line_type, comment);
+			const lines_for_shader = this._lines.get(shaderName)!;
+			const comment = CodeFormatter.nodeComment(node, lineType);
+			MapUtils.pushOnArrayAtEntry(lines_for_shader, lineType, comment);
 			lines.forEach((line) => {
-				line = CodeFormatter.lineWrap(node, line, line_type);
-				MapUtils.pushOnArrayAtEntry(lines_for_shader, line_type, line);
+				line = CodeFormatter.lineWrap(node, line, lineType);
+				MapUtils.pushOnArrayAtEntry(lines_for_shader, lineType, line);
 			});
-			if (!(line_type == LineType.BODY && isLast)) {
-				const separator = CodeFormatter.post_line_separator(line_type);
-				MapUtils.pushOnArrayAtEntry(lines_for_shader, line_type, separator);
+			if (!(lineType == LineType.BODY && isLast)) {
+				const separator = CodeFormatter.post_line_separator(lineType);
+				MapUtils.pushOnArrayAtEntry(lines_for_shader, lineType, separator);
 			}
 		}
 	}
