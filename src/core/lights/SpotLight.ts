@@ -7,6 +7,8 @@ import {VolumetricSpotLight} from './spotlight/VolumetricSpotLight';
 import {isBooleanTrue} from '../Type';
 import {CoreSpotLightHelper, CoreSpotLightHelperParams} from './spotlight/CoreSpotLightHelper';
 import {CoreSceneObjectsFactory, GeneratorName} from '../CoreSceneObjectsFactory';
+import {TypedNodePathParamValue} from '../Walker';
+import {NodeContext} from '../../engine/poly/NodeContext';
 
 export interface SpotLightParams extends DefaultOperationParams {
 	color: Color;
@@ -18,6 +20,10 @@ export interface SpotLightParams extends DefaultOperationParams {
 	//
 	showHelper: boolean;
 	helperSize: number;
+	//
+	tmap: boolean;
+	map: TypedNodePathParamValue;
+	//
 	name: string;
 	//
 	castShadow: boolean;
@@ -55,6 +61,10 @@ export const DEFAULT_SPOT_LIGHT_PARAMS: SpotLightParams = {
 	//
 	showHelper: false,
 	helperSize: 1,
+	//
+	tmap: false,
+	map: new TypedNodePathParamValue(''),
+	//
 	name: 'pointLight',
 	//
 	castShadow: false,
@@ -116,6 +126,18 @@ export function SpotLightParamConfig<TBase extends Constructor>(Base: TBase) {
 		showHelper = ParamConfig.BOOLEAN(DEFAULT.showHelper);
 		/** @param helper size */
 		helperSize = ParamConfig.FLOAT(DEFAULT.helperSize, {visibleIf: {showHelper: 1}});
+		// helper
+		/** @param toggle on to show helper */
+		tmap = ParamConfig.BOOLEAN(DEFAULT.tmap);
+		/** @param helper size */
+		map = ParamConfig.NODE_PATH('', {
+			nodeSelection: {
+				context: NodeContext.COP,
+			},
+			dependentOnFoundNode: false,
+			visibleIf: {tmap: 1},
+		});
+		//
 		/** @param light name */
 		name = ParamConfig.STRING('`$OS`');
 

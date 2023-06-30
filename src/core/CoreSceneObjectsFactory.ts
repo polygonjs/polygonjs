@@ -1,5 +1,6 @@
 import {ColorRepresentation, PerspectiveCamera, RectAreaLight, SpotLight} from 'three';
 import {ObjectType, registerObjectType} from './geometry/Constant';
+import {monkeyPatchSpotLight} from './monkeyPath/SpotLight';
 
 export interface PerspectiveCameraOptions {
 	fov: number;
@@ -66,9 +67,12 @@ const DEFAULT_AREA_LIGHT_CONSTRUCTOR: AreaLightConstructor = (options: AreaLight
 	const {color, intensity, width, height} = options;
 	return new RectAreaLight(color, intensity, width, height);
 };
+
 const DEFAULT_SPOT_LIGHT_CONSTRUCTOR: SpotLightConstructor = () => {
 	registerObjectType({type: ObjectType.SPOT_LIGHT, ctor: SpotLight, humanName: ObjectType.SPOT_LIGHT});
-	return new SpotLight();
+	const spotLight = new SpotLight();
+	monkeyPatchSpotLight(spotLight);
+	return spotLight;
 };
 const DEFAULT_SPOT_LIGHT_UPDATE: SpotLightUpdate<SpotLight> = <L extends SpotLight>(
 	options: SpotLightUpdateOptions<L>

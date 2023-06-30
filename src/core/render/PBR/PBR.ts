@@ -7,7 +7,7 @@ import {PathTracingViewer} from '../../../engine/viewers/PathTracingViewer';
 import {ThreejsViewer} from '../../../engine/viewers/Threejs';
 import {CoreCameraRendererController} from '../../camera/CoreCameraRendererController';
 import {CoreCameraPerspectiveFrameMode} from '../../camera/frameMode/CoreCameraPerspectiveFrameMode';
-
+import {monkeyPatchSpotLight} from '../../monkeyPath/SpotLight';
 import {
 	CoreSceneObjectsFactory,
 	GeneratorName,
@@ -50,7 +50,9 @@ export function onPBRModuleRegister(poly: PolyEngine) {
 		return new ShapedAreaLight(color, intensity, width, height);
 	});
 	CoreSceneObjectsFactory.registerGenerator(GeneratorName.SPOT_LIGHT, () => {
-		return new PhysicalSpotLight();
+		const physicalSpotLight = new PhysicalSpotLight();
+		monkeyPatchSpotLight(physicalSpotLight);
+		return physicalSpotLight;
 	});
 	CoreSceneObjectsFactory.registerGenerator(GeneratorName.SPOT_LIGHT_UPDATE, PHYSICAL_SPOT_LIGHT_UPDATE as any);
 

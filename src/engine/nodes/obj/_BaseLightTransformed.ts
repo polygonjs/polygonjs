@@ -5,6 +5,7 @@ import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {TransformController, TransformedParamConfig} from './utils/TransformController';
 import {FlagsControllerD} from '../utils/FlagsController';
 import {HierarchyController} from './utils/HierarchyController';
+import {isPromise} from '../../../core/Type';
 
 // import {Transformed} from './Concerns/Transformed';
 class TransformedObjParamConfig extends TransformedParamConfig(NodeParamsConfig) {}
@@ -23,10 +24,13 @@ export abstract class BaseLightTransformedObjNode<
 		this.transformController.initializeNode();
 	}
 
-	override cook() {
+	override async cook() {
 		this.transformController.update();
-		this.updateLightParams();
 		this.updateShadowParams();
+		const result = this.updateLightParams();
+		if (isPromise(result)) {
+			await result;
+		}
 		this.cookController.endCook();
 	}
 }

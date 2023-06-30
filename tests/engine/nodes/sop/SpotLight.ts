@@ -1,6 +1,7 @@
 import {Object3D, SpotLight} from 'three';
 import {ColorConversion} from '../../../../src/core/Color';
 import {BaseSopNodeType} from '../../../../src/engine/nodes/sop/_Base';
+import {ASSETS_ROOT} from '../../../../src/core/loader/AssetsUtils';
 
 function objectsCount(object: Object3D, countStart: number = 0) {
 	countStart += 1;
@@ -103,4 +104,42 @@ QUnit.test('sop/spotLight name change is maintained', async (assert) => {
 		'CoreSpotLightHelper_spotLight1',
 		'CoreSpotLightHelperCone_spotLight1',
 	]);
+});
+
+QUnit.test('sop/spotLight maintain map over cloning', async (assert) => {
+	const geo1 = window.geo1;
+	geo1.flags.display.set(false); // cancels geo node displayNodeController
+
+	const image1 = window.COP.createNode('image');
+	image1.p.url.set(`${ASSETS_ROOT}/textures/uv.webp`);
+
+	const spotLight1 = geo1.createNode('spotLight');
+	const transform1 = geo1.createNode('transform');
+	const transform2 = geo1.createNode('transform');
+	const transform3 = geo1.createNode('transform');
+
+	transform1.setInput(0, spotLight1);
+	transform2.setInput(0, transform1);
+	transform3.setInput(0, transform2);
+
+	spotLight1.p.tmap.set(true);
+	spotLight1.p.map.setNode(image1);
+
+	async function spotLightMap() {
+		const container = await transform3.compute();
+		const coreGroup = container.coreContent();
+		const object = coreGroup?.threejsObjects()[0]!;
+		return (object.children[0] as SpotLight).map;
+	}
+
+	assert.ok(await spotLightMap(), 'map is set on spotLight');
+	assert.equal((await spotLightMap())!.uuid, image1.__textureSync__()!.uuid, 'map is the same');
+
+	// remove map
+	spotLight1.p.tmap.set(false);
+	assert.notOk(await spotLightMap(), 'map is removed');
+
+	// remove map
+	spotLight1.p.tmap.set(true);
+	assert.ok(await spotLightMap(), 'map is re-added');
 });

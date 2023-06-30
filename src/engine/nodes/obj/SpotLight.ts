@@ -25,8 +25,8 @@ export class SpotLightObjNode extends BaseLightTransformedObjNode<SpotLightConta
 		return this._operation().createLight(this.pv);
 	}
 
-	protected override updateLightParams() {
-		this._operation().updateLightParams(this.light, this.pv);
+	protected override async updateLightParams() {
+		await this._operation().updateLightParams(this.light, this.pv);
 	}
 	protected override updateShadowParams() {
 		this.light.updateParams(this.pv);

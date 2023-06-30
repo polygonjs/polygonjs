@@ -2,6 +2,7 @@ import {TypedObjNode, ObjNodeRenderOrder} from './_Base';
 import {Object3D, Group} from 'three';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {FlagsControllerD} from '../utils/FlagsController';
+import {isPromise} from '../../../core/Type';
 
 export abstract class TypedLightObjNode<L extends Object3D, K extends NodeParamsConfig> extends TypedObjNode<Group, K> {
 	public override readonly flags: FlagsControllerD = new FlagsControllerD(this);
@@ -49,13 +50,16 @@ export abstract class TypedLightObjNode<L extends Object3D, K extends NodeParams
 		}
 	}
 
-	override cook() {
-		this.updateLightParams();
+	override async cook() {
 		this.updateShadowParams();
+		const result = this.updateLightParams();
+		if (isPromise(result)) {
+			await result;
+		}
 		this.cookController.endCook();
 	}
 
-	protected updateLightParams(): void {}
+	protected updateLightParams(): void | Promise<void> {}
 	protected updateShadowParams(): void {}
 }
 

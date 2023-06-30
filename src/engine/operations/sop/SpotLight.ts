@@ -9,6 +9,8 @@ import {
 	SpotLightContainerParams,
 } from '../../../core/lights/SpotLight';
 import {LightUserDataRaymarching} from '../../../core/lights/Common';
+import {SpotLight} from 'three';
+import {NodeContext} from '../../poly/NodeContext';
 
 export class SpotLightSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: SpotLightParams = DEFAULT_SPOT_LIGHT_PARAMS;
@@ -16,11 +18,11 @@ export class SpotLightSopOperation extends BaseSopOperation {
 	static override type(): Readonly<'spotLight'> {
 		return 'spotLight';
 	}
-	override cook(inputCoreGroups: CoreGroup[], params: SpotLightParams) {
+	override async cook(inputCoreGroups: CoreGroup[], params: SpotLightParams) {
 		const container = this.createLight(params);
 		container.light().name = params.name;
 
-		this.updateLightParams(container, params);
+		await this.updateLightParams(container, params);
 		this.updateShadowParams(container, params);
 		container.updateParams(params);
 		container.updateHelper();
@@ -42,7 +44,7 @@ export class SpotLightSopOperation extends BaseSopOperation {
 
 		return container;
 	}
-	updateLightParams(container: SpotLightContainer, params: SpotLightParams) {
+	async updateLightParams(container: SpotLightContainer, params: SpotLightParams): Promise<void> {
 		const light = container.light();
 
 		light.color = params.color;
@@ -60,7 +62,28 @@ export class SpotLightSopOperation extends BaseSopOperation {
 		light.userData[LightUserDataRaymarching.PENUMBRA] = params.raymarchingPenumbra;
 		light.userData[LightUserDataRaymarching.SHADOW_BIAS_ANGLE] = params.raymarchingShadowBiasAngle;
 		light.userData[LightUserDataRaymarching.SHADOW_BIAS_DISTANCE] = params.raymarchingShadowBiasDistance;
+		await this._updateLightMap(light, params);
 	}
+	private async _updateLightMap(light: SpotLight, params: SpotLightParams) {
+		if (!params.tmap) {
+			light.map = null;
+			return;
+		}
+		const textureNode = params.map.nodeWithContext(NodeContext.COP, this.states?.error);
+		if (textureNode) {
+			const container = await textureNode.compute();
+			const texture = container.coreContent();
+
+			if (!texture) {
+				this.states?.error.set(`texture invalid. (error: '${textureNode.states.error.message()}')`);
+			}
+
+			light.map = texture || null;
+		} else {
+			this.states?.error.set(`no texture node found`);
+		}
+	}
+
 	updateShadowParams(container: SpotLightContainer, params: SpotLightParams) {
 		const light = container.light();
 
