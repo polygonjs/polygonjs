@@ -573,6 +573,7 @@ import './engine/nodes/sop/TetDelete';
 import './engine/nodes/sop/TetTriangulate';
 import './engine/nodes/sop/Tetrahedralize';
 import './engine/nodes/sop/Tetrahedron';
+import './engine/nodes/sop/TetSoftBodySolver';
 import './engine/nodes/sop/Text';
 import './engine/nodes/sop/TextureCopy';
 import './engine/nodes/sop/TextureProperties';

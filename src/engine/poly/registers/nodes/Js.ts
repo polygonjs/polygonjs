@@ -35,6 +35,7 @@ import {CodeJsNode} from '../../../nodes/js/Code';
 import {ColorToVec3JsNode} from '../../../nodes/js/ColorToVec3';
 import {CompareJsNode} from '../../../nodes/js/Compare';
 import {ComplementJsNode} from '../../../nodes/js/Complement';
+import {ComputeVelocityJsNode} from '../../../nodes/js/ComputeVelocity';
 import {ConstantJsNode} from '../../../nodes/js/Constant';
 import {CookNodeJsNode} from '../../../nodes/js/CookNode';
 import {CosJsNode} from '../../../nodes/js/Cos';
@@ -346,6 +347,7 @@ export interface JsNodeChildrenMap {
 	code: CodeJsNode;
 	compare: CompareJsNode;
 	complement: ComplementJsNode;
+	computeVelocity: ComputeVelocityJsNode;
 	cookNode: CookNodeJsNode;
 	colorToVec3: ColorToVec3JsNode;
 	constant: ConstantJsNode;
@@ -703,6 +705,7 @@ export class JsRegister {
 		poly.registerNode(ColorToVec3JsNode, CATEGORY_JS.CONVERSION);
 		poly.registerNode(CompareJsNode, CATEGORY_JS.LOGIC);
 		poly.registerNode(ComplementJsNode, CATEGORY_JS.MATH);
+		poly.registerNode(ComputeVelocityJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(ConstantJsNode, CATEGORY_JS.GLOBALS);
 		poly.registerNode(CookNodeJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR);
 		poly.registerNode(CosJsNode, CATEGORY_JS.MATH);

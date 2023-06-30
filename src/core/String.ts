@@ -36,7 +36,75 @@ export function stringToAttribNames(word: string): string[] {
 			.filter((w) => w.length > 0)
 	);
 }
+export function stringTailDigits(word: string): number {
+	const match = word.match(TAIL_DIGIT_MATCH_REGEXP);
+	if (match) {
+		return parseInt(match[0]);
+	} else {
+		return 0;
+	}
+}
+export function stringIncrement(word: string): string {
+	const match = word.match(TAIL_DIGIT_MATCH_REGEXP);
+	if (match) {
+		let numbers_as_str = match[0];
+		let zeros_prefix: string = '';
+		const leading_zeros_match = numbers_as_str.match(LEADING_ZEROS_MATCH_REGEXP);
+		if (leading_zeros_match) {
+			zeros_prefix = leading_zeros_match[0];
+		}
 
+		const digits = parseInt(numbers_as_str);
+		if (digits == 0) {
+			if (zeros_prefix.length > 0) {
+				if (zeros_prefix[zeros_prefix.length - 1] == ZERO) {
+					zeros_prefix = zeros_prefix.slice(0, -1);
+				}
+			}
+		}
+
+		const prefix = word.substring(0, word.length - match[0].length);
+		return `${prefix}${zeros_prefix}${digits + 1}`;
+	} else {
+		return `${word}1`;
+	}
+}
+export function stringPluralize(word: string): string {
+	const last_char = word[word.length - 1];
+	if (last_char !== 's') {
+		return `${word}s`;
+	} else {
+		return word;
+	}
+}
+export function stringCamelCase(str: string): string {
+	const elements = str.replace(/_/g, ' ').split(' ');
+	let newWord = '';
+	for (let i = 0; i < elements.length; i++) {
+		let element = elements[i].toLowerCase();
+		if (i > 0) {
+			element = stringUpperFirst(element);
+		}
+		newWord += element;
+	}
+	return newWord;
+
+	// inspired from https://blog.bitsrc.io/5-string-manipulation-libraries-for-javascript-5de27e48ee62
+	// return str.replace(/_/g, ' ').replace(/(?:^\w|[A-Z0-9]|\b\w|\s+)/g, function (match, index) {
+	// 	console.log('match', match, index);
+	// 	if (+match === 0) return ''; // or if (/\s+/.test(match)) for white spaces
+	// 	return index === 0 ? match.toLowerCase() : match.toUpperCase();
+	// });
+}
+export function stringUpperFirst(word: string): string {
+	const newString = word[0].toUpperCase() + word.substring(1);
+	return newString;
+}
+export function stringTitleize(word: string): string {
+	const elements = word.split(/\s|_/g);
+	const newElements = elements.map((elem) => stringUpperFirst(elem));
+	return newElements.join(' ');
+}
 export class CoreString {
 	// static has_tail_digits(word: string): boolean {
 	// 	const match = word.match(TAIL_DIGIT_MATCH_REGEXP)
@@ -52,87 +120,12 @@ export class CoreString {
 		return NUM_REGEXP.test(word);
 	}
 
-	static tailDigits(word: string): number {
-		const match = word.match(TAIL_DIGIT_MATCH_REGEXP);
-		if (match) {
-			return parseInt(match[0]);
-		} else {
-			return 0;
-		}
-	}
-
-	static increment(word: string): string {
-		const match = word.match(TAIL_DIGIT_MATCH_REGEXP);
-		if (match) {
-			let numbers_as_str = match[0];
-			let zeros_prefix: string = '';
-			const leading_zeros_match = numbers_as_str.match(LEADING_ZEROS_MATCH_REGEXP);
-			if (leading_zeros_match) {
-				zeros_prefix = leading_zeros_match[0];
-			}
-
-			const digits = parseInt(numbers_as_str);
-			if (digits == 0) {
-				if (zeros_prefix.length > 0) {
-					if (zeros_prefix[zeros_prefix.length - 1] == ZERO) {
-						zeros_prefix = zeros_prefix.slice(0, -1);
-					}
-				}
-			}
-
-			const prefix = word.substring(0, word.length - match[0].length);
-			return `${prefix}${zeros_prefix}${digits + 1}`;
-		} else {
-			return `${word}1`;
-		}
-	}
-
-	static pluralize(word: string): string {
-		const last_char = word[word.length - 1];
-		if (last_char !== 's') {
-			return `${word}s`;
-		} else {
-			return word;
-		}
-	}
-
-	static camelCase(str: string): string {
-		const elements = str.replace(/_/g, ' ').split(' ');
-		let newWord = '';
-		for (let i = 0; i < elements.length; i++) {
-			let element = elements[i].toLowerCase();
-			if (i > 0) {
-				element = this.upperFirst(element);
-			}
-			newWord += element;
-		}
-		return newWord;
-
-		// inspired from https://blog.bitsrc.io/5-string-manipulation-libraries-for-javascript-5de27e48ee62
-		// return str.replace(/_/g, ' ').replace(/(?:^\w|[A-Z0-9]|\b\w|\s+)/g, function (match, index) {
-		// 	console.log('match', match, index);
-		// 	if (+match === 0) return ''; // or if (/\s+/.test(match)) for white spaces
-		// 	return index === 0 ? match.toLowerCase() : match.toUpperCase();
-		// });
-	}
-
-	static upperFirst(word: string): string {
-		const newString = word[0].toUpperCase() + word.substring(1);
-		return newString;
-	}
-	// https://stackoverflow.com/questions/52963900/convert-different-strings-to-snake-case-in-javascript
-	// static snake_case(str: string): string {
-	// 	return str
-	// 		.replace(/\W+/g, ' ')
-	// 		.split(/ |\B(?=[A-Z])/)
-	// 		.map((word) => word.toLowerCase())
-	// 		.join('_');
-	// }
-	static titleize(word: string): string {
-		const elements = word.split(/\s|_/g);
-		const newElements = elements.map((elem) => this.upperFirst(elem));
-		return newElements.join(' ');
-	}
+	static tailDigits = stringTailDigits;
+	static increment = stringIncrement;
+	static pluralize = stringPluralize;
+	static camelCase = stringCamelCase;
+	static upperFirst = stringUpperFirst;
+	static titleize = stringTitleize;
 
 	// static type_to_class_name(word: string): string {
 	// 	return this.upperFirst(this.camelCase(word));
@@ -250,7 +243,7 @@ export class CoreString {
 		return matches_one_mask;
 	}
 
-	static attribNames = stringToAttribNames
+	static attribNames = stringToAttribNames;
 
 	static indices(indicesString: string): number[] {
 		const elements = indicesString.split(INDICES_LIST_SEPARATOR);

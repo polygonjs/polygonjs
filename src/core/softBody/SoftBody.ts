@@ -44,8 +44,6 @@ import {
 interface SoftBodyOptions {
 	node: TetSoftBodySolverSopNode;
 	tetEmbed: TetEmbed;
-	edgeCompliance: number;
-	volumeCompliance: number;
 	highResSkinning: {
 		lookup: {
 			spacing: number;
@@ -65,8 +63,8 @@ export class SoftBody {
 	public readonly restVol: Float32Array;
 	public readonly edgeLengths: Float32Array;
 	public readonly invMass: Float32Array;
-	public edgeCompliance: number;
-	public volumeCompliance: number;
+	public edgeCompliance: number = 0;
+	public volumeCompliance: number = 0;
 	public readonly temp: Float32Array;
 	public readonly grads: Float32Array;
 	public readonly constraintsById: Map<number, SoftBodyConstraint> = new Map();
@@ -83,7 +81,7 @@ export class SoftBody {
 
 	constructor(private options: SoftBodyOptions) {
 		this._node = options.node;
-		const {tetEmbed, edgeCompliance, volumeCompliance} = this.options;
+		const {tetEmbed} = this.options;
 		const {tetObject, lowResObject, highResObject} = tetEmbed;
 		this.bufferGeometry = (lowResObject as Mesh).geometry;
 		// physics
@@ -102,9 +100,6 @@ export class SoftBody {
 		this.restVol = new Float32Array(this.numTets);
 		this.edgeLengths = new Float32Array(this.edgeIds.length / 2);
 		this.invMass = new Float32Array(this.numParticles);
-
-		this.edgeCompliance = edgeCompliance;
-		this.volumeCompliance = volumeCompliance;
 
 		this.temp = new Float32Array(4 * 3);
 		this.grads = new Float32Array(4 * 3);

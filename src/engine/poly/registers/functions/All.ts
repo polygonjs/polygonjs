@@ -43,6 +43,7 @@ import { clothSolverUpdateMaterial } from "../../../functions/clothSolverUpdateM
 import { colorSetRGB } from "../../../functions/colorSetRGB";
 import { colorToVec3 } from "../../../functions/colorToVec3";
 import { complement } from "../../../functions/complement";
+import { computeVelocity } from "../../../functions/computeVelocity";
 import { cookNode } from "../../../functions/cookNode";
 import { createScrollListener } from "../../../functions/createScrollListener";
 import { crossVector2 } from "../../../functions/crossVector2";
@@ -418,7 +419,6 @@ import { setPhysicsRBDRotation } from "../../../functions/setPhysicsRBDRotation"
 import { setPhysicsRBDSphereProperty } from "../../../functions/setPhysicsRBDSphereProperty";
 import { setPhysicsWorldGravity } from "../../../functions/setPhysicsWorldGravity";
 import { setPlayerInput } from "../../../functions/setPlayerInput";
-import { setSoftBodySolverGravity } from "../../../functions/setSoftBodySolverGravity";
 import { setSpotLightIntensity } from "../../../functions/setSpotLightIntensity";
 import { setViewer } from "../../../functions/setViewer";
 import { sizzleVec3XY } from "../../../functions/sizzleVec3XY";
@@ -493,6 +493,7 @@ export interface NamedFunctionMap {
 	colorSetRGB: colorSetRGB;
 	colorToVec3: colorToVec3;
 	complement: complement;
+	computeVelocity: computeVelocity;
 	cookNode: cookNode;
 	createScrollListener: createScrollListener;
 	crossVector2: crossVector2;
@@ -868,7 +869,6 @@ export interface NamedFunctionMap {
 	setPhysicsRBDSphereProperty: setPhysicsRBDSphereProperty;
 	setPhysicsWorldGravity: setPhysicsWorldGravity;
 	setPlayerInput: setPlayerInput;
-	setSoftBodySolverGravity: setSoftBodySolverGravity;
 	setSpotLightIntensity: setSpotLightIntensity;
 	setViewer: setViewer;
 	sizzleVec3XY: sizzleVec3XY;
@@ -946,6 +946,7 @@ export class AllNamedFunctionRegister {
 			colorSetRGB,
 			colorToVec3,
 			complement,
+			computeVelocity,
 			cookNode,
 			createScrollListener,
 			crossVector2,
@@ -1321,7 +1322,6 @@ export class AllNamedFunctionRegister {
 			setPhysicsRBDSphereProperty,
 			setPhysicsWorldGravity,
 			setPlayerInput,
-			setSoftBodySolverGravity,
 			setSpotLightIntensity,
 			setViewer,
 			sizzleVec3XY,

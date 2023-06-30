@@ -386,8 +386,8 @@ export const FUNCTION_NAME_BY_FILE_NAME: Record<string, string[]> = {
 	Sizzle: ['sizzleVec3XY', 'sizzleVec3XZ', 'sizzleVec3YZ', 'sizzleVec4XYZ', 'sizzleVec4WArray', 'sizzleVec4XYZArray'],
 	Sleep: ['sleep'],
 	SoftBody: [
+		'computeVelocity',
 		'softBodySolverStepSimulation',
-		'setSoftBodySolverGravity',
 		'softBodyConstraintCreate',
 		'softBodyConstraintSetPosition',
 		'softBodyConstraintDelete',

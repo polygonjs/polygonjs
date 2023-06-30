@@ -1,4 +1,4 @@
-import {Object3D, Vector3} from 'three';
+import {Object3D} from 'three';
 import {CoreGraphNodeId} from '../graph/CoreGraph';
 import {CoreObject} from '../geometry/Object';
 import {CoreSoftBodyAttribute, SoftBodyIdAttribute} from './SoftBodyAttribute';
@@ -10,7 +10,6 @@ import {TetEmbed} from './Common';
 
 const controllers: WeakMap<Object3D, SoftBodyController> = new WeakMap();
 const softBodies: WeakMap<Object3D, SoftBody> = new WeakMap();
-const gravity = new Vector3();
 
 interface CreateOrFindSoftBodyControllerOptions {
 	tetEmbed: TetEmbed;
@@ -35,13 +34,8 @@ export function createOrFindSoftBodyController(
 	//
 	let controller = controllers.get(threejsObjectInSceneTree);
 	if (!controller) {
-		// const subSteps = CoreSoftBodyAttribute.getSubSteps(threejsObject);
-		// console.log({subSteps});
-		CoreSoftBodyAttribute.getGravity(threejsObjectInSceneTree, gravity);
 		controller = new SoftBodyController(scene, {
 			node,
-			gravity,
-			// subSteps,
 		});
 		controllers.set(threejsObjectInSceneTree, controller);
 		const {softBody} = createOrFindSoftBody(node, tetEmbed);
@@ -50,15 +44,6 @@ export function createOrFindSoftBodyController(
 		} else {
 			console.warn('no softbody found');
 		}
-		// const children = tetObject.children;
-		// for (const child of children) {
-		// 	if ((child as Mesh).isMesh) {
-		// 		const {softBody} = createOrFindSoftBody(scene, child);
-		// 		if (softBody) {
-		// 			controller.addSoftBody(softBody);
-		// 		}
-		// 	}
-		// }
 	}
 
 	return {controller};
@@ -70,20 +55,14 @@ export function createOrFindSoftBody(node: TetSoftBodySolverSopNode, tetEmbed: T
 	}
 	let softBody = softBodies.get(threejsObjectInSceneTree);
 	if (!softBody) {
-		const edgeCompliance = CoreSoftBodyAttribute.getEdgeCompliance(threejsObjectInSceneTree);
-		const volumeCompliance = CoreSoftBodyAttribute.getVolumeCompliance(threejsObjectInSceneTree);
-		const highResSkinningLookupSpacing =
-			CoreSoftBodyAttribute.getHighResSkinningLookupSpacing(threejsObjectInSceneTree);
-		const highResSkinningLookupPadding =
-			CoreSoftBodyAttribute.getHighResSkinningLookupPadding(threejsObjectInSceneTree);
+		const highResSkinningLookupSpacing = CoreSoftBodyAttribute.getHighResSkinningLookupSpacing(tetEmbed.tetObject);
+		const highResSkinningLookupPadding = CoreSoftBodyAttribute.getHighResSkinningLookupPadding(tetEmbed.tetObject);
 
 		// if ((softBodyObject as Mesh).isMesh) {
 		// const mesh = softBodyObject as Mesh;
 		softBody = new SoftBody({
 			node,
 			tetEmbed,
-			edgeCompliance,
-			volumeCompliance,
 			highResSkinning: {
 				lookup: {
 					spacing: highResSkinningLookupSpacing,

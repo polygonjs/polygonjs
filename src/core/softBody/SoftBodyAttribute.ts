@@ -4,18 +4,19 @@ import {Vector3} from 'three';
 
 export enum SoftBodyIdAttribute {
 	SOLVER_NODE = 'SoftBodyIdAttribute_node',
+	EMBED_HIGH_RES_NODE = 'SoftBodyIdAttribute_embedHighResNode',
 	EPHEMERAL_ID = 'SoftBodyIdAttribute_ephemeralId',
 }
 export enum SoftBodyCommonAttribute {
-	GRAVITY = 'SoftBodyAttribute_gravity',
+	// GRAVITY = 'SoftBodyAttribute_gravity',
 	// SUB_STEPS = 'SoftBodyAttribute_subSteps', // substep is handled by the js/stepSimulation node
-	EDGE_COMPLIANCE = 'SoftBodyAttribute_edgeCompliance',
-	VOLUME_COMPLIANCED = 'SoftBodyAttribute_volumeCompliance',
+	// EDGE_COMPLIANCE = 'SoftBodyAttribute_edgeCompliance',
+	// VOLUME_COMPLIANCED = 'SoftBodyAttribute_volumeCompliance',
 	HIGH_RES_SKINNING_LOOKUP_SPACING = 'SoftBodyAttribute_highResSkinningLookupSpacing',
 	HIGH_RES_SKINNING_LOOKUP_PADDING = 'SoftBodyAttribute_highResSkinningLookupPadding',
 }
 
-type SoftBodyAttribute = SoftBodyCommonAttribute;
+type SoftBodyAttribute = SoftBodyCommonAttribute | SoftBodyIdAttribute;
 
 export class CoreSoftBodyBaseAttribute {
 	protected static _setVector3(object: ObjectContent<CoreObjectType>, attribName: SoftBodyAttribute, value: Vector3) {
@@ -46,25 +47,31 @@ export class CoreSoftBodyBaseAttribute {
 }
 
 export class CoreSoftBodyAttribute extends CoreSoftBodyBaseAttribute {
-	static setGravity(object: ObjectContent<CoreObjectType>, value: Vector3) {
-		this._setVector3(object, SoftBodyCommonAttribute.GRAVITY, value);
+	static setTetEmbedHighResNodeId(object: ObjectContent<CoreObjectType>, value: number) {
+		this._setNumber(object, SoftBodyIdAttribute.EMBED_HIGH_RES_NODE, value);
 	}
-	static getGravity(object: ObjectContent<CoreObjectType>, value: Vector3) {
-		return this._getVector3(object, SoftBodyCommonAttribute.GRAVITY, value);
+	static getTetEmbedHighResNodeId(object: ObjectContent<CoreObjectType>) {
+		return this._getNumber(object, SoftBodyIdAttribute.EMBED_HIGH_RES_NODE, -1);
 	}
+	// static setGravity(object: ObjectContent<CoreObjectType>, value: Vector3) {
+	// 	this._setVector3(object, SoftBodyCommonAttribute.GRAVITY, value);
+	// }
+	// static getGravity(object: ObjectContent<CoreObjectType>, value: Vector3) {
+	// 	return this._getVector3(object, SoftBodyCommonAttribute.GRAVITY, value);
+	// }
 
-	static setEdgeCompliance(object: ObjectContent<CoreObjectType>, value: number) {
-		this._setNumber(object, SoftBodyCommonAttribute.EDGE_COMPLIANCE, value);
-	}
-	static getEdgeCompliance(object: ObjectContent<CoreObjectType>) {
-		return this._getNumber(object, SoftBodyCommonAttribute.EDGE_COMPLIANCE, 100);
-	}
-	static setVolumeCompliance(object: ObjectContent<CoreObjectType>, value: number) {
-		this._setNumber(object, SoftBodyCommonAttribute.VOLUME_COMPLIANCED, value);
-	}
-	static getVolumeCompliance(object: ObjectContent<CoreObjectType>) {
-		return this._getNumber(object, SoftBodyCommonAttribute.VOLUME_COMPLIANCED, 0);
-	}
+	// static setEdgeCompliance(object: ObjectContent<CoreObjectType>, value: number) {
+	// 	this._setNumber(object, SoftBodyCommonAttribute.EDGE_COMPLIANCE, value);
+	// }
+	// static getEdgeCompliance(object: ObjectContent<CoreObjectType>) {
+	// 	return this._getNumber(object, SoftBodyCommonAttribute.EDGE_COMPLIANCE, 100);
+	// }
+	// static setVolumeCompliance(object: ObjectContent<CoreObjectType>, value: number) {
+	// 	this._setNumber(object, SoftBodyCommonAttribute.VOLUME_COMPLIANCED, value);
+	// }
+	// static getVolumeCompliance(object: ObjectContent<CoreObjectType>) {
+	// 	return this._getNumber(object, SoftBodyCommonAttribute.VOLUME_COMPLIANCED, 0);
+	// }
 	static setHighResSkinningLookupSpacing(object: ObjectContent<CoreObjectType>, value: number) {
 		this._setNumber(object, SoftBodyCommonAttribute.HIGH_RES_SKINNING_LOOKUP_SPACING, value);
 	}

@@ -1,6 +1,12 @@
 import {Object3D, Vector3} from 'three';
 import {getSoftBodyControllerNodeFromSolverObject} from '../nodes/sop/TetSoftBodySolver';
-import {ObjectNamedFunction0, ObjectNamedFunction2, ObjectNamedFunction1, ObjectNamedFunction3} from './_Base';
+import {
+	ObjectNamedFunction0,
+	ObjectNamedFunction2,
+	ObjectNamedFunction1,
+	ObjectNamedFunction3,
+	NamedFunction5,
+} from './_Base';
 import {
 	softBodySolverStepSimulation as _softBodySolverStepSimulation,
 	setSoftBodySolverGravity as _setSoftBodySolverGravity,
@@ -9,6 +15,8 @@ import {
 	softBodyConstraintDelete as _softBodyConstraintDelete,
 } from '../../core/softBody/SoftBodySolver';
 import {Ref} from '@vue/reactivity';
+
+const _v3 = new Vector3();
 
 export class softBodySolverReset extends ObjectNamedFunction0 {
 	static override type() {
@@ -33,14 +41,17 @@ export class softBodySolverStepSimulation extends ObjectNamedFunction3<[number, 
 	}
 }
 
-export class setSoftBodySolverGravity extends ObjectNamedFunction2<[Vector3, number]> {
+export class computeVelocity extends NamedFunction5<[Vector3, Vector3, number, number, Vector3]> {
 	static override type() {
-		return 'setSoftBodySolverGravity';
+		return 'computeVelocity';
 	}
-	func(object3D: Object3D, gravity: Vector3, lerp: number): void {
-		_setSoftBodySolverGravity(object3D, gravity, lerp);
+	func(velocity: Vector3, forces: Vector3, dt: number, drag: number, target: Vector3): Vector3 {
+		_v3.copy(forces).multiplyScalar(dt);
+		target.copy(velocity).multiplyScalar(drag).add(_v3);
+		return target;
 	}
 }
+
 export class softBodyConstraintCreate extends ObjectNamedFunction2<[number, Ref<number>]> {
 	static override type() {
 		return 'softBodyConstraintCreate';

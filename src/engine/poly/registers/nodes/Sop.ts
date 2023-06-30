@@ -256,15 +256,9 @@ import {SubnetInputSopNode} from '../../../nodes/sop/SubnetInput';
 import {SubnetOutputSopNode} from '../../../nodes/sop/SubnetOutput';
 import {SwitchSopNode} from '../../../nodes/sop/Switch';
 import {TangentSopNode} from '../../../nodes/sop/Tangent';
-// import {TetSopNode} from '../../../nodes/sop/Tet';
-// import {TetBoxSopNode} from '../../../nodes/sop/TetBox';
-// import {TetBunnySopNode} from '../../../nodes/sop/TetBunny';
 import {TetDeleteSopNode} from '../../../nodes/sop/TetDelete';
-// import {TetGrowSopNode} from '../../../nodes/sop/TetGrow';
-// import {TetMirrorSopNode} from '../../../nodes/sop/TetMirror';
-// import {TetQualitySopNode} from '../../../nodes/sop/TetQuality';
+import {TetEmbedSopNode} from '../../../nodes/sop/TetEmbed';
 import {TetSoftBodySolverSopNode} from '../../../nodes/sop/TetSoftBodySolver';
-// import {TetSplitSopNode} from '../../../nodes/sop/TetSplit';
 import {TetTriangulateSopNode} from '../../../nodes/sop/TetTriangulate';
 import {TetrahedralizeSopNode} from '../../../nodes/sop/Tetrahedralize';
 import {TetrahedronSopNode} from '../../../nodes/sop/Tetrahedron';
@@ -553,15 +547,9 @@ export interface GeoNodeChildrenMap {
 	subnetOutput: SubnetOutputSopNode;
 	switch: SwitchSopNode;
 	tangent: TangentSopNode;
-	// tet: TetSopNode;
-	// tetBox: TetBoxSopNode;
-	// tetBunny: TetBunnySopNode;
 	tetDelete: TetDeleteSopNode;
-	// tetGrow: TetGrowSopNode;
-	// tetMirror: TetMirrorSopNode;
-	// tetQuality: TetQualitySopNode;
+	tetEmbed: TetEmbedSopNode;
 	tetSoftBodySolver: TetSoftBodySolverSopNode;
-	// tetSplit: TetSplitSopNode;
 	tetTriangulate: TetTriangulateSopNode;
 	tetrahedralize: TetrahedralizeSopNode;
 	tetrahedron: TetrahedronSopNode;
@@ -1089,19 +1077,12 @@ export class SopRegister {
 		poly.registerNode(SwitchSopNode, CATEGORY_SOP.FLOW);
 		poly.registerNode(TangentSopNode, CATEGORY_SOP.ATTRIBUTE);
 		//
-		if (process.env.NODE_ENV == 'development') {
-			// poly.registerNode(TetSopNode, CATEGORY_SOP.TET);
-			// poly.registerNode(TetBoxSopNode, CATEGORY_SOP.TET);
-			// poly.registerNode(TetBunnySopNode, CATEGORY_SOP.TET);
-			poly.registerNode(TetDeleteSopNode, CATEGORY_SOP.TET);
-			// poly.registerNode(TetGrowSopNode, CATEGORY_SOP.TET);
-			// poly.registerNode(TetMirrorSopNode, CATEGORY_SOP.TET);
-			// poly.registerNode(TetQualitySopNode, CATEGORY_SOP.TET);
-			poly.registerNode(TetSoftBodySolverSopNode, CATEGORY_SOP.TET);
-			// poly.registerNode(TetSplitSopNode, CATEGORY_SOP.TET);
-			poly.registerNode(TetTriangulateSopNode, CATEGORY_SOP.TET);
-			poly.registerNode(TetrahedralizeSopNode, CATEGORY_SOP.TET);
-		}
+		// poly.registerNode(TetBunnySopNode, CATEGORY_SOP.TET);
+		poly.registerNode(TetDeleteSopNode, CATEGORY_SOP.TET);
+		poly.registerNode(TetEmbedSopNode, CATEGORY_SOP.TET);
+		poly.registerNode(TetSoftBodySolverSopNode, CATEGORY_SOP.TET);
+		poly.registerNode(TetTriangulateSopNode, CATEGORY_SOP.TET);
+		poly.registerNode(TetrahedralizeSopNode, CATEGORY_SOP.TET);
 		//
 		poly.registerNode(TetrahedronSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.registerNode(TextSopNode, CATEGORY_SOP.PRIMITIVES);

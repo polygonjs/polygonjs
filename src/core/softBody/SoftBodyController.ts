@@ -1,4 +1,3 @@
-import {Vector3} from 'three';
 import {PolyScene} from '../../engine/scene/PolyScene';
 import {Number3} from '../../types/GlobalTypes';
 import {SoftBody} from './SoftBody';
@@ -14,17 +13,17 @@ import {TetSoftBodySolverSopNode, MultiFunctionDefined} from '../../engine/nodes
 interface SoftBodyControllerOptions {
 	// subSteps: number;
 	node: TetSoftBodySolverSopNode;
-	gravity: Vector3;
+	// gravity: Vector3;
 }
 
 export class SoftBodyController {
 	private _stepsCount: number = 10;
 	private _softBody: SoftBody | undefined;
-	private _gravity: Number3 = [0, 0, 0];
+	private _gravity: Number3 = [0, -9.8, 0];
 	private _node: TetSoftBodySolverSopNode;
 	constructor(public readonly scene: PolyScene, options: SoftBodyControllerOptions) {
 		this._node = options.node;
-		options.gravity.toArray(this._gravity);
+		// options.gravity.toArray(this._gravity);
 		// this._stepsCount = options.subSteps;
 		// console.log('create subSteps:', options.subSteps, this._stepsCount);
 		// this._softBodies.length = 0;

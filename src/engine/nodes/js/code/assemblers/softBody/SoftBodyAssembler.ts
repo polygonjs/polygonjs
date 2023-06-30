@@ -35,7 +35,7 @@ function logDefault(message: string) {
 	console.log(message);
 }
 
-enum SoftBodyVariable {
+export enum SoftBodyVariable {
 	P = 'position',
 	V = 'velocity',
 	COLLISION_SDF = 'collisionSDF',
