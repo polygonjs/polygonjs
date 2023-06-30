@@ -52,9 +52,17 @@ export enum JsType {
 	RAY_FROM_CURSOR = 'rayFromCursor',
 	RAY_FROM_CAMERA = 'rayFromCamera',
 	// SDF
+	SDF_2D_BOX = 'SDF2DBox',
+	SDF_2D_CIRCLE = 'SDF2DCircle',
+	SDF_2D_CROSS = 'SDF2DCross',
+	SDF_2D_HEART = 'SDF2DHeart',
+	SDF_2D_ROUNDED_X = 'SDF2DRoundedX',
 	SDF_BOX = 'SDFBox',
 	SDF_PLANE = 'SDFPlane',
+	SDF_REVOLUTION = 'SDFRevolution',
 	SDF_SPHERE = 'SDFSphere',
+	SDF_TORUS = 'SDFTorus',
+	SDF_TUBE = 'SDFTube',
 	// set
 	SET_OBJECT_ATTRIBUTE = 'setObjectAttribute',
 	SET_OBJECT_LOOK_AT = 'setObjectLookAt',

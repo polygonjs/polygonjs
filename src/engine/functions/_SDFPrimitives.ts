@@ -1,8 +1,9 @@
-import {Vector3} from 'three';
+import {Vector2, Vector3} from 'three';
 import {NamedFunction3, NamedFunction4} from './_Base';
 import {absV3, maxV3Components, maxV3Component} from './_VectorUtils';
 
 const _q = new Vector3();
+const _v2 = new Vector2();
 const _sHalf = new Vector3();
 
 //
@@ -47,4 +48,36 @@ export class SDFSphere extends NamedFunction3<[Vector3, Vector3, number]> {
 		return 'SDFSphere';
 	}
 	func = _SDFSphere;
+}
+export function _SDFTorus(p: Vector3, center: Vector3, radius1: number, radius2: number): number {
+	p.sub(center);
+	_v2.x = p.x;
+	_v2.y = p.z;
+	_q.x = _v2.length() - radius1;
+	_q.y = p.y;
+	return _q.length() - radius2;
+}
+export class SDFTorus extends NamedFunction4<[Vector3, Vector3, number, number]> {
+	static override type() {
+		return 'SDFTorus';
+	}
+	func = _SDFTorus;
+}
+/*
+float sdTube( vec3 p, float r )
+{
+	return length(p.xz)-r;
+}
+*/
+export function _SDFTube(p: Vector3, center: Vector3, radius: number): number {
+	p.sub(center);
+	_q.x = p.x;
+	_q.y = p.z;
+	return _q.length() - radius;
+}
+export class SDFTube extends NamedFunction3<[Vector3, Vector3, number]> {
+	static override type() {
+		return 'SDFTube';
+	}
+	func = _SDFTube;
 }

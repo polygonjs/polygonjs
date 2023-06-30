@@ -19,7 +19,9 @@ class SDF2DCrossGlParamsConfig extends NodeParamsConfig {
 	center = ParamConfig.VECTOR2([0, 0]);
 	length = ParamConfig.FLOAT(1);
 	width = ParamConfig.FLOAT(0.3);
-	radius = ParamConfig.FLOAT(0);
+	radius = ParamConfig.FLOAT(0, {
+		range: [-1, 1],
+	});
 }
 const ParamsConfig = new SDF2DCrossGlParamsConfig();
 export class SDF2DCrossGlNode extends BaseSDF2DGlNode<SDF2DCrossGlParamsConfig> {

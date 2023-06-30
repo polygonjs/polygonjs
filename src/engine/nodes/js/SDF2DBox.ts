@@ -15,17 +15,16 @@ import {Poly} from '../../Poly';
 import {JsType} from '../../poly/registers/nodes/types/Js';
 
 const OUTPUT_NAME = 'float';
-class SDF2DRoundedXJsParamsConfig extends NodeParamsConfig {
+class SDF2DBoxJsParamsConfig extends NodeParamsConfig {
 	position = ParamConfig.VECTOR2([0, 0], {hidden: true});
 	center = ParamConfig.VECTOR2([0, 0]);
-	length = ParamConfig.FLOAT(1);
-	radius = ParamConfig.FLOAT(0.1);
+	sizes = ParamConfig.VECTOR2([1, 1]);
 }
-const ParamsConfig = new SDF2DRoundedXJsParamsConfig();
-export class SDF2DRoundedXJsNode extends BaseSDF2DJsNode<SDF2DRoundedXJsParamsConfig> {
+const ParamsConfig = new SDF2DBoxJsParamsConfig();
+export class SDF2DBoxJsNode extends BaseSDF2DJsNode<SDF2DBoxJsParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return JsType.SDF_2D_ROUNDED_X;
+		return JsType.SDF_2D_BOX;
 	}
 
 	override initializeNode() {
@@ -39,16 +38,15 @@ export class SDF2DRoundedXJsNode extends BaseSDF2DJsNode<SDF2DRoundedXJsParamsCo
 	override setLines(shadersCollectionController: JsLinesCollectionController) {
 		const position = this.variableForInputParam(shadersCollectionController, this.p.position);
 		const center = this.variableForInputParam(shadersCollectionController, this.p.center);
-		const length = this.variableForInputParam(shadersCollectionController, this.p.length);
-		const radius = this.variableForInputParam(shadersCollectionController, this.p.radius);
+		const sizes = this.variableForInputParam(shadersCollectionController, this.p.sizes);
 
 		const float = this.jsVarName(OUTPUT_NAME);
-		const func = Poly.namedFunctionsRegister.getFunction('SDF2DRoundedX', this, shadersCollectionController);
+		const func = Poly.namedFunctionsRegister.getFunction('SDF2DBox', this, shadersCollectionController);
 		shadersCollectionController.addBodyOrComputed(this, [
 			{
 				dataType: JsConnectionPointType.FLOAT,
 				varName: float,
-				value: func.asString(position, center, length, radius),
+				value: func.asString(position, center, sizes),
 			},
 		]);
 	}

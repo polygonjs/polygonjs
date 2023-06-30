@@ -45,3 +45,12 @@ export function maxV3Component(src: Vector3, target: Vector3, value: number): Ve
 	target.z = Math.max(src.z, value);
 	return target;
 }
+export function vector2MaxScalar(src: Vector2, scalar: number, target: Vector2) {
+	target.x = Math.max(src.x, scalar);
+	target.y = Math.max(src.y, scalar);
+	return target;
+}
+
+export function vector2Dot(src: Vector2) {
+	return src.dot(src);
+}

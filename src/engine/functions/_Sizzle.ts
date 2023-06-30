@@ -7,6 +7,11 @@ import {NamedFunction2} from './_Base';
 // Sizzle
 //
 //
+export function _sizzleVec2(src: Vector2, target: Vector2) {
+	target.x = src.y;
+	target.y = src.x;
+	return target;
+}
 export function _sizzleVec3XY(src: Vector3, target: Vector2): Vector2 {
 	target.x = src.x;
 	target.y = src.y;

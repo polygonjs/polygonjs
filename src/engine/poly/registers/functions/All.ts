@@ -336,18 +336,24 @@ import { rayIntersectsPlane } from "../../../functions/rayIntersectsPlane";
 import { rayIntersectsSphere } from "../../../functions/rayIntersectsSphere";
 import { raySet } from "../../../functions/raySet";
 import { renderPixel } from "../../../functions/renderPixel";
+import { SDF2DBox } from "../../../functions/SDF2DBox";
+import { SDF2DCircle } from "../../../functions/SDF2DCircle";
+import { SDF2DCross } from "../../../functions/SDF2DCross";
+import { SDF2DHeart } from "../../../functions/SDF2DHeart";
+import { SDF2DRoundedX } from "../../../functions/SDF2DRoundedX";
 import { SDFBox } from "../../../functions/SDFBox";
 import { SDFIntersect } from "../../../functions/SDFIntersect";
 import { SDFPlane } from "../../../functions/SDFPlane";
 import { SDFRevolutionX } from "../../../functions/SDFRevolutionX";
 import { SDFRevolutionY } from "../../../functions/SDFRevolutionY";
 import { SDFRevolutionZ } from "../../../functions/SDFRevolutionZ";
-import { SDFRoundedX } from "../../../functions/SDFRoundedX";
 import { SDFSmoothIntersect } from "../../../functions/SDFSmoothIntersect";
 import { SDFSmoothSubtract } from "../../../functions/SDFSmoothSubtract";
 import { SDFSmoothUnion } from "../../../functions/SDFSmoothUnion";
 import { SDFSphere } from "../../../functions/SDFSphere";
 import { SDFSubtract } from "../../../functions/SDFSubtract";
+import { SDFTorus } from "../../../functions/SDFTorus";
+import { SDFTube } from "../../../functions/SDFTube";
 import { SDFUnion } from "../../../functions/SDFUnion";
 import { setCSSObjectClass } from "../../../functions/setCSSObjectClass";
 import { setGeometryInstanceAttributeColor } from "../../../functions/setGeometryInstanceAttributeColor";
@@ -780,18 +786,24 @@ export interface NamedFunctionMap {
 	rayIntersectsSphere: rayIntersectsSphere;
 	raySet: raySet;
 	renderPixel: renderPixel;
+	SDF2DBox: SDF2DBox;
+	SDF2DCircle: SDF2DCircle;
+	SDF2DCross: SDF2DCross;
+	SDF2DHeart: SDF2DHeart;
+	SDF2DRoundedX: SDF2DRoundedX;
 	SDFBox: SDFBox;
 	SDFIntersect: SDFIntersect;
 	SDFPlane: SDFPlane;
 	SDFRevolutionX: SDFRevolutionX;
 	SDFRevolutionY: SDFRevolutionY;
 	SDFRevolutionZ: SDFRevolutionZ;
-	SDFRoundedX: SDFRoundedX;
 	SDFSmoothIntersect: SDFSmoothIntersect;
 	SDFSmoothSubtract: SDFSmoothSubtract;
 	SDFSmoothUnion: SDFSmoothUnion;
 	SDFSphere: SDFSphere;
 	SDFSubtract: SDFSubtract;
+	SDFTorus: SDFTorus;
+	SDFTube: SDFTube;
 	SDFUnion: SDFUnion;
 	setCSSObjectClass: setCSSObjectClass;
 	setGeometryInstanceAttributeColor: setGeometryInstanceAttributeColor;
@@ -1227,18 +1239,24 @@ export class AllNamedFunctionRegister {
 			rayIntersectsSphere,
 			raySet,
 			renderPixel,
+			SDF2DBox,
+			SDF2DCircle,
+			SDF2DCross,
+			SDF2DHeart,
+			SDF2DRoundedX,
 			SDFBox,
 			SDFIntersect,
 			SDFPlane,
 			SDFRevolutionX,
 			SDFRevolutionY,
 			SDFRevolutionZ,
-			SDFRoundedX,
 			SDFSmoothIntersect,
 			SDFSmoothSubtract,
 			SDFSmoothUnion,
 			SDFSphere,
 			SDFSubtract,
+			SDFTorus,
+			SDFTube,
 			SDFUnion,
 			setCSSObjectClass,
 			setGeometryInstanceAttributeColor,
