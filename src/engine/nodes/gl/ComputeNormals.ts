@@ -107,7 +107,7 @@ export class ComputeNormalsGlNode extends TypedSubnetGlNode<ComputeNormalsGlPara
 				// ComputeNormalsInput.N,
 				ComputeNormalsInput.UV,
 				ComputeNormalsInput.ID,
-			][index] || super._expectedInputName(index - 3)
+			][index] || super._expectedInputName(index - 2)
 		);
 	}
 	override childExpectedOutputConnectionPointTypes() {

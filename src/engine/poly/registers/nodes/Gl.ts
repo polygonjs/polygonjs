@@ -191,6 +191,7 @@ import {VaryingWriteGlNode} from '../../../nodes/gl/VaryingWrite';
 import {VaryingReadGlNode} from '../../../nodes/gl/VaryingRead';
 import {VectorAlignGlNode} from '../../../nodes/gl/VectorAlign';
 import {VectorAngleGlNode} from '../../../nodes/gl/VectorAngle';
+import {WavesGlNode} from '../../../nodes/gl/Waves';
 // networks
 // import {ActorsNetworkGlNode} from '../../../nodes/gl/ActorsNetwork';
 // import {MaterialsNetworkGlNode} from '../../../nodes/gl/MaterialsNetwork';
@@ -388,6 +389,7 @@ export interface GlNodeChildrenMap {
 	vec4ToVec3: Vec4ToVec3GlNode;
 	vectorAlign: VectorAlignGlNode;
 	vectorAngle: VectorAngleGlNode;
+	waves: WavesGlNode;
 	// networks
 	// actorsNetwork: ActorsNetworkGlNode;
 	// materialsNetwork: MaterialsNetworkGlNode;
@@ -607,6 +609,7 @@ export class GlRegister {
 		poly.registerNode(Vec4ToVec3GlNode, CATEGORY_GL.CONVERSION);
 		poly.registerNode(VectorAlignGlNode, CATEGORY_GL.GEOMETRY);
 		poly.registerNode(VectorAngleGlNode, CATEGORY_GL.GEOMETRY);
+		poly.registerNode(WavesGlNode, CATEGORY_GL.GEOMETRY);
 		// networks
 		// poly.registerNode(ActorsNetworkGlNode, CATEGORY_GL.NETWORK);
 		// poly.registerNode(MaterialsNetworkGlNode, CATEGORY_GL.NETWORK);
