@@ -8,6 +8,7 @@ import {InputCloneMode} from '../../poly/InputCloneMode';
 
 import {ScatterSopOperation} from '../../operations/sop/Scatter';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {SopType} from '../../poly/registers/nodes/types/Sop';
 const DEFAULT = ScatterSopOperation.DEFAULT_PARAMS;
 class ScatterSopParamsConfig extends NodeParamsConfig {
 	/** @param number of points to create */
@@ -42,11 +43,7 @@ const ParamsConfig = new ScatterSopParamsConfig();
 export class ScatterSopNode extends TypedSopNode<ScatterSopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'scatter';
-	}
-
-	static override displayedInputNames(): string[] {
-		return ['geometry to scatter points onto'];
+		return SopType.SCATTER;
 	}
 
 	override initializeNode() {

@@ -11,6 +11,7 @@ import {CoreGroup} from '../../../core/geometry/Group';
 import {DecalSopOperation} from '../../operations/sop/Decal';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {SopType} from '../../poly/registers/nodes/types/Sop';
 const DEFAULT = DecalSopOperation.DEFAULT_PARAMS;
 class DecalSopParamsConfig extends NodeParamsConfig {
 	/** @param decal position */
@@ -27,11 +28,7 @@ const ParamsConfig = new DecalSopParamsConfig();
 export class DecalSopNode extends TypedSopNode<DecalSopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'decal';
-	}
-
-	static override displayedInputNames(): string[] {
-		return ['geometry to create decal from'];
+		return SopType.DECAL;
 	}
 
 	override initializeNode() {

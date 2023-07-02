@@ -37,6 +37,7 @@ import {ByObjectTypeHelper, OBJECT_TYPE_MENU_ENTRIES, OBJECT_TYPES} from './util
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {ByBoundingObjectHelper} from './utils/delete/ByBoundingObjectHelper';
 import {geometryBuilder} from '../../../core/geometry/builders/geometryBuilder';
+import {SopType} from '../../poly/registers/nodes/types/Sop';
 class DeleteSopParamsConfig extends NodeParamsConfig {
 	/** @param defines the class that should be deleted (objects or vertices) */
 	class = ParamConfig.INTEGER(ATTRIBUTE_CLASSES.indexOf(AttribClass.VERTEX), {
@@ -175,7 +176,7 @@ const ParamsConfig = new DeleteSopParamsConfig();
 export class DeleteSopNode extends TypedSopNode<DeleteSopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'delete';
+		return SopType.DELETE;
 	}
 
 	private _marked_for_deletion_per_object_index: Map<number, boolean> = new Map();
@@ -185,10 +186,6 @@ export class DeleteSopNode extends TypedSopNode<DeleteSopParamsConfig> {
 	public readonly byObjectTypeHelper = new ByObjectTypeHelper(this);
 	public readonly byBboxHelper = new ByBboxHelper(this);
 	public readonly byBoundingObjectHelper = new ByBoundingObjectHelper(this);
-
-	static override displayedInputNames(): string[] {
-		return ['geometry to delete from', 'points inside this geometry will be deleted (optional)'];
-	}
 
 	override initializeNode() {
 		this.io.inputs.setCount(1, 2);

@@ -35,10 +35,6 @@ export class RoundedBoxSopNode extends TypedSopNode<RoundedBoxSopParamsConfig> {
 		return SopType.ROUNDED_BOX;
 	}
 
-	static override displayedInputNames(): string[] {
-		return ['geometry to create bounding box from (optional)'];
-	}
-
 	override initializeNode() {
 		this.io.inputs.setCount(0, 1);
 		this.io.inputs.initInputsClonedState(RoundedBoxSopOperation.INPUT_CLONED_STATE);

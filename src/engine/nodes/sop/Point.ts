@@ -23,6 +23,7 @@ type ComponentOffset = 0 | 1 | 2;
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {isBooleanTrue} from '../../../core/BooleanValue';
+import {SopType} from '../../poly/registers/nodes/types/Sop';
 class PointSopParamsConfig extends NodeParamsConfig {
 	/** @param toggle on to update the x component */
 	updateX = ParamConfig.BOOLEAN(0);
@@ -53,16 +54,12 @@ const ParamsConfig = new PointSopParamsConfig();
 export class PointSopNode extends TypedSopNode<PointSopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'point';
+		return SopType.POINT;
 	}
 
 	private _x_arrays_by_geometry_uuid: ValueArrayByName = new Map();
 	private _y_arrays_by_geometry_uuid: ValueArrayByName = new Map();
 	private _z_arrays_by_geometry_uuid: ValueArrayByName = new Map();
-
-	static override displayedInputNames(): string[] {
-		return ['points to move'];
-	}
 
 	override initializeNode() {
 		this.io.inputs.setCount(1);

@@ -8,6 +8,7 @@ import {CoreGroup} from '../../../core/geometry/Group';
 import {TypedSopNode} from './_Base';
 import {JitterSopOperation} from '../../operations/sop/Jitter';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {SopType} from '../../poly/registers/nodes/types/Sop';
 
 const DEFAULT = JitterSopOperation.DEFAULT_PARAMS;
 class JitterSopParamsConfig extends NodeParamsConfig {
@@ -23,11 +24,7 @@ const ParamsConfig = new JitterSopParamsConfig();
 export class JitterSopNode extends TypedSopNode<JitterSopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'jitter';
-	}
-
-	static override displayedInputNames(): string[] {
-		return ['geometry to jitter points of'];
+		return SopType.JITTER;
 	}
 
 	override initializeNode() {

@@ -11,6 +11,7 @@ import {CoreGroup} from '../../../core/geometry/Group';
 import {BVHVisualizerSopOperation} from '../../operations/sop/BVHVisualizer';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {SopType} from '../../poly/registers/nodes/types/Sop';
 const DEFAULT = BVHVisualizerSopOperation.DEFAULT_PARAMS;
 class BVHVisualizerSopParamsConfig extends NodeParamsConfig {
 	/** @param depth */
@@ -33,11 +34,7 @@ const ParamsConfig = new BVHVisualizerSopParamsConfig();
 export class BVHVisualizerSopNode extends TypedSopNode<BVHVisualizerSopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'BVHVisualizer';
-	}
-
-	static override displayedInputNames(): string[] {
-		return ['geometry with bvh'];
+		return SopType.BVH_VISUALIZER;
 	}
 
 	override initializeNode() {

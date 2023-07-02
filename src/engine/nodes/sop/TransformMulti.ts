@@ -47,6 +47,7 @@ import {TypeAssert} from '../../poly/Assert';
 import {Object3D} from 'three';
 import {BufferAttribute} from 'three';
 import {CoreAttribute, Attribute} from '../../../core/geometry/Attribute';
+import {SopType} from '../../poly/registers/nodes/types/Sop';
 class TransformMultiSopParamConfig extends NodeParamsConfig {
 	/** @param defines if this applies to objects or geometries */
 	applyOn = ParamConfig.INTEGER(TRANSFORM_TARGET_TYPES.indexOf(TransformTargetType.GEOMETRY), {
@@ -127,11 +128,7 @@ const ParamsConfig = new TransformMultiSopParamConfig();
 export class TransformMultiSopNode extends TypedSopNode<TransformMultiSopParamConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'transformMulti';
-	}
-
-	static override displayedInputNames(): string[] {
-		return ['objects to transform', 'objects to copy initial transform from'];
+		return SopType.TRANSFORM_MULTI;
 	}
 
 	override initializeNode() {

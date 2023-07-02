@@ -136,10 +136,6 @@ export class PhysicsPlayerSopNode extends TypedActorSopNode<PhysicsPlayerSopPara
 		return SopType.PHYSICS_PLAYER;
 	}
 
-	static override displayedInputNames(): string[] {
-		return ['player object (optional)', 'camera (optional)'];
-	}
-
 	protected override initializeNode() {
 		this.io.inputs.setCount(0, 2);
 		this.io.inputs.initInputsClonedState(InputCloneMode.FROM_NODE);

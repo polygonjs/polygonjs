@@ -8,6 +8,7 @@ import {CoreGroup} from '../../../core/geometry/Group';
 import {CameraProjectSopOperation} from '../../operations/sop/CameraProject';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {SopType} from '../../poly/registers/nodes/types/Sop';
 const DEFAULT = CameraProjectSopOperation.DEFAULT_PARAMS;
 class CameraProjectSopParamsConfig extends NodeParamsConfig {
 	/** @param unproject */
@@ -18,11 +19,7 @@ const ParamsConfig = new CameraProjectSopParamsConfig();
 export class CameraProjectSopNode extends TypedSopNode<CameraProjectSopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'cameraProject';
-	}
-
-	static override displayedInputNames(): string[] {
-		return ['points to project/unproject', 'camera'];
+		return SopType.CAMERA_PROJECT;
 	}
 
 	override initializeNode() {

@@ -6,6 +6,7 @@ import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {SetChildrenSopOperation} from '../../operations/sop/SetChildren';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {SopType} from '../../poly/registers/nodes/types/Sop';
 const DEFAULT = SetChildrenSopOperation.DEFAULT_PARAMS;
 class SetChildrenSopParamsConfig extends NodeParamsConfig {
 	clearExistingChildren = ParamConfig.BOOLEAN(DEFAULT.clearExistingChildren);
@@ -15,11 +16,7 @@ const ParamsConfig = new SetChildrenSopParamsConfig();
 export class SetChildrenSopNode extends TypedSopNode<SetChildrenSopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'setChildren';
-	}
-
-	static override displayedInputNames(): string[] {
-		return ['object to set the children of', 'objects to use as children'];
+		return SopType.SET_CHILDREN;
 	}
 
 	override initializeNode() {

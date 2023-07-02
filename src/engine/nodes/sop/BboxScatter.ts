@@ -10,6 +10,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {BboxScatterSopOperation} from '../../operations/sop/BboxScatter';
+import {SopType} from '../../poly/registers/nodes/types/Sop';
 class BboxScatterSopParamsConfig extends NodeParamsConfig {
 	/** @param the smaller the step size, the more points this will create */
 	stepSize = ParamConfig.FLOAT(0.1);
@@ -19,11 +20,7 @@ const ParamsConfig = new BboxScatterSopParamsConfig();
 export class BboxScatterSopNode extends TypedSopNode<BboxScatterSopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'bboxScatter';
-	}
-
-	static override displayedInputNames(): string[] {
-		return ['geometry to create points from'];
+		return SopType.BBOX_SCATTER;
 	}
 
 	override initializeNode() {

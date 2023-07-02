@@ -37,10 +37,6 @@ export class RaySopNode extends TypedSopNode<RaySopParamsConfig> {
 		return SopType.RAY;
 	}
 
-	static override displayedInputNames(): string[] {
-		return ['geometry to move', 'geometry to ray onto'];
-	}
-
 	override initializeNode() {
 		this.io.inputs.setCount(2);
 		this.io.inputs.initInputsClonedState(RaySopOperation.INPUT_CLONED_STATE);

@@ -103,10 +103,10 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 	get parentController(): HierarchyParentController {
 		return (this._parent_controller = this._parent_controller || new HierarchyParentController(this));
 	}
-	static displayedInputNames(): string[] {
-		return [];
+	static displayedInputNames(): string[] | undefined {
+		return undefined;
 	}
-	displayedInputNames(): string[] {
+	displayedInputNames(): string[] | undefined {
 		return (this.constructor as any as TypedNode<NC, K>).displayedInputNames();
 	}
 

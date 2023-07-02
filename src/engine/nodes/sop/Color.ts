@@ -31,6 +31,7 @@ import {ColorSopOperation} from '../../operations/sop/Color';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {PolyDictionary} from '../../../types/GlobalTypes';
 import {isBooleanTrue} from '../../../core/BooleanValue';
+import {SopType} from '../../poly/registers/nodes/types/Sop';
 const DEFAULT = ColorSopOperation.DEFAULT_PARAMS;
 class ColorSopParamsConfig extends NodeParamsConfig {
 	/** @param toggle on if the color should be copied from another attribute */
@@ -54,7 +55,7 @@ const ParamsConfig = new ColorSopParamsConfig();
 export class ColorSopNode extends TypedSopNode<ColorSopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'color';
+		return SopType.COLOR;
 	}
 
 	private _arrayByGeometryUUID: ArrayByGeometryUUID = {
@@ -62,10 +63,6 @@ export class ColorSopNode extends TypedSopNode<ColorSopParamsConfig> {
 		G: {},
 		B: {},
 	};
-
-	static override displayedInputNames(): string[] {
-		return ['geometry to update color of'];
-	}
 
 	override initializeNode() {
 		this.io.inputs.setCount(1);

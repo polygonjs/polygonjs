@@ -20,6 +20,7 @@ import {
 } from '../../operations/sop/TransformReset';
 
 import {ParamConfig, NodeParamsConfig} from '../utils/params/ParamsConfig';
+import {SopType} from '../../poly/registers/nodes/types/Sop';
 const DEFAULT = TransformResetSopOperation.DEFAULT_PARAMS;
 class TransformResetSopParamConfig extends NodeParamsConfig {
 	/** @param mode to reset the geometry and object */
@@ -36,11 +37,7 @@ const ParamsConfig = new TransformResetSopParamConfig();
 export class TransformResetSopNode extends TypedSopNode<TransformResetSopParamConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'transformReset';
-	}
-
-	static override displayedInputNames(): string[] {
-		return ['objects to reset transform', 'optional reference for center'];
+		return SopType.TRANSFORM_RESET;
 	}
 
 	override initializeNode() {

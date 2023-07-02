@@ -14,6 +14,7 @@ import {CoreIterator} from '../../../core/Iterator';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {Box3} from 'three';
+import {SopType} from '../../poly/registers/nodes/types/Sop';
 const tmpBox = new Box3();
 class AttribTransferSopParamsConfig extends NodeParamsConfig {
 	/** @param source group to transfer from (right input, or input 1) */
@@ -37,7 +38,7 @@ const ParamsConfig = new AttribTransferSopParamsConfig();
 export class AttribTransferSopNode extends TypedSopNode<AttribTransferSopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'attribTransfer';
+		return SopType.ATTRIB_TRANSFER;
 	}
 
 	_core_group_dest!: CoreGroup;
@@ -48,10 +49,6 @@ export class AttribTransferSopNode extends TypedSopNode<AttribTransferSopParamsC
 	_octree_timestamp: number | undefined;
 	_prev_param_srcGroup: string | undefined;
 	_octree: CoreOctree | undefined;
-
-	static override displayedInputNames(): string[] {
-		return ['geometry to transfer attributes to', 'geometry to transfer attributes from'];
-	}
 
 	override initializeNode() {
 		this.io.inputs.setCount(2);

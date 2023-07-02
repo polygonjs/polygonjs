@@ -30,8 +30,6 @@ import {coreObjectInstanceFactory} from '../../../core/geometry/CoreObjectFactor
 import {CoreEntity} from '../../../core/geometry/Entity';
 import {CadCoreFace} from '../../../core/geometry/cad/CadCoreFace';
 
-const DISPLAYED_INPUT_NAMES = ['input geometries', 'bounding box (optional)'];
-
 const GROUP_TYPES: EntityGroupType[] = [EntityGroupType.EDGE, EntityGroupType.FACE];
 
 class CADGroupSopParamsConfig extends NodeParamsConfig {
@@ -94,9 +92,7 @@ export class CADGroupSopNode extends CADSopNode<CADGroupSopParamsConfig> {
 	static override type() {
 		return SopType.CAD_GROUP;
 	}
-	static override displayedInputNames(): string[] {
-		return DISPLAYED_INPUT_NAMES;
-	}
+
 	// public readonly entitySelectionHelper = new EntitySelectionHelper(this);
 	public readonly byExpressionHelper = new GroupByExpressionHelper(this);
 	public readonly byBoundingBoxHelper = new GroupByBoundingBoxHelper(this);

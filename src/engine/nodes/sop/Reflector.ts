@@ -10,6 +10,7 @@ import {ReflectorSopOperation} from '../../operations/sop/Reflector';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {Number3} from '../../../types/GlobalTypes';
+import {SopType} from '../../poly/registers/nodes/types/Sop';
 const DEFAULT = ReflectorSopOperation.DEFAULT_PARAMS;
 
 class ReflectorSopParamsConfig extends NodeParamsConfig {
@@ -70,11 +71,7 @@ const ParamsConfig = new ReflectorSopParamsConfig();
 export class ReflectorSopNode extends TypedSopNode<ReflectorSopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'reflector';
-	}
-
-	static override displayedInputNames(): string[] {
-		return ['geometry to create a reflector from'];
+		return SopType.REFLECTOR;
 	}
 
 	override initializeNode() {

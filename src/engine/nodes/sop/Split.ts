@@ -23,6 +23,7 @@ import {CoreObject} from '../../../core/geometry/Object';
 import {CorePoint} from '../../../core/geometry/Point';
 import {MapUtils} from '../../../core/MapUtils';
 import {geometryBuilder} from '../../../core/geometry/builders/geometryBuilder';
+import {SopType} from '../../poly/registers/nodes/types/Sop';
 class SplitSopParamsConfig extends NodeParamsConfig {
 	/** @param type of attribute to use */
 	attribType = ParamConfig.INTEGER(ATTRIBUTE_TYPES.indexOf(AttribType.NUMERIC), {
@@ -38,11 +39,7 @@ const ParamsConfig = new SplitSopParamsConfig();
 export class SplitSopNode extends TypedSopNode<SplitSopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'split';
-	}
-
-	static override displayedInputNames(): string[] {
-		return ['geometry to split in multiple objects'];
+		return SopType.SPLIT;
 	}
 
 	override initializeNode() {

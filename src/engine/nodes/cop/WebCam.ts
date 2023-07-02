@@ -47,9 +47,6 @@ export class WebCamCopNode extends TypedCopNode<WebCamCopParamsConfig> {
 	}
 	public readonly textureParamsController: TextureParamsController = new TextureParamsController(this);
 
-	static override displayedInputNames(): string[] {
-		return ['optional texture to copy attributes from'];
-	}
 	override initializeNode() {
 		this.io.inputs.setCount(0, 1);
 		this.io.inputs.initInputsClonedState(InputCloneMode.NEVER);

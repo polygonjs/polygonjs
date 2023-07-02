@@ -11,8 +11,6 @@ import {CoreCameraPostProcessController} from '../../../core/camera/CoreCameraPo
 import {CoreType} from '../../../core/Type';
 import {BaseViewerType} from '../../viewers/_Base';
 
-const INPUT_PASS_NAME = 'input pass';
-const DEFAULT_INPUT_NAMES = [INPUT_PASS_NAME];
 export interface TypedPostNodeContext {
 	composerController: EffectComposerController;
 	composer: EffectComposer;
@@ -49,9 +47,6 @@ export class TypedPostNode<P extends Pass, K extends NodeParamsConfig> extends T
 
 	protected _passesByEffectsComposer: Map<EffectComposer, P | P[]> = new Map();
 
-	static override displayedInputNames(): string[] {
-		return DEFAULT_INPUT_NAMES;
-	}
 	override initializeNode() {
 		this.flags.display.set(false);
 		this.flags.display.onUpdate(() => {

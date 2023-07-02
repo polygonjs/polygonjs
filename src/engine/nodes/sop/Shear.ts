@@ -115,10 +115,6 @@ export class ShearSopNode extends TypedSopNode<ShearSopParamConfig> {
 		return SopType.SHEAR;
 	}
 
-	static override displayedInputNames(): string[] {
-		return ['geometries or objects to transform'];
-	}
-
 	override initializeNode() {
 		// this.uiData.set_param_label(this.p.applyOn, (v)=>TARGET_TYPES[v])
 		this.io.inputs.setCount(1);

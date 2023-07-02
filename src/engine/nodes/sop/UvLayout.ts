@@ -37,10 +37,6 @@ export class UvLayoutSopNode extends TypedSopNode<UvLayoutSopParamConfig> {
 		return SopType.UV_LAYOUT;
 	}
 
-	static override displayedInputNames(): string[] {
-		return ['geometries to unwrap UVs'];
-	}
-
 	override initializeNode() {
 		this.io.inputs.setCount(1);
 		this.io.inputs.initInputsClonedState(UvLayoutSopOperation.INPUT_CLONED_STATE);

@@ -23,8 +23,6 @@ import {isBooleanTrue} from '../../../core/Type';
 import {CoreCadType} from '../../../core/geometry/cad/CadCoreType';
 import {cadWireFromEdge} from '../../../core/geometry/cad/toObject3D/CadWire';
 
-const DISPLAYED_INPUT_NAMES = ['profiles', 'paths'];
-
 class CADPipeSopParamsConfig extends NodeParamsConfig {
 	/** @param create caps */
 	cap = ParamConfig.BOOLEAN(1);
@@ -39,9 +37,6 @@ export class CADPipeSopNode extends CADSopNode<CADPipeSopParamsConfig> {
 		return SopType.CAD_PIPE;
 	}
 
-	static override displayedInputNames(): string[] {
-		return DISPLAYED_INPUT_NAMES;
-	}
 	protected override initializeNode() {
 		this.io.inputs.setCount(2);
 	}

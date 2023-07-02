@@ -12,7 +12,6 @@ import {BaseNodeType} from '../_Base';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 import {NodeEvent} from '../../poly/NodeEvent';
 
-const INPUT_NAME = 'geometry to switch to';
 const DEFAULT_INPUTS_COUNT = 4;
 class SwitchSopParamsConfig extends NodeParamsConfig {
 	/** @param sets which input is used */
@@ -39,10 +38,6 @@ export class SwitchSopNode extends TypedSopNode<SwitchSopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
 		return SopType.SWITCH;
-	}
-
-	static override displayedInputNames(): string[] {
-		return [INPUT_NAME, INPUT_NAME, INPUT_NAME, INPUT_NAME];
 	}
 
 	override initializeNode() {

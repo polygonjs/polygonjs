@@ -11,9 +11,8 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {Group} from 'three';
 import {CoreObject} from '../../../core/geometry/Object';
 import {CoreWebXRAREstimatedLightController} from '../../../core/webXR/webXRAR/CoreWebXRAREstimatedLightController';
+import {SopType} from '../../poly/registers/nodes/types/Sop';
 const ATTRIB_NAME = CoreWebXRAREstimatedLightController.ATTRIB_NAME;
-
-const INPUT_NAME = 'default lights';
 
 class WebXRAREstimatedLightSopParamsConfig extends NodeParamsConfig {
 	/** @param default environment map */
@@ -42,12 +41,9 @@ const ParamsConfig = new WebXRAREstimatedLightSopParamsConfig();
 export class WebXRAREstimatedLightSopNode extends TypedSopNode<WebXRAREstimatedLightSopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'webXRAREstimatedLight';
+		return SopType.WEB_XR_AR_ESTIMATED_LIGHT;
 	}
 
-	static override displayedInputNames(): string[] {
-		return [INPUT_NAME];
-	}
 	override initializeNode() {
 		this.io.inputs.setCount(0, 1);
 	}

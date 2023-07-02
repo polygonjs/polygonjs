@@ -15,6 +15,7 @@ import {
 	INSTANCE_UPDATE_MODES,
 } from '../../operations/sop/InstanceUpdate';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {SopType} from '../../poly/registers/nodes/types/Sop';
 const DEFAULT = InstanceUpdateSopOperation.DEFAULT_PARAMS;
 
 class InstanceUpdateSopParamsConfig extends NodeParamsConfig {
@@ -40,11 +41,7 @@ const ParamsConfig = new InstanceUpdateSopParamsConfig();
 export class InstanceUpdateSopNode extends TypedSopNode<InstanceUpdateSopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'instanceUpdate';
-	}
-
-	static override displayedInputNames(): string[] {
-		return ['instance to update', 'geometry to copy attributes from'];
+		return SopType.INSTANCE_UPDATE;
 	}
 
 	override initializeNode() {

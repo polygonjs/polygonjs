@@ -60,10 +60,6 @@ export class AttribCopySopNode extends TypedSopNode<AttribCopySopParamsConfig> {
 		return SopType.ATTRIB_COPY;
 	}
 
-	static override displayedInputNames(): string[] {
-		return ['geometry to copy attributes to', 'geometry to copy attributes from'];
-	}
-
 	override initializeNode() {
 		this.io.inputs.setCount(1, 2);
 		this.io.inputs.initInputsClonedState(AttribCopySopOperation.INPUT_CLONED_STATE);

@@ -11,6 +11,7 @@ import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {SkeletonHelper} from 'three';
 import {Object3D} from 'three';
+import {SopType} from '../../poly/registers/nodes/types/Sop';
 
 class SkeletonHelperSopParamsConfig extends NodeParamsConfig {
 	// no keepInput param for now, as there seems to be a bug
@@ -23,11 +24,7 @@ const ParamsConfig = new SkeletonHelperSopParamsConfig();
 export class SkeletonHelperSopNode extends TypedSopNode<SkeletonHelperSopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'skeletonHelper';
-	}
-
-	static override displayedInputNames(): string[] {
-		return ['objects to add a skeletonHelper to'];
+		return SopType.SKELETON_HELPER;
 	}
 
 	override initializeNode() {

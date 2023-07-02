@@ -32,10 +32,6 @@ export class PolywireSopNode extends TypedSopNode<PolywireSopParamsConfig> {
 		return SopType.POLYWIRE;
 	}
 
-	static override displayedInputNames(): string[] {
-		return ['lines to create tubes from'];
-	}
-
 	override initializeNode() {
 		this.io.inputs.setCount(1);
 		this.io.inputs.initInputsClonedState(InputCloneMode.NEVER);

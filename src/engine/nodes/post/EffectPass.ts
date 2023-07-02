@@ -9,9 +9,10 @@ import {Effect, EffectPass, Pass} from 'postprocessing';
 import {ArrayUtils} from '../../../core/ArrayUtils';
 import {BaseNodeType} from '../_Base';
 import {NodeEvent} from '../../poly/NodeEvent';
+import {PostType} from '../../poly/registers/nodes/types/Post';
 
 const POSSIBLE_COMBINED_PASSES_COUNT = 5;
-const RANGE = ArrayUtils.range(POSSIBLE_COMBINED_PASSES_COUNT);
+export const RANGE = ArrayUtils.range(POSSIBLE_COMBINED_PASSES_COUNT);
 const DEFAULT_INPUTS_COUNT = POSSIBLE_COMBINED_PASSES_COUNT + 1;
 
 class EffectPassPostParamsConfig extends NodeParamsConfig {
@@ -28,12 +29,9 @@ const ParamsConfig = new EffectPassPostParamsConfig();
 export class EffectPassPostNode extends TypedPostNode<EffectPass, EffectPassPostParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'effectPass';
+		return PostType.EFFECT_PASS;
 	}
 
-	static override displayedInputNames(): string[] {
-		return ['input pass', ...RANGE.map((i) => `combined pass ${i}`)];
-	}
 	override initializeNode() {
 		super.initializeNode();
 		this.io.inputs.setCount(DEFAULT_INPUTS_COUNT);

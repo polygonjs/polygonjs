@@ -14,6 +14,7 @@ import {isBooleanTrue} from '../../../core/Type';
 import {Object3D} from 'three';
 import {CoreMask} from '../../../core/geometry/Mask';
 import {object3DHasGeometry} from '../../../core/geometry/GeometryUtils';
+import {SopType} from '../../poly/registers/nodes/types/Sop';
 
 class NormalsHelperSopParamsConfig extends NodeParamsConfig {
 	/** @param group to assign the material to */
@@ -35,11 +36,7 @@ const ParamsConfig = new NormalsHelperSopParamsConfig();
 export class NormalsHelperSopNode extends TypedSopNode<NormalsHelperSopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'normalsHelper';
-	}
-
-	static override displayedInputNames(): string[] {
-		return ['geometry to view normals of'];
+		return SopType.NORMALS_HELPER;
 	}
 
 	override initializeNode() {

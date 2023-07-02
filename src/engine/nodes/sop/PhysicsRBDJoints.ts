@@ -18,6 +18,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {Object3D, Vector4, Vector3, Group, Box3, Matrix4, Quaternion} from 'three';
 import {CoreMask} from '../../../core/geometry/Mask';
+import {SopType} from '../../poly/registers/nodes/types/Sop';
 
 const center = new Vector3();
 // const delta = new Vector3();
@@ -111,11 +112,7 @@ const ParamsConfig = new PhysicsRBDJointsSopParamsConfig();
 export class PhysicsRBDJointsSopNode extends TypedSopNode<PhysicsRBDJointsSopParamsConfig> {
 	override readonly paramsConfig = ParamsConfig;
 	static override type() {
-		return 'physicsRBDJoints';
-	}
-
-	static override displayedInputNames(): string[] {
-		return ['RBD objects to create joints for'];
+		return SopType.PHYSICS_RBD_JOINTS;
 	}
 
 	protected override initializeNode() {

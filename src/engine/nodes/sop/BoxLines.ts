@@ -34,10 +34,6 @@ export class BoxLinesSopNode extends TypedSopNode<BoxLinesSopParamsConfig> {
 		return SopType.BOX_LINES;
 	}
 
-	static override displayedInputNames(): string[] {
-		return ['geometry to create bounding box from (optional)'];
-	}
-
 	protected override initializeNode() {
 		this.io.inputs.setCount(0, 1);
 		this.io.inputs.initInputsClonedState(BoxLinesSopOperation.INPUT_CLONED_STATE);

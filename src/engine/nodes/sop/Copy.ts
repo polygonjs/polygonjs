@@ -83,10 +83,6 @@ export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 	private _objects: ObjectContent<CoreObjectType>[] = [];
 	private _stampNode!: SopCopyStamp;
 
-	static override displayedInputNames(): string[] {
-		return ['geometry to be copied', 'points to copy to (optional)'];
-	}
-
 	override initializeNode() {
 		this.io.inputs.setCount(1, 2);
 		this.io.inputs.initInputsClonedState([InputCloneMode.FROM_NODE, InputCloneMode.NEVER]);

@@ -62,10 +62,6 @@ export class GifCopNode extends TypedCopNode<GifCopParamsConfig> {
 
 	public readonly textureParamsController: TextureParamsController = new TextureParamsController(this);
 
-	static override displayedInputNames(): string[] {
-		return ['optional texture to copy attributes from'];
-	}
-
 	override initializeNode() {
 		this.io.inputs.setCount(0, 1);
 		this.io.inputs.initInputsClonedState(InputCloneMode.NEVER);

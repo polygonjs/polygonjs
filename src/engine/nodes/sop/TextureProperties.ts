@@ -15,6 +15,7 @@ import {MAPPINGS} from '../../../core/cop/Mapping';
 import {WRAPPINGS} from '../../../core/cop/Wrapping';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {SopType} from '../../poly/registers/nodes/types/Sop';
 const DEFAULT = TexturePropertiesSopOperation.DEFAULT_PARAMS;
 class TexturePropertiesSopParamsConfig extends NodeParamsConfig {
 	/** @param sets if this node should search through the materials inside the whole hierarchy */
@@ -115,11 +116,7 @@ const ParamsConfig = new TexturePropertiesSopParamsConfig();
 export class TexturePropertiesSopNode extends TypedSopNode<TexturePropertiesSopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'textureProperties';
-	}
-
-	static override displayedInputNames(): string[] {
-		return ['objects with textures to change properties of'];
+		return SopType.TEXTURE_PROPERTIES;
 	}
 
 	override initializeNode() {

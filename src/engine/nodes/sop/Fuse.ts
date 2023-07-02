@@ -15,6 +15,7 @@ import {ObjectType, objectTypeFromConstructor} from '../../../core/geometry/Cons
 import {ArrayUtils} from '../../../core/ArrayUtils';
 import {mergeFaces} from '../../../core/geometry/operation/Fuse';
 import {CoreMask} from '../../../core/geometry/Mask';
+import {SopType} from '../../poly/registers/nodes/types/Sop';
 const roundedPosition = new Vector3();
 const vector2 = new Vector2();
 const vector3 = new Vector3();
@@ -55,11 +56,7 @@ const ParamsConfig = new FuseSopParamsConfig();
 export class FuseSopNode extends TypedSopNode<FuseSopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'fuse';
-	}
-
-	static override displayedInputNames(): string[] {
-		return ['points to fuse together'];
+		return SopType.FUSE;
 	}
 
 	override initializeNode() {

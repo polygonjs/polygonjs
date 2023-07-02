@@ -118,10 +118,6 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 		return true;
 	}
 
-	static override displayedInputNames(): string[] {
-		return ['points to emit particles from'];
-	}
-
 	protected override _childrenControllerContext = NodeContext.GL;
 	override initializeNode() {
 		this.io.inputs.setCount(1);

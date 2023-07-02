@@ -9,6 +9,7 @@ import {CoreGroup} from '../../../core/geometry/Group';
 import {TextureCopySopOperation} from '../../operations/sop/TextureCopy';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {SopType} from '../../poly/registers/nodes/types/Sop';
 const DEFAULT = TextureCopySopOperation.DEFAULT_PARAMS;
 class TextureCopySopParamsConfig extends NodeParamsConfig {
 	textureName = ParamConfig.STRING(DEFAULT.textureName);
@@ -18,11 +19,7 @@ const ParamsConfig = new TextureCopySopParamsConfig();
 export class TextureCopySopNode extends TypedSopNode<TextureCopySopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'textureCopy';
-	}
-
-	static override displayedInputNames(): string[] {
-		return ['objects to copy textures to', 'objects to copy textures from'];
+		return SopType.TEXTURE_COPY;
 	}
 
 	override initializeNode() {

@@ -50,10 +50,6 @@ export class MetaballSopNode extends TypedSopNode<MetaballSopParamsConfig> {
 		return 'metaball';
 	}
 
-	static override displayedInputNames(): string[] {
-		return ['points to create metaballs from'];
-	}
-
 	override initializeNode() {
 		this.io.inputs.setCount(1);
 		this.io.inputs.initInputsClonedState(MetaballSopOperation.INPUT_CLONED_STATE);

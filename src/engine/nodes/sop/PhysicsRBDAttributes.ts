@@ -213,10 +213,6 @@ export class PhysicsRBDAttributesSopNode extends TypedSopNode<PhysicsRBDAttribut
 		return SopType.PHYSICS_RBD_ATTRIBUTES;
 	}
 
-	static override displayedInputNames(): string[] {
-		return ['objects to add physics RBD attributes to'];
-	}
-
 	protected override initializeNode() {
 		this.io.inputs.setCount(0, 1);
 		this.io.inputs.initInputsClonedState(PhysicsRBDAttributesSopOperation.INPUT_CLONED_STATE);

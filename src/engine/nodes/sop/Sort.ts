@@ -9,6 +9,7 @@ import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {SortSopOperation, AXISES, SORT_MODES, SortMode, SORT_TARGET_TYPES} from '../../operations/sop/Sort';
+import {SopType} from '../../poly/registers/nodes/types/Sop';
 const DEFAULT = SortSopOperation.DEFAULT_PARAMS;
 
 class SortSopParamsConfig extends NodeParamsConfig {
@@ -47,11 +48,7 @@ const ParamsConfig = new SortSopParamsConfig();
 export class SortSopNode extends TypedSopNode<SortSopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'sort';
-	}
-
-	static override displayedInputNames(): string[] {
-		return ['geometry to sort'];
+		return SopType.SORT;
 	}
 
 	override initializeNode() {

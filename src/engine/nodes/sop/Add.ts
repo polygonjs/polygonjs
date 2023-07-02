@@ -38,10 +38,6 @@ export class AddSopNode extends TypedSopNode<AddSopParamsConfig> {
 		return SopType.ADD;
 	}
 
-	static override displayedInputNames(): string[] {
-		return ['geometry to create polygons from (optional)'];
-	}
-
 	override initializeNode() {
 		this.io.inputs.setCount(0, 1);
 	}

@@ -92,10 +92,6 @@ export class TransformSopNode extends TypedSopNode<TransformSopParamConfig> {
 		return SopType.TRANSFORM;
 	}
 
-	static override displayedInputNames(): string[] {
-		return ['geometries or objects to transform'];
-	}
-
 	override initializeNode() {
 		this.io.inputs.setCount(1);
 		this.io.inputs.initInputsClonedState(TransformSopOperation.INPUT_CLONED_STATE);

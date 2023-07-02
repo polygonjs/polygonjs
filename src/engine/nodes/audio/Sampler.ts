@@ -12,6 +12,7 @@ import {StringParamLanguage} from '../../params/utils/OptionsController';
 import {sanitizeUrl} from '../../../core/UrlHelper';
 import {CoreLoaderAudio} from '../../../core/loader/Audio';
 import {Poly} from '../../Poly';
+import {AudioType} from '../../poly/registers/nodes/types/Audio';
 
 export const SAMPLER_DEFAULTS: Partial<SamplerOptions> = {
 	attack: 0.01,
@@ -66,15 +67,13 @@ const ParamsConfig = new SamplerAudioParamsConfig();
 export class SamplerAudioNode extends TypedAudioNode<SamplerAudioParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'sampler';
+		return AudioType.SAMPLER;
 	}
 
 	override initializeNode() {
 		this.io.inputs.setCount(1);
 	}
-	static override displayedInputNames(): string[] {
-		return ['envelope'];
-	}
+
 	override dispose(): void {
 		super.dispose();
 		Poly.blobs.clearBlobsForNode(this);

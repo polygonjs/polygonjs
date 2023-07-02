@@ -36,10 +36,6 @@ export class InstanceSopNode extends TypedSopNode<InstanceSopParamsConfig> {
 		return SopType.INSTANCE;
 	}
 
-	static override displayedInputNames(): string[] {
-		return ['geometry to be instanciated', 'points to instance to'];
-	}
-
 	override initializeNode() {
 		super.initializeNode();
 

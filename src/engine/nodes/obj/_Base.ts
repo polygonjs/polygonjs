@@ -7,9 +7,6 @@ import {ChildrenDisplayController} from './utils/ChildrenDisplayController';
 import {TransformController} from './utils/TransformController';
 import {HierarchyController} from './utils/HierarchyController';
 
-const INPUT_OBJECT_NAME = 'parent object';
-const DEFAULT_INPUT_NAMES = [INPUT_OBJECT_NAME, INPUT_OBJECT_NAME, INPUT_OBJECT_NAME, INPUT_OBJECT_NAME];
-
 interface Object3DWithNode extends Object3D {
 	node: BaseNodeType;
 }
@@ -30,9 +27,7 @@ export class TypedObjNode<O extends Object3D, K extends NodeParamsConfig> extend
 	static override context(): NodeContext {
 		return NodeContext.OBJ;
 	}
-	static override displayedInputNames(): string[] {
-		return DEFAULT_INPUT_NAMES;
-	}
+
 	public readonly renderOrder: number = ObjNodeRenderOrder.MANAGER;
 	readonly transformController: TransformController | undefined;
 	readonly hierarchyController: HierarchyController | undefined;

@@ -12,6 +12,7 @@ import {NodeContext} from '../../poly/NodeContext';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {isBooleanTrue} from '../../../core/BooleanValue';
+import {SopType} from '../../poly/registers/nodes/types/Sop';
 class TransformCopySopParamConfig extends NodeParamsConfig {
 	/** @param toggle on if the second input should be used */
 	useSecondInput = ParamConfig.BOOLEAN(1);
@@ -28,11 +29,7 @@ const ParamsConfig = new TransformCopySopParamConfig();
 export class TransformCopySopNode extends TypedSopNode<TransformCopySopParamConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'transformCopy';
-	}
-
-	static override displayedInputNames(): string[] {
-		return ['objects to transform', 'objects to copy transform from'];
+		return SopType.TRANSFORM_COPY;
 	}
 
 	override initializeNode() {

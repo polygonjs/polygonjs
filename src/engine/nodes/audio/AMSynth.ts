@@ -9,6 +9,7 @@ import {AudioBuilder} from '../../../core/audio/AudioBuilder';
 
 import {AMSynth} from 'tone/build/esm/instrument/AMSynth';
 import {ENVELOPE_DEFAULTS} from './Envelope';
+import {AudioType} from '../../poly/registers/nodes/types/Audio';
 
 class AMSynthAudioParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new AMSynthAudioParamsConfig();
@@ -16,14 +17,11 @@ const ParamsConfig = new AMSynthAudioParamsConfig();
 export class AMSynthAudioNode extends TypedAudioNode<AMSynthAudioParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'AMSynth';
+		return AudioType.AM_SYNTH;
 	}
 
 	override initializeNode() {
 		this.io.inputs.setCount(0, 1);
-	}
-	static override displayedInputNames(): string[] {
-		return ['envelope'];
 	}
 
 	override cook(inputContents: AudioBuilder[]) {

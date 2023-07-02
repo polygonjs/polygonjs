@@ -11,18 +11,6 @@ import {FlagsControllerDBO} from '../utils/FlagsController';
 import {BaseSopOperation} from '../../operations/sop/_Base';
 import {CoreObjectType, ObjectContent} from '../../../core/geometry/ObjectContent';
 
-// enum MESSAGE {
-// 	FROM_SET_CORE_GROUP = 'from set_core_group',
-// 	FROM_SET_GROUP = 'from set_group',
-// 	FROM_SET_OBJECTS = 'from set_objects',
-// 	FROM_SET_OBJECT = 'from set_object',
-// 	FROM_SET_GEOMETRIES = 'from set_geometries',
-// 	FROM_SET_GEOMETRY = 'from set_geometry',
-// }
-
-const INPUT_GEOMETRY_NAME = 'input geometry';
-const DEFAULT_INPUT_NAMES = [INPUT_GEOMETRY_NAME, INPUT_GEOMETRY_NAME, INPUT_GEOMETRY_NAME, INPUT_GEOMETRY_NAME];
-
 // class ParamLessNetworkSopParamsConfig extends NodeParamsConfig {}
 // export class BaseNetworkSopNode<K extends NodeParamsConfig> extends TypedNode<NodeContext.SOP, K> {
 // 	static node_context(): NodeContext {
@@ -50,9 +38,6 @@ export class TypedSopNode<K extends NodeParamsConfig> extends TypedNode<NodeCont
 	public override readonly flags: FlagsControllerDBO = new FlagsControllerDBO(this);
 	override dataType(): string {
 		return CoreObjectType.THREEJS;
-	}
-	static override displayedInputNames(): string[] {
-		return DEFAULT_INPUT_NAMES;
 	}
 
 	override initializeBaseNode() {

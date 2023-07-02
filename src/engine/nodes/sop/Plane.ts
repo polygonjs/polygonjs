@@ -38,10 +38,6 @@ export class PlaneSopNode extends TypedSopNode<PlaneSopParamsConfig> {
 		return SopType.PLANE;
 	}
 
-	static override displayedInputNames(): string[] {
-		return ['geometry to create plane from (optional)'];
-	}
-
 	override initializeNode() {
 		this.io.inputs.setCount(0, 1);
 		this.io.inputs.initInputsClonedState(PlaneSopOperation.INPUT_CLONED_STATE);

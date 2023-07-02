@@ -16,6 +16,7 @@ import {CoreTransform} from '../../../core/Transform';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {Camera} from 'three';
 import {ObjectType, registerObjectType} from '../../../core/geometry/Constant';
+import {SopType} from '../../poly/registers/nodes/types/Sop';
 class LODSopParamsConfig extends NodeParamsConfig {
 	/** @param distance when switching between high res and mid res (first input and second input) */
 	distance0 = ParamConfig.FLOAT(10, {
@@ -55,12 +56,9 @@ const ParamsConfig = new LODSopParamsConfig();
 export class LodSopNode extends TypedSopNode<LODSopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'lod';
+		return SopType.LOD;
 	}
 
-	static override displayedInputNames(): string[] {
-		return ['high res', 'mid res', 'low res'];
-	}
 	private _lod = this._createLOD();
 
 	override initializeNode() {

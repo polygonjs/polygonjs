@@ -112,9 +112,6 @@ export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
 	private _currentAttribValueV3 = new Vector3();
 	private _currentAttribValueV4 = new Vector4();
 
-	static override displayedInputNames(): string[] {
-		return ['geometry to add noise to'];
-	}
 	override initializeNode() {
 		this.io.inputs.setCount(1);
 		this.io.inputs.initInputsClonedState([InputCloneMode.FROM_NODE]);

@@ -1,26 +1,16 @@
 import {TypedSopNode} from './_Base';
-// import {CoreTransform} from '../../../Core/Transform';
-// import {ParamType} from '../../../Engine/Param/_Module'
-
-// interface ActionsByName {
-// 	[propName: string]: THREE.AnimationClip;
-// }
-
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {Object3DWithAnimation} from '../../../core/geometry/Animation';
+import {SopType} from '../../poly/registers/nodes/types/Sop';
 class AnimationCopySopParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new AnimationCopySopParamsConfig();
 
 export class AnimationCopySopNode extends TypedSopNode<AnimationCopySopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'animationCopy';
-	}
-
-	static override displayedInputNames(): string[] {
-		return ['geometry to copy animation to', 'geometry to copy animation from'];
+		return SopType.ANIMATION_COPY;
 	}
 
 	override initializeNode() {

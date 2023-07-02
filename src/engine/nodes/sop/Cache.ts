@@ -13,6 +13,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {BaseNodeType} from '../_Base';
 import {BaseParamType} from '../../params/_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
+import {SopType} from '../../poly/registers/nodes/types/Sop';
 class CacheSopParamsConfig extends NodeParamsConfig {
 	/** @param content of the cache (hidden) */
 	cache = ParamConfig.STRING('', {hidden: true});
@@ -28,11 +29,7 @@ const ParamsConfig = new CacheSopParamsConfig();
 export class CacheSopNode extends TypedSopNode<CacheSopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'cache';
-	}
-
-	static override displayedInputNames(): string[] {
-		return ['geometry to cache'];
+		return SopType.CACHE;
 	}
 
 	override initializeNode() {

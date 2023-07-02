@@ -8,6 +8,7 @@ import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {ObjectsLayoutSopOperation} from '../../operations/sop/ObjectsLayout';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {SopType} from '../../poly/registers/nodes/types/Sop';
 const DEFAULT = ObjectsLayoutSopOperation.DEFAULT_PARAMS;
 class ObjectsLayoutSopParamConfig extends NodeParamsConfig {
 	/** @param layout width */
@@ -37,11 +38,7 @@ const ParamsConfig = new ObjectsLayoutSopParamConfig();
 export class ObjectsLayoutSopNode extends TypedSopNode<ObjectsLayoutSopParamConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'objectsLayout';
-	}
-
-	static override displayedInputNames(): string[] {
-		return ['objects to transform'];
+		return SopType.OBJECTS_LAYOUT;
 	}
 
 	override initializeNode() {

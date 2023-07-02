@@ -30,10 +30,6 @@ export class TetEmbedSopNode extends TetSopNode<TetEmbedSopParamsConfig> {
 		return SopType.TET_EMBED;
 	}
 
-	static override displayedInputNames(): string[] {
-		return ['tetrahedrons', 'highres threejs geometry'];
-	}
-
 	protected override initializeNode() {
 		this.io.inputs.setCount(2);
 	}

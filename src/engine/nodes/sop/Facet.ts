@@ -11,6 +11,7 @@ import {toCreasedNormals} from 'three/examples/jsm/utils/BufferGeometryUtils';
 import {MathUtils} from 'three';
 import {CoreMask} from '../../../core/geometry/Mask';
 import {object3DHasGeometry} from '../../../core/geometry/GeometryUtils';
+import {SopType} from '../../poly/registers/nodes/types/Sop';
 const {degToRad} = MathUtils;
 
 class FacetSopParamsConfig extends NodeParamsConfig {
@@ -31,12 +32,9 @@ const ParamsConfig = new FacetSopParamsConfig();
 export class FacetSopNode extends TypedSopNode<FacetSopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'facet';
+		return SopType.FACET;
 	}
 
-	static override displayedInputNames(): string[] {
-		return ['geometry to update normals of'];
-	}
 	override initializeNode() {
 		this.io.inputs.setCount(1);
 		this.io.inputs.initInputsClonedState(InputCloneMode.FROM_NODE);

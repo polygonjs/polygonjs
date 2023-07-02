@@ -15,6 +15,7 @@ import {
 } from '../../operations/sop/Hierarchy';
 export const MODES_WITH_LEVEL = [HierarchyMode.ADD_PARENT, HierarchyMode.REMOVE_PARENT];
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {SopType} from '../../poly/registers/nodes/types/Sop';
 const DEFAULT = HierarchySopOperation.DEFAULT_PARAMS;
 class HierarchySopParamsConfig extends NodeParamsConfig {
 	/** @param defines if parent objects will be added or removed */
@@ -53,11 +54,7 @@ const ParamsConfig = new HierarchySopParamsConfig();
 export class HierarchySopNode extends TypedSopNode<HierarchySopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'hierarchy';
-	}
-
-	static override displayedInputNames(): string[] {
-		return ['geometry to add or remove parents to/from', 'objects to use as parent or children (optional)'];
+		return SopType.HIERARCHY;
 	}
 
 	override initializeNode() {

@@ -47,10 +47,6 @@ export class PolarTransformSopNode extends TypedSopNode<PolarTransformSopParamCo
 		return SopType.POLAR_TRANSFORM;
 	}
 
-	static override displayedInputNames(): string[] {
-		return ['geometries or objects to transform'];
-	}
-
 	override initializeNode() {
 		this.io.inputs.setCount(1);
 		this.io.inputs.initInputsClonedState(PolarTransformSopOperation.INPUT_CLONED_STATE);

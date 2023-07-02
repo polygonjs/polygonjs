@@ -16,6 +16,7 @@ import {CoreGeometry} from '../../../core/geometry/Geometry';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {isBooleanTrue} from '../../../core/BooleanValue';
+import {SopType} from '../../poly/registers/nodes/types/Sop';
 class NormalsSopParamsConfig extends NodeParamsConfig {
 	/** @param toggle on if normals can be updated via expressions */
 	edit = ParamConfig.BOOLEAN(0);
@@ -59,12 +60,9 @@ const ParamsConfig = new NormalsSopParamsConfig();
 export class NormalsSopNode extends TypedSopNode<NormalsSopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'normals';
+		return SopType.NORMALS;
 	}
 
-	static override displayedInputNames(): string[] {
-		return ['geometry to update normals of'];
-	}
 	override initializeNode() {
 		this.io.inputs.setCount(1);
 		this.io.inputs.initInputsClonedState(InputCloneMode.FROM_NODE);

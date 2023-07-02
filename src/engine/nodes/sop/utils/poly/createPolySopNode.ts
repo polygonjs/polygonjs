@@ -14,7 +14,7 @@ export function createPolySopNode(
 		static override type() {
 			return nodeType;
 		}
-		static override displayedInputNames(): string[] {
+		static override displayedInputNames(): string[] | undefined {
 			return definition.inputs?.simple?.names || ['input geometries'];
 		}
 

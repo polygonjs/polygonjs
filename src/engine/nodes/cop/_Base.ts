@@ -6,9 +6,6 @@ import {FlagsControllerBO} from '../utils/FlagsController';
 import {DataTexture} from 'three';
 import {LuminanceFormat, HalfFloatType} from 'three';
 
-const INPUT_COP_NAME = 'input texture';
-const DEFAULT_INPUT_NAMES = [INPUT_COP_NAME, INPUT_COP_NAME, INPUT_COP_NAME, INPUT_COP_NAME];
-
 var size = 32;
 var data = new Uint16Array(size);
 for (var i = 0; i < size; i++) {
@@ -28,9 +25,6 @@ export class TypedCopNode<K extends NodeParamsConfig> extends TypedNode<NodeCont
 
 	static override context(): NodeContext {
 		return NodeContext.COP;
-	}
-	static override displayedInputNames(): string[] {
-		return DEFAULT_INPUT_NAMES;
 	}
 
 	override initializeBaseNode() {

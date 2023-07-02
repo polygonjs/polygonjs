@@ -10,8 +10,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {Poly} from '../../Poly';
 import {GsapCoreTimeline, gsapTimeline, gsap} from '../../../core/thirdParty/gsap';
-
-const DISPLAY_INPUT_NAMES = ['from', 'to'];
+import {AnimType} from '../../poly/registers/nodes/types/Anim';
 
 class PlayAnimParamsConfig extends NodeParamsConfig {
 	/** @param play the animations */
@@ -56,10 +55,7 @@ export class PlayAnimNode extends TypedAnimNode<PlayAnimParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	public gsap = gsap; // give access to gsap to external scripts
 	static override type() {
-		return 'play';
-	}
-	static override displayedInputNames(): string[] {
-		return DISPLAY_INPUT_NAMES;
+		return AnimType.PLAY;
 	}
 	override initializeNode() {
 		this.io.inputs.setCount(2);

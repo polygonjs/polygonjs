@@ -34,9 +34,6 @@ export class SnapshotCopNode extends TypedCopNode<SnapshotCopParamsConfig> {
 		return CopType.SNAPSHOT;
 	}
 
-	static override displayedInputNames(): string[] {
-		return ['input to take a snapshot of'];
-	}
 	override initializeNode() {
 		this.io.inputs.setCount(1);
 		this.io.inputs.initInputsClonedState(InputCloneMode.NEVER);

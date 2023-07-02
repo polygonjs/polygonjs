@@ -11,6 +11,7 @@ import {CoreGroup} from '../../../core/geometry/Group';
 import {BVHSopOperation, STRAGERY_MENU_ENTRIES} from '../../operations/sop/BVH';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {SopType} from '../../poly/registers/nodes/types/Sop';
 const DEFAULT = BVHSopOperation.DEFAULT_PARAMS;
 class BVHSopParamsConfig extends NodeParamsConfig {
 	strategy = ParamConfig.INTEGER(DEFAULT.strategy, {
@@ -34,11 +35,7 @@ const ParamsConfig = new BVHSopParamsConfig();
 export class BVHSopNode extends TypedSopNode<BVHSopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'BVH';
-	}
-
-	static override displayedInputNames(): string[] {
-		return ['geometry to create BVH from'];
+		return SopType.BVH;
 	}
 
 	override initializeNode() {

@@ -13,17 +13,14 @@ import {CoreGroup} from '../../../core/geometry/Group';
 
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {ArrayUtils} from '../../../core/ArrayUtils';
+import {SopType} from '../../poly/registers/nodes/types/Sop';
 class SkinSopParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new SkinSopParamsConfig();
 
 export class SkinSopNode extends TypedSopNode<SkinSopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'skin';
-	}
-
-	static override displayedInputNames(): string[] {
-		return ['lines to create polygons from', 'if used, lines from both inputs will be used'];
+		return SopType.SKIN;
 	}
 
 	override initializeNode() {

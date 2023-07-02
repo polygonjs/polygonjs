@@ -34,9 +34,6 @@ export class BlendSopNode extends TypedSopNode<BlendSopParamsConfig> {
 		return SopType.BLEND;
 	}
 
-	static override displayedInputNames(): string[] {
-		return ['geometry to blend from', 'geometry to blend to'];
-	}
 	override initializeNode() {
 		this.io.inputs.setCount(2);
 		this.io.inputs.initInputsClonedState([InputCloneMode.FROM_NODE, InputCloneMode.NEVER]);

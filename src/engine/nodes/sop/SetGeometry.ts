@@ -7,6 +7,7 @@ import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {SetGeometrySopOperation, SET_GEOMETRY_MODES, SetGeometryMode} from '../../operations/sop/SetGeometry';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {SopType} from '../../poly/registers/nodes/types/Sop';
 const DEFAULT = SetGeometrySopOperation.DEFAULT_PARAMS;
 class SetGeometrySopParamsConfig extends NodeParamsConfig {
 	mode = ParamConfig.INTEGER(DEFAULT.mode, {
@@ -20,11 +21,7 @@ const ParamsConfig = new SetGeometrySopParamsConfig();
 export class SetGeometrySopNode extends TypedSopNode<SetGeometrySopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'setGeometry';
-	}
-
-	static override displayedInputNames(): string[] {
-		return ['objects to places geometries into', 'objects to take geometries from'];
+		return SopType.SET_GEOMETRY;
 	}
 
 	override initializeNode() {

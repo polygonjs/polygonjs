@@ -18,6 +18,7 @@ import {FloatParam} from '../../params/Float';
 import {CoreObjectType} from '../../../core/geometry/ObjectContent';
 import {CoreMask} from '../../../core/geometry/Mask';
 import {BaseCoreObject} from '../../../core/geometry/_BaseObject';
+import {SopType} from '../../poly/registers/nodes/types/Sop';
 const DEFAULT = ObjectPropertiesSopOperation.DEFAULT_PARAMS;
 class ObjectPropertiesSopParamsConfig extends NodeParamsConfig {
 	/** @param group to assign the material to */
@@ -98,11 +99,7 @@ const ParamsConfig = new ObjectPropertiesSopParamsConfig();
 export class ObjectPropertiesSopNode extends TypedSopNode<ObjectPropertiesSopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'objectProperties';
-	}
-
-	static override displayedInputNames(): string[] {
-		return ['objects to change properties of'];
+		return SopType.OBJECT_PROPERTIES;
 	}
 
 	override initializeNode() {

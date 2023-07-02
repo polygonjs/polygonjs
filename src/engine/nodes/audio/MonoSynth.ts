@@ -10,6 +10,7 @@ import {AudioBuilder} from '../../../core/audio/AudioBuilder';
 import {MonoSynth} from 'tone/build/esm/instrument/MonoSynth';
 import {PolySynth} from 'tone/build/esm/instrument/PolySynth';
 import {ENVELOPE_DEFAULTS} from './Envelope';
+import { AudioType } from '../../poly/registers/nodes/types/Audio';
 
 class MonoSynthAudioParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new MonoSynthAudioParamsConfig();
@@ -17,15 +18,13 @@ const ParamsConfig = new MonoSynthAudioParamsConfig();
 export class MonoSynthAudioNode extends TypedAudioNode<MonoSynthAudioParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'monoSynth';
+		return AudioType.MONO_SYNTH;
 	}
 
 	override initializeNode() {
 		this.io.inputs.setCount(0, 1);
 	}
-	static override displayedInputNames(): string[] {
-		return ['envelope'];
-	}
+
 
 	override cook(inputContents: AudioBuilder[]) {
 		const envelopeBuilder = inputContents[0];

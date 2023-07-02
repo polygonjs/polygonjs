@@ -11,12 +11,10 @@
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {MergeSopOperation} from '../../operations/sop/Merge';
-
-const INPUT_NAME = 'geometry to merge';
-
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {BaseNodeType} from '../_Base';
 import {NodeEvent} from '../../poly/NodeEvent';
+import {SopType} from '../../poly/registers/nodes/types/Sop';
 const DEFAULT = MergeSopOperation.DEFAULT_PARAMS;
 const DEFAULT_INPUTS_COUNT = 4;
 class MergeSopParamsConfig extends NodeParamsConfig {
@@ -42,12 +40,9 @@ const ParamsConfig = new MergeSopParamsConfig();
 export class MergeSopNode extends TypedSopNode<MergeSopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'merge';
+		return SopType.MERGE;
 	}
 
-	static override displayedInputNames(): string[] {
-		return [INPUT_NAME, INPUT_NAME, INPUT_NAME, INPUT_NAME];
-	}
 	setCompactMode(compact: boolean) {
 		this.p.compact.set(compact);
 	}

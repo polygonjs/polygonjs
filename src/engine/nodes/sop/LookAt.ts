@@ -8,6 +8,7 @@ import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {LookAtSopOperation} from '../../operations/sop/LookAt';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {SopType} from '../../poly/registers/nodes/types/Sop';
 const DEFAULT = LookAtSopOperation.DEFAULT_PARAMS;
 class LookAtSopParamConfig extends NodeParamsConfig {
 	/** @param target */
@@ -27,11 +28,7 @@ const ParamsConfig = new LookAtSopParamConfig();
 export class LookAtSopNode extends TypedSopNode<LookAtSopParamConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'lookAt';
-	}
-
-	static override displayedInputNames(): string[] {
-		return ['geometries or objects to transform'];
+		return SopType.LOOK_AT;
 	}
 
 	override initializeNode() {

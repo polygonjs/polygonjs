@@ -18,7 +18,6 @@ import {TransformTargetType, TRANSFORM_TARGET_TYPES} from '../../../core/Transfo
 import {Object3D} from 'three';
 import {TypeAssert} from '../../poly/Assert';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
-const INPUT_NAMES = ['points to transform in mapbox space'];
 
 class MapboxTransformSopParamsConfig extends NodeParamsConfig {
 	/** @param sets if this node should transform objects or geometries */
@@ -45,10 +44,6 @@ export class MapboxTransformSopNode extends TypedSopNode<MapboxTransformSopParam
 
 	static override type() {
 		return SopType.MAPBOX_TRANSFORM;
-	}
-
-	static override displayedInputNames(): string[] {
-		return INPUT_NAMES;
 	}
 
 	override initializeNode() {

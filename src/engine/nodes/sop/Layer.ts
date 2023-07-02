@@ -8,6 +8,7 @@ import {TypedSopNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {CoreGroup} from '../../../core/geometry/Group';
+import {SopType} from '../../poly/registers/nodes/types/Sop';
 class LayerSopParamsConfig extends NodeParamsConfig {
 	/** @param the layer that the objects will be assigned to */
 	layer = ParamConfig.INTEGER(0, {
@@ -20,12 +21,9 @@ const ParamsConfig = new LayerSopParamsConfig();
 export class LayerSopNode extends TypedSopNode<LayerSopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'layer';
+		return SopType.LAYER;
 	}
 
-	static override displayedInputNames(): string[] {
-		return ['objects to change layers of'];
-	}
 	override initializeNode() {
 		this.io.inputs.setCount(1);
 		this.io.inputs.initInputsClonedState(InputCloneMode.FROM_NODE);

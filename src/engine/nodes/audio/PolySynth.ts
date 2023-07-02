@@ -6,9 +6,9 @@
 import {TypedAudioNode} from './_Base';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {AudioBuilder} from '../../../core/audio/AudioBuilder';
-
 import {PolySynth} from 'tone/build/esm/instrument/PolySynth';
 import {Synth} from 'tone/build/esm/instrument/Synth';
+import {AudioType} from '../../poly/registers/nodes/types/Audio';
 
 class PolySynthAudioParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new PolySynthAudioParamsConfig();
@@ -16,14 +16,11 @@ const ParamsConfig = new PolySynthAudioParamsConfig();
 export class PolySynthAudioNode extends TypedAudioNode<PolySynthAudioParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'polySynth';
+		return AudioType.POLY_SYNTH;
 	}
 
 	override initializeNode() {
 		this.io.inputs.setCount(0);
-	}
-	static override displayedInputNames(): string[] {
-		return ['envelope'];
 	}
 
 	override cook(inputContents: AudioBuilder[]) {

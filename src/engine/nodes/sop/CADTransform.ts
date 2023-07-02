@@ -33,10 +33,6 @@ export class CADTransformSopNode extends CADSopNode<CADTransformSopParamConfig> 
 		return SopType.CAD_TRANSFORM;
 	}
 
-	static override displayedInputNames(): string[] {
-		return ['geometries or objects to transform'];
-	}
-
 	override initializeNode() {
 		this.io.inputs.setCount(1);
 		this.io.inputs.initInputsClonedState(InputCloneMode.FROM_NODE);

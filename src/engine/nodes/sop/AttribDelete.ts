@@ -11,6 +11,7 @@ import {AttribClassMenuEntries, AttribClass, ATTRIBUTE_CLASSES} from '../../../c
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {Object3D, BufferGeometry, Mesh} from 'three';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {SopType} from '../../poly/registers/nodes/types/Sop';
 class AttribDeleteSopParamsConfig extends NodeParamsConfig {
 	/** @param attribute class (geometry or object) */
 	class = ParamConfig.INTEGER(ATTRIBUTE_CLASSES.indexOf(AttribClass.VERTEX), {
@@ -26,11 +27,7 @@ const ParamsConfig = new AttribDeleteSopParamsConfig();
 export class AttribDeleteSopNode extends TypedSopNode<AttribDeleteSopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'attribDelete';
-	}
-
-	static override displayedInputNames(): string[] {
-		return ['geometry to delete attributes from'];
+		return SopType.ATTRIB_DELETE;
 	}
 
 	override initializeNode() {

@@ -4,9 +4,6 @@ import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {FlagsControllerB} from '../utils/FlagsController';
 import {AudioBuilder} from '../../../core/audio/AudioBuilder';
 
-const INPUT_NAME = 'input audio properties';
-const DEFAULT_INPUT_NAMES = [INPUT_NAME, INPUT_NAME, INPUT_NAME, INPUT_NAME];
-
 /**
  *
  *
@@ -18,10 +15,6 @@ export class TypedAudioNode<K extends NodeParamsConfig> extends TypedNode<NodeCo
 
 	static override context(): NodeContext {
 		return NodeContext.AUDIO;
-	}
-
-	static override displayedInputNames(): string[] {
-		return DEFAULT_INPUT_NAMES;
 	}
 
 	override initializeBaseNode() {

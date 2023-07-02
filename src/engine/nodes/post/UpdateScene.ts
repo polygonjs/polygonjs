@@ -13,6 +13,7 @@ import {BaseNodeType} from '../_Base';
 import {Mesh, Material, MeshBasicMaterial, Color} from 'three';
 import {UpdateScenePass} from './utils/effects/UpdateScenePass';
 import {CoreObjectType, ObjectContent} from '../../../core/geometry/ObjectContent';
+import {PostType} from '../../poly/registers/nodes/types/Post';
 
 const MATTE_MATERIAL = new MeshBasicMaterial({color: new Color(0, 0, 0)});
 
@@ -87,14 +88,11 @@ const ParamsConfig = new UpdateScenePostParamsConfig();
 export class UpdateScenePostNode extends TypedPostNode<UpdateScenePass, UpdateScenePostParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'updateScene';
+		return PostType.UPDATE_SCENE;
 	}
 	override initializeNode() {
 		super.initializeNode();
 		this.io.inputs.setCount(0, 2);
-	}
-	static override displayedInputNames(): string[] {
-		return ['previous pass', 'updateScene node to reset changes of'];
 	}
 
 	override createPass(context: TypedPostNodeContext) {

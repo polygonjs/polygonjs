@@ -22,8 +22,6 @@ import {cadFilterObjects} from '../../../core/geometry/cad/utils/CadFilter';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {isBooleanTrue} from '../../../core/Type';
 
-const DISPLAYED_INPUT_NAMES = ['curves'];
-
 class CADLoftSopParamsConfig extends NodeParamsConfig {
 	/** @param create solid */
 	solid = ParamConfig.BOOLEAN(1);
@@ -38,9 +36,6 @@ export class CADLoftSopNode extends CADSopNode<CADLoftSopParamsConfig> {
 		return SopType.CAD_LOFT;
 	}
 
-	static override displayedInputNames(): string[] {
-		return DISPLAYED_INPUT_NAMES;
-	}
 	protected override initializeNode() {
 		this.io.inputs.setCount(1);
 	}
