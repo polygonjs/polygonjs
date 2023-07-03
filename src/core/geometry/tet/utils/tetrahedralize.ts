@@ -9,6 +9,8 @@ import {isPositionInsideMesh} from './tetInsideMesh';
 import {setFirstValue} from '../../../SetUtils';
 import {tetRemoveUnusedPoints} from './tetRemoveUnusedPoints';
 import {jitterOffset} from '../../operation/Jitter';
+import {setToArray} from '../../../SetUtils';
+import {tetQuality} from './tetQuality';
 
 const _v = new Vector3();
 const _jitterOffset = new Vector3();
@@ -35,12 +37,10 @@ export type TetEdge = [number, number, number, number];
 // ];
 
 interface TetrahedralizeOptions {
-	// traversalMethod: PointsTraversalMethod;
-	// axisSort: Vector3;
 	mesh: MeshWithBVHGeometry;
-	innerPointsResolution: number;
 	jitterAmount: number;
-	// additionalPoints: Vector3[];
+	innerPointsResolution: number;
+	minQuality: number;
 	stage: number | null;
 	deleteOutsideTets: boolean;
 }
@@ -103,23 +103,33 @@ function addPoint(
 }
 
 const _outsideTestPos = new Vector3();
-function removeOutsideTets(
-	tetGeometry: TetGeometry,
-	mesh: MeshWithBVHGeometry,
-	deleteOutsideTets: boolean
-): TetGeometry {
-	if (!deleteOutsideTets) {
-		return tetRemoveUnusedPoints(tetGeometry);
+interface FinalizeOptions {
+	tetGeometry: TetGeometry;
+	mesh: MeshWithBVHGeometry;
+	deleteOutsideTets: boolean;
+	minQuality: number;
+}
+function finalize(options: FinalizeOptions): TetGeometry {
+	const {tetGeometry, mesh, deleteOutsideTets, minQuality} = options;
+
+	const idsToDelete: Set<number> = new Set();
+	if (minQuality > 0) {
+		tetGeometry.tetrahedrons.forEach((tet, tetId) => {
+			if (tetQuality(tetGeometry, tetId) < minQuality) {
+				idsToDelete.add(tetId);
+			}
+		});
 	}
-	const outsideIds: number[] = [];
-	tetGeometry.tetrahedrons.forEach((tet, tetId) => {
-		tetCenter(tetGeometry, tetId, _outsideTestPos);
-		const isInside = isPositionInsideMesh(_outsideTestPos, mesh, 0.001);
-		if (!isInside) {
-			outsideIds.push(tetId);
-		}
-	});
-	tetGeometry.removeTets(outsideIds);
+	if (deleteOutsideTets) {
+		tetGeometry.tetrahedrons.forEach((tet, tetId) => {
+			tetCenter(tetGeometry, tetId, _outsideTestPos);
+			const isInside = isPositionInsideMesh(_outsideTestPos, mesh, 0.001);
+			if (!isInside) {
+				idsToDelete.add(tetId);
+			}
+		});
+	}
+	tetGeometry.removeTets(setToArray(idsToDelete));
 	return tetRemoveUnusedPoints(tetGeometry);
 }
 
@@ -161,45 +171,6 @@ function prepareInputPoints(options: TetrahedralizeOptions): Vector3[] {
 		}
 	}
 
-	// switch (traversalMethod) {
-	// 	case PointsTraversalMethod.MERGE: {
-	// 		const geoPositionAttribute = geometry.attributes.position;
-	// 		const pointsCount = geoPositionAttribute.count;
-	// 		for (let i = 0; i < pointsCount; i++) {
-	// 			const newPos = new Vector3();
-	// 			newPos.fromBufferAttribute(geoPositionAttribute, i);
-	// 			inputPoints.push(newPos);
-	// 		}
-	// 		inputPoints.push(...additionalPoints);
-	// 		break;
-	// 	}
-	// 	case PointsTraversalMethod.MESH_FIRST: {
-	// 		const geoPositionAttribute = geometry.attributes.position;
-	// 		const pointsCount = geoPositionAttribute.count;
-	// 		for (let i = 0; i < pointsCount; i++) {
-	// 			const newPos = new Vector3();
-	// 			newPos.fromBufferAttribute(geoPositionAttribute, i);
-	// 			inputPoints.push(newPos);
-	// 		}
-	// 		//
-	// 		inputPoints.push(...additionalPoints);
-	// 		break;
-	// 	}
-	// 	case PointsTraversalMethod.ADDITIONAL_FIRST: {
-	// 		inputPoints.push(...additionalPoints);
-	// 		//
-	// 		const geoPositionAttribute = geometry.attributes.position;
-	// 		const pointsCount = geoPositionAttribute.count;
-	// 		for (let i = 0; i < pointsCount; i++) {
-	// 			const newPos = new Vector3();
-	// 			newPos.fromBufferAttribute(geoPositionAttribute, i);
-	// 			inputPoints.push(newPos);
-	// 		}
-
-	// 		break;
-	// 	}
-	// }
-
 	return inputPoints;
 }
 function getNearestPoint(inputPoints: Set<Vector3>, inputPoint: Vector3) {
@@ -218,7 +189,7 @@ function getNearestPoint(inputPoints: Set<Vector3>, inputPoint: Vector3) {
 let _stage = 0;
 export function tetrahedralize(options: TetrahedralizeOptions): TetGeometry {
 	_stage = 0;
-	const {mesh, stage, deleteOutsideTets} = options;
+	const {mesh, stage, deleteOutsideTets, minQuality} = options;
 	const {geometry} = mesh;
 	const tetGeometry = new TetGeometry();
 
@@ -241,7 +212,7 @@ export function tetrahedralize(options: TetrahedralizeOptions): TetGeometry {
 	}
 	_stage++;
 	if (stage != null && _stage > stage) {
-		return removeOutsideTets(tetGeometry, mesh, deleteOutsideTets);
+		return finalize({tetGeometry, mesh, deleteOutsideTets, minQuality});
 	}
 
 	// 2. sort input points
@@ -264,12 +235,12 @@ export function tetrahedralize(options: TetrahedralizeOptions): TetGeometry {
 
 		_stage++;
 		if (stage != null && _stage > stage) {
-			return removeOutsideTets(tetGeometry, mesh, deleteOutsideTets);
+			return finalize({tetGeometry, mesh, deleteOutsideTets, minQuality});
 		}
 		// get nearest point
 		inputPoints.delete(inputPoint);
 		inputPoint = getNearestPoint(inputPoints, inputPoint);
 	}
 
-	return removeOutsideTets(tetGeometry, mesh, deleteOutsideTets);
+	return finalize({tetGeometry, mesh, deleteOutsideTets, minQuality});
 }

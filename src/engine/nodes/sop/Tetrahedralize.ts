@@ -23,16 +23,10 @@ class TetrahedralizeSopParamsConfig extends NodeParamsConfig {
 	innerPointsResolution = ParamConfig.INTEGER(5, {
 		range: [0, 10],
 	});
-	// traversalMethod = ParamConfig.INTEGER(POINTS_TRAVERSAL_METHODS.indexOf(PointsTraversalMethod.MERGE), {
-	// 	menu: {
-	// 		entries: POINTS_TRAVERSAL_METHODS.map((name, value) => ({name, value})),
-	// 	},
-	// });
-	// axisSort = ParamConfig.VECTOR3([1, 1, 1], {});
-	// minQualityExp = ParamConfig.FLOAT(-2, {
-	// 	range: [-4, 0],
-	// 	rangeLocked: [true, true],
-	// });
+	minQuality = ParamConfig.FLOAT(0.25, {
+		range: [0, 1],
+		rangeLocked: [true, true],
+	});
 	stepByStep = ParamConfig.BOOLEAN(0, {
 		separatorBefore: true,
 	});
@@ -60,7 +54,6 @@ export class TetrahedralizeSopNode extends TetSopNode<TetrahedralizeSopParamsCon
 	override cook(inputCoreGroups: CoreGroup[]) {
 		const coreGroup = inputCoreGroups[0];
 		const inputMeshes = coreGroup.threejsObjectsWithGeo() as Mesh[];
-		// const additionalPointsObjects = inputCoreGroups[1]?.threejsObjects();
 
 		for (let inputMesh of inputMeshes) {
 			mergeFaces(inputMesh.geometry, this.pv.fuseDist);
@@ -72,28 +65,17 @@ export class TetrahedralizeSopNode extends TetSopNode<TetrahedralizeSopParamsCon
 		});
 
 		const tetGeometries: TetGeometry[] = [];
-		// let i = 0;
 		for (let inputMesh of inputMeshes) {
-			// const additionalPointsObject = additionalPointsObjects ? additionalPointsObjects[i] : null;
-			// const additionalPoints =
-			// 	additionalPointsObject && (additionalPointsObject as Mesh).geometry
-			// 		? CoreGeometry.points((additionalPointsObject as Mesh).geometry).map((p) => p.position())
-			// 		: [];
-
 			ThreeMeshBVHHelper.assignDefaultBVHIfNone(inputMesh);
 			const tetGeometry = tetrahedralize({
-				// traversalMethod: POINTS_TRAVERSAL_METHODS[this.pv.traversalMethod],
-				// axisSort: this.pv.axisSort,
 				mesh: inputMesh as MeshWithBVHGeometry,
-				innerPointsResolution: this.pv.innerPointsResolution,
 				jitterAmount: this.pv.jitter,
-				// additionalPoints: additionalPoints,
-				// minQuality: Math.pow(10.0, this.pv.minQualityExp),
+				innerPointsResolution: this.pv.innerPointsResolution,
+				minQuality: this.pv.minQuality,
 				stage: this.pv.stepByStep ? (this.pv.step >= 0 ? this.pv.step : null) : null,
 				deleteOutsideTets: this.pv.stepByStep ? this.pv.deleteOutsideTets : true,
 			});
 			tetGeometries.push(tetGeometry);
-			// i++;
 		}
 
 		this.setTetGeometries(tetGeometries);

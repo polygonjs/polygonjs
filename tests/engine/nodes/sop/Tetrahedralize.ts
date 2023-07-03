@@ -16,6 +16,7 @@ QUnit.test('sop/tetrahedralize simple', async (assert) => {
 	const tetrahedralize1 = geo1.createNode('tetrahedralize');
 
 	tetrahedralize1.setInput(0, icosahedron1);
+	tetrahedralize1.p.minQuality.set(0);
 
 	assert.equal(await tetsCount(tetrahedralize1), 61);
 
@@ -24,4 +25,7 @@ QUnit.test('sop/tetrahedralize simple', async (assert) => {
 
 	tetrahedralize1.p.innerPointsResolution.set(8);
 	assert.equal(await tetsCount(tetrahedralize1), 1268);
+
+	tetrahedralize1.p.minQuality.set(0.25);
+	assert.equal(await tetsCount(tetrahedralize1), 1154);
 });
