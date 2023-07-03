@@ -24,22 +24,11 @@ import {
 	_SDFBox,
 	// _SDFPlane
 } from '../../engine/functions/_SDFPrimitives';
-import {
-	TetSoftBodySolverSopNode,
-	EvalArgsWithParamConfigs,
-	MultiFunctionDefined,
-} from '../../engine/nodes/sop/TetSoftBodySolver';
+import {TetSoftBodySolverSopNode} from '../../engine/nodes/sop/TetSoftBodySolver';
+import {softBodyRayMarch} from './SoftBodyCollider';
 
-// const _boxCenter = new Vector3(0, 0, 0);
-// const _boxSizes = new Vector3(1, 1, 1);
-// const _planeCenter = new Vector3(0, 0, 0);
-// const _planeNormal = new Vector3(0, 1, 0);
-// const planeOffset = 0;
-// function collisionSDF(p: Vector3) {
-// 	// const plane = _SDFPlane(p, _planeCenter, _planeNormal, planeOffset);
-// 	return -_SDFBox(p, _boxCenter, _boxSizes, 5);
-// 	// return Math.min(plane, box);
-// }
+export type VelocityFunction = () => Vector3;
+export type SDFFunction = () => number;
 
 interface SoftBodyOptions {
 	node: TetSoftBodySolverSopNode;
@@ -51,6 +40,9 @@ interface SoftBodyOptions {
 		};
 	};
 }
+const _pos = new Vector3(0, 0, 0);
+const _vel = new Vector3(0, 0, 0);
+const _velDt = new Vector3(0, 0, 0);
 
 export class SoftBody {
 	public readonly numParticles: number;
@@ -281,31 +273,33 @@ export class SoftBody {
 		}
 	}
 
-	private _pos = new Vector3(0, 0, 0);
-	private _vel = new Vector3(0, 0, 0);
-	preSolve(dt: number, gravity: number[], args: EvalArgsWithParamConfigs, functions: MultiFunctionDefined) {
+	preSolve(dt: number, gravity: number[], velFunc: VelocityFunction, sdfFunc: SDFFunction) {
+		const sdfEvaluator = (p: Vector3) => {
+			this._node.setPositionGlobals(p);
+			return sdfFunc();
+		};
+
 		for (let i = 0; i < this.numParticles; i++) {
 			if (this.invMass[i] == 0.0) continue;
-			this._pos.fromArray(this.pos, i * 3);
-			this._vel.fromArray(this.vel, i * 3);
-			this._node.setPointGlobals(this._pos, this._vel);
+			_pos.fromArray(this.pos, i * 3);
+			_vel.fromArray(this.vel, i * 3);
+			this._node.setPointGlobals(_pos, _vel);
 
-			const computedVel: Vector3 = functions.velocity(...args.velocity);
+			const computedVel: Vector3 = velFunc();
 			computedVel.toArray(this.vel, i * 3);
+			_velDt.copy(computedVel).multiplyScalar(dt);
 
 			// vecAdd(this.vel, i, gravity, 0, dt);
 			vecCopy(this.prevPos, i, this.pos, i);
 
 			// if (true) {
 
-			const stepMagnitude = this._vel
-				.fromArray(this.vel, i * 3)
-				.multiplyScalar(dt)
-				.length();
+			const stepMagnitude = _velDt.length();
 
 			// console.log(colliderFunc);
 			// const args = this._node.functionEvalArgsWithParamConfigs().collider;
-			const distToCollider: number = functions.collider(...args.collider);
+			const distToCollider: number = softBodyRayMarch(_pos, _vel, stepMagnitude, sdfEvaluator); //functions.collider();
+			// const distToCollider: number = sdfFunc();
 			// const dist = collisionSDF(this._pos);
 			if (stepMagnitude > distToCollider) {
 				// handle collision
@@ -313,9 +307,9 @@ export class SoftBody {
 				vecAdd(this.pos, i, this.vel, i, dt);
 				vecCopy(this.pos, i, this.prevPos, i);
 				// 2. update pos
-				this._vel.normalize().multiplyScalar(distToCollider);
-				this._pos.add(this._vel);
-				this._pos.toArray(this.pos, i * 3);
+				_vel.normalize().multiplyScalar(distToCollider);
+				_pos.add(_vel);
+				_pos.toArray(this.pos, i * 3);
 			} else {
 				// no collision
 				vecAdd(this.pos, i, this.vel, i, dt);

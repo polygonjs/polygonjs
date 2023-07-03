@@ -3,6 +3,7 @@ import {
 	INSERT_DEFINE_AFTER,
 	INSERT_BODY_AFTER,
 	INSERT_MEMBERS_AFTER,
+	INSERT_CONSTRUCTOR_AFTER,
 	VelocityColliderFunctionData,
 	SpareParamOptions,
 } from '../_Base';
@@ -19,6 +20,7 @@ import {Vector3} from 'three';
 import {NamedFunctionMap} from '../../../../../poly/registers/functions/All';
 import {ParamOptions} from '../../../../../params/utils/OptionsController';
 import {Poly} from '../../../../../Poly';
+import {PrettierController} from '../../../../../../core/code/PrettierController';
 
 let FORCE_DEBUG: boolean | undefined = true;
 function _debug() {
@@ -44,12 +46,32 @@ export enum SoftBodyVariable {
 	DELTA = 'delta',
 }
 
-const TEMPLATE = `
+// const TEMPLATE = `
+// ${INSERT_DEFINE_AFTER}
+// ${INSERT_MEMBERS_AFTER}
+
+// ${INSERT_BODY_AFTER}
+// `;
+
+const TEMPLATE_VELOCITY = `
 ${INSERT_DEFINE_AFTER}
 ${INSERT_MEMBERS_AFTER}
-
-${INSERT_BODY_AFTER}
+${INSERT_CONSTRUCTOR_AFTER}
+const SoftBodyVelocity = function(){
+	${INSERT_BODY_AFTER}
 `;
+const CLOSE_CLASS_DEFINITION_VELOCITY = `};
+return SoftBodyVelocity;`;
+
+const TEMPLATE_COLLIDER = `
+${INSERT_DEFINE_AFTER}
+${INSERT_MEMBERS_AFTER}
+${INSERT_CONSTRUCTOR_AFTER}
+const SoftBodyCollider = function(){
+	${INSERT_BODY_AFTER}
+`;
+const CLOSE_CLASS_DEFINITION_COLLIDER = `};
+return SoftBodyCollider;`;
 
 export class JsAssemblerSoftBody extends BaseJsShaderAssembler {
 	makeFunctionNodeDirtyOnChange() {
@@ -63,8 +85,8 @@ export class JsAssemblerSoftBody extends BaseJsShaderAssembler {
 	}
 	override templateShader() {
 		return {
-			velocity: TEMPLATE,
-			collider: TEMPLATE,
+			velocity: TEMPLATE_VELOCITY,
+			collider: TEMPLATE_COLLIDER,
 		};
 	}
 
@@ -81,8 +103,20 @@ export class JsAssemblerSoftBody extends BaseJsShaderAssembler {
 	}
 
 	functionData(): VelocityColliderFunctionData | undefined {
-		const functionBodyVelocity = this._shaders_by_name.get(JsFunctionName.VELOCITY);
-		const functionBodyCollider = this._shaders_by_name.get(JsFunctionName.COLLIDER);
+		const _buildFunctionBody = (functionName: JsFunctionName, closeDef: string) => {
+			const bodyLines = this._shaders_by_name.get(functionName) || TEMPLATE_VELOCITY;
+			const functionBodyElements = [
+				bodyLines,
+				// triggerableFunctionLines.join('\n'),
+				// triggerFunctionLines.join('\n'),
+				closeDef,
+			];
+			const functionBody = PrettierController.formatJs(functionBodyElements.join('\n'));
+			return functionBody;
+		};
+
+		const functionBodyVelocity = _buildFunctionBody(JsFunctionName.VELOCITY, CLOSE_CLASS_DEFINITION_VELOCITY);
+		const functionBodyCollider = _buildFunctionBody(JsFunctionName.COLLIDER, CLOSE_CLASS_DEFINITION_COLLIDER);
 		if (!(functionBodyVelocity && functionBodyCollider)) {
 			return;
 		}

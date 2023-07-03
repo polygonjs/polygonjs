@@ -1,7 +1,7 @@
 import {PolyScene} from '../../engine/scene/PolyScene';
 import {Number3} from '../../types/GlobalTypes';
-import {SoftBody} from './SoftBody';
-import {TetSoftBodySolverSopNode, MultiFunctionDefined} from '../../engine/nodes/sop/TetSoftBodySolver';
+import {SoftBody, VelocityFunction, SDFFunction} from './SoftBody';
+import {TetSoftBodySolverSopNode} from '../../engine/nodes/sop/TetSoftBodySolver';
 
 // const gPhysicsScene = {
 // 	gravity: [0.0, -10.0, 0.0],
@@ -63,8 +63,9 @@ export class SoftBodyController {
 		if (!(functions.collider && functions.velocity)) {
 			return;
 		}
-		const _functions = functions as MultiFunctionDefined;
 		const args = this._node.functionEvalArgsWithParamConfigs();
+		const velFunc: VelocityFunction = functions.velocity(...args.velocity);
+		const sdfFunc: SDFFunction = functions.collider(...args.collider);
 
 		const delta = this.scene.timeController.delta();
 		// if (gPhysicsScene.paused) return;
@@ -76,7 +77,7 @@ export class SoftBodyController {
 		for (let step = 0; step < stepsCount; step++) {
 			this._node.updateSceneGlobals(step, sdt);
 			// for (const softBody of softBodies) {
-			softBody.preSolve(sdt, this._gravity, args, _functions);
+			softBody.preSolve(sdt, this._gravity, velFunc, sdfFunc);
 			// }
 
 			// for (const softBody of softBodies) {

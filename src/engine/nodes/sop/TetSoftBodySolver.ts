@@ -36,11 +36,13 @@ import {ParamType} from '../../poly/ParamType';
 import {RegisterableVariable} from '../js/code/assemblers/_BaseJsPersistedConfigUtils';
 import {JsNodeFinder} from '../js/code/utils/NodeFinder';
 import {TetObject} from '../../../core/geometry/tet/TetObject';
+import {VelocityFunction, SDFFunction} from '../../../core/softBody/SoftBody';
 import {BaseSopNodeType} from './_Base';
 
 type FunctionArg = number | boolean | Function | RegisterableVariable;
-type SoftBodyVelocityFunction = (...args: FunctionArg[]) => Vector3;
-type SoftBodyColliderFunction = (...args: FunctionArg[]) => number;
+
+type SoftBodyVelocityEvaluatorFunction = (...args: FunctionArg[]) => VelocityFunction;
+type SoftBodyColliderEvaluatorFunction = (...args: FunctionArg[]) => SDFFunction;
 
 interface FunctionCreationArgs {
 	velocity: string[];
@@ -56,12 +58,12 @@ interface MultiFunctionEvalArgs {
 	collider: FunctionEvalArgs;
 }
 export interface MultiFunctionPartial {
-	velocity: SoftBodyVelocityFunction | undefined;
-	collider: SoftBodyColliderFunction | undefined;
+	velocity: SoftBodyVelocityEvaluatorFunction | undefined;
+	collider: SoftBodyColliderEvaluatorFunction | undefined;
 }
 export interface MultiFunctionDefined {
-	velocity: SoftBodyVelocityFunction;
-	collider: SoftBodyColliderFunction;
+	velocity: VelocityFunction;
+	collider: SDFFunction;
 }
 export interface EvalArgsWithParamConfigs {
 	velocity: FunctionArg[];
@@ -256,6 +258,9 @@ export class TetSoftBodySolverSopNode extends TetSopNode<TetSoftBodySolverSopPar
 		this._functionArgsWithParams.collider[2] = this._evaluationGlobals.time;
 		this._functionArgsWithParams.velocity[3] = this._evaluationGlobals.delta;
 		this._functionArgsWithParams.collider[3] = this._evaluationGlobals.delta;
+	}
+	setPositionGlobals(position: Vector3) {
+		this._evaluationGlobals.position.copy(position);
 	}
 	setPointGlobals(position: Vector3, velocity: Vector3) {
 		this._evaluationGlobals.position.copy(position);

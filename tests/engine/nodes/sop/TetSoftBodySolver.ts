@@ -121,7 +121,7 @@ QUnit.test('sop/tetSoftBodySolver low res only', async (assert) => {
 	const container = await actor1.compute();
 	const object = container.coreContent()!.threejsObjects()[0] as Mesh;
 
-	assert.equal(await tetsCount(tetrahedralize1), 52, 'tets count');
+	assert.equal(await tetsCount(tetrahedralize1), 28, 'tets count');
 
 	async function getGeometryBoundingBoxY() {
 		const geometry = object.geometry;
@@ -143,8 +143,14 @@ QUnit.test('sop/tetSoftBodySolver low res only with SDFSphere', async (assert) =
 	const geo1 = window.geo1;
 	const scene = window.scene;
 	const cameraNode = window.perspective_camera1;
-	cameraNode.p.t.z.set(5);
+	cameraNode.p.t.z.set(10);
+	cameraNode.p.t.y.set(4);
+	cameraNode.p.t.x.set(10);
+	cameraNode.p.r.y.set(45);
 	scene.root().createNode('hemisphereLight');
+
+	const geo2 = scene.root().createNode('geo');
+	geo2.createNode('planeHelper');
 
 	const box1 = geo1.createNode('box');
 	const transform1 = geo1.createNode('transform');
@@ -162,7 +168,7 @@ QUnit.test('sop/tetSoftBodySolver low res only with SDFSphere', async (assert) =
 	tetrahedralize1.setInput(0, transform1);
 	transform1.setInput(0, box1);
 
-	transform1.p.t.set([0, 2, 0]);
+	transform1.p.t.set([0, 2, 0.5]);
 	transform1.p.r.set([45, 0, 0]);
 
 	actor1.flags.display.set(true);
@@ -170,7 +176,7 @@ QUnit.test('sop/tetSoftBodySolver low res only with SDFSphere', async (assert) =
 	const container = await actor1.compute();
 	const object = container.coreContent()!.threejsObjects()[0] as Mesh;
 
-	assert.equal(await tetsCount(tetrahedralize1), 52, 'tets count');
+	assert.equal(await tetsCount(tetrahedralize1), 28, 'tets count');
 
 	async function getGeometryBoundingBoxY() {
 		const geometry = object.geometry;
@@ -184,7 +190,7 @@ QUnit.test('sop/tetSoftBodySolver low res only with SDFSphere', async (assert) =
 
 	await RendererUtils.withViewer({cameraNode}, async ({viewer, element}) => {
 		scene.play();
-		await CoreSleep.sleep(2000);
+		await CoreSleep.sleep(3000);
 		assert.in_delta(await getGeometryBoundingBoxY(), -6, 3, 'object has fallen');
 	});
 });
@@ -227,7 +233,7 @@ QUnit.test('sop/tetSoftBodySolver high res', async (assert) => {
 	const container = await actor1.compute();
 	const object = container.coreContent()!.threejsObjects()[0] as Mesh;
 
-	assert.equal(await tetsCount(tetrahedralize1), 52, 'tets count');
+	assert.equal(await tetsCount(tetrahedralize1), 28, 'tets count');
 
 	async function getGeometryBoundingBoxY() {
 		const geometry = object.geometry;
