@@ -18,18 +18,14 @@ import {Poly} from '../../Poly';
 import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {StringParam} from '../../params/String';
 import {JsType} from '../../poly/registers/nodes/types/Js';
-// import {CoreObject} from '../../../core/geometry/Object';
-// import {Vector2, Vector3, Vector4} from 'three';
-// const tmpV2 = new Vector2();
-// const tmpV3 = new Vector3();
-// const tmpV4 = new Vector4();
+import {TypeAssert} from '../../poly/Assert';
 
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
 
-// function typedVisibleOptions(type: ActorConnectionPointType, otherParamVal: PolyDictionary<number | boolean> = {}) {
-// 	const val = PARAM_CONVERTIBLE_ACTOR_CONNECTION_POINT_TYPES.indexOf(type);
-// 	return {visibleIf: {type: val, ...otherParamVal}};
-// }
+function typedVisibleOptions(type: ParamConvertibleJsType, otherParamVal: Record<string, number | boolean> = {}) {
+	const val = PARAM_CONVERTIBLE_JS_CONNECTION_POINT_TYPES.indexOf(type);
+	return {visibleIf: {type: val, ...otherParamVal}};
+}
 enum GetObjectAttributeInputName {
 	attribName = 'attribName',
 }
@@ -41,13 +37,14 @@ class GetObjectAttributeJsParamsConfig extends NodeParamsConfig {
 			entries: PARAM_CONVERTIBLE_JS_CONNECTION_POINT_TYPES.map((name, value) => ({name, value})),
 		},
 	});
-	// boolean = ParamConfig.BOOLEAN(0, typedVisibleOptions(ActorConnectionPointType.BOOLEAN));
-	// color = ParamConfig.COLOR([0, 0, 0], typedVisibleOptions(ActorConnectionPointType.COLOR));
-	// float = ParamConfig.FLOAT(0, typedVisibleOptions(ActorConnectionPointType.FLOAT));
-	// integer = ParamConfig.INTEGER(0, typedVisibleOptions(ActorConnectionPointType.INTEGER));
-	// vector2 = ParamConfig.VECTOR2([0, 0], typedVisibleOptions(ActorConnectionPointType.VECTOR2));
-	// vector3 = ParamConfig.VECTOR3([0, 0, 0], typedVisibleOptions(ActorConnectionPointType.VECTOR3));
-	// vector4 = ParamConfig.VECTOR4([0, 0, 0, 0], typedVisibleOptions(ActorConnectionPointType.VECTOR4));
+	defaultBoolean = ParamConfig.BOOLEAN(0, typedVisibleOptions(JsConnectionPointType.BOOLEAN));
+	defaultColor = ParamConfig.COLOR([0, 0, 0], typedVisibleOptions(JsConnectionPointType.COLOR));
+	defaultFloat = ParamConfig.FLOAT(0, typedVisibleOptions(JsConnectionPointType.FLOAT));
+	defaultInteger = ParamConfig.INTEGER(0, typedVisibleOptions(JsConnectionPointType.INT));
+	defaultString = ParamConfig.STRING('', typedVisibleOptions(JsConnectionPointType.STRING));
+	defaultVector2 = ParamConfig.VECTOR2([0, 0], typedVisibleOptions(JsConnectionPointType.VECTOR2));
+	defaultVector3 = ParamConfig.VECTOR3([0, 0, 0], typedVisibleOptions(JsConnectionPointType.VECTOR3));
+	defaultVector4 = ParamConfig.VECTOR4([0, 0, 0, 0], typedVisibleOptions(JsConnectionPointType.VECTOR4));
 }
 const ParamsConfig = new GetObjectAttributeJsParamsConfig();
 
@@ -94,35 +91,36 @@ export class GetObjectAttributeJsNode extends TypedJsNode<GetObjectAttributeJsPa
 		}
 		return connection_type;
 	}
-	// currentParam(): BaseParamType {
-	// 	const type = PARAM_CONVERTIBLE_ACTOR_CONNECTION_POINT_TYPES[this.pv.type];
-	// 	switch (type) {
-	// 		case ActorConnectionPointType.BOOLEAN: {
-	// 			return this.p.boolean;
-	// 		}
-	// 		case ActorConnectionPointType.COLOR: {
-	// 			return this.p.color;
-	// 		}
-	// 		case ActorConnectionPointType.FLOAT: {
-	// 			return this.p.float;
-	// 		}
-	// 		case ActorConnectionPointType.INTEGER: {
-	// 			return this.p.integer;
-	// 		}
-	// 		case ActorConnectionPointType.VECTOR2: {
-	// 			return this.p.vector2;
-	// 		}
-	// 		case ActorConnectionPointType.VECTOR3: {
-	// 			return this.p.vector3;
-	// 		}
-	// 		case ActorConnectionPointType.VECTOR4: {
-	// 			return this.p.vector4;
-	// 		}
-	// 	}
-	// 	// we should never run this
-	// 	return this.p.boolean;
-	// }
-	// this is used to allow setting attribName before the parameter is created
+	defaultValueParam() {
+		const type = PARAM_CONVERTIBLE_JS_CONNECTION_POINT_TYPES[this.pv.type] as ParamConvertibleJsType;
+		switch (type) {
+			case JsConnectionPointType.BOOLEAN: {
+				return this.p.defaultBoolean;
+			}
+			case JsConnectionPointType.COLOR: {
+				return this.p.defaultColor;
+			}
+			case JsConnectionPointType.FLOAT: {
+				return this.p.defaultFloat;
+			}
+			case JsConnectionPointType.INT: {
+				return this.p.defaultInteger;
+			}
+			case JsConnectionPointType.STRING: {
+				return this.p.defaultString;
+			}
+			case JsConnectionPointType.VECTOR2: {
+				return this.p.defaultVector2;
+			}
+			case JsConnectionPointType.VECTOR3: {
+				return this.p.defaultVector3;
+			}
+			case JsConnectionPointType.VECTOR4: {
+				return this.p.defaultVector4;
+			}
+		}
+		TypeAssert.unreachable(type);
+	}
 	private _nextAttribName: string = '';
 	override paramDefaultValue(name: GetObjectAttributeInputName) {
 		return {
@@ -144,43 +142,16 @@ export class GetObjectAttributeJsNode extends TypedJsNode<GetObjectAttributeJsPa
 		return (this.params.get(GetObjectAttributeInputName.attribName) as StringParam).value;
 	}
 
-	override setLines(shadersCollectionController: JsLinesCollectionController) {
-		const object3D = inputObject3D(this, shadersCollectionController);
-		const attribName = this.variableForInput(shadersCollectionController, GetObjectAttributeInputName.attribName);
+	override setLines(linesController: JsLinesCollectionController) {
+		const object3D = inputObject3D(this, linesController);
+		const attribName = this.variableForInput(linesController, GetObjectAttributeInputName.attribName);
+		const defaultParam = this.defaultValueParam();
+		const defaultValue = this.variableForInputParam(linesController, defaultParam);
 		const out = this.jsVarName(GetObjectAttributeJsNode.OUTPUT_NAME);
 		const dataType = PARAM_CONVERTIBLE_JS_CONNECTION_POINT_TYPES[this.pv.type];
 
-		const func = Poly.namedFunctionsRegister.getFunction('getObjectAttribute', this, shadersCollectionController);
-		const bodyLine = func.asString(object3D, attribName, `'${dataType}'`);
-		shadersCollectionController.addBodyOrComputed(this, [{dataType, varName: out, value: bodyLine}]);
+		const func = Poly.namedFunctionsRegister.getFunction('getObjectAttribute', this, linesController);
+		const bodyLine = func.asString(object3D, attribName, `'${dataType}'`, defaultValue);
+		linesController.addBodyOrComputed(this, [{dataType, varName: out, value: bodyLine}]);
 	}
-
-	// public override outputValue(
-	// 	context: ActorNodeTriggerContext
-	// ): ReturnValueTypeByActorConnectionPointType[ActorConnectionPointType] | undefined {
-	// 	const Object3D =
-	// 		this._inputValue<ActorConnectionPointType.OBJECT_3D>(ActorConnectionPointType.OBJECT_3D, context) ||
-	// 		context.Object3D;
-	// 	const attribValue = CoreObject.attribValue(Object3D, this.pv.attribName);
-	// 	if (attribValue == null) {
-	// 		this.states.error.set(`attribute ${this.pv.attribName} not found`);
-	// 	} else {
-	// 		this.states.error.clear();
-	// 	}
-
-	// 	if (attribValue instanceof Vector2) {
-	// 		return tmpV2.copy(attribValue);
-	// 	}
-	// 	if (attribValue instanceof Vector3) {
-	// 		return tmpV3.copy(attribValue);
-	// 	}
-	// 	if (attribValue instanceof Quaternion || attribValue instanceof Vector4) {
-	// 		tmpV4.x = attribValue.x;
-	// 		tmpV4.y = attribValue.y;
-	// 		tmpV4.z = attribValue.z;
-	// 		tmpV4.w = attribValue.w;
-	// 		return tmpV4;
-	// 	}
-	// 	return attribValue as ReturnValueTypeByActorConnectionPointType[ActorConnectionPointType];
-	// }
 }

@@ -22,6 +22,7 @@ QUnit.test('sop/tetDelete simple', async (assert) => {
 	const tetDelete1 = geo1.createNode('tetDelete');
 
 	tetrahedralize1.setInput(0, icosahedron1);
+	tetrahedralize1.p.minQuality.set(0);
 	tetDelete1.setInput(0, tetrahedralize1);
 
 	assert.equal(await tetsCount(tetDelete1), 61);

@@ -4,6 +4,8 @@ export const FUNCTION_TEMPLATE_BY_FUNCTION_NAME: Record<string, string> = {
 	arrayElementPrimitive: 'PrimitiveArrayElement',
 	debug: 'any',
 	divideVectorNumber: 'Vector2 | Vector3 | Vector4',
+	getObjectAttribute: 'ParamConvertibleJsType',
+	getObjectAttributeAutoDefault: 'ParamConvertibleJsType',
 	elementsToArrayPrimitive: 'PrimitiveArrayElement',
 	elementsToArrayVector: 'VectorArrayElement',
 	lengthVector: 'Vector2 | Vector3 | Vector4',

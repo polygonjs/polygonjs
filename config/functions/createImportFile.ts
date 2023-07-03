@@ -84,7 +84,7 @@ function createFunctionsRegisterAll() {
 	const fileContent = formatJs(`
 import type {PolyEngine} from '../../../Poly';
 import type {Color, Vector2, Vector3, Vector4} from 'three';
-import type {PrimitiveArrayElement, VectorArrayElement} from '../../../nodes/utils/io/connections/Js';
+import type {PrimitiveArrayElement, VectorArrayElement, ParamConvertibleJsType} from '../../../nodes/utils/io/connections/Js';
 import type { MathArrayVectorElement } from '../../../functions/_MathGeneric';
 //
 

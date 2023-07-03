@@ -56,10 +56,10 @@ import {Material} from 'three';
 import {MeshLambertMaterial} from 'three';
 import {CustomMaterialName, IUniforms} from '../../../core/geometry/Material';
 import {MatType} from '../../poly/registers/nodes/types/Mat';
-// import {
-// 	CustomMaterialMeshParamConfig,
-// 	materialMeshAssemblerCustomMaterialRequested,
-// } from './utils/customMaterials/CustomMaterialMesh';
+import {
+	CustomMaterialMeshParamConfig,
+	materialMeshAssemblerCustomMaterialRequested,
+} from './utils/customMaterials/CustomMaterialMesh';
 interface MeshLambertBuilderMaterial extends MeshLambertMaterial {
 	vertexShader: string;
 	fragmentShader: string;
@@ -80,23 +80,25 @@ interface MeshLambertBuilderControllers
 		UniformFogControllers,
 		UniformsTransparencyControllers,
 		WireframeShaderMaterialControllers {}
-class MeshLambertBuilderMatParamsConfig extends PCSSParamConfig(
-	FogParamConfig(
-		WireframeShaderMaterialParamsConfig(
-			AdvancedCommonParamConfig(
-				BaseBuilderParamConfig(
-					/* advanced */
-					AdvancedFolderParamConfig(
-						LightMapParamConfig(
-							EnvMapSimpleParamConfig(
-								EmissiveMapParamConfig(
-									AOMapParamConfig(
-										AlphaMapParamConfig(
-											MapParamConfig(
-												/* textures */
-												TexturesFolderParamConfig(
-													UniformsTransparencyParamConfig(
-														DefaultFolderParamConfig(NodeParamsConfig)
+class MeshLambertBuilderMatParamsConfig extends CustomMaterialMeshParamConfig(
+	PCSSParamConfig(
+		FogParamConfig(
+			WireframeShaderMaterialParamsConfig(
+				AdvancedCommonParamConfig(
+					BaseBuilderParamConfig(
+						/* advanced */
+						AdvancedFolderParamConfig(
+							LightMapParamConfig(
+								EnvMapSimpleParamConfig(
+									EmissiveMapParamConfig(
+										AOMapParamConfig(
+											AlphaMapParamConfig(
+												MapParamConfig(
+													/* textures */
+													TexturesFolderParamConfig(
+														UniformsTransparencyParamConfig(
+															DefaultFolderParamConfig(NodeParamsConfig)
+														)
 													)
 												)
 											)
@@ -128,9 +130,9 @@ export class MeshLambertBuilderMatNode extends TypedBuilderMatNode<
 	protected _createAssemblerController() {
 		return Poly.assemblersRegister.assembler(this, this.usedAssembler());
 	}
-	// public override customMaterialRequested(customName: CustomMaterialName): boolean {
-	// 	return materialMeshAssemblerCustomMaterialRequested(this, customName);
-	// }
+	public override customMaterialRequested(customName: CustomMaterialName): boolean {
+		return materialMeshAssemblerCustomMaterialRequested(this, customName);
+	}
 
 	readonly controllers: MeshLambertBuilderControllers = {
 		advancedCommon: new AdvancedCommonController(this),

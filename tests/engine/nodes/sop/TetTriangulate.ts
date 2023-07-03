@@ -15,6 +15,7 @@ QUnit.test('sop/tetTriangulate simple', async (assert) => {
 
 	tetrahedralize1.setInput(0, icosahedron1);
 	tetTriangulate1.setInput(0, tetrahedralize1);
+	tetrahedralize1.p.minQuality.set(0);
 
 	assert.equal(await pointsCount(tetTriangulate1), 732);
 

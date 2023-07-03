@@ -40,11 +40,44 @@ function defaultValue<T extends ParamConvertibleJsType>(type: T): JsIConnectionP
 	}
 	TypeAssert.unreachable(type);
 }
+function cloneDefaultValue<T extends ParamConvertibleJsType>(
+	value: JsIConnectionPointTypeToDataTypeMap[T],
+	type: T
+): JsIConnectionPointTypeToDataTypeMap[T] {
+	switch (type) {
+		case JsConnectionPointType.BOOLEAN: {
+			return value as JsIConnectionPointTypeToDataTypeMap[T];
+		}
+		case JsConnectionPointType.COLOR: {
+			return (value as Color).clone() as JsIConnectionPointTypeToDataTypeMap[T];
+		}
+		case JsConnectionPointType.FLOAT: {
+			return value as JsIConnectionPointTypeToDataTypeMap[T];
+		}
+		case JsConnectionPointType.INT: {
+			return value as JsIConnectionPointTypeToDataTypeMap[T];
+		}
+		case JsConnectionPointType.STRING: {
+			return value as JsIConnectionPointTypeToDataTypeMap[T];
+		}
+		case JsConnectionPointType.VECTOR2: {
+			return (value as Vector2).clone() as JsIConnectionPointTypeToDataTypeMap[T];
+		}
+		case JsConnectionPointType.VECTOR3: {
+			return (value as Vector3).clone() as JsIConnectionPointTypeToDataTypeMap[T];
+		}
+		case JsConnectionPointType.VECTOR4: {
+			return (value as Vector4).clone() as JsIConnectionPointTypeToDataTypeMap[T];
+		}
+	}
+	TypeAssert.unreachable(type);
+}
 
 export function _getOrCreateObjectAttributeRef<T extends ParamConvertibleJsType>(
 	object3D: ObjectXD,
 	attribName: string,
-	type: T
+	type: T,
+	defaultAttribValue?: JsIConnectionPointTypeToDataTypeMap[T]
 ): AttribRefs<T> {
 	let mapForObject = refByObjectUuidByAttribName.get(object3D);
 	if (!mapForObject) {
@@ -53,8 +86,8 @@ export function _getOrCreateObjectAttributeRef<T extends ParamConvertibleJsType>
 	}
 	let refForAttribName: AttribRefs<T> = mapForObject.get(attribName) as AttribRefs<T>;
 	if (!refForAttribName) {
-		let _defaultValue = defaultValue(type);
-		let _previousValue = defaultValue(type);
+		let _defaultValue = defaultAttribValue != null ? defaultAttribValue : defaultValue(type);
+		let _previousValue = cloneDefaultValue(_defaultValue, type);
 		const currentValue = BaseCoreObject.attribValue(
 			object3D,
 			attribName,
@@ -66,8 +99,8 @@ export function _getOrCreateObjectAttributeRef<T extends ParamConvertibleJsType>
 			| undefined;
 		if (currentValue == null || previousValue == null) {
 			refForAttribName = {
-				current: ref(defaultValue(type)) as Ref<JsIConnectionPointTypeToDataTypeMap[T]>,
-				previous: ref<JsIConnectionPointTypeToDataTypeMap[T]>(defaultValue(type)) as Ref<
+				current: ref(_defaultValue) as Ref<JsIConnectionPointTypeToDataTypeMap[T]>,
+				previous: ref<JsIConnectionPointTypeToDataTypeMap[T]>(_previousValue) as Ref<
 					JsIConnectionPointTypeToDataTypeMap[T]
 				>,
 			};

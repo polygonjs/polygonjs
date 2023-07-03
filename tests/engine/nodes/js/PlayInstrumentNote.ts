@@ -69,6 +69,7 @@ QUnit.test('js/playInstrumentNote', async (assert) => {
 	onObjectAttributeUpdate1.setAttribType(JsConnectionPointType.INT);
 	getObjectAttribute1.setAttribName('note');
 	getObjectAttribute1.setAttribType(JsConnectionPointType.STRING);
+	getObjectAttribute1.p.defaultString.set('haha');
 	playInstrumentNote1.p.node.setNode(null1);
 	playInstrumentNote1.setInput(JsConnectionPointType.TRIGGER, onObjectAttributeUpdate1);
 	playInstrumentNote1.setInput(playInstrumentNote1.p.note.name(), getObjectAttribute1);

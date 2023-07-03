@@ -426,7 +426,11 @@ export class JsAssemblerObjectBuilder extends BaseJsShaderAssembler {
 		for (const outputName of usedOutputNames) {
 			const varName = attributeNode.jsVarName(outputName);
 
-			const func = Poly.namedFunctionsRegister.getFunction('getObjectAttribute', attributeNode, linesController);
+			const func = Poly.namedFunctionsRegister.getFunction(
+				'getObjectAttributeAutoDefault',
+				attributeNode,
+				linesController
+			);
 			const bodyLine =
 				`${varName} = ` +
 				func.asString(ObjectBuilderAssemblerConstant.OBJECT_3D, `'${attribName}'`, `'${dataType}'`);

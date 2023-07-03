@@ -1,15 +1,32 @@
 import {Object3D} from 'three';
-import {ObjectNamedFunction2} from './_Base';
+import {ObjectNamedFunction2, ObjectNamedFunction3} from './_Base';
 import {_getOrCreateObjectAttributeRef} from '../../core/reactivity/ObjectAttributeReactivityCreateRef';
 import {AttribValue} from '../../types/GlobalTypes';
-import {ParamConvertibleJsType} from '../nodes/utils/io/connections/Js';
+import {JsIConnectionPointTypeToDataTypeMap, ParamConvertibleJsType} from '../nodes/utils/io/connections/Js';
 
-export class getObjectAttribute extends ObjectNamedFunction2<[string, ParamConvertibleJsType]> {
+export class getObjectAttribute<T extends ParamConvertibleJsType> extends ObjectNamedFunction3<
+	[string, T, JsIConnectionPointTypeToDataTypeMap[T]]
+> {
 	static override type() {
 		return 'getObjectAttribute';
 	}
-	func(object3D: Object3D, attribName: string, type: ParamConvertibleJsType): AttribValue {
-		const _ref = _getOrCreateObjectAttributeRef(object3D, attribName, type);
+	func(
+		object3D: Object3D,
+		attribName: string,
+		type: T,
+		defaultValue: JsIConnectionPointTypeToDataTypeMap[T]
+	): AttribValue {
+		const _ref = _getOrCreateObjectAttributeRef<T>(object3D, attribName, type, defaultValue);
+		return _ref.current.value;
+	}
+}
+
+export class getObjectAttributeAutoDefault<T extends ParamConvertibleJsType> extends ObjectNamedFunction2<[string, T]> {
+	static override type() {
+		return 'getObjectAttributeAutoDefault';
+	}
+	func(object3D: Object3D, attribName: string, type: T): AttribValue {
+		const _ref = _getOrCreateObjectAttributeRef<T>(object3D, attribName, type);
 		return _ref.current.value;
 	}
 }

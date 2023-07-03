@@ -75,31 +75,44 @@ export abstract class BaseCoreObject<T extends CoreObjectType> extends CoreEntit
 	static attributeRef<OT extends CoreObjectType, T extends ParamConvertibleJsType>(
 		object: ObjectContent<OT>,
 		attribName: string,
-		type: T
+		type: T,
+		defaultValue: JsIConnectionPointTypeToDataTypeMap[T]
 	) {
-		return _getOrCreateObjectAttributeRef(object, attribName, type);
+		return _getOrCreateObjectAttributeRef(object, attribName, type, defaultValue);
 	}
-	attributeRef(attribName: string, type: ParamConvertibleJsType) {
+	attributeRef<T extends ParamConvertibleJsType>(
+		attribName: string,
+		type: T,
+		defaultValue: JsIConnectionPointTypeToDataTypeMap[T]
+	) {
 		return (this.constructor as any as typeof BaseCoreObject<CoreObjectType>).attributeRef(
 			this._object,
 			attribName,
-			type
+			type,
+			defaultValue
 		);
 	}
 	static onAttribChange<OT extends CoreObjectType, T extends ParamConvertibleJsType>(
 		object: ObjectContent<OT>,
 		attribName: string,
 		type: T,
+		defaultValue: JsIConnectionPointTypeToDataTypeMap[T],
 		callback: OnAttribChange<T>
 	) {
-		const ref = this.attributeRef(object, attribName, type);
+		const ref = this.attributeRef(object, attribName, type, defaultValue);
 		return watch(ref.current, callback);
 	}
-	onAttribChange<T extends ParamConvertibleJsType>(attribName: string, type: T, callback: OnAttribChange<T>) {
+	onAttribChange<T extends ParamConvertibleJsType>(
+		attribName: string,
+		type: T,
+		defaultValue: JsIConnectionPointTypeToDataTypeMap[T],
+		callback: OnAttribChange<T>
+	) {
 		return (this.constructor as any as typeof BaseCoreObject<CoreObjectType>).onAttribChange(
 			this._object,
 			attribName,
 			type,
+			defaultValue,
 			callback
 		);
 	}

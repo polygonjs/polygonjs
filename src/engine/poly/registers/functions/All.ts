@@ -1,6 +1,10 @@
 import type { PolyEngine } from "../../../Poly";
 import type { Color, Vector2, Vector3, Vector4 } from "three";
-import type { PrimitiveArrayElement, VectorArrayElement } from "../../../nodes/utils/io/connections/Js";
+import type {
+	PrimitiveArrayElement,
+	VectorArrayElement,
+	ParamConvertibleJsType,
+} from "../../../nodes/utils/io/connections/Js";
 import type { MathArrayVectorElement } from "../../../functions/_MathGeneric";
 //
 
@@ -134,6 +138,7 @@ import { getIntersectionPropertyUv } from "../../../functions/getIntersectionPro
 import { getMaterial } from "../../../functions/getMaterial";
 import { getObject } from "../../../functions/getObject";
 import { getObjectAttribute } from "../../../functions/getObjectAttribute";
+import { getObjectAttributeAutoDefault } from "../../../functions/getObjectAttributeAutoDefault";
 import { getObjectAttributePrevious } from "../../../functions/getObjectAttributePrevious";
 import { getObjectAttributeRef } from "../../../functions/getObjectAttributeRef";
 import { getObjectChild } from "../../../functions/getObjectChild";
@@ -583,7 +588,8 @@ export interface NamedFunctionMap {
 	getIntersectionPropertyUv: getIntersectionPropertyUv;
 	getMaterial: getMaterial;
 	getObject: getObject;
-	getObjectAttribute: getObjectAttribute;
+	getObjectAttribute: getObjectAttribute<ParamConvertibleJsType>;
+	getObjectAttributeAutoDefault: getObjectAttributeAutoDefault<ParamConvertibleJsType>;
 	getObjectAttributePrevious: getObjectAttributePrevious;
 	getObjectAttributeRef: getObjectAttributeRef;
 	getObjectChild: getObjectChild;
@@ -1037,6 +1043,7 @@ export class AllNamedFunctionRegister {
 			getMaterial,
 			getObject,
 			getObjectAttribute,
+			getObjectAttributeAutoDefault,
 			getObjectAttributePrevious,
 			getObjectAttributeRef,
 			getObjectChild,

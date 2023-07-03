@@ -115,7 +115,7 @@ export class OnObjectAttributeUpdateJsNode extends TypedJsNode<OnObjectAttribute
 		const usedOutputNames = this.io.outputs.used_output_names();
 		const _val = (
 			propertyName: string,
-			functionName: 'getObjectAttribute' | 'getObjectAttributePrevious',
+			functionName: 'getObjectAttributeAutoDefault' | 'getObjectAttributePrevious',
 			type: JsConnectionPointType
 		) => {
 			if (!usedOutputNames.includes(propertyName)) {
@@ -136,7 +136,7 @@ export class OnObjectAttributeUpdateJsNode extends TypedJsNode<OnObjectAttribute
 			]);
 		};
 
-		_val(OnObjectAttributeUpdateJsNode.OUTPUT_NEW_VAL, 'getObjectAttribute', type);
+		_val(OnObjectAttributeUpdateJsNode.OUTPUT_NEW_VAL, 'getObjectAttributeAutoDefault', type);
 		_val(OnObjectAttributeUpdateJsNode.OUTPUT_PREV_VAL, 'getObjectAttributePrevious', type);
 	}
 

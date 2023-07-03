@@ -285,6 +285,8 @@ export class SoftBody {
 			_vel.fromArray(this.vel, i * 3);
 			this._node.setPointGlobals(_pos, _vel);
 
+			// TODO: detect if velFunc depends on time, or point,
+			// and compute it only when required
 			const computedVel: Vector3 = velFunc();
 			computedVel.toArray(this.vel, i * 3);
 			_velDt.copy(computedVel).multiplyScalar(dt);

@@ -76,10 +76,10 @@ import {PCSSController, PCSSControllers, PCSSParamConfig} from './utils/PCSSCont
 import {CustomMaterialName, IUniforms} from '../../../core/geometry/Material';
 import {Material, MeshPhongMaterial} from 'three';
 import {MatType} from '../../poly/registers/nodes/types/Mat';
-// import {
-// 	CustomMaterialMeshParamConfig,
-// 	materialMeshAssemblerCustomMaterialRequested,
-// } from './utils/customMaterials/CustomMaterialMesh';
+import {
+	CustomMaterialMeshParamConfig,
+	materialMeshAssemblerCustomMaterialRequested,
+} from './utils/customMaterials/CustomMaterialMesh';
 interface MeshPhongBuilderMaterial extends MeshPhongMaterial {
 	vertexShader: string;
 	fragmentShader: string;
@@ -104,27 +104,29 @@ interface MeshPhongBuilderControllers
 		UniformFogControllers,
 		UniformsTransparencyControllers,
 		WireframeShaderMaterialControllers {}
-class MeshPhongBuilderMatParamsConfig extends PCSSParamConfig(
-	FogParamConfig(
-		WireframeShaderMaterialParamsConfig(
-			AdvancedCommonParamConfig(
-				BaseBuilderParamConfig(
-					/* advanced */
-					AdvancedFolderParamConfig(
-						SpecularMapParamConfig(
-							NormalMapParamConfig(
-								LightMapParamConfig(
-									EnvMapSimpleParamConfig(
-										EmissiveMapParamConfig(
-											DisplacementMapParamConfig(
-												BumpMapParamConfig(
-													AOMapParamConfig(
-														AlphaMapParamConfig(
-															MapParamConfig(
-																/* textures */
-																TexturesFolderParamConfig(
-																	UniformsTransparencyParamConfig(
-																		DefaultFolderParamConfig(NodeParamsConfig)
+class MeshPhongBuilderMatParamsConfig extends CustomMaterialMeshParamConfig(
+	PCSSParamConfig(
+		FogParamConfig(
+			WireframeShaderMaterialParamsConfig(
+				AdvancedCommonParamConfig(
+					BaseBuilderParamConfig(
+						/* advanced */
+						AdvancedFolderParamConfig(
+							SpecularMapParamConfig(
+								NormalMapParamConfig(
+									LightMapParamConfig(
+										EnvMapSimpleParamConfig(
+											EmissiveMapParamConfig(
+												DisplacementMapParamConfig(
+													BumpMapParamConfig(
+														AOMapParamConfig(
+															AlphaMapParamConfig(
+																MapParamConfig(
+																	/* textures */
+																	TexturesFolderParamConfig(
+																		UniformsTransparencyParamConfig(
+																			DefaultFolderParamConfig(NodeParamsConfig)
+																		)
 																	)
 																)
 															)
@@ -160,9 +162,9 @@ export class MeshPhongBuilderMatNode extends TypedBuilderMatNode<
 	protected _createAssemblerController() {
 		return Poly.assemblersRegister.assembler(this, this.usedAssembler());
 	}
-	// public override customMaterialRequested(customName: CustomMaterialName): boolean {
-	// 	return materialMeshAssemblerCustomMaterialRequested(this, customName);
-	// }
+	public override customMaterialRequested(customName: CustomMaterialName): boolean {
+		return materialMeshAssemblerCustomMaterialRequested(this, customName);
+	}
 	readonly controllers: MeshPhongBuilderControllers = {
 		advancedCommon: new AdvancedCommonController(this),
 		alphaMap: new TextureAlphaMapController(this),
