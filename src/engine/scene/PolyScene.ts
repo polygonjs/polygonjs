@@ -160,9 +160,9 @@ export class PolyScene {
 	get lifecycleController() {
 		return (this._lifecycleController = this._lifecycleController || new SceneLifeCycleController(this));
 	}
-	private _loading_controller: LoadingController | undefined;
+	private _loadingController: LoadingController | undefined;
 	get loadingController() {
-		return (this._loading_controller = this._loading_controller || new LoadingController(this));
+		return (this._loadingController = this._loadingController || new LoadingController(this));
 	}
 
 	private _missing_expression_references_controller: MissingReferencesController = new MissingReferencesController(

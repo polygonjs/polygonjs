@@ -311,6 +311,14 @@ export abstract class TypedViewer<C extends Camera> {
 			threshold,
 		};
 		const onObserverChange: IntersectionObserverCallback = (entries, observer) => {
+			if (!this._scene.loadingController.loaded()) {
+				// we must check that the scene is loaded before
+				// calling .play(),
+				// otherwise, the scene will start playing as soon
+				// as the viewer is created,
+				// even if we have the option .autoPlay=false in the loading options
+				return;
+			}
 			entries.forEach((entry) => {
 				const isVisible: boolean = entry.isIntersecting;
 				this.setAutoRender(isVisible);

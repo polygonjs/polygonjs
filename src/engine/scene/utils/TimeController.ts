@@ -219,6 +219,12 @@ export class TimeController {
 		}
 	}
 	play() {
+		if (!this._playAllowedWithoutAllNodesCooked) {
+			if (!this.scene.cookController.allNodesHaveCookedAtLeastOnce()) {
+				console.warn('play not allowed, some nodes have not completed cooking');
+				return;
+			}
+		}
 		if (this._playing == true) {
 			return;
 		}
@@ -236,6 +242,10 @@ export class TimeController {
 		} else {
 			this.play();
 		}
+	}
+	private _playAllowedWithoutAllNodesCooked = true;
+	forbidPlayUntilAllNodesCooked() {
+		this._playAllowedWithoutAllNodesCooked = false;
 	}
 
 	//

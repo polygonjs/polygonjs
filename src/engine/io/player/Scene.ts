@@ -66,11 +66,13 @@ export class ScenePlayerImporter {
 	}
 
 	static async loadSceneData(options: SceneDataImportOptions): Promise<SceneLoadReturnData> {
-		const importer = new ScenePlayerImporter(options);
-		const scene = await importer.loadScene();
+		const scenePlayerImporter = new ScenePlayerImporter(options);
+		const scene = await scenePlayerImporter.loadScene();
 
-		const viewer = importer._viewer;
-		return {scene, viewer};
+		return {
+			scene,
+			viewer: scenePlayerImporter._viewer,
+		};
 	}
 
 	private async _onLoadComplete(scene: PolyScene) {
@@ -150,6 +152,7 @@ export class ScenePlayerImporter {
 				});
 
 				const scene = importer.scene();
+				scene.timeController.forbidPlayUntilAllNodesCooked();
 				this._scene = scene;
 				this._dispatchEvent(PolyEventName.SCENE_CREATED);
 				if (this.options.renderer) {
@@ -249,6 +252,7 @@ export class ScenePlayerImporter {
 			console.warn(`no event emitted as no scene preset`);
 			return;
 		}
+
 		const detail: SceneLoadReturnData = {
 			scene: this._scene,
 			viewer: this._viewer,

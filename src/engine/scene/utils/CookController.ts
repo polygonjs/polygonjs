@@ -4,26 +4,40 @@ import {CoreGraphNodeId} from '../../../core/graph/CoreGraph';
 type SceneCookControllerCallback = (value: void) => void;
 
 export class SceneCookController {
-	private _cooking_nodes_by_id: Map<CoreGraphNodeId, BaseNodeType> = new Map();
+	private _cookingNodesById: Map<CoreGraphNodeId, BaseNodeType> = new Map();
+	private _nodeIdsHavingCookedAtLeastOnce: Set<number> = new Set();
+	private _nodeIdsCookingMoreThanOnce: Set<number> = new Set();
 	private _resolves: SceneCookControllerCallback[] = [];
 	constructor() {}
 
 	addNode(node: BaseNodeType) {
-		this._cooking_nodes_by_id.set(node.graphNodeId(), node);
+		const id = node.graphNodeId();
+		this._cookingNodesById.set(id, node);
+
+		if (!this._nodeIdsHavingCookedAtLeastOnce.has(id)) {
+			this._nodeIdsCookingMoreThanOnce.add(id);
+		}
+		this._nodeIdsHavingCookedAtLeastOnce.add(id);
 	}
 	removeNode(node: BaseNodeType) {
-		this._cooking_nodes_by_id.delete(node.graphNodeId());
+		const id = node.graphNodeId();
+		this._cookingNodesById.delete(id);
+		this._nodeIdsCookingMoreThanOnce.delete(id);
 
-		if (this._cooking_nodes_by_id.size == 0) {
+		if (this._cookingNodesById.size == 0) {
 			this.flush();
 		}
 	}
 	cookingNodes() {
 		const list: BaseNodeType[] = [];
-		this._cooking_nodes_by_id.forEach((node, id) => {
+		this._cookingNodesById.forEach((node, id) => {
 			list.push(node);
 		});
 		return list;
+	}
+
+	allNodesHaveCookedAtLeastOnce() {
+		return this._nodeIdsCookingMoreThanOnce.size == 0;
 	}
 
 	private flush() {
@@ -34,7 +48,7 @@ export class SceneCookController {
 	}
 
 	async waitForCooksCompleted(): Promise<void> {
-		if (this._cooking_nodes_by_id.size == 0) {
+		if (this._cookingNodesById.size == 0) {
 			return;
 		} else {
 			return new Promise((resolve, reject) => {

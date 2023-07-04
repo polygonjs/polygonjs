@@ -18,6 +18,9 @@ import './engine/scene/ObjectsController';
 import './engine/scene/OptimizedNodes';
 import './engine/scene/TimeController';
 
+QUnit.module('io');
+import './engine/io/Player';
+
 QUnit.module('expressions');
 import './engine/expressions/methods/abs';
 import './engine/expressions/methods/animationNames';
