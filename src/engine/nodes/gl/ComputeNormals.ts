@@ -388,8 +388,8 @@ export class ComputeNormalsGlNode extends TypedSubnetGlNode<ComputeNormalsGlPara
 		if (connections) {
 			for (let connection of connections) {
 				if (connection) {
-					if (connection.input_index >= SUBNET_INPUT_CONNECTIONS_OFFSET) {
-						const connection_point = connection.dest_connection_point();
+					if (connection.inputIndex() >= SUBNET_INPUT_CONNECTIONS_OFFSET) {
+						const connection_point = connection.destConnectionPoint();
 						const in_value = this.glVarName(connection_point.name());
 						const gl_type = connection_point.type();
 						const out = childNode.glVarName(connection_point.name());

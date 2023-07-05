@@ -295,7 +295,7 @@ export class ConnectionPointsController<NC extends NodeContext> {
 		if (!connection) {
 			return;
 		}
-		const connectionPoint = connection.src_connection_point();
+		const connectionPoint = connection.srcConnectionPoint();
 		if (!connectionPoint) {
 			return;
 		}

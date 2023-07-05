@@ -191,7 +191,7 @@ export class AbstractTypedSubnetGlNode<K extends NodeParamsConfig> extends Typed
 		const bodyLines: string[] = [];
 		for (let connection of connections) {
 			if (connection) {
-				const connection_point = connection.dest_connection_point();
+				const connection_point = connection.destConnectionPoint();
 				const in_value = ThreeToGl.any(this.variableForInput(connection_point.name()));
 				const gl_type = connection_point.type();
 				const out = childNode.glVarName(connection_point.name());
@@ -210,7 +210,7 @@ export class AbstractTypedSubnetGlNode<K extends NodeParamsConfig> extends Typed
 
 		for (let connection of connections) {
 			if (connection) {
-				const connection_point = connection.dest_connection_point();
+				const connection_point = connection.destConnectionPoint();
 
 				const in_value = ThreeToGl.any(childNode.variableForInput(connection_point.name()));
 				const out = this.glVarName(connection_point.name());

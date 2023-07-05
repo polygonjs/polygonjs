@@ -36,7 +36,7 @@ export class ConnectionsController<NC extends NodeContext> {
 	addInputConnection(connection: TypedNodeConnection<NC>) {
 		if (this._inputConnections) {
 			// if (connection.input_index < this._input_connections.length) {
-			this._inputConnections[connection.input_index] = connection;
+			this._inputConnections[connection.inputIndex()] = connection;
 			// } else {
 			// 	console.warn(`attempt to add an input connection at index ${connection.input_index}`);
 			// }
@@ -46,20 +46,20 @@ export class ConnectionsController<NC extends NodeContext> {
 	}
 	removeInputConnection(connection: TypedNodeConnection<NC>) {
 		if (this._inputConnections) {
-			if (connection.input_index < this._inputConnections.length) {
-				this._inputConnections[connection.input_index] = undefined;
+			if (connection.inputIndex() < this._inputConnections.length) {
+				this._inputConnections[connection.inputIndex()] = undefined;
 				// if all connections after are also undefined, we can safely shrink the array
 				let all_connections_after_are_undefined = true;
-				for (let i = connection.input_index; i < this._inputConnections.length; i++) {
+				for (let i = connection.inputIndex(); i < this._inputConnections.length; i++) {
 					if (this._inputConnections[i]) {
 						all_connections_after_are_undefined = false;
 					}
 				}
 				if (all_connections_after_are_undefined) {
-					this._inputConnections = this._inputConnections.slice(0, connection.input_index);
+					this._inputConnections = this._inputConnections.slice(0, connection.inputIndex());
 				}
 			} else {
-				console.warn(`attempt to remove an input connection at index ${connection.input_index}`);
+				console.warn(`attempt to remove an input connection at index ${connection.inputIndex()}`);
 			}
 		} else {
 			console.warn(`input connections array not initialized`);
@@ -100,8 +100,8 @@ export class ConnectionsController<NC extends NodeContext> {
 	//
 	//
 	addOutputConnection(connection: TypedNodeConnection<NC>) {
-		const output_index = connection.output_index;
-		const id = connection.id;
+		const output_index = connection.outputIndex();
+		const id = connection.id();
 		let connections_by_id = this._outputConnections.get(output_index);
 		if (!connections_by_id) {
 			connections_by_id = new Map<number, TypedNodeConnection<NC>>();
@@ -112,8 +112,8 @@ export class ConnectionsController<NC extends NodeContext> {
 		// this._output_connections[output_index][id] = connection;
 	}
 	removeOutputConnection(connection: TypedNodeConnection<NC>) {
-		const output_index = connection.output_index;
-		const id = connection.id;
+		const output_index = connection.outputIndex();
+		const id = connection.id();
 		let connections_by_id = this._outputConnections.get(output_index);
 		if (connections_by_id) {
 			connections_by_id.delete(id);

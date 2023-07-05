@@ -134,7 +134,7 @@ export class MultGlNode extends MathFunctionArg2OperationFactory('mult', {
 
 			if (first_connection) {
 				const connection_point_for_first_connection =
-					first_connection.node_src.io.outputs.namedOutputConnectionPoints()[first_connection.output_index];
+					first_connection.nodeSrc().io.outputs.namedOutputConnectionPoints()[first_connection.outputIndex()];
 				// this.io.inputs.namedInputConnectionPoints()[
 				// 	first_connection.input_index
 				// ];
@@ -146,8 +146,8 @@ export class MultGlNode extends MathFunctionArg2OperationFactory('mult', {
 					const second_connection = input_connections[1];
 					if (second_connection) {
 						const connection_point_for_second_connection =
-							second_connection.node_src.io.outputs.namedOutputConnectionPoints()[
-								second_connection.output_index
+							second_connection.nodeSrc().io.outputs.namedOutputConnectionPoints()[
+								second_connection.outputIndex()
 							];
 						const second_type = connection_point_for_second_connection.type();
 						if (second_type == GlConnectionPointType.FLOAT) {

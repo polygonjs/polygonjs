@@ -53,7 +53,7 @@ export class TwoWaySwitchGlNode extends ParamlessTypedGlNode {
 		const second_or_third_connection =
 			this.io.connections.inputConnection(1) || this.io.connections.inputConnection(2);
 		const type: GlConnectionPointType = second_or_third_connection
-			? second_or_third_connection.src_connection_point().type()
+			? second_or_third_connection.srcConnectionPoint().type()
 			: GlConnectionPointType.FLOAT;
 		return [GlConnectionPointType.BOOL, type, type];
 	}

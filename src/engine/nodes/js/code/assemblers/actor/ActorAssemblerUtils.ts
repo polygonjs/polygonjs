@@ -163,10 +163,10 @@ export function getConnectedOutputNodes(options: GetConnectedOutputNodesOptions)
 		const triggerConnections = node.io.connections.outputConnectionsByOutputIndex(triggerOutputIndex);
 		if (triggerConnections) {
 			triggerConnections.forEach((triggerConnection) => {
-				triggerableNodes.add(triggerConnection.node_dest);
+				triggerableNodes.add(triggerConnection.nodeDest());
 				if (recursive) {
 					connectedTriggerableNodes({
-						triggeringNodes: new Set([triggerConnection.node_dest]),
+						triggeringNodes: new Set([triggerConnection.nodeDest()]),
 						triggerableNodes,
 						recursive,
 					});
@@ -229,7 +229,7 @@ export function inputNodesFromConnectionWithCallback(node: BaseJsNodeType, callb
 	for (let nonTriggerInputIndex of nonTriggerInputIndices) {
 		const connection = node.io.connections.inputConnection(nonTriggerInputIndex);
 		if (connection) {
-			nonTriggerInputNodes.add(connection.node_src);
+			nonTriggerInputNodes.add(connection.nodeSrc());
 		}
 	}
 	return SetUtils.toArray(nonTriggerInputNodes);
@@ -263,8 +263,8 @@ export function triggerInputIndex(triggeringNode: BaseJsNodeType, triggeredNode:
 		const triggerConnections = triggeringNode.io.connections.outputConnectionsByOutputIndex(triggerOutputIndex);
 		if (triggerConnections) {
 			triggerConnections.forEach((triggerConnection) => {
-				if (triggerConnection.node_dest == triggeredNode) {
-					index = triggerConnection.input_index;
+				if (triggerConnection.nodeDest() == triggeredNode) {
+					index = triggerConnection.inputIndex();
 				}
 			});
 		}

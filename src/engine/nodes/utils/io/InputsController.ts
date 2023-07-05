@@ -126,7 +126,7 @@ export class NodeInputsController<NC extends NodeContext> {
 				if (connection) {
 					// assume we only work with indices for now, not with connection point names
 					// so we only need to check again the new max number of connection points.
-					if (connection.input_index >= allNewConnectionPoints.length) {
+					if (connection.inputIndex() >= allNewConnectionPoints.length) {
 						connection.disconnect({setInput: true, ignoreLockedState: true});
 					}
 				}
@@ -465,7 +465,7 @@ export class NodeInputsController<NC extends NodeContext> {
 			oldConnection = this.node.io.connections.inputConnection(inputIndex);
 		}
 		if (oldConnection) {
-			oldOutputIndex = oldConnection.output_index;
+			oldOutputIndex = oldConnection.outputIndex();
 		}
 
 		if (node !== oldInputNode || outputIndex != oldOutputIndex) {

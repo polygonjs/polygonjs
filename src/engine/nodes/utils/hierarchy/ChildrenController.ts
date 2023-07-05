@@ -249,26 +249,26 @@ export class HierarchyChildrenController {
 				this.selection.remove([childNode]);
 			}
 
-			const first_connection = childNode.io.connections.firstInputConnection();
-			const input_connections = childNode.io.connections.inputConnections();
-			const output_connections = childNode.io.connections.outputConnections();
-			if (input_connections) {
-				for (let input_connection of input_connections) {
-					if (input_connection) {
-						input_connection.disconnect({setInput: true});
+			const firstConnection = childNode.io.connections.firstInputConnection();
+			const inputConnections = childNode.io.connections.inputConnections();
+			const outputConnections = childNode.io.connections.outputConnections();
+			if (inputConnections) {
+				for (let inputConnection of inputConnections) {
+					if (inputConnection) {
+						inputConnection.disconnect({setInput: true});
 					}
 				}
 			}
-			if (output_connections) {
-				for (let output_connection of output_connections) {
-					if (output_connection) {
-						output_connection.disconnect({setInput: true});
-						if (first_connection) {
-							const old_src = first_connection.node_src;
-							const old_output_index = output_connection.output_index;
-							const old_dest = output_connection.node_dest;
-							const old_input_index = output_connection.input_index;
-							old_dest.io.inputs.setInput(old_input_index, old_src, old_output_index);
+			if (outputConnections) {
+				for (let outputConnection of outputConnections) {
+					if (outputConnection) {
+						outputConnection.disconnect({setInput: true});
+						if (firstConnection) {
+							const oldSrc = firstConnection.nodeSrc();
+							const oldOutputIndex = firstConnection.outputIndex();
+							const oldDest = outputConnection.nodeDest();
+							const oldInputIndex = outputConnection.inputIndex();
+							oldDest.io.inputs.setInput(oldInputIndex, oldSrc, oldOutputIndex);
 						}
 					}
 				}

@@ -149,7 +149,7 @@ export class SDFGradientGlNode extends TypedSubnetGlNode<SDFGradientGlParamsConf
 			return;
 		}
 
-		const connectionPoint = connection.dest_connection_point();
+		const connectionPoint = connection.destConnectionPoint();
 		const inValue = ThreeToGl.any(childNode.variableForInput(connectionPoint.name()));
 		const bodyLine = `return ${inValue}`;
 		shadersCollectionController.addBodyLines(childNode, [bodyLine]);

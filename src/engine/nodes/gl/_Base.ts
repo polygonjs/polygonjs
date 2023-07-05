@@ -101,9 +101,9 @@ export class TypedGlNode<K extends NodeParamsConfig> extends TypedNode<NodeConte
 		const input_index = this.io.inputs.getInputIndex(inputName);
 		const connection = this.io.connections.inputConnection(input_index);
 		if (connection) {
-			const input_node = (<unknown>connection.node_src) as BaseGlNodeType;
+			const input_node = (<unknown>connection.nodeSrc()) as BaseGlNodeType;
 			const output_connection_point =
-				input_node.io.outputs.namedOutputConnectionPoints()[connection.output_index];
+				input_node.io.outputs.namedOutputConnectionPoints()[connection.outputIndex()];
 			if (output_connection_point) {
 				const output_name = output_connection_point.name();
 				return input_node.glVarName(output_name);

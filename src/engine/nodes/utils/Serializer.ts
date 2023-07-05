@@ -37,8 +37,7 @@ export class NodeSerializer {
 
 	dispose() {}
 
-		toJSON(include_param_components: boolean = false): NodeSerializerData {
-
+	toJSON(include_param_components: boolean = false): NodeSerializerData {
 		const data: NodeSerializerData = {
 			name: this.node.name(),
 			type: this.node.type(),
@@ -92,7 +91,7 @@ export class NodeSerializer {
 	inputConnectionOutputIndices() {
 		return this.node.io.connections
 			.inputConnections()
-			?.map((connection) => (connection != null ? connection.output_index : undefined));
+			?.map((connection) => (connection != null ? connection.outputIndex() : undefined));
 	}
 	namedInputConnectionPoints() {
 		return this.node.io.inputs.namedInputConnectionPoints().map((i) => i.toJSON());

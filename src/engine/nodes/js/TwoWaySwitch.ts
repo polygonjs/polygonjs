@@ -46,7 +46,7 @@ export class TwoWaySwitchJsNode extends ParamlessTypedJsNode {
 		const second_or_third_connection =
 			this.io.connections.inputConnection(1) || this.io.connections.inputConnection(2);
 		const type: JsConnectionPointType = second_or_third_connection
-			? second_or_third_connection.src_connection_point().type()
+			? second_or_third_connection.srcConnectionPoint().type()
 			: JsConnectionPointType.FLOAT;
 		return [JsConnectionPointType.BOOLEAN, type, type];
 	}

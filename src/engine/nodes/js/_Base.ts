@@ -168,8 +168,8 @@ export class TypedJsNode<K extends NodeParamsConfig> extends TypedNode<NodeConte
 		const connection = this.io.connections.inputConnection(inputIndex);
 		let outputJsVarName: string | undefined;
 		if (connection) {
-			const inputNode = (<unknown>connection.node_src) as BaseJsNodeType;
-			const outputConnectionPoint = inputNode.io.outputs.namedOutputConnectionPoints()[connection.output_index];
+			const inputNode = (<unknown>connection.nodeSrc()) as BaseJsNodeType;
+			const outputConnectionPoint = inputNode.io.outputs.namedOutputConnectionPoints()[connection.outputIndex()];
 			if (outputConnectionPoint) {
 				const outputName = outputConnectionPoint.name();
 				outputJsVarName = inputNode.jsVarName(outputName);

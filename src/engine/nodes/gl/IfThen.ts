@@ -13,7 +13,7 @@ import {ThreeToGl} from '../../../core/ThreeToGl';
 // import {SubnetInputGlNode} from './SubnetInput';
 // import {ArrayUtils} from '../../../core/ArrayUtils';
 import {SubnetInputGlNode} from './SubnetInput';
-import { GlType } from '../../poly/registers/nodes/types/Gl';
+import {GlType} from '../../poly/registers/nodes/types/Gl';
 
 const CONDITION_INPUT_NAME = 'condition';
 
@@ -87,7 +87,7 @@ export class IfThenGlNode extends TypedSubnetGlNode<IfThenGlParamsConfig> {
 		const body_lines: string[] = [];
 		for (let connection of connections) {
 			if (connection) {
-				const connectionPoint = connection.dest_connection_point();
+				const connectionPoint = connection.destConnectionPoint();
 				const connectionPointName = connectionPoint.name();
 				if (connectionPointName != CONDITION_INPUT_NAME) {
 					const in_value = ThreeToGl.any(this.variableForInput(connectionPointName));
