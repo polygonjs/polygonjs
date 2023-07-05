@@ -659,7 +659,7 @@ import {MaterialPropertiesSopOperation} from '../../../operations/sop/MaterialPr
 import {NullSopOperation} from '../../../operations/sop/Null';
 import {ObjectPropertiesSopOperation} from '../../../operations/sop/ObjectProperties';
 import {ObjectsLayoutSopOperation} from '../../../operations/sop/ObjectsLayout';
-import {OceanPlaneSopOperation} from '../../../operations/sop/OceanPlane';
+// import {OceanPlaneSopOperation} from '../../../operations/sop/OceanPlane';
 import {OrthographicCameraSopOperation} from '../../../operations/sop/OrthographicCamera';
 import {PaletteSopOperation} from '../../../operations/sop/Palette';
 import {ParticlesSystemGpuAttributesSopOperation} from '../../../operations/sop/ParticlesSystemGpuAttributes';
@@ -672,7 +672,7 @@ import {PolarTransformSopOperation} from '../../../operations/sop/PolarTransform
 import {PolywireSopOperation} from '../../../operations/sop/Polywire';
 import {PointLightSopOperation} from '../../../operations/sop/PointLight';
 import {RaySopOperation} from '../../../operations/sop/Ray';
-import {ReflectorSopOperation} from '../../../operations/sop/Reflector';
+// import {ReflectorSopOperation} from '../../../operations/sop/Reflector';
 import {RestAttributesSopOperation} from '../../../operations/sop/RestAttributes';
 import {RingSopOperation} from '../../../operations/sop/Ring';
 import {RoundedBoxSopOperation} from '../../../operations/sop/RoundedBox';
@@ -772,7 +772,7 @@ export class SopRegister {
 		poly.registerOperation(NullSopOperation);
 		poly.registerOperation(ObjectPropertiesSopOperation);
 		poly.registerOperation(ObjectsLayoutSopOperation);
-		poly.registerOperation(OceanPlaneSopOperation);
+		// poly.registerOperation(OceanPlaneSopOperation);
 		poly.registerOperation(OrthographicCameraSopOperation);
 		poly.registerOperation(PaletteSopOperation);
 		poly.registerOperation(ParticlesSystemGpuAttributesSopOperation);
@@ -785,7 +785,7 @@ export class SopRegister {
 		poly.registerOperation(PolarTransformSopOperation);
 		poly.registerOperation(PolywireSopOperation);
 		poly.registerOperation(RaySopOperation);
-		poly.registerOperation(ReflectorSopOperation);
+		// poly.registerOperation(ReflectorSopOperation);
 		poly.registerOperation(RestAttributesSopOperation);
 		poly.registerOperation(RingSopOperation);
 		poly.registerOperation(RoundedBoxSopOperation);

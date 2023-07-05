@@ -6,13 +6,18 @@
 
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {ReflectorSopOperation} from '../../operations/sop/Reflector';
-
+import {DEFAULT_PARAMS} from '../../operations/sop/Reflector';
+import {Reflector} from '../../../modules/core/objects/Reflector';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {Number3} from '../../../types/GlobalTypes';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
-const DEFAULT = ReflectorSopOperation.DEFAULT_PARAMS;
+import {InputCloneMode} from '../../poly/InputCloneMode';
+import {Poly} from '../../Poly';
+import {Object3D, Vector3, Mesh} from 'three';
+import {replaceChild} from '../../poly/PolyOnObjectsAddedHooksController';
+const DEFAULT = DEFAULT_PARAMS;
 
+const _v3 = new Vector3();
 class ReflectorSopParamsConfig extends NodeParamsConfig {
 	/** @param direction the objects reflects */
 	direction = ParamConfig.VECTOR3(DEFAULT.direction.toArray());
@@ -75,14 +80,59 @@ export class ReflectorSopNode extends TypedSopNode<ReflectorSopParamsConfig> {
 	}
 
 	override initializeNode() {
-		this.io.inputs.setCount(0, 1);
-		this.io.inputs.initInputsClonedState(ReflectorSopOperation.INPUT_CLONED_STATE);
+		this.io.inputs.setCount(1);
+		this.io.inputs.initInputsClonedState(InputCloneMode.FROM_NODE);
 	}
 
-	private _operation: ReflectorSopOperation | undefined;
-	override cook(input_contents: CoreGroup[]) {
-		this._operation = this._operation || new ReflectorSopOperation(this._scene, this.states, this);
-		const core_group = this._operation.cook(input_contents, this.pv);
-		this.setCoreGroup(core_group);
+	override cook(inputCoreGroups: CoreGroup[]) {
+		const coreGroup = inputCoreGroups[0];
+
+		const objects = coreGroup.threejsObjectsWithGeo();
+		for (const object of objects) {
+			Poly.onObjectsAddedHooks.assignHookHandler(object, this);
+		}
+		this.setCoreGroup(coreGroup);
+	}
+	public override updateObjectOnAdd(object: Object3D, parent: Object3D) {
+		const geometry = (object as Mesh).geometry;
+		if (!geometry) {
+			return;
+		}
+
+		const renderer = this.scene().renderersRegister.lastRegisteredRenderer();
+
+		_v3.copy(this.pv.direction).normalize().multiplyScalar(this.pv.directionOffset);
+
+		geometry.translate(-_v3.x, -_v3.y, -_v3.z);
+		Reflector.rotateGeometry(geometry, this.pv.direction);
+
+		const reflector = new Reflector(geometry, {
+			clipBias: this.pv.clipBias,
+			renderer,
+			scene: this.scene().threejsScene(),
+			pixelRatio: this.pv.pixelRatio,
+			multisamples: this.pv.multisamples,
+			color: this.pv.color,
+			opacity: this.pv.opacity,
+			useVertexColor: this.pv.useVertexColor,
+			reflectionBlend: this.pv.reflectionBlend,
+			active: this.pv.active,
+			tblur: this.pv.tblur,
+			blur: this.pv.blur,
+			verticalBlurMult: this.pv.verticalBlurMult,
+			tblur2: this.pv.tblur2,
+			blur2: this.pv.blur2,
+			verticalBlur2Mult: this.pv.verticalBlur2Mult,
+		});
+		reflector.matrixAutoUpdate = false;
+		// make sure object attributes are up to date
+		object.matrix.decompose(object.position, object.quaternion, object.scale);
+		_v3.add(object.position);
+		reflector.position.copy(_v3);
+		reflector.rotation.copy(object.rotation);
+		reflector.scale.copy(object.scale);
+		reflector.updateMatrix();
+		Reflector.compensateGeometryRotation(reflector, this.pv.direction);
+		replaceChild(parent, object, reflector);
 	}
 }

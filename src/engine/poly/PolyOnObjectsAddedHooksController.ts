@@ -1,6 +1,7 @@
 import {BaseSopNodeType} from '../nodes/sop/_Base';
 import {PolyScene} from '../scene/PolyScene';
 import {CoreObjectType, ObjectContent} from '../../core/geometry/ObjectContent';
+import {Object3D} from 'three';
 
 const ON_OBJECT_ADD_HOOK_HANDLER_NODE_IDS_KEY = 'onObjectAddHookHandlerNodeIds';
 
@@ -17,6 +18,18 @@ function assignHookHandler(object: ObjectContent<CoreObjectType>, node: BaseSopN
 }
 function hookHandlers(object: ObjectContent<CoreObjectType>) {
 	return object.userData[ON_OBJECT_ADD_HOOK_HANDLER_NODE_IDS_KEY] as number[] | undefined;
+}
+
+export function replaceChild(parent: Object3D, oldObject: Object3D, newObject: Object3D) {
+	// new object replaces old Object directly,
+	// and not using .remove and .add,
+	// as this would make traversing the scenes from the hooks handler
+	// unpredictable.
+	const index = parent.children.indexOf(oldObject);
+	parent.children[index] = newObject;
+	newObject.parent = parent;
+	// parent.remove(object);
+	// parent.add(CSSObject);
 }
 
 export class PolyOnObjectsAddedHooksController {

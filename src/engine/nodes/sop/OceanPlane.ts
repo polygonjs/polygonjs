@@ -13,11 +13,15 @@
 
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {OceanPlaneSopOperation} from '../../operations/sop/OceanPlane';
-
+import {DEFAULT_PARAMS, DEFAULT_OCEAN_PARAMS} from '../../operations/sop/OceanPlane';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {Number3} from '../../../types/GlobalTypes';
-const DEFAULT = OceanPlaneSopOperation.DEFAULT_PARAMS;
+import {Poly} from '../../Poly';
+import {Object3D, Mesh} from 'three';
+import {isBooleanTrue} from '../../../core/Type';
+import {Water, WaterOptions} from '../../../modules/core/objects/Water';
+import {replaceChild} from '../../poly/PolyOnObjectsAddedHooksController';
+const DEFAULT = DEFAULT_PARAMS;
 
 class OceanPlaneSopParamsConfig extends NodeParamsConfig {
 	main = ParamConfig.FOLDER();
@@ -81,10 +85,71 @@ export class OceanPlaneSopNode extends TypedSopNode<OceanPlaneSopParamsConfig> {
 		this.io.inputs.setCount(1);
 	}
 
-	private _operation: OceanPlaneSopOperation | undefined;
-	override cook(input_contents: CoreGroup[]) {
-		this._operation = this._operation || new OceanPlaneSopOperation(this._scene, this.states, this);
-		const core_group = this._operation.cook(input_contents, this.pv);
-		this.setCoreGroup(core_group);
+	override cook(inputCoreGroups: CoreGroup[]) {
+		const coreGroup = inputCoreGroups[0];
+
+		const objects = coreGroup.threejsObjectsWithGeo();
+		for (const object of objects) {
+			Poly.onObjectsAddedHooks.assignHookHandler(object, this);
+		}
+		this.setCoreGroup(coreGroup);
+	}
+	public override updateObjectOnAdd(object: Object3D, parent: Object3D) {
+		const geometry = (object as Mesh).geometry;
+		if (!geometry) {
+			return;
+		}
+
+		const scene = this.scene();
+		const renderer = scene.renderersRegister.lastRegisteredRenderer();
+
+		Water.rotateGeometry(geometry, this.pv.direction);
+		const waterOptions: WaterOptions = {
+			polyScene: this.scene(),
+			scene: scene.threejsScene(),
+			renderer,
+			...DEFAULT_OCEAN_PARAMS,
+			direction: this.pv.direction,
+			sunDirection: this.pv.sunDirection,
+			sunColor: this.pv.sunColor,
+			wavesHeight: this.pv.wavesHeight,
+			waterColor: this.pv.waterColor,
+			reflectionColor: this.pv.reflectionColor,
+			reflectionFresnel: this.pv.reflectionFresnel,
+			distortionScale: this.pv.distortionScale,
+			timeScale: this.pv.timeScale,
+			size: this.pv.size,
+			// renderReflection: params.renderReflection,
+			normalBias: this.pv.normalBias,
+			multisamples: this.pv.multisamples,
+			useFog: this.pv.useFog,
+		};
+		const water = new Water(geometry, waterOptions);
+		water.matrixAutoUpdate = false;
+		// make sure object attributes are up to date
+		object.matrix.decompose(object.position, object.quaternion, object.scale);
+		water.position.copy(object.position);
+		water.rotation.copy(object.rotation);
+		water.scale.copy(object.scale);
+		water.updateMatrix();
+		Water.compensateGeometryRotation(water, this.pv.direction);
+		//
+
+		// water.updateMatrix();
+		// water.matrixAutoUpdate = false;
+		const material = water.material;
+		material.uniforms.direction.value.copy(this.pv.direction);
+		material.uniforms.sunDirection.value.copy(this.pv.sunDirection);
+		material.uniforms.sunColor.value.copy(this.pv.sunColor);
+		material.uniforms.wavesHeight.value = this.pv.wavesHeight;
+		material.uniforms.waterColor.value.copy(this.pv.waterColor);
+		material.uniforms.reflectionColor.value.copy(this.pv.reflectionColor);
+		material.uniforms.reflectionFresnel.value = this.pv.reflectionFresnel;
+		material.uniforms.distortionScale.value = this.pv.distortionScale;
+		material.uniforms.timeScale.value = this.pv.timeScale;
+		material.uniforms.size.value = this.pv.size;
+		material.uniforms.normalBias.value = this.pv.normalBias;
+		water.setReflectionActive(isBooleanTrue(this.pv.renderReflection));
+		replaceChild(parent, object, water);
 	}
 }

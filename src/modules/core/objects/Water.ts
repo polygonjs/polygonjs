@@ -176,26 +176,26 @@ export class Water extends BaseReflector<BufferGeometry, WaterMaterial> {
 		}
 	}
 
-	override clone(recursive: boolean): this {
-		// we clone so that a cloned reflector does not share the same color
-		const clonedOptions = {...this._options};
-		clonedOptions.sunDirection = this._options.sunDirection?.clone();
-		clonedOptions.sunColor = this._options.sunColor?.clone();
-		clonedOptions.waterColor = this._options.waterColor?.clone();
-		const clonedGeometry = this.geometry.clone();
+	// override clone(recursive: boolean): this {
+	// 	// we clone so that a cloned reflector does not share the same color
+	// 	const clonedOptions = {...this._options};
+	// 	clonedOptions.sunDirection = this._options.sunDirection?.clone();
+	// 	clonedOptions.sunColor = this._options.sunColor?.clone();
+	// 	clonedOptions.waterColor = this._options.waterColor?.clone();
+	// 	const clonedGeometry = this.geometry.clone();
 
-		const clonedWater = new Water(clonedGeometry, clonedOptions);
-		const material: WaterMaterial = clonedWater.material;
-		clonedWater.copy(this, recursive);
-		// the material and geometry needs to be added back after the copy, as Mesh.copy would override that
-		clonedWater.material = material;
-		clonedWater.geometry = clonedGeometry;
+	// 	const clonedWater = new Water(clonedGeometry, clonedOptions);
+	// 	const material: WaterMaterial = clonedWater.material;
+	// 	clonedWater.copy(this, recursive);
+	// 	// the material and geometry needs to be added back after the copy, as Mesh.copy would override that
+	// 	clonedWater.material = material;
+	// 	clonedWater.geometry = clonedGeometry;
 
-		// TODO:
-		// - size is not passed correctly
-		// - make time dependent to update the time uniform attribute
+	// 	// TODO:
+	// 	// - size is not passed correctly
+	// 	// - make time dependent to update the time uniform attribute
 
-		clonedWater.updateMatrix();
-		return clonedWater as this;
-	}
+	// 	clonedWater.updateMatrix();
+	// 	return clonedWater as this;
+	// }
 }

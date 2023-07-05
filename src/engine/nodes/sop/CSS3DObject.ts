@@ -19,6 +19,7 @@ import {InputCloneMode} from '../../poly/InputCloneMode';
 import {CoreObjectType, ObjectContent} from '../../../core/geometry/ObjectContent';
 import {stringToAttribNames} from '../../../core/String';
 import {Object3D} from 'three';
+import {replaceChild} from '../../poly/PolyOnObjectsAddedHooksController';
 class CSS3DObjectSopParamsConfig extends NodeParamsConfig {
 	/** @param toggles on if attributes are copied from the geometry to the html element */
 	copyAttributes = ParamConfig.BOOLEAN(true);
@@ -122,14 +123,6 @@ export class CSS3DObjectSopNode extends TypedSopNode<CSS3DObjectSopParamsConfig>
 			attributesToCopy: stringToAttribNames(attributesToCopy),
 			scale,
 		});
-		// new object replaces old Object directly,
-		// and not using .remove and .add,
-		// as this would make traversing the scenes from the hooks handler
-		// unpredictable.
-		const index = parent.children.indexOf(object);
-		parent.children[index] = CSSObject;
-		CSSObject.parent = parent;
-		// parent.remove(object);
-		// parent.add(CSSObject);
+		replaceChild(parent, object, CSSObject);
 	}
 }

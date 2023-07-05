@@ -18,6 +18,7 @@ import {createCSS2DObject} from '../../../core/render/CSSRenderers/CSS2DObject';
 import {stringToAttribNames} from '../../../core/String';
 import {Object3D} from 'three';
 import {InputCloneMode} from '../../poly/InputCloneMode';
+import {replaceChild} from '../../poly/PolyOnObjectsAddedHooksController';
 import {CoreObjectType, ObjectContent} from '../../../core/geometry/ObjectContent';
 class CSS2DObjectSopParamsConfig extends NodeParamsConfig {
 	/** @param toggles on if attributes are copied from the geometry to the html element */
@@ -116,14 +117,6 @@ export class CSS2DObjectSopNode extends TypedSopNode<CSS2DObjectSopParamsConfig>
 			copyAttributes,
 			attributesToCopy: stringToAttribNames(attributesToCopy),
 		});
-		// new object replaces old Object directly,
-		// and not using .remove and .add,
-		// as this would make traversing the scenes from the hooks handler
-		// unpredictable.
-		const index = parent.children.indexOf(object);
-		parent.children[index] = CSSObject;
-		CSSObject.parent = parent;
-		// parent.remove(object);
-		// parent.add(CSSObject);
+		replaceChild(parent, object, CSSObject);
 	}
 }

@@ -66,20 +66,20 @@ export class Reflector extends BaseReflector<BufferGeometry, ShaderMaterial> {
 		}
 	}
 
-	override clone(recursive: boolean): this {
-		// we clone so that a cloned reflector does not share the same color
-		const clonedOptions = {...this._options};
-		clonedOptions.color = this._options.color.clone();
-		const clonedGeometry = this.geometry.clone();
+	// override clone(recursive: boolean): this {
+	// 	// we clone so that a cloned reflector does not share the same color
+	// 	const clonedOptions = {...this._options};
+	// 	clonedOptions.color = this._options.color.clone();
+	// 	const clonedGeometry = this.geometry.clone();
 
-		const clonedReflector = new Reflector(clonedGeometry, clonedOptions);
-		const {material} = clonedReflector;
-		clonedReflector.copy(this, recursive);
-		// the material and geometry needs to be added back after the copy, as Mesh.copy would override that
-		clonedReflector.material = material;
-		clonedReflector.geometry = clonedGeometry;
+	// 	const clonedReflector = new Reflector(clonedGeometry, clonedOptions);
+	// 	const {material} = clonedReflector;
+	// 	clonedReflector.copy(this, recursive);
+	// 	// the material and geometry needs to be added back after the copy, as Mesh.copy would override that
+	// 	clonedReflector.material = material;
+	// 	clonedReflector.geometry = clonedGeometry;
 
-		clonedReflector.updateMatrix();
-		return clonedReflector as this;
-	}
+	// 	clonedReflector.updateMatrix();
+	// 	return clonedReflector as this;
+	// }
 }
