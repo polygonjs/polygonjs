@@ -1,25 +1,26 @@
 // converted to typescript from:
 // https://github.com/mrdoob/three.js/blob/dev/examples/jsm/objects/Reflector.js
 
-// import {LinearFilter} from 'three';
-// import {isPowerOfTwo} from 'three';
-import {Matrix4} from 'three';
-import {PerspectiveCamera} from 'three';
-import {Plane} from 'three';
-import {LinearFilter} from 'three';
-import {Vector3} from 'three';
-import {Vector4} from 'three';
-import {WebGLRenderTarget, WebGLRenderTargetOptions} from 'three';
-import {Mesh} from 'three';
-import {WebGLRenderer} from 'three';
-import {BufferGeometry} from 'three';
-import {Object3D} from 'three';
-import {Camera} from 'three';
-import {Scene} from 'three';
+import {
+	Material,
+	Scene,
+	Camera,
+	Object3D,
+	BufferGeometry,
+	WebGLRenderer,
+	Mesh,
+	WebGLRenderTarget,
+	WebGLRenderTargetOptions,
+	Vector2,
+	Vector3,
+	Vector4,
+	LinearFilter,
+	Plane,
+	Matrix4,
+	PerspectiveCamera,
+} from 'three';
 import {CoreRenderBlur} from '../../../core/render/Blur';
-import {Vector2} from 'three';
 import {isBooleanTrue} from '../../../core/Type';
-import {Material} from 'three';
 import {CoreTransform} from '../../../core/Transform';
 import {Poly} from '../../../engine/Poly';
 import {AbstractRenderer} from '../../../engine/viewers/Common';

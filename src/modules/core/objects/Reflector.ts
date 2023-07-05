@@ -1,10 +1,7 @@
 // converted to typescript from:
 // https://github.com/mrdoob/three.js/blob/dev/examples/jsm/objects/Reflector.js
 
-import {Color} from 'three';
-import {ShaderMaterial} from 'three';
-import {UniformsUtils} from 'three';
-import {BufferGeometry} from 'three';
+import {BufferGeometry, UniformsUtils, ShaderMaterial, Color} from 'three';
 import {BaseReflector, BaseReflectorOptions} from './_BaseReflector';
 import VERTEX from './reflector/vert.glsl';
 import FRAGMENT from './reflector/frag.glsl';

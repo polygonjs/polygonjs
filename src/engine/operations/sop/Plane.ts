@@ -23,17 +23,18 @@ interface PlaneSopParams extends DefaultOperationParams {
 	center: Vector3;
 	asLines: boolean;
 }
+export const DEFAULT_PARAMS: PlaneSopParams = {
+	size: new Vector2(1, 1),
+	useSegmentsCount: false,
+	stepSize: 1,
+	segments: new Vector2(1, 1),
+	direction: new Vector3(0, 1, 0),
+	center: new Vector3(0, 0, 0),
+	asLines: false,
+};
 
 export class PlaneSopOperation extends BaseSopOperation {
-	static override readonly DEFAULT_PARAMS: PlaneSopParams = {
-		size: new Vector2(1, 1),
-		useSegmentsCount: false,
-		stepSize: 1,
-		segments: new Vector2(1, 1),
-		direction: new Vector3(0, 1, 0),
-		center: new Vector3(0, 0, 0),
-		asLines: false,
-	};
+	static override readonly DEFAULT_PARAMS = DEFAULT_PARAMS;
 	static override readonly INPUT_CLONED_STATE = InputCloneMode.NEVER;
 	static override type(): Readonly<'plane'> {
 		return 'plane';

@@ -176,6 +176,10 @@ export interface FloatParamOptions
 export interface FolderParamOptions extends BaseParamOptions {
 	level?: number;
 }
+interface ObjectMask {
+	fromInputOnly: boolean;
+}
+type ObjectMaskOptions = ObjectMask | boolean;
 export interface IntegerParamOptions
 	extends NumberParamOptions,
 		MenuNumericParamOptions,
@@ -212,7 +216,7 @@ export interface StringParamOptions
 		LabelVisibilityParamOptions {
 	multiline?: boolean;
 	language?: StringParamLanguage;
-	objectMask?: boolean;
+	objectMask?: ObjectMaskOptions;
 }
 interface VectorParamOptions
 	extends BaseParamOptions,
@@ -568,8 +572,14 @@ export class OptionsController {
 			return options[NODE_SELECTION_TYPES];
 		}
 	}
-	objectMask() {
-		return this._options[OBJECT_MASK] == true;
+	displayObjectMaskSelection() {
+		const value = this._options[OBJECT_MASK];
+		return value != null && value != false;
+	}
+	objectMaskFromInputOnly() {
+		const value = this._options[OBJECT_MASK];
+		const fromInputOnly = (value as ObjectMask).fromInputOnly;
+		return fromInputOnly != false;
 	}
 
 	dependentOnFoundNode() {

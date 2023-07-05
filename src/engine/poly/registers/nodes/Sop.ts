@@ -95,6 +95,7 @@ import {ClothSolverSopNode} from '../../../nodes/sop/ClothSolver';
 import {CodeSopNode} from '../../../nodes/sop/Code';
 import {ColorSopNode} from '../../../nodes/sop/Color';
 import {ConeSopNode} from '../../../nodes/sop/Cone';
+import {ContactShadowsSopNode} from '../../../nodes/sop/ContactShadows';
 import {ConvexHullSopNode} from '../../../nodes/sop/ConvexHull';
 import {CopySopNode} from '../../../nodes/sop/Copy';
 import {CurveFromPointsSopNode} from '../../../nodes/sop/CurveFromPoints';
@@ -385,6 +386,7 @@ export interface GeoNodeChildrenMap {
 	code: CodeSopNode;
 	color: ColorSopNode;
 	cone: ConeSopNode;
+	contactShadows: ContactShadowsSopNode;
 	convexHull: ConvexHullSopNode;
 	copy: CopySopNode;
 	curveFromPoints: CurveFromPointsSopNode;
@@ -904,6 +906,7 @@ export class SopRegister {
 		poly.registerNode(CodeSopNode, CATEGORY_SOP.ADVANCED);
 		poly.registerNode(ColorSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(ConeSopNode, CATEGORY_SOP.PRIMITIVES);
+		poly.registerNode(ContactShadowsSopNode, CATEGORY_SOP.RENDER);
 		poly.registerNode(ConvexHullSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(CopySopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(CurveFromPointsSopNode, CATEGORY_SOP.PRIMITIVES);

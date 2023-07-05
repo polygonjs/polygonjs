@@ -60,6 +60,7 @@ export enum SopType {
 	CLOTH_SOLVER = 'clothSolver',
 	COLOR = 'color',
 	CONE = 'cone',
+	CONTACT_SHADOWS = 'contactShadows',
 	COPY = 'copy',
 	CURVE_FROM_POINTS = 'curveFromPoints',
 	//

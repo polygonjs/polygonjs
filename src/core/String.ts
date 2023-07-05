@@ -22,6 +22,15 @@ enum BooleanString {
 	TRUE = 'true',
 	FALSE = 'false',
 }
+export function stringIsBoolean(word: string): boolean {
+	return word == BooleanString.TRUE || word == BooleanString.FALSE;
+}
+export function stringToBoolean(word: string): boolean {
+	return word == BooleanString.TRUE;
+}
+export function stringIsNumber(word: string): boolean {
+	return NUM_REGEXP.test(word);
+}
 export function sanitizeName(word: string): string {
 	word = word.replace(/[^A-Za-z0-9]/g, '_');
 	word = word.replace(/^[0-9]/, '_'); // replace first char if not a letter
@@ -105,181 +114,159 @@ export function stringTitleize(word: string): string {
 	const newElements = elements.map((elem) => stringUpperFirst(elem));
 	return newElements.join(' ');
 }
-export class CoreString {
-	// static has_tail_digits(word: string): boolean {
-	// 	const match = word.match(TAIL_DIGIT_MATCH_REGEXP)
-	// 	return (match != null)
-	// }
-	static isBoolean(word: string): boolean {
-		return word == BooleanString.TRUE || word == BooleanString.FALSE;
-	}
-	static toBoolean(word: string): boolean {
-		return word == BooleanString.TRUE;
-	}
-	static isNumber(word: string): boolean {
-		return NUM_REGEXP.test(word);
+export function precision(val: number, decimals: number = 2): string {
+	decimals = Math.max(decimals, 0);
+	const elements = `${val}`.split('.');
+
+	if (decimals <= 0) {
+		return elements[0];
 	}
 
+	let frac = elements[1];
+	if (frac !== undefined) {
+		if (frac.length > decimals) {
+			frac = frac.substring(0, decimals);
+		}
+
+		frac = frac.padEnd(decimals, '0');
+		return `${elements[0]}.${frac}`;
+	} else {
+		const string_to_pad = `${val}.`;
+		const pad = string_to_pad.length + decimals;
+		return string_to_pad.padEnd(pad, '0');
+	}
+}
+export function ensureFloat(num: number): string {
+	// const integer = Math.floor(num)
+	// const delta = num - integer
+	// if(delta)
+	const num_as_string = `${num}`;
+	const dot_pos = num_as_string.indexOf('.');
+	if (dot_pos >= 0) {
+		return num_as_string;
+	} else {
+		return `${num_as_string}.0`;
+	}
+}
+export function ensureInteger(num: number): string {
+	const num_as_string = `${num}`;
+	const dot_pos = num_as_string.indexOf('.');
+	if (dot_pos >= 0) {
+		return num_as_string.split('.')[0];
+	} else {
+		return num_as_string;
+	}
+}
+
+// // https://stackoverflow.com/questions/26246601/wildcard-string-comparison-in-javascript#32402438
+export function stringMatchMask(word: string, mask: string) {
+	if (mask === '*') {
+		return true;
+	}
+	if (word == mask) {
+		return true;
+	}
+	const elements = mask.split(SPACE);
+	const exclusionFilters = elements
+		.filter((element) => element.startsWith('^'))
+		.map((element) => element.substring(1));
+	for (let exclusionFilter of exclusionFilters) {
+		const match = stringMatchMask(word, exclusionFilter);
+		if (match) {
+			return false;
+		}
+	}
+
+	if (elements.length > 1) {
+		for (let element of elements) {
+			const match = stringMatchMask(word, element);
+			if (match) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	// "."  => Find a single character, except newline or line terminator
+	// ".*" => Matches any string that contains zero or more characters
+	mask = mask.split('*').join('.*');
+
+	// "^"  => Matches any string with the following at the beginning of it
+	// "$"  => Matches any string with that in front at the end of it
+	mask = `^${mask}$`;
+
+	try {
+		// Create a regular expression object for matching string
+		const regex = new RegExp(mask);
+
+		// Returns true if it finds a match, otherwise it returns false
+		return regex.test(word);
+	} catch (err) {
+		// we need to wrap in a try catch in case it would create an invalid regex
+		return false;
+	}
+}
+export function stringMatchesOneMask(word: string, masks: string[]): boolean {
+	let matches_one_mask = false;
+	for (let mask of masks) {
+		if (stringMatchMask(word, mask)) {
+			matches_one_mask = true;
+		}
+	}
+	return matches_one_mask;
+}
+export function stringToIndices(indicesString: string): number[] {
+	const elements = indicesString.split(INDICES_LIST_SEPARATOR);
+	if (elements.length > 1) {
+		const indices: number[] = elements.flatMap(stringToIndices);
+		return ArrayUtils.uniq(indices).sort((a, b) => a - b);
+	} else {
+		const element = elements[0];
+		if (element) {
+			if (element.indexOf(RANGE_SEPARATOR) > 0) {
+				const rangeElements = element.split(RANGE_SEPARATOR);
+				const rangeStart = rangeElements[0];
+				const rangeEnd = rangeElements[1];
+				const rangeStartI = parseInt(rangeStart);
+				const rangeEndI = parseInt(rangeEnd);
+				if (CoreType.isNumberValid(rangeStartI) && CoreType.isNumberValid(rangeEndI)) {
+					return ArrayUtils.range(rangeStartI, rangeEndI + 1);
+				} else {
+					return [];
+				}
+			} else {
+				const parsed = parseInt(element);
+				if (CoreType.isNumberValid(parsed)) {
+					return [parsed];
+				} else {
+					return [];
+				}
+			}
+		} else {
+			return [];
+		}
+	}
+}
+export function stringEscapeLineBreaks(word: string): string {
+	return word.replace(/(\r\n|\n|\r)/gm, '\\n');
+}
+export class CoreString {
+	static isBoolean=stringIsBoolean
+	static toBoolean=stringToBoolean
+	static isNumber=stringIsNumber
 	static tailDigits = stringTailDigits;
 	static increment = stringIncrement;
 	static pluralize = stringPluralize;
 	static camelCase = stringCamelCase;
 	static upperFirst = stringUpperFirst;
 	static titleize = stringTitleize;
-
-	// static type_to_class_name(word: string): string {
-	// 	return this.upperFirst(this.camelCase(word));
-	// }
-
-	// static timestamp_to_seconds(word: string): number {
-	// 	return Date.parse(word) / 1000;
-	// }
-	// static seconds_to_timestamp(seconds: number): string {
-	// 	const d = new Date();
-	// 	d.setTime(seconds * 1000);
-	// 	return d.toISOString().substr(11, 8);
-	// }
-
-	static precision(val: number, decimals: number = 2): string {
-		decimals = Math.max(decimals, 0);
-		const elements = `${val}`.split('.');
-
-		if (decimals <= 0) {
-			return elements[0];
-		}
-
-		let frac = elements[1];
-		if (frac !== undefined) {
-			if (frac.length > decimals) {
-				frac = frac.substring(0, decimals);
-			}
-
-			frac = frac.padEnd(decimals, '0');
-			return `${elements[0]}.${frac}`;
-		} else {
-			const string_to_pad = `${val}.`;
-			const pad = string_to_pad.length + decimals;
-			return string_to_pad.padEnd(pad, '0');
-		}
-	}
-
-	static ensureFloat(num: number): string {
-		// const integer = Math.floor(num)
-		// const delta = num - integer
-		// if(delta)
-		const num_as_string = `${num}`;
-		const dot_pos = num_as_string.indexOf('.');
-		if (dot_pos >= 0) {
-			return num_as_string;
-		} else {
-			return `${num_as_string}.0`;
-		}
-	}
-	static ensureInteger(num: number): string {
-		const num_as_string = `${num}`;
-		const dot_pos = num_as_string.indexOf('.');
-		if (dot_pos >= 0) {
-			return num_as_string.split('.')[0];
-		} else {
-			return num_as_string;
-		}
-	}
-
-	// https://stackoverflow.com/questions/26246601/wildcard-string-comparison-in-javascript#32402438
-	static matchMask(word: string, mask: string) {
-		if (mask === '*') {
-			return true;
-		}
-		if (word == mask) {
-			return true;
-		}
-		const elements = mask.split(SPACE);
-		const exclusionFilters = elements
-			.filter((element) => element.startsWith('^'))
-			.map((element) => element.substring(1));
-		for (let exclusionFilter of exclusionFilters) {
-			const match = this.matchMask(word, exclusionFilter);
-			if (match) {
-				return false;
-			}
-		}
-
-		if (elements.length > 1) {
-			for (let element of elements) {
-				const match = this.matchMask(word, element);
-				if (match) {
-					return true;
-				}
-			}
-			return false;
-		}
-
-		// "."  => Find a single character, except newline or line terminator
-		// ".*" => Matches any string that contains zero or more characters
-		mask = mask.split('*').join('.*');
-
-		// "^"  => Matches any string with the following at the beginning of it
-		// "$"  => Matches any string with that in front at the end of it
-		mask = `^${mask}$`;
-
-		try {
-			// Create a regular expression object for matching string
-			const regex = new RegExp(mask);
-
-			// Returns true if it finds a match, otherwise it returns false
-			return regex.test(word);
-		} catch (err) {
-			// we need to wrap in a try catch in case it would create an invalid regex
-			return false;
-		}
-	}
-	static matchesOneMask(word: string, masks: string[]): boolean {
-		let matches_one_mask = false;
-		for (let mask of masks) {
-			if (CoreString.matchMask(word, mask)) {
-				matches_one_mask = true;
-			}
-		}
-		return matches_one_mask;
-	}
-
+	static precision=precision
+	static ensureFloat=ensureFloat
+	static ensureInteger=ensureInteger
+	static matchMask=stringMatchMask
+	static matchesOneMask=stringMatchesOneMask
 	static attribNames = stringToAttribNames;
-
-	static indices(indicesString: string): number[] {
-		const elements = indicesString.split(INDICES_LIST_SEPARATOR);
-		if (elements.length > 1) {
-			const indices: number[] = elements.flatMap((element) => this.indices(element));
-			return ArrayUtils.uniq(indices).sort((a, b) => a - b);
-		} else {
-			const element = elements[0];
-			if (element) {
-				if (element.indexOf(RANGE_SEPARATOR) > 0) {
-					const rangeElements = element.split(RANGE_SEPARATOR);
-					const rangeStart = rangeElements[0];
-					const rangeEnd = rangeElements[1];
-					const rangeStartI = parseInt(rangeStart);
-					const rangeEndI = parseInt(rangeEnd);
-					if (CoreType.isNumberValid(rangeStartI) && CoreType.isNumberValid(rangeEndI)) {
-						return ArrayUtils.range(rangeStartI, rangeEndI + 1);
-					} else {
-						return [];
-					}
-				} else {
-					const parsed = parseInt(element);
-					if (CoreType.isNumberValid(parsed)) {
-						return [parsed];
-					} else {
-						return [];
-					}
-				}
-			} else {
-				return [];
-			}
-		}
-	}
-
-	static escapeLineBreaks(word: string): string {
-		return word.replace(/(\r\n|\n|\r)/gm, '\\n');
-	}
+	static indices=stringToIndices
+	static escapeLineBreaks=stringEscapeLineBreaks
 	static sanitizeName = sanitizeName;
 }

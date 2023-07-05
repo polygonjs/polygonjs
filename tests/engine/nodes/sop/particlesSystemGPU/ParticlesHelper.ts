@@ -73,7 +73,7 @@ export function renderController(node: ParticlesSystemGpuSopNode): CoreParticles
 	return renderControllerFromNode(node)!;
 }
 
-export function roundPixelBuffer(pixelBuffer: Float32Array) {
+export function roundPixelBuffer(pixelBuffer: Float32Array | Uint8Array) {
 	const rounded: number[] = [];
 	pixelBuffer.forEach((n) => {
 		rounded.push(Math.round(n));

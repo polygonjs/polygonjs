@@ -26,10 +26,34 @@ export function replaceChild(parent: Object3D, oldObject: Object3D, newObject: O
 	// as this would make traversing the scenes from the hooks handler
 	// unpredictable.
 	const index = parent.children.indexOf(oldObject);
+	if (index < 0) {
+		console.warn('could not find object to replace');
+		return;
+	}
 	parent.children[index] = newObject;
 	newObject.parent = parent;
 	// parent.remove(object);
 	// parent.add(CSSObject);
+}
+// export function replaceChildWithCallbackObject(
+// 	parent: Object3D,
+// 	oldObject: Object3D,
+// 	newObjectCallback: () => Object3D
+// ) {
+// 	const index = parent.children.indexOf(oldObject);
+// 	const newObject = newObjectCallback();
+// 	parent.children[index] = newObject;
+// 	newObject.parent = parent;
+// }
+export function copyBasicObjectProperties(srcObject: Object3D, destObject: Object3D) {
+	destObject.name = srcObject.name;
+	destObject.matrixAutoUpdate = srcObject.matrixAutoUpdate;
+	destObject.frustumCulled = srcObject.frustumCulled;
+	destObject.layers = srcObject.layers;
+	destObject.position.copy(srcObject.position);
+	destObject.quaternion.copy(srcObject.quaternion);
+	destObject.scale.copy(srcObject.scale);
+	destObject.matrix.copy(srcObject.matrix);
 }
 
 export class PolyOnObjectsAddedHooksController {
