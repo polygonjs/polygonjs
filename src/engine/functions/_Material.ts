@@ -17,8 +17,8 @@ import {MaterialUserDataUniforms} from '../nodes/gl/code/assemblers/materials/On
 import {
 	NamedFunction2,
 	NamedFunction3,
-	NamedFunction4,
 	NamedFunction5,
+	NamedFunction6,
 	ObjectNamedFunction1,
 	ObjectNamedFunction2,
 } from './_Base';
@@ -181,20 +181,31 @@ export class setMaterialOpacity extends NamedFunction3<[Material, number, number
 // SET MAT UNIFORM
 //
 //
-export class setMaterialUniformNumber extends NamedFunction5<[Material, string, number, number, boolean]> {
+export class setMaterialUniformNumber extends NamedFunction6<[Material, string, number, number, boolean, boolean]> {
 	static override type() {
 		return 'setMaterialUniformNumber';
 	}
-	func(material: Material, uniformName: string, value: number, lerp: number, addPrefix: boolean): void {
+	func(
+		material: Material,
+		uniformName: string,
+		value: number,
+		lerp: number,
+		addPrefix: boolean,
+		printWarnings: boolean
+	): void {
 		const uniforms = MaterialUserDataUniforms.getUniforms(material);
 		if (!uniforms) {
-			console.warn(`uniforms not found`, material);
+			if (printWarnings) {
+				console.warn(`uniforms not found`, material);
+			}
 			return;
 		}
 		uniformName = _addParamUniformNamePrefix(uniformName, addPrefix);
 		const uniform = uniforms[uniformName];
 		if (!uniform) {
-			console.warn(`uniform '${uniformName}' not found`, material, uniforms);
+			if (printWarnings) {
+				console.warn(`uniform '${uniformName}' not found`, material, uniforms);
+			}
 			return;
 		}
 		if (lerp == 1) {
@@ -205,22 +216,33 @@ export class setMaterialUniformNumber extends NamedFunction5<[Material, string, 
 	}
 }
 type VectorColorUniform = Color | Vector2 | Vector3 | Vector4;
-export class setMaterialUniformVectorColor extends NamedFunction5<
-	[Material, string, VectorColorUniform, number, boolean]
+export class setMaterialUniformVectorColor extends NamedFunction6<
+	[Material, string, VectorColorUniform, number, boolean, boolean]
 > {
 	static override type() {
 		return 'setMaterialUniformVectorColor';
 	}
-	func(material: Material, uniformName: string, value: VectorColorUniform, lerp: number, addPrefix: boolean): void {
+	func(
+		material: Material,
+		uniformName: string,
+		value: VectorColorUniform,
+		lerp: number,
+		addPrefix: boolean,
+		printWarnings: boolean
+	): void {
 		const uniforms = MaterialUserDataUniforms.getUniforms(material);
 		if (!uniforms) {
-			console.warn(`uniforms not found`, material);
+			if (printWarnings) {
+				console.warn(`uniforms not found`, material);
+			}
 			return;
 		}
 		uniformName = _addParamUniformNamePrefix(uniformName, addPrefix);
 		const uniform = uniforms[uniformName];
 		if (!uniform) {
-			console.warn(`uniform '${uniformName}' not found`, material, uniforms);
+			if (printWarnings) {
+				console.warn(`uniform '${uniformName}' not found`, material, uniforms);
+			}
 			return;
 		}
 		if (lerp >= 1) {
@@ -231,20 +253,24 @@ export class setMaterialUniformVectorColor extends NamedFunction5<
 	}
 }
 
-export class setMaterialUniformTexture extends NamedFunction4<[Material, string, Texture, boolean]> {
+export class setMaterialUniformTexture extends NamedFunction5<[Material, string, Texture, boolean, boolean]> {
 	static override type() {
 		return 'setMaterialUniformTexture';
 	}
-	func(material: Material, uniformName: string, value: Texture, addPrefix: boolean): void {
+	func(material: Material, uniformName: string, value: Texture, addPrefix: boolean, printWarnings: boolean): void {
 		const uniforms = MaterialUserDataUniforms.getUniforms(material);
 		if (!uniforms) {
-			console.warn(`uniforms not found`, material);
+			if (printWarnings) {
+				console.warn(`uniforms not found`, material);
+			}
 			return;
 		}
 		uniformName = _addTextureUniformNamePrefix(uniformName, addPrefix);
 		const uniform = uniforms[uniformName];
 		if (!uniform) {
-			console.warn(`uniform '${uniformName}' not found`, material, uniforms);
+			if (printWarnings) {
+				console.warn(`uniform '${uniformName}' not found`, material, uniforms);
+			}
 			return;
 		}
 		uniform.value = value;

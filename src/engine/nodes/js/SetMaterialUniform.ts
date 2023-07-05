@@ -42,14 +42,13 @@ const DEFAULT_PARAM_VALUES = {lerp: 1, addPrefix: 1};
 enum SetMaterialUniformJsNodeInputName {
 	uniformName = 'uniformName',
 	lerp = 'lerp',
-	addPrefix = 'addPrefix',
 }
 
 class SetMaterialUniformJsParamsConfig extends NodeParamsConfig {
+	/** @param printWarnings */
+	printWarnings = ParamConfig.BOOLEAN(1);
 	/** @param add prefix */
 	addPrefix = ParamConfig.BOOLEAN(1);
-	/** @param uniform name */
-	// uniformName = ParamConfig.STRING('');
 	/** @param uniform type */
 	type = ParamConfig.INTEGER(JS_CONNECTION_POINT_TYPES.indexOf(JsConnectionPointType.FLOAT), {
 		menu: {
@@ -57,14 +56,8 @@ class SetMaterialUniformJsParamsConfig extends NodeParamsConfig {
 				return {name: name, value: i};
 			}),
 		},
+		separatorBefore: true,
 	});
-	/** @param lerp */
-	// lerp cannot yet be a parameter,
-	// otherwise it will not appear as a named input
-	// lerp = ParamConfig.FLOAT(1, {
-	// 	range: [0, 1],
-	// 	rangeLocked: [false, false],
-	// });
 }
 const ParamsConfig = new SetMaterialUniformJsParamsConfig();
 
@@ -84,7 +77,6 @@ export class SetMaterialUniformJsNode extends TypedJsNode<SetMaterialUniformJsPa
 					this.uniformType(),
 					SetMaterialUniformJsNodeInputName.uniformName,
 					this._lerpAllowed() ? SetMaterialUniformJsNodeInputName.lerp : null,
-					SetMaterialUniformJsNodeInputName.addPrefix,
 				])[index]
 		);
 		this.io.connection_points.set_expected_input_types_function(() => this._expectedInputType());
@@ -98,7 +90,6 @@ export class SetMaterialUniformJsNode extends TypedJsNode<SetMaterialUniformJsPa
 			this.uniformType(),
 			JsConnectionPointType.STRING,
 			this._lerpAllowed() ? JsConnectionPointType.FLOAT : null,
-			JsConnectionPointType.BOOLEAN,
 		]);
 	}
 	override paramDefaultValue(name: 'lerp') {
@@ -121,31 +112,29 @@ export class SetMaterialUniformJsNode extends TypedJsNode<SetMaterialUniformJsPa
 			SetMaterialUniformJsNodeInputName.uniformName
 		);
 		const uniformValue = this.variableForInput(shadersCollectionController, this.uniformType());
+		const printWarnings = this.pv.printWarnings ? 'true' : 'false';
+		const addPrefix = this.pv.addPrefix ? 'true' : 'false';
 
-		const addPrefix = this.variableForInput(
-			shadersCollectionController,
-			SetMaterialUniformJsNodeInputName.addPrefix
-		);
 		if (this._isUniformNumber() || this._isUniformVectorColor()) {
 			const lerp = this.variableForInput(shadersCollectionController, SetMaterialUniformJsNodeInputName.lerp);
 			if (this._isUniformNumber()) {
 				const functionName = 'setMaterialUniformNumber';
 				const func = Poly.namedFunctionsRegister.getFunction(functionName, this, shadersCollectionController);
-				const bodyLine = func.asString(material, uniformName, uniformValue, lerp, addPrefix);
+				const bodyLine = func.asString(material, uniformName, uniformValue, lerp, addPrefix, printWarnings);
 				shadersCollectionController.addTriggerableLines(this, [bodyLine]);
 				return;
 			}
 			if (this._isUniformVectorColor()) {
 				const functionName = 'setMaterialUniformVectorColor';
 				const func = Poly.namedFunctionsRegister.getFunction(functionName, this, shadersCollectionController);
-				const bodyLine = func.asString(material, uniformName, uniformValue, lerp, addPrefix);
+				const bodyLine = func.asString(material, uniformName, uniformValue, lerp, addPrefix, printWarnings);
 				shadersCollectionController.addTriggerableLines(this, [bodyLine]);
 				return;
 			}
 		} else {
 			const functionName = 'setMaterialUniformTexture';
 			const func = Poly.namedFunctionsRegister.getFunction(functionName, this, shadersCollectionController);
-			const bodyLine = func.asString(material, uniformName, uniformValue, addPrefix);
+			const bodyLine = func.asString(material, uniformName, uniformValue, addPrefix, printWarnings);
 			shadersCollectionController.addTriggerableLines(this, [bodyLine]);
 			return;
 		}
