@@ -4,7 +4,7 @@ import {TypedNodePathParamValue} from '../../../core/Walker';
 import {GlobalsGeometryHandler} from '../../../engine/nodes/gl/code/globals/Geometry';
 import {BufferGeometry} from 'three';
 import {objectTypeFromConstructor} from '../../../core/geometry/Constant';
-import {CoreMaterial} from '../../../core/geometry/Material';
+import {applyCustomMaterials} from '../../../core/geometry/Material';
 import {NodeContext} from '../../../engine/poly/NodeContext';
 import {CoreInstancer} from '../../../core/geometry/Instancer';
 import {BaseBuilderMatNodeType} from '../../../engine/nodes/mat/_BaseBuilder';
@@ -85,7 +85,7 @@ export class InstanceSopOperation extends BaseSopOperation {
 
 	async _applyMaterial(object: Mesh, material: Material) {
 		object.material = material;
-		CoreMaterial.applyCustomMaterials(object, material);
+		applyCustomMaterials(object, material);
 	}
 
 	private _createInstance(

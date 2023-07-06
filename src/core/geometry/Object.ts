@@ -18,7 +18,7 @@ import {GroupString, Object3DWithGeometry} from './Group';
 import {CoreAttribute} from './Attribute';
 import {dataFromConstructor, ObjectData, ObjectType} from './Constant';
 import {CorePoint} from './Point';
-import {CoreMaterial, MaterialWithCustomMaterials} from './Material';
+import {MaterialWithCustomMaterials, applyCustomMaterials} from './Material';
 import {CoreString} from '../String';
 import {ObjectUtils} from '../ObjectUtils';
 import {ArrayUtils} from '../ArrayUtils';
@@ -206,7 +206,7 @@ export class CoreObject extends BaseCoreObject<CoreObjectType.THREEJS> {
 				// Otherwise, when this is assigned here, some objects that rely on their own mat
 				// such as sop/Reflector stop working when cloned
 				// mesh_node.material = src_node.material;
-				CoreMaterial.applyCustomMaterials(node, meshNode.material as MaterialWithCustomMaterials);
+				applyCustomMaterials(node, meshNode.material as MaterialWithCustomMaterials);
 
 				// prevents crashes for linesegments with shader material such as the line dashed instance
 				// TODO: test

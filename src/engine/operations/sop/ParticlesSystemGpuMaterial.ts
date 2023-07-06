@@ -2,7 +2,7 @@ import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {TypedNodePathParamValue} from '../../../core/Walker';
 import {NodeContext} from '../../../engine/poly/NodeContext';
-import {CoreMaterial} from '../../../core/geometry/Material';
+import {applyRenderHook,applyCustomMaterials} from '../../../core/geometry/Material';
 import {Group, Material, Object3D, Mesh} from 'three';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
@@ -88,7 +88,7 @@ export class ParticlesSystemGpuMaterialSopOperation extends BaseSopOperation {
 		objectWithmaterial.material = materialData.material;
 		CoreParticlesAttribute.setMaterialNodeId(object, materialData.materialNode.graphNodeId());
 
-		CoreMaterial.applyRenderHook(object, materialData.material);
-		CoreMaterial.applyCustomMaterials(object, materialData.material);
+		applyRenderHook(object, materialData.material);
+		applyCustomMaterials(object, materialData.material);
 	}
 }

@@ -10,7 +10,10 @@ export class MaterialContainer extends TypedContainer<NodeContext.MAT> {
 	}
 	override coreContentCloned(): ContainableMap[NodeContext.MAT] | undefined {
 		if (this._content) {
-			const cloned = CoreMaterial.clone(this._node.scene(), this._content, {shareCustomUniforms: true}); //.clone();
+			const cloned = CoreMaterial.clone(this._node.scene(), this._content, {
+				shareCustomUniforms: true,
+				addCustomMaterials: true,
+			}); //.clone();
 			// const cloned = this._content.clone();
 			return cloned;
 		}

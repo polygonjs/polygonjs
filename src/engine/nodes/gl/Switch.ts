@@ -16,7 +16,8 @@ import {ThreeToGl} from '../../../core/ThreeToGl';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {CoreMath} from '../../../core/math/_Module';
 
-// force MAX_INPUTS_COUNT to 16 to encourage limiting number of textures per draw call
+// force MAX_INPUTS_COUNT to 16 to encourage limiting number of textures for a single vertex shader
+// see: https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API/WebGL_best_practices#understand_system_limits
 const MAX_INPUTS_COUNT = 16;
 class SwitchParamsConfig extends NodeParamsConfig {}
 

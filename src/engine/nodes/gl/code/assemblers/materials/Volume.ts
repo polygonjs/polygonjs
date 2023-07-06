@@ -5,7 +5,7 @@ import {ShaderName} from '../../../../utils/shaders/ShaderName';
 import {OutputGlNode} from '../../../Output';
 import {GlConnectionPointType, GlConnectionPoint} from '../../../../utils/io/connections/Gl';
 import {FrontSide} from 'three';
-import {CoreMaterial} from '../../../../../../core/geometry/Material';
+import {addUserDataRenderHook} from '../../../../../../core/geometry/Material';
 import {VolumeController} from '../../../../mat/utils/VolumeController';
 import {ShaderConfig} from '../../configs/ShaderConfig';
 import {VariableConfig} from '../../configs/VariableConfig';
@@ -43,7 +43,7 @@ export class ShaderAssemblerVolume extends BaseShaderAssemblerVolume {
 			uniforms: UniformsUtils.clone(template_shader.uniforms),
 		});
 
-		CoreMaterial.addUserDataRenderHook(material, VolumeController.renderHook.bind(VolumeController));
+		addUserDataRenderHook(material, VolumeController.renderHook.bind(VolumeController));
 
 		this._addCustomMaterials(material);
 		return material;

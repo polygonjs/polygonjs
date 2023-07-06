@@ -15,7 +15,7 @@ import {VOLUME_UNIFORMS} from '../gl/gl/volume/uniforms';
 import {UniformsUtils} from 'three';
 
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
-import {CoreMaterial} from '../../../core/geometry/Material';
+import {addUserDataRenderHook} from '../../../core/geometry/Material';
 import {VolumeController, VolumeParamConfig} from './utils/VolumeController';
 import {MatType} from '../../poly/registers/nodes/types/Mat';
 class VolumeMatParamsConfig extends VolumeParamConfig(NodeParamsConfig) {}
@@ -39,7 +39,7 @@ export class VolumeMatNode extends PrimitiveMatNode<ShaderMaterial, VolumeMatPar
 			uniforms: UniformsUtils.clone(VOLUME_UNIFORMS),
 		});
 
-		CoreMaterial.addUserDataRenderHook(mat, VolumeController.renderHook.bind(VolumeController));
+		addUserDataRenderHook(mat, VolumeController.renderHook.bind(VolumeController));
 
 		return mat;
 	}

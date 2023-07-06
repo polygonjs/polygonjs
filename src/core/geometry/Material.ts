@@ -86,141 +86,117 @@ const EMPTY_RENDER_HOOK: RenderHook = (
 
 interface CloneOptions {
 	shareCustomUniforms: boolean;
+	addCustomMaterials: boolean;
+}
+export function cloneMaterial(scene: PolyScene, srcMaterial: Material | ShaderMaterial, options: CloneOptions) {
+	const clonedMaterial = srcMaterial.clone();
+	const srcUniforms = (srcMaterial as ShaderMaterial).uniforms;
+	if (srcUniforms) {
+		(clonedMaterial as ShaderMaterial).uniforms = UniformsUtils.clone(srcUniforms);
+	}
+	copyOnBeforeCompileData(scene, {
+		src: srcMaterial,
+		dest: clonedMaterial,
+		shareCustomUniforms: options.shareCustomUniforms,
+	});
+
+	if ((srcMaterial as MaterialWithCustomMaterials).customMaterials && options.addCustomMaterials) {
+		const customNames = Object.keys((srcMaterial as MaterialWithCustomMaterials).customMaterials);
+		if (customNames.length > 0) {
+			(clonedMaterial as MaterialWithCustomMaterials).customMaterials = {};
+		}
+		for (const customName of customNames) {
+			const matName = customName as CustomMaterialName;
+			const customMaterial = (srcMaterial as MaterialWithCustomMaterials).customMaterials[matName];
+			if (customMaterial) {
+				const clonedCustomMaterial = cloneMaterial(scene, customMaterial, {
+					...options,
+					addCustomMaterials: false,
+				});
+				(clonedMaterial as MaterialWithCustomMaterials).customMaterials[matName] = clonedCustomMaterial;
+			}
+		}
+	}
+
+	return clonedMaterial;
+}
+
+export function applyCustomMaterials(object: Object3D, material: Material) {
+	const materialWithCustom = material as MaterialWithCustomMaterials;
+	if (materialWithCustom.customMaterials) {
+		for (const customName of Object.keys(materialWithCustom.customMaterials)) {
+			const matName = customName as CustomMaterialName;
+			// http://blog.edankwan.com/post/three-js-advanced-tips-shadow
+			const customMaterial = materialWithCustom.customMaterials[matName];
+			if (customMaterial) {
+				(object as ObjectWithCustomMaterials)[matName] = customMaterial;
+				customMaterial.needsUpdate = true;
+			}
+		}
+		// object.material = material.customMaterials.customDepthDOFMaterial
+		// object.material = material.customMaterials.customDepthMaterial
+		// object.material = material.customMaterials.customDistanceMaterial
+	}
+}
+
+/*
+//
+// TODO:
+// this render hook system has a big limitation,
+// which is that if we clone the object, it may not be propagated correctly,
+// since this is assigned at render time.
+// This means that if we clone an object before it has been rendered,
+// it won't have the onBeforeRender function, and therefore won't pass it on to its clone.
+//
+*/
+export function addUserDataRenderHook(material: Material, renderHook: RenderHookWithObject) {
+	material.userData[RENDER_HOOK_USER_DATA_KEY] = renderHook;
+}
+export function applyRenderHook(object: Object3D, material: MaterialWithRenderHook) {
+	if (material.userData) {
+		const renderHook: RenderHookWithObject = material.userData[RENDER_HOOK_USER_DATA_KEY];
+		if (renderHook) {
+			object.onBeforeRender = (
+				renderer: WebGLRenderer,
+				scene: Scene,
+				camera: Camera,
+				geometry: BufferGeometry,
+				material: Material,
+				group: Group | null
+			) => {
+				renderHook(renderer, scene, camera, geometry, material, group, object);
+			};
+			return;
+		}
+	}
+	// make sure to reset the render hook if apply to a material that does not have any
+	object.onBeforeRender = EMPTY_RENDER_HOOK;
+}
+export function assignUniforms(
+	mat: Material,
+	uniformName: string,
+	uniform: IUniformTexture,
+	assembler?: ShaderAssemblerMaterial
+) {
+	assignUniformViaUserData(mat, uniformName, uniform);
+	if (assembler) {
+		assignUniformForOnBeforeCompile(mat, uniformName, uniform, assembler);
+	}
+}
+export function assignUniformForOnBeforeCompile(
+	mat: Material,
+	uniformName: string,
+	uniform: IUniformTexture,
+	assembler: ShaderAssemblerMaterial
+) {
+	assembler.addAdditionalTextureUniforms(uniformName, uniform);
 }
 export class CoreMaterial {
 	static node(scene: PolyScene, material: Material) {
 		return scene.node(material.name);
 	}
-
-	static clone(scene: PolyScene, srcMaterial: Material | ShaderMaterial, options: CloneOptions) {
-		const clonedMaterial = srcMaterial.clone();
-		const srcUniforms = (srcMaterial as ShaderMaterial).uniforms;
-		if (srcUniforms) {
-			(clonedMaterial as ShaderMaterial).uniforms = UniformsUtils.clone(srcUniforms);
-		}
-		copyOnBeforeCompileData(scene, {
-			src: srcMaterial,
-			dest: clonedMaterial,
-			shareCustomUniforms: options.shareCustomUniforms,
-		});
-		return clonedMaterial;
-	}
-
-	// static clone_single(src_material: Material) {
-	// 	const material = src_material.clone();
-	// 	// linewidth doesn't seem cloned correctly for ShaderMaterial
-	// 	(material as LineBasicMaterial).linewidth = (src_material as LineBasicMaterial).linewidth;
-
-	// 	return material;
-	// }
-
-	/*
-	//
-	// TODO:
-	// this render hook system has a big limitation,
-	// which is that if we clone the object, it may not be propagated correctly,
-	// since this is assigned at render time.
-	// This means that if we clone an object before it has been rendered,
-	// it won't have the onBeforeRender function, and therefore won't pass it on to its clone.
-	//
-	*/
-	static addUserDataRenderHook(material: Material, renderHook: RenderHookWithObject) {
-		material.userData[RENDER_HOOK_USER_DATA_KEY] = renderHook;
-	}
-
-	static applyRenderHook(object: Object3D, material: MaterialWithRenderHook) {
-		if (material.userData) {
-			const renderHook: RenderHookWithObject = material.userData[RENDER_HOOK_USER_DATA_KEY];
-			if (renderHook) {
-				object.onBeforeRender = (
-					renderer: WebGLRenderer,
-					scene: Scene,
-					camera: Camera,
-					geometry: BufferGeometry,
-					material: Material,
-					group: Group | null
-				) => {
-					renderHook(renderer, scene, camera, geometry, material, group, object);
-				};
-				return;
-			}
-		}
-		// make sure to reset the render hook if apply to a material that does not have any
-		object.onBeforeRender = EMPTY_RENDER_HOOK;
-	}
-
-	static applyCustomMaterials(object: Object3D, material: Material) {
-		const material_with_custom = material as MaterialWithCustomMaterials;
-		if (material_with_custom.customMaterials) {
-			for (let name of Object.keys(material_with_custom.customMaterials)) {
-				const matName = name as CustomMaterialName;
-				// http://blog.edankwan.com/post/three-js-advanced-tips-shadow
-				const customMaterial = material_with_custom.customMaterials[matName];
-				if (customMaterial) {
-					(object as ObjectWithCustomMaterials)[matName] = customMaterial;
-					customMaterial.needsUpdate = true;
-				}
-			}
-			// object.material = material.customMaterials.customDepthDOFMaterial
-			// object.material = material.customMaterials.customDepthMaterial
-			// object.material = material.customMaterials.customDistanceMaterial
-		}
-	}
-	static assignUniforms(
-		mat: Material,
-		uniformName: string,
-		uniform: IUniformTexture,
-		assembler?: ShaderAssemblerMaterial
-	) {
-		assignUniformViaUserData(mat, uniformName, uniform);
-		if (assembler) {
-			this.assignUniformForOnBeforeCompile(mat, uniformName, uniform, assembler);
-		}
-	}
-	// static assignCustomUniforms(
-	// 	assembler: ShaderAssemblerMaterial,
-	// 	mat: Material,
-	// 	uniformName: string,
-	// 	uniform: IUniform
-	// ) {
-	// 	const material = mat as MaterialWithCustomMaterials;
-	// 	if (material.customMaterials) {
-	// 		const matNames = Object.keys(material.customMaterials) as Array<CustomMaterialName>;
-	// 		for (let matName of matNames) {
-	// 			const customMaterial = material.customMaterials[matName];
-	// 			if (customMaterial) {
-	// 				this.assignUniforms(assembler, customMaterial, uniformName, uniform);
-	// 				// const customShaderMaterial = customMaterial as ShaderMaterial;
-	// 				// if (customShaderMaterial.uniforms) {
-	// 				// 	customShaderMaterial.uniforms[uniformName].value = uniformValue;
-	// 				// }
-	// 			}
-	// 		}
-	// 	}
-	// }
-	static assignUniformForOnBeforeCompile(
-		mat: Material,
-		uniformName: string,
-		uniform: IUniformTexture,
-		assembler: ShaderAssemblerMaterial
-	) {
-		assembler.addAdditionalTextureUniforms(uniformName, uniform);
-	}
-
-	// static initCustomMaterialUniforms(mat: Material, uniformName: string, uniformValue: any) {
-	// 	const material = mat as MaterialWithCustomMaterials;
-	// 	if (material.customMaterials) {
-	// 		for (let name of Object.keys(material.customMaterials)) {
-	// 			const mat_name = name as CustomMaterialName;
-	// 			const customMaterial = material.customMaterials[mat_name];
-	// 			if (customMaterial) {
-	// 				const customShaderMaterial = customMaterial as ShaderMaterial;
-	// 				if (customShaderMaterial.uniforms) {
-	// 					customShaderMaterial.uniforms[uniformName] =
-	// 						customShaderMaterial.uniforms[uniformName] || uniformValue;
-	// 				}
-	// 			}
-	// 		}
-	// 	}
-	// }
+	static clone = cloneMaterial;
+	static applyCustomMaterials = applyCustomMaterials;
+	static assignUniforms = assignUniforms;
+	static assignUniformForOnBeforeCompile = assignUniformForOnBeforeCompile;
 }

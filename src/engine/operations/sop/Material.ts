@@ -3,7 +3,7 @@ import {CoreGroup} from '../../../core/geometry/Group';
 import {TypedNodePathParamValue} from '../../../core/Walker';
 import {NodeContext} from '../../../engine/poly/NodeContext';
 import {BaseBuilderMatNodeType} from '../../../engine/nodes/mat/_BaseBuilder';
-import {CoreMaterial} from '../../../core/geometry/Material';
+import {applyRenderHook, applyCustomMaterials, cloneMaterial} from '../../../core/geometry/Material';
 import {Group, Material, Object3D, Mesh, Texture, ShaderMaterial} from 'three';
 import {GlobalsGeometryHandler} from '../../../engine/nodes/gl/code/globals/Geometry';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
@@ -118,7 +118,10 @@ export class MaterialSopOperation extends BaseSopOperation {
 
 	private _applyMaterial(object: Object3D, srcMaterial: Material, params: MaterialSopParams) {
 		const usedMaterial = isBooleanTrue(params.cloneMat)
-			? CoreMaterial.clone(this.scene(), srcMaterial, {shareCustomUniforms: params.shareCustomUniforms})
+			? cloneMaterial(this.scene(), srcMaterial, {
+					shareCustomUniforms: params.shareCustomUniforms,
+					addCustomMaterials: true,
+			  })
 			: srcMaterial;
 
 		if (srcMaterial instanceof ShaderMaterial && usedMaterial instanceof ShaderMaterial) {
@@ -140,8 +143,8 @@ export class MaterialSopOperation extends BaseSopOperation {
 		this._oldMatByOldNewId.set(usedMaterial.uuid, object_with_material.material as Material);
 		object_with_material.material = usedMaterial;
 
-		CoreMaterial.applyRenderHook(object, usedMaterial);
-		CoreMaterial.applyCustomMaterials(object, usedMaterial);
+		applyRenderHook(object, usedMaterial);
+		applyCustomMaterials(object, usedMaterial);
 	}
 
 	private _swapTexture(target_mat: Material, params: MaterialSopParams) {

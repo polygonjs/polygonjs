@@ -2,7 +2,7 @@ import {Material, Mesh} from 'three';
 import {ObjectUtils} from '../ObjectUtils';
 import {BaseBuilderMatNodeType} from '../../engine/nodes/mat/_BaseBuilder';
 // import {ParticlesSystemGpuSopNode} from '../../ParticlesSystemGpu';
-import {CoreMaterial, ShaderMaterialWithCustomMaterials} from '../geometry/Material';
+import {assignUniforms, applyCustomMaterials, ShaderMaterialWithCustomMaterials} from '../geometry/Material';
 // import {CoreGroup} from '../geometry/Group';
 import {ShaderName} from '../../engine/nodes/utils/shaders/ShaderName';
 import {TextureAllocationsControllerData} from '../../engine/nodes/gl/code/utils/TextureAllocationsController';
@@ -67,7 +67,7 @@ export class CoreParticlesRenderController {
 		// 	const object = object3d as Mesh;
 		// if (object.geometry) {
 		(object as Mesh).material = this._renderMaterial;
-		CoreMaterial.applyCustomMaterials(object, this._renderMaterial as ShaderMaterialWithCustomMaterials);
+		applyCustomMaterials(object, this._renderMaterial as ShaderMaterialWithCustomMaterials);
 		object.matrixAutoUpdate = false;
 		object.updateMatrix();
 		// }
@@ -110,7 +110,7 @@ export class CoreParticlesRenderController {
 			// instead of needsUpdate, we need to force a recompilation
 			// with assignOnBeforeCompileDataAndFunction below
 			// after having added the new uniforms to the data from OnBeforeCompileDataHandler.getData
-			CoreMaterial.assignUniforms(this._renderMaterial, uniformName, uniform, this._matNodeAssembler);
+			assignUniforms(this._renderMaterial, uniformName, uniform, this._matNodeAssembler);
 			if (data) {
 				data.additionalTextureUniforms[uniformName] = uniform;
 			}

@@ -1,4 +1,4 @@
-import {Mesh} from 'three';
+import {Mesh, ShaderMaterial} from 'three';
 import {Material} from 'three';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 import {MaterialUserDataUniforms} from '../../../../src/engine/nodes/gl/code/assemblers/materials/OnBeforeCompile';
@@ -10,6 +10,7 @@ import {Object3D} from 'three';
 import {HierarchyMode} from '../../../../src/engine/operations/sop/Hierarchy';
 import {CoreType} from '../../../../src/core/Type';
 import {CoreObjectType, ObjectContent} from '../../../../src/core/geometry/ObjectContent';
+import {CustomMaterialName, MaterialWithCustomMaterials} from '../../../../src/core/geometry/Material';
 // import {CorePath} from '../../../../src/core/geometry/CorePath';
 
 const LAMBERT_UNIFORMS = UniformsUtils.clone(ShaderLib.lambert.uniforms);
@@ -345,6 +346,15 @@ QUnit.test('sop/material clone preserves builder onBeforeCompile', async (assert
 		assert.deepEqual(
 			Object.keys(MaterialUserDataUniforms.getUniforms(materialObject1)!).sort(),
 			currentUniformNames
+		);
+		assert.equal(
+			(srcMaterial.customMaterials[CustomMaterialName.DEPTH] as ShaderMaterial).vertexShader,
+			(
+				(materialObject0 as MaterialWithCustomMaterials).customMaterials[
+					CustomMaterialName.DEPTH
+				] as ShaderMaterial
+			).vertexShader,
+			'depth'
 		);
 
 		MaterialUserDataUniforms.getUniforms(srcMaterial)!.alphaTest.value = 0.7;
