@@ -29,17 +29,18 @@ export class SetChildrenSopOperation extends BaseSopOperation {
 
 		const parentObjects = parentCoreGroup.threejsObjects();
 		const parent = parentObjects[0];
-
-		if (isBooleanTrue(params.clearExistingChildren)) {
-			let child: Object3D | undefined;
-			while ((child = parent.children[0])) {
-				parent.remove(child);
+		if (parent) {
+			if (isBooleanTrue(params.clearExistingChildren)) {
+				let child: Object3D | undefined;
+				while ((child = parent.children[0])) {
+					parent.remove(child);
+				}
 			}
-		}
 
-		const childrenObjects = childrenCoreGroup.threejsObjects();
-		for (let childObject of childrenObjects) {
-			parent.add(childObject);
+			const childrenObjects = childrenCoreGroup.threejsObjects();
+			for (let childObject of childrenObjects) {
+				parent.add(childObject);
+			}
 		}
 		return this.createCoreGroupFromObjects(parentObjects);
 	}

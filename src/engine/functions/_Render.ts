@@ -76,7 +76,7 @@ export class renderPixel extends ObjectNamedFunction5<[Material, Camera, Color, 
 	}
 	func(
 		object3D: Object3D,
-		material: Material,
+		material: Material | null,
 		camera: Camera,
 		backgroundColor: Color,
 		uv: Vector2,
@@ -98,12 +98,12 @@ export class renderPixel extends ObjectNamedFunction5<[Material, Camera, Color, 
 
 		this._prepare(object3D, material, backgroundColor, renderer);
 		this._render(uv, camera, renderer, target);
-		this._restore(object3D, material, renderer);
+		this._restore(object3D, renderer);
 
 		return target;
 	}
 
-	private _prepare(object3D: Object3D, material: Material, backgroundColor: Color, renderer: WebGLRenderer) {
+	private _prepare(object3D: Object3D, material: Material | null, backgroundColor: Color, renderer: WebGLRenderer) {
 		// save context
 		this._restoreContext.renderer.outputColorSpace = renderer.outputColorSpace;
 		this._restoreContext.renderer.toneMapping = renderer.toneMapping;
@@ -111,7 +111,7 @@ export class renderPixel extends ObjectNamedFunction5<[Material, Camera, Color, 
 
 		// set context
 		this._renderScene.background = backgroundColor;
-		this._renderScene.overrideMaterial = material;
+		this._renderScene.overrideMaterial = material || null;
 		this._renderScene.attach(object3D);
 		renderer.toneMapping = NoToneMapping;
 		renderer.outputColorSpace = NoColorSpace;
@@ -145,7 +145,7 @@ export class renderPixel extends ObjectNamedFunction5<[Material, Camera, Color, 
 		// read buffer into target vector
 		target.fromArray(this._read);
 	}
-	private _restore(object3D: Object3D, material: Material, renderer: WebGLRenderer) {
+	private _restore(object3D: Object3D, renderer: WebGLRenderer) {
 		renderer.outputColorSpace = this._restoreContext.renderer.outputColorSpace;
 		renderer.toneMapping = this._restoreContext.renderer.toneMapping;
 		this._restoreContext.object.parent?.attach(object3D);

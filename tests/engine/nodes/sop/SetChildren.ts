@@ -1,6 +1,6 @@
 import {Object3D} from 'three';
 
-QUnit.test('setChildren simple', async (assert) => {
+QUnit.test('sop/setChildren simple', async (assert) => {
 	const geo1 = window.geo1;
 
 	const emptyObject1 = geo1.createNode('emptyObject');
@@ -34,4 +34,19 @@ QUnit.test('setChildren simple', async (assert) => {
 
 	setChildren2.p.clearExistingChildren.set(false);
 	assert.deepEqual(await getChildrenCount2(), [2]);
+});
+
+QUnit.test('sop/setChildren can process empty inputs', async (assert) => {
+	const geo1 = window.geo1;
+
+	const null1 = geo1.createNode('null');
+	const setChildren1 = geo1.createNode('setChildren');
+
+	setChildren1.setInput(0, null1);
+	setChildren1.setInput(1, null1);
+
+	const container = await setChildren1.compute();
+	assert.ok(container);
+	const objects = container.coreContent()!.threejsObjects();
+	assert.equal(objects.length, 0);
 });
