@@ -36,6 +36,29 @@ QUnit.test('sop/setChildren simple', async (assert) => {
 	assert.deepEqual(await getChildrenCount2(), [2]);
 });
 
+QUnit.test('sop/setChildren takes children one by one, and assigns all of them to a parent', async (assert) => {
+	const geo1 = window.geo1;
+
+	const box1 = geo1.createNode('box');
+	const copy1 = geo1.createNode('copy');
+	const copy2 = geo1.createNode('copy');
+	const setChildren1 = geo1.createNode('setChildren');
+
+	copy1.setInput(0, box1);
+	copy2.setInput(0, box1);
+	setChildren1.setInput(0, copy1);
+	setChildren1.setInput(1, copy2);
+	copy1.p.count.set(2);
+	copy2.p.count.set(3);
+
+	const container = await setChildren1.compute();
+	assert.ok(container);
+	const objects = container.coreContent()!.threejsObjects();
+	assert.equal(objects.length, 2);
+	assert.equal(objects[0].children.length, 1);
+	assert.equal(objects[1].children.length, 2);
+});
+
 QUnit.test('sop/setChildren can process empty inputs', async (assert) => {
 	const geo1 = window.geo1;
 
