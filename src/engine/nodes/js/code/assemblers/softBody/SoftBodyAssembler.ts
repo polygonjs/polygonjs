@@ -94,7 +94,7 @@ export class JsAssemblerSoftBody extends BaseJsShaderAssembler {
 		const _options: ParamOptions = {
 			spare: true,
 			// computeOnDirty: true, // not needed if cook option is not set
-			// cook: false, // for SDFBuilder, the node needs to recook
+			cook: false, // for Softbody, the node must not recook
 			// important for texture nodes
 			// that compute after being found by the nodepath param
 			dependentOnFoundNode: true,
