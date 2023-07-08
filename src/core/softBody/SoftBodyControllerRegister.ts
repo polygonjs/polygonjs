@@ -40,7 +40,7 @@ export function createOrFindSoftBodyController(
 		controllers.set(threejsObjectInSceneTree, controller);
 		const {softBody} = createOrFindSoftBody(node, tetEmbed);
 		if (softBody) {
-			controller.addSoftBody(softBody);
+			controller.setSoftBody(softBody);
 		} else {
 			console.warn('no softbody found');
 		}
@@ -58,8 +58,6 @@ export function createOrFindSoftBody(node: TetSoftBodySolverSopNode, tetEmbed: T
 		const highResSkinningLookupSpacing = CoreSoftBodyAttribute.getHighResSkinningLookupSpacing(tetEmbed.tetObject);
 		const highResSkinningLookupPadding = CoreSoftBodyAttribute.getHighResSkinningLookupPadding(tetEmbed.tetObject);
 
-		// if ((softBodyObject as Mesh).isMesh) {
-		// const mesh = softBodyObject as Mesh;
 		softBody = new SoftBody({
 			node,
 			tetEmbed,
@@ -71,7 +69,6 @@ export function createOrFindSoftBody(node: TetSoftBodySolverSopNode, tetEmbed: T
 			},
 		});
 		softBodies.set(threejsObjectInSceneTree, softBody);
-		// }
 	}
 
 	return {softBody};

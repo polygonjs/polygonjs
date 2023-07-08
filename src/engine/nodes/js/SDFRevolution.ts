@@ -13,6 +13,7 @@ import {JsLinesCollectionController} from './code/utils/JsLinesCollectionControl
 import {TypeAssert} from '../../poly/Assert';
 import {Vector2} from 'three';
 import {Poly} from '../../Poly';
+import {JsType} from '../../poly/registers/nodes/types/Js';
 
 enum SDFRevolutionJsAxis {
 	X = 'X',
@@ -40,7 +41,7 @@ const ParamsConfig = new SDFRevolutionJsParamsConfig();
 export class SDFRevolutionJsNode extends BaseSDFJsNode<SDFRevolutionJsParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'SDFRevolution';
+		return JsType.SDF_REVOLUTION;
 	}
 
 	override initializeNode() {
@@ -53,16 +54,15 @@ export class SDFRevolutionJsNode extends BaseSDFJsNode<SDFRevolutionJsParamsConf
 		this.p.axis.set(SDF_REVOLUTION_AXISES.indexOf(axis));
 	}
 
-	override setLines(shadersCollectionController: JsLinesCollectionController) {
-		const position = this.position(shadersCollectionController);
-		const center = this.variableForInputParam(shadersCollectionController, this.p.center);
-		const radius = this.variableForInputParam(shadersCollectionController, this.p.radius);
+	override setLines(linesController: JsLinesCollectionController) {
+		const position = this.position(linesController);
+		const center = this.variableForInputParam(linesController, this.p.center);
+		const radius = this.variableForInputParam(linesController, this.p.radius);
 
 		const out = this.jsVarName(OUTPUT_NAME);
-		const tmpVarName = shadersCollectionController.addVariable(this, new Vector2());
-		const func = Poly.namedFunctionsRegister.getFunction(this._functionName(), this, shadersCollectionController);
-		// const bodyLine = `${func.asString(position, center, radius, out)}`;
-		shadersCollectionController.addBodyOrComputed(this, [
+		const tmpVarName = linesController.addVariable(this, new Vector2());
+		const func = Poly.namedFunctionsRegister.getFunction(this._functionName(), this, linesController);
+		linesController.addBodyOrComputed(this, [
 			{
 				dataType: JsConnectionPointType.VECTOR2,
 				varName: out,

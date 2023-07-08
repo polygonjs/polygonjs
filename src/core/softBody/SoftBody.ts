@@ -12,6 +12,7 @@ import {
 	vecSetDiff,
 	matSetMult,
 	matSetInverse,
+	vecAddVector3,
 } from './SoftBodyMath';
 import {tetSortPoints} from '../geometry/tet/utils/tetSortPoints';
 import {buildTetIds, buildTetEdgeIds} from '../geometry/tet/utils/tetSoftBodyUtils';
@@ -29,6 +30,7 @@ import {softBodyRayMarch} from './SoftBodyCollider';
 
 export type VelocityFunction = () => Vector3;
 export type SDFFunction = () => number;
+export type SDFEvaluator = (p: Vector3) => number;
 
 interface SoftBodyOptions {
 	node: TetSoftBodySolverSopNode;
@@ -43,6 +45,7 @@ interface SoftBodyOptions {
 const _pos = new Vector3(0, 0, 0);
 const _vel = new Vector3(0, 0, 0);
 const _velDt = new Vector3(0, 0, 0);
+const ONE_SIXTH = 1.0 / 6.0;
 
 export class SoftBody {
 	public readonly numParticles: number;
@@ -55,8 +58,8 @@ export class SoftBody {
 	public readonly restVol: Float32Array;
 	public readonly edgeLengths: Float32Array;
 	public readonly invMass: Float32Array;
-	public edgeCompliance: number = 0;
-	public volumeCompliance: number = 0;
+	// public edgeCompliance: number = 0;
+	// public volumeCompliance: number = 0;
 	public readonly temp: Float32Array;
 	public readonly grads: Float32Array;
 	public readonly constraintsById: Map<number, SoftBodyConstraint> = new Map();
@@ -273,12 +276,7 @@ export class SoftBody {
 		}
 	}
 
-	preSolve(dt: number, gravity: number[], velFunc: VelocityFunction, sdfFunc: SDFFunction) {
-		const sdfEvaluator = (p: Vector3) => {
-			this._node.setPositionGlobals(p);
-			return sdfFunc();
-		};
-
+	preSolve(dt: number, gravity: number[], velFunc: VelocityFunction, sdfEvaluator: SDFEvaluator) {
 		for (let i = 0; i < this.numParticles; i++) {
 			if (this.invMass[i] == 0.0) continue;
 			_pos.fromArray(this.pos, i * 3);
@@ -294,15 +292,9 @@ export class SoftBody {
 			// vecAdd(this.vel, i, gravity, 0, dt);
 			vecCopy(this.prevPos, i, this.pos, i);
 
-			// if (true) {
-
 			const stepMagnitude = _velDt.length();
 
-			// console.log(colliderFunc);
-			// const args = this._node.functionEvalArgsWithParamConfigs().collider;
-			const distToCollider: number = softBodyRayMarch(_pos, _vel, stepMagnitude, sdfEvaluator); //functions.collider();
-			// const distToCollider: number = sdfFunc();
-			// const dist = collisionSDF(this._pos);
+			const distToCollider: number = softBodyRayMarch(_pos, _vel, stepMagnitude, sdfEvaluator);
 			if (stepMagnitude > distToCollider) {
 				// handle collision
 				// 1. set prevPos
@@ -316,21 +308,18 @@ export class SoftBody {
 				// no collision
 				vecAdd(this.pos, i, this.vel, i, dt);
 			}
-
-			// } else {
-			// 	vecAdd(this.pos, i, this.vel, i, dt);
-			// 	const y = this.pos[3 * i + 1];
-			// 	if (y < 0.0) {
-			// 		vecCopy(this.pos, i, this.prevPos, i);
-			// 		this.pos[3 * i + 1] = 0.0;
-			// 	}
-			// }
 		}
 	}
 
-	solve(dt: number) {
-		this.solveEdges(this.edgeCompliance, dt);
-		this.solveVolumes(this.volumeCompliance, dt);
+	solve(
+		dt: number,
+		edgeCompliance: number,
+		volumeCompliance: number,
+		preciseCollisions: boolean,
+		sdfEvaluator: SDFEvaluator
+	) {
+		this.solveEdges(dt, edgeCompliance, preciseCollisions, sdfEvaluator);
+		this.solveVolumes(dt, volumeCompliance, preciseCollisions, sdfEvaluator);
 	}
 
 	postSolve(dt: number) {
@@ -340,7 +329,7 @@ export class SoftBody {
 		}
 	}
 
-	solveEdges(compliance: number, dt: number) {
+	solveEdges(dt: number, compliance: number, preciseCollisions: boolean, sdfEvaluator: SDFEvaluator) {
 		const alpha = compliance / dt / dt;
 
 		for (let i = 0; i < this.edgeLengths.length; i++) {
@@ -358,12 +347,44 @@ export class SoftBody {
 			const restLen = this.edgeLengths[i];
 			const C = len - restLen;
 			const s = -C / (w + alpha);
-			vecAdd(this.pos, id0, this.grads, 0, s * w0);
-			vecAdd(this.pos, id1, this.grads, 0, -s * w1);
+
+			if (preciseCollisions) {
+				// id0
+				_pos.fromArray(this.pos, id0 * 3);
+				_vel.fromArray(this.grads, 0).multiplyScalar(s * w0);
+				const stepMagnitude0 = _vel.length();
+				const distToCollider0: number = softBodyRayMarch(_pos, _vel, stepMagnitude0, sdfEvaluator);
+				if (stepMagnitude0 > distToCollider0) {
+					_vel.fromArray(this.grads, 0)
+						.multiplyScalar(s * w0)
+						.normalize()
+						.multiplyScalar(distToCollider0);
+					vecAddVector3(this.pos, id0, _vel);
+				} else {
+					vecAdd(this.pos, id0, this.grads, 0, s * w0);
+				}
+				// id1
+				_pos.fromArray(this.pos, id1 * 3);
+				_vel.fromArray(this.grads, 0).multiplyScalar(-s * w1);
+				const stepMagnitude1 = _vel.length();
+				const distToCollider1: number = softBodyRayMarch(_pos, _vel, stepMagnitude1, sdfEvaluator);
+				if (stepMagnitude1 > distToCollider1) {
+					_vel.fromArray(this.grads, 0)
+						.multiplyScalar(-s * w1)
+						.normalize()
+						.multiplyScalar(distToCollider1);
+					vecAddVector3(this.pos, id1, _vel);
+				} else {
+					vecAdd(this.pos, id1, this.grads, 0, -s * w1);
+				}
+			} else {
+				vecAdd(this.pos, id0, this.grads, 0, s * w0);
+				vecAdd(this.pos, id1, this.grads, 0, -s * w1);
+			}
 		}
 	}
 
-	solveVolumes(compliance: number, dt: number) {
+	solveVolumes(dt: number, compliance: number, preciseCollisions: boolean, sdfEvaluator: SDFEvaluator) {
 		const alpha = compliance / dt / dt;
 
 		for (let i = 0; i < this.numTets; i++) {
@@ -377,7 +398,7 @@ export class SoftBody {
 				vecSetDiff(this.temp, 0, this.pos, id1, this.pos, id0);
 				vecSetDiff(this.temp, 1, this.pos, id2, this.pos, id0);
 				vecSetCross(this.grads, j, this.temp, 0, this.temp, 1);
-				vecScale(this.grads, j, 1.0 / 6.0);
+				vecScale(this.grads, j, ONE_SIXTH);
 
 				w += this.invMass[this.tetIds[4 * i + j]] * vecLengthSquared(this.grads, j);
 			}
@@ -390,7 +411,24 @@ export class SoftBody {
 
 			for (let j = 0; j < 4; j++) {
 				const id = this.tetIds[4 * i + j];
-				vecAdd(this.pos, id, this.grads, j, s * this.invMass[id]);
+				const magnitude = s * this.invMass[id];
+				if (preciseCollisions) {
+					_pos.fromArray(this.pos, id * 3);
+					_vel.fromArray(this.grads, j * 3).multiplyScalar(magnitude);
+					const stepMagnitude = _vel.length();
+					const distToCollider: number = softBodyRayMarch(_pos, _vel, stepMagnitude, sdfEvaluator);
+					if (stepMagnitude > distToCollider) {
+						_vel.fromArray(this.grads, j * 3)
+							.multiplyScalar(magnitude)
+							.normalize()
+							.multiplyScalar(distToCollider);
+						vecAddVector3(this.pos, id, _vel);
+					} else {
+						vecAdd(this.pos, id, this.grads, j, magnitude);
+					}
+				} else {
+					vecAdd(this.pos, id, this.grads, j, magnitude);
+				}
 			}
 		}
 	}

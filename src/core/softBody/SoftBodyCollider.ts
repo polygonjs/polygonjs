@@ -24,9 +24,10 @@ type DistanceFunction = (position: Vector3) => number;
 const _p = new Vector3();
 const _d = new Vector3();
 const _vn = new Vector3();
+const _vn2 = new Vector3();
 
 const MAX_STEPS = 100;
-const SURF_DIST = 0.0001;
+const SURF_DIST = 0.01;
 export function softBodyRayMarch(
 	origin: Vector3,
 	dir: Vector3,
@@ -36,6 +37,7 @@ export function softBodyRayMarch(
 	let totalDist = 0;
 	_p.copy(origin);
 	_vn.copy(dir).normalize();
+	_p.add(_vn2.copy(_vn).multiplyScalar(1 * SURF_DIST));
 	for (let i = 0; i < MAX_STEPS; i++) {
 		const dist = distanceFunction(_p);
 		totalDist += dist;

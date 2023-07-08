@@ -12,6 +12,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {GlConnectionPointType, GlConnectionPoint} from '../utils/io/connections/Gl';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 import {isBooleanTrue} from '../../../core/Type';
+import {GlType} from '../../poly/registers/nodes/types/Gl';
 
 const OUTPUT_NAME = 'p';
 class SDFElongateGlParamsConfig extends NodeParamsConfig {
@@ -24,7 +25,7 @@ const ParamsConfig = new SDFElongateGlParamsConfig();
 export class SDFElongateGlNode extends BaseSDFGlNode<SDFElongateGlParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'SDFElongate';
+		return GlType.SDF_ELONGATE;
 	}
 
 	override initializeNode() {

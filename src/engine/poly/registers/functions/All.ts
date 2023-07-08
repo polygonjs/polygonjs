@@ -348,7 +348,10 @@ import { SDF2DCross } from "../../../functions/SDF2DCross";
 import { SDF2DHeart } from "../../../functions/SDF2DHeart";
 import { SDF2DRoundedX } from "../../../functions/SDF2DRoundedX";
 import { SDFBox } from "../../../functions/SDFBox";
+import { SDFElongateFast } from "../../../functions/SDFElongateFast";
+import { SDFElongateSlow } from "../../../functions/SDFElongateSlow";
 import { SDFIntersect } from "../../../functions/SDFIntersect";
+import { SDFOnion } from "../../../functions/SDFOnion";
 import { SDFPlane } from "../../../functions/SDFPlane";
 import { SDFRevolutionX } from "../../../functions/SDFRevolutionX";
 import { SDFRevolutionY } from "../../../functions/SDFRevolutionY";
@@ -359,6 +362,7 @@ import { SDFSmoothUnion } from "../../../functions/SDFSmoothUnion";
 import { SDFSphere } from "../../../functions/SDFSphere";
 import { SDFSubtract } from "../../../functions/SDFSubtract";
 import { SDFTorus } from "../../../functions/SDFTorus";
+import { SDFTransform } from "../../../functions/SDFTransform";
 import { SDFTube } from "../../../functions/SDFTube";
 import { SDFUnion } from "../../../functions/SDFUnion";
 import { setCSSObjectClass } from "../../../functions/setCSSObjectClass";
@@ -799,7 +803,10 @@ export interface NamedFunctionMap {
 	SDF2DHeart: SDF2DHeart;
 	SDF2DRoundedX: SDF2DRoundedX;
 	SDFBox: SDFBox;
+	SDFElongateFast: SDFElongateFast;
+	SDFElongateSlow: SDFElongateSlow;
 	SDFIntersect: SDFIntersect;
+	SDFOnion: SDFOnion;
 	SDFPlane: SDFPlane;
 	SDFRevolutionX: SDFRevolutionX;
 	SDFRevolutionY: SDFRevolutionY;
@@ -810,6 +817,7 @@ export interface NamedFunctionMap {
 	SDFSphere: SDFSphere;
 	SDFSubtract: SDFSubtract;
 	SDFTorus: SDFTorus;
+	SDFTransform: SDFTransform;
 	SDFTube: SDFTube;
 	SDFUnion: SDFUnion;
 	setCSSObjectClass: setCSSObjectClass;
@@ -1253,7 +1261,10 @@ export class AllNamedFunctionRegister {
 			SDF2DHeart,
 			SDF2DRoundedX,
 			SDFBox,
+			SDFElongateFast,
+			SDFElongateSlow,
 			SDFIntersect,
+			SDFOnion,
 			SDFPlane,
 			SDFRevolutionX,
 			SDFRevolutionY,
@@ -1264,6 +1275,7 @@ export class AllNamedFunctionRegister {
 			SDFSphere,
 			SDFSubtract,
 			SDFTorus,
+			SDFTransform,
 			SDFTube,
 			SDFUnion,
 			setCSSObjectClass,

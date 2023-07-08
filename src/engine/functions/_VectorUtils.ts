@@ -1,6 +1,7 @@
 import {Vector2, Vector3} from 'three';
 import {PolyDictionary} from '../../types/GlobalTypes';
 import {JsConnectionPointType} from '../nodes/utils/io/connections/Js';
+import {clamp as _clamp} from '../../core/math/_Module';
 
 const RGB = ['r', 'g', 'b'];
 const XY = ['x', 'y'];
@@ -21,23 +22,31 @@ export function componentsForType(type: JsConnectionPointType) {
 //
 //
 //
-export function _v2Function(src: Vector2, target: Vector2, _func: (x: number) => number): void {
+export function _v2Function(src: Vector2, target: Vector2, _func: (x: number) => number): Vector2 {
 	target.x = _func(src.x);
 	target.y = _func(src.y);
+	return target;
 }
-export function _v3Function(src: Vector3, target: Vector3, _func: (x: number) => number): void {
+export function _v3Function(src: Vector3, target: Vector3, _func: (x: number) => number): Vector3 {
 	target.x = _func(src.x);
 	target.y = _func(src.y);
 	target.z = _func(src.z);
+	return target;
 }
-export function absV2(src: Vector2, target: Vector2): void {
-	_v2Function(src, target, Math.abs);
+export function absV2(src: Vector2, target: Vector2): Vector2 {
+	return _v2Function(src, target, Math.abs);
 }
-export function absV3(src: Vector3, target: Vector3): void {
-	_v3Function(src, target, Math.abs);
+export function absV3(src: Vector3, target: Vector3): Vector3 {
+	return _v3Function(src, target, Math.abs);
 }
 export function maxV3Components(src: Vector3): number {
 	return Math.max(src.x, Math.max(src.y, src.z));
+}
+export function vector3Clamp(src: Vector3, min: Vector3, max: Vector3, target: Vector3): Vector3 {
+	target.x = _clamp(src.x, min.x, max.x);
+	target.y = _clamp(src.y, min.y, max.y);
+	target.z = _clamp(src.z, min.z, max.z);
+	return target;
 }
 export function maxV3Component(src: Vector3, target: Vector3, value: number): Vector3 {
 	target.x = Math.max(src.x, value);

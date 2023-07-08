@@ -12,6 +12,7 @@ import {ThreeToGl} from '../../../core/ThreeToGl';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {GlConnectionPointType} from '../utils/io/connections/Gl';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {JsType} from '../../poly/registers/nodes/types/Js';
 
 enum InputName {
 	SDF = 'sdf',
@@ -20,14 +21,14 @@ enum InputName {
 const DefaultValues: PolyDictionary<number> = {
 	thickness: 0.1,
 };
-const OUTPUT_NAME = 'union';
+const OUTPUT_NAME = 'sdf';
 const ALLOWED_TYPES = [GlConnectionPointType.FLOAT, GlConnectionPointType.SDF_CONTEXT];
 class SDFOnionGlParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new SDFOnionGlParamsConfig();
 export class SDFOnionGlNode extends TypedGlNode<SDFOnionGlParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'SDFOnion';
+		return JsType.SDF_ONION;
 	}
 
 	override initializeNode() {

@@ -12,7 +12,7 @@ import {JsConnectionPoint, JsConnectionPointType, JS_CONNECTION_POINT_IN_NODE_DE
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
 
 class SoftBodySolverStepSimulationJsParamsConfig extends NodeParamsConfig {
-	subSteps = ParamConfig.INTEGER(10, {
+	stepsCount = ParamConfig.INTEGER(10, {
 		range: [1, 100],
 		rangeLocked: [true, false],
 	});
@@ -26,6 +26,8 @@ class SoftBodySolverStepSimulationJsParamsConfig extends NodeParamsConfig {
 		range: [0, 1],
 		rangeLocked: [true, false],
 	});
+	/** @param preciseCollisions */
+	preciseCollisions = ParamConfig.BOOLEAN(0);
 }
 const ParamsConfig = new SoftBodySolverStepSimulationJsParamsConfig();
 export class SoftBodySolverStepSimulationJsNode extends TypedJsNode<SoftBodySolverStepSimulationJsParamsConfig> {
@@ -52,13 +54,14 @@ export class SoftBodySolverStepSimulationJsNode extends TypedJsNode<SoftBodySolv
 
 	override setTriggerableLines(linesController: JsLinesCollectionController) {
 		const object3D = inputObject3D(this, linesController);
-		const subSteps = this.variableForInputParam(linesController, this.p.subSteps);
+		const stepsCount = this.variableForInputParam(linesController, this.p.stepsCount);
 		const edgeCompliance = this.variableForInputParam(linesController, this.p.edgeCompliance);
 		const volumeCompliance = this.variableForInputParam(linesController, this.p.volumeCompliance);
+		const preciseCollisions = this.variableForInputParam(linesController, this.p.preciseCollisions);
 
 		const func = Poly.namedFunctionsRegister.getFunction('softBodySolverStepSimulation', this, linesController);
 
-		const bodyLine = func.asString(object3D, subSteps, edgeCompliance, volumeCompliance);
+		const bodyLine = func.asString(object3D, stepsCount, edgeCompliance, volumeCompliance, preciseCollisions);
 		linesController.addTriggerableLines(this, [bodyLine]);
 	}
 }

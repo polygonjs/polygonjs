@@ -6,6 +6,7 @@ import {
 	ObjectNamedFunction1,
 	ObjectNamedFunction3,
 	NamedFunction5,
+	ObjectNamedFunction4,
 } from './_Base';
 import {
 	softBodySolverStepSimulation as _softBodySolverStepSimulation,
@@ -32,12 +33,18 @@ export class softBodySolverReset extends ObjectNamedFunction0 {
 	}
 }
 
-export class softBodySolverStepSimulation extends ObjectNamedFunction3<[number, number, number]> {
+export class softBodySolverStepSimulation extends ObjectNamedFunction4<[number, number, number, boolean]> {
 	static override type() {
 		return 'softBodySolverStepSimulation';
 	}
-	func(object3D: Object3D, stepsCount: number, edgeCompliance: number, volumeCompliance: number): void {
-		_softBodySolverStepSimulation(object3D, stepsCount, edgeCompliance, volumeCompliance);
+	func(
+		object3D: Object3D,
+		stepsCount: number,
+		edgeCompliance: number,
+		volumeCompliance: number,
+		preciseCollisions: boolean
+	): void {
+		_softBodySolverStepSimulation(object3D, stepsCount, edgeCompliance, volumeCompliance, preciseCollisions);
 	}
 }
 

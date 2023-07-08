@@ -11,6 +11,7 @@ import {ThreeToGl} from '../../../../src/core/ThreeToGl';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {GlConnectionPointType, GlConnectionPoint} from '../utils/io/connections/Gl';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {GlType} from '../../poly/registers/nodes/types/Gl';
 
 enum SDFRevolutionGlAxis {
 	X = 'X',
@@ -38,7 +39,7 @@ const ParamsConfig = new SDFRevolutionGlParamsConfig();
 export class SDFRevolutionGlNode extends BaseSDFGlNode<SDFRevolutionGlParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'SDFRevolution';
+		return GlType.SDF_REVOLUTION;
 	}
 
 	override initializeNode() {

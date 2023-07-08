@@ -3,26 +3,18 @@ import {softBodyControllerFromObject, softBodyFromObject} from './SoftBodyContro
 
 export function softBodySolverStepSimulation(
 	softBodyObject: Object3D,
-	subSteps: number,
+	stepsCount: number,
 	edgeCompliance: number,
-	volumeCompliance: number
-	// selectedVertexInfluence: number,
-	// viscosity: number,
-	// spring: number,
+	volumeCompliance: number,
+	preciseCollisions: boolean
 ) {
 	const controller = softBodyControllerFromObject(softBodyObject);
 	if (!controller) {
 		console.log('no controller for', softBodyObject.uuid, softBodyObject);
 		return;
 	}
-	controller.setSubSteps(subSteps);
-	controller.setEdgeCompliance(edgeCompliance);
-	controller.setVolumeCompliance(volumeCompliance);
-	// controller.selectedVertexInfluence = selectedVertexInfluence;
-	// controller.viscosity = viscosity;
-	// controller.spring = spring;
 
-	controller.step();
+	controller.step(stepsCount, edgeCompliance, volumeCompliance, preciseCollisions);
 }
 
 export function setSoftBodySolverGravity(softBodyObject: Object3D, gravity: Vector3, lerp: number) {

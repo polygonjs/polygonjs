@@ -31,7 +31,6 @@ export class SDFTransformGlNode extends BaseSDFGlNode<SDFTransformGlParamsConfig
 
 	override initializeNode() {
 		super.initializeNode();
-		this.io.connection_points.spare_params.setInputlessParamNames(['axis']);
 		this.io.outputs.setNamedOutputConnectionPoints([
 			new GlConnectionPoint(OUTPUT_NAME, GlConnectionPointType.VEC3),
 		]);

@@ -58,10 +58,13 @@ export enum JsType {
 	SDF_2D_HEART = 'SDF2DHeart',
 	SDF_2D_ROUNDED_X = 'SDF2DRoundedX',
 	SDF_BOX = 'SDFBox',
+	SDF_ELONGATE = 'SDFElongate',
+	SDF_ONION = 'SDFOnion',
 	SDF_PLANE = 'SDFPlane',
 	SDF_REVOLUTION = 'SDFRevolution',
 	SDF_SPHERE = 'SDFSphere',
 	SDF_TORUS = 'SDFTorus',
+	SDF_TRANSFORM = 'SDFTransform',
 	SDF_TUBE = 'SDFTube',
 	// set
 	SET_OBJECT_ATTRIBUTE = 'setObjectAttribute',
