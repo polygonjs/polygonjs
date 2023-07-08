@@ -207,24 +207,29 @@ export class JsAssemblerSoftBody extends BaseJsShaderAssembler {
 		];
 	}
 
-	override setNodeLinesOutput(outputNode: OutputJsNode, shadersCollectionController: JsLinesCollectionController) {
-		const inputNames = this.inputNamesForShaderName(outputNode, shadersCollectionController.currentShaderName());
+	override setNodeLinesOutput(outputNode: OutputJsNode, linesController: JsLinesCollectionController) {
+		const inputNames = this.inputNamesForShaderName(
+			outputNode,
+			linesController.currentShaderName()
+		) as SoftBodyVariable[];
 		if (inputNames) {
 			for (const inputName of inputNames) {
 				const input = outputNode.io.inputs.named_input(inputName);
-
-				if (input) {
-					const glVar = outputNode.variableForInput(shadersCollectionController, inputName);
-
-					let bodyLine: string | undefined;
-					if (inputName == SoftBodyVariable.V) {
-						bodyLine = `return ${ThreeToGl.any(glVar)}`;
+				const glVar = outputNode.variableForInput(linesController, inputName);
+				switch (inputName) {
+					case SoftBodyVariable.V: {
+						const _defaultVar = () => {
+							const tmpVarName = linesController.addVariable(outputNode, new Vector3(0, 0.1, 0));
+							return `return ${tmpVarName}`;
+						};
+						const bodyLine = input ? `return ${ThreeToGl.any(glVar)}` : _defaultVar();
+						linesController._addBodyLines(outputNode, [bodyLine]);
+						break;
 					}
-					if (inputName == SoftBodyVariable.COLLISION_SDF) {
-						bodyLine = `return ${ThreeToGl.any(glVar)}`;
-					}
-					if (bodyLine) {
-						shadersCollectionController._addBodyLines(outputNode, [bodyLine]);
+					case SoftBodyVariable.COLLISION_SDF: {
+						const bodyLine = input ? `return ${ThreeToGl.any(glVar)}` : `return 100`;
+						linesController._addBodyLines(outputNode, [bodyLine]);
+						break;
 					}
 				}
 			}
