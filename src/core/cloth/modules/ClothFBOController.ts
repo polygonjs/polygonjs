@@ -363,19 +363,13 @@ export class ClothFBOController {
 		this.targetRT[1] = tmp;
 	}
 
-	// private _coordinate = new Vector3();
-	// private _coordinates = [this._coordinate];
 	protected mouseOffset(renderer: WebGLRenderer) {
 		const mouseShader = this.mainController.materials.mouseShader;
-		// const inputs = this.mainController.inputs;
-
-		// this.mainController.selectedVertexPosition(this._coordinate);
 
 		this.fboMesh.material = mouseShader;
 		mouseShader.uniforms.tSize.value.copy(this.tSize);
-		mouseShader.uniforms.vertex.value = this.mainController.selectedVertexIndex(); //inputs.vertices;
+		mouseShader.uniforms.vertex.value = this.mainController.selectedVertexIndex();
 		this.mainController.constraintPosition(mouseShader.uniforms.coordinates.value);
-		// .copythis._coordinate]; //inputs.coordinates;
 		mouseShader.uniforms.tOriginal.value = this.originalRT.texture;
 		mouseShader.uniforms.tPosition0.value = this.positionRT[0].texture;
 		mouseShader.uniforms.tPosition1.value = this.positionRT[1].texture;
@@ -428,27 +422,3 @@ function createRenderTarget(resolution: Vector2) {
 		stencilBuffer: false,
 	});
 }
-
-// function analyzeData(dataName: string, data: Float32Array) {
-// 	let min = 10000;
-// 	let max = -10000;
-// 	let i = 0;
-// 	const minThreshold = 2 * 0.0076568;
-// 	const indicesWithZero = new Set<number>();
-// 	const indicesBelowThreshold = new Set<number>();
-// 	for (let elem of data) {
-// 		if (elem < min && elem > -1) {
-// 			min = elem;
-// 		} else if (elem > max) {
-// 			max = elem;
-// 		}
-// 		if (elem == 0) {
-// 			indicesWithZero.add(i);
-// 		}
-// 		if (elem < minThreshold) {
-// 			indicesBelowThreshold.add(i);
-// 		}
-// 		i++;
-// 	}
-// 	// console.log(dataName, {min, max, indicesWithZero, indicesBelowThreshold});
-// }

@@ -13,7 +13,7 @@ import {JsConnectionPoint, JsConnectionPointType, JS_CONNECTION_POINT_IN_NODE_DE
 import {ClothMaterialUniformConfigRefString} from '../../../core/cloth/modules/ClothFBOController';
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
 
-enum ClothSolverStepSimulationOutput {
+export enum ClothSolverStepSimulationOutput {
 	TEXTURE_SIZE = 'tSize',
 	TEXTURE_POSITION0 = 'tPosition0',
 	TEXTURE_POSITION1 = 'tPosition1',

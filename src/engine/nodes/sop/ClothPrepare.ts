@@ -18,10 +18,14 @@ import {populateAdjacency3, POPULATE_ADJACENCY_DEFAULT} from '../../../core/geom
 
 class ClothPrepareSopParamsConfig extends NodeParamsConfig {
 	fuseDist = ParamConfig.FLOAT(0.001);
-	viscosity = ParamConfig.FLOAT(1, {
+	viscosity = ParamConfig.FLOAT(0.1, {
+		range: [0, 1],
+		rangeLocked: [true, false],
 		expression: {forEntities: true},
 	});
-	spring = ParamConfig.FLOAT(1, {
+	spring = ParamConfig.FLOAT(2, {
+		range: [0, 5],
+		rangeLocked: [true, false],
 		expression: {forEntities: true},
 	});
 }

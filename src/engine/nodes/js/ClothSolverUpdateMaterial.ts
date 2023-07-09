@@ -10,14 +10,15 @@ import {Poly} from '../../Poly';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {JsConnectionPoint, JsConnectionPointType, JS_CONNECTION_POINT_IN_NODE_DEF} from '../utils/io/connections/Js';
 import {ClothSolverUniformName} from '../../../core/cloth/ClothAttribute';
+import {ClothSolverStepSimulationOutput} from './ClothSolverStepSimulation';
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
 
-enum ClothSolverUpdateMaterialInput {
-	TEXTURE_SIZE = 'tSize',
-	TEXTURE_POSITION0 = 'tPosition0',
-	TEXTURE_POSITION1 = 'tPosition1',
-	TEXTURE_NORMAL = 'tNormal',
-}
+// export enum ClothSolverUpdateMaterialInput {
+// 	TEXTURE_SIZE = 'tSize',
+// 	TEXTURE_POSITION0 = 'tPosition0',
+// 	TEXTURE_POSITION1 = 'tPosition1',
+// 	TEXTURE_NORMAL = 'tNormal',
+// }
 class ClothSolverUpdateMaterialJsParamsConfig extends NodeParamsConfig {
 	tSizeName = ParamConfig.STRING(ClothSolverUniformName.SIZE);
 	tPosition0Name = ParamConfig.STRING(ClothSolverUniformName.POSITION0);
@@ -36,22 +37,22 @@ export class ClothSolverUpdateMaterialJsNode extends TypedJsNode<ClothSolverUpda
 			new JsConnectionPoint(TRIGGER_CONNECTION_NAME, JsConnectionPointType.TRIGGER, CONNECTION_OPTIONS),
 			new JsConnectionPoint(JsConnectionPointType.MATERIAL, JsConnectionPointType.MATERIAL, CONNECTION_OPTIONS),
 			new JsConnectionPoint(
-				ClothSolverUpdateMaterialInput.TEXTURE_SIZE,
+				ClothSolverStepSimulationOutput.TEXTURE_SIZE,
 				JsConnectionPointType.VECTOR2,
 				CONNECTION_OPTIONS
 			),
 			new JsConnectionPoint(
-				ClothSolverUpdateMaterialInput.TEXTURE_POSITION0,
+				ClothSolverStepSimulationOutput.TEXTURE_POSITION0,
 				JsConnectionPointType.TEXTURE,
 				CONNECTION_OPTIONS
 			),
 			new JsConnectionPoint(
-				ClothSolverUpdateMaterialInput.TEXTURE_POSITION1,
+				ClothSolverStepSimulationOutput.TEXTURE_POSITION1,
 				JsConnectionPointType.TEXTURE,
 				CONNECTION_OPTIONS
 			),
 			new JsConnectionPoint(
-				ClothSolverUpdateMaterialInput.TEXTURE_NORMAL,
+				ClothSolverStepSimulationOutput.TEXTURE_NORMAL,
 				JsConnectionPointType.TEXTURE,
 				CONNECTION_OPTIONS
 			),
@@ -71,10 +72,10 @@ export class ClothSolverUpdateMaterialJsNode extends TypedJsNode<ClothSolverUpda
 		const tPosition1Name = this.variableForInputParam(linesController, this.p.tPosition1Name);
 		const tNormalName = this.variableForInputParam(linesController, this.p.tNormalName);
 
-		const tSize = this.variableForInput(linesController, ClothSolverUpdateMaterialInput.TEXTURE_SIZE);
-		const tPosition0 = this.variableForInput(linesController, ClothSolverUpdateMaterialInput.TEXTURE_POSITION0);
-		const tPosition1 = this.variableForInput(linesController, ClothSolverUpdateMaterialInput.TEXTURE_POSITION1);
-		const tNormal = this.variableForInput(linesController, ClothSolverUpdateMaterialInput.TEXTURE_NORMAL);
+		const tSize = this.variableForInput(linesController, ClothSolverStepSimulationOutput.TEXTURE_SIZE);
+		const tPosition0 = this.variableForInput(linesController, ClothSolverStepSimulationOutput.TEXTURE_POSITION0);
+		const tPosition1 = this.variableForInput(linesController, ClothSolverStepSimulationOutput.TEXTURE_POSITION1);
+		const tNormal = this.variableForInput(linesController, ClothSolverStepSimulationOutput.TEXTURE_NORMAL);
 
 		const func = Poly.namedFunctionsRegister.getFunction('clothSolverUpdateMaterial', this, linesController);
 

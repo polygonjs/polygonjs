@@ -1,8 +1,6 @@
-// import {ClothInputsController} from './modules/ClothInputsController';
 import {ClothMaterialController} from './modules/ClothMaterialsController';
 import {ClothGeometryInitController} from './modules/ClothGeometryInitController';
 import {ClothFBOController, ClothMaterialUniformConfigRef} from './modules/ClothFBOController';
-// import {ClothOnBeforeRenderController} from './modules/ClothOnBeforeRenderController';
 import {WebGLRenderer, Mesh, Vector3, ShaderMaterial, Texture} from 'three';
 import {PolyScene} from '../../engine/scene/PolyScene';
 import type {ClothSolverSopNode} from '../../engine/nodes/sop/ClothSolver';
@@ -12,10 +10,8 @@ import {GlParamConfig} from '../../engine/nodes/gl/code/utils/GLParamConfig';
 export class ClothController {
 	public readonly materials: ClothMaterialController;
 	public readonly geometryInit: ClothGeometryInitController;
-	// public readonly inputs: ClothInputsController;
 	private _persistedTextureAllocationsController: TextureAllocationsController | undefined;
 	public readonly fbo: ClothFBOController;
-	// public readonly onBeforeRender: ClothOnBeforeRenderController;
 	//
 	public stepsCount = 40;
 	public selectedVertexInfluence = 0.1;
@@ -26,8 +22,6 @@ export class ClothController {
 		this._node.initCoreClothControllerFromPersistedConfig(this);
 		this.materials = new ClothMaterialController(this);
 		this.geometryInit = new ClothGeometryInitController(this.clothObject);
-		// this.inputs = new ClothInputsController(this);
-		// this.onBeforeRender = new ClothOnBeforeRenderController(this);
 		this.fbo = new ClothFBOController(this);
 	}
 	dispose() {
@@ -61,15 +55,6 @@ export class ClothController {
 			const uniformName = `texture_${textureName}`;
 			material.uniforms[uniformName] = {value: texture};
 		}
-
-		// for (let allocation of readonlyAllocations) {
-		// 	const shaderName = allocation.shaderName();
-		// 	const texture = this._createdTexturesByName.get(shaderName);
-		// 	if (texture) {
-		// 		const uniformName = this._textureNameForShaderName(shaderName);
-		// 		material.uniforms[uniformName] = {value: texture};
-		// 	}
-		// }
 	}
 	addMaterialUniforms(material: ShaderMaterial) {
 		const node = this._node;
