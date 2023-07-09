@@ -1,6 +1,12 @@
 import {Material, Object3D, Texture, Vector2, Vector3} from 'three';
 import {getClothControllerNodeFromWorldObject} from '../nodes/sop/ClothSolver';
-import {NamedFunction9, ObjectNamedFunction0, ObjectNamedFunction1, ObjectNamedFunction5} from './_Base';
+import {
+	NamedFunction9,
+	ObjectNamedFunction0,
+	ObjectNamedFunction1,
+	ObjectNamedFunction2,
+	ObjectNamedFunction5,
+} from './_Base';
 import {
 	clothSolverStepSimulation as _clothSolverStepSimulation,
 	clothSolverUpdateMaterial as _clothSolverUpdateMaterial,
@@ -14,6 +20,8 @@ import {
 	ClothMaterialUniformConfigRef,
 	ClothMaterialUniformNameConfig,
 } from '../../core/cloth/modules/ClothFBOController';
+
+const _v3 = new Vector3();
 
 //
 //
@@ -91,25 +99,42 @@ export class clothSolverUpdateMaterial extends NamedFunction9<
 	}
 }
 
-export class clothSolverSetSelectedVertexIndex extends ObjectNamedFunction1<[number]> {
+export class clothCreateConstraint extends ObjectNamedFunction1<[number]> {
 	static override type() {
-		return 'clothSolverSetSelectedVertexIndex';
+		return 'clothCreateConstraint';
 	}
 	func(object3D: Object3D, index: number): void {
 		const controller = clothControllerFromObject(object3D);
 		if (controller) {
-			controller.setSelectedVertexIndex(index);
+			controller.createConstraint(index);
 		}
 	}
 }
-export class clothSolverSetSelectedVertexPosition extends ObjectNamedFunction1<[Vector3]> {
+export class clothDeleteConstraint extends ObjectNamedFunction0 {
 	static override type() {
-		return 'clothSolverSetSelectedVertexPosition';
+		return 'clothDeleteConstraint';
 	}
-	func(object3D: Object3D, position: Vector3): void {
+	func(object3D: Object3D): void {
 		const controller = clothControllerFromObject(object3D);
 		if (controller) {
-			controller.setSelectedVertexPosition(position);
+			controller.deleteConstraint();
+		}
+	}
+}
+export class clothConstraintSetPosition extends ObjectNamedFunction2<[Vector3, number]> {
+	static override type() {
+		return 'clothConstraintSetPosition';
+	}
+	func(object3D: Object3D, position: Vector3, lerp: number): void {
+		const controller = clothControllerFromObject(object3D);
+		if (controller) {
+			if (lerp >= 1) {
+				controller.setConstraintPosition(position);
+			} else {
+				controller.constraintPosition(_v3);
+				_v3.lerp(position, lerp);
+				controller.setConstraintPosition(position);
+			}
 		}
 	}
 }

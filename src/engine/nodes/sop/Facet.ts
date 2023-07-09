@@ -12,6 +12,7 @@ import {MathUtils} from 'three';
 import {CoreMask} from '../../../core/geometry/Mask';
 import {object3DHasGeometry} from '../../../core/geometry/GeometryUtils';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
+import {CoreGeometryIndexBuilder} from '../../../core/geometry/util/IndexBuilder';
 const {degToRad} = MathUtils;
 
 class FacetSopParamsConfig extends NodeParamsConfig {
@@ -47,7 +48,7 @@ export class FacetSopNode extends TypedSopNode<FacetSopParamsConfig> {
 		const rad = degToRad(this.pv.angle);
 		for (let object of selectedObjects) {
 			object.geometry = toCreasedNormals(object.geometry, rad);
-			// this._applyCusp(object.geometry);
+			CoreGeometryIndexBuilder.createIndexIfNone(object.geometry);
 		}
 		this.setCoreGroup(inputCoreGroup);
 	}

@@ -127,20 +127,26 @@ export class ClothController {
 
 	private _selectedVertexIndex = -1;
 	private _selectedVertexPosition = new Vector3();
-	setSelectedVertexIndex(index: number | null) {
+	private _setSelectedVertexIndex(index: number | null) {
 		if (index == null) {
 			this._selectedVertexIndex = -1;
 		} else {
 			this._selectedVertexIndex = index;
 		}
 	}
+	createConstraint(index: number) {
+		this._setSelectedVertexIndex(index);
+	}
+	deleteConstraint() {
+		this._setSelectedVertexIndex(null);
+	}
 	selectedVertexIndex() {
 		return this._selectedVertexIndex;
 	}
-	setSelectedVertexPosition(position: Vector3) {
+	setConstraintPosition(position: Vector3) {
 		this._selectedVertexPosition.copy(position);
 	}
-	selectedVertexPosition(target: Vector3) {
+	constraintPosition(target: Vector3) {
 		target.copy(this._selectedVertexPosition);
 	}
 }

@@ -39,9 +39,10 @@ import { channelVector2 } from "../../../functions/channelVector2";
 import { channelVector3 } from "../../../functions/channelVector3";
 import { channelVector4 } from "../../../functions/channelVector4";
 import { clamp } from "../../../functions/clamp";
+import { clothConstraintSetPosition } from "../../../functions/clothConstraintSetPosition";
+import { clothCreateConstraint } from "../../../functions/clothCreateConstraint";
+import { clothDeleteConstraint } from "../../../functions/clothDeleteConstraint";
 import { clothSolverReset } from "../../../functions/clothSolverReset";
-import { clothSolverSetSelectedVertexIndex } from "../../../functions/clothSolverSetSelectedVertexIndex";
-import { clothSolverSetSelectedVertexPosition } from "../../../functions/clothSolverSetSelectedVertexPosition";
 import { clothSolverStepSimulation } from "../../../functions/clothSolverStepSimulation";
 import { clothSolverUpdateMaterial } from "../../../functions/clothSolverUpdateMaterial";
 import { colorSetRGB } from "../../../functions/colorSetRGB";
@@ -494,9 +495,10 @@ export interface NamedFunctionMap {
 	channelVector3: channelVector3;
 	channelVector4: channelVector4;
 	clamp: clamp;
+	clothConstraintSetPosition: clothConstraintSetPosition;
+	clothCreateConstraint: clothCreateConstraint;
+	clothDeleteConstraint: clothDeleteConstraint;
 	clothSolverReset: clothSolverReset;
-	clothSolverSetSelectedVertexIndex: clothSolverSetSelectedVertexIndex;
-	clothSolverSetSelectedVertexPosition: clothSolverSetSelectedVertexPosition;
 	clothSolverStepSimulation: clothSolverStepSimulation;
 	clothSolverUpdateMaterial: clothSolverUpdateMaterial;
 	colorSetRGB: colorSetRGB;
@@ -952,9 +954,10 @@ export class AllNamedFunctionRegister {
 			channelVector3,
 			channelVector4,
 			clamp,
+			clothConstraintSetPosition,
+			clothCreateConstraint,
+			clothDeleteConstraint,
 			clothSolverReset,
-			clothSolverSetSelectedVertexIndex,
-			clothSolverSetSelectedVertexPosition,
 			clothSolverStepSimulation,
 			clothSolverUpdateMaterial,
 			colorSetRGB,

@@ -32,8 +32,9 @@ export const FUNCTION_NAME_BY_FILE_NAME: Record<string, string[]> = {
 	CameraControlsDeviceOrientation: ['deviceOrientation'],
 	Cloth: [
 		'clothSolverReset',
-		'clothSolverSetSelectedVertexIndex',
-		'clothSolverSetSelectedVertexPosition',
+		'clothCreateConstraint',
+		'clothDeleteConstraint',
+		'clothConstraintSetPosition',
 		'clothSolverStepSimulation',
 		'clothSolverUpdateMaterial',
 	],

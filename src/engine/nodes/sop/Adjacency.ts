@@ -8,6 +8,7 @@ import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {AdjacencySopOperation} from '../../operations/sop/Adjacency';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {SopType} from '../../poly/registers/nodes/types/Sop';
 const DEFAULT = AdjacencySopOperation.DEFAULT_PARAMS;
 
 class AdjacencySopParamsConfig extends NodeParamsConfig {
@@ -25,7 +26,7 @@ const ParamsConfig = new AdjacencySopParamsConfig();
 export class AdjacencySopNode extends TypedSopNode<AdjacencySopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'adjacency';
+		return SopType.ADJACENCY;
 	}
 
 	override initializeNode() {

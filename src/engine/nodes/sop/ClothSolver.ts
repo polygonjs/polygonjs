@@ -244,12 +244,6 @@ export class ClothSolverSopNode extends TypedSopNode<ClothSolverSopParamsConfig>
 
 	private _setShaderNames(shadersByName: Map<ShaderName, string>) {
 		this._shadersByName = shadersByName;
-
-		// this.gpuController.setShadersByName(this._shaders_by_name);
-		// this.renderController.setShadersByName(this._shaders_by_name);
-
-		// this.gpuController.resetGpuCompute();
-		// this.gpuController.resetParticleGroups();
 	}
 
 	init_with_persisted_config() {
@@ -257,14 +251,12 @@ export class ClothSolverSopNode extends TypedSopNode<ClothSolverSopParamsConfig>
 		const texture_allocations_controller = this.persisted_config.texture_allocations_controller();
 		if (shaders_by_name && texture_allocations_controller) {
 			this._setShaderNames(shaders_by_name);
-			// this.gpuController.setPersistedTextureAllocationController(texture_allocations_controller);
 		}
 	}
 	initCoreClothControllerFromPersistedConfig(coreClothController: ClothController) {
 		const shaders_by_name = this.persisted_config.shaders_by_name();
 		const texture_allocations_controller = this.persisted_config.texture_allocations_controller();
 		if (shaders_by_name && texture_allocations_controller) {
-			// this._setShaderNames(shaders_by_name);
 			coreClothController.setPersistedTextureAllocationController(texture_allocations_controller);
 		}
 	}

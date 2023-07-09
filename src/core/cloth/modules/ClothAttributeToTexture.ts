@@ -4,22 +4,19 @@ import {ClothGeometryAttributeName} from '../ClothAttribute';
 import {TextureAllocationsController} from '../../../engine/nodes/gl/code/utils/TextureAllocationsController';
 import {textureFromAttributes} from '../../geometry/operation/TextureFromAttribute';
 
-// const _v1 = new Vector3();
-// const _v2 = new Vector3();
+const _v3 = new Vector3();
+const _v3b = new Vector3();
 
-export function positionTexture(geometry: BufferGeometry, vertices: Vector3[], resolution: Vector2): DataTexture {
+export function positionTexture(geometry: BufferGeometry, resolution: Vector2): DataTexture {
 	const data = new Float32Array(resolution.x * resolution.y * 4);
 	const positionAttribute = geometry.getAttribute(Attribute.POSITION) as BufferAttribute;
+	const array = positionAttribute.array;
 	const pointsCount = positionAttribute.count;
 
 	for (let i = 0; i < pointsCount; i++) {
-		const vertex = vertices[i];
+		_v3.fromArray(array, i * 3);
 		const i4 = i * 4;
-		// _v1.fromBufferAttribute(positionAttribute, i);
-		vertex.toArray(data, i4);
-		// data[i4 + 0] = geoVertices[i].x;
-		// data[i4 + 1] = geoVertices[i].y;
-		// data[i4 + 2] = geoVertices[i].z;
+		_v3.toArray(data, i4);
 	}
 
 	const texture = new DataTexture(data, resolution.x, resolution.y, RGBAFormat, FloatType);
@@ -62,24 +59,20 @@ export function adjacencyTexture(
 	return texture;
 }
 
-export function distancesTexture(
-	geometry: BufferGeometry,
-	vertices: Vector3[],
-	resolution: Vector2,
-	adjacency: number[][],
-	k: number
-) {
+export function distancesTexture(geometry: BufferGeometry, resolution: Vector2, adjacency: number[][], k: number) {
 	const data = new Float32Array(resolution.x * resolution.y * 4).fill(-1);
 	// const geoVertices = this.mainController.geometryInit.vertices;
 	const positionAttribute = geometry.getAttribute(Attribute.POSITION) as BufferAttribute;
 	const pointsCount = positionAttribute.count;
+	const array = positionAttribute.array;
 
 	for (let i = 0; i < pointsCount; i++) {
+		_v3.fromArray(array, i * 3);
 		const i4 = i * 4;
 		const adj = adjacency[i];
 		const len = adj.length - 1;
 
-		const v = vertices[i];
+		// const v = vertices[i];
 
 		// for (let j = 0; j < 4; j++) data[i4 + j] = len < k * 4 + j ? -1 : v.distanceTo(geoVertices[adj[k * 4 + j]]);
 		for (let j = 0; j < 4; j++) {
@@ -90,8 +83,8 @@ export function distancesTexture(
 				if (adjacentIndex < 0) {
 					data[i4 + j] = -1;
 				} else {
-					const neighbourPosition = vertices[adjacentIndex];
-					const dist = v.distanceTo(neighbourPosition);
+					_v3b.fromArray(array, adjacentIndex * 3);
+					const dist = _v3.distanceTo(_v3b);
 					data[i4 + j] = dist;
 					if (dist < 0.0001) {
 						console.log('bad dist');

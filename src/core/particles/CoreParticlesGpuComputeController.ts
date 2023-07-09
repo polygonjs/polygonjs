@@ -15,7 +15,7 @@ import {CoreUserAgent} from '../UserAgent';
 import type {CoreParticlesController} from './CoreParticlesController';
 import {CoreParticlesAttribute} from './CoreParticlesAttribute';
 import {coreParticlesInitParticlesUVs} from './CoreParticlesInit';
-import {textureFromAttributePointsCount, textureFromAttributeSize} from '../geometry/operation/TextureFromAttribute';
+import {textureFromAttributePointsCount, textureSizeFromPointsCount} from '../geometry/operation/TextureFromAttribute';
 
 export enum ParticlesDataType {
 	AUTO = 'Auto',
@@ -42,113 +42,52 @@ const tmpV2 = new Vector2();
 const tmpV3 = new Vector3();
 const tmpV4 = new Vector4();
 
-// const _autoTexturesSize = new Vector2()
-
 export class CoreParticlesGpuComputeController {
 	protected _gpuCompute: GPUComputationRenderer | undefined;
-	// protected _simulationRestartRequired: boolean = false;
-
-	// protected _particlesCoreGroup: CoreGroup | undefined;
-	// protected _points: CorePoint[] = [];
-
 	private _variablesByName: Map<ShaderName, GPUComputationRendererVariable> = new Map();
 	private _allVariables: GPUComputationRendererVariable[] = [];
 	private _createdTexturesByName: Map<ShaderName, DataTexture> = new Map();
-	// private _shadersByName: Map<ShaderName, string> | undefined;
 	protected _lastSimulatedFrame: number | undefined;
-	// protected _lastSimulatedTime: number | undefined;
-	// protected _deltaTime: number = 0;
 	private _texturesSize: Vector2 = new Vector2();
 	private _persistedTextureAllocationsController: TextureAllocationsController | undefined;
 
-	// private _callbackName: string;
-	// public readonly object: Object3D;
-	constructor(private mainController: CoreParticlesController) {
-		// this.object = this.mainController.object;
-		// this._callbackName = `gpuCompute-${this.node.graphNodeId()}`;
-	}
+	constructor(private mainController: CoreParticlesController) {}
 
 	dispose() {
-		// if (this._graph_node) {
-		// 	this._graph_node.dispose();
-		// 	this._graph_node = undefined;
-		// }
 		if (this._gpuCompute) {
 			this._gpuCompute.dispose();
 			this._gpuCompute = undefined;
 		}
-		// if (this._renderer) {
-		// 	this._renderer.dispose();
-		// 	this._renderer = undefined;
-		// }
-		// if (this._particlesCoreGroup) {
-		// 	this._particlesCoreGroup.dispose();
-		// 	this._particlesCoreGroup = undefined;
-		// }
+
 		this._variablesByName.clear();
 		this._allVariables.splice(0, this._allVariables.length);
 		this._createdTexturesByName.clear();
-		// if (this._shadersByName) {
-		// 	this._shadersByName.clear();
-		// 	this._shadersByName = undefined;
-		// }
+
 		if (this._persistedTextureAllocationsController) {
 			this._persistedTextureAllocationsController.dispose();
 			this._persistedTextureAllocationsController = undefined;
 		}
-		// this.node.scene().unRegisterOnBeforeTick(this._callbackName);
 	}
 
 	setPersistedTextureAllocationController(controller: TextureAllocationsController) {
 		this._persistedTextureAllocationsController = controller;
 	}
 
-	// setShadersByName(shaders_by_name: Map<ShaderName, string>) {
-	// 	this._shadersByName = shaders_by_name;
-	// 	this.resetGpuCompute();
-	// }
 	allVariables() {
 		return this._allVariables;
 	}
 
 	init() {
 		this._initPoints();
-		// this.node.debugMessage('GPUComputeController: this.createGPUCompute() START');
 		return this.createGPUCompute();
-		// this.node.debugMessage('GPUComputeController: this.createGPUCompute() END');
 	}
 
 	private _initPoints() {
 		this.resetGpuCompute();
-
-		// this._particlesCoreGroup = coreGroup;
-
-		// this._points = this._getPoints() || [];
 	}
 	private _initParticlesUVs(object: Object3D) {
 		coreParticlesInitParticlesUVs(object, this._texturesSize);
 	}
-	// computeSimulationIfRequired(delta: number) {
-	// 	console.warn('computeSimulationIfRequired');
-	// 	const frame = this.node.scene().frame();
-	// 	const start_frame: number = this.node.pv.startFrame;
-	// 	if (frame >= start_frame) {
-	// 		if (this._lastSimulatedFrame == null) {
-	// 			this._lastSimulatedFrame = start_frame - 1;
-	// 		}
-	// 		// if (this._lastSimulatedTime == null) {
-	// 		// 	this._lastSimulatedTime = this.node.scene().time();
-	// 		// }
-	// 		if (frame > this._lastSimulatedFrame) {
-	// 			const iterationsCount = frame - this._lastSimulatedFrame;
-	// 			this._lastSimulatedFrame = frame;
-	// 			if (!isBooleanTrue(this.node.pv.active)) {
-	// 				return;
-	// 			}
-	// 			this._computeSimulation(delta, iterationsCount);
-	// 		}
-	// 	}
-	// }
 
 	createGPUCompute() {
 		const object = this.mainController.object();
@@ -160,43 +99,12 @@ export class CoreParticlesGpuComputeController {
 		if (!geometry) {
 			return;
 		}
-		// const autoTexturesSize = CoreParticlesAttribute.getAutoTextureSize(this.object)
-		// CoreParticlesAttribute.getMaxTextureSize(this.object,maxTexturesSize)
-		// CoreParticlesAttribute.getTextureSize(object, this._texturesSize);
-		textureFromAttributeSize(geometry, this._texturesSize);
-		// if (isBooleanTrue(autoTexturesSize)) {
-		// 	const nearest_power_of_two = CoreMath.nearestPower2(Math.sqrt(this._points.length));
-		// 	this._usedTexturesSize.x = Math.min(nearest_power_of_two, maxTexturesSize.x);
-		// 	this._usedTexturesSize.y = Math.min(nearest_power_of_two, maxTexturesSize.y);
-		// } else {
-		// 	if (
-		// 		!(
-		// 			MathUtils.isPowerOfTwo(texturesSize.x) &&
-		// 			MathUtils.isPowerOfTwo(texturesSize.y)
-		// 		)
-		// 	) {
-		// 		this.node.states.error.set('texture size must be a power of 2');
-		// 		return;
-		// 	}
 
-		// 	const max_particles_count = texturesSize.x * texturesSize.y;
-		// 	if (this._points.length > max_particles_count) {
-		// 		this.node.states.error.set(
-		// 			`max particles is set to (${texturesSize.x}x${texturesSize.y}=) ${max_particles_count}`
-		// 		);
-		// 		return;
-		// 	}
-		// 	this._usedTexturesSize.copy(texturesSize);
-		// }
-
-		// this._forceTimeDependent();
+		textureSizeFromPointsCount(geometry, this._texturesSize);
 		this._initParticlesUVs(object);
 		// we need to recreate the material if the texture allocation changes
 		this.mainController.renderController.reset();
 
-		// if (!this._renderer) {
-		// 	return;
-		// }
 		if (this._gpuCompute) {
 			this._gpuCompute.dispose();
 		}
@@ -204,15 +112,7 @@ export class CoreParticlesGpuComputeController {
 
 		this._gpuCompute.setDataType(dataType(object));
 
-		// if (!this._gpuCompute) {
-		// 	this.node.states.error.set('failed to create the GPUComputationRenderer');
-		// 	return;
-		// }
-
 		this._lastSimulatedFrame = undefined;
-
-		// document.body.style = ''
-		// document.body.appendChild( renderer.domElement );
 
 		this._variablesByName.forEach((variable, shader_name) => {
 			variable.renderTargets[0].dispose();
@@ -254,32 +154,6 @@ export class CoreParticlesGpuComputeController {
 		}
 		return configRef;
 	}
-
-	// private _graph_node: CoreGraphNode | undefined;
-	// private _forceTimeDependent() {
-	// 	// using force_time_dependent would force the whole node to recook,
-	// 	// but that would also trigger the obj geo node to update its display node.
-	// 	// A better way is to just recompute the sim only, outside of the cook method.
-	// 	// But we need to be sure that on first frame, we are still recooking the whole node
-	// 	// this.node.states.time_dependent.force_time_dependent();
-	// 	// if (!this._graph_node) {
-	// 	// 	this._graph_node = new CoreGraphNode(this.node.scene(), 'gpu_compute');
-	// 	// 	this._graph_node.addGraphInput(this.node.scene().timeController.graphNode);
-	// 	// 	this._graph_node.addPostDirtyHook('on_time_change', this._onGraphNodeDirty.bind(this));
-	// 	// }
-	// 	const callback = this._onTimeUpdate.bind(this);
-	// 	if (!this.node.scene().registeredBeforeTickCallbacks().has(this._callbackName)) {
-	// 		this.node.scene().registerOnBeforeTick(this._callbackName, callback);
-	// 	}
-	// }
-	// private _onTimeUpdate(delta: number) {
-	// 	if (this.node.isOnStartFrame()) {
-	// 		this.node.setDirty();
-	// 		return;
-	// 	} else {
-	// 		this.computeSimulationIfRequired(delta);
-	// 	}
-	// }
 
 	public computeSimulation(delta: number, configRef: GPUComputationConfigRef) {
 		if (!this._gpuCompute /* || this._lastSimulatedTime == null*/) {
@@ -463,26 +337,11 @@ export class CoreParticlesGpuComputeController {
 	}
 	reset() {
 		this.resetGpuCompute();
-		// this._resetParticleGroups();
 	}
 	private resetGpuCompute() {
 		this._gpuCompute?.dispose();
 		this._gpuCompute = undefined;
-		// this._simulationRestartRequired = true;
 	}
-	// setRestartNotRequired() {
-	// 	this._simulationRestartRequired = false;
-	// }
-	// resetGpuComputeAndSetDirty() {
-	// 	this.resetGpuCompute();
-	// 	// this.node.setDirty();
-	// }
-	// private resetParticleGroups() {
-	// 	this._particlesCoreGroup = undefined;
-	// }
-	// initialized(): boolean {
-	// 	return this._particlesCoreGroup != null && this._gpuCompute != null;
-	// }
 
 	private _createTextureRenderTargets() {
 		this._createdTexturesByName.forEach((texture, shader_name) => {
@@ -513,64 +372,4 @@ export class CoreParticlesGpuComputeController {
 	private _readonlyAllocations() {
 		return this._textureAllocationsController()?.readonlyAllocations();
 	}
-
-	// restartSimulationIfRequired() {
-	// 	if (this._simulationRestartRequired) {
-	// 		this._restartSimulation();
-	// 	}
-	// }
-	// private _restartSimulation() {
-	// 	const object = this.mainController.object();
-	// 	if (!object) {
-	// 		return;
-	// 	}
-	// 	this.mainController.debugMessage(`restartSimulation`);
-
-	// 	// this._lastSimulatedTime = undefined;
-
-	// 	this._createTextureRenderTargets();
-	// 	// const points = this._getPoints(); // TODO: typescript - not sure that's right
-	// 	// if (!points) {
-	// 	// 	return;
-	// 	// }
-
-	// 	this._fillTextures(object);
-
-	// 	this._variablesByName.forEach((variable, shader_name) => {
-	// 		const texture = this._createdTexturesByName.get(shader_name);
-	// 		if (this._gpuCompute && texture) {
-	// 			this._gpuCompute.renderTexture(texture, variable.renderTargets[0]);
-	// 			this._gpuCompute.renderTexture(texture, variable.renderTargets[1]);
-	// 		}
-	// 	});
-	// }
-
-	// if we have a mix of marked_as_instance and non marked_as_instance
-	// we take all geos that are the type that comes first
-	// private _getPoints() {
-	// 	if (!this._particlesCoreGroup) {
-	// 		return;
-	// 	}
-
-	// 	let geometries = this._particlesCoreGroup.coreGeometries();
-	// 	const first_geometry = geometries[0];
-	// 	if (first_geometry) {
-	// 		const type = first_geometry.markedAsInstance();
-	// 		const selected_geometries = [];
-	// 		for (let geometry of geometries) {
-	// 			if (geometry.markedAsInstance() == type) {
-	// 				selected_geometries.push(geometry);
-	// 			}
-	// 		}
-	// 		const points = [];
-	// 		for (let geometry of selected_geometries) {
-	// 			for (let point of geometry.points()) {
-	// 				points.push(point);
-	// 			}
-	// 		}
-	// 		return points;
-	// 	} else {
-	// 		return [];
-	// 	}
-	// }
 }

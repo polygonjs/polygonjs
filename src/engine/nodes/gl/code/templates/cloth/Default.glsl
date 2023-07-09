@@ -28,9 +28,7 @@ void main() {
 	vec3 viscositySpring = texture2D( tViscositySpring, particleUv ).xyz;
 	float viscosityMult = viscosity * viscositySpring.x;
 	float springMult = spring * viscositySpring.y;
-	float lipsMult = viscositySpring.z;
 
-	// position.y += lipsMult * 1.*sin(-50.*time+50.*original.x) * timeDelta;
 	// INSERT BODY
 
 	vec3 offset = ( original - position ) * timeDelta * springMult;

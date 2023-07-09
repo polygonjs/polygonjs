@@ -38,7 +38,7 @@ export function textureFromAttributePointsCount(geometry: BufferGeometry): numbe
 	return CoreGeometry.pointsCount(geometry);
 }
 
-export function textureFromAttributeSize(geometry: BufferGeometry, target: Vector2): void {
+export function textureSizeFromPointsCount(geometry: BufferGeometry, target: Vector2): void {
 	// const position = geometry.attributes.position;
 	// if (!(position instanceof BufferAttribute)) {
 	// 	console.warn('position is not a BufferAttribute');
@@ -86,7 +86,7 @@ export function textureFromAttributesTotalAttribSizes(geometry: BufferGeometry, 
 }
 
 export function textureFromAttributes(geometry: BufferGeometry, attribNames: string[]) {
-	textureFromAttributeSize(geometry, _textureSize);
+	textureSizeFromPointsCount(geometry, _textureSize);
 	const pointsCount = textureFromAttributePointsCount(geometry);
 
 	const width = _textureSize.x;
@@ -131,7 +131,7 @@ export function textureFromAttributes(geometry: BufferGeometry, attribNames: str
 export function textureFromAttribLookupUv(geometry: BufferGeometry) {
 	const attribSize = 2;
 	const pointsCount = textureFromAttributePointsCount(geometry);
-	textureFromAttributeSize(geometry, _textureSize);
+	textureSizeFromPointsCount(geometry, _textureSize);
 	const uvSize = 2;
 	const values = new Array(pointsCount * uvSize);
 

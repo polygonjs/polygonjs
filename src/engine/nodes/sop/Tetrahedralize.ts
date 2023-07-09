@@ -13,7 +13,6 @@ import {TetGeometry} from '../../../core/geometry/tet/TetGeometry';
 import {MeshWithBVHGeometry, ThreeMeshBVHHelper} from '../../../core/geometry/bvh/ThreeMeshBVHHelper';
 import {Mesh, Vector3} from 'three';
 import {mergeFaces} from '../../../core/geometry/operation/Fuse';
-// import {CoreGeometry} from '../../../core/geometry/Geometry';
 import {jitterPositions} from '../../../core/geometry/operation/Jitter';
 
 const jitterMult = new Vector3(1, 1, 1);

@@ -15,6 +15,7 @@ import {
 	Texture,
 	Material,
 	OrthographicCamera,
+	Sphere,
 } from 'three';
 import {ClothController} from '../ClothController';
 import {Ref} from '@vue/reactivity';
@@ -118,6 +119,7 @@ export class ClothFBOController {
 		const positions = new Float32Array([-1.0, -1.0, 3.0, -1.0, -1.0, 3.0]);
 
 		geometry.setAttribute('position', new BufferAttribute(positions, 2));
+		geometry.boundingSphere = new Sphere(new Vector3(0, 0, 0), 5);
 		// mesh
 		this.fboMesh = new Mesh(geometry, this.mainController.materials.copyShader);
 		this.fboMesh.frustumCulled = false;
@@ -181,7 +183,7 @@ export class ClothFBOController {
 		this.originalRT = {
 			texture: positionTexture(
 				this.mainController.geometryInit.geometry,
-				this.mainController.geometryInit.vertices,
+				// this.mainController.geometryInit.vertices,
 				this.RESOLUTION
 			),
 		};
@@ -220,7 +222,7 @@ export class ClothFBOController {
 		this.distancesRT[k] = {
 			texture: distancesTexture(
 				this.mainController.geometryInit.geometry,
-				this.mainController.geometryInit.vertices,
+				// this.mainController.geometryInit.vertices,
 				this.RESOLUTION,
 				this.mainController.geometryInit.adjacency,
 				k
@@ -361,18 +363,18 @@ export class ClothFBOController {
 		this.targetRT[1] = tmp;
 	}
 
-	private _coordinate = new Vector3();
+	// private _coordinate = new Vector3();
 	// private _coordinates = [this._coordinate];
 	protected mouseOffset(renderer: WebGLRenderer) {
 		const mouseShader = this.mainController.materials.mouseShader;
 		// const inputs = this.mainController.inputs;
 
-		this.mainController.selectedVertexPosition(this._coordinate);
+		// this.mainController.selectedVertexPosition(this._coordinate);
 
 		this.fboMesh.material = mouseShader;
 		mouseShader.uniforms.tSize.value.copy(this.tSize);
 		mouseShader.uniforms.vertex.value = this.mainController.selectedVertexIndex(); //inputs.vertices;
-		this.mainController.selectedVertexPosition(mouseShader.uniforms.coordinates.value);
+		this.mainController.constraintPosition(mouseShader.uniforms.coordinates.value);
 		// .copythis._coordinate]; //inputs.coordinates;
 		mouseShader.uniforms.tOriginal.value = this.originalRT.texture;
 		mouseShader.uniforms.tPosition0.value = this.positionRT[0].texture;

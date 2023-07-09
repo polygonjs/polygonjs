@@ -5,7 +5,7 @@ import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 import {CoreMask} from '../../../core/geometry/Mask';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
-import {textureFromAttributeSize} from '../../../core/geometry/operation/TextureFromAttribute';
+import {textureSizeFromPointsCount} from '../../../core/geometry/operation/TextureFromAttribute';
 import {coreParticlesInitParticlesUVs} from '../../../core/particles/CoreParticlesInit';
 
 const _textureSize = new Vector2();
@@ -46,7 +46,7 @@ export class ParticlesSystemGpuAttributesSopOperation extends BaseSopOperation {
 			return;
 		}
 
-		textureFromAttributeSize(geometry, _textureSize);
+		textureSizeFromPointsCount(geometry, _textureSize);
 		coreParticlesInitParticlesUVs(object, _textureSize);
 	}
 }

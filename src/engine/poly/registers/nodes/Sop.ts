@@ -90,7 +90,7 @@ import {CenterSopNode} from '../../../nodes/sop/Center';
 import {CircleSopNode} from '../../../nodes/sop/Circle';
 import {Circle3PointsSopNode} from '../../../nodes/sop/Circle3Points';
 import {ClipSopNode} from '../../../nodes/sop/Clip';
-import {ClothDebugSopNode} from '../../../nodes/sop/ClothDebug';
+import {ClothPrepareSopNode} from '../../../nodes/sop/ClothPrepare';
 import {ClothSolverSopNode} from '../../../nodes/sop/ClothSolver';
 import {CodeSopNode} from '../../../nodes/sop/Code';
 import {ColorSopNode} from '../../../nodes/sop/Color';
@@ -381,7 +381,7 @@ export interface GeoNodeChildrenMap {
 	circle: CircleSopNode;
 	circle3Points: Circle3PointsSopNode;
 	clip: ClipSopNode;
-	clothDebug: ClothDebugSopNode;
+	clothPrepare: ClothPrepareSopNode;
 	clothSolver: ClothSolverSopNode;
 	code: CodeSopNode;
 	color: ColorSopNode;
@@ -899,9 +899,7 @@ export class SopRegister {
 		poly.registerNode(CircleSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.registerNode(Circle3PointsSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.registerNode(ClipSopNode, CATEGORY_SOP.MODIFIER);
-		if (process.env.NODE_ENV == 'development') {
-			poly.registerNode(ClothDebugSopNode, CATEGORY_SOP.PHYSICS);
-		}
+		poly.registerNode(ClothPrepareSopNode, CATEGORY_SOP.PHYSICS);
 		poly.registerNode(ClothSolverSopNode, CATEGORY_SOP.PHYSICS);
 		poly.registerNode(CodeSopNode, CATEGORY_SOP.ADVANCED);
 		poly.registerNode(ColorSopNode, CATEGORY_SOP.MODIFIER);

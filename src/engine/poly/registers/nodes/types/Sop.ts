@@ -1,6 +1,7 @@
 export enum SopType {
 	ACTOR = 'actor',
 	ADD = 'add',
+	ADJACENCY = 'adjacency',
 	ANIMATION_COPY = 'animationCopy',
 	ATTRIB_ADD_MULT = 'attribAddMult',
 	ATTRIB_COPY = 'attribCopy',
@@ -57,6 +58,7 @@ export enum SopType {
 	CAPSULE = 'capsule',
 	CIRCLE = 'circle',
 	CIRCLE_3_POINTS = 'circle3Points',
+	CLOTH_PREPARE = 'clothPrepare',
 	CLOTH_SOLVER = 'clothSolver',
 	COLOR = 'color',
 	CONE = 'cone',
