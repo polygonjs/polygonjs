@@ -95,15 +95,20 @@ export class OceanPlaneSopNode extends TypedSopNode<OceanPlaneSopParamsConfig> {
 		this.setCoreGroup(coreGroup);
 	}
 	public override updateObjectOnAdd(object: Object3D, parent: Object3D) {
-		const geometry = (object as Mesh).geometry;
-		if (!geometry) {
+		const _geometry = (object as Mesh).geometry;
+		if (!_geometry) {
 			return;
 		}
+		// since the geometry is rotated in this method,
+		// we could end up with rotating it multiple times
+		// if we were to toggle the display flag between this node and another.
+		// The current fix is to clone the geometry before transforming it.
+		const clonedGeometry = _geometry.clone();
 
 		const scene = this.scene();
 		const renderer = scene.renderersRegister.lastRegisteredRenderer();
 
-		Water.rotateGeometry(geometry, this.pv.direction);
+		Water.rotateGeometry(clonedGeometry, this.pv.direction);
 		const waterOptions: WaterOptions = {
 			polyScene: this.scene(),
 			scene: scene.threejsScene(),
@@ -124,7 +129,7 @@ export class OceanPlaneSopNode extends TypedSopNode<OceanPlaneSopParamsConfig> {
 			multisamples: this.pv.multisamples,
 			useFog: this.pv.useFog,
 		};
-		const water = new Water(geometry, waterOptions);
+		const water = new Water(clonedGeometry, waterOptions);
 		water.matrixAutoUpdate = false;
 		// make sure object attributes are up to date
 		object.matrix.decompose(object.position, object.quaternion, object.scale);

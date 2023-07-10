@@ -48,7 +48,7 @@ export class TypedObjNode<O extends Object3D, K extends NodeParamsConfig> extend
 	}
 	protected _usedInScene: boolean = true;
 	usedInScene() {
-		return this._usedInScene && this.disposed == false;
+		return this._usedInScene && this.disposed() == false;
 	}
 	// TODO call set_used_in_scene(false) when node is deleted
 	// set_used_in_scene(state: boolean) {

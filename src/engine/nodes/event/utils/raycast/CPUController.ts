@@ -179,7 +179,7 @@ export class RaycastCPUController extends BaseRaycastController {
 		if (isBooleanTrue(this._node.pv.tpositionTarget)) {
 			const targetParam = this._node.pv.positionTarget;
 
-			if (this._foundPositionTargetParam == null || isBooleanTrue(this._foundPositionTargetParam.disposed)) {
+			if (this._foundPositionTargetParam == null || isBooleanTrue(this._foundPositionTargetParam.disposed())) {
 				this._foundPositionTargetParam = targetParam.paramWithType(ParamType.VECTOR3);
 			}
 

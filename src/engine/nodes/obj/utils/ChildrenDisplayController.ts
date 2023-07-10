@@ -96,7 +96,7 @@ export class ChildrenDisplayController {
 
 	usedInScene(): boolean {
 		const node = this.node;
-		if (node.disposed == true) {
+		if (node.disposed() == true) {
 			return false;
 		}
 

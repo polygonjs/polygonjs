@@ -41,7 +41,7 @@ export class RaycastCPUVelocityController {
 		this._hitVelocity.toArray(this._hitVelocityArray);
 
 		if (isBooleanTrue(this._node.pv.tvelocityTarget)) {
-			if (this._foundVelocityTargetParam == null || isBooleanTrue(this._foundVelocityTargetParam.disposed)) {
+			if (this._foundVelocityTargetParam == null || isBooleanTrue(this._foundVelocityTargetParam.disposed())) {
 				const targetParam = this._node.pv.velocityTarget;
 				this._foundVelocityTargetParam = targetParam.paramWithType(ParamType.VECTOR3);
 			}

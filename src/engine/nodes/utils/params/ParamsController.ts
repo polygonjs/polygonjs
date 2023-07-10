@@ -484,7 +484,7 @@ export class ParamsController {
 	async _evalParam(param: BaseParamType) {
 		if (param.isDirty()) {
 			await param.compute();
-			if (param.states.error.active() && param.disposed == false) {
+			if (param.states.error.active() && param.disposed() == false) {
 				this.node.states.error.set(`param '${param.name()}' error: ${param.states.error.message()}`);
 			}
 		}

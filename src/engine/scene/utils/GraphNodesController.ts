@@ -35,7 +35,7 @@ export class GraphNodesController {
 				_ref.value = null;
 			}
 		}
-		if (node.disposed) {
+		if (node.disposed()) {
 			return;
 		}
 

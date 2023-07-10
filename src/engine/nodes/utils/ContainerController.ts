@@ -54,7 +54,7 @@ export class TypedContainerController<NC extends NodeContext> {
 	}
 
 	async compute(): Promise<ContainerMap[NC]> {
-		if (this.node.disposed) {
+		if (this.node.disposed()) {
 			console.warn('.compute() requested from a disposed node', this.node);
 		}
 		if (this.node.flags?.bypass?.active()) {

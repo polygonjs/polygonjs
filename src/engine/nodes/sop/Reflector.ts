@@ -94,19 +94,24 @@ export class ReflectorSopNode extends TypedSopNode<ReflectorSopParamsConfig> {
 		this.setCoreGroup(coreGroup);
 	}
 	public override updateObjectOnAdd(object: Object3D, parent: Object3D) {
-		const geometry = (object as Mesh).geometry;
-		if (!geometry) {
+		const _geometry = (object as Mesh).geometry;
+		if (!_geometry) {
 			return;
 		}
+		// since the geometry is rotated in this method,
+		// we could end up with rotating it multiple times
+		// if we were to toggle the display flag between this node and another.
+		// The current fix is to clone the geometry before transforming it.
+		const clonedGeometry = _geometry.clone();
 
 		const renderer = this.scene().renderersRegister.lastRegisteredRenderer();
 
 		_v3.copy(this.pv.direction).normalize().multiplyScalar(this.pv.directionOffset);
 
-		geometry.translate(-_v3.x, -_v3.y, -_v3.z);
-		Reflector.rotateGeometry(geometry, this.pv.direction);
+		clonedGeometry.translate(-_v3.x, -_v3.y, -_v3.z);
+		Reflector.rotateGeometry(clonedGeometry, this.pv.direction);
 
-		const reflector = new Reflector(geometry, {
+		const reflector = new Reflector(clonedGeometry, {
 			clipBias: this.pv.clipBias,
 			renderer,
 			scene: this.scene().threejsScene(),

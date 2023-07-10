@@ -139,7 +139,7 @@ export class BaseMethod {
 	}
 
 	protected createDependencyFromIndexOrPath(args: BaseMethodFindDependencyArgs): MethodDependency | null {
-		if (this.param.disposed == true) {
+		if (this.param.disposed() == true) {
 			return null;
 		}
 		const {indexOrPath} = args;

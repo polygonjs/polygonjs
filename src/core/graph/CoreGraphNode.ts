@@ -18,11 +18,14 @@ export class CoreGraphNode {
 		this._graph = _scene.graph;
 	}
 
-	public disposed = false;
+	private _disposed = false;
 	dispose() {
 		this._dirtyController.dispose();
 		this.graphRemove();
-		this.disposed = true;
+		this._disposed = true;
+	}
+	disposed() {
+		return this._disposed;
 	}
 
 	/**

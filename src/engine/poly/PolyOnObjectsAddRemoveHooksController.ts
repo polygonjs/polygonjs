@@ -8,32 +8,57 @@ enum HandlerName {
 	ADD = 'onObjectAddHookHandlerNodeIds',
 	REMOVE = 'onObjectRemoveHookHandlerNodeIds',
 }
+// enum CompletedHandlerName {
+// 	ADD = 'onObjectAddHookHandlerNodeIds_Completed',
+// 	REMOVE = 'onObjectRemoveHookHandlerNodeIds_Completed',
+// }
+// function _completedHandlerName(handlerName: HandlerName) {
+// 	switch (handlerName) {
+// 		case HandlerName.ADD:
+// 			return CompletedHandlerName.ADD;
+// 		case HandlerName.REMOVE:
+// 			return CompletedHandlerName.REMOVE;
+// 	}
+// }
 interface HookHandler {
 	graphNodeId(): number;
 	updateObjectOnAdd(object: ObjectContent<CoreObjectType>, parent: ObjectContent<CoreObjectType>): void;
 	updateObjectOnRemove(object: ObjectContent<CoreObjectType>, parent: ObjectContent<CoreObjectType>): void;
 }
-function assignHookHandler(object: ObjectContent<CoreObjectType>, node: HookHandler, handleName: HandlerName) {
-	let ids = hookHandlers(object, handleName);
+function assignHookHandler(object: ObjectContent<CoreObjectType>, node: HookHandler, handlerName: HandlerName) {
+	let ids = hookHandlers(object, handlerName);
 	if (!ids) {
 		ids = [];
-		object.userData[handleName] = ids;
+		object.userData[handlerName] = ids;
 	}
 	const id = node.graphNodeId();
 	if (!ids.includes(id)) {
 		ids.push(id);
 	}
 }
+// function assignCompletedHookHandler(
+// 	object: ObjectContent<CoreObjectType>,
+// 	node: HookHandler,
+// 	handlerName: HandlerName
+// ) {
+// 	const completedHandlerName = _completedHandlerName(handlerName);
+// 	let ids = completedHookHandlers(object, completedHandlerName);
+// 	if (!ids) {
+// 		ids = [];
+// 		object.userData[completedHandlerName] = ids;
+// 	}
+// 	const id = node.graphNodeId();
+// 	if (!ids.includes(id)) {
+// 		ids.push(id);
+// 	}
+// }
 
-// function assignOnAddHookHandler(object: ObjectContent<CoreObjectType>, node: BaseSopNodeType) {
-// 	assignHookHandler(object, node, HandlerName.ADD)
-// }
-// function assignOnRemoveHookHandler(object: ObjectContent<CoreObjectType>, node: BaseSopNodeType) {
-// 	assignHookHandler(object, node, HandlerName.REMOVE)
-// }
 function hookHandlers(object: ObjectContent<CoreObjectType>, handlerName: HandlerName) {
 	return object.userData[handlerName] as number[] | undefined;
 }
+// function completedHookHandlers(object: ObjectContent<CoreObjectType>, handlerName: CompletedHandlerName) {
+// 	return object.userData[handlerName] as number[] | undefined;
+// }
 function runHooks(scene: PolyScene, parent: ObjectContent<CoreObjectType>, handlerName: HandlerName) {
 	const children = parent.children;
 	for (let child of children) {
@@ -48,9 +73,18 @@ function runHookOnObject(object: ObjectContent<CoreObjectType>, scene: PolyScene
 		if (!ids) {
 			return;
 		}
+		// const completedHandlersIds = completedHookHandlers(object, _completedHandlerName(handlerName));
+		// if (completedHandlersIds) {
+		// 	for (const id of completedHandlersIds) {
+		// 		const index = ids.indexOf(id);
+		// 		if (index >= 0) {
+		// 			ids.splice(index, 1);
+		// 		}
+		// 	}
+		// }
 		for (const id of ids) {
 			const node = scene.graph.nodeFromId(id) as BaseSopNodeType | undefined;
-			if (node) {
+			if (node && !node.disposed()) {
 				// when traversing the scene to run the hooks
 				// we must be very careful to note update the hierarchy
 				// with .add and .remove, as this will make .traverse unpredictable.
@@ -69,6 +103,7 @@ function runHookOnObject(object: ObjectContent<CoreObjectType>, scene: PolyScene
 						break;
 					}
 				}
+				// assignCompletedHookHandler(object, node, handlerName);
 			}
 		}
 	}

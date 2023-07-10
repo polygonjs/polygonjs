@@ -44,7 +44,7 @@ export class NodeCookController<NC extends NodeContext> {
 	}
 
 	private _startCookIfNoErrors(inputContents?: ContainableMap[NC][]) {
-		if (this.node.states.error.active() || this.node.disposed == true) {
+		if (this.node.states.error.active() || this.node.disposed() == true) {
 			this.endCook();
 		} else {
 			try {
@@ -67,7 +67,7 @@ export class NodeCookController<NC extends NodeContext> {
 		if (this.isCooking()) {
 			return;
 		}
-		if (this.node.disposed == true) {
+		if (this.node.disposed() == true) {
 			return;
 		}
 
@@ -131,7 +131,7 @@ export class NodeCookController<NC extends NodeContext> {
 			this.node.removeDirtyState();
 			this._terminateCookProcess();
 		} else {
-			if (this.node.disposed == true) {
+			if (this.node.disposed() == true) {
 				return;
 			}
 			Poly.log('COOK AGAIN', dirtyTimestamp, this._cookingDirtyTimestamp, this.node.path());
@@ -158,7 +158,7 @@ export class NodeCookController<NC extends NodeContext> {
 			// setTimeout(this.node.containerController.notifyRequesters.bind(this.node.containerController), 0);
 			this.node.containerController.notifyRequesters();
 			this._runOnCookCompleteHooks();
-			if (this.node.disposed == true) {
+			if (this.node.disposed() == true) {
 				return;
 			}
 			touchNodeRef(this.node.path());
