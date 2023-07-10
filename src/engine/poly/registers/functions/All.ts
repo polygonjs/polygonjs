@@ -24,6 +24,10 @@ import { animationMixerUpdate } from "../../../functions/animationMixerUpdate";
 import { arrayElementPrimitive } from "../../../functions/arrayElementPrimitive";
 import { arrayElementVector } from "../../../functions/arrayElementVector";
 import { arrayLength } from "../../../functions/arrayLength";
+import { arrayPopPrimitive } from "../../../functions/arrayPopPrimitive";
+import { arrayPopVector } from "../../../functions/arrayPopVector";
+import { arrayShiftPrimitive } from "../../../functions/arrayShiftPrimitive";
+import { arrayShiftVector } from "../../../functions/arrayShiftVector";
 import { boolToInt } from "../../../functions/boolToInt";
 import { box3ContainsPoint } from "../../../functions/box3ContainsPoint";
 import { box3IntersectsBox3 } from "../../../functions/box3IntersectsBox3";
@@ -119,6 +123,7 @@ import { getChildrenPropertiesUp } from "../../../functions/getChildrenPropertie
 import { getChildrenPropertiesVisible } from "../../../functions/getChildrenPropertiesVisible";
 import { getDefaultCamera } from "../../../functions/getDefaultCamera";
 import { getGeometryBoundingBox } from "../../../functions/getGeometryBoundingBox";
+import { getGeometryNodeObjects } from "../../../functions/getGeometryNodeObjects";
 import { getGeometryPositions } from "../../../functions/getGeometryPositions";
 import { getIntersectionAttributeColorInterpolated } from "../../../functions/getIntersectionAttributeColorInterpolated";
 import { getIntersectionAttributeColorNearest } from "../../../functions/getIntersectionAttributeColorNearest";
@@ -288,9 +293,11 @@ import { normalizeVector3 } from "../../../functions/normalizeVector3";
 import { normalizeVector4 } from "../../../functions/normalizeVector4";
 import { object3DLocalToWorld } from "../../../functions/object3DLocalToWorld";
 import { object3DWorldToLocal } from "../../../functions/object3DWorldToLocal";
+import { objectAdd } from "../../../functions/objectAdd";
 import { objectAddEventListeners } from "../../../functions/objectAddEventListeners";
 import { objectDelete } from "../../../functions/objectDelete";
 import { objectDispatchEvent } from "../../../functions/objectDispatchEvent";
+import { objectsAdd } from "../../../functions/objectsAdd";
 import { objectUpdateMatrix } from "../../../functions/objectUpdateMatrix";
 import { objectUpdateWorldMatrix } from "../../../functions/objectUpdateWorldMatrix";
 import { onPerformanceChange } from "../../../functions/onPerformanceChange";
@@ -481,8 +488,12 @@ export interface NamedFunctionMap {
 	animationActionStop: animationActionStop;
 	animationMixerUpdate: animationMixerUpdate;
 	arrayElementPrimitive: arrayElementPrimitive<PrimitiveArrayElement>;
-	arrayElementVector: arrayElementVector;
+	arrayElementVector: arrayElementVector<Vector2 | Vector3 | Vector4>;
 	arrayLength: arrayLength;
+	arrayPopPrimitive: arrayPopPrimitive<PrimitiveArrayElement>;
+	arrayPopVector: arrayPopVector<Vector2 | Vector3 | Vector4>;
+	arrayShiftPrimitive: arrayShiftPrimitive<PrimitiveArrayElement>;
+	arrayShiftVector: arrayShiftVector<Vector2 | Vector3 | Vector4>;
 	boolToInt: boolToInt;
 	box3ContainsPoint: box3ContainsPoint;
 	box3IntersectsBox3: box3IntersectsBox3;
@@ -578,6 +589,7 @@ export interface NamedFunctionMap {
 	getChildrenPropertiesVisible: getChildrenPropertiesVisible;
 	getDefaultCamera: getDefaultCamera;
 	getGeometryBoundingBox: getGeometryBoundingBox;
+	getGeometryNodeObjects: getGeometryNodeObjects;
 	getGeometryPositions: getGeometryPositions;
 	getIntersectionAttributeColorInterpolated: getIntersectionAttributeColorInterpolated;
 	getIntersectionAttributeColorNearest: getIntersectionAttributeColorNearest;
@@ -747,9 +759,11 @@ export interface NamedFunctionMap {
 	normalizeVector4: normalizeVector4;
 	object3DLocalToWorld: object3DLocalToWorld;
 	object3DWorldToLocal: object3DWorldToLocal;
+	objectAdd: objectAdd;
 	objectAddEventListeners: objectAddEventListeners;
 	objectDelete: objectDelete;
 	objectDispatchEvent: objectDispatchEvent;
+	objectsAdd: objectsAdd;
 	objectUpdateMatrix: objectUpdateMatrix;
 	objectUpdateWorldMatrix: objectUpdateWorldMatrix;
 	onPerformanceChange: onPerformanceChange;
@@ -945,6 +959,10 @@ export class AllNamedFunctionRegister {
 			arrayElementPrimitive,
 			arrayElementVector,
 			arrayLength,
+			arrayPopPrimitive,
+			arrayPopVector,
+			arrayShiftPrimitive,
+			arrayShiftVector,
 			boolToInt,
 			box3ContainsPoint,
 			box3IntersectsBox3,
@@ -1040,6 +1058,7 @@ export class AllNamedFunctionRegister {
 			getChildrenPropertiesVisible,
 			getDefaultCamera,
 			getGeometryBoundingBox,
+			getGeometryNodeObjects,
 			getGeometryPositions,
 			getIntersectionAttributeColorInterpolated,
 			getIntersectionAttributeColorNearest,
@@ -1209,9 +1228,11 @@ export class AllNamedFunctionRegister {
 			normalizeVector4,
 			object3DLocalToWorld,
 			object3DWorldToLocal,
+			objectAdd,
 			objectAddEventListeners,
 			objectDelete,
 			objectDispatchEvent,
+			objectsAdd,
 			objectUpdateMatrix,
 			objectUpdateWorldMatrix,
 			onPerformanceChange,

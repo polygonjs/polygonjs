@@ -1,5 +1,5 @@
 /**
- * TBD
+ * removes an object from the hierarchy
  *
  *
  */

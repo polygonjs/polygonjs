@@ -2,6 +2,7 @@ import {CATEGORY_JS} from './Category';
 
 import {AbsJsNode} from '../../../nodes/js/Abs';
 import {AcosJsNode} from '../../../nodes/js/Acos';
+import {AddObjectsJsNode} from '../../../nodes/js/AddObjects';
 import {AddJsNode} from '../../../nodes/js/Add';
 import {AndJsNode} from '../../../nodes/js/And';
 import {AnimationActionJsNode} from '../../../nodes/js/AnimationAction';
@@ -15,6 +16,8 @@ import {AnimationMixerUpdateJsNode} from '../../../nodes/js/AnimationMixerUpdate
 import {AnyTriggerJsNode} from '../../../nodes/js/AnyTrigger';
 import {ArrayElementJsNode} from '../../../nodes/js/ArrayElement';
 import {ArrayLengthJsNode} from '../../../nodes/js/ArrayLength';
+import {ArrayPopJsNode} from '../../../nodes/js/ArrayPop';
+import {ArrayShiftJsNode} from '../../../nodes/js/ArrayShift';
 import {AsinJsNode} from '../../../nodes/js/Asin';
 import {AtanJsNode} from '../../../nodes/js/Atan';
 import {AttributeJsNode} from '../../../nodes/js/Attribute';
@@ -72,6 +75,7 @@ import {GetChildrenPhysicsRBDPropertiesJsNode} from '../../../nodes/js/GetChildr
 import {GetChildrenPropertiesJsNode} from '../../../nodes/js/GetChildrenProperties';
 import {GetDefaultCameraJsNode} from '../../../nodes/js/GetDefaultCamera';
 import {GetGeometryBoundingBoxJsNode} from '../../../nodes/js/GetGeometryBoundingBox';
+import {GetGeometryNodeObjectsJsNode} from '../../../nodes/js/GetGeometryNodeObjects';
 import {GetGeometryPositionsJsNode} from '../../../nodes/js/GetGeometryPositions';
 import {GetIntersectionAttributeJsNode} from '../../../nodes/js/GetIntersectionAttribute';
 import {GetIntersectionPropertyJsNode} from '../../../nodes/js/GetIntersectionProperty';
@@ -322,6 +326,7 @@ import {Vector4JsNode} from '../../../nodes/js/Vector4';
 export interface JsNodeChildrenMap {
 	abs: AbsJsNode;
 	add: AddJsNode;
+	addObjects: AddObjectsJsNode;
 	acos: AcosJsNode;
 	and: AndJsNode;
 	animationAction: AnimationActionJsNode;
@@ -335,6 +340,8 @@ export interface JsNodeChildrenMap {
 	anyTrigger: AnyTriggerJsNode;
 	arrayElement: ArrayElementJsNode;
 	arrayLength: ArrayLengthJsNode;
+	arrayPop: ArrayPopJsNode;
+	arrayShift: ArrayShiftJsNode;
 	asin: AsinJsNode;
 	atan: AtanJsNode;
 	attribute: AttributeJsNode;
@@ -392,6 +399,7 @@ export interface JsNodeChildrenMap {
 	getChildrenProperties: GetChildrenPropertiesJsNode;
 	getDefaultCamera: GetDefaultCameraJsNode;
 	getGeometryBoundingBox: GetGeometryBoundingBoxJsNode;
+	getGeometryNodeObjects: GetGeometryNodeObjectsJsNode;
 	getGeometryPositions: GetGeometryPositionsJsNode;
 	getIntersectionAttribute: GetIntersectionAttributeJsNode;
 	getIntersectionProperty: GetIntersectionPropertyJsNode;
@@ -688,6 +696,7 @@ export class JsRegister {
 		poly.registerNode(AbsJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(AcosJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(AddJsNode, CATEGORY_JS.MATH);
+		poly.registerNode(AddObjectsJsNode, CATEGORY_JS.ACTION);
 		poly.registerNode(AndJsNode, CATEGORY_JS.LOGIC);
 		poly.registerNode(AnimationActionJsNode, CATEGORY_JS.ANIMATION, ONLY_ACTOR);
 		poly.registerNode(AnimationActionCrossFadeJsNode, CATEGORY_JS.ANIMATION, ONLY_ACTOR);
@@ -700,6 +709,8 @@ export class JsRegister {
 		poly.registerNode(AnyTriggerJsNode, CATEGORY_JS.ANIMATION, ONLY_ACTOR);
 		poly.registerNode(ArrayElementJsNode, CATEGORY_JS.CONVERSION);
 		poly.registerNode(ArrayLengthJsNode, CATEGORY_JS.LOGIC);
+		poly.registerNode(ArrayPopJsNode, CATEGORY_JS.LOGIC);
+		poly.registerNode(ArrayShiftJsNode, CATEGORY_JS.LOGIC);
 		poly.registerNode(AsinJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(AtanJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(BoolToIntJsNode, CATEGORY_JS.CONVERSION);
@@ -756,6 +767,7 @@ export class JsRegister {
 		poly.registerNode(GetChildrenPropertiesJsNode, CATEGORY_JS.GET, ONLY_ACTOR);
 		poly.registerNode(GetDefaultCameraJsNode, CATEGORY_JS.GET, ONLY_ACTOR);
 		poly.registerNode(GetGeometryBoundingBoxJsNode, CATEGORY_JS.GET, ONLY_ACTOR);
+		poly.registerNode(GetGeometryNodeObjectsJsNode, CATEGORY_JS.GET, ONLY_ACTOR);
 		poly.registerNode(GetGeometryPositionsJsNode, CATEGORY_JS.GET, ONLY_ACTOR);
 		poly.registerNode(GetIntersectionAttributeJsNode, CATEGORY_JS.GET);
 		poly.registerNode(GetIntersectionPropertyJsNode, CATEGORY_JS.GET);

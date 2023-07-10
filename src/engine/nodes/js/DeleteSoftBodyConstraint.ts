@@ -1,5 +1,5 @@
 /**
- * TBD
+ * Deletes a soft body constraint
  *
  *
  */

@@ -4,15 +4,12 @@
  *
  */
 
-import {TRIGGER_CONNECTION_NAME, TypedJsNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {JsConnectionPoint, JsConnectionPointType, JS_CONNECTION_POINT_IN_NODE_DEF} from '../utils/io/connections/Js';
 import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {JsType} from '../../poly/registers/nodes/types/Js';
 import {Poly} from '../../Poly';
-import {inputObject3D, setObject3DOutputLine} from './_BaseObject3D';
-
-const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
+import {inputObject3D} from './_BaseObject3D';
+import {BaseTriggerAndObjectJsNode} from './_BaseTriggerAndObject';
 
 class SetObjectPositionJsParamsConfig extends NodeParamsConfig {
 	/** @param target position */
@@ -24,26 +21,12 @@ class SetObjectPositionJsParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new SetObjectPositionJsParamsConfig();
 
-export class SetObjectPositionJsNode extends TypedJsNode<SetObjectPositionJsParamsConfig> {
+export class SetObjectPositionJsNode extends BaseTriggerAndObjectJsNode<SetObjectPositionJsParamsConfig> {
 	override readonly paramsConfig = ParamsConfig;
 	static override type() {
 		return JsType.SET_OBJECT_POSITION;
 	}
 
-	override initializeNode() {
-		this.io.inputs.setNamedInputConnectionPoints([
-			new JsConnectionPoint(TRIGGER_CONNECTION_NAME, JsConnectionPointType.TRIGGER, CONNECTION_OPTIONS),
-			new JsConnectionPoint(JsConnectionPointType.OBJECT_3D, JsConnectionPointType.OBJECT_3D, CONNECTION_OPTIONS),
-		]);
-
-		this.io.outputs.setNamedOutputConnectionPoints([
-			new JsConnectionPoint(TRIGGER_CONNECTION_NAME, JsConnectionPointType.TRIGGER),
-			new JsConnectionPoint(JsConnectionPointType.OBJECT_3D, JsConnectionPointType.OBJECT_3D),
-		]);
-	}
-	override setLines(linesController: JsLinesCollectionController) {
-		setObject3DOutputLine(this, linesController);
-	}
 	override setTriggerableLines(shadersCollectionController: JsLinesCollectionController) {
 		const object3D = inputObject3D(this, shadersCollectionController);
 		const position = this.variableForInputParam(shadersCollectionController, this.p.position);

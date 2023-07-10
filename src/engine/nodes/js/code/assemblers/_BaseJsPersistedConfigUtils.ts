@@ -104,6 +104,7 @@ export function createVariable(type: JsConnectionPointType) {
 		case JsConnectionPointType.TEXTURE_ARRAY:
 		case JsConnectionPointType.COLOR_ARRAY:
 		case JsConnectionPointType.EULER_ARRAY:
+		case JsConnectionPointType.OBJECT_3D_ARRAY:
 		case JsConnectionPointType.VECTOR2_ARRAY:
 		case JsConnectionPointType.VECTOR3_ARRAY:
 		case JsConnectionPointType.VECTOR4_ARRAY: {

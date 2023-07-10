@@ -118,6 +118,7 @@ export class CadObject<T extends CadGeometryType> implements ObjectContent<CoreO
 			}
 		}
 	}
+	add(...object: ObjectContent<CoreObjectType>[]) {}
 	remove(...object: ObjectContent<CoreObjectType>[]) {}
 	traverse(callback: (object: CadObject<T>) => any) {
 		callback(this);

@@ -25,7 +25,7 @@ import {Poly} from '../../../../../Poly';
 import {ParamType} from '../../../../../poly/ParamType';
 import {JsShaderConfig} from '../../configs/ShaderConfig';
 
-let FORCE_DEBUG: boolean | undefined = false;
+let FORCE_DEBUG: boolean | undefined = true;
 function _debug() {
 	if (FORCE_DEBUG != undefined) {
 		return FORCE_DEBUG;

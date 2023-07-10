@@ -95,6 +95,7 @@ export class SDFObject implements ObjectContent<CoreObjectType.SDF> {
 		const geometry = this.geometry.translate(_tN3).rotate(_rN3).scale(_sN3);
 		this._geometry = geometry;
 	}
+	add(...object: ObjectContent<CoreObjectType>[]) {}
 	remove(...object: ObjectContent<CoreObjectType>[]) {}
 	traverse(callback: (object: SDFObject) => any) {
 		callback(this);

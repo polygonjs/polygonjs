@@ -97,6 +97,14 @@ export function removeFromParent(scene: PolyScene, object: ObjectContent<CoreObj
 	Poly.onObjectsAddRemoveHooks.runOnRemoveHookOnObject(scene, object);
 	object.parent?.remove(object);
 }
+export function addToParent(
+	scene: PolyScene,
+	parent: ObjectContent<CoreObjectType>,
+	child: ObjectContent<CoreObjectType>
+) {
+	parent.add(child);
+	Poly.onObjectsAddRemoveHooks.runOnAddHookOnObject(scene, child);
+}
 // export function replaceChildWithCallbackObject(
 // 	parent: Object3D,
 // 	oldObject: Object3D,

@@ -16,7 +16,7 @@ export class getTexture extends NamedFunction1<[string]> {
 
 		const node = this.scene.node(nodePath);
 		if (node && node.context() == NodeContext.COP) {
-			if (node && CoreType.isFunction((node as BaseCopNodeType).__textureSync__)) {
+			if (CoreType.isFunction((node as BaseCopNodeType).__textureSync__)) {
 				if (node.isDirty()) {
 					node.compute();
 				}

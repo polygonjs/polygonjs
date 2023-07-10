@@ -56,6 +56,7 @@ export class CsgObject<T extends CsgGeometryType> implements ObjectContent<CoreO
 	applyMatrix4(matrix: Matrix4) {
 		matrix4ToMat4(matrix, this.csgGeometry().transforms);
 	}
+	add(...object: ObjectContent<CoreObjectType>[]) {}
 	remove(...object: ObjectContent<CoreObjectType>[]) {}
 	traverse(callback: (object: CsgObject<T>) => any) {
 		callback(this);

@@ -54,37 +54,33 @@ export class OnObjectHoverJsNode extends BaseOnObjectPointerEventJsNode {
 		]);
 	}
 
-	override setLines(shadersCollectionController: JsLinesCollectionController) {
+	override setLines(linesController: JsLinesCollectionController) {
 		const usedOutputNames = this.io.outputs.used_output_names();
 		if (usedOutputNames.includes(OnObjectHoverJsNodeOutputName.hovered)) {
-			this._addHoveredRef(shadersCollectionController);
+			this._addHoveredRef(linesController);
 		}
 		if (usedOutputNames.includes(JsConnectionPointType.INTERSECTION)) {
-			this._addIntersectionRef(shadersCollectionController);
+			this._addIntersectionRef(linesController);
 
 			if (!usedOutputNames.includes(JsConnectionPointType.TRIGGER)) {
-				this.setTriggeringLines(shadersCollectionController, '');
+				this.setTriggeringLines(linesController, '');
 			}
 		}
 	}
 
-	override setTriggeringLines(shadersCollectionController: JsLinesCollectionController, triggeredMethods: string) {
-		const object3D = inputObject3D(this, shadersCollectionController);
-		const traverseChildren = this.variableForInputParam(shadersCollectionController, this.p.traverseChildren);
-		const lineThreshold = this.variableForInputParam(shadersCollectionController, this.p.lineThreshold);
-		const pointsThreshold = this.variableForInputParam(shadersCollectionController, this.p.pointsThreshold);
+	override setTriggeringLines(linesController: JsLinesCollectionController, triggeredMethods: string) {
+		const object3D = inputObject3D(this, linesController);
+		const traverseChildren = this.variableForInputParam(linesController, this.p.traverseChildren);
+		const lineThreshold = this.variableForInputParam(linesController, this.p.lineThreshold);
+		const pointsThreshold = this.variableForInputParam(linesController, this.p.pointsThreshold);
 
 		const newHovered = `newHovered`;
 		const currentHovered = `currentHovered`;
-		const outIntersection = this._addIntersectionRef(shadersCollectionController);
-		const outHovered = this._addHoveredRef(shadersCollectionController);
+		const outIntersection = this._addIntersectionRef(linesController);
+		const outHovered = this._addHoveredRef(linesController);
 
 		const _getObjectHoveredState_ = () => {
-			const func = Poly.namedFunctionsRegister.getFunction(
-				'getObjectHoveredState',
-				this,
-				shadersCollectionController
-			);
+			const func = Poly.namedFunctionsRegister.getFunction('getObjectHoveredState', this, linesController);
 			return func.asString(object3D, traverseChildren, lineThreshold, pointsThreshold, `this.${outIntersection}`);
 		};
 
@@ -99,28 +95,22 @@ export class OnObjectHoverJsNode extends BaseOnObjectPointerEventJsNode {
 			`}`,
 		];
 
-		shadersCollectionController.addTriggeringLines(this, bodyLines, {
+		linesController.addTriggeringLines(this, bodyLines, {
 			gatherable: true,
 			triggeringMethodName: 'onPointermove',
 		});
 	}
-	private _addIntersectionRef(shadersCollectionController: JsLinesCollectionController) {
+	private _addIntersectionRef(linesController: JsLinesCollectionController) {
 		const outIntersection = this.jsVarName(JsConnectionPointType.INTERSECTION);
-		shadersCollectionController.addDefinitions(this, [
-			new RefJsDefinition(
-				this,
-				shadersCollectionController,
-				JsConnectionPointType.INTERSECTION,
-				outIntersection,
-				`null`
-			),
+		linesController.addDefinitions(this, [
+			new RefJsDefinition(this, linesController, JsConnectionPointType.INTERSECTION, outIntersection, `null`),
 		]);
 		return outIntersection;
 	}
-	private _addHoveredRef(shadersCollectionController: JsLinesCollectionController) {
+	private _addHoveredRef(linesController: JsLinesCollectionController) {
 		const outHovered = this.jsVarName(OnObjectHoverJsNodeOutputName.hovered);
-		shadersCollectionController.addDefinitions(this, [
-			new RefJsDefinition(this, shadersCollectionController, JsConnectionPointType.BOOLEAN, outHovered, `false`),
+		linesController.addDefinitions(this, [
+			new RefJsDefinition(this, linesController, JsConnectionPointType.BOOLEAN, outHovered, `false`),
 		]);
 		return outHovered;
 	}

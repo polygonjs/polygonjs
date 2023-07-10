@@ -1,7 +1,4 @@
-import {Vector2} from 'three';
-import {Vector3} from 'three';
-import {Vector4} from 'three';
-import {BufferAttribute} from 'three';
+import {Color, Vector2, Vector3, Vector4, BufferAttribute} from 'three';
 import {AttribValue, PolyDictionary} from '../../types/GlobalTypes';
 import {ArrayUtils} from '../ArrayUtils';
 import {CoreString} from '../String';
@@ -103,6 +100,8 @@ export class CoreAttribute {
 		}
 
 		switch (val.constructor) {
+			case Color:
+				return AttribSize.VECTOR3;
 			case Vector2:
 				return AttribSize.VECTOR2;
 			case Vector3:

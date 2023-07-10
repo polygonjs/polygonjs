@@ -1,5 +1,5 @@
 /**
- * TBD
+ * Creates a cloth constraint
  *
  *
  */

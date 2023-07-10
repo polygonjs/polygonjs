@@ -1,5 +1,5 @@
 /**
- * TBD
+ * sets the position of a cloth constraint
  *
  *
  */

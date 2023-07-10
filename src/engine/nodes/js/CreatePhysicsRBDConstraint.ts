@@ -1,5 +1,5 @@
 /**
- * TBD
+ * Create an RBD constraint.
  *
  *
  */

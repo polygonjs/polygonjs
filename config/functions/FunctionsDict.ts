@@ -17,6 +17,10 @@ export const FUNCTION_NAME_BY_FILE_NAME: Record<string, string[]> = {
 		'elementsToArrayVector',
 		'arrayElementPrimitive',
 		'arrayElementVector',
+		'arrayPopPrimitive',
+		'arrayPopVector',
+		'arrayShiftPrimitive',
+		'arrayShiftVector',
 	],
 	Audio: ['addAudioStopEventListener', 'playAudioSource', 'pauseAudioSource', 'playInstrumentNote'],
 	Box3: [
@@ -252,7 +256,7 @@ export const FUNCTION_NAME_BY_FILE_NAME: Record<string, string[]> = {
 	NoiseSimplex: ['noiseSimplexVector2', 'noiseSimplexVector3', 'noiseSimplexVector4'],
 	NoiseImproved: ['noiseImprovedVector3'],
 	ObjectDispatchEvent: ['objectDispatchEvent', 'getObjectLastDispatchedEventName', 'objectAddEventListeners'],
-	Object3D: ['objectDelete'],
+	Object3D: ['getGeometryNodeObjects', 'objectAdd', 'objectsAdd', 'objectDelete'],
 	Param: [
 		'getParam',
 		'setParamBoolean',

@@ -1,4 +1,4 @@
-import {BaseNamedFunction} from './_Base';
+import {NamedFunction1, NamedFunction2, NamedFunction3} from './_Base';
 import {_matchArrayLength} from './_ArrayUtils';
 import {PrimitiveArrayElement, VectorArrayElement} from '../nodes/utils/io/connections/Js';
 import {Vector4} from 'three';
@@ -8,16 +8,12 @@ import {Vector4} from 'three';
 //  Array Props
 //
 //
-export class arrayLength extends BaseNamedFunction {
+export class arrayLength extends NamedFunction1<[Array<any>]> {
 	static override type() {
 		return 'arrayLength';
 	}
 	override func(array: Array<any>): number {
 		return array.length;
-	}
-	override asString(elements: string): string {
-		super.asString(elements);
-		return `${this.type()}(${[elements].join(', ')})`;
 	}
 }
 
@@ -26,7 +22,7 @@ export class arrayLength extends BaseNamedFunction {
 // To Array
 //
 //
-export class elementsToArrayPrimitive<T extends PrimitiveArrayElement> extends BaseNamedFunction {
+export class elementsToArrayPrimitive<T extends PrimitiveArrayElement> extends NamedFunction2<[Array<T>, Array<T>]> {
 	static override type() {
 		return 'elementsToArrayPrimitive';
 	}
@@ -39,12 +35,8 @@ export class elementsToArrayPrimitive<T extends PrimitiveArrayElement> extends B
 		}
 		return target;
 	}
-	override asString(elements: string, target: string): string {
-		super.asString(elements, target);
-		return `${this.type()}(${[elements, target].join(', ')})`;
-	}
 }
-export class elementsToArrayVector<T extends VectorArrayElement> extends BaseNamedFunction {
+export class elementsToArrayVector<T extends VectorArrayElement> extends NamedFunction2<[Array<T>, Array<T>]> {
 	static override type() {
 		return 'elementsToArrayVector';
 	}
@@ -57,10 +49,6 @@ export class elementsToArrayVector<T extends VectorArrayElement> extends BaseNam
 		}
 		return target;
 	}
-	override asString(elements: string, target: string): string {
-		super.asString(elements, target);
-		return `${this.type()}(${[elements, target].join(', ')})`;
-	}
 }
 
 //
@@ -68,7 +56,7 @@ export class elementsToArrayVector<T extends VectorArrayElement> extends BaseNam
 // From Array
 //
 //
-export class arrayElementPrimitive<T extends PrimitiveArrayElement> extends BaseNamedFunction {
+export class arrayElementPrimitive<T extends PrimitiveArrayElement> extends NamedFunction2<[Array<T>, number]> {
 	static override type() {
 		return 'arrayElementPrimitive';
 	}
@@ -76,23 +64,71 @@ export class arrayElementPrimitive<T extends PrimitiveArrayElement> extends Base
 		const element = src[index];
 		return element != null ? element : src[0];
 	}
-	override asString(src: string, index: string): string {
-		super.asString(src, index);
-		return `${this.type()}(${[src, index].join(', ')})`;
-	}
 }
-export class arrayElementVector extends BaseNamedFunction {
+
+export class arrayElementVector<T extends VectorArrayElement> extends NamedFunction3<[Array<T>, number, T]> {
 	static override type() {
 		return 'arrayElementVector';
 	}
-	override func<T extends VectorArrayElement>(src: Array<T>, index: number, target: T): T {
+	override func(src: Array<T>, index: number, target: T): T {
 		let element: T = src[index];
 		element != null ? element : src[0];
-		(target as Vector4).copy(element as Vector4);
+		if (element) {
+			(target as Vector4).copy(element as Vector4);
+		}
 		return target;
 	}
-	override asString(src: string, index: string, target: string): string {
-		super.asString(src, target);
-		return `${this.type()}(${[src, index, target].join(', ')})`;
+}
+//
+//
+// Pop
+//
+//
+export class arrayPopPrimitive<T extends PrimitiveArrayElement> extends NamedFunction1<[Array<T>]> {
+	static override type() {
+		return 'arrayPopPrimitive';
+	}
+	override func(src: Array<T>): T | undefined {
+		const element = src.pop();
+		return element;
+	}
+}
+export class arrayPopVector<T extends VectorArrayElement> extends NamedFunction2<[Array<T>, T]> {
+	static override type() {
+		return 'arrayPopVector';
+	}
+	override func(src: Array<T>, target: T): T {
+		const element = src.pop();
+		if (element) {
+			(target as Vector4).copy(element as Vector4);
+		}
+		return target;
+	}
+}
+
+//
+//
+// Shift
+//
+//
+export class arrayShiftPrimitive<T extends PrimitiveArrayElement> extends NamedFunction1<[Array<T>]> {
+	static override type() {
+		return 'arrayShiftPrimitive';
+	}
+	override func(src: Array<T>): T | undefined {
+		const element = src.shift();
+		return element;
+	}
+}
+export class arrayShiftVector<T extends VectorArrayElement> extends NamedFunction2<[Array<T>, T]> {
+	static override type() {
+		return 'arrayShiftVector';
+	}
+	override func(src: Array<T>, target: T): T {
+		const element = src.shift();
+		if (element) {
+			(target as Vector4).copy(element as Vector4);
+		}
+		return target;
 	}
 }

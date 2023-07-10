@@ -46,6 +46,7 @@ export enum JsConnectionPointType {
 	MATRIX4 = 'Matrix4',
 	MATRIX4_ARRAY = 'Matrix4[]',
 	OBJECT_3D = 'Object3D',
+	OBJECT_3D_ARRAY = 'Object3D[]',
 	PARAM = 'Param',
 	PLANE = 'Plane',
 	QUATERNION = 'Quaternion',
@@ -130,6 +131,7 @@ export const JS_CONNECTION_POINT_TYPES: Array<JsConnectionPointType> = [
 	JsConnectionPointType.MATRIX4,
 	JsConnectionPointType.MATRIX4_ARRAY,
 	JsConnectionPointType.OBJECT_3D,
+	JsConnectionPointType.OBJECT_3D_ARRAY,
 	JsConnectionPointType.PARAM,
 	JsConnectionPointType.PLANE,
 	JsConnectionPointType.QUATERNION,
@@ -173,7 +175,8 @@ export interface JsIConnectionPointTypeToArrayTypeMap extends JsConnectionPointT
 	[JsConnectionPointType.MATERIAL]: JsConnectionPointType.MATERIAL; //
 	[JsConnectionPointType.MATRIX4]: JsConnectionPointType.MATRIX4_ARRAY; //
 	[JsConnectionPointType.MATRIX4_ARRAY]: JsConnectionPointType.MATRIX4_ARRAY; //
-	[JsConnectionPointType.OBJECT_3D]: JsConnectionPointType.OBJECT_3D; //
+	[JsConnectionPointType.OBJECT_3D]: JsConnectionPointType.OBJECT_3D_ARRAY; //
+	[JsConnectionPointType.OBJECT_3D_ARRAY]: JsConnectionPointType.OBJECT_3D_ARRAY; //
 	[JsConnectionPointType.PARAM]: JsConnectionPointType.PARAM; //
 	[JsConnectionPointType.PLANE]: JsConnectionPointType.PLANE; //
 	[JsConnectionPointType.QUATERNION]: JsConnectionPointType.QUATERNION_ARRAY; //
@@ -213,7 +216,8 @@ export const JsConnectionPointTypeToArrayTypeMap: JsIConnectionPointTypeToArrayT
 	[JsConnectionPointType.MATERIAL]: JsConnectionPointType.MATERIAL,
 	[JsConnectionPointType.MATRIX4]: JsConnectionPointType.MATRIX4_ARRAY,
 	[JsConnectionPointType.MATRIX4_ARRAY]: JsConnectionPointType.MATRIX4_ARRAY,
-	[JsConnectionPointType.OBJECT_3D]: JsConnectionPointType.OBJECT_3D,
+	[JsConnectionPointType.OBJECT_3D]: JsConnectionPointType.OBJECT_3D_ARRAY,
+	[JsConnectionPointType.OBJECT_3D_ARRAY]: JsConnectionPointType.OBJECT_3D_ARRAY,
 	[JsConnectionPointType.PARAM]: JsConnectionPointType.PARAM,
 	[JsConnectionPointType.PLANE]: JsConnectionPointType.PLANE,
 	[JsConnectionPointType.QUATERNION]: JsConnectionPointType.QUATERNION_ARRAY,
@@ -257,6 +261,7 @@ export interface JsIConnectionPointTypeFromArrayTypeMap extends JsConnectionPoin
 	[JsConnectionPointType.MATRIX4]: JsConnectionPointType.MATRIX4; //
 	[JsConnectionPointType.MATRIX4_ARRAY]: JsConnectionPointType.MATRIX4; //
 	[JsConnectionPointType.OBJECT_3D]: JsConnectionPointType.OBJECT_3D; //
+	[JsConnectionPointType.OBJECT_3D_ARRAY]: JsConnectionPointType.OBJECT_3D; //
 	[JsConnectionPointType.PARAM]: JsConnectionPointType.PARAM; //
 	[JsConnectionPointType.PLANE]: JsConnectionPointType.PLANE; //
 	[JsConnectionPointType.QUATERNION]: JsConnectionPointType.QUATERNION; //
@@ -297,6 +302,7 @@ export const JsConnectionPointTypeFromArrayTypeMap: JsIConnectionPointTypeFromAr
 	[JsConnectionPointType.MATRIX4]: JsConnectionPointType.MATRIX4,
 	[JsConnectionPointType.MATRIX4_ARRAY]: JsConnectionPointType.MATRIX4,
 	[JsConnectionPointType.OBJECT_3D]: JsConnectionPointType.OBJECT_3D,
+	[JsConnectionPointType.OBJECT_3D_ARRAY]: JsConnectionPointType.OBJECT_3D,
 	[JsConnectionPointType.PARAM]: JsConnectionPointType.PARAM,
 	[JsConnectionPointType.PLANE]: JsConnectionPointType.PLANE,
 	[JsConnectionPointType.QUATERNION]: JsConnectionPointType.QUATERNION,
@@ -351,6 +357,7 @@ export type JsConnectionPointTypeArray =
 	| JsConnectionPointType.INT_ARRAY
 	| JsConnectionPointType.INTERSECTION_ARRAY
 	| JsConnectionPointType.MATRIX4_ARRAY
+	| JsConnectionPointType.OBJECT_3D_ARRAY
 	| JsConnectionPointType.QUATERNION_ARRAY
 	| JsConnectionPointType.STRING_ARRAY
 	| JsConnectionPointType.TEXTURE_ARRAY
@@ -365,6 +372,7 @@ export const ARRAY_JS_CONNECTION_TYPES: Array<JsConnectionPointTypeArray> = [
 	JsConnectionPointType.INT_ARRAY,
 	JsConnectionPointType.INTERSECTION_ARRAY,
 	JsConnectionPointType.MATRIX4_ARRAY,
+	JsConnectionPointType.OBJECT_3D_ARRAY,
 	JsConnectionPointType.QUATERNION_ARRAY,
 	JsConnectionPointType.STRING_ARRAY,
 	JsConnectionPointType.TEXTURE_ARRAY,
@@ -416,6 +424,7 @@ export type JsDataType =
 	| Array<Intersection>
 	| Material
 	| Object3D
+	| Array<Object3D>
 	| Ray
 	| Sphere
 	| Texture
@@ -445,6 +454,7 @@ export interface JsIConnectionPointTypeToDataTypeMap extends JSConnectionPointTy
 	[JsConnectionPointType.MATRIX4]: Matrix4;
 	[JsConnectionPointType.MATRIX4_ARRAY]: Matrix4[];
 	[JsConnectionPointType.OBJECT_3D]: Object3D;
+	[JsConnectionPointType.OBJECT_3D_ARRAY]: Object3D[];
 	[JsConnectionPointType.PARAM]: BaseParamType;
 	[JsConnectionPointType.PLANE]: Plane;
 	[JsConnectionPointType.QUATERNION]: Quaternion;
@@ -531,6 +541,7 @@ export interface JsIConnectionPointTypeToParamTypeMap extends JSConnectionPointT
 	[JsConnectionPointType.MATRIX4]: ParamType.BUTTON;
 	[JsConnectionPointType.MATRIX4_ARRAY]: ParamType.BUTTON;
 	[JsConnectionPointType.OBJECT_3D]: ParamType.BUTTON;
+	[JsConnectionPointType.OBJECT_3D_ARRAY]: ParamType.BUTTON;
 	[JsConnectionPointType.PARAM]: ParamType.PARAM_PATH;
 	[JsConnectionPointType.PLANE]: ParamType.BUTTON;
 	[JsConnectionPointType.QUATERNION]: ParamType.BUTTON;
@@ -573,6 +584,7 @@ export const JsConnectionPointTypeToParamTypeMap: JsIConnectionPointTypeToParamT
 	[JsConnectionPointType.MATRIX4]: ParamType.BUTTON,
 	[JsConnectionPointType.MATRIX4_ARRAY]: ParamType.BUTTON,
 	[JsConnectionPointType.OBJECT_3D]: ParamType.BUTTON,
+	[JsConnectionPointType.OBJECT_3D_ARRAY]: ParamType.BUTTON,
 	[JsConnectionPointType.PARAM]: ParamType.PARAM_PATH,
 	[JsConnectionPointType.PLANE]: ParamType.BUTTON,
 	[JsConnectionPointType.QUATERNION]: ParamType.BUTTON,
@@ -663,6 +675,7 @@ export const JsConnectionPointInitValueMap: ConnectionPointInitValueMapGeneric =
 	[JsConnectionPointType.MATRIX4]: null,
 	[JsConnectionPointType.MATRIX4_ARRAY]: null,
 	[JsConnectionPointType.OBJECT_3D]: null,
+	[JsConnectionPointType.OBJECT_3D_ARRAY]: null,
 	[JsConnectionPointType.PARAM]: '',
 	[JsConnectionPointType.PLANE]: null,
 	[JsConnectionPointType.QUATERNION]: null,
@@ -714,6 +727,7 @@ export const JsConnectionPointComponentsCountMap: ConnectionPointComponentsCount
 	[JsConnectionPointType.MATRIX4]: 1,
 	[JsConnectionPointType.MATRIX4_ARRAY]: 1,
 	[JsConnectionPointType.OBJECT_3D]: 1,
+	[JsConnectionPointType.OBJECT_3D_ARRAY]: 1,
 	[JsConnectionPointType.PARAM]: 1,
 	[JsConnectionPointType.PLANE]: 1,
 	[JsConnectionPointType.QUATERNION]: 1,

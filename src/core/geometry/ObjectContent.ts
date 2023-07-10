@@ -38,6 +38,7 @@ export interface ObjectContent<T extends CoreObjectType> {
 	dispose?: () => void;
 	traverse(callback: (object: ObjectContent<T>) => any): void;
 	applyMatrix4(matrix: Matrix4): void;
+	add: (...object: any[]) => void;
 	remove: (...object: any[]) => void;
 }
 

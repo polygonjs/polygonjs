@@ -73,9 +73,11 @@ export abstract class BaseNamedFunction {
 }
 export abstract class NamedFunction<ARGS extends Array<any>, ARGS_STR extends Array<string>> extends BaseNamedFunction {
 	abstract override func(...args: ARGS): any;
+	protected async = false;
 	override asString(...args: ARGS_STR): string {
 		super.asString(...args);
-		return `${this.type()}(${args.join(', ')})`;
+		const functionCall = `${this.type()}(${args.join(', ')})`;
+		return this.async ? `await ${functionCall}` : functionCall;
 	}
 }
 

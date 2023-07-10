@@ -1,4 +1,4 @@
-import {BufferAttribute, Color, Object3D} from 'three';
+import {BufferAttribute, Color, Mesh, Object3D} from 'three';
 import {SORTED_PALETTE_NAMES} from '../../../../src/core/color/chromotomeWrapper';
 import {AttribClass} from '../../../../src/core/geometry/Constant';
 import {CoreObject} from '../../../../src/core/geometry/Object';
@@ -108,4 +108,26 @@ QUnit.test('sop/palette simple object', async (assert) => {
 	assert.in_delta(colors[9], 0.8713671191959567, delta, '3r');
 	assert.in_delta(colors[10], 0.8796223968851662, delta, '3g');
 	assert.in_delta(colors[11], 0.9046611743890203, delta, '3b');
+
+	// add an attrib promote
+	const attribPromote1 = geo1.createNode('attribPromote');
+	attribPromote1.setInput(0, palette);
+	attribPromote1.setAttribClassFrom(AttribClass.OBJECT);
+	attribPromote1.setAttribClassTo(AttribClass.VERTEX);
+	attribPromote1.p.name.set('color');
+
+	async function vertexColors() {
+		const container = await attribPromote1.compute();
+		const objects = container.coreContent()?.threejsObjects() || [];
+		return objects.map((object: Object3D) => (object as Mesh).geometry.getAttribute('color') as BufferAttribute);
+	}
+	await vertexColors();
+	assert.notOk(attribPromote1.states.error.message(), 'no error');
+	assert.equal((await vertexColors()).length, 4, '4 buffers');
+	assert.deepEqual((await vertexColors())[0].array[0], 0.9046611785888672, 'buffer 0');
+	assert.deepEqual((await vertexColors())[0].array[1], 0.0003035269910469651, 'buffer 0');
+	assert.deepEqual((await vertexColors())[0].array[2], 0.0012141079641878605, 'buffer 0');
+	assert.deepEqual((await vertexColors())[1].array[0], 0.9215818643569946, 'buffer 1');
+	assert.deepEqual((await vertexColors())[2].array[1], 0.13563333451747894, 'buffer 1');
+	assert.deepEqual((await vertexColors())[3].array[2], 0.9046611785888672, 'buffer 1');
 });
