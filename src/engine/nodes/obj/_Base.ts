@@ -6,6 +6,7 @@ import {Group} from 'three';
 import {ChildrenDisplayController} from './utils/ChildrenDisplayController';
 import {TransformController} from './utils/TransformController';
 import {HierarchyController} from './utils/HierarchyController';
+import {Poly} from '../../Poly';
 
 interface Object3DWithNode extends Object3D {
 	node: BaseNodeType;
@@ -62,12 +63,14 @@ export class TypedObjNode<O extends Object3D, K extends NodeParamsConfig> extend
 	addObjectToParent(parent: Object3D) {
 		if (this.attachableToHierarchy()) {
 			parent.add(this.object);
+			Poly.onObjectsAddRemoveHooks.runOnAddHookOnObject(this._scene, this.object);
 		}
 	}
 	removeObjectFromParent() {
 		if (this.attachableToHierarchy()) {
 			const parent = this.object.parent;
 			if (parent) {
+				Poly.onObjectsAddRemoveHooks.runOnRemoveHookOnObject(this._scene, this.object);
 				parent.remove(this.object);
 			}
 		}

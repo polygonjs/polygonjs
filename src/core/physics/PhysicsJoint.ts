@@ -8,7 +8,7 @@ import type {
 	RevoluteImpulseJoint,
 } from '@dimforge/rapier3d-compat';
 import {Object3D, Vector4, Vector3, Vector2} from 'three';
-import {PhysicsLib} from './CorePhysics';
+import {CorePhysicsLoaded, PhysicsLib} from './CorePhysics';
 import {physicsWorldNodeIdFromObject} from './PhysicsWorld';
 import {TypeAssert} from './../../engine/poly/Assert';
 import {CoreGraphNodeId} from '../graph/CoreGraph';
@@ -22,6 +22,10 @@ import {
 	getObjectString,
 	setObjectString,
 } from '../geometry/AttributeUtils';
+import {CorePhysicsAttribute} from './PhysicsAttribute';
+import {_getPhysicsWorldFromRBD, _getRBD} from './PhysicsRBD';
+import {removeFromParent} from '../../engine/poly/PolyOnObjectsAddRemoveHooksController';
+import {PolyScene} from '../../engine/scene/PolyScene';
 export enum PhysicsJointType {
 	FIXED = 'fixed',
 	SPHERICAL = 'spherical',
@@ -135,7 +139,7 @@ export class CorePhysicsJoinAttribute {
 type JointDataListByWorldObject = Map<CoreGraphNodeId, JointData[]>;
 const jointDataListByWorldObject: JointDataListByWorldObject = new Map();
 
-export function setJointDataListForWorldObject(worldObject: Object3D) {
+export function setJointDataListForWorldObject(scene: PolyScene, worldObject: Object3D) {
 	const nodeId = physicsWorldNodeIdFromObject(worldObject);
 	if (nodeId == null) {
 		return;
@@ -151,7 +155,8 @@ export function setJointDataListForWorldObject(worldObject: Object3D) {
 		}
 	});
 	for (let child of childrenToRemove) {
-		child.parent?.remove(child);
+		// child.parent?.remove(child);
+		removeFromParent(scene, child);
 	}
 }
 
@@ -390,4 +395,74 @@ function _createJoint(
 		}
 	}
 	TypeAssert.unreachable(jointType);
+}
+
+export function _physicsRBDCreateConstraint(rbdObject: Object3D, anchor: Vector3): string | undefined {
+	const PhysicsLib = CorePhysicsLoaded();
+	if (!PhysicsLib) {
+		return;
+	}
+	const rbd1Id = CorePhysicsAttribute.getRBDId(rbdObject);
+	if (rbd1Id == null) {
+		return;
+	}
+	const rbd1 = _getRBD(rbdObject);
+	if (!rbd1) {
+		return;
+	}
+	const world = _getPhysicsWorldFromRBD(rbdObject);
+	if (!world) {
+		return;
+	}
+	// worldByRBD.set(rigidBody, world);
+	// physicsRBDByRBDId.set(handle, rigidBody);
+
+	// const rbd1 = world.getRigidBody(rbdId)
+	// const rbdType: RigidBodyType = RigidBodyType.KinematicPositionBased;
+	// const rigidBodyDesc = new PhysicsLib.RigidBodyDesc(rbdType);
+	// rigidBodyDesc.setTranslation(rbdObject.position.x, rbdObject.position.y, rbdObject.position.z);
+	// const rbd2Id = `constraint-${rbd1}-${performance.now()}`;
+	// const rbd2 = _createRBDFromDescAndId(world, rigidBodyDesc, rbd2Id);
+
+	// const jointData: JointData = {
+	// 	jointType: PhysicsJointType.SPHERICAL,
+	// 	rbdId1: rbd1Id,
+	// 	rbdId2: rbd2Id,
+	// 	anchor1: anchor,
+	// 	anchor2: anchor,
+	// 	data: {},
+	// };
+	// _createJoint(world, PhysicsLib, jointData, rbd1, rbd2);
+
+	// return rbd2Id;
+	return 'not implemented';
+}
+export function _physicsRBDDeleteConstraints(rbdObject: Object3D) {
+	const handle = CorePhysicsAttribute.getRBDHandle(rbdObject);
+	if (handle == null) {
+		return;
+	}
+	const body = _getRBD(rbdObject);
+	if (!body) {
+		return;
+	}
+	const world = _getPhysicsWorldFromRBD(rbdObject);
+	if (!world) {
+		return;
+	}
+
+	const wakeUp = true;
+	const handles: number[] = [];
+	world.impulseJoints.forEachJointHandleAttachedToRigidBody(handle, (jointHandle) => {
+		handles.push(jointHandle);
+		// do not attempt to delete the joint from within forEachJointHandleAttachedToRigidBody
+		// as it will not work. Instead accumulate the handles,
+		// and do it right after
+	});
+	for (const jointHandle of handles) {
+		const joint = world.getImpulseJoint(jointHandle);
+		if (joint) {
+			world.removeImpulseJoint(joint, wakeUp);
+		}
+	}
 }

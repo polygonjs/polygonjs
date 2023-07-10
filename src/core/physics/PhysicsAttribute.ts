@@ -11,10 +11,11 @@ import {
 	getObjectString,
 	setObjectString,
 } from '../geometry/AttributeUtils';
+import {CoreObject} from '../geometry/Object';
 
 export enum PhysicsIdAttribute {
 	WORLD = 'PhysicsIdAttribute_worldId',
-	RBD = 'PhysicsIdAttribute_rbdId',
+	RBD_HANDLE = 'PhysicsIdAttribute_rbdHandle',
 	DEBUG = 'PhysicsIdAttribute_debugId',
 }
 export enum PhysicsRBDType {
@@ -128,6 +129,15 @@ export function physicsAttribNameLive(attribute: PhysicsAttribute): string {
 }
 
 export class CorePhysicsAttribute {
+	static setRBDHandle(object: ObjectContent<CoreObjectType>, value: number) {
+		setObjectNumber(object, PhysicsIdAttribute.RBD_HANDLE, value);
+	}
+	static getRBDHandle(object: ObjectContent<CoreObjectType>): number {
+		return getObjectNumber(object, PhysicsIdAttribute.RBD_HANDLE, -1);
+	}
+	static deleteRBDHandle(object: ObjectContent<CoreObjectType>): void {
+		CoreObject.deleteAttribute(object, PhysicsIdAttribute.RBD_HANDLE);
+	}
 	// common
 	static setRBDId(object: ObjectContent<CoreObjectType>, value: string) {
 		setObjectString(object, PhysicsCommonAttribute.RBD_ID, value);

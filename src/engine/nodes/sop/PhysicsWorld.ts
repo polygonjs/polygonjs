@@ -62,14 +62,14 @@ export class PhysicsWorldSopNode extends TypedActorSopNode<PhysicsWorldSopParams
 		const worldObject = new Group();
 		worldObject.name = this.name();
 		worldObject.matrixAutoUpdate = false;
-		Poly.onObjectsAddedHooks.assignHookHandler(worldObject, this);
+		Poly.onObjectsAddRemoveHooks.assignOnAddHookHandler(worldObject, this);
 		CoreObject.addAttribute(worldObject, PhysicsIdAttribute.WORLD, this.graphNodeId());
 
 		const inputObjects = coreGroup.threejsObjects();
 		for (let inputObject of inputObjects) {
 			worldObject.add(inputObject);
 		}
-		setJointDataListForWorldObject(worldObject);
+		setJointDataListForWorldObject(this.scene(), worldObject);
 
 		// const {world, PhysicsLib} = await createOrFindPhysicsWorld(this, worldObject, this.pv.gravity);
 		// this._PhysicsLib = PhysicsLib;

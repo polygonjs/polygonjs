@@ -20,7 +20,6 @@ export async function createOrFindPhysicsWorld(node: BaseNodeType, worldObject: 
 	const PhysicsLib = await CorePhysics();
 	let world = physicsworldByGraphNodeId.get(nodeId);
 	if (!world) {
-		// const gravity = {x: 0.0, y: -9.81, z: 0.0};
 		world = new PhysicsLib.World(gravity);
 		physicsworldByGraphNodeId.set(nodeId, world);
 	}

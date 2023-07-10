@@ -18,7 +18,7 @@ import {createCSS2DObject} from '../../../core/render/CSSRenderers/CSS2DObject';
 import {stringToAttribNames} from '../../../core/String';
 import {Object3D} from 'three';
 import {InputCloneMode} from '../../poly/InputCloneMode';
-import {replaceChild} from '../../poly/PolyOnObjectsAddedHooksController';
+import {replaceChild} from '../../poly/PolyOnObjectsAddRemoveHooksController';
 import {CoreObjectType, ObjectContent} from '../../../core/geometry/ObjectContent';
 class CSS2DObjectSopParamsConfig extends NodeParamsConfig {
 	/** @param toggles on if attributes are copied from the geometry to the html element */
@@ -89,7 +89,7 @@ export class CSS2DObjectSopNode extends TypedSopNode<CSS2DObjectSopParamsConfig>
 		}
 	}
 	private _addAttributes(object: ObjectContent<CoreObjectType>) {
-		Poly.onObjectsAddedHooks.assignHookHandler(object, this);
+		Poly.onObjectsAddRemoveHooks.assignOnAddHookHandler(object, this);
 		if (this.pv.overrideId) {
 			CoreCSSObjectAttribute.setElementId(object, this.pv.id);
 		}

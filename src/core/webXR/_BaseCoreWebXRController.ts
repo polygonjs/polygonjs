@@ -55,7 +55,7 @@ export abstract class BaseCoreWebXRController {
 	}
 
 	private _createController(controllerIndex: number): CoreWebXRControllerContainer {
-		const controllerContainer = new CoreWebXRControllerContainer(this.renderer, controllerIndex);
+		const controllerContainer = new CoreWebXRControllerContainer(this.scene, this.renderer, controllerIndex);
 		controllerContainer.initialize(this.camera);
 		this.controllerContainers.push(controllerContainer);
 		this._addControllerEvents(controllerContainer, controllerIndex);

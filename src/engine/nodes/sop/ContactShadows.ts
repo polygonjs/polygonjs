@@ -72,7 +72,7 @@ export class ContactShadowsSopNode extends TypedSopNode<ContactShadowsSopParamsC
 
 		const objects = coreGroup.threejsObjectsWithGeo();
 		for (const object of objects) {
-			Poly.onObjectsAddedHooks.assignHookHandler(object, this);
+			Poly.onObjectsAddRemoveHooks.assignOnAddHookHandler(object, this);
 		}
 		this.setCoreGroup(coreGroup);
 	}

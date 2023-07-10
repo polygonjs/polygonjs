@@ -168,7 +168,7 @@ export class TetSoftBodySolverSopNode extends TetSopNode<TetSoftBodySolverSopPar
 						highResObject,
 					};
 					this._tetEmbedByThreejsObjectEphemeralId.set(nextId, tetEmbed);
-					Poly.onObjectsAddedHooks.assignHookHandler(displayedObject, this);
+					Poly.onObjectsAddRemoveHooks.assignOnAddHookHandler(displayedObject, this);
 					newThreejsObjects.push(displayedObject);
 				}
 			}

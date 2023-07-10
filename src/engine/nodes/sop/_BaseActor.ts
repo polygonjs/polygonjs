@@ -17,6 +17,7 @@ import {JsAssemblerActor} from '../js/code/assemblers/actor/ActorAssembler';
 import {Poly} from '../../Poly';
 import {ActorPersistedConfig} from '../js/code/assemblers/actor/ActorPersistedConfig';
 import {ActorCompilationController} from '../../../core/actor/ActorCompilationController';
+import {CoreObjectType, ObjectContent} from '../../../core/geometry/ObjectContent';
 
 export class TypedActorSopNode<K extends NodeParamsConfig> extends TypedSopNode<K> {
 	//
@@ -74,6 +75,13 @@ export class TypedActorSopNode<K extends NodeParamsConfig> extends TypedSopNode<
 	public readonly compilationController: ActorCompilationController = new ActorCompilationController(this);
 	compile() {
 		this.compilationController.compile();
+	}
+
+	//
+	// clean
+	//
+	override updateObjectOnRemove(object: ObjectContent<CoreObjectType>, parent: ObjectContent<CoreObjectType>) {
+		this.compilationController.evaluatorGenerator().deleteEvaluator(object);
 	}
 }
 

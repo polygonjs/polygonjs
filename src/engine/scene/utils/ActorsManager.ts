@@ -10,6 +10,7 @@ import {AssemblerControllerNode} from '../../nodes/js/code/Controller';
 import {JsAssemblerActor} from '../../nodes/js/code/assemblers/actor/ActorAssembler';
 import {ActorCompilationController} from '../../../core/actor/ActorCompilationController';
 import {ObjectContent, CoreObjectType} from '../../../core/geometry/ObjectContent';
+import {Poly} from '../../Poly';
 
 const ACTOR_BUILDER_NODE_IDS_KEY = 'actorBuilderNodeIds';
 
@@ -86,9 +87,7 @@ export class ActorsManager {
 		if (!ids.includes(id)) {
 			ids.push(id);
 		}
-
-		// this._actorNodes.add(node);
-		// this._findSceneEvents(node);
+		Poly.onObjectsAddRemoveHooks.assignOnRemoveHookHandler(object, node);
 	}
 	objectActorNodeIds(object: ObjectContent<CoreObjectType>) {
 		return object.userData[ACTOR_BUILDER_NODE_IDS_KEY] as number[] | undefined;

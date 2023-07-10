@@ -20,7 +20,7 @@ import {Poly} from '../../Poly';
 import {Object3D, Mesh} from 'three';
 import {isBooleanTrue} from '../../../core/Type';
 import {Water, WaterOptions} from '../../../modules/core/objects/Water';
-import {replaceChild} from '../../poly/PolyOnObjectsAddedHooksController';
+import {replaceChild} from '../../poly/PolyOnObjectsAddRemoveHooksController';
 const DEFAULT = DEFAULT_PARAMS;
 
 class OceanPlaneSopParamsConfig extends NodeParamsConfig {
@@ -90,7 +90,7 @@ export class OceanPlaneSopNode extends TypedSopNode<OceanPlaneSopParamsConfig> {
 
 		const objects = coreGroup.threejsObjectsWithGeo();
 		for (const object of objects) {
-			Poly.onObjectsAddedHooks.assignHookHandler(object, this);
+			Poly.onObjectsAddRemoveHooks.assignOnAddHookHandler(object, this);
 		}
 		this.setCoreGroup(coreGroup);
 	}

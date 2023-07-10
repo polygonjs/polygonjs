@@ -181,7 +181,7 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 			return;
 		}
 		for (let object of selectedObjects) {
-			Poly.onObjectsAddedHooks.assignHookHandler(object, this);
+			Poly.onObjectsAddRemoveHooks.assignOnAddHookHandler(object, this);
 			setParticleRenderer(this.graphNodeId(), renderer);
 			CoreParticlesAttribute.setParticlesNodeId(object, this.graphNodeId());
 			CoreParticlesAttribute.setDataType(object, this.pv.dataType);

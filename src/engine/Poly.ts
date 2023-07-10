@@ -14,7 +14,7 @@ import {PolyPerformanceformanceController} from './poly/PerformanceController';
 import {ScenesRegister} from './poly/ScenesRegister';
 // import {LogoController} from './poly/LogoController';
 import {PolyThirdPartyController} from './poly/ThirdPartyController';
-import {PolyOnObjectsAddedHooksController} from './poly/PolyOnObjectsAddedHooksController';
+import {PolyOnObjectsAddRemoveHooksController} from './poly/PolyOnObjectsAddRemoveHooksController';
 import {PolyOnSceneUpdatedHooksController} from './poly/PolyOnSceneUpdatedHooksController';
 import {PolySpecializedChildrenController} from './poly/PolySpecializedChildrenController';
 import {Camera} from 'three';
@@ -67,7 +67,7 @@ export class PolyEngine {
 	public readonly assetUrls: AssetUrlsController = new AssetUrlsController();
 	// public readonly logo = new LogoController();
 	public readonly thirdParty = new PolyThirdPartyController();
-	public readonly onObjectsAddedHooks = new PolyOnObjectsAddedHooksController();
+	public readonly onObjectsAddRemoveHooks = new PolyOnObjectsAddRemoveHooksController();
 	public readonly onSceneUpdatedHooks = new PolyOnSceneUpdatedHooksController();
 	public readonly specializedChildren = new PolySpecializedChildrenController();
 	// public readonly selfContainedScenesLoader: SelfContainedScenesLoader = new SelfContainedScenesLoader();

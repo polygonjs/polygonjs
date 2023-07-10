@@ -1,4 +1,4 @@
-import {BufferGeometry, Object3D, Material, Mesh, Matrix4} from 'three';
+import {BufferGeometry, Object3D, Material, Matrix4} from 'three';
 import {ObjectUtils} from '../ObjectUtils';
 import type {CadGeometry} from './cad/CadCommon';
 import type {CsgGeometry} from './csg/CsgCommon';
@@ -38,6 +38,7 @@ export interface ObjectContent<T extends CoreObjectType> {
 	dispose?: () => void;
 	traverse(callback: (object: ObjectContent<T>) => any): void;
 	applyMatrix4(matrix: Matrix4): void;
+	remove: (...object: any[]) => void;
 }
 
 export function isObject3D<T extends CoreObjectType>(o: ObjectContent<T>): o is Object3D {
@@ -53,7 +54,7 @@ export function objectContentCopyProperties(src: ObjectContent<CoreObjectType>, 
 	target.frustumCulled = src.frustumCulled;
 	target.matrixAutoUpdate = src.matrixAutoUpdate;
 	if (src.material) {
-		(target as Mesh).material = src.material;
+		target.material = src.material;
 	}
 	target.userData = ObjectUtils.cloneDeep(src.userData); //JSON.parse(JSON.stringify(this.userData));
 }

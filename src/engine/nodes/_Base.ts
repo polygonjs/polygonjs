@@ -36,6 +36,7 @@ import {PolyDictionary} from '../../types/GlobalTypes';
 import {SetInputsOptions} from './utils/io/InputsController';
 import {OnNodeRegisterCallback} from '../poly/registers/nodes/NodesRegister';
 import {EventDispatcher, BaseEvent, EventListener} from 'three';
+import {CoreObjectType, ObjectContent} from '../../core/geometry/ObjectContent';
 export interface NodeDeletedEmitData {
 	parent_id: CoreGraphNodeId;
 }
@@ -483,6 +484,9 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 	processError(e: unknown) {
 		return e;
 	}
+
+	public updateObjectOnAdd(object: ObjectContent<CoreObjectType>, parent: ObjectContent<CoreObjectType>) {}
+	public updateObjectOnRemove(object: ObjectContent<CoreObjectType>, parent: ObjectContent<CoreObjectType>) {}
 }
 
 export type BaseNodeType = TypedNode<any, any>;

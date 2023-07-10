@@ -14,7 +14,7 @@ import {SopType} from '../../poly/registers/nodes/types/Sop';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {Poly} from '../../Poly';
 import {Object3D, Vector3, Mesh} from 'three';
-import {replaceChild} from '../../poly/PolyOnObjectsAddedHooksController';
+import {replaceChild} from '../../poly/PolyOnObjectsAddRemoveHooksController';
 const DEFAULT = DEFAULT_PARAMS;
 
 const _v3 = new Vector3();
@@ -89,7 +89,7 @@ export class ReflectorSopNode extends TypedSopNode<ReflectorSopParamsConfig> {
 
 		const objects = coreGroup.threejsObjectsWithGeo();
 		for (const object of objects) {
-			Poly.onObjectsAddedHooks.assignHookHandler(object, this);
+			Poly.onObjectsAddRemoveHooks.assignOnAddHookHandler(object, this);
 		}
 		this.setCoreGroup(coreGroup);
 	}

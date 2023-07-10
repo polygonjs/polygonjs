@@ -289,6 +289,7 @@ import { normalizeVector4 } from "../../../functions/normalizeVector4";
 import { object3DLocalToWorld } from "../../../functions/object3DLocalToWorld";
 import { object3DWorldToLocal } from "../../../functions/object3DWorldToLocal";
 import { objectAddEventListeners } from "../../../functions/objectAddEventListeners";
+import { objectDelete } from "../../../functions/objectDelete";
 import { objectDispatchEvent } from "../../../functions/objectDispatchEvent";
 import { objectUpdateMatrix } from "../../../functions/objectUpdateMatrix";
 import { objectUpdateWorldMatrix } from "../../../functions/objectUpdateWorldMatrix";
@@ -304,7 +305,9 @@ import { physicsRBDAddTorque } from "../../../functions/physicsRBDAddTorque";
 import { physicsRBDApplyImpulse } from "../../../functions/physicsRBDApplyImpulse";
 import { physicsRBDApplyImpulseAtPoint } from "../../../functions/physicsRBDApplyImpulseAtPoint";
 import { physicsRBDApplyTorqueImpulse } from "../../../functions/physicsRBDApplyTorqueImpulse";
-import { physicsRBDRemove } from "../../../functions/physicsRBDRemove";
+import { physicsRBDCreateConstraint } from "../../../functions/physicsRBDCreateConstraint";
+import { physicsRBDDelete } from "../../../functions/physicsRBDDelete";
+import { physicsRBDDeleteConstraints } from "../../../functions/physicsRBDDeleteConstraints";
 import { physicsRBDResetAll } from "../../../functions/physicsRBDResetAll";
 import { physicsRBDResetForces } from "../../../functions/physicsRBDResetForces";
 import { physicsRBDResetTorques } from "../../../functions/physicsRBDResetTorques";
@@ -745,6 +748,7 @@ export interface NamedFunctionMap {
 	object3DLocalToWorld: object3DLocalToWorld;
 	object3DWorldToLocal: object3DWorldToLocal;
 	objectAddEventListeners: objectAddEventListeners;
+	objectDelete: objectDelete;
 	objectDispatchEvent: objectDispatchEvent;
 	objectUpdateMatrix: objectUpdateMatrix;
 	objectUpdateWorldMatrix: objectUpdateWorldMatrix;
@@ -760,7 +764,9 @@ export interface NamedFunctionMap {
 	physicsRBDApplyImpulse: physicsRBDApplyImpulse;
 	physicsRBDApplyImpulseAtPoint: physicsRBDApplyImpulseAtPoint;
 	physicsRBDApplyTorqueImpulse: physicsRBDApplyTorqueImpulse;
-	physicsRBDRemove: physicsRBDRemove;
+	physicsRBDCreateConstraint: physicsRBDCreateConstraint;
+	physicsRBDDelete: physicsRBDDelete;
+	physicsRBDDeleteConstraints: physicsRBDDeleteConstraints;
 	physicsRBDResetAll: physicsRBDResetAll;
 	physicsRBDResetForces: physicsRBDResetForces;
 	physicsRBDResetTorques: physicsRBDResetTorques;
@@ -1204,6 +1210,7 @@ export class AllNamedFunctionRegister {
 			object3DLocalToWorld,
 			object3DWorldToLocal,
 			objectAddEventListeners,
+			objectDelete,
 			objectDispatchEvent,
 			objectUpdateMatrix,
 			objectUpdateWorldMatrix,
@@ -1219,7 +1226,9 @@ export class AllNamedFunctionRegister {
 			physicsRBDApplyImpulse,
 			physicsRBDApplyImpulseAtPoint,
 			physicsRBDApplyTorqueImpulse,
-			physicsRBDRemove,
+			physicsRBDCreateConstraint,
+			physicsRBDDelete,
+			physicsRBDDeleteConstraints,
 			physicsRBDResetAll,
 			physicsRBDResetForces,
 			physicsRBDResetTorques,

@@ -49,8 +49,8 @@ const TEMPLATE = `
 ${INSERT_DEFINE_AFTER}
 class CustomActorEvaluator extends ActorEvaluator {
 	${INSERT_MEMBERS_AFTER}
-	constructor(scene, object3D){
-		super(scene, object3D);
+	constructor(node, object3D){
+		super(node, object3D);
 		${INSERT_CONSTRUCTOR_AFTER}
 	}
 	${INSERT_BODY_AFTER}

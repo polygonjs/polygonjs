@@ -9,6 +9,7 @@ import {JsType} from '../../../../../poly/registers/nodes/types/Js';
 import {EventData} from '../../../../../../core/event/EventData';
 import {ActorBuilderNode} from '../../../../../scene/utils/ActorsManager';
 import {BaseEvaluator} from '../_BaseEvaluator';
+import {CoreObjectType, ObjectContent} from '../../../../../../core/geometry/ObjectContent';
 // import {watch} from '../../../../../../core/reactivity/CoreReactivity';
 // import {getObjectAttributeRef} from '../../../../../../core/reactivity/ObjectAttributeReactivity';
 // import {ref} from '../../../../../../core/reactivity';
@@ -145,7 +146,12 @@ export interface EvaluatorEventData extends EventData {
 	// methodName: EvaluatorMethodName;
 }
 export class ActorEvaluator extends BaseEvaluator {
-	constructor(public override readonly node: ActorBuilderNode, public readonly object3D: Object3D) {
+	constructor(
+		public override readonly node: ActorBuilderNode,
+		// make sure the name of this member 'object3D'
+		// remains consistent with this.object3D used in the ActorAssembler
+		public readonly object3D: ObjectContent<CoreObjectType>
+	) {
 		super(node);
 	}
 

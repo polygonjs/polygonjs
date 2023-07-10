@@ -16,7 +16,7 @@ import {
 	_physicsRBDAddTorque,
 	_physicsRBDApplyImpulse,
 	_physicsRBDApplyImpulseAtPoint,
-	_physicsRBDRemove,
+	_physicsRBDDelete,
 	_physicsRBDResetAll,
 	_physicsRBDApplyTorqueImpulse,
 	_physicsRBDResetForces,
@@ -26,6 +26,7 @@ import {
 	_setPhysicsRBDPosition,
 	_setPhysicsRBDRotation,
 } from '../../core/physics/PhysicsRBD';
+import {_physicsRBDCreateConstraint, _physicsRBDDeleteConstraints} from '../../core/physics/PhysicsJoint';
 import {
 	RBDCapsuleProperty,
 	_getPhysicsRBDCapsuleRadius,
@@ -518,12 +519,12 @@ export class physicsRBDApplyImpulseAtPoint extends ObjectNamedFunction2<[Vector3
 		_physicsRBDApplyImpulseAtPoint(object3D, impulse, point);
 	}
 }
-export class physicsRBDRemove extends ObjectNamedFunction0 {
+export class physicsRBDDelete extends ObjectNamedFunction0 {
 	static override type() {
-		return 'physicsRBDRemove';
+		return 'physicsRBDDelete';
 	}
 	func(object3D: Object3D): void {
-		_physicsRBDRemove(object3D);
+		_physicsRBDDelete(this.scene, object3D);
 	}
 }
 export class physicsRBDResetAll extends ObjectNamedFunction1<[boolean]> {
@@ -548,5 +549,27 @@ export class physicsRBDResetTorques extends ObjectNamedFunction1<[boolean]> {
 	}
 	func(object3D: Object3D, wakeup: boolean): void {
 		_physicsRBDResetTorques(object3D, wakeup);
+	}
+}
+
+//
+//
+// CONSTRAINTS
+//
+//
+export class physicsRBDCreateConstraint extends ObjectNamedFunction1<[Vector3]> {
+	static override type() {
+		return 'physicsRBDCreateConstraint';
+	}
+	func(object3D: Object3D, anchor: Vector3): string | undefined {
+		return _physicsRBDCreateConstraint(object3D, anchor);
+	}
+}
+export class physicsRBDDeleteConstraints extends ObjectNamedFunction0 {
+	static override type() {
+		return 'physicsRBDDeleteConstraints';
+	}
+	func(object3D: Object3D): void {
+		_physicsRBDDeleteConstraints(object3D);
 	}
 }

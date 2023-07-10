@@ -250,3 +250,32 @@ QUnit.test('sop/actor using actorsNetwork', async (assert) => {
 
 	RendererUtils.dispose();
 });
+
+QUnit.test('sop/actor removes unused objects', async (assert) => {
+	const scene = window.scene;
+	const perspective_camera1 = window.perspective_camera1;
+	const geo1 = window.geo1;
+	const box1 = geo1.createNode('box');
+	const actor1 = geo1.createNode('actor');
+	const null1 = geo1.createNode('null');
+
+	actor1.setInput(0, box1);
+	null1.setInput(0, actor1);
+	null1.flags.display.set(true);
+
+	const onObjectClick1 = actor1.createNode('onObjectClick');
+	const setObjectPosition = actor1.createNode('setObjectPosition');
+	setObjectPosition.setInput(0, onObjectClick1);
+
+	await RendererUtils.withViewer({cameraNode: perspective_camera1}, async (args) => {
+		scene.play();
+		await CoreSleep.sleep(100);
+
+		assert.equal(actor1.compilationController.evaluatorGenerator().size(), 1);
+
+		null1.setDirty();
+		await CoreSleep.sleep(100);
+		assert.equal(actor1.compilationController.evaluatorGenerator().size(), 1);
+	});
+	RendererUtils.dispose();
+});

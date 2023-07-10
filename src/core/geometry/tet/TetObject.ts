@@ -41,6 +41,7 @@ export class TetObject implements ObjectContent<CoreObjectType.TET> {
 	applyMatrix4(matrix: Matrix4) {
 		this.geometry.applyMatrix4(matrix);
 	}
+	remove(...object: ObjectContent<CoreObjectType>[]) {}
 	traverse(callback: (object: TetObject) => any) {
 		callback(this);
 	}

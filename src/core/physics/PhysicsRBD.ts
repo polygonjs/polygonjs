@@ -1,10 +1,9 @@
 import {TypeAssert} from './../../engine/poly/Assert';
 // import {CorePhysicsUserData} from './PhysicsUserData';
-import {PhysicsRBDColliderType, PhysicsRBDType, CorePhysicsAttribute, PhysicsIdAttribute} from './PhysicsAttribute';
+import {PhysicsRBDColliderType, PhysicsRBDType, CorePhysicsAttribute} from './PhysicsAttribute';
 import {Object3D, Vector3, Quaternion} from 'three';
-import type {World, RigidBodyType, RigidBodyDesc, RigidBody, ColliderDesc} from '@dimforge/rapier3d-compat';
+import {World, RigidBodyType, RigidBodyDesc, RigidBody, ColliderDesc} from '@dimforge/rapier3d-compat';
 import {CorePhysicsLoaded, PhysicsLib, Object3DByRididBody} from './CorePhysics';
-import {CoreObject} from '../geometry/Object';
 import {createPhysicsSphere} from './shapes/RBDSphere';
 import {createPhysicsCuboid} from './shapes/RBDCuboid';
 import {createPhysicsCapsule} from './shapes/RBDCapsule';
@@ -15,6 +14,8 @@ import {createPhysicsConvexHull} from './shapes/ConvexHull';
 import {createPhysicsHeightField} from './shapes/HeightField';
 import {touchRBDProperties, touchRBDProperty} from '../reactivity/RBDPropertyReactivity';
 import {OBJECT_TRANSFORM_PROPERTIES, touchObjectProperties} from '../reactivity/ObjectPropertyReactivity';
+import {PolyScene} from '../../engine/scene/PolyScene';
+import {removeFromParent} from '../../engine/poly/PolyOnObjectsAddRemoveHooksController';
 
 export enum RBDProperty {
 	ANGULAR_VELOCITY = 'angVel',
@@ -46,15 +47,22 @@ interface CollidescObjectPair {
 	colliderDesc: ColliderDesc;
 }
 
-const physicsRBDByRBDId: Map<number, RigidBody> = new Map();
+const physicsRBDByRBDHandle: Map<number, RigidBody> = new Map();
+const physicsRBDByRBDId: Map<string, RigidBody> = new Map();
 const worldByRBD: WeakMap<RigidBody, World> = new WeakMap();
 
-function _createRBDFromDesc(world: World, rigidBodyDesc: RigidBodyDesc, object: Object3D) {
+function _createRBDFromDescAndId(world: World, rigidBodyDesc: RigidBodyDesc, rbdId: string) {
 	const rigidBody = world.createRigidBody(rigidBodyDesc);
 	const handle = rigidBody.handle;
 	worldByRBD.set(rigidBody, world);
-	physicsRBDByRBDId.set(handle, rigidBody);
-	CoreObject.addAttribute(object, PhysicsIdAttribute.RBD, handle);
+	physicsRBDByRBDHandle.set(handle, rigidBody);
+	physicsRBDByRBDId.set(rbdId, rigidBody);
+	return rigidBody;
+}
+function _createRBDFromDescAndObject(world: World, rigidBodyDesc: RigidBodyDesc, object: Object3D) {
+	const rbdId = CorePhysicsAttribute.getRBDId(object);
+	const rigidBody = _createRBDFromDescAndId(world, rigidBodyDesc, rbdId);
+	CorePhysicsAttribute.setRBDHandle(object, rigidBody.handle);
 	return rigidBody;
 }
 interface CreateRBDFromAttributesOptions {
@@ -107,7 +115,7 @@ function _createRBDFromAttributes(options: CreateRBDFromAttributesOptions) {
 	}
 
 	// create RBD
-	const rigidBody = _createRBDFromDesc(world, rigidBodyDesc, object);
+	const rigidBody = _createRBDFromDescAndObject(world, rigidBodyDesc, object);
 	objectsByRigidBody.set(rigidBody, object);
 	const rbdId = CorePhysicsAttribute.getRBDId(object);
 	if (rbdId) {
@@ -140,19 +148,26 @@ function _createColliderDesc(PhysicsLib: PhysicsLib, object: Object3D) {
 	return colliderDesc;
 }
 export function _getRBD(object: Object3D) {
-	const rbdId = CoreObject.attribValue(object, PhysicsIdAttribute.RBD) as number | undefined;
-	if (rbdId == null) {
+	const handle = CorePhysicsAttribute.getRBDHandle(object);
+	if (handle == null) {
 		return;
 	}
-	return physicsRBDByRBDId.get(rbdId);
+	return physicsRBDByRBDHandle.get(handle);
+}
+export function _getPhysicsWorldFromRBD(object: Object3D) {
+	const rbd = _getRBD(object);
+	if (!rbd) {
+		return;
+	}
+	return worldByRBD.get(rbd);
 }
 
-export function _physicsRBDRemove(object: Object3D) {
-	const rbdId = CoreObject.attribValue(object, PhysicsIdAttribute.RBD) as number | undefined;
-	if (rbdId == null) {
+export function _physicsRBDDelete(scene: PolyScene, object: Object3D) {
+	const handle = CorePhysicsAttribute.getRBDHandle(object);
+	if (handle == null) {
 		return;
 	}
-	const body = physicsRBDByRBDId.get(rbdId);
+	const body = physicsRBDByRBDHandle.get(handle);
 	if (!body) {
 		return;
 	}
@@ -162,9 +177,9 @@ export function _physicsRBDRemove(object: Object3D) {
 	}
 	world.removeRigidBody(body);
 	worldByRBD.delete(body);
-	physicsRBDByRBDId.delete(rbdId);
-	CoreObject.deleteAttribute(object, PhysicsIdAttribute.RBD);
-	object.visible = false;
+	physicsRBDByRBDHandle.delete(handle);
+	CorePhysicsAttribute.deleteRBDHandle(object);
+	removeFromParent(scene, object);
 }
 
 interface PhysicsCreateRBDOptions {

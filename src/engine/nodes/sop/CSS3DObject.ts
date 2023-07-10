@@ -19,7 +19,7 @@ import {InputCloneMode} from '../../poly/InputCloneMode';
 import {CoreObjectType, ObjectContent} from '../../../core/geometry/ObjectContent';
 import {stringToAttribNames} from '../../../core/String';
 import {Object3D} from 'three';
-import {replaceChild} from '../../poly/PolyOnObjectsAddedHooksController';
+import {replaceChild} from '../../poly/PolyOnObjectsAddRemoveHooksController';
 class CSS3DObjectSopParamsConfig extends NodeParamsConfig {
 	/** @param toggles on if attributes are copied from the geometry to the html element */
 	copyAttributes = ParamConfig.BOOLEAN(true);
@@ -92,7 +92,7 @@ export class CSS3DObjectSopNode extends TypedSopNode<CSS3DObjectSopParamsConfig>
 		}
 	}
 	private _addAttributes(object: ObjectContent<CoreObjectType>) {
-		Poly.onObjectsAddedHooks.assignHookHandler(object, this);
+		Poly.onObjectsAddRemoveHooks.assignOnAddHookHandler(object, this);
 		// CoreCSSObjectAttribute.setNodeId(object, this.graphNodeId());
 		if (this.pv.overrideId) {
 			CoreCSSObjectAttribute.setElementId(object, this.pv.id);

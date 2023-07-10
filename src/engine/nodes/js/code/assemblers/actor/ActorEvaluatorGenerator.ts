@@ -1,21 +1,27 @@
-import {Object3D} from 'three';
 import {EvaluatorEventData, ActorEvaluator} from './ActorEvaluator';
+import {CoreObjectType, ObjectContent} from '../../../../../../core/geometry/ObjectContent';
 
-type GeneratorFunction = (object3D: Object3D) => ActorEvaluator;
+type GeneratorFunction = (object: ObjectContent<CoreObjectType>) => ActorEvaluator;
 type EvaluatorCallback = (evaluator: ActorEvaluator) => void;
 
 export class ActorEvaluatorGenerator {
 	constructor(private _func: GeneratorFunction) {}
-	private _evaluatorByObject: Map<Object3D, ActorEvaluator> = new Map();
+	private _evaluatorByObject: Map<ObjectContent<CoreObjectType>, ActorEvaluator> = new Map();
 	eventDatas?: Set<EvaluatorEventData>;
-	private _createEvaluator(object3D: Object3D) {
-		return this._func(object3D);
+	private _createEvaluator(object: ObjectContent<CoreObjectType>) {
+		return this._func(object);
 	}
-	findOrCreateEvaluator(object3D: Object3D) {
-		let evaluator = this._evaluatorByObject.get(object3D);
+	size(): number {
+		return this._evaluatorByObject.size;
+	}
+	deleteEvaluator(object: ObjectContent<CoreObjectType>) {
+		this._evaluatorByObject.delete(object);
+	}
+	findOrCreateEvaluator(object: ObjectContent<CoreObjectType>) {
+		let evaluator = this._evaluatorByObject.get(object);
 		if (!evaluator) {
-			evaluator = this._createEvaluator(object3D);
-			this._evaluatorByObject.set(object3D, evaluator);
+			evaluator = this._createEvaluator(object);
+			this._evaluatorByObject.set(object, evaluator);
 		}
 		return evaluator;
 	}

@@ -106,81 +106,15 @@ export class ClothSolverSopNode extends TypedSopNode<ClothSolverSopParamsConfig>
 
 		const objects = coreGroup.threejsObjects();
 		const object = objects[0];
-
-		// get texture size
-		// if (!isBooleanTrue(this.pv.autoTexturesSize)) {
-		// 	// const nearest_power_of_two = CoreMath.nearestPower2(Math.sqrt(pointsCount));
-		// 	// _usedTexturesSize.x = Math.min(nearest_power_of_two, this.pv.maxTexturesSize.x);
-		// 	// _usedTexturesSize.y = Math.min(nearest_power_of_two, this.pv.maxTexturesSize.y);
-		// 	// } else {
-		// 	if (!(MathUtils.isPowerOfTwo(this.pv.texturesSize.x) && MathUtils.isPowerOfTwo(this.pv.texturesSize.y))) {
-		// 		this.states.error.set('texture size must be a power of 2');
-		// 		return;
-		// 	}
-
-		// 	const pointsCount = coreParticlesGpuComputeControllerPointsCount(object);
-		// 	const maxParticlesCount = this.pv.texturesSize.x * this.pv.texturesSize.y;
-		// 	if (pointsCount > maxParticlesCount) {
-		// 		this.states.error.set(
-		// 			`max particles is set to (${this.pv.texturesSize.x}x${this.pv.texturesSize.y}=) ${maxParticlesCount}`
-		// 		);
-		// 		return;
-		// 	}
-		// }
-
 		const existingActorIds = this.scene().actorsManager.objectActorNodeIds(object);
 		if (existingActorIds == null || existingActorIds.length == 0) {
 			this.states.error.set(`the input objects requires an actor node assigned to it`);
 		}
-		// const renderer = await this.scene().renderersRegister.waitForRenderer();
+
 		CoreObject.addAttribute(object, ClothIdAttribute.OBJECT, this.graphNodeId());
-		Poly.onObjectsAddedHooks.assignHookHandler(object, this);
-		// setParticleRenderer(this.graphNodeId(), renderer);
-		// CoreParticlesAttribute.setParticlesNodeId(object, this.graphNodeId());
-		// CoreParticlesAttribute.setDataType(object, this.pv.dataType);
-		// CoreParticlesAttribute.setAutoTextureSize(object, this.pv.autoTexturesSize);
-		// CoreParticlesAttribute.setMaxTextureSize(object, this.pv.maxTexturesSize);
-		// CoreParticlesAttribute.setTextureSize(object, this.pv.texturesSize);
-		// CoreParticlesAttribute.setPreRollFramesCount(object, this.pv.preRollFramesCount);
+		Poly.onObjectsAddRemoveHooks.assignOnAddHookHandler(object, this);
 
-		// const matNode = this.pv.material.nodeWithContext(NodeContext.MAT, this.states?.error);
-		// if (matNode) {
-		// 	const material = await matNode.material();
-		// 	// const baseBuilderMatNode = materialNode as BaseBuilderMatNodeType;
-		// 	// if (baseBuilderMatNode.assemblerController) {
-		// 	// 	baseBuilderMatNode.assemblerController()?.setAssemblerGlobalsHandler(this._globalsHandler);
-		// 	// }
-		// 	CoreParticlesAttribute.setMaterialNodeId(object, matNode.graphNodeId());
-
-		// 	if (!material) {
-		// 		this.states?.error.set(`material invalid. (error: '${matNode.states.error.message()}')`);
-		// 	}
-		// } else {
-		// 	this.states?.error.set(`no material node found`);
-		// }
-		// if (node.p.material.isDirty()) {
-		// 	this.mainController.debugMessage('renderController: this.node.p.material.compute() START');
-		// 	await node.p.material.compute();
-		// 	this.mainController.debugMessage('renderController: this.node.p.material.compute() END');
-		// }
-		// const matNode = node.pv.material.nodeWithContext(NodeContext.MAT, node.states.error) as BaseBuilderMatNodeType;
 		this.setObject(object);
-
-		// this.compilationController.compileIfRequired();
-		// //
-		// Poly.onObjectsAddedHooks.registerHook(this.type(), this.traverseObjectOnSopGroupAdd.bind(this));
-		// const coreGroup = inputCoreGroups[0];
-
-		// const objects: Object3D[] = coreGroup.threejsObjects();
-
-		// const actorNode = this._findActorNode();
-		// for (let object of objects) {
-		// 	CoreObject.addAttribute(object, ClothIdAttribute.OBJECT, this.graphNodeId());
-		// 	// CoreObject.addAttribute(object, ClothSolverAttribute.STEPS_COUNT, this.pv.steps);
-		// 	this.scene().actorsManager.assignActorBuilder(object, actorNode);
-		// }
-
-		// this.setObjects(objects);
 	}
 	public override updateObjectOnAdd(object: Object3D) {
 		//

@@ -130,6 +130,7 @@ export class ChildrenDisplayController {
 			return;
 		}
 		let child: Object3D | undefined;
+		Poly.onObjectsAddRemoveHooks.runOnRemoveHooks(this._scene, this._sopGroup);
 		while ((child = this._sopGroup.children[0])) {
 			this._sopGroup.remove(child);
 		}
@@ -184,7 +185,7 @@ export class ChildrenDisplayController {
 				this._notifyCamerasController();
 				this._runOnSopGroupUpdatedHooks();
 				if (this._scene.loadingController.loaded()) {
-					Poly.onObjectsAddedHooks.runHooks(this._scene, this._sopGroup);
+					Poly.onObjectsAddRemoveHooks.runOnAddHooks(this._scene, this._sopGroup);
 					Poly.onSceneUpdatedHooks.runHooks();
 				}
 				return;
