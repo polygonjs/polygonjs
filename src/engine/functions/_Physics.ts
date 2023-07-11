@@ -7,7 +7,7 @@ import {
 	ObjectNamedFunction3,
 	ObjectNamedFunction4,
 } from './_Base';
-import {setWorldGravity, stepWorld} from '../../core/physics/PhysicsWorld';
+import {physicsCreateRBD, setWorldGravity, stepWorld} from '../../core/physics/PhysicsWorld';
 import {
 	RBDProperty,
 	_getRBD,
@@ -25,8 +25,9 @@ import {
 	_setPhysicsRBDLinearVelocity,
 	_setPhysicsRBDPosition,
 	_setPhysicsRBDRotation,
+	_getRBDFromWorldObject,
 } from '../../core/physics/PhysicsRBD';
-import {_physicsRBDCreateConstraint, _physicsRBDDeleteConstraints} from '../../core/physics/PhysicsJoint';
+import {_createPhysicsRBDKinematicConstraint, _physicsRBDDeleteConstraints} from '../../core/physics/PhysicsJoint';
 import {
 	RBDCapsuleProperty,
 	_getPhysicsRBDCapsuleRadius,
@@ -52,6 +53,7 @@ import {getOrCreatePropertyRef} from '../../core/reactivity/RBDPropertyReactivit
 import {RBDCommonProperty} from '../../core/physics/shapes/_CommonHeightRadius';
 import {dummyReadRefVal} from '../../core/reactivity/CoreReactivity';
 import {_matchArrayLength} from './_ArrayUtils';
+import {Ref} from '@vue/reactivity';
 
 //
 //
@@ -87,6 +89,20 @@ export class setPhysicsWorldGravity extends ObjectNamedFunction2<[Vector3, numbe
 	}
 	func(object3D: Object3D, gravity: Vector3, lerp: number): void {
 		setWorldGravity(object3D, gravity, lerp);
+	}
+}
+//
+//
+// GET RBD
+//
+//
+export class getPhysicsRBD extends ObjectNamedFunction1<[string]> {
+	static override type() {
+		return 'getPhysicsRBD';
+	}
+	func(object3D: Object3D, rbdId: string): Object3D | undefined {
+		dummyReadRefVal(this.timeController.timeUniform().value);
+		return _getRBDFromWorldObject(object3D, rbdId);
 	}
 }
 
@@ -519,14 +535,7 @@ export class physicsRBDApplyImpulseAtPoint extends ObjectNamedFunction2<[Vector3
 		_physicsRBDApplyImpulseAtPoint(object3D, impulse, point);
 	}
 }
-export class physicsRBDDelete extends ObjectNamedFunction0 {
-	static override type() {
-		return 'physicsRBDDelete';
-	}
-	func(object3D: Object3D): void {
-		_physicsRBDDelete(this.scene, object3D);
-	}
-}
+
 export class physicsRBDResetAll extends ObjectNamedFunction1<[boolean]> {
 	static override type() {
 		return 'physicsRBDResetAll';
@@ -554,20 +563,67 @@ export class physicsRBDResetTorques extends ObjectNamedFunction1<[boolean]> {
 
 //
 //
+// ADD / DELETE
+//
+//
+export class createPhysicsRBD extends ObjectNamedFunction2<[Object3D, Ref<string>]> {
+	static override type() {
+		return 'createPhysicsRBD';
+	}
+	func(worldObject: Object3D, object: Object3D, rbdId: Ref<string>): void {
+		const newRBDIds = physicsCreateRBD(worldObject, object);
+		newRBDIds?.forEach((id) => {
+			rbdId.value = id;
+		});
+	}
+}
+export class createPhysicsRBDs extends ObjectNamedFunction2<[Object3D[], Ref<string[]>]> {
+	static override type() {
+		return 'createPhysicsRBDs';
+	}
+	func(worldObject: Object3D, objects: Object3D[], rbdIds: Ref<string[]>): void {
+		for (let object of objects) {
+			const newRBDIds = physicsCreateRBD(worldObject, object);
+			newRBDIds?.forEach((id) => {
+				rbdIds.value.push(id);
+			});
+		}
+	}
+}
+export class physicsRBDDelete extends ObjectNamedFunction0 {
+	static override type() {
+		return 'physicsRBDDelete';
+	}
+	func(object3D: Object3D): void {
+		_physicsRBDDelete(this.scene, object3D);
+	}
+}
+
+//
+//
 // CONSTRAINTS
 //
 //
-export class physicsRBDCreateConstraint extends ObjectNamedFunction1<[Vector3]> {
+export class createPhysicsRBDKinematicConstraint extends ObjectNamedFunction1<[Vector3]> {
 	static override type() {
-		return 'physicsRBDCreateConstraint';
+		return 'createPhysicsRBDKinematicConstraint';
 	}
 	func(object3D: Object3D, anchor: Vector3): string | undefined {
-		return _physicsRBDCreateConstraint(object3D, anchor);
+		return _createPhysicsRBDKinematicConstraint(object3D, anchor);
 	}
 }
-export class physicsRBDDeleteConstraints extends ObjectNamedFunction0 {
+export class deletePhysicsRBDKinematicConstraint extends ObjectNamedFunction0 {
 	static override type() {
-		return 'physicsRBDDeleteConstraints';
+		return 'deletePhysicsRBDKinematicConstraint';
+	}
+	func(object3D: Object3D): void {
+		_physicsRBDDeleteConstraints(object3D);
+	}
+}
+
+export class deletePhysicsRBDConstraints extends ObjectNamedFunction0 {
+	static override type() {
+		return 'deletePhysicsRBDConstraints';
 	}
 	func(object3D: Object3D): void {
 		_physicsRBDDeleteConstraints(object3D);

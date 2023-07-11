@@ -256,7 +256,7 @@ export const FUNCTION_NAME_BY_FILE_NAME: Record<string, string[]> = {
 	NoiseSimplex: ['noiseSimplexVector2', 'noiseSimplexVector3', 'noiseSimplexVector4'],
 	NoiseImproved: ['noiseImprovedVector3'],
 	ObjectDispatchEvent: ['objectDispatchEvent', 'getObjectLastDispatchedEventName', 'objectAddEventListeners'],
-	Object3D: ['getGeometryNodeObjects', 'objectAdd', 'objectsAdd', 'objectDelete'],
+	Object3D: ['getGeometryNodeObjects', 'createObject', 'createObjects', 'objectDelete'],
 	Param: [
 		'getParam',
 		'setParamBoolean',
@@ -275,6 +275,8 @@ export const FUNCTION_NAME_BY_FILE_NAME: Record<string, string[]> = {
 	Physics: [
 		'physicsWorldReset',
 		'physicsWorldStepSimulation',
+		// get
+		'getPhysicsRBD',
 		// get shape
 		'getPhysicsRBDCapsuleRadius',
 		'getPhysicsRBDCapsuleHeight',
@@ -318,13 +320,18 @@ export const FUNCTION_NAME_BY_FILE_NAME: Record<string, string[]> = {
 		'physicsRBDApplyImpulse',
 		'physicsRBDApplyImpulseAtPoint',
 		'physicsRBDApplyTorqueImpulse',
-		'physicsRBDDelete',
+
 		'physicsRBDResetAll',
 		'physicsRBDResetForces',
 		'physicsRBDResetTorques',
+		// add / remove
+		'createPhysicsRBD',
+		'createPhysicsRBDs',
+		'physicsRBDDelete',
 		// constraints
-		'physicsRBDCreateConstraint',
-		'physicsRBDDeleteConstraints',
+		'createPhysicsRBDKinematicConstraint',
+		'deletePhysicsRBDKinematicConstraint',
+		'deletePhysicsRBDConstraints',
 	],
 	PlayerPhysics: ['playerPhysicsUpdate'],
 	PlayerSimple: ['playerSimpleUpdate', 'getPlayerSimplePropertyOnGround', 'getPlayerSimplePropertyVelocity'],

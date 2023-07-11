@@ -1,8 +1,8 @@
-import {PhysicsLib, CorePhysics, Object3DByRididBodyByWorld} from './CorePhysics';
+import {PhysicsLib, CorePhysics, Object3DByRigidBodyByWorld, CorePhysicsLoaded} from './CorePhysics';
 import {World, RigidBody, Collider, ImpulseJoint, MultibodyJoint} from '@dimforge/rapier3d-compat';
 // import {CorePhysicsUserData} from './PhysicsUserData';
 import {Object3D, Vector3} from 'three';
-import {physicsCreateRBD, physicsUpdateRBD} from './PhysicsRBD';
+import {_physicsCreateRBD, physicsUpdateRBD} from './PhysicsRBD';
 import {physicsCreateJoints} from './PhysicsJoint';
 import {CoreGraphNodeId} from '../graph/CoreGraph';
 import {BaseNodeType} from '../../engine/nodes/_Base';
@@ -15,6 +15,9 @@ import {PolyScene} from '../../engine/scene/PolyScene';
 export const PHYSICS_GRAVITY_DEFAULT = new Vector3(0, -9.81, 0);
 
 const physicsworldByGraphNodeId: Map<CoreGraphNodeId, World> = new Map();
+const objectsByRBDByWorld: Object3DByRigidBodyByWorld = new Map();
+const rigidBodyById: Map<string, RigidBody> = new Map();
+//
 export async function createOrFindPhysicsWorld(node: BaseNodeType, worldObject: Object3D, gravity: Vector3) {
 	const nodeId = node.graphNodeId();
 	const PhysicsLib = await CorePhysics();
@@ -42,7 +45,6 @@ export function physicsWorldFromNodeId(nodeId: CoreGraphNodeId) {
 	return physicsworldByGraphNodeId.get(nodeId);
 }
 
-const objectsByRBDByWorld: Object3DByRididBodyByWorld = new Map();
 export function initCorePhysicsWorld(PhysicsLib: PhysicsLib, worldObject: Object3D, scene: PolyScene) {
 	const world = physicsWorldFromObject(worldObject);
 	if (!world) {
@@ -50,14 +52,10 @@ export function initCorePhysicsWorld(PhysicsLib: PhysicsLib, worldObject: Object
 		return;
 	}
 	_clearWorld(world);
-	let objectsByRigidBody = objectsByRBDByWorld.get(world);
-	if (!objectsByRigidBody) {
-		objectsByRigidBody = new WeakMap();
-		objectsByRBDByWorld.set(world, objectsByRigidBody);
-	}
+	const objectsByRigidBody = _objectByRBDWorld(world);
 
 	// create RBDs
-	const rigidBodyById: Map<string, RigidBody> = new Map();
+
 	// we keep a copy of the children here,
 	// as they are removed/added inside physicsCreateRBD
 	// in order to compute relative transform
@@ -65,8 +63,9 @@ export function initCorePhysicsWorld(PhysicsLib: PhysicsLib, worldObject: Object
 	// We also need to keep a copy as when traversing to create the joints,
 	// we end up removing them from the hierarchy
 	const children = [...worldObject.children];
+	const newRBDIds = new Set<string>();
 	for (let child of children) {
-		physicsCreateRBD({PhysicsLib, world, rigidBodyById, objectsByRigidBody, object: child});
+		_physicsCreateRBD({PhysicsLib, world, rigidBodyById, objectsByRigidBody, object: child, newRBDIds});
 	}
 
 	// create joints
@@ -77,6 +76,36 @@ export function initCorePhysicsWorld(PhysicsLib: PhysicsLib, worldObject: Object
 	for (let child of children) {
 		createOrFindPhysicsPlayer({scene, object: child, PhysicsLib, world, worldObject});
 	}
+}
+function _objectByRBDWorld(world: World) {
+	let objectsByRigidBody = objectsByRBDByWorld.get(world);
+	if (!objectsByRigidBody) {
+		objectsByRigidBody = new WeakMap();
+		objectsByRBDByWorld.set(world, objectsByRigidBody);
+	}
+	return objectsByRigidBody;
+}
+export function object3DByRBDByWorld(worldObject: Object3D, rbd: RigidBody) {
+	const objectsByRigidBody = _objectByRBDWorld(physicsWorldFromObject(worldObject) as World);
+	return objectsByRigidBody.get(rbd);
+}
+export function physicsCreateRBD(worldObject: Object3D, object: Object3D) {
+	const PhysicsLib = CorePhysicsLoaded();
+	if (!PhysicsLib) {
+		return;
+	}
+	const world = physicsWorldFromObject(worldObject);
+	if (!world) {
+		console.warn('no physicsWorld found with this object', worldObject);
+		return;
+	}
+	const objectsByRigidBody = _objectByRBDWorld(world);
+	const newRBDIds = new Set<string>();
+	_physicsCreateRBD({PhysicsLib, world, rigidBodyById, objectsByRigidBody, object, newRBDIds});
+	return newRBDIds;
+}
+export function getRBDFromId(rbdId: string) {
+	return rigidBodyById.get(rbdId);
 }
 
 function _clearWorld(world: World) {

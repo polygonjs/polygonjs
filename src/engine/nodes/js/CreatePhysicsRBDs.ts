@@ -9,29 +9,26 @@ import {JsLinesCollectionController} from './code/utils/JsLinesCollectionControl
 import {Poly} from '../../Poly';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {JsConnectionPointType} from '../utils/io/connections/Js';
+import {RefJsDefinition} from './utils/JsDefinition';
 
-enum AddObjectsJsNodeInput {
-	CHILD = 'child',
-	CHILDREN = 'children',
+enum CreatePhysicsRBDsJsNodeInput {
+	OBJECT_3D = 'rbdObject',
+	OBJECT_3DS = 'rbdObjects',
+}
+enum CreatePhysicsRBDsJsNodeOutput {
+	RBD_ID = 'RBDId',
+	RBD_IDS = 'RBDIds',
 }
 
-class AddObjectsJsParamsConfig extends NodeParamsConfig {}
-const ParamsConfig = new AddObjectsJsParamsConfig();
+class CreatePhysicsRBDsJsParamsConfig extends NodeParamsConfig {}
+const ParamsConfig = new CreatePhysicsRBDsJsParamsConfig();
 
-export class AddObjectsJsNode extends BaseTriggerAndObjectJsNode<AddObjectsJsParamsConfig> {
+export class CreatePhysicsRBDsJsNode extends BaseTriggerAndObjectJsNode<CreatePhysicsRBDsJsParamsConfig> {
 	override readonly paramsConfig = ParamsConfig;
 	static override type() {
-		return 'addObjects';
+		return 'createPhysicsRBDs';
 	}
-	// protected override _additionalInputs(): JsConnectionPoint<JsConnectionPointType>[] {
-	// 	return [
-	// 		new JsConnectionPoint(
-	// 			AddObjectsJsNodeInput.CHILDREN,
-	// 			JsConnectionPointType.OBJECT_3D_ARRAY,
-	// 			CONNECTION_OPTIONS
-	// 		),
-	// 	];
-	// }
+
 	override initializeNode() {
 		super.initializeNode();
 		this.io.connection_points.set_input_name_function(this._expectedInputName.bind(this));
@@ -50,41 +47,55 @@ export class AddObjectsJsNode extends BaseTriggerAndObjectJsNode<AddObjectsJsPar
 		return [JsConnectionPointType.TRIGGER, JsConnectionPointType.OBJECT_3D, this._childInputType()];
 	}
 	private _expectedOutputTypes() {
-		return this._expectedInputTypes();
+		return [JsConnectionPointType.TRIGGER, JsConnectionPointType.OBJECT_3D, this._childOutputType()];
 	}
 	private _isInputArray() {
 		const firstInputType = this.io.connection_points.input_connection_type(2);
 		return firstInputType == JsConnectionPointType.OBJECT_3D_ARRAY;
 	}
 	private _childInputName() {
-		return this._isInputArray() ? AddObjectsJsNodeInput.CHILDREN : AddObjectsJsNodeInput.CHILD;
+		return this._isInputArray() ? CreatePhysicsRBDsJsNodeInput.OBJECT_3DS : CreatePhysicsRBDsJsNodeInput.OBJECT_3D;
 	}
 	private _childOutputName() {
-		return this._childInputName();
+		return this._isInputArray() ? CreatePhysicsRBDsJsNodeOutput.RBD_IDS : CreatePhysicsRBDsJsNodeOutput.RBD_ID;
 	}
 	private _childInputType() {
 		return this._isInputArray() ? JsConnectionPointType.OBJECT_3D_ARRAY : JsConnectionPointType.OBJECT_3D;
+	}
+	private _childOutputType() {
+		return this._isInputArray() ? JsConnectionPointType.STRING_ARRAY : JsConnectionPointType.STRING;
 	}
 
 	override setLines(linesController: JsLinesCollectionController) {
 		super.setLines(linesController);
 
-		const object3D = this.variableForInput(linesController, this._childOutputName());
+		const outRBDIds = this._addRBDIdRef(linesController);
 		const out = this.jsVarName(this._childOutputName());
 
 		linesController.addBodyOrComputed(this, [
-			{dataType: JsConnectionPointType.OBJECT_3D, varName: out, value: object3D},
+			{dataType: JsConnectionPointType.OBJECT_3D, varName: out, value: `this.${outRBDIds}.value`},
 		]);
 	}
 	override setTriggerableLines(linesController: JsLinesCollectionController) {
 		const object3D = inputObject3D(this, linesController);
 		const inputName = this._childInputName();
-		const inputChildObjects = this.variableForInput(linesController, inputName);
-		const functionName = this._isInputArray() ? 'objectsAdd' : 'objectAdd';
+		const inputObjects = this.variableForInput(linesController, inputName);
+		const functionName = this._isInputArray() ? 'createPhysicsRBDs' : 'createPhysicsRBD';
+		const outRBDIds = this._addRBDIdRef(linesController);
 
 		const func = Poly.namedFunctionsRegister.getFunction(functionName, this, linesController);
 
-		const bodyLine = func.asString(object3D, inputChildObjects);
+		const bodyLine = func.asString(object3D, inputObjects, `this.${outRBDIds}`);
 		linesController.addTriggerableLines(this, [bodyLine]);
+	}
+
+	private _addRBDIdRef(linesController: JsLinesCollectionController) {
+		// const outputName = this._childOutputName();
+		const outRBDIds = this.jsVarName('rbdIds');
+		linesController.addDefinitions(this, [
+			// do not use a ref, as it makes the object reactive
+			new RefJsDefinition(this, linesController, JsConnectionPointType.STRING, outRBDIds, `''`),
+		]);
+		return outRBDIds;
 	}
 }

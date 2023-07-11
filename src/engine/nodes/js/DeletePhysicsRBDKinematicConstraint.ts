@@ -9,19 +9,23 @@ import {JsLinesCollectionController} from './code/utils/JsLinesCollectionControl
 import {Poly} from '../../Poly';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 
-class DeletePhysicsRBDConstraintsJsParamsConfig extends NodeParamsConfig {}
-const ParamsConfig = new DeletePhysicsRBDConstraintsJsParamsConfig();
+class DeletePhysicsRBDKinematicConstraintJsParamsConfig extends NodeParamsConfig {}
+const ParamsConfig = new DeletePhysicsRBDKinematicConstraintJsParamsConfig();
 
-export class DeletePhysicsRBDConstraintsJsNode extends BaseTriggerAndObjectJsNode<DeletePhysicsRBDConstraintsJsParamsConfig> {
+export class DeletePhysicsRBDKinematicConstraintJsNode extends BaseTriggerAndObjectJsNode<DeletePhysicsRBDKinematicConstraintJsParamsConfig> {
 	override readonly paramsConfig = ParamsConfig;
 	static override type() {
-		return 'deletePhysicsRBDConstraints';
+		return 'deletePhysicsRBDKinematicConstraint';
 	}
 
 	override setTriggerableLines(linesController: JsLinesCollectionController) {
 		const object3D = inputObject3D(this, linesController);
 
-		const func = Poly.namedFunctionsRegister.getFunction('deletePhysicsRBDConstraints', this, linesController);
+		const func = Poly.namedFunctionsRegister.getFunction(
+			'deletePhysicsRBDKinematicConstraint',
+			this,
+			linesController
+		);
 
 		const bodyLine = func.asString(object3D);
 		linesController.addTriggerableLines(this, [bodyLine]);

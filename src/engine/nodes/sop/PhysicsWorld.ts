@@ -87,9 +87,10 @@ export class PhysicsWorldSopNode extends TypedActorSopNode<PhysicsWorldSopParams
 			objects.push(debugObject);
 		}
 		const actorNode = this._findActorNode();
-		for (let object of objects) {
-			this.scene().actorsManager.assignActorBuilder(object, actorNode);
-		}
+		// for (let object of objects) {
+		// do not assign actor node to the debug object
+		this.scene().actorsManager.assignActorBuilder(worldObject, actorNode);
+		// }
 
 		this.setObjects(objects);
 	}

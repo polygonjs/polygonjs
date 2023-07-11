@@ -1,5 +1,5 @@
 import {Object3D} from 'three';
-import {NamedFunction2, ObjectNamedFunction0} from './_Base';
+import {NamedFunction2, ObjectNamedFunction0, ObjectNamedFunction1} from './_Base';
 import {removeFromParent, addToParent} from '../poly/PolyOnObjectsAddRemoveHooksController';
 import {dummyReadRefVal} from './_Param';
 import {getOrCreateNodeRef} from '../../core/reactivity/NodeReactivity';
@@ -33,22 +33,25 @@ export class getGeometryNodeObjects extends NamedFunction2<[string, Object3D[]]>
 	}
 }
 
-export class objectAdd extends NamedFunction2<[Object3D, Object3D]> {
+export class createObject extends ObjectNamedFunction1<[Object3D | undefined]> {
 	static override type() {
-		return 'objectAdd';
+		return 'createObject';
 	}
-	func(parent: Object3D, child: Object3D): void {
-		addToParent(this.scene, parent, child);
+	func(parent: Object3D, child: Object3D | undefined): void {
+		if (child) {
+			addToParent(this.scene, parent, child);
+		}
 	}
 }
-export class objectsAdd extends NamedFunction2<[Object3D, Object3D[]]> {
+export class createObjects extends ObjectNamedFunction1<[Object3D[]]> {
 	static override type() {
-		return 'objectsAdd';
+		return 'createObjects';
 	}
 	func(parent: Object3D, children: Object3D[]): void {
-		console.log('add', parent, children, children.length);
 		for (let child of children) {
-			addToParent(this.scene, parent, child);
+			if (child) {
+				addToParent(this.scene, parent, child);
+			}
 		}
 	}
 }

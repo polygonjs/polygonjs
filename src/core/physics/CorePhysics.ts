@@ -17,8 +17,8 @@ export interface PhysicsLib {
 		EXCLUDE_KINEMATIC: number;
 	};
 }
-export type Object3DByRididBody = WeakMap<RigidBody, Object3D>;
-export type Object3DByRididBodyByWorld = Map<World, Object3DByRididBody>;
+export type Object3DByRigidBody = WeakMap<RigidBody, Object3D>;
+export type Object3DByRigidBodyByWorld = Map<World, Object3DByRigidBody>;
 
 let physics: PhysicsLib | undefined;
 

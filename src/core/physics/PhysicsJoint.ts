@@ -397,7 +397,7 @@ function _createJoint(
 	TypeAssert.unreachable(jointType);
 }
 
-export function _physicsRBDCreateConstraint(rbdObject: Object3D, anchor: Vector3): string | undefined {
+export function _createPhysicsRBDKinematicConstraint(rbdObject: Object3D, anchor: Vector3): string | undefined {
 	const PhysicsLib = CorePhysicsLoaded();
 	if (!PhysicsLib) {
 		return;

@@ -54,12 +54,19 @@ import { colorToVec3 } from "../../../functions/colorToVec3";
 import { complement } from "../../../functions/complement";
 import { computeVelocity } from "../../../functions/computeVelocity";
 import { cookNode } from "../../../functions/cookNode";
+import { createObject } from "../../../functions/createObject";
+import { createObjects } from "../../../functions/createObjects";
+import { createPhysicsRBD } from "../../../functions/createPhysicsRBD";
+import { createPhysicsRBDKinematicConstraint } from "../../../functions/createPhysicsRBDKinematicConstraint";
+import { createPhysicsRBDs } from "../../../functions/createPhysicsRBDs";
 import { createScrollListener } from "../../../functions/createScrollListener";
 import { crossVector2 } from "../../../functions/crossVector2";
 import { crossVector3 } from "../../../functions/crossVector3";
 import { cursorToUv } from "../../../functions/cursorToUv";
 import { debug } from "../../../functions/debug";
 import { degToRad } from "../../../functions/degToRad";
+import { deletePhysicsRBDConstraints } from "../../../functions/deletePhysicsRBDConstraints";
+import { deletePhysicsRBDKinematicConstraint } from "../../../functions/deletePhysicsRBDKinematicConstraint";
 import { deviceOrientation } from "../../../functions/deviceOrientation";
 import { distanceVector2 } from "../../../functions/distanceVector2";
 import { distanceVector3 } from "../../../functions/distanceVector3";
@@ -156,6 +163,7 @@ import { getObjectUserData } from "../../../functions/getObjectUserData";
 import { getObjectWorldPosition } from "../../../functions/getObjectWorldPosition";
 import { getParam } from "../../../functions/getParam";
 import { getParent } from "../../../functions/getParent";
+import { getPhysicsRBD } from "../../../functions/getPhysicsRBD";
 import { getPhysicsRBDAngularDamping } from "../../../functions/getPhysicsRBDAngularDamping";
 import { getPhysicsRBDAngularVelocity } from "../../../functions/getPhysicsRBDAngularVelocity";
 import { getPhysicsRBDCapsuleHeight } from "../../../functions/getPhysicsRBDCapsuleHeight";
@@ -293,11 +301,9 @@ import { normalizeVector3 } from "../../../functions/normalizeVector3";
 import { normalizeVector4 } from "../../../functions/normalizeVector4";
 import { object3DLocalToWorld } from "../../../functions/object3DLocalToWorld";
 import { object3DWorldToLocal } from "../../../functions/object3DWorldToLocal";
-import { objectAdd } from "../../../functions/objectAdd";
 import { objectAddEventListeners } from "../../../functions/objectAddEventListeners";
 import { objectDelete } from "../../../functions/objectDelete";
 import { objectDispatchEvent } from "../../../functions/objectDispatchEvent";
-import { objectsAdd } from "../../../functions/objectsAdd";
 import { objectUpdateMatrix } from "../../../functions/objectUpdateMatrix";
 import { objectUpdateWorldMatrix } from "../../../functions/objectUpdateWorldMatrix";
 import { onPerformanceChange } from "../../../functions/onPerformanceChange";
@@ -312,9 +318,7 @@ import { physicsRBDAddTorque } from "../../../functions/physicsRBDAddTorque";
 import { physicsRBDApplyImpulse } from "../../../functions/physicsRBDApplyImpulse";
 import { physicsRBDApplyImpulseAtPoint } from "../../../functions/physicsRBDApplyImpulseAtPoint";
 import { physicsRBDApplyTorqueImpulse } from "../../../functions/physicsRBDApplyTorqueImpulse";
-import { physicsRBDCreateConstraint } from "../../../functions/physicsRBDCreateConstraint";
 import { physicsRBDDelete } from "../../../functions/physicsRBDDelete";
-import { physicsRBDDeleteConstraints } from "../../../functions/physicsRBDDeleteConstraints";
 import { physicsRBDResetAll } from "../../../functions/physicsRBDResetAll";
 import { physicsRBDResetForces } from "../../../functions/physicsRBDResetForces";
 import { physicsRBDResetTorques } from "../../../functions/physicsRBDResetTorques";
@@ -520,12 +524,19 @@ export interface NamedFunctionMap {
 	complement: complement;
 	computeVelocity: computeVelocity;
 	cookNode: cookNode;
+	createObject: createObject;
+	createObjects: createObjects;
+	createPhysicsRBD: createPhysicsRBD;
+	createPhysicsRBDKinematicConstraint: createPhysicsRBDKinematicConstraint;
+	createPhysicsRBDs: createPhysicsRBDs;
 	createScrollListener: createScrollListener;
 	crossVector2: crossVector2;
 	crossVector3: crossVector3;
 	cursorToUv: cursorToUv;
 	debug: debug<any>;
 	degToRad: degToRad;
+	deletePhysicsRBDConstraints: deletePhysicsRBDConstraints;
+	deletePhysicsRBDKinematicConstraint: deletePhysicsRBDKinematicConstraint;
 	deviceOrientation: deviceOrientation;
 	distanceVector2: distanceVector2;
 	distanceVector3: distanceVector3;
@@ -622,6 +633,7 @@ export interface NamedFunctionMap {
 	getObjectWorldPosition: getObjectWorldPosition;
 	getParam: getParam;
 	getParent: getParent;
+	getPhysicsRBD: getPhysicsRBD;
 	getPhysicsRBDAngularDamping: getPhysicsRBDAngularDamping;
 	getPhysicsRBDAngularVelocity: getPhysicsRBDAngularVelocity;
 	getPhysicsRBDCapsuleHeight: getPhysicsRBDCapsuleHeight;
@@ -759,11 +771,9 @@ export interface NamedFunctionMap {
 	normalizeVector4: normalizeVector4;
 	object3DLocalToWorld: object3DLocalToWorld;
 	object3DWorldToLocal: object3DWorldToLocal;
-	objectAdd: objectAdd;
 	objectAddEventListeners: objectAddEventListeners;
 	objectDelete: objectDelete;
 	objectDispatchEvent: objectDispatchEvent;
-	objectsAdd: objectsAdd;
 	objectUpdateMatrix: objectUpdateMatrix;
 	objectUpdateWorldMatrix: objectUpdateWorldMatrix;
 	onPerformanceChange: onPerformanceChange;
@@ -778,9 +788,7 @@ export interface NamedFunctionMap {
 	physicsRBDApplyImpulse: physicsRBDApplyImpulse;
 	physicsRBDApplyImpulseAtPoint: physicsRBDApplyImpulseAtPoint;
 	physicsRBDApplyTorqueImpulse: physicsRBDApplyTorqueImpulse;
-	physicsRBDCreateConstraint: physicsRBDCreateConstraint;
 	physicsRBDDelete: physicsRBDDelete;
-	physicsRBDDeleteConstraints: physicsRBDDeleteConstraints;
 	physicsRBDResetAll: physicsRBDResetAll;
 	physicsRBDResetForces: physicsRBDResetForces;
 	physicsRBDResetTorques: physicsRBDResetTorques;
@@ -989,12 +997,19 @@ export class AllNamedFunctionRegister {
 			complement,
 			computeVelocity,
 			cookNode,
+			createObject,
+			createObjects,
+			createPhysicsRBD,
+			createPhysicsRBDKinematicConstraint,
+			createPhysicsRBDs,
 			createScrollListener,
 			crossVector2,
 			crossVector3,
 			cursorToUv,
 			debug,
 			degToRad,
+			deletePhysicsRBDConstraints,
+			deletePhysicsRBDKinematicConstraint,
 			deviceOrientation,
 			distanceVector2,
 			distanceVector3,
@@ -1091,6 +1106,7 @@ export class AllNamedFunctionRegister {
 			getObjectWorldPosition,
 			getParam,
 			getParent,
+			getPhysicsRBD,
 			getPhysicsRBDAngularDamping,
 			getPhysicsRBDAngularVelocity,
 			getPhysicsRBDCapsuleHeight,
@@ -1228,11 +1244,9 @@ export class AllNamedFunctionRegister {
 			normalizeVector4,
 			object3DLocalToWorld,
 			object3DWorldToLocal,
-			objectAdd,
 			objectAddEventListeners,
 			objectDelete,
 			objectDispatchEvent,
-			objectsAdd,
 			objectUpdateMatrix,
 			objectUpdateWorldMatrix,
 			onPerformanceChange,
@@ -1247,9 +1261,7 @@ export class AllNamedFunctionRegister {
 			physicsRBDApplyImpulse,
 			physicsRBDApplyImpulseAtPoint,
 			physicsRBDApplyTorqueImpulse,
-			physicsRBDCreateConstraint,
 			physicsRBDDelete,
-			physicsRBDDeleteConstraints,
 			physicsRBDResetAll,
 			physicsRBDResetForces,
 			physicsRBDResetTorques,

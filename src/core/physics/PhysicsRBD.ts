@@ -3,7 +3,7 @@ import {TypeAssert} from './../../engine/poly/Assert';
 import {PhysicsRBDColliderType, PhysicsRBDType, CorePhysicsAttribute} from './PhysicsAttribute';
 import {Object3D, Vector3, Quaternion} from 'three';
 import {World, RigidBodyType, RigidBodyDesc, RigidBody, ColliderDesc} from '@dimforge/rapier3d-compat';
-import {CorePhysicsLoaded, PhysicsLib, Object3DByRididBody} from './CorePhysics';
+import {CorePhysicsLoaded, PhysicsLib, Object3DByRigidBody} from './CorePhysics';
 import {createPhysicsSphere} from './shapes/RBDSphere';
 import {createPhysicsCuboid} from './shapes/RBDCuboid';
 import {createPhysicsCapsule} from './shapes/RBDCapsule';
@@ -16,6 +16,7 @@ import {touchRBDProperties, touchRBDProperty} from '../reactivity/RBDPropertyRea
 import {OBJECT_TRANSFORM_PROPERTIES, touchObjectProperties} from '../reactivity/ObjectPropertyReactivity';
 import {PolyScene} from '../../engine/scene/PolyScene';
 import {removeFromParent} from '../../engine/poly/PolyOnObjectsAddRemoveHooksController';
+import {object3DByRBDByWorld, getRBDFromId} from './PhysicsWorld';
 
 export enum RBDProperty {
 	ANGULAR_VELOCITY = 'angVel',
@@ -48,7 +49,7 @@ interface CollidescObjectPair {
 }
 
 const physicsRBDByRBDHandle: Map<number, RigidBody> = new Map();
-const physicsRBDByRBDId: Map<string, RigidBody> = new Map();
+// const physicsRBDByRBDId: Map<string, RigidBody> = new Map();
 const worldByRBD: WeakMap<RigidBody, World> = new WeakMap();
 
 function _createRBDFromDescAndId(world: World, rigidBodyDesc: RigidBodyDesc, rbdId: string) {
@@ -56,7 +57,7 @@ function _createRBDFromDescAndId(world: World, rigidBodyDesc: RigidBodyDesc, rbd
 	const handle = rigidBody.handle;
 	worldByRBD.set(rigidBody, world);
 	physicsRBDByRBDHandle.set(handle, rigidBody);
-	physicsRBDByRBDId.set(rbdId, rigidBody);
+	// physicsRBDByRBDId.set(rbdId, rigidBody);
 	return rigidBody;
 }
 function _createRBDFromDescAndObject(world: World, rigidBodyDesc: RigidBodyDesc, object: Object3D) {
@@ -70,10 +71,11 @@ interface CreateRBDFromAttributesOptions {
 	world: World;
 	object: Object3D;
 	rigidBodyById: Map<string, RigidBody>;
-	objectsByRigidBody: Object3DByRididBody;
+	objectsByRigidBody: Object3DByRigidBody;
+	newRBDIds: Set<string>;
 }
-function _createRBDFromAttributes(options: CreateRBDFromAttributesOptions) {
-	const {PhysicsLib, world, object, rigidBodyById, objectsByRigidBody} = options;
+function _createRBDFromAttributes(options: CreateRBDFromAttributesOptions): RigidBody | undefined {
+	const {PhysicsLib, world, object, rigidBodyById, objectsByRigidBody, newRBDIds} = options;
 	const type = CorePhysicsAttribute.getRBDType(object);
 	if (type == null) {
 		return;
@@ -120,6 +122,7 @@ function _createRBDFromAttributes(options: CreateRBDFromAttributesOptions) {
 	const rbdId = CorePhysicsAttribute.getRBDId(object);
 	if (rbdId) {
 		rigidBodyById.set(rbdId, rigidBody);
+		newRBDIds.add(rbdId);
 	}
 	return rigidBody;
 }
@@ -146,6 +149,14 @@ function _createColliderDesc(PhysicsLib: PhysicsLib, object: Object3D) {
 		colliderDesc.setDensity(density);
 	}
 	return colliderDesc;
+}
+export function _getRBDFromWorldObject(worldObject: Object3D, rbdId: string): Object3D | undefined {
+	const rigidBody = getRBDFromId(rbdId);
+	if (!rigidBody) {
+		return;
+	}
+	const object = object3DByRBDByWorld(worldObject, rigidBody);
+	return object;
 }
 export function _getRBD(object: Object3D) {
 	const handle = CorePhysicsAttribute.getRBDHandle(object);
@@ -187,15 +198,23 @@ interface PhysicsCreateRBDOptions {
 	world: World;
 	object: Object3D;
 	rigidBodyById: Map<string, RigidBody>;
-	objectsByRigidBody: Object3DByRididBody;
+	objectsByRigidBody: Object3DByRigidBody;
+	newRBDIds: Set<string>;
 }
-export function physicsCreateRBD(options: PhysicsCreateRBDOptions) {
-	const {PhysicsLib, world, object, rigidBodyById, objectsByRigidBody} = options;
-	const rigidBody = _createRBDFromAttributes({PhysicsLib, world, object, rigidBodyById, objectsByRigidBody});
+export function _physicsCreateRBD(options: PhysicsCreateRBDOptions) {
+	const {PhysicsLib, world, object, rigidBodyById, objectsByRigidBody, newRBDIds} = options;
+	const rigidBody = _createRBDFromAttributes({
+		PhysicsLib,
+		world,
+		object,
+		rigidBodyById,
+		objectsByRigidBody,
+		newRBDIds,
+	});
 	if (!rigidBody) {
 		// if not rbd created, we go through the children
 		for (let child of object.children) {
-			physicsCreateRBD({PhysicsLib, world, rigidBodyById, objectsByRigidBody, object: child});
+			_physicsCreateRBD({PhysicsLib, world, rigidBodyById, objectsByRigidBody, object: child, newRBDIds});
 		}
 
 		return;

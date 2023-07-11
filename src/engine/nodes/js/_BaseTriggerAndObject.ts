@@ -16,6 +16,7 @@ export abstract class BaseTriggerAndObjectJsNode<K extends NodeParamsConfig> ext
 		this.io.outputs.setNamedOutputConnectionPoints([
 			new JsConnectionPoint(TRIGGER_CONNECTION_NAME, JsConnectionPointType.TRIGGER),
 			new JsConnectionPoint(JsConnectionPointType.OBJECT_3D, JsConnectionPointType.OBJECT_3D),
+			...this._additionalOutputs(),
 		]);
 	}
 
@@ -23,6 +24,9 @@ export abstract class BaseTriggerAndObjectJsNode<K extends NodeParamsConfig> ext
 		setObject3DOutputLine(this, linesController);
 	}
 	protected _additionalInputs(): JsConnectionPoint<JsConnectionPointType>[] {
+		return [];
+	}
+	protected _additionalOutputs(): JsConnectionPoint<JsConnectionPointType>[] {
 		return [];
 	}
 }
