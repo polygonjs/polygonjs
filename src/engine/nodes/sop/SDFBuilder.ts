@@ -230,7 +230,6 @@ export class SDFBuilderSopNode extends TypedSopNode<SDFBuilderSopParamsConfig> {
 
 		const {functionBody, variableNames, variablesByName, functionNames, functionsByName, paramConfigs} =
 			this._functionData;
-		console.log(functionBody);
 
 		const wrappedBody = `
 		try {

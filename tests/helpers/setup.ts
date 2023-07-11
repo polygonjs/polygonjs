@@ -82,12 +82,7 @@ export function setupQUnit() {
 		window.scene.cooker.unblock();
 	});
 	QUnit.testDone(() => {
-		window.scene.batchUpdates(() => {
-			window.scene.nodesController.traverseNodes((node) => {
-				node.parent()?.removeNode(node);
-			});
-			window.scene.dispose();
-		});
+		Poly.dispose();
 		// it's preferable to not display anything
 		// so that we can correctly display non-blocking crashing tests
 		console.log(`%c ✓ ${QUnit.config.current.testName}`, 'background: #222; color: #bada55');

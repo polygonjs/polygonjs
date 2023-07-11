@@ -7,9 +7,9 @@ import type {
 	SphericalImpulseJoint,
 	RevoluteImpulseJoint,
 } from '@dimforge/rapier3d-compat';
-import {Object3D, Vector4, Vector3, Vector2} from 'three';
+import {Object3D, Vector4, Vector3, Vector2, BoxGeometry, Mesh, MeshBasicMaterial} from 'three';
 import {CorePhysicsLoaded, PhysicsLib} from './CorePhysics';
-import {physicsWorldNodeIdFromObject} from './PhysicsWorld';
+import {getRBDFromId, physicsCreateRBDFromWorld, physicsWorldNodeIdFromObject} from './PhysicsWorld';
 import {TypeAssert} from './../../engine/poly/Assert';
 import {CoreGraphNodeId} from '../graph/CoreGraph';
 import {
@@ -23,9 +23,12 @@ import {
 	setObjectString,
 } from '../geometry/AttributeUtils';
 import {CorePhysicsAttribute} from './PhysicsAttribute';
-import {_getPhysicsWorldFromRBD, _getRBD} from './PhysicsRBD';
+import {_getPhysicsWorldFromRBD, _getRBDFromObject, _physicsRBDDelete} from './PhysicsRBD';
 import {removeFromParent} from '../../engine/poly/PolyOnObjectsAddRemoveHooksController';
 import {PolyScene} from '../../engine/scene/PolyScene';
+import {PhysicsRBDType} from './PhysicsAttribute';
+import {PhysicsRBDColliderType} from './PhysicsAttribute';
+import {setFirstValue} from '../SetUtils';
 export enum PhysicsJointType {
 	FIXED = 'fixed',
 	SPHERICAL = 'spherical',
@@ -222,12 +225,7 @@ const wakeUp = true;
 // const _axis = new Vector3();
 // const _frame1 = new Vector4();
 // const _frame2 = new Vector4();
-export function physicsCreateJoints(
-	PhysicsLib: PhysicsLib,
-	world: World,
-	worldObject: Object3D,
-	rigidBodyById: Map<string, RigidBody>
-) {
+export function physicsCreateJoints(PhysicsLib: PhysicsLib, world: World, worldObject: Object3D) {
 	const nodeId = physicsWorldNodeIdFromObject(worldObject);
 	if (nodeId == null) {
 		return;
@@ -237,19 +235,14 @@ export function physicsCreateJoints(
 		return;
 	}
 	for (let jointData of jointDataList) {
-		physicsCreateJointFromJointData(PhysicsLib, world, jointData, rigidBodyById);
+		physicsCreateJointFromJointData(PhysicsLib, world, jointData);
 	}
 }
-export function physicsCreateJointFromJointData(
-	PhysicsLib: PhysicsLib,
-	world: World,
-	jointData: JointData,
-	rigidBodyById: Map<string, RigidBody>
-) {
+export function physicsCreateJointFromJointData(PhysicsLib: PhysicsLib, world: World, jointData: JointData) {
 	const {rbdId1, rbdId2} = jointData;
 
-	const rbd1 = rigidBodyById.get(rbdId1);
-	const rbd2 = rigidBodyById.get(rbdId2);
+	const rbd1 = getRBDFromId(rbdId1);
+	const rbd2 = getRBDFromId(rbdId2);
 	if (!(rbd1 && rbd2)) {
 		return;
 	}
@@ -397,16 +390,49 @@ function _createJoint(
 	TypeAssert.unreachable(jointType);
 }
 
+interface CreateRBDForKinematicConstraintOptions {
+	world: World;
+	rbdId: string;
+	anchor: Vector3;
+}
+const anchor1 = new Vector3(0, 0, 0);
+const anchor2 = new Vector3(0, 0, 0);
+const _createRBDForKinematicConstraint = (options: CreateRBDForKinematicConstraintOptions) => {
+	const {world, rbdId, anchor} = options;
+	const size = 0.01;
+	const geometry = new BoxGeometry(size, size, size);
+	const object = new Mesh(geometry, new MeshBasicMaterial());
+	object.castShadow = false;
+	object.receiveShadow = false;
+	object.visible = false;
+	object.position.copy(anchor);
+	object.updateMatrix();
+	object.matrixAutoUpdate = false;
+
+	object.worldToLocal(anchor1.copy(anchor));
+
+	const RBD_ID = `kinematicConstraint-${rbdId}-${performance.now()}`;
+	CorePhysicsAttribute.setDensity(object, 0);
+	CorePhysicsAttribute.setRBDType(object, PhysicsRBDType.KINEMATIC_POS);
+	CorePhysicsAttribute.setColliderType(object, PhysicsRBDColliderType.SPHERE);
+	CorePhysicsAttribute.setRBDId(object, RBD_ID);
+	CorePhysicsAttribute.setRadius(object, size / 2);
+
+	const newRBDIds = physicsCreateRBDFromWorld(world, object);
+
+	return {newRBDIds, object, anchor1};
+};
+
 export function _createPhysicsRBDKinematicConstraint(rbdObject: Object3D, anchor: Vector3): string | undefined {
 	const PhysicsLib = CorePhysicsLoaded();
 	if (!PhysicsLib) {
 		return;
 	}
-	const rbd1Id = CorePhysicsAttribute.getRBDId(rbdObject);
-	if (rbd1Id == null) {
+	const rbdId1 = CorePhysicsAttribute.getRBDId(rbdObject);
+	if (rbdId1 == null) {
 		return;
 	}
-	const rbd1 = _getRBD(rbdObject);
+	const rbd1 = _getRBDFromObject(rbdObject);
 	if (!rbd1) {
 		return;
 	}
@@ -414,6 +440,26 @@ export function _createPhysicsRBDKinematicConstraint(rbdObject: Object3D, anchor
 	if (!world) {
 		return;
 	}
+	const result = _createRBDForKinematicConstraint({world, rbdId: rbdId1, anchor});
+
+	const rbdId2 = result.newRBDIds ? setFirstValue(result.newRBDIds) : undefined;
+
+	if (!rbdId2) {
+		return;
+	}
+	const jointData: JointData = {
+		jointType: PhysicsJointType.SPHERICAL,
+		anchor1: result.anchor1,
+		anchor2,
+		rbdId1,
+		rbdId2,
+		data: {},
+	};
+
+	physicsCreateJointFromJointData(PhysicsLib, world, jointData);
+
+	return rbdId2;
+
 	// worldByRBD.set(rigidBody, world);
 	// physicsRBDByRBDId.set(handle, rigidBody);
 
@@ -435,14 +481,17 @@ export function _createPhysicsRBDKinematicConstraint(rbdObject: Object3D, anchor
 	// _createJoint(world, PhysicsLib, jointData, rbd1, rbd2);
 
 	// return rbd2Id;
-	return 'not implemented';
 }
+export function _deletePhysicsRBDKinematicConstraint(scene: PolyScene, object: Object3D) {
+	_physicsRBDDelete(scene, object);
+}
+
 export function _physicsRBDDeleteConstraints(rbdObject: Object3D) {
 	const handle = CorePhysicsAttribute.getRBDHandle(rbdObject);
 	if (handle == null) {
 		return;
 	}
-	const body = _getRBD(rbdObject);
+	const body = _getRBDFromObject(rbdObject);
 	if (!body) {
 		return;
 	}

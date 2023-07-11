@@ -130,6 +130,7 @@ export enum SopType {
 	PARTICLES_SYSTEM_GPU = 'particlesSystemGpu',
 	PARTICLES_SYSTEM_GPU_ATTRIBUTES = 'particlesSystemGpuAttributes',
 	PARTICLES_SYSTEM_GPU_MATERIAL = 'particlesSystemGpuMaterial',
+	PHYSICS_DEBUG = 'physicsDebug',
 	PHYSICS_GROUND = 'physicsGround',
 	PHYSICS_RBD_ATTRIBUTES = 'physicsRBDAttributes',
 	PHYSICS_RBD_JOINTS = 'physicsRBDJoints',

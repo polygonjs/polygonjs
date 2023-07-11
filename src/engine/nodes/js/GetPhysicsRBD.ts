@@ -6,8 +6,6 @@
 
 import {ParamlessTypedJsNode} from './_Base';
 import {JsConnectionPoint, JsConnectionPointType, JS_CONNECTION_POINT_IN_NODE_DEF} from '../utils/io/connections/Js';
-import {_getRBD} from '../../../core/physics/PhysicsRBD';
-import {inputObject3D} from './_BaseObject3D';
 import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {Poly} from '../../Poly';
 
@@ -24,7 +22,6 @@ export class GetPhysicsRBDJsNode extends ParamlessTypedJsNode {
 
 	override initializeNode() {
 		this.io.inputs.setNamedInputConnectionPoints([
-			new JsConnectionPoint(JsConnectionPointType.OBJECT_3D, JsConnectionPointType.OBJECT_3D, CONNECTION_OPTIONS),
 			new JsConnectionPoint(GetPhysicsRBDJsNodeOutput.RBD_ID, JsConnectionPointType.STRING, CONNECTION_OPTIONS),
 		]);
 
@@ -34,7 +31,6 @@ export class GetPhysicsRBDJsNode extends ParamlessTypedJsNode {
 	}
 
 	override setLines(linesController: JsLinesCollectionController) {
-		const object3D = inputObject3D(this, linesController);
 		const rbdId = this.variableForInput(linesController, GetPhysicsRBDJsNodeOutput.RBD_ID);
 
 		const out = this.jsVarName(JsConnectionPointType.OBJECT_3D);
@@ -43,7 +39,7 @@ export class GetPhysicsRBDJsNode extends ParamlessTypedJsNode {
 			{
 				dataType: JsConnectionPointType.OBJECT_3D,
 				varName: out,
-				value: func.asString(object3D, rbdId),
+				value: func.asString(rbdId),
 			},
 		]);
 	}

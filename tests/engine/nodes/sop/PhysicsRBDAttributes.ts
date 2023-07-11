@@ -381,7 +381,7 @@ QUnit.test('sop/physicsRBDAttributes cuboid with expressions entity dependent', 
 	physicsRBDAttributes1.p.size.set(0.55);
 
 	createPhysicsWorldNodes(physicsWorld1);
-	physicsWorld1.p.debug.set(true);
+	// physicsWorld1.p.debug.set(true);
 	const container = await physicsWorld1.compute();
 	waitForPhysicsComputedAndMounted(physicsWorld1);
 

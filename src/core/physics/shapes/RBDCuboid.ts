@@ -6,7 +6,7 @@ import {
 	physicsAttribNameLive,
 	PhysicsRBDCuboidAttribute,
 } from '../PhysicsAttribute';
-import {_getRBD} from '../PhysicsRBD';
+import {_getRBDFromObject} from '../PhysicsRBD';
 import {PhysicsLib} from '../CorePhysics';
 import {CoreObject} from '../../geometry/Object';
 import {touchRBDProperty} from '../../reactivity/RBDPropertyReactivity';
@@ -66,7 +66,7 @@ export function currentSizes(object: Object3D, collider: Collider, target: Vecto
 }
 
 export function _getPhysicsRBDCuboidSizes(object: Object3D, target: Vector3): void {
-	const body = _getRBD(object);
+	const body = _getRBDFromObject(object);
 	if (!body) {
 		console.warn('no rbd found');
 		return;
@@ -89,7 +89,7 @@ export function _setPhysicsRBDCuboidProperty(
 	lerp: number,
 	updateObjectMatrix: boolean
 ) {
-	const body = _getRBD(object);
+	const body = _getRBDFromObject(object);
 	if (!body) {
 		console.warn('no rbd found');
 		return;

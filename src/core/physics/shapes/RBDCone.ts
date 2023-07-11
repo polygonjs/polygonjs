@@ -1,6 +1,5 @@
 import {Object3D} from 'three';
 import {CorePhysicsAttribute, PhysicsRBDColliderType} from '../PhysicsAttribute';
-import {_getRBD} from '../PhysicsRBD';
 import {PhysicsLib} from '../CorePhysics';
 import {getPhysicsRBDHeight, getPhysicsRBDRadius, setPhysicsRBDHeightRadiusProperty} from './_CommonHeightRadius';
 

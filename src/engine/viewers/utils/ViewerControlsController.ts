@@ -58,6 +58,13 @@ export class ViewerControlsController<C extends Camera> {
 			this._updateControlsFunc(delta);
 		}
 	}
+	setActive(active: boolean) {
+		if (active) {
+			this.unmount();
+		} else {
+			this.mount();
+		}
+	}
 
 	// async create_controls() {
 	// 	this.dispose_controls();

@@ -1,16 +1,18 @@
 import {Object3D, Quaternion, Vector3} from 'three';
 import {getPhysicsWorldNodeFromWorldObject} from '../nodes/sop/PhysicsWorld';
 import {
+NamedFunction1,
 	ObjectNamedFunction0,
 	ObjectNamedFunction1,
 	ObjectNamedFunction2,
 	ObjectNamedFunction3,
 	ObjectNamedFunction4,
 } from './_Base';
-import {physicsCreateRBD, setWorldGravity, stepWorld} from '../../core/physics/PhysicsWorld';
+import {physicsCreateRBDFromWorldObject, setWorldGravity, stepWorld} from '../../core/physics/PhysicsWorld';
 import {
 	RBDProperty,
-	_getRBD,
+	_getRBDFromObject,
+	_getRBDFromId,
 	_physicsRBDAddForce,
 	_physicsRBDAddForceAtPoint,
 	_physicsRBDAddTorque,
@@ -25,9 +27,13 @@ import {
 	_setPhysicsRBDLinearVelocity,
 	_setPhysicsRBDPosition,
 	_setPhysicsRBDRotation,
-	_getRBDFromWorldObject,
+	
 } from '../../core/physics/PhysicsRBD';
-import {_createPhysicsRBDKinematicConstraint, _physicsRBDDeleteConstraints} from '../../core/physics/PhysicsJoint';
+import {
+	_createPhysicsRBDKinematicConstraint,
+	_deletePhysicsRBDKinematicConstraint,
+	_physicsRBDDeleteConstraints,
+} from '../../core/physics/PhysicsJoint';
 import {
 	RBDCapsuleProperty,
 	_getPhysicsRBDCapsuleRadius,
@@ -54,6 +60,7 @@ import {RBDCommonProperty} from '../../core/physics/shapes/_CommonHeightRadius';
 import {dummyReadRefVal} from '../../core/reactivity/CoreReactivity';
 import {_matchArrayLength} from './_ArrayUtils';
 import {Ref} from '@vue/reactivity';
+import {updatePhysicsDebugObject} from '../../core/physics/PhysicsDebug';
 
 //
 //
@@ -82,6 +89,14 @@ export class physicsWorldStepSimulation extends ObjectNamedFunction0 {
 		stepWorld(object3D);
 	}
 }
+export class physicsDebugUpdate extends ObjectNamedFunction0 {
+	static override type() {
+		return 'physicsDebugUpdate';
+	}
+	func(object3D: Object3D): void {
+		updatePhysicsDebugObject(object3D);
+	}
+}
 
 export class setPhysicsWorldGravity extends ObjectNamedFunction2<[Vector3, number]> {
 	static override type() {
@@ -96,13 +111,13 @@ export class setPhysicsWorldGravity extends ObjectNamedFunction2<[Vector3, numbe
 // GET RBD
 //
 //
-export class getPhysicsRBD extends ObjectNamedFunction1<[string]> {
+export class getPhysicsRBD extends NamedFunction1<[string]> {
 	static override type() {
 		return 'getPhysicsRBD';
 	}
-	func(object3D: Object3D, rbdId: string): Object3D | undefined {
+	func(rbdId: string): Object3D | undefined {
 		dummyReadRefVal(this.timeController.timeUniform().value);
-		return _getRBDFromWorldObject(object3D, rbdId);
+		return _getRBDFromId(rbdId);
 	}
 }
 
@@ -247,7 +262,7 @@ export class getPhysicsRBDAngularVelocity extends ObjectNamedFunction1<[Vector3]
 		return 'getPhysicsRBDAngularVelocity';
 	}
 	func(object3D: Object3D, target: Vector3) {
-		const body = _getRBD(object3D);
+		const body = _getRBDFromObject(object3D);
 		if (body) {
 			dummyReadRefVal(getOrCreatePropertyRef(this.timeController, object3D, RBDProperty.ANGULAR_VELOCITY).value);
 			const angvel = body.angvel();
@@ -267,7 +282,7 @@ export class getChildrenPhysicsRBDPropertiesAngularVelocity extends ObjectNamedF
 		let i = 0;
 		const children = object3D.children;
 		for (let child of children) {
-			const body = _getRBD(child);
+			const body = _getRBDFromObject(child);
 			if (body) {
 				const angvel = body.angvel();
 				values[i].set(angvel.x, angvel.y, angvel.z);
@@ -287,7 +302,7 @@ export class getPhysicsRBDLinearVelocity extends ObjectNamedFunction1<[Vector3]>
 		return 'getPhysicsRBDLinearVelocity';
 	}
 	func(object3D: Object3D, target: Vector3) {
-		const body = _getRBD(object3D);
+		const body = _getRBDFromObject(object3D);
 		if (body) {
 			dummyReadRefVal(getOrCreatePropertyRef(this.timeController, object3D, RBDProperty.LINEAR_VELOCITY).value);
 			const linvel = body.linvel();
@@ -307,7 +322,7 @@ export class getChildrenPhysicsRBDPropertiesLinearVelocity extends ObjectNamedFu
 		let i = 0;
 		const children = object3D.children;
 		for (let child of children) {
-			const body = _getRBD(child);
+			const body = _getRBDFromObject(child);
 			if (body) {
 				const linvel = body.linvel();
 				values[i].set(linvel.x, linvel.y, linvel.z);
@@ -326,7 +341,7 @@ export class getPhysicsRBDAngularDamping extends ObjectNamedFunction0 {
 		return 'getPhysicsRBDAngularDamping';
 	}
 	func(object3D: Object3D): number {
-		const body = _getRBD(object3D);
+		const body = _getRBDFromObject(object3D);
 		if (body) {
 			dummyReadRefVal(getOrCreatePropertyRef(this.timeController, object3D, RBDProperty.ANGULAR_DAMPING).value);
 			return body.angularDamping();
@@ -343,7 +358,7 @@ export class getChildrenPhysicsRBDPropertiesAngularDamping extends ObjectNamedFu
 		let i = 0;
 		const children = object3D.children;
 		for (let child of children) {
-			const body = _getRBD(child);
+			const body = _getRBDFromObject(child);
 			values[i] = body ? body.angularDamping() : 0;
 			i++;
 		}
@@ -356,7 +371,7 @@ export class getPhysicsRBDLinearDamping extends ObjectNamedFunction0 {
 		return 'getPhysicsRBDLinearDamping';
 	}
 	func(object3D: Object3D): number {
-		const body = _getRBD(object3D);
+		const body = _getRBDFromObject(object3D);
 		if (body) {
 			dummyReadRefVal(getOrCreatePropertyRef(this.timeController, object3D, RBDProperty.LINEAR_DAMPING).value);
 			return body.linearDamping();
@@ -373,7 +388,7 @@ export class getChildrenPhysicsRBDPropertiesLinearDamping extends ObjectNamedFun
 		let i = 0;
 		const children = object3D.children;
 		for (let child of children) {
-			const body = _getRBD(child);
+			const body = _getRBDFromObject(child);
 			values[i] = body ? body.linearDamping() : 0;
 			i++;
 		}
@@ -386,7 +401,7 @@ export class getPhysicsRBDIsSleeping extends ObjectNamedFunction0 {
 		return 'getPhysicsRBDIsSleeping';
 	}
 	func(object3D: Object3D): boolean {
-		const body = _getRBD(object3D);
+		const body = _getRBDFromObject(object3D);
 		if (body) {
 			dummyReadRefVal(getOrCreatePropertyRef(this.timeController, object3D, RBDProperty.IS_SLEEPING).value);
 			return body.isSleeping();
@@ -403,7 +418,7 @@ export class getChildrenPhysicsRBDPropertiesIsSleeping extends ObjectNamedFuncti
 		let i = 0;
 		const children = object3D.children;
 		for (let child of children) {
-			const body = _getRBD(child);
+			const body = _getRBDFromObject(child);
 			values[i] = body?.isSleeping() || false;
 			i++;
 		}
@@ -416,7 +431,7 @@ export class getPhysicsRBDIsMoving extends ObjectNamedFunction0 {
 		return 'getPhysicsRBDIsMoving';
 	}
 	func(object3D: Object3D): boolean {
-		const body = _getRBD(object3D);
+		const body = _getRBDFromObject(object3D);
 		if (body) {
 			dummyReadRefVal(getOrCreatePropertyRef(this.timeController, object3D, RBDProperty.IS_MOVING).value);
 			return body.isMoving();
@@ -433,7 +448,7 @@ export class getChildrenPhysicsRBDPropertiesIsMoving extends ObjectNamedFunction
 		let i = 0;
 		const children = object3D.children;
 		for (let child of children) {
-			const body = _getRBD(child);
+			const body = _getRBDFromObject(child);
 			values[i] = body?.isMoving() || false;
 			i++;
 		}
@@ -571,7 +586,7 @@ export class createPhysicsRBD extends ObjectNamedFunction2<[Object3D, Ref<string
 		return 'createPhysicsRBD';
 	}
 	func(worldObject: Object3D, object: Object3D, rbdId: Ref<string>): void {
-		const newRBDIds = physicsCreateRBD(worldObject, object);
+		const newRBDIds = physicsCreateRBDFromWorldObject(worldObject, object);
 		newRBDIds?.forEach((id) => {
 			rbdId.value = id;
 		});
@@ -583,7 +598,7 @@ export class createPhysicsRBDs extends ObjectNamedFunction2<[Object3D[], Ref<str
 	}
 	func(worldObject: Object3D, objects: Object3D[], rbdIds: Ref<string[]>): void {
 		for (let object of objects) {
-			const newRBDIds = physicsCreateRBD(worldObject, object);
+			const newRBDIds = physicsCreateRBDFromWorldObject(worldObject, object);
 			newRBDIds?.forEach((id) => {
 				rbdIds.value.push(id);
 			});
@@ -604,12 +619,15 @@ export class physicsRBDDelete extends ObjectNamedFunction0 {
 // CONSTRAINTS
 //
 //
-export class createPhysicsRBDKinematicConstraint extends ObjectNamedFunction1<[Vector3]> {
+export class createPhysicsRBDKinematicConstraint extends ObjectNamedFunction2<[Vector3, Ref<string>]> {
 	static override type() {
 		return 'createPhysicsRBDKinematicConstraint';
 	}
-	func(object3D: Object3D, anchor: Vector3): string | undefined {
-		return _createPhysicsRBDKinematicConstraint(object3D, anchor);
+	func(object3D: Object3D, anchor: Vector3, rbdIdRef: Ref<string>): void {
+		const rbdId = _createPhysicsRBDKinematicConstraint(object3D, anchor);
+		if (rbdId) {
+			rbdIdRef.value = rbdId;
+		}
 	}
 }
 export class deletePhysicsRBDKinematicConstraint extends ObjectNamedFunction0 {
@@ -617,7 +635,7 @@ export class deletePhysicsRBDKinematicConstraint extends ObjectNamedFunction0 {
 		return 'deletePhysicsRBDKinematicConstraint';
 	}
 	func(object3D: Object3D): void {
-		_physicsRBDDeleteConstraints(object3D);
+		_deletePhysicsRBDKinematicConstraint(this.scene, object3D);
 	}
 }
 

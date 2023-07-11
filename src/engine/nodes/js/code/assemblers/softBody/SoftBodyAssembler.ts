@@ -22,7 +22,7 @@ import {ParamOptions} from '../../../../../params/utils/OptionsController';
 import {Poly} from '../../../../../Poly';
 import {PrettierController} from '../../../../../../core/code/PrettierController';
 
-let FORCE_DEBUG: boolean | undefined = true;
+let FORCE_DEBUG: boolean | undefined = false;
 function _debug() {
 	if (FORCE_DEBUG != undefined) {
 		return FORCE_DEBUG;

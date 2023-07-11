@@ -103,6 +103,9 @@ export class PolyEngine {
 	playerMode() {
 		return this._playerMode;
 	}
+	dispose() {
+		this.scenesRegister.dispose();
+	}
 
 	registerNode(node: BaseNodeConstructor, tab_menu_category?: string | string[], options?: NodeRegisterOptions) {
 		// console.warn('registerNode', node.context(), node.type());

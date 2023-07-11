@@ -312,6 +312,7 @@ import { orBooleans } from "../../../functions/orBooleans";
 import { particlesSystemReset } from "../../../functions/particlesSystemReset";
 import { particlesSystemStepSimulation } from "../../../functions/particlesSystemStepSimulation";
 import { pauseAudioSource } from "../../../functions/pauseAudioSource";
+import { physicsDebugUpdate } from "../../../functions/physicsDebugUpdate";
 import { physicsRBDAddForce } from "../../../functions/physicsRBDAddForce";
 import { physicsRBDAddForceAtPoint } from "../../../functions/physicsRBDAddForceAtPoint";
 import { physicsRBDAddTorque } from "../../../functions/physicsRBDAddTorque";
@@ -445,6 +446,7 @@ import { setPhysicsWorldGravity } from "../../../functions/setPhysicsWorldGravit
 import { setPlayerInput } from "../../../functions/setPlayerInput";
 import { setSpotLightIntensity } from "../../../functions/setSpotLightIntensity";
 import { setViewer } from "../../../functions/setViewer";
+import { setViewerControls } from "../../../functions/setViewerControls";
 import { sizzleVec3XY } from "../../../functions/sizzleVec3XY";
 import { sizzleVec3XZ } from "../../../functions/sizzleVec3XZ";
 import { sizzleVec3YZ } from "../../../functions/sizzleVec3YZ";
@@ -782,6 +784,7 @@ export interface NamedFunctionMap {
 	particlesSystemReset: particlesSystemReset;
 	particlesSystemStepSimulation: particlesSystemStepSimulation;
 	pauseAudioSource: pauseAudioSource;
+	physicsDebugUpdate: physicsDebugUpdate;
 	physicsRBDAddForce: physicsRBDAddForce;
 	physicsRBDAddForceAtPoint: physicsRBDAddForceAtPoint;
 	physicsRBDAddTorque: physicsRBDAddTorque;
@@ -915,6 +918,7 @@ export interface NamedFunctionMap {
 	setPlayerInput: setPlayerInput;
 	setSpotLightIntensity: setSpotLightIntensity;
 	setViewer: setViewer;
+	setViewerControls: setViewerControls;
 	sizzleVec3XY: sizzleVec3XY;
 	sizzleVec3XZ: sizzleVec3XZ;
 	sizzleVec3YZ: sizzleVec3YZ;
@@ -1255,6 +1259,7 @@ export class AllNamedFunctionRegister {
 			particlesSystemReset,
 			particlesSystemStepSimulation,
 			pauseAudioSource,
+			physicsDebugUpdate,
 			physicsRBDAddForce,
 			physicsRBDAddForceAtPoint,
 			physicsRBDAddTorque,
@@ -1388,6 +1393,7 @@ export class AllNamedFunctionRegister {
 			setPlayerInput,
 			setSpotLightIntensity,
 			setViewer,
+			setViewerControls,
 			sizzleVec3XY,
 			sizzleVec3XZ,
 			sizzleVec3YZ,

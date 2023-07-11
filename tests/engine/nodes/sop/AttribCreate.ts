@@ -535,7 +535,6 @@ QUnit.test('sop/attribCreate object position', async (assert) => {
 	let container = await attribCreate1.compute();
 	const coreGroup = container.coreContent()!;
 	const objects = coreGroup.allCoreObjects();
-	console.log(objects);
 	assert.deepEqual((objects[0].attribValue('center') as Vector3).toArray(), [1, 2, 3]);
 	assert.deepEqual((objects[1].attribValue('center') as Vector3).toArray(), [4, 5, 6]);
 });

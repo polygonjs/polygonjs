@@ -7,7 +7,7 @@ import {
 	PhysicsRBDHeightAttribute,
 	PhysicsRBDRadiusAttribute,
 } from '../PhysicsAttribute';
-import {_getRBD} from '../PhysicsRBD';
+import {_getRBDFromObject} from '../PhysicsRBD';
 import {PhysicsLib} from '../CorePhysics';
 import {CoreObject} from '../../geometry/Object';
 import {touchRBDProperty} from '../../reactivity/RBDPropertyReactivity';
@@ -47,7 +47,7 @@ export function currentRadius(object: Object3D, collider: Collider) {
 }
 
 export function _getPhysicsRBDCapsuleHeight(object: Object3D): number | undefined {
-	const body = _getRBD(object);
+	const body = _getRBDFromObject(object);
 	if (!body) {
 		console.warn('no rbd found');
 		return;
@@ -63,7 +63,7 @@ export function _getPhysicsRBDCapsuleHeight(object: Object3D): number | undefine
 	return currentHeight(object, collider);
 }
 export function _getPhysicsRBDCapsuleRadius(object: Object3D): number | undefined {
-	const body = _getRBD(object);
+	const body = _getRBDFromObject(object);
 	if (!body) {
 		console.warn('no rbd found');
 		return;
@@ -85,7 +85,7 @@ export function _setPhysicsRBDCapsuleProperty(
 	lerp: number,
 	updateObjectMatrix: boolean
 ) {
-	const body = _getRBD(object);
+	const body = _getRBDFromObject(object);
 	if (!body) {
 		console.warn('no rbd found');
 		return;

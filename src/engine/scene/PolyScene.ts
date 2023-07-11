@@ -391,8 +391,19 @@ export class PolyScene {
 		Poly.scenesRegister.registerScene(this);
 	}
 
+	private _disposed = false;
 	dispose() {
+		if (this._disposed == true) {
+			return;
+		}
+		this._disposed = true;
+		this.batchUpdates(() => {
+			this.nodesController.traverseNodes((node) => {
+				node.parent()?.removeNode(node);
+			});
+		});
 		this._windowController?.dispose();
+		this.renderersRegister.dispose();
 		Poly.scenesRegister.deregisterScene(this);
 	}
 

@@ -40,6 +40,12 @@ export class SceneRenderersRegister {
 			this._flushCallbacksWithRenderer(renderer);
 		}
 	}
+	dispose() {
+		const renderers = this.renderers();
+		for (const renderer of renderers) {
+			this.deregisterRenderer(renderer);
+		}
+	}
 	deregisterRenderer(renderer: AbstractRenderer) {
 		const id = Poly.renderersController.rendererId(renderer);
 		if (id == null) {

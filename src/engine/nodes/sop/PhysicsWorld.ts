@@ -15,10 +15,10 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {NodeContext} from '../../poly/NodeContext';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {createOrFindPhysicsWorld} from '../../../core/physics/PhysicsWorld';
-import {physicsCreateDebugObject, updatePhysicsDebugObject} from '../../../core/physics/PhysicsDebug';
+import {updatePhysicsDebugObject} from '../../../core/physics/PhysicsDebug';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 import {PolyScene} from '../../scene/PolyScene';
-import {CoreType, isBooleanTrue} from '../../../core/Type';
+import {CoreType} from '../../../core/Type';
 import {BaseNodeType} from '../_Base';
 import {Poly} from '../../Poly';
 import {CoreObject} from '../../../core/geometry/Object';
@@ -29,7 +29,7 @@ class PhysicsWorldSopParamsConfig extends NodeParamsConfig {
 	/** @param gravity */
 	gravity = ParamConfig.VECTOR3(PHYSICS_GRAVITY_DEFAULT);
 	/** @param display debug information */
-	debug = ParamConfig.BOOLEAN(0);
+	// debug = ParamConfig.BOOLEAN(0);
 	/** @param actor node */
 	// node = ParamConfig.NODE_PATH('', {
 	// 	visibleIf: {useThisNode: 0},
@@ -77,22 +77,22 @@ export class PhysicsWorldSopNode extends TypedActorSopNode<PhysicsWorldSopParams
 
 		// if (actorNode) {
 		// }
-		const objects: Object3D[] = [worldObject];
-		if (isBooleanTrue(this.pv.debug)) {
-			// const pair = createOrFindPhysicsDebugObject(this, world);
-			// updatePhysicsDebugObject(pair);
-			const debugObject = physicsCreateDebugObject();
-			CoreObject.addAttribute(debugObject, PhysicsIdAttribute.DEBUG, this.graphNodeId());
-			debugObject.name = `${this.name()}_Debug`;
-			objects.push(debugObject);
-		}
+		// const objects: Object3D[] = [worldObject];
+		// if (isBooleanTrue(this.pv.debug)) {
+		// 	// const pair = createOrFindPhysicsDebugObject(this, world);
+		// 	// updatePhysicsDebugObject(pair);
+		// 	const debugObject = physicsCreateDebugObject();
+		// 	CoreObject.addAttribute(debugObject, PhysicsIdAttribute.DEBUG, this.graphNodeId());
+		// 	debugObject.name = `${this.name()}_Debug`;
+		// 	objects.push(debugObject);
+		// }
 		const actorNode = this._findActorNode();
 		// for (let object of objects) {
 		// do not assign actor node to the debug object
 		this.scene().actorsManager.assignActorBuilder(worldObject, actorNode);
 		// }
 
-		this.setObjects(objects);
+		this.setObject(worldObject);
 	}
 	public override updateObjectOnAdd(object: Object3D) {
 		// if (!this._PhysicsLib) {
@@ -113,7 +113,7 @@ export class PhysicsWorldSopNode extends TypedActorSopNode<PhysicsWorldSopParams
 					return;
 				}
 				const debugObject = sibblings.find(
-					(sibbling) => CoreObject.attribValue(sibbling, PhysicsIdAttribute.DEBUG) == this.graphNodeId()
+					(sibbling) => CoreObject.attribValue(sibbling, PhysicsIdAttribute.DEBUG_WORLD) == worldNodeId //this.graphNodeId()
 				);
 				if (debugObject) {
 					updatePhysicsDebugObject(debugObject);

@@ -16,7 +16,7 @@ import {CoreObject} from '../geometry/Object';
 export enum PhysicsIdAttribute {
 	WORLD = 'PhysicsIdAttribute_worldId',
 	RBD_HANDLE = 'PhysicsIdAttribute_rbdHandle',
-	DEBUG = 'PhysicsIdAttribute_debugId',
+	DEBUG_WORLD = 'PhysicsIdAttribute_debugWorldId',
 }
 export enum PhysicsRBDType {
 	FIXED = 'fixed',

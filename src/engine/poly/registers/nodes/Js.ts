@@ -117,6 +117,7 @@ import {GlobalsSpotLightJsNode} from '../../../nodes/js/GlobalsSpotLight';
 import {HsvToRgbJsNode} from '../../../nodes/js/HsvToRgb';
 import {IntToBoolJsNode} from '../../../nodes/js/IntToBool';
 import {IntToFloatJsNode} from '../../../nodes/js/IntToFloat';
+import {IsDefinedJsNode} from '../../../nodes/js/IsDefined';
 import {KeyframesJsNode} from '../../../nodes/js/Keyframes';
 import {LengthJsNode} from '../../../nodes/js/Length';
 import {LerpJsNode} from '../../../nodes/js/Lerp';
@@ -180,6 +181,7 @@ import {ParamJsNode} from '../../../nodes/js/Param';
 import {ParticlesSystemResetJsNode} from '../../../nodes/js/ParticlesSystemReset';
 import {ParticlesSystemStepSimulationJsNode} from '../../../nodes/js/ParticlesSystemStepSimulation';
 import {PauseAudioSourceJsNode} from '../../../nodes/js/PauseAudioSource';
+import {PhysicsDebugUpdateJsNode} from '../../../nodes/js/PhysicsDebugUpdate';
 import {PhysicsPlayerUpdateJsNode} from '../../../nodes/js/PhysicsPlayerUpdate';
 import {PhysicsRBDAddForceJsNode} from '../../../nodes/js/PhysicsRBDAddForce';
 import {PhysicsRBDAddForceAtPointJsNode} from '../../../nodes/js/PhysicsRBDAddForceAtPoint';
@@ -291,6 +293,7 @@ import {SetClothConstraintPositionJsNode} from '../../../nodes/js/SetClothConstr
 import {SetSoftBodyConstraintPositionJsNode} from '../../../nodes/js/SetSoftBodyConstraintPosition';
 import {SetSpotLightIntensityJsNode} from '../../../nodes/js/SetSpotLightIntensity';
 import {SetViewerJsNode} from '../../../nodes/js/SetViewer';
+import {SetViewerControlsJsNode} from '../../../nodes/js/SetViewerControls';
 import {SignJsNode} from '../../../nodes/js/Sign';
 import {SinJsNode} from '../../../nodes/js/Sin';
 import {SmoothstepJsNode} from '../../../nodes/js/Smoothstep';
@@ -444,6 +447,7 @@ export interface JsNodeChildrenMap {
 	hsvToRgb: HsvToRgbJsNode;
 	intToBool: IntToBoolJsNode;
 	intToFloat: IntToFloatJsNode;
+	isDefined: IsDefinedJsNode;
 	keyframes: KeyframesJsNode;
 	length: LengthJsNode;
 	lerp: LerpJsNode;
@@ -507,6 +511,7 @@ export interface JsNodeChildrenMap {
 	particlesSystemReset: ParticlesSystemResetJsNode;
 	particlesSystemStepSimulation: ParticlesSystemStepSimulationJsNode;
 	pauseAudioSource: PauseAudioSourceJsNode;
+	physicsDebugUpdate: PhysicsDebugUpdateJsNode;
 	physicsPlayerUpdate: PhysicsPlayerUpdateJsNode;
 	physicsRBDAddForce: PhysicsRBDAddForceJsNode;
 	physicsRBDAddForceAtPoint: PhysicsRBDAddForceAtPointJsNode;
@@ -618,6 +623,7 @@ export interface JsNodeChildrenMap {
 	setSoftBodyConstraintPosition: SetSoftBodyConstraintPositionJsNode;
 	setSpotLightIntensity: SetSpotLightIntensityJsNode;
 	setViewer: SetViewerJsNode;
+	setViewerControls: SetViewerControlsJsNode;
 	sign: SignJsNode;
 	sin: SinJsNode;
 	smoothstep: SmoothstepJsNode;
@@ -681,6 +687,7 @@ const ONLY_ACTOR = {
 		sopType(SopType.ACTOR),
 		sopType(SopType.CLOTH_SOLVER),
 		sopType(SopType.PHYSICS_WORLD),
+		sopType(SopType.PHYSICS_DEBUG),
 		sopType(SopType.PHYSICS_PLAYER),
 		// sopType(SopType.TET_SOFT_BODY_SOLVER),
 		...[
@@ -815,9 +822,8 @@ export class JsRegister {
 		poly.registerNode(HsvToRgbJsNode, CATEGORY_JS.CONVERSION);
 		poly.registerNode(IntToBoolJsNode, CATEGORY_JS.CONVERSION);
 		poly.registerNode(IntToFloatJsNode, CATEGORY_JS.CONVERSION);
-		// if (process.env.NODE_ENV == 'development') {
+		poly.registerNode(IsDefinedJsNode, CATEGORY_JS.ANIMATION);
 		poly.registerNode(KeyframesJsNode, CATEGORY_JS.ANIMATION);
-		// }
 		poly.registerNode(LengthJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(LerpJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(ManhattanDistanceJsNode, CATEGORY_JS.MATH);
@@ -880,6 +886,7 @@ export class JsRegister {
 		poly.registerNode(ParticlesSystemResetJsNode, CATEGORY_JS.PARTICLES, ONLY_ACTOR);
 		poly.registerNode(ParticlesSystemStepSimulationJsNode, CATEGORY_JS.PARTICLES, ONLY_ACTOR);
 		poly.registerNode(PauseAudioSourceJsNode, CATEGORY_JS.AUDIO, ONLY_ACTOR);
+		poly.registerNode(PhysicsDebugUpdateJsNode, CATEGORY_JS.PHYSICS, ONLY_ACTOR);
 		poly.registerNode(PhysicsPlayerUpdateJsNode, CATEGORY_JS.PHYSICS, ONLY_ACTOR);
 		poly.registerNode(PhysicsRBDAddForceJsNode, CATEGORY_JS.PHYSICS, ONLY_ACTOR);
 		poly.registerNode(PhysicsRBDAddForceAtPointJsNode, CATEGORY_JS.PHYSICS, ONLY_ACTOR);
@@ -991,6 +998,7 @@ export class JsRegister {
 		poly.registerNode(SetSoftBodyConstraintPositionJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
 		poly.registerNode(SetSpotLightIntensityJsNode, CATEGORY_JS.PHYSICS, ONLY_ACTOR);
 		poly.registerNode(SetViewerJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR);
+		poly.registerNode(SetViewerControlsJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR);
 		poly.registerNode(SignJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(SinJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(SmoothstepJsNode, CATEGORY_JS.MATH);

@@ -20,6 +20,12 @@ export class ScenesRegister {
 		this._registerTimeByScene.delete(scene);
 		this._updateCache();
 	}
+	dispose() {
+		const scenes = this.scenes();
+		for (const scene of scenes) {
+			scene.dispose();
+		}
+	}
 	lastRegisteredScene() {
 		return this._lastRegisteredScene;
 	}

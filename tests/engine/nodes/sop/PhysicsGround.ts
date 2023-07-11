@@ -28,7 +28,7 @@ QUnit.test('sop/physicsGround simple', async (assert) => {
 	merge1.setInput(1, physicsRBDAttributes1);
 	physicsWorld1.setInput(0, merge1);
 	physicsWorld1.flags.display.set(true);
-	physicsWorld1.p.debug.set(true);
+	// physicsWorld1.p.debug.set(true);
 
 	plane1.p.center.set([0, 2, 0]);
 	sphere1.p.radius.set(0.2);

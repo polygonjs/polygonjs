@@ -35,7 +35,12 @@ export class CreatePhysicsRBDKinematicConstraintJsNode extends BaseTriggerAndObj
 	override setLines(linesController: JsLinesCollectionController) {
 		const usedOutputNames = this.io.outputs.used_output_names();
 		if (usedOutputNames.includes(CreatePhysicsRBDKinematicConstraintJsNodeOutput.RBD_ID)) {
-			this._addRBDIdRef(linesController);
+			const outRBDIds = this._addRBDIdRef(linesController);
+			const out = this.jsVarName(CreatePhysicsRBDKinematicConstraintJsNodeOutput.RBD_ID);
+
+			linesController.addBodyOrComputed(this, [
+				{dataType: JsConnectionPointType.OBJECT_3D, varName: out, value: `this.${outRBDIds}.value`},
+			]);
 
 			if (!usedOutputNames.includes(JsConnectionPointType.TRIGGER)) {
 				this.setTriggeringLines(linesController, '');
@@ -46,7 +51,7 @@ export class CreatePhysicsRBDKinematicConstraintJsNode extends BaseTriggerAndObj
 	override setTriggerableLines(linesController: JsLinesCollectionController) {
 		const object3D = inputObject3D(this, linesController);
 		const anchor = this.variableForInputParam(linesController, this.p.anchor);
-		this._addRBDIdRef(linesController);
+		const rbdId = this._addRBDIdRef(linesController);
 
 		const func = Poly.namedFunctionsRegister.getFunction(
 			'createPhysicsRBDKinematicConstraint',
@@ -54,7 +59,7 @@ export class CreatePhysicsRBDKinematicConstraintJsNode extends BaseTriggerAndObj
 			linesController
 		);
 
-		const bodyLine = func.asString(object3D, anchor);
+		const bodyLine = func.asString(object3D, anchor, `this.${rbdId}`);
 		linesController.addTriggerableLines(this, [bodyLine]);
 	}
 

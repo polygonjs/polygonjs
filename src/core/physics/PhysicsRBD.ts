@@ -3,7 +3,7 @@ import {TypeAssert} from './../../engine/poly/Assert';
 import {PhysicsRBDColliderType, PhysicsRBDType, CorePhysicsAttribute} from './PhysicsAttribute';
 import {Object3D, Vector3, Quaternion} from 'three';
 import {World, RigidBodyType, RigidBodyDesc, RigidBody, ColliderDesc} from '@dimforge/rapier3d-compat';
-import {CorePhysicsLoaded, PhysicsLib, Object3DByRigidBody} from './CorePhysics';
+import {CorePhysicsLoaded, PhysicsLib} from './CorePhysics';
 import {createPhysicsSphere} from './shapes/RBDSphere';
 import {createPhysicsCuboid} from './shapes/RBDCuboid';
 import {createPhysicsCapsule} from './shapes/RBDCapsule';
@@ -16,7 +16,7 @@ import {touchRBDProperties, touchRBDProperty} from '../reactivity/RBDPropertyRea
 import {OBJECT_TRANSFORM_PROPERTIES, touchObjectProperties} from '../reactivity/ObjectPropertyReactivity';
 import {PolyScene} from '../../engine/scene/PolyScene';
 import {removeFromParent} from '../../engine/poly/PolyOnObjectsAddRemoveHooksController';
-import {object3DByRBDByWorld, getRBDFromId} from './PhysicsWorld';
+import {getRBDFromId, object3DFromRBD} from './PhysicsWorld';
 
 export enum RBDProperty {
 	ANGULAR_VELOCITY = 'angVel',
@@ -71,11 +71,11 @@ interface CreateRBDFromAttributesOptions {
 	world: World;
 	object: Object3D;
 	rigidBodyById: Map<string, RigidBody>;
-	objectsByRigidBody: Object3DByRigidBody;
+	objectsByRBD: WeakMap<RigidBody, Object3D>;
 	newRBDIds: Set<string>;
 }
 function _createRBDFromAttributes(options: CreateRBDFromAttributesOptions): RigidBody | undefined {
-	const {PhysicsLib, world, object, rigidBodyById, objectsByRigidBody, newRBDIds} = options;
+	const {PhysicsLib, world, object, rigidBodyById, objectsByRBD, newRBDIds} = options;
 	const type = CorePhysicsAttribute.getRBDType(object);
 	if (type == null) {
 		return;
@@ -118,7 +118,7 @@ function _createRBDFromAttributes(options: CreateRBDFromAttributesOptions): Rigi
 
 	// create RBD
 	const rigidBody = _createRBDFromDescAndObject(world, rigidBodyDesc, object);
-	objectsByRigidBody.set(rigidBody, object);
+	objectsByRBD.set(rigidBody, object);
 	const rbdId = CorePhysicsAttribute.getRBDId(object);
 	if (rbdId) {
 		rigidBodyById.set(rbdId, rigidBody);
@@ -150,15 +150,14 @@ function _createColliderDesc(PhysicsLib: PhysicsLib, object: Object3D) {
 	}
 	return colliderDesc;
 }
-export function _getRBDFromWorldObject(worldObject: Object3D, rbdId: string): Object3D | undefined {
+export function _getRBDFromId(rbdId: string): Object3D | undefined {
 	const rigidBody = getRBDFromId(rbdId);
 	if (!rigidBody) {
 		return;
 	}
-	const object = object3DByRBDByWorld(worldObject, rigidBody);
-	return object;
+	return object3DFromRBD(rigidBody);
 }
-export function _getRBD(object: Object3D) {
+export function _getRBDFromObject(object: Object3D) {
 	const handle = CorePhysicsAttribute.getRBDHandle(object);
 	if (handle == null) {
 		return;
@@ -166,7 +165,7 @@ export function _getRBD(object: Object3D) {
 	return physicsRBDByRBDHandle.get(handle);
 }
 export function _getPhysicsWorldFromRBD(object: Object3D) {
-	const rbd = _getRBD(object);
+	const rbd = _getRBDFromObject(object);
 	if (!rbd) {
 		return;
 	}
@@ -198,23 +197,23 @@ interface PhysicsCreateRBDOptions {
 	world: World;
 	object: Object3D;
 	rigidBodyById: Map<string, RigidBody>;
-	objectsByRigidBody: Object3DByRigidBody;
+	objectsByRBD: WeakMap<RigidBody, Object3D>;
 	newRBDIds: Set<string>;
 }
 export function _physicsCreateRBD(options: PhysicsCreateRBDOptions) {
-	const {PhysicsLib, world, object, rigidBodyById, objectsByRigidBody, newRBDIds} = options;
+	const {PhysicsLib, world, object, rigidBodyById, objectsByRBD, newRBDIds} = options;
 	const rigidBody = _createRBDFromAttributes({
 		PhysicsLib,
 		world,
 		object,
 		rigidBodyById,
-		objectsByRigidBody,
+		objectsByRBD,
 		newRBDIds,
 	});
 	if (!rigidBody) {
 		// if not rbd created, we go through the children
 		for (let child of object.children) {
-			_physicsCreateRBD({PhysicsLib, world, rigidBodyById, objectsByRigidBody, object: child, newRBDIds});
+			_physicsCreateRBD({PhysicsLib, world, rigidBodyById, objectsByRBD, object: child, newRBDIds});
 		}
 
 		return;
@@ -299,7 +298,7 @@ function updateRBDRefs(object: Object3D) {
 
 // impulse
 export function _physicsRBDApplyImpulse(object: Object3D, impulse: Vector3) {
-	const body = _getRBD(object);
+	const body = _getRBDFromObject(object);
 	if (!body) {
 		console.warn('no rbd found');
 		return;
@@ -307,7 +306,7 @@ export function _physicsRBDApplyImpulse(object: Object3D, impulse: Vector3) {
 	body.applyImpulse(impulse, true);
 }
 export function _physicsRBDApplyImpulseAtPoint(object: Object3D, impulse: Vector3, point: Vector3) {
-	const body = _getRBD(object);
+	const body = _getRBDFromObject(object);
 	if (!body) {
 		console.warn('no rbd found');
 		return;
@@ -315,7 +314,7 @@ export function _physicsRBDApplyImpulseAtPoint(object: Object3D, impulse: Vector
 	body.applyImpulseAtPoint(impulse, point, true);
 }
 export function _physicsRBDApplyTorqueImpulse(object: Object3D, impulse: Vector3) {
-	const body = _getRBD(object);
+	const body = _getRBDFromObject(object);
 	if (!body) {
 		console.warn('no rbd found');
 		return;
@@ -324,7 +323,7 @@ export function _physicsRBDApplyTorqueImpulse(object: Object3D, impulse: Vector3
 }
 // add
 export function _physicsRBDAddForce(object: Object3D, force: Vector3) {
-	const body = _getRBD(object);
+	const body = _getRBDFromObject(object);
 	if (!body) {
 		console.warn('no rbd found');
 		return;
@@ -332,7 +331,7 @@ export function _physicsRBDAddForce(object: Object3D, force: Vector3) {
 	body.addForce(force, true);
 }
 export function _physicsRBDAddForceAtPoint(object: Object3D, force: Vector3, point: Vector3) {
-	const body = _getRBD(object);
+	const body = _getRBDFromObject(object);
 	if (!body) {
 		console.warn('no rbd found');
 		return;
@@ -340,7 +339,7 @@ export function _physicsRBDAddForceAtPoint(object: Object3D, force: Vector3, poi
 	body.addForceAtPoint(force, point, true);
 }
 export function _physicsRBDAddTorque(object: Object3D, torque: Vector3) {
-	const body = _getRBD(object);
+	const body = _getRBDFromObject(object);
 	if (!body) {
 		console.warn('no rbd found');
 		return;
@@ -349,7 +348,7 @@ export function _physicsRBDAddTorque(object: Object3D, torque: Vector3) {
 }
 // reset
 export function _physicsRBDResetAll(object: Object3D, wakeup: boolean) {
-	const body = _getRBD(object);
+	const body = _getRBDFromObject(object);
 	if (!body) {
 		console.warn('no rbd found');
 		return;
@@ -360,7 +359,7 @@ export function _physicsRBDResetAll(object: Object3D, wakeup: boolean) {
 	body.setAngvel({x: 0, y: 0, z: 0}, wakeup);
 }
 export function _physicsRBDResetForces(object: Object3D, wakeup: boolean) {
-	const body = _getRBD(object);
+	const body = _getRBDFromObject(object);
 	if (!body) {
 		console.warn('no rbd found');
 		return;
@@ -368,7 +367,7 @@ export function _physicsRBDResetForces(object: Object3D, wakeup: boolean) {
 	body.resetForces(wakeup);
 }
 export function _physicsRBDResetTorques(object: Object3D, wakeup: boolean) {
-	const body = _getRBD(object);
+	const body = _getRBDFromObject(object);
 	if (!body) {
 		console.warn('no rbd found');
 		return;
@@ -377,7 +376,7 @@ export function _physicsRBDResetTorques(object: Object3D, wakeup: boolean) {
 }
 
 export function _setPhysicsRBDPosition(object: Object3D, targetPosition: Vector3, lerp: number) {
-	const body = _getRBD(object);
+	const body = _getRBDFromObject(object);
 	if (!body) {
 		console.warn('no rbd found');
 		return;
@@ -398,7 +397,7 @@ export function _setPhysicsRBDPosition(object: Object3D, targetPosition: Vector3
 	touchRBDProperty(object, RBDProperty.POSITION);
 }
 export function _setPhysicsRBDRotation(object: Object3D, targetQuaternion: Quaternion, lerp: number) {
-	const body = _getRBD(object);
+	const body = _getRBDFromObject(object);
 	if (!body) {
 		console.warn('no rbd found');
 		return;
@@ -416,7 +415,7 @@ export function _setPhysicsRBDRotation(object: Object3D, targetQuaternion: Quate
 	touchRBDProperty(object, RBDProperty.ROTATION);
 }
 export function _setPhysicsRBDLinearVelocity(object: Object3D, targetVelocity: Vector3, lerp: number) {
-	const body = _getRBD(object);
+	const body = _getRBDFromObject(object);
 	if (!body) {
 		console.warn('no rbd found');
 		return;
@@ -434,7 +433,7 @@ export function _setPhysicsRBDLinearVelocity(object: Object3D, targetVelocity: V
 	touchRBDProperty(object, RBDProperty.LINEAR_VELOCITY);
 }
 export function _setPhysicsRBDAngularVelocity(object: Object3D, targetVelocity: Vector3, lerp: number) {
-	const body = _getRBD(object);
+	const body = _getRBDFromObject(object);
 	if (!body) {
 		console.warn('no rbd found');
 		return;

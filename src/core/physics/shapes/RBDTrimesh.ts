@@ -1,5 +1,4 @@
 import {BufferAttribute, Mesh, Object3D} from 'three';
-import {_getRBD} from '../PhysicsRBD';
 import {PhysicsLib} from '../CorePhysics';
 
 export function createPhysicsTriMesh(PhysicsLib: PhysicsLib, object: Object3D) {

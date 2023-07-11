@@ -1,4 +1,4 @@
-import {PhysicsLib, CorePhysics, Object3DByRigidBodyByWorld, CorePhysicsLoaded} from './CorePhysics';
+import {PhysicsLib, CorePhysics, CorePhysicsLoaded} from './CorePhysics';
 import {World, RigidBody, Collider, ImpulseJoint, MultibodyJoint} from '@dimforge/rapier3d-compat';
 // import {CorePhysicsUserData} from './PhysicsUserData';
 import {Object3D, Vector3} from 'three';
@@ -8,14 +8,15 @@ import {CoreGraphNodeId} from '../graph/CoreGraph';
 import {BaseNodeType} from '../../engine/nodes/_Base';
 import {CoreObject} from '../geometry/Object';
 import {PhysicsIdAttribute} from './PhysicsAttribute';
-import {updatePhysicsDebugObject} from './PhysicsDebug';
+// import {updatePhysicsDebugObject} from './PhysicsDebug';
 import {clearPhysicsPlayers, createOrFindPhysicsPlayer} from './player/PhysicsPlayer';
 import {PolyScene} from '../../engine/scene/PolyScene';
 
 export const PHYSICS_GRAVITY_DEFAULT = new Vector3(0, -9.81, 0);
 
 const physicsworldByGraphNodeId: Map<CoreGraphNodeId, World> = new Map();
-const objectsByRBDByWorld: Object3DByRigidBodyByWorld = new Map();
+// const objectsByRBDByWorld: Object3DByRigidBodyByWorld = new Map();
+const objectsByRBD: WeakMap<RigidBody, Object3D> = new WeakMap();
 const rigidBodyById: Map<string, RigidBody> = new Map();
 //
 export async function createOrFindPhysicsWorld(node: BaseNodeType, worldObject: Object3D, gravity: Vector3) {
@@ -52,7 +53,7 @@ export function initCorePhysicsWorld(PhysicsLib: PhysicsLib, worldObject: Object
 		return;
 	}
 	_clearWorld(world);
-	const objectsByRigidBody = _objectByRBDWorld(world);
+	// const objectsByRigidBody = _objectByRBDWorld(world);
 
 	// create RBDs
 
@@ -65,45 +66,52 @@ export function initCorePhysicsWorld(PhysicsLib: PhysicsLib, worldObject: Object
 	const children = [...worldObject.children];
 	const newRBDIds = new Set<string>();
 	for (let child of children) {
-		_physicsCreateRBD({PhysicsLib, world, rigidBodyById, objectsByRigidBody, object: child, newRBDIds});
+		_physicsCreateRBD({PhysicsLib, world, rigidBodyById, objectsByRBD, object: child, newRBDIds});
 	}
 
 	// create joints
 	// for (let child of children) {
-	physicsCreateJoints(PhysicsLib, world, worldObject, rigidBodyById);
+	physicsCreateJoints(PhysicsLib, world, worldObject);
 	// }
 	// create character controller
 	for (let child of children) {
 		createOrFindPhysicsPlayer({scene, object: child, PhysicsLib, world, worldObject});
 	}
 }
-function _objectByRBDWorld(world: World) {
-	let objectsByRigidBody = objectsByRBDByWorld.get(world);
-	if (!objectsByRigidBody) {
-		objectsByRigidBody = new WeakMap();
-		objectsByRBDByWorld.set(world, objectsByRigidBody);
-	}
-	return objectsByRigidBody;
+// function _objectByRBDWorld(world: World) {
+// 	let objectsByRigidBody = objectsByRBDByWorld.get(world);
+// 	if (!objectsByRigidBody) {
+// 		objectsByRigidBody = new WeakMap();
+// 		objectsByRBDByWorld.set(world, objectsByRigidBody);
+// 	}
+// 	return objectsByRigidBody;
+// }
+// export function object3DByRBDByWorld(worldObject: Object3D, rbd: RigidBody) {
+// 	const objectsByRigidBody = _objectByRBDWorld(physicsWorldFromObject(worldObject) as World);
+// 	return objectsByRigidBody.get(rbd);
+// }
+export function object3DFromRBD(rbd: RigidBody) {
+	return objectsByRBD.get(rbd);
 }
-export function object3DByRBDByWorld(worldObject: Object3D, rbd: RigidBody) {
-	const objectsByRigidBody = _objectByRBDWorld(physicsWorldFromObject(worldObject) as World);
-	return objectsByRigidBody.get(rbd);
-}
-export function physicsCreateRBD(worldObject: Object3D, object: Object3D) {
-	const PhysicsLib = CorePhysicsLoaded();
-	if (!PhysicsLib) {
-		return;
-	}
+export function physicsCreateRBDFromWorldObject(worldObject: Object3D, object: Object3D) {
 	const world = physicsWorldFromObject(worldObject);
 	if (!world) {
 		console.warn('no physicsWorld found with this object', worldObject);
 		return;
 	}
-	const objectsByRigidBody = _objectByRBDWorld(world);
+	return physicsCreateRBDFromWorld(world, object);
+}
+export function physicsCreateRBDFromWorld(world: World, object: Object3D) {
+	const PhysicsLib = CorePhysicsLoaded();
+	if (!PhysicsLib) {
+		return;
+	}
+	// const objectsByRigidBody = _objectByRBDWorld(world);
 	const newRBDIds = new Set<string>();
-	_physicsCreateRBD({PhysicsLib, world, rigidBodyById, objectsByRigidBody, object, newRBDIds});
+	_physicsCreateRBD({PhysicsLib, world, rigidBodyById, objectsByRBD, object, newRBDIds});
 	return newRBDIds;
 }
+
 export function getRBDFromId(rbdId: string) {
 	return rigidBodyById.get(rbdId);
 }
@@ -149,20 +157,20 @@ export function stepWorld(worldObject: Object3D) {
 		// if (!pair) {
 		// 	return;
 		// }
-		updatePhysicsDebugObject(worldObject);
+		// updatePhysicsDebugObject(worldObject);
 		return;
 	}
 	world.step();
 
-	const objectsByRigidBody = objectsByRBDByWorld.get(world);
-	if (objectsByRigidBody) {
-		world.bodies.forEach((body) => {
-			const object = objectsByRigidBody.get(body);
-			if (object) {
-				physicsUpdateRBD(object, body);
-			}
-		});
-	}
+	// const objectsByRigidBody = objectsByRBDByWorld.get(world);
+	// if (objectsByRigidBody) {
+	world.bodies.forEach((body) => {
+		const object = objectsByRBD.get(body);
+		if (object) {
+			physicsUpdateRBD(object, body);
+		}
+	});
+	// }
 }
 
 const currentGravity = new Vector3();

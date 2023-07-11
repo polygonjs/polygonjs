@@ -1,5 +1,4 @@
 import {Mesh, Object3D, Vector3} from 'three';
-import {_getRBD} from '../PhysicsRBD';
 import {PhysicsLib} from '../CorePhysics';
 import {ThreeMeshBVHHelper} from '../../../core/geometry/bvh/ThreeMeshBVHHelper';
 import {CoreMath} from '../../math/_Module';

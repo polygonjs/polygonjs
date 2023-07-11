@@ -1,4 +1,4 @@
-import {NamedFunction2} from './_Base';
+import {NamedFunction1, NamedFunction2} from './_Base';
 
 export class setViewer extends NamedFunction2<[string, boolean]> {
 	static override type() {
@@ -17,5 +17,15 @@ export class setViewer extends NamedFunction2<[string, boolean]> {
 				canvas.classList.remove(className);
 			}
 		}
+	}
+}
+
+export class setViewerControls extends NamedFunction1<[boolean]> {
+	static override type() {
+		return 'setViewerControls';
+	}
+	func(active: boolean): void {
+		const viewer = this.scene.viewersRegister.firstViewer();
+		viewer?.controlsController().setActive(active);
 	}
 }

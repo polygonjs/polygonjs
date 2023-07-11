@@ -6,7 +6,7 @@ import {
 	physicsAttribNameLive,
 	PhysicsRBDRadiusAttribute,
 } from '../PhysicsAttribute';
-import {_getRBD} from '../PhysicsRBD';
+import {_getRBDFromObject} from '../PhysicsRBD';
 import {PhysicsLib} from '../CorePhysics';
 import {CoreObject} from '../../geometry/Object';
 import {getPhysicsRBDRadius, RBDCommonProperty} from './_CommonHeightRadius';
@@ -40,7 +40,7 @@ export function _setPhysicsRBDSphereProperty(
 	lerp: number,
 	updateObjectMatrix: boolean
 ) {
-	const body = _getRBD(object);
+	const body = _getRBDFromObject(object);
 	if (!body) {
 		console.warn('no rbd found');
 		return;

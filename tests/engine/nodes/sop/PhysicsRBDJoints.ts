@@ -139,7 +139,7 @@ function createScene(root: RootManagerNode) {
 			}
 			physicsWorld1.uiData.setPosition(50, 1000);
 
-			physicsWorld1.p.debug.set(true);
+			// physicsWorld1.p.debug.set(true);
 			physicsWorld1.params.postCreateSpareParams();
 			physicsWorld1.params.runOnSceneLoadHooks();
 			return {node: physicsWorld1, children: physicsWorld1_nodes};

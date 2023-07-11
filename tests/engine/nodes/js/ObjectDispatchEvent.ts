@@ -50,9 +50,8 @@ QUnit.test('js/ObjectDispatchEvent simple', async (assert) => {
 		await CoreSleep.sleep(70);
 		onManualTriggerDispatch.p.trigger.pressButton();
 		await CoreSleep.sleep(70);
-		console.log(object.position.y);
 		assert.equal(object.position.y, 1);
-		return;
+		// return;
 		// dispatch another event that is listented to
 		objectDispatchEvent.p.eventName.set('B');
 		await CoreSleep.sleep(70);

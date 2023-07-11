@@ -39,7 +39,7 @@ export function physicsCreateDebugObject() {
 // }
 
 export function updatePhysicsDebugObject(debugObject: Object3D) {
-	const nodeId = CoreObject.attribValue(debugObject, PhysicsIdAttribute.DEBUG) as CoreGraphNodeId | undefined;
+	const nodeId = CoreObject.attribValue(debugObject, PhysicsIdAttribute.DEBUG_WORLD) as CoreGraphNodeId | undefined;
 	if (nodeId == null) {
 		return;
 	}

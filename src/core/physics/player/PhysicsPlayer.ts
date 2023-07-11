@@ -1,7 +1,7 @@
 import type {World} from '@dimforge/rapier3d-compat';
 import {Object3D} from 'three';
 import {CorePhysicsAttribute} from '../PhysicsAttribute';
-import {_getRBD} from '../PhysicsRBD';
+import {_getRBDFromObject} from '../PhysicsRBD';
 import {CorePlayerPhysics} from './CorePlayerPhysics';
 import {PhysicsLib} from '../CorePhysics';
 import {PolyScene} from '../../../engine/scene/PolyScene';
@@ -39,7 +39,7 @@ export function createOrFindPhysicsPlayer(options: CreateOrFindPhysicsPlayerOpti
 		if (!characterControllerId) {
 			return;
 		}
-		const body = _getRBD(object);
+		const body = _getRBDFromObject(object);
 		if (!body) {
 			return;
 		}

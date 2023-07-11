@@ -275,6 +275,7 @@ export const FUNCTION_NAME_BY_FILE_NAME: Record<string, string[]> = {
 	Physics: [
 		'physicsWorldReset',
 		'physicsWorldStepSimulation',
+		'physicsDebugUpdate',
 		// get
 		'getPhysicsRBD',
 		// get shape
@@ -441,7 +442,7 @@ export const FUNCTION_NAME_BY_FILE_NAME: Record<string, string[]> = {
 		'getVideoPropertyMuted',
 		'getVideoPropertyPlaying',
 	],
-	Viewer: ['setViewer'],
+	Viewer: ['setViewer', 'setViewerControls'],
 	WebXR: [
 		'getWebXRARHitDetected',
 		'getWebXRARHitMatrix',

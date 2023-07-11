@@ -100,7 +100,6 @@ export class EasingJsNode extends TypedJsNode<EasingJsParamsConfig> {
 
 		// color / vector
 		const vectorFunctionName = _vectorFunctionName_1(inputType);
-		console.log('vectorFunctionName', inputType, vectorFunctionName);
 		if (vectorFunctionName && tmpVarName) {
 			func.asString('');
 			const vectorFunc = Poly.namedFunctionsRegister.getFunction(

@@ -7,7 +7,7 @@ import {
 	PhysicsRBDRadiusAttribute,
 	PhysicsRBDHeightAttribute,
 } from '../PhysicsAttribute';
-import {_getRBD} from '../PhysicsRBD';
+import {_getRBDFromObject} from '../PhysicsRBD';
 import {CoreObject} from '../../geometry/Object';
 import {touchRBDProperty} from '../../reactivity/RBDPropertyReactivity';
 
@@ -41,7 +41,7 @@ export function getPhysicsRBDHeight(
 	expectedType: PhysicsRBDColliderType.CONE | PhysicsRBDColliderType.CYLINDER,
 	object: Object3D
 ): number | undefined {
-	const body = _getRBD(object);
+	const body = _getRBDFromObject(object);
 	if (!body) {
 		console.warn('no rbd found');
 		return;
@@ -60,7 +60,7 @@ export function getPhysicsRBDRadius(
 	expectedType: PhysicsRBDColliderType.CONE | PhysicsRBDColliderType.CYLINDER | PhysicsRBDColliderType.SPHERE,
 	object: Object3D
 ): number | undefined {
-	const body = _getRBD(object);
+	const body = _getRBDFromObject(object);
 	if (!body) {
 		console.warn('no rbd found');
 		return;
@@ -90,7 +90,7 @@ export function setPhysicsRBDHeightRadiusProperty(
 	lerp: number,
 	updateObjectMatrix: boolean
 ) {
-	const body = _getRBD(object);
+	const body = _getRBDFromObject(object);
 	if (!body) {
 		console.warn('no rbd found');
 		return;
