@@ -15,8 +15,25 @@ export interface OnBeforeCompileData {
 	resolutionDependent: boolean;
 	raymarchingLightsWorldCoordsDependent: boolean;
 }
-export function cloneOnBeforeCompileData(data: OnBeforeCompileData): OnBeforeCompileData {
-	return OnBeforeCompileDataConverter.fromJSON(OnBeforeCompileDataConverter.toJSON(data));
+interface CloneOptions {
+	clonedParamConfigName: string;
+}
+export function cloneOnBeforeCompileData(data: OnBeforeCompileData, options: CloneOptions): OnBeforeCompileData {
+	const {clonedParamConfigName} = options;
+	const json = OnBeforeCompileDataConverter.toJSON(data);
+	const clonedData = OnBeforeCompileDataConverter.fromJSON(json);
+
+	const preservedParamConfigs = data.paramConfigs.filter((p) => p.name() != clonedParamConfigName);
+	const clonedParamConfig = clonedData.paramConfigs.find((p) => p.name() == clonedParamConfigName);
+
+	const paramConfigs = preservedParamConfigs;
+	if (clonedParamConfig) {
+		paramConfigs.push(clonedParamConfig);
+	}
+	return {
+		...clonedData,
+		paramConfigs,
+	};
 }
 
 // from https://www.typescriptlang.org/docs/handbook/2/mapped-types.html

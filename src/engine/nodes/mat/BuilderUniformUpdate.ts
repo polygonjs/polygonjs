@@ -35,6 +35,9 @@ function typedVisibleOptions(
 	return {
 		visibleIf: {type: val, ...otherParamVal},
 		cook: false,
+		callback: (node: BaseNodeType) => {
+			BuilderUniformUpdateMatNode.PARAM_CALLBACK_applyCurrentParam(node as BuilderUniformUpdateMatNode);
+		},
 	};
 }
 
@@ -57,10 +60,6 @@ class BuilderUniformUpdateMatParamsConfig extends NodeParamsConfig {
 	texture = ParamConfig.NODE_PATH('', {
 		...typedVisibleOptions(AdditionalType.TEXTURE),
 		nodeSelection: {context: NodeContext.COP},
-		cook: false,
-		callback: (node: BaseNodeType) => {
-			BuilderUniformUpdateMatNode.PARAM_CALLBACK_updateTexture(node as BuilderUniformUpdateMatNode);
-		},
 	});
 }
 const ParamsConfig = new BuilderUniformUpdateMatParamsConfig();
@@ -83,22 +82,31 @@ export class BuilderUniformUpdateMatNode extends UpdateMatNode<ShaderMaterial, B
 			return;
 		}
 
-		const data = OnBeforeCompileDataHandler.getData(inputMaterial);
+		const inputMaterialData = OnBeforeCompileDataHandler.getData(inputMaterial);
 
-		if (!data) {
+		if (!inputMaterialData) {
 			this.states.error.set(`input material does not come from a builder material`);
 			this.setMaterial(material);
 			return;
 		}
-		const clonedData = cloneOnBeforeCompileData(data);
+		const clonedData = cloneOnBeforeCompileData(inputMaterialData, {
+			clonedParamConfigName: this.pv.uniformName,
+		});
 		const {paramConfigs} = clonedData;
 		this._paramConfig = paramConfigs.find((p) => p.name() == this.pv.uniformName);
+		// const inputParamConfigs = inputMaterialData.paramConfigs.filter((p) => p.name() != this.pv.uniformName);
+		// const clonedParamConfigNames = clonedData.paramConfigs.map((p) => p.name());
+		// for (const inputParamConfig of inputParamConfigs) {
+		// 	const currentIndex = clonedParamConfigNames.indexOf(inputParamConfig.name());
+		// 	clonedData.paramConfigs[currentIndex] = inputParamConfig;
+		// }
+
 		if (!this._paramConfig) {
 			this.states.error.set(`uniform '${this.pv.uniformName}' not found`);
 			this.setMaterial(material);
 			return;
 		}
-		await this.applyCurrentParam();
+		await this._applyCurrentParam();
 
 		assignOnBeforeCompileDataAndFunction(this.scene(), material, clonedData);
 
@@ -109,25 +117,11 @@ export class BuilderUniformUpdateMatNode extends UpdateMatNode<ShaderMaterial, B
 		this.p.type.set(AVAILABLE_TYPES.indexOf(type));
 	}
 
-	private async _updateTexture() {
-		if (!this._paramConfig) {
-			return;
-		}
-		const textureNode = this.p.texture.value.nodeWithContext(NodeContext.COP);
-		if (textureNode) {
-			const container = await textureNode.compute();
-
-			const texture = container.texture();
-			this._paramConfig.uniform().value = texture;
-		} else {
-			this._paramConfig.uniform().value = null;
-		}
-	}
-	static PARAM_CALLBACK_updateTexture(node: BuilderUniformUpdateMatNode) {
-		node._updateTexture();
+	static PARAM_CALLBACK_applyCurrentParam(node: BuilderUniformUpdateMatNode) {
+		node._applyCurrentParam();
 	}
 
-	async applyCurrentParam() {
+	private async _applyCurrentParam() {
 		if (!this._paramConfig) {
 			return;
 		}
@@ -195,6 +189,20 @@ export class BuilderUniformUpdateMatNode extends UpdateMatNode<ShaderMaterial, B
 				await this._updateTexture();
 				return;
 			}
+		}
+	}
+	private async _updateTexture() {
+		if (!this._paramConfig) {
+			return;
+		}
+		const textureNode = this.p.texture.value.nodeWithContext(NodeContext.COP);
+		if (textureNode) {
+			const container = await textureNode.compute();
+
+			const texture = container.texture();
+			this._paramConfig.uniform().value = texture;
+		} else {
+			this._paramConfig.uniform().value = null;
 		}
 	}
 }
