@@ -1,5 +1,6 @@
 import {CATEGORY_MAT} from './Category';
 
+import {BuilderUniformUpdateMatNode} from '../../../nodes/mat/BuilderUniformUpdate';
 import {CodeMatNode} from '../../../nodes/mat/Code';
 import {ColorMatNode} from '../../../nodes/mat/Color';
 import {EnvMapMatNode} from '../../../nodes/mat/EnvMap';
@@ -43,6 +44,7 @@ import {PostProcessNetworkMatNode} from '../../../nodes/mat/PostProcessNetwork';
 import {RenderersNetworkMatNode} from '../../../nodes/mat/RenderersNetwork';
 
 export interface MatNodeChildrenMap {
+	builderUniformUpdate: BuilderUniformUpdateMatNode;
 	code: CodeMatNode;
 	color: ColorMatNode;
 	envMap: EnvMapMatNode;
@@ -88,6 +90,7 @@ export interface MatNodeChildrenMap {
 import {PolyEngine} from '../../../Poly';
 export class MatRegister {
 	static run(poly: PolyEngine) {
+		poly.registerNode(BuilderUniformUpdateMatNode, CATEGORY_MAT.ADVANCED);
 		poly.registerNode(CodeMatNode, CATEGORY_MAT.ADVANCED);
 		if (process.env.NODE_ENV == 'development') {
 			poly.registerNode(ColorMatNode, CATEGORY_MAT.UPDATE);

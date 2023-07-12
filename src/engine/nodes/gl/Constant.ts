@@ -10,18 +10,18 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
 import {CoreType, isBooleanTrue} from '../../../core/Type';
 import {PolyDictionary} from '../../../types/GlobalTypes';
-import {GlConnectionPointType, GL_CONNECTION_POINT_TYPES} from '../utils/io/connections/Gl';
+import {GlConnectionPointType, GL_CONNECTION_POINT_TYPES_FOR_CONSTANT} from '../utils/io/connections/Gl';
 import {GlType} from '../../poly/registers/nodes/types/Gl';
 
 function typedVisibleOptions(type: GlConnectionPointType, otherParamVal: PolyDictionary<number | boolean> = {}) {
-	const val = GL_CONNECTION_POINT_TYPES.indexOf(type);
+	const val = GL_CONNECTION_POINT_TYPES_FOR_CONSTANT.indexOf(type);
 	return {visibleIf: {type: val, ...otherParamVal}};
 }
 
 class ConstantGlParamsConfig extends NodeParamsConfig {
-	type = ParamConfig.INTEGER(GL_CONNECTION_POINT_TYPES.indexOf(GlConnectionPointType.FLOAT), {
+	type = ParamConfig.INTEGER(GL_CONNECTION_POINT_TYPES_FOR_CONSTANT.indexOf(GlConnectionPointType.FLOAT), {
 		menu: {
-			entries: GL_CONNECTION_POINT_TYPES.map((name, i) => {
+			entries: GL_CONNECTION_POINT_TYPES_FOR_CONSTANT.map((name, i) => {
 				return {name: name, value: i};
 			}),
 		},
@@ -71,7 +71,7 @@ export class ConstantGlNode extends TypedGlNode<ConstantGlParamsConfig> {
 		if (this.pv.type == null) {
 			console.warn('constant gl node type is null', this.path());
 		}
-		const connectionType = GL_CONNECTION_POINT_TYPES[this.pv.type] || GlConnectionPointType.FLOAT;
+		const connectionType = GL_CONNECTION_POINT_TYPES_FOR_CONSTANT[this.pv.type] || GlConnectionPointType.FLOAT;
 		if (connectionType == null) {
 			console.warn(`constant gl node type if not valid (${this.pv.type})`, this.path());
 		}
@@ -79,7 +79,7 @@ export class ConstantGlNode extends TypedGlNode<ConstantGlParamsConfig> {
 	}
 
 	currentParam(): BaseParamType {
-		const type = GL_CONNECTION_POINT_TYPES[this.pv.type];
+		const type = GL_CONNECTION_POINT_TYPES_FOR_CONSTANT[this.pv.type];
 		switch (type) {
 			case GlConnectionPointType.BOOL: {
 				return this.p.bool;
@@ -125,6 +125,6 @@ export class ConstantGlNode extends TypedGlNode<ConstantGlParamsConfig> {
 	}
 
 	setGlType(type: GlConnectionPointType) {
-		this.p.type.set(GL_CONNECTION_POINT_TYPES.indexOf(type));
+		this.p.type.set(GL_CONNECTION_POINT_TYPES_FOR_CONSTANT.indexOf(type));
 	}
 }

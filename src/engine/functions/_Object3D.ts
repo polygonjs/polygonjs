@@ -10,7 +10,7 @@ export class getGeometryNodeObjects extends NamedFunction2<[string, Object3D[]]>
 	static override type() {
 		return 'getGeometryNodeObjects';
 	}
-	protected override async = true;
+	public override async = true;
 	async func(nodePath: string, objects: Object3D[]): Promise<void> {
 		dummyReadRefVal(getOrCreateNodeRef(nodePath).value);
 
@@ -23,13 +23,7 @@ export class getGeometryNodeObjects extends NamedFunction2<[string, Object3D[]]>
 			for (let object of nodeObjects) {
 				objects.push(object);
 			}
-			// console.log('set', objects);
-			// geometryNode.compute().then((container) => {
-			// 	objectsRef.value = container.coreContent()?.threejsObjects() || [];
-			// 	callback();
-			// });
 		}
-		// return objectsRef;
 	}
 }
 

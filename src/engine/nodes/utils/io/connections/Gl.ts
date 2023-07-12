@@ -105,6 +105,14 @@ export const GL_CONNECTION_POINT_TYPES: Array<GlConnectionPointType> = [
 	GlConnectionPointType.SDF_CONTEXT,
 	GlConnectionPointType.SDF_MATERIAL,
 ];
+export const GL_CONNECTION_POINT_TYPES_FOR_CONSTANT: Array<GlConnectionPointType> = [
+	GlConnectionPointType.BOOL,
+	GlConnectionPointType.INT,
+	GlConnectionPointType.FLOAT,
+	GlConnectionPointType.VEC2,
+	GlConnectionPointType.VEC3,
+	GlConnectionPointType.VEC4,
+];
 
 //
 //

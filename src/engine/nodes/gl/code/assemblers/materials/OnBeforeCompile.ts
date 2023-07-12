@@ -15,6 +15,10 @@ export interface OnBeforeCompileData {
 	resolutionDependent: boolean;
 	raymarchingLightsWorldCoordsDependent: boolean;
 }
+export function cloneOnBeforeCompileData(data: OnBeforeCompileData): OnBeforeCompileData {
+	return OnBeforeCompileDataConverter.fromJSON(OnBeforeCompileDataConverter.toJSON(data));
+}
+
 // from https://www.typescriptlang.org/docs/handbook/2/mapped-types.html
 type RemoveParamConfigField<Type> = {
 	[Property in keyof Type as Exclude<Property, 'paramConfigs' | 'additionalTextureUniforms'>]: Type[Property];

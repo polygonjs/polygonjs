@@ -348,6 +348,7 @@ import './engine/nodes/manager/root/BackgroundController';
 import './engine/nodes/manager/root/AudioController';
 
 QUnit.module('mat');
+import './engine/nodes/mat/BuilderUniformUpdate';
 import './engine/nodes/mat/Code';
 import './engine/nodes/mat/LineBasicBuilder';
 import './engine/nodes/mat/MeshBasicBuilder';

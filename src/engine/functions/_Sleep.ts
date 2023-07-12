@@ -5,7 +5,7 @@ export class sleep extends NamedFunction1<[number]> {
 	static override type() {
 		return 'sleep';
 	}
-	protected override async = true;
+	public override async = true;
 	async func(delay: number): Promise<void> {
 		await CoreSleep.sleep(delay);
 	}
