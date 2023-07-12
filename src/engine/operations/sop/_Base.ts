@@ -15,7 +15,7 @@ export class BaseSopOperation extends BaseOperation<NodeContext.SOP> {
 	static override context() {
 		return NodeContext.SOP;
 	}
-	override cook(input_contents: CoreGroup[], params: any): CoreGroup | Promise<CoreGroup> | void {}
+	override cook(inputCoreGroups: CoreGroup[], params: any): CoreGroup | Promise<CoreGroup> | void {}
 
 	//
 	//

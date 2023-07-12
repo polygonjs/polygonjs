@@ -152,17 +152,14 @@ QUnit.test('mat/builderUniformUpdate simple with 2 color params and only 1 chang
 		await RendererUtils.compile(builderUniformUpdate1Material2, renderer);
 		assert.equal(GLSLHelper.compress(material.fragmentShader), GLSLHelper.compress(meshBasicMat1.fragmentShader));
 		assert.equal(GLSLHelper.compress(material.vertexShader), GLSLHelper.compress(meshBasicMat1.vertexShader));
-		console.log('A');
 		assert.equal(
 			GLSLHelper.compress(material.fragmentShader),
 			GLSLHelper.compress(builderUniformUpdate1Material2.fragmentShader)
 		);
-		console.log('B');
 		assert.equal(
 			GLSLHelper.compress(material.vertexShader),
 			GLSLHelper.compress(builderUniformUpdate1Material2.vertexShader)
 		);
-		console.log('C');
 
 		const uniformName = (paramName: string) => {
 			return `v_POLY_param_${paramName}`;

@@ -17,14 +17,19 @@ export interface OnBeforeCompileData {
 }
 interface CloneOptions {
 	clonedParamConfigName: string;
+	clonedParamConfig?: GlParamConfig<ParamType>;
 }
 export function cloneOnBeforeCompileData(data: OnBeforeCompileData, options: CloneOptions): OnBeforeCompileData {
 	const {clonedParamConfigName} = options;
+	let {clonedParamConfig} = options;
 	const json = OnBeforeCompileDataConverter.toJSON(data);
 	const clonedData = OnBeforeCompileDataConverter.fromJSON(json);
 
 	const preservedParamConfigs = data.paramConfigs.filter((p) => p.name() != clonedParamConfigName);
-	const clonedParamConfig = clonedData.paramConfigs.find((p) => p.name() == clonedParamConfigName);
+
+	if (!clonedParamConfig) {
+		clonedParamConfig = clonedData.paramConfigs.find((p) => p.name() == clonedParamConfigName);
+	}
 
 	const paramConfigs = preservedParamConfigs;
 	if (clonedParamConfig) {

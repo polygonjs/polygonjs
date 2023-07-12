@@ -10,6 +10,8 @@ import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 import {CoreMask} from '../../../core/geometry/Mask';
+import {BaseMatNodeType} from '../../nodes/mat/_Base';
+import {MaterialSopNode} from '../../nodes/sop/Material';
 
 interface MaterialSopParams extends DefaultOperationParams {
 	group: string;
@@ -23,7 +25,9 @@ interface MaterialSopParams extends DefaultOperationParams {
 	texDest0: string;
 }
 // type TraverseCallback = (coreObject: CoreObject) => void;
+let _nextId = 0;
 export class MaterialSopOperation extends BaseSopOperation {
+	private _materialSopOperationId = _nextId++;
 	static override readonly DEFAULT_PARAMS: MaterialSopParams = {
 		group: '',
 		applyToChildren: true,
@@ -54,6 +58,7 @@ export class MaterialSopOperation extends BaseSopOperation {
 	private async _getMaterial(params: MaterialSopParams) {
 		const materialNode = params.material.nodeWithContext(NodeContext.MAT, this.states?.error);
 		if (materialNode) {
+			this._watchMaterialNode(materialNode);
 			const material = await materialNode.material();
 			const baseBuilderMatNode = materialNode as BaseBuilderMatNodeType;
 			if (baseBuilderMatNode.assemblerController) {
@@ -68,6 +73,36 @@ export class MaterialSopOperation extends BaseSopOperation {
 		} else {
 			this.states?.error.set(`no material node found`);
 		}
+	}
+	private _watchedMaterialNode: BaseMatNodeType | undefined;
+	private _watchedMaterialNodeMaterial: Material | undefined;
+	private _watchMaterialNode(materialNode: BaseMatNodeType) {
+		if (this._watchedMaterialNode == materialNode) {
+			return;
+		}
+		const hookName = this._watchHookName();
+		materialNode.addPostDirtyHook(hookName, this._onMaterialUpdateBound);
+		materialNode.cookController.registerOnCookEnd(hookName, this._onMaterialUpdateBound);
+		if (this._watchedMaterialNode) {
+			this._watchedMaterialNode.removePostDirtyHook(hookName);
+			this._watchedMaterialNode.cookController.deregisterOnCookEnd(hookName);
+		}
+		this._watchedMaterialNode = materialNode;
+	}
+	private _onMaterialUpdateBound = this._onMaterialUpdate.bind(this);
+	private async _onMaterialUpdate() {
+		if (!this._watchedMaterialNode) {
+			return;
+		}
+		const container = await this._watchedMaterialNode.compute();
+		const material = container.material();
+		if (material != this._watchedMaterialNodeMaterial) {
+			this._watchedMaterialNodeMaterial = material;
+			(this._node as MaterialSopNode).p.material.setDirty();
+		}
+	}
+	private _watchHookName() {
+		return `MaterialSopOperationId-${this._materialSopOperationId}`;
 	}
 
 	private async _applyMaterials(coreGroup: CoreGroup, params: MaterialSopParams) {

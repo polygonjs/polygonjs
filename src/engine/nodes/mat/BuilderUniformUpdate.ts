@@ -20,6 +20,7 @@ import {ParamType} from '../../poly/ParamType';
 import {GlParamConfig} from '../gl/code/utils/GLParamConfig';
 import {isBoolean} from '../../../core/Type';
 import {BaseNodeType} from '../_Base';
+import {CustomMaterialName, ShaderMaterialWithCustomMaterials} from '../../../core/geometry/Material';
 
 export enum AdditionalType {
 	COLOR = 'color',
@@ -72,13 +73,12 @@ export class BuilderUniformUpdateMatNode extends UpdateMatNode<ShaderMaterial, B
 
 	private _paramConfig: GlParamConfig<ParamType> | undefined;
 	override async cook(inputMaterials: Material[]) {
-		const inputMaterial = inputMaterials[0] as ShaderMaterial;
-		const material = inputMaterial.clone();
-		material.needsUpdate = true;
+		const inputMaterial = inputMaterials[0] as ShaderMaterialWithCustomMaterials;
+		inputMaterial.needsUpdate = true;
 		const uniformName = this.pv.uniformName;
 		if (uniformName.trim() == '') {
 			this.states.error.set(`uniform name is empty`);
-			this.setMaterial(material);
+			this.setMaterial(inputMaterial);
 			return;
 		}
 
@@ -86,7 +86,7 @@ export class BuilderUniformUpdateMatNode extends UpdateMatNode<ShaderMaterial, B
 
 		if (!inputMaterialData) {
 			this.states.error.set(`input material does not come from a builder material`);
-			this.setMaterial(material);
+			this.setMaterial(inputMaterial);
 			return;
 		}
 		const clonedData = cloneOnBeforeCompileData(inputMaterialData, {
@@ -94,23 +94,37 @@ export class BuilderUniformUpdateMatNode extends UpdateMatNode<ShaderMaterial, B
 		});
 		const {paramConfigs} = clonedData;
 		this._paramConfig = paramConfigs.find((p) => p.name() == this.pv.uniformName);
-		// const inputParamConfigs = inputMaterialData.paramConfigs.filter((p) => p.name() != this.pv.uniformName);
-		// const clonedParamConfigNames = clonedData.paramConfigs.map((p) => p.name());
-		// for (const inputParamConfig of inputParamConfigs) {
-		// 	const currentIndex = clonedParamConfigNames.indexOf(inputParamConfig.name());
-		// 	clonedData.paramConfigs[currentIndex] = inputParamConfig;
-		// }
 
 		if (!this._paramConfig) {
 			this.states.error.set(`uniform '${this.pv.uniformName}' not found`);
-			this.setMaterial(material);
+			this.setMaterial(inputMaterial);
 			return;
 		}
 		await this._applyCurrentParam();
 
-		assignOnBeforeCompileDataAndFunction(this.scene(), material, clonedData);
+		assignOnBeforeCompileDataAndFunction(this.scene(), inputMaterial, clonedData);
+		if (inputMaterial.customMaterials) {
+			const customMaterialNames = Object.keys(inputMaterial.customMaterials) as CustomMaterialName[];
+			for (const customMaterialName of customMaterialNames) {
+				const customMaterial = inputMaterial.customMaterials[customMaterialName];
+				if (customMaterial) {
+					this._handleCustomMaterial(customMaterial);
+				}
+			}
+		}
 
-		this.setMaterial(material);
+		this.setMaterial(inputMaterial);
+	}
+	private _handleCustomMaterial(customMaterial: Material) {
+		const inputMaterialData = OnBeforeCompileDataHandler.getData(customMaterial);
+		if (!inputMaterialData) {
+			return;
+		}
+		const clonedData = cloneOnBeforeCompileData(inputMaterialData, {
+			clonedParamConfigName: this.pv.uniformName,
+			clonedParamConfig: this._paramConfig,
+		});
+		assignOnBeforeCompileDataAndFunction(this.scene(), customMaterial, clonedData);
 	}
 
 	setType(type: GlConnectionPointType | AdditionalType) {
