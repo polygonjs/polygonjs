@@ -15,6 +15,7 @@
  * - `copy('../copy1', 0, 'i')` - returns the index of each evaluation
  * - `copy('../copy1', 0)` - returns the index of each evaluation
  * - `copy('../copy1')` - returns the index of each evaluation
+ * - `copy('../copy1', 0, 'id')` - returns the value of the 'id' attribute of the instance point, or 0 if the attribute doesn't exist
  *
  */
 import {BaseMethodFindDependencyArgs} from './_Base';

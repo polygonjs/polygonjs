@@ -36,6 +36,7 @@ import {
 } from './poly/registers/nodes/NodesRegister';
 import {PolyPluginInterface} from './poly/registers/plugins/Plugin';
 import {NamedFunctionRegister} from './poly/registers/functions/FunctionsRegister';
+import {NamedFunctionRegisterOptions} from './poly/registers/functions/_BaseRegister';
 import {BaseNamedFunction} from './functions/_Base';
 //
 
@@ -114,7 +115,7 @@ export class PolyEngine {
 	registerOperation(operation: typeof BaseOperation, options?: OperationRegisterOptions) {
 		this.operationsRegister.register(operation, options);
 	}
-	registerNamedFunction(namedFunction: typeof BaseNamedFunction) {
+	registerNamedFunction(namedFunction: typeof BaseNamedFunction, options?: NamedFunctionRegisterOptions) {
 		this.namedFunctionsRegister.register(namedFunction);
 	}
 
