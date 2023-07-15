@@ -685,7 +685,6 @@ const ONLY_POINT_OR_OBJECT_BUILDER = {
 const ONLY_ACTOR = {
 	only: [
 		sopType(SopType.ACTOR),
-		sopType(SopType.CLOTH_SOLVER),
 		sopType(SopType.PHYSICS_WORLD),
 		sopType(SopType.PHYSICS_DEBUG),
 		sopType(SopType.PHYSICS_PLAYER),
