@@ -35,7 +35,9 @@ module.exports = (env) => {
 		registerAll: true,
 	});
 
-	const MODULES = ['CAD', 'CSG'];
+	const moduleFiles = fs.readdirSync('src/engine/poly/registers/modules/entryPoints');
+	const MODULES = moduleFiles.map((fileName) => fileName.replace('.ts', '')); //['CAD', 'CSG', 'PBR', 'SDF', 'TET'];
+	console.log(MODULES);
 	if (BUILD_MODULES) {
 		for (let module of MODULES) {
 			common_options.entry[`modules/${module}`] = {
