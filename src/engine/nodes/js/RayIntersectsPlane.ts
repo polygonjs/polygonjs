@@ -34,17 +34,4 @@ export class RayIntersectsPlaneJsNode extends BaseRayPlaneJsNode {
 			{dataType: JsConnectionPointType.VECTOR3, varName: out, value: bodyLine},
 		]);
 	}
-	// protected _expectedOutputName(index: number) {
-	// 	return OUTPUT_NAME;
-	// }
-	// protected _expectedOutputType(): ActorConnectionPointType.BOOLEAN {
-	// 	return ActorConnectionPointType.BOOLEAN;
-	// }
-	// protected _processRayData() {
-	// 	if (this._processData.plane) {
-	// 		return this._processData.ray?.intersectsPlane(this._processData.plane) || false;
-	// 	} else {
-	// 		return false;
-	// 	}
-	// }
 }

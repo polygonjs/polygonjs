@@ -4,12 +4,12 @@
  *
  */
 
-import {TRIGGER_CONNECTION_NAME, TypedJsNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {JsConnectionPoint, JsConnectionPointType, JS_CONNECTION_POINT_IN_NODE_DEF} from '../utils/io/connections/Js';
 import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {Poly} from '../../Poly';
-import {inputObject3D, setObject3DOutputLine} from './_BaseObject3D';
+import {booleanOutputFromParam, floatOutputFromParam, inputObject3D, vector3OutputFromParam} from './_BaseObject3D';
+import {BaseTriggerAndObjectJsNode} from './_BaseTriggerAndObject';
 
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
 
@@ -28,25 +28,28 @@ class SetObjectScaleJsParamsConfig extends NodeParamsConfig {
 }
 const ParamsConfig = new SetObjectScaleJsParamsConfig();
 
-export class SetObjectScaleJsNode extends TypedJsNode<SetObjectScaleJsParamsConfig> {
+export class SetObjectScaleJsNode extends BaseTriggerAndObjectJsNode<SetObjectScaleJsParamsConfig> {
 	override readonly paramsConfig = ParamsConfig;
 	static override type() {
 		return 'setObjectScale';
 	}
 
-	override initializeNode() {
-		this.io.inputs.setNamedInputConnectionPoints([
-			new JsConnectionPoint(TRIGGER_CONNECTION_NAME, JsConnectionPointType.TRIGGER, CONNECTION_OPTIONS),
-			new JsConnectionPoint(JsConnectionPointType.OBJECT_3D, JsConnectionPointType.OBJECT_3D, CONNECTION_OPTIONS),
-		]);
-
-		this.io.outputs.setNamedOutputConnectionPoints([
-			new JsConnectionPoint(TRIGGER_CONNECTION_NAME, JsConnectionPointType.TRIGGER),
-			new JsConnectionPoint(JsConnectionPointType.OBJECT_3D, JsConnectionPointType.OBJECT_3D),
-		]);
+	protected override _additionalOutputs(): JsConnectionPoint<JsConnectionPointType>[] {
+		return [
+			new JsConnectionPoint('scale', JsConnectionPointType.VECTOR3, CONNECTION_OPTIONS),
+			new JsConnectionPoint('mult', JsConnectionPointType.FLOAT, CONNECTION_OPTIONS),
+			new JsConnectionPoint('lerp', JsConnectionPointType.FLOAT, CONNECTION_OPTIONS),
+			new JsConnectionPoint('updateMatrix', JsConnectionPointType.BOOLEAN, CONNECTION_OPTIONS),
+		];
 	}
+
 	override setLines(linesController: JsLinesCollectionController) {
-		setObject3DOutputLine(this, linesController);
+		super.setLines(linesController);
+
+		vector3OutputFromParam(this, this.p.scale, linesController);
+		floatOutputFromParam(this, this.p.mult, linesController);
+		floatOutputFromParam(this, this.p.lerp, linesController);
+		booleanOutputFromParam(this, this.p.updateMatrix, linesController);
 	}
 	override setTriggerableLines(linesController: JsLinesCollectionController) {
 		const object3D = inputObject3D(this, linesController);

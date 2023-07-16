@@ -29,7 +29,7 @@ export class RayIntersectBoxJsNode extends BaseRayBox3JsNode {
 		const ray = this.variableForInput(shadersCollectionController, JsConnectionPointType.RAY);
 		const box3 = this.variableForInput(shadersCollectionController, JsConnectionPointType.BOX3);
 		const out = this.jsVarName(OUTPUT_NAME);
-		const tmpVarName =shadersCollectionController.addVariable(this, new Vector3());
+		const tmpVarName = shadersCollectionController.addVariable(this, new Vector3());
 
 		const func = Poly.namedFunctionsRegister.getFunction('rayIntersectBox3', this, shadersCollectionController);
 		const bodyLine = func.asString(ray, box3, tmpVarName);
@@ -37,18 +37,4 @@ export class RayIntersectBoxJsNode extends BaseRayBox3JsNode {
 			{dataType: JsConnectionPointType.VECTOR3, varName: out, value: bodyLine},
 		]);
 	}
-
-	// protected _expectedOutputName(index: number) {
-	// 	return OUTPUT_NAME;
-	// }
-	// protected _expectedOutputType(): ActorConnectionPointType.VECTOR3 {
-	// 	return ActorConnectionPointType.VECTOR3;
-	// }
-	// private _target = new Vector3();
-	// protected _processRayData() {
-	// 	if (this._processData.box3) {
-	// 		this._processData.ray?.intersectBox(this._processData.box3, this._target);
-	// 	}
-	// 	return this._target;
-	// }
 }

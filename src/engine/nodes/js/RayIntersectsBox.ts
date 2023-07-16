@@ -34,18 +34,4 @@ export class RayIntersectsBoxJsNode extends BaseRayBox3JsNode {
 			{dataType: JsConnectionPointType.VECTOR3, varName: out, value: bodyLine},
 		]);
 	}
-
-	// protected _expectedOutputName(index: number) {
-	// 	return OUTPUT_NAME;
-	// }
-	// protected _expectedOutputType(): ActorConnectionPointType.BOOLEAN {
-	// 	return ActorConnectionPointType.BOOLEAN;
-	// }
-	// protected _processRayData() {
-	// 	if (this._processData.box3) {
-	// 		return this._processData.ray?.intersectsBox(this._processData.box3) || false;
-	// 	} else {
-	// 		return false;
-	// 	}
-	// }
 }

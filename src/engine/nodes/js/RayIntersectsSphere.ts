@@ -34,17 +34,4 @@ export class RayIntersectsSphereJsNode extends BaseRaySphereJsNode {
 			{dataType: JsConnectionPointType.VECTOR3, varName: out, value: bodyLine},
 		]);
 	}
-	// protected _expectedOutputName(index: number) {
-	// 	return OUTPUT_NAME;
-	// }
-	// protected _expectedOutputType(): ActorConnectionPointType.BOOLEAN {
-	// 	return ActorConnectionPointType.BOOLEAN;
-	// }
-	// protected _processRayData() {
-	// 	if (this._processData.sphere) {
-	// 		return this._processData.ray?.intersectsSphere(this._processData.sphere) || false;
-	// 	} else {
-	// 		return false;
-	// 	}
-	// }
 }

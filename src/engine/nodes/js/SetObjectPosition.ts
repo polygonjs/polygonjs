@@ -8,9 +8,11 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {JsType} from '../../poly/registers/nodes/types/Js';
 import {Poly} from '../../Poly';
-import {inputObject3D} from './_BaseObject3D';
+import {inputObject3D, vector3OutputFromParam, floatOutputFromParam, booleanOutputFromParam} from './_BaseObject3D';
 import {BaseTriggerAndObjectJsNode} from './_BaseTriggerAndObject';
+import {JS_CONNECTION_POINT_IN_NODE_DEF, JsConnectionPoint, JsConnectionPointType} from '../utils/io/connections/Js';
 
+const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
 class SetObjectPositionJsParamsConfig extends NodeParamsConfig {
 	/** @param target position */
 	position = ParamConfig.VECTOR3([0, 0, 0]);
@@ -25,6 +27,22 @@ export class SetObjectPositionJsNode extends BaseTriggerAndObjectJsNode<SetObjec
 	override readonly paramsConfig = ParamsConfig;
 	static override type() {
 		return JsType.SET_OBJECT_POSITION;
+	}
+
+	protected override _additionalOutputs(): JsConnectionPoint<JsConnectionPointType>[] {
+		return [
+			new JsConnectionPoint('position', JsConnectionPointType.VECTOR3, CONNECTION_OPTIONS),
+			new JsConnectionPoint('lerp', JsConnectionPointType.FLOAT, CONNECTION_OPTIONS),
+			new JsConnectionPoint('updateMatrix', JsConnectionPointType.BOOLEAN, CONNECTION_OPTIONS),
+		];
+	}
+
+	override setLines(linesController: JsLinesCollectionController) {
+		super.setLines(linesController);
+
+		vector3OutputFromParam(this, this.p.position, linesController);
+		floatOutputFromParam(this, this.p.lerp, linesController);
+		booleanOutputFromParam(this, this.p.updateMatrix, linesController);
 	}
 
 	override setTriggerableLines(shadersCollectionController: JsLinesCollectionController) {

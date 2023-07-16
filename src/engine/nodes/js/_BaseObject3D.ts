@@ -4,6 +4,10 @@ import {JsConnectionPointType} from '../utils/io/connections/Js';
 import {ParamPathParam} from '../../params/ParamPath';
 import {Poly} from '../../Poly';
 import {DecomposedPath} from '../../../core/DecomposedPath';
+import {BooleanParam} from '../../params/Boolean';
+import {FloatParam} from '../../params/Float';
+import {StringParam} from '../../params/String';
+import {Vector3Param} from '../../params/Vector3';
 
 function _defaultObject3D(linesController: JsLinesCollectionController): string {
 	return linesController.assembler().defaultObject3DVariable();
@@ -28,7 +32,28 @@ export function inputObject3DMaterial(node: BaseJsNodeType, linesController: JsL
 	return material;
 }
 
+export function setObject3DMaterialOutputLine(node: BaseJsNodeType, linesController: JsLinesCollectionController) {
+	const usedOutputNames = node.io.outputs.used_output_names();
+
+	if (!usedOutputNames.includes(JsConnectionPointType.MATERIAL)) {
+		return;
+	}
+
+	const material = inputObject3DMaterial(node, linesController);
+	const out = node.jsVarName(JsConnectionPointType.MATERIAL);
+
+	linesController.addBodyOrComputed(node, [
+		{dataType: JsConnectionPointType.OBJECT_3D, varName: out, value: material},
+	]);
+}
+
 export function setObject3DOutputLine(node: BaseJsNodeType, linesController: JsLinesCollectionController) {
+	const usedOutputNames = node.io.outputs.used_output_names();
+
+	if (!usedOutputNames.includes(JsConnectionPointType.OBJECT_3D)) {
+		return;
+	}
+
 	const object3D = inputObject3D(node, linesController);
 	const out = node.jsVarName(JsConnectionPointType.OBJECT_3D);
 
@@ -67,4 +92,139 @@ export function inputParam(node: BaseJsNodeType, linesController: JsLinesCollect
 		? node.variableForInput(linesController, JsConnectionPointType.PARAM)
 		: _getParam(linesController);
 	return param;
+}
+
+export function vector3OutputFromParam(
+	node: BaseJsNodeType,
+	param: Vector3Param,
+	linesController: JsLinesCollectionController
+) {
+	const usedOutputNames = node.io.outputs.used_output_names();
+
+	const propertyName = param.name();
+	if (!usedOutputNames.includes(propertyName)) {
+		return;
+	}
+	linesController.addBodyOrComputed(node, [
+		{
+			dataType: JsConnectionPointType.VECTOR3,
+			varName: node.jsVarName(propertyName),
+			value: node.variableForInputParam(linesController, param),
+		},
+	]);
+}
+export function floatOutputFromParam(
+	node: BaseJsNodeType,
+	param: FloatParam,
+	linesController: JsLinesCollectionController
+) {
+	const usedOutputNames = node.io.outputs.used_output_names();
+
+	const propertyName = param.name();
+	if (!usedOutputNames.includes(propertyName)) {
+		return;
+	}
+	linesController.addBodyOrComputed(node, [
+		{
+			dataType: JsConnectionPointType.FLOAT,
+			varName: node.jsVarName(propertyName),
+			value: node.variableForInputParam(linesController, param),
+		},
+	]);
+}
+export function floatOutputFromInput(
+	node: BaseJsNodeType,
+	inputName: string,
+	linesController: JsLinesCollectionController
+) {
+	const usedOutputNames = node.io.outputs.used_output_names();
+
+	const propertyName = inputName;
+	if (!usedOutputNames.includes(propertyName)) {
+		return;
+	}
+	linesController.addBodyOrComputed(node, [
+		{
+			dataType: JsConnectionPointType.FLOAT,
+			varName: node.jsVarName(propertyName),
+			value: node.variableForInput(linesController, inputName),
+		},
+	]);
+}
+export function stringOutputFromParam(
+	node: BaseJsNodeType,
+	param: StringParam,
+	linesController: JsLinesCollectionController
+) {
+	const usedOutputNames = node.io.outputs.used_output_names();
+
+	const propertyName = param.name();
+	if (!usedOutputNames.includes(propertyName)) {
+		return;
+	}
+	linesController.addBodyOrComputed(node, [
+		{
+			dataType: JsConnectionPointType.STRING,
+			varName: node.jsVarName(propertyName),
+			value: node.variableForInputParam(linesController, param),
+		},
+	]);
+}
+export function stringOutputFromInput(
+	node: BaseJsNodeType,
+	inputName: string,
+	linesController: JsLinesCollectionController
+) {
+	const usedOutputNames = node.io.outputs.used_output_names();
+
+	const propertyName = inputName;
+	if (!usedOutputNames.includes(propertyName)) {
+		return;
+	}
+	linesController.addBodyOrComputed(node, [
+		{
+			dataType: JsConnectionPointType.STRING,
+			varName: node.jsVarName(propertyName),
+			value: node.variableForInput(linesController, inputName),
+		},
+	]);
+}
+export function booleanOutputFromParam(
+	node: BaseJsNodeType,
+	param: BooleanParam,
+	linesController: JsLinesCollectionController
+) {
+	const usedOutputNames = node.io.outputs.used_output_names();
+
+	const propertyName = param.name();
+	if (!usedOutputNames.includes(propertyName)) {
+		return;
+	}
+	linesController.addBodyOrComputed(node, [
+		{
+			dataType: JsConnectionPointType.BOOLEAN,
+			varName: node.jsVarName(propertyName),
+			value: node.variableForInputParam(linesController, param),
+		},
+	]);
+}
+
+export function anyTypeOutputFromInput(
+	node: BaseJsNodeType,
+	inputName: string,
+	linesController: JsLinesCollectionController
+) {
+	const usedOutputNames = node.io.outputs.used_output_names();
+
+	const propertyName = inputName;
+	if (!usedOutputNames.includes(propertyName)) {
+		return;
+	}
+	linesController.addBodyOrComputed(node, [
+		{
+			dataType: JsConnectionPointType.FLOAT,
+			varName: node.jsVarName(propertyName),
+			value: node.variableForInput(linesController, inputName),
+		},
+	]);
 }

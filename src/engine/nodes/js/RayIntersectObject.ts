@@ -41,23 +41,4 @@ export class RayIntersectObjectJsNode extends BaseRayObjectJsNode {
 			{dataType: JsConnectionPointType.VECTOR3, varName, value: bodyLine},
 		]);
 	}
-
-	// protected _expectedOutputName(index: number) {
-	// 	return ActorConnectionPointType.INTERSECTION;
-	// }
-	// protected _expectedOutputType(): ActorConnectionPointType.INTERSECTION {
-	// 	return ActorConnectionPointType.INTERSECTION;
-	// }
-	// private _raycaster = new Raycaster();
-	// protected _processRayData(context: ActorNodeTriggerContext) {
-	// 	if (this._processData.ray && this._processData.Object3D) {
-	// 		this._raycaster.ray.copy(this._processData.ray);
-	// 		const intersections = this._raycaster.intersectObject(this._processData.Object3D);
-	// 		const intersection = intersections[0];
-	// 		if (intersection) {
-	// 			return intersection;
-	// 		}
-	// 	}
-	// 	return _defaultIntersection(context);
-	// }
 }

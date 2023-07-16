@@ -9,8 +9,13 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {JsConnectionPointType} from '../utils/io/connections/Js';
 import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {Poly} from '../../Poly';
-import {inputObject3DMaterial, setObject3DOutputLine} from './_BaseObject3D';
-import {ArrayUtils} from '../../../core/ArrayUtils';
+import {
+	floatOutputFromInput,
+	stringOutputFromInput,
+	anyTypeOutputFromInput,
+	inputObject3DMaterial,
+	setObject3DMaterialOutputLine,
+} from './_BaseObject3D';
 
 type AvailableJsType =
 	| JsConnectionPointType.COLOR
@@ -69,29 +74,36 @@ export class SetMaterialUniformJsNode extends TypedJsNode<SetMaterialUniformJsPa
 
 	override initializeNode() {
 		this.io.connection_points.spare_params.setInputlessParamNames(['type']);
-		this.io.connection_points.set_input_name_function(
-			(index: number) =>
-				ArrayUtils.compact([
-					TRIGGER_CONNECTION_NAME,
-					JsConnectionPointType.MATERIAL,
-					this.uniformType(),
-					SetMaterialUniformJsNodeInputName.uniformName,
-					this._lerpAllowed() ? SetMaterialUniformJsNodeInputName.lerp : null,
-				])[index]
-		);
-		this.io.connection_points.set_expected_input_types_function(() => this._expectedInputType());
-		this.io.connection_points.set_output_name_function((index: number) => TRIGGER_CONNECTION_NAME);
-		this.io.connection_points.set_expected_output_types_function(() => [JsConnectionPointType.TRIGGER]);
+		this.io.connection_points.set_input_name_function(this._expectedInputNames.bind(this));
+		this.io.connection_points.set_expected_input_types_function(this._expectedInputType.bind(this));
+		this.io.connection_points.set_output_name_function(this._expectedInputNames.bind(this));
+		this.io.connection_points.set_expected_output_types_function(this._expectedInputType.bind(this));
+	}
+	private _expectedInputNames(index: number) {
+		const list = [
+			TRIGGER_CONNECTION_NAME,
+			JsConnectionPointType.MATERIAL,
+			this.uniformType(),
+			SetMaterialUniformJsNodeInputName.uniformName,
+		];
+		if (this._lerpAllowed()) {
+			list.push(SetMaterialUniformJsNodeInputName.lerp);
+		}
+		return list[index];
 	}
 	private _expectedInputType() {
-		return ArrayUtils.compact([
+		const list = [
 			JsConnectionPointType.TRIGGER,
 			JsConnectionPointType.MATERIAL,
 			this.uniformType(),
 			JsConnectionPointType.STRING,
-			this._lerpAllowed() ? JsConnectionPointType.FLOAT : null,
-		]);
+		];
+		if (this._lerpAllowed()) {
+			list.push(JsConnectionPointType.FLOAT);
+		}
+		return list;
 	}
+
 	override paramDefaultValue(name: 'lerp') {
 		return DEFAULT_PARAM_VALUES[name];
 	}
@@ -103,7 +115,11 @@ export class SetMaterialUniformJsNode extends TypedJsNode<SetMaterialUniformJsPa
 		this.p.type.set(JS_CONNECTION_POINT_TYPES.indexOf(type));
 	}
 	override setLines(linesController: JsLinesCollectionController) {
-		setObject3DOutputLine(this, linesController);
+		setObject3DMaterialOutputLine(this, linesController);
+
+		anyTypeOutputFromInput(this, this.uniformType(), linesController);
+		floatOutputFromInput(this, SetMaterialUniformJsNodeInputName.lerp, linesController);
+		stringOutputFromInput(this, SetMaterialUniformJsNodeInputName.uniformName, linesController);
 	}
 	override setTriggerableLines(shadersCollectionController: JsLinesCollectionController) {
 		const material = inputObject3DMaterial(this, shadersCollectionController);
