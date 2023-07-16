@@ -7,11 +7,10 @@
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {CameraFrameModeSopOperation} from '../../operations/sop/CameraFrameMode';
-import {NodeParamsConfig} from '../utils/params/ParamsConfig';
+import {HierarchyParamConfig} from '../utils/params/ParamsConfig';
 import {CameraSopNodeType} from '../../poly/NodeContext';
 import {CoreCameraFrameParamConfig} from '../../../core/camera/CoreCameraFrameMode';
-import {HierarchyParamConfig} from '../../../core/common/HierarchyParamConfig';
-class CameraFrameModeSopParamsConfig extends CoreCameraFrameParamConfig(HierarchyParamConfig(NodeParamsConfig)) {}
+class CameraFrameModeSopParamsConfig extends CoreCameraFrameParamConfig(HierarchyParamConfig) {}
 const ParamsConfig = new CameraFrameModeSopParamsConfig();
 
 export class CameraFrameModeSopNode extends TypedSopNode<CameraFrameModeSopParamsConfig> {

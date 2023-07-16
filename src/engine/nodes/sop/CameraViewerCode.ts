@@ -7,11 +7,10 @@
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {CameraViewerCodeSopOperation} from '../../operations/sop/CameraViewerCode';
-import {NodeParamsConfig} from '../utils/params/ParamsConfig';
+import {HierarchyParamConfig} from '../utils/params/ParamsConfig';
 import {CameraSopNodeType} from '../../poly/NodeContext';
 import {CoreCameraViewerCodeParamConfig} from '../../../core/camera/CoreCameraViewerCodeController';
-import {HierarchyParamConfig} from '../../../core/common/HierarchyParamConfig';
-class CameraViewerCodeSopParamsConfig extends CoreCameraViewerCodeParamConfig(HierarchyParamConfig(NodeParamsConfig)) {}
+class CameraViewerCodeSopParamsConfig extends CoreCameraViewerCodeParamConfig(HierarchyParamConfig) {}
 const ParamsConfig = new CameraViewerCodeSopParamsConfig();
 
 export class CameraViewerCodeSopNode extends TypedSopNode<CameraViewerCodeSopParamsConfig> {

@@ -7,12 +7,11 @@
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {CameraWebXRARSopOperation} from '../../operations/sop/CameraWebXRAR';
-import {NodeParamsConfig} from '../utils/params/ParamsConfig';
+import {HierarchyParamConfig} from '../utils/params/ParamsConfig';
 import {CameraSopNodeType} from '../../poly/NodeContext';
 import {CoreCameraWebXRARParamConfig} from '../../../core/camera/webXR/CoreCameraWebXRAR';
-import {HierarchyParamConfig} from '../../../core/common/HierarchyParamConfig';
 
-class CameraWebXRARSopParamsConfig extends CoreCameraWebXRARParamConfig(HierarchyParamConfig(NodeParamsConfig)) {}
+class CameraWebXRARSopParamsConfig extends CoreCameraWebXRARParamConfig(HierarchyParamConfig) {}
 const ParamsConfig = new CameraWebXRARSopParamsConfig();
 
 export class CameraWebXRARSopNode extends TypedSopNode<CameraWebXRARSopParamsConfig> {

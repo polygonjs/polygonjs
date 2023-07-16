@@ -24,6 +24,7 @@ import {
 import {CoreObjectType, isObject3D, ObjectContent} from '../../../core/geometry/ObjectContent';
 import {CoreMask} from '../../../core/geometry/Mask';
 import {CoreObject} from '../../../core/geometry/Object';
+import {SopType} from '../../poly/registers/nodes/types/Sop';
 
 // const _t = new Vector3();
 const _r = new Vector3();
@@ -64,8 +65,8 @@ export class TransformSopOperation extends BaseSopOperation {
 		pivot: new Vector3(0, 0, 0),
 	};
 	static override readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
-	static override type(): Readonly<'transform'> {
-		return 'transform';
+	static override type(): Readonly<SopType.TRANSFORM> {
+		return SopType.TRANSFORM;
 	}
 
 	private _coreTransform = new CoreTransform();

@@ -529,6 +529,7 @@ import './engine/nodes/sop/Material';
 import './engine/nodes/sop/MaterialProperties';
 import './engine/nodes/sop/Merge';
 import './engine/nodes/sop/Metaball';
+import './engine/nodes/sop/Mirror';
 import './engine/nodes/sop/Noise';
 import './engine/nodes/sop/Normals';
 import './engine/nodes/sop/NormalsHelper';

@@ -121,6 +121,7 @@ export enum SopType {
 	MATERIAL_PROPERTIES = 'materialProperties',
 	MERGE = 'merge',
 	METABALL = 'metaball',
+	MIRROR = 'mirror',
 	NOISE = 'noise',
 	NORMALS = 'normals',
 	NORMALS_HELPER = 'normalsHelper',

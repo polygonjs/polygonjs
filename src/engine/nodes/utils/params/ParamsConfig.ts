@@ -135,3 +135,10 @@ export class NodeParamsConfig {}
 
 // but it will lead to some type error in ParamsValueAccessorType and ParamsAccessorType, preventing compilation with it.
 // TODO: try and find a way that prevents node.p.nonExistingAttribute to be accessible, and that has not other compilation error
+
+export class HierarchyParamConfig extends NodeParamsConfig {
+	/** @param group to apply this node to */
+	group = ParamConfig.STRING('', {
+		objectMask: true,
+	});
+}

@@ -7,12 +7,11 @@
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {CameraWebXRVRSopOperation} from '../../operations/sop/CameraWebXRVR';
-import {NodeParamsConfig} from '../utils/params/ParamsConfig';
+import {HierarchyParamConfig} from '../utils/params/ParamsConfig';
 import {CameraSopNodeType} from '../../poly/NodeContext';
 import {CoreCameraWebXRVRParamConfig} from '../../../core/camera/webXR/CoreCameraWebXRVR';
-import {HierarchyParamConfig} from '../../../core/common/HierarchyParamConfig';
 
-class CameraWebXRVRSopParamsConfig extends CoreCameraWebXRVRParamConfig(HierarchyParamConfig(NodeParamsConfig)) {}
+class CameraWebXRVRSopParamsConfig extends CoreCameraWebXRVRParamConfig(HierarchyParamConfig) {}
 const ParamsConfig = new CameraWebXRVRSopParamsConfig();
 
 export class CameraWebXRVRSopNode extends TypedSopNode<CameraWebXRVRSopParamsConfig> {
