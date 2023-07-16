@@ -6,7 +6,7 @@ import {FloatParam} from '../../../../src/engine/params/Float';
 import {ParamType} from '../../../../src/engine/poly/ParamType';
 import {AssemblersUtils} from '../../../helpers/AssemblersUtils';
 import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Js';
-import {AttributeJsNode} from '../../../../src/engine/nodes/js/Attribute';
+import {AttributeJsNodeOutput} from '../../../../src/engine/nodes/js/Attribute';
 
 const bbox = new Box3();
 const size = new Vector3();
@@ -117,7 +117,7 @@ QUnit.test('sop/pointBuilder read attributes', async (assert) => {
 	output.setInput('position', add1);
 	add1.setInput(0, globals, 'position');
 	add1.setInput(1, colorToVec3_1);
-	colorToVec3_1.setInput(0, attribute1, AttributeJsNode.OUTPUT_NAME);
+	colorToVec3_1.setInput(0, attribute1, AttributeJsNodeOutput.VAL);
 
 	attribute1.setJsType(JsConnectionPointType.COLOR);
 	attribute1.p.name.set('color');

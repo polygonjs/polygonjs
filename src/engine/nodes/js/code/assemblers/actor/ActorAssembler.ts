@@ -124,7 +124,7 @@ export class JsAssemblerActor extends BaseJsShaderAssembler {
 	// private _triggerNodesByType: Map<string, Set<BaseJsNodeType>> = new Map();
 
 	createFunctionData(additionalRootNodes: BaseJsNodeType[]): ActorFunctionData | undefined {
-		const node = this.currentGlParentNode() as ActorBuilderNode;
+		const node = this.currentJsParentNode() as ActorBuilderNode;
 		logBlue(`************* ${node.path()} *************`);
 		this._reset();
 		//
@@ -152,7 +152,7 @@ export class JsAssemblerActor extends BaseJsShaderAssembler {
 		triggerableNodes: Set<BaseJsNodeType>,
 		shaderNames: JsFunctionName[]
 	): ActorFunctionData | undefined {
-		const functionNode = this.currentGlParentNode() as ActorBuilderNode;
+		const functionNode = this.currentJsParentNode() as ActorBuilderNode;
 
 		//
 		//
@@ -358,7 +358,7 @@ export class JsAssemblerActor extends BaseJsShaderAssembler {
 		}
 
 		const eventDatas: EvaluatorEventData[] = [];
-		this._gl_parent_node.childrenController?.traverseChildren((child) => {
+		this.currentJsParentNode().childrenController?.traverseChildren((child) => {
 			const eventDataFunction = (child as BaseJsNodeType).eventData;
 			if (eventDataFunction && CoreType.isFunction(eventDataFunction)) {
 				const eventData = (child as BaseJsNodeType).eventData();

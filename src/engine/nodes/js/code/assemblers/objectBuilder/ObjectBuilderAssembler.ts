@@ -18,10 +18,11 @@ import {JsLinesCollectionController} from '../../utils/JsLinesCollectionControll
 import {Euler, Matrix4, Quaternion, Vector3} from 'three';
 import {NamedFunctionMap} from '../../../../../poly/registers/functions/All';
 import {ParamOptions} from '../../../../../params/utils/OptionsController';
-import {AttributeJsNode} from '../../../Attribute';
 import {Poly} from '../../../../../Poly';
 import {PrettierController} from '../../../../../../core/code/PrettierController';
 import {ObjectBuilderAssemblerConstant, ObjectVariable} from './ObjectBuilderAssemblerCommon';
+import {AttributeJsNodeInput} from '../../../Attribute';
+import type {AttributeJsNode} from '../../../Attribute';
 
 const TEMPLATE = `
 ${INSERT_DEFINE_AFTER}
@@ -235,7 +236,7 @@ export class JsAssemblerObjectBuilder extends BaseJsShaderAssembler {
 					ObjectVariable.MATRIX,
 					ObjectVariable.VISIBLE,
 					// attribute
-					AttributeJsNode.INPUT_NAME,
+					AttributeJsNodeInput.EXPORT,
 				],
 				[]
 			),
@@ -409,7 +410,7 @@ export class JsAssemblerObjectBuilder extends BaseJsShaderAssembler {
 		// export
 		if (attributeNode.isExporting()) {
 			const func = Poly.namedFunctionsRegister.getFunction('setObjectAttribute', attributeNode, linesController);
-			const exportedValue = attributeNode.variableForInput(linesController, AttributeJsNode.INPUT_NAME);
+			const exportedValue = attributeNode.variableForInput(linesController, AttributeJsNodeInput.EXPORT);
 			const bodyLine = func.asString(
 				ObjectBuilderAssemblerConstant.OBJECT_3D,
 				`'${attribName}'`,

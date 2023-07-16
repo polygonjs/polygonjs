@@ -669,6 +669,7 @@ const SUBNET_CHILD_OPTION = {
 const sopType = (type: SopType) => `${NodeContext.SOP}/${type}`;
 const ONLY_WITH_GLOBALS = {
 	only: [
+		sopType(SopType.INSTANCE_BUILDER),
 		sopType(SopType.OBJECT_BUILDER),
 		sopType(SopType.POINT_BUILDER),
 		sopType(SopType.SDF_BUILDER),
@@ -679,7 +680,7 @@ const ONLY_OBJECT_BUILDER = {
 	only: [sopType(SopType.OBJECT_BUILDER)],
 };
 const ONLY_POINT_OR_OBJECT_BUILDER = {
-	only: [sopType(SopType.OBJECT_BUILDER), sopType(SopType.POINT_BUILDER)],
+	only: [sopType(SopType.INSTANCE_BUILDER), sopType(SopType.OBJECT_BUILDER), sopType(SopType.POINT_BUILDER)],
 };
 
 const ONLY_ACTOR = {

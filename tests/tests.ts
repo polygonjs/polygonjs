@@ -514,6 +514,7 @@ import './engine/nodes/sop/Hierarchy';
 import './engine/nodes/sop/Icosahedron';
 import './engine/nodes/sop/IFCFilterCategories';
 import './engine/nodes/sop/Instance';
+import './engine/nodes/sop/InstanceBuilder';
 import './engine/nodes/sop/InstancesCount';
 import './engine/nodes/sop/InstanceUpdate';
 import './engine/nodes/sop/Jitter';

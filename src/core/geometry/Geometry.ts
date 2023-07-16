@@ -20,6 +20,7 @@ import {CoreType} from '../Type';
 import {ArrayUtils} from '../ArrayUtils';
 import {ObjectUtils} from '../ObjectUtils';
 import {GroupString} from './Group';
+import {InstanceAttrib} from './Instancer';
 
 const IS_INSTANCE_KEY = 'isInstance';
 const INDEX_ATTRIB_VALUES = 'indexed_attrib_values';
@@ -60,11 +61,7 @@ export class CoreGeometry {
 		return CoreGeometry.positionAttribName(this._geometry);
 	}
 	static positionAttribName(geometry: BufferGeometry) {
-		let name = 'position';
-		if (this.markedAsInstance(geometry)) {
-			name = 'instancePosition';
-		}
-		return name;
+		return this.markedAsInstance(geometry) ? InstanceAttrib.POSITION : Attribute.POSITION;
 	}
 
 	computeVertexNormals() {
@@ -340,13 +337,13 @@ export class CoreGeometry {
 		// when the points are updated internaly
 		return this.pointsFromGeometry();
 	}
-	static points(geometry:BufferGeometry): CorePoint[] {
+	static points(geometry: BufferGeometry): CorePoint[] {
 		return CoreGeometry.pointsFromGeometry(geometry);
 	}
 	pointsFromGeometry(): CorePoint[] {
 		return CoreGeometry.pointsFromGeometry(this._geometry);
 	}
-	static pointsFromGeometry(geometry:BufferGeometry): CorePoint[] {
+	static pointsFromGeometry(geometry: BufferGeometry): CorePoint[] {
 		const points = [];
 		const positionAttrib = geometry.getAttribute(this.positionAttribName(geometry)) as BufferAttribute;
 

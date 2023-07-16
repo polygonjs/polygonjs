@@ -124,16 +124,16 @@ export abstract class BaseJsShaderAssembler extends TypedAssembler<NodeContext.J
 	private _uniformsResolutionDependent: boolean = false;
 	private _computedVarNames: Set<string> = new Set();
 
-	constructor(protected _gl_parent_node: AssemblerControllerNode<BaseJsShaderAssembler>) {
+	constructor(protected _jsParentNode: AssemblerControllerNode<BaseJsShaderAssembler>) {
 		super();
 	}
 
-	protected _overriden_gl_parent_node: AssemblerControllerNode<BaseJsShaderAssembler> | undefined;
-	setGlParentNode(gl_parent_node: AssemblerControllerNode<BaseJsShaderAssembler>) {
-		this._overriden_gl_parent_node = gl_parent_node;
+	protected _overridenJsParentNode: AssemblerControllerNode<BaseJsShaderAssembler> | undefined;
+	setJsParentNode(parentNode: AssemblerControllerNode<BaseJsShaderAssembler>) {
+		this._overridenJsParentNode = parentNode;
 	}
-	currentGlParentNode() {
-		return this._overriden_gl_parent_node || this._gl_parent_node;
+	currentJsParentNode() {
+		return this._overridenJsParentNode || this._jsParentNode;
 	}
 	abstract makeFunctionNodeDirtyOnChange(): boolean;
 	addComputedVarName(varName: string) {
@@ -184,10 +184,10 @@ export abstract class BaseJsShaderAssembler extends TypedAssembler<NodeContext.J
 	}
 
 	globalsHandler(): GlobalsJsBaseController | undefined {
-		return this.currentGlParentNode().assemblerController()?.globalsHandler();
+		return this.currentJsParentNode().assemblerController()?.globalsHandler();
 	}
 	compileAllowed(): boolean {
-		return this.currentGlParentNode().assemblerController()?.globalsHandler() != null;
+		return this.currentJsParentNode().assemblerController()?.globalsHandler() != null;
 	}
 	shaders_by_name() {
 		return this._shaders_by_name;
@@ -322,7 +322,7 @@ export abstract class BaseJsShaderAssembler extends TypedAssembler<NodeContext.J
 
 	private _createCodeBuilder() {
 		const nodeTraverser = new TypedNodeTraverser<NodeContext.JS>(
-			this.currentGlParentNode(),
+			this.currentJsParentNode(),
 			this.shaderNames(),
 			(rootNode, shaderName) => {
 				return this.inputNamesForShaderName(rootNode, shaderName);
@@ -338,7 +338,7 @@ export abstract class BaseJsShaderAssembler extends TypedAssembler<NodeContext.J
 		);
 	}
 	protected buildCodeFromNodes(rootNodes: BaseJsNodeType[], codeBuilderOptions?: CodeBuilderSetCodeLinesOptions) {
-		const paramNodes = JsNodeFinder.findParamGeneratingNodes(this.currentGlParentNode());
+		const paramNodes = JsNodeFinder.findParamGeneratingNodes(this.currentJsParentNode());
 		this.codeBuilder().buildFromNodes(rootNodes, paramNodes, codeBuilderOptions);
 	}
 	allow_new_param_configs() {

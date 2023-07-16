@@ -21,6 +21,7 @@ import {ShaderAssemblerCustomMeshDepthForRender} from '../../../nodes/gl/code/as
 import {ShaderAssemblerCustomMeshDistanceForRender} from '../../../nodes/gl/code/assemblers/materials/custom/mesh/CustomMeshDistance';
 //
 import {JsAssemblerActor} from '../../../nodes/js/code/assemblers/actor/ActorAssembler';
+import {JsAssemblerInstanceBuilder} from '../../../nodes/js/code/assemblers/instanceBuilder/InstanceBuilderAssembler';
 import {JsAssemblerObjectBuilder} from '../../../nodes/js/code/assemblers/objectBuilder/ObjectBuilderAssembler';
 import {JsAssemblerPointBuilder} from '../../../nodes/js/code/assemblers/pointBuilder/PointBuilderAssembler';
 import {JsAssemblerSDF} from '../../../nodes/js/code/assemblers/sdf/SDF';
@@ -99,6 +100,10 @@ export interface AssemblersMap extends PolyDictionary<ControllerAssemblerPair> {
 		controller: JsAssemblerController<JsAssemblerActor>;
 		assembler: typeof JsAssemblerActor;
 	};
+	[AssemblerName.JS_INSTANCE_BUILDER]: {
+		controller: JsAssemblerController<JsAssemblerInstanceBuilder>;
+		assembler: typeof JsAssemblerInstanceBuilder;
+	};
 	[AssemblerName.JS_OBJECT_BUILDER]: {
 		controller: JsAssemblerController<JsAssemblerObjectBuilder>;
 		assembler: typeof JsAssemblerObjectBuilder;
@@ -165,6 +170,11 @@ export class AllAssemblersRegister {
 		poly.assemblersRegister.register(AssemblerName.GL_VOLUME, GlAssemblerController, ShaderAssemblerVolume);
 		//
 		poly.assemblersRegister.register(AssemblerName.JS_ACTOR, JsAssemblerController, JsAssemblerActor);
+		poly.assemblersRegister.register(
+			AssemblerName.JS_INSTANCE_BUILDER,
+			JsAssemblerController,
+			JsAssemblerInstanceBuilder
+		);
 		poly.assemblersRegister.register(
 			AssemblerName.JS_OBJECT_BUILDER,
 			JsAssemblerController,

@@ -19,7 +19,15 @@ export const ATTRIBUTE_NODE_AVAILABLE_JS_TYPES = [
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {isBooleanTrue} from '../../../core/Type';
-import {PointBuilderFunctionDataAttributeDataItem} from './code/assemblers/pointBuilder/PointBuilderPersistedConfig';
+import {PointBuilderFunctionDataAttributeDataItem} from './code/assemblers/pointBuilder/_BasePointBuilderPersistedConfig';
+
+export enum AttributeJsNodeInput {
+	EXPORT = 'export',
+}
+export enum AttributeJsNodeOutput {
+	VAL = 'val',
+}
+
 class AttributeJsParamsConfig extends NodeParamsConfig {
 	name = ParamConfig.STRING('');
 	type = ParamConfig.INTEGER(0, {
@@ -39,8 +47,6 @@ export class AttributeJsNode extends TypedJsNode<AttributeJsParamsConfig> {
 	static override type() {
 		return JsType.ATTRIBUTE;
 	}
-	static readonly INPUT_NAME = 'export';
-	static readonly OUTPUT_NAME = 'val';
 
 	// private _update_signature_if_required_bound = this._update_signature_if_required.bind(this);
 	override initializeNode() {
@@ -66,10 +72,10 @@ export class AttributeJsNode extends TypedJsNode<AttributeJsParamsConfig> {
 	}
 
 	inputName() {
-		return AttributeJsNode.INPUT_NAME;
+		return AttributeJsNodeInput.EXPORT;
 	}
 	outputName() {
-		return AttributeJsNode.OUTPUT_NAME;
+		return AttributeJsNodeOutput.VAL;
 	}
 
 	override setLines(linesController: JsLinesCollectionController) {
@@ -98,10 +104,10 @@ export class AttributeJsNode extends TypedJsNode<AttributeJsParamsConfig> {
 	//
 	//
 	connected_input_node(): BaseJsNodeType | null {
-		return this.io.inputs.named_input(AttributeJsNode.INPUT_NAME) as BaseJsNodeType | null;
+		return this.io.inputs.named_input(AttributeJsNodeInput.EXPORT) as BaseJsNodeType | null;
 	}
 	connected_input_connection_point(): BaseJsConnectionPoint | undefined {
-		return this.io.inputs.named_input_connection_point(AttributeJsNode.INPUT_NAME);
+		return this.io.inputs.named_input_connection_point(AttributeJsNodeInput.EXPORT);
 	}
 
 	output_connection_point(): BaseJsConnectionPoint | undefined {
@@ -115,7 +121,7 @@ export class AttributeJsNode extends TypedJsNode<AttributeJsParamsConfig> {
 	}
 	isExporting(): boolean {
 		if (isBooleanTrue(this.pv.exportWhenConnected)) {
-			const inputNode = this.io.inputs.named_input(AttributeJsNode.INPUT_NAME);
+			const inputNode = this.io.inputs.named_input(AttributeJsNodeInput.EXPORT);
 			return inputNode != null;
 		} else {
 			return false;

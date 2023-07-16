@@ -175,6 +175,7 @@ import {HemisphereLightSopNode} from '../../../nodes/sop/HemisphereLight';
 import {IcosahedronSopNode} from '../../../nodes/sop/Icosahedron';
 import {IFCFilterCategoriesSopNode} from '../../../nodes/sop/IFCFilterCategories';
 import {InstanceSopNode} from '../../../nodes/sop/Instance';
+import {InstanceBuilderSopNode} from '../../../nodes/sop/InstanceBuilder';
 import {InstanceUpdateSopNode} from '../../../nodes/sop/InstanceUpdate';
 import {InstancesCountSopNode} from '../../../nodes/sop/InstancesCount';
 import {JitterSopNode} from '../../../nodes/sop/Jitter';
@@ -469,6 +470,7 @@ export interface GeoNodeChildrenMap {
 	icosahedron: IcosahedronSopNode;
 	IFCFilterCategories: IFCFilterCategoriesSopNode;
 	instance: InstanceSopNode;
+	instanceBuilder: InstanceBuilderSopNode;
 	instanceUpdate: InstanceUpdateSopNode;
 	instancesCount: InstancesCountSopNode;
 	jitter: JitterSopNode;
@@ -993,6 +995,7 @@ export class SopRegister {
 		poly.registerNode(IcosahedronSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.registerNode(IFCFilterCategoriesSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(InstanceSopNode, CATEGORY_SOP.RENDER);
+		poly.registerNode(InstanceBuilderSopNode, CATEGORY_SOP.RENDER);
 		poly.registerNode(InstanceUpdateSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(InstancesCountSopNode, CATEGORY_SOP.RENDER);
 		poly.registerNode(JitterSopNode, CATEGORY_SOP.MODIFIER);

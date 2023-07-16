@@ -111,6 +111,7 @@ export enum SopType {
 	IFC_FILTER_CATEGORIES = 'IFCFilterCategories',
 	//
 	INSTANCE = 'instance',
+	INSTANCE_BUILDER = 'instanceBuilder',
 	INSTANCE_UPDATE = 'instanceUpdate',
 	JITTER = 'jitter',
 	LAYER = 'layer',
