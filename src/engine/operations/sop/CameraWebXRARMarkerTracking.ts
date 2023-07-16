@@ -18,7 +18,6 @@ import {CoreMask} from '../../../core/geometry/Mask';
 
 interface CameraWebXRARMarkerTrackingSopParams extends DefaultOperationParams {
 	group: string;
-	applyToChildren: boolean;
 	sourceMode: number;
 	sourceUrl: string;
 	transformMode: number;
@@ -38,7 +37,6 @@ interface UpdateObjectOptions {
 export class CameraWebXRARMarkerTrackingSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: CameraWebXRARMarkerTrackingSopParams = {
 		group: '',
-		applyToChildren: true,
 		sourceMode: MARKER_TRACKING_SOURCE_MODES.indexOf(MarkerTrackingSourceMode.WEBCAM),
 		sourceUrl: '',
 		transformMode: MARKER_TRACKING_TRANSFORM_MODES.indexOf(MarkerTrackingTransformMode.CAMERA),
@@ -53,7 +51,10 @@ export class CameraWebXRARMarkerTrackingSopOperation extends BaseSopOperation {
 	}
 	override cook(inputCoreGroups: CoreGroup[], params: CameraWebXRARMarkerTrackingSopParams) {
 		const coreGroup = inputCoreGroups[0];
-		const objects = CoreMask.filterObjects(coreGroup, params);
+		const objects = CoreMask.filterObjects(coreGroup, {
+			group: params.group,
+			applyToChildren: params.group.trim().length == 0,
+		});
 
 		if (Poly.thirdParty.markerTracking().hasController()) {
 			if (this._node) {

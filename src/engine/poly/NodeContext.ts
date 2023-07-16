@@ -89,6 +89,7 @@ export enum CameraSopNodeType {
 	POST_PROCESS = 'cameraPostProcess',
 	RENDER_SCENE = 'cameraRenderScene',
 	RENDERER = 'cameraRenderer',
+	VIEWER_CODE = 'cameraViewerCode',
 	WEBXR_AR = 'cameraWebXRAR',
 	WEBXR_VR = 'cameraWebXRVR',
 	WEBXR_AR_MARKER_TRACKING = 'cameraWebXRARMarkerTracking',

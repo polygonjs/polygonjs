@@ -12,7 +12,6 @@ import {CoreMask} from '../../../core/geometry/Mask';
 
 interface CameraRenderSceneSopParams extends DefaultOperationParams {
 	group: string;
-	applyToChildren: boolean;
 	node: TypedNodePathParamValue;
 }
 interface UpdateObjectOptions {
@@ -25,7 +24,6 @@ interface UpdateObjectOptions {
 export class CameraRenderSceneSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: CameraRenderSceneSopParams = {
 		group: '',
-		applyToChildren: true,
 		node: new TypedNodePathParamValue(''),
 	};
 	static override readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
@@ -34,7 +32,10 @@ export class CameraRenderSceneSopOperation extends BaseSopOperation {
 	}
 	override cook(inputCoreGroups: CoreGroup[], params: CameraRenderSceneSopParams) {
 		const coreGroup = inputCoreGroups[0];
-		const objects = CoreMask.filterObjects(coreGroup, params);
+		const objects = CoreMask.filterObjects(coreGroup, {
+			group: params.group,
+			applyToChildren: params.group.trim().length == 0,
+		});
 
 		if (this._node) {
 			CameraRenderSceneSopOperation.updateObject({objects, params, node: this._node, active: true});

@@ -38,6 +38,7 @@ import {codeMatPresetRegister} from './mat/Code';
 import {attribCreateSopPresetRegister} from './sop/AttribCreate';
 import {attribPromoteSopPresetRegister} from './sop/AttribPromote';
 import {cadFileSTEPSopPresetRegister} from './sop/CADFileSTEP';
+import {cameraViewerCodeSopPresetRegister} from './sop/CameraViewerCode';
 import {cameraWebXRARMarkerTrackingSopPresetRegister} from './sop/CameraWebXRARMarkerTracking';
 import {capsuleSopPresetRegister} from './sop/Capsule';
 import {codeSopPresetRegister} from './sop/Code';
@@ -113,6 +114,7 @@ class PresetLibraryClass {
 		this._registerPreset(attribCreateSopPresetRegister);
 		this._registerPreset(attribPromoteSopPresetRegister);
 		this._registerPreset(cadFileSTEPSopPresetRegister);
+		this._registerPreset(cameraViewerCodeSopPresetRegister);
 		this._registerPreset(cameraWebXRARMarkerTrackingSopPresetRegister);
 		this._registerPreset(capsuleSopPresetRegister);
 		this._registerPreset(codeSopPresetRegister);

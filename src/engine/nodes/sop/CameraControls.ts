@@ -7,21 +7,14 @@
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {CameraControlsSopOperation} from '../../operations/sop/CameraControls';
-
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CameraSopNodeType, NodeContext} from '../../poly/NodeContext';
 import {EventNodeChildrenMap} from '../../poly/registers/nodes/Event';
 import {NodeCreateOptions} from '../utils/hierarchy/ChildrenController';
 import {Constructor, valueof} from '../../../types/GlobalTypes';
+import {HierarchyParamConfig} from '../../../core/common/HierarchyParamConfig';
 import {BaseEventNodeType} from '../event/_Base';
-const DEFAULT = CameraControlsSopOperation.DEFAULT_PARAMS;
-class CameraControlsSopParamsConfig extends NodeParamsConfig {
-	/** @param group to assign the material to */
-	group = ParamConfig.STRING(DEFAULT.group, {
-		objectMask: true,
-	});
-	/** @param sets if this node should search through the materials inside the whole hierarchy */
-	applyToChildren = ParamConfig.BOOLEAN(DEFAULT.applyToChildren, {separatorAfter: true});
+class CameraControlsSopParamsConfig extends HierarchyParamConfig(NodeParamsConfig) {
 	/** @param renderer */
 	node = ParamConfig.NODE_PATH('', {
 		nodeSelection: {

@@ -5,31 +5,31 @@ import {DefaultOperationParams} from '../../../core/operations/_Base';
 import {CoreObject} from '../../../core/geometry/Object';
 import {CameraAttribute} from '../../../core/camera/CoreCamera';
 import {CameraSopNodeType} from '../../poly/NodeContext';
-import {CameraFrameMode, CAMERA_FRAME_MODES} from '../../../core/camera/CoreCameraFrameMode';
 import {CoreObjectType, ObjectContent} from '../../../core/geometry/ObjectContent';
 import {CoreMask} from '../../../core/geometry/Mask';
 
-interface CameraFrameModeSopParams extends DefaultOperationParams {
+interface CameraViewerCodeSopParams extends DefaultOperationParams {
 	group: string;
-	frameMode: number;
-	expectedAspectRatio: number;
+	viewerId: string;
+	// shadowRoot: boolean;
+	html: string;
 }
 interface UpdateObjectOptions {
 	objects: ObjectContent<CoreObjectType>[];
-	params: CameraFrameModeSopParams;
+	params: CameraViewerCodeSopParams;
 }
-
-export class CameraFrameModeSopOperation extends BaseSopOperation {
-	static override readonly DEFAULT_PARAMS: CameraFrameModeSopParams = {
+export class CameraViewerCodeSopOperation extends BaseSopOperation {
+	static override readonly DEFAULT_PARAMS: CameraViewerCodeSopParams = {
 		group: '',
-		frameMode: CAMERA_FRAME_MODES.indexOf(CameraFrameMode.DEFAULT),
-		expectedAspectRatio: 16 / 9,
+		viewerId: 'my-viewer',
+		// shadowRoot: true,
+		html: '',
 	};
 	static override readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
-	static override type(): Readonly<CameraSopNodeType.FRAME_MODE> {
-		return CameraSopNodeType.FRAME_MODE;
+	static override type(): Readonly<CameraSopNodeType.VIEWER_CODE> {
+		return CameraSopNodeType.VIEWER_CODE;
 	}
-	override cook(inputCoreGroups: CoreGroup[], params: CameraFrameModeSopParams) {
+	override cook(inputCoreGroups: CoreGroup[], params: CameraViewerCodeSopParams) {
 		const coreGroup = inputCoreGroups[0];
 		const objects = CoreMask.filterObjects(coreGroup, {
 			group: params.group,
@@ -37,7 +37,7 @@ export class CameraFrameModeSopOperation extends BaseSopOperation {
 		});
 
 		if (this._node) {
-			CameraFrameModeSopOperation.updateObject({objects, params});
+			CameraViewerCodeSopOperation.updateObject({objects, params});
 		}
 
 		return coreGroup;
@@ -46,12 +46,9 @@ export class CameraFrameModeSopOperation extends BaseSopOperation {
 		const {objects, params} = options;
 
 		for (let object of objects) {
-			CoreObject.addAttribute(object, CameraAttribute.FRAME_MODE, params.frameMode);
-			CoreObject.addAttribute(
-				object,
-				CameraAttribute.FRAME_MODE_EXPECTED_ASPECT_RATIO,
-				params.expectedAspectRatio
-			);
+			CoreObject.addAttribute(object, CameraAttribute.VIEWER_ID, params.viewerId);
+			// CoreObject.addAttribute(object, CameraAttribute.VIEWER_SHADOW_ROOT, params.shadowRoot);
+			CoreObject.addAttribute(object, CameraAttribute.VIEWER_HTML, params.html);
 		}
 	}
 }

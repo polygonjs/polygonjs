@@ -5,6 +5,7 @@ import {TypedViewer, TypedViewerOptions, BaseViewerMountOptions} from './_Base';
 import {AvailableRenderConfig, CoreCameraRendererController} from '../../core/camera/CoreCameraRendererController';
 import {CoreCameraPostProcessController} from '../../core/camera/CoreCameraPostProcessController';
 import {CoreCameraCSSRendererController, CSSRendererConfig} from '../../core/camera/CoreCameraCSSRendererController';
+import {CoreCameraViewerCodeController, ViewerCodeConfig} from '../../core/camera/CoreCameraViewerCodeController';
 import {CoreCameraControlsController} from '../../core/camera/CoreCameraControlsController';
 import {CoreCameraRenderSceneController} from '../../core/camera/CoreCameraRenderSceneController';
 import type {EffectComposer} from 'postprocessing';
@@ -55,6 +56,7 @@ export class ThreejsViewer<C extends Camera> extends TypedViewer<C> {
 	protected _renderFunc: RenderFuncWithDelta | undefined;
 	protected _renderCSSFunc: RenderFunc | undefined;
 	private _cssRendererConfig: CSSRendererConfig | undefined;
+	private _viewerCodeConfig: ViewerCodeConfig | undefined;
 
 	private _effectComposer: EffectComposer | undefined;
 	protected _errorMessage: string | undefined;
@@ -124,6 +126,8 @@ export class ThreejsViewer<C extends Camera> extends TypedViewer<C> {
 					},
 				});
 			}
+			// ViewerCode
+			this._viewerCodeConfig = CoreCameraViewerCodeController.viewerCodeConfig({camera});
 			// CSSRender
 			this._cssRendererConfig = CoreCameraCSSRendererController.cssRendererConfig({scene, camera, canvas});
 			const cssRenderer = this._cssRendererConfig?.cssRenderer;
@@ -148,8 +152,20 @@ export class ThreejsViewer<C extends Camera> extends TypedViewer<C> {
 	override mount(element: HTMLElement, options?: BaseViewerMountOptions) {
 		super.mount(element, options);
 		const canvas = this.canvas();
-		this._domElement?.appendChild(canvas);
-		this._domElement?.classList.add(CSS_CLASS);
+		const _appendCanvasWithViewerCodeConfig = (config: ViewerCodeConfig) => {
+			if (!this._domElement) {
+				return;
+			}
+			return config.createViewerElement({domElement: this._domElement, canvas, CSSClass: CSS_CLASS});
+		};
+		const _appendCanvasWithoutViewerCodeConfig = () => {
+			this._domElement?.appendChild(canvas);
+			this._domElement?.classList.add(CSS_CLASS);
+			return this._domElement;
+		};
+		const viewerContainerElement = this._viewerCodeConfig
+			? _appendCanvasWithViewerCodeConfig(this._viewerCodeConfig)
+			: _appendCanvasWithoutViewerCodeConfig();
 
 		// mount CSSRenderer
 		const cssRendererNode = this._cssRendererConfig?.cssRendererNode;
@@ -177,7 +193,7 @@ export class ThreejsViewer<C extends Camera> extends TypedViewer<C> {
 			errorElement.style.textAlign = 'center';
 			errorElement.style.opacity = '90%';
 			errorElement.innerText = this._errorMessage;
-			this._domElement?.append(errorElement);
+			viewerContainerElement?.append(errorElement);
 		}
 
 		// if (Poly.logo.displayed()) {

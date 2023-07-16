@@ -23,7 +23,6 @@ import {CoreMask} from '../../../core/geometry/Mask';
 
 interface CameraWebXRARSopParams extends DefaultOperationParams {
 	group: string;
-	applyToChildren: boolean;
 	hitTest: number;
 	lightEstimation: number;
 	cameraAccess: number;
@@ -41,7 +40,6 @@ interface UpdateObjectOptions {
 export class CameraWebXRARSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: CameraWebXRARSopParams = {
 		group: '',
-		applyToChildren: true,
 		hitTest: WEBXR_FEATURE_STATUS_OPTIONAL_INDEX,
 		lightEstimation: WEBXR_FEATURE_STATUS_OPTIONAL_INDEX,
 		cameraAccess: WEBXR_FEATURE_STATUS_OPTIONAL_INDEX,
@@ -54,7 +52,10 @@ export class CameraWebXRARSopOperation extends BaseSopOperation {
 	}
 	override cook(inputCoreGroups: CoreGroup[], params: CameraWebXRARSopParams) {
 		const coreGroup = inputCoreGroups[0];
-		const objects = CoreMask.filterObjects(coreGroup, params);
+		const objects = CoreMask.filterObjects(coreGroup, {
+			group: params.group,
+			applyToChildren: params.group.trim().length == 0,
+		});
 
 		if (this._node) {
 			CameraWebXRARSopOperation.updateObject({scene: this._node.scene(), objects, params, active: true});

@@ -7,7 +7,6 @@
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {CameraPostProcessSopOperation} from '../../operations/sop/CameraPostProcess';
-
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CameraSopNodeType, NetworkNodeType, NodeContext} from '../../poly/NodeContext';
 import {PostNodeChildrenMap} from '../../poly/registers/nodes/Post';
@@ -16,16 +15,11 @@ import {Constructor, valueof} from '../../../types/GlobalTypes';
 import {BasePostProcessNodeType} from '../post/_Base';
 import {EffectComposerController, PostProcessNetworkParamsConfigMixin} from '../post/utils/EffectComposerController';
 import {DisplayNodeController} from '../utils/DisplayNodeController';
+import {HierarchyParamConfig} from '../../../core/common/HierarchyParamConfig';
 const DEFAULT = CameraPostProcessSopOperation.DEFAULT_PARAMS;
 
 export function CameraPostProcessParamsMixin<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
-		/** @param group to assign the material to */
-		group = ParamConfig.STRING(DEFAULT.group, {
-			objectMask: true,
-		});
-		/** @param sets if this node should search through the materials inside the whole hierarchy */
-		applyToChildren = ParamConfig.BOOLEAN(DEFAULT.applyToChildren, {separatorAfter: true});
 		/** @param set to true to define the post process nodes from a different node than this one */
 		useOtherNode = ParamConfig.BOOLEAN(DEFAULT.useOtherNode);
 		/** @param other parent node containing the post process nodes that will make up the passes used */
@@ -41,7 +35,7 @@ export function CameraPostProcessParamsMixin<TBase extends Constructor>(Base: TB
 }
 
 class CameraPostProcessSopParamsConfig extends PostProcessNetworkParamsConfigMixin(
-	CameraPostProcessParamsMixin(NodeParamsConfig)
+	CameraPostProcessParamsMixin(HierarchyParamConfig(NodeParamsConfig))
 ) {}
 const ParamsConfig = new CameraPostProcessSopParamsConfig();
 

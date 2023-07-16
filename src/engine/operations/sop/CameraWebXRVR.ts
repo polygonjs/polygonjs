@@ -23,7 +23,6 @@ import {CoreMask} from '../../../core/geometry/Mask';
 
 interface CameraWebXRVRSopParams extends DefaultOperationParams {
 	group: string;
-	applyToChildren: boolean;
 	localFloor: number;
 	boundedFloor: number;
 	handTracking: number;
@@ -42,7 +41,6 @@ interface UpdateObjectOptions {
 export class CameraWebXRVRSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: CameraWebXRVRSopParams = {
 		group: '',
-		applyToChildren: true,
 		localFloor: WEBXR_FEATURE_STATUS_OPTIONAL_INDEX,
 		boundedFloor: WEBXR_FEATURE_STATUS_OPTIONAL_INDEX,
 		handTracking: WEBXR_FEATURE_STATUS_OPTIONAL_INDEX,
@@ -56,7 +54,10 @@ export class CameraWebXRVRSopOperation extends BaseSopOperation {
 	}
 	override cook(inputCoreGroups: CoreGroup[], params: CameraWebXRVRSopParams) {
 		const coreGroup = inputCoreGroups[0];
-		const objects = CoreMask.filterObjects(coreGroup, params);
+		const objects = CoreMask.filterObjects(coreGroup, {
+			group: params.group,
+			applyToChildren: params.group.trim().length == 0,
+		});
 
 		if (this._node) {
 			CameraWebXRVRSopOperation.updateObject({scene: this._node.scene(), objects, params, active: true});

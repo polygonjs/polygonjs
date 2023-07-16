@@ -16,6 +16,9 @@ export enum CameraAttribute {
 	POST_PROCESS_NODE_ID = '_Camera_postProcessNodeId',
 	RENDER_SCENE_NODE_ID = '_Camera_renderSceneNodeId',
 	RENDERER_NODE_ID = '_Camera_rendererNodeId',
+	VIEWER_ID = '_Camera_viewerId',
+	// VIEWER_SHADOW_ROOT = '_Camera_viewerShadowRoot',
+	VIEWER_HTML = '_Camera_viewerHTML',
 	// webXR
 	WEBXR_AR = '_Camera_WebXR_AR',
 	WEBXR_VR = '_Camera_WebXR_VR',

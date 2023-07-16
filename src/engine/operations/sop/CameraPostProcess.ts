@@ -13,7 +13,6 @@ import {CoreMask} from '../../../core/geometry/Mask';
 
 interface CameraPostProcessSopParams extends DefaultOperationParams {
 	group: string;
-	applyToChildren: boolean;
 	useOtherNode: boolean;
 	node: TypedNodePathParamValue;
 }
@@ -27,7 +26,6 @@ interface UpdateObjectOptions {
 export class CameraPostProcessSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: CameraPostProcessSopParams = {
 		group: '',
-		applyToChildren: true,
 		useOtherNode: false,
 		node: new TypedNodePathParamValue(''),
 	};
@@ -37,7 +35,10 @@ export class CameraPostProcessSopOperation extends BaseSopOperation {
 	}
 	override cook(inputCoreGroups: CoreGroup[], params: CameraPostProcessSopParams) {
 		const coreGroup = inputCoreGroups[0];
-		const objects = CoreMask.filterObjects(coreGroup, params);
+		const objects = CoreMask.filterObjects(coreGroup, {
+			group: params.group,
+			applyToChildren: params.group.trim().length == 0,
+		});
 
 		const relativeOrAbsolutePath = params.node.path();
 		const node = isBooleanTrue(params.useOtherNode) ? this._node?.node(relativeOrAbsolutePath) : this._node;

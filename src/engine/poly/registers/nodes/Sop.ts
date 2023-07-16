@@ -82,6 +82,7 @@ import {CameraPostProcessSopNode} from '../../../nodes/sop/CameraPostProcess';
 import {CameraProjectSopNode} from '../../../nodes/sop/CameraProject';
 import {CameraRenderSceneSopNode} from '../../../nodes/sop/CameraRenderScene';
 import {CameraRendererSopNode} from '../../../nodes/sop/CameraRenderer';
+import {CameraViewerCodeSopNode} from '../../../nodes/sop/CameraViewerCode';
 import {CameraWebXRARMarkerTrackingSopNode} from '../../../nodes/sop/CameraWebXRARMarkerTracking';
 import {CameraWebXRARSopNode} from '../../../nodes/sop/CameraWebXRAR';
 import {CameraWebXRVRSopNode} from '../../../nodes/sop/CameraWebXRVR';
@@ -374,6 +375,7 @@ export interface GeoNodeChildrenMap {
 	cameraProject: CameraProjectSopNode;
 	cameraRenderer: CameraRendererSopNode;
 	cameraRenderScene: CameraRenderSceneSopNode;
+	cameraViewerCode: CameraViewerCodeSopNode;
 	cameraWebXRAR: CameraWebXRARSopNode;
 	cameraWebXRARMarkerTracking: CameraWebXRARMarkerTrackingSopNode;
 	cameraWebXRVR: CameraWebXRVRSopNode;
@@ -619,6 +621,7 @@ import {CameraPostProcessSopOperation} from '../../../operations/sop/CameraPostP
 import {CameraProjectSopOperation} from '../../../operations/sop/CameraProject';
 import {CameraRendererSopOperation} from '../../../operations/sop/CameraRenderer';
 import {CameraRenderSceneSopOperation} from '../../../operations/sop/CameraRenderScene';
+import {CameraViewerCodeSopOperation} from '../../../operations/sop/CameraViewerCode';
 import {CameraWebXRARMarkerTrackingSopOperation} from '../../../operations/sop/CameraWebXRARMarkerTracking';
 import {CameraWebXRARSopOperation} from '../../../operations/sop/CameraWebXRAR';
 import {CameraWebXRVRSopOperation} from '../../../operations/sop/CameraWebXRVR';
@@ -632,7 +635,6 @@ import {CurveGetPointSopOperation} from '../../../operations/sop/CurveGetPoint';
 import {DecalSopOperation} from '../../../operations/sop/Decal';
 import {DirectionalLightSopOperation} from '../../../operations/sop/DirectionalLight';
 import {EmptyObjectSopOperation} from '../../../operations/sop/EmptyObject';
-// import {FileSopOperation} from '../../../operations/sop/File';
 import {FileDRCSopOperation} from '../../../operations/sop/FileDRC';
 import {FileFBXSopOperation} from '../../../operations/sop/FileFBX';
 import {FileGLTFSopOperation} from '../../../operations/sop/FileGLTF';
@@ -733,6 +735,7 @@ export class SopRegister {
 		poly.registerOperation(CameraProjectSopOperation);
 		poly.registerOperation(CameraRendererSopOperation);
 		poly.registerOperation(CameraRenderSceneSopOperation);
+		poly.registerOperation(CameraViewerCodeSopOperation);
 		poly.registerOperation(CameraWebXRARMarkerTrackingSopOperation);
 		poly.registerOperation(CameraWebXRARSopOperation);
 		poly.registerOperation(CameraWebXRVRSopOperation);
@@ -893,6 +896,7 @@ export class SopRegister {
 		poly.registerNode(CameraProjectSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(CameraRendererSopNode, CATEGORY_SOP.RENDER);
 		poly.registerNode(CameraRenderSceneSopNode, CATEGORY_SOP.RENDER);
+		poly.registerNode(CameraViewerCodeSopNode, CATEGORY_SOP.RENDER);
 		poly.registerNode(CameraWebXRARMarkerTrackingSopNode, CATEGORY_SOP.WEBXR);
 		poly.registerNode(CameraWebXRARSopNode, CATEGORY_SOP.WEBXR);
 		poly.registerNode(CameraWebXRVRSopNode, CATEGORY_SOP.WEBXR);

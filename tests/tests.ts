@@ -447,6 +447,7 @@ import './engine/nodes/sop/CameraProject';
 import './engine/nodes/sop/CameraCSSRenderer';
 import './engine/nodes/sop/CameraRenderer';
 import './engine/nodes/sop/CameraRenderScene';
+import './engine/nodes/sop/CameraViewerCode';
 import './engine/nodes/sop/CameraWebXRAR';
 import './engine/nodes/sop/CameraWebXRARMarkerTracking';
 import './engine/nodes/sop/CameraWebXRVR';

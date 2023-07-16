@@ -7,18 +7,11 @@
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {CameraFrameModeSopOperation} from '../../operations/sop/CameraFrameMode';
-import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {CameraSopNodeType} from '../../poly/NodeContext';
 import {CoreCameraFrameParamConfig} from '../../../core/camera/CoreCameraFrameMode';
-const DEFAULT = CameraFrameModeSopOperation.DEFAULT_PARAMS;
-class CameraFrameModeSopParamsConfig extends CoreCameraFrameParamConfig(NodeParamsConfig) {
-	/** @param group to assign the material to */
-	group = ParamConfig.STRING(DEFAULT.group, {
-		objectMask: true,
-	});
-	/** @param sets if this node should search through the materials inside the whole hierarchy */
-	applyToChildren = ParamConfig.BOOLEAN(DEFAULT.applyToChildren, {separatorAfter: true});
-}
+import {HierarchyParamConfig} from '../../../core/common/HierarchyParamConfig';
+class CameraFrameModeSopParamsConfig extends CoreCameraFrameParamConfig(HierarchyParamConfig(NodeParamsConfig)) {}
 const ParamsConfig = new CameraFrameModeSopParamsConfig();
 
 export class CameraFrameModeSopNode extends TypedSopNode<CameraFrameModeSopParamsConfig> {
@@ -35,7 +28,7 @@ export class CameraFrameModeSopNode extends TypedSopNode<CameraFrameModeSopParam
 	private _operation: CameraFrameModeSopOperation | undefined;
 	override cook(inputCoreGroups: CoreGroup[]) {
 		this._operation = this._operation || new CameraFrameModeSopOperation(this._scene, this.states, this);
-		const core_group = this._operation.cook(inputCoreGroups, this.pv);
-		this.setCoreGroup(core_group);
+		const coreGroup = this._operation.cook(inputCoreGroups, this.pv);
+		this.setCoreGroup(coreGroup);
 	}
 }

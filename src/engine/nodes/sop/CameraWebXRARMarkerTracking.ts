@@ -8,7 +8,7 @@
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {CameraWebXRARMarkerTrackingSopOperation} from '../../operations/sop/CameraWebXRARMarkerTracking';
-import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {CameraSopNodeType} from '../../poly/NodeContext';
 import {CoreCameraMarkerTrackingParamConfig} from '../../../core/camera/webXR/CoreCameraMarkerTracking';
 import {
@@ -17,22 +17,10 @@ import {
 	MARKER_TRACKING_TRANSFORM_MODES,
 	MarkerTrackingTransformMode,
 } from '../../../core/webXR/markerTracking/Common';
-import {Constructor} from '../../../types/GlobalTypes';
-const DEFAULT = CameraWebXRARMarkerTrackingSopOperation.DEFAULT_PARAMS;
-
-export function ParamsConfigBase<TBase extends Constructor>(Base: TBase) {
-	return class Mixin extends Base {
-		/** @param group to assign the material to */
-		group = ParamConfig.STRING(DEFAULT.group, {
-			objectMask: true,
-		});
-		/** @param sets if this node should search through the materials inside the whole hierarchy */
-		applyToChildren = ParamConfig.BOOLEAN(DEFAULT.applyToChildren, {separatorAfter: true});
-	};
-}
+import {HierarchyParamConfig} from '../../../core/common/HierarchyParamConfig';
 
 class CameraWebXRARMarkerTrackingSopParamsConfig extends CoreCameraMarkerTrackingParamConfig(
-	ParamsConfigBase(NodeParamsConfig)
+	HierarchyParamConfig(NodeParamsConfig)
 ) {}
 const ParamsConfig = new CameraWebXRARMarkerTrackingSopParamsConfig();
 
