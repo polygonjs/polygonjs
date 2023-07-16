@@ -19,23 +19,7 @@ import {JsLinesCollectionController} from '../../utils/JsLinesCollectionControll
 import {Vector3} from 'three';
 import {NamedFunctionMap} from '../../../../../poly/registers/functions/All';
 import {ParamOptions} from '../../../../../params/utils/OptionsController';
-import {Poly} from '../../../../../Poly';
 import {PrettierController} from '../../../../../../core/code/PrettierController';
-
-let FORCE_DEBUG: boolean | undefined = false;
-function _debug() {
-	if (FORCE_DEBUG != undefined) {
-		return FORCE_DEBUG;
-	}
-	return !Poly.playerMode();
-}
-
-function logDefault(message: string) {
-	if (!_debug()) {
-		return;
-	}
-	console.log(message);
-}
 
 export enum SoftBodyVariable {
 	P = 'position',
@@ -45,13 +29,6 @@ export enum SoftBodyVariable {
 	TIME = 'time',
 	DELTA = 'delta',
 }
-
-// const TEMPLATE = `
-// ${INSERT_DEFINE_AFTER}
-// ${INSERT_MEMBERS_AFTER}
-
-// ${INSERT_BODY_AFTER}
-// `;
 
 const TEMPLATE_VELOCITY = `
 ${INSERT_DEFINE_AFTER}
@@ -120,8 +97,6 @@ export class JsAssemblerSoftBody extends BaseJsShaderAssembler {
 		if (!(functionBodyVelocity && functionBodyCollider)) {
 			return;
 		}
-		logDefault(functionBodyVelocity);
-		logDefault(functionBodyCollider);
 		const variableNames: string[] = [];
 		const functionNames: Array<keyof NamedFunctionMap> = [];
 		const variablesByName: Record<string, RegisterableVariable> = {};
@@ -249,40 +224,26 @@ export class JsAssemblerSoftBody extends BaseJsShaderAssembler {
 			const varName = globalsNode.jsVarName(outputName);
 
 			switch (outputName) {
-				case 'position':
-					// definitions.push(new UniformJsDefinition(globals_node, JsConnectionPointType.FLOAT, output_name));
+				case 'position': {
 					shadersCollectionController.addVariable(globalsNode, new Vector3(), varName);
 					bodyLines.push(`${varName}.copy(${outputName})`);
-
-					// this.setUniformsTimeDependent();
 					break;
-				case SoftBodyVariable.V:
+				}
+				case SoftBodyVariable.V: {
 					shadersCollectionController.addVariable(globalsNode, new Vector3(), varName);
 					bodyLines.push(`${varName}.copy(${outputName})`);
-
-					// this.setUniformsTimeDependent();
 					break;
-				case SoftBodyVariable.TIME:
+				}
+				case SoftBodyVariable.TIME: {
 					bodyLines.push(`const ${varName} = ${SoftBodyVariable.TIME}`);
-					// this.setUniformsTimeDependent();
 					break;
-				case SoftBodyVariable.DELTA:
+				}
+				case SoftBodyVariable.DELTA: {
 					bodyLines.push(`const ${varName} = ${SoftBodyVariable.DELTA}`);
-
-					// this.setUniformsTimeDependent();
 					break;
-				// case 'uv':
-				// 	this._handleUV(body_lines, shader_name, var_name);
-				// 	break;
-				// case 'gl_FragCoord':
-				// 	this._handle_gl_FragCoord(body_lines, shader_name, var_name);
-				// 	break;
-				// case 'resolution':
-				// 	this._handle_resolution(body_lines, shader_name, var_name);
-				// 	break;
+				}
 			}
 		}
-		// shadersCollectionController.addDefinitions(globalsNode, definitions, shaderName);
 		shadersCollectionController._addBodyLines(globalsNode, bodyLines);
 	}
 }
