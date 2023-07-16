@@ -7,6 +7,7 @@ import {RegisterableVariable} from '../../engine/nodes/js/code/assemblers/_BaseJ
 import {SetUtils} from '../SetUtils';
 import {ActorBuilderNode} from '../../engine/scene/utils/ActorsManager';
 
+type OnCompilationCompletedHook = () => void;
 export class ActorCompilationController {
 	constructor(protected node: ActorBuilderNode) {}
 
@@ -149,5 +150,27 @@ export class ActorCompilationController {
 			this._resetFunctionData();
 			// throw new Error(err);
 		}
+		this._runOnCompilationCompletedCallbacks();
+	}
+
+	private _onCompilationCompletedCallbacks: Set<OnCompilationCompletedHook> | undefined;
+	addOnCompilationCompleted(callback: OnCompilationCompletedHook) {
+		this._onCompilationCompletedCallbacks = this._onCompilationCompletedCallbacks || new Set();
+		this._onCompilationCompletedCallbacks.add(callback);
+	}
+	removeOnCompilationCompleted(callback: OnCompilationCompletedHook) {
+		if (!this._onCompilationCompletedCallbacks) {
+			return;
+		}
+		this._onCompilationCompletedCallbacks.delete(callback);
+		if (this._onCompilationCompletedCallbacks.size == 0) {
+			this._onCompilationCompletedCallbacks = undefined;
+		}
+	}
+	private _runOnCompilationCompletedCallbacks() {
+		if (!this._onCompilationCompletedCallbacks) {
+			return;
+		}
+		this._onCompilationCompletedCallbacks.forEach((callback) => callback());
 	}
 }
