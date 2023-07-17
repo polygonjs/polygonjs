@@ -246,6 +246,7 @@ export class TriggeringJsDefinition extends TypedJsDefinition<JsDefinitionType.T
 					${setPointIndex}
 					${this._value}
 				}
+				CoreGeometry.computeVertexNormals(${ActorAssemblerConstant.GEOMETRY});
 			}`;
 		} else {
 			return `${methodName}(){

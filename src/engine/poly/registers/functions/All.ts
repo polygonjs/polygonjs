@@ -188,6 +188,10 @@ import { getPlayerInputDataRight } from "../../../functions/getPlayerInputDataRi
 import { getPlayerInputDataRun } from "../../../functions/getPlayerInputDataRun";
 import { getPlayerSimplePropertyOnGround } from "../../../functions/getPlayerSimplePropertyOnGround";
 import { getPlayerSimplePropertyVelocity } from "../../../functions/getPlayerSimplePropertyVelocity";
+import { getPointAttributeNumber } from "../../../functions/getPointAttributeNumber";
+import { getPointAttributeVector2 } from "../../../functions/getPointAttributeVector2";
+import { getPointAttributeVector3 } from "../../../functions/getPointAttributeVector3";
+import { getPointAttributeVector4 } from "../../../functions/getPointAttributeVector4";
 import { getPointIndex } from "../../../functions/getPointIndex";
 import { getPointPosition } from "../../../functions/getPointPosition";
 import { getRayDirection } from "../../../functions/getRayDirection";
@@ -664,6 +668,10 @@ export interface NamedFunctionMap {
 	getPlayerInputDataRun: getPlayerInputDataRun;
 	getPlayerSimplePropertyOnGround: getPlayerSimplePropertyOnGround;
 	getPlayerSimplePropertyVelocity: getPlayerSimplePropertyVelocity;
+	getPointAttributeNumber: getPointAttributeNumber;
+	getPointAttributeVector2: getPointAttributeVector2;
+	getPointAttributeVector3: getPointAttributeVector3;
+	getPointAttributeVector4: getPointAttributeVector4;
 	getPointIndex: getPointIndex;
 	getPointPosition: getPointPosition;
 	getRayDirection: getRayDirection;
@@ -1143,6 +1151,10 @@ export class AllNamedFunctionRegister {
 			getPlayerInputDataRun,
 			getPlayerSimplePropertyOnGround,
 			getPlayerSimplePropertyVelocity,
+			getPointAttributeNumber,
+			getPointAttributeVector2,
+			getPointAttributeVector3,
+			getPointAttributeVector4,
 			getPointIndex,
 			getPointPosition,
 			getRayDirection,

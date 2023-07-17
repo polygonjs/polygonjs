@@ -29,6 +29,9 @@ function typedVisibleOptions(type: ParamConvertibleJsType, otherParamVal: Record
 enum GetObjectAttributeInputName {
 	attribName = 'attribName',
 }
+enum GetObjectAttributeOutputName {
+	VALUE = 'val',
+}
 
 class GetObjectAttributeJsParamsConfig extends NodeParamsConfig {
 	// attribName = ParamConfig.STRING('');
@@ -54,7 +57,6 @@ export class GetObjectAttributeJsNode extends TypedJsNode<GetObjectAttributeJsPa
 		return JsType.GET_OBJECT_ATTRIBUTE;
 	}
 
-	static readonly OUTPUT_NAME = 'val';
 	override initializeNode() {
 		this.io.inputs.setNamedInputConnectionPoints([
 			new JsConnectionPoint(JsConnectionPointType.OBJECT_3D, JsConnectionPointType.OBJECT_3D, CONNECTION_OPTIONS),
@@ -79,7 +81,7 @@ export class GetObjectAttributeJsNode extends TypedJsNode<GetObjectAttributeJsPa
 		this.io.connection_points.set_expected_input_types_function(() => []);
 		// this.io.connection_points.set_input_name_function((index: number) => GetObjectAttributeInputName.attribName);
 		this.io.connection_points.set_expected_output_types_function(() => [this._currentConnectionType()]);
-		this.io.connection_points.set_output_name_function((index: number) => GetObjectAttributeJsNode.OUTPUT_NAME);
+		this.io.connection_points.set_output_name_function((index: number) => GetObjectAttributeOutputName.VALUE);
 	}
 	private _currentConnectionType() {
 		if (this.pv.type == null) {
@@ -147,7 +149,7 @@ export class GetObjectAttributeJsNode extends TypedJsNode<GetObjectAttributeJsPa
 		const attribName = this.variableForInput(linesController, GetObjectAttributeInputName.attribName);
 		const defaultParam = this.defaultValueParam();
 		const defaultValue = this.variableForInputParam(linesController, defaultParam);
-		const out = this.jsVarName(GetObjectAttributeJsNode.OUTPUT_NAME);
+		const out = this.jsVarName(GetObjectAttributeOutputName.VALUE);
 		const dataType = PARAM_CONVERTIBLE_JS_CONNECTION_POINT_TYPES[this.pv.type];
 
 		const func = Poly.namedFunctionsRegister.getFunction('getObjectAttribute', this, linesController);

@@ -63,9 +63,11 @@ export class CoreGeometry {
 	static positionAttribName(geometry: BufferGeometry) {
 		return this.markedAsInstance(geometry) ? InstanceAttrib.POSITION : Attribute.POSITION;
 	}
-
+	static computeVertexNormals(geometry?: BufferGeometry) {
+		geometry?.computeVertexNormals();
+	}
 	computeVertexNormals() {
-		this._geometry.computeVertexNormals();
+		CoreGeometry.computeVertexNormals(this._geometry);
 	}
 	static userDataAttribs(geometry: BufferGeometry) {
 		return (geometry.userData[INDEX_ATTRIB_VALUES] = geometry.userData[INDEX_ATTRIB_VALUES] || {});

@@ -14,11 +14,12 @@ import {
 } from '../../../core/reactivity/PointPropertyReactivity';
 import {Poly} from '../../Poly';
 import {inputObject3D, inputPointIndex} from './_BaseObject3D';
+import {JsType} from '../../poly/registers/nodes/types/Js';
 
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
 export class GetPointPropertyJsNode extends ParamlessTypedJsNode {
 	static override type() {
-		return 'getPointProperty';
+		return JsType.GET_POINT_PROPERTY;
 	}
 
 	override initializeNode() {
