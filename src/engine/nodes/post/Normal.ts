@@ -12,7 +12,7 @@ const ParamsConfig = new NormalParamsConfig();
 export class NormalPostNode extends TypedPostNode<NormalPass, NormalParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'Normal';
+		return 'normal';
 	}
 
 	override createPass(context: TypedPostNodeContext) {

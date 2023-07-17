@@ -333,7 +333,7 @@ export class ClothFBOController {
 	protected solveConstraints(renderer: WebGLRenderer, secondaryMotionMult: number) {
 		const constraintsShader = this.mainController.materials.constraintsShader;
 		this.fboMesh.material = constraintsShader;
-		constraintsShader.uniforms.selectedVertexInfluence.value = this.mainController.selectedVertexInfluence;
+		constraintsShader.uniforms.constraintInfluence.value = this.mainController.constraintInfluence;
 		constraintsShader.uniforms.tSize.value.copy(this.tSize);
 		constraintsShader.uniforms.tPosition0.value = this.positionRT[0].texture;
 		constraintsShader.uniforms.tPosition1.value = this.positionRT[1].texture;

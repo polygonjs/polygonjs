@@ -30,7 +30,7 @@ const ParamsConfig = new TrackFaceJsParamsConfig();
 export class TrackFaceJsNode extends TypedJsNode<TrackFaceJsParamsConfig> {
 	override readonly paramsConfig = ParamsConfig;
 	static override type() {
-		return 'TrackFace';
+		return 'trackFace';
 	}
 
 	override initializeNode() {

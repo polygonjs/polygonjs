@@ -60,7 +60,7 @@ class ClothSolverStepSimulationJsParamsConfig extends NodeParamsConfig {
 		range: [1, 100],
 		rangeLocked: [true, false],
 	});
-	selectedVertexInfluence = ParamConfig.FLOAT(0.1, {
+	constraintInfluence = ParamConfig.FLOAT(0.1, {
 		range: [0, 2],
 		rangeLocked: [true, false],
 	});
@@ -109,7 +109,7 @@ export class ClothSolverStepSimulationJsNode extends TypedJsNode<ClothSolverStep
 	override setTriggerableLines(linesController: JsLinesCollectionController) {
 		const object3D = inputObject3D(this, linesController);
 		const stepsCount = this.variableForInputParam(linesController, this.p.stepsCount);
-		const selectedVertexInfluence = this.variableForInputParam(linesController, this.p.selectedVertexInfluence);
+		const constraintInfluence = this.variableForInputParam(linesController, this.p.constraintInfluence);
 		const viscosity = this.variableForInputParam(linesController, this.p.viscosity);
 		const spring = this.variableForInputParam(linesController, this.p.spring);
 
@@ -120,7 +120,7 @@ export class ClothSolverStepSimulationJsNode extends TypedJsNode<ClothSolverStep
 		const bodyLine = func.asString(
 			object3D,
 			stepsCount,
-			selectedVertexInfluence,
+			constraintInfluence,
 			viscosity,
 			spring,
 			this._refToString(configRef)

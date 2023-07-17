@@ -61,7 +61,7 @@ interface ConstraintsUniforms extends RawMaterialUniforms {
 	time: IUniformN;
 	tSize: IUniformV2;
 	order: IUniformN;
-	selectedVertexInfluence: IUniformN;
+	constraintInfluence: IUniformN;
 	tPosition0: IUniformTexture;
 	tPosition1: IUniformTexture;
 	tAdjacentsA: IUniformTexture;
@@ -161,7 +161,7 @@ export class ClothMaterialController {
 			time: this.mainController.scene.timeController.timeUniform(),
 			tSize: {value: new Vector2()},
 			order: {value: -1},
-			selectedVertexInfluence: {value: 0},
+			constraintInfluence: {value: 0},
 			tPosition0: {value: null},
 			tPosition1: {value: null},
 			tAdjacentsA: {value: null},

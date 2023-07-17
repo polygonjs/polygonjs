@@ -109,7 +109,6 @@ export class PolyEngine {
 	}
 
 	registerNode(node: BaseNodeConstructor, tab_menu_category?: string | string[], options?: NodeRegisterOptions) {
-		// console.warn('registerNode', node.context(), node.type());
 		this.nodesRegister.register(node, tab_menu_category, options);
 	}
 	registerOperation(operation: typeof BaseOperation, options?: OperationRegisterOptions) {

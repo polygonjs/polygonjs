@@ -35,7 +35,7 @@ const ParamsConfig = new GetIntersectionAttributeJsParamsConfig();
 export class GetIntersectionAttributeJsNode extends TypedJsNode<GetIntersectionAttributeJsParamsConfig> {
 	override readonly paramsConfig = ParamsConfig;
 	static override type() {
-		return 'GetIntersectionAttribute';
+		return 'getIntersectionAttribute';
 	}
 
 	static readonly OUTPUT_NAME = 'val';

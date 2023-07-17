@@ -3,7 +3,7 @@ import {_matchArrayLength} from './_ArrayUtils';
 import {Object3D} from 'three';
 import {JsDataType} from '../nodes/utils/io/connections/Js';
 import {Ref} from '@vue/reactivity';
-import {CoreType} from '../../core/Type';
+import {isVector, isColor, isBoolean, isNumber, isString, isArray} from '../../core/Type';
 import {ref} from '../../core/reactivity/CoreReactivity';
 import {PolyScene} from '../scene/PolyScene';
 
@@ -45,27 +45,27 @@ const _debugDataController: DebugDataController = {
 
 function _displayableValue(value: JsDataType): string {
 	try {
-		if (CoreType.isBoolean(value) || CoreType.isString(value)) {
+		if (isBoolean(value) || isString(value)) {
 			return `${value}`;
 		}
-		if (CoreType.isNumber(value)) {
+		if (isNumber(value)) {
 			return `${value.toFixed(6)}`;
 		}
 
-		if (CoreType.isColor(value)) {
+		if (isColor(value)) {
 			return value
 				.toArray()
 				.map((e) => e.toFixed(4))
 				.join(', ');
 		}
-		if (CoreType.isVector(value)) {
+		if (isVector(value)) {
 			return value
 				.toArray()
 				.map((e) => e.toFixed(4))
 				.join(', ');
 		}
 
-		if (CoreType.isArray(value)) {
+		if (isArray(value)) {
 			const firstElement = value[0];
 			const firstElementAsString = _displayableValue(firstElement);
 			return `[${firstElementAsString},...] (length: ${value.length})`;
@@ -82,7 +82,7 @@ export function tableContent(debugLines: DebugLine[]) {
 	const entries = debugLines.map((debugLine, i) => {
 		return {
 			objectName: debugLine.objectName,
-			value: debugLine.value,
+			value: isVector(debugLine.value) || isColor(debugLine.value) ? debugLine.value.toArray() : debugLine.value,
 		};
 	});
 	return entries;

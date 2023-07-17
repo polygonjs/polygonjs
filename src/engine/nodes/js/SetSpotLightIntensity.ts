@@ -23,7 +23,7 @@ const ParamsConfig = new SetSpotLightIntensityJsParamsConfig();
 export class SetSpotLightIntensityJsNode extends TypedJsNode<SetSpotLightIntensityJsParamsConfig> {
 	override readonly paramsConfig = ParamsConfig;
 	static override type() {
-		return 'SetSpotLightIntensity';
+		return 'setSpotLightIntensity';
 	}
 
 	override initializeNode() {

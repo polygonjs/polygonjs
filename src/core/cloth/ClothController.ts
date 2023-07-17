@@ -14,7 +14,7 @@ export class ClothController {
 	public readonly fbo: ClothFBOController;
 	//
 	public stepsCount = 40;
-	public selectedVertexInfluence = 0.1;
+	public constraintInfluence = 0.1;
 	public viscosity = 0.1;
 	public spring = 1;
 

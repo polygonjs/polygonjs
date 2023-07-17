@@ -53,12 +53,12 @@ export class clothSolverStepSimulation extends ObjectNamedFunction5<
 	func(
 		object3D: Object3D,
 		stepsCount: number,
-		selectedVertexInfluence: number,
+		constraintInfluence: number,
 		viscosity: number,
 		spring: number,
 		uniformConfigRef: ClothMaterialUniformConfigRef
 	): void {
-		_clothSolverStepSimulation(object3D, stepsCount, selectedVertexInfluence, viscosity, spring, uniformConfigRef);
+		_clothSolverStepSimulation(object3D, stepsCount, constraintInfluence, viscosity, spring, uniformConfigRef);
 	}
 }
 export class clothSolverUpdateMaterial extends NamedFunction9<

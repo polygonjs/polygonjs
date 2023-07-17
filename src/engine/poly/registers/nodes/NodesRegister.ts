@@ -47,8 +47,11 @@ export class NodesRegister {
 		return nodeType.toLowerCase();
 	}
 
-	register(node: BaseNodeConstructor, tab_menu_category?: string | string[], options?: NodeRegisterOptions) {
+	register(node: BaseNodeConstructor, tabMenuCategory?: string | string[], options?: NodeRegisterOptions) {
 		const context = node.context();
+		// if (node.type()[0].toLowerCase() != node.type()[0]) {
+		// 	console.warn(`node type '${node.context()}/${node.type()}' should start with a lower case letter`);
+		// }
 		const nodeType = NodesRegister.type(node);
 		let printWarnings = options?.printWarnings;
 		if (printWarnings == null) {
@@ -81,13 +84,13 @@ export class NodesRegister {
 			node.onRegister(this.poly);
 		}
 
-		if (tab_menu_category) {
+		if (tabMenuCategory) {
 			let current_categories = this._nodesRegisterCategories.get(context);
 			if (!current_categories) {
 				current_categories = new Map();
 				this._nodesRegisterCategories.set(context, current_categories);
 			}
-			const savedCategory = CoreType.isArray(tab_menu_category) ? tab_menu_category : [tab_menu_category];
+			const savedCategory = CoreType.isArray(tabMenuCategory) ? tabMenuCategory : [tabMenuCategory];
 			current_categories.set(nodeType, savedCategory);
 		}
 

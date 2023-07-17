@@ -3,7 +3,7 @@ precision highp sampler2D;
 
 uniform vec2 tSize;
 uniform float order;
-uniform float selectedVertexInfluence;
+uniform float constraintInfluence;
 uniform sampler2D tPosition0;
 uniform sampler2D tPosition1;
 
@@ -19,7 +19,7 @@ uniform sampler2D tAdjacentsB;
 vec3 getDisplacement( vec3 point0, vec3 point1, float restDistance ) {
 
 	float curDistance = distance( point0, point1 );
-	return selectedVertexInfluence * ( curDistance - restDistance ) * ( point1 - point0 ) / curDistance;
+	return constraintInfluence * ( curDistance - restDistance ) * ( point1 - point0 ) / curDistance;
 
 }
 

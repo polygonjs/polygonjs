@@ -18,7 +18,7 @@ function _addTexturePrefix(uniformName: string): string {
 export function clothSolverStepSimulation(
 	clothObject: Object3D,
 	stepsCount: number,
-	selectedVertexInfluence: number,
+	constraintInfluence: number,
 	viscosity: number,
 	spring: number,
 	uniformConfig: ClothMaterialUniformConfigRef
@@ -29,7 +29,7 @@ export function clothSolverStepSimulation(
 		return;
 	}
 	controller.stepsCount = stepsCount;
-	controller.selectedVertexInfluence = selectedVertexInfluence;
+	controller.constraintInfluence = constraintInfluence;
 	controller.viscosity = viscosity;
 	controller.spring = spring;
 
