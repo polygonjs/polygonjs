@@ -114,6 +114,9 @@ export class JsAssemblerObjectBuilder extends BaseJsShaderAssembler {
 	defaultObject3DMaterialVariable(): string {
 		return ObjectBuilderAssemblerConstant.MATERIAL;
 	}
+	defaultPointIndexVariable(): string {
+		return ObjectBuilderAssemblerConstant.PTNUM;
+	}
 
 	override updateFunction() {
 		super.updateFunction();

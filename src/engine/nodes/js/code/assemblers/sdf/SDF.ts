@@ -50,6 +50,9 @@ export class JsAssemblerSDF extends BaseJsShaderAssembler {
 	defaultObject3DMaterialVariable(): string {
 		return 'null';
 	}
+	defaultPointIndexVariable(): string {
+		return 'null';
+	}
 	override templateShader() {
 		return {
 			main: TEMPLATE,

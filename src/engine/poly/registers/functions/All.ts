@@ -188,6 +188,8 @@ import { getPlayerInputDataRight } from "../../../functions/getPlayerInputDataRi
 import { getPlayerInputDataRun } from "../../../functions/getPlayerInputDataRun";
 import { getPlayerSimplePropertyOnGround } from "../../../functions/getPlayerSimplePropertyOnGround";
 import { getPlayerSimplePropertyVelocity } from "../../../functions/getPlayerSimplePropertyVelocity";
+import { getPointIndex } from "../../../functions/getPointIndex";
+import { getPointPosition } from "../../../functions/getPointPosition";
 import { getRayDirection } from "../../../functions/getRayDirection";
 import { getRayOrigin } from "../../../functions/getRayOrigin";
 import { getSibbling } from "../../../functions/getSibbling";
@@ -444,6 +446,8 @@ import { setPhysicsRBDRotation } from "../../../functions/setPhysicsRBDRotation"
 import { setPhysicsRBDSphereProperty } from "../../../functions/setPhysicsRBDSphereProperty";
 import { setPhysicsWorldGravity } from "../../../functions/setPhysicsWorldGravity";
 import { setPlayerInput } from "../../../functions/setPlayerInput";
+import { setPointIndex } from "../../../functions/setPointIndex";
+import { setPointPosition } from "../../../functions/setPointPosition";
 import { setSpotLightIntensity } from "../../../functions/setSpotLightIntensity";
 import { setViewer } from "../../../functions/setViewer";
 import { setViewerControls } from "../../../functions/setViewerControls";
@@ -660,6 +664,8 @@ export interface NamedFunctionMap {
 	getPlayerInputDataRun: getPlayerInputDataRun;
 	getPlayerSimplePropertyOnGround: getPlayerSimplePropertyOnGround;
 	getPlayerSimplePropertyVelocity: getPlayerSimplePropertyVelocity;
+	getPointIndex: getPointIndex;
+	getPointPosition: getPointPosition;
 	getRayDirection: getRayDirection;
 	getRayOrigin: getRayOrigin;
 	getSibbling: getSibbling;
@@ -916,6 +922,8 @@ export interface NamedFunctionMap {
 	setPhysicsRBDSphereProperty: setPhysicsRBDSphereProperty;
 	setPhysicsWorldGravity: setPhysicsWorldGravity;
 	setPlayerInput: setPlayerInput;
+	setPointIndex: setPointIndex;
+	setPointPosition: setPointPosition;
 	setSpotLightIntensity: setSpotLightIntensity;
 	setViewer: setViewer;
 	setViewerControls: setViewerControls;
@@ -1135,6 +1143,8 @@ export class AllNamedFunctionRegister {
 			getPlayerInputDataRun,
 			getPlayerSimplePropertyOnGround,
 			getPlayerSimplePropertyVelocity,
+			getPointIndex,
+			getPointPosition,
 			getRayDirection,
 			getRayOrigin,
 			getSibbling,
@@ -1391,6 +1401,8 @@ export class AllNamedFunctionRegister {
 			setPhysicsRBDSphereProperty,
 			setPhysicsWorldGravity,
 			setPlayerInput,
+			setPointIndex,
+			setPointPosition,
 			setSpotLightIntensity,
 			setViewer,
 			setViewerControls,

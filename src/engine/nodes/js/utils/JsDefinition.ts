@@ -7,6 +7,9 @@ import {LineType} from '../code/utils/LineType';
 import {MapUtils} from '../../../../core/MapUtils';
 import {EvaluatorMethodName} from '../code/assemblers/actor/ActorEvaluator';
 import {ArrayUtils} from '../../../../core/ArrayUtils';
+import {ActorAssemblerConstant} from '../code/assemblers/actor/ActorAssemblerCommon';
+import {Poly} from '../../../Poly';
+import {inputObject3D} from '../_BaseObject3D';
 
 export enum JsDefinitionType {
 	// ATTRIBUTE = 'attribute',
@@ -213,6 +216,7 @@ interface TriggeringJsDefinitionOptions {
 	triggeringMethodName: EvaluatorMethodName;
 	gatherable: boolean;
 	nodeMethodName?: string;
+	perPoint?: boolean;
 }
 export class TriggeringJsDefinition extends TypedJsDefinition<JsDefinitionType.TRIGGERING> {
 	constructor(
@@ -228,9 +232,26 @@ export class TriggeringJsDefinition extends TypedJsDefinition<JsDefinitionType.T
 	}
 	line() {
 		const methodName = this._options.nodeMethodName || nodeMethodName(this._node);
-		return `${methodName}(){
-			${this._value}
-		}`;
+		if (this._options.perPoint) {
+			const func = Poly.namedFunctionsRegister.getFunction(
+				'setPointIndex',
+				this._node,
+				this._shaderCollectionController
+			);
+			const setPointIndex = func.asString(inputObject3D(this._node, this._shaderCollectionController), 'i');
+
+			return `${methodName}(){
+				const pointsCount = CoreGeometry.pointsCount(${ActorAssemblerConstant.GEOMETRY});
+				for(let i=0; i<pointsCount; i++){
+					${setPointIndex}
+					${this._value}
+				}
+			}`;
+		} else {
+			return `${methodName}(){
+				${this._value}
+			}`;
+		}
 	}
 	static override gather(
 		_definitions: TypedJsDefinition<JsDefinitionType>[],

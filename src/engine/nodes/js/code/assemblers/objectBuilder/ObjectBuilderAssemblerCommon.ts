@@ -5,6 +5,7 @@ export enum ObjectBuilderAssemblerConstant {
 	OBJECT_3D = 'objectContainer.Object3D',
 	OBJ_NUM = 'objectContainer.objnum',
 	MATERIAL = 'objectContainer.Object3D.material',
+	PTNUM = 'null', // not available in this assembler
 }
 
 export interface ObjectContainer {

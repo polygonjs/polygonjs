@@ -98,6 +98,7 @@ import {GetPhysicsRBDCuboidPropertyJsNode} from '../../../nodes/js/GetPhysicsRBD
 import {GetPhysicsRBDSpherePropertyJsNode} from '../../../nodes/js/GetPhysicsRBDSphereProperty';
 import {GetPhysicsRBDPropertyJsNode} from '../../../nodes/js/GetPhysicsRBDProperty';
 import {GetPlanePropertyJsNode} from '../../../nodes/js/GetPlaneProperty';
+import {GetPointPropertyJsNode} from '../../../nodes/js/GetPointProperty';
 import {GetRayPropertyJsNode} from '../../../nodes/js/GetRayProperty';
 import {GetSibblingJsNode} from '../../../nodes/js/GetSibbling';
 import {GetSpherePropertyJsNode} from '../../../nodes/js/GetSphereProperty';
@@ -241,6 +242,7 @@ import {SDFTorusJsNode} from '../../../nodes/js/SDFTorus';
 import {SDFTransformJsNode} from '../../../nodes/js/SDFTransform';
 import {SDFTubeJsNode} from '../../../nodes/js/SDFTube';
 import {SDFUnionJsNode} from '../../../nodes/js/SDFUnion';
+import {SetClothConstraintPositionJsNode} from '../../../nodes/js/SetClothConstraintPosition';
 import {SetCSSObjectClassJsNode} from '../../../nodes/js/SetCSSObjectClass';
 import {SetGeometryInstanceAttributeJsNode} from '../../../nodes/js/SetGeometryInstanceAttribute';
 import {SetGeometryInstancePositionsJsNode} from '../../../nodes/js/SetGeometryInstancePositions';
@@ -289,7 +291,7 @@ import {SetPhysicsRBDCuboidPropertyJsNode} from '../../../nodes/js/SetPhysicsRBD
 import {SetPhysicsRBDSpherePropertyJsNode} from '../../../nodes/js/SetPhysicsRBDSphereProperty';
 import {SetPhysicsWorldGravityJsNode} from '../../../nodes/js/SetPhysicsWorldGravity';
 import {SetPlayerInputJsNode} from '../../../nodes/js/SetPlayerInput';
-import {SetClothConstraintPositionJsNode} from '../../../nodes/js/SetClothConstraintPosition';
+import {SetPointPositionJsNode} from '../../../nodes/js/SetPointPosition';
 import {SetSoftBodyConstraintPositionJsNode} from '../../../nodes/js/SetSoftBodyConstraintPosition';
 import {SetSpotLightIntensityJsNode} from '../../../nodes/js/SetSpotLightIntensity';
 import {SetViewerJsNode} from '../../../nodes/js/SetViewer';
@@ -428,6 +430,7 @@ export interface JsNodeChildrenMap {
 	getPhysicsRBDCuboidProperty: GetPhysicsRBDCuboidPropertyJsNode;
 	getPhysicsRBDSphereProperty: GetPhysicsRBDSpherePropertyJsNode;
 	getPhysicsRBDProperty: GetPhysicsRBDPropertyJsNode;
+	getPointProperty: GetPointPropertyJsNode;
 	getRayProperty: GetRayPropertyJsNode;
 	getSibbling: GetSibblingJsNode;
 	getSphereProperty: GetSpherePropertyJsNode;
@@ -619,6 +622,7 @@ export interface JsNodeChildrenMap {
 	setPhysicsRBDSphereProperty: SetPhysicsRBDSpherePropertyJsNode;
 	setPhysicsWorldGravity: SetPhysicsWorldGravityJsNode;
 	setPlayerInput: SetPlayerInputJsNode;
+	setPointPosition: SetPointPositionJsNode;
 	setClothConstraintPosition: SetClothConstraintPositionJsNode;
 	setSoftBodyConstraintPosition: SetSoftBodyConstraintPositionJsNode;
 	setSpotLightIntensity: SetSpotLightIntensityJsNode;
@@ -683,25 +687,33 @@ const ONLY_POINT_OR_OBJECT_BUILDER = {
 	only: [sopType(SopType.INSTANCE_BUILDER), sopType(SopType.OBJECT_BUILDER), sopType(SopType.POINT_BUILDER)],
 };
 
+const ACTOR_OBJECTS = [
+	sopType(SopType.ACTOR),
+	sopType(SopType.PHYSICS_WORLD),
+	sopType(SopType.PHYSICS_DEBUG),
+	sopType(SopType.PHYSICS_PLAYER),
+	// sopType(SopType.TET_SOFT_BODY_SOLVER),
+	...[
+		NodeContext.ANIM,
+		NodeContext.AUDIO,
+		NodeContext.COP,
+		NodeContext.EVENT,
+		NodeContext.MAT,
+		NodeContext.OBJ,
+		NodeContext.POST,
+		NodeContext.ROP,
+		NodeContext.SOP,
+	].map((c) => `${c}/${NetworkNodeType.ACTOR}`),
+];
+const ACTOR_POITNS = [sopType(SopType.ACTOR_POINT)];
 const ONLY_ACTOR = {
-	only: [
-		sopType(SopType.ACTOR),
-		sopType(SopType.PHYSICS_WORLD),
-		sopType(SopType.PHYSICS_DEBUG),
-		sopType(SopType.PHYSICS_PLAYER),
-		// sopType(SopType.TET_SOFT_BODY_SOLVER),
-		...[
-			NodeContext.ANIM,
-			NodeContext.AUDIO,
-			NodeContext.COP,
-			NodeContext.EVENT,
-			NodeContext.MAT,
-			NodeContext.OBJ,
-			NodeContext.POST,
-			NodeContext.ROP,
-			NodeContext.SOP,
-		].map((c) => `${c}/${NetworkNodeType.ACTOR}`),
-	],
+	only: ACTOR_OBJECTS,
+};
+const ONLY_ACTOR_POINT = {
+	only: ACTOR_POITNS,
+};
+const ONLY_ACTOR_AND_POINT = {
+	only: [...ACTOR_OBJECTS, ...ACTOR_POITNS],
 };
 export class JsRegister {
 	static run(poly: PolyEngine) {
@@ -804,6 +816,7 @@ export class JsRegister {
 		poly.registerNode(GetPhysicsRBDSpherePropertyJsNode, CATEGORY_JS.PHYSICS, ONLY_ACTOR);
 		poly.registerNode(GetPhysicsRBDPropertyJsNode, CATEGORY_JS.PHYSICS, ONLY_ACTOR);
 		poly.registerNode(GetRayPropertyJsNode, CATEGORY_JS.MATH);
+		poly.registerNode(GetPointPropertyJsNode, CATEGORY_JS.GET, ONLY_ACTOR_POINT);
 		poly.registerNode(GetSibblingJsNode, CATEGORY_JS.GET);
 		poly.registerNode(GetSpherePropertyJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(GetTextureJsNode, CATEGORY_JS.GET, ONLY_ACTOR);
@@ -871,7 +884,7 @@ export class JsRegister {
 		poly.registerNode(OnScenePlayJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
 		poly.registerNode(OnSceneResetJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
 		poly.registerNode(OnScrollJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
-		poly.registerNode(OnTickJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
+		poly.registerNode(OnTickJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR_AND_POINT);
 		poly.registerNode(OnVideoEventJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
 		poly.registerNode(OnWebXRControllerEventJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
 		poly.registerNode(OrJsNode, CATEGORY_JS.LOGIC);
@@ -946,6 +959,7 @@ export class JsRegister {
 		poly.registerNode(SDFTransformJsNode, CATEGORY_JS.SDF_PRIMITIVES);
 		poly.registerNode(SDFTubeJsNode, CATEGORY_JS.SDF_PRIMITIVES);
 		poly.registerNode(SDFUnionJsNode, CATEGORY_JS.SDF_MODIFIERS);
+		poly.registerNode(SetClothConstraintPositionJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
 		poly.registerNode(SetCSSObjectClassJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR);
 		poly.registerNode(SetGeometryInstanceAttributeJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR);
 		poly.registerNode(SetGeometryInstancePositionsJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR);
@@ -994,7 +1008,7 @@ export class JsRegister {
 		poly.registerNode(SetPhysicsRBDSpherePropertyJsNode, CATEGORY_JS.PHYSICS, ONLY_ACTOR);
 		poly.registerNode(SetPhysicsWorldGravityJsNode, CATEGORY_JS.PHYSICS, ONLY_ACTOR);
 		poly.registerNode(SetPlayerInputJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
-		poly.registerNode(SetClothConstraintPositionJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
+		poly.registerNode(SetPointPositionJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR_POINT);
 		poly.registerNode(SetSoftBodyConstraintPositionJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
 		poly.registerNode(SetSpotLightIntensityJsNode, CATEGORY_JS.PHYSICS, ONLY_ACTOR);
 		poly.registerNode(SetViewerJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR);

@@ -6,14 +6,21 @@ import {Poly} from '../../Poly';
 import {DecomposedPath} from '../../../core/DecomposedPath';
 import {BooleanParam} from '../../params/Boolean';
 import {FloatParam} from '../../params/Float';
+import {IntegerParam} from '../../params/Integer';
 import {StringParam} from '../../params/String';
 import {Vector3Param} from '../../params/Vector3';
+import {Attribute} from '../../../core/geometry/Attribute';
 
 function _defaultObject3D(linesController: JsLinesCollectionController): string {
 	return linesController.assembler().defaultObject3DVariable();
 }
 function _defaultObject3DMaterial(linesController: JsLinesCollectionController): string {
 	return linesController.assembler().defaultObject3DMaterialVariable();
+}
+function _defaultPointIndex(node: BaseJsNodeType, linesController: JsLinesCollectionController): string {
+	// return linesController.assembler().defaultPointIndexVariable();
+	const func = Poly.namedFunctionsRegister.getFunction('getPointIndex', node, linesController);
+	return func.asString(inputObject3D(node, linesController));
 }
 
 export function inputObject3D(node: BaseJsNodeType, linesController: JsLinesCollectionController) {
@@ -30,6 +37,14 @@ export function inputObject3DMaterial(node: BaseJsNodeType, linesController: JsL
 		? node.variableForInput(linesController, JsConnectionPointType.MATERIAL)
 		: _defaultObject3DMaterial(linesController);
 	return material;
+}
+
+export function inputPointIndex(node: BaseJsNodeType, linesController: JsLinesCollectionController) {
+	const inputPoint = node.io.inputs.named_input(Attribute.POINT_INDEX);
+	const object3D = inputPoint
+		? node.variableForInput(linesController, Attribute.POINT_INDEX)
+		: _defaultPointIndex(node, linesController);
+	return object3D;
 }
 
 export function setObject3DMaterialOutputLine(node: BaseJsNodeType, linesController: JsLinesCollectionController) {
@@ -146,6 +161,44 @@ export function floatOutputFromInput(
 	linesController.addBodyOrComputed(node, [
 		{
 			dataType: JsConnectionPointType.FLOAT,
+			varName: node.jsVarName(propertyName),
+			value: node.variableForInput(linesController, inputName),
+		},
+	]);
+}
+export function integerOutputFromParam(
+	node: BaseJsNodeType,
+	param: IntegerParam,
+	linesController: JsLinesCollectionController
+) {
+	const usedOutputNames = node.io.outputs.used_output_names();
+
+	const propertyName = param.name();
+	if (!usedOutputNames.includes(propertyName)) {
+		return;
+	}
+	linesController.addBodyOrComputed(node, [
+		{
+			dataType: JsConnectionPointType.INT,
+			varName: node.jsVarName(propertyName),
+			value: node.variableForInputParam(linesController, param),
+		},
+	]);
+}
+export function integerOutputFromInput(
+	node: BaseJsNodeType,
+	inputName: string,
+	linesController: JsLinesCollectionController
+) {
+	const usedOutputNames = node.io.outputs.used_output_names();
+
+	const propertyName = inputName;
+	if (!usedOutputNames.includes(propertyName)) {
+		return;
+	}
+	linesController.addBodyOrComputed(node, [
+		{
+			dataType: JsConnectionPointType.INT,
 			varName: node.jsVarName(propertyName),
 			value: node.variableForInput(linesController, inputName),
 		},

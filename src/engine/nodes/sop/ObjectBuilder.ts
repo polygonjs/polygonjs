@@ -33,22 +33,6 @@ import {logBlue as _logBlue} from '../../../core/logger/Console';
 import {PointBuilderEvaluator} from '../js/code/assemblers/pointBuilder/PointBuilderEvaluator';
 import {CoreMask} from '../../../core/geometry/Mask';
 
-function _debug() {
-	return !Poly.playerMode();
-}
-function logBlue(message: string) {
-	if (!_debug()) {
-		return;
-	}
-	_logBlue(message);
-}
-function logDefault(message: string) {
-	if (!_debug()) {
-		return;
-	}
-	console.log(message);
-}
-
 type ObjectFunction = Function; //(object:Object3D)=>Object3D
 
 const DUMMY = new Object3D();
@@ -214,7 +198,6 @@ export class ObjectBuilderSopNode extends TypedSopNode<ObjectBuilderSopParamsCon
 
 		const {functionBody, variableNames, variablesByName, functionNames, functionsByName, paramConfigs} =
 			this._functionData;
-		logBlue('*****************');
 
 		const wrappedBody = `
 		try {
@@ -223,7 +206,6 @@ export class ObjectBuilderSopNode extends TypedSopNode<ObjectBuilderSopParamsCon
 			_setErrorFromError(e)
 			return 0;
 		}`;
-		logDefault(wrappedBody);
 		const _setErrorFromError = (e: Error) => {
 			this.states.error.set(e.message);
 		};

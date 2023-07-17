@@ -54,7 +54,6 @@ QUnit.test('sop/SDFBuilder simple', async (assert) => {
 	SDFSphere1.p.radius.set(0.65);
 	SDFSubtract1.p.smooth.set(1);
 	SDFSubtract1.p.smoothFactor.set(0.5);
-	console.log((await getBbox()).x);
 	assert.in_delta((await getBbox()).x, 0.74, 0.02);
 });
 

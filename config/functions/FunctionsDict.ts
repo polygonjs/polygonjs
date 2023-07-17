@@ -134,6 +134,7 @@ export const FUNCTION_NAME_BY_FILE_NAME: Record<string, string[]> = {
 	],
 	GetObjectUserData: ['getObjectUserData'],
 	GetParent: ['getParent'],
+	GetPointProperty: ['getPointIndex', 'getPointPosition', 'setPointIndex'],
 	GetSceneObject: ['getMaterial', 'getTexture'],
 	GetSibbling: ['getSibbling'],
 	Globals: ['globalsTime', 'globalsTimeDelta', 'globalsRaycaster', 'globalsRayFromCursor', 'globalsCursor'],
@@ -404,6 +405,7 @@ export const FUNCTION_NAME_BY_FILE_NAME: Record<string, string[]> = {
 		'getPlayerInputDataJump',
 		'getPlayerInputDataRun',
 	],
+	SetPointPosition: ['setPointPosition'],
 	Sizzle: ['sizzleVec3XY', 'sizzleVec3XZ', 'sizzleVec3YZ', 'sizzleVec4XYZ', 'sizzleVec4WArray', 'sizzleVec4XYZArray'],
 	Sleep: ['sleep'],
 	SoftBody: [

@@ -74,4 +74,5 @@ export enum JsType {
 	SET_PARAM = 'setParam',
 	SET_PHYSICS_RBD_POSITION = 'setPhysicsRBDPosition',
 	SET_PLAYER_INPUT = 'setPlayerInput',
+	SET_POINT_POSITION = 'setPointPosition',
 }

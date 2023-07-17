@@ -76,6 +76,9 @@ export class JsAssemblerActor extends BaseJsShaderAssembler {
 	defaultObject3DMaterialVariable(): string {
 		return ActorAssemblerConstant.MATERIAL;
 	}
+	defaultPointIndexVariable(): string {
+		return ActorAssemblerConstant.PTNUM;
+	}
 
 	createFunctionData(additionalRootNodes: BaseJsNodeType[]): ActorFunctionData | undefined {
 		const node = this.currentJsParentNode() as ActorBuilderNode;

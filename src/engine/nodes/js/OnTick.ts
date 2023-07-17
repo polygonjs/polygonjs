@@ -36,31 +36,28 @@ export class OnTickJsNode extends TypedJsNode<OnTickJsParamsConfig> {
 		]);
 	}
 
-	override setTriggeringLines(
-		shadersCollectionController: JsLinesCollectionController,
-		triggeredMethods: string
-	): void {
-		shadersCollectionController.addTriggeringLines(this, [triggeredMethods], {gatherable: true});
+	override setTriggeringLines(linesController: JsLinesCollectionController, triggeredMethods: string): void {
+		linesController.addTriggeringLines(this, [triggeredMethods], {gatherable: true});
 	}
-	override setLines(shadersCollectionController: JsLinesCollectionController) {
+	override setLines(linesController: JsLinesCollectionController) {
 		const timeVarName = this.jsVarName(OnTickJsNodeOuput.TIME);
 		const deltaVarName = this.jsVarName(OnTickJsNodeOuput.DELTA);
 
-		const _time = Poly.namedFunctionsRegister.getFunction('globalsTime', this, shadersCollectionController);
-		const _delta = Poly.namedFunctionsRegister.getFunction('globalsTimeDelta', this, shadersCollectionController);
-		shadersCollectionController.addDefinitions(this, [
+		const _time = Poly.namedFunctionsRegister.getFunction('globalsTime', this, linesController);
+		const _delta = Poly.namedFunctionsRegister.getFunction('globalsTimeDelta', this, linesController);
+		linesController.addDefinitions(this, [
 			new ComputedValueJsDefinition(
 				this,
-				shadersCollectionController,
+				linesController,
 				JsConnectionPointType.FLOAT,
 				timeVarName,
 				_time.asString()
 			),
 		]);
-		shadersCollectionController.addDefinitions(this, [
+		linesController.addDefinitions(this, [
 			new ComputedValueJsDefinition(
 				this,
-				shadersCollectionController,
+				linesController,
 				JsConnectionPointType.FLOAT,
 				deltaVarName,
 				_delta.asString()

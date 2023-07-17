@@ -62,6 +62,9 @@ export class JsAssemblerBasePointBuilder extends BaseJsShaderAssembler {
 	defaultObject3DMaterialVariable(): string {
 		return PointBuilderAssemblerConstant.MATERIAL;
 	}
+	defaultPointIndexVariable(): string {
+		return PointBuilderAssemblerConstant.PTNUM;
+	}
 
 	functionData(): PointBuilderFunctionData | undefined {
 		// const functionBody = this._shaders_by_name.get(ShaderName.FRAGMENT);

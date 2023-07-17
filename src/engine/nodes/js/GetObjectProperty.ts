@@ -43,20 +43,16 @@ export class GetObjectPropertyJsNode extends ParamlessTypedJsNode {
 			new JsConnectionPoint(GetObjectPropertyJsNodeInputName.material, JsConnectionPointType.MATERIAL),
 		]);
 	}
-	override setLines(shadersCollectionController: JsLinesCollectionController) {
+	override setLines(linesController: JsLinesCollectionController) {
 		const usedOutputNames = this.io.outputs.used_output_names();
-		const object3D = inputObject3D(this, shadersCollectionController);
+		const object3D = inputObject3D(this, linesController);
 
 		const _f = (propertyName: string, type: JsConnectionPointType) => {
 			if (!usedOutputNames.includes(propertyName)) {
 				return;
 			}
-			const func = Poly.namedFunctionsRegister.getFunction(
-				'getObjectProperty',
-				this,
-				shadersCollectionController
-			);
-			shadersCollectionController.addBodyOrComputed(this, [
+			const func = Poly.namedFunctionsRegister.getFunction('getObjectProperty', this, linesController);
+			linesController.addBodyOrComputed(this, [
 				{
 					dataType: type,
 					varName: this.jsVarName(propertyName),

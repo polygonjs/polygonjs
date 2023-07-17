@@ -34,6 +34,7 @@ import {NamedFunctionMap} from '../../../../poly/registers/functions/All';
 import {JsParamConfig} from '../utils/JsParamConfig';
 import {ParamType} from '../../../../poly/ParamType';
 import {ParamOptions} from '../../../../params/utils/OptionsController';
+import {SopType} from '../../../../poly/registers/nodes/types/Sop';
 
 type StringArrayByJsFunctionName = Map<JsFunctionName, string[]>;
 export interface SpareParamOptions {
@@ -107,7 +108,7 @@ const LINES_TO_REMOVE_MAP: Map<JsFunctionName, string[]> = new Map([
 ]);
 
 const SPACED_LINES = 3;
-
+const PER_POINT_PARENT_TYPES: Set<string> = new Set([SopType.ACTOR_POINT]);
 export abstract class BaseJsShaderAssembler extends TypedAssembler<NodeContext.JS> {
 	protected _shaders_by_name: Map<JsFunctionName, string> = new Map();
 	protected _lines: StringArrayByJsFunctionName = new Map();
@@ -126,6 +127,10 @@ export abstract class BaseJsShaderAssembler extends TypedAssembler<NodeContext.J
 
 	constructor(protected _jsParentNode: AssemblerControllerNode<BaseJsShaderAssembler>) {
 		super();
+	}
+
+	perPoint() {
+		return PER_POINT_PARENT_TYPES.has(this._jsParentNode.type());
 	}
 
 	protected _overridenJsParentNode: AssemblerControllerNode<BaseJsShaderAssembler> | undefined;
@@ -162,6 +167,7 @@ export abstract class BaseJsShaderAssembler extends TypedAssembler<NodeContext.J
 
 	abstract defaultObject3DVariable(): string;
 	abstract defaultObject3DMaterialVariable(): string;
+	abstract defaultPointIndexVariable(): string;
 
 	// private get material() {
 	// 	return (this._material = this._material || this._createMaterial());

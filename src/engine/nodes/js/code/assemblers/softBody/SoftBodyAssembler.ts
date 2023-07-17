@@ -60,6 +60,9 @@ export class JsAssemblerSoftBody extends BaseJsShaderAssembler {
 	defaultObject3DMaterialVariable(): string {
 		return 'null';
 	}
+	defaultPointIndexVariable(): string {
+		return 'null';
+	}
 	override templateShader() {
 		return {
 			velocity: TEMPLATE_VELOCITY,

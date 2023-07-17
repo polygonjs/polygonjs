@@ -6,6 +6,7 @@ import {computed, ref, watch} from '../reactivity/CoreReactivity';
 import {RegisterableVariable} from '../../engine/nodes/js/code/assemblers/_BaseJsPersistedConfigUtils';
 import {SetUtils} from '../SetUtils';
 import {ActorBuilderNode} from '../../engine/scene/utils/ActorsManager';
+import {CoreGeometry} from '../geometry/Geometry';
 
 type OnCompilationCompletedHook = () => void;
 export class ActorCompilationController {
@@ -71,6 +72,7 @@ export class ActorCompilationController {
 		// args & args names
 		const functionCreationArgs = [
 			'ActorEvaluator',
+			'CoreGeometry',
 			'computed',
 			'ref',
 			'watch',
@@ -83,6 +85,7 @@ export class ActorCompilationController {
 		];
 		const functionEvalArgs = () => [
 			ActorEvaluator,
+			CoreGeometry,
 			computed,
 			ref,
 			watch,

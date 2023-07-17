@@ -108,7 +108,11 @@ export class JsLinesCollectionController {
 		// 	console.warn(`method '${triggeringMethodName}' is not included`);
 		// }
 		this.addDefinitions(node, [
-			new TriggeringJsDefinition(node, this, dataType, varName, value, {triggeringMethodName, gatherable}),
+			new TriggeringJsDefinition(node, this, dataType, varName, value, {
+				triggeringMethodName,
+				gatherable,
+				perPoint: this._assembler.perPoint(),
+			}),
 		]);
 	}
 	addTriggerableLines(

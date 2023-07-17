@@ -58,17 +58,10 @@ export abstract class ActorBuilderNode extends AssemblerControllerNode<JsAssembl
 }
 
 export class ActorsManager {
-	// private _actorNodes: Set<ActorBuilderNode> = new Set();
 	private _keyboardEventsController: ActorKeyboardEventsController | undefined;
 	private _manualTriggerController: ActorManualTriggersController | undefined;
 	private _pointerEventsController: ActorPointerEventsController | undefined;
-	// private _hoveredEventsController: ActorHoveredEventsController | undefined;
-	// private _contextByObject: WeakMap<Object3D, ActorNodeTriggerContext> = new WeakMap();
-	// private _context: EvaluationContext;
-	// private _evaluatorByObjectByActorNode:WeakMap<Object3D,WeakMap<ActorJsSopNode,ActorEvaluator>>= new WeakMap()
-	constructor(public readonly scene: PolyScene) {
-		// this._context = {Object3D: scene.threejsScene()};
-	}
+	constructor(public readonly scene: PolyScene) {}
 
 	registerEvaluatorGenerator(evaluatorGenerator: ActorEvaluatorGenerator) {
 		this.scene.eventsDispatcher.registerEvaluatorGenerator(evaluatorGenerator);
@@ -116,15 +109,12 @@ export class ActorsManager {
 	 *
 	 */
 	tick() {
-		// this._manualTriggerController?.runTriggers();
 		this._pointerEventsController?.runTriggers();
 		this._keyboardEventsController?.runTriggers();
-		// this.hoveredEventsController.runTriggers();
 		this.scene.threejsScene().traverse((object) => {
 			this.triggerEventNodes(object, 'onPointermove');
-			// this.triggerEventNodes(object, JsType.ON_OBJECT_CLICK);
+			this._onEventTickBound(object);
 		});
-		this._runOnEventTick();
 	}
 	runOnEventSceneReset() {
 		this._onEventSceneResetTraverse();
@@ -144,18 +134,13 @@ export class ActorsManager {
 	 * PRIVATE METHODS
 	 *
 	 */
-	private _runOnEventTick() {
-		this._onEventTickTraverse();
-	}
 
 	// tick
 	private _onEventTickBound = this._onEventTick.bind(this);
 	private _onEventTick(object: Object3D) {
 		this.triggerEventNodes(object, JsType.ON_TICK);
 	}
-	private _onEventTickTraverse() {
-		this.scene.threejsScene().traverse(this._onEventTickBound);
-	}
+
 	// reset
 	private _onEventSceneResetBound = this._onEventSceneReset.bind(this);
 	private _onEventSceneReset(object: Object3D) {
