@@ -35,7 +35,10 @@ function _lerpAndGetValue(
 		}
 		case JsConnectionPointType.FLOAT:
 		case JsConnectionPointType.INT: {
-			const currentValue = CoreObject.attribValue(object3D, attribName, 0) as number;
+			let currentValue = CoreObject.attribValue(object3D, attribName, 0) as number | undefined;
+			if (currentValue == null) {
+				currentValue = 0;
+			}
 			return mix(currentValue, newValue as number, lerp);
 		}
 
