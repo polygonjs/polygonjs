@@ -10,6 +10,7 @@ import {AssemblerControllerNode} from '../../nodes/js/code/Controller';
 import {JsAssemblerActor} from '../../nodes/js/code/assemblers/actor/ActorAssembler';
 import {ActorCompilationController} from '../../../core/actor/ActorCompilationController';
 import {ObjectContent, CoreObjectType} from '../../../core/geometry/ObjectContent';
+import {hierarchyTraverse} from '../../../core/geometry/util/HierarchyTraverse';
 import {Poly} from '../../Poly';
 
 const ACTOR_BUILDER_NODE_IDS_KEY = 'actorBuilderNodeIds';
@@ -111,7 +112,7 @@ export class ActorsManager {
 	tick() {
 		this._pointerEventsController?.runTriggers();
 		this._keyboardEventsController?.runTriggers();
-		this.scene.threejsScene().traverse((object) => {
+		hierarchyTraverse(this.scene.threejsScene(), (object) => {
 			this.triggerEventNodes(object, 'onPointermove');
 			this._onEventTickBound(object);
 		});
@@ -147,7 +148,7 @@ export class ActorsManager {
 		this.triggerEventNodes(object, JsType.ON_SCENE_RESET);
 	}
 	private _onEventSceneResetTraverse() {
-		this.scene.threejsScene().traverse(this._onEventSceneResetBound);
+		hierarchyTraverse(this.scene.threejsScene(), this._onEventSceneResetBound);
 	}
 	// play
 	private _onEventScenePlayBound = this._onEventScenePlay.bind(this);
@@ -155,7 +156,7 @@ export class ActorsManager {
 		this.triggerEventNodes(object, JsType.ON_SCENE_PLAY);
 	}
 	private _onEventScenePlayTraverse() {
-		this.scene.threejsScene().traverse(this._onEventScenePlayBound);
+		hierarchyTraverse(this.scene.threejsScene(), this._onEventScenePlayBound);
 	}
 	// pause
 	private _onEventScenePauseBound = this._onEventScenePause.bind(this);
@@ -163,7 +164,7 @@ export class ActorsManager {
 		this.triggerEventNodes(object, JsType.ON_SCENE_PAUSE);
 	}
 	private _onEventScenePauseTraverse() {
-		this.scene.threejsScene().traverse(this._onEventScenePauseBound);
+		hierarchyTraverse(this.scene.threejsScene(), this._onEventScenePauseBound);
 	}
 	// performanceChange
 	private _onEventPerformanceChangeBound = this._onEventPerformanceChange.bind(this);
@@ -171,7 +172,7 @@ export class ActorsManager {
 		this.triggerEventNodes(object, JsType.ON_PERFORMANCE_CHANGE);
 	}
 	private _onEventPerformanceChangeTraverse() {
-		this.scene.threejsScene().traverse(this._onEventPerformanceChangeBound);
+		hierarchyTraverse(this.scene.threejsScene(), this._onEventPerformanceChangeBound);
 	}
 	//
 	triggerEventNodes(object: Object3D, methodName: EvaluatorMethodName) {

@@ -3,6 +3,7 @@ import {ObjectNamedFunction1, ObjectNamedFunction2} from './_Base';
 import {getObjectPropertyRef, PropertyType} from '../../core/reactivity/ObjectPropertyReactivity';
 import {dummyReadRefVal} from '../../core/reactivity/CoreReactivity';
 import {_matchArrayLength} from './_ArrayUtils';
+import {getObjectChildrenCountRef} from '../../core/reactivity/ObjectHierarchyReactivity';
 
 //
 //
@@ -72,6 +73,7 @@ export class object3DWorldToLocal extends ObjectNamedFunction2<[Vector3, Vector3
 
 function _getChildrenPropertiesVector3(propertyName: 'position' | 'scale' | 'up') {
 	return function (object3D: Object3D, targets: Vector3[]): Vector3[] {
+		dummyReadRefVal(getObjectChildrenCountRef(object3D).value);
 		_matchArrayLength(object3D.children, targets, () => new Vector3());
 		let i = 0;
 		const children = object3D.children;
@@ -85,6 +87,7 @@ function _getChildrenPropertiesVector3(propertyName: 'position' | 'scale' | 'up'
 }
 function _getChildrenPropertiesQuaternion(propertyName: 'quaternion') {
 	return function (object3D: Object3D, targets: Quaternion[]): Quaternion[] {
+		dummyReadRefVal(getObjectChildrenCountRef(object3D).value);
 		_matchArrayLength(object3D.children, targets, () => new Quaternion());
 		let i = 0;
 		const children = object3D.children;
@@ -100,6 +103,7 @@ function _getChildrenPropertiesBoolean(
 	propertyName: 'visible' | 'matrixAutoUpdate' | 'castShadow' | 'receiveShadow' | 'frustumCulled'
 ) {
 	return function (object3D: Object3D, targets: boolean[]): boolean[] {
+		dummyReadRefVal(getObjectChildrenCountRef(object3D).value);
 		_matchArrayLength(object3D.children, targets, () => false);
 		let i = 0;
 		const children = object3D.children;

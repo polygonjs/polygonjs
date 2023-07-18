@@ -93,6 +93,18 @@ export function createVariable(type: JsConnectionPointType) {
 		case JsConnectionPointType.VECTOR4: {
 			return new Vector4();
 		}
+		case JsConnectionPointType.BOX3: {
+			return new Box3();
+		}
+		case JsConnectionPointType.PLANE: {
+			return new Plane();
+		}
+		case JsConnectionPointType.RAY: {
+			return new Ray();
+		}
+		case JsConnectionPointType.SPHERE: {
+			return new Sphere();
+		}
 		case JsConnectionPointType.BOOLEAN_ARRAY:
 		case JsConnectionPointType.FLOAT_ARRAY:
 		case JsConnectionPointType.INT_ARRAY:
@@ -112,21 +124,18 @@ export function createVariable(type: JsConnectionPointType) {
 		}
 		case JsConnectionPointType.ANIMATION_MIXER:
 		case JsConnectionPointType.ANIMATION_ACTION:
-		case JsConnectionPointType.BOX3:
 		case JsConnectionPointType.CAMERA:
 		case JsConnectionPointType.CATMULL_ROM_CURVE3:
 		case JsConnectionPointType.INTERSECTION:
 		case JsConnectionPointType.INTERSECTION_ARRAY:
 		case JsConnectionPointType.MATERIAL:
+		case JsConnectionPointType.NODE:
 		case JsConnectionPointType.OBJECT_3D:
 		case JsConnectionPointType.PARAM:
-		case JsConnectionPointType.PLANE:
-		case JsConnectionPointType.RAY:
-		case JsConnectionPointType.SPHERE:
 		case JsConnectionPointType.TEXTURE:
 		case JsConnectionPointType.TEXTURE_ARRAY:
 		case JsConnectionPointType.TRIGGER: {
-			console.warn('no variable can be created for type', type);
+			// console.warn('no variable can be created for type', type);
 			return null;
 		}
 	}

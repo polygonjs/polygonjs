@@ -3,6 +3,8 @@ import {PolyScene} from '../scene/PolyScene';
 import {CoreObjectType, ObjectContent} from '../../core/geometry/ObjectContent';
 import {Object3D} from 'three';
 import {Poly} from '../Poly';
+import {updateObjectChildrenCountRef} from '../../core/reactivity/ObjectHierarchyReactivity';
+import {ON_OBJECT_BEFORE_DELETE} from '../../core/geometry/Event';
 
 enum HandlerName {
 	ADD = 'onObjectAddHookHandlerNodeIds',
@@ -130,7 +132,9 @@ export function removeFromParent(scene: PolyScene, object: ObjectContent<CoreObj
 		return;
 	}
 	Poly.onObjectsAddRemoveHooks.runOnRemoveHookOnObject(scene, object);
+	object.dispatchEvent(ON_OBJECT_BEFORE_DELETE);
 	object.parent?.remove(object);
+	updateObjectChildrenCountRef(parent);
 }
 export function addToParent(
 	scene: PolyScene,
@@ -138,6 +142,7 @@ export function addToParent(
 	child: ObjectContent<CoreObjectType>
 ) {
 	parent.add(child);
+	updateObjectChildrenCountRef(parent);
 	Poly.onObjectsAddRemoveHooks.runOnAddHookOnObject(scene, child);
 }
 // export function replaceChildWithCallbackObject(

@@ -58,6 +58,7 @@ export class CsgObject<T extends CsgGeometryType> implements ObjectContent<CoreO
 	}
 	add(...object: ObjectContent<CoreObjectType>[]) {}
 	remove(...object: ObjectContent<CoreObjectType>[]) {}
+	dispatchEvent(event: {type: string}) {}
 	traverse(callback: (object: CsgObject<T>) => any) {
 		callback(this);
 	}

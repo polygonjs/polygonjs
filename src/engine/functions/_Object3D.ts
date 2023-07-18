@@ -6,15 +6,14 @@ import {getOrCreateNodeRef} from '../../core/reactivity/NodeReactivity';
 import {NodeContext} from '../poly/NodeContext';
 import {BaseSopNodeType} from '../nodes/sop/_Base';
 
-export class getGeometryNodeObjects extends NamedFunction2<[string, Object3D[]]> {
+export class getGeometryNodeObjects extends NamedFunction2<[BaseSopNodeType, Object3D[]]> {
 	static override type() {
 		return 'getGeometryNodeObjects';
 	}
 	public override async = true;
-	async func(nodePath: string, objects: Object3D[]): Promise<void> {
-		dummyReadRefVal(getOrCreateNodeRef(nodePath).value);
+	async func(node: BaseSopNodeType, objects: Object3D[]): Promise<void> {
+		dummyReadRefVal(getOrCreateNodeRef(node.path()).value);
 
-		const node = this.scene.node(nodePath);
 		if (node && node.context() == NodeContext.SOP) {
 			const geometryNode = node as BaseSopNodeType;
 			const container = await geometryNode.compute();

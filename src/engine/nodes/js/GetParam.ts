@@ -1,5 +1,5 @@
 /**
- * Updates the param of specific node
+ * Get a param of specific node
  *
  *
  */
@@ -39,7 +39,7 @@ export class GetParamJsNode extends TypedJsNode<GetParamJsParamsConfig> {
 	setParamPath(paramPath: string) {
 		this.p.Param.set(paramPath);
 	}
-	override setLines(shadersCollectionController: JsLinesCollectionController) {
+	override setLines(linesController: JsLinesCollectionController) {
 		const out = this.jsVarName(JsConnectionPointType.PARAM);
 
 		const param = (this.params.get(JsConnectionPointType.PARAM) as ParamPathParam).value.param();
@@ -47,9 +47,9 @@ export class GetParamJsNode extends TypedJsNode<GetParamJsParamsConfig> {
 			return;
 		}
 
-		const func = Poly.namedFunctionsRegister.getFunction('getParam', this, shadersCollectionController);
+		const func = Poly.namedFunctionsRegister.getFunction('getParam', this, linesController);
 		const bodyLine = func.asString(`'${param.path()}'`);
-		shadersCollectionController.addBodyOrComputed(this, [
+		linesController.addBodyOrComputed(this, [
 			{dataType: JsConnectionPointType.PARAM, varName: out, value: bodyLine},
 		]);
 	}

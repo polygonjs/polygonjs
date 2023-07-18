@@ -1,10 +1,10 @@
 /**
- * sends a trigger when the listened object dispatches an event
+ * sends a trigger when the listened object is about to be deleted
  *
  *
  */
 import {TRIGGER_CONNECTION_NAME, TypedJsNode} from './_Base';
-import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {JsConnectionPoint, JsConnectionPointType, JS_CONNECTION_POINT_IN_NODE_DEF} from '../utils/io/connections/Js';
 import {JsType} from '../../poly/registers/nodes/types/Js';
 import {inputObject3D} from './_BaseObject3D';
@@ -13,48 +13,34 @@ import {Poly} from '../../Poly';
 import {InitFunctionJsDefinition} from './utils/JsDefinition';
 import {nodeMethodName} from './code/assemblers/actor/ActorAssemblerUtils';
 
-enum OnObjectDispatchEventJsNodeInputName {
-	eventName = 'eventName',
-}
-
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
-class OnObjectDispatchEventJsParamsConfig extends NodeParamsConfig {
-	/** @param event names (space separated) */
-	eventNames = ParamConfig.STRING('my-eventA my-eventB');
-}
-const ParamsConfig = new OnObjectDispatchEventJsParamsConfig();
+class OnObjectBeforeDeleteJsParamsConfig extends NodeParamsConfig {}
+const ParamsConfig = new OnObjectBeforeDeleteJsParamsConfig();
 
-export class OnObjectDispatchEventJsNode extends TypedJsNode<OnObjectDispatchEventJsParamsConfig> {
+export class OnObjectBeforeDeleteJsNode extends TypedJsNode<OnObjectBeforeDeleteJsParamsConfig> {
 	override readonly paramsConfig = ParamsConfig;
-	static override type(): JsType.ON_OBJECT_DISPATCH_EVENT {
-		return JsType.ON_OBJECT_DISPATCH_EVENT;
+	static override type(): JsType.ON_OBJECT_BEFORE_DELETE {
+		return JsType.ON_OBJECT_BEFORE_DELETE;
 	}
 	override isTriggering() {
 		return true;
 	}
 	override initializeNode() {
 		super.initializeNode();
-		this.io.connection_points.spare_params.setInputlessParamNames(['eventNames']);
 		this.io.inputs.setNamedInputConnectionPoints([]);
 		this.io.outputs.setNamedOutputConnectionPoints([
 			new JsConnectionPoint(TRIGGER_CONNECTION_NAME, JsConnectionPointType.TRIGGER, CONNECTION_OPTIONS),
-			new JsConnectionPoint(
-				OnObjectDispatchEventJsNodeInputName.eventName,
-				JsConnectionPointType.STRING,
-				CONNECTION_OPTIONS
-			),
 		]);
 	}
 
 	override setTriggeringLines(shadersCollectionController: JsLinesCollectionController, triggeredMethods: string) {
 		const object3D = inputObject3D(this, shadersCollectionController);
-		const eventNames = this.variableForInputParam(shadersCollectionController, this.p.eventNames);
 		const func = Poly.namedFunctionsRegister.getFunction(
-			'objectAddEventListeners',
+			'objectAddOnBeforeDeleteEventListener',
 			this,
 			shadersCollectionController
 		);
-		const bodyLine = func.asString(object3D, eventNames, `this`, `this.${nodeMethodName(this)}.bind(this)`);
+		const bodyLine = func.asString(object3D, `this`, `this.${nodeMethodName(this)}.bind(this)`);
 		shadersCollectionController.addDefinitions(this, [
 			new InitFunctionJsDefinition(
 				this,

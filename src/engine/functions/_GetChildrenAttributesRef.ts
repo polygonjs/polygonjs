@@ -6,6 +6,8 @@ import {_matchArrayLength, _matchArrayLengthWithType} from './_ArrayUtils';
 import {ParamConvertibleJsType} from '../nodes/utils/io/connections/Js';
 import {Ref} from '@vue/reactivity';
 import {AttribValue} from '../../types/GlobalTypes';
+import {getObjectChildrenCountRef} from '../../core/reactivity/ObjectHierarchyReactivity';
+import {dummyReadRefVal} from './_Param';
 
 export class getChildrenAttributesRef extends ObjectNamedFunction3<[string, string, Array<Ref<AttribValue>>]> {
 	static override type() {
@@ -17,6 +19,7 @@ export class getChildrenAttributesRef extends ObjectNamedFunction3<[string, stri
 		type: ParamConvertibleJsType,
 		values: Ref<AttribValue>[]
 	): Ref<AttribValue>[] {
+		dummyReadRefVal(getObjectChildrenCountRef(object3D).value);
 		_matchArrayLengthWithType(object3D.children, values, type);
 
 		let i = 0;

@@ -88,6 +88,7 @@ import {GetObjectChildJsNode} from '../../../nodes/js/GetObjectChild';
 import {GetObjectPropertyJsNode} from '../../../nodes/js/GetObjectProperty';
 import {GetObjectUserDataJsNode} from '../../../nodes/js/GetObjectUserData';
 import {GetObjectWorldPositionJsNode} from '../../../nodes/js/GetObjectWorldPosition';
+import {GetNodeJsNode} from '../../../nodes/js/GetNode';
 import {GetParamJsNode} from '../../../nodes/js/GetParam';
 import {GetParentJsNode} from '../../../nodes/js/GetParent';
 import {GetPhysicsRBDJsNode} from '../../../nodes/js/GetPhysicsRBD';
@@ -156,6 +157,7 @@ import {OnMapboxCameraMoveJsNode} from '../../../nodes/js/OnMapboxCameraMove';
 import {OnMapboxCameraMoveEndJsNode} from '../../../nodes/js/OnMapboxCameraMoveEnd';
 import {OnMapboxCameraMoveStartJsNode} from '../../../nodes/js/OnMapboxCameraMoveStart';
 import {OnObjectAttributeUpdateJsNode} from '../../../nodes/js/OnObjectAttributeUpdate';
+import {OnObjectBeforeDeleteJsNode} from '../../../nodes/js/OnObjectBeforeDelete';
 import {OnObjectClickJsNode} from '../../../nodes/js/OnObjectClick';
 import {OnObjectDispatchEventJsNode} from '../../../nodes/js/OnObjectDispatchEvent';
 import {OnObjectHoverJsNode} from '../../../nodes/js/OnObjectHover';
@@ -421,6 +423,7 @@ export interface JsNodeChildrenMap {
 	getObjectProperty: GetObjectPropertyJsNode;
 	getObjectUserData: GetObjectUserDataJsNode;
 	getObjectWorldPosition: GetObjectWorldPositionJsNode;
+	getNode: GetNodeJsNode;
 	getParam: GetParamJsNode;
 	getParent: GetParentJsNode;
 	getPlaneProperty: GetPlanePropertyJsNode;
@@ -489,6 +492,7 @@ export interface JsNodeChildrenMap {
 	onMapboxCameraMoveEnd: OnMapboxCameraMoveEndJsNode;
 	onMapboxCameraMoveStart: OnMapboxCameraMoveStartJsNode;
 	onObjectAttributeUpdate: OnObjectAttributeUpdateJsNode;
+	onObjectBeforeDelete: OnObjectBeforeDeleteJsNode;
 	onObjectClick: OnObjectClickJsNode;
 	onObjectDispatchEvent: OnObjectDispatchEventJsNode;
 	onObjectHover: OnObjectHoverJsNode;
@@ -807,6 +811,7 @@ export class JsRegister {
 		poly.registerNode(GetObjectPropertyJsNode, CATEGORY_JS.GET);
 		poly.registerNode(GetObjectUserDataJsNode, CATEGORY_JS.GET, ONLY_ACTOR);
 		poly.registerNode(GetObjectWorldPositionJsNode, CATEGORY_JS.GET, ONLY_ACTOR);
+		poly.registerNode(GetNodeJsNode, CATEGORY_JS.GET, ONLY_ACTOR);
 		poly.registerNode(GetParamJsNode, CATEGORY_JS.GET, ONLY_ACTOR);
 		poly.registerNode(GetParentJsNode, CATEGORY_JS.GET, ONLY_ACTOR);
 		poly.registerNode(GetPlanePropertyJsNode, CATEGORY_JS.MATH);
@@ -875,6 +880,7 @@ export class JsRegister {
 		poly.registerNode(OnMapboxCameraMoveEndJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
 		poly.registerNode(OnMapboxCameraMoveStartJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
 		poly.registerNode(OnObjectAttributeUpdateJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
+		poly.registerNode(OnObjectBeforeDeleteJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
 		poly.registerNode(OnObjectClickJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
 		poly.registerNode(OnObjectDispatchEventJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
 		poly.registerNode(OnObjectHoverJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);

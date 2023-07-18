@@ -4,24 +4,25 @@
  *
  */
 import {TypedJsNode} from './_Base';
-import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {JsConnectionPoint, JsConnectionPointType, JS_CONNECTION_POINT_IN_NODE_DEF} from '../utils/io/connections/Js';
 import {Poly} from '../../Poly';
 import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
-import {NodeContext} from '../../poly/NodeContext';
+// import {NodeContext} from '../../poly/NodeContext';
 import {ConstantJsDefinition} from './utils/JsDefinition';
+import {inputNode} from './_BaseObject3D';
 
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
 
 class GetGeometryNodeObjectsJsParamsConfig extends NodeParamsConfig {
 	/** @param geometry node */
-	node = ParamConfig.NODE_PATH('', {
-		nodeSelection: {
-			context: NodeContext.SOP,
-		},
-		dependentOnFoundNode: false,
-		computeOnDirty: true,
-	});
+	// Node = ParamConfig.NODE_PATH('', {
+	// 	nodeSelection: {
+	// 		context: NodeContext.SOP,
+	// 	},
+	// 	dependentOnFoundNode: false,
+	// 	computeOnDirty: true,
+	// });
 }
 const ParamsConfig = new GetGeometryNodeObjectsJsParamsConfig();
 
@@ -34,6 +35,7 @@ export class GetGeometryNodeObjectsJsNode extends TypedJsNode<GetGeometryNodeObj
 	override initializeNode() {
 		this.io.inputs.setNamedInputConnectionPoints([
 			new JsConnectionPoint(JsConnectionPointType.TRIGGER, JsConnectionPointType.TRIGGER, CONNECTION_OPTIONS),
+			new JsConnectionPoint(JsConnectionPointType.NODE, JsConnectionPointType.NODE, CONNECTION_OPTIONS),
 		]);
 		this.io.outputs.setNamedOutputConnectionPoints([
 			new JsConnectionPoint(JsConnectionPointType.TRIGGER, JsConnectionPointType.TRIGGER, CONNECTION_OPTIONS),
@@ -52,16 +54,12 @@ export class GetGeometryNodeObjectsJsNode extends TypedJsNode<GetGeometryNodeObj
 		}
 	}
 	override setTriggerableLines(linesController: JsLinesCollectionController): void {
-		const node = this.pv.node.node();
-		if (!(node && node.context() == NodeContext.SOP)) {
-			return;
-		}
+		const node = inputNode(this, linesController);
 
 		const outObjects = this._addObjectsRef(linesController);
-		const nodePath = `'${node.path()}'`;
 
 		const func = Poly.namedFunctionsRegister.getFunction('getGeometryNodeObjects', this, linesController);
-		const bodyLine = func.asString(nodePath, `this.${outObjects}.value`);
+		const bodyLine = func.asString(node, `this.${outObjects}.value`);
 		linesController.addTriggerableLines(this, [bodyLine], {async: true});
 	}
 

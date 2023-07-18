@@ -40,6 +40,7 @@ export interface ObjectContent<T extends CoreObjectType> {
 	applyMatrix4(matrix: Matrix4): void;
 	add: (...object: any[]) => void;
 	remove: (...object: any[]) => void;
+	dispatchEvent: (event: {type: string}) => void;
 }
 
 export function isObject3D<T extends CoreObjectType>(o: ObjectContent<T>): o is Object3D {

@@ -43,6 +43,7 @@ export class TetObject implements ObjectContent<CoreObjectType.TET> {
 	}
 	add(...object: ObjectContent<CoreObjectType>[]) {}
 	remove(...object: ObjectContent<CoreObjectType>[]) {}
+	dispatchEvent(event: {type: string}) {}
 	traverse(callback: (object: TetObject) => any) {
 		callback(this);
 	}

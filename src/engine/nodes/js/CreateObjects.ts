@@ -10,7 +10,7 @@ import {Poly} from '../../Poly';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {JsConnectionPointType} from '../utils/io/connections/Js';
 
-enum CreateObjectsJsNodeInput {
+export enum CreateObjectsJsNodeInput {
 	CHILD = 'child',
 	CHILDREN = 'children',
 }

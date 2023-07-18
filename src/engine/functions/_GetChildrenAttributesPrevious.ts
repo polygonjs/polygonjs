@@ -5,12 +5,15 @@ import {_getOrCreateObjectAttributeRef} from '../../core/reactivity/ObjectAttrib
 import {_matchArrayLength, _matchArrayLengthWithType} from './_ArrayUtils';
 import {ParamConvertibleJsType} from '../nodes/utils/io/connections/Js';
 import {AttribValue} from '../../types/GlobalTypes';
+import {getObjectChildrenCountRef} from '../../core/reactivity/ObjectHierarchyReactivity';
+import {dummyReadRefVal} from './_Param';
 
 export class getChildrenAttributesPrevious extends ObjectNamedFunction3<[string, string, Array<AttribValue>]> {
 	static override type() {
 		return 'getChildrenAttributesPrevious';
 	}
 	func(object3D: Object3D, attribName: string, type: ParamConvertibleJsType, values: AttribValue[]): AttribValue[] {
+		dummyReadRefVal(getObjectChildrenCountRef(object3D).value);
 		_matchArrayLengthWithType(object3D.children, values, type);
 
 		let i = 0;

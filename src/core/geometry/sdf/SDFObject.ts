@@ -97,6 +97,7 @@ export class SDFObject implements ObjectContent<CoreObjectType.SDF> {
 	}
 	add(...object: ObjectContent<CoreObjectType>[]) {}
 	remove(...object: ObjectContent<CoreObjectType>[]) {}
+	dispatchEvent(event: {type: string}) {}
 	traverse(callback: (object: SDFObject) => any) {
 		callback(this);
 	}

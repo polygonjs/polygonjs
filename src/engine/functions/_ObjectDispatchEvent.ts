@@ -1,11 +1,13 @@
 import {Ref} from '@vue/reactivity';
 import {Object3D} from 'three';
-import {ObjectNamedFunction0, ObjectNamedFunction1, ObjectNamedFunction3} from './_Base';
+import {ObjectNamedFunction0, ObjectNamedFunction1, ObjectNamedFunction2, ObjectNamedFunction3} from './_Base';
 import {ref} from '../../core/reactivity/CoreReactivity';
 import {ActorEvaluator} from '../nodes/js/code/assemblers/actor/ActorEvaluator';
+import {ObjectEvent} from '../../core/geometry/Event';
 
 type Listener = () => void;
 const EVENT = {type: ''};
+
 const lastEventByObject: Map<Object3D, Ref<string>> = new Map();
 function getOrCreateRef(object3D: Object3D) {
 	return getObjectRef(object3D) || _createObjectRef(object3D);
@@ -52,22 +54,46 @@ export class getObjectLastDispatchedEventName extends ObjectNamedFunction0 {
 		return getOrCreateRef(object3D).value;
 	}
 }
+function addListeners(evaluator: ActorEvaluator, object3D: Object3D, eventNames: string[], boundListener: Listener) {
+	for (let eventName of eventNames) {
+		if (boundListener) {
+			object3D.addEventListener(eventName, boundListener);
+		}
+	}
+	evaluator.onDispose(() => {
+		for (let eventName of eventNames) {
+			object3D.removeEventListener(eventName, boundListener);
+		}
+	});
+}
 export class objectAddEventListeners extends ObjectNamedFunction3<[string, ActorEvaluator, Listener]> {
 	static override type() {
 		return 'objectAddEventListeners';
 	}
 	func(object3D: Object3D, eventNamesList: string, evaluator: ActorEvaluator, boundListener: Listener): string {
 		const eventNames = eventNamesList.split(' ');
-		for (let eventName of eventNames) {
-			if (boundListener) {
-				object3D.addEventListener(eventName, boundListener);
-			}
-		}
-		evaluator.onDispose(() => {
-			for (let eventName of eventNames) {
-				object3D.removeEventListener(eventName, boundListener);
-			}
-		});
+		addListeners(evaluator, object3D, eventNames, boundListener);
+		// for (let eventName of eventNames) {
+		// 	if (boundListener) {
+		// 		object3D.addEventListener(eventName, boundListener);
+		// 	}
+		// }
+		// evaluator.onDispose(() => {
+		// 	for (let eventName of eventNames) {
+		// 		object3D.removeEventListener(eventName, boundListener);
+		// 	}
+		// });
+
+		return getOrCreateRef(object3D).value;
+	}
+}
+export class objectAddOnBeforeDeleteEventListener extends ObjectNamedFunction2<[ActorEvaluator, Listener]> {
+	static override type() {
+		return 'objectAddOnBeforeDeleteEventListener';
+	}
+	func(object3D: Object3D, evaluator: ActorEvaluator, boundListener: Listener): string {
+		const eventNames = [ObjectEvent.BEFORE_DELETE];
+		addListeners(evaluator, object3D, eventNames, boundListener);
 
 		return getOrCreateRef(object3D).value;
 	}

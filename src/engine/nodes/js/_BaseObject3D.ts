@@ -1,7 +1,6 @@
 import {BaseJsNodeType, wrapIfComputed} from './_Base';
 import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {JsConnectionPointType} from '../utils/io/connections/Js';
-import {ParamPathParam} from '../../params/ParamPath';
 import {Poly} from '../../Poly';
 import {DecomposedPath} from '../../../core/DecomposedPath';
 import {BooleanParam} from '../../params/Boolean';
@@ -10,6 +9,8 @@ import {IntegerParam} from '../../params/Integer';
 import {StringParam} from '../../params/String';
 import {Vector3Param} from '../../params/Vector3';
 import {Attribute} from '../../../core/geometry/Attribute';
+import {ParamPathParam} from '../../params/ParamPath';
+import {NodePathParam} from '../../params/NodePath';
 
 function _defaultObject3D(linesController: JsLinesCollectionController): string {
 	return linesController.assembler().defaultObject3DVariable();
@@ -107,6 +108,37 @@ export function inputParam(node: BaseJsNodeType, linesController: JsLinesCollect
 		? node.variableForInput(linesController, JsConnectionPointType.PARAM)
 		: _getParam(linesController);
 	return param;
+}
+export function inputNode(jsNode: BaseJsNodeType, linesController: JsLinesCollectionController) {
+	const inputNode = jsNode.io.inputs.named_input(JsConnectionPointType.NODE);
+
+	const _getNode = (linesController: JsLinesCollectionController) => {
+		const nodePathParam = jsNode.params.get(JsConnectionPointType.NODE) as NodePathParam;
+
+		// instead of using the path of the found param,
+		// or the value of the param,
+		// we use the resolved absolute path,
+		// so that it works when the js node is not created from the player
+		const decomposedPath = new DecomposedPath();
+		nodePathParam.value.resolve(jsNode, decomposedPath);
+		const absolutePath = decomposedPath.toAbsolutePath();
+
+		const out = jsNode.jsVarName('getNodeSinceNoInput');
+		// if (foundParam) {
+		// do not create the variable only if param has been found,
+		// as we also need to handle cases where it will be found later
+		const func = Poly.namedFunctionsRegister.getFunction('getNode', jsNode, linesController);
+		const bodyLine = func.asString(`'${absolutePath}'`);
+		linesController.addBodyOrComputed(jsNode, [
+			{dataType: JsConnectionPointType.NODE, varName: out, value: bodyLine},
+		]);
+		return wrapIfComputed(out, linesController);
+	};
+
+	const foundNode = inputNode
+		? jsNode.variableForInput(linesController, JsConnectionPointType.NODE)
+		: _getNode(linesController);
+	return foundNode;
 }
 
 export function vector3OutputFromParam(

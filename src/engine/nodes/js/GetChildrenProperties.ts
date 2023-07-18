@@ -25,7 +25,7 @@ import {Quaternion, Vector3} from 'three';
 
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
 
-enum GetChildrenPropertiesJsNodeInputName {
+export enum GetChildrenPropertiesJsNodeOutputName {
 	position = 'position',
 	quaternion = 'quaternion',
 	scale = 'scale',
@@ -120,29 +120,32 @@ export class GetChildrenPropertiesJsNode extends ParamlessTypedJsNode {
 		]);
 
 		this.io.outputs.setNamedOutputConnectionPoints([
-			new JsConnectionPoint(GetChildrenPropertiesJsNodeInputName.position, JsConnectionPointType.VECTOR3_ARRAY),
+			new JsConnectionPoint(GetChildrenPropertiesJsNodeOutputName.position, JsConnectionPointType.VECTOR3_ARRAY),
 			new JsConnectionPoint(
-				GetChildrenPropertiesJsNodeInputName.quaternion,
+				GetChildrenPropertiesJsNodeOutputName.quaternion,
 				JsConnectionPointType.QUATERNION_ARRAY
 			),
-			new JsConnectionPoint(GetChildrenPropertiesJsNodeInputName.scale, JsConnectionPointType.VECTOR3_ARRAY),
+			new JsConnectionPoint(GetChildrenPropertiesJsNodeOutputName.scale, JsConnectionPointType.VECTOR3_ARRAY),
 			// new JsConnectionPoint(
 			// 	GetChildrenPropertiesJsNodeInputName.matrix,
 			// 	JsConnectionPointType.MATRIX4_ARRAY
 			// ),
-			new JsConnectionPoint(GetChildrenPropertiesJsNodeInputName.up, JsConnectionPointType.VECTOR3_ARRAY),
-			new JsConnectionPoint(GetChildrenPropertiesJsNodeInputName.visible, JsConnectionPointType.BOOLEAN_ARRAY),
+			new JsConnectionPoint(GetChildrenPropertiesJsNodeOutputName.up, JsConnectionPointType.VECTOR3_ARRAY),
+			new JsConnectionPoint(GetChildrenPropertiesJsNodeOutputName.visible, JsConnectionPointType.BOOLEAN_ARRAY),
 			new JsConnectionPoint(
-				GetChildrenPropertiesJsNodeInputName.matrixAutoUpdate,
-				JsConnectionPointType.BOOLEAN_ARRAY
-			),
-			new JsConnectionPoint(GetChildrenPropertiesJsNodeInputName.castShadow, JsConnectionPointType.BOOLEAN_ARRAY),
-			new JsConnectionPoint(
-				GetChildrenPropertiesJsNodeInputName.receiveShadow,
+				GetChildrenPropertiesJsNodeOutputName.matrixAutoUpdate,
 				JsConnectionPointType.BOOLEAN_ARRAY
 			),
 			new JsConnectionPoint(
-				GetChildrenPropertiesJsNodeInputName.frustumCulled,
+				GetChildrenPropertiesJsNodeOutputName.castShadow,
+				JsConnectionPointType.BOOLEAN_ARRAY
+			),
+			new JsConnectionPoint(
+				GetChildrenPropertiesJsNodeOutputName.receiveShadow,
+				JsConnectionPointType.BOOLEAN_ARRAY
+			),
+			new JsConnectionPoint(
+				GetChildrenPropertiesJsNodeOutputName.frustumCulled,
 				JsConnectionPointType.BOOLEAN_ARRAY
 			),
 			// new JsConnectionPoint(GetChildrenPropertiesJsNodeInputName.id, JsConnectionPointType.INTEGER),
@@ -155,7 +158,7 @@ export class GetChildrenPropertiesJsNode extends ParamlessTypedJsNode {
 		const usedOutputNames = this.io.outputs.used_output_names();
 		const object3D = inputObject3D(this, shadersCollectionController);
 		const _v3 = (
-			propertyName: GetChildrenPropertiesJsNodeInputName,
+			propertyName: GetChildrenPropertiesJsNodeOutputName,
 			functionName: 'getChildrenPropertiesPosition' | 'getChildrenPropertiesScale' | 'getChildrenPropertiesUp',
 			type: JsConnectionPointType
 		) => {
@@ -174,7 +177,7 @@ export class GetChildrenPropertiesJsNode extends ParamlessTypedJsNode {
 			]);
 		};
 		const _q = (
-			propertyName: GetChildrenPropertiesJsNodeInputName,
+			propertyName: GetChildrenPropertiesJsNodeOutputName,
 			functionName: 'getChildrenPropertiesQuaternion',
 			type: JsConnectionPointType
 		) => {
@@ -193,7 +196,7 @@ export class GetChildrenPropertiesJsNode extends ParamlessTypedJsNode {
 			]);
 		};
 		const _b = (
-			propertyName: GetChildrenPropertiesJsNodeInputName,
+			propertyName: GetChildrenPropertiesJsNodeOutputName,
 			functionName:
 				| 'getChildrenPropertiesVisible'
 				| 'getChildrenPropertiesMatrixAutoUpdate'
@@ -218,43 +221,43 @@ export class GetChildrenPropertiesJsNode extends ParamlessTypedJsNode {
 		};
 
 		_v3(
-			GetChildrenPropertiesJsNodeInputName.position,
+			GetChildrenPropertiesJsNodeOutputName.position,
 			'getChildrenPropertiesPosition',
 			JsConnectionPointType.VECTOR3_ARRAY
 		);
 		_v3(
-			GetChildrenPropertiesJsNodeInputName.scale,
+			GetChildrenPropertiesJsNodeOutputName.scale,
 			'getChildrenPropertiesScale',
 			JsConnectionPointType.VECTOR3_ARRAY
 		);
-		_v3(GetChildrenPropertiesJsNodeInputName.up, 'getChildrenPropertiesUp', JsConnectionPointType.VECTOR3_ARRAY);
+		_v3(GetChildrenPropertiesJsNodeOutputName.up, 'getChildrenPropertiesUp', JsConnectionPointType.VECTOR3_ARRAY);
 		_q(
-			GetChildrenPropertiesJsNodeInputName.quaternion,
+			GetChildrenPropertiesJsNodeOutputName.quaternion,
 			'getChildrenPropertiesQuaternion',
 			JsConnectionPointType.QUATERNION_ARRAY
 		);
 		_b(
-			GetChildrenPropertiesJsNodeInputName.visible,
+			GetChildrenPropertiesJsNodeOutputName.visible,
 			'getChildrenPropertiesVisible',
 			JsConnectionPointType.BOOLEAN_ARRAY
 		);
 		_b(
-			GetChildrenPropertiesJsNodeInputName.matrixAutoUpdate,
+			GetChildrenPropertiesJsNodeOutputName.matrixAutoUpdate,
 			'getChildrenPropertiesMatrixAutoUpdate',
 			JsConnectionPointType.BOOLEAN_ARRAY
 		);
 		_b(
-			GetChildrenPropertiesJsNodeInputName.castShadow,
+			GetChildrenPropertiesJsNodeOutputName.castShadow,
 			'getChildrenPropertiesCastShadow',
 			JsConnectionPointType.BOOLEAN_ARRAY
 		);
 		_b(
-			GetChildrenPropertiesJsNodeInputName.receiveShadow,
+			GetChildrenPropertiesJsNodeOutputName.receiveShadow,
 			'getChildrenPropertiesReceiveShadow',
 			JsConnectionPointType.BOOLEAN_ARRAY
 		);
 		_b(
-			GetChildrenPropertiesJsNodeInputName.frustumCulled,
+			GetChildrenPropertiesJsNodeOutputName.frustumCulled,
 			'getChildrenPropertiesFrustumCulled',
 			JsConnectionPointType.BOOLEAN_ARRAY
 		);

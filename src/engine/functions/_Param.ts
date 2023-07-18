@@ -30,7 +30,7 @@ const tmpN2: Number2 = [0, 0];
 const tmpN3: Number3 = [0, 0, 0];
 const tmpN4: Number4 = [0, 0, 0, 0];
 
-function _getParam<T extends ParamType>(scene: PolyScene, paramPath: string): ParamConstructorMap[T] | void {
+function _getParam<T extends ParamType>(scene: PolyScene, paramPath: string): ParamConstructorMap[T] | undefined {
 	dummyReadRefVal(scene.graphNodesController.pathRef(paramPath).value);
 	const elements = paramPath.split('/');
 	const paramName = elements.pop() as string;

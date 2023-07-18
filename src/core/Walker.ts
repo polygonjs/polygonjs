@@ -55,8 +55,8 @@ export class TypedNodePathParamValue extends GraphNodePathParamValue<BaseNodeTyp
 		return this.node()?.path();
 	}
 
-	resolve(nodeStart: BaseNodeType) {
-		this._graphNode = CoreWalker.findNode(nodeStart, this._path);
+	resolve(nodeStart: BaseNodeType, decomposedPath?: DecomposedPath) {
+		this._graphNode = CoreWalker.findNode(nodeStart, this._path, decomposedPath);
 	}
 
 	nodeWithContext<N extends NodeContext, K extends NodeContext>(

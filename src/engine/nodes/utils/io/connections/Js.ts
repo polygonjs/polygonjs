@@ -23,6 +23,7 @@ import {ParamInitValuesTypeMap} from '../../../../params/types/ParamInitValuesTy
 import {ParamType} from '../../../../poly/ParamType';
 import {BaseConnectionPoint} from './_Base';
 import {BaseParamType} from '../../../../params/_Base';
+import {BaseNodeType} from '../../../_Base';
 
 export enum JsConnectionPointType {
 	ANIMATION_MIXER = 'AnimationMixer',
@@ -45,6 +46,7 @@ export enum JsConnectionPointType {
 	MATERIAL = 'Material',
 	MATRIX4 = 'Matrix4',
 	MATRIX4_ARRAY = 'Matrix4[]',
+	NODE = 'Node',
 	OBJECT_3D = 'Object3D',
 	OBJECT_3D_ARRAY = 'Object3D[]',
 	PARAM = 'Param',
@@ -130,6 +132,7 @@ export const JS_CONNECTION_POINT_TYPES: Array<JsConnectionPointType> = [
 	JsConnectionPointType.MATERIAL,
 	JsConnectionPointType.MATRIX4,
 	JsConnectionPointType.MATRIX4_ARRAY,
+	JsConnectionPointType.NODE,
 	JsConnectionPointType.OBJECT_3D,
 	JsConnectionPointType.OBJECT_3D_ARRAY,
 	JsConnectionPointType.PARAM,
@@ -175,6 +178,7 @@ export interface JsIConnectionPointTypeToArrayTypeMap extends JsConnectionPointT
 	[JsConnectionPointType.MATERIAL]: JsConnectionPointType.MATERIAL; //
 	[JsConnectionPointType.MATRIX4]: JsConnectionPointType.MATRIX4_ARRAY; //
 	[JsConnectionPointType.MATRIX4_ARRAY]: JsConnectionPointType.MATRIX4_ARRAY; //
+	[JsConnectionPointType.NODE]: JsConnectionPointType.NODE; //
 	[JsConnectionPointType.OBJECT_3D]: JsConnectionPointType.OBJECT_3D_ARRAY; //
 	[JsConnectionPointType.OBJECT_3D_ARRAY]: JsConnectionPointType.OBJECT_3D_ARRAY; //
 	[JsConnectionPointType.PARAM]: JsConnectionPointType.PARAM; //
@@ -216,6 +220,7 @@ export const JsConnectionPointTypeToArrayTypeMap: JsIConnectionPointTypeToArrayT
 	[JsConnectionPointType.MATERIAL]: JsConnectionPointType.MATERIAL,
 	[JsConnectionPointType.MATRIX4]: JsConnectionPointType.MATRIX4_ARRAY,
 	[JsConnectionPointType.MATRIX4_ARRAY]: JsConnectionPointType.MATRIX4_ARRAY,
+	[JsConnectionPointType.NODE]: JsConnectionPointType.NODE,
 	[JsConnectionPointType.OBJECT_3D]: JsConnectionPointType.OBJECT_3D_ARRAY,
 	[JsConnectionPointType.OBJECT_3D_ARRAY]: JsConnectionPointType.OBJECT_3D_ARRAY,
 	[JsConnectionPointType.PARAM]: JsConnectionPointType.PARAM,
@@ -260,6 +265,7 @@ export interface JsIConnectionPointTypeFromArrayTypeMap extends JsConnectionPoin
 	[JsConnectionPointType.MATERIAL]: JsConnectionPointType.MATERIAL; //
 	[JsConnectionPointType.MATRIX4]: JsConnectionPointType.MATRIX4; //
 	[JsConnectionPointType.MATRIX4_ARRAY]: JsConnectionPointType.MATRIX4; //
+	[JsConnectionPointType.NODE]: JsConnectionPointType.NODE; //
 	[JsConnectionPointType.OBJECT_3D]: JsConnectionPointType.OBJECT_3D; //
 	[JsConnectionPointType.OBJECT_3D_ARRAY]: JsConnectionPointType.OBJECT_3D; //
 	[JsConnectionPointType.PARAM]: JsConnectionPointType.PARAM; //
@@ -301,6 +307,7 @@ export const JsConnectionPointTypeFromArrayTypeMap: JsIConnectionPointTypeFromAr
 	[JsConnectionPointType.MATERIAL]: JsConnectionPointType.MATERIAL,
 	[JsConnectionPointType.MATRIX4]: JsConnectionPointType.MATRIX4,
 	[JsConnectionPointType.MATRIX4_ARRAY]: JsConnectionPointType.MATRIX4,
+	[JsConnectionPointType.NODE]: JsConnectionPointType.NODE,
 	[JsConnectionPointType.OBJECT_3D]: JsConnectionPointType.OBJECT_3D,
 	[JsConnectionPointType.OBJECT_3D_ARRAY]: JsConnectionPointType.OBJECT_3D,
 	[JsConnectionPointType.PARAM]: JsConnectionPointType.PARAM,
@@ -429,6 +436,7 @@ export type JsDataType =
 	| Sphere
 	| Texture
 	| Array<Texture>
+	| BaseNodeType
 	| BaseParamType
 	| null;
 type JSConnectionPointTypeToDataTypeMapGeneric = {[key in JsConnectionPointType]: JsDataType};
@@ -453,6 +461,7 @@ export interface JsIConnectionPointTypeToDataTypeMap extends JSConnectionPointTy
 	[JsConnectionPointType.MATERIAL]: Material;
 	[JsConnectionPointType.MATRIX4]: Matrix4;
 	[JsConnectionPointType.MATRIX4_ARRAY]: Matrix4[];
+	[JsConnectionPointType.NODE]: BaseNodeType;
 	[JsConnectionPointType.OBJECT_3D]: Object3D;
 	[JsConnectionPointType.OBJECT_3D_ARRAY]: Object3D[];
 	[JsConnectionPointType.PARAM]: BaseParamType;
@@ -540,6 +549,7 @@ export interface JsIConnectionPointTypeToParamTypeMap extends JSConnectionPointT
 	[JsConnectionPointType.MATERIAL]: ParamType.BUTTON;
 	[JsConnectionPointType.MATRIX4]: ParamType.BUTTON;
 	[JsConnectionPointType.MATRIX4_ARRAY]: ParamType.BUTTON;
+	[JsConnectionPointType.NODE]: ParamType.NODE_PATH;
 	[JsConnectionPointType.OBJECT_3D]: ParamType.BUTTON;
 	[JsConnectionPointType.OBJECT_3D_ARRAY]: ParamType.BUTTON;
 	[JsConnectionPointType.PARAM]: ParamType.PARAM_PATH;
@@ -583,6 +593,7 @@ export const JsConnectionPointTypeToParamTypeMap: JsIConnectionPointTypeToParamT
 	[JsConnectionPointType.MATERIAL]: ParamType.BUTTON,
 	[JsConnectionPointType.MATRIX4]: ParamType.BUTTON,
 	[JsConnectionPointType.MATRIX4_ARRAY]: ParamType.BUTTON,
+	[JsConnectionPointType.NODE]: ParamType.NODE_PATH,
 	[JsConnectionPointType.OBJECT_3D]: ParamType.BUTTON,
 	[JsConnectionPointType.OBJECT_3D_ARRAY]: ParamType.BUTTON,
 	[JsConnectionPointType.PARAM]: ParamType.PARAM_PATH,
@@ -622,9 +633,8 @@ export interface IJsParamTypeToConnectionPointTypeMap extends JsParamTypeToConne
 	[ParamType.VECTOR3]: JsConnectionPointType.VECTOR3;
 	[ParamType.VECTOR4]: JsConnectionPointType.VECTOR4;
 	[ParamType.BUTTON]: undefined;
-	// [ParamType.OPERATOR_PATH]: undefined;
+	[ParamType.NODE_PATH]: JsConnectionPointType.NODE;
 	[ParamType.PARAM_PATH]: JsConnectionPointType.PARAM;
-	[ParamType.NODE_PATH]: undefined;
 	[ParamType.RAMP]: undefined;
 	[ParamType.STRING]: JsConnectionPointType.STRING;
 }
@@ -638,9 +648,8 @@ export const JsParamTypeToConnectionPointTypeMap: IJsParamTypeToConnectionPointT
 	[ParamType.VECTOR3]: JsConnectionPointType.VECTOR3,
 	[ParamType.VECTOR4]: JsConnectionPointType.VECTOR4,
 	[ParamType.BUTTON]: undefined,
-	// [ParamType.OPERATOR_PATH]: undefined,
+	[ParamType.NODE_PATH]: JsConnectionPointType.NODE,
 	[ParamType.PARAM_PATH]: JsConnectionPointType.PARAM,
-	[ParamType.NODE_PATH]: undefined,
 	[ParamType.RAMP]: undefined,
 	[ParamType.STRING]: JsConnectionPointType.STRING,
 };
@@ -674,6 +683,7 @@ export const JsConnectionPointInitValueMap: ConnectionPointInitValueMapGeneric =
 	[JsConnectionPointType.MATERIAL]: null,
 	[JsConnectionPointType.MATRIX4]: null,
 	[JsConnectionPointType.MATRIX4_ARRAY]: null,
+	[JsConnectionPointType.NODE]: '',
 	[JsConnectionPointType.OBJECT_3D]: null,
 	[JsConnectionPointType.OBJECT_3D_ARRAY]: null,
 	[JsConnectionPointType.PARAM]: '',
@@ -726,6 +736,7 @@ export const JsConnectionPointComponentsCountMap: ConnectionPointComponentsCount
 	[JsConnectionPointType.MATERIAL]: 1,
 	[JsConnectionPointType.MATRIX4]: 1,
 	[JsConnectionPointType.MATRIX4_ARRAY]: 1,
+	[JsConnectionPointType.NODE]: 1,
 	[JsConnectionPointType.OBJECT_3D]: 1,
 	[JsConnectionPointType.OBJECT_3D_ARRAY]: 1,
 	[JsConnectionPointType.PARAM]: 1,

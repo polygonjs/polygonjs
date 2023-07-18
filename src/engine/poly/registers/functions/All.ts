@@ -149,6 +149,7 @@ import { getIntersectionPropertyObject } from "../../../functions/getIntersectio
 import { getIntersectionPropertyPoint } from "../../../functions/getIntersectionPropertyPoint";
 import { getIntersectionPropertyUv } from "../../../functions/getIntersectionPropertyUv";
 import { getMaterial } from "../../../functions/getMaterial";
+import { getNode } from "../../../functions/getNode";
 import { getObject } from "../../../functions/getObject";
 import { getObjectAttribute } from "../../../functions/getObjectAttribute";
 import { getObjectAttributeAutoDefault } from "../../../functions/getObjectAttributeAutoDefault";
@@ -308,6 +309,7 @@ import { normalizeVector4 } from "../../../functions/normalizeVector4";
 import { object3DLocalToWorld } from "../../../functions/object3DLocalToWorld";
 import { object3DWorldToLocal } from "../../../functions/object3DWorldToLocal";
 import { objectAddEventListeners } from "../../../functions/objectAddEventListeners";
+import { objectAddOnBeforeDeleteEventListener } from "../../../functions/objectAddOnBeforeDeleteEventListener";
 import { objectDelete } from "../../../functions/objectDelete";
 import { objectDispatchEvent } from "../../../functions/objectDispatchEvent";
 import { objectUpdateMatrix } from "../../../functions/objectUpdateMatrix";
@@ -629,6 +631,7 @@ export interface NamedFunctionMap {
 	getIntersectionPropertyPoint: getIntersectionPropertyPoint;
 	getIntersectionPropertyUv: getIntersectionPropertyUv;
 	getMaterial: getMaterial;
+	getNode: getNode;
 	getObject: getObject;
 	getObjectAttribute: getObjectAttribute<ParamConvertibleJsType>;
 	getObjectAttributeAutoDefault: getObjectAttributeAutoDefault<ParamConvertibleJsType>;
@@ -788,6 +791,7 @@ export interface NamedFunctionMap {
 	object3DLocalToWorld: object3DLocalToWorld;
 	object3DWorldToLocal: object3DWorldToLocal;
 	objectAddEventListeners: objectAddEventListeners;
+	objectAddOnBeforeDeleteEventListener: objectAddOnBeforeDeleteEventListener;
 	objectDelete: objectDelete;
 	objectDispatchEvent: objectDispatchEvent;
 	objectUpdateMatrix: objectUpdateMatrix;
@@ -1112,6 +1116,7 @@ export class AllNamedFunctionRegister {
 			getIntersectionPropertyPoint,
 			getIntersectionPropertyUv,
 			getMaterial,
+			getNode,
 			getObject,
 			getObjectAttribute,
 			getObjectAttributeAutoDefault,
@@ -1271,6 +1276,7 @@ export class AllNamedFunctionRegister {
 			object3DLocalToWorld,
 			object3DWorldToLocal,
 			objectAddEventListeners,
+			objectAddOnBeforeDeleteEventListener,
 			objectDelete,
 			objectDispatchEvent,
 			objectUpdateMatrix,
