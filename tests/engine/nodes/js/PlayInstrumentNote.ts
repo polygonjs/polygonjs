@@ -12,6 +12,7 @@ import {PerspectiveCameraObjNode} from '../../../../src/engine/nodes/obj/Perspec
 import {PositionalAudioObjNode} from '../../../../src/engine/nodes/obj/PositionalAudio';
 import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Js';
 import {RendererUtils} from '../../../helpers/RendererUtils';
+import {StringParam} from '../../../../src/engine/params/String';
 
 function onCreateHookPositionalAudio(node: PositionalAudioObjNode, cameraNode: PerspectiveCameraObjNode) {
 	const envelope1 = node.createNode(EnvelopeAudioNode);
@@ -69,7 +70,7 @@ QUnit.test('js/playInstrumentNote', async (assert) => {
 	onObjectAttributeUpdate1.setAttribType(JsConnectionPointType.INT);
 	getObjectAttribute1.setAttribName('note');
 	getObjectAttribute1.setAttribType(JsConnectionPointType.STRING);
-	getObjectAttribute1.p.defaultString.set('haha');
+	(getObjectAttribute1.params.get('defaultString') as StringParam).set('haha');
 	playInstrumentNote1.p.node.setNode(null1);
 	playInstrumentNote1.setInput(JsConnectionPointType.TRIGGER, onObjectAttributeUpdate1);
 	playInstrumentNote1.setInput(playInstrumentNote1.p.note.name(), getObjectAttribute1);

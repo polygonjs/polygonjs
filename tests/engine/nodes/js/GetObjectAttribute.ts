@@ -4,6 +4,8 @@ import {CoreObject} from '../../../../src/core/geometry/Object';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Js';
 import {RendererUtils} from '../../../helpers/RendererUtils';
+import {FloatParam} from '../../../../src/engine/params/Float';
+import {Vector3Param} from '../../../../src/engine/params/Vector3';
 
 QUnit.test('js/GetObjectAttribute', async (assert) => {
 	const scene = window.scene;
@@ -79,7 +81,7 @@ QUnit.test('js/GetObjectAttribute with default value (float)', async (assert) =>
 
 	getObjectAttribute1.setAttribName('height');
 	getObjectAttribute1.setAttribType(JsConnectionPointType.FLOAT);
-	getObjectAttribute1.p.defaultFloat.set(-1);
+	(getObjectAttribute1.params.get('defaultFloat') as FloatParam).set(-1);
 
 	floatToVec3_1.setInput(1, getObjectAttribute1);
 
@@ -132,7 +134,7 @@ QUnit.test('js/GetObjectAttribute with default value (vector3)', async (assert) 
 
 	getObjectAttribute1.setAttribName('height');
 	getObjectAttribute1.setAttribType(JsConnectionPointType.VECTOR3);
-	getObjectAttribute1.p.defaultVector3.set([-1, -2, -3]);
+	(getObjectAttribute1.params.get('defaultVector3') as Vector3Param).set([-1, -2, -3]);
 
 	// floatToVec3_1.setInput(1, getObjectAttribute1);
 
