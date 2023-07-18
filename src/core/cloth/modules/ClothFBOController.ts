@@ -201,12 +201,12 @@ export class ClothFBOController {
 		if (!allocation) {
 			return;
 		}
-		const textures = createTexturesFromAllocation(
+		const texturesByName = createTexturesFromAllocation(
 			this.mainController.geometryInit.geometry,
 			this.RESOLUTION,
 			allocation
 		);
-		this.mainController.assignReadonlyTextures(this.mainController.materials.integrateShader, textures);
+		this.mainController.assignReadonlyTextures(this.mainController.materials.integrateShader, texturesByName);
 	}
 	private createAdjacentsTexture(k: number) {
 		this.adjacentsRT[k] = {

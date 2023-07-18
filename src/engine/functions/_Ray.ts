@@ -116,23 +116,23 @@ function _defaultIntersection(object3D: Object3D): Intersection {
 	DEFAULT_INTERSECTION.object = object3D;
 	return DEFAULT_INTERSECTION;
 }
-export class rayIntersectObject3D extends NamedFunction2<[Ray, Object3D]> {
+export class rayIntersectObject3D extends NamedFunction3<[Ray, Object3D, boolean]> {
 	static override type() {
 		return 'rayIntersectObject3D';
 	}
-	func(ray: Ray, object3D: Object3D): Intersection {
+	func(ray: Ray, object3D: Object3D, recursive: boolean): Intersection {
 		raycaster.ray.copy(ray);
-		const intersections = raycaster.intersectObject(object3D);
+		const intersections = raycaster.intersectObject(object3D, recursive);
 		return intersections[0] || _defaultIntersection(object3D);
 	}
 }
-export class rayIntersectsObject3D extends NamedFunction2<[Ray, Object3D]> {
+export class rayIntersectsObject3D extends NamedFunction3<[Ray, Object3D, boolean]> {
 	static override type() {
 		return 'rayIntersectsObject3D';
 	}
-	func(ray: Ray, object3D: Object3D): boolean {
+	func(ray: Ray, object3D: Object3D, recursive: boolean): boolean {
 		raycaster.ray.copy(ray);
-		const intersections = raycaster.intersectObject(object3D);
+		const intersections = raycaster.intersectObject(object3D, recursive);
 		return intersections.length > 0;
 	}
 }

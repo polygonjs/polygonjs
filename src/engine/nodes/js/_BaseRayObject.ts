@@ -17,7 +17,11 @@ export abstract class BaseRayObjectJsNode extends TypedJsNode<BaseRayObjectJsPar
 		this.io.inputs.setNamedInputConnectionPoints([
 			new JsConnectionPoint(JsConnectionPointType.RAY, JsConnectionPointType.RAY, CONNECTION_OPTIONS),
 			new JsConnectionPoint(JsConnectionPointType.OBJECT_3D, JsConnectionPointType.OBJECT_3D, CONNECTION_OPTIONS),
+			...this._additionalInputs(),
 		]);
+	}
+	protected _additionalInputs(): JsConnectionPoint<JsConnectionPointType>[] {
+		return [];
 	}
 	// override initializeNode() {
 	// 	super.initializeNode();

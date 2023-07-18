@@ -15,6 +15,10 @@ import {inputObject3D} from './_BaseObject3D';
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
 
 const OUTPUT_NAME = 'intersects';
+
+enum RayIntersectsObjectJsNodeInputName {
+	RECURSIVE = 'recursive',
+}
 export class RayIntersectsObjectJsNode extends BaseRayObjectJsNode {
 	static override type() {
 		return 'rayIntersectsObject';
@@ -26,19 +30,24 @@ export class RayIntersectsObjectJsNode extends BaseRayObjectJsNode {
 			new JsConnectionPoint(OUTPUT_NAME, JsConnectionPointType.BOOLEAN, CONNECTION_OPTIONS),
 		]);
 	}
-	override setLines(shadersCollectionController: JsLinesCollectionController) {
-		const object3D = inputObject3D(this, shadersCollectionController);
-		const ray = this.variableForInput(shadersCollectionController, JsConnectionPointType.RAY);
+	protected override _additionalInputs(): JsConnectionPoint<JsConnectionPointType>[] {
+		return [
+			new JsConnectionPoint(
+				RayIntersectsObjectJsNodeInputName.RECURSIVE,
+				JsConnectionPointType.BOOLEAN,
+				CONNECTION_OPTIONS
+			),
+		];
+	}
+	override setLines(linesController: JsLinesCollectionController) {
+		const object3D = inputObject3D(this, linesController);
+		const ray = this.variableForInput(linesController, JsConnectionPointType.RAY);
+		const recursive = this.variableForInput(linesController, RayIntersectsObjectJsNodeInputName.RECURSIVE);
 		const out = this.jsVarName(OUTPUT_NAME);
-		// shadersCollectionController.addVariable(this, out, new Vector3());
 
-		const func = Poly.namedFunctionsRegister.getFunction(
-			'rayIntersectsObject3D',
-			this,
-			shadersCollectionController
-		);
-		const bodyLine = func.asString(ray, object3D);
-		shadersCollectionController.addBodyOrComputed(this, [
+		const func = Poly.namedFunctionsRegister.getFunction('rayIntersectsObject3D', this, linesController);
+		const bodyLine = func.asString(ray, object3D, recursive);
+		linesController.addBodyOrComputed(this, [
 			{dataType: JsConnectionPointType.VECTOR3, varName: out, value: bodyLine},
 		]);
 	}

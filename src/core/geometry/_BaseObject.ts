@@ -12,7 +12,7 @@ import {ObjectTransformMode, ObjectTransformSpace} from '../TransformSpace';
 import {EntityGroupCollection} from './EntityGroupCollection';
 import {_updateObjectAttribRef} from '../reactivity/ObjectAttributeReactivityUpdateRef';
 import {attribValueNonPrimitive, copyAttribValue, AttributeDictionary, cloneAttribValue} from './_BaseObjectUtils';
-import {_getOrCreateObjectAttributeRef} from '../reactivity/ObjectAttributeReactivityCreateRef';
+import {getOrCreateObjectAttributeRef} from '../reactivity/ObjectAttributeReactivityCreateRef';
 import {JsIConnectionPointTypeToDataTypeMap, ParamConvertibleJsType} from '../../engine/nodes/utils/io/connections/Js';
 // import {computeBoundingBoxFromObject3D} from './BoundingBox';
 // import {setSphereFromObject} from './BoundingSphere';
@@ -78,7 +78,7 @@ export abstract class BaseCoreObject<T extends CoreObjectType> extends CoreEntit
 		type: T,
 		defaultValue: JsIConnectionPointTypeToDataTypeMap[T]
 	) {
-		return _getOrCreateObjectAttributeRef(object, attribName, type, defaultValue);
+		return getOrCreateObjectAttributeRef(object, attribName, type, defaultValue);
 	}
 	attributeRef<T extends ParamConvertibleJsType>(
 		attribName: string,

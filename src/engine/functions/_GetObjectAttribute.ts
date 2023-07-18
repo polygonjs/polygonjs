@@ -1,6 +1,6 @@
 import {Object3D} from 'three';
 import {ObjectNamedFunction2, ObjectNamedFunction3} from './_Base';
-import {_getOrCreateObjectAttributeRef} from '../../core/reactivity/ObjectAttributeReactivityCreateRef';
+import {getOrCreateObjectAttributeRef} from '../../core/reactivity/ObjectAttributeReactivityCreateRef';
 import {AttribValue} from '../../types/GlobalTypes';
 import {JsIConnectionPointTypeToDataTypeMap, ParamConvertibleJsType} from '../nodes/utils/io/connections/Js';
 
@@ -16,7 +16,7 @@ export class getObjectAttribute<T extends ParamConvertibleJsType> extends Object
 		type: T,
 		defaultValue: JsIConnectionPointTypeToDataTypeMap[T]
 	): AttribValue {
-		const _ref = _getOrCreateObjectAttributeRef<T>(object3D, attribName, type, defaultValue);
+		const _ref = getOrCreateObjectAttributeRef<T>(object3D, attribName, type, defaultValue);
 		return _ref.current.value;
 	}
 }
@@ -26,7 +26,7 @@ export class getObjectAttributeAutoDefault<T extends ParamConvertibleJsType> ext
 		return 'getObjectAttributeAutoDefault';
 	}
 	func(object3D: Object3D, attribName: string, type: T): AttribValue {
-		const _ref = _getOrCreateObjectAttributeRef<T>(object3D, attribName, type);
+		const _ref = getOrCreateObjectAttributeRef<T>(object3D, attribName, type);
 		return _ref.current.value;
 	}
 }

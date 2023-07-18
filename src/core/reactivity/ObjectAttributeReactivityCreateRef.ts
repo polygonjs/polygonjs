@@ -73,7 +73,7 @@ function cloneDefaultValue<T extends ParamConvertibleJsType>(
 	TypeAssert.unreachable(type);
 }
 
-export function _getOrCreateObjectAttributeRef<T extends ParamConvertibleJsType>(
+export function getOrCreateObjectAttributeRef<T extends ParamConvertibleJsType>(
 	object3D: ObjectXD,
 	attribName: string,
 	type: T,

@@ -13,6 +13,7 @@ import {BufferAttribute} from 'three';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 import {CoreObjectType, ObjectContent} from '../../../core/geometry/ObjectContent';
 import {isBooleanTrue} from '../../../core/Type';
+import {setToArray} from '../../../core/SetUtils';
 
 const tmpPos = new Vector3();
 
@@ -86,12 +87,11 @@ export class SortSopOperation extends BaseSopOperation {
 	private _sortObjectsByAxis(coreGroup: CoreGroup, params: SortSopParams) {
 		const coreObjects = coreGroup.allCoreObjects();
 		const objectsByPos: Map<number, BaseCoreObject<CoreObjectType>[]> = new Map();
-		const positions: number[] = [];
+		const positions: Set<number> = new Set();
 
 		// accumulate axisValue
 		const axis = AXISES[params.axis];
 		let axisValue: number = 0;
-		let i = 0;
 		for (let coreObject of coreObjects) {
 			coreObject.position(tmpPos);
 			switch (axis) {
@@ -108,13 +108,12 @@ export class SortSopOperation extends BaseSopOperation {
 					break;
 				}
 			}
-			positions[i] = axisValue;
+			positions.add(axisValue);
 			MapUtils.pushOnArrayAtEntry(objectsByPos, axisValue, coreObject);
-			i++;
 		}
 
 		// sort
-		let sortedPositions: number[] = positions.sort((a, b) => a - b);
+		let sortedPositions: number[] = setToArray(positions).sort((a, b) => a - b);
 		if (isBooleanTrue(params.invert)) {
 			sortedPositions.reverse();
 		}

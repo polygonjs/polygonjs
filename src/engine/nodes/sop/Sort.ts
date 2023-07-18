@@ -57,10 +57,10 @@ export class SortSopNode extends TypedSopNode<SortSopParamsConfig> {
 	}
 
 	private _operation: SortSopOperation | undefined;
-	override cook(input_contents: CoreGroup[]) {
+	override cook(inputCoreGroups: CoreGroup[]) {
 		this._operation = this._operation || new SortSopOperation(this._scene, this.states, this);
-		const core_group = this._operation.cook(input_contents, this.pv);
-		this.setCoreGroup(core_group);
+		const coreGroup = this._operation.cook(inputCoreGroups, this.pv);
+		this.setCoreGroup(coreGroup);
 	}
 
 	setSortMode(mode: SortMode) {

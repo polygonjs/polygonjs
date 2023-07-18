@@ -48,11 +48,11 @@ export class ClothController {
 			this._persistedTextureAllocationsController
 		);
 	}
-	assignReadonlyTextures(material: ShaderMaterial, textures: Record<string, Texture>) {
-		const textureNames = Object.keys(textures);
+	assignReadonlyTextures(material: ShaderMaterial, texturesByName: Record<string, Texture>) {
+		const textureNames = Object.keys(texturesByName);
 		for (let textureName of textureNames) {
-			const texture = textures[textureName];
-			const uniformName = `texture_${textureName}`;
+			const texture = texturesByName[textureName];
+			const uniformName = textureName;
 			material.uniforms[uniformName] = {value: texture};
 		}
 	}

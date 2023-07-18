@@ -137,6 +137,8 @@ export function createTexturesFromAllocation(
 
 	allocationsController.readonlyAllocations().forEach((allocation) => {
 		const textureData = new Float32Array(resolution.x * resolution.y * 4);
+		const texture = new DataTexture(textureData, resolution.x, resolution.y, RGBAFormat, FloatType);
+		data[allocation.textureName()] = texture;
 		let offset = 0;
 		allocation.variables()?.forEach((variable) => {
 			const attribName = variable.name();
@@ -150,9 +152,7 @@ export function createTexturesFromAllocation(
 						textureData[i4 + j] = array[i * attribSize + j];
 					}
 				}
-				const texture = new DataTexture(textureData, resolution.x, resolution.y, RGBAFormat, FloatType);
 				texture.needsUpdate = true;
-				data[attribName] = texture;
 			}
 			offset += attribSize;
 		});

@@ -7,7 +7,7 @@ import {UNIFORM_PARAM_PREFIX, UNIFORM_TEXTURE_PREFIX} from '../../../../src/core
 import {createOrFindClothController} from '../../../../src/core/cloth/ClothControllerRegister';
 import {AssemblersUtils} from '../../../helpers/AssemblersUtils';
 import {SceneJsonExporter} from '../../../../src/engine/io/json/export/Scene';
-import {SceneJsonImporter} from '../../../../src/engine/index_all';
+import {SceneJsonImporter} from '../../../../src/engine/io/json/import/Scene';
 import {PerspectiveCameraObjNode} from '../../../../src/engine/nodes/obj/PerspectiveCamera';
 import {ClothSolverSopNode} from '../../../../src/engine/nodes/sop/ClothSolver';
 import {MaterialSopNode} from '../../../../src/engine/nodes/sop/Material';

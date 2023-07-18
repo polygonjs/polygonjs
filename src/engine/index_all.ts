@@ -19,6 +19,10 @@ import {CoreGeometry} from '../core/geometry/Geometry';
 import {CoreGroup} from '../core/geometry/Group';
 import {CoreObject} from '../core/geometry/Object';
 import {CoreFeaturesController} from '../core/FeaturesController';
+import {randFloat, radToDeg} from '../core/math/_Module';
+import {sanitizeName} from '../core/String';
+import {watch} from '../core/reactivity/CoreReactivity';
+import {getOrCreateObjectAttributeRef} from '../core/reactivity/ObjectAttributeReactivityCreateRef';
 // types
 import type {Number2, Number3, Number4} from '../types/GlobalTypes';
 import {JsConnectionPointType} from './nodes/utils/io/connections/Js';
@@ -35,6 +39,20 @@ import {Vector2Param} from './params/Vector2';
 import {Vector3Param} from './params/Vector3';
 import {Vector4Param} from './params/Vector4';
 
+// types
+export type {
+	// global types
+	Number2,
+	Number3,
+	Number4,
+	// io
+	SceneJsonExporterData,
+	ComplexParamJsonExporterData,
+	// params
+	ParamType,
+};
+
+// classes / functions
 export {
 	PolyScene,
 	Poly,
@@ -47,8 +65,6 @@ export {
 	SceneJsonImporter,
 	SceneDataManifestImporter,
 	ScenePlayerImporter,
-	SceneJsonExporterData,
-	ComplexParamJsonExporterData,
 	// viewers
 	ThreejsViewer,
 	addStatsToViewer,
@@ -57,13 +73,14 @@ export {
 	CoreGroup,
 	CoreObject,
 	CoreFeaturesController,
+	randFloat,
+	radToDeg,
+	sanitizeName,
+	watch,
+	getOrCreateObjectAttributeRef,
 	// types
-	Number2,
-	Number3,
-	Number4,
 	JsConnectionPointType,
 	// params
-	ParamType,
 	BooleanParam,
 	ColorParam,
 	FloatParam,
