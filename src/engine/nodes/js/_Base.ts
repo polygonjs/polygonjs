@@ -38,8 +38,8 @@ export interface WrappedBodyLines {
 function wrapComputed(varName: string): string {
 	return `this.${varName}.value`;
 }
-export function wrapIfComputed(varName: string, shadersCollectionController: JsLinesCollectionController): string {
-	if (shadersCollectionController.registeredAsComputed(varName)) {
+export function wrapIfComputed(varName: string, linesController: JsLinesCollectionController): string {
+	if (linesController.registeredAsComputed(varName)) {
 		return wrapComputed(varName);
 	} else {
 		return varName;

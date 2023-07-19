@@ -12,7 +12,6 @@ import {
 	JS_CONNECTION_POINT_IN_NODE_DEF,
 	ParamConvertibleJsType,
 	PARAM_CONVERTIBLE_JS_CONNECTION_POINT_TYPES,
-	// ReturnValueTypeByActorConnectionPointType,
 } from '../utils/io/connections/Js';
 import {JsType} from '../../poly/registers/nodes/types/Js';
 import {inputObject3D} from './_BaseObject3D';
@@ -22,14 +21,13 @@ import {Poly} from '../../Poly';
 import {nodeMethodName} from './code/assemblers/actor/ActorAssemblerUtils';
 import {createVariable} from './code/assemblers/_BaseJsPersistedConfigUtils';
 import {StringParam} from '../../params/String';
-// import {CoreObject} from '../../../core/geometry/Object';
 enum OnObjectAttributeUpdateInputName {
 	attribName = 'attribName',
 }
 
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
 class OnObjectAttributeUpdateJsParamsConfig extends NodeParamsConfig {
-	// attribName = ParamConfig.STRING('');
+	/** @param type */
 	type = ParamConfig.INTEGER(PARAM_CONVERTIBLE_JS_CONNECTION_POINT_TYPES.indexOf(JsConnectionPointType.FLOAT), {
 		menu: {
 			entries: PARAM_CONVERTIBLE_JS_CONNECTION_POINT_TYPES.map((name, i) => {
@@ -103,13 +101,10 @@ export class OnObjectAttributeUpdateJsNode extends TypedJsNode<OnObjectAttribute
 		return (this.params.get(OnObjectAttributeUpdateInputName.attribName) as StringParam).value;
 	}
 
-	override setLines(shadersCollectionController: JsLinesCollectionController) {
+	override setLines(linesController: JsLinesCollectionController) {
 		const type = this.attribType();
-		const object3D = inputObject3D(this, shadersCollectionController);
-		const attribName = this.variableForInput(
-			shadersCollectionController,
-			OnObjectAttributeUpdateInputName.attribName
-		);
+		const object3D = inputObject3D(this, linesController);
+		const attribName = this.variableForInput(linesController, OnObjectAttributeUpdateInputName.attribName);
 
 		// outputs
 		const usedOutputNames = this.io.outputs.used_output_names();
@@ -121,13 +116,13 @@ export class OnObjectAttributeUpdateJsNode extends TypedJsNode<OnObjectAttribute
 			if (!usedOutputNames.includes(propertyName)) {
 				return;
 			}
-			const func = Poly.namedFunctionsRegister.getFunction(functionName, this, shadersCollectionController);
+			const func = Poly.namedFunctionsRegister.getFunction(functionName, this, linesController);
 			const varName = this.jsVarName(propertyName);
 			const variable = createVariable(type);
 			if (variable) {
-				shadersCollectionController.addVariable(this, variable);
+				linesController.addVariable(this, variable);
 			}
-			shadersCollectionController.addBodyOrComputed(this, [
+			linesController.addBodyOrComputed(this, [
 				{
 					dataType: type,
 					varName,
@@ -140,24 +135,21 @@ export class OnObjectAttributeUpdateJsNode extends TypedJsNode<OnObjectAttribute
 		_val(OnObjectAttributeUpdateJsNode.OUTPUT_PREV_VAL, 'getObjectAttributePrevious', type);
 	}
 
-	override setTriggeringLines(shadersCollectionController: JsLinesCollectionController, triggeredMethods: string) {
+	override setTriggeringLines(linesController: JsLinesCollectionController, triggeredMethods: string) {
 		const type = this.attribType();
-		const object3D = inputObject3D(this, shadersCollectionController);
-		const attribName = this.variableForInput(
-			shadersCollectionController,
-			OnObjectAttributeUpdateInputName.attribName
-		);
+		const object3D = inputObject3D(this, linesController);
+		const attribName = this.variableForInput(linesController, OnObjectAttributeUpdateInputName.attribName);
 
 		const getObjectAttributeRef = Poly.namedFunctionsRegister.getFunction(
 			'getObjectAttributeRef',
 			this,
-			shadersCollectionController
+			linesController
 		);
 
-		shadersCollectionController.addDefinitions(this, [
+		linesController.addDefinitions(this, [
 			new WatchedValueJsDefinition(
 				this,
-				shadersCollectionController,
+				linesController,
 				type,
 				getObjectAttributeRef.asString(object3D, attribName, `'${type}'`),
 				`this.${nodeMethodName(this)}()`,
@@ -167,7 +159,7 @@ export class OnObjectAttributeUpdateJsNode extends TypedJsNode<OnObjectAttribute
 			),
 		]);
 
-		shadersCollectionController.addTriggeringLines(this, [triggeredMethods], {
+		linesController.addTriggeringLines(this, [triggeredMethods], {
 			gatherable: false,
 		});
 	}

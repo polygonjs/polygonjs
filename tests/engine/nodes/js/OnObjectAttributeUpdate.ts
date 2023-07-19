@@ -5,6 +5,7 @@ import {CoreSleep} from '../../../../src/core/Sleep';
 import {OnObjectAttributeUpdateJsNode} from '../../../../src/engine/nodes/js/OnObjectAttributeUpdate';
 import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Js';
 import {RendererUtils} from '../../../helpers/RendererUtils';
+import {Vector3Param} from '../../../../src/engine/params/Vector3';
 
 QUnit.test('js/onObjectAttributeUpdate with number', async (assert) => {
 	const scene = window.scene;
@@ -285,3 +286,55 @@ QUnit.test('js/onObjectAttributeUpdate with vector4', async (assert) => {
 		assert.equal(object.position.z, 8, 'object moved to 0.5');
 	});
 });
+
+QUnit.test(
+	'js/onObjectAttributeUpdate generates correct code when only connected with its trigger output and no other output',
+	async (assert) => {
+		const scene = window.scene;
+		const perspective_camera1 = window.perspective_camera1;
+		const geo1 = window.geo1;
+		const box1 = geo1.createNode('box');
+		const hierarchy1 = geo1.createNode('hierarchy');
+		const attributeCreate1 = geo1.createNode('attribCreate');
+		const actor1 = geo1.createNode('actor');
+
+		attributeCreate1.setAttribClass(AttribClass.OBJECT);
+		attributeCreate1.p.name.set('height');
+
+		actor1.setInput(0, box1);
+		hierarchy1.setInput(0, actor1);
+		attributeCreate1.setInput(0, hierarchy1);
+
+		attributeCreate1.flags.display.set(true);
+
+		const onObjectAttributeUpdate1 = actor1.createNode('onObjectAttributeUpdate');
+		const setObjectPosition1 = actor1.createNode('setObjectPosition');
+		const getParent1 = actor1.createNode('getParent');
+
+		onObjectAttributeUpdate1.setInput(JsConnectionPointType.OBJECT_3D, getParent1);
+		onObjectAttributeUpdate1.setAttribName('height');
+		setObjectPosition1.setInput(JsConnectionPointType.TRIGGER, onObjectAttributeUpdate1);
+		(setObjectPosition1.params.get('position') as Vector3Param).set([0, 1, 0]);
+
+		const container = await attributeCreate1.compute();
+		const object = container.coreContent()!.threejsObjects()[0] as Mesh;
+		assert.equal(object.children.length, 1);
+		const child = object.children[0];
+
+		// wait to make sure objects are mounted to the scene
+		await CoreSleep.sleep(150);
+
+		await RendererUtils.withViewer({cameraNode: perspective_camera1}, async (args) => {
+			scene.play();
+			assert.equal(scene.time(), 0);
+			assert.equal(object.position.y, 0);
+			await CoreSleep.sleep(500);
+			assert.in_delta(scene.time(), 0.5, 0.25, 'time is 0.5 sec');
+			assert.equal(child.position.y, 0, 'object still at 0');
+
+			new CoreObject(object, 0).setAttribValue('height', 1);
+			await CoreSleep.sleep(100);
+			assert.equal(child.position.y, 1, 'object moved to 1');
+		});
+	}
+);

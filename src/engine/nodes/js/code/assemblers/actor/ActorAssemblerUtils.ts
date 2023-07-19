@@ -235,24 +235,13 @@ export function inputNodesFromConnectionWithCallback(node: BaseJsNodeType, callb
 	return SetUtils.toArray(nonTriggerInputNodes);
 }
 export function inputNodesExceptTrigger(node: BaseJsNodeType) {
-	return inputNodesFromConnectionWithCallback(node, (c) => c.type() != JsConnectionPointType.TRIGGER);
-	// const nonTriggerInputNodes: Set<BaseJsNodeType> = new Set();
-	// let nonTriggerInputIndices: number[] = [];
-	// const inputConnectionPoints = node.io.inputs.namedInputConnectionPoints();
-	// let i = 0;
-	// for (let outputConnectionPoint of inputConnectionPoints) {
-	// 	if (outputConnectionPoint.type() != JsConnectionPointType.TRIGGER) {
-	// 		nonTriggerInputIndices.push(i);
-	// 	}
-	// 	i++;
-	// }
-	// for (let nonTriggerInputIndex of nonTriggerInputIndices) {
-	// 	const connection = node.io.connections.inputConnection(nonTriggerInputIndex);
-	// 	if (connection) {
-	// 		nonTriggerInputNodes.add(connection.node_src);
-	// 	}
-	// }
-	// return SetUtils.toArray(nonTriggerInputNodes);
+	// return inputNodesFromConnectionWithCallback(node, (c) => c.type() != JsConnectionPointType.TRIGGER);
+	// update:
+	// I initially thought we should not take into account node when only connected via a trigger connection,
+	// but that fails with the onObjectAttributeUpdate,
+	// if it is only connected via its trigger, as its inputs are then not parsed,
+	// which is very much needed when using a different object as input
+	return inputNodesFromConnectionWithCallback(node, (c) => true);
 }
 
 export function triggerInputIndex(triggeringNode: BaseJsNodeType, triggeredNode: BaseJsNodeType): number | null {

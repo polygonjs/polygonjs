@@ -148,6 +148,9 @@ export abstract class BaseJsShaderAssembler extends TypedAssembler<NodeContext.J
 		this._computedVarNames.add(varName);
 	}
 	registeredAsComputed(varName: string): boolean {
+		if (varName.trim().length == 0) {
+			console.warn('attempt to read an empty variable');
+		}
 		return this._computedVarNames.has(varName);
 	}
 	computedVariablesAllowed(): boolean {
