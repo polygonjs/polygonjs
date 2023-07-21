@@ -14,19 +14,19 @@ import {DefaultOperationParams} from '../../../core/operations/_Base';
 import {CoreObjectType, ObjectContent} from '../../../core/geometry/ObjectContent';
 import {isBooleanTrue} from '../../../core/Type';
 import {setToArray} from '../../../core/SetUtils';
+import {isNumber} from '../../../core/Type';
 
 const tmpPos = new Vector3();
 
 export enum SortMode {
 	RANDOM = 'random',
 	AXIS = 'axis',
+	ATTRIBUTE = 'attribute',
 }
-export const SORT_MODES: SortMode[] = [SortMode.AXIS, SortMode.RANDOM];
+export const SORT_MODES: SortMode[] = [SortMode.AXIS, SortMode.RANDOM, SortMode.ATTRIBUTE];
 
-export const SORT_TARGET_TYPES: Array<AttribClass.VERTEX | AttribClass.OBJECT> = [
-	AttribClass.VERTEX,
-	AttribClass.OBJECT,
-];
+export type SortTargetType = AttribClass.VERTEX | AttribClass.OBJECT;
+export const SORT_TARGET_TYPES: Array<SortTargetType> = [AttribClass.VERTEX, AttribClass.OBJECT];
 
 export enum Axis {
 	X = 'x',
@@ -36,13 +36,15 @@ export enum Axis {
 export const AXISES: Axis[] = [Axis.X, Axis.Y, Axis.Z];
 
 interface SortSopParams extends DefaultOperationParams {
-	mode: number;
 	targetType: number;
+	mode: number;
 	// random
 	seed: number;
 	// axis
 	axis: number;
-	// commpn
+	// attribute
+	attribute: string;
+	// common
 	invert: boolean;
 }
 
@@ -52,6 +54,7 @@ export class SortSopOperation extends BaseSopOperation {
 		targetType: SORT_TARGET_TYPES.indexOf(AttribClass.VERTEX),
 		seed: 0,
 		axis: AXISES.indexOf(Axis.X),
+		attribute: '',
 		invert: false,
 	};
 	static override readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
@@ -81,6 +84,8 @@ export class SortSopOperation extends BaseSopOperation {
 				return this._sortObjectsByAxis(coreGroup, params);
 			case SortMode.RANDOM:
 				return this._sortObjectsByRandom(coreGroup, params);
+			case SortMode.ATTRIBUTE:
+				return this._sortObjectsByAttribute(coreGroup, params);
 		}
 		TypeAssert.unreachable(sortMode);
 	}
@@ -161,6 +166,38 @@ export class SortSopOperation extends BaseSopOperation {
 		}
 		coreGroup.setAllObjects(sortedObjects);
 	}
+	private _sortObjectsByAttribute(coreGroup: CoreGroup, params: SortSopParams) {
+		const coreObjects = coreGroup.allCoreObjects();
+		const objectsByAttribValue: Map<number, BaseCoreObject<CoreObjectType>[]> = new Map();
+		const attribValues: number[] = [];
+
+		// accumulate attribValue
+		let i = 0;
+		for (let coreObject of coreObjects) {
+			const attribValue = coreObject.attribValue(params.attribute);
+			const sortValue = isNumber(attribValue) ? attribValue : 0;
+			attribValues[i] = sortValue;
+			MapUtils.pushOnArrayAtEntry(objectsByAttribValue, sortValue, coreObject);
+			i++;
+		}
+
+		// sort
+		let sortedValues: number[] = attribValues.sort((a, b) => a - b);
+		if (params.invert) {
+			sortedValues.reverse();
+		}
+
+		const sortedObjects: ObjectContent<CoreObjectType>[] = [];
+		for (let sortedValue of sortedValues) {
+			const coreObjectsForPosition = objectsByAttribValue.get(sortedValue);
+			if (coreObjectsForPosition) {
+				for (let coreObjectForPosition of coreObjectsForPosition) {
+					sortedObjects.push(coreObjectForPosition.object());
+				}
+			}
+		}
+		coreGroup.setAllObjects(sortedObjects);
+	}
 
 	private _sortPoints(coreGroup: CoreGroup, params: SortSopParams) {
 		const sortMode = SORT_MODES[params.mode];
@@ -169,6 +206,8 @@ export class SortSopOperation extends BaseSopOperation {
 				return this._sortPointsByAxis(coreGroup, params);
 			case SortMode.RANDOM:
 				return this._sortPointsByRandom(coreGroup, params);
+			case SortMode.ATTRIBUTE:
+				return this._sortPointsByAttribute(coreGroup, params);
 		}
 		TypeAssert.unreachable(sortMode);
 	}
@@ -180,6 +219,9 @@ export class SortSopOperation extends BaseSopOperation {
 	}
 	private _sortPointsByRandom(coreGroup: CoreGroup, params: SortSopParams) {
 		this.states?.error.set('sorting points in random mode is not yet implemented');
+	}
+	private _sortPointsByAttribute(coreGroup: CoreGroup, params: SortSopParams) {
+		this.states?.error.set('sorting points by attribute is not yet implemented');
 	}
 
 	private _pointPos = new Vector3();

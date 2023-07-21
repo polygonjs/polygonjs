@@ -1,6 +1,8 @@
 import {Object3D, Box3} from 'three';
 import {AttribClass} from '../../../../src/core/geometry/Constant';
 import {AXISES, Axis, SortMode} from '../../../../src/engine/operations/sop/Sort';
+import {SortSopNode} from '../../../../src/engine/nodes/sop/Sort';
+import {MergeSopNode} from '../../../../src/engine/nodes/sop/Merge';
 const tmpBox = new Box3();
 QUnit.test('sop/sort simple with mesh axis', async (assert) => {
 	const geo1 = window.geo1;
@@ -137,4 +139,54 @@ QUnit.test('sop/sort simple with points axis', async (assert) => {
 	// coreGroup = (await delete1.compute()).coreContent()!;
 	assert.in_delta((await compute()).bbox.min.y, -0.76, 0.1);
 	assert.in_delta((await compute()).bbox.max.y, 0.76, 0.1);
+});
+
+QUnit.test('sop/sort objects by attributes', async (assert) => {
+	const geo1 = window.geo1;
+	const box1 = geo1.createNode('box');
+	const copy1 = geo1.createNode('copy');
+	const attribId1 = geo1.createNode('attribId');
+	const objectProperties1 = geo1.createNode('objectProperties');
+	const delete1 = geo1.createNode('delete');
+	const delete2 = geo1.createNode('delete');
+	const merge1 = geo1.createNode('merge');
+	const sort1 = geo1.createNode('sort');
+
+	copy1.setInput(0, box1);
+	attribId1.setInput(0, copy1);
+	objectProperties1.setInput(0, attribId1);
+	delete1.setInput(0, objectProperties1);
+	delete2.setInput(0, objectProperties1);
+	merge1.setInput(0, delete1);
+	merge1.setInput(1, delete2);
+	sort1.setInput(0, merge1);
+
+	copy1.p.count.set(4);
+	const deleteNodes = [delete1, delete2];
+	for (const deleteNode of deleteNodes) {
+		deleteNode.setAttribClass(AttribClass.OBJECT);
+		deleteNode.p.byAttrib.set(true);
+		deleteNode.p.attribName.set('id');
+		deleteNode.p.attribValue1.set(2);
+	}
+	delete2.p.invert.set(true);
+
+	attribId1.setAttribClass(AttribClass.OBJECT);
+	objectProperties1.p.tname.set(true);
+	objectProperties1.p.name.set('obj-`@id`');
+	sort1.setTargetType(AttribClass.OBJECT);
+	sort1.setSortMode(SortMode.ATTRIBUTE);
+	sort1.p.attribute.set('id');
+
+	const objectNames = async (node: SortSopNode | MergeSopNode) => {
+		const container = await node.compute();
+		return (
+			container
+				.coreContent()
+				?.threejsObjects()
+				.map((o: Object3D) => o.name || '') || []
+		);
+	};
+	assert.deepEqual(await objectNames(merge1), ['obj-0', 'obj-1', 'obj-3', 'obj-2'], 'merge node');
+	assert.deepEqual(await objectNames(sort1), ['obj-0', 'obj-1', 'obj-2', 'obj-3'], 'sort node');
 });

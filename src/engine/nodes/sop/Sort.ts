@@ -8,21 +8,28 @@ import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {SortSopOperation, AXISES, SORT_MODES, SortMode, SORT_TARGET_TYPES} from '../../operations/sop/Sort';
+import {
+	SortSopOperation,
+	AXISES,
+	SORT_MODES,
+	SortMode,
+	SORT_TARGET_TYPES,
+	SortTargetType,
+} from '../../operations/sop/Sort';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 const DEFAULT = SortSopOperation.DEFAULT_PARAMS;
 
 class SortSopParamsConfig extends NodeParamsConfig {
-	/** @param criteria used to sort */
-	mode = ParamConfig.INTEGER(DEFAULT.mode, {
-		menu: {
-			entries: SORT_MODES.map((name, value) => ({name, value})),
-		},
-	});
 	/** @param defines if this node will sort points or objects */
 	targetType = ParamConfig.INTEGER(DEFAULT.targetType, {
 		menu: {
 			entries: SORT_TARGET_TYPES.map((name, value) => ({name, value})),
+		},
+	});
+	/** @param criteria used to sort */
+	mode = ParamConfig.INTEGER(DEFAULT.mode, {
+		menu: {
+			entries: SORT_MODES.map((name, value) => ({name, value})),
 		},
 	});
 	/** @param seed used by the random mode */
@@ -39,6 +46,10 @@ class SortSopParamsConfig extends NodeParamsConfig {
 			}),
 		},
 		visibleIf: {mode: SORT_MODES.indexOf(SortMode.AXIS)},
+	});
+	/** @param attribute */
+	attribute = ParamConfig.STRING(DEFAULT.attribute, {
+		visibleIf: {mode: SORT_MODES.indexOf(SortMode.ATTRIBUTE)},
 	});
 	/** @param invert the sort */
 	invert = ParamConfig.BOOLEAN(DEFAULT.invert);
@@ -63,6 +74,16 @@ export class SortSopNode extends TypedSopNode<SortSopParamsConfig> {
 		this.setCoreGroup(coreGroup);
 	}
 
+	setAttribClass(attribClass: SortTargetType) {
+		if (SORT_TARGET_TYPES.includes(attribClass)) {
+			this.p.targetType.set(SORT_TARGET_TYPES.indexOf(attribClass));
+		} else {
+			console.warn(`${attribClass} is not possible on this node`);
+		}
+	}
+	attribClass() {
+		return SORT_TARGET_TYPES[this.pv.targetType];
+	}
 	setSortMode(mode: SortMode) {
 		this.p.mode.set(SORT_MODES.indexOf(mode));
 	}
