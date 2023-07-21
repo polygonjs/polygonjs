@@ -10,6 +10,7 @@ export function createStats() {
 
 import {BaseViewerType} from '../_Base';
 
+const CALLBACK_NAME = 'viewer-stats';
 export function addStatsToViewer(viewer: BaseViewerType) {
 	const stats = new Stats();
 	const viewerElement = viewer.domElement();
@@ -19,7 +20,12 @@ export function addStatsToViewer(viewer: BaseViewerType) {
 	}
 	viewerElement.appendChild(stats.dom);
 
-	viewer.registerOnAfterRender('stats', () => {
+	viewer.registerOnAfterRender(CALLBACK_NAME, () => {
 		stats.update();
 	});
+	const removeStatsFromViewer = () => {
+		viewer.unRegisterOnAfterRender(CALLBACK_NAME);
+	};
+
+	return {viewerElement, stats, removeStatsFromViewer};
 }

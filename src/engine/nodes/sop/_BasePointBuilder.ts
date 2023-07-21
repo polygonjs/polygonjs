@@ -146,6 +146,12 @@ export abstract class BasePointBuilderSopNode extends TypedSopNode<PointBuilderS
 		this._attributesDict.clear();
 	}
 	protected _checkRequiredReadAttributes(geometry: BufferGeometry) {
+		// no need to check if there are no points in the geometry
+		const pointsCount = CoreGeometry.pointsCount(geometry);
+		if (pointsCount == 0) {
+			return;
+		}
+
 		const readAttributesData = this._functionData?.attributesData.read;
 		if (!readAttributesData) {
 			return;
@@ -153,8 +159,10 @@ export abstract class BasePointBuilderSopNode extends TypedSopNode<PointBuilderS
 		for (const attribData of readAttributesData) {
 			const attribute = geometry.getAttribute(attribData.attribName);
 			if (!attribute) {
-				this.states.error.set(`attribute ${attribData.attribName} is missing`);
-				throw 'error';
+				const message = `attribute ${attribData.attribName} is missing`;
+				this.states.error.set(message);
+				throw message;
+				return;
 			} else {
 				const expectedAttribSize = JsConnectionPointComponentsCountMap[attribData.attribType];
 				if (attribute.itemSize != expectedAttribSize) {

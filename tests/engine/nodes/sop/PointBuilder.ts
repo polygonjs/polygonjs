@@ -173,3 +173,51 @@ QUnit.test('sop/pointBuilder write attributes', async (assert) => {
 		assert.in_delta(color[i], expectedMatch[i], 0.001, `${i}`);
 	}
 });
+
+QUnit.test(
+	'sop/pointBuilder does not error if an attribute is missing but there are no points in the geometry',
+	async (assert) => {
+		const geo1 = window.geo1;
+		const data1 = geo1.createNode('data');
+		const data2 = geo1.createNode('data');
+		const data3 = geo1.createNode('data');
+		const pointBuilder1 = geo1.createNode('pointBuilder');
+
+		data1.p.data.set(JSON.stringify([{value: -10}, {value: 0}, {value: 10}]));
+		data2.p.data.set(JSON.stringify([]));
+		data3.p.data.set(JSON.stringify([{otherAttrib: -10}]));
+
+		const globals = pointBuilder1.createNode('globals');
+		const output = pointBuilder1.createNode('output');
+		const add1 = pointBuilder1.createNode('add');
+		const attribute1 = pointBuilder1.createNode('attribute');
+		const floatToVec3_1 = pointBuilder1.createNode('floatToVec3');
+
+		output.setInput('position', add1);
+		add1.setInput(0, globals, 'position');
+		add1.setInput(1, floatToVec3_1);
+		floatToVec3_1.setInput(0, attribute1);
+
+		attribute1.setJsType(JsConnectionPointType.FLOAT);
+		attribute1.p.name.set('value');
+
+		const _compute = async () => {
+			const container = await pointBuilder1.compute();
+			const errorMessage = pointBuilder1.states.error.message();
+			const pointsCount = container.pointsCount();
+			return {errorMessage, pointsCount};
+		};
+
+		pointBuilder1.setInput(0, data1);
+		assert.notOk((await _compute()).errorMessage, 'no error message');
+		assert.equal((await _compute()).pointsCount, 3, '3 pts');
+
+		pointBuilder1.setInput(0, data2);
+		assert.notOk((await _compute()).errorMessage, 'no error message');
+		assert.equal((await _compute()).pointsCount, 0, '0 pts');
+
+		pointBuilder1.setInput(0, data3);
+		assert.equal((await _compute()).errorMessage, 'attribute value is missing', 'error message');
+		assert.equal((await _compute()).pointsCount, 0, '0 pts');
+	}
+);
