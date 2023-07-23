@@ -7,7 +7,9 @@ import {BooleanParam} from '../../params/Boolean';
 import {FloatParam} from '../../params/Float';
 import {IntegerParam} from '../../params/Integer';
 import {StringParam} from '../../params/String';
+import {Vector2Param} from '../../params/Vector2';
 import {Vector3Param} from '../../params/Vector3';
+import {Vector4Param} from '../../params/Vector4';
 import {Attribute} from '../../../core/geometry/Attribute';
 import {ParamPathParam} from '../../params/ParamPath';
 import {NodePathParam} from '../../params/NodePath';
@@ -141,6 +143,45 @@ export function inputNode(jsNode: BaseJsNodeType, linesController: JsLinesCollec
 	return foundNode;
 }
 
+export function vector2OutputFromParam(
+	node: BaseJsNodeType,
+	param: Vector2Param,
+	linesController: JsLinesCollectionController
+) {
+	const usedOutputNames = node.io.outputs.used_output_names();
+
+	const propertyName = param.name();
+	if (!usedOutputNames.includes(propertyName)) {
+		return;
+	}
+	linesController.addBodyOrComputed(node, [
+		{
+			dataType: JsConnectionPointType.VECTOR2,
+			varName: node.jsVarName(propertyName),
+			value: node.variableForInputParam(linesController, param),
+		},
+	]);
+}
+export function vector2OutputFromInput(
+	node: BaseJsNodeType,
+	inputName: string,
+	linesController: JsLinesCollectionController
+) {
+	const usedOutputNames = node.io.outputs.used_output_names();
+
+	const propertyName = inputName;
+	if (!usedOutputNames.includes(propertyName)) {
+		return;
+	}
+	linesController.addBodyOrComputed(node, [
+		{
+			dataType: JsConnectionPointType.VECTOR2,
+			varName: node.jsVarName(propertyName),
+			value: node.variableForInput(linesController, inputName),
+		},
+	]);
+}
+
 export function vector3OutputFromParam(
 	node: BaseJsNodeType,
 	param: Vector3Param,
@@ -160,6 +201,65 @@ export function vector3OutputFromParam(
 		},
 	]);
 }
+export function vector3OutputFromInput(
+	node: BaseJsNodeType,
+	inputName: string,
+	linesController: JsLinesCollectionController
+) {
+	const usedOutputNames = node.io.outputs.used_output_names();
+
+	const propertyName = inputName;
+	if (!usedOutputNames.includes(propertyName)) {
+		return;
+	}
+	linesController.addBodyOrComputed(node, [
+		{
+			dataType: JsConnectionPointType.VECTOR3,
+			varName: node.jsVarName(propertyName),
+			value: node.variableForInput(linesController, inputName),
+		},
+	]);
+}
+
+export function vector4OutputFromParam(
+	node: BaseJsNodeType,
+	param: Vector4Param,
+	linesController: JsLinesCollectionController
+) {
+	const usedOutputNames = node.io.outputs.used_output_names();
+
+	const propertyName = param.name();
+	if (!usedOutputNames.includes(propertyName)) {
+		return;
+	}
+	linesController.addBodyOrComputed(node, [
+		{
+			dataType: JsConnectionPointType.VECTOR4,
+			varName: node.jsVarName(propertyName),
+			value: node.variableForInputParam(linesController, param),
+		},
+	]);
+}
+export function vector4OutputFromInput(
+	node: BaseJsNodeType,
+	inputName: string,
+	linesController: JsLinesCollectionController
+) {
+	const usedOutputNames = node.io.outputs.used_output_names();
+
+	const propertyName = inputName;
+	if (!usedOutputNames.includes(propertyName)) {
+		return;
+	}
+	linesController.addBodyOrComputed(node, [
+		{
+			dataType: JsConnectionPointType.VECTOR4,
+			varName: node.jsVarName(propertyName),
+			value: node.variableForInput(linesController, inputName),
+		},
+	]);
+}
+
 export function floatOutputFromParam(
 	node: BaseJsNodeType,
 	param: FloatParam,

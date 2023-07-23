@@ -43,19 +43,6 @@ export class Vector4Param extends TypedMultipleParam<ParamType.VECTOR4> {
 		}
 		return super._prefilterInvalidRawInput(rawInput);
 	}
-	// get raw_input_serialized() {
-	// 	if (this._raw_input instanceof Vector4) {
-	// 		return this._raw_input.toArray() as Number4;
-	// 	} else {
-	// 		const new_array: StringOrNumber4 = [
-	// 			this._raw_input[0],
-	// 			this._raw_input[1],
-	// 			this._raw_input[2],
-	// 			this._raw_input[3],
-	// 		];
-	// 		return new_array;
-	// 	}
-	// }
 	override valueSerialized() {
 		return this.value.toArray() as Number4;
 	}
@@ -64,42 +51,42 @@ export class Vector4Param extends TypedMultipleParam<ParamType.VECTOR4> {
 		param.value.toArray(this._copied_value);
 		this.set(this._copied_value);
 	}
-	protected override _cloneRawInput(raw_input: ParamInitValuesTypeMap[ParamType.VECTOR4]) {
-		if (raw_input instanceof Vector4) {
-			return raw_input.clone();
+	protected override _cloneRawInput(rawInput: ParamInitValuesTypeMap[ParamType.VECTOR4]) {
+		if (rawInput instanceof Vector4) {
+			return rawInput.clone();
 		} else {
-			const new_array: StringOrNumber4 = [raw_input[0], raw_input[1], raw_input[2], raw_input[3]];
+			const newArray: StringOrNumber4 = [rawInput[0], rawInput[1], rawInput[2], rawInput[3]];
 			// in case array elements are undefined
-			if (new_array[0] == null) {
-				new_array[0] = new_array[0] || 0;
+			if (newArray[0] == null) {
+				newArray[0] = newArray[0] || 0;
 			}
-			if (new_array[1] == null) {
-				new_array[1] = new_array[1] || new_array[0];
+			if (newArray[1] == null) {
+				newArray[1] = newArray[1] || newArray[0];
 			}
-			if (new_array[2] == null) {
-				new_array[2] = new_array[2] || new_array[1];
+			if (newArray[2] == null) {
+				newArray[2] = newArray[2] || newArray[1];
 			}
-			if (new_array[3] == null) {
-				new_array[3] = new_array[3] || new_array[2];
+			if (newArray[3] == null) {
+				newArray[3] = newArray[3] || newArray[2];
 			}
-			return new_array;
+			return newArray;
 		}
 	}
 	static override areRawInputEqual(
-		raw_input1: ParamInitValuesTypeMap[ParamType.VECTOR4],
-		raw_input2: ParamInitValuesTypeMap[ParamType.VECTOR4]
+		rawInput1: ParamInitValuesTypeMap[ParamType.VECTOR4],
+		rawInput2: ParamInitValuesTypeMap[ParamType.VECTOR4]
 	) {
-		if (raw_input1 instanceof Vector4) {
-			if (raw_input2 instanceof Vector4) {
-				return raw_input1.equals(raw_input2);
+		if (rawInput1 instanceof Vector4) {
+			if (rawInput2 instanceof Vector4) {
+				return rawInput1.equals(rawInput2);
 			} else {
-				return vector2EqualsStringNumber4(raw_input1, raw_input2);
+				return vector2EqualsStringNumber4(rawInput1, rawInput2);
 			}
 		} else {
-			if (raw_input2 instanceof Vector4) {
-				return vector2EqualsStringNumber4(raw_input2, raw_input1);
+			if (rawInput2 instanceof Vector4) {
+				return vector2EqualsStringNumber4(rawInput2, rawInput1);
 			} else {
-				return stringNumber4Equals(raw_input1, raw_input2);
+				return stringNumber4Equals(rawInput1, rawInput2);
 			}
 		}
 	}
@@ -123,10 +110,4 @@ export class Vector4Param extends TypedMultipleParam<ParamType.VECTOR4> {
 		this._value.z = this.z.value;
 		this._value.w = this.w.value;
 	}
-	// convert(input: any) {
-	// 	if (CoreType.isArray(input)) {
-	// 		return new Vector4().fromArray(input);
-	// 	}
-	// 	return new Vector4();
-	// }
 }

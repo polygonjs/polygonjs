@@ -1,4 +1,12 @@
-import {Color, Vector2, Vector3, Vector4, BufferAttribute} from 'three';
+import {
+	Color,
+	Vector2,
+	Vector3,
+	Vector4,
+	BufferAttribute,
+	InstancedBufferAttribute,
+	InterleavedBufferAttribute,
+} from 'three';
 import {AttribValue, PolyDictionary} from '../../types/GlobalTypes';
 import {ArrayUtils} from '../ArrayUtils';
 import {CoreString} from '../String';
@@ -63,7 +71,7 @@ export class CoreAttribute {
 		};
 	}
 
-	static default_value(size: number) {
+	static defaultValue(size: number) {
 		switch (size) {
 			case 1:
 				return 0;
@@ -129,5 +137,18 @@ export class CoreAttribute {
 		}
 
 		return ArrayUtils.uniq(matchingAttribNames);
+	}
+}
+
+export function markAttributeAsNeedsUpdateForFrame(
+	attribute: BufferAttribute | InstancedBufferAttribute | InterleavedBufferAttribute,
+	frame: number
+) {
+	if (attribute instanceof BufferAttribute || attribute instanceof InstancedBufferAttribute) {
+		(attribute as BufferAttribute | InstancedBufferAttribute).version = frame;
+	} else {
+		if (attribute.data) {
+			attribute.data.version = frame;
+		}
 	}
 }

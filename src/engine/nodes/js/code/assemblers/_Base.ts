@@ -108,7 +108,7 @@ const LINES_TO_REMOVE_MAP: Map<JsFunctionName, string[]> = new Map([
 ]);
 
 const SPACED_LINES = 3;
-const PER_POINT_PARENT_TYPES: Set<string> = new Set([SopType.ACTOR_POINT]);
+const PER_POINT_PARENT_TYPES: Set<string> = new Set([SopType.ACTOR_INSTANCE, SopType.ACTOR_POINT]);
 export abstract class BaseJsShaderAssembler extends TypedAssembler<NodeContext.JS> {
 	protected _shaders_by_name: Map<JsFunctionName, string> = new Map();
 	protected _lines: StringArrayByJsFunctionName = new Map();
@@ -149,7 +149,7 @@ export abstract class BaseJsShaderAssembler extends TypedAssembler<NodeContext.J
 	}
 	registeredAsComputed(varName: string): boolean {
 		if (varName.trim().length == 0) {
-			console.warn('attempt to read an empty variable');
+			console.warn(`attempt to read an empty variable ('${varName}')`);
 		}
 		return this._computedVarNames.has(varName);
 	}

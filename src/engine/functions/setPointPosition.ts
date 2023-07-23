@@ -1,2 +1,2 @@
-import { setPointPosition } from "./_SetPointPosition";
+import { setPointPosition } from "./_SetPoint";
 export { setPointPosition };

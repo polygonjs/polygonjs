@@ -10,6 +10,7 @@ import {JsConnectionPoint, JsConnectionPointType, JS_CONNECTION_POINT_IN_NODE_DE
 import {inputObject3D, setObject3DOutputLine} from './_BaseObject3D';
 import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {Poly} from '../../Poly';
+import {JsType} from '../../poly/registers/nodes/types/Js';
 
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
 
@@ -24,11 +25,10 @@ const ParamsConfig = new SetObjectQuaternionJsParamsConfig();
 export class SetObjectQuaternionJsNode extends TypedJsNode<SetObjectQuaternionJsParamsConfig> {
 	override readonly paramsConfig = ParamsConfig;
 	static override type() {
-		return 'setObjectQuaternion';
+		return JsType.SET_OBJECT_QUATERNION;
 	}
 
 	override initializeNode() {
-		this.io.connection_points.spare_params.setInputlessParamNames(['rotationOrder']);
 		this.io.inputs.setNamedInputConnectionPoints([
 			new JsConnectionPoint(TRIGGER_CONNECTION_NAME, JsConnectionPointType.TRIGGER, CONNECTION_OPTIONS),
 			new JsConnectionPoint(JsConnectionPointType.OBJECT_3D, JsConnectionPointType.OBJECT_3D, CONNECTION_OPTIONS),

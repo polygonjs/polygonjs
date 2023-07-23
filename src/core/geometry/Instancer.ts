@@ -1,13 +1,15 @@
-import {Vector3} from 'three';
-import {Vector2} from 'three';
-import {Quaternion} from 'three';
-import {Matrix4} from 'three';
-import {InstancedBufferGeometry} from 'three';
-import {InstancedBufferAttribute} from 'three';
+import {
+	BufferGeometry,
+	InstancedBufferAttribute,
+	InstancedBufferGeometry,
+	Matrix4,
+	Quaternion,
+	Vector2,
+	Vector3,
+} from 'three';
 import {CorePoint} from './Point';
 import {CoreGroup} from './Group';
 import {CoreGeometry} from './Geometry';
-import {BufferGeometry} from 'three';
 import {CoreType} from '../Type';
 import {Attribute} from './Attribute';
 import {PolyDictionary} from '../../types/GlobalTypes';
@@ -155,9 +157,13 @@ export class CoreInstancer {
 			this._scale.toArray(scales, index3);
 			i++;
 		}
-		geometry.setAttribute(InstanceAttrib.POSITION, new InstancedBufferAttribute(positions, 3));
-		geometry.setAttribute(InstanceAttrib.SCALE, new InstancedBufferAttribute(scales, 3));
-		geometry.setAttribute(InstanceAttrib.QUATERNION, new InstancedBufferAttribute(quaternions, 4));
+		const instancePosition = new InstancedBufferAttribute(positions, 3);
+		const instanceQuaternion = new InstancedBufferAttribute(quaternions, 4);
+		const instanceScale = new InstancedBufferAttribute(scales, 3);
+
+		geometry.setAttribute(InstanceAttrib.POSITION, instancePosition);
+		geometry.setAttribute(InstanceAttrib.QUATERNION, instanceQuaternion);
+		geometry.setAttribute(InstanceAttrib.SCALE, instanceScale);
 	}
 
 	static updateColorInstanceAttribute(

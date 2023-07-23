@@ -430,7 +430,7 @@ export class CoreGroup extends CoreEntity {
 
 	addGeoNumericVertexAttrib(name: string, size: number, defaultValue: NumericAttribValue) {
 		if (defaultValue == null) {
-			defaultValue = CoreAttribute.default_value(size);
+			defaultValue = CoreAttribute.defaultValue(size);
 		}
 
 		for (let coreGeometry of this.coreGeometries()) {

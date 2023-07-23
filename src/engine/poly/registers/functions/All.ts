@@ -194,6 +194,9 @@ import { getPointAttributeVector2 } from "../../../functions/getPointAttributeVe
 import { getPointAttributeVector3 } from "../../../functions/getPointAttributeVector3";
 import { getPointAttributeVector4 } from "../../../functions/getPointAttributeVector4";
 import { getPointIndex } from "../../../functions/getPointIndex";
+import { getPointInstancePosition } from "../../../functions/getPointInstancePosition";
+import { getPointInstanceQuaternion } from "../../../functions/getPointInstanceQuaternion";
+import { getPointInstanceScale } from "../../../functions/getPointInstanceScale";
 import { getPointPosition } from "../../../functions/getPointPosition";
 import { getRayDirection } from "../../../functions/getRayDirection";
 import { getRayOrigin } from "../../../functions/getRayOrigin";
@@ -452,7 +455,16 @@ import { setPhysicsRBDRotation } from "../../../functions/setPhysicsRBDRotation"
 import { setPhysicsRBDSphereProperty } from "../../../functions/setPhysicsRBDSphereProperty";
 import { setPhysicsWorldGravity } from "../../../functions/setPhysicsWorldGravity";
 import { setPlayerInput } from "../../../functions/setPlayerInput";
+import { setPointAttributeColor } from "../../../functions/setPointAttributeColor";
+import { setPointAttributeNumber } from "../../../functions/setPointAttributeNumber";
+import { setPointAttributeVector2 } from "../../../functions/setPointAttributeVector2";
+import { setPointAttributeVector3 } from "../../../functions/setPointAttributeVector3";
+import { setPointAttributeVector4 } from "../../../functions/setPointAttributeVector4";
 import { setPointIndex } from "../../../functions/setPointIndex";
+import { setPointInstanceLookAt } from "../../../functions/setPointInstanceLookAt";
+import { setPointInstancePosition } from "../../../functions/setPointInstancePosition";
+import { setPointInstanceQuaternion } from "../../../functions/setPointInstanceQuaternion";
+import { setPointInstanceScale } from "../../../functions/setPointInstanceScale";
 import { setPointPosition } from "../../../functions/setPointPosition";
 import { setSpotLightIntensity } from "../../../functions/setSpotLightIntensity";
 import { setViewer } from "../../../functions/setViewer";
@@ -676,6 +688,9 @@ export interface NamedFunctionMap {
 	getPointAttributeVector3: getPointAttributeVector3;
 	getPointAttributeVector4: getPointAttributeVector4;
 	getPointIndex: getPointIndex;
+	getPointInstancePosition: getPointInstancePosition;
+	getPointInstanceQuaternion: getPointInstanceQuaternion;
+	getPointInstanceScale: getPointInstanceScale;
 	getPointPosition: getPointPosition;
 	getRayDirection: getRayDirection;
 	getRayOrigin: getRayOrigin;
@@ -934,7 +949,16 @@ export interface NamedFunctionMap {
 	setPhysicsRBDSphereProperty: setPhysicsRBDSphereProperty;
 	setPhysicsWorldGravity: setPhysicsWorldGravity;
 	setPlayerInput: setPlayerInput;
+	setPointAttributeColor: setPointAttributeColor;
+	setPointAttributeNumber: setPointAttributeNumber;
+	setPointAttributeVector2: setPointAttributeVector2;
+	setPointAttributeVector3: setPointAttributeVector3;
+	setPointAttributeVector4: setPointAttributeVector4;
 	setPointIndex: setPointIndex;
+	setPointInstanceLookAt: setPointInstanceLookAt;
+	setPointInstancePosition: setPointInstancePosition;
+	setPointInstanceQuaternion: setPointInstanceQuaternion;
+	setPointInstanceScale: setPointInstanceScale;
 	setPointPosition: setPointPosition;
 	setSpotLightIntensity: setSpotLightIntensity;
 	setViewer: setViewer;
@@ -1161,6 +1185,9 @@ export class AllNamedFunctionRegister {
 			getPointAttributeVector3,
 			getPointAttributeVector4,
 			getPointIndex,
+			getPointInstancePosition,
+			getPointInstanceQuaternion,
+			getPointInstanceScale,
 			getPointPosition,
 			getRayDirection,
 			getRayOrigin,
@@ -1419,7 +1446,16 @@ export class AllNamedFunctionRegister {
 			setPhysicsRBDSphereProperty,
 			setPhysicsWorldGravity,
 			setPlayerInput,
+			setPointAttributeColor,
+			setPointAttributeNumber,
+			setPointAttributeVector2,
+			setPointAttributeVector3,
+			setPointAttributeVector4,
 			setPointIndex,
+			setPointInstanceLookAt,
+			setPointInstancePosition,
+			setPointInstanceQuaternion,
+			setPointInstanceScale,
 			setPointPosition,
 			setSpotLightIntensity,
 			setViewer,

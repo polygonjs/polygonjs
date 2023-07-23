@@ -1,6 +1,7 @@
 import {BufferGeometry, BufferAttribute, Object3D, Mesh, Vector2, Vector3, Vector4, Quaternion, Color} from 'three';
 import {InstanceAttrib} from '../../core/geometry/Instancer';
 import {ObjectNamedFunction3, ObjectNamedFunction4, ObjectNamedFunction6} from './_Base';
+import {markAttributeAsNeedsUpdateForFrame} from '../../core/geometry/Attribute';
 const tmpV2 = new Vector2();
 const tmpV3 = new Vector3();
 const tmpV4 = new Vector4();
@@ -21,6 +22,7 @@ const STRIDE4 = 4;
 //
 //
 function _setGeometryInstancePositions(
+	frame: number,
 	geometry: BufferGeometry,
 	newValues: Vector3[],
 	lerp: number,
@@ -48,11 +50,12 @@ function _setGeometryInstancePositions(
 	}
 
 	if (attributeNeedsUpdate) {
-		instancePositionAttribute.needsUpdate = true;
+		markAttributeAsNeedsUpdateForFrame(instancePositionAttribute, frame);
 	}
 }
 
 function _setGeometryInstanceQuaternions(
+	frame: number,
 	geometry: BufferGeometry,
 	newValues: Quaternion[],
 	lerp: number,
@@ -79,10 +82,11 @@ function _setGeometryInstanceQuaternions(
 	}
 
 	if (attributeNeedsUpdate) {
-		instanceQuaternionAttribute.needsUpdate = true;
+		markAttributeAsNeedsUpdateForFrame(instanceQuaternionAttribute, frame);
 	}
 }
 function _setGeometryInstanceScales(
+	frame: number,
 	geometry: BufferGeometry,
 	scaleValues: Vector3[],
 	multValues: number[],
@@ -143,7 +147,7 @@ function _setGeometryInstanceScales(
 	}
 
 	if (attributeNeedsUpdate) {
-		instanceScaleAttribute.needsUpdate = true;
+		markAttributeAsNeedsUpdateForFrame(instanceScaleAttribute, frame);
 	}
 }
 
@@ -161,7 +165,7 @@ export class setGeometryInstancePositions extends ObjectNamedFunction3<[Array<Ve
 		if (!geometry) {
 			return;
 		}
-		_setGeometryInstancePositions(geometry, newValues, lerp, attributeNeedsUpdate);
+		_setGeometryInstancePositions(this.timeController.frame(), geometry, newValues, lerp, attributeNeedsUpdate);
 	}
 }
 
@@ -174,7 +178,7 @@ export class setGeometryInstanceQuaternions extends ObjectNamedFunction3<[Array<
 		if (!geometry) {
 			return;
 		}
-		_setGeometryInstanceQuaternions(geometry, newValues, lerp, attributeNeedsUpdate);
+		_setGeometryInstanceQuaternions(this.timeController.frame(), geometry, newValues, lerp, attributeNeedsUpdate);
 	}
 }
 
@@ -193,7 +197,14 @@ export class setGeometryInstanceScales extends ObjectNamedFunction4<[Array<Vecto
 		if (!geometry) {
 			return;
 		}
-		_setGeometryInstanceScales(geometry, scaleValues, multValues, lerp, attributeNeedsUpdate);
+		_setGeometryInstanceScales(
+			this.timeController.frame(),
+			geometry,
+			scaleValues,
+			multValues,
+			lerp,
+			attributeNeedsUpdate
+		);
 	}
 }
 export class setGeometryInstanceTransforms extends ObjectNamedFunction6<
@@ -215,9 +226,16 @@ export class setGeometryInstanceTransforms extends ObjectNamedFunction6<
 		if (!geometry) {
 			return;
 		}
-		_setGeometryInstancePositions(geometry, positions, lerp, attributeNeedsUpdate);
-		_setGeometryInstanceQuaternions(geometry, quaternions, lerp, attributeNeedsUpdate);
-		_setGeometryInstanceScales(geometry, scaleValues, multValues, lerp, attributeNeedsUpdate);
+		_setGeometryInstancePositions(this.timeController.frame(), geometry, positions, lerp, attributeNeedsUpdate);
+		_setGeometryInstanceQuaternions(this.timeController.frame(), geometry, quaternions, lerp, attributeNeedsUpdate);
+		_setGeometryInstanceScales(
+			this.timeController.frame(),
+			geometry,
+			scaleValues,
+			multValues,
+			lerp,
+			attributeNeedsUpdate
+		);
 	}
 }
 
@@ -261,7 +279,7 @@ export class setGeometryInstanceAttributeFloat extends ObjectNamedFunction4<[str
 		}
 
 		if (attributeNeedsUpdate) {
-			instanceAttribute.needsUpdate = true;
+			markAttributeAsNeedsUpdateForFrame(instanceAttribute, this.timeController.frame());
 		}
 	}
 }
@@ -303,7 +321,7 @@ export class setGeometryInstanceAttributeColor extends ObjectNamedFunction4<[str
 		}
 
 		if (attributeNeedsUpdate) {
-			instanceAttribute.needsUpdate = true;
+			markAttributeAsNeedsUpdateForFrame(instanceAttribute, this.timeController.frame());
 		}
 	}
 }
@@ -345,7 +363,7 @@ export class setGeometryInstanceAttributeQuaternion extends ObjectNamedFunction4
 		}
 
 		if (attributeNeedsUpdate) {
-			instanceAttribute.needsUpdate = true;
+			markAttributeAsNeedsUpdateForFrame(instanceAttribute, this.timeController.frame());
 		}
 	}
 }
@@ -389,7 +407,7 @@ export class setGeometryInstanceAttributeVector2 extends ObjectNamedFunction4<
 		}
 
 		if (attributeNeedsUpdate) {
-			instanceAttribute.needsUpdate = true;
+			markAttributeAsNeedsUpdateForFrame(instanceAttribute, this.timeController.frame());
 		}
 	}
 }
@@ -433,7 +451,7 @@ export class setGeometryInstanceAttributeVector3 extends ObjectNamedFunction4<
 		}
 
 		if (attributeNeedsUpdate) {
-			instanceAttribute.needsUpdate = true;
+			markAttributeAsNeedsUpdateForFrame(instanceAttribute, this.timeController.frame());
 		}
 	}
 }
@@ -477,7 +495,7 @@ export class setGeometryInstanceAttributeVector4 extends ObjectNamedFunction4<
 		}
 
 		if (attributeNeedsUpdate) {
-			instanceAttribute.needsUpdate = true;
+			markAttributeAsNeedsUpdateForFrame(instanceAttribute, this.timeController.frame());
 		}
 	}
 }

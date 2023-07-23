@@ -1,5 +1,6 @@
 export enum SopType {
 	ACTOR = 'actor',
+	ACTOR_INSTANCE = 'actorInstance',
 	ACTOR_POINT = 'actorPoint',
 	ADD = 'add',
 	ADJACENCY = 'adjacency',

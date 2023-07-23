@@ -120,7 +120,7 @@ export class CoreObject extends BaseCoreObject<CoreObjectType.THREEJS> {
 	}
 	addNumericVertexAttrib(name: string, size: number, defaultValue: NumericAttribValue) {
 		if (defaultValue == null) {
-			defaultValue = CoreAttribute.default_value(size);
+			defaultValue = CoreAttribute.defaultValue(size);
 		}
 		this.coreGeometry()?.addNumericAttrib(name, size, defaultValue);
 	}

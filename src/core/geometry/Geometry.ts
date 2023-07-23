@@ -6,11 +6,15 @@ import {
 	Vector3Like,
 	Vector4Like,
 } from '../../types/GlobalTypes';
-import {BufferAttribute, Vector3} from 'three';
-import {Int32BufferAttribute} from 'three';
-import {Float32BufferAttribute} from 'three';
-import {BufferGeometry} from 'three';
-import {Box3} from 'three';
+import {
+	Box3,
+	BufferGeometry,
+	Float32BufferAttribute,
+	BufferAttribute,
+	Vector3,
+	Int32BufferAttribute,
+	InstancedBufferAttribute,
+} from 'three';
 import {CorePoint} from './Point';
 import {CoreFace} from './CoreFace';
 import {AttribType, AttribSize} from './Constant';
@@ -23,7 +27,9 @@ import {GroupString} from './Group';
 import {InstanceAttrib} from './Instancer';
 
 const IS_INSTANCE_KEY = 'isInstance';
-const INDEX_ATTRIB_VALUES = 'indexed_attrib_values';
+const INDEX_ATTRIB_VALUES = 'indexedAttribValues';
+
+const normalsComputedWithPositionAttributeVersion: Map<string, number> = new Map();
 
 export class CoreGeometry {
 	_bounding_box: Box3 | undefined;
@@ -64,7 +70,27 @@ export class CoreGeometry {
 		return this.markedAsInstance(geometry) ? InstanceAttrib.POSITION : Attribute.POSITION;
 	}
 	static computeVertexNormals(geometry?: BufferGeometry) {
-		geometry?.computeVertexNormals();
+		if (!geometry) {
+			return;
+		}
+		geometry.computeVertexNormals();
+	}
+	static computeVertexNormalsIfAttributeVersionChanged(geometry?: BufferGeometry) {
+		if (!geometry) {
+			return;
+		}
+		const positionAttribute = geometry.getAttribute(Attribute.POSITION);
+		if (!positionAttribute) {
+			return;
+		}
+		if (!(positionAttribute instanceof BufferAttribute)) {
+			return;
+		}
+		let lastVersion = normalsComputedWithPositionAttributeVersion.get(geometry.uuid);
+		if (lastVersion == null || lastVersion != positionAttribute.version) {
+			geometry.computeVertexNormals();
+			normalsComputedWithPositionAttributeVersion.set(geometry.uuid, positionAttribute.version);
+		}
 	}
 	computeVertexNormals() {
 		CoreGeometry.computeVertexNormals(this._geometry);
@@ -184,7 +210,7 @@ export class CoreGeometry {
 	addNumericAttrib(name: string, size: number = 1, default_value: NumericAttribValue = 0) {
 		const values = [];
 
-		let attribute_added = false;
+		let attributeAdded = false;
 		if (CoreType.isNumber(default_value)) {
 			// adding number
 			for (let i = 0; i < this.pointsCount(); i++) {
@@ -192,7 +218,7 @@ export class CoreGeometry {
 					values.push(default_value);
 				}
 			}
-			attribute_added = true;
+			attributeAdded = true;
 		} else {
 			if (size > 1) {
 				if (CoreType.isArray(default_value)) {
@@ -202,7 +228,7 @@ export class CoreGeometry {
 							values.push(default_value[j]);
 						}
 					}
-					attribute_added = true;
+					attributeAdded = true;
 				} else {
 					// adding Vector2
 					const vec2 = default_value as Vector2Like;
@@ -211,7 +237,7 @@ export class CoreGeometry {
 							values.push(vec2.x);
 							values.push(vec2.y);
 						}
-						attribute_added = true;
+						attributeAdded = true;
 					}
 					// adding Vector3
 					const vec3 = default_value as Vector3Like;
@@ -221,7 +247,7 @@ export class CoreGeometry {
 							values.push(vec3.y);
 							values.push(vec3.z);
 						}
-						attribute_added = true;
+						attributeAdded = true;
 					}
 					// adding Color
 					const col = default_value as ColorLike;
@@ -231,7 +257,7 @@ export class CoreGeometry {
 							values.push(col.g);
 							values.push(col.b);
 						}
-						attribute_added = true;
+						attributeAdded = true;
 					}
 					// adding Vector4
 					const vec4 = default_value as Vector4Like;
@@ -242,14 +268,19 @@ export class CoreGeometry {
 							values.push(vec4.z);
 							values.push(vec4.w);
 						}
-						attribute_added = true;
+						attributeAdded = true;
 					}
 				}
 			}
 		}
 
-		if (attribute_added) {
-			this._geometry.setAttribute(name.trim(), new Float32BufferAttribute(values, size));
+		if (attributeAdded) {
+			if (this.markedAsInstance()) {
+				const valuesAsTypedArray = new Float32Array(values);
+				this._geometry.setAttribute(name.trim(), new InstancedBufferAttribute(valuesAsTypedArray, size));
+			} else {
+				this._geometry.setAttribute(name.trim(), new Float32BufferAttribute(values, size));
+			}
 		} else {
 			console.warn(default_value);
 			throw `CoreGeometry.add_numeric_attrib error: no other default value allowed for now in add_numeric_attrib (default given: ${default_value})`;

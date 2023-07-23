@@ -409,6 +409,21 @@ export const PARAM_CONVERTIBLE_JS_CONNECTION_POINT_TYPES: Array<ParamConvertible
 	JsConnectionPointType.VECTOR3,
 	JsConnectionPointType.VECTOR4,
 ];
+export type PointAttributeJsType =
+	| JsConnectionPointType.COLOR
+	| JsConnectionPointType.FLOAT
+	| JsConnectionPointType.INT
+	| JsConnectionPointType.VECTOR2
+	| JsConnectionPointType.VECTOR3
+	| JsConnectionPointType.VECTOR4;
+export const POINT_ATTRIBUTE_JS_CONNECTION_POINT_TYPES: Array<PointAttributeJsType> = [
+	JsConnectionPointType.COLOR,
+	JsConnectionPointType.FLOAT,
+	JsConnectionPointType.INT,
+	JsConnectionPointType.VECTOR2,
+	JsConnectionPointType.VECTOR3,
+	JsConnectionPointType.VECTOR4,
+];
 
 //
 //

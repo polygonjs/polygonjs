@@ -5,7 +5,6 @@ export enum GetPointPropertyJsNodeInputName {
 	ptnum = 'ptnum',
 	position = 'position',
 }
-export const POINT_VECTOR3_PROPERTIES = [GetPointPropertyJsNodeInputName.position];
 
 const ptnumRefByObjectUuid: Map<string, Ref<number>> = new Map();
 export function getObjectPtnumRef(object3D: Object3D) {

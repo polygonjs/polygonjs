@@ -1,5 +1,5 @@
 import {Box3, Vector3, Object3D, Mesh, BufferAttribute} from 'three';
-import {Attribute} from '../../core/geometry/Attribute';
+import {Attribute, markAttributeAsNeedsUpdateForFrame} from '../../core/geometry/Attribute';
 import {isBooleanTrue} from '../../core/Type';
 import {ObjectNamedFunction1, ObjectNamedFunction2, ObjectNamedFunction5} from './_Base';
 import {_setArrayLength} from './_ArrayUtils';
@@ -106,12 +106,12 @@ export class setGeometryPositions extends ObjectNamedFunction5<[Vector3[], numbe
 		}
 
 		if (isBooleanTrue(attributeNeedsUpdate)) {
-			positionAttribute.needsUpdate = true;
-		}
-		if (isBooleanTrue(computeTangents)) {
-			geometry.computeVertexNormals();
+			markAttributeAsNeedsUpdateForFrame(positionAttribute, this.timeController.frame());
 		}
 		const normalAttribute = geometry.getAttribute(Attribute.NORMAL);
+		if (positionAttribute != null && normalAttribute != null && isBooleanTrue(computeNormals)) {
+			geometry.computeVertexNormals();
+		}
 		const uvAttribute = geometry.getAttribute(Attribute.UV);
 		const index = geometry.getIndex();
 		if (
@@ -119,7 +119,7 @@ export class setGeometryPositions extends ObjectNamedFunction5<[Vector3[], numbe
 			uvAttribute != null &&
 			normalAttribute != null &&
 			index != null &&
-			isBooleanTrue(computeNormals)
+			isBooleanTrue(computeTangents)
 		) {
 			geometry.computeTangents();
 		}

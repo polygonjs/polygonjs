@@ -79,16 +79,18 @@ import {GetDefaultCameraJsNode} from '../../../nodes/js/GetDefaultCamera';
 import {GetGeometryBoundingBoxJsNode} from '../../../nodes/js/GetGeometryBoundingBox';
 import {GetGeometryNodeObjectsJsNode} from '../../../nodes/js/GetGeometryNodeObjects';
 import {GetGeometryPositionsJsNode} from '../../../nodes/js/GetGeometryPositions';
+import {GetInstanceAttributeJsNode} from '../../../nodes/js/GetInstanceAttribute';
+import {GetInstancePropertyJsNode} from '../../../nodes/js/GetInstanceProperty';
 import {GetIntersectionAttributeJsNode} from '../../../nodes/js/GetIntersectionAttribute';
 import {GetIntersectionPropertyJsNode} from '../../../nodes/js/GetIntersectionProperty';
 import {GetMaterialJsNode} from '../../../nodes/js/GetMaterial';
+import {GetNodeJsNode} from '../../../nodes/js/GetNode';
 import {GetObjectJsNode} from '../../../nodes/js/GetObject';
 import {GetObjectAttributeJsNode} from '../../../nodes/js/GetObjectAttribute';
 import {GetObjectChildJsNode} from '../../../nodes/js/GetObjectChild';
 import {GetObjectPropertyJsNode} from '../../../nodes/js/GetObjectProperty';
 import {GetObjectUserDataJsNode} from '../../../nodes/js/GetObjectUserData';
 import {GetObjectWorldPositionJsNode} from '../../../nodes/js/GetObjectWorldPosition';
-import {GetNodeJsNode} from '../../../nodes/js/GetNode';
 import {GetParamJsNode} from '../../../nodes/js/GetParam';
 import {GetParentJsNode} from '../../../nodes/js/GetParent';
 import {GetPhysicsRBDJsNode} from '../../../nodes/js/GetPhysicsRBD';
@@ -253,6 +255,11 @@ import {SetGeometryInstanceQuaternionsJsNode} from '../../../nodes/js/SetGeometr
 import {SetGeometryInstanceScalesJsNode} from '../../../nodes/js/SetGeometryInstanceScales';
 import {SetGeometryInstanceTransformsJsNode} from '../../../nodes/js/SetGeometryInstanceTransforms';
 import {SetGeometryPositionsJsNode} from '../../../nodes/js/SetGeometryPositions';
+import {SetInstanceAttributeJsNode} from '../../../nodes/js/SetInstanceAttribute';
+import {SetInstanceLookAtJsNode} from '../../../nodes/js/SetInstanceLookAt';
+import {SetInstancePositionJsNode} from '../../../nodes/js/SetInstancePosition';
+import {SetInstanceQuaternionJsNode} from '../../../nodes/js/SetInstanceQuaternion';
+import {SetInstanceScaleJsNode} from '../../../nodes/js/SetInstanceScale';
 import {SetMaterialAlphaMapJsNode} from '../../../nodes/js/SetMaterialAlphaMap';
 import {SetMaterialAOMapJsNode} from '../../../nodes/js/SetMaterialAOMap';
 import {SetMaterialColorJsNode} from '../../../nodes/js/SetMaterialColor';
@@ -294,6 +301,7 @@ import {SetPhysicsRBDCuboidPropertyJsNode} from '../../../nodes/js/SetPhysicsRBD
 import {SetPhysicsRBDSpherePropertyJsNode} from '../../../nodes/js/SetPhysicsRBDSphereProperty';
 import {SetPhysicsWorldGravityJsNode} from '../../../nodes/js/SetPhysicsWorldGravity';
 import {SetPlayerInputJsNode} from '../../../nodes/js/SetPlayerInput';
+import {SetPointAttributeJsNode} from '../../../nodes/js/SetPointAttribute';
 import {SetPointPositionJsNode} from '../../../nodes/js/SetPointPosition';
 import {SetSoftBodyConstraintPositionJsNode} from '../../../nodes/js/SetSoftBodyConstraintPosition';
 import {SetSpotLightIntensityJsNode} from '../../../nodes/js/SetSpotLightIntensity';
@@ -414,16 +422,18 @@ export interface JsNodeChildrenMap {
 	getGeometryBoundingBox: GetGeometryBoundingBoxJsNode;
 	getGeometryNodeObjects: GetGeometryNodeObjectsJsNode;
 	getGeometryPositions: GetGeometryPositionsJsNode;
+	getInstanceAttribute: GetInstanceAttributeJsNode;
+	getInstanceProperty: GetInstancePropertyJsNode;
 	getIntersectionAttribute: GetIntersectionAttributeJsNode;
 	getIntersectionProperty: GetIntersectionPropertyJsNode;
 	getMaterial: GetMaterialJsNode;
+	getNode: GetNodeJsNode;
 	getObject: GetObjectJsNode;
 	getObjectAttribute: GetObjectAttributeJsNode;
 	getObjectChild: GetObjectChildJsNode;
 	getObjectProperty: GetObjectPropertyJsNode;
 	getObjectUserData: GetObjectUserDataJsNode;
 	getObjectWorldPosition: GetObjectWorldPositionJsNode;
-	getNode: GetNodeJsNode;
 	getParam: GetParamJsNode;
 	getParent: GetParentJsNode;
 	getPlaneProperty: GetPlanePropertyJsNode;
@@ -587,6 +597,11 @@ export interface JsNodeChildrenMap {
 	setGeometryInstanceScales: SetGeometryInstanceScalesJsNode;
 	setGeometryInstanceTransforms: SetGeometryInstanceTransformsJsNode;
 	setGeometryPositions: SetGeometryPositionsJsNode;
+	setInstanceAttribute: SetInstanceAttributeJsNode;
+	setInstanceLookAt: SetInstanceLookAtJsNode;
+	setInstancePosition: SetInstancePositionJsNode;
+	setInstanceQuaternion: SetInstanceQuaternionJsNode;
+	setInstanceScale: SetInstanceScaleJsNode;
 	setMaterialAlphaMap: SetMaterialAlphaMapJsNode;
 	setMaterialAOMap: SetMaterialAOMapJsNode;
 	setMaterialColor: SetMaterialColorJsNode;
@@ -628,6 +643,7 @@ export interface JsNodeChildrenMap {
 	setPhysicsRBDSphereProperty: SetPhysicsRBDSpherePropertyJsNode;
 	setPhysicsWorldGravity: SetPhysicsWorldGravityJsNode;
 	setPlayerInput: SetPlayerInputJsNode;
+	setPointAttribute: SetPointAttributeJsNode;
 	setPointPosition: SetPointPositionJsNode;
 	setClothConstraintPosition: SetClothConstraintPositionJsNode;
 	setSoftBodyConstraintPosition: SetSoftBodyConstraintPositionJsNode;
@@ -711,15 +727,19 @@ const ACTOR_OBJECTS = [
 		NodeContext.SOP,
 	].map((c) => `${c}/${NetworkNodeType.ACTOR}`),
 ];
-const ACTOR_POITNS = [sopType(SopType.ACTOR_POINT)];
+const ACTOR_POINTS = [sopType(SopType.ACTOR_POINT)];
+const ACTOR_INSTANCES = [sopType(SopType.ACTOR_INSTANCE)];
 const ONLY_ACTOR = {
 	only: ACTOR_OBJECTS,
 };
 const ONLY_ACTOR_POINT = {
-	only: ACTOR_POITNS,
+	only: ACTOR_POINTS,
+};
+const ONLY_ACTOR_INSTANCE = {
+	only: ACTOR_INSTANCES,
 };
 const ONLY_ACTOR_AND_POINT = {
-	only: [...ACTOR_OBJECTS, ...ACTOR_POITNS],
+	only: [...ACTOR_OBJECTS, ...ACTOR_POINTS, ...ACTOR_INSTANCES],
 };
 export class JsRegister {
 	static run(poly: PolyEngine) {
@@ -804,6 +824,8 @@ export class JsRegister {
 		poly.registerNode(GetGeometryPositionsJsNode, CATEGORY_JS.GET, ONLY_ACTOR);
 		poly.registerNode(GetIntersectionAttributeJsNode, CATEGORY_JS.GET);
 		poly.registerNode(GetIntersectionPropertyJsNode, CATEGORY_JS.GET);
+		poly.registerNode(GetInstanceAttributeJsNode, CATEGORY_JS.GET, ONLY_ACTOR_INSTANCE);
+		poly.registerNode(GetInstancePropertyJsNode, CATEGORY_JS.GET, ONLY_ACTOR_INSTANCE);
 		poly.registerNode(GetMaterialJsNode, CATEGORY_JS.GET, ONLY_ACTOR);
 		poly.registerNode(GetObjectChildJsNode, CATEGORY_JS.GET, ONLY_ACTOR);
 		poly.registerNode(GetObjectJsNode, CATEGORY_JS.GET, ONLY_ACTOR);
@@ -976,6 +998,11 @@ export class JsRegister {
 		poly.registerNode(SetGeometryInstanceScalesJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR);
 		poly.registerNode(SetGeometryInstanceTransformsJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR);
 		poly.registerNode(SetGeometryPositionsJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR);
+		poly.registerNode(SetInstanceAttributeJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR_INSTANCE);
+		poly.registerNode(SetInstanceLookAtJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR_INSTANCE);
+		poly.registerNode(SetInstancePositionJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR_INSTANCE);
+		poly.registerNode(SetInstanceQuaternionJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR_INSTANCE);
+		poly.registerNode(SetInstanceScaleJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR_INSTANCE);
 		poly.registerNode(SetMaterialAlphaMapJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR);
 		poly.registerNode(SetMaterialAOMapJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR);
 		poly.registerNode(SetMaterialColorJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR);
@@ -1017,6 +1044,7 @@ export class JsRegister {
 		poly.registerNode(SetPhysicsRBDSpherePropertyJsNode, CATEGORY_JS.PHYSICS, ONLY_ACTOR);
 		poly.registerNode(SetPhysicsWorldGravityJsNode, CATEGORY_JS.PHYSICS, ONLY_ACTOR);
 		poly.registerNode(SetPlayerInputJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
+		poly.registerNode(SetPointAttributeJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR_POINT);
 		poly.registerNode(SetPointPositionJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR_POINT);
 		poly.registerNode(SetSoftBodyConstraintPositionJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
 		poly.registerNode(SetSpotLightIntensityJsNode, CATEGORY_JS.PHYSICS, ONLY_ACTOR);
@@ -1039,7 +1067,7 @@ export class JsRegister {
 		poly.registerNode(TrackHandJsNode, CATEGORY_JS.COMPUTER_VISION);
 		poly.registerNode(TriggerDelayJsNode, CATEGORY_JS.FLOW, ONLY_ACTOR);
 		poly.registerNode(TriggerFilterJsNode, CATEGORY_JS.FLOW, ONLY_ACTOR);
-		poly.registerNode(TriggerTwoWaySwitchJsNode, CATEGORY_JS.FLOW, ONLY_ACTOR);
+		poly.registerNode(TriggerTwoWaySwitchJsNode, CATEGORY_JS.FLOW, ONLY_ACTOR_AND_POINT);
 		poly.registerNode(TwoWaySwitchJsNode, CATEGORY_JS.LOGIC);
 		poly.registerNode(Vector3AngleToJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(Vector3ProjectJsNode, CATEGORY_JS.MATH);

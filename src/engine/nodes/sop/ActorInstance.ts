@@ -13,7 +13,7 @@ import {TypedActorSopNode} from './_BaseActor';
 import {isBooleanTrue} from '../../../core/Type';
 import {ActorBuilderNode} from '../../scene/utils/ActorsManager';
 import {InputCloneMode} from '../../poly/InputCloneMode';
-class ActorPointSopParamsConfig extends NodeParamsConfig {
+class ActorInstanceSopParamsConfig extends NodeParamsConfig {
 	/** @param select which objects this applies the actor behavior to */
 	objectsMask = ParamConfig.STRING('', {
 		objectMask: true,
@@ -32,12 +32,12 @@ class ActorPointSopParamsConfig extends NodeParamsConfig {
 		separatorAfter: true,
 	});
 }
-const ParamsConfig = new ActorPointSopParamsConfig();
+const ParamsConfig = new ActorInstanceSopParamsConfig();
 
-export class ActorPointSopNode extends TypedActorSopNode<ActorPointSopParamsConfig> {
+export class ActorInstanceSopNode extends TypedActorSopNode<ActorInstanceSopParamsConfig> {
 	override readonly paramsConfig = ParamsConfig;
 	static override type() {
-		return SopType.ACTOR_POINT;
+		return SopType.ACTOR_INSTANCE;
 	}
 
 	protected override initializeNode() {

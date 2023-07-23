@@ -388,6 +388,7 @@ import './engine/nodes/post/DepthOfField';
 
 QUnit.module('sop');
 import './engine/nodes/sop/Actor';
+import './engine/nodes/sop/ActorInstance';
 import './engine/nodes/sop/ActorPoint';
 import './engine/nodes/sop/Add';
 import './engine/nodes/sop/AmbientLight';

@@ -1,5 +1,5 @@
 /**
- * Update a point position
+ * Update the object position
  *
  *
  */
@@ -19,7 +19,7 @@ import {BaseTriggerAndObjectJsNode} from './_BaseTriggerAndObject';
 import {JS_CONNECTION_POINT_IN_NODE_DEF, JsConnectionPoint, JsConnectionPointType} from '../utils/io/connections/Js';
 
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
-class SetPointPositionJsParamsConfig extends NodeParamsConfig {
+class SetInstancePositionJsParamsConfig extends NodeParamsConfig {
 	/** @param point index */
 	ptnum = ParamConfig.INTEGER(0);
 	/** @param target position */
@@ -27,12 +27,12 @@ class SetPointPositionJsParamsConfig extends NodeParamsConfig {
 	/** @param lerp factor */
 	lerp = ParamConfig.FLOAT(1);
 }
-const ParamsConfig = new SetPointPositionJsParamsConfig();
+const ParamsConfig = new SetInstancePositionJsParamsConfig();
 
-export class SetPointPositionJsNode extends BaseTriggerAndObjectJsNode<SetPointPositionJsParamsConfig> {
+export class SetInstancePositionJsNode extends BaseTriggerAndObjectJsNode<SetInstancePositionJsParamsConfig> {
 	override readonly paramsConfig = ParamsConfig;
 	static override type() {
-		return JsType.SET_POINT_POSITION;
+		return JsType.SET_INSTANCE_POSITION;
 	}
 
 	protected override _additionalOutputs(): JsConnectionPoint<JsConnectionPointType>[] {
@@ -57,7 +57,7 @@ export class SetPointPositionJsNode extends BaseTriggerAndObjectJsNode<SetPointP
 		const position = this.variableForInputParam(linesController, this.p.position);
 		const lerp = this.variableForInputParam(linesController, this.p.lerp);
 
-		const func = Poly.namedFunctionsRegister.getFunction('setPointPosition', this, linesController);
+		const func = Poly.namedFunctionsRegister.getFunction('setPointInstancePosition', this, linesController);
 		const bodyLine = func.asString(object3D, ptnum, position, lerp);
 		linesController.addTriggerableLines(this, [bodyLine]);
 	}

@@ -242,11 +242,13 @@ export class TriggeringJsDefinition extends TypedJsDefinition<JsDefinitionType.T
 
 			return `${methodName}(){
 				const pointsCount = CoreGeometry.pointsCount(${ActorAssemblerConstant.GEOMETRY});
-				for(let i=0; i<pointsCount; i++){
+				for( let i = 0; i < pointsCount; i++ ) {
 					${setPointIndex}
 					${this._value}
 				}
-				CoreGeometry.computeVertexNormals(${ActorAssemblerConstant.GEOMETRY});
+				if( ${ActorAssemblerConstant.OBJECT_3D}.isMesh ){
+					CoreGeometry.computeVertexNormalsIfAttributeVersionChanged(${ActorAssemblerConstant.GEOMETRY});
+				}
 			}`;
 		} else {
 			return `${methodName}(){
