@@ -73,16 +73,6 @@ export class objectAddEventListeners extends ObjectNamedFunction3<[string, Actor
 	func(object3D: Object3D, eventNamesList: string, evaluator: ActorEvaluator, boundListener: Listener): string {
 		const eventNames = eventNamesList.split(' ');
 		addListeners(evaluator, object3D, eventNames, boundListener);
-		// for (let eventName of eventNames) {
-		// 	if (boundListener) {
-		// 		object3D.addEventListener(eventName, boundListener);
-		// 	}
-		// }
-		// evaluator.onDispose(() => {
-		// 	for (let eventName of eventNames) {
-		// 		object3D.removeEventListener(eventName, boundListener);
-		// 	}
-		// });
 
 		return getOrCreateRef(object3D).value;
 	}

@@ -115,7 +115,7 @@ export class PolyEngine {
 		this.operationsRegister.register(operation, options);
 	}
 	registerNamedFunction(namedFunction: typeof BaseNamedFunction, options?: NamedFunctionRegisterOptions) {
-		this.namedFunctionsRegister.register(namedFunction);
+		this.namedFunctionsRegister.register(namedFunction, options);
 	}
 
 	registerCamera<C extends Camera>(cameraClass: any, viewerCreateCallback: ViewerCreateCallback<C>) {

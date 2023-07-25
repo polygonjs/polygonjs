@@ -4,6 +4,7 @@ import {SceneEvent} from '../../poly/SceneEvent';
 import {Clock} from 'three';
 import {SCENE_EVENT_PLAY_EVENT_CONTEXT, SCENE_EVENT_PAUSE_EVENT_CONTEXT} from './events/SceneEventsController';
 import {ref} from '../../../core/reactivity/CoreReactivity';
+import {Poly} from '../../Poly';
 
 // ensure that FPS remains a float
 // to have divisions and multiplications also give a float
@@ -221,7 +222,7 @@ export class TimeController {
 	play() {
 		if (!this._playAllowedWithoutAllNodesCooked) {
 			if (!this.scene.cookController.allNodesHaveCookedAtLeastOnce()) {
-				console.warn('play not allowed, some nodes have not completed cooking');
+				Poly.warn('play not allowed, some nodes have not completed cooking');
 				return;
 			}
 		}

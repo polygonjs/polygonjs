@@ -1,9 +1,10 @@
-import {Mesh} from 'three';
+import {Mesh, Object3D} from 'three';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Js';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 import {SetObjectAttributeInputName} from '../../../../src/engine/nodes/js/SetObjectAttribute';
 import {CoreObject} from '../../../../src/core/geometry/Object';
+import {ObjectEvent} from '../../../../src/core/geometry/Event';
 
 QUnit.test('js/onObjectBeforeDelete simple', async (assert) => {
 	const scene = window.scene;
@@ -41,10 +42,16 @@ QUnit.test('js/onObjectBeforeDelete simple', async (assert) => {
 	const getChildDeleted = () => {
 		return CoreObject.attribValue(parent, 'childDeleted', 0);
 	};
+	const onBeforeDeleteListeners = (object: Object3D) => {
+		return (object as any)._listeners[ObjectEvent.BEFORE_DELETE] as Function[];
+	};
 	assert.equal(getChildDeleted(), undefined);
 
 	await RendererUtils.withViewer({cameraNode: perspective_camera1}, async (args) => {
 		scene.play();
+
+		assert.equal(onBeforeDeleteListeners(object).length, 1, '1 listener');
+
 		assert.equal(scene.time(), 0);
 		assert.ok(object.parent, 'object has a parent');
 		assert.equal(parent.children.length, 1, '1 child');
@@ -55,5 +62,7 @@ QUnit.test('js/onObjectBeforeDelete simple', async (assert) => {
 		assert.notOk(object.parent, 'object has no parent');
 		assert.equal(parent.children.length, 0, '0 child');
 		assert.equal(getChildDeleted(), 1);
+
+		assert.equal(onBeforeDeleteListeners(object).length, 0, '0 listener');
 	});
 });

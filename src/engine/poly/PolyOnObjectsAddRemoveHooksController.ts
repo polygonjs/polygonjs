@@ -5,6 +5,7 @@ import {Object3D} from 'three';
 import {Poly} from '../Poly';
 import {updateObjectChildrenCountRef} from '../../core/reactivity/ObjectHierarchyReactivity';
 import {ON_OBJECT_BEFORE_DELETE} from '../../core/geometry/Event';
+import {deregisterGeneratorsForObject} from '../nodes/js/code/assemblers/actor/ActorEvaluatorGenerator';
 
 enum HandlerName {
 	ADD = 'onObjectAddHookHandlerNodeIds',
@@ -131,9 +132,10 @@ export function removeFromParent(scene: PolyScene, object: ObjectContent<CoreObj
 	if (!parent) {
 		return;
 	}
-	Poly.onObjectsAddRemoveHooks.runOnRemoveHookOnObject(scene, object);
 	object.dispatchEvent(ON_OBJECT_BEFORE_DELETE);
-	object.parent?.remove(object);
+	deregisterGeneratorsForObject(object);
+	Poly.onObjectsAddRemoveHooks.runOnRemoveHookOnObject(scene, object);
+	parent.remove(object);
 	updateObjectChildrenCountRef(parent);
 }
 export function addToParent(

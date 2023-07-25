@@ -15,7 +15,6 @@ export interface RaycasterUpdateOptions {
 	lineThreshold: number;
 }
 
-// type PointerEventsControllerAvailableEventNames = 'pointermove' | 'pointerdown' | 'pointerup';
 const methodNameByEventType: Record<PointerEventType, EvaluatorPointerMethod> = {
 	[PointerEventType.click]: 'onClick',
 	[PointerEventType.pointerdown]: JsType.ON_POINTERDOWN,

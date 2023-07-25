@@ -7,8 +7,16 @@ import {RegisterableVariable} from '../../engine/nodes/js/code/assemblers/_BaseJ
 import {SetUtils} from '../SetUtils';
 import {ActorBuilderNode} from '../../engine/scene/utils/ActorsManager';
 import {CoreGeometry} from '../geometry/Geometry';
+import {Object3D} from 'three';
+import {CoreObjectType, ObjectContent} from '../geometry/ObjectContent';
 
 type OnCompilationCompletedHook = () => void;
+function _createDummyObject() {
+	const object = new Object3D();
+	object.name = 'ActorCompilationController-DUMMY';
+	return object;
+}
+const dummyObject = _createDummyObject();
 export class ActorCompilationController {
 	constructor(protected node: ActorBuilderNode) {}
 
@@ -98,11 +106,18 @@ export class ActorCompilationController {
 		];
 		try {
 			const _function = new Function(...functionCreationArgs);
-			const evaluatorGenerator = new ActorEvaluatorGenerator((object) => {
+			const _createEvaluator = (object: ObjectContent<CoreObjectType>) => {
 				const evaluatorClass = _function(...functionEvalArgs()) as typeof ActorEvaluator;
 				const evaluator = new evaluatorClass(this.node, object);
+				return evaluator;
+			};
+			const evaluatorGenerator = new ActorEvaluatorGenerator((object) => {
+				const evaluator = _createEvaluator(object);
 				return this.node.scene().dispatchController.processActorEvaluator(evaluator) || evaluator;
 			});
+			//
+			const dummyEvaluator = _createEvaluator(dummyObject);
+			evaluatorGenerator.setExpectedEvaluatorMethodNames(dummyEvaluator);
 
 			//
 			//

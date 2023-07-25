@@ -15,6 +15,30 @@ export function range(start: number, end?: number, step: number = 1): number[] {
 	}
 	return array;
 }
+export function arrayUniq<T>(array: Array<T>): Array<T> {
+	const newArray: Array<T> = [];
+	for (let element of array) {
+		if (!newArray.includes(element)) {
+			newArray.push(element);
+		}
+	}
+	return newArray;
+	// if we use a set, we lose the order
+	// const tmpSet: Set<T> = new Set();
+
+	// for (let elem of array) {
+	// 	tmpSet.add(elem);
+	// }
+
+	// const newArray: Array<T> = new Array(tmpSet.size);
+	// let i = 0;
+	// tmpSet.forEach((elem) => {
+	// 	newArray[i] = elem;
+	// 	i++;
+	// });
+
+	// return newArray;
+}
 
 export class ArrayUtils {
 	static shallowClone<T>(array: Array<T>): Array<T> {
@@ -57,30 +81,7 @@ export class ArrayUtils {
 
 		return newArray;
 	}
-	static uniq<T>(array: Array<T>): Array<T> {
-		const newArray: Array<T> = [];
-		for (let element of array) {
-			if (!newArray.includes(element)) {
-				newArray.push(element);
-			}
-		}
-		return newArray;
-		// if we use a set, we lose the order
-		// const tmpSet: Set<T> = new Set();
-
-		// for (let elem of array) {
-		// 	tmpSet.add(elem);
-		// }
-
-		// const newArray: Array<T> = new Array(tmpSet.size);
-		// let i = 0;
-		// tmpSet.forEach((elem) => {
-		// 	newArray[i] = elem;
-		// 	i++;
-		// });
-
-		// return newArray;
-	}
+	static uniq = arrayUniq;
 	static uniqWithoutPreservingOrder<T>(array: Array<T>): Array<T> {
 		return SetUtils.toArray(SetUtils.fromArray(array));
 

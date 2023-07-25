@@ -13,7 +13,7 @@ export class BaseNamedFunctionRegister {
 		}
 
 		const type = namedFunction.type();
-		if (this._functionByName.get(type) && printWarnings) {
+		if (this._functionByName.has(type) && printWarnings) {
 			console.warn(`namedFunction already registered`, type);
 		}
 

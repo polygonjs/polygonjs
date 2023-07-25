@@ -3,6 +3,15 @@ import {CoreType} from './Type';
 import cloneDeep from 'lodash-es/cloneDeep';
 import clone from 'lodash-es/clone';
 
+export function getObjectMethodNames(obj: any): string[] {
+	let properties = new Set();
+	let currentObj = obj;
+	do {
+		Object.getOwnPropertyNames(currentObj).map((item) => properties.add(item));
+	} while ((currentObj = Object.getPrototypeOf(currentObj)));
+	return [...properties.keys()].filter((item) => typeof (obj as any)[item as string] === 'function') as string[];
+}
+
 export class ObjectUtils {
 	// static isObject(value: any): boolean {
 	// 	var type = typeof value;

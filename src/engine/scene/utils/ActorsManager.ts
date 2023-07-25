@@ -182,7 +182,16 @@ export class ActorsManager {
 		}
 
 		for (let nodeId of nodeIds) {
+			// we need to test that the object has a parent,
+			// as it could have multiple actor attached,
+			// and if the first one from nodeIds triggers the object removal
+			// from the hierarchy, going through the following actor nodes
+			// will regenerate an evaluator for an object that is not in the hierarchy anymore
+			if (object.parent == null) {
+				return;
+			}
 			const node = this.scene.graph.nodeFromId(nodeId) as ActorBuilderNode | undefined;
+
 			if (node) {
 				this.triggerEventNode(node, object, methodName);
 			}
@@ -197,6 +206,11 @@ export class ActorsManager {
 		object: Object3D,
 		methodName: EvaluatorMethodName
 	) {
+		// we can't yet create evaluators only when the method requested here exists,
+		// as this fails for onObjectClick methods, which are called from the relevant event controller
+		// if (onlyIfMethodExists == true && !evaluatorGenerator.hasExpectedEvaluatorMethodName(methodName)) {
+		// 	return;
+		// }
 		const evaluator = evaluatorGenerator.findOrCreateEvaluator(object);
 
 		if ((evaluator as any)[methodName]) {

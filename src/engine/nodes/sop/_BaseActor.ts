@@ -84,7 +84,7 @@ export class TypedActorSopNode<K extends NodeParamsConfig> extends TypedSopNode<
 	// clean
 	//
 	override updateObjectOnRemove(object: ObjectContent<CoreObjectType>, parent: ObjectContent<CoreObjectType>) {
-		this.compilationController.evaluatorGenerator().deleteEvaluator(object);
+		this.compilationController.evaluatorGenerator().disposeEvaluator(object);
 	}
 }
 

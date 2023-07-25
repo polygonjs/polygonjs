@@ -15,6 +15,7 @@ import type {ComplexParamJsonExporterData} from './nodes/utils/io/IOController';
 import {ThreejsViewer} from './viewers/Threejs';
 import {addStatsToViewer} from './viewers/utils/Stats';
 // core
+import {CoreSleep} from '../core/Sleep';
 import {CoreGeometry} from '../core/geometry/Geometry';
 import {CoreGroup} from '../core/geometry/Group';
 import {CoreObject} from '../core/geometry/Object';
@@ -69,6 +70,7 @@ export {
 	ThreejsViewer,
 	addStatsToViewer,
 	// core
+	CoreSleep,
 	CoreGeometry,
 	CoreGroup,
 	CoreObject,
