@@ -37,6 +37,7 @@ import {
 import {PolyPluginInterface} from './poly/registers/plugins/Plugin';
 import {NamedFunctionRegister} from './poly/registers/functions/FunctionsRegister';
 import {NamedFunctionRegisterOptions} from './poly/registers/functions/_BaseRegister';
+import {ModuleRegisterOptions} from './poly/registers/modules/_BaseRegister';
 import {BaseNamedFunction} from './functions/_Base';
 //
 
@@ -140,8 +141,8 @@ export class PolyEngine {
 	// registeredCameraTypes() {
 	// 	return this.camerasRegister.registeredTypes();
 	// }
-	registerModule(module: BaseModule<ModuleName>) {
-		this.modulesRegister.register(module.moduleName, module /*.module()*/);
+	registerModule(module: BaseModule<ModuleName>, options?: ModuleRegisterOptions) {
+		this.modulesRegister.register(module.moduleName, module /*.module()*/, options);
 	}
 
 	inWorkerThread() {

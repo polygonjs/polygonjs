@@ -2,11 +2,19 @@ import {PolyEngine} from '../../../Poly';
 import {ModuleName} from './Common';
 import {BaseModule} from './_BaseModule';
 
+export interface ModuleRegisterOptions {
+	printWarnings?: boolean;
+}
 export class BaseModulesRegister {
 	private _moduleByName: Map<ModuleName, any> = new Map();
 	constructor(private poly: PolyEngine) {}
-	register<K extends ModuleName>(moduleName: K, module: BaseModule<K>) {
-		if (this._moduleByName.has(moduleName)) {
+	register<K extends ModuleName>(moduleName: K, module: BaseModule<K>, options?: ModuleRegisterOptions) {
+		let printWarnings = options?.printWarnings;
+		if (printWarnings == null) {
+			printWarnings = true;
+		}
+
+		if (this._moduleByName.has(moduleName) && printWarnings) {
 			console.warn('module already registered', moduleName);
 			return;
 		}
