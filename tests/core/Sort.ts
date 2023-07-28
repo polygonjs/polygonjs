@@ -1,6 +1,5 @@
 import {sortedNumber3} from '../../src/core/geometry/tet/utils/sortedIndices';
 import {Number3} from '../../src/types/GlobalTypes';
-import '../../tests/helpers/assertions';
 
 let target: Number3 = [0, 0, 0];
 

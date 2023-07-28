@@ -1,5 +1,4 @@
 import {ObjectUtils} from '../../src/core/ObjectUtils';
-import '../../tests/helpers/assertions';
 
 QUnit.test('ObjectUtils.merge', (assert) => {
 	assert.deepEqual(ObjectUtils.merge({a: 1}, {b: 2}), {a: 1, b: 2});

@@ -134,6 +134,8 @@ export class ActorCompilationController {
 			this._setEvaluatorGenerator(evaluatorGenerator);
 		} catch (e) {
 			console.warn(e);
+			console.log(`failed to compile actor node ${this.node.path()}`);
+			console.log({functionData});
 			this.node.states.error.set('failed to compile');
 		}
 	}

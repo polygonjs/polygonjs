@@ -1,5 +1,4 @@
 import {ArrayUtils} from '../../src/core/ArrayUtils';
-import '../../tests/helpers/assertions';
 
 QUnit.test('ArrayUtils.min', (assert) => {
 	assert.deepEqual(ArrayUtils.min([7, 3.1, 8, -1]), -1);

@@ -492,6 +492,7 @@ import { trackHand } from "../../../functions/trackHand";
 import { trackHandGetNormalizedLandmarks } from "../../../functions/trackHandGetNormalizedLandmarks";
 import { trackHandGetWorldLandmarks } from "../../../functions/trackHandGetWorldLandmarks";
 import { triggerFilter } from "../../../functions/triggerFilter";
+import { triggerSwitch } from "../../../functions/triggerSwitch";
 import { triggerTwoWaySwitch } from "../../../functions/triggerTwoWaySwitch";
 import { vec2ToVec3 } from "../../../functions/vec2ToVec3";
 import { vec3ToColor } from "../../../functions/vec3ToColor";
@@ -986,6 +987,7 @@ export interface NamedFunctionMap {
 	trackHandGetNormalizedLandmarks: trackHandGetNormalizedLandmarks;
 	trackHandGetWorldLandmarks: trackHandGetWorldLandmarks;
 	triggerFilter: triggerFilter;
+	triggerSwitch: triggerSwitch;
 	triggerTwoWaySwitch: triggerTwoWaySwitch;
 	vec2ToVec3: vec2ToVec3;
 	vec3ToColor: vec3ToColor;
@@ -1483,6 +1485,7 @@ export class AllNamedFunctionRegister {
 			trackHandGetNormalizedLandmarks,
 			trackHandGetWorldLandmarks,
 			triggerFilter,
+			triggerSwitch,
 			triggerTwoWaySwitch,
 			vec2ToVec3,
 			vec3ToColor,

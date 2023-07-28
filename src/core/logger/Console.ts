@@ -39,7 +39,7 @@ export function logBlueBg(message: string) {
 		padding: {x: 10, y: 5},
 	});
 }
-interface LogStyle {
+export interface LogStyle {
 	backgroundColor?: string;
 	color?: string;
 	fontWeight?: string;

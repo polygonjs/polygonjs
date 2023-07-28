@@ -24,6 +24,8 @@ import {randFloat, radToDeg} from '../core/math/_Module';
 import {sanitizeName} from '../core/String';
 import {watch} from '../core/reactivity/CoreReactivity';
 import {getOrCreateObjectAttributeRef} from '../core/reactivity/ObjectAttributeReactivityCreateRef';
+import {ConsoleLogger, logBlue, logRedBg, logGreenBg, logBlueBg, logStyled} from '../core/logger/Console';
+import type {LogStyle} from '../core/logger/Console';
 // types
 import type {Number2, Number3, Number4} from '../types/GlobalTypes';
 import {JsConnectionPointType} from './nodes/utils/io/connections/Js';
@@ -49,6 +51,8 @@ export type {
 	// io
 	SceneJsonExporterData,
 	ComplexParamJsonExporterData,
+	// core
+	LogStyle,
 	// params
 	ParamType,
 };
@@ -80,6 +84,12 @@ export {
 	sanitizeName,
 	watch,
 	getOrCreateObjectAttributeRef,
+	ConsoleLogger,
+	logBlue,
+	logRedBg,
+	logGreenBg,
+	logBlueBg,
+	logStyled,
 	// types
 	JsConnectionPointType,
 	// params

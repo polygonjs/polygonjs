@@ -1,5 +1,4 @@
 import {ThreeToGl} from '../../src/core/ThreeToGl';
-import '../../tests/helpers/assertions';
 
 QUnit.test('ThreeToGl.float', (assert) => {
 	assert.equal(ThreeToGl.float(1), '1.0');

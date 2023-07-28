@@ -1,11 +1,12 @@
-import QUnit from 'qunit';
+import {QUnit} from './QUnit';
 import {PolyScene} from '../../src/engine/scene/PolyScene';
-import {RootManagerNode} from '../../src/engine/nodes/manager/Root';
-import {PerspectiveCameraObjNode} from '../../src/engine/nodes/obj/PerspectiveCamera';
-import {GeoObjNode} from '../../src/engine/nodes/obj/Geo';
-import {MaterialsNetworkObjNode} from '../../src/engine/nodes/obj/MaterialsNetwork';
-import {PostProcessNetworkObjNode} from '../../src/engine/nodes/obj/PostProcessNetwork';
-import {CopNetworkObjNode} from '../../src/engine/nodes/obj/CopNetwork';
+import type {RootManagerNode} from '../../src/engine/nodes/manager/Root';
+import type {PerspectiveCameraObjNode} from '../../src/engine/nodes/obj/PerspectiveCamera';
+import type {GeoObjNode} from '../../src/engine/nodes/obj/Geo';
+import type {MaterialsNetworkObjNode} from '../../src/engine/nodes/obj/MaterialsNetwork';
+import type {PostProcessNetworkObjNode} from '../../src/engine/nodes/obj/PostProcessNetwork';
+import type {CopNetworkObjNode} from '../../src/engine/nodes/obj/CopNetwork';
+import {addQUnitAssertions} from './assertions';
 
 import {Poly} from '../../src/engine/Poly';
 
@@ -37,9 +38,11 @@ declare global {
 	}
 }
 
-export {QUnit};
-export function setupQUnit() {
-	QUnit.testStart(async () => {
+// export {QUnit};
+export function setupQUnit(qunit: QUnit) {
+	addQUnitAssertions(qunit);
+
+	qunit.testStart(async () => {
 		console.log(`%c ^^^^ ${QUnit.config.current.testName}`, 'background: #222; color: #da5555');
 
 		await waitForUserInteraction();
@@ -81,7 +84,7 @@ export function setupQUnit() {
 		await window.scene.loadingController.markAsLoaded();
 		window.scene.cooker.unblock();
 	});
-	QUnit.testDone(() => {
+	qunit.testDone(() => {
 		Poly.dispose();
 		// it's preferable to not display anything
 		// so that we can correctly display non-blocking crashing tests

@@ -1,4 +1,4 @@
-import {NamedFunction1, NamedFunction3} from './_Base';
+import {NamedFunction1, NamedFunction2, NamedFunction3} from './_Base';
 
 export class triggerFilter extends NamedFunction1<[boolean]> {
 	static override type() {
@@ -21,6 +21,18 @@ export class triggerTwoWaySwitch extends NamedFunction3<[boolean, Function, Func
 			_func0();
 		} else {
 			_func1();
+		}
+	}
+}
+
+export class triggerSwitch extends NamedFunction2<[number, Array<Function>]> {
+	static override type() {
+		return 'triggerSwitch';
+	}
+	func(index: number, _functions: Array<Function>): void {
+		const _func = _functions[index];
+		if (_func) {
+			_func();
 		}
 	}
 }

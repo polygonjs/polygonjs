@@ -1,5 +1,4 @@
 import {CoreAttribute} from '../../../src/core/geometry/Attribute';
-import '../../../tests/helpers/assertions';
 
 QUnit.test('array to indexed array', (assert) => {
 	const array = ['a', 'b', 'c', 'a', 'd', 'c'];

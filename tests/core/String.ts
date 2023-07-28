@@ -1,5 +1,4 @@
 import {CoreString} from '../../src/core/String';
-import '../../tests/helpers/assertions';
 
 // QUnit.test('string timestamp', (assert) => {
 // 	assert.equal(CoreString.timestamp_to_seconds('2018-09-28 10:44:32'), 1538127872);
