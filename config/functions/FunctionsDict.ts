@@ -445,6 +445,8 @@ export const FUNCTION_NAME_BY_FILE_NAME: Record<string, string[]> = {
 	Sleep: ['sleep'],
 	SoftBody: [
 		'computeVelocity',
+		'softBodySetPosition',
+		'softBodyMultiplyVelocity',
 		'softBodySolverStepSimulation',
 		'softBodyConstraintCreate',
 		'softBodyConstraintSetPosition',

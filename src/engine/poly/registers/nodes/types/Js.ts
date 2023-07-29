@@ -90,4 +90,7 @@ export enum JsType {
 	SET_PLAYER_INPUT = 'setPlayerInput',
 	SET_POINT_ATTRIBUTE = 'setPointAttribute',
 	SET_POINT_POSITION = 'setPointPosition',
+	SET_SOFT_BODY_CONSTRAINT_POSITION = 'setSoftBodyConstraintPosition',
+	SET_SOFT_BODY_POSITION = 'setSoftBodyPosition',
+	SET_SOFT_BODY_VELOCITY = 'setSoftBodyVelocity',
 }

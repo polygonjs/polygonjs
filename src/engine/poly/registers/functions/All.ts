@@ -483,6 +483,8 @@ import { smoothstep } from "../../../functions/smoothstep";
 import { softBodyConstraintCreate } from "../../../functions/softBodyConstraintCreate";
 import { softBodyConstraintDelete } from "../../../functions/softBodyConstraintDelete";
 import { softBodyConstraintSetPosition } from "../../../functions/softBodyConstraintSetPosition";
+import { softBodyMultiplyVelocity } from "../../../functions/softBodyMultiplyVelocity";
+import { softBodySetPosition } from "../../../functions/softBodySetPosition";
 import { softBodySolverStepSimulation } from "../../../functions/softBodySolverStepSimulation";
 import { sphereSet } from "../../../functions/sphereSet";
 import { subtractNumber } from "../../../functions/subtractNumber";
@@ -980,6 +982,8 @@ export interface NamedFunctionMap {
 	softBodyConstraintCreate: softBodyConstraintCreate;
 	softBodyConstraintDelete: softBodyConstraintDelete;
 	softBodyConstraintSetPosition: softBodyConstraintSetPosition;
+	softBodyMultiplyVelocity: softBodyMultiplyVelocity;
+	softBodySetPosition: softBodySetPosition;
 	softBodySolverStepSimulation: softBodySolverStepSimulation;
 	sphereSet: sphereSet;
 	subtractNumber: subtractNumber;
@@ -1480,6 +1484,8 @@ export class AllNamedFunctionRegister {
 			softBodyConstraintCreate,
 			softBodyConstraintDelete,
 			softBodyConstraintSetPosition,
+			softBodyMultiplyVelocity,
+			softBodySetPosition,
 			softBodySolverStepSimulation,
 			sphereSet,
 			subtractNumber,

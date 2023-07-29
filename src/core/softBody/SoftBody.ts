@@ -46,6 +46,7 @@ const _pos = new Vector3(0, 0, 0);
 const _vel = new Vector3(0, 0, 0);
 const _velDt = new Vector3(0, 0, 0);
 const ONE_SIXTH = 1.0 / 6.0;
+const _v3array: Number3 = [0, 0, 0];
 
 export class SoftBody {
 	public readonly numParticles: number;
@@ -430,6 +431,18 @@ export class SoftBody {
 					vecAdd(this.pos, id, this.grads, j, magnitude);
 				}
 			}
+		}
+	}
+	translate(offset: Vector3) {
+		offset.toArray(_v3array);
+		for (var i = 0; i < this.numParticles; i++) {
+			vecAdd(this.pos, i, _v3array, 0);
+			vecAdd(this.prevPos, i, _v3array, 0);
+		}
+	}
+	velocityMult(mult: number) {
+		for (var i = 0; i < this.numParticles; i++) {
+			vecScale(this.vel, i, mult);
 		}
 	}
 

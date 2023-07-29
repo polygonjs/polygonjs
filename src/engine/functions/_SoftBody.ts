@@ -11,6 +11,8 @@ import {
 import {
 	softBodySolverStepSimulation as _softBodySolverStepSimulation,
 	setSoftBodySolverGravity as _setSoftBodySolverGravity,
+	softBodySetPosition as _softBodySetPosition,
+	softBodyMultiplyVelocity as _softBodyMultiplyVelocity,
 	softBodyConstraintCreate as _softBodyConstraintCreate,
 	softBodyConstraintSetPosition as _softBodyConstraintSetPosition,
 	softBodyConstraintDelete as _softBodyConstraintDelete,
@@ -56,6 +58,22 @@ export class computeVelocity extends NamedFunction5<[Vector3, Vector3, number, n
 		_v3.copy(forces).multiplyScalar(dt);
 		target.copy(velocity).multiplyScalar(drag).add(_v3);
 		return target;
+	}
+}
+export class softBodySetPosition extends ObjectNamedFunction2<[Vector3, number]> {
+	static override type() {
+		return 'softBodySetPosition';
+	}
+	func(object3D: Object3D, position: Vector3, lerp: number): void {
+		_softBodySetPosition(object3D, position, lerp);
+	}
+}
+export class softBodyMultiplyVelocity extends ObjectNamedFunction1<[number]> {
+	static override type() {
+		return 'softBodyMultiplyVelocity';
+	}
+	func(object3D: Object3D, mult: number): void {
+		_softBodyMultiplyVelocity(object3D, mult);
 	}
 }
 

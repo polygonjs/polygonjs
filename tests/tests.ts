@@ -281,6 +281,7 @@ import {testenginenodesjsSetObjectPosition} from './engine/nodes/js/SetObjectPos
 import {testenginenodesjsSetObjectQuaternion} from './engine/nodes/js/SetObjectQuaternion';
 import {testenginenodesjsSetObjectScale} from './engine/nodes/js/SetObjectScale';
 import {testenginenodesjsSetObjectVisible} from './engine/nodes/js/SetObjectVisible';
+import {testenginenodesjsSetSoftBodyPosition} from './engine/nodes/js/SetSoftBodyPosition';
 import {testenginenodesjsSetParam} from './engine/nodes/js/SetParam';
 import {testenginenodesjsSetPerspectiveCameraFov} from './engine/nodes/js/SetPerspectiveCameraFov';
 import {testenginenodesjsSetPerspectiveCameraNearFar} from './engine/nodes/js/SetPerspectiveCameraNearFar';
@@ -852,6 +853,7 @@ export function testPolygonjs(qUnit: QUnit) {
 	testenginenodesjsSetPhysicsRBDCuboidProperty(qUnit);
 	testenginenodesjsSetPhysicsRBDCylinderProperty(qUnit);
 	testenginenodesjsSetPhysicsRBDSphereProperty(qUnit);
+	testenginenodesjsSetSoftBodyPosition(qUnit);
 	testenginenodesjsSetSpotLightIntensity(qUnit);
 	testenginenodesjsSetViewer(qUnit);
 	testenginenodesjsSin(qUnit);

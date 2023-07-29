@@ -304,6 +304,8 @@ import {SetPhysicsWorldGravityJsNode} from '../../../nodes/js/SetPhysicsWorldGra
 import {SetPlayerInputJsNode} from '../../../nodes/js/SetPlayerInput';
 import {SetPointAttributeJsNode} from '../../../nodes/js/SetPointAttribute';
 import {SetPointPositionJsNode} from '../../../nodes/js/SetPointPosition';
+import {SetSoftBodyPositionJsNode} from '../../../nodes/js/SetSoftBodyPosition';
+import {SetSoftBodyVelocityJsNode} from '../../../nodes/js/SetSoftBodyVelocity';
 import {SetSoftBodyConstraintPositionJsNode} from '../../../nodes/js/SetSoftBodyConstraintPosition';
 import {SetSpotLightIntensityJsNode} from '../../../nodes/js/SetSpotLightIntensity';
 import {SetViewerJsNode} from '../../../nodes/js/SetViewer';
@@ -649,6 +651,8 @@ export interface JsNodeChildrenMap {
 	setPointAttribute: SetPointAttributeJsNode;
 	setPointPosition: SetPointPositionJsNode;
 	setClothConstraintPosition: SetClothConstraintPositionJsNode;
+	setSoftBodyPosition: SetSoftBodyPositionJsNode;
+	setSoftBodyVelocity: SetSoftBodyVelocityJsNode;
 	setSoftBodyConstraintPosition: SetSoftBodyConstraintPositionJsNode;
 	setSpotLightIntensity: SetSpotLightIntensityJsNode;
 	setViewer: SetViewerJsNode;
@@ -1051,6 +1055,8 @@ export class JsRegister {
 		poly.registerNode(SetPlayerInputJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
 		poly.registerNode(SetPointAttributeJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR_POINT);
 		poly.registerNode(SetPointPositionJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR_POINT);
+		poly.registerNode(SetSoftBodyPositionJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
+		poly.registerNode(SetSoftBodyVelocityJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
 		poly.registerNode(SetSoftBodyConstraintPositionJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
 		poly.registerNode(SetSpotLightIntensityJsNode, CATEGORY_JS.PHYSICS, ONLY_ACTOR);
 		poly.registerNode(SetViewerJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR);

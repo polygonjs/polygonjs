@@ -8,6 +8,7 @@ import {JsLinesCollectionController} from './code/utils/JsLinesCollectionControl
 import {Poly} from '../../Poly';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {inputObject3D} from './_BaseObject3D';
+import {JsType} from '../../poly/registers/nodes/types/Js';
 
 class SetSoftBodyConstraintPositionJsParamsConfig extends NodeParamsConfig {
 	id = ParamConfig.INTEGER(0, {
@@ -25,7 +26,7 @@ const ParamsConfig = new SetSoftBodyConstraintPositionJsParamsConfig();
 export class SetSoftBodyConstraintPositionJsNode extends BaseTriggerAndObjectJsNode<SetSoftBodyConstraintPositionJsParamsConfig> {
 	override readonly paramsConfig = ParamsConfig;
 	static override type() {
-		return 'setSoftBodyConstraintPosition';
+		return JsType.SET_SOFT_BODY_CONSTRAINT_POSITION;
 	}
 
 	override setTriggerableLines(shadersCollectionController: JsLinesCollectionController) {

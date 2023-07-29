@@ -23,6 +23,8 @@ function _onCreatePrepareActorNode(node: TetSoftBodySolverSopNode) {
 		// particlesSystemReset.uiData.setPosition(100, -100);
 		onTick.uiData.setPosition(-100, 100);
 		softBodySolverStepSimulation1.uiData.setPosition(100, 100);
+
+		return {onTick};
 	}
 	function createActorNode(geoNode: GeoObjNode) {
 		const actor1 = geoNode.createNode('actor');
@@ -31,15 +33,15 @@ function _onCreatePrepareActorNode(node: TetSoftBodySolverSopNode) {
 		const nodePos = node.uiData.position();
 		actor1.uiData.setPosition(nodePos.x, nodePos.y + 200);
 
-		createActorNodeChildren(actor1);
+		const {onTick} = createActorNodeChildren(actor1);
 
-		return actor1;
+		return {actor1, onTick};
 	}
 
 	const geoNode = node.parent() as GeoObjNode;
-	const actor1: ActorSopNode = /*geoNode.nodesByType('actor')[0] ||*/ createActorNode(geoNode);
+	const {actor1, onTick} = createActorNode(geoNode);
 
-	return {actor1};
+	return {actor1, onTick};
 	// const pointsMat = MAT.node(particlesMatName) || createMat(MAT);
 	// if (pointsMat) {
 	// 	node.p.material.setNode(pointsMat, {relative: true});
@@ -75,10 +77,10 @@ function onCreateHook(node: TetSoftBodySolverSopNode) {
 	computeVelocity1.uiData.setPosition(0, 0);
 	SDFPlane1.uiData.setPosition(0, 200);
 
-	const {actor1} = _onCreatePrepareActorNode(node);
+	const {actor1, onTick} = _onCreatePrepareActorNode(node);
 	actor1.setInput(0, node);
 
-	return {actor1, globals, output1};
+	return {actor1, onTick, globals, output1};
 }
 
 export class TetSoftBodySolverSopOnCreateRegister extends SopOnCreateHookRegister<SopType.TET_SOFT_BODY_SOLVER> {
