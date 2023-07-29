@@ -80,8 +80,8 @@ export class AttribDeleteSopNode extends TypedSopNode<AttribDeleteSopParamsConfi
 			object.traverse((object3d: Object3D) => {
 				const child = object3d as Mesh;
 				if (child.geometry) {
-					const core_geometry = new CoreGeometry(child.geometry as BufferGeometry);
-					core_geometry.deleteAttribute(attribName);
+					const coreGeometry = new CoreGeometry(child.geometry as BufferGeometry);
+					coreGeometry.deleteAttribute(attribName);
 				}
 			});
 		}

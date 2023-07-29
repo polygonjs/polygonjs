@@ -1,7 +1,7 @@
 import {PolyDictionary} from '../../../types/GlobalTypes';
 import {PolyScene} from '../PolyScene';
 import {RootManagerNode, ROOT_NODE_NAME} from '../../nodes/manager/Root';
-import {CoreString} from '../../../core/String';
+import {stringMatchMask} from '../../../core/String';
 import {BaseNodeType} from '../../nodes/_Base';
 import {NodeContext} from '../../poly/NodeContext';
 import {NodeChildrenMapByContext} from '../../poly/registers/nodes/All';
@@ -99,7 +99,7 @@ export class NodesController {
 		const matching_nodes: BaseNodeType[] = [];
 		for (let node of nodes) {
 			const path = node.path();
-			if (CoreString.matchMask(path, mask)) {
+			if (stringMatchMask(path, mask)) {
 				matching_nodes.push(node);
 			}
 		}

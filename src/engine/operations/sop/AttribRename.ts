@@ -9,7 +9,7 @@ interface AttribRenameSopParams extends DefaultOperationParams {
 	oldName: string;
 	newName: string;
 }
-
+const SPLIT_REGEX = /[ ,]+/g;
 export class AttribRenameSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: AttribRenameSopParams = {
 		class: ATTRIBUTE_CLASSES.indexOf(AttribClass.VERTEX),
@@ -22,7 +22,13 @@ export class AttribRenameSopOperation extends BaseSopOperation {
 	}
 	override cook(inputCoreGroups: CoreGroup[], params: AttribRenameSopParams) {
 		const inputCoreGroup = inputCoreGroups[0];
-		inputCoreGroup.renameAttrib(params.oldName, params.newName, ATTRIBUTE_CLASSES[params.class]);
+		const oldNames = params.oldName.split(SPLIT_REGEX);
+		const newNames = params.newName.split(SPLIT_REGEX);
+		const minCount = Math.min(oldNames.length, newNames.length);
+		const attribClass = ATTRIBUTE_CLASSES[params.class];
+		for (let i = 0; i < minCount; i++) {
+			inputCoreGroup.renameAttrib(oldNames[i], newNames[i], attribClass);
+		}
 		return inputCoreGroup;
 	}
 }

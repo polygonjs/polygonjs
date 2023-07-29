@@ -10,7 +10,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {TypedInputEventNode, EVENT_PARAM_OPTIONS} from './_BaseInput';
 import {EventContext} from '../../scene/utils/events/_BaseEventsController';
 import {isBooleanTrue} from '../../../core/BooleanValue';
-import {CoreString} from '../../../core/String';
+import {stringMatchMask} from '../../../core/String';
 import {EventInputType} from '../../poly/registers/nodes/types/Event';
 import {CoreEventEmitter, EVENT_EMITTERS} from '../../../core/event/CoreEventEmitter';
 import {ACCEPTED_KEYBOARD_EVENT_TYPES} from '../../../core/event/KeyboardEventType';
@@ -92,7 +92,7 @@ export class KeyboardEventNode extends TypedInputEventNode<KeyboardEventParamsCo
 			return;
 		}
 
-		if (!CoreString.matchMask(event.code, this.pv.keyCodes)) {
+		if (!stringMatchMask(event.code, this.pv.keyCodes)) {
 			return;
 		}
 		this.dispatchEventToOutput(event.type, eventContext);

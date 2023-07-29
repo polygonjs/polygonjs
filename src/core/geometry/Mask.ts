@@ -1,6 +1,6 @@
 import {Object3D} from 'three';
 import {ArrayUtils} from '../ArrayUtils';
-import {CoreString} from '../String';
+import {stringMatchMask} from '../String';
 import {CoreType, isBooleanTrue} from '../Type';
 import {CorePath} from './CorePath';
 import {CoreGroup} from './Group';
@@ -76,7 +76,7 @@ function isInGroup<T extends CoreObjectType>(groupString: string, coreObject: Ba
 	if (coreObject.object.name == group) {
 		return true;
 	}
-	if (CoreString.matchMask(groupString, coreObject.name())) {
+	if (stringMatchMask(groupString, coreObject.name())) {
 		return true;
 	}
 

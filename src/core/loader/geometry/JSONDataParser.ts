@@ -1,6 +1,6 @@
 import {Float32BufferAttribute} from 'three';
 import {BufferGeometry} from 'three';
-import {CoreString} from '../../String';
+import {stringMatchesOneMask, stringToAttribNames} from '../../String';
 import {CoreGeometry} from '../../geometry/Geometry';
 import {AttribType} from '../../geometry/Constant';
 import {CoreAttributeData} from '../../geometry/AttributeData';
@@ -59,7 +59,7 @@ export class JSONDataParser {
 
 			this._find_attributes();
 
-			const convert_to_numeric_masks = CoreString.attribNames(this._options.convertToNumeric || '');
+			const convert_to_numeric_masks = stringToAttribNames(this._options.convertToNumeric || '');
 
 			// set values
 			for (let attrib_name of Object.keys(this._attribute_datas_by_name)) {
@@ -70,7 +70,7 @@ export class JSONDataParser {
 				const size = data.size();
 
 				if (data.type() === AttribType.STRING) {
-					if (this._options.doConvert && CoreString.matchesOneMask(attrib_name, convert_to_numeric_masks)) {
+					if (this._options.doConvert && stringMatchesOneMask(attrib_name, convert_to_numeric_masks)) {
 						const numerical_attrib_values: number[] = attrib_values.map((v) => {
 							if (CoreType.isString(v)) {
 								return parseFloat(v) || 0;
@@ -98,7 +98,7 @@ export class JSONDataParser {
 	private _find_attributes() {
 		let first_pt;
 
-		const masks = CoreString.attribNames(this._options.skipEntries || '');
+		const masks = stringToAttribNames(this._options.skipEntries || '');
 
 		if (this._json) {
 			if ((first_pt = this._json[0]) != null) {
@@ -110,13 +110,13 @@ export class JSONDataParser {
 							const deep_attrib_name = [attrib_name, key].join(DEEP_ATTRIB_SEPARATOR);
 							const deep_attrib_value = attrib_value[attrib_name];
 
-							if (!CoreString.matchesOneMask(deep_attrib_name, masks)) {
+							if (!stringMatchesOneMask(deep_attrib_name, masks)) {
 								this._attribute_datas_by_name[deep_attrib_name] =
 									CoreAttributeData.from_value(deep_attrib_value);
 							}
 						}
 					} else {
-						if (!CoreString.matchesOneMask(attrib_name, masks)) {
+						if (!stringMatchesOneMask(attrib_name, masks)) {
 							this._attribute_datas_by_name[attrib_name] = CoreAttributeData.from_value(attrib_value);
 						}
 					}

@@ -1,5 +1,4 @@
-import {CoreString} from '../String';
-// import {Object3D} from 'three';
+import {stringMatchMask} from '../String';
 import {ObjectContent, CoreObjectType} from './ObjectContent';
 
 export const ROOT_NAME = '/';
@@ -8,14 +7,21 @@ export type CorePathObjCallback<T extends CoreObjectType> = (obj: ObjectContent<
 const REGEX_PATH_SANITIZE = /\/+/g;
 
 export class CorePath {
-	static findObjectByMask<T extends CoreObjectType>(mask: string, parent: ObjectContent<T>): ObjectContent<T> | undefined {
+	static findObjectByMask<T extends CoreObjectType>(
+		mask: string,
+		parent: ObjectContent<T>
+	): ObjectContent<T> | undefined {
 		return this.findObjectByMaskInObject(mask, parent);
 	}
-	static findObjectByMaskInObject<T extends CoreObjectType>(mask: string, object: ObjectContent<T>, objectPath: string = ''): ObjectContent<T> | undefined {
+	static findObjectByMaskInObject<T extends CoreObjectType>(
+		mask: string,
+		object: ObjectContent<T>,
+		objectPath: string = ''
+	): ObjectContent<T> | undefined {
 		for (let child of object.children) {
 			const childName = this.sanitizePath(child.name);
 			const path = this.sanitizePath(`${objectPath}/${childName}`);
-			if (CoreString.matchMask(path, mask)) {
+			if (stringMatchMask(path, mask)) {
 				return child;
 			}
 			const grandChild = this.findObjectByMaskInObject<T>(mask, child, path);
@@ -25,8 +31,8 @@ export class CorePath {
 		}
 	}
 
-	static objectsByMask<T extends CoreObjectType>(mask: string, parent: ObjectContent<T>):  ObjectContent<T>[] {
-		const list:  ObjectContent<T>[] = [];
+	static objectsByMask<T extends CoreObjectType>(mask: string, parent: ObjectContent<T>): ObjectContent<T>[] {
+		const list: ObjectContent<T>[] = [];
 		this.traverseObjectsWithMask(
 			mask,
 			(obj) => {
@@ -36,7 +42,12 @@ export class CorePath {
 		);
 		return list;
 	}
-	static objectsByMaskInObject<T extends CoreObjectType>(mask: string, object:  ObjectContent<T>, list:  ObjectContent<T>[] = [], objectPath: string = '') {
+	static objectsByMaskInObject<T extends CoreObjectType>(
+		mask: string,
+		object: ObjectContent<T>,
+		list: ObjectContent<T>[] = [],
+		objectPath: string = ''
+	) {
 		this.traverseObjectsWithMask(
 			mask,
 			(obj) => {
@@ -64,7 +75,7 @@ export class CorePath {
 	) {
 		const objectName = this.sanitizePath(object.name);
 		const path = this.sanitizePath(objectPath != null ? `${objectPath}/${objectName}` : objectName);
-		let match = CoreString.matchMask(path, mask);
+		let match = stringMatchMask(path, mask);
 		if (invertMask) {
 			match = !match;
 		}

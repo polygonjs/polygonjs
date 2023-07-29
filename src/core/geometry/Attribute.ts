@@ -9,7 +9,7 @@ import {
 } from 'three';
 import {AttribValue, PolyDictionary} from '../../types/GlobalTypes';
 import {ArrayUtils} from '../ArrayUtils';
-import {CoreString} from '../String';
+import {stringToAttribNames, stringMatchMask} from '../String';
 import {CoreType} from '../Type';
 import {AttribSize} from './Constant';
 import {GroupString} from './Group';
@@ -120,12 +120,12 @@ export class CoreAttribute {
 		return 0;
 	}
 	static attribNamesMatchingMask(masksString: GroupString, existingAttribNames: string[]) {
-		const masks = CoreString.attribNames(masksString);
+		const masks = stringToAttribNames(masksString);
 
 		const matchingAttribNames: string[] = [];
 		for (const mask of masks) {
 			for (const attribName of existingAttribNames) {
-				if (CoreString.matchMask(attribName, mask)) {
+				if (stringMatchMask(attribName, mask)) {
 					matchingAttribNames.push(attribName);
 				} else {
 					const remapped = CoreAttribute.remapName(mask);

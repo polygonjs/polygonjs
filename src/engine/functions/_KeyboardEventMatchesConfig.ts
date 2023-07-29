@@ -1,4 +1,4 @@
-import {CoreString} from '../../core/String';
+import {stringMatchMask} from '../../core/String';
 import {NamedFunction5} from './_Base';
 
 export enum KeyModifierRequirement {
@@ -61,7 +61,7 @@ export class keyboardEventMatchesConfig extends NamedFunction5<[string, number, 
 		};
 		const eventMatchesAtLeastOneKeyCode = () => {
 			for (let event of events) {
-				if (keyCodes == '' || CoreString.matchMask(event.code, keyCodes)) {
+				if (keyCodes == '' || stringMatchMask(event.code, keyCodes)) {
 					return true;
 				}
 			}

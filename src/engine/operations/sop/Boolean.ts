@@ -1,4 +1,4 @@
-import {CoreString} from './../../../core/String';
+import {stringToAttribNames} from './../../../core/String';
 import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../poly/InputCloneMode';
@@ -79,7 +79,7 @@ export class BooleanSopOperation extends BaseSopOperation {
 			attributes.push('color');
 		}
 		if (params.additionalAttributes.trim() != '') {
-			const newNames = CoreString.attribNames(params.additionalAttributes);
+			const newNames = stringToAttribNames(params.additionalAttributes);
 			attributes.push(...newNames);
 		}
 		csgEvaluator.attributes = attributes;

@@ -5,7 +5,7 @@ import {BufferAttribute, Float32BufferAttribute} from 'three';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
-import {CoreString} from '../../../core/String';
+import {stringToAttribNames} from '../../../core/String';
 import {ATTRIBUTE_CLASSES, AttribClass} from '../../../core/geometry/Constant';
 import {TypeAssert} from '../../../engine/poly/Assert';
 import {CoreObject} from '../../../core/geometry/Object';
@@ -57,7 +57,7 @@ export class AttribCopySopOperation extends BaseSopOperation {
 		const coreGroupDest = inputCoreGroups[0];
 		const coreGroupSrc = inputCoreGroups[1] || coreGroupDest;
 		const attribClass = ATTRIBUTE_CLASSES[params.class];
-		const newNames = CoreString.attribNames(params.newName);
+		const newNames = stringToAttribNames(params.newName);
 
 		if (attribClass == AttribClass.VERTEX) {
 			// for geometry attributes, first iterate over the existing attributes
@@ -80,7 +80,7 @@ export class AttribCopySopOperation extends BaseSopOperation {
 			}
 		} else {
 			// for object attributes, first iterate over the existing attributes
-			const attribNames = CoreString.attribNames(params.name);
+			const attribNames = stringToAttribNames(params.name);
 			for (let i = 0; i < attribNames.length; i++) {
 				const destAttribName = isBooleanTrue(params.tnewName) ? newNames[i] : attribNames[i];
 				this._copyAttributeBetweenCoreGroups(attribClass, {

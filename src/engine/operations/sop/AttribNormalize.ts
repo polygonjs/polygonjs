@@ -1,9 +1,8 @@
 import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {BufferAttribute} from 'three';
+import {Vector3, BufferAttribute} from 'three';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
-import {Vector3} from 'three';
-import {CoreString} from '../../../core/String';
+import {stringToAttribNames} from '../../../core/String';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 interface AttribNormalizeSopParams extends DefaultOperationParams {
@@ -34,7 +33,7 @@ export class AttribNormalizeSopOperation extends BaseSopOperation {
 	override cook(input_contents: CoreGroup[], params: AttribNormalizeSopParams) {
 		const core_group = input_contents[0];
 		const objects = input_contents[0].threejsObjectsWithGeo();
-		const attrib_names = CoreString.attribNames(params.name);
+		const attrib_names = stringToAttribNames(params.name);
 		for (let object of objects) {
 			const geometry = object.geometry;
 			for (let attrib_name of attrib_names) {
