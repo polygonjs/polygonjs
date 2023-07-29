@@ -1,10 +1,12 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {ParamType} from './../../../../src/engine/poly/ParamType';
 import {GlConnectionPointType} from './../../../../src/engine/nodes/utils/io/connections/Gl';
 import {Vector2Param} from './../../../../src/engine/params/Vector2';
 import {Vector3Param} from './../../../../src/engine/params/Vector3';
 import {NoiseName, NoiseOutputType} from '../../../../src/engine/nodes/gl/Noise';
+export function testenginenodesglNoise(qUnit: QUnit) {
 
-QUnit.test('gl noise params update as type changes', async (assert) => {
+qUnit.test('gl noise params update as type changes', async (assert) => {
 	const MAT = window.MAT;
 	const material_basic_builder1 = MAT.createNode('meshBasicBuilder');
 	material_basic_builder1.createNode('output');
@@ -140,3 +142,5 @@ QUnit.test('gl noise params update as type changes', async (assert) => {
 	// assert.deepEqual(noise1.params.get('amp')?.defaultValueSerialized(), [1, 1]);
 	// noise1.params.get('amp')?.set([2, 3]);
 });
+
+}

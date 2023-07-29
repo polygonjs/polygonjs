@@ -1,3 +1,4 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {Mesh, Material, IUniform, WebGLRenderer, WebGLRenderTarget, Vector3} from 'three';
@@ -11,8 +12,9 @@ import {SceneJsonImporter} from '../../../../src/engine/io/json/import/Scene';
 import {PerspectiveCameraObjNode} from '../../../../src/engine/nodes/obj/PerspectiveCamera';
 import {ClothSolverSopNode} from '../../../../src/engine/nodes/sop/ClothSolver';
 import {MaterialSopNode} from '../../../../src/engine/nodes/sop/Material';
+export function testenginenodessopClothSolver(qUnit: QUnit) {
 
-QUnit.test('sop/clothSolver simple', async (assert) => {
+qUnit.test('sop/clothSolver simple', async (assert) => {
 	const geo1 = window.geo1;
 	const scene = window.scene;
 	const cameraNode = window.perspective_camera1;
@@ -241,3 +243,5 @@ QUnit.test('sop/clothSolver simple', async (assert) => {
 	};
 	await _testWithoutAssembler();
 });
+
+}

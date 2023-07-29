@@ -1,3 +1,4 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {Mesh, Vector3} from 'three';
 import {AttribClass} from '../../../../src/core/geometry/Constant';
 import {CoreObject} from '../../../../src/core/geometry/Object';
@@ -10,8 +11,9 @@ import {SetObjectAttributeInputName} from '../../../../src/engine/nodes/js/SetOb
 import {TrackHandJsNodeOutput} from '../../../../src/engine/nodes/js/TrackHand';
 import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Js';
 import {RendererUtils} from '../../../helpers/RendererUtils';
+export function testenginenodesjsTrackHand(qUnit: QUnit) {
 
-QUnit.test('js/trackHand', async (assert) => {
+qUnit.test('js/trackHand', async (assert) => {
 	const scene = window.scene;
 	const perspective_camera1 = window.perspective_camera1;
 	const geo1 = window.geo1;
@@ -174,3 +176,5 @@ QUnit.test('js/trackHand', async (assert) => {
 
 	video1.dispose();
 });
+
+}

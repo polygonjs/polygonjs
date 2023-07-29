@@ -1,8 +1,10 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {HierarchyMode} from '../../../../src/engine/operations/sop/Hierarchy';
 import {CoreObject} from '../../../../src/core/geometry/Object';
 import {ASSETS_ROOT} from '../../../../src/core/loader/AssetsUtils';
 import {FileGLTFSopNode} from '../../../../src/engine/nodes/sop/FileGLTF';
 import {FileMPDSopNode} from '../../../../src/engine/nodes/sop/FileMPD';
+export function testenginenodessopFileMPD(qUnit: QUnit) {
 
 function _url(path: string) {
 	return `${ASSETS_ROOT}${path}`;
@@ -27,7 +29,7 @@ async function withHierarchy(fileNode: FileGLTFSopNode | FileMPDSopNode, levels:
 	return container;
 }
 
-QUnit.test('SOP file Ldraw radar truck', async (assert) => {
+qUnit.test('SOP file Ldraw radar truck', async (assert) => {
 	const {container, fileNode} = await withFileMPD('models/889-1-RadarTruck.mpd_Packed.mpd');
 	assert.equal(container.pointsCount(), 0);
 	const container2 = await withHierarchy(fileNode, 3);
@@ -39,7 +41,7 @@ QUnit.test('SOP file Ldraw radar truck', async (assert) => {
 	assert.equal(CoreObject.attribValue(objects1[0].children[0], 'buildingStep') as number, 1, 'buildingStep 1');
 });
 
-QUnit.test('SOP file Ldraw car', async (assert) => {
+qUnit.test('SOP file Ldraw car', async (assert) => {
 	const {container, fileNode} = await withFileMPD('models/ldraw/officialLibrary/models/car.ldr_Packed.mpd');
 	assert.equal(container.pointsCount(), 0);
 	const container2 = await withHierarchy(fileNode, 3);
@@ -60,3 +62,5 @@ QUnit.test('SOP file Ldraw car', async (assert) => {
 	// 	'buildingStep 2'
 	// );
 });
+
+}

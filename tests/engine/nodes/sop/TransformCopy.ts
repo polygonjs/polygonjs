@@ -1,7 +1,9 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {TransformTargetType} from '../../../../src/core/Transform';
 import { ObjectTransformMode } from '../../../../src/core/TransformSpace';
+export function testenginenodessopTransformCopy(qUnit: QUnit) {
 
-QUnit.test('transform copy simple', async (assert) => {
+qUnit.test('transform copy simple', async (assert) => {
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false);
 
@@ -24,3 +26,5 @@ QUnit.test('transform copy simple', async (assert) => {
 	assert.in_delta(elements[0], 1, 0.01);
 	assert.equal(elements[12], 2);
 });
+
+}

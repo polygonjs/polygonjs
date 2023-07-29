@@ -1,3 +1,4 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {SwitchSopNode} from '../../../../src/engine/nodes/sop/Switch';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {NodeCookEventNode} from '../../../../src/engine/nodes/event/NodeCook';
@@ -5,8 +6,9 @@ import {ScatterSopNode} from '../../../../src/engine/nodes/sop/Scatter';
 import {MergeSopNode} from '../../../../src/engine/nodes/sop/Merge';
 import {BoxSopNode} from '../../../../src/engine/nodes/sop/Box';
 import {saveAndLoadScene} from '../../../helpers/ImportHelper';
+export function testenginenodeseventNodeCook(qUnit: QUnit) {
 
-QUnit.test('event nodeCook simple', async (assert) => {
+qUnit.test('event nodeCook simple', async (assert) => {
 	const geo1 = window.geo1;
 	const scene = window.scene;
 	const events = scene.root().createNode('eventsNetwork');
@@ -82,7 +84,7 @@ QUnit.test('event nodeCook simple', async (assert) => {
 	assert.notOk(scatter1.cookController.onCookEndCallbackNames(), 'all callbacks removed');
 });
 
-QUnit.test('event nodeCook can trigger a node cook multiple times', async (assert) => {
+qUnit.test('event nodeCook can trigger a node cook multiple times', async (assert) => {
 	const geo1 = window.geo1;
 	const scene = window.scene;
 	const events = scene.root().createNode('eventsNetwork');
@@ -137,7 +139,7 @@ QUnit.test('event nodeCook can trigger a node cook multiple times', async (asser
 	});
 });
 
-QUnit.test('event nodeCook functions event if the node is part of the root loading watched nodes', async (assert) => {
+qUnit.test('event nodeCook functions event if the node is part of the root loading watched nodes', async (assert) => {
 	const geo1 = window.geo1;
 	const scene = window.scene;
 	const events = scene.root().createNode('eventsNetwork');
@@ -200,3 +202,5 @@ QUnit.test('event nodeCook functions event if the node is part of the root loadi
 		assert.equal(box2_2.pv.size, 8, '8');
 	});
 });
+
+}

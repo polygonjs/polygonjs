@@ -1,3 +1,4 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {Box3, Vector3} from 'three';
 import {SceneJsonImporter} from '../../../../src/engine/io/json/import/Scene';
 import {SceneJsonExporter} from '../../../../src/engine/io/json/export/Scene';
@@ -6,6 +7,7 @@ import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/conne
 import {FloatParam} from '../../../../src/engine/params/Float';
 import {ParamType} from '../../../../src/engine/poly/ParamType';
 import {AssemblersUtils} from '../../../helpers/AssemblersUtils';
+export function testenginenodessopSDFBuilder(qUnit: QUnit) {
 
 const bbox = new Box3();
 const size = new Vector3();
@@ -16,7 +18,7 @@ async function _getBbox(node: SDFBuilderSopNode) {
 	return size;
 }
 
-QUnit.test('sop/SDFBuilder simple', async (assert) => {
+qUnit.test('sop/SDFBuilder simple', async (assert) => {
 	const geo1 = window.geo1;
 	const boxLines1 = geo1.createNode('boxLines');
 	const SDFBuilder1 = geo1.createNode('SDFBuilder');
@@ -57,7 +59,7 @@ QUnit.test('sop/SDFBuilder simple', async (assert) => {
 	assert.in_delta((await getBbox()).x, 0.74, 0.02);
 });
 
-QUnit.test('sop/SDFBuilder with param and persisted config', async (assert) => {
+qUnit.test('sop/SDFBuilder with param and persisted config', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
 	const boxLines1 = geo1.createNode('boxLines');
@@ -113,3 +115,5 @@ QUnit.test('sop/SDFBuilder with param and persisted config', async (assert) => {
 		assert.in_delta((await getBbox2()).y, 2, 0.02);
 	});
 });
+
+}

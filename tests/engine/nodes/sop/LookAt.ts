@@ -1,5 +1,7 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {Quaternion, Vector3} from 'three';
 import {BaseSopNodeType} from '../../../../src/engine/nodes/sop/_Base';
+export function testenginenodessopLookAt(qUnit: QUnit) {
 
 const t = new Vector3();
 const q = new Quaternion();
@@ -13,7 +15,7 @@ async function getObject(node: BaseSopNodeType): Promise<Quaternion> {
 	return q.clone();
 }
 
-QUnit.test('sop/lookAt simple', async (assert) => {
+qUnit.test('sop/lookAt simple', async (assert) => {
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false); // cancels geo node displayNodeController
 
@@ -30,3 +32,5 @@ QUnit.test('sop/lookAt simple', async (assert) => {
 	lookAt1.p.lerp.set(0.5);
 	assert.in_delta(initQuat.angleTo(await getObject(lookAt1)), 0.5, 0.05);
 });
+
+}

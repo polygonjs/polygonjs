@@ -1,8 +1,10 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {SplineCurveType} from '../../../../src/core/geometry/Curve';
 import {METHOD, METHODS} from '../../../../src/engine/nodes/sop/Resample';
 import {TextType} from '../../../../src/core/geometry/text/TextType';
+export function testenginenodessopResample(qUnit: QUnit) {
 
-QUnit.test('resample a line', async (assert) => {
+qUnit.test('resample a line', async (assert) => {
 	const geo1 = window.geo1;
 
 	const line1 = geo1.createNode('line');
@@ -46,7 +48,7 @@ QUnit.test('resample a line', async (assert) => {
 	assert.equal(container.pointsCount(), 22);
 });
 
-QUnit.test('resample a text', async (assert) => {
+qUnit.test('resample a text', async (assert) => {
 	const geo1 = window.geo1;
 
 	const text1 = geo1.createNode('text');
@@ -121,3 +123,5 @@ QUnit.test('resample a text', async (assert) => {
 	container = await resample1.compute();
 	assert.equal(container.pointsCount(), 354);
 });
+
+}

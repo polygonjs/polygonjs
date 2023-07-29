@@ -1,7 +1,9 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {AnimationsNetworkObjNode} from '../../../../src/engine/nodes/obj/AnimationsNetwork';
 import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Js';
 import {RendererUtils} from '../../../helpers/RendererUtils';
+export function testenginenodesjsPlayAnimation(qUnit: QUnit) {
 
 function onCreateHookAnimationNetwork(node: AnimationsNetworkObjNode) {
 	const duration = node.createNode('duration');
@@ -33,7 +35,7 @@ function onCreateHookAnimationNetwork(node: AnimationsNetworkObjNode) {
 	return {end};
 }
 
-QUnit.test('js/playAnimation', async (assert) => {
+qUnit.test('js/playAnimation', async (assert) => {
 	const scene = window.scene;
 	const perspective_camera1 = window.perspective_camera1;
 	const geo1 = window.geo1;
@@ -69,3 +71,5 @@ QUnit.test('js/playAnimation', async (assert) => {
 		assert.in_delta(object.position.y, 1, 0.1);
 	});
 });
+
+}

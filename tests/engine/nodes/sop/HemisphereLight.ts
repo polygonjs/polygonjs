@@ -1,6 +1,8 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {HemisphereLight, Object3D} from 'three';
 import {ColorConversion} from '../../../../src/core/Color';
 import {BaseSopNodeType} from '../../../../src/engine/nodes/sop/_Base';
+export function testenginenodessopHemisphereLight(qUnit: QUnit) {
 
 function objectsCount(object: Object3D, countStart: number = 0) {
 	countStart += 1;
@@ -23,7 +25,7 @@ async function getObject(node: BaseSopNodeType) {
 	return object;
 }
 
-QUnit.test('sop/hemisphereLight hierarchy is maintained as it is cloned', async (assert) => {
+qUnit.test('sop/hemisphereLight hierarchy is maintained as it is cloned', async (assert) => {
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false); // cancels geo node displayNodeController
 
@@ -45,7 +47,7 @@ QUnit.test('sop/hemisphereLight hierarchy is maintained as it is cloned', async 
 	assert.deepEqual((object2 as HemisphereLight).color.toArray(), [0.2, 0.4, 0.7]);
 });
 
-QUnit.test('sop/hemisphereLight name change is maintained', async (assert) => {
+qUnit.test('sop/hemisphereLight name change is maintained', async (assert) => {
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false); // cancels geo node displayNodeController
 
@@ -70,3 +72,5 @@ QUnit.test('sop/hemisphereLight name change is maintained', async (assert) => {
 	assert.equal(objectsCount(object2), 1);
 	assert.deepEqual(objectNames(object2), ['hemisphereLight1']);
 });
+
+}

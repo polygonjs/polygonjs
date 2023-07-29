@@ -1,9 +1,11 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {GlConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Gl';
 import {SceneJsonExporter, SceneJsonExporterData} from '../../../../src/engine/io/json/export/Scene';
 import {SceneJsonImporter} from '../../../../src/engine/io/json/import/Scene';
 import {PolyScene} from '../../../../src/engine/scene/PolyScene';
+export function testenginenodesglAdd(qUnit: QUnit) {
 
-QUnit.test('gl add updates its output type correctly when created', async (assert) => {
+qUnit.test('gl add updates its output type correctly when created', async (assert) => {
 	const MAT = window.MAT;
 	const material_basic_builder1 = MAT.createNode('meshBasicBuilder');
 	material_basic_builder1.createNode('output');
@@ -52,7 +54,7 @@ QUnit.test('gl add updates its output type correctly when created', async (asser
 	assert.equal(add1.io.inputs.namedInputConnectionPoints()[0].type(), GlConnectionPointType.VEC2);
 });
 
-QUnit.test('gl add updates its output type correctly when scene is loaded', async (assert) => {
+qUnit.test('gl add updates its output type correctly when scene is loaded', async (assert) => {
 	const scene = window.scene;
 	const MAT = window.MAT;
 	const material_basic_builder1 = MAT.createNode('meshBasicBuilder');
@@ -81,7 +83,7 @@ QUnit.test('gl add updates its output type correctly when scene is loaded', asyn
 	assert.deepEqual(add2.params.get('add1')?.valueSerialized(), [1, 2]);
 });
 
-QUnit.test('gl add updates its output type correctly when scene is loaded 2', async (assert) => {
+qUnit.test('gl add updates its output type correctly when scene is loaded 2', async (assert) => {
 	const scene = window.scene;
 	const MAT = window.MAT;
 	const material_basic_builder1 = MAT.createNode('meshBasicBuilder');
@@ -118,3 +120,5 @@ QUnit.test('gl add updates its output type correctly when scene is loaded 2', as
 	assert.equal(add2.io.inputs.namedInputConnectionPoints()[0].type(), GlConnectionPointType.VEC2);
 	assert.deepEqual(add2.params.get('add1')?.valueSerialized(), [1, 2]);
 });
+
+}

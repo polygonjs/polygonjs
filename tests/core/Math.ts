@@ -1,8 +1,10 @@
+import type {QUnit} from '../helpers/QUnit';
 import {expandTriangle, pow2Inverse, mod} from '../../src/core/math/_Module';
 import {Triangle} from 'three';
 import {Vector3} from 'three';
+export function testcoreMath(qUnit: QUnit) {
 
-QUnit.test('math: expandTriangle', (assert) => {
+qUnit.test('math: expandTriangle', (assert) => {
 	const p0 = new Vector3(0, 0, 0);
 	const p1 = new Vector3(1, 0, 0);
 	const p2 = new Vector3(0, 0, 1);
@@ -19,14 +21,14 @@ QUnit.test('math: expandTriangle', (assert) => {
 	assert.in_delta(triangle.c.z, 1.44, 0.01);
 });
 
-QUnit.test('pow2Inverse', (assert) => {
+qUnit.test('pow2Inverse', (assert) => {
 	assert.equal(pow2Inverse(2), 1);
 	assert.equal(pow2Inverse(4), 2);
 	assert.equal(pow2Inverse(8), 3);
 	assert.equal(pow2Inverse(16), 4);
 });
 
-QUnit.test('mod for negative numbers', (assert) => {
+qUnit.test('mod for negative numbers', (assert) => {
 	assert.equal(mod(5, 2), 1);
 	assert.equal(mod(-5, 2), 1);
 	assert.equal(mod(0, 4), 0);
@@ -49,3 +51,5 @@ QUnit.test('mod for negative numbers', (assert) => {
 	assert.equal(mod(-4, 4), 0);
 	assert.equal(mod(-5, 4), 3);
 });
+
+}

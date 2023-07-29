@@ -1,7 +1,9 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {SetParamParamType} from '../../../../src/engine/nodes/event/SetParam';
+export function testenginenodeseventParam(qUnit: QUnit) {
 
-QUnit.test('event/param simple', async (assert) => {
+qUnit.test('event/param simple', async (assert) => {
 	const geo1 = window.geo1;
 	const scene = window.scene;
 	await scene.waitForCooksCompleted();
@@ -32,7 +34,7 @@ QUnit.test('event/param simple', async (assert) => {
 	assert.equal(boxWitness.pv.size, 3);
 });
 
-QUnit.test('event/param works with params with an expression', async (assert) => {
+qUnit.test('event/param works with params with an expression', async (assert) => {
 	const geo1 = window.geo1;
 	const scene = window.scene;
 
@@ -66,3 +68,5 @@ QUnit.test('event/param works with params with an expression', async (assert) =>
 	await CoreSleep.sleep(50);
 	assert.equal(boxWitness.pv.size, 3);
 });
+
+}

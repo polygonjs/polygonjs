@@ -1,10 +1,12 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 import {ASSETS_ROOT} from '../../../../src/core/loader/AssetsUtils';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {CopTypeImage} from '../../../../src/engine/poly/registers/nodes/types/Cop';
 import {Number2} from '../../../../src/types/GlobalTypes';
+export function testenginenodescopImage(qUnit: QUnit) {
 
-QUnit.test('COP image simple default', async (assert) => {
+qUnit.test('COP image simple default', async (assert) => {
 	const COP = window.COP;
 
 	const file1 = COP.createNode('image');
@@ -18,7 +20,7 @@ QUnit.test('COP image simple default', async (assert) => {
 	assert.deepEqual(container.resolution(), [512, 512]);
 });
 
-QUnit.test('cop/image with webp', async (assert) => {
+qUnit.test('cop/image with webp', async (assert) => {
 	const COP = window.COP;
 
 	const file1 = COP.createNode('image');
@@ -30,7 +32,7 @@ QUnit.test('cop/image with webp', async (assert) => {
 	assert.equal(texture.image.width, 512);
 	assert.equal(texture.image.height, 512);
 });
-QUnit.test('cop/image with png', async (assert) => {
+qUnit.test('cop/image with png', async (assert) => {
 	const COP = window.COP;
 
 	const file1 = COP.createNode('image');
@@ -43,7 +45,7 @@ QUnit.test('cop/image with png', async (assert) => {
 	assert.equal(texture.image.height, 1024);
 });
 
-QUnit.test('COP image simple with bad path', async (assert) => {
+qUnit.test('COP image simple with bad path', async (assert) => {
 	const COP = window.COP;
 
 	const file1 = COP.createNode('image');
@@ -58,7 +60,7 @@ QUnit.test('COP image simple with bad path', async (assert) => {
 	// assert.equal(texture.image.height, 512);
 });
 
-QUnit.test('COP image simple exr', async (assert) => {
+qUnit.test('COP image simple exr', async (assert) => {
 	const COP = window.COP;
 
 	const file1 = COP.createNode('imageEXR');
@@ -74,7 +76,7 @@ QUnit.test('COP image simple exr', async (assert) => {
 	assert.deepEqual(container.resolution(), [1024, 512]);
 });
 
-QUnit.test('COP image simple ktx2', async (assert) => {
+qUnit.test('COP image simple ktx2', async (assert) => {
 	const COP = window.COP;
 
 	// create renderer for basis loader
@@ -95,7 +97,7 @@ QUnit.test('COP image simple ktx2', async (assert) => {
 	RendererUtils.dispose();
 });
 
-QUnit.test('COP image simple hdr', async (assert) => {
+qUnit.test('COP image simple hdr', async (assert) => {
 	const COP = window.COP;
 
 	const file1 = COP.createNode('imageHDR');
@@ -110,7 +112,7 @@ QUnit.test('COP image simple hdr', async (assert) => {
 	assert.equal(texture.image.height, 512);
 });
 
-QUnit.test('COP image transform param can be time dependent', async (assert) => {
+qUnit.test('COP image transform param can be time dependent', async (assert) => {
 	const COP = window.COP;
 	const scene = window.scene;
 
@@ -140,7 +142,7 @@ QUnit.test('COP image transform param can be time dependent', async (assert) => 
 	assert.deepEqual(texture.offset.toArray(), [4, 8], 'C');
 });
 
-QUnit.test('COP images with default values', async (assert) => {
+qUnit.test('COP images with default values', async (assert) => {
 	const COP = window.COP;
 
 	// create renderer for basis loader
@@ -160,6 +162,8 @@ QUnit.test('COP images with default values', async (assert) => {
 	await testFileType(CopTypeImage.IMAGE_KTX2, [1000, 1392]);
 });
 
-QUnit.skip('COP refers a path in another node', async (assert) => {
+qUnit.skip('COP refers a path in another node', async (assert) => {
 	// check that the graph is set correctly, but changing the referred path
 });
+
+}

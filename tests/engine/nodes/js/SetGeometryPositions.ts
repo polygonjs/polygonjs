@@ -1,3 +1,4 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {BufferAttribute, Mesh, Vector3} from 'three';
 import {Attribute} from '../../../../src/core/geometry/Attribute';
 import {CoreSleep} from '../../../../src/core/Sleep';
@@ -5,8 +6,9 @@ import {SetGeometryPositionsInputName} from '../../../../src/engine/nodes/js/Set
 import {ConstantJsNode} from '../../../../src/engine/nodes/js/Constant';
 import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Js';
 import {RendererUtils} from '../../../helpers/RendererUtils';
+export function testenginenodesjsSetGeometryPositions(qUnit: QUnit) {
 
-QUnit.test('js/setGeometryPositions', async (assert) => {
+qUnit.test('js/setGeometryPositions', async (assert) => {
 	const scene = window.scene;
 	const perspective_camera1 = window.perspective_camera1;
 	const geo1 = window.geo1;
@@ -131,3 +133,5 @@ QUnit.test('js/setGeometryPositions', async (assert) => {
 		assert.deepEqual(_positions[2].toArray(), [0, 0, 1], '6');
 	});
 });
+
+}

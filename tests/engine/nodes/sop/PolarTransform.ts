@@ -1,6 +1,8 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {TransformTargetType} from '../../../../src/core/Transform';
+export function testenginenodessopPolarTransform(qUnit: QUnit) {
 
-QUnit.test('sop/polarTransform simple', async (assert) => {
+qUnit.test('sop/polarTransform simple', async (assert) => {
 	const geo1 = window.geo1;
 
 	const add1 = geo1.createNode('add');
@@ -34,3 +36,5 @@ QUnit.test('sop/polarTransform simple', async (assert) => {
 	assert.in_delta(points[0].position().y, 1, 0.001);
 	assert.in_delta(points[0].position().z, 0, 0.001);
 });
+
+}

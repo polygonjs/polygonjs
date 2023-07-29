@@ -1,7 +1,9 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {Box3} from 'three';
+export function testenginenodescopMapboxSatellite(qUnit: QUnit) {
 const tmpBox = new Box3();
 
-QUnit.test('cop/mapboxSatellite simple', async (assert) => {
+qUnit.test('cop/mapboxSatellite simple', async (assert) => {
 	const scene = window.scene;
 	const geo1 = scene.root().createNode('geo');
 	const COP = scene.root().createNode('copNetwork');
@@ -24,3 +26,5 @@ QUnit.test('cop/mapboxSatellite simple', async (assert) => {
 	assert.in_delta(tmpBox.min.y, 400, 0.1);
 	assert.in_delta(tmpBox.max.y, 400, 0.1);
 });
+
+}

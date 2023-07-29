@@ -1,10 +1,12 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {Mesh} from 'three';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Js';
 import {ParamType} from '../../../../src/engine/poly/ParamType';
 import {RendererUtils} from '../../../helpers/RendererUtils';
+export function testenginenodesjsDivide(qUnit: QUnit) {
 
-QUnit.test('js/divide with float inputs', async (assert) => {
+qUnit.test('js/divide with float inputs', async (assert) => {
 	const scene = window.scene;
 	const perspective_camera1 = window.perspective_camera1;
 
@@ -58,7 +60,7 @@ QUnit.test('js/divide with float inputs', async (assert) => {
 	});
 });
 
-QUnit.test('js/divide with vector+float inputs', async (assert) => {
+qUnit.test('js/divide with vector+float inputs', async (assert) => {
 	const scene = window.scene;
 	const perspective_camera1 = window.perspective_camera1;
 
@@ -105,3 +107,5 @@ QUnit.test('js/divide with vector+float inputs', async (assert) => {
 		assert.equal(object.position.z, 200, 'object moved ');
 	});
 });
+
+}

@@ -1,8 +1,10 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Js';
 import {RendererUtils} from '../../../helpers/RendererUtils';
+export function testenginenodesjsSetMaterialEmissiveColor(qUnit: QUnit) {
 
-QUnit.test('js/setMaterialEmissiveColor', async (assert) => {
+qUnit.test('js/setMaterialEmissiveColor', async (assert) => {
 	const MAT = window.MAT;
 	const scene = window.scene;
 	const perspective_camera1 = window.perspective_camera1;
@@ -41,3 +43,5 @@ QUnit.test('js/setMaterialEmissiveColor', async (assert) => {
 		assert.equal(material.emissive.r, 0.2, 'color changed');
 	});
 });
+
+}

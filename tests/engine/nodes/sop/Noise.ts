@@ -1,8 +1,10 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {NoiseOperation} from '../../../../src/engine/nodes/sop/Noise';
 import {BufferAttribute, Box3} from 'three';
+export function testenginenodessopNoise(qUnit: QUnit) {
 const tmpBox = new Box3();
 
-QUnit.test('noise simple', async (assert) => {
+qUnit.test('noise simple', async (assert) => {
 	const geo1 = window.geo1;
 
 	const sphere1 = geo1.createNode('sphere');
@@ -19,7 +21,7 @@ QUnit.test('noise simple', async (assert) => {
 	assert.in_delta(tmpBox.min.y, -1.3, 0.1);
 });
 
-QUnit.test('noise to update a float attribute', async (assert) => {
+qUnit.test('noise to update a float attribute', async (assert) => {
 	const geo1 = window.geo1;
 
 	const sphere1 = geo1.createNode('sphere');
@@ -60,7 +62,7 @@ QUnit.test('noise to update a float attribute', async (assert) => {
 	assert.in_delta(massAttribArray[3], 1 + 0.16, 0.01);
 });
 
-QUnit.test('noise without rest and no input cloning', async (assert) => {
+qUnit.test('noise without rest and no input cloning', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
 
@@ -88,7 +90,7 @@ QUnit.test('noise without rest and no input cloning', async (assert) => {
 	assert.in_delta(tmpBox.min.y, -13.46, 0.1);
 });
 
-QUnit.test('noise with rest and no input cloning', async (assert) => {
+qUnit.test('noise with rest and no input cloning', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
 
@@ -119,7 +121,9 @@ QUnit.test('noise with rest and no input cloning', async (assert) => {
 	assert.in_delta(tmpBox.min.y, -1.3, 0.1);
 });
 
-QUnit.skip('noise on flamingo', (assert) => {
+qUnit.skip('noise on flamingo', (assert) => {
 	// load example flamingo glb
 	assert.equal(0, 1);
 });
+
+}

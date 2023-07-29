@@ -1,1 +1,5 @@
-QUnit.skip('expression rand works', (assert) => {});
+import type {QUnit} from '../../../helpers/QUnit';
+export function testengineexpressionsmethodsrand(qUnit: QUnit) {
+qUnit.skip('expression rand works', (assert) => {});
+
+}

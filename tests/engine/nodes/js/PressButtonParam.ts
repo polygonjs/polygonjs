@@ -1,10 +1,12 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {IntegerParam} from './../../../../src/engine/params/Integer';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {SetParamJsNodeInputName} from '../../../../src/engine/nodes/js/SetParam';
 import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Js';
 import {RendererUtils} from '../../../helpers/RendererUtils';
+export function testenginenodesjsPressButtonParam(qUnit: QUnit) {
 
-QUnit.test('js/pressButtonParam', async (assert) => {
+qUnit.test('js/pressButtonParam', async (assert) => {
 	const scene = window.scene;
 	const perspective_camera1 = window.perspective_camera1;
 	const geo1 = window.geo1;
@@ -43,3 +45,5 @@ QUnit.test('js/pressButtonParam', async (assert) => {
 		assert.equal(checkedParam.value, 2);
 	});
 });
+
+}

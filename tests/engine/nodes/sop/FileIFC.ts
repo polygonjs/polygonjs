@@ -1,7 +1,9 @@
+import type {QUnit} from '../../../helpers/QUnit';
 // import {HierarchyMode} from '../../../../src/engine/operations/sop/Hierarchy';
 import {ASSETS_ROOT} from '../../../../src/core/loader/AssetsUtils';
 // import {Poly} from '../../../../src/engine/Poly';
 // import {withPlayerMode} from '../../../helpers/PlayerMode';
+export function testenginenodessopFileIFC(qUnit: QUnit) {
 
 function _url(path: string) {
 	return `${ASSETS_ROOT}${path}`;
@@ -31,7 +33,9 @@ async function withFile(path: string) {
 // 	return {container, fileNode, hierarchyNode};
 // }
 
-QUnit.test('sop/fileIFC simple', async (assert) => {
+qUnit.test('sop/fileIFC simple', async (assert) => {
 	const {container} = await withFile('models/ifc/rac_advanced_sample_project.ifc');
 	assert.equal(container.totalPointsCount(), 1450993);
 });
+
+}

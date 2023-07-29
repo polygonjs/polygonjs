@@ -1,8 +1,10 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {Color} from 'three';
 import {DataTexture} from 'three';
 import {SORTED_PALETTE_NAMES} from '../../../../src/core/color/chromotomeWrapper';
+export function testenginenodescopPalette(qUnit: QUnit) {
 
-QUnit.test('cop/palette simple', async (assert) => {
+qUnit.test('cop/palette simple', async (assert) => {
 	const COP = window.COP;
 	const palette = COP.createNode('palette');
 
@@ -35,3 +37,5 @@ QUnit.test('cop/palette simple', async (assert) => {
 	setColorAtPos(250, 0, color);
 	assert.deepEqual(color.toArray(), [193, 46, 109]);
 });
+
+}

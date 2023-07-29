@@ -1,4 +1,6 @@
-QUnit.skip('a geo node getting dirty gets evaluated on request', async (assert) => {});
+import type {QUnit} from '../../../helpers/QUnit';
+export function testengineparamsutilsDirty(qUnit: QUnit) {
+qUnit.skip('a geo node getting dirty gets evaluated on request', async (assert) => {});
 
 // assert geo1.isDirty()()
 // tx = geo1.param('tx')
@@ -25,3 +27,5 @@ QUnit.skip('a geo node getting dirty gets evaluated on request', async (assert) 
 // assert !tx.isDirty()()
 // assert !geo1.isDirty()()
 // done()
+
+}

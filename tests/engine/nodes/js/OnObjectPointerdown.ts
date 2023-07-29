@@ -1,3 +1,4 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {TransformTargetType} from '../../../../src/core/Transform';
 import {GetIntersectionPropertyJsNodeOutputName} from '../../../../src/engine/nodes/js/GetIntersectionProperty';
@@ -5,8 +6,9 @@ import {SetParamJsNodeInputName} from '../../../../src/engine/nodes/js/SetParam'
 import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Js';
 import {triggerPointerdownAside, triggerPointerdownInMiddle, triggerPointerdown} from '../../../helpers/EventsHelper';
 import {RendererUtils} from '../../../helpers/RendererUtils';
+export function testenginenodesjsOnObjectPointerdown(qUnit: QUnit) {
 
-QUnit.test('js/onObjectPointerdown', async (assert) => {
+qUnit.test('js/onObjectPointerdown', async (assert) => {
 	const scene = window.scene;
 	const MAT = window.MAT;
 	const perspective_camera1 = window.perspective_camera1;
@@ -128,3 +130,5 @@ QUnit.test('js/onObjectPointerdown', async (assert) => {
 		object.position.set(0, 0, 0);
 	});
 });
+
+}

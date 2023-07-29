@@ -1,6 +1,8 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {SpotLight} from 'three';
 import {CoreGroup} from '../../../../src/core/geometry/Group';
 import {LightUserDataRaymarching} from '../../../../src/core/lights/Common';
+export function testenginenodesjsOutputSpotLight(qUnit: QUnit) {
 
 function isSpotLight(object: any): object is SpotLight {
 	return (object as SpotLight).isSpotLight == true && (object as SpotLight).intensity != null;
@@ -24,7 +26,7 @@ function getLight(coreGroup: CoreGroup): SpotLight {
 	return light!;
 }
 
-QUnit.test('js/OutputSpotLight simple', async (assert) => {
+qUnit.test('js/OutputSpotLight simple', async (assert) => {
 	const geo1 = window.geo1;
 	const spotLight1 = geo1.createNode('spotLight');
 	const objectBuilder1 = geo1.createNode('objectBuilder');
@@ -354,3 +356,5 @@ QUnit.test('js/OutputSpotLight simple', async (assert) => {
 	assert.equal(await getRaymarchingShadowBiasAngle(), 0.02, 'getRaymarchingShadowBiasAngle');
 	assert.equal(await getRaymarchingShadowBiasDistance(), 0.2, 'getRaymarchingShadowBiasDistance');
 });
+
+}

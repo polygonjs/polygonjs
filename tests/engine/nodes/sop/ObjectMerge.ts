@@ -1,4 +1,6 @@
-QUnit.test('object_merge simple', async (assert) => {
+import type {QUnit} from '../../../helpers/QUnit';
+export function testenginenodessopObjectMerge(qUnit: QUnit) {
+qUnit.test('object_merge simple', async (assert) => {
 	const geo1 = window.geo1;
 	const geo2 = window.scene.root().createNode('geo');
 
@@ -12,3 +14,5 @@ QUnit.test('object_merge simple', async (assert) => {
 	container = await object_merge1.compute();
 	assert.equal(container.pointsCount(), 4);
 });
+
+}

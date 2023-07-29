@@ -1,7 +1,9 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {ASSETS_ROOT} from '../../../../src/core/loader/AssetsUtils';
 import {CoreSleep} from '../../../../src/core/Sleep';
+export function testenginenodeseventAudio(qUnit: QUnit) {
 
-QUnit.test('event/audio onStop trigger', async (assert) => {
+qUnit.test('event/audio onStop trigger', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
 
@@ -46,3 +48,5 @@ QUnit.test('event/audio onStop trigger', async (assert) => {
 	await CoreSleep.sleep(4000);
 	assert.equal(geo1.p.t.x.value, 2, 'moved to 2');
 });
+
+}

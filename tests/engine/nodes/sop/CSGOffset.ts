@@ -1,8 +1,10 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {BufferAttribute, Box3, Vector3} from 'three';
+export function testenginenodessopCSGOffset(qUnit: QUnit) {
 const tmpBox = new Box3();
 const tmpSize = new Vector3();
 
-QUnit.test('sop/CSGOffset on 2d prim', async (assert) => {
+qUnit.test('sop/CSGOffset on 2d prim', async (assert) => {
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false); // cancels geo node displayNodeController
 
@@ -58,7 +60,7 @@ QUnit.test('sop/CSGOffset on 2d prim', async (assert) => {
 	assert.in_delta(tmpBox.max.x, 1.099, 0.002);
 });
 
-// QUnit.test('SOP/CSGOffset on 3d prim', async (assert) => {
+// qUnit.test('SOP/CSGOffset on 3d prim', async (assert) => {
 // 	const geo1 = window.geo1;
 // 	geo1.flags.display.set(false); // cancels geo node displayNodeController
 
@@ -108,3 +110,5 @@ QUnit.test('sop/CSGOffset on 2d prim', async (assert) => {
 // 	assert.in_delta(tmpBox.min.x, -1.099, 0.002);
 // 	assert.in_delta(tmpBox.max.x, 1.099, 0.002);
 // });
+
+}

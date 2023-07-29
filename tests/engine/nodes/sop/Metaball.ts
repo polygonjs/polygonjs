@@ -1,5 +1,7 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {MetaballSopNode} from '../../../../src/engine/nodes/sop/Metaball';
 import {checkConsolePrints} from '../../../helpers/Console';
+export function testenginenodessopMetaball(qUnit: QUnit) {
 
 async function compute(metaball: MetaballSopNode) {
 	const container = await metaball.compute();
@@ -9,7 +11,7 @@ async function compute(metaball: MetaballSopNode) {
 	return {bbox: geometry.boundingBox!, coreGroup: coreGroup};
 }
 
-QUnit.test('metaball simple', async (assert) => {
+qUnit.test('metaball simple', async (assert) => {
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false); // cancels geo node displayNodeController
 
@@ -50,7 +52,7 @@ QUnit.test('metaball simple', async (assert) => {
 	assert.equal(result.coreGroup.points().length, 8000);
 });
 
-QUnit.test('metaballs can be cloned without warnings', async (assert) => {
+qUnit.test('metaballs can be cloned without warnings', async (assert) => {
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false); // cancels geo node displayNodeController
 
@@ -71,3 +73,5 @@ QUnit.test('metaballs can be cloned without warnings', async (assert) => {
 	assert.equal(consoleHistory.warn.length, 2);
 	assert.equal(consoleHistory.error.length, 0);
 });
+
+}

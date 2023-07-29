@@ -1,7 +1,9 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {CoreObject} from '../../../../src/core/geometry/Object';
 import {CameraAttribute} from '../../../../src/core/camera/CoreCamera';
+export function testenginenodessopCameraWebXRARMarkerTracking(qUnit: QUnit) {
 
-QUnit.test('sop/cameraWebXRARMArkerTracking simple', async (assert) => {
+qUnit.test('sop/cameraWebXRARMArkerTracking simple', async (assert) => {
 	const geo1 = window.geo1;
 	const camera1 = geo1.createNode('perspectiveCamera');
 	const cameraWebXRARMarkerTracking1 = geo1.createNode('cameraWebXRARMarkerTracking');
@@ -16,7 +18,7 @@ QUnit.test('sop/cameraWebXRARMArkerTracking simple', async (assert) => {
 		'This node requires the plugin-marker-tracking. See [https://github.com/polygonjs/plugin-marker-tracking](https://github.com/polygonjs/plugin-marker-tracking)'
 	);
 });
-QUnit.test('sop/cameraWebXRARMArkerTracking applyToChildren', async (assert) => {
+qUnit.test('sop/cameraWebXRARMArkerTracking applyToChildren', async (assert) => {
 	const geo1 = window.geo1;
 	const camera1 = geo1.createNode('perspectiveCamera');
 	const hierarchy1 = geo1.createNode('hierarchy');
@@ -35,3 +37,5 @@ QUnit.test('sop/cameraWebXRARMArkerTracking applyToChildren', async (assert) => 
 		'This node requires the plugin-marker-tracking. See [https://github.com/polygonjs/plugin-marker-tracking](https://github.com/polygonjs/plugin-marker-tracking)'
 	);
 });
+
+}

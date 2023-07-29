@@ -1,9 +1,11 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {TwoWaySwitchJsNodeInputName} from '../../../../src/engine/nodes/js/TwoWaySwitch';
 import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Js';
 import {RendererUtils} from '../../../helpers/RendererUtils';
+export function testenginenodesjsRayIntersectsObject(qUnit: QUnit) {
 
-QUnit.test('js/rayIntersectsObject', async (assert) => {
+qUnit.test('js/rayIntersectsObject', async (assert) => {
 	const scene = window.scene;
 	const perspective_camera1 = window.perspective_camera1;
 
@@ -64,3 +66,5 @@ QUnit.test('js/rayIntersectsObject', async (assert) => {
 		assert.deepEqual(object.position.toArray(), [0, 0, 1], 'pos set');
 	});
 });
+
+}

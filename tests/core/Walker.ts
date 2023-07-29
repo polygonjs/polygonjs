@@ -1,6 +1,8 @@
+import type {QUnit} from '../helpers/QUnit';
 import {CoreWalker} from '../../src/core/Walker';
+export function testcoreWalker(qUnit: QUnit) {
 
-QUnit.test('CoreWalker: from a box', (assert) => {
+qUnit.test('CoreWalker: from a box', (assert) => {
 	const scene = window.scene;
 	const box1 = window.geo1.createNode('box');
 
@@ -20,7 +22,7 @@ QUnit.test('CoreWalker: from a box', (assert) => {
 	assert.notEqual(window.scene.node('/geo10'), window.geo1);
 });
 
-QUnit.test('CoreWalker: a param to another', (assert) => {
+qUnit.test('CoreWalker: a param to another', (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
 	const box1 = geo1.createNode('box');
@@ -34,7 +36,7 @@ QUnit.test('CoreWalker: a param to another', (assert) => {
 	assert.equal(box2.p.size.pathRelativeTo(box3), '../../geo1/box2/size');
 });
 
-QUnit.test('CoreWalker.relativePath', (assert) => {
+qUnit.test('CoreWalker.relativePath', (assert) => {
 	const geo1 = window.geo1;
 	const material = geo1.createNode('material');
 	const materials = geo1.createNode('materialsNetwork');
@@ -43,7 +45,7 @@ QUnit.test('CoreWalker.relativePath', (assert) => {
 	assert.equal(CoreWalker.relativePath(material, meshBasic), '../materialsNetwork1/meshBasic1');
 });
 
-QUnit.test('CoreWalker node.node() relative and absolute', (assert) => {
+qUnit.test('CoreWalker node.node() relative and absolute', (assert) => {
 	const geo1 = window.geo1;
 	const material = geo1.createNode('material');
 
@@ -58,7 +60,7 @@ QUnit.test('CoreWalker node.node() relative and absolute', (assert) => {
 	assert.equal(geo2.node('/geo1/material1')?.graphNodeId(), material.graphNodeId());
 });
 
-QUnit.test('CoreWalker.makeAbsolute', (assert) => {
+qUnit.test('CoreWalker.makeAbsolute', (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
 	const geo2 = scene.createNode('geo');
@@ -86,3 +88,5 @@ QUnit.test('CoreWalker.makeAbsolute', (assert) => {
 		'/geo2/materialsNetwork1/meshBasic1'
 	);
 });
+
+}

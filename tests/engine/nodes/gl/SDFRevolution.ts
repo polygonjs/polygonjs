@@ -1,8 +1,10 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import DEFAULT_FRAGMENT from './SDFRevolution/default.frag.glsl';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 import {GLSLHelper} from '../../../helpers/GLSLHelper';
+export function testenginenodesglSDFRevolution(qUnit: QUnit) {
 
-QUnit.test('gl/SDFRevolution', async (assert) => {
+qUnit.test('gl/SDFRevolution', async (assert) => {
 	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 	const MAT = window.MAT;
 	const rayMarchingBuilder1 = MAT.createNode('rayMarchingBuilder');
@@ -28,3 +30,5 @@ QUnit.test('gl/SDFRevolution', async (assert) => {
 
 	RendererUtils.dispose();
 });
+
+}

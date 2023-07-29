@@ -1,6 +1,8 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {ASSETS_ROOT} from '../../../../src/core/loader/AssetsUtils';
+export function testengineexpressionsmethodscopRes(qUnit: QUnit) {
 
-QUnit.test('expression cosRes works', async (assert) => {
+qUnit.test('expression cosRes works', async (assert) => {
 	const geo1 = window.geo1;
 	const COP = window.COP;
 
@@ -30,7 +32,7 @@ QUnit.test('expression cosRes works', async (assert) => {
 	assert.equal(tx.value, 512);
 });
 
-QUnit.test('expression cosRes updates if referenced cop updates', async (assert) => {
+qUnit.test('expression cosRes updates if referenced cop updates', async (assert) => {
 	const geo1 = window.geo1;
 	const COP = window.COP;
 
@@ -54,7 +56,7 @@ QUnit.test('expression cosRes updates if referenced cop updates', async (assert)
 	assert.equal(tx.value, 2128);
 });
 
-QUnit.test('expression cosRes updates if referenced video updates', async (assert) => {
+qUnit.test('expression cosRes updates if referenced video updates', async (assert) => {
 	const geo1 = window.geo1;
 	const COP = window.COP;
 
@@ -84,3 +86,5 @@ QUnit.test('expression cosRes updates if referenced video updates', async (asser
 	assert.notOk(tx.states.error.active());
 	assert.notOk(tx.states.error.message());
 });
+
+}

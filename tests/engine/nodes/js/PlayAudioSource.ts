@@ -1,3 +1,4 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {Mesh} from 'three';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Js';
@@ -6,8 +7,9 @@ import {ASSETS_ROOT} from '../../../../src/core/loader/AssetsUtils';
 import {SetParamJsNodeInputName} from '../../../../src/engine/nodes/js/SetParam';
 import {ParamConstructorMap} from '../../../../src/engine/params/types/ParamConstructorMap';
 import {ParamType} from '../../../../src/engine/poly/ParamType';
+export function testenginenodesjsPlayAudioSource(qUnit: QUnit) {
 
-QUnit.test('js/playAudioSource', async (assert) => {
+qUnit.test('js/playAudioSource', async (assert) => {
 	const scene = window.scene;
 	const perspective_camera1 = window.perspective_camera1;
 	const geo1 = window.geo1;
@@ -69,3 +71,5 @@ QUnit.test('js/playAudioSource', async (assert) => {
 		assert.equal(geo1.p.t.x.value, 1, '1');
 	});
 });
+
+}

@@ -1,4 +1,6 @@
-QUnit.test('cache static', async (assert) => {
+import type {QUnit} from '../../../helpers/QUnit';
+export function testenginenodessopCache(qUnit: QUnit) {
+qUnit.test('cache static', async (assert) => {
 	let container;
 	const geo1 = window.geo1;
 	const sphere1 = geo1.createNode('sphere');
@@ -62,7 +64,7 @@ QUnit.test('cache static', async (assert) => {
 
 // 		done()
 
-QUnit.skip('cache animated', () => {});
+qUnit.skip('cache animated', () => {});
 
 // box1 = geo1.createNode('box')
 // transform1 = geo1.createNode('transform')
@@ -113,3 +115,5 @@ QUnit.skip('cache animated', () => {});
 // 			assert !cache1.isDirty()()
 
 // 			done()
+
+}

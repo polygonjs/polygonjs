@@ -1,11 +1,13 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {AttribClass} from '../../../../src/core/geometry/Constant';
 import {AttribPromoteMode} from '../../../../src/engine/operations/sop/AttribPromote';
 import {TransformTargetType} from '../../../../src/core/Transform';
 import {BufferAttribute} from 'three';
 import {CoreObjectType} from '../../../../src/core/geometry/ObjectContent';
 import {BaseCoreObject} from '../../../../src/core/geometry/_BaseObject';
+export function testenginenodessopAttribPromote(qUnit: QUnit) {
 
-QUnit.test('sop/attribPromote vertex to vertex with min', async (assert) => {
+qUnit.test('sop/attribPromote vertex to vertex with min', async (assert) => {
 	const geo1 = window.geo1;
 
 	const box1 = geo1.createNode('box');
@@ -34,7 +36,7 @@ QUnit.test('sop/attribPromote vertex to vertex with min', async (assert) => {
 	assert.equal(array[5], 0);
 });
 
-QUnit.test('sop/attribPromote vertex to vertex with max', async (assert) => {
+qUnit.test('sop/attribPromote vertex to vertex with max', async (assert) => {
 	const geo1 = window.geo1;
 
 	const box1 = geo1.createNode('box');
@@ -63,7 +65,7 @@ QUnit.test('sop/attribPromote vertex to vertex with max', async (assert) => {
 	assert.equal(array[5], 23);
 });
 
-QUnit.test('sop/attribPromote vertex to object with max', async (assert) => {
+qUnit.test('sop/attribPromote vertex to object with max', async (assert) => {
 	const geo1 = window.geo1;
 
 	const box1 = geo1.createNode('box');
@@ -89,7 +91,7 @@ QUnit.test('sop/attribPromote vertex to object with max', async (assert) => {
 	assert.deepEqual(object.userData, {attributes: {test: 23}});
 });
 
-QUnit.test('sop/attribPromote object to vertex with max', async (assert) => {
+qUnit.test('sop/attribPromote object to vertex with max', async (assert) => {
 	const geo1 = window.geo1;
 
 	const box1 = geo1.createNode('box');
@@ -117,7 +119,7 @@ QUnit.test('sop/attribPromote object to vertex with max', async (assert) => {
 	assert.deepEqual(array[0], 12);
 });
 
-QUnit.test('sop/attribPromote multiple attributes from objects to vertex', async (assert) => {
+qUnit.test('sop/attribPromote multiple attributes from objects to vertex', async (assert) => {
 	const geo1 = window.geo1;
 
 	const box1 = geo1.createNode('box');
@@ -155,7 +157,7 @@ QUnit.test('sop/attribPromote multiple attributes from objects to vertex', async
 	assert.in_delta(array_role[0], 0.2, 0.001);
 });
 
-QUnit.test('sop/attribPromote object to object with max', async (assert) => {
+qUnit.test('sop/attribPromote object to object with max', async (assert) => {
 	const geo1 = window.geo1;
 
 	const box1 = geo1.createNode('box');
@@ -191,7 +193,7 @@ QUnit.test('sop/attribPromote object to object with max', async (assert) => {
 	);
 });
 
-QUnit.test('sop/attribPromote object to object with max (2)', async (assert) => {
+qUnit.test('sop/attribPromote object to object with max (2)', async (assert) => {
 	const geo1 = window.geo1;
 
 	const merge1 = geo1.createNode('merge');
@@ -235,6 +237,8 @@ QUnit.test('sop/attribPromote object to object with max (2)', async (assert) => 
 	);
 });
 
-QUnit.skip('attrib promote from multiple objects to vertex', (assert) => {
+qUnit.skip('attrib promote from multiple objects to vertex', (assert) => {
 	assert.equal(1, 2);
 });
+
+}

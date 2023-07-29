@@ -1,8 +1,10 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {LightProbe} from 'three';
 import {ASSETS_ROOT} from '../../../../src/core/loader/AssetsUtils';
 import {CoreSleep} from '../../../../src/core/Sleep';
+export function testenginenodesobjLightProbe(qUnit: QUnit) {
 
-QUnit.test('obj/lightProbe simple', async (assert) => {
+qUnit.test('obj/lightProbe simple', async (assert) => {
 	const scene = window.scene;
 
 	const COP = window.COP;
@@ -24,3 +26,5 @@ QUnit.test('obj/lightProbe simple', async (assert) => {
 	assert.in_delta(lightProbe.sh.coefficients[0].y, 1.14215, 0.001);
 	assert.in_delta(lightProbe.sh.coefficients[0].z, 1.0629, 0.001);
 });
+
+}

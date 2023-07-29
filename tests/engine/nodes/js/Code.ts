@@ -1,8 +1,10 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Js';
 import {RendererUtils} from '../../../helpers/RendererUtils';
+export function testenginenodesjsCode(qUnit: QUnit) {
 
-QUnit.test('js/code simple', async (assert) => {
+qUnit.test('js/code simple', async (assert) => {
 	const scene = window.scene;
 	const perspective_camera1 = window.perspective_camera1;
 	const geo1 = window.geo1;
@@ -33,7 +35,7 @@ QUnit.test('js/code simple', async (assert) => {
 	});
 });
 
-QUnit.test('js/code modified with new input', async (assert) => {
+qUnit.test('js/code modified with new input', async (assert) => {
 	const scene = window.scene;
 	const perspective_camera1 = window.perspective_camera1;
 	const geo1 = window.geo1;
@@ -97,3 +99,5 @@ QUnit.test('js/code modified with new input', async (assert) => {
 		assert.equal(object.position.y, 1);
 	});
 });
+
+}

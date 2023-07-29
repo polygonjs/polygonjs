@@ -1,3 +1,4 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 import {ShaderName} from '../../../../src/engine/nodes/utils/shaders/ShaderName';
 import {AttribClass} from '../../../../src/core/geometry/Constant';
@@ -30,8 +31,9 @@ import {
 	joinArray,
 } from './particlesSystemGPU/ParticlesHelper';
 import {CoreSleep} from '../../../../src/core/Sleep';
+export function testenginenodessopParticlesSystemGpu(qUnit: QUnit) {
 
-QUnit.test('ParticlesSystemGPU simple', async (assert) => {
+qUnit.test('ParticlesSystemGPU simple', async (assert) => {
 	const geo1 = window.geo1;
 	const scene = window.scene;
 
@@ -100,7 +102,7 @@ QUnit.test('ParticlesSystemGPU simple', async (assert) => {
 	disposeParticlesFromNode(particles1);
 });
 
-QUnit.test('ParticlesSystemGPU attributes are used without needing to be set as exporting', async (assert) => {
+qUnit.test('ParticlesSystemGPU attributes are used without needing to be set as exporting', async (assert) => {
 	const geo1 = window.geo1;
 	const scene = window.scene;
 	scene.setFrame(0);
@@ -342,7 +344,7 @@ QUnit.test('ParticlesSystemGPU attributes are used without needing to be set as 
 	RendererUtils.dispose();
 });
 
-QUnit.test('ParticlesSystemGPU node can be deleted without error', async (assert) => {
+qUnit.test('ParticlesSystemGPU node can be deleted without error', async (assert) => {
 	const geo1 = window.geo1;
 	const scene = window.scene;
 	scene.setFrame(0);
@@ -367,7 +369,7 @@ QUnit.test('ParticlesSystemGPU node can be deleted without error', async (assert
 	disposeParticlesFromNode(particles1);
 });
 
-QUnit.test('texture allocation works as expected wih pos, vel, normal and bby float', async (assert) => {
+qUnit.test('texture allocation works as expected wih pos, vel, normal and bby float', async (assert) => {
 	const geo1 = window.geo1;
 
 	const scene = window.scene;
@@ -424,7 +426,7 @@ QUnit.test('texture allocation works as expected wih pos, vel, normal and bby fl
 	disposeParticlesFromNode(particlesSystemGpu1);
 });
 
-QUnit.test('material can use a float attribute also used in simulation in readonly', async (assert) => {
+qUnit.test('material can use a float attribute also used in simulation in readonly', async (assert) => {
 	const scene = window.scene;
 	const cameraNode = window.perspective_camera1;
 	// lights & camera
@@ -601,7 +603,7 @@ QUnit.test('material can use a float attribute also used in simulation in readon
 	disposeParticlesFromNode(particlesSystemGpu1);
 });
 
-QUnit.test('ParticlesSystemGPU attributes can be used from inside a subnet', async (assert) => {
+qUnit.test('ParticlesSystemGPU attributes can be used from inside a subnet', async (assert) => {
 	const geo1 = window.geo1;
 	const scene = window.scene;
 	scene.setFrame(0);
@@ -687,7 +689,7 @@ QUnit.test('ParticlesSystemGPU attributes can be used from inside a subnet', asy
 	disposeParticlesFromNode(particles1);
 });
 
-QUnit.test('ParticlesSystemGPU params can be used from inside a subnet', async (assert) => {
+qUnit.test('ParticlesSystemGPU params can be used from inside a subnet', async (assert) => {
 	const geo1 = window.geo1;
 	const scene = window.scene;
 	scene.setFrame(0);
@@ -773,7 +775,7 @@ QUnit.test('ParticlesSystemGPU params can be used from inside a subnet', async (
 	disposeParticlesFromNode(particles1);
 });
 
-QUnit.test('ParticlesSystemGPU: 2 gl/attribute with same attrib name do not trigger a redefinition', async (assert) => {
+qUnit.test('ParticlesSystemGPU: 2 gl/attribute with same attrib name do not trigger a redefinition', async (assert) => {
 	const geo1 = window.geo1;
 	const scene = window.scene;
 	scene.setFrame(0);
@@ -828,7 +830,7 @@ QUnit.test('ParticlesSystemGPU: 2 gl/attribute with same attrib name do not trig
 	disposeParticlesFromNode(particles1);
 });
 
-QUnit.test('ParticlesSystemGPU persisted config still loads with an uncooked particles node', async (assert) => {
+qUnit.test('ParticlesSystemGPU persisted config still loads with an uncooked particles node', async (assert) => {
 	const scene = window.scene;
 	scene.setFrame(0);
 
@@ -907,3 +909,5 @@ QUnit.test('ParticlesSystemGPU persisted config still loads with an uncooked par
 	RendererUtils.dispose();
 	disposeParticlesFromNode(particles1);
 });
+
+}

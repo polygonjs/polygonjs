@@ -1,6 +1,8 @@
+import type {QUnit} from '../../helpers/QUnit';
 import {ParamType} from '../../../src/engine/poly/ParamType';
+export function testengineparamsInteger(qUnit: QUnit) {
 
-QUnit.test('int eval correctly when set to different values', async (assert) => {
+qUnit.test('int eval correctly when set to different values', async (assert) => {
 	const geo1 = window.geo1;
 
 	const switch1 = geo1.createNode('switch');
@@ -20,7 +22,7 @@ QUnit.test('int eval correctly when set to different values', async (assert) => 
 	assert.equal(param.value, 2);
 });
 
-QUnit.test('int hasExpression() returns false when removing the expression', async (assert) => {
+qUnit.test('int hasExpression() returns false when removing the expression', async (assert) => {
 	const geo1 = window.geo1;
 
 	const switch1 = geo1.createNode('switch');
@@ -41,7 +43,7 @@ QUnit.test('int hasExpression() returns false when removing the expression', asy
 	assert.equal(param.value, 0);
 });
 
-QUnit.test('a range will limit the result of an expression', async (assert) => {
+qUnit.test('a range will limit the result of an expression', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
 
@@ -68,7 +70,7 @@ QUnit.test('a range will limit the result of an expression', async (assert) => {
 	await param.compute();
 	assert.equal(param.value, 1);
 });
-QUnit.test('integer param can take an expression returning a boolean', async (assert) => {
+qUnit.test('integer param can take an expression returning a boolean', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
 
@@ -89,7 +91,7 @@ QUnit.test('integer param can take an expression returning a boolean', async (as
 	assert.equal(param.value, 1);
 });
 
-QUnit.test('serialized value is integer if numerical value entered as a string', async (assert) => {
+qUnit.test('serialized value is integer if numerical value entered as a string', async (assert) => {
 	const geo1 = window.geo1;
 
 	const icosahedron1 = geo1.createNode('icosahedron');
@@ -102,3 +104,5 @@ QUnit.test('serialized value is integer if numerical value entered as a string',
 	// for optimized nodes, as the string was not converted to an int
 	assert.equal(param.rawInputSerialized(), 12);
 });
+
+}

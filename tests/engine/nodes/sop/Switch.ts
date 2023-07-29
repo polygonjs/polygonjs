@@ -1,4 +1,6 @@
-QUnit.test('SOP switch simple', async (assert) => {
+import type {QUnit} from '../../../helpers/QUnit';
+export function testenginenodessopSwitch(qUnit: QUnit) {
+qUnit.test('SOP switch simple', async (assert) => {
 	const geo1 = window.geo1;
 
 	const box1 = geo1.createNode('box');
@@ -20,7 +22,7 @@ QUnit.test('SOP switch simple', async (assert) => {
 	assert.equal(await pointsCount(), 961);
 });
 
-QUnit.test(
+qUnit.test(
 	'SOP switch re evaluates input when one goes from errored to valid (error in numeric param)',
 	async (assert) => {
 		const geo1 = window.geo1;
@@ -61,7 +63,7 @@ QUnit.test(
 	}
 );
 
-QUnit.test(
+qUnit.test(
 	'SOP switch re evaluates input when one goes from errored to valid (error in string param)',
 	async (assert) => {
 		const geo1 = window.geo1;
@@ -106,3 +108,5 @@ QUnit.test(
 		assert.notOk(switch1.states.error.message());
 	}
 );
+
+}

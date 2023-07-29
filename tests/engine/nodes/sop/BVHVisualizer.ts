@@ -1,11 +1,13 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {ObjectTransformSpace} from './../../../../src/core/TransformSpace';
 import {TransformTargetType} from './../../../../src/core/Transform';
 import {HierarchyMode} from './../../../../src/engine/operations/sop/Hierarchy';
 import {BufferAttribute, Box3, Mesh, Vector3} from 'three';
+export function testenginenodessopBVHVisualizer(qUnit: QUnit) {
 const tmpBox = new Box3();
 const tmpCenter = new Vector3();
 
-QUnit.test('sop/BVHVisualizer simple', async (assert) => {
+qUnit.test('sop/BVHVisualizer simple', async (assert) => {
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false); // cancels geo node displayNodeController
 
@@ -42,7 +44,7 @@ QUnit.test('sop/BVHVisualizer simple', async (assert) => {
 	assert.equal((geo.attributes.position as BufferAttribute).array.length, 48, '48');
 });
 
-QUnit.test('sop/BVHVisualizer with hierarchy', async (assert) => {
+qUnit.test('sop/BVHVisualizer with hierarchy', async (assert) => {
 	const geo1 = window.geo1;
 	// hierarchy
 	const box1 = geo1.createNode('box');
@@ -88,3 +90,5 @@ QUnit.test('sop/BVHVisualizer with hierarchy', async (assert) => {
 	copy1.setObjectTransformSpace(ObjectTransformSpace.LOCAL);
 	assert.in_delta((await getBbox()).center.x, 10, 0.1);
 });
+
+}

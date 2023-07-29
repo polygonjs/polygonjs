@@ -1,4 +1,6 @@
-QUnit.test('expression precision works on a float', async (assert) => {
+import type {QUnit} from '../../../helpers/QUnit';
+export function testengineexpressionsmethodsprecision(qUnit: QUnit) {
+qUnit.test('expression precision works on a float', async (assert) => {
 	const geo1 = window.geo1;
 
 	const box1 = geo1.createNode('box');
@@ -17,7 +19,7 @@ QUnit.test('expression precision works on a float', async (assert) => {
 	assert.equal(box1.p.center.y.value, -15.4);
 });
 
-QUnit.test('expression precision works on a string', async (assert) => {
+qUnit.test('expression precision works on a string', async (assert) => {
 	const geo1 = window.geo1;
 
 	const box1 = geo1.createNode('box');
@@ -40,3 +42,5 @@ QUnit.test('expression precision works on a string', async (assert) => {
 	await param.compute();
 	assert.equal(param.value, '-15.40');
 });
+
+}

@@ -1,7 +1,9 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {CoreObject} from '../../../../src/core/geometry/Object';
 import {CameraAttribute} from '../../../../src/core/camera/CoreCamera';
+export function testenginenodessopCameraWebXRVR(qUnit: QUnit) {
 
-QUnit.test('sop/cameraWebXRVR simple', async (assert) => {
+qUnit.test('sop/cameraWebXRVR simple', async (assert) => {
 	const geo1 = window.geo1;
 	const camera1 = geo1.createNode('perspectiveCamera');
 	const cameraWebXRVR1 = geo1.createNode('cameraWebXRVR');
@@ -12,7 +14,7 @@ QUnit.test('sop/cameraWebXRVR simple', async (assert) => {
 
 	assert.equal(CoreObject.attribValue(objects[0], CameraAttribute.WEBXR_VR), true);
 });
-QUnit.test('sop/cameraWebXRVR applyToChildren', async (assert) => {
+qUnit.test('sop/cameraWebXRVR applyToChildren', async (assert) => {
 	const geo1 = window.geo1;
 	const camera1 = geo1.createNode('perspectiveCamera');
 	const hierarchy1 = geo1.createNode('hierarchy');
@@ -26,3 +28,5 @@ QUnit.test('sop/cameraWebXRVR applyToChildren', async (assert) => {
 	assert.equal(CoreObject.attribValue(objects[0], CameraAttribute.WEBXR_VR), true);
 	assert.equal(CoreObject.attribValue(objects[0].children[0], CameraAttribute.WEBXR_VR), true);
 });
+
+}

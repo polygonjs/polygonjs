@@ -1,7 +1,9 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {Mesh} from 'three';
 import {Matrix4MultiplyInputName} from '../../../../src/engine/nodes/js/Matrix4Multiply';
+export function testenginenodesjsMatrix4Multiply(qUnit: QUnit) {
 
-QUnit.test('js/matrix4Multiply', async (assert) => {
+qUnit.test('js/matrix4Multiply', async (assert) => {
 	const geo1 = window.geo1;
 	const box1 = geo1.createNode('box');
 	const objectBuilder1 = geo1.createNode('objectBuilder');
@@ -29,3 +31,5 @@ QUnit.test('js/matrix4Multiply', async (assert) => {
 	assert.equal((await getPosXRY()).tx, 1);
 	assert.in_delta((await getPosXRY()).ry, -Math.PI * 0.25, 0.0001);
 });
+
+}

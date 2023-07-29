@@ -1,3 +1,4 @@
+import type {QUnit} from '../../../../helpers/QUnit';
 import {AnimTargetNodeTargetType} from '../../../../../src/engine/nodes/anim/Target';
 import {AnimPropertyValueNodeMode} from '../../../../../src/engine/nodes/anim/PropertyValue';
 import {CoreSleep} from '../../../../../src/core/Sleep';
@@ -5,6 +6,7 @@ import {BaseParamType} from '../../../../../src/engine/params/_Base';
 import {AnimationPositionMode, AnimationPositionRelativeTo} from '../../../../../src/core/animation/Position';
 import {ParamType} from '../../../../../src/engine/poly/ParamType';
 import {Number4} from '../../../../../src/types/GlobalTypes';
+export function testenginenodesanimUtilsParamProxy(qUnit: QUnit) {
 
 interface Values {
 	step1: Number4;
@@ -75,7 +77,7 @@ function createAnimNode(param: BaseParamType, values: Values) {
 	return {null1, propertyValue1, propertyValue2};
 }
 
-QUnit.test('integer param can be animated twice without value being reset', async (assert) => {
+qUnit.test('integer param can be animated twice without value being reset', async (assert) => {
 	await window.scene.waitForCooksCompleted();
 
 	const geo1 = window.geo1;
@@ -94,7 +96,7 @@ QUnit.test('integer param can be animated twice without value being reset', asyn
 	assert.deepEqual(param.valueSerialized(), 10);
 });
 
-QUnit.test('float param can be animated twice without value being reset', async (assert) => {
+qUnit.test('float param can be animated twice without value being reset', async (assert) => {
 	await window.scene.waitForCooksCompleted();
 
 	const geo1 = window.geo1;
@@ -112,7 +114,7 @@ QUnit.test('float param can be animated twice without value being reset', async 
 	await CoreSleep.sleep(700);
 	assert.deepEqual(param.valueSerialized(), 2);
 });
-QUnit.test('vector2 param can be animated twice without value being reset', async (assert) => {
+qUnit.test('vector2 param can be animated twice without value being reset', async (assert) => {
 	await window.scene.waitForCooksCompleted();
 
 	const geo1 = window.geo1;
@@ -134,7 +136,7 @@ QUnit.test('vector2 param can be animated twice without value being reset', asyn
 	assert.in_delta(param.valueSerialized()[0], 20, 1);
 	assert.in_delta(param.valueSerialized()[1], 20, 1);
 });
-QUnit.test('vector3 param can be animated twice without value being reset', async (assert) => {
+qUnit.test('vector3 param can be animated twice without value being reset', async (assert) => {
 	await window.scene.waitForCooksCompleted();
 
 	const geo1 = window.geo1;
@@ -152,7 +154,7 @@ QUnit.test('vector3 param can be animated twice without value being reset', asyn
 	await CoreSleep.sleep(700);
 	assert.in_delta(param.valueSerialized()[1], 2, 0.1);
 });
-QUnit.test('color param can be animated twice without value being reset', async (assert) => {
+qUnit.test('color param can be animated twice without value being reset', async (assert) => {
 	await window.scene.waitForCooksCompleted();
 
 	const geo1 = window.geo1;
@@ -172,7 +174,7 @@ QUnit.test('color param can be animated twice without value being reset', async 
 	assert.in_delta(param.valueSerialized()[1], 1, 0.1);
 });
 
-QUnit.test('color param can be animated twice without value being reset with value set as color', async (assert) => {
+qUnit.test('color param can be animated twice without value being reset with value set as color', async (assert) => {
 	await window.scene.waitForCooksCompleted();
 
 	const geo1 = window.geo1;
@@ -197,7 +199,7 @@ QUnit.test('color param can be animated twice without value being reset with val
 	assert.in_delta(param.valueSerialized()[1], 1, 0.1);
 });
 
-QUnit.test('vector4 param can be animated twice without value being reset', async (assert) => {
+qUnit.test('vector4 param can be animated twice without value being reset', async (assert) => {
 	await window.scene.waitForCooksCompleted();
 
 	const geo1 = window.geo1;
@@ -216,3 +218,5 @@ QUnit.test('vector4 param can be animated twice without value being reset', asyn
 	await CoreSleep.sleep(700);
 	assert.in_delta(param.valueSerialized()[1], 2, 0.1);
 });
+
+}

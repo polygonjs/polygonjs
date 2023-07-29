@@ -1,4 +1,6 @@
-QUnit.test('SOP fileMultiOBJ simple', async (assert) => {
+import type {QUnit} from '../../../helpers/QUnit';
+export function testenginenodessopFileMultiOBJ(qUnit: QUnit) {
+qUnit.test('SOP fileMultiOBJ simple', async (assert) => {
 	const geo1 = window.geo1;
 
 	const json0 = [{name: 'wolf'}];
@@ -22,7 +24,7 @@ QUnit.test('SOP fileMultiOBJ simple', async (assert) => {
 	assert.equal(container.totalPointsCount(), 6756, 'total points_count is 6756');
 });
 
-QUnit.test('SOP fileMultiOBJ can use multiple times the same url', async (assert) => {
+qUnit.test('SOP fileMultiOBJ can use multiple times the same url', async (assert) => {
 	const geo1 = window.geo1;
 
 	const json = [{name: 'wolf'}, {name: 'dolphin'}, {name: 'wolf'}];
@@ -35,3 +37,5 @@ QUnit.test('SOP fileMultiOBJ can use multiple times the same url', async (assert
 	let container = await fileMultOBJ1.compute();
 	assert.equal(container.totalPointsCount(), 12108, 'total points_count is 12108');
 });
+
+}

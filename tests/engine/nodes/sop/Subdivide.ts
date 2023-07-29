@@ -1,4 +1,6 @@
-QUnit.test('sop/subdivide simple', async (assert) => {
+import type {QUnit} from '../../../helpers/QUnit';
+export function testenginenodessopSubdivide(qUnit: QUnit) {
+qUnit.test('sop/subdivide simple', async (assert) => {
 	const geo1 = window.geo1;
 
 	const box1 = geo1.createNode('box');
@@ -31,3 +33,5 @@ QUnit.test('sop/subdivide simple', async (assert) => {
 	subdivide1.p.mergeVertices.set(false);
 	assert.equal(await pointsCount(), 4608);
 });
+
+}

@@ -1,9 +1,11 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {Mesh} from 'three';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Js';
 import {RendererUtils} from '../../../helpers/RendererUtils';
+export function testenginenodesjsSubnet(qUnit: QUnit) {
 
-QUnit.test('js/Subnet', async (assert) => {
+qUnit.test('js/Subnet', async (assert) => {
 	const scene = window.scene;
 	const perspective_camera1 = window.perspective_camera1;
 	const geo1 = window.geo1;
@@ -53,3 +55,5 @@ QUnit.test('js/Subnet', async (assert) => {
 		assert.deepEqual(object.position.toArray(), [2, 6, -12]);
 	});
 });
+
+}

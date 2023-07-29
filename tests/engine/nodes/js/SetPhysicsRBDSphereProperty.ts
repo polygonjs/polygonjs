@@ -1,3 +1,4 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {PhysicsWorldSopNode} from '../../../../src/engine/nodes/sop/PhysicsWorld';
 import {RendererUtils} from '../../../helpers/RendererUtils';
@@ -7,6 +8,7 @@ import {_getPhysicsRBDSphereRadius} from '../../../../src/core/physics/shapes/RB
 import {MultAddInput} from '../../../../src/engine/nodes/js/MultAdd';
 import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Js';
 import {RBDCommonProperty} from '../../../../src/core/physics/shapes/_CommonHeightRadius';
+export function testenginenodesjsSetPhysicsRBDSphereProperty(qUnit: QUnit) {
 
 function createPhysicsWorldNodes(node: PhysicsWorldSopNode) {
 	// const physicsWorldReset = node.createNode('physicsWorldReset');
@@ -18,7 +20,7 @@ function createPhysicsWorldNodes(node: PhysicsWorldSopNode) {
 	physicsWorldStepSimulation.setInput(0, onTick);
 }
 
-QUnit.test('js/setPhysicsRBDSphereProperty simple', async (assert) => {
+qUnit.test('js/setPhysicsRBDSphereProperty simple', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
 	const cameraNode = window.perspective_camera1;
@@ -95,3 +97,5 @@ QUnit.test('js/setPhysicsRBDSphereProperty simple', async (assert) => {
 		assert.in_delta(_getPhysicsRBDSphereRadius(object) || 0, 1, 0.001, 'back to original attrib value');
 	});
 });
+
+}

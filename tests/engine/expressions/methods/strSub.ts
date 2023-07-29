@@ -1,4 +1,6 @@
-QUnit.test('expression strSub simple', async (assert) => {
+import type {QUnit} from '../../../helpers/QUnit';
+export function testengineexpressionsmethodsstrSub(qUnit: QUnit) {
+qUnit.test('expression strSub simple', async (assert) => {
 	const geo1 = window.geo1;
 
 	const text1 = geo1.createNode('text');
@@ -40,7 +42,7 @@ QUnit.test('expression strSub simple', async (assert) => {
 	assert.equal(text_param.value, 'a');
 });
 
-QUnit.test('expression strSub with a number argument', async (assert) => {
+qUnit.test('expression strSub with a number argument', async (assert) => {
 	const geo1 = window.geo1;
 
 	const text1 = geo1.createNode('text');
@@ -58,3 +60,5 @@ QUnit.test('expression strSub with a number argument', async (assert) => {
 	await text_param.compute();
 	assert.equal(text_param.value, '12.1');
 });
+
+}

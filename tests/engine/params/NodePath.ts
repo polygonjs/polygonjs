@@ -1,8 +1,10 @@
+import type {QUnit} from '../../helpers/QUnit';
 import {GeoObjNode} from './../../../src/engine/nodes/obj/Geo';
 import {IntegerParam} from './../../../src/engine/params/Integer';
 import {ParamType} from '../../../src/engine/poly/ParamType';
+export function testengineparamsNodePath(qUnit: QUnit) {
 
-QUnit.test('param/nodePath: expression simple', async (assert) => {
+qUnit.test('param/nodePath: expression simple', async (assert) => {
 	const geo1 = window.geo1;
 	const MAT = window.MAT;
 	const meshBasic1 = MAT.createNode('meshBasic');
@@ -21,7 +23,7 @@ QUnit.test('param/nodePath: expression simple', async (assert) => {
 	assert.equal(material1.pv.material.node()?.graphNodeId(), meshBasic1.graphNodeId());
 	assert.equal(material2.pv.material.node()?.graphNodeId(), meshBasic1.graphNodeId());
 });
-QUnit.test('param/nodePath: expression simple from different networks', async (assert) => {
+qUnit.test('param/nodePath: expression simple from different networks', async (assert) => {
 	function createNodes(geo: GeoObjNode) {
 		const materialsNetworks1 = geo.createNode('materialsNetwork');
 		const meshBasic1 = materialsNetworks1.createNode('meshBasic');
@@ -54,7 +56,7 @@ QUnit.test('param/nodePath: expression simple from different networks', async (a
 	assert.equal(material2.pv.material.path(), '/geo1/materialsNetwork1/meshBasic1');
 });
 
-QUnit.test('param/nodePath: expression referring spare param', async (assert) => {
+qUnit.test('param/nodePath: expression referring spare param', async (assert) => {
 	const geo1 = window.geo1;
 	const MAT = window.MAT;
 	const meshBasic1 = MAT.createNode('meshBasic');
@@ -101,3 +103,5 @@ QUnit.test('param/nodePath: expression referring spare param', async (assert) =>
 	await material1.p.material.compute();
 	assert.equal(material1.pv.material.node()?.graphNodeId(), meshBasic1.graphNodeId());
 });
+
+}

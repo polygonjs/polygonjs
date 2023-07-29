@@ -1,7 +1,9 @@
+import type {QUnit} from '../../../helpers/QUnit';
 // import {Vector2} from 'three';
 // import {CorePoint} from '../../../../src/core/geometry/Point';
 // import {AttribCreateSopNode} from './../../../../src/engine/nodes/sop/AttribCreate';
-QUnit.test('sop/curveFromPoints simple', async (assert) => {
+export function testenginenodessopCurveFromPoints(qUnit: QUnit) {
+qUnit.test('sop/curveFromPoints simple', async (assert) => {
 	const geo1 = window.geo1;
 
 	const add1 = geo1.createNode('add');
@@ -31,7 +33,7 @@ QUnit.test('sop/curveFromPoints simple', async (assert) => {
 	assert.equal(coreGroup.pointsCount(), 100);
 });
 
-// QUnit.test('sop/curveFromPoints interpolates attributes', async (assert) => {
+// qUnit.test('sop/curveFromPoints interpolates attributes', async (assert) => {
 // 	const geo1 = window.geo1;
 
 // 	const add1 = geo1.createNode('add');
@@ -99,3 +101,5 @@ QUnit.test('sop/curveFromPoints simple', async (assert) => {
 // 		[0, 0, 0.3125, 0.3125, 1, 1]
 // 	);
 // });
+
+}

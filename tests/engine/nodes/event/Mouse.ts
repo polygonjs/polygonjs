@@ -1,7 +1,9 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {checkConsolePrints} from '../../../helpers/Console';
 import {RendererUtils} from '../../../helpers/RendererUtils';
+export function testenginenodeseventMouse(qUnit: QUnit) {
 
-QUnit.test('mouse event nodes simple', async (assert) => {
+qUnit.test('mouse event nodes simple', async (assert) => {
 	const scene = window.scene;
 	await scene.waitForCooksCompleted();
 	assert.ok(!scene.loadingController.isLoading());
@@ -86,3 +88,5 @@ QUnit.test('mouse event nodes simple', async (assert) => {
 		});
 	});
 });
+
+}

@@ -1,10 +1,12 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {BufferAttribute, Box3, Vector3} from 'three';
 import {CadGeometryType} from '../../../../src/core/geometry/cad/CadCommon';
 import {CadObject} from '../../../../src/core/geometry/cad/CadObject';
+export function testenginenodessopCADPipe(qUnit: QUnit) {
 const tmpBox = new Box3();
 const tmpSize = new Vector3();
 
-QUnit.test('sop/CADPipe simple', async (assert) => {
+qUnit.test('sop/CADPipe simple', async (assert) => {
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false); // cancels geo node displayNodeController
 
@@ -101,3 +103,5 @@ QUnit.test('sop/CADPipe simple', async (assert) => {
 	pipe1.p.cap.set(false);
 	assert.deepEqual((await computePipe()).cadObjectsTypes, [CadGeometryType.SHELL], 'types');
 });
+
+}

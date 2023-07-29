@@ -1,4 +1,6 @@
-QUnit.test('expression/objectsCount with node path', async (assert) => {
+import type {QUnit} from '../../../helpers/QUnit';
+export function testengineexpressionsmethodsobjectsCount(qUnit: QUnit) {
+qUnit.test('expression/objectsCount with node path', async (assert) => {
 	const geo1 = window.geo1;
 
 	const box1 = geo1.createNode('box');
@@ -24,7 +26,7 @@ QUnit.test('expression/objectsCount with node path', async (assert) => {
 	assert.equal(param.value, 3);
 });
 
-QUnit.test('expression/objectsCount with index', async (assert) => {
+qUnit.test('expression/objectsCount with index', async (assert) => {
 	const geo1 = window.geo1;
 
 	const box1 = geo1.createNode('box');
@@ -48,3 +50,5 @@ QUnit.test('expression/objectsCount with index', async (assert) => {
 	await param.compute();
 	assert.equal(param.value, 3);
 });
+
+}

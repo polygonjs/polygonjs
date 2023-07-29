@@ -1,3 +1,4 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {Mesh, Object3D} from 'three';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Js';
@@ -5,8 +6,9 @@ import {RendererUtils} from '../../../helpers/RendererUtils';
 import {SetObjectAttributeInputName} from '../../../../src/engine/nodes/js/SetObjectAttribute';
 import {CoreObject} from '../../../../src/core/geometry/Object';
 import {ObjectEvent} from '../../../../src/core/geometry/Event';
+export function testenginenodesjsOnObjectBeforeDelete(qUnit: QUnit) {
 
-QUnit.test('js/onObjectBeforeDelete simple', async (assert) => {
+qUnit.test('js/onObjectBeforeDelete simple', async (assert) => {
 	const scene = window.scene;
 	const perspective_camera1 = window.perspective_camera1;
 
@@ -66,3 +68,5 @@ QUnit.test('js/onObjectBeforeDelete simple', async (assert) => {
 		assert.equal(onBeforeDeleteListeners(object).length, 0, '0 listener');
 	});
 });
+
+}

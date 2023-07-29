@@ -1,3 +1,4 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {Mesh, Vector2, Vector3, Vector4} from 'three';
 import {AttribClass, AttribType} from '../../../../src/core/geometry/Constant';
 import {CoreObject} from '../../../../src/core/geometry/Object';
@@ -6,8 +7,9 @@ import {OnObjectAttributeUpdateJsNode} from '../../../../src/engine/nodes/js/OnO
 import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Js';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 import {Vector3Param} from '../../../../src/engine/params/Vector3';
+export function testenginenodesjsOnObjectAttributeUpdate(qUnit: QUnit) {
 
-QUnit.test('js/onObjectAttributeUpdate with number', async (assert) => {
+qUnit.test('js/onObjectAttributeUpdate with number', async (assert) => {
 	const scene = window.scene;
 	const perspective_camera1 = window.perspective_camera1;
 	const geo1 = window.geo1;
@@ -61,7 +63,7 @@ QUnit.test('js/onObjectAttributeUpdate with number', async (assert) => {
 	});
 });
 
-QUnit.test('js/onObjectAttributeUpdate with string', async (assert) => {
+qUnit.test('js/onObjectAttributeUpdate with string', async (assert) => {
 	const scene = window.scene;
 	const perspective_camera1 = window.perspective_camera1;
 	const geo1 = window.geo1;
@@ -115,7 +117,7 @@ QUnit.test('js/onObjectAttributeUpdate with string', async (assert) => {
 	});
 });
 
-QUnit.test('js/onObjectAttributeUpdate with vector2', async (assert) => {
+qUnit.test('js/onObjectAttributeUpdate with vector2', async (assert) => {
 	const scene = window.scene;
 	const perspective_camera1 = window.perspective_camera1;
 	const geo1 = window.geo1;
@@ -174,7 +176,7 @@ QUnit.test('js/onObjectAttributeUpdate with vector2', async (assert) => {
 	});
 });
 
-QUnit.test('js/onObjectAttributeUpdate with vector3', async (assert) => {
+qUnit.test('js/onObjectAttributeUpdate with vector3', async (assert) => {
 	const scene = window.scene;
 	const perspective_camera1 = window.perspective_camera1;
 	const geo1 = window.geo1;
@@ -227,7 +229,7 @@ QUnit.test('js/onObjectAttributeUpdate with vector3', async (assert) => {
 	});
 });
 
-QUnit.test('js/onObjectAttributeUpdate with vector4', async (assert) => {
+qUnit.test('js/onObjectAttributeUpdate with vector4', async (assert) => {
 	const scene = window.scene;
 	const perspective_camera1 = window.perspective_camera1;
 	const geo1 = window.geo1;
@@ -287,7 +289,7 @@ QUnit.test('js/onObjectAttributeUpdate with vector4', async (assert) => {
 	});
 });
 
-QUnit.test(
+qUnit.test(
 	'js/onObjectAttributeUpdate generates correct code when only connected with its trigger output and no other output',
 	async (assert) => {
 		const scene = window.scene;
@@ -338,3 +340,5 @@ QUnit.test(
 		});
 	}
 );
+
+}

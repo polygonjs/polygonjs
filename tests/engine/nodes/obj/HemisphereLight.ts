@@ -1,6 +1,8 @@
+import type {QUnit} from '../../../helpers/QUnit';
 // import {Color} from 'three';
+export function testenginenodesobjHemisphereLight(qUnit: QUnit) {
 
-QUnit.test('obj/hemisphereLight simple', async (assert) => {
+qUnit.test('obj/hemisphereLight simple', async (assert) => {
 	const scene = window.scene;
 	const main_group = scene.threejsScene();
 	assert.equal(main_group.name, '/');
@@ -49,7 +51,7 @@ QUnit.test('obj/hemisphereLight simple', async (assert) => {
 	window.scene.performance.stop();
 });
 
-QUnit.test('hemisphere light params update as expected', async (assert) => {
+qUnit.test('hemisphere light params update as expected', async (assert) => {
 	const scene = window.scene;
 	const root = scene.root();
 	const hemisphere_light = root.createNode('hemisphereLight');
@@ -58,3 +60,5 @@ QUnit.test('hemisphere light params update as expected', async (assert) => {
 	await scene.waitForCooksCompleted();
 	assert.in_delta(hemisphere_light.light.color.r, 0.5, 0.05);
 });
+
+}

@@ -1,9 +1,11 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Js';
 import {triggerKeyup} from '../../../helpers/EventsHelper';
 import {RendererUtils} from '../../../helpers/RendererUtils';
+export function testenginenodesjsOnKeyup(qUnit: QUnit) {
 
-QUnit.test('js/onKeyup', async (assert) => {
+qUnit.test('js/onKeyup', async (assert) => {
 	const scene = window.scene;
 	const perspective_camera1 = window.perspective_camera1;
 
@@ -47,3 +49,5 @@ QUnit.test('js/onKeyup', async (assert) => {
 		assert.deepEqual(object.position.toArray(), [0, 0, 1], 'moved');
 	});
 });
+
+}

@@ -1,6 +1,8 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {Vector3, Box3} from 'three';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {SubnetSopNode} from '../../../../src/engine/nodes/sop/Subnet';
+export function testenginenodessopSubnet(qUnit: QUnit) {
 const tmpBbox = new Box3();
 const tmpSize = new Vector3();
 
@@ -10,7 +12,7 @@ function create_required_nodes(node: SubnetSopNode) {
 	return {subnetInput1, subnetOutput1};
 }
 
-QUnit.test('subnet simple', async (assert) => {
+qUnit.test('subnet simple', async (assert) => {
 	await window.scene.waitForCooksCompleted();
 	const geo1 = window.geo1;
 	const box1 = geo1.createNode('box');
@@ -59,7 +61,7 @@ QUnit.test('subnet simple', async (assert) => {
 	assert.ok(!subnet1.states.error.message());
 });
 
-QUnit.test('subnet errors without subnetOutput child node', async (assert) => {
+qUnit.test('subnet errors without subnetOutput child node', async (assert) => {
 	const geo1 = window.geo1;
 	await window.scene.waitForCooksCompleted();
 	const subnet1 = geo1.createNode('subnet');
@@ -88,7 +90,7 @@ QUnit.test('subnet errors without subnetOutput child node', async (assert) => {
 	assert.equal(core_group.pointsCount(), 24);
 });
 
-QUnit.test('subnet works without inputs', async (assert) => {
+qUnit.test('subnet works without inputs', async (assert) => {
 	const geo1 = window.geo1;
 	const subnet1 = geo1.createNode('subnet');
 
@@ -103,3 +105,5 @@ QUnit.test('subnet works without inputs', async (assert) => {
 	let core_group = container.coreContent()!;
 	assert.equal(core_group.pointsCount(), 24);
 });
+
+}

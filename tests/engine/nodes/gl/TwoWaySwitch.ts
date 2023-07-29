@@ -1,3 +1,4 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {SubnetGlNode} from '../../../../src/engine/nodes/gl/Subnet';
 import {MeshBasicBuilderMatNode} from '../../../../src/engine/nodes/mat/MeshBasicBuilder';
 import {MaterialsNetworkObjNode} from '../../../../src/engine/nodes/obj/MaterialsNetwork';
@@ -5,6 +6,7 @@ import {ParamType} from '../../../../src/engine/poly/ParamType';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 
 import TEMPLATE from './TwoWaySwitch/default.frag.glsl';
+export function testenginenodesglTwoWaySwitch(qUnit: QUnit) {
 
 function create_meshBasicBuilder1(parentNode: MaterialsNetworkObjNode) {
 	var meshBasicBuilder1 = parentNode.createNode('meshBasicBuilder');
@@ -180,7 +182,7 @@ function create_meshBasicBuilder1(parentNode: MaterialsNetworkObjNode) {
 	return meshBasicBuilder1;
 }
 
-QUnit.test('2 twoWaySwitch gl node in a subnet function as expected', async (assert) => {
+qUnit.test('2 twoWaySwitch gl node in a subnet function as expected', async (assert) => {
 	const scene = window.scene;
 	await scene.waitForCooksCompleted();
 	const {renderer} = await RendererUtils.waitForRenderer(scene);
@@ -191,3 +193,5 @@ QUnit.test('2 twoWaySwitch gl node in a subnet function as expected', async (ass
 	await RendererUtils.compile(meshBasicBuilder1, renderer);
 	assert.equal(material.fragmentShader, TEMPLATE, 'twoWaySwitch nodes do not conflict');
 });
+
+}

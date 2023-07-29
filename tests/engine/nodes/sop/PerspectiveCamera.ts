@@ -1,7 +1,9 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {CameraAttribute, PerspectiveCameraAttribute} from '../../../../src/core/camera/CoreCamera';
 import {CoreObject} from '../../../../src/core/geometry/Object';
+export function testenginenodessopPerspectiveCamera(qUnit: QUnit) {
 
-QUnit.test('sop/perspectiveCamera simple', async (assert) => {
+qUnit.test('sop/perspectiveCamera simple', async (assert) => {
 	const geo1 = window.geo1;
 
 	const perspectiveCamera1 = geo1.createNode('perspectiveCamera');
@@ -69,3 +71,5 @@ QUnit.test('sop/perspectiveCamera simple', async (assert) => {
 	);
 	assert.equal(CoreObject.attribValue(object, PerspectiveCameraAttribute.FOV), 55, PerspectiveCameraAttribute.FOV);
 });
+
+}

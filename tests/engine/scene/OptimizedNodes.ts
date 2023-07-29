@@ -1,3 +1,4 @@
+import type {QUnit} from '../../helpers/QUnit';
 import {SceneJsonImporter} from '../../../src/engine/io/json/import/Scene';
 import {SceneJsonExporter} from '../../../src/engine/io/json/export/Scene';
 import {Poly} from '../../../src/engine/Poly';
@@ -5,8 +6,9 @@ import {BoxSopNode} from '../../../src/engine/nodes/sop/Box';
 import {OperationsComposerSopNode} from '../../../src/engine/nodes/sop/OperationsComposer';
 import {TransformSopNode} from '../../../src/engine/nodes/sop/Transform';
 import {BufferAttribute} from 'three';
+export function testenginesceneOptimizedNodes(qUnit: QUnit) {
 
-QUnit.test('scene can be imported with a single optimized node', async (assert) => {
+qUnit.test('scene can be imported with a single optimized node', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
 	const box1 = geo1.createNode('box');
@@ -31,7 +33,7 @@ QUnit.test('scene can be imported with a single optimized node', async (assert) 
 	assert.equal((geometry?.getAttribute('position') as BufferAttribute).array.length, 72);
 });
 
-QUnit.test('scene can be imported with a 2 optimized nodes plugged into each other', async (assert) => {
+qUnit.test('scene can be imported with a 2 optimized nodes plugged into each other', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
 	const box1 = geo1.createNode('box');
@@ -60,7 +62,7 @@ QUnit.test('scene can be imported with a 2 optimized nodes plugged into each oth
 	assert.equal((geometry?.getAttribute('position') as BufferAttribute).array.length, 72);
 });
 
-QUnit.test(
+qUnit.test(
 	'scene can be imported with a multiple optimized nodes creating a node with multiple inputs',
 	async (assert) => {
 		const scene = window.scene;
@@ -114,3 +116,5 @@ QUnit.test(
 		assert.equal((geometry?.getAttribute('position') as BufferAttribute).array.length, 2955);
 	}
 );
+
+}

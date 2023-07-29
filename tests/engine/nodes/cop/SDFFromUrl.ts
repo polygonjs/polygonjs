@@ -1,10 +1,12 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {SDFDataContainer} from '../../../../src/core/loader/geometry/SDF';
 import {ASSETS_ROOT} from './../../../../src/core/loader/AssetsUtils';
+export function testenginenodescopSDFFromUrl(qUnit: QUnit) {
 function _url(path: string) {
 	return `${ASSETS_ROOT}${path}`;
 }
 
-QUnit.test('cop/SDFFromUrl simple', async (assert) => {
+qUnit.test('cop/SDFFromUrl simple', async (assert) => {
 	const scene = window.scene;
 	const COP = scene.createNode('copNetwork');
 	const SDFFromUrl1 = COP.createNode('SDFFromUrl');
@@ -24,3 +26,5 @@ QUnit.test('cop/SDFFromUrl simple', async (assert) => {
 	assert.equal(data.boundMaxz, 0.940548300743103);
 	assert.equal(data.data.length, 88320);
 });
+
+}

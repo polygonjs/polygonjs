@@ -1,10 +1,12 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {ASSETS_ROOT} from '../../../../src/core/loader/AssetsUtils';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {GetVideoPropertyJsNodeOutputName} from '../../../../src/engine/nodes/js/GetVideoProperty';
 import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Js';
 import {RendererUtils} from '../../../helpers/RendererUtils';
+export function testenginenodesjsGetVideoProperty(qUnit: QUnit) {
 
-QUnit.test('js/GetVideoProperty', async (assert) => {
+qUnit.test('js/GetVideoProperty', async (assert) => {
 	const scene = window.scene;
 	const perspective_camera1 = window.perspective_camera1;
 	const geo1 = window.geo1;
@@ -78,3 +80,5 @@ QUnit.test('js/GetVideoProperty', async (assert) => {
 		video1.dispose();
 	}, 1000);
 });
+
+}

@@ -1,3 +1,4 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {Object3D, Vector3} from 'three';
 import {
 	PhysicsCommonAttribute,
@@ -12,6 +13,7 @@ import {RendererUtils} from '../../../helpers/RendererUtils';
 import {PhysicsWorldSopNode} from './../../../../src/engine/nodes/sop/PhysicsWorld';
 import {SizeComputationMethod} from '../../../../src/engine/operations/sop/PhysicsRBDAttributes';
 import {waitForPhysicsComputedAndMounted} from './physics/PhysicsHelper';
+export function testenginenodessopPhysicsRBDAttributes(qUnit: QUnit) {
 
 function createPhysicsWorldNodes(node: PhysicsWorldSopNode) {
 	const physicsWorldReset = node.createNode('physicsWorldReset');
@@ -23,7 +25,7 @@ function createPhysicsWorldNodes(node: PhysicsWorldSopNode) {
 	physicsWorldStepSimulation.setInput(0, onTick);
 }
 
-QUnit.test('sop/physicsRBDAttributes simple', async (assert) => {
+qUnit.test('sop/physicsRBDAttributes simple', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
 	const cameraNode = window.perspective_camera1;
@@ -57,7 +59,7 @@ QUnit.test('sop/physicsRBDAttributes simple', async (assert) => {
 		}
 	});
 });
-QUnit.test('sop/physicsRBDAttributes with expressions', async (assert) => {
+qUnit.test('sop/physicsRBDAttributes with expressions', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
 	const cameraNode = window.perspective_camera1;
@@ -102,7 +104,7 @@ QUnit.test('sop/physicsRBDAttributes with expressions', async (assert) => {
 		}
 	});
 });
-QUnit.test('sop/physicsRBDAttributes capsule', async (assert) => {
+qUnit.test('sop/physicsRBDAttributes capsule', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
 	const cameraNode = window.perspective_camera1;
@@ -149,7 +151,7 @@ QUnit.test('sop/physicsRBDAttributes capsule', async (assert) => {
 		}
 	});
 });
-QUnit.test('sop/physicsRBDAttributes cone', async (assert) => {
+qUnit.test('sop/physicsRBDAttributes cone', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
 	const cameraNode = window.perspective_camera1;
@@ -196,7 +198,7 @@ QUnit.test('sop/physicsRBDAttributes cone', async (assert) => {
 		}
 	});
 });
-QUnit.test('sop/physicsRBDAttributes convex hull', async (assert) => {
+qUnit.test('sop/physicsRBDAttributes convex hull', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
 	const cameraNode = window.perspective_camera1;
@@ -234,7 +236,7 @@ QUnit.test('sop/physicsRBDAttributes convex hull', async (assert) => {
 		}
 	});
 });
-QUnit.test('sop/physicsRBDAttributes cuboid', async (assert) => {
+qUnit.test('sop/physicsRBDAttributes cuboid', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
 	const cameraNode = window.perspective_camera1;
@@ -294,7 +296,7 @@ QUnit.test('sop/physicsRBDAttributes cuboid', async (assert) => {
 		}
 	});
 });
-QUnit.test('sop/physicsRBDAttributes cuboid with expressions non entity dependent', async (assert) => {
+qUnit.test('sop/physicsRBDAttributes cuboid with expressions non entity dependent', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
 	const cameraNode = window.perspective_camera1;
@@ -355,7 +357,7 @@ QUnit.test('sop/physicsRBDAttributes cuboid with expressions non entity dependen
 		}
 	});
 });
-QUnit.test('sop/physicsRBDAttributes cuboid with expressions entity dependent', async (assert) => {
+qUnit.test('sop/physicsRBDAttributes cuboid with expressions entity dependent', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
 	const cameraNode = window.perspective_camera1;
@@ -420,7 +422,7 @@ QUnit.test('sop/physicsRBDAttributes cuboid with expressions entity dependent', 
 		}
 	});
 });
-QUnit.test('sop/physicsRBDAttributes cylinder', async (assert) => {
+qUnit.test('sop/physicsRBDAttributes cylinder', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
 	const cameraNode = window.perspective_camera1;
@@ -468,7 +470,7 @@ QUnit.test('sop/physicsRBDAttributes cylinder', async (assert) => {
 		}
 	});
 });
-QUnit.test('sop/physicsRBDAttributes sphere', async (assert) => {
+qUnit.test('sop/physicsRBDAttributes sphere', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
 	const cameraNode = window.perspective_camera1;
@@ -510,7 +512,7 @@ QUnit.test('sop/physicsRBDAttributes sphere', async (assert) => {
 		}
 	});
 });
-QUnit.test('sop/physicsRBDAttributes sphere with expression non entity dependent', async (assert) => {
+qUnit.test('sop/physicsRBDAttributes sphere with expression non entity dependent', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
 	const cameraNode = window.perspective_camera1;
@@ -552,7 +554,7 @@ QUnit.test('sop/physicsRBDAttributes sphere with expression non entity dependent
 		}
 	});
 });
-QUnit.test('sop/physicsRBDAttributes sphere with expression entity dependent', async (assert) => {
+qUnit.test('sop/physicsRBDAttributes sphere with expression entity dependent', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
 	const cameraNode = window.perspective_camera1;
@@ -597,7 +599,7 @@ QUnit.test('sop/physicsRBDAttributes sphere with expression entity dependent', a
 		}
 	});
 });
-QUnit.test('sop/physicsRBDAttributes sphere with size auto', async (assert) => {
+qUnit.test('sop/physicsRBDAttributes sphere with size auto', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
 	const cameraNode = window.perspective_camera1;
@@ -643,7 +645,7 @@ QUnit.test('sop/physicsRBDAttributes sphere with size auto', async (assert) => {
 		}
 	});
 });
-QUnit.test('sop/physicsRBDAttributes trimesh', async (assert) => {
+qUnit.test('sop/physicsRBDAttributes trimesh', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
 	const cameraNode = window.perspective_camera1;
@@ -679,7 +681,7 @@ QUnit.test('sop/physicsRBDAttributes trimesh', async (assert) => {
 		}
 	});
 });
-QUnit.test('sop/physicsRBDAttributes can sleep with expressions non entity dependent', async (assert) => {
+qUnit.test('sop/physicsRBDAttributes can sleep with expressions non entity dependent', async (assert) => {
 	const geo1 = window.geo1;
 	const cameraNode = window.perspective_camera1;
 	cameraNode.p.t.z.set(5);
@@ -719,7 +721,7 @@ QUnit.test('sop/physicsRBDAttributes can sleep with expressions non entity depen
 	physicsRBDAttributes1.p.canSleep.set(`ch('../${box1.name()}/sizesx')>1`);
 	assert.deepEqual(await _getCanSleeps(), [false, false, false, false]);
 });
-QUnit.test('sop/physicsRBDAttributes can sleep with expressions entity dependent', async (assert) => {
+qUnit.test('sop/physicsRBDAttributes can sleep with expressions entity dependent', async (assert) => {
 	const geo1 = window.geo1;
 	const cameraNode = window.perspective_camera1;
 	cameraNode.p.t.z.set(5);
@@ -759,3 +761,5 @@ QUnit.test('sop/physicsRBDAttributes can sleep with expressions entity dependent
 	physicsRBDAttributes1.p.canSleep.set(`@objnum%2==0`);
 	assert.deepEqual(await _getCanSleeps(), [true, false, true, false]);
 });
+
+}

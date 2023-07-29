@@ -1,6 +1,8 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {RendererUtils} from '../../../helpers/RendererUtils';
+export function testenginenodeseventTouch(qUnit: QUnit) {
 
-QUnit.test('touch event nodes simple', async (assert) => {
+qUnit.test('touch event nodes simple', async (assert) => {
 	const scene = window.scene;
 	await scene.waitForCooksCompleted();
 	assert.ok(!scene.loadingController.isLoading());
@@ -58,3 +60,5 @@ QUnit.test('touch event nodes simple', async (assert) => {
 	// document.body.removeChild(element);
 	// document.body.removeChild(element2);
 });
+
+}

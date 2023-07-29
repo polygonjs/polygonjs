@@ -1,6 +1,8 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {Box3} from 'three';
+export function testenginenodessopPlane(qUnit: QUnit) {
 const tmpBox = new Box3();
-QUnit.test('sop/plane simple', async (assert) => {
+qUnit.test('sop/plane simple', async (assert) => {
 	const geo1 = window.geo1;
 
 	const plane1 = geo1.createNode('plane');
@@ -11,7 +13,7 @@ QUnit.test('sop/plane simple', async (assert) => {
 	assert.equal(tmpBox.min.x, -0.5);
 });
 
-QUnit.test('sop/plane with input', async (assert) => {
+qUnit.test('sop/plane with input', async (assert) => {
 	const geo1 = window.geo1;
 	const plane1 = geo1.createNode('plane');
 	const sphere1 = geo1.createNode('sphere');
@@ -26,7 +28,7 @@ QUnit.test('sop/plane with input', async (assert) => {
 	assert.in_delta(tmpBox.min.z, -1, 0.1);
 });
 
-QUnit.test('sop/plane as lines', async (assert) => {
+qUnit.test('sop/plane as lines', async (assert) => {
 	const geo1 = window.geo1;
 
 	const plane1 = geo1.createNode('plane');
@@ -62,3 +64,5 @@ QUnit.test('sop/plane as lines', async (assert) => {
 		]
 	);
 });
+
+}

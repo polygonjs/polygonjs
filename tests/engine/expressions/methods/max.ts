@@ -1,4 +1,6 @@
-QUnit.test('expression max works', async (assert) => {
+import type {QUnit} from '../../../helpers/QUnit';
+export function testengineexpressionsmethodsmax(qUnit: QUnit) {
+qUnit.test('expression max works', async (assert) => {
 	const geo1 = window.geo1;
 
 	const tx = geo1.p.t.x;
@@ -11,3 +13,5 @@ QUnit.test('expression max works', async (assert) => {
 	await tx.compute();
 	assert.equal(tx.value, 5);
 });
+
+}

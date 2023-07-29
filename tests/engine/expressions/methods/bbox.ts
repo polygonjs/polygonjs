@@ -1,10 +1,12 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {Vector3, Box3} from 'three';
 import {ASSETS_ROOT} from '../../../../src/core/loader/AssetsUtils';
 import {TransformTargetType} from '../../../../src/core/Transform';
+export function testengineexpressionsmethodsbbox(qUnit: QUnit) {
 const tmpBox3 = new Box3();
 const tmpV3 = new Vector3();
 
-QUnit.test('expression bbox works with path', async (assert) => {
+qUnit.test('expression bbox works with path', async (assert) => {
 	const geo1 = window.geo1;
 
 	const box1 = geo1.createNode('box');
@@ -17,7 +19,7 @@ QUnit.test('expression bbox works with path', async (assert) => {
 	assert.equal(box2.p.size.value, 1.5);
 });
 
-QUnit.test('expression bbox works with index', async (assert) => {
+qUnit.test('expression bbox works with index', async (assert) => {
 	const geo1 = window.geo1;
 
 	const box1 = geo1.createNode('box');
@@ -32,7 +34,7 @@ QUnit.test('expression bbox works with index', async (assert) => {
 	assert.equal(box2.p.divisions.x.value, 10);
 });
 
-QUnit.test('expression bbox works without component', async (assert) => {
+qUnit.test('expression bbox works without component', async (assert) => {
 	const geo1 = window.geo1;
 
 	const box1 = geo1.createNode('box');
@@ -47,7 +49,7 @@ QUnit.test('expression bbox works without component', async (assert) => {
 	assert.equal(box2.p.divisions.x.value, 25);
 });
 
-QUnit.test('expression bbox works without vector name', async (assert) => {
+qUnit.test('expression bbox works without vector name', async (assert) => {
 	const geo1 = window.geo1;
 
 	const box1 = geo1.createNode('box');
@@ -65,7 +67,7 @@ QUnit.test('expression bbox works without vector name', async (assert) => {
 function _url(path: string) {
 	return `${ASSETS_ROOT}${path}`;
 }
-QUnit.test('expression bbox works on hierarchy', async (assert) => {
+qUnit.test('expression bbox works on hierarchy', async (assert) => {
 	const geo1 = window.geo1;
 
 	const fileNode = geo1.createNode('fileGLTF');
@@ -93,3 +95,5 @@ QUnit.test('expression bbox works on hierarchy', async (assert) => {
 	transform1.p.applyToChildren.set(false);
 	assert.in_delta((await getSize()).x, 1, 0.0001, `bbox (${(await getSize()).x})`);
 });
+
+}

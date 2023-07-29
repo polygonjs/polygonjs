@@ -1,8 +1,10 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {BooleanCsgOperationType} from '../../../../src/engine/nodes/sop/CSGBoolean';
 import {BufferAttribute, Box3} from 'three';
+export function testenginenodessopCSGEllipse(qUnit: QUnit) {
 const tmpBox = new Box3();
 
-QUnit.test('sop/CSGEllipse simple', async (assert) => {
+qUnit.test('sop/CSGEllipse simple', async (assert) => {
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false); // cancels geo node displayNodeController
 
@@ -50,3 +52,5 @@ QUnit.test('sop/CSGEllipse simple', async (assert) => {
 	assert.in_delta(tmpBox.min.x, -1.199, 0.002);
 	assert.in_delta(tmpBox.max.x, 0.66, 0.01);
 });
+
+}

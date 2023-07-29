@@ -1,3 +1,4 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {GlConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Gl';
 import {SceneJsonExporter} from '../../../../src/engine/io/json/export/Scene';
 import {SceneJsonImporter} from '../../../../src/engine/io/json/import/Scene';
@@ -9,8 +10,9 @@ import {BuilderUniformUpdateMatNode} from '../../../../src/engine/nodes/mat/Buil
 import {MaterialUserDataUniforms} from '../../../../src/engine/nodes/gl/code/assemblers/materials/OnBeforeCompile';
 import {GLSLHelper} from '../../../helpers/GLSLHelper';
 import {AdditionalType} from '../../../../src/engine/nodes/mat/BuilderUniformUpdate';
+export function testenginenodesmatBuilderUniformUpdate(qUnit: QUnit) {
 
-QUnit.test('mat/builderUniformUpdate simple with color param', async (assert) => {
+qUnit.test('mat/builderUniformUpdate simple with color param', async (assert) => {
 	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 	const MAT = window.MAT;
 	const meshBasicBuilder1 = MAT.createNode('meshBasicBuilder');
@@ -92,7 +94,7 @@ QUnit.test('mat/builderUniformUpdate simple with color param', async (assert) =>
 	RendererUtils.dispose();
 });
 
-QUnit.test('mat/builderUniformUpdate simple with 2 color params and only 1 changed', async (assert) => {
+qUnit.test('mat/builderUniformUpdate simple with 2 color params and only 1 changed', async (assert) => {
 	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 	const MAT = window.MAT;
 	const meshBasicBuilder1 = MAT.createNode('meshBasicBuilder');
@@ -204,3 +206,5 @@ QUnit.test('mat/builderUniformUpdate simple with 2 color params and only 1 chang
 	});
 	RendererUtils.dispose();
 });
+
+}

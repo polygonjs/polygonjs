@@ -1,6 +1,8 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {BufferAttribute} from 'three';
+export function testenginenodessopAttribTransfer(qUnit: QUnit) {
 
-QUnit.test('attrib_transfer simple', async (assert) => {
+qUnit.test('attrib_transfer simple', async (assert) => {
 	const geo1 = window.geo1;
 
 	const plane1 = geo1.createNode('plane');
@@ -33,3 +35,5 @@ QUnit.test('attrib_transfer simple', async (assert) => {
 	// array = core_group.objects()[0].geometry.getAttribute('test').array;
 	// assert.deepEqual(Array.from(array), [0, 0, 0, 1]);
 });
+
+}

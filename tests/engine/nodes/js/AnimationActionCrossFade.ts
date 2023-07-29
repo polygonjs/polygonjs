@@ -1,3 +1,4 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {ASSETS_ROOT} from '../../../../src/core/loader/AssetsUtils';
 import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Js';
 import {RendererUtils} from '../../../helpers/RendererUtils';
@@ -11,6 +12,7 @@ import {
 	findOrCreateAnimationMixer,
 	getMostActiveAnimationActionFromMixer,
 } from '../../../../src/engine/functions/_AnimationMixer';
+export function testenginenodesjsAnimationActionCrossFade(qUnit: QUnit) {
 
 function addWater(scene: PolyScene) {
 	const geo2 = scene.root().createNode('geo');
@@ -22,7 +24,7 @@ function addWater(scene: PolyScene) {
 	oceanPlane.flags.display.set(true);
 }
 
-QUnit.test('js/animationActionCrossFade can fadeIn an action', async (assert) => {
+qUnit.test('js/animationActionCrossFade can fadeIn an action', async (assert) => {
 	const scene = window.scene;
 	await scene.waitForCooksCompleted();
 
@@ -138,3 +140,5 @@ QUnit.test('js/animationActionCrossFade can fadeIn an action', async (assert) =>
 		assert.equal(getMostActiveAnimationActionFromMixer(mixer).mostActiveAnimationAction.getClip().name, 'Attack');
 	});
 });
+
+}

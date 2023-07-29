@@ -1,5 +1,9 @@
-QUnit.skip('$F', (assert) => {});
+import type {QUnit} from '../../helpers/QUnit';
+export function testengineexpressionsGlobalVariables(qUnit: QUnit) {
+qUnit.skip('$F', (assert) => {});
 
-QUnit.skip('$CEX,Y,Z', (assert) => {});
+qUnit.skip('$CEX,Y,Z', (assert) => {});
 
-QUnit.skip('$CH', (assert) => {});
+qUnit.skip('$CH', (assert) => {});
+
+}

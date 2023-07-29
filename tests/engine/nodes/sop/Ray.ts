@@ -1,9 +1,11 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {RaySopMode} from '../../../../src/engine/operations/sop/Ray';
 import {Box3, Vector3} from 'three';
+export function testenginenodessopRay(qUnit: QUnit) {
 const tmpBox = new Box3();
 const tmpSize = new Vector3();
 
-QUnit.test('ray from normal', async (assert) => {
+qUnit.test('ray from normal', async (assert) => {
 	const geo1 = window.geo1;
 
 	const box1 = geo1.createNode('box');
@@ -28,7 +30,7 @@ QUnit.test('ray from normal', async (assert) => {
 	assert.in_delta((await getSize())[2], 1, 0.1);
 });
 
-QUnit.test('ray from dir', async (assert) => {
+qUnit.test('ray from dir', async (assert) => {
 	const geo1 = window.geo1;
 
 	const plane1 = geo1.createNode('plane');
@@ -58,7 +60,7 @@ QUnit.test('ray from dir', async (assert) => {
 	assert.in_delta((await getSize())[2], 2, 0.1);
 });
 
-QUnit.test('ray with min dist creates a bvh if none given', async (assert) => {
+qUnit.test('ray with min dist creates a bvh if none given', async (assert) => {
 	const geo1 = window.geo1;
 
 	const plane1 = geo1.createNode('plane');
@@ -84,3 +86,5 @@ QUnit.test('ray with min dist creates a bvh if none given', async (assert) => {
 	assert.in_delta((await getSize())[1], 0.6, 0.1);
 	assert.in_delta((await getSize())[2], 1.68, 0.1);
 });
+
+}

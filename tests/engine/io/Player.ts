@@ -1,8 +1,10 @@
+import type {QUnit} from '../../helpers/QUnit';
 import {PolyScene} from '../../../src/engine/scene/PolyScene';
 import {SceneJsonExporter} from '../../../src/engine/io/json/export/Scene';
 import {ActorSopNode} from '../../../src/engine/nodes/sop/Actor';
 import {SceneDataImportOptions, ScenePlayerImporter} from '../../../src/engine/io/player/Scene';
 import {CoreSleep} from '../../../src/core/Sleep';
+export function testengineioPlayer(qUnit: QUnit) {
 
 interface LoadSceneOptions {
 	autoPlay: boolean;
@@ -38,7 +40,7 @@ async function loadScene(scene: PolyScene, options: LoadSceneOptions, callback: 
 	});
 }
 
-QUnit.test('scene loads with autoPlay=false', async (assert) => {
+qUnit.test('scene loads with autoPlay=false', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
 	const geo2 = scene.root().createNode('geo');
@@ -93,3 +95,5 @@ QUnit.test('scene loads with autoPlay=false', async (assert) => {
 		assert.equal(await _getSphereY(scene), 1, 'position set');
 	});
 });
+
+}

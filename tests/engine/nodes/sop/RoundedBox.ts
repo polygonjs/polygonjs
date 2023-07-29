@@ -1,6 +1,8 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {BufferAttribute, Box3} from 'three';
+export function testenginenodessopRoundedBox(qUnit: QUnit) {
 const tmpBox = new Box3();
-QUnit.test('roundedBox simple', async (assert) => {
+qUnit.test('roundedBox simple', async (assert) => {
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false); // cancels geo node displayNodeController
 
@@ -28,7 +30,7 @@ QUnit.test('roundedBox simple', async (assert) => {
 	assert.equal((geometry?.getAttribute('position') as BufferAttribute).array.length, 47628);
 });
 
-QUnit.test('roundedBox with input', async (assert) => {
+qUnit.test('roundedBox with input', async (assert) => {
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false); // cancels geo node displayNodeController
 
@@ -57,3 +59,5 @@ QUnit.test('roundedBox with input', async (assert) => {
 	container.boundingBox(tmpBox);
 	assert.equal(tmpBox.min.y, -1.5);
 });
+
+}

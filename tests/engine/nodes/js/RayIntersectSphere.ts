@@ -1,8 +1,10 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Js';
 import {RendererUtils} from '../../../helpers/RendererUtils';
+export function testenginenodesjsRayIntersectSphere(qUnit: QUnit) {
 
-QUnit.test('js/rayIntersectSphere', async (assert) => {
+qUnit.test('js/rayIntersectSphere', async (assert) => {
 	const scene = window.scene;
 	const perspective_camera1 = window.perspective_camera1;
 
@@ -52,3 +54,5 @@ QUnit.test('js/rayIntersectSphere', async (assert) => {
 		assert.deepEqual(object.position.toArray(), [0, 0, -2], 'pos set');
 	});
 });
+
+}

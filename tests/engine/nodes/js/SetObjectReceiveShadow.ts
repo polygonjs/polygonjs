@@ -1,9 +1,11 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {Mesh} from 'three';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Js';
 import {RendererUtils} from '../../../helpers/RendererUtils';
+export function testenginenodesjsSetObjectReceiveShadow(qUnit: QUnit) {
 
-QUnit.test('js/setObjectReceiveShadow', async (assert) => {
+qUnit.test('js/setObjectReceiveShadow', async (assert) => {
 	const scene = window.scene;
 	const perspective_camera1 = window.perspective_camera1;
 
@@ -54,3 +56,5 @@ QUnit.test('js/setObjectReceiveShadow', async (assert) => {
 		assert.ok(object.receiveShadow, 'object receiveShadow 5');
 	});
 });
+
+}

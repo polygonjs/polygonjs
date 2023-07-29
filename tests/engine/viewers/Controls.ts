@@ -1,7 +1,9 @@
+import type {QUnit} from '../../helpers/QUnit';
 import {CoreSleep} from '../../../src/core/Sleep';
 import {RendererUtils} from '../../helpers/RendererUtils';
+export function testengineviewersControls(qUnit: QUnit) {
 
-QUnit.test('viewer controls are updated as expected', async (assert) => {
+qUnit.test('viewer controls are updated as expected', async (assert) => {
 	const scene = window.scene;
 	await scene.waitForCooksCompleted();
 	assert.ok(!scene.loadingController.isLoading());
@@ -63,3 +65,5 @@ QUnit.test('viewer controls are updated as expected', async (assert) => {
 		assert.ok(!viewer.controlsController().controls(), 'no controls');
 	});
 });
+
+}

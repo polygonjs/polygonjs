@@ -1,17 +1,19 @@
+import type {QUnit} from '../helpers/QUnit';
 import {CoreString} from '../../src/core/String';
+export function testcoreString(qUnit: QUnit) {
 
-// QUnit.test('string timestamp', (assert) => {
+// qUnit.test('string timestamp', (assert) => {
 // 	assert.equal(CoreString.timestamp_to_seconds('2018-09-28 10:44:32'), 1538127872);
 
 // 	assert.equal(CoreString.seconds_to_timestamp(1538127872), '09:44:32');
 // });
 
-QUnit.test('string pluralize', (assert) => {
+qUnit.test('string pluralize', (assert) => {
 	assert.equal(CoreString.pluralize('node'), 'nodes');
 	assert.equal(CoreString.pluralize('nodes'), 'nodes');
 });
 
-QUnit.test('string precision', (assert) => {
+qUnit.test('string precision', (assert) => {
 	assert.equal(CoreString.precision(12.7, 4), '12.7000');
 	assert.equal(CoreString.precision(12.75789465, 4), '12.7578');
 	assert.equal(CoreString.precision(12.0, 4), '12.0000');
@@ -30,20 +32,20 @@ QUnit.test('string precision', (assert) => {
 	assert.equal(CoreString.precision(12.56, -2), '12');
 });
 
-QUnit.test('string matchMask', (assert) => {
+qUnit.test('string matchMask', (assert) => {
 	assert.ok(CoreString.matchMask('abc', 'a*'));
 	assert.notOk(CoreString.matchMask('abc', 'e*'));
 
 	assert.ok(CoreString.matchMask('abc', 'a* d*'));
 	assert.notOk(CoreString.matchMask('abc', 'e* d*'));
 });
-QUnit.test('string matchMask with exclusion', (assert) => {
+qUnit.test('string matchMask with exclusion', (assert) => {
 	assert.notOk(CoreString.matchMask('abc', '* ^ab*'), '* ^ab*');
 	assert.ok(CoreString.matchMask('abc', 'abc* ^de*'), 'abc* ^de*');
 	assert.ok(CoreString.matchMask('abcdef', 'abc* ^de*'), 'abc* ^de*');
 	assert.notOk(CoreString.matchMask('abcdef', 'abc* ^*de*'), 'abc* ^*de*');
 });
-QUnit.test('string matchMask does not break with invalid input', (assert) => {
+qUnit.test('string matchMask does not break with invalid input', (assert) => {
 	assert.notOk(CoreString.matchMask('abc', '{"actor":"var nodesByRequestedName_1372 = {}\ncon'), 'abc* ^de*');
 	assert.notOk(
 		CoreString.matchMask(
@@ -54,7 +56,7 @@ QUnit.test('string matchMask does not break with invalid input', (assert) => {
 	);
 });
 
-QUnit.test('string attrib_names', (assert) => {
+qUnit.test('string attrib_names', (assert) => {
 	assert.deepEqual(CoreString.attribNames('position, normal'), ['position', 'normal']);
 	assert.deepEqual(CoreString.attribNames('position,normal'), ['position', 'normal']);
 	assert.deepEqual(CoreString.attribNames('position,   normal'), ['position', 'normal']);
@@ -63,7 +65,7 @@ QUnit.test('string attrib_names', (assert) => {
 	assert.deepEqual(CoreString.attribNames('position,normal,'), ['position', 'normal']);
 });
 
-QUnit.test('string increment name', (assert) => {
+qUnit.test('string increment name', (assert) => {
 	assert.equal(CoreString.increment('a'), 'a1');
 	assert.equal(CoreString.increment('a12_11'), 'a12_12');
 	assert.equal(CoreString.increment('a1211'), 'a1212');
@@ -113,13 +115,13 @@ QUnit.test('string increment name', (assert) => {
 	assert.equal(CoreString.increment('attrib_create_0001'), 'attrib_create_0002');
 });
 
-QUnit.test('indices', (assert) => {
+qUnit.test('indices', (assert) => {
 	assert.deepEqual(CoreString.indices('1'), [1]);
 	assert.deepEqual(CoreString.indices('1,2'), [1, 2]);
 	assert.deepEqual(CoreString.indices('1,2 4-6'), [1, 2, 4, 5, 6]);
 });
 
-QUnit.test('number conversion', (assert) => {
+qUnit.test('number conversion', (assert) => {
 	assert.ok(CoreString.isNumber('1'));
 	assert.ok(CoreString.isNumber('1.'));
 	assert.ok(CoreString.isNumber('1.1'));
@@ -130,19 +132,19 @@ QUnit.test('number conversion', (assert) => {
 	assert.notOk(CoreString.isNumber('A1.'));
 });
 
-QUnit.test('CoreString.upperFirst', (assert) => {
+qUnit.test('CoreString.upperFirst', (assert) => {
 	assert.equal(CoreString.upperFirst('abcde'), 'Abcde');
 	assert.equal(CoreString.upperFirst('Abcde'), 'Abcde');
 	assert.equal(CoreString.upperFirst('1bcde'), '1bcde');
 });
-QUnit.test('CoreString.titleize', (assert) => {
+qUnit.test('CoreString.titleize', (assert) => {
 	assert.equal(CoreString.titleize('spring_torus'), 'Spring Torus');
 	assert.equal(CoreString.titleize('spring torus'), 'Spring Torus');
 	assert.equal(CoreString.titleize('abcde'), 'Abcde');
 	assert.equal(CoreString.titleize('Abcde'), 'Abcde');
 	assert.equal(CoreString.titleize('1bcde'), '1bcde');
 });
-QUnit.test('CoreString.camelCase', (assert) => {
+qUnit.test('CoreString.camelCase', (assert) => {
 	assert.equal(CoreString.camelCase('spring torus'), 'springTorus');
 	assert.equal(CoreString.camelCase('spring_torus'), 'springTorus');
 	assert.equal(CoreString.camelCase('hemisphere_light'), 'hemisphereLight');
@@ -153,16 +155,18 @@ QUnit.test('CoreString.camelCase', (assert) => {
 	assert.equal(CoreString.camelCase('fit_from_01'), 'fitFrom01');
 	assert.equal(CoreString.camelCase('fit_from_01_to_variance'), 'fitFrom01ToVariance');
 });
-QUnit.test('CoreString.ensureFloat', (assert) => {
+qUnit.test('CoreString.ensureFloat', (assert) => {
 	assert.equal(CoreString.ensureFloat(2), '2.0');
 	assert.equal(CoreString.ensureFloat(10), '10.0');
 	assert.equal(CoreString.ensureFloat(1.6), '1.6');
 	assert.equal(CoreString.ensureFloat(-1.6), '-1.6');
 });
 
-QUnit.test('CoreString.ensureInteger', (assert) => {
+qUnit.test('CoreString.ensureInteger', (assert) => {
 	assert.equal(CoreString.ensureInteger(2), '2');
 	assert.equal(CoreString.ensureInteger(10), '10');
 	assert.equal(CoreString.ensureInteger(1.6), '1');
 	assert.equal(CoreString.ensureInteger(-1.6), '-1');
 });
+
+}

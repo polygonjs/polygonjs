@@ -1,5 +1,7 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {RectAreaLight} from 'three';
 import {CoreGroup} from '../../../../src/core/geometry/Group';
+export function testenginenodesjsOutputAreaLight(qUnit: QUnit) {
 
 function isAreaLight(object: any): object is RectAreaLight {
 	return (
@@ -28,7 +30,7 @@ function getLight(coreGroup: CoreGroup): RectAreaLight {
 	return light!;
 }
 
-QUnit.test('js/OutputAreaLight simple', async (assert) => {
+qUnit.test('js/OutputAreaLight simple', async (assert) => {
 	const geo1 = window.geo1;
 	const areaLight1 = geo1.createNode('areaLight');
 	const objectBuilder1 = geo1.createNode('objectBuilder');
@@ -137,3 +139,5 @@ QUnit.test('js/OutputAreaLight simple', async (assert) => {
 	assert.equal(await getWidth(), 6);
 	assert.equal(await getHeight(), 10);
 });
+
+}

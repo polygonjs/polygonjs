@@ -1,7 +1,9 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {BufferAttribute} from 'three';
 import {NormalizeMode} from '../../../../src/engine/operations/sop/AttribNormalize';
+export function testenginenodessopAttribNormalize(qUnit: QUnit) {
 
-QUnit.test('attrib normalize simple float', async (assert) => {
+qUnit.test('attrib normalize simple float', async (assert) => {
 	const geo1 = window.geo1;
 
 	const plane1 = geo1.createNode('plane');
@@ -57,9 +59,9 @@ QUnit.test('attrib normalize simple float', async (assert) => {
 	assert.equal(array.join(','), [0, 0, 0, 0, 0.5, 0.5, 0.5, 0.5, 1, 1, 1, 1].join(','));
 });
 
-QUnit.skip('attrib normalize simple float when all points have same value', (assert) => {});
+qUnit.skip('attrib normalize simple float when all points have same value', (assert) => {});
 
-QUnit.test('attrib normalize simple vector', async (assert) => {
+qUnit.test('attrib normalize simple vector', async (assert) => {
 	const geo1 = window.geo1;
 
 	const plane1 = geo1.createNode('plane');
@@ -147,7 +149,7 @@ QUnit.test('attrib normalize simple vector', async (assert) => {
 	);
 });
 
-QUnit.test('attrib normalize vector length', async (assert) => {
+qUnit.test('attrib normalize vector length', async (assert) => {
 	const geo1 = window.geo1;
 
 	const add1 = geo1.createNode('add');
@@ -167,3 +169,5 @@ QUnit.test('attrib normalize vector length', async (assert) => {
 
 	assert.equal(array.join(','), [1, 0, 0]);
 });
+
+}

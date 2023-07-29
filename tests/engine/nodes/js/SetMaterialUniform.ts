@@ -1,3 +1,4 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {FloatParam} from './../../../../src/engine/params/Float';
 import {UNIFORM_PARAM_PREFIX} from '../../../../src/core/material/uniform';
 import {CoreSleep} from '../../../../src/core/Sleep';
@@ -5,8 +6,9 @@ import {MaterialUserDataUniforms} from '../../../../src/engine/nodes/gl/code/ass
 import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Js';
 import {GlConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Gl';
 import {RendererUtils} from '../../../helpers/RendererUtils';
+export function testenginenodesjsSetMaterialUniform(qUnit: QUnit) {
 
-QUnit.test('js/setMaterialUniform', async (assert) => {
+qUnit.test('js/setMaterialUniform', async (assert) => {
 	const MAT = window.MAT;
 	const scene = window.scene;
 	const perspective_camera1 = window.perspective_camera1;
@@ -77,3 +79,5 @@ QUnit.test('js/setMaterialUniform', async (assert) => {
 		);
 	});
 });
+
+}

@@ -1,3 +1,4 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {
 	ObjectType,
 	objectTypeFromConstructor,
@@ -7,8 +8,9 @@ import {
 } from '../../../../src/core/geometry/Constant';
 import {CorePoint} from '../../../../src/core/geometry/Point';
 import {TransformTargetType} from '../../../../src/core/Transform';
+export function testenginenodessopDelete(qUnit: QUnit) {
 
-QUnit.test('sop/delete: (class=points) simple plane', async (assert) => {
+qUnit.test('sop/delete: (class=points) simple plane', async (assert) => {
 	const geo1 = window.geo1;
 
 	const plane1 = geo1.createNode('plane');
@@ -30,7 +32,7 @@ QUnit.test('sop/delete: (class=points) simple plane', async (assert) => {
 	assert.equal(container.pointsCount(), 0);
 });
 
-QUnit.test('sop/delete: (class=points) simple box', async (assert) => {
+qUnit.test('sop/delete: (class=points) simple box', async (assert) => {
 	const geo1 = window.geo1;
 
 	const box1 = geo1.createNode('box');
@@ -50,7 +52,7 @@ QUnit.test('sop/delete: (class=points) simple box', async (assert) => {
 	assert.equal(container.pointsCount(), 6, 'after expression delete');
 });
 
-QUnit.test('sop/delete: (class=points) simple box byExpression with and without expression', async (assert) => {
+qUnit.test('sop/delete: (class=points) simple box byExpression with and without expression', async (assert) => {
 	const geo1 = window.geo1;
 
 	const add1 = geo1.createNode('add');
@@ -95,7 +97,7 @@ QUnit.test('sop/delete: (class=points) simple box byExpression with and without 
 	assert.equal(container.pointsCount(), 9, 'radius and @ptnum dependent');
 });
 
-QUnit.test('sop/delete: (class=object) simple box', async (assert) => {
+qUnit.test('sop/delete: (class=object) simple box', async (assert) => {
 	const geo1 = window.geo1;
 	const box1 = geo1.createNode('box');
 	const box2 = geo1.createNode('box');
@@ -138,7 +140,7 @@ QUnit.test('sop/delete: (class=object) simple box', async (assert) => {
 	assert.equal(objectTypeFromConstructor(core_object.threejsCoreObjects()[0].object().constructor), ObjectType.MESH);
 });
 
-QUnit.test('sop/delete: (class=point) string attrib', async (assert) => {
+qUnit.test('sop/delete: (class=point) string attrib', async (assert) => {
 	const geo1 = window.geo1;
 	const add1 = geo1.createNode('add');
 	const add2 = geo1.createNode('add');
@@ -194,7 +196,7 @@ QUnit.test('sop/delete: (class=point) string attrib', async (assert) => {
 	);
 });
 
-QUnit.test('sop/delete byBoundingObject 1', async (assert) => {
+qUnit.test('sop/delete byBoundingObject 1', async (assert) => {
 	const geo1 = window.geo1;
 
 	const sphere = geo1.createNode('sphere');
@@ -213,7 +215,7 @@ QUnit.test('sop/delete byBoundingObject 1', async (assert) => {
 	assert.equal(container.pointsCount(), 719);
 });
 
-QUnit.test('sop/delete byBoundingObject 2', async (assert) => {
+qUnit.test('sop/delete byBoundingObject 2', async (assert) => {
 	const geo1 = window.geo1;
 
 	const icosahedron1 = geo1.createNode('icosahedron');
@@ -249,3 +251,5 @@ QUnit.test('sop/delete byBoundingObject 2', async (assert) => {
 	container = await delete1.compute();
 	assert.equal(container.pointsCount(), 823);
 });
+
+}

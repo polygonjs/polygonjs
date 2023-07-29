@@ -1,4 +1,6 @@
-QUnit.test('multiple keep their default and also for their components', async (assert) => {
+import type {QUnit} from '../../helpers/QUnit';
+export function testengineparamsMultiple(qUnit: QUnit) {
+qUnit.test('multiple keep their default and also for their components', async (assert) => {
 	const geo1 = window.geo1;
 
 	const param = geo1.p.t;
@@ -35,7 +37,7 @@ QUnit.test('multiple keep their default and also for their components', async (a
 	assert.equal(param.z.value, 0);
 });
 
-QUnit.test('color keep their default and also for their components', async (assert) => {
+qUnit.test('color keep their default and also for their components', async (assert) => {
 	const scene = window.scene;
 
 	const hemisphere_light1 = scene.root().createNode('hemisphereLight');
@@ -66,3 +68,5 @@ QUnit.test('color keep their default and also for their components', async (asse
 	assert.equal(param.valuePreConversion().g, 1);
 	assert.equal(param.valuePreConversion().b, 1);
 });
+
+}

@@ -1,10 +1,12 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {Mesh} from 'three';
 // import {AttribClass} from '../../../../src/core/geometry/Constant';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Js';
 import {RendererUtils} from '../../../helpers/RendererUtils';
+export function testenginenodesjsLength(qUnit: QUnit) {
 
-QUnit.test('js/length with vector2 inputs', async (assert) => {
+qUnit.test('js/length with vector2 inputs', async (assert) => {
 	const scene = window.scene;
 	const perspective_camera1 = window.perspective_camera1;
 
@@ -50,7 +52,7 @@ QUnit.test('js/length with vector2 inputs', async (assert) => {
 	});
 });
 
-QUnit.test('js/length with vector3 inputs', async (assert) => {
+qUnit.test('js/length with vector3 inputs', async (assert) => {
 	const scene = window.scene;
 	const perspective_camera1 = window.perspective_camera1;
 
@@ -98,7 +100,7 @@ QUnit.test('js/length with vector3 inputs', async (assert) => {
 	});
 });
 
-QUnit.test('js/length with vector4 inputs', async (assert) => {
+qUnit.test('js/length with vector4 inputs', async (assert) => {
 	const scene = window.scene;
 	const perspective_camera1 = window.perspective_camera1;
 
@@ -145,3 +147,5 @@ QUnit.test('js/length with vector4 inputs', async (assert) => {
 		assert.equal(object.position.z, 0, 'object moved ');
 	});
 });
+
+}

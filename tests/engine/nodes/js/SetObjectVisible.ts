@@ -1,9 +1,11 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {Mesh} from 'three';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Js';
 import {RendererUtils} from '../../../helpers/RendererUtils';
+export function testenginenodesjsSetObjectVisible(qUnit: QUnit) {
 
-QUnit.test('js/setObjectVisible', async (assert) => {
+qUnit.test('js/setObjectVisible', async (assert) => {
 	const scene = window.scene;
 	const perspective_camera1 = window.perspective_camera1;
 
@@ -53,3 +55,5 @@ QUnit.test('js/setObjectVisible', async (assert) => {
 		assert.ok(object.visible, 'object visible 5');
 	});
 });
+
+}

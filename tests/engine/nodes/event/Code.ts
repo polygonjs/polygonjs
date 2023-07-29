@@ -1,6 +1,8 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {CoreSleep} from '../../../../src/core/Sleep';
+export function testenginenodeseventCode(qUnit: QUnit) {
 
-QUnit.test('event code simple', async (assert) => {
+qUnit.test('event code simple', async (assert) => {
 	const geo1 = window.geo1;
 	const eventsNetwork1 = geo1.createNode('eventsNetwork');
 
@@ -20,3 +22,5 @@ QUnit.test('event code simple', async (assert) => {
 	await CoreSleep.sleep(200);
 	assert.equal(box1.p.divisions.x.value, 10);
 });
+
+}

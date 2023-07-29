@@ -1,8 +1,10 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {BufferAttribute, Box3, Vector3} from 'three';
+export function testenginenodessopCSGPolyhedron(qUnit: QUnit) {
 const tmpBox = new Box3();
 const tmpSize = new Vector3();
 
-QUnit.test('sop/CSGPolyhedron simple', async (assert) => {
+qUnit.test('sop/CSGPolyhedron simple', async (assert) => {
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false); // cancels geo node displayNodeController
 
@@ -43,3 +45,5 @@ QUnit.test('sop/CSGPolyhedron simple', async (assert) => {
 	assert.equal(((await computeTriangulate()).geometry.getAttribute('position') as BufferAttribute).array.length, 18);
 	assert.in_delta(tmpBox.min.y, -1, 0.002);
 });
+
+}

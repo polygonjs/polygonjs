@@ -1,6 +1,8 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {RendererUtils} from '../../../helpers/RendererUtils';
+export function testenginenodescopCubeMapFromScene(qUnit: QUnit) {
 
-QUnit.test('cop/cubeMapFromScene simple', async (assert) => {
+qUnit.test('cop/cubeMapFromScene simple', async (assert) => {
 	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 	assert.ok(renderer);
 
@@ -89,3 +91,5 @@ QUnit.test('cop/cubeMapFromScene simple', async (assert) => {
 
 	RendererUtils.dispose();
 });
+
+}

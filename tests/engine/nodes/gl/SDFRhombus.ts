@@ -1,9 +1,11 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import DEFAULT_FRAGMENT from './SDFRhombus/default.frag.glsl';
 import DEFAULT_VERTEX from './SDFRhombus/default.vert.glsl';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 import {GLSLHelper} from '../../../helpers/GLSLHelper';
+export function testenginenodesglSDFRhombus(qUnit: QUnit) {
 
-QUnit.test('gl/SDFRhombus simple', async (assert) => {
+qUnit.test('gl/SDFRhombus simple', async (assert) => {
 	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 	const MAT = window.MAT;
 	const rayMarchingBuilder1 = MAT.createNode('rayMarchingBuilder');
@@ -27,3 +29,5 @@ QUnit.test('gl/SDFRhombus simple', async (assert) => {
 
 	RendererUtils.dispose();
 });
+
+}

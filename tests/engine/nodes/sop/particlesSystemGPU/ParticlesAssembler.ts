@@ -1,3 +1,4 @@
+import type {QUnit} from '../../../../helpers/QUnit';
 import {RendererUtils} from '../../../../helpers/RendererUtils';
 import {AttribClass} from '../../../../../src/core/geometry/Constant';
 import {MaterialUserDataUniforms} from '../../../../../src/engine/nodes/gl/code/assemblers/materials/OnBeforeCompile';
@@ -17,8 +18,9 @@ import {
 	waitForParticlesComputedAndMounted,
 	stepParticlesSimulation,
 } from './ParticlesHelper';
+export function testenginenodessopparticlesSystemGPUParticlesAssembler(qUnit: QUnit) {
 
-QUnit.test('ParticlesSystemGPU: displays ok on first frame without assemblers', async (assert) => {
+qUnit.test('ParticlesSystemGPU: displays ok on first frame without assemblers', async (assert) => {
 	const geo1 = window.geo1;
 	const scene = window.scene;
 	scene.setFrame(0);
@@ -167,3 +169,5 @@ QUnit.test('ParticlesSystemGPU: displays ok on first frame without assemblers', 
 
 	RendererUtils.dispose();
 });
+
+}

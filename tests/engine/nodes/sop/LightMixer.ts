@@ -1,5 +1,7 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {Light} from 'three';
 import {GeometryContainer} from '../../../../src/engine/containers/Geometry';
+export function testenginenodessopLightMixer(qUnit: QUnit) {
 
 function getLight(container: GeometryContainer, lightName: string): Light | undefined {
 	const coreGroup = container.coreContent()!;
@@ -15,7 +17,7 @@ function getLight(container: GeometryContainer, lightName: string): Light | unde
 	return light;
 }
 
-QUnit.test('sop/lightMixer', async (assert) => {
+qUnit.test('sop/lightMixer', async (assert) => {
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false); // cancels geo node displayNodeController
 
@@ -58,3 +60,5 @@ QUnit.test('sop/lightMixer', async (assert) => {
 	container = await lightMixer1.compute();
 	assert.deepEqual(getLight(container, 'areaLight1')?.color.toArray(), [0, 0.2, 0.4]);
 });
+
+}

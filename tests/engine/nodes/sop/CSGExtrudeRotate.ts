@@ -1,7 +1,9 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {BufferAttribute, Box3} from 'three';
+export function testenginenodessopCSGExtrudeRotate(qUnit: QUnit) {
 const tmpBox = new Box3();
 
-QUnit.test('sop/CSGExtrudeRotate with non closed shapes', async (assert) => {
+qUnit.test('sop/CSGExtrudeRotate with non closed shapes', async (assert) => {
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false); // cancels geo node displayNodeController
 
@@ -45,7 +47,7 @@ QUnit.test('sop/CSGExtrudeRotate with non closed shapes', async (assert) => {
 	assert.in_delta(tmpBox.max.y, 0, 0.002);
 });
 
-QUnit.test('sop/CSGExtrudeRotate with closed shapes', async (assert) => {
+qUnit.test('sop/CSGExtrudeRotate with closed shapes', async (assert) => {
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false); // cancels geo node displayNodeController
 
@@ -91,3 +93,5 @@ QUnit.test('sop/CSGExtrudeRotate with closed shapes', async (assert) => {
 	assert.in_delta(tmpBox.min.y, -1, 0.002);
 	assert.in_delta(tmpBox.max.y, 1, 0.002);
 });
+
+}

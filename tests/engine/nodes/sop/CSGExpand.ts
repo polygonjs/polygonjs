@@ -1,7 +1,9 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {BufferAttribute, Box3} from 'three';
+export function testenginenodessopCSGExpand(qUnit: QUnit) {
 const tmpBox = new Box3();
 
-QUnit.test('sop/CSGExpand with 2D primitive', async (assert) => {
+qUnit.test('sop/CSGExpand with 2D primitive', async (assert) => {
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false); // cancels geo node displayNodeController
 
@@ -53,3 +55,5 @@ QUnit.test('sop/CSGExpand with 2D primitive', async (assert) => {
 	assert.in_delta(tmpBox.min.x, -1.497, 0.002);
 	assert.in_delta(tmpBox.max.x, 1.497, 0.002);
 });
+
+}

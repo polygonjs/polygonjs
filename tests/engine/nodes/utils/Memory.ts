@@ -1,4 +1,6 @@
-QUnit.test('nodes can dispose themselves when removed by their parents', async (assert) => {
+import type {QUnit} from '../../../helpers/QUnit';
+export function testenginenodesutilsMemory(qUnit: QUnit) {
+qUnit.test('nodes can dispose themselves when removed by their parents', async (assert) => {
 	const scene = window.scene;
 
 	const startGraphNodesCount = scene.graph.nodesCount();
@@ -22,3 +24,5 @@ QUnit.test('nodes can dispose themselves when removed by their parents', async (
 	const finalGraphNodesCount = scene.graph.nodesCount();
 	assert.equal(finalGraphNodesCount, startGraphNodesCount);
 });
+
+}

@@ -1,4 +1,6 @@
-QUnit.test('param/paramPath: expression simple', async (assert) => {
+import type {QUnit} from '../../helpers/QUnit';
+export function testengineparamsParamPath(qUnit: QUnit) {
+qUnit.test('param/paramPath: expression simple', async (assert) => {
 	const geo1 = window.geo1;
 	const eventsNetwork1 = geo1.createNode('eventsNetwork');
 	const raycast1 = eventsNetwork1.createNode('raycast');
@@ -14,3 +16,5 @@ QUnit.test('param/paramPath: expression simple', async (assert) => {
 	assert.equal(raycast1.pv.positionTarget.param()?.graphNodeId(), plane1.p.center.graphNodeId());
 	assert.equal(raycast2.pv.positionTarget.param()?.graphNodeId(), plane1.p.center.graphNodeId());
 });
+
+}

@@ -1,10 +1,12 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {Mesh} from 'three';
 // import {AttribClass} from '../../../../src/core/geometry/Constant';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Js';
 import {RendererUtils} from '../../../helpers/RendererUtils';
+export function testenginenodesjsEasing(qUnit: QUnit) {
 
-QUnit.test('js/easing with float inputs', async (assert) => {
+qUnit.test('js/easing with float inputs', async (assert) => {
 	const scene = window.scene;
 	const perspective_camera1 = window.perspective_camera1;
 
@@ -50,7 +52,7 @@ QUnit.test('js/easing with float inputs', async (assert) => {
 	});
 });
 
-QUnit.test('js/easing with vector inputs', async (assert) => {
+qUnit.test('js/easing with vector inputs', async (assert) => {
 	const scene = window.scene;
 	const perspective_camera1 = window.perspective_camera1;
 
@@ -95,3 +97,5 @@ QUnit.test('js/easing with vector inputs', async (assert) => {
 		assert.in_delta(object.position.z, 0.0787, 0.02, 'object moved ');
 	});
 });
+
+}

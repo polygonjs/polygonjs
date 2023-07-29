@@ -1,3 +1,4 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {PointsBuilderMatNode} from '../../../../src/engine/nodes/mat/PointsBuilder';
 import {MaterialsNetworkSopNode} from '../../../../src/engine/nodes/sop/MaterialsNetwork';
 import {LineBasicBuilderMatNode} from '../../../../src/engine/nodes/mat/LineBasicBuilder';
@@ -24,6 +25,7 @@ import {MeshLambertBuilderMatNode} from '../../../../src/engine/nodes/mat/MeshLa
 import {MeshBasicBuilderMatNode} from '../../../../src/engine/nodes/mat/MeshBasicBuilder';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 import {GLSLHelper} from '../../../helpers/GLSLHelper';
+export function testenginenodesglVaryingWrite(qUnit: QUnit) {
 
 function createMeshBasicBuilder(parentNode: MaterialsNetworkSopNode): MeshBasicBuilderMatNode {
 	const meshBasicBuilder1 = parentNode.createNode('meshBasicBuilder');
@@ -672,7 +674,7 @@ function createPointsBuilder(parentNode: MaterialsNetworkSopNode): PointsBuilder
 	return pointsParticles_DEBUG;
 }
 
-QUnit.test('gl VaryingWrite works inside a meshBasicBuilder', async (assert) => {
+qUnit.test('gl VaryingWrite works inside a meshBasicBuilder', async (assert) => {
 	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 	const geo1 = window.geo1;
 	const MAT = geo1.createNode('materialsNetwork');
@@ -685,7 +687,7 @@ QUnit.test('gl VaryingWrite works inside a meshBasicBuilder', async (assert) => 
 	RendererUtils.dispose();
 });
 
-QUnit.test('gl VaryingWrite works inside a meshLambertBuilder', async (assert) => {
+qUnit.test('gl VaryingWrite works inside a meshLambertBuilder', async (assert) => {
 	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 	const geo1 = window.geo1;
 	const MAT = geo1.createNode('materialsNetwork');
@@ -696,7 +698,7 @@ QUnit.test('gl VaryingWrite works inside a meshLambertBuilder', async (assert) =
 	assert.equal(GLSLHelper.compress(material.fragmentShader), GLSLHelper.compress(MESH_LAMBERT_BUILDER_FRAGMENT));
 	RendererUtils.dispose();
 });
-QUnit.test('gl VaryingWrite works inside a meshPhongBuilder', async (assert) => {
+qUnit.test('gl VaryingWrite works inside a meshPhongBuilder', async (assert) => {
 	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 	const geo1 = window.geo1;
 	const MAT = geo1.createNode('materialsNetwork');
@@ -708,7 +710,7 @@ QUnit.test('gl VaryingWrite works inside a meshPhongBuilder', async (assert) => 
 	RendererUtils.dispose();
 });
 
-QUnit.test('gl VaryingWrite works inside a meshStandardBuilder', async (assert) => {
+qUnit.test('gl VaryingWrite works inside a meshStandardBuilder', async (assert) => {
 	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 	const geo1 = window.geo1;
 	const MAT = geo1.createNode('materialsNetwork');
@@ -720,7 +722,7 @@ QUnit.test('gl VaryingWrite works inside a meshStandardBuilder', async (assert) 
 	RendererUtils.dispose();
 });
 
-QUnit.test('gl VaryingWrite works inside a meshPhysicalBuilder', async (assert) => {
+qUnit.test('gl VaryingWrite works inside a meshPhysicalBuilder', async (assert) => {
 	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 	const geo1 = window.geo1;
 	const MAT = geo1.createNode('materialsNetwork');
@@ -732,7 +734,7 @@ QUnit.test('gl VaryingWrite works inside a meshPhysicalBuilder', async (assert) 
 	RendererUtils.dispose();
 });
 
-QUnit.test('gl VaryingWrite works inside a lineBasicBuilder', async (assert) => {
+qUnit.test('gl VaryingWrite works inside a lineBasicBuilder', async (assert) => {
 	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 	const geo1 = window.geo1;
 	const MAT = geo1.createNode('materialsNetwork');
@@ -744,7 +746,7 @@ QUnit.test('gl VaryingWrite works inside a lineBasicBuilder', async (assert) => 
 	RendererUtils.dispose();
 });
 
-QUnit.test('gl VaryingWrite works inside a pointsBuilder', async (assert) => {
+qUnit.test('gl VaryingWrite works inside a pointsBuilder', async (assert) => {
 	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 	const geo1 = window.geo1;
 	const MAT = geo1.createNode('materialsNetwork');
@@ -755,3 +757,5 @@ QUnit.test('gl VaryingWrite works inside a pointsBuilder', async (assert) => {
 	assert.equal(GLSLHelper.compress(material.fragmentShader), GLSLHelper.compress(POINTS_BUILDER_FRAGMENT));
 	RendererUtils.dispose();
 });
+
+}

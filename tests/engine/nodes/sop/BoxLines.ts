@@ -1,7 +1,9 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {BufferAttribute, Box3} from 'three';
+export function testenginenodessopBoxLines(qUnit: QUnit) {
 const tmpBox = new Box3();
 
-QUnit.test('boxLines simple', async (assert) => {
+qUnit.test('boxLines simple', async (assert) => {
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false); // cancels geo node displayNodeController
 
@@ -25,7 +27,7 @@ QUnit.test('boxLines simple', async (assert) => {
 	assert.ok(!boxLines1.isDirty(), 'box is not dirty anymore');
 });
 
-QUnit.test('boxLines with input', async (assert) => {
+qUnit.test('boxLines with input', async (assert) => {
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false); // cancels geo node displayNodeController
 
@@ -59,7 +61,7 @@ QUnit.test('boxLines with input', async (assert) => {
 	assert.equal((await getBbox()).min.y, -1.5);
 });
 
-QUnit.test('boxLines with expression', async (assert) => {
+qUnit.test('boxLines with expression', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false); // cancels geo node displayNodeController
@@ -123,3 +125,5 @@ QUnit.test('boxLines with expression', async (assert) => {
 	// container = await boxLines1.compute();
 	assert.equal((await getBbox()).min.y, -10.5);
 });
+
+}

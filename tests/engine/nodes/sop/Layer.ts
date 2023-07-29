@@ -1,6 +1,8 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {Layers} from 'three';
+export function testenginenodessopLayer(qUnit: QUnit) {
 
-QUnit.test('layer simple', async (assert) => {
+qUnit.test('layer simple', async (assert) => {
 	const geo1 = window.geo1;
 
 	const plane1 = geo1.createNode('plane');
@@ -36,3 +38,5 @@ QUnit.test('layer simple', async (assert) => {
 	assert.notOk(layers.test(layers1));
 	assert.ok(layers.test(layers2));
 });
+
+}

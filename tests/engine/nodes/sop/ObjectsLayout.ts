@@ -1,6 +1,8 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {CoreObject} from './../../../../src/core/geometry/Object';
 import {GeoObjNode} from '../../../../src/engine/nodes/obj/Geo';
 import {ObjectsLayoutSopNode} from '../../../../src/engine/nodes/sop/ObjectsLayout';
+export function testenginenodessopObjectsLayout(qUnit: QUnit) {
 
 function createObject(geo1: GeoObjNode, x: number, y: number) {
 	const box1 = geo1.createNode('box');
@@ -24,7 +26,7 @@ async function getAttributes(objectLayout1: ObjectsLayoutSopNode, attribName: st
 	return computedObjects.map((object) => CoreObject.attribValue(object, attribName) as number);
 }
 
-QUnit.test('sop/objectsLayout simple', async (assert) => {
+qUnit.test('sop/objectsLayout simple', async (assert) => {
 	const geo1 = window.geo1;
 
 	const obj1 = createObject(geo1, 1, 1);
@@ -53,7 +55,7 @@ QUnit.test('sop/objectsLayout simple', async (assert) => {
 	]);
 });
 
-QUnit.test('sop/objectsLayout with attributes', async (assert) => {
+qUnit.test('sop/objectsLayout with attributes', async (assert) => {
 	const geo1 = window.geo1;
 
 	const obj1 = createObject(geo1, 1, 1);
@@ -82,3 +84,5 @@ QUnit.test('sop/objectsLayout with attributes', async (assert) => {
 	assert.deepEqual(await getAttributes(objectsLayout1, 'rowWidthInner'), [1.5, 1.5, 0]);
 	assert.deepEqual(await getAttributes(objectsLayout1, 'rowWidthOuter'), [3, 3, 4]);
 });
+
+}

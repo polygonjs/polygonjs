@@ -1,3 +1,5 @@
+import type {QUnit} from '../../../helpers/QUnit';
+export function testenginenodessopData(qUnit: QUnit) {
 async function with_data(data_json?: object) {
 	const geo1 = window.geo1;
 	const data1 = geo1.createNode('data');
@@ -8,13 +10,13 @@ async function with_data(data_json?: object) {
 	return container;
 }
 
-QUnit.test('data default', async (assert) => {
+qUnit.test('data default', async (assert) => {
 	const container = await with_data();
 	assert.equal(container.pointsCount(), 13);
 	assert.equal(container.coreContent()!.points()[0].attribValue('value'), -40);
 });
 
-QUnit.test('data with position', async (assert) => {
+qUnit.test('data with position', async (assert) => {
 	const data = [
 		{value: 1, position: [-1, 0, 1]},
 		{value: 2, position: [-2, 0, 1]},
@@ -28,7 +30,7 @@ QUnit.test('data with position', async (assert) => {
 	assert.deepEqual(points[1].position().toArray(), [-2, 0, 1]);
 });
 
-QUnit.test('data with position remaped', async (assert) => {
+qUnit.test('data with position remaped', async (assert) => {
 	const data = [
 		{value: 1, P: [-1, 0, 1]},
 		{value: 2, P: [-2, 0, 1]},
@@ -41,3 +43,5 @@ QUnit.test('data with position remaped', async (assert) => {
 	assert.deepEqual(points[0].position().toArray(), [-1, 0, 1]);
 	assert.deepEqual(points[1].position().toArray(), [-2, 0, 1]);
 });
+
+}

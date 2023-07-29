@@ -1,7 +1,9 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {RendererUtils} from '../../../helpers/RendererUtils';
+export function testenginenodesjsOnTick(qUnit: QUnit) {
 
-QUnit.test('js/onTick send an event when playing', async (assert) => {
+qUnit.test('js/onTick send an event when playing', async (assert) => {
 	const scene = window.scene;
 	const perspective_camera1 = window.perspective_camera1;
 	const geo1 = window.geo1;
@@ -30,7 +32,7 @@ QUnit.test('js/onTick send an event when playing', async (assert) => {
 	});
 });
 
-QUnit.test('js/onTick with getObjectProperty and add', async (assert) => {
+qUnit.test('js/onTick with getObjectProperty and add', async (assert) => {
 	const scene = window.scene;
 	const perspective_camera1 = window.perspective_camera1;
 	const geo1 = window.geo1;
@@ -65,3 +67,5 @@ QUnit.test('js/onTick with getObjectProperty and add', async (assert) => {
 		assert.in_delta(object.position.y, 5.5, 1);
 	});
 });
+
+}

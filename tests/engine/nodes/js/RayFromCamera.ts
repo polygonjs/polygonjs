@@ -1,8 +1,10 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Js';
 import {RendererUtils} from '../../../helpers/RendererUtils';
+export function testenginenodesjsRayFromCamera(qUnit: QUnit) {
 
-QUnit.test('js/rayFromCamera', async (assert) => {
+qUnit.test('js/rayFromCamera', async (assert) => {
 	const scene = window.scene;
 	const perspective_camera1 = window.perspective_camera1;
 
@@ -54,3 +56,5 @@ QUnit.test('js/rayFromCamera', async (assert) => {
 		assert.in_delta(object.position.toArray()[2], 1, 0.001, 'pos set');
 	});
 });
+
+}

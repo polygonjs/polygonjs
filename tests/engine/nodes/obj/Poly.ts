@@ -1,8 +1,10 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {PolyNodeController} from '../../../../src/engine/nodes/utils/poly/PolyNodeController';
 import {PolyNodeDefinition} from '../../../../src/engine/nodes/utils/poly/PolyNodeDefinition';
 import {NodeContext} from '../../../../src/engine/poly/NodeContext';
 import {ParamType} from '../../../../src/engine/poly/ParamType';
 import {ObjNodeChildrenMap} from '../../../../src/engine/poly/registers/nodes/Obj';
+export function testenginenodesobjPoly(qUnit: QUnit) {
 
 const data: PolyNodeDefinition = {
 	metadata: {
@@ -32,7 +34,7 @@ const data: PolyNodeDefinition = {
 };
 PolyNodeController.createNodeClassAndRegister({node_context: NodeContext.OBJ, node_type: 'poly_obj_test', data});
 
-QUnit.test('poly obj simple', async (assert) => {
+qUnit.test('poly obj simple', async (assert) => {
 	const root = window.root;
 	const poly1 = root.createNode('poly_obj_test' as keyof ObjNodeChildrenMap);
 	assert.equal(poly1.children().length, 2);
@@ -40,4 +42,6 @@ QUnit.test('poly obj simple', async (assert) => {
 	assert.equal(poly1.params.get('id')!.type(), ParamType.INTEGER);
 });
 
-QUnit.skip('poly obj params are preserved in copy/paste', async (assert) => {});
+qUnit.skip('poly obj params are preserved in copy/paste', async (assert) => {});
+
+}

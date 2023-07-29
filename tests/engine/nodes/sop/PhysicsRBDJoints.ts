@@ -1,3 +1,4 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 import {RootManagerNode} from './../../../../src/engine/nodes/manager/Root';
@@ -5,6 +6,7 @@ import {GeoObjNode} from './../../../../src/engine/nodes/obj/Geo';
 import {PhysicsWorldSopNode} from './../../../../src/engine/nodes/sop/PhysicsWorld';
 import {CameraControlsSopNode} from './../../../../src/engine/nodes/sop/CameraControls';
 import {BaseNodeType} from '../../../../src/engine/nodes/_Base';
+export function testenginenodessopPhysicsRBDJoints(qUnit: QUnit) {
 
 interface ReturnedNodeData {
 	node: BaseNodeType;
@@ -318,7 +320,7 @@ function createScene(root: RootManagerNode) {
 	return scene_root_nodes;
 }
 
-QUnit.test('sop/physicsRBDJoints simple', async (assert) => {
+qUnit.test('sop/physicsRBDJoints simple', async (assert) => {
 	const scene = window.scene;
 	await scene.waitForCooksCompleted();
 	const cameraNode = window.perspective_camera1;
@@ -351,7 +353,7 @@ QUnit.test('sop/physicsRBDJoints simple', async (assert) => {
 	});
 });
 
-QUnit.test('sop/physicsRBDJoints simple with clone', async (assert) => {
+qUnit.test('sop/physicsRBDJoints simple with clone', async (assert) => {
 	const scene = window.scene;
 	await scene.waitForCooksCompleted();
 	const cameraNode = window.perspective_camera1;
@@ -385,3 +387,5 @@ QUnit.test('sop/physicsRBDJoints simple with clone', async (assert) => {
 		}
 	});
 });
+
+}

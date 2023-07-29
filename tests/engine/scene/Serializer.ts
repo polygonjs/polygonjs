@@ -1,9 +1,11 @@
+import type {QUnit} from '../../helpers/QUnit';
 import {PolyScene} from '../../../src/engine/scene/PolyScene';
 import {PerspectiveCameraObjNode} from '../../../src/engine/nodes/obj/PerspectiveCamera';
 import {GeoObjNode} from '../../../src/engine/nodes/obj/Geo';
 import {saveAndLoadScene} from '../../helpers/ImportHelper';
+export function testenginesceneSerializer(qUnit: QUnit) {
 
-QUnit.test('scene save simple', async (assert) => {
+qUnit.test('scene save simple', async (assert) => {
 	const scene = new PolyScene();
 	scene.setFrame(1);
 	scene.root().createNode('ambientLight');
@@ -36,3 +38,5 @@ QUnit.test('scene save simple', async (assert) => {
 		assert.deepEqual(new_geo1.p.r.value.toArray(), [0, 32, 0]);
 	});
 });
+
+}

@@ -1,7 +1,9 @@
+import type {QUnit} from '../../helpers/QUnit';
 import {ParamType} from '../../../src/engine/poly/ParamType';
 import {CoreGraphNode} from '../../../src/core/graph/CoreGraphNode';
+export function testengineparamsBoolean(qUnit: QUnit) {
 
-QUnit.test('boolean evals correctly when set to different values', async (assert) => {
+qUnit.test('boolean evals correctly when set to different values', async (assert) => {
 	const geo1 = window.geo1;
 	const scene = window.scene;
 
@@ -66,7 +68,7 @@ QUnit.test('boolean evals correctly when set to different values', async (assert
 	assert.equal(boolean_param.value, true);
 });
 
-QUnit.test('boolean isDefault', async (assert) => {
+qUnit.test('boolean isDefault', async (assert) => {
 	const geo1 = window.geo1;
 
 	const boolean_param = geo1.p.display;
@@ -83,7 +85,7 @@ QUnit.test('boolean isDefault', async (assert) => {
 	boolean_param.compute();
 	assert.ok(boolean_param.isDefault());
 });
-QUnit.test('boolean is_default for spare with expression', async (assert) => {
+qUnit.test('boolean is_default for spare with expression', async (assert) => {
 	const geo1 = window.geo1;
 	const scene = window.scene;
 	scene.timeController.setMaxFrame(10);
@@ -140,3 +142,5 @@ QUnit.test('boolean is_default for spare with expression', async (assert) => {
 	assert.ok(spare_boolean.isDefault());
 	assert.equal(spare_boolean.defaultValueSerialized(), '$F');
 });
+
+}

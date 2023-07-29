@@ -1,6 +1,8 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {CoreGeometry} from '../../../../src/core/geometry/Geometry';
 import {GeometryContainer} from '../../../../src/engine/containers/Geometry';
 import {ShearMode} from '../../../../src/engine/operations/sop/Shear';
+export function testenginenodessopShear(qUnit: QUnit) {
 
 function getMinMaxPointYPos(container: GeometryContainer) {
 	let geometry = container.coreContent()!.threejsObjectsWithGeo()[0].geometry;
@@ -14,7 +16,7 @@ function getMinMaxPointYPos(container: GeometryContainer) {
 	};
 }
 
-QUnit.test('shear simple', async (assert) => {
+qUnit.test('shear simple', async (assert) => {
 	const geo1 = window.geo1;
 
 	const box1 = geo1.createNode('box');
@@ -49,3 +51,5 @@ QUnit.test('shear simple', async (assert) => {
 	container = await shear.compute();
 	assert.deepEqual(getMinMaxPointYPos(container), {min: -1, max: 2});
 });
+
+}

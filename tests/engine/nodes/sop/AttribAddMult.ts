@@ -1,6 +1,8 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {CorePoint} from '../../../../src/core/geometry/Point';
+export function testenginenodessopAttribAddMult(qUnit: QUnit) {
 
-QUnit.test('sop/attribAddMult simple', async (assert) => {
+qUnit.test('sop/attribAddMult simple', async (assert) => {
 	const geo1 = window.geo1;
 
 	const plane1 = geo1.createNode('plane');
@@ -25,3 +27,5 @@ QUnit.test('sop/attribAddMult simple', async (assert) => {
 	values = core_group.points().map((p: CorePoint) => p.attribValue('test'));
 	assert.deepEqual(values, [0, 0.5, 1, 1.5]);
 });
+
+}

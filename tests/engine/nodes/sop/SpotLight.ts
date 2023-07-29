@@ -1,7 +1,9 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {Object3D, SpotLight} from 'three';
 import {ColorConversion} from '../../../../src/core/Color';
 import {BaseSopNodeType} from '../../../../src/engine/nodes/sop/_Base';
 import {ASSETS_ROOT} from '../../../../src/core/loader/AssetsUtils';
+export function testenginenodessopSpotLight(qUnit: QUnit) {
 
 function objectsCount(object: Object3D, countStart: number = 0) {
 	countStart += 1;
@@ -24,7 +26,7 @@ async function getObject(node: BaseSopNodeType) {
 	return object;
 }
 
-QUnit.test('sop/spotLight hierarchy is maintained as it is cloned', async (assert) => {
+qUnit.test('sop/spotLight hierarchy is maintained as it is cloned', async (assert) => {
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false); // cancels geo node displayNodeController
 
@@ -62,7 +64,7 @@ QUnit.test('sop/spotLight hierarchy is maintained as it is cloned', async (asser
 	assert.deepEqual((object2.children[0] as SpotLight).color.toArray(), [0.2, 0.4, 0.7]);
 });
 
-QUnit.test('sop/spotLight name change is maintained', async (assert) => {
+qUnit.test('sop/spotLight name change is maintained', async (assert) => {
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false); // cancels geo node displayNodeController
 
@@ -106,7 +108,7 @@ QUnit.test('sop/spotLight name change is maintained', async (assert) => {
 	]);
 });
 
-QUnit.test('sop/spotLight maintain map over cloning', async (assert) => {
+qUnit.test('sop/spotLight maintain map over cloning', async (assert) => {
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false); // cancels geo node displayNodeController
 
@@ -143,3 +145,5 @@ QUnit.test('sop/spotLight maintain map over cloning', async (assert) => {
 	spotLight1.p.tmap.set(true);
 	assert.ok(await spotLightMap(), 'map is re-added');
 });
+
+}

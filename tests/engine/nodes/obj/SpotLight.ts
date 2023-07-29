@@ -1,4 +1,6 @@
-QUnit.test('spot light helper does not get shown when turning light on and off', async (assert) => {
+import type {QUnit} from '../../../helpers/QUnit';
+export function testenginenodesobjSpotLight(qUnit: QUnit) {
+qUnit.test('spot light helper does not get shown when turning light on and off', async (assert) => {
 	const scene = window.scene;
 	const main_group = scene.threejsScene();
 	assert.equal(main_group.name, '/');
@@ -43,3 +45,5 @@ QUnit.test('spot light helper does not get shown when turning light on and off',
 	spotLight1.flags.display.set(true);
 	assert.equal(spotLight1.light.children.length, 2, 'no helper');
 });
+
+}

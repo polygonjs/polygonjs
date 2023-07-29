@@ -1,10 +1,12 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {JsCompareTestName} from '../../../../src/engine/nodes/js/Compare';
 import {OnTickJsNodeOuput} from '../../../../src/engine/nodes/js/OnTick';
 import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Js';
 import {RendererUtils} from '../../../helpers/RendererUtils';
+export function testenginenodesjsCompare(qUnit: QUnit) {
 
-QUnit.test('js/compare', async (assert) => {
+qUnit.test('js/compare', async (assert) => {
 	const scene = window.scene;
 	const perspective_camera1 = window.perspective_camera1;
 
@@ -56,3 +58,5 @@ QUnit.test('js/compare', async (assert) => {
 		assert.deepEqual(object.position.toArray(), [0, 1, 0]);
 	});
 });
+
+}

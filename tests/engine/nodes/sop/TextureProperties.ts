@@ -1,9 +1,11 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {Mesh} from 'three';
 import {MeshBasicMaterial} from 'three';
 import {Texture} from 'three';
 import {ImageDefaultTextureLoader} from '../../../../src/core/loader/texture/ImageDefault';
+export function testenginenodessopTextureProperties(qUnit: QUnit) {
 
-QUnit.test('texture_properties simple', async (assert) => {
+qUnit.test('texture_properties simple', async (assert) => {
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false);
 	const COP = window.COP;
@@ -44,3 +46,5 @@ QUnit.test('texture_properties simple', async (assert) => {
 	texture = ((core_group.allObjects()[0] as Mesh).material as MeshBasicMaterial).map as Texture;
 	assert.equal(texture.anisotropy, 8);
 });
+
+}

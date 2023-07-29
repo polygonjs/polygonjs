@@ -1,3 +1,4 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {MeshBasicMatNode} from './../../../../src/engine/nodes/mat/MeshBasic';
 import {ImageCopNode} from './../../../../src/engine/nodes/cop/Image';
 import {Box3, Mesh, Object3D, Vector3, MeshBasicMaterial, Texture, BufferAttribute} from 'three';
@@ -9,10 +10,11 @@ import {ObjectTransformSpace} from '../../../../src/core/TransformSpace';
 import {CopySopNode} from '../../../../src/engine/nodes/sop/Copy';
 import {HierarchyMode} from '../../../../src/engine/operations/sop/Hierarchy';
 import {saveAndLoadScene} from '../../../helpers/ImportHelper';
+export function testenginenodessopCopy(qUnit: QUnit) {
 const tmpBox = new Box3();
 const tmpCenter = new Vector3();
 
-QUnit.test('sop/copy simple', async (assert) => {
+qUnit.test('sop/copy simple', async (assert) => {
 	const geo1 = window.geo1;
 
 	const box1 = geo1.createNode('box');
@@ -47,7 +49,7 @@ QUnit.test('sop/copy simple', async (assert) => {
 	assert.equal((await compute()).bbox.min.y, -1.5);
 });
 
-QUnit.test('sop/copy with template and stamp', async (assert) => {
+qUnit.test('sop/copy with template and stamp', async (assert) => {
 	const geo1 = window.geo1;
 
 	const box1 = geo1.createNode('box');
@@ -87,7 +89,7 @@ QUnit.test('sop/copy with template and stamp', async (assert) => {
 	assert.equal((objects[1].geometry.attributes.test as BufferAttribute).array[0], 3);
 });
 
-QUnit.test('sop/copy without template and stamp', async (assert) => {
+qUnit.test('sop/copy without template and stamp', async (assert) => {
 	const geo1 = window.geo1;
 
 	const box1 = geo1.createNode('box');
@@ -116,7 +118,7 @@ QUnit.test('sop/copy without template and stamp', async (assert) => {
 	assert.equal(container.pointsCount(), 32);
 });
 
-QUnit.test('sop/copy objects with template and stamp', async (assert) => {
+qUnit.test('sop/copy objects with template and stamp', async (assert) => {
 	const geo1 = window.geo1;
 
 	const box1 = geo1.createNode('box');
@@ -146,7 +148,7 @@ QUnit.test('sop/copy objects with template and stamp', async (assert) => {
 	assert.equal(objects[3].userData.attributes.test, 3);
 });
 
-QUnit.test('sop/copy using a copy stamp expression only triggers the successors once per cook', async (assert) => {
+qUnit.test('sop/copy using a copy stamp expression only triggers the successors once per cook', async (assert) => {
 	const geo1 = window.geo1;
 
 	window.scene.performance.start();
@@ -177,7 +179,7 @@ QUnit.test('sop/copy using a copy stamp expression only triggers the successors 
 
 	window.scene.performance.stop();
 });
-QUnit.test('sop/copy switching from useCopyExpr from true to false will give expected results', async (assert) => {
+qUnit.test('sop/copy switching from useCopyExpr from true to false will give expected results', async (assert) => {
 	const geo1 = window.geo1;
 
 	const sphere = geo1.createNode('sphere');
@@ -217,7 +219,7 @@ QUnit.test('sop/copy switching from useCopyExpr from true to false will give exp
 	assert.deepEqual(await objectNames(), ['box_0', 'box_1', 'box_2', 'box_3', 'box_4']);
 });
 
-QUnit.test('sop/copy accumulated transform without template points', async (assert) => {
+qUnit.test('sop/copy accumulated transform without template points', async (assert) => {
 	const geo1 = window.geo1;
 
 	const box = geo1.createNode('box');
@@ -235,7 +237,7 @@ QUnit.test('sop/copy accumulated transform without template points', async (asse
 	assert.equal(objects[2].position.z, 2);
 	assert.equal(objects[3].position.z, 3);
 });
-QUnit.test('sop/copy accumulated transform with template points and local transform space', async (assert) => {
+qUnit.test('sop/copy accumulated transform with template points and local transform space', async (assert) => {
 	const geo1 = window.geo1;
 
 	const plane = geo1.createNode('plane');
@@ -255,7 +257,7 @@ QUnit.test('sop/copy accumulated transform with template points and local transf
 	assert.in_delta(objects[2].position.y, 2, 0.0001);
 	assert.in_delta(objects[3].position.y, 3, 0.0001);
 });
-QUnit.test('sop/copy accumulated transform with template points and parent transform space', async (assert) => {
+qUnit.test('sop/copy accumulated transform with template points and parent transform space', async (assert) => {
 	const geo1 = window.geo1;
 
 	const plane = geo1.createNode('plane');
@@ -275,7 +277,7 @@ QUnit.test('sop/copy accumulated transform with template points and parent trans
 	assert.in_delta(objects[2].position.z, 2.5, 0.0001);
 	assert.in_delta(objects[3].position.z, 3.5, 0.0001);
 });
-QUnit.test('sop/copy accumulated transform with template points and geometry mode', async (assert) => {
+qUnit.test('sop/copy accumulated transform with template points and geometry mode', async (assert) => {
 	const geo1 = window.geo1;
 
 	const plane = geo1.createNode('plane');
@@ -300,7 +302,7 @@ QUnit.test('sop/copy accumulated transform with template points and geometry mod
 	assert.in_delta((objects[2] as Mesh).geometry!.boundingBox!.getCenter(new Vector3()).z, 2.5, 0.0001);
 	assert.in_delta((objects[3] as Mesh).geometry!.boundingBox!.getCenter(new Vector3()).z, 3.5, 0.0001);
 });
-QUnit.test('sop/copy transform only with not enough points or objects', async (assert) => {
+qUnit.test('sop/copy transform only with not enough points or objects', async (assert) => {
 	const geo1 = window.geo1;
 
 	const line1 = geo1.createNode('line');
@@ -345,7 +347,7 @@ QUnit.test('sop/copy transform only with not enough points or objects', async (a
 	objects = await computeCopy(copy2);
 	assert.equal(objects.length, 2);
 });
-QUnit.test('sop/copy transform only with accumulated transform in local space', async (assert) => {
+qUnit.test('sop/copy transform only with accumulated transform in local space', async (assert) => {
 	const geo1 = window.geo1;
 
 	const plane = geo1.createNode('plane');
@@ -374,7 +376,7 @@ QUnit.test('sop/copy transform only with accumulated transform in local space', 
 	assert.equal(objects[2].position.y, 2);
 	assert.equal(objects[3].position.y, 3);
 });
-QUnit.test('sop/copy transform only with accumulated transform in parent space', async (assert) => {
+qUnit.test('sop/copy transform only with accumulated transform in parent space', async (assert) => {
 	const geo1 = window.geo1;
 
 	const plane = geo1.createNode('plane');
@@ -403,7 +405,7 @@ QUnit.test('sop/copy transform only with accumulated transform in parent space',
 	assert.equal(objects[2].position.y, 2);
 	assert.equal(objects[3].position.y, 3);
 });
-QUnit.test('sop/copy can copy and move a hierarchy', async (assert) => {
+qUnit.test('sop/copy can copy and move a hierarchy', async (assert) => {
 	const geo1 = window.geo1;
 
 	// hierarchy
@@ -449,7 +451,7 @@ QUnit.test('sop/copy can copy and move a hierarchy', async (assert) => {
 	assert.in_delta((await compute()).center.x, 10, 0.1);
 });
 
-QUnit.test('sop/copy can handle expression inside a nodePath param such as sop/material', async (assert) => {
+qUnit.test('sop/copy can handle expression inside a nodePath param such as sop/material', async (assert) => {
 	async function runAsserts(_copyNode: CopySopNode, _imageNodes: ImageCopNode[], _materialNodes: MeshBasicMatNode[]) {
 		let container = await _copyNode.compute();
 		let coreContent = container.coreContent()!;
@@ -538,8 +540,8 @@ QUnit.test('sop/copy can handle expression inside a nodePath param such as sop/m
 	});
 });
 
-QUnit.skip('sop/copy with group sets an error', (assert) => {});
-QUnit.skip(
+qUnit.skip('sop/copy with group sets an error', (assert) => {});
+qUnit.skip(
 	'copy with transform_only can update the input 0 with different scale multiple times and give reliable scale',
 	(assert) => {
 		// create an attrib_create, pipe in input 1
@@ -552,4 +554,6 @@ QUnit.skip(
 		// check the output size
 	}
 );
-QUnit.skip('copy does not modify input 0 with transform_only', (assert) => {});
+qUnit.skip('copy does not modify input 0 with transform_only', (assert) => {});
+
+}

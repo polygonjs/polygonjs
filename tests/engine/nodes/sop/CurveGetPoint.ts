@@ -1,6 +1,8 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {Vector3} from 'three';
+export function testenginenodessopCurveGetPoint(qUnit: QUnit) {
 
-QUnit.test('sop/curveGetPoint simple', async (assert) => {
+qUnit.test('sop/curveGetPoint simple', async (assert) => {
 	const geo1 = window.geo1;
 
 	const add1 = geo1.createNode('add');
@@ -44,3 +46,5 @@ QUnit.test('sop/curveGetPoint simple', async (assert) => {
 	assert.in_delta(pos.y, 16.125, 0.1);
 	assert.in_delta(pos.z, 37.1875, 0.1);
 });
+
+}

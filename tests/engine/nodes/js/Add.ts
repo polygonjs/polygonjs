@@ -1,11 +1,13 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {Mesh} from 'three';
 import {AttribClass} from '../../../../src/core/geometry/Constant';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Js';
 import {ParamType} from '../../../../src/engine/poly/ParamType';
 import {RendererUtils} from '../../../helpers/RendererUtils';
+export function testenginenodesjsAdd(qUnit: QUnit) {
 
-QUnit.test('js/add for more than 2 inputs float', async (assert) => {
+qUnit.test('js/add for more than 2 inputs float', async (assert) => {
 	const scene = window.scene;
 	const perspective_camera1 = window.perspective_camera1;
 
@@ -87,7 +89,7 @@ QUnit.test('js/add for more than 2 inputs float', async (assert) => {
 	});
 });
 
-QUnit.test('js/add with 2 inputs float', async (assert) => {
+qUnit.test('js/add with 2 inputs float', async (assert) => {
 	const scene = window.scene;
 	const perspective_camera1 = window.perspective_camera1;
 
@@ -140,7 +142,7 @@ QUnit.test('js/add with 2 inputs float', async (assert) => {
 	});
 });
 
-QUnit.test('js/add with 2 inputs vector', async (assert) => {
+qUnit.test('js/add with 2 inputs vector', async (assert) => {
 	const scene = window.scene;
 	const perspective_camera1 = window.perspective_camera1;
 
@@ -197,7 +199,7 @@ QUnit.test('js/add with 2 inputs vector', async (assert) => {
 	});
 });
 
-QUnit.test('js/add with 2 inputs vector from attrib to pos', async (assert) => {
+qUnit.test('js/add with 2 inputs vector from attrib to pos', async (assert) => {
 	const scene = window.scene;
 	const perspective_camera1 = window.perspective_camera1;
 
@@ -268,3 +270,5 @@ QUnit.test('js/add with 2 inputs vector from attrib to pos', async (assert) => {
 		assert.deepEqual(object.position.toArray(), [3, 6, 9], 'object moved again');
 	});
 });
+
+}

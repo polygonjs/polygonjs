@@ -1,9 +1,11 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {WebGLRenderer} from 'three';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 import {roundPixelBuffer} from './particlesSystemGPU/ParticlesHelper';
+export function testenginenodessopContactShadows(qUnit: QUnit) {
 
-QUnit.test('sop/contactShadows simple', async (assert) => {
+qUnit.test('sop/contactShadows simple', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
 	const cameraNode = window.perspective_camera1;
@@ -46,3 +48,5 @@ QUnit.test('sop/contactShadows simple', async (assert) => {
 		assert.deepEqual(roundPixelBuffer(pixelBuffer), '0:0:0:57:0:0:0:57:0:0:0:57:0:0:0:57', 'point moved up');
 	});
 });
+
+}

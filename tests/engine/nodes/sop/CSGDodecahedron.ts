@@ -1,8 +1,10 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {BooleanCsgOperationType} from '../../../../src/engine/nodes/sop/CSGBoolean';
 import {BufferAttribute, Box3} from 'three';
+export function testenginenodessopCSGDodecahedron(qUnit: QUnit) {
 const tmpBox = new Box3();
 
-QUnit.test('sop/CSGDodecahedron simple', async (assert) => {
+qUnit.test('sop/CSGDodecahedron simple', async (assert) => {
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false); // cancels geo node displayNodeController
 
@@ -48,3 +50,5 @@ QUnit.test('sop/CSGDodecahedron simple', async (assert) => {
 	);
 	assert.in_delta(tmpBox.min.y, -1, 0.002);
 });
+
+}

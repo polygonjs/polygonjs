@@ -1,8 +1,10 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {Box3, Vector3} from 'three';
+export function testenginenodessopJitter(qUnit: QUnit) {
 const tmpBox = new Box3();
 const tmpSize = new Vector3();
 
-QUnit.test('jitter simple', async (assert) => {
+qUnit.test('jitter simple', async (assert) => {
 	const geo1 = window.geo1;
 
 	const plane1 = geo1.createNode('plane');
@@ -20,7 +22,7 @@ QUnit.test('jitter simple', async (assert) => {
 	assert.more_than(tmpSize.z, 1.8);
 });
 
-QUnit.test('jitter with large y mult', async (assert) => {
+qUnit.test('jitter with large y mult', async (assert) => {
 	const geo1 = window.geo1;
 
 	const plane1 = geo1.createNode('plane');
@@ -39,7 +41,7 @@ QUnit.test('jitter with large y mult', async (assert) => {
 	assert.more_than(tmpSize.z, 1.8);
 });
 
-QUnit.test('jitter with copy', async (assert) => {
+qUnit.test('jitter with copy', async (assert) => {
 	const geo1 = window.geo1;
 
 	const plane1 = geo1.createNode('plane');
@@ -71,3 +73,5 @@ QUnit.test('jitter with copy', async (assert) => {
 	assert.in_delta(objects[0].position.x, -77.2, 0.1);
 	assert.in_delta(objects[5].position.x, 4.74, 0.1);
 });
+
+}

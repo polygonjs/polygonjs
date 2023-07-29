@@ -1,3 +1,4 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {ParamType} from '../../../../src/engine/poly/ParamType';
 import {RampParam} from '../../../../src/engine/params/Ramp';
@@ -9,8 +10,9 @@ import {ImageCopNode} from '../../../../src/engine/nodes/cop/Image';
 import {MeshBasicBuilderMatNode} from '../../../../src/engine/nodes/mat/MeshBasicBuilder';
 import {MaterialUserDataUniforms} from '../../../../src/engine/nodes/gl/code/assemblers/materials/OnBeforeCompile';
 import {RendererUtils} from '../../../helpers/RendererUtils';
+export function testenginenodesmatUniforms(qUnit: QUnit) {
 
-QUnit.test('MAT spare params: ensures uniforms are set when scene loads', async (assert) => {
+qUnit.test('MAT spare params: ensures uniforms are set when scene loads', async (assert) => {
 	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 
 	const scene = window.scene;
@@ -129,3 +131,5 @@ QUnit.test('MAT spare params: ensures uniforms are set when scene loads', async 
 
 	RendererUtils.dispose();
 });
+
+}

@@ -1,4 +1,6 @@
-QUnit.test('expression strIndex simple', async (assert) => {
+import type {QUnit} from '../../../helpers/QUnit';
+export function testengineexpressionsmethodsstrIndex(qUnit: QUnit) {
+qUnit.test('expression strIndex simple', async (assert) => {
 	const geo1 = window.geo1;
 
 	const plane1 = geo1.createNode('plane');
@@ -20,3 +22,5 @@ QUnit.test('expression strIndex simple', async (assert) => {
 	await param.compute();
 	assert.equal(param.value, 4);
 });
+
+}

@@ -1,3 +1,4 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {GlConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Gl';
 import {SceneJsonExporter} from '../../../../src/engine/io/json/export/Scene';
 import {SceneJsonImporter} from '../../../../src/engine/io/json/import/Scene';
@@ -7,8 +8,9 @@ import {create_required_nodes_for_subnet_gl_node} from './Subnet';
 import {SubnetGlNode} from '../../../../src/engine/nodes/gl/Subnet';
 import {MeshBasicBuilderMatNode} from '../../../../src/engine/nodes/mat/MeshBasicBuilder';
 import {MaterialUserDataUniforms} from '../../../../src/engine/nodes/gl/code/assemblers/materials/OnBeforeCompile';
+export function testenginenodesglParam(qUnit: QUnit) {
 
-QUnit.test('gl param updates its output type correctly when created', async (assert) => {
+qUnit.test('gl param updates its output type correctly when created', async (assert) => {
 	const MAT = window.MAT;
 	const meshBasicBuilder1 = MAT.createNode('meshBasicBuilder');
 	meshBasicBuilder1.createNode('output');
@@ -25,7 +27,7 @@ QUnit.test('gl param updates its output type correctly when created', async (ass
 	assert.equal(param1.io.outputs.namedOutputConnectionPoints()[0].type(), GlConnectionPointType.VEC2);
 });
 
-QUnit.test('gl param updates its output type correctly when scene is loaded', async (assert) => {
+qUnit.test('gl param updates its output type correctly when scene is loaded', async (assert) => {
 	const scene = window.scene;
 	const MAT = window.MAT;
 	const meshBasicBuilder1 = MAT.createNode('meshBasicBuilder');
@@ -52,7 +54,7 @@ QUnit.test('gl param updates its output type correctly when scene is loaded', as
 	assert.equal(param1.io.outputs.namedOutputConnectionPoints()[0].type(), GlConnectionPointType.VEC2);
 });
 
-QUnit.test('gl param updates its parent material with new spare parameters', async (assert) => {
+qUnit.test('gl param updates its parent material with new spare parameters', async (assert) => {
 	const scene = window.scene;
 	await scene.waitForCooksCompleted();
 	const MAT = window.MAT;
@@ -106,7 +108,7 @@ QUnit.test('gl param updates its parent material with new spare parameters', asy
 	assert.equal(meshBasicBuilder1.params.spare.length, 0);
 });
 
-QUnit.test('gl param updates its parent cop builder with new spare parameters', async (assert) => {
+qUnit.test('gl param updates its parent cop builder with new spare parameters', async (assert) => {
 	const scene = window.scene;
 	await scene.waitForCooksCompleted();
 	await scene.waitForCooksCompleted();
@@ -163,7 +165,7 @@ QUnit.test('gl param updates its parent cop builder with new spare parameters', 
 	assert.equal(builder1.params.spare.length, 0);
 });
 
-QUnit.test('gl param updates its particles system with new spare parameters', async (assert) => {
+qUnit.test('gl param updates its particles system with new spare parameters', async (assert) => {
 	const scene = window.scene;
 	await scene.waitForCooksCompleted();
 	const {renderer} = await RendererUtils.waitForRenderer(scene);
@@ -222,7 +224,7 @@ QUnit.test('gl param updates its particles system with new spare parameters', as
 	assert.equal(particlesSystemGpu1.params.spare.length, 0);
 });
 
-QUnit.test('gl param: 1 param node on top level and one in a subnet work ok', async (assert) => {
+qUnit.test('gl param: 1 param node on top level and one in a subnet work ok', async (assert) => {
 	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 	const MAT = window.MAT;
 	const meshBasicBuilder1 = MAT.createNode('meshBasicBuilder');
@@ -371,3 +373,5 @@ uniform float v_POLY_param_test;`
 
 	RendererUtils.dispose();
 });
+
+}

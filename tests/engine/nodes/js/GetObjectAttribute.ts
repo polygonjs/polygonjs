@@ -1,3 +1,4 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {Mesh, Vector3} from 'three';
 import {AttribClass} from '../../../../src/core/geometry/Constant';
 import {CoreObject} from '../../../../src/core/geometry/Object';
@@ -6,8 +7,9 @@ import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/conne
 import {RendererUtils} from '../../../helpers/RendererUtils';
 import {FloatParam} from '../../../../src/engine/params/Float';
 import {Vector3Param} from '../../../../src/engine/params/Vector3';
+export function testenginenodesjsGetObjectAttribute(qUnit: QUnit) {
 
-QUnit.test('js/GetObjectAttribute', async (assert) => {
+qUnit.test('js/GetObjectAttribute', async (assert) => {
 	const scene = window.scene;
 	const perspective_camera1 = window.perspective_camera1;
 	const geo1 = window.geo1;
@@ -59,7 +61,7 @@ QUnit.test('js/GetObjectAttribute', async (assert) => {
 	});
 });
 
-QUnit.test('js/GetObjectAttribute with default value (float)', async (assert) => {
+qUnit.test('js/GetObjectAttribute with default value (float)', async (assert) => {
 	const scene = window.scene;
 	const perspective_camera1 = window.perspective_camera1;
 	const geo1 = window.geo1;
@@ -112,7 +114,7 @@ QUnit.test('js/GetObjectAttribute with default value (float)', async (assert) =>
 	});
 });
 
-QUnit.test('js/GetObjectAttribute with default value (vector3)', async (assert) => {
+qUnit.test('js/GetObjectAttribute with default value (vector3)', async (assert) => {
 	const scene = window.scene;
 	const perspective_camera1 = window.perspective_camera1;
 	const geo1 = window.geo1;
@@ -170,3 +172,5 @@ QUnit.test('js/GetObjectAttribute with default value (vector3)', async (assert) 
 		assert.equal(object.position.z, 12, 'object z moved to 12');
 	});
 });
+
+}

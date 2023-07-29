@@ -1,4 +1,6 @@
-QUnit.test('sphere simple', async (assert) => {
+import type {QUnit} from '../../../helpers/QUnit';
+export function testenginenodessopSphere(qUnit: QUnit) {
+qUnit.test('sphere simple', async (assert) => {
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false);
 
@@ -23,3 +25,5 @@ QUnit.test('sphere simple', async (assert) => {
 	assert.ok(geometry);
 	assert.equal(container.pointsCount(), 2601);
 });
+
+}

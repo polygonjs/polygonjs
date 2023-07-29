@@ -1,4 +1,6 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {BaseSopNodeType} from '../../../../src/engine/nodes/sop/_Base';
+export function testenginenodessopTetrahedralize(qUnit: QUnit) {
 
 async function tetsCount(node: BaseSopNodeType) {
 	const container = await node.compute();
@@ -9,7 +11,7 @@ async function tetsCount(node: BaseSopNodeType) {
 	return geometry.tetsCount();
 }
 
-QUnit.test('sop/tetrahedralize simple', async (assert) => {
+qUnit.test('sop/tetrahedralize simple', async (assert) => {
 	const geo1 = window.geo1;
 
 	const icosahedron1 = geo1.createNode('icosahedron');
@@ -29,3 +31,5 @@ QUnit.test('sop/tetrahedralize simple', async (assert) => {
 	tetrahedralize1.p.minQuality.set(0.25);
 	assert.equal(await tetsCount(tetrahedralize1), 1154);
 });
+
+}

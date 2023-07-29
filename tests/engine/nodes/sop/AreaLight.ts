@@ -1,6 +1,8 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {Object3D, RectAreaLight} from 'three';
 import {ColorConversion} from '../../../../src/core/Color';
 import {BaseSopNodeType} from '../../../../src/engine/nodes/sop/_Base';
+export function testenginenodessopAreaLight(qUnit: QUnit) {
 
 function objectsCount(object: Object3D, countStart: number = 0) {
 	countStart += 1;
@@ -23,7 +25,7 @@ async function getObject(node: BaseSopNodeType) {
 	return object;
 }
 
-QUnit.test('sop/areaLight hierarchy is maintained as it is cloned', async (assert) => {
+qUnit.test('sop/areaLight hierarchy is maintained as it is cloned', async (assert) => {
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false); // cancels geo node displayNodeController
 
@@ -63,3 +65,5 @@ QUnit.test('sop/areaLight hierarchy is maintained as it is cloned', async (asser
 	assert.equal((object2.children[0] as RectAreaLight).width, 3);
 	assert.deepEqual(object2.children[1].scale.toArray(), [3, 2, 1]);
 });
+
+}

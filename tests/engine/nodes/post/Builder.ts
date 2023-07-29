@@ -1,3 +1,4 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {SceneJsonImporter} from '../../../../src/engine/io/json/import/Scene';
 import {SceneObjNode} from './../../../../src/engine/nodes/obj/Scene';
 import {BuilderPostNode} from './../../../../src/engine/nodes/post/Builder';
@@ -10,8 +11,9 @@ import {SceneJsonExporter} from '../../../../src/engine/io/json/export/Scene';
 import {AssemblersUtils} from '../../../helpers/AssemblersUtils';
 import {FloatParam} from '../../../../src/engine/params/Float';
 import {GLSLHelper} from '../../../helpers/GLSLHelper';
+export function testenginenodespostBuilder(qUnit: QUnit) {
 
-QUnit.test('post/builder simple', async (assert) => {
+qUnit.test('post/builder simple', async (assert) => {
 	const scene = window.scene;
 	await scene.waitForCooksCompleted();
 
@@ -64,7 +66,7 @@ QUnit.test('post/builder simple', async (assert) => {
 	});
 });
 
-QUnit.test('post/builder using both inputs', async (assert) => {
+qUnit.test('post/builder using both inputs', async (assert) => {
 	const scene = window.scene;
 	await scene.waitForCooksCompleted();
 
@@ -222,3 +224,5 @@ QUnit.test('post/builder using both inputs', async (assert) => {
 		await CoreSleep.sleep(200);
 	});
 });
+
+}

@@ -1,11 +1,13 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {ASSETS_ROOT} from '../../../../src/core/loader/AssetsUtils';
 import {CoreSleep} from '../../../../src/core/Sleep';
+export function testenginenodescopSwitch(qUnit: QUnit) {
 
 function _url(path: string) {
 	return `${ASSETS_ROOT}${path}`;
 }
 
-QUnit.test('COP switch simple', async (assert) => {
+qUnit.test('COP switch simple', async (assert) => {
 	window.scene.performance.start();
 
 	const scene = window.scene;
@@ -106,3 +108,5 @@ QUnit.test('COP switch simple', async (assert) => {
 
 	window.scene.performance.stop();
 });
+
+}

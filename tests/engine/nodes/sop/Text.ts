@@ -1,11 +1,13 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {CoreObject} from '../../../../src/core/geometry/Object';
 import {TextType} from '../../../../src/core/geometry/text/TextType';
 import {checkConsolePrints} from '../../../helpers/Console';
 import {Box3, Vector3} from 'three';
+export function testenginenodessopText(qUnit: QUnit) {
 const tmpBox = new Box3();
 const tmpSize = new Vector3();
 
-QUnit.test('sop/text simple', async (assert) => {
+qUnit.test('sop/text simple', async (assert) => {
 	const geo1 = window.geo1;
 
 	const text1 = geo1.createNode('text');
@@ -26,7 +28,7 @@ QUnit.test('sop/text simple', async (assert) => {
 	assert.equal(container.pointsCount(), 3792);
 });
 
-QUnit.test('sop/text prints no warning', async (assert) => {
+qUnit.test('sop/text prints no warning', async (assert) => {
 	const geo1 = window.geo1;
 
 	const consoleHistory = await checkConsolePrints(async () => {
@@ -60,7 +62,7 @@ QUnit.test('sop/text prints no warning', async (assert) => {
 	assert.equal(consoleHistory.error.length, 0);
 });
 
-QUnit.test('sop/text does not fail with an empty text', async (assert) => {
+qUnit.test('sop/text does not fail with an empty text', async (assert) => {
 	const geo1 = window.geo1;
 
 	const text1 = geo1.createNode('text');
@@ -74,7 +76,7 @@ QUnit.test('sop/text does not fail with an empty text', async (assert) => {
 	assert.notOk(text1.states.error.message());
 });
 
-QUnit.test('sop/text does not fail with just spaces', async (assert) => {
+qUnit.test('sop/text does not fail with just spaces', async (assert) => {
 	const geo1 = window.geo1;
 
 	const text1 = geo1.createNode('text');
@@ -88,7 +90,7 @@ QUnit.test('sop/text does not fail with just spaces', async (assert) => {
 	assert.notOk(text1.states.error.message());
 });
 
-QUnit.test('sop/text does not fail with just spaces and newlines', async (assert) => {
+qUnit.test('sop/text does not fail with just spaces and newlines', async (assert) => {
 	const geo1 = window.geo1;
 
 	const text1 = geo1.createNode('text');
@@ -104,7 +106,7 @@ QUnit.test('sop/text does not fail with just spaces and newlines', async (assert
 	assert.notOk(text1.states.error.message());
 });
 
-QUnit.test('sop/text with json font', async (assert) => {
+qUnit.test('sop/text with json font', async (assert) => {
 	const geo1 = window.geo1;
 
 	const text1 = geo1.createNode('text');
@@ -114,7 +116,7 @@ QUnit.test('sop/text with json font', async (assert) => {
 	assert.equal(container.pointsCount(), 3324);
 });
 
-QUnit.test('sop/text with ttf font', async (assert) => {
+qUnit.test('sop/text with ttf font', async (assert) => {
 	const geo1 = window.geo1;
 
 	const text1 = geo1.createNode('text');
@@ -124,7 +126,7 @@ QUnit.test('sop/text with ttf font', async (assert) => {
 	assert.equal(container.pointsCount(), 3204);
 });
 
-QUnit.test('sop/text with a non existing font', async (assert) => {
+qUnit.test('sop/text with a non existing font', async (assert) => {
 	const geo1 = window.geo1;
 
 	const text1 = geo1.createNode('text');
@@ -139,7 +141,7 @@ QUnit.test('sop/text with a non existing font', async (assert) => {
 	assert.equal(container.pointsCount(), 0);
 });
 
-QUnit.test('sop/text with multiline', async (assert) => {
+qUnit.test('sop/text with multiline', async (assert) => {
 	const geo1 = window.geo1;
 
 	const text1 = geo1.createNode('text');
@@ -166,7 +168,7 @@ QUnit.test('sop/text with multiline', async (assert) => {
 	assert.less_than_or_equal((await getSize()).y, 3.5);
 });
 
-QUnit.test('sop/text with multiline and mutliple objects', async (assert) => {
+qUnit.test('sop/text with multiline and mutliple objects', async (assert) => {
 	const geo1 = window.geo1;
 
 	const text1 = geo1.createNode('text');
@@ -226,7 +228,7 @@ QUnit.test('sop/text with multiline and mutliple objects', async (assert) => {
 	);
 });
 
-QUnit.test('sop/text as different types', async (assert) => {
+qUnit.test('sop/text as different types', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false); // cancels geo node displayNodeController
@@ -261,7 +263,7 @@ QUnit.test('sop/text as different types', async (assert) => {
 	assert.equal(container.pointsCount(), 22746);
 });
 
-QUnit.test('sop/text can recover from generation errors', async (assert) => {
+qUnit.test('sop/text can recover from generation errors', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false); // cancels geo node displayNodeController
@@ -290,3 +292,5 @@ QUnit.test('sop/text can recover from generation errors', async (assert) => {
 	assert.notOk(text1.states.error.active(), 'no error');
 	assert.equal(container.pointsCount(), 4200, 'points count is 4200');
 });
+
+}

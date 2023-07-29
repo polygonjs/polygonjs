@@ -1,4 +1,6 @@
-QUnit.test('expression floor simple', async (assert) => {
+import type {QUnit} from '../../../helpers/QUnit';
+export function testengineexpressionsmethodsfloor(qUnit: QUnit) {
+qUnit.test('expression floor simple', async (assert) => {
 	const geo1 = window.geo1;
 
 	const box1 = geo1.createNode('box');
@@ -8,3 +10,5 @@ QUnit.test('expression floor simple', async (assert) => {
 	await box1.p.size.compute();
 	assert.equal(box1.p.size.value, 3);
 });
+
+}

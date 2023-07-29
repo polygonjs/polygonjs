@@ -1,8 +1,10 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {ParamType} from '../../../../src/engine/poly/ParamType';
 import {Vector2} from 'three';
 import {Vector3} from 'three';
 import {Vector4} from 'three';
 import {Color} from 'three';
+export function testengineparamsutilsDefaultValues(qUnit: QUnit) {
 
 async function ensure_default_value<T extends ParamType>(
 	assert: Assert,
@@ -29,7 +31,7 @@ async function ensure_default_value<T extends ParamType>(
 	}
 }
 
-QUnit.test('params convert their default values to one they can handle', async (assert) => {
+qUnit.test('params convert their default values to one they can handle', async (assert) => {
 	await ensure_default_value(assert, ParamType.BOOLEAN, 0, 0, false);
 	await ensure_default_value(assert, ParamType.BOOLEAN, 1, 1, true);
 	await ensure_default_value(assert, ParamType.BOOLEAN, [1, 2, 3, 4], 1, true);
@@ -83,3 +85,5 @@ QUnit.test('params convert their default values to one they can handle', async (
 	ensure_default_value(assert, ParamType.COLOR, [2], [2, 2, 2], new Color(2, 2, 2));
 	ensure_default_value(assert, ParamType.COLOR, '1+2', ['1+2', '1+2', '1+2'], new Color(3, 3, 3));
 });
+
+}

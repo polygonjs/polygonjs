@@ -1,11 +1,13 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {Mesh} from 'three';
 // import {AttribClass} from '../../../../src/core/geometry/Constant';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {SmoothstepInput} from '../../../../src/engine/nodes/js/Smoothstep';
 import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Js';
 import {RendererUtils} from '../../../helpers/RendererUtils';
+export function testenginenodesjsSmootherstep(qUnit: QUnit) {
 
-QUnit.test('js/smoothstep with float inputs', async (assert) => {
+qUnit.test('js/smoothstep with float inputs', async (assert) => {
 	const scene = window.scene;
 	const perspective_camera1 = window.perspective_camera1;
 
@@ -52,7 +54,7 @@ QUnit.test('js/smoothstep with float inputs', async (assert) => {
 	});
 });
 
-QUnit.test('js/smootherstep with vector inputs', async (assert) => {
+qUnit.test('js/smootherstep with vector inputs', async (assert) => {
 	const scene = window.scene;
 	const perspective_camera1 = window.perspective_camera1;
 
@@ -98,3 +100,5 @@ QUnit.test('js/smootherstep with vector inputs', async (assert) => {
 		assert.equal(object.position.z, 1, 'object moved ');
 	});
 });
+
+}

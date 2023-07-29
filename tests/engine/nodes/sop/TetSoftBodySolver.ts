@@ -1,9 +1,11 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {SoftBodyVariable} from '../../../../src/engine/nodes/js/code/assemblers/softBody/SoftBodyAssembler';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {Mesh, Vector3} from 'three';
 import {BaseSopNodeType} from '../../../../src/engine/nodes/sop/_Base';
 import {TetSoftBodySolverSopOnCreateRegister} from '../../../../src/core/hooks/onCreate/sop/TetSoftBodySolver';
+export function testenginenodessopTetSoftBodySolver(qUnit: QUnit) {
 
 async function tetsCount(node: BaseSopNodeType) {
 	const container = await node.compute();
@@ -16,7 +18,7 @@ async function tetsCount(node: BaseSopNodeType) {
 
 const _v = new Vector3();
 
-QUnit.test('sop/tetSoftBodySolver low res only with SDFSphere', async (assert) => {
+qUnit.test('sop/tetSoftBodySolver low res only with SDFSphere', async (assert) => {
 	const geo1 = window.geo1;
 	const scene = window.scene;
 	const cameraNode = window.perspective_camera1;
@@ -73,7 +75,7 @@ QUnit.test('sop/tetSoftBodySolver low res only with SDFSphere', async (assert) =
 	});
 });
 
-QUnit.test('sop/tetSoftBodySolver high res', async (assert) => {
+qUnit.test('sop/tetSoftBodySolver high res', async (assert) => {
 	const geo1 = window.geo1;
 	const scene = window.scene;
 	const cameraNode = window.perspective_camera1;
@@ -129,3 +131,5 @@ QUnit.test('sop/tetSoftBodySolver high res', async (assert) => {
 		assert.in_delta(await getGeometryBoundingBoxY(), 0.5, 0.2, 'object has fallen');
 	});
 });
+
+}

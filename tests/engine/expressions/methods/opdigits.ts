@@ -1,6 +1,8 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {CorePoint} from '../../../../src/core/geometry/Point';
+export function testengineexpressionsmethodsopdigits(qUnit: QUnit) {
 
-QUnit.test('expression opdigits works', async (assert) => {
+qUnit.test('expression opdigits works', async (assert) => {
 	const geo1 = window.geo1;
 
 	const line1 = geo1.createNode('line');
@@ -28,3 +30,5 @@ QUnit.test('expression opdigits works', async (assert) => {
 		[12, 12]
 	);
 });
+
+}

@@ -1,7 +1,9 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {PointSopNode} from '../../../../src/engine/nodes/sop/Point';
 import {PolyScene} from '../../../../src/engine/scene/PolyScene';
 import {saveAndLoadScene} from '../../../helpers/ImportHelper';
 import {Box3} from 'three';
+export function testengineoperationssopAttribFromTexture(qUnit: QUnit) {
 const tmpBox=new Box3()
 
 function prepareCOP(scene: PolyScene) {
@@ -10,7 +12,7 @@ function prepareCOP(scene: PolyScene) {
 	return image;
 }
 
-QUnit.test('operation/sop/attribFromTexture with float - optimized', async (assert) => {
+qUnit.test('operation/sop/attribFromTexture with float - optimized', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
 
@@ -49,7 +51,7 @@ QUnit.test('operation/sop/attribFromTexture with float - optimized', async (asse
 	});
 });
 
-QUnit.test('operation/sop/attribFromTexture with vector - optimized', async (assert) => {
+qUnit.test('operation/sop/attribFromTexture with vector - optimized', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
 
@@ -91,3 +93,5 @@ QUnit.test('operation/sop/attribFromTexture with vector - optimized', async (ass
 		assert.in_delta(tmpBox.min.y, -1, 0.1);
 	});
 });
+
+}

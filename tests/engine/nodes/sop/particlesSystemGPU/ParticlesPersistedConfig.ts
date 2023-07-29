@@ -1,3 +1,4 @@
+import type {QUnit} from '../../../../helpers/QUnit';
 import {AttribClass} from '../../../../../src/core/geometry/Constant';
 import {MaterialUserDataUniforms} from '../../../../../src/engine/nodes/gl/code/assemblers/materials/OnBeforeCompile';
 import {ParticlesSystemGpuSopNode} from '../../../../../src/engine/nodes/sop/ParticlesSystemGpu';
@@ -17,8 +18,9 @@ import {
 	waitForParticlesComputedAndMounted,
 	stepParticlesSimulation,
 } from './ParticlesHelper';
+export function testenginenodessopparticlesSystemGPUParticlesPersistedConfig(qUnit: QUnit) {
 
-QUnit.test('ParticlesSystemGPU with param and persisted_config', async (assert) => {
+qUnit.test('ParticlesSystemGPU with param and persisted_config', async (assert) => {
 	const geo1 = window.geo1;
 	const scene = window.scene;
 
@@ -179,3 +181,5 @@ QUnit.test('ParticlesSystemGPU with param and persisted_config', async (assert) 
 
 	RendererUtils.dispose();
 });
+
+}

@@ -1,3 +1,4 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {Points} from 'three';
 import {Mesh} from 'three';
 import {SceneJsonExporter} from '../../../../src/engine/io/json/export/Scene';
@@ -8,8 +9,9 @@ import {PlaneSopNode} from '../../../../src/engine/nodes/sop/Plane';
 import {GeoObjNode} from '../../../../src/engine/nodes/obj/Geo';
 import {CadObject} from '../../../../src/core/geometry/cad/CadObject';
 import {CadGeometryType} from '../../../../src/core/geometry/cad/CadCommon';
+export function testenginenodessopMerge(qUnit: QUnit) {
 
-QUnit.test('sop/merge simple', async (assert) => {
+qUnit.test('sop/merge simple', async (assert) => {
 	const geo1 = window.geo1;
 
 	const tube1 = geo1.createNode('tube');
@@ -25,7 +27,7 @@ QUnit.test('sop/merge simple', async (assert) => {
 	assert.equal(container.pointsCount(), 100);
 });
 
-QUnit.skip('sop/merge geos with different attributes', async (assert) => {
+qUnit.skip('sop/merge geos with different attributes', async (assert) => {
 	const geo1 = window.geo1;
 
 	const sphere1 = geo1.createNode('sphere');
@@ -52,7 +54,7 @@ QUnit.skip('sop/merge geos with different attributes', async (assert) => {
 	assert.equal(core_group.pointsCount(), 12);
 });
 
-QUnit.test('sop/merge has predictable order in assembled objects', async (assert) => {
+qUnit.test('sop/merge has predictable order in assembled objects', async (assert) => {
 	const geo1 = window.geo1;
 
 	const add1 = geo1.createNode('add');
@@ -69,7 +71,7 @@ QUnit.test('sop/merge has predictable order in assembled objects', async (assert
 	assert.equal(objects[1].constructor, Mesh);
 });
 
-QUnit.test('sop/merge can have missing inputs, save and load again', async (assert) => {
+qUnit.test('sop/merge can have missing inputs, save and load again', async (assert) => {
 	const geo1 = window.geo1;
 	const scene = window.scene;
 
@@ -105,7 +107,7 @@ QUnit.test('sop/merge can have missing inputs, save and load again', async (asse
 	assert.equal(objects[1].constructor, Mesh);
 });
 
-QUnit.test('sop/merge can update its inputs count', async (assert) => {
+qUnit.test('sop/merge can update its inputs count', async (assert) => {
 	const geo1 = window.geo1;
 	const scene = window.scene;
 
@@ -142,7 +144,7 @@ QUnit.test('sop/merge can update its inputs count', async (assert) => {
 	assert.equal(objects[1].constructor, Mesh);
 });
 
-QUnit.test('sop/merge maintains its inputs count when nothing is connected to it', async (assert) => {
+qUnit.test('sop/merge maintains its inputs count when nothing is connected to it', async (assert) => {
 	const geo1 = window.geo1;
 	const scene = window.scene;
 
@@ -168,7 +170,7 @@ QUnit.test('sop/merge maintains its inputs count when nothing is connected to it
 	assert.equal(merge2.io.inputs.inputs()[19]?.graphNodeId(), plane1.graphNodeId());
 });
 
-QUnit.test('sop/merge compact preserves object properties', async (assert) => {
+qUnit.test('sop/merge compact preserves object properties', async (assert) => {
 	const geo1 = window.geo1;
 
 	const box1 = geo1.createNode('box');
@@ -204,7 +206,7 @@ QUnit.test('sop/merge compact preserves object properties', async (assert) => {
 	assert.equal(await getMergeProperty(), false);
 });
 
-QUnit.test('sop/merge with preserveMaterials', async (assert) => {
+qUnit.test('sop/merge with preserveMaterials', async (assert) => {
 	const geo1 = window.geo1;
 	const MAT = window.MAT;
 
@@ -245,7 +247,7 @@ QUnit.test('sop/merge with preserveMaterials', async (assert) => {
 	assert.equal(await getObjectsCount(), 1);
 });
 
-QUnit.test('sop/merge cad', async (assert) => {
+qUnit.test('sop/merge cad', async (assert) => {
 	const geo1 = window.geo1;
 
 	const CADPoint1 = geo1.createNode('CADPoint');
@@ -284,3 +286,5 @@ QUnit.test('sop/merge cad', async (assert) => {
 	assert.equal((await getObjectsCount()).count, 1);
 	assert.deepEqual((await getObjectsCount()).types, ['CADWire']);
 });
+
+}

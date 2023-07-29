@@ -1,3 +1,4 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {PhysicsWorldSopNode} from '../../../../src/engine/nodes/sop/PhysicsWorld';
 import {RendererUtils} from '../../../helpers/RendererUtils';
@@ -7,6 +8,7 @@ import {MultAddInput} from '../../../../src/engine/nodes/js/MultAdd';
 import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Js';
 import {RBDCuboidProperty, _getPhysicsRBDCuboidSizes} from '../../../../src/core/physics/shapes/RBDCuboid';
 import {Vector3} from 'three';
+export function testenginenodesjsSetPhysicsRBDCuboidProperty(qUnit: QUnit) {
 
 function createPhysicsWorldNodes(node: PhysicsWorldSopNode) {
 	// const physicsWorldReset = node.createNode('physicsWorldReset');
@@ -18,7 +20,7 @@ function createPhysicsWorldNodes(node: PhysicsWorldSopNode) {
 	physicsWorldStepSimulation.setInput(0, onTick);
 }
 
-QUnit.test('js/setPhysicsRBDCuboidProperty simple', async (assert) => {
+qUnit.test('js/setPhysicsRBDCuboidProperty simple', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
 	const cameraNode = window.perspective_camera1;
@@ -99,3 +101,5 @@ QUnit.test('js/setPhysicsRBDCuboidProperty simple', async (assert) => {
 		assert.equal(target.x, 1, 'back to original attrib value');
 	});
 });
+
+}

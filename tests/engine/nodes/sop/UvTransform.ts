@@ -1,6 +1,8 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {BufferAttribute} from 'three';
+export function testenginenodessopUvTransform(qUnit: QUnit) {
 
-QUnit.test('UvTransform simple', async (assert) => {
+qUnit.test('UvTransform simple', async (assert) => {
 	const geo1 = window.geo1;
 	const plane = geo1.createNode('plane');
 	const uvTransform = geo1.createNode('uvTransform');
@@ -25,3 +27,5 @@ QUnit.test('UvTransform simple', async (assert) => {
 	uvTransform.p.s.set([0.5, 0.5]);
 	await assertUv([0.25, 0.75, 0.75, 0.75, 0.25, 0.25, 0.75, 0.25]);
 });
+
+}

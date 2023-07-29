@@ -1,3 +1,4 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {Mesh, PerspectiveCamera} from 'three';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {GeoObjNode} from '../../../../src/engine/nodes/obj/Geo';
@@ -7,6 +8,7 @@ import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/conne
 import {BaseNodeType} from '../../../../src/engine/nodes/_Base';
 import {ThreejsViewer} from '../../../../src/engine/viewers/Threejs';
 import {RendererUtils} from '../../../helpers/RendererUtils';
+export function testenginenodesjsVector3Project(qUnit: QUnit) {
 
 interface ReturnedNodeData {
 	node: BaseNodeType;
@@ -129,7 +131,7 @@ function _createScene(parentNode: GeoObjNode) {
 	return cameras_nodes;
 }
 
-QUnit.test('js/Vector3Project', async (assert) => {
+qUnit.test('js/Vector3Project', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
 	const nodes = _createScene(geo1);
@@ -170,3 +172,5 @@ QUnit.test('js/Vector3Project', async (assert) => {
 		assert.in_delta(object.position.z, 1.288, 0.01);
 	});
 });
+
+}

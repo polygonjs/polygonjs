@@ -1,6 +1,8 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {CorePoint} from '../../../../src/core/geometry/Point';
+export function testenginenodessopScatter(qUnit: QUnit) {
 
-QUnit.test('scatter simple', async (assert) => {
+qUnit.test('scatter simple', async (assert) => {
 	const geo1 = window.geo1;
 
 	const plane1 = geo1.createNode('plane');
@@ -18,7 +20,7 @@ QUnit.test('scatter simple', async (assert) => {
 	assert.equal(container.pointsCount(), 1000);
 });
 
-QUnit.test('scatter takes into account the transform of objects', async (assert) => {
+qUnit.test('scatter takes into account the transform of objects', async (assert) => {
 	const geo1 = window.geo1;
 
 	const plane1 = geo1.createNode('plane');
@@ -44,7 +46,7 @@ QUnit.test('scatter takes into account the transform of objects', async (assert)
 	assert.in_delta(firstPt.position().x, -0.23, 0.01);
 });
 
-QUnit.test('scatter interpolates correctly a float attributes with value 0', async (assert) => {
+qUnit.test('scatter interpolates correctly a float attributes with value 0', async (assert) => {
 	const geo1 = window.geo1;
 
 	const plane1 = geo1.createNode('plane');
@@ -79,7 +81,7 @@ QUnit.test('scatter interpolates correctly a float attributes with value 0', asy
 	assert.deepEqual(delayValues(), [-17, -17]);
 });
 
-QUnit.test(
+qUnit.test(
 	'scatter sets the buffer size correctly when transfering an attribute with size different than 3',
 	async (assert) => {
 		const geo1 = window.geo1;
@@ -100,3 +102,5 @@ QUnit.test(
 		assert.equal(geometry?.getAttribute('uv').count, 100);
 	}
 );
+
+}

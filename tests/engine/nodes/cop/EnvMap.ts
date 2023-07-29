@@ -1,7 +1,9 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 import {ASSETS_ROOT} from '../../../../src/core/loader/AssetsUtils';
+export function testenginenodescopEnvMap(qUnit: QUnit) {
 
-QUnit.test('COP env_map simple', async (assert) => {
+qUnit.test('COP env_map simple', async (assert) => {
 	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 	assert.ok(renderer);
 
@@ -22,3 +24,5 @@ QUnit.test('COP env_map simple', async (assert) => {
 
 	RendererUtils.dispose();
 });
+
+}

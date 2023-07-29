@@ -1,7 +1,9 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {CameraAttribute, OrthographicCameraAttribute} from '../../../../src/core/camera/CoreCamera';
 import {CoreObject} from '../../../../src/core/geometry/Object';
+export function testenginenodessopOrthographicCamera(qUnit: QUnit) {
 
-QUnit.test('sop/orthographicCamera simple', async (assert) => {
+qUnit.test('sop/orthographicCamera simple', async (assert) => {
 	const geo1 = window.geo1;
 
 	const orthographicCamera1 = geo1.createNode('orthographicCamera');
@@ -73,3 +75,5 @@ QUnit.test('sop/orthographicCamera simple', async (assert) => {
 		OrthographicCameraAttribute.SIZE
 	);
 });
+
+}

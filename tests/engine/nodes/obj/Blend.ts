@@ -1,7 +1,9 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {RendererUtils} from '../../../helpers/RendererUtils';
+export function testenginenodesobjBlend(qUnit: QUnit) {
 
-QUnit.test('blend obj simple', async (assert) => {
+qUnit.test('blend obj simple', async (assert) => {
 	const scene = window.scene;
 	const root = window.root;
 
@@ -83,3 +85,5 @@ QUnit.test('blend obj simple', async (assert) => {
 		blend1.p.updateOnRender.set(1);
 	});
 });
+
+}

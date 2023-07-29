@@ -1,3 +1,4 @@
+import type {QUnit} from '../../helpers/QUnit';
 import {CoreWalker} from '../../../src/core/Walker';
 import {PolyScene} from '../../../src/engine/scene/PolyScene';
 import {MaterialsNetworkObjNode} from '../../../src/engine/nodes/obj/MaterialsNetwork';
@@ -9,6 +10,7 @@ import {MaterialsNetworkSopNode} from '../../../src/engine/nodes/sop/MaterialsNe
 import {saveAndLoadScene, sceneFromScene} from '../../helpers/ImportHelper';
 import {MeshStandardMatNode} from '../../../src/engine/nodes/mat/MeshStandard';
 import {ASSETS_ROOT} from '../../../src/core/loader/AssetsUtils';
+export function testengineexpressionsMissingReferences(qUnit: QUnit) {
 
 // async function saveAndLoad(scene: PolyScene) {
 // 	const data = new SceneJsonExporter(scene).data();
@@ -19,7 +21,7 @@ import {ASSETS_ROOT} from '../../../src/core/loader/AssetsUtils';
 // 	return scene2;
 // }
 
-QUnit.test('expression ch refers to a node that is later added', async (assert) => {
+qUnit.test('expression ch refers to a node that is later added', async (assert) => {
 	const geo1 = window.geo1;
 	const box1 = geo1.createNode('box');
 	const transform1 = geo1.createNode('transform');
@@ -46,7 +48,7 @@ QUnit.test('expression ch refers to a node that is later added', async (assert) 
 	assert.ok(!param.isDirty(), 'param is not dirty anymore');
 });
 
-QUnit.test('expression point refers to a node that is later added', async (assert) => {
+qUnit.test('expression point refers to a node that is later added', async (assert) => {
 	const geo1 = window.geo1;
 	const box1 = geo1.createNode('box');
 	const transform1 = geo1.createNode('transform');
@@ -72,7 +74,7 @@ QUnit.test('expression point refers to a node that is later added', async (asser
 	assert.ok(!param.isDirty(), 'param is not dirty anymore');
 });
 
-QUnit.test('a node referenced in an expression gets renamed involves updating the expression', async (assert) => {
+qUnit.test('a node referenced in an expression gets renamed involves updating the expression', async (assert) => {
 	const geo1 = window.geo1;
 	const box1 = geo1.createNode('box');
 	const transform1 = geo1.createNode('transform');
@@ -97,7 +99,7 @@ QUnit.test('a node referenced in an expression gets renamed involves updating th
 	assert.equal(transform1.p.t.x.rawInput(), "ch('../transform_MASTER2/tx')");
 });
 
-QUnit.test('a top node referenced in an expression gets renamed involves updating the expression', async (assert) => {
+qUnit.test('a top node referenced in an expression gets renamed involves updating the expression', async (assert) => {
 	const scene = window.scene;
 	const root = scene.root();
 	const geo1 = window.geo1;
@@ -128,7 +130,7 @@ QUnit.test('a top node referenced in an expression gets renamed involves updatin
 	assert.equal(param.value, 3);
 });
 
-QUnit.test('a relative path in a node path param gets updated when ref changes name', async (assert) => {
+qUnit.test('a relative path in a node path param gets updated when ref changes name', async (assert) => {
 	const geo1 = window.geo1;
 	const MAT = window.MAT;
 	const material_sop = geo1.createNode('material');
@@ -152,7 +154,7 @@ QUnit.test('a relative path in a node path param gets updated when ref changes n
 	assert.equal(path_param.value.path(), '/new_MAT/new_name_again');
 });
 
-// QUnit.test('an absolute path in a node path param gets updated when ref changes name', async (assert) => {
+// qUnit.test('an absolute path in a node path param gets updated when ref changes name', async (assert) => {
 // 	const scene = window.scene;
 // 	const geo = window.geo1;
 // 	const anim = scene.root().createNode('animationsNetwork');
@@ -194,7 +196,7 @@ QUnit.test('a relative path in a node path param gets updated when ref changes n
 // 	assert.equal(param.value, '/new_event/new_name_again');
 // });
 
-QUnit.test('an absolute path in a node path param gets updated when ref changes name', async (assert) => {
+qUnit.test('an absolute path in a node path param gets updated when ref changes name', async (assert) => {
 	const scene = window.scene;
 	const root = scene.root();
 	const event = root.createNode('eventsNetwork');
@@ -235,7 +237,7 @@ QUnit.test('an absolute path in a node path param gets updated when ref changes 
 	assert.equal(controls_param.value.path(), '/new_event/new_name_again');
 });
 
-QUnit.test('mutiple params referencing a node with an absolute path all get updated', async (assert) => {
+qUnit.test('mutiple params referencing a node with an absolute path all get updated', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
 	await scene.waitForCooksCompleted();
@@ -290,7 +292,7 @@ QUnit.test('mutiple params referencing a node with an absolute path all get upda
 	const newSceneData = await checkNewScene(scene, MAT, 'MAT3', true);
 	await checkNewScene(newSceneData.scene, newSceneData.MAT2, 'MAT4', false);
 });
-QUnit.test('mutiple params referencing a node with a relative path all get updated', async (assert) => {
+qUnit.test('mutiple params referencing a node with a relative path all get updated', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
 	await scene.waitForCooksCompleted();
@@ -347,7 +349,7 @@ QUnit.test('mutiple params referencing a node with a relative path all get updat
 	await checkNewScene(newSceneData.scene, newSceneData.MAT2, 'MAT4', false);
 });
 
-QUnit.test(
+qUnit.test(
 	'an operator path param referencing a param gets updated when the param is deleted or added',
 	async (assert) => {
 		const scene = window.scene;
@@ -386,7 +388,7 @@ QUnit.test(
 	}
 );
 
-QUnit.test(
+qUnit.test(
 	'a node path param referencing a non existing node with an absolute path gets linked to it when one matching is named to the path',
 	async (assert) => {
 		const scene = window.scene;
@@ -436,7 +438,7 @@ QUnit.test(
 	}
 );
 
-QUnit.test(
+qUnit.test(
 	'a node path param referencing a non existing node with a relative path gets linked to it when one matching is named to the path',
 	async (assert) => {
 		const scene = window.scene;
@@ -487,7 +489,7 @@ QUnit.test(
 	}
 );
 
-// QUnit.test(
+// qUnit.test(
 // 	'an operator path param referencing a non existing node with an absolute path gets linked to it when one matching is named to the path',
 // 	async (assert) => {
 // 		const scene = window.scene;
@@ -520,7 +522,7 @@ QUnit.test(
 // 	}
 // );
 
-// QUnit.test(
+// qUnit.test(
 // 	'an operator path param referencing a non existing node with a relative path gets linked to it when one matching is named to the path',
 // 	async (assert) => {
 // 		const scene = window.scene;
@@ -550,7 +552,7 @@ QUnit.test(
 // 	}
 // );
 
-QUnit.test(
+qUnit.test(
 	'referring to a node named image1 will not create conflict when other nodes may be given same name during scene load',
 	async (assert) => {
 		const scene = window.scene;
@@ -592,3 +594,5 @@ QUnit.test(
 		});
 	}
 );
+
+}

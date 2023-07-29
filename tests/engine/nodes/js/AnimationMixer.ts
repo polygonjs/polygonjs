@@ -1,3 +1,4 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {ASSETS_ROOT} from '../../../../src/core/loader/AssetsUtils';
 import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Js';
 import {RendererUtils} from '../../../helpers/RendererUtils';
@@ -11,6 +12,7 @@ import {
 	findOrCreateAnimationMixer,
 	getMostActiveAnimationActionFromMixer,
 } from '../../../../src/engine/functions/_AnimationMixer';
+export function testenginenodesjsAnimationMixer(qUnit: QUnit) {
 
 function addReflector(scene: PolyScene) {
 	const geo2 = scene.root().createNode('geo');
@@ -26,7 +28,7 @@ function addReflector(scene: PolyScene) {
 	reflector.flags.display.set(true);
 }
 
-QUnit.test('js/animationMixer can fadeIn an action', async (assert) => {
+qUnit.test('js/animationMixer can fadeIn an action', async (assert) => {
 	const scene = window.scene;
 
 	scene.root().createNode('hemisphereLight');
@@ -143,3 +145,5 @@ QUnit.test('js/animationMixer can fadeIn an action', async (assert) => {
 		);
 	});
 });
+
+}

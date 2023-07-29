@@ -1,6 +1,8 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {BufferAttribute} from 'three';
+export function testenginenodessopSkin(qUnit: QUnit) {
 
-QUnit.test('skin simple with 2 curves', async (assert) => {
+qUnit.test('skin simple with 2 curves', async (assert) => {
 	const geo1 = window.geo1;
 
 	const line1 = geo1.createNode('line');
@@ -59,7 +61,7 @@ QUnit.test('skin simple with 2 curves', async (assert) => {
 	);
 });
 
-QUnit.skip('skin simple with 3 curves', async (assert) => {
+qUnit.skip('skin simple with 3 curves', async (assert) => {
 	const geo1 = window.geo1;
 
 	const line1 = geo1.createNode('line');
@@ -80,3 +82,5 @@ QUnit.skip('skin simple with 3 curves', async (assert) => {
 	container = await skin1.compute();
 	assert.equal(container.pointsCount(), 8);
 });
+
+}

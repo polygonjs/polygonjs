@@ -1,9 +1,11 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {Mesh} from 'three';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {OnPerformanceChangeJsNode} from '../../../../src/engine/nodes/js/OnPerformanceChange';
 import {GeoObjNode} from '../../../../src/engine/nodes/obj/Geo';
 import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Js';
 import {RendererUtils} from '../../../helpers/RendererUtils';
+export function testenginenodesjsOnPerformanceChange(qUnit: QUnit) {
 
 function setupGeo2(geo1: GeoObjNode) {
 	const box1 = geo1.createNode('box');
@@ -18,7 +20,7 @@ function setupGeo2(geo1: GeoObjNode) {
 	return {plane1};
 }
 
-QUnit.test('js/onPerformanceChange', async (assert) => {
+qUnit.test('js/onPerformanceChange', async (assert) => {
 	const scene = window.scene;
 	const perspective_camera1 = window.perspective_camera1;
 	const geo1 = window.geo1;
@@ -71,3 +73,5 @@ QUnit.test('js/onPerformanceChange', async (assert) => {
 		assert.equal(object.position.y, -1, 'object moved to -1');
 	});
 });
+
+}

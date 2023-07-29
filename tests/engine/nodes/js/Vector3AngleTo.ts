@@ -1,9 +1,11 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {Mesh} from 'three';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Js';
 import {RendererUtils} from '../../../helpers/RendererUtils';
+export function testenginenodesjsVector3AngleTo(qUnit: QUnit) {
 
-QUnit.test('js/Vector3AngleTo', async (assert) => {
+qUnit.test('js/Vector3AngleTo', async (assert) => {
 	const scene = window.scene;
 	const perspective_camera1 = window.perspective_camera1;
 	const geo1 = window.geo1;
@@ -48,3 +50,5 @@ QUnit.test('js/Vector3AngleTo', async (assert) => {
 		assert.in_delta(object.position.x, 1.0723, 0.01);
 	});
 });
+
+}

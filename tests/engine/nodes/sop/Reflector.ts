@@ -1,11 +1,13 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {Material} from 'three';
 import {Reflector} from 'three/examples/jsm/objects/Reflector';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 import {ReflectorSopNode} from '../../../../src/engine/nodes/sop/Reflector';
 import {NullSopNode} from '../../../../src/engine/nodes/sop/Null';
 import {CoreSleep} from '../../../../src/core/Sleep';
+export function testenginenodessopReflector(qUnit: QUnit) {
 
-QUnit.test('reflectors can be cloned and keep unique material', async (assert) => {
+qUnit.test('reflectors can be cloned and keep unique material', async (assert) => {
 	const geo1 = window.geo1;
 	// cancels geo node displayNodeController
 	// update: display flag needs to be set to true for onAddRemove hooks to be run
@@ -35,7 +37,7 @@ QUnit.test('reflectors can be cloned and keep unique material', async (assert) =
 	assert.notEqual((reflectorObject1.material as Material).uuid, (reflectorObject2.material as Material).uuid);
 });
 
-QUnit.test('reflectors can complete cook without a renderer', async (assert) => {
+qUnit.test('reflectors can complete cook without a renderer', async (assert) => {
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false); // cancels geo node displayNodeController
 
@@ -49,3 +51,5 @@ QUnit.test('reflectors can complete cook without a renderer', async (assert) => 
 	await reflector.compute();
 	assert.equal(1, 1, 'reflector has cooked');
 });
+
+}

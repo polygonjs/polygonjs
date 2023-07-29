@@ -1,6 +1,8 @@
+import type {QUnit} from '../../../helpers/QUnit';
 // import {ASSETS_ROOT} from '../../../../src/core/loader/AssetsUtils';
+export function testenginenodescopImageSequence(qUnit: QUnit) {
 
-// QUnit.test('cop/imageSequence simple default', async (assert) => {
+// qUnit.test('cop/imageSequence simple default', async (assert) => {
 // 	const COP = window.COP;
 
 // 	const imageSequence1 = COP.createNode('imageSequence');
@@ -15,7 +17,7 @@
 // 	assert.deepEqual(container.resolution(), [1920, 1080]);
 // });
 
-// QUnit.test('cop/imageSequence simple with bad frame range', async (assert) => {
+// qUnit.test('cop/imageSequence simple with bad frame range', async (assert) => {
 // 	const COP = window.COP;
 
 // 	const imageSequence1 = COP.createNode('imageSequence');
@@ -29,3 +31,5 @@
 // 		`failed to load url 'https://raw.githubusercontent.com/polygonjs/polygonjs-assets/master//textures/sequence/pano.00010.jpg' (at frame 10)`
 // 	);
 // });
+
+}

@@ -1,7 +1,9 @@
+import type {QUnit} from '../../helpers/QUnit';
 import {Object3D} from 'three';
 import {CoreObjectType} from '../../../src/core/geometry/ObjectContent';
+export function testenginesceneObjectsController(qUnit: QUnit) {
 
-QUnit.test('scene can find one top node by mask', async (assert) => {
+qUnit.test('scene can find one top node by mask', async (assert) => {
 	const scene = window.scene;
 	const camera = window.perspective_camera1;
 
@@ -21,7 +23,7 @@ QUnit.test('scene can find one top node by mask', async (assert) => {
 	assert.notOk(foundObject);
 });
 
-QUnit.test('scene can find top nodes by mask', async (assert) => {
+qUnit.test('scene can find top nodes by mask', async (assert) => {
 	const scene = window.scene;
 	const camera = window.perspective_camera1;
 
@@ -40,3 +42,5 @@ QUnit.test('scene can find top nodes by mask', async (assert) => {
 	foundObjects = scene.objectsByMask('/perspectiveCamera') as Object3D[];
 	assert.notOk(foundObjects[0], 'cam not found (ok)');
 });
+
+}

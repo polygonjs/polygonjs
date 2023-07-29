@@ -1,9 +1,11 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {CoreObject} from './../../../../src/core/geometry/Object';
 import {AttribClass} from '../../../../src/core/geometry/Constant';
 import {coreObjectFactory} from '../../../../src/core/geometry/CoreObjectFactory';
 import {CoreObjectType, ObjectContent} from '../../../../src/core/geometry/ObjectContent';
+export function testengineexpressionsmethodscopy(qUnit: QUnit) {
 
-QUnit.test('copy can use default value with 1 arg', async (assert) => {
+qUnit.test('copy can use default value with 1 arg', async (assert) => {
 	const geo1 = window.geo1;
 
 	const box1 = geo1.createNode('box');
@@ -36,7 +38,7 @@ QUnit.test('copy can use default value with 1 arg', async (assert) => {
 	);
 });
 
-QUnit.test('copy can use default value with 2 args', async (assert) => {
+qUnit.test('copy can use default value with 2 args', async (assert) => {
 	const geo1 = window.geo1;
 
 	const box1 = geo1.createNode('box');
@@ -66,7 +68,7 @@ QUnit.test('copy can use default value with 2 args', async (assert) => {
 	);
 });
 
-QUnit.test('copy can use default value with 3 args', async (assert) => {
+qUnit.test('copy can use default value with 3 args', async (assert) => {
 	const geo1 = window.geo1;
 
 	const box1 = geo1.createNode('box');
@@ -94,3 +96,5 @@ QUnit.test('copy can use default value with 3 args', async (assert) => {
 		[0, 1, 2, 3]
 	);
 });
+
+}

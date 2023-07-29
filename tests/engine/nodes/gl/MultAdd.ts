@@ -1,6 +1,8 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {CoreType} from '../../../../src/core/Type';
+export function testenginenodesglMultAdd(qUnit: QUnit) {
 
-QUnit.test('gl multAdd default values', async (assert) => {
+qUnit.test('gl multAdd default values', async (assert) => {
 	const MAT = window.MAT;
 	const materialBasicBuilder1 = MAT.createNode('meshBasicBuilder');
 	materialBasicBuilder1.createNode('output');
@@ -15,7 +17,7 @@ QUnit.test('gl multAdd default values', async (assert) => {
 	assert.equal(multAdd1.params.float('postAdd'), 0);
 });
 
-QUnit.test('gl multAdd default values are converted from float to bool to float', async (assert) => {
+qUnit.test('gl multAdd default values are converted from float to bool to float', async (assert) => {
 	const MAT = window.MAT;
 	const materialBasicBuilder1 = MAT.createNode('meshBasicBuilder');
 	materialBasicBuilder1.createNode('output');
@@ -40,3 +42,5 @@ QUnit.test('gl multAdd default values are converted from float to bool to float'
 
 	assert.ok(!CoreType.isBoolean(multAdd1.params.float('value')));
 });
+
+}

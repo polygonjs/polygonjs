@@ -1,6 +1,8 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {NodeContext} from '../../../../src/engine/poly/NodeContext';
+export function testenginenodesutilsChildrenContext(qUnit: QUnit) {
 
-QUnit.test('children_context grand_parent types are updated as nodes get added and removed', async (assert) => {
+qUnit.test('children_context grand_parent types are updated as nodes get added and removed', async (assert) => {
 	const scene = window.scene;
 	const root = scene.root();
 	const geo1 = window.geo1;
@@ -17,7 +19,7 @@ QUnit.test('children_context grand_parent types are updated as nodes get added a
 	geo1.removeNode(box);
 	assert.ok(!root.childrenController.hasChildrenAndGrandchildrenWithContext(NodeContext.SOP));
 });
-QUnit.test('deleting a node connects its input to its output', async (assert) => {
+qUnit.test('deleting a node connects its input to its output', async (assert) => {
 	const geo1 = window.geo1;
 	const box1 = geo1.createNode('box');
 	const actor1 = geo1.createNode('actor');
@@ -39,3 +41,5 @@ QUnit.test('deleting a node connects its input to its output', async (assert) =>
 	assert.equal(connection.outputIndex(), 1);
 	assert.equal(connection.inputIndex(), 3);
 });
+
+}

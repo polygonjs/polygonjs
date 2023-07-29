@@ -1,6 +1,8 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {BufferAttribute} from 'three';
+export function testenginenodessopCenter(qUnit: QUnit) {
 
-QUnit.test('center simple', async (assert) => {
+qUnit.test('center simple', async (assert) => {
 	const geo1 = window.geo1;
 
 	const box1 = geo1.createNode('box');
@@ -17,7 +19,7 @@ QUnit.test('center simple', async (assert) => {
 	assert.deepEqual(positions.join(','), [1, 3, 4].join(','));
 });
 
-QUnit.test('center with multiple objects', async (assert) => {
+qUnit.test('center with multiple objects', async (assert) => {
 	const geo1 = window.geo1;
 
 	const box1 = geo1.createNode('box');
@@ -41,3 +43,5 @@ QUnit.test('center with multiple objects', async (assert) => {
 	const positions = (geometry.getAttribute('position') as BufferAttribute).array as number[];
 	assert.deepEqual(positions.join(','), [1, 3, 4, -1, 5, 2].join(','));
 });
+
+}

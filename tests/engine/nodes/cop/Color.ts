@@ -1,6 +1,8 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {DataTexture} from 'three';
+export function testenginenodescopColor(qUnit: QUnit) {
 
-QUnit.test('cop/color simple', async (assert) => {
+qUnit.test('cop/color simple', async (assert) => {
 	const COP = window.COP;
 	const color = COP.createNode('color');
 
@@ -20,3 +22,5 @@ QUnit.test('cop/color simple', async (assert) => {
 	assert.equal(data[2], 102);
 	assert.equal(data[3], 255);
 });
+
+}

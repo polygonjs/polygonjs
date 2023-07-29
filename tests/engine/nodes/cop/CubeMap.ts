@@ -1,7 +1,9 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {CubeTexture} from 'three';
 import {ASSETS_ROOT} from '../../../../src/core/loader/AssetsUtils';
+export function testenginenodescopCubeMap(qUnit: QUnit) {
 
-QUnit.test('cop/cubeMap simple', async (assert) => {
+qUnit.test('cop/cubeMap simple', async (assert) => {
 	const COP = window.COP;
 	const cubeMap1 = COP.createNode('cubeMap');
 	cubeMap1.p.prefix.set(`${ASSETS_ROOT}/textures/cube/pisa/`);
@@ -15,3 +17,5 @@ QUnit.test('cop/cubeMap simple', async (assert) => {
 	assert.equal(texture.source.data[0].width, 256);
 	assert.equal(texture.source.data[0].height, 256);
 });
+
+}

@@ -1,4 +1,6 @@
-QUnit.test('simple expression', async (assert) => {
+import type {QUnit} from '../../helpers/QUnit';
+export function testengineexpressionsEvaluator(qUnit: QUnit) {
+qUnit.test('simple expression', async (assert) => {
 	const geo1 = window.geo1;
 
 	const tx = geo1.p.t.x;
@@ -16,7 +18,7 @@ QUnit.test('simple expression', async (assert) => {
 	assert.equal(tx.value, 0);
 });
 
-QUnit.test('simple expression 2', async (assert) => {
+qUnit.test('simple expression 2', async (assert) => {
 	const geo1 = window.geo1;
 
 	const tx = geo1.p.t.x;
@@ -34,7 +36,7 @@ QUnit.test('simple expression 2', async (assert) => {
 	assert.equal(tx.value, Math.PI * -3);
 });
 
-QUnit.test('simple expression with errors', async (assert) => {
+qUnit.test('simple expression with errors', async (assert) => {
 	const geo1 = window.geo1;
 
 	const tx = geo1.p.t.x;
@@ -49,3 +51,5 @@ QUnit.test('simple expression with errors', async (assert) => {
 	assert.equal(tx.value, 0);
 	assert.equal(tx.states.error.message(), 'expression error: "3+bla" (bla is not defined)');
 });
+
+}

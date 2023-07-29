@@ -1,6 +1,8 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {CoreMath} from '../../../../src/core/math/_Module';
 import {CoreType} from '../../../../src/core/Type';
 import {GeoObjNode} from '../../../../src/engine/nodes/obj/Geo';
+export function testengineexpressionsmethodseasing(qUnit: QUnit) {
 
 async function createSopNodes(parentNode: GeoObjNode, expression: string) {
 	function create_line1(parentNode: GeoObjNode) {
@@ -87,7 +89,7 @@ function ensureAllValuesValid(ys: number[]) {
 	}
 }
 
-// QUnit.test('expression ease_i', async (assert) => {
+// qUnit.test('expression ease_i', async (assert) => {
 // 	const ys1 = await createScene('ease_i(@pti, 2)');
 // 	assert.deepEqual(valuesAtKeyPos(ys1), [0, 0.0625, 0.25, 0.5625, 1]);
 
@@ -101,7 +103,7 @@ function ensureAllValuesValid(ys: number[]) {
 // 	assert.deepEqual(valuesAtKeyPos(ys4), [0, 0.316439151763916, 0.5625292658805847, 0.7875911593437195, 1]);
 // });
 
-// QUnit.test('expression ease_o', async (assert) => {
+// qUnit.test('expression ease_o', async (assert) => {
 // 	const ys1 = await createScene('ease_o(@pti, 2)');
 // 	assert.deepEqual(valuesAtKeyPos(ys1), [0, 0.4375, 0.75, 0.9375, 1]);
 
@@ -115,7 +117,7 @@ function ensureAllValuesValid(ys: number[]) {
 // 	assert.deepEqual(valuesAtKeyPos(ys4), [0, 0.0625, 0.25, 0.5625, 1]);
 // });
 
-// QUnit.test('expression ease_io', async (assert) => {
+// qUnit.test('expression ease_io', async (assert) => {
 // 	const ys1 = await createScene('ease_io(@pti, 2)');
 // 	assert.deepEqual(valuesAtKeyPos(ys1), [0, 0.0625, 0.25, 0.5625, 1]);
 
@@ -129,79 +131,81 @@ function ensureAllValuesValid(ys: number[]) {
 // 	assert.deepEqual(valuesAtKeyPos(ys4), [0, 0.0625, 0.25, 0.5625, 1]);
 // });
 
-QUnit.test('expression easeI2', async (assert) => {
+qUnit.test('expression easeI2', async (assert) => {
 	const ys = await createScene('easeI2(@pti)');
 
 	assert.deepEqual(valuesAtKeyPos(ys), [0, 0.0625, 0.25, 0.5625, 1]);
 });
 
-QUnit.test('expression easeO2', async (assert) => {
+qUnit.test('expression easeO2', async (assert) => {
 	const ys = await createScene('easeO2(@pti)');
 	assert.deepEqual(valuesAtKeyPos(ys), [0, 0.4375, 0.75, 0.9375, 1]);
 });
 
-QUnit.test('expression easeIO2', async (assert) => {
+qUnit.test('expression easeIO2', async (assert) => {
 	const ys = await createScene('easeIO2(@pti)');
 	assert.deepEqual(valuesAtKeyPos(ys), [0, 0.125, 0.5, 0.875, 1]);
 });
 
-QUnit.test('expression easeI3', async (assert) => {
+qUnit.test('expression easeI3', async (assert) => {
 	const ys = await createScene('easeI3(@pti)');
 	assert.deepEqual(valuesAtKeyPos(ys), [0, 0.015625, 0.125, 0.421875, 1]);
 });
 
-QUnit.test('expression easeO3', async (assert) => {
+qUnit.test('expression easeO3', async (assert) => {
 	const ys = await createScene('easeO3(@pti)');
 
 	assert.deepEqual(valuesAtKeyPos(ys), [0, 0.578125, 0.875, 0.984375, 1]);
 });
 
-QUnit.test('expression easeIO3', async (assert) => {
+qUnit.test('expression easeIO3', async (assert) => {
 	const ys = await createScene('easeIO3(@pti)');
 	assert.deepEqual(valuesAtKeyPos(ys), [0, 0.0625, 0.5, 0.9375, 1]);
 });
 
-QUnit.test('expression easeI4', async (assert) => {
+qUnit.test('expression easeI4', async (assert) => {
 	const ys = await createScene('easeI4(@pti)');
 	assert.deepEqual(valuesAtKeyPos(ys), [0, 0.00390625, 0.0625, 0.31640625, 1]);
 });
 
-QUnit.test('expression easeO4', async (assert) => {
+qUnit.test('expression easeO4', async (assert) => {
 	const ys = await createScene('easeO4(@pti)');
 	assert.deepEqual(valuesAtKeyPos(ys), [0, 0.68359375, 0.9375, 0.99609375, 1]);
 });
 
-QUnit.test('expression easeIO4', async (assert) => {
+qUnit.test('expression easeIO4', async (assert) => {
 	const ys = await createScene('easeIO4(@pti)');
 	assert.deepEqual(valuesAtKeyPos(ys), [0, 0.03125, 0.5, 0.96875, 1]);
 });
 
-QUnit.test('expression easeSinI', async (assert) => {
+qUnit.test('expression easeSinI', async (assert) => {
 	const ys = await createScene('easeSinI(@pti)');
 	assert.deepEqual(valuesAtKeyPos(ys), [0, 0.07612046599388123, 0.2928932309150696, 0.6173165440559387, 1]);
 });
 
-QUnit.test('expression easeSinO', async (assert) => {
+qUnit.test('expression easeSinO', async (assert) => {
 	const ys = await createScene('easeSinO(@pti)');
 	assert.deepEqual(valuesAtKeyPos(ys), [0, 0.3826834261417389, 0.7071067690849304, 0.9238795042037964, 1]);
 });
 
-QUnit.test('expression easeSinIO', async (assert) => {
+qUnit.test('expression easeSinIO', async (assert) => {
 	const ys = await createScene('easeSinIO(@pti)');
 	assert.deepEqual(valuesAtKeyPos(ys), [0, 0.1464466154575348, 0.5, 0.8535534143447876, 1]);
 });
 
-QUnit.test('expression easeElasticI', async (assert) => {
+qUnit.test('expression easeElasticI', async (assert) => {
 	const ys = await createScene('easeElasticI(@pti)');
 	assert.deepEqual(valuesAtKeyPos(ys), [0, 1.0039814710617065, 1.002652883529663, 1.001325249671936, 1]);
 });
 
-QUnit.test('expression easeElasticO', async (assert) => {
+qUnit.test('expression easeElasticO', async (assert) => {
 	const ys = await createScene('easeElasticO(@pti)');
 	assert.deepEqual(valuesAtKeyPos(ys), [0, -0.0013252205681055784, -0.0026528758462518454, -0.003981505986303091, 1]);
 });
 
-QUnit.test('expression easeElasticIO', async (assert) => {
+qUnit.test('expression easeElasticIO', async (assert) => {
 	const ys = await createScene('easeElasticIO(@pti)');
 	assert.deepEqual(valuesAtKeyPos(ys), [0, -0.0013264379231259227, 0, 1.0013264417648315, 1]);
 });
+
+}

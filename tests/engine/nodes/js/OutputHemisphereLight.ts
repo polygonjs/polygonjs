@@ -1,5 +1,7 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {HemisphereLight} from 'three';
 import {CoreGroup} from '../../../../src/core/geometry/Group';
+export function testenginenodesjsOutputHemisphereLight(qUnit: QUnit) {
 
 function isAreaLight(object: any): object is HemisphereLight {
 	return (
@@ -27,7 +29,7 @@ function getLight(coreGroup: CoreGroup): HemisphereLight {
 	return light!;
 }
 
-QUnit.test('js/OutputHemisphereLight simple', async (assert) => {
+qUnit.test('js/OutputHemisphereLight simple', async (assert) => {
 	const geo1 = window.geo1;
 	const hemisphereLight1 = geo1.createNode('hemisphereLight');
 	const objectBuilder1 = geo1.createNode('objectBuilder');
@@ -106,3 +108,5 @@ QUnit.test('js/OutputHemisphereLight simple', async (assert) => {
 	assert.deepEqual(await getSkyColor(), [2, 1, 0.5]);
 	assert.deepEqual(await getGroundColor(), [0.4, 0.8, 1.6]);
 });
+
+}

@@ -1,8 +1,10 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {BaseCoreObject} from './../../../../src/core/geometry/_BaseObject';
 import {AttribClass, AttribType} from '../../../../src/core/geometry/Constant';
 import {CoreObjectType} from '../../../../src/core/geometry/ObjectContent';
+export function testengineexpressionsmethodsobject(qUnit: QUnit) {
 
-QUnit.test('expression object with float attr', async (assert) => {
+qUnit.test('expression object with float attr', async (assert) => {
 	const geo1 = window.geo1;
 
 	const plane1 = geo1.createNode('plane');
@@ -27,7 +29,7 @@ QUnit.test('expression object with float attr', async (assert) => {
 	assert.equal(param.value, 0);
 });
 
-QUnit.test('expression object with string attr', async (assert) => {
+qUnit.test('expression object with string attr', async (assert) => {
 	const geo1 = window.geo1;
 
 	const plane1 = geo1.createNode('plane');
@@ -64,7 +66,7 @@ QUnit.test('expression object with string attr', async (assert) => {
 	assert.deepEqual(await getValues(), ['0']);
 });
 
-QUnit.test('expression object with vector attr', async (assert) => {
+qUnit.test('expression object with vector attr', async (assert) => {
 	const geo1 = window.geo1;
 
 	const plane1 = geo1.createNode('plane');
@@ -81,3 +83,5 @@ QUnit.test('expression object with vector attr', async (assert) => {
 	await param.compute();
 	assert.equal(param.value, 5.12);
 });
+
+}

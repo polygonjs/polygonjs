@@ -1,3 +1,4 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {GlConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Gl';
 import {SceneJsonExporter} from '../../../../src/engine/io/json/export/Scene';
 import {SceneJsonImporter} from '../../../../src/engine/io/json/import/Scene';
@@ -8,8 +9,9 @@ import {RendererUtils} from '../../../helpers/RendererUtils';
 import {MeshLambertBuilderMatNode} from '../../../../src/engine/nodes/mat/MeshLambertBuilder';
 import {MaterialUserDataUniforms} from '../../../../src/engine/nodes/gl/code/assemblers/materials/OnBeforeCompile';
 import {GLSLHelper} from '../../../helpers/GLSLHelper';
+export function testenginenodesmatMeshLambertBuilder(qUnit: QUnit) {
 
-QUnit.test('mesh lambert builder persisted_config', async (assert) => {
+qUnit.test('mesh lambert builder persisted_config', async (assert) => {
 	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 	const MAT = window.MAT;
 	const mesh_lambert1 = MAT.createNode('meshLambertBuilder');
@@ -81,3 +83,5 @@ QUnit.test('mesh lambert builder persisted_config', async (assert) => {
 
 	RendererUtils.dispose();
 });
+
+}

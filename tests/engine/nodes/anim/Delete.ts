@@ -1,4 +1,6 @@
-// QUnit.test('anim merge simple', async (assert) => {
+import type {QUnit} from '../../../helpers/QUnit';
+export function testenginenodesanimDelete(qUnit: QUnit) {
+// qUnit.test('anim merge simple', async (assert) => {
 // 	const ANIM = window.scene.root.createNode('animationsNetwork');
 // 	const track1 = ANIM.createNode('track');
 // 	const track2 = ANIM.createNode('track');
@@ -17,3 +19,5 @@
 // 	assert.equal(core_group.tracks.length, 1);
 // 	assert.equal(core_group.tracks[0].name, 'test1');
 // });
+
+}

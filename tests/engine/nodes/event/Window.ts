@@ -1,7 +1,9 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {checkConsolePrints} from '../../../helpers/Console';
 import {RendererUtils} from '../../../helpers/RendererUtils';
+export function testenginenodeseventWindow(qUnit: QUnit) {
 
-QUnit.test('window event nodes simple', async (assert) => {
+qUnit.test('window event nodes simple', async (assert) => {
 	const scene = window.scene;
 	await scene.waitForCooksCompleted();
 	assert.ok(!scene.loadingController.isLoading());
@@ -72,3 +74,5 @@ QUnit.test('window event nodes simple', async (assert) => {
 		});
 	});
 });
+
+}

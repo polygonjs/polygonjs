@@ -1,8 +1,10 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {Box3, Vector3} from 'three';
+export function testenginenodessopPeak(qUnit: QUnit) {
 const tmpBox = new Box3();
 const tmpSize = new Vector3();
 
-QUnit.test('peak simple', async (assert) => {
+qUnit.test('peak simple', async (assert) => {
 	const geo1 = window.geo1;
 
 	const box1 = geo1.createNode('box');
@@ -26,3 +28,5 @@ QUnit.test('peak simple', async (assert) => {
 	assert.equal((await getSize())[1], 2);
 	assert.equal((await getSize())[2], 2);
 });
+
+}

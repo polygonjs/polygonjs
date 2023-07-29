@@ -1,6 +1,8 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {CorePoint} from '../../../../src/core/geometry/Point';
+export function testengineexpressionsmethodsopname(qUnit: QUnit) {
 
-QUnit.test('expression opname works', async (assert) => {
+qUnit.test('expression opname works', async (assert) => {
 	const geo1 = window.geo1;
 
 	const line1 = geo1.createNode('line');
@@ -29,7 +31,7 @@ QUnit.test('expression opname works', async (assert) => {
 	);
 });
 
-QUnit.test('expression $OS', async (assert) => {
+qUnit.test('expression $OS', async (assert) => {
 	const geo1 = window.geo1;
 
 	const perspectiveCamera1 = geo1.createNode('perspectiveCamera');
@@ -45,3 +47,5 @@ QUnit.test('expression $OS', async (assert) => {
 	perspectiveCamera1.setName('myCam');
 	assert.equal(await getName(), 'myCam');
 });
+
+}

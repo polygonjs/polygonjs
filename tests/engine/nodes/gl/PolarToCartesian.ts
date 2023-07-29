@@ -1,9 +1,11 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import DEFAULT_FRAGMENT from './PolarToCartesian/default.frag.glsl';
 import NO_INPUT_EMPTY_VERTEX from './PolarToCartesian/default.vert.glsl';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 import {GLSLHelper} from '../../../helpers/GLSLHelper';
+export function testenginenodesglPolarToCartesian(qUnit: QUnit) {
 
-QUnit.test('gl/polarToCartesian simple', async (assert) => {
+qUnit.test('gl/polarToCartesian simple', async (assert) => {
 	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 	const MAT = window.MAT;
 	const materialBasicBuilder1 = MAT.createNode('meshBasicBuilder');
@@ -31,3 +33,5 @@ QUnit.test('gl/polarToCartesian simple', async (assert) => {
 
 	RendererUtils.dispose();
 });
+
+}

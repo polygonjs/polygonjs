@@ -1,3 +1,4 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {UniformsUtils} from 'three';
 import {ShaderLib} from 'three';
 
@@ -53,6 +54,7 @@ import {RendererUtils} from '../../../helpers/RendererUtils';
 import {MaterialUserDataUniforms} from '../../../../src/engine/nodes/gl/code/assemblers/materials/OnBeforeCompile';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {GLSLHelper} from '../../../helpers/GLSLHelper';
+export function testenginenodesmatMeshBasicBuilder(qUnit: QUnit) {
 
 const TEST_SHADER_LIB = {
 	default: {vert: BasicDefaultVertex, frag: BasicDefaultFragment},
@@ -77,7 +79,7 @@ const TEST_SHADER_LIB = {
 const BASIC_UNIFORMS = UniformsUtils.clone(ShaderLib.basic.uniforms);
 const BASIC_UNIFORM_NAMES = Object.keys(BASIC_UNIFORMS).concat(['clippingPlanes']).sort();
 
-QUnit.test('mesh basic builder simple', async (assert) => {
+qUnit.test('mesh basic builder simple', async (assert) => {
 	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 	const MAT = window.MAT;
 	// const debug = MAT.createNode('test')
@@ -137,7 +139,7 @@ QUnit.test('mesh basic builder simple', async (assert) => {
 	RendererUtils.dispose();
 });
 
-QUnit.test('mesh basic builder can save and load param configs', async (assert) => {
+qUnit.test('mesh basic builder can save and load param configs', async (assert) => {
 	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 	const scene = window.scene;
 	const MAT = window.MAT;
@@ -188,7 +190,7 @@ QUnit.test('mesh basic builder can save and load param configs', async (assert) 
 	RendererUtils.dispose();
 });
 
-QUnit.test(
+qUnit.test(
 	'mesh basic builder: attrib is declared accordingly and uses varying if used in fragment',
 	async (assert) => {
 		const {renderer} = await RendererUtils.waitForRenderer(window.scene);
@@ -252,7 +254,7 @@ QUnit.test(
 	}
 );
 
-QUnit.test('mesh basic builder with ifThen', async (assert) => {
+qUnit.test('mesh basic builder with ifThen', async (assert) => {
 	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 	const MAT = window.MAT;
 	const mesh_basic1 = MAT.createNode('meshBasicBuilder');
@@ -319,7 +321,7 @@ QUnit.test('mesh basic builder with ifThen', async (assert) => {
 	RendererUtils.dispose();
 });
 
-QUnit.test('mesh basic builder with forLoop', async (assert) => {
+qUnit.test('mesh basic builder with forLoop', async (assert) => {
 	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 	const MAT = window.MAT;
 	const mesh_basic1 = MAT.createNode('meshBasicBuilder');
@@ -353,7 +355,7 @@ QUnit.test('mesh basic builder with forLoop', async (assert) => {
 	RendererUtils.dispose();
 });
 
-QUnit.test('mesh basic builder with subnet', async (assert) => {
+qUnit.test('mesh basic builder with subnet', async (assert) => {
 	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 	const MAT = window.MAT;
 	const mesh_basic1 = MAT.createNode('meshBasicBuilder');
@@ -388,7 +390,7 @@ QUnit.test('mesh basic builder with subnet', async (assert) => {
 	RendererUtils.dispose();
 });
 
-QUnit.test('mesh basic builder with subnet without input', async (assert) => {
+qUnit.test('mesh basic builder with subnet without input', async (assert) => {
 	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 	const MAT = window.MAT;
 	const mesh_basic1 = MAT.createNode('meshBasicBuilder');
@@ -421,7 +423,7 @@ QUnit.test('mesh basic builder with subnet without input', async (assert) => {
 	RendererUtils.dispose();
 });
 
-QUnit.test('mesh basic builder with subnet without input and attributes', async (assert) => {
+qUnit.test('mesh basic builder with subnet without input and attributes', async (assert) => {
 	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 	const MAT = window.MAT;
 	const mesh_basic1 = MAT.createNode('meshBasicBuilder');
@@ -493,7 +495,7 @@ QUnit.test('mesh basic builder with subnet without input and attributes', async 
 	RendererUtils.dispose();
 });
 
-QUnit.test('mesh basic builder persisted_config', async (assert) => {
+qUnit.test('mesh basic builder persisted_config', async (assert) => {
 	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 	const MAT = window.MAT;
 	const mesh_basic1 = MAT.createNode('meshBasicBuilder');
@@ -564,7 +566,7 @@ QUnit.test('mesh basic builder persisted_config', async (assert) => {
 	RendererUtils.dispose();
 });
 
-QUnit.test('mesh basic builder frame dependent with custom mat', async (assert) => {
+qUnit.test('mesh basic builder frame dependent with custom mat', async (assert) => {
 	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 	const MAT = window.MAT;
 	const geo1 = window.geo1;
@@ -647,7 +649,7 @@ QUnit.test('mesh basic builder frame dependent with custom mat', async (assert) 
 	RendererUtils.dispose();
 });
 
-QUnit.test('mesh basic builder: 2 materials will have unique customProgramCacheKey', async (assert) => {
+qUnit.test('mesh basic builder: 2 materials will have unique customProgramCacheKey', async (assert) => {
 	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 	const MAT = window.MAT;
 	const scene = window.scene;
@@ -717,7 +719,7 @@ QUnit.test('mesh basic builder: 2 materials will have unique customProgramCacheK
 	RendererUtils.dispose();
 });
 
-QUnit.test('mat/meshBasicBuilder can select which customMat is created', async (assert) => {
+qUnit.test('mat/meshBasicBuilder can select which customMat is created', async (assert) => {
 	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 	const MAT = window.MAT;
 	const geo1 = window.geo1;
@@ -789,6 +791,8 @@ QUnit.test('mat/meshBasicBuilder can select which customMat is created', async (
 	RendererUtils.dispose();
 });
 
-QUnit.skip('mesh basic builder bbox dependent', (assert) => {});
+qUnit.skip('mesh basic builder bbox dependent', (assert) => {});
 
-QUnit.skip('mesh basic builder basic instanced works without an input node', (assert) => {});
+qUnit.skip('mesh basic builder basic instanced works without an input node', (assert) => {});
+
+}

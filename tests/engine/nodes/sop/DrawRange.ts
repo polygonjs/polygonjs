@@ -1,4 +1,6 @@
-QUnit.test('draw range simple', async (assert) => {
+import type {QUnit} from '../../../helpers/QUnit';
+export function testenginenodessopDrawRange(qUnit: QUnit) {
+qUnit.test('draw range simple', async (assert) => {
 	const geo1 = window.geo1;
 
 	const box1 = geo1.createNode('box');
@@ -25,3 +27,5 @@ QUnit.test('draw range simple', async (assert) => {
 	core_group = container.coreContent()!;
 	assert.deepEqual(core_group.geometries()[0].drawRange, {start: 5, count: 100});
 });
+
+}

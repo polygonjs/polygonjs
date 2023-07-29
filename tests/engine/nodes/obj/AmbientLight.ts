@@ -1,6 +1,8 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {CoreSleep} from '../../../../src/core/Sleep';
+export function testenginenodesobjAmbientLight(qUnit: QUnit) {
 
-QUnit.test('ambient light simple', async (assert) => {
+qUnit.test('ambient light simple', async (assert) => {
 	const scene = window.scene;
 	window.scene.performance.start();
 
@@ -39,7 +41,7 @@ QUnit.test('ambient light simple', async (assert) => {
 	window.scene.performance.stop();
 });
 
-QUnit.test('ambient light display flag off removes from scene', async (assert) => {
+qUnit.test('ambient light display flag off removes from scene', async (assert) => {
 	const scene = window.scene;
 	const main_group = scene.threejsScene();
 	assert.equal(main_group.name, '/');
@@ -81,7 +83,7 @@ QUnit.test('ambient light display flag off removes from scene', async (assert) =
 	assert.equal(ambient_light_object.children.length, 2);
 });
 
-QUnit.test('ambient light display flag off still cooks', async (assert) => {
+qUnit.test('ambient light display flag off still cooks', async (assert) => {
 	const scene = window.scene;
 	const main_group = scene.threejsScene();
 	assert.equal(main_group.name, '/');
@@ -107,7 +109,7 @@ QUnit.test('ambient light display flag off still cooks', async (assert) => {
 	window.scene.performance.stop();
 });
 
-QUnit.test('ambient light is removed from scene when node is deleted', async (assert) => {
+qUnit.test('ambient light is removed from scene when node is deleted', async (assert) => {
 	const scene = window.scene;
 	const main_group = scene.threejsScene();
 	assert.equal(main_group.name, '/');
@@ -142,7 +144,7 @@ QUnit.test('ambient light is removed from scene when node is deleted', async (as
 	);
 });
 
-QUnit.test('ambient light cooks only once when multiple params are updated', async (assert) => {
+qUnit.test('ambient light cooks only once when multiple params are updated', async (assert) => {
 	const scene = window.scene;
 	const main_group = scene.threejsScene();
 	assert.equal(main_group.name, '/');
@@ -174,3 +176,5 @@ QUnit.test('ambient light cooks only once when multiple params are updated', asy
 
 	window.scene.performance.stop();
 });
+
+}

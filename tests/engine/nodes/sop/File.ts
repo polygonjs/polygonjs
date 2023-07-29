@@ -1,3 +1,4 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {HierarchyMode} from '../../../../src/engine/operations/sop/Hierarchy';
 import {Mesh} from 'three';
 import {BufferGeometry} from 'three';
@@ -7,6 +8,7 @@ import {withPlayerMode} from '../../../helpers/PlayerMode';
 import {FileGLTFSopNode} from '../../../../src/engine/nodes/sop/FileGLTF';
 import {FileMPDSopNode} from '../../../../src/engine/nodes/sop/FileMPD';
 import {SopTypeFile} from '../../../../src/engine/poly/registers/nodes/types/Sop';
+export function testenginenodessopFile(qUnit: QUnit) {
 
 function _url(path: string) {
 	return `${ASSETS_ROOT}${path}`;
@@ -121,7 +123,7 @@ async function withHierarchy(fileNode: FileGLTFSopNode | FileMPDSopNode, levels:
 	return container;
 }
 
-QUnit.test('SOP file simple', async (assert) => {
+qUnit.test('SOP file simple', async (assert) => {
 	const geo1 = window.geo1;
 
 	const file1 = geo1.createNode('fileOBJ');
@@ -173,7 +175,7 @@ QUnit.test('SOP file simple', async (assert) => {
 	assert.equal(container.totalPointsCount(), 36);
 });
 
-QUnit.test('SOP file obj wolf', async (assert) => {
+qUnit.test('SOP file obj wolf', async (assert) => {
 	const {container} = await withFileOBJ('/models/wolf.obj');
 	const core_content = container.coreContent()!;
 	assert.equal(container.objectsCount(), 1);
@@ -188,66 +190,66 @@ QUnit.test('SOP file obj wolf', async (assert) => {
 	const first_geometry = first_mesh.geometry as BufferGeometry;
 	assert.ok(first_geometry.index, 'geometry has index');
 });
-QUnit.test('SOP file json wolf', async (assert) => {
+qUnit.test('SOP file json wolf', async (assert) => {
 	const {container} = await withFileJSON('models/wolf.json');
 	assert.equal(container.totalPointsCount(), 5352);
 });
-QUnit.test('SOP file glb stork', async (assert) => {
+qUnit.test('SOP file glb stork', async (assert) => {
 	const {container} = await withFileGLTF('models/stork.glb');
 	assert.equal(container.totalPointsCount(), 358);
 });
-QUnit.test('SOP file glb soldier', async (assert) => {
+qUnit.test('SOP file glb soldier', async (assert) => {
 	const {container} = await withFileGLTF('models/soldier.glb');
 	assert.equal(container.totalPointsCount(), 7434);
 });
-QUnit.test('SOP file glb json', async (assert) => {
+qUnit.test('SOP file glb json', async (assert) => {
 	const {container} = await withFileGLTF('models/parrot.glb');
 	assert.equal(container.totalPointsCount(), 497);
 });
-QUnit.test('SOP file glb horse', async (assert) => {
+qUnit.test('SOP file glb horse', async (assert) => {
 	const {container} = await withFileGLTF('models/horse.glb');
 	assert.equal(container.totalPointsCount(), 796);
 });
-QUnit.test('SOP file glb flamingo', async (assert) => {
+qUnit.test('SOP file glb flamingo', async (assert) => {
 	const {container} = await withFileGLTF('models/flamingo.glb');
 	assert.equal(container.totalPointsCount(), 337);
 });
-QUnit.test('SOP file z3 glb with draco', async (assert) => {
+qUnit.test('SOP file z3 glb with draco', async (assert) => {
 	const {container, fileNode} = await withFileGLTF('models/z3.glb');
 	assert.equal(container.pointsCount(), 0);
 	const container2 = await withHierarchy(fileNode);
 	assert.equal(container2.pointsCount(), 498800);
 });
-QUnit.test('SOP file draco bunny with format FBX', async (assert) => {
+qUnit.test('SOP file draco bunny with format FBX', async (assert) => {
 	const {container, fileNode} = await withFileFBX('models/stanford-bunny.fbx');
 	assert.equal(container.pointsCount(), 0);
 	const container2 = await withHierarchy(fileNode);
 	assert.equal(container2.pointsCount(), 91014);
 });
-QUnit.test('SOP file draco bunny with format DRC', async (assert) => {
+qUnit.test('SOP file draco bunny with format DRC', async (assert) => {
 	const {container} = await withFileDRC('models/bunny.drc');
 	assert.equal(container.pointsCount(), 34834);
 });
-QUnit.test('SOP file format pdb', async (assert) => {
+qUnit.test('SOP file format pdb', async (assert) => {
 	const {container} = await withFilePDB('models/ethanol.pdb');
 	assert.equal(container.pointsCount(), 25);
 });
-QUnit.test('SOP file format ply', async (assert) => {
+qUnit.test('SOP file format ply', async (assert) => {
 	const {container} = await withFilePLY('models/dolphins_be.ply');
 	assert.equal(container.pointsCount(), 855);
 });
-QUnit.test('SOP file format stl', async (assert) => {
+qUnit.test('SOP file format stl', async (assert) => {
 	const {container} = await withFileSTL('models/warrior.stl');
 	assert.equal(container.pointsCount(), 154059);
 });
 
-QUnit.test('SOP file format usdz', async (assert) => {
+qUnit.test('SOP file format usdz', async (assert) => {
 	const {container} = await withFileUSDZ('models/saeukkang.usdz');
 	console.log(container.coreContent()?.allObjects());
 	assert.equal(container.pointsCount(), 75000);
 });
 
-QUnit.test('SOP file draco bunny with format OBJ', async (assert) => {
+qUnit.test('SOP file draco bunny with format OBJ', async (assert) => {
 	const {container, fileNode} = await withFileFBX('models/bunny.drc');
 	assert.equal(
 		fileNode.states.error.message(),
@@ -256,7 +258,7 @@ QUnit.test('SOP file draco bunny with format OBJ', async (assert) => {
 	assert.equal(container.pointsCount(), 0);
 });
 
-QUnit.test(
+qUnit.test(
 	'SOP file can load multiple glb without conflicts, using the blobs controller in non player mode',
 	async (assert) => {
 		Poly.blobs.clear();
@@ -289,7 +291,7 @@ QUnit.test(
 	}
 );
 
-QUnit.test(
+qUnit.test(
 	'SOP file can load multiple glb without conflicts, using the blobs controller in player mode',
 	async (assert) => {
 		Poly.blobs.clear();
@@ -322,7 +324,7 @@ QUnit.test(
 	}
 );
 
-QUnit.test('SOP file nodes work with their default url', async (assert) => {
+qUnit.test('SOP file nodes work with their default url', async (assert) => {
 	const geo1 = window.geo1;
 	async function testFileType(fileType: SopTypeFile, pointsCount: number, hierarchyLevels: number = 0) {
 		const fileNode = geo1.createNode(fileType);
@@ -351,3 +353,5 @@ QUnit.test('SOP file nodes work with their default url', async (assert) => {
 	await testFileType(SopTypeFile.FILE_STL, 154059, 0);
 	await testFileType(SopTypeFile.FILE_SVG, 164050);
 });
+
+}

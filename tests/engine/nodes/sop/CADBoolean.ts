@@ -1,10 +1,12 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {BooleanCadOperationType} from '../../../../src/engine/nodes/sop/CADBoolean';
 import {Box3} from 'three';
 import {CadObject} from '../../../../src/core/geometry/cad/CadObject';
 import {CadGeometryType} from '../../../../src/core/geometry/cad/CadCommon';
+export function testenginenodessopCADBoolean(qUnit: QUnit) {
 const tmpBox = new Box3();
 
-QUnit.test('sop/CADBoolean operations', async (assert) => {
+qUnit.test('sop/CADBoolean operations', async (assert) => {
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false); // cancels geo node displayNodeController
 
@@ -94,3 +96,5 @@ QUnit.test('sop/CADBoolean operations', async (assert) => {
 	assert.in_delta(tmpBox.min.x, 0.13397, 0.01);
 	assert.in_delta(tmpBox.max.x, 0.625, 0.01);
 });
+
+}

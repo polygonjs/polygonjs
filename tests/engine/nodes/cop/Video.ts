@@ -1,7 +1,9 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {ASSETS_ROOT} from '../../../../src/core/loader/AssetsUtils';
 import {VideoMode} from '../../../../src/engine/nodes/cop/Video';
+export function testenginenodescopVideo(qUnit: QUnit) {
 
-QUnit.test('COP video simple mp4', async (assert) => {
+qUnit.test('COP video simple mp4', async (assert) => {
 	const COP = window.COP;
 
 	const file1 = COP.createNode('video');
@@ -19,7 +21,7 @@ QUnit.test('COP video simple mp4', async (assert) => {
 		file1.dispose();
 	}, 1000);
 });
-QUnit.test('COP video simple ogv', async (assert) => {
+qUnit.test('COP video simple ogv', async (assert) => {
 	const COP = window.COP;
 
 	const file1 = COP.createNode('video');
@@ -37,7 +39,7 @@ QUnit.test('COP video simple ogv', async (assert) => {
 		file1.dispose();
 	}, 1000);
 });
-QUnit.test('COP video from selector', async (assert) => {
+qUnit.test('COP video from selector', async (assert) => {
 	const COP = window.COP;
 
 	const videoElement = document.createElement('video');
@@ -69,3 +71,5 @@ QUnit.test('COP video from selector', async (assert) => {
 		document.body.removeChild(videoElement);
 	}, 100);
 });
+
+}

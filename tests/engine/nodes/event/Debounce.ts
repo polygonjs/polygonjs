@@ -1,8 +1,10 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {DebounceEventNode} from '../../../../src/engine/nodes/event/Debounce';
 import {EventContext} from '../../../../src/engine/scene/utils/events/_BaseEventsController';
+export function testenginenodeseventDebounce(qUnit: QUnit) {
 
-QUnit.test('event/debounce nodes simple', async (assert) => {
+qUnit.test('event/debounce nodes simple', async (assert) => {
 	const geo1 = window.geo1;
 	const eventsNetwork1 = geo1.createNode('eventsNetwork');
 	const debounce1 = eventsNetwork1.createNode('debounce');
@@ -31,3 +33,5 @@ QUnit.test('event/debounce nodes simple', async (assert) => {
 	}
 	assert.equal(count, 20);
 });
+
+}

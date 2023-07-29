@@ -1,3 +1,4 @@
+import type {QUnit} from '../../helpers/QUnit';
 import {ParamEvent} from '../../../src/engine/poly/ParamEvent';
 import {CoreGraphNode} from '../../../src/core/graph/CoreGraphNode';
 import {NodeEvent} from '../../../src/engine/poly/NodeEvent';
@@ -5,8 +6,9 @@ import {PolyScene} from '../../../src/engine/scene/PolyScene';
 import {SceneEvent} from '../../../src/engine/poly/SceneEvent';
 import {ActorEvaluator} from '../../../src/engine/nodes/js/code/assemblers/actor/ActorEvaluator';
 import {DebugLinesContainer} from '../../../src/engine/scene/utils/DispatchController';
+export function testengineparams_Base(qUnit: QUnit) {
 
-QUnit.test('sets the node to update if set value', async (assert) => {
+qUnit.test('sets the node to update if set value', async (assert) => {
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false); // cancels geo node displayNodeController
 
@@ -31,7 +33,7 @@ QUnit.test('sets the node to update if set value', async (assert) => {
 	assert.ok(!box1.isDirty());
 });
 
-QUnit.test('sets the node to recook if set expression', async (assert) => {
+qUnit.test('sets the node to recook if set expression', async (assert) => {
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false); // cancels geo node displayNodeController
 
@@ -83,7 +85,7 @@ class EventsListener {
 	actorEvaluatorDebug(options: DebugLinesContainer) {}
 }
 
-QUnit.test('emit only the minimum times', (assert) => {
+qUnit.test('emit only the minimum times', (assert) => {
 	const geo1 = window.geo1;
 
 	window.scene.dispatchController.setListener(new EventsListener());
@@ -113,3 +115,5 @@ QUnit.test('emit only the minimum times', (assert) => {
 	assert.equal(ty.emitController.eventsCount(ParamEvent.VALUE_UPDATED), 2);
 	assert.equal(t.emitController.eventsCount(ParamEvent.VALUE_UPDATED), 3);
 });
+
+}

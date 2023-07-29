@@ -1,6 +1,8 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {Mesh, ShaderMaterial} from 'three';
+export function testenginenodesmatCode(qUnit: QUnit) {
 
-QUnit.test('mat/code simple', async (assert) => {
+qUnit.test('mat/code simple', async (assert) => {
 	const MAT = window.MAT;
 	const geo1 = window.geo1;
 	const code1 = MAT.createNode('code');
@@ -40,3 +42,5 @@ void main() {
 }`
 	);
 });
+
+}

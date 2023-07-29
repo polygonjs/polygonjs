@@ -1,7 +1,9 @@
+import type {QUnit} from '../../../../helpers/QUnit';
 import {BackgroundMode} from '../../../../../src/engine/nodes/manager/utils/Scene/Background';
 import {saveAndLoadScene} from '../../../../helpers/ImportHelper';
+export function testenginenodesmanagerrootBackgroundController(qUnit: QUnit) {
 
-QUnit.test('root background is saved and loaded as expected', async (assert) => {
+qUnit.test('root background is saved and loaded as expected', async (assert) => {
 	const scene = window.scene;
 	const root = scene.root();
 
@@ -20,3 +22,5 @@ QUnit.test('root background is saved and loaded as expected', async (assert) => 
 		assert.equal(scene2.root().sceneBackgroundController.backgroundMode(), BackgroundMode.TEXTURE);
 	});
 });
+
+}

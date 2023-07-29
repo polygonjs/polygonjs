@@ -1,6 +1,8 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {CoreSleep} from '../../../../src/core/Sleep';
+export function testengineexpressionsmethodspointsCount(qUnit: QUnit) {
 
-QUnit.test('expression pointsCount works with path', async (assert) => {
+qUnit.test('expression pointsCount works with path', async (assert) => {
 	const geo1 = window.geo1;
 
 	const box1 = geo1.createNode('box');
@@ -12,7 +14,7 @@ QUnit.test('expression pointsCount works with path', async (assert) => {
 	assert.equal(box2.p.size.value, 24);
 });
 
-QUnit.test('expression pointsCount works with input index', async (assert) => {
+qUnit.test('expression pointsCount works with input index', async (assert) => {
 	const geo1 = window.geo1;
 
 	const box1 = geo1.createNode('box');
@@ -26,7 +28,7 @@ QUnit.test('expression pointsCount works with input index', async (assert) => {
 	assert.equal(box2.p.size.value, 24);
 });
 
-QUnit.test('expression pointsCount updates when dependency changes', async (assert) => {
+qUnit.test('expression pointsCount updates when dependency changes', async (assert) => {
 	const geo1 = window.geo1;
 
 	const box1 = geo1.createNode('box');
@@ -68,7 +70,7 @@ QUnit.test('expression pointsCount updates when dependency changes', async (asse
 	assert.ok(!box2.isDirty());
 });
 
-QUnit.skip('expression pointsCount cannot create infinite loop if scene is loaded', async (assert) => {
+qUnit.skip('expression pointsCount cannot create infinite loop if scene is loaded', async (assert) => {
 	// const geo1 = window.geo1
 	// window.scene.mark_as_loaded();
 	// const box1 = geo1.createNode('box');
@@ -91,7 +93,7 @@ QUnit.skip('expression pointsCount cannot create infinite loop if scene is loade
 	//done();
 });
 
-QUnit.test('expression pointsCount fails with bad path', async (assert) => {
+qUnit.test('expression pointsCount fails with bad path', async (assert) => {
 	const geo1 = window.geo1;
 
 	const box1 = geo1.createNode('box');
@@ -110,7 +112,7 @@ QUnit.test('expression pointsCount fails with bad path', async (assert) => {
 	);
 });
 
-QUnit.test('expression pointsCount fails with bad input index 1', async (assert) => {
+qUnit.test('expression pointsCount fails with bad input index 1', async (assert) => {
 	const geo1 = window.geo1;
 
 	const box1 = geo1.createNode('box');
@@ -129,7 +131,7 @@ QUnit.test('expression pointsCount fails with bad input index 1', async (assert)
 	);
 });
 
-QUnit.test('expression pointsCount fails with bad input index 0', async (assert) => {
+qUnit.test('expression pointsCount fails with bad input index 0', async (assert) => {
 	const geo1 = window.geo1;
 	const dummy = geo1.createNode('plane');
 	dummy.flags.display.set(true);
@@ -191,7 +193,7 @@ QUnit.test('expression pointsCount fails with bad input index 0', async (assert)
 
 // 				done()
 
-QUnit.test('pointsCount: if dependent is deleted, node becomes dirty', async (assert) => {
+qUnit.test('pointsCount: if dependent is deleted, node becomes dirty', async (assert) => {
 	const geo1 = window.geo1;
 
 	const box1 = geo1.createNode('box');
@@ -238,7 +240,7 @@ QUnit.test('pointsCount: if dependent is deleted, node becomes dirty', async (as
 	// 		assert.equal val, 24
 });
 
-QUnit.test('pointsCount: if the points count of input changes, the param gets updated', async (assert) => {
+qUnit.test('pointsCount: if the points count of input changes, the param gets updated', async (assert) => {
 	const geo1 = window.geo1;
 
 	// create a sphere that would have the display flag
@@ -274,3 +276,5 @@ QUnit.test('pointsCount: if the points count of input changes, the param gets up
 	assert.ok(!param.isDirty());
 	assert.equal(param.value, 40);
 });
+
+}

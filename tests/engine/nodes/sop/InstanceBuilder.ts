@@ -1,3 +1,4 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {
 	Box3,
 	BufferAttribute,
@@ -15,6 +16,7 @@ import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/conne
 import {createRequiredNodes} from './Instance';
 import {CoreGeometry} from '../../../../src/core/geometry/Geometry';
 import {AttributeJsNodeOutput} from '../../../../src/engine/nodes/js/Attribute';
+export function testenginenodessopInstanceBuilder(qUnit: QUnit) {
 
 const _v3 = new Vector3();
 const bbox = new Box3();
@@ -38,7 +40,7 @@ async function _getBbox(node: InstanceBuilderSopNode) {
 	return {instancePosition, min: bbox.min, max: bbox.max, size};
 }
 
-QUnit.test('sop/instanceBuilder simple', async (assert) => {
+qUnit.test('sop/instanceBuilder simple', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
 	const line1 = geo1.createNode('line');
@@ -127,7 +129,7 @@ QUnit.test('sop/instanceBuilder simple', async (assert) => {
 	});
 });
 
-QUnit.test('sop/instanceBuilder read attributes', async (assert) => {
+qUnit.test('sop/instanceBuilder read attributes', async (assert) => {
 	const geo1 = window.geo1;
 	const plane1 = geo1.createNode('plane');
 	const box1 = geo1.createNode('box');
@@ -173,7 +175,7 @@ QUnit.test('sop/instanceBuilder read attributes', async (assert) => {
 	}
 });
 
-QUnit.test('sop/instanceBuilder write attributes', async (assert) => {
+qUnit.test('sop/instanceBuilder write attributes', async (assert) => {
 	const geo1 = window.geo1;
 	const box1 = geo1.createNode('box');
 	const plane1 = geo1.createNode('plane');
@@ -209,3 +211,5 @@ QUnit.test('sop/instanceBuilder write attributes', async (assert) => {
 		assert.in_delta(color[i], expectedMatch[i], 0.001, `${i}`);
 	}
 });
+
+}

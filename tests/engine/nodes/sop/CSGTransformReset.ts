@@ -1,9 +1,11 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {BufferAttribute, Box3, Vector3} from 'three';
 import {TransformTargetType} from '../../../../src/core/Transform';
+export function testenginenodessopCSGTransformReset(qUnit: QUnit) {
 const tmpBox = new Box3();
 const tmpSize = new Vector3();
 
-QUnit.test('sop/CSGTransformReset', async (assert) => {
+qUnit.test('sop/CSGTransformReset', async (assert) => {
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false); // cancels geo node displayNodeController
 
@@ -74,3 +76,5 @@ QUnit.test('sop/CSGTransformReset', async (assert) => {
 	assert.in_delta(tmpBox.min.x, 0.5, 0.002);
 	assert.in_delta(tmpBox.max.x, 1.5, 0.002);
 });
+
+}

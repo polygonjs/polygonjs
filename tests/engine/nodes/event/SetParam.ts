@@ -1,3 +1,4 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {SceneJsonExporter} from '../../../../src/engine/io/json/export/Scene';
 import {SceneJsonImporter} from '../../../../src/engine/io/json/import/Scene';
 import {SwitchSopNode} from '../../../../src/engine/nodes/sop/Switch';
@@ -5,8 +6,9 @@ import {CoreSleep} from '../../../../src/core/Sleep';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 import {GlConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Gl';
 import {ParamType} from '../../../../src/engine/poly/ParamType';
+export function testenginenodeseventSetParam(qUnit: QUnit) {
 
-QUnit.test('event/setParam simple', async (assert) => {
+qUnit.test('event/setParam simple', async (assert) => {
 	const geo1 = window.geo1;
 	const scene = window.scene;
 
@@ -58,7 +60,7 @@ QUnit.test('event/setParam simple', async (assert) => {
 	assert.equal(switch2.pv.input, 1);
 });
 
-QUnit.test(
+qUnit.test(
 	'event/setParam finds a param again when node owning it is deleted and one with same name is recreated',
 	async (assert) => {
 		const geo1 = window.geo1;
@@ -91,7 +93,7 @@ QUnit.test(
 	}
 );
 
-QUnit.test(
+qUnit.test(
 	'event/setParam finds a material spare param again material deletes it then recreates it',
 	async (assert) => {
 		const {renderer} = await RendererUtils.waitForRenderer(window.scene);
@@ -162,3 +164,5 @@ QUnit.test(
 		RendererUtils.dispose();
 	}
 );
+
+}

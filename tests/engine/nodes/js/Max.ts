@@ -1,10 +1,12 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {Mesh} from 'three';
 import {AttribClass} from '../../../../src/core/geometry/Constant';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Js';
 import {RendererUtils} from '../../../helpers/RendererUtils';
+export function testenginenodesjsMax(qUnit: QUnit) {
 
-QUnit.test('js/max', async (assert) => {
+qUnit.test('js/max', async (assert) => {
 	const scene = window.scene;
 	const perspective_camera1 = window.perspective_camera1;
 
@@ -66,7 +68,7 @@ QUnit.test('js/max', async (assert) => {
 	});
 });
 
-QUnit.skip('js/max for more than 2 inputs', async (assert) => {
+qUnit.skip('js/max for more than 2 inputs', async (assert) => {
 	const scene = window.scene;
 	const perspective_camera1 = window.perspective_camera1;
 
@@ -143,3 +145,5 @@ QUnit.skip('js/max for more than 2 inputs', async (assert) => {
 		assert.equal(object.position.y, 6, 'object moved to 6');
 	});
 });
+
+}

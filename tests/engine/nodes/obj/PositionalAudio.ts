@@ -1,6 +1,8 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {DEMO_ASSETS_ROOT_URL} from '../../../../src/core/Assets';
+export function testenginenodesobjPositionalAudio(qUnit: QUnit) {
 
-QUnit.test('positionalAudio url can switch without error', async (assert) => {
+qUnit.test('positionalAudio url can switch without error', async (assert) => {
 	const scene = window.scene;
 
 	await scene.waitForCooksCompleted();
@@ -46,3 +48,5 @@ QUnit.test('positionalAudio url can switch without error', async (assert) => {
 	volume1.p.volume.set(0);
 	file1.p.pause.pressButton();
 });
+
+}

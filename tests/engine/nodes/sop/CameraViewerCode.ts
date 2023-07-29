@@ -1,3 +1,4 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {CoreObject} from '../../../../src/core/geometry/Object';
 import {CameraAttribute} from '../../../../src/core/camera/CoreCamera';
 import {
@@ -6,8 +7,9 @@ import {
 } from '../../../../examples/presets/sop/CameraViewerCode';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 import {CoreSleep} from '../../../../src/core/Sleep';
+export function testenginenodessopCameraViewerCode(qUnit: QUnit) {
 
-QUnit.test('sop/cameraViewerCode simple', async (assert) => {
+qUnit.test('sop/cameraViewerCode simple', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
 	const perspectiveCamera1 = geo1.createNode('perspectiveCamera');
@@ -112,3 +114,5 @@ QUnit.test('sop/cameraViewerCode simple', async (assert) => {
 		);
 	});
 });
+
+}

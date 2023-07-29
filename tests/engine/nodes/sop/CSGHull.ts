@@ -1,7 +1,9 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {BufferAttribute, Box3} from 'three';
+export function testenginenodessopCSGHull(qUnit: QUnit) {
 const tmpBox = new Box3();
 
-QUnit.test('sop/CSGHull', async (assert) => {
+qUnit.test('sop/CSGHull', async (assert) => {
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false); // cancels geo node displayNodeController
 
@@ -50,3 +52,5 @@ QUnit.test('sop/CSGHull', async (assert) => {
 	assert.in_delta(tmpBox.min.x, -2.5, 0.002);
 	assert.in_delta(tmpBox.max.x, 2.5, 0.002);
 });
+
+}

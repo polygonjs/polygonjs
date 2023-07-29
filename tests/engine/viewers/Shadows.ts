@@ -1,3 +1,4 @@
+import type {QUnit} from '../../helpers/QUnit';
 import {RendererUtils} from '../../helpers/RendererUtils';
 import {PolyScene} from '../../../src/engine/scene/PolyScene';
 import {BaseBuilderMatNodeType} from '../../../src/engine/nodes/mat/_BaseBuilder';
@@ -33,6 +34,7 @@ import {updateObjectsWithDepthMaterial} from '../../../src/modules/core/post_pro
 import {AbstractRenderer} from '../../../src/engine/viewers/Common';
 // import LINE_BASIC_DOF_VERTEX from './templates/lineBasicBuilder/customDOFMaterial.vert.glsl';
 // import LINE_BASIC_DOF_FRAGMENT from './templates/lineBasicBuilder/customDOFMaterial.frag.glsl';
+export function testengineviewersShadows(qUnit: QUnit) {
 
 async function addLightCastingShadow(assert: Assert, scene: PolyScene, builderMatNode: BaseBuilderMatNodeType) {
 	// we need to create a spotlight and assign the material for the customDepthMaterial to be compile
@@ -68,7 +70,7 @@ function renderWithDOF(scene: Scene, renderer: AbstractRenderer, camera: Camera)
 	});
 }
 
-QUnit.test('depth/distance shadows work for mesh, with mat builders', async (assert) => {
+qUnit.test('depth/distance shadows work for mesh, with mat builders', async (assert) => {
 	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 	const matNode = window.MAT.createNode('meshBasicBuilder');
 	const globals1 = matNode.createNode('globals');
@@ -148,7 +150,7 @@ QUnit.test('depth/distance shadows work for mesh, with mat builders', async (ass
 	RendererUtils.dispose();
 });
 
-QUnit.test('depth/distance shadows work for point, with mat builders', async (assert) => {
+qUnit.test('depth/distance shadows work for point, with mat builders', async (assert) => {
 	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 
 	const matNode = window.MAT.createNode('pointsBuilder');
@@ -204,7 +206,7 @@ QUnit.test('depth/distance shadows work for point, with mat builders', async (as
 
 	RendererUtils.dispose();
 });
-QUnit.test('depth/distance shadows work for lines, with mat builders ', async (assert) => {
+qUnit.test('depth/distance shadows work for lines, with mat builders ', async (assert) => {
 	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 
 	const matNode = window.MAT.createNode('lineBasicBuilder');
@@ -260,3 +262,5 @@ QUnit.test('depth/distance shadows work for lines, with mat builders ', async (a
 
 	RendererUtils.dispose();
 });
+
+}

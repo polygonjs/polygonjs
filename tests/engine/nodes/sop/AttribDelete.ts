@@ -1,6 +1,8 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {AttribClass} from '../../../../src/core/geometry/Constant';
+export function testenginenodessopAttribDelete(qUnit: QUnit) {
 
-QUnit.test('sop/attribDelete simple vertex', async (assert) => {
+qUnit.test('sop/attribDelete simple vertex', async (assert) => {
 	const geo1 = window.geo1;
 
 	const plane1 = geo1.createNode('plane');
@@ -29,7 +31,7 @@ QUnit.test('sop/attribDelete simple vertex', async (assert) => {
 	assert.notOk(geometry.getAttribute('test') != null);
 });
 
-QUnit.test('sop/attribDelete simple object', async (assert) => {
+qUnit.test('sop/attribDelete simple object', async (assert) => {
 	const geo1 = window.geo1;
 	const plane1 = geo1.createNode('plane');
 
@@ -61,7 +63,7 @@ QUnit.test('sop/attribDelete simple object', async (assert) => {
 	assert.deepEqual(coreObject.attribNames(), []);
 });
 
-QUnit.test('sop/attribDelete simple coreGroup', async (assert) => {
+qUnit.test('sop/attribDelete simple coreGroup', async (assert) => {
 	const geo1 = window.geo1;
 	const plane1 = geo1.createNode('plane');
 
@@ -90,3 +92,5 @@ QUnit.test('sop/attribDelete simple coreGroup', async (assert) => {
 	assert.notOk(coreGroup.attribValue('test'));
 	assert.deepEqual(coreGroup.attribNames(), []);
 });
+
+}

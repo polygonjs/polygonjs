@@ -1,7 +1,9 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {Box3, BufferAttribute} from 'three';
+export function testenginenodessopDecal(qUnit: QUnit) {
 const tmpBox = new Box3();
 
-QUnit.test('decal simple', async (assert) => {
+qUnit.test('decal simple', async (assert) => {
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false); // cancels geo node displayNodeController
 
@@ -23,3 +25,5 @@ QUnit.test('decal simple', async (assert) => {
 	assert.equal(tmpBox.max.y, 0.5);
 	assert.in_delta(tmpBox.max.z, 0.5, 0.1);
 });
+
+}

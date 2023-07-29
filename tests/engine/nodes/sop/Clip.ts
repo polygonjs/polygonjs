@@ -1,5 +1,7 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {ClipSopNode} from '../../../../src/engine/nodes/sop/Clip';
 import {ASSETS_ROOT} from '../../../../src/core/loader/AssetsUtils';
+export function testenginenodessopClip(qUnit: QUnit) {
 
 function _url(path: string) {
 	return `${ASSETS_ROOT}${path}`;
@@ -19,7 +21,7 @@ async function _compute(node: ClipSopNode) {
 	return {pointsCount: container.pointsCount()};
 }
 
-QUnit.test('sop/clip simple', async (assert) => {
+qUnit.test('sop/clip simple', async (assert) => {
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false); // cancels geo node displayNodeController
 
@@ -54,7 +56,7 @@ QUnit.test('sop/clip simple', async (assert) => {
 	assert.equal((await compute()).pointsCount, 100);
 });
 
-QUnit.test('sop/clip with hierarchy', async (assert) => {
+qUnit.test('sop/clip with hierarchy', async (assert) => {
 	const {geo1, fileNode} = withFile('models/resources/threedscans.com/eagle.glb');
 
 	const clip1 = geo1.createNode('clip');
@@ -87,3 +89,5 @@ QUnit.test('sop/clip with hierarchy', async (assert) => {
 	clip1.p.keepBelowPlane.set(true);
 	assert.equal((await compute()).pointsCount, 661632);
 });
+
+}

@@ -1,4 +1,6 @@
-QUnit.test('delay simple', async (assert) => {
+import type {QUnit} from '../../../helpers/QUnit';
+export function testenginenodessopDelay(qUnit: QUnit) {
+qUnit.test('delay simple', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
 
@@ -25,3 +27,5 @@ QUnit.test('delay simple', async (assert) => {
 	assert.more_than(total_time, 90);
 	assert.less_than(total_time, 200);
 });
+
+}

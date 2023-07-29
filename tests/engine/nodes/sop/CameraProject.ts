@@ -1,5 +1,7 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {CameraProjectSopNode} from '../../../../src/engine/nodes/sop/CameraProject';
 import {PerspectiveCameraSopNode} from '../../../../src/engine/nodes/sop/PerspectiveCamera';
+export function testenginenodessopCameraProject(qUnit: QUnit) {
 
 async function createCameraNode() {
 	const geo1 = window.geo1;
@@ -31,7 +33,7 @@ async function getBbox(cameraProject: CameraProjectSopNode) {
 	return geometry.boundingBox!;
 }
 
-QUnit.test('sop/cameraProject simple', async (assert) => {
+qUnit.test('sop/cameraProject simple', async (assert) => {
 	const cameraNode = await createCameraNode();
 	const geo1 = window.geo1;
 	const cameraProject1 = await createCameraProject(cameraNode);
@@ -59,3 +61,5 @@ QUnit.test('sop/cameraProject simple', async (assert) => {
 	assert.in_delta(bbox.min.z, -0.8, 0.1);
 	assert.in_delta(bbox.max.z, -0.4, 0.1);
 });
+
+}

@@ -1,10 +1,12 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Js';
 import {FloatParam} from '../../../../src/engine/params/Float';
 import {ParamType} from '../../../../src/engine/poly/ParamType';
 import {RendererUtils} from '../../../helpers/RendererUtils';
+export function testenginenodesjsPreviousValue(qUnit: QUnit) {
 
-QUnit.test('js/PreviousValue with primitive', async (assert) => {
+qUnit.test('js/PreviousValue with primitive', async (assert) => {
 	const scene = window.scene;
 	const perspective_camera1 = window.perspective_camera1;
 	const geo1 = window.geo1;
@@ -69,3 +71,5 @@ QUnit.test('js/PreviousValue with primitive', async (assert) => {
 		assert.equal(object.position.y, 4, 'object at 4');
 	});
 });
+
+}

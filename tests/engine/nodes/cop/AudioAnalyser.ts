@@ -1,8 +1,10 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {ASSETS_ROOT} from '../../../../src/core/loader/AssetsUtils';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 import {CoreSleep} from '../../../../src/core/Sleep';
+export function testenginenodescopAudioAnalyser(qUnit: QUnit) {
 
-QUnit.test('COP audioAnalyser with FFT', async (assert) => {
+qUnit.test('COP audioAnalyser with FFT', async (assert) => {
 	const scene = window.scene;
 
 	scene.root().createNode('audioListener');
@@ -53,7 +55,7 @@ QUnit.test('COP audioAnalyser with FFT', async (assert) => {
 	null1.setInput(0, null);
 });
 
-QUnit.test('COP audioAnalyser with FFT as octaves', async (assert) => {
+qUnit.test('COP audioAnalyser with FFT as octaves', async (assert) => {
 	const scene = window.scene;
 
 	scene.root().createNode('audioListener');
@@ -105,7 +107,7 @@ QUnit.test('COP audioAnalyser with FFT as octaves', async (assert) => {
 	null1.setInput(0, null);
 });
 
-QUnit.test('COP audioAnalyser with Meter', async (assert) => {
+qUnit.test('COP audioAnalyser with Meter', async (assert) => {
 	const scene = window.scene;
 
 	const listener = scene.root().createNode('audioListener');
@@ -156,7 +158,7 @@ QUnit.test('COP audioAnalyser with Meter', async (assert) => {
 	});
 });
 
-QUnit.test('COP audioAnalyser with Waveform', async (assert) => {
+qUnit.test('COP audioAnalyser with Waveform', async (assert) => {
 	const scene = window.scene;
 
 	scene.root().createNode('audioListener');
@@ -204,3 +206,5 @@ QUnit.test('COP audioAnalyser with Waveform', async (assert) => {
 		scene.pause();
 	});
 });
+
+}

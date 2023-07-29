@@ -1,3 +1,4 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {Mesh, Vector3} from 'three';
 import {ASSETS_ROOT} from '../../../../src/core/loader/AssetsUtils';
 import {CoreSleep} from '../../../../src/core/Sleep';
@@ -6,8 +7,9 @@ import {SetGeometryPositionsInputName} from '../../../../src/engine/nodes/js/Set
 import {TrackFaceJsNodeOutput} from '../../../../src/engine/nodes/js/TrackFace';
 import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Js';
 import {RendererUtils} from '../../../helpers/RendererUtils';
+export function testenginenodesjsTrackFace(qUnit: QUnit) {
 
-QUnit.test('js/trackFace', async (assert) => {
+qUnit.test('js/trackFace', async (assert) => {
 	const scene = window.scene;
 	const perspective_camera1 = window.perspective_camera1;
 	const geo1 = window.geo1;
@@ -108,3 +110,5 @@ QUnit.test('js/trackFace', async (assert) => {
 
 	video1.dispose();
 });
+
+}

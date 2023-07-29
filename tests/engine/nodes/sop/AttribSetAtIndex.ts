@@ -1,3 +1,4 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {Vector4} from 'three';
 import {Vector2} from 'three';
 import {Vector3} from 'three';
@@ -11,6 +12,7 @@ import {Vector2Param} from '../../../../src/engine/params/Vector2';
 import {Vector3Param} from '../../../../src/engine/params/Vector3';
 import {Vector4Param} from '../../../../src/engine/params/Vector4';
 import {StringOrNumber2, StringOrNumber3, StringOrNumber4} from '../../../../src/types/GlobalTypes';
+export function testenginenodessopAttribSetAtIndex(qUnit: QUnit) {
 
 interface MultiTestOptions {
 	existingAttrib: boolean;
@@ -21,7 +23,7 @@ interface MultiTestOptions {
 	withValidIndex: boolean;
 }
 
-QUnit.test('sop/attribSetAtIndex using group or not', async (assert) => {
+qUnit.test('sop/attribSetAtIndex using group or not', async (assert) => {
 	const geo1 = window.geo1;
 
 	function vParamNumeric(attribSetAtIndex: AttribSetAtIndexSopNode | AttribCreateSopNode) {
@@ -247,3 +249,5 @@ QUnit.test('sop/attribSetAtIndex using group or not', async (assert) => {
 		}
 	}
 });
+
+}

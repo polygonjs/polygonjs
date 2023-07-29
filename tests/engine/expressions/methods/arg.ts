@@ -1,4 +1,6 @@
-QUnit.test('expression arg simple', async (assert) => {
+import type {QUnit} from '../../../helpers/QUnit';
+export function testengineexpressionsmethodsarg(qUnit: QUnit) {
+qUnit.test('expression arg simple', async (assert) => {
 	const geo1 = window.geo1;
 
 	const box1 = geo1.createNode('box');
@@ -13,3 +15,5 @@ QUnit.test('expression arg simple', async (assert) => {
 	await box2.p.size.compute();
 	assert.equal(box2.p.size.value, 3);
 });
+
+}

@@ -1,3 +1,4 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {Material} from 'three';
 import {Mesh} from 'three';
 import {AttribClass} from '../../../../src/core/geometry/Constant';
@@ -6,8 +7,9 @@ import {CoreSleep} from '../../../../src/core/Sleep';
 import {OnObjectAttributeUpdateJsNode} from '../../../../src/engine/nodes/js/OnObjectAttributeUpdate';
 import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Js';
 import {RendererUtils} from '../../../helpers/RendererUtils';
+export function testenginenodesjsGetMaterial(qUnit: QUnit) {
 
-QUnit.test('js/GetMaterial', async (assert) => {
+qUnit.test('js/GetMaterial', async (assert) => {
 	const MAT = window.MAT;
 	const scene = window.scene;
 	const perspective_camera1 = window.perspective_camera1;
@@ -70,3 +72,5 @@ QUnit.test('js/GetMaterial', async (assert) => {
 		assert.equal((object.material as Material).uuid, (await meshBasic2.material()).uuid, 'mat switched to basic2');
 	});
 });
+
+}

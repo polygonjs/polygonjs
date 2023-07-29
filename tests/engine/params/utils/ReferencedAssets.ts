@@ -1,8 +1,10 @@
+import type {QUnit} from '../../../helpers/QUnit';
 // import {SceneExporter} from '../../../../src/Engine/IO/Code/Export/Scene'
 // import {SceneJsonExporter} from '../../../../src/Engine/IO/Json/Export/Scene'
 // import {ParamType} from '../../../../src/Engine/Param/_Module'
+export function testengineparamsutilsReferencedAssets(qUnit: QUnit) {
 
-// QUnit.test( "param can be marked as referencing an asset", async ( assert ) => {
+// qUnit.test( "param can be marked as referencing an asset", async ( assert ) => {
 
 // 	const scene = window.scene
 // 	const geo1 = window.geo1
@@ -32,8 +34,8 @@
 // 	const scene_json_exporter = new SceneJsonExporter(scene)
 // 	const data = scene_json_exporter.data()
 
-// 	const old_max_depth = QUnit.dump.maxDepth
-// 	QUnit.dump.maxDepth = 10
+// 	const old_max_depth = qUnit.dump.maxDepth
+// 	qUnit.dump.maxDepth = 10
 // assert.deepEqual(data, {
 //   "properties": {
 //     "fps": 30,
@@ -165,7 +167,7 @@
 //     }
 //   }
 // })
-// 	QUnit.dump.maxDepth = old_max_depth
+// 	qUnit.dump.maxDepth = old_max_depth
 
 // 	const new_scene = window.POLY.load_json(data)
 
@@ -173,3 +175,5 @@
 // 	assert.notOk( new_scene.node('/MAT/mesh_basic2').param('texture_map').is_referencing_asset() )
 
 // });
+
+}

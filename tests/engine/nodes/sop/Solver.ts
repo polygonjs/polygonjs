@@ -1,6 +1,8 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {Box3, Vector3} from 'three';
 import {SolverSopNode} from '../../../../src/engine/nodes/sop/Solver';
 import {BooleanOperation} from '../../../../src/engine/operations/sop/Boolean';
+export function testenginenodessopSolver(qUnit: QUnit) {
 const tmpBox = new Box3();
 function create_required_nodes(node: SolverSopNode) {
 	const subnetInput1 = node.createNode('subnetInput');
@@ -18,7 +20,7 @@ function create_required_nodes(node: SolverSopNode) {
 	return {switch1, subnetInput1, solverPreviousFrame, subnetOutput1};
 }
 
-QUnit.test('sop/solver simple', async (assert) => {
+qUnit.test('sop/solver simple', async (assert) => {
 	const scene = window.scene;
 	scene.setFrame(0);
 	await scene.waitForCooksCompleted();
@@ -100,3 +102,5 @@ QUnit.test('sop/solver simple', async (assert) => {
 	assert.in_delta(size.x, 2.21, 0.01);
 	assert.ok(!solver1.states.error.message());
 });
+
+}

@@ -1,8 +1,10 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {LinearSRGBColorSpace} from 'three';
 import {ASSETS_ROOT} from '../../../../src/core/loader/AssetsUtils';
 import {CoreSleep} from '../../../../src/core/Sleep';
+export function testenginenodescopSnapshot(qUnit: QUnit) {
 
-QUnit.test('cop/snapshot from video', async (assert) => {
+qUnit.test('cop/snapshot from video', async (assert) => {
 	const COP = window.COP;
 
 	const video1 = COP.createNode('video');
@@ -33,7 +35,7 @@ QUnit.test('cop/snapshot from video', async (assert) => {
 	}, 1000);
 });
 
-QUnit.test('cop/snapshot from webcam', async (assert) => {
+qUnit.test('cop/snapshot from webcam', async (assert) => {
 	const COP = window.COP;
 
 	const webcam1 = COP.createNode('webCam');
@@ -61,3 +63,5 @@ QUnit.test('cop/snapshot from webcam', async (assert) => {
 		webcam1.dispose();
 	}, 1000);
 });
+
+}

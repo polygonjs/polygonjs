@@ -1,4 +1,6 @@
-QUnit.test('bbox_scatter simple', async (assert) => {
+import type {QUnit} from '../../../helpers/QUnit';
+export function testenginenodessopBboxScatter(qUnit: QUnit) {
+qUnit.test('bbox_scatter simple', async (assert) => {
 	const geo1 = window.geo1;
 
 	const box1 = geo1.createNode('box');
@@ -22,3 +24,5 @@ QUnit.test('bbox_scatter simple', async (assert) => {
 	container = await bbox_scatter1.compute();
 	assert.equal(container.pointsCount(), 1210);
 });
+
+}

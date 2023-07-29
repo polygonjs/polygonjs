@@ -1,4 +1,6 @@
-QUnit.test('sop/code simple', async (assert) => {
+import type {QUnit} from '../../../helpers/QUnit';
+export function testenginenodessopCode(qUnit: QUnit) {
+qUnit.test('sop/code simple', async (assert) => {
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false); // cancels geo node displayNodeController
 
@@ -14,7 +16,7 @@ QUnit.test('sop/code simple', async (assert) => {
 	assert.equal((await getPos()).y, 1);
 });
 
-QUnit.test('sop/code js changed', async (assert) => {
+qUnit.test('sop/code js changed', async (assert) => {
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false); // cancels geo node displayNodeController
 
@@ -43,3 +45,5 @@ QUnit.test('sop/code js changed', async (assert) => {
 	}
 	assert.equal((await getPos()).y, 5);
 });
+
+}

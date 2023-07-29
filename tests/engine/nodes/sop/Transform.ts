@@ -1,10 +1,12 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {Vector3, Box3} from 'three';
 import {TransformTargetType} from '../../../../src/core/Transform';
 import {HierarchyMode} from '../../../../src/engine/operations/sop/Hierarchy';
+export function testenginenodessopTransform(qUnit: QUnit) {
 const tmpBox = new Box3();
 const tmpSize = new Vector3();
 
-QUnit.test('sop/transform simple', async (assert) => {
+qUnit.test('sop/transform simple', async (assert) => {
 	const geo1 = window.geo1;
 
 	const box1 = geo1.createNode('box');
@@ -49,7 +51,7 @@ QUnit.test('sop/transform simple', async (assert) => {
 	assert.equal(tmpBox.max.y, +3);
 });
 
-QUnit.test('sop/transform can scale geometries down a hierarchy', async (assert) => {
+qUnit.test('sop/transform can scale geometries down a hierarchy', async (assert) => {
 	const geo1 = window.geo1;
 	const box1 = geo1.createNode('box');
 	const merge1 = geo1.createNode('merge');
@@ -73,3 +75,5 @@ QUnit.test('sop/transform can scale geometries down a hierarchy', async (assert)
 	assert.in_delta(tmpSize.x, 0.1, 0.00001);
 	assert.in_delta(tmpSize.y, 0.1, 0.00001);
 });
+
+}

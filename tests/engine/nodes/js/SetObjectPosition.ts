@@ -1,4 +1,8 @@
+import type {QUnit} from '../../../helpers/QUnit';
+export function testenginenodesjsSetObjectPosition(qUnit: QUnit) {
 // tested in multiple tests
-// QUnit.test('js/setObjectPosition', async (assert) => {
+// qUnit.test('js/setObjectPosition', async (assert) => {
 // 	assert.equal(1, 2);
 // });
+
+}

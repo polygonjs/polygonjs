@@ -1,11 +1,13 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {Mesh} from 'three';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {TransformTargetType} from '../../../../src/core/Transform';
 import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Js';
 import {ParamType} from '../../../../src/engine/poly/ParamType';
 import {RendererUtils} from '../../../helpers/RendererUtils';
+export function testenginenodesjsGetSibbling(qUnit: QUnit) {
 
-QUnit.test('js/GetSibbling', async (assert) => {
+qUnit.test('js/GetSibbling', async (assert) => {
 	const scene = window.scene;
 	const perspective_camera1 = window.perspective_camera1;
 
@@ -110,3 +112,5 @@ QUnit.test('js/GetSibbling', async (assert) => {
 		assert.equal(object.position.x, 3, 'object moved to 3');
 	});
 });
+
+}

@@ -1,8 +1,10 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {GlConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Gl';
 import {SceneJsonExporter} from '../../../../src/engine/io/json/export/Scene';
 import {SceneJsonImporter} from '../../../../src/engine/io/json/import/Scene';
+export function testenginenodesglAttribute(qUnit: QUnit) {
 
-QUnit.test('gl attribute updates its output type correctly when created', async (assert) => {
+qUnit.test('gl attribute updates its output type correctly when created', async (assert) => {
 	const MAT = window.MAT;
 	const material_basic_builder1 = MAT.createNode('meshBasicBuilder');
 	assert.equal(material_basic_builder1.children().length, 0);
@@ -21,7 +23,7 @@ QUnit.test('gl attribute updates its output type correctly when created', async 
 	assert.equal(attribute1.io.outputs.namedOutputConnectionPoints()[0].type(), GlConnectionPointType.VEC2);
 });
 
-QUnit.test('gl attribute updates its output type correctly when scene is loaded', async (assert) => {
+qUnit.test('gl attribute updates its output type correctly when scene is loaded', async (assert) => {
 	const scene = window.scene;
 	const MAT = window.MAT;
 	const material_basic_builder1 = MAT.createNode('meshBasicBuilder');
@@ -47,7 +49,9 @@ QUnit.test('gl attribute updates its output type correctly when scene is loaded'
 	assert.equal(attribute1.io.outputs.namedOutputConnectionPoints()[0].type(), GlConnectionPointType.VEC2);
 });
 
-QUnit.skip(
+qUnit.skip(
 	'gl attribute is changed, then the shader is updated correctly, without double definition',
 	async (assert) => {}
 );
+
+}

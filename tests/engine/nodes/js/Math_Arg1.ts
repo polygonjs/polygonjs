@@ -1,3 +1,4 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {AbsJsNode} from '../../../../src/engine/nodes/js/Abs';
 import {AcosJsNode} from '../../../../src/engine/nodes/js/Acos';
@@ -13,8 +14,9 @@ import {SqrtJsNode} from '../../../../src/engine/nodes/js/Sqrt';
 import {TanJsNode} from '../../../../src/engine/nodes/js/Tan';
 import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Js';
 import {RendererUtils} from '../../../helpers/RendererUtils';
+export function testenginenodesjsMath_Arg1(qUnit: QUnit) {
 
-QUnit.test('js/Math_Arg1 simple', async (assert) => {
+qUnit.test('js/Math_Arg1 simple', async (assert) => {
 	const scene = window.scene;
 	const perspective_camera1 = window.perspective_camera1;
 	const geo1 = window.geo1;
@@ -100,3 +102,5 @@ QUnit.test('js/Math_Arg1 simple', async (assert) => {
 		await useNode(tan, 0.5, Math.tan(0.5));
 	});
 });
+
+}

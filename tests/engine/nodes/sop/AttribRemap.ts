@@ -1,7 +1,9 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {CorePoint} from '../../../../src/core/geometry/Point';
 import {RampPoint, RampValue, RampInterpolation} from '../../../../src/engine/params/ramp/RampValue';
+export function testenginenodessopAttribRemap(qUnit: QUnit) {
 
-QUnit.test('attrib_remap simple', async (assert) => {
+qUnit.test('attrib_remap simple', async (assert) => {
 	const geo1 = window.geo1;
 
 	const plane1 = geo1.createNode('plane');
@@ -34,3 +36,5 @@ QUnit.test('attrib_remap simple', async (assert) => {
 	assert.equal(values[2], 1);
 	assert.equal(values[3], 0.625);
 });
+
+}

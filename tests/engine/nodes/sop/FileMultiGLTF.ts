@@ -1,4 +1,6 @@
-QUnit.test('SOP fileMultiGLTF simple', async (assert) => {
+import type {QUnit} from '../../../helpers/QUnit';
+export function testenginenodessopFileMultiGLTF(qUnit: QUnit) {
+qUnit.test('SOP fileMultiGLTF simple', async (assert) => {
 	const geo1 = window.geo1;
 
 	const json0 = [{name: 'horse'}];
@@ -22,7 +24,7 @@ QUnit.test('SOP fileMultiGLTF simple', async (assert) => {
 	assert.equal(container.totalPointsCount(), 2524, 'total points_count is 6756');
 });
 
-QUnit.test('SOP fileMultiGLTF can use multiple times the same url', async (assert) => {
+qUnit.test('SOP fileMultiGLTF can use multiple times the same url', async (assert) => {
 	const geo1 = window.geo1;
 
 	const json = [{name: 'horse'}, {name: 'sphere_with_texture'}, {name: 'horse'}];
@@ -35,3 +37,5 @@ QUnit.test('SOP fileMultiGLTF can use multiple times the same url', async (asser
 	let container = await fileMultiGLTF1.compute();
 	assert.equal(container.totalPointsCount(), 3320, 'total points_count is 12108');
 });
+
+}

@@ -1,7 +1,9 @@
+import type {QUnit} from '../../../../helpers/QUnit';
 import {Camera} from 'three';
 import {CoreSleep} from '../../../../../src/core/Sleep';
 import {ThreejsViewer} from '../../../../../src/engine/viewers/Threejs';
 import {RendererUtils} from '../../../../helpers/RendererUtils';
+export function testenginenodesmanagerrootAudioController(qUnit: QUnit) {
 function soundIcon(viewer: ThreejsViewer<Camera>) {
 	return viewer.domElement()?.querySelector('svg') as HTMLElement | undefined;
 }
@@ -20,7 +22,7 @@ function clickOnSoundIcon(viewer: ThreejsViewer<Camera>) {
 	icon.parentElement?.dispatchEvent(new PointerEvent('pointerdown'));
 }
 
-QUnit.test('root audio controller simple', async (assert) => {
+qUnit.test('root audio controller simple', async (assert) => {
 	const scene = window.scene;
 	assert.ok(!scene.loadingController.isLoading());
 	const root = scene.root();
@@ -105,7 +107,7 @@ QUnit.test('root audio controller simple', async (assert) => {
 	});
 });
 
-QUnit.test('root audio controller sound icon display controller by root param', async (assert) => {
+qUnit.test('root audio controller sound icon display controller by root param', async (assert) => {
 	const scene = window.scene;
 	const root = scene.root();
 
@@ -122,7 +124,7 @@ QUnit.test('root audio controller sound icon display controller by root param', 
 });
 
 // that test does not make sense as the soundOn setting is on the audioListener
-// QUnit.test(
+// qUnit.test(
 // 	'root audio controller: creating an audioListener after setting sound to off will also turn it off',
 // 	async (assert) => {
 // 		const scene = create_scene();
@@ -152,3 +154,5 @@ QUnit.test('root audio controller sound icon display controller by root param', 
 // 		assert.equal(audioListener1.pv.soundOn, 1);
 // 	}
 // );
+
+}

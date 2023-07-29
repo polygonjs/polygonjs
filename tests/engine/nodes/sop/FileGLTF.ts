@@ -1,7 +1,9 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {HierarchyMode} from '../../../../src/engine/operations/sop/Hierarchy';
 import {ASSETS_ROOT} from '../../../../src/core/loader/AssetsUtils';
 import {Poly} from '../../../../src/engine/Poly';
 import {withPlayerMode} from '../../../helpers/PlayerMode';
+export function testenginenodessopFileGLTF(qUnit: QUnit) {
 
 function _url(path: string) {
 	return `${ASSETS_ROOT}${path}`;
@@ -31,34 +33,34 @@ async function withFileAndHierarchy(path: string) {
 	return {container, fileNode, hierarchyNode};
 }
 
-QUnit.test('SOP fileGLTF glb stork', async (assert) => {
+qUnit.test('SOP fileGLTF glb stork', async (assert) => {
 	const {container} = await withFile('models/stork.glb');
 	assert.equal(container.totalPointsCount(), 358);
 });
-QUnit.test('SOP fileGLTF glb soldier', async (assert) => {
+qUnit.test('SOP fileGLTF glb soldier', async (assert) => {
 	const {container} = await withFile('models/soldier.glb');
 	assert.equal(container.totalPointsCount(), 7434);
 });
-QUnit.test('SOP fileGLTF glb json', async (assert) => {
+qUnit.test('SOP fileGLTF glb json', async (assert) => {
 	const {container} = await withFile('models/parrot.glb');
 	assert.equal(container.totalPointsCount(), 497);
 });
-QUnit.test('SOP fileGLTF glb horse', async (assert) => {
+qUnit.test('SOP fileGLTF glb horse', async (assert) => {
 	const {container} = await withFile('models/horse.glb');
 	assert.equal(container.totalPointsCount(), 796);
 });
-QUnit.test('SOP fileGLTF glb flamingo', async (assert) => {
+qUnit.test('SOP fileGLTF glb flamingo', async (assert) => {
 	const {container} = await withFile('models/flamingo.glb');
 	assert.equal(container.totalPointsCount(), 337);
 });
-QUnit.test('SOP fileGLTF z3 glb with draco', async (assert) => {
+qUnit.test('SOP fileGLTF z3 glb with draco', async (assert) => {
 	const data1 = await withFile('models/z3.glb');
 	assert.equal(data1.container.pointsCount(), 0);
 	const data2 = await withFileAndHierarchy('models/z3.glb');
 	assert.equal(data2.container.pointsCount(), 498800);
 });
 
-QUnit.test('SOP fileGLTF can load multiple glb one after the other', async (assert) => {
+qUnit.test('SOP fileGLTF can load multiple glb one after the other', async (assert) => {
 	Poly.blobs.clear();
 	await withPlayerMode(true, async () => {
 		assert.ok(Poly.playerMode());
@@ -88,7 +90,7 @@ QUnit.test('SOP fileGLTF can load multiple glb one after the other', async (asse
 	});
 });
 
-QUnit.test('SOP fileGLTF can load multiple glb in parallel', async (assert) => {
+qUnit.test('SOP fileGLTF can load multiple glb in parallel', async (assert) => {
 	Poly.blobs.clear();
 	await withPlayerMode(true, async () => {
 		assert.ok(Poly.playerMode());
@@ -121,3 +123,5 @@ QUnit.test('SOP fileGLTF can load multiple glb in parallel', async (assert) => {
 		assert.equal(container.pointsCount(), 153233);
 	});
 });
+
+}

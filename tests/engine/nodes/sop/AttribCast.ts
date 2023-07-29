@@ -1,10 +1,12 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {AttribType, ATTRIB_TYPES} from '../../../../src/engine/operations/sop/AttribCast';
 import {HierarchyMode} from '../../../../src/engine/operations/sop/Hierarchy';
 
 import {ASSETS_ROOT} from '../../../../src/core/loader/AssetsUtils';
 import {BufferAttribute, Uint16BufferAttribute} from 'three';
+export function testenginenodessopAttribCast(qUnit: QUnit) {
 
-QUnit.test('attribCast simple', async (assert) => {
+qUnit.test('attribCast simple', async (assert) => {
 	const geo1 = window.geo1;
 
 	const file1 = geo1.createNode('fileGLTF');
@@ -35,3 +37,5 @@ QUnit.test('attribCast simple', async (assert) => {
 	assert.ok(index instanceof BufferAttribute);
 	assert.ok(index instanceof Uint16BufferAttribute);
 });
+
+}

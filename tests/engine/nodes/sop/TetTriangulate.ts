@@ -1,4 +1,6 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {BaseSopNodeType} from '../../../../src/engine/nodes/sop/_Base';
+export function testenginenodessopTetTriangulate(qUnit: QUnit) {
 
 async function pointsCount(node: BaseSopNodeType) {
 	const container = await node.compute();
@@ -6,7 +8,7 @@ async function pointsCount(node: BaseSopNodeType) {
 	return coreGroup.pointsCount();
 }
 
-QUnit.test('sop/tetTriangulate simple', async (assert) => {
+qUnit.test('sop/tetTriangulate simple', async (assert) => {
 	const geo1 = window.geo1;
 
 	const icosahedron1 = geo1.createNode('icosahedron');
@@ -40,3 +42,5 @@ QUnit.test('sop/tetTriangulate simple', async (assert) => {
 	tetTriangulate1.p.displaySphere.set(1);
 	assert.equal(await pointsCount(tetTriangulate1), 1407724, 'sphere');
 });
+
+}

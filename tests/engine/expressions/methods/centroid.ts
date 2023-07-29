@@ -1,10 +1,12 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {Box3} from 'three';
 import {TextSopNode} from '../../../../src/engine/nodes/sop/Text';
 import {TransformSopNode} from '../../../../src/engine/nodes/sop/Transform';
 import {sceneFromScene} from '../../../helpers/ImportHelper';
+export function testengineexpressionsmethodscentroid(qUnit: QUnit) {
 const tmpBox = new Box3();
 
-QUnit.test('expression centroid works with path', async (assert) => {
+qUnit.test('expression centroid works with path', async (assert) => {
 	const geo1 = window.geo1;
 
 	const box1 = geo1.createNode('box');
@@ -46,7 +48,7 @@ QUnit.test('expression centroid works with path', async (assert) => {
 	assert.equal(transform2.p.t.x.value, 10);
 });
 
-QUnit.test('using $CEX on a node without inputs fails correctly', async (assert) => {
+qUnit.test('using $CEX on a node without inputs fails correctly', async (assert) => {
 	const geo1 = window.geo1;
 
 	const box1 = geo1.createNode('box');
@@ -57,7 +59,7 @@ QUnit.test('using $CEX on a node without inputs fails correctly', async (assert)
 	assert.equal(box1.p.size.states.error.message(), 'expression error: "$CEX" (invalid input (0))');
 });
 
-QUnit.test('expression centroid with input index still build dependency after scene load', async (assert) => {
+qUnit.test('expression centroid with input index still build dependency after scene load', async (assert) => {
 	const geo1 = window.geo1;
 
 	const text = geo1.createNode('text');
@@ -112,3 +114,5 @@ QUnit.test('expression centroid with input index still build dependency after sc
 	assert.in_delta(tmpBox.min.x, -18.9, 1);
 	assert.in_delta(tmpBox.max.x, 18.9, 1);
 });
+
+}

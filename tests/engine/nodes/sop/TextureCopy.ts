@@ -1,7 +1,9 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {Mesh} from 'three';
 import {Texture} from 'three';
 import {ASSETS_ROOT} from '../../../../src/core/loader/AssetsUtils';
 import {BaseSopNodeType} from '../../../../src/engine/nodes/sop/_Base';
+export function testenginenodessopTextureCopy(qUnit: QUnit) {
 
 async function findTexture(node: BaseSopNodeType, textureName: string) {
 	const container = await node.compute();
@@ -18,7 +20,7 @@ async function findTexture(node: BaseSopNodeType, textureName: string) {
 	return texture;
 }
 
-QUnit.test('textureCopy simple', async (assert) => {
+qUnit.test('textureCopy simple', async (assert) => {
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false);
 	const file1 = geo1.createNode('fileGLTF');
@@ -40,3 +42,5 @@ QUnit.test('textureCopy simple', async (assert) => {
 	assert.equal(copiedTexture.image.width, 2048);
 	assert.equal(copiedTexture.image.height, 2048);
 });
+
+}

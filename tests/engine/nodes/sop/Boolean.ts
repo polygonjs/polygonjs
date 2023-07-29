@@ -1,3 +1,4 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {ArrayUtils} from './../../../../src/core/ArrayUtils';
 import {Mesh} from 'three';
 import {Material} from 'three';
@@ -5,8 +6,9 @@ import {BooleanOperation, BOOLEAN_OPERATIONS} from '../../../../src/engine/opera
 import {AttribCreateSopNode} from '../../../../src/engine/nodes/sop/AttribCreate';
 import {DeleteSopNode} from '../../../../src/engine/nodes/sop/Delete';
 import {BooleanSopNode} from '../../../../src/engine/nodes/sop/Boolean';
+export function testenginenodessopBoolean(qUnit: QUnit) {
 
-QUnit.test('sop/boolean simple', async (assert) => {
+qUnit.test('sop/boolean simple', async (assert) => {
 	const geo1 = window.geo1;
 
 	const boxA = geo1.createNode('box');
@@ -57,7 +59,7 @@ QUnit.test('sop/boolean simple', async (assert) => {
 	assert.equal(coreGroup.points().length, 5523);
 });
 
-QUnit.test('sop/boolean with shared materials', async (assert) => {
+qUnit.test('sop/boolean with shared materials', async (assert) => {
 	const geo1 = window.geo1;
 	const MAT = window.MAT;
 
@@ -114,7 +116,7 @@ QUnit.test('sop/boolean with shared materials', async (assert) => {
 	// assert.equal(geometry.groups[2].count, 0, 'group 2 has 0');
 });
 
-QUnit.test('sop/boolean result can be instanciated', async (assert) => {
+qUnit.test('sop/boolean result can be instanciated', async (assert) => {
 	const geo1 = window.geo1;
 	const MAT = window.MAT;
 
@@ -140,7 +142,7 @@ QUnit.test('sop/boolean result can be instanciated', async (assert) => {
 	assert.equal(coreGroup?.pointsCount(), 2);
 });
 
-QUnit.test('sop/boolean result can be used by delete node', async (assert) => {
+qUnit.test('sop/boolean result can be used by delete node', async (assert) => {
 	const geo1 = window.geo1;
 
 	const sphere1 = geo1.createNode('sphere');
@@ -177,7 +179,7 @@ QUnit.test('sop/boolean result can be used by delete node', async (assert) => {
 	assert.equal(await pointsCount(boolean1), 8028);
 	assert.equal(await pointsCount(delete1), 4047);
 });
-QUnit.test('sop/boolean with intersection edges', async (assert) => {
+qUnit.test('sop/boolean with intersection edges', async (assert) => {
 	const geo1 = window.geo1;
 
 	const sphere1 = geo1.createNode('sphere');
@@ -199,3 +201,5 @@ QUnit.test('sop/boolean with intersection edges', async (assert) => {
 	boolean1.p.intersectionEdgesOnly.set(false);
 	assert.equal(await pointsCount(boolean1), 8028);
 });
+
+}

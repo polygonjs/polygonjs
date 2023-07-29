@@ -1,4 +1,6 @@
-QUnit.test('expression/cameraNames with node path', async (assert) => {
+import type {QUnit} from '../../../helpers/QUnit';
+export function testengineexpressionsmethodscameraNames(qUnit: QUnit) {
+qUnit.test('expression/cameraNames with node path', async (assert) => {
 	const geo1 = window.geo1;
 
 	const box1 = geo1.createNode('box');
@@ -26,7 +28,7 @@ QUnit.test('expression/cameraNames with node path', async (assert) => {
 	assert.equal(param.value, 'perspectiveCamera1,perspectiveCamera2');
 });
 
-QUnit.test('expression/cameraNames with index', async (assert) => {
+qUnit.test('expression/cameraNames with index', async (assert) => {
 	const geo1 = window.geo1;
 
 	const box1 = geo1.createNode('box');
@@ -52,3 +54,5 @@ QUnit.test('expression/cameraNames with index', async (assert) => {
 	await param.compute();
 	assert.equal(param.value, 'perspectiveCamera1,perspectiveCamera2');
 });
+
+}

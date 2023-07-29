@@ -1,6 +1,8 @@
+import type {QUnit} from '../../helpers/QUnit';
 import {ASSETS_ROOT} from '../../../src/core/loader/AssetsUtils';
+export function testengineparamsFloat(qUnit: QUnit) {
 
-QUnit.test('float eval correctly when set to different values', async (assert) => {
+qUnit.test('float eval correctly when set to different values', async (assert) => {
 	const geo1 = window.geo1;
 
 	const scale = geo1.p.scale;
@@ -18,7 +20,7 @@ QUnit.test('float eval correctly when set to different values', async (assert) =
 	assert.equal(scale.value, 1.5);
 });
 
-QUnit.test('float hasExpression() returns false when removing the expression', async (assert) => {
+qUnit.test('float hasExpression() returns false when removing the expression', async (assert) => {
 	const geo1 = window.geo1;
 
 	const box1 = geo1.createNode('box');
@@ -41,7 +43,7 @@ QUnit.test('float hasExpression() returns false when removing the expression', a
 	assert.ok(param.hasExpression());
 });
 
-QUnit.test('float param can take an expression returning a boolean', async (assert) => {
+qUnit.test('float param can take an expression returning a boolean', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
 
@@ -62,7 +64,7 @@ QUnit.test('float param can take an expression returning a boolean', async (asse
 	assert.equal(param.value, 1);
 });
 
-QUnit.test('serialized value is float if numerical value entered as a string', async (assert) => {
+qUnit.test('serialized value is float if numerical value entered as a string', async (assert) => {
 	const geo1 = window.geo1;
 
 	const attrib_create1 = geo1.createNode('attribCreate');
@@ -76,7 +78,7 @@ QUnit.test('serialized value is float if numerical value entered as a string', a
 	assert.equal(param.rawInputSerialized(), 12.5);
 });
 
-QUnit.test('a float param can clear its error when missing ref is solved', async (assert) => {
+qUnit.test('a float param can clear its error when missing ref is solved', async (assert) => {
 	const geo1 = window.geo1;
 	const COP = window.COP;
 	const text1 = geo1.createNode('text');
@@ -110,7 +112,7 @@ QUnit.test('a float param can clear its error when missing ref is solved', async
 	setTimeout(() => video1.dispose(), 100);
 });
 
-QUnit.test('a float param can clear its error when expression resolves', async (assert) => {
+qUnit.test('a float param can clear its error when expression resolves', async (assert) => {
 	const geo1 = window.geo1;
 	const COP = window.COP;
 	const text1 = geo1.createNode('text');
@@ -145,3 +147,5 @@ QUnit.test('a float param can clear its error when expression resolves', async (
 
 	setTimeout(() => video1.dispose(), 100);
 });
+
+}

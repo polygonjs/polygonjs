@@ -1,4 +1,6 @@
-QUnit.test('tube simple', async (assert) => {
+import type {QUnit} from '../../../helpers/QUnit';
+export function testenginenodessopTube(qUnit: QUnit) {
+qUnit.test('tube simple', async (assert) => {
 	const geo1 = window.geo1;
 
 	const tube1 = geo1.createNode('tube');
@@ -10,3 +12,5 @@ QUnit.test('tube simple', async (assert) => {
 	assert.ok(geometry);
 	assert.equal(container.pointsCount(), 76);
 });
+
+}

@@ -1,3 +1,4 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {GlConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Gl';
 import {SceneJsonExporter} from '../../../../src/engine/io/json/export/Scene';
 import {SceneJsonImporter} from '../../../../src/engine/io/json/import/Scene';
@@ -8,8 +9,9 @@ import {RendererUtils} from '../../../helpers/RendererUtils';
 import {PointsBuilderMatNode} from '../../../../src/engine/nodes/mat/PointsBuilder';
 import {MaterialUserDataUniforms} from '../../../../src/engine/nodes/gl/code/assemblers/materials/OnBeforeCompile';
 import {GLSLHelper} from '../../../helpers/GLSLHelper';
+export function testenginenodesmatPointsBuilder(qUnit: QUnit) {
 
-QUnit.test('points builder persisted_config', async (assert) => {
+qUnit.test('points builder persisted_config', async (assert) => {
 	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 	const MAT = window.MAT;
 	const points1 = MAT.createNode('pointsBuilder');
@@ -74,3 +76,5 @@ QUnit.test('points builder persisted_config', async (assert) => {
 	});
 	RendererUtils.dispose();
 });
+
+}

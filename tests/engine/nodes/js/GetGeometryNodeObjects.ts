@@ -1,9 +1,11 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {Mesh} from 'three';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Js';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 import {ActorSopNode} from '../../../../src/engine/nodes/sop/Actor';
 import {CreateObjectsJsNodeInput} from '../../../../src/engine/nodes/js/CreateObjects';
+export function testenginenodesjsGetGeometryNodeObjects(qUnit: QUnit) {
 
 function _setupActor1(actorNode: ActorSopNode) {
 	const onManualTrigger1 = actorNode.createNode('onManualTrigger');
@@ -32,7 +34,7 @@ function _setupActor2(actorNode: ActorSopNode) {
 	floatToVec3_1.setInput(0, onTick1, 'time');
 }
 
-QUnit.test('js/getGeometryNodeObjects simple', async (assert) => {
+qUnit.test('js/getGeometryNodeObjects simple', async (assert) => {
 	const scene = window.scene;
 	const perspective_camera1 = window.perspective_camera1;
 
@@ -77,3 +79,5 @@ QUnit.test('js/getGeometryNodeObjects simple', async (assert) => {
 		assert.more_than(child.position.x, 0.2, 'new child has moved');
 	});
 });
+
+}

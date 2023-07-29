@@ -1,5 +1,7 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {ASSETS_ROOT} from './../../../../src/core/loader/AssetsUtils';
-QUnit.test('expression/animationNames with node path', async (assert) => {
+export function testengineexpressionsmethodsanimationNames(qUnit: QUnit) {
+qUnit.test('expression/animationNames with node path', async (assert) => {
 	const geo1 = window.geo1;
 
 	const url = `${ASSETS_ROOT}/models/resources/quaternius/animals/Alpaca.gltf`;
@@ -17,3 +19,5 @@ QUnit.test('expression/animationNames with node path', async (assert) => {
 		'Attack_Headbutt,Attack_Kick,Death,Eating,Gallop,Gallop_Jump,Idle,Idle_2,Idle_Headlow,Idle_HitReact1,Idle_HitReact2,Jump_toIdle,Walk'
 	);
 });
+
+}

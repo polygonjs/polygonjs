@@ -1,3 +1,4 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {Mesh, ShaderMaterial} from 'three';
 import {Material} from 'three';
 import {RendererUtils} from '../../../helpers/RendererUtils';
@@ -12,11 +13,12 @@ import {CoreType} from '../../../../src/core/Type';
 import {CoreObjectType, ObjectContent} from '../../../../src/core/geometry/ObjectContent';
 import {CustomMaterialName, MaterialWithCustomMaterials} from '../../../../src/core/geometry/Material';
 // import {CorePath} from '../../../../src/core/geometry/CorePath';
+export function testenginenodessopMaterial(qUnit: QUnit) {
 
 const LAMBERT_UNIFORMS = UniformsUtils.clone(ShaderLib.lambert.uniforms);
 const LAMBERT_UNIFORM_NAMES = Object.keys(LAMBERT_UNIFORMS).concat(['clippingPlanes']).sort();
 
-QUnit.test('sop/material simple', async (assert) => {
+qUnit.test('sop/material simple', async (assert) => {
 	const geo1 = window.geo1;
 	const MAT = window.MAT;
 
@@ -35,7 +37,7 @@ QUnit.test('sop/material simple', async (assert) => {
 	assert.equal(material.uuid, (await lambert1.material()).uuid);
 });
 
-QUnit.test('sop/material clone', async (assert) => {
+qUnit.test('sop/material clone', async (assert) => {
 	const geo1 = window.geo1;
 	const MAT = window.MAT;
 
@@ -66,7 +68,7 @@ QUnit.test('sop/material clone', async (assert) => {
 	assert.notEqual(src_material.uuid, (objects[1].material as Material).uuid);
 });
 
-QUnit.test('sop/material access group by object name', async (assert) => {
+qUnit.test('sop/material access group by object name', async (assert) => {
 	const geo1 = window.geo1;
 	const MAT = window.MAT;
 
@@ -123,7 +125,7 @@ QUnit.test('sop/material access group by object name', async (assert) => {
 	);
 });
 
-QUnit.test('sop/material access group by object index', async (assert) => {
+qUnit.test('sop/material access group by object index', async (assert) => {
 	const geo1 = window.geo1;
 	const MAT = window.MAT;
 
@@ -166,7 +168,7 @@ QUnit.test('sop/material access group by object index', async (assert) => {
 	assert.equal((objects2[0].material as Material).uuid, (await lambert1.material()).uuid, 'assigned');
 });
 
-QUnit.test('sop/material access group by hierarchy mask', async (assert) => {
+qUnit.test('sop/material access group by hierarchy mask', async (assert) => {
 	const geo1 = window.geo1;
 	const MAT = window.MAT;
 
@@ -240,7 +242,7 @@ QUnit.test('sop/material access group by hierarchy mask', async (assert) => {
 	);
 });
 
-QUnit.test('sop/material applies to children correctly', async (assert) => {
+qUnit.test('sop/material applies to children correctly', async (assert) => {
 	const geo1 = window.geo1;
 	const MAT = window.MAT;
 	const fileGLTF1 = geo1.createNode('fileGLTF');
@@ -279,7 +281,7 @@ QUnit.test('sop/material applies to children correctly', async (assert) => {
 	assert.notOk(anyWithAdifferentMat);
 });
 
-QUnit.test('sop/material clone preserves builder onBeforeCompile', async (assert) => {
+qUnit.test('sop/material clone preserves builder onBeforeCompile', async (assert) => {
 	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 	const geo1 = window.geo1;
 	const MAT = window.MAT;
@@ -462,3 +464,5 @@ QUnit.test('sop/material clone preserves builder onBeforeCompile', async (assert
 
 	RendererUtils.dispose();
 });
+
+}

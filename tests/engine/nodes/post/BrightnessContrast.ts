@@ -1,9 +1,11 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {CoreSleep} from './../../../../src/core/Sleep';
 import {Camera} from 'three';
 import {ThreejsViewer} from './../../../../src/engine/viewers/Threejs';
 import {HTMLElementWithViewer} from './../../../../src/engine/viewers/_Base';
 import {RendererUtils} from './../../../helpers/RendererUtils';
-QUnit.test('post/brightnessContrast simple', async (assert) => {
+export function testenginenodespostBrightnessContrast(qUnit: QUnit) {
+qUnit.test('post/brightnessContrast simple', async (assert) => {
 	const scene = window.scene;
 	await scene.waitForCooksCompleted();
 
@@ -53,3 +55,5 @@ QUnit.test('post/brightnessContrast simple', async (assert) => {
 		// console.log(await RendererUtils.readCanvasPixelValue(viewer.canvas(), new Vector2(0.5, 0.5)));
 	});
 });
+
+}

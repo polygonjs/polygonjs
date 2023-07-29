@@ -1,8 +1,10 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {AttribClass} from '../../../../src/core/geometry/Constant';
 import {CoreObjectType, ObjectContent} from '../../../../src/core/geometry/ObjectContent';
 import {HierarchyMode} from '../../../../src/engine/operations/sop/Hierarchy';
+export function testenginenodessopObjectProperties(qUnit: QUnit) {
 
-QUnit.test('sop/objectProperties simple', async (assert) => {
+qUnit.test('sop/objectProperties simple', async (assert) => {
 	let container;
 	const geo1 = window.geo1;
 	const plane1 = geo1.createNode('plane');
@@ -49,7 +51,7 @@ QUnit.test('sop/objectProperties simple', async (assert) => {
 	object = container.coreContent()!.allObjects()[0];
 	assert.ok(!object.visible);
 });
-QUnit.test('sop/objectProperties with non entity dependent expression', async (assert) => {
+qUnit.test('sop/objectProperties with non entity dependent expression', async (assert) => {
 	const geo1 = window.geo1;
 	const sphere1 = geo1.createNode('sphere');
 	const plane1 = geo1.createNode('plane');
@@ -131,7 +133,7 @@ QUnit.test('sop/objectProperties with non entity dependent expression', async (a
 	objectProperties1.p.visible.set(`@ptnum%2==1`);
 	assert.deepEqual(await _getVisible(), [false, true]);
 });
-QUnit.test('sop/objectProperties with entity dependent expression', async (assert) => {
+qUnit.test('sop/objectProperties with entity dependent expression', async (assert) => {
 	const geo1 = window.geo1;
 	const plane1 = geo1.createNode('plane');
 	const plane2 = geo1.createNode('plane');
@@ -170,7 +172,7 @@ QUnit.test('sop/objectProperties with entity dependent expression', async (asser
 		['box_2', 'box_4']
 	);
 });
-QUnit.test('sop/objectProperties does not fail with bad expression', async (assert) => {
+qUnit.test('sop/objectProperties does not fail with bad expression', async (assert) => {
 	const geo1 = window.geo1;
 	const plane1 = geo1.createNode('plane');
 	const plane2 = geo1.createNode('plane');
@@ -212,3 +214,5 @@ QUnit.test('sop/objectProperties does not fail with bad expression', async (asse
 	objectProperties1.p.name.set('box_`@objnum`');
 	assert.deepEqual(await _getNames(), ['box_0', 'box_0', 'box_1']);
 });
+
+}

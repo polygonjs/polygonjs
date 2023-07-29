@@ -1,3 +1,4 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {Box3, BufferAttribute, Vector3} from 'three';
 import {PointBuilderSopNode} from '../../../../src/engine/nodes/sop/PointBuilder';
 import {SceneJsonImporter} from '../../../../src/engine/io/json/import/Scene';
@@ -7,6 +8,7 @@ import {ParamType} from '../../../../src/engine/poly/ParamType';
 import {AssemblersUtils} from '../../../helpers/AssemblersUtils';
 import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Js';
 import {AttributeJsNodeOutput} from '../../../../src/engine/nodes/js/Attribute';
+export function testenginenodessopPointBuilder(qUnit: QUnit) {
 
 const bbox = new Box3();
 const size = new Vector3();
@@ -17,7 +19,7 @@ async function _getBbox(node: PointBuilderSopNode) {
 	return {min: bbox.min, max: bbox.max, size};
 }
 
-QUnit.test('sop/pointBuilder simple', async (assert) => {
+qUnit.test('sop/pointBuilder simple', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
 	const line1 = geo1.createNode('line');
@@ -101,7 +103,7 @@ QUnit.test('sop/pointBuilder simple', async (assert) => {
 	});
 });
 
-QUnit.test('sop/pointBuilder read attributes', async (assert) => {
+qUnit.test('sop/pointBuilder read attributes', async (assert) => {
 	const geo1 = window.geo1;
 	const plane1 = geo1.createNode('plane');
 	const pointBuilder1 = geo1.createNode('pointBuilder');
@@ -142,7 +144,7 @@ QUnit.test('sop/pointBuilder read attributes', async (assert) => {
 	}
 });
 
-QUnit.test('sop/pointBuilder write attributes', async (assert) => {
+qUnit.test('sop/pointBuilder write attributes', async (assert) => {
 	const geo1 = window.geo1;
 	const plane1 = geo1.createNode('plane');
 	const pointBuilder1 = geo1.createNode('pointBuilder');
@@ -174,7 +176,7 @@ QUnit.test('sop/pointBuilder write attributes', async (assert) => {
 	}
 });
 
-QUnit.test(
+qUnit.test(
 	'sop/pointBuilder does not error if an attribute is missing but there are no points in the geometry',
 	async (assert) => {
 		const geo1 = window.geo1;
@@ -221,3 +223,5 @@ QUnit.test(
 		assert.equal((await _compute()).pointsCount, 0, '0 pts');
 	}
 );
+
+}

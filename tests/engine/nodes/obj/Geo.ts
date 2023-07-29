@@ -1,12 +1,14 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {Matrix4} from 'three';
 import {ASSETS_ROOT} from '../../../../src/core/loader/AssetsUtils';
 import {CoreSleep} from '../../../../src/core/Sleep';
+export function testenginenodesobjGeo(qUnit: QUnit) {
 
 function _url(path: string) {
 	return `${ASSETS_ROOT}${path}`;
 }
 
-QUnit.test('obj/geo obj simple', async (assert) => {
+qUnit.test('obj/geo obj simple', async (assert) => {
 	const scene = window.scene;
 	const main_group = scene.threejsScene();
 	assert.equal(main_group.name, '/');
@@ -32,13 +34,13 @@ QUnit.test('obj/geo obj simple', async (assert) => {
 	window.scene.performance.stop();
 });
 
-QUnit.test('obj/geo obj creates node sop on create', async (assert) => {
+qUnit.test('obj/geo obj creates node sop on create', async (assert) => {
 	const scene = window.scene;
 	const geo2 = scene.root().createNode('geo');
 	assert.equal(geo2.children().length, 0);
 });
 
-QUnit.test('obj/geo obj is removed from scene when node is deleted', async (assert) => {
+qUnit.test('obj/geo obj is removed from scene when node is deleted', async (assert) => {
 	const scene = window.scene;
 	const main_group = scene.threejsScene();
 	assert.equal(main_group.name, '/');
@@ -64,7 +66,7 @@ QUnit.test('obj/geo obj is removed from scene when node is deleted', async (asse
 	);
 });
 
-QUnit.test('obj/geo obj cooks only once when multiple params are updated', async (assert) => {
+qUnit.test('obj/geo obj cooks only once when multiple params are updated', async (assert) => {
 	const scene = window.scene;
 	const main_group = scene.threejsScene();
 	assert.equal(main_group.name, '/');
@@ -93,7 +95,7 @@ QUnit.test('obj/geo obj cooks only once when multiple params are updated', async
 	window.scene.performance.stop();
 });
 
-QUnit.test(
+qUnit.test(
 	'obj/geo obj: only the top group from a file sop with hierarchy is added to the geo object',
 	async (assert) => {
 		const scene = window.scene;
@@ -119,7 +121,7 @@ QUnit.test(
 	}
 );
 
-QUnit.test('obj/geo obj: $F in params will update the matrix', async (assert) => {
+qUnit.test('obj/geo obj: $F in params will update the matrix', async (assert) => {
 	const scene = window.scene;
 	scene.performance.start();
 	await scene.waitForCooksCompleted();
@@ -148,7 +150,7 @@ QUnit.test('obj/geo obj: $F in params will update the matrix', async (assert) =>
 	window.scene.performance.stop();
 });
 
-QUnit.test('obj/geo obj: display node can update and still inherit geo transform', async (assert) => {
+qUnit.test('obj/geo obj: display node can update and still inherit geo transform', async (assert) => {
 	const geo1 = window.geo1;
 	const box = geo1.createNode('box');
 
@@ -167,7 +169,7 @@ QUnit.test('obj/geo obj: display node can update and still inherit geo transform
 	assert.equal(obj.matrixWorld.elements[12], 10);
 });
 
-QUnit.test('obj/geo: display node is updated when it is deleted', async (assert) => {
+qUnit.test('obj/geo: display node is updated when it is deleted', async (assert) => {
 	const geo1 = window.geo1;
 	assert.equal(geo1.children().length, 0);
 	const box1 = geo1.createNode('box');
@@ -178,3 +180,5 @@ QUnit.test('obj/geo: display node is updated when it is deleted', async (assert)
 	geo1.removeNode(box2);
 	assert.ok(box1.flags.display.active());
 });
+
+}

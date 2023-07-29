@@ -1,8 +1,10 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {Vector3, Box3} from 'three';
+export function testenginenodessopFace(qUnit: QUnit) {
 const tmpBox = new Box3();
 const tmpSize = new Vector3();
 
-QUnit.test('face simple', async (assert) => {
+qUnit.test('face simple', async (assert) => {
 	const geo1 = window.geo1;
 
 	const sphere1 = geo1.createNode('sphere');
@@ -34,3 +36,5 @@ QUnit.test('face simple', async (assert) => {
 	assert.equal((await compute()).pointsCount, 240);
 	assert.deepEqual((await compute()).size.toArray(), [2.4536805152893066, 2.2200846672058105, 2.4536805152893066]);
 });
+
+}

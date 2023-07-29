@@ -1,6 +1,8 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {SDFDataContainer} from '../../../../src/core/loader/geometry/SDF';
+export function testenginenodescopSDFFromObject(qUnit: QUnit) {
 
-QUnit.test('cop/SDFFromObject simple', async (assert) => {
+qUnit.test('cop/SDFFromObject simple', async (assert) => {
 	const scene = window.scene;
 
 	// create geometry
@@ -40,9 +42,11 @@ QUnit.test('cop/SDFFromObject simple', async (assert) => {
 	// test shader with params linked to cop node
 });
 
-QUnit.test('cop/SDFFromObject with hierarchy', async (assert) => {
+qUnit.test('cop/SDFFromObject with hierarchy', async (assert) => {
 	assert.equal(1, 2);
 });
-QUnit.test('cop/SDFFromObject with hierarchy and scale', async (assert) => {
+qUnit.test('cop/SDFFromObject with hierarchy and scale', async (assert) => {
 	assert.equal(1, 2);
 });
+
+}

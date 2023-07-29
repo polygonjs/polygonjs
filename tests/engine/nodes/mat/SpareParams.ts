@@ -1,3 +1,4 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {OutputGlNode} from '../../../../src/engine/nodes/gl/Output';
 import {SceneJsonExporter} from '../../../../src/engine/io/json/export/Scene';
 import {SceneJsonImporter} from '../../../../src/engine/io/json/import/Scene';
@@ -10,8 +11,9 @@ import {MeshBasicBuilderMatNode} from '../../../../src/engine/nodes/mat/MeshBasi
 import {ColorParam} from '../../../../src/engine/params/Color';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 import {MaterialUserDataUniforms} from '../../../../src/engine/nodes/gl/code/assemblers/materials/OnBeforeCompile';
+export function testenginenodesmatSpareParams(qUnit: QUnit) {
 
-QUnit.test(
+qUnit.test(
 	'MAT spare params:spare params are re-created as expected and the uniforms updated on change',
 	async (assert) => {
 		const {renderer} = await RendererUtils.waitForRenderer(window.scene);
@@ -177,7 +179,7 @@ QUnit.test(
 	}
 );
 
-QUnit.test('MAT spare params:creating a spare param as vector, saving and load back', async (assert) => {
+qUnit.test('MAT spare params:creating a spare param as vector, saving and load back', async (assert) => {
 	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 	const scene = window.scene;
 	const MAT = window.MAT;
@@ -287,7 +289,7 @@ QUnit.test('MAT spare params:creating a spare param as vector, saving and load b
 
 	RendererUtils.dispose();
 });
-QUnit.test('MAT spare params: creating a spare param as color, saving and load back', async (assert) => {
+qUnit.test('MAT spare params: creating a spare param as color, saving and load back', async (assert) => {
 	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 
 	const scene = window.scene;
@@ -379,3 +381,5 @@ QUnit.test('MAT spare params: creating a spare param as color, saving and load b
 
 	RendererUtils.dispose();
 });
+
+}

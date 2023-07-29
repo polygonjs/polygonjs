@@ -1,3 +1,4 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Js';
 import {ObjectBuilderSopNode} from '../../../../src/engine/nodes/sop/ObjectBuilder';
 import {SceneJsonImporter} from '../../../../src/engine/io/json/import/Scene';
@@ -7,8 +8,9 @@ import {ParamType} from '../../../../src/engine/poly/ParamType';
 import {AssemblersUtils} from '../../../helpers/AssemblersUtils';
 import {AttribClass} from '../../../../src/core/geometry/Constant';
 import {CoreObject} from '../../../../src/core/geometry/Object';
+export function testenginenodessopObjectBuilder(qUnit: QUnit) {
 
-QUnit.test('sop/ObjectBuilder simple', async (assert) => {
+qUnit.test('sop/ObjectBuilder simple', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
 	const box1 = geo1.createNode('box');
@@ -87,7 +89,7 @@ QUnit.test('sop/ObjectBuilder simple', async (assert) => {
 	});
 });
 
-QUnit.test('sop/ObjectBuilder get set attributes', async (assert) => {
+qUnit.test('sop/ObjectBuilder get set attributes', async (assert) => {
 	const geo1 = window.geo1;
 	const box1 = geo1.createNode('box');
 	const attribCreate1 = geo1.createNode('attribCreate');
@@ -125,3 +127,5 @@ QUnit.test('sop/ObjectBuilder get set attributes', async (assert) => {
 	add1.params.get('add1')!.set(1);
 	assert.equal(await getAttribValue(), 2);
 });
+
+}

@@ -1,6 +1,8 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {BufferAttribute,Box3} from 'three';
+export function testenginenodessopRing(qUnit: QUnit) {
 const tmpBox = new Box3()
-QUnit.test('sop/ring simple', async (assert) => {
+qUnit.test('sop/ring simple', async (assert) => {
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false); // cancels geo node displayNodeController
 
@@ -21,3 +23,5 @@ QUnit.test('sop/ring simple', async (assert) => {
 	container.boundingBox(tmpBox)
 	assert.equal(tmpBox.min.x, -2.0);
 });
+
+}

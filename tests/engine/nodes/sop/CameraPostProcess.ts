@@ -1,7 +1,9 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {CoreObject} from '../../../../src/core/geometry/Object';
 import {CameraAttribute} from '../../../../src/core/camera/CoreCamera';
+export function testenginenodessopCameraPostProcess(qUnit: QUnit) {
 
-QUnit.test('sop/cameraPostProcess simple', async (assert) => {
+qUnit.test('sop/cameraPostProcess simple', async (assert) => {
 	const geo1 = window.geo1;
 	const camera1 = geo1.createNode('perspectiveCamera');
 	const cameraPostProcess1 = geo1.createNode('cameraPostProcess');
@@ -17,7 +19,7 @@ QUnit.test('sop/cameraPostProcess simple', async (assert) => {
 		cameraPostProcess1.graphNodeId()
 	);
 });
-QUnit.test('sop/cameraPostProcess applyToChildren', async (assert) => {
+qUnit.test('sop/cameraPostProcess applyToChildren', async (assert) => {
 	const geo1 = window.geo1;
 	const camera1 = geo1.createNode('perspectiveCamera');
 	const hierarchy1 = geo1.createNode('hierarchy');
@@ -39,3 +41,5 @@ QUnit.test('sop/cameraPostProcess applyToChildren', async (assert) => {
 		cameraPostProcess1.graphNodeId()
 	);
 });
+
+}

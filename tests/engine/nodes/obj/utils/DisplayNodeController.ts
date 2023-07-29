@@ -1,9 +1,11 @@
+import type {QUnit} from '../../../../helpers/QUnit';
 import {BufferAttribute, Matrix4} from 'three';
 import {Mesh} from 'three';
 import {BufferGeometry} from 'three';
 import {CoreSleep} from '../../../../../src/core/Sleep';
+export function testenginenodesobjutilsDisplayNodeController(qUnit: QUnit) {
 
-QUnit.test('geo obj display flag off does not cook', async (assert) => {
+qUnit.test('geo obj display flag off does not cook', async (assert) => {
 	window.scene.performance.start();
 
 	const scene = window.scene;
@@ -56,7 +58,7 @@ QUnit.test('geo obj display flag off does not cook', async (assert) => {
 	window.scene.performance.stop();
 });
 
-QUnit.test('geo obj display flag off removes from scene', async (assert) => {
+qUnit.test('geo obj display flag off removes from scene', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
 	const main_group = scene.threejsScene();
@@ -85,7 +87,7 @@ QUnit.test('geo obj display flag off removes from scene', async (assert) => {
 	assert.ok(!geo1.childrenDisplayController.sopGroup().visible);
 });
 
-QUnit.test('geo obj display flag off does not cook its content on load', async (assert) => {
+qUnit.test('geo obj display flag off does not cook its content on load', async (assert) => {
 	window.scene.performance.start();
 
 	const scene = window.scene;
@@ -113,7 +115,7 @@ QUnit.test('geo obj display flag off does not cook its content on load', async (
 	);
 });
 
-QUnit.test('geo obj renders the child which has the display node', async (assert) => {
+qUnit.test('geo obj renders the child which has the display node', async (assert) => {
 	const scene = window.scene;
 	const main_group = scene.threejsScene();
 	assert.equal(main_group.name, '/');
@@ -163,3 +165,5 @@ QUnit.test('geo obj renders the child which has the display node', async (assert
 	assert.equal(positions[0], -1);
 	assert.equal(positions[2], -2.5, 'y position');
 });
+
+}

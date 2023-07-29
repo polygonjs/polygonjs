@@ -1,8 +1,10 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {Mesh} from 'three';
 import {ObjectType} from '../../../../src/core/geometry/Constant';
 import {SetGeometryMode} from '../../../../src/engine/operations/sop/SetGeometry';
+export function testenginenodessopSetGeometry(qUnit: QUnit) {
 
-QUnit.test('sop/setGeometry simple with mode one geo per object', async (assert) => {
+qUnit.test('sop/setGeometry simple with mode one geo per object', async (assert) => {
 	const geo1 = window.geo1;
 
 	const emptyObject1 = geo1.createNode('emptyObject');
@@ -42,7 +44,7 @@ QUnit.test('sop/setGeometry simple with mode one geo per object', async (assert)
 	switch1.p.input.set(0);
 	assert.equal(await pointsCount(), 24);
 });
-QUnit.test('sop/setGeometry simple with mode first geo to each object', async (assert) => {
+qUnit.test('sop/setGeometry simple with mode first geo to each object', async (assert) => {
 	const geo1 = window.geo1;
 
 	const emptyObject1 = geo1.createNode('emptyObject');
@@ -66,3 +68,5 @@ QUnit.test('sop/setGeometry simple with mode first geo to each object', async (a
 	assert.equal((objects[0] as Mesh).geometry.uuid, (objects[1] as Mesh).geometry.uuid);
 	assert.equal((objects[0] as Mesh).geometry.uuid, (objects[2] as Mesh).geometry.uuid);
 });
+
+}

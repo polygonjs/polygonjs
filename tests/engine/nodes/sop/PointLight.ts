@@ -1,8 +1,10 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {Object3D} from 'three';
 import {PointLight} from 'three';
 import {TRANSFORM_TARGET_TYPES, TransformTargetType} from '../../../../src/core/Transform';
+export function testenginenodessopPointLight(qUnit: QUnit) {
 
-QUnit.test('pointLight simple', async (assert) => {
+qUnit.test('pointLight simple', async (assert) => {
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false); // cancels geo node displayNodeController
 
@@ -14,7 +16,7 @@ QUnit.test('pointLight simple', async (assert) => {
 	assert.deepEqual(object.color.toArray(), [1, 1, 1]);
 });
 
-QUnit.test('pointLight with transform', async (assert) => {
+qUnit.test('pointLight with transform', async (assert) => {
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false); // cancels geo node displayNodeController
 
@@ -32,7 +34,7 @@ QUnit.test('pointLight with transform', async (assert) => {
 	assert.deepEqual(object.position.toArray(), [1, 2, 3]);
 });
 
-QUnit.test('pointLight with copy SOP', async (assert) => {
+qUnit.test('pointLight with copy SOP', async (assert) => {
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false); // cancels geo node displayNodeController
 
@@ -68,7 +70,7 @@ function objectNames(object: Object3D, names: string[] = []) {
 	return names;
 }
 
-QUnit.test('sop/pointLight hierarchy is maintained as it is cloned', async (assert) => {
+qUnit.test('sop/pointLight hierarchy is maintained as it is cloned', async (assert) => {
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false); // cancels geo node displayNodeController
 
@@ -98,3 +100,5 @@ QUnit.test('sop/pointLight hierarchy is maintained as it is cloned', async (asse
 		'PointLightHelper_pointLight1',
 	]);
 });
+
+}

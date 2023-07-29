@@ -1,6 +1,8 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {Mesh, Vector3} from 'three';
+export function testenginenodesjsNoiseImproved(qUnit: QUnit) {
 
-QUnit.test('js/noiseImproved', async (assert) => {
+qUnit.test('js/noiseImproved', async (assert) => {
 	const geo1 = window.geo1;
 	const plane1 = geo1.createNode('plane');
 	const pointBuilder1 = geo1.createNode('pointBuilder');
@@ -35,3 +37,5 @@ QUnit.test('js/noiseImproved', async (assert) => {
 	noiseImproved1.setInput(0, globals1, 'position');
 	assert.in_delta(await getBboxYSize(), 1.77, 0.01);
 });
+
+}

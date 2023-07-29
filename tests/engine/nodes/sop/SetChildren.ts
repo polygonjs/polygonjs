@@ -1,6 +1,8 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {Object3D} from 'three';
+export function testenginenodessopSetChildren(qUnit: QUnit) {
 
-QUnit.test('sop/setChildren simple', async (assert) => {
+qUnit.test('sop/setChildren simple', async (assert) => {
 	const geo1 = window.geo1;
 
 	const emptyObject1 = geo1.createNode('emptyObject');
@@ -36,7 +38,7 @@ QUnit.test('sop/setChildren simple', async (assert) => {
 	assert.deepEqual(await getChildrenCount2(), [2]);
 });
 
-QUnit.test('sop/setChildren takes children one by one, and assigns all of them to a parent', async (assert) => {
+qUnit.test('sop/setChildren takes children one by one, and assigns all of them to a parent', async (assert) => {
 	const geo1 = window.geo1;
 
 	const box1 = geo1.createNode('box');
@@ -59,7 +61,7 @@ QUnit.test('sop/setChildren takes children one by one, and assigns all of them t
 	assert.equal(objects[1].children.length, 2);
 });
 
-QUnit.test('sop/setChildren can process empty inputs', async (assert) => {
+qUnit.test('sop/setChildren can process empty inputs', async (assert) => {
 	const geo1 = window.geo1;
 
 	const null1 = geo1.createNode('null');
@@ -73,3 +75,5 @@ QUnit.test('sop/setChildren can process empty inputs', async (assert) => {
 	const objects = container.coreContent()!.threejsObjects();
 	assert.equal(objects.length, 0);
 });
+
+}

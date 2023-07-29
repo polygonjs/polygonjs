@@ -1,4 +1,6 @@
-QUnit.test('add simple', async (assert) => {
+import type {QUnit} from '../../../helpers/QUnit';
+export function testenginenodessopAdd(qUnit: QUnit) {
+qUnit.test('add simple', async (assert) => {
 	const geo1 = window.geo1;
 	const add1 = geo1.createNode('add');
 
@@ -7,7 +9,7 @@ QUnit.test('add simple', async (assert) => {
 	assert.equal(core_group.points().length, 1);
 });
 
-QUnit.test('add connect input points', async (assert) => {
+qUnit.test('add connect input points', async (assert) => {
 	const geo1 = window.geo1;
 	const add1 = geo1.createNode('add');
 	const add2 = geo1.createNode('add');
@@ -35,3 +37,5 @@ QUnit.test('add connect input points', async (assert) => {
 	core_group = container.coreContent()!;
 	assert.equal(core_group.points().length, 4);
 });
+
+}

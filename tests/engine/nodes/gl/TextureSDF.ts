@@ -1,10 +1,12 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import DEFAULT_FRAGMENT from './TextureSDF/default.frag.glsl';
 import BLUR_FRAGMENT from './TextureSDF/blur.frag.glsl';
 import NO_INPUT_EMPTY_VERTEX from './TextureSDF/default.vert.glsl';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 import {GLSLHelper} from '../../../helpers/GLSLHelper';
+export function testenginenodesglTextureSDF(qUnit: QUnit) {
 
-QUnit.test('gl/TextureSDF simple', async (assert) => {
+qUnit.test('gl/TextureSDF simple', async (assert) => {
 	const scene = window.scene;
 	// create geo and SDF texture
 	const geo1 = window.geo1;
@@ -48,7 +50,7 @@ QUnit.test('gl/TextureSDF simple', async (assert) => {
 	RendererUtils.dispose();
 });
 
-QUnit.test('gl/TextureSDF blur', async (assert) => {
+qUnit.test('gl/TextureSDF blur', async (assert) => {
 	const scene = window.scene;
 	// create geo and SDF texture
 	const geo1 = window.geo1;
@@ -88,3 +90,5 @@ QUnit.test('gl/TextureSDF blur', async (assert) => {
 
 	RendererUtils.dispose();
 });
+
+}

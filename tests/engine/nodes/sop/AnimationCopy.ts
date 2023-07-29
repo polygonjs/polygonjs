@@ -1,11 +1,13 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {ASSETS_ROOT} from '../../../../src/core/loader/AssetsUtils';
 import {HierarchyMode} from '../../../../src/engine/operations/sop/Hierarchy';
+export function testenginenodessopAnimationCopy(qUnit: QUnit) {
 
 function _url(path: string) {
 	return `${ASSETS_ROOT}${path}`;
 }
 
-QUnit.test('animation_copy simple', async (assert) => {
+qUnit.test('animation_copy simple', async (assert) => {
 	const geo1 = window.geo1;
 
 	const file1 = geo1.createNode('fileGLTF');
@@ -23,3 +25,5 @@ QUnit.test('animation_copy simple', async (assert) => {
 	let container = await animation_copy1.compute();
 	assert.equal(container.totalPointsCount(), 7434); // I should really do a better test
 });
+
+}

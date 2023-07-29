@@ -1,8 +1,10 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {TransformTargetType} from '../../../../src/core/Transform';
 import {Matrix4} from 'three';
 import {ObjectTransformMode} from '../../../../src/core/TransformSpace';
+export function testenginenodessopTransformReset(qUnit: QUnit) {
 
-QUnit.test('transform reset simple', async (assert) => {
+qUnit.test('transform reset simple', async (assert) => {
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false);
 
@@ -29,3 +31,5 @@ QUnit.test('transform reset simple', async (assert) => {
 	elements = core_group.threejsObjects()[0].matrix.elements;
 	assert.deepEqual(elements, new Matrix4().identity().elements);
 });
+
+}

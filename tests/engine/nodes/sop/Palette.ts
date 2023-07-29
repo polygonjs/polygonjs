@@ -1,10 +1,12 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {BufferAttribute, Color, Mesh, Object3D} from 'three';
 import {SORTED_PALETTE_NAMES} from '../../../../src/core/color/chromotomeWrapper';
 import {AttribClass} from '../../../../src/core/geometry/Constant';
 import {CoreObject} from '../../../../src/core/geometry/Object';
 import {PolyScene} from '../../../../src/engine/scene/PolyScene';
+export function testenginenodessopPalette(qUnit: QUnit) {
 const delta = 0.05;
-QUnit.test('sop/palette simple vertex', async (assert) => {
+qUnit.test('sop/palette simple vertex', async (assert) => {
 	const scene = new PolyScene();
 	const geo1 = scene.root().createNode('geo');
 
@@ -56,7 +58,7 @@ QUnit.test('sop/palette simple vertex', async (assert) => {
 	assert.in_delta(colorAttribArray[11], 0.9046611785888672, delta);
 });
 
-QUnit.test('sop/palette simple object', async (assert) => {
+qUnit.test('sop/palette simple object', async (assert) => {
 	const scene = new PolyScene();
 	const geo1 = scene.root().createNode('geo');
 
@@ -131,3 +133,5 @@ QUnit.test('sop/palette simple object', async (assert) => {
 	assert.deepEqual((await vertexColors())[2].array[1], 0.13563333451747894, 'buffer 1');
 	assert.deepEqual((await vertexColors())[3].array[2], 0.9046611785888672, 'buffer 1');
 });
+
+}

@@ -1,9 +1,11 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {BooleanCsgOperationType} from '../../../../src/engine/nodes/sop/CSGBoolean';
 import {BufferAttribute, Box3, Vector3} from 'three';
+export function testenginenodessopCSGTubeElliptic(qUnit: QUnit) {
 const tmpBox = new Box3();
 const tmpSize = new Vector3();
 
-QUnit.test('sop/CSGTubeElliptic simple', async (assert) => {
+qUnit.test('sop/CSGTubeElliptic simple', async (assert) => {
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false); // cancels geo node displayNodeController
 
@@ -52,3 +54,5 @@ QUnit.test('sop/CSGTubeElliptic simple', async (assert) => {
 	);
 	assert.in_delta(tmpBox.min.y, -0.845, 0.002);
 });
+
+}

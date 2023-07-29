@@ -1,8 +1,10 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {BufferAttribute, Mesh} from 'three';
 import {LOD} from 'three';
 import {BufferGeometry} from 'three';
+export function testenginenodessopLod(qUnit: QUnit) {
 
-QUnit.test('LOD simple', async (assert) => {
+qUnit.test('LOD simple', async (assert) => {
 	const geo1 = window.geo1;
 	const camera_node = window.perspective_camera1;
 	const camera_object = camera_node.object;
@@ -91,3 +93,5 @@ QUnit.test('LOD simple', async (assert) => {
 		box0_pts_count
 	);
 });
+
+}

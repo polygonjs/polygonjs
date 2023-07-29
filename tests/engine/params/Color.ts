@@ -1,3 +1,4 @@
+import type {QUnit} from '../../helpers/QUnit';
 import {Number3} from './../../../src/types/GlobalTypes';
 import {OnBeforeCompileDataHandler} from './../../../src/engine/nodes/gl/code/assemblers/materials/OnBeforeCompile';
 import {MeshBasicBuilderMatNode} from './../../../src/engine/nodes/mat/MeshBasicBuilder';
@@ -10,8 +11,9 @@ import {ColorParam} from '../../../src/engine/params/Color';
 import {Color} from 'three';
 import {GlConnectionPointType} from '../../../src/engine/nodes/utils/io/connections/Gl';
 import {saveAndLoadScene} from '../../helpers/ImportHelper';
+export function testengineparamsColor(qUnit: QUnit) {
 
-QUnit.test('color eval correctly when set to different values', async (assert) => {
+qUnit.test('color eval correctly when set to different values', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
 
@@ -41,7 +43,7 @@ QUnit.test('color eval correctly when set to different values', async (assert) =
 	assert.deepEqual(color.value.toArray(), [10, 0.5, 0.7], 'red is 10');
 });
 
-QUnit.test('color is_default', async (assert) => {
+qUnit.test('color is_default', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
 	scene.timeController.setMaxFrame(10);
@@ -65,7 +67,7 @@ QUnit.test('color is_default', async (assert) => {
 	assert.equal(color.defaultValueSerialized().join(':'), '1:1:$F');
 });
 
-QUnit.test(
+qUnit.test(
 	'color conversion option can be changed and this is preserved on scene save/load for a normal param',
 	async (assert) => {
 		const scene = window.scene;
@@ -88,7 +90,7 @@ QUnit.test(
 	}
 );
 
-QUnit.test(
+qUnit.test(
 	'color conversion option can be changed and this is preserved on scene save/load for a spare param',
 	async (assert) => {
 		const scene = window.scene;
@@ -112,7 +114,7 @@ QUnit.test(
 	}
 );
 
-QUnit.test('params/color accepts a color', async (assert) => {
+qUnit.test('params/color accepts a color', async (assert) => {
 	const geo1 = window.geo1;
 	const color1 = geo1.createNode('color');
 
@@ -121,7 +123,7 @@ QUnit.test('params/color accepts a color', async (assert) => {
 	assert.deepEqual(color.value.toArray(), [1, 2, 3]);
 });
 
-QUnit.test('params/color colorConversion is saved and loaded correctly', async (assert) => {
+qUnit.test('params/color colorConversion is saved and loaded correctly', async (assert) => {
 	const scene = window.scene;
 	const MAT = scene.createNode('materialsNetwork');
 	const meshBasicBuilder1 = MAT.createNode('meshBasicBuilder');
@@ -200,3 +202,5 @@ QUnit.test('params/color colorConversion is saved and loaded correctly', async (
 		assert.deepEqual(await declaredColor(meshBasicBuilder2), [0.4, 0.6, 0.8], 'new scene no conversion ok');
 	});
 });
+
+}

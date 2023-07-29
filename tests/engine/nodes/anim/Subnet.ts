@@ -1,6 +1,8 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {CoreSleep} from '../../../../src/core/Sleep';
+export function testenginenodesanimSubnet(qUnit: QUnit) {
 
-QUnit.test('anim subnet simple', async (assert) => {
+qUnit.test('anim subnet simple', async (assert) => {
 	const scene = window.scene;
 	const animNetwork = scene.root().createNode('animationsNetwork');
 
@@ -33,3 +35,5 @@ QUnit.test('anim subnet simple', async (assert) => {
 	// assert.equal(timelineBuilder.target(), '');
 	assert.equal(timelineBuilder.easing(), 'power4.out');
 });
+
+}

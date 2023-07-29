@@ -1,9 +1,11 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {Mesh} from 'three';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Js';
 import {RendererUtils} from '../../../helpers/RendererUtils';
+export function testenginenodesjsDegToRad(qUnit: QUnit) {
 
-QUnit.test('js/degToRad with float inputs', async (assert) => {
+qUnit.test('js/degToRad with float inputs', async (assert) => {
 	const scene = window.scene;
 	const perspective_camera1 = window.perspective_camera1;
 
@@ -50,7 +52,7 @@ QUnit.test('js/degToRad with float inputs', async (assert) => {
 	});
 });
 
-QUnit.test('js/degToRad with vector inputs', async (assert) => {
+qUnit.test('js/degToRad with vector inputs', async (assert) => {
 	const scene = window.scene;
 	const perspective_camera1 = window.perspective_camera1;
 
@@ -96,3 +98,5 @@ QUnit.test('js/degToRad with vector inputs', async (assert) => {
 		assert.in_delta(object.position.z, 0.0349, 0.05, 'object moved ');
 	});
 });
+
+}

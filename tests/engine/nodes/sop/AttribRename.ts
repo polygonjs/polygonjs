@@ -1,4 +1,6 @@
-QUnit.test('attrib_rename simple', async (assert) => {
+import type {QUnit} from '../../../helpers/QUnit';
+export function testenginenodessopAttribRename(qUnit: QUnit) {
+qUnit.test('attrib_rename simple', async (assert) => {
 	const geo1 = window.geo1;
 
 	const plane1 = geo1.createNode('plane');
@@ -25,3 +27,5 @@ QUnit.test('attrib_rename simple', async (assert) => {
 	assert.notOk(geometry.getAttribute('test'));
 	assert.ok(geometry.getAttribute('test2'));
 });
+
+}

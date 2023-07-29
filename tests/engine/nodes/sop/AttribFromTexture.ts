@@ -1,5 +1,7 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {PolyScene} from '../../../../src/engine/scene/PolyScene';
 import {Box3} from 'three';
+export function testenginenodessopAttribFromTexture(qUnit: QUnit) {
 const tmpBox = new Box3();
 
 function prepareCOP(scene: PolyScene) {
@@ -8,7 +10,7 @@ function prepareCOP(scene: PolyScene) {
 	return image;
 }
 
-QUnit.test('attribFromTexture with float', async (assert) => {
+qUnit.test('attribFromTexture with float', async (assert) => {
 	const geo1 = window.geo1;
 
 	const image = prepareCOP(window.scene);
@@ -34,7 +36,7 @@ QUnit.test('attribFromTexture with float', async (assert) => {
 	assert.in_delta(tmpBox.max.y, 0.5, 0.1);
 });
 
-QUnit.test('attribFromTexture with vector', async (assert) => {
+qUnit.test('attribFromTexture with vector', async (assert) => {
 	const geo1 = window.geo1;
 
 	const image = prepareCOP(window.scene);
@@ -63,3 +65,5 @@ QUnit.test('attribFromTexture with vector', async (assert) => {
 	assert.in_delta(tmpBox.max.y, 1.4, 0.1);
 	assert.in_delta(tmpBox.min.y, -1, 0.1);
 });
+
+}

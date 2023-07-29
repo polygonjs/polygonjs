@@ -1,7 +1,9 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {TransformSopNode} from '../../../../src/engine/nodes/sop/Transform';
 import {saveAndLoadScene} from '../../../helpers/ImportHelper';
+export function testengineexpressionsmethodsch(qUnit: QUnit) {
 
-QUnit.test('expression ch works in relative', async (assert) => {
+qUnit.test('expression ch works in relative', async (assert) => {
 	const geo1 = window.geo1;
 
 	const box1 = geo1.createNode('box');
@@ -22,7 +24,7 @@ QUnit.test('expression ch works in relative', async (assert) => {
 	assert.equal(box2.p.size.value, 5);
 });
 
-QUnit.test('expression ch works in absolute', async (assert) => {
+qUnit.test('expression ch works in absolute', async (assert) => {
 	const geo1 = window.geo1;
 
 	const box1 = geo1.createNode('box');
@@ -43,7 +45,7 @@ QUnit.test('expression ch works in absolute', async (assert) => {
 	assert.equal(box2.p.size.value, 5);
 });
 
-QUnit.test('expression ch can be resolved if no node exist at first with absolute path', async (assert) => {
+qUnit.test('expression ch can be resolved if no node exist at first with absolute path', async (assert) => {
 	const geo1 = window.geo1;
 
 	const box1 = geo1.createNode('box');
@@ -62,7 +64,7 @@ QUnit.test('expression ch can be resolved if no node exist at first with absolut
 	assert.equal(box1.p.size.value, 3);
 });
 
-QUnit.test('expression ch can be resolved if no node exist at first with relative path', async (assert) => {
+qUnit.test('expression ch can be resolved if no node exist at first with relative path', async (assert) => {
 	const geo1 = window.geo1;
 
 	const box1 = geo1.createNode('box');
@@ -81,7 +83,7 @@ QUnit.test('expression ch can be resolved if no node exist at first with relativ
 	assert.equal(box1.p.size.value, 3);
 });
 
-QUnit.test('expression ch can be resolved if on scene load', async (assert) => {
+qUnit.test('expression ch can be resolved if on scene load', async (assert) => {
 	const geo1 = window.geo1;
 
 	const box1 = geo1.createNode('box');
@@ -107,7 +109,7 @@ QUnit.test('expression ch can be resolved if on scene load', async (assert) => {
 	});
 });
 
-QUnit.test('expression ch can find dependency again when node is deleted', async (assert) => {
+qUnit.test('expression ch can find dependency again when node is deleted', async (assert) => {
 	const geo1 = window.geo1;
 
 	const box1a = geo1.createNode('box');
@@ -170,7 +172,7 @@ QUnit.test('expression ch can find dependency again when node is deleted', async
 	});
 });
 
-QUnit.test(
+qUnit.test(
 	'expression ch can find dependency again when node is deleted without rename needed if same name',
 	async (assert) => {
 		const geo1 = window.geo1;
@@ -230,7 +232,7 @@ QUnit.test(
 	}
 );
 
-QUnit.test('expression ch works with an expression as argument', async (assert) => {
+qUnit.test('expression ch works with an expression as argument', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
 
@@ -260,3 +262,5 @@ QUnit.test('expression ch works with an expression as argument', async (assert) 
 	await radius.compute();
 	assert.equal(radius.value, 90);
 });
+
+}

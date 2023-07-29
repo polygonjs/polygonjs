@@ -1,9 +1,11 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {LinearSRGBColorSpace, NoToneMapping, WebGLRenderer} from 'three';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {BackgroundMode} from '../../../../src/engine/nodes/manager/utils/Scene/Background';
 import {RendererUtils} from '../../../helpers/RendererUtils';
+export function testenginenodescopRender(qUnit: QUnit) {
 
-QUnit.test('cop/render simple', async (assert) => {
+qUnit.test('cop/render simple', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
 	await scene.waitForCooksCompleted();
@@ -73,3 +75,5 @@ QUnit.test('cop/render simple', async (assert) => {
 		assert.in_delta(pixelBuffer[2], 0.25, 0.02);
 	});
 });
+
+}

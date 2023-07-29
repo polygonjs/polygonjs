@@ -1,3 +1,4 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {BufferAttribute, Vector4} from 'three';
 import {Vector2} from 'three';
 import {Vector3} from 'three';
@@ -13,8 +14,9 @@ import {Vector2Param} from '../../../../src/engine/params/Vector2';
 import {Vector3Param} from '../../../../src/engine/params/Vector3';
 import {Vector4Param} from '../../../../src/engine/params/Vector4';
 import {StringOrNumber2, StringOrNumber3, StringOrNumber4} from '../../../../src/types/GlobalTypes';
+export function testenginenodessopAttribCreate(qUnit: QUnit) {
 
-QUnit.test('sop/attribCreate simple float vertex', async (assert) => {
+qUnit.test('sop/attribCreate simple float vertex', async (assert) => {
 	const geo1 = window.geo1;
 
 	const box1 = geo1.createNode('box');
@@ -40,7 +42,7 @@ QUnit.test('sop/attribCreate simple float vertex', async (assert) => {
 	assert.equal(cloned_array[0], 3.5);
 });
 
-QUnit.test('sop/attribCreate expression float vertex', async (assert) => {
+qUnit.test('sop/attribCreate expression float vertex', async (assert) => {
 	const geo1 = window.geo1;
 
 	const box1 = geo1.createNode('box');
@@ -63,7 +65,7 @@ QUnit.test('sop/attribCreate expression float vertex', async (assert) => {
 	assert.equal(array[2], 9);
 });
 
-QUnit.test('sop/attribCreate expression float vertex from position', async (assert) => {
+qUnit.test('sop/attribCreate expression float vertex from position', async (assert) => {
 	const geo1 = window.geo1;
 
 	const sphere1 = geo1.createNode('sphere');
@@ -88,7 +90,7 @@ QUnit.test('sop/attribCreate expression float vertex from position', async (asse
 	assert.equal(array[array.length - 2], 0);
 });
 
-QUnit.test('sop/attribCreate expression from a non existing attribute', async (assert) => {
+qUnit.test('sop/attribCreate expression from a non existing attribute', async (assert) => {
 	const geo1 = window.geo1;
 
 	const sphere1 = geo1.createNode('sphere');
@@ -107,7 +109,7 @@ QUnit.test('sop/attribCreate expression from a non existing attribute', async (a
 	assert.ok(!attrib_create1.states.error.active());
 });
 
-QUnit.test('sop/attribCreate simple vector2 vertex', async (assert) => {
+qUnit.test('sop/attribCreate simple vector2 vertex', async (assert) => {
 	const geo1 = window.geo1;
 
 	const box1 = geo1.createNode('box');
@@ -134,7 +136,7 @@ QUnit.test('sop/attribCreate simple vector2 vertex', async (assert) => {
 	assert.equal(array[5], 5);
 });
 
-QUnit.test('sop/attribCreate simple vector vertex', async (assert) => {
+qUnit.test('sop/attribCreate simple vector vertex', async (assert) => {
 	const geo1 = window.geo1;
 
 	const box1 = geo1.createNode('box');
@@ -159,7 +161,7 @@ QUnit.test('sop/attribCreate simple vector vertex', async (assert) => {
 	assert.equal(array[3], 3.5);
 });
 
-QUnit.test('sop/attribCreate expression vector vertex', async (assert) => {
+qUnit.test('sop/attribCreate expression vector vertex', async (assert) => {
 	const geo1 = window.geo1;
 
 	const plane1 = geo1.createNode('plane');
@@ -206,7 +208,7 @@ QUnit.test('sop/attribCreate expression vector vertex', async (assert) => {
 	assert.equal(array[9], 3);
 });
 
-QUnit.test('sop/attribCreate on existing attrib vector2 uv', async (assert) => {
+qUnit.test('sop/attribCreate on existing attrib vector2 uv', async (assert) => {
 	const geo1 = window.geo1;
 
 	const plane1 = geo1.createNode('plane');
@@ -237,7 +239,7 @@ QUnit.test('sop/attribCreate on existing attrib vector2 uv', async (assert) => {
 	assert.equal(array.join(','), [1, 0, 1, 1, 0, 0, 0, 1].join(','));
 });
 
-QUnit.test('sop/attribCreate simple float object', async (assert) => {
+qUnit.test('sop/attribCreate simple float object', async (assert) => {
 	const geo1 = window.geo1;
 
 	const box1 = geo1.createNode('box');
@@ -256,7 +258,7 @@ QUnit.test('sop/attribCreate simple float object', async (assert) => {
 	assert.deepEqual(object.userData, {attributes: {test: 3.5}});
 });
 
-QUnit.test('sop/attribCreate simple vector2 object', async (assert) => {
+qUnit.test('sop/attribCreate simple vector2 object', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
 
@@ -287,7 +289,7 @@ QUnit.test('sop/attribCreate simple vector2 object', async (assert) => {
 	assert.deepEqual(object.userData, {attributes: {test: new Vector2(21.5, 12)}});
 });
 
-QUnit.test('sop/attribCreate simple vector object', async (assert) => {
+qUnit.test('sop/attribCreate simple vector object', async (assert) => {
 	const geo1 = window.geo1;
 
 	const box1 = geo1.createNode('box');
@@ -307,7 +309,7 @@ QUnit.test('sop/attribCreate simple vector object', async (assert) => {
 	assert.deepEqual(object.userData, {attributes: {test: new Vector3(3.5, 12, 17)}});
 });
 
-QUnit.test('sop/attribCreate simple string object', async (assert) => {
+qUnit.test('sop/attribCreate simple string object', async (assert) => {
 	const scene = window.scene;
 	scene.setFrame(1);
 	const geo1 = window.geo1;
@@ -342,7 +344,7 @@ QUnit.test('sop/attribCreate simple string object', async (assert) => {
 	assert.deepEqual(object.userData, {attributes: {test_string: '24'}});
 });
 
-QUnit.test('sop/attribCreate for many points completes in reasonable time', async (assert) => {
+qUnit.test('sop/attribCreate for many points completes in reasonable time', async (assert) => {
 	const geo1 = window.geo1;
 
 	window.scene.performance.start();
@@ -392,7 +394,7 @@ QUnit.test('sop/attribCreate for many points completes in reasonable time', asyn
 	assert.equal(core_group.points().length, 1331);
 });
 
-QUnit.test('sop/attribCreate for string on vertices with expr', async (assert) => {
+qUnit.test('sop/attribCreate for string on vertices with expr', async (assert) => {
 	const geo1 = window.geo1;
 
 	window.scene.performance.start();
@@ -426,7 +428,7 @@ QUnit.test('sop/attribCreate for string on vertices with expr', async (assert) =
 	assert.equal(points[2].attribValue('ids'), '4');
 });
 
-QUnit.test('sop/attribCreate for string on vertices without expr', async (assert) => {
+qUnit.test('sop/attribCreate for string on vertices without expr', async (assert) => {
 	const geo1 = window.geo1;
 
 	window.scene.performance.start();
@@ -453,7 +455,7 @@ QUnit.test('sop/attribCreate for string on vertices without expr', async (assert
 	assert.equal(array[2], 0);
 });
 
-QUnit.test('sop/attribCreate for string referring other string attributes', async (assert) => {
+qUnit.test('sop/attribCreate for string referring other string attributes', async (assert) => {
 	const geo1 = window.geo1;
 
 	const plane1 = geo1.createNode('plane');
@@ -477,7 +479,7 @@ QUnit.test('sop/attribCreate for string referring other string attributes', asyn
 	assert.equal(points[2].attribValue('html'), 'myId2-myClass6');
 });
 
-QUnit.test(
+qUnit.test(
 	'sop/attribCreate for string referring other string attributes with some points having the same values',
 	async (assert) => {
 		const geo1 = window.geo1;
@@ -504,7 +506,7 @@ QUnit.test(
 	}
 );
 
-QUnit.test('sop/attribCreate object position', async (assert) => {
+qUnit.test('sop/attribCreate object position', async (assert) => {
 	const geo1 = window.geo1;
 
 	const box1 = geo1.createNode('box');
@@ -549,7 +551,7 @@ interface MultiTestOptions {
 	withValidGroup: boolean;
 }
 
-QUnit.test('sop/attribCreate using group or not', async (assert) => {
+qUnit.test('sop/attribCreate using group or not', async (assert) => {
 	const geo1 = window.geo1;
 
 	function vParamNumeric(attribCreate: AttribCreateSopNode) {
@@ -803,3 +805,5 @@ QUnit.test('sop/attribCreate using group or not', async (assert) => {
 		}
 	}
 });
+
+}

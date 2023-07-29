@@ -1,8 +1,10 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {SRGBColorSpace, WebGLRenderer} from 'three';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {RendererUtils} from '../../../helpers/RendererUtils';
+export function testenginenodescopCanvas(qUnit: QUnit) {
 
-QUnit.test('COP canvas simple', async (assert) => {
+qUnit.test('COP canvas simple', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
 	const COP = window.COP;
@@ -154,3 +156,5 @@ QUnit.test('COP canvas simple', async (assert) => {
 		cancelAnimationFrame(requestId);
 	});
 });
+
+}

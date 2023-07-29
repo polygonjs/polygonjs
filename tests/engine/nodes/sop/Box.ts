@@ -1,7 +1,9 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {BufferAttribute, Box3} from 'three';
+export function testenginenodessopBox(qUnit: QUnit) {
 const tmpBox = new Box3();
 
-QUnit.test('sop/box simple', async (assert) => {
+qUnit.test('sop/box simple', async (assert) => {
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false); // cancels geo node displayNodeController
 
@@ -23,7 +25,7 @@ QUnit.test('sop/box simple', async (assert) => {
 	assert.equal(tmpBox.min.y, -1.0);
 });
 
-QUnit.test('sop/box with input', async (assert) => {
+qUnit.test('sop/box with input', async (assert) => {
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false); // cancels geo node displayNodeController
 
@@ -53,7 +55,7 @@ QUnit.test('sop/box with input', async (assert) => {
 	assert.equal(tmpBox.min.y, -1.5);
 });
 
-QUnit.test('sop/box with expression', async (assert) => {
+qUnit.test('sop/box with expression', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false); // cancels geo node displayNodeController
@@ -107,3 +109,5 @@ QUnit.test('sop/box with expression', async (assert) => {
 	box1.p.size.set('$F+1');
 	assert.equal((await getBbox()).min.y, -10.5);
 });
+
+}

@@ -1,7 +1,9 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {LightProbe} from 'three';
 import {ASSETS_ROOT} from '../../../../src/core/loader/AssetsUtils';
+export function testenginenodessopLightProbe(qUnit: QUnit) {
 
-QUnit.test('sop/lightProbe simple', async (assert) => {
+qUnit.test('sop/lightProbe simple', async (assert) => {
 	const COP = window.COP;
 	const cubeMap1 = COP.createNode('cubeMap');
 	cubeMap1.p.prefix.set(`${ASSETS_ROOT}/textures/cube/pisa/`);
@@ -26,3 +28,5 @@ QUnit.test('sop/lightProbe simple', async (assert) => {
 	assert.in_delta(lightProbe.sh.coefficients[0].y, 1.14215, 0.001);
 	assert.in_delta(lightProbe.sh.coefficients[0].z, 1.0629, 0.001);
 });
+
+}

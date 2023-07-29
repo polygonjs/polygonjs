@@ -1,10 +1,12 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {MeshDepthBuilderMatNode} from './../../../../src/engine/nodes/mat/MeshDepthBuilder';
 import {SceneJsonImporter} from './../../../../src/engine/io/json/import/Scene';
 import {AssemblersUtils} from './../../../helpers/AssemblersUtils';
 import {SceneJsonExporter} from '../../../../src/engine/io/json/export/Scene';
 import {RendererUtils} from './../../../helpers/RendererUtils';
 import {GLSLHelper} from '../../../helpers/GLSLHelper';
-QUnit.test('meshDepthMaterial as a custom mat is saved and loaded with the correct depth packing', async (assert) => {
+export function testenginenodesmatMeshDepthMaterial(qUnit: QUnit) {
+qUnit.test('meshDepthMaterial as a custom mat is saved and loaded with the correct depth packing', async (assert) => {
 	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 	const MAT = window.MAT;
 	const meshDepthBuilder1 = MAT.createNode('meshDepthBuilder');
@@ -41,3 +43,5 @@ QUnit.test('meshDepthMaterial as a custom mat is saved and loaded with the corre
 
 	RendererUtils.dispose();
 });
+
+}

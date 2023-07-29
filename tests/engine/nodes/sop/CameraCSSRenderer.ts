@@ -1,7 +1,9 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {CoreObject} from '../../../../src/core/geometry/Object';
 import {CameraAttribute} from '../../../../src/core/camera/CoreCamera';
+export function testenginenodessopCameraCSSRenderer(qUnit: QUnit) {
 
-QUnit.test('sop/cameraCSSRenderer simple', async (assert) => {
+qUnit.test('sop/cameraCSSRenderer simple', async (assert) => {
 	const geo1 = window.geo1;
 	const camera1 = geo1.createNode('perspectiveCamera');
 	const cameraCSSRenderer1 = geo1.createNode('cameraCSSRenderer');
@@ -17,7 +19,7 @@ QUnit.test('sop/cameraCSSRenderer simple', async (assert) => {
 		CSS2DRenderer1.graphNodeId()
 	);
 });
-QUnit.test('sop/cameraCSSRenderer applyToChildren', async (assert) => {
+qUnit.test('sop/cameraCSSRenderer applyToChildren', async (assert) => {
 	const geo1 = window.geo1;
 	const camera1 = geo1.createNode('perspectiveCamera');
 	const hierarchy1 = geo1.createNode('hierarchy');
@@ -39,3 +41,5 @@ QUnit.test('sop/cameraCSSRenderer applyToChildren', async (assert) => {
 		CSS2DRenderer1.graphNodeId()
 	);
 });
+
+}

@@ -1,5 +1,7 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {AmbientLight} from 'three';
 import {CoreGroup} from '../../../../src/core/geometry/Group';
+export function testenginenodesjsOutputAmbientLight(qUnit: QUnit) {
 
 function getLight(coreGroup: CoreGroup): AmbientLight {
 	const objects = coreGroup.threejsObjects();
@@ -19,7 +21,7 @@ function getLight(coreGroup: CoreGroup): AmbientLight {
 	return light!;
 }
 
-QUnit.test('js/OutputAmbientLight simple', async (assert) => {
+qUnit.test('js/OutputAmbientLight simple', async (assert) => {
 	const geo1 = window.geo1;
 	const ambientLight1 = geo1.createNode('ambientLight');
 	const objectBuilder1 = geo1.createNode('objectBuilder');
@@ -72,3 +74,5 @@ QUnit.test('js/OutputAmbientLight simple', async (assert) => {
 	assert.equal(await getIntensity(), 4);
 	assert.deepEqual(await getColor(), [2, 1, 0.5]);
 });
+
+}

@@ -1,8 +1,10 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {CoreSleep} from './../../../../src/core/Sleep';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 import {createPhysicsWorldNodes} from './physics/PhysicsHelper';
+export function testenginenodessopPhysicsWorld(qUnit: QUnit) {
 
-QUnit.test('sop/physicsWorld simple', async (assert) => {
+qUnit.test('sop/physicsWorld simple', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
 	const cameraNode = window.perspective_camera1;
@@ -37,7 +39,7 @@ QUnit.test('sop/physicsWorld simple', async (assert) => {
 	});
 });
 
-QUnit.test('sop/physicsWorld with actor/setPhysicsWorldGravity', async (assert) => {
+qUnit.test('sop/physicsWorld with actor/setPhysicsWorldGravity', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
 	const cameraNode = window.perspective_camera1;
@@ -83,7 +85,7 @@ QUnit.test('sop/physicsWorld with actor/setPhysicsWorldGravity', async (assert) 
 	});
 });
 
-QUnit.test('sop/physicsWorld can be cloned', async (assert) => {
+qUnit.test('sop/physicsWorld can be cloned', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
 	const cameraNode = window.perspective_camera1;
@@ -115,3 +117,5 @@ QUnit.test('sop/physicsWorld can be cloned', async (assert) => {
 		assert.less_than(object.position.y, -1.0);
 	});
 });
+
+}

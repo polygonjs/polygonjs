@@ -1,4 +1,6 @@
-QUnit.test('torus knot simple', async (assert) => {
+import type {QUnit} from '../../../helpers/QUnit';
+export function testenginenodessopTorusKnot(qUnit: QUnit) {
+qUnit.test('torus knot simple', async (assert) => {
 	const geo1 = window.geo1;
 
 	const torus_knot1 = geo1.createNode('torusKnot');
@@ -10,3 +12,5 @@ QUnit.test('torus knot simple', async (assert) => {
 	assert.ok(geometry);
 	assert.equal(container.pointsCount(), 1161);
 });
+
+}

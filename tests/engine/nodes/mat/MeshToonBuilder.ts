@@ -1,3 +1,4 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {UniformsUtils} from 'three';
 import {ShaderLib} from 'three';
 import {GlobalsGlNode} from '../../../../src/engine/nodes/gl/Globals';
@@ -15,6 +16,7 @@ import BasicPositionXZFragment from './templates/meshToonBuilder/Basic.positionX
 import {RendererUtils} from '../../../helpers/RendererUtils';
 import {MaterialUserDataUniforms} from '../../../../src/engine/nodes/gl/code/assemblers/materials/OnBeforeCompile';
 import {GLSLHelper} from '../../../helpers/GLSLHelper';
+export function testenginenodesmatMeshToonBuilder(qUnit: QUnit) {
 
 const TEST_SHADER_LIB = {
 	default: {vert: BasicDefaultVertex, frag: BasicDefaultFragment},
@@ -26,7 +28,7 @@ const TEST_SHADER_LIB = {
 const BASIC_UNIFORMS = UniformsUtils.clone(ShaderLib.toon.uniforms);
 const BASIC_UNIFORM_NAMES = Object.keys(BASIC_UNIFORMS).concat(['clippingPlanes']).sort();
 
-QUnit.test('mat/meshToonBuilder simple', async (assert) => {
+qUnit.test('mat/meshToonBuilder simple', async (assert) => {
 	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 	const MAT = window.MAT;
 	// const debug = MAT.createNode('test')
@@ -109,3 +111,5 @@ QUnit.test('mat/meshToonBuilder simple', async (assert) => {
 
 	RendererUtils.dispose();
 });
+
+}

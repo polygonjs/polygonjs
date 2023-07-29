@@ -1,10 +1,12 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {BufferAttribute, Box3, Vector3} from 'three';
 import {CadGeometryType} from '../../../../src/core/geometry/cad/CadCommon';
 import {CadObject} from '../../../../src/core/geometry/cad/CadObject';
+export function testenginenodessopCADRevolution(qUnit: QUnit) {
 const tmpBox = new Box3();
 const tmpSize = new Vector3();
 
-QUnit.test('sop/CADRevolution simple', async (assert) => {
+qUnit.test('sop/CADRevolution simple', async (assert) => {
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false); // cancels geo node displayNodeController
 
@@ -56,3 +58,5 @@ QUnit.test('sop/CADRevolution simple', async (assert) => {
 	assert.in_delta(tmpBox.min.x, -3, 0.01);
 	assert.in_delta(tmpBox.max.x, 3, 0.01);
 });
+
+}

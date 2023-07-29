@@ -1,3 +1,4 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {SubnetGlNode} from '../../../../src/engine/nodes/gl/Subnet';
 import {MeshBasicBuilderMatNode} from '../../../../src/engine/nodes/mat/MeshBasicBuilder';
 import {GlConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Gl';
@@ -8,8 +9,9 @@ import {create_required_nodes_for_subnet_gl_node} from './Subnet';
 import {RampValue, RampPoint, RampInterpolation} from '../../../../src/engine/params/ramp/RampValue';
 import {DataTexture} from 'three';
 import {MaterialUserDataUniforms} from '../../../../src/engine/nodes/gl/code/assemblers/materials/OnBeforeCompile';
+export function testenginenodesglRamp(qUnit: QUnit) {
 
-QUnit.test('gl ramp updates its parent material with new spare parameters', async (assert) => {
+qUnit.test('gl ramp updates its parent material with new spare parameters', async (assert) => {
 	const scene = window.scene;
 	await scene.waitForCooksCompleted();
 	const MAT = window.MAT;
@@ -36,7 +38,7 @@ QUnit.test('gl ramp updates its parent material with new spare parameters', asyn
 	assert.equal(meshBasicBuilder1.params.spare.length, 0);
 });
 
-QUnit.test('gl ramp updates its parent cop builder with new spare parameters', async (assert) => {
+qUnit.test('gl ramp updates its parent cop builder with new spare parameters', async (assert) => {
 	const scene = window.scene;
 	await scene.waitForCooksCompleted();
 	await scene.waitForCooksCompleted();
@@ -66,7 +68,7 @@ QUnit.test('gl ramp updates its parent cop builder with new spare parameters', a
 	assert.equal(builder1.params.spare.length, 0);
 });
 
-QUnit.test('gl ramp updates its particles system with new spare parameters', async (assert) => {
+qUnit.test('gl ramp updates its particles system with new spare parameters', async (assert) => {
 	const scene = window.scene;
 	await scene.waitForCooksCompleted();
 	const {renderer} = await RendererUtils.waitForRenderer(scene);
@@ -98,7 +100,7 @@ QUnit.test('gl ramp updates its particles system with new spare parameters', asy
 	assert.equal(particlesSystemGpu1.params.spare.length, 0);
 });
 
-QUnit.test('gl ramp: 1 ramp node on top level and one in a subnet work ok', async (assert) => {
+qUnit.test('gl ramp: 1 ramp node on top level and one in a subnet work ok', async (assert) => {
 	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 	const MAT = window.MAT;
 	const meshBasicBuilder1 = MAT.createNode('meshBasicBuilder');
@@ -257,3 +259,5 @@ uniform sampler2D v_POLY_ramp_myCustomRamp;`
 
 	RendererUtils.dispose();
 });
+
+}

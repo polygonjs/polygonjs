@@ -1,8 +1,10 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {BooleanCadOperationType} from '../../../../src/engine/nodes/sop/CADBoolean';
 import {BufferAttribute, Box3} from 'three';
+export function testenginenodessopCADBox(qUnit: QUnit) {
 const tmpBox = new Box3();
 
-QUnit.test('sop/CADBox simple', async (assert) => {
+qUnit.test('sop/CADBox simple', async (assert) => {
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false); // cancels geo node displayNodeController
 
@@ -55,3 +57,5 @@ QUnit.test('sop/CADBox simple', async (assert) => {
 	await computeTriangulate();
 	assert.in_delta(tmpBox.min.y, -0.6, 0.01);
 });
+
+}

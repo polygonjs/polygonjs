@@ -1,9 +1,11 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {BufferAttribute} from 'three';
 import {SceneJsonExporter} from '../../../../src/engine/io/json/export/Scene';
 import {SceneJsonImporter} from '../../../../src/engine/io/json/import/Scene';
 import {PointSopNode} from '../../../../src/engine/nodes/sop/Point';
+export function testengineexpressionsmethodspoint(qUnit: QUnit) {
 
-QUnit.test('expression points works with path', async (assert) => {
+qUnit.test('expression points works with path', async (assert) => {
 	const geo1 = window.geo1;
 
 	const plane1 = geo1.createNode('plane');
@@ -25,7 +27,7 @@ QUnit.test('expression points works with path', async (assert) => {
 	assert.deepEqual(array.join(','), [2, 2, 2, 2].join(','));
 });
 
-QUnit.test('expression points works with input index', async (assert) => {
+qUnit.test('expression points works with input index', async (assert) => {
 	const geo1 = window.geo1;
 
 	const plane1 = geo1.createNode('plane');
@@ -47,7 +49,7 @@ QUnit.test('expression points works with input index', async (assert) => {
 	assert.deepEqual(array.join(','), [2, 2, 2, 2].join(','));
 });
 
-QUnit.test('expression points works in a point sop on scene load', async (assert) => {
+qUnit.test('expression points works in a point sop on scene load', async (assert) => {
 	const geo1 = window.geo1;
 	const scene = window.scene;
 
@@ -77,3 +79,5 @@ QUnit.test('expression points works in a point sop on scene load', async (assert
 	positions = (geometry.getAttribute('position') as BufferAttribute).array as number[];
 	assert.deepEqual(positions.join(','), [0, 0.5, 0, 0, 0.5, 0].join(','));
 });
+
+}

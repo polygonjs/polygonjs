@@ -1,7 +1,9 @@
+import type {QUnit} from '../../../helpers/QUnit';
 // import {Box3} from 'three';
+export function testenginenodessopCsgNetwork(qUnit: QUnit) {
 // const tmpBox = new Box3();
 
-// QUnit.test('sop/CsgNetwork errors if the displayNode does', async (assert) => {
+// qUnit.test('sop/CsgNetwork errors if the displayNode does', async (assert) => {
 // 	const geo1 = window.geo1;
 
 // 	const csgNetwork1 = geo1.createNode('csgNetwork');
@@ -34,3 +36,5 @@
 // 	assert.equal((await compute()).pointsCount, 96);
 // 	assert.in_delta((await compute()).bbox.min.y, -0.3, 0.001);
 // });
+
+}

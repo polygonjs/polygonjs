@@ -1,6 +1,8 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {BufferAttribute} from 'three';
+export function testenginenodessopColor(qUnit: QUnit) {
 
-QUnit.test('sop/color simple', async (assert) => {
+qUnit.test('sop/color simple', async (assert) => {
 	const geo1 = window.geo1;
 
 	const box1 = geo1.createNode('box');
@@ -33,7 +35,7 @@ QUnit.test('sop/color simple', async (assert) => {
 	assert.equal(array[5], 0.75);
 });
 
-QUnit.test('sop/color with expression', async (assert) => {
+qUnit.test('sop/color with expression', async (assert) => {
 	const geo1 = window.geo1;
 
 	const box1 = geo1.createNode('box');
@@ -57,7 +59,7 @@ QUnit.test('sop/color with expression', async (assert) => {
 	);
 });
 
-QUnit.test('sop/color with position', async (assert) => {
+qUnit.test('sop/color with position', async (assert) => {
 	const geo1 = window.geo1;
 
 	const box1 = geo1.createNode('box');
@@ -99,7 +101,7 @@ QUnit.test('sop/color with position', async (assert) => {
 	);
 });
 
-QUnit.test('sop/color with non entity dependent expression', async (assert) => {
+qUnit.test('sop/color with non entity dependent expression', async (assert) => {
 	const geo1 = window.geo1;
 
 	const sphere1 = geo1.createNode('sphere');
@@ -123,3 +125,5 @@ QUnit.test('sop/color with non entity dependent expression', async (assert) => {
 	sphere1.p.radius.set(2);
 	assert.equal((await getColors())[0], 2);
 });
+
+}

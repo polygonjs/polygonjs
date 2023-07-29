@@ -1,4 +1,6 @@
-QUnit.test('normalsHelper simple', async (assert) => {
+import type {QUnit} from '../../../helpers/QUnit';
+export function testenginenodessopNormalsHelper(qUnit: QUnit) {
+qUnit.test('normalsHelper simple', async (assert) => {
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false); // cancels geo node displayNodeController
 
@@ -13,3 +15,5 @@ QUnit.test('normalsHelper simple', async (assert) => {
 	container = await normalsHelper.compute();
 	assert.equal(container.coreContent()!.threejsObjects().length, 1);
 });
+
+}

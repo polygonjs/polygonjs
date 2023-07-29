@@ -1,11 +1,13 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import DEFAULT_FRAGMENT from './SDFUnion/default.frag.glsl';
 import SDF_CONTEXT_NO_SMOOTH_FRAGMENT from './SDFUnion/sdfContextNoSmooth.frag.glsl';
 import SDF_CONTEXT_WITH_SMOOTH_FRAGMENT from './SDFUnion/sdfContextWithSmooth.frag.glsl';
 import NO_INPUT_EMPTY_VERTEX from './SDFUnion/default.vert.glsl';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 import {GLSLHelper} from '../../../helpers/GLSLHelper';
+export function testenginenodesglSDFUnion(qUnit: QUnit) {
 
-QUnit.test('gl/SDFUnion with float inputs', async (assert) => {
+qUnit.test('gl/SDFUnion with float inputs', async (assert) => {
 	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 	const MAT = window.MAT;
 	const rayMarchingBuilder1 = MAT.createNode('rayMarchingBuilder');
@@ -42,7 +44,7 @@ QUnit.test('gl/SDFUnion with float inputs', async (assert) => {
 	RendererUtils.dispose();
 });
 
-QUnit.test('gl/SDFUnion with context inputs and no smooth', async (assert) => {
+qUnit.test('gl/SDFUnion with context inputs and no smooth', async (assert) => {
 	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 	const MAT = window.MAT;
 	const rayMarchingBuilder1 = MAT.createNode('rayMarchingBuilder');
@@ -81,7 +83,7 @@ QUnit.test('gl/SDFUnion with context inputs and no smooth', async (assert) => {
 	RendererUtils.dispose();
 });
 
-QUnit.test('gl/SDFUnion with context inputs and smooth', async (assert) => {
+qUnit.test('gl/SDFUnion with context inputs and smooth', async (assert) => {
 	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 	const MAT = window.MAT;
 	const rayMarchingBuilder1 = MAT.createNode('rayMarchingBuilder');
@@ -121,3 +123,5 @@ QUnit.test('gl/SDFUnion with context inputs and smooth', async (assert) => {
 
 	RendererUtils.dispose();
 });
+
+}

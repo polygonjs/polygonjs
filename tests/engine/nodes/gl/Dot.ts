@@ -1,9 +1,11 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {GlConnectionPointType, BaseGlConnectionPoint} from '../../../../src/engine/nodes/utils/io/connections/Gl';
 import {SceneJsonExporter} from '../../../../src/engine/io/json/export/Scene';
 import {SceneJsonImporter} from '../../../../src/engine/io/json/import/Scene';
 import {BaseGlNodeType} from '../../../../src/engine/nodes/gl/_Base';
+export function testenginenodesglDot(qUnit: QUnit) {
 
-QUnit.test('gl dot updates its input and output types correctly', async (assert) => {
+qUnit.test('gl dot updates its input and output types correctly', async (assert) => {
 	const MAT = window.MAT;
 	const material_basic_builder1 = MAT.createNode('meshBasicBuilder');
 	material_basic_builder1.createNode('output');
@@ -56,7 +58,7 @@ QUnit.test('gl dot updates its input and output types correctly', async (assert)
 	assert.equal(dot1.io.outputs.namedOutputConnectionPoints()[0].type(), GlConnectionPointType.FLOAT);
 });
 
-QUnit.test('gl dot updates its output type and param correctly when scene is loaded', async (assert) => {
+qUnit.test('gl dot updates its output type and param correctly when scene is loaded', async (assert) => {
 	const scene = window.scene;
 	const MAT = window.MAT;
 	const material_basic_builder1 = MAT.createNode('meshBasicBuilder');
@@ -85,3 +87,5 @@ QUnit.test('gl dot updates its output type and param correctly when scene is loa
 	);
 	assert.deepEqual(dot2.params.get('vec1')!.valueSerialized(), [1, 2]);
 });
+
+}

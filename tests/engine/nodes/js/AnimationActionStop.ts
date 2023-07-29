@@ -1,3 +1,4 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {ASSETS_ROOT} from '../../../../src/core/loader/AssetsUtils';
 import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Js';
 import {RendererUtils} from '../../../helpers/RendererUtils';
@@ -7,8 +8,9 @@ import {
 	findOrCreateAnimationMixer,
 	getMostActiveAnimationActionFromMixer,
 } from '../../../../src/engine/functions/_AnimationMixer';
+export function testenginenodesjsAnimationActionStop(qUnit: QUnit) {
 
-QUnit.test('js/animationActionStop', async (assert) => {
+qUnit.test('js/animationActionStop', async (assert) => {
 	const scene = window.scene;
 	const perspective_camera1 = window.perspective_camera1;
 	const geo1 = window.geo1;
@@ -70,3 +72,5 @@ QUnit.test('js/animationActionStop', async (assert) => {
 		assert.notOk(animationAction.isRunning(), 'not running');
 	});
 });
+
+}

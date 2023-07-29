@@ -1,6 +1,8 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {DataTexture} from 'three';
+export function testenginenodescopGeometryAttribute(qUnit: QUnit) {
 
-QUnit.test('cop/geometryAttribute simple', async (assert) => {
+qUnit.test('cop/geometryAttribute simple', async (assert) => {
 	const COP = window.COP;
 	const geo1 = window.geo1;
 
@@ -37,7 +39,7 @@ QUnit.test('cop/geometryAttribute simple', async (assert) => {
 	assert.equal(data[7], 0);
 });
 
-QUnit.test('cop/geometryAttribute with multiple attributes', async (assert) => {
+qUnit.test('cop/geometryAttribute with multiple attributes', async (assert) => {
 	const COP = window.COP;
 	const geo1 = window.geo1;
 
@@ -80,7 +82,7 @@ QUnit.test('cop/geometryAttribute with multiple attributes', async (assert) => {
 	assert.equal(data[11], 6, 'test 2');
 });
 
-QUnit.test('cop/geometryAttribute errors with too many attributes', async (assert) => {
+qUnit.test('cop/geometryAttribute errors with too many attributes', async (assert) => {
 	const COP = window.COP;
 	const geo1 = window.geo1;
 
@@ -102,3 +104,5 @@ QUnit.test('cop/geometryAttribute errors with too many attributes', async (asser
 	await geometryAttribute1.compute();
 	assert.equal(geometryAttribute1.states.error.message(), 'total size of attributes is 5, but maximum is 4');
 });
+
+}

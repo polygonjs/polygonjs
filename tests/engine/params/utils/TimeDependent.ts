@@ -1,6 +1,8 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {TIME_CONTROLLER_UPDATE_TIME_OPTIONS_DEFAULT} from '../../../../src/engine/scene/utils/TimeController';
+export function testengineparamsutilsTimeDependent(qUnit: QUnit) {
 
-QUnit.skip('a param sets its node to timedependent and back', async (assert) => {});
+qUnit.skip('a param sets its node to timedependent and back', async (assert) => {});
 
 // assert !geo1.is_time_dependent()
 
@@ -45,7 +47,7 @@ QUnit.skip('a param sets its node to timedependent and back', async (assert) => 
 
 // done()
 
-QUnit.test('a param sets its node to timedependent and a scene time change sets the node to dirty', async (assert) => {
+qUnit.test('a param sets its node to timedependent and a scene time change sets the node to dirty', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false); // cancels geo node displayNodeController
@@ -84,7 +86,7 @@ QUnit.test('a param sets its node to timedependent and a scene time change sets 
 	assert.ok(!box1.isDirty());
 });
 
-QUnit.test('a param value is updated is it is time dependent', async (assert) => {
+qUnit.test('a param value is updated is it is time dependent', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false); // cancels geo node displayNodeController
@@ -113,7 +115,7 @@ QUnit.test('a param value is updated is it is time dependent', async (assert) =>
 	assert.equal(scene.timeController.graphNode.graphSuccessors().length, 0);
 });
 
-QUnit.test('a node with 2 params can be time dependent', async (assert) => {
+qUnit.test('a node with 2 params can be time dependent', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false); // cancels geo node displayNodeController
@@ -167,3 +169,5 @@ QUnit.test('a node with 2 params can be time dependent', async (assert) => {
 	assert.equal(ry.graphAllPredecessors().length, 0);
 	assert.equal(time_graph_node.graphSuccessors().length, 0);
 });
+
+}

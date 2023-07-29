@@ -1,8 +1,10 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {ThrottleEventNode} from '../../../../src/engine/nodes/event/Throttle';
 import {EventContext} from '../../../../src/engine/scene/utils/events/_BaseEventsController';
+export function testenginenodeseventThrottle(qUnit: QUnit) {
 
-QUnit.test('event/throttle nodes simple', async (assert) => {
+qUnit.test('event/throttle nodes simple', async (assert) => {
 	const geo1 = window.geo1;
 	const eventsNetwork1 = geo1.createNode('eventsNetwork');
 	const throttle1 = eventsNetwork1.createNode('throttle');
@@ -29,3 +31,5 @@ QUnit.test('event/throttle nodes simple', async (assert) => {
 	}
 	assert.equal(count, 21);
 });
+
+}

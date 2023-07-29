@@ -1,4 +1,6 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {BaseSopNodeType} from '../../../../src/engine/nodes/sop/_Base';
+export function testenginenodessopTetDelete(qUnit: QUnit) {
 
 async function tetsCount(node: BaseSopNodeType) {
 	const container = await node.compute();
@@ -14,7 +16,7 @@ async function tetsCount(node: BaseSopNodeType) {
 	return geometry.tetsCount();
 }
 
-QUnit.test('sop/tetDelete simple', async (assert) => {
+qUnit.test('sop/tetDelete simple', async (assert) => {
 	const geo1 = window.geo1;
 
 	const icosahedron1 = geo1.createNode('icosahedron');
@@ -94,3 +96,5 @@ QUnit.test('sop/tetDelete simple', async (assert) => {
 	tetDelete1.p.byBoundingObject.set(false);
 	tetDelete1.p.invert.set(false);
 });
+
+}

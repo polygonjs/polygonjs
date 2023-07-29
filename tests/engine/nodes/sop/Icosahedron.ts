@@ -1,6 +1,8 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {BufferAttribute} from 'three';
+export function testenginenodessopIcosahedron(qUnit: QUnit) {
 
-QUnit.test('icosahedron simple', async (assert) => {
+qUnit.test('icosahedron simple', async (assert) => {
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false); // cancels geo node displayNodeController
 
@@ -44,3 +46,5 @@ QUnit.test('icosahedron simple', async (assert) => {
 	container = await icosahedron1.compute();
 	assert.equal(container.coreContent()?.pointsCount(), 20744);
 });
+
+}

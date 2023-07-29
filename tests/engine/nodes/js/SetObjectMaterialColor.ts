@@ -1,9 +1,11 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {Mesh} from 'three';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Js';
 import {RendererUtils} from '../../../helpers/RendererUtils';
+export function testenginenodesjsSetObjectMaterialColor(qUnit: QUnit) {
 
-QUnit.test('js/setObjectMaterialColor', async (assert) => {
+qUnit.test('js/setObjectMaterialColor', async (assert) => {
 	const MAT = window.MAT;
 	const meshBasic1 = MAT.createNode('meshBasic');
 	const scene = window.scene;
@@ -44,3 +46,5 @@ QUnit.test('js/setObjectMaterialColor', async (assert) => {
 		assert.deepEqual(material.color.toArray(), [0, 1, 0], 'color has been updated');
 	});
 });
+
+}

@@ -1,7 +1,9 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {BufferAttribute} from 'three';
 import {BaseSopNodeType} from '../../../../src/engine/nodes/sop/_Base';
+export function testenginenodessopFuse(qUnit: QUnit) {
 
-QUnit.test('fuse simple', async (assert) => {
+qUnit.test('fuse simple', async (assert) => {
 	const geo1 = window.geo1;
 
 	const box1 = geo1.createNode('box');
@@ -39,7 +41,7 @@ async function getPosition(node: BaseSopNodeType) {
 	return [...((object.geometry.getAttribute('position')! as BufferAttribute).array as number[])];
 }
 
-QUnit.test('fuse on simple mesh', async (assert) => {
+qUnit.test('fuse on simple mesh', async (assert) => {
 	const geo1 = window.geo1;
 
 	const plane1 = geo1.createNode('plane');
@@ -61,7 +63,7 @@ QUnit.test('fuse on simple mesh', async (assert) => {
 	assert.deepEqual((await getPosition(fuse1)).length, 0);
 });
 
-QUnit.test('fuse on simple line', async (assert) => {
+qUnit.test('fuse on simple line', async (assert) => {
 	const geo1 = window.geo1;
 
 	const line1 = geo1.createNode('line');
@@ -84,7 +86,7 @@ QUnit.test('fuse on simple line', async (assert) => {
 	assert.deepEqual(await getIndex(fuse1), [0, 1, 1, 2, 2, 3]);
 });
 
-QUnit.test('fuse on simple points', async (assert) => {
+qUnit.test('fuse on simple points', async (assert) => {
 	const geo1 = window.geo1;
 
 	const plane1 = geo1.createNode('plane');
@@ -100,3 +102,5 @@ QUnit.test('fuse on simple points', async (assert) => {
 	fuse1.p.dist.set(0.5);
 	assert.deepEqual(await getIndex(fuse1), [0, 1, 2, 3, 4, 5, 6, 7, 8]);
 });
+
+}

@@ -1,10 +1,12 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Js';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 import {findCSS2DObjects} from '../sop/CSS2DObject';
 import {findCSS3DObjects} from '../sop/CSS3DObject';
+export function testenginenodesjsSetCSSObjectClass(qUnit: QUnit) {
 
-QUnit.test('js/setCSSObjectClass CSS2DObject', async (assert) => {
+qUnit.test('js/setCSSObjectClass CSS2DObject', async (assert) => {
 	const scene = window.scene;
 	const perspective_camera1 = window.perspective_camera1;
 	const geo1 = window.geo1;
@@ -51,7 +53,7 @@ QUnit.test('js/setCSSObjectClass CSS2DObject', async (assert) => {
 	});
 });
 
-QUnit.test('js/setCSSObjectClass CSS3DObject', async (assert) => {
+qUnit.test('js/setCSSObjectClass CSS3DObject', async (assert) => {
 	const scene = window.scene;
 	const perspective_camera1 = window.perspective_camera1;
 	const geo1 = window.geo1;
@@ -97,3 +99,5 @@ QUnit.test('js/setCSSObjectClass CSS3DObject', async (assert) => {
 		assert.notOk(CSSObject.element.classList.contains('active'), 'active class removed');
 	});
 });
+
+}

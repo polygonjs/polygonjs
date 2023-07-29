@@ -1,6 +1,8 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {ASSETS_ROOT} from '../../../../src/core/loader/AssetsUtils';
 import {objectTypeFromConstructor, ObjectType} from '../../../../src/core/geometry/Constant';
 import {Object3D} from 'three';
+export function testenginenodessopFileGEOJSON(qUnit: QUnit) {
 
 function _url(path: string) {
 	return `${ASSETS_ROOT}${path}`;
@@ -15,7 +17,7 @@ async function withFile(path: string) {
 	return {container, fileNode};
 }
 
-QUnit.test('sop/fileGEOJSON simple', async (assert) => {
+qUnit.test('sop/fileGEOJSON simple', async (assert) => {
 	const {container} = await withFile('models/geojson/wikipedia.geojson');
 	assert.equal(container.objectsCount(), 1);
 	assert.equal(container.totalPointsCount(), 9);
@@ -28,7 +30,7 @@ QUnit.test('sop/fileGEOJSON simple', async (assert) => {
 	assert.equal(objectTypeFromConstructor(objects[2].constructor), ObjectType.MESH);
 });
 
-// QUnit.test('sop/fileGEOJSON ibm.bounded', async (assert) => {
+// qUnit.test('sop/fileGEOJSON ibm.bounded', async (assert) => {
 // 	const {container} = await withFile('models/geojson/ibm.bounded.geojson');
 // 	assert.equal(container.objectsCount(), 1);
 // 	assert.equal(container.totalPointsCount(), 9);
@@ -41,7 +43,7 @@ QUnit.test('sop/fileGEOJSON simple', async (assert) => {
 // 	assert.equal(objectTypeFromConstructor(objects[2].constructor), ObjectType.MESH);
 // });
 
-QUnit.test('sop/fileGEOJSON brooklyn', async (assert) => {
+qUnit.test('sop/fileGEOJSON brooklyn', async (assert) => {
 	const {container} = await withFile('models/geojson/ebrelsford/brooklyn.geojson');
 	assert.equal(container.objectsCount(), 1);
 	assert.equal(container.totalPointsCount(), 17585);
@@ -73,7 +75,7 @@ QUnit.test('sop/fileGEOJSON brooklyn', async (assert) => {
 		]
 	);
 });
-QUnit.test('sop/fileGEOJSON queens', async (assert) => {
+qUnit.test('sop/fileGEOJSON queens', async (assert) => {
 	const {container} = await withFile('models/geojson/ebrelsford/queens.geojson');
 	assert.equal(container.objectsCount(), 1);
 	assert.equal(container.totalPointsCount(), 466);
@@ -103,3 +105,5 @@ QUnit.test('sop/fileGEOJSON queens', async (assert) => {
 		]
 	);
 });
+
+}

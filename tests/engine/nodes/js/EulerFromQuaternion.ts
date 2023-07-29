@@ -1,7 +1,9 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {Mesh} from 'three';
 import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Js';
+export function testenginenodesjsEulerFromQuaternion(qUnit: QUnit) {
 
-QUnit.test('js/eulerFromQuaternion', async (assert) => {
+qUnit.test('js/eulerFromQuaternion', async (assert) => {
 	const geo1 = window.geo1;
 	const box1 = geo1.createNode('box');
 	const objectBuilder1 = geo1.createNode('objectBuilder');
@@ -28,3 +30,5 @@ QUnit.test('js/eulerFromQuaternion', async (assert) => {
 	quaternion1.p.angle.set(0.5 * Math.PI);
 	assert.equal(await getRotY(), Math.PI * 0.5);
 });
+
+}

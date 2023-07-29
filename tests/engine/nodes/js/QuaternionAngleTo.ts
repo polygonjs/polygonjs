@@ -1,6 +1,8 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {Mesh} from 'three';
+export function testenginenodesjsQuaternionAngleTo(qUnit: QUnit) {
 
-QUnit.test('js/quaternionAngleTo', async (assert) => {
+qUnit.test('js/quaternionAngleTo', async (assert) => {
 	const geo1 = window.geo1;
 	const box1 = geo1.createNode('box');
 	const objectBuilder1 = geo1.createNode('objectBuilder');
@@ -27,3 +29,5 @@ QUnit.test('js/quaternionAngleTo', async (assert) => {
 	quaternion2.p.angle.set(Math.PI * 0.25);
 	assert.in_delta(await getPosX(), Math.PI * 0.25, 0.00001);
 });
+
+}

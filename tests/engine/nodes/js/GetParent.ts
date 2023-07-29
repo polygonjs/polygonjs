@@ -1,11 +1,13 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {Mesh} from 'three';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {TransformTargetType} from '../../../../src/core/Transform';
 import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Js';
 import {HierarchyMode} from '../../../../src/engine/operations/sop/Hierarchy';
 import {RendererUtils} from '../../../helpers/RendererUtils';
+export function testenginenodesjsGetParent(qUnit: QUnit) {
 
-QUnit.test('js/GetParent', async (assert) => {
+qUnit.test('js/GetParent', async (assert) => {
 	const scene = window.scene;
 	const perspective_camera1 = window.perspective_camera1;
 
@@ -79,3 +81,5 @@ QUnit.test('js/GetParent', async (assert) => {
 		assert.equal(object.position.x, 1, 'object moved to 1');
 	});
 });
+
+}

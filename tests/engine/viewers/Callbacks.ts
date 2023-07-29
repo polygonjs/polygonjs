@@ -1,6 +1,8 @@
+import type {QUnit} from '../../helpers/QUnit';
 import {RendererUtils} from '../../helpers/RendererUtils';
+export function testengineviewersCallbacks(qUnit: QUnit) {
 
-QUnit.test('viewer callbacks can be registered/unregistered', async (assert) => {
+qUnit.test('viewer callbacks can be registered/unregistered', async (assert) => {
 	const scene = window.scene;
 	await scene.waitForCooksCompleted();
 	assert.ok(!scene.loadingController.isLoading(), 'scene is loaded');
@@ -32,3 +34,5 @@ QUnit.test('viewer callbacks can be registered/unregistered', async (assert) => 
 		assert.notOk(viewer.registeredAfterRenderCallbacks().has(`OnAfterRender 9`));
 	});
 });
+
+}

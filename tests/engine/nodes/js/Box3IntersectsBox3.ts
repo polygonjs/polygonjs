@@ -1,3 +1,4 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {Mesh} from 'three';
 import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Js';
 import {SetObjectAttributeInputName} from '../../../../src/engine/nodes/js/SetObjectAttribute';
@@ -9,8 +10,9 @@ import {GetGeometryBoundingBoxOutputName} from '../../../../src/engine/nodes/js/
 import {CoreObject} from '../../../../src/core/geometry/Object';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 import {CoreSleep} from '../../../../src/core/Sleep';
+export function testenginenodesjsBox3IntersectsBox3(qUnit: QUnit) {
 
-QUnit.test('js/box3IntersectsBox3', async (assert) => {
+qUnit.test('js/box3IntersectsBox3', async (assert) => {
 	const perspective_camera1 = window.perspective_camera1;
 	const scene = window.scene;
 	const geo1 = window.geo1;
@@ -90,3 +92,5 @@ QUnit.test('js/box3IntersectsBox3', async (assert) => {
 		assert.equal(await getAttribValue(), true, '-9,-11');
 	});
 });
+
+}

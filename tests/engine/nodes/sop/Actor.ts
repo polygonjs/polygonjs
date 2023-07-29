@@ -1,3 +1,4 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {OnTickJsNodeOuput} from '../../../../src/engine/nodes/js/OnTick';
 import {Mesh, Object3D} from 'three';
 import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Js';
@@ -11,6 +12,7 @@ import {PerspectiveCameraObjNode} from '../../../../src/engine/nodes/obj/Perspec
 import {FloatParam} from '../../../../src/engine/params/Float';
 import {ParamType} from '../../../../src/engine/poly/ParamType';
 import {ActorBuilderNode} from '../../../../src/engine/scene/utils/ActorsManager';
+export function testenginenodessopActor(qUnit: QUnit) {
 
 function createBasicActorNodes(actor1: ActorBuilderNode) {
 	const onTick1 = actor1.createNode('onTick');
@@ -26,7 +28,7 @@ function createBasicActorNodes(actor1: ActorBuilderNode) {
 	return {onTick1, setObjectPosition1, floatToVec3_1, sin1};
 }
 
-QUnit.test('sop/actor with objectsMask', async (assert) => {
+qUnit.test('sop/actor with objectsMask', async (assert) => {
 	const geo1 = window.geo1;
 	const box1 = geo1.createNode('box');
 	const box2 = geo1.createNode('box');
@@ -64,7 +66,7 @@ QUnit.test('sop/actor with objectsMask', async (assert) => {
 	assert.deepEqual(await _objectNamesWithActor(), ['box2']);
 });
 
-QUnit.test('sop/actor removing children resets the evaluator', async (assert) => {
+qUnit.test('sop/actor removing children resets the evaluator', async (assert) => {
 	const scene = window.scene;
 	const perspective_camera1 = window.perspective_camera1;
 	const geo1 = window.geo1;
@@ -106,7 +108,7 @@ QUnit.test('sop/actor removing children resets the evaluator', async (assert) =>
 	});
 });
 
-QUnit.test('sop/actor persisted_config', async (assert) => {
+qUnit.test('sop/actor persisted_config', async (assert) => {
 	const scene = window.scene;
 	const perspective_camera1_1 = window.perspective_camera1;
 	const geo1 = window.geo1;
@@ -166,7 +168,7 @@ QUnit.test('sop/actor persisted_config', async (assert) => {
 	RendererUtils.dispose();
 });
 
-QUnit.test('sop/actor using actorsNetwork', async (assert) => {
+qUnit.test('sop/actor using actorsNetwork', async (assert) => {
 	const scene = window.scene;
 	const perspective_camera1_1 = window.perspective_camera1;
 	const geo1 = window.geo1;
@@ -251,7 +253,7 @@ QUnit.test('sop/actor using actorsNetwork', async (assert) => {
 	RendererUtils.dispose();
 });
 
-QUnit.test('sop/actor removes unused objects', async (assert) => {
+qUnit.test('sop/actor removes unused objects', async (assert) => {
 	const scene = window.scene;
 	const perspective_camera1 = window.perspective_camera1;
 	const geo1 = window.geo1;
@@ -279,3 +281,5 @@ QUnit.test('sop/actor removes unused objects', async (assert) => {
 	});
 	RendererUtils.dispose();
 });
+
+}

@@ -1,4 +1,6 @@
-QUnit.test('circle 3 points simple', async (assert) => {
+import type {QUnit} from '../../../helpers/QUnit';
+export function testenginenodessopCircle3Points(qUnit: QUnit) {
+qUnit.test('circle 3 points simple', async (assert) => {
 	const geo1 = window.geo1;
 
 	const add0 = geo1.createNode('add');
@@ -22,3 +24,5 @@ QUnit.test('circle 3 points simple', async (assert) => {
 	assert.ok(geometry);
 	assert.equal(container.pointsCount(), 101);
 });
+
+}

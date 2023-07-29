@@ -1,10 +1,12 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {AttribClass} from '../../../../src/core/geometry/Constant';
 import {AttributeHelper} from '../../../helpers/AttributeHelper';
 import {BufferAttribute} from 'three';
 import {coreObjectFactory} from '../../../../src/core/geometry/CoreObjectFactory';
 import {CoreObjectType, ObjectContent} from '../../../../src/core/geometry/ObjectContent';
+export function testenginenodessopAttribId(qUnit: QUnit) {
 
-QUnit.test('sop/attribId simple on points', async (assert) => {
+qUnit.test('sop/attribId simple on points', async (assert) => {
 	const geo1 = window.geo1;
 
 	const plane1 = geo1.createNode('plane');
@@ -27,7 +29,7 @@ QUnit.test('sop/attribId simple on points', async (assert) => {
 	);
 });
 
-QUnit.test('sop/attribId simple on objects', async (assert) => {
+qUnit.test('sop/attribId simple on objects', async (assert) => {
 	const geo1 = window.geo1;
 
 	const box1 = geo1.createNode('box');
@@ -52,3 +54,5 @@ QUnit.test('sop/attribId simple on objects', async (assert) => {
 		[0, 1 / 3, 2 / 3, 1]
 	);
 });
+
+}

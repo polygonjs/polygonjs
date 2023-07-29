@@ -1,10 +1,12 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {TimeController} from '../../../../src/engine/scene/utils/TimeController';
 import {checkConsolePrints} from '../../../helpers/Console';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 import {saveAndLoadScene} from '../../../helpers/ImportHelper';
+export function testenginenodeseventScene(qUnit: QUnit) {
 
-QUnit.test('scene event nodes simple tick event', async (assert) => {
+qUnit.test('scene event nodes simple tick event', async (assert) => {
 	const scene = window.scene;
 	const eventsNetwork = scene.root().createNode('eventsNetwork');
 	const eventScene = eventsNetwork.createNode('scene');
@@ -31,7 +33,7 @@ QUnit.test('scene event nodes simple tick event', async (assert) => {
 	eventScene.p.active.set(0);
 	assert.equal(await logPrintsCount(), 0);
 });
-QUnit.test('scene event nodes simple created event', async (assert) => {
+qUnit.test('scene event nodes simple created event', async (assert) => {
 	const scene = window.scene;
 	const eventsNetwork = scene.root().createNode('eventsNetwork');
 	const eventScene = eventsNetwork.createNode('scene');
@@ -54,7 +56,7 @@ QUnit.test('scene event nodes simple created event', async (assert) => {
 	assert.equal(await logPrintsCount(), 1);
 });
 
-QUnit.test('scene event nodes simple play event', async (assert) => {
+qUnit.test('scene event nodes simple play event', async (assert) => {
 	const scene = window.scene;
 	const eventsNetwork = scene.root().createNode('eventsNetwork');
 	const eventScene = eventsNetwork.createNode('scene');
@@ -82,7 +84,7 @@ QUnit.test('scene event nodes simple play event', async (assert) => {
 	assert.equal(await logPrintsCount(), 0);
 });
 
-QUnit.test('scene event nodes simple pause event', async (assert) => {
+qUnit.test('scene event nodes simple pause event', async (assert) => {
 	const scene = window.scene;
 	const eventsNetwork = scene.root().createNode('eventsNetwork');
 	const eventScene = eventsNetwork.createNode('scene');
@@ -111,7 +113,7 @@ QUnit.test('scene event nodes simple pause event', async (assert) => {
 	assert.equal(await logPrintsCount(), 0);
 });
 
-QUnit.test('scene event nodes simple time reached event', async (assert) => {
+qUnit.test('scene event nodes simple time reached event', async (assert) => {
 	const scene = window.scene;
 	const eventsNetwork = scene.root().createNode('eventsNetwork');
 	const eventScene = eventsNetwork.createNode('scene');
@@ -148,7 +150,7 @@ QUnit.test('scene event nodes simple time reached event', async (assert) => {
 	});
 });
 
-QUnit.test('scene event nodes simple process setFrame input', async (assert) => {
+qUnit.test('scene event nodes simple process setFrame input', async (assert) => {
 	const scene = window.scene;
 	const eventsNetwork = scene.root().createNode('eventsNetwork');
 	const eventScene = eventsNetwork.createNode('scene');
@@ -161,7 +163,7 @@ QUnit.test('scene event nodes simple process setFrame input', async (assert) => 
 	assert.equal(scene.frame(), 10);
 });
 
-QUnit.test('scene event nodes simple process play input', async (assert) => {
+qUnit.test('scene event nodes simple process play input', async (assert) => {
 	const scene = window.scene;
 	const eventsNetwork = scene.root().createNode('eventsNetwork');
 	const eventScene = eventsNetwork.createNode('scene');
@@ -173,7 +175,7 @@ QUnit.test('scene event nodes simple process play input', async (assert) => {
 	button.p.dispatch.pressButton();
 	assert.equal(scene.timeController.playing(), true);
 });
-QUnit.test('scene event nodes simple process pause input', async (assert) => {
+qUnit.test('scene event nodes simple process pause input', async (assert) => {
 	const scene = window.scene;
 	const eventsNetwork = scene.root().createNode('eventsNetwork');
 	const eventScene = eventsNetwork.createNode('scene');
@@ -186,3 +188,5 @@ QUnit.test('scene event nodes simple process pause input', async (assert) => {
 	button.p.dispatch.pressButton();
 	assert.equal(scene.timeController.playing(), false);
 });
+
+}

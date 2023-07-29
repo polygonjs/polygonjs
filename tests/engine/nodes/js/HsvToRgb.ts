@@ -1,8 +1,10 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {RectAreaLight} from 'three';
 import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Js';
 import {FloatParam} from '../../../../src/engine/params/Float';
+export function testenginenodesjsHsvToRgb(qUnit: QUnit) {
 
-QUnit.test('js/hsvToRgb', async (assert) => {
+qUnit.test('js/hsvToRgb', async (assert) => {
 	const geo1 = window.geo1;
 	const areaLight1 = geo1.createNode('areaLight');
 	const copy1 = geo1.createNode('copy');
@@ -59,3 +61,5 @@ QUnit.test('js/hsvToRgb', async (assert) => {
 	assert.in_delta(objects[3].color.b, 1, 0.01);
 	assert.in_delta(objects[4].color.b, 1, 0.01);
 });
+
+}

@@ -1,4 +1,6 @@
-QUnit.test('a param can be set to errored with a bad expression then back to non errored', async (assert) => {
+import type {QUnit} from '../../../helpers/QUnit';
+export function testengineparamsutilsExpression(qUnit: QUnit) {
+qUnit.test('a param can be set to errored with a bad expression then back to non errored', async (assert) => {
 	const geo1 = window.geo1;
 
 	const param = geo1.p.t.x;
@@ -18,7 +20,7 @@ QUnit.test('a param can be set to errored with a bad expression then back to non
 	assert.notOk(param.isDirty());
 });
 
-QUnit.test('a param can access another with its component full path', async (assert) => {
+qUnit.test('a param can access another with its component full path', async (assert) => {
 	const geo1 = window.geo1;
 
 	const t = geo1.p.t;
@@ -47,3 +49,5 @@ QUnit.test('a param can access another with its component full path', async (ass
 	assert.equal(tz.value, -2);
 	assert.deepEqual(t.value.toArray(), [0, -1, -2]);
 });
+
+}

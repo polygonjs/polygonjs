@@ -1,4 +1,6 @@
-QUnit.test('event/setFlag simple display flag', async (assert) => {
+import type {QUnit} from '../../../helpers/QUnit';
+export function testenginenodeseventSetFlag(qUnit: QUnit) {
+qUnit.test('event/setFlag simple display flag', async (assert) => {
 	const geo1 = window.geo1;
 	const scene = window.scene;
 
@@ -31,7 +33,7 @@ QUnit.test('event/setFlag simple display flag', async (assert) => {
 	);
 });
 
-QUnit.test('event/setFlag simple bypass flag', async (assert) => {
+qUnit.test('event/setFlag simple bypass flag', async (assert) => {
 	const geo1 = window.geo1;
 	const scene = window.scene;
 
@@ -67,3 +69,5 @@ QUnit.test('event/setFlag simple bypass flag', async (assert) => {
 		[true, true, false]
 	);
 });
+
+}

@@ -1,3 +1,4 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {GlConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Gl';
 import {SceneJsonExporter} from '../../../../src/engine/io/json/export/Scene';
 import {SceneJsonImporter} from '../../../../src/engine/io/json/import/Scene';
@@ -10,8 +11,9 @@ import {Poly} from '../../../../src/engine/Poly';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 import {MaterialUserDataUniforms} from '../../../../src/engine/nodes/gl/code/assemblers/materials/OnBeforeCompile';
 import {GLSLHelper} from '../../../helpers/GLSLHelper';
+export function testenginenodesmatMeshStandardBuilder(qUnit: QUnit) {
 
-QUnit.test('mesh standard builder persisted_config', async (assert) => {
+qUnit.test('mesh standard builder persisted_config', async (assert) => {
 	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 	const MAT = window.MAT;
 	const mesh_standard1 = MAT.createNode('meshStandardBuilder');
@@ -85,7 +87,7 @@ QUnit.test('mesh standard builder persisted_config', async (assert) => {
 	RendererUtils.dispose();
 });
 
-QUnit.test('mesh standard builder persisted_config with no node', async (assert) => {
+qUnit.test('mesh standard builder persisted_config with no node', async (assert) => {
 	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 	const MAT = window.MAT;
 	const mesh_standard1 = MAT.createNode('meshStandardBuilder');
@@ -142,7 +144,7 @@ QUnit.test('mesh standard builder persisted_config with no node', async (assert)
 	RendererUtils.dispose();
 });
 
-QUnit.test('mesh standard builder persisted_config with no node but with assembler in player mode', async (assert) => {
+qUnit.test('mesh standard builder persisted_config with no node but with assembler in player mode', async (assert) => {
 	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 	const MAT = window.MAT;
 	const mesh_standard1 = MAT.createNode('meshStandardBuilder');
@@ -198,7 +200,7 @@ QUnit.test('mesh standard builder persisted_config with no node but with assembl
 	RendererUtils.dispose();
 });
 
-QUnit.test('mat/meshStandardBuilder can select which customMat is created', async (assert) => {
+qUnit.test('mat/meshStandardBuilder can select which customMat is created', async (assert) => {
 	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 	const MAT = window.MAT;
 	const geo1 = window.geo1;
@@ -267,3 +269,5 @@ QUnit.test('mat/meshStandardBuilder can select which customMat is created', asyn
 
 	RendererUtils.dispose();
 });
+
+}

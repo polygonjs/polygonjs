@@ -1,3 +1,4 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {Mesh} from 'three';
 import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Js';
 import {ActorInstanceSopNode} from '../../../../src/engine/nodes/sop/ActorInstance';
@@ -7,6 +8,7 @@ import {Vector3Param} from '../../../../src/engine/params/Vector3';
 import {SetPointAttributeInputName} from '../../../../src/engine/nodes/js/SetPointAttribute';
 import {GeoObjNode} from '../../../../src/engine/nodes/obj/Geo';
 import {InstanceAttrib} from '../../../../src/core/geometry/Instancer';
+export function testenginenodessopActorInstance(qUnit: QUnit) {
 
 function onCreateHookSetInstancePosition(node: ActorInstanceSopNode) {
 	const onTick = node.createNode('onTick');
@@ -101,7 +103,7 @@ function prepareSopNodes(geo: GeoObjNode) {
 	return {instance1, actorInstance1};
 }
 
-QUnit.test('sop/actorInstance setInstancePosition', async (assert) => {
+qUnit.test('sop/actorInstance setInstancePosition', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
 	const perspective_camera1 = window.perspective_camera1;
@@ -138,7 +140,7 @@ QUnit.test('sop/actorInstance setInstancePosition', async (assert) => {
 	});
 });
 
-QUnit.test('sop/actorInstance setInstanceQuaternion', async (assert) => {
+qUnit.test('sop/actorInstance setInstanceQuaternion', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
 	const perspective_camera1 = window.perspective_camera1;
@@ -170,7 +172,7 @@ QUnit.test('sop/actorInstance setInstanceQuaternion', async (assert) => {
 	});
 });
 
-QUnit.test('sop/actorInstance setInstanceLookAt', async (assert) => {
+qUnit.test('sop/actorInstance setInstanceLookAt', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
 	const perspective_camera1 = window.perspective_camera1;
@@ -206,7 +208,7 @@ QUnit.test('sop/actorInstance setInstanceLookAt', async (assert) => {
 	});
 });
 
-QUnit.test('sop/actorInstance setInstanceScale', async (assert) => {
+qUnit.test('sop/actorInstance setInstanceScale', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
 	const perspective_camera1 = window.perspective_camera1;
@@ -243,7 +245,7 @@ QUnit.test('sop/actorInstance setInstanceScale', async (assert) => {
 	});
 });
 
-QUnit.test('sop/actorInstance setPointInstanceAttributeNumber', async (assert) => {
+qUnit.test('sop/actorInstance setPointInstanceAttributeNumber', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
 	const perspective_camera1 = window.perspective_camera1;
@@ -281,7 +283,7 @@ QUnit.test('sop/actorInstance setPointInstanceAttributeNumber', async (assert) =
 	});
 });
 
-QUnit.test('sop/actorInstance setPointAttributeNumberWithConstant', async (assert) => {
+qUnit.test('sop/actorInstance setPointAttributeNumberWithConstant', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
 	const perspective_camera1 = window.perspective_camera1;
@@ -319,7 +321,7 @@ QUnit.test('sop/actorInstance setPointAttributeNumberWithConstant', async (asser
 	});
 });
 
-QUnit.test('sop/actorInstance setPointAttributeVector2', async (assert) => {
+qUnit.test('sop/actorInstance setPointAttributeVector2', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
 	const perspective_camera1 = window.perspective_camera1;
@@ -358,3 +360,5 @@ QUnit.test('sop/actorInstance setPointAttributeVector2', async (assert) => {
 		assert.deepEqual(_getGeometryAttribNumber(), [0, 0, 0, 1], 'after play');
 	});
 });
+
+}

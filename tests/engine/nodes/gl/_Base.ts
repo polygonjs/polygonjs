@@ -1,7 +1,9 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {BaseGlNodeType} from '../../../../src/engine/nodes/gl/_Base';
 import {checkConsolePrints} from '../../../helpers/Console';
+export function testenginenodesgl_Base(qUnit: QUnit) {
 
-QUnit.test('gl nodes cannot create cycles', async (assert) => {
+qUnit.test('gl nodes cannot create cycles', async (assert) => {
 	const MAT = window.MAT;
 	const meshBasicBuilder1 = MAT.createNode('meshBasicBuilder');
 	meshBasicBuilder1.createNode('output');
@@ -36,3 +38,5 @@ QUnit.test('gl nodes cannot create cycles', async (assert) => {
 		'1 warning'
 	);
 });
+
+}

@@ -1,4 +1,6 @@
-QUnit.test('obj nodes can be parented to each other', async (assert) => {
+import type {QUnit} from '../../../helpers/QUnit';
+export function testenginenodesobj_BaseTransformed(qUnit: QUnit) {
+qUnit.test('obj nodes can be parented to each other', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
 	const world_root = scene.threejsScene();
@@ -22,7 +24,7 @@ QUnit.test('obj nodes can be parented to each other', async (assert) => {
 	assert.equal(geo1.object.children[0].children.length, 0);
 });
 
-QUnit.test('obj nodes can keep their position on input change', async (assert) => {
+qUnit.test('obj nodes can keep their position on input change', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
 
@@ -61,3 +63,5 @@ QUnit.test('obj nodes can keep their position on input change', async (assert) =
 	assert.in_delta(geo1.pv.t.y, -0.6, 0.00001, 'ty');
 	assert.equal(geo1.pv.t.z, 2, 'tz');
 });
+
+}

@@ -1,3 +1,4 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {ASSETS_ROOT} from '../../../../src/core/loader/AssetsUtils';
 import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Js';
 import {RendererUtils} from '../../../helpers/RendererUtils';
@@ -7,8 +8,9 @@ import {
 	findOrCreateAnimationMixer,
 	getMostActiveAnimationActionFromMixer,
 } from '../../../../src/engine/functions/_AnimationMixer';
+export function testenginenodesjsAnimationActionPlay(qUnit: QUnit) {
 
-QUnit.test('js/animationActionPlay', async (assert) => {
+qUnit.test('js/animationActionPlay', async (assert) => {
 	const scene = window.scene;
 	const perspective_camera1 = window.perspective_camera1;
 	const geo1 = window.geo1;
@@ -78,3 +80,5 @@ QUnit.test('js/animationActionPlay', async (assert) => {
 		assert.ok(animationAction.isRunning(), 'back to running');
 	});
 });
+
+}

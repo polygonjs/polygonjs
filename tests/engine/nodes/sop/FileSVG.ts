@@ -1,5 +1,7 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {BufferGeometry} from 'three';
 import {ASSETS_ROOT} from '../../../../src/core/loader/AssetsUtils';
+export function testenginenodessopFileSVG(qUnit: QUnit) {
 
 function assetPath(path: string) {
 	return `${ASSETS_ROOT}/${path}`;
@@ -13,7 +15,7 @@ async function withFile(path: string) {
 	return container;
 }
 
-QUnit.test('SOP svg with tiger', async (assert) => {
+qUnit.test('SOP svg with tiger', async (assert) => {
 	const container = await withFile('models/svg/tiger.svg');
 	const core_content = container.coreContent()!;
 	assert.equal(container.objectsCount(), 466);
@@ -27,7 +29,7 @@ QUnit.test('SOP svg with tiger', async (assert) => {
 	const first_geometry = first_mesh.geometry as BufferGeometry;
 	assert.ok(first_geometry.index, 'geometry has index');
 });
-QUnit.test('SOP svg with wolf', async (assert) => {
+qUnit.test('SOP svg with wolf', async (assert) => {
 	const container = await withFile('models/svg/wolf.svg');
 	const core_content = container.coreContent()!;
 	assert.equal(container.objectsCount(), 60);
@@ -42,7 +44,7 @@ QUnit.test('SOP svg with wolf', async (assert) => {
 	assert.ok(first_geometry.index, 'geometry has index');
 });
 
-QUnit.test('SOP svg can error and still be usable', async (assert) => {
+qUnit.test('SOP svg can error and still be usable', async (assert) => {
 	const geo1 = window.geo1;
 	const fileSVG1 = geo1.createNode('fileSVG');
 
@@ -59,3 +61,5 @@ QUnit.test('SOP svg can error and still be usable', async (assert) => {
 	assert.equal(container.objectsCount(), 60);
 	assert.notOk(fileSVG1.states.error.message());
 });
+
+}

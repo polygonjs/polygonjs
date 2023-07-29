@@ -1,9 +1,11 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {Mesh} from 'three';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Js';
 import {RendererUtils} from '../../../helpers/RendererUtils';
+export function testenginenodesjsObject3DUpdateMatrix(qUnit: QUnit) {
 
-QUnit.test('js/object3DUpdateMatrix', async (assert) => {
+qUnit.test('js/object3DUpdateMatrix', async (assert) => {
 	const scene = window.scene;
 	const perspective_camera1 = window.perspective_camera1;
 	const geo1 = window.geo1;
@@ -41,3 +43,5 @@ QUnit.test('js/object3DUpdateMatrix', async (assert) => {
 		assert.deepEqual(object.matrix.elements, [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 4, 5, 6, 1]);
 	});
 });
+
+}

@@ -1,11 +1,13 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import DEFAULT_FRAGMENT from './SDFSubtract/default.frag.glsl';
 import SDF_CONTEXT_NO_SMOOTH_FRAGMENT from './SDFSubtract/sdfContextNoSmooth.frag.glsl';
 import SDF_CONTEXT_WITH_SMOOTH_FRAGMENT from './SDFSubtract/sdfContextWithSmooth.frag.glsl';
 import NO_INPUT_EMPTY_VERTEX from './SDFSubtract/default.vert.glsl';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 import {GLSLHelper} from '../../../helpers/GLSLHelper';
+export function testenginenodesglSDFSubtract(qUnit: QUnit) {
 
-QUnit.test('gl/SDFSubtract with float inputs', async (assert) => {
+qUnit.test('gl/SDFSubtract with float inputs', async (assert) => {
 	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 	const MAT = window.MAT;
 	const rayMarchingBuilder1 = MAT.createNode('rayMarchingBuilder');
@@ -42,7 +44,7 @@ QUnit.test('gl/SDFSubtract with float inputs', async (assert) => {
 	RendererUtils.dispose();
 });
 
-QUnit.test('gl/SDFSubtract with context inputs and no smooth', async (assert) => {
+qUnit.test('gl/SDFSubtract with context inputs and no smooth', async (assert) => {
 	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 	const MAT = window.MAT;
 	const rayMarchingBuilder1 = MAT.createNode('rayMarchingBuilder');
@@ -81,7 +83,7 @@ QUnit.test('gl/SDFSubtract with context inputs and no smooth', async (assert) =>
 	RendererUtils.dispose();
 });
 
-QUnit.test('gl/SDFSubtract with context inputs and smooth', async (assert) => {
+qUnit.test('gl/SDFSubtract with context inputs and smooth', async (assert) => {
 	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 	const MAT = window.MAT;
 	const rayMarchingBuilder1 = MAT.createNode('rayMarchingBuilder');
@@ -121,3 +123,5 @@ QUnit.test('gl/SDFSubtract with context inputs and smooth', async (assert) => {
 
 	RendererUtils.dispose();
 });
+
+}

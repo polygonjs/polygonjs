@@ -1,9 +1,11 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {PolyScene} from '../../../../src/engine/scene/PolyScene';
 import {SceneJsonExporter} from '../../../../src/engine/io/json/export/Scene';
 import {SceneJsonImporter} from '../../../../src/engine/io/json/import/Scene';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {ColorConversion} from '../../../../src/core/Color';
 import {saveAndLoadScene} from '../../../helpers/ImportHelper';
+export function testenginenodesmanagerRoot(qUnit: QUnit) {
 
 function create_scene() {
 	const scene = new PolyScene();
@@ -25,7 +27,7 @@ function create_scene() {
 	return scene;
 }
 
-QUnit.test('root adds objects to hierarchy when created with api', async (assert) => {
+qUnit.test('root adds objects to hierarchy when created with api', async (assert) => {
 	const scene = create_scene();
 	assert.ok(!scene.loadingController.isLoading());
 
@@ -40,7 +42,7 @@ QUnit.test('root adds objects to hierarchy when created with api', async (assert
 	);
 });
 
-QUnit.test('root adds objects to hierarchy when loaded from json', async (assert) => {
+qUnit.test('root adds objects to hierarchy when loaded from json', async (assert) => {
 	const scene = create_scene();
 	assert.ok(!scene.loadingController.isLoading());
 
@@ -61,7 +63,7 @@ QUnit.test('root adds objects to hierarchy when loaded from json', async (assert
 	);
 });
 
-QUnit.test('it is possible to link to root params', async (assert) => {
+qUnit.test('it is possible to link to root params', async (assert) => {
 	const scene = create_scene();
 	assert.ok(!scene.loadingController.isLoading());
 
@@ -81,7 +83,7 @@ QUnit.test('it is possible to link to root params', async (assert) => {
 	assert.equal(matColorR.value, 0.5);
 });
 
-QUnit.test('root node: bgColor colorConversion is properly saved and loaded', async (assert) => {
+qUnit.test('root node: bgColor colorConversion is properly saved and loaded', async (assert) => {
 	const scene = create_scene();
 	assert.ok(!scene.loadingController.isLoading());
 
@@ -102,3 +104,5 @@ QUnit.test('root node: bgColor colorConversion is properly saved and loaded', as
 		assert.equal(scene2.root().p.bgColor.options.colorConversion(), ColorConversion.SRGB_TO_LINEAR);
 	});
 });
+
+}

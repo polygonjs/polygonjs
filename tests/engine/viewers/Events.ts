@@ -1,8 +1,10 @@
+import type {QUnit} from '../../helpers/QUnit';
 import {CoreSleep} from '../../../src/core/Sleep';
 import {RendererUtils} from '../../helpers/RendererUtils';
 import {sceneFromScene} from '../../helpers/ImportHelper';
+export function testengineviewersEvents(qUnit: QUnit) {
 
-QUnit.test('mouse event nodes update the viewer event listeners', async (assert) => {
+qUnit.test('mouse event nodes update the viewer event listeners', async (assert) => {
 	const scene = window.scene;
 	await scene.waitForCooksCompleted();
 	assert.ok(!scene.loadingController.isLoading(), 'scene is loaded');
@@ -77,7 +79,7 @@ QUnit.test('mouse event nodes update the viewer event listeners', async (assert)
 	});
 });
 
-QUnit.test('mouse event are set correctly when saving/loading the scene', async (assert) => {
+qUnit.test('mouse event are set correctly when saving/loading the scene', async (assert) => {
 	const scene = window.scene;
 	await scene.waitForCooksCompleted();
 	assert.ok(!scene.loadingController.isLoading(), 'scene is loaded');
@@ -136,7 +138,7 @@ QUnit.test('mouse event are set correctly when saving/loading the scene', async 
 	});
 });
 
-QUnit.test('keyboard event nodes update the viewer event listeners', async (assert) => {
+qUnit.test('keyboard event nodes update the viewer event listeners', async (assert) => {
 	const scene = window.scene;
 	await scene.waitForCooksCompleted();
 	assert.ok(!scene.loadingController.isLoading());
@@ -192,7 +194,7 @@ QUnit.test('keyboard event nodes update the viewer event listeners', async (asse
 	});
 });
 
-QUnit.test('scene event nodes do not add events to the viewer', async (assert) => {
+qUnit.test('scene event nodes do not add events to the viewer', async (assert) => {
 	const scene = window.scene;
 	await scene.waitForCooksCompleted();
 	assert.ok(!scene.loadingController.isLoading());
@@ -215,3 +217,5 @@ QUnit.test('scene event nodes do not add events to the viewer', async (assert) =
 		assert.deepEqual(viewer.eventsController().registeredEventTypes(), []);
 	});
 });
+
+}

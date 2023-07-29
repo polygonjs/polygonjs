@@ -1,9 +1,11 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {BufferAttribute} from 'three';
 import {PolyNodeController} from '../../../../src/engine/nodes/utils/poly/PolyNodeController';
 import {PolyNodeDefinition} from '../../../../src/engine/nodes/utils/poly/PolyNodeDefinition';
 import {NodeContext} from '../../../../src/engine/poly/NodeContext';
 import {ParamType} from '../../../../src/engine/poly/ParamType';
 import {GeoNodeChildrenMap} from '../../../../src/engine/poly/registers/nodes/Sop';
+export function testenginenodessopPoly(qUnit: QUnit) {
 
 const data: PolyNodeDefinition = {
 	metadata: {
@@ -43,7 +45,7 @@ const data: PolyNodeDefinition = {
 };
 PolyNodeController.createNodeClassAndRegister({node_context: NodeContext.SOP, node_type: 'poly_sop_test', data});
 
-QUnit.test('poly sop simple', async (assert) => {
+qUnit.test('poly sop simple', async (assert) => {
 	const geo1 = window.geo1;
 	const poly1 = geo1.createNode('poly_sop_test' as keyof GeoNodeChildrenMap);
 	assert.equal(poly1.children().length, 4);
@@ -54,3 +56,5 @@ QUnit.test('poly sop simple', async (assert) => {
 	const geometry = core_group?.threejsObjectsWithGeo()[0].geometry;
 	assert.equal((geometry?.getAttribute('position') as BufferAttribute).array.length, 72);
 });
+
+}

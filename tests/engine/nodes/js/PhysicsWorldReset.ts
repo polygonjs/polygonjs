@@ -1,7 +1,9 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {PhysicsWorldSopNode} from '../../../../src/engine/nodes/sop/PhysicsWorld';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 import {PhysicsRBDColliderType} from '../../../../src/core/physics/PhysicsAttribute';
+export function testenginenodesjsPhysicsWorldReset(qUnit: QUnit) {
 
 function createPhysicsWorldNodes(node: PhysicsWorldSopNode) {
 	const physicsWorldReset = node.createNode('physicsWorldReset');
@@ -13,7 +15,7 @@ function createPhysicsWorldNodes(node: PhysicsWorldSopNode) {
 	physicsWorldStepSimulation.setInput(0, onTick);
 }
 
-QUnit.test('js/physicsWorldReset simple', async (assert) => {
+qUnit.test('js/physicsWorldReset simple', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
 	const cameraNode = window.perspective_camera1;
@@ -57,3 +59,5 @@ QUnit.test('js/physicsWorldReset simple', async (assert) => {
 		}
 	});
 });
+
+}

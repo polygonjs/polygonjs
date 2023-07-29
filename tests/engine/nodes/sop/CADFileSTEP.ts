@@ -1,9 +1,11 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {BufferAttribute, Box3, Vector3} from 'three';
 import {ASSETS_ROOT} from '../../../../src/core/loader/AssetsUtils';
+export function testenginenodessopCADFileSTEP(qUnit: QUnit) {
 const tmpBox = new Box3();
 const tmpSize = new Vector3();
 
-QUnit.test('sop/CADFileSTEP simple', async (assert) => {
+qUnit.test('sop/CADFileSTEP simple', async (assert) => {
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false); // cancels geo node displayNodeController
 
@@ -49,7 +51,7 @@ QUnit.test('sop/CADFileSTEP simple', async (assert) => {
 	assert.in_delta(tmpSize.y, 2.54, 0.01);
 });
 
-QUnit.test('sop/CADFileSTEP legowhitehouse', async (assert) => {
+qUnit.test('sop/CADFileSTEP legowhitehouse', async (assert) => {
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false); // cancels geo node displayNodeController
 
@@ -93,7 +95,7 @@ QUnit.test('sop/CADFileSTEP legowhitehouse', async (assert) => {
 	assert.in_delta(tmpSize.y, 77.5, 0.01);
 });
 
-QUnit.test('sop/CADFileSTEP pigsignaler', async (assert) => {
+qUnit.test('sop/CADFileSTEP pigsignaler', async (assert) => {
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false); // cancels geo node displayNodeController
 
@@ -137,3 +139,5 @@ QUnit.test('sop/CADFileSTEP pigsignaler', async (assert) => {
 	assert.in_delta(tmpBox.min.y, -82.54, 0.01);
 	assert.in_delta(tmpSize.y, 165.09, 0.01);
 });
+
+}

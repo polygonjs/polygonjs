@@ -1,7 +1,9 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {Box3} from 'three';
+export function testenginenodessopCircle(qUnit: QUnit) {
 const tmpBox = new Box3();
 
-QUnit.test('circle simple', async (assert) => {
+qUnit.test('circle simple', async (assert) => {
 	const geo1 = window.geo1;
 	const scene = window.scene;
 
@@ -30,3 +32,5 @@ QUnit.test('circle simple', async (assert) => {
 	assert.equal((await compute()).pointsCount, 52);
 	assert.in_delta((await compute()).bbox.min.z, -2.0, 0.01);
 });
+
+}

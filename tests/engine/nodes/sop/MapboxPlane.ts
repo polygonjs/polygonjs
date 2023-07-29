@@ -1,3 +1,4 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {CoreSleep} from './../../../../src/core/Sleep';
 import {Poly} from '../../../../src/engine/Poly';
 import {PolyScene} from '../../../../src/engine/scene/PolyScene';
@@ -5,6 +6,7 @@ import {BackgroundMode} from '../../../../src/engine/nodes/manager/utils/Scene/B
 import {RendererUtils} from '../../../helpers/RendererUtils';
 import {CorePath} from '../../../../src/core/geometry/CorePath';
 import {Camera} from 'three';
+export function testenginenodessopMapboxPlane(qUnit: QUnit) {
 async function createCameraNodes(scene: PolyScene) {
 	const cameras = scene.createNode('geo');
 	cameras.setName('cameras');
@@ -18,7 +20,7 @@ async function createCameraNodes(scene: PolyScene) {
 	return {camera, mapboxCamera1};
 }
 
-QUnit.test('sop/mapboxPlane simple', async (assert) => {
+qUnit.test('sop/mapboxPlane simple', async (assert) => {
 	const scene = window.scene;
 
 	const {camera, mapboxCamera1} = await createCameraNodes(scene);
@@ -41,3 +43,5 @@ QUnit.test('sop/mapboxPlane simple', async (assert) => {
 		assert.more_than(container1.totalPointsCount(), 5000);
 	});
 });
+
+}

@@ -1,3 +1,4 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {Object3D} from 'three';
 import {AttribClass} from '../../../../src/core/geometry/Constant';
 import {CoreObject} from '../../../../src/core/geometry/Object';
@@ -13,6 +14,7 @@ import {PositionalAudioObjNode} from '../../../../src/engine/nodes/obj/Positiona
 import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Js';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 import {StringParam} from '../../../../src/engine/params/String';
+export function testenginenodesjsPlayInstrumentNote(qUnit: QUnit) {
 
 function onCreateHookPositionalAudio(node: PositionalAudioObjNode, cameraNode: PerspectiveCameraObjNode) {
 	const envelope1 = node.createNode(EnvelopeAudioNode);
@@ -38,7 +40,7 @@ function onCreateHookPositionalAudio(node: PositionalAudioObjNode, cameraNode: P
 	return {null1, playInstrument1};
 }
 
-QUnit.test('js/playInstrumentNote', async (assert) => {
+qUnit.test('js/playInstrumentNote', async (assert) => {
 	const scene = window.scene;
 	const perspective_camera1 = window.perspective_camera1;
 	const geo1 = window.geo1;
@@ -105,3 +107,5 @@ QUnit.test('js/playInstrumentNote', async (assert) => {
 		assert.equal(lastNote(5), 'F2');
 	});
 });
+
+}

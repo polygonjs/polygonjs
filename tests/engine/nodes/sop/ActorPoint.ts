@@ -1,3 +1,4 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {Mesh, Vector3} from 'three';
 import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Js';
 import {ActorPointSopNode} from '../../../../src/engine/nodes/sop/ActorPoint';
@@ -5,6 +6,7 @@ import {RendererUtils} from '../../../helpers/RendererUtils';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {Vector3Param} from '../../../../src/engine/params/Vector3';
 import {SetPointAttributeInputName} from '../../../../src/engine/nodes/js/SetPointAttribute';
+export function testenginenodessopActorPoint(qUnit: QUnit) {
 
 const _center = new Vector3();
 
@@ -55,7 +57,7 @@ function onCreateHookSetPointAttributeVector2(node: ActorPointSopNode) {
 	return {setPointAttribute1, getPointProperty, vec3ToVec2_1};
 }
 
-QUnit.test('sop/actorPoint setPointPosition', async (assert) => {
+qUnit.test('sop/actorPoint setPointPosition', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
 	const perspective_camera1 = window.perspective_camera1;
@@ -87,7 +89,7 @@ QUnit.test('sop/actorPoint setPointPosition', async (assert) => {
 	});
 });
 
-QUnit.test('sop/actorPoint setPointAttributeNumber', async (assert) => {
+qUnit.test('sop/actorPoint setPointAttributeNumber', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
 	const perspective_camera1 = window.perspective_camera1;
@@ -125,7 +127,7 @@ QUnit.test('sop/actorPoint setPointAttributeNumber', async (assert) => {
 	});
 });
 
-QUnit.test('sop/actorPoint setPointAttributeNumberWithConstant', async (assert) => {
+qUnit.test('sop/actorPoint setPointAttributeNumberWithConstant', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
 	const perspective_camera1 = window.perspective_camera1;
@@ -163,7 +165,7 @@ QUnit.test('sop/actorPoint setPointAttributeNumberWithConstant', async (assert) 
 	});
 });
 
-QUnit.test('sop/actorPoint setPointAttributeVector2', async (assert) => {
+qUnit.test('sop/actorPoint setPointAttributeVector2', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
 	const perspective_camera1 = window.perspective_camera1;
@@ -201,3 +203,5 @@ QUnit.test('sop/actorPoint setPointAttributeVector2', async (assert) => {
 		assert.deepEqual(_getGeometryAttribNumber(), [0, 0, 0, 1], 'after play');
 	});
 });
+
+}

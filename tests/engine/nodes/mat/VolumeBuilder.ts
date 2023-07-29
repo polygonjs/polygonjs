@@ -1,3 +1,4 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {GlobalsGlNode} from '../../../../src/engine/nodes/gl/Globals';
 import {OutputGlNode} from '../../../../src/engine/nodes/gl/Output';
 import {GlConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Gl';
@@ -20,6 +21,7 @@ import {ShaderMaterialWithCustomMaterials} from '../../../../src/core/geometry/M
 import {RendererUtils} from '../../../helpers/RendererUtils';
 import {MaterialUserDataUniforms} from '../../../../src/engine/nodes/gl/code/assemblers/materials/OnBeforeCompile';
 import {GLSLHelper} from '../../../helpers/GLSLHelper';
+export function testenginenodesmatVolumeBuilder(qUnit: QUnit) {
 
 const TEST_SHADER_LIB = {
 	default: {vert: BasicDefaultVertex, frag: BasicDefaultFragment},
@@ -27,7 +29,7 @@ const TEST_SHADER_LIB = {
 	position: {vert: BasicPositionVertex, frag: BasicPositionFragment},
 };
 
-QUnit.test('mat/volumeBuilder simple', async (assert) => {
+qUnit.test('mat/volumeBuilder simple', async (assert) => {
 	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 	const MAT = window.MAT;
 	// const debug = MAT.createNode('test')
@@ -66,7 +68,7 @@ QUnit.test('mat/volumeBuilder simple', async (assert) => {
 	RendererUtils.dispose();
 });
 
-QUnit.test('mat/volumeBuilder persisted_config', async (assert) => {
+qUnit.test('mat/volumeBuilder persisted_config', async (assert) => {
 	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 	const MAT = window.MAT;
 	const volume1 = MAT.createNode('volumeBuilder');
@@ -132,3 +134,5 @@ QUnit.test('mat/volumeBuilder persisted_config', async (assert) => {
 
 	RendererUtils.dispose();
 });
+
+}

@@ -1,7 +1,9 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {BufferAttribute, Box3} from 'three';
+export function testenginenodessopCSGExtrudeLinear(qUnit: QUnit) {
 const tmpBox = new Box3();
 
-QUnit.test('sop/CSGExtrudeLinear with non closed shapes', async (assert) => {
+qUnit.test('sop/CSGExtrudeLinear with non closed shapes', async (assert) => {
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false); // cancels geo node displayNodeController
 
@@ -16,7 +18,7 @@ QUnit.test('sop/CSGExtrudeLinear with non closed shapes', async (assert) => {
 	assert.equal(extrudeLinear1.states.error.message(), `node internal error: 'Error: extruded path must be closed'.`);
 });
 
-QUnit.test('sop/CSGExtrudeLinear with closed shapes', async (assert) => {
+qUnit.test('sop/CSGExtrudeLinear with closed shapes', async (assert) => {
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false); // cancels geo node displayNodeController
 
@@ -73,3 +75,5 @@ QUnit.test('sop/CSGExtrudeLinear with closed shapes', async (assert) => {
 	assert.in_delta(tmpBox.min.z, 0, 0.01);
 	assert.in_delta(tmpBox.max.z, 2, 0.01);
 });
+
+}

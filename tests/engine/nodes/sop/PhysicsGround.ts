@@ -1,10 +1,12 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {CoreSleep} from './../../../../src/core/Sleep';
 import {SizeComputationMethod} from '../../../../src/engine/operations/sop/PhysicsRBDAttributes';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 import {PhysicsRBDColliderType} from '../../../../src/core/physics/PhysicsAttribute';
 import {createPhysicsWorldNodes} from './physics/PhysicsHelper';
+export function testenginenodessopPhysicsGround(qUnit: QUnit) {
 
-QUnit.test('sop/physicsGround simple', async (assert) => {
+qUnit.test('sop/physicsGround simple', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
 	const cameraNode = window.perspective_camera1;
@@ -57,3 +59,5 @@ QUnit.test('sop/physicsGround simple', async (assert) => {
 		}
 	});
 });
+
+}

@@ -1,7 +1,9 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {ASSETS_ROOT} from '../../../../src/core/loader/AssetsUtils';
 import {CoreSleep} from '../../../../src/core/Sleep';
+export function testenginenodesaudioFile(qUnit: QUnit) {
 
-QUnit.test('audio/file onStop callbacks', async (assert) => {
+qUnit.test('audio/file onStop callbacks', async (assert) => {
 	const scene = window.scene;
 
 	scene.root().createNode('audioListener');
@@ -34,3 +36,5 @@ QUnit.test('audio/file onStop callbacks', async (assert) => {
 	await CoreSleep.sleep(4000);
 	assert.ok(stopDetected);
 });
+
+}

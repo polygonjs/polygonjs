@@ -1,8 +1,10 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 import {RenderPass, KawaseBlurPass, BloomEffect, EffectPass} from 'postprocessing';
 import {ThreejsViewer} from '../../../../src/engine/viewers/Threejs';
-QUnit.test('Post nodes simple', async (assert) => {
+export function testenginenodespostBase(qUnit: QUnit) {
+qUnit.test('Post nodes simple', async (assert) => {
 	const scene = window.scene;
 	await scene.waitForCooksCompleted();
 
@@ -85,3 +87,5 @@ QUnit.test('Post nodes simple', async (assert) => {
 
 	RendererUtils.dispose();
 });
+
+}

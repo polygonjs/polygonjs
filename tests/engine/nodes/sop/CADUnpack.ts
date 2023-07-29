@@ -1,10 +1,12 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {Box3} from 'three';
 import {CadGeometryType} from '../../../../src/core/geometry/cad/CadCommon';
 import {CadObject} from '../../../../src/core/geometry/cad/CadObject';
 import {CADUnpackSopNode} from '../../../../src/engine/nodes/sop/CADUnpack';
+export function testenginenodessopCADUnpack(qUnit: QUnit) {
 const tmpBox = new Box3();
 
-QUnit.test('sop/CADUnpack operations', async (assert) => {
+qUnit.test('sop/CADUnpack operations', async (assert) => {
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false); // cancels geo node displayNodeController
 
@@ -84,3 +86,5 @@ QUnit.test('sop/CADUnpack operations', async (assert) => {
 	assert.deepEqual((await computeUnpack(unpack5)).cadObjectsTypes.length, 48, 'types 5');
 	assert.deepEqual((await computeUnpack(unpack6)).cadObjectsTypes, [], 'types 6');
 });
+
+}

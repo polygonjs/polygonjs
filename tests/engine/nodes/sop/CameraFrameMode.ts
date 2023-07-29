@@ -1,8 +1,10 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {CoreObject} from '../../../../src/core/geometry/Object';
 import {CameraAttribute} from '../../../../src/core/camera/CoreCamera';
 import {CameraFrameMode, CAMERA_FRAME_MODES} from '../../../../src/core/camera/CoreCameraFrameMode';
+export function testenginenodessopCameraFrameMode(qUnit: QUnit) {
 
-QUnit.test('sop/cameraFrameMode simple', async (assert) => {
+qUnit.test('sop/cameraFrameMode simple', async (assert) => {
 	const geo1 = window.geo1;
 	const camera1 = geo1.createNode('perspectiveCamera');
 	const cameraFrameMode1 = geo1.createNode('cameraFrameMode');
@@ -17,7 +19,7 @@ QUnit.test('sop/cameraFrameMode simple', async (assert) => {
 	);
 	assert.equal(CoreObject.attribValue(objects[0], CameraAttribute.FRAME_MODE_EXPECTED_ASPECT_RATIO), 16 / 9);
 });
-QUnit.test('sop/cameraFrameMode applyToChildren', async (assert) => {
+qUnit.test('sop/cameraFrameMode applyToChildren', async (assert) => {
 	const geo1 = window.geo1;
 	const camera1 = geo1.createNode('perspectiveCamera');
 	const hierarchy1 = geo1.createNode('hierarchy');
@@ -42,3 +44,5 @@ QUnit.test('sop/cameraFrameMode applyToChildren', async (assert) => {
 		16 / 9
 	);
 });
+
+}

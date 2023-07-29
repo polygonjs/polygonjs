@@ -1,6 +1,8 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {Mesh} from 'three';
+export function testenginenodesjsMatrix4LookAt(qUnit: QUnit) {
 
-QUnit.test('js/matrix4LookAt', async (assert) => {
+qUnit.test('js/matrix4LookAt', async (assert) => {
 	const geo1 = window.geo1;
 	const box1 = geo1.createNode('box');
 	const objectBuilder1 = geo1.createNode('objectBuilder');
@@ -21,3 +23,5 @@ QUnit.test('js/matrix4LookAt', async (assert) => {
 	matrix4LookAt1.p.target.set([1, 0, 1]);
 	assert.in_delta(await getRotY(), -Math.PI * 0.25, 0.00001);
 });
+
+}

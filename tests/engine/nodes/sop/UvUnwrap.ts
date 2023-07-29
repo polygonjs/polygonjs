@@ -1,7 +1,9 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {BufferAttribute} from 'three';
 import {UvUnwrapMethod} from '../../../../src/engine/operations/sop/UvUnwrap';
+export function testenginenodessopUvUnwrap(qUnit: QUnit) {
 
-QUnit.test('UvUnwrap potpack', async (assert) => {
+qUnit.test('UvUnwrap potpack', async (assert) => {
 	const geo1 = window.geo1;
 	const plane = geo1.createNode('plane');
 	const box = geo1.createNode('box');
@@ -57,7 +59,7 @@ QUnit.test('UvUnwrap potpack', async (assert) => {
 	);
 });
 
-QUnit.test('UvUnwrap xatlast', async (assert) => {
+qUnit.test('UvUnwrap xatlast', async (assert) => {
 	const geo1 = window.geo1;
 	const plane = geo1.createNode('plane');
 	const box = geo1.createNode('box');
@@ -117,3 +119,5 @@ QUnit.test('UvUnwrap xatlast', async (assert) => {
 		].join(';')
 	);
 });
+
+}

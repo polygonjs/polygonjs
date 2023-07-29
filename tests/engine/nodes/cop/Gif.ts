@@ -1,6 +1,8 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {ASSETS_ROOT} from '../../../../src/core/loader/AssetsUtils';
+export function testenginenodescopGif(qUnit: QUnit) {
 
-QUnit.test('COP gif simple', async (assert) => {
+qUnit.test('COP gif simple', async (assert) => {
 	const COP = window.COP;
 
 	const file1 = COP.createNode('gif');
@@ -15,3 +17,5 @@ QUnit.test('COP gif simple', async (assert) => {
 	assert.equal(texture.image.height, 280);
 	assert.deepEqual(container.resolution(), [402, 280]);
 });
+
+}

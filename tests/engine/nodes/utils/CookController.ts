@@ -1,8 +1,10 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {AttribClass} from '../../../../src/core/geometry/Constant';
 import {coreObjectFactory} from '../../../../src/core/geometry/CoreObjectFactory';
 import {CoreObjectType, ObjectContent} from '../../../../src/core/geometry/ObjectContent';
+export function testenginenodesutilsCookController(qUnit: QUnit) {
 
-QUnit.test('nodes/cookController bypassed input works as expected when changing node params', async (assert) => {
+qUnit.test('nodes/cookController bypassed input works as expected when changing node params', async (assert) => {
 	const geo1 = window.geo1;
 
 	const plane1 = geo1.createNode('plane');
@@ -25,7 +27,7 @@ QUnit.test('nodes/cookController bypassed input works as expected when changing 
 	assert.notOk(attribSetAtIndex1.states.error.active());
 });
 
-QUnit.test('merge is updated correctly if two inputs are updated at the same time', async (assert) => {
+qUnit.test('merge is updated correctly if two inputs are updated at the same time', async (assert) => {
 	const geo1 = window.geo1;
 
 	const merge1 = geo1.createNode('merge');
@@ -69,3 +71,5 @@ QUnit.test('merge is updated correctly if two inputs are updated at the same tim
 	setValues(4, 21);
 	assert.deepEqual(await attribValues(), [4, 21]);
 });
+
+}

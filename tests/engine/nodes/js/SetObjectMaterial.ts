@@ -1,4 +1,8 @@
+import type {QUnit} from '../../../helpers/QUnit';
+export function testenginenodesjsSetObjectMaterial(qUnit: QUnit) {
 // tested in getMaterial
-// QUnit.test('js/setObjectMaterial', async (assert) => {
+// qUnit.test('js/setObjectMaterial', async (assert) => {
 // 	assert.equal(1, 2);
 // });
+
+}

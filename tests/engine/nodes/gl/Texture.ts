@@ -1,3 +1,4 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {ASSETS_ROOT} from '../../../../src/core/loader/AssetsUtils';
 import {MaterialUserDataUniforms} from '../../../../src/engine/nodes/gl/code/assemblers/materials/OnBeforeCompile';
 import {SubnetGlNode} from '../../../../src/engine/nodes/gl/Subnet';
@@ -9,8 +10,9 @@ import {checkConsolePrints} from '../../../helpers/Console';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 import {create_required_nodes_for_subnet_gl_node} from './Subnet';
 import {waitForParticlesComputedAndMounted, createActorNodeChildren} from '../sop/particlesSystemGPU/ParticlesHelper';
+export function testenginenodesglTexture(qUnit: QUnit) {
 
-QUnit.test('gl texture updates it parent material with new spare parameters', async (assert) => {
+qUnit.test('gl texture updates it parent material with new spare parameters', async (assert) => {
 	const scene = window.scene;
 	await scene.waitForCooksCompleted();
 	const MAT = window.MAT;
@@ -36,7 +38,7 @@ QUnit.test('gl texture updates it parent material with new spare parameters', as
 	assert.equal(meshBasicBuilder1.params.spare.length, 0);
 });
 
-QUnit.test('gl texture updates it parent cop builder with new spare parameters', async (assert) => {
+qUnit.test('gl texture updates it parent cop builder with new spare parameters', async (assert) => {
 	const scene = window.scene;
 	await scene.waitForCooksCompleted();
 	const COP = window.COP;
@@ -65,7 +67,7 @@ QUnit.test('gl texture updates it parent cop builder with new spare parameters',
 	assert.equal(builder1.params.spare.length, 0);
 });
 
-QUnit.test('gl texture updates it particle system with new spare parameters', async (assert) => {
+qUnit.test('gl texture updates it particle system with new spare parameters', async (assert) => {
 	const scene = window.scene;
 	await scene.waitForCooksCompleted();
 	const {renderer} = await RendererUtils.waitForRenderer(scene);
@@ -98,7 +100,7 @@ QUnit.test('gl texture updates it particle system with new spare parameters', as
 	assert.equal(particlesSystemGpu1.params.spare.length, 0);
 });
 
-QUnit.test('gl texture generates an error on material if no name is given', async (assert) => {
+qUnit.test('gl texture generates an error on material if no name is given', async (assert) => {
 	const MAT = window.MAT;
 	const geo1 = window.geo1;
 	const COP = window.COP;
@@ -170,7 +172,7 @@ QUnit.test('gl texture generates an error on material if no name is given', asyn
 	}
 });
 
-QUnit.test('gl texture: 1 texture node on top level and one in a subnet work ok', async (assert) => {
+qUnit.test('gl texture: 1 texture node on top level and one in a subnet work ok', async (assert) => {
 	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 	const MAT = window.MAT;
 	const meshBasicBuilder1 = MAT.createNode('meshBasicBuilder');
@@ -326,3 +328,5 @@ uniform sampler2D v_POLY_texture_myTextureMap;`
 
 	RendererUtils.dispose();
 });
+
+}

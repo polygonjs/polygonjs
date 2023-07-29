@@ -1,11 +1,13 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {ASSETS_ROOT} from '../../../../src/core/loader/AssetsUtils';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {VideoEvent, VIDEO_EVENT_INDICES} from '../../../../src/core/VideoEvent';
 import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Js';
 import {Vector3Param} from '../../../../src/engine/params/Vector3';
 import {RendererUtils} from '../../../helpers/RendererUtils';
+export function testenginenodesjsOnVideoEvent(qUnit: QUnit) {
 
-QUnit.test('js/OnVideoEvent', async (assert) => {
+qUnit.test('js/OnVideoEvent', async (assert) => {
 	const scene = window.scene;
 	const perspective_camera1 = window.perspective_camera1;
 	const geo1 = window.geo1;
@@ -114,3 +116,5 @@ QUnit.test('js/OnVideoEvent', async (assert) => {
 		video1.dispose();
 	}, 1000);
 });
+
+}

@@ -1,6 +1,8 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {Box3} from 'three';
+export function testenginenodessopPoint(qUnit: QUnit) {
 const tmpBox = new Box3();
-QUnit.test('sop/point without expressions', async (assert) => {
+qUnit.test('sop/point without expressions', async (assert) => {
 	const geo1 = window.geo1;
 
 	const plane1 = geo1.createNode('plane');
@@ -34,7 +36,7 @@ QUnit.test('sop/point without expressions', async (assert) => {
 	assert.deepEqual(tmpBox.max.toArray(), [0.5, 1, 0.5]);
 });
 
-QUnit.test('sop/point with non entity dependent expression', async (assert) => {
+qUnit.test('sop/point with non entity dependent expression', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
 
@@ -68,7 +70,7 @@ QUnit.test('sop/point with non entity dependent expression', async (assert) => {
 	assert.equal(tmpBox.max.z, 0.5);
 });
 
-QUnit.test('sop/point with expression based on @P.x', async (assert) => {
+qUnit.test('sop/point with expression based on @P.x', async (assert) => {
 	const geo1 = window.geo1;
 
 	const plane1 = geo1.createNode('plane');
@@ -94,7 +96,7 @@ QUnit.test('sop/point with expression based on @P.x', async (assert) => {
 	assert.equal(tmpBox.max.z, 0.5);
 });
 
-QUnit.test('sop/point with inverting @P.x and @P.z', async (assert) => {
+qUnit.test('sop/point with inverting @P.x and @P.z', async (assert) => {
 	const geo1 = window.geo1;
 
 	const plane1 = geo1.createNode('plane');
@@ -117,5 +119,7 @@ QUnit.test('sop/point with inverting @P.x and @P.z', async (assert) => {
 	assert.deepEqual([tmpBox.min.z, tmpBox.max.z], [-2, 2]);
 });
 
-QUnit.skip('sop/point with expression based on @Cd.r', () => {});
-QUnit.skip('sop/point with expression based on @ptnum', () => {});
+qUnit.skip('sop/point with expression based on @Cd.r', () => {});
+qUnit.skip('sop/point with expression based on @ptnum', () => {});
+
+}

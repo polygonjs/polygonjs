@@ -1,3 +1,4 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {AttribClass} from '../../../../src/core/geometry/Constant';
 import {CoreObject} from '../../../../src/core/geometry/Object';
 import {CoreSleep} from '../../../../src/core/Sleep';
@@ -5,8 +6,9 @@ import {SetObjectAttributeInputName} from '../../../../src/engine/nodes/js/SetOb
 import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Js';
 import {triggerClickAside, triggerClickInMiddle} from '../../../helpers/EventsHelper';
 import {RendererUtils} from '../../../helpers/RendererUtils';
+export function testenginenodesjsSetObjectAttribute(qUnit: QUnit) {
 
-QUnit.test('js/setObjectAttribute', async (assert) => {
+qUnit.test('js/setObjectAttribute', async (assert) => {
 	const scene = window.scene;
 	const perspective_camera1 = window.perspective_camera1;
 
@@ -70,3 +72,5 @@ QUnit.test('js/setObjectAttribute', async (assert) => {
 		assert.equal(coreObject.attribValue('increment'), 2);
 	});
 });
+
+}

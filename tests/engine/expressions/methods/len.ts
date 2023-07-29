@@ -1,5 +1,7 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {ASSETS_ROOT} from './../../../../src/core/loader/AssetsUtils';
-QUnit.test('expression/len with node path', async (assert) => {
+export function testengineexpressionsmethodslen(qUnit: QUnit) {
+qUnit.test('expression/len with node path', async (assert) => {
 	const geo1 = window.geo1;
 
 	const url = `${ASSETS_ROOT}/models/resources/quaternius/animals/Alpaca.gltf`;
@@ -14,3 +16,5 @@ QUnit.test('expression/len with node path', async (assert) => {
 	await param.compute();
 	assert.equal(param.value, '13');
 });
+
+}

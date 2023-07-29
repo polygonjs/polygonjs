@@ -1,7 +1,9 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {Mesh} from 'three';
 import {Material} from 'three';
 import {FrontSide, BackSide, DoubleSide} from 'three';
 import {BaseNodeType} from '../../../../src/engine/nodes/_Base';
+export function testenginenodessopMaterialProperties(qUnit: QUnit) {
 
 async function getMaterial(node: BaseNodeType) {
 	const container = await node.compute();
@@ -9,7 +11,7 @@ async function getMaterial(node: BaseNodeType) {
 	return object.material as Material;
 }
 
-QUnit.test('materialProperties simple', async (assert) => {
+qUnit.test('materialProperties simple', async (assert) => {
 	const geo1 = window.geo1;
 	const plane = geo1.createNode('plane');
 
@@ -31,3 +33,5 @@ QUnit.test('materialProperties simple', async (assert) => {
 	const material4 = await getMaterial(materialProperties);
 	assert.equal(material4.side, DoubleSide);
 });
+
+}

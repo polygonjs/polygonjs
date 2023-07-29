@@ -1,7 +1,9 @@
+import type {QUnit} from '../../helpers/QUnit';
 import {AttribType} from '../../../src/core/geometry/Constant';
 import {ASSETS_ROOT} from '../../../src/core/loader/AssetsUtils';
+export function testengineparamsString(qUnit: QUnit) {
 
-QUnit.test('a string is set dirty if it refers another param with ch and it changes', async (assert) => {
+qUnit.test('a string is set dirty if it refers another param with ch and it changes', async (assert) => {
 	const geo1 = window.geo1;
 	const text1 = geo1.createNode('text');
 	const text2 = geo1.createNode('text');
@@ -28,7 +30,7 @@ QUnit.test('a string is set dirty if it refers another param with ch and it chan
 	await text3_param.compute();
 	assert.equal(text3_param.value, 'ok this is a change middle this is another change end');
 });
-QUnit.test('a string of `$F` will make the param frame dependent', async (assert) => {
+qUnit.test('a string of `$F` will make the param frame dependent', async (assert) => {
 	const scene = window.scene;
 	scene.setFrame(1);
 	const geo1 = window.geo1;
@@ -45,7 +47,7 @@ QUnit.test('a string of `$F` will make the param frame dependent', async (assert
 	assert.equal(text_param.value, '7');
 });
 
-QUnit.test('set as a number will convert to string', async (assert) => {
+qUnit.test('set as a number will convert to string', async (assert) => {
 	const geo1 = window.geo1;
 
 	const box1 = geo1.createNode('box');
@@ -56,7 +58,7 @@ QUnit.test('set as a number will convert to string', async (assert) => {
 	assert.equal(transform1.p.group.value, '12');
 });
 
-QUnit.test('a string can have multiple expression and maintain dependencies', async (assert) => {
+qUnit.test('a string can have multiple expression and maintain dependencies', async (assert) => {
 	const scene = window.scene;
 	scene.setFrame(1);
 	const geo1 = window.geo1;
@@ -102,7 +104,7 @@ QUnit.test('a string can have multiple expression and maintain dependencies', as
 	// assert.equal(text2_param.value, 'a simple string');
 });
 
-QUnit.test('a string param using single quotes in its expression is sanitized correctly', async (assert) => {
+qUnit.test('a string param using single quotes in its expression is sanitized correctly', async (assert) => {
 	const geo1 = window.geo1;
 	const plane1 = geo1.createNode('plane');
 	const attribCreate1 = geo1.createNode('attribCreate');
@@ -120,7 +122,7 @@ QUnit.test('a string param using single quotes in its expression is sanitized co
 	assert.equal(points[12].attribValue('html'), "<div style='will-change: transform, opacity;'>12</div>");
 });
 
-QUnit.test('a string param can clear its error when missing ref is solved', async (assert) => {
+qUnit.test('a string param can clear its error when missing ref is solved', async (assert) => {
 	const geo1 = window.geo1;
 	const COP = window.COP;
 	const text1 = geo1.createNode('text');
@@ -154,7 +156,7 @@ QUnit.test('a string param can clear its error when missing ref is solved', asyn
 	setTimeout(() => video1.dispose(), 100);
 });
 
-QUnit.test('a string param can clear its error when expression resolves', async (assert) => {
+qUnit.test('a string param can clear its error when expression resolves', async (assert) => {
 	const geo1 = window.geo1;
 	const COP = window.COP;
 	const text1 = geo1.createNode('text');
@@ -189,3 +191,5 @@ QUnit.test('a string param can clear its error when expression resolves', async 
 
 	setTimeout(() => video1.dispose(), 100);
 });
+
+}

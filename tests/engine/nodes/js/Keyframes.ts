@@ -1,3 +1,4 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {Box3, Vector3} from 'three';
 import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Js';
 import {sampleData0} from '../../../../src/core/keyframes/KeyframeSamples';
@@ -7,6 +8,7 @@ import {Mesh} from 'three';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 import {OnTickJsNodeOuput} from '../../../../src/engine/nodes/js/OnTick';
+export function testenginenodesjsKeyframes(qUnit: QUnit) {
 
 // to test:
 // - [x] interpolation
@@ -22,7 +24,7 @@ import {OnTickJsNodeOuput} from '../../../../src/engine/nodes/js/OnTick';
 
 const box = new Box3();
 const size = new Vector3();
-QUnit.test('js/keyframes pointbuilder float', async (assert) => {
+qUnit.test('js/keyframes pointbuilder float', async (assert) => {
 	const geo1 = window.geo1;
 	const line1 = geo1.createNode('line');
 	const attribId1 = geo1.createNode('attribId');
@@ -68,7 +70,7 @@ QUnit.test('js/keyframes pointbuilder float', async (assert) => {
 	assert.in_delta((await getBboxSize()).z, 0, 0.02);
 });
 
-QUnit.test('js/keyframes pointbuilder vector2', async (assert) => {
+qUnit.test('js/keyframes pointbuilder vector2', async (assert) => {
 	const geo1 = window.geo1;
 	const line1 = geo1.createNode('line');
 	const attribId1 = geo1.createNode('attribId');
@@ -134,7 +136,7 @@ QUnit.test('js/keyframes pointbuilder vector2', async (assert) => {
 	assert.in_delta((await getBboxSize()).z, 0, 0.02);
 });
 
-QUnit.test('js/keyframes pointbuilder vector3', async (assert) => {
+qUnit.test('js/keyframes pointbuilder vector3', async (assert) => {
 	const geo1 = window.geo1;
 	const line1 = geo1.createNode('line');
 	const attribId1 = geo1.createNode('attribId');
@@ -198,7 +200,7 @@ QUnit.test('js/keyframes pointbuilder vector3', async (assert) => {
 	assert.in_delta((await getBboxSize()).z, 14, 0.02);
 });
 
-QUnit.test('js/keyframes pointbuilder vector4', async (assert) => {
+qUnit.test('js/keyframes pointbuilder vector4', async (assert) => {
 	const geo1 = window.geo1;
 	const line1 = geo1.createNode('line');
 	const attribId1 = geo1.createNode('attribId');
@@ -268,7 +270,7 @@ QUnit.test('js/keyframes pointbuilder vector4', async (assert) => {
 	assert.in_delta((await getBboxSize()).z, 14, 0.02);
 });
 
-QUnit.test('js/keyframes objectbuilder float linear', async (assert) => {
+qUnit.test('js/keyframes objectbuilder float linear', async (assert) => {
 	const geo1 = window.geo1;
 	const box1 = geo1.createNode('box');
 	const objectBuilder1 = geo1.createNode('objectBuilder');
@@ -324,7 +326,7 @@ QUnit.test('js/keyframes objectbuilder float linear', async (assert) => {
 	assert.in_delta((await getBboxPos()).x, 0.4, 0.01);
 });
 
-QUnit.test('js/keyframes objectbuilder multiple channels', async (assert) => {
+qUnit.test('js/keyframes objectbuilder multiple channels', async (assert) => {
 	const geo1 = window.geo1;
 	const box1 = geo1.createNode('box');
 	const objectBuilder1 = geo1.createNode('objectBuilder');
@@ -380,7 +382,7 @@ QUnit.test('js/keyframes objectbuilder multiple channels', async (assert) => {
 	assert.equal((await getBboxPos()).z, 1332);
 });
 
-QUnit.test('js/keyframes with actor', async (assert) => {
+qUnit.test('js/keyframes with actor', async (assert) => {
 	const scene = window.scene;
 	const perspective_camera1 = window.perspective_camera1;
 	const geo1 = window.geo1;
@@ -431,3 +433,5 @@ QUnit.test('js/keyframes with actor', async (assert) => {
 		assert.in_delta(object.scale.y, 0.5, 0.1, 'object scale up');
 	});
 });
+
+}

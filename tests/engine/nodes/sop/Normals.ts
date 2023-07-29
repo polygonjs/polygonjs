@@ -1,6 +1,8 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {CorePoint} from '../../../../src/core/geometry/Point';
+export function testenginenodessopNormals(qUnit: QUnit) {
 
-QUnit.test('sop/normals simple', async (assert) => {
+qUnit.test('sop/normals simple', async (assert) => {
 	const geo1 = window.geo1;
 
 	const sphere1 = geo1.createNode('sphere');
@@ -36,7 +38,7 @@ QUnit.test('sop/normals simple', async (assert) => {
 	assert.in_delta(normal[2], 0.4, 0.05);
 });
 
-QUnit.test('sop/normals with non entity dependent expression', async (assert) => {
+qUnit.test('sop/normals with non entity dependent expression', async (assert) => {
 	const geo1 = window.geo1;
 
 	const sphere1 = geo1.createNode('sphere');
@@ -64,7 +66,7 @@ QUnit.test('sop/normals with non entity dependent expression', async (assert) =>
 	assert.in_delta((await _getFirstNormal()).x, -4, 0.001);
 });
 
-QUnit.test('sop/normals with  entity dependent expression', async (assert) => {
+qUnit.test('sop/normals with  entity dependent expression', async (assert) => {
 	const geo1 = window.geo1;
 
 	const sphere1 = geo1.createNode('sphere');
@@ -94,3 +96,5 @@ QUnit.test('sop/normals with  entity dependent expression', async (assert) => {
 	assert.in_delta((await _getNormals())[0].x, 2, 0.001);
 	assert.in_delta((await _getNormals())[1].x, 4, 0.001);
 });
+
+}

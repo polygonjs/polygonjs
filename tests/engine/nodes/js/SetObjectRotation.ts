@@ -1,10 +1,12 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {Mesh} from 'three';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Js';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 import {Quaternion} from 'three';
+export function testenginenodesjsSetObjectRotation(qUnit: QUnit) {
 
-QUnit.test('js/setObjectRotation', async (assert) => {
+qUnit.test('js/setObjectRotation', async (assert) => {
 	const scene = window.scene;
 	const perspective_camera1 = window.perspective_camera1;
 	const geo1 = window.geo1;
@@ -40,3 +42,5 @@ QUnit.test('js/setObjectRotation', async (assert) => {
 		assert.in_delta(object.quaternion.angleTo(quat0), 1, 0.05);
 	});
 });
+
+}

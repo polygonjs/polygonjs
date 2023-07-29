@@ -1,4 +1,6 @@
-QUnit.test('sop/mirror simple', async (assert) => {
+import type {QUnit} from '../../../helpers/QUnit';
+export function testenginenodessopMirror(qUnit: QUnit) {
+qUnit.test('sop/mirror simple', async (assert) => {
 	const geo1 = window.geo1;
 
 	const box1 = geo1.createNode('box');
@@ -30,3 +32,5 @@ QUnit.test('sop/mirror simple', async (assert) => {
 	assert.equal((await getObjects())!.length, 1);
 	assert.equal((await getObjects())![0].children?.length, 2);
 });
+
+}

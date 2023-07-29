@@ -1,3 +1,4 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {SceneJsonExporter} from '../../../../src/engine/io/json/export/Scene';
 import {SceneJsonImporter} from '../../../../src/engine/io/json/import/Scene';
 import {AssemblersUtils} from '../../../helpers/AssemblersUtils';
@@ -6,11 +7,12 @@ import BasicFragment from './templates/lineBasic/Basic.frag.glsl';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 import {LineBasicBuilderMatNode} from '../../../../src/engine/nodes/mat/LineBasicBuilder';
 import {GLSLHelper} from '../../../helpers/GLSLHelper';
+export function testenginenodesmatLineBasicBuilder(qUnit: QUnit) {
 const TEST_SHADER_LIB = {
 	basic: {vert: BasicVertex, frag: BasicFragment},
 };
 
-QUnit.test('lineBasic builder persisted_config', async (assert) => {
+qUnit.test('lineBasic builder persisted_config', async (assert) => {
 	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 	const MAT = window.MAT;
 	const lineBasicBuilder1 = MAT.createNode('lineBasicBuilder');
@@ -44,3 +46,5 @@ QUnit.test('lineBasic builder persisted_config', async (assert) => {
 
 	RendererUtils.dispose();
 });
+
+}

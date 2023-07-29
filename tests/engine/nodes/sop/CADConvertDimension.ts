@@ -1,9 +1,11 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {ConversionMode} from '../../../../src/engine/nodes/sop/CADConvertDimension';
 import {Box3, Vector3} from 'three';
+export function testenginenodessopCADConvertDimension(qUnit: QUnit) {
 const tmpBox = new Box3();
 const tmpSize = new Vector3();
 
-QUnit.test('sop/CADConvertDimension simple', async (assert) => {
+qUnit.test('sop/CADConvertDimension simple', async (assert) => {
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false); // cancels geo node displayNodeController
 
@@ -51,3 +53,5 @@ QUnit.test('sop/CADConvertDimension simple', async (assert) => {
 	await computeTransform2();
 	assert.in_delta(tmpBox.min.z, 1, 0.01);
 });
+
+}

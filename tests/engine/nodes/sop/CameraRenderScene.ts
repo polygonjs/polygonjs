@@ -1,7 +1,9 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {CoreObject} from '../../../../src/core/geometry/Object';
 import {CameraAttribute} from '../../../../src/core/camera/CoreCamera';
+export function testenginenodessopCameraRenderScene(qUnit: QUnit) {
 
-QUnit.test('sop/cameraRenderScene simple', async (assert) => {
+qUnit.test('sop/cameraRenderScene simple', async (assert) => {
 	const geo1 = window.geo1;
 	const scene1 = window.scene.root().createNode('scene');
 	const camera1 = geo1.createNode('perspectiveCamera');
@@ -14,7 +16,7 @@ QUnit.test('sop/cameraRenderScene simple', async (assert) => {
 
 	assert.equal(CoreObject.attribValue(objects[0], CameraAttribute.RENDER_SCENE_NODE_ID), scene1.graphNodeId());
 });
-QUnit.test('sop/cameraRenderScene applyToChildren', async (assert) => {
+qUnit.test('sop/cameraRenderScene applyToChildren', async (assert) => {
 	const geo1 = window.geo1;
 	const scene1 = window.scene.root().createNode('scene');
 	const camera1 = geo1.createNode('perspectiveCamera');
@@ -33,3 +35,5 @@ QUnit.test('sop/cameraRenderScene applyToChildren', async (assert) => {
 		scene1.graphNodeId()
 	);
 });
+
+}

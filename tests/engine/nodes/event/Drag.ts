@@ -1,6 +1,8 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {RendererUtils} from '../../../helpers/RendererUtils';
+export function testenginenodeseventDrag(qUnit: QUnit) {
 
-QUnit.test('drag event nodes simple', async (assert) => {
+qUnit.test('drag event nodes simple', async (assert) => {
 	const scene = window.scene;
 	await scene.waitForCooksCompleted();
 	assert.ok(!scene.loadingController.isLoading());
@@ -52,3 +54,5 @@ QUnit.test('drag event nodes simple', async (assert) => {
 		});
 	});
 });
+
+}

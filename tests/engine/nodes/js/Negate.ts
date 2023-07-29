@@ -1,3 +1,4 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {TransformTargetType} from './../../../../src/core/Transform';
 import {AttribClass} from './../../../../src/core/geometry/Constant';
 import {Mesh} from 'three';
@@ -5,8 +6,9 @@ import {Mesh} from 'three';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Js';
 import {RendererUtils} from '../../../helpers/RendererUtils';
+export function testenginenodesjsNegate(qUnit: QUnit) {
 
-QUnit.test('js/negate with float inputs', async (assert) => {
+qUnit.test('js/negate with float inputs', async (assert) => {
 	const scene = window.scene;
 	const perspective_camera1 = window.perspective_camera1;
 
@@ -52,7 +54,7 @@ QUnit.test('js/negate with float inputs', async (assert) => {
 	});
 });
 
-QUnit.test('js/negate with vector inputs', async (assert) => {
+qUnit.test('js/negate with vector inputs', async (assert) => {
 	const scene = window.scene;
 	const perspective_camera1 = window.perspective_camera1;
 
@@ -98,7 +100,7 @@ QUnit.test('js/negate with vector inputs', async (assert) => {
 	});
 });
 
-QUnit.test('js/negate with vector from attrib to pos', async (assert) => {
+qUnit.test('js/negate with vector from attrib to pos', async (assert) => {
 	const scene = window.scene;
 	const perspective_camera1 = window.perspective_camera1;
 
@@ -158,7 +160,7 @@ QUnit.test('js/negate with vector from attrib to pos', async (assert) => {
 	});
 });
 
-QUnit.test('js/negate with vector from attrib to pos 2', async (assert) => {
+qUnit.test('js/negate with vector from attrib to pos 2', async (assert) => {
 	const scene = window.scene;
 	const perspective_camera1 = window.perspective_camera1;
 
@@ -232,3 +234,5 @@ QUnit.test('js/negate with vector from attrib to pos 2', async (assert) => {
 		assert.deepEqual(object.position.toArray(), [-5, -6, -7], 'object moved again');
 	});
 });
+
+}

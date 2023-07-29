@@ -1,6 +1,8 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {DirectionalLight} from 'three';
 import {CoreGroup} from '../../../../src/core/geometry/Group';
 import {LightUserDataRaymarching} from '../../../../src/core/lights/Common';
+export function testenginenodesjsOutputDirectionalLight(qUnit: QUnit) {
 
 function isDirectionalLight(object: any): object is DirectionalLight {
 	return (object as DirectionalLight).isDirectionalLight == true && (object as DirectionalLight).intensity != null;
@@ -24,7 +26,7 @@ function getLight(coreGroup: CoreGroup): DirectionalLight {
 	return light!;
 }
 
-QUnit.test('js/OutputDirectionalLight simple', async (assert) => {
+qUnit.test('js/OutputDirectionalLight simple', async (assert) => {
 	const geo1 = window.geo1;
 	const directionalLight1 = geo1.createNode('directionalLight');
 	const objectBuilder1 = geo1.createNode('objectBuilder');
@@ -249,3 +251,5 @@ QUnit.test('js/OutputDirectionalLight simple', async (assert) => {
 	assert.equal(await getRaymarchingShadowBiasAngle(), 0.02, 'getRaymarchingShadowBiasAngle');
 	assert.equal(await getRaymarchingShadowBiasDistance(), 0.2, 'getRaymarchingShadowBiasDistance');
 });
+
+}

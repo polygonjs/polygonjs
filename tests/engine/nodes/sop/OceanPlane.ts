@@ -1,11 +1,13 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {Material} from 'three';
 import {Water} from '../../../../src/modules/core/objects/Water';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 import {OceanPlaneSopNode} from '../../../../src/engine/nodes/sop/OceanPlane';
 import {NullSopNode} from '../../../../src/engine/nodes/sop/Null';
 import {CoreSleep} from '../../../../src/core/Sleep';
+export function testenginenodessopOceanPlane(qUnit: QUnit) {
 
-QUnit.test(
+qUnit.test(
 	'oceanPlane can be cloned and keep unique material and the time uniform is updated correctly',
 	async (assert) => {
 		const scene = window.scene;
@@ -53,7 +55,7 @@ QUnit.test(
 	}
 );
 
-QUnit.test('oceanPlane can complete cook without a renderer', async (assert) => {
+qUnit.test('oceanPlane can complete cook without a renderer', async (assert) => {
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false); // cancels geo node displayNodeController
 
@@ -67,3 +69,5 @@ QUnit.test('oceanPlane can complete cook without a renderer', async (assert) => 
 	await oceanPlane.compute();
 	assert.equal(1, 1, 'ocean has cooked');
 });
+
+}

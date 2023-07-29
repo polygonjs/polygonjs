@@ -1,11 +1,13 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {BaseSopNodeType} from '../../../../src/engine/nodes/sop/_Base';
 import {saveAndLoadScene} from '../../../helpers/ImportHelper';
 import {OperationsComposerSopNode} from '../../../../src/engine/nodes/sop/OperationsComposer';
 import {Box3, Vector3} from 'three';
+export function testengineoperationssopNull(qUnit: QUnit) {
 const tmpBox = new Box3();
 const tmpSize = new Vector3();
 
-QUnit.test('operation/sop/null loads fine when node has overriden params', async (assert) => {
+qUnit.test('operation/sop/null loads fine when node has overriden params', async (assert) => {
 	const scene = window.scene;
 	const geo1 = window.geo1;
 
@@ -48,3 +50,5 @@ QUnit.test('operation/sop/null loads fine when node has overriden params', async
 		assert.in_delta(await bboxSizeY(transform2), 1, 0.1);
 	});
 });
+
+}

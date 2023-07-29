@@ -1,6 +1,8 @@
+import type {QUnit} from '../../helpers/QUnit';
 import {AttribClass} from '../../../src/core/geometry/Constant';
+export function testcoregeometryGroup(qUnit: QUnit) {
 
-QUnit.test('geoAttribNamesMatchingMask', async (assert) => {
+qUnit.test('geoAttribNamesMatchingMask', async (assert) => {
 	const geo1 = window.geo1;
 	const box1 = geo1.createNode('box');
 
@@ -33,7 +35,7 @@ QUnit.test('geoAttribNamesMatchingMask', async (assert) => {
 	);
 });
 
-QUnit.test('objectAttribNamesMatchingMask', async (assert) => {
+qUnit.test('objectAttribNamesMatchingMask', async (assert) => {
 	const geo1 = window.geo1;
 	const box1 = geo1.createNode('box');
 
@@ -64,7 +66,7 @@ QUnit.test('objectAttribNamesMatchingMask', async (assert) => {
 	assert.deepEqual(coreGroup.objectAttribNamesMatchingMask('blend*,pos*').sort(), ['blend', 'blend2'].sort());
 });
 
-QUnit.test('coreGroupAttribNamesMatchingMask', async (assert) => {
+qUnit.test('coreGroupAttribNamesMatchingMask', async (assert) => {
 	const geo1 = window.geo1;
 	const box1 = geo1.createNode('box');
 
@@ -94,3 +96,5 @@ QUnit.test('coreGroupAttribNamesMatchingMask', async (assert) => {
 	assert.deepEqual(coreGroup.attribNamesMatchingMask('blend*,pos').sort(), ['blend', 'blend2'].sort());
 	assert.deepEqual(coreGroup.attribNamesMatchingMask('blend*,pos*').sort(), ['blend', 'blend2'].sort());
 });
+
+}

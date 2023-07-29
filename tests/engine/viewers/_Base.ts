@@ -1,9 +1,11 @@
+import type {QUnit} from '../../helpers/QUnit';
 import {Poly} from '../../../src/engine/Poly';
 import {HTMLElementWithViewer} from '../../../src/engine/viewers/_Base';
 import {ThreejsViewer} from '../../../src/engine/viewers/Threejs';
 import {RendererUtils} from '../../helpers/RendererUtils';
+export function testengineviewers_Base(qUnit: QUnit) {
 
-QUnit.test('viewer domElement is assigned scene and viewer', async (assert) => {
+qUnit.test('viewer domElement is assigned scene and viewer', async (assert) => {
 	const scene = window.scene;
 	await scene.waitForCooksCompleted();
 	const cameraNode = window.perspective_camera1;
@@ -16,7 +18,7 @@ QUnit.test('viewer domElement is assigned scene and viewer', async (assert) => {
 	});
 });
 
-QUnit.test('viewer has a viewer with and without post processing', async (assert) => {
+qUnit.test('viewer has a viewer with and without post processing', async (assert) => {
 	const scene = window.scene;
 	await scene.waitForCooksCompleted();
 	const cameraNode = window.perspective_camera1;
@@ -44,3 +46,5 @@ QUnit.test('viewer has a viewer with and without post processing', async (assert
 		assert.ok(effectComposer.getRenderer());
 	});
 });
+
+}

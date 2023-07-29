@@ -1,7 +1,9 @@
+import type {QUnit} from '../../../../helpers/QUnit';
 import {GlConnectionPointType} from '../../../../../src/engine/nodes/utils/io/connections/Gl';
 import {RendererUtils} from '../../../../helpers/RendererUtils';
+export function testenginenodesglAssemblersconflicts(qUnit: QUnit) {
 
-QUnit.test('2 gl/attributes with same name can live on same level without conflict in a material', async (assert) => {
+qUnit.test('2 gl/attributes with same name can live on same level without conflict in a material', async (assert) => {
 	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 
 	const MAT = window.MAT;
@@ -101,7 +103,7 @@ varying vec3 v_POLY_attribute_myAttrib;
 	RendererUtils.dispose();
 });
 
-QUnit.test('2 gl/param with same name can live on same level without conflict in a material', async (assert) => {
+qUnit.test('2 gl/param with same name can live on same level without conflict in a material', async (assert) => {
 	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 
 	const MAT = window.MAT;
@@ -175,3 +177,5 @@ uniform vec3 v_POLY_param_myParam;
 		'fragmentShader reads what is declared in vertexShader (body)'
 	);
 });
+
+}

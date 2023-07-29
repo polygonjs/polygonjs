@@ -1,9 +1,11 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {AnimTargetNodeTargetType} from '../../../../src/engine/nodes/anim/Target';
 import {AnimPropertyValueNodeMode} from '../../../../src/engine/nodes/anim/PropertyValue';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {AnimatedPropertiesRegister} from '../../../../src/core/animation/AnimatedPropertiesRegister';
+export function testenginenodesanimNull(qUnit: QUnit) {
 
-QUnit.test('anim null simple', async (assert) => {
+qUnit.test('anim null simple', async (assert) => {
 	// setup objects
 	const geo = window.geo1;
 	const box = geo.createNode('box');
@@ -45,7 +47,7 @@ QUnit.test('anim null simple', async (assert) => {
 	assert.deepEqual(object.position.toArray(), [3, 4, 7]);
 });
 
-QUnit.test('anim null object property vector3 element', async (assert) => {
+qUnit.test('anim null object property vector3 element', async (assert) => {
 	// setup objects
 	const geo = window.geo1;
 	const box = geo.createNode('box');
@@ -87,7 +89,7 @@ QUnit.test('anim null object property vector3 element', async (assert) => {
 	assert.deepEqual(object.position.toArray(), [0, 4, 0]);
 });
 
-QUnit.test('anim null object property euler', async (assert) => {
+qUnit.test('anim null object property euler', async (assert) => {
 	// setup objects
 	const geo = window.geo1;
 	const box = geo.createNode('box');
@@ -129,7 +131,7 @@ QUnit.test('anim null object property euler', async (assert) => {
 	assert.deepEqual(object.rotation.toArray(), [0, 1, 0, 'XYZ']);
 });
 
-QUnit.test('anim null object property euler component', async (assert) => {
+qUnit.test('anim null object property euler component', async (assert) => {
 	// setup objects
 	const geo = window.geo1;
 	const box = geo.createNode('box');
@@ -171,7 +173,7 @@ QUnit.test('anim null object property euler component', async (assert) => {
 	assert.deepEqual(object.rotation.toArray(), [0, 1, 0, 'XYZ']);
 });
 
-QUnit.test('anim null node integer param', async (assert) => {
+qUnit.test('anim null node integer param', async (assert) => {
 	// setup objects
 	const geo = window.geo1;
 	const line = geo.createNode('line');
@@ -199,7 +201,7 @@ QUnit.test('anim null node integer param', async (assert) => {
 	assert.equal(line.pv.pointsCount, 7);
 });
 
-QUnit.test('anim null node float param', async (assert) => {
+qUnit.test('anim null node float param', async (assert) => {
 	// setup objects
 	const geo = window.geo1;
 	const box = geo.createNode('box');
@@ -229,7 +231,7 @@ QUnit.test('anim null node float param', async (assert) => {
 	assert.equal(transform.pv.scale, 7);
 });
 
-QUnit.test('anim null node vector2 param', async (assert) => {
+qUnit.test('anim null node vector2 param', async (assert) => {
 	// setup objects
 	const scene = window.scene;
 	const COP = scene.createNode('copNetwork');
@@ -258,7 +260,7 @@ QUnit.test('anim null node vector2 param', async (assert) => {
 	assert.deepEqual(image.pv.center.toArray(), [7, 5]);
 });
 
-QUnit.test('anim null node vector3 param', async (assert) => {
+qUnit.test('anim null node vector3 param', async (assert) => {
 	// setup objects
 	const geo = window.geo1;
 	const box = geo.createNode('box');
@@ -288,7 +290,7 @@ QUnit.test('anim null node vector3 param', async (assert) => {
 	assert.deepEqual(transform.pv.t.toArray(), [7, 5, 48]);
 });
 
-QUnit.test('anim null node vector4 param', async (assert) => {
+qUnit.test('anim null node vector4 param', async (assert) => {
 	// setup objects
 	const geo = window.geo1;
 	const box = geo.createNode('box');
@@ -318,7 +320,7 @@ QUnit.test('anim null node vector4 param', async (assert) => {
 	assert.deepEqual(attribCreate.pv.value4.toArray(), [7, 5, 48, 9]);
 });
 
-QUnit.test('anim null node color param', async (assert) => {
+qUnit.test('anim null node color param', async (assert) => {
 	// setup objects
 	const scene = window.scene;
 	const MAT = scene.createNode('materialsNetwork');
@@ -347,7 +349,7 @@ QUnit.test('anim null node color param', async (assert) => {
 	assert.deepEqual(meshBasic.p.color.valuePreConversionSerialized(), [0.7, 0.5, 0.8]);
 });
 
-QUnit.test('anim null play promise still returns if no target params resolved', async (assert) => {
+qUnit.test('anim null play promise still returns if no target params resolved', async (assert) => {
 	// setup objects
 	const geo = window.geo1;
 	const box = geo.createNode('box');
@@ -385,7 +387,7 @@ QUnit.test('anim null play promise still returns if no target params resolved', 
 /*
 TESTS WITH AnimatedPropertiesRegister
 */
-QUnit.test('animating a scene graph prop when it is already animated kills the previous timeline', async (assert) => {
+qUnit.test('animating a scene graph prop when it is already animated kills the previous timeline', async (assert) => {
 	// setup objects
 	const geo = window.geo1;
 	const box = geo.createNode('box');
@@ -477,3 +479,5 @@ QUnit.test('animating a scene graph prop when it is already animated kills the p
 	assert.in_delta(object.position.y, 4, 0.1);
 	assert.equal(AnimatedPropertiesRegister.registeredPropertiesCount(), 0);
 });
+
+}

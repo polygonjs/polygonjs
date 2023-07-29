@@ -1,12 +1,14 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {Mesh} from 'three/src/objects/Mesh.js';
 import {ASSETS_ROOT} from '../../../../src/core/loader/AssetsUtils';
 import {_dataUrlUrl} from './DataUrl';
+export function testenginenodessopFileJSON(qUnit: QUnit) {
 
 function _url(path: string) {
 	return `${ASSETS_ROOT}${path}`;
 }
 
-QUnit.test('sop/fileJSON simple', async (assert) => {
+qUnit.test('sop/fileJSON simple', async (assert) => {
 	const geo1 = window.geo1;
 	const fileNode = geo1.createNode('fileJSON');
 	fileNode.p.url.set(_url('/models/threejs/scatteredBoxes.json'));
@@ -21,7 +23,7 @@ QUnit.test('sop/fileJSON simple', async (assert) => {
 	);
 });
 
-QUnit.test('sop/fileJSON has a meaningful error when loading a non-threejs json', async (assert) => {
+qUnit.test('sop/fileJSON has a meaningful error when loading a non-threejs json', async (assert) => {
 	const geo1 = window.geo1;
 	const fileNode = geo1.createNode('fileJSON');
 	fileNode.p.url.set(_dataUrlUrl('default.json'));
@@ -33,3 +35,5 @@ QUnit.test('sop/fileJSON has a meaningful error when loading a non-threejs json'
 		'Are you sure you did not mean to use the sop/dataUrl node instead?'
 	);
 });
+
+}

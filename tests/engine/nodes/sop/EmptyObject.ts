@@ -1,7 +1,9 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {Group, LineSegments, Mesh, Object3D, Points} from 'three';
 import {ObjectType} from '../../../../src/core/geometry/Constant';
+export function testenginenodessopEmptyObject(qUnit: QUnit) {
 
-QUnit.test('SOP emptyObject simple', async (assert) => {
+qUnit.test('SOP emptyObject simple', async (assert) => {
 	const geo1 = window.geo1;
 
 	const emptyObject1 = geo1.createNode('emptyObject');
@@ -38,3 +40,5 @@ QUnit.test('SOP emptyObject simple', async (assert) => {
 	emptyObject1.setObjectType(ObjectType.GROUP);
 	assert.ok((await getOutput()) instanceof Group);
 });
+
+}

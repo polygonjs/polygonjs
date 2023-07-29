@@ -1,4 +1,6 @@
-QUnit.test('expression strCharsCount simple', async (assert) => {
+import type {QUnit} from '../../../helpers/QUnit';
+export function testengineexpressionsmethodsstrCharsCount(qUnit: QUnit) {
+qUnit.test('expression strCharsCount simple', async (assert) => {
 	const geo1 = window.geo1;
 
 	const plane1 = geo1.createNode('plane');
@@ -26,3 +28,5 @@ QUnit.test('expression strCharsCount simple', async (assert) => {
 	await sizex_param.compute();
 	assert.equal(sizex_param.value, 18);
 });
+
+}

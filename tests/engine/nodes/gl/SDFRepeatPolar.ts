@@ -1,9 +1,11 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import DEFAULT_FRAGMENT from './SDFRepeatPolar/default.frag.glsl';
 import NO_INPUT_EMPTY_VERTEX from './SDFRepeatPolar/default.vert.glsl';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 import {GLSLHelper} from '../../../helpers/GLSLHelper';
+export function testenginenodesglSDFRepeatPolar(qUnit: QUnit) {
 
-QUnit.test('gl/SDFRepeatPolar simple', async (assert) => {
+qUnit.test('gl/SDFRepeatPolar simple', async (assert) => {
 	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 	const MAT = window.MAT;
 	const rayMarchingBuilder1 = MAT.createNode('rayMarchingBuilder');
@@ -33,3 +35,5 @@ QUnit.test('gl/SDFRepeatPolar simple', async (assert) => {
 
 	RendererUtils.dispose();
 });
+
+}

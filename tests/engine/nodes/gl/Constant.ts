@@ -1,8 +1,10 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {GlConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Gl';
 import {SceneJsonExporter} from '../../../../src/engine/io/json/export/Scene';
 import {SceneJsonImporter} from '../../../../src/engine/io/json/import/Scene';
+export function testenginenodesglConstant(qUnit: QUnit) {
 
-QUnit.test('gl constant updates its output type correctly when created', async (assert) => {
+qUnit.test('gl constant updates its output type correctly when created', async (assert) => {
 	const MAT = window.MAT;
 	const material_basic_builder1 = MAT.createNode('meshBasicBuilder');
 	material_basic_builder1.createNode('output');
@@ -19,7 +21,7 @@ QUnit.test('gl constant updates its output type correctly when created', async (
 	assert.equal(constant1.io.outputs.namedOutputConnectionPoints()[0].type(), GlConnectionPointType.VEC2);
 });
 
-QUnit.test('gl constant updates its output type correctly when scene is loaded', async (assert) => {
+qUnit.test('gl constant updates its output type correctly when scene is loaded', async (assert) => {
 	const scene = window.scene;
 	const MAT = window.MAT;
 	const material_basic_builder1 = MAT.createNode('meshBasicBuilder');
@@ -44,3 +46,5 @@ QUnit.test('gl constant updates its output type correctly when scene is loaded',
 	assert.equal(constant1.io.outputs.namedOutputConnectionPoints().length, 1);
 	assert.equal(constant1.io.outputs.namedOutputConnectionPoints()[0].type(), GlConnectionPointType.VEC2);
 });
+
+}

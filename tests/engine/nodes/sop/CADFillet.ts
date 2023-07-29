@@ -1,8 +1,10 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {BufferAttribute, Box3, Vector3} from 'three';
+export function testenginenodessopCADFillet(qUnit: QUnit) {
 const tmpBox = new Box3();
 const tmpSize = new Vector3();
 
-QUnit.test('sop/CADFillet simple', async (assert) => {
+qUnit.test('sop/CADFillet simple', async (assert) => {
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false); // cancels geo node displayNodeController
 
@@ -61,3 +63,5 @@ QUnit.test('sop/CADFillet simple', async (assert) => {
 	assert.in_delta(tmpBox.min.x, -0.541, 0.01);
 	assert.in_delta(tmpSize.x, 1.08, 0.01);
 });
+
+}

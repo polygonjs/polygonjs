@@ -1,9 +1,11 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {PerspectiveCamera} from 'three';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Js';
 import {RendererUtils} from '../../../helpers/RendererUtils';
+export function testenginenodesjsSetPerspectiveCameraFov(qUnit: QUnit) {
 
-QUnit.test('js/setPerspectiveCameraFov', async (assert) => {
+qUnit.test('js/setPerspectiveCameraFov', async (assert) => {
 	const scene = window.scene;
 	const perspective_camera1 = window.perspective_camera1;
 	const geo1 = window.geo1;
@@ -36,3 +38,5 @@ QUnit.test('js/setPerspectiveCameraFov', async (assert) => {
 		assert.equal(camera.fov, 20);
 	});
 });
+
+}

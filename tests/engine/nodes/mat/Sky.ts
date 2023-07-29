@@ -1,6 +1,8 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {Mesh, Material} from 'three';
+export function testenginenodesmatSky(qUnit: QUnit) {
 
-QUnit.test('mat sky simple', async (assert) => {
+qUnit.test('mat sky simple', async (assert) => {
 	const MAT = window.MAT;
 	const geo1 = window.geo1;
 	const sky1 = MAT.createNode('sky');
@@ -19,3 +21,5 @@ QUnit.test('mat sky simple', async (assert) => {
 
 	assert.equal(material.uuid, (await sky1.material()).uuid);
 });
+
+}

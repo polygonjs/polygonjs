@@ -1,7 +1,9 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {CoreObject} from '../../../../src/core/geometry/Object';
 import {CameraAttribute} from '../../../../src/core/camera/CoreCamera';
+export function testenginenodessopCameraWebXRAR(qUnit: QUnit) {
 
-QUnit.test('sop/cameraWebXRAR simple', async (assert) => {
+qUnit.test('sop/cameraWebXRAR simple', async (assert) => {
 	const geo1 = window.geo1;
 	const camera1 = geo1.createNode('perspectiveCamera');
 	const cameraWebXRAR1 = geo1.createNode('cameraWebXRAR');
@@ -12,7 +14,7 @@ QUnit.test('sop/cameraWebXRAR simple', async (assert) => {
 
 	assert.equal(CoreObject.attribValue(objects[0], CameraAttribute.WEBXR_AR), true);
 });
-QUnit.test('sop/cameraWebXRAR applyToChildren', async (assert) => {
+qUnit.test('sop/cameraWebXRAR applyToChildren', async (assert) => {
 	const geo1 = window.geo1;
 	const camera1 = geo1.createNode('perspectiveCamera');
 	const hierarchy1 = geo1.createNode('hierarchy');
@@ -26,3 +28,5 @@ QUnit.test('sop/cameraWebXRAR applyToChildren', async (assert) => {
 	assert.equal(CoreObject.attribValue(objects[0], CameraAttribute.WEBXR_AR), true);
 	assert.equal(CoreObject.attribValue(objects[0].children[0], CameraAttribute.WEBXR_AR), true);
 });
+
+}

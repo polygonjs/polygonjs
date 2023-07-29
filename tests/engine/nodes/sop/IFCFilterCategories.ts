@@ -1,3 +1,4 @@
+import type {QUnit} from '../../../helpers/QUnit';
 // import {HierarchyMode} from '../../../../src/engine/operations/sop/Hierarchy';
 import {Mesh} from 'three';
 import {CoreSleep} from '../../../../src/core/Sleep';
@@ -5,6 +6,7 @@ import {ASSETS_ROOT} from '../../../../src/core/loader/AssetsUtils';
 import {BooleanParam} from '../../../../src/engine/params/Boolean';
 // import {Poly} from '../../../../src/engine/Poly';
 // import {withPlayerMode} from '../../../helpers/PlayerMode';
+export function testenginenodessopIFCFilterCategories(qUnit: QUnit) {
 
 function _url(path: string) {
 	return `${ASSETS_ROOT}${path}`;
@@ -34,7 +36,7 @@ async function withFile(path: string) {
 // 	return {container, fileNode, hierarchyNode};
 // }
 
-QUnit.test('sop/IFCFilterCategories simple', async (assert) => {
+qUnit.test('sop/IFCFilterCategories simple', async (assert) => {
 	const {fileNode, geo1} = await withFile('models/ifc/rac_advanced_sample_project.ifc');
 
 	const IFCFilterCategories1 = geo1.createNode('IFCFilterCategories');
@@ -95,3 +97,5 @@ QUnit.test('sop/IFCFilterCategories simple', async (assert) => {
 	(IFCFilterCategories1.params.get('IFCWALLSTANDARDCASE') as BooleanParam).set(false);
 	assert.equal((await getIndex())?.array.length, 23568);
 });
+
+}

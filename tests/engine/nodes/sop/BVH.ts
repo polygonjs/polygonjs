@@ -1,6 +1,8 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {BufferGeometryWithBVH} from '../../../../src/core/geometry/bvh/three-mesh-bvh';
+export function testenginenodessopBVH(qUnit: QUnit) {
 
-QUnit.test('BVH simple', async (assert) => {
+qUnit.test('BVH simple', async (assert) => {
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false); // cancels geo node displayNodeController
 
@@ -14,7 +16,7 @@ QUnit.test('BVH simple', async (assert) => {
 	assert.ok((geometry as BufferGeometryWithBVH).boundsTree);
 });
 
-QUnit.test('BVH is cloned', async (assert) => {
+qUnit.test('BVH is cloned', async (assert) => {
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false); // cancels geo node displayNodeController
 
@@ -34,3 +36,5 @@ QUnit.test('BVH is cloned', async (assert) => {
 	geometry = coreGroup?.threejsObjectsWithGeo()[0].geometry!;
 	assert.ok((geometry as BufferGeometryWithBVH).boundsTree);
 });
+
+}

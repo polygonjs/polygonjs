@@ -1,3 +1,4 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {GlConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Gl';
 import {SceneJsonExporter} from '../../../../src/engine/io/json/export/Scene';
@@ -8,6 +9,7 @@ import {Vector3Param} from '../../../../src/engine/params/Vector3';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 import {AssemblersUtils} from '../../../helpers/AssemblersUtils';
 import {GLSLHelper} from '../../../helpers/GLSLHelper';
+export function testenginenodescopBuilder2DArray(qUnit: QUnit) {
 
 function createRequiredNodes(node: Builder2DArrayCopNode) {
 	const output1 = node.createNode('output');
@@ -15,7 +17,7 @@ function createRequiredNodes(node: Builder2DArrayCopNode) {
 	return {output1, globals1};
 }
 
-QUnit.test('COP/builder2DArray simple with render target', async (assert) => {
+qUnit.test('COP/builder2DArray simple with render target', async (assert) => {
 	const scene = window.scene;
 	await scene.waitForCooksCompleted();
 
@@ -73,7 +75,7 @@ QUnit.test('COP/builder2DArray simple with render target', async (assert) => {
 	RendererUtils.dispose();
 });
 
-// QUnit.test('COP/builder2DArray simple with data texture', async (assert) => {
+// qUnit.test('COP/builder2DArray simple with data texture', async (assert) => {
 // 	const scene = window.scene;
 // 	await scene.waitForCooksCompleted();
 
@@ -112,7 +114,7 @@ QUnit.test('COP/builder2DArray simple with render target', async (assert) => {
 // 	});
 // });
 
-QUnit.test('COP/builder2DArray with persisted_config', async (assert) => {
+qUnit.test('COP/builder2DArray with persisted_config', async (assert) => {
 	const scene = window.scene;
 	await scene.waitForCooksCompleted();
 
@@ -170,3 +172,5 @@ QUnit.test('COP/builder2DArray with persisted_config', async (assert) => {
 		});
 	});
 });
+
+}

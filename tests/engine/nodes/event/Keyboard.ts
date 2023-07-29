@@ -1,8 +1,10 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {CoreEventEmitter} from '../../../../src/core/event/CoreEventEmitter';
 import {checkConsolePrints} from '../../../helpers/Console';
 import {RendererUtils} from '../../../helpers/RendererUtils';
+export function testenginenodeseventKeyboard(qUnit: QUnit) {
 
-QUnit.test('keyboard event nodes simple from document', async (assert) => {
+qUnit.test('keyboard event nodes simple from document', async (assert) => {
 	const scene = window.scene;
 	await scene.waitForCooksCompleted();
 	assert.ok(!scene.loadingController.isLoading());
@@ -85,7 +87,7 @@ QUnit.test('keyboard event nodes simple from document', async (assert) => {
 	});
 });
 
-QUnit.test('keyboard event nodes simple from canvas', async (assert) => {
+qUnit.test('keyboard event nodes simple from canvas', async (assert) => {
 	const scene = window.scene;
 	await scene.waitForCooksCompleted();
 	assert.ok(!scene.loadingController.isLoading());
@@ -166,3 +168,5 @@ QUnit.test('keyboard event nodes simple from canvas', async (assert) => {
 		});
 	});
 });
+
+}

@@ -1,4 +1,6 @@
-QUnit.test('obj/polarTransform simple', async (assert) => {
+import type {QUnit} from '../../../helpers/QUnit';
+export function testenginenodesobjPolarTransform(qUnit: QUnit) {
+qUnit.test('obj/polarTransform simple', async (assert) => {
 	const root = window.root;
 
 	const polarTransform = root.createNode('polarTransform');
@@ -14,3 +16,5 @@ QUnit.test('obj/polarTransform simple', async (assert) => {
 	assert.deepEqual(polarTransform.object.position.toArray(), [2, 2, 3]);
 	assert.deepEqual(polarTransform.object.rotation.toArray(), [0, 0.5 * Math.PI, 0, 'XYZ']);
 });
+
+}

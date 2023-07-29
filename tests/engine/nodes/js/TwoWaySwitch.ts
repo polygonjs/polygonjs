@@ -1,6 +1,8 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {JsConnectionPointType, BaseJsConnectionPoint} from '../../../../src/engine/nodes/utils/io/connections/Js';
+export function testenginenodesjsTwoWaySwitch(qUnit: QUnit) {
 
-QUnit.test('js/twoWaySwitch spare params are created as expected', async (assert) => {
+qUnit.test('js/twoWaySwitch spare params are created as expected', async (assert) => {
 	const geo1 = window.geo1;
 	const box1 = geo1.createNode('box');
 	const actor1 = geo1.createNode('actor');
@@ -34,3 +36,5 @@ QUnit.test('js/twoWaySwitch spare params are created as expected', async (assert
 		[JsConnectionPointType.BOOLEAN, JsConnectionPointType.FLOAT, JsConnectionPointType.FLOAT]
 	);
 });
+
+}

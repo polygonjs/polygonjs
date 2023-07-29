@@ -1,7 +1,9 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {GlRotateMode} from '../../../../src/engine/nodes/gl/Rotate';
 import {ParamType} from '../../../../src/engine/poly/ParamType';
+export function testenginenodesglRotate(qUnit: QUnit) {
 
-QUnit.test('gl rotate has his input updated when mode changes', async (assert) => {
+qUnit.test('gl rotate has his input updated when mode changes', async (assert) => {
 	const MAT = window.MAT;
 	const material_basic_builder1 = MAT.createNode('meshBasicBuilder');
 	material_basic_builder1.createNode('output');
@@ -28,7 +30,7 @@ QUnit.test('gl rotate has his input updated when mode changes', async (assert) =
 	assert.notOk(rotate1.io.inputs.input(2));
 });
 
-QUnit.test('gl rotate is created with correct defaults', async (assert) => {
+qUnit.test('gl rotate is created with correct defaults', async (assert) => {
 	const MAT = window.MAT;
 	const material_basic_builder1 = MAT.createNode('meshBasicBuilder');
 	material_basic_builder1.createNode('output');
@@ -39,3 +41,5 @@ QUnit.test('gl rotate is created with correct defaults', async (assert) => {
 	assert.deepEqual(rotate1.params.paramWithType('vector', ParamType.VECTOR3)!.valueSerialized(), [0, 0, 1]);
 	assert.deepEqual(rotate1.params.paramWithType('axis', ParamType.VECTOR3)!.valueSerialized(), [0, 1, 0]);
 });
+
+}

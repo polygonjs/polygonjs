@@ -1,4 +1,6 @@
-QUnit.test('scene callbacks can be registered/unregistered', async (assert) => {
+import type {QUnit} from '../../helpers/QUnit';
+export function testenginesceneTimeController(qUnit: QUnit) {
+qUnit.test('scene callbacks can be registered/unregistered', async (assert) => {
 	const scene = window.scene;
 	await scene.waitForCooksCompleted();
 	assert.ok(!scene.loadingController.isLoading(), 'scene is loaded');
@@ -18,3 +20,5 @@ QUnit.test('scene callbacks can be registered/unregistered', async (assert) => {
 	scene.unRegisterOnAfterTick(`OnAfterTick 9`);
 	assert.notOk(scene.registeredAfterTickCallbacks().has(`OnAfterTick 9`));
 });
+
+}

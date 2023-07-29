@@ -1,6 +1,8 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {BufferAttribute} from 'three';
+export function testenginenodessopConvexHull(qUnit: QUnit) {
 
-QUnit.test('sop/convexHull simple', async (assert) => {
+qUnit.test('sop/convexHull simple', async (assert) => {
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false); // cancels geo node displayNodeController
 
@@ -33,3 +35,5 @@ QUnit.test('sop/convexHull simple', async (assert) => {
 	transform1.p.r.y.set(45);
 	assert.equal((await _compute()).pointsCount, 84);
 });
+
+}

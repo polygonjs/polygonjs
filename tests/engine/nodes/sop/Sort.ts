@@ -1,10 +1,12 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {Object3D, Box3} from 'three';
 import {AttribClass} from '../../../../src/core/geometry/Constant';
 import {AXISES, Axis, SortMode} from '../../../../src/engine/operations/sop/Sort';
 import {SortSopNode} from '../../../../src/engine/nodes/sop/Sort';
 import {MergeSopNode} from '../../../../src/engine/nodes/sop/Merge';
+export function testenginenodessopSort(qUnit: QUnit) {
 const tmpBox = new Box3();
-QUnit.test('sop/sort simple with mesh axis', async (assert) => {
+qUnit.test('sop/sort simple with mesh axis', async (assert) => {
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false); // cancels geo node displayNodeController
 
@@ -46,7 +48,7 @@ QUnit.test('sop/sort simple with mesh axis', async (assert) => {
 	assert.in_delta((await compute()).bbox.max.y, 0.85, 0.1);
 });
 
-QUnit.test('sop/sort simple with mesh random', async (assert) => {
+qUnit.test('sop/sort simple with mesh random', async (assert) => {
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false); // cancels geo node displayNodeController
 
@@ -87,7 +89,7 @@ QUnit.test('sop/sort simple with mesh random', async (assert) => {
 	sort1.p.invert.set(true);
 	assert.deepEqual(await objectNames(), ['obj-1', 'obj-2', 'obj-0']);
 });
-QUnit.test('sop/sort simple with points axis', async (assert) => {
+qUnit.test('sop/sort simple with points axis', async (assert) => {
 	const geo1 = window.geo1;
 	geo1.flags.display.set(false); // cancels geo node displayNodeController
 
@@ -141,7 +143,7 @@ QUnit.test('sop/sort simple with points axis', async (assert) => {
 	assert.in_delta((await compute()).bbox.max.y, 0.76, 0.1);
 });
 
-QUnit.test('sop/sort objects by attributes', async (assert) => {
+qUnit.test('sop/sort objects by attributes', async (assert) => {
 	const geo1 = window.geo1;
 	const box1 = geo1.createNode('box');
 	const copy1 = geo1.createNode('copy');
@@ -190,3 +192,5 @@ QUnit.test('sop/sort objects by attributes', async (assert) => {
 	assert.deepEqual(await objectNames(merge1), ['obj-0', 'obj-1', 'obj-3', 'obj-2'], 'merge node');
 	assert.deepEqual(await objectNames(sort1), ['obj-0', 'obj-1', 'obj-2', 'obj-3'], 'sort node');
 });
+
+}

@@ -1,3 +1,4 @@
+import type {QUnit} from '../../../helpers/QUnit';
 import {BaseGlShaderAssembler} from './../../../../src/engine/nodes/gl/code/assemblers/_Base';
 import {GlConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Gl';
 import {SceneJsonExporter} from '../../../../src/engine/io/json/export/Scene';
@@ -17,11 +18,12 @@ import {MeshPhysicalBuilderMatNode} from '../../../../src/engine/nodes/mat/MeshP
 import {checkConsolePrints} from '../../../helpers/Console';
 import {GLSLHelper} from '../../../helpers/GLSLHelper';
 import {CoreSleep} from '../../../../src/core/Sleep';
+export function testenginenodesmatMeshPhysicalBuilder(qUnit: QUnit) {
 const TEST_SHADER_LIB_DEFAULT = {vert: BasicDefaultVertex, frag: BasicDefaultFragment};
 const TEST_SHADER_LIB_SSS = {vert: BasicSSSVertex, frag: BasicSSSFragment};
 const TEST_SHADER_LIB_SET_BUILDER_NODE = {vert: BasicSetBuilderNodeVertex};
 
-QUnit.test('mesh physical builder persisted_config', async (assert) => {
+qUnit.test('mesh physical builder persisted_config', async (assert) => {
 	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 	const MAT = window.MAT;
 	const mesh_physical1 = MAT.createNode('meshPhysicalBuilder');
@@ -95,7 +97,7 @@ QUnit.test('mesh physical builder persisted_config', async (assert) => {
 	RendererUtils.dispose();
 });
 
-QUnit.test('mesh physical builder persisted_config with advanced params', async (assert) => {
+qUnit.test('mesh physical builder persisted_config with advanced params', async (assert) => {
 	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 	const MAT = window.MAT;
 	const mesh_physical1 = MAT.createNode('meshPhysicalBuilder');
@@ -176,7 +178,7 @@ QUnit.test('mesh physical builder persisted_config with advanced params', async 
 	RendererUtils.dispose();
 });
 
-QUnit.test('mesh physical builder SSS Model', async (assert) => {
+qUnit.test('mesh physical builder SSS Model', async (assert) => {
 	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 	const MAT = window.MAT;
 	const mesh_physical1 = MAT.createNode('meshPhysicalBuilder');
@@ -213,7 +215,7 @@ QUnit.test('mesh physical builder SSS Model', async (assert) => {
 	RendererUtils.dispose();
 });
 
-QUnit.test('mesh physical builder can compile from another node', async (assert) => {
+qUnit.test('mesh physical builder can compile from another node', async (assert) => {
 	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 	const MAT = window.MAT;
 	const mesh_physical_SRC = MAT.createNode('meshPhysicalBuilder');
@@ -245,7 +247,7 @@ QUnit.test('mesh physical builder can compile from another node', async (assert)
 	RendererUtils.dispose();
 });
 
-QUnit.test('mat/meshPhysicalBuilder can select which customMat is created', async (assert) => {
+qUnit.test('mat/meshPhysicalBuilder can select which customMat is created', async (assert) => {
 	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 	const MAT = window.MAT;
 	const geo1 = window.geo1;
@@ -315,7 +317,7 @@ QUnit.test('mat/meshPhysicalBuilder can select which customMat is created', asyn
 	RendererUtils.dispose();
 });
 
-QUnit.test('mat/meshPhysicalBuilder override thickness and transmission', async (assert) => {
+qUnit.test('mat/meshPhysicalBuilder override thickness and transmission', async (assert) => {
 	const {renderer} = await RendererUtils.waitForRenderer(window.scene);
 	const MAT = window.MAT;
 	const geo1 = window.geo1;
@@ -382,3 +384,5 @@ QUnit.test('mat/meshPhysicalBuilder override thickness and transmission', async 
 
 	RendererUtils.dispose();
 });
+
+}
