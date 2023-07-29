@@ -43,6 +43,8 @@ class PathTracingRendererRopParamsConfig extends NodeParamsConfig {
 	realtime = ParamConfig.FOLDER();
 	/** @param display samples count */
 	displayDebug = ParamConfig.BOOLEAN(1);
+	/** @param useWorker */
+	useWorker = ParamConfig.BOOLEAN(0);
 	/** @param samples */
 	maxSamplesCount = ParamConfig.INTEGER(2 ** 12, {
 		range: [1, 2 ** 12],
@@ -245,6 +247,7 @@ export class PathTracingRendererRopNode extends TypedRopNode<PathTracingRenderer
 			maxSamplesCount: this.pv.maxSamplesCount,
 			samplesPerAnimationFrame: this.pv.samplesPerAnimationFrame,
 			f: this.pv.f,
+			useWorker: this.pv.useWorker,
 		});
 		// rendererContainer.maxSamplesCount = this.pv.maxSamplesCount;
 		// rendererContainer.samplesPerAnimationFrame = this.pv.samplesPerAnimationFrame;

@@ -67,6 +67,9 @@ export class PathTracingRenderer {
 	reset(): void;
 	dispose(): void;
 }
+export class PathTracingSceneGenerator {
+	generate: (scene: Scene) => GeneratorResult;
+}
 interface PathTracingSceneWorkerGenerateOptions {
 	onProgress: (p: number) => void;
 }
