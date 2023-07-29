@@ -8,14 +8,22 @@ import {Vector3, BufferAttribute} from 'three';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 import {PointBuilderPersistedConfig} from '../js/code/assemblers/pointBuilder/PointBuilderPersistedConfig';
 import {AssemblerName} from '../../poly/registers/assemblers/_BaseRegister';
-import {BasePointBuilderSopNode} from './_BasePointBuilder';
+import {BasePointBuilderSopNode, BasePointBuilderSopParamsConfig} from './_BasePointBuilder';
 import {CoreGeometry} from '../../../core/geometry/Geometry';
 import {PointBuilderEvaluator} from '../js/code/assemblers/pointBuilder/PointBuilderEvaluator';
 import {PointContainer} from '../js/code/assemblers/pointBuilder/PointBuilderAssemblerCommon';
 import {Object3DWithGeometry} from '../../../core/geometry/Group';
 import {Attribute} from '../../../core/geometry/Attribute';
+import {ParamConfig} from '../utils/params/ParamsConfig';
+import {isBooleanTrue} from '../../../core/Type';
 
-export class PointBuilderSopNode extends BasePointBuilderSopNode {
+class PointBuilderSopParamsConfig extends BasePointBuilderSopParamsConfig {
+	/** @param updateNormals */
+	updateNormals = ParamConfig.BOOLEAN(1);
+}
+const ParamsConfig = new PointBuilderSopParamsConfig();
+export class PointBuilderSopNode extends BasePointBuilderSopNode<PointBuilderSopParamsConfig> {
+	override paramsConfig = ParamsConfig;
 	static override type() {
 		return SopType.POINT_BUILDER;
 	}
@@ -30,10 +38,12 @@ export class PointBuilderSopNode extends BasePointBuilderSopNode {
 		normal: new Vector3(),
 		ptnum: -1,
 		objnum: -1,
+		normalsUpdated: false,
 	};
 
 	protected _processObject(inputObject: Object3DWithGeometry, objnum: number, evaluator: PointBuilderEvaluator) {
 		this._pointContainer.objnum = objnum;
+		this._pointContainer.normalsUpdated = false;
 		const geometry = inputObject.geometry;
 		const readAttributeOptions = this._checkRequiredReadAttributes(geometry);
 		const writeAttributeOptions = this._checkRequiredWriteAttributes(geometry);
@@ -84,6 +94,9 @@ export class PointBuilderSopNode extends BasePointBuilderSopNode {
 				);
 			}
 			this._writeRequiredAttributes(ptnum, writeAttribNames, writeAttributeByName);
+		}
+		if (isBooleanTrue(this.pv.updateNormals) && !this._pointContainer.normalsUpdated) {
+			geometry.computeVertexNormals();
 		}
 	}
 }

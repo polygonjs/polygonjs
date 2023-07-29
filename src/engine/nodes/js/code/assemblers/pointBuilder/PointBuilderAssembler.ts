@@ -59,6 +59,9 @@ export class JsAssemblerPointBuilder extends JsAssemblerBasePointBuilder {
 			new VariableConfig(PointVariable.POSITION, {
 				prefix: 'return ',
 			}),
+			new VariableConfig(PointVariable.NORMAL, {
+				prefix: 'return ',
+			}),
 		];
 	}
 
@@ -69,6 +72,7 @@ export class JsAssemblerPointBuilder extends JsAssemblerBasePointBuilder {
 	//
 	override setNodeLinesOutput(outputNode: OutputJsNode, linesController: JsLinesCollectionController) {
 		const inputNames = this.inputNamesForShaderName(outputNode, linesController.currentShaderName());
+		const bodyLines: string[] = [];
 		if (inputNames) {
 			for (const inputName of inputNames) {
 				const input = outputNode.io.inputs.named_input(inputName);
@@ -76,17 +80,21 @@ export class JsAssemblerPointBuilder extends JsAssemblerBasePointBuilder {
 				if (input) {
 					const varName = outputNode.variableForInput(linesController, inputName);
 
-					let bodyLine: string | undefined;
-					if (inputName == PointVariable.POSITION) {
-						bodyLine = `${PointBuilderAssemblerConstant.POSITION}.copy(${varName})`;
-					}
-
-					if (bodyLine) {
-						linesController._addBodyLines(outputNode, [bodyLine]);
+					switch (inputName) {
+						case PointVariable.POSITION: {
+							bodyLines.push(`${PointBuilderAssemblerConstant.POSITION}.copy(${varName})`);
+							break;
+						}
+						case PointVariable.NORMAL: {
+							bodyLines.push(`${PointBuilderAssemblerConstant.NORMAL}.copy(${varName})`);
+							bodyLines.push(`${PointBuilderAssemblerConstant.NORMALS_UPDATED} = true`);
+							break;
+						}
 					}
 				}
 			}
 		}
+		linesController._addBodyLines(outputNode, bodyLines);
 	}
 
 	override setNodeLinesGlobals(globalsNode: GlobalsJsNode, linesController: JsLinesCollectionController) {

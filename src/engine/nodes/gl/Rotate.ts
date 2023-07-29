@@ -10,6 +10,9 @@ import {TypedGlNode} from './_Base';
 import Quaternion from './gl/quaternion.glsl';
 import {FunctionGLDefinition} from './utils/GLDefinition';
 import {GlConnectionPointType} from '../utils/io/connections/Gl';
+import {ParamConfig, NodeParamsConfig} from '../utils/params/ParamsConfig';
+import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
+import {ThreeToGl} from '../../../core/ThreeToGl';
 
 export enum GlRotateMode {
 	AXIS = 0,
@@ -42,10 +45,6 @@ const DefaultValues: PolyDictionary<Number3> = {
 	axis: [0, 1, 0],
 };
 
-import {ParamConfig, NodeParamsConfig} from '../utils/params/ParamsConfig';
-import {ShadersCollectionController} from './code/utils/ShadersCollectionController';
-import {ThreeToGl} from '../../../core/ThreeToGl';
-
 class RotateParamsConfig extends NodeParamsConfig {
 	signature = ParamConfig.INTEGER(GlRotateMode.AXIS, {
 		menu: {
@@ -66,35 +65,34 @@ export class RotateGlNode extends TypedGlNode<RotateParamsConfig> {
 
 	override initializeNode() {
 		super.initializeNode();
-		this.io.connection_points.set_expected_input_types_function(this._expected_input_types.bind(this));
-		this.io.connection_points.set_expected_output_types_function(this._expected_output_types.bind(this));
-		this.io.connection_points.set_input_name_function(this._gl_input_name.bind(this));
+		this.io.connection_points.set_expected_input_types_function(this._expectedInputTypes.bind(this));
+		this.io.connection_points.set_expected_output_types_function(this._expectedOutputTypes.bind(this));
+		this.io.connection_points.set_input_name_function(this._expectedInputName.bind(this));
 	}
-	set_signature(mode: GlRotateMode) {
+	setSignature(mode: GlRotateMode) {
 		const index = Modes.indexOf(mode);
 		this.p.signature.set(index);
 	}
-
-	protected _gl_input_name(index: number) {
-		const mode = Modes[this.pv.signature];
-		return InputNamesByMode[mode][index];
+	mode() {
+		return Modes[this.pv.signature];
+	}
+	protected _expectedInputName(index: number) {
+		return InputNamesByMode[this.mode()][index];
 	}
 	override paramDefaultValue(name: string) {
 		return DefaultValues[name];
 	}
-	gl_method_name(): string {
-		const mode = Modes[this.pv.signature];
-		return MethodNameByMode[mode];
+	functionName(): string {
+		return MethodNameByMode[this.mode()];
 	}
 
-	protected _expected_input_types() {
-		const mode = Modes[this.pv.signature];
-		return InputTypesByMode[mode];
+	protected _expectedInputTypes() {
+		return InputTypesByMode[this.mode()];
 	}
-	protected _expected_output_types() {
+	protected _expectedOutputTypes() {
 		return [GlConnectionPointType.VEC3];
 	}
-	gl_function_definitions() {
+	functionDefinitions() {
 		// const type = this._expected_output_types()[0];
 		// do not use type from the output, as there seem to always be a def somewhere
 		// TODO: I probably don't need a data type in FunctionGLDefinition
@@ -111,8 +109,8 @@ export class RotateGlNode extends TypedGlNode<RotateParamsConfig> {
 		const joined_args = args.join(', ');
 
 		const sum = this.glVarName(this.io.connection_points.output_name(0));
-		const body_line = `${var_type} ${sum} = ${this.gl_method_name()}(${joined_args})`;
+		const body_line = `${var_type} ${sum} = ${this.functionName()}(${joined_args})`;
 		shaders_collection_controller.addBodyLines(this, [body_line]);
-		shaders_collection_controller.addDefinitions(this, this.gl_function_definitions());
+		shaders_collection_controller.addDefinitions(this, this.functionDefinitions());
 	}
 }

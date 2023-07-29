@@ -229,6 +229,7 @@ import {RayIntersectsPlaneJsNode} from '../../../nodes/js/RayIntersectsPlane';
 import {RayIntersectSphereJsNode} from '../../../nodes/js/RayIntersectSphere';
 import {RayIntersectsSphereJsNode} from '../../../nodes/js/RayIntersectsSphere';
 import {RenderPixelJsNode} from '../../../nodes/js/RenderPixel';
+import {RotateJsNode} from '../../../nodes/js/Rotate';
 import {RoundJsNode} from '../../../nodes/js/Round';
 import {SDF2DBoxJsNode} from '../../../nodes/js/SDF2DBox';
 import {SDF2DCircleJsNode} from '../../../nodes/js/SDF2DCircle';
@@ -573,6 +574,7 @@ export interface JsNodeChildrenMap {
 	rayIntersectSphere: RayIntersectSphereJsNode;
 	rayIntersectsSphere: RayIntersectsSphereJsNode;
 	renderPixel: RenderPixelJsNode;
+	rotate: RotateJsNode;
 	round: RoundJsNode;
 	SDF2DBox: SDF2DBoxJsNode;
 	SDF2DCircle: SDF2DCircleJsNode;
@@ -974,6 +976,7 @@ export class JsRegister {
 		poly.registerNode(RayIntersectSphereJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(RayIntersectsSphereJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(RenderPixelJsNode, CATEGORY_JS.ADVANCED, ONLY_ACTOR);
+		poly.registerNode(RotateJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(RoundJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(SDF2DBoxJsNode, CATEGORY_JS.SDF_PRIMITIVES_2D);
 		poly.registerNode(SDF2DCircleJsNode, CATEGORY_JS.SDF_PRIMITIVES_2D);

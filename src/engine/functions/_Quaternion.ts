@@ -36,3 +36,19 @@ export class quaternionSlerp extends NamedFunction4<[Quaternion, Quaternion, num
 		return target;
 	}
 }
+export class rotateWithAxisAngle extends NamedFunction4<[Vector3, Vector3, number, Vector3]> {
+	static override type() {
+		return 'rotateWithAxisAngle';
+	}
+	func(vector: Vector3, axis: Vector3, angle: number, target: Vector3): Vector3 {
+		return target.copy(vector).applyAxisAngle(axis, angle);
+	}
+}
+export class rotateWithQuaternion extends NamedFunction3<[Vector3, Quaternion, Vector3]> {
+	static override type() {
+		return 'rotateWithQuaternion';
+	}
+	func(vector: Vector3, quat: Quaternion, target: Vector3): Vector3 {
+		return target.copy(vector).applyQuaternion(quat);
+	}
+}

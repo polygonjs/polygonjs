@@ -369,6 +369,8 @@ import { rayIntersectsPlane } from "../../../functions/rayIntersectsPlane";
 import { rayIntersectsSphere } from "../../../functions/rayIntersectsSphere";
 import { raySet } from "../../../functions/raySet";
 import { renderPixel } from "../../../functions/renderPixel";
+import { rotateWithAxisAngle } from "../../../functions/rotateWithAxisAngle";
+import { rotateWithQuaternion } from "../../../functions/rotateWithQuaternion";
 import { SDF2DBox } from "../../../functions/SDF2DBox";
 import { SDF2DCircle } from "../../../functions/SDF2DCircle";
 import { SDF2DCross } from "../../../functions/SDF2DCross";
@@ -864,6 +866,8 @@ export interface NamedFunctionMap {
 	rayIntersectsSphere: rayIntersectsSphere;
 	raySet: raySet;
 	renderPixel: renderPixel;
+	rotateWithAxisAngle: rotateWithAxisAngle;
+	rotateWithQuaternion: rotateWithQuaternion;
 	SDF2DBox: SDF2DBox;
 	SDF2DCircle: SDF2DCircle;
 	SDF2DCross: SDF2DCross;
@@ -1362,6 +1366,8 @@ export class AllNamedFunctionRegister {
 			rayIntersectsSphere,
 			raySet,
 			renderPixel,
+			rotateWithAxisAngle,
+			rotateWithQuaternion,
 			SDF2DBox,
 			SDF2DCircle,
 			SDF2DCross,

@@ -259,6 +259,7 @@ import {testenginenodesjsRayIntersectsObject} from './engine/nodes/js/RayInterse
 import {testenginenodesjsRayIntersectsPlane} from './engine/nodes/js/RayIntersectsPlane';
 import {testenginenodesjsRayIntersectsSphere} from './engine/nodes/js/RayIntersectsSphere';
 import {testenginenodesjsRenderPixel} from './engine/nodes/js/RenderPixel';
+import {testenginenodesjsRotate} from './engine/nodes/js/Rotate';
 import {testenginenodesjsSetCSSObjectClass} from './engine/nodes/js/SetCSSObjectClass';
 import {testenginenodesjsSetGeometryPositions} from './engine/nodes/js/SetGeometryPositions';
 import {testenginenodesjsSetMaterialColor} from './engine/nodes/js/SetMaterialColor';
@@ -820,6 +821,7 @@ export function testPolygonjs(qUnit: QUnit) {
 	testenginenodesjsRayIntersectsPlane(qUnit);
 	testenginenodesjsRayIntersectsSphere(qUnit);
 	testenginenodesjsRenderPixel(qUnit);
+	testenginenodesjsRotate(qUnit);
 	testenginenodesjsSetCSSObjectClass(qUnit);
 	testenginenodesjsSetGeometryPositions(qUnit);
 	testenginenodesjsSetMaterialColor(qUnit);

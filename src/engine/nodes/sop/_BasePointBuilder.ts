@@ -41,17 +41,14 @@ type PointFunction = Function; //(object:Object3D)=>Object3D
 type AttributeItem = boolean | number | string | Color | Vector2 | Vector3 | Vector4;
 type AttributesDict = Map<string, AttributeItem>;
 
-class PointBuilderSopParamsConfig extends NodeParamsConfig {
+export class BasePointBuilderSopParamsConfig extends NodeParamsConfig {
 	/** @param group to assign the material to */
 	group = ParamConfig.STRING('', {
 		objectMask: true,
 	});
 }
-const ParamsConfig = new PointBuilderSopParamsConfig();
 
-export abstract class BasePointBuilderSopNode extends TypedSopNode<PointBuilderSopParamsConfig> {
-	override paramsConfig = ParamsConfig;
-
+export abstract class BasePointBuilderSopNode<P extends BasePointBuilderSopParamsConfig> extends TypedSopNode<P> {
 	assemblerController() {
 		return this._assemblerController;
 	}

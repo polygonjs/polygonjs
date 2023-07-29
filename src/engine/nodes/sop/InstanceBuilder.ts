@@ -8,14 +8,16 @@ import {Vector3, Quaternion, BufferAttribute} from 'three';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 import {InstanceBuilderPersistedConfig} from '../js/code/assemblers/instanceBuilder/InstanceBuilderPersistedConfig';
 import {AssemblerName} from '../../poly/registers/assemblers/_BaseRegister';
-import {BasePointBuilderSopNode} from './_BasePointBuilder';
+import {BasePointBuilderSopNode, BasePointBuilderSopParamsConfig} from './_BasePointBuilder';
 import {PointBuilderEvaluator} from '../js/code/assemblers/pointBuilder/PointBuilderEvaluator';
 import {InstanceContainer} from '../js/code/assemblers/instanceBuilder/InstanceBuilderAssemblerCommon';
 import {CoreGeometry} from '../../../core/geometry/Geometry';
 import {Object3DWithGeometry} from '../../../core/geometry/Group';
 import {InstanceAttrib} from '../../../core/geometry/Instancer';
 
-export class InstanceBuilderSopNode extends BasePointBuilderSopNode {
+const ParamsConfig = new BasePointBuilderSopParamsConfig();
+export class InstanceBuilderSopNode extends BasePointBuilderSopNode<BasePointBuilderSopParamsConfig> {
+	override paramsConfig = ParamsConfig;
 	static override type() {
 		return SopType.INSTANCE_BUILDER;
 	}

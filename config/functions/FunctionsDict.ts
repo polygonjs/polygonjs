@@ -362,7 +362,14 @@ export const FUNCTION_NAME_BY_FILE_NAME: Record<string, string[]> = {
 		'previousValueVector3',
 		'previousValueVector4',
 	],
-	Quaternion: ['quaternionSetFromEuler', 'quaternionSetFromAxisAngle', 'quaternionAngleTo', 'quaternionSlerp'],
+	Quaternion: [
+		'quaternionSetFromEuler',
+		'quaternionSetFromAxisAngle',
+		'quaternionAngleTo',
+		'quaternionSlerp',
+		'rotateWithAxisAngle',
+		'rotateWithQuaternion',
+	],
 	Ray: [
 		'raySet',
 		'rayFromCamera',
