@@ -120,9 +120,6 @@ export class MatRegister {
 		poly.registerNode(MeshToonBuilderMatNode, CATEGORY_MAT.ADVANCED);
 		poly.registerNode(PointsMatNode, CATEGORY_MAT.POINTS);
 		poly.registerNode(PointsBuilderMatNode, CATEGORY_MAT.ADVANCED);
-		// if (process.env.NODE_ENV == 'development') {
-		// 	poly.registerNode(RayMarchingMatNode, CATEGORY_MAT.ADVANCED);
-		// }
 		poly.registerNode(RayMarchingBuilderMatNode, CATEGORY_MAT.ADVANCED);
 		poly.registerNode(ShadowMatNode, CATEGORY_MAT.ADVANCED);
 		poly.registerNode(SkyMatNode, CATEGORY_MAT.MESH);

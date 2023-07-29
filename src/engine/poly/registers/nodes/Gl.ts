@@ -191,6 +191,8 @@ import {VaryingWriteGlNode} from '../../../nodes/gl/VaryingWrite';
 import {VaryingReadGlNode} from '../../../nodes/gl/VaryingRead';
 import {VectorAlignGlNode} from '../../../nodes/gl/VectorAlign';
 import {VectorAngleGlNode} from '../../../nodes/gl/VectorAngle';
+import {VertexAnimationTextureGlNode} from '../../../nodes/gl/VertexAnimationTexture';
+import {VertexAnimationTextureInterpolatedGlNode} from '../../../nodes/gl/VertexAnimationTextureInterpolated';
 import {WavesGlNode} from '../../../nodes/gl/Waves';
 // networks
 // import {ActorsNetworkGlNode} from '../../../nodes/gl/ActorsNetwork';
@@ -389,6 +391,8 @@ export interface GlNodeChildrenMap {
 	vec4ToVec3: Vec4ToVec3GlNode;
 	vectorAlign: VectorAlignGlNode;
 	vectorAngle: VectorAngleGlNode;
+	vertexAnimationTexture: VertexAnimationTextureGlNode;
+	vertexAnimationTextureInterpolated: VertexAnimationTextureInterpolatedGlNode;
 	waves: WavesGlNode;
 	// networks
 	// actorsNetwork: ActorsNetworkGlNode;
@@ -609,9 +613,10 @@ export class GlRegister {
 		poly.registerNode(Vec4ToVec3GlNode, CATEGORY_GL.CONVERSION);
 		poly.registerNode(VectorAlignGlNode, CATEGORY_GL.GEOMETRY);
 		poly.registerNode(VectorAngleGlNode, CATEGORY_GL.GEOMETRY);
+		poly.registerNode(VertexAnimationTextureGlNode, CATEGORY_GL.ADVANCED);
+		if (process.env.NODE_ENV == 'development') {
+			poly.registerNode(VertexAnimationTextureInterpolatedGlNode, CATEGORY_GL.ADVANCED);
+		}
 		poly.registerNode(WavesGlNode, CATEGORY_GL.GEOMETRY);
-		// networks
-		// poly.registerNode(ActorsNetworkGlNode, CATEGORY_GL.NETWORK);
-		// poly.registerNode(MaterialsNetworkGlNode, CATEGORY_GL.NETWORK);
 	}
 }

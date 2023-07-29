@@ -59,4 +59,6 @@ export enum GlType {
 	TEXTURE_SDF = 'textureSDF',
 	VARYING_READ = 'varyingRead',
 	VARYING_WRITE = 'varyingWrite',
+	VERTEX_ANIMATION_TEXTURE = 'vertexAnimationTexture',
+	VERTEX_ANIMATION_TEXTURE_INTERPOLATED = 'vertexAnimationTextureInterpolated',
 }

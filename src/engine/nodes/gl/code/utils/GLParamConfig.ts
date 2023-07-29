@@ -1,15 +1,10 @@
-import {Vector4} from 'three';
-import {Vector3} from 'three';
-import {Vector2} from 'three';
-import {Color} from 'three';
+import {IUniform, Color, Vector2, Vector3, Vector4} from 'three';
 import {ParamType} from '../../../../poly/ParamType';
 import {ParamInitValuesTypeMap} from '../../../../params/types/ParamInitValuesTypeMap';
 import {BaseNodeType} from '../../../_Base';
 import {BaseParamType} from '../../../../params/_Base';
 import {TypeAssert} from '../../../../poly/Assert';
-import {IUniform} from 'three';
 import {RampParam} from '../../../../params/Ramp';
-// import {OperatorPathParam} from '../../../../params/OperatorPath';
 import {BaseParamConfig} from '../../../utils/code/configs/BaseParamConfig';
 import {NodePathParam} from '../../../../params/NodePath';
 import {NodeContext} from '../../../../poly/NodeContext';
