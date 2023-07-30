@@ -165,6 +165,7 @@ export enum SopType {
 	SET_CHILDREN = 'setChildren',
 	SET_GEOMETRY = 'setGeometry',
 	SHEAR = 'shear',
+	SHORTEST_PATH = 'shortestPath',
 	SKELETON_HELPER = 'skeletonHelper',
 	SKIN = 'skin',
 	SORT = 'sort',

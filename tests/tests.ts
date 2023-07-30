@@ -529,6 +529,7 @@ import {testenginenodessopSDFBuilder} from './engine/nodes/sop/SDFBuilder';
 import {testenginenodessopSetChildren} from './engine/nodes/sop/SetChildren';
 import {testenginenodessopSetGeometry} from './engine/nodes/sop/SetGeometry';
 import {testenginenodessopShear} from './engine/nodes/sop/Shear';
+import {testenginenodessopShortestPath} from './engine/nodes/sop/ShortestPath';
 import {testenginenodessopSkin} from './engine/nodes/sop/Skin';
 import {testenginenodessopSolver} from './engine/nodes/sop/Solver';
 import {testenginenodessopSort} from './engine/nodes/sop/Sort';
@@ -1092,6 +1093,7 @@ export function testPolygonjs(qUnit: QUnit) {
 	testenginenodessopSetChildren(qUnit);
 	testenginenodessopSetGeometry(qUnit);
 	testenginenodessopShear(qUnit);
+	testenginenodessopShortestPath(qUnit);
 	testenginenodessopSkin(qUnit);
 	testenginenodessopSolver(qUnit);
 	testenginenodessopSort(qUnit);

@@ -249,6 +249,7 @@ import {SDFBuilderSopNode} from '../../../nodes/sop/SDFBuilder';
 import {SetChildrenSopNode} from '../../../nodes/sop/SetChildren';
 import {SetGeometrySopNode} from '../../../nodes/sop/SetGeometry';
 import {ShearSopNode} from '../../../nodes/sop/Shear';
+import {ShortestPathSopNode} from '../../../nodes/sop/ShortestPath';
 import {SkeletonHelperSopNode} from '../../../nodes/sop/SkeletonHelper';
 import {SkinSopNode} from '../../../nodes/sop/Skin';
 import {SortSopNode} from '../../../nodes/sop/Sort';
@@ -547,6 +548,7 @@ export interface GeoNodeChildrenMap {
 	setChildren: SetChildrenSopNode;
 	setGeometry: SetGeometrySopNode;
 	shear: ShearSopNode;
+	shortestPath: ShortestPathSopNode;
 	skin: SkinSopNode;
 	skeletonHelper: SkeletonHelperSopNode;
 	solver: SolverSopNode;
@@ -1075,6 +1077,7 @@ export class SopRegister {
 		poly.registerNode(SkeletonHelperSopNode, CATEGORY_SOP.HELPERS);
 		poly.registerNode(SkinSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(ShearSopNode, CATEGORY_SOP.MODIFIER);
+		poly.registerNode(ShortestPathSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(SolverSopNode, CATEGORY_SOP.ADVANCED);
 		poly.registerNode(SolverPreviousFrameSopNode, CATEGORY_SOP.ADVANCED);
 		poly.registerNode(SortSopNode, CATEGORY_SOP.MODIFIER);
