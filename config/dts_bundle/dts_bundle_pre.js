@@ -1,13 +1,14 @@
 "use strict";
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", { value: true });
 var fs = require("fs");
 var path = require("path");
 var walk_1 = require("../common/walk");
 var common_1 = require("./common");
 var TS_IGNORE = '// @ts-ignore';
 function copyMissingDtsFiles() {
-    fs.copyFileSync(path.join(common_1.polygonjsRoot, 'src/engine/nodes/sop/utils/ParticlesSystemGPU/GPUComputationRenderer.d.ts'), path.join(common_1.polygonjsDist, 'src/engine/nodes/sop/utils/ParticlesSystemGPU/GPUComputationRenderer.d.ts'));
     fs.copyFileSync(path.join(common_1.polygonjsRoot, 'src/core/particles/gpuCompute/GPUComputationRenderer.d.ts'), path.join(common_1.polygonjsDist, 'src/core/particles/gpuCompute/GPUComputationRenderer.d.ts'));
+    fs.copyFileSync(path.join(common_1.polygonjsRoot, 'src/core/render/PBR/three-gpu-pathtracer.d.ts'), path.join(common_1.polygonjsDist, 'src/core/render/PBR/three-gpu-pathtracer.d.ts'));
+    fs.copyFileSync(path.join(common_1.polygonjsRoot, 'src/core/render/post/n8ao.d.ts'), path.join(common_1.polygonjsDist, 'src/core/render/post/n8ao.d.ts'));
     // fs.copyFileSync(
     // 	path.join(polygonjsRoot, 'src/core/geometry/cad/build/polygonjs-occt.d.ts'),
     // 	path.join(polygonjsDist, 'src/core/geometry/cad/build/polygonjs-occt.d.ts')

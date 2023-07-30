@@ -3,30 +3,10 @@
  *
  *
  */
-import type {Color} from 'three';
 import {TypedPostNode, TypedPostNodeContext, PostParamOptions} from './_Base';
 import {Pass} from 'postprocessing';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-// @ts-ignore
-import {N8AOPostPass} from 'n8ao';
-
-interface N8AOPostPass extends Pass {
-	configuration: {
-		aoSamples: number;
-		aoRadius: number;
-		distanceFalloff: number;
-		intensity: number;
-		color: Color;
-		denoiseSamples: number;
-		denoiseRadius: number;
-		denoiseIterations: number;
-		logarithmicDepthBuffer: boolean;
-		screenSpaceRadius: boolean;
-		halfRef: boolean;
-		depthAwareUpsampling: boolean;
-	};
-	setDisplayMode: (mode: DisplayMode) => void;
-}
+import {N8AOPostPass} from '../../../core/render/post/n8ao';
 
 enum DisplayMode {
 	COMBINED = 'Combined',
