@@ -45,19 +45,33 @@ void main() {
 
 	// vertex position
 	vec3 p0 = packPosition( uv );
+	float count = 0.0;
 
 	// adjacent vertices positions
-	vec3 p1 = packPosition( getUV( adjacentA.x ) );
-	vec3 p2 = packPosition( getUV( adjacentA.y ) );
-	vec3 p3 = packPosition( getUV( adjacentA.z ) );
-	vec3 p4 = packPosition( getUV( adjacentA.w ) );
-
-	// spring-based displacement
-	displacement += getDisplacement( p0, p1, distancesA.x );
-	displacement += getDisplacement( p0, p2, distancesA.y );
-	displacement += getDisplacement( p0, p3, distancesA.z );
-	displacement += getDisplacement( p0, p4, distancesA.w );
-	float count = 4.0;
+	float Ax = adjacentA.x;
+	if( Ax >= 0.0 ){
+		vec3 p1 = packPosition( getUV( Ax ) );
+		displacement += getDisplacement( p0, p1, distancesA.x );
+		count += 1.0;
+	}
+	float Ay = adjacentA.y;
+	if( Ay >= 0.0 ){
+		vec3 p2 = packPosition( getUV( adjacentA.y ) );
+		displacement += getDisplacement( p0, p2, distancesA.y );
+		count += 1.0;
+	}
+	float Az = adjacentA.z;
+	if( Az >= 0.0 ){
+		vec3 p3 = packPosition( getUV( adjacentA.z ) );
+		displacement += getDisplacement( p0, p3, distancesA.z );
+		count += 1.0;
+	}
+	float Aw = adjacentA.w;
+	if( Aw >= 0.0 ){
+		vec3 p4 = packPosition( getUV( adjacentA.w ) );
+		displacement += getDisplacement( p0, p4, distancesA.w );
+		count += 1.0;
+	}
 
 	float Bx = adjacentB.x;
 	if( Bx >= 0.0 ){
