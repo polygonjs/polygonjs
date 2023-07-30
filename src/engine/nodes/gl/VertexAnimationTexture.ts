@@ -1,3 +1,11 @@
+/**
+ * reads a vertex animation texture
+ *
+ *
+ *
+ *
+ */
+
 import {TypedGlNode} from './_Base';
 import {ThreeToGl} from '../../../core/ThreeToGl';
 import VERTEX_ANIMATION_TEXTURE from './gl/vertexAnimationTexture.glsl';
