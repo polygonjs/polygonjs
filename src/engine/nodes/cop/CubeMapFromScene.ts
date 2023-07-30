@@ -76,6 +76,10 @@ export class CubeMapFromSceneCopNode extends TypedCopNode<CubeMapFromSceneCopPar
 			setTimeout(this._cookMainWithoutInputsWhenDirtyBound, 0);
 		});
 	}
+	override dispose() {
+		this._pmremGenerator?.dispose();
+		super.dispose();
+	}
 
 	override createNode<S extends keyof GeoNodeChildrenMap>(
 		node_class: S,
@@ -110,6 +114,7 @@ export class CubeMapFromSceneCopNode extends TypedCopNode<CubeMapFromSceneCopPar
 	}
 
 	override async cook() {
+		await this._updateRenderScene();
 		const texture = await this._renderCubeMap();
 		if (!texture) {
 			this.cookController.endCook();
@@ -117,12 +122,11 @@ export class CubeMapFromSceneCopNode extends TypedCopNode<CubeMapFromSceneCopPar
 	}
 
 	private _renderScene = new Scene();
-	private async _renderCubeMap(): Promise<Texture | undefined> {
+	private _pmremGenerator: PMREMGenerator | undefined;
+	private async _updateRenderScene() {
 		if (!this.scene().loadingController.autoUpdating()) {
 			return;
 		}
-
-		this._rendererController = this._rendererController || new CopRendererController(this);
 		const displayNode = this.displayNodeController.displayNode();
 		if (!displayNode) {
 			return;
@@ -140,6 +144,22 @@ export class CubeMapFromSceneCopNode extends TypedCopNode<CubeMapFromSceneCopPar
 			return;
 		}
 
+		const currentChildren = [...this._renderScene.children];
+		for (const child of currentChildren) {
+			this._renderScene.remove(child);
+		}
+		const objects = coreGroup.threejsObjects();
+		for (const object of objects) {
+			this._renderScene.add(object);
+		}
+	}
+	private async _renderCubeMap(): Promise<Texture | undefined> {
+		if (!this.scene().loadingController.autoUpdating()) {
+			return;
+		}
+
+		this._rendererController = this._rendererController || new CopRendererController(this);
+
 		const renderer = await this._rendererController.waitForRenderer();
 
 		if (!renderer) {
@@ -151,22 +171,13 @@ export class CubeMapFromSceneCopNode extends TypedCopNode<CubeMapFromSceneCopPar
 			return;
 		}
 
-		const currentChildren = [...this._renderScene.children];
-		for (const child of currentChildren) {
-			this._renderScene.remove(child);
-		}
-		const objects = coreGroup.threejsObjects();
-		for (const object of objects) {
-			this._renderScene.add(object);
-		}
-		const pmremGenerator = new PMREMGenerator(renderer);
-		this._lastGeneratedRenderTarget = pmremGenerator.fromScene(
+		this._pmremGenerator = this._pmremGenerator || new PMREMGenerator(renderer);
+		this._lastGeneratedRenderTarget = this._pmremGenerator.fromScene(
 			this._renderScene,
 			this.pv.blur,
 			this.pv.near,
 			this.pv.far
 		);
-		pmremGenerator.dispose();
 		this.setTexture(this._lastGeneratedRenderTarget.texture);
 		return this._lastGeneratedRenderTarget.texture;
 	}
