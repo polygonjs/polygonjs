@@ -7,6 +7,8 @@ import {ParamJsonExporterData} from '../../../nodes/utils/io/IOController';
 import {ParamType} from '../../../poly/ParamType';
 import {BaseConnectionPointData} from '../../../nodes/utils/io/connections/_Base';
 import {sanitizeExportedString} from './sanitize';
+import {isString} from '../../../../core/Type';
+import {VelocityColliderFunctionBody} from '../../../nodes/js/code/assemblers/_Base';
 
 // revert to using index instead of name
 // for gl nodes such as the if node, whose input names
@@ -54,7 +56,7 @@ export interface NodeJsonExporterUIData {
 	nodes?: PolyDictionary<NodeJsonExporterUIData>;
 }
 export type NodeJSONShadersData = PolyDictionary<PolyDictionary<string>>;
-export type NodeJSONFunctionBodiesData = PolyDictionary<string>;
+export type NodeJSONFunctionBodiesData = PolyDictionary<string | PolyDictionary<string>>;
 
 type BaseNodeTypeWithIO = TypedNode<NodeContext, any>;
 
@@ -235,10 +237,25 @@ export class NodeJsonExporter<T extends BaseNodeTypeWithIO> {
 			if (persisted_config_data) {
 				if (persisted_config_data.shaders) {
 					shadersData[this._node.path()] = persisted_config_data.shaders;
+					return;
 				}
-				if (persisted_config_data.functionBody) {
-					jsFunctionBodiesData[this._node.path()] = persisted_config_data.functionBody;
+				if (persisted_config_data.functionBody != null) {
+					if (isString(persisted_config_data.functionBody)) {
+						jsFunctionBodiesData[this._node.path()] = persisted_config_data.functionBody;
+						return;
+					} else {
+						const dict: Record<string, string> = {};
+						const keys = Object.keys(persisted_config_data.functionBody) as Array<
+							keyof VelocityColliderFunctionBody
+						>;
+						for (let key of keys) {
+							dict[key] = persisted_config_data.functionBody[key];
+						}
+						jsFunctionBodiesData[this._node.path()] = dict;
+						return;
+					}
 				}
+				console.warn(`persisted config data not handled`, persisted_config_data);
 			}
 		}
 	}

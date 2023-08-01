@@ -329,4 +329,25 @@ export function testenginenodessopActor(qUnit: QUnit) {
 		const functionNodeNames = Object.keys(data.jsFunctionBodies || {});
 		assert.deepEqual(functionNodeNames, [actor1.path()], 'actor is saved');
 	});
+	qUnit.test('sop/actor persisted config is saved without requiring scene play nor display flag', async (assert) => {
+		const scene = window.scene;
+		// const perspective_camera1 = window.perspective_camera1;
+		const geo1 = window.geo1;
+		const box1 = geo1.createNode('box');
+		const actor1 = geo1.createNode('actor');
+		const null1 = geo1.createNode('null');
+
+		actor1.setInput(0, box1);
+		null1.setInput(0, actor1);
+		box1.flags.display.set(true);
+
+		const onObjectClick1 = actor1.createNode('onObjectClick');
+		const setObjectPosition = actor1.createNode('setObjectPosition');
+		setObjectPosition.setInput(0, onObjectClick1);
+
+		const data = await new SceneJsonExporter(scene).data();
+		assert.ok(data);
+		const functionNodeNames = Object.keys(data.jsFunctionBodies || {});
+		assert.deepEqual(functionNodeNames, [actor1.path()], 'actor is saved');
+	});
 }

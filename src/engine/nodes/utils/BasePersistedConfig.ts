@@ -26,6 +26,7 @@ import {
 	LineDashedMaterial,
 	LineBasicMaterial,
 } from 'three';
+import {VelocityColliderFunctionBody} from '../js/code/assemblers/_Base';
 
 function MonkeyPatchMaterial() {
 	const materialLib = {
@@ -68,7 +69,7 @@ export interface PersistedConfigWithShaders extends DataObjectWithoutShaders {
 	// when a particle system is saved without having been computed
 	// it will not have shaders, and this can therefore be undefined
 	shaders?: PolyDictionary<string>;
-	functionBody?: string;
+	functionBody?: string | VelocityColliderFunctionBody;
 }
 const ENTRY_NAMES_TO_REMOVE: Set<string> = new Set(['shaders', 'functionBody']);
 export abstract class BasePersistedConfig {

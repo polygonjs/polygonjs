@@ -309,15 +309,8 @@ export class TetSoftBodySolverSopNode extends TetSopNode<TetSoftBodySolverSopPar
 	updateFromFunctionData(functionData: VelocityColliderFunctionData) {
 		this._functionData = functionData;
 
-		const {
-			functionBodyVelocity,
-			functionBodyCollider,
-			variableNames,
-			variablesByName,
-			functionNames,
-			functionsByName,
-			paramConfigs,
-		} = this._functionData;
+		const {functionBody, variableNames, variablesByName, functionNames, functionsByName, paramConfigs} =
+			this._functionData;
 
 		const _createFunctionArgs = (functionBody: string, type: FunctionType) => {
 			const wrappedBody = `
@@ -374,8 +367,8 @@ export class TetSoftBodySolverSopNode extends TetSopNode<TetSoftBodySolverSopPar
 				this.states.error.set('failed to compile');
 			}
 		};
-		_createFunctionArgs(functionBodyVelocity, 'velocity');
-		_createFunctionArgs(functionBodyCollider, 'collider');
+		_createFunctionArgs(functionBody.velocity, 'velocity');
+		_createFunctionArgs(functionBody.collider, 'collider');
 	}
 
 	functionEvalArgsWithParamConfigs() {

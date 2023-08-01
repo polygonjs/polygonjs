@@ -32,7 +32,7 @@ export class ActorPersistedConfig extends BasePersistedConfig {
 	override async toData(): Promise<ActorPersistedConfigBaseJsData | undefined> {
 		// we need to compute the node here it case it hasn't yet,
 		// otherwise the .functionData() will be empty
-		await this.node.compute();
+		await this.node.compile();
 		//
 		const assemblerController = this.node.assemblerController();
 		if (!assemblerController) {

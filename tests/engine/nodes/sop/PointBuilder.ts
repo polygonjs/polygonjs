@@ -9,6 +9,8 @@ import {AssemblersUtils} from '../../../helpers/AssemblersUtils';
 import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Js';
 import {AttributeJsNodeOutput} from '../../../../src/engine/nodes/js/Attribute';
 import {JsRotateMode} from '../../../../src/engine/nodes/js/Rotate';
+import {RendererUtils} from '../../../helpers/RendererUtils';
+import {CoreSleep} from '../../../../src/core/Sleep';
 export function testenginenodessopPointBuilder(qUnit: QUnit) {
 	const bbox = new Box3();
 	const size = new Vector3();
@@ -275,4 +277,76 @@ export function testenginenodessopPointBuilder(qUnit: QUnit) {
 		output.setInput('normal', constant1);
 		assert.deepEqual((await _compute()).midNormal.toArray().map(_precision), [0, 1, 0], 'mid normal up');
 	});
+
+	function _prepareForSave(pointBuilder1: PointBuilderSopNode) {
+		const globals = pointBuilder1.createNode('globals');
+		const output = pointBuilder1.createNode('output');
+		const rotate1 = pointBuilder1.createNode('rotate');
+		const quaternion1 = pointBuilder1.createNode('quaternion');
+
+		output.setInput('position', rotate1);
+		rotate1.setMode(JsRotateMode.QUAT);
+		rotate1.setInput(JsConnectionPointType.VECTOR3, globals, 'position');
+		rotate1.setInput(JsConnectionPointType.QUATERNION, quaternion1);
+		quaternion1.p.angle.set(0);
+	}
+
+	qUnit.test('sop/pointBuilder persisted config is saved after scene play', async (assert) => {
+		const scene = window.scene;
+		const perspective_camera1 = window.perspective_camera1;
+		const geo1 = window.geo1;
+		const box1 = geo1.createNode('box');
+		const pointBuilder1 = geo1.createNode('pointBuilder');
+
+		pointBuilder1.setInput(0, box1);
+		pointBuilder1.flags.display.set(true);
+
+		_prepareForSave(pointBuilder1);
+
+		await RendererUtils.withViewer({cameraNode: perspective_camera1}, async (args) => {
+			scene.play();
+			await CoreSleep.sleep(100);
+
+			const data = await new SceneJsonExporter(scene).data();
+			assert.ok(data);
+			const functionNodeNames = Object.keys(data.jsFunctionBodies || {});
+			assert.deepEqual(functionNodeNames, [pointBuilder1.path()], 'actor is saved');
+		});
+		RendererUtils.dispose();
+	});
+	qUnit.test('sop/pointBuilder persisted config is saved without requiring scene play', async (assert) => {
+		const scene = window.scene;
+		const geo1 = window.geo1;
+		const box1 = geo1.createNode('box');
+		const pointBuilder1 = geo1.createNode('pointBuilder');
+
+		pointBuilder1.setInput(0, box1);
+		pointBuilder1.flags.display.set(true);
+
+		_prepareForSave(pointBuilder1);
+
+		const data = await new SceneJsonExporter(scene).data();
+		assert.ok(data);
+		const functionNodeNames = Object.keys(data.jsFunctionBodies || {});
+		assert.deepEqual(functionNodeNames, [pointBuilder1.path()], 'actor is saved');
+	});
+	qUnit.test(
+		'sop/pointBuilder persisted config is saved without requiring scene play nor display flag',
+		async (assert) => {
+			const scene = window.scene;
+			const geo1 = window.geo1;
+			const box1 = geo1.createNode('box');
+			const pointBuilder1 = geo1.createNode('pointBuilder');
+
+			pointBuilder1.setInput(0, box1);
+			box1.flags.display.set(true);
+
+			_prepareForSave(pointBuilder1);
+
+			const data = await new SceneJsonExporter(scene).data();
+			assert.ok(data);
+			const functionNodeNames = Object.keys(data.jsFunctionBodies || {});
+			assert.deepEqual(functionNodeNames, [pointBuilder1.path()], 'actor is saved');
+		}
+	);
 }

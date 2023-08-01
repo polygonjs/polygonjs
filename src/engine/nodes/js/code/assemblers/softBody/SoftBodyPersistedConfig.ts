@@ -1,5 +1,5 @@
 import {BasePersistedConfig} from '../../../../utils/BasePersistedConfig';
-import {VelocityColliderFunctionData} from '../_Base';
+import {VelocityColliderFunctionBody, VelocityColliderFunctionData} from '../_Base';
 import {SerializedVariable, SerializedVariableType} from '../_BaseJsPersistedConfigUtils';
 import {TetSoftBodySolverSopNode} from '../../../../sop/TetSoftBodySolver';
 import {NamedFunctionMap} from '../../../../../poly/registers/functions/All';
@@ -13,8 +13,7 @@ import {
 } from '../_BaseJsPersistedConfig';
 
 export interface SoftBodyPersistedConfigBaseJsData extends PersistedConfigBaseJsData {
-	functionBodyCollider: string;
-	functionBodyVelocity: string;
+	functionBody: VelocityColliderFunctionBody;
 	variableNames: string[];
 	variables: SerializedVariable<SerializedVariableType>[];
 	functionNames: Array<keyof NamedFunctionMap>;
@@ -26,6 +25,10 @@ export class SoftBodyPersistedConfig extends BasePersistedConfig {
 		super(node);
 	}
 	override async toData(): Promise<SoftBodyPersistedConfigBaseJsData | undefined> {
+		// we need to compute the node here it case it hasn't yet,
+		// otherwise the .functionData() will be empty
+		await this.node.compile();
+		//
 		const assemblerController = this.node.assemblerController();
 		if (!assemblerController) {
 			return;
@@ -34,11 +37,10 @@ export class SoftBodyPersistedConfig extends BasePersistedConfig {
 		if (!functionData) {
 			return;
 		}
-		const {functionBodyVelocity, functionBodyCollider, variableNames, functionNames, paramConfigs} = functionData;
+		const {functionBody, variableNames, functionNames, paramConfigs} = functionData;
 
 		const data: SoftBodyPersistedConfigBaseJsData = {
-			functionBodyVelocity,
-			functionBodyCollider,
+			functionBody,
 			variableNames,
 			variables: serializedVariablesFromFunctionData(functionData),
 			functionNames,
@@ -52,11 +54,10 @@ export class SoftBodyPersistedConfig extends BasePersistedConfig {
 			return;
 		}
 
-		const {functionBodyVelocity, functionBodyCollider, variableNames, functionNames, serializedParamConfigs} = data;
+		const {functionBody, variableNames, functionNames, serializedParamConfigs} = data;
 
 		const functionData: VelocityColliderFunctionData = {
-			functionBodyVelocity,
-			functionBodyCollider,
+			functionBody,
 			variableNames,
 			variablesByName: variablesByNameFromPersistedConfigData(data),
 			functionNames,

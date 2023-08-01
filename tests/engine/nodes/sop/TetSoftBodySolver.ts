@@ -5,6 +5,9 @@ import {CoreSleep} from '../../../../src/core/Sleep';
 import {Mesh, Vector3} from 'three';
 import {BaseSopNodeType} from '../../../../src/engine/nodes/sop/_Base';
 import {TetSoftBodySolverSopOnCreateRegister} from '../../../../src/core/hooks/onCreate/sop/TetSoftBodySolver';
+import {TetSoftBodySolverSopNode} from '../../../../src/engine/nodes/sop/TetSoftBodySolver';
+import {SceneJsonExporter} from '../../../../src/engine/io/json/export/Scene';
+import {VelocityColliderFunctionBody} from '../../../../src/engine/nodes/js/code/assemblers/_Base';
 export function testenginenodessopTetSoftBodySolver(qUnit: QUnit) {
 	async function tetsCount(node: BaseSopNodeType) {
 		const container = await node.compute();
@@ -130,4 +133,94 @@ export function testenginenodessopTetSoftBodySolver(qUnit: QUnit) {
 			assert.in_delta(await getGeometryBoundingBoxY(), 0.5, 0.2, 'object has fallen');
 		});
 	});
+
+	function _prepareForSave(tetSoftBodySolver1: TetSoftBodySolverSopNode) {
+		const hookController = new TetSoftBodySolverSopOnCreateRegister();
+		const createdNode = hookController.onCreate(tetSoftBodySolver1);
+		const {actor1, output1} = createdNode!;
+		return {actor1, output1};
+	}
+
+	qUnit.test('sop/tetSoftBodySolver persisted config is saved after scene play', async (assert) => {
+		const scene = window.scene;
+		const perspective_camera1 = window.perspective_camera1;
+		const geo1 = window.geo1;
+		const box1 = geo1.createNode('box');
+		const tetSoftBodySolver1 = geo1.createNode('tetSoftBodySolver');
+
+		tetSoftBodySolver1.setInput(0, box1);
+		tetSoftBodySolver1.flags.display.set(true);
+
+		const {actor1} = _prepareForSave(tetSoftBodySolver1);
+
+		await RendererUtils.withViewer({cameraNode: perspective_camera1}, async (args) => {
+			scene.play();
+			await CoreSleep.sleep(100);
+
+			const data = await new SceneJsonExporter(scene).data();
+			assert.ok(data);
+			const functionNodeNames = Object.keys(data.jsFunctionBodies || {});
+			assert.deepEqual(functionNodeNames, [tetSoftBodySolver1.path(), actor1.path()], 'actor is saved');
+			assert.ok(
+				((data.jsFunctionBodies as any)[tetSoftBodySolver1.path()] as VelocityColliderFunctionBody).velocity,
+				'velocity ok'
+			);
+			assert.ok(
+				((data.jsFunctionBodies as any)[tetSoftBodySolver1.path()] as VelocityColliderFunctionBody).collider,
+				'collider ok'
+			);
+		});
+		RendererUtils.dispose();
+	});
+	qUnit.test('sop/tetSoftBodySolver persisted config is saved without requiring scene play', async (assert) => {
+		const scene = window.scene;
+		const geo1 = window.geo1;
+		const box1 = geo1.createNode('box');
+		const tetSoftBodySolver1 = geo1.createNode('tetSoftBodySolver');
+
+		tetSoftBodySolver1.setInput(0, box1);
+		tetSoftBodySolver1.flags.display.set(true);
+
+		const {actor1} = _prepareForSave(tetSoftBodySolver1);
+
+		const data = await new SceneJsonExporter(scene).data();
+		assert.ok(data);
+		const functionNodeNames = Object.keys(data.jsFunctionBodies || {});
+		assert.deepEqual(functionNodeNames, [tetSoftBodySolver1.path(), actor1.path()], 'actor is saved');
+		assert.ok(
+			((data.jsFunctionBodies as any)[tetSoftBodySolver1.path()] as VelocityColliderFunctionBody).velocity,
+			'velocity ok'
+		);
+		assert.ok(
+			((data.jsFunctionBodies as any)[tetSoftBodySolver1.path()] as VelocityColliderFunctionBody).collider,
+			'collider ok'
+		);
+	});
+	qUnit.test(
+		'sop/tetSoftBodySolver persisted config is saved without requiring scene play nor display flag',
+		async (assert) => {
+			const scene = window.scene;
+			const geo1 = window.geo1;
+			const box1 = geo1.createNode('box');
+			const tetSoftBodySolver1 = geo1.createNode('tetSoftBodySolver');
+
+			tetSoftBodySolver1.setInput(0, box1);
+			box1.flags.display.set(true);
+
+			const {actor1} = _prepareForSave(tetSoftBodySolver1);
+
+			const data = await new SceneJsonExporter(scene).data();
+			assert.ok(data);
+			const functionNodeNames = Object.keys(data.jsFunctionBodies || {});
+			assert.deepEqual(functionNodeNames, [tetSoftBodySolver1.path(), actor1.path()], 'actor is saved');
+			assert.ok(
+				((data.jsFunctionBodies as any)[tetSoftBodySolver1.path()] as VelocityColliderFunctionBody).velocity,
+				'velocity ok'
+			);
+			assert.ok(
+				((data.jsFunctionBodies as any)[tetSoftBodySolver1.path()] as VelocityColliderFunctionBody).collider,
+				'collider ok'
+			);
+		}
+	);
 }

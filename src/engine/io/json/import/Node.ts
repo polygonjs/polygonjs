@@ -13,9 +13,10 @@ import {
 } from '../../../nodes/utils/io/IOController';
 import type {NodesJsonImporter} from './Nodes';
 import {Poly} from '../../../Poly';
-import {CoreType} from '../../../../core/Type';
+import {CoreType, isString} from '../../../../core/Type';
 // import {CoreString} from '../../../../core/String';
 import {PolyDictionary} from '../../../../types/GlobalTypes';
+import {VelocityColliderFunctionBody} from '../../../nodes/js/code/assemblers/_Base';
 
 const COMPLEX_PARAM_DATA_KEYS: Readonly<string[]> = ['overriden_options', 'type'];
 
@@ -69,7 +70,11 @@ export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 			if (jsFunctionBodiesData) {
 				const jsFunctionBodyData = jsFunctionBodiesData[this._node.path()];
 				if (jsFunctionBodyData) {
-					data.persisted_config.functionBody = jsFunctionBodyData;
+					if (isString(jsFunctionBodyData)) {
+						data.persisted_config.functionBody = jsFunctionBodyData;
+					} else {
+						data.persisted_config.functionBody = jsFunctionBodyData as any as VelocityColliderFunctionBody;
+					}
 				}
 			}
 			this.set_persisted_config(data.persisted_config);

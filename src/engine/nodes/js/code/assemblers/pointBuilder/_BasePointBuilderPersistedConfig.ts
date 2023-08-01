@@ -40,6 +40,10 @@ export class BasePointBuilderPersistedConfig extends BasePersistedConfig {
 		super(node);
 	}
 	override async toData(): Promise<PointBuilderPersistedConfigBaseJsData | undefined> {
+		// we need to compute the node here it case it hasn't yet,
+		// otherwise the .functionData() will be empty
+		await this.node.compile();
+		//
 		const assemblerController = this.node.assemblerController();
 		if (!assemblerController) {
 			return;

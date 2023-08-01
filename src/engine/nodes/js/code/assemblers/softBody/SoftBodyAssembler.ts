@@ -114,8 +114,10 @@ export class JsAssemblerSoftBody extends BaseJsShaderAssembler {
 		});
 		const paramConfigs = this.param_configs();
 		return {
-			functionBodyVelocity,
-			functionBodyCollider,
+			functionBody: {
+				velocity: functionBodyVelocity,
+				collider: functionBodyCollider,
+			},
 			variableNames,
 			variablesByName,
 			functionNames,

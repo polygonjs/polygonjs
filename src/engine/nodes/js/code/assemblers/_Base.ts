@@ -48,12 +48,16 @@ export interface BaseFunctionData {
 	functionsByName: Record<string, Function>;
 	paramConfigs: JsParamConfig<ParamType>[];
 }
+
+export interface VelocityColliderFunctionBody {
+	velocity: string;
+	collider: string;
+}
 export interface SingleBodyFunctionData extends BaseFunctionData {
 	functionBody: string;
 }
 export interface VelocityColliderFunctionData extends BaseFunctionData {
-	functionBodyVelocity: string;
-	functionBodyCollider: string;
+	functionBody: VelocityColliderFunctionBody;
 }
 interface JsTemplateShader {
 	main?: string;
