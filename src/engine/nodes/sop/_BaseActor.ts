@@ -77,7 +77,6 @@ export class TypedActorSopNode<K extends NodeParamsConfig> extends TypedSopNode<
 		this.compilationController.compile();
 	}
 	functionData() {
-		console.log(this.compilationController.functionData());
 		return this.compilationController.functionData();
 	}
 

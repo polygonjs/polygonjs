@@ -57,7 +57,7 @@ export function RootLoadProgressParamConfig<TBase extends Constructor>(Base: TBa
 		nodesMask = ParamConfig.STRING('*/image* */envMap*', {
 			cook: false,
 			separatorBefore: true,
-			objectMask: true,
+			objectMask: false, // do not use objectMask, since it is a node mask, not object
 		});
 		/** @param prints which nodes match the mask in the console */
 		printNodes = ParamConfig.BUTTON(null, {

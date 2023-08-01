@@ -509,6 +509,7 @@ import {testenginenodessopparticlesSystemGPUParticlesPersistedConfig} from './en
 import {testenginenodessopPeak} from './engine/nodes/sop/Peak';
 import {testenginenodessopPerspectiveCamera} from './engine/nodes/sop/PerspectiveCamera';
 import {testenginenodessopPlane} from './engine/nodes/sop/Plane';
+import {testenginenodessopPhysicsDebug} from './engine/nodes/sop/PhysicsDebug';
 import {testenginenodessopPhysicsGround} from './engine/nodes/sop/PhysicsGround';
 import {testenginenodessopPhysicsRBDAttributes} from './engine/nodes/sop/PhysicsRBDAttributes';
 import {testenginenodessopPhysicsRBDJoints} from './engine/nodes/sop/PhysicsRBDJoints';
@@ -1073,6 +1074,7 @@ export function testPolygonjs(qUnit: QUnit) {
 	testenginenodessopPeak(qUnit);
 	testenginenodessopPerspectiveCamera(qUnit);
 	testenginenodessopPlane(qUnit);
+	testenginenodessopPhysicsDebug(qUnit);
 	testenginenodessopPhysicsGround(qUnit);
 	testenginenodessopPhysicsRBDAttributes(qUnit);
 	testenginenodessopPhysicsRBDJoints(qUnit);
