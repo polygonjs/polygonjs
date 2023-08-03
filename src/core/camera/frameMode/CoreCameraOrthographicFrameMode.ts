@@ -22,10 +22,15 @@ type BasicCoreCameraOrthographicFrameModeOptions = PartialBy<
 >;
 
 export class CoreCameraOrthographicFrameMode {
-	static updateCameraAspect(camera: OrthographicCamera, aspect: number) {
-		const frameMode = BaseCoreCameraFrameMode.frameMode(camera);
-		const expectedAspectRatio = BaseCoreCameraFrameMode.expectedAspectRatio(camera) as number | undefined;
-		const size = CoreObject.attribValue(camera, OrthographicCameraAttribute.SIZE) as number | undefined;
+	static updateCameraAspect(camera: OrthographicCamera, aspect: number, cameraWithAttributes?: OrthographicCamera) {
+		cameraWithAttributes = cameraWithAttributes || camera;
+		const frameMode = BaseCoreCameraFrameMode.frameMode(cameraWithAttributes);
+		const expectedAspectRatio = BaseCoreCameraFrameMode.expectedAspectRatio(cameraWithAttributes) as
+			| number
+			| undefined;
+		const size = CoreObject.attribValue(cameraWithAttributes, OrthographicCameraAttribute.SIZE) as
+			| number
+			| undefined;
 		if (size != null) {
 			this._update({
 				mode: frameMode,

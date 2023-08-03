@@ -106,12 +106,15 @@ export function stringCamelCase(str: string): string {
 	// });
 }
 export function stringUpperFirst(word: string): string {
+	if (word.length == 0) {
+		return word;
+	}
 	const newString = word[0].toUpperCase() + word.substring(1);
 	return newString;
 }
 export function stringTitleize(word: string): string {
 	const elements = word.split(/\s|_/g);
-	const newElements = elements.map((elem) => stringUpperFirst(elem));
+	const newElements = elements.map(stringUpperFirst);
 	return newElements.join(' ');
 }
 export function precision(val: number, decimals: number = 2): string {
@@ -251,22 +254,22 @@ export function stringEscapeLineBreaks(word: string): string {
 	return word.replace(/(\r\n|\n|\r)/gm, '\\n');
 }
 export class CoreString {
-	static isBoolean=stringIsBoolean
-	static toBoolean=stringToBoolean
-	static isNumber=stringIsNumber
+	static isBoolean = stringIsBoolean;
+	static toBoolean = stringToBoolean;
+	static isNumber = stringIsNumber;
 	static tailDigits = stringTailDigits;
 	static increment = stringIncrement;
 	static pluralize = stringPluralize;
 	static camelCase = stringCamelCase;
 	static upperFirst = stringUpperFirst;
 	static titleize = stringTitleize;
-	static precision=precision
-	static ensureFloat=ensureFloat
-	static ensureInteger=ensureInteger
-	static matchMask=stringMatchMask
-	static matchesOneMask=stringMatchesOneMask
+	static precision = precision;
+	static ensureFloat = ensureFloat;
+	static ensureInteger = ensureInteger;
+	static matchMask = stringMatchMask;
+	static matchesOneMask = stringMatchesOneMask;
 	static attribNames = stringToAttribNames;
-	static indices=stringToIndices
-	static escapeLineBreaks=stringEscapeLineBreaks
+	static indices = stringToIndices;
+	static escapeLineBreaks = stringEscapeLineBreaks;
 	static sanitizeName = sanitizeName;
 }

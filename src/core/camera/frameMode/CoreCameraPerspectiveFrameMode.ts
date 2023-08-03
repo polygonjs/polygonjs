@@ -13,12 +13,15 @@ interface CoreCameraPerspectiveFrameModeOptions {
 }
 
 export class CoreCameraPerspectiveFrameMode {
-	static updateCameraAspect(camera: PerspectiveCamera, aspect: number) {
+	static updateCameraAspect(camera: PerspectiveCamera, aspect: number, cameraWithAttributes?: PerspectiveCamera) {
 		camera.aspect = aspect;
+		cameraWithAttributes = cameraWithAttributes || camera;
 
-		const frameMode = BaseCoreCameraFrameMode.frameMode(camera);
-		const expectedAspectRatio = BaseCoreCameraFrameMode.expectedAspectRatio(camera) as number | undefined;
-		const fov = CoreObject.attribValue(camera, PerspectiveCameraAttribute.FOV) as number | undefined;
+		const frameMode = BaseCoreCameraFrameMode.frameMode(cameraWithAttributes);
+		const expectedAspectRatio = BaseCoreCameraFrameMode.expectedAspectRatio(cameraWithAttributes) as
+			| number
+			| undefined;
+		const fov = CoreObject.attribValue(cameraWithAttributes, PerspectiveCameraAttribute.FOV) as number | undefined;
 		if (fov != null && expectedAspectRatio != null) {
 			this._update({
 				mode: frameMode,

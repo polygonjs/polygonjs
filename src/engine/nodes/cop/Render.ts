@@ -5,13 +5,25 @@
  * This node can be useful when you want to use what a camera sees as a texture.
  *
  */
-import {ColorSpace, WebGLRenderer, WebGLRenderTarget} from 'three';
-import {FloatType, HalfFloatType, RGBAFormat, NearestFilter, LinearFilter, ClampToEdgeWrapping} from 'three';
+import {
+	ColorSpace,
+	WebGLRenderer,
+	WebGLRenderTarget,
+	OrthographicCamera,
+	FloatType,
+	HalfFloatType,
+	RGBAFormat,
+	NearestFilter,
+	LinearFilter,
+	ClampToEdgeWrapping,
+	PerspectiveCamera,
+	Vector2,
+	Object3D,
+	Scene,
+} from 'three';
 import {TypedCopNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {CameraNodeType, NodeContext, CAMERA_TYPES} from '../../poly/NodeContext';
 import {BaseNodeType} from '../_Base';
-import {TypedCameraObjNode} from '../obj/_BaseCamera';
 import {CopRendererController} from './utils/RendererController';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {DataTextureController, DataTextureControllerBufferType} from './utils/DataTextureController';
@@ -19,20 +31,30 @@ import {TextureParamsController, TextureParamConfig} from './utils/TextureParams
 import {CoreUserAgent} from '../../../core/UserAgent';
 import {Poly} from '../../Poly';
 import {Constructor} from '../../../types/GlobalTypes';
-import {OrthographicCamera} from 'three';
-import {PerspectiveCamera} from 'three';
+import {isObject3D} from '../../../core/geometry/ObjectContent';
+import {CoreCameraPerspectiveFrameMode} from '../../../core/camera/frameMode/CoreCameraPerspectiveFrameMode';
+import {CoreCameraOrthographicFrameMode} from '../../../core/camera/frameMode/CoreCameraOrthographicFrameMode';
+
+const _v2 = new Vector2();
 
 export function RenderCopNodeParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
-		/** @param camera to render from */
-		camera = ParamConfig.NODE_PATH('', {
-			nodeSelection: {
-				context: NodeContext.OBJ,
-				types: CAMERA_TYPES,
+		/** @param path to the main camera object that will be used when the scene loads outside of the editor */
+		cameraPath = ParamConfig.STRING('*perspectiveCamera*', {
+			objectMask: true,
+		});
+		/** @param objects to render */
+		objects = ParamConfig.STRING('/', {
+			objectMask: true,
+		});
+		/** @param use same resolution as renderer */
+		useRendererRes = ParamConfig.BOOLEAN(1);
+		/** @param render resolution */
+		resolution = ParamConfig.VECTOR2([1024, 1024], {
+			visibleIf: {
+				useRendererRes: 0,
 			},
 		});
-		/** @param render resolution */
-		resolution = ParamConfig.VECTOR2([1024, 1024]);
 		/** @param use a data texture instead of a render target, which can be useful when using that texture as and envMap */
 		useDataTexture = ParamConfig.BOOLEAN(0);
 		/** @param render button */
@@ -54,22 +76,19 @@ export class RenderCopNode extends TypedCopNode<RenderCopParamConfig> {
 	}
 	public readonly textureParamsController: TextureParamsController = new TextureParamsController(this);
 
+	private _renderScene: Scene = new Scene();
 	private _textureCamera: OrthographicCamera | PerspectiveCamera | undefined;
-	private _cameraNode: TypedCameraObjNode<any, any> | undefined;
 	private _renderTarget: WebGLRenderTarget | undefined;
 	private _rendererController: CopRendererController | undefined;
 	private _dataTextureController: DataTextureController | undefined;
 
 	override async cook() {
-		this._cameraNode = this.pv.camera.nodeWithContext(NodeContext.OBJ) as TypedCameraObjNode<any, any>;
-		// Walker.find_node(<unknown>this as Node, this._param_camera)
-		if (this._cameraNode && CAMERA_TYPES.includes(this._cameraNode.type() as CameraNodeType)) {
-			this._textureCamera = this._cameraNode.object as OrthographicCamera | PerspectiveCamera;
-			await this._cameraNode.compute();
-			// this.start_animate();
-			this.renderOnTarget();
+		const camera = await this._getCamera();
+		this._textureCamera = camera;
+		if (this._textureCamera) {
+			await this.renderOnTarget();
 		} else {
-			this._textureCamera = undefined;
+			this.cookController.endCook();
 		}
 	}
 
@@ -78,32 +97,94 @@ export class RenderCopNode extends TypedCopNode<RenderCopParamConfig> {
 	// RENDER + RENDER TARGET
 	//
 	//
+	private _getCameraSync() {
+		return this.scene().objectsController.findObjectByMask(this.pv.cameraPath) as
+			| OrthographicCamera
+			| PerspectiveCamera
+			| undefined;
+	}
+	private async _getCamera(): Promise<PerspectiveCamera | OrthographicCamera | undefined> {
+		const camera = this._getCameraSync();
+		if (camera) {
+			return camera;
+		}
+		return new Promise((resolve) => {
+			this.scene().camerasController.onCameraObjectsUpdated(async () => {
+				const camera = this._getCameraSync();
+				if (camera) {
+					resolve(camera);
+				}
+			});
+		});
+	}
+
 	async renderOnTarget() {
-		await this.createRenderTargetIfRequired();
-		if (!(this._renderTarget && this._textureCamera)) {
+		const camera = this._textureCamera;
+		if (!camera) {
+			this.states.error.set(`no camera found`);
 			return;
 		}
 
 		this._rendererController = this._rendererController || new CopRendererController(this);
 		const renderer = await this._rendererController.waitForRenderer();
 		if (!(renderer instanceof WebGLRenderer)) {
-			console.log('renderer found is not WebGLRenderer');
+			this.states.error.set(`no renderer found`);
 			return;
 		}
+		await this.createRenderTargetIfRequired(renderer);
+		if (!this._renderTarget) {
+			this.states.error.set(`no renderTarget`);
+			return;
+		}
+		const viewer = this.scene().viewersRegister.lastRenderedViewer();
+		if (!viewer) {
+			this.states.error.set(`no viewer found`);
+			return;
+		}
+		const viewerCamera = viewer.camera();
+		if (!viewerCamera) {
+			this.states.error.set(`no viewer camera found`);
+			return;
+		}
+		this._requestedResolution(renderer, _v2);
+		const aspect = _v2.x / _v2.y;
+		if (camera instanceof PerspectiveCamera && viewerCamera instanceof PerspectiveCamera) {
+			CoreCameraPerspectiveFrameMode.updateCameraAspect(camera, aspect, viewerCamera);
+		} else {
+			if (camera instanceof OrthographicCamera && viewerCamera instanceof OrthographicCamera) {
+				CoreCameraOrthographicFrameMode.updateCameraAspect(camera, aspect, viewerCamera);
+			}
+		}
 
+		const renderedObjects = this.scene().objectsController.objectsByMask(this.pv.objects).filter(isObject3D);
+		//
+		const previousParentByObject: WeakMap<Object3D, Object3D | null> = new WeakMap();
+		for (const renderedObject of renderedObjects) {
+			previousParentByObject.set(renderedObject, renderedObject.parent);
+			this._renderScene.attach(renderedObject);
+		}
+
+		//
 		const prevTarget = renderer.getRenderTarget();
 		const prevColorSpace = renderer.outputColorSpace;
+		const prevBackground = this.scene().threejsScene().background;
+		this.scene().threejsScene().background = null;
 		renderer.setRenderTarget(this._renderTarget);
 		renderer.outputColorSpace = this.pv.colorSpace as ColorSpace;
-		// this._texture_camera.updateMatrix();
-		// this._texture_camera.updateMatrixWorld();
-		// this._texture_camera.updateWorldMatrix(true, true);
-		// this._texture_camera.updateProjectionMatrix();
-		// this._texture_scene.updateWorldMatrix(true, true);
 		renderer.clear();
-		renderer.render(this.scene().threejsScene(), this._textureCamera);
+		renderer.render(this._renderScene, camera);
+
+		// restore
+		this.scene().threejsScene().background = prevBackground;
 		renderer.setRenderTarget(prevTarget);
 		renderer.outputColorSpace = prevColorSpace;
+		// restore object
+		for (const renderedObject of renderedObjects) {
+			const previousParent = previousParentByObject.get(renderedObject);
+			if (previousParent) {
+				previousParent.attach(renderedObject);
+			}
+		}
 
 		if (this._renderTarget.texture) {
 			if (isBooleanTrue(this.pv.useDataTexture)) {
@@ -122,33 +203,37 @@ export class RenderCopNode extends TypedCopNode<RenderCopParamConfig> {
 		}
 	}
 
-	async renderTarget() {
-		return (this._renderTarget =
-			this._renderTarget || (await this._createRenderTarget(this.pv.resolution.x, this.pv.resolution.y)));
+	async renderTarget(renderer: WebGLRenderer) {
+		return (this._renderTarget = this._renderTarget || (await this._createRenderTarget(renderer)));
 	}
-	private async createRenderTargetIfRequired() {
-		if (!this._renderTarget || !this._renderTargetResolutionValid()) {
-			this._renderTarget = await this._createRenderTarget(this.pv.resolution.x, this.pv.resolution.y);
+	private async createRenderTargetIfRequired(renderer: WebGLRenderer) {
+		if (!this._renderTarget || !this._renderTargetResolutionValid(renderer)) {
+			this._renderTarget = await this._createRenderTarget(renderer);
 			this._dataTextureController?.reset();
 		}
 	}
-	private _renderTargetResolutionValid() {
+	private _requestedResolution(renderer: WebGLRenderer, target: Vector2) {
+		if (isBooleanTrue(this.pv.useRendererRes)) {
+			renderer.getSize(target);
+		} else {
+			target.copy(this.pv.resolution);
+		}
+	}
+	private _renderTargetResolutionValid(renderer: WebGLRenderer) {
 		if (this._renderTarget) {
 			const image = this._renderTarget.texture.image;
-			if (image.width != this.pv.resolution.x || image.height != this.pv.resolution.y) {
-				return false;
-			} else {
-				return true;
-			}
+			this._requestedResolution(renderer, _v2);
+			return (image.width = _v2.x && image.height == _v2.y);
 		} else {
 			return false;
 		}
 	}
 
-	private async _createRenderTarget(width: number, height: number) {
+	private async _createRenderTarget(renderer: WebGLRenderer) {
+		this._requestedResolution(renderer, _v2);
 		if (this._renderTarget) {
 			const image = this._renderTarget.texture.image;
-			if (image.width == width && image.height == height) {
+			if (image.width == _v2.x && image.height == _v2.y) {
 				return this._renderTarget;
 			}
 		}
@@ -159,7 +244,7 @@ export class RenderCopNode extends TypedCopNode<RenderCopParamConfig> {
 		const minFilter = LinearFilter;
 		const magFilter = NearestFilter;
 
-		var renderTarget = new WebGLRenderTarget(width, height, {
+		var renderTarget = new WebGLRenderTarget(_v2.x, _v2.y, {
 			wrapS,
 			wrapT,
 			minFilter,
@@ -167,11 +252,12 @@ export class RenderCopNode extends TypedCopNode<RenderCopParamConfig> {
 			format: RGBAFormat,
 			generateMipmaps: true,
 			type: CoreUserAgent.isiOS() ? HalfFloatType : FloatType,
+			samples: renderer.getPixelRatio(),
 			stencilBuffer: false,
 			depthBuffer: false,
 		});
 		await this.textureParamsController.update(renderTarget.texture);
-		Poly.warn('created render target', this.path(), width, height);
+		Poly.warn('created render target', this.path(), _v2.x, _v2.y);
 		return renderTarget;
 	}
 
