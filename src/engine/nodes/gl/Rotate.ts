@@ -74,7 +74,10 @@ export class RotateGlNode extends TypedGlNode<RotateParamsConfig> {
 		this.p.signature.set(index);
 	}
 	mode() {
-		return Modes[this.pv.signature];
+		// we need the "|| GlRotateMode.AXIS",
+		// as when creating a polyNode containing this node,
+		// this.pv.signature is undefined
+		return Modes[this.pv.signature] || GlRotateMode.AXIS;
 	}
 	protected _expectedInputName(index: number) {
 		return InputNamesByMode[this.mode()][index];
@@ -100,17 +103,17 @@ export class RotateGlNode extends TypedGlNode<RotateParamsConfig> {
 		return [new FunctionGLDefinition(this, Quaternion)];
 	}
 
-	override setLines(shaders_collection_controller: ShadersCollectionController) {
-		const var_type: GlConnectionPointType = this.io.outputs.namedOutputConnectionPoints()[0].type();
+	override setLines(shadersCollectionController: ShadersCollectionController) {
+		const varType: GlConnectionPointType = this._expectedInputTypes()[0];
 		const args = this.io.inputs.namedInputConnectionPoints().map((connection, i) => {
 			const name = connection.name();
 			return ThreeToGl.any(this.variableForInput(name));
 		});
-		const joined_args = args.join(', ');
+		const joinedArgs = args.join(', ');
 
 		const sum = this.glVarName(this.io.connection_points.output_name(0));
-		const body_line = `${var_type} ${sum} = ${this.functionName()}(${joined_args})`;
-		shaders_collection_controller.addBodyLines(this, [body_line]);
-		shaders_collection_controller.addDefinitions(this, this.functionDefinitions());
+		const bodyLine = `${varType} ${sum} = ${this.functionName()}(${joinedArgs})`;
+		shadersCollectionController.addBodyLines(this, [bodyLine]);
+		shadersCollectionController.addDefinitions(this, this.functionDefinitions());
 	}
 }
