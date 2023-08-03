@@ -82,7 +82,10 @@ export class RotateJsNode extends TypedJsNode<RotateParamsConfig> {
 		this.p.mode.set(index);
 	}
 	mode() {
-		return Modes[this.pv.mode];
+		// we need the "|| GlRotateMode.AXIS",
+		// as when creating a polyNode containing this node,
+		// this.pv.signature is undefined
+		return Modes[this.pv.mode] || JsRotateMode.AXIS;
 	}
 	protected _expectedInputName(index: number) {
 		return InputNamesByMode[this.mode()][index];
