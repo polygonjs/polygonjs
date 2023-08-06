@@ -15,6 +15,7 @@ import {lutCopPresetRegister} from './cop/Lut';
 import {mapboxElevationCopPresetRegister} from './cop/MapboxElevation';
 import {mapboxSatelliteCopPresetRegister} from './cop/MapboxSatellite';
 import {SDFFromUrlCopPresetRegister} from './cop/SDFFromUrl';
+import {textCopPresetRegister} from './cop/Text';
 import {videoCopPresetRegister} from './cop/Video';
 // gl
 import {attributeGlPresetRegister} from './gl/Attribute';
@@ -92,6 +93,7 @@ class PresetLibraryClass {
 		this._registerPreset(mapboxElevationCopPresetRegister);
 		this._registerPreset(mapboxSatelliteCopPresetRegister);
 		this._registerPreset(SDFFromUrlCopPresetRegister);
+		this._registerPreset(textCopPresetRegister);
 		this._registerPreset(videoCopPresetRegister);
 		// gl
 		this._registerPreset(attributeGlPresetRegister);

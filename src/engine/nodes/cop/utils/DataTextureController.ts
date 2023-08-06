@@ -111,9 +111,9 @@ export class DataTextureController {
 
 	private _sameDimensions(texture: Texture): boolean {
 		if (this._dataTexture) {
-			const same_w = this._dataTexture.image.width == texture.image.width;
-			const same_h = this._dataTexture.image.height == texture.image.height;
-			return same_w && same_h;
+			const sameW = this._dataTexture.image.width == texture.image.width;
+			const sameH = this._dataTexture.image.height == texture.image.height;
+			return sameW && sameH;
 		} else {
 			return true;
 		}

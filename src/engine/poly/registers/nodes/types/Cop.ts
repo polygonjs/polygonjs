@@ -11,6 +11,7 @@ export enum CopType {
 	SDF_FROM_OBJECT = 'SDFFromObject',
 	SDF_FROM_URL = 'SDFFromUrl',
 	SNAPSHOT = 'snapshot',
+	TEXT = 'text',
 	VIDEO = 'video',
 	WEB_CAM = 'webCam',
 }

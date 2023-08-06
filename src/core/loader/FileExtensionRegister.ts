@@ -10,6 +10,7 @@ import {
 	VIDEO_EXTENSIONS,
 	FontExtension,
 } from '../FileTypeController';
+
 export const EXTENSIONS_BY_NODE_TYPE_BY_CONTEXT: Record<NodeContext, Record<string, string[]>> = {
 	[NodeContext.ANIM]: {},
 	[NodeContext.AUDIO]: {
@@ -25,6 +26,7 @@ export const EXTENSIONS_BY_NODE_TYPE_BY_CONTEXT: Record<NodeContext, Record<stri
 		[CopTypeImage.IMAGE_KTX2]: [ImageExtension.KTX2],
 		[CopType.LUT]: [ImageExtension.PNG],
 		[CopType.SDF_FROM_URL]: [...SDF_EXTENSIONS],
+		[CopType.TEXT]: [FontExtension.TTF],
 		[CopType.VIDEO]: [...VIDEO_EXTENSIONS],
 	},
 	// [NodeContext.CSG]: {},

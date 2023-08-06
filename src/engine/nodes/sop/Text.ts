@@ -9,7 +9,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CoreLoaderFont} from '../../../core/loader/font/CoreFontLoader';
 import {Font} from '../../../core/loader/font/Font';
 import {Poly} from '../../Poly';
-import {DEMO_ASSETS_ROOT_URL} from '../../../core/Assets';
+import {DEFAULT_FONT_URL_JSON} from '../../../core/Assets';
 import {TextSopJustifiyMode, TEXT_SOP_JUSTIFY_MODES} from '../../../core/geometry/text/TextJustify';
 import {textBuildGeometries} from '../../../core/geometry/text/TextGeometries';
 import {TextType, TEXT_TYPES} from '../../../core/geometry/text/TextType';
@@ -18,7 +18,6 @@ import {isBooleanTrue} from '../../../core/Type';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 import {EXTENSIONS_BY_NODE_TYPE_BY_CONTEXT} from '../../../core/loader/FileExtensionRegister';
 import {NodeContext} from '../../poly/NodeContext';
-const DEFAULT_FONT_URL = `${DEMO_ASSETS_ROOT_URL}/fonts/droid_sans_regular.typeface.json`;
 
 // function isGeometryValid(geometry: BufferGeometry) {
 // 	return geometry.getAttribute(Attribute.POSITION).count != 0;
@@ -27,7 +26,7 @@ const DEFAULT_FONT_URL = `${DEMO_ASSETS_ROOT_URL}/fonts/droid_sans_regular.typef
 const GENERATION_ERROR_MESSAGE = `failed to generate geometry. Try to remove some characters`;
 class TextSopParamsConfig extends NodeParamsConfig {
 	/** @param font used */
-	font = ParamConfig.STRING(DEFAULT_FONT_URL, {
+	font = ParamConfig.STRING(DEFAULT_FONT_URL_JSON, {
 		fileBrowse: {extensions: EXTENSIONS_BY_NODE_TYPE_BY_CONTEXT[NodeContext.SOP][SopType.TEXT]},
 	});
 	/** @param text created */

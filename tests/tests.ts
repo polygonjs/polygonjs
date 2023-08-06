@@ -100,6 +100,7 @@ import {testenginenodescopSDFBlur} from './engine/nodes/cop/SDFBlur';
 import {testenginenodescopSDFFromObject} from './engine/nodes/cop/SDFFromObject';
 import {testenginenodescopSDFFromUrl} from './engine/nodes/cop/SDFFromUrl';
 import {testenginenodescopSwitch} from './engine/nodes/cop/Switch';
+import {testenginenodescopText} from './engine/nodes/cop/Text';
 import {testenginenodescopVideo} from './engine/nodes/cop/Video';
 import {testenginenodeseventAudio} from './engine/nodes/event/Audio';
 import {testenginenodeseventCode} from './engine/nodes/event/Code';
@@ -665,6 +666,7 @@ export function testPolygonjs(qUnit: QUnit) {
 	testenginenodescopSDFFromObject(qUnit);
 	testenginenodescopSDFFromUrl(qUnit);
 	testenginenodescopSwitch(qUnit);
+	testenginenodescopText(qUnit);
 	testenginenodescopVideo(qUnit);
 	testenginenodeseventAudio(qUnit);
 	testenginenodeseventCode(qUnit);

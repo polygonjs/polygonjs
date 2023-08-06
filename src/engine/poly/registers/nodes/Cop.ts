@@ -31,6 +31,7 @@ import {SDFFromObjectCopNode} from '../../../nodes/cop/SDFFromObject';
 import {SDFFromUrlCopNode} from '../../../nodes/cop/SDFFromUrl';
 import {SnapshotCopNode} from '../../../nodes/cop/Snapshot';
 import {SwitchCopNode} from '../../../nodes/cop/Switch';
+import {TextCopNode} from '../../../nodes/cop/Text';
 import {TexturePropertiesCopNode} from '../../../nodes/cop/TextureProperties';
 import {VideoCopNode} from '../../../nodes/cop/Video';
 import {WebCamCopNode} from '../../../nodes/cop/WebCam';
@@ -77,6 +78,7 @@ export interface CopNodeChildrenMap {
 	SDFFromUrl: SDFFromUrlCopNode;
 	snapshot: SnapshotCopNode;
 	switch: SwitchCopNode;
+	text: TextCopNode;
 	textureProperties: TexturePropertiesCopNode;
 	video: VideoCopNode;
 	webCam: WebCamCopNode;
@@ -128,6 +130,7 @@ export class CopRegister {
 		poly.registerNode(SDFFromUrlCopNode, CATEGORY_COP.SDF);
 		poly.registerNode(SnapshotCopNode, CATEGORY_COP.MISC);
 		poly.registerNode(SwitchCopNode, CATEGORY_COP.MISC);
+		poly.registerNode(TextCopNode, CATEGORY_COP.INPUT);
 		poly.registerNode(TexturePropertiesCopNode, CATEGORY_COP.ADVANCED);
 		poly.registerNode(VideoCopNode, CATEGORY_COP.INPUT);
 		poly.registerNode(WebCamCopNode, CATEGORY_COP.ADVANCED);

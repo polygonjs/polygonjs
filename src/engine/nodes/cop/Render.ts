@@ -244,7 +244,7 @@ export class RenderCopNode extends TypedCopNode<RenderCopParamConfig> {
 		const minFilter = LinearFilter;
 		const magFilter = NearestFilter;
 
-		var renderTarget = new WebGLRenderTarget(_v2.x, _v2.y, {
+		const renderTarget = new WebGLRenderTarget(_v2.x, _v2.y, {
 			wrapS,
 			wrapT,
 			minFilter,

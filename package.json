@@ -63,6 +63,7 @@
 		"@vue-reactivity/watch": "0.2.0",
 		"@vue/reactivity": "3.3.4",
 		"chromotome": "1.20.0",
+		"fontfaceobserver": "2.3.0",
 		"gifuct-js": "2.1.2",
 		"gsap": "3.11.5",
 		"jsep": "1.0.3",
@@ -87,6 +88,7 @@
 	},
 	"devDependencies": {
 		"@statoscope/webpack-plugin": "5.20.1",
+		"@types/fontfaceobserver": "2.1.0",
 		"@types/geojson": "7946.0.10",
 		"@types/lodash-es": "4.17.7",
 		"@types/node": "18.15.11",
