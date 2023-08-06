@@ -61,7 +61,7 @@ export class TextCopNode extends TypedCopNode<TextCopParamConfig> {
 
 		const url = this.pv.font.split('/');
 		const fontNameFromUrl = url[url.length - 1].split('.')[0];
-		loadAndUseFont({
+		await loadAndUseFont({
 			texture,
 			text: this.pv.text,
 			fontFamily: sanitizeName(this.path()) + fontNameFromUrl,
