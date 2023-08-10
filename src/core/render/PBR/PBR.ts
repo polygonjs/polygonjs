@@ -7,7 +7,7 @@ import {PathTracingViewer} from '../../../engine/viewers/PathTracingViewer';
 import {ThreejsViewer} from '../../../engine/viewers/Threejs';
 import {CoreCameraRendererController} from '../../camera/CoreCameraRendererController';
 import {CoreCameraPerspectiveFrameMode} from '../../camera/frameMode/CoreCameraPerspectiveFrameMode';
-import {monkeyPatchSpotLight} from '../../monkeyPath/SpotLight';
+import {monkeyPatchSpotLight} from '../../monkeyPatch/SpotLight';
 import {
 	CoreSceneObjectsFactory,
 	GeneratorName,
@@ -19,6 +19,7 @@ import {
 	SpotLightUpdate,
 } from '../../CoreSceneObjectsFactory';
 import {IES_PROFILE_LM_63_1995} from '../../lights/spotlight/ies/lm_63_1995';
+import {ObjectType, registerObjectType} from '../../geometry/Constant';
 
 // type PhysicalSpotLightUpdateOptions = SpotLightUpdateOptions<PhysicalSpotLight>
 const PHYSICAL_CAMERA_UPDATE: PerspectiveCameraUpdate<PhysicalCamera> = (
@@ -42,14 +43,29 @@ const PHYSICAL_SPOT_LIGHT_UPDATE: SpotLightUpdate<PhysicalSpotLight> = (
 export function onPBRModuleRegister(poly: PolyEngine) {
 	CoreSceneObjectsFactory.registerGenerator(GeneratorName.PERSPECTIVE_CAMERA, (options: PerspectiveCameraOptions) => {
 		const {fov, aspect, near, far} = options;
+		// we also register PerspectiveCamera here,
+		// as otherwise, cameras created by other objects, like the CubeCamera,
+		// only appear as Object3D in the scene tree
+		registerObjectType({
+			type: ObjectType.PERSPECTIVE_CAMERA,
+			ctor: PerspectiveCamera,
+			humanName: 'PerspectiveCamera',
+		});
+		registerObjectType({
+			type: ObjectType.PERSPECTIVE_CAMERA,
+			ctor: PhysicalCamera,
+			humanName: 'PerspectiveCamera',
+		});
 		return new PhysicalCamera(fov, aspect, near, far);
 	});
 	CoreSceneObjectsFactory.registerGenerator(GeneratorName.PERSPECTIVE_CAMERA_UPDATE, PHYSICAL_CAMERA_UPDATE as any);
 	CoreSceneObjectsFactory.registerGenerator(GeneratorName.AREA_LIGHT, (options: AreaLightOptions) => {
 		const {color, intensity, width, height} = options;
+		registerObjectType({type: ObjectType.AREA_LIGHT, ctor: ShapedAreaLight, humanName: 'AreaLight'});
 		return new ShapedAreaLight(color, intensity, width, height);
 	});
 	CoreSceneObjectsFactory.registerGenerator(GeneratorName.SPOT_LIGHT, () => {
+		registerObjectType({type: ObjectType.SPOT_LIGHT, ctor: PhysicalSpotLight, humanName: ObjectType.SPOT_LIGHT});
 		const physicalSpotLight = new PhysicalSpotLight();
 		monkeyPatchSpotLight(physicalSpotLight);
 		return physicalSpotLight;

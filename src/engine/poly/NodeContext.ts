@@ -78,6 +78,7 @@ export enum NetworkChildNodeType {
 	OUTPUT = 'subnetOutput',
 }
 export enum CameraNodeType {
+	CUBE = 'cubeCamera',
 	MAPBOX = 'mapboxCamera',
 	ORTHOGRAPHIC = 'orthographicCamera',
 	PERSPECTIVE = 'perspectiveCamera',

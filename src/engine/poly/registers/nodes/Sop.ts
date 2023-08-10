@@ -136,6 +136,7 @@ import {CSGTubeEllipticSopNode} from '../../../nodes/sop/CSGTubeElliptic';
 //
 import {CSS2DObjectSopNode} from '../../../nodes/sop/CSS2DObject';
 import {CSS3DObjectSopNode} from '../../../nodes/sop/CSS3DObject';
+import {CubeCameraSopNode} from '../../../nodes/sop/CubeCamera';
 import {DataSopNode} from '../../../nodes/sop/Data';
 import {DataUrlSopNode} from '../../../nodes/sop/DataUrl';
 import {DecalSopNode} from '../../../nodes/sop/Decal';
@@ -434,6 +435,7 @@ export interface GeoNodeChildrenMap {
 	//
 	CSS2DObject: CSS2DObjectSopNode;
 	CSS3DObject: CSS3DObjectSopNode;
+	cubeCamera: CubeCameraSopNode;
 	data: DataSopNode;
 	dataUrl: DataUrlSopNode;
 	decal: DecalSopNode;
@@ -640,6 +642,7 @@ import {CenterSopOperation} from '../../../operations/sop/Center';
 import {CircleSopOperation} from '../../../operations/sop/Circle';
 import {ClipSopOperation} from '../../../operations/sop/Clip';
 import {ConvexHullSopOperation} from '../../../operations/sop/ConvexHull';
+import {CubeCameraSopOperation} from '../../../operations/sop/CubeCamera';
 import {CurveFromPointsSopOperation} from '../../../operations/sop/CurveFromPoints';
 import {CurveGetPointSopOperation} from '../../../operations/sop/CurveGetPoint';
 import {DecalSopOperation} from '../../../operations/sop/Decal';
@@ -755,6 +758,7 @@ export class SopRegister {
 		poly.registerOperation(CircleSopOperation);
 		poly.registerOperation(ClipSopOperation);
 		poly.registerOperation(ConvexHullSopOperation);
+		poly.registerOperation(CubeCameraSopOperation);
 		poly.registerOperation(CurveFromPointsSopOperation);
 		poly.registerOperation(CurveGetPointSopOperation);
 		poly.registerOperation(DecalSopOperation);
@@ -962,6 +966,7 @@ export class SopRegister {
 		//
 		poly.registerNode(CSS2DObjectSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.registerNode(CSS3DObjectSopNode, CATEGORY_SOP.PRIMITIVES);
+		poly.registerNode(CubeCameraSopNode, CATEGORY_SOP.RENDER);
 		poly.registerNode(DataSopNode, CATEGORY_SOP.INPUT);
 		poly.registerNode(DataUrlSopNode, CATEGORY_SOP.INPUT);
 		poly.registerNode(DecalSopNode, CATEGORY_SOP.MISC);
@@ -978,7 +983,6 @@ export class SopRegister {
 		// poly.registerNode(ExporterUSDZSopNode, CATEGORY_SOP.OUTPUT);
 		poly.registerNode(FaceSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(FacetSopNode, CATEGORY_SOP.MODIFIER);
-		// poly.registerNode(FileSopNode, CATEGORY_SOP.INPUT);
 		poly.registerNode(FileDRCSopNode, CATEGORY_SOP.INPUT);
 		poly.registerNode(FileFBXSopNode, CATEGORY_SOP.INPUT);
 		poly.registerNode(FileGEOJSONSopNode, CATEGORY_SOP.INPUT);

@@ -480,6 +480,13 @@ export class PolyScene {
 		return this.timeController.registeredBeforeTickCallbacks();
 	}
 	/**
+	 * return true if a callback is registered with that name
+	 *
+	 */
+	hasBeforeTickCallback(callbackName: string): boolean {
+		return this.timeController.hasBeforeTickCallback(callbackName);
+	}
+	/**
 	 * registers AfterTick callback. AfterTick callbacks are run after updating the frame (and therefore after any time dependent node has changed)
 	 *
 	 */
@@ -499,5 +506,12 @@ export class PolyScene {
 	 */
 	registeredAfterTickCallbacks(): Map<string, onTimeTickHook> {
 		return this.timeController.registeredAfterTickCallbacks();
+	}
+	/**
+	 * return true if a callback is registered with that name
+	 *
+	 */
+	hasAfterTickCallback(callbackName: string): boolean {
+		return this.timeController.hasAfterTickCallback(callbackName);
 	}
 }

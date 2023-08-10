@@ -110,6 +110,11 @@ export function expandTriangle(triangle: Triangle, margin: number) {
 	_triangleMidToCorner.normalize().multiplyScalar(margin);
 	triangle.c.add(_triangleMidToCorner);
 }
+
+export function lerpFloat(current: number, target: number, blend: number) {
+	return current * (1 - blend) + target * blend;
+}
+
 export class CoreMath {
 	static Easing = Easing; // used in expressions
 	static degToRad = degToRad; // used in expressions
@@ -131,4 +136,6 @@ export class CoreMath {
 
 	static randFloat = randFloat;
 	static randVec2 = randVec2;
+
+	static lerpFloat = lerpFloat;
 }

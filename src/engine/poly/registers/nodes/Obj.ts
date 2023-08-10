@@ -19,7 +19,7 @@ import {SceneObjNode} from '../../../nodes/obj/Scene';
 
 import {OrthographicCameraObjNode} from '../../../nodes/obj/OrthographicCamera';
 import {PerspectiveCameraObjNode} from '../../../nodes/obj/PerspectiveCamera';
-import {CubeCameraObjNode} from '../../../nodes/obj/CubeCamera';
+// import {CubeCameraObjNode} from '../../../nodes/obj/CubeCamera';
 
 // networks
 import {ActorsNetworkObjNode} from '../../../nodes/obj/ActorsNetwork';
@@ -36,7 +36,7 @@ export interface ObjNodeChildrenMap {
 	areaLight: AreaLightObjNode;
 	audioListener: AudioListenerObjNode;
 	blend: BlendObjNode;
-	cubeCamera: CubeCameraObjNode;
+	// cubeCamera: CubeCameraObjNode;
 	directionalLight: DirectionalLightObjNode;
 	geo: GeoObjNode;
 	hemisphereLight: HemisphereLightObjNode;
@@ -86,7 +86,7 @@ export class ObjRegister {
 		// cameras
 		poly.registerNode(OrthographicCameraObjNode, CATEGORY_OBJ.CAMERA);
 		poly.registerNode(PerspectiveCameraObjNode, CATEGORY_OBJ.CAMERA);
-		poly.registerNode(CubeCameraObjNode, CATEGORY_OBJ.CAMERA);
+		// poly.registerNode(CubeCameraObjNode, CATEGORY_OBJ.CAMERA);
 
 		// networks
 		poly.registerNode(ActorsNetworkObjNode, CATEGORY_OBJ.NETWORK);

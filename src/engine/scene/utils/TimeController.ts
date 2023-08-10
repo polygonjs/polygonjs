@@ -270,6 +270,9 @@ export class TimeController {
 	registeredBeforeTickCallbacks() {
 		return (this._onBeforeTickCallbacksMap = this._onBeforeTickCallbacksMap || new Map());
 	}
+	hasBeforeTickCallback(callbackName: string): boolean {
+		return this._onBeforeTickCallbacksMap?.has(callbackName) || false;
+	}
 	registerOnAfterTick(callbackName: string, callback: onTimeTickHook) {
 		this._registerCallback(callbackName, callback, this.registeredAfterTickCallbacks());
 	}
@@ -278,6 +281,9 @@ export class TimeController {
 	}
 	registeredAfterTickCallbacks() {
 		return (this._onAfterTickCallbacksMap = this._onAfterTickCallbacksMap || (new Map() as onTimeTickCallbacksMap));
+	}
+	hasAfterTickCallback(callbackName: string): boolean {
+		return this._onAfterTickCallbacksMap?.has(callbackName) || false;
 	}
 	onPlayingStateChange(callback: onPlayingStateChangeCallback) {
 		this._onPlayingStateChangeCallbacksMap = this._onPlayingStateChangeCallbacksMap || new Set();

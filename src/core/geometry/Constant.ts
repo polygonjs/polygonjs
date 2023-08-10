@@ -1,21 +1,30 @@
 import {Number2} from '../../types/GlobalTypes';
-import {Object3D, Mesh, Group, MeshStandardMaterial, PointsMaterial, LineBasicMaterial, FrontSide} from 'three';
 import {
+	Object3D,
+	LineSegments,
+	Mesh,
+	Points,
+	Group,
+	Scene,
+	MeshStandardMaterial,
+	PointsMaterial,
+	LineBasicMaterial,
+	FrontSide,
+} from 'three';
+import type {
 	AmbientLight,
 	// SkinnedMesh,
 	// Bone,
+	CubeCamera,
 	DirectionalLight,
 	HemisphereLight,
 	LightProbe,
-	LineSegments,
 	Material,
 	LOD,
 	OrthographicCamera,
 	PerspectiveCamera,
 	PointLight,
-	Points,
 	RectAreaLight,
-	Scene,
 	SpotLight,
 } from 'three';
 import {GroupCollectionData} from './EntityGroupCollection';
@@ -31,6 +40,7 @@ export enum ObjectType {
 	AMBIENT_LIGHT = 'AmbientLight',
 	AREA_LIGHT = 'AreaLight',
 	// BONE = 'Bone',
+	CUBE_CAMERA = 'CubeCamera',
 	DIRECTIONAL_LIGHT = 'DirectionalLight',
 	GROUP = 'Group',
 	HEMISPHERE_LIGHT = 'HemisphereLight',
@@ -61,13 +71,14 @@ interface Object3DConstructor<O extends Object3D> {
 	new (args: any): O;
 	// Model: Model;
 }
-type DefaultObject3DConstructor = Object3DConstructor<Object3D>;
+export type DefaultObject3DConstructor = Object3DConstructor<Object3D>;
 
 // type ObjectByObjectTypeMapGeneric = {[key in ObjectType]: DefaultObject3DConstructor};
 export interface ObjectByObjectType {
 	[ObjectType.AMBIENT_LIGHT]: AmbientLight;
 	[ObjectType.AREA_LIGHT]: RectAreaLight;
 	// [ObjectType.BONE]: typeof Bone;
+	[ObjectType.CUBE_CAMERA]: CubeCamera;
 	[ObjectType.DIRECTIONAL_LIGHT]: DirectionalLight;
 	[ObjectType.GROUP]: Group;
 	[ObjectType.HEMISPHERE_LIGHT]: HemisphereLight;

@@ -84,6 +84,7 @@ import {testenginenodescopBuilder} from './engine/nodes/cop/Builder';
 import {testenginenodescopBuilder2DArray} from './engine/nodes/cop/Builder2DArray';
 import {testenginenodescopCanvas} from './engine/nodes/cop/Canvas';
 import {testenginenodescopColor} from './engine/nodes/cop/Color';
+import {testenginenodescopCubeCamera} from './engine/nodes/cop/CubeCamera';
 import {testenginenodescopCubeMap} from './engine/nodes/cop/CubeMap';
 import {testenginenodescopCubeMapFromScene} from './engine/nodes/cop/CubeMapFromScene';
 import {testenginenodescopEnvMap} from './engine/nodes/cop/EnvMap';
@@ -650,6 +651,7 @@ export function testPolygonjs(qUnit: QUnit) {
 	testenginenodescopBuilder2DArray(qUnit);
 	testenginenodescopCanvas(qUnit);
 	testenginenodescopColor(qUnit);
+	testenginenodescopCubeCamera(qUnit);
 	testenginenodescopCubeMap(qUnit);
 	testenginenodescopCubeMapFromScene(qUnit);
 	testenginenodescopEnvMap(qUnit);

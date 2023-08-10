@@ -1,6 +1,8 @@
 import {CATEGORY_MAT} from './Category';
 
 import {BuilderUniformUpdateMatNode} from '../../../nodes/mat/BuilderUniformUpdate';
+import {ClippingPlaneMatNode} from '../../../nodes/mat/ClippingPlane';
+import {ClipPropertiesMatNode} from '../../../nodes/mat/ClipProperties';
 import {CodeMatNode} from '../../../nodes/mat/Code';
 import {ColorMatNode} from '../../../nodes/mat/Color';
 import {EnvMapMatNode} from '../../../nodes/mat/EnvMap';
@@ -30,6 +32,7 @@ import {PointsBuilderMatNode} from '../../../nodes/mat/PointsBuilder';
 import {RayMarchingBuilderMatNode} from '../../../nodes/mat/RayMarchingBuilder';
 import {ShadowMatNode} from '../../../nodes/mat/Shadow';
 import {SkyMatNode} from '../../../nodes/mat/Sky';
+import {StencilPropertiesMatNode} from '../../../nodes/mat/StencilProperties';
 import {VolumeMatNode} from '../../../nodes/mat/Volume';
 import {VolumeBuilderMatNode} from '../../../nodes/mat/VolumeBuilder';
 
@@ -45,6 +48,8 @@ import {RenderersNetworkMatNode} from '../../../nodes/mat/RenderersNetwork';
 
 export interface MatNodeChildrenMap {
 	builderUniformUpdate: BuilderUniformUpdateMatNode;
+	clippingPlane: ClippingPlaneMatNode;
+	clipProperties: ClipPropertiesMatNode;
 	code: CodeMatNode;
 	color: ColorMatNode;
 	envMap: EnvMapMatNode;
@@ -74,6 +79,7 @@ export interface MatNodeChildrenMap {
 	rayMarchingBuilder: RayMarchingBuilderMatNode;
 	shadow: ShadowMatNode;
 	sky: SkyMatNode;
+	stencilProperties: StencilPropertiesMatNode;
 	volume: VolumeMatNode;
 	volumeBuilder: VolumeBuilderMatNode;
 	// networks
@@ -91,6 +97,8 @@ import {PolyEngine} from '../../../Poly';
 export class MatRegister {
 	static run(poly: PolyEngine) {
 		poly.registerNode(BuilderUniformUpdateMatNode, CATEGORY_MAT.ADVANCED);
+		poly.registerNode(ClippingPlaneMatNode, CATEGORY_MAT.ADVANCED);
+		poly.registerNode(ClipPropertiesMatNode, CATEGORY_MAT.ADVANCED);
 		poly.registerNode(CodeMatNode, CATEGORY_MAT.ADVANCED);
 		if (process.env.NODE_ENV == 'development') {
 			poly.registerNode(ColorMatNode, CATEGORY_MAT.UPDATE);
@@ -123,6 +131,7 @@ export class MatRegister {
 		poly.registerNode(RayMarchingBuilderMatNode, CATEGORY_MAT.ADVANCED);
 		poly.registerNode(ShadowMatNode, CATEGORY_MAT.ADVANCED);
 		poly.registerNode(SkyMatNode, CATEGORY_MAT.MESH);
+		poly.registerNode(StencilPropertiesMatNode, CATEGORY_MAT.ADVANCED);
 		poly.registerNode(VolumeMatNode, CATEGORY_MAT.VOLUME);
 		poly.registerNode(VolumeBuilderMatNode, CATEGORY_MAT.VOLUME);
 		// networks

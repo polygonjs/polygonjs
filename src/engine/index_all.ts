@@ -16,11 +16,12 @@ import {ThreejsViewer} from './viewers/Threejs';
 import {addStatsToViewer} from './viewers/utils/Stats';
 // core
 import {CoreSleep} from '../core/Sleep';
+import {CoreUserAgent} from '../core/UserAgent';
 import {CoreGeometry} from '../core/geometry/Geometry';
 import {CoreGroup} from '../core/geometry/Group';
 import {CoreObject} from '../core/geometry/Object';
 import {CoreFeaturesController} from '../core/FeaturesController';
-import {randFloat, radToDeg} from '../core/math/_Module';
+import {CoreMath, clamp, fit, randFloat, radToDeg} from '../core/math/_Module';
 import {sanitizeName} from '../core/String';
 import {watch} from '../core/reactivity/CoreReactivity';
 import {getOrCreateObjectAttributeRef} from '../core/reactivity/ObjectAttributeReactivityCreateRef';
@@ -75,10 +76,14 @@ export {
 	addStatsToViewer,
 	// core
 	CoreSleep,
+	CoreUserAgent,
 	CoreGeometry,
 	CoreGroup,
 	CoreObject,
 	CoreFeaturesController,
+	CoreMath,
+	clamp,
+	fit,
 	randFloat,
 	radToDeg,
 	sanitizeName,

@@ -281,6 +281,8 @@ class WebGLRendererRopParamsConfig extends NodeParamsConfig {
 	stencil = ParamConfig.BOOLEAN(1);
 	/** @param depth */
 	depth = ParamConfig.BOOLEAN(1);
+	/** @param localClippingEnabled */
+	localClippingEnabled = ParamConfig.BOOLEAN(0);
 	/** @param logarithmicDepthBuffer */
 	logarithmicDepthBuffer = ParamConfig.BOOLEAN(0);
 	/** @param preserveDrawingBuffer */
@@ -348,6 +350,7 @@ export class WebGLRendererRopNode extends TypedRopNode<WebGLRendererRopParamsCon
 		params.context = gl;
 		params.preserveDrawingBuffer = this.pv.preserveDrawingBuffer;
 		const renderer = Poly.renderersController.createWebGLRenderer(params);
+		renderer.localClippingEnabled = isBooleanTrue(this.pv.localClippingEnabled);
 		this._rendererByCanvas.set(canvas, renderer);
 
 		if (Poly.renderersController.printDebug()) {

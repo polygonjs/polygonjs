@@ -47,6 +47,14 @@ export function RenderCopNodeParamConfig<TBase extends Constructor>(Base: TBase)
 		objects = ParamConfig.STRING('/', {
 			objectMask: true,
 		});
+		/** @param transparent background */
+		transparentBackground = ParamConfig.BOOLEAN(1);
+		/** @param bg Color */
+		backgroundColor = ParamConfig.COLOR([0, 0, 0], {
+			visibleIf: {
+				transparentBackground: 0,
+			},
+		});
 		/** @param use same resolution as renderer */
 		useRendererRes = ParamConfig.BOOLEAN(1);
 		/** @param render resolution */
@@ -57,6 +65,8 @@ export function RenderCopNodeParamConfig<TBase extends Constructor>(Base: TBase)
 		});
 		/** @param use a data texture instead of a render target, which can be useful when using that texture as and envMap */
 		useDataTexture = ParamConfig.BOOLEAN(0);
+		/** @param autoRender */
+		autoRender = ParamConfig.BOOLEAN(1);
 		/** @param render button */
 		render = ParamConfig.BUTTON(null, {
 			callback: (node: BaseNodeType) => {
@@ -83,6 +93,12 @@ export class RenderCopNode extends TypedCopNode<RenderCopParamConfig> {
 	private _dataTextureController: DataTextureController | undefined;
 
 	override async cook() {
+		if (isBooleanTrue(this.pv.autoRender)) {
+			this._addOnBeforeTickCallback();
+		} else {
+			this._removeOnBeforeTickCallback();
+		}
+
 		const camera = await this._getCamera();
 		this._textureCamera = camera;
 		if (this._textureCamera) {
@@ -90,6 +106,29 @@ export class RenderCopNode extends TypedCopNode<RenderCopParamConfig> {
 		} else {
 			this.cookController.endCook();
 		}
+	}
+
+	//
+	//
+	// AUTO RENDER
+	//
+	//
+	private _addOnBeforeTickCallback() {
+		const callbackName = this._onBeforeRenderCallbackName();
+		if (this.scene().hasBeforeTickCallback(callbackName)) {
+			return;
+		}
+		this.scene().registerOnBeforeTick(callbackName, this._renderOnTargetBound);
+	}
+	private _removeOnBeforeTickCallback() {
+		this.scene().unRegisterOnBeforeTick(this._onBeforeRenderCallbackName());
+	}
+	private _onBeforeRenderCallbackName() {
+		return `cop/render_onBeforeTickCallback-${this.graphNodeId()}`;
+	}
+	override dispose() {
+		super.dispose();
+		this._removeOnBeforeTickCallback();
 	}
 
 	//
@@ -118,6 +157,8 @@ export class RenderCopNode extends TypedCopNode<RenderCopParamConfig> {
 		});
 	}
 
+	private previousParentByObject: WeakMap<Object3D, Object3D | null> = new WeakMap();
+	private _renderOnTargetBound = this.renderOnTarget.bind(this);
 	async renderOnTarget() {
 		const camera = this._textureCamera;
 		if (!camera) {
@@ -158,29 +199,27 @@ export class RenderCopNode extends TypedCopNode<RenderCopParamConfig> {
 
 		const renderedObjects = this.scene().objectsController.objectsByMask(this.pv.objects).filter(isObject3D);
 		//
-		const previousParentByObject: WeakMap<Object3D, Object3D | null> = new WeakMap();
+
 		for (const renderedObject of renderedObjects) {
-			previousParentByObject.set(renderedObject, renderedObject.parent);
+			this.previousParentByObject.set(renderedObject, renderedObject.parent);
 			this._renderScene.attach(renderedObject);
 		}
 
 		//
 		const prevTarget = renderer.getRenderTarget();
 		const prevColorSpace = renderer.outputColorSpace;
-		const prevBackground = this.scene().threejsScene().background;
-		this.scene().threejsScene().background = null;
+		this._renderScene.background = this.pv.transparentBackground ? null : this.pv.backgroundColor;
 		renderer.setRenderTarget(this._renderTarget);
 		renderer.outputColorSpace = this.pv.colorSpace as ColorSpace;
 		renderer.clear();
 		renderer.render(this._renderScene, camera);
 
 		// restore
-		this.scene().threejsScene().background = prevBackground;
 		renderer.setRenderTarget(prevTarget);
 		renderer.outputColorSpace = prevColorSpace;
 		// restore object
 		for (const renderedObject of renderedObjects) {
-			const previousParent = previousParentByObject.get(renderedObject);
+			const previousParent = this.previousParentByObject.get(renderedObject);
 			if (previousParent) {
 				previousParent.attach(renderedObject);
 			}

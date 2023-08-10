@@ -1,6 +1,6 @@
 import {ColorRepresentation, PerspectiveCamera, RectAreaLight, SpotLight} from 'three';
 import {ObjectType, registerObjectType} from './geometry/Constant';
-import {monkeyPatchSpotLight} from './monkeyPath/SpotLight';
+import {monkeyPatchSpotLight} from './monkeyPatch/SpotLight';
 
 export interface PerspectiveCameraOptions {
 	fov: number;
