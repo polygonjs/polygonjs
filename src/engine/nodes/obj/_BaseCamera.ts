@@ -263,7 +263,6 @@ export class TypedThreejsCameraObjNode<
 		const node = this;
 		const hierachyParams = {
 			group: '',
-			applyToChildren: true,
 		};
 		CameraControlsSopOperation.updateObject({
 			objects,

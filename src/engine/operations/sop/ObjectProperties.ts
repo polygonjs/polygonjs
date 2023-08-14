@@ -8,7 +8,6 @@ import {CoreMask} from '../../../core/geometry/Mask';
 
 interface ObjectPropertiesSopParams extends DefaultOperationParams {
 	group: string;
-	applyToChildren: boolean;
 	// name
 	tname: boolean;
 	name: string;
@@ -35,7 +34,6 @@ interface ObjectPropertiesSopParams extends DefaultOperationParams {
 export class ObjectPropertiesSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: ObjectPropertiesSopParams = {
 		group: '',
-		applyToChildren: false,
 		// name
 		tname: false,
 		name: '',

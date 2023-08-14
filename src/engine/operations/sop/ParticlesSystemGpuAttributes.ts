@@ -12,13 +12,11 @@ const _textureSize = new Vector2();
 
 interface ParticlesSystemGpuAttributesSopParams extends DefaultOperationParams {
 	group: string;
-	applyToChildren: boolean;
 }
 // type TraverseCallback = (coreObject: CoreObject) => void;
 export class ParticlesSystemGpuAttributesSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: ParticlesSystemGpuAttributesSopParams = {
 		group: '',
-		applyToChildren: true,
 	};
 	static override readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
 	static override type(): Readonly<SopType.PARTICLES_SYSTEM_GPU_ATTRIBUTES> {

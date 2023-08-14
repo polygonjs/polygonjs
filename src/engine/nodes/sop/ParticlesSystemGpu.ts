@@ -54,10 +54,7 @@ class ParticlesSystemGpuSopParamsConfig extends NodeParamsConfig {
 	group = ParamConfig.STRING(DEFAULT.group, {
 		objectMask: true,
 	});
-	/** @param toggle on to also assign the material to children */
-	applyToChildren = ParamConfig.BOOLEAN(DEFAULT.applyToChildren, {
-		separatorAfter: true,
-	});
+
 	/** @param data type used by the solver */
 	dataType = ParamConfig.INTEGER(0, {
 		menu: {

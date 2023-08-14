@@ -7,11 +7,15 @@
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {MirrorSopOperation} from '../../operations/sop/Mirror';
-import {HierarchyParamConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 
 const DEFAULT = MirrorSopOperation.DEFAULT_PARAMS;
-class MirrorSopParamConfig extends HierarchyParamConfig {
+class MirrorSopParamConfig extends NodeParamsConfig {
+	/** @param group to assign the material to */
+	group = ParamConfig.STRING(DEFAULT.group, {
+		objectMask: true,
+	});
 	/** @param axis */
 	axis = ParamConfig.VECTOR3(DEFAULT.axis);
 	/** @param center */

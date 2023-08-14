@@ -174,7 +174,7 @@ function _createClipGeo(mesh: Mesh) {
 		bvh = meshBVH.geometry.boundsTree;
 	}
 
-	const performIntersection = (attrib?: BufferAttribute | InterleavedBufferAttribute) => {
+	const performIntersection = (posAttrib?: BufferAttribute | InterleavedBufferAttribute) => {
 		let index = 0;
 
 		const intersectsBounds = (
@@ -193,7 +193,7 @@ function _createClipGeo(mesh: Mesh) {
 			tempLine.start.copy(tri.a);
 			tempLine.end.copy(tri.b);
 			if (_plane.intersectLine(tempLine, tempVector)) {
-				attrib?.setXYZ(index, tempVector.x, tempVector.y, tempVector.z);
+				posAttrib?.setXYZ(index, tempVector.x, tempVector.y, tempVector.z);
 				index++;
 				count++;
 			}
@@ -201,7 +201,7 @@ function _createClipGeo(mesh: Mesh) {
 			tempLine.start.copy(tri.b);
 			tempLine.end.copy(tri.c);
 			if (_plane.intersectLine(tempLine, tempVector)) {
-				attrib?.setXYZ(index, tempVector.x, tempVector.y, tempVector.z);
+				posAttrib?.setXYZ(index, tempVector.x, tempVector.y, tempVector.z);
 				count++;
 				index++;
 			}
@@ -209,7 +209,7 @@ function _createClipGeo(mesh: Mesh) {
 			tempLine.start.copy(tri.c);
 			tempLine.end.copy(tri.a);
 			if (_plane.intersectLine(tempLine, tempVector)) {
-				attrib?.setXYZ(index, tempVector.x, tempVector.y, tempVector.z);
+				posAttrib?.setXYZ(index, tempVector.x, tempVector.y, tempVector.z);
 				count++;
 				index++;
 			}
@@ -231,7 +231,15 @@ function _createClipGeo(mesh: Mesh) {
 	const {index} = performIntersection();
 	const lineGeometry = new BufferGeometry();
 	const linePosAttr = new BufferAttribute(new Float32Array(index * 3), 3, false);
-	// linePosAttr.setUsage(DynamicDrawUsage);
+	// No index is added for now, as this would add internal lines.
+	// But this means that this geometry cannot yet be processed by operations that require indices,
+	// such as sop/polywire.
+	// const indices: number[] = new Array(index * 2);
+	// for (let i = 0; i < index - 1; i++) {
+	// 	indices[i * 2] = i;
+	// 	indices[i * 2 + 1] = i + 1;
+	// }
+	// lineGeometry.setIndex(indices);
 	lineGeometry.setAttribute('position', linePosAttr);
 	const outlineLines = new LineSegments(lineGeometry, DEFAULT_MATERIALS[ObjectType.LINE_SEGMENTS]);
 	outlineLines.frustumCulled = false;

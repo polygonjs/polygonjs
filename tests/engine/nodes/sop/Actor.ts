@@ -27,7 +27,7 @@ export function testenginenodessopActor(qUnit: QUnit) {
 		return {onTick1, setObjectPosition1, floatToVec3_1, sin1};
 	}
 
-	qUnit.test('sop/actor with objectsMask', async (assert) => {
+	qUnit.test('sop/actor with group', async (assert) => {
 		const geo1 = window.geo1;
 		const box1 = geo1.createNode('box');
 		const box2 = geo1.createNode('box');
@@ -59,9 +59,13 @@ export function testenginenodessopActor(qUnit: QUnit) {
 			return names;
 		}
 
+		// actor1.p.group.set('*box2');
 		assert.deepEqual(await _objectNamesWithActor(), ['box3']);
 
-		actor1.p.objectsMask.set('*box2');
+		actor1.p.group.set('*');
+		assert.deepEqual(await _objectNamesWithActor(), ['box3', 'box2', 'box1']);
+
+		actor1.p.group.set('*box2');
 		assert.deepEqual(await _objectNamesWithActor(), ['box2']);
 	});
 

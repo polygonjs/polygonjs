@@ -39,7 +39,7 @@ interface UpdateObjectOptions {
 
 export class CameraWebXRARSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: CameraWebXRARSopParams = {
-		group: '',
+		group: '*',
 		hitTest: WEBXR_FEATURE_STATUS_OPTIONAL_INDEX,
 		lightEstimation: WEBXR_FEATURE_STATUS_OPTIONAL_INDEX,
 		cameraAccess: WEBXR_FEATURE_STATUS_OPTIONAL_INDEX,
@@ -54,7 +54,6 @@ export class CameraWebXRARSopOperation extends BaseSopOperation {
 		const coreGroup = inputCoreGroups[0];
 		const objects = CoreMask.filterObjects(coreGroup, {
 			group: params.group,
-			applyToChildren: params.group.trim().length == 0,
 		});
 
 		if (this._node) {

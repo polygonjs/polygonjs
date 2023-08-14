@@ -9,7 +9,6 @@ import {updateMaterialSideWithShadow} from '../../nodes/mat/utils/helpers/Materi
 import {CoreMask} from '../../../core/geometry/Mask';
 interface MaterialPropertiesSopParams extends DefaultOperationParams {
 	group: string;
-	applyToChildren: boolean;
 	// side
 	tside: boolean;
 	doubleSided: boolean;
@@ -25,7 +24,6 @@ interface MaterialPropertiesSopParams extends DefaultOperationParams {
 export class MaterialPropertiesSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: MaterialPropertiesSopParams = {
 		group: '',
-		applyToChildren: true,
 		// side
 		tside: false,
 		doubleSided: false,

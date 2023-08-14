@@ -353,6 +353,7 @@ import {testenginenodessopActor} from './engine/nodes/sop/Actor';
 import {testenginenodessopActorInstance} from './engine/nodes/sop/ActorInstance';
 import {testenginenodessopActorPoint} from './engine/nodes/sop/ActorPoint';
 import {testenginenodessopAdd} from './engine/nodes/sop/Add';
+import {testenginenodessopAdjacency} from './engine/nodes/sop/Adjacency';
 import {testenginenodessopAmbientLight} from './engine/nodes/sop/AmbientLight';
 import {testenginenodessopAnimationCopy} from './engine/nodes/sop/AnimationCopy';
 import {testenginenodessopAreaLight} from './engine/nodes/sop/AreaLight';
@@ -920,6 +921,7 @@ export function testPolygonjs(qUnit: QUnit) {
 	testenginenodessopActorInstance(qUnit);
 	testenginenodessopActorPoint(qUnit);
 	testenginenodessopAdd(qUnit);
+	testenginenodessopAdjacency(qUnit);
 	testenginenodessopAmbientLight(qUnit);
 	testenginenodessopAnimationCopy(qUnit);
 	testenginenodessopAreaLight(qUnit);

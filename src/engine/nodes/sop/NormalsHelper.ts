@@ -21,8 +21,6 @@ class NormalsHelperSopParamsConfig extends NodeParamsConfig {
 	group = ParamConfig.STRING('', {
 		objectMask: true,
 	});
-	/** @param applyToChildren */
-	applyToChildren = ParamConfig.BOOLEAN(true, {separatorAfter: true});
 	/** @param keep input */
 	keepInput = ParamConfig.BOOLEAN(1);
 	/** @param size of the box */

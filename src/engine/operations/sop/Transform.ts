@@ -36,7 +36,6 @@ const _mat4 = new Matrix4();
 interface TransformSopParams extends DefaultOperationParams {
 	applyOn: number;
 	group: string;
-	applyToChildren: boolean;
 	//
 	objectMode: number;
 	objectTransformSpace: number;
@@ -53,7 +52,6 @@ export class TransformSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: TransformSopParams = {
 		applyOn: TRANSFORM_TARGET_TYPES.indexOf(TransformTargetType.GEOMETRY),
 		group: '',
-		applyToChildren: false,
 		objectMode: OBJECT_TRANSFORM_MODES.indexOf(ObjectTransformMode.SET),
 		objectTransformSpace: OBJECT_TRANSFORM_SPACES.indexOf(ObjectTransformSpace.PARENT),
 		pointGroup: '',

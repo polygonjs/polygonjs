@@ -17,8 +17,9 @@ import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {MAG_FILTER_DEFAULT_VALUE, MIN_FILTER_DEFAULT_VALUE} from '../../../core/cop/Filter';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
+import {filterThreejsObjects} from '../../../core/geometry/Mask';
 interface TexturePropertiesSopParams extends DefaultOperationParams {
-	applyToChildren: boolean;
+	group: string;
 	// encoding
 	tcolorSpace: boolean;
 	colorSpace: string;
@@ -42,7 +43,7 @@ interface TexturePropertiesSopParams extends DefaultOperationParams {
 
 export class TexturePropertiesSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: TexturePropertiesSopParams = {
-		applyToChildren: false,
+		group: '',
 		// anisotropy
 		tcolorSpace: false,
 		colorSpace: NoColorSpace,
@@ -68,39 +69,31 @@ export class TexturePropertiesSopOperation extends BaseSopOperation {
 		return 'textureProperties';
 	}
 
-	override async cook(input_contents: CoreGroup[], params: TexturePropertiesSopParams) {
-		const core_group = input_contents[0];
+	override async cook(inputCoreGroups: CoreGroup[], params: TexturePropertiesSopParams) {
+		const coreGroup = inputCoreGroups[0];
 
-		const objects: Mesh[] = [];
-		for (let object of core_group.threejsObjects() as Mesh[]) {
-			if (isBooleanTrue(params.applyToChildren)) {
-				object.traverse((child) => {
-					objects.push(child as Mesh);
-				});
-			} else {
-				objects.push(object);
-			}
-		}
-		const promises = objects.map((object) => this._update_object(object, params));
+		const objects: Mesh[] = filterThreejsObjects(coreGroup, params) as Mesh[];
+		const promises = objects.map((object) => this._updateObject(object, params));
 		await Promise.all(promises);
-		return core_group;
+		return coreGroup;
 	}
-	private async _update_object(object: Mesh, params: TexturePropertiesSopParams) {
+	private async _updateObject(object: Mesh, params: TexturePropertiesSopParams) {
 		const material = object.material as Material;
-		if (material) {
-			// TODO: a problem with this node,
-			// is that when it cooks, the material may not already have a texture assigned
-			// so it will appear to have no effect
-			await this._update_material(material, params);
+		if (!material) {
+			return;
 		}
+		// TODO: a problem with this node,
+		// is that when it cooks, the material may not already have a texture assigned
+		// so it will appear to have no effect
+		await this._updateMaterial(material, params);
 	}
-	private async _update_material(material: Material, params: TexturePropertiesSopParams) {
+	private async _updateMaterial(material: Material, params: TexturePropertiesSopParams) {
 		let texture: Texture = (material as any).map;
 		if (texture) {
-			await this._update_texture(texture, params);
+			await this._updateTexture(texture, params);
 		}
 	}
-	private async _update_texture(texture: Texture, params: TexturePropertiesSopParams) {
+	private async _updateTexture(texture: Texture, params: TexturePropertiesSopParams) {
 		this._updateColorSpace(texture, params);
 		this._updateMapping(texture, params);
 		this._updateWrap(texture, params);

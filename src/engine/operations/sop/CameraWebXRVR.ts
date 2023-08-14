@@ -56,7 +56,6 @@ export class CameraWebXRVRSopOperation extends BaseSopOperation {
 		const coreGroup = inputCoreGroups[0];
 		const objects = CoreMask.filterObjects(coreGroup, {
 			group: params.group,
-			applyToChildren: params.group.trim().length == 0,
 		});
 
 		if (this._node) {

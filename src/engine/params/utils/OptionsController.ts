@@ -35,6 +35,7 @@ const NODE_SELECTION = 'nodeSelection';
 const NODE_SELECTION_CONTEXT = 'context';
 const NODE_SELECTION_TYPES = 'types';
 const OBJECT_MASK = 'objectMask';
+const OBJECT_MASK_INPUT_INDEX = 'inputIndex';
 // const PARAM_SELECTION = 'paramSelection';
 const DEPENDENT_ON_FOUND_NODE = 'dependentOnFoundNode';
 const DEPENDENT_ON_FOUND_PARAM = 'dependentOnFoundParam';
@@ -177,7 +178,8 @@ export interface FolderParamOptions extends BaseParamOptions {
 	level?: number;
 }
 interface ObjectMask {
-	fromInputOnly: boolean;
+	inputIndex?: number;
+	fromInputOnly?: boolean;
 }
 type ObjectMaskOptions = ObjectMask | boolean;
 export interface IntegerParamOptions
@@ -575,6 +577,11 @@ export class OptionsController {
 	displayObjectMaskSelection() {
 		const value = this._options[OBJECT_MASK];
 		return value != null && value != false;
+	}
+	objectMaskInputIndex(): number {
+		const value = this._options[OBJECT_MASK];
+		const input = value != null ? (value as ObjectMask)[OBJECT_MASK_INPUT_INDEX] : 0;
+		return input || 0;
 	}
 	objectMaskFromInputOnly() {
 		const value = this._options[OBJECT_MASK];

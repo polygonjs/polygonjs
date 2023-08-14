@@ -142,3 +142,9 @@ export class HierarchyParamConfig extends NodeParamsConfig {
 		objectMask: true,
 	});
 }
+export class HierarchyParamConfigAll extends NodeParamsConfig {
+	/** @param group to apply this node to */
+	group = ParamConfig.STRING('*', {
+		objectMask: true,
+	});
+}

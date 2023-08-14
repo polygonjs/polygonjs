@@ -37,7 +37,6 @@ export class CameraPostProcessSopOperation extends BaseSopOperation {
 		const coreGroup = inputCoreGroups[0];
 		const objects = CoreMask.filterObjects(coreGroup, {
 			group: params.group,
-			applyToChildren: params.group.trim().length == 0,
 		});
 
 		const relativeOrAbsolutePath = params.node.path();

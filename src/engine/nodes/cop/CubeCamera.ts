@@ -8,19 +8,10 @@
 
 import {TypedCopNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {
-	CubeCamera,
-	Scene,
-	Object3D,
-	CubeReflectionMapping,
-	CubeRefractionMapping,
-	Texture,
-	WebGLRenderTarget,
-} from 'three';
+import {CubeCamera, CubeReflectionMapping, CubeRefractionMapping, Texture, WebGLRenderer} from 'three';
 import {CopType} from '../../poly/registers/nodes/types/Cop';
 import {BaseNodeType} from '../_Base';
 import {isBooleanTrue} from '../../../core/Type';
-import {isObject3D} from '../../../core/geometry/ObjectContent';
 import {CopRendererController} from './utils/RendererController';
 
 enum MapMode {
@@ -34,9 +25,9 @@ class CubeCameraCopParamsConfig extends NodeParamsConfig {
 		objectMask: true,
 	});
 	/** @param objects to render */
-	objects = ParamConfig.STRING('/', {
-		objectMask: true,
-	});
+	// objects = ParamConfig.STRING('/', {
+	// 	objectMask: true,
+	// });
 	/** @param defines if the texture is used for reflection or refraction */
 	mode = ParamConfig.INTEGER(0, {
 		menu: {
@@ -69,27 +60,8 @@ export class CubeCameraCopNode extends TypedCopNode<CubeCameraCopParamsConfig> {
 		return CopType.CUBE_CAMERA;
 	}
 
-	private _renderScene: Scene = new Scene();
 	private _rendererController: CopRendererController | undefined;
-	// override async cook() {
-	// 	const cubeCameraNode = this.pv.cubeCamera.nodeWithContext(NodeContext.OBJ, this.states.error);
-	// 	if (!cubeCameraNode) {
-	// 		this.states.error.set(`cubeCamera not found at '${this.pv.cubeCamera.path()}'`);
-	// 		return this.cookController.endCook();
-	// 	}
-	// 	const renderTarget = (cubeCameraNode as CubeCameraObjNode).renderTarget();
-	// 	if (!renderTarget) {
-	// 		this.states.error.set(`cubeCamera has no render target'`);
-	// 		return this.cookController.endCook();
-	// 	}
-	// 	const texture = renderTarget.texture;
-	// 	if (MAP_MODES[this.pv.mode] == MapMode.REFLECTION) {
-	// 		texture.mapping = CubeReflectionMapping;
-	// 	} else {
-	// 		texture.mapping = CubeRefractionMapping;
-	// 	}
-	// 	this.setTexture(texture);
-	// }
+
 	override async cook() {
 		if (isBooleanTrue(this.pv.autoRender)) {
 			this._addOnBeforeTickCallback();
@@ -97,7 +69,7 @@ export class CubeCameraCopNode extends TypedCopNode<CubeCameraCopParamsConfig> {
 			this._removeOnBeforeTickCallback();
 		}
 
-		const texture = await this.renderOnTarget();
+		const texture = await this.renderOnTarget(false);
 		if (texture) {
 			const mode = MAP_MODES[this.pv.mode];
 			switch (mode) {
@@ -108,8 +80,8 @@ export class CubeCameraCopNode extends TypedCopNode<CubeCameraCopParamsConfig> {
 					texture.mapping = CubeRefractionMapping;
 					break;
 			}
-
-			this.setTexture(texture);
+			// not needed, as it is called inside .renderOnTarget
+			// this.setTexture(texture);
 		} else {
 			this.cookController.endCook();
 		}
@@ -159,9 +131,11 @@ export class CubeCameraCopNode extends TypedCopNode<CubeCameraCopParamsConfig> {
 			});
 		});
 	}
-	private previousParentByObject: WeakMap<Object3D, Object3D | null> = new WeakMap();
-	private _renderOnTargetBound = this.renderOnTarget.bind(this);
-	async renderOnTarget(): Promise<Texture | undefined> {
+	// private previousParentByObject: WeakMap<Object3D, Object3D | null> = new WeakMap();
+	private _renderOnTargetBound = () => this.renderOnTarget(true);
+	private _prevCamera: CubeCamera | undefined;
+	private _prevRenderer: WebGLRenderer | undefined;
+	async renderOnTarget(setDirtyIfChangesDetected: boolean): Promise<Texture | undefined> {
 		const camera = await this._getCamera();
 		if (!camera) {
 			console.warn(`${this.path()}: no camera found`);
@@ -172,34 +146,36 @@ export class CubeCameraCopNode extends TypedCopNode<CubeCameraCopParamsConfig> {
 		if (!renderer) {
 			return;
 		}
-
-		const renderedObjects = this.scene().objectsController.objectsByMask(this.pv.objects).filter(isObject3D);
-		//
-
-		for (const renderedObject of renderedObjects) {
-			this.previousParentByObject.set(renderedObject, renderedObject.parent);
-			this._renderScene.attach(renderedObject);
+		// ensure materials using this texture are updated
+		if ((setDirtyIfChangesDetected == true && this._prevCamera != camera) || renderer != this._prevRenderer) {
+			this.setDirty();
+			this._prevCamera = camera;
+			this._prevRenderer = renderer;
 		}
 
-		this._renderScene.background = this.pv.transparentBackground ? null : this.pv.backgroundColor;
+		const scene = this.scene().threejsScene();
+		// save state
+		const prevBackground = scene.background;
+		scene.background = this.pv.transparentBackground ? null : this.pv.backgroundColor;
 
 		// render
-		camera.update(renderer, this.scene().threejsScene());
+		camera.update(renderer, scene);
 
-		// restore object
-		for (const renderedObject of renderedObjects) {
-			const previousParent = this.previousParentByObject.get(renderedObject);
-			if (previousParent) {
-				previousParent.attach(renderedObject);
-			}
-		}
+		// restore state
+		scene.background = prevBackground;
 
-		this._renderTarget = camera.renderTarget;
-		return camera.renderTarget.texture;
+		// make sure to set the texture here,
+		// otherwise it will not be replaced when the renderer changes
+		const texture = camera.renderTarget.texture;
+		this.setTexture(texture);
+		console.log(texture.uuid);
+
+		return texture;
 	}
-	private _renderTarget: WebGLRenderTarget | undefined;
-	renderTarget() {
-		return this._renderTarget;
+	// private _renderTarget: WebGLRenderTarget | undefined;
+	async renderTarget() {
+		const camera = await this._getCamera();
+		return camera?.renderTarget.texture;
 	}
 
 	//
@@ -208,6 +184,6 @@ export class CubeCameraCopNode extends TypedCopNode<CubeCameraCopParamsConfig> {
 	//
 	//
 	static PARAM_CALLBACK_render(node: CubeCameraCopNode) {
-		node.renderOnTarget();
+		node.renderOnTarget(true);
 	}
 }

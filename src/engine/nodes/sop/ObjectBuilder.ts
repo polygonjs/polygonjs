@@ -42,8 +42,6 @@ class ObjectBuilderSopParamsConfig extends NodeParamsConfig {
 	group = ParamConfig.STRING('', {
 		objectMask: true,
 	});
-	/** @param toggle on to apply recursively to children */
-	applyToChildren = ParamConfig.BOOLEAN(0);
 }
 const ParamsConfig = new ObjectBuilderSopParamsConfig();
 

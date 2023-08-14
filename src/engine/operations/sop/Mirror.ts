@@ -27,7 +27,7 @@ interface MirrorSopParams extends DefaultOperationParams {
 
 export class MirrorSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: MirrorSopParams = {
-		group: '',
+		group: '*',
 		axis: new Vector3(1, 0, 0),
 		center: new Vector3(0, 0, 0),
 		preserveInput: true,
@@ -42,7 +42,6 @@ export class MirrorSopOperation extends BaseSopOperation {
 		const newObjects = coreGroup.allObjects();
 		const objects = CoreMask.filterThreejsObjects(coreGroup, {
 			group: params.group,
-			applyToChildren: params.group.trim().length == 0,
 		}).filter(object3DHasGeometry);
 		//
 		_axis.copy(params.axis).normalize();

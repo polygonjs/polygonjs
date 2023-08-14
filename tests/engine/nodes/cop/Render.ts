@@ -65,7 +65,7 @@ export function testenginenodescopRender(qUnit: QUnit) {
 			assert.equal(texture.image.height, 16);
 			render1.p.render.pressButton();
 
-			const renderTarget = await render1.renderTarget(renderer);
+			const renderTarget = (await render1.renderTarget(renderer))!;
 			const bufferWidth = 16;
 			const bufferHeight = 16;
 			const pixelBuffer = new Float32Array(bufferWidth * bufferHeight * 4);

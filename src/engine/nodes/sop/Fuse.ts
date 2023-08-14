@@ -40,8 +40,6 @@ class FuseSopParamsConfig extends NodeParamsConfig {
 	group = ParamConfig.STRING('', {
 		objectMask: true,
 	});
-	/** @param applyToChildren */
-	applyToChildren = ParamConfig.BOOLEAN(true, {separatorAfter: true});
 	/** @param distance threshold */
 	dist = ParamConfig.FLOAT(0.001, {
 		range: [0, 1],

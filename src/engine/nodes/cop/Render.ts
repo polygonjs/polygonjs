@@ -18,8 +18,6 @@ import {
 	ClampToEdgeWrapping,
 	PerspectiveCamera,
 	Vector2,
-	Object3D,
-	Scene,
 } from 'three';
 import {TypedCopNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
@@ -31,7 +29,6 @@ import {TextureParamsController, TextureParamConfig} from './utils/TextureParams
 import {CoreUserAgent} from '../../../core/UserAgent';
 import {Poly} from '../../Poly';
 import {Constructor} from '../../../types/GlobalTypes';
-import {isObject3D} from '../../../core/geometry/ObjectContent';
 import {CoreCameraPerspectiveFrameMode} from '../../../core/camera/frameMode/CoreCameraPerspectiveFrameMode';
 import {CoreCameraOrthographicFrameMode} from '../../../core/camera/frameMode/CoreCameraOrthographicFrameMode';
 
@@ -41,10 +38,6 @@ export function RenderCopNodeParamConfig<TBase extends Constructor>(Base: TBase)
 	return class Mixin extends Base {
 		/** @param path to the main camera object that will be used when the scene loads outside of the editor */
 		cameraPath = ParamConfig.STRING('*perspectiveCamera*', {
-			objectMask: true,
-		});
-		/** @param objects to render */
-		objects = ParamConfig.STRING('/', {
 			objectMask: true,
 		});
 		/** @param transparent background */
@@ -86,12 +79,10 @@ export class RenderCopNode extends TypedCopNode<RenderCopParamConfig> {
 	}
 	public readonly textureParamsController: TextureParamsController = new TextureParamsController(this);
 
-	private _renderScene: Scene = new Scene();
-	private _textureCamera: OrthographicCamera | PerspectiveCamera | undefined;
-	private _renderTarget: WebGLRenderTarget | undefined;
+	// private _renderTarget: WebGLRenderTarget | undefined;
 	private _rendererController: CopRendererController | undefined;
 	private _dataTextureController: DataTextureController | undefined;
-
+	private _renderTargetByRenderer: WeakMap<WebGLRenderer, WebGLRenderTarget> = new WeakMap();
 	override async cook() {
 		if (isBooleanTrue(this.pv.autoRender)) {
 			this._addOnBeforeTickCallback();
@@ -100,8 +91,7 @@ export class RenderCopNode extends TypedCopNode<RenderCopParamConfig> {
 		}
 
 		const camera = await this._getCamera();
-		this._textureCamera = camera;
-		if (this._textureCamera) {
+		if (camera) {
 			await this.renderOnTarget();
 		} else {
 			this.cookController.endCook();
@@ -157,10 +147,9 @@ export class RenderCopNode extends TypedCopNode<RenderCopParamConfig> {
 		});
 	}
 
-	private previousParentByObject: WeakMap<Object3D, Object3D | null> = new WeakMap();
 	private _renderOnTargetBound = this.renderOnTarget.bind(this);
 	async renderOnTarget() {
-		const camera = this._textureCamera;
+		const camera = await this._getCamera();
 		if (!camera) {
 			this.states.error.set(`no camera found`);
 			return;
@@ -172,11 +161,10 @@ export class RenderCopNode extends TypedCopNode<RenderCopParamConfig> {
 			this.states.error.set(`no renderer found`);
 			return;
 		}
-		await this.createRenderTargetIfRequired(renderer);
-		if (!this._renderTarget) {
-			this.states.error.set(`no renderTarget`);
-			return;
-		}
+
+		const renderTarget = await this.createRenderTargetIfRequired(renderer);
+
+		this._ensureRenderTargetResolutionValid(renderer, renderTarget);
 		const viewer = this.scene().viewersRegister.lastRenderedViewer();
 		if (!viewer) {
 			this.states.error.set(`no viewer found`);
@@ -197,59 +185,55 @@ export class RenderCopNode extends TypedCopNode<RenderCopParamConfig> {
 			}
 		}
 
-		const renderedObjects = this.scene().objectsController.objectsByMask(this.pv.objects).filter(isObject3D);
-		//
-
-		for (const renderedObject of renderedObjects) {
-			this.previousParentByObject.set(renderedObject, renderedObject.parent);
-			this._renderScene.attach(renderedObject);
-		}
-
-		//
+		const scene = this.scene().threejsScene();
+		// save state
 		const prevTarget = renderer.getRenderTarget();
 		const prevColorSpace = renderer.outputColorSpace;
-		this._renderScene.background = this.pv.transparentBackground ? null : this.pv.backgroundColor;
-		renderer.setRenderTarget(this._renderTarget);
+		const prevBackground = scene.background;
+		scene.background = this.pv.transparentBackground ? null : this.pv.backgroundColor;
+		renderer.setRenderTarget(renderTarget);
 		renderer.outputColorSpace = this.pv.colorSpace as ColorSpace;
-		renderer.clear();
-		renderer.render(this._renderScene, camera);
 
-		// restore
+		// render
+		renderer.clear();
+		renderer.render(scene, camera);
+
+		// restore state
 		renderer.setRenderTarget(prevTarget);
 		renderer.outputColorSpace = prevColorSpace;
-		// restore object
-		for (const renderedObject of renderedObjects) {
-			const previousParent = this.previousParentByObject.get(renderedObject);
-			if (previousParent) {
-				previousParent.attach(renderedObject);
-			}
-		}
+		scene.background = prevBackground;
 
-		if (this._renderTarget.texture) {
+		// set texture
+		// Note: this cannot be done just in the cook method,
+		// since a window resize will require the re-creation of the renderTarget
+		// and therefore of the texture.
+		if (renderTarget.texture) {
 			if (isBooleanTrue(this.pv.useDataTexture)) {
 				this._dataTextureController =
 					this._dataTextureController ||
 					new DataTextureController(DataTextureControllerBufferType.Float32Array);
-				const dataTexture = this._dataTextureController.fromRenderTarget(renderer, this._renderTarget);
+				const dataTexture = this._dataTextureController.fromRenderTarget(renderer, renderTarget);
 				await this.textureParamsController.update(dataTexture);
 				this.setTexture(dataTexture);
+				return;
 			} else {
-				this.setTexture(this._renderTarget.texture);
-				await this.textureParamsController.update(this._renderTarget.texture);
+				this.setTexture(renderTarget.texture);
+				await this.textureParamsController.update(renderTarget.texture);
+				return;
 			}
-		} else {
-			this.cookController.endCook();
 		}
 	}
 
 	async renderTarget(renderer: WebGLRenderer) {
-		return (this._renderTarget = this._renderTarget || (await this._createRenderTarget(renderer)));
+		return this._renderTargetByRenderer.get(renderer);
 	}
 	private async createRenderTargetIfRequired(renderer: WebGLRenderer) {
-		if (!this._renderTarget || !this._renderTargetResolutionValid(renderer)) {
-			this._renderTarget = await this._createRenderTarget(renderer);
-			this._dataTextureController?.reset();
+		let renderTarget = this._renderTargetByRenderer.get(renderer);
+		if (!renderTarget) {
+			renderTarget = await this._createRenderTarget(renderer);
+			this._renderTargetByRenderer.set(renderer, renderTarget);
 		}
+		return renderTarget;
 	}
 	private _requestedResolution(renderer: WebGLRenderer, target: Vector2) {
 		if (isBooleanTrue(this.pv.useRendererRes)) {
@@ -258,24 +242,16 @@ export class RenderCopNode extends TypedCopNode<RenderCopParamConfig> {
 			target.copy(this.pv.resolution);
 		}
 	}
-	private _renderTargetResolutionValid(renderer: WebGLRenderer) {
-		if (this._renderTarget) {
-			const image = this._renderTarget.texture.image;
-			this._requestedResolution(renderer, _v2);
-			return (image.width = _v2.x && image.height == _v2.y);
-		} else {
-			return false;
+	private _ensureRenderTargetResolutionValid(renderer: WebGLRenderer, renderTarget: WebGLRenderTarget) {
+		this._requestedResolution(renderer, _v2);
+		const image = renderTarget.texture.image;
+		if (image.width != _v2.x || image.height != _v2.y) {
+			renderTarget.setSize(_v2.x, _v2.y);
 		}
 	}
 
 	private async _createRenderTarget(renderer: WebGLRenderer) {
 		this._requestedResolution(renderer, _v2);
-		if (this._renderTarget) {
-			const image = this._renderTarget.texture.image;
-			if (image.width == _v2.x && image.height == _v2.y) {
-				return this._renderTarget;
-			}
-		}
 
 		const wrapS = ClampToEdgeWrapping;
 		const wrapT = ClampToEdgeWrapping;
@@ -292,8 +268,8 @@ export class RenderCopNode extends TypedCopNode<RenderCopParamConfig> {
 			generateMipmaps: true,
 			type: CoreUserAgent.isiOS() ? HalfFloatType : FloatType,
 			samples: renderer.getPixelRatio(),
-			stencilBuffer: false,
-			depthBuffer: false,
+			stencilBuffer: true,
+			depthBuffer: true,
 		});
 		await this.textureParamsController.update(renderTarget.texture);
 		Poly.warn('created render target', this.path(), _v2.x, _v2.y);

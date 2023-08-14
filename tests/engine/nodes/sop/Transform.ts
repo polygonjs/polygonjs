@@ -66,7 +66,7 @@ qUnit.test('sop/transform can scale geometries down a hierarchy', async (assert)
 	const transform1 = geo1.createNode('transform');
 	transform1.setInput(0, hierarchy1);
 	transform1.setApplyOn(TransformTargetType.GEOMETRY);
-	transform1.p.applyToChildren.set(true);
+	transform1.p.group.set('*');
 	transform1.p.scale.set(0.1);
 	const container = await transform1.compute();
 	const coreContent = container.coreContent();

@@ -130,7 +130,7 @@ export class PhysicsRBDJointsSopNode extends TypedSopNode<PhysicsRBDJointsSopPar
 	override cook(inputCoreGroups: CoreGroup[]) {
 		const coreGroup = inputCoreGroups[0];
 		const inputObjects = coreGroup.allObjects();
-		const selectedObjects = CoreMask.filterThreejsObjects(coreGroup, {group: this.pv.group, applyToChildren: true});
+		const selectedObjects = CoreMask.filterThreejsObjects(coreGroup, this.pv);
 		const candidateObjects = selectedObjects.filter((object) => CorePhysicsAttribute.getRBDId(object) != null);
 
 		const joinObjects: Object3D[] = [];

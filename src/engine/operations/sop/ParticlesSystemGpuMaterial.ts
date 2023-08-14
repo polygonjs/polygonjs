@@ -2,7 +2,7 @@ import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {TypedNodePathParamValue} from '../../../core/Walker';
 import {NodeContext} from '../../../engine/poly/NodeContext';
-import {applyRenderHook,applyCustomMaterials} from '../../../core/geometry/Material';
+import {applyRenderHook, applyCustomMaterials} from '../../../core/geometry/Material';
 import {Group, Material, Object3D, Mesh} from 'three';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
@@ -18,14 +18,12 @@ interface MaterialAndNode {
 
 interface ParticlesSystemGpuMaterialSopParams extends DefaultOperationParams {
 	group: string;
-	applyToChildren: boolean;
 	material: TypedNodePathParamValue;
 }
 // type TraverseCallback = (coreObject: CoreObject) => void;
 export class ParticlesSystemGpuMaterialSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: ParticlesSystemGpuMaterialSopParams = {
 		group: '',
-		applyToChildren: true,
 		material: new TypedNodePathParamValue(''),
 	};
 	static override readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;

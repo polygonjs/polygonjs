@@ -1,71 +1,37 @@
 import {Object3D} from 'three';
 import {ArrayUtils} from '../ArrayUtils';
 import {stringMatchMask} from '../String';
-import {CoreType, isBooleanTrue} from '../Type';
+import {CoreType} from '../Type';
 import {CorePath} from './CorePath';
 import {CoreGroup} from './Group';
 import {BaseCoreObject} from './_BaseObject';
+import {CoreObject} from './Object';
 import {CoreObjectType, ObjectContent} from './ObjectContent';
-import {SetUtils} from '../SetUtils';
 import {coreObjectInstanceFactory} from './CoreObjectFactory';
-
-export interface CoreMaskFilterOptions {
+interface GroupOptions {
 	group: string;
-	applyToChildren?: boolean;
 }
+interface CoreMaskFilterOptions extends GroupOptions {}
 function filterObjectsFromCoreGroup<T extends CoreObjectType>(
 	coreGroup: CoreGroup,
 	options: CoreMaskFilterOptions,
 	coreObjects?: BaseCoreObject<T>[]
 ): ObjectContent<CoreObjectType>[] {
-	const selectedTopObjects = filterCoreObjects(options.group, coreObjects || coreGroup.allCoreObjects()).map((o) =>
-		o.object()
-	);
-
-	// check if children should be included
-	const selectedObjects: Set<ObjectContent<CoreObjectType>> = new Set();
-	if (options.applyToChildren != null && isBooleanTrue(options.applyToChildren)) {
-		for (const selectedTopObject of selectedTopObjects) {
-			selectedTopObject.traverse((object) => {
-				selectedObjects.add(object);
-			});
-		}
-	} else {
-		for (const selectedTopObject of selectedTopObjects) {
-			selectedObjects.add(selectedTopObject);
-		}
-	}
-
-	return SetUtils.toArray(selectedObjects);
+	return filterCoreObjects(options.group, coreObjects || coreGroup.allCoreObjects()).map((o) => o.object());
 }
-function filterCoreObjectsFromCoreGroup<T extends CoreObjectType>(
+export function filterCoreObjectsFromCoreGroup<T extends CoreObjectType>(
 	coreGroup: CoreGroup,
 	options: CoreMaskFilterOptions,
 	coreObjects?: BaseCoreObject<T>[]
 ): BaseCoreObject<CoreObjectType>[] {
-	const selectedTopObjects = filterCoreObjects(options.group, coreObjects || coreGroup.allCoreObjects());
-
-	// check if children should be included
-	const selectedObjects: Set<BaseCoreObject<CoreObjectType>> = new Set();
-	if (options.applyToChildren != null && isBooleanTrue(options.applyToChildren)) {
-		for (const selectedTopObject of selectedTopObjects) {
-			selectedObjects.add(selectedTopObject);
-			const object = selectedTopObject.object();
-			let childIndex = 0;
-			object.traverse((child) => {
-				if (child != object) {
-					const childCoreObject = coreObjectInstanceFactory<CoreObjectType>(child, childIndex);
-					selectedObjects.add(childCoreObject);
-					childIndex++;
-				}
-			});
-		}
-	} else {
-		for (const selectedTopObject of selectedTopObjects) {
-			selectedObjects.add(selectedTopObject);
-		}
-	}
-	return SetUtils.toArray(selectedObjects);
+	return filterCoreObjects(options.group, coreObjects || coreGroup.allCoreObjects());
+}
+export function filterThreejsCoreObjectsFromCoreGroup(
+	coreGroup: CoreGroup,
+	options: CoreMaskFilterOptions,
+	coreObjects?: CoreObject[]
+): CoreObject[] {
+	return filterCoreObjects(options.group, coreObjects || coreGroup.threejsCoreObjects()) as CoreObject[];
 }
 function isInGroup<T extends CoreObjectType>(groupString: string, coreObject: BaseCoreObject<T>) {
 	const group = groupString.trim();
@@ -105,31 +71,43 @@ function filterCoreObjects<T extends CoreObjectType>(
 		return ArrayUtils.compact([coreObjects[index]]);
 	}
 
-	const selectedCoreObjects: BaseCoreObject<T>[] = [];
+	const selectedCoreObjects: Array<BaseCoreObject<T>> = [];
 
 	for (const rootObject of coreObjects) {
+		let added = false;
 		const object = rootObject.object();
-		if (object instanceof Object3D) {
-			const objectsInMask = CorePath.objectsByMask(groupString, object) as Object3D[];
-			for (const objectInMask of objectsInMask) {
-				const coreObject = coreObjectInstanceFactory<T>(objectInMask);
-				selectedCoreObjects.push(coreObject);
-			}
+		const objectsInMask = CorePath.objectsByMask(groupString, object);
+		for (const objectInMask of objectsInMask) {
+			const parent = objectInMask.parent;
+			const index = parent ? parent.children.indexOf(objectInMask) : 0;
+			const coreObject = coreObjectInstanceFactory<T>(objectInMask, index);
+			selectedCoreObjects.push(coreObject);
+			added = true;
 		}
 		const isInGroup = CoreMask.isInGroup(groupString, rootObject);
-		if (isInGroup) {
+		if (isInGroup && !added) {
 			selectedCoreObjects.push(rootObject);
 		}
 	}
 
 	return selectedCoreObjects;
 }
-
+export function filterThreejsObjects(coreGroup: CoreGroup, options: CoreMaskFilterOptions) {
+	return filterObjectsFromCoreGroup(coreGroup, options, coreGroup.threejsCoreObjects()) as Object3D[];
+}
+export function filterObjectsWithGroup(coreGroup: CoreGroup, options: GroupOptions) {
+	return filterObjectsFromCoreGroup(coreGroup, {
+		group: options.group,
+	});
+}
+export function filterThreejsObjectsWithGroup(coreGroup: CoreGroup, options: GroupOptions) {
+	return filterThreejsObjects(coreGroup, {
+		group: options.group,
+	});
+}
 export class CoreMask {
 	static filterObjects = filterObjectsFromCoreGroup;
 	static filterCoreObjects = filterCoreObjectsFromCoreGroup;
-	static filterThreejsObjects(coreGroup: CoreGroup, options: CoreMaskFilterOptions) {
-		return this.filterObjects(coreGroup, options, coreGroup.threejsCoreObjects()) as Object3D[];
-	}
+	static filterThreejsObjects = filterThreejsObjects;
 	static isInGroup = isInGroup;
 }

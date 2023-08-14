@@ -53,7 +53,6 @@ export class CameraWebXRARMarkerTrackingSopOperation extends BaseSopOperation {
 		const coreGroup = inputCoreGroups[0];
 		const objects = CoreMask.filterObjects(coreGroup, {
 			group: params.group,
-			applyToChildren: params.group.trim().length == 0,
 		});
 
 		if (Poly.thirdParty.markerTracking().hasController()) {

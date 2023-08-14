@@ -33,7 +33,7 @@ import {BufferAttribute, BufferGeometry, Color, Vector2, Vector3, Vector4} from 
 import {JsConnectionPointComponentsCountMap, JsConnectionPointType} from '../utils/io/connections/Js';
 import {logBlue as _logBlue} from '../../../core/logger/Console';
 import {PointBuilderEvaluator} from '../js/code/assemblers/pointBuilder/PointBuilderEvaluator';
-import {CoreMask} from '../../../core/geometry/Mask';
+import {filterThreejsObjectsWithGroup} from '../../../core/geometry/Mask';
 import {object3DHasGeometry} from '../../../core/geometry/GeometryUtils';
 import {CoreGeometry} from '../../../core/geometry/Geometry';
 
@@ -134,10 +134,7 @@ export abstract class BasePointBuilderSopNode<P extends BasePointBuilderSopParam
 	): void;
 
 	private _getObjects(coreGroup: CoreGroup): Object3DWithGeometry[] {
-		return CoreMask.filterThreejsObjects(coreGroup, {
-			group: this.pv.group,
-			applyToChildren: this.pv.group.trim().length == 0,
-		}).filter(object3DHasGeometry);
+		return filterThreejsObjectsWithGroup(coreGroup, this.pv).filter(object3DHasGeometry);
 	}
 	protected _resetRequiredAttributes() {
 		this._attributesDict.clear();

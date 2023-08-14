@@ -15,7 +15,6 @@ import {MaterialSopNode} from '../../nodes/sop/Material';
 
 interface MaterialSopParams extends DefaultOperationParams {
 	group: string;
-	applyToChildren: boolean;
 	assignMat: boolean;
 	material: TypedNodePathParamValue;
 	cloneMat: boolean;
@@ -30,7 +29,6 @@ export class MaterialSopOperation extends BaseSopOperation {
 	private _materialSopOperationId = _nextId++;
 	static override readonly DEFAULT_PARAMS: MaterialSopParams = {
 		group: '',
-		applyToChildren: true,
 		assignMat: true,
 		material: new TypedNodePathParamValue(''),
 		cloneMat: false,
@@ -135,15 +133,8 @@ export class MaterialSopOperation extends BaseSopOperation {
 
 		const objects = CoreMask.filterObjects(coreGroup, params, coreGroup.allCoreObjects());
 		for (let object of objects) {
-			if (params.applyToChildren) {
-				object.traverse((child) => {
-					const mat = (object as Mesh).material as Material;
-					this._materialByUuid.set(mat.uuid, mat);
-				});
-			} else {
-				const mat = (object as Mesh).material as Material;
-				this._materialByUuid.set(mat.uuid, mat);
-			}
+			const mat = (object as Mesh).material as Material;
+			this._materialByUuid.set(mat.uuid, mat);
 		}
 
 		this._materialByUuid.forEach((mat, mat_uuid) => {

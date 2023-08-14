@@ -27,10 +27,6 @@ class TransformSopParamConfig extends NodeParamsConfig {
 	group = ParamConfig.STRING(DEFAULT.group, {
 		objectMask: true,
 	});
-	/** @param sets if this node should search through the materials inside the whole hierarchy */
-	applyToChildren = ParamConfig.BOOLEAN(DEFAULT.applyToChildren, {
-		visibleIf: {applyOn: TRANSFORM_TARGET_TYPES.indexOf(TransformTargetType.OBJECT)},
-	});
 
 	/** @param if applyOn is set to object, the transform can then be applied in 2 different ways on those objects. Either the .position, .rotation and .scale attributes are set, or the matrix is set directly. */
 	objectMode = ParamConfig.INTEGER(DEFAULT.objectMode, {

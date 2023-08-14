@@ -53,11 +53,11 @@ export function testenginenodescopCanvas(qUnit: QUnit) {
 				}
 				render.p.render.pressButton();
 
-				const render_target = await render.renderTarget(renderer);
+				const renderTarget = (await render.renderTarget(renderer))!;
 				const buffer_width = 16;
 				const buffer_height = 16;
 				const pixelBuffer = new Float32Array(buffer_width * buffer_height * 4);
-				renderer.readRenderTargetPixels(render_target, 0, 0, buffer_width, buffer_height, pixelBuffer);
+				renderer.readRenderTargetPixels(renderTarget, 0, 0, buffer_width, buffer_height, pixelBuffer);
 				const result = [pixelBuffer[0], pixelBuffer[1], pixelBuffer[2], pixelBuffer[3]];
 				// console.log(result);
 				return result;

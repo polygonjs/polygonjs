@@ -18,6 +18,11 @@ import {CorePoint} from '../../../core/geometry/Point';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {isBooleanTrue} from '../../../core/BooleanValue';
+import {
+	filterCoreObjectsFromCoreGroup,
+	filterObjectsWithGroup,
+	filterThreejsCoreObjectsFromCoreGroup,
+} from '../../../core/geometry/Mask';
 import {CoreTransform, RotationOrder, TRANSFORM_TARGET_TYPES, TransformTargetType} from '../../../core/Transform';
 import {OBJECT_TRANSFORM_SPACE_MENU_ENTRIES, OBJECT_TRANSFORM_SPACES} from '../../../core/TransformSpace';
 import {CoreObjectType, ObjectContent} from '../../../core/geometry/ObjectContent';
@@ -34,6 +39,16 @@ import {coreObjectFactory} from '../../../core/geometry/CoreObjectFactory';
 // ];
 
 class CopySopParamsConfig extends NodeParamsConfig {
+	/** @param select which objects are copied */
+	srcGroup = ParamConfig.STRING('', {
+		objectMask: true,
+	});
+	/** @param select which objects the src objects are copied onto */
+	templateGroup = ParamConfig.STRING('', {
+		objectMask: {
+			inputIndex: 1,
+		},
+	});
 	/** @param copies count, used when the second input is not given */
 	count = ParamConfig.INTEGER(1, {
 		range: [1, 20],
@@ -118,7 +133,13 @@ export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 	private async cookWithTemplate(instanceCoreGroup: CoreGroup, templateCoreGroup: CoreGroup) {
 		this._objects = [];
 
-		const templatePoints = templateCoreGroup.points();
+		const templateCoreObjects = filterThreejsCoreObjectsFromCoreGroup(templateCoreGroup, {
+			group: this.pv.templateGroup,
+		});
+		const templatePoints = templateCoreObjects
+			.map((o) => o.coreGeometry())
+			.map((g) => (g ? g.points() : []))
+			.flat();
 
 		this._instancer.setCoreGroup(templateCoreGroup);
 
@@ -139,11 +160,11 @@ export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 	private _instanceMatrix = new Matrix4();
 	private async _copyMovedObjectOnTemplatePoint(
 		instanceCoreGroup: CoreGroup,
-		template_points: CorePoint[],
+		templatePoints: CorePoint[],
 		point_index: number
 	) {
-		this._instancer.matrixFromPoint(template_points[point_index], this._instanceMatrix);
-		const templatePoint = template_points[point_index];
+		this._instancer.matrixFromPoint(templatePoints[point_index], this._instanceMatrix);
+		const templatePoint = templatePoints[point_index];
 		if (isBooleanTrue(this.pv.useCopyExpr)) {
 			this.stampNode().setPoint(templatePoint);
 		}
@@ -152,7 +173,7 @@ export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 
 		for (let movedObject of movedObjects) {
 			if (isBooleanTrue(this.pv.copyAttributes)) {
-				this._copyAttributes_from_template(movedObject, templatePoint);
+				this._copyAttributesGromTemplate(movedObject, templatePoint);
 			}
 
 			// TODO: that node is getting inconsistent...
@@ -177,7 +198,8 @@ export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 		if (stampedInstanceCoreGroup) {
 			// duplicate or select from instance children
 			const getObjectsForTransformOnly = () => {
-				const object = stampedInstanceCoreGroup.allObjects()[pointIndex];
+				const objects = filterObjectsWithGroup(stampedInstanceCoreGroup, {group: this.pv.srcGroup});
+				const object = objects[pointIndex];
 				if (object) {
 					return [coreObjectFactory(object).clone(object)];
 				} else {
@@ -187,7 +209,7 @@ export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 			const movedObjects = isBooleanTrue(this.pv.transformOnly)
 				? // TODO: why is doing a transform slower than cloning the input??
 				  getObjectsForTransformOnly()
-				: stampedInstanceCoreGroup.clone().allObjects();
+				: filterObjectsWithGroup(stampedInstanceCoreGroup.clone(), {group: this.pv.srcGroup});
 
 			return movedObjects;
 		} else {
@@ -195,7 +217,7 @@ export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 		}
 	}
 
-	private async _stampInstanceGroupIfRequired(instance_core_group: CoreGroup): Promise<CoreGroup | undefined> {
+	private async _stampInstanceGroupIfRequired(instanceCoreGroup: CoreGroup): Promise<CoreGroup | undefined> {
 		// we do not test here for pv.useCopyExpr
 		// as we use the stampNode.reset() at the beginning of the cook
 		// to reupdate it if necessary,
@@ -206,9 +228,9 @@ export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 		// if (isBooleanTrue(this.pv.useCopyExpr)) {
 		const container0 = await this.containerController.requestInputContainer(0);
 		if (container0) {
-			const core_group0 = container0.coreContent();
-			if (core_group0) {
-				return core_group0;
+			const coreGroup0 = container0.coreContent();
+			if (coreGroup0) {
+				return coreGroup0;
 			} else {
 				return;
 			}
@@ -217,46 +239,49 @@ export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 			return;
 		}
 		// } else {
-		// 	return instance_core_group;
+		// 	return instanceCoreGroup;
 		// }
 	}
 
-	private async _copyMovedObjectsForEachInstance(instance_core_group: CoreGroup) {
+	private async _copyMovedObjectsForEachInstance(instanceCoreGroup: CoreGroup) {
 		this._initAccumulatedTransform();
 		for (let i = 0; i < this.pv.count; i++) {
-			await this._copyMovedObjectsForInstance(instance_core_group, i);
+			await this._copyMovedObjectsForInstance(instanceCoreGroup, i);
 			this._accumulateTransform();
 		}
 	}
 
-	private async _copyMovedObjectsForInstance(instance_core_group: CoreGroup, i: number) {
+	private async _copyMovedObjectsForInstance(instanceCoreGroup: CoreGroup, i: number) {
 		if (isBooleanTrue(this.pv.useCopyExpr)) {
 			this.stampNode().setGlobalIndex(i);
 		}
 
-		const stamped_instance_core_group = await this._stampInstanceGroupIfRequired(instance_core_group);
-		if (stamped_instance_core_group) {
-			stamped_instance_core_group.allCoreObjects().forEach((coreObject) => {
+		const stamptedInstanceCoreGroup = await this._stampInstanceGroupIfRequired(instanceCoreGroup);
+		if (stamptedInstanceCoreGroup) {
+			const srcCoreObjects = filterCoreObjectsFromCoreGroup(stamptedInstanceCoreGroup, {
+				group: this.pv.srcGroup,
+			});
+			for (const coreObject of srcCoreObjects) {
 				// TODO: I should use the Core Group, to ensure that material.linewidth is properly cloned
 				const clonedObject = coreObject.clone().object();
 				this._applyAccumulatedTransform(clonedObject);
 				this._objects.push(clonedObject);
-			});
+			}
 		}
 	}
 
 	// TODO: what if I combine both param_count and stamping?!
-	private async cookWithoutTemplate(instance_core_group: CoreGroup) {
+	private async cookWithoutTemplate(instanceCoreGroup: CoreGroup) {
 		this._objects = [];
-		await this._copyMovedObjectsForEachInstance(instance_core_group);
+		await this._copyMovedObjectsForEachInstance(instanceCoreGroup);
 
 		this.setObjects(this._objects);
 	}
 
-	private _copyAttributes_from_template(object: ObjectContent<CoreObjectType>, template_point: CorePoint) {
-		this._attribNamesToCopy.forEach((attrib_name, i) => {
-			const attrib_value = template_point.attribValue(attrib_name);
-			BaseCoreObject.addAttribute(object, attrib_name, attrib_value);
+	private _copyAttributesGromTemplate(object: ObjectContent<CoreObjectType>, templatePoint: CorePoint) {
+		this._attribNamesToCopy.forEach((attribName, i) => {
+			const attribValue = templatePoint.attribValue(attribName);
+			BaseCoreObject.addAttribute(object, attribName, attribValue);
 		});
 	}
 

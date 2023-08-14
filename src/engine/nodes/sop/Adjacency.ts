@@ -12,9 +12,9 @@ import {SopType} from '../../poly/registers/nodes/types/Sop';
 const DEFAULT = AdjacencySopOperation.DEFAULT_PARAMS;
 
 class AdjacencySopParamsConfig extends NodeParamsConfig {
-	/** @param toggle on to apply recursively to children */
-	applyToChildren = ParamConfig.BOOLEAN(DEFAULT.applyToChildren, {
-		separatorAfter: true,
+	/** @param select which objects this add adjacency attributes to */
+	group = ParamConfig.STRING('', {
+		objectMask: true,
 	});
 	/** @param name of attribute with count of adjacency attributes */
 	adjacencyCountName = ParamConfig.STRING(DEFAULT.adjacencyCountName);

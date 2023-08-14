@@ -19,8 +19,6 @@ class MaterialPropertiesSopParamsConfig extends NodeParamsConfig {
 	group = ParamConfig.STRING(DEFAULT.group, {
 		objectMask: true,
 	});
-	/** @param sets if this node should search through the materials inside the whole hierarchy */
-	applyToChildren = ParamConfig.BOOLEAN(DEFAULT.applyToChildren, {separatorAfter: true});
 
 	/** @param toggle on to allow updating the side properties of the materials */
 	tside = ParamConfig.BOOLEAN(DEFAULT.tside);

@@ -7,10 +7,10 @@
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {CameraRenderSceneSopOperation} from '../../operations/sop/CameraRenderScene';
-import {HierarchyParamConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {HierarchyParamConfigAll, ParamConfig} from '../utils/params/ParamsConfig';
 import {CameraSopNodeType, NodeContext} from '../../poly/NodeContext';
 import {ObjType} from '../../poly/registers/nodes/types/Obj';
-class CameraRenderSceneSopParamsConfig extends HierarchyParamConfig {
+class CameraRenderSceneSopParamsConfig extends HierarchyParamConfigAll {
 	/** @param renderer */
 	node = ParamConfig.NODE_PATH('', {
 		nodeSelection: {

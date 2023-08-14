@@ -20,7 +20,8 @@ import {GlParamConfig} from './code/utils/GLParamConfig';
 import {ParamType} from '../../poly/ParamType';
 import {UNIFORM_TEXTURE_PREFIX} from '../../../core/material/uniform';
 import {BaseGLDefinition, FunctionGLDefinition, UniformGLDefinition} from './utils/GLDefinition';
-import TEXTURE_DISPLACEMENT from './gl/textureDisplacement.glsl';
+import TEXTURE_DISPLACEMENT_4PTS from './gl/textureDisplacement_4pts.glsl';
+import TEXTURE_DISPLACEMENT_8PTS from './gl/textureDisplacement_8pts.glsl';
 import TEXTURE_DISPLACEMENT_RESULT from './gl/textureDisplacementResult.glsl';
 
 export enum DisplacementTextureOutput {
@@ -31,6 +32,7 @@ const COMPONENTS = ['x', 'y', 'z', 'w'];
 
 class TextureDisplacementGlParamsConfig extends NodeParamsConfig {
 	paramName = ParamConfig.STRING('');
+	computeAllNeighbours = ParamConfig.BOOLEAN(0);
 	position = ParamConfig.VECTOR3([0, 0, 0]);
 	normal = ParamConfig.VECTOR3([0, 0, 0]);
 	uv = ParamConfig.VECTOR2([0, 0]);
@@ -61,7 +63,7 @@ export class TextureDisplacementGlNode extends TypedGlNode<TextureDisplacementGl
 			new GlConnectionPoint(DisplacementTextureOutput.P, GlConnectionPointType.VEC3),
 			new GlConnectionPoint(DisplacementTextureOutput.N, GlConnectionPointType.VEC3),
 		]);
-		this.io.connection_points.spare_params.setInputlessParamNames(['textureComponent']);
+		this.io.connection_points.spare_params.setInputlessParamNames(['computeAllNeighbours', 'textureComponent']);
 	}
 
 	override setLines(linesController: ShadersCollectionController) {
@@ -74,7 +76,8 @@ export class TextureDisplacementGlNode extends TypedGlNode<TextureDisplacementGl
 		const tangentsPosOffset = ThreeToGl.vector3(this.variableForInputParam(this.p.tangentsPosOffset));
 		const component = COMPONENTS[this.pv.textureComponent];
 
-		const textureDisplacementFunctionDeclaration = TEXTURE_DISPLACEMENT.replace(/__COMPONENT__/g, component);
+		const template = this.pv.computeAllNeighbours ? TEXTURE_DISPLACEMENT_8PTS : TEXTURE_DISPLACEMENT_4PTS;
+		const textureDisplacementFunctionDeclaration = template.replace(/__COMPONENT__/g, component);
 		const textureDisplacementFunctionName = `textureDisplacement__COMPONENT__`.replace(/__COMPONENT__/g, component);
 
 		const out = this.glVarName('out');
@@ -87,8 +90,9 @@ export class TextureDisplacementGlNode extends TypedGlNode<TextureDisplacementGl
 		];
 
 		const args = [map, uv, textureSize, amount, position, normal, tangentsPosOffset];
+		const functionCall = `${textureDisplacementFunctionName}(${args.join(', ')})`;
 		const bodyLines: string[] = [
-			`TextureDisplacementResult ${out} = ${textureDisplacementFunctionName}(${args.join(', ')})`,
+			`TextureDisplacementResult ${out} = ${functionCall}`,
 			`vec3 ${outPosition} = ${out}.position`,
 			`vec3 ${outNormal} = ${out}.normal`,
 		];

@@ -8,7 +8,7 @@
 import {CoreGroup} from '../../../core/geometry/Group';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {NetworkNodeType} from '../../poly/NodeContext';
-import {CorePath} from '../../../core/geometry/CorePath';
+import {filterObjectsWithGroup} from '../../../core/geometry/Mask';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 import {TypedActorSopNode} from './_BaseActor';
 import {isBooleanTrue} from '../../../core/Type';
@@ -16,7 +16,7 @@ import {ActorBuilderNode} from '../../scene/utils/ActorsManager';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 class ActorSopParamsConfig extends NodeParamsConfig {
 	/** @param select which objects this applies the actor behavior to */
-	objectsMask = ParamConfig.STRING('', {
+	group = ParamConfig.STRING('', {
 		objectMask: true,
 	});
 	/** @param build actor from child nodes */
@@ -52,22 +52,14 @@ export class ActorSopNode extends TypedActorSopNode<ActorSopParamsConfig> {
 
 		//
 		const coreGroup = inputCoreGroups[0];
-		const objects = coreGroup.allObjects();
+		const objects = filterObjectsWithGroup(coreGroup, this.pv);
 		const actorNode = await this._findActorNode();
 		if (actorNode) {
-			const objectsMask = this.pv.objectsMask.trim();
-			if (objectsMask == '') {
+
 				for (let object of objects) {
 					this.scene().actorsManager.assignActorBuilder(object, actorNode);
 				}
-			} else {
-				for (let object of objects) {
-					const children = CorePath.objectsByMaskInObject(objectsMask, object);
-					for (let child of children) {
-						this.scene().actorsManager.assignActorBuilder(child, actorNode);
-					}
-				}
-			}
+			
 		}
 
 		this.setCoreGroup(coreGroup);

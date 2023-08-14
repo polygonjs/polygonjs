@@ -8,7 +8,7 @@
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {CameraWebXRARMarkerTrackingSopOperation} from '../../operations/sop/CameraWebXRARMarkerTracking';
-import {HierarchyParamConfig} from '../utils/params/ParamsConfig';
+import {HierarchyParamConfigAll} from '../utils/params/ParamsConfig';
 import {CameraSopNodeType} from '../../poly/NodeContext';
 import {CoreCameraMarkerTrackingParamConfig} from '../../../core/camera/webXR/CoreCameraMarkerTracking';
 import {
@@ -18,7 +18,7 @@ import {
 	MarkerTrackingTransformMode,
 } from '../../../core/webXR/markerTracking/Common';
 
-class CameraWebXRARMarkerTrackingSopParamsConfig extends CoreCameraMarkerTrackingParamConfig(HierarchyParamConfig) {}
+class CameraWebXRARMarkerTrackingSopParamsConfig extends CoreCameraMarkerTrackingParamConfig(HierarchyParamConfigAll) {}
 const ParamsConfig = new CameraWebXRARMarkerTrackingSopParamsConfig();
 
 export class CameraWebXRARMarkerTrackingSopNode extends TypedSopNode<CameraWebXRARMarkerTrackingSopParamsConfig> {

@@ -18,8 +18,10 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 const DEFAULT = TexturePropertiesSopOperation.DEFAULT_PARAMS;
 class TexturePropertiesSopParamsConfig extends NodeParamsConfig {
-	/** @param sets if this node should search through the materials inside the whole hierarchy */
-	applyToChildren = ParamConfig.BOOLEAN(DEFAULT.applyToChildren, {separatorAfter: true});
+	/** @param group to assign the material to */
+	group = ParamConfig.STRING(DEFAULT.group, {
+		objectMask: true,
+	});
 
 	/** @param toggle on to allow updating the texture color space */
 	tcolorSpace = ParamConfig.BOOLEAN(DEFAULT.tcolorSpace);

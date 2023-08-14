@@ -12,10 +12,6 @@ class ParticlesSystemGpuAttributesSopParamsConfig extends NodeParamsConfig {
 	group = ParamConfig.STRING(DEFAULT.group, {
 		objectMask: true,
 	});
-	/** @param toggle on to also assign the material to children */
-	applyToChildren = ParamConfig.BOOLEAN(DEFAULT.applyToChildren, {
-		separatorAfter: true,
-	});
 }
 const ParamsConfig = new ParticlesSystemGpuAttributesSopParamsConfig();
 

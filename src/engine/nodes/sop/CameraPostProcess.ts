@@ -7,7 +7,7 @@
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {CameraPostProcessSopOperation} from '../../operations/sop/CameraPostProcess';
-import {HierarchyParamConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {HierarchyParamConfigAll, ParamConfig} from '../utils/params/ParamsConfig';
 import {CameraSopNodeType, NetworkNodeType, NodeContext} from '../../poly/NodeContext';
 import {PostNodeChildrenMap} from '../../poly/registers/nodes/Post';
 import {NodeCreateOptions} from '../utils/hierarchy/ChildrenController';
@@ -34,7 +34,7 @@ export function CameraPostProcessParamsMixin<TBase extends Constructor>(Base: TB
 }
 
 class CameraPostProcessSopParamsConfig extends PostProcessNetworkParamsConfigMixin(
-	CameraPostProcessParamsMixin(HierarchyParamConfig)
+	CameraPostProcessParamsMixin(HierarchyParamConfigAll)
 ) {}
 const ParamsConfig = new CameraPostProcessSopParamsConfig();
 

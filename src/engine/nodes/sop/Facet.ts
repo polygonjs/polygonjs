@@ -20,8 +20,6 @@ class FacetSopParamsConfig extends NodeParamsConfig {
 	group = ParamConfig.STRING('', {
 		objectMask: true,
 	});
-	/** @param applyToChildren */
-	applyToChildren = ParamConfig.BOOLEAN(true, {separatorAfter: true});
 	/** @param angle threshold to separate vertices */
 	angle = ParamConfig.FLOAT(20, {
 		range: [0, 90],
