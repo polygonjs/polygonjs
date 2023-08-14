@@ -188,10 +188,13 @@ export class PathTracingRendererContainer implements AbstractRenderer {
 		return this.webGLRenderer.compile(scene, camera);
 	}
 	dispose(): void {
-		// console.log('dispose');
+		// Note:
+		// it's best NOT to dispose the renderers here,
+		// so that we can switch from one camera to the other in the editor.
+		// If we were to dispose, re-using the renderers would fail.
 		// this.webGLRenderer.dispose();
-		this.pathTracingRenderer.dispose();
-		this.fsQuadMat.dispose();
+		// this.pathTracingRenderer.dispose();
+		// this.fsQuadMat.dispose();
 	}
 	setSize(w: number, h: number, setStyle: boolean) {
 		this.webGLRenderer.setSize(w, h, setStyle);

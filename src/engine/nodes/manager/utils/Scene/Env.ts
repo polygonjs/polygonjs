@@ -55,7 +55,7 @@ export class SceneEnvController {
 				});
 			} else {
 				scene.environment = null;
-				this.node.states.error.set('bgTexture node not found');
+				this.node.states.error.set('environment node not found');
 			}
 		} else {
 			scene.environment = null;

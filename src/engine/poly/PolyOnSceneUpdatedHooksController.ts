@@ -9,12 +9,10 @@ export class PolyOnSceneUpdatedHooksController {
 	registerHook(node: BaseNodeType, hook: Hook) {
 		this._map.set(node, hook);
 		this._updateCache();
-		console.log('register hook', node.path());
 	}
 	unregisterHook(node: BaseNodeType) {
 		this._map.delete(node);
 		this._updateCache();
-		console.log('unregisterHook hook', node.path());
 	}
 	runHooks() {
 		const hooks = this._hooks;

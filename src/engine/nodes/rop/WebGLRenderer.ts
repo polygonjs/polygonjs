@@ -36,7 +36,13 @@ import {CoreType} from '../../../core/Type';
 import {Poly} from '../../Poly';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {defaultPixelRatio} from '../../../core/render/defaultPixelRatio';
-import {PowerPreference, POWER_PREFERENCES} from '../../../core/render/Common';
+import {
+	PowerPreference,
+	POWER_PREFERENCES,
+	RENDERER_PRECISIONS,
+	RendererPrecision,
+	WEBGL_RENDERER_DEFAULT_PARAMS,
+} from '../../../core/render/Common';
 import {BaseNodeType} from '../_Base';
 import {WebGLRendererWithTypes} from '../../../core/camera/CoreCameraRendererController';
 import {COLOR_SPACE_NAME_BY_COLOR_SPACE} from '../../../core/cop/ColorSpace';
@@ -98,18 +104,6 @@ const TONE_MAPPING_MENU_ENTRIES = TONE_MAPPING_NAMES.map((name, i) => {
 	};
 });
 
-enum RendererPrecision {
-	HIGH = 'highp',
-	MEDIUM = 'mediump',
-	LOW = 'lowp',
-}
-
-const RENDERER_PRECISIONS: RendererPrecision[] = [
-	RendererPrecision.HIGH,
-	RendererPrecision.MEDIUM,
-	RendererPrecision.LOW,
-];
-
 enum ShadowMapTypeName {
 	Basic = 'Basic',
 	PCF = 'PCF',
@@ -138,17 +132,6 @@ export const SHADOW_MAP_TYPES = [BasicShadowMap, PCFShadowMap, PCFSoftShadowMap,
 export const DEFAULT_SHADOW_MAP_TYPE = ShadowMapTypeValue.PCFSoft as ShadowMapType;
 
 // TODO: set debug.checkShaderErrors to false in prod
-export const DEFAULT_PARAMS: WebGLRendererParameters = {
-	alpha: false,
-	precision: RendererPrecision.HIGH,
-	premultipliedAlpha: true,
-	antialias: true,
-	stencil: true,
-	preserveDrawingBuffer: false,
-	powerPreference: PowerPreference.DEFAULT,
-	depth: true,
-	logarithmicDepthBuffer: false,
-};
 
 class WebGLRendererRopParamsConfig extends NodeParamsConfig {
 	//
@@ -325,12 +308,12 @@ export class WebGLRendererRopNode extends TypedRopNode<WebGLRendererRopParamsCon
 	// private _renderersbyCamera: Map<Camera, WebGLRenderer> = new Map();
 	createRenderer(canvas: HTMLCanvasElement, gl: WebGLRenderingContext): WebGLRenderer {
 		const params: WebGLRendererParameters = {};
-		const keys: Array<keyof WebGLRendererParameters> = Object.keys(DEFAULT_PARAMS) as Array<
+		const keys: Array<keyof WebGLRendererParameters> = Object.keys(WEBGL_RENDERER_DEFAULT_PARAMS) as Array<
 			keyof WebGLRendererParameters
 		>;
 		let k: keyof WebGLRendererParameters;
 		for (k of keys) {
-			(params[k] as any) = DEFAULT_PARAMS[k];
+			(params[k] as any) = WEBGL_RENDERER_DEFAULT_PARAMS[k];
 		}
 		if (isBooleanTrue(this.pv.tprecision)) {
 			const precision = RENDERER_PRECISIONS[this.pv.precision];

@@ -90,7 +90,7 @@ export abstract class BaseReflector<TGeometry extends BufferGeometry, TMaterial 
 	private _createRenderTarget(renderer: AbstractRenderer) {
 		const {width, height} = this._getRendererSize(renderer);
 
-		this.renderTarget = Poly.renderersController.renderTarget(width, height, renderTargetParams);
+		this.renderTarget = Poly.renderersController.createRenderTarget(width, height, renderTargetParams);
 		if (this._options.multisamples > 0) {
 			this.renderTarget.samples = this._options.multisamples;
 		}

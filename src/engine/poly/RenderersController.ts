@@ -6,12 +6,17 @@ import {
 	NoColorSpace,
 	NoToneMapping,
 } from 'three';
-import {AbstractRenderer} from '../viewers/Common';
+import type {AbstractRenderer} from '../viewers/Common';
+import {WEBGL_RENDERER_DEFAULT_PARAMS} from '../../core/render/Common';
 
 export interface WithPolyId {
 	_polygonId?: number;
 }
+export interface WithContextId {
+	_polygonjsContextId?: number;
+}
 export interface POLYAbstractRenderer extends AbstractRenderer, WithPolyId {}
+export interface CanvasContext extends WebGLRenderingContext, WithContextId {}
 
 const CONTEXT_OPTIONS: WebGLContextAttributes = {
 	// powerPreference: 'high-performance', // attempt to fix issues in safari
@@ -26,6 +31,8 @@ enum WebGLContext {
 	EXPERIMENTAL_WEBGL2 = 'experimental-webgl2',
 }
 let nextRendererId: number = 0;
+const webGLContextByCanvas: WeakMap<HTMLCanvasElement, WebGLRenderingContext> = new WeakMap();
+const defaultRendererByCanvas = new WeakMap<HTMLCanvasElement, WebGLRenderer>();
 
 export class RenderersController {
 	private static _nextGlContextId = 0;
@@ -56,15 +63,24 @@ export class RenderersController {
 			this._require_webgl2 = true;
 		}
 	}
-	webGL2Available() {
+	webGL2Available(canvas?: HTMLCanvasElement) {
 		if (this._webgl2_available === undefined) {
-			this._webgl2_available = this._setWebGL2Available();
+			this._webgl2_available = this._getWebGL2Available(canvas);
 		}
 		return this._webgl2_available;
 	}
-	private _setWebGL2Available() {
-		const canvas = document.createElement('canvas');
+	private _getWebGL2Available(canvas?: HTMLCanvasElement) {
+		canvas = canvas || document.createElement('canvas');
 		return (window.WebGL2RenderingContext && canvas.getContext(WebGLContext.WEBGL2)) != null;
+	}
+	defaultWebGLRendererForCanvas(canvas: HTMLCanvasElement) {
+		let renderer = defaultRendererByCanvas.get(canvas);
+		if (!renderer) {
+			const context = this.getRenderingContext(canvas)!;
+			renderer = this.createWebGLRenderer({...WEBGL_RENDERER_DEFAULT_PARAMS, canvas, context});
+			defaultRendererByCanvas.set(canvas, renderer);
+		}
+		return renderer;
 	}
 
 	createWebGLRenderer(params: WebGLRendererParameters) {
@@ -96,7 +112,10 @@ export class RenderersController {
 	}
 
 	getRenderingContext(canvas: HTMLCanvasElement): WebGLRenderingContext | null {
-		let gl: WebGLRenderingContext | null = null;
+		let gl: WebGLRenderingContext | undefined = webGLContextByCanvas.get(canvas);
+		if (gl) {
+			return gl;
+		}
 		// if (this._require_webgl2) {
 		gl = this._getRenderingContextWebgl(canvas, true);
 		if (!gl) {
@@ -112,9 +131,10 @@ export class RenderersController {
 			return null;
 		}
 
-		if ((gl as any).contextId == null) {
-			(gl as any).contextId = RenderersController._nextGlContextId++;
+		if ((gl as CanvasContext)._polygonjsContextId == null) {
+			(gl as CanvasContext)._polygonjsContextId = RenderersController._nextGlContextId++;
 		}
+		webGLContextByCanvas.set(canvas, gl);
 
 		// gl.getExtension('OES_standard_derivatives') // for derivative normals, but it cannot work at the moment (see node Gl/DerivativeNormals)
 		// to test data texture
@@ -123,25 +143,26 @@ export class RenderersController {
 
 		return gl;
 	}
-	private _getRenderingContextWebgl(canvas: HTMLCanvasElement, webgl2: boolean): WebGLRenderingContext | null {
-		let context_name: WebGLContext;
-		if (this.webGL2Available()) {
-			context_name = WebGLContext.WEBGL2;
+	private _getRenderingContextWebgl(canvas: HTMLCanvasElement, webgl2: boolean): WebGLRenderingContext | undefined {
+		let contextName: WebGLContext;
+		if (this.webGL2Available(canvas)) {
+			contextName = WebGLContext.WEBGL2;
 		} else {
-			context_name = webgl2 ? WebGLContext.WEBGL2 : WebGLContext.WEBGL;
+			contextName = webgl2 ? WebGLContext.WEBGL2 : WebGLContext.WEBGL;
 		}
-		let gl = canvas.getContext(context_name, CONTEXT_OPTIONS);
+		let gl = canvas.getContext(contextName, CONTEXT_OPTIONS);
 		if (gl) {
-			this.printDebugMessage(`create gl context: ${context_name}.`);
+			this.printDebugMessage(`create gl context: ${contextName}.`);
 		} else {
-			context_name = webgl2 ? WebGLContext.EXPERIMENTAL_WEBGL2 : WebGLContext.EXPERIMENTAL_WEBGL;
-			this.printDebugMessage(`create gl context: ${context_name}.`);
-			gl = canvas.getContext(context_name, CONTEXT_OPTIONS);
+			contextName = webgl2 ? WebGLContext.EXPERIMENTAL_WEBGL2 : WebGLContext.EXPERIMENTAL_WEBGL;
+			this.printDebugMessage(`create gl context: ${contextName}.`);
+			gl = canvas.getContext(contextName, CONTEXT_OPTIONS);
 		}
-		return gl as WebGLRenderingContext | null;
+
+		return gl as WebGLRenderingContext | undefined;
 	}
 
-	renderTarget(width: number, height: number, parameters: WebGLRenderTargetOptions) {
+	createRenderTarget(width: number, height: number, parameters: WebGLRenderTargetOptions) {
 		if (this.webGL2Available()) {
 			const multiSampleRenderTarget = new WebGLRenderTarget(width, height, parameters);
 			multiSampleRenderTarget.samples = 2;

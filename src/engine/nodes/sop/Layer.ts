@@ -39,7 +39,7 @@ function visibleOption(options: VisibleOptions) {
 
 class LayerSopParamsConfig extends NodeParamsConfig {
 	/** @param group to assign the material to */
-	group = ParamConfig.STRING('', {
+	group = ParamConfig.STRING('*', {
 		objectMask: true,
 	});
 	layersCount = ParamConfig.INTEGER(1, {

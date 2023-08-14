@@ -1,4 +1,4 @@
-import {Camera, Vector2, WebGLRenderer, WebGLRendererParameters} from 'three';
+import {Camera, Vector2, WebGLRenderer} from 'three';
 import {PolyScene} from '../../engine/scene/PolyScene';
 import {Poly} from '../../engine/Poly';
 import {
@@ -7,7 +7,6 @@ import {
 	DEFAULT_TONE_MAPPING,
 } from '../../engine/nodes/rop/WebGLRenderer';
 import {defaultPixelRatio} from '../render/defaultPixelRatio';
-import {PowerPreference} from '../render/Common';
 import {CoreObject} from '../geometry/Object';
 import {CameraAttribute} from './CoreCamera';
 import {CoreType} from '../Type';
@@ -100,7 +99,7 @@ export class CoreCameraRendererController {
 					break;
 				}
 				case RopType.PATH_TRACING: {
-					renderer = (rendererROP as PathTracingRendererRopNode).createRenderer(canvas, gl);
+					renderer = (rendererROP as PathTracingRendererRopNode).renderer(canvas, gl);
 					rendererNode = rendererROP as PathTracingRendererRopNode;
 					break;
 				}
@@ -153,17 +152,18 @@ export class CoreCameraRendererController {
 		}
 	}
 	static createDefaultRenderer(canvas: HTMLCanvasElement, gl: WebGLRenderingContext) {
-		const params: WebGLRendererParameters = {
-			powerPreference: PowerPreference.HIGH,
-			canvas: canvas,
-			// no anti alias with a pixel ratio of 2 is more performant
-			// but using a pixel ratio of 2 by default can also create hard to debug
-			// inconsistencies when using post processing
-			antialias: true, //defaultPixelRatio() < 2,
-			// alpha: true, // let's use threejs default alpha
-			context: gl,
-		};
-		const renderer = Poly.renderersController.createWebGLRenderer(params);
+		// const params: WebGLRendererParameters = {
+		// 	...WEBGL_RENDERER_DEFAULT_PARAMS,
+		// 	// powerPreference: PowerPreference.HIGH,
+		// 	// canvas: canvas,
+		// 	// no anti alias with a pixel ratio of 2 is more performant
+		// 	// but using a pixel ratio of 2 by default can also create hard to debug
+		// 	// inconsistencies when using post processing
+		// 	// antialias: true, //defaultPixelRatio() < 2,
+		// 	// alpha: true, // let's use threejs default alpha
+		// 	context: gl,
+		// };
+		const renderer = Poly.renderersController.defaultWebGLRendererForCanvas(canvas);
 		const pixelRatio = defaultPixelRatio();
 		renderer.setPixelRatio(pixelRatio);
 
@@ -179,10 +179,10 @@ export class CoreCameraRendererController {
 
 		if (Poly.renderersController.printDebug()) {
 			Poly.renderersController.printDebugMessage('create default renderer');
-			Poly.renderersController.printDebugMessage({
-				params: params,
-				pixelRatio: pixelRatio,
-			});
+			// Poly.renderersController.printDebugMessage({
+			// 	params: params,
+			// 	pixelRatio: pixelRatio,
+			// });
 		}
 
 		return renderer;
