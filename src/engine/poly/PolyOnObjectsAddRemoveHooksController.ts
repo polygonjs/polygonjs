@@ -39,13 +39,13 @@ function assignHookHandler(object: ObjectContent<CoreObjectType>, node: HookHand
 		ids.push(id);
 	}
 }
-function removeHookHandler(object: ObjectContent<CoreObjectType>, node: HookHandler, handlerName: HandlerName) {
-	let ids = hookHandlers(object, handlerName);
-	if (ids) {
-		const index = ids.indexOf(node.graphNodeId());
-		ids.splice(index, 1);
-	}
-}
+// function removeHookHandler(object: ObjectContent<CoreObjectType>, node: HookHandler, handlerName: HandlerName) {
+// 	let ids = hookHandlers(object, handlerName);
+// 	if (ids) {
+// 		const index = ids.indexOf(node.graphNodeId());
+// 		ids.splice(index, 1);
+// 	}
+// }
 // function assignCompletedHookHandler(
 // 	object: ObjectContent<CoreObjectType>,
 // 	node: HookHandler,
@@ -108,7 +108,8 @@ function runHookOnObject(object: ObjectContent<CoreObjectType>, scene: PolyScene
 				// to avoid cases where it might be processed multiple times.
 				// This can happen on scene load, and also when multiple objects are added via the same node,
 				// and only one is new. This will still trigger the hook on the already-added objects
-				removeHookHandler(object, node, handlerName);
+				// UPDATE: this impacts the particles, which are not generated correctly
+				// removeHookHandler(object, node, handlerName);
 				switch (handlerName) {
 					case HandlerName.ADD: {
 						node.updateObjectOnAdd(object, object.parent);

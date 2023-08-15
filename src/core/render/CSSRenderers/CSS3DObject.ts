@@ -77,7 +77,11 @@ export function createCSS3DObject(options: CSS3DObjectOptions) {
 		}
 		CSSObject.position.copy(options.object.position);
 		CSSObject.quaternion.copy(options.object.quaternion);
-		CSSObject.scale.copy(options.object.scale);
+		// do not copy the scale of the object,
+		// as when processing the object multiple times
+		// in the onAdd hook, the scale gets accumulated,
+		// and the object becomes so small it is invisible.
+		// CSSObject.scale.copy(options.object.scale);
 		CSSObject.scale.multiplyScalar(scale);
 		CSSObject.updateMatrix();
 	}
