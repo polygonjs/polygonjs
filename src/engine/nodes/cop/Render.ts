@@ -31,6 +31,7 @@ import {Poly} from '../../Poly';
 import {Constructor} from '../../../types/GlobalTypes';
 import {CoreCameraPerspectiveFrameMode} from '../../../core/camera/frameMode/CoreCameraPerspectiveFrameMode';
 import {CoreCameraOrthographicFrameMode} from '../../../core/camera/frameMode/CoreCameraOrthographicFrameMode';
+import {CopType} from '../../poly/registers/nodes/types/Cop';
 
 const _v2 = new Vector2();
 
@@ -74,8 +75,8 @@ const ParamsConfig = new RenderCopParamConfig();
 
 export class RenderCopNode extends TypedCopNode<RenderCopParamConfig> {
 	override paramsConfig = ParamsConfig;
-	static override type(): Readonly<'render'> {
-		return 'render';
+	static override type(): Readonly<CopType.RENDER> {
+		return CopType.RENDER;
 	}
 	public readonly textureParamsController: TextureParamsController = new TextureParamsController(this);
 

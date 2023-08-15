@@ -7,6 +7,7 @@ export enum CopType {
 	ENV_MAP = 'envMap',
 	GIF = 'gif',
 	LUT = 'lut',
+	RENDER = 'render',
 	SDF_BLUR = 'SDFBlur',
 	SDF_FROM_OBJECT = 'SDFFromObject',
 	SDF_FROM_URL = 'SDFFromUrl',
