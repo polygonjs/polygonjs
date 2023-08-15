@@ -27,7 +27,6 @@ class TransformSopParamConfig extends NodeParamsConfig {
 	group = ParamConfig.STRING(DEFAULT.group, {
 		objectMask: true,
 	});
-
 	/** @param if applyOn is set to object, the transform can then be applied in 2 different ways on those objects. Either the .position, .rotation and .scale attributes are set, or the matrix is set directly. */
 	objectMode = ParamConfig.INTEGER(DEFAULT.objectMode, {
 		visibleIf: {applyOn: TRANSFORM_TARGET_TYPES.indexOf(TransformTargetType.OBJECT)},
@@ -51,7 +50,6 @@ class TransformSopParamConfig extends NodeParamsConfig {
 	pointGroup = ParamConfig.STRING(DEFAULT.pointGroup, {
 		visibleIf: {applyOn: TRANSFORM_TARGET_TYPES.indexOf(TransformTargetType.GEOMETRY)},
 	});
-
 	// transform
 	/** @param rotation order */
 	rotationOrder = ParamConfig.INTEGER(DEFAULT.rotationOrder, {

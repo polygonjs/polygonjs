@@ -73,22 +73,10 @@ export class CSS3DObjectSopNode extends TypedSopNode<CSS3DObjectSopParamsConfig>
 			}
 			this.setCoreGroup(coreGroup);
 		} else {
-			// if no input, create CSS object
-			// and also add attributes.
-			// Even if the attributes can be redundant,
-			// they give clues that they can be changed
-			// to update the output
-			const group = createCSS3DObject({
-				id: this.pv.id,
-				className: this.pv.className,
-				html: this.pv.html,
-				copyAttributes: this.pv.copyAttributes,
-				attributesToCopy: stringToAttribNames(this.pv.attributesToCopy),
-				scale: this.pv.scale,
-			});
-			group.name = this.name();
-			this._addAttributes(group);
-			this.setObjects([group]);
+			const object = new Object3D();
+			object.name = this.name();
+			this._addAttributes(object);
+			this.setObjects([object]);
 		}
 	}
 	private _addAttributes(object: ObjectContent<CoreObjectType>) {

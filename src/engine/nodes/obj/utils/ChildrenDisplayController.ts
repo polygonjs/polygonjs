@@ -19,7 +19,6 @@ interface BaseObjNodeClassWithDisplayNode extends BaseObjNodeClass {
 export class ChildrenDisplayController {
 	protected _childrenUuids: Set<string> = new Set();
 	protected _sopGroup = this._createSopGroup();
-	protected _newObjectsAreDifferent = false;
 	protected _newSpecializedObjects: Object3D[] = [];
 	private _scene: PolyScene;
 	constructor(protected node: BaseObjNodeClassWithDisplayNode) {
@@ -150,24 +149,24 @@ export class ChildrenDisplayController {
 			if (coreGroup) {
 				// check if the new objects are different
 				const newObjects = coreGroup.threejsObjects();
-				this._newObjectsAreDifferent = false;
-				const checkObjectsAreDifferent = () => {
-					this._newObjectsAreDifferent = newObjects.length != this._childrenUuids.size;
-					if (!this._newObjectsAreDifferent) {
-						for (let object of newObjects) {
-							if (!this._childrenUuids.has(object.uuid)) {
-								this._newObjectsAreDifferent = true;
-							}
+				const _checkObjectsHaveChanged = () => {
+					const objectsCountChanged = newObjects.length != this._childrenUuids.size;
+					if (objectsCountChanged) {
+						return true;
+					}
+					for (let object of newObjects) {
+						if (!this._childrenUuids.has(object.uuid)) {
+							return true;
 						}
 					}
+					return false;
 				};
-				// add CAD objects
-				checkObjectsAreDifferent();
+				const newObjectsAreDifferent = _checkObjectsHaveChanged();
 				this._newSpecializedObjects.length = 0;
 				this._addSpecializedObjects(displayNode, coreGroup, this._newSpecializedObjects);
 
 				// update hierarchy if different
-				if (this._newObjectsAreDifferent) {
+				if (newObjectsAreDifferent) {
 					this.removeChildren();
 					const addObject = (object: Object3D) => {
 						this._sopGroup.add(object);
