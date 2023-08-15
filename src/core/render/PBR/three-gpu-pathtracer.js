@@ -7,6 +7,7 @@ import {
 	IESLoader,
 	PhysicalPathTracingMaterial,
 	PathTracingSceneGenerator,
+	DenoiseMaterial,
 } from 'three-gpu-pathtracer'; // ../../thirdParty/repositories/three-gpu-pathtracer/src/index.js
 import {PathTracingSceneWorker} from 'three-gpu-pathtracer/src/workers/PathTracingSceneWorker.js'; // ../../thirdParty/repositories/three-gpu-pathtracer/src/workers/PathTracingSceneWorker.js
 
@@ -20,4 +21,5 @@ export {
 	IESLoader,
 	PhysicalPathTracingMaterial,
 	PathTracingSceneGenerator,
+	DenoiseMaterial,
 };

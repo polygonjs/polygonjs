@@ -22,6 +22,7 @@ import {
 	PathTracingSceneGenerator,
 	BlurredEnvMapGenerator,
 	PhysicalCamera,
+	DenoiseMaterial,
 } from '../../../../../core/render/PBR/three-gpu-pathtracer';
 import type {PathTracingRendererRopNode} from '../../PathTracingRenderer';
 
@@ -38,11 +39,26 @@ interface UpdateOptions {
 	tiles: Vector2;
 	multipleImportanceSampling: boolean;
 	//
+	denoise: boolean;
+	denoiseSigma: number;
+	denoiseThreshold: number;
+	denoiseKSigma: number;
+	//
 	maxSamplesCount: number;
 	samplesPerAnimationFrame: number;
 	f: Vector2;
 	//
 	useWorker: boolean;
+}
+
+interface PathtracingRendererContainerOptions {
+	node: PathTracingRendererRopNode;
+	webGLRenderer: WebGLRenderer;
+	pathTracingRenderer: PathTracingRenderer;
+	fsQuad: FullScreenQuad;
+	fsQuadMat: MeshBasicMaterial;
+	denoiseQuad: FullScreenQuad;
+	denoiseMat: DenoiseMaterial;
 }
 export class PathTracingRendererContainer implements AbstractRenderer {
 	public displayDebug = true;
@@ -56,14 +72,23 @@ export class PathTracingRendererContainer implements AbstractRenderer {
 	private _generated = false;
 	private _generating = false;
 	public readonly isPathTracingRendererContainer = true;
+	private _denoiseActive: boolean = false;
 
-	constructor(
-		public readonly node: PathTracingRendererRopNode,
-		public readonly webGLRenderer: WebGLRenderer,
-		public readonly pathTracingRenderer: PathTracingRenderer,
-		public readonly fsQuad: FullScreenQuad,
-		public readonly fsQuadMat: MeshBasicMaterial
-	) {
+	public readonly node: PathTracingRendererRopNode;
+	public readonly webGLRenderer: WebGLRenderer;
+	public readonly pathTracingRenderer: PathTracingRenderer;
+	public readonly fsQuad: FullScreenQuad;
+	public readonly fsQuadMat: MeshBasicMaterial;
+	public readonly denoiseQuad: FullScreenQuad;
+	public readonly denoiseMat: DenoiseMaterial;
+	constructor(options: PathtracingRendererContainerOptions) {
+		this.node = options.node;
+		this.webGLRenderer = options.webGLRenderer;
+		this.pathTracingRenderer = options.pathTracingRenderer;
+		this.fsQuad = options.fsQuad;
+		this.fsQuadMat = options.fsQuadMat;
+		this.denoiseQuad = options.denoiseQuad;
+		this.denoiseMat = options.denoiseMat;
 		this.domElement = this.webGLRenderer.domElement;
 	}
 	private _multipleImportanceSampling: boolean = true;
@@ -114,6 +139,12 @@ export class PathTracingRendererContainer implements AbstractRenderer {
 			pathTracingRenderer.material.setDefine('FEATURE_MIS', Number(options.multipleImportanceSampling));
 			resetRequired = true;
 		}
+		//
+		this._denoiseActive = options.denoise;
+		this.denoiseMat.sigma = options.denoiseSigma;
+		this.denoiseMat.threshold = options.denoiseThreshold;
+		this.denoiseMat.kSigma = options.denoiseKSigma;
+		//
 		this._useWorker = options.useWorker;
 
 		// for progressive render only, no reset/generate required
@@ -174,8 +205,10 @@ export class PathTracingRendererContainer implements AbstractRenderer {
 	}
 	private _postRender() {
 		this.webGLRenderer.autoClear = false;
-		this.fsQuadMat.map = this.pathTracingRenderer.target.texture;
-		this.fsQuad.render(this.webGLRenderer);
+		const quad = this._denoiseActive ? this.denoiseQuad : this.fsQuad;
+		const mat = this._denoiseActive ? this.denoiseMat : this.fsQuadMat;
+		mat.map = this.pathTracingRenderer.target.texture;
+		quad.render(this.webGLRenderer);
 		this.webGLRenderer.autoClear = true;
 	}
 	samplesCount() {

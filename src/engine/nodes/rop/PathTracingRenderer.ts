@@ -15,7 +15,11 @@ import {Poly} from '../../Poly';
 // import {WEBGL_RENDERER_DEFAULT_PARAMS} from './WebGLRenderer';
 // <<<<<<< HEAD
 import {FullScreenQuad} from '../../../modules/three/examples/jsm/postprocessing/Pass';
-import {PathTracingRenderer, PhysicalPathTracingMaterial} from '../../../core/render/PBR/three-gpu-pathtracer';
+import {
+	PathTracingRenderer,
+	PhysicalPathTracingMaterial,
+	DenoiseMaterial,
+} from '../../../core/render/PBR/three-gpu-pathtracer';
 // =======
 // import {FullScreenQuad} from 'three/examples/jsm/postprocessing/Pass';
 // import {
@@ -93,15 +97,34 @@ class PathTracingRendererRopParamsConfig extends NodeParamsConfig {
 	environmentIntensity = ParamConfig.FLOAT(1, {
 		range: [0, 1],
 		rangeLocked: [true, false],
-		separatorAfter: true,
+		...updateWithoutCook,
+	});
+	denoise = ParamConfig.BOOLEAN(1, {
+		separatorBefore: true,
+		...updateWithoutCook,
+	});
+	denoiseSigma = ParamConfig.FLOAT(2.5, {
+		range: [0.01, 12.0],
+		rangeLocked: [true, true],
+		...updateWithoutCook,
+	});
+	denoiseThreshold = ParamConfig.FLOAT(0.1, {
+		range: [0.01, 1.0],
+		rangeLocked: [true, true],
+		...updateWithoutCook,
+	});
+	denoiseKSigma = ParamConfig.FLOAT(1.0, {
+		range: [0.0, 12.0],
+		rangeLocked: [true, true],
 		...updateWithoutCook,
 	});
 	/** @param toggle on to have alpha on (change requires page reload) */
-	alpha = ParamConfig.BOOLEAN(1);
+	// alpha = ParamConfig.BOOLEAN(1);
 	/** @param toggle on to have antialias on (change requires page reload) */
-	antialias = ParamConfig.BOOLEAN(1);
+	// antialias = ParamConfig.BOOLEAN(1);
 	/** @param tiles */
 	tiles = ParamConfig.VECTOR2([2, 2], {
+		separatorBefore: true,
 		...updateWithoutCook,
 	});
 	/** @param force update */
@@ -199,14 +222,23 @@ export class PathTracingRendererRopNode extends TypedRopNode<PathTracingRenderer
 			map: pathTracingRenderer.target.texture,
 			blending: CustomBlending,
 		});
+		const denoiseMat = new DenoiseMaterial({
+			map: pathTracingRenderer.target.texture,
+			blending: CustomBlending,
+			premultipliedAlpha: this._webGLRenderer.getContextAttributes().premultipliedAlpha,
+		});
+		const denoiseQuad = new FullScreenQuad(denoiseMat);
+
 		const fsQuad = new FullScreenQuad(fsQuadMat);
-		const pathTracingRendererContainer = new PathTracingRendererContainer(
-			this,
-			this._webGLRenderer,
+		const pathTracingRendererContainer = new PathTracingRendererContainer({
+			node: this,
+			webGLRenderer: this._webGLRenderer,
 			pathTracingRenderer,
 			fsQuad,
-			fsQuadMat
-		);
+			fsQuadMat,
+			denoiseQuad,
+			denoiseMat,
+		});
 
 		this._updateRenderer(pathTracingRendererContainer);
 
@@ -235,6 +267,11 @@ export class PathTracingRendererRopNode extends TypedRopNode<PathTracingRenderer
 			environmentIntensity: this.pv.environmentIntensity,
 			tiles: this.pv.tiles,
 			multipleImportanceSampling: this.pv.multipleImportanceSampling,
+			//
+			denoise: this.pv.denoise,
+			denoiseSigma: this.pv.denoiseSigma,
+			denoiseThreshold: this.pv.denoiseThreshold,
+			denoiseKSigma: this.pv.denoiseKSigma,
 			//
 			maxSamplesCount: this.pv.maxSamplesCount,
 			samplesPerAnimationFrame: this.pv.samplesPerAnimationFrame,

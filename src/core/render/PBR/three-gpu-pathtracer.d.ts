@@ -13,6 +13,8 @@ import type {
 	GLBufferAttribute,
 	Material,
 	Vector2,
+	ShaderMaterial,
+	Blending,
 } from 'three';
 import type {MeshBVH, MeshBVHUniformStruct} from '../../geometry/bvh/three-mesh-bvh';
 
@@ -121,4 +123,19 @@ export class PhysicalPathTracingMaterial {
 		updateFrom(lights: PhysicalSpotLight[], iesTextures: Array<IESTexture>): void;
 	};
 	setDefine(define: string, value?: number): void;
+}
+
+export class MaterialBase extends ShaderMaterial {}
+interface DenoiseMaterialParams {
+	map: Texture;
+	blending: Blending;
+	premultipliedAlpha: boolean;
+}
+export class DenoiseMaterial extends MaterialBase {
+	constructor(parameters: DenoiseMaterialParams);
+
+	public map: Texture;
+	public sigma: number;
+	public threshold: number;
+	public kSigma: number;
 }
