@@ -168,7 +168,6 @@ export class CubeCameraCopNode extends TypedCopNode<CubeCameraCopParamsConfig> {
 		// otherwise it will not be replaced when the renderer changes
 		const texture = camera.renderTarget.texture;
 		this.setTexture(texture);
-		console.log(texture.uuid);
 
 		return texture;
 	}
