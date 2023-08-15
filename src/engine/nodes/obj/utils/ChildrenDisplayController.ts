@@ -20,6 +20,7 @@ export class ChildrenDisplayController {
 	protected _childrenUuids: Set<string> = new Set();
 	protected _sopGroup = this._createSopGroup();
 	protected _newSpecializedObjects: Object3D[] = [];
+	protected _newObjectsAreDifferent: boolean = false;
 	private _scene: PolyScene;
 	constructor(protected node: BaseObjNodeClassWithDisplayNode) {
 		this._scene = this.node.scene();
@@ -161,12 +162,12 @@ export class ChildrenDisplayController {
 					}
 					return false;
 				};
-				const newObjectsAreDifferent = _checkObjectsHaveChanged();
+				this._newObjectsAreDifferent = _checkObjectsHaveChanged();
 				this._newSpecializedObjects.length = 0;
 				this._addSpecializedObjects(displayNode, coreGroup, this._newSpecializedObjects);
 
 				// update hierarchy if different
-				if (newObjectsAreDifferent) {
+				if (this._newObjectsAreDifferent) {
 					this.removeChildren();
 					const addObject = (object: Object3D) => {
 						this._sopGroup.add(object);
