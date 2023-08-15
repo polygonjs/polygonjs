@@ -91,7 +91,7 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 		material.customMaterials[customName] = mat;
 	}
 
-	compileCustomMaterials(material: MaterialWithCustomMaterials) {
+	compileCustomMaterials(material: MaterialWithCustomMaterials, parentAssembler: ShaderAssemblerMaterial) {
 		const matNode = this.currentGlParentNode();
 		const matBuilderNode = matNode as TypedBuilderMatNode<any, any, any>;
 		const class_by_custom_name = this.customAssemblerClassByCustomName();
@@ -120,6 +120,10 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 
 						assembler._setAdditionalTextureUniforms(this._additionalTextureUniforms);
 						assembler.set_root_nodes(this._root_nodes);
+						//
+						// ensure the if the builder node uses a template builder (using the builderNode parameter), the custom materials are also updated with the same fragment shader, vertex shader, and uniforms
+						assembler.setGlParentNode(parentAssembler.currentGlParentNode());
+						//
 						assembler.set_param_configs_owner(this._codeBuilder);
 						assembler.set_shader_configs(this.shaderConfigs());
 						assembler.set_variable_configs(this.variable_configs());
@@ -226,7 +230,7 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 		// assign custom materials
 		if (COMPILE_CUSTOM_MATERIALS) {
 			if ((material as MaterialWithCustomMaterials).customMaterials) {
-				this.compileCustomMaterials(material as MaterialWithCustomMaterials);
+				this.compileCustomMaterials(material as MaterialWithCustomMaterials, this);
 			}
 		}
 		// const custom_materials = await this.get_custom_materials();
