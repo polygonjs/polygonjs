@@ -43,7 +43,7 @@ export function AreaLightParamConfig<TBase extends Constructor>(Base: TBase) {
 		});
 		/** @param light intensity */
 		intensity = ParamConfig.FLOAT(DEFAULT.intensity, {
-			range: [0, 2],
+			range: [0, 10],
 			rangeLocked: [true, false],
 		});
 		/** @param grid width */

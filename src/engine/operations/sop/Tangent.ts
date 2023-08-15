@@ -6,8 +6,17 @@ import {DefaultOperationParams} from '../../../core/operations/_Base';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 import {Attribute} from '../../../core/geometry/Attribute';
 import {CoreAttribute} from '../../../core/geometry/Attribute';
+import {filterThreejsObjectsWithGroup} from '../../../core/geometry/Mask';
+
+export enum TangentMode {
+	MESH = 'Normal Maps',
+	CURVE = 'Curve',
+}
+export const TANGENT_MODES: TangentMode[] = [TangentMode.MESH, TangentMode.CURVE];
 
 interface TangentSopParams extends DefaultOperationParams {
+	group: string;
+	mode: number;
 	closed: boolean;
 	tangentName: string;
 }
@@ -18,6 +27,8 @@ const STRIDE = 3;
 
 export class TangentSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: TangentSopParams = {
+		group: '*',
+		mode: TANGENT_MODES.indexOf(TangentMode.MESH),
 		closed: false,
 		tangentName: 'tangent',
 	};
@@ -28,11 +39,32 @@ export class TangentSopOperation extends BaseSopOperation {
 	override cook(inputCoreGroups: CoreGroup[], params: TangentSopParams) {
 		const inputCoreGroup = inputCoreGroups[0];
 
-		const objects = inputCoreGroup.threejsObjects();
+		const objects = filterThreejsObjectsWithGroup(inputCoreGroup, params);
+		return this._process(objects, params);
+	}
+	private _process(objects: Object3D[], params: TangentSopParams) {
+		const mode = TANGENT_MODES[params.mode];
+		switch (mode) {
+			case TangentMode.MESH:
+				return this._processForMesh(objects, params);
+			case TangentMode.CURVE:
+				return this._processForCurve(objects, params);
+		}
+	}
+	private _processForMesh(objects: Object3D[], params: TangentSopParams) {
+		for (const object of objects) {
+			const geometry = (object as Mesh).geometry;
+			if (geometry) {
+				geometry.computeTangents();
+			}
+		}
+		return this.createCoreGroupFromObjects(objects);
+	}
+	private _processForCurve(objects: Object3D[], params: TangentSopParams) {
 		const newObjects: Object3D[] = [];
 
-		for (let object of objects) {
-			const objectWithTangent = this._createTangent(object, params);
+		for (const object of objects) {
+			const objectWithTangent = this._createTangentForCurve(object, params);
 			if (objectWithTangent) {
 				newObjects.push(objectWithTangent);
 			}
@@ -41,7 +73,7 @@ export class TangentSopOperation extends BaseSopOperation {
 		return this.createCoreGroupFromObjects(newObjects);
 	}
 
-	private _createTangent(object: Object3D, params: TangentSopParams) {
+	private _createTangentForCurve(object: Object3D, params: TangentSopParams) {
 		const {closed} = params;
 		const tangentName = CoreAttribute.remapName(params.tangentName);
 

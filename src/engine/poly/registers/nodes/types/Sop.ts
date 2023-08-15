@@ -174,6 +174,7 @@ export enum SopType {
 	SUBDIVIDE = 'subdivide',
 	SWITCH = 'switch',
 	TANGENT = 'tangent',
+	TANGENTS_HELPER = 'tangentsHelper',
 	//
 	// TET = 'tet',
 	// TET_BOX = 'tetBox',

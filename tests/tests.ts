@@ -543,6 +543,7 @@ import {testenginenodessopSubdivide} from './engine/nodes/sop/Subdivide';
 import {testenginenodessopSubnet} from './engine/nodes/sop/Subnet';
 import {testenginenodessopSwitch} from './engine/nodes/sop/Switch';
 import {testenginenodessopTangent} from './engine/nodes/sop/Tangent';
+import {testenginenodessopTangentsHelper} from './engine/nodes/sop/TangentsHelper';
 import {testenginenodessopTetDelete} from './engine/nodes/sop/TetDelete';
 import {testenginenodessopTetTriangulate} from './engine/nodes/sop/TetTriangulate';
 import {testenginenodessopTetrahedralize} from './engine/nodes/sop/Tetrahedralize';
@@ -1111,6 +1112,7 @@ export function testPolygonjs(qUnit: QUnit) {
 	testenginenodessopSubnet(qUnit);
 	testenginenodessopSwitch(qUnit);
 	testenginenodessopTangent(qUnit);
+	testenginenodessopTangentsHelper(qUnit);
 	testenginenodessopTetDelete(qUnit);
 	testenginenodessopTetTriangulate(qUnit);
 	testenginenodessopTetrahedralize(qUnit);

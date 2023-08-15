@@ -265,6 +265,7 @@ import {SubnetInputSopNode} from '../../../nodes/sop/SubnetInput';
 import {SubnetOutputSopNode} from '../../../nodes/sop/SubnetOutput';
 import {SwitchSopNode} from '../../../nodes/sop/Switch';
 import {TangentSopNode} from '../../../nodes/sop/Tangent';
+import {TangentsHelperSopNode} from '../../../nodes/sop/TangentsHelper';
 import {TetDeleteSopNode} from '../../../nodes/sop/TetDelete';
 import {TetEmbedSopNode} from '../../../nodes/sop/TetEmbed';
 import {TetSoftBodySolverSopNode} from '../../../nodes/sop/TetSoftBodySolver';
@@ -565,6 +566,7 @@ export interface GeoNodeChildrenMap {
 	subnetOutput: SubnetOutputSopNode;
 	switch: SwitchSopNode;
 	tangent: TangentSopNode;
+	tangentsHelper: TangentsHelperSopNode;
 	tetDelete: TetDeleteSopNode;
 	tetEmbed: TetEmbedSopNode;
 	tetSoftBodySolver: TetSoftBodySolverSopNode;
@@ -1105,6 +1107,7 @@ export class SopRegister {
 		);
 		poly.registerNode(SwitchSopNode, CATEGORY_SOP.FLOW);
 		poly.registerNode(TangentSopNode, CATEGORY_SOP.ATTRIBUTE);
+		poly.registerNode(TangentsHelperSopNode, CATEGORY_SOP.HELPERS);
 		//
 		// poly.registerNode(TetBunnySopNode, CATEGORY_SOP.TET);
 		poly.registerNode(TetDeleteSopNode, CATEGORY_SOP.TET);
