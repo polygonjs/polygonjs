@@ -26,12 +26,38 @@ interface ArraySetter {
 	buffer: ArrayBufferLike;
 }
 
+// export interface ChartOptions {
+// 	maxIterations?: number;
+// 	straightnessWeight?: number;
+// 	textureSeamWeight?: number;
+// 	useInputMeshUvs?: boolean;
+// 	maxChartArea?: number;
+// 	normalDeviationWeight?: number;
+// 	maxCost?: number;
+// 	roundnessWeight?: number;
+// 	maxBoundaryLength?: number;
+// 	normalSeamWeight?: number;
+// 	fixWinding?: boolean;
+// }
+// export interface PackOptions {
+// 	maxChartSize?: number;
+// 	padding?: number;
+// 	bilinear?: boolean;
+// 	createImage?: boolean;
+// 	rotateCharts?: boolean;
+// 	rotateChartsToAxis?: boolean;
+// 	blockAlign?: boolean;
+// 	resolution?: number;
+// 	bruteForce?: boolean;
+// 	texelsPerUnit?: number;
+// }
+
 interface XAtlasOptions {}
 export interface XAtlasManager {
 	createMesh: (vertexCount: number, originalIndexCount: number, test: boolean, test2: boolean) => MeshInfo;
 
 	createAtlas: () => void;
-	generateAtlas: () => void;
+	generateAtlas: (/*chartOptions?: ChartOptions, packOptions?: PackOptions, test?: boolean*/) => void;
 	addMesh: () => number;
 	getMeshData: (meshId: MeshId) => MeshData;
 	destroyAtlas: () => void;

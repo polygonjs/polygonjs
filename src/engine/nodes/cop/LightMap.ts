@@ -10,7 +10,8 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {BaseNodeType} from '../_Base';
 import {Object3D, WebGLRenderer} from 'three';
 import {Light} from 'three';
-import {LightMapController, DEFAULT_ITERATION_BLEND} from './utils/LightMapController';
+import {LightMapController} from './utils/LightMapController';
+// import {DEFAULT_ITERATION_BLEND} from './utils/lightMap/Common';
 import {Mesh} from 'three';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {DataTextureController, DataTextureControllerBufferType} from './utils/DataTextureController';
@@ -30,10 +31,10 @@ class LightMapCopParamConfig extends NodeParamsConfig {
 	/** @param iterations */
 	iterations = ParamConfig.INTEGER(512, {range: [1, 2048], rangeLocked: [true, false]});
 	/** @param blendWindow */
-	iterationBlend = ParamConfig.FLOAT(DEFAULT_ITERATION_BLEND, {
-		range: [0, 1],
-		rangeLocked: [true, true],
-	});
+	// iterationBlend = ParamConfig.FLOAT(DEFAULT_ITERATION_BLEND, {
+	// 	range: [0, 1],
+	// 	rangeLocked: [true, true],
+	// });
 	/** @param blurEdges */
 	blur = ParamConfig.BOOLEAN(1);
 	/** @param blurAmount */
@@ -49,12 +50,6 @@ class LightMapCopParamConfig extends NodeParamsConfig {
 
 	objectsMask = ParamConfig.STRING('', {objectMask: true});
 	lightsMask = ParamConfig.STRING('*', {objectMask: true});
-
-	printResolveObjectsList = ParamConfig.BUTTON(null, {
-		callback: (node: BaseNodeType) => {
-			LightMapCopNode.PARAM_CALLBACK_printResolveObjectsList(node as LightMapCopNode);
-		},
-	});
 }
 const ParamsConfig = new LightMapCopParamConfig();
 
@@ -70,7 +65,7 @@ export class LightMapCopNode extends TypedCopNode<LightMapCopParamConfig> {
 	private _rendererController: CopRendererController | undefined;
 
 	override async cook() {
-		this._updateManual();
+		await this._render();
 	}
 
 	private async _createLightMapController() {
@@ -83,8 +78,8 @@ export class LightMapCopNode extends TypedCopNode<LightMapCopParamConfig> {
 			this.states.error.set('renderer found is not WebGLRenderer');
 			return;
 		}
-		const progressiveSurfacemap = new LightMapController(renderer, this.pv.lightMapRes);
-		return progressiveSurfacemap;
+		const lightMapController = new LightMapController(renderer);
+		return lightMapController;
 	}
 
 	//
@@ -92,16 +87,16 @@ export class LightMapCopNode extends TypedCopNode<LightMapCopParamConfig> {
 	// ACTIVE
 	//
 	//
-	static PARAM_CALLBACK_update_updateMode(node: LightMapCopNode) {
-		// node._updateRenderHook();
-	}
+	// static PARAM_CALLBACK_update_updateMode(node: LightMapCopNode) {
+	// 	// node._updateRenderHook();
+	// }
 
 	//
 	//
 	// UPDATE
 	//
 	//
-	private async _updateManual() {
+	private async _render() {
 		this.lightMapController = this.lightMapController || (await this._createLightMapController());
 		if (!this.lightMapController) {
 			return;
@@ -111,13 +106,14 @@ export class LightMapCopNode extends TypedCopNode<LightMapCopParamConfig> {
 			return;
 		}
 		this._updateObjectsAndLightsList();
-		this.lightMapController.init(this._includedObjects, this._includedLights);
+		this.lightMapController.setState(this._includedObjects, this._includedLights);
 
 		// const camera = mainCameraNode.camera();
 		this.lightMapController.setParams({
+			resolution: this.pv.lightMapRes,
 			lightRadius: this.pv.lightRadius,
-			iterations: this.pv.iterations,
-			iterationBlend: this.pv.iterationBlend,
+			totalIterationsCount: this.pv.iterations,
+			// iterationBlend: this.pv.iterationBlend,
 			blur: this.pv.blur,
 			blurAmount: this.pv.blurAmount,
 		});
@@ -143,7 +139,7 @@ export class LightMapCopNode extends TypedCopNode<LightMapCopParamConfig> {
 		}
 	}
 	static PARAM_CALLBACK_updateManual(node: LightMapCopNode) {
-		node._updateManual();
+		node.setDirty();
 	}
 
 	//
@@ -176,16 +172,5 @@ export class LightMapCopNode extends TypedCopNode<LightMapCopParamConfig> {
 				}
 			}
 		}
-	}
-
-	static PARAM_CALLBACK_printResolveObjectsList(node: LightMapCopNode) {
-		node._printResolveObjectsList();
-	}
-	private _printResolveObjectsList() {
-		this._updateObjectsAndLightsList();
-		console.log('included objects:');
-		console.log(this._includedObjects);
-		console.log('included lights:');
-		console.log(this._includedLights);
 	}
 }

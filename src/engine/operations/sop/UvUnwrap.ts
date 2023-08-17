@@ -2,23 +2,34 @@ import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
-import {BufferAttribute, Mesh} from 'three';
-import {Float32BufferAttribute, Uint32BufferAttribute} from 'three';
+import {
+	BufferAttribute,
+	Mesh,
+	BufferGeometry,
+	Float32BufferAttribute,
+	Uint32BufferAttribute,
+	Vector3,
+	// Triangle,
+	Line3,
+} from 'three';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
-import {BufferGeometry} from 'three';
 import {Attribute} from '../../../core/geometry/Attribute';
 import {XAtlasLoaderHandler, AddMeshStatus, XAtlasManager} from '../../../core/loader/geometry/XAtlas';
 import {TypeAssert} from '../../poly/Assert';
-import {Vector3} from 'three';
-import {Line3} from 'three';
 import {Potpack, PotPackBox, PotPackBoxResult} from '../../../core/libs/Potpack';
 import {LIBRARY_INSTALL_HINT} from '../../../core/loader/common';
+// import {UV_LIGHT_MAP_FLIPPED_ATTRIB_NAME} from '../../nodes/cop/utils/lightMap/LightMapMaterial';
 
 export enum UvUnwrapMethod {
 	POTPACK = 'potpack',
 	XATLAS = 'xatlas',
+	// XATLAS_2 = 'xatlas 2',
 }
-export const UV_UNWRAP_METHODS: UvUnwrapMethod[] = [UvUnwrapMethod.XATLAS, UvUnwrapMethod.POTPACK];
+export const UV_UNWRAP_METHODS: UvUnwrapMethod[] = [
+	UvUnwrapMethod.XATLAS,
+	// UvUnwrapMethod.XATLAS_2,
+	UvUnwrapMethod.POTPACK,
+];
 
 interface UvUnwrapSopParams extends DefaultOperationParams {
 	method: number;
@@ -31,6 +42,8 @@ const v3 = new Vector3();
 const vMid = new Vector3();
 const vEnd = new Vector3();
 const line = new Line3();
+// const _uvTriangle = new Triangle();
+// const _uvTriangleN = new Vector3();
 
 export class UvUnwrapSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: UvUnwrapSopParams = {
@@ -48,12 +61,67 @@ export class UvUnwrapSopOperation extends BaseSopOperation {
 			case UvUnwrapMethod.XATLAS: {
 				return await this._unwrapMeshUVsWithXAtlas(inputCoreGroups, params);
 			}
+			// case UvUnwrapMethod.XATLAS_2: {
+			// 	return await this._unwrapMeshUVsWithXAtlas2(inputCoreGroups, params);
+			// }
 			case UvUnwrapMethod.POTPACK: {
 				return this._unwrapMeshUVsWithPotpack(inputCoreGroups, params);
 			}
 		}
 		TypeAssert.unreachable(method);
 	}
+	// private async _unwrapMeshUVsWithXAtlas2(inputCoreGroups: CoreGroup[], params: UvUnwrapSopParams) {
+	// 	const coreGroup = inputCoreGroups[0];
+	// 	const unwrapper = new UVUnwrapper({BufferAttribute: BufferAttribute});
+	// 	console.log(unwrapper, unwrapper.chartOptions, unwrapper.packOptions);
+	// 	unwrapper.chartOptions = {
+	// 		fixWinding: false,
+	// 		maxBoundaryLength: 0,
+	// 		maxChartArea: 0,
+	// 		maxCost: 2,
+	// 		maxIterations: 1,
+	// 		normalDeviationWeight: 2,
+	// 		normalSeamWeight: 4,
+	// 		roundnessWeight: 0.009999999776482582,
+	// 		straightnessWeight: 6,
+	// 		textureSeamWeight: 0.5,
+	// 		useInputMeshUvs: false,
+	// 	};
+	// 	unwrapper.packOptions = {
+	// 		bilinear: true,
+	// 		blockAlign: true,
+	// 		bruteForce: false,
+	// 		createImage: false,
+	// 		maxChartSize: 0,
+	// 		padding: 0,
+	// 		resolution: 2048,
+	// 		rotateCharts: true,
+	// 		rotateChartsToAxis: true,
+	// 		texelsPerUnit: 0,
+	// 	};
+
+	// 	await unwrapper.loadLibrary(
+	// 		(mode, progress) => {
+	// 			// console.log(mode, progress);
+	// 		},
+	// 		'https://cdn.jsdelivr.net/npm/xatlasjs@0.1.0/dist/xatlas.wasm',
+	// 		'https://cdn.jsdelivr.net/npm/xatlasjs@0.1.0/dist/xatlas.js'
+	// 	); // Make sure to wait for the library to load before unwrapping.
+
+	// 	const objects = coreGroup.threejsObjectsWithGeo();
+	// 	for (let object of objects) {
+	// 		const mesh = object as Mesh;
+	// 		if (mesh.isMesh) {
+	// 			// unwrapper.useNormals = true;
+	// 			// const res = await unwrapper.unwrapGeometry(mesh.geometry);
+	// 			// mesh.geometry = res[0];
+	// 			// unwrapper.(mesh.geometry);
+	// 			await unwrapper.packAtlas([mesh.geometry]);
+	// 		}
+	// 	}
+
+	// 	return coreGroup;
+	// }
 
 	private async _unwrapMeshUVsWithXAtlas(inputCoreGroups: CoreGroup[], params: UvUnwrapSopParams) {
 		const coreGroup = inputCoreGroups[0];
@@ -74,7 +142,7 @@ export class UvUnwrapSopOperation extends BaseSopOperation {
 			}
 		}
 
-		return inputCoreGroups[0];
+		return coreGroup;
 	}
 
 	private _unwrapMeshUVsWithAtlas(xatlas: XAtlasManager, mesh: Mesh, params: UvUnwrapSopParams) {
@@ -120,11 +188,38 @@ export class UvUnwrapSopOperation extends BaseSopOperation {
 		if (statusCode !== AddMeshStatus.Success) {
 			throw new Error(`UVUnwrapper: Error adding mesh. Status code ${statusCode}`);
 		}
+		// const chartOptions: ChartOptions = {
+		// 	fixWinding: true,
+		// 	maxBoundaryLength: 0,
+		// 	maxChartArea: 0,
+		// 	maxCost: 2,
+		// 	maxIterations: 1,
+		// 	normalDeviationWeight: 2,
+		// 	normalSeamWeight: 4,
+		// 	roundnessWeight: 0.009999999776482582,
+		// 	straightnessWeight: 6,
+		// 	textureSeamWeight: 0.5,
+		// 	useInputMeshUvs: false,
+		// };
+		// const packOptions: PackOptions = {
+		// 	bilinear: true,
+		// 	blockAlign: false,
+		// 	bruteForce: false,
+		// 	createImage: false,
+		// 	maxChartSize: 0,
+		// 	padding: 0,
+		// 	resolution: 0,
+		// 	rotateCharts: true,
+		// 	rotateChartsToAxis: true,
+		// 	texelsPerUnit: 0,
+		// };
+		// console.log({chartOptions, packOptions});
 
 		try {
 			xatlas.generateAtlas();
 		} catch (err) {
 			this._node?.states.error.set('failed to generate atlas');
+			console.log(err);
 			return;
 		}
 
@@ -145,16 +240,58 @@ export class UvUnwrapSopOperation extends BaseSopOperation {
 
 		for (let i = 0; i < meshData.newVertexCount; i++) {
 			const originalIndex = originalIndexArray[i];
+			// P
 			newPositionArray[i * 3] = oldPositionArray[originalIndex * 3];
 			newPositionArray[i * 3 + 1] = oldPositionArray[originalIndex * 3 + 1];
 			newPositionArray[i * 3 + 2] = oldPositionArray[originalIndex * 3 + 2];
+			// N
 			newNormalArray[i * 3] = oldNormalArray[originalIndex * 3];
 			newNormalArray[i * 3 + 1] = oldNormalArray[originalIndex * 3 + 1];
 			newNormalArray[i * 3 + 2] = oldNormalArray[originalIndex * 3 + 2];
+			// uv
 			newUvArray[i * 2] = oldUvArray[originalIndex * 2];
 			newUvArray[i * 2 + 1] = oldUvArray[originalIndex * 2 + 1];
 		}
+		// check inverted uvs (which face toward -z when set onto P)
+		// const pointsCount = newPositionArray.length / 3;
+		// const polyCount = newIndexArray.length / 3;
+		// const maxI = polyCount * 3;
+		// const uvLightmapFlipped: number[] = new Array(newPositionArray.length / 3).fill(-1);
+		// for (let i = 0; i < maxI; i += 3) {
+		// 	const i0 = newIndexArray[i];
+		// 	const i1 = newIndexArray[i + 1];
+		// 	const i2 = newIndexArray[i + 2];
+		// 	_uvTriangle.a.set(newUv2Array[i0 * 2], newUv2Array[i0 * 2 + 1], 0);
+		// 	_uvTriangle.b.set(newUv2Array[i1 * 2], newUv2Array[i1 * 2 + 1], 0);
+		// 	_uvTriangle.c.set(newUv2Array[i2 * 2], newUv2Array[i2 * 2 + 1], 0);
+		// 	_uvTriangle.getNormal(_uvTriangleN);
+		// 	const flipped = _uvTriangleN.z < 0 ? 1 : 0;
+		// 	// if (flipped) {
+		// 	// 	// newIndexArray[i] = i2;
+		// 	// 	// newIndexArray[i + 2] = i0;
+		// 	// 	// newUv2Array[i0 * 2] = _uvTriangle.c.x;
+		// 	// 	// newUv2Array[i0 * 2 + 1] = _uvTriangle.c.y;
+		// 	// 	// newUv2Array[i2 * 2] = _uvTriangle.a.x;
+		// 	// 	// newUv2Array[i2 * 2 + 1] = _uvTriangle.a.y;
+		// 	// }
+		// 	uvLightmapFlipped[i0] = flipped;
+		// 	uvLightmapFlipped[i1] = flipped;
+		// 	uvLightmapFlipped[i2] = flipped;
+		// 	// if (_uvTriangleN.z < 0) {
+		// 	// 	newNormalArray[i] *= -1;
+		// 	// 	newNormalArray[i + 1] *= -1;
+		// 	// 	newNormalArray[i + 2] *= -1;
+		// 	// }
+		// }
+		// for (let i = 0; i < pointsCount; i++) {
+		// 	const flipped = uvFlip[i];
+		// 	console.log(i, flipped);
+		// 	newNormalArray[i * 3] *= flipped;
+		// 	newNormalArray[i * 3 + 1] *= flipped;
+		// 	newNormalArray[i * 3 + 2] *= flipped;
+		// }
 
+		// create geo
 		const newGeometry = new BufferGeometry();
 		newGeometry.setAttribute('position', new Float32BufferAttribute(newPositionArray, 3));
 		newGeometry.setAttribute('normal', new Float32BufferAttribute(newNormalArray, 3));
@@ -162,6 +299,7 @@ export class UvUnwrapSopOperation extends BaseSopOperation {
 			newGeometry.setAttribute('uv', new Float32BufferAttribute(newUvArray, 2));
 		}
 		newGeometry.setAttribute(params.uv, new Float32BufferAttribute(newUv2Array, 2));
+		// newGeometry.setAttribute(UV_LIGHT_MAP_FLIPPED_ATTRIB_NAME, new Float32BufferAttribute(uvLightmapFlipped, 1));
 		newGeometry.setIndex(new Uint32BufferAttribute(newIndexArray, 1));
 
 		mesh.geometry = newGeometry;
@@ -180,7 +318,7 @@ export class UvUnwrapSopOperation extends BaseSopOperation {
 			}
 		}
 
-		return inputCoreGroups[0];
+		return coreGroup;
 	}
 
 	// TODO: at the moment each polygon will fix a single box
@@ -196,7 +334,7 @@ export class UvUnwrapSopOperation extends BaseSopOperation {
 		if (!positionArray) {
 			return;
 		}
-		const uvArray = (geometry.attributes[params.uv] as BufferAttribute)?.array;
+		const uvArray = (geometry.attributes['uv'] as BufferAttribute)?.array;
 		if (!uvArray) {
 			return;
 		}

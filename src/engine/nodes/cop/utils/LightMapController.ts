@@ -1,8 +1,9 @@
+//
+// adapted from https://threejs.org/examples/?q=light#webgl_shadowmap_progressive
+//
 import {
 	Quaternion,
 	Vector3,
-	Matrix4,
-	Texture,
 	Light,
 	Camera,
 	WebGLRenderer,
@@ -10,140 +11,117 @@ import {
 	Mesh,
 	WebGLRenderTarget,
 	Scene,
-	HalfFloatType,
-	FloatType,
-	MeshPhongMaterial,
-	MeshBasicMaterial,
-	PlaneGeometry,
-	Material,
+	BackSide,
+	FrontSide,
+	DoubleSide,
+	// Color,
 } from 'three';
-import {CoreUserAgent} from '../../../../core/UserAgent';
+import {
+	LightMapControllerParams,
+	ObjectState,
+	LightHierarchyState,
+	LightMatrixState,
+	RENDER_TARGET_DEFAULT_SIZE,
+	renderTargetFormat,
+	renderTargetType,
+} from './lightMap/Common';
+import {BlurMaterial, setBlurMaterial} from './lightMap/BlurMaterial';
+import {createBlurPlane} from './lightMap/BlurPlane';
+import {RenderTargetsCombineMaterial, setRenderTargetsCombineMaterial} from './lightMap/RenderTargetsCombineMaterial';
+import {createRenderTargetsCombinePlane} from './lightMap/RenderTargetsCombinePlane';
+import {createLightMapMaterial, LightMapMaterial, setLightMapMaterial} from './lightMap/LightMapMaterial';
+import {invertNormals} from './lightMap/LightMapUtils';
+import {RenderTargetPair} from './lightMap/RenderTargetPair';
 
-//
-// adapted from https://threejs.org/examples/?q=light#webgl_shadowmap_progressive
-//
-
-interface MeshPhongMaterialWithUniforms extends MeshPhongMaterial {
-	uniforms: {
-		previousShadowMap: {value: Texture | null};
-		iterationBlend: {value: number};
-	};
-}
-interface MeshBasicMaterialWithUniforms extends MeshBasicMaterial {
-	uniforms: {
-		previousShadowMap: {value: Texture | null};
-		pixelOffset: {value: number};
-	};
-}
-interface ObjectState {
-	material: Material | Material[];
-	frustumCulled: boolean;
-	parent: Object3D | null;
-	castShadow: boolean;
-	receiveShadow: boolean;
-}
-interface LightHierarchyState {
-	matrixAutoUpdate: boolean;
-	parent: Object3D | null;
-}
-interface LightMatrixState {
-	matrix: Matrix4;
-	position: Vector3;
-}
-
-interface Params {
-	lightRadius: number;
-	iterations: number;
-	iterationBlend: number;
-	blur: boolean;
-	blurAmount: number;
-}
-export const DEFAULT_ITERATION_BLEND = 1 / 200;
 export class LightMapController {
 	private objectTargets: Mesh[] = [];
 	private lights: Light[] = [];
-	private scene = new Scene();
-	// private tinyTarget = new WebGLRenderTarget(1, 1);
-	private buffer1Active = false;
-	// private firstUpdate = false;
-	private progressiveLightMap1: WebGLRenderTarget;
-	private progressiveLightMap2: WebGLRenderTarget;
-	private uvMat: MeshPhongMaterialWithUniforms;
-	private blurMaterial: MeshBasicMaterialWithUniforms | undefined;
-	private blurringPlane: Mesh | undefined;
-	private _params: Params = {
+	private _scene = new Scene();
+	private renderFlippedUvs = false;
+	private nonFlippedRenderTargetPair: RenderTargetPair = new RenderTargetPair();
+	private flippedRenderTargetPair: RenderTargetPair = new RenderTargetPair();
+	private lightMapMaterial: LightMapMaterial;
+	private blurMaterial: BlurMaterial;
+	private blurPlane: Mesh;
+	private renderTargetsCombineMaterial: RenderTargetsCombineMaterial;
+	private renderTargetsCombinePlane: Mesh;
+	private finalRenderTarget = new WebGLRenderTarget(RENDER_TARGET_DEFAULT_SIZE, RENDER_TARGET_DEFAULT_SIZE, {
+		type: renderTargetType,
+		format: renderTargetFormat,
+	});
+	private _params: LightMapControllerParams = {
+		resolution: 1,
 		lightRadius: 1,
-		iterations: 1,
-		iterationBlend: DEFAULT_ITERATION_BLEND,
+		totalIterationsCount: 1,
 		blur: false,
 		blurAmount: 0,
 	};
-	constructor(private renderer: WebGLRenderer, private res: number = 1024) {
-		// Create the Progressive LightMap Texture
-		const isAndroidOriOS = CoreUserAgent.isAndroid() || CoreUserAgent.isiOS();
-		const format = isAndroidOriOS ? HalfFloatType : FloatType;
-		this.progressiveLightMap1 = new WebGLRenderTarget(this.res, this.res, {type: format});
-		this.progressiveLightMap2 = new WebGLRenderTarget(this.res, this.res, {type: format});
+	constructor(private renderer: WebGLRenderer) {
+		this.lightMapMaterial = createLightMapMaterial();
 
-		this.uvMat = this._createUVMat();
+		const blurPlaneData = createBlurPlane();
+		this.blurPlane = blurPlaneData.plane;
+		this.blurMaterial = blurPlaneData.mat;
+
+		const renderTargetsCombinePlaneData = createRenderTargetsCombinePlane();
+		this.renderTargetsCombinePlane = renderTargetsCombinePlaneData.plane;
+		this.renderTargetsCombineMaterial = renderTargetsCombinePlaneData.mat;
+	}
+	private setSize(w: number, h: number) {
+		this.nonFlippedRenderTargetPair.setSize(w, h);
+		this.flippedRenderTargetPair.setSize(w, h);
+		this.finalRenderTarget.setSize(w, h);
 	}
 
+	renderTargetPair() {
+		return this.renderFlippedUvs ? this.flippedRenderTargetPair : this.nonFlippedRenderTargetPair;
+	}
 	textureRenderTarget() {
-		return this.progressiveLightMap2;
-	}
-	texture() {
-		return this.textureRenderTarget().texture;
+		return this.finalRenderTarget;
 	}
 
-	setParams(params: Params) {
+	setParams(params: LightMapControllerParams) {
+		this._params.resolution = params.resolution;
 		this._params.lightRadius = params.lightRadius;
-		this._params.iterations = params.iterations;
-		this._params.iterationBlend = params.iterationBlend;
+		this._params.totalIterationsCount = params.totalIterationsCount;
 		this._params.blur = params.blur;
 		this._params.blurAmount = params.blurAmount;
+		this.setSize(params.resolution, params.resolution);
 	}
 
-	/**
-	 * Sets these objects' materials' lightmaps and modifies their uv2's.
-	 * @param {Object3D} objects An array of objects and lights to set up your lightmap.
-	 */
-	init(objects: Mesh[], lights: Light[]) {
-		// this._reset();
+	setState(objects: Mesh[], lights: Light[]) {
+		this._clearScene();
+
+		this._scene.add(this.blurPlane);
+
+		this._previousRenderTarget = this.renderer.getRenderTarget();
 		this._setObjects(objects);
 		this._setLights(lights);
 	}
-	private _setObjects(objects: Array<Mesh>) {
-		this.objectTargets = [];
-		for (let mesh of objects) {
-			if (this.blurringPlane == null) {
-				this._initializeBlurPlane(this.res, this.progressiveLightMap1);
-			}
-			this.objectTargets.push(mesh);
+	private _clearScene() {
+		let child: Object3D | undefined;
+		while ((child = this._scene.children[0])) {
+			this._scene.remove(child);
 		}
+	}
+	private _setObjects(objects: Array<Mesh>) {
+		this.objectTargets = [...objects];
 		this._saveObjectsState();
 	}
 	private _setLights(lights: Array<Light>) {
 		this.lights = lights;
 		for (let light of lights) {
 			this._saveLightHierarchyState(light);
-			this.scene.attach(light);
+			this._scene.attach(light);
 			this._saveLightMatrixState(light);
 		}
 	}
 
-	/**
-	 * This function renders each mesh one at a time into their respective surface maps
-	 * @param {Camera} camera Standard Rendering Camera
-	 * @param {number} iterationBlend When >1, samples will accumulate over time.
-	 * @param {boolean} blurEdges  Whether to fix UV Edges via blurring
-	 */
 	private _objectStateByObject: WeakMap<Object3D, ObjectState> = new WeakMap();
 	private _previousRenderTarget: WebGLRenderTarget | null = null;
 	private _lightHierarchyStateByLight: WeakMap<Light, LightHierarchyState> = new WeakMap();
 	private _lightMatrixStateByLight: WeakMap<Light, LightMatrixState> = new WeakMap();
-	// private _reset() {
-	// 	this.firstUpdate = false;
-	// }
+
 	private _saveLightHierarchyState(light: Light) {
 		this._lightHierarchyStateByLight.set(light, {
 			parent: light.parent,
@@ -169,18 +147,15 @@ export class LightMapController {
 				frustumCulled: object.frustumCulled,
 				material: object.material,
 				parent: object.parent,
-				castShadow: object.castShadow,
-				receiveShadow: object.receiveShadow,
+				renderOrder: object.renderOrder,
 			});
-			object.material = this.uvMat;
+			object.material = this.lightMapMaterial;
 			object.frustumCulled = false;
-			object.castShadow = true;
-			object.receiveShadow = true;
 			object.renderOrder = 1000 + i;
-			this.scene.attach(object);
+			this._scene.attach(object);
+
 			i++;
 		}
-		this._previousRenderTarget = this.renderer.getRenderTarget();
 	}
 	private _moveLights() {
 		const lightRadius = this._params.lightRadius;
@@ -199,13 +174,17 @@ export class LightMapController {
 		this._restoreLightsState();
 		this.renderer.setRenderTarget(this._previousRenderTarget);
 	}
+	private _invertObjects() {
+		for (let object of this.objectTargets) {
+			invertNormals(object);
+		}
+	}
 	private _restoreObjectsState() {
 		for (let object of this.objectTargets) {
 			const state = this._objectStateByObject.get(object);
 			if (state) {
 				object.frustumCulled = state.frustumCulled;
-				object.castShadow = state.castShadow;
-				object.receiveShadow = state.receiveShadow;
+				object.renderOrder = state.renderOrder;
 				object.material = state.material;
 				const parent = state.parent;
 				if (parent) {
@@ -214,6 +193,7 @@ export class LightMapController {
 			}
 		}
 	}
+
 	private _restoreLightsState() {
 		for (let light of this.lights) {
 			const stateH = this._lightHierarchyStateByLight.get(light);
@@ -229,148 +209,83 @@ export class LightMapController {
 	}
 
 	runUpdates(camera: Camera) {
-		if (!this.blurMaterial) {
-			return;
-		}
-		if (this.blurringPlane == null) {
-			return;
-		}
-		const iterations = this._params.iterations;
-		this.blurMaterial.uniforms.pixelOffset.value = this._params.blurAmount / this.res;
-		this.blurringPlane.visible = this._params.blur;
-		this.uvMat.uniforms.iterationBlend.value = this._params.iterationBlend;
+		const totalIterationsCount = this._params.totalIterationsCount;
 
+		// set up blur material
+		this.blurMaterial.uniforms.pixelOffset.value = this._params.blurAmount / this._params.resolution;
+		this.blurPlane.visible = this._params.blur;
+
+		// set up lightmap material
+		// this.lightMapMaterial.opacity = 1 / totalIterationsCount;
+		this.lightMapMaterial.uniforms.lightMapMult.value = 1 / totalIterationsCount;
+		// this.lightMapMaterial.uniforms.flipped.value = false;
+		this.lightMapMaterial.side = FrontSide;
+		this.lightMapMaterial.shadowSide = null;
+
+		// capture front facing lightmap uvs
+		this.renderFlippedUvs = false;
 		this._clear(camera);
-		for (let i = 0; i < iterations; i++) {
+		for (let i = 0; i < totalIterationsCount; i++) {
 			this._moveLights();
 			this._update(camera);
 		}
+		// if (1 + 1) {
+		// 	return;
+		// }
+
+		// capture back facing lightmap uvs
+		this.renderFlippedUvs = true;
+		this._clear(camera);
+		this._invertObjects();
+		// this.lightMapMaterial.uniforms.flipped.value = true;
+		this.lightMapMaterial.side = [DoubleSide, BackSide][1];
+		this.lightMapMaterial.shadowSide = BackSide;
+
+		for (let i = 0; i < totalIterationsCount; i++) {
+			this._moveLights();
+			this._update(camera);
+		}
+		this._invertObjects();
+
+		// combine both flipped and nonFlipped render targets
+		this._clearScene();
+		this._scene.add(this.renderTargetsCombinePlane);
+		setRenderTargetsCombineMaterial(this.renderTargetsCombineMaterial, {
+			rt1: this.flippedRenderTargetPair.current(),
+			rt2: this.nonFlippedRenderTargetPair.current(),
+		});
+		this.renderer.setRenderTarget(this.finalRenderTarget);
+		this.renderer.render(this._scene, camera);
 	}
 
 	private _clear(camera: Camera) {
-		this.scene.visible = false;
+		this._scene.visible = false;
 		this._update(camera);
 		this._update(camera);
-		this.scene.visible = true;
+		this._scene.visible = true;
 	}
 
 	private _update(camera: Camera) {
-		if (!this.blurMaterial) {
-			return;
-		}
-
 		// Ping-pong two surface buffers for reading/writing
-		const activeMap = this.buffer1Active ? this.progressiveLightMap1 : this.progressiveLightMap2;
-		const inactiveMap = this.buffer1Active ? this.progressiveLightMap2 : this.progressiveLightMap1;
+		const rtPair = this.renderTargetPair();
+		const activeMap = rtPair.current();
+		const inactiveMap = rtPair.previous();
 
 		// Render the object's surface maps
 		this.renderer.setRenderTarget(activeMap);
-		this.uvMat.uniforms.previousShadowMap.value = inactiveMap.texture;
-		this.blurMaterial.uniforms.previousShadowMap.value = inactiveMap.texture;
-		this.buffer1Active = !this.buffer1Active;
-		this.renderer.render(this.scene, camera);
-	}
-
-	private _initializeBlurPlane(res: number, lightMap: WebGLRenderTarget) {
-		this.blurMaterial = this._createBlurPlaneMaterial(res, lightMap);
-
-		this.blurringPlane = new Mesh(new PlaneGeometry(1, 1), this.blurMaterial);
-		this.blurringPlane.name = 'Blurring Plane';
-		this.blurringPlane.frustumCulled = false;
-		this.blurringPlane.renderOrder = 0;
-		this.blurMaterial.depthWrite = false;
-		this.scene.add(this.blurringPlane);
-	}
-
-	private _createBlurPlaneMaterial(res: number, lightMap: WebGLRenderTarget) {
-		const blurMaterial = new MeshBasicMaterial() as MeshBasicMaterialWithUniforms;
-		blurMaterial.uniforms = {
-			previousShadowMap: {value: null},
-			pixelOffset: {value: 1.0 / res},
-			// TODO: make sure this is not important
-			// polygonOffset: true,
-			// polygonOffsetFactor: -1,
-			// polygonOffsetUnits: 3.0,
-		};
-		blurMaterial.onBeforeCompile = (shader) => {
-			// Vertex Shader: Set Vertex Positions to the Unwrapped UV Positions
-			shader.vertexShader =
-				'#define USE_UV\n' +
-				shader.vertexShader.slice(0, -2) +
-				'	gl_Position = vec4((uv - 0.5) * 2.0, 1.0, 1.0); }';
-			// Fragment Shader: Set Pixels to 9-tap box blur the current frame's Shadows
-			const bodyStart = shader.fragmentShader.indexOf('void main() {');
-			shader.fragmentShader =
-				'#define USE_UV\n' +
-				shader.fragmentShader.slice(0, bodyStart) +
-				'	uniform sampler2D previousShadowMap;\n	uniform float pixelOffset;\n' +
-				shader.fragmentShader.slice(bodyStart - 1, -2) +
-				`	gl_FragColor.rgb = (
-									texture2D(previousShadowMap, vUv + vec2( pixelOffset,  0.0        )).rgb +
-									texture2D(previousShadowMap, vUv + vec2( 0.0        ,  pixelOffset)).rgb +
-									texture2D(previousShadowMap, vUv + vec2( 0.0        , -pixelOffset)).rgb +
-									texture2D(previousShadowMap, vUv + vec2(-pixelOffset,  0.0        )).rgb +
-									texture2D(previousShadowMap, vUv + vec2( pixelOffset,  pixelOffset)).rgb +
-									texture2D(previousShadowMap, vUv + vec2(-pixelOffset,  pixelOffset)).rgb +
-									texture2D(previousShadowMap, vUv + vec2( pixelOffset, -pixelOffset)).rgb +
-									texture2D(previousShadowMap, vUv + vec2(-pixelOffset, -pixelOffset)).rgb)/8.0;
-				}`;
-
-			// Set the LightMap Accumulation Buffer
-			const uniforms = {
-				previousShadowMap: {value: lightMap.texture},
-				pixelOffset: {value: 0.5 / res},
-			};
-			shader.uniforms.previousShadowMap = uniforms.previousShadowMap;
-			shader.uniforms.pixelOffset = uniforms.pixelOffset;
-			blurMaterial.uniforms.previousShadowMap = uniforms.previousShadowMap;
-			blurMaterial.uniforms.pixelOffset = uniforms.pixelOffset;
-
-			// Set the new Shader to this
-			blurMaterial.userData.shader = shader;
-		};
-		return blurMaterial;
-	}
-
-	private _createUVMat() {
-		const mat = new MeshPhongMaterial() as MeshPhongMaterialWithUniforms;
-		mat.uniforms = {
-			previousShadowMap: {value: null},
-			iterationBlend: {value: DEFAULT_ITERATION_BLEND},
-		};
-		mat.name = 'uvMat';
-		mat.onBeforeCompile = (shader) => {
-			// Vertex Shader: Set Vertex Positions to the Unwrapped UV Positions
-			shader.vertexShader =
-				'#define USE_LIGHTMAP\n' +
-				shader.vertexShader.slice(0, -2) +
-				'	gl_Position = vec4((uv2 - 0.5) * 2.0, 1.0, 1.0); }';
-
-			// Fragment Shader: Set Pixels to average in the Previous frame's Shadows
-			const bodyStart = shader.fragmentShader.indexOf('void main() {');
-			shader.fragmentShader =
-				'varying vec2 vUv2;\n' +
-				shader.fragmentShader.slice(0, bodyStart) +
-				'	uniform sampler2D previousShadowMap;\n	uniform float iterationBlend;\n' +
-				shader.fragmentShader.slice(bodyStart - 1, -2) +
-				`\nvec3 texelOld = texture2D(previousShadowMap, vUv2).rgb;
-				gl_FragColor.rgb = mix(texelOld, gl_FragColor.rgb, iterationBlend);
-				// gl_FragColor.rgb = vec3(vUv2,1.0);
-			}`;
-
-			// Set the Previous Frame's Texture Buffer and Averaging Window
-			const uniforms = {
-				previousShadowMap: {value: this.progressiveLightMap1.texture},
-				iterationBlend: {value: DEFAULT_ITERATION_BLEND},
-			};
-			shader.uniforms.previousShadowMap = uniforms.previousShadowMap;
-			shader.uniforms.iterationBlend = uniforms.iterationBlend;
-			mat.uniforms.previousShadowMap = uniforms.previousShadowMap;
-			mat.uniforms.iterationBlend = uniforms.iterationBlend;
-
-			// Set the new Shader to this
-			mat.userData.shader = shader;
-		};
-		return mat;
+		// this._scene.background = inactiveMap.texture;
+		// this.lightMapMaterial.uniforms.previousLightMap.value = inactiveMap.texture;
+		setLightMapMaterial(this.lightMapMaterial, {
+			lightMap: inactiveMap,
+			// lightMapMult:1 / totalIterationsCount,
+		});
+		// this.blurMaterial.uniforms.previousShadowMap.value = inactiveMap.texture;
+		setBlurMaterial(this.blurMaterial, {
+			res: this._params.resolution,
+			lightMap: inactiveMap,
+		});
+		// this.buffer1Active = !this.buffer1Active;
+		rtPair.toggle();
+		this.renderer.render(this._scene, camera);
 	}
 }

@@ -86,6 +86,13 @@ export class RenderersController {
 	createWebGLRenderer(params: WebGLRendererParameters) {
 		const renderer = new WebGLRenderer(params);
 
+		// renderer.debug.checkShaderErrors = true;
+		// renderer.debug.onShaderError = (gl, program, glVertexShader, glFragmentShader) => {
+		// 	console.log('onShaderError', {gl, program, glVertexShader, glFragmentShader});
+		// 	console.log(gl.getShaderSource(glVertexShader));
+		// 	console.log(gl.getShaderSource(glFragmentShader));
+		// };
+
 		this.assignIdToRenderer(renderer);
 
 		this.printDebugMessage([`create renderer:`, params]);

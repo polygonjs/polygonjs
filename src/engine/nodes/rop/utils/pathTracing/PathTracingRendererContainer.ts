@@ -23,6 +23,7 @@ import {
 	BlurredEnvMapGenerator,
 	PhysicalCamera,
 	DenoiseMaterial,
+	GeneratorResult,
 } from '../../../../../core/render/PBR/three-gpu-pathtracer';
 import type {PathTracingRendererRopNode} from '../../PathTracingRenderer';
 
@@ -323,7 +324,14 @@ export class PathTracingRendererContainer implements AbstractRenderer {
 			});
 			return result;
 		};
-		const result = this._useWorker ? await generateInWorker() : generateInThread();
+		let result: GeneratorResult | undefined;
+		try {
+			result = this._useWorker ? await generateInWorker() : generateInThread();
+		} catch (err) {
+			console.error(err);
+			this._generating = false;
+			return;
+		}
 
 		restoreScene(scene);
 		await CoreSleep.sleep(20);
