@@ -232,6 +232,7 @@ import { globalsTimeDelta } from "../../../functions/globalsTimeDelta";
 import { hsvToRgb } from "../../../functions/hsvToRgb";
 import { intToBool } from "../../../functions/intToBool";
 import { intToFloat } from "../../../functions/intToFloat";
+import { isTouchDevice } from "../../../functions/isTouchDevice";
 import { keyboardEventMatchesConfig } from "../../../functions/keyboardEventMatchesConfig";
 import { lengthVector } from "../../../functions/lengthVector";
 import { lengthVectorArray } from "../../../functions/lengthVectorArray";
@@ -732,6 +733,7 @@ export interface NamedFunctionMap {
 	hsvToRgb: hsvToRgb;
 	intToBool: intToBool;
 	intToFloat: intToFloat;
+	isTouchDevice: isTouchDevice;
 	keyboardEventMatchesConfig: keyboardEventMatchesConfig;
 	lengthVector: lengthVector<Vector2 | Vector3 | Vector4>;
 	lengthVectorArray: lengthVectorArray<Vector2 | Vector3 | Vector4>;
@@ -1235,6 +1237,7 @@ export class AllNamedFunctionRegister {
 			hsvToRgb,
 			intToBool,
 			intToFloat,
+			isTouchDevice,
 			keyboardEventMatchesConfig,
 			lengthVector,
 			lengthVectorArray,

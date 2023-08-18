@@ -466,6 +466,7 @@ export const FUNCTION_NAME_BY_FILE_NAME: Record<string, string[]> = {
 		'getTrackedHandThumbDirection',
 	],
 	Trigger: ['triggerFilter', 'triggerSwitch', 'triggerTwoWaySwitch'],
+	UserAgent: ['isTouchDevice'],
 	Vector: ['vector3AngleTo', 'vector3Project', 'vector3ProjectOnPlane', 'vector3Unproject'],
 	VectorCross: ['crossVector2', 'crossVector3'],
 	VectorDistance: ['distanceVector2', 'distanceVector3'],

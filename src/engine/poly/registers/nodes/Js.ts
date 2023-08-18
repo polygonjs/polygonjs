@@ -123,6 +123,7 @@ import {HsvToRgbJsNode} from '../../../nodes/js/HsvToRgb';
 import {IntToBoolJsNode} from '../../../nodes/js/IntToBool';
 import {IntToFloatJsNode} from '../../../nodes/js/IntToFloat';
 import {IsDefinedJsNode} from '../../../nodes/js/IsDefined';
+import {IsTouchDeviceJsNode} from '../../../nodes/js/IsTouchDevice';
 import {KeyframesJsNode} from '../../../nodes/js/Keyframes';
 import {LengthJsNode} from '../../../nodes/js/Length';
 import {LerpJsNode} from '../../../nodes/js/Lerp';
@@ -471,6 +472,7 @@ export interface JsNodeChildrenMap {
 	intToBool: IntToBoolJsNode;
 	intToFloat: IntToFloatJsNode;
 	isDefined: IsDefinedJsNode;
+	IsTouchDevice: IsTouchDeviceJsNode;
 	keyframes: KeyframesJsNode;
 	length: LengthJsNode;
 	lerp: LerpJsNode;
@@ -875,7 +877,8 @@ export class JsRegister {
 		poly.registerNode(HsvToRgbJsNode, CATEGORY_JS.CONVERSION);
 		poly.registerNode(IntToBoolJsNode, CATEGORY_JS.CONVERSION);
 		poly.registerNode(IntToFloatJsNode, CATEGORY_JS.CONVERSION);
-		poly.registerNode(IsDefinedJsNode, CATEGORY_JS.ANIMATION);
+		poly.registerNode(IsDefinedJsNode, CATEGORY_JS.FLOW);
+		poly.registerNode(IsTouchDeviceJsNode, CATEGORY_JS.FLOW);
 		poly.registerNode(KeyframesJsNode, CATEGORY_JS.ANIMATION);
 		poly.registerNode(LengthJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(LerpJsNode, CATEGORY_JS.MATH);
