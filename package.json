@@ -84,6 +84,7 @@
 		"tone": "14.7.77",
 		"web-ifc-three": "0.0.125",
 		"xatlas-web": "0.1.0",
+		"xatlas-three": "0.2.0",
 		"yuka": "^0.7.8"
 	},
 	"devDependencies": {

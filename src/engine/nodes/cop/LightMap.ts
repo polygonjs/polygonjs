@@ -16,6 +16,7 @@ import {Mesh} from 'three';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {DataTextureController, DataTextureControllerBufferType} from './utils/DataTextureController';
 import {CopRendererController} from './utils/RendererController';
+import {CopType} from '../../poly/registers/nodes/types/Cop';
 
 class LightMapCopParamConfig extends NodeParamsConfig {
 	/** @param click to update shadow, when mode is manual */
@@ -55,8 +56,8 @@ const ParamsConfig = new LightMapCopParamConfig();
 
 export class LightMapCopNode extends TypedCopNode<LightMapCopParamConfig> {
 	override paramsConfig = ParamsConfig;
-	static override type(): Readonly<'lightMap'> {
-		return 'lightMap';
+	static override type(): Readonly<CopType.LIGHT_MAP> {
+		return CopType.LIGHT_MAP;
 	}
 	private lightMapController: LightMapController | undefined;
 	private _includedObjects: Mesh[] = [];

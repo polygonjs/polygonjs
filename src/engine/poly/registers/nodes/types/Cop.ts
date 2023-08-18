@@ -6,6 +6,7 @@ export enum CopType {
 	CUBE_MAP_FROM_SCENE = 'cubeMapFromScene',
 	ENV_MAP = 'envMap',
 	GIF = 'gif',
+	LIGHT_MAP = 'lightMap',
 	LUT = 'lut',
 	RENDER = 'render',
 	SDF_BLUR = 'SDFBlur',

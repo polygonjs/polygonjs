@@ -25,6 +25,22 @@ class UvUnwrapSopParamConfig extends NodeParamsConfig {
 	});
 	/** @param attribute to unwrap */
 	uv = ParamConfig.STRING(DEFAULT.uv);
+	/** @param target texture resolution */
+	resolution = ParamConfig.INTEGER(DEFAULT.resolution, {
+		range: [16, 4096],
+		rangeLocked: [true, false],
+		visibleIf: {
+			method: UV_UNWRAP_METHODS.indexOf(UvUnwrapMethod.XATLAS),
+		},
+	});
+	/** @param padding */
+	padding = ParamConfig.INTEGER(DEFAULT.padding, {
+		range: [0, 10],
+		rangeLocked: [true, false],
+		visibleIf: {
+			method: UV_UNWRAP_METHODS.indexOf(UvUnwrapMethod.XATLAS),
+		},
+	});
 }
 const ParamsConfig = new UvUnwrapSopParamConfig();
 

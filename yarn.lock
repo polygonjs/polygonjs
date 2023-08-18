@@ -4570,6 +4570,11 @@ ws@^8.4.2:
   resolved "https://registry.yarnpkg.com/ws/-/ws-8.5.0.tgz#bfb4be96600757fe5382de12c670dab984a1ed4f"
   integrity sha512-BWX0SWVgLPzYwF8lTzEy1egjhS4S4OEAHfsO8o65WOVsrnSRGaSiUaa9e0ggGlkMTtBlmOpEXiie9RUcBO86qg==
 
+xatlas-three@0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/xatlas-three/-/xatlas-three-0.2.0.tgz#2ea6aad4a286c33f835d5d8ccbb8f8a6e04e8551"
+  integrity sha512-oZjKK+n4xVi9tj1PTdBycYLkQtoOjXlTYMDfdHwR2JUlvBaIy2faO1lOxAamkKlcEVQbdX981i0jR7vXVTxf4A==
+
 xatlas-web@0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/xatlas-web/-/xatlas-web-0.1.0.tgz#c1c636d557cbcd30726b546cde011c3861b6e4ef"
