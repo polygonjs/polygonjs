@@ -287,7 +287,7 @@ import {TransformCopySopNode} from '../../../nodes/sop/TransformCopy';
 import {TransformMultiSopNode} from '../../../nodes/sop/TransformMulti';
 import {TransformResetSopNode} from '../../../nodes/sop/TransformReset';
 import {TubeSopNode} from '../../../nodes/sop/Tube';
-// import {UvLayoutSopNode} from '../../../nodes/sop/UvLayout';
+import {UvLayoutSopNode} from '../../../nodes/sop/UvLayout';
 import {UvProjectSopNode} from '../../../nodes/sop/UvProject';
 import {UvTransformSopNode} from '../../../nodes/sop/UvTransform';
 import {UvUnwrapSopNode} from '../../../nodes/sop/UvUnwrap';
@@ -589,7 +589,7 @@ export interface GeoNodeChildrenMap {
 	transformMulti: TransformMultiSopNode;
 	transformReset: TransformResetSopNode;
 	tube: TubeSopNode;
-	// uvLayout: UvProjectSopNode;
+	uvLayout: UvProjectSopNode;
 	uvProject: UvProjectSopNode;
 	uvTransform: UvTransformSopNode;
 	uvUnwrap: UvUnwrapSopNode;
@@ -1136,7 +1136,7 @@ export class SopRegister {
 		poly.registerNode(TransformMultiSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(TransformResetSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(TubeSopNode, CATEGORY_SOP.PRIMITIVES);
-		// poly.registerNode(UvLayoutSopNode, CATEGORY_SOP.MODIFIER);
+		poly.registerNode(UvLayoutSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(UvProjectSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(UvTransformSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(UvUnwrapSopNode, CATEGORY_SOP.MODIFIER);
