@@ -1,4 +1,4 @@
-import {ObjectNamedFunction2} from './_Base';
+import {ObjectNamedFunction3} from './_Base';
 import {_matchArrayLength} from './_ArrayUtils';
 import {Object3D} from 'three';
 import {JsDataType} from '../nodes/utils/io/connections/Js';
@@ -142,16 +142,47 @@ function _optionsToDebugLines(scene: PolyScene, options: ActorEvaluatorDebugOpti
 	return optionsToDebugLines(scene, options, _debugDataController);
 }
 
-export class debug<T extends JsDataType> extends ObjectNamedFunction2<[string, T]> {
+export interface DebugOptions {
+	displayValue: boolean;
+	displayFrame: boolean;
+	displayTime: boolean;
+	displayNodePath: boolean;
+	message: string;
+	bundleByObject: boolean;
+}
+
+export class debug<T extends JsDataType> extends ObjectNamedFunction3<[string, T, DebugOptions]> {
 	static override type() {
 		return 'debug';
 	}
-	override func(object3D: Object3D, nodePath: string, input: T): T {
-		options.object3D = object3D;
-		options.nodePath = nodePath;
-		options.value = input;
+	override func(object3D: Object3D, nodePath: string, input: T, debugOptions: DebugOptions): T {
+		const messageElements: any[] = [];
+		if (debugOptions.displayFrame) {
+			messageElements.push(`${this.scene.frame()}`);
+		}
+		if (debugOptions.displayTime) {
+			messageElements.push(`${this.scene.time()}`);
+		}
+		if (debugOptions.message) {
+			messageElements.push(debugOptions.message);
+		}
+		if (debugOptions.displayNodePath) {
+			messageElements.push(nodePath);
+		}
+		const message = messageElements.join(' ');
 
-		_optionsToDebugLines(this.scene, options);
+		if (debugOptions.bundleByObject) {
+			options.object3D = object3D;
+			options.nodePath = message;
+			options.value = input;
+
+			_optionsToDebugLines(this.scene, options);
+		} else {
+			if (debugOptions.displayValue) {
+				messageElements.push(input);
+			}
+			console.log(...messageElements);
+		}
 		return input;
 	}
 }

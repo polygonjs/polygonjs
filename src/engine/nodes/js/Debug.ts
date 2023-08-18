@@ -6,12 +6,20 @@
  */
 import {JsConnectionPointType} from '../utils/io/connections/Js';
 import {TypedJsNode} from './_Base';
-import {NodeParamsConfig} from '../utils/params/ParamsConfig';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {Poly} from '../../Poly';
 import {inputObject3D} from './_BaseObject3D';
+import {DebugOptions} from '../../functions/_Debug';
 
-class DebugJsParamsConfig extends NodeParamsConfig {}
+class DebugJsParamsConfig extends NodeParamsConfig {
+	displayValue = ParamConfig.BOOLEAN(1);
+	displayFrame = ParamConfig.BOOLEAN(1);
+	displayTime = ParamConfig.BOOLEAN(0);
+	displayNodePath = ParamConfig.BOOLEAN(1);
+	message = ParamConfig.STRING('');
+	bundleByObject = ParamConfig.BOOLEAN(1);
+}
 const ParamsConfig = new DebugJsParamsConfig();
 
 export class DebugJsNode extends TypedJsNode<DebugJsParamsConfig> {
@@ -21,6 +29,7 @@ export class DebugJsNode extends TypedJsNode<DebugJsParamsConfig> {
 	}
 	override initializeNode() {
 		super.initializeNode();
+		this.io.connection_points.spare_params.setInputlessParamNames(['displayValue']);
 		this.io.connection_points.set_expected_input_types_function(this._expectedInputTypes.bind(this));
 		this.io.connection_points.set_expected_output_types_function(this._expectedOutputTypes.bind(this));
 		this.io.connection_points.set_input_name_function(this._expectedInputName.bind(this));
@@ -49,11 +58,21 @@ export class DebugJsNode extends TypedJsNode<DebugJsParamsConfig> {
 		const dataType = this._expectedInputTypes()[0];
 		const varName = this.jsVarName(this._expectedOutputName(0));
 		const func = Poly.namedFunctionsRegister.getFunction('debug', this, shadersCollectionController);
+
+		const debugOptions: DebugOptions = {
+			displayValue: this.pv.displayValue,
+			displayFrame: this.pv.displayFrame,
+			displayTime: this.pv.displayTime,
+			displayNodePath: this.pv.displayNodePath,
+			message: this.pv.message,
+			bundleByObject: this.pv.bundleByObject,
+		};
+
 		shadersCollectionController.addBodyOrComputed(this, [
 			{
 				dataType,
 				varName,
-				value: func.asString(object3D, nodePath, inputValue),
+				value: func.asString(object3D, nodePath, inputValue, JSON.stringify(debugOptions)),
 			},
 		]);
 	}
