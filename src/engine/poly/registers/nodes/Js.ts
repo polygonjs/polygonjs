@@ -248,6 +248,7 @@ import {SDFTorusJsNode} from '../../../nodes/js/SDFTorus';
 import {SDFTransformJsNode} from '../../../nodes/js/SDFTransform';
 import {SDFTubeJsNode} from '../../../nodes/js/SDFTube';
 import {SDFUnionJsNode} from '../../../nodes/js/SDFUnion';
+import {SetCameraViewOffsetJsNode} from '../../../nodes/js/SetCameraViewOffset';
 import {SetClothConstraintPositionJsNode} from '../../../nodes/js/SetClothConstraintPosition';
 import {SetCSSObjectClassJsNode} from '../../../nodes/js/SetCSSObjectClass';
 import {SetGeometryInstanceAttributeJsNode} from '../../../nodes/js/SetGeometryInstanceAttribute';
@@ -595,6 +596,7 @@ export interface JsNodeChildrenMap {
 	SDFTransform: SDFTransformJsNode;
 	SDFTube: SDFTubeJsNode;
 	SDFUnion: SDFUnionJsNode;
+	setCameraViewOffset: SetCameraViewOffsetJsNode;
 	setCSSObjectClass: SetCSSObjectClassJsNode;
 	setGeometryInstanceAttribute: SetGeometryInstanceAttributeJsNode;
 	setGeometryInstancePositions: SetGeometryInstancePositionsJsNode;
@@ -999,6 +1001,7 @@ export class JsRegister {
 		poly.registerNode(SDFTransformJsNode, CATEGORY_JS.SDF_PRIMITIVES);
 		poly.registerNode(SDFTubeJsNode, CATEGORY_JS.SDF_PRIMITIVES);
 		poly.registerNode(SDFUnionJsNode, CATEGORY_JS.SDF_MODIFIERS);
+		poly.registerNode(SetCameraViewOffsetJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR);
 		poly.registerNode(SetClothConstraintPositionJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
 		poly.registerNode(SetCSSObjectClassJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR);
 		poly.registerNode(SetGeometryInstanceAttributeJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR);

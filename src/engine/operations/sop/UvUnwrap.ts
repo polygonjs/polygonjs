@@ -18,6 +18,7 @@ import {XAtlasLoaderHandler, AddMeshStatus, XAtlasManager} from '../../../core/l
 import {TypeAssert} from '../../poly/Assert';
 import {Potpack, PotPackBox, PotPackBoxResult} from '../../../core/libs/Potpack';
 import {LIBRARY_INSTALL_HINT} from '../../../core/loader/common';
+import {DEFAULT_UV_LIGHT_MAP_ATTRIB_NAME} from '../../nodes/cop/utils/lightMap/LightMapMaterial';
 // import {UV_LIGHT_MAP_FLIPPED_ATTRIB_NAME} from '../../nodes/cop/utils/lightMap/LightMapMaterial';
 
 export enum UvUnwrapMethod {
@@ -48,7 +49,7 @@ const line = new Line3();
 export class UvUnwrapSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: UvUnwrapSopParams = {
 		method: UV_UNWRAP_METHODS.indexOf(UvUnwrapMethod.XATLAS),
-		uv: 'uv',
+		uv: DEFAULT_UV_LIGHT_MAP_ATTRIB_NAME,
 	};
 	static override readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
 	static override type(): Readonly<SopType.UV_UNWRAP> {

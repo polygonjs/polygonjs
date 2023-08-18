@@ -394,6 +394,7 @@ import { SDFTorus } from "../../../functions/SDFTorus";
 import { SDFTransform } from "../../../functions/SDFTransform";
 import { SDFTube } from "../../../functions/SDFTube";
 import { SDFUnion } from "../../../functions/SDFUnion";
+import { setCameraViewOffset } from "../../../functions/setCameraViewOffset";
 import { setCSSObjectClass } from "../../../functions/setCSSObjectClass";
 import { setGeometryInstanceAttributeColor } from "../../../functions/setGeometryInstanceAttributeColor";
 import { setGeometryInstanceAttributeFloat } from "../../../functions/setGeometryInstanceAttributeFloat";
@@ -893,6 +894,7 @@ export interface NamedFunctionMap {
 	SDFTransform: SDFTransform;
 	SDFTube: SDFTube;
 	SDFUnion: SDFUnion;
+	setCameraViewOffset: setCameraViewOffset;
 	setCSSObjectClass: setCSSObjectClass;
 	setGeometryInstanceAttributeColor: setGeometryInstanceAttributeColor;
 	setGeometryInstanceAttributeFloat: setGeometryInstanceAttributeFloat;
@@ -1395,6 +1397,7 @@ export class AllNamedFunctionRegister {
 			SDFTransform,
 			SDFTube,
 			SDFUnion,
+			setCameraViewOffset,
 			setCSSObjectClass,
 			setGeometryInstanceAttributeColor,
 			setGeometryInstanceAttributeFloat,

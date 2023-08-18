@@ -6,7 +6,7 @@ import {OnNodeRegisterCallback} from '../../engine/poly/registers/nodes/NodesReg
 import {ThreejsViewer} from '../../engine/viewers/Threejs';
 import {Constructor, Number2} from '../../types/GlobalTypes';
 import {CoreCameraPerspectiveFrameMode} from './frameMode/CoreCameraPerspectiveFrameMode';
-import {PerspectiveCamera} from 'three';
+import {PerspectiveCamera, Vector2} from 'three';
 
 interface PerspectiveCameraDefault {
 	fov: number;
@@ -29,8 +29,8 @@ export const registerPerspectiveCamera: OnNodeRegisterCallback = (poly: PolyEngi
 	poly.registerCamera<PerspectiveCamera>(PerspectiveCamera, (options: ViewerCallbackOptions<PerspectiveCamera>) => {
 		const viewer = new ThreejsViewer<PerspectiveCamera>({
 			...options,
-			updateCameraAspect: (aspect) => {
-				CoreCameraPerspectiveFrameMode.updateCameraAspect(options.camera, aspect);
+			updateCameraAspect: (aspect, resolution: Vector2) => {
+				CoreCameraPerspectiveFrameMode.updateCameraAspect(options.camera, aspect, {resolution});
 			},
 		});
 		return viewer;

@@ -32,7 +32,7 @@ export const FUNCTION_NAME_BY_FILE_NAME: Record<string, string[]> = {
 		'getBox3Min',
 		'getBox3Max',
 	],
-	Camera: ['setPerspectiveCameraFov', 'setPerspectiveCameraNearFar', 'getDefaultCamera'],
+	Camera: ['setPerspectiveCameraFov', 'setPerspectiveCameraNearFar', 'getDefaultCamera', 'setCameraViewOffset'],
 	CameraControlsDeviceOrientation: ['deviceOrientation'],
 	Cloth: [
 		'clothSolverReset',

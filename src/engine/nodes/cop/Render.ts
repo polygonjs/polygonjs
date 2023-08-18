@@ -179,10 +179,12 @@ export class RenderCopNode extends TypedCopNode<RenderCopParamConfig> {
 		this._requestedResolution(renderer, _v2);
 		const aspect = _v2.x / _v2.y;
 		if (camera instanceof PerspectiveCamera && viewerCamera instanceof PerspectiveCamera) {
-			CoreCameraPerspectiveFrameMode.updateCameraAspect(camera, aspect, viewerCamera);
+			CoreCameraPerspectiveFrameMode.updateCameraAspect(camera, aspect, {cameraWithAttributes: viewerCamera});
 		} else {
 			if (camera instanceof OrthographicCamera && viewerCamera instanceof OrthographicCamera) {
-				CoreCameraOrthographicFrameMode.updateCameraAspect(camera, aspect, viewerCamera);
+				CoreCameraOrthographicFrameMode.updateCameraAspect(camera, aspect, {
+					cameraWithAttributes: viewerCamera,
+				});
 			}
 		}
 

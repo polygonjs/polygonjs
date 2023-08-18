@@ -1,9 +1,10 @@
 import {OrthographicCamera} from 'three';
 import {CoreObject} from '../../geometry/Object';
-import {OrthographicCameraAttribute} from '../CoreCamera';
+import {OrthographicCameraAttribute, UpdateProjectionOptions} from '../CoreCamera';
 import {CameraFrameMode} from '../CoreCameraFrameMode';
 import {ORTHOGRAPHIC_CAMERA_DEFAULT} from '../CoreOrthographicCamera';
 import {BaseCoreCameraFrameMode} from './_BaseCoreCameraFrameMode';
+import {cameraSetViewOffset} from '../CoreCameraViewOffset';
 
 interface CoreCameraOrthographicFrameModeOptions {
 	camera: OrthographicCamera;
@@ -21,9 +22,14 @@ type BasicCoreCameraOrthographicFrameModeOptions = PartialBy<
 	'expectedAspectRatio'
 >;
 
+interface UpdateOptions extends UpdateProjectionOptions {
+	cameraWithAttributes?: OrthographicCamera;
+}
+OrthographicCamera;
+
 export class CoreCameraOrthographicFrameMode {
-	static updateCameraAspect(camera: OrthographicCamera, aspect: number, cameraWithAttributes?: OrthographicCamera) {
-		cameraWithAttributes = cameraWithAttributes || camera;
+	static updateCameraAspect(camera: OrthographicCamera, aspect: number, options?: UpdateOptions) {
+		const cameraWithAttributes = options?.cameraWithAttributes || camera;
 		const frameMode = BaseCoreCameraFrameMode.frameMode(cameraWithAttributes);
 		const expectedAspectRatio = BaseCoreCameraFrameMode.expectedAspectRatio(cameraWithAttributes) as
 			| number
@@ -39,6 +45,9 @@ export class CoreCameraOrthographicFrameMode {
 				aspect: aspect,
 				expectedAspectRatio,
 			});
+		}
+		if (options && options.resolution) {
+			cameraSetViewOffset(camera, options.resolution);
 		}
 
 		camera.updateProjectionMatrix();

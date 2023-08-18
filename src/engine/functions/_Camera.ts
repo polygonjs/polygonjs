@@ -1,6 +1,6 @@
-import {Camera, Object3D, PerspectiveCamera} from 'three';
+import {Camera, Object3D, OrthographicCamera, PerspectiveCamera, Vector2} from 'three';
 import {isBooleanTrue} from '../../core/Type';
-import {NamedFunction0, ObjectNamedFunction3, ObjectNamedFunction4} from './_Base';
+import {NamedFunction0, ObjectNamedFunction2, ObjectNamedFunction3, ObjectNamedFunction4} from './_Base';
 import {dummyReadRefVal} from '../../core/reactivity/CoreReactivity';
 
 export class setPerspectiveCameraFov extends ObjectNamedFunction3<[number, number, boolean]> {
@@ -53,5 +53,23 @@ export class getDefaultCamera extends NamedFunction0 {
 			this.scene.viewersRegister.lastRenderedViewer()?.camera() ||
 			this.scene.root().mainCameraController.dummyPerspectiveCamera()
 		);
+	}
+}
+
+export class setCameraViewOffset extends ObjectNamedFunction2<[Vector2, Vector2]> {
+	static override type() {
+		return 'setCameraViewOffset';
+	}
+	func(object3D: Object3D, min: Vector2, max: Vector2): void {
+		if (!(object3D instanceof PerspectiveCamera || object3D instanceof OrthographicCamera)) {
+			return;
+		}
+		const viewer = this.scene.viewersRegister.lastRenderedViewer();
+		if (!viewer) {
+			return;
+		}
+		const camera = object3D as PerspectiveCamera | OrthographicCamera;
+		const size = viewer.camerasController().size;
+		camera.setViewOffset(size.x, size.y, size.x * min.x, size.y * min.y, size.x * max.x, size.y * max.y);
 	}
 }

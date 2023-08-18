@@ -1,4 +1,4 @@
-import {OrthographicCamera} from 'three';
+import {OrthographicCamera, Vector2} from 'three';
 import {ParamConfig} from '../../engine/nodes/utils/params/ParamsConfig';
 import {PolyEngine} from '../../engine/Poly';
 import {CameraNodeType} from '../../engine/poly/NodeContext';
@@ -30,8 +30,8 @@ export const registerOrthographicCamera: OnNodeRegisterCallback = (poly: PolyEng
 		(options: ViewerCallbackOptions<OrthographicCamera>) => {
 			const viewer = new ThreejsViewer<OrthographicCamera>({
 				...options,
-				updateCameraAspect: (aspect) => {
-					CoreCameraOrthographicFrameMode.updateCameraAspect(options.camera, aspect);
+				updateCameraAspect: (aspect, resolution: Vector2) => {
+					CoreCameraOrthographicFrameMode.updateCameraAspect(options.camera, aspect, {resolution});
 				},
 			});
 			return viewer;

@@ -1,9 +1,10 @@
 import {MathUtils, PerspectiveCamera} from 'three';
 import {TypeAssert} from '../../../engine/poly/Assert';
 import {CoreObject} from '../../geometry/Object';
-import {PerspectiveCameraAttribute} from '../CoreCamera';
+import {PerspectiveCameraAttribute, UpdateProjectionOptions} from '../CoreCamera';
 import {CameraFrameMode} from '../CoreCameraFrameMode';
 import {BaseCoreCameraFrameMode} from './_BaseCoreCameraFrameMode';
+import {cameraSetViewOffset} from '../CoreCameraViewOffset';
 
 interface CoreCameraPerspectiveFrameModeOptions {
 	camera: PerspectiveCamera;
@@ -11,11 +12,14 @@ interface CoreCameraPerspectiveFrameModeOptions {
 	fov: number;
 	expectedAspectRatio: number;
 }
+interface UpdateOptions extends UpdateProjectionOptions {
+	cameraWithAttributes?: PerspectiveCamera;
+}
 
 export class CoreCameraPerspectiveFrameMode {
-	static updateCameraAspect(camera: PerspectiveCamera, aspect: number, cameraWithAttributes?: PerspectiveCamera) {
+	static updateCameraAspect(camera: PerspectiveCamera, aspect: number, options?: UpdateOptions) {
 		camera.aspect = aspect;
-		cameraWithAttributes = cameraWithAttributes || camera;
+		const cameraWithAttributes = options?.cameraWithAttributes || camera;
 
 		const frameMode = BaseCoreCameraFrameMode.frameMode(cameraWithAttributes);
 		const expectedAspectRatio = BaseCoreCameraFrameMode.expectedAspectRatio(cameraWithAttributes) as
@@ -29,6 +33,10 @@ export class CoreCameraPerspectiveFrameMode {
 				fov: fov,
 				expectedAspectRatio: expectedAspectRatio,
 			});
+		}
+
+		if (options && options.resolution) {
+			cameraSetViewOffset(camera, options.resolution);
 		}
 
 		camera.updateProjectionMatrix();

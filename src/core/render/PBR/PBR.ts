@@ -93,16 +93,16 @@ export function onPBRModuleRegister(poly: PolyEngine) {
 			if (rendererNode instanceof PathTracingRendererRopNode) {
 				const viewer = new PathTracingViewer<PhysicalCamera>({
 					...options,
-					updateCameraAspect: (aspect) => {
-						CoreCameraPerspectiveFrameMode.updateCameraAspect(options.camera, aspect);
+					updateCameraAspect: (aspect, resolution) => {
+						CoreCameraPerspectiveFrameMode.updateCameraAspect(options.camera, aspect, {resolution});
 					},
 				});
 				return viewer;
 			} else {
 				const viewer = new ThreejsViewer<PerspectiveCamera>({
 					...options,
-					updateCameraAspect: (aspect) => {
-						CoreCameraPerspectiveFrameMode.updateCameraAspect(options.camera, aspect);
+					updateCameraAspect: (aspect, resolution) => {
+						CoreCameraPerspectiveFrameMode.updateCameraAspect(options.camera, aspect, {resolution});
 					},
 				});
 				return viewer;

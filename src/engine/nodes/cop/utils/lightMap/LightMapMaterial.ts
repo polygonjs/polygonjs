@@ -1,5 +1,6 @@
 import {MeshPhongMaterial, WebGLRenderTarget, Texture} from 'three';
-export const UV_LIGHT_MAP_FLIPPED_ATTRIB_NAME = 'uvLightmapFlipped';
+// export const UV_LIGHT_MAP_FLIPPED_ATTRIB_NAME = 'uvLightmapFlipped';
+export const DEFAULT_UV_LIGHT_MAP_ATTRIB_NAME = 'uvLightMap';
 
 export interface LightMapMaterial extends MeshPhongMaterial {
 	uniforms: {
@@ -10,10 +11,12 @@ export interface LightMapMaterial extends MeshPhongMaterial {
 }
 export interface LightMapMatOptions {
 	lightMap: WebGLRenderTarget;
+	// uv: string;
 	// lightMapMult: number;
 }
 export function setLightMapMaterial(mat: LightMapMaterial, options: LightMapMatOptions) {
 	mat.uniforms.previousLightMap.value = options.lightMap.texture;
+	// mat.customProgramCacheKey = ()=> options.uv
 	// mat.uniforms.lightMapMult.value = options.lightMapMult;
 }
 
@@ -32,14 +35,12 @@ export function createLightMapMaterial() {
 	mat.onBeforeCompile = (shader) => {
 		// Vertex Shader: Set Vertex Positions to the Unwrapped UV Positions
 		shader.vertexShader = `#define USE_LIGHTMAP
-#define LIGHTMAP_UV uvLightMap
-attribute vec2 uvLightMap;
-// attribute float ${UV_LIGHT_MAP_FLIPPED_ATTRIB_NAME};
+#define LIGHTMAP_UV ${DEFAULT_UV_LIGHT_MAP_ATTRIB_NAME}
+attribute vec2 LIGHTMAP_UV;
 varying vec2 vUvLightMap;
 // varying float vUvLightMapFlipped;
 ${shader.vertexShader.slice(0, -2)}
 	vUvLightMap = LIGHTMAP_UV;
-	// vUvLightMapFlipped = ${UV_LIGHT_MAP_FLIPPED_ATTRIB_NAME};
 	gl_Position = vec4((LIGHTMAP_UV - 0.5) * 2.0, 1.0, 1.0);
 }`;
 

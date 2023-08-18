@@ -1,4 +1,4 @@
-import {Camera} from 'three';
+import {Camera, Vector2} from 'three';
 import {ArrayUtils} from '../ArrayUtils';
 import {CoreObject} from '../geometry/Object';
 
@@ -7,12 +7,18 @@ export const CORE_CAMERA_DEFAULT = {
 	far: 100.0,
 };
 
+export interface UpdateProjectionOptions {
+	resolution?: Vector2;
+}
+
 export enum CameraAttribute {
 	NODE_ID = '_Camera_nodeGeneratorId__',
 	CONTROLS_NODE_ID = '_Camera_controlsNodeId',
 	CSS_RENDERER_NODE_ID = '_Camera_CSSRendererNodeId',
 	FRAME_MODE = '_Camera_frameMode',
 	FRAME_MODE_EXPECTED_ASPECT_RATIO = '_Camera_frameModeExpectedAspectRatio',
+	VIEW_OFFSET_MIN = '_Camera_viewOffsetMin',
+	VIEW_OFFSET_MAX = '_Camera_viewOffsetMax',
 	POST_PROCESS_NODE_ID = '_Camera_postProcessNodeId',
 	RENDER_SCENE_NODE_ID = '_Camera_renderSceneNodeId',
 	RENDERER_NODE_ID = '_Camera_rendererNodeId',
@@ -49,6 +55,8 @@ export const CAMERA_ATTRIBUTES: CameraAttribute[] = [
 	CameraAttribute.CSS_RENDERER_NODE_ID,
 	CameraAttribute.FRAME_MODE,
 	CameraAttribute.FRAME_MODE_EXPECTED_ASPECT_RATIO,
+	CameraAttribute.VIEW_OFFSET_MIN,
+	CameraAttribute.VIEW_OFFSET_MAX,
 	CameraAttribute.POST_PROCESS_NODE_ID,
 	CameraAttribute.RENDER_SCENE_NODE_ID,
 	CameraAttribute.RENDERER_NODE_ID,

@@ -5,6 +5,7 @@ import {AttributeGlNode, ATTRIBUTE_NODE_AVAILABLE_GL_TYPES} from '../../../src/e
 import {GlobalsTextureHandler} from '../../../src/engine/nodes/gl/code/globals/Texture';
 import {GlConnectionPointType} from '../../../src/engine/nodes/utils/io/connections/Gl';
 import {BasePreset, NodePresetsCollection, PresetRegister, PresetsCollectionFactory} from '../BasePreset';
+import {DEFAULT_UV_LIGHT_MAP_ATTRIB_NAME} from '../../../src/engine/nodes/cop/utils/lightMap/LightMapMaterial';
 
 const attributeGlNodePresetsCollectionFactory: PresetsCollectionFactory<AttributeGlNode> = (node: AttributeGlNode) => {
 	const collection = new NodePresetsCollection();
@@ -25,6 +26,9 @@ const attributeGlNodePresetsCollectionFactory: PresetsCollectionFactory<Attribut
 	const position = new BasePreset().addEntry(node.p.name, Attribute.POSITION).addEntry(node.p.type, v3);
 	const normal = new BasePreset().addEntry(node.p.name, Attribute.NORMAL).addEntry(node.p.type, v3);
 	const uv = new BasePreset().addEntry(node.p.name, Attribute.UV).addEntry(node.p.type, v2);
+	const uvLightMap = new BasePreset()
+		.addEntry(node.p.name, DEFAULT_UV_LIGHT_MAP_ATTRIB_NAME)
+		.addEntry(node.p.type, v2);
 	const id = new BasePreset().addEntry(node.p.name, `id`).addEntry(node.p.type, f);
 	const idn = new BasePreset().addEntry(node.p.name, `idn`).addEntry(node.p.type, f);
 	const pti = new BasePreset().addEntry(node.p.name, `pti`).addEntry(node.p.type, f);
@@ -48,6 +52,7 @@ const attributeGlNodePresetsCollectionFactory: PresetsCollectionFactory<Attribut
 		position,
 		normal,
 		uv,
+		uvLightMap,
 		id,
 		idn,
 		pti,

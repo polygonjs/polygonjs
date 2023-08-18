@@ -91,6 +91,7 @@ export enum CameraSopNodeType {
 	RENDER_SCENE = 'cameraRenderScene',
 	RENDERER = 'cameraRenderer',
 	VIEWER_CODE = 'cameraViewerCode',
+	VIEW_OFFSET = 'cameraViewOffset',
 	WEBXR_AR = 'cameraWebXRAR',
 	WEBXR_VR = 'cameraWebXRVR',
 	WEBXR_AR_MARKER_TRACKING = 'cameraWebXRARMarkerTracking',

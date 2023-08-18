@@ -5,7 +5,7 @@ import {ViewerControlsController} from './utils/ViewerControlsController';
 import {ViewerEventsController} from './utils/ViewerEventsController';
 import {ViewerWebGLController} from './utils/ViewerWebglController';
 import {ViewerAudioController} from './utils/ViewerAudioController';
-import {Camera, Object3D} from 'three';
+import {Camera, Object3D, Vector2} from 'three';
 import {PolyScene} from '../scene/PolyScene';
 import {Poly, PolyEngine} from '../Poly';
 import {AbstractRenderer} from './Common';
@@ -31,7 +31,7 @@ export interface HTMLElementWithViewer<C extends Camera> extends HTMLElement {
 	viewer: TypedViewer<C>;
 	Poly: PolyEngine;
 }
-type UpdateCameraAspectCallback = (aspect: number) => void;
+type UpdateCameraAspectCallback = (aspect: number, resolution: Vector2) => void;
 
 export interface CreateViewerOptions {
 	canvas?: HTMLCanvasElement;
@@ -160,6 +160,14 @@ export abstract class TypedViewer<C extends Camera> {
 		// than its container, without requiring css to enforce this
 		canvas.style.width = '100%';
 		canvas.style.height = '100%';
+
+		// This gets rid of an annoying popup showing an option to copy the image.
+		// when doing a long press on touch device
+		canvas.addEventListener('contextmenu', (e) => {
+			e.preventDefault();
+			e.stopPropagation();
+		});
+
 		return canvas;
 	}
 
