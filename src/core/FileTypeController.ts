@@ -20,6 +20,7 @@ export const IMAGE_EXTENSIONS: string[] = [
 	ImageExtension.WEBP,
 ];
 export enum GeometryExtension {
+	TDS = '3DS',
 	DRC = 'drc',
 	FBX = 'fbx',
 	GEOJSON = 'geojson',

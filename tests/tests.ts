@@ -462,6 +462,7 @@ import {testenginenodessopDrawRange} from './engine/nodes/sop/DrawRange';
 import {testenginenodessopEmptyObject} from './engine/nodes/sop/EmptyObject';
 import {testenginenodessopFace} from './engine/nodes/sop/Face';
 import {testenginenodessopFile} from './engine/nodes/sop/File';
+import {testenginenodessopFile3DS} from './engine/nodes/sop/File3DS';
 import {testenginenodessopFileGEOJSON} from './engine/nodes/sop/FileGEOJSON';
 import {testenginenodessopFileGLTF} from './engine/nodes/sop/FileGLTF';
 import {testenginenodessopFileIFC} from './engine/nodes/sop/FileIFC';
@@ -1032,6 +1033,7 @@ export function testPolygonjs(qUnit: QUnit) {
 	testenginenodessopEmptyObject(qUnit);
 	testenginenodessopFace(qUnit);
 	testenginenodessopFile(qUnit);
+	testenginenodessopFile3DS(qUnit);
 	testenginenodessopFileGEOJSON(qUnit);
 	testenginenodessopFileGLTF(qUnit);
 	testenginenodessopFileIFC(qUnit);
