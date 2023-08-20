@@ -206,6 +206,7 @@ export enum SopType {
 }
 
 export enum SopTypeFile {
+	FILE_3DS = 'file3DS',
 	FILE_DRC = 'fileDRC',
 	FILE_FBX = 'fileFBX',
 	FILE_GEOJSON = 'fileGEOJSON',
