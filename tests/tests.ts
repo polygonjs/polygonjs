@@ -470,6 +470,7 @@ import {testenginenodessopFileMPD} from './engine/nodes/sop/FileMPD';
 import {testenginenodessopFileMultiGLTF} from './engine/nodes/sop/FileMultiGLTF';
 import {testenginenodessopFileMultiOBJ} from './engine/nodes/sop/FileMultiOBJ';
 import {testenginenodessopFileSVG} from './engine/nodes/sop/FileSVG';
+import {testenginenodessopFileVOX} from './engine/nodes/sop/FileVOX';
 import {testenginenodessopFuse} from './engine/nodes/sop/Fuse';
 import {testenginenodessopHeightMap} from './engine/nodes/sop/HeightMap';
 import {testenginenodessopHemisphereLight} from './engine/nodes/sop/HemisphereLight';
@@ -1036,6 +1037,7 @@ export function testPolygonjs(qUnit: QUnit) {
 	testenginenodessopFileIFC(qUnit);
 	testenginenodessopFileJSON(qUnit);
 	testenginenodessopFileMPD(qUnit);
+	testenginenodessopFileVOX(qUnit);
 	testenginenodessopFileMultiGLTF(qUnit);
 	testenginenodessopFileMultiOBJ(qUnit);
 	testenginenodessopFileSVG(qUnit);

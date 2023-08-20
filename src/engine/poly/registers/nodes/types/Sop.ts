@@ -219,6 +219,7 @@ export enum SopTypeFile {
 	FILE_STL = 'fileSTL',
 	FILE_SVG = 'fileSVG',
 	FILE_USDZ = 'fileUSDZ',
+	FILE_VOX = 'fileVOX',
 }
 
 export enum SopTypeFileMulti {

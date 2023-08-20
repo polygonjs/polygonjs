@@ -2,12 +2,14 @@ import type {BufferGeometry, Object3D} from 'three';
 import type {GLTF} from 'three/examples/jsm/loaders/GLTFLoader';
 import type {PDB} from 'three/examples/jsm/loaders/PDBLoader';
 import type {CoreObjectType, ObjectContent} from '../../geometry/ObjectContent';
+import type { Chunk} from 'three/examples/jsm/loaders/VOXLoader';
 // import type {IFCModel} from 'web-ifc-three/IFC/components/IFCModel';
 type IFCModel = Object3D;
 
 export type BaseGeoLoaderOutput =
 	| Object3D
 	| BufferGeometry
+	|Chunk[]
 	| PDB
 	| GLTF
 	| IFCModel

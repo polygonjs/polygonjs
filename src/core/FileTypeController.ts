@@ -35,6 +35,7 @@ export enum GeometryExtension {
 	STL = 'stl',
 	SVG = 'svg',
 	USDZ = 'usdz',
+	VOX = 'vox',
 }
 export const GEOMETRY_EXTENSIONS: string[] = [
 	GeometryExtension.DRC,
@@ -52,6 +53,7 @@ export const GEOMETRY_EXTENSIONS: string[] = [
 	GeometryExtension.STL,
 	GeometryExtension.SVG,
 	GeometryExtension.USDZ,
+	GeometryExtension.VOX,
 ];
 export enum SDFExtension {
 	BIN = 'bin',
