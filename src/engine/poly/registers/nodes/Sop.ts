@@ -194,6 +194,7 @@ import {MapboxCameraSopNode} from '../../../nodes/sop/MapboxCamera';
 import {MapboxLayerSopNode} from '../../../nodes/sop/MapboxLayer';
 import {MapboxPlaneSopNode} from '../../../nodes/sop/MapboxPlane';
 import {MapboxTransformSopNode} from '../../../nodes/sop/MapboxTransform';
+import {MarkovSolverSopNode} from '../../../nodes/sop/MarkovSolver';
 import {MaterialSopNode} from '../../../nodes/sop/Material';
 import {MaterialPropertiesSopNode} from '../../../nodes/sop/MaterialProperties';
 // import {MaterialPropertiesMeshStandardSopNode} from '../../../nodes/sop/MaterialPropertiesMeshStandard';
@@ -497,6 +498,7 @@ export interface GeoNodeChildrenMap {
 	mapboxLayer: MapboxLayerSopNode;
 	mapboxPlane: MapboxPlaneSopNode;
 	mapboxTransform: MapboxTransformSopNode;
+	markovSolver: MarkovSolverSopNode;
 	material: MaterialSopNode;
 	materialProperties: MaterialPropertiesSopNode;
 	// materialPropertiesMeshStandard: MaterialPropertiesMeshStandardSopNode;
@@ -1033,6 +1035,7 @@ export class SopRegister {
 		poly.registerNode(MapboxLayerSopNode, CATEGORY_SOP.MAPS);
 		poly.registerNode(MapboxPlaneSopNode, CATEGORY_SOP.MAPS);
 		poly.registerNode(MapboxTransformSopNode, CATEGORY_SOP.MAPS);
+		poly.registerNode(MarkovSolverSopNode, CATEGORY_SOP.ADVANCED);
 		poly.registerNode(MaterialSopNode, CATEGORY_SOP.RENDER);
 		poly.registerNode(MaterialPropertiesSopNode, CATEGORY_SOP.RENDER);
 		// poly.registerNode(MaterialPropertiesMeshStandardSopNode, CATEGORY_SOP.RENDER);
