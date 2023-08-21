@@ -85,7 +85,6 @@ export class MarkovSolverSopNode extends TypedSopNode<MarkovSolverSopParamsConfi
 				for (let z = 0; z < FZ; z++) {
 					const index = x + y * FX + z * FX * FY;
 					const value = state[index];
-					console.log(x, y, z, index, value);
 					if (value) {
 						const object = this.createObject(geometry, ObjectType.MESH);
 						object.position.set(x * mult, y * mult, z * mult);
