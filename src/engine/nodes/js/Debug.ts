@@ -12,6 +12,11 @@ import {Poly} from '../../Poly';
 import {inputObject3D} from './_BaseObject3D';
 import {DebugOptions} from '../../functions/_Debug';
 
+interface FunctionOptions {
+	linesController: JsLinesCollectionController;
+	inputValue?: string;
+}
+
 class DebugJsParamsConfig extends NodeParamsConfig {
 	displayValue = ParamConfig.BOOLEAN(1);
 	displayFrame = ParamConfig.BOOLEAN(1);
@@ -51,14 +56,33 @@ export class DebugJsNode extends TypedJsNode<DebugJsParamsConfig> {
 	protected _expectedOutputTypes() {
 		return this._expectedInputTypes();
 	}
-	override setLines(shadersCollectionController: JsLinesCollectionController) {
-		const object3D = inputObject3D(this, shadersCollectionController);
-		const nodePath = `'${this.path()}'`;
-		const inputValue = this.variableForInput(shadersCollectionController, this._expectedInputName(0));
+	override setLines(linesController: JsLinesCollectionController) {
 		const dataType = this._expectedInputTypes()[0];
 		const varName = this.jsVarName(this._expectedOutputName(0));
-		const func = Poly.namedFunctionsRegister.getFunction('debug', this, shadersCollectionController);
+		const inputValue = this.variableForInput(linesController, this._expectedInputName(0));
 
+		linesController.addBodyOrComputed(this, [
+			{
+				dataType,
+				varName,
+				value: this._function({
+					linesController,
+					inputValue,
+				}),
+			},
+		]);
+	}
+	override setTriggerableLines(linesController: JsLinesCollectionController) {
+		const bodyLine = this._function({
+			linesController,
+		});
+		linesController.addTriggerableLines(this, [bodyLine]);
+	}
+
+	private _function(options: FunctionOptions): string {
+		const {linesController, inputValue} = options;
+		const object3D = inputObject3D(this, linesController);
+		const nodePath = `'${this.path()}'`;
 		const debugOptions: DebugOptions = {
 			displayValue: this.pv.displayValue,
 			displayFrame: this.pv.displayFrame,
@@ -67,13 +91,8 @@ export class DebugJsNode extends TypedJsNode<DebugJsParamsConfig> {
 			message: this.pv.message,
 			bundleByObject: this.pv.bundleByObject,
 		};
+		const func = Poly.namedFunctionsRegister.getFunction('debug', this, linesController);
 
-		shadersCollectionController.addBodyOrComputed(this, [
-			{
-				dataType,
-				varName,
-				value: func.asString(object3D, nodePath, inputValue, JSON.stringify(debugOptions)),
-			},
-		]);
+		return func.asString(object3D, nodePath, inputValue || `''`, JSON.stringify(debugOptions));
 	}
 }
