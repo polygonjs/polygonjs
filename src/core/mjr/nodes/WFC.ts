@@ -1,42 +1,42 @@
 import seedrandom, {PRNG} from 'seedrandom';
-import {Grid} from '../grid';
-import {Array3D, BoolArray2D} from '../helpers/DataStructures';
-import {Helper} from '../helpers/helper';
+import {Grid} from '../Grid';
+// import {Array3D, BoolArray2D} from '../helpers/DataStructures';
+import {Helper} from '../helpers/Helper';
 import {Wave} from './wfc/Wave';
 import {Branch} from './Branch';
 import {SequenceNode} from './Sequence';
 import {RunState} from './Common';
 
 export abstract class WFCNode extends Branch {
-	protected wave: Wave;
-	protected propagator: Int32Array[][];
+	protected wave!: Wave;
+	protected propagator!: Int32Array[][];
 	protected P = 1;
 	protected N = 1;
 
-	private stack: Uint16Array | Uint32Array;
+	private stack!: Uint16Array | Uint32Array;
 	private stacksize = 0;
 
-	protected weights: Float64Array;
-	private weightLogWeights: Float64Array;
+	protected weights!: Float64Array;
+	private weightLogWeights?: Float64Array;
 
 	private sumOfWeights = 0;
 	private sumOfWeightLogWeights = 0;
 	private startingEntropy = 0;
 
-	protected newgrid: Grid;
-	private startwave: Wave;
+	protected newgrid!: Grid;
+	private startwave!: Wave;
 
 	protected map: Map<number, Uint8Array> = new Map();
-	protected periodic: boolean;
-	protected shannon: boolean;
+	protected periodic: boolean = false;
+	protected shannon!: boolean;
 
-	private distribution: Float64Array;
-	private tries: number;
+	private distribution!: Float64Array;
+	private tries: number = 1000;
 
-	public name: string;
+	public name: string | null = null;
 
 	private firstgo = true;
-	protected rng: PRNG;
+	protected rng?: PRNG;
 
 	public override async load(elem: Element, parentSymmetry: Uint8Array, grid: Grid) {
 		this.shannon = elem.getAttribute('shannon') === 'True';
@@ -75,6 +75,10 @@ export abstract class WFCNode extends Branch {
 
 	public override run() {
 		if (this.n >= 0) return SequenceNode.prototype.run.apply(this);
+
+		if (!(this.grid && this.ip)) {
+			return RunState.FAIL;
+		}
 
 		if (this.firstgo) {
 			this.wave.init(
@@ -115,6 +119,10 @@ export abstract class WFCNode extends Branch {
 
 			return RunState.SUCCESS;
 		} else {
+			if (!this.rng) {
+				console.error('WFC rng not set');
+				return RunState.FAIL;
+			}
 			const node = this.nextUnobservedNode(this.rng);
 			if (node >= 0) {
 				this.observe(node, this.rng);
@@ -128,7 +136,10 @@ export abstract class WFCNode extends Branch {
 		}
 	}
 
-	goodSeed(): number {
+	goodSeed(): number | null {
+		if (!this.ip) {
+			return null;
+		}
 		for (let k = 0; k < this.tries; k++) {
 			let obs = 0;
 			const seed = this.ip.rng.int32();
@@ -160,6 +171,9 @@ export abstract class WFCNode extends Branch {
 
 	nextUnobservedNode(rng: PRNG) {
 		const {grid, wave, periodic, shannon} = this;
+		if (!grid) {
+			return -1;
+		}
 		const {MX, MY, MZ} = grid;
 
 		const N = this.N;
@@ -172,7 +186,7 @@ export abstract class WFCNode extends Branch {
 					if (!periodic && (x + N > MX || y + N > MY || z + 1 > MZ)) continue;
 					const i = x + y * MX + z * MX * MY;
 					const remainingValues = wave.sumsOfOnes[i];
-					const entropy = shannon ? wave.entropies[i] : remainingValues;
+					const entropy = shannon && wave.entropies ? wave.entropies[i] : remainingValues;
 					if (remainingValues > 1 && entropy <= min) {
 						const noise = 1e-6 * rng.double();
 						if (entropy + noise < min) {
@@ -195,6 +209,10 @@ export abstract class WFCNode extends Branch {
 	// Very cache sensitive (context switch = runtime go boom)
 	propagate(): boolean {
 		const {N, grid, periodic, propagator, stack, wave} = this;
+		if (!grid) {
+			console.error('propagate: grid is null');
+			return false;
+		}
 		const {MX, MY, MZ} = grid;
 
 		while (this.stacksize > 0) {
@@ -243,7 +261,7 @@ export abstract class WFCNode extends Branch {
 
 		wave.sumsOfOnes[i] -= 1;
 
-		if (shannon) {
+		if (shannon && wave.sumsOfWeights && wave.entropies && wave.sumsOfWeightLogWeights && weightLogWeights) {
 			let sum = wave.sumsOfWeights[i];
 			wave.entropies[i] += wave.sumsOfWeightLogWeights[i] / sum - Math.log(sum);
 
@@ -255,7 +273,7 @@ export abstract class WFCNode extends Branch {
 		}
 	}
 
-	public abstract updateState();
+	public abstract updateState(): void;
 
 	protected static DX = new Int8Array([1, 0, -1, 0, 0, 0]);
 	protected static DY = new Int8Array([0, 1, 0, -1, 0, 0]);

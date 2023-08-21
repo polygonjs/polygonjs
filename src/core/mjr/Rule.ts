@@ -142,7 +142,7 @@ export class Rule {
 		);
 	}
 
-	public symmetries(symmetry: Uint8Array, d2: boolean) {
+	public symmetries(symmetry: Uint8Array | null, d2: boolean) {
 		return d2
 			? SymmetryHelper.squareSymmetries<Rule>(
 					this,
@@ -246,18 +246,20 @@ export class Rule {
 			OMZ = -1;
 
 		if (!fileString) {
-			if (!(inString && finString)) {
-				console.error(elem, 'no intput');
+			if (!(inString || finString)) {
+				console.error(elem, 'no input');
 				return null;
 			}
-			if (!(outString && foutString)) {
+			if (!(outString || foutString)) {
 				console.error(elem, 'no output');
 				return null;
 			}
 
 			[inRect, IMX, IMY, IMZ] = inString
 				? this.parse(inString)
-				: await this.loadResource(filepath(finString), legend, gin.MZ === 1);
+				: finString
+				? await this.loadResource(filepath(finString), legend, gin.MZ === 1)
+				: [null, -1, -1, -1];
 			if (!inRect) {
 				console.error(elem, 'failed to load input');
 				return null;
@@ -265,7 +267,9 @@ export class Rule {
 
 			[outRect, OMX, OMY, OMZ] = outString
 				? this.parse(outString)
-				: await this.loadResource(filepath(foutString), legend, gout.MZ === 1);
+				: foutString
+				? await this.loadResource(filepath(foutString), legend, gout.MZ === 1)
+				: [null, -1, -1, -1];
 			if (!outRect) {
 				console.error(elem, 'failed to load input');
 				return null;

@@ -1,13 +1,17 @@
 import {Branch} from './Branch';
 import {Node} from './Node';
-import {NodeOptions} from './Common';
+import {} from './Common';
 import {SequenceNode} from './Sequence';
-export class MarkovNode<T extends Node = Node> extends Branch<T> {
-	constructor(options: NodeOptions<T>) {
-		super(options);
+import {Interpreter} from '../Interpreter';
 
-		if (options.child) (<Node[]>this.children).push(options.child);
+export class MarkovNode<T extends Node = Node> extends Branch<T> {
+	constructor(child?: Node, ip?: Interpreter) {
+		super();
+		if (child) (<Node[]>this.children).push(child);
 		this.grid = ip?.grid;
+		if (ip) {
+			this.ip = ip;
+		}
 	}
 
 	public override run() {

@@ -5,6 +5,10 @@ import {RunState} from './Common';
 
 export class SequenceNode<T extends Node = Node> extends Branch<T> {
 	public override run() {
+		if (!this.ip) {
+			console.warn('no ip');
+			return RunState.FAIL;
+		}
 		for (; this.n < this.children.length; this.n++) {
 			const node = this.children[this.n];
 
@@ -13,7 +17,6 @@ export class SequenceNode<T extends Node = Node> extends Branch<T> {
 			} else {
 				this.ip.blocking = this.sync || node.sync;
 			}
-
 			const status = node.run();
 			if (status === RunState.SUCCESS || status === RunState.HALT) return status;
 		}

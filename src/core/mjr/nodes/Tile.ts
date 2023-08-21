@@ -1,37 +1,38 @@
 import {alea} from 'seedrandom';
-import {Grid} from '../grid';
+import {Grid} from '../Grid';
 import {Loader} from '../loader';
-import {Array2D, Array3Dflat, BoolArray3D} from '../helpers/datastructures';
-import {Helper} from '../helpers/helper';
-import {SymmetryHelper} from '../helpers/symmetry';
-
+import {Array2D, Array3Dflat, BoolArray3D} from '../helpers/DataStructures';
+import {Helper} from '../helpers/Helper';
+import {SymmetryHelper} from '../helpers/Symmetry';
 import {WFCNode} from './WFC';
 
-const FALSE = (_) => false;
+const FALSE = () => false;
 
 export class TileNode extends WFCNode {
 	protected static state_rng = alea('', {entropy: true});
 
-	private tiledata: Uint8Array[];
+	private tiledata: Uint8Array[] = [];
 
-	private S: number;
-	private SZ: number;
-	private overlap: number;
-	private overlapz: number;
+	private S: number = -1;
+	private SZ: number = -1;
+	private overlap: number = 0;
+	private overlapz: number = 0;
 
-	private votes: Array2D<Uint32Array>;
+	private votes!: Array2D<Uint32Array>;
 
 	public override async load(elem: Element, parentSymmetry: Uint8Array, grid: Grid) {
 		this.periodic = elem.getAttribute('periodic') === 'True';
 		this.name = elem.getAttribute('tileset');
 		const tilesname = elem.getAttribute('tiles') || this.name;
-		this.overlap = parseInt(elem.getAttribute('overlap')) || 0;
-		this.overlapz = parseInt(elem.getAttribute('overlapz')) || 0;
+		this.overlap = parseInt(elem.getAttribute('overlap') || '0') || 0;
+		this.overlapz = parseInt(elem.getAttribute('overlapz') || '0') || 0;
 
 		const filepath = `resources/tilesets/${this.name}.xml`;
-		const root = (await Loader.xml(filepath)).elem;
+		// TODO: remove this loader
+		const root = (await Loader.xml(filepath))!.elem;
 		const fullSymmetry = root.getAttribute('fullSymmetry') === 'True';
-		const eFirstTile = Helper.matchTag(Helper.matchTag(root, 'tiles'), 'tile');
+		// TODO: remove forced non null
+		const eFirstTile = Helper.matchTag(Helper.matchTag(root, 'tiles')!, 'tile')!;
 		const firstFileName = `${tilesname}/${eFirstTile.getAttribute('name')}.vox`;
 		const [firstData, S, SY, SZ] = await Loader.vox(`resources/tilesets/${firstFileName}`);
 
@@ -52,13 +53,14 @@ export class TileNode extends WFCNode {
 		this.SZ = SZ;
 
 		const {overlap, overlapz} = this;
-		this.newgrid = Grid.build(
+		const newgrid = Grid.build(
 			elem,
 			(S - overlap) * grid.MX + overlap,
 			(S - overlap) * grid.MY + overlap,
 			(SZ - overlapz) * grid.MZ + overlapz
 		);
-		if (!this.newgrid) return false;
+		if (!newgrid) return false;
+		this.newgrid = newgrid;
 
 		this.votes = new Array2D(Uint32Array, this.newgrid.C, S * S * SZ, 0);
 
@@ -75,11 +77,11 @@ export class TileNode extends WFCNode {
 		const zReflect = (p: Uint8Array) => newtile((x, y, z) => p[x + y * S + (S - 1 - z) * S * S]);
 
 		const uniques: number[] = [];
-		const etiles = [...Helper.matchTags(Helper.matchTag(root, 'tiles'), 'tile')];
+		const etiles = [...Helper.matchTags(Helper.matchTag(root, 'tiles')!, 'tile')] as Element[];
 
 		const tasks = etiles.map(async (etile) => {
 			const tilename = etile.getAttribute('name');
-			const weight = parseFloat(etile.getAttribute('weight')) || 1;
+			const weight = parseFloat(etile.getAttribute('weight') || '1') || 1;
 
 			const filename = `resources/tilesets/${tilesname}/${tilename}.vox`;
 			const [vox] = await Loader.vox(filename);
@@ -103,7 +105,11 @@ export class TileNode extends WFCNode {
 		const tempStationary: number[] = [];
 		let ind = 0;
 
-		for (const {tilename, flatTile, weight} of result) {
+		for (const {tilename, flatTile, weight} of result as {
+			tilename: string;
+			flatTile: Uint8Array;
+			weight: number;
+		}[]) {
 			const localdata = fullSymmetry
 				? SymmetryHelper.cubeSymmetries(flatTile, zRotate, yRotate, xReflect, Helper.compareArr)
 				: SymmetryHelper.squareSymmetries(flatTile, zRotate, xReflect, Helper.compareArr);
@@ -126,19 +132,25 @@ export class TileNode extends WFCNode {
 		this.map = new Map();
 		for (const erule of Helper.childrenByTag(elem, 'rule')) {
 			// console.log(erule);
-
-			const input = erule.getAttribute('in').charCodeAt(0);
-			const outputs = erule.getAttribute('out').split('|');
-			const position = new Uint8Array(P);
-			for (const s of outputs) {
-				const array = positions.get(s);
-				if (!array) {
-					console.error(elem, `unknown tilename ${s}`);
-					return false;
+			const inStr = erule.getAttribute('in');
+			const outStr = erule.getAttribute('out');
+			if (inStr && outStr) {
+				const input = inStr.charCodeAt(0);
+				const outputs = outStr.split('|');
+				const position = new Uint8Array(P);
+				for (const s of outputs) {
+					const array = positions.get(s);
+					if (!array) {
+						console.error(elem, `unknown tilename ${s}`);
+						return false;
+					}
+					for (let p = 0; p < P; p++) if (array[p]) position[p] = 1;
 				}
-				for (let p = 0; p < P; p++) if (array[p]) position[p] = 1;
+				const i = grid.values.get(input);
+				if (i != null) {
+					this.map.set(i, position);
+				}
 			}
-			this.map.set(grid.values.get(input), position);
 		}
 
 		if (!this.map.has(0)) {
@@ -156,28 +168,38 @@ export class TileNode extends WFCNode {
 		const tile = (attribute: string) => {
 			const code = attribute.split(' ');
 			const action = code.length === 2 ? code[0] : '';
-			let starttile = namedTileData.get(last(attribute))[0];
-			for (let i = action.length - 1; i >= 0; i--) {
-				const sym = action.charAt(i);
-				if (sym === 'x') starttile = xRotate(starttile);
-				else if (sym === 'y') starttile = yRotate(starttile);
-				else if (sym === 'z') starttile = zRotate(starttile);
-				else {
-					console.error(`unknown symmetry ${sym}`);
-					return null;
+			const lastVal = last(attribute);
+			const elements = namedTileData.get(lastVal);
+			if (elements && elements.length > 0) {
+				let starttile = elements[0];
+				for (let i = action.length - 1; i >= 0; i--) {
+					const sym = action.charAt(i);
+					if (sym === 'x') starttile = xRotate(starttile);
+					else if (sym === 'y') starttile = yRotate(starttile);
+					else if (sym === 'z') starttile = zRotate(starttile);
+					else {
+						console.error(`unknown symmetry ${sym}`);
+						return null;
+					}
 				}
+				return starttile;
 			}
-			return starttile;
 		};
 
 		const tilenames = etiles.map((x) => x.getAttribute('name'));
 		tilenames.push(null);
 		// console.log(tilenames);
 
-		for (const en of Helper.matchTags(Helper.matchTag(root, 'neighbors'), 'neighbor')) {
+		for (const en of Helper.matchTags(Helper.matchTag(root, 'neighbors')!, 'neighbor')) {
+			if (!en) {
+				continue;
+			}
 			if (fullSymmetry) {
 				const left = en.getAttribute('left');
 				const right = en.getAttribute('right');
+				if (!left || !right) {
+					continue;
+				}
 				if (!tilenames.includes(last(left)) || !tilenames.includes(last(right))) {
 					console.error(
 						en,
@@ -223,7 +245,9 @@ export class TileNode extends WFCNode {
 			} else if (en.getAttribute('left')) {
 				const left = en.getAttribute('left');
 				const right = en.getAttribute('right');
-
+				if (!left || !right) {
+					continue;
+				}
 				if (!tilenames.includes(last(left)) || !tilenames.includes(last(right))) {
 					console.error(
 						en,
@@ -252,6 +276,9 @@ export class TileNode extends WFCNode {
 			} else {
 				const top = en.getAttribute('top');
 				const bottom = en.getAttribute('bottom');
+				if (!top || !bottom) {
+					continue;
+				}
 				if (!tilenames.includes(last(top)) || !tilenames.includes(last(bottom))) {
 					console.error(
 						en,
@@ -296,6 +323,9 @@ export class TileNode extends WFCNode {
 
 	public override updateState() {
 		const {newgrid, grid, wave, S, SZ, P, tiledata, overlap, overlapz, votes} = this;
+		if (!grid) {
+			return;
+		}
 
 		const rng = TileNode.state_rng;
 

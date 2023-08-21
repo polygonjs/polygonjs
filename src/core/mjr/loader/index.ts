@@ -1,5 +1,5 @@
 import {DOMParser} from '@xmldom/xmldom';
-import {VoxHelper} from '../helpers/Vox';
+// import {VoxHelper} from '../helpers/Vox';
 
 export class Loader {
 	static async xml(path: string) {
@@ -20,19 +20,19 @@ export class Loader {
 		return doc.documentElement;
 	}
 
-	static async vox(path: string): Promise<[Int32Array, number, number, number]> {
-		const res = await fetch(path);
-		if (res.status !== 200) return [null, -1, -1, -1];
-		const buf = await res.arrayBuffer();
-		try {
-			return VoxHelper.read(buf);
-		} catch (e) {
-			console.error(e);
-			return [null, -1, -1, -1];
-		}
+	static async vox(path: string): Promise<[Int32Array | null, number, number, number]> {
+		// const res = await fetch(path);
+		// if (res.status !== 200) return [null, -1, -1, -1];
+		// const buf = await res.arrayBuffer();
+		// try {
+		// 	return VoxHelper.read(buf);
+		// } catch (e) {
+		// console.error(e);
+		return [null, -1, -1, -1];
+		// }
 	}
 
-	static async bitmap(url: string): Promise<[Int32Array, number, number, number]> {
+	static async bitmap(url: string): Promise<[Int32Array | null, number, number, number]> {
 		try {
 			const response = await fetch(url);
 			const fileBlob = await response.blob();
@@ -43,7 +43,7 @@ export class Loader {
 			canvas.width = bitmap.width;
 			canvas.height = bitmap.height;
 
-			const context = canvas.getContext('2d');
+			const context = canvas.getContext('2d')!;
 			context.drawImage(bitmap, 0, 0);
 			bitmap.close();
 

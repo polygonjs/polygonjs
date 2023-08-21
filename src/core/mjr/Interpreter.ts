@@ -2,11 +2,11 @@ import seedrandom, {PRNG} from 'seedrandom';
 import {Grid} from './Grid';
 import {vec3} from './helpers/Helper';
 import {SymmetryHelper} from './helpers/Symmetry';
-import {Node} from './nodes/Node';
+import {nodeFactory} from './nodes/Factory';
 import {Branch} from './nodes/Branch';
 import {MarkovNode} from './nodes/Markov';
 import {EventNode} from './nodes/extensions/Event';
-import type {WFCNode} from './nodes/WFC';
+import {WFCNode} from './nodes/WFC';
 
 interface InterpreterOptions {
 	origin: boolean;
@@ -17,14 +17,14 @@ interface InterpreterOptions {
 export class Interpreter {
 	public root: Branch | null = null;
 	public current: Branch | null = null;
-	public listener?: EventNode;
+	public listener: EventNode | null = null;
 	public blocking = false;
 
 	public grid: Grid;
 	public startgrid: Grid;
 
 	origin: boolean;
-	public rng: PRNG;
+	public rng!: PRNG;
 	public time = 0;
 
 	public readonly changes: vec3[] = [];
@@ -47,10 +47,6 @@ export class Interpreter {
 		const startgrid = grid;
 
 		const symmetryString = elem.getAttribute('symmetry');
-		console.error('no symmetry ');
-		if (!symmetryString) {
-			return null;
-		}
 
 		const dflt = new Uint8Array(grid.MZ === 1 ? 8 : 48);
 		dflt.fill(1);
@@ -66,8 +62,10 @@ export class Interpreter {
 			startgrid,
 		});
 
-		const topnode = await Node.factory(elem, symmetry, ip, ip.grid);
+		const topnode = await nodeFactory(elem, symmetry, ip, ip.grid);
 		if (!topnode) return null;
+		console.log({topnode});
+
 		const root = topnode instanceof Branch ? topnode : new MarkovNode(topnode, ip);
 		ip.root = root;
 		return ip;

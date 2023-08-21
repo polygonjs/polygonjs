@@ -4,6 +4,9 @@ import {Node} from './Node';
 
 export class ScopeNode<T extends Node = Node> extends Branch<T> {
 	public override run(): RunState {
+		if (!this.ip) {
+			return RunState.FAIL;
+		}
 		const {current} = this.ip;
 		for (; this.n < this.children.length; this.n++) {
 			const node = this.children[this.n];

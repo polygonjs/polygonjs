@@ -1,10 +1,9 @@
 import {alea} from 'seedrandom';
-import {Grid} from '../grid';
+import {Grid} from '../Grid';
 import {Loader} from '../loader';
-import {Array2D} from '../helpers/datastructures';
-import {Helper} from '../helpers/helper';
-import {SymmetryHelper} from '../helpers/symmetry';
-
+import {Array2D} from '../helpers/DataStructures';
+import {Helper} from '../helpers/Helper';
+import {SymmetryHelper} from '../helpers/Symmetry';
 import {WFCNode} from './WFC';
 
 // A bit slower than C# (130ms vs 90ms, WaveFlower, ryzen 5800x)
@@ -14,8 +13,8 @@ export class OverlapNode extends WFCNode {
 	// - seedrandom is 3.0.5
 	protected static state_rng = alea('', {entropy: true});
 
-	private patterns: Array2D<Uint8Array>;
-	private votes: Array2D<Uint32Array>;
+	private patterns!: Array2D<Uint8Array>;
+	private votes!: Array2D<Uint32Array>;
 
 	public override async load(elem: Element, parentSymmetry: Uint8Array, grid: Grid) {
 		if (grid.MZ !== 1) {
@@ -35,8 +34,9 @@ export class OverlapNode extends WFCNode {
 		// Default to true
 		const periodicInput = !(elem.getAttribute('periodicInput') === 'False');
 
-		this.newgrid = Grid.build(elem, grid.MX, grid.MY, grid.MZ);
-		if (!this.newgrid) return false;
+		const newgrid = Grid.build(elem, grid.MX, grid.MY, grid.MZ);
+		if (!newgrid) return false;
+		this.newgrid = newgrid;
 		this.periodic = true;
 
 		this.name = elem.getAttribute('sample');
@@ -121,7 +121,10 @@ export class OverlapNode extends WFCNode {
 
 		for (const w of ordering) {
 			patternFromIndex(w, this.patterns.row(counter));
-			this.weights[counter] = weights.get(w);
+			const weight = weights.get(w);
+			if (weight != null) {
+				this.weights[counter] = weight;
+			}
 			counter++;
 		}
 
@@ -149,15 +152,19 @@ export class OverlapNode extends WFCNode {
 
 		this.map = new Map();
 		for (const rule of Helper.childrenByTag(elem, 'rule')) {
-			const input = rule.getAttribute('in').charCodeAt(0);
-			const outputs = rule
-				.getAttribute('out')
-				.split('|')
-				.map((s) => this.newgrid.values.get(s.charCodeAt(0)));
-			const position = new Uint8Array(
-				Array.from({length: P}, (_, k) => (outputs.includes(this.patterns.get(0, k)) ? 1 : 0))
-			);
-			this.map.set(grid.values.get(input), position);
+			const inStr = rule.getAttribute('in');
+			const outStr = rule.getAttribute('out');
+			if (inStr && outStr) {
+				const input = inStr.charCodeAt(0);
+				const outputs = outStr.split('|').map((s) => this.newgrid!.values.get(s.charCodeAt(0)));
+				const position = new Uint8Array(
+					Array.from({length: P}, (_, k) => (outputs.includes(this.patterns.get(0, k)) ? 1 : 0))
+				);
+				const i = grid.values.get(input);
+				if (i != null) {
+					this.map.set(i, position);
+				}
+			}
 		}
 
 		if (!this.map.has(0)) {
@@ -171,6 +178,10 @@ export class OverlapNode extends WFCNode {
 
 	public override updateState() {
 		const {newgrid, wave, patterns, P, N, votes} = this;
+		if (!newgrid) {
+			console.error('newgrid is null');
+			return;
+		}
 		const {MX, MY} = newgrid;
 
 		const rng = OverlapNode.state_rng;
