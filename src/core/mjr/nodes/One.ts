@@ -28,6 +28,7 @@ export class OneNode extends RuleNode {
 
 	public override run() {
 		const status = super.run();
+		console.warn('one.run', status);
 		if (status !== RunState.SUCCESS) return status;
 		if (!(this.grid && this.ip)) {
 			return RunState.FAIL;

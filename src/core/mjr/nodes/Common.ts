@@ -1,6 +1,7 @@
 // import type {Interpreter} from '../Interpreter';
 // import type {Grid} from '../Grid';
 import type {Node} from './Node';
+import type {Branch} from './Branch';
 
 export type AvailableName =
 	| 'one'
@@ -44,9 +45,9 @@ export const EXT: {[tag: string]: () => Node} = {};
 // }
 
 export enum RunState {
-	SUCCESS = 0,
-	FAIL = 1,
-	HALT = 2,
+	SUCCESS = 'success',
+	FAIL = 'fail',
+	HALT = 'halt',
 }
 export type NodeOptionsElement = Element & {lineNumber: number; columnNumber: number};
 
@@ -63,3 +64,15 @@ export type NodeOptionsElement = Element & {lineNumber: number; columnNumber: nu
 export const OPTIMIZATION_INLINE_LIMIT = 128;
 
 export type NodeSourceElement = Element;
+
+export interface BranchTaskContainerOptions {
+	parentNode: Branch;
+	elem: Element;
+}
+interface BranchTaskContainer {
+	func: (options: BranchTaskContainerOptions) => Promise<Node | null>;
+}
+
+export const BRANCH_TASK_CONTAINER: BranchTaskContainer = {
+	func: (options: BranchTaskContainerOptions) => Promise.resolve(null),
+};

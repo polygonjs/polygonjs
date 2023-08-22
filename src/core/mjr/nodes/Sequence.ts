@@ -11,6 +11,7 @@ export class SequenceNode<T extends Node = Node> extends Branch<T> {
 		}
 		for (; this.n < this.children.length; this.n++) {
 			const node = this.children[this.n];
+			console.log(this.n, node);
 
 			if (node instanceof Branch) {
 				if (!(node instanceof ScopeNode)) this.ip.current = node;
@@ -18,7 +19,9 @@ export class SequenceNode<T extends Node = Node> extends Branch<T> {
 				this.ip.blocking = this.sync || node.sync;
 			}
 			const status = node.run();
-			if (status === RunState.SUCCESS || status === RunState.HALT) return status;
+			if (status === RunState.SUCCESS || status === RunState.HALT) {
+				return status;
+			}
 		}
 		this.ip.current = this.ip.current?.parent || null;
 		this.reset();

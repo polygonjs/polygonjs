@@ -7,11 +7,12 @@ import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {Interpreter} from '../../../core/mjr/Interpreter';
-import {BASIC} from '../../../core/mjr/models/basic';
 import {Object3D, BoxGeometry} from 'three';
 import {ObjectType} from '../../../core/geometry/Constant';
-// import {NodeStateInfo} from '../../../core/mjr/State';
-// import {runInAction} from 'mobx';
+import {arrayUniq} from '../../../core/ArrayUtils';
+// import {BASIC} from '../../../core/mjr/models/basic';
+// import {BASIC_DJIKSTRA_DUNGEON} from '../../../core/mjr/models/basicDjikstraDungeon';
+import {BASIC_DIJKSTRA_DUNGEON_DEBUG} from '../../../core/mjr/models/basicDijkstraDungeonDebug';
 
 class MarkovSolverSopParamsConfig extends NodeParamsConfig {
 	/** @param size of the box */
@@ -43,10 +44,15 @@ export class MarkovSolverSopNode extends TypedSopNode<MarkovSolverSopParamsConfi
 	// protected _seed: number = 0;
 	override async cook(inputCoreGroups: CoreGroup[]) {
 		const coreGroup = inputCoreGroups[0];
-		const elem = document.createElement('div');
-		elem.innerHTML = BASIC;
-		const child = elem.children[0];
-		const interpreter = await Interpreter.load(child, this.pv.size.x, this.pv.size.y, this.pv.size.z);
+		// const elem = document.createElement('div');
+		// elem.innerHTML = BASIC_DJIKSTRA_DUNGEON;
+		// const child = elem.children[0];
+		// console.log(child);
+		const parser = new DOMParser();
+		const doc = parser.parseFromString(BASIC_DIJKSTRA_DUNGEON_DEBUG, 'text/xml');
+		const elem = doc.documentElement;
+		console.log(elem);
+		const interpreter = await Interpreter.load(elem, this.pv.size.x, this.pv.size.y, this.pv.size.z);
 		if (!interpreter) {
 			this.setCoreGroup(coreGroup);
 			return;
@@ -93,6 +99,8 @@ export class MarkovSolverSopNode extends TypedSopNode<MarkovSolverSopParamsConfi
 				}
 			}
 		}
+		const uniqueValues = arrayUniq([...state] as number[]);
+		console.log(uniqueValues);
 
 		this.setObjects(newObjects);
 	}

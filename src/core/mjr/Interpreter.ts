@@ -7,6 +7,8 @@ import {Branch} from './nodes/Branch';
 import {MarkovNode} from './nodes/Markov';
 import {EventNode} from './nodes/extensions/Event';
 import {WFCNode} from './nodes/WFC';
+import {BRANCH_TASK_CONTAINER, BranchTaskContainerOptions} from './nodes/Common';
+import {MapNode} from './nodes/Map';
 
 interface InterpreterOptions {
 	origin: boolean;
@@ -61,6 +63,16 @@ export class Interpreter {
 			grid,
 			startgrid,
 		});
+
+		BRANCH_TASK_CONTAINER.func = async (options: BranchTaskContainerOptions) => {
+			const {parentNode, elem} = options;
+			const node = await nodeFactory(elem, symmetry, ip, grid);
+			if (!node) return null;
+			if (node instanceof Branch) {
+				node.parent = node instanceof MapNode || node instanceof WFCNode ? null : parentNode;
+			}
+			return node;
+		};
 
 		const topnode = await nodeFactory(elem, symmetry, ip, ip.grid);
 		if (!topnode) return null;

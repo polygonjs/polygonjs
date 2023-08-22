@@ -58,6 +58,7 @@ export abstract class RuleNode extends Node {
 		}
 
 		const rules = [...Helper.childrenByTag(elem, 'rule')];
+		console.log('rules', elem, rules, rules.length);
 		const ruleElements = rules.length > 0 ? rules : [elem];
 
 		const tasks: Promise<Rule[] | null>[] = ruleElements.map(async (e) => {
@@ -84,6 +85,7 @@ export abstract class RuleNode extends Node {
 		const ruleLists = await Promise.all(tasks);
 		if (ruleLists.some((list) => !list)) return false;
 		this.rules.splice(0, this.rules.length, ...(ruleLists.flat() as Rule[]));
+		console.log('2 rules', elem, this.rules, rules.length);
 
 		this.last = 0;
 
@@ -314,8 +316,9 @@ export abstract class RuleNode extends Node {
 		const {MX, MY, MZ, state} = grid;
 
 		const status = this.observe();
+		console.log('run 1', status);
 		if (status != null) return status;
-
+		console.log('this.lastMatchedTurn', this.lastMatchedTurn);
 		if (this.lastMatchedTurn >= 0) {
 			const ip = this.ip;
 			for (let n = ip.first[this.lastMatchedTurn]; n < ip.changes.length; n++) {
@@ -347,6 +350,7 @@ export abstract class RuleNode extends Node {
 			}
 		} else {
 			this.matchCount = 0;
+			console.log('this.rules', this.rules);
 			for (let r = 0; r < this.rules.length; r++) {
 				const rule = this.rules[r];
 				for (let z = rule.IMZ - 1; z < MZ; z += rule.IMZ)
@@ -366,16 +370,24 @@ export abstract class RuleNode extends Node {
 									sx + rule.IMX > MX ||
 									sy + rule.IMY > MY ||
 									sz + rule.IMZ > MZ
-								)
+								) {
 									continue;
+								}
 
-								if (rule.jit_match_kernel && rule.jit_match_kernel(state, sx, sy, sz))
+								console.log(
+									'rule.jit_match_kernel',
+									rule.jit_match_kernel,
+									rule.jit_match_kernel ? rule.jit_match_kernel(state, sx, sy, sz) : null
+								);
+								if (rule.jit_match_kernel && rule.jit_match_kernel(state, sx, sy, sz)) {
+									console.log(r, sx, sy, sz);
 									this.add(r, sx, sy, sz);
+								}
 							}
 						}
 			}
 		}
-
+		console.log('this.fields', this.fields);
 		if (this.fields) {
 			let anysuccess = false;
 			let anycomputation = false;
@@ -390,6 +402,7 @@ export abstract class RuleNode extends Node {
 				}
 			}
 			if (anycomputation && !anysuccess) return RunState.FAIL;
+			console.log({anysuccess, anycomputation});
 		}
 
 		return RunState.SUCCESS;

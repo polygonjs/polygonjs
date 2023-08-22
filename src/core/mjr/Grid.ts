@@ -116,7 +116,7 @@ export class Grid {
 		const state = padded.subarray(0, MX * MY * MZ);
 		// g.statebuffer = new Uint8Array(MX * MY * MZ);
 		const mask = new Uint8Array(MX * MY * MZ);
-		const folder = elem.getAttribute('folder') || 'no-folder';
+		const folder = elem.getAttribute('folder') || '';
 
 		return new Grid({
 			MX,

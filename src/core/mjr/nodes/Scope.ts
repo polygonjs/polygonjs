@@ -21,7 +21,9 @@ export class ScopeNode<T extends Node = Node> extends Branch<T> {
 			if (status === RunState.SUCCESS || status === RunState.HALT) return status;
 		}
 		this.ip.current = current;
-		while (this.ip.current instanceof ScopeNode) this.ip.current = this.ip.current.parent;
+		while (this.ip.current instanceof ScopeNode) {
+			this.ip.current = this.ip.current.parent;
+		}
 		this.reset();
 		return RunState.FAIL;
 	}
