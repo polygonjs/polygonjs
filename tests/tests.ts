@@ -406,6 +406,7 @@ import {testenginenodessopCADTube} from './engine/nodes/sop/CADTube';
 import {testenginenodessopCADUnpack} from './engine/nodes/sop/CADUnpack';
 import {testenginenodessopCADWedge} from './engine/nodes/sop/CADWedge';
 import {testenginenodessopCameraControls} from './engine/nodes/sop/CameraControls';
+import {testenginenodessopCameraFPS} from './engine/nodes/sop/CameraFPS';
 import {testenginenodessopCameraFrameMode} from './engine/nodes/sop/CameraFrameMode';
 import {testenginenodessopCameraPlane} from './engine/nodes/sop/CameraPlane';
 import {testenginenodessopCameraPostProcess} from './engine/nodes/sop/CameraPostProcess';
@@ -977,6 +978,7 @@ export function testPolygonjs(qUnit: QUnit) {
 	testenginenodessopCADUnpack(qUnit);
 	testenginenodessopCADWedge(qUnit);
 	testenginenodessopCameraControls(qUnit);
+	testenginenodessopCameraFPS(qUnit);
 	testenginenodessopCameraFrameMode(qUnit);
 	testenginenodessopCameraPlane(qUnit);
 	testenginenodessopCameraPostProcess(qUnit);

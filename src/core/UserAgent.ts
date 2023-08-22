@@ -2,6 +2,26 @@
 // function _div() {
 // 	return (el = el || document.createElement('div'));
 // }
+
+function isMobile(): boolean {
+	return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+}
+function isIOS(): boolean {
+	return /(iPad|iPhone|iPod)/g.test(navigator.userAgent);
+}
+function isAndroid(): boolean {
+	return /(Android)/g.test(navigator.userAgent);
+}
+function isTouchDevice(): boolean {
+	return (
+		isMobile() ||
+		isIOS() ||
+		isAndroid() ||
+		'ontouchstart' in window ||
+		((window as any).DocumentTouch && document instanceof (window as any).DocumentTouch)
+	);
+}
+
 export class CoreUserAgent {
 	// user agent on linux with chrome
 	// "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36"
@@ -15,17 +35,24 @@ export class CoreUserAgent {
 	}
 	private static _isMobile: boolean | undefined;
 	static isMobile(): boolean {
-		return (this._isMobile =
-			this._isMobile ||
-			/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
+		if (this._isMobile == null) {
+			this._isMobile = isMobile();
+		}
+		return this._isMobile;
 	}
 	private static _isiOS: boolean | undefined;
 	static isiOS(): boolean {
-		return (this._isiOS = this._isiOS || /(iPad|iPhone|iPod)/g.test(navigator.userAgent));
+		if (this._isiOS == null) {
+			this._isiOS = isIOS();
+		}
+		return this._isiOS;
 	}
 	private static _isAndroid: boolean | undefined;
 	static isAndroid(): boolean {
-		return (this._isAndroid = this._isAndroid || /(Android)/g.test(navigator.userAgent));
+		if (this._isAndroid == null) {
+			this._isAndroid = isAndroid();
+		}
+		return this._isAndroid;
 	}
 	private static _isTouchDevice: boolean | undefined;
 	static isTouchDevice(): boolean {
@@ -35,7 +62,12 @@ export class CoreUserAgent {
 		// el.setAttribute('ongesturestart', 'return;'); // or try "ontouchstart"
 		// return typeof (el as any).ongesturestart === 'function';
 		// but this does work on android
-		return (this._isTouchDevice = this._isTouchDevice || document.documentElement.ontouchstart != null);
+		// return (this._isTouchDevice = this._isTouchDevice || document.documentElement.ontouchstart != null);
+		// update:
+		if (this._isTouchDevice == null) {
+			this._isTouchDevice = isTouchDevice();
+		}
+		return this._isTouchDevice;
 	}
 	static isPortrait(): boolean {
 		return window.innerHeight > window.innerWidth;

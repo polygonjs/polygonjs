@@ -78,6 +78,7 @@ import {CADWedgeSopNode} from '../../../nodes/sop/CADWedge';
 //
 import {CameraControlsSopNode} from '../../../nodes/sop/CameraControls';
 import {CameraCSSRendererSopNode} from '../../../nodes/sop/CameraCSSRenderer';
+import {CameraFPSSopNode} from '../../../nodes/sop/CameraFPS';
 import {CameraFrameModeSopNode} from '../../../nodes/sop/CameraFrameMode';
 import {CameraPlaneSopNode} from '../../../nodes/sop/CameraPlane';
 import {CameraPostProcessSopNode} from '../../../nodes/sop/CameraPostProcess';
@@ -382,6 +383,7 @@ export interface GeoNodeChildrenMap {
 	//
 	cameraControls: CameraControlsSopNode;
 	cameraCSSRenderer: CameraCSSRendererSopNode;
+	cameraFPS: CameraFPSSopNode;
 	cameraFrameMode: CameraFrameModeSopNode;
 	cameraPlane: CameraPlaneSopNode;
 	cameraPostProcess: CameraPostProcessSopNode;
@@ -638,6 +640,7 @@ import {BVHSopOperation} from '../../../operations/sop/BVH';
 import {BVHVisualizerSopOperation} from '../../../operations/sop/BVHVisualizer';
 import {CameraControlsSopOperation} from '../../../operations/sop/CameraControls';
 import {CameraCSSRendererSopOperation} from '../../../operations/sop/CameraCSSRenderer';
+import {CameraFPSSopOperation} from '../../../operations/sop/CameraFPS';
 import {CameraFrameModeSopOperation} from '../../../operations/sop/CameraFrameMode';
 import {CameraPostProcessSopOperation} from '../../../operations/sop/CameraPostProcess';
 import {CameraProjectSopOperation} from '../../../operations/sop/CameraProject';
@@ -756,6 +759,7 @@ export class SopRegister {
 		poly.registerOperation(BVHSopOperation);
 		poly.registerOperation(BVHVisualizerSopOperation);
 		poly.registerOperation(CameraControlsSopOperation);
+		poly.registerOperation(CameraFPSSopOperation);
 		poly.registerOperation(CameraFrameModeSopOperation);
 		poly.registerOperation(CameraCSSRendererSopOperation);
 		poly.registerOperation(CameraPostProcessSopOperation);
@@ -922,19 +926,20 @@ export class SopRegister {
 		poly.registerNode(CADUnpackSopNode, CATEGORY_SOP.CAD);
 		poly.registerNode(CADWedgeSopNode, [CATEGORY_SOP.CAD, CATEGORY_SOP.PRIMITIVES]);
 		//
-		poly.registerNode(CameraControlsSopNode, CATEGORY_SOP.RENDER);
-		poly.registerNode(CameraFrameModeSopNode, CATEGORY_SOP.RENDER);
-		poly.registerNode(CameraCSSRendererSopNode, CATEGORY_SOP.RENDER);
+		poly.registerNode(CameraControlsSopNode, CATEGORY_SOP.CAMERA);
+		poly.registerNode(CameraFPSSopNode, CATEGORY_SOP.CAMERA);
+		poly.registerNode(CameraFrameModeSopNode, CATEGORY_SOP.CAMERA);
+		poly.registerNode(CameraCSSRendererSopNode, CATEGORY_SOP.CAMERA);
 		poly.registerNode(CameraPlaneSopNode, CATEGORY_SOP.PRIMITIVES);
-		poly.registerNode(CameraPostProcessSopNode, CATEGORY_SOP.RENDER);
+		poly.registerNode(CameraPostProcessSopNode, CATEGORY_SOP.CAMERA);
 		poly.registerNode(CameraProjectSopNode, CATEGORY_SOP.MODIFIER);
-		poly.registerNode(CameraRendererSopNode, CATEGORY_SOP.RENDER);
-		poly.registerNode(CameraRenderSceneSopNode, CATEGORY_SOP.RENDER);
-		poly.registerNode(CameraViewerCodeSopNode, CATEGORY_SOP.RENDER);
-		poly.registerNode(CameraViewOffsetSopNode, CATEGORY_SOP.RENDER);
-		poly.registerNode(CameraWebXRARMarkerTrackingSopNode, CATEGORY_SOP.WEBXR);
-		poly.registerNode(CameraWebXRARSopNode, CATEGORY_SOP.WEBXR);
-		poly.registerNode(CameraWebXRVRSopNode, CATEGORY_SOP.WEBXR);
+		poly.registerNode(CameraRendererSopNode, CATEGORY_SOP.CAMERA);
+		poly.registerNode(CameraRenderSceneSopNode, CATEGORY_SOP.CAMERA);
+		poly.registerNode(CameraViewerCodeSopNode, CATEGORY_SOP.CAMERA);
+		poly.registerNode(CameraViewOffsetSopNode, CATEGORY_SOP.CAMERA);
+		poly.registerNode(CameraWebXRARMarkerTrackingSopNode, [CATEGORY_SOP.CAMERA, CATEGORY_SOP.WEBXR]);
+		poly.registerNode(CameraWebXRARSopNode, [CATEGORY_SOP.CAMERA, CATEGORY_SOP.WEBXR]);
+		poly.registerNode(CameraWebXRVRSopNode, [CATEGORY_SOP.CAMERA, CATEGORY_SOP.WEBXR]);
 		poly.registerNode(CapsuleSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.registerNode(CenterSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.registerNode(CircleSopNode, CATEGORY_SOP.PRIMITIVES);
@@ -983,7 +988,7 @@ export class SopRegister {
 		//
 		poly.registerNode(CSS2DObjectSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.registerNode(CSS3DObjectSopNode, CATEGORY_SOP.PRIMITIVES);
-		poly.registerNode(CubeCameraSopNode, CATEGORY_SOP.RENDER);
+		poly.registerNode(CubeCameraSopNode, CATEGORY_SOP.CAMERA);
 		poly.registerNode(DataSopNode, CATEGORY_SOP.INPUT);
 		poly.registerNode(DataUrlSopNode, CATEGORY_SOP.INPUT);
 		poly.registerNode(DecalSopNode, CATEGORY_SOP.MISC);
@@ -1057,13 +1062,13 @@ export class SopRegister {
 		poly.registerNode(ObjectsLayoutSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(OceanPlaneSopNode, CATEGORY_SOP.ADVANCED);
 		poly.registerNode(OperationsComposerSopNode, CATEGORY_SOP.ADVANCED, {userAllowed: false});
-		poly.registerNode(OrthographicCameraSopNode, CATEGORY_SOP.RENDER);
+		poly.registerNode(OrthographicCameraSopNode, CATEGORY_SOP.CAMERA);
 		poly.registerNode(PaletteSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(ParticlesSystemGpuSopNode, CATEGORY_SOP.DYNAMICS);
 		poly.registerNode(ParticlesSystemGpuAttributesSopNode, CATEGORY_SOP.DYNAMICS);
 		poly.registerNode(ParticlesSystemGpuMaterialSopNode, CATEGORY_SOP.DYNAMICS);
 		poly.registerNode(PeakSopNode, CATEGORY_SOP.MODIFIER);
-		poly.registerNode(PerspectiveCameraSopNode, CATEGORY_SOP.RENDER);
+		poly.registerNode(PerspectiveCameraSopNode, CATEGORY_SOP.CAMERA);
 		poly.registerNode(PhysicsDebugSopNode, CATEGORY_SOP.PHYSICS);
 		poly.registerNode(PhysicsGroundSopNode, CATEGORY_SOP.PHYSICS);
 		poly.registerNode(PhysicsPlayerSopNode, CATEGORY_SOP.PHYSICS);

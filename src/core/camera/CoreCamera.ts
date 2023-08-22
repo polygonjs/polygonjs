@@ -17,6 +17,7 @@ export enum CameraAttribute {
 	CSS_RENDERER_NODE_ID = '_Camera_CSSRendererNodeId',
 	FRAME_MODE = '_Camera_frameMode',
 	FRAME_MODE_EXPECTED_ASPECT_RATIO = '_Camera_frameModeExpectedAspectRatio',
+	MAX_FPS = '_Camera_maxFPS',
 	VIEW_OFFSET_MIN = '_Camera_viewOffsetMin',
 	VIEW_OFFSET_MAX = '_Camera_viewOffsetMax',
 	POST_PROCESS_NODE_ID = '_Camera_postProcessNodeId',
