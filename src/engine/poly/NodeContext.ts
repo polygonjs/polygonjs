@@ -86,6 +86,7 @@ export enum CameraNodeType {
 export enum CameraSopNodeType {
 	CONTROLS = 'cameraControls',
 	CSS_RENDERER = 'cameraCSSRenderer',
+	FPS = 'cameraFPS',
 	FRAME_MODE = 'cameraFrameMode',
 	POST_PROCESS = 'cameraPostProcess',
 	RENDER_SCENE = 'cameraRenderScene',

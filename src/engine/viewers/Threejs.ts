@@ -13,6 +13,7 @@ import {AbstractRenderer} from './Common';
 import {CoreCameraWebXRController, CoreCameraWebXRControllerConfig} from '../../core/camera/webXR/CoreCameraWebXR';
 import {MarkerTrackingControllerConfig} from '../../core/webXR/markerTracking/Common';
 import {CoreCameraMarkerTrackingController} from '../../core/camera/webXR/CoreCameraMarkerTracking';
+import {CoreCameraViewerFPSController, ViewerFPSConfig} from '../../core/camera/CoreCameraFPS';
 const CSS_CLASS = 'CoreThreejsViewer';
 
 declare global {
@@ -57,6 +58,7 @@ export class ThreejsViewer<C extends Camera> extends TypedViewer<C> {
 	protected _renderCSSFunc: RenderFunc | undefined;
 	private _cssRendererConfig: CSSRendererConfig | undefined;
 	private _viewerCodeConfig: ViewerCodeConfig | undefined;
+	private _viewerFPSConfig: ViewerFPSConfig | undefined;
 
 	private _effectComposer: EffectComposer | undefined;
 	protected _errorMessage: string | undefined;
@@ -134,6 +136,8 @@ export class ThreejsViewer<C extends Camera> extends TypedViewer<C> {
 			this._renderCSSFunc = cssRenderer ? () => cssRenderer.render(renderScene, camera) : undefined;
 			// controls
 			this._controlsNode = CoreCameraControlsController.controlsNode({camera, scene});
+			// FPS
+			this._viewerFPSConfig = CoreCameraViewerFPSController.viewerFPSConfig({camera});
 			// renderFunc
 			if (effectComposer) {
 				this._renderFunc = (delta) => effectComposer.render(delta);
@@ -345,8 +349,18 @@ export class ThreejsViewer<C extends Camera> extends TypedViewer<C> {
 	private _animateWebXR() {
 		this.__animateCommon__();
 	}
+	private __animatedCommonAt = -1000;
 	protected __animateCommon__() {
 		const delta = this._scene.timeController.updateClockDelta();
+		if (this._viewerFPSConfig) {
+			const now = performance.now();
+			const viewerFPSDelta = now - this.__animatedCommonAt;
+			if (viewerFPSDelta < this._viewerFPSConfig.minDelta) {
+				return;
+			}
+			this.__animatedCommonAt = now;
+		}
+
 		this._preRender(delta);
 		this.render(delta);
 	}
