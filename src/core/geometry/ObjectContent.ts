@@ -2,6 +2,7 @@ import {BufferGeometry, Object3D, Material, Matrix4} from 'three';
 import {ObjectUtils} from '../ObjectUtils';
 import type {CadGeometry} from './cad/CadCommon';
 import type {CsgGeometry} from './csg/CsgCommon';
+import type {QuadGeometry} from './quad/QuadGeometry';
 import type {SDFGeometry} from './sdf/SDFCommon';
 import type {TetGeometry} from './tet/TetGeometry';
 
@@ -9,6 +10,7 @@ export enum CoreObjectType {
 	THREEJS = 'Object3D',
 	CAD = 'CADObject',
 	CSG = 'CSGObject',
+	QUAD = 'QUADObject',
 	SDF = 'SDFObject',
 	TET = 'TetObject',
 }
@@ -17,6 +19,7 @@ export interface ObjectGeometryMap {
 	[CoreObjectType.THREEJS]: BufferGeometry;
 	[CoreObjectType.CAD]: CadGeometry;
 	[CoreObjectType.CSG]: CsgGeometry;
+	[CoreObjectType.QUAD]: QuadGeometry;
 	[CoreObjectType.SDF]: SDFGeometry;
 	[CoreObjectType.TET]: TetGeometry;
 }

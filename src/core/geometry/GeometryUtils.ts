@@ -1,5 +1,8 @@
 import {BufferAttribute, BufferGeometry, Object3D, Mesh} from 'three';
 import {Object3DWithGeometry} from './Group';
+import {ObjectContent, CoreObjectType, isObject3D} from './ObjectContent';
+import {QuadObject} from './quad/QuadObject';
+import {isQuadObject} from './quad/QuadCoreType';
 
 export function bufferGeometryMaxGroupEnd(geometry: BufferGeometry): number {
 	const groups = geometry.groups;
@@ -30,4 +33,13 @@ export function truncateBufferGeometry(geometry: BufferGeometry, maxCount: numbe
 
 export function object3DHasGeometry(o: Object3D): o is Object3DWithGeometry {
 	return (o as Mesh).geometry != null;
+}
+export function objectContentHasGeometry(o: ObjectContent<CoreObjectType>): o is Object3DWithGeometry | QuadObject {
+	if (isQuadObject(o)) {
+		return true;
+	}
+	if (isObject3D(o)) {
+		return (o as Mesh).geometry != null;
+	}
+	return false;
 }

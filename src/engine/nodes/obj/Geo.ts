@@ -24,6 +24,7 @@ import {TransformedParamConfig, TransformController} from './utils/TransformCont
 import {ObjTesselationParamConfig} from './utils/TesselationParams';
 import {addCADTesselationParamsCallback} from '../../../core/geometry/cad/utils/TesselationParamsConfig';
 import {addCSGTesselationParamsCallback} from '../../../core/geometry/csg/utils/TesselationParamsConfig';
+import {addQUADTesselationParamsCallback} from '../../../core/geometry/quad/utils/TesselationParamsConfig';
 // import {addSDFTesselationParamsCallback} from '../../../core/geometry/sdf/utils/TesselationParamsConfig';
 import {addTetTesselationParamsCallback} from '../../../core/geometry/tet/utils/TesselationParamsConfig';
 
@@ -81,6 +82,7 @@ export class GeoObjNode extends TypedObjNode<Group, GeoObjParamConfig> {
 		};
 		addCADTesselationParamsCallback(this, _updateSpecializedChildren);
 		addCSGTesselationParamsCallback(this, _updateSpecializedChildren);
+		addQUADTesselationParamsCallback(this, _updateSpecializedChildren);
 		// addSDFTesselationParamsCallback(this, _updateSpecializedChildren);
 		addTetTesselationParamsCallback(this, _updateSpecializedChildren);
 	}

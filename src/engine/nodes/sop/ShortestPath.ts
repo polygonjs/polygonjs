@@ -12,7 +12,7 @@ import {CoreMask} from '../../../core/geometry/Mask';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 import {Node, Edge, Graph, AStar, HeuristicPolicy} from '../../../core/thirdParty/yuka/yuka';
 import {Attribute} from '../../../core/geometry/Attribute';
-import {Number2} from '../../index_all';
+import {Number2} from '../../../types/GlobalTypes';
 import {ObjectType} from '../../../core/geometry/Constant';
 const _v0 = new Vector3();
 const _v1 = new Vector3();

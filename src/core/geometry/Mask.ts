@@ -1,13 +1,14 @@
-import {Object3D} from 'three';
+import type {Object3D} from 'three';
 import {ArrayUtils} from '../ArrayUtils';
 import {stringMatchMask} from '../String';
 import {CoreType} from '../Type';
 import {CorePath} from './CorePath';
-import {CoreGroup} from './Group';
+import type {CoreGroup} from './Group';
 import {BaseCoreObject} from './_BaseObject';
-import {CoreObject} from './Object';
+import type {CoreObject} from './Object';
 import {CoreObjectType, ObjectContent} from './ObjectContent';
 import {coreObjectInstanceFactory} from './CoreObjectFactory';
+import type {QuadObject} from './quad/QuadObject';
 interface GroupOptions {
 	group: string;
 }
@@ -95,6 +96,11 @@ function filterCoreObjects<T extends CoreObjectType>(
 export function filterThreejsObjects(coreGroup: CoreGroup, options: CoreMaskFilterOptions) {
 	return filterObjectsFromCoreGroup(coreGroup, options, coreGroup.threejsCoreObjects()) as Object3D[];
 }
+export function filterThreejsOrQuadObjects(coreGroup: CoreGroup, options: CoreMaskFilterOptions) {
+	return filterObjectsFromCoreGroup(coreGroup, options, coreGroup.threejsOrQuadCoreObjects()) as Array<
+		Object3D | QuadObject
+	>;
+}
 export function filterObjectsWithGroup(coreGroup: CoreGroup, options: GroupOptions) {
 	return filterObjectsFromCoreGroup(coreGroup, {
 		group: options.group,
@@ -102,6 +108,11 @@ export function filterObjectsWithGroup(coreGroup: CoreGroup, options: GroupOptio
 }
 export function filterThreejsObjectsWithGroup(coreGroup: CoreGroup, options: GroupOptions) {
 	return filterThreejsObjects(coreGroup, {
+		group: options.group,
+	});
+}
+export function filterThreejsOrQuadObjectsWithGroup(coreGroup: CoreGroup, options: GroupOptions) {
+	return filterThreejsOrQuadObjects(coreGroup, {
 		group: options.group,
 	});
 }

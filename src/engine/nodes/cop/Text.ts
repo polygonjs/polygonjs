@@ -13,7 +13,7 @@ import {EXTENSIONS_BY_NODE_TYPE_BY_CONTEXT} from '../../../core/loader/FileExten
 import {CopType} from '../../poly/registers/nodes/types/Cop';
 import {NodeContext} from '../../poly/NodeContext';
 import {loadAndUseFont} from '../../../core/Text';
-import {sanitizeName} from '../../index_all';
+import {sanitizeName} from '../../../core/String';
 
 const _v2 = new Vector2();
 

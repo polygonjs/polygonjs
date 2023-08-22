@@ -33,9 +33,10 @@ import {BufferAttribute, BufferGeometry, Color, Vector2, Vector3, Vector4} from 
 import {JsConnectionPointComponentsCountMap, JsConnectionPointType} from '../utils/io/connections/Js';
 import {logBlue as _logBlue} from '../../../core/logger/Console';
 import {PointBuilderEvaluator} from '../js/code/assemblers/pointBuilder/PointBuilderEvaluator';
-import {filterThreejsObjectsWithGroup} from '../../../core/geometry/Mask';
-import {object3DHasGeometry} from '../../../core/geometry/GeometryUtils';
+import {filterThreejsOrQuadObjectsWithGroup, filterThreejsObjectsWithGroup} from '../../../core/geometry/Mask';
+import {objectContentHasGeometry, object3DHasGeometry} from '../../../core/geometry/GeometryUtils';
 import {CoreGeometry} from '../../../core/geometry/Geometry';
+import {QuadObject} from '../../../core/geometry/quad/QuadObject';
 
 type PointFunction = Function; //(object:Object3D)=>Object3D
 type AttributeItem = boolean | number | string | Color | Vector2 | Vector3 | Vector4;
@@ -128,13 +129,17 @@ export abstract class BasePointBuilderSopNode<P extends BasePointBuilderSopParam
 	}
 
 	protected abstract _processObject(
-		inputObject: Object3DWithGeometry,
+		inputObject: Object3DWithGeometry | QuadObject,
 		objnum: number,
 		evaluator: PointBuilderEvaluator
 	): void;
 
-	private _getObjects(coreGroup: CoreGroup): Object3DWithGeometry[] {
-		return filterThreejsObjectsWithGroup(coreGroup, this.pv).filter(object3DHasGeometry);
+	private _getObjects(coreGroup: CoreGroup) {
+		if (0) {
+			return filterThreejsOrQuadObjectsWithGroup(coreGroup, this.pv).filter(objectContentHasGeometry);
+		} else {
+			return filterThreejsObjectsWithGroup(coreGroup, this.pv).filter(object3DHasGeometry);
+		}
 	}
 	protected _resetRequiredAttributes() {
 		this._attributesDict.clear();

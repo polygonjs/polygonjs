@@ -25,25 +25,42 @@ export class CoreGeometryOperationHexagon {
 					if (y >= 1) {
 						if (x == 0 || x == stepsCount.x - 1) {
 							if (x == 0) {
-								indices.push(
-									x + 1 + (y - 1) * stepsCount.x,
-									x + y * stepsCount.x,
-									x + (y - 1) * stepsCount.x
-								);
+								// indices.push(
+								// 	x + 1 + (y - 1) * stepsCount.x,
+								// 	x + y * stepsCount.x,
+								// 	x + (y - 1) * stepsCount.x
+								// );
 							} else {
+								// indices.push(
+								// 	x + y * stepsCount.x,
+								// 	x - 1 + y * stepsCount.x,
+								// 	x + (y - 1) * stepsCount.x
+								// );
+							}
+						} else {
+							if (y % 2 == 0) {
 								indices.push(
 									x + y * stepsCount.x,
 									x - 1 + y * stepsCount.x,
 									x + (y - 1) * stepsCount.x
 								);
+								indices.push(
+									x + y * stepsCount.x,
+									x + (y - 1) * stepsCount.x,
+									x + 1 + (y - 1) * stepsCount.x
+								);
+							} else {
+								indices.push(
+									x + (y - 1) * stepsCount.x,
+									x + y * stepsCount.x,
+									x - 1 + (y - 1) * stepsCount.x
+								);
+								indices.push(
+									x + 1 + y * stepsCount.x,
+									x + y * stepsCount.x,
+									x + (y - 1) * stepsCount.x
+								);
 							}
-						} else {
-							indices.push(x + y * stepsCount.x, x - 1 + y * stepsCount.x, x + (y - 1) * stepsCount.x);
-							indices.push(
-								x + y * stepsCount.x,
-								x + (y - 1) * stepsCount.x,
-								x + 1 + (y - 1) * stepsCount.x
-							);
 						}
 					}
 				}

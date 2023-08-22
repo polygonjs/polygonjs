@@ -3,11 +3,13 @@ import {CoreGroup} from '../../core/geometry/Group';
 import {BaseSopNodeType} from '../nodes/sop/_Base';
 import type {CSGOBJTesselationParams} from '../../core/geometry/csg/CsgCommon';
 import type {CADOBJTesselationParams} from '../../core/geometry/cad/CadCommon';
+import type {QUADOBJTesselationParams} from '../../core/geometry/quad/QuadCommon';
 import type {TetOBJTesselationParams} from '../../core/geometry/tet/TetCommon';
 // import type {SDFOBJTesselationParams} from '../../core/geometry/sdf/SDFCommon';
 interface Params
 	extends CSGOBJTesselationParams,
-		CADOBJTesselationParams /*, SDFOBJTesselationParams*/,
+		CADOBJTesselationParams,
+		QUADOBJTesselationParams /*, SDFOBJTesselationParams*/,
 		TetOBJTesselationParams {}
 
 export type SpecializedChildrenHook = (

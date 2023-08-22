@@ -169,10 +169,11 @@ export const CATEGORY_SOP = {
 	PHYSICS: 'physics',
 	PRIMITIVES_2D: 'primitives 2D',
 	PRIMITIVES: 'primitives 3D',
+	QUAD: 'QUAD',
 	RENDER: 'render',
 	SDF: 'SDF',
 	SUBNET: 'subnet',
-	TET: 'tet',
+	TET: 'TET',
 	WEBXR: 'webXR',
 };
 export const CATEGORY_POST = {

@@ -145,6 +145,11 @@ export enum SopType {
 	POINT_BUILDER = 'pointBuilder',
 	POLAR_TRANSFORM = 'polarTransform',
 	POLYWIRE = 'polywire',
+	//
+	QUAD_PLANE = 'QuadPlane',
+	QUAD_TRIANGULATE = 'QuadTriangulate',
+	QUADRANGULATE = 'quadrangulate',
+	//
 	RAY = 'ray',
 	REFLECTOR = 'reflector',
 	RING = 'ring',

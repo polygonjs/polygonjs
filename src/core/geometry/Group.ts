@@ -29,6 +29,10 @@ import {object3DHasGeometry} from './GeometryUtils';
 import {isTetObject} from './tet/TetCoreType';
 import {TetObject} from './tet/TetObject';
 //
+// QUAD
+import type {QuadObject} from './quad/QuadObject';
+import {isQuadObject, isQuadOrThreejsObject} from './quad/QuadCoreType';
+//
 // SDF
 // import type {SDFObjectType} from './sdf/SDFCommon';
 // import {SDF_OBJECT_TYPES_SET} from './sdf/SDFCommon';
@@ -188,6 +192,24 @@ export class CoreGroup extends CoreEntity {
 	}
 	csgCoreObjects() {
 		return this.csgObjects()?.map((o, i) => coreObjectInstanceFactory(o, i));
+	}
+	//
+	//
+	// QUAD OBJECTS
+	//
+	//
+	quadObjects() {
+		const list = this._allObjects?.filter(isQuadObject) || undefined;
+		return list as QuadObject[] | undefined;
+	}
+	quadCoreObjects() {
+		return this.quadObjects()?.map((o, i) => coreObjectInstanceFactory(o, i));
+	}
+	threejsOrQuadObjects(): Array<Object3D | QuadObject> {
+		return (this._allObjects ? this._allObjects.filter(isQuadOrThreejsObject) : []) as Array<Object3D | QuadObject>;
+	}
+	threejsOrQuadCoreObjects() {
+		return this.threejsOrQuadObjects().map((o, i) => coreObjectInstanceFactory(o, i));
 	}
 	//
 	//

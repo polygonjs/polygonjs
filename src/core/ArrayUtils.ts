@@ -1,6 +1,7 @@
 import {MapUtils} from './MapUtils';
 import {SetUtils} from './SetUtils';
 import {CoreType} from './Type';
+import {randFloat} from './math/_Module';
 
 export function range(start: number, end?: number, step: number = 1): number[] {
 	if (end == null) {
@@ -38,6 +39,9 @@ export function arrayUniq<T>(array: Array<T>): Array<T> {
 	// });
 
 	// return newArray;
+}
+export function sample<T>(array: Array<T>, seed: number): T | undefined {
+	return array[Math.floor(randFloat(seed) * array.length)];
 }
 
 export class ArrayUtils {
