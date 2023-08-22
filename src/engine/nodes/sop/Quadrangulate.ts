@@ -204,6 +204,29 @@ export class QuadrangulateSopNode extends QuadSopNode<QuadrangulateSopParamsConf
 			graph.addTriangle(_v3.toArray() as Number3);
 		}
 
+		const edgeCenterIndexByEdgeIndices: Map<number, Map<number, number>> = new Map();
+		const _findOrCreateEdgeCenterIndex = (i0: number, i1: number) => {
+			const key0 = i0 < i1 ? i0 : i1;
+			const key1 = i0 < i1 ? i1 : i0;
+			let edgeCenterIndexByEdgeIndex = edgeCenterIndexByEdgeIndices.get(key0);
+			if (!edgeCenterIndexByEdgeIndex) {
+				edgeCenterIndexByEdgeIndex = new Map();
+				edgeCenterIndexByEdgeIndices.set(key0, edgeCenterIndexByEdgeIndex);
+			}
+			let edgeCenterIndex = edgeCenterIndexByEdgeIndex.get(key1);
+			if (edgeCenterIndex == null) {
+				_p0.fromArray(newPositionArray, i0 * 3);
+				_p1.fromArray(newPositionArray, i1 * 3);
+				// add edge
+				_v3.copy(_p0).add(_p1).multiplyScalar(0.5);
+				edgeCenterIndex = newPositionArray.length / 3;
+				_v3.toArray(newPositionArray, newPositionArray.length);
+
+				edgeCenterIndexByEdgeIndex.set(key1, edgeCenterIndex);
+			}
+			return edgeCenterIndex;
+		};
+
 		let quadsCount = 0;
 		const _completeQuadObject = () => {
 			// if non regular, we also need to add the remaining triangles
@@ -221,18 +244,22 @@ export class QuadrangulateSopNode extends QuadSopNode<QuadrangulateSopParamsConf
 					_v3.copy(_p0).add(_p1).add(_p2).divideScalar(3);
 					const iCenter = newPositionArray.length / 3;
 					_v3.toArray(newPositionArray, newPositionArray.length);
+					// add edge centers
+					const i01 = _findOrCreateEdgeCenterIndex(i0, i1);
+					const i12 = _findOrCreateEdgeCenterIndex(i1, i2);
+					const i20 = _findOrCreateEdgeCenterIndex(i2, i0);
 					// add edge 0-1
-					_v3.copy(_p0).add(_p1).multiplyScalar(0.5);
-					const i01 = newPositionArray.length / 3;
-					_v3.toArray(newPositionArray, newPositionArray.length);
+					// _v3.copy(_p0).add(_p1).multiplyScalar(0.5);
+					// const i01 = newPositionArray.length / 3;
+					// _v3.toArray(newPositionArray, newPositionArray.length);
 					// add edge 1-2
-					_v3.copy(_p1).add(_p2).multiplyScalar(0.5);
-					const i12 = newPositionArray.length / 3;
-					_v3.toArray(newPositionArray, newPositionArray.length);
+					// _v3.copy(_p1).add(_p2).multiplyScalar(0.5);
+					// const i12 = newPositionArray.length / 3;
+					// _v3.toArray(newPositionArray, newPositionArray.length);
 					// add edge 2-0
-					_v3.copy(_p2).add(_p0).multiplyScalar(0.5);
-					const i20 = newPositionArray.length / 3;
-					_v3.toArray(newPositionArray, newPositionArray.length);
+					// _v3.copy(_p2).add(_p0).multiplyScalar(0.5);
+					// const i20 = newPositionArray.length / 3;
+					// _v3.toArray(newPositionArray, newPositionArray.length);
 
 					// add 3 quads
 					quadIndices.push(i0, i01, iCenter, i20);
@@ -299,22 +326,26 @@ export class QuadrangulateSopNode extends QuadSopNode<QuadrangulateSopParamsConf
 				_v3.copy(_p0).add(_p1).add(_p2).add(_p3).multiplyScalar(0.25);
 				const iCenter = newPositionArray.length / 3;
 				_v3.toArray(newPositionArray, newPositionArray.length);
-				// add edge 0-1
-				_v3.copy(_p0).add(_p1).multiplyScalar(0.5);
-				const i01 = newPositionArray.length / 3;
-				_v3.toArray(newPositionArray, newPositionArray.length);
+				// add edge centers
+				const i01 = _findOrCreateEdgeCenterIndex(i0, i1);
+				const i12 = _findOrCreateEdgeCenterIndex(i1, i2);
+				const i23 = _findOrCreateEdgeCenterIndex(i2, i3);
+				const i30 = _findOrCreateEdgeCenterIndex(i3, i0);
+				// _v3.copy(_p0).add(_p1).multiplyScalar(0.5);
+				// const i01 = newPositionArray.length / 3;
+				// _v3.toArray(newPositionArray, newPositionArray.length);
 				// add edge 1-2
-				_v3.copy(_p1).add(_p2).multiplyScalar(0.5);
-				const i12 = newPositionArray.length / 3;
-				_v3.toArray(newPositionArray, newPositionArray.length);
+				// _v3.copy(_p1).add(_p2).multiplyScalar(0.5);
+				// const i12 = newPositionArray.length / 3;
+				// _v3.toArray(newPositionArray, newPositionArray.length);
 				// add edge 2-3
-				_v3.copy(_p2).add(_p3).multiplyScalar(0.5);
-				const i23 = newPositionArray.length / 3;
-				_v3.toArray(newPositionArray, newPositionArray.length);
+				// _v3.copy(_p2).add(_p3).multiplyScalar(0.5);
+				// const i23 = newPositionArray.length / 3;
+				// _v3.toArray(newPositionArray, newPositionArray.length);
 				// add edge 3-0
-				_v3.copy(_p3).add(_p0).multiplyScalar(0.5);
-				const i30 = newPositionArray.length / 3;
-				_v3.toArray(newPositionArray, newPositionArray.length);
+				// _v3.copy(_p3).add(_p0).multiplyScalar(0.5);
+				// const i30 = newPositionArray.length / 3;
+				// _v3.toArray(newPositionArray, newPositionArray.length);
 				// add 4 quads
 				quadIndices.push(i0, i01, iCenter, i30);
 				quadIndices.push(i1, i12, iCenter, i01);

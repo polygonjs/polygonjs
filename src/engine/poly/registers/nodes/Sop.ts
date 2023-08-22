@@ -232,9 +232,12 @@ import {PointSopNode} from '../../../nodes/sop/Point';
 import {PointLightSopNode} from '../../../nodes/sop/PointLight';
 import {PolarTransformSopNode} from '../../../nodes/sop/PolarTransform';
 import {PolywireSopNode} from '../../../nodes/sop/Polywire';
+// QUAD
 import {QuadPlaneSopNode} from '../../../nodes/sop/QuadPlane';
+import {QuadSmoothSopNode} from '../../../nodes/sop/QuadSmooth';
 import {QuadTriangulateSopNode} from '../../../nodes/sop/QuadTriangulate';
 import {QuadrangulateSopNode} from '../../../nodes/sop/Quadrangulate';
+//
 import {RaySopNode} from '../../../nodes/sop/Ray';
 import {ReflectorSopNode} from '../../../nodes/sop/Reflector';
 import {ResampleSopNode} from '../../../nodes/sop/Resample';
@@ -540,9 +543,12 @@ export interface GeoNodeChildrenMap {
 	polarTransform: PolarTransformSopNode;
 	polywire: PolywireSopNode;
 	pointBuilder: PointBuilderSopNode;
+	// QUAD
 	quadPlane: QuadPlaneSopNode;
-	QuadTriangulate: QuadTriangulateSopNode;
+	quadSmooth: QuadSmoothSopNode;
+	quadTriangulate: QuadTriangulateSopNode;
 	quadrangulate: QuadrangulateSopNode;
+	//
 	ray: RaySopNode;
 	reflector: ReflectorSopNode;
 	resample: ResampleSopNode;
@@ -1087,6 +1093,7 @@ export class SopRegister {
 		poly.registerNode(PolywireSopNode, CATEGORY_SOP.MODIFIER);
 		// QUAD
 		poly.registerNode(QuadPlaneSopNode, CATEGORY_SOP.QUAD);
+		poly.registerNode(QuadSmoothSopNode, CATEGORY_SOP.QUAD);
 		poly.registerNode(QuadTriangulateSopNode, CATEGORY_SOP.QUAD);
 		poly.registerNode(QuadrangulateSopNode, CATEGORY_SOP.QUAD);
 		//

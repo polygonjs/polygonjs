@@ -147,8 +147,9 @@ export enum SopType {
 	POLYWIRE = 'polywire',
 	//
 	QUAD_PLANE = 'QuadPlane',
+	QUAD_SMOOTH = 'QuadSmooth',
 	QUAD_TRIANGULATE = 'QuadTriangulate',
-	QUADRANGULATE = 'quadrangulate',
+	QUADRANGULATE = 'Quadrangulate',
 	//
 	RAY = 'ray',
 	REFLECTOR = 'reflector',
