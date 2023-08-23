@@ -145,6 +145,7 @@ import {DecalSopNode} from '../../../nodes/sop/Decal';
 import {DecomposeSopNode} from '../../../nodes/sop/Decompose';
 import {DelaySopNode} from '../../../nodes/sop/Delay';
 import {DeleteSopNode} from '../../../nodes/sop/Delete';
+import {DeleteByNameSopNode} from '../../../nodes/sop/DeleteByName';
 import {DirectionalLightSopNode} from '../../../nodes/sop/DirectionalLight';
 import {DrawRangeSopNode} from '../../../nodes/sop/DrawRange';
 import {EmptyObjectSopNode} from '../../../nodes/sop/EmptyObject';
@@ -301,6 +302,10 @@ import {UvProjectSopNode} from '../../../nodes/sop/UvProject';
 import {UvTransformSopNode} from '../../../nodes/sop/UvTransform';
 import {UvUnwrapSopNode} from '../../../nodes/sop/UvUnwrap';
 import {WebXRAREstimatedLightSopNode} from '../../../nodes/sop/WebXRAREstimatedLight';
+import {WFCTileConnectSopNode} from '../../../nodes/sop/WFCTileConnect';
+import {WFCTileConnectDebugSopNode} from '../../../nodes/sop/WFCTileConnectDebug';
+import {WFCTilePropertiesSopNode} from '../../../nodes/sop/WFCTileProperties';
+import {WFCTileTransformSopNode} from '../../../nodes/sop/WFCTileTransform';
 // networks
 import {ActorsNetworkSopNode} from '../../../nodes/sop/ActorsNetwork';
 import {AnimationsNetworkSopNode} from '../../../nodes/sop/AnimationsNetwork';
@@ -455,6 +460,7 @@ export interface GeoNodeChildrenMap {
 	decompose: DecomposeSopNode;
 	delay: DelaySopNode;
 	delete: DeleteSopNode;
+	deleteByName: DeleteByNameSopNode;
 	directionalLight: DirectionalLightSopNode;
 	drawRange: DrawRangeSopNode;
 	emptyObject: EmptyObjectSopNode;
@@ -612,6 +618,10 @@ export interface GeoNodeChildrenMap {
 	uvTransform: UvTransformSopNode;
 	uvUnwrap: UvUnwrapSopNode;
 	webXRAREstimatedLight: WebXRAREstimatedLightSopNode;
+	WFCTileConnect: WFCTileConnectSopNode;
+	WFCTileConnectDebug: WFCTileConnectDebugSopNode;
+	WFCTileProperties: WFCTilePropertiesSopNode;
+	WFCTileTransform: WFCTileTransformSopNode;
 
 	// networks
 	actorsNetwork: ActorsNetworkSopNode;
@@ -670,6 +680,7 @@ import {CubeCameraSopOperation} from '../../../operations/sop/CubeCamera';
 import {CurveFromPointsSopOperation} from '../../../operations/sop/CurveFromPoints';
 import {CurveGetPointSopOperation} from '../../../operations/sop/CurveGetPoint';
 import {DecalSopOperation} from '../../../operations/sop/Decal';
+import {DeleteByNameSopOperation} from '../../../operations/sop/DeleteByName';
 import {DirectionalLightSopOperation} from '../../../operations/sop/DirectionalLight';
 import {EmptyObjectSopOperation} from '../../../operations/sop/EmptyObject';
 import {File3DSSopOperation} from '../../../operations/sop/File3DS';
@@ -790,6 +801,7 @@ export class SopRegister {
 		poly.registerOperation(CurveFromPointsSopOperation);
 		poly.registerOperation(CurveGetPointSopOperation);
 		poly.registerOperation(DecalSopOperation);
+		poly.registerOperation(DeleteByNameSopOperation);
 		poly.registerOperation(DirectionalLightSopOperation);
 		poly.registerOperation(EmptyObjectSopOperation);
 		poly.registerOperation(File3DSSopOperation);
@@ -1005,6 +1017,7 @@ export class SopRegister {
 		poly.registerNode(DecomposeSopNode, CATEGORY_SOP.MISC);
 		poly.registerNode(DelaySopNode, CATEGORY_SOP.MISC);
 		poly.registerNode(DeleteSopNode, CATEGORY_SOP.MODIFIER);
+		poly.registerNode(DeleteByNameSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(DirectionalLightSopNode, CATEGORY_SOP.LIGHTS);
 		poly.registerNode(DrawRangeSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(EmptyObjectSopNode, CATEGORY_SOP.PRIMITIVES);
@@ -1174,6 +1187,11 @@ export class SopRegister {
 		poly.registerNode(UvTransformSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(UvUnwrapSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(WebXRAREstimatedLightSopNode, CATEGORY_SOP.WEBXR);
+		poly.registerNode(WFCTileConnectSopNode, CATEGORY_SOP.WFC);
+		poly.registerNode(WFCTileConnectDebugSopNode, CATEGORY_SOP.WFC);
+		poly.registerNode(WFCTilePropertiesSopNode, CATEGORY_SOP.WFC);
+		poly.registerNode(WFCTileTransformSopNode, CATEGORY_SOP.WFC);
+
 		// networks
 		poly.registerNode(ActorsNetworkSopNode, CATEGORY_SOP.NETWORK);
 		poly.registerNode(AnimationsNetworkSopNode, CATEGORY_SOP.NETWORK);

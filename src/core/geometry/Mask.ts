@@ -12,13 +12,18 @@ import type {QuadObject} from './quad/QuadObject';
 interface GroupOptions {
 	group: string;
 }
-interface CoreMaskFilterOptions extends GroupOptions {}
-function filterObjectsFromCoreGroup<T extends CoreObjectType>(
+export interface CoreMaskFilterOptions extends GroupOptions {
+	invert?: boolean;
+}
+export function filterObjectsFromCoreGroup<T extends CoreObjectType>(
 	coreGroup: CoreGroup,
 	options: CoreMaskFilterOptions,
 	coreObjects?: BaseCoreObject<T>[]
 ): ObjectContent<CoreObjectType>[] {
-	return filterCoreObjects(options.group, coreObjects || coreGroup.allCoreObjects()).map((o) => o.object());
+	return filterCoreObjects(options.group, coreObjects || coreGroup.allCoreObjects()).map(
+		(o) => o.object(),
+		options.invert
+	);
 }
 export function filterCoreObjectsFromCoreGroup<T extends CoreObjectType>(
 	coreGroup: CoreGroup,
@@ -34,8 +39,8 @@ export function filterThreejsCoreObjectsFromCoreGroup(
 ): CoreObject[] {
 	return filterCoreObjects(options.group, coreObjects || coreGroup.threejsCoreObjects()) as CoreObject[];
 }
-function isInGroup<T extends CoreObjectType>(groupString: string, coreObject: BaseCoreObject<T>) {
-	const group = groupString.trim();
+export function isInGroup<T extends CoreObjectType>(unSanitizedGroupString: string, coreObject: BaseCoreObject<T>) {
+	const group = unSanitizedGroupString.trim();
 	if (group.length == 0) {
 		return true;
 	}
@@ -43,7 +48,7 @@ function isInGroup<T extends CoreObjectType>(groupString: string, coreObject: Ba
 	if (coreObject.object.name == group) {
 		return true;
 	}
-	if (stringMatchMask(groupString, coreObject.name())) {
+	if (stringMatchMask(group, coreObject.name())) {
 		return true;
 	}
 

@@ -175,6 +175,7 @@ export const CATEGORY_SOP = {
 	SUBNET: 'subnet',
 	TET: 'TET',
 	WEBXR: 'webXR',
+	WFC: 'WFC',
 };
 export const CATEGORY_POST = {
 	ADVANCED: 'advanced',

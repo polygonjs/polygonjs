@@ -104,6 +104,7 @@ export enum SopType {
 	DATA_URL = 'dataUrl',
 	DECAL = 'decal',
 	DELETE = 'delete',
+	DELETE_BY_NAME = 'deleteByName',
 	FACET = 'facet',
 	FUSE = 'fuse',
 	GROUND_PROJECTED_SKYBOX = 'groundProjectedSkybox',
@@ -209,6 +210,10 @@ export enum SopType {
 	UV_TRANSFORM = 'uvTransform',
 	UV_UNWRAP = 'uvUnwrap',
 	WEB_XR_AR_ESTIMATED_LIGHT = 'webXRAREstimatedLight',
+	WFC_TILE_CONNECT = 'WFCTileConnect',
+	WFC_TILE_CONNECT_DEBUG = 'WFCTileConnectDebug',
+	WFC_TILE_PROPERTIES = 'WFCTileProperties',
+	WFC_TILE_TRANSFORM = 'WFCTileTransform',
 }
 
 export enum SopTypeFile {
