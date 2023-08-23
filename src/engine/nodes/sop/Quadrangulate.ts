@@ -130,10 +130,10 @@ class TriangleEdge {
 
 class QuadrangulateSopParamsConfig extends NodeParamsConfig {
 	/** @param quadsCount */
-	quadsCount = ParamConfig.INTEGER(1, {
-		range: [0, 1000],
-		rangeLocked: [true, false],
-	});
+	// quadsCount = ParamConfig.INTEGER(1, {
+	// 	range: [0, 1000],
+	// 	rangeLocked: [true, false],
+	// });
 	/** @param regular */
 	regular = ParamConfig.BOOLEAN(1);
 	/** @param seed */
@@ -188,7 +188,7 @@ export class QuadrangulateSopNode extends QuadSopNode<QuadrangulateSopParamsConf
 		if (!positionAttribute) {
 			return;
 		}
-		const expectedQuadsCount = this.pv.quadsCount;
+		// const expectedQuadsCount = this.pv.quadsCount;
 		const regular = this.pv.regular;
 		const seed = this.pv.seed;
 
@@ -227,7 +227,7 @@ export class QuadrangulateSopNode extends QuadSopNode<QuadrangulateSopParamsConf
 			return edgeCenterIndex;
 		};
 
-		let quadsCount = 0;
+		// let quadsCount = 0;
 		const _completeQuadObject = () => {
 			// if non regular, we also need to add the remaining triangles
 			if (!regular) {
@@ -287,7 +287,7 @@ export class QuadrangulateSopNode extends QuadSopNode<QuadrangulateSopParamsConf
 
 		const edgeIds = graph.edgeIds();
 		let i = 0;
-		while (edgeIds.length > 0 && quadsCount < expectedQuadsCount) {
+		while (edgeIds.length > 0 /*&& quadsCount < expectedQuadsCount*/) {
 			i++;
 			const edgeId = regular ? _nextEdgeIdWithRegularMethod() : _nextEdgeidWithIrregularMethod(i);
 			if (edgeId == null) {
@@ -315,7 +315,7 @@ export class QuadrangulateSopNode extends QuadSopNode<QuadrangulateSopParamsConf
 			const i3 = triangle1.triangle[(triangle1UnsharedIndexIndex + 1) % 3];
 			if (regular) {
 				quadIndices.push(i0, i1, i2, i3);
-				quadsCount++;
+				// quadsCount++;
 			} else {
 				// get center and add to position
 				_p0.fromArray(newPositionArray, i0 * 3);
@@ -354,7 +354,7 @@ export class QuadrangulateSopNode extends QuadSopNode<QuadrangulateSopParamsConf
 			}
 			// we only add one quad per loop, even if not regular,
 			// as the count is too unpredictable otherwise
-			quadsCount++;
+			// quadsCount++;
 		}
 
 		return _completeQuadObject();
