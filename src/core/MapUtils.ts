@@ -5,6 +5,13 @@ export function mapFirstKey<K>(map: Map<K, any>): K | undefined {
 		return k;
 	}
 }
+export function pushOnArrayAtEntry<K, V>(map: Map<K, V[]>, key: K, newElement: V) {
+	if (map.has(key)) {
+		map.get(key)!.push(newElement);
+	} else {
+		map.set(key, [newElement]);
+	}
+}
 export class MapUtils {
 	static arrayFromValues<K, V>(map: Map<K, V>): Array<V> {
 		const array: Array<V> = [];
@@ -13,13 +20,7 @@ export class MapUtils {
 		});
 		return array;
 	}
-	static pushOnArrayAtEntry<K, V>(map: Map<K, V[]>, key: K, newElement: V) {
-		if (map.has(key)) {
-			map.get(key)!.push(newElement);
-		} else {
-			map.set(key, [newElement]);
-		}
-	}
+	static pushOnArrayAtEntry = pushOnArrayAtEntry;
 	static addToSetAtEntry<K, V>(map: Map<K, Set<V>>, key: K, newElement: V) {
 		if (map.has(key)) {
 			map.get(key)!.add(newElement);

@@ -41,16 +41,7 @@ function _convertArrayToVector(value: number[]) {
 }
 const tmpVec3 = new Vector3();
 const tmpN3: Number3 = [0, 0, 0];
-// interface SkinnedMeshWithisSkinnedMesh extends SkinnedMesh {
-// 	readonly isSkinnedMesh: boolean;
-// }
 
-// export type PositionStaticMethod<T extends CoreObjectType> = (object: ObjectContent<T>, target: Vector3)=>void
-// function DEFAULT_POSITION_STATIC_METHOD<T extends CoreObjectType>(object: ObjectContent<T>, target: Vector3) {
-// 	target.copy(ORIGIN);
-// }
-
-// export type CoreObjectContent = Object3D|CadObject
 type OnAttribChange<T extends ParamConvertibleJsType> = (
 	newValue: JsIConnectionPointTypeToDataTypeMap[T],
 	oldValue: JsIConnectionPointTypeToDataTypeMap[T]

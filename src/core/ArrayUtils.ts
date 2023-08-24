@@ -40,8 +40,14 @@ export function arrayUniq<T>(array: Array<T>): Array<T> {
 
 	// return newArray;
 }
+export function sampleIndex(array: Array<any>, seed: number): number {
+	return Math.floor(randFloat(seed) * array.length);
+}
 export function sample<T>(array: Array<T>, seed: number): T | undefined {
-	return array[Math.floor(randFloat(seed) * array.length)];
+	return array[sampleIndex(array, seed)];
+}
+export function spliceSample<T>(array: Array<T>, seed: number): T | undefined {
+	return array.splice(sampleIndex(array, seed), 1)[0];
 }
 
 export class ArrayUtils {

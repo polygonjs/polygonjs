@@ -61,6 +61,7 @@ export const FUNCTION_NAME_BY_FILE_NAME: Record<string, string[]> = {
 	CSSObject: ['setCSSObjectClass'],
 	Curve: ['catmullRomCurve3GetPoint'],
 	Debug: ['debug'],
+	Deform: ['cubeLatticeDeform'],
 	Divide: ['divideNumber', 'divideVectorNumber'],
 	Easing: [
 		'easeI2',

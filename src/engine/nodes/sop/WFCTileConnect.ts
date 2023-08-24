@@ -32,7 +32,6 @@ export class WFCTileConnectSopNode extends TypedSopNode<WFCTileConnectSopParamsC
 		const inputObjects = coreGroup0.allObjects();
 		const templateObjects = coreGroup1.threejsObjects();
 
-		console.log(inputObjects, templateObjects);
 		const templateObjectsInGrid: Object3D[][][] = []; // x/y/z
 		const _addTemplateObject = (templateObject: Object3D) => {
 			const x = Math.round(templateObject.position.x);
@@ -63,13 +62,7 @@ export class WFCTileConnectSopNode extends TypedSopNode<WFCTileConnectSopParamsC
 			if (!neighbour) {
 				return;
 			}
-			console.log(
-				'found neighbour',
-				currentObject.name,
-				neighbour.name,
-				currentObject.rotation.y,
-				neighbour.rotation.y
-			);
+
 			const id0 = CoreWFCTileAttribute.getTileId(currentObject);
 			const id1 = CoreWFCTileAttribute.getTileId(neighbour);
 			const currentObjectSideUnrotated: WFCTileSide =

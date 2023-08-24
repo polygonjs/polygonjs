@@ -13,120 +13,15 @@ import {QuadPointAttribute} from '../../../core/geometry/quad/QuadPointAttribute
 import {Attribute} from '../../../core/geometry/Attribute';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {QuadObject} from '../../../core/geometry/quad/QuadObject';
-import {Number2, Number3} from '../../../types/GlobalTypes';
-import {setToArray} from '../../../core/SetUtils';
+import {Number3} from '../../../types/GlobalTypes';
 import {sample} from '../../../core/ArrayUtils';
+import {TriangleGraph} from '../../../core/graph/triangle/TriangleGraph';
 
 const _v3 = new Vector3();
 const _p0 = new Vector3();
 const _p1 = new Vector3();
 const _p2 = new Vector3();
 const _p3 = new Vector3();
-const EDGES: [Number2, Number2, Number2] = [
-	[0, 1],
-	[1, 2],
-	[2, 0],
-];
-function sortNumber2(n: Number2): Number2 {
-	return n[0] < n[1] ? n : [n[1], n[0]];
-}
-function _edgeId(edge: Number2): string {
-	return sortNumber2(edge).join('-');
-}
-function triangleEdge(triangle: Number3, edgeIndex: number): Number2 {
-	const edgeIndices = EDGES[edgeIndex];
-	const edge: Number2 = [triangle[edgeIndices[0]], triangle[edgeIndices[1]]];
-	return edge;
-}
-
-class TriangleNode {
-	constructor(public readonly id: number, public readonly triangle: Number3) {}
-}
-class TriangleGraph {
-	private _nextTriangleId = -1;
-	private _trianglesById: Map<number, TriangleNode> = new Map();
-	private _edgesByTriangleId: Map<number, TriangleEdge[]> = new Map();
-	private _edgesById: Map<string, TriangleEdge> = new Map();
-	private _edgeIds: Set<string> = new Set();
-	addTriangle(triangle: Number3): TriangleNode {
-		this._nextTriangleId++;
-		const triangleId = this._nextTriangleId;
-		const triangleNode = new TriangleNode(triangleId, triangle);
-		this._trianglesById.set(triangleId, triangleNode);
-
-		// add edges
-		const edges: TriangleEdge[] = [];
-		for (let i = 0; i < 3; i++) {
-			const edgeIndices = triangleEdge(triangle, i);
-			const edgeId = _edgeId(edgeIndices);
-			let edge = this._edgesById.get(edgeId);
-			if (!edge) {
-				edge = new TriangleEdge(edgeId, edgeIndices);
-				this._edgesById.set(edgeId, edge);
-			}
-			edge.addTriangle(triangleId);
-			edges.push(edge);
-			this._edgeIds.add(edgeId);
-		}
-		this._edgesByTriangleId.set(triangleId, edges);
-
-		return triangleNode;
-	}
-	removeTriangle(triangleId: number) {
-		const triangleNode = this._trianglesById.get(triangleId);
-		if (!triangleNode) {
-			return;
-		}
-		this._trianglesById.delete(triangleId);
-		const edges = this._edgesByTriangleId.get(triangleId);
-		if (!edges) {
-			return;
-		}
-		for (let edge of edges) {
-			const index = edge.triangleIds.indexOf(triangleId);
-			if (index >= 0) {
-				edge.triangleIds.splice(index, 1);
-			}
-			this._edgesById.delete(edge.id);
-			this._edgeIds.delete(edge.id);
-		}
-		this._edgesByTriangleId.delete(triangleId);
-	}
-	traverseTriangle(callback: (triangle: TriangleNode) => void) {
-		this._trianglesById.forEach((triangle) => {
-			callback(triangle);
-		});
-	}
-	firstNeighbourId(triangleId: number): number | undefined {
-		const edges = this._edgesByTriangleId.get(triangleId);
-		if (!edges) {
-			return;
-		}
-		for (let edge of edges) {
-			for (let triangleId of edge.triangleIds) {
-				if (triangleId != triangleId) {
-					return triangleId;
-				}
-			}
-		}
-	}
-	triangle(triangleId: number) {
-		return this._trianglesById.get(triangleId);
-	}
-	edgeIds() {
-		return setToArray(this._edgeIds);
-	}
-	edge(edgeId: string) {
-		return this._edgesById.get(edgeId);
-	}
-}
-class TriangleEdge {
-	public triangleIds: number[] = [];
-	constructor(public readonly id: string, public readonly indices: Number2) {}
-	addTriangle(triangleId: number) {
-		this.triangleIds.push(triangleId);
-	}
-}
 
 class QuadrangulateSopParamsConfig extends NodeParamsConfig {
 	/** @param quadsCount */
@@ -231,7 +126,7 @@ export class QuadrangulateSopNode extends QuadSopNode<QuadrangulateSopParamsConf
 		const _completeQuadObject = () => {
 			// if non regular, we also need to add the remaining triangles
 			if (!regular) {
-				graph.traverseTriangle((triangle) => {
+				graph.traverseTriangles((triangle) => {
 					// quadIndices.push(...triangle.triangle);
 					const i0 = triangle.triangle[0];
 					const i1 = triangle.triangle[1];

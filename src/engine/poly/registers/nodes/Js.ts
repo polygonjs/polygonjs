@@ -48,6 +48,7 @@ import {CrossJsNode} from '../../../nodes/js/Cross';
 import {CursorJsNode} from '../../../nodes/js/Cursor';
 import {CursorToUvJsNode} from '../../../nodes/js/CursorToUv';
 import {DebugJsNode} from '../../../nodes/js/Debug';
+import {DeformGeometryCubeLatticeJsNode} from '../../../nodes/js/DeformGeometryCubeLattice';
 import {DeleteClothConstraintJsNode} from '../../../nodes/js/DeleteClothConstraint';
 import {DeleteObjectJsNode} from '../../../nodes/js/DeleteObject';
 import {DeletePhysicsRBDJsNode} from '../../../nodes/js/DeletePhysicsRBD';
@@ -397,6 +398,7 @@ export interface JsNodeChildrenMap {
 	cursor: CursorJsNode;
 	cursorToUv: CursorToUvJsNode;
 	debug: DebugJsNode;
+	deformGeometryCubeLattice: DeformGeometryCubeLatticeJsNode;
 	deleteClothonstraint: DeleteClothConstraintJsNode;
 	deleteObject: DeleteObjectJsNode;
 	deletePhysicsRBD: DeletePhysicsRBDJsNode;
@@ -803,6 +805,7 @@ export class JsRegister {
 		poly.registerNode(CursorJsNode, CATEGORY_JS.INPUTS, ONLY_ACTOR);
 		poly.registerNode(CursorToUvJsNode, CATEGORY_JS.INPUTS);
 		poly.registerNode(DebugJsNode, CATEGORY_JS.FLOW, ONLY_ACTOR);
+		poly.registerNode(DeformGeometryCubeLatticeJsNode, CATEGORY_JS.GEOMETRY, ONLY_ACTOR);
 		poly.registerNode(DeleteClothConstraintJsNode, CATEGORY_JS.ACTION);
 		poly.registerNode(DeleteObjectJsNode, CATEGORY_JS.ACTION);
 		poly.registerNode(DeletePhysicsRBDJsNode, CATEGORY_JS.ACTION);
