@@ -4,7 +4,7 @@
  *
  */
 
-import {TRIGGER_CONNECTION_NAME} from './_Base';
+import {TRIGGER_CONNECTION_NAME, TypedJsNode} from './_Base';
 import {JsConnectionPoint, JsConnectionPointType, JS_CONNECTION_POINT_IN_NODE_DEF} from '../utils/io/connections/Js';
 import {JsType} from '../../poly/registers/nodes/types/Js';
 import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
@@ -23,12 +23,12 @@ export abstract class BaseOnObjectSwipeEventJsNode extends BaseOnObjectPointerEv
 	override eventData(): EvaluatorEventData[] {
 		return [
 			{
-				type: PointerEventType.pointerdown,
+				type: PointerEventType.touchstart,
 				emitter: this.eventEmitter(),
 				jsType: JsType.ON_OBJECT_POINTERDOWN,
 			},
 			{
-				type: PointerEventType.pointerup,
+				type: PointerEventType.touchend,
 				emitter: this.eventEmitter(),
 				jsType: JsType.ON_OBJECT_POINTERUP,
 			},
@@ -75,20 +75,25 @@ export abstract class BaseOnObjectSwipeEventJsNode extends BaseOnObjectPointerEv
 			pointsThreshold,
 			`this.${outIntersection}`
 		);
+		const swipeStarted = TypedJsNode.inputVarName(this, 'swipeStarted');
 
 		//
 		const bodyLinesOnPointerdown = `
 if(${bodyLine}){
-	this.swipeStarted = true;
+	console.log('ok A');
+	this.${swipeStarted} = true;
 	${onPointerdownCursor}.copy( ${_cursorFunc.asString()} );
 } else {
-	this.swipeStarted = false;
+	console.log('NOT ok A');
+	this.${swipeStarted} = false;
 }`;
 		const bodyLinesOnPointerup = `
-if( ${bodyLine} && this.swipeStarted ){
-	this.swipeStarted = false;
+if( ${bodyLine} && this.${swipeStarted} ){
+	console.log('ok B');
+	this.${swipeStarted} = false;
 	${onPointerupCursor}.copy( ${_cursorFunc.asString()} );
 	if( ${this._cursorComparison(onPointerdownCursor, onPointerupCursor)} ){
+		console.log('ok B 2');
 		${triggeredMethods}
 	}
 }`;
