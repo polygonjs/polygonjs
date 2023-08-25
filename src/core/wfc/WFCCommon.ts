@@ -1,4 +1,5 @@
 import {mod} from '../math/_Module';
+import {QuadHalfEdgeCardinality} from '../graph/quad/QuadGraphCommon';
 import {Vector3} from 'three';
 export interface TileCorners {
 	p0: Vector3;
@@ -8,44 +9,41 @@ export interface TileCorners {
 	height: number;
 }
 
-export enum WFCTileSide {
-	SOUTH = 's',
-	NORTH = 'n',
-	WEST = 'w',
-	EAST = 'e',
-	BOTTOM = 'b',
-	TOP = 't',
+export type WFCTileSide = 's' | 'n' | 'w' | 'e' | 'b' | 't';
+// export enum WFCLookAtSide {
+// 	SOUTH = 's',
+// 	NORTH = 'n',
+// 	WEST = 'w',
+// 	EAST = 'e',
+// }
+// export const WFC_LOOK_AT_SIDES: WFCLookAtSide[] = [
+// 	WFCLookAtSide.NORTH,
+// 	WFCLookAtSide.EAST,
+// 	WFCLookAtSide.SOUTH,
+// 	WFCLookAtSide.WEST,
+// ];
+export interface TileConfig {
+	tileId: string;
+	lookAtSide: QuadHalfEdgeCardinality;
 }
 export interface PotentialNeighbour {
 	id: string;
 	side: WFCTileSide;
 }
-export interface WFCAvailableTileNeighbours {
-	[WFCTileSide.SOUTH]: PotentialNeighbour[];
-	[WFCTileSide.NORTH]: PotentialNeighbour[];
-	[WFCTileSide.WEST]: PotentialNeighbour[];
-	[WFCTileSide.EAST]: PotentialNeighbour[];
-	[WFCTileSide.BOTTOM]: PotentialNeighbour[];
-	[WFCTileSide.TOP]: PotentialNeighbour[];
-}
+export type WFCAvailableTileNeighbours = Record<WFCTileSide, PotentialNeighbour[]>;
 export function createEmptyAvailableTileNeighbours(): WFCAvailableTileNeighbours {
 	return {
-		[WFCTileSide.SOUTH]: [],
-		[WFCTileSide.NORTH]: [],
-		[WFCTileSide.WEST]: [],
-		[WFCTileSide.EAST]: [],
-		[WFCTileSide.BOTTOM]: [],
-		[WFCTileSide.TOP]: [],
+		s: [],
+		n: [],
+		w: [],
+		e: [],
+		b: [],
+		t: [],
 	};
 }
 
-export const CLOCK_WISE_TILE_SIDES: WFCTileSide[] = [
-	WFCTileSide.NORTH,
-	WFCTileSide.EAST,
-	WFCTileSide.SOUTH,
-	WFCTileSide.WEST,
-];
-export function rotateSide(side: WFCTileSide, rotation: number): WFCTileSide {
+export const CLOCK_WISE_TILE_SIDES: WFCTileSide[] = ['n', 'e', 's', 'w'];
+export function rotatedSide(side: WFCTileSide, rotation: number): WFCTileSide {
 	const index = CLOCK_WISE_TILE_SIDES.indexOf(side);
 	return CLOCK_WISE_TILE_SIDES[(index + mod(rotation, 4)) % CLOCK_WISE_TILE_SIDES.length];
 }

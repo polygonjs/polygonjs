@@ -9,7 +9,7 @@ import {CoreGroup} from '../../../core/geometry/Group';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {Object3D, Group} from 'three';
-import {WFCTileSide, rotateSide} from '../../../core/wfc/WFCCommon';
+import {WFCTileSide, rotatedSide} from '../../../core/wfc/WFCCommon';
 import {CoreWFCConnectionAttribute, CoreWFCTileAttribute} from '../../../core/wfc/WFCAttributes';
 
 class WFCTileConnectSopParamsConfig extends NodeParamsConfig {}
@@ -66,34 +66,14 @@ export class WFCTileConnectSopNode extends TypedSopNode<WFCTileConnectSopParamsC
 			const id0 = CoreWFCTileAttribute.getTileId(currentObject);
 			const id1 = CoreWFCTileAttribute.getTileId(neighbour);
 			const currentObjectSideUnrotated: WFCTileSide =
-				xOffset < 0
-					? WFCTileSide.SOUTH
-					: xOffset > 0
-					? WFCTileSide.NORTH
-					: zOffset < 0
-					? WFCTileSide.WEST
-					: zOffset > 0
-					? WFCTileSide.EAST
-					: yOffset < 0
-					? WFCTileSide.BOTTOM
-					: WFCTileSide.TOP;
-			const currentObjectSide = rotateSide(
+				xOffset < 0 ? 's' : xOffset > 0 ? 'n' : zOffset < 0 ? 'w' : zOffset > 0 ? 'e' : yOffset < 0 ? 'b' : 't';
+			const currentObjectSide = rotatedSide(
 				currentObjectSideUnrotated,
 				Math.round(currentObject.rotation.y / (Math.PI / 2))
 			);
 			const neighbourSideUnrotated: WFCTileSide =
-				xOffset < 0
-					? WFCTileSide.NORTH
-					: xOffset > 0
-					? WFCTileSide.SOUTH
-					: zOffset < 0
-					? WFCTileSide.EAST
-					: zOffset > 0
-					? WFCTileSide.WEST
-					: yOffset < 0
-					? WFCTileSide.TOP
-					: WFCTileSide.BOTTOM;
-			const neighbourSide = rotateSide(neighbourSideUnrotated, Math.round(neighbour.rotation.y / (Math.PI / 2)));
+				xOffset < 0 ? 'n' : xOffset > 0 ? 's' : zOffset < 0 ? 'e' : zOffset > 0 ? 'w' : yOffset < 0 ? 't' : 'b';
+			const neighbourSide = rotatedSide(neighbourSideUnrotated, Math.round(neighbour.rotation.y / (Math.PI / 2)));
 			const group = new Group();
 			CoreWFCConnectionAttribute.setIsConnection(group, true);
 			CoreWFCConnectionAttribute.setId0(group, id0);

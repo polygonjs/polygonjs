@@ -10,12 +10,12 @@ import {CoreGroup} from '../../../core/geometry/Group';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {WFCSolver} from '../../../core/wfc/WFCSolver';
-import {WFCTilesCollection} from '../../../core/wfc/WFCTilesCollection';
-import {WFCGrid} from '../../../core/wfc/WFCGrid';
+import {filterTileObjects, filterConnectionObjects} from '../../../core/wfc/WFCUtils';
+import {logBlueBg} from '../../../core/logger/Console';
 
 class WFCSolverSopParamsConfig extends NodeParamsConfig {
 	/** @param iterations */
-	iterations = ParamConfig.INTEGER(1, {
+	stepsCount = ParamConfig.INTEGER(1, {
 		range: [1, 1000],
 		rangeLocked: [true, false],
 	});
@@ -48,22 +48,32 @@ export class WFCSolverSopNode extends TypedSopNode<WFCSolverSopParamsConfig> {
 		const coreGroup1 = inputCoreGroups[1];
 		const quadObjects = coreGroup0.quadObjects();
 
-		const {iterations, seed, tileHeight} = this.pv;
-		const newObjects: Object3D[] = [];
-		if (quadObjects && quadObjects.length > 0) {
-			const tileObjects = coreGroup1.threejsObjects();
-
-			const collection = new WFCTilesCollection(tileObjects);
-			for (let quadObject of quadObjects) {
-				const grid = new WFCGrid(quadObject);
-				const solver = new WFCSolver(grid, collection, tileHeight);
-				for (let i = 0; i < iterations; i++) {
-					solver.step(seed + i);
-				}
-				newObjects.push(...solver.objects());
-			}
-		} else {
+		if (!quadObjects || quadObjects.length == 0) {
 			this.states.error.set('no quad objects found');
+			return;
+		}
+		const tileAndConnectionObjects = coreGroup1.threejsObjects();
+		const tileObjects = filterTileObjects(tileAndConnectionObjects);
+		const connectionObjects = filterConnectionObjects(tileAndConnectionObjects);
+		if (tileObjects.length == 0) {
+			this.states.error.set('no tile objects found');
+			return;
+		}
+		if (connectionObjects.length == 0) {
+			this.states.error.set('no connection objects found');
+			return;
+		}
+
+		const {stepsCount, seed, tileHeight} = this.pv;
+		const newObjects: Object3D[] = [];
+
+		for (let quadObject of quadObjects) {
+			logBlueBg('------------- SOLVE -------------');
+			const solver = new WFCSolver(tileAndConnectionObjects, quadObject, tileHeight);
+			for (let i = 0; i < stepsCount; i++) {
+				solver.step(seed + i);
+			}
+			newObjects.push(...solver.objects());
 		}
 
 		this.setObjects(newObjects);

@@ -19,7 +19,7 @@ export class CoreWFCTileAttribute {
 		setObjectBoolean(object, WFCTileAttribute.IS_TILE, value);
 	}
 	static getIsTile(object: ObjectContent<CoreObjectType>) {
-		return getObjectBoolean(object, WFCTileAttribute.IS_TILE, true);
+		return getObjectBoolean(object, WFCTileAttribute.IS_TILE, false);
 	}
 	static setTileId(object: ObjectContent<CoreObjectType>, value: string) {
 		setObjectString(object, WFCTileAttribute.TILE_ID, value);
@@ -31,7 +31,7 @@ export class CoreWFCTileAttribute {
 		setObjectBoolean(object, WFCTileAttribute.ROTATION_Y_ALLOWED, value);
 	}
 	static getRotationYAllowed(object: ObjectContent<CoreObjectType>) {
-		return getObjectBoolean(object, WFCTileAttribute.ROTATION_Y_ALLOWED, true);
+		return getObjectBoolean(object, WFCTileAttribute.ROTATION_Y_ALLOWED, false);
 	}
 }
 export class CoreWFCConnectionAttribute {
@@ -39,7 +39,7 @@ export class CoreWFCConnectionAttribute {
 		setObjectBoolean(object, WFCConnectionAttribute.IS_CONNECTION, value);
 	}
 	static getIsConnection(object: ObjectContent<CoreObjectType>) {
-		return getObjectBoolean(object, WFCConnectionAttribute.IS_CONNECTION, true);
+		return getObjectBoolean(object, WFCConnectionAttribute.IS_CONNECTION, false);
 	}
 	static setId0(object: ObjectContent<CoreObjectType>, value: string) {
 		setObjectString(object, WFCConnectionAttribute.ID0, value);

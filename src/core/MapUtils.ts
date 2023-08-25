@@ -12,6 +12,39 @@ export function pushOnArrayAtEntry<K, V>(map: Map<K, V[]>, key: K, newElement: V
 		map.set(key, [newElement]);
 	}
 }
+export function popFromArrayAtEntry<K, V>(map: Map<K, V[]>, key: K, elementToRemove: V) {
+	if (map.has(key)) {
+		const array = map.get(key)!;
+		const index = array.indexOf(elementToRemove);
+		if (index >= 0) {
+			array.splice(index, 1);
+		}
+	}
+}
+export function addToSetAtEntry<K, V>(map: Map<K, Set<V>>, key: K, newElement: V) {
+	if (map.has(key)) {
+		map.get(key)!.add(newElement);
+	} else {
+		const set: Set<V> = new Set();
+		set.add(newElement);
+		map.set(key, set);
+	}
+}
+export function addToMapAtEntry<K0, K1, V>(map: Map<K0, Map<K1, V>>, key0: K0, key1: K1, newElement: V) {
+	let subMap = map.get(key0);
+	if (!subMap) {
+		subMap = new Map();
+		map.set(key0, subMap);
+	}
+	subMap.set(key1, newElement);
+}
+export function getMapElementAtEntry<K0, K1, V>(map: Map<K0, Map<K1, V>>, key0: K0, key1: K1): V | undefined {
+	let subMap = map.get(key0);
+	if (!subMap) {
+		return;
+	}
+	return subMap.get(key1);
+}
 export class MapUtils {
 	static arrayFromValues<K, V>(map: Map<K, V>): Array<V> {
 		const array: Array<V> = [];
@@ -21,24 +54,8 @@ export class MapUtils {
 		return array;
 	}
 	static pushOnArrayAtEntry = pushOnArrayAtEntry;
-	static addToSetAtEntry<K, V>(map: Map<K, Set<V>>, key: K, newElement: V) {
-		if (map.has(key)) {
-			map.get(key)!.add(newElement);
-		} else {
-			const set: Set<V> = new Set();
-			set.add(newElement);
-			map.set(key, set);
-		}
-	}
-	static popFromArrayAtEntry<K, V>(map: Map<K, V[]>, key: K, elementToRemove: V) {
-		if (map.has(key)) {
-			const array = map.get(key)!;
-			const index = array.indexOf(elementToRemove);
-			if (index >= 0) {
-				array.splice(index, 1);
-			}
-		}
-	}
+	static addToSetAtEntry = addToSetAtEntry;
+	static popFromArrayAtEntry = popFromArrayAtEntry;
 	static removeFromSetAtEntry<K, V>(map: Map<K, Set<V>>, key: K, elementToRemove: V) {
 		if (map.has(key)) {
 			const set = map.get(key)!;
