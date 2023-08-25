@@ -80,20 +80,16 @@ export abstract class BaseOnObjectSwipeEventJsNode extends BaseOnObjectPointerEv
 		//
 		const bodyLinesOnPointerdown = `
 if(${bodyLine}){
-	console.log('ok A');
 	this.${swipeStarted} = true;
 	${onPointerdownCursor}.copy( ${_cursorFunc.asString()} );
 } else {
-	console.log('NOT ok A');
 	this.${swipeStarted} = false;
 }`;
 		const bodyLinesOnPointerup = `
 if( ${bodyLine} && this.${swipeStarted} ){
-	console.log('ok B');
 	this.${swipeStarted} = false;
 	${onPointerupCursor}.copy( ${_cursorFunc.asString()} );
 	if( ${this._cursorComparison(onPointerdownCursor, onPointerupCursor)} ){
-		console.log('ok B 2');
 		${triggeredMethods}
 	}
 }`;
