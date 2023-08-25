@@ -166,6 +166,10 @@ import {OnObjectDispatchEventJsNode} from '../../../nodes/js/OnObjectDispatchEve
 import {OnObjectHoverJsNode} from '../../../nodes/js/OnObjectHover';
 import {OnObjectPointerdownJsNode} from '../../../nodes/js/OnObjectPointerdown';
 import {OnObjectPointerupJsNode} from '../../../nodes/js/OnObjectPointerup';
+import {OnObjectSwipedownJsNode} from '../../../nodes/js/OnObjectSwipedown';
+import {OnObjectSwipeleftJsNode} from '../../../nodes/js/OnObjectSwipeleft';
+import {OnObjectSwiperightJsNode} from '../../../nodes/js/OnObjectSwiperight';
+import {OnObjectSwipeupJsNode} from '../../../nodes/js/OnObjectSwipeup';
 import {OnPerformanceChangeJsNode} from '../../../nodes/js/OnPerformanceChange';
 import {OnPointerdownJsNode} from '../../../nodes/js/OnPointerdown';
 import {OnPointerupJsNode} from '../../../nodes/js/OnPointerup';
@@ -515,6 +519,10 @@ export interface JsNodeChildrenMap {
 	onObjectHover: OnObjectHoverJsNode;
 	onObjectPointerdown: OnObjectPointerdownJsNode;
 	onObjectPointerup: OnObjectPointerupJsNode;
+	onObjectSwipedown: OnObjectSwipedownJsNode;
+	onObjectSwipeleft: OnObjectSwipeleftJsNode;
+	onObjectSwiperight: OnObjectSwiperightJsNode;
+	onObjectSwipeup: OnObjectSwipeupJsNode;
 	onPerformanceChange: OnPerformanceChangeJsNode;
 	onPointerdown: OnPointerdownJsNode;
 	onPointerup: OnPointerupJsNode;
@@ -921,6 +929,10 @@ export class JsRegister {
 		poly.registerNode(OnObjectHoverJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
 		poly.registerNode(OnObjectPointerdownJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
 		poly.registerNode(OnObjectPointerupJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
+		poly.registerNode(OnObjectSwipedownJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
+		poly.registerNode(OnObjectSwipeleftJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
+		poly.registerNode(OnObjectSwiperightJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
+		poly.registerNode(OnObjectSwipeupJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
 		poly.registerNode(OnPerformanceChangeJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
 		poly.registerNode(OnPointerdownJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
 		poly.registerNode(OnPointerupJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);

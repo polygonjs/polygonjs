@@ -23,6 +23,7 @@ export interface ComputedValueJsDefinitionData {
 interface TriggeringJsDefinitionOptionsExtended {
 	gatherable: boolean;
 	triggeringMethodName?: EvaluatorMethodName;
+	nodeMethodName?: string;
 }
 interface TriggerableJsDefinitionOptionsExtended extends TriggerableJsDefinitionOptions {
 	addTriggeredLines?: boolean;
@@ -102,7 +103,7 @@ export class JsLinesCollectionController {
 			options?.triggeringMethodName != null ? options.triggeringMethodName : (node.type() as EvaluatorMethodName);
 
 		const value = triggeringLines.join('\n');
-		const varName = nodeMethodName(node); //.wrappedBodyLinesMethodName();
+		const varName = options.nodeMethodName || nodeMethodName(node); //.wrappedBodyLinesMethodName();
 		const dataType = JsConnectionPointType.BOOLEAN; // unused
 		// if (!EVALUATOR_METHOD_NAMES.includes(triggeringMethodName as EvaluatorMethodName)) {
 		// 	console.warn(`method '${triggeringMethodName}' is not included`);
@@ -112,6 +113,7 @@ export class JsLinesCollectionController {
 				triggeringMethodName,
 				gatherable,
 				perPoint: this._assembler.perPoint(),
+				nodeMethodName: options.nodeMethodName,
 			}),
 		]);
 	}

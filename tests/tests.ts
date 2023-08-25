@@ -225,6 +225,9 @@ import {testenginenodesjsOnObjectDispatchEvent} from './engine/nodes/js/OnObject
 import {testenginenodesjsOnObjectHover} from './engine/nodes/js/OnObjectHover';
 import {testenginenodesjsOnObjectPointerdown} from './engine/nodes/js/OnObjectPointerdown';
 import {testenginenodesjsOnObjectPointerup} from './engine/nodes/js/OnObjectPointerup';
+import {testenginenodesjsOnObjectSwipedown} from './engine/nodes/js/OnObjectSwipedown';
+import {testenginenodesjsOnObjectSwipeleft} from './engine/nodes/js/OnObjectSwipeleft';
+import {testenginenodesjsOnObjectSwipeup} from './engine/nodes/js/OnObjectSwipeup';
 import {testenginenodesjsOnPerformanceChange} from './engine/nodes/js/OnPerformanceChange';
 import {testenginenodesjsOnScenePlayState} from './engine/nodes/js/OnScenePlayState';
 import {testenginenodesjsOnSceneReset} from './engine/nodes/js/OnSceneReset';
@@ -797,6 +800,9 @@ export function testPolygonjs(qUnit: QUnit) {
 	testenginenodesjsOnObjectHover(qUnit);
 	testenginenodesjsOnObjectPointerdown(qUnit);
 	testenginenodesjsOnObjectPointerup(qUnit);
+	testenginenodesjsOnObjectSwipedown(qUnit);
+	testenginenodesjsOnObjectSwipeleft(qUnit);
+	testenginenodesjsOnObjectSwipeup(qUnit);
 	testenginenodesjsOnPerformanceChange(qUnit);
 	testenginenodesjsOnScenePlayState(qUnit);
 	testenginenodesjsOnSceneReset(qUnit);

@@ -1,5 +1,5 @@
 /**
- * sends a trigger when the viewer taps or clicks on an object
+ * sends a trigger when the viewer swipes down on an object
  *
  *
  */
@@ -7,27 +7,32 @@
 import {TRIGGER_CONNECTION_NAME} from './_Base';
 import {JsConnectionPoint, JsConnectionPointType, JS_CONNECTION_POINT_IN_NODE_DEF} from '../utils/io/connections/Js';
 import {JsType} from '../../poly/registers/nodes/types/Js';
-import {EvaluatorEventData} from './code/assemblers/actor/ActorEvaluator';
 import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
+import {EvaluatorEventData} from './code/assemblers/actor/ActorEvaluator';
 import {BaseOnObjectPointerEventJsNode} from './_BaseOnObjectPointerEvent';
 import {PointerEventType} from '../../../core/event/PointerEventType';
 import {inputObject3D} from './_BaseObject3D';
 import {Poly} from '../../Poly';
 import {RefJsDefinition} from './utils/JsDefinition';
+import {nodeMethodName} from './code/assemblers/actor/ActorAssemblerUtils';
+import {Vector2} from 'three';
 
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
 
-export class OnObjectPointerupJsNode extends BaseOnObjectPointerEventJsNode {
-	static override type() {
-		return JsType.ON_OBJECT_POINTERUP;
-	}
-
-	override eventData(): EvaluatorEventData | undefined {
-		return {
-			type: PointerEventType.pointerup,
-			emitter: this.eventEmitter(),
-			jsType: JsType.ON_OBJECT_POINTERUP,
-		};
+export abstract class BaseOnObjectSwipeEventJsNode extends BaseOnObjectPointerEventJsNode {
+	override eventData(): EvaluatorEventData[] {
+		return [
+			{
+				type: PointerEventType.pointerdown,
+				emitter: this.eventEmitter(),
+				jsType: JsType.ON_OBJECT_POINTERDOWN,
+			},
+			{
+				type: PointerEventType.pointerup,
+				emitter: this.eventEmitter(),
+				jsType: JsType.ON_OBJECT_POINTERUP,
+			},
+		];
 	}
 
 	override initializeNode() {
@@ -57,6 +62,11 @@ export class OnObjectPointerupJsNode extends BaseOnObjectPointerEventJsNode {
 		const pointsThreshold = this.variableForInputParam(linesController, this.p.pointsThreshold);
 		const outIntersection = this._addIntersectionRef(linesController);
 
+		const _cursorFunc = Poly.namedFunctionsRegister.getFunction('globalsCursor', this, linesController);
+		// const varName = `${sanitizedNodePath}_${this.p.position.name()}`;
+		const onPointerdownCursor = linesController.addVariable(this, new Vector2());
+		const onPointerupCursor = linesController.addVariable(this, new Vector2());
+
 		const func = Poly.namedFunctionsRegister.getFunction('getObjectHoveredState', this, linesController);
 		const bodyLine = func.asString(
 			object3D,
@@ -67,13 +77,34 @@ export class OnObjectPointerupJsNode extends BaseOnObjectPointerEventJsNode {
 		);
 
 		//
-		const bodyLines = [`if( ${bodyLine} ){`, `${triggeredMethods}`, `}`];
+		const bodyLinesOnPointerdown = `
+if(${bodyLine}){
+	this.swipeStarted = true;
+	${onPointerdownCursor}.copy( ${_cursorFunc.asString()} );
+} else {
+	this.swipeStarted = false;
+}`;
+		const bodyLinesOnPointerup = `
+if( ${bodyLine} && this.swipeStarted ){
+	this.swipeStarted = false;
+	${onPointerupCursor}.copy( ${_cursorFunc.asString()} );
+	if( ${this._cursorComparison(onPointerdownCursor, onPointerupCursor)} ){
+		${triggeredMethods}
+	}
+}`;
 
-		linesController.addTriggeringLines(this, bodyLines, {
+		linesController.addTriggeringLines(this, [bodyLinesOnPointerdown], {
+			gatherable: true,
+			triggeringMethodName: JsType.ON_POINTERDOWN,
+			nodeMethodName: nodeMethodName(this) + 'onPointerdown',
+		});
+		linesController.addTriggeringLines(this, [bodyLinesOnPointerup], {
 			gatherable: true,
 			triggeringMethodName: JsType.ON_POINTERUP,
+			nodeMethodName: nodeMethodName(this) + 'onPointerup',
 		});
 	}
+
 	private _addIntersectionRef(linesController: JsLinesCollectionController) {
 		const outIntersection = this.jsVarName(JsConnectionPointType.INTERSECTION);
 		linesController.addDefinitions(this, [
@@ -81,4 +112,6 @@ export class OnObjectPointerupJsNode extends BaseOnObjectPointerEventJsNode {
 		]);
 		return outIntersection;
 	}
+
+	protected abstract _cursorComparison(onPointerdownCursor: string, onPointerupCursor: string): string;
 }
