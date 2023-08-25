@@ -230,6 +230,9 @@ export class TriggeringJsDefinition extends TypedJsDefinition<JsDefinitionType.T
 		super(JsDefinitionType.TRIGGERING, _node, _shaderCollectionController, _dataType, _name);
 		// _shaderCollectionController.addComputedVarName(this.name());
 	}
+	override name() {
+		return this._options.nodeMethodName || nodeMethodName(this._node);
+	}
 	line() {
 		const methodName = this._options.nodeMethodName || nodeMethodName(this._node);
 		if (this._options.perPoint) {
@@ -269,9 +272,7 @@ export class TriggeringJsDefinition extends TypedJsDefinition<JsDefinitionType.T
 			(definition) => definition._options.triggeringMethodName
 		);
 		definitionGroups.forEach((definitions, triggeringMethodName) => {
-			const definitionMethodCalls = ArrayUtils.uniq(
-				definitions.map((d) => `this.${nodeMethodName(d.node())}()`)
-			).join(';');
+			const definitionMethodCalls = ArrayUtils.uniq(definitions.map((d) => `this.${d.name()}()`)).join(';');
 			const line = `${triggeringMethodName}(){
 				${definitionMethodCalls}
 			}`;

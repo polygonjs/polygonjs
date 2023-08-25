@@ -1,3 +1,5 @@
+import {Vector2} from 'three';
+
 interface EventPos {
 	x: number;
 	y: number;
@@ -11,10 +13,13 @@ function triggerPointerEvent(eventName: PointerEventName, canvas: HTMLCanvasElem
 	const y = rect.top + rect.height * (0.5 + offsetY);
 	canvas.dispatchEvent(new PointerEvent(eventName, {clientX: x, clientY: y}));
 }
-function triggerPointerEventInMiddle(eventName: PointerEventName, canvas: HTMLCanvasElement) {
+function triggerPointerEventInMiddle(eventName: PointerEventName, canvas: HTMLCanvasElement, offset?: Vector2) {
 	const rect = canvas.getBoundingClientRect();
 	canvas.dispatchEvent(
-		new PointerEvent(eventName, {clientX: rect.left + rect.width * 0.5, clientY: rect.top + rect.height * 0.5})
+		new PointerEvent(eventName, {
+			clientX: rect.left + rect.width * 0.5 + (offset ? offset.x : 0),
+			clientY: rect.top + rect.height * 0.5 + (offset ? offset.y : 0),
+		})
 	);
 }
 function triggerPointerEventAside(eventName: PointerEventName, canvas: HTMLCanvasElement) {
@@ -35,8 +40,8 @@ export function triggerPointermoveAside(canvas: HTMLCanvasElement) {
 export function triggerPointerdown(canvas: HTMLCanvasElement, options?: EventPos) {
 	triggerPointerEvent('pointerdown', canvas, options);
 }
-export function triggerPointerdownInMiddle(canvas: HTMLCanvasElement) {
-	triggerPointerEventInMiddle('pointerdown', canvas);
+export function triggerPointerdownInMiddle(canvas: HTMLCanvasElement, offset?: Vector2) {
+	triggerPointerEventInMiddle('pointerdown', canvas, offset);
 }
 export function triggerPointerdownAside(canvas: HTMLCanvasElement) {
 	triggerPointerEventAside('pointerdown', canvas);
@@ -45,8 +50,8 @@ export function triggerPointerdownAside(canvas: HTMLCanvasElement) {
 export function triggerPointerup(canvas: HTMLCanvasElement, options?: EventPos) {
 	triggerPointerEvent('pointerup', canvas, options);
 }
-export function triggerPointerupInMiddle(canvas: HTMLCanvasElement) {
-	triggerPointerEventInMiddle('pointerup', canvas);
+export function triggerPointerupInMiddle(canvas: HTMLCanvasElement, offset?: Vector2) {
+	triggerPointerEventInMiddle('pointerup', canvas, offset);
 }
 export function triggerPointerupAside(canvas: HTMLCanvasElement) {
 	triggerPointerEventAside('pointerup', canvas);
