@@ -1,5 +1,5 @@
 import {WFCTilesCollection} from './WFCTilesCollection';
-import {TileCorners, TileConfig, EMPTY_TILE_ID} from './WFCCommon';
+import {TileCorners, TileConfig, EMPTY_TILE_ID, configTilesStats, TileConfigStats, solidTilesStats} from './WFCCommon';
 import {Object3D, Vector3, Vector4, Mesh} from 'three';
 import {CoreObject} from '../geometry/Object';
 import {tileCubeLatticeDeform} from './WFCTileDeform';
@@ -28,6 +28,10 @@ const _neighbourData: NeighbourData = {
 	quadNode: null,
 	neighbourIndex: null,
 };
+const _configStats: TileConfigStats = {
+	solid: 0,
+	empty: 0,
+};
 
 const _v4 = new Vector4();
 export class WFCSolver {
@@ -50,14 +54,14 @@ export class WFCSolver {
 		const allTileConfigs: TileConfig[] = [];
 		for (const tile of tiles) {
 			const tileId = CoreWFCTileAttribute.getTileId(tile);
-			if (tileId == EMPTY_TILE_ID) {
-				allTileConfigs.push({tileId, rotation: 0});
-			} else {
-				allTileConfigs.push({tileId, rotation: 0});
-				allTileConfigs.push({tileId, rotation: 1});
-				allTileConfigs.push({tileId, rotation: 2});
-				allTileConfigs.push({tileId, rotation: 3});
-			}
+			// if (tileId == EMPTY_TILE_ID) {
+			// allTileConfigs.push({tileId, rotation: 0});
+			// } else {
+			allTileConfigs.push({tileId, rotation: 0});
+			allTileConfigs.push({tileId, rotation: 1});
+			allTileConfigs.push({tileId, rotation: 2});
+			allTileConfigs.push({tileId, rotation: 3});
+			// }
 		}
 
 		this._quadPositionArray = this.quadObject.geometry.attributes[Attribute.POSITION].array;
@@ -93,7 +97,12 @@ export class WFCSolver {
 			console.warn('no allowed config for quad', quadNode.id);
 			return;
 		}
-		const config = sample(allowedConfigs, configSeed + this._stepsCount)!;
+		configTilesStats(allowedConfigs, _configStats);
+
+		const config =
+			_configStats.solid == 0
+				? allowedConfigs[0]
+				: sample(solidTilesStats(allowedConfigs), configSeed + this._stepsCount)!;
 		this._allowedTileConfigsByQuadId.set(quadNode.id, [config]);
 		console.log('step result', this._stepsCount, allowedConfigs, config);
 		this._approveConfigForQuad(config, quadNode);
@@ -112,6 +121,7 @@ export class WFCSolver {
 		);
 	}
 	private _approveConfigForQuad(config: TileConfig, quadNode: QuadNode) {
+		console.log('_approveConfigForQuad', config, quadNode.id);
 		const tileId = config.tileId;
 		// console.log(this._stepsCount, config);
 		const templateTileObject = this._tilesCollection.tile(tileId);
@@ -214,7 +224,7 @@ export class WFCSolver {
 			}
 			case 1: {
 				const config = allowedTileConfigs[0];
-				// console.log('isolated 1 tile config for quad', quadNode.id, config);
+				console.log('isolated 1 tile config for quad', quadNode.id, config);
 				this._approveConfigForQuad(config, quadNode);
 				return;
 			}
@@ -265,7 +275,7 @@ export class WFCSolver {
 		allowedTileConfigs: TileConfig[]
 		// neighbourCardinalities: NeighbourCardinalities
 	) {
-		// const debug = true && quadNode.id == 1;
+		// const debug = true && quadNode.id == 16;
 		// if (debug) logRedBg('reduce entropy ' + quadNode.id);
 		// console.log({quadNodeId: quadNode.id, possibleTileConfigs});
 		let i = 0;
@@ -273,7 +283,7 @@ export class WFCSolver {
 		while (i < allowedTileConfigs.length) {
 			// if (debug) console.log('');
 			// if (debug) console.log('----- > check config', allowedTileConfigs[i]);
-
+			// if (debug) console.log(quadNode.id, 'check config START', allowedTileConfigs[i]);
 			const allowed = this._checkConfigAgainstNeighbours(quadNode.id, allowedTileConfigs[i]);
 			// if (debug) console.log(quadNode.id, allowedTileConfigs[i], allowed);
 			if (allowed) {
@@ -285,16 +295,8 @@ export class WFCSolver {
 
 		// if the allowedTileConfigs contain a single solid tile and empty tiles, remove the empty tiles
 		if (allowedTileConfigs.length > 1) {
-			let solidTilesCount = 0;
-			let emptyTilesCount = 0;
-			for (const config of allowedTileConfigs) {
-				if (config.tileId == EMPTY_TILE_ID) {
-					emptyTilesCount++;
-				} else {
-					solidTilesCount++;
-				}
-			}
-			if (solidTilesCount == 1 && emptyTilesCount >= 1) {
+			configTilesStats(allowedTileConfigs, _configStats);
+			if (_configStats.solid == 1 && _configStats.empty >= 1) {
 				allowedTileConfigs = allowedTileConfigs.filter((config) => config.tileId != EMPTY_TILE_ID);
 			}
 		}
@@ -306,7 +308,7 @@ export class WFCSolver {
 		tileConfig: TileConfig
 		// neighbourCardinalities: NeighbourCardinalities
 	): boolean {
-		// const debug = true && quadNodeId == 1;
+		// const debug = true && quadNodeId == 16;
 		if (!this._isConfigAllowedWithNeighbour(quadNodeId, tileConfig, 0)) {
 			// if (debug)
 			// 	console.log(
@@ -376,13 +378,13 @@ export class WFCSolver {
 		// neighbourCardinalities: NeighbourCardinalities,
 		neighbourIndex: NeighbourIndex
 	): boolean {
-		// const debug = true && quadNodeId == 1;
+		// const debug = true && quadNodeId == 16;
 		this._quadGraph.neighbourData(quadNodeId, neighbourIndex, _neighbourData);
 		if (!_neighbourData.quadNode || _neighbourData.neighbourIndex == null) {
 			return true;
 		}
 		// const rotationRequired = mod(tileConfig.rotation - neighbourIndex, 4);
-		const presentedSide0 = CCW_HALF_EDGE_SIDES[mod(neighbourIndex + tileConfig.rotation, 4)];
+		const presentedSide0 = CCW_HALF_EDGE_SIDES[mod(neighbourIndex - tileConfig.rotation, 4)];
 		// const side0 = CCW_HALF_EDGE_CARDINALITIES[mod(neighbourIndex + rotationRequired, 4)];
 		const neighbourConfigs = this._allowedTileConfigsByQuadId.get(_neighbourData.quadNode.id)!;
 		if (neighbourConfigs.length == 0) {
@@ -390,12 +392,12 @@ export class WFCSolver {
 			return true;
 		}
 		// if (debug)
-		// 	console.log('neighbourConfigs', neighbourIndex, {quadId: _neighbourData.quadNode.id}, neighbourConfigs);
+		// console.log('neighbourConfigs', neighbourIndex, {quadId: _neighbourData.quadNode.id}, neighbourConfigs);
 		for (const neighbourConfig of neighbourConfigs) {
 			// const side0 = rotatedSide('s', neighbourConfig.rotation);
 			// const side1 = rotatedSide('n', rotationRequired);
 			const presentedSide1 =
-				CCW_HALF_EDGE_SIDES[mod(_neighbourData.neighbourIndex + neighbourConfig.rotation, 4)];
+				CCW_HALF_EDGE_SIDES[mod(_neighbourData.neighbourIndex - neighbourConfig.rotation, 4)];
 			// if (debug) console.log({presentedSide0, presentedSide1});
 			const isAllowed = this._tilesCollection.allowedTileConfig(
 				tileConfig.tileId,

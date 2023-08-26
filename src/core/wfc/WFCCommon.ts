@@ -56,3 +56,22 @@ export function rotatedSide(side: WFCTileSide, rotation: number): WFCTileSide {
 	const index = CLOCK_WISE_TILE_SIDES.indexOf(side);
 	return CLOCK_WISE_TILE_SIDES[(index + mod(rotation, 4)) % CLOCK_WISE_TILE_SIDES.length];
 }
+
+export interface TileConfigStats {
+	solid: number;
+	empty: number;
+}
+export function configTilesStats(tileConfigs: TileConfig[], target: TileConfigStats) {
+	target.solid = 0;
+	target.empty = 0;
+	for (const config of tileConfigs) {
+		if (config.tileId == EMPTY_TILE_ID) {
+			target.empty++;
+		} else {
+			target.solid++;
+		}
+	}
+}
+export function solidTilesStats(tileConfigs: TileConfig[]): TileConfig[] {
+	return tileConfigs.filter((config) => config.tileId != EMPTY_TILE_ID);
+}

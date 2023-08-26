@@ -67,7 +67,7 @@ export class WFCTilesCollection {
 				this._connectionsByTileId.set(connection.id0, mapForId0);
 			}
 			pushOnArrayAtEntry(mapForId0, connection.id1, connection);
-			// console.log(i++, connection.id0, connection.side0, connection.id1, connection.side1);
+			console.log(connection.id0, connection.side0, connection.id1, connection.side1);
 		}
 	}
 	tiles() {
@@ -90,7 +90,7 @@ export class WFCTilesCollection {
 		}
 		// const debug = true; // && id0 == 't1';
 		// if (debug)
-		// console.log('connections', {side0, side1}, connections.map((c) => [c.side0, c.side1].join('-')).join(','));
+		// console.log('connections', {side0, side1}, connections.map((c) => [c.side0, c.side1].join('-')).join(', '));
 		for (const connection of connections) {
 			if (
 				(connection.side0 == side0 || side0.includes(connection.side0) || connection.side0.includes(side0)) &&
