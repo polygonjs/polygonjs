@@ -12,12 +12,15 @@ export function pushOnArrayAtEntry<K, V>(map: Map<K, V[]>, key: K, newElement: V
 		map.set(key, [newElement]);
 	}
 }
-export function popFromArrayAtEntry<K, V>(map: Map<K, V[]>, key: K, elementToRemove: V) {
+export function popFromArrayAtEntry<K, V>(map: Map<K, V[]>, key: K, elementToRemove: V, removeFromMapIfEmpty = true) {
 	if (map.has(key)) {
 		const array = map.get(key)!;
 		const index = array.indexOf(elementToRemove);
 		if (index >= 0) {
 			array.splice(index, 1);
+			if (removeFromMapIfEmpty && array.length == 0) {
+				map.delete(key);
+			}
 		}
 	}
 }

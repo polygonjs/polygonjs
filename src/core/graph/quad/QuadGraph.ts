@@ -1,8 +1,22 @@
 import {QuadHalfEdge} from './QuadHalfEdge';
 import {QuadNode} from './QuadNode';
 import {Number4} from '../../../types/GlobalTypes';
-import {quadHalfEdgeIndices, QuadHalfEdgeCardinality, CCW_HALF_EDGE_CARDINALITIES} from './QuadGraphCommon';
+import {
+	quadHalfEdgeIndices,
+	// QuadHalfEdgeSide,
+	// CCW_HALF_EDGE_SIDES,
+	HalfEdgeIndices,
+	// NeighbourSides,
+	NeighbourIndex,
+} from './QuadGraphCommon';
 import {addToMapAtEntry, getMapElementAtEntry} from '../../../core/MapUtils';
+
+const _indices: HalfEdgeIndices = {index0: 0, index1: 0};
+
+export interface NeighbourData {
+	quadNode?: QuadNode | null;
+	neighbourIndex: NeighbourIndex | null;
+}
 
 export class QuadGraph {
 	private _quadsById: Map<number, QuadNode> = new Map();
@@ -18,17 +32,18 @@ export class QuadGraph {
 		// add edges
 		// const edges: QuadEdge[] = [];
 		for (let i = 0; i < 4; i++) {
-			const [index0, index1] = quadHalfEdgeIndices(quadIndices, i);
+			quadHalfEdgeIndices(quadIndices, i, _indices);
 			// const _edgeId = edgeId(edgeIndices);
 			// let edge = this._edgesById.get(_edgeId);
 			// if (!edge) {
 			const edge = new QuadHalfEdge({
 				quadId,
-				index0,
-				index1,
+				index0: _indices.index0,
+				index1: _indices.index1,
+				sideIndex: i as NeighbourIndex,
 			});
-			addToMapAtEntry(this._edgesByIndex, index0, index1, edge);
-			const oppositeHalfEdge = getMapElementAtEntry(this._edgesByIndex, index1, index0);
+			addToMapAtEntry(this._edgesByIndex, _indices.index0, _indices.index1, edge);
+			const oppositeHalfEdge = getMapElementAtEntry(this._edgesByIndex, _indices.index1, _indices.index0);
 			if (oppositeHalfEdge) {
 				this._halfEdgeByHalfEdge.set(edge, oppositeHalfEdge);
 				this._halfEdgeByHalfEdge.set(oppositeHalfEdge, edge);
@@ -70,50 +85,63 @@ export class QuadGraph {
 	// 		callback(quad);
 	// 	});
 	// }
-	setQuadCardinality(quadId: number, firstCardinal: QuadHalfEdgeCardinality) {
-		// console.log('setQuadCardinality', quadId, firstCardinal);
-		const quad = this._quadsById.get(quadId);
-		if (!quad) {
-			console.warn('quad not found', quadId);
-			return;
-		}
-		let currentIndex = CCW_HALF_EDGE_CARDINALITIES.indexOf(firstCardinal);
-		for (let i = 0; i < 4; i++) {
-			const [index0, index1] = quadHalfEdgeIndices(quad.indices, i);
-			const halfEdge = getMapElementAtEntry(this._edgesByIndex, index0, index1);
-			if (halfEdge) {
-				const cardinality = CCW_HALF_EDGE_CARDINALITIES[currentIndex];
-				halfEdge.setCardinality(cardinality);
-			} else {
-				console.warn('half edge not found', {quadId, i, index0, index1});
-			}
-			currentIndex++;
-			if (currentIndex > 3) {
-				currentIndex = 0;
-			}
-		}
-	}
-	cardinality(quadId0: number, quadId1: number): QuadHalfEdgeCardinality | undefined {
-		const halfEdge = getMapElementAtEntry(this._halfEdgeByQuadId, quadId0, quadId1);
-		// console.log('cardinality', quadId0, quadId1, halfEdge, halfEdge?.cardinality());
-		return halfEdge?.cardinality();
-	}
+	// setQuadSide(quadId: number, firstCardinal: QuadHalfEdgeSide) {
+	// 	// console.log('setQuadCardinality', quadId, firstCardinal);
+	// 	const quad = this._quadsById.get(quadId);
+	// 	if (!quad) {
+	// 		console.warn('quad not found', quadId);
+	// 		return;
+	// 	}
+	// 	let currentIndex = CCW_HALF_EDGE_SIDES.indexOf(firstCardinal);
+	// 	for (let i = 0; i < 4; i++) {
+	// 		quadHalfEdgeIndices(quad.indices, i, _indices);
+	// 		const halfEdge = getMapElementAtEntry(this._edgesByIndex, _indices.index0, _indices.index1);
+	// 		if (halfEdge) {
+	// 			const cardinality = CCW_HALF_EDGE_SIDES[currentIndex];
+	// 			halfEdge.setSide(cardinality);
+	// 		} else {
+	// 			console.warn('half edge not found', {quadId, i, index0: _indices.index0, index1: _indices.index1});
+	// 		}
+	// 		currentIndex++;
+	// 		if (currentIndex > 3) {
+	// 			currentIndex = 0;
+	// 		}
+	// 	}
+	// }
+	// sides(quadId: number, target: NeighbourSides): void {
+	// 	const neighbour0 = this.neighbour(quadId, 0);
+	// 	const neighbour1 = this.neighbour(quadId, 1);
+	// 	const neighbour2 = this.neighbour(quadId, 2);
+	// 	const neighbour3 = this.neighbour(quadId, 3);
 
-	neighbour(quadId: number, sideIndex: number): QuadNode | undefined {
+	// 	target[0] = neighbour0 ? this._side(neighbour0.id, quadId) || null : null;
+	// 	target[1] = neighbour1 ? this._side(neighbour1.id, quadId) || null : null;
+	// 	target[2] = neighbour2 ? this._side(neighbour2.id, quadId) || null : null;
+	// 	target[3] = neighbour3 ? this._side(neighbour3.id, quadId) || null : null;
+	// }
+	// private _side(quadId0: number, quadId1: number): QuadHalfEdgeSide | undefined {
+	// 	const halfEdge = getMapElementAtEntry(this._halfEdgeByQuadId, quadId0, quadId1);
+	// 	// console.log('cardinality', quadId0, quadId1, halfEdge, halfEdge?.cardinality());
+	// 	return halfEdge?.side();
+	// }
+
+	neighbourData(quadId: number, sideIndex: NeighbourIndex, target: NeighbourData): void {
 		const quadNode = this._quadsById.get(quadId);
 		if (!quadNode) {
 			return;
 		}
-		// TODO optimize
-		const [index0, index1] = quadHalfEdgeIndices(quadNode.indices, sideIndex);
-		const halfEdge = getMapElementAtEntry(this._edgesByIndex, index0, index1)!;
+		quadHalfEdgeIndices(quadNode.indices, sideIndex, _indices);
+		const halfEdge = getMapElementAtEntry(this._edgesByIndex, _indices.index0, _indices.index1)!;
 		const oppositeHalfEdge = this._halfEdgeByHalfEdge.get(halfEdge);
 		if (!oppositeHalfEdge) {
+			target.quadNode = null;
+			target.neighbourIndex = null;
 			return;
 		}
 		const oppositeQuadId = oppositeHalfEdge.quadId;
-		const oppositeQuadNode = this._quadsById.get(oppositeQuadId);
-		return oppositeQuadNode;
+		target.quadNode = this._quadsById.get(oppositeQuadId);
+		target.neighbourIndex = oppositeHalfEdge.sideIndex;
+		// return oppositeQuadNode;
 
 		// const edges = this._edgesByQuadId.get(quadId);
 		// if (!edges) {

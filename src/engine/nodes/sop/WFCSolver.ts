@@ -19,8 +19,13 @@ class WFCSolverSopParamsConfig extends NodeParamsConfig {
 		range: [1, 1000],
 		rangeLocked: [true, false],
 	});
-	/** @param seed */
-	seed = ParamConfig.INTEGER(0, {
+	/** @param quadSeed */
+	quadSeed = ParamConfig.INTEGER(0, {
+		range: [-100, 100],
+		rangeLocked: [false, false],
+	});
+	/** @param configSeed */
+	configSeed = ParamConfig.INTEGER(0, {
 		range: [-100, 100],
 		rangeLocked: [false, false],
 	});
@@ -64,14 +69,14 @@ export class WFCSolverSopNode extends TypedSopNode<WFCSolverSopParamsConfig> {
 			return;
 		}
 
-		const {stepsCount, seed, tileHeight} = this.pv;
+		const {stepsCount, quadSeed, configSeed, tileHeight} = this.pv;
 		const newObjects: Object3D[] = [];
 
 		for (let quadObject of quadObjects) {
 			logBlueBg('------------- SOLVE -------------');
 			const solver = new WFCSolver(tileAndConnectionObjects, quadObject, tileHeight);
 			for (let i = 0; i < stepsCount; i++) {
-				solver.step(seed + i);
+				solver.step(quadSeed, configSeed);
 			}
 			newObjects.push(...solver.objects());
 		}

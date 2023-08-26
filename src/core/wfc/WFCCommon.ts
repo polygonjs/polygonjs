@@ -1,5 +1,5 @@
 import {mod} from '../math/_Module';
-import {QuadHalfEdgeCardinality} from '../graph/quad/QuadGraphCommon';
+import {NeighbourIndex} from '../graph/quad/QuadGraphCommon';
 import {Vector3} from 'three';
 export interface TileCorners {
 	p0: Vector3;
@@ -8,8 +8,16 @@ export interface TileCorners {
 	p3: Vector3;
 	height: number;
 }
-
-export type WFCTileSide = 's' | 'n' | 'w' | 'e' | 'b' | 't';
+export type WFCAllHorizontalSides = 'snwe';
+export const ALL_HORIZONTAL_SIDES: WFCAllHorizontalSides = 'snwe';
+export type WFCTileSide = 's' | 'n' | 'w' | 'e' | 'b' | 't' | WFCAllHorizontalSides;
+export interface WFCConnection {
+	readonly id0: string;
+	readonly id1: string;
+	readonly side0: WFCTileSide;
+	readonly side1: WFCTileSide;
+}
+export const EMPTY_TILE_ID = '__EMPTY_TILE__';
 // export enum WFCLookAtSide {
 // 	SOUTH = 's',
 // 	NORTH = 'n',
@@ -22,25 +30,26 @@ export type WFCTileSide = 's' | 'n' | 'w' | 'e' | 'b' | 't';
 // 	WFCLookAtSide.SOUTH,
 // 	WFCLookAtSide.WEST,
 // ];
+export type TileRotation = NeighbourIndex;
 export interface TileConfig {
 	tileId: string;
-	lookAtSide: QuadHalfEdgeCardinality;
+	rotation: TileRotation;
 }
-export interface PotentialNeighbour {
-	id: string;
-	side: WFCTileSide;
-}
-export type WFCAvailableTileNeighbours = Record<WFCTileSide, PotentialNeighbour[]>;
-export function createEmptyAvailableTileNeighbours(): WFCAvailableTileNeighbours {
-	return {
-		s: [],
-		n: [],
-		w: [],
-		e: [],
-		b: [],
-		t: [],
-	};
-}
+// export interface PotentialNeighbour {
+// 	id: string;
+// 	side: WFCTileSide;
+// }
+// export type WFCAvailableTileNeighbours = Record<WFCTileSide, PotentialNeighbour[]>;
+// export function createEmptyAvailableTileNeighbours(): WFCAvailableTileNeighbours {
+// 	return {
+// 		s: [],
+// 		n: [],
+// 		w: [],
+// 		e: [],
+// 		b: [],
+// 		t: [],
+// 	};
+// }
 
 export const CLOCK_WISE_TILE_SIDES: WFCTileSide[] = ['n', 'e', 's', 'w'];
 export function rotatedSide(side: WFCTileSide, rotation: number): WFCTileSide {

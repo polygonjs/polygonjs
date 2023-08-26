@@ -1,46 +1,74 @@
-import {QuadHalfEdgeCardinality} from '../graph/quad/QuadGraphCommon';
+import {pushOnArrayAtEntry} from '../MapUtils';
 import {CoreWFCTileAttribute} from './WFCAttributes';
-import {WFCAvailableTileNeighbours, createEmptyAvailableTileNeighbours, WFCTileSide} from './WFCCommon';
-import {WFCConnection} from './WFCConnection';
+import {WFCTileSide, EMPTY_TILE_ID, WFCConnection, ALL_HORIZONTAL_SIDES} from './WFCCommon';
+import {validConnectionObject, wfcConnectionFromObject} from './WFCConnection';
 import {filterTileObjects, filterConnectionObjects} from './WFCUtils';
 import {Object3D} from 'three';
+import {createEmptyTileObject} from './WFCDebugTileObjects';
 export class WFCTilesCollection {
 	private _tiles: Object3D[];
 	private _tilesById: Map<string, Object3D>;
-	private _availableNeighboursByTileId: Map<string, WFCAvailableTileNeighbours>;
-	// private _connections: WFCConnection[];
+	private _connectionsByTileId: Map<string, Map<string, WFCConnection[]>> = new Map();
 	constructor(objects: Object3D[]) {
 		this._tiles = filterTileObjects(objects);
 		this._tilesById = new Map();
 		for (let tile of this._tiles) {
 			this._tilesById.set(CoreWFCTileAttribute.getTileId(tile), tile);
 		}
+		const emptyTile = createEmptyTileObject();
+		this._tiles.push(emptyTile);
+		this._tilesById.set(EMPTY_TILE_ID, emptyTile);
 
 		const connectionObjects = filterConnectionObjects(objects);
-		const connections = connectionObjects
-			.filter((o) => WFCConnection.validConnectionObject(o))
-			.map((o) => new WFCConnection(o));
-
-		const connectionsById0 = new Map<string, WFCConnection[]>();
-		this._availableNeighboursByTileId = new Map();
-		let i = 0;
-		for (const connection of connections) {
-			const connections = connectionsById0.get(connection.id0) || [];
-			connections.push(connection);
-			connectionsById0.set(connection.id0, connections);
-			console.log(i++, connection.id0, connection.side0, connection.id1, connection.side1);
+		const connections = connectionObjects.filter(validConnectionObject).map(wfcConnectionFromObject);
+		// TODO: add empty to all unconnected sides
+		for (const side0 of ['s', 'e', 'n'] as WFCTileSide[]) {
+			connections.push({
+				id0: 't1',
+				side0,
+				id1: EMPTY_TILE_ID,
+				side1: ALL_HORIZONTAL_SIDES,
+			});
+			connections.push({
+				id0: EMPTY_TILE_ID,
+				side0: ALL_HORIZONTAL_SIDES,
+				id1: 't1',
+				side1: side0,
+			});
 		}
-		connectionsById0.forEach((connections, tileId) => {
-			const availableNeighbours: WFCAvailableTileNeighbours = createEmptyAvailableTileNeighbours();
-			this._availableNeighboursByTileId.set(tileId, availableNeighbours);
-			for (const connection of connections) {
-				const neighbourId = connection.id1;
-				const currentTileSide = connection.side0;
-				const neighbourSide = connection.side1;
-				// availableNeighbours[currentTileSide] = availableNeighbours[neighbourSide] || [];
-				availableNeighbours[currentTileSide].push({id: neighbourId, side: neighbourSide});
-			}
+		for (const side0 of ['e'] as WFCTileSide[]) {
+			connections.push({
+				id0: 't0',
+				side0,
+				id1: EMPTY_TILE_ID,
+				side1: ALL_HORIZONTAL_SIDES,
+			});
+			connections.push({
+				id0: EMPTY_TILE_ID,
+				side0: ALL_HORIZONTAL_SIDES,
+				id1: 't0',
+				side1: side0,
+			});
+		}
+		connections.push({
+			id0: EMPTY_TILE_ID,
+			side0: ALL_HORIZONTAL_SIDES,
+			id1: EMPTY_TILE_ID,
+			side1: ALL_HORIZONTAL_SIDES,
 		});
+
+		// const connectionsById0 = new Map<string, WFCConnection[]>();
+		// this._availableNeighboursByTileId = new Map();
+		// let i = 0;
+		for (const connection of connections) {
+			let mapForId0 = this._connectionsByTileId.get(connection.id0);
+			if (!mapForId0) {
+				mapForId0 = new Map();
+				this._connectionsByTileId.set(connection.id0, mapForId0);
+			}
+			pushOnArrayAtEntry(mapForId0, connection.id1, connection);
+			// console.log(i++, connection.id0, connection.side0, connection.id1, connection.side1);
+		}
 	}
 	tiles() {
 		return this._tiles;
@@ -48,54 +76,31 @@ export class WFCTilesCollection {
 	tile(tileId: string) {
 		return this._tilesById.get(tileId);
 	}
-	// availableNeighbours(tileId: string, side: WFCTileSide): PotentialNeighbour[] {
-	// 	const availableTiles = this._availableNeighboursByTileId.get(tileId);
-	// 	if (!availableTiles) {
-	// 		return [];
-	// 	}
-	// 	return availableTiles[side];
-	// }
-	allowedTileConfig(
-		id0: string,
-		side0: WFCTileSide,
-		id1: string,
-		side1: WFCTileSide,
-		id1Cardinality?: QuadHalfEdgeCardinality
-	): boolean {
-		console.log({id0, side0, id1, side1, id1Cardinality});
-		const fromId0 = this._availableNeighboursByTileId.get(id0);
-		if (!fromId0) {
-			// console.log('NO allowedTileConfig - no fromId0', id0);
+
+	allowedTileConfig(id0: string, side0: WFCTileSide, id1: string, side1: WFCTileSide): boolean {
+		const mapForId0 = this._connectionsByTileId.get(id0);
+		if (!mapForId0) {
+			// console.log('no map');
 			return false;
 		}
-		const fromId0Side0 = fromId0[side0];
-		if (!fromId0Side0) {
-			// console.log('NO allowedTileConfig - no fromId0Side0', id0, side0);
+		const connections = mapForId0.get(id1);
+		if (!connections) {
+			// console.log('no connections', mapForId0, id1);
 			return false;
 		}
-		if (fromId0Side0.length == 0) {
-			// console.log('NO allowedTileConfig - fromId0Side0 empty', id0, side0, this._availableNeighboursByTileId);
-			return false;
-		}
-		// if (id1Cardinality) {
-		// console.log('allowedTileConfig', fromId0Side0, id1Cardinality, id0, side0, id1, side1);
-		// }
-		if (id1Cardinality) {
-			console.log('same as cardinality?', {side1, id1Cardinality}, side1 == id1Cardinality);
-			return side1 == id1Cardinality;
-			// for (const potentialNeighbour of fromId0Side0) {
-			// 	if (potentialNeighbour.id == id1 && potentialNeighbour.side == side1) {
-			// 		return true;
-			// 	}
-			// }
-		} else {
-			console.log('fromId0Side0', fromId0Side0);
-			for (const potentialNeighbour of fromId0Side0) {
-				if (potentialNeighbour.id == id1 /*&& potentialNeighbour.side == side1*/) {
-					return true;
-				}
+		// const debug = true; // && id0 == 't1';
+		// if (debug)
+		// console.log('connections', {side0, side1}, connections.map((c) => [c.side0, c.side1].join('-')).join(','));
+		for (const connection of connections) {
+			if (
+				(connection.side0 == side0 || side0.includes(connection.side0) || connection.side0.includes(side0)) &&
+				(connection.side1 == side1 || side1.includes(connection.side1) || connection.side1.includes(side1))
+			) {
+				// console.log('true!');
+				return true;
 			}
 		}
+		// console.log('false!');
 		return false;
 	}
 }
