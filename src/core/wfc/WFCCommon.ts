@@ -54,7 +54,7 @@ export interface TileConfig {
 export const CLOCK_WISE_TILE_SIDES: WFCTileSide[] = ['n', 'e', 's', 'w'];
 export function rotatedSide(side: WFCTileSide, rotation: number): WFCTileSide {
 	const index = CLOCK_WISE_TILE_SIDES.indexOf(side);
-	return CLOCK_WISE_TILE_SIDES[(index + mod(rotation, 4)) % CLOCK_WISE_TILE_SIDES.length];
+	return CLOCK_WISE_TILE_SIDES[mod(index + rotation, 4)];
 }
 
 export interface TileConfigStats {
@@ -74,4 +74,18 @@ export function configTilesStats(tileConfigs: TileConfig[], target: TileConfigSt
 }
 export function solidTilesStats(tileConfigs: TileConfig[]): TileConfig[] {
 	return tileConfigs.filter((config) => config.tileId != EMPTY_TILE_ID);
+}
+
+export interface SortedTileIds {
+	first: string;
+	second: string;
+}
+export function sortTileIds(id0: string, id1: string, target: SortedTileIds) {
+	if (id0 < id1) {
+		target.first = id0;
+		target.second = id1;
+	} else {
+		target.first = id1;
+		target.second = id0;
+	}
 }

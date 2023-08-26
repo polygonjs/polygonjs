@@ -34,6 +34,7 @@ const _configStats: TileConfigStats = {
 };
 
 const _v4 = new Vector4();
+// const QUAD_DEBUG_ID = 2;
 export class WFCSolver {
 	private _stepsCount: number = 0;
 	private _objects: Object3D[] = [];
@@ -54,14 +55,14 @@ export class WFCSolver {
 		const allTileConfigs: TileConfig[] = [];
 		for (const tile of tiles) {
 			const tileId = CoreWFCTileAttribute.getTileId(tile);
-			// if (tileId == EMPTY_TILE_ID) {
-			// allTileConfigs.push({tileId, rotation: 0});
-			// } else {
-			allTileConfigs.push({tileId, rotation: 0});
-			allTileConfigs.push({tileId, rotation: 1});
-			allTileConfigs.push({tileId, rotation: 2});
-			allTileConfigs.push({tileId, rotation: 3});
-			// }
+			if (tileId == EMPTY_TILE_ID) {
+				allTileConfigs.push({tileId, rotation: 0});
+			} else {
+				allTileConfigs.push({tileId, rotation: 0});
+				allTileConfigs.push({tileId, rotation: 1});
+				allTileConfigs.push({tileId, rotation: 2});
+				allTileConfigs.push({tileId, rotation: 3});
+			}
 		}
 
 		this._quadPositionArray = this.quadObject.geometry.attributes[Attribute.POSITION].array;
@@ -87,7 +88,7 @@ export class WFCSolver {
 		this._stepsCount++;
 		// const previousEntropy = this._lowestEntropy;
 		const quadNode = this._quadNodeWithLowestEntropy(quadSeed + this._stepsCount);
-		console.log('*** step', {stepsCount: this._stepsCount, quadId: quadNode?.id, indices: quadNode?.indices});
+		// console.log('*** step', {stepsCount: this._stepsCount, quadId: quadNode?.id, indices: quadNode?.indices});
 		if (!quadNode) {
 			console.warn('no quad left');
 			return;
@@ -98,13 +99,14 @@ export class WFCSolver {
 			return;
 		}
 		configTilesStats(allowedConfigs, _configStats);
+		// console.log([...allowedConfigs], _configStats);
 
 		const config =
 			_configStats.solid == 0
 				? allowedConfigs[0]
 				: sample(solidTilesStats(allowedConfigs), configSeed + this._stepsCount)!;
 		this._allowedTileConfigsByQuadId.set(quadNode.id, [config]);
-		console.log('step result', this._stepsCount, allowedConfigs, config);
+		// console.log('step result', this._stepsCount, allowedConfigs, config);
 		this._approveConfigForQuad(config, quadNode);
 		//
 		// popFromArrayAtEntry(this._quadNodeByEntropy, previousEntropy, quadNode);
@@ -112,16 +114,16 @@ export class WFCSolver {
 
 		this._updateNeighboursEntropy(quadNode);
 
-		console.log(
-			this._stepsCount,
-			'lowest entropy',
-			this._lowestEntropy,
-			this._quadNodeByEntropy,
-			this._allowedTileConfigsByQuadId
-		);
+		// console.log(
+		// 	this._stepsCount,
+		// 	'lowest entropy',
+		// 	this._lowestEntropy,
+		// 	this._quadNodeByEntropy,
+		// 	this._allowedTileConfigsByQuadId
+		// );
 	}
 	private _approveConfigForQuad(config: TileConfig, quadNode: QuadNode) {
-		console.log('_approveConfigForQuad', config, quadNode.id);
+		// console.log('_approveConfigForQuad', config, quadNode.id);
 		const tileId = config.tileId;
 		// console.log(this._stepsCount, config);
 		const templateTileObject = this._tilesCollection.tile(tileId);
@@ -224,7 +226,7 @@ export class WFCSolver {
 			}
 			case 1: {
 				const config = allowedTileConfigs[0];
-				console.log('isolated 1 tile config for quad', quadNode.id, config);
+				// console.log('isolated 1 tile config for quad', quadNode.id, config);
 				this._approveConfigForQuad(config, quadNode);
 				return;
 			}
@@ -275,7 +277,7 @@ export class WFCSolver {
 		allowedTileConfigs: TileConfig[]
 		// neighbourCardinalities: NeighbourCardinalities
 	) {
-		// const debug = true && quadNode.id == 16;
+		// const debug = true && quadNode.id == QUAD_DEBUG_ID;
 		// if (debug) logRedBg('reduce entropy ' + quadNode.id);
 		// console.log({quadNodeId: quadNode.id, possibleTileConfigs});
 		let i = 0;
@@ -285,7 +287,7 @@ export class WFCSolver {
 			// if (debug) console.log('----- > check config', allowedTileConfigs[i]);
 			// if (debug) console.log(quadNode.id, 'check config START', allowedTileConfigs[i]);
 			const allowed = this._checkConfigAgainstNeighbours(quadNode.id, allowedTileConfigs[i]);
-			// if (debug) console.log(quadNode.id, allowedTileConfigs[i], allowed);
+			// if (debug) console.log(quadNode.id, 'check config DONE', allowedTileConfigs[i], allowed);
 			if (allowed) {
 				i++;
 			} else {
@@ -296,9 +298,48 @@ export class WFCSolver {
 		// if the allowedTileConfigs contain a single solid tile and empty tiles, remove the empty tiles
 		if (allowedTileConfigs.length > 1) {
 			configTilesStats(allowedTileConfigs, _configStats);
-			if (_configStats.solid == 1 && _configStats.empty >= 1) {
-				allowedTileConfigs = allowedTileConfigs.filter((config) => config.tileId != EMPTY_TILE_ID);
+			// console.log('stats', quadNode.id, {..._configStats});
+			switch (_configStats.solid) {
+				case 0: {
+					// if none is solid, we keep the first empty
+					allowedTileConfigs.splice(1, allowedTileConfigs.length - 1);
+					return;
+				}
+				case 1: {
+					// if one is solid, we keep this one
+					const _getIndex = () => {
+						let index = 0;
+						for (const tileConfig of allowedTileConfigs) {
+							if (tileConfig.tileId != EMPTY_TILE_ID) {
+								return index;
+							}
+							index++;
+						}
+						return index;
+					};
+					const index = _getIndex();
+					allowedTileConfigs.splice(index + 1, allowedTileConfigs.length).splice(index - 1, index);
+				}
 			}
+			// if (_configStats.solid == 1 && _configStats.empty >= 1) {
+			// 	const _getIndex = () => {
+			// 		let index = 0;
+			// 		for (const tileConfig of allowedTileConfigs) {
+			// 			if (tileConfig.tileId != EMPTY_TILE_ID) {
+			// 				return index;
+			// 			}
+			// 			index++;
+			// 		}
+			// 		return index;
+			// 	};
+			// 	const index = _getIndex();
+			// 	allowedTileConfigs.splice(index + 1, allowedTileConfigs.length).splice(index - 1, index);
+			// 	// console.log({allowedTileConfigs: [...allowedTileConfigs]});
+			// 	// const solidTileConfig = allowedTileConfigs.find((config) => config.tileId != EMPTY_TILE_ID)
+			// 	// const
+			// 	// array = array.splice(index + 1, array.length - (index + 1) );
+			// 	// allowedTileConfigs = allowedTileConfigs.filter((config) => config.tileId != EMPTY_TILE_ID);
+			// }
 		}
 
 		// if (debug) console.log('remaining configs', quadNode.id, allowedTileConfigs);
@@ -308,7 +349,7 @@ export class WFCSolver {
 		tileConfig: TileConfig
 		// neighbourCardinalities: NeighbourCardinalities
 	): boolean {
-		// const debug = true && quadNodeId == 16;
+		// const debug = true && quadNodeId == QUAD_DEBUG_ID;
 		if (!this._isConfigAllowedWithNeighbour(quadNodeId, tileConfig, 0)) {
 			// if (debug)
 			// 	console.log(
@@ -378,7 +419,7 @@ export class WFCSolver {
 		// neighbourCardinalities: NeighbourCardinalities,
 		neighbourIndex: NeighbourIndex
 	): boolean {
-		// const debug = true && quadNodeId == 16;
+		// const debug = true && quadNodeId == QUAD_DEBUG_ID;
 		this._quadGraph.neighbourData(quadNodeId, neighbourIndex, _neighbourData);
 		if (!_neighbourData.quadNode || _neighbourData.neighbourIndex == null) {
 			return true;

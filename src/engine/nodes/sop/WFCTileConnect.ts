@@ -8,9 +8,21 @@ import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 import {InputCloneMode} from '../../poly/InputCloneMode';
-import {Object3D, Group} from 'three';
+import {Object3D, Group, Quaternion} from 'three';
 import {WFCTileSide, rotatedSide} from '../../../core/wfc/WFCCommon';
 import {CoreWFCConnectionAttribute, CoreWFCTileAttribute} from '../../../core/wfc/WFCAttributes';
+
+const identityQuaternion = new Quaternion();
+const _q = new Quaternion();
+// const EPS = 0.001;
+function _angleIncrement(object: Object3D) {
+	if (Math.abs(object.rotation.y) > 0.1) {
+		return object.rotation.y / (Math.PI / 2);
+	}
+	_q.setFromRotationMatrix(object.matrix);
+	return _q.angleTo(identityQuaternion) / (Math.PI / 2);
+	//return Math.round(object.rotation.y / (Math.PI / 2));
+}
 
 class WFCTileConnectSopParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new WFCTileConnectSopParamsConfig();
@@ -69,12 +81,19 @@ export class WFCTileConnectSopNode extends TypedSopNode<WFCTileConnectSopParamsC
 				xOffset < 0 ? 's' : xOffset > 0 ? 'n' : zOffset < 0 ? 'w' : zOffset > 0 ? 'e' : yOffset < 0 ? 'b' : 't';
 			const currentObjectSide = rotatedSide(
 				currentObjectSideUnrotated,
-				Math.round(currentObject.rotation.y / (Math.PI / 2))
+				Math.round(_angleIncrement(currentObject))
 			);
 			const neighbourSideUnrotated: WFCTileSide =
 				xOffset < 0 ? 'n' : xOffset > 0 ? 's' : zOffset < 0 ? 'e' : zOffset > 0 ? 'w' : yOffset < 0 ? 't' : 'b';
-			const neighbourSide = rotatedSide(neighbourSideUnrotated, Math.round(neighbour.rotation.y / (Math.PI / 2)));
+			const neighbourSide = rotatedSide(neighbourSideUnrotated, Math.round(_angleIncrement(neighbour)));
+			console.log('neighbourSide', {
+				neighbourSideUnrotated,
+				neighbourSide,
+				cr: _angleIncrement(currentObject),
+				nr: _angleIncrement(neighbour),
+			});
 			const group = new Group();
+			console.log(this.path(), {id0, id1, currentObjectSide, neighbourSide});
 			CoreWFCConnectionAttribute.setIsConnection(group, true);
 			CoreWFCConnectionAttribute.setId0(group, id0);
 			CoreWFCConnectionAttribute.setId1(group, id1);
