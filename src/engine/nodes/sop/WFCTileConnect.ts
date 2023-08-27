@@ -8,20 +8,23 @@ import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 import {InputCloneMode} from '../../poly/InputCloneMode';
-import {Object3D, Group, Quaternion} from 'three';
-import {WFCTileSide, rotatedSide} from '../../../core/wfc/WFCCommon';
-import {CoreWFCConnectionAttribute, CoreWFCTileAttribute} from '../../../core/wfc/WFCAttributes';
+import {Object3D, Quaternion} from 'three';
+import {WFCTileSide, rotatedSide, tileSideUnrotated, neighbourTileSideUnrotated} from '../../../core/wfc/WFCCommon';
+import {CoreWFCTileAttribute} from '../../../core/wfc/WFCAttributes';
+import { createConnectionObject } from '../../../core/wfc/WFCConnection';
 
 const identityQuaternion = new Quaternion();
 const _q = new Quaternion();
 // const EPS = 0.001;
 function _angleIncrement(object: Object3D) {
+	// when a tile rotation is 2 rotations ( 2x90 = 180 ),
+	// the rotation.y is not 180, but 0,
+	// and we therefore check the quaternion angle intead.
 	if (Math.abs(object.rotation.y) > 0.1) {
 		return object.rotation.y / (Math.PI / 2);
 	}
 	_q.setFromRotationMatrix(object.matrix);
 	return _q.angleTo(identityQuaternion) / (Math.PI / 2);
-	//return Math.round(object.rotation.y / (Math.PI / 2));
 }
 
 class WFCTileConnectSopParamsConfig extends NodeParamsConfig {}
@@ -77,31 +80,24 @@ export class WFCTileConnectSopNode extends TypedSopNode<WFCTileConnectSopParamsC
 
 			const id0 = CoreWFCTileAttribute.getTileId(currentObject);
 			const id1 = CoreWFCTileAttribute.getTileId(neighbour);
-			const currentObjectSideUnrotated: WFCTileSide =
-				xOffset < 0 ? 's' : xOffset > 0 ? 'n' : zOffset < 0 ? 'w' : zOffset > 0 ? 'e' : yOffset < 0 ? 'b' : 't';
+			const currentObjectSideUnrotated: WFCTileSide = tileSideUnrotated(xOffset, yOffset, zOffset);
+			//xOffset < 0 ? 's' : xOffset > 0 ? 'n' : zOffset < 0 ? 'w' : zOffset > 0 ? 'e' : yOffset < 0 ? 'b' : 't';
 			const currentObjectSide = rotatedSide(
 				currentObjectSideUnrotated,
 				Math.round(_angleIncrement(currentObject))
 			);
-			const neighbourSideUnrotated: WFCTileSide =
-				xOffset < 0 ? 'n' : xOffset > 0 ? 's' : zOffset < 0 ? 'e' : zOffset > 0 ? 'w' : yOffset < 0 ? 't' : 'b';
+			const neighbourSideUnrotated: WFCTileSide = neighbourTileSideUnrotated(xOffset, yOffset, zOffset);
+			// xOffset < 0 ? 'n' : xOffset > 0 ? 's' : zOffset < 0 ? 'e' : zOffset > 0 ? 'w' : yOffset < 0 ? 't' : 'b';
 			const neighbourSide = rotatedSide(neighbourSideUnrotated, Math.round(_angleIncrement(neighbour)));
-			console.log('neighbourSide', {
-				neighbourSideUnrotated,
-				neighbourSide,
-				cr: _angleIncrement(currentObject),
-				nr: _angleIncrement(neighbour),
-			});
-			const group = new Group();
-			console.log(this.path(), {id0, id1, currentObjectSide, neighbourSide});
-			CoreWFCConnectionAttribute.setIsConnection(group, true);
-			CoreWFCConnectionAttribute.setId0(group, id0);
-			CoreWFCConnectionAttribute.setId1(group, id1);
-			CoreWFCConnectionAttribute.setSide0(group, currentObjectSide);
-			CoreWFCConnectionAttribute.setSide1(group, neighbourSide);
+
+			const group = createConnectionObject({
+				id0,
+				id1,
+				side0: currentObjectSide,
+				side1: neighbourSide,
+			})
+		
 			inputObjects.push(group);
-			// TODO: make sure to not add a connection twice?
-			// or maybe we do need both sides (to be like half edges)
 		};
 		for (const templateObject of templateObjects) {
 			const isTile = CoreWFCTileAttribute.getIsTile(templateObject);

@@ -11,6 +11,7 @@ export interface TileCorners {
 export type WFCAllHorizontalSides = 'snwe';
 export const ALL_HORIZONTAL_SIDES: WFCAllHorizontalSides = 'snwe';
 export type WFCTileSide = 's' | 'n' | 'w' | 'e' | 'b' | 't' | WFCAllHorizontalSides;
+export const ALL_SIDES: WFCTileSide[] = ['s', 'n', 'w', 'e', 'b', 't'];
 export interface WFCConnection {
 	readonly id0: string;
 	readonly id1: string;
@@ -80,12 +81,29 @@ export interface SortedTileIds {
 	first: string;
 	second: string;
 }
-export function sortTileIds(id0: string, id1: string, target: SortedTileIds) {
-	if (id0 < id1) {
-		target.first = id0;
-		target.second = id1;
+export function sortTileIds(id0: string, id1: string, target: SortedTileIds, invert = false) {
+	if (invert) {
+		if (id0 > id1) {
+			target.first = id0;
+			target.second = id1;
+		} else {
+			target.first = id1;
+			target.second = id0;
+		}
 	} else {
-		target.first = id1;
-		target.second = id0;
+		if (id0 < id1) {
+			target.first = id0;
+			target.second = id1;
+		} else {
+			target.first = id1;
+			target.second = id0;
+		}
 	}
+}
+
+export function tileSideUnrotated(xOffset: number, yOffset: number, zOffset: number): WFCTileSide {
+	return xOffset < 0 ? 's' : xOffset > 0 ? 'n' : zOffset < 0 ? 'w' : zOffset > 0 ? 'e' : yOffset < 0 ? 'b' : 't';
+}
+export function neighbourTileSideUnrotated(xOffset: number, yOffset: number, zOffset: number): WFCTileSide {
+	return xOffset < 0 ? 'n' : xOffset > 0 ? 's' : zOffset < 0 ? 'e' : zOffset > 0 ? 'w' : yOffset < 0 ? 't' : 'b';
 }

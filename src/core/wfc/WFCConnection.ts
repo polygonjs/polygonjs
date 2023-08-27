@@ -1,3 +1,4 @@
+import {Group, Object3D} from 'three';
 import {CoreObjectType, ObjectContent} from '../geometry/ObjectContent';
 import {CoreWFCConnectionAttribute} from './WFCAttributes';
 import {WFCTileSide, WFCConnection} from './WFCCommon';
@@ -17,6 +18,15 @@ export function wfcConnectionFromObject(object: ObjectContent<CoreObjectType>): 
 		side1: CoreWFCConnectionAttribute.getSide1(object) as WFCTileSide,
 	};
 	return connection;
+}
+export function createConnectionObject(connection: WFCConnection): Object3D {
+	const group = new Group();
+	CoreWFCConnectionAttribute.setIsConnection(group, true);
+	CoreWFCConnectionAttribute.setId0(group, connection.id0);
+	CoreWFCConnectionAttribute.setId1(group, connection.id1);
+	CoreWFCConnectionAttribute.setSide0(group, connection.side0);
+	CoreWFCConnectionAttribute.setSide1(group, connection.side1);
+	return group;
 }
 // export class WFCConnection {
 // 	public readonly id0: string;

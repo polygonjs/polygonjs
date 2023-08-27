@@ -306,6 +306,7 @@ import {WebXRAREstimatedLightSopNode} from '../../../nodes/sop/WebXRAREstimatedL
 import {WFCSolverSopNode} from '../../../nodes/sop/WFCSolver';
 import {WFCTileConnectSopNode} from '../../../nodes/sop/WFCTileConnect';
 import {WFCTileConnectDebugSopNode} from '../../../nodes/sop/WFCTileConnectDebug';
+import {WFCTileConnectEmptySopNode} from '../../../nodes/sop/WFCTileConnectEmpty';
 import {WFCTilePropertiesSopNode} from '../../../nodes/sop/WFCTileProperties';
 import {WFCTileTransformSopNode} from '../../../nodes/sop/WFCTileTransform';
 // networks
@@ -624,6 +625,7 @@ export interface GeoNodeChildrenMap {
 	WFCSolver: WFCSolverSopNode;
 	WFCTileConnect: WFCTileConnectSopNode;
 	WFCTileConnectDebug: WFCTileConnectDebugSopNode;
+	WFCTileConnectEmpty: WFCTileConnectEmptySopNode;
 	WFCTileProperties: WFCTilePropertiesSopNode;
 	WFCTileTransform: WFCTileTransformSopNode;
 
@@ -1197,6 +1199,7 @@ export class SopRegister {
 		poly.registerNode(WFCSolverSopNode, CATEGORY_SOP.WFC);
 		poly.registerNode(WFCTileConnectSopNode, CATEGORY_SOP.WFC);
 		poly.registerNode(WFCTileConnectDebugSopNode, CATEGORY_SOP.WFC);
+		poly.registerNode(WFCTileConnectEmptySopNode, CATEGORY_SOP.WFC);
 		poly.registerNode(WFCTilePropertiesSopNode, CATEGORY_SOP.WFC);
 		poly.registerNode(WFCTileTransformSopNode, CATEGORY_SOP.WFC);
 
