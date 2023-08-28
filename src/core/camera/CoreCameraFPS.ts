@@ -52,28 +52,31 @@ export class CoreCameraViewerFPSController {
 		};
 
 		const maxFPS = _getMaxFPSIfPreset();
-		if (maxFPS != null) {
-			const _minDelta = _getMinDelta(maxFPS);
-			const allowDynamicChange =
-				(CoreObject.attribValue(camera, CameraAttribute.MAX_FPS_DYNAMIC_CHANGE) as boolean | null) || false;
-			if (allowDynamicChange) {
-				const config: ViewerFPSConfig = {
-					minDelta: () => _minDelta,
-				};
-				return config;
-			} else {
-				const defaultMinDelta = _getMinDelta(60);
-				const config: ViewerFPSConfig = {
-					minDelta: () => {
-						const maxFPS = _getMaxFPSIfPreset();
-						if (maxFPS == null) {
-							return defaultMinDelta;
-						}
-						return _minDelta;
-					},
-				};
-				return config;
-			}
+		if (maxFPS == null) {
+			return;
+		}
+
+		const _minDelta = _getMinDelta(maxFPS);
+		const allowDynamicChange =
+			(CoreObject.attribValue(camera, CameraAttribute.MAX_FPS_DYNAMIC_CHANGE) as boolean | null) || false;
+
+		if (allowDynamicChange) {
+			const defaultMinDelta = _getMinDelta(60);
+			const config: ViewerFPSConfig = {
+				minDelta: () => {
+					const maxFPS = _getMaxFPSIfPreset();
+					if (maxFPS == null) {
+						return defaultMinDelta;
+					}
+					return _minDelta;
+				},
+			};
+			return config;
+		} else {
+			const config: ViewerFPSConfig = {
+				minDelta: () => _minDelta,
+			};
+			return config;
 		}
 	}
 }
