@@ -37,17 +37,17 @@ const _q = new Quaternion();
 const _average = new Vector3();
 // const _sphere = new Sphere()
 // const _neighbours:Vector3[] = []
-enum QuadSmoothMethod {
-	AVERAGE = 'average',
+enum QuadSmoothMode {
 	SQUARIFY = 'squarify',
+	AVERAGE = 'average',
 }
-const QUAD_SMOOTH_METHODS: QuadSmoothMethod[] = [QuadSmoothMethod.AVERAGE, QuadSmoothMethod.SQUARIFY];
+const QUAD_SMOOTH_MODES: QuadSmoothMode[] = [QuadSmoothMode.AVERAGE, QuadSmoothMode.SQUARIFY];
 
 class QuadSmoothSopParamsConfig extends NodeParamsConfig {
-	/** @param method */
-	method = ParamConfig.INTEGER(QUAD_SMOOTH_METHODS.indexOf(QuadSmoothMethod.AVERAGE), {
+	/** @param mode */
+	mode = ParamConfig.INTEGER(QUAD_SMOOTH_MODES.indexOf(QuadSmoothMode.SQUARIFY), {
 		menu: {
-			entries: QUAD_SMOOTH_METHODS.map((name, value) => {
+			entries: QUAD_SMOOTH_MODES.map((name, value) => {
 				return {name, value};
 			}),
 		},
@@ -88,21 +88,21 @@ export class QuadSmoothSopNode extends QuadSopNode<QuadSmoothSopParamsConfig> {
 
 		this.setCoreGroup(coreGroup);
 	}
-	setMethod(method: QuadSmoothMethod) {
-		this.p.method.set(QUAD_SMOOTH_METHODS.indexOf(method));
+	setMode(method: QuadSmoothMode) {
+		this.p.mode.set(QUAD_SMOOTH_MODES.indexOf(method));
 	}
-	method() {
-		return QUAD_SMOOTH_METHODS[this.pv.method];
+	mode() {
+		return QUAD_SMOOTH_MODES[this.pv.mode];
 	}
 	private _smoothQuadGeometry(geometry: QuadGeometry) {
-		const method = this.method();
-		switch (method) {
-			case QuadSmoothMethod.AVERAGE:
+		const mode = this.mode();
+		switch (mode) {
+			case QuadSmoothMode.AVERAGE:
 				return this._smoothQuadGeometryWithAverage(geometry);
-			case QuadSmoothMethod.SQUARIFY:
+			case QuadSmoothMode.SQUARIFY:
 				return this._smoothQuadGeometryWithSquarify(geometry);
 		}
-		TypeAssert.unreachable(method);
+		TypeAssert.unreachable(mode);
 	}
 	private _smoothQuadGeometryWithAverage(geometry: QuadGeometry) {
 		const position = geometry.attributes[Attribute.POSITION];
