@@ -13,7 +13,6 @@ import {Attribute} from '../../../core/geometry/Attribute';
 import {setToArray} from '../../../core/SetUtils';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {TypeAssert} from '../../poly/Assert';
-// import {getCircumCenter} from '../../../core/geometry/tet/utils/tetCenter';
 
 const _current = new Vector3();
 const _neighbourAverage = new Vector3();
@@ -35,8 +34,6 @@ const _triangle = new Triangle();
 const _triangleNormal = new Vector3();
 const _q = new Quaternion();
 const _average = new Vector3();
-// const _sphere = new Sphere()
-// const _neighbours:Vector3[] = []
 enum QuadSmoothMode {
 	SQUARIFY = 'squarify',
 	AVERAGE = 'average',
