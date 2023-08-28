@@ -57,8 +57,8 @@ export class ThreejsViewer<C extends Camera> extends TypedViewer<C> {
 	protected _renderFunc: RenderFuncWithDelta | undefined;
 	protected _renderCSSFunc: RenderFunc | undefined;
 	private _cssRendererConfig: CSSRendererConfig | undefined;
-	private _viewerCodeConfig: ViewerCodeConfig | undefined;
-	private _viewerFPSConfig: ViewerFPSConfig | undefined;
+	private _codeConfig: ViewerCodeConfig | undefined;
+	private _FPSConfig: ViewerFPSConfig | undefined;
 
 	private _effectComposer: EffectComposer | undefined;
 	protected _errorMessage: string | undefined;
@@ -129,7 +129,7 @@ export class ThreejsViewer<C extends Camera> extends TypedViewer<C> {
 				});
 			}
 			// ViewerCode
-			this._viewerCodeConfig = CoreCameraViewerCodeController.viewerCodeConfig({camera});
+			this._codeConfig = CoreCameraViewerCodeController.viewerCodeConfig({camera});
 			// CSSRender
 			this._cssRendererConfig = CoreCameraCSSRendererController.cssRendererConfig({scene, camera, canvas});
 			const cssRenderer = this._cssRendererConfig?.cssRenderer;
@@ -137,7 +137,7 @@ export class ThreejsViewer<C extends Camera> extends TypedViewer<C> {
 			// controls
 			this._controlsNode = CoreCameraControlsController.controlsNode({camera, scene});
 			// FPS
-			this._viewerFPSConfig = CoreCameraViewerFPSController.viewerFPSConfig({camera});
+			this._FPSConfig = CoreCameraViewerFPSController.viewerFPSConfig({camera});
 			// renderFunc
 			if (effectComposer) {
 				this._renderFunc = (delta) => effectComposer.render(delta);
@@ -167,8 +167,8 @@ export class ThreejsViewer<C extends Camera> extends TypedViewer<C> {
 			this._domElement?.classList.add(CSS_CLASS);
 			return this._domElement;
 		};
-		const viewerContainerElement = this._viewerCodeConfig
-			? _appendCanvasWithViewerCodeConfig(this._viewerCodeConfig)
+		const viewerContainerElement = this._codeConfig
+			? _appendCanvasWithViewerCodeConfig(this._codeConfig)
 			: _appendCanvasWithoutViewerCodeConfig();
 
 		// mount CSSRenderer
@@ -352,9 +352,9 @@ export class ThreejsViewer<C extends Camera> extends TypedViewer<C> {
 	private _accumulatedDelta = 0;
 	protected __animateCommon__() {
 		const delta = this._scene.timeController.updateClockDelta();
-		if (this._viewerFPSConfig) {
+		if (this._FPSConfig) {
 			this._accumulatedDelta += delta;
-			if (!isDeltaValid(this._accumulatedDelta, this._viewerFPSConfig)) {
+			if (!isDeltaValid(this._accumulatedDelta, this._FPSConfig)) {
 				return;
 			}
 			this._accumulatedDelta = 0;

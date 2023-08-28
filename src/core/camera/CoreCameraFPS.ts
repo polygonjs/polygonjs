@@ -68,7 +68,7 @@ export class CoreCameraViewerFPSController {
 					if (maxFPS == null) {
 						return defaultMinDelta;
 					}
-					return _minDelta;
+					return _getMinDelta(maxFPS);
 				},
 			};
 			return config;
