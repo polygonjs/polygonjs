@@ -90,8 +90,8 @@ function filterCoreObjects<T extends CoreObjectType>(
 			selectedCoreObjects.push(coreObject);
 			added = true;
 		}
-		const isInGroup = CoreMask.isInGroup(groupString, rootObject);
-		if (isInGroup && !added) {
+		const _isInGroup = isInGroup(groupString, rootObject);
+		if (_isInGroup && !added) {
 			selectedCoreObjects.push(rootObject);
 		}
 	}

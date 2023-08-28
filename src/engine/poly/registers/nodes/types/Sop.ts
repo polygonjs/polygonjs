@@ -211,10 +211,12 @@ export enum SopType {
 	UV_TRANSFORM = 'uvTransform',
 	UV_UNWRAP = 'uvUnwrap',
 	WEB_XR_AR_ESTIMATED_LIGHT = 'webXRAREstimatedLight',
+	WFC_EMPTY_TILE = 'WFCEmptyTile',
+	WFC_ERROR_TILE = 'WFCErrorTile',
+	WFC_UNRESOLVED_TILE = 'WFCUnresolvedTile',
 	WFC_SOLVER = 'WFCSolver',
 	WFC_TILE_CONNECT = 'WFCTileConnect',
 	WFC_TILE_CONNECT_DEBUG = 'WFCTileConnectDebug',
-	WFC_TILE_CONNECT_EMPTY = 'WFCTileConnectEmpty',
 	WFC_TILE_PROPERTIES = 'WFCTileProperties',
 	WFC_TILE_TRANSFORM = 'WFCTileTransform',
 }

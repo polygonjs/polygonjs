@@ -21,7 +21,7 @@ export function wfcConnectionFromObject(object: ObjectContent<CoreObjectType>): 
 }
 export function createConnectionObject(connection: WFCConnection): Object3D {
 	const group = new Group();
-	CoreWFCConnectionAttribute.setIsConnection(group, true);
+	// CoreWFCConnectionAttribute.setIsConnection(group, true);
 	CoreWFCConnectionAttribute.setId0(group, connection.id0);
 	CoreWFCConnectionAttribute.setId1(group, connection.id1);
 	CoreWFCConnectionAttribute.setSide0(group, connection.side0);

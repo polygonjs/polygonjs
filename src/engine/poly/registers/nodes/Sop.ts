@@ -304,11 +304,13 @@ import {UvTransformSopNode} from '../../../nodes/sop/UvTransform';
 import {UvUnwrapSopNode} from '../../../nodes/sop/UvUnwrap';
 import {WebXRAREstimatedLightSopNode} from '../../../nodes/sop/WebXRAREstimatedLight';
 import {WFCSolverSopNode} from '../../../nodes/sop/WFCSolver';
+import {WFCEmptyTileSopNode} from '../../../nodes/sop/WFCEmptyTile';
+import {WFCErrorTileSopNode} from '../../../nodes/sop/WFCErrorTile';
 import {WFCTileConnectSopNode} from '../../../nodes/sop/WFCTileConnect';
 import {WFCTileConnectDebugSopNode} from '../../../nodes/sop/WFCTileConnectDebug';
-import {WFCTileConnectEmptySopNode} from '../../../nodes/sop/WFCTileConnectEmpty';
 import {WFCTilePropertiesSopNode} from '../../../nodes/sop/WFCTileProperties';
 import {WFCTileTransformSopNode} from '../../../nodes/sop/WFCTileTransform';
+import {WFCUnresolvedTileSopNode} from '../../../nodes/sop/WFCUnresolvedTile';
 // networks
 import {ActorsNetworkSopNode} from '../../../nodes/sop/ActorsNetwork';
 import {AnimationsNetworkSopNode} from '../../../nodes/sop/AnimationsNetwork';
@@ -622,12 +624,14 @@ export interface GeoNodeChildrenMap {
 	uvTransform: UvTransformSopNode;
 	uvUnwrap: UvUnwrapSopNode;
 	webXRAREstimatedLight: WebXRAREstimatedLightSopNode;
+	WFCEmptyTile: WFCEmptyTileSopNode;
+	WFCErrorTile: WFCErrorTileSopNode;
 	WFCSolver: WFCSolverSopNode;
 	WFCTileConnect: WFCTileConnectSopNode;
 	WFCTileConnectDebug: WFCTileConnectDebugSopNode;
-	WFCTileConnectEmpty: WFCTileConnectEmptySopNode;
 	WFCTileProperties: WFCTilePropertiesSopNode;
 	WFCTileTransform: WFCTileTransformSopNode;
+	WFCUnresolvedTile: WFCUnresolvedTileSopNode;
 
 	// networks
 	actorsNetwork: ActorsNetworkSopNode;
@@ -1196,12 +1200,14 @@ export class SopRegister {
 		poly.registerNode(UvTransformSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(UvUnwrapSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(WebXRAREstimatedLightSopNode, CATEGORY_SOP.WEBXR);
+		poly.registerNode(WFCEmptyTileSopNode, CATEGORY_SOP.WFC);
+		poly.registerNode(WFCErrorTileSopNode, CATEGORY_SOP.WFC);
 		poly.registerNode(WFCSolverSopNode, CATEGORY_SOP.WFC);
 		poly.registerNode(WFCTileConnectSopNode, CATEGORY_SOP.WFC);
 		poly.registerNode(WFCTileConnectDebugSopNode, CATEGORY_SOP.WFC);
-		poly.registerNode(WFCTileConnectEmptySopNode, CATEGORY_SOP.WFC);
 		poly.registerNode(WFCTilePropertiesSopNode, CATEGORY_SOP.WFC);
 		poly.registerNode(WFCTileTransformSopNode, CATEGORY_SOP.WFC);
+		poly.registerNode(WFCUnresolvedTileSopNode, CATEGORY_SOP.WFC);
 
 		// networks
 		poly.registerNode(ActorsNetworkSopNode, CATEGORY_SOP.NETWORK);

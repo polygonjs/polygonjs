@@ -11,7 +11,6 @@ import {SopType} from '../../poly/registers/nodes/types/Sop';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {WFCSolver} from '../../../core/wfc/WFCSolver';
 import {filterTileObjects, filterConnectionObjects} from '../../../core/wfc/WFCUtils';
-import {logBlueBg} from '../../../core/logger/Console';
 
 class WFCSolverSopParamsConfig extends NodeParamsConfig {
 	/** @param iterations */
@@ -73,11 +72,11 @@ export class WFCSolverSopNode extends TypedSopNode<WFCSolverSopParamsConfig> {
 		const newObjects: Object3D[] = [];
 
 		for (let quadObject of quadObjects) {
-			logBlueBg('------------- SOLVE -------------');
 			const solver = new WFCSolver(tileAndConnectionObjects, quadObject, tileHeight);
 			for (let i = 0; i < stepsCount; i++) {
 				solver.step(quadSeed, configSeed);
 			}
+			solver.addUnresolvedTileObjects();
 			newObjects.push(...solver.objects());
 		}
 

@@ -60,7 +60,6 @@ export class WFCTileConnectDebugSopNode extends TypedSopNode<WFCTileConnectDebug
 					if (visited.has(id)) {
 						return;
 					}
-					console.log(id);
 					let inverted = id0 != srcTileId;
 					visited.add(id);
 

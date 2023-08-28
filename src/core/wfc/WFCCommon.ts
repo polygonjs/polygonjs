@@ -19,6 +19,8 @@ export interface WFCConnection {
 	readonly side1: WFCTileSide;
 }
 export const EMPTY_TILE_ID = '__EMPTY_TILE__';
+export const ERROR_TILE_ID = '__ERROR_TILE__';
+export const UNRESOLVED_TILE_ID = '__UNRESOLVED_TILE__';
 // export enum WFCLookAtSide {
 // 	SOUTH = 's',
 // 	NORTH = 'n',

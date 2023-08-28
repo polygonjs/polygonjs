@@ -47,8 +47,12 @@ export class WFCTilesCollection {
 	private _tiles: Object3D[];
 	private _tilesById: Map<string, Object3D>;
 	private _connectionsByTileId: ConnectionsByTileId = new Map();
+	private _errorTileObject: Object3D | null;
+	private _unresolvedTileObject: Object3D | null;
 	constructor(objects: Object3D[]) {
 		this._tiles = filterTileObjects(objects);
+		this._errorTileObject = objects.find((o) => CoreWFCTileAttribute.getIsErrorTile(o)) || null;
+		this._unresolvedTileObject = objects.find((o) => CoreWFCTileAttribute.getIsUnresolvedTile(o)) || null;
 		this._tilesById = new Map();
 		for (let tile of this._tiles) {
 			this._tilesById.set(CoreWFCTileAttribute.getTileId(tile), tile);
@@ -68,6 +72,12 @@ export class WFCTilesCollection {
 	}
 	tile(tileId: string) {
 		return this._tilesById.get(tileId);
+	}
+	errorTile() {
+		return this._errorTileObject;
+	}
+	unresolvedTile() {
+		return this._unresolvedTileObject;
 	}
 	traverseConnections(id0: string, id1: string, callback: TraverseConnectionsCallback): void {
 		sortTileIds(id0, id1, _sortedTileIds);

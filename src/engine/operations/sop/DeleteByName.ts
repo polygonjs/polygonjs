@@ -26,12 +26,19 @@ export class DeleteByNameSopOperation extends BaseSopOperation {
 
 		const coreObjects = coreGroup.allCoreObjects();
 		const newObjects: ObjectContent<CoreObjectType>[] = [];
+		const masks = params.group.split(' ');
 		for (const coreObject of coreObjects) {
-			let _isNotGroup = !isInGroup(`${params.group}`, coreObject);
-			if (params.invert) {
-				_isNotGroup = !_isNotGroup;
+			let _toDelete = false;
+			for (const mask of masks) {
+				let _inGroup = isInGroup(`${mask}`, coreObject);
+				if ((_inGroup && !params.invert) || (!_inGroup && params.invert)) {
+					_toDelete = true;
+				}
 			}
-			if (_isNotGroup) {
+			// if (params.invert) {
+			// 	_inAnyGroup = !_inAnyGroup;
+			// }
+			if (!_toDelete) {
 				newObjects.push(coreObject.object());
 			}
 		}

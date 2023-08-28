@@ -58,9 +58,9 @@ export class WFCTilePropertiesSopNode extends TypedSopNode<WFCTilePropertiesSopP
 		const promises: Array<Promise<void>> = [];
 		const {addName, addId} = this.pv;
 
-		for (const coreObject of coreObjects) {
-			CoreWFCTileAttribute.setIsTile(coreObject.object(), true);
-		}
+		// for (const coreObject of coreObjects) {
+		// 	CoreWFCTileAttribute.setIsTile(coreObject.object(), true);
+		// }
 
 		if (isBooleanTrue(addId)) {
 			promises.push(
