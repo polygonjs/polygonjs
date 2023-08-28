@@ -23,12 +23,12 @@ export abstract class BaseOnObjectSwipeEventJsNode extends BaseOnObjectPointerEv
 	override eventData(): EvaluatorEventData[] {
 		return [
 			{
-				type: PointerEventType.touchstart,
+				type: PointerEventType.pointerdown,
 				emitter: this.eventEmitter(),
 				jsType: JsType.ON_OBJECT_POINTERDOWN,
 			},
 			{
-				type: PointerEventType.touchend,
+				type: PointerEventType.pointerup,
 				emitter: this.eventEmitter(),
 				jsType: JsType.ON_OBJECT_POINTERUP,
 			},
