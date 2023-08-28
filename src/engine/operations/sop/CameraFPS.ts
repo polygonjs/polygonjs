@@ -11,6 +11,7 @@ import {CoreMask} from '../../../core/geometry/Mask';
 interface CameraFPSSopParams extends DefaultOperationParams {
 	group: string;
 	maxFPS: number;
+	allowDynamicChange: boolean;
 }
 interface UpdateObjectOptions {
 	objects: ObjectContent<CoreObjectType>[];
@@ -21,6 +22,7 @@ export class CameraFPSSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: CameraFPSSopParams = {
 		group: '',
 		maxFPS: 60,
+		allowDynamicChange: false,
 	};
 	static override readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
 	static override type(): Readonly<CameraSopNodeType.FPS> {
@@ -43,6 +45,7 @@ export class CameraFPSSopOperation extends BaseSopOperation {
 
 		for (let object of objects) {
 			CoreObject.addAttribute(object, CameraAttribute.MAX_FPS, params.maxFPS);
+			CoreObject.addAttribute(object, CameraAttribute.MAX_FPS_DYNAMIC_CHANGE, params.allowDynamicChange);
 		}
 	}
 }

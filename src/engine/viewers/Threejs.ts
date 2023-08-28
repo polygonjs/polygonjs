@@ -13,7 +13,7 @@ import {AbstractRenderer} from './Common';
 import {CoreCameraWebXRController, CoreCameraWebXRControllerConfig} from '../../core/camera/webXR/CoreCameraWebXR';
 import {MarkerTrackingControllerConfig} from '../../core/webXR/markerTracking/Common';
 import {CoreCameraMarkerTrackingController} from '../../core/camera/webXR/CoreCameraMarkerTracking';
-import {CoreCameraViewerFPSController, ViewerFPSConfig} from '../../core/camera/CoreCameraFPS';
+import {CoreCameraViewerFPSController, ViewerFPSConfig, isDeltaValid} from '../../core/camera/CoreCameraFPS';
 const CSS_CLASS = 'CoreThreejsViewer';
 
 declare global {
@@ -349,16 +349,15 @@ export class ThreejsViewer<C extends Camera> extends TypedViewer<C> {
 	private _animateWebXR() {
 		this.__animateCommon__();
 	}
-	private __animatedCommonAt = -1000;
+	private _accumulatedDelta = 0;
 	protected __animateCommon__() {
 		const delta = this._scene.timeController.updateClockDelta();
 		if (this._viewerFPSConfig) {
-			const now = performance.now();
-			const viewerFPSDelta = now - this.__animatedCommonAt;
-			if (viewerFPSDelta < this._viewerFPSConfig.minDelta) {
+			this._accumulatedDelta += delta;
+			if (!isDeltaValid(this._accumulatedDelta, this._viewerFPSConfig)) {
 				return;
 			}
-			this.__animatedCommonAt = now;
+			this._accumulatedDelta = 0;
 		}
 
 		this._preRender(delta);
