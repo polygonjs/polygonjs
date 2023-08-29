@@ -220,7 +220,7 @@ export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
 				}
 				this._currentAttribValueF = position.x;
 			} else {
-				destPoint.getPosition(position);
+				destPoint.position(position);
 				if (useNormals) {
 					destPoint.attribValueVector3(Attribute.NORMAL, normal);
 				}
@@ -256,7 +256,7 @@ export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
 				}
 				this._currentAttribValueV2.set(position.x, position.y);
 			} else {
-				destPoint.getPosition(position);
+				destPoint.position(position);
 				if (useNormals) {
 					destPoint.attribValueVector3(Attribute.NORMAL, normal);
 				}
@@ -293,7 +293,7 @@ export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
 				}
 				this._currentAttribValueV3.copy(position);
 			} else {
-				destPoint.getPosition(position);
+				destPoint.position(position);
 				if (useNormals) {
 					destPoint.attribValueVector3(Attribute.NORMAL, normal);
 				}
@@ -329,7 +329,7 @@ export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
 				}
 				this._currentAttribValueV4.set(position.x, position.y, position.z, 0);
 			} else {
-				destPoint.getPosition(position);
+				destPoint.position(position);
 				if (useNormals) {
 					destPoint.attribValueVector3(Attribute.NORMAL, normal);
 				}

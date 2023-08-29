@@ -13,9 +13,10 @@ import {CoreOctree} from '../../../core/math/octree/Octree';
 import {CoreIterator} from '../../../core/Iterator';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {InputCloneMode} from '../../poly/InputCloneMode';
-import {Box3} from 'three';
+import {Box3,Vector3} from 'three';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 const tmpBox = new Box3();
+const _position = new Vector3();
 class AttribTransferSopParamsConfig extends NodeParamsConfig {
 	/** @param source group to transfer from (right input, or input 1) */
 	srcGroup = ParamConfig.STRING();
@@ -108,13 +109,14 @@ export class AttribTransferSopNode extends TypedSopNode<AttribTransferSopParamsC
 		const iterator = new CoreIterator();
 		await iterator.startWithArray(dest_points, this._transfer_attributes_for_point.bind(this));
 	}
-	private _transfer_attributes_for_point(dest_point: CorePoint) {
-		const total_dist = this.pv.distanceThreshold + this.pv.blendWidth;
+	private _transfer_attributes_for_point(destPoint: CorePoint) {
+		const totalDist = this.pv.distanceThreshold + this.pv.blendWidth;
+		destPoint.position(_position)
 		const nearest_points: CorePoint[] =
-			this._octree?.find_points(dest_point.position(), total_dist, this.pv.maxSamplesCount) || [];
+			this._octree?.find_points(_position, totalDist, this.pv.maxSamplesCount) || [];
 
 		for (let attrib_name of this._attrib_names) {
-			this._interpolate_points(dest_point, nearest_points, attrib_name);
+			this._interpolate_points(destPoint, nearest_points, attrib_name);
 		}
 	}
 

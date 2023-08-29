@@ -566,7 +566,6 @@ export class PhysicsRBDAttributesSopNode extends TypedSopNode<PhysicsRBDAttribut
 			const coreObject = coreObjects[i];
 			const value = valuesByCoreObjectIndex.get(coreObject.index());
 			if (value != null) {
-				// coreObject.setAttribValue(attribName, value);
 				applyMethod(coreObject.object(), value);
 			}
 		}

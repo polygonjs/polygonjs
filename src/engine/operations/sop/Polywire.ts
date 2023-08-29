@@ -96,23 +96,23 @@ export class PolywireSopOperation extends BaseSopOperation {
 		// const scale = 1;
 		let i = 0;
 		for (let point of points) {
-			point.getPosition(currentPos);
+			point.position(currentPos);
 			let prevPoint = points[i - 1];
 			let nextPoint = points[i + 1];
 			if (prevPoint && nextPoint) {
 				// if we have both prev and next points, the dir is a blend between the dir to the prev and to the next
-				nextPoint.getPosition(nextPos);
+				nextPoint.position(nextPos);
 				deltaNext.copy(nextPos).sub(currentPos);
-				prevPoint.getPosition(prevPos);
+				prevPoint.position(prevPos);
 				deltaPrev.copy(prevPos).sub(currentPos).multiplyScalar(-1);
 				delta.lerpVectors(deltaNext, deltaPrev, 0.5);
 			} else {
 				if (nextPoint) {
-					nextPoint.getPosition(nextPos);
+					nextPoint.position(nextPos);
 					delta.copy(nextPos).sub(currentPos);
 				} else {
 					nextPoint = points[i - 1];
-					nextPoint.getPosition(nextPos);
+					nextPoint.position(nextPos);
 					delta.copy(nextPos).sub(currentPos).multiplyScalar(-1);
 				}
 			}

@@ -48,8 +48,10 @@ type OnAttribChange<T extends ParamConvertibleJsType> = (
 ) => void;
 
 export abstract class BaseCoreObject<T extends CoreObjectType> extends CoreEntity {
-	constructor(protected _object: ObjectContent<T>, index: number) {
-		super(index);
+	protected _object: ObjectContent<T>;
+	constructor(object: ObjectContent<T>, index: number) {
+		super(object, index);
+		this._object = object;
 	}
 	dispose() {}
 
@@ -61,7 +63,7 @@ export abstract class BaseCoreObject<T extends CoreObjectType> extends CoreEntit
 		return this._object;
 	}
 	geometry(): ObjectGeometryMap[T] | null {
-		return this._object.geometry || null; //(this._object as Mesh).geometry as BufferGeometry | null;
+		return this._object?.geometry || null; //(this._object as Mesh).geometry as BufferGeometry | null;
 	}
 	static attributeRef<OT extends CoreObjectType, T extends ParamConvertibleJsType>(
 		object: ObjectContent<OT>,
@@ -76,6 +78,9 @@ export abstract class BaseCoreObject<T extends CoreObjectType> extends CoreEntit
 		type: T,
 		defaultValue: JsIConnectionPointTypeToDataTypeMap[T]
 	) {
+		if (!this._object) {
+			return;
+		}
 		return (this.constructor as any as typeof BaseCoreObject<CoreObjectType>).attributeRef(
 			this._object,
 			attribName,
@@ -99,6 +104,9 @@ export abstract class BaseCoreObject<T extends CoreObjectType> extends CoreEntit
 		defaultValue: JsIConnectionPointTypeToDataTypeMap[T],
 		callback: OnAttribChange<T>
 	) {
+		if (!this._object) {
+			return;
+		}
 		return (this.constructor as any as typeof BaseCoreObject<CoreObjectType>).onAttribChange(
 			this._object,
 			attribName,
@@ -155,6 +163,9 @@ export abstract class BaseCoreObject<T extends CoreObjectType> extends CoreEntit
 		// }
 	}
 	addAttribute(name: string, value: AttribValue) {
+		if (!this._object) {
+			return;
+		}
 		(this.constructor as any as typeof BaseCoreObject<CoreObjectType>).addAttribute(this._object, name, value);
 	}
 	addNumericAttrib(name: string, value: NumericAttribValue) {

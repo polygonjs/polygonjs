@@ -23,6 +23,7 @@ const DEFAULT = {
 
 const DEFAULT_COLOR = new Vector3(1, 1, 1);
 const DEFAULT_UV = new Vector2(0, 0);
+const _position = new Vector3();
 
 export enum InstanceAttrib {
 	POSITION = 'instancePosition',
@@ -86,7 +87,7 @@ export class CoreInstancer {
 	// private _point_m = new Matrix4()
 	matrixFromPoint(point: CorePoint, targetMatrix: Matrix4) {
 		targetMatrix.identity();
-		const t = point.position();
+		point.position(_position);
 		//r = new Vector3(0,0,0)
 		if (this._is_scale_present) {
 			point.attribValue(Attribute.SCALE, this._pointScale);
@@ -105,7 +106,7 @@ export class CoreInstancer {
 		scale_matrix.makeScale(this._pointScale.x, this._pointScale.y, this._pointScale.z);
 
 		const translate_matrix = this._matrixT;
-		translate_matrix.makeTranslation(t.x, t.y, t.z);
+		translate_matrix.makeTranslation(_position.x, _position.y, _position.z);
 
 		targetMatrix.multiply(translate_matrix);
 

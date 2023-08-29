@@ -15,14 +15,15 @@ export const OBJECT_TYPE_MENU_ENTRIES = OBJECT_TYPES.map((name, value) => ({name
 export class ByObjectTypeHelper {
 	constructor(private node: DeleteSopNode) {}
 
-	eval_for_objects(core_objects: BaseCoreObject<CoreObjectType>[]) {
-		const object_type = OBJECT_TYPES[this.node.pv.objectType];
+	eval_for_objects(coreObjects: BaseCoreObject<CoreObjectType>[]) {
+		const objectType = OBJECT_TYPES[this.node.pv.objectType];
 
-		for (let core_object of core_objects) {
-			const object = core_object.object();
-
-			if (objectTypeFromConstructor(object.constructor) == object_type) {
-				this.node.entitySelectionHelper.select(core_object);
+		for (let coreObject of coreObjects) {
+			const object = coreObject.object();
+			if (object) {
+				if (objectTypeFromConstructor(object.constructor) == objectType) {
+					this.node.entitySelectionHelper.select(coreObject);
+				}
 			}
 		}
 	}

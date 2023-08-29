@@ -2,6 +2,9 @@ import type {QUnit} from '../../../helpers/QUnit';
 import {CoreMath} from '../../../../src/core/math/_Module';
 import {CoreType} from '../../../../src/core/Type';
 import {GeoObjNode} from '../../../../src/engine/nodes/obj/Geo';
+import { Vector3 } from 'three';
+const _position = new Vector3()
+
 export function testengineexpressionsmethodseasing(qUnit: QUnit) {
 
 async function createSopNodes(parentNode: GeoObjNode, expression: string) {
@@ -61,7 +64,7 @@ async function createSopNodes(parentNode: GeoObjNode, expression: string) {
 	const ys = container
 		.coreContent()!
 		.points()
-		.map((p) => p.position().y);
+		.map((p) => p.position(_position).y);
 
 	ensureAllValuesValid(ys);
 	return ys;

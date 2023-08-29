@@ -1,17 +1,16 @@
 import {DeleteSopNode} from '../../Delete';
 import {CorePoint} from '../../../../../core/geometry/Point';
-import {Vector3} from 'three';
+import {Mesh, Vector3, Raycaster, Intersection} from 'three';
 import {CoreGroup} from '../../../../../core/geometry/Group';
-import {Raycaster, Intersection} from 'three';
-import {Mesh} from 'three';
 import {MatDoubleSideTmpSetter} from '../../../../../core/render/MatDoubleSideTmpSetter';
 
 const UP = new Vector3(0, 1, 0);
 const DOWN = new Vector3(0, -1, 0);
+const _pointPosition = new Vector3();
 
 export class ByBoundingObjectHelper {
 	private _matDoubleSideTmpSetter = new MatDoubleSideTmpSetter();
-	private _point_position = new Vector3();
+
 	private _raycaster = new Raycaster();
 	private _intersections: Intersection[] = [];
 
@@ -35,12 +34,12 @@ export class ByBoundingObjectHelper {
 		const bbox = geo.boundingBox!;
 
 		for (let point of points) {
-			point.getPosition(this._point_position);
+			point.position(_pointPosition);
 
-			if (bbox.containsPoint(this._point_position)) {
+			if (bbox.containsPoint(_pointPosition)) {
 				if (
-					this._isPositionInObject(this._point_position, mesh, UP) &&
-					this._isPositionInObject(this._point_position, mesh, DOWN)
+					this._isPositionInObject(_pointPosition, mesh, UP) &&
+					this._isPositionInObject(_pointPosition, mesh, DOWN)
 				) {
 					this.node.entitySelectionHelper.select(point);
 				}

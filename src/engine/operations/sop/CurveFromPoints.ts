@@ -65,7 +65,7 @@ export class CurveFromPointsSopOperation extends BaseSopOperation {
 			return;
 		}
 		const geoPoints = coreGeo.points();
-		const pointPositions = geoPoints.map((p) => p.getPosition(new Vector3()));
+		const pointPositions = geoPoints.map((p) => p.position(new Vector3()));
 		if (pointPositions.length < 2) {
 			return;
 		}

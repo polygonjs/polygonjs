@@ -8,8 +8,10 @@ import {QuadGeometry} from './QuadGeometry';
 
 const _box = new Box3();
 export class QuadCoreObject extends BaseCoreObject<CoreObjectType.QUAD> {
-	constructor(protected override _object: QuadObject, index: number) {
+	protected override _object: QuadObject
+	constructor(_object: QuadObject, index: number) {
 		super(_object, index);
+		this._object = _object
 	}
 	static override position(object: QuadObject, target: Vector3) {
 		object.boundingBox(_box);

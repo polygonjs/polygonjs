@@ -4,41 +4,45 @@ import {CorePoint} from '../Point';
 import {PolyDictionary} from '../../../types/GlobalTypes';
 
 export class CoreGeometryBuilderMesh extends CoreGeometryBuilderBase {
-	protected _filterPoints(points: CorePoint[]) {
+	protected _filterPoints(points: CorePoint[]): CorePoint[] {
 		// ensures we only keep points that form a full face.
 		// if a single point from a face is discarded, we remove all 3
 
-		const first_point = points[0];
-		if (first_point) {
-			const geometry = first_point.geometry();
-			const indices = geometry.getIndex()?.array;
+		const firstPoint = points[0];
+		if (!firstPoint) {
+			return [];
+		}
+		const geometry = firstPoint.geometry();
+		if (!geometry) {
+			return [];
+		}
+		const indices = geometry.getIndex()?.array;
+		if (!indices) {
+			return [];
+		}
 
-			if (indices) {
-				const points_by_index: PolyDictionary<CorePoint> = {};
-				for (let point of points) {
-					points_by_index[point.index()] = point;
-				}
-				const filtered_points: CorePoint[] = [];
+		const points_by_index: PolyDictionary<CorePoint> = {};
+		for (let point of points) {
+			points_by_index[point.index()] = point;
+		}
+		const filteredPoints: CorePoint[] = [];
 
-				const index_length = indices.length;
-				let pt0: CorePoint;
-				let pt1: CorePoint;
-				let pt2: CorePoint;
-				for (let i = 0; i < index_length; i += 3) {
-					pt0 = points_by_index[indices[i + 0]];
-					pt1 = points_by_index[indices[i + 1]];
-					pt2 = points_by_index[indices[i + 2]];
-					if (pt0 && pt1 && pt2) {
-						filtered_points.push(pt0);
-						filtered_points.push(pt1);
-						filtered_points.push(pt2);
-					}
-				}
-
-				return filtered_points;
+		const index_length = indices.length;
+		let pt0: CorePoint;
+		let pt1: CorePoint;
+		let pt2: CorePoint;
+		for (let i = 0; i < index_length; i += 3) {
+			pt0 = points_by_index[indices[i + 0]];
+			pt1 = points_by_index[indices[i + 1]];
+			pt2 = points_by_index[indices[i + 2]];
+			if (pt0 && pt1 && pt2) {
+				filteredPoints.push(pt0);
+				filteredPoints.push(pt1);
+				filteredPoints.push(pt2);
 			}
 		}
-		return [];
+
+		return filteredPoints;
 	}
 
 	protected _indicesFromPoints(new_index_by_old_index: PolyDictionary<number>, old_geometry: BufferGeometry) {

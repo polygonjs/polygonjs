@@ -136,7 +136,10 @@ export class ObjectPropertiesSopNode extends TypedSopNode<ObjectPropertiesSopPar
 					);
 				} else {
 					for (const entity of entities) {
-						entity.object()[property] = valueParam.value;
+						const object = entity.object();
+						if (object) {
+							object[property] = valueParam.value;
+						}
 					}
 				}
 			}
@@ -156,7 +159,10 @@ export class ObjectPropertiesSopNode extends TypedSopNode<ObjectPropertiesSopPar
 					);
 				} else {
 					for (const entity of entities) {
-						entity.object()[property] = valueParam.value;
+						const object = entity.object();
+						if (object) {
+							object[property] = valueParam.value;
+						}
 					}
 				}
 			}
@@ -176,7 +182,10 @@ export class ObjectPropertiesSopNode extends TypedSopNode<ObjectPropertiesSopPar
 					);
 				} else {
 					for (const entity of entities) {
-						entity.object()[property] = valueParam.value;
+						const object = entity.object();
+						if (object) {
+							object[property] = valueParam.value;
+						}
 					}
 				}
 			}

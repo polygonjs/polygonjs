@@ -9,7 +9,7 @@ import {CoreString} from '../String';
 import {AttribClass, AttribSize, ObjectData, AttribType} from './Constant';
 import {CoreType} from '../Type';
 import {ArrayUtils} from '../ArrayUtils';
-import {CoreFace} from './CoreFace';
+// import {CoreFace} from './CoreFace';
 import {Poly} from '../../engine/Poly';
 import {CoreEntity} from './Entity';
 import {CoreObjectType, ObjectContent, isObject3D} from './ObjectContent';
@@ -81,11 +81,11 @@ function objectTotalPointsCount(object: Object3D) {
 }
 
 export class CoreGroup extends CoreEntity {
-	private _timestamp: number | undefined; // _core_objects:
+	private _timestamp: number | undefined;
 	private _allObjects: ObjectContent<CoreObjectType>[] = [];
 
 	constructor() {
-		super(0);
+		super(undefined, 0);
 		this.touch();
 	}
 	dispose() {
@@ -131,9 +131,15 @@ export class CoreGroup extends CoreEntity {
 		const coreGroup = new CoreGroup();
 		// all
 		if (this._allObjects) {
-			const clonedObjects: ObjectContent<CoreObjectType>[] = this.allCoreObjects().map((o) => {
-				return o.clone().object();
-			});
+			const allCoreObjects = this.allCoreObjects();
+			const clonedObjects: ObjectContent<CoreObjectType>[] = [];
+			for (const coreObject of allCoreObjects) {
+				const clonedObject = coreObject.clone().object();
+				if (clonedObject) {
+					clonedObjects.push(clonedObject);
+				}
+			}
+
 			// for (let object of this._allObjects) {
 			// 	allObjects.push(object.clone());
 			// }
@@ -279,20 +285,20 @@ export class CoreGroup extends CoreEntity {
 		}
 		return null;
 	}
-	faces() {
-		const faces: CoreFace[] = [];
-		for (let object of this.threejsObjectsWithGeo()) {
-			if (object.geometry) {
-				const coreGeo = new CoreGeometry(object.geometry);
-				const geoFaces = coreGeo.faces();
-				for (let geoFace of geoFaces) {
-					geoFace.applyMatrix4(object.matrix);
-					faces.push(geoFace);
-				}
-			}
-		}
-		return faces;
-	}
+	// faces() {
+	// 	const faces: CoreFace[] = [];
+	// 	for (let object of this.threejsObjectsWithGeo()) {
+	// 		if (object.geometry) {
+	// 			const coreGeo = new CoreGeometry(object.geometry);
+	// 			const geoFaces = coreGeo.faces();
+	// 			for (let geoFace of geoFaces) {
+	// 				geoFace.applyMatrix4(object.matrix);
+	// 				faces.push(geoFace);
+	// 			}
+	// 		}
+	// 	}
+	// 	return faces;
+	// }
 	points() {
 		return this.coreGeometries()
 			.map((g) => g.points())

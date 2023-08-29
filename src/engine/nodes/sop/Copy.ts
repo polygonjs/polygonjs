@@ -264,8 +264,10 @@ export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 			for (const coreObject of srcCoreObjects) {
 				// TODO: I should use the Core Group, to ensure that material.linewidth is properly cloned
 				const clonedObject = coreObject.clone().object();
-				this._applyAccumulatedTransform(clonedObject);
-				this._objects.push(clonedObject);
+				if (clonedObject) {
+					this._applyAccumulatedTransform(clonedObject);
+					this._objects.push(clonedObject);
+				}
 			}
 		}
 	}

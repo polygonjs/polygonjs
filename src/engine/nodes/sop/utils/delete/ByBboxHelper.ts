@@ -1,26 +1,26 @@
 import {DeleteSopNode} from '../../Delete';
 import {CorePoint} from '../../../../../core/geometry/Point';
-import {Box3} from 'three';
-import {Vector3} from 'three';
+import {Box3, Vector3} from 'three';
+
+const _position = new Vector3();
+const _bbox = new Box3();
 
 export class ByBboxHelper {
-	private _point_position = new Vector3();
 	constructor(private node: DeleteSopNode) {}
 	evalForPoints(points: CorePoint[]) {
-		const bbox = this._createBbox();
+		this._setBbox(_bbox);
 
 		for (let point of points) {
-			const in_bbox = bbox.containsPoint(point.getPosition(this._point_position));
+			point.position(_position);
+			const inBbox = _bbox.containsPoint(_position);
 
-			if (in_bbox) {
+			if (inBbox) {
 				this.node.entitySelectionHelper.select(point);
 			}
 		}
 	}
-	private _createBbox() {
-		return new Box3(
-			this.node.pv.bboxCenter.clone().sub(this.node.pv.bboxSize.clone().multiplyScalar(0.5)),
-			this.node.pv.bboxCenter.clone().add(this.node.pv.bboxSize.clone().multiplyScalar(0.5))
-		);
+	private _setBbox(target: Box3) {
+		target.min.copy(this.node.pv.bboxSize).multiplyScalar(-0.5).add(this.node.pv.bboxCenter);
+		target.max.copy(this.node.pv.bboxSize).multiplyScalar(0.5).add(this.node.pv.bboxCenter);
 	}
 }

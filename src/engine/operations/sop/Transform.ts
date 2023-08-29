@@ -32,6 +32,7 @@ const _euler = new Euler();
 const _q = new Quaternion();
 const _s = new Vector3();
 const _mat4 = new Matrix4();
+const _pointPos = new Vector3();
 
 interface TransformSopParams extends DefaultOperationParams {
 	applyOn: number;
@@ -124,7 +125,6 @@ export class TransformSopOperation extends BaseSopOperation {
 	// 	}
 	// }
 
-	private _point_pos = new Vector3();
 	private _updateGeometry(object: Object3D, params: TransformSopParams) {
 		const matrix = this._matrix(params);
 
@@ -142,7 +142,7 @@ export class TransformSopOperation extends BaseSopOperation {
 			// const coreGroup = CoreGroup._fromObjects(objects);
 			const points = CoreObject.pointsFromGroup(object, pointGroup);
 			for (let point of points) {
-				const position = point.getPosition(this._point_pos).sub(params.pivot);
+				const position = point.position(_pointPos).sub(params.pivot);
 				position.applyMatrix4(matrix);
 				point.setPosition(position.add(params.pivot));
 			}

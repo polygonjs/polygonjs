@@ -128,7 +128,10 @@ export class SortSopOperation extends BaseSopOperation {
 			const coreObjectsForPosition = objectsByPos.get(position);
 			if (coreObjectsForPosition) {
 				for (let coreObjectForPosition of coreObjectsForPosition) {
-					sortedObjects.push(coreObjectForPosition.object());
+					const object = coreObjectForPosition.object();
+					if (object) {
+						sortedObjects.push(object);
+					}
 				}
 			}
 		}
@@ -160,7 +163,10 @@ export class SortSopOperation extends BaseSopOperation {
 			const coreObjectsForPosition = objectsByPos.get(position);
 			if (coreObjectsForPosition) {
 				for (let coreObjectForPosition of coreObjectsForPosition) {
-					sortedObjects.push(coreObjectForPosition.object());
+					const object = coreObjectForPosition.object();
+					if (object) {
+						sortedObjects.push(object);
+					}
 				}
 			}
 		}
@@ -192,7 +198,10 @@ export class SortSopOperation extends BaseSopOperation {
 			const coreObjectsForPosition = objectsByAttribValue.get(sortedValue);
 			if (coreObjectsForPosition) {
 				for (let coreObjectForPosition of coreObjectsForPosition) {
-					sortedObjects.push(coreObjectForPosition.object());
+					const object = coreObjectForPosition.object();
+					if (object) {
+						sortedObjects.push(object);
+					}
 				}
 			}
 		}
@@ -255,7 +264,7 @@ export class SortSopOperation extends BaseSopOperation {
 		let axisValue: number = 0;
 		let i = 0;
 		for (let point of points) {
-			point.getPosition(this._pointPos);
+			point.position(this._pointPos);
 			switch (axis) {
 				case Axis.X: {
 					axisValue = this._pointPos.x;

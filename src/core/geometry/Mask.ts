@@ -82,17 +82,19 @@ function filterCoreObjects<T extends CoreObjectType>(
 	for (const rootObject of coreObjects) {
 		let added = false;
 		const object = rootObject.object();
-		const objectsInMask = CorePath.objectsByMask(groupString, object);
-		for (const objectInMask of objectsInMask) {
-			const parent = objectInMask.parent;
-			const index = parent ? parent.children.indexOf(objectInMask) : 0;
-			const coreObject = coreObjectInstanceFactory<T>(objectInMask, index);
-			selectedCoreObjects.push(coreObject);
-			added = true;
-		}
-		const _isInGroup = isInGroup(groupString, rootObject);
-		if (_isInGroup && !added) {
-			selectedCoreObjects.push(rootObject);
+		if (object) {
+			const objectsInMask = CorePath.objectsByMask(groupString, object);
+			for (const objectInMask of objectsInMask) {
+				const parent = objectInMask.parent;
+				const index = parent ? parent.children.indexOf(objectInMask) : 0;
+				const coreObject = coreObjectInstanceFactory<T>(objectInMask, index);
+				selectedCoreObjects.push(coreObject);
+				added = true;
+			}
+			const _isInGroup = isInGroup(groupString, rootObject);
+			if (_isInGroup && !added) {
+				selectedCoreObjects.push(rootObject);
+			}
 		}
 	}
 

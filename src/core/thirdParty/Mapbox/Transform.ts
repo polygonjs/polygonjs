@@ -10,6 +10,7 @@ import {LngLat} from './Common';
 const tmpBox = new Box3();
 const tmpCenter = new Vector3();
 const tmpSize = new Vector3();
+const _position = new Vector3();
 // const tmpSize1 = new Vector3()
 // const tmpSize2 = new Vector3()
 
@@ -161,9 +162,9 @@ export class CoreMapboxTransform {
 		const core_geometry = new CoreGeometry(geometry);
 		const points = core_geometry.points();
 		points.forEach((point) => {
-			const position = point.position();
-			this.transform_position_FINAL(position);
-			point.setAttribValue(POSITION_ATTRIB_NAME, position);
+			point.position(_position);
+			this.transform_position_FINAL(_position);
+			point.setAttribValue(POSITION_ATTRIB_NAME, _position);
 		});
 
 		// geometry.applyMatrix(MAT_RX);
@@ -174,9 +175,9 @@ export class CoreMapboxTransform {
 		const core_geometry = new CoreGeometry(geometry);
 		const points = core_geometry.points();
 		points.forEach((point) => {
-			const position = point.position();
-			this.transform_position_with_max_ratio(position, max_ratio);
-			point.setAttribValue(POSITION_ATTRIB_NAME, position);
+			point.position(_position);
+			this.transform_position_with_max_ratio(_position, max_ratio);
+			point.setAttribValue(POSITION_ATTRIB_NAME, _position);
 		});
 
 		geometry.applyMatrix4(MAT_RX);

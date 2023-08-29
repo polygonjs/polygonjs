@@ -9,8 +9,10 @@ import {SDFGeometry} from './SDFCommon';
 
 const _box = new Box3();
 export class SDFCoreObject extends BaseCoreObject<CoreObjectType.SDF> {
-	constructor(protected override _object: SDFObject, index: number) {
+	protected override _object: SDFObject;
+	constructor(_object: SDFObject, index: number) {
 		super(_object, index);
+		this._object = _object;
 	}
 	static override position(object: SDFObject, target: Vector3) {
 		object.boundingBox(_box);

@@ -6,15 +6,12 @@ import {
 	Vector3Like,
 	Vector4Like,
 } from '../../types/GlobalTypes';
-import {BufferAttribute, Vector4} from 'three';
-import {Vector3} from 'three';
-import {Vector2} from 'three';
-import {BufferGeometry} from 'three';
+import {BufferAttribute, Vector4, Vector3, Vector2, BufferGeometry} from 'three';
 import {Attribute, CoreAttribute} from './Attribute';
 import {CoreGeometry} from './Geometry';
 import {CoreEntity} from './Entity';
 import {CoreType} from '../Type';
-import {Matrix4} from 'three';
+// import {Matrix4} from 'three';
 
 const ATTRIB_NAMES = {
 	POSITION: 'position',
@@ -43,28 +40,39 @@ const COMPONENT_INDICES = {
 const DOT = '.';
 
 export class CorePoint extends CoreEntity {
-	_position: Vector3 | undefined;
-	_normal: Vector3 | undefined;
-
-	constructor(private _geometry: BufferGeometry, _index: number) {
-		super(_index);
+	// _position: Vector3 | undefined;
+	// _normal: Vector3 | undefined;
+	private _geometry?: BufferGeometry;
+	constructor(geometry?: BufferGeometry, index?: number) {
+		super(geometry, index);
+		this._geometry = geometry;
 	}
-	applyMatrix4(matrix: Matrix4) {
-		this.position().applyMatrix4(matrix);
+	// applyMatrix4(matrix: Matrix4) {
+	// 	this.position().applyMatrix4(matrix);
+	// }
+	setGeometry(geometry: BufferGeometry) {
+		this._geometry = geometry;
+		return this;
 	}
-
+	override setIndex(index: number, geometry?: BufferGeometry) {
+		this._index = index;
+		if (geometry) {
+			this._geometry = geometry;
+		}
+		return this;
+	}
 	geometry() {
 		return this._geometry;
 	}
 
 	attribSize(attribName: string): number {
 		attribName = CoreAttribute.remapName(attribName);
-		return this._geometry.getAttribute(attribName).itemSize;
+		return this._geometry?.getAttribute(attribName).itemSize || 0;
 	}
 
 	hasAttrib(attribName: string): boolean {
-		const remapped_name = CoreAttribute.remapName(attribName);
-		return CoreGeometry.hasAttrib(this._geometry, remapped_name);
+		const remappedName = CoreAttribute.remapName(attribName);
+		return this._geometry ? CoreGeometry.hasAttrib(this._geometry, remappedName) : false;
 	}
 	static attribValue(
 		geometry: BufferGeometry,
@@ -136,7 +144,7 @@ export class CorePoint extends CoreEntity {
 		}
 	}
 	attribValue(attribName: string, target?: Vector2 | Vector3 | Vector4): AttribValue {
-		return CorePoint.attribValue(this._geometry, this._index, attribName, target);
+		return this._geometry ? CorePoint.attribValue(this._geometry, this._index, attribName, target) : 0;
 		// if (name === Attribute.POINT_INDEX) {
 		// 	return this.index();
 		// } else {
@@ -202,23 +210,35 @@ export class CorePoint extends CoreEntity {
 	}
 	attribValueNumber(attribName: string) {
 		const remapedName = CoreAttribute.remapName(attribName);
+		if (!this._geometry) {
+			return 0;
+		}
 		const attrib = this._geometry.getAttribute(remapedName) as BufferAttribute;
 		return attrib.array[this._index];
 	}
 	attribValueVector2(attribName: string, target: Vector2) {
 		const remapedName = CoreAttribute.remapName(attribName);
+		if (!this._geometry) {
+			return;
+		}
 		const attrib = this._geometry.getAttribute(remapedName) as BufferAttribute;
 		target.fromArray(attrib.array, this._index * 2);
 		return target;
 	}
 	attribValueVector3(attribName: string, target: Vector3) {
 		const remapedName = CoreAttribute.remapName(attribName);
+		if (!this._geometry) {
+			return;
+		}
 		const attrib = this._geometry.getAttribute(remapedName) as BufferAttribute;
 		target.fromArray(attrib.array, this._index * 3);
 		return target;
 	}
 	attribValueVector4(attribName: string, target: Vector4) {
 		const remapedName = CoreAttribute.remapName(attribName);
+		if (!this._geometry) {
+			return;
+		}
 		const attrib = this._geometry.getAttribute(remapedName) as BufferAttribute;
 		target.fromArray(attrib.array, this._index * 4);
 		return target;
@@ -229,6 +249,9 @@ export class CorePoint extends CoreEntity {
 	}
 	indexedAttribValue(attribName: string): string {
 		const valueIndex = this.attribValueIndex(attribName); //attrib.value()
+		if (!this._geometry) {
+			return '';
+		}
 		return CoreGeometry.userDataAttrib(this._geometry, attribName)[valueIndex];
 	}
 	static stringAttribValue(geometry: BufferGeometry, index: number, attribName: string) {
@@ -245,6 +268,9 @@ export class CorePoint extends CoreEntity {
 		}
 	}
 	attribValueIndex(attribName: string): number {
+		if (!this._geometry) {
+			return -1;
+		}
 		return CorePoint.attribValueIndex(this._geometry, this._index, attribName);
 		// if (this._coreGeometry.isAttribIndexed(name)) {
 		// 	return this._geometry.getAttribute(name).array[this._index];
@@ -252,34 +278,39 @@ export class CorePoint extends CoreEntity {
 		// 	return -1;
 		// }
 	}
-	isAttribIndexed(attribName: string) {
+	isAttribIndexed(attribName: string): boolean {
+		if (!this._geometry) {
+			return false;
+		}
 		return CoreGeometry.isAttribIndexed(this._geometry, attribName);
 	}
 
-	position() {
-		return this._position || (this._position = this.getPosition(new Vector3()));
-	}
-
-	getPosition(target: Vector3): Vector3 {
+	position(target: Vector3) {
+		if (!this._geometry) {
+			return target;
+		}
 		const {array} = this._geometry.getAttribute(ATTRIB_NAMES.POSITION) as BufferAttribute;
 		return target.fromArray(array, this._index * 3);
 	}
-	setPosition(new_position: Vector3) {
-		this.setAttribValueFromVector3(ATTRIB_NAMES.POSITION, new_position);
+	setPosition(newPosition: Vector3) {
+		this.setAttribValueFromVector3(ATTRIB_NAMES.POSITION, newPosition);
 	}
 
-	normal(): Vector3 {
-		return (this._normal = this._normal || this.getNormal(new Vector3()));
-	}
-	getNormal(target: Vector3): Vector3 {
+	normal(target: Vector3): Vector3 {
+		if (!this._geometry) {
+			return target;
+		}
 		const {array} = this._geometry.getAttribute(ATTRIB_NAMES.NORMAL) as BufferAttribute;
 		return target.fromArray(array, this._index * 3);
 	}
-	setNormal(new_normal: Vector3) {
-		return this.setAttribValueFromVector3(ATTRIB_NAMES.NORMAL, new_normal);
+	setNormal(newNormal: Vector3) {
+		return this.setAttribValueFromVector3(ATTRIB_NAMES.NORMAL, newNormal);
 	}
 
 	setAttribValue(attribName: string, value: NumericAttribValue | string) {
+		if (!this._geometry) {
+			return;
+		}
 		const attrib = this._geometry.getAttribute(attribName) as BufferAttribute;
 		const array = attrib.array as number[];
 		const attribSize = attrib.itemSize;
@@ -330,19 +361,31 @@ export class CorePoint extends CoreEntity {
 		}
 	}
 	setAttribValueFromNumber(attribName: string, value: number) {
+		if (!this._geometry) {
+			return;
+		}
 		const attrib = this._geometry.getAttribute(attribName) as BufferAttribute;
 		const array = attrib.array as number[];
 		array[this._index] = value;
 	}
 	setAttribValueFromVector2(attribName: string, value: Vector2) {
+		if (!this._geometry) {
+			return;
+		}
 		const attrib = this._geometry.getAttribute(attribName) as BufferAttribute;
 		value.toArray(attrib.array, this._index * 2);
 	}
 	setAttribValueFromVector3(attribName: string, value: Vector3) {
+		if (!this._geometry) {
+			return;
+		}
 		const attrib = this._geometry.getAttribute(attribName) as BufferAttribute;
 		value.toArray(attrib.array, this._index * 3);
 	}
 	setAttribValueFromVector4(attribName: string, value: Vector4) {
+		if (!this._geometry) {
+			return;
+		}
 		const attrib = this._geometry.getAttribute(attribName) as BufferAttribute;
 		value.toArray(attrib.array, this._index * 4);
 	}
@@ -361,6 +404,9 @@ export class CorePoint extends CoreEntity {
 	// }
 
 	setAttribIndex(name: string, new_value_index: number) {
+		if (!this._geometry) {
+			return;
+		}
 		const array = (this._geometry.getAttribute(name) as BufferAttribute).array as number[];
 		return (array[this._index] = new_value_index);
 	}

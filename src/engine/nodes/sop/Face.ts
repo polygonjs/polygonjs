@@ -9,13 +9,25 @@ import {BufferAttribute} from 'three';
 import {Mesh} from 'three';
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {InputCloneMode} from '../../poly/InputCloneMode';
-
-import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {CorePointArray3} from '../../../core/geometry/CoreFace';
 import {CorePoint} from '../../../core/geometry/Point';
+import {InputCloneMode} from '../../poly/InputCloneMode';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CoreFace} from '../../../core/geometry/CoreFace';
 import {ArrayUtils} from '../../../core/ArrayUtils';
 import {isBooleanTrue} from '../../../core/BooleanValue';
+
+enum FaceAttribName {
+	CENTER = 'faceCenter',
+	ID = 'faceId',
+	POSITION = 'position',
+}
+const _faceCenter = new Vector3();
+const _position = new Vector3();
+const _newPosition = new Vector3();
+const _face = new CoreFace();
+const _points: CorePointArray3 = [new CorePoint(), new CorePoint(), new CorePoint()];
+
 class FaceSopParamsConfig extends NodeParamsConfig {
 	/** @param makes faces unique */
 	makeFacesUnique = ParamConfig.BOOLEAN(0);
@@ -65,7 +77,7 @@ export class FaceSopNode extends TypedSopNode<FaceSopParamsConfig> {
 				this._addFaceId(core_group);
 			}
 			if (isBooleanTrue(this.pv.transform)) {
-				this._transform_faces(core_group);
+				this._transformFaces(core_group);
 			}
 		}
 
@@ -101,91 +113,93 @@ export class FaceSopNode extends TypedSopNode<FaceSopParamsConfig> {
 		}
 	}
 
-	private _addFaceCenterAttribute(core_group: CoreGroup) {
-		const attrib_name = 'face_center';
-		const face_center = new Vector3();
-		let faces: CoreFace[], face: CoreFace, points: CorePoint[], point: CorePoint;
+	private _addFaceCenterAttribute(coreGroup: CoreGroup) {
+		// let faces: CoreFace[], face: CoreFace, points: CorePoint[], point: CorePoint;
 
-		core_group.threejsCoreObjects().forEach((core_object) => {
-			const object = core_object.object();
-			const core_geometry = core_object.coreGeometry();
-			if ((object as Mesh).isMesh && core_geometry) {
-				faces = core_geometry.faces();
-				if (!core_geometry.hasAttrib(attrib_name)) {
-					core_geometry.addNumericAttrib(attrib_name, 3, -1);
+		const coreObjects = coreGroup.threejsCoreObjects();
+		for (const coreObject of coreObjects) {
+			const object = coreObject.object();
+			const coreGeometry = coreObject.coreGeometry();
+			if ((object as Mesh).isMesh && coreGeometry) {
+				if (!coreGeometry.hasAttrib(FaceAttribName.CENTER)) {
+					coreGeometry.addNumericAttrib(FaceAttribName.CENTER, 3, -1);
 				}
 
-				for (let fi = 0; fi < faces.length; fi++) {
-					face = faces[fi];
-					face.center(face_center);
+				const facesCount = coreGeometry.facesCount();
+				_face.setGeometry(coreGeometry.geometry());
+				for (let fi = 0; fi < facesCount; fi++) {
+					// face = faces[fi];
+					_face.setIndex(fi);
+					_face.center(_faceCenter);
 
-					points = face.points();
-					for (let pi = 0; pi < points.length; pi++) {
-						point = points[pi];
-						point.setAttribValue(attrib_name, face_center);
+					_face.points(_points);
+					for (const point of _points) {
+						point.setAttribValue(FaceAttribName.CENTER, _faceCenter);
 					}
 				}
 			}
-		});
+		}
 	}
 
-	private _addFaceId(core_group: CoreGroup) {
-		const attrib_name = 'face_id';
+	private _addFaceId(coreGroup: CoreGroup) {
+		const coreObjects = coreGroup.threejsCoreObjects();
 
-		core_group.threejsCoreObjects().forEach((core_object) => {
-			const object = core_object.object();
-			const core_geometry = core_object.coreGeometry();
-			if ((object as Mesh).isMesh && core_geometry) {
-				const faces = core_geometry.faces();
+		for (const coreObject of coreObjects) {
+			const object = coreObject.object();
+			const coreGeometry = coreObject.coreGeometry();
+			if ((object as Mesh).isMesh && coreGeometry) {
+				// const faces = core_geometry.faces();
 				// const points_count = core_geometry.pointsCount();
 
-				if (!core_geometry.hasAttrib(attrib_name)) {
-					core_geometry.addNumericAttrib(attrib_name, 1, -1);
+				if (!coreGeometry.hasAttrib(FaceAttribName.ID)) {
+					coreGeometry.addNumericAttrib(FaceAttribName.ID, 1, -1);
 				}
 
-				for (let i = 0; i < faces.length; i++) {
-					const face = faces[i];
-					const points = face.points();
-					for (let j = 0; j < points.length; j++) {
-						const point = points[j];
-						point.setAttribValue(attrib_name, i);
+				const facesCount = coreGeometry.facesCount();
+				_face.setGeometry(coreGeometry.geometry());
+				for (let i = 0; i < facesCount; i++) {
+					_face.setIndex(i);
+					_face.points(_points);
+					for (const point of _points) {
+						point.setAttribValue(FaceAttribName.ID, i);
 					}
 				}
 			}
-		});
+		}
 	}
 
-	private _transform_faces(core_group: CoreGroup) {
-		const attrib_name = 'position';
-		const face_center = new Vector3();
-		const new_position = new Vector3();
+	private _transformFaces(coreGroup: CoreGroup) {
+		// const face_center = new Vector3();
+		// const new_position = new Vector3();
 		const scale = this.pv.scale;
-		let faces: CoreFace[], face: CoreFace, points: CorePoint[], point: CorePoint;
+		// let faces: CoreFace[], face: CoreFace, points: CorePoint[], point: CorePoint;
 
-		core_group.threejsCoreObjects().forEach((core_object) => {
-			const object = core_object.object();
-			const core_geometry = core_object.coreGeometry();
-			if ((object as Mesh).isMesh && core_geometry) {
-				faces = core_geometry.faces();
-				if (!core_geometry.hasAttrib(attrib_name)) {
-					core_geometry.addNumericAttrib(attrib_name, 3, -1);
+		const coreObjects = coreGroup.threejsCoreObjects();
+		for (const coreObject of coreObjects) {
+			const object = coreObject.object();
+			const coreGeometry = coreObject.coreGeometry();
+			if ((object as Mesh).isMesh && coreGeometry) {
+				// faces = coreGeometry.faces();
+				if (!coreGeometry.hasAttrib(FaceAttribName.POSITION)) {
+					coreGeometry.addNumericAttrib(FaceAttribName.POSITION, 3, -1);
 				}
 
-				for (let fi = 0; fi < faces.length; fi++) {
-					face = faces[fi];
-					face.center(face_center);
+				const facesCount = coreGeometry.facesCount();
+				_face.setGeometry(coreGeometry.geometry());
+				for (let fi = 0; fi < facesCount; fi++) {
+					_face.setIndex(fi);
+					_face.center(_faceCenter);
 
-					points = face.points();
-					for (let pi = 0; pi < points.length; pi++) {
-						point = points[pi];
-						const position = point.position();
-						new_position.x = position.x * scale + face_center.x * (1 - scale);
-						new_position.y = position.y * scale + face_center.y * (1 - scale);
-						new_position.z = position.z * scale + face_center.z * (1 - scale);
-						point.setAttribValue(attrib_name, new_position);
+					_face.points(_points);
+					for (const point of _points) {
+						point.position(_position);
+						_newPosition.x = _position.x * scale + _faceCenter.x * (1 - scale);
+						_newPosition.y = _position.y * scale + _faceCenter.y * (1 - scale);
+						_newPosition.z = _position.z * scale + _faceCenter.z * (1 - scale);
+						point.setAttribValue(FaceAttribName.POSITION, _newPosition);
 					}
 				}
 			}
-		});
+		}
 	}
 }

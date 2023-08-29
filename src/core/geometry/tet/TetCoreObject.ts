@@ -8,8 +8,10 @@ import {ObjectData} from '../Constant';
 
 const _bbox = new Box3();
 export class TetCoreObject extends BaseCoreObject<CoreObjectType.TET> {
-	constructor(protected override _object: TetObject, index: number) {
+	protected override _object: TetObject;
+	constructor(_object: TetObject, index: number) {
 		super(_object, index);
+		this._object = _object;
 	}
 	static override position(object: TetObject, target: Vector3) {
 		object.boundingBox(_bbox);

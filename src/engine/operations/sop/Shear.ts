@@ -122,7 +122,7 @@ export class ShearSopOperation extends BaseSopOperation {
 				const coreGeo = new CoreGeometry(geometry);
 				const points = coreGeo.points();
 				for (let point of points) {
-					point.getPosition(this._pointPos);
+					point.position(this._pointPos);
 					this._axisPlane.projectPoint(this._pointPos, this._pointOnPlane);
 					this._delta.copy(this._pointOnPlane).sub(this._pointPos);
 					const distToPlane = this._delta.length();

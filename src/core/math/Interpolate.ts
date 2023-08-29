@@ -3,6 +3,9 @@ import {ArrayUtils} from '../ArrayUtils';
 import {CorePoint} from '../geometry/Point';
 import {CoreType} from '../Type';
 
+const _positionSrc = new Vector3();
+const _positionDest = new Vector3();
+
 export class CoreInterpolate {
 	static perform(
 		point_dest: CorePoint,
@@ -40,9 +43,9 @@ export class CoreInterpolate {
 		distance_threshold: number,
 		blend_with: number
 	): number {
-		const position_dest = point_dest.position();
-		const position_src = point_src.position();
-		const distance = position_dest.distanceTo(position_src);
+		point_dest.position(_positionDest);
+		point_src.position(_positionSrc);
+		const distance = _positionDest.distanceTo(_positionSrc);
 
 		const value_src = point_src.attribValue(attrib_name);
 		if (CoreType.isNumber(value_src)) {

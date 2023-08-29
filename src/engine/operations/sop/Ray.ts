@@ -91,10 +91,10 @@ export class RaySopOperation extends BaseSopOperation {
 		let direction: Vector3, firstIntersect: Intersection;
 		const points = coreGroup.points();
 		for (let point of points) {
-			point.getPosition(this._pointPos);
+			point.position(this._pointPos);
 			direction = params.direction;
 			if (isBooleanTrue(params.useNormals)) {
-				point.getNormal(this._pointNormal);
+				point.normal(this._pointNormal);
 				direction = this._pointNormal;
 			}
 			this._raycaster.set(this._pointPos, direction);
@@ -139,7 +139,7 @@ export class RaySopOperation extends BaseSopOperation {
 		const position = collisionGeometry.getAttribute('position') as BufferAttribute;
 		const points = coreGroup.points();
 		for (let point of points) {
-			point.getPosition(this._pointPos);
+			point.position(this._pointPos);
 			// apply object inverse matrix
 			this._pointPos.applyMatrix4(objectWorldMatInverse);
 			bvh.closestPointToPoint(this._pointPos, this._hitPointInfo);

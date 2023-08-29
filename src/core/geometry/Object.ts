@@ -52,8 +52,10 @@ const SPHERE_EMPTY = new Sphere(new Vector3(0, 0, 0), 0);
 
 // type ThreejsCoreObjectContent =  ObjectContent<BufferGeometry>
 export class CoreObject extends BaseCoreObject<CoreObjectType.THREEJS> {
-	constructor(protected override _object: Object3D, index: number) {
+	protected override _object: Object3D;
+	constructor(_object: Object3D, index: number) {
 		super(_object, index);
+		this._object = _object;
 	}
 	override humanType(): string {
 		return dataFromConstructor(this._object.constructor).humanName;

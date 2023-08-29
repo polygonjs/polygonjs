@@ -16,7 +16,7 @@ import {
 	InstancedBufferAttribute,
 } from 'three';
 import {CorePoint} from './Point';
-import {CoreFace} from './CoreFace';
+// import {CoreFace} from './CoreFace';
 import {AttribType, AttribSize} from './Constant';
 import {Attribute, CoreAttribute} from './Attribute';
 import {CoreAttributeData} from './AttributeData';
@@ -397,12 +397,15 @@ export class CoreGeometry {
 		return ArrayUtils.chunk(index, 2);
 	}
 
-	faces(): CoreFace[] {
-		return this.facesFromGeometry();
+	// faces(): CoreFace[] {
+	// 	return this.facesFromGeometry();
+	// }
+	facesCount(): number {
+		const indexArray = this.geometry().index?.array || [];
+		const facesCount = indexArray.length / 3;
+		return facesCount;
 	}
-	facesFromGeometry(): CoreFace[] {
-		const index_array = this.geometry().index?.array || [];
-		const faces_count = index_array.length / 3;
-		return ArrayUtils.range(faces_count).map((i) => new CoreFace(this, i));
-	}
+	// facesFromGeometry(): CoreFace[] {
+	// 	return ArrayUtils.range(faces_count).map((i) => new CoreFace(this, i));
+	// }
 }

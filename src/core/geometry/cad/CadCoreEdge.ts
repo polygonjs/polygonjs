@@ -8,7 +8,7 @@ import {traverseVertices} from './CadTraverse';
 
 export class CadCoreEdge extends CoreEntity {
 	constructor(protected _shape: TopoDS_Shape, protected _edge: TopoDS_Edge, _index: number) {
-		super(_index);
+		super(_shape, _index);
 	}
 	edge() {
 		return this._edge;

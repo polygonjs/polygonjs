@@ -39,7 +39,10 @@ export class DeleteByNameSopOperation extends BaseSopOperation {
 			// 	_inAnyGroup = !_inAnyGroup;
 			// }
 			if (!_toDelete) {
-				newObjects.push(coreObject.object());
+				const object = coreObject.object();
+				if (object) {
+					newObjects.push(object);
+				}
 			}
 		}
 
