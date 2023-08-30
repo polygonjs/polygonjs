@@ -32,7 +32,7 @@ export const ATTRIB_PROMOTE_MODES: AttribPromoteMode[] = [
 
 export class AttribPromoteSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: AttribPromoteSopParams = {
-		classFrom: ATTRIBUTE_CLASSES.indexOf(AttribClass.VERTEX),
+		classFrom: ATTRIBUTE_CLASSES.indexOf(AttribClass.POINT),
 		classTo: ATTRIBUTE_CLASSES.indexOf(AttribClass.OBJECT),
 		mode: ATTRIB_PROMOTE_MODES.indexOf(AttribPromoteMode.FIRST_FOUND),
 		name: '',
@@ -58,10 +58,14 @@ export class AttribPromoteSopOperation extends BaseSopOperation {
 	}
 }
 
-function _attribNames(coreGroup: CoreGroup, attribClass: AttribClass, mask: string) {
+function _attribNames(coreGroup: CoreGroup, attribClass: AttribClass, mask: string): string[] {
 	switch (attribClass) {
-		case AttribClass.VERTEX:
+		case AttribClass.POINT:
 			return coreGroup.geoAttribNamesMatchingMask(mask);
+		case AttribClass.PRIMITIVE: {
+			console.warn('primitive not supported yet');
+			return [];
+		}
 		case AttribClass.OBJECT:
 			return coreGroup.objectAttribNamesMatchingMask(mask);
 		case AttribClass.CORE_GROUP:
@@ -77,8 +81,12 @@ function promoteAttribute(
 	params: AttribPromoteSopParams
 ) {
 	switch (classFrom) {
-		case AttribClass.VERTEX:
+		case AttribClass.POINT:
 			return promoteAttributeFromPoints(coreGroup, classTo, attribName, params);
+		case AttribClass.PRIMITIVE: {
+			console.warn('primitive not supported yet');
+			return;
+		}
 		case AttribClass.OBJECT:
 			return promoteAttributeFromObjects(coreGroup, classTo, attribName, params);
 		case AttribClass.CORE_GROUP:
@@ -93,8 +101,12 @@ function promoteAttributeFromPoints(
 	params: AttribPromoteSopParams
 ) {
 	switch (classTo) {
-		case AttribClass.VERTEX:
+		case AttribClass.POINT:
 			return pointsToPoints(coreGroup, attribName, params);
+		case AttribClass.PRIMITIVE: {
+			console.warn('primitive not supported yet');
+			return;
+		}
 		case AttribClass.OBJECT:
 			return pointsToObject(coreGroup, attribName, params);
 		case AttribClass.CORE_GROUP:
@@ -109,8 +121,12 @@ function promoteAttributeFromObjects(
 	params: AttribPromoteSopParams
 ) {
 	switch (classTo) {
-		case AttribClass.VERTEX:
+		case AttribClass.POINT:
 			return objectsToPoints(coreGroup, attribName);
+		case AttribClass.PRIMITIVE: {
+			console.warn('primitive not supported yet');
+			return;
+		}
 		case AttribClass.OBJECT:
 			return objectsToObjects(coreGroup, attribName, params);
 		case AttribClass.CORE_GROUP:
@@ -120,8 +136,13 @@ function promoteAttributeFromObjects(
 }
 function promoteAttributeFromCoreGroup(coreGroup: CoreGroup, classTo: AttribClass, attribName: string) {
 	switch (classTo) {
-		case AttribClass.VERTEX:
+		case AttribClass.POINT:
 			return coreGroupToPoints(coreGroup, attribName);
+		case AttribClass.PRIMITIVE: {
+			console.log('primitive not supported yet');
+			return;
+		}
+
 		case AttribClass.OBJECT:
 			return coreGroupToObjects(coreGroup, attribName);
 		case AttribClass.CORE_GROUP:
@@ -229,7 +250,7 @@ function setValuesToPoints(coreObject: CoreObject, attribName: string, newValue:
 	if (!attributeExists) {
 		const attribSize = CoreAttribute.attribSizeFromValue(newValue);
 		if (attribSize) {
-			coreObject.addNumericVertexAttrib(attribName, attribSize, newValue);
+			coreObject.addNumericPointAttrib(attribName, attribSize, newValue);
 		}
 	}
 

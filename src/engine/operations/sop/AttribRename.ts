@@ -12,7 +12,7 @@ interface AttribRenameSopParams extends DefaultOperationParams {
 const SPLIT_REGEX = /[ ,]+/g;
 export class AttribRenameSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: AttribRenameSopParams = {
-		class: ATTRIBUTE_CLASSES.indexOf(AttribClass.VERTEX),
+		class: ATTRIBUTE_CLASSES.indexOf(AttribClass.POINT),
 		oldName: '',
 		newName: '',
 	};

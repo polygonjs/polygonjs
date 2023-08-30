@@ -2,6 +2,7 @@ import {CoreGroup} from './../../../core/geometry/Group';
 import {BaseParamType} from '../_Base';
 import {ExpressionManager} from '../../expressions/ExpressionManager';
 import {CorePoint} from '../../../core/geometry/Point';
+import {CorePrimitive} from '../../../core/geometry/Primitive';
 import {CoreEntity} from '../../../core/geometry/Entity';
 import {ParamType} from '../../poly/ParamType';
 import {ParamValuesTypeMap} from '../types/ParamValuesTypeMap';
@@ -125,6 +126,9 @@ export class ExpressionController<T extends ParamType> {
 		this._resetEntities();
 	}
 	computeExpressionForPoints(entities: CorePoint[], callback: PointEntityCallback<T>) {
+		return this.computeExpressionForEntities(entities, callback as EntityCallback<T>);
+	}
+	computeExpressionForPrimitives(entities: CorePrimitive[], callback: PointEntityCallback<T>) {
 		return this.computeExpressionForEntities(entities, callback as EntityCallback<T>);
 	}
 	computeExpressionForObjects<OT extends CoreObjectType>(

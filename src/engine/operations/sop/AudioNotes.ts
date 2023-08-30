@@ -50,8 +50,12 @@ export class AudioNotesSopOperation extends BaseSopOperation {
 	}
 	private async _addAttribute(attribClass: AttribClass, coreGroup: CoreGroup, params: AudioNotesSopParams) {
 		switch (attribClass) {
-			case AttribClass.VERTEX:
+			case AttribClass.POINT:
 				return this._addPointAttribute(coreGroup, params);
+			case AttribClass.PRIMITIVE: {
+				this.states?.error.set('primitive not supported yet');
+				return;
+			}
 			case AttribClass.OBJECT:
 				return this._addObjectAttribute(coreGroup, params);
 			case AttribClass.CORE_GROUP:

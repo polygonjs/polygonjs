@@ -83,11 +83,11 @@ export class CorePoint extends CoreEntity {
 		if (attribName === Attribute.POINT_INDEX) {
 			return index;
 		} else {
-			let component_name = null;
-			let component_index = null;
+			let componentName = null;
+			let componentIndex = null;
 			if (attribName[attribName.length - 2] === DOT) {
-				component_name = attribName[attribName.length - 1] as ComponentName;
-				component_index = COMPONENT_INDICES[component_name];
+				componentName = attribName[attribName.length - 1] as ComponentName;
+				componentIndex = COMPONENT_INDICES[componentName];
 				attribName = attribName.substring(0, attribName.length - 2);
 			}
 			const remapedName = CoreAttribute.remapName(attribName);
@@ -98,39 +98,39 @@ export class CorePoint extends CoreEntity {
 				if (CoreGeometry.isAttribIndexed(geometry, remapedName)) {
 					return CorePoint.indexedAttribValue(geometry, index, remapedName);
 				} else {
-					const size = attrib.itemSize;
-					const start_index = index * size;
+					const itemSize = attrib.itemSize;
+					const startIndex = index * itemSize;
 
-					if (component_index == null) {
-						switch (size) {
+					if (componentIndex == null) {
+						switch (itemSize) {
 							case 1:
-								return array[start_index];
+								return array[startIndex];
 								break;
 							case 2:
 								target = target || new Vector2();
-								target.fromArray(array, start_index);
+								target.fromArray(array, startIndex);
 								return target;
 								break;
 							case 3:
 								target = target || new Vector3();
-								target.fromArray(array, start_index);
+								target.fromArray(array, startIndex);
 								return target;
 								break;
 							case 4:
 								target = target || new Vector4();
-								target.fromArray(array, start_index);
+								target.fromArray(array, startIndex);
 								return target;
 								break;
 							default:
-								throw `size not valid (${size})`;
+								throw `size not valid (${itemSize})`;
 						}
 					} else {
-						switch (size) {
+						switch (itemSize) {
 							case 1:
-								return array[start_index];
+								return array[startIndex];
 								break;
 							default:
-								return array[start_index + component_index];
+								return array[startIndex + componentIndex];
 						}
 					}
 				}
@@ -145,68 +145,6 @@ export class CorePoint extends CoreEntity {
 	}
 	attribValue(attribName: string, target?: Vector2 | Vector3 | Vector4): AttribValue {
 		return this._geometry ? CorePoint.attribValue(this._geometry, this._index, attribName, target) : 0;
-		// if (name === Attribute.POINT_INDEX) {
-		// 	return this.index();
-		// } else {
-		// 	let component_name = null;
-		// 	let component_index = null;
-		// 	if (name[name.length - 2] === DOT) {
-		// 		component_name = name[name.length - 1] as ComponentName;
-		// 		component_index = COMPONENT_INDICES[component_name];
-		// 		name = name.substring(0, name.length - 2);
-		// 	}
-		// 	const remaped_name = CoreAttribute.remapName(name);
-
-		// 	const attrib = this._geometry.getAttribute(remaped_name);
-		// 	if (attrib) {
-		// 		const {array} = attrib;
-		// 		if (this._coreGeometry.isAttribIndexed(remaped_name)) {
-		// 			return this.indexedAttribValue(remaped_name);
-		// 		} else {
-		// 			const size = attrib.itemSize;
-		// 			const start_index = this._index * size;
-
-		// 			if (component_index == null) {
-		// 				switch (size) {
-		// 					case 1:
-		// 						return array[start_index];
-		// 						break;
-		// 					case 2:
-		// 						target = target || new Vector2();
-		// 						target.fromArray(array, start_index);
-		// 						return target;
-		// 						break;
-		// 					case 3:
-		// 						target = target || new Vector3();
-		// 						target.fromArray(array, start_index);
-		// 						return target;
-		// 						break;
-		// 					case 4:
-		// 						target = target || new Vector4();
-		// 						target.fromArray(array, start_index);
-		// 						return target;
-		// 						break;
-		// 					default:
-		// 						throw `size not valid (${size})`;
-		// 				}
-		// 			} else {
-		// 				switch (size) {
-		// 					case 1:
-		// 						return array[start_index];
-		// 						break;
-		// 					default:
-		// 						return array[start_index + component_index];
-		// 				}
-		// 			}
-		// 		}
-		// 	} else {
-		// 		const message = `attrib ${name} not found. availables are: ${Object.keys(
-		// 			this._geometry.attributes || {}
-		// 		).join(',')}`;
-		// 		console.warn(message);
-		// 		throw message;
-		// 	}
-		// }
 	}
 	attribValueNumber(attribName: string) {
 		const remapedName = CoreAttribute.remapName(attribName);
@@ -403,11 +341,11 @@ export class CorePoint extends CoreEntity {
 	// 	value.toArray(array, this._index * 3);
 	// }
 
-	setAttribIndex(name: string, new_value_index: number) {
+	setAttribIndex(attribName: string, newValueIndex: number) {
 		if (!this._geometry) {
 			return;
 		}
-		const array = (this._geometry.getAttribute(name) as BufferAttribute).array as number[];
-		return (array[this._index] = new_value_index);
+		const array = (this._geometry.getAttribute(attribName) as BufferAttribute).array as number[];
+		return (array[this._index] = newValueIndex);
 	}
 }

@@ -301,12 +301,22 @@ export const DEFAULT_MATERIALS: MaterialsByString = {
 };
 
 export enum AttribClass {
-	VERTEX = 'vertex',
+	POINT = 'point',
+	PRIMITIVE = 'primitive',
 	OBJECT = 'object',
 	CORE_GROUP = 'container',
 }
-export const ATTRIBUTE_CLASSES: Array<AttribClass> = [AttribClass.VERTEX, AttribClass.OBJECT, AttribClass.CORE_GROUP];
-export const ATTRIBUTE_CLASSES_WITHOUT_CORE_GROUP: Array<AttribClass> = [AttribClass.VERTEX, AttribClass.OBJECT];
+export const ATTRIBUTE_CLASSES: Array<AttribClass> = [
+	AttribClass.POINT,
+	AttribClass.PRIMITIVE,
+	AttribClass.OBJECT,
+	AttribClass.CORE_GROUP,
+];
+export const ATTRIBUTE_CLASSES_WITHOUT_CORE_GROUP: Array<AttribClass> = [
+	AttribClass.POINT,
+	AttribClass.PRIMITIVE,
+	AttribClass.OBJECT,
+];
 export const AttribClassMenuEntries = ATTRIBUTE_CLASSES.map((name, value) => ({name, value}));
 export const AttribClassMenuEntriesWithoutCoreGroup = ATTRIBUTE_CLASSES_WITHOUT_CORE_GROUP.map((name, value) => ({
 	name,
@@ -336,7 +346,7 @@ export const ATTRIBUTE_SIZE_RANGE: Number2 = [AttribSize.FLOAT, AttribSize.VECTO
 
 // export const CoreConstant = {
 // 	ATTRIB_CLASS: {
-// 		VERTEX: AttribClass.VERTEX,
+// 		VERTEX: AttribClass.POINT,
 // 		OBJECT: AttribClass.OBJECT,
 // 	},
 

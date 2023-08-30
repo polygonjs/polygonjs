@@ -40,7 +40,7 @@ import {geometryBuilder} from '../../../core/geometry/builders/geometryBuilder';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 class DeleteSopParamsConfig extends NodeParamsConfig {
 	/** @param defines the class that should be deleted (objects or vertices) */
-	class = ParamConfig.INTEGER(ATTRIBUTE_CLASSES.indexOf(AttribClass.VERTEX), {
+	class = ParamConfig.INTEGER(ATTRIBUTE_CLASSES.indexOf(AttribClass.POINT), {
 		menu: {
 			entries: AttribClassMenuEntries,
 		},
@@ -135,20 +135,20 @@ class DeleteSopParamsConfig extends NodeParamsConfig {
 	/** @param deletes objects that are inside a bounding box */
 	byBbox = ParamConfig.BOOLEAN(0, {
 		visibleIf: {
-			class: ATTRIBUTE_CLASSES.indexOf(AttribClass.VERTEX),
+			class: ATTRIBUTE_CLASSES.indexOf(AttribClass.POINT),
 		},
 	});
 	/** @param the bounding box size */
 	bboxSize = ParamConfig.VECTOR3([1, 1, 1], {
 		visibleIf: {
-			class: ATTRIBUTE_CLASSES.indexOf(AttribClass.VERTEX),
+			class: ATTRIBUTE_CLASSES.indexOf(AttribClass.POINT),
 			byBbox: true,
 		},
 	});
 	/** @param the bounding box center */
 	bboxCenter = ParamConfig.VECTOR3([0, 0, 0], {
 		visibleIf: {
-			class: ATTRIBUTE_CLASSES.indexOf(AttribClass.VERTEX),
+			class: ATTRIBUTE_CLASSES.indexOf(AttribClass.POINT),
 			byBbox: true,
 		},
 		separatorAfter: true,
@@ -158,7 +158,7 @@ class DeleteSopParamsConfig extends NodeParamsConfig {
 	/** @param deletes objects that are inside an object. This uses the object from the 2nd input */
 	byBoundingObject = ParamConfig.BOOLEAN(0, {
 		visibleIf: {
-			class: ATTRIBUTE_CLASSES.indexOf(AttribClass.VERTEX),
+			class: ATTRIBUTE_CLASSES.indexOf(AttribClass.POINT),
 		},
 	});
 
@@ -202,7 +202,7 @@ export class DeleteSopNode extends TypedSopNode<DeleteSopParamsConfig> {
 		}
 		const attribClass = ATTRIBUTE_CLASSES[this.pv.class];
 		switch (attribClass) {
-			case AttribClass.VERTEX:
+			case AttribClass.POINT:
 				await this._evalForPoints(coreGroup0, coreGroup1);
 				break;
 			case AttribClass.OBJECT:

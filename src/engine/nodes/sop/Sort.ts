@@ -87,7 +87,7 @@ export class SortSopNode extends TypedSopNode<SortSopParamsConfig> {
 	setSortMode(mode: SortMode) {
 		this.p.mode.set(SORT_MODES.indexOf(mode));
 	}
-	setTargetType(targetType: AttribClass.VERTEX | AttribClass.OBJECT) {
+	setTargetType(targetType: AttribClass.POINT | AttribClass.OBJECT) {
 		this.p.targetType.set(SORT_TARGET_TYPES.indexOf(targetType));
 	}
 }

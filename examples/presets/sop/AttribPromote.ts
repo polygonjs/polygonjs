@@ -7,7 +7,7 @@ const attribPromoteSopNodeNodePresetsCollectionFactory: PresetsCollectionFactory
 ) => {
 	const collection = new NodePresetsCollection();
 
-	const points = ATTRIBUTE_CLASSES.indexOf(AttribClass.VERTEX);
+	const points = ATTRIBUTE_CLASSES.indexOf(AttribClass.POINT);
 	const objects = ATTRIBUTE_CLASSES.indexOf(AttribClass.OBJECT);
 
 	collection.addPreset(

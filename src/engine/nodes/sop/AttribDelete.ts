@@ -14,7 +14,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 class AttribDeleteSopParamsConfig extends NodeParamsConfig {
 	/** @param attribute class (geometry or object) */
-	class = ParamConfig.INTEGER(ATTRIBUTE_CLASSES.indexOf(AttribClass.VERTEX), {
+	class = ParamConfig.INTEGER(ATTRIBUTE_CLASSES.indexOf(AttribClass.POINT), {
 		menu: {
 			entries: AttribClassMenuEntries,
 		},
@@ -51,10 +51,14 @@ export class AttribDeleteSopNode extends TypedSopNode<AttribDeleteSopParamsConfi
 		this.setCoreGroup(coreGroup);
 	}
 
-	private _attribNames(coreGroup: CoreGroup, attribClass: AttribClass) {
+	private _attribNames(coreGroup: CoreGroup, attribClass: AttribClass): string[] {
 		switch (attribClass) {
-			case AttribClass.VERTEX:
+			case AttribClass.POINT:
 				return coreGroup.geoAttribNamesMatchingMask(this.pv.name);
+			case AttribClass.PRIMITIVE: {
+				this.states.error.set('primitive attributes are not supported yet');
+				return [];
+			}
 			case AttribClass.OBJECT:
 				return coreGroup.objectAttribNamesMatchingMask(this.pv.name);
 			case AttribClass.CORE_GROUP:
@@ -64,8 +68,12 @@ export class AttribDeleteSopNode extends TypedSopNode<AttribDeleteSopParamsConfi
 	}
 	private _deleteAttrib(coreGroup: CoreGroup, attribName: string, attribClass: AttribClass) {
 		switch (attribClass) {
-			case AttribClass.VERTEX:
+			case AttribClass.POINT:
 				return this._deleteVertexAttribute(coreGroup, attribName);
+			case AttribClass.PRIMITIVE: {
+				this.states.error.set('primitive attributes are not supported yet');
+				return;
+			}
 			case AttribClass.OBJECT:
 				return this._deleteObjectAttribute(coreGroup, attribName);
 			case AttribClass.CORE_GROUP:

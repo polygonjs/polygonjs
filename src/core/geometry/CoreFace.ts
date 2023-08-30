@@ -39,9 +39,14 @@ export class CoreFace {
 	constructor() {}
 	setGeometry(geometry: BufferGeometry) {
 		this._geometry = geometry;
+		return this;
 	}
-	setIndex(index: number) {
+	setIndex(index: number, geometry?: BufferGeometry) {
 		this._index = index;
+		if (geometry) {
+			this._geometry = geometry;
+		}
+		return this;
 	}
 	index() {
 		return this._index;

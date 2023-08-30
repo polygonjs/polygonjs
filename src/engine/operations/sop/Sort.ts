@@ -25,8 +25,8 @@ export enum SortMode {
 }
 export const SORT_MODES: SortMode[] = [SortMode.AXIS, SortMode.RANDOM, SortMode.ATTRIBUTE];
 
-export type SortTargetType = AttribClass.VERTEX | AttribClass.OBJECT;
-export const SORT_TARGET_TYPES: Array<SortTargetType> = [AttribClass.VERTEX, AttribClass.OBJECT];
+export type SortTargetType = AttribClass.POINT | AttribClass.OBJECT;
+export const SORT_TARGET_TYPES: Array<SortTargetType> = [AttribClass.POINT, AttribClass.OBJECT];
 
 export enum Axis {
 	X = 'x',
@@ -51,7 +51,7 @@ interface SortSopParams extends DefaultOperationParams {
 export class SortSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: SortSopParams = {
 		mode: SORT_MODES.indexOf(SortMode.AXIS),
-		targetType: SORT_TARGET_TYPES.indexOf(AttribClass.VERTEX),
+		targetType: SORT_TARGET_TYPES.indexOf(AttribClass.POINT),
 		seed: 0,
 		axis: AXISES.indexOf(Axis.X),
 		attribute: '',
@@ -70,7 +70,7 @@ export class SortSopOperation extends BaseSopOperation {
 	private _sort(coreGroup: CoreGroup, params: SortSopParams) {
 		const targetType = SORT_TARGET_TYPES[params.targetType];
 		switch (targetType) {
-			case AttribClass.VERTEX:
+			case AttribClass.POINT:
 				return this._sortPoints(coreGroup, params);
 			case AttribClass.OBJECT:
 				return this._sortObjects(coreGroup, params);

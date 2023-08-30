@@ -374,7 +374,7 @@ export class CoreGroup extends CoreEntity {
 
 	renameAttrib(old_name: string, new_name: string, attribClass: AttribClass) {
 		switch (attribClass) {
-			case AttribClass.VERTEX:
+			case AttribClass.POINT:
 				if (this.hasAttrib(old_name)) {
 					const objects = this.threejsObjects();
 					// if (this._objects) {

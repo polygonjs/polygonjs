@@ -16,6 +16,7 @@ import {GroupString} from './Group';
 
 export enum Attribute {
 	POINT_INDEX = 'ptnum',
+	PRIMITIVE_INDEX = 'primnum',
 	OBJECT_INDEX = 'objnum',
 	COLOR = 'color',
 	NORMAL = 'normal',

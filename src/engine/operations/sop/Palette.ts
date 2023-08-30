@@ -22,7 +22,7 @@ interface PaletteSopParams extends DefaultOperationParams {
 
 export class PaletteSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: PaletteSopParams = {
-		class: ATTRIBUTE_CLASSES.indexOf(AttribClass.VERTEX),
+		class: ATTRIBUTE_CLASSES.indexOf(AttribClass.POINT),
 		paletteName: SORTED_PALETTE_NAMES[0],
 		colorsCount: 0,
 		color1: new Color(1, 1, 1),
@@ -51,8 +51,11 @@ export class PaletteSopOperation extends BaseSopOperation {
 		colors: Color[]
 	) {
 		switch (attribClass) {
-			case AttribClass.VERTEX:
+			case AttribClass.POINT:
 				return await this._setVertexColor(coreGroup, params, colors);
+			case AttribClass.PRIMITIVE:
+				this.states?.error.set('primitive not supported yet');
+				return;
 			case AttribClass.OBJECT:
 				return await this._setObjectColor(coreGroup, params, colors);
 			case AttribClass.CORE_GROUP:

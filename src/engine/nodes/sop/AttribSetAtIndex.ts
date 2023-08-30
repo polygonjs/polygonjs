@@ -108,8 +108,11 @@ export class AttribSetAtIndexSopNode extends TypedSopNode<AttribSetAtIndexSopPar
 	private _addAttribute(attribClass: AttribClass, coreGroup: CoreGroup) {
 		const attribType = ATTRIBUTE_TYPES[this.pv.type];
 		switch (attribClass) {
-			case AttribClass.VERTEX:
+			case AttribClass.POINT:
 				this._addPointAttribute(attribType, coreGroup);
+				return this.setCoreGroup(coreGroup);
+			case AttribClass.PRIMITIVE:
+				this.states.error.set('primitive attributes are not supported');
 				return this.setCoreGroup(coreGroup);
 			case AttribClass.OBJECT:
 				this._addObjectAttribute(attribType, coreGroup);

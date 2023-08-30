@@ -25,6 +25,7 @@ import {ArrayUtils} from '../ArrayUtils';
 import {ObjectUtils} from '../ObjectUtils';
 import {GroupString} from './Group';
 import {InstanceAttrib} from './Instancer';
+import {CorePrimitive} from './Primitive';
 
 const IS_INSTANCE_KEY = 'isInstance';
 const INDEX_ATTRIB_VALUES = 'indexedAttribValues';
@@ -364,7 +365,11 @@ export class CoreGeometry {
 
 		return count;
 	}
-
+	//
+	//
+	// POINTS
+	//
+	//
 	points(): CorePoint[] {
 		// do not cache, as this gives unexpected results
 		// when the points are updated internaly
@@ -377,7 +382,7 @@ export class CoreGeometry {
 		return CoreGeometry.pointsFromGeometry(this._geometry);
 	}
 	static pointsFromGeometry(geometry: BufferGeometry): CorePoint[] {
-		const points = [];
+		const points: CorePoint[] = [];
 		const positionAttrib = geometry.getAttribute(this.positionAttribName(geometry)) as BufferAttribute;
 
 		if (positionAttrib != null) {
@@ -391,7 +396,40 @@ export class CoreGeometry {
 
 		return points;
 	}
+	//
+	//
+	// PRIMITIVES
+	//
+	//
+	primitives(): CorePrimitive[] {
+		// do not cache, as this gives unexpected results
+		// when the points are updated internaly
+		return this.primitivesFromGeometry();
+	}
+	static primitives(geometry: BufferGeometry): CorePrimitive[] {
+		return CoreGeometry.primitivesFromGeometry(geometry);
+	}
+	primitivesFromGeometry(): CorePrimitive[] {
+		return CoreGeometry.primitivesFromGeometry(this._geometry);
+	}
+	static primitivesFromGeometry(geometry: BufferGeometry): CorePrimitive[] {
+		const primtives: CorePrimitive[] = [];
 
+		const count = CorePrimitive.primitivesCount(geometry);
+		for (let i = 0; i < count; i++) {
+			const primitive = new CorePrimitive(geometry, i);
+
+			primtives.push(primitive);
+		}
+
+		return primtives;
+	}
+
+	//
+	//
+	//
+	//
+	//
 	segments() {
 		const index: Array<number> = (this.geometry().index?.array || []) as Array<number>;
 		return ArrayUtils.chunk(index, 2);

@@ -41,7 +41,7 @@ interface CopyBetweenGeometriesArgs extends CopyArgs {
 
 export class AttribCopySopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: AttribCopySopParams = {
-		class: ATTRIBUTE_CLASSES.indexOf(AttribClass.VERTEX),
+		class: ATTRIBUTE_CLASSES.indexOf(AttribClass.POINT),
 		name: '',
 		tnewName: false,
 		newName: '',
@@ -59,7 +59,7 @@ export class AttribCopySopOperation extends BaseSopOperation {
 		const attribClass = ATTRIBUTE_CLASSES[params.class];
 		const newNames = stringToAttribNames(params.newName);
 
-		if (attribClass == AttribClass.VERTEX) {
+		if (attribClass == AttribClass.POINT) {
 			// for geometry attributes, first iterate over the existing attributes
 			const srcAttribNames = coreGroupSrc.geoAttribNamesMatchingMask(params.name);
 			for (let i = 0; i < srcAttribNames.length; i++) {
@@ -99,8 +99,11 @@ export class AttribCopySopOperation extends BaseSopOperation {
 
 	private _copyAttributeBetweenCoreGroups(attribClass: AttribClass, copyArgs: CopyBetweenCoreGroupsArgs) {
 		switch (attribClass) {
-			case AttribClass.VERTEX:
+			case AttribClass.POINT:
 				this._copyAttributesBetweenGeometries(copyArgs);
+				return;
+			case AttribClass.PRIMITIVE:
+				this.states?.error.set('primitive attributes are not supported yet');
 				return;
 			case AttribClass.OBJECT:
 				this._copyAttributesBetweenObjects(copyArgs);

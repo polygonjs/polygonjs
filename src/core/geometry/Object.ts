@@ -30,6 +30,7 @@ import {TransformTargetType} from '../Transform';
 import {TypeAssert} from '../../engine/poly/Assert';
 import {applyTransformWithSpaceToObject, ObjectTransformMode, ObjectTransformSpace} from '../TransformSpace';
 import {BaseSopOperation} from '../../engine/operations/sop/_Base';
+import {CorePrimitive} from './Primitive';
 // import {computeBoundingBoxFromObject3D} from './BoundingBox';
 // import {setSphereFromObject} from './BoundingSphere';
 
@@ -83,6 +84,11 @@ export class CoreObject extends BaseCoreObject<CoreObjectType.THREEJS> {
 		// 	return null
 		// }
 	}
+	//
+	//
+	// POINTS
+	//
+	//
 	static points(object: Object3D) {
 		const geometry = (object as Mesh).geometry;
 		if (geometry) {
@@ -120,7 +126,54 @@ export class CoreObject extends BaseCoreObject<CoreObjectType.THREEJS> {
 			return this.points();
 		}
 	}
-	addNumericVertexAttrib(name: string, size: number, defaultValue: NumericAttribValue) {
+	//
+	//
+	// PRIMITIVES
+	//
+	//
+	static primitives(object: Object3D) {
+		const geometry = (object as Mesh).geometry;
+		if (geometry) {
+			return CoreGeometry.primitives(geometry) || [];
+		} else {
+			return [];
+		}
+	}
+	primitives() {
+		return this.coreGeometry()?.primitives() || [];
+	}
+	static primitivesFromGroup(object: Object3D, group: GroupString): CorePrimitive[] {
+		if (group) {
+			const indices = CoreString.indices(group);
+			if (indices) {
+				const primitives = this.primitives(object);
+				return ArrayUtils.compact(indices.map((i) => primitives[i]));
+			} else {
+				return [];
+			}
+		} else {
+			return this.primitives(object);
+		}
+	}
+	primitivesFromGroup(group: GroupString): CorePrimitive[] {
+		if (group) {
+			const indices = CoreString.indices(group);
+			if (indices) {
+				const primitives = this.primitives();
+				return ArrayUtils.compact(indices.map((i) => primitives[i]));
+			} else {
+				return [];
+			}
+		} else {
+			return this.primitives();
+		}
+	}
+	//
+	//
+	//
+	//
+	//
+	addNumericPointAttrib(name: string, size: number, defaultValue: NumericAttribValue) {
 		if (defaultValue == null) {
 			defaultValue = CoreAttribute.defaultValue(size);
 		}

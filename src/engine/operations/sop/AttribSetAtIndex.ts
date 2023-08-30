@@ -28,7 +28,7 @@ interface AttribSetAtIndexSopParams extends DefaultOperationParams {
 export class AttribSetAtIndexSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: AttribSetAtIndexSopParams = {
 		index: 0,
-		class: ATTRIBUTE_CLASSES.indexOf(AttribClass.VERTEX),
+		class: ATTRIBUTE_CLASSES.indexOf(AttribClass.POINT),
 		type: ATTRIBUTE_TYPES.indexOf(AttribType.NUMERIC),
 		name: 'new_attrib',
 		size: 1,
@@ -56,8 +56,11 @@ export class AttribSetAtIndexSopOperation extends BaseSopOperation {
 	private _addAttribute(attribClass: AttribClass, coreGroup: CoreGroup, params: AttribSetAtIndexSopParams) {
 		const attribType = ATTRIBUTE_TYPES[params.type];
 		switch (attribClass) {
-			case AttribClass.VERTEX:
+			case AttribClass.POINT:
 				this._addPointAttribute(attribType, coreGroup, params);
+				return;
+			case AttribClass.PRIMITIVE:
+				this.states?.error.set('primitive not supported yet');
 				return;
 			case AttribClass.OBJECT:
 				this._addObjectAttribute(attribType, coreGroup, params);
