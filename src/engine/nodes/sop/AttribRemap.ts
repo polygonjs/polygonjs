@@ -62,7 +62,7 @@ export class AttribRemapSopNode extends TypedSopNode<AttribRemapSopParamsConfig>
 		let target_name = this.pv.name;
 		if (isBooleanTrue(this.pv.changeName)) {
 			target_name = this.pv.newName;
-			if (!core_group.hasAttrib(target_name)) {
+			if (!core_group.hasPointAttrib(target_name)) {
 				core_group.addGeoNumericVertexAttrib(target_name, attrib_size, 0);
 			}
 		}

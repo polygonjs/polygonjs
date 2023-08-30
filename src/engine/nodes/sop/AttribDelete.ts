@@ -54,7 +54,11 @@ export class AttribDeleteSopNode extends TypedSopNode<AttribDeleteSopParamsConfi
 	private _attribNames(coreGroup: CoreGroup, attribClass: AttribClass): string[] {
 		switch (attribClass) {
 			case AttribClass.POINT:
-				return coreGroup.geoAttribNamesMatchingMask(this.pv.name);
+				return coreGroup.pointAttribNamesMatchingMask(this.pv.name);
+			case AttribClass.VERTEX: {
+				this.states.error.set('vertex attributes are not supported yet');
+				return [];
+			}
 			case AttribClass.PRIMITIVE: {
 				this.states.error.set('primitive attributes are not supported yet');
 				return [];
@@ -70,6 +74,10 @@ export class AttribDeleteSopNode extends TypedSopNode<AttribDeleteSopParamsConfi
 		switch (attribClass) {
 			case AttribClass.POINT:
 				return this._deleteVertexAttribute(coreGroup, attribName);
+			case AttribClass.VERTEX: {
+				this.states.error.set('vertex attributes are not supported yet');
+				return;
+			}
 			case AttribClass.PRIMITIVE: {
 				this.states.error.set('primitive attributes are not supported yet');
 				return;

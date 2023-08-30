@@ -26,6 +26,7 @@
  * it is also possible to use variables to access attributes:
  *
  * - `@ptnum` will evaluate to the current point index
+ * - `@vtxnum` will evaluate to the current vertex index
  * - `@primnum` will evaluate to the current primitive index
  * - `@objnum` will evaluate to the current object index
  * - And you can also refer to any existing attribute, **using @ following by the attribute name**.

@@ -61,7 +61,7 @@ export class AttribCopySopOperation extends BaseSopOperation {
 
 		if (attribClass == AttribClass.POINT) {
 			// for geometry attributes, first iterate over the existing attributes
-			const srcAttribNames = coreGroupSrc.geoAttribNamesMatchingMask(params.name);
+			const srcAttribNames = coreGroupSrc.pointAttribNamesMatchingMask(params.name);
 			for (let i = 0; i < srcAttribNames.length; i++) {
 				const srcAttribName = srcAttribNames[i];
 				let destAttribName = isBooleanTrue(params.tnewName) ? newNames[i] : srcAttribName;
@@ -101,6 +101,9 @@ export class AttribCopySopOperation extends BaseSopOperation {
 		switch (attribClass) {
 			case AttribClass.POINT:
 				this._copyAttributesBetweenGeometries(copyArgs);
+				return;
+			case AttribClass.VERTEX:
+				this.states?.error.set('vertex attributes are not supported yet');
 				return;
 			case AttribClass.PRIMITIVE:
 				this.states?.error.set('primitive attributes are not supported yet');

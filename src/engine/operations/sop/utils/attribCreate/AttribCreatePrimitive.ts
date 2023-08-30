@@ -59,35 +59,3 @@ function _addAttributeToPrimitives(coreObject: CoreObject, params: AttribCreateS
 		}
 	}
 }
-
-// function _addStringAttributeToPrimitives(coreObject: CoreObject, params: AttribCreateSopParams) {
-// 	const coreGeometry = coreObject.coreGeometry();
-// 	if (!coreGeometry) {
-// 		return;
-// 	}
-// 	const value = params.string;
-// 	const geometry = coreGeometry.geometry();
-// 	const attribName = CoreAttribute.remapName(params.name);
-
-// 	// add default if not found
-// 	let attribute = CorePrimitive.attribute(geometry, attribName);
-// 	if (!attribute) {
-// 		const primitivesCount = CorePrimitive.primitivesCount(geometry);
-// 		const values = new Array(primitivesCount * params.size).fill(value);
-// 		attribute = new PrimitiveNumberAttribute(values, params.size);
-// 		CorePrimitive.addAttribute(geometry, attribName, attribute);
-// 	}
-
-// 	// set values
-// 	if (params.group) {
-// 		const primitives = coreObject.primitivesFromGroup(params.group);
-// 		for (let primitive of primitives) {
-// 			primitive.setAttribValue(attribName, value);
-// 		}
-// 	} else {
-// 		const primitives = coreObject.primitives();
-// 		for (let primitive of primitives) {
-// 			primitive.setAttribValue(attribName, value);
-// 		}
-// 	}
-// }

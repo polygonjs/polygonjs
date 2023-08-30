@@ -72,11 +72,11 @@ export class CoreInstancer {
 	}
 	setCoreGroup(coreGroup: CoreGroup) {
 		this._coreGroup = coreGroup;
-		this._is_pscale_present = this._coreGroup.hasAttrib(Attribute.PSCALE);
-		this._is_scale_present = this._coreGroup.hasAttrib(Attribute.SCALE);
+		this._is_pscale_present = this._coreGroup.hasPointAttrib(Attribute.PSCALE);
+		this._is_scale_present = this._coreGroup.hasPointAttrib(Attribute.SCALE);
 
-		this._is_normal_present = this._coreGroup.hasAttrib(Attribute.NORMAL);
-		this._is_up_present = this._coreGroup.hasAttrib(Attribute.UP);
+		this._is_normal_present = this._coreGroup.hasPointAttrib(Attribute.NORMAL);
+		this._is_up_present = this._coreGroup.hasPointAttrib(Attribute.UP);
 
 		this._do_rotate_matrices = this._is_normal_present; //&& this._is_up_present;
 	}
@@ -174,7 +174,7 @@ export class CoreInstancer {
 	) {
 		const instancesCount = instancePts.length;
 		const colors = new Float32Array(instancesCount * 3);
-		const hasColor = templateCoreGroup.hasAttrib(Attribute.COLOR);
+		const hasColor = templateCoreGroup.hasPointAttrib(Attribute.COLOR);
 		let i = 0;
 		for (let instancePt of instancePts) {
 			const color = hasColor
@@ -206,7 +206,7 @@ export class CoreInstancer {
 		const instancesCount = instancePts.length;
 
 		// if(this._param_add_uv_offset){
-		const has_uv = templateCoreGroup.hasAttrib(Attribute.UV);
+		const has_uv = templateCoreGroup.hasPointAttrib(Attribute.UV);
 		if (has_uv) {
 			const uvs = new Float32Array(instancesCount * 2);
 			let i = 0;
@@ -222,10 +222,10 @@ export class CoreInstancer {
 		this.updateTransformInstanceAttributes(instancePts, templateCoreGroup, geometry);
 		this.updateColorInstanceAttribute(instancePts, templateCoreGroup, geometry);
 
-		const attribNames = templateCoreGroup.geoAttribNamesMatchingMask(attributesToCopy);
+		const attribNames = templateCoreGroup.pointAttribNamesMatchingMask(attributesToCopy);
 
 		attribNames.forEach((attribName) => {
-			const attribSize = templateCoreGroup.geoAttribSize(attribName);
+			const attribSize = templateCoreGroup.pointAttribSize(attribName);
 			const values = new Float32Array(instancesCount * attribSize);
 			instancePts.forEach((pt, i) => {
 				const value = pt.attribValue(attribName);

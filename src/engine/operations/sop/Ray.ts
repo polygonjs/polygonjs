@@ -83,7 +83,7 @@ export class RaySopOperation extends BaseSopOperation {
 		this._matDoubleSideTmpSetter.setCoreGroupMaterialDoubleSided(coreGroupCollision);
 
 		if (isBooleanTrue(params.addDistAttribute)) {
-			if (!coreGroup.hasAttrib(DIST_ATTRIB_NAME)) {
+			if (!coreGroup.hasPointAttrib(DIST_ATTRIB_NAME)) {
 				coreGroup.addGeoNumericVertexAttrib(DIST_ATTRIB_NAME, 1, -1);
 			}
 		}

@@ -61,7 +61,11 @@ export class AttribPromoteSopOperation extends BaseSopOperation {
 function _attribNames(coreGroup: CoreGroup, attribClass: AttribClass, mask: string): string[] {
 	switch (attribClass) {
 		case AttribClass.POINT:
-			return coreGroup.geoAttribNamesMatchingMask(mask);
+			return coreGroup.pointAttribNamesMatchingMask(mask);
+		case AttribClass.VERTEX: {
+			console.warn('primitive not supported yet');
+			return [];
+		}
 		case AttribClass.PRIMITIVE: {
 			console.warn('primitive not supported yet');
 			return [];
@@ -83,6 +87,10 @@ function promoteAttribute(
 	switch (classFrom) {
 		case AttribClass.POINT:
 			return promoteAttributeFromPoints(coreGroup, classTo, attribName, params);
+		case AttribClass.VERTEX: {
+			console.warn('vertex not supported yet');
+			return;
+		}
 		case AttribClass.PRIMITIVE: {
 			console.warn('primitive not supported yet');
 			return;
@@ -103,6 +111,10 @@ function promoteAttributeFromPoints(
 	switch (classTo) {
 		case AttribClass.POINT:
 			return pointsToPoints(coreGroup, attribName, params);
+		case AttribClass.VERTEX: {
+			console.warn('vertex not supported yet');
+			return;
+		}
 		case AttribClass.PRIMITIVE: {
 			console.warn('primitive not supported yet');
 			return;
@@ -123,6 +135,10 @@ function promoteAttributeFromObjects(
 	switch (classTo) {
 		case AttribClass.POINT:
 			return objectsToPoints(coreGroup, attribName);
+		case AttribClass.VERTEX: {
+			console.warn('primitive not supported yet');
+			return;
+		}
 		case AttribClass.PRIMITIVE: {
 			console.warn('primitive not supported yet');
 			return;
@@ -138,6 +154,10 @@ function promoteAttributeFromCoreGroup(coreGroup: CoreGroup, classTo: AttribClas
 	switch (classTo) {
 		case AttribClass.POINT:
 			return coreGroupToPoints(coreGroup, attribName);
+		case AttribClass.VERTEX: {
+			console.log('vertex not supported yet');
+			return;
+		}
 		case AttribClass.PRIMITIVE: {
 			console.log('primitive not supported yet');
 			return;

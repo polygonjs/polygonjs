@@ -13,7 +13,7 @@ import {CoreOctree} from '../../../core/math/octree/Octree';
 import {CoreIterator} from '../../../core/Iterator';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {InputCloneMode} from '../../poly/InputCloneMode';
-import {Box3,Vector3} from 'three';
+import {Box3, Vector3} from 'three';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 const tmpBox = new Box3();
 const _position = new Vector3();
@@ -62,7 +62,7 @@ export class AttribTransferSopNode extends TypedSopNode<AttribTransferSopParamsC
 
 		this._core_group_src = input_contents[1];
 
-		this._attrib_names = this._core_group_src.geoAttribNamesMatchingMask(this.pv.name);
+		this._attrib_names = this._core_group_src.pointAttribNamesMatchingMask(this.pv.name);
 		this._error_if_attribute_not_found_on_second_input();
 		this._build_octree_if_required(this._core_group_src);
 		this._add_attribute_if_required();
@@ -73,7 +73,7 @@ export class AttribTransferSopNode extends TypedSopNode<AttribTransferSopParamsC
 
 	_error_if_attribute_not_found_on_second_input() {
 		for (let attrib_name of this._attrib_names) {
-			if (!this._core_group_src.hasAttrib(attrib_name)) {
+			if (!this._core_group_src.hasPointAttrib(attrib_name)) {
 				this.states.error.set(`attribute '${attrib_name}' not found on second input`);
 			}
 		}
@@ -98,8 +98,8 @@ export class AttribTransferSopNode extends TypedSopNode<AttribTransferSopParamsC
 
 	private _add_attribute_if_required() {
 		for (let attrib_name of this._attrib_names) {
-			if (!this._core_group_dest.hasAttrib(attrib_name)) {
-				const attrib_size = this._core_group_src.geoAttribSize(attrib_name);
+			if (!this._core_group_dest.hasPointAttrib(attrib_name)) {
+				const attrib_size = this._core_group_src.pointAttribSize(attrib_name);
 				this._core_group_dest.addGeoNumericVertexAttrib(attrib_name, attrib_size, 0);
 			}
 		}
@@ -111,7 +111,7 @@ export class AttribTransferSopNode extends TypedSopNode<AttribTransferSopParamsC
 	}
 	private _transfer_attributes_for_point(destPoint: CorePoint) {
 		const totalDist = this.pv.distanceThreshold + this.pv.blendWidth;
-		destPoint.position(_position)
+		destPoint.position(_position);
 		const nearest_points: CorePoint[] =
 			this._octree?.find_points(_position, totalDist, this.pv.maxSamplesCount) || [];
 

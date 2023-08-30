@@ -263,42 +263,12 @@ export class CoreGroup extends CoreEntity {
 	coreGeometries(): CoreGeometry[] {
 		return this.geometries().map((g) => new CoreGeometry(g));
 	}
-	//
-	//
-	//
-	//
-	//
 
 	//
 	//
+	// POINTS
 	//
 	//
-	//
-	// computeVertexNormals() {
-	// 	for (let object of this.threejsCoreObjects()) {
-	// 		object.computeVertexNormals();
-	// 	}
-	// }
-	static geometryFromObject(object: Object3D): BufferGeometry | null {
-		if ((object as Mesh).isMesh || (object as LineSegments).isLine || (object as Points).isPoints) {
-			return (object as Mesh).geometry as BufferGeometry;
-		}
-		return null;
-	}
-	// faces() {
-	// 	const faces: CoreFace[] = [];
-	// 	for (let object of this.threejsObjectsWithGeo()) {
-	// 		if (object.geometry) {
-	// 			const coreGeo = new CoreGeometry(object.geometry);
-	// 			const geoFaces = coreGeo.faces();
-	// 			for (let geoFace of geoFaces) {
-	// 				geoFace.applyMatrix4(object.matrix);
-	// 				faces.push(geoFace);
-	// 			}
-	// 		}
-	// 	}
-	// 	return faces;
-	// }
 	points() {
 		return this.coreGeometries()
 			.map((g) => g.points())
@@ -324,58 +294,161 @@ export class CoreGroup extends CoreEntity {
 			return this.points();
 		}
 	}
+	pointAttribNames() {
+		const firstCoreGeometry = this.coreGeometries()[0];
+		if (firstCoreGeometry) {
+			return firstCoreGeometry.attribNames();
+		} else {
+			return [];
+		}
+	}
+	hasPointAttrib(name: string) {
+		const firstCoreGeometry = this.coreGeometries()[0];
+		return firstCoreGeometry?.hasAttrib(name) || false;
+	}
+	pointAttribType(name: string) {
+		const firstCoreGeometry = this.coreGeometries()[0];
+		if (firstCoreGeometry != null) {
+			return firstCoreGeometry.attribType(name);
+		} else {
+			return null;
+		}
+	}
+	pointAttribNamesMatchingMask(masksString: GroupString) {
+		return CoreAttribute.attribNamesMatchingMask(masksString, this.pointAttribNames());
+	}
+	pointAttribSizes() {
+		const firstGeometry = this.coreGeometries()[0];
+		if (firstGeometry) {
+			return firstGeometry.attribSizes();
+		} else {
+			return {};
+		}
+	}
+	pointAttribSize(attrib_name: string) {
+		const firstGeometry = this.coreGeometries()[0];
+		if (firstGeometry) {
+			return firstGeometry.attribSize(attrib_name);
+		} else {
+			return 0;
+		}
+	}
 
+	//
+	//
+	// VERTEX
+	//
+	//
+	vertices() {
+		return this.coreGeometries()
+			.map((g) => g.vertices())
+			.flat();
+	}
+	vertexAttribNames(): string[] {
+		const firstGeometry = this.geometries()[0];
+		if (firstGeometry) {
+			return CoreGeometry.vertexAttributeNames(firstGeometry);
+		} else {
+			return [];
+		}
+	}
+	vertexAttribSizes(): PolyDictionary<AttribSize> {
+		const firstGeometry = this.geometries()[0];
+		if (firstGeometry) {
+			return CoreGeometry.vertexAttributeSizes(firstGeometry);
+		} else {
+			return {};
+		}
+	}
+	vertexAttribTypes(): PolyDictionary<AttribType> {
+		const firstGeometry = this.geometries()[0];
+		if (firstGeometry) {
+			return CoreGeometry.vertexAttributeTypes(firstGeometry);
+		} else {
+			return {};
+		}
+	}
+	//
+	//
+	// PRIMITIVE
+	//
+	//
+	primitives() {
+		return this.coreGeometries()
+			.map((g) => g.primitives())
+			.flat();
+	}
+	primitiveAttribNames(): string[] {
+		const firstGeometry = this.geometries()[0];
+		if (firstGeometry) {
+			return CoreGeometry.primitiveAttributeNames(firstGeometry);
+		} else {
+			return [];
+		}
+	}
+	primitiveAttribSizes(): PolyDictionary<AttribSize> {
+		const firstGeometry = this.geometries()[0];
+		if (firstGeometry) {
+			return CoreGeometry.primitiveAttributeSizes(firstGeometry);
+		} else {
+			return {};
+		}
+	}
+	primitiveAttribTypes(): PolyDictionary<AttribType> {
+		const firstGeometry = this.geometries()[0];
+		if (firstGeometry) {
+			return CoreGeometry.primitiveAttributeTypes(firstGeometry);
+		} else {
+			return {};
+		}
+	}
+	//
+	//
+	// OBJECTS
+	//
+	//
 	static _fromObjects(objects: Object3D[]): CoreGroup {
 		const coreGroup = new CoreGroup();
 		coreGroup.setAllObjects(objects);
 		return coreGroup;
 	}
-
-	//
-	//
-	//
-	//
-	//
-	objectsData(): ObjectData[] {
-		return this._allObjects?.map((o) => coreObjectFactory(o).objectData(o)) || [];
+	objectAttribTypesByName() {
+		return BaseCoreObject.coreObjectAttributeTypesByName(this.allCoreObjects());
 	}
-	boundingBox(target: Box3) {
-		target.makeEmpty();
-		const coreObjects = this.allCoreObjects();
-		for (let coreObject of coreObjects) {
-			coreObject.boundingBox(tmpBox3);
-			target.union(tmpBox3);
+	objectAttribNames() {
+		return BaseCoreObject.coreObjectsAttribNames(this.allCoreObjects());
+	}
+	objectAttribNamesMatchingMask(masksString: GroupString) {
+		return CoreAttribute.attribNamesMatchingMask(masksString, this.objectAttribNames());
+	}
+	objectAttribSizesByName(): PolyDictionary<AttribSize[]> {
+		return BaseCoreObject.coreObjectsAttribSizesByName(this.allCoreObjects());
+		// const firstObject = this.coreObjects()[0];
+		// if (firstObject) {
+		// 	return firstObject.attribSizes();
+		// } else {
+		// 	return {};
+		// }
+	}
+	addGeoNumericVertexAttrib(name: string, size: number, defaultValue: NumericAttribValue) {
+		if (defaultValue == null) {
+			defaultValue = CoreAttribute.defaultValue(size);
+		}
+
+		for (let coreGeometry of this.coreGeometries()) {
+			coreGeometry.addNumericAttrib(name, size, defaultValue);
 		}
 	}
+
 	//
 	//
 	// attributes
 	//
 	//
-	hasAttrib(name: string) {
-		let first_geometry;
-		if ((first_geometry = this.coreGeometries()[0]) != null) {
-			return first_geometry.hasAttrib(name);
-		} else {
-			return false;
-		}
-	}
-	geoAttribType(name: string) {
-		const first_core_geometry = this.coreGeometries()[0];
-		if (first_core_geometry != null) {
-			return first_core_geometry.attribType(name);
-		} else {
-			return null;
-		}
-	}
-	objectAttribTypesByName() {
-		return BaseCoreObject.coreObjectAttributeTypesByName(this.allCoreObjects());
-	}
-
 	renameAttrib(old_name: string, new_name: string, attribClass: AttribClass) {
 		switch (attribClass) {
 			case AttribClass.POINT:
-				if (this.hasAttrib(old_name)) {
+				if (this.hasPointAttrib(old_name)) {
 					const objects = this.threejsObjects();
 					// if (this._objects) {
 					for (let object of objects) {
@@ -392,78 +465,25 @@ export class CoreGroup extends CoreEntity {
 				break;
 
 			case AttribClass.OBJECT:
-				if (this.hasAttrib(old_name)) {
-					// if (this._allObjects) {
-					for (let object of this._allObjects) {
-						if (isObject3D(object)) {
-							object.traverse((child) => {
-								CoreObject.renameAttrib(child, old_name, new_name);
-							});
-						} else {
-							CoreObject.renameAttrib(object, old_name, new_name);
-						}
+				// if (this.hasAttrib(old_name)) {
+				// if (this._allObjects) {
+				for (let object of this._allObjects) {
+					if (isObject3D(object)) {
+						object.traverse((child) => {
+							CoreObject.renameAttrib(child, old_name, new_name);
+						});
+					} else {
+						CoreObject.renameAttrib(object, old_name, new_name);
 					}
-					// }
 				}
+				// }
+				// }
 				break;
 		}
 	}
-	geoAttribNames() {
-		const firstGeometry = this.coreGeometries()[0];
-		if (firstGeometry) {
-			return firstGeometry.attribNames();
-		} else {
-			return [];
-		}
-	}
-	objectAttribNames() {
-		return BaseCoreObject.coreObjectsAttribNames(this.allCoreObjects());
-	}
 
-	geoAttribNamesMatchingMask(masksString: GroupString) {
-		return CoreAttribute.attribNamesMatchingMask(masksString, this.geoAttribNames());
-	}
-	objectAttribNamesMatchingMask(masksString: GroupString) {
-		return CoreAttribute.attribNamesMatchingMask(masksString, this.objectAttribNames());
-	}
 	attribNamesMatchingMask(masksString: GroupString) {
 		return CoreAttribute.attribNamesMatchingMask(masksString, this.attribNames());
-	}
-
-	geoAttribSizes() {
-		const firstGeometry = this.coreGeometries()[0];
-		if (firstGeometry) {
-			return firstGeometry.attribSizes();
-		} else {
-			return {};
-		}
-	}
-	objectAttribSizesByName(): PolyDictionary<AttribSize[]> {
-		return BaseCoreObject.coreObjectsAttribSizesByName(this.allCoreObjects());
-		// const firstObject = this.coreObjects()[0];
-		// if (firstObject) {
-		// 	return firstObject.attribSizes();
-		// } else {
-		// 	return {};
-		// }
-	}
-	geoAttribSize(attrib_name: string) {
-		const firstGeometry = this.coreGeometries()[0];
-		if (firstGeometry) {
-			return firstGeometry.attribSize(attrib_name);
-		} else {
-			return 0;
-		}
-	}
-
-	addGeoNumericVertexAttrib(name: string, size: number, defaultValue: NumericAttribValue) {
-		if (defaultValue == null) {
-			defaultValue = CoreAttribute.defaultValue(size);
-		}
-
-		for (let coreGeometry of this.coreGeometries()) {
-			coreGeometry.addNumericAttrib(name, size, defaultValue);
-		}
 	}
 
 	private _attributes: AttributeDictionary = {};
@@ -529,5 +549,28 @@ export class CoreGroup extends CoreEntity {
 			target.add(tmpPos);
 		}
 		target.divideScalar(objectsCount);
+	}
+
+	//
+	//
+	// UTILS
+	//
+	//
+	objectsData(): ObjectData[] {
+		return this._allObjects?.map((o) => coreObjectFactory(o).objectData(o)) || [];
+	}
+	boundingBox(target: Box3) {
+		target.makeEmpty();
+		const coreObjects = this.allCoreObjects();
+		for (let coreObject of coreObjects) {
+			coreObject.boundingBox(tmpBox3);
+			target.union(tmpBox3);
+		}
+	}
+	static geometryFromObject(object: Object3D): BufferGeometry | null {
+		if ((object as Mesh).isMesh || (object as LineSegments).isLine || (object as Points).isPoints) {
+			return (object as Mesh).geometry as BufferGeometry;
+		}
+		return null;
 	}
 }

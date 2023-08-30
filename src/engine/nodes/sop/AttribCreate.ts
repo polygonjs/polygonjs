@@ -28,6 +28,7 @@ import {AttribCreateSopOperation} from '../../operations/sop/AttribCreate';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 import {addPointAttribute} from './utils/attribCreate/AttribCreatePoint';
+import {addVertexAttribute} from './utils/attribCreate/AttribCreateVertex';
 import {addPrimitiveAttribute} from './utils/attribCreate/AttribCreatePrimitive';
 import {addObjectAttribute} from './utils/attribCreate/AttribCreateObject';
 import {addCoreGroupAttribute} from './utils/attribCreate/AttribCreateCoreGroup';
@@ -117,6 +118,9 @@ export class AttribCreateSopNode extends TypedSopNode<AttribCreateSopParamsConfi
 		switch (attribClass) {
 			case AttribClass.POINT:
 				await addPointAttribute(attribType, coreGroup, this.p);
+				return this.setCoreGroup(coreGroup);
+			case AttribClass.VERTEX:
+				await addVertexAttribute(attribType, coreGroup, this.p);
 				return this.setCoreGroup(coreGroup);
 			case AttribClass.PRIMITIVE:
 				await addPrimitiveAttribute(attribType, coreGroup, this.p);

@@ -52,6 +52,10 @@ export class AudioNotesSopOperation extends BaseSopOperation {
 		switch (attribClass) {
 			case AttribClass.POINT:
 				return this._addPointAttribute(coreGroup, params);
+			case AttribClass.VERTEX: {
+				this.states?.error.set('vertex not supported yet');
+				return;
+			}
 			case AttribClass.PRIMITIVE: {
 				this.states?.error.set('primitive not supported yet');
 				return;

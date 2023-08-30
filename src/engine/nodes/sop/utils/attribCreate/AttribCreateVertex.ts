@@ -5,8 +5,8 @@ import {ValueArrayByName, initArrayIfRequired} from './Common';
 import {AttribCreateSopNodeParams} from '../../../../operations/sop/utils/attribCreate/Common';
 import {AttribType} from '../../../../../core/geometry/Constant';
 import {TypeAssert} from '../../../../poly/Assert';
-import {CorePrimitive} from '../../../../../core/geometry/Primitive';
-import {PrimitiveNumberAttribute, PrimitiveStringAttribute} from '../../../../../core/geometry/PrimitiveAttribute';
+import {CoreVertex} from '../../../../../core/geometry/Vertex';
+import {VertexNumberAttribute, VertexStringAttribute} from '../../../../../core/geometry/VertexAttribute';
 
 interface ArraysByGeoUuid {
 	X: ValueArrayByName;
@@ -21,7 +21,7 @@ const _arraysByGeoUuid: ArraysByGeoUuid = {
 	W: new Map(),
 };
 
-export async function addPrimitiveAttribute(
+export async function addVertexAttribute(
 	attribType: AttribType,
 	coreGroup: CoreGroup,
 	params: AttribCreateSopNodeParams
@@ -30,13 +30,13 @@ export async function addPrimitiveAttribute(
 	switch (attribType) {
 		case AttribType.NUMERIC: {
 			for (const coreObject of coreObjects) {
-				await _addNumericAttributeToPrimitives(coreObject, params);
+				await _addNumericAttributeToVertices(coreObject, params);
 			}
 			return;
 		}
 		case AttribType.STRING: {
 			for (const coreObject of coreObjects) {
-				await _addStringAttributeToPrimitives(coreObject, params);
+				await _addStringAttributeToVertices(coreObject, params);
 			}
 			return;
 		}
@@ -44,7 +44,7 @@ export async function addPrimitiveAttribute(
 	TypeAssert.unreachable(attribType);
 }
 
-async function _addNumericAttributeToPrimitives(coreObject: CoreObject, params: AttribCreateSopNodeParams) {
+async function _addNumericAttributeToVertices(coreObject: CoreObject, params: AttribCreateSopNodeParams) {
 	const coreGeometry = coreObject.coreGeometry();
 	if (!coreGeometry) {
 		return;
@@ -52,7 +52,7 @@ async function _addNumericAttributeToPrimitives(coreObject: CoreObject, params: 
 	// const geometry = coreGeometry.geometry();
 	// const primitivesCount = CorePrimitive.primitivesCount(geometry);
 
-	const primitives = coreObject.primitivesFromGroup(params.group.value);
+	const vertices = coreObject.verticesFromGroup(params.group.value);
 	const attribName = CoreAttribute.remapName(params.name.value);
 	const size = params.size.value;
 
@@ -60,12 +60,12 @@ async function _addNumericAttributeToPrimitives(coreObject: CoreObject, params: 
 
 	if (param.hasExpression()) {
 		const geometry = coreGeometry.geometry();
-		let attribute = CorePrimitive.attribute(geometry, attribName);
+		let attribute = CoreVertex.attribute(geometry, attribName);
 		if (!attribute) {
-			const primitivesCount = CorePrimitive.primitivesCount(geometry);
-			const values = new Array(primitivesCount * size).fill(0);
-			attribute = new PrimitiveNumberAttribute(values, size);
-			CorePrimitive.addAttribute(geometry, attribName, attribute);
+			const verticesCount = CoreVertex.verticesCount(geometry);
+			const values = new Array(verticesCount * size).fill(0);
+			attribute = new VertexNumberAttribute(values, size);
+			CoreVertex.addAttribute(geometry, attribName, attribute);
 		}
 
 		// attribute.needsUpdate = true;
@@ -74,15 +74,15 @@ async function _addNumericAttributeToPrimitives(coreObject: CoreObject, params: 
 			const paramN = params.value1;
 			if (paramN.expressionController) {
 				if (paramN.expressionController.entitiesDependent()) {
-					await paramN.expressionController.computeExpressionForPrimitives(
-						primitives,
+					await paramN.expressionController.computeExpressionForVertices(
+						vertices,
 						(primitive, value: number) => {
 							array[primitive.index() * size + 0] = value;
 						}
 					);
 				} else {
-					for (const primitive of primitives) {
-						array[primitive.index() * size + 0] = paramN.value;
+					for (const vertex of vertices) {
+						array[vertex.index() * size + 0] = paramN.value;
 					}
 				}
 			}
@@ -101,24 +101,24 @@ async function _addNumericAttributeToPrimitives(coreObject: CoreObject, params: 
 			for (let i = 0; i < components.length; i++) {
 				const componentParam = components[i];
 				if (componentParam.hasExpression() && componentParam.expressionController) {
-					tmpArrays[i] = initArrayIfRequired(geometry, arraysByGeometryUuid[i], primitives.length);
+					tmpArrays[i] = initArrayIfRequired(geometry, arraysByGeometryUuid[i], vertices.length);
 					if (componentParam.expressionController.entitiesDependent()) {
-						await componentParam.expressionController.computeExpressionForPrimitives(
-							primitives,
+						await componentParam.expressionController.computeExpressionForVertices(
+							vertices,
 							(point, value: number) => {
 								// array[point.index()*this.pv.size+i] = value
 								tmpArrays[i][point.index()] = value;
 							}
 						);
 					} else {
-						for (const primitive of primitives) {
-							tmpArrays[i][primitive.index()] = componentParam.value;
+						for (const vertex of vertices) {
+							tmpArrays[i][vertex.index()] = componentParam.value;
 						}
 					}
 				} else {
 					const value = componentParam.value;
-					for (let primitive of primitives) {
-						array[primitive.index() * size + i] = value;
+					for (let vertex of vertices) {
+						array[vertex.index() * size + i] = value;
 					}
 				}
 			}
@@ -140,12 +140,12 @@ async function _addNumericAttributeToPrimitives(coreObject: CoreObject, params: 
 	}
 }
 
-async function _addStringAttributeToPrimitives(coreObject: CoreObject, params: AttribCreateSopNodeParams) {
+async function _addStringAttributeToVertices(coreObject: CoreObject, params: AttribCreateSopNodeParams) {
 	const coreGeometry = coreObject.coreGeometry();
 	if (!coreGeometry) {
 		return;
 	}
-	const primitives = coreObject.primitivesFromGroup(params.group.value);
+	const vertices = coreObject.verticesFromGroup(params.group.value);
 	const param = params.string;
 	const attribName = params.name.value;
 
@@ -153,21 +153,21 @@ async function _addStringAttributeToPrimitives(coreObject: CoreObject, params: A
 		const geometry = coreGeometry.geometry();
 		// if a group is given, we prefill the existing stringValues
 		// create attrib if non existent
-		const primitivesCount = CorePrimitive.primitivesCount(geometry);
-		const values = new Array(primitivesCount).fill('');
-		let attribute = CorePrimitive.attribute(geometry, attribName);
+		const verticesCount = CoreVertex.verticesCount(geometry);
+		const values = new Array(verticesCount).fill('');
+		let attribute = CoreVertex.attribute(geometry, attribName);
 		if (!attribute) {
-			attribute = new PrimitiveStringAttribute(values, 1);
-			CorePrimitive.addAttribute(geometry, attribName, attribute);
+			attribute = new VertexStringAttribute(values, 1);
+			CoreVertex.addAttribute(geometry, attribName, attribute);
 		}
 
 		if (param.expressionController.entitiesDependent()) {
-			await param.expressionController.computeExpressionForPrimitives(primitives, (primitive, value) => {
-				values[primitive.index()] = value;
+			await param.expressionController.computeExpressionForVertices(vertices, (vertex, value) => {
+				values[vertex.index()] = value;
 			});
 		} else {
-			for (const primitive of primitives) {
-				values[primitive.index()] = param.value;
+			for (const vertex of vertices) {
+				values[vertex.index()] = param.value;
 			}
 		}
 	} else {

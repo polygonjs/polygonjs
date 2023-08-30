@@ -8,6 +8,7 @@ import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {TypeAssert} from '../../../engine/poly/Assert';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 import {addPointAttribute} from './utils/attribCreate/AttribCreatePoint';
+import {addVertexAttribute} from './utils/attribCreate/AttribCreateVertex';
 import {addPrimitiveAttribute} from './utils/attribCreate/AttribCreatePrimitive';
 import {addObjectAttribute} from './utils/attribCreate/AttribCreateObject';
 import {addCoreGroupAttribute} from './utils/attribCreate/AttribCreateCoreGroup';
@@ -57,24 +58,16 @@ export class AttribCreateSopOperation extends BaseSopOperation {
 		const attribType = ATTRIBUTE_TYPES[params.type];
 		switch (attribClass) {
 			case AttribClass.POINT:
-				addPointAttribute(attribType, coreGroup, params);
-				return;
+				return addPointAttribute(attribType, coreGroup, params);
+			case AttribClass.VERTEX:
+				return addVertexAttribute(attribType, coreGroup, params);
 			case AttribClass.PRIMITIVE:
-				addPrimitiveAttribute(attribType, coreGroup, params);
-				return;
+				return addPrimitiveAttribute(attribType, coreGroup, params);
 			case AttribClass.OBJECT:
-				addObjectAttribute(attribType, coreGroup, params);
-				return;
+				return addObjectAttribute(attribType, coreGroup, params);
 			case AttribClass.CORE_GROUP:
-				addCoreGroupAttribute(attribType, coreGroup, params);
-				return;
+				return addCoreGroupAttribute(attribType, coreGroup, params);
 		}
 		TypeAssert.unreachable(attribClass);
 	}
-
-	//
-	//
-	// INTERNAL UTILS
-	//
-	//
 }

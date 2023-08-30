@@ -126,12 +126,12 @@ export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
 		const destPoints = coreGroup.points();
 		const destAttribName = this.pv.attribName;
 
-		if (!coreGroup.hasAttrib(destAttribName)) {
+		if (!coreGroup.hasPointAttrib(destAttribName)) {
 			this.states.error.set(`attribute ${destAttribName} not found`);
 			this.cookController.endCook();
 			return;
 		}
-		const attribType = coreGroup.geoAttribType(destAttribName);
+		const attribType = coreGroup.pointAttribType(destAttribName);
 		if (attribType != AttribType.NUMERIC) {
 			this.states.error.set(`attribute ${destAttribName} is not a numeric attribute`);
 			this.cookController.endCook();
@@ -140,7 +140,7 @@ export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
 
 		// const simplex = this._getSimplex();
 		// const useNormals = isBooleanTrue(this.pv.useNormals) && coreGroup.hasAttrib(ATTRIB_NORMAL);
-		const targetAttribSize = coreGroup.geoAttribSize(this.pv.attribName);
+		const targetAttribSize = coreGroup.pointAttribSize(this.pv.attribName);
 		// const operation = OPERATIONS[this.pv.operation];
 		// const useRestAttributes: boolean = isBooleanTrue(this.pv.useRestAttributes);
 		// const baseAmplitude: number = this.pv.amplitude;

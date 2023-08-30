@@ -11,33 +11,7 @@ import {Attribute, CoreAttribute} from './Attribute';
 import {CoreGeometry} from './Geometry';
 import {CoreEntity} from './Entity';
 import {CoreType} from '../Type';
-// import {Matrix4} from 'three';
-
-const ATTRIB_NAMES = {
-	POSITION: 'position',
-	NORMAL: 'normal',
-};
-
-enum ComponentName {
-	x = 'x',
-	y = 'y',
-	z = 'z',
-	w = 'w',
-	r = 'r',
-	g = 'g',
-	b = 'b',
-}
-const COMPONENT_INDICES = {
-	x: 0,
-	y: 1,
-	z: 2,
-	w: 3,
-	r: 0,
-	g: 1,
-	b: 2,
-};
-
-const DOT = '.';
+import {DOT, ComponentName, COMPONENT_INDICES} from './Constant';
 
 export class CorePoint extends CoreEntity {
 	// _position: Vector3 | undefined;
@@ -227,22 +201,22 @@ export class CorePoint extends CoreEntity {
 		if (!this._geometry) {
 			return target;
 		}
-		const {array} = this._geometry.getAttribute(ATTRIB_NAMES.POSITION) as BufferAttribute;
+		const {array} = this._geometry.getAttribute(Attribute.POSITION) as BufferAttribute;
 		return target.fromArray(array, this._index * 3);
 	}
 	setPosition(newPosition: Vector3) {
-		this.setAttribValueFromVector3(ATTRIB_NAMES.POSITION, newPosition);
+		this.setAttribValueFromVector3(Attribute.POSITION, newPosition);
 	}
 
 	normal(target: Vector3): Vector3 {
 		if (!this._geometry) {
 			return target;
 		}
-		const {array} = this._geometry.getAttribute(ATTRIB_NAMES.NORMAL) as BufferAttribute;
+		const {array} = this._geometry.getAttribute(Attribute.NORMAL) as BufferAttribute;
 		return target.fromArray(array, this._index * 3);
 	}
 	setNormal(newNormal: Vector3) {
-		return this.setAttribValueFromVector3(ATTRIB_NAMES.NORMAL, newNormal);
+		return this.setAttribValueFromVector3(Attribute.NORMAL, newNormal);
 	}
 
 	setAttribValue(attribName: string, value: NumericAttribValue | string) {

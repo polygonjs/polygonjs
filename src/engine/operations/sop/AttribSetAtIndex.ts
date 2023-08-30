@@ -59,6 +59,9 @@ export class AttribSetAtIndexSopOperation extends BaseSopOperation {
 			case AttribClass.POINT:
 				this._addPointAttribute(attribType, coreGroup, params);
 				return;
+			case AttribClass.VERTEX:
+				this.states?.error.set('vertex not supported yet');
+				return;
 			case AttribClass.PRIMITIVE:
 				this.states?.error.set('primitive not supported yet');
 				return;

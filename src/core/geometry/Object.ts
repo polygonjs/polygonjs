@@ -31,6 +31,7 @@ import {TypeAssert} from '../../engine/poly/Assert';
 import {applyTransformWithSpaceToObject, ObjectTransformMode, ObjectTransformSpace} from '../TransformSpace';
 import {BaseSopOperation} from '../../engine/operations/sop/_Base';
 import {CorePrimitive} from './Primitive';
+import {CoreVertex} from './Vertex';
 // import {computeBoundingBoxFromObject3D} from './BoundingBox';
 // import {setSphereFromObject} from './BoundingSphere';
 
@@ -124,6 +125,48 @@ export class CoreObject extends BaseCoreObject<CoreObjectType.THREEJS> {
 			}
 		} else {
 			return this.points();
+		}
+	}
+	//
+	//
+	// VERTICES
+	//
+	//
+	static vertices(object: Object3D) {
+		const geometry = (object as Mesh).geometry;
+		if (geometry) {
+			return CoreGeometry.vertices(geometry) || [];
+		} else {
+			return [];
+		}
+	}
+	vertices() {
+		return this.coreGeometry()?.vertices() || [];
+	}
+	static verticesFromGroup(object: Object3D, group: GroupString): CoreVertex[] {
+		if (group) {
+			const indices = CoreString.indices(group);
+			if (indices) {
+				const vertices = this.vertices(object);
+				return ArrayUtils.compact(indices.map((i) => vertices[i]));
+			} else {
+				return [];
+			}
+		} else {
+			return this.vertices(object);
+		}
+	}
+	verticesFromGroup(group: GroupString): CoreVertex[] {
+		if (group) {
+			const indices = CoreString.indices(group);
+			if (indices) {
+				const vertices = this.vertices();
+				return ArrayUtils.compact(indices.map((i) => vertices[i]));
+			} else {
+				return [];
+			}
+		} else {
+			return this.vertices();
 		}
 	}
 	//
