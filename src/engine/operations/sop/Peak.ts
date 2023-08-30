@@ -1,10 +1,8 @@
 import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {BufferGeometry} from 'three';
-import {BufferAttribute} from 'three';
+import {BufferAttribute, Mesh, Vector3} from 'three';
 import {CoreGeometry} from '../../../core/geometry/Geometry';
 import {CorePoint} from '../../../core/geometry/Point';
-import {Mesh, Vector3} from 'three';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 
 const POSITION = 'position';
@@ -29,8 +27,8 @@ export class PeakSopOperation extends BaseSopOperation {
 		const objects = coreGroup.threejsObjects();
 		for (const object of objects) {
 			object.traverse((childObject) => {
-				let geometry;
-				if ((geometry = (childObject as Mesh).geometry as BufferGeometry) != null) {
+				const geometry = (childObject as Mesh).geometry;
+				if (geometry) {
 					const coreGeometry = new CoreGeometry(geometry);
 					_corePoint.setGeometry(geometry);
 					const pointsCount = coreGeometry.pointsCount();

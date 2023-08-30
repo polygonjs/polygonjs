@@ -19,6 +19,7 @@ export abstract class CoreEntity {
 		this._index = index;
 		return this;
 	}
+	abstract geometry(): any;
 
 	abstract setAttribValue(attribName: string, attribValue: NumericAttribValue | string): void;
 	abstract attribValue(attribName: string, target?: Vector2 | Vector3 | Vector4): AttribValue | undefined;

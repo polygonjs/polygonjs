@@ -2,10 +2,14 @@ import {Object3D, Color} from 'three';
 import {PolyEngine} from '../../../engine/Poly';
 import {CoreType} from '../../Type';
 import {
-	registerCoreObjectCheckFunctions,
+	registerFactoryFunctions,
+	CoreFactoryFunctions,
+	CoreVertexClassFactoryCheckFunction,
+	CoreVertexInstanceFactoryCheckFunction,
+	CorePrimitiveClassFactoryCheckFunction,
+	CorePrimitiveInstanceFactoryCheckFunction,
 	CoreObjectClassFactoryCheckFunction,
 	CoreObjectInstanceFactoryCheckFunction,
-	CoreObjectFactoryCheckFunctions,
 } from '../CoreObjectFactory';
 import {BaseSopNodeType} from '../../../engine/nodes/sop/_Base';
 import {SpecializedChildrenHook} from '../../../engine/poly/PolySpecializedChildrenController';
@@ -13,6 +17,8 @@ import {CoreGroup} from '../Group';
 import {CoreObjectType, ObjectContent} from '../ObjectContent';
 import {CSG_GEOMETRY_TYPES_SET, CsgGeometryType, CSGTesselationParams, CSGOBJTesselationParams} from './CsgCommon';
 import {CsgCoreObject} from './CsgCoreObject';
+import {CsgVertex} from './CsgVertex';
+import {CsgPrimitive} from './CsgPrimitive';
 import {CsgObject} from './CsgObject';
 
 const CSG_TESSELATION_PARAMS: CSGTesselationParams = {
@@ -58,12 +64,42 @@ export function onCsgModuleRegister(poly: PolyEngine) {
 	// CORE OBJECT CHECKS
 	//
 	//
-	const classCheckFunction: CoreObjectClassFactoryCheckFunction = (object: ObjectContent<CoreObjectType>) => {
+	// vertex methods
+	const vertexClassFactory: CoreVertexClassFactoryCheckFunction = (object: ObjectContent<CoreObjectType>) => {
+		if (CSG_GEOMETRY_TYPES_SET.has(object.type as CsgGeometryType)) {
+			return CsgVertex;
+		}
+	};
+	const vertexInstanceFactory: CoreVertexInstanceFactoryCheckFunction = (
+		object: ObjectContent<CoreObjectType>,
+		index: number = 0
+	) => {
+		if (CSG_GEOMETRY_TYPES_SET.has(object.type as CsgGeometryType)) {
+			return new CsgVertex(object as CsgObject<CsgGeometryType>, index);
+		}
+	};
+	// primitive methods
+	const primitiveClassFactory: CorePrimitiveClassFactoryCheckFunction = (object: ObjectContent<CoreObjectType>) => {
+		if (CSG_GEOMETRY_TYPES_SET.has(object.type as CsgGeometryType)) {
+			return CsgPrimitive;
+		}
+	};
+	const primitiveInstanceFactory: CorePrimitiveInstanceFactoryCheckFunction = (
+		object: ObjectContent<CoreObjectType>,
+		index: number = 0
+	) => {
+		if (CSG_GEOMETRY_TYPES_SET.has(object.type as CsgGeometryType)) {
+			return new CsgPrimitive(object as CsgObject<CsgGeometryType>, index);
+		}
+	};
+
+	// object methods
+	const objectClassFactory: CoreObjectClassFactoryCheckFunction = (object: ObjectContent<CoreObjectType>) => {
 		if (CSG_GEOMETRY_TYPES_SET.has(object.type as CsgGeometryType)) {
 			return CsgCoreObject;
 		}
 	};
-	const instanceCheckFunction: CoreObjectInstanceFactoryCheckFunction = (
+	const objectInstanceFactory: CoreObjectInstanceFactoryCheckFunction = (
 		object: ObjectContent<CoreObjectType>,
 		index: number = 0
 	) => {
@@ -71,12 +107,17 @@ export function onCsgModuleRegister(poly: PolyEngine) {
 			return new CsgCoreObject(object as CsgObject<CsgGeometryType>, index);
 		}
 	};
-	const checkFunctions: CoreObjectFactoryCheckFunctions = {
-		class: classCheckFunction,
-		instance: instanceCheckFunction,
+
+	const factoryFunctions: CoreFactoryFunctions = {
+		vertexClass: vertexClassFactory,
+		vertexInstance: vertexInstanceFactory,
+		primitiveClass: primitiveClassFactory,
+		primitiveInstance: primitiveInstanceFactory,
+		objectClass: objectClassFactory,
+		objectInstance: objectInstanceFactory,
 	};
 
-	registerCoreObjectCheckFunctions(checkFunctions);
+	registerFactoryFunctions(factoryFunctions);
 
 	//
 	//

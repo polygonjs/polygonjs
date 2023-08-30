@@ -2,10 +2,14 @@ import {Object3D} from 'three';
 import {PolyEngine} from '../../../engine/Poly';
 import {CoreType} from '../../Type';
 import {
-	registerCoreObjectCheckFunctions,
+	registerFactoryFunctions,
+	CoreFactoryFunctions,
+	CoreVertexClassFactoryCheckFunction,
+	CoreVertexInstanceFactoryCheckFunction,
+	CorePrimitiveClassFactoryCheckFunction,
+	CorePrimitiveInstanceFactoryCheckFunction,
 	CoreObjectClassFactoryCheckFunction,
 	CoreObjectInstanceFactoryCheckFunction,
-	CoreObjectFactoryCheckFunctions,
 } from '../CoreObjectFactory';
 import {BaseSopNodeType} from '../../../engine/nodes/sop/_Base';
 import {SpecializedChildrenHook} from '../../../engine/poly/PolySpecializedChildrenController';
@@ -13,8 +17,10 @@ import {CoreGroup} from '../Group';
 import {CoreObjectType, ObjectContent} from '../ObjectContent';
 import {TetTesselationParams, TetOBJTesselationParams} from './TetCommon';
 import {TetCoreObject} from './TetCoreObject';
-import {TetObject} from './TetObject';
 import {isTetObject} from './TetCoreType';
+import {TetVertex} from './TetVertex';
+import {TetPrimitive} from './TetPrimitive';
+import {TetObject} from './TetObject';
 
 const TET_TESSELATION_PARAMS: TetTesselationParams = {
 	scale: 1,
@@ -68,12 +74,43 @@ export function onTetModuleRegister(poly: PolyEngine) {
 	// CORE OBJECT CHECKS
 	//
 	//
-	const classCheckFunction: CoreObjectClassFactoryCheckFunction = (object: ObjectContent<CoreObjectType>) => {
+
+	// vertex methods
+	const vertexClassFactory: CoreVertexClassFactoryCheckFunction = (object: ObjectContent<CoreObjectType>) => {
+		if (isTetObject(object)) {
+			return TetVertex;
+		}
+	};
+	const vertexInstanceFactory: CoreVertexInstanceFactoryCheckFunction = (
+		object: ObjectContent<CoreObjectType>,
+		index: number = 0
+	) => {
+		if (isTetObject(object)) {
+			return new TetVertex(object as TetObject, index);
+		}
+	};
+	// primitive methods
+	const primitiveClassFactory: CorePrimitiveClassFactoryCheckFunction = (object: ObjectContent<CoreObjectType>) => {
+		if (isTetObject(object)) {
+			return TetPrimitive;
+		}
+	};
+	const primitiveInstanceFactory: CorePrimitiveInstanceFactoryCheckFunction = (
+		object: ObjectContent<CoreObjectType>,
+		index: number = 0
+	) => {
+		if (isTetObject(object)) {
+			return new TetPrimitive(object as TetObject, index);
+		}
+	};
+
+	// object methods
+	const objectClassFactory: CoreObjectClassFactoryCheckFunction = (object: ObjectContent<CoreObjectType>) => {
 		if (isTetObject(object)) {
 			return TetCoreObject;
 		}
 	};
-	const instanceCheckFunction: CoreObjectInstanceFactoryCheckFunction = (
+	const objectInstanceFactory: CoreObjectInstanceFactoryCheckFunction = (
 		object: ObjectContent<CoreObjectType>,
 		index: number = 0
 	) => {
@@ -81,12 +118,18 @@ export function onTetModuleRegister(poly: PolyEngine) {
 			return new TetCoreObject(object as TetObject, index);
 		}
 	};
-	const checkFunctions: CoreObjectFactoryCheckFunctions = {
-		class: classCheckFunction,
-		instance: instanceCheckFunction,
+
+	//
+	const factoryFunctions: CoreFactoryFunctions = {
+		vertexClass: vertexClassFactory,
+		vertexInstance: vertexInstanceFactory,
+		primitiveClass: primitiveClassFactory,
+		primitiveInstance: primitiveInstanceFactory,
+		objectClass: objectClassFactory,
+		objectInstance: objectInstanceFactory,
 	};
 
-	registerCoreObjectCheckFunctions(checkFunctions);
+	registerFactoryFunctions(factoryFunctions);
 
 	//
 	//

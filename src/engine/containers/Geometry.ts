@@ -1,21 +1,17 @@
 import {AttribValue} from './../../types/GlobalTypes';
-// import {Object3D} from 'three'
-// import {Group} from 'three'
 import {Mesh, Box3, BufferGeometry} from 'three';
 import {TypedContainer} from './_Base';
-import {CoreGroup} from '../../core/geometry/Group';
+import type {CoreGroup} from '../../core/geometry/Group';
 import {CoreGeometry} from '../../core/geometry/Geometry';
-// import {Object3D} from 'three';
 import {ContainableMap} from './utils/ContainableMap';
-// import {CoreObject} from '../../core/geometry/Object';
 import {AttribSize, AttribType, ObjectData} from '../../core/geometry/Constant';
-import {BaseCoreObject} from '../../core/geometry/_BaseObject';
 import {CoreObject} from '../../core/geometry/Object';
 import {SetUtils} from '../../core/SetUtils';
 import {NodeContext} from '../poly/NodeContext';
 import {PolyDictionary} from '../../types/GlobalTypes';
 import {MapUtils} from '../../core/MapUtils';
 import {isObject3D} from '../../core/geometry/ObjectContent';
+import {coreObjectsAttribSizesByName, coreObjectAttributeTypesByName} from '../../core/geometry/_BaseObjectUtils';
 
 export class GeometryContainer extends TypedContainer<NodeContext.SOP> {
 	// set_objects(objects: Object3D[]) {}
@@ -118,7 +114,7 @@ export class GeometryContainer extends TypedContainer<NodeContext.SOP> {
 	}
 
 	objectAttributeSizesByName(): PolyDictionary<AttribSize[]> {
-		return BaseCoreObject.coreObjectsAttribSizesByName(this._content.allCoreObjects());
+		return coreObjectsAttribSizesByName(this._content.allCoreObjects());
 		// const _sizesByName: Map<string, Set<AttribSize>> = new Map();
 		// const objects = this._content.objects();
 		// for (let object of objects) {
@@ -171,7 +167,7 @@ export class GeometryContainer extends TypedContainer<NodeContext.SOP> {
 		return types_by_name;
 	}
 	objectAttributeTypesByName(): PolyDictionary<AttribType[]> {
-		return CoreObject.coreObjectAttributeTypesByName(this._content.allCoreObjects());
+		return coreObjectAttributeTypesByName(this._content.allCoreObjects());
 		// const _typesByName: Map<string, Set<AttribType>> = new Map();
 		// const objects = this._content.objects();
 		// for (let object of objects) {

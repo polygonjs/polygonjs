@@ -1,19 +1,16 @@
 import {AttribValue} from './../../types/GlobalTypes';
 import {NumericAttribValue, PolyDictionary} from '../../types/GlobalTypes';
 import {Box3, BufferGeometry, LineSegments, Mesh, Points, Object3D, Vector3} from 'three';
-import {BaseCoreObject} from './_BaseObject';
 import {CoreObject} from './Object';
 import {CoreGeometry} from './Geometry';
 import {CoreAttribute} from './Attribute';
 import {CoreString} from '../String';
-import {AttribClass, AttribSize, ObjectData, AttribType} from './Constant';
+import {AttribClass, AttribSize, ObjectData, AttribType, GroupString} from './Constant';
 import {CoreType} from '../Type';
 import {ArrayUtils} from '../ArrayUtils';
-// import {CoreFace} from './CoreFace';
 import {Poly} from '../../engine/Poly';
 import {CoreEntity} from './Entity';
 import {CoreObjectType, ObjectContent, isObject3D} from './ObjectContent';
-// import {computeBoundingBoxFromObject3Ds} from './BoundingBox';
 import {coreObjectFactory, coreObjectInstanceFactory} from './CoreObjectFactory';
 
 // CAD
@@ -32,6 +29,7 @@ import {TetObject} from './tet/TetObject';
 // QUAD
 import type {QuadObject} from './quad/QuadObject';
 import {isQuadObject, isQuadOrThreejsObject} from './quad/QuadCoreType';
+import {coreObjectAttributeTypesByName, coreObjectsAttribNames, coreObjectsAttribSizesByName} from './_BaseObjectUtils';
 //
 // SDF
 // import type {SDFObjectType} from './sdf/SDFCommon';
@@ -41,7 +39,7 @@ import {isQuadObject, isQuadOrThreejsObject} from './quad/QuadCoreType';
 type AttributeDictionary = PolyDictionary<AttribValue>;
 
 // import {CoreMask} from './Mask';
-export type GroupString = string;
+
 const tmpBox3 = new Box3();
 const tmpPos = new Vector3();
 
@@ -97,6 +95,9 @@ export class CoreGroup extends CoreEntity {
 			}
 		}
 		this._allObjects.length = 0;
+	}
+	geometry(){
+		return null;
 	}
 
 	//
@@ -336,74 +337,6 @@ export class CoreGroup extends CoreEntity {
 
 	//
 	//
-	// VERTEX
-	//
-	//
-	vertices() {
-		return this.coreGeometries()
-			.map((g) => g.vertices())
-			.flat();
-	}
-	vertexAttribNames(): string[] {
-		const firstGeometry = this.geometries()[0];
-		if (firstGeometry) {
-			return CoreGeometry.vertexAttributeNames(firstGeometry);
-		} else {
-			return [];
-		}
-	}
-	vertexAttribSizes(): PolyDictionary<AttribSize> {
-		const firstGeometry = this.geometries()[0];
-		if (firstGeometry) {
-			return CoreGeometry.vertexAttributeSizes(firstGeometry);
-		} else {
-			return {};
-		}
-	}
-	vertexAttribTypes(): PolyDictionary<AttribType> {
-		const firstGeometry = this.geometries()[0];
-		if (firstGeometry) {
-			return CoreGeometry.vertexAttributeTypes(firstGeometry);
-		} else {
-			return {};
-		}
-	}
-	//
-	//
-	// PRIMITIVE
-	//
-	//
-	primitives() {
-		return this.coreGeometries()
-			.map((g) => g.primitives())
-			.flat();
-	}
-	primitiveAttribNames(): string[] {
-		const firstGeometry = this.geometries()[0];
-		if (firstGeometry) {
-			return CoreGeometry.primitiveAttributeNames(firstGeometry);
-		} else {
-			return [];
-		}
-	}
-	primitiveAttribSizes(): PolyDictionary<AttribSize> {
-		const firstGeometry = this.geometries()[0];
-		if (firstGeometry) {
-			return CoreGeometry.primitiveAttributeSizes(firstGeometry);
-		} else {
-			return {};
-		}
-	}
-	primitiveAttribTypes(): PolyDictionary<AttribType> {
-		const firstGeometry = this.geometries()[0];
-		if (firstGeometry) {
-			return CoreGeometry.primitiveAttributeTypes(firstGeometry);
-		} else {
-			return {};
-		}
-	}
-	//
-	//
 	// OBJECTS
 	//
 	//
@@ -413,16 +346,16 @@ export class CoreGroup extends CoreEntity {
 		return coreGroup;
 	}
 	objectAttribTypesByName() {
-		return BaseCoreObject.coreObjectAttributeTypesByName(this.allCoreObjects());
+		return coreObjectAttributeTypesByName(this.allCoreObjects());
 	}
 	objectAttribNames() {
-		return BaseCoreObject.coreObjectsAttribNames(this.allCoreObjects());
+		return coreObjectsAttribNames(this.allCoreObjects());
 	}
 	objectAttribNamesMatchingMask(masksString: GroupString) {
 		return CoreAttribute.attribNamesMatchingMask(masksString, this.objectAttribNames());
 	}
 	objectAttribSizesByName(): PolyDictionary<AttribSize[]> {
-		return BaseCoreObject.coreObjectsAttribSizesByName(this.allCoreObjects());
+		return coreObjectsAttribSizesByName(this.allCoreObjects());
 		// const firstObject = this.coreObjects()[0];
 		// if (firstObject) {
 		// 	return firstObject.attribSizes();

@@ -1,12 +1,11 @@
 import {AttribValue, Number3, NumericAttribValue, PolyDictionary} from '../../types/GlobalTypes';
 import {Box3, Color, Matrix4, Sphere, Vector2, Vector3, Vector4} from 'three';
 import {Attribute, CoreAttribute} from './Attribute';
-import {AttribType, AttribSize, ObjectData, objectTypeFromConstructor, ObjectType} from './Constant';
+import {AttribType, AttribSize, ObjectData} from './Constant';
 import {CoreEntity} from './Entity';
 import {CoreType} from '../Type';
 import {SetUtils} from '../../core/SetUtils';
-import {MapUtils} from '../../core/MapUtils';
-import {ObjectContent, CoreObjectType, ObjectGeometryMap, MergeCompactOptions, isObject3D} from './ObjectContent';
+import {ObjectContent, CoreObjectType, ObjectGeometryMap, MergeCompactOptions} from './ObjectContent';
 import {TransformTargetType} from '../Transform';
 import {ObjectTransformMode, ObjectTransformSpace} from '../TransformSpace';
 import {EntityGroupCollection} from './EntityGroupCollection';
@@ -14,10 +13,12 @@ import {_updateObjectAttribRef} from '../reactivity/ObjectAttributeReactivityUpd
 import {attribValueNonPrimitive, copyAttribValue, AttributeDictionary, cloneAttribValue} from './_BaseObjectUtils';
 import {getOrCreateObjectAttributeRef} from '../reactivity/ObjectAttributeReactivityCreateRef';
 import {JsIConnectionPointTypeToDataTypeMap, ParamConvertibleJsType} from '../../engine/nodes/utils/io/connections/Js';
-// import {computeBoundingBoxFromObject3D} from './BoundingBox';
-// import {setSphereFromObject} from './BoundingSphere';
 import {watch} from '../reactivity/CoreReactivity';
-// import {Ref} from '@vue/reactivity';
+import {objectData} from './_BaseObjectUtils';
+// import type {CoreVertex} from './vertex/CoreVertex';
+// import {verticesFromObject, verticesFromObjectFromGroup} from './vertex/CoreVertexUtils';
+// import type {CorePrimitive} from './primitive/CorePrimitive';
+// import {primitivesFromObject, primitivesFromObjectFromGroup} from './primitive/CorePrimitiveUtils';
 
 enum PropertyName {
 	NAME = 'name',
@@ -132,9 +133,6 @@ export abstract class BaseCoreObject<T extends CoreObjectType> extends CoreEntit
 
 		const currentValue = dict[attribName];
 
-		// if (currentValue != null) {
-		// console.log('set', object, attribName, currentRef, currentRef.value);
-		// const currentValue = currentRef.value;
 		if (attribValueNonPrimitive(value)) {
 			if (currentValue == null) {
 				const cloned = cloneAttribValue(value);
@@ -143,24 +141,13 @@ export abstract class BaseCoreObject<T extends CoreObjectType> extends CoreEntit
 				}
 			} else {
 				if (attribValueNonPrimitive(currentValue)) {
-					// AttributeCallbackQueue.block();
 					copyAttribValue(value, currentValue);
-
-					// AttributeCallbackQueue.unblock();
 				}
 			}
 		} else {
 			dict[attribName] = value;
 		}
 		_updateObjectAttribRef(object, attribName, value);
-		// }
-
-		// if (CoreType.isVector(value)) {
-		// 	// make sure to clone it, otherwise editing the attrib of one object would update another object's
-		// 	dict[attribName] = value.clone();
-		// } else {
-		// 	dict[attribName] = value;
-		// }
 	}
 	addAttribute(name: string, value: AttribValue) {
 		if (!this._object) {
@@ -230,17 +217,6 @@ export abstract class BaseCoreObject<T extends CoreObjectType> extends CoreEntit
 		const names: Set<string> = new Set();
 		for (let object of objects) {
 			const objectAttriNames = this.attribNames(object);
-			for (let attribName of objectAttriNames) {
-				names.add(attribName);
-			}
-		}
-
-		return SetUtils.toArray(names);
-	}
-	static coreObjectsAttribNames<T extends CoreObjectType>(coreObjects: BaseCoreObject<T>[]) {
-		const names: Set<string> = new Set();
-		for (let coreObject of coreObjects) {
-			const objectAttriNames = coreObject.attribNames();
 			for (let attribName of objectAttriNames) {
 				names.add(attribName);
 			}
@@ -486,31 +462,7 @@ export abstract class BaseCoreObject<T extends CoreObjectType> extends CoreEntit
 	attribType(attribName: string) {
 		return (this.constructor as any as typeof BaseCoreObject<CoreObjectType>).attribType(this._object, attribName);
 	}
-	static coreObjectAttributeTypesByName<T extends CoreObjectType>(
-		coreObjects: BaseCoreObject<T>[]
-	): PolyDictionary<AttribType[]> {
-		const _typesByName: Map<string, Set<AttribType>> = new Map();
-		for (let coreObject of coreObjects) {
-			const objectAttriNames = coreObject.attribNames();
-			for (let attribName of objectAttriNames) {
-				const attribType = coreObject.attribType(attribName);
-				MapUtils.addToSetAtEntry(_typesByName, attribName, attribType);
-			}
-		}
 
-		const typesByName: PolyDictionary<AttribType[]> = {};
-		_typesByName.forEach((attribTypes, attribName) => {
-			typesByName[attribName] = SetUtils.toArray(attribTypes);
-		});
-		return typesByName;
-		// const core_object = this.firstCoreObject();
-		// if (core_object) {
-		// 	for (let name of core_object.attribNames()) {
-		// 		types_by_name[name] = core_object.attribType(name);
-		// 	}
-		// }
-		// return types_by_name;
-	}
 	attribSizes() {
 		const h: PolyDictionary<AttribSize> = {};
 		const attribNames = this.attribNames();
@@ -532,42 +484,25 @@ export abstract class BaseCoreObject<T extends CoreObjectType> extends CoreEntit
 	attribSize(attribName: string) {
 		return (this.constructor as any as typeof BaseCoreObject<CoreObjectType>).attribSize(this._object, attribName);
 	}
-	static coreObjectsAttribSizesByName<T extends CoreObjectType>(
-		coreObjects: BaseCoreObject<T>[]
-	): PolyDictionary<AttribSize[]> {
-		const _sizesByName: Map<string, Set<AttribSize>> = new Map();
-		for (let coreObject of coreObjects) {
-			const objectAttriNames = coreObject.attribNames();
-			for (let attribName of objectAttriNames) {
-				const attribSize = coreObject.attribSize(attribName);
-				MapUtils.addToSetAtEntry(_sizesByName, attribName, attribSize);
-			}
-		}
-
-		const sizesByName: PolyDictionary<AttribSize[]> = {};
-		_sizesByName.forEach((attribSizes, attribName) => {
-			sizesByName[attribName] = SetUtils.toArray(attribSizes);
-		});
-		return sizesByName;
-	}
 
 	static objectData<T extends CoreObjectType>(object: ObjectContent<T>): ObjectData {
-		const childrenCount = isObject3D(object) ? object.children.length : 0;
-		// if ((object as Mesh).geometry) {
-		// 	points_count = CoreGeometry.pointsCount((object as Mesh).geometry as BufferGeometry);
-		// }
-		const objectType = isObject3D(object)
-			? objectTypeFromConstructor(object.constructor)
-			: (object.type as ObjectType);
-		const groupData = EntityGroupCollection.data(object);
-		return {
-			type: objectType,
-			name: object.name,
-			childrenCount,
-			groupData,
-			pointsCount: 0,
-			tetsCount: null,
-		};
+		return objectData(object);
+		// const childrenCount = isObject3D(object) ? object.children.length : 0;
+		// // if ((object as Mesh).geometry) {
+		// // 	points_count = CoreGeometry.pointsCount((object as Mesh).geometry as BufferGeometry);
+		// // }
+		// const objectType = isObject3D(object)
+		// 	? objectTypeFromConstructor(object.constructor)
+		// 	: (object.type as ObjectType);
+		// const groupData = EntityGroupCollection.data(object);
+		// return {
+		// 	type: objectType,
+		// 	name: object.name,
+		// 	childrenCount,
+		// 	groupData,
+		// 	pointsCount: 0,
+		// 	tetsCount: null,
+		// };
 	}
 
 	clone(): BaseCoreObject<T> {
@@ -601,4 +536,29 @@ export abstract class BaseCoreObject<T extends CoreObjectType> extends CoreEntit
 	groupCollection() {
 		return new EntityGroupCollection(this._object);
 	}
+
+	//
+	//
+	// VERTICES
+	//
+	//
+	// vertices() {
+	// 	return verticesFromObject(this._object);
+	// }
+
+	// verticesFromGroup(group: GroupString): CoreVertex<T>[] {
+	// 	return verticesFromObjectFromGroup(this._object, group);
+	// }
+
+	// //
+	// //
+	// // PRIMITIVES
+	// //
+	// //
+	// primitives(): CorePrimitive<T>[] {
+	// 	return primitivesFromObject(this._object);
+	// }
+	// primitivesFromGroup(group: GroupString): CorePrimitive<T>[] {
+	// 	return primitivesFromObjectFromGroup(this._object, group);
+	// }
 }

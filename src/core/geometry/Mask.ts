@@ -97,7 +97,6 @@ function filterCoreObjects<T extends CoreObjectType>(
 			}
 		}
 	}
-
 	return selectedCoreObjects;
 }
 export function filterThreejsObjects(coreGroup: CoreGroup, options: CoreMaskFilterOptions) {

@@ -16,17 +16,13 @@ import {
 	InstancedBufferAttribute,
 } from 'three';
 import {CorePoint} from './Point';
-// import {CoreFace} from './CoreFace';
-import {AttribType, AttribSize} from './Constant';
+import {AttribType, AttribSize, GroupString} from './Constant';
 import {Attribute, CoreAttribute} from './Attribute';
 import {CoreAttributeData} from './AttributeData';
 import {CoreType} from '../Type';
 import {ArrayUtils} from '../ArrayUtils';
 import {ObjectUtils} from '../ObjectUtils';
-import {GroupString} from './Group';
 import {InstanceAttrib} from './Instancer';
-import {CorePrimitive} from './Primitive';
-import {CoreVertex} from './Vertex';
 
 const IS_INSTANCE_KEY = 'isInstance';
 const INDEX_ATTRIB_VALUES = 'indexedAttribValues';
@@ -402,118 +398,59 @@ export class CoreGeometry {
 	// VERTICES
 	//
 	//
-	vertices(): CoreVertex[] {
-		// do not cache, as this gives unexpected results
-		// when the points are updated internaly
-		return this.verticesFromGeometry();
-	}
-	static vertices(geometry: BufferGeometry): CoreVertex[] {
-		return CoreGeometry.verticesFromGeometry(geometry);
-	}
-	verticesFromGeometry(): CoreVertex[] {
-		return CoreGeometry.verticesFromGeometry(this._geometry);
-	}
-	static verticesFromGeometry(geometry: BufferGeometry): CoreVertex[] {
-		const vertices: CoreVertex[] = [];
+	// vertices(): CoreVertex[] {
+	// 	// do not cache, as this gives unexpected results
+	// 	// when the points are updated internaly
+	// 	return this.verticesFromGeometry();
+	// }
+	// static vertices(geometry: BufferGeometry): CoreVertex[] {
+	// 	return CoreGeometry.verticesFromGeometry(geometry);
+	// }
+	// verticesFromGeometry(): CoreVertex[] {
+	// 	return CoreGeometry.verticesFromGeometry(this._geometry);
+	// }
+	// static verticesFromGeometry(geometry: BufferGeometry): CoreVertex[] {
+	// 	const vertices: CoreVertex[] = [];
 
-		const count = CoreVertex.verticesCount(geometry);
-		for (let i = 0; i < count; i++) {
-			const vertex = new CoreVertex(geometry, i);
-			vertices.push(vertex);
-		}
+	// 	const count = CoreVertex.verticesCount(geometry);
+	// 	for (let i = 0; i < count; i++) {
+	// 		const vertex = new CoreVertex(geometry, i);
+	// 		vertices.push(vertex);
+	// 	}
 
-		return vertices;
-	}
-	static vertexAttributeNames(geometry: BufferGeometry): string[] {
-		const attributes = CoreVertex.attributes(geometry);
-		if (!attributes) {
-			return [];
-		}
-		return Object.keys(attributes);
-	}
-	static vertexAttributeSizes(geometry: BufferGeometry): PolyDictionary<AttribSize> {
-		const attributes = CoreVertex.attributes(geometry);
-		if (!attributes) {
-			return {};
-		}
-		const attribNames = Object.keys(attributes);
-		const h: PolyDictionary<AttribSize> = {};
-		for (const attribName of attribNames) {
-			h[attribName] = attributes[attribName].itemSize;
-		}
-		return h;
-	}
-	static vertexAttributeTypes(geometry: BufferGeometry): PolyDictionary<AttribType> {
-		const attributes = CoreVertex.attributes(geometry);
-		if (!attributes) {
-			return {};
-		}
-		const attribNames = Object.keys(attributes);
-		const h: PolyDictionary<AttribType> = {};
-		for (const attribName of attribNames) {
-			h[attribName] = attributes[attribName].isString() ? AttribType.STRING : AttribType.NUMERIC;
-		}
-		return h;
-	}
-	//
-	//
-	// PRIMITIVES
-	//
-	//
-	primitives(): CorePrimitive[] {
-		// do not cache, as this gives unexpected results
-		// when the points are updated internaly
-		return this.primitivesFromGeometry();
-	}
-	static primitives(geometry: BufferGeometry): CorePrimitive[] {
-		return CoreGeometry.primitivesFromGeometry(geometry);
-	}
-	primitivesFromGeometry(): CorePrimitive[] {
-		return CoreGeometry.primitivesFromGeometry(this._geometry);
-	}
-	static primitivesFromGeometry(geometry: BufferGeometry): CorePrimitive[] {
-		const primitives: CorePrimitive[] = [];
-
-		const count = CorePrimitive.primitivesCount(geometry);
-		for (let i = 0; i < count; i++) {
-			const primitive = new CorePrimitive(geometry, i);
-
-			primitives.push(primitive);
-		}
-
-		return primitives;
-	}
-	static primitiveAttributeNames(geometry: BufferGeometry): string[] {
-		const attributes = CorePrimitive.attributes(geometry);
-		if (!attributes) {
-			return [];
-		}
-		return Object.keys(attributes);
-	}
-	static primitiveAttributeSizes(geometry: BufferGeometry): PolyDictionary<AttribSize> {
-		const attributes = CorePrimitive.attributes(geometry);
-		if (!attributes) {
-			return {};
-		}
-		const attribNames = Object.keys(attributes);
-		const h: PolyDictionary<AttribSize> = {};
-		for (const attribName of attribNames) {
-			h[attribName] = attributes[attribName].itemSize;
-		}
-		return h;
-	}
-	static primitiveAttributeTypes(geometry: BufferGeometry): PolyDictionary<AttribType> {
-		const attributes = CorePrimitive.attributes(geometry);
-		if (!attributes) {
-			return {};
-		}
-		const attribNames = Object.keys(attributes);
-		const h: PolyDictionary<AttribType> = {};
-		for (const attribName of attribNames) {
-			h[attribName] = attributes[attribName].isString() ? AttribType.STRING : AttribType.NUMERIC;
-		}
-		return h;
-	}
+	// 	return vertices;
+	// }
+	// static vertexAttributeNames(geometry: BufferGeometry): string[] {
+	// 	const attributes = CoreVertex.attributes(geometry);
+	// 	if (!attributes) {
+	// 		return [];
+	// 	}
+	// 	return Object.keys(attributes);
+	// }
+	// static vertexAttributeSizes(geometry: BufferGeometry): PolyDictionary<AttribSize> {
+	// 	const attributes = CoreVertex.attributes(geometry);
+	// 	if (!attributes) {
+	// 		return {};
+	// 	}
+	// 	const attribNames = Object.keys(attributes);
+	// 	const h: PolyDictionary<AttribSize> = {};
+	// 	for (const attribName of attribNames) {
+	// 		h[attribName] = attributes[attribName].itemSize;
+	// 	}
+	// 	return h;
+	// }
+	// static vertexAttributeTypes(geometry: BufferGeometry): PolyDictionary<AttribType> {
+	// 	const attributes = CoreVertex.attributes(geometry);
+	// 	if (!attributes) {
+	// 		return {};
+	// 	}
+	// 	const attribNames = Object.keys(attributes);
+	// 	const h: PolyDictionary<AttribType> = {};
+	// 	for (const attribName of attribNames) {
+	// 		h[attribName] = attributes[attribName].isString() ? AttribType.STRING : AttribType.NUMERIC;
+	// 	}
+	// 	return h;
+	// }
 
 	//
 	//

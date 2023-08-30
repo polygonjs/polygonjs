@@ -1,32 +1,38 @@
 import {CoreGroup} from '../../../../../core/geometry/Group';
-import {CoreObject} from '../../../../../core/geometry/Object';
 import {CoreAttribute} from '../../../../../core/geometry/Attribute';
-import {ValueArrayByName, initArrayIfRequired} from './Common';
+import {ValueArrayByObject, initArrayIfRequired} from './Common';
 import {AttribCreateSopNodeParams} from '../../../../operations/sop/utils/attribCreate/Common';
 import {AttribType} from '../../../../../core/geometry/Constant';
 import {TypeAssert} from '../../../../poly/Assert';
-import {CorePrimitive} from '../../../../../core/geometry/Primitive';
-import {PrimitiveNumberAttribute, PrimitiveStringAttribute} from '../../../../../core/geometry/PrimitiveAttribute';
+import {
+	PrimitiveNumberAttribute,
+	PrimitiveStringAttribute,
+} from '../../../../../core/geometry/primitive/PrimitiveAttribute';
+import {primitivesFromObjectFromGroup} from '../../../../../core/geometry/primitive/CorePrimitiveUtils';
+import {corePrimitiveClassFactory} from '../../../../../core/geometry/CoreObjectFactory';
+import {BaseCoreObject} from '../../../../../core/geometry/_BaseObject';
+import {CoreObjectType} from '../../../../../core/geometry/ObjectContent';
 
-interface ArraysByGeoUuid {
-	X: ValueArrayByName;
-	Y: ValueArrayByName;
-	Z: ValueArrayByName;
-	W: ValueArrayByName;
+interface ArraysByObject {
+	X: ValueArrayByObject;
+	Y: ValueArrayByObject;
+	Z: ValueArrayByObject;
+	W: ValueArrayByObject;
 }
-const _arraysByGeoUuid: ArraysByGeoUuid = {
-	X: new Map(),
-	Y: new Map(),
-	Z: new Map(),
-	W: new Map(),
+const _arraysByObject: ArraysByObject = {
+	X: new WeakMap(),
+	Y: new WeakMap(),
+	Z: new WeakMap(),
+	W: new WeakMap(),
 };
+const arraysByGeometryUuid = [_arraysByObject.X, _arraysByObject.Y, _arraysByObject.Z, _arraysByObject.W];
 
 export async function addPrimitiveAttribute(
 	attribType: AttribType,
 	coreGroup: CoreGroup,
 	params: AttribCreateSopNodeParams
 ) {
-	const coreObjects = coreGroup.threejsCoreObjects();
+	const coreObjects = coreGroup.allCoreObjects();
 	switch (attribType) {
 		case AttribType.NUMERIC: {
 			for (const coreObject of coreObjects) {
@@ -44,28 +50,25 @@ export async function addPrimitiveAttribute(
 	TypeAssert.unreachable(attribType);
 }
 
-async function _addNumericAttributeToPrimitives(coreObject: CoreObject, params: AttribCreateSopNodeParams) {
-	const coreGeometry = coreObject.coreGeometry();
-	if (!coreGeometry) {
-		return;
-	}
-	// const geometry = coreGeometry.geometry();
-	// const primitivesCount = CorePrimitive.primitivesCount(geometry);
-
-	const primitives = coreObject.primitivesFromGroup(params.group.value);
+async function _addNumericAttributeToPrimitives(
+	coreObject: BaseCoreObject<CoreObjectType>,
+	params: AttribCreateSopNodeParams
+) {
+	const object = coreObject.object();
+	const primitives = primitivesFromObjectFromGroup(object, params.group.value);
 	const attribName = CoreAttribute.remapName(params.name.value);
 	const size = params.size.value;
 
 	const param = [params.value1, params.value2, params.value3, params.value4][size - 1];
 
 	if (param.hasExpression()) {
-		const geometry = coreGeometry.geometry();
-		let attribute = CorePrimitive.attribute(geometry, attribName);
+		const primitiveClass = corePrimitiveClassFactory(object);
+		let attribute = primitiveClass.attribute(object, attribName);
 		if (!attribute) {
-			const primitivesCount = CorePrimitive.primitivesCount(geometry);
+			const primitivesCount = primitiveClass.primitivesCount(object);
 			const values = new Array(primitivesCount * size).fill(0);
 			attribute = new PrimitiveNumberAttribute(values, size);
-			CorePrimitive.addAttribute(geometry, attribName, attribute);
+			primitiveClass.addAttribute(object, attribName, attribute);
 		}
 
 		// attribute.needsUpdate = true;
@@ -91,17 +94,10 @@ async function _addNumericAttributeToPrimitives(coreObject: CoreObject, params: 
 			const components = vparam.components;
 			const tmpArrays = new Array(components.length);
 
-			const arraysByGeometryUuid = [
-				_arraysByGeoUuid.X,
-				_arraysByGeoUuid.Y,
-				_arraysByGeoUuid.Z,
-				_arraysByGeoUuid.W,
-			];
-
 			for (let i = 0; i < components.length; i++) {
 				const componentParam = components[i];
 				if (componentParam.hasExpression() && componentParam.expressionController) {
-					tmpArrays[i] = initArrayIfRequired(geometry, arraysByGeometryUuid[i], primitives.length);
+					tmpArrays[i] = initArrayIfRequired(coreObject, arraysByGeometryUuid[i], primitives.length);
 					if (componentParam.expressionController.entitiesDependent()) {
 						await componentParam.expressionController.computeExpressionForPrimitives(
 							primitives,
@@ -140,25 +136,26 @@ async function _addNumericAttributeToPrimitives(coreObject: CoreObject, params: 
 	}
 }
 
-async function _addStringAttributeToPrimitives(coreObject: CoreObject, params: AttribCreateSopNodeParams) {
-	const coreGeometry = coreObject.coreGeometry();
-	if (!coreGeometry) {
-		return;
-	}
-	const primitives = coreObject.primitivesFromGroup(params.group.value);
+async function _addStringAttributeToPrimitives(
+	coreObject: BaseCoreObject<CoreObjectType>,
+	params: AttribCreateSopNodeParams
+) {
+	const object = coreObject.object();
+
+	const primitives = primitivesFromObjectFromGroup(object, params.group.value);
 	const param = params.string;
 	const attribName = params.name.value;
 
 	if (param.hasExpression() && param.expressionController) {
-		const geometry = coreGeometry.geometry();
 		// if a group is given, we prefill the existing stringValues
 		// create attrib if non existent
-		const primitivesCount = CorePrimitive.primitivesCount(geometry);
+		const primitiveClass = corePrimitiveClassFactory(object);
+		const primitivesCount = primitiveClass.primitivesCount(object);
 		const values = new Array(primitivesCount).fill('');
-		let attribute = CorePrimitive.attribute(geometry, attribName);
+		let attribute = primitiveClass.attribute(object, attribName);
 		if (!attribute) {
 			attribute = new PrimitiveStringAttribute(values, 1);
-			CorePrimitive.addAttribute(geometry, attribName, attribute);
+			primitiveClass.addAttribute(object, attribName, attribute);
 		}
 
 		if (param.expressionController.entitiesDependent()) {

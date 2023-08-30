@@ -5,37 +5,37 @@ import {
 	Vector2Like,
 	Vector3Like,
 	Vector4Like,
-} from '../../types/GlobalTypes';
-import {Vector4, Vector3, Vector2, BufferGeometry, Triangle} from 'three';
-import {Attribute, CoreAttribute} from './Attribute';
-import {CoreEntity} from './Entity';
-import {CoreType} from '../Type';
+} from '../../../types/GlobalTypes';
+import {Vector4, Vector3, Vector2} from 'three';
+import {Attribute, CoreAttribute} from '../Attribute';
+import {CoreEntity} from '../Entity';
+import {CoreType} from '../../Type';
 import {BaseVertexAttribute} from './VertexAttribute';
-import {CoreFace} from './CoreFace';
-import {DOT, ComponentName, COMPONENT_INDICES} from './Constant';
+import {DOT, ComponentName, COMPONENT_INDICES} from '../Constant';
+import {VertexAttributesDict} from './Common';
+import {CoreObjectType, ObjectContent} from '../ObjectContent';
 
-type VertexAttributesDict = Record<string, BaseVertexAttribute>;
+// const _coreFace = new CoreFace();
+// const _triangle = new Triangle();
 
-interface BufferGeometryWithVertexAttributes extends BufferGeometry {
+export interface GeometryWithVertexAttributes {
 	userData: {
 		vertexAttributes?: VertexAttributesDict;
 	};
 }
 
-const _coreFace = new CoreFace();
-const _triangle = new Triangle();
-
-export class CoreVertex extends CoreEntity {
-	private _geometry?: BufferGeometryWithVertexAttributes;
-	constructor(geometry?: BufferGeometryWithVertexAttributes, index?: number) {
-		super(geometry, index);
-		this._geometry = geometry;
+export class CoreVertex<T extends CoreObjectType> extends CoreEntity {
+	protected _object?: ObjectContent<T>;
+	protected _geometry?: GeometryWithVertexAttributes;
+	constructor(object?: ObjectContent<T>, index?: number) {
+		super(object?.geometry, index);
+		this._object = object;
 	}
-	setGeometry(geometry: BufferGeometry) {
+	setGeometry(geometry: GeometryWithVertexAttributes) {
 		this._geometry = geometry;
 		return this;
 	}
-	override setIndex(index: number, geometry?: BufferGeometry) {
+	override setIndex(index: number, geometry?: GeometryWithVertexAttributes) {
 		this._index = index;
 		if (geometry) {
 			this._geometry = geometry;
@@ -45,48 +45,40 @@ export class CoreVertex extends CoreEntity {
 	geometry() {
 		return this._geometry;
 	}
-	static addAttribute(
-		geometry: BufferGeometryWithVertexAttributes,
-		attribName: string,
-		attribute: BaseVertexAttribute
-	) {
+	static addAttribute(geometry: GeometryWithVertexAttributes, attribName: string, attribute: BaseVertexAttribute) {
 		if (!geometry.userData.vertexAttributes) {
 			geometry.userData.vertexAttributes = {};
 		}
 		geometry.userData.vertexAttributes[attribName] = attribute;
 	}
 
-	static verticesCount(geometry: BufferGeometry) {
-		const index = geometry.getIndex();
-		if (!index) {
-			return 0;
-		}
-		return index.count;
+	static verticesCount<T extends CoreObjectType>(object: ObjectContent<T>) {
+		return 0;
 	}
 
-	static attributes(geometry: BufferGeometryWithVertexAttributes): VertexAttributesDict | undefined {
+	static attributes(geometry: GeometryWithVertexAttributes): VertexAttributesDict | undefined {
 		return geometry.userData.vertexAttributes;
 	}
 	attributes(): VertexAttributesDict | undefined {
 		if (!this._geometry) {
 			return;
 		}
-		return CoreVertex.attributes(this._geometry);
+		return (this.constructor as typeof CoreVertex<T>).attributes(this._geometry);
 	}
-	static attribute(
-		geometry: BufferGeometryWithVertexAttributes,
-		attribName: string
-	): BaseVertexAttribute | undefined {
-		const attributes = CoreVertex.attributes(geometry);
+	static attribute(geometry: GeometryWithVertexAttributes, attribName: string): BaseVertexAttribute | undefined {
+		const attributes = this.attributes(geometry);
 		if (!attributes) {
 			return;
 		}
 		return attributes[attribName];
 	}
 	attribute(attribName: string): BaseVertexAttribute | undefined {
-		return CoreVertex.attribute(this._geometry as BufferGeometryWithVertexAttributes, attribName);
+		return (this.constructor as typeof CoreVertex<T>).attribute(
+			this._geometry as GeometryWithVertexAttributes,
+			attribName
+		);
 	}
-	static attribSize(geometry: BufferGeometryWithVertexAttributes, attribName: string): number {
+	static attribSize(geometry: GeometryWithVertexAttributes, attribName: string): number {
 		const attributes = this.attributes(geometry);
 		if (!attributes) {
 			return -1;
@@ -96,18 +88,24 @@ export class CoreVertex extends CoreEntity {
 	}
 
 	attribSize(attribName: string): number {
-		return CoreVertex.attribSize(this._geometry as BufferGeometryWithVertexAttributes, attribName);
+		return (this.constructor as typeof CoreVertex<T>).attribSize(
+			this._geometry as GeometryWithVertexAttributes,
+			attribName
+		);
 	}
-	static hasAttrib(geometry: BufferGeometryWithVertexAttributes, attribName: string): boolean {
+	static hasAttrib(geometry: GeometryWithVertexAttributes, attribName: string): boolean {
 		const remappedName = CoreAttribute.remapName(attribName);
 		return this.attributes(geometry) ? this.attributes(geometry)![remappedName] != null : false;
 	}
 
 	hasAttrib(attribName: string): boolean {
-		return CoreVertex.hasAttrib(this._geometry as BufferGeometryWithVertexAttributes, attribName);
+		return (this.constructor as typeof CoreVertex<T>).hasAttrib(
+			this._geometry as GeometryWithVertexAttributes,
+			attribName
+		);
 	}
 	static attribValue(
-		geometry: BufferGeometry,
+		geometry: GeometryWithVertexAttributes,
 		index: number,
 		attribName: string,
 		target?: Vector2 | Vector3 | Vector4
@@ -124,7 +122,7 @@ export class CoreVertex extends CoreEntity {
 			}
 			const remapedName = CoreAttribute.remapName(attribName);
 
-			const attrib = CoreVertex.attribute(geometry, remapedName);
+			const attrib = this.attribute(geometry, remapedName);
 			if (attrib) {
 				const {array} = attrib;
 				// if (attrib.isString()) {
@@ -167,16 +165,18 @@ export class CoreVertex extends CoreEntity {
 				}
 				// }
 			} else {
-				const message = `attrib ${attribName} not found. availables are: ${Object.keys(
-					geometry.attributes || {}
-				).join(',')}`;
+				const attributes = this.attributes(geometry);
+				const attributeNames = attributes ? Object.keys(attributes) : [];
+				const message = `attrib ${attribName} not found. availables are: ${attributeNames.join(',')}`;
 				console.warn(message);
 				throw message;
 			}
 		}
 	}
 	attribValue(attribName: string, target?: Vector2 | Vector3 | Vector4): AttribValue {
-		return this._geometry ? CoreVertex.attribValue(this._geometry, this._index, attribName, target) : 0;
+		return this._geometry
+			? (this.constructor as typeof CoreVertex<T>).attribValue(this._geometry, this._index, attribName, target)
+			: 0;
 	}
 	attribValueNumber(attribName: string) {
 		const attrib = this.attribute(attribName);
@@ -210,7 +210,7 @@ export class CoreVertex extends CoreEntity {
 		return target;
 	}
 
-	static stringAttribValue(geometry: BufferGeometry, index: number, attribName: string) {
+	static stringAttribValue(geometry: GeometryWithVertexAttributes, index: number, attribName: string) {
 		return this.attribValue(geometry, index, attribName); //this.indexedAttribValue(geometry, index, attribName);
 	}
 	stringAttribValue(attribName: string) {
@@ -218,17 +218,14 @@ export class CoreVertex extends CoreEntity {
 	}
 
 	position(target: Vector3) {
-		_coreFace.setIndex(this._index, this._geometry as BufferGeometry);
-		_coreFace.center(target);
+		console.warn('CoreVertex.position needs to be overloadedd');
 	}
 	setPosition(newPosition: Vector3) {
 		this.setAttribValueFromVector3(Attribute.POSITION, newPosition);
 	}
 
 	normal(target: Vector3): Vector3 {
-		_coreFace.setIndex(this._index, this._geometry as BufferGeometry);
-		_coreFace.triangle(_triangle);
-		_triangle.getNormal(target);
+		console.warn('CoreVertex.normal needs to be overloadedd');
 		return target;
 	}
 	setNormal(newNormal: Vector3) {

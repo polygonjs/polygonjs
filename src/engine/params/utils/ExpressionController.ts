@@ -2,8 +2,8 @@ import {CoreGroup} from './../../../core/geometry/Group';
 import {BaseParamType} from '../_Base';
 import {ExpressionManager} from '../../expressions/ExpressionManager';
 import type {CorePoint} from '../../../core/geometry/Point';
-import type {CoreVertex} from '../../../core/geometry/Vertex';
-import type {CorePrimitive} from '../../../core/geometry/Primitive';
+import type {CoreVertex} from '../../../core/geometry/vertex/CoreVertex';
+import type {CorePrimitive} from '../../../core/geometry/primitive/CorePrimitive';
 import {CoreEntity} from '../../../core/geometry/Entity';
 import {ParamType} from '../../poly/ParamType';
 import {ParamValuesTypeMap} from '../types/ParamValuesTypeMap';
@@ -129,10 +129,10 @@ export class ExpressionController<T extends ParamType> {
 	computeExpressionForPoints(entities: CorePoint[], callback: PointEntityCallback<T>) {
 		return this.computeExpressionForEntities(entities, callback as EntityCallback<T>);
 	}
-	computeExpressionForVertices(entities: CoreVertex[], callback: PointEntityCallback<T>) {
+	computeExpressionForVertices(entities: CoreVertex<CoreObjectType>[], callback: PointEntityCallback<T>) {
 		return this.computeExpressionForEntities(entities, callback as EntityCallback<T>);
 	}
-	computeExpressionForPrimitives(entities: CorePrimitive[], callback: PointEntityCallback<T>) {
+	computeExpressionForPrimitives(entities: CorePrimitive<CoreObjectType>[], callback: PointEntityCallback<T>) {
 		return this.computeExpressionForEntities(entities, callback as EntityCallback<T>);
 	}
 	computeExpressionForObjects<OT extends CoreObjectType>(

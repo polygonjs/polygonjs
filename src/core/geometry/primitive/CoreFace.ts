@@ -1,14 +1,8 @@
-import {AttribValue, Number3, NumericAttribValue} from '../../types/GlobalTypes';
-import {Vector3} from 'three';
-import {Vector2} from 'three';
-import {Triangle} from 'three';
-import {BufferGeometry} from 'three';
-import {BufferAttribute} from 'three';
-import {CorePoint} from './Point';
-// import {CoreGeometry} from './Geometry';
-import {CoreMath} from '../math/_Module';
-import {ArrayUtils} from '../ArrayUtils';
-// import {Matrix4} from 'three';
+import {AttribValue, Number3, NumericAttribValue} from '../../../types/GlobalTypes';
+import {BufferAttribute, BufferGeometry, Triangle, Vector2, Vector3} from 'three';
+import {CorePoint} from '../Point';
+import {CoreMath} from '../../math/_Module';
+import {ArrayUtils} from '../../ArrayUtils';
 
 interface FaceLike {
 	a: number;

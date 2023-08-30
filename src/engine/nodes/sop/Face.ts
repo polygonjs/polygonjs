@@ -9,11 +9,10 @@ import {BufferAttribute} from 'three';
 import {Mesh} from 'three';
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {CorePointArray3} from '../../../core/geometry/CoreFace';
+import {CorePointArray3, CoreFace} from '../../../core/geometry/primitive/CoreFace';
 import {CorePoint} from '../../../core/geometry/Point';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {CoreFace} from '../../../core/geometry/CoreFace';
 import {ArrayUtils} from '../../../core/ArrayUtils';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 

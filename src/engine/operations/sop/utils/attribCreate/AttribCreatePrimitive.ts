@@ -1,14 +1,22 @@
 import {CoreGroup} from '../../../../../core/geometry/Group';
-import {CoreObject} from '../../../../../core/geometry/Object';
 import {CoreAttribute} from '../../../../../core/geometry/Attribute';
 import {AttribCreateSopParams} from '../../AttribCreate';
 import {AttribType} from '../../../../../core/geometry/Constant';
 import {TypeAssert} from '../../../../poly/Assert';
-import {CorePrimitive} from '../../../../../core/geometry/Primitive';
-import {PrimitiveNumberAttribute} from '../../../../../core/geometry/PrimitiveAttribute';
+import {
+	PrimitiveNumberAttribute,
+	PrimitiveStringAttribute,
+} from '../../../../../core/geometry/primitive/PrimitiveAttribute';
+import {
+	primitivesFromObject,
+	primitivesFromObjectFromGroup,
+} from '../../../../../core/geometry/primitive/CorePrimitiveUtils';
+import {corePrimitiveClassFactory} from '../../../../../core/geometry/CoreObjectFactory';
+import {BaseCoreObject} from '../../../../../core/geometry/_BaseObject';
+import {CoreObjectType} from '../../../../../core/geometry/ObjectContent';
 
 export function addPrimitiveAttribute(attribType: AttribType, coreGroup: CoreGroup, params: AttribCreateSopParams) {
-	const coreObjects = coreGroup.threejsCoreObjects();
+	const coreObjects = coreGroup.allCoreObjects();
 	switch (attribType) {
 		case AttribType.NUMERIC: {
 			for (let coreObject of coreObjects) {
@@ -26,34 +34,38 @@ export function addPrimitiveAttribute(attribType: AttribType, coreGroup: CoreGro
 	TypeAssert.unreachable(attribType);
 }
 
-function _addAttributeToPrimitives(coreObject: CoreObject, params: AttribCreateSopParams, isString: boolean) {
-	const coreGeometry = coreObject.coreGeometry();
-	if (!coreGeometry) {
-		return;
-	}
+function _addAttributeToPrimitives(
+	coreObject: BaseCoreObject<CoreObjectType>,
+	params: AttribCreateSopParams,
+	isString: boolean
+) {
+	const object = coreObject.object();
+
 	const value = isString
 		? params.string
 		: [params.value1, params.value2, params.value3, params.value4][params.size - 1];
-	const geometry = coreGeometry.geometry();
 	const attribName = CoreAttribute.remapName(params.name);
 
 	// add default if not found
-	let attribute = CorePrimitive.attribute(geometry, attribName);
+	const primitiveClass = corePrimitiveClassFactory(object);
+	let attribute = primitiveClass.attribute(object, attribName);
 	if (!attribute) {
-		const primitivesCount = CorePrimitive.primitivesCount(geometry);
+		const primitivesCount = primitiveClass.primitivesCount(object);
 		const values = new Array(primitivesCount * params.size).fill(value);
-		attribute = new PrimitiveNumberAttribute(values, params.size);
-		CorePrimitive.addAttribute(geometry, attribName, attribute);
+		attribute = isString
+			? new PrimitiveStringAttribute(values, 1)
+			: new PrimitiveNumberAttribute(values, params.size);
+		primitiveClass.addAttribute(object, attribName, attribute);
 	}
 
 	// set values
 	if (params.group) {
-		const primitives = coreObject.primitivesFromGroup(params.group);
+		const primitives = primitivesFromObjectFromGroup(coreObject.object(), params.group);
 		for (let primitive of primitives) {
 			primitive.setAttribValue(attribName, value);
 		}
 	} else {
-		const primitives = coreObject.primitives();
+		const primitives = primitivesFromObject(coreObject.object());
 		for (let primitive of primitives) {
 			primitive.setAttribValue(attribName, value);
 		}

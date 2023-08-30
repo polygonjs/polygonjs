@@ -211,7 +211,6 @@ export function testenginenodessopObjectProperties(qUnit: QUnit) {
 		assert.deepEqual(await _getNames(), ['box_', 'box_', 'box_']);
 
 		objectProperties1.p.name.set('box_`@objnum`');
-		console.log('SET');
 		assert.deepEqual(await _getNames(), ['box_0', 'box_0', 'box_1']);
 	});
 }

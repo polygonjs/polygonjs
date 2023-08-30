@@ -392,3 +392,5 @@ export const COMPONENT_INDICES = {
 	b: 2,
 };
 export const DOT = '.';
+
+export type GroupString = string;

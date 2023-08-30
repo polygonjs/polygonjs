@@ -6,15 +6,21 @@ import {PolyEngine} from '../../../engine/Poly';
 import {SpecializedChildrenHook} from '../../../engine/poly/PolySpecializedChildrenController';
 import {CoreType} from '../../Type';
 import {
-	registerCoreObjectCheckFunctions,
+	registerFactoryFunctions,
+	CoreFactoryFunctions,
+	CoreVertexClassFactoryCheckFunction,
+	CoreVertexInstanceFactoryCheckFunction,
+	CorePrimitiveClassFactoryCheckFunction,
+	CorePrimitiveInstanceFactoryCheckFunction,
 	CoreObjectClassFactoryCheckFunction,
 	CoreObjectInstanceFactoryCheckFunction,
-	CoreObjectFactoryCheckFunctions,
 } from '../CoreObjectFactory';
 import {CoreGroup} from '../Group';
 import {CoreObjectType, ObjectContent} from '../ObjectContent';
 import {CAD_GEOMETRY_TYPES_SET, CadGeometryType, CADTesselationParams, CADOBJTesselationParams} from './CadCommon';
 import {CadCoreObject} from './CadCoreObject';
+import {CadVertex} from './CadVertex';
+import {CadPrimitive} from './CadPrimitive';
 import {CadObject} from './CadObject';
 
 const CAD_TESSELATION_PARAMS: CADTesselationParams = {
@@ -72,12 +78,44 @@ export function onCadModuleRegister(poly: PolyEngine) {
 	// CORE OBJECT CHECKS
 	//
 	//
-	const classCheckFunction: CoreObjectClassFactoryCheckFunction = (object: ObjectContent<CoreObjectType>) => {
+
+	// vertex methods
+	const vertexClassFactory: CoreVertexClassFactoryCheckFunction = (object: ObjectContent<CoreObjectType>) => {
+		if (CAD_GEOMETRY_TYPES_SET.has(object.type as CadGeometryType)) {
+			return CadVertex;
+		}
+	};
+	const vertexInstanceFactory: CoreVertexInstanceFactoryCheckFunction = (
+		object: ObjectContent<CoreObjectType>,
+		index: number = 0
+	) => {
+		if (CAD_GEOMETRY_TYPES_SET.has(object.type as CadGeometryType)) {
+			return new CadVertex(object as CadObject<CadGeometryType>, index);
+		}
+	};
+
+	// primitive methods
+	const primitiveClassFactory: CorePrimitiveClassFactoryCheckFunction = (object: ObjectContent<CoreObjectType>) => {
+		if (CAD_GEOMETRY_TYPES_SET.has(object.type as CadGeometryType)) {
+			return CadPrimitive;
+		}
+	};
+	const primitiveInstanceFactory: CorePrimitiveInstanceFactoryCheckFunction = (
+		object: ObjectContent<CoreObjectType>,
+		index: number = 0
+	) => {
+		if (CAD_GEOMETRY_TYPES_SET.has(object.type as CadGeometryType)) {
+			return new CadPrimitive(object as CadObject<CadGeometryType>, index);
+		}
+	};
+
+	// object methods
+	const objectClassFactory: CoreObjectClassFactoryCheckFunction = (object: ObjectContent<CoreObjectType>) => {
 		if (CAD_GEOMETRY_TYPES_SET.has(object.type as CadGeometryType)) {
 			return CadCoreObject;
 		}
 	};
-	const instanceCheckFunction: CoreObjectInstanceFactoryCheckFunction = (
+	const objectInstanceFactory: CoreObjectInstanceFactoryCheckFunction = (
 		object: ObjectContent<CoreObjectType>,
 		index: number = 0
 	) => {
@@ -85,12 +123,18 @@ export function onCadModuleRegister(poly: PolyEngine) {
 			return new CadCoreObject(object as CadObject<CadGeometryType>, index);
 		}
 	};
-	const checkFunctions: CoreObjectFactoryCheckFunctions = {
-		class: classCheckFunction,
-		instance: instanceCheckFunction,
+
+	//
+	const factoryFunctions: CoreFactoryFunctions = {
+		vertexClass: vertexClassFactory,
+		vertexInstance: vertexInstanceFactory,
+		primitiveClass: primitiveClassFactory,
+		primitiveInstance: primitiveInstanceFactory,
+		objectClass: objectClassFactory,
+		objectInstance: objectInstanceFactory,
 	};
 
-	registerCoreObjectCheckFunctions(checkFunctions);
+	registerFactoryFunctions(factoryFunctions);
 
 	//
 	//

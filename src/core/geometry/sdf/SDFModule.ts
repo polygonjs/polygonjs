@@ -1,13 +1,19 @@
 import {PolyEngine} from '../../../engine/Poly';
 import {
-	registerCoreObjectCheckFunctions,
+	registerFactoryFunctions,
+	CoreFactoryFunctions,
+	CoreVertexClassFactoryCheckFunction,
+	CoreVertexInstanceFactoryCheckFunction,
+	CorePrimitiveClassFactoryCheckFunction,
+	CorePrimitiveInstanceFactoryCheckFunction,
 	CoreObjectClassFactoryCheckFunction,
 	CoreObjectInstanceFactoryCheckFunction,
-	CoreObjectFactoryCheckFunctions,
 } from '../CoreObjectFactory';
 import {CoreObjectType, ObjectContent} from '../ObjectContent';
 import {SDF_OBJECT_TYPES_SET, SDFObjectType} from './SDFCommon';
 import {SDFCoreObject} from './SDFCoreObject';
+import {SDFVertex} from './SDFVertex';
+import {SDFPrimitive} from './SDFPrimitive';
 import {SDFObject} from './SDFObject';
 
 export function onSDFModuleRegister(poly: PolyEngine) {
@@ -16,12 +22,43 @@ export function onSDFModuleRegister(poly: PolyEngine) {
 	// CORE OBJECT CHECKS
 	//
 	//
-	const classCheckFunction: CoreObjectClassFactoryCheckFunction = (object: ObjectContent<CoreObjectType>) => {
+
+	// vertex methods
+	const vertexClassFactory: CoreVertexClassFactoryCheckFunction = (object: ObjectContent<CoreObjectType>) => {
+		if (SDF_OBJECT_TYPES_SET.has(object.type as SDFObjectType)) {
+			return SDFVertex;
+		}
+	};
+	const vertexInstanceFactory: CoreVertexInstanceFactoryCheckFunction = (
+		object: ObjectContent<CoreObjectType>,
+		index: number = 0
+	) => {
+		if (SDF_OBJECT_TYPES_SET.has(object.type as SDFObjectType)) {
+			return new SDFVertex(object as SDFObject, index);
+		}
+	};
+	// primitive methods
+	const primitiveClassFactory: CorePrimitiveClassFactoryCheckFunction = (object: ObjectContent<CoreObjectType>) => {
+		if (SDF_OBJECT_TYPES_SET.has(object.type as SDFObjectType)) {
+			return SDFPrimitive;
+		}
+	};
+	const primitiveInstanceFactory: CorePrimitiveInstanceFactoryCheckFunction = (
+		object: ObjectContent<CoreObjectType>,
+		index: number = 0
+	) => {
+		if (SDF_OBJECT_TYPES_SET.has(object.type as SDFObjectType)) {
+			return new SDFPrimitive(object as SDFObject, index);
+		}
+	};
+
+	// object methods
+	const objectClassFactory: CoreObjectClassFactoryCheckFunction = (object: ObjectContent<CoreObjectType>) => {
 		if (SDF_OBJECT_TYPES_SET.has(object.type as SDFObjectType)) {
 			return SDFCoreObject;
 		}
 	};
-	const instanceCheckFunction: CoreObjectInstanceFactoryCheckFunction = (
+	const objectInstanceFactory: CoreObjectInstanceFactoryCheckFunction = (
 		object: ObjectContent<CoreObjectType>,
 		index: number = 0
 	) => {
@@ -29,12 +66,18 @@ export function onSDFModuleRegister(poly: PolyEngine) {
 			return new SDFCoreObject(object as SDFObject, index);
 		}
 	};
-	const checkFunctions: CoreObjectFactoryCheckFunctions = {
-		class: classCheckFunction,
-		instance: instanceCheckFunction,
+
+	//
+	const factoryFunctions: CoreFactoryFunctions = {
+		vertexClass: vertexClassFactory,
+		vertexInstance: vertexInstanceFactory,
+		primitiveClass: primitiveClassFactory,
+		primitiveInstance: primitiveInstanceFactory,
+		objectClass: objectClassFactory,
+		objectInstance: objectInstanceFactory,
 	};
 
-	registerCoreObjectCheckFunctions(checkFunctions);
+	registerFactoryFunctions(factoryFunctions);
 	//
 	//
 	// SPECIALIZED CHILDREN

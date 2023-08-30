@@ -14,9 +14,10 @@ import {
 	Matrix4,
 } from 'three';
 import {CoreGeometry} from './Geometry';
-import {GroupString, Object3DWithGeometry} from './Group';
+import {Object3DWithGeometry} from './Group';
 import {CoreAttribute} from './Attribute';
-import {dataFromConstructor, ObjectData, ObjectType} from './Constant';
+import {dataFromConstructor, ObjectData, ObjectType, GroupString} from './Constant';
+import {objectData} from './_BaseObjectUtils';
 import {CorePoint} from './Point';
 import {MaterialWithCustomMaterials, applyCustomMaterials} from './Material';
 import {CoreString} from '../String';
@@ -30,10 +31,6 @@ import {TransformTargetType} from '../Transform';
 import {TypeAssert} from '../../engine/poly/Assert';
 import {applyTransformWithSpaceToObject, ObjectTransformMode, ObjectTransformSpace} from '../TransformSpace';
 import {BaseSopOperation} from '../../engine/operations/sop/_Base';
-import {CorePrimitive} from './Primitive';
-import {CoreVertex} from './Vertex';
-// import {computeBoundingBoxFromObject3D} from './BoundingBox';
-// import {setSphereFromObject} from './BoundingSphere';
 
 interface Object3DWithAnimations extends Object3D {
 	animations: AnimationClip[];
@@ -127,90 +124,7 @@ export class CoreObject extends BaseCoreObject<CoreObjectType.THREEJS> {
 			return this.points();
 		}
 	}
-	//
-	//
-	// VERTICES
-	//
-	//
-	static vertices(object: Object3D) {
-		const geometry = (object as Mesh).geometry;
-		if (geometry) {
-			return CoreGeometry.vertices(geometry) || [];
-		} else {
-			return [];
-		}
-	}
-	vertices() {
-		return this.coreGeometry()?.vertices() || [];
-	}
-	static verticesFromGroup(object: Object3D, group: GroupString): CoreVertex[] {
-		if (group) {
-			const indices = CoreString.indices(group);
-			if (indices) {
-				const vertices = this.vertices(object);
-				return ArrayUtils.compact(indices.map((i) => vertices[i]));
-			} else {
-				return [];
-			}
-		} else {
-			return this.vertices(object);
-		}
-	}
-	verticesFromGroup(group: GroupString): CoreVertex[] {
-		if (group) {
-			const indices = CoreString.indices(group);
-			if (indices) {
-				const vertices = this.vertices();
-				return ArrayUtils.compact(indices.map((i) => vertices[i]));
-			} else {
-				return [];
-			}
-		} else {
-			return this.vertices();
-		}
-	}
-	//
-	//
-	// PRIMITIVES
-	//
-	//
-	static primitives(object: Object3D) {
-		const geometry = (object as Mesh).geometry;
-		if (geometry) {
-			return CoreGeometry.primitives(geometry) || [];
-		} else {
-			return [];
-		}
-	}
-	primitives() {
-		return this.coreGeometry()?.primitives() || [];
-	}
-	static primitivesFromGroup(object: Object3D, group: GroupString): CorePrimitive[] {
-		if (group) {
-			const indices = CoreString.indices(group);
-			if (indices) {
-				const primitives = this.primitives(object);
-				return ArrayUtils.compact(indices.map((i) => primitives[i]));
-			} else {
-				return [];
-			}
-		} else {
-			return this.primitives(object);
-		}
-	}
-	primitivesFromGroup(group: GroupString): CorePrimitive[] {
-		if (group) {
-			const indices = CoreString.indices(group);
-			if (indices) {
-				const primitives = this.primitives();
-				return ArrayUtils.compact(indices.map((i) => primitives[i]));
-			} else {
-				return [];
-			}
-		} else {
-			return this.primitives();
-		}
-	}
+
 	//
 	//
 	//
@@ -223,7 +137,7 @@ export class CoreObject extends BaseCoreObject<CoreObjectType.THREEJS> {
 		this.coreGeometry()?.addNumericAttrib(name, size, defaultValue);
 	}
 	static override objectData(object: Object3D): ObjectData {
-		const data = BaseCoreObject.objectData(object);
+		const data = objectData(object);
 
 		data.pointsCount =
 			isObject3D(object) && (object as Mesh).geometry

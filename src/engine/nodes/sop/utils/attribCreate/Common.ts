@@ -1,26 +1,27 @@
-import {BufferGeometry, Vector2, Vector3, Vector4} from 'three';
+import {Vector2, Vector3, Vector4} from 'three';
+import type {BaseCoreObject} from '../../../../../core/geometry/_BaseObject';
+import type {CoreObjectType} from '../../../../../core/geometry/ObjectContent';
 
-export type ValueArrayByName = Map<string, number[]>;
+export type ValueArrayByObject = WeakMap<BaseCoreObject<CoreObjectType>, number[]>;
 
 export type VectorComponent = 'x' | 'y' | 'z' | 'w';
 export const COMPONENT_NAMES: Array<VectorComponent> = ['x', 'y', 'z', 'w'];
 
 export function initArrayIfRequired(
-	geometry: BufferGeometry,
-	arraysByGeometryUuid: ValueArrayByName,
-	points_count: number
+	coreObject: BaseCoreObject<CoreObjectType>,
+	arraysByGeometryUuid: ValueArrayByObject,
+	arrayLength: number
 ) {
-	const uuid = geometry.uuid;
-	const currentArray = arraysByGeometryUuid.get(uuid);
+	const currentArray = arraysByGeometryUuid.get(coreObject);
 	if (currentArray) {
 		// only create new array if we need more point, or as soon as the length is different?
-		if (currentArray.length < points_count) {
-			arraysByGeometryUuid.set(uuid, new Array(points_count));
+		if (currentArray.length < arrayLength) {
+			arraysByGeometryUuid.set(coreObject, new Array(arrayLength));
 		}
 	} else {
-		arraysByGeometryUuid.set(uuid, new Array(points_count));
+		arraysByGeometryUuid.set(coreObject, new Array(arrayLength));
 	}
-	return arraysByGeometryUuid.get(uuid);
+	return arraysByGeometryUuid.get(coreObject);
 }
 
 export function vectorByAttribSize(size: number) {

@@ -2,18 +2,24 @@ import {Object3D} from 'three';
 import {PolyEngine} from '../../../engine/Poly';
 import {SpecializedChildrenHook} from '../../../engine/poly/PolySpecializedChildrenController';
 import {
-	registerCoreObjectCheckFunctions,
+	registerFactoryFunctions,
+	CoreFactoryFunctions,
+	CoreVertexClassFactoryCheckFunction,
+	CoreVertexInstanceFactoryCheckFunction,
+	CorePrimitiveClassFactoryCheckFunction,
+	CorePrimitiveInstanceFactoryCheckFunction,
 	CoreObjectClassFactoryCheckFunction,
 	CoreObjectInstanceFactoryCheckFunction,
-	CoreObjectFactoryCheckFunctions,
 } from '../CoreObjectFactory';
 import {CoreObjectType, ObjectContent} from '../ObjectContent';
 import {QUAD_OBJECT_TYPES_SET, QUADObjectType, QUADTesselationParams, QUADOBJTesselationParams} from './QuadCommon';
 import {QuadCoreObject} from './QuadCoreObject';
-import {QuadObject} from './QuadObject';
 import {BaseSopNodeType} from '../../../engine/nodes/sop/_Base';
 import {CoreGroup} from '../Group';
 import {isArray} from '../../Type';
+import {QuadVertex} from './QuadVertex';
+import {QuadPrimitive} from './QuadPrimitive';
+import {QuadObject} from './QuadObject';
 
 const QUAD_TESSELATION_PARAMS: QUADTesselationParams = {
 	triangles: true,
@@ -54,12 +60,42 @@ export function onQuadModuleRegister(poly: PolyEngine) {
 	// CORE OBJECT CHECKS
 	//
 	//
-	const classCheckFunction: CoreObjectClassFactoryCheckFunction = (object: ObjectContent<CoreObjectType>) => {
+	// vertex methods
+	const vertexClassFactory: CoreVertexClassFactoryCheckFunction = (object: ObjectContent<CoreObjectType>) => {
+		if (QUAD_OBJECT_TYPES_SET.has(object.type as QUADObjectType)) {
+			return QuadVertex;
+		}
+	};
+	const vertexInstanceFactory: CoreVertexInstanceFactoryCheckFunction = (
+		object: ObjectContent<CoreObjectType>,
+		index = 0
+	) => {
+		if (QUAD_OBJECT_TYPES_SET.has(object.type as QUADObjectType)) {
+			return new QuadVertex(object as QuadObject, index);
+		}
+	};
+	// primitive methods
+	const primitiveClassFactory: CorePrimitiveClassFactoryCheckFunction = (object: ObjectContent<CoreObjectType>) => {
+		if (QUAD_OBJECT_TYPES_SET.has(object.type as QUADObjectType)) {
+			return QuadPrimitive;
+		}
+	};
+	const primitiveInstanceFactory: CorePrimitiveInstanceFactoryCheckFunction = (
+		object: ObjectContent<CoreObjectType>,
+		index = 0
+	) => {
+		if (QUAD_OBJECT_TYPES_SET.has(object.type as QUADObjectType)) {
+			return new QuadPrimitive(object as QuadObject, index);
+		}
+	};
+
+	// object methods
+	const objectClassFactory: CoreObjectClassFactoryCheckFunction = (object: ObjectContent<CoreObjectType>) => {
 		if (QUAD_OBJECT_TYPES_SET.has(object.type as QUADObjectType)) {
 			return QuadCoreObject;
 		}
 	};
-	const instanceCheckFunction: CoreObjectInstanceFactoryCheckFunction = (
+	const objectInstanceFactory: CoreObjectInstanceFactoryCheckFunction = (
 		object: ObjectContent<CoreObjectType>,
 		index: number = 0
 	) => {
@@ -67,12 +103,17 @@ export function onQuadModuleRegister(poly: PolyEngine) {
 			return new QuadCoreObject(object as QuadObject, index);
 		}
 	};
-	const checkFunctions: CoreObjectFactoryCheckFunctions = {
-		class: classCheckFunction,
-		instance: instanceCheckFunction,
+
+	const factoryFunction: CoreFactoryFunctions = {
+		vertexClass: vertexClassFactory,
+		vertexInstance: vertexInstanceFactory,
+		primitiveClass: primitiveClassFactory,
+		primitiveInstance: primitiveInstanceFactory,
+		objectClass: objectClassFactory,
+		objectInstance: objectInstanceFactory,
 	};
 
-	registerCoreObjectCheckFunctions(checkFunctions);
+	registerFactoryFunctions(factoryFunction);
 	//
 	//
 	// SPECIALIZED CHILDREN

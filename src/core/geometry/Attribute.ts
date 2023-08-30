@@ -11,8 +11,7 @@ import {AttribValue, PolyDictionary} from '../../types/GlobalTypes';
 import {ArrayUtils} from '../ArrayUtils';
 import {stringToAttribNames, stringMatchMask} from '../String';
 import {CoreType} from '../Type';
-import {AttribSize} from './Constant';
-import {GroupString} from './Group';
+import {AttribSize, GroupString} from './Constant';
 
 export enum Attribute {
 	POINT_INDEX = 'ptnum',

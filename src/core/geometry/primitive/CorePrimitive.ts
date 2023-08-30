@@ -5,85 +5,90 @@ import {
 	Vector2Like,
 	Vector3Like,
 	Vector4Like,
-} from '../../types/GlobalTypes';
-import {Vector4, Vector3, Vector2, BufferGeometry, Triangle} from 'three';
-import {Attribute, CoreAttribute} from './Attribute';
-import {CoreEntity} from './Entity';
-import {CoreType} from '../Type';
+} from '../../../types/GlobalTypes';
+import {Vector4, Vector3, Vector2} from 'three';
+import {Attribute, CoreAttribute} from '../Attribute';
+import {CoreEntity} from '../Entity';
+import {CoreType} from '../../Type';
 import {BasePrimitiveAttribute} from './PrimitiveAttribute';
-import {CoreFace} from './CoreFace';
-import {DOT, ComponentName, COMPONENT_INDICES} from './Constant';
+import {DOT, ComponentName, COMPONENT_INDICES} from '../Constant';
+import {PrimitiveAttributesDict} from './Common';
+import {CoreObjectType, ObjectContent} from '../ObjectContent';
 
-type PrimitiveAttributesDict = Record<string, BasePrimitiveAttribute>;
+// interface GeometryWithPrimitiveAttributes {
+// 	userData?: {
+// 		primAttributes?: PrimitiveAttributesDict;
+// 	};
+// }
 
-interface BufferGeometryWithPrimitiveAttributes extends BufferGeometry {
-	userData: {
-		primAttributes?: PrimitiveAttributesDict;
-	};
-}
-
-const _coreFace = new CoreFace();
-const _triangle = new Triangle();
-
-export class CorePrimitive extends CoreEntity {
-	private _geometry?: BufferGeometryWithPrimitiveAttributes;
-	constructor(geometry?: BufferGeometryWithPrimitiveAttributes, index?: number) {
-		super(geometry, index);
-		this._geometry = geometry;
+export abstract class CorePrimitive<T extends CoreObjectType> extends CoreEntity {
+	protected _object?: ObjectContent<T>;
+	// protected _geometry?: GeometryWithPrimitiveAttributes;
+	constructor(object?: ObjectContent<T>, index?: number) {
+		super(object, index);
+		this._object = object;
 	}
-	setGeometry(geometry: BufferGeometry) {
-		this._geometry = geometry;
-		return this;
+	// setGeometry(geometry: GeometryWithPrimitiveAttributes) {
+	// 	this._geometry = geometry;
+	// 	return this;
+	// }
+	static primitivesCount<T extends CoreObjectType>(object: ObjectContent<T>) {
+		return 0;
 	}
-	override setIndex(index: number, geometry?: BufferGeometry) {
-		this._index = index;
-		if (geometry) {
-			this._geometry = geometry;
-		}
-		return this;
-	}
-	geometry() {
-		return this._geometry;
-	}
-	static addAttribute(geometry: BufferGeometry, attribName: string, attribute: BasePrimitiveAttribute) {
-		if (!geometry.userData.primAttributes) {
-			geometry.userData.primAttributes = {};
-		}
-		geometry.userData.primAttributes[attribName] = attribute;
-	}
-
-	static primitivesCount(geometry: BufferGeometry) {
-		const index = geometry.getIndex();
-		if (!index) {
-			return 0;
-		}
-		return index.count / 3;
+	// override setIndex(index: number, object?: ObjectContent<T>) {
+	// 	this._index = index;
+	// 	if (geometry) {
+	// 		this._geometry = geometry;
+	// 	}
+	// 	return this;
+	// }
+	// geometry() {
+	// 	return this._geometry;
+	// }
+	static addAttribute<T extends CoreObjectType>(
+		geometry: ObjectContent<T>,
+		attribName: string,
+		attribute: BasePrimitiveAttribute
+	) {
+		console.warn('CorePrimitive.addAttribute needs to be overloaded');
+		// if (!geometry.userData) {
+		// 	console.warn('geometry has no userData');
+		// 	return;
+		// }
+		// if (!geometry.userData.primAttributes) {
+		// 	geometry.userData.primAttributes = {};
+		// }
+		// geometry.userData.primAttributes[attribName] = attribute;
 	}
 
-	static attributes(geometry: BufferGeometryWithPrimitiveAttributes): PrimitiveAttributesDict | undefined {
-		return geometry.userData.primAttributes;
+	static attributes<T extends CoreObjectType>(object?: ObjectContent<T>): PrimitiveAttributesDict | undefined {
+		console.warn('CorePrimitive.attributes needs to be overloaded');
+		return;
 	}
 	attributes(): PrimitiveAttributesDict | undefined {
-		if (!this._geometry) {
+		if (!this._object) {
 			return;
 		}
-		return CorePrimitive.attributes(this._geometry);
+		return (this.constructor as typeof CorePrimitive<T>).attributes(this._object);
 	}
-	static attribute(
-		geometry: BufferGeometryWithPrimitiveAttributes,
+	static attribute<T extends CoreObjectType>(
+		object: ObjectContent<T>,
 		attribName: string
 	): BasePrimitiveAttribute | undefined {
-		const attributes = CorePrimitive.attributes(geometry);
+		const attributes = this.attributes(object);
 		if (!attributes) {
 			return;
 		}
 		return attributes[attribName];
 	}
 	attribute(attribName: string): BasePrimitiveAttribute | undefined {
-		return CorePrimitive.attribute(this._geometry as BufferGeometryWithPrimitiveAttributes, attribName);
+		if (!this._object) {
+			return;
+		}
+		return (this.constructor as typeof CorePrimitive<T>).attribute(this._object, attribName);
 	}
-	static attribSize(geometry: BufferGeometryWithPrimitiveAttributes, attribName: string): number {
-		const attributes = this.attributes(geometry);
+	static attribSize<T extends CoreObjectType>(object: ObjectContent<T>, attribName: string): number {
+		const attributes = this.attributes(object);
 		if (!attributes) {
 			return -1;
 		}
@@ -92,18 +97,24 @@ export class CorePrimitive extends CoreEntity {
 	}
 
 	attribSize(attribName: string): number {
-		return CorePrimitive.attribSize(this._geometry as BufferGeometryWithPrimitiveAttributes, attribName);
+		if (!this._object) {
+			return 0;
+		}
+		return (this.constructor as typeof CorePrimitive<T>).attribSize(this._object, attribName);
 	}
-	static hasAttrib(geometry: BufferGeometryWithPrimitiveAttributes, attribName: string): boolean {
+	static hasAttrib<T extends CoreObjectType>(object: ObjectContent<T>, attribName: string): boolean {
 		const remappedName = CoreAttribute.remapName(attribName);
-		return this.attributes(geometry) ? this.attributes(geometry)![remappedName] != null : false;
+		return this.attributes(object) ? this.attributes(object)![remappedName] != null : false;
 	}
 
 	hasAttrib(attribName: string): boolean {
-		return CorePrimitive.hasAttrib(this._geometry as BufferGeometryWithPrimitiveAttributes, attribName);
+		if (!this._object) {
+			return false;
+		}
+		return (this.constructor as typeof CorePrimitive<T>).hasAttrib(this._object, attribName);
 	}
-	static attribValue(
-		geometry: BufferGeometry,
+	static attribValue<T extends CoreObjectType>(
+		object: ObjectContent<T>,
 		index: number,
 		attribName: string,
 		target?: Vector2 | Vector3 | Vector4
@@ -120,7 +131,7 @@ export class CorePrimitive extends CoreEntity {
 			}
 			const remapedName = CoreAttribute.remapName(attribName);
 
-			const attrib = CorePrimitive.attribute(geometry, remapedName);
+			const attrib = this.attribute(object, remapedName);
 			if (attrib) {
 				const {array} = attrib;
 				// if (attrib.isString()) {
@@ -163,16 +174,20 @@ export class CorePrimitive extends CoreEntity {
 				}
 				// }
 			} else {
-				const message = `attrib ${attribName} not found. availables are: ${Object.keys(
-					geometry.attributes || {}
-				).join(',')}`;
+				// const geometry = object.geometry as GeometryWithPrimitiveAttributes | undefined;
+				const attributesDict = this.attributes() || {};
+				const attribNames: string[] = Object.keys(attributesDict);
+				const message = `attrib ${attribName} not found. availables are: ${attribNames.join(',')}`;
 				console.warn(message);
 				throw message;
 			}
 		}
 	}
 	attribValue(attribName: string, target?: Vector2 | Vector3 | Vector4): AttribValue {
-		return this._geometry ? CorePrimitive.attribValue(this._geometry, this._index, attribName, target) : 0;
+		if (!this._object) {
+			return 0;
+		}
+		return (this.constructor as typeof CorePrimitive<T>).attribValue(this._object, this._index, attribName, target);
 	}
 	attribValueNumber(attribName: string) {
 		const attrib = this.attribute(attribName);
@@ -216,8 +231,8 @@ export class CorePrimitive extends CoreEntity {
 	// 	}
 	// 	return CoreGeometry.userDataAttrib(this._geometry, attribName)[valueIndex];
 	// }
-	static stringAttribValue(geometry: BufferGeometry, index: number, attribName: string) {
-		return this.attribValue(geometry, index, attribName); //this.indexedAttribValue(geometry, index, attribName);
+	static stringAttribValue<T extends CoreObjectType>(object: ObjectContent<T>, index: number, attribName: string) {
+		return this.attribValue(object, index, attribName); //this.indexedAttribValue(geometry, index, attribName);
 	}
 	stringAttribValue(attribName: string) {
 		return this.attribValue(attribName) as string; //this.indexedAttribValue(attribName);
@@ -247,30 +262,10 @@ export class CorePrimitive extends CoreEntity {
 	// 	return CoreGeometry.isAttribIndexed(this._geometry, attribName);
 	// }
 
-	position(target: Vector3) {
-		_coreFace.setIndex(this._index, this._geometry as BufferGeometry);
-		_coreFace.center(target);
-		// if (!this._geometry) {
-		// 	return target;
-		// }
-		// const {array} = this._geometry.getAttribute(ATTRIB_NAMES.POSITION) as BufferAttribute;
-		// return target.fromArray(array, this._index * 3);
-	}
 	setPosition(newPosition: Vector3) {
 		this.setAttribValueFromVector3(Attribute.POSITION, newPosition);
 	}
 
-	normal(target: Vector3): Vector3 {
-		_coreFace.setIndex(this._index, this._geometry as BufferGeometry);
-		_coreFace.triangle(_triangle);
-		_triangle.getNormal(target);
-		return target;
-		// if (!this._geometry) {
-		// 	return target;
-		// }
-		// const {array} = this._geometry.getAttribute(ATTRIB_NAMES.NORMAL) as BufferAttribute;
-		// return target.fromArray(array, this._index * 3);
-	}
 	setNormal(newNormal: Vector3) {
 		return this.setAttribValueFromVector3(Attribute.NORMAL, newNormal);
 	}

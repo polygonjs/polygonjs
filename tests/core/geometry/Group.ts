@@ -22,15 +22,15 @@ qUnit.test('geoAttribNamesMatchingMask', async (assert) => {
 	const coreGroup = container.coreContent()!;
 
 	assert.deepEqual(
-		coreGroup.geoAttribNames().sort(),
+		coreGroup.pointAttribNames().sort(),
 		['position', 'normal', 'uv', 'blend', 'blend2', 'restP'].sort()
 	);
-	assert.deepEqual(coreGroup.geoAttribNamesMatchingMask('blend*').sort(), ['blend', 'blend2'].sort());
-	assert.deepEqual(coreGroup.geoAttribNamesMatchingMask('pos*').sort(), ['position'].sort());
-	assert.deepEqual(coreGroup.geoAttribNamesMatchingMask('pos').sort(), [].sort());
-	assert.deepEqual(coreGroup.geoAttribNamesMatchingMask('blend*,pos').sort(), ['blend', 'blend2'].sort());
+	assert.deepEqual(coreGroup.pointAttribNamesMatchingMask('blend*').sort(), ['blend', 'blend2'].sort());
+	assert.deepEqual(coreGroup.pointAttribNamesMatchingMask('pos*').sort(), ['position'].sort());
+	assert.deepEqual(coreGroup.pointAttribNamesMatchingMask('pos').sort(), [].sort());
+	assert.deepEqual(coreGroup.pointAttribNamesMatchingMask('blend*,pos').sort(), ['blend', 'blend2'].sort());
 	assert.deepEqual(
-		coreGroup.geoAttribNamesMatchingMask('blend*,pos*').sort(),
+		coreGroup.pointAttribNamesMatchingMask('blend*,pos*').sort(),
 		['blend', 'blend2', 'position'].sort()
 	);
 });

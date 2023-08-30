@@ -2,25 +2,25 @@ import {BufferAttribute} from 'three';
 import {CoreGroup} from '../../../../../core/geometry/Group';
 import {CoreObject} from '../../../../../core/geometry/Object';
 import {CoreAttribute} from '../../../../../core/geometry/Attribute';
-import {ValueArrayByName, initArrayIfRequired} from './Common';
+import {ValueArrayByObject, initArrayIfRequired} from './Common';
 import {hasGroupFromParams, AttribCreateSopNodeParams} from '../../../../operations/sop/utils/attribCreate/Common';
 
 import {AttribType} from '../../../../../core/geometry/Constant';
 import {TypeAssert} from '../../../../poly/Assert';
 
-interface ArraysByGeoUuid {
-	X: ValueArrayByName;
-	Y: ValueArrayByName;
-	Z: ValueArrayByName;
-	W: ValueArrayByName;
+interface ArraysByObject {
+	X: ValueArrayByObject;
+	Y: ValueArrayByObject;
+	Z: ValueArrayByObject;
+	W: ValueArrayByObject;
 }
-const _arraysByGeoUuid: ArraysByGeoUuid = {
-	X: new Map(),
-	Y: new Map(),
-	Z: new Map(),
-	W: new Map(),
+const _arraysByObject: ArraysByObject = {
+	X: new WeakMap(),
+	Y: new WeakMap(),
+	Z: new WeakMap(),
+	W: new WeakMap(),
 };
-
+const arraysByGeometryUuid = [_arraysByObject.X, _arraysByObject.Y, _arraysByObject.Z, _arraysByObject.W];
 export async function addPointAttribute(
 	attribType: AttribType,
 	coreGroup: CoreGroup,
@@ -82,17 +82,10 @@ async function _addNumericAttributeToPoints(coreObject: CoreObject, params: Attr
 			const components = vparam.components;
 			const tmpArrays = new Array(components.length);
 
-			const arraysByGeometryUuid = [
-				_arraysByGeoUuid.X,
-				_arraysByGeoUuid.Y,
-				_arraysByGeoUuid.Z,
-				_arraysByGeoUuid.W,
-			];
-
 			for (let i = 0; i < components.length; i++) {
 				const componentParam = components[i];
 				if (componentParam.hasExpression() && componentParam.expressionController) {
-					tmpArrays[i] = initArrayIfRequired(geometry, arraysByGeometryUuid[i], points.length);
+					tmpArrays[i] = initArrayIfRequired(coreObject, arraysByGeometryUuid[i], points.length);
 					if (componentParam.expressionController.entitiesDependent()) {
 						await componentParam.expressionController.computeExpressionForPoints(
 							points,

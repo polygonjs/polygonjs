@@ -13,6 +13,9 @@ export class CadCoreFace extends CoreEntity {
 	face() {
 		return this._face;
 	}
+	geometry() {
+		return this._shape;
+	}
 
 	setAttribValue(attribName: string, attribValue: NumericAttribValue | string) {}
 	attribValue(attribName: string, target?: Vector2 | Vector3 | Vector4): AttribValue | undefined {

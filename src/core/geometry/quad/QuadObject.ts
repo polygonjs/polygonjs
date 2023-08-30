@@ -66,9 +66,7 @@ export class QuadObject implements ObjectContent<CoreObjectType.QUAD> {
 	}
 
 	boundingBox(target: Box3): void {
-		const bbox = this.geometry.boundingBox();
-		target.min.copy(bbox.min);
-		target.max.copy(bbox.max);
+		this.geometry.boundingBox(target);
 	}
 	boundingSphere(target: Sphere): void {
 		this.boundingBox(_box);

@@ -5,6 +5,7 @@ import {TransformTargetType} from '../../Transform';
 import {ObjectTransformMode, ObjectTransformSpace} from '../../TransformSpace';
 import {TetObject} from './TetObject';
 import {ObjectData} from '../Constant';
+import {objectData} from '../_BaseObjectUtils';
 
 const _bbox = new Box3();
 export class TetCoreObject extends BaseCoreObject<CoreObjectType.TET> {
@@ -25,7 +26,7 @@ export class TetCoreObject extends BaseCoreObject<CoreObjectType.TET> {
 	}
 
 	static override objectData<T extends CoreObjectType>(object: ObjectContent<T>): ObjectData {
-		const data = BaseCoreObject.objectData(object);
+		const data = objectData(object);
 
 		const tetObject = object as any as TetObject;
 		data.tetsCount = tetObject.geometry.tetsCount();
