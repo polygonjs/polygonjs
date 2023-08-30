@@ -12,7 +12,7 @@ import {Plane} from 'three';
 import {OrthographicCamera} from 'three';
 import {PerspectiveCamera} from 'three';
 import {isBooleanTrue} from '../../../core/BooleanValue';
-import {CoreTransform} from '../../../core/Transform';
+import {CoreTransform, rotateGeometry} from '../../../core/Transform';
 import {BaseNodeType} from '../_Base';
 import {createRaycaster} from '../../../core/RaycastHelper';
 
@@ -126,7 +126,7 @@ export class CameraPlaneSopNode extends TypedSopNode<CameraPlaneSopParamsConfig>
 		this.planeSize.set(width, height);
 		const geometry = this._createPlane(this.planeSize);
 
-		CoreTransform.rotateGeometry(geometry, DEFAULT_UP, this.pv.direction);
+		rotateGeometry(geometry, DEFAULT_UP, this.pv.direction);
 
 		const matrix = this._coreTransform.translationMatrix(this._planeCenter);
 		geometry.applyMatrix4(matrix);

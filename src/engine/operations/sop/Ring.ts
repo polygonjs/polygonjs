@@ -4,7 +4,7 @@ import {BufferGeometry, Vector3, RingGeometry} from 'three';
 // import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 import {ObjectType} from '../../../core/geometry/Constant';
-import {CoreTransform} from '../../../core/Transform';
+import {rotateGeometry} from '../../../core/Transform';
 
 const DEFAULT_UP = new Vector3(0, 0, 1);
 // const q = new Quaternion();
@@ -50,7 +50,7 @@ export class RingSopOperation extends BaseSopOperation {
 	}
 	private _cookWithoutInput(params: RingSopParams) {
 		const geometry = this._createRequiredGeometry(params);
-		CoreTransform.rotateGeometry(geometry, DEFAULT_UP, params.direction);
+		rotateGeometry(geometry, DEFAULT_UP, params.direction);
 		geometry.translate(params.center.x, params.center.y, params.center.z);
 		const object = this._createRingObject(geometry, params);
 		return object;

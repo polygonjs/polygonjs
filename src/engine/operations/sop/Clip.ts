@@ -21,7 +21,7 @@ import {DefaultOperationParams} from '../../../core/operations/_Base';
 import {ThreeMeshBVHHelper} from '../../../core/geometry/bvh/ThreeMeshBVHHelper';
 import {isBooleanTrue} from '../../../core/Type';
 import {SUBTRACTION, Brush, Evaluator} from '../../../core/thirdParty/three-bvh-csg';
-import {CoreTransform} from '../../../core/Transform';
+import {rotateGeometry} from '../../../core/Transform';
 import {CoreGeometry} from '../../../core/geometry/Geometry';
 import {CoreGeometryBuilderMesh} from '../../../core/geometry/builders/Mesh';
 import {ObjectUtils} from '../../../core/ObjectUtils';
@@ -152,7 +152,7 @@ function _createBox(params: ClipSopParams, above: boolean) {
 	geometry.translate(0, BOOLEAN_SIZE * 0.5 * (above ? 1 : -1), 0);
 
 	geometry.translate(origin.x, origin.y + distance, origin.z);
-	CoreTransform.rotateGeometry(geometry, DEFAULT_UP, direction);
+	rotateGeometry(geometry, DEFAULT_UP, direction);
 	// geometry.lookAt(direction);
 	const object = BaseSopOperation.createObject(geometry, ObjectType.MESH);
 	// _matT.identity();

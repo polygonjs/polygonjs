@@ -36,6 +36,20 @@ const _m = new Matrix4();
 const _q = new Quaternion();
 const _rotateDirOrigin = new Vector3();
 const _rotateDirDest = new Vector3();
+
+export function rotationMatrix(dirOrigin: Vector3, dirDest: Vector3, target: Matrix4) {
+	_rotateDirDest.copy(dirDest).normalize();
+	_rotateDirOrigin.copy(dirOrigin).normalize();
+	_q.setFromUnitVectors(_rotateDirOrigin, _rotateDirDest);
+	target.makeRotationFromQuaternion(_q);
+}
+export function rotateGeometry(geometry: BufferGeometry, dirOrigin: Vector3, dirDest: Vector3) {
+	_rotateDirDest.copy(dirDest).normalize();
+	_rotateDirOrigin.copy(dirOrigin).normalize();
+	_q.setFromUnitVectors(_rotateDirOrigin, _rotateDirDest);
+	_m.makeRotationFromQuaternion(_q);
+	geometry.applyMatrix4(_m);
+}
 export class CoreTransform {
 	private static set_params_from_matrix_position = new Vector3();
 	private static set_params_from_matrix_quaternion = new Quaternion();
@@ -115,14 +129,6 @@ export class CoreTransform {
 		return this._matrix;
 	}
 
-	static rotateGeometry(geometry: BufferGeometry, dirOrigin: Vector3, dirDest: Vector3) {
-		_rotateDirDest.copy(dirDest).normalize();
-		_rotateDirOrigin.copy(dirOrigin).normalize();
-		_q.setFromUnitVectors(_rotateDirOrigin, _rotateDirDest);
-		// this._rotate_geometry_m.identity(); // not entirely sure this is necessary
-		_m.makeRotationFromQuaternion(_q);
-		geometry.applyMatrix4(_m);
-	}
 	static rotateObject(object: Object3D, dirOrigin: Vector3, dirDest: Vector3) {
 		_rotateDirDest.copy(dirDest).normalize();
 		_rotateDirOrigin.copy(dirOrigin).normalize();

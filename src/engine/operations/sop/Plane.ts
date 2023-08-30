@@ -1,6 +1,6 @@
 import {BaseSopOperation} from './_Base';
 import {BufferGeometry, Vector2, Vector3, PlaneGeometry, Quaternion, BoxGeometry, Box3} from 'three';
-import {CoreTransform} from '../../../core/Transform';
+import {CoreTransform, rotateGeometry} from '../../../core/Transform';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {isBooleanTrue} from '../../../core/BooleanValue';
@@ -56,7 +56,7 @@ export class PlaneSopOperation extends BaseSopOperation {
 		// convert to buffer geo, as some render problems can occur otherwise
 		// geometry = BufferGeometryUtils.mergeGeometries([geometry])
 		// console.log(geometry, geometry.isBufferGeometry)
-		CoreTransform.rotateGeometry(geometry, DEFAULT_UP, params.direction);
+		rotateGeometry(geometry, DEFAULT_UP, params.direction);
 
 		const matrix = this._coreTransform.translationMatrix(params.center);
 		geometry.applyMatrix4(matrix);
@@ -97,7 +97,7 @@ export class PlaneSopOperation extends BaseSopOperation {
 		const size2d = new Vector2(tmpSize.x, tmpSize.y);
 		const geometry = this._createPlane(size2d, params);
 
-		CoreTransform.rotateGeometry(geometry, DEFAULT_UP, params.direction);
+		rotateGeometry(geometry, DEFAULT_UP, params.direction);
 		geometry.translate(tmpCenter.x, tmpCenter.y, tmpCenter.z);
 
 		const object = this._createPlaneObject(geometry, params);
