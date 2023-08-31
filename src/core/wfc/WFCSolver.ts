@@ -1,8 +1,9 @@
 import {WFCTilesCollection} from './WFCTilesCollection';
 import {TileCorners, TileConfig, EMPTY_TILE_ID, configTilesStats, TileConfigStats, solidTilesStats} from './WFCCommon';
+import {CoreWFCTileAttribute, WFCQuadTileAttribute} from './WFCAttributes';
+import {tileCubeLatticeDeform} from './WFCTileDeform';
 import {Object3D, Vector3, Vector4, Mesh} from 'three';
 import {CoreObject} from '../geometry/Object';
-import {tileCubeLatticeDeform} from './WFCTileDeform';
 import {QuadObject} from '../geometry/quad/QuadObject';
 import {QuadGraph, NeighbourData} from '../graph/quad/QuadGraph';
 import {QuadNode} from '../graph/quad/QuadNode';
@@ -10,10 +11,10 @@ import {Attribute} from '../geometry/Attribute';
 import {pushOnArrayAtEntry, popFromArrayAtEntry} from '../MapUtils';
 import {Number4} from '../../types/GlobalTypes';
 import {sample, spliceSample} from '../ArrayUtils';
-import {CoreWFCTileAttribute} from './WFCAttributes';
 import {setToArray} from '../SetUtils';
 import {NeighbourIndex, CCW_HALF_EDGE_SIDES} from '../graph/quad/QuadGraphCommon';
 import {mod} from '../math/_Module';
+import {QuadPrimitive} from '../geometry/quad/QuadPrimitive';
 
 const tileCorners: TileCorners = {
 	p0: new Vector3(),
@@ -64,21 +65,30 @@ export class WFCSolver {
 
 		this._quadPositionArray = this.quadObject.geometry.attributes[Attribute.POSITION].array;
 		const quadsCount = this.quadObject.geometry.quadsCount();
-		const index = this.quadObject.geometry.index;
+		const quadPrimitive = new QuadPrimitive(this.quadObject, 0);
 		for (let i = 0; i < quadsCount; i++) {
-			_v4.fromArray(index, i * 4);
-			const quadNode = this._quadGraph.addQuad(i, _v4.toArray() as Number4);
-			const quadTileConfigs = [...allTileConfigs];
-			const entropy = quadTileConfigs.length;
-			this._allowedTileConfigsByQuadId.set(i, quadTileConfigs);
-			pushOnArrayAtEntry(this._quadNodeByEntropy, entropy, quadNode);
-			if (entropy < this._lowestEntropy) {
-				this._lowestEntropy = entropy;
-			}
+			this._setupQuadNode(quadPrimitive, i, allTileConfigs);
 		}
 	}
 	objects(): Object3D[] {
 		return this._objects;
+	}
+	private _setupQuadNode(quadPrimitive: QuadPrimitive, i: number, allTileConfigs: TileConfig[]) {
+		quadPrimitive.setIndex(i, this.quadObject);
+		const tileId: string = (quadPrimitive.attribValue(WFCQuadTileAttribute.TILE_ID) as string | undefined) || '';
+		const tileIds = tileId.trim().length > 0 ? tileId.split(' ') : [];
+		const tileIdsSet = new Set<string>(tileIds);
+		const index = this.quadObject.geometry.index;
+		_v4.fromArray(index, i * 4);
+		const quadNode = this._quadGraph.addQuad(i, _v4.toArray() as Number4);
+		const quadTileConfigs =
+			tileIds.length > 0 ? allTileConfigs.filter((c) => tileIdsSet.has(c.tileId)) : [...allTileConfigs];
+		const entropy = quadTileConfigs.length;
+		this._allowedTileConfigsByQuadId.set(i, quadTileConfigs);
+		pushOnArrayAtEntry(this._quadNodeByEntropy, entropy, quadNode);
+		if (entropy < this._lowestEntropy) {
+			this._lowestEntropy = entropy;
+		}
 	}
 
 	step(quadSeed: number, configSeed: number) {
