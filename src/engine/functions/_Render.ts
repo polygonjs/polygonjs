@@ -50,6 +50,9 @@ interface RestoreContext {
 }
 
 export class renderPixel extends ObjectNamedFunction5<[Material, Camera, Color, Vector2, Vector4]> {
+	// Note for this to work on iOS:
+	// The materials used for picking should have their transparency OFF.
+	// This could potentially be done automatically by traversing the scene first.
 	private _renderTarget: WebGLRenderTarget = new WebGLRenderTarget(1, 1, {
 		minFilter: LinearFilter,
 		magFilter: NearestFilter,
