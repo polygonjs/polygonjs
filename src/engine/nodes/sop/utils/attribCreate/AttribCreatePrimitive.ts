@@ -4,10 +4,7 @@ import {ValueArrayByObject, initArrayIfRequired} from './Common';
 import {AttribCreateSopNodeParams} from '../../../../operations/sop/utils/attribCreate/Common';
 import {AttribType} from '../../../../../core/geometry/Constant';
 import {TypeAssert} from '../../../../poly/Assert';
-import {
-	PrimitiveNumberAttribute,
-	PrimitiveStringAttribute,
-} from '../../../../../core/geometry/primitive/PrimitiveAttribute';
+
 import {primitivesFromObjectFromGroup} from '../../../../../core/geometry/primitive/CorePrimitiveUtils';
 import {corePrimitiveClassFactory} from '../../../../../core/geometry/CoreObjectFactory';
 import {BaseCoreObject} from '../../../../../core/geometry/_BaseObject';
@@ -67,7 +64,11 @@ async function _addNumericAttributeToPrimitives(
 		if (!attribute) {
 			const primitivesCount = primitiveClass.primitivesCount(object);
 			const values = new Array(primitivesCount * size).fill(0);
-			attribute = new PrimitiveNumberAttribute(values, size);
+			attribute = {
+				array: values,
+				itemSize: size,
+				isString: false,
+			};
 			primitiveClass.addAttribute(object, attribName, attribute);
 		}
 
@@ -154,7 +155,7 @@ async function _addStringAttributeToPrimitives(
 		const values = new Array(primitivesCount).fill('');
 		let attribute = primitiveClass.attribute(object, attribName);
 		if (!attribute) {
-			attribute = new PrimitiveStringAttribute(values, 1);
+			attribute = {array: values, itemSize: 1, isString: true};
 			primitiveClass.addAttribute(object, attribName, attribute);
 		}
 

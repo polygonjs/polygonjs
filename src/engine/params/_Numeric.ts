@@ -26,7 +26,7 @@ export abstract class TypedNumericParam<T extends ParamType> extends TypedParam<
 		const converted = this.convert(this._raw_input);
 		if (converted != null) {
 			if (this._expression_controller) {
-				this._expression_controller.set_expression(undefined, false);
+				this._expression_controller.setExpression(undefined, false);
 				this.emitController.emit(ParamEvent.EXPRESSION_UPDATED); // ensure expression is considered removed
 			}
 			const wasErrored = this.states.error.active();
@@ -40,7 +40,7 @@ export abstract class TypedNumericParam<T extends ParamType> extends TypedParam<
 				this.states.error.clear();
 				this._expression_controller = this._expression_controller || new ExpressionController(this);
 				if (this._raw_input != this._expression_controller.expression()) {
-					this._expression_controller.set_expression(this._raw_input);
+					this._expression_controller.setExpression(this._raw_input);
 					this.emitController.emit(ParamEvent.EXPRESSION_UPDATED);
 				}
 			} else {
@@ -51,9 +51,9 @@ export abstract class TypedNumericParam<T extends ParamType> extends TypedParam<
 	protected override async processComputation(): Promise<void> {
 		if (this.expressionController?.active() && !this.expressionController.entitiesDependent()) {
 			const expression_result = await this.expressionController.computeExpression();
-			if (this.expressionController.is_errored()) {
+			if (this.expressionController.isErrored()) {
 				this.states.error.set(
-					`expression error: "${this.expressionController.expression()}" (${this.expressionController.error_message()})`
+					`expression error: "${this.expressionController.expression()}" (${this.expressionController.errorMessage()})`
 				);
 			} else {
 				const converted = this.convert(expression_result);

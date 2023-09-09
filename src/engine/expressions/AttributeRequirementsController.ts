@@ -52,6 +52,19 @@ export class AttributeRequirementsController {
 		// TODO: add test that a Point Sop can take an expression that does not require attributes
 		return 'true';
 	}
+	missingAttributesLine(): string {
+		if (this._attributeNames) {
+			let lineElements: string[] = ['(()=>{', 'const missingAttributes = [];'];
+			for (let attribName of this._attributeNames) {
+				const varName = AttributeRequirementsController._varAttribute(attribName);
+				lineElements.push(`if( !${varName} ) {	missingAttributes.push('${attribName}'); }`);
+			}
+
+			lineElements.push('return missingAttributes;', '})');
+			return lineElements.join('');
+		}
+		return '[]';
+	}
 
 	add(attribName: string) {
 		this._attributeNames = this._attributeNames || new Set<string>();

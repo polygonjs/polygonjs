@@ -1,3 +1,5 @@
+import {Poly} from '../../src/engine/Poly';
+
 type Callback = () => void;
 interface ConsoleHistory {
 	log: any[];
@@ -46,9 +48,17 @@ function restoreConsole(originalConsole: PreservedConsole) {
 	console.error = originalConsole.error;
 }
 export async function checkConsolePrints(callback: Callback) {
-	// Save original console methods
+	// save logger state
+	const previousLogger = Poly.logger();
 	const {originalConsole, consoleHistory} = overrideConsole();
+	Poly.setLogger(originalConsole);
+
+	// run
 	await callback();
+
+	// restore
+	Poly.setLogger(previousLogger);
 	restoreConsole(originalConsole);
+
 	return consoleHistory;
 }

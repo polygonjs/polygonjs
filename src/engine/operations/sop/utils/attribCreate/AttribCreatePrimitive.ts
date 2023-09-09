@@ -4,10 +4,6 @@ import {AttribCreateSopParams} from '../../AttribCreate';
 import {AttribType} from '../../../../../core/geometry/Constant';
 import {TypeAssert} from '../../../../poly/Assert';
 import {
-	PrimitiveNumberAttribute,
-	PrimitiveStringAttribute,
-} from '../../../../../core/geometry/primitive/PrimitiveAttribute';
-import {
 	primitivesFromObject,
 	primitivesFromObjectFromGroup,
 } from '../../../../../core/geometry/primitive/CorePrimitiveUtils';
@@ -53,8 +49,8 @@ function _addAttributeToPrimitives(
 		const primitivesCount = primitiveClass.primitivesCount(object);
 		const values = new Array(primitivesCount * params.size).fill(value);
 		attribute = isString
-			? new PrimitiveStringAttribute(values, 1)
-			: new PrimitiveNumberAttribute(values, params.size);
+			? {array: values, itemSize: 1, isString}
+			: {array: values, itemSize: params.size, isString};
 		primitiveClass.addAttribute(object, attribName, attribute);
 	}
 

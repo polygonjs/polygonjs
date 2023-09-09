@@ -1,13 +1,12 @@
-export class TypedPrimitiveAttribute<T extends number | string> {
-	protected _isString: boolean = false;
-	constructor(public array: T[], public readonly itemSize: number) {}
-	isString() {
-		return this._isString;
-	}
+export interface TypedPrimitiveAttribute<T extends number | string> {
+	isString: boolean;
+	array: T[];
+	itemSize: number;
 }
-export type BasePrimitiveAttribute = TypedPrimitiveAttribute<number | string>;
-
-export class PrimitiveNumberAttribute extends TypedPrimitiveAttribute<number> {}
-export class PrimitiveStringAttribute extends TypedPrimitiveAttribute<number> {
-	protected override _isString: boolean = true;
+export interface BasePrimitiveAttribute extends TypedPrimitiveAttribute<number | string> {}
+export interface PrimitiveNumberAttribute extends TypedPrimitiveAttribute<number> {
+	isString: false;
+}
+export interface PrimitiveStringAttribute extends TypedPrimitiveAttribute<string> {
+	isString: true;
 }

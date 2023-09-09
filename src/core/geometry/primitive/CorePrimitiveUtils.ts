@@ -97,7 +97,7 @@ export function primitiveAttributeTypes<T extends CoreObjectType>(
 	const attribNames = Object.keys(attributes);
 	const h: PolyDictionary<AttribType> = {};
 	for (const attribName of attribNames) {
-		h[attribName] = attributes[attribName].isString() ? AttribType.STRING : AttribType.NUMERIC;
+		h[attribName] = attributes[attribName].isString == true ? AttribType.STRING : AttribType.NUMERIC;
 	}
 	return h;
 }

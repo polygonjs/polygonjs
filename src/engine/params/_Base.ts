@@ -327,13 +327,8 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 	isMultiple(): boolean {
 		return this.componentNames().length > 0;
 	}
-	// create_components() {}
 	initComponents() {}
 
-	// expression
-	// set_expression(expression: string | null) {
-	// 	this.expressionController.set_expression(expression);
-	// }
 	hasExpression(): boolean {
 		return this.expressionController != null && this.expressionController.active(); // use this._expression_controller to avoid creating it
 	}

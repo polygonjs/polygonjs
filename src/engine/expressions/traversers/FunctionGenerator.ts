@@ -280,14 +280,15 @@ export class FunctionGenerator extends BaseTraverser {
 	public parseTree(parsedTree: ParsedTree) {
 		this.reset();
 
-		if (parsedTree.error_message == null) {
+		if (!parsedTree.errorMessage()) {
 			try {
 				// this.function_pre_entities_loop_lines = [];
 				this._attribute_requirements_controller = new AttributeRequirementsController();
 				// this.function_pre_body = ''
-				if (parsedTree.node) {
-					const function_main_string = this.traverse_node(parsedTree.node);
-					if (function_main_string && !this.is_errored()) {
+				const node = parsedTree.node();
+				if (node) {
+					const function_main_string = this.traverse_node(node);
+					if (function_main_string && !this.isErrored()) {
 						this.function_main_string = function_main_string;
 					}
 				} else {
@@ -319,13 +320,13 @@ export class FunctionGenerator extends BaseTraverser {
 					);
 				} catch (e) {
 					console.warn(e);
-					this.set_error('cannot generate function');
+					this.setError('cannot generate function');
 				}
 			} else {
-				this.set_error('cannot generate function body');
+				this.setError('cannot generate function body');
 			}
 		} else {
-			this.set_error('cannot parse expression');
+			this.setError('cannot parse expression');
 		}
 	}
 
@@ -385,7 +386,8 @@ export class FunctionGenerator extends BaseTraverser {
 						}
 						resolve()
 					} else {
-						const error = new Error('attribute not found')
+						const missingAttributes = ${this._attribute_requirements_controller.missingAttributesLine()}().join(', ');
+						const error = new Error('attribute ' + missingAttributes + ' not found')
 						_set_error_from_error(error)
 						reject(error)
 					}
@@ -412,7 +414,7 @@ export class FunctionGenerator extends BaseTraverser {
 	}
 	evalFunction() {
 		if (this.function) {
-			this.clear_error();
+			this.clearError();
 
 			const result = this.function(
 				CorePoint,
@@ -482,7 +484,7 @@ export class FunctionGenerator extends BaseTraverser {
 			}
 		}
 
-		this.set_error(`unknown method: ${method_name}`);
+		this.setError(`unknown method: ${method_name}`);
 	}
 	protected override traverse_BinaryExpression(node: jsep.BinaryExpression): string {
 		// if(node.right.type == 'Identifier'){
@@ -576,7 +578,7 @@ export class FunctionGenerator extends BaseTraverser {
 			if (method) {
 				return (this as any)[method_name]();
 			} else {
-				this.set_error(`identifier unknown: ${node.name}`);
+				this.setError(`identifier unknown: ${node.name}`);
 			}
 		} else {
 			return node.name; // @ptnum will call this method and return "ptnum"
@@ -646,7 +648,7 @@ export class FunctionGenerator extends BaseTraverser {
 		if (!methodConstructor) {
 			const availableMethods = expressionRegister.availableMethods();
 			const message = `method not found (${methodName}), available methods are: ${availableMethods.join(', ')}`;
-			this.set_error(message);
+			this.setError(message);
 			Poly.warn(message);
 			return;
 		}
@@ -662,7 +664,7 @@ export class FunctionGenerator extends BaseTraverser {
 			this.methodDependencies.push(methodDependency);
 		} else {
 			if (pathNode && CoreType.isString(pathArgument)) {
-				this.param.scene().missingExpressionReferencesController.register(this.param, pathArgument);
+				this.param.scene().missingExpressionReferencesController.register(this.param, pathArgument, pathNode);
 			}
 		}
 		// method_dependencies.resolved_graph_nodes.forEach((graph_node)=>{

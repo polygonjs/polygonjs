@@ -38,6 +38,7 @@ import {isBooleanTrue} from '../../../core/BooleanValue';
 import {ByBoundingObjectHelper} from './utils/delete/ByBoundingObjectHelper';
 import {geometryBuilder} from '../../../core/geometry/builders/geometryBuilder';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
+import {TypeAssert} from '../../poly/Assert';
 class DeleteSopParamsConfig extends NodeParamsConfig {
 	/** @param defines the class that should be deleted (objects or vertices) */
 	class = ParamConfig.INTEGER(ATTRIBUTE_CLASSES.indexOf(AttribClass.POINT), {
@@ -203,12 +204,18 @@ export class DeleteSopNode extends TypedSopNode<DeleteSopParamsConfig> {
 		const attribClass = ATTRIBUTE_CLASSES[this.pv.class];
 		switch (attribClass) {
 			case AttribClass.POINT:
-				await this._evalForPoints(coreGroup0, coreGroup1);
-				break;
+				return await this._evalForPoints(coreGroup0, coreGroup1);
+			case AttribClass.VERTEX:
+				this.states.error.set(`vertex not supported yet`);
+			case AttribClass.PRIMITIVE:
+				this.states.error.set(`primitive not supported yet`);
 			case AttribClass.OBJECT:
-				await this._evalForObjects(coreGroup0);
-				break;
+				return await this._evalForObjects(coreGroup0);
+			case AttribClass.CORE_GROUP:
+				this.states.error.set(`core group not supported yet`);
+				return;
 		}
+		TypeAssert.unreachable(attribClass);
 	}
 
 	setAttribClass(attribClass: AttribClass) {

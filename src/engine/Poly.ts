@@ -179,6 +179,9 @@ export class PolyEngine {
 	setLogger(logger: BaseCoreLogger | null) {
 		this._logger = logger;
 	}
+	logger() {
+		return this._logger;
+	}
 
 	log(message?: any, ...optionalParams: any[]) {
 		this._logger?.log(...[message, ...optionalParams]);

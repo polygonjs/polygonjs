@@ -4,32 +4,32 @@ import {CoreType} from '../../../core/Type';
 export const VARIABLE_PREFIX = '$';
 
 export abstract class BaseTraverser {
-	public _error_message: string | undefined;
+	private _errorMessage: string | undefined;
 
 	constructor(public param: BaseParamType) {}
 
-	protected clear_error() {
-		this._error_message = undefined;
+	protected clearError() {
+		this._errorMessage = undefined;
 	}
-	protected set_error(message: string) {
-		this._error_message = this._error_message || message;
+	protected setError(message: string) {
+		this._errorMessage = this._errorMessage || message;
 	}
 	protected _set_error_from_error_bound = this._set_error_from_error.bind(this);
 	private _set_error_from_error(error: Error | string) {
 		if (CoreType.isString(error)) {
-			this._error_message = error;
+			this._errorMessage = error;
 		} else {
-			this._error_message = error.message;
+			this._errorMessage = error.message;
 		}
 	}
-	is_errored(): boolean {
-		return this._error_message != null;
+	isErrored(): boolean {
+		return this._errorMessage != null;
 	}
-	error_message() {
-		return this._error_message;
+	errorMessage() {
+		return this._errorMessage;
 	}
 	reset() {
-		this._error_message = undefined;
+		this._errorMessage = undefined;
 	}
 
 	traverse_node(node: jsep.Expression): string | undefined {
@@ -38,7 +38,7 @@ export abstract class BaseTraverser {
 		if (method) {
 			return (this as any)[method_name](node);
 		} else {
-			this.set_error(`expression unknown node type: ${node.type}`);
+			this.setError(`expression unknown node type: ${node.type}`);
 		}
 	}
 

@@ -1,7 +1,5 @@
 import type {QUnit} from '../../../helpers/QUnit';
-import {BufferAttribute, Vector4} from 'three';
-import {Vector2} from 'three';
-import {Vector3} from 'three';
+import {Vector3,Vector2,BufferAttribute, Vector4} from 'three';
 import {AttribType, AttribClass, AttribSize} from '../../../../src/core/geometry/Constant';
 import {CoreEntity} from '../../../../src/core/geometry/Entity';
 import {TransformTargetType} from '../../../../src/core/Transform';
@@ -14,6 +12,7 @@ import {Vector2Param} from '../../../../src/engine/params/Vector2';
 import {Vector3Param} from '../../../../src/engine/params/Vector3';
 import {Vector4Param} from '../../../../src/engine/params/Vector4';
 import {StringOrNumber2, StringOrNumber3, StringOrNumber4} from '../../../../src/types/GlobalTypes';
+import {primitivesFromObject} from '../../../../src/core/geometry/primitive/CorePrimitiveUtils';
 export function testenginenodessopAttribCreate(qUnit: QUnit) {
 	qUnit.test('sop/attribCreate simple float vertex', async (assert) => {
 		const geo1 = window.geo1;
@@ -101,7 +100,10 @@ export function testenginenodessopAttribCreate(qUnit: QUnit) {
 
 		await attrib_create1.compute();
 		assert.ok(attrib_create1.states.error.active());
-		assert.equal(attrib_create1.states.error.message(), 'expression evalution error: attribute not found');
+		assert.equal(
+			attrib_create1.states.error.message(),
+			'expression evaluation error: attribute doesnotexist not found'
+		);
 
 		attrib_create1.p.value1.set('@P.y > 0');
 		await attrib_create1.compute();
@@ -538,6 +540,87 @@ export function testenginenodessopAttribCreate(qUnit: QUnit) {
 		const objects = coreGroup.allCoreObjects();
 		assert.deepEqual((objects[0].attribValue('center') as Vector3).toArray(), [1, 2, 3]);
 		assert.deepEqual((objects[1].attribValue('center') as Vector3).toArray(), [4, 5, 6]);
+	});
+
+	qUnit.test('sop/attribCreate generates error when attribute is not found', async (assert) => {
+		const geo1 = window.geo1;
+
+		const plane1 = geo1.createNode('plane');
+
+		const attribCreate1 = geo1.createNode('attribCreate');
+		attribCreate1.setInput(0, plane1);
+		attribCreate1.setAttribClass(AttribClass.POINT);
+
+		// with string
+		attribCreate1.setAttribType(AttribType.STRING);
+		attribCreate1.p.name.set('t');
+		attribCreate1.p.string.set('t`@ptnum`');
+
+		await attribCreate1.compute();
+		assert.notOk(attribCreate1.states.error.active(), 'no error');
+		assert.notOk(attribCreate1.states.error.message(), 'no error');
+
+		attribCreate1.p.string.set('t`@primnum`');
+		await attribCreate1.compute();
+		assert.ok(attribCreate1.states.error.active());
+		assert.equal(
+			attribCreate1.states.error.message(),
+			'expression evaluation error: attribute primnum not found',
+			'error'
+		);
+
+		// with float
+		attribCreate1.setAttribType(AttribType.NUMERIC);
+		attribCreate1.p.size.set(1);
+		attribCreate1.p.value1.set('@ptnum');
+		await attribCreate1.compute();
+		assert.notOk(attribCreate1.states.error.active(), 'no error');
+		assert.notOk(attribCreate1.states.error.message(), 'no error');
+		attribCreate1.p.value1.set('@primnum');
+		await attribCreate1.compute();
+		assert.ok(attribCreate1.states.error.active());
+		assert.equal(
+			attribCreate1.states.error.message(),
+			'expression evaluation error: attribute primnum not found',
+			'error'
+		);
+
+		// with vector2
+		attribCreate1.setAttribType(AttribType.NUMERIC);
+		attribCreate1.p.size.set(2);
+		attribCreate1.p.value2.x.set('@ptnum');
+		await attribCreate1.compute();
+		assert.notOk(attribCreate1.states.error.active(), 'no error');
+		assert.notOk(attribCreate1.states.error.message(), 'no error');
+		attribCreate1.p.value2.x.set('@primnum');
+		await attribCreate1.compute();
+		assert.ok(attribCreate1.states.error.active());
+		assert.equal(
+			attribCreate1.states.error.message(),
+			'expression evaluation error: attribute primnum not found',
+			'error'
+		);
+	});
+
+	qUnit.test('sop/attribCreate prim attrib', async (assert) => {
+		const geo1 = window.geo1;
+
+		const plane1 = geo1.createNode('plane');
+
+		const attribCreate1 = geo1.createNode('attribCreate');
+		attribCreate1.setInput(0, plane1);
+		attribCreate1.setAttribClass(AttribClass.PRIMITIVE);
+		attribCreate1.p.name.set('t');
+		attribCreate1.p.size.set(1);
+		attribCreate1.p.value1.set('(@primnum+1)*2');
+
+		const container = await attribCreate1.compute();
+		const object = container.coreContent()!.allObjects()[0];
+		const primitives = primitivesFromObject(object);
+		assert.deepEqual(
+			primitives.map((p) => p.attribValue('t')),
+			[2, 4]
+		);
 	});
 
 	interface MultiTestOptions {

@@ -6,13 +6,19 @@ import {PolyScene} from '../../PolyScene';
 import {CoreWalker} from '../../../../core/Walker';
 import {CoreGraphNodeId} from '../../../../core/graph/CoreGraph';
 import {SetUtils} from '../../../../core/SetUtils';
+import jsep from 'jsep';
 
 export class MissingReferencesController {
 	private references: Map<CoreGraphNodeId, Set<MissingReference>> = new Map();
+	private _toIgnore: WeakMap<jsep.Expression, boolean> = new WeakMap();
 
 	constructor(private scene: PolyScene) {}
 
-	register(param: BaseParamType, path: string): MissingReference {
+	register(param: BaseParamType, path: string, jsepNode?: jsep.Expression): MissingReference | undefined {
+		if (jsepNode && this._toIgnore.get(jsepNode) == true) {
+			return;
+		}
+
 		const missingReference = new MissingReference(param, path);
 		MapUtils.addToSetAtEntry(this.references, param.graphNodeId(), missingReference);
 
@@ -20,6 +26,10 @@ export class MissingReferencesController {
 	}
 	deregisterParam(param: BaseParamType) {
 		this.references.delete(param.graphNodeId());
+	}
+
+	registerToIgnore(jsepNode: jsep.Expression) {
+		this._toIgnore.set(jsepNode, true);
 	}
 
 	//

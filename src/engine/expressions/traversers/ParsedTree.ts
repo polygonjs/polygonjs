@@ -1,5 +1,6 @@
 import jsep from 'jsep';
 import {CoreType} from '../../../core/Type';
+import {BaseParamType} from '../../params/_Base';
 jsep.addUnaryOp('@');
 let precedence = 10;
 jsep.addBinaryOp('**', precedence);
@@ -13,30 +14,48 @@ const JSEP_LITERAL = 'Literal';
 const JSEP_CALL_EXPRESSION = 'CallExpression';
 const STRING_EXPRESSION_SEPARATOR = '`';
 
-export class ParsedTree {
-	public node: jsep.Expression | undefined;
-	public error_message: string | undefined;
+export function stringValueElements(v: string): string[] {
+	if (v != null) {
+		if (CoreType.isString(v)) {
+			return v.split(STRING_EXPRESSION_SEPARATOR);
+		} else {
+			return [];
+		}
+	} else {
+		return [];
+	}
+}
 
-	constructor() {}
+export class ParsedTree {
+	private _node: jsep.Expression | undefined;
+	private _errorMessage: string | undefined;
+
+	constructor(private _param: BaseParamType) {}
+	node() {
+		return this._node;
+	}
+	errorMessage() {
+		return this._errorMessage;
+	}
 
 	parseExpression(string: string) {
 		try {
 			this.reset();
-			this.node = jsep(string);
+			this._node = jsep(string);
 		} catch (e) {
 			const message = `could not parse the expression '${string}' (error: ${e})`;
-			this.error_message = message;
+			this._errorMessage = message;
 		}
 	}
 	parseExpressionForStringParam(string: string) {
 		try {
 			this.reset();
 
-			const elements = ParsedTree.stringValueElements(string);
+			const elements = stringValueElements(string);
 			const nodes = [];
 			for (let i = 0; i < elements.length; i++) {
 				const element = elements[i];
-				let node;
+				let node: jsep.Expression;
 				if (i % 2 == 1) {
 					node = jsep(element);
 				} else {
@@ -57,6 +76,9 @@ export class ParsedTree {
 						value: `'${sanitizedElement}'`,
 						raw: `'${sanitizedElement}'`,
 					};
+					// we must add this node to the ignore list of the missing references controller.
+					// If it is not added, a param with the name of the element will be searched for.
+					this._param.scene().missingExpressionReferencesController.registerToIgnore(node);
 				}
 				nodes.push(node);
 				// nodes.push({
@@ -79,7 +101,7 @@ export class ParsedTree {
 			// 	last_plus_node = plus_node;
 			// }
 			// this.node = last_plus_node
-			this.node = (<unknown>{
+			this._node = (<unknown>{
 				type: JSEP_CALL_EXPRESSION,
 				arguments: nodes,
 				callee: {
@@ -89,21 +111,10 @@ export class ParsedTree {
 			}) as jsep.Compound;
 		} catch (e) {
 			const message = `could not parse the expression '${string}' (error: ${e})`;
-			this.error_message = message;
+			this._errorMessage = message;
 		}
 	}
 
-	static stringValueElements(v: string): string[] {
-		if (v != null) {
-			if (CoreType.isString(v)) {
-				return v.split(STRING_EXPRESSION_SEPARATOR);
-			} else {
-				return [];
-			}
-		} else {
-			return [];
-		}
-	}
 	// static string_value_contains_expression(v:string): boolean{
 	// 	return ((this.string_value_elements(v).length - 1) % 2) === 0;
 	// }
@@ -138,7 +149,7 @@ export class ParsedTree {
 	// }
 
 	private reset() {
-		this.node = undefined;
-		this.error_message = undefined;
+		this._node = undefined;
+		this._errorMessage = undefined;
 	}
 }

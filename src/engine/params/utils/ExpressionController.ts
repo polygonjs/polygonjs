@@ -36,7 +36,7 @@ export class ExpressionController<T extends ParamType> {
 	protected _entities: CoreEntity[] | undefined;
 	protected _entityCallback: EntityCallback<T> | undefined;
 	protected _manager: ExpressionManager | undefined;
-	protected _method_dependencies_by_graph_node_id: Map<CoreGraphNodeId, MethodDependency> | undefined;
+	protected _methodDependenciesByGraphNodeId: Map<CoreGraphNodeId, MethodDependency> | undefined;
 	// private _reset_bound = this.reset.bind(this);
 	constructor(protected param: BaseParamType) {
 		// this.param.dirtyController.addPostDirtyHook('expression_controller_reset', this._reset_bound);
@@ -49,14 +49,14 @@ export class ExpressionController<T extends ParamType> {
 		this._resetMethodDependencies();
 	}
 	private _resetMethodDependencies() {
-		this._method_dependencies_by_graph_node_id?.forEach((method_dependency) => {
-			method_dependency.dispose();
+		this._methodDependenciesByGraphNodeId?.forEach((methodDependency) => {
+			methodDependency.dispose();
 		});
-		this._method_dependencies_by_graph_node_id?.clear();
+		this._methodDependenciesByGraphNodeId?.clear();
 	}
-	registerMethodDependency(method_dependency: MethodDependency) {
-		this._method_dependencies_by_graph_node_id = this._method_dependencies_by_graph_node_id || new Map();
-		this._method_dependencies_by_graph_node_id.set(method_dependency.graphNodeId(), method_dependency);
+	registerMethodDependency(methodDependency: MethodDependency) {
+		this._methodDependenciesByGraphNodeId = this._methodDependenciesByGraphNodeId || new Map();
+		this._methodDependenciesByGraphNodeId.set(methodDependency.graphNodeId(), methodDependency);
 	}
 
 	active() {
@@ -65,15 +65,15 @@ export class ExpressionController<T extends ParamType> {
 	expression() {
 		return this._expression;
 	}
-	is_errored() {
+	isErrored() {
 		if (this._manager) {
-			return this._manager.is_errored();
+			return this._manager.isErrored();
 		}
 		return false;
 	}
-	error_message() {
+	errorMessage() {
 		if (this._manager) {
-			return this._manager.error_message();
+			return this._manager.errorMessage();
 		}
 		return null;
 	}
@@ -85,7 +85,7 @@ export class ExpressionController<T extends ParamType> {
 	// 	this._manager?.clear_error();
 	// }
 
-	set_expression(expression: string | undefined, set_dirty: boolean = true) {
+	setExpression(expression: string | undefined, set_dirty: boolean = true) {
 		this.param.scene().missingExpressionReferencesController.deregisterParam(this.param);
 		this.param.scene().expressionsController.deregisterParam(this.param);
 
@@ -120,8 +120,9 @@ export class ExpressionController<T extends ParamType> {
 	async computeExpressionForEntities(entities: CoreEntity[], callback: EntityCallback<T>) {
 		this._setEntities(entities, callback);
 		await this.computeExpression();
-		if (this._manager?.error_message()) {
-			this.param.node.states.error.set(`expression evalution error: ${this._manager?.error_message()}`);
+		const errorMessage = this._manager?.errorMessage();
+		if (errorMessage) {
+			this.param.node.states.error.set(`expression evaluation error: ${errorMessage}`);
 		}
 
 		this._resetEntities();

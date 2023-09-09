@@ -34,11 +34,11 @@ const _triangle = new Triangle();
 const _triangleNormal = new Vector3();
 const _q = new Quaternion();
 const _average = new Vector3();
-enum QuadSmoothMode {
+export enum QuadSmoothMode {
 	SQUARIFY = 'squarify',
 	AVERAGE = 'average',
 }
-const QUAD_SMOOTH_MODES: QuadSmoothMode[] = [QuadSmoothMode.AVERAGE, QuadSmoothMode.SQUARIFY];
+export const QUAD_SMOOTH_MODES: QuadSmoothMode[] = [QuadSmoothMode.AVERAGE, QuadSmoothMode.SQUARIFY];
 
 class QuadSmoothSopParamsConfig extends NodeParamsConfig {
 	/** @param mode */

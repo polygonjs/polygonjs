@@ -1,5 +1,5 @@
 import {ParamValuesTypeMap} from './types/ParamValuesTypeMap';
-import {ParsedTree} from './../expressions/traversers/ParsedTree';
+import {stringValueElements} from './../expressions/traversers/ParsedTree';
 import {ParamEvent} from './../poly/ParamEvent';
 import {TypedParam} from './_Base';
 import {ParamType} from '../poly/ParamType';
@@ -15,11 +15,11 @@ export abstract class TypedStringParam<
 	}
 
 	protected override processRawInput() {
-		if (ParsedTree.stringValueElements(this._raw_input).length >= 3) {
+		if (stringValueElements(this._raw_input).length >= 3) {
 			this._expression_controller = this._expression_controller || new ExpressionController(this);
 			if (this._raw_input != this._expression_controller.expression()) {
 				this.states.error.clear();
-				this._expression_controller.set_expression(this._raw_input, false);
+				this._expression_controller.setExpression(this._raw_input, false);
 				this.setDirty();
 				this.emitController.emit(ParamEvent.EXPRESSION_UPDATED);
 			}
@@ -32,9 +32,9 @@ export abstract class TypedStringParam<
 	protected override async processComputation(): Promise<void> {
 		if (this.expressionController?.active() && !this.expressionController.entitiesDependent()) {
 			const expressionResult = await this.expressionController.computeExpression();
-			if (this.expressionController.is_errored()) {
+			if (this.expressionController.isErrored()) {
 				this.states.error.set(
-					`expression error: "${this.expressionController.expression()}" (${this.expressionController.error_message()})`
+					`expression error: "${this.expressionController.expression()}" (${this.expressionController.errorMessage()})`
 				);
 			} else {
 				const converted = this.convert(expressionResult);

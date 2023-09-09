@@ -64,7 +64,7 @@ export class StringParam extends TypedStringParam<ParamType.STRING> {
 			this.emitController.emit(ParamEvent.VALUE_UPDATED);
 			this.options.executeCallback();
 			if (this._expression_controller) {
-				this._expression_controller.set_expression(undefined, false);
+				this._expression_controller.setExpression(undefined, false);
 				this._expression_controller = undefined;
 				this.emitController.emit(ParamEvent.EXPRESSION_UPDATED); // ensure expression is considered removed
 			}

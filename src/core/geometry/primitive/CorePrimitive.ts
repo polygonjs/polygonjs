@@ -334,7 +334,7 @@ export abstract class CorePrimitive<T extends CoreObjectType> extends CoreEntity
 	}
 	setAttribValueFromVector2(attribName: string, value: Vector2) {
 		const attrib = this.attribute(attribName);
-		if (!attrib || attrib.isString()) {
+		if (!attrib || attrib.isString == true) {
 			return;
 		}
 
@@ -342,14 +342,14 @@ export abstract class CorePrimitive<T extends CoreObjectType> extends CoreEntity
 	}
 	setAttribValueFromVector3(attribName: string, value: Vector3) {
 		const attrib = this.attribute(attribName);
-		if (!attrib || attrib.isString()) {
+		if (!attrib || attrib.isString == true) {
 			return;
 		}
 		value.toArray(attrib.array as number[], this._index * 3);
 	}
 	setAttribValueFromVector4(attribName: string, value: Vector4) {
 		const attrib = this.attribute(attribName);
-		if (!attrib || attrib.isString()) {
+		if (!attrib || attrib.isString == true) {
 			return;
 		}
 		value.toArray(attrib.array as number[], this._index * 4);
