@@ -305,7 +305,7 @@ export enum AttribClass {
 	VERTEX = 'vertex',
 	PRIMITIVE = 'primitive',
 	OBJECT = 'object',
-	CORE_GROUP = 'container',
+	CORE_GROUP = 'coreGroup',
 }
 export const ATTRIBUTE_CLASSES: Array<AttribClass> = [
 	AttribClass.POINT,

@@ -10,7 +10,7 @@ import {CoreType} from '../Type';
 import {ArrayUtils} from '../ArrayUtils';
 import {Poly} from '../../engine/Poly';
 import {CoreEntity} from './Entity';
-import {CoreObjectType, ObjectContent, isObject3D} from './ObjectContent';
+import {CoreObjectType, ObjectBuilder, ObjectContent, isObject3D} from './ObjectContent';
 import {coreObjectFactory, coreObjectInstanceFactory} from './CoreObjectFactory';
 
 // CAD
@@ -96,8 +96,11 @@ export class CoreGroup extends CoreEntity {
 		}
 		this._allObjects.length = 0;
 	}
-	geometry(){
+	geometry() {
 		return null;
+	}
+	builder<T extends CoreObjectType>(): ObjectBuilder<T> | undefined {
+		return undefined;
 	}
 
 	//

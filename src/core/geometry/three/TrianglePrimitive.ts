@@ -1,7 +1,8 @@
 import {Triangle, Vector3, Mesh} from 'three';
 import {CoreFace} from '../primitive/CoreFace';
-import {CoreObjectType, ObjectContent} from '../ObjectContent';
+import {CoreObjectType, ObjectBuilder, ObjectContent} from '../ObjectContent';
 import {CoreThreejsPrimitive, BufferGeometryWithPrimitiveAttributes} from './CoreThreejsPrimitive';
+import {threeMeshFromPrimitives} from './builders/Mesh';
 
 const _coreFace = new CoreFace();
 const _triangle = new Triangle();
@@ -31,5 +32,8 @@ export class TrianglePrimitive extends CoreThreejsPrimitive {
 		_coreFace.triangle(_triangle);
 		_triangle.getNormal(target);
 		return target;
+	}
+	override builder<T extends CoreObjectType>() {
+		return threeMeshFromPrimitives as any as ObjectBuilder<T>;
 	}
 }

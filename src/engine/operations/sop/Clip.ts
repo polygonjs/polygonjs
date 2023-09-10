@@ -12,7 +12,6 @@ import {
 	Object3D,
 	Vector3,
 	Plane,
-	// Matrix4,
 } from 'three';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {MeshWithBVH, ExtendedTriangle} from '../../../core/geometry/bvh/three-mesh-bvh';
@@ -23,7 +22,7 @@ import {isBooleanTrue} from '../../../core/Type';
 import {SUBTRACTION, Brush, Evaluator} from '../../../core/thirdParty/three-bvh-csg';
 import {rotateGeometry} from '../../../core/Transform';
 import {CoreGeometry} from '../../../core/geometry/Geometry';
-import {CoreGeometryBuilderMesh} from '../../../core/geometry/builders/Mesh';
+import {CoreGeometryBuilderMesh} from '../../../core/geometry/three/builders/Mesh';
 import {ObjectUtils} from '../../../core/ObjectUtils';
 
 interface ClipSopParams extends DefaultOperationParams {

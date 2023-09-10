@@ -1,5 +1,5 @@
 // import {TypeAssert} from '../../../engine/poly/Assert';
-import {ObjectType} from '../Constant';
+import {ObjectType} from '../../Constant';
 import {CoreGeometryBuilderLineSegments} from './LineSegments';
 import {CoreGeometryBuilderMesh} from './Mesh';
 import {CoreGeometryBuilderPoints} from './Points';

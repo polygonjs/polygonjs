@@ -13,7 +13,7 @@ import {CoreType} from '../../Type';
 import {BaseVertexAttribute} from './VertexAttribute';
 import {DOT, ComponentName, COMPONENT_INDICES} from '../Constant';
 import {VertexAttributesDict} from './Common';
-import {CoreObjectType, ObjectContent} from '../ObjectContent';
+import {CoreObjectType, ObjectBuilder, ObjectContent} from '../ObjectContent';
 
 // const _coreFace = new CoreFace();
 // const _triangle = new Triangle();
@@ -23,6 +23,9 @@ export abstract class CoreVertex<T extends CoreObjectType> extends CoreEntity {
 	constructor(object?: ObjectContent<T>, index?: number) {
 		super(object, index);
 		this._object = object;
+	}
+	builder<T extends CoreObjectType>(): ObjectBuilder<T> | undefined {
+		return undefined;
 	}
 
 	static addAttribute<T extends CoreObjectType>(

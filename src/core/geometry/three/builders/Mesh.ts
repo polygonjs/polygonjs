@@ -1,7 +1,10 @@
-import {BufferGeometry} from 'three';
+import {BufferGeometry, Mesh, Vector3} from 'three';
 import {CoreGeometryBuilderBase} from './_Base';
-import {CorePoint} from '../Point';
-import {PolyDictionary} from '../../../types/GlobalTypes';
+import {CorePoint} from '../../Point';
+import {PolyDictionary} from '../../../../types/GlobalTypes';
+import {CoreObjectType, ObjectBuilder, ObjectContent} from '../../ObjectContent';
+import {CoreEntity} from '../../Entity';
+import {TrianglePrimitive} from '../TrianglePrimitive';
 
 export class CoreGeometryBuilderMesh extends CoreGeometryBuilderBase {
 	protected _filterPoints(points: CorePoint[]): CorePoint[] {
@@ -76,3 +79,35 @@ export class CoreGeometryBuilderMesh extends CoreGeometryBuilderBase {
 		}
 	}
 }
+
+const _v3 = new Vector3();
+const STRIDE = 3;
+export const threeMeshFromPrimitives: ObjectBuilder<CoreObjectType.THREEJS> = (
+	object: ObjectContent<CoreObjectType.THREEJS>,
+	entities: CoreEntity[]
+) => {
+	const mesh = object as ObjectContent<CoreObjectType.THREEJS> as Mesh;
+	const geometry = mesh.geometry;
+	if (!geometry) {
+		return undefined;
+	}
+	const oldIndex = geometry.getIndex();
+	if (!oldIndex) {
+		return undefined;
+	}
+	const oldIndexArray = oldIndex.array;
+
+	const primitives = entities as TrianglePrimitive[];
+
+	const newIndices = new Array(primitives.length * STRIDE);
+
+	let i = 0;
+	for (const primitive of primitives) {
+		_v3.fromArray(oldIndexArray, primitive.index() * STRIDE);
+		_v3.toArray(newIndices, i * STRIDE);
+		i++;
+	}
+	geometry.setIndex(newIndices);
+
+	return mesh;
+};

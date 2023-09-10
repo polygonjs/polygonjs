@@ -13,7 +13,7 @@ import {CoreType} from '../../Type';
 import {BasePrimitiveAttribute} from './PrimitiveAttribute';
 import {DOT, ComponentName, COMPONENT_INDICES} from '../Constant';
 import {PrimitiveAttributesDict} from './Common';
-import {CoreObjectType, ObjectContent} from '../ObjectContent';
+import {CoreObjectType, ObjectContent, ObjectBuilder} from '../ObjectContent';
 
 export abstract class CorePrimitive<T extends CoreObjectType> extends CoreEntity {
 	protected _object?: ObjectContent<T>;
@@ -21,7 +21,9 @@ export abstract class CorePrimitive<T extends CoreObjectType> extends CoreEntity
 		super(object, index);
 		this._object = object;
 	}
-
+	builder<T extends CoreObjectType>(): ObjectBuilder<T> | undefined {
+		return undefined;
+	}
 	static primitivesCount<T extends CoreObjectType>(object: ObjectContent<T>) {
 		return 0;
 	}

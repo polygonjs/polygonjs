@@ -5,6 +5,7 @@ import type {CsgGeometry} from './csg/CsgCommon';
 import type {QuadGeometry} from './quad/QuadGeometry';
 import type {SDFGeometry} from './sdf/SDFCommon';
 import type {TetGeometry} from './tet/TetGeometry';
+import {CoreEntity} from './Entity';
 
 export enum CoreObjectType {
 	THREEJS = 'Object3D',
@@ -71,3 +72,8 @@ export interface MergeCompactOptions {
 	objectType: string;
 	onError: (message: string) => void;
 }
+
+export type ObjectBuilder<T extends CoreObjectType> = (
+	object: ObjectContent<T>,
+	entities: CoreEntity[]
+) => ObjectContent<T> | undefined;

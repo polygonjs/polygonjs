@@ -12,6 +12,7 @@ import {CoreGeometry} from './Geometry';
 import {CoreEntity} from './Entity';
 import {CoreType} from '../Type';
 import {DOT, ComponentName, COMPONENT_INDICES} from './Constant';
+import {CoreObjectType, ObjectBuilder} from './ObjectContent';
 
 export class CorePoint extends CoreEntity {
 	// _position: Vector3 | undefined;
@@ -37,6 +38,9 @@ export class CorePoint extends CoreEntity {
 	}
 	geometry() {
 		return this._geometry;
+	}
+	builder<T extends CoreObjectType>(): ObjectBuilder<T> | undefined {
+		return undefined;
 	}
 
 	attribSize(attribName: string): number {

@@ -5,7 +5,7 @@ import {AttribType, AttribSize, ObjectData} from './Constant';
 import {CoreEntity} from './Entity';
 import {CoreType} from '../Type';
 import {SetUtils} from '../../core/SetUtils';
-import {ObjectContent, CoreObjectType, ObjectGeometryMap, MergeCompactOptions} from './ObjectContent';
+import {ObjectContent, CoreObjectType, ObjectGeometryMap, MergeCompactOptions, ObjectBuilder} from './ObjectContent';
 import {TransformTargetType} from '../Transform';
 import {ObjectTransformMode, ObjectTransformSpace} from '../TransformSpace';
 import {EntityGroupCollection} from './EntityGroupCollection';
@@ -65,6 +65,9 @@ export abstract class BaseCoreObject<T extends CoreObjectType> extends CoreEntit
 	}
 	geometry(): ObjectGeometryMap[T] | null {
 		return this._object?.geometry || null; //(this._object as Mesh).geometry as BufferGeometry | null;
+	}
+	builder<T extends CoreObjectType>(): ObjectBuilder<T> | undefined {
+		return undefined;
 	}
 	static attributeRef<OT extends CoreObjectType, T extends ParamConvertibleJsType>(
 		object: ObjectContent<OT>,

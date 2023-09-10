@@ -22,7 +22,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CoreObject} from '../../../core/geometry/Object';
 import {CorePoint} from '../../../core/geometry/Point';
 import {MapUtils} from '../../../core/MapUtils';
-import {geometryBuilder} from '../../../core/geometry/builders/geometryBuilder';
+import {geometryBuilder} from '../../../core/geometry/three/builders/geometryBuilder';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 class SplitSopParamsConfig extends NodeParamsConfig {
 	/** @param type of attribute to use */

@@ -1,17 +1,14 @@
 import {AttribValue, NumericAttribValue} from '../../types/GlobalTypes';
 import {Vector2, Vector3, Vector4} from 'three';
+import {CoreObjectType, ObjectBuilder} from './ObjectContent';
 export abstract class CoreEntity {
 	protected _index: number = 0;
-	// protected _content?: T;
 	constructor(content?: any, index?: number) {
-		// this._content = content;
 		if (index != null) {
 			this._index = index;
 		}
 	}
-	// setContent(content: T) {
-	// 	this._content = content;
-	// }
+
 	index() {
 		return this._index;
 	}
@@ -19,8 +16,9 @@ export abstract class CoreEntity {
 		this._index = index;
 		return this;
 	}
-	abstract geometry(): any;
 
+	abstract geometry(): any;
+	abstract builder<T extends CoreObjectType>(): ObjectBuilder<T> | undefined;
 	abstract setAttribValue(attribName: string, attribValue: NumericAttribValue | string): void;
 	abstract attribValue(attribName: string, target?: Vector2 | Vector3 | Vector4): AttribValue | undefined;
 	abstract stringAttribValue(attribName: string): string | undefined;

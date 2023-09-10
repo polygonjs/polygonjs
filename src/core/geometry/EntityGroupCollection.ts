@@ -119,11 +119,7 @@ export class EntityGroupCollection {
 			}
 		}
 	}
-	// entities<E extends CoreEntity>(type: EntityGroupType, groupName: string, entities: E[]): E[] {
-	// 	const indices = this.findOrCreateGroup(type, groupName);
-	// 	const set = SetUtils.fromArray(indices);
-	// 	return entities.filter((e) => set.has(e.index()));
-	// }
+
 	private selectedIndices: Set<number> = new Set();
 	updateGroup(options: UpdateGroupOptions, selectionStates: CoreEntitySelectionState) {
 		const {type, groupName, operation, invert} = options;

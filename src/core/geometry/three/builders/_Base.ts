@@ -1,8 +1,8 @@
-import {CorePoint} from '../Point';
 import {Vector3, BufferGeometry, Float32BufferAttribute} from 'three';
-import {CoreGeometry} from '../Geometry';
-import {ArrayUtils} from '../../ArrayUtils';
-import {PolyDictionary} from '../../../types/GlobalTypes';
+import {CorePoint} from '../../Point';
+import {CoreGeometry} from '../../Geometry';
+import {ArrayUtils} from '../../../ArrayUtils';
+import {PolyDictionary} from '../../../../types/GlobalTypes';
 
 export abstract class CoreGeometryBuilderBase {
 	fromPoints(points: CorePoint[]): BufferGeometry {

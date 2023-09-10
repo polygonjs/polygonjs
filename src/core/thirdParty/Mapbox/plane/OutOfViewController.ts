@@ -8,18 +8,15 @@ import {CoreGeometry} from '../../../geometry/Geometry';
 import {expandTriangle} from '../../../math/_Module';
 import {CorePoint} from '../../../geometry/Point';
 import {Vector2Like} from '../../../../types/GlobalTypes';
-import {CoreGeometryBuilderMesh} from '../../..//geometry/builders/Mesh';
+import {CoreGeometryBuilderMesh} from '../../..//geometry/three/builders/Mesh';
 import {CoreMapboxUtils} from '../Utils';
 
 export class MapboxPlaneFrustumController {
-	// private _core_transform = new CoreTransform();
 	constructor() {}
 
 	deleteOutOfView(
 		map: mapboxgl.Map,
-		// geometry: BufferGeometry,
 		core_geo: CoreGeometry,
-		// transformer: CoreMapboxTransform,
 		plane_dimensions: Vector2,
 		segments_counts: Vector2Like
 	) {

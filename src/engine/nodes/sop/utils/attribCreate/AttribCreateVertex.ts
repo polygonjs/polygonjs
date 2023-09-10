@@ -59,7 +59,6 @@ async function _addNumericAttributeToVertices(
 	const param = [params.value1, params.value2, params.value3, params.value4][size - 1];
 
 	if (param.hasExpression()) {
-		// const geometry = coreGeometry.geometry();
 		const vertexClass = coreVertexClassFactory(object);
 		let attribute = vertexClass.attribute(object, attribName);
 		if (!attribute) {

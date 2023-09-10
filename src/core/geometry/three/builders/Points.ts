@@ -1,7 +1,7 @@
 import {BufferGeometry} from 'three';
 import {CoreGeometryBuilderBase} from './_Base';
-import {CorePoint} from '../Point';
-import {PolyDictionary} from '../../../types/GlobalTypes';
+import {CorePoint} from '../../Point';
+import {PolyDictionary} from '../../../../types/GlobalTypes';
 
 export class CoreGeometryBuilderPoints extends CoreGeometryBuilderBase {
 	protected _filterPoints(points: CorePoint[]) {

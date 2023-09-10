@@ -5,6 +5,7 @@ import {AttribValue, NumericAttribValue} from '../../../types/GlobalTypes';
 import {Attribute, CoreAttribute} from '../Attribute';
 import {CadLoaderSync} from './CadLoaderSync';
 import {traverseVertices} from './CadTraverse';
+import {ObjectBuilder, CoreObjectType} from '../ObjectContent';
 
 export class CadCoreEdge extends CoreEntity {
 	constructor(protected _shape: TopoDS_Shape, protected _edge: TopoDS_Edge, _index: number) {
@@ -15,6 +16,9 @@ export class CadCoreEdge extends CoreEntity {
 	}
 	geometry() {
 		return this._shape;
+	}
+	builder<T extends CoreObjectType>(): ObjectBuilder<T> | undefined {
+		return undefined;
 	}
 
 	setAttribValue(attribName: string, attribValue: NumericAttribValue | string) {}

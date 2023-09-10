@@ -1,10 +1,11 @@
 import {Vector3} from 'three';
 import {CorePrimitive} from '../primitive/CorePrimitive';
 import {PrimitiveAttributesDict, UserDataWithPrimitiveAttributes} from '../primitive/Common';
-import {CoreObjectType, ObjectContent} from '../ObjectContent';
+import {CoreObjectType, ObjectBuilder, ObjectContent} from '../ObjectContent';
 import {QuadObject} from './QuadObject';
 import {QuadGeometry} from './QuadGeometry';
 import {BasePrimitiveAttribute} from '../primitive/PrimitiveAttribute';
+import {quadObjectFromPrimitives} from './builders/QuadPrimitiveBuilder';
 // import {CoreFace} from '../primitive/CoreFace';
 
 // const _coreFace = new CoreFace();
@@ -36,6 +37,9 @@ export class QuadPrimitive extends CorePrimitive<CoreObjectType.QUAD> {
 	}
 	geometry() {
 		return this._geometry;
+	}
+	override builder<T extends CoreObjectType>() {
+		return quadObjectFromPrimitives as any as ObjectBuilder<T>;
 	}
 	static override addAttribute<T extends CoreObjectType>(
 		object: ObjectContent<T>,
