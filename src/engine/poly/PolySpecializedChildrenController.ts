@@ -1,11 +1,11 @@
 import {Object3D} from 'three';
 import {CoreGroup} from '../../core/geometry/Group';
 import {BaseSopNodeType} from '../nodes/sop/_Base';
-import type {CSGOBJTesselationParams} from '../../core/geometry/csg/CsgCommon';
-import type {CADOBJTesselationParams} from '../../core/geometry/cad/CadCommon';
-import type {QUADOBJTesselationParams} from '../../core/geometry/quad/QuadCommon';
-import type {TetOBJTesselationParams} from '../../core/geometry/tet/TetCommon';
-// import type {SDFOBJTesselationParams} from '../../core/geometry/sdf/SDFCommon';
+import type {CSGOBJTesselationParams} from '../../core/geometry/modules/csg/CsgCommon';
+import type {CADOBJTesselationParams} from '../../core/geometry/modules/cad/CadCommon';
+import type {QUADOBJTesselationParams} from '../../core/geometry/modules/quad/QuadCommon';
+import type {TetOBJTesselationParams} from '../../core/geometry/modules/tet/TetCommon';
+// import type {SDFOBJTesselationParams} from '../../core/geometry/modules/sdf/SDFCommon';
 interface Params
 	extends CSGOBJTesselationParams,
 		CADOBJTesselationParams,

@@ -1,11 +1,11 @@
 import type {QUnit} from '../../../helpers/QUnit';
-import {CorePoint} from '../../../../src/core/geometry/Point';
+import {CorePoint} from '../../../../src/core/geometry/entities/point/CorePoint';
 import {Vector3} from 'three';
 
 const _p = new Vector3();
 
 export function testenginenodessopScatter(qUnit: QUnit) {
-	qUnit.test('scatter simple', async (assert) => {
+	qUnit.test('sop/scatter simple', async (assert) => {
 		const geo1 = window.geo1;
 
 		const plane1 = geo1.createNode('plane');
@@ -23,7 +23,7 @@ export function testenginenodessopScatter(qUnit: QUnit) {
 		assert.equal(container.pointsCount(), 1000);
 	});
 
-	qUnit.test('scatter takes into account the transform of objects', async (assert) => {
+	qUnit.test('sop/scatter takes into account the transform of objects', async (assert) => {
 		const geo1 = window.geo1;
 
 		const plane1 = geo1.createNode('plane');
@@ -85,7 +85,7 @@ export function testenginenodessopScatter(qUnit: QUnit) {
 	});
 
 	qUnit.test(
-		'scatter sets the buffer size correctly when transfering an attribute with size different than 3',
+		'sop/scatter sets the buffer size correctly when transfering an attribute with size different than 3',
 		async (assert) => {
 			const geo1 = window.geo1;
 

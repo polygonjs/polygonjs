@@ -4,7 +4,7 @@ import {AttribPromoteMode} from '../../../../src/engine/operations/sop/AttribPro
 import {TransformTargetType} from '../../../../src/core/Transform';
 import {BufferAttribute} from 'three';
 import {CoreObjectType} from '../../../../src/core/geometry/ObjectContent';
-import {BaseCoreObject} from '../../../../src/core/geometry/_BaseObject';
+import {BaseCoreObject} from '../../../../src/core/geometry/entities/object/BaseCoreObject';
 export function testenginenodessopAttribPromote(qUnit: QUnit) {
 	qUnit.test('sop/attribPromote point to point with min', async (assert) => {
 		const geo1 = window.geo1;

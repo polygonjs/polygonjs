@@ -6,11 +6,11 @@
 import {CADSopNode} from './_BaseCAD';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
-import {step} from '../../../core/geometry/cad/CadConstant';
-import {CadLoader} from '../../../core/geometry/cad/CadLoader';
-import {CadLoaderSync} from '../../../core/geometry/cad/CadLoaderSync';
+import {step} from '../../../core/geometry/modules/cad/CadConstant';
+import {CadLoader} from '../../../core/geometry/modules/cad/CadLoader';
+import {CadLoaderSync} from '../../../core/geometry/modules/cad/CadLoaderSync';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {cadEdgeCreate} from '../../../core/geometry/cad/toObject3D/CadEdge';
+import {cadEdgeCreate} from '../../../core/geometry/modules/cad/toObject3D/CadEdge';
 
 class CADEllipseSopParamsConfig extends NodeParamsConfig {
 	/** @param major radius */

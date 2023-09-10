@@ -3,8 +3,6 @@ import {TileCorners, TileConfig, EMPTY_TILE_ID, configTilesStats, TileConfigStat
 import {CoreWFCTileAttribute, WFCQuadTileAttribute} from './WFCAttributes';
 import {tileCubeLatticeDeform} from './WFCTileDeform';
 import {Object3D, Vector3, Vector4, Mesh} from 'three';
-import {CoreObject} from '../geometry/Object';
-import {QuadObject} from '../geometry/quad/QuadObject';
 import {QuadGraph, NeighbourData} from '../graph/quad/QuadGraph';
 import {QuadNode} from '../graph/quad/QuadNode';
 import {Attribute} from '../geometry/Attribute';
@@ -14,7 +12,9 @@ import {sample, spliceSample} from '../ArrayUtils';
 import {setToArray} from '../SetUtils';
 import {NeighbourIndex, CCW_HALF_EDGE_SIDES} from '../graph/quad/QuadGraphCommon';
 import {mod} from '../math/_Module';
-import {QuadPrimitive} from '../geometry/quad/QuadPrimitive';
+import {CoreObject} from '../geometry/modules/three/CoreObject';
+import {QuadObject} from '../geometry/modules/quad/QuadObject';
+import {QuadPrimitive} from '../geometry/modules/quad/QuadPrimitive';
 
 const tileCorners: TileCorners = {
 	p0: new Vector3(),

@@ -7,7 +7,7 @@
 // import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 // import {CoreGroup} from '../../../core/geometry/Group';
 // import {SopType} from '../../poly/registers/nodes/types/Sop';
-// import {TetObject} from '../../../core/geometry/tet/TetObject';
+// import {TetObject} from '../../../core/geometry/modules/tet/TetObject';
 
 // class TetGrowSopParamsConfig extends NodeParamsConfig {
 // 	/** @param iterations */

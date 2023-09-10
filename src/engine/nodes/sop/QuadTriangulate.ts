@@ -10,7 +10,7 @@ import {CoreGroup} from '../../../core/geometry/Group';
 import {Object3D} from 'three';
 import {CoreType} from '../../../core/Type';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
-import {SOPQUADTesselationParamConfig} from '../../../core/geometry/quad/utils/TesselationParamsConfig';
+import {SOPQUADTesselationParamConfig} from '../../../core/geometry/modules/quad/utils/TesselationParamsConfig';
 class QuadTriangulateSopParamsConfig extends SOPQUADTesselationParamConfig(NodeParamsConfig) {}
 const ParamsConfig = new QuadTriangulateSopParamsConfig();
 

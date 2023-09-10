@@ -19,7 +19,7 @@
 // import {BaseCsgNodeType} from '../csg/_Base';
 // import {DisplayNodeController} from '../utils/DisplayNodeController';
 // import {CsgChildrenDisplayController} from './utils/csg/CsgChildrenNodesController';
-// import {csgToObject3D} from '../../../core/geometry/csg/CsgToObject3D';
+// import {csgToObject3D} from '../../../core/geometry/modules/csg/CsgToObject3D';
 // import {Object3D} from 'three';
 // import {MathUtils} from 'three';
 // const {degToRad} = MathUtils;

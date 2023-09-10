@@ -1,5 +1,5 @@
 import {DeleteSopNode} from '../../Delete';
-import {CorePoint} from '../../../../../core/geometry/Point';
+import {CorePoint} from '../../../../../core/geometry/entities/point/CorePoint';
 import {Box3, Vector3} from 'three';
 
 const _position = new Vector3();

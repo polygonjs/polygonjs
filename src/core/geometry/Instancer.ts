@@ -7,7 +7,7 @@ import {
 	Vector2,
 	Vector3,
 } from 'three';
-import {CorePoint} from './Point';
+import {CorePoint} from './entities/point/CorePoint';
 import {CoreGroup} from './Group';
 import {CoreGeometry} from './Geometry';
 import {CoreType} from '../Type';

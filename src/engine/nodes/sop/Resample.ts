@@ -21,7 +21,7 @@ export const METHODS = [METHOD.POINTS_COUNT, METHOD.SEGMENT_LENGTH];
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {CorePoint} from '../../../core/geometry/Point';
+import {CorePoint} from '../../../core/geometry/entities/point/CorePoint';
 import {TypeAssert} from '../../poly/Assert';
 import {Vector3} from 'three';
 import {SplineCurveType, SPLINE_CURVE_TYPES} from '../../../core/geometry/Curve';

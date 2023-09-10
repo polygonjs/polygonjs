@@ -1,5 +1,5 @@
 import {Triangle, Mesh, Intersection, Color, Vector2, Vector3, Vector4, BufferAttribute, Face} from 'three';
-import {CorePoint} from '../../core/geometry/Point';
+import {CorePoint} from '../../core/geometry/entities/point/CorePoint';
 import {NamedFunction2, NamedFunction3, NamedFunction4} from './_Base';
 const positionA = new Vector3();
 const positionB = new Vector3();

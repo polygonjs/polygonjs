@@ -1,7 +1,7 @@
 import {AttribValue} from './../../types/GlobalTypes';
 import {NumericAttribValue, PolyDictionary} from '../../types/GlobalTypes';
 import {Box3, BufferGeometry, LineSegments, Mesh, Points, Object3D, Vector3} from 'three';
-import {CoreObject} from './Object';
+import {CoreObject} from './modules/three/CoreObject';
 import {CoreGeometry} from './Geometry';
 import {CoreAttribute} from './Attribute';
 import {CoreString} from '../String';
@@ -12,30 +12,36 @@ import {Poly} from '../../engine/Poly';
 import {CoreEntity} from './Entity';
 import {CoreObjectType, ObjectBuilder, ObjectContent, isObject3D} from './ObjectContent';
 import {coreObjectFactory, coreObjectInstanceFactory} from './CoreObjectFactory';
+import {
+	coreObjectAttributeTypesByName,
+	coreObjectsAttribNames,
+	coreObjectsAttribSizesByName,
+} from './entities/object/BaseCoreObjectUtils';
+import {object3DHasGeometry} from './GeometryUtils';
 
 // CAD
-import type {CadGeometryType, CadGeometryTypeShape} from './cad/CadCommon';
-import type {CadObject} from './cad/CadObject';
-import {CoreCadType, isCADObject} from './cad/CadCoreType';
+import type {CadGeometryType, CadGeometryTypeShape} from './modules/cad/CadCommon';
+import type {CadObject} from './modules/cad/CadObject';
+import {CoreCadType, isCADObject} from './modules/cad/CadCoreType';
 //
 // CSG
-import type {CsgGeometryType} from './csg/CsgCommon';
-import type {CsgObject} from './csg/CsgObject';
-import {isCSGObject} from './csg/CsgCoreType';
-import {object3DHasGeometry} from './GeometryUtils';
-import {isTetObject} from './tet/TetCoreType';
-import {TetObject} from './tet/TetObject';
+import type {CsgGeometryType} from './modules/csg/CsgCommon';
+import type {CsgObject} from './modules/csg/CsgObject';
+import {isCSGObject} from './modules/csg/CsgCoreType';
 //
 // QUAD
-import type {QuadObject} from './quad/QuadObject';
-import {isQuadObject, isQuadOrThreejsObject} from './quad/QuadCoreType';
-import {coreObjectAttributeTypesByName, coreObjectsAttribNames, coreObjectsAttribSizesByName} from './_BaseObjectUtils';
+import type {QuadObject} from './modules/quad/QuadObject';
+import {isQuadObject, isQuadOrThreejsObject} from './modules/quad/QuadCoreType';
 //
 // SDF
 // import type {SDFObjectType} from './sdf/SDFCommon';
 // import {SDF_OBJECT_TYPES_SET} from './sdf/SDFCommon';
 // import type {SDFObject} from './sdf/SDFObject';
 //
+// TET
+import {isTetObject} from './modules/tet/TetCoreType';
+import {TetObject} from './modules/tet/TetObject';
+
 type AttributeDictionary = PolyDictionary<AttribValue>;
 
 // import {CoreMask} from './Mask';

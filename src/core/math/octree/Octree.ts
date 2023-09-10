@@ -1,5 +1,5 @@
 import {Box3, Sphere, Vector3} from 'three';
-import {CorePoint} from '../../geometry/Point';
+import {CorePoint} from '../../geometry/entities/point/CorePoint';
 import {OctreeNode, OctreeNodeTraverseCallback} from './Node';
 import {ArrayUtils} from '../../ArrayUtils';
 

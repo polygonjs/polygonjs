@@ -1,7 +1,4 @@
-import {BufferGeometry} from 'three';
-import {Float32BufferAttribute} from 'three';
-import {Vector3} from 'three';
-// import {Vector2} from 'three';
+import {Vector3, Float32BufferAttribute, BufferGeometry} from 'three';
 
 interface PolyHedronBufferGeometryParameters {
 	vertices: number[];

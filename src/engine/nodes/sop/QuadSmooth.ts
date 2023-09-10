@@ -8,7 +8,7 @@ import {QuadSopNode} from './_BaseQuad';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
-import {QuadGeometry} from '../../../core/geometry/quad/QuadGeometry';
+import {QuadGeometry} from '../../../core/geometry/modules/quad/QuadGeometry';
 import {Attribute} from '../../../core/geometry/Attribute';
 import {setToArray} from '../../../core/SetUtils';
 import {InputCloneMode} from '../../poly/InputCloneMode';

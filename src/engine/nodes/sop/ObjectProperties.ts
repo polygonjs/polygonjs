@@ -8,7 +8,6 @@
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {ObjectPropertiesSopOperation} from '../../operations/sop/ObjectProperties';
-
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {isBooleanTrue} from '../../../core/Type';
 import {StringParam} from '../../params/String';
@@ -17,7 +16,7 @@ import {IntegerParam} from '../../params/Integer';
 import {FloatParam} from '../../params/Float';
 import {CoreObjectType} from '../../../core/geometry/ObjectContent';
 import {filterCoreObjectsFromCoreGroup} from '../../../core/geometry/Mask';
-import {BaseCoreObject} from '../../../core/geometry/_BaseObject';
+import {BaseCoreObject} from '../../../core/geometry/entities/object/BaseCoreObject';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 const DEFAULT = ObjectPropertiesSopOperation.DEFAULT_PARAMS;
 class ObjectPropertiesSopParamsConfig extends NodeParamsConfig {

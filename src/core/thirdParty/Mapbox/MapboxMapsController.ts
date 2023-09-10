@@ -1,6 +1,6 @@
 import mapboxgl from 'mapbox-gl';
 import {Camera} from 'three';
-import {CoreObject} from '../../geometry/Object';
+import {CoreObject} from '../../geometry/modules/three/CoreObject';
 import {PolyScene} from '../../../engine/scene/PolyScene';
 import {MapboxCameraAttribute} from './MapboxCameraAttribute';
 import {MapboxLayersController, LayersOptions} from './LayersController';

@@ -5,10 +5,10 @@
  */
 import {CADSopNode} from './_BaseCAD';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {CadLoader} from '../../../core/geometry/cad/CadLoader';
+import {CadLoader} from '../../../core/geometry/modules/cad/CadLoader';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
-import {CadObject} from '../../../core/geometry/cad/CadObject';
-import {CadGeometryType} from '../../../core/geometry/cad/CadCommon';
+import {CadObject} from '../../../core/geometry/modules/cad/CadObject';
+import {CadGeometryType} from '../../../core/geometry/modules/cad/CadCommon';
 
 class CADPoint2DSopParamsConfig extends NodeParamsConfig {
 	/** @param center */

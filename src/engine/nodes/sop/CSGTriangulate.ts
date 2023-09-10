@@ -10,7 +10,7 @@ import {CoreGroup} from '../../../core/geometry/Group';
 import {Object3D} from 'three';
 import {CoreType} from '../../../core/Type';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
-import {SOPCSGTesselationParamConfig} from '../../../core/geometry/csg/utils/TesselationParamsConfig';
+import {SOPCSGTesselationParamConfig} from '../../../core/geometry/modules/csg/utils/TesselationParamsConfig';
 class CSGTriangulateSopParamsConfig extends SOPCSGTesselationParamConfig(NodeParamsConfig) {}
 const ParamsConfig = new CSGTriangulateSopParamsConfig();
 

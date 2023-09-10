@@ -10,7 +10,7 @@ import {NodeContext} from '../../poly/NodeContext';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {BaseCopNodeType} from '../cop/_Base';
 import {InputCloneMode} from '../../poly/InputCloneMode';
-import {CoreObject} from '../../../core/geometry/Object';
+import {CoreObject} from '../../../core/geometry/modules/three/CoreObject';
 import {Texture} from 'three';
 import {CoreImage} from '../../../core/Image';
 class HeightMapSopParamsConfig extends NodeParamsConfig {
@@ -45,7 +45,7 @@ export class HeightMapSopNode extends TypedSopNode<HeightMapSopParamsConfig> {
 				const container = await texture_node.compute();
 				const texture = container.texture();
 
-				const objects = coreGroup.threejsCoreObjects()
+				const objects = coreGroup.threejsCoreObjects();
 				for (let coreObject of objects) {
 					this._set_position_from_data_texture(coreObject, texture);
 				}
@@ -55,9 +55,9 @@ export class HeightMapSopNode extends TypedSopNode<HeightMapSopParamsConfig> {
 		}
 		// core_group.computeVertexNormals();
 		const objects = coreGroup.threejsObjectsWithGeo();
-				for (let object of objects) {
-					object.geometry.computeVertexNormals();
-				}
+		for (let object of objects) {
+			object.geometry.computeVertexNormals();
+		}
 		this.setCoreGroup(coreGroup);
 	}
 

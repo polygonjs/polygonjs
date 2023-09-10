@@ -17,11 +17,11 @@ import {
 	TopoDS_Wire,
 	TopoDS_Face,
 	TopoDS_Shape,
-} from '../../../core/geometry/cad/CadCommon';
+} from '../../../core/geometry/modules/cad/CadCommon';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
-import {CadLoaderSync} from '../../../core/geometry/cad/CadLoaderSync';
-import {CadObject} from '../../../core/geometry/cad/CadObject';
+import {CadLoaderSync} from '../../../core/geometry/modules/cad/CadLoaderSync';
+import {CadObject} from '../../../core/geometry/modules/cad/CadObject';
 import {isBooleanTrue} from '../../../core/Type';
 
 interface CommonOptions {

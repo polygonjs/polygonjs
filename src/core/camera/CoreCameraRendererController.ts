@@ -7,7 +7,7 @@ import {
 	DEFAULT_TONE_MAPPING,
 } from '../../engine/nodes/rop/WebGLRenderer';
 import {defaultPixelRatio} from '../render/defaultPixelRatio';
-import {CoreObject} from '../geometry/Object';
+import {CoreObject} from '../geometry/modules/three/CoreObject';
 import {CameraAttribute} from './CoreCamera';
 import {CoreType} from '../Type';
 import {RopType} from '../../engine/poly/registers/nodes/types/Rop';

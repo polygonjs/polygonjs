@@ -1,5 +1,5 @@
 import type {QUnit} from '../../../helpers/QUnit';
-import {primitivesFromObject} from '../../../../src/core/geometry/primitive/CorePrimitiveUtils';
+import {primitivesFromObject} from '../../../../src/core/geometry/entities/primitive/CorePrimitiveUtils';
 export function testenginenodessopQuadrangulate(qUnit: QUnit) {
 	qUnit.test('sop/quadrangulate prim count', async (assert) => {
 		const geo1 = window.geo1;

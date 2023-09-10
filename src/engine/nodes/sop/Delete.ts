@@ -21,8 +21,8 @@ import {
 } from '../../../core/geometry/Constant';
 import {CoreGroup, Object3DWithGeometry} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../poly/InputCloneMode';
-import {CorePoint} from '../../../core/geometry/Point';
-import {CoreObject} from '../../../core/geometry/Object';
+import {CorePoint} from '../../../core/geometry/entities/point/CorePoint';
+import {CoreObject} from '../../../core/geometry/modules/three/CoreObject';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {EntitySelectionHelper} from './utils/delete/EntitySelectionHelper';
 import {
@@ -36,12 +36,12 @@ import {ByBboxHelper} from './utils/delete/ByBboxHelper';
 import {ByObjectTypeHelper, OBJECT_TYPE_MENU_ENTRIES, OBJECT_TYPES} from './utils/delete/ByObjectTypeHelper';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {ByBoundingObjectHelper} from './utils/delete/ByBoundingObjectHelper';
-import {geometryBuilder} from '../../../core/geometry/three/builders/geometryBuilder';
+import {geometryBuilder} from '../../../core/geometry/modules/three/builders/geometryBuilder';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 import {TypeAssert} from '../../poly/Assert';
-import {primitivesFromObject} from '../../../core/geometry/primitive/CorePrimitiveUtils';
+import {primitivesFromObject} from '../../../core/geometry/entities/primitive/CorePrimitiveUtils';
 import {CoreObjectType, ObjectContent} from '../../../core/geometry/ObjectContent';
-import {CorePrimitive} from '../../../core/geometry/primitive/CorePrimitive';
+import {CorePrimitive} from '../../../core/geometry/entities/primitive/CorePrimitive';
 class DeleteSopParamsConfig extends NodeParamsConfig {
 	/** @param defines the class that should be deleted (objects or vertices) */
 	class = ParamConfig.INTEGER(ATTRIBUTE_CLASSES_WITHOUT_CORE_GROUP.indexOf(AttribClass.POINT), {

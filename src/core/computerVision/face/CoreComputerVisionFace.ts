@@ -1,6 +1,6 @@
 import {Object3D, Vector4} from 'three';
 import {FaceMesh, Options, Results} from '@mediapipe/face_mesh';
-import {CoreObject} from '../../geometry/Object';
+import {CoreObject} from '../../geometry/modules/three/CoreObject';
 import {CoreComputerVisionFaceAttribute} from './Common';
 import {ParamConfig} from '../../../engine/nodes/utils/params/ParamsConfig';
 import {Constructor} from '../../../types/GlobalTypes';

@@ -8,7 +8,7 @@
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../poly/InputCloneMode';
-import {CoreObject} from '../../../core/geometry/Object';
+import {CoreObject} from '../../../core/geometry/modules/three/CoreObject';
 import {Attribute} from '../../../core/geometry/Attribute';
 import {BufferAttribute, Mesh} from 'three';
 import {BufferGeometry} from 'three';

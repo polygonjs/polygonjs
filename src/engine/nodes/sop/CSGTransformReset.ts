@@ -8,7 +8,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 import {maths} from '@jscad/modeling';
-import {csgApplyTransform} from '../../../core/geometry/csg/math/CsgMat4';
+import {csgApplyTransform} from '../../../core/geometry/modules/csg/math/CsgMat4';
 const {mat4} = maths;
 
 class CSGTransformResetSopParamsConfig extends NodeParamsConfig {

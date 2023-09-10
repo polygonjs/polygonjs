@@ -7,9 +7,9 @@ import {CSGSopNode} from './_BaseCSG';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
-import {CsgGeometry} from '../../../core/geometry/csg/CsgCommon';
-import { csgIsPath2, csgIsGeom2} from '../../../core/geometry/csg/CsgCoreType';
-import {CsgCorner, CSG_CORNERS} from '../../../core/geometry/csg/operations/CsgCorner';
+import {CsgGeometry} from '../../../core/geometry/modules/csg/CsgCommon';
+import {csgIsPath2, csgIsGeom2} from '../../../core/geometry/modules/csg/CsgCoreType';
+import {CsgCorner, CSG_CORNERS} from '../../../core/geometry/modules/csg/operations/CsgCorner';
 import jscad from '@jscad/modeling';
 const {offset} = jscad.expansions;
 

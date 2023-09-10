@@ -6,7 +6,7 @@ import {CoreGeometry} from '../../../core/geometry/Geometry';
 import {CircleCreateOptions, CoreGeometryUtilCircle} from '../../../core/geometry/util/Circle';
 import {CoreGeometryUtilCurve} from '../../../core/geometry/util/Curve';
 import {CoreGeometryOperationSkin} from '../../../core/geometry/operation/Skin';
-import {CorePoint} from '../../../core/geometry/Point';
+import {CorePoint} from '../../../core/geometry/entities/point/CorePoint';
 import {isBooleanTrue} from '../../../core/Type';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 import {CoreGeometryBuilderMerge} from '../../../core/geometry/builders/Merge';

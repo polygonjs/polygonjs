@@ -6,7 +6,7 @@ import {TypeAssert} from '../../../../poly/Assert';
 import {CoreMask} from '../../../../../core/geometry/Mask';
 import {AttribCreateSopParams} from '../../../../operations/sop/AttribCreate';
 import {CoreObjectType} from '../../../../../core/geometry/ObjectContent';
-import {BaseCoreObject} from '../../../../../core/geometry/_BaseObject';
+import {BaseCoreObject} from '../../../../../core/geometry/entities/object/BaseCoreObject';
 import {AttribCreateSopNodeParams, defaultAttribValue} from '../../../../operations/sop/utils/attribCreate/Common';
 
 export async function addObjectAttribute(

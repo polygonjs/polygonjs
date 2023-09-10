@@ -1,7 +1,7 @@
 import {Group} from 'three';
 import {LDrawLoader} from 'three/examples/jsm/loaders/LDrawLoader';
 import {BaseObject3DLoaderHandler, BaseGeoLoader} from './_BaseLoaderHandler';
-import {CoreObject} from '../../geometry/Object';
+import {CoreObject} from '../../geometry/modules/three/CoreObject';
 import {CoreType} from '../../Type';
 
 // export enum MPDAttribute {

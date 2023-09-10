@@ -22,11 +22,11 @@ import {ObjType} from '../../poly/registers/nodes/types/Obj';
 import {NodeCreateOptions} from '../utils/hierarchy/ChildrenController';
 import {TransformedParamConfig, TransformController} from './utils/TransformController';
 import {ObjTesselationParamConfig} from './utils/TesselationParams';
-import {addCADTesselationParamsCallback} from '../../../core/geometry/cad/utils/TesselationParamsConfig';
-import {addCSGTesselationParamsCallback} from '../../../core/geometry/csg/utils/TesselationParamsConfig';
-import {addQUADTesselationParamsCallback} from '../../../core/geometry/quad/utils/TesselationParamsConfig';
-// import {addSDFTesselationParamsCallback} from '../../../core/geometry/sdf/utils/TesselationParamsConfig';
-import {addTetTesselationParamsCallback} from '../../../core/geometry/tet/utils/TesselationParamsConfig';
+import {addCADTesselationParamsCallback} from '../../../core/geometry/modules/cad/utils/TesselationParamsConfig';
+import {addCSGTesselationParamsCallback} from '../../../core/geometry/modules/csg/utils/TesselationParamsConfig';
+import {addQUADTesselationParamsCallback} from '../../../core/geometry/modules/quad/utils/TesselationParamsConfig';
+// import {addSDFTesselationParamsCallback} from '../../../core/geometry/modules/sdf/utils/TesselationParamsConfig';
+import {addTetTesselationParamsCallback} from '../../../core/geometry/modules/tet/utils/TesselationParamsConfig';
 
 export function GeoParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {

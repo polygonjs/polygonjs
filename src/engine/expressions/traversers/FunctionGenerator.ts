@@ -235,7 +235,7 @@ const QUOTE = "'";
 const ARGUMENTS_SEPARATOR = ', ';
 const ATTRIBUTE_PREFIX = '@';
 import {VARIABLE_PREFIX} from './_Base';
-import {CorePoint} from '../../../core/geometry/Point';
+import {CorePoint} from '../../../core/geometry/entities/point/CorePoint';
 import {CoreGeometry} from '../../../core/geometry/Geometry';
 
 const PROPERTY_OFFSETS: AnyDictionary = {

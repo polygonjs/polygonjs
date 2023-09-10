@@ -10,7 +10,7 @@ import {SopType} from '../../poly/registers/nodes/types/Sop';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {BooleanParam} from '../../params/Boolean';
 import {StringParam} from '../../params/String';
-import {BaseCoreObject} from '../../../core/geometry/_BaseObject';
+import {BaseCoreObject} from '../../../core/geometry/entities/object/BaseCoreObject';
 import {CoreObjectType, ObjectContent} from '../../../core/geometry/ObjectContent';
 import {CoreWFCTileAttribute} from '../../../core/wfc/WFCAttributes';
 import {isBooleanTrue} from '../../../core/Type';
@@ -96,7 +96,7 @@ export class WFCTilePropertiesSopNode extends TypedSopNode<WFCTilePropertiesSopP
 			});
 		} else {
 			for (let coreObject of coreObjects) {
-					applyMethod(coreObject.object(), param.value);
+				applyMethod(coreObject.object(), param.value);
 			}
 		}
 	}
@@ -111,7 +111,7 @@ export class WFCTilePropertiesSopNode extends TypedSopNode<WFCTilePropertiesSopP
 			});
 		} else {
 			for (let coreObject of coreObjects) {
-					applyMethod(coreObject.object(), param.value);
+				applyMethod(coreObject.object(), param.value);
 			}
 		}
 	}

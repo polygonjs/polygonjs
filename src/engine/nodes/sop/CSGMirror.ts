@@ -8,12 +8,12 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 import {isBooleanTrue} from '../../../core/Type';
-import {CsgGeometry} from '../../../core/geometry/csg/CsgCommon';
-import {csgIsGeom3} from '../../../core/geometry/csg/CsgCoreType';
-import {vector3ToCsgVec3} from '../../../core/geometry/csg/CsgVecToVector';
+import {CsgGeometry} from '../../../core/geometry/modules/csg/CsgCommon';
+import {csgIsGeom3} from '../../../core/geometry/modules/csg/CsgCoreType';
+import {vector3ToCsgVec3} from '../../../core/geometry/modules/csg/CsgVecToVector';
 import {transforms, geometries} from '@jscad/modeling';
 import type {maths} from '@jscad/modeling';
-import {csgApplyTransform} from '../../../core/geometry/csg/math/CsgMat4';
+import {csgApplyTransform} from '../../../core/geometry/modules/csg/math/CsgMat4';
 const {mirror} = transforms;
 
 class CSGMirrorSopParamsConfig extends NodeParamsConfig {

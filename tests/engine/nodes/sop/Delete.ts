@@ -7,9 +7,9 @@ import {
 	AttribType,
 	ATTRIBUTE_TYPES,
 } from '../../../../src/core/geometry/Constant';
-import {CorePoint} from '../../../../src/core/geometry/Point';
+import {CorePoint} from '../../../../src/core/geometry/entities/point/CorePoint';
 import {TransformTargetType} from '../../../../src/core/Transform';
-import {QuadObject} from '../../../../src/core/geometry/quad/QuadObject';
+import {QuadObject} from '../../../../src/core/geometry/modules/quad/QuadObject';
 export function testenginenodessopDelete(qUnit: QUnit) {
 	qUnit.test('sop/delete: (class=points) simple plane', async (assert) => {
 		const geo1 = window.geo1;

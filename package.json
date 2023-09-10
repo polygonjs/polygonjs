@@ -40,7 +40,7 @@
 		"build_folder_delete": "rm -rf dist/*",
 		"build_folder_remove_unneeded": "rm -rf dist/config && rm -rf dist/tests",
 		"copy_threejs_examples_to_dist": "cp -rf src/modules/three/* dist/src/modules/three/",
-		"copy_occt_wasm_to_dist": "cp src/core/geometry/cad/build/*.wasm dist/src/core/geometry/cad/build/",
+		"copy_occt_wasm_to_dist": "cp src/core/geometry/modules/cad/build/*.wasm dist/src/core/geometry/modules/cad/build/",
 		"build_renameMJS": "./node_modules/typescript/bin/tsc config/common/renameMJStoJS.ts --moduleResolution node",
 		"renameMJS": "node config/common/renameMJStoJS.js",
 		"bundle_types_build": "tsc config/dts_bundle/dts_bundle_pre.ts && tsc config/dts_bundle/dts_bundle_post.ts",
@@ -49,7 +49,7 @@
 		"bundle_types_post": "node config/dts_bundle/dts_bundle_post.js",
 		"bundle_types_step1": "yarn bundle_types_build && yarn bundle_types_pre && yarn bundle_types_mid",
 		"bundle_types_step2": "yarn bundle_types_build && yarn bundle_types_post",
-		"build_opencascade": "cd src/core/geometry/cad/config && docker run --rm -it -v \"$(pwd):/src\" -u \"$(id -u):$(id -g)\" donalffons/opencascade.js config.yml && mv ./polygonjs-occt.* ../build && cd ../../../../../ && xmessage 'opencascade custom build completed'",
+		"build_opencascade": "cd src/core/geometry/modules/cad/config && docker run --rm -it -v \"$(pwd):/src\" -u \"$(id -u):$(id -g)\" donalffons/opencascade.js config.yml && mv ./polygonjs-occt.* ../build && cd ../../../../../ && xmessage 'opencascade custom build completed'",
 		"create_functions_import_file": "esbuild config/functions/createImportFile.ts --platform=node --bundle --outfile=config/functions/createImportFile.js && node config/functions/createImportFile.js"
 	},
 	"dependencies": {

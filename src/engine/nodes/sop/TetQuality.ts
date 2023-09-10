@@ -8,9 +8,9 @@
 // import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 // import {CoreGroup} from '../../../core/geometry/Group';
 // import {SopType} from '../../poly/registers/nodes/types/Sop';
-// import {TetObject} from '../../../core/geometry/tet/TetObject';
-// import {tetQuality} from '../../../core/geometry/tet/utils/tetQuality';
-// import {tetRemoveUnusedPoints} from '../../../core/geometry/tet/utils/tetRemoveUnusedPoints';
+// import {TetObject} from '../../../core/geometry/modules/tet/TetObject';
+// import {tetQuality} from '../../../core/geometry/modules/tet/utils/tetQuality';
+// import {tetRemoveUnusedPoints} from '../../../core/geometry/modules/tet/utils/tetRemoveUnusedPoints';
 // class TetQualitySopParamsConfig extends NodeParamsConfig {
 // 	minQuality = ParamConfig.FLOAT(0.1, {
 // 		range: [0, 1],

@@ -7,8 +7,8 @@
 // import {SDFSopNode} from './_BaseSDF';
 // import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 // import {SopType} from '../../poly/registers/nodes/types/Sop';
-// import {SDFLoader} from '../../../core/geometry/sdf/SDFLoader';
-// import {Box} from '../../../core/geometry/sdf/SDFCommon';
+// import {SDFLoader} from '../../../core/geometry/modules/sdf/SDFLoader';
+// import {Box} from '../../../core/geometry/modules/sdf/SDFCommon';
 // import {Number3} from '../../../types/GlobalTypes';
 // import {Vector3} from 'three';
 

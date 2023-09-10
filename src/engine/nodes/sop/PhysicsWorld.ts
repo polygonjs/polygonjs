@@ -21,7 +21,7 @@ import {PolyScene} from '../../scene/PolyScene';
 import {CoreType} from '../../../core/Type';
 import {BaseNodeType} from '../_Base';
 import {Poly} from '../../Poly';
-import {CoreObject} from '../../../core/geometry/Object';
+import {CoreObject} from '../../../core/geometry/modules/three/CoreObject';
 import {PhysicsIdAttribute} from '../../../core/physics/PhysicsAttribute';
 import {CorePhysics} from '../../../core/physics/CorePhysics';
 import {setJointDataListForWorldObject} from '../../../core/physics/PhysicsJoint';

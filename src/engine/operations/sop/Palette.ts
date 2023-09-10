@@ -7,7 +7,7 @@ import {DefaultOperationParams} from '../../../core/operations/_Base';
 import {SORTED_PALETTE_NAMES} from '../../../core/color/chromotomeWrapper';
 import {AttribClass, ATTRIBUTE_CLASSES} from '../../../core/geometry/Constant';
 import {TypeAssert} from '../../poly/Assert';
-import {CoreObject} from '../../../core/geometry/Object';
+import {CoreObject} from '../../../core/geometry/modules/three/CoreObject';
 
 interface PaletteSopParams extends DefaultOperationParams {
 	class: number;

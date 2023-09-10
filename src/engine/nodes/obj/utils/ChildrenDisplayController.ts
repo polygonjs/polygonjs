@@ -6,7 +6,7 @@ import {BaseSopNodeType} from '../../sop/_Base';
 import {Poly} from '../../../Poly';
 import {CoreGroup} from '../../../../core/geometry/Group';
 import {PolyScene} from '../../../scene/PolyScene';
-// import {TesselationParams} from '../../../../core/geometry/cad/CadCommon';
+// import {TesselationParams} from '../../../../core/geometry/modules/cad/CadCommon';
 
 const DISPLAY_PARAM_NAME = 'display';
 

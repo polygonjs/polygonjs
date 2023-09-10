@@ -5,22 +5,22 @@
  */
 import {CADSopNode} from './_BaseCAD';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import type {OpenCascadeInstance, TopoDS_Shape} from '../../../core/geometry/cad/CadCommon';
-import {step} from '../../../core/geometry/cad/CadConstant';
-import {CoreCadType} from '../../../core/geometry/cad/CadCoreType';
-import {traverseEdges} from '../../../core/geometry/cad/CadTraverse';
-import {CadGeometryType, cadGeometryTypeFromShape} from '../../../core/geometry/cad/CadCommon';
+import type {OpenCascadeInstance, TopoDS_Shape} from '../../../core/geometry/modules/cad/CadCommon';
+import {step} from '../../../core/geometry/modules/cad/CadConstant';
+import {CoreCadType} from '../../../core/geometry/modules/cad/CadCoreType';
+import {traverseEdges} from '../../../core/geometry/modules/cad/CadTraverse';
+import {CadGeometryType, cadGeometryTypeFromShape} from '../../../core/geometry/modules/cad/CadCommon';
 import {TypeAssert} from '../../poly/Assert';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
-import {CadObject} from '../../../core/geometry/cad/CadObject';
-import {CadLoaderSync} from '../../../core/geometry/cad/CadLoaderSync';
-// import {CadCoreEdge} from '../../../core/geometry/cad/CadCoreEdge';
+import {CadObject} from '../../../core/geometry/modules/cad/CadObject';
+import {CadLoaderSync} from '../../../core/geometry/modules/cad/CadLoaderSync';
+// import {CadCoreEdge} from '../../../core/geometry/modules/cad/CadCoreEdge';
 // import {CoreString} from '../../../core/String';
 // import {SetUtils} from '../../../core/SetUtils';
 // import {coreObjectInstanceFactory} from '../../../core/geometry/CoreObjectFactory';
 import {EntityGroupType} from '../../../core/geometry/EntityGroupCollection';
-import {CadEntityGroupCollection} from '../../../core/geometry/cad/CadEntityGroupCollection';
+import {CadEntityGroupCollection} from '../../../core/geometry/modules/cad/CadEntityGroupCollection';
 
 enum FilletMode {
 	ROUND = 'round',

@@ -1,6 +1,6 @@
 import {BufferAttribute, BufferGeometry, Vector3} from 'three';
 import {CoreType} from '../../Type';
-import {CorePoint} from '../Point';
+import {CorePoint} from '../entities/point/CorePoint';
 
 export function addAttributesFromPoint(geometry: BufferGeometry, point: CorePoint, attributeNames: string[]) {
 	const pointsCount = geometry.getAttribute('position').count;

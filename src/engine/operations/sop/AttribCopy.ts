@@ -8,7 +8,7 @@ import {DefaultOperationParams} from '../../../core/operations/_Base';
 import {stringToAttribNames} from '../../../core/String';
 import {ATTRIBUTE_CLASSES, AttribClass} from '../../../core/geometry/Constant';
 import {TypeAssert} from '../../../engine/poly/Assert';
-import {CoreObject} from '../../../core/geometry/Object';
+import {CoreObject} from '../../../core/geometry/modules/three/CoreObject';
 interface AttribCopySopParams extends DefaultOperationParams {
 	class: number;
 	name: string;

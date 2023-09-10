@@ -1,6 +1,6 @@
 import {Number3} from '../../types/GlobalTypes';
 import {Object3D} from 'three';
-import {TetObject} from '../geometry/tet/TetObject';
+import {TetObject} from '../geometry/modules/tet/TetObject';
 
 // export interface TetMesh {
 // 	name: string;

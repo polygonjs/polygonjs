@@ -5,7 +5,7 @@ import {PolyScene} from '../scene/PolyScene';
 import {NamedFunction3, ObjectNamedFunction1, ObjectNamedFunction3} from './_Base';
 import {Player} from 'tone/build/esm/source/buffer/Player';
 import {AudioPlayerCallbacksManager} from '../../core/audio/PlayerCallbacksManager';
-import {CoreObject} from '../../core/geometry/Object';
+import {CoreObject} from '../../core/geometry/modules/three/CoreObject';
 import {ActorEvaluator} from '../nodes/js/code/assemblers/actor/ActorEvaluator';
 
 // const AUDIO_COMPLETED_EVENT_NAME = 'onAudioCompleted';

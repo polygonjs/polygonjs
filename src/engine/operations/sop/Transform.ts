@@ -23,7 +23,7 @@ import {
 } from '../../../core/TransformSpace';
 import {CoreObjectType, isObject3D, ObjectContent} from '../../../core/geometry/ObjectContent';
 import {CoreMask} from '../../../core/geometry/Mask';
-import {CoreObject} from '../../../core/geometry/Object';
+import {CoreObject} from '../../../core/geometry/modules/three/CoreObject';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 
 // const _t = new Vector3();

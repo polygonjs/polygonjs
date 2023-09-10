@@ -7,7 +7,7 @@ import {FloatParam} from '../../../../src/engine/params/Float';
 import {ParamType} from '../../../../src/engine/poly/ParamType';
 import {AssemblersUtils} from '../../../helpers/AssemblersUtils';
 import {AttribClass} from '../../../../src/core/geometry/Constant';
-import {CoreObject} from '../../../../src/core/geometry/Object';
+import {CoreObject} from '../../../../src/core/geometry/modules/three/CoreObject';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 import {CoreSleep} from '../../../../src/core/Sleep';
 export function testenginenodessopObjectBuilder(qUnit: QUnit) {

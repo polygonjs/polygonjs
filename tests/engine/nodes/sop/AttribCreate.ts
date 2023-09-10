@@ -12,8 +12,8 @@ import {Vector2Param} from '../../../../src/engine/params/Vector2';
 import {Vector3Param} from '../../../../src/engine/params/Vector3';
 import {Vector4Param} from '../../../../src/engine/params/Vector4';
 import {StringOrNumber2, StringOrNumber3, StringOrNumber4} from '../../../../src/types/GlobalTypes';
-import {primitivesFromObject} from '../../../../src/core/geometry/primitive/CorePrimitiveUtils';
-import {verticesFromObject} from '../../../../src/core/geometry/vertex/CoreVertexUtils';
+import {primitivesFromObject} from '../../../../src/core/geometry/entities/primitive/CorePrimitiveUtils';
+import {verticesFromObject} from '../../../../src/core/geometry/entities/vertex/CoreVertexUtils';
 export function testenginenodessopAttribCreate(qUnit: QUnit) {
 	qUnit.test('sop/attribCreate simple float vertex', async (assert) => {
 		const geo1 = window.geo1;

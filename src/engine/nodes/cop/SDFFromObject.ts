@@ -10,7 +10,6 @@ import {Vector3, Ray, Texture, Data3DTexture, DoubleSide, Box3, Mesh} from 'thre
 import {NodeContext} from './../../poly/NodeContext';
 import {TypedCopNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-// import {BaseNodeType} from '../_Base';
 import {HitPointInfo} from 'three-mesh-bvh';
 import {addSDFMetadataToContainer, createSDFTexture} from '../../../core/loader/geometry/SDF';
 import {CopType} from '../../poly/registers/nodes/types/Cop';

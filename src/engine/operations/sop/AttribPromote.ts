@@ -1,5 +1,5 @@
-import {CorePoint} from './../../../core/geometry/Point';
-import {CoreObject} from './../../../core/geometry/Object';
+import {CorePoint} from './../../../core/geometry/entities/point/CorePoint';
+import {CoreObject} from './../../../core/geometry/modules/three/CoreObject';
 import {CoreAttribute} from './../../../core/geometry/Attribute';
 import {AttribValue, NumericAttribValue} from './../../../types/GlobalTypes';
 import {TypeAssert} from './../../poly/Assert';

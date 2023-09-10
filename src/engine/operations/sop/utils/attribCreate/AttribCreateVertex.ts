@@ -1,10 +1,13 @@
 import {CoreGroup} from '../../../../../core/geometry/Group';
-import {CoreObject} from '../../../../../core/geometry/Object';
+import {CoreObject} from '../../../../../core/geometry/modules/three/CoreObject';
 import {CoreAttribute} from '../../../../../core/geometry/Attribute';
 import {AttribCreateSopParams} from '../../AttribCreate';
 import {AttribType} from '../../../../../core/geometry/Constant';
 import {TypeAssert} from '../../../../poly/Assert';
-import {verticesFromObject, verticesFromObjectFromGroup} from '../../../../../core/geometry/vertex/CoreVertexUtils';
+import {
+	verticesFromObject,
+	verticesFromObjectFromGroup,
+} from '../../../../../core/geometry/entities/vertex/CoreVertexUtils';
 import {coreVertexClassFactory} from '../../../../../core/geometry/CoreObjectFactory';
 
 export function addVertexAttribute(attribType: AttribType, coreGroup: CoreGroup, params: AttribCreateSopParams) {

@@ -6,9 +6,9 @@ import {Triangle} from 'three';
 import mapboxgl from 'mapbox-gl';
 import {CoreGeometry} from '../../../geometry/Geometry';
 import {expandTriangle} from '../../../math/_Module';
-import {CorePoint} from '../../../geometry/Point';
+import {CorePoint} from '../../../geometry/entities/point/CorePoint';
 import {Vector2Like} from '../../../../types/GlobalTypes';
-import {CoreGeometryBuilderMesh} from '../../..//geometry/three/builders/Mesh';
+import {CoreGeometryBuilderMesh} from '../../../geometry/modules/three/builders/Mesh';
 import {CoreMapboxUtils} from '../Utils';
 
 export class MapboxPlaneFrustumController {

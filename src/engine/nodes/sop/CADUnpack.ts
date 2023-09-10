@@ -5,12 +5,12 @@
  */
 import {CADSopNode} from './_BaseCAD';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
-import {CadGeometryType, cadGeometryTypeFromShape, cadDowncast} from '../../../core/geometry/cad/CadCommon';
+import {CadGeometryType, cadGeometryTypeFromShape, cadDowncast} from '../../../core/geometry/modules/cad/CadCommon';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
-import {CadLoaderSync} from '../../../core/geometry/cad/CadLoaderSync';
-import {CadObject} from '../../../core/geometry/cad/CadObject';
-import {CoreCadType} from '../../../core/geometry/cad/CadCoreType';
+import {CadLoaderSync} from '../../../core/geometry/modules/cad/CadLoaderSync';
+import {CadObject} from '../../../core/geometry/modules/cad/CadObject';
+import {CoreCadType} from '../../../core/geometry/modules/cad/CadCoreType';
 
 class CADUnpackSopParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new CADUnpackSopParamsConfig();

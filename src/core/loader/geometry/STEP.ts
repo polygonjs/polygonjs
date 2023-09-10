@@ -1,10 +1,10 @@
 import {Loader, LoadingManager, MathUtils} from 'three';
 import {BaseLoaderHandler, BaseGeoLoader} from './_BaseLoaderHandler';
 import type {OnSuccess, OnProgress, OnError} from './Common';
-import {CadLoader} from '../../geometry/cad/CadLoader';
-import {CadGeometryType, cadGeometryTypeFromShape} from '../../geometry/cad/CadCommon';
-import {CadLoaderSync} from '../../geometry/cad/CadLoaderSync';
-import {CadObject} from '../../geometry/cad/CadObject';
+import {CadLoader} from '../../geometry/modules/cad/CadLoader';
+import {CadGeometryType, cadGeometryTypeFromShape} from '../../geometry/modules/cad/CadCommon';
+import {CadLoaderSync} from '../../geometry/modules/cad/CadLoaderSync';
+import {CadObject} from '../../geometry/modules/cad/CadObject';
 import {BaseLoaderLoadOptions} from '../_Base';
 
 type TypedCadObject = CadObject<CadGeometryType>;

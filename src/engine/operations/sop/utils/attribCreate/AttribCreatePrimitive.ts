@@ -6,9 +6,9 @@ import {TypeAssert} from '../../../../poly/Assert';
 import {
 	primitivesFromObject,
 	primitivesFromObjectFromGroup,
-} from '../../../../../core/geometry/primitive/CorePrimitiveUtils';
+} from '../../../../../core/geometry/entities/primitive/CorePrimitiveUtils';
 import {corePrimitiveClassFactory} from '../../../../../core/geometry/CoreObjectFactory';
-import {BaseCoreObject} from '../../../../../core/geometry/_BaseObject';
+import {BaseCoreObject} from '../../../../../core/geometry/entities/object/BaseCoreObject';
 import {CoreObjectType} from '../../../../../core/geometry/ObjectContent';
 
 export function addPrimitiveAttribute(attribType: AttribType, coreGroup: CoreGroup, params: AttribCreateSopParams) {

@@ -5,13 +5,13 @@
  */
 import {CADSopNode} from './_BaseCAD';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
-import {TopoDS_Shape, TopoDS_Edge, gp_Pnt, CadGC} from '../../../core/geometry/cad/CadCommon';
-import {CoreCadType} from '../../../core/geometry/cad/CadCoreType';
-import {cadEdgeCreate} from '../../../core/geometry/cad/toObject3D/CadEdge';
+import {TopoDS_Shape, TopoDS_Edge, gp_Pnt, CadGC} from '../../../core/geometry/modules/cad/CadCommon';
+import {CoreCadType} from '../../../core/geometry/modules/cad/CadCoreType';
+import {cadEdgeCreate} from '../../../core/geometry/modules/cad/toObject3D/CadEdge';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
-import {CadLoaderSync} from '../../../core/geometry/cad/CadLoaderSync';
-// import {withCadException} from '../../../core/geometry/cad/CadExceptionHandler';
+import {CadLoaderSync} from '../../../core/geometry/modules/cad/CadLoaderSync';
+// import {withCadException} from '../../../core/geometry/modules/cad/CadExceptionHandler';
 
 class CADCurveFromPointsSopParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new CADCurveFromPointsSopParamsConfig();

@@ -2,7 +2,7 @@ import {Camera} from 'three';
 import {ParamConfig} from '../../engine/nodes/utils/params/ParamsConfig';
 import {StringParamLanguage} from '../../engine/params/utils/OptionsController';
 import {Constructor} from '../../types/GlobalTypes';
-import {CoreObject} from '../geometry/Object';
+import {CoreObject} from '../geometry/modules/three/CoreObject';
 import {CameraAttribute} from './CoreCamera';
 
 export function CoreCameraViewerCodeParamConfig<TBase extends Constructor>(Base: TBase) {

@@ -7,10 +7,10 @@ import {CSGSopNode} from './_BaseCSG';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
-import {csgIsGeom3} from '../../../core/geometry/csg/CsgCoreType';
-import {CsgGeometry} from '../../../core/geometry/csg/CsgCommon';
+import {csgIsGeom3} from '../../../core/geometry/modules/csg/CsgCoreType';
+import {CsgGeometry} from '../../../core/geometry/modules/csg/CsgCommon';
 import {extrusions} from '@jscad/modeling';
-import {vector3ToCsgVec3} from '../../../core/geometry/csg/CsgVecToVector';
+import {vector3ToCsgVec3} from '../../../core/geometry/modules/csg/CsgVecToVector';
 import type {maths} from '@jscad/modeling';
 const {project} = extrusions;
 

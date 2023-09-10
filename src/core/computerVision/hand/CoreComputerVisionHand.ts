@@ -1,6 +1,6 @@
 import {Object3D, Vector4} from 'three';
 import {Hands, Options, Results} from '@mediapipe/hands';
-import {CoreObject} from '../../geometry/Object';
+import {CoreObject} from '../../geometry/modules/three/CoreObject';
 import {CoreComputerVisionHandAttribute} from './Common';
 import {ParamConfig} from '../../../engine/nodes/utils/params/ParamsConfig';
 import {Constructor} from '../../../types/GlobalTypes';

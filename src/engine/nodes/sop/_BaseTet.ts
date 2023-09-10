@@ -1,7 +1,7 @@
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {TypedSopNode} from './_Base';
-import type {TetGeometry} from '../../../core/geometry/tet/TetGeometry';
-import {TetObject} from '../../../core/geometry/tet/TetObject';
+import type {TetGeometry} from '../../../core/geometry/modules/tet/TetGeometry';
+import {TetObject} from '../../../core/geometry/modules/tet/TetObject';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {CoreObjectType} from '../../../core/geometry/ObjectContent';
 import {ModuleName} from '../../poly/registers/modules/Common';

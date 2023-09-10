@@ -6,7 +6,7 @@ import {_physicsCreateRBD, physicsUpdateRBD} from './PhysicsRBD';
 import {physicsCreateJoints} from './PhysicsJoint';
 import {CoreGraphNodeId} from '../graph/CoreGraph';
 import {BaseNodeType} from '../../engine/nodes/_Base';
-import {CoreObject} from '../geometry/Object';
+import {CoreObject} from '../geometry/modules/three/CoreObject';
 import {PhysicsIdAttribute} from './PhysicsAttribute';
 // import {updatePhysicsDebugObject} from './PhysicsDebug';
 import {clearPhysicsPlayers, createOrFindPhysicsPlayer} from './player/PhysicsPlayer';

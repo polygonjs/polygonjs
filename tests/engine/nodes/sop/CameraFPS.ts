@@ -1,5 +1,5 @@
 import type {QUnit} from '../../../helpers/QUnit';
-import {CoreObject} from '../../../../src/core/geometry/Object';
+import {CoreObject} from '../../../../src/core/geometry/modules/three/CoreObject';
 import {CameraAttribute} from '../../../../src/core/camera/CoreCamera';
 export function testenginenodessopCameraFPS(qUnit: QUnit) {
 	qUnit.test('sop/cameraFPS simple', async (assert) => {

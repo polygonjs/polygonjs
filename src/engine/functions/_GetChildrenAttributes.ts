@@ -1,5 +1,5 @@
 import {Object3D} from 'three';
-import {CoreObject} from '../../core/geometry/Object';
+import {CoreObject} from '../../core/geometry/modules/three/CoreObject';
 import {ObjectNamedFunction3} from './_Base';
 import {_dummyReadAttributeRefVal} from '../../core/reactivity/ObjectAttributeReactivity';
 import {getOrCreateObjectAttributeRef} from '../../core/reactivity/ObjectAttributeReactivityCreateRef';

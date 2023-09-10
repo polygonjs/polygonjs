@@ -5,9 +5,9 @@ import {AttribCreateSopNodeParams} from '../../../../operations/sop/utils/attrib
 import {AttribType} from '../../../../../core/geometry/Constant';
 import {TypeAssert} from '../../../../poly/Assert';
 
-import {primitivesFromObjectFromGroup} from '../../../../../core/geometry/primitive/CorePrimitiveUtils';
+import {primitivesFromObjectFromGroup} from '../../../../../core/geometry/entities/primitive/CorePrimitiveUtils';
 import {corePrimitiveClassFactory} from '../../../../../core/geometry/CoreObjectFactory';
-import {BaseCoreObject} from '../../../../../core/geometry/_BaseObject';
+import {BaseCoreObject} from '../../../../../core/geometry/entities/object/BaseCoreObject';
 import {CoreObjectType} from '../../../../../core/geometry/ObjectContent';
 
 interface ArraysByObject {

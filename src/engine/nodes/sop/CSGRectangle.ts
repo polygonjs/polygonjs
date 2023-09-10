@@ -8,8 +8,8 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 import {primitives, maths} from '@jscad/modeling';
-import {vector2ToCsgVec2} from '../../../core/geometry/csg/CsgVecToVector';
-import {csgVec2MultScalar} from '../../../core/geometry/csg/math/CsgMathVec2';
+import {vector2ToCsgVec2} from '../../../core/geometry/modules/csg/CsgVecToVector';
+import {csgVec2MultScalar} from '../../../core/geometry/modules/csg/math/CsgMathVec2';
 import {CoreMath} from '../../../core/math/_Module';
 const {rectangle, roundedRectangle} = primitives;
 

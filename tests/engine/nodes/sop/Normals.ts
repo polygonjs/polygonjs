@@ -1,5 +1,5 @@
 import type {QUnit} from '../../../helpers/QUnit';
-import {CorePoint} from '../../../../src/core/geometry/Point';
+import {CorePoint} from '../../../../src/core/geometry/entities/point/CorePoint';
 import {Vector3} from 'three';
 const _normal = new Vector3();
 

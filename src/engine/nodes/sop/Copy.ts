@@ -10,11 +10,11 @@ import {ObjectTransformMode, ObjectTransformSpace} from './../../../core/Transfo
 import {SopType} from './../../poly/registers/nodes/types/Sop';
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {BaseCoreObject} from '../../../core/geometry/_BaseObject';
+import {BaseCoreObject} from '../../../core/geometry/entities/object/BaseCoreObject';
 import {CoreInstancer} from '../../../core/geometry/Instancer';
 import {SopCopyStamp} from './utils/CopyStamp';
 import {Matrix4} from 'three';
-import {CorePoint} from '../../../core/geometry/Point';
+import {CorePoint} from '../../../core/geometry/entities/point/CorePoint';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {isBooleanTrue} from '../../../core/BooleanValue';

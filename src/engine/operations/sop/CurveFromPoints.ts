@@ -12,7 +12,7 @@ import {
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 import {ObjectType} from '../../../core/geometry/Constant';
-import {CoreObject} from '../../../core/geometry/Object';
+import {CoreObject} from '../../../core/geometry/modules/three/CoreObject';
 import {SPLINE_CURVE_TYPES} from '../../../core/geometry/Curve';
 import {ObjectUserData} from '../../../core/UserData';
 

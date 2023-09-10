@@ -2,7 +2,7 @@ import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {BufferAttribute, Mesh, Vector3} from 'three';
 import {CoreGeometry} from '../../../core/geometry/Geometry';
-import {CorePoint} from '../../../core/geometry/Point';
+import {CorePoint} from '../../../core/geometry/entities/point/CorePoint';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 
 const POSITION = 'position';

@@ -1,5 +1,5 @@
 import {DeleteSopNode} from '../../Delete';
-import {CorePoint} from '../../../../../core/geometry/Point';
+import {CorePoint} from '../../../../../core/geometry/entities/point/CorePoint';
 import {Mesh, Vector3, Raycaster, Intersection} from 'three';
 import {CoreGroup} from '../../../../../core/geometry/Group';
 import {MatDoubleSideTmpSetter} from '../../../../../core/render/MatDoubleSideTmpSetter';

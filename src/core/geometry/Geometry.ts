@@ -15,7 +15,7 @@ import {
 	Int32BufferAttribute,
 	InstancedBufferAttribute,
 } from 'three';
-import {CorePoint} from './Point';
+import {CorePoint} from './entities/point/CorePoint';
 import {AttribType, AttribSize, GroupString} from './Constant';
 import {Attribute, CoreAttribute} from './Attribute';
 import {CoreAttributeData} from './AttributeData';

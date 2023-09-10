@@ -5,11 +5,11 @@
  */
 import {CADSopNode} from './_BaseCAD';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
-import {gp_Pnt2d} from '../../../core/geometry/cad/CadCommon';
-import {CoreCadType} from '../../../core/geometry/cad/CadCoreType';
+import {gp_Pnt2d} from '../../../core/geometry/modules/cad/CadCommon';
+import {CoreCadType} from '../../../core/geometry/modules/cad/CadCoreType';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
-import {CadLoaderSync} from '../../../core/geometry/cad/CadLoaderSync';
+import {CadLoaderSync} from '../../../core/geometry/modules/cad/CadLoaderSync';
 
 class CADCurveFromPoints2DSopParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new CADCurveFromPoints2DSopParamsConfig();

@@ -1,10 +1,10 @@
 import {BufferGeometry, Object3D, Material, Matrix4} from 'three';
 import {ObjectUtils} from '../ObjectUtils';
-import type {CadGeometry} from './cad/CadCommon';
-import type {CsgGeometry} from './csg/CsgCommon';
-import type {QuadGeometry} from './quad/QuadGeometry';
-import type {SDFGeometry} from './sdf/SDFCommon';
-import type {TetGeometry} from './tet/TetGeometry';
+import type {CadGeometry} from './modules/cad/CadCommon';
+import type {CsgGeometry} from './modules/csg/CsgCommon';
+import type {QuadGeometry} from './modules/quad/QuadGeometry';
+import type {SDFGeometry} from './modules/sdf/SDFCommon';
+import type {TetGeometry} from './modules/tet/TetGeometry';
 import {CoreEntity} from './Entity';
 
 export enum CoreObjectType {

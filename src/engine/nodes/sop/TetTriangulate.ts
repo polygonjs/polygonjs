@@ -10,7 +10,7 @@ import {CoreGroup} from '../../../core/geometry/Group';
 import {Object3D} from 'three';
 import {CoreType} from '../../../core/Type';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
-import {SOPTetTesselationParamConfig} from '../../../core/geometry/tet/utils/TesselationParamsConfig';
+import {SOPTetTesselationParamConfig} from '../../../core/geometry/modules/tet/utils/TesselationParamsConfig';
 class TetTriangulateSopParamsConfig extends SOPTetTesselationParamConfig(NodeParamsConfig) {}
 const ParamsConfig = new TetTriangulateSopParamsConfig();
 

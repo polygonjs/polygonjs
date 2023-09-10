@@ -6,7 +6,7 @@ import {Attribute} from '../../../core/geometry/Attribute';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 import {BufferAttribute, Object3D} from 'three';
 import {isBooleanTrue} from '../../../core/Type';
-import {BaseCoreObject} from '../../../core/geometry/_BaseObject';
+import {BaseCoreObject} from '../../../core/geometry/entities/object/BaseCoreObject';
 import {CoreObjectType} from '../../../core/geometry/ObjectContent';
 
 interface AttribIdSopParams extends DefaultOperationParams {

@@ -1,7 +1,7 @@
 import {Camera} from 'three';
 import {PolyScene} from '../../engine/scene/PolyScene';
 import {BaseNodeType, TypedNode} from '../../engine/nodes/_Base';
-import {CoreObject} from '../geometry/Object';
+import {CoreObject} from '../geometry/modules/three/CoreObject';
 import {CameraAttribute} from './CoreCamera';
 import {CoreType} from '../Type';
 import {ObjType} from '../../engine/poly/registers/nodes/types/Obj';

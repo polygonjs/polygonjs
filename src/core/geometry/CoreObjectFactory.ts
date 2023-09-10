@@ -1,8 +1,8 @@
 import type {CoreObjectType, ObjectContent} from './ObjectContent';
-import {BaseCoreObject} from './_BaseObject';
-import {object3DFactory} from './three/ThreeModule';
-import {CoreVertex} from './vertex/CoreVertex';
-import {CorePrimitive} from './primitive/CorePrimitive';
+import {BaseCoreObject} from './entities/object/BaseCoreObject';
+import {object3DFactory} from './modules/three/ThreeModule';
+import {CoreVertex} from './entities/vertex/CoreVertex';
+import {CorePrimitive} from './entities/primitive/CorePrimitive';
 
 // vertex return types
 type BaseCoreVertexInstance = CoreVertex<CoreObjectType>;

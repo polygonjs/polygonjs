@@ -3,14 +3,11 @@
  *
  *
  */
-import {Vector3} from 'three';
-import {BufferGeometry} from 'three';
-import {BufferAttribute} from 'three';
-import {Mesh} from 'three';
+import {Mesh, BufferAttribute, BufferGeometry, Vector3} from 'three';
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {CorePointArray3, CoreFace} from '../../../core/geometry/primitive/CoreFace';
-import {CorePoint} from '../../../core/geometry/Point';
+import {CorePointArray3, CoreFace} from '../../../core/geometry/modules/three/CoreFace';
+import {CorePoint} from '../../../core/geometry/entities/point/CorePoint';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {ArrayUtils} from '../../../core/ArrayUtils';

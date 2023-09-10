@@ -1,7 +1,7 @@
 import {BufferAttribute, BufferGeometry, Object3D, Vector3, Mesh} from 'three';
 import {setToArray} from '../../SetUtils';
 import {Number2} from '../../../types/GlobalTypes';
-import {CoreObject} from '../Object';
+import {CoreObject} from '../modules/three/CoreObject';
 import {textureFromAttribLookupId, textureFromAttribLookupUv} from './TextureFromAttribute';
 
 export interface Face {

@@ -5,12 +5,12 @@
  */
 import {CADSopNode} from './_BaseCAD';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {CadGeometryType, TopoDS_Shape, cadGeometryTypeFromShape} from '../../../core/geometry/cad/CadCommon';
-import {CoreCadType} from '../../../core/geometry/cad/CadCoreType';
+import {CadGeometryType, TopoDS_Shape, cadGeometryTypeFromShape} from '../../../core/geometry/modules/cad/CadCommon';
+import {CoreCadType} from '../../../core/geometry/modules/cad/CadCoreType';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
-import {CadLoaderSync} from '../../../core/geometry/cad/CadLoaderSync';
-import {CadObject} from '../../../core/geometry/cad/CadObject';
+import {CadLoaderSync} from '../../../core/geometry/modules/cad/CadLoaderSync';
+import {CadObject} from '../../../core/geometry/modules/cad/CadObject';
 
 // TODO: make sure it works for 3D as well
 class CADMirrorSopParamsConfig extends NodeParamsConfig {

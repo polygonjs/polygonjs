@@ -1,5 +1,5 @@
 import {BaseCopyStamp} from '../../utils/BaseCopyStamp';
-import {CorePoint} from '../../../../core/geometry/Point';
+import {CorePoint} from '../../../../core/geometry/entities/point/CorePoint';
 
 export class SopCopyStamp extends BaseCopyStamp {
 	protected _point: CorePoint | undefined;

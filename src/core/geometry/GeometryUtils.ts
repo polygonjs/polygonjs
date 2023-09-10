@@ -1,8 +1,8 @@
 import {BufferAttribute, BufferGeometry, Object3D, Mesh} from 'three';
 import {Object3DWithGeometry} from './Group';
 import {ObjectContent, CoreObjectType, isObject3D} from './ObjectContent';
-import {QuadObject} from './quad/QuadObject';
-import {isQuadObject} from './quad/QuadCoreType';
+import type {QuadObject} from './modules/quad/QuadObject';
+import {isQuadObject} from './modules/quad/QuadCoreType';
 
 export function bufferGeometryMaxGroupEnd(geometry: BufferGeometry): number {
 	const groups = geometry.groups;

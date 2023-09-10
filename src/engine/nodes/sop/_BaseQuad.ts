@@ -1,7 +1,7 @@
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {TypedSopNode} from './_Base';
-import type {QuadGeometry} from '../../../core/geometry/quad/QuadGeometry';
-import {QuadObject} from '../../../core/geometry/quad/QuadObject';
+import type {QuadGeometry} from '../../../core/geometry/modules/quad/QuadGeometry';
+import {QuadObject} from '../../../core/geometry/modules/quad/QuadObject';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {CoreObjectType} from '../../../core/geometry/ObjectContent';
 import {ModuleName} from '../../poly/registers/modules/Common';

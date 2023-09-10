@@ -4,21 +4,21 @@
  *
  */
 import {CADSopNode} from './_BaseCAD';
-import {step} from '../../../core/geometry/cad/CadConstant';
+import {step} from '../../../core/geometry/modules/cad/CadConstant';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {CoreCadType} from '../../../core/geometry/cad/CadCoreType';
-import {CadGeometryType, cadGeometryTypeFromShape, TopoDS_Edge} from '../../../core/geometry/cad/CadCommon';
-import {CadObject} from '../../../core/geometry/cad/CadObject';
+import {CoreCadType} from '../../../core/geometry/modules/cad/CadCoreType';
+import {CadGeometryType, cadGeometryTypeFromShape, TopoDS_Edge} from '../../../core/geometry/modules/cad/CadCommon';
+import {CadObject} from '../../../core/geometry/modules/cad/CadObject';
 import {
 	cadAxis,
 	// cadPlaneXY
-} from '../../../core/geometry/cad/CadMath';
+} from '../../../core/geometry/modules/cad/CadMath';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
-import {curveDataFromEdge} from '../../../core/geometry/cad/toObject3D/CadEdge';
-import {traverseEdges} from '../../../core/geometry/cad/CadTraverse';
-import {CadLoaderSync} from '../../../core/geometry/cad/CadLoaderSync';
-// import {withCadException} from '../../../core/geometry/cad/CadExceptionHandler';
+import {curveDataFromEdge} from '../../../core/geometry/modules/cad/toObject3D/CadEdge';
+import {traverseEdges} from '../../../core/geometry/modules/cad/CadTraverse';
+import {CadLoaderSync} from '../../../core/geometry/modules/cad/CadLoaderSync';
+// import {withCadException} from '../../../core/geometry/modules/cad/CadExceptionHandler';
 
 class CADRevolutionSopParamsConfig extends NodeParamsConfig {
 	/** @param axis */

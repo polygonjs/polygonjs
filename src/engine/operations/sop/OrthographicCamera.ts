@@ -8,7 +8,7 @@ import {CameraAttribute, CORE_CAMERA_DEFAULT, OrthographicCameraAttribute} from 
 import {isBooleanTrue} from '../../../core/Type';
 import {CameraHelper} from '../../../core/helpers/CameraHelper';
 import {ORTHOGRAPHIC_CAMERA_DEFAULT, registerOrthographicCamera} from '../../../core/camera/CoreOrthographicCamera';
-import {CoreObject} from '../../../core/geometry/Object';
+import {CoreObject} from '../../../core/geometry/modules/three/CoreObject';
 import type {BaseNodeType} from '../../nodes/_Base';
 import {ObjectType, registerObjectType} from '../../../core/geometry/Constant';
 interface CreateOrthographicCameraParams {

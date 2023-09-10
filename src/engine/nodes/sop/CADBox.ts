@@ -7,9 +7,9 @@
 import {CADSopNode} from './_BaseCAD';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
-import {step} from '../../../core/geometry/cad/CadConstant';
-import {CadLoader} from '../../../core/geometry/cad/CadLoader';
-import {cadShapeTranslate} from '../../../core/geometry/cad/toObject3D/CadShapeCommon';
+import {step} from '../../../core/geometry/modules/cad/CadConstant';
+import {CadLoader} from '../../../core/geometry/modules/cad/CadLoader';
+import {cadShapeTranslate} from '../../../core/geometry/modules/cad/toObject3D/CadShapeCommon';
 import {Vector3} from 'three';
 
 const size = new Vector3();

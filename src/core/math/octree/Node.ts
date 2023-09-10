@@ -1,5 +1,5 @@
 import {Box3, Vector3, Sphere} from 'three';
-import {CorePoint} from '../../geometry/Point';
+import {CorePoint} from '../../geometry/entities/point/CorePoint';
 import {PolyDictionary} from '../../../types/GlobalTypes';
 
 const _position = new Vector3();

@@ -1,7 +1,7 @@
 import type {QUnit} from '../../../helpers/QUnit';
 import {AttribClass} from '../../../../src/core/geometry/Constant';
-import {primitivesFromObject} from '../../../../src/core/geometry/primitive/CorePrimitiveUtils';
-import {verticesFromObject} from '../../../../src/core/geometry/vertex/CoreVertexUtils';
+import {primitivesFromObject} from '../../../../src/core/geometry/entities/primitive/CorePrimitiveUtils';
+import {verticesFromObject} from '../../../../src/core/geometry/entities/vertex/CoreVertexUtils';
 export function testenginenodessopQuadPlane(qUnit: QUnit) {
 	qUnit.test('sop/quadPlane prim count', async (assert) => {
 		const geo1 = window.geo1;

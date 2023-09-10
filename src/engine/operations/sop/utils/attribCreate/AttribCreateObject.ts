@@ -3,7 +3,7 @@ import {AttribCreateSopParams} from '../../AttribCreate';
 import {AttribType} from '../../../../../core/geometry/Constant';
 import {TypeAssert} from '../../../../poly/Assert';
 import {CoreMask} from '../../../../../core/geometry/Mask';
-import {BaseCoreObject} from '../../../../../core/geometry/_BaseObject';
+import {BaseCoreObject} from '../../../../../core/geometry/entities/object/BaseCoreObject';
 import {CoreObjectType} from '../../../../../core/geometry/ObjectContent';
 import {defaultAttribValue} from './Common';
 

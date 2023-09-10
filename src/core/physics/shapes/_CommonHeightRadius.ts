@@ -8,7 +8,7 @@ import {
 	PhysicsRBDHeightAttribute,
 } from '../PhysicsAttribute';
 import {_getRBDFromObject} from '../PhysicsRBD';
-import {CoreObject} from '../../geometry/Object';
+import {CoreObject} from '../../geometry/modules/three/CoreObject';
 import {touchRBDProperty} from '../../reactivity/RBDPropertyReactivity';
 
 export enum RBDCommonProperty {

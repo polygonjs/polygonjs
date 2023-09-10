@@ -1,5 +1,5 @@
 import type {QUnit} from '../../../helpers/QUnit';
-import {CoreObject} from '../../../../src/core/geometry/Object';
+import {CoreObject} from '../../../../src/core/geometry/modules/three/CoreObject';
 import {CameraAttribute} from '../../../../src/core/camera/CoreCamera';
 import {
 	CameraViewerCodePresetName,
@@ -8,32 +8,31 @@ import {
 import {RendererUtils} from '../../../helpers/RendererUtils';
 import {CoreSleep} from '../../../../src/core/Sleep';
 export function testenginenodessopCameraViewerCode(qUnit: QUnit) {
+	qUnit.test('sop/cameraViewerCode simple', async (assert) => {
+		const scene = window.scene;
+		const geo1 = window.geo1;
+		const perspectiveCamera1 = geo1.createNode('perspectiveCamera');
+		perspectiveCamera1.setName('perspectiveCamera_MAIN_WITH_CODE');
+		const cameraViewerCode1 = geo1.createNode('cameraViewerCode');
+		const presetsCollection = cameraViewerCodeSopPresetRegister.setupFunc(cameraViewerCode1);
+		const preset = presetsCollection.getPreset(CameraViewerCodePresetName.COLOR)!;
+		assert.ok(preset, 'preset ok');
+		const presetEntries = preset.entries();
+		for (const entry of presetEntries) {
+			(entry.param as any).set(entry.value as unknown as any);
+		}
 
-qUnit.test('sop/cameraViewerCode simple', async (assert) => {
-	const scene = window.scene;
-	const geo1 = window.geo1;
-	const perspectiveCamera1 = geo1.createNode('perspectiveCamera');
-	perspectiveCamera1.setName('perspectiveCamera_MAIN_WITH_CODE');
-	const cameraViewerCode1 = geo1.createNode('cameraViewerCode');
-	const presetsCollection = cameraViewerCodeSopPresetRegister.setupFunc(cameraViewerCode1);
-	const preset = presetsCollection.getPreset(CameraViewerCodePresetName.COLOR)!;
-	assert.ok(preset, 'preset ok');
-	const presetEntries = preset.entries();
-	for (const entry of presetEntries) {
-		(entry.param as any).set(entry.value as unknown as any);
-	}
+		cameraViewerCode1.setInput(0, perspectiveCamera1);
+		cameraViewerCode1.flags.display.set(true);
+		const container = await cameraViewerCode1.compute();
+		const objects = container.coreContent()!.allObjects()!;
+		assert.equal(objects.length, 1);
+		const cameraObject = objects[0];
 
-	cameraViewerCode1.setInput(0, perspectiveCamera1);
-	cameraViewerCode1.flags.display.set(true);
-	const container = await cameraViewerCode1.compute();
-	const objects = container.coreContent()!.allObjects()!;
-	assert.equal(objects.length, 1);
-	const cameraObject = objects[0];
-
-	assert.equal(CoreObject.attribValue(cameraObject, CameraAttribute.VIEWER_ID), 'my-viewer');
-	assert.equal(
-		CoreObject.attribValue(cameraObject, CameraAttribute.VIEWER_HTML),
-		`<div id='my-viewer'></div>
+		assert.equal(CoreObject.attribValue(cameraObject, CameraAttribute.VIEWER_ID), 'my-viewer');
+		assert.equal(
+			CoreObject.attribValue(cameraObject, CameraAttribute.VIEWER_HTML),
+			`<div id='my-viewer'></div>
 <div id='color-bars'>
 	<div class='color-bar red'></div>
 	<div class='color-bar green'></div>
@@ -65,21 +64,21 @@ qUnit.test('sop/cameraViewerCode simple', async (assert) => {
 </style>
 
 `
-	);
+		);
 
-	await CoreSleep.sleep(50);
-	const viewer = (await scene.camerasController.createMainViewer({
-		autoRender: false,
-		cameraMaskOverride: '*/perspectiveCamera_MAIN_WITH_CODE',
-	}))!;
-	assert.ok(viewer, '_viewer');
+		await CoreSleep.sleep(50);
+		const viewer = (await scene.camerasController.createMainViewer({
+			autoRender: false,
+			cameraMaskOverride: '*/perspectiveCamera_MAIN_WITH_CODE',
+		}))!;
+		assert.ok(viewer, '_viewer');
 
-	await RendererUtils.withViewer({viewer, mount: true}, async ({viewer, element}) => {
-		scene.play();
-		await CoreSleep.sleep(500);
-		assert.equal(
-			viewer.domElement()?.innerHTML,
-			`<div class="CoreThreejsViewer" style="height: 100%;"><div id="my-viewer"><canvas id="TypedViewer_0" data-engine="three.js r152" width="400" height="400" style="display: block; outline: none; width: 100%; height: 100%;"></canvas></div>
+		await RendererUtils.withViewer({viewer, mount: true}, async ({viewer, element}) => {
+			scene.play();
+			await CoreSleep.sleep(500);
+			assert.equal(
+				viewer.domElement()?.innerHTML,
+				`<div class="CoreThreejsViewer" style="height: 100%;"><div id="my-viewer"><canvas id="TypedViewer_0" data-engine="three.js r152" width="400" height="400" style="display: block; outline: none; width: 100%; height: 100%;"></canvas></div>
 <div id="color-bars">
 	<div class="color-bar red"></div>
 	<div class="color-bar green"></div>
@@ -111,8 +110,7 @@ qUnit.test('sop/cameraViewerCode simple', async (assert) => {
 </style>
 
 </div>`
-		);
+			);
+		});
 	});
-});
-
 }

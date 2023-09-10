@@ -1,5 +1,5 @@
 import {OrthographicCamera} from 'three';
-import {CoreObject} from '../../geometry/Object';
+import {CoreObject} from '../../geometry/modules/three/CoreObject';
 import {OrthographicCameraAttribute, UpdateProjectionOptions} from '../CoreCamera';
 import {CameraFrameMode} from '../CoreCameraFrameMode';
 import {ORTHOGRAPHIC_CAMERA_DEFAULT} from '../CoreOrthographicCamera';

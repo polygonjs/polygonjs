@@ -6,10 +6,10 @@
 import {BaseExporterSopParamsConfig} from './_BaseExporter';
 import {CADExporterSopNode} from './_BaseExporterCAD';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
-import {CadLoader} from '../../../core/geometry/cad/CadLoader';
-import {CadGC} from '../../../core/geometry/cad/CadCommon';
-import {CoreCadType} from '../../../core/geometry/cad/CadCoreType';
-import {CadLoaderSync} from '../../../core/geometry/cad/CadLoaderSync';
+import {CadLoader} from '../../../core/geometry/modules/cad/CadLoader';
+import {CadGC} from '../../../core/geometry/modules/cad/CadCommon';
+import {CoreCadType} from '../../../core/geometry/modules/cad/CadCoreType';
+import {CadLoaderSync} from '../../../core/geometry/modules/cad/CadLoaderSync';
 import {MathUtils} from 'three';
 
 class ExporterSTEPSopParamsConfig extends BaseExporterSopParamsConfig {}

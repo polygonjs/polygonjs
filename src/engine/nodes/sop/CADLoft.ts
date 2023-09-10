@@ -7,9 +7,9 @@
 import {CADSopNode} from './_BaseCAD';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
-import {CadLoaderSync} from '../../../core/geometry/cad/CadLoaderSync';
-import {CoreCadType} from '../../../core/geometry/cad/CadCoreType';
-import {CadObject} from '../../../core/geometry/cad/CadObject';
+import {CadLoaderSync} from '../../../core/geometry/modules/cad/CadLoaderSync';
+import {CoreCadType} from '../../../core/geometry/modules/cad/CadCoreType';
+import {CadObject} from '../../../core/geometry/modules/cad/CadObject';
 import {
 	cadDowncast,
 	CadGC,
@@ -17,8 +17,8 @@ import {
 	cadGeometryTypeFromShape,
 	// TopoDS_Wire,
 	// TopoDS_Shape,
-} from '../../../core/geometry/cad/CadCommon';
-import {cadFilterObjects} from '../../../core/geometry/cad/utils/CadFilter';
+} from '../../../core/geometry/modules/cad/CadCommon';
+import {cadFilterObjects} from '../../../core/geometry/modules/cad/utils/CadFilter';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {isBooleanTrue} from '../../../core/Type';
 

@@ -19,7 +19,7 @@ import {CoreSleep} from '../core/Sleep';
 import {CoreUserAgent} from '../core/UserAgent';
 import {CoreGeometry} from '../core/geometry/Geometry';
 import {CoreGroup} from '../core/geometry/Group';
-import {CoreObject} from '../core/geometry/Object';
+import {CoreObject} from '../core/geometry/modules/three/CoreObject';
 import {CoreFeaturesController} from '../core/FeaturesController';
 import {CoreMath, clamp, fit, randFloat, radToDeg} from '../core/math/_Module';
 import {sanitizeName} from '../core/String';

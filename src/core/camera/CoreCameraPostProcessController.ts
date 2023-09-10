@@ -3,7 +3,7 @@ import {PolyScene} from '../../engine/scene/PolyScene';
 import type {BaseNetworkPostProcessNodeType} from '../../engine/nodes/post/utils/EffectComposerController';
 import {BaseNodeType, TypedNode} from '../../engine/nodes/_Base';
 import {CameraSopNodeType, NetworkNodeType, NodeContext} from '../../engine/poly/NodeContext';
-import {CoreObject} from '../geometry/Object';
+import {CoreObject} from '../geometry/modules/three/CoreObject';
 import {CoreType} from '../Type';
 import {CameraAttribute} from './CoreCamera';
 import {BaseViewerType} from '../../engine/viewers/_Base';

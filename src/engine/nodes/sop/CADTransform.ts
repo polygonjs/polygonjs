@@ -9,9 +9,9 @@ import {CoreGroup} from '../../../core/geometry/Group';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 import {InputCloneMode} from '../../poly/InputCloneMode';
-import {CadObject} from '../../../core/geometry/cad/CadObject';
-import {CadGeometryType} from '../../../core/geometry/cad/CadCommon';
-import {cadTransform} from '../../../core/geometry/cad/operations/CadTransform';
+import {CadObject} from '../../../core/geometry/modules/cad/CadObject';
+import {CadGeometryType} from '../../../core/geometry/modules/cad/CadCommon';
+import {cadTransform} from '../../../core/geometry/modules/cad/operations/CadTransform';
 class CADTransformSopParamConfig extends NodeParamsConfig {
 	/** @param translate */
 	t = ParamConfig.VECTOR3([0, 0, 0]);

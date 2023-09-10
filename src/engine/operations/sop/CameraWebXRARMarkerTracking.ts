@@ -4,7 +4,7 @@ import {InputCloneMode} from '../../poly/InputCloneMode';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 import {CameraSopNodeType} from '../../poly/NodeContext';
 import {PolyScene} from '../../scene/PolyScene';
-import {CoreObject} from '../../../core/geometry/Object';
+import {CoreObject} from '../../../core/geometry/modules/three/CoreObject';
 import {CameraAttribute} from '../../../core/camera/CoreCamera';
 import {
 	MarkerTrackingTransformMode,

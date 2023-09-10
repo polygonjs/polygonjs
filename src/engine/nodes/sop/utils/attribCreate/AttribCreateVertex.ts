@@ -4,10 +4,10 @@ import {ValueArrayByObject, initArrayIfRequired} from './Common';
 import {AttribCreateSopNodeParams} from '../../../../operations/sop/utils/attribCreate/Common';
 import {AttribType} from '../../../../../core/geometry/Constant';
 import {TypeAssert} from '../../../../poly/Assert';
-import {verticesFromObjectFromGroup} from '../../../../../core/geometry/vertex/CoreVertexUtils';
+import {verticesFromObjectFromGroup} from '../../../../../core/geometry/entities/vertex/CoreVertexUtils';
 import {coreVertexClassFactory} from '../../../../../core/geometry/CoreObjectFactory';
 import {CoreObjectType} from '../../../../../core/geometry/ObjectContent';
-import {BaseCoreObject} from '../../../../../core/geometry/_BaseObject';
+import {BaseCoreObject} from '../../../../../core/geometry/entities/object/BaseCoreObject';
 
 interface ArraysByObject {
 	X: ValueArrayByObject;

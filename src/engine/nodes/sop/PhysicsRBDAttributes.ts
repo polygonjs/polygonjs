@@ -25,14 +25,14 @@ import {
 	SIZE_COMPUTATION_METHODS,
 } from '../../operations/sop/PhysicsRBDAttributes';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {BaseCoreObject} from '../../../core/geometry/_BaseObject';
+import {BaseCoreObject} from '../../../core/geometry/entities/object/BaseCoreObject';
 import {Vector3, Box3, Sphere} from 'three';
 import {Vector3Param} from '../../params/Vector3';
 import {isBooleanTrue} from '../../../core/Type';
 import {BooleanParam} from '../../params/Boolean';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 import {CoreObjectType, ObjectContent} from '../../../core/geometry/ObjectContent';
-import {CoreObject} from '../../../core/geometry/Object';
+import {CoreObject} from '../../../core/geometry/modules/three/CoreObject';
 const tmpBox = new Box3();
 const tmpSphere = new Sphere();
 const DEFAULT = PhysicsRBDAttributesSopOperation.DEFAULT_PARAMS;

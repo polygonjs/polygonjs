@@ -8,7 +8,7 @@ import {
 	setObjectString,
 } from '../../geometry/AttributeUtils';
 import {Object3D} from 'three';
-import {CoreObject} from '../../geometry/Object';
+import {CoreObject} from '../../geometry/modules/three/CoreObject';
 import {isString, isNumber} from '../../Type';
 import type {CSS2DObject} from './CSS2DObject';
 import type {CSS3DObject} from './CSS3DObject';

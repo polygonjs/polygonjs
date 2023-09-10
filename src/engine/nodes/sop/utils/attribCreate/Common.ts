@@ -1,5 +1,5 @@
 import {Vector2, Vector3, Vector4} from 'three';
-import type {BaseCoreObject} from '../../../../../core/geometry/_BaseObject';
+import type {BaseCoreObject} from '../../../../../core/geometry/entities/object/BaseCoreObject';
 import type {CoreObjectType} from '../../../../../core/geometry/ObjectContent';
 
 export type ValueArrayByObject = WeakMap<BaseCoreObject<CoreObjectType>, number[]>;

@@ -5,13 +5,16 @@ import type {CoreGroup} from '../../core/geometry/Group';
 import {CoreGeometry} from '../../core/geometry/Geometry';
 import {ContainableMap} from './utils/ContainableMap';
 import {AttribSize, AttribType, ObjectData} from '../../core/geometry/Constant';
-import {CoreObject} from '../../core/geometry/Object';
+import {CoreObject} from '../../core/geometry/modules/three/CoreObject';
 import {SetUtils} from '../../core/SetUtils';
 import {NodeContext} from '../poly/NodeContext';
 import {PolyDictionary} from '../../types/GlobalTypes';
 import {MapUtils} from '../../core/MapUtils';
 import {isObject3D} from '../../core/geometry/ObjectContent';
-import {coreObjectsAttribSizesByName, coreObjectAttributeTypesByName} from '../../core/geometry/_BaseObjectUtils';
+import {
+	coreObjectsAttribSizesByName,
+	coreObjectAttributeTypesByName,
+} from '../../core/geometry/entities/object/BaseCoreObjectUtils';
 
 export class GeometryContainer extends TypedContainer<NodeContext.SOP> {
 	// set_objects(objects: Object3D[]) {}

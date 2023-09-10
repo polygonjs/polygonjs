@@ -2,7 +2,7 @@ import type {QUnit} from '../../../helpers/QUnit';
 import {BufferAttribute, Color, Mesh, Object3D} from 'three';
 import {SORTED_PALETTE_NAMES} from '../../../../src/core/color/chromotomeWrapper';
 import {AttribClass} from '../../../../src/core/geometry/Constant';
-import {CoreObject} from '../../../../src/core/geometry/Object';
+import {CoreObject} from '../../../../src/core/geometry/modules/three/CoreObject';
 import {PolyScene} from '../../../../src/engine/scene/PolyScene';
 export function testenginenodessopPalette(qUnit: QUnit) {
 	const delta = 0.05;

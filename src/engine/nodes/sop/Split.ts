@@ -19,10 +19,10 @@ import {CoreGroup, Object3DWithGeometry} from '../../../core/geometry/Group';
 import {Object3D} from 'three';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {CoreObject} from '../../../core/geometry/Object';
-import {CorePoint} from '../../../core/geometry/Point';
+import {CoreObject} from '../../../core/geometry/modules/three/CoreObject';
+import {CorePoint} from '../../../core/geometry/entities/point/CorePoint';
 import {MapUtils} from '../../../core/MapUtils';
-import {geometryBuilder} from '../../../core/geometry/three/builders/geometryBuilder';
+import {geometryBuilder} from '../../../core/geometry/modules/three/builders/geometryBuilder';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 class SplitSopParamsConfig extends NodeParamsConfig {
 	/** @param type of attribute to use */

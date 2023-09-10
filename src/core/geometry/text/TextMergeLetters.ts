@@ -1,7 +1,7 @@
 import {BufferGeometry, Object3D} from 'three';
 import {ArrayUtils} from '../../ArrayUtils';
 import {ObjectType} from '../Constant';
-import {CoreObject} from '../Object';
+import {CoreObject} from '../modules/three/CoreObject';
 import {isBooleanTrue} from '../../Type';
 import {mergeGeometries} from 'three/examples/jsm/utils/BufferGeometryUtils';
 import {TransformResetSopOperation} from '../../../engine/operations/sop/TransformReset';

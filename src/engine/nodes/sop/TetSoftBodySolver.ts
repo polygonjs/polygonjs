@@ -13,8 +13,8 @@ import {PolyScene} from '../../scene/PolyScene';
 import {CoreType, isArray} from '../../../core/Type';
 import {BaseNodeType} from '../_Base';
 import {Poly} from '../../Poly';
-import {CoreObject} from '../../../core/geometry/Object';
-import {DEFAULT as DEFAULT_TESSELATION_PARAMS} from '../../../core/geometry/tet/utils/TesselationParamsConfig';
+import {CoreObject} from '../../../core/geometry/modules/three/CoreObject';
+import {DEFAULT as DEFAULT_TESSELATION_PARAMS} from '../../../core/geometry/modules/tet/utils/TesselationParamsConfig';
 import {CoreSoftBodyAttribute, SoftBodyIdAttribute} from '../../../core/softBody/SoftBodyAttribute';
 import {
 	createOrFindSoftBodyController,
@@ -35,7 +35,7 @@ import {VelocityColliderFunctionData} from '../js/code/assemblers/_Base';
 import {ParamType} from '../../poly/ParamType';
 import {RegisterableVariable} from '../js/code/assemblers/_BaseJsPersistedConfigUtils';
 import {JsNodeFinder} from '../js/code/utils/NodeFinder';
-import {TetObject} from '../../../core/geometry/tet/TetObject';
+import {TetObject} from '../../../core/geometry/modules/tet/TetObject';
 import {VelocityFunction, SDFFunction} from '../../../core/softBody/SoftBody';
 import {BaseSopNodeType} from './_Base';
 

@@ -1,5 +1,5 @@
 import {Camera} from 'three';
-import {CoreObject} from '../../geometry/Object';
+import {CoreObject} from '../../geometry/modules/three/CoreObject';
 import {CoreType} from '../../Type';
 import {CameraAttribute} from '../CoreCamera';
 import {CameraFrameMode, CAMERA_FRAME_MODES} from '../CoreCameraFrameMode';

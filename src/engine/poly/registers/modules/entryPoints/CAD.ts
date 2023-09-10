@@ -1,4 +1,4 @@
-import {onCadModuleRegister} from '../../../../../core/geometry/cad/CadModule';
+import {onCadModuleRegister} from '../../../../../core/geometry/modules/cad/CadModule';
 import {ModuleName} from '../Common';
 import {BaseModule} from '../_BaseModule';
 

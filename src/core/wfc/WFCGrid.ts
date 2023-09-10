@@ -1,4 +1,4 @@
-// import {QuadObject} from '../geometry/quad/QuadObject';
+// import {QuadObject} from '../geometry/modules/quad/QuadObject';
 // import {QuadGraph} from '../graph/quad/QuadGraph';
 // import {Vector4} from 'three';
 // import {Number4} from '../../types/GlobalTypes';

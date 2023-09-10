@@ -1,5 +1,5 @@
 import {MapUtils} from './../../../core/MapUtils';
-import {CoreObject} from './../../../core/geometry/Object';
+import {CoreObject} from './../../../core/geometry/modules/three/CoreObject';
 import {Vector2, Vector3, Box3, Object3D} from 'three';
 import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';

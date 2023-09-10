@@ -1,5 +1,5 @@
 import type {QUnit} from '../../../helpers/QUnit';
-import {primitivesFromObject} from '../../../../src/core/geometry/primitive/CorePrimitiveUtils';
+import {primitivesFromObject} from '../../../../src/core/geometry/entities/primitive/CorePrimitiveUtils';
 import {QuadSmoothMode} from '../../../../src/engine/nodes/sop/QuadSmooth';
 export function testenginenodessopQuadSmooth(qUnit: QUnit) {
 	qUnit.test('sop/quadsmooth prim count', async (assert) => {

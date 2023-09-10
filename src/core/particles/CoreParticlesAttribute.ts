@@ -1,5 +1,5 @@
 import {Object3D, Vector2} from 'three';
-import {CoreObject} from '../geometry/Object';
+import {CoreObject} from '../geometry/modules/three/CoreObject';
 export enum ParticlesAttribute {
 	PARTICLES_NODE_ID = 'particles_nodeId',
 	MATERIAL_NODE_ID = 'particles_materialNodeId',

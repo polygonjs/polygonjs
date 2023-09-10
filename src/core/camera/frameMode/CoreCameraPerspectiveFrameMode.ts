@@ -1,6 +1,6 @@
 import {MathUtils, PerspectiveCamera} from 'three';
 import {TypeAssert} from '../../../engine/poly/Assert';
-import {CoreObject} from '../../geometry/Object';
+import {CoreObject} from '../../geometry/modules/three/CoreObject';
 import {PerspectiveCameraAttribute, UpdateProjectionOptions} from '../CoreCamera';
 import {CameraFrameMode} from '../CoreCameraFrameMode';
 import {BaseCoreCameraFrameMode} from './_BaseCoreCameraFrameMode';

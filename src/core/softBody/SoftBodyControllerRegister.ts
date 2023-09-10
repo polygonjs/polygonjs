@@ -1,6 +1,6 @@
 import {Object3D} from 'three';
 import {CoreGraphNodeId} from '../graph/CoreGraph';
-import {CoreObject} from '../geometry/Object';
+import {CoreObject} from '../geometry/modules/three/CoreObject';
 import {CoreSoftBodyAttribute, SoftBodyIdAttribute} from './SoftBodyAttribute';
 import {SoftBodyController} from './SoftBodyController';
 import type {PolyScene} from '../../engine/scene/PolyScene';

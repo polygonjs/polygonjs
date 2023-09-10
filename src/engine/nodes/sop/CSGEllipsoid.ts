@@ -9,7 +9,7 @@ import {CoreGroup} from '../../../core/geometry/Group';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 import type {maths} from '@jscad/modeling';
 import {primitives} from '@jscad/modeling';
-import {vector3ToCsgVec3} from '../../../core/geometry/csg/CsgVecToVector';
+import {vector3ToCsgVec3} from '../../../core/geometry/modules/csg/CsgVecToVector';
 const {ellipsoid} = primitives;
 
 class CSGEllipsoidSopParamsConfig extends NodeParamsConfig {

@@ -8,7 +8,7 @@ import {
 } from '../PhysicsAttribute';
 import {_getRBDFromObject} from '../PhysicsRBD';
 import {PhysicsLib} from '../CorePhysics';
-import {CoreObject} from '../../geometry/Object';
+import {CoreObject} from '../../geometry/modules/three/CoreObject';
 import {touchRBDProperty} from '../../reactivity/RBDPropertyReactivity';
 
 const EXPECTED_TYPE = PhysicsRBDColliderType.CUBOID;

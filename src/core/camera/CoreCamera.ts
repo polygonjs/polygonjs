@@ -1,6 +1,6 @@
 import {Camera, Vector2} from 'three';
 import {ArrayUtils} from '../ArrayUtils';
-import {CoreObject} from '../geometry/Object';
+import {CoreObject} from '../geometry/modules/three/CoreObject';
 
 export const CORE_CAMERA_DEFAULT = {
 	near: 0.1,

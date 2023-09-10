@@ -1,4 +1,4 @@
-import {CoreObject} from '../geometry/Object';
+import {CoreObject} from '../geometry/modules/three/CoreObject';
 import {CoreObjectType, ObjectContent} from '../geometry/ObjectContent';
 import {Vector3} from 'three';
 

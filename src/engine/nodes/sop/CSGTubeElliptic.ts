@@ -9,9 +9,9 @@ import {CoreGroup} from '../../../core/geometry/Group';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 import type {maths} from '@jscad/modeling';
 import {primitives} from '@jscad/modeling';
-import {vector2ToCsgVec2, vector3ToCsgVec3} from '../../../core/geometry/csg/CsgVecToVector';
-import {step} from '../../../core/geometry/csg/CsgConstant';
-import {csgVec2MultScalar} from '../../../core/geometry/csg/math/CsgMathVec2';
+import {vector2ToCsgVec2, vector3ToCsgVec3} from '../../../core/geometry/modules/csg/CsgVecToVector';
+import {step} from '../../../core/geometry/modules/csg/CsgConstant';
+import {csgVec2MultScalar} from '../../../core/geometry/modules/csg/math/CsgMathVec2';
 const {cylinderElliptic} = primitives;
 
 class CSGTubeEllipticSopParamsConfig extends NodeParamsConfig {

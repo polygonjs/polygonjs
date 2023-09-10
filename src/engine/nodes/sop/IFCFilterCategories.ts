@@ -15,7 +15,7 @@ import {ParamType} from '../../poly/ParamType';
 import {IFCAttribute, getIFCModelCategories, ifcCategoryIds, ifcElementIds} from '../../../core/geometry/ifc/IFCUtils';
 import type {SubsetConfig} from 'web-ifc-three/IFC/BaseDefinitions';
 import {IFCLoaderHandler} from '../../../core/loader/geometry/IFC';
-import {CoreObject} from '../../../core/geometry/Object';
+import {CoreObject} from '../../../core/geometry/modules/three/CoreObject';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 
 class IFCFilterCategoriesSopParamsConfig extends NodeParamsConfig {

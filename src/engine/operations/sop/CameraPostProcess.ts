@@ -3,7 +3,7 @@ import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 import {TypedNodePathParamValue} from '../../../core/Walker';
-import {CoreObject} from '../../../core/geometry/Object';
+import {CoreObject} from '../../../core/geometry/modules/three/CoreObject';
 import {CameraAttribute} from '../../../core/camera/CoreCamera';
 import {isBooleanTrue} from '../../../core/Type';
 import {CameraSopNodeType} from '../../poly/NodeContext';

@@ -36,7 +36,7 @@ interface FbmParams {
 }
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {CorePoint} from '../../../core/geometry/Point';
+import {CorePoint} from '../../../core/geometry/entities/point/CorePoint';
 import {CoreType} from '../../../core/Type';
 import {AttribValue, NumericAttribValue} from '../../../types/GlobalTypes';
 import {isBooleanTrue} from '../../../core/BooleanValue';

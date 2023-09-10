@@ -5,19 +5,19 @@
  */
 import {CADSopNode} from './_BaseCAD';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-// import {CadCoreGroup} from '../../../core/geometry/cad/CadCoreGroup';
+// import {CadCoreGroup} from '../../../core/geometry/modules/cad/CadCoreGroup';
 import {
 	OpenCascadeInstance,
 	TopoDS_Shape,
 	CadGeometryTypeShape,
 	cadGeometryTypeFromShape,
-} from '../../../core/geometry/cad/CadCommon';
-import {CadGeometryType} from '../../../core/geometry/cad/CadCommon';
-import {CadObject} from '../../../core/geometry/cad/CadObject';
+} from '../../../core/geometry/modules/cad/CadCommon';
+import {CadGeometryType} from '../../../core/geometry/modules/cad/CadCommon';
+import {CadObject} from '../../../core/geometry/modules/cad/CadObject';
 import {TypeAssert} from '../../poly/Assert';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {CadLoaderSync} from '../../../core/geometry/cad/CadLoaderSync';
+import {CadLoaderSync} from '../../../core/geometry/modules/cad/CadLoaderSync';
 
 enum BooleanMode {
 	ALL_IN_SEQUENCE = 'process all in sequence',

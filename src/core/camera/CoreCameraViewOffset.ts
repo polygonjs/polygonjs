@@ -1,7 +1,7 @@
 import {ParamConfig} from '../../engine/nodes/utils/params/ParamsConfig';
 import {Constructor} from '../../types/GlobalTypes';
 import {Camera, Vector2, PerspectiveCamera, OrthographicCamera} from 'three';
-import {CoreObject} from '../geometry/Object';
+import {CoreObject} from '../geometry/modules/three/CoreObject';
 import {CameraAttribute} from './CoreCamera';
 
 export function CoreCameraViewOffsetParamConfig<TBase extends Constructor>(Base: TBase) {

@@ -3,7 +3,7 @@ import {CoreGroup} from '../../../core/geometry/Group';
 import {TypedNodePathParamValue, NODE_PATH_DEFAULT} from '../../../core/Walker';
 import {NodeContext} from '../../../engine/poly/NodeContext';
 import {AttribFromTexture} from '../../../core/geometry/operation/AttribFromTexture';
-import {CoreObject} from '../../../core/geometry/Object';
+import {CoreObject} from '../../../core/geometry/modules/three/CoreObject';
 import {Texture} from 'three';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {DefaultOperationParams} from '../../../core/operations/_Base';

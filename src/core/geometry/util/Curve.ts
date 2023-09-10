@@ -1,8 +1,7 @@
 import {CoreGeometry} from '../Geometry';
-import {CorePoint} from '../Point';
+import {CorePoint} from '../entities/point/CorePoint';
 import {Float32BufferAttribute} from 'three';
-import {BufferGeometry} from 'three';
-import {Vector2} from 'three';
+import {Vector2, BufferGeometry} from 'three';
 import {PolyDictionary} from '../../../types/GlobalTypes';
 
 export class CoreGeometryUtilCurve {

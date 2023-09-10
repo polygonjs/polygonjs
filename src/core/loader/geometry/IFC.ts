@@ -4,7 +4,7 @@ import {IFCSPACE} from 'web-ifc';
 import type {IFCModel} from 'web-ifc-three/IFC/components/IFCModel';
 import {BaseLoaderLoadOptions, CoreBaseLoader} from '../_Base';
 import {BaseObject3DLoaderHandler} from './_BaseLoaderHandler';
-import {CoreObject} from '../../geometry/Object';
+import {CoreObject} from '../../geometry/modules/three/CoreObject';
 import {IFCAttribute} from '../../geometry/ifc/IFCUtils';
 import {Poly} from '../../../engine/Poly';
 import {sanitizeUrl} from '../../UrlHelper';

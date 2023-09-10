@@ -4,11 +4,11 @@ import {stringMatchMask} from '../String';
 import {CoreType} from '../Type';
 import {CorePath} from './CorePath';
 import type {CoreGroup} from './Group';
-import {BaseCoreObject} from './_BaseObject';
-import type {CoreObject} from './Object';
+import {BaseCoreObject} from './entities/object/BaseCoreObject';
+import type {CoreObject} from './modules/three/CoreObject';
 import {CoreObjectType, ObjectContent} from './ObjectContent';
 import {coreObjectInstanceFactory} from './CoreObjectFactory';
-import type {QuadObject} from './quad/QuadObject';
+import type {QuadObject} from './modules/quad/QuadObject';
 interface GroupOptions {
 	group: string;
 }

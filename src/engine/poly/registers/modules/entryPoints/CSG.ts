@@ -1,4 +1,4 @@
-import {onCsgModuleRegister} from '../../../../../core/geometry/csg/CsgModule';
+import {onCsgModuleRegister} from '../../../../../core/geometry/modules/csg/CsgModule';
 import {ModuleName} from '../Common';
 import {BaseModule} from '../_BaseModule';
 

@@ -13,7 +13,7 @@ import {PolyScene} from '../../scene/PolyScene';
 import {CoreType} from '../../../core/Type';
 import {BaseNodeType} from '../_Base';
 import {Poly} from '../../Poly';
-import {CoreObject} from '../../../core/geometry/Object';
+import {CoreObject} from '../../../core/geometry/modules/three/CoreObject';
 import {ClothIdAttribute} from '../../../core/cloth/ClothAttribute';
 import {
 	createOrFindClothController,

@@ -11,7 +11,7 @@ import {Matrix4} from 'three';
 import {Poly} from '../../../../Poly';
 import type {BaseGeoLoaderOutput} from '../../../../../core/loader/geometry/Common';
 import {BaseObject3DLoaderHandler} from '../../../../../core/loader/geometry/_BaseLoaderHandler';
-import {CorePoint} from '../../../../../core/geometry/Point';
+import {CorePoint} from '../../../../../core/geometry/entities/point/CorePoint';
 // import { Constructor } from 'vue/types/options';
 
 // interface FileMultSopNodeParamConfigOptions {

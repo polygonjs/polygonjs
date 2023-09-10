@@ -8,7 +8,7 @@ import {PERSPECTIVE_CAMERA_DEFAULT, registerPerspectiveCamera} from '../../../co
 import {CameraAttribute, CORE_CAMERA_DEFAULT, PerspectiveCameraAttribute} from '../../../core/camera/CoreCamera';
 import {isBooleanTrue} from '../../../core/Type';
 import {CameraHelper} from '../../../core/helpers/CameraHelper';
-import {CoreObject} from '../../../core/geometry/Object';
+import {CoreObject} from '../../../core/geometry/modules/three/CoreObject';
 import type {BaseNodeType} from '../../nodes/_Base';
 import {CoreSceneObjectsFactory, GeneratorName} from '../../../core/CoreSceneObjectsFactory';
 interface CreatePerspectiveCameraParams {

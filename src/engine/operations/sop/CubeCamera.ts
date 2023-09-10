@@ -8,7 +8,7 @@ import {CameraAttribute, CORE_CAMERA_DEFAULT} from '../../../core/camera/CoreCam
 import {CUBE_CAMERA_DEFAULT, registerCubeCamera} from '../../../core/camera/CoreCubeCamera';
 import {isBooleanTrue} from '../../../core/Type';
 import {CameraHelper} from '../../../core/helpers/CameraHelper';
-import {CoreObject} from '../../../core/geometry/Object';
+import {CoreObject} from '../../../core/geometry/modules/three/CoreObject';
 import type {BaseNodeType} from '../../nodes/_Base';
 import {DefaultObject3DConstructor, ObjectType, registerObjectType} from '../../../core/geometry/Constant';
 interface CreateCubeCameraParams {

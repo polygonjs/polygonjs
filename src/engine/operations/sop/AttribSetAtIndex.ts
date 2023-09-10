@@ -1,13 +1,11 @@
 import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {BufferAttribute, Vector2} from 'three';
-import {Vector3} from 'three';
-import {Vector4} from 'three';
+import {BufferAttribute, Vector2, Vector3, Vector4} from 'three';
 import {ATTRIBUTE_CLASSES, AttribClass, AttribType, ATTRIBUTE_TYPES} from '../../../core/geometry/Constant';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {TypeAssert} from '../../../engine/poly/Assert';
-import {BaseCoreObject} from '../../../core/geometry/_BaseObject';
-import {CoreObject} from '../../../core/geometry/Object';
+import {BaseCoreObject} from '../../../core/geometry/entities/object/BaseCoreObject';
+import {CoreObject} from '../../../core/geometry/modules/three/CoreObject';
 import {CoreAttribute} from '../../../core/geometry/Attribute';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 import {CoreObjectType} from '../../../core/geometry/ObjectContent';

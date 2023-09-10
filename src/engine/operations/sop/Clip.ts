@@ -22,7 +22,7 @@ import {isBooleanTrue} from '../../../core/Type';
 import {SUBTRACTION, Brush, Evaluator} from '../../../core/thirdParty/three-bvh-csg';
 import {rotateGeometry} from '../../../core/Transform';
 import {CoreGeometry} from '../../../core/geometry/Geometry';
-import {CoreGeometryBuilderMesh} from '../../../core/geometry/three/builders/Mesh';
+import {CoreGeometryBuilderMesh} from '../../../core/geometry/modules/three/builders/Mesh';
 import {ObjectUtils} from '../../../core/ObjectUtils';
 
 interface ClipSopParams extends DefaultOperationParams {

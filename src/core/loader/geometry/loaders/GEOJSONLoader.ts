@@ -34,7 +34,7 @@ import {ObjectType} from '../../../geometry/Constant';
 import {createGeometriesFromTypeFlat} from '../../../geometry/text/TextFlat';
 import {ArrayUtils} from '../../../ArrayUtils';
 import {CoreType} from '../../../Type';
-import {CoreObject} from '../../../geometry/Object';
+import {CoreObject} from '../../../geometry/modules/three/CoreObject';
 
 export class GEOJSONLoader extends Loader {
 	constructor(manager: LoadingManager) {

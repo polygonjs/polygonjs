@@ -7,7 +7,7 @@ import {CameraNodeType} from '../../poly/NodeContext';
 import {registerMapboxCamera} from '../../../core/thirdParty/Mapbox/registerMapboxCamera';
 import {MapboxPerspectiveCamera} from '../../../core/thirdParty/Mapbox/MapboxPerspectiveCamera';
 import {CameraAttribute} from '../../../core/camera/CoreCamera';
-import {CoreObject} from '../../../core/geometry/Object';
+import {CoreObject} from '../../../core/geometry/modules/three/CoreObject';
 import type {BaseNodeType} from '../../nodes/_Base';
 import {MapboxCameraAttribute} from '../../../core/thirdParty/Mapbox/MapboxCameraAttribute';
 import mapboxgl from 'mapbox-gl';

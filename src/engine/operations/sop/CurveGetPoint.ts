@@ -4,7 +4,7 @@ import {BufferGeometry, CatmullRomCurve3, Float32BufferAttribute, Object3D, Vect
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 import {ObjectType} from '../../../core/geometry/Constant';
-import {CoreObject} from '../../../core/geometry/Object';
+import {CoreObject} from '../../../core/geometry/modules/three/CoreObject';
 import {SPLINE_CURVE_TYPES} from '../../../core/geometry/Curve';
 
 const EPSILON = 0.001;

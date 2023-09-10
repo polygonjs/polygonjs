@@ -7,7 +7,7 @@ import {
 	MARKER_TRACKING_TRANSFORM_MODES,
 	MarkerTrackingTransformMode,
 } from '../../webXR/markerTracking/Common';
-import {CoreObject} from '../../geometry/Object';
+import {CoreObject} from '../../geometry/modules/three/CoreObject';
 import {CameraAttribute} from '../CoreCamera';
 import {PolyScene} from '../../../engine/scene/PolyScene';
 import {CameraWebXRARMarkerTrackingSopOperation} from '../../../engine/operations/sop/CameraWebXRARMarkerTracking';

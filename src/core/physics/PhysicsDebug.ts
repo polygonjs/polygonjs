@@ -1,6 +1,6 @@
 import {CoreGraphNodeId} from '../graph/CoreGraph';
 import {LineBasicMaterial, BufferGeometry, LineSegments, BufferAttribute, Object3D} from 'three';
-import {CoreObject} from '../geometry/Object';
+import {CoreObject} from '../geometry/modules/three/CoreObject';
 import {PhysicsIdAttribute} from './PhysicsAttribute';
 import {physicsWorldFromNodeId} from './PhysicsWorld';
 // interface PhysicsDebugPair {

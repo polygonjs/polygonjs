@@ -18,8 +18,8 @@ import {
 	ATTRIBUTE_TYPES,
 } from '../../../core/geometry/Constant';
 import {CoreAttribute} from '../../../core/geometry/Attribute';
-import {BaseCoreObject} from '../../../core/geometry/_BaseObject';
-import {CoreObject} from '../../../core/geometry/Object';
+import {BaseCoreObject} from '../../../core/geometry/entities/object/BaseCoreObject';
+import {CoreObject} from '../../../core/geometry/modules/three/CoreObject';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {TypeAssert} from '../../poly/Assert';
 
@@ -111,10 +111,10 @@ export class AttribSetAtIndexSopNode extends TypedSopNode<AttribSetAtIndexSopPar
 			case AttribClass.POINT:
 				this._addPointAttribute(attribType, coreGroup);
 				return this.setCoreGroup(coreGroup);
-				case AttribClass.VERTEX:
-					this.states.error.set('vertex attributes are not supported');
-					return this.setCoreGroup(coreGroup);
-				case AttribClass.PRIMITIVE:
+			case AttribClass.VERTEX:
+				this.states.error.set('vertex attributes are not supported');
+				return this.setCoreGroup(coreGroup);
+			case AttribClass.PRIMITIVE:
 				this.states.error.set('primitive attributes are not supported');
 				return this.setCoreGroup(coreGroup);
 			case AttribClass.OBJECT:

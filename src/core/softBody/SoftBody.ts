@@ -14,8 +14,8 @@ import {
 	matSetInverse,
 	vecAddVector3,
 } from './SoftBodyMath';
-import {tetSortPoints} from '../geometry/tet/utils/tetSortPoints';
-import {buildTetIds, buildTetEdgeIds} from '../geometry/tet/utils/tetSoftBodyUtils';
+import {tetSortPoints} from '../geometry/modules/tet/utils/tetSortPoints';
+import {buildTetIds, buildTetEdgeIds} from '../geometry/modules/tet/utils/tetSoftBodyUtils';
 import {Number3, Number9} from '../../types/GlobalTypes';
 import {TetEmbed} from './Common';
 import {Hash} from '../Hash';

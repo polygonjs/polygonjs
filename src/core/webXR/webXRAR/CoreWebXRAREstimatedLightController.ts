@@ -4,7 +4,7 @@ import {XREstimatedLight} from 'three/examples/jsm/webxr/XREstimatedLight';
 // import {TypedNode} from '../../../engine/nodes/_Base';
 // import {NodeContext} from '../../../engine/poly/NodeContext';
 import {PolyScene} from '../../../engine/scene/PolyScene';
-import {CoreObject} from '../../geometry/Object';
+import {CoreObject} from '../../geometry/modules/three/CoreObject';
 
 const ATTRIB_NAME = {
 	IS_ESTIMATED_LIGHT: 'CoreWebXRAREstimatedLight_isEstimatedLight',

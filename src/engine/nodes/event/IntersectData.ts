@@ -12,7 +12,7 @@ import {EventConnectionPoint, EventConnectionPointType} from '../utils/io/connec
 import {Intersection} from 'three';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {EventContext} from '../../scene/utils/events/_BaseEventsController';
-import {CoreObject} from '../../../core/geometry/Object';
+import {CoreObject} from '../../../core/geometry/modules/three/CoreObject';
 import {CoreType} from '../../../core/Type';
 import {TypeAssert} from '../../poly/Assert';
 import {resolveIntersectGeometryAttribute} from '../../../core/geometry/intersect/CoreIntersect';

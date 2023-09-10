@@ -11,7 +11,7 @@ import {
 	getObjectString,
 	setObjectString,
 } from '../geometry/AttributeUtils';
-import {CoreObject} from '../geometry/Object';
+import {CoreObject} from '../geometry/modules/three/CoreObject';
 
 export enum PhysicsIdAttribute {
 	WORLD = 'PhysicsIdAttribute_worldId',

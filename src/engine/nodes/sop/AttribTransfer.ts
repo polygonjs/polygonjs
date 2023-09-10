@@ -6,7 +6,7 @@
  *
  */
 import {TypedSopNode} from './_Base';
-import {CorePoint} from '../../../core/geometry/Point';
+import {CorePoint} from '../../../core/geometry/entities/point/CorePoint';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {CoreInterpolate} from '../../../core/math/Interpolate';
 import {CoreOctree} from '../../../core/math/octree/Octree';

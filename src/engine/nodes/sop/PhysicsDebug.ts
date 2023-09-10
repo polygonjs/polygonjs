@@ -10,7 +10,7 @@ import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {physicsCreateDebugObject} from '../../../core/physics/PhysicsDebug';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
-import {CoreObject} from '../../../core/geometry/Object';
+import {CoreObject} from '../../../core/geometry/modules/three/CoreObject';
 import {PhysicsIdAttribute} from '../../../core/physics/PhysicsAttribute';
 import {CorePhysics} from '../../../core/physics/CorePhysics';
 class PhysicsDebugSopParamsConfig extends NodeParamsConfig {}

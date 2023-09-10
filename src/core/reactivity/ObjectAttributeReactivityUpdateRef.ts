@@ -1,4 +1,4 @@
-import {attribValueNonPrimitive, copyAttribValue} from '../geometry/_BaseObjectUtils';
+import {attribValueNonPrimitive, copyAttribValue} from '../geometry/entities/object/BaseCoreObjectUtils';
 import {ObjectXD, _getObjectAttributeRef_} from './ObjectAttributeReactivity';
 import type {Ref} from '@vue/reactivity';
 import type {AttribValue} from '../../types/GlobalTypes';

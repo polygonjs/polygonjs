@@ -8,10 +8,10 @@
 // import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 // import {SopType} from '../../poly/registers/nodes/types/Sop';
 // import {CoreGroup} from '../../../core/geometry/Group';
-// import {SDFObject} from '../../../core/geometry/sdf/SDFObject';
+// import {SDFObject} from '../../../core/geometry/modules/sdf/SDFObject';
 // import {TypeAssert} from '../../poly/Assert';
-// import {SDFLoaderSync} from '../../../core/geometry/sdf/SDFLoaderSync';
-// import {ManifoldStatic, SDFGeometry} from '../../../core/geometry/sdf/SDFCommon';
+// import {SDFLoaderSync} from '../../../core/geometry/modules/sdf/SDFLoaderSync';
+// import {ManifoldStatic, SDFGeometry} from '../../../core/geometry/modules/sdf/SDFCommon';
 
 // enum BooleanMode {
 // 	ALL_IN_SEQUENCE = 'process all in sequence',

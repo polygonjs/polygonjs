@@ -6,7 +6,7 @@ import {
 	GPUComputationRenderer,
 	GPUComputationRendererVariable,
 } from './gpuCompute/GPUComputationRenderer';
-import {CorePoint} from '../geometry/Point';
+import {CorePoint} from '../geometry/entities/point/CorePoint';
 import {ShaderName} from '../../engine/nodes/utils/shaders/ShaderName';
 import {TextureAllocationsController} from '../../engine/nodes/gl/code/utils/TextureAllocationsController';
 import {GlParamConfig} from '../../engine/nodes/gl/code/utils/GLParamConfig';

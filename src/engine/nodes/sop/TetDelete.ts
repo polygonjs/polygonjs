@@ -8,16 +8,16 @@ import {TetSopNode} from './_BaseTet';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CoreGroup, Object3DWithGeometry} from '../../../core/geometry/Group';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
-import {TetObject} from '../../../core/geometry/tet/TetObject';
+import {TetObject} from '../../../core/geometry/modules/tet/TetObject';
 import {CoreString} from '../../../core/String';
 import {isBooleanTrue} from '../../../core/Type';
 import {Vector3, Mesh} from 'three';
-import {tetCenter} from '../../../core/geometry/tet/utils/tetCenter';
-import {isPositionInsideMesh} from '../../../core/geometry/tet/utils/tetInsideMesh';
+import {tetCenter} from '../../../core/geometry/modules/tet/utils/tetCenter';
+import {isPositionInsideMesh} from '../../../core/geometry/modules/tet/utils/tetInsideMesh';
 import {MeshWithBVHGeometry, ThreeMeshBVHHelper} from '../../../core/geometry/bvh/ThreeMeshBVHHelper';
-import {findNonDelaunayTetsFromMultiplePointsCheck} from '../../../core/geometry/tet/utils/findNonDelaunayTets';
-import {tetRemoveUnusedPoints} from '../../../core/geometry/tet/utils/tetRemoveUnusedPoints';
-import {tetQuality} from '../../../core/geometry/tet/utils/tetQuality';
+import {findNonDelaunayTetsFromMultiplePointsCheck} from '../../../core/geometry/modules/tet/utils/findNonDelaunayTets';
+import {tetRemoveUnusedPoints} from '../../../core/geometry/modules/tet/utils/tetRemoveUnusedPoints';
+import {tetQuality} from '../../../core/geometry/modules/tet/utils/tetQuality';
 
 const _tetCenter = new Vector3();
 

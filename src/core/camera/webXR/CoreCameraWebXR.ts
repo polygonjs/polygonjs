@@ -1,6 +1,6 @@
 import {Camera, WebGLRenderer} from 'three';
 import {PolyScene} from '../../../engine/scene/PolyScene';
-import {CoreObject} from '../../geometry/Object';
+import {CoreObject} from '../../geometry/modules/three/CoreObject';
 import {CameraAttribute} from '../CoreCamera';
 import {
 	WebXRControllerMountFunction,

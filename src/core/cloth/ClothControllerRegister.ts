@@ -1,6 +1,6 @@
 import {Mesh, Object3D} from 'three';
 import {CoreGraphNodeId} from '../graph/CoreGraph';
-import {CoreObject} from '../geometry/Object';
+import {CoreObject} from '../geometry/modules/three/CoreObject';
 import {ClothIdAttribute} from './ClothAttribute';
 import {ClothController} from './ClothController';
 import type {PolyScene} from '../../engine/scene/PolyScene';

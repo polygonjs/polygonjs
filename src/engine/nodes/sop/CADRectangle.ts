@@ -5,14 +5,14 @@
  */
 import {CADSopNode} from './_BaseCAD';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {step} from '../../../core/geometry/cad/CadConstant';
-import {CadLoader} from '../../../core/geometry/cad/CadLoader';
-import type {OpenCascadeInstance, GCRegisterFunction} from '../../../core/geometry/cad/CadCommon';
-import {CadGC} from '../../../core/geometry/cad/CadCommon';
+import {step} from '../../../core/geometry/modules/cad/CadConstant';
+import {CadLoader} from '../../../core/geometry/modules/cad/CadLoader';
+import type {OpenCascadeInstance, GCRegisterFunction} from '../../../core/geometry/modules/cad/CadCommon';
+import {CadGC} from '../../../core/geometry/modules/cad/CadCommon';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
-import {CadLoaderSync} from '../../../core/geometry/cad/CadLoaderSync';
-import {cadShapeTranslate} from '../../../core/geometry/cad/toObject3D/CadShapeCommon';
+import {CadLoaderSync} from '../../../core/geometry/modules/cad/CadLoaderSync';
+import {cadShapeTranslate} from '../../../core/geometry/modules/cad/toObject3D/CadShapeCommon';
 
 // TODO: make by default on the same axis as other 3d curve primitives like cad/circle
 const FILLET_RADIUS_SAFETY_MARGIN = 0.01;

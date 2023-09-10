@@ -1,5 +1,5 @@
 import {DeleteSopNode} from '../../Delete';
-import {BaseCoreObject} from '../../../../../core/geometry/_BaseObject';
+import {BaseCoreObject} from '../../../../../core/geometry/entities/object/BaseCoreObject';
 import {ObjectType, objectTypeFromConstructor} from '../../../../../core/geometry/Constant';
 import {CoreObjectType} from '../../../../../core/geometry/ObjectContent';
 

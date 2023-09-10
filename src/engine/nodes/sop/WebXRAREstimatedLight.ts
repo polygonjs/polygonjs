@@ -5,11 +5,9 @@
 
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-// import {NodeContext} from '../../poly/NodeContext';
 import {Group} from 'three';
-import {CoreObject} from '../../../core/geometry/Object';
+import {CoreObject} from '../../../core/geometry/modules/three/CoreObject';
 import {CoreWebXRAREstimatedLightController} from '../../../core/webXR/webXRAR/CoreWebXRAREstimatedLightController';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 const ATTRIB_NAME = CoreWebXRAREstimatedLightController.ATTRIB_NAME;

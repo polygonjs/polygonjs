@@ -1,5 +1,4 @@
-import {BaseCoreObject} from '../geometry/_BaseObject';
-// import {CoreObject} from '../geometry/Object';
+import {BaseCoreObject} from '../geometry/entities/object/BaseCoreObject';
 import type {Vector4, Vector3, Vector2} from 'three';
 import {CoreObjectType, ObjectContent} from '../geometry/ObjectContent';
 

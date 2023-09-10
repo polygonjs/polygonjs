@@ -36,7 +36,7 @@ import {PointBuilderEvaluator} from '../js/code/assemblers/pointBuilder/PointBui
 import {filterThreejsOrQuadObjectsWithGroup, filterThreejsObjectsWithGroup} from '../../../core/geometry/Mask';
 import {objectContentHasGeometry, object3DHasGeometry} from '../../../core/geometry/GeometryUtils';
 import {CoreGeometry} from '../../../core/geometry/Geometry';
-import {QuadObject} from '../../../core/geometry/quad/QuadObject';
+import {QuadObject} from '../../../core/geometry/modules/quad/QuadObject';
 
 type PointFunction = Function; //(object:Object3D)=>Object3D
 type AttributeItem = boolean | number | string | Color | Vector2 | Vector3 | Vector4;
@@ -135,7 +135,7 @@ export abstract class BasePointBuilderSopNode<P extends BasePointBuilderSopParam
 	): void;
 
 	private _getObjects(coreGroup: CoreGroup) {
-		if (0) {
+		if (1) {
 			return filterThreejsOrQuadObjectsWithGroup(coreGroup, this.pv).filter(objectContentHasGeometry);
 		} else {
 			return filterThreejsObjectsWithGroup(coreGroup, this.pv).filter(object3DHasGeometry);

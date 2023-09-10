@@ -1,6 +1,6 @@
 import {Vector3} from 'three';
 import {ArrayUtils} from '../ArrayUtils';
-import {CorePoint} from '../geometry/Point';
+import {CorePoint} from '../geometry/entities/point/CorePoint';
 import {CoreType} from '../Type';
 
 const _positionSrc = new Vector3();

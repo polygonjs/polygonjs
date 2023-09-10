@@ -9,7 +9,7 @@ import {CoreGroup} from '../../../core/geometry/Group';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 import type {maths} from '@jscad/modeling';
 import {primitives} from '@jscad/modeling';
-import {csgVec3sToJSON} from '../../../core/geometry/csg/math/CsgMathVec3';
+import {csgVec3sToJSON} from '../../../core/geometry/modules/csg/math/CsgMathVec3';
 const {polyhedron} = primitives;
 
 const DEFAULT_POINTS: maths.vec3.Vec3[] = [

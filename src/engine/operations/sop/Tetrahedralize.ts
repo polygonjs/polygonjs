@@ -3,7 +3,7 @@
 // import {DefaultOperationParams} from '../../../core/operations/_Base';
 // // import {bunnyMesh} from '../../../core/softBody/Bunny';
 // import {Object3D, Mesh} from 'three';
-// import {tetrahedralize,TET_CREATION_STAGES} from '../../../core/geometry/tet/utils/tetrahedralize';
+// import {tetrahedralize,TET_CREATION_STAGES} from '../../../core/geometry/modules/tet/utils/tetrahedralize';
 // import {ObjectType} from '../../../core/geometry/Constant';
 // import {MeshWithBVHGeometry,ThreeMeshBVHHelper} from '../../../core/geometry/bvh/ThreeMeshBVHHelper';
 // import {logBlueBg} from '../../../core/logger/Console';

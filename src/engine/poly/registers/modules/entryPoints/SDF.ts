@@ -1,4 +1,4 @@
-import {onSDFModuleRegister} from '../../../../../core/geometry/sdf/SDFModule';
+import {onSDFModuleRegister} from '../../../../../core/geometry/modules/sdf/SDFModule';
 import {ModuleName} from '../Common';
 import {BaseModule} from '../_BaseModule';
 
