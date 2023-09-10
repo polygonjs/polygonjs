@@ -4,7 +4,6 @@ import {ValueArrayByObject, initArrayIfRequired} from './Common';
 import {AttribCreateSopNodeParams} from '../../../../operations/sop/utils/attribCreate/Common';
 import {AttribType} from '../../../../../core/geometry/Constant';
 import {TypeAssert} from '../../../../poly/Assert';
-import {VertexNumberAttribute, VertexStringAttribute} from '../../../../../core/geometry/vertex/VertexAttribute';
 import {verticesFromObjectFromGroup} from '../../../../../core/geometry/vertex/CoreVertexUtils';
 import {coreVertexClassFactory} from '../../../../../core/geometry/CoreObjectFactory';
 import {CoreObjectType} from '../../../../../core/geometry/ObjectContent';
@@ -66,7 +65,7 @@ async function _addNumericAttributeToVertices(
 		if (!attribute) {
 			const verticesCount = vertexClass.verticesCount(object);
 			const values = new Array(verticesCount * size).fill(0);
-			attribute = new VertexNumberAttribute(values, size);
+			attribute = {array: values, itemSize: size, isString: false};
 			vertexClass.addAttribute(object, attribName, attribute);
 		}
 
@@ -154,7 +153,7 @@ async function _addStringAttributeToVertices(
 		const values = new Array(verticesCount).fill('');
 		let attribute = vertexClass.attribute(object, attribName);
 		if (!attribute) {
-			attribute = new VertexStringAttribute(values, 1);
+			attribute = {array: values, itemSize: 1, isString: true};
 			vertexClass.addAttribute(object, attribName, attribute);
 		}
 

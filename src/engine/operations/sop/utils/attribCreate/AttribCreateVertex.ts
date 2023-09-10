@@ -4,7 +4,6 @@ import {CoreAttribute} from '../../../../../core/geometry/Attribute';
 import {AttribCreateSopParams} from '../../AttribCreate';
 import {AttribType} from '../../../../../core/geometry/Constant';
 import {TypeAssert} from '../../../../poly/Assert';
-import {VertexNumberAttribute} from '../../../../../core/geometry/vertex/VertexAttribute';
 import {verticesFromObject, verticesFromObjectFromGroup} from '../../../../../core/geometry/vertex/CoreVertexUtils';
 import {coreVertexClassFactory} from '../../../../../core/geometry/CoreObjectFactory';
 
@@ -43,7 +42,7 @@ function _addAttributeToVertices(coreObject: CoreObject, params: AttribCreateSop
 	if (!attribute) {
 		const verticesCount = vertexClass.verticesCount(object);
 		const values = new Array(verticesCount * params.size).fill(value);
-		attribute = new VertexNumberAttribute(values, params.size);
+		attribute = {array: values, itemSize: params.size, isString: isString};
 		vertexClass.addAttribute(object, attribName, attribute);
 	}
 

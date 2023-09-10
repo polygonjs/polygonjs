@@ -9,6 +9,9 @@ export class CsgVertex<T extends CsgGeometryType> extends CoreVertex<CoreObjectT
 	constructor(public object: CsgObject<T>, index: number) {
 		super(object, index);
 	}
+	geometry() {
+		return undefined;
+	}
 	static override attributes<T extends CoreObjectType>(object: ObjectContent<T>): VertexAttributesDict | undefined {
 		return;
 	}

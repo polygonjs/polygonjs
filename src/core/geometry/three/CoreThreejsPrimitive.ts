@@ -1,13 +1,8 @@
 import {BufferGeometry, Object3D, Mesh} from 'three';
 import {CorePrimitive} from '../primitive/CorePrimitive';
-// import {BufferGeometryWithPrimitiveAttributes} from '../primitive/Common';
-// import {CoreFace} from '../primitive/CoreFace';
 import {CoreObjectType, ObjectContent} from '../ObjectContent';
 import {PrimitiveAttributesDict, UserDataWithPrimitiveAttributes} from '../primitive/Common';
 import {BasePrimitiveAttribute} from '../primitive/PrimitiveAttribute';
-
-// const _coreFace = new CoreFace();
-// const _triangle = new Triangle();
 
 export interface BufferGeometryWithPrimitiveAttributes extends BufferGeometry {
 	userData: UserDataWithPrimitiveAttributes;
@@ -28,7 +23,7 @@ export abstract class CoreThreejsPrimitive extends CorePrimitive<CoreObjectType.
 		return this;
 	}
 	private _updateGeometry() {
-		const geometry = (this.object as any as Mesh).geometry as BufferGeometryWithPrimitiveAttributes | undefined;
+		const geometry = (this.object as Mesh).geometry as BufferGeometryWithPrimitiveAttributes | undefined;
 		if (geometry) {
 			this._geometry = geometry;
 		}
@@ -37,7 +32,7 @@ export abstract class CoreThreejsPrimitive extends CorePrimitive<CoreObjectType.
 		return this._geometry;
 	}
 	static override addAttribute(object: Object3D, attribName: string, attribute: BasePrimitiveAttribute) {
-		const geometry = (object as any as Mesh).geometry as BufferGeometryWithPrimitiveAttributes | undefined;
+		const geometry = (object as Mesh).geometry as BufferGeometryWithPrimitiveAttributes | undefined;
 		if (!geometry) {
 			return;
 		}

@@ -18,68 +18,53 @@ import {CoreObjectType, ObjectContent} from '../ObjectContent';
 // const _coreFace = new CoreFace();
 // const _triangle = new Triangle();
 
-export interface GeometryWithVertexAttributes {
-	userData: {
-		vertexAttributes?: VertexAttributesDict;
-	};
-}
-
-export class CoreVertex<T extends CoreObjectType> extends CoreEntity {
+export abstract class CoreVertex<T extends CoreObjectType> extends CoreEntity {
 	protected _object?: ObjectContent<T>;
-	protected _geometry?: GeometryWithVertexAttributes;
 	constructor(object?: ObjectContent<T>, index?: number) {
-		super(object?.geometry, index);
+		super(object, index);
 		this._object = object;
 	}
-	setGeometry(geometry: GeometryWithVertexAttributes) {
-		this._geometry = geometry;
-		return this;
-	}
-	override setIndex(index: number, geometry?: GeometryWithVertexAttributes) {
-		this._index = index;
-		if (geometry) {
-			this._geometry = geometry;
-		}
-		return this;
-	}
-	geometry() {
-		return this._geometry;
-	}
-	static addAttribute(geometry: GeometryWithVertexAttributes, attribName: string, attribute: BaseVertexAttribute) {
-		if (!geometry.userData.vertexAttributes) {
-			geometry.userData.vertexAttributes = {};
-		}
-		geometry.userData.vertexAttributes[attribName] = attribute;
+
+	static addAttribute<T extends CoreObjectType>(
+		object: ObjectContent<T>,
+		attribName: string,
+		attribute: BaseVertexAttribute
+	) {
+		console.warn('CoreVertex.addAttribute needs to be overloaded');
 	}
 
 	static verticesCount<T extends CoreObjectType>(object: ObjectContent<T>) {
 		return 0;
 	}
 
-	static attributes(geometry: GeometryWithVertexAttributes): VertexAttributesDict | undefined {
-		return geometry.userData.vertexAttributes;
+	static attributes<T extends CoreObjectType>(object?: ObjectContent<T>): VertexAttributesDict | undefined {
+		console.warn('CoreVertex.attributes needs to be overloaded');
+		return;
 	}
 	attributes(): VertexAttributesDict | undefined {
-		if (!this._geometry) {
+		if (!this._object) {
 			return;
 		}
-		return (this.constructor as typeof CoreVertex<T>).attributes(this._geometry);
+		return (this.constructor as typeof CoreVertex<T>).attributes(this._object);
 	}
-	static attribute(geometry: GeometryWithVertexAttributes, attribName: string): BaseVertexAttribute | undefined {
-		const attributes = this.attributes(geometry);
+	static attribute<T extends CoreObjectType>(
+		object: ObjectContent<T>,
+		attribName: string
+	): BaseVertexAttribute | undefined {
+		const attributes = this.attributes(object);
 		if (!attributes) {
 			return;
 		}
 		return attributes[attribName];
 	}
 	attribute(attribName: string): BaseVertexAttribute | undefined {
-		return (this.constructor as typeof CoreVertex<T>).attribute(
-			this._geometry as GeometryWithVertexAttributes,
-			attribName
-		);
+		if (!this._object) {
+			return;
+		}
+		return (this.constructor as typeof CoreVertex<T>).attribute(this._object, attribName);
 	}
-	static attribSize(geometry: GeometryWithVertexAttributes, attribName: string): number {
-		const attributes = this.attributes(geometry);
+	static attribSize<T extends CoreObjectType>(object: ObjectContent<T>, attribName: string): number {
+		const attributes = this.attributes(object);
 		if (!attributes) {
 			return -1;
 		}
@@ -88,24 +73,24 @@ export class CoreVertex<T extends CoreObjectType> extends CoreEntity {
 	}
 
 	attribSize(attribName: string): number {
-		return (this.constructor as typeof CoreVertex<T>).attribSize(
-			this._geometry as GeometryWithVertexAttributes,
-			attribName
-		);
+		if (!this._object) {
+			return 0;
+		}
+		return (this.constructor as typeof CoreVertex<T>).attribSize(this._object, attribName);
 	}
-	static hasAttrib(geometry: GeometryWithVertexAttributes, attribName: string): boolean {
+	static hasAttrib<T extends CoreObjectType>(object: ObjectContent<T>, attribName: string): boolean {
 		const remappedName = CoreAttribute.remapName(attribName);
-		return this.attributes(geometry) ? this.attributes(geometry)![remappedName] != null : false;
+		return this.attributes(object) ? this.attributes(object)![remappedName] != null : false;
 	}
 
 	hasAttrib(attribName: string): boolean {
-		return (this.constructor as typeof CoreVertex<T>).hasAttrib(
-			this._geometry as GeometryWithVertexAttributes,
-			attribName
-		);
+		if (!this._object) {
+			return false;
+		}
+		return (this.constructor as typeof CoreVertex<T>).hasAttrib(this._object, attribName);
 	}
-	static attribValue(
-		geometry: GeometryWithVertexAttributes,
+	static attribValue<T extends CoreObjectType>(
+		object: ObjectContent<T>,
 		index: number,
 		attribName: string,
 		target?: Vector2 | Vector3 | Vector4
@@ -122,12 +107,10 @@ export class CoreVertex<T extends CoreObjectType> extends CoreEntity {
 			}
 			const remapedName = CoreAttribute.remapName(attribName);
 
-			const attrib = this.attribute(geometry, remapedName);
+			const attrib = this.attribute(object, remapedName);
 			if (attrib) {
 				const {array} = attrib;
-				// if (attrib.isString()) {
-				// 	return CorePrimitive.indexedAttribValue(geometry, index, remapedName);
-				// } else {
+
 				const itemSize = attrib.itemSize;
 				const startIndex = index * itemSize;
 
@@ -165,18 +148,19 @@ export class CoreVertex<T extends CoreObjectType> extends CoreEntity {
 				}
 				// }
 			} else {
-				const attributes = this.attributes(geometry);
-				const attributeNames = attributes ? Object.keys(attributes) : [];
-				const message = `attrib ${attribName} not found. availables are: ${attributeNames.join(',')}`;
+				const attributesDict = this.attributes() || {};
+				const attribNames: string[] = Object.keys(attributesDict);
+				const message = `attrib ${attribName} not found. availables are: ${attribNames.join(',')}`;
 				console.warn(message);
 				throw message;
 			}
 		}
 	}
 	attribValue(attribName: string, target?: Vector2 | Vector3 | Vector4): AttribValue {
-		return this._geometry
-			? (this.constructor as typeof CoreVertex<T>).attribValue(this._geometry, this._index, attribName, target)
-			: 0;
+		if (!this._object) {
+			return 0;
+		}
+		return (this.constructor as typeof CoreVertex<T>).attribValue(this._object, this._index, attribName, target);
 	}
 	attribValueNumber(attribName: string) {
 		const attrib = this.attribute(attribName);
@@ -210,11 +194,11 @@ export class CoreVertex<T extends CoreObjectType> extends CoreEntity {
 		return target;
 	}
 
-	static stringAttribValue(geometry: GeometryWithVertexAttributes, index: number, attribName: string) {
-		return this.attribValue(geometry, index, attribName); //this.indexedAttribValue(geometry, index, attribName);
+	static stringAttribValue<T extends CoreObjectType>(object: ObjectContent<T>, index: number, attribName: string) {
+		return this.attribValue(object, index, attribName);
 	}
 	stringAttribValue(attribName: string) {
-		return this.attribValue(attribName) as string; //this.indexedAttribValue(attribName);
+		return this.attribValue(attribName) as string;
 	}
 
 	position(target: Vector3) {
@@ -296,7 +280,7 @@ export class CoreVertex<T extends CoreObjectType> extends CoreEntity {
 	}
 	setAttribValueFromVector2(attribName: string, value: Vector2) {
 		const attrib = this.attribute(attribName);
-		if (!attrib || attrib.isString()) {
+		if (!attrib || attrib.isString == true) {
 			return;
 		}
 
@@ -304,14 +288,14 @@ export class CoreVertex<T extends CoreObjectType> extends CoreEntity {
 	}
 	setAttribValueFromVector3(attribName: string, value: Vector3) {
 		const attrib = this.attribute(attribName);
-		if (!attrib || attrib.isString()) {
+		if (!attrib || attrib.isString == true) {
 			return;
 		}
 		value.toArray(attrib.array as number[], this._index * 3);
 	}
 	setAttribValueFromVector4(attribName: string, value: Vector4) {
 		const attrib = this.attribute(attribName);
-		if (!attrib || attrib.isString()) {
+		if (!attrib || attrib.isString == true) {
 			return;
 		}
 		value.toArray(attrib.array as number[], this._index * 4);

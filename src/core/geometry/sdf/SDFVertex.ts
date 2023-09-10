@@ -8,6 +8,9 @@ export class SDFVertex extends CoreVertex<CoreObjectType.SDF> {
 	constructor(public object: SDFObject, index: number) {
 		super(object, index);
 	}
+	geometry() {
+		return undefined;
+	}
 	static override attributes<T extends CoreObjectType>(object: ObjectContent<T>): VertexAttributesDict | undefined {
 		return;
 	}

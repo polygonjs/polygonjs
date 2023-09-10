@@ -1,5 +1,5 @@
 import type {QUnit} from '../../../helpers/QUnit';
-import {Vector3,Vector2,BufferAttribute, Vector4} from 'three';
+import {Vector3, Vector2, BufferAttribute, Vector4} from 'three';
 import {AttribType, AttribClass, AttribSize} from '../../../../src/core/geometry/Constant';
 import {CoreEntity} from '../../../../src/core/geometry/Entity';
 import {TransformTargetType} from '../../../../src/core/Transform';
@@ -13,6 +13,7 @@ import {Vector3Param} from '../../../../src/engine/params/Vector3';
 import {Vector4Param} from '../../../../src/engine/params/Vector4';
 import {StringOrNumber2, StringOrNumber3, StringOrNumber4} from '../../../../src/types/GlobalTypes';
 import {primitivesFromObject} from '../../../../src/core/geometry/primitive/CorePrimitiveUtils';
+import {verticesFromObject} from '../../../../src/core/geometry/vertex/CoreVertexUtils';
 export function testenginenodessopAttribCreate(qUnit: QUnit) {
 	qUnit.test('sop/attribCreate simple float vertex', async (assert) => {
 		const geo1 = window.geo1;
@@ -620,6 +621,27 @@ export function testenginenodessopAttribCreate(qUnit: QUnit) {
 		assert.deepEqual(
 			primitives.map((p) => p.attribValue('t')),
 			[2, 4]
+		);
+	});
+
+	qUnit.test('sop/attribCreate vertex attrib', async (assert) => {
+		const geo1 = window.geo1;
+
+		const plane1 = geo1.createNode('plane');
+
+		const attribCreate1 = geo1.createNode('attribCreate');
+		attribCreate1.setInput(0, plane1);
+		attribCreate1.setAttribClass(AttribClass.VERTEX);
+		attribCreate1.p.name.set('t');
+		attribCreate1.p.size.set(1);
+		attribCreate1.p.value1.set('(@vtxnum+1)*2');
+
+		const container = await attribCreate1.compute();
+		const object = container.coreContent()!.allObjects()[0];
+		const vertices = verticesFromObject(object);
+		assert.deepEqual(
+			vertices.map((p) => p.attribValue('t')),
+			[2, 4, 6, 8, 10, 12]
 		);
 	});
 
