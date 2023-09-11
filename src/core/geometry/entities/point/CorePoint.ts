@@ -382,6 +382,9 @@ export abstract class TypedCorePoint<T extends CoreObjectType> extends CoreEntit
 	setNormal(newNormal: Vector3) {
 		return this.setAttribValueFromVector3(Attribute.NORMAL, newNormal);
 	}
+	static computeNormals<T extends CoreObjectType>(object: ObjectContent<T>) {
+		console.warn('CorePoint.computeNormals needs to be overloaded');
+	}
 
 	setAttribValue(attribName: string, value: NumericAttribValue | string) {
 		const attrib = this.attribute(attribName);

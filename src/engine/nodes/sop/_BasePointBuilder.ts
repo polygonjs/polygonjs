@@ -4,7 +4,7 @@
  *
  */
 import {TypedSopNode} from './_Base';
-import {CoreGroup, Object3DWithGeometry} from '../../../core/geometry/Group';
+import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {PointBuilderFunctionData} from '../js/code/assemblers/pointBuilder/_BasePointBuilderPersistedConfig';
@@ -33,12 +33,11 @@ import {BufferAttribute, Color, Vector2, Vector3, Vector4} from 'three';
 import {JsConnectionPointComponentsCountMap, JsConnectionPointType} from '../utils/io/connections/Js';
 import {logBlue as _logBlue} from '../../../core/logger/Console';
 import {PointBuilderEvaluator} from '../js/code/assemblers/pointBuilder/PointBuilderEvaluator';
-import {filterThreejsOrQuadObjectsWithGroup, filterThreejsObjectsWithGroup} from '../../../core/geometry/Mask';
-import {objectContentHasGeometry, object3DHasGeometry} from '../../../core/geometry/GeometryUtils';
-import {QuadObject} from '../../../core/geometry/modules/quad/QuadObject';
+
 import {pointsCountFromObject} from '../../../core/geometry/entities/point/CorePointUtils';
 import {CoreObjectType, ObjectContent} from '../../../core/geometry/ObjectContent';
 import {corePointClassFactory} from '../../../core/geometry/CoreObjectFactory';
+import {filterObjectsFromCoreGroup} from '../../../core/geometry/Mask';
 
 type PointFunction = Function; //(object:Object3D)=>Object3D
 type AttributeItem = boolean | number | string | Color | Vector2 | Vector3 | Vector4;
@@ -115,34 +114,27 @@ export abstract class BasePointBuilderSopNode<P extends BasePointBuilderSopParam
 
 			const evaluator = _func(...args) as PointBuilderEvaluator;
 
-			const inputObjects = this._getObjects(coreGroup);
+			const objects = filterObjectsFromCoreGroup(coreGroup, this.pv);
 
 			let objnum = 0;
-			for (const inputObject of inputObjects) {
-				this._processObject(inputObject, objnum, evaluator);
+			for (const object of objects) {
+				this._processObject(object, objnum, evaluator);
 
 				objnum++;
 			}
 
-			this.setObjects(inputObjects);
+			this.setObjects(objects);
 		} else {
 			this.setObjects([]);
 		}
 	}
 
-	protected abstract _processObject(
-		inputObject: Object3DWithGeometry | QuadObject,
+	protected abstract _processObject<T extends CoreObjectType>(
+		object: ObjectContent<T>,
 		objnum: number,
 		evaluator: PointBuilderEvaluator
 	): void;
 
-	private _getObjects(coreGroup: CoreGroup) {
-		if (1) {
-			return filterThreejsOrQuadObjectsWithGroup(coreGroup, this.pv).filter(objectContentHasGeometry);
-		} else {
-			return filterThreejsObjectsWithGroup(coreGroup, this.pv).filter(object3DHasGeometry);
-		}
-	}
 	protected _resetRequiredAttributes() {
 		this._attributesDict.clear();
 	}

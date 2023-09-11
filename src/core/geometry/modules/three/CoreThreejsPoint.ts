@@ -24,11 +24,10 @@ const INDEX_ATTRIB_VALUES = 'indexedAttribValues';
 export class CoreThreejsPoint extends TypedCorePoint<CoreObjectType.THREEJS> {
 	protected _geometry?: BufferGeometry;
 
-	constructor( object: Object3D, index: number) {
+	constructor(object: Object3D, index: number) {
 		super(object, index);
 		this._updateGeometry();
 	}
-
 
 	override setIndex(index: number, object?: Object3D) {
 		this._index = index;
@@ -88,6 +87,13 @@ export class CoreThreejsPoint extends TypedCorePoint<CoreObjectType.THREEJS> {
 		}
 		const {array} = this._geometry.getAttribute(Attribute.NORMAL) as BufferAttribute;
 		return target.fromArray(array, this._index * 3);
+	}
+	static override computeNormals<T extends CoreObjectType>(object: ObjectContent<T>) {
+		const geometry = (object as any as Mesh).geometry as BufferGeometry | undefined;
+		if (!geometry) {
+			return null;
+		}
+		geometry.computeVertexNormals();
 	}
 	static override markAttribAsNeedsUpdate<T extends CoreObjectType>(object: ObjectContent<T>, attribName: string) {
 		const geometry = (object as any as Mesh).geometry as BufferGeometry | undefined;
