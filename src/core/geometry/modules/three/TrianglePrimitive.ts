@@ -8,7 +8,7 @@ const _coreFace = new CoreFace();
 const _triangle = new Triangle();
 
 export class TrianglePrimitive extends CoreThreejsPrimitive {
-	constructor(public override object: Mesh, index: number) {
+	constructor(object: Mesh, index: number) {
 		super(object, index);
 		this._geometry = object.geometry;
 	}

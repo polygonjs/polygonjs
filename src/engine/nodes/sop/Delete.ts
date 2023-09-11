@@ -42,6 +42,7 @@ import {TypeAssert} from '../../poly/Assert';
 import {primitivesFromObject} from '../../../core/geometry/entities/primitive/CorePrimitiveUtils';
 import {CoreObjectType, ObjectContent} from '../../../core/geometry/ObjectContent';
 import {CorePrimitive} from '../../../core/geometry/entities/primitive/CorePrimitive';
+import {pointsFromObject} from '../../../core/geometry/entities/point/CorePointUtils';
 class DeleteSopParamsConfig extends NodeParamsConfig {
 	/** @param defines the class that should be deleted (objects or vertices) */
 	class = ParamConfig.INTEGER(ATTRIBUTE_CLASSES_WITHOUT_CORE_GROUP.indexOf(AttribClass.POINT), {
@@ -241,7 +242,7 @@ export class DeleteSopNode extends TypedSopNode<DeleteSopParamsConfig> {
 			const coreGeometry = coreObject.coreGeometry();
 			if (coreGeometry) {
 				const object = coreObject.object() as Object3DWithGeometry;
-				const entities = coreGeometry.pointsFromGeometry();
+				const entities = pointsFromObject(object);
 				this.entitySelectionHelper.init(entities);
 
 				const initEntitiesCount = entities.length;
@@ -270,7 +271,7 @@ export class DeleteSopNode extends TypedSopNode<DeleteSopParamsConfig> {
 						if (objectType) {
 							const builder = geometryBuilder(objectType);
 							if (builder) {
-								const newGeo = builder.fromPoints(keptEntities);
+								const newGeo = builder.fromPoints(object, keptEntities);
 								if (newGeo) {
 									object.geometry = newGeo;
 									newObjects.push(object);
@@ -362,11 +363,12 @@ export class DeleteSopNode extends TypedSopNode<DeleteSopParamsConfig> {
 		this.setObjects(objectsToKeep);
 	}
 
-	private _pointObject(core_object: CoreObject) {
-		const core_points = core_object.points();
+	private _pointObject(coreObject: CoreObject) {
+		const object = coreObject.object();
+		const points = pointsFromObject(object);
 		const builder = geometryBuilder(ObjectType.POINTS);
 		if (builder) {
-			const geometry = builder.fromPoints(core_points);
+			const geometry = builder.fromPoints(object, points);
 			if (geometry) return this.createObject(geometry, ObjectType.POINTS);
 		}
 	}

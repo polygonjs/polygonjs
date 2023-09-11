@@ -6,7 +6,7 @@ import {CsgObject} from './CsgObject';
 import {CsgGeometryType} from './CsgCommon';
 
 export class CsgVertex<T extends CsgGeometryType> extends CoreVertex<CoreObjectType.CSG> {
-	constructor(public object: CsgObject<T>, index: number) {
+	constructor(object: CsgObject<T>, index: number) {
 		super(object, index);
 	}
 	geometry() {

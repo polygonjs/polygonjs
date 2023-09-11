@@ -24,6 +24,7 @@ type ComponentOffset = 0 | 1 | 2;
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
+import {pointsFromObject} from '../../../core/geometry/entities/point/CorePointUtils';
 class PointSopParamsConfig extends NodeParamsConfig {
 	/** @param toggle on to update the x component */
 	updateX = ParamConfig.BOOLEAN(0);
@@ -106,7 +107,7 @@ export class PointSopNode extends TypedSopNode<PointSopParamsConfig> {
 	async _evalExpressionsForCoreObject(coreObject: CoreObject) {
 		const object = coreObject.object();
 		const geometry = (object as Mesh).geometry as BufferGeometry;
-		const points = coreObject.points();
+		const points = pointsFromObject(object);
 
 		const array = (geometry.getAttribute(POSITION_ATTRIB_NAME) as BufferAttribute).array as number[];
 

@@ -1,6 +1,6 @@
 import {Vector4} from 'three';
 import {CoreObjectType, ObjectBuilder, ObjectContent} from '../../../ObjectContent';
-import {CoreEntity} from '../../../Entity';
+import {CoreEntity} from '../../../CoreEntity';
 import {QuadPrimitive} from '../QuadPrimitive';
 import {QuadObject} from '../QuadObject';
 

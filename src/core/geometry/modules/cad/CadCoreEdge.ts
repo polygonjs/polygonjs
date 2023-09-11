@@ -1,4 +1,4 @@
-import {CoreEntity} from '../../Entity';
+import {CoreEntity} from '../../CoreEntity';
 import {TopoDS_Shape, TopoDS_Edge} from './CadCommon';
 import {Vector2, Vector3, Vector4} from 'three';
 import {AttribValue, NumericAttribValue} from '../../../../types/GlobalTypes';
@@ -35,7 +35,7 @@ export class CadCoreEdge extends CoreEntity {
 			return this._index;
 		}
 	}
-	stringAttribValue(attribName: string): string | undefined {
+	stringAttribValue(attribName: string): string | null {
 		return '';
 	}
 	position(target: Vector3) {

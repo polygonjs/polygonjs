@@ -1,4 +1,4 @@
-import {CoreEntity} from '../../../../../core/geometry/Entity';
+import {CoreEntity} from '../../../../../core/geometry/CoreEntity';
 import {isBooleanTrue} from '../../../../../core/BooleanValue';
 import {ExpressionController} from '../../../../params/utils/ExpressionController';
 import {ParamType} from '../../../../poly/ParamType';

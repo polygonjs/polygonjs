@@ -7,6 +7,8 @@ import {hasGroupFromParams, AttribCreateSopNodeParams} from '../../../../operati
 
 import {AttribType} from '../../../../../core/geometry/Constant';
 import {TypeAssert} from '../../../../poly/Assert';
+import {pointsFromObject, pointsFromObjectFromGroup} from '../../../../../core/geometry/entities/point/CorePointUtils';
+import {corePointClassFactory} from '../../../../../core/geometry/CoreObjectFactory';
 
 interface ArraysByObject {
 	X: ValueArrayByObject;
@@ -45,23 +47,22 @@ export async function addPointAttribute(
 }
 
 async function _addNumericAttributeToPoints(coreObject: CoreObject, params: AttribCreateSopNodeParams) {
-	const coreGeometry = coreObject.coreGeometry();
-	if (!coreGeometry) {
-		return;
-	}
-	const points = coreObject.pointsFromGroup(params.group.value);
+	const object = coreObject.object();
+	const corePointClass = corePointClassFactory(object);
+
+	const points = pointsFromObjectFromGroup(object, params.group.value);
 	const attribName = CoreAttribute.remapName(params.name.value);
 	const size = params.size.value;
 
 	const param = [params.value1, params.value2, params.value3, params.value4][size - 1];
 
 	if (param.hasExpression()) {
-		if (!coreGeometry.hasAttrib(attribName)) {
-			coreGeometry.addNumericAttrib(attribName, size, param.value);
+		if (!corePointClass.hasAttrib(object, attribName)) {
+			corePointClass.addNumericAttrib(object, attribName, size, param.value);
 		}
 
-		const geometry = coreGeometry.geometry();
-		const attrib = geometry.getAttribute(attribName) as BufferAttribute;
+		// const geometry = coreGeometry.geometry();
+		const attrib = corePointClass.attribute(object, attribName) as BufferAttribute;
 		attrib.needsUpdate = true;
 		const array = attrib.array as number[];
 		if (size == 1) {
@@ -125,11 +126,10 @@ async function _addNumericAttributeToPoints(coreObject: CoreObject, params: Attr
 }
 
 async function _addStringAttributeToPoints(coreObject: CoreObject, params: AttribCreateSopNodeParams) {
-	const coreGeometry = coreObject.coreGeometry();
-	if (!coreGeometry) {
-		return;
-	}
-	const points = coreObject.pointsFromGroup(params.group.value);
+	const object = coreObject.object();
+	const corePointClass = corePointClassFactory(object);
+
+	const points = pointsFromObjectFromGroup(object, params.group.value);
 	const param = params.string;
 	const attribName = params.name.value;
 
@@ -139,11 +139,11 @@ async function _addStringAttributeToPoints(coreObject: CoreObject, params: Attri
 		if (hasGroupFromParams(params)) {
 			// create attrib if non existent
 
-			if (!coreGeometry.hasAttrib(attribName)) {
+			if (!corePointClass.hasAttrib(object, attribName)) {
 				const tmpIndexData = CoreAttribute.arrayToIndexedArrays(['']);
-				coreGeometry.setIndexedAttribute(attribName, tmpIndexData['values'], tmpIndexData['indices']);
+				corePointClass.setIndexedAttribute(object, attribName, tmpIndexData['values'], tmpIndexData['indices']);
 			}
-			const allPoints = coreObject.points();
+			const allPoints = pointsFromObject(object);
 			stringValues = stringValues.length != allPoints.length ? new Array(allPoints.length) : stringValues;
 			for (let point of allPoints) {
 				let currentValue = point.stringAttribValue(attribName);
@@ -167,8 +167,8 @@ async function _addStringAttributeToPoints(coreObject: CoreObject, params: Attri
 	}
 
 	const indexData = CoreAttribute.arrayToIndexedArrays(stringValues);
-	const geometry = coreObject.coreGeometry();
-	if (geometry) {
-		geometry.setIndexedAttribute(attribName, indexData['values'], indexData['indices']);
-	}
+	// const geometry = coreObject.coreGeometry();
+	// if (geometry) {
+	corePointClass.setIndexedAttribute(object, attribName, indexData['values'], indexData['indices']);
+	// }
 }

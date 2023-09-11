@@ -1,6 +1,6 @@
 import {Triangle, Mesh, Intersection, Color, Vector2, Vector3, Vector4, BufferAttribute, Face} from 'three';
-import {CorePoint} from '../../core/geometry/entities/point/CorePoint';
 import {NamedFunction2, NamedFunction3, NamedFunction4} from './_Base';
+import {CoreThreejsPoint} from '../../core/geometry/modules/three/CoreThreejsPoint';
 const positionA = new Vector3();
 const positionB = new Vector3();
 const positionC = new Vector3();
@@ -318,7 +318,11 @@ export class getIntersectionAttributeStringNearest extends NamedFunction2<[Inter
 		if (!geometry) {
 			return notFoundValueStr;
 		}
-		return CorePoint.stringAttribValue(geometry, vertexIndex, attribName);
+		const result = CoreThreejsPoint.stringAttribValue(intersection.object, vertexIndex, attribName);
+		if (result == null) {
+			return notFoundValueStr;
+		}
+		return result;
 	}
 }
 

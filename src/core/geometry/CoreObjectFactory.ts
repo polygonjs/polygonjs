@@ -1,9 +1,14 @@
 import type {CoreObjectType, ObjectContent} from './ObjectContent';
-import {BaseCoreObject} from './entities/object/BaseCoreObject';
 import {object3DFactory} from './modules/three/ThreeModule';
+import {TypedCorePoint} from './entities/point/CorePoint';
 import {CoreVertex} from './entities/vertex/CoreVertex';
+import {BaseCoreObject} from './entities/object/BaseCoreObject';
 import {CorePrimitive} from './entities/primitive/CorePrimitive';
 
+// point return types
+type BaseCorePointInstance = TypedCorePoint<CoreObjectType>;
+abstract class BaseCorePointClass extends TypedCorePoint<CoreObjectType> {}
+type BaseCorePointClassClass = typeof BaseCorePointClass;
 // vertex return types
 type BaseCoreVertexInstance = CoreVertex<CoreObjectType>;
 abstract class BaseCoreVertexClass extends CoreVertex<CoreObjectType> {}
@@ -17,6 +22,14 @@ type BaseCoreObjectInstance = BaseCoreObject<CoreObjectType>;
 class BaseCoreObjectClass extends BaseCoreObject<CoreObjectType> {}
 type BaseCoreObjectClassClass = typeof BaseCoreObjectClass;
 
+// point methods
+export type CorePointClassFactoryCheckFunction = (
+	object: ObjectContent<CoreObjectType>
+) => BaseCorePointClassClass | undefined;
+export type CorePointInstanceFactoryCheckFunction = (
+	object: ObjectContent<CoreObjectType>,
+	index: number
+) => BaseCorePointInstance | undefined;
 // vertex methods
 export type CoreVertexClassFactoryCheckFunction = (
 	object: ObjectContent<CoreObjectType>
@@ -43,6 +56,9 @@ export type CoreObjectInstanceFactoryCheckFunction = (
 ) => BaseCoreObjectInstance | undefined;
 
 export interface CoreFactoryFunctions {
+	// point
+	pointClass: CorePointClassFactoryCheckFunction;
+	pointInstance: CorePointInstanceFactoryCheckFunction;
 	// vertex
 	vertexClass: CoreVertexClassFactoryCheckFunction;
 	vertexInstance: CoreVertexInstanceFactoryCheckFunction;
@@ -60,6 +76,29 @@ export function registerFactoryFunctions(checkFunctions: CoreFactoryFunctions) {
 	coreFactoryFunctions.push(checkFunctions);
 }
 
+// point creation methods
+export function corePointClassFactory(object: ObjectContent<CoreObjectType>): BaseCorePointClassClass {
+	for (let factoryFunction of coreFactoryFunctions) {
+		const result = factoryFunction.pointClass(object);
+		if (result) {
+			return result;
+		}
+	}
+	return object3DFactory.pointClass(object) as BaseCorePointClassClass;
+}
+
+export function corePointInstanceFactory<T extends CoreObjectType>(
+	object: ObjectContent<T>,
+	index = 0
+): TypedCorePoint<T> {
+	for (let factoryFunction of coreFactoryFunctions) {
+		const result = factoryFunction.pointInstance(object, index);
+		if (result) {
+			return result as TypedCorePoint<T>;
+		}
+	}
+	return object3DFactory.pointInstance(object, index) as TypedCorePoint<T>;
+}
 // vertex creation methods
 export function coreVertexClassFactory(object: ObjectContent<CoreObjectType>): BaseCoreVertexClassClass {
 	for (let factoryFunction of coreFactoryFunctions) {

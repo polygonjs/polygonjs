@@ -1,6 +1,6 @@
 import {Vector3, Box3} from 'three';
 import {CoreGroup} from '../../../../../core/geometry/Group';
-import {CoreEntity} from '../../../../../core/geometry/Entity';
+import {CoreEntity} from '../../../../../core/geometry/CoreEntity';
 import {CoreEntitySelectionState, updateSelectionState} from './GroupCommon';
 
 const bbox = new Box3();

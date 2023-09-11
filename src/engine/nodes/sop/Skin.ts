@@ -47,17 +47,17 @@ export class SkinSopNode extends TypedSopNode<SkinSopParamsConfig> {
 		if (line_segments0) {
 			const first_line_segment = line_segments0[0] as Mesh;
 			if (first_line_segment) {
-				const src_geometries = CoreGeometryUtilCurve.line_segment_to_geometries(
-					first_line_segment.geometry as BufferGeometry
-				);
-				src_geometries.forEach((src_geometry, i) => {
-					if (i > 0) {
-						const prev_src_geometry = src_geometries[i - 1];
+				const src_geometries = CoreGeometryUtilCurve.line_segment_to_geometries(first_line_segment);
+				if (src_geometries) {
+					src_geometries.forEach((src_geometry, i) => {
+						if (i > 0) {
+							const prev_src_geometry = src_geometries[i - 1];
 
-						const geometry = this._skin(prev_src_geometry, src_geometry);
-						geometries.push(geometry);
-					}
-				});
+							const geometry = this._skin(prev_src_geometry, src_geometry);
+							geometries.push(geometry);
+						}
+					});
+				}
 			}
 		}
 

@@ -2,7 +2,7 @@ import {AttribValue, Number3, NumericAttribValue, PolyDictionary} from '../../..
 import {Box3, Color, Matrix4, Sphere, Vector2, Vector3, Vector4} from 'three';
 import {Attribute, CoreAttribute} from '../../Attribute';
 import {AttribType, AttribSize, ObjectData} from '../../Constant';
-import {CoreEntity} from '../../Entity';
+import {CoreEntity} from '../../CoreEntity';
 import {CoreType} from '../../../Type';
 import {SetUtils} from '../../../../core/SetUtils';
 import {
@@ -245,20 +245,20 @@ export abstract class BaseCoreObject<T extends CoreObjectType> extends CoreEntit
 		return attribName in this._attributesDictionary(object);
 	}
 
-	renameAttrib(old_name: string, new_name: string) {
+	renameAttrib(oldName: string, newName: string) {
 		return (this.constructor as any as typeof BaseCoreObject<CoreObjectType>).renameAttrib(
 			this._object,
-			old_name,
-			new_name
+			oldName,
+			newName
 		);
 	}
-	static renameAttrib<T extends CoreObjectType>(object: ObjectContent<T>, old_name: string, new_name: string) {
-		const current_value = this.attribValue(object, old_name);
-		if (current_value != null) {
-			this.addAttribute(object, new_name, current_value);
-			this.deleteAttribute(object, old_name);
+	static renameAttrib<T extends CoreObjectType>(object: ObjectContent<T>, oldName: string, newName: string) {
+		const currentValue = this.attribValue(object, oldName);
+		if (currentValue != null) {
+			this.addAttribute(object, newName, currentValue);
+			this.deleteAttribute(object, oldName);
 		} else {
-			console.warn(`attribute ${old_name} not found`);
+			console.warn(`attribute ${oldName} not found`);
 		}
 	}
 
@@ -352,7 +352,7 @@ export abstract class BaseCoreObject<T extends CoreObjectType> extends CoreEntit
 		object: ObjectContent<T>,
 		attribName: string,
 		index: number = 0
-	): string | undefined {
+	): string | null {
 		const str = this.attribValue(object, attribName, index);
 		if (str != null) {
 			if (CoreType.isString(str)) {
@@ -361,6 +361,7 @@ export abstract class BaseCoreObject<T extends CoreObjectType> extends CoreEntit
 				return `${str}`;
 			}
 		}
+		return null;
 	}
 	// static makeAttribReactive<V extends AttribValue, T extends CoreObjectType>(
 	// 	object: ObjectContent<T>,

@@ -12,9 +12,11 @@ import {
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 import {ObjectType} from '../../../core/geometry/Constant';
-import {CoreObject} from '../../../core/geometry/modules/three/CoreObject';
 import {SPLINE_CURVE_TYPES} from '../../../core/geometry/Curve';
 import {ObjectUserData} from '../../../core/UserData';
+import {CoreObjectType, ObjectContent} from '../../../core/geometry/ObjectContent';
+import {pointsFromObject} from '../../../core/geometry/entities/point/CorePointUtils';
+import {corePointClassFactory} from '../../../core/geometry/CoreObjectFactory';
 
 interface CurveFromPointsSopParams extends DefaultOperationParams {
 	pointsCount: number;
@@ -46,25 +48,29 @@ export class CurveFromPointsSopOperation extends BaseSopOperation {
 	override cook(inputCoreGroups: CoreGroup[], params: CurveFromPointsSopParams) {
 		const inputCoreGroup = inputCoreGroups[0];
 
-		const coreObjects = inputCoreGroup.threejsCoreObjects();
+		const objects = inputCoreGroup.allObjects();
 		const newObjects: Object3D[] = [];
-		for (let coreObject of coreObjects) {
-			const object = this._createCurveFromCoreObject(coreObject, params);
-			if (object) {
-				newObjects.push(object);
+		for (let object of objects) {
+			const newObject = this._createCurveFromCoreObject(object, params);
+			if (newObject) {
+				newObjects.push(newObject);
 			}
 		}
 
 		return this.createCoreGroupFromObjects(newObjects);
 	}
 
-	private _createCurveFromCoreObject(coreObject: CoreObject, params: CurveFromPointsSopParams) {
+	private _createCurveFromCoreObject<T extends CoreObjectType>(
+		object: ObjectContent<T>,
+		params: CurveFromPointsSopParams
+	) {
 		const {pointsCount, closed, curveType, tension, tTangent} = params;
-		const coreGeo = coreObject.coreGeometry();
-		if (!coreGeo) {
-			return;
-		}
-		const geoPoints = coreGeo.points();
+		// const coreGeo = coreObject.coreGeometry();
+		// if (!coreGeo) {
+		// 	return;
+		// }
+		const corePointClass = corePointClassFactory(object);
+		const geoPoints = pointsFromObject(object);
 		const pointPositions = geoPoints.map((p) => p.position(new Vector3()));
 		if (pointPositions.length < 2) {
 			return;
@@ -97,7 +103,7 @@ export class CurveFromPointsSopOperation extends BaseSopOperation {
 		// coreGeo.attribNamesMatchingMask(params.attributesToInterpolate)
 		// );
 		for (const attribName of attribNamesToInterpolate) {
-			const attribSize = coreGeo.attribSize(attribName);
+			const attribSize = corePointClass.attribSize(object, attribName);
 			let attribPositions: Vector3[] = [];
 			switch (attribSize) {
 				case 1: {
@@ -167,9 +173,9 @@ export class CurveFromPointsSopOperation extends BaseSopOperation {
 		}
 
 		// add curve as userData to the object, to make it possible to use the curve from actor nodes
-		const object = BaseSopOperation.createObject(geometry, ObjectType.LINE_SEGMENTS);
-		object.userData[ObjectUserData.PATH] = curve;
+		const newObject = BaseSopOperation.createObject(geometry, ObjectType.LINE_SEGMENTS);
+		newObject.userData[ObjectUserData.PATH] = curve;
 
-		return object;
+		return newObject;
 	}
 }

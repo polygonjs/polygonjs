@@ -1,14 +1,14 @@
 import {Vector3, BufferGeometry, Float32BufferAttribute} from 'three';
 import {CorePoint} from '../../../entities/point/CorePoint';
-import {CoreGeometry} from '../../../Geometry';
-import {ArrayUtils} from '../../../../ArrayUtils';
+import {uniqWithoutPreservingOrder, arrayCompact} from '../../../../ArrayUtils';
 import {PolyDictionary} from '../../../../../types/GlobalTypes';
+import {CoreObjectType, ObjectContent} from '../../../ObjectContent';
 
 export abstract class CoreGeometryBuilderBase {
-	fromPoints(points: CorePoint[]): BufferGeometry {
+	fromPoints<T extends CoreObjectType>(object: ObjectContent<T>, points: CorePoint[]): BufferGeometry {
 		points = this._filterPoints(points);
 		const geometry = new BufferGeometry();
-		const coreGeometry = new CoreGeometry(geometry);
+		// const coreGeometry = new CoreGeometry(geometry);
 
 		const firstPoint = points[0];
 		if (!firstPoint) {
@@ -34,25 +34,28 @@ export abstract class CoreGeometryBuilderBase {
 		const {attributes} = oldGeometry;
 		// const new_attributes = {}
 		for (let attribute_name of Object.keys(attributes)) {
-			const attrib_values = CoreGeometry.userDataAttribs(oldGeometry)[attribute_name];
+			const attrib_values = firstPoint.userDataAttribs()[attribute_name];
 			const is_attrib_indexed = attrib_values != null;
 
 			if (is_attrib_indexed) {
-				const new_values: string[] = ArrayUtils.uniqWithoutPreservingOrder(
-					points.map((point) => point.indexedAttribValue(attribute_name))
+				const new_values: string[] = arrayCompact(
+					uniqWithoutPreservingOrder(points.map((point) => point.indexedAttribValue(attribute_name)))
 				);
 				const new_index_by_value: PolyDictionary<number> = {};
 				new_values.forEach((new_value, i) => (new_index_by_value[new_value] = i));
 
-				coreGeometry.userDataAttribs()[attribute_name] = new_values;
+				firstPoint.userDataAttribs()[attribute_name] = new_values;
 
 				// const old_attrib = old_geometry.getAttribute(attribute_name)
 				// const old_attrib_array = old_attrib.array
 				const new_attrib_indices = [];
 				for (let point of points) {
 					// const old_index = old_attrib_array[point.index()]
-					const new_index = new_index_by_value[point.indexedAttribValue(attribute_name)];
-					new_attrib_indices.push(new_index);
+					const oldIndex = point.indexedAttribValue(attribute_name);
+					if (oldIndex) {
+						const new_index = new_index_by_value[oldIndex];
+						new_attrib_indices.push(new_index);
+					}
 				}
 
 				geometry.setAttribute(attribute_name, new Float32BufferAttribute(new_attrib_indices, 1));

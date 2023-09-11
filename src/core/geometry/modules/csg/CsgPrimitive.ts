@@ -6,7 +6,7 @@ import {CsgGeometryType} from './CsgCommon';
 
 export class CsgPrimitive<T extends CsgGeometryType> extends CorePrimitive<CoreObjectType.CSG> {
 	// public override _geometry?: QuadGeometryWithPrimitiveAttributes;
-	constructor(public object: CsgObject<T>, index: number) {
+	constructor( object: CsgObject<T>, index: number) {
 		super(object, index);
 		// this._geometry = object.geometry as QuadGeometryWithPrimitiveAttributes;
 	}
@@ -14,7 +14,7 @@ export class CsgPrimitive<T extends CsgGeometryType> extends CorePrimitive<CoreO
 		return 0;
 	}
 	geometry() {
-		return this.object.geometry;
+		return (this._object as CsgObject<CsgGeometryType>).geometry;
 	}
 	position(target: Vector3) {
 		console.warn('CsgPrimitive.position not implemented');

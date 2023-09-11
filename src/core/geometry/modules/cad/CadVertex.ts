@@ -6,7 +6,7 @@ import {CadObject} from './CadObject';
 import {CadGeometryType} from './CadCommon';
 
 export class CadVertex<T extends CadGeometryType> extends CoreVertex<CoreObjectType.CAD> {
-	constructor(public object: CadObject<T>, index: number) {
+	constructor(object: CadObject<T>, index: number) {
 		super(object, index);
 	}
 	geometry() {

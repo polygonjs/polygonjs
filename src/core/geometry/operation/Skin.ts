@@ -1,8 +1,10 @@
-import {BufferGeometry, Float32BufferAttribute} from 'three';
+import {Vector2, BufferGeometry, Float32BufferAttribute, Mesh} from 'three';
 import {CoreGeometry} from '../Geometry';
-import {Vector2} from 'three';
 import {ArrayUtils} from '../../ArrayUtils';
+import {pointsFromObject} from '../entities/point/CorePointUtils';
 
+const dummyMeshSmallest = new Mesh();
+const dummyMeshLargest = new Mesh();
 export class CoreGeometryOperationSkin {
 	constructor(
 		private geometry: BufferGeometry,
@@ -25,12 +27,14 @@ export class CoreGeometryOperationSkin {
 
 		const smallest_geometry = geometries_by_segments_count[0];
 		const largest_geometry = geometries_by_segments_count[1];
+		dummyMeshSmallest.geometry = smallest_geometry.geometry();
+		dummyMeshLargest.geometry = largest_geometry.geometry();
 
 		const smallest_segments = smallest_geometry.segments();
 		const largest_segments = largest_geometry.segments();
 
-		const smallest_points = smallest_geometry.points();
-		const largest_points = largest_geometry.points();
+		const smallest_points = pointsFromObject(dummyMeshSmallest);
+		const largest_points = pointsFromObject(dummyMeshLargest);
 		const smallest_points_count = smallest_points.length;
 		// const largest_points_count = largest_points.length;
 		const all_points = smallest_points.concat(largest_points);

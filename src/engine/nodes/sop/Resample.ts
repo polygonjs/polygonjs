@@ -10,9 +10,7 @@ import {mergeGeometries} from 'three/examples/jsm/utils/BufferGeometryUtils';
 import {TypedSopNode} from './_Base';
 import {ObjectType} from '../../../core/geometry/Constant';
 import {CoreGeometryUtilCurve} from '../../../core/geometry/util/Curve';
-import {CoreGeometry} from '../../../core/geometry/Geometry';
 
-const POSITION_ATTRIBUTE_NAME = 'position';
 export enum METHOD {
 	POINTS_COUNT = 'pointsCount',
 	SEGMENT_LENGTH = 'segmentLength',
@@ -26,6 +24,8 @@ import {TypeAssert} from '../../poly/Assert';
 import {Vector3} from 'three';
 import {SplineCurveType, SPLINE_CURVE_TYPES} from '../../../core/geometry/Curve';
 import {InputCloneMode} from '../../poly/InputCloneMode';
+import {pointsFromObject} from '../../../core/geometry/entities/point/CorePointUtils';
+import {Attribute} from '../../../core/geometry/Attribute';
 class ResampleSopParamsConfig extends NodeParamsConfig {
 	/** @param resampling method */
 	method = ParamConfig.INTEGER(METHODS.indexOf(METHOD.POINTS_COUNT), {
@@ -104,8 +104,7 @@ export class ResampleSopNode extends TypedSopNode<ResampleSopParamsConfig> {
 
 	_resample(lineSegment: LineSegments) {
 		const geometry = lineSegment.geometry as BufferGeometry;
-		const coreGeometry = new CoreGeometry(geometry);
-		const points = coreGeometry.points();
+		const points = pointsFromObject(lineSegment);
 		const indices = geometry.getIndex()?.array as number[];
 
 		const accumulated_curve_point_indices = CoreGeometryUtilCurve.accumulatedCurvePointIndices(indices);
@@ -129,7 +128,7 @@ export class ResampleSopNode extends TypedSopNode<ResampleSopParamsConfig> {
 			return;
 		}
 
-		const old_curve_positions = points.map((point) => point.attribValue(POSITION_ATTRIBUTE_NAME)) as Vector3[];
+		const old_curve_positions = points.map((point) => point.attribValue(Attribute.POSITION)) as Vector3[];
 		const closed = false;
 		const curveType = SPLINE_CURVE_TYPES[this.pv.curveType];
 		const tension = this.pv.tension;

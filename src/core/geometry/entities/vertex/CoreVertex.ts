@@ -8,21 +8,21 @@ import {
 } from '../../../../types/GlobalTypes';
 import {Vector4, Vector3, Vector2} from 'three';
 import {Attribute, CoreAttribute} from '../../Attribute';
-import {CoreEntity} from '../../Entity';
+import {CoreEntity} from '../../CoreEntity';
 import {CoreType} from '../../../Type';
 import {BaseVertexAttribute} from './VertexAttribute';
 import {DOT, ComponentName, COMPONENT_INDICES} from '../../Constant';
 import {VertexAttributesDict} from './Common';
 import {CoreObjectType, ObjectBuilder, ObjectContent} from '../../ObjectContent';
 
-// const _coreFace = new CoreFace();
-// const _triangle = new Triangle();
-
 export abstract class CoreVertex<T extends CoreObjectType> extends CoreEntity {
 	protected _object?: ObjectContent<T>;
 	constructor(object?: ObjectContent<T>, index?: number) {
 		super(object, index);
 		this._object = object;
+	}
+	object() {
+		return this._object;
 	}
 	builder<T extends CoreObjectType>(): ObjectBuilder<T> | undefined {
 		return undefined;
@@ -66,6 +66,19 @@ export abstract class CoreVertex<T extends CoreObjectType> extends CoreEntity {
 		}
 		return (this.constructor as typeof CoreVertex<T>).attribute(this._object, attribName);
 	}
+	static renameAttrib<T extends CoreObjectType>(object: ObjectContent<T>, oldName: string, newName: string) {
+		const attributes = this.attributes(object);
+		if (!attributes) {
+			return;
+		}
+		const attribute = this.attribute(object, oldName);
+		if (!attribute) {
+			return;
+		}
+		attributes[newName] = attribute;
+		delete attributes[oldName];
+	}
+
 	static attribSize<T extends CoreObjectType>(object: ObjectContent<T>, attribName: string): number {
 		const attributes = this.attributes(object);
 		if (!attributes) {
@@ -205,7 +218,7 @@ export abstract class CoreVertex<T extends CoreObjectType> extends CoreEntity {
 	}
 
 	position(target: Vector3) {
-		console.warn('CoreVertex.position needs to be overloadedd');
+		console.warn('CoreVertex.position needs to be overloaded');
 	}
 	setPosition(newPosition: Vector3) {
 		this.setAttribValueFromVector3(Attribute.POSITION, newPosition);
@@ -269,7 +282,7 @@ export abstract class CoreVertex<T extends CoreObjectType> extends CoreEntity {
 				array[i4 + 3] = v4.w;
 				break;
 			default:
-				console.warn(`Point.set_attrib_value does not yet allow attrib size ${attribSize}`);
+				console.warn(`CoreVertex.setAttribValue does not yet allow attrib size ${attribSize}`);
 				throw `attrib size ${attribSize} not implemented`;
 		}
 	}

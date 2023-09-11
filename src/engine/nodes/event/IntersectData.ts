@@ -111,7 +111,10 @@ export class IntersectDataEventNode extends TypedEventNode<IntersectDataParamsCo
 
 	private _resolveIntersectAttribute(intersection: Intersection) {
 		const attribType = ATTRIBUTE_TYPES[this.pv.attributeType];
-		let attribValue = IntersectDataEventNode.resolveObjectAttribute(intersection, this.pv.attributeName);
+		let attribValue: string | number | null | undefined = IntersectDataEventNode.resolveObjectAttribute(
+			intersection,
+			this.pv.attributeName
+		);
 		if (attribValue == null) {
 			attribValue = resolveIntersectGeometryAttribute(intersection, this.pv.attributeName, attribType);
 		}

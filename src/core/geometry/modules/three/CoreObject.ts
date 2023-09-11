@@ -1,4 +1,3 @@
-import {NumericAttribValue} from '../../../../types/GlobalTypes';
 import {
 	Bone,
 	SkinnedMesh,
@@ -15,22 +14,22 @@ import {
 } from 'three';
 import {CoreGeometry} from '../../Geometry';
 import {Object3DWithGeometry} from '../../Group';
-import {CoreAttribute} from '../../Attribute';
-import {dataFromConstructor, ObjectData, ObjectType, GroupString} from '../../Constant';
+import {dataFromConstructor, ObjectData, ObjectType} from '../../Constant';
 import {objectData} from '../../entities/object/BaseCoreObjectUtils';
-import {CorePoint} from '../../entities/point/CorePoint';
+// import {CorePoint} from '../../entities/point/CorePoint';
 import {MaterialWithCustomMaterials, applyCustomMaterials} from '../../Material';
-import {CoreString} from '../../../String';
+// import {CoreString} from '../../../String';
 import {ObjectUtils} from '../../../ObjectUtils';
-import {ArrayUtils} from '../../../ArrayUtils';
+// import {ArrayUtils} from '../../../ArrayUtils';
 import {ThreeMeshBVHHelper} from '../../bvh/ThreeMeshBVHHelper';
 import {CoreGeometryBuilderMerge} from '../../builders/Merge';
-import {CoreObjectType, MergeCompactOptions, isObject3D, objectContentCopyProperties} from '../../ObjectContent';
+import {CoreObjectType, MergeCompactOptions, objectContentCopyProperties} from '../../ObjectContent';
 import {BaseCoreObject} from '../../entities/object/BaseCoreObject';
 import {TransformTargetType} from '../../../Transform';
 import {TypeAssert} from '../../../../engine/poly/Assert';
 import {applyTransformWithSpaceToObject, ObjectTransformMode, ObjectTransformSpace} from '../../../TransformSpace';
 import {BaseSopOperation} from '../../../../engine/operations/sop/_Base';
+import {pointsCountFromObject} from '../../entities/point/CorePointUtils';
 
 interface Object3DWithAnimations extends Object3D {
 	animations: AnimationClip[];
@@ -87,62 +86,59 @@ export class CoreObject extends BaseCoreObject<CoreObjectType.THREEJS> {
 	// POINTS
 	//
 	//
-	static points(object: Object3D) {
-		const geometry = (object as Mesh).geometry;
-		if (geometry) {
-			return CoreGeometry.points(geometry) || [];
-		} else {
-			return [];
-		}
-	}
-	points() {
-		return this.coreGeometry()?.points() || [];
-	}
-	static pointsFromGroup(object: Object3D, group: GroupString): CorePoint[] {
-		if (group) {
-			const indices = CoreString.indices(group);
-			if (indices) {
-				const points = this.points(object);
-				return ArrayUtils.compact(indices.map((i) => points[i]));
-			} else {
-				return [];
-			}
-		} else {
-			return this.points(object);
-		}
-	}
-	pointsFromGroup(group: GroupString): CorePoint[] {
-		if (group) {
-			const indices = CoreString.indices(group);
-			if (indices) {
-				const points = this.points();
-				return ArrayUtils.compact(indices.map((i) => points[i]));
-			} else {
-				return [];
-			}
-		} else {
-			return this.points();
-		}
-	}
+	// static points(object: Object3D) {
+	// 	const geometry = (object as Mesh).geometry;
+	// 	if (geometry) {
+	// 		return CoreGeometry.points(geometry) || [];
+	// 	} else {
+	// 		return [];
+	// 	}
+	// }
+	// points() {
+	// 	return this.coreGeometry()?.points() || [];
+	// }
+	// static pointsFromGroup(object: Object3D, group: GroupString): CorePoint[] {
+	// 	if (group) {
+	// 		const indices = CoreString.indices(group);
+	// 		if (indices) {
+	// 			const points = this.points(object);
+	// 			return ArrayUtils.compact(indices.map((i) => points[i]));
+	// 		} else {
+	// 			return [];
+	// 		}
+	// 	} else {
+	// 		return this.points(object);
+	// 	}
+	// }
+	// pointsFromGroup(group: GroupString): CorePoint[] {
+	// 	if (group) {
+	// 		const indices = CoreString.indices(group);
+	// 		if (indices) {
+	// 			const points = this.points();
+	// 			return ArrayUtils.compact(indices.map((i) => points[i]));
+	// 		} else {
+	// 			return [];
+	// 		}
+	// 	} else {
+	// 		return this.points();
+	// 	}
+	// }
 
 	//
 	//
 	//
 	//
 	//
-	addNumericPointAttrib(name: string, size: number, defaultValue: NumericAttribValue) {
-		if (defaultValue == null) {
-			defaultValue = CoreAttribute.defaultValue(size);
-		}
-		this.coreGeometry()?.addNumericAttrib(name, size, defaultValue);
-	}
+	// addNumericPointAttrib(name: string, size: number, defaultValue: NumericAttribValue) {
+	// 	if (defaultValue == null) {
+	// 		defaultValue = CoreAttribute.defaultValue(size);
+	// 	}
+	// 	this.coreGeometry()?.addNumericAttrib(name, size, defaultValue);
+	// }
 	static override objectData(object: Object3D): ObjectData {
 		const data = objectData(object);
 
-		data.pointsCount =
-			isObject3D(object) && (object as Mesh).geometry
-				? CoreGeometry.pointsCount((object as Mesh).geometry as BufferGeometry)
-				: 0;
+		data.pointsCount = pointsCountFromObject(object);
 		// const childrenCount = isObject3D(object) ? object.children.length : 0;
 		// if ((object as Mesh).geometry) {
 		// 	points_count = CoreGeometry.pointsCount((object as Mesh).geometry as BufferGeometry);

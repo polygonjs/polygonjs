@@ -10,13 +10,12 @@ import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {CoreObject} from '../../../core/geometry/modules/three/CoreObject';
 import {Attribute} from '../../../core/geometry/Attribute';
-import {BufferAttribute, Mesh} from 'three';
-import {BufferGeometry} from 'three';
-import {CoreGeometry} from '../../../core/geometry/Geometry';
-
+import {BufferGeometry, BufferAttribute, Mesh} from 'three';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
+import {pointsFromObject} from '../../../core/geometry/entities/point/CorePointUtils';
+import {corePointClassFactory} from '../../../core/geometry/CoreObjectFactory';
 class NormalsSopParamsConfig extends NodeParamsConfig {
 	/** @param toggle on if normals can be updated via expressions */
 	edit = ParamConfig.BOOLEAN(0);
@@ -88,21 +87,21 @@ export class NormalsSopNode extends TypedSopNode<NormalsSopParamsConfig> {
 		this.setCoreGroup(coreGroup);
 	}
 
-	private async _eval_expressions_for_core_group(core_group: CoreGroup) {
-		const core_objects = core_group.threejsCoreObjects();
+	private async _eval_expressions_for_core_group(coreGroup: CoreGroup) {
+		const core_objects = coreGroup.threejsCoreObjects();
 		for (let i = 0; i < core_objects.length; i++) {
 			await this._eval_expressions_for_core_object(core_objects[i]);
 		}
 	}
-	private async _eval_expressions_for_core_object(core_object: CoreObject) {
-		const object = core_object.object();
+	private async _eval_expressions_for_core_object(coreObject: CoreObject) {
+		const object = coreObject.object();
 		const geometry = (object as Mesh).geometry as BufferGeometry;
-		const points = core_object.points();
+		const points = pointsFromObject(object);
+		const corePointClass = corePointClassFactory(object);
 
 		let attrib = geometry.getAttribute(Attribute.NORMAL) as BufferAttribute;
 		if (!attrib) {
-			const core_geometry = new CoreGeometry(geometry);
-			core_geometry.addNumericAttrib(Attribute.NORMAL, 3, 0);
+			corePointClass.addNumericAttrib(object, Attribute.NORMAL, 3, 0);
 			attrib = geometry.getAttribute(Attribute.NORMAL) as BufferAttribute;
 		}
 		const array = attrib.array as number[];

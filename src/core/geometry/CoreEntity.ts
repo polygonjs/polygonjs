@@ -21,6 +21,6 @@ export abstract class CoreEntity {
 	abstract builder<T extends CoreObjectType>(): ObjectBuilder<T> | undefined;
 	abstract setAttribValue(attribName: string, attribValue: NumericAttribValue | string): void;
 	abstract attribValue(attribName: string, target?: Vector2 | Vector3 | Vector4): AttribValue | undefined;
-	abstract stringAttribValue(attribName: string): string | undefined;
+	abstract stringAttribValue(attribName: string): string | null;
 	abstract position(target: Vector3): void;
 }

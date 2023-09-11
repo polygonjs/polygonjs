@@ -6,10 +6,10 @@ import {Mesh} from 'three';
 import {Object3D} from 'three';
 import {Matrix4} from 'three';
 import {TypeAssert} from '../../poly/Assert';
-import {CoreGeometry} from '../../../core/geometry/Geometry';
 import {Plane} from 'three';
 import {BufferGeometry} from 'three';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
+import { pointsFromObject } from '../../../core/geometry/entities/point/CorePointUtils';
 
 export enum ShearMode {
 	MATRIX = 'matrix',
@@ -119,8 +119,7 @@ export class ShearSopOperation extends BaseSopOperation {
 			if (geometry) {
 				this._getAxisModeCenter(geometry, params);
 				this._axisPlane.setFromNormalAndCoplanarPoint(params.planeAxis, this._center);
-				const coreGeo = new CoreGeometry(geometry);
-				const points = coreGeo.points();
+				const points = pointsFromObject(object)
 				for (let point of points) {
 					point.position(this._pointPos);
 					this._axisPlane.projectPoint(this._pointPos, this._pointOnPlane);

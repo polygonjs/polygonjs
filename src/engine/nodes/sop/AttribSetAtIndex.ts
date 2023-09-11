@@ -27,6 +27,8 @@ import {AttribSetAtIndexSopOperation} from '../../operations/sop/AttribSetAtInde
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {BufferAttribute} from 'three';
 import {CoreObjectType} from '../../../core/geometry/ObjectContent';
+import {corePointClassFactory} from '../../../core/geometry/CoreObjectFactory';
+import {pointsFromObject} from '../../../core/geometry/entities/point/CorePointUtils';
 const DEFAULT = AttribSetAtIndexSopOperation.DEFAULT_PARAMS;
 class AttribSetAtIndexSopParamsConfig extends NodeParamsConfig {
 	/** @param the point or object index this applies to */
@@ -187,15 +189,14 @@ export class AttribSetAtIndexSopNode extends TypedSopNode<AttribSetAtIndexSopPar
 	}
 
 	private _addNumericAttributeToPoints(coreObject: CoreObject) {
-		const coreGeometry = coreObject.coreGeometry();
-		if (!coreGeometry) {
-			return;
-		}
+		const object = coreObject.object();
+		const corePointClass = corePointClassFactory(object);
+
 		const attribName = CoreAttribute.remapName(this.pv.name);
-		if (!coreGeometry.hasAttrib(attribName)) {
-			coreGeometry.addNumericAttrib(attribName, this.pv.size, 0);
+		if (!corePointClass.hasAttrib(object, attribName)) {
+			corePointClass.addNumericAttrib(object, attribName, this.pv.size, 0);
 		}
-		const attrib = coreGeometry.geometry().attributes[attribName] as BufferAttribute;
+		const attrib = corePointClass.attribute(object, attribName) as BufferAttribute;
 		const array = attrib.array as number[];
 		const {index, size} = this.pv;
 		switch (size) {
@@ -254,17 +255,16 @@ export class AttribSetAtIndexSopNode extends TypedSopNode<AttribSetAtIndexSopPar
 	}
 
 	private _addStringAttributeToPoints(coreObject: CoreObject) {
-		const coreGeometry = coreObject.coreGeometry();
-		if (!coreGeometry) {
-			return;
-		}
+		const object = coreObject.object();
+		const corePointClass = corePointClassFactory(object);
+
 		const attribName = this.pv.name;
-		if (!coreGeometry.hasAttrib(attribName)) {
+		if (!corePointClass.hasAttrib(object, attribName)) {
 			const tmpIndexData = CoreAttribute.arrayToIndexedArrays(['']);
-			coreGeometry.setIndexedAttribute(attribName, tmpIndexData['values'], tmpIndexData['indices']);
+			corePointClass.setIndexedAttribute(object, attribName, tmpIndexData['values'], tmpIndexData['indices']);
 		}
 
-		const allPoints = coreObject.points();
+		const allPoints = pointsFromObject(object);
 
 		const param = this.p.string;
 
@@ -283,10 +283,10 @@ export class AttribSetAtIndexSopNode extends TypedSopNode<AttribSetAtIndexSopPar
 		}
 
 		const indexData = CoreAttribute.arrayToIndexedArrays(stringValues);
-		const geometry = coreObject.coreGeometry();
-		if (geometry) {
-			geometry.setIndexedAttribute(attribName, indexData['values'], indexData['indices']);
-		}
+		// const geometry = coreObject.coreGeometry();
+		// if (geometry) {
+		corePointClass.setIndexedAttribute(object, attribName, indexData['values'], indexData['indices']);
+		// }
 	}
 
 	private _addStringAttributeToObject(coreObject: BaseCoreObject<CoreObjectType>) {

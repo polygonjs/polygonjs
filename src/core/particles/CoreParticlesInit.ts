@@ -1,10 +1,7 @@
 import {Object3D, Vector2, Mesh, BufferAttribute, InstancedBufferAttribute} from 'three';
-// import {CoreParticlesAttribute} from './CoreParticlesAttribute';
-// import {isBooleanTrue} from '../Type';
-// import {nearestPower2} from '../math/_Module';
-import {CoreGeometry} from '../geometry/Geometry';
 import {GlobalsTextureHandler} from '../../engine/nodes/gl/code/globals/Texture';
 import {textureFromAttributePointsCount} from '../geometry/operation/TextureFromAttribute';
+import {markedAsInstance} from '../geometry/GeometryUtils';
 
 // const _maxTexturesSize = new Vector2();
 // const _texturesSize = new Vector2();
@@ -93,7 +90,7 @@ export function coreParticlesInitParticlesUVs(object: Object3D, texturesSize: Ve
 	}
 
 	const uv_attrib_name = GlobalsTextureHandler.PARTICLES_SIM_UV_ATTRIB;
-	const attribute_constructor = CoreGeometry.markedAsInstance(geometry) ? InstancedBufferAttribute : BufferAttribute;
+	const attribute_constructor = markedAsInstance(geometry) ? InstancedBufferAttribute : BufferAttribute;
 	// if (this._particlesCoreGroup) {
 	// for (let core_geometry of this._particlesCoreGroup.coreGeometries()) {
 	// const geometry = core_geometry.geometry();

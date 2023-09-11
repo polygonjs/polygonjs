@@ -1,7 +1,7 @@
 import {Intersection, Vector2, Vector3, Mesh, BufferGeometry, BufferAttribute, Triangle, Points} from 'three';
 import {TypeAssert} from '../../../engine/poly/Assert';
 import {AttribType, objectTypeFromConstructor, ObjectType} from '../Constant';
-import {CoreGeometry} from '../Geometry';
+import {corePointClassFactory} from '../CoreObjectFactory';
 
 const _vA = new Vector3();
 const _vB = new Vector3();
@@ -57,11 +57,12 @@ function resolveGeometryAttributeForMesh(intersection: Intersection, attribName:
 					return;
 				}
 				case AttribType.STRING: {
-					const coreGeometry = new CoreGeometry(geometry);
-					const corePoint = coreGeometry.points()[0];
-					if (corePoint) {
-						return corePoint.stringAttribValue(attribName);
-					}
+					const corePointClass = corePointClassFactory(intersection.object);
+					// const coreGeometry = new CoreGeometry(geometry);
+					// const corePoint = coreGeometry.points()[0];
+					// if (corePoint) {
+					return corePointClass.stringAttribValue(intersection.object, 0, attribName);
+					// }
 					return;
 				}
 			}
@@ -81,12 +82,14 @@ function resolveGeometryAttributeForPoint(intersection: Intersection, attribName
 				return;
 			}
 			case AttribType.STRING: {
-				const core_geometry = new CoreGeometry(geometry);
-				const core_point = core_geometry.points()[intersection.index];
-				if (core_point) {
-					return core_point.stringAttribValue(attribName);
-				}
-				return;
+				const corePointClass = corePointClassFactory(intersection.object);
+				return corePointClass.stringAttribValue(intersection.object, intersection.index, attribName);
+				// const core_geometry = new CoreGeometry(geometry);
+				// const core_point = core_geometry.points()[intersection.index];
+				// if (core_point) {
+				// 	return core_point.stringAttribValue(attribName);
+				// }
+				// return;
 			}
 		}
 		TypeAssert.unreachable(attribType);

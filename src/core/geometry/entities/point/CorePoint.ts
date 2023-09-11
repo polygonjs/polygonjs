@@ -6,54 +6,257 @@ import {
 	Vector3Like,
 	Vector4Like,
 } from '../../../../types/GlobalTypes';
-import {BufferAttribute, Vector4, Vector3, Vector2, BufferGeometry} from 'three';
+import {BufferAttribute, Vector4, Vector3, Vector2, InterleavedBufferAttribute} from 'three';
 import {Attribute, CoreAttribute} from '../../Attribute';
-import {CoreGeometry} from '../../Geometry';
-import {CoreEntity} from '../../Entity';
 import {isArray} from '../../../Type';
-import {DOT, ComponentName, COMPONENT_INDICES} from '../../Constant';
-import {CoreObjectType, ObjectBuilder} from '../../ObjectContent';
+import {CoreEntity} from '../../CoreEntity';
+import {DOT, ComponentName, COMPONENT_INDICES, AttribType} from '../../Constant';
+import {ObjectContent, CoreObjectType, ObjectBuilder} from '../../ObjectContent';
+import {PointAttributesDict} from './Common';
+import {CoreAttributeData} from '../../AttributeData';
 
-export class CorePoint extends CoreEntity {
-	// _position: Vector3 | undefined;
-	// _normal: Vector3 | undefined;
-	private _geometry?: BufferGeometry;
-	constructor(geometry?: BufferGeometry, index?: number) {
-		super(geometry, index);
-		this._geometry = geometry;
+export abstract class TypedCorePoint<T extends CoreObjectType> extends CoreEntity {
+	protected _object?: ObjectContent<T>;
+	constructor(object?: ObjectContent<T>, index?: number) {
+		super(object, index);
+		this._object = object;
 	}
-	// applyMatrix4(matrix: Matrix4) {
-	// 	this.position().applyMatrix4(matrix);
-	// }
-	setGeometry(geometry: BufferGeometry) {
-		this._geometry = geometry;
-		return this;
-	}
-	override setIndex(index: number, geometry?: BufferGeometry) {
-		this._index = index;
-		if (geometry) {
-			this._geometry = geometry;
-		}
-		return this;
-	}
-	geometry() {
-		return this._geometry;
+	object() {
+		return this._object;
 	}
 	builder<T extends CoreObjectType>(): ObjectBuilder<T> | undefined {
 		return undefined;
 	}
+	static addAttribute<T extends CoreObjectType>(
+		object: ObjectContent<T>,
+		attribName: string,
+		attribute: BufferAttribute
+	) {
+		console.warn('CorePoint.addAttribute needs to be overloaded');
+	}
+
+	static pointsCount<T extends CoreObjectType>(object: ObjectContent<T>) {
+		return 0;
+	}
+
+	static attributes<T extends CoreObjectType>(object?: ObjectContent<T>): PointAttributesDict | undefined {
+		console.warn('CorePoint.attributes needs to be overloaded');
+		return;
+	}
+	attributes(): PointAttributesDict | undefined {
+		if (!this._object) {
+			return;
+		}
+		return (this.constructor as typeof TypedCorePoint<T>).attributes(this._object);
+	}
+	static attribute<T extends CoreObjectType>(
+		object: ObjectContent<T>,
+		attribName: string
+	): BufferAttribute | InterleavedBufferAttribute | undefined {
+		const attributes = this.attributes(object);
+		if (!attributes) {
+			return;
+		}
+		return attributes[attribName];
+	}
+	attribute(attribName: string): BufferAttribute | InterleavedBufferAttribute | undefined {
+		if (!this._object) {
+			return;
+		}
+		return (this.constructor as typeof TypedCorePoint<T>).attribute(this._object, attribName);
+	}
+	static attribSize<T extends CoreObjectType>(object: ObjectContent<T>, attribName: string): number {
+		const attributes = this.attributes(object);
+		if (!attributes) {
+			return -1;
+		}
+		attribName = CoreAttribute.remapName(attribName);
+		return attributes[attribName].itemSize || 0;
+	}
 
 	attribSize(attribName: string): number {
-		attribName = CoreAttribute.remapName(attribName);
-		return this._geometry?.getAttribute(attribName).itemSize || 0;
+		if (!this._object) {
+			return 0;
+		}
+		return (this.constructor as typeof TypedCorePoint<T>).attribSize(this._object, attribName);
+	}
+	static hasAttrib<T extends CoreObjectType>(object: ObjectContent<T>, attribName: string): boolean {
+		const remappedName = CoreAttribute.remapName(attribName);
+		return this.attributes(object) ? this.attributes(object)![remappedName] != null : false;
 	}
 
 	hasAttrib(attribName: string): boolean {
-		const remappedName = CoreAttribute.remapName(attribName);
-		return this._geometry ? CoreGeometry.hasAttrib(this._geometry, remappedName) : false;
+		if (!this._object) {
+			return false;
+		}
+		return (this.constructor as typeof TypedCorePoint<T>).hasAttrib(this._object, attribName);
 	}
-	static attribValue(
-		geometry: BufferGeometry,
+
+	//
+	//
+	// INDEXED ATTRIBUTES
+	//
+	//
+	static userDataAttribs<T extends CoreObjectType>(object?: ObjectContent<T>): Record<string, string[]> {
+		console.warn('CorePoint.userDataAttribs needs to be overloaded');
+		return {};
+	}
+	userDataAttribs(): Record<string, string[]> {
+		return this._object ? (this.constructor as any as typeof TypedCorePoint).userDataAttribs(this._object) : {};
+	}
+	static userDataAttrib<T extends CoreObjectType>(
+		object: ObjectContent<T> | undefined,
+		attribName: string
+	): string[] | undefined {
+		attribName = CoreAttribute.remapName(attribName);
+		return this.userDataAttribs(object)[attribName];
+	}
+	userDataAttrib(name: string) {
+		name = CoreAttribute.remapName(name);
+		return this.userDataAttribs()[name];
+	}
+	static indexedAttributeNames<T extends CoreObjectType>(object?: ObjectContent<T>): string[] {
+		return object ? Object.keys(this.userDataAttribs(object) || {}) : [];
+	}
+	indexedAttributeNames(): string[] {
+		return this._object
+			? (this.constructor as any as typeof TypedCorePoint).indexedAttributeNames(this._object)
+			: [];
+		// return Object.keys(this.userDataAttribs() || {});
+	}
+	static isAttribIndexed<T extends CoreObjectType>(
+		object: ObjectContent<T> | undefined,
+		attribName: string
+	): boolean {
+		attribName = CoreAttribute.remapName(attribName);
+		return this.userDataAttrib(object, attribName) != null;
+	}
+	isAttribIndexed(name: string): boolean {
+		name = CoreAttribute.remapName(name);
+		return this.userDataAttrib(name) != null;
+	}
+	static setIndexedAttributeValues<T extends CoreObjectType>(
+		object: ObjectContent<T> | undefined,
+		attribName: string,
+		values: string[]
+	) {
+		this.userDataAttribs(object)[attribName] = values;
+	}
+	setIndexedAttributeValues(attribName: string, values: string[]) {
+		return (this.constructor as any as typeof TypedCorePoint).setIndexedAttributeValues(
+			this._object,
+			attribName,
+			values
+		);
+	}
+	static setIndexedAttribute<T extends CoreObjectType>(
+		object: ObjectContent<T> | undefined,
+		attribName: string,
+		values: string[],
+		indices: number[]
+	) {
+		console.warn('CorePoint.setIndexedAttribute needs to be overloaded');
+	}
+	setIndexedAttribute(attribName: string, values: string[], indices: number[]) {
+		return (this.constructor as any as typeof TypedCorePoint).setIndexedAttribute(
+			this._object,
+			attribName,
+			values,
+			indices
+		);
+	}
+	//
+	static indexedAttribValue<T extends CoreObjectType>(
+		object: ObjectContent<T> | undefined,
+		index: number,
+		attribName: string
+	): string | null {
+		const valueIndex = this.attribValueIndex(object, index, attribName); //attrib.value()
+		const values = this.userDataAttrib(object, attribName);
+		return values ? values[valueIndex] : null;
+	}
+	indexedAttribValue(attribName: string): string | null {
+		return (this.constructor as any as typeof TypedCorePoint).indexedAttribValue(
+			this._object,
+			this._index,
+			attribName
+		);
+	}
+	static stringAttribValue<T extends CoreObjectType>(object: ObjectContent<T>, index: number, attribName: string) {
+		return this.indexedAttribValue(object, index, attribName);
+	}
+	stringAttribValue(attribName: string) {
+		return this.indexedAttribValue(attribName);
+	}
+	static attribValueIndex<T extends CoreObjectType>(
+		object: ObjectContent<T> | undefined,
+		index: number,
+		attribName: string
+	): number {
+		console.warn('CorePoint.attribValueIndex needs to be overloaded');
+		return 0;
+	}
+	attribValueIndex(attribName: string): number {
+		return (this.constructor as any as typeof TypedCorePoint).attribValueIndex(
+			this._object,
+			this._index,
+			attribName
+		);
+	}
+	static attribType<T extends CoreObjectType>(object: ObjectContent<T> | undefined, attribName: string): AttribType {
+		if (this.isAttribIndexed(object, attribName)) {
+			return AttribType.STRING;
+		} else {
+			return AttribType.NUMERIC;
+		}
+	}
+	attribType(attribName: string): AttribType {
+		return (this.constructor as any as typeof TypedCorePoint).attribType(this._object, attribName);
+	}
+	isStringAttribute(attribName: string): boolean {
+		return this.attribType(attribName) == AttribType.STRING;
+	}
+	setAttribIndex(attribName: string, newValueIndex: number) {
+		// if (!this._geometry) {
+		// 	return;
+		// }
+		const attribute = this.attribute(attribName);
+		if (!attribute) {
+			return;
+		}
+		const array = (attribute as BufferAttribute).array as number[];
+		return (array[this._index] = newValueIndex);
+	}
+
+	//
+	//
+	//
+	//
+	//
+	static renameAttrib<T extends CoreObjectType>(object: ObjectContent<T>, oldName: string, newName: string) {
+		console.warn('CorePoint.renameAttrib needs to be overloaded');
+	}
+	static deleteAttribute<T extends CoreObjectType>(object: ObjectContent<T>, attribName: string) {
+		console.warn('CorePoint.deleteAttribute needs to be overloaded');
+	}
+
+	//
+	//
+	//
+	//
+	//
+
+	// attribSize(attribName: string): number {
+	// 	attribName = CoreAttribute.remapName(attribName);
+	// 	return this._geometry?.getAttribute(attribName).itemSize || 0;
+	// }
+
+	// hasAttrib(attribName: string): boolean {
+	// 	const remappedName = CoreAttribute.remapName(attribName);
+	// 	return this._geometry ? CoreGeometry.hasAttrib(this._geometry, remappedName) : false;
+	// }
+	static attribValue<T extends CoreObjectType>(
+		object: ObjectContent<T>,
 		index: number,
 		attribName: string,
 		target?: Vector2 | Vector3 | Vector4
@@ -70,11 +273,11 @@ export class CorePoint extends CoreEntity {
 			}
 			const remapedName = CoreAttribute.remapName(attribName);
 
-			const attrib = geometry.getAttribute(remapedName) as BufferAttribute | undefined;
+			const attrib = this.attribute(object, remapedName);
 			if (attrib) {
 				const {array} = attrib;
-				if (CoreGeometry.isAttribIndexed(geometry, remapedName)) {
-					return CorePoint.indexedAttribValue(geometry, index, remapedName);
+				if (this.isAttribIndexed(object, remapedName)) {
+					return this.indexedAttribValue(object, index, remapedName)!;
 				} else {
 					const itemSize = attrib.itemSize;
 					const startIndex = index * itemSize;
@@ -113,121 +316,78 @@ export class CorePoint extends CoreEntity {
 					}
 				}
 			} else {
-				const message = `attrib ${attribName} not found. availables are: ${Object.keys(
-					geometry.attributes || {}
-				).join(',')}`;
+				const attributesDict = this.attributes() || {};
+				const attribNames: string[] = Object.keys(attributesDict);
+				const message = `attrib ${attribName} not found. availables are: ${attribNames.join(',')}`;
 				console.warn(message);
 				throw message;
 			}
 		}
 	}
 	attribValue(attribName: string, target?: Vector2 | Vector3 | Vector4): AttribValue {
-		return this._geometry ? CorePoint.attribValue(this._geometry, this._index, attribName, target) : 0;
-	}
-	attribValueNumber(attribName: string) {
-		const remapedName = CoreAttribute.remapName(attribName);
-		if (!this._geometry) {
+		if (!this._object) {
 			return 0;
 		}
-		const attrib = this._geometry.getAttribute(remapedName) as BufferAttribute;
+		return (this.constructor as typeof TypedCorePoint<T>).attribValue(
+			this._object,
+			this._index,
+			attribName,
+			target
+		);
+	}
+	attribValueNumber(attribName: string) {
+		const attrib = this.attribute(attribName);
+		if (!attrib) {
+			return 0;
+		}
 		return attrib.array[this._index];
 	}
 	attribValueVector2(attribName: string, target: Vector2) {
-		const remapedName = CoreAttribute.remapName(attribName);
-		if (!this._geometry) {
+		const attrib = this.attribute(attribName);
+		if (!attrib) {
 			return;
 		}
-		const attrib = this._geometry.getAttribute(remapedName) as BufferAttribute;
-		target.fromArray(attrib.array, this._index * 2);
+		target.fromArray(attrib.array as number[], this._index * 2);
 		return target;
 	}
 	attribValueVector3(attribName: string, target: Vector3) {
-		const remapedName = CoreAttribute.remapName(attribName);
-		if (!this._geometry) {
+		const attrib = this.attribute(attribName);
+		if (!attrib) {
 			return;
 		}
-		const attrib = this._geometry.getAttribute(remapedName) as BufferAttribute;
-		target.fromArray(attrib.array, this._index * 3);
+		target.fromArray(attrib.array as number[], this._index * 3);
 		return target;
 	}
 	attribValueVector4(attribName: string, target: Vector4) {
-		const remapedName = CoreAttribute.remapName(attribName);
-		if (!this._geometry) {
+		const attrib = this.attribute(attribName);
+		if (!attrib) {
 			return;
 		}
-		const attrib = this._geometry.getAttribute(remapedName) as BufferAttribute;
-		target.fromArray(attrib.array, this._index * 4);
+		target.fromArray(attrib.array as number[], this._index * 4);
 		return target;
 	}
-	static indexedAttribValue(geometry: BufferGeometry, index: number, attribName: string): string {
-		const valueIndex = this.attribValueIndex(geometry, index, attribName); //attrib.value()
-		return CoreGeometry.userDataAttrib(geometry, attribName)[valueIndex];
-	}
-	indexedAttribValue(attribName: string): string {
-		const valueIndex = this.attribValueIndex(attribName); //attrib.value()
-		if (!this._geometry) {
-			return '';
-		}
-		return CoreGeometry.userDataAttrib(this._geometry, attribName)[valueIndex];
-	}
-	static stringAttribValue(geometry: BufferGeometry, index: number, attribName: string) {
-		return this.indexedAttribValue(geometry, index, attribName);
-	}
-	stringAttribValue(attribName: string) {
-		return this.indexedAttribValue(attribName);
-	}
-	static attribValueIndex(geometry: BufferGeometry, index: number, attribName: string): number {
-		if (CoreGeometry.isAttribIndexed(geometry, attribName)) {
-			return (geometry.getAttribute(attribName) as BufferAttribute).array[index];
-		} else {
-			return -1;
-		}
-	}
-	attribValueIndex(attribName: string): number {
-		if (!this._geometry) {
-			return -1;
-		}
-		return CorePoint.attribValueIndex(this._geometry, this._index, attribName);
-		// if (this._coreGeometry.isAttribIndexed(name)) {
-		// 	return this._geometry.getAttribute(name).array[this._index];
-		// } else {
-		// 	return -1;
-		// }
-	}
-	isAttribIndexed(attribName: string): boolean {
-		if (!this._geometry) {
-			return false;
-		}
-		return CoreGeometry.isAttribIndexed(this._geometry, attribName);
-	}
 
-	position(target: Vector3) {
-		if (!this._geometry) {
-			return target;
-		}
-		const {array} = this._geometry.getAttribute(Attribute.POSITION) as BufferAttribute;
-		return target.fromArray(array, this._index * 3);
+	position(target: Vector3): Vector3 {
+		console.warn('CorePoint.position needs to be overloaded');
+		return target;
 	}
 	setPosition(newPosition: Vector3) {
 		this.setAttribValueFromVector3(Attribute.POSITION, newPosition);
 	}
 
 	normal(target: Vector3): Vector3 {
-		if (!this._geometry) {
-			return target;
-		}
-		const {array} = this._geometry.getAttribute(Attribute.NORMAL) as BufferAttribute;
-		return target.fromArray(array, this._index * 3);
+		console.warn('CorePoint.normal needs to be overloaded');
+		return target;
 	}
 	setNormal(newNormal: Vector3) {
 		return this.setAttribValueFromVector3(Attribute.NORMAL, newNormal);
 	}
 
 	setAttribValue(attribName: string, value: NumericAttribValue | string) {
-		if (!this._geometry) {
+		const attrib = this.attribute(attribName);
+		if (!attrib) {
 			return;
 		}
-		const attrib = this._geometry.getAttribute(attribName) as BufferAttribute;
 		const array = attrib.array as number[];
 		const attribSize = attrib.itemSize;
 
@@ -272,58 +432,65 @@ export class CorePoint extends CoreEntity {
 				array[i4 + 3] = v4.w;
 				break;
 			default:
-				console.warn(`Point.set_attrib_value does not yet allow attrib size ${attribSize}`);
+				console.warn(`CorePoint.setAttribValue does not yet allow attrib size ${attribSize}`);
 				throw `attrib size ${attribSize} not implemented`;
 		}
 	}
 	setAttribValueFromNumber(attribName: string, value: number) {
-		if (!this._geometry) {
+		const attrib = this.attribute(attribName);
+		if (!attrib) {
 			return;
 		}
-		const attrib = this._geometry.getAttribute(attribName) as BufferAttribute;
 		const array = attrib.array as number[];
 		array[this._index] = value;
 	}
 	setAttribValueFromVector2(attribName: string, value: Vector2) {
-		if (!this._geometry) {
+		const attrib = this.attribute(attribName);
+		if (!attrib || this.isStringAttribute(attribName)) {
 			return;
 		}
-		const attrib = this._geometry.getAttribute(attribName) as BufferAttribute;
-		value.toArray(attrib.array, this._index * 2);
+
+		value.toArray(attrib.array as number[], this._index * 2);
 	}
 	setAttribValueFromVector3(attribName: string, value: Vector3) {
-		if (!this._geometry) {
+		const attrib = this.attribute(attribName);
+		if (!attrib || this.isStringAttribute(attribName)) {
 			return;
 		}
-		const attrib = this._geometry.getAttribute(attribName) as BufferAttribute;
-		value.toArray(attrib.array, this._index * 3);
+		value.toArray(attrib.array as number[], this._index * 3);
 	}
 	setAttribValueFromVector4(attribName: string, value: Vector4) {
-		if (!this._geometry) {
+		const attrib = this.attribute(attribName);
+		if (!attrib || this.isStringAttribute(attribName)) {
 			return;
 		}
-		const attrib = this._geometry.getAttribute(attribName) as BufferAttribute;
-		value.toArray(attrib.array, this._index * 4);
+		value.toArray(attrib.array as number[], this._index * 4);
 	}
-	// setAttribValueVector3(name: string, value: Vector3) {
-	// 	// TODO: this fails if the value is null
-	// 	if (value == null) {
-	// 		return;
-	// 	}
-	// 	if (name == null) {
-	// 		throw 'Point.set_attrib_value requires a name';
-	// 	}
 
-	// 	const attrib = this._geometry.getAttribute(name);
-	// 	const array = attrib.array as number[];
-	// 	value.toArray(array, this._index * 3);
-	// }
-
-	setAttribIndex(attribName: string, newValueIndex: number) {
-		if (!this._geometry) {
-			return;
+	//
+	static addAttributeFromAttribData<T extends CoreObjectType>(
+		object: ObjectContent<T>,
+		attribName: string,
+		attribData: CoreAttributeData
+	) {
+		switch (attribData.type()) {
+			case AttribType.STRING:
+				return console.log('TODO: to implement');
+			case AttribType.NUMERIC:
+				return this.addNumericAttrib(object, attribName, attribData.size());
 		}
-		const array = (this._geometry.getAttribute(attribName) as BufferAttribute).array as number[];
-		return (array[this._index] = newValueIndex);
+	}
+	static addNumericAttrib<T extends CoreObjectType>(
+		object: ObjectContent<T>,
+		attribName: string,
+		size: number = 1,
+		defaultValue: NumericAttribValue = 0
+	) {}
+
+	//
+	static markAttribAsNeedsUpdate<T extends CoreObjectType>(object: ObjectContent<T>, attribName: string) {
+		console.warn('CorePoint.markAttribAsNeedsUpdate needs to be overloaded');
 	}
 }
+
+export type CorePoint = TypedCorePoint<CoreObjectType>;

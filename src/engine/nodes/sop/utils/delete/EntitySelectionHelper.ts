@@ -1,5 +1,5 @@
 import {DeleteSopNode} from '../../Delete';
-import {CoreEntity} from '../../../../../core/geometry/Entity';
+import {CoreEntity} from '../../../../../core/geometry/CoreEntity';
 import {isBooleanTrue} from '../../../../../core/BooleanValue';
 
 export class EntitySelectionHelper {

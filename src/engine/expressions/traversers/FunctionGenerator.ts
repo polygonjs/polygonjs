@@ -147,14 +147,28 @@ import {BaseMethod} from '../methods/_Base';
 import {Attribute, CoreAttribute} from '../../../core/geometry/Attribute';
 import {BaseTraverser} from './_Base';
 import {MethodDependency} from '../MethodDependency';
-import {AttributeRequirementsController, VAR_ARE_ENTITY_CORE_POINT} from '../AttributeRequirementsController';
+import {
+	VAR_ENTITY,
+	VAR_ENTITIES,
+	FUNC_GET_ENTITIES_ATTRIBUTE,
+	FUNC_GET_ENTITY_ATTRIBUTE_VALUE,
+	FUNC_GET_ENTITY_ATTRIBUTE_VALUE_FUNC,
+} from '../Common';
+import {AttributeRequirementsController} from '../AttributeRequirementsController';
 import {CoreMath} from '../../../core/math/_Module';
 import {CoreString} from '../../../core/String';
 import {Poly} from '../../Poly';
 import {CoreType} from '../../../core/Type';
 import {PolyDictionary} from '../../../types/GlobalTypes';
-// import {JsepsByString} from '../DependenciesController'
+import {CoreThreejsPoint} from '../../../core/geometry/modules/three/CoreThreejsPoint';
+import {CoreGeometry} from '../../../core/geometry/Geometry';
+import {corePointClassFactory} from '../../../core/geometry/CoreObjectFactory';
+import {CoreEntity} from '../../../core/geometry/CoreEntity';
 import jsep from 'jsep';
+import {VARIABLE_PREFIX} from './_Base';
+const QUOTE = "'";
+const ARGUMENTS_SEPARATOR = ', ';
+const ATTRIBUTE_PREFIX = '@';
 
 // import {Vector3} from 'three'
 type LiteralConstructDictionary = PolyDictionary<LiteralConstructMethod>;
@@ -231,13 +245,6 @@ NATIVE_MATH_CONSTANTS.forEach((name) => {
 	GLOBAL_CONSTANTS[name] = `Math.${name}`;
 });
 
-const QUOTE = "'";
-const ARGUMENTS_SEPARATOR = ', ';
-const ATTRIBUTE_PREFIX = '@';
-import {VARIABLE_PREFIX} from './_Base';
-import {CorePoint} from '../../../core/geometry/entities/point/CorePoint';
-import {CoreGeometry} from '../../../core/geometry/Geometry';
-
 const PROPERTY_OFFSETS: AnyDictionary = {
 	x: 0,
 	y: 1,
@@ -253,6 +260,57 @@ const Core = {
 	Math: CoreMath,
 	String: CoreString,
 };
+
+// const ${VAR_ENTITIES} = param.expressionController.entities();
+function getEntitiesAttributes(entities: CoreEntity[], attribName: string) {
+	const firstEntity = entities[0];
+	if (firstEntity instanceof CoreThreejsPoint) {
+		return firstEntity.attribute(attribName);
+	} else {
+		return entities.map((e) => e.attribValue(attribName));
+	}
+}
+function getCorePointAttribValue(
+	entity: CoreThreejsPoint,
+	attribName: string,
+	array: number[],
+	attributeSize: number,
+	propertyOffset: number
+) {
+	return array[entity.index() * attributeSize + propertyOffset];
+}
+function getCoreEntityAttribValue(
+	entity: CoreEntity,
+	attribName: string,
+	array: number[],
+	attributeSize: number,
+	propertyOffset: number
+) {
+	const value = entity.attribValue(attribName);
+	if (CoreType.isArray(value)) {
+		return value[propertyOffset];
+	} else {
+		return value;
+	}
+}
+function getCoreEntityAttribValueFunc(entity: CoreEntity) {
+	if (entity instanceof CoreThreejsPoint) {
+		return getCorePointAttribValue;
+	}
+	return getCoreEntityAttribValue;
+}
+
+const FUNCTION_ARGS_DICT = {
+	corePointClassFactory,
+	CoreThreejsPoint,
+	CoreGeometry,
+	Core,
+	CoreType,
+	[FUNC_GET_ENTITIES_ATTRIBUTE]: getEntitiesAttributes,
+	[FUNC_GET_ENTITY_ATTRIBUTE_VALUE_FUNC]: getCoreEntityAttribValueFunc,
+};
+const FUNCTION_ARG_NAMES = Object.keys(FUNCTION_ARGS_DICT);
+const FUNCTION_ARGS = FUNCTION_ARG_NAMES.map((argName) => (FUNCTION_ARGS_DICT as any)[argName]);
 
 export class FunctionGenerator extends BaseTraverser {
 	private _entitiesDependent: boolean = false;
@@ -303,10 +361,7 @@ export class FunctionGenerator extends BaseTraverser {
 				try {
 					const body = this._functionBody();
 					this.function = new Function(
-						'CorePoint',
-						'CoreGeometry',
-						'Core',
-						'CoreType',
+						...FUNCTION_ARG_NAMES,
 						'param',
 						'methods',
 						'_set_error_from_error',
@@ -346,43 +401,22 @@ export class FunctionGenerator extends BaseTraverser {
 		const entitiesDependent = this._entitiesDependent;
 		if (entitiesDependent) {
 			return `
-			const entities = param.expressionController.entities();
-			function getEntitiesAttribute(entities, attribName){
-				const firstEntity = entities[0];
-				if(firstEntity instanceof CorePoint){
-					return firstEntity.geometry().attributes[attribName];
-				} else {
-					return entities.map(e=>e.attribValue(attribName));
-				}
-			}
-			function getCorePointAttribValue(entity, attribName, array, attributeSize, propertyOffset){
-				return array[entity.index()*attributeSize+propertyOffset];
-			}
-			function getCoreObjectAttribValue(entity, attribName, array, attributeSize, propertyOffset){
-				const value = entity.attribValue(attribName);
-				if(CoreType.isArray(value)){
-					return value[propertyOffset]
-				} else {
-					return value
-				}
-			}
-			if(entities){
+			const ${VAR_ENTITIES} = param.expressionController.entities();
+			
+			if(${VAR_ENTITIES}){
 				return new Promise( async (resolve, reject)=>{
-					let entity;
 					const entityCallback = param.expressionController.entityCallback();
 					// assign_attributes_lines
 					${this._attribute_requirements_controller.assignAttributesLines()}
 					// check if attributes are present
 					if( ${this._attribute_requirements_controller.attributePresenceCheckLine()} ){
 						// assign function
-						const ${VAR_ARE_ENTITY_CORE_POINT} = entities[0] instanceof CorePoint;
-						const getEntityAttribValue = areEntitiesCorePoint ? getCorePointAttribValue : getCoreObjectAttribValue;
+						const ${FUNC_GET_ENTITY_ATTRIBUTE_VALUE} = ${FUNC_GET_ENTITY_ATTRIBUTE_VALUE_FUNC}(entities[0]);
 						// assign_arrays_lines
 						${this._attribute_requirements_controller.assignArraysLines()}
-						for(let index=0; index < entities.length; index++){
-							entity = entities[index];
+						for(const ${VAR_ENTITY} of ${VAR_ENTITIES}){
 							result = ${this.function_main_string};
-							entityCallback(entity, result);
+							entityCallback(${VAR_ENTITY}, result);
 						}
 						resolve()
 					} else {
@@ -416,15 +450,7 @@ export class FunctionGenerator extends BaseTraverser {
 		if (this.function) {
 			this.clearError();
 
-			const result = this.function(
-				CorePoint,
-				CoreGeometry,
-				Core,
-				CoreType,
-				this.param,
-				this.methods,
-				this._set_error_from_error_bound
-			);
+			const result = this.function(...FUNCTION_ARGS, this.param, this.methods, this._set_error_from_error_bound);
 
 			return result;
 		}
@@ -531,7 +557,7 @@ export class FunctionGenerator extends BaseTraverser {
 			if (attributeName) {
 				attributeName = CoreAttribute.remapName(attributeName);
 				if (attributeName == Attribute.POINT_INDEX || attributeName == Attribute.OBJECT_INDEX) {
-					return '((entity != null) ? entity.index() : 0)';
+					return `((${VAR_ENTITY} != null) ? ${VAR_ENTITY}.index() : 0)`;
 				} else {
 					const var_attribute_size = this._attribute_requirements_controller.varAttributeSize(attributeName);
 					const var_array = this._attribute_requirements_controller.varArray(attributeName);
@@ -546,7 +572,7 @@ export class FunctionGenerator extends BaseTraverser {
 					// } else {
 					// 	return `${var_array}[entity.index()*${var_attribute_size}]`;
 					// }
-					return `getEntityAttribValue(entity, '${attributeName}', ${var_array}, ${var_attribute_size}, ${propertyOffset})`;
+					return `${FUNC_GET_ENTITY_ATTRIBUTE_VALUE}(${VAR_ENTITY}, '${attributeName}', ${var_array}, ${var_attribute_size}, ${propertyOffset})`;
 				}
 			} else {
 				console.warn('attribute not found');

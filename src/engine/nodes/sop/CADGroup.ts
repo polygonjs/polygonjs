@@ -27,7 +27,7 @@ import {
 	EntityGroupType,
 } from '../../../core/geometry/EntityGroupCollection';
 import {coreObjectInstanceFactory} from '../../../core/geometry/CoreObjectFactory';
-import {CoreEntity} from '../../../core/geometry/Entity';
+import {CoreEntity} from '../../../core/geometry/CoreEntity';
 import {CadCoreFace} from '../../../core/geometry/modules/cad/CadCoreFace';
 
 const GROUP_TYPES: EntityGroupType[] = [EntityGroupType.EDGE, EntityGroupType.FACE];

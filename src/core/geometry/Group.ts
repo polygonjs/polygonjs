@@ -1,15 +1,14 @@
 import {AttribValue} from './../../types/GlobalTypes';
-import {NumericAttribValue, PolyDictionary} from '../../types/GlobalTypes';
+import {PolyDictionary} from '../../types/GlobalTypes';
 import {Box3, BufferGeometry, LineSegments, Mesh, Points, Object3D, Vector3} from 'three';
 import {CoreObject} from './modules/three/CoreObject';
-import {CoreGeometry} from './Geometry';
+// import {CoreGeometry} from './Geometry';
 import {CoreAttribute} from './Attribute';
 import {CoreString} from '../String';
-import {AttribClass, AttribSize, ObjectData, AttribType, GroupString} from './Constant';
+import {AttribSize, ObjectData, AttribType, GroupString} from './Constant';
 import {CoreType} from '../Type';
 import {ArrayUtils} from '../ArrayUtils';
 import {Poly} from '../../engine/Poly';
-import {CoreEntity} from './Entity';
 import {CoreObjectType, ObjectBuilder, ObjectContent, isObject3D} from './ObjectContent';
 import {coreObjectFactory, coreObjectInstanceFactory} from './CoreObjectFactory';
 import {
@@ -18,6 +17,18 @@ import {
 	coreObjectsAttribSizesByName,
 } from './entities/object/BaseCoreObjectUtils';
 import {object3DHasGeometry} from './GeometryUtils';
+
+// entities
+import {CoreEntity} from './CoreEntity';
+import {
+	pointsCountFromObject,
+	pointsFromObject,
+	pointAttributeNames,
+	hasPointAttribute,
+	pointAttributeType,
+	pointAttributeSizes,
+	pointAttributeSize,
+} from './entities/point/CorePointUtils';
 
 // CAD
 import type {CadGeometryType, CadGeometryTypeShape} from './modules/cad/CadCommon';
@@ -73,13 +84,13 @@ export interface Object3DWithGeometry extends Object3D {
 // 		tetrahedronsCount: 0,
 // 	};
 // }
-function objectTotalPointsCount(object: Object3D) {
+function objectTotalPointsCount(object: ObjectContent<CoreObjectType>) {
 	let sum = 0;
 	object.traverse((child) => {
-		const geometry = (child as Mesh).geometry as BufferGeometry;
-		if (geometry) {
-			sum += CoreGeometry.pointsCount(geometry);
-		}
+		// const geometry = (child as Mesh).geometry as BufferGeometry;
+		// if (geometry) {
+		sum += pointsCountFromObject(child);
+		// }
 	});
 	return sum;
 }
@@ -270,9 +281,9 @@ export class CoreGroup extends CoreEntity {
 	geometries(): BufferGeometry[] {
 		return this.threejsObjectsWithGeo().map((o) => o.geometry);
 	}
-	coreGeometries(): CoreGeometry[] {
-		return this.geometries().map((g) => new CoreGeometry(g));
-	}
+	// coreGeometries(): CoreGeometry[] {
+	// 	return this.geometries().map((g) => new CoreGeometry(g));
+	// }
 
 	//
 	//
@@ -280,12 +291,14 @@ export class CoreGroup extends CoreEntity {
 	//
 	//
 	points() {
-		return this.coreGeometries()
-			.map((g) => g.points())
+		return this.allObjects()
+			.map((o) => pointsFromObject(o))
 			.flat();
+		// .map((g) => g.points())
+		// .flat();
 	}
 	pointsCount() {
-		return ArrayUtils.sum(this.geometries().map((g) => CoreGeometry.pointsCount(g)));
+		return ArrayUtils.sum(this.allObjects().map((g) => pointsCountFromObject(g)));
 	}
 	totalPointsCount() {
 		const threejsObjects = this.threejsObjects();
@@ -304,41 +317,45 @@ export class CoreGroup extends CoreEntity {
 			return this.points();
 		}
 	}
-	pointAttribNames() {
-		const firstCoreGeometry = this.coreGeometries()[0];
-		if (firstCoreGeometry) {
-			return firstCoreGeometry.attribNames();
+	pointAttribNames(): string[] {
+		const firstObject = this.allObjects()[0];
+		if (firstObject) {
+			return pointAttributeNames(firstObject);
 		} else {
 			return [];
 		}
 	}
-	hasPointAttrib(name: string) {
-		const firstCoreGeometry = this.coreGeometries()[0];
-		return firstCoreGeometry?.hasAttrib(name) || false;
-	}
-	pointAttribType(name: string) {
-		const firstCoreGeometry = this.coreGeometries()[0];
-		if (firstCoreGeometry != null) {
-			return firstCoreGeometry.attribType(name);
+	hasPointAttrib(attribName: string): boolean {
+		const firstObject = this.allObjects()[0];
+		if (firstObject) {
+			return hasPointAttribute(firstObject, attribName);
 		} else {
-			return null;
+			return false;
+		}
+	}
+	pointAttribType(attribName: string): AttribType {
+		const firstObject = this.allObjects()[0];
+		if (firstObject) {
+			return pointAttributeType(firstObject, attribName);
+		} else {
+			return AttribType.NUMERIC;
 		}
 	}
 	pointAttribNamesMatchingMask(masksString: GroupString) {
 		return CoreAttribute.attribNamesMatchingMask(masksString, this.pointAttribNames());
 	}
-	pointAttribSizes() {
-		const firstGeometry = this.coreGeometries()[0];
-		if (firstGeometry) {
-			return firstGeometry.attribSizes();
+	pointAttribSizes(): Record<string, number> {
+		const firstObject = this.allObjects()[0];
+		if (firstObject) {
+			return pointAttributeSizes(firstObject);
 		} else {
 			return {};
 		}
 	}
-	pointAttribSize(attrib_name: string) {
-		const firstGeometry = this.coreGeometries()[0];
-		if (firstGeometry) {
-			return firstGeometry.attribSize(attrib_name);
+	pointAttribSize(attribName: string): number {
+		const firstObject = this.allObjects()[0];
+		if (firstObject) {
+			return pointAttributeSize(firstObject, attribName);
 		} else {
 			return 0;
 		}
@@ -372,56 +389,69 @@ export class CoreGroup extends CoreEntity {
 		// 	return {};
 		// }
 	}
-	addGeoNumericVertexAttrib(name: string, size: number, defaultValue: NumericAttribValue) {
-		if (defaultValue == null) {
-			defaultValue = CoreAttribute.defaultValue(size);
-		}
+	// addPointNumericVertexAttrib(attribName: string, size: number, defaultValue: NumericAttribValue) {
+	// 	if (defaultValue == null) {
+	// 		defaultValue = CoreAttribute.defaultValue(size);
+	// 	}
+	// 	const objects = this.allObjects()
+	// 	for(const object of objects){
+	// 		const pointClass = corePointClassFactory(object);
+	// 		pointClass.addAttribute(object,attribName, size, defaultValue);
+	// 	}
 
-		for (let coreGeometry of this.coreGeometries()) {
-			coreGeometry.addNumericAttrib(name, size, defaultValue);
-		}
-	}
+	// 	// for (let coreGeometry of this.coreGeometries()) {
+	// 	// 	coreGeometry.addNumericAttrib(name, size, defaultValue);
+	// 	// }
+	// }
 
 	//
 	//
 	// attributes
 	//
 	//
-	renameAttrib(old_name: string, new_name: string, attribClass: AttribClass) {
-		switch (attribClass) {
-			case AttribClass.POINT:
-				if (this.hasPointAttrib(old_name)) {
-					const objects = this.threejsObjects();
-					// if (this._objects) {
-					for (let object of objects) {
-						object.traverse((child) => {
-							const geometry = CoreGroup.geometryFromObject(child);
-							if (geometry) {
-								const core_geometry = new CoreGeometry(geometry);
-								core_geometry.renameAttrib(old_name, new_name);
-							}
-						});
-					}
-					// }
-				}
-				break;
+	// renameAttrib(oldName: string, newName: string, attribClass: AttribClass) {
+	// 	switch (attribClass) {
+	// 		case AttribClass.POINT:
+	// 			if (this.hasPointAttrib(old_name)) {
+	// 				const objects = this.threejsObjects();
+	// 				// if (this._objects) {
+	// 				for (let object of objects) {
+	// 					object.traverse((child) => {
+	// 						const geometry = CoreGroup.geometryFromObject(child);
+	// 						if (geometry) {
+	// 							const core_geometry = new CoreGeometry(geometry);
+	// 							core_geometry.renameAttrib(old_name, new_name);
+	// 						}
+	// 					});
+	// 				}
+	// 				// }
+	// 			}
+	// 			break;
 
-			case AttribClass.OBJECT:
-				// if (this.hasAttrib(old_name)) {
-				// if (this._allObjects) {
-				for (let object of this._allObjects) {
-					if (isObject3D(object)) {
-						object.traverse((child) => {
-							CoreObject.renameAttrib(child, old_name, new_name);
-						});
-					} else {
-						CoreObject.renameAttrib(object, old_name, new_name);
-					}
-				}
-				// }
-				// }
-				break;
+	// 		case AttribClass.OBJECT:
+	// 			// if (this.hasAttrib(old_name)) {
+	// 			// if (this._allObjects) {
+	// 			for (let object of this._allObjects) {
+	// 				if (isObject3D(object)) {
+	// 					object.traverse((child) => {
+	// 						CoreObject.renameAttrib(child, old_name, new_name);
+	// 					});
+	// 				} else {
+	// 					CoreObject.renameAttrib(object, old_name, new_name);
+	// 				}
+	// 			}
+	// 			// }
+	// 			// }
+	// 			break;
+	// 	}
+	// }
+	renameAttrib(oldName: string, newName: string) {
+		const attribValue = this.attribValue(oldName);
+		if (attribValue == null) {
+			return;
 		}
+		this.addAttribute(newName, attribValue);
+		this.deleteAttribute(oldName);
 	}
 
 	attribNamesMatchingMask(masksString: GroupString) {
@@ -481,7 +511,7 @@ export class CoreGroup extends CoreEntity {
 	}
 
 	stringAttribValue(attribName: string) {
-		return this.attribValue(attribName) as string | undefined;
+		return this.attribValue(attribName) as string | null;
 	}
 	position(target: Vector3) {
 		const objectsCount = this._allObjects.length;

@@ -1,7 +1,7 @@
 import type {QUnit} from '../../../helpers/QUnit';
 import {Vector3, Vector2, BufferAttribute, Vector4} from 'three';
 import {AttribType, AttribClass, AttribSize} from '../../../../src/core/geometry/Constant';
-import {CoreEntity} from '../../../../src/core/geometry/Entity';
+import {CoreEntity} from '../../../../src/core/geometry/CoreEntity';
 import {TransformTargetType} from '../../../../src/core/Transform';
 import {CoreType} from '../../../../src/core/Type';
 import {SceneJsonExporter} from '../../../../src/engine/io/json/export/Scene';

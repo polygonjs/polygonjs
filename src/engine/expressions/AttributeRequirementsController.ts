@@ -1,6 +1,10 @@
-export const VAR_ARE_ENTITY_CORE_POINT = `areEntitiesCorePoint`;
-const VAR_GEOMETRY = `geometry`;
-const CLASS_CORE_GEOMETRY = `CoreGeometry`;
+import {
+	VAR_OBJECT,
+	VAR_ENTITIES,
+	CLASS_CORE_POINT,
+	CLASS_CORE_THREEJS_POINT,
+	FUNC_GET_ENTITIES_ATTRIBUTE,
+} from './Common';
 
 export class AttributeRequirementsController {
 	private _attributeNames: Set<string> | undefined;
@@ -26,8 +30,8 @@ export class AttributeRequirementsController {
 		if (this._attributeNames) {
 			const lines: string[] = [];
 			if (this._attributeNames.size > 0) {
-				const geoLine = `const ${VAR_GEOMETRY} = entities[0].geometry();`;
-				lines.push(geoLine);
+				const objectLine = `const ${VAR_OBJECT} = entities[0].object();`;
+				lines.push(objectLine);
 			}
 			for (let attribName of this._attributeNames) {
 				lines.push(AttributeRequirementsController.assignItemSizeLine(attribName));
@@ -73,27 +77,27 @@ export class AttributeRequirementsController {
 
 	static assignAttributeLine(attribName: string) {
 		const varAttribute = this._varAttribute(attribName);
-		return `const ${varAttribute} = getEntitiesAttribute(entities,'${attribName}')`;
+		return `const ${varAttribute} = ${FUNC_GET_ENTITIES_ATTRIBUTE}(${VAR_ENTITIES},'${attribName}')`;
 	}
-	static assignItemSizeLine(attribName: string) {
+	private static assignItemSizeLine(attribName: string) {
 		const varAttribute = this._varAttribute(attribName);
 		const varAttributeSize = this._varAttribSize(attribName);
 		return `const ${varAttributeSize} = ${varAttribute}.itemSize`;
 	}
-	static assignArrayLine(attribName: string) {
+	private static assignArrayLine(attribName: string) {
 		const varAttribute = this._varAttribute(attribName);
 		const varArray = this._varArray(attribName);
-		const isIndexedCondition = `(${VAR_ARE_ENTITY_CORE_POINT} && ${CLASS_CORE_GEOMETRY}.isAttribIndexed(${VAR_GEOMETRY}, '${attribName}'))`;
-		const indexedArray = `entities.map(e=>e.indexedAttribValue('${attribName}'))`;
+		const isIndexedCondition = `(${VAR_ENTITIES}[0] && ${VAR_ENTITIES}[0] instanceof ${CLASS_CORE_THREEJS_POINT} && ${CLASS_CORE_POINT}.isAttribIndexed(${VAR_OBJECT}, '${attribName}'))`;
+		const indexedArray = `${VAR_ENTITIES}.map(e=>e.indexedAttribValue('${attribName}'))`;
 		const nonIndexedArray = `${varAttribute}.array`;
-		return `const ${varArray} = ${isIndexedCondition} ? ${indexedArray} : ${nonIndexedArray}`;
+		return `const ${varArray} = ${isIndexedCondition} ? ${indexedArray} : ${nonIndexedArray};`;
 	}
 
 	private static _varAttribute(attribName: string) {
 		return `attrib_${attribName}`;
 	}
 	private static _varAttribSize(attribName: string) {
-		return `attrib_size_${attribName}`;
+		return `attribSize_${attribName}`;
 	}
 	private static _varArray(attribName: string) {
 		return `array_${attribName}`;

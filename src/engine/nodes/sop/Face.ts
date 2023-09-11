@@ -7,12 +7,14 @@ import {Mesh, BufferAttribute, BufferGeometry, Vector3} from 'three';
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {CorePointArray3, CoreFace} from '../../../core/geometry/modules/three/CoreFace';
-import {CorePoint} from '../../../core/geometry/entities/point/CorePoint';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {ArrayUtils} from '../../../core/ArrayUtils';
 import {isBooleanTrue} from '../../../core/BooleanValue';
+import {corePointClassFactory} from '../../../core/geometry/CoreObjectFactory';
+import {CoreThreejsPoint} from '../../../core/geometry/modules/three/CoreThreejsPoint';
 
+const dummyMesh = new Mesh();
 enum FaceAttribName {
 	CENTER = 'faceCenter',
 	ID = 'faceId',
@@ -22,7 +24,11 @@ const _faceCenter = new Vector3();
 const _position = new Vector3();
 const _newPosition = new Vector3();
 const _face = new CoreFace();
-const _points: CorePointArray3 = [new CorePoint(), new CorePoint(), new CorePoint()];
+const _points: CorePointArray3 = [
+	new CoreThreejsPoint(dummyMesh, 0),
+	new CoreThreejsPoint(dummyMesh, 0),
+	new CoreThreejsPoint(dummyMesh, 0),
+];
 
 class FaceSopParamsConfig extends NodeParamsConfig {
 	/** @param makes faces unique */
@@ -115,10 +121,11 @@ export class FaceSopNode extends TypedSopNode<FaceSopParamsConfig> {
 		const coreObjects = coreGroup.threejsCoreObjects();
 		for (const coreObject of coreObjects) {
 			const object = coreObject.object();
+			const corePointClass = corePointClassFactory(object);
 			const coreGeometry = coreObject.coreGeometry();
 			if ((object as Mesh).isMesh && coreGeometry) {
-				if (!coreGeometry.hasAttrib(FaceAttribName.CENTER)) {
-					coreGeometry.addNumericAttrib(FaceAttribName.CENTER, 3, -1);
+				if (!corePointClass.hasAttrib(object, FaceAttribName.CENTER)) {
+					corePointClass.addNumericAttrib(object, FaceAttribName.CENTER, 3, -1);
 				}
 
 				const facesCount = coreGeometry.facesCount();
@@ -142,13 +149,14 @@ export class FaceSopNode extends TypedSopNode<FaceSopParamsConfig> {
 
 		for (const coreObject of coreObjects) {
 			const object = coreObject.object();
+			const corePointClass = corePointClassFactory(object);
 			const coreGeometry = coreObject.coreGeometry();
 			if ((object as Mesh).isMesh && coreGeometry) {
 				// const faces = core_geometry.faces();
 				// const points_count = core_geometry.pointsCount();
 
-				if (!coreGeometry.hasAttrib(FaceAttribName.ID)) {
-					coreGeometry.addNumericAttrib(FaceAttribName.ID, 1, -1);
+				if (!corePointClass.hasAttrib(object, FaceAttribName.ID)) {
+					corePointClass.addNumericAttrib(object, FaceAttribName.ID, 1, -1);
 				}
 
 				const facesCount = coreGeometry.facesCount();
@@ -173,11 +181,12 @@ export class FaceSopNode extends TypedSopNode<FaceSopParamsConfig> {
 		const coreObjects = coreGroup.threejsCoreObjects();
 		for (const coreObject of coreObjects) {
 			const object = coreObject.object();
+			const corePointClass = corePointClassFactory(object);
 			const coreGeometry = coreObject.coreGeometry();
 			if ((object as Mesh).isMesh && coreGeometry) {
 				// faces = coreGeometry.faces();
-				if (!coreGeometry.hasAttrib(FaceAttribName.POSITION)) {
-					coreGeometry.addNumericAttrib(FaceAttribName.POSITION, 3, -1);
+				if (!corePointClass.hasAttrib(object, FaceAttribName.POSITION)) {
+					corePointClass.addNumericAttrib(object, FaceAttribName.POSITION, 3, -1);
 				}
 
 				const facesCount = coreGeometry.facesCount();

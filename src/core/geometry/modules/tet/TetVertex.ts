@@ -11,20 +11,20 @@ export interface TetGeometryWithVertexAttributes extends TetGeometry {
 
 export class TetVertex extends CoreVertex<CoreObjectType.TET> {
 	protected _geometry?: TetGeometry;
-	constructor(public object: TetObject, index: number) {
+	constructor(object: TetObject, index: number) {
 		super(object, index);
 		this._updateGeometry();
 	}
 	override setIndex(index: number, object?: TetObject) {
 		this._index = index;
 		if (object) {
-			this.object = object;
+			this._object = object;
 			this._updateGeometry();
 		}
 		return this;
 	}
 	private _updateGeometry() {
-		const geometry = this.object.geometry as TetGeometryWithVertexAttributes | undefined;
+		const geometry = (this._object as TetObject).geometry as TetGeometryWithVertexAttributes | undefined;
 		if (geometry) {
 			this._geometry = geometry;
 		}

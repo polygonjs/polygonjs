@@ -6,7 +6,6 @@ import {
 	GPUComputationRenderer,
 	GPUComputationRendererVariable,
 } from './gpuCompute/GPUComputationRenderer';
-import {CorePoint} from '../geometry/entities/point/CorePoint';
 import {ShaderName} from '../../engine/nodes/utils/shaders/ShaderName';
 import {TextureAllocationsController} from '../../engine/nodes/gl/code/utils/TextureAllocationsController';
 import {GlParamConfig} from '../../engine/nodes/gl/code/utils/GLParamConfig';
@@ -16,6 +15,7 @@ import type {CoreParticlesController} from './CoreParticlesController';
 import {CoreParticlesAttribute} from './CoreParticlesAttribute';
 import {coreParticlesInitParticlesUVs} from './CoreParticlesInit';
 import {textureFromAttributePointsCount, textureSizeFromPointsCount} from '../geometry/operation/TextureFromAttribute';
+import {corePointClassFactory} from '../geometry/CoreObjectFactory';
 
 export enum ParticlesDataType {
 	AUTO = 'Auto',
@@ -271,6 +271,7 @@ export class CoreParticlesGpuComputeController {
 		if (!geometry) {
 			return;
 		}
+		const corePointClass = corePointClassFactory(object);
 		const pointsCount = textureFromAttributePointsCount(geometry);
 		const texture_allocations_controller = this._textureAllocationsController();
 		if (!texture_allocations_controller) {
@@ -303,22 +304,22 @@ export class CoreParticlesGpuComputeController {
 					for (let i = 0; i < pointsCount; i++) {
 						switch (attrib_size) {
 							case 1: {
-								const val: number = CorePoint.attribValue(geometry, i, variable_name) as number;
+								const val: number = corePointClass.attribValue(object, i, variable_name) as number;
 								array[cmptr] = val;
 								break;
 							}
 							case 2: {
-								CorePoint.attribValue(geometry, i, variable_name, tmpV2);
+								corePointClass.attribValue(object, i, variable_name, tmpV2);
 								tmpV2.toArray(array, cmptr);
 								break;
 							}
 							case 3: {
-								CorePoint.attribValue(geometry, i, variable_name, tmpV3);
+								corePointClass.attribValue(object, i, variable_name, tmpV3);
 								tmpV3.toArray(array, cmptr);
 								break;
 							}
 							case 4: {
-								CorePoint.attribValue(geometry, i, variable_name, tmpV4);
+								corePointClass.attribValue(object, i, variable_name, tmpV4);
 								tmpV4.toArray(array, cmptr);
 								break;
 							}

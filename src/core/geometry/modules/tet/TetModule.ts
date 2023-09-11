@@ -4,6 +4,8 @@ import {CoreType} from '../../../Type';
 import {
 	registerFactoryFunctions,
 	CoreFactoryFunctions,
+	CorePointClassFactoryCheckFunction,
+	CorePointInstanceFactoryCheckFunction,
 	CoreVertexClassFactoryCheckFunction,
 	CoreVertexInstanceFactoryCheckFunction,
 	CorePrimitiveClassFactoryCheckFunction,
@@ -18,6 +20,7 @@ import {CoreObjectType, ObjectContent} from '../../ObjectContent';
 import {TetTesselationParams, TetOBJTesselationParams} from './TetCommon';
 import {TetCoreObject} from './TetCoreObject';
 import {isTetObject} from './TetCoreType';
+import {TetPoint} from './TetPoint';
 import {TetVertex} from './TetVertex';
 import {TetPrimitive} from './TetPrimitive';
 import {TetObject} from './TetObject';
@@ -75,6 +78,20 @@ export function onTetModuleRegister(poly: PolyEngine) {
 	//
 	//
 
+	// point methods
+	const pointClassFactory: CorePointClassFactoryCheckFunction = (object: ObjectContent<CoreObjectType>) => {
+		if (isTetObject(object)) {
+			return TetPoint;
+		}
+	};
+	const pointInstanceFactory: CorePointInstanceFactoryCheckFunction = (
+		object: ObjectContent<CoreObjectType>,
+		index: number = 0
+	) => {
+		if (isTetObject(object)) {
+			return new TetPoint(object as TetObject, index);
+		}
+	};
 	// vertex methods
 	const vertexClassFactory: CoreVertexClassFactoryCheckFunction = (object: ObjectContent<CoreObjectType>) => {
 		if (isTetObject(object)) {
@@ -121,6 +138,8 @@ export function onTetModuleRegister(poly: PolyEngine) {
 
 	//
 	const factoryFunctions: CoreFactoryFunctions = {
+		pointClass: pointClassFactory,
+		pointInstance: pointInstanceFactory,
 		vertexClass: vertexClassFactory,
 		vertexInstance: vertexInstanceFactory,
 		primitiveClass: primitiveClassFactory,

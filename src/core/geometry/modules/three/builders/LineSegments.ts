@@ -28,11 +28,9 @@ export class CoreGeometryBuilderLineSegments extends CoreGeometryBuilderBase {
 		const filteredPoints: CorePoint[] = [];
 
 		const index_length = indices.length;
-		let pt0: CorePoint;
-		let pt1: CorePoint;
 		for (let i = 0; i < index_length; i += 2) {
-			pt0 = points_by_index[indices[i + 0]];
-			pt1 = points_by_index[indices[i + 1]];
+			const pt0 = points_by_index[indices[i + 0]];
+			const pt1 = points_by_index[indices[i + 1]];
 			if (pt0 && pt1) {
 				filteredPoints.push(pt0);
 				filteredPoints.push(pt1);

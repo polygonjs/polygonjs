@@ -4,7 +4,7 @@ import {ExpressionManager} from '../../expressions/ExpressionManager';
 import type {CorePoint} from '../../../core/geometry/entities/point/CorePoint';
 import type {CoreVertex} from '../../../core/geometry/entities/vertex/CoreVertex';
 import type {CorePrimitive} from '../../../core/geometry/entities/primitive/CorePrimitive';
-import {CoreEntity} from '../../../core/geometry/Entity';
+import {CoreEntity} from '../../../core/geometry/CoreEntity';
 import {ParamType} from '../../poly/ParamType';
 import {ParamValuesTypeMap} from '../types/ParamValuesTypeMap';
 import {BaseCoreObject} from '../../../core/geometry/entities/object/BaseCoreObject';

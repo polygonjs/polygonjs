@@ -23,8 +23,8 @@ import {
 } from '../../../core/TransformSpace';
 import {CoreObjectType, isObject3D, ObjectContent} from '../../../core/geometry/ObjectContent';
 import {CoreMask} from '../../../core/geometry/Mask';
-import {CoreObject} from '../../../core/geometry/modules/three/CoreObject';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
+import {pointsFromObjectFromGroup} from '../../../core/geometry/entities/point/CorePointUtils';
 
 // const _t = new Vector3();
 const _r = new Vector3();
@@ -140,7 +140,7 @@ export class TransformSopOperation extends BaseSopOperation {
 			// });
 		} else {
 			// const coreGroup = CoreGroup._fromObjects(objects);
-			const points = CoreObject.pointsFromGroup(object, pointGroup);
+			const points = pointsFromObjectFromGroup(object, pointGroup);
 			for (let point of points) {
 				const position = point.position(_pointPos).sub(params.pivot);
 				position.applyMatrix4(matrix);

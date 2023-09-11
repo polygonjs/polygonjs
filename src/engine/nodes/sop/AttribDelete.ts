@@ -6,12 +6,11 @@
 import {TypeAssert} from './../../poly/Assert';
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {CoreGeometry} from '../../../core/geometry/Geometry';
 import {AttribClassMenuEntries, AttribClass, ATTRIBUTE_CLASSES} from '../../../core/geometry/Constant';
 import {InputCloneMode} from '../../poly/InputCloneMode';
-import {Object3D, BufferGeometry, Mesh} from 'three';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
+import {corePointClassFactory} from '../../../core/geometry/CoreObjectFactory';
 class AttribDeleteSopParamsConfig extends NodeParamsConfig {
 	/** @param attribute class (geometry or object) */
 	class = ParamConfig.INTEGER(ATTRIBUTE_CLASSES.indexOf(AttribClass.POINT), {
@@ -73,7 +72,7 @@ export class AttribDeleteSopNode extends TypedSopNode<AttribDeleteSopParamsConfi
 	private _deleteAttrib(coreGroup: CoreGroup, attribName: string, attribClass: AttribClass) {
 		switch (attribClass) {
 			case AttribClass.POINT:
-				return this._deleteVertexAttribute(coreGroup, attribName);
+				return this._deletePointAttribute(coreGroup, attribName);
 			case AttribClass.VERTEX: {
 				this.states.error.set('vertex attributes are not supported yet');
 				return;
@@ -90,15 +89,17 @@ export class AttribDeleteSopNode extends TypedSopNode<AttribDeleteSopParamsConfi
 		TypeAssert.unreachable(attribClass);
 	}
 
-	private _deleteVertexAttribute(core_group: CoreGroup, attribName: string) {
-		const objects = core_group.threejsObjects();
+	private _deletePointAttribute(core_group: CoreGroup, attribName: string) {
+		const objects = core_group.allObjects();
 		for (let object of objects) {
-			object.traverse((object3d: Object3D) => {
-				const child = object3d as Mesh;
-				if (child.geometry) {
-					const coreGeometry = new CoreGeometry(child.geometry as BufferGeometry);
-					coreGeometry.deleteAttribute(attribName);
-				}
+			object.traverse((child) => {
+				const corePointClass = corePointClassFactory(child);
+				corePointClass.deleteAttribute(child, attribName);
+				// const child = object3d as Mesh;
+				// if (child.geometry) {
+				// 	const coreGeometry = new CoreGeometry(child.geometry as BufferGeometry);
+				// 	coreGeometry.deleteAttribute(attribName);
+				// }
 			});
 		}
 	}

@@ -1,20 +1,32 @@
-import {Float32BufferAttribute} from 'three';
-import {BufferGeometry} from 'three';
+import {BufferGeometry, Float32BufferAttribute, Mesh} from 'three';
 import {stringMatchesOneMask, stringToAttribNames} from '../../String';
-import {CoreGeometry} from '../../geometry/Geometry';
 import {AttribType} from '../../geometry/Constant';
 import {CoreAttributeData} from '../../geometry/AttributeData';
-import {CoreAttribute} from '../../geometry/Attribute';
+import {Attribute, CoreAttribute} from '../../geometry/Attribute';
 import {CoreType} from '../../Type';
 import {PolyDictionary, StringOrNumber} from '../../../types/GlobalTypes';
+import {CoreThreejsPoint} from '../../geometry/modules/three/CoreThreejsPoint';
 
 const DEEP_ATTRIB_SEPARATOR = ':';
+const dummyMesh = new Mesh();
 
 export interface JsonDataLoaderOptions {
 	dataKeysPrefix?: string;
 	skipEntries?: string;
 	doConvert?: boolean;
 	convertToNumeric?: string;
+}
+
+function initPositionAttribute(geometry: BufferGeometry, pointsCount: number) {
+	const values: number[] = new Array(pointsCount * 3);
+
+	// for (let i = 0; i < pointsCount; i++) {
+	// 	values.push(defaultValue.x);
+	// 	values.push(defaultValue.y);
+	// 	values.push(defaultValue.z);
+	// }
+
+	return geometry.setAttribute(Attribute.POSITION, new Float32BufferAttribute(values, 3));
 }
 
 export class JSONDataParser {
@@ -51,11 +63,13 @@ export class JSONDataParser {
 
 	createObject() {
 		const geometry = new BufferGeometry();
-		const core_geo = new CoreGeometry(geometry);
+		dummyMesh.geometry = geometry;
+		// const core_geo = new CoreGeometry(geometry);
+		const corePointClass = CoreThreejsPoint;
 
 		if (this._json != null) {
-			const points_count = this._json.length;
-			core_geo.initPositionAttribute(points_count);
+			const pointsCount = this._json.length;
+			initPositionAttribute(geometry, pointsCount);
 
 			this._find_attributes();
 
@@ -84,7 +98,12 @@ export class JSONDataParser {
 						);
 					} else {
 						const index_data = CoreAttribute.arrayToIndexedArrays(attrib_values as string[]);
-						core_geo.setIndexedAttribute(geo_attrib_name, index_data['values'], index_data['indices']);
+						corePointClass.setIndexedAttribute(
+							dummyMesh,
+							geo_attrib_name,
+							index_data['values'],
+							index_data['indices']
+						);
 					}
 				} else {
 					const numerical_attrib_values = attrib_values as number[];

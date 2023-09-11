@@ -8,7 +8,7 @@ import {CoreThreejsPrimitive} from './CoreThreejsPrimitive';
 // const _triangle = new Triangle();
 
 export class PointPrimitive extends CoreThreejsPrimitive {
-	constructor(public override object: Points, index: number) {
+	constructor(object: Points, index: number) {
 		super(object, index);
 		this._geometry = object.geometry;
 	}

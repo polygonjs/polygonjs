@@ -15,6 +15,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {Box3, Vector3} from 'three';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
+import {corePointClassFactory} from '../../../core/geometry/CoreObjectFactory';
 const tmpBox = new Box3();
 const _position = new Vector3();
 class AttribTransferSopParamsConfig extends NodeParamsConfig {
@@ -100,7 +101,11 @@ export class AttribTransferSopNode extends TypedSopNode<AttribTransferSopParamsC
 		for (let attrib_name of this._attrib_names) {
 			if (!this._core_group_dest.hasPointAttrib(attrib_name)) {
 				const attrib_size = this._core_group_src.pointAttribSize(attrib_name);
-				this._core_group_dest.addGeoNumericVertexAttrib(attrib_name, attrib_size, 0);
+				const objects = this._core_group_dest.allObjects();
+				for (const object of objects) {
+					const corePointClass = corePointClassFactory(object);
+					corePointClass.addNumericAttrib(object, attrib_name, attrib_size, 0);
+				}
 			}
 		}
 	}

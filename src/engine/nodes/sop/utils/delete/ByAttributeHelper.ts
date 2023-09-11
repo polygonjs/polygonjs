@@ -1,10 +1,8 @@
 import {DeleteSopNode} from '../../Delete';
 import {ATTRIBUTE_TYPES, AttribType, AttribSize, ATTRIBUTE_SIZES} from '../../../../../core/geometry/Constant';
 import {TypeAssert} from '../../../../poly/Assert';
-import {Vector2} from 'three';
-import {Vector3} from 'three';
-import {Vector4} from 'three';
-import {CoreEntity} from '../../../../../core/geometry/Entity';
+import {Vector2, Vector3, Vector4} from 'three';
+import {CoreEntity} from '../../../../../core/geometry/CoreEntity';
 import {ensureString} from '../../../../../core/Type';
 
 export enum ComparisonOperator {
@@ -68,7 +66,7 @@ export class ByAttributeHelper {
 		TypeAssert.unreachable(attribType);
 	}
 	private _evalForString(entities: CoreEntity[]) {
-		let value: string | undefined;
+		let value: string | null;
 		for (let entity of entities) {
 			value = entity.stringAttribValue(this.node.pv.attribName);
 			if (value == ensureString(this.node.pv.attribString)) {

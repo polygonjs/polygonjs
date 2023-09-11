@@ -4,6 +4,8 @@ import {CoreType} from '../../../Type';
 import {
 	registerFactoryFunctions,
 	CoreFactoryFunctions,
+	CorePointClassFactoryCheckFunction,
+	CorePointInstanceFactoryCheckFunction,
 	CoreVertexClassFactoryCheckFunction,
 	CoreVertexInstanceFactoryCheckFunction,
 	CorePrimitiveClassFactoryCheckFunction,
@@ -17,6 +19,7 @@ import {CoreGroup} from '../../Group';
 import {CoreObjectType, ObjectContent} from '../../ObjectContent';
 import {CSG_GEOMETRY_TYPES_SET, CsgGeometryType, CSGTesselationParams, CSGOBJTesselationParams} from './CsgCommon';
 import {CsgCoreObject} from './CsgCoreObject';
+import {CsgPoint} from './CsgPoint';
 import {CsgVertex} from './CsgVertex';
 import {CsgPrimitive} from './CsgPrimitive';
 import {CsgObject} from './CsgObject';
@@ -64,6 +67,21 @@ export function onCsgModuleRegister(poly: PolyEngine) {
 	// CORE OBJECT CHECKS
 	//
 	//
+
+	// point methods
+	const pointClassFactory: CorePointClassFactoryCheckFunction = (object: ObjectContent<CoreObjectType>) => {
+		if (CSG_GEOMETRY_TYPES_SET.has(object.type as CsgGeometryType)) {
+			return CsgPoint;
+		}
+	};
+	const pointInstanceFactory: CorePointInstanceFactoryCheckFunction = (
+		object: ObjectContent<CoreObjectType>,
+		index: number = 0
+	) => {
+		if (CSG_GEOMETRY_TYPES_SET.has(object.type as CsgGeometryType)) {
+			return new CsgPoint(object as CsgObject<CsgGeometryType>, index);
+		}
+	};
 	// vertex methods
 	const vertexClassFactory: CoreVertexClassFactoryCheckFunction = (object: ObjectContent<CoreObjectType>) => {
 		if (CSG_GEOMETRY_TYPES_SET.has(object.type as CsgGeometryType)) {
@@ -109,6 +127,8 @@ export function onCsgModuleRegister(poly: PolyEngine) {
 	};
 
 	const factoryFunctions: CoreFactoryFunctions = {
+		pointClass: pointClassFactory,
+		pointInstance: pointInstanceFactory,
 		vertexClass: vertexClassFactory,
 		vertexInstance: vertexInstanceFactory,
 		primitiveClass: primitiveClassFactory,

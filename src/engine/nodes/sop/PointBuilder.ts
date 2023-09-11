@@ -9,13 +9,14 @@ import {SopType} from '../../poly/registers/nodes/types/Sop';
 import {PointBuilderPersistedConfig} from '../js/code/assemblers/pointBuilder/PointBuilderPersistedConfig';
 import {AssemblerName} from '../../poly/registers/assemblers/_BaseRegister';
 import {BasePointBuilderSopNode, BasePointBuilderSopParamsConfig} from './_BasePointBuilder';
-import {CoreGeometry} from '../../../core/geometry/Geometry';
 import {PointBuilderEvaluator} from '../js/code/assemblers/pointBuilder/PointBuilderEvaluator';
 import {PointContainer} from '../js/code/assemblers/pointBuilder/PointBuilderAssemblerCommon';
 import {Object3DWithGeometry} from '../../../core/geometry/Group';
 import {Attribute} from '../../../core/geometry/Attribute';
 import {ParamConfig} from '../utils/params/ParamsConfig';
 import {isBooleanTrue} from '../../../core/Type';
+import {pointsCountFromObject} from '../../../core/geometry/entities/point/CorePointUtils';
+import {CoreObjectType} from '../../../core/geometry/ObjectContent';
 
 class PointBuilderSopParamsConfig extends BasePointBuilderSopParamsConfig {
 	/** @param updateNormals */
@@ -41,19 +42,24 @@ export class PointBuilderSopNode extends BasePointBuilderSopNode<PointBuilderSop
 		normalsUpdated: false,
 	};
 
-	protected _processObject(inputObject: Object3DWithGeometry, objnum: number, evaluator: PointBuilderEvaluator) {
+	protected _processObject<T extends CoreObjectType>(
+		inputObject: Object3DWithGeometry,
+		objnum: number,
+		evaluator: PointBuilderEvaluator
+	) {
 		this._pointContainer.objnum = objnum;
 		this._pointContainer.normalsUpdated = false;
 		const geometry = inputObject.geometry;
-		const readAttributeOptions = this._checkRequiredReadAttributes(geometry);
-		const writeAttributeOptions = this._checkRequiredWriteAttributes(geometry);
+		console.log({geometry});
+		const readAttributeOptions = this._checkRequiredReadAttributes(inputObject);
+		const writeAttributeOptions = this._checkRequiredWriteAttributes(inputObject);
 		const readAttribNames = readAttributeOptions ? readAttributeOptions.attribNames : [];
 		const readAttributeByName = readAttributeOptions ? readAttributeOptions.attributeByName : new Map();
 		const attribTypeByName = readAttributeOptions ? readAttributeOptions.attribTypeByName : new Map();
 		const writeAttribNames = writeAttributeOptions ? writeAttributeOptions.attribNames : [];
 		const writeAttributeByName = writeAttributeOptions ? writeAttributeOptions.attributeByName : new Map();
 		this._resetRequiredAttributes();
-		const pointsCount = CoreGeometry.pointsCount(geometry);
+		const pointsCount = pointsCountFromObject(inputObject);
 		const positionAttrib = geometry.getAttribute(Attribute.POSITION) as BufferAttribute;
 		const normalAttrib = geometry.getAttribute(Attribute.NORMAL) as BufferAttribute;
 		const hasPosition = positionAttrib != null;

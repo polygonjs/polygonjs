@@ -1,16 +1,17 @@
-import {Float32BufferAttribute} from 'three';
+import {Float32BufferAttribute, Mesh} from 'three';
 import {BufferGeometry} from 'three';
 import {CoreAttributeData} from '../../geometry/AttributeData';
-import {CoreAttribute} from '../../geometry/Attribute';
+import {Attribute, CoreAttribute} from '../../geometry/Attribute';
 import {AttribType} from '../../geometry/Constant';
-import {CoreGeometry} from '../../geometry/Geometry';
 import {CoreType} from '../../Type';
 import {PolyDictionary} from '../../../types/GlobalTypes';
 import {BaseNodeType} from '../../../engine/nodes/_Base';
 import {CoreBaseLoader} from '../_Base';
+import {CoreThreejsPoint} from '../../geometry/modules/three/CoreThreejsPoint';
 
 type CsvValue = string | number | number[];
-const POSITION = 'position';
+// const POSITION = 'position';
+const dummyMesh = new Mesh();
 
 export class CsvLoader extends CoreBaseLoader<string> {
 	static SEPARATOR = ',';
@@ -113,12 +114,12 @@ export class CsvLoader extends CoreBaseLoader<string> {
 		}
 
 		// create position if not present in data
-		if (!this.attribute_values_by_name[POSITION]) {
+		if (!this.attribute_values_by_name[Attribute.POSITION]) {
 			const positions: number[] = new Array(this.points_count * 3);
 			positions.fill(0);
-			this.attribute_values_by_name[POSITION] = positions;
-			this.attribute_data_by_name[POSITION] = new CoreAttributeData(3, AttribType.NUMERIC);
-			this.attribute_names.push(POSITION);
+			this.attribute_values_by_name[Attribute.POSITION] = positions;
+			this.attribute_data_by_name[Attribute.POSITION] = new CoreAttributeData(3, AttribType.NUMERIC);
+			this.attribute_names.push(Attribute.POSITION);
 		}
 	}
 	create_points() {
@@ -127,14 +128,21 @@ export class CsvLoader extends CoreBaseLoader<string> {
 		}
 		// create geometry
 		const geometry = new BufferGeometry();
-		const core_geometry = new CoreGeometry(geometry);
+		dummyMesh.geometry = geometry;
+		// const core_geometry = new CoreGeometry(geometry);
+		const corePointClass = CoreThreejsPoint;
 		for (let attribute_name of this.attribute_names) {
 			const attribute_values = this.attribute_values_by_name[attribute_name].flat();
 			const size = this.attribute_data_by_name[attribute_name].size();
 			const type = this.attribute_data_by_name[attribute_name].type();
 			if (type == AttribType.STRING) {
 				const index_data = CoreAttribute.arrayToIndexedArrays(attribute_values as string[]);
-				core_geometry.setIndexedAttribute(attribute_name, index_data['values'], index_data['indices']);
+				corePointClass.setIndexedAttribute(
+					dummyMesh,
+					attribute_name,
+					index_data['values'],
+					index_data['indices']
+				);
 			} else {
 				geometry.setAttribute(attribute_name, new Float32BufferAttribute(attribute_values as number[], size));
 			}

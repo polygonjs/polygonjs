@@ -12,6 +12,8 @@ import {AttribClass, ATTRIBUTE_CLASSES} from '../../../core/geometry/Constant';
 import {ArrayUtils} from '../../../core/ArrayUtils';
 
 import {DefaultOperationParams} from '../../../core/operations/_Base';
+import {pointsFromObject} from '../../../core/geometry/entities/point/CorePointUtils';
+import {corePointClassFactory} from '../../../core/geometry/CoreObjectFactory';
 interface AttribPromoteSopParams extends DefaultOperationParams {
 	classFrom: number;
 	classTo: number;
@@ -180,9 +182,11 @@ function pointsToPoints(coreGroup: CoreGroup, attribName: string, params: Attrib
 	}
 }
 function pointsToObject(coreGroup: CoreGroup, attribName: string, params: AttribPromoteSopParams) {
-	const coreObjects = coreGroup.threejsCoreObjects();
+	const coreObjects = coreGroup.allCoreObjects();
 	for (let coreObject of coreObjects) {
-		const values = findValuesFromPoints(coreObject.points(), attribName);
+		const object = coreObject.object();
+		const points = pointsFromObject(object);
+		const values = findValuesFromPoints(points, attribName);
 		const value = filterValues(values, params);
 		coreObject.setAttribValue(attribName, value);
 	}
@@ -248,7 +252,7 @@ function filterValues(values: number[], params: AttribPromoteSopParams) {
 
 //
 //
-// VERTICES
+// POINTS
 //
 //
 function findValuesFromPoints(corePoints: CorePoint[], attribName: string) {
@@ -267,14 +271,16 @@ function findValuesFromPoints(corePoints: CorePoint[], attribName: string) {
 }
 function setValuesToPoints(coreObject: CoreObject, attribName: string, newValue: NumericAttribValue) {
 	const attributeExists = coreObject.coreGeometry()?.hasAttrib(attribName);
+	const object = coreObject.object();
 	if (!attributeExists) {
 		const attribSize = CoreAttribute.attribSizeFromValue(newValue);
 		if (attribSize) {
-			coreObject.addNumericPointAttrib(attribName, attribSize, newValue);
+			const corePointClass = corePointClassFactory(object);
+			corePointClass.addNumericAttrib(object, attribName, attribSize, newValue);
 		}
 	}
 
-	const points = coreObject.points();
+	const points = pointsFromObject(object);
 	for (let point of points) {
 		point.setAttribValue(attribName, newValue);
 	}

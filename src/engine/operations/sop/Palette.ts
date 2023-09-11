@@ -2,12 +2,12 @@ import {BaseSopOperation} from './_Base';
 import {CoreGroup, Object3DWithGeometry} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {BufferAttribute, Color} from 'three';
-import {CoreGeometry} from '../../../core/geometry/Geometry';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 import {SORTED_PALETTE_NAMES} from '../../../core/color/chromotomeWrapper';
 import {AttribClass, ATTRIBUTE_CLASSES} from '../../../core/geometry/Constant';
 import {TypeAssert} from '../../poly/Assert';
 import {CoreObject} from '../../../core/geometry/modules/three/CoreObject';
+import {corePointClassFactory} from '../../../core/geometry/CoreObjectFactory';
 
 interface PaletteSopParams extends DefaultOperationParams {
 	class: number;
@@ -89,6 +89,7 @@ export class PaletteSopOperation extends BaseSopOperation {
 		if (params.colorsCount <= 0) {
 			return;
 		}
+		const corePointClass = corePointClassFactory(object);
 
 		const geometry = object.geometry;
 		if (!geometry) {
@@ -96,8 +97,7 @@ export class PaletteSopOperation extends BaseSopOperation {
 		}
 		let colorAttrib = geometry.getAttribute('color') as BufferAttribute;
 		if (!colorAttrib) {
-			const coreGeo = new CoreGeometry(geometry);
-			coreGeo.addNumericAttrib('color', 3, [0, 0, 0]);
+			corePointClass.addNumericAttrib(object, 'color', 3, [0, 0, 0]);
 			colorAttrib = geometry.getAttribute('color') as BufferAttribute;
 		}
 		if (!colorAttrib) {

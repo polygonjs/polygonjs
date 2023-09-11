@@ -5,7 +5,7 @@ import type {CsgGeometry} from './modules/csg/CsgCommon';
 import type {QuadGeometry} from './modules/quad/QuadGeometry';
 import type {SDFGeometry} from './modules/sdf/SDFCommon';
 import type {TetGeometry} from './modules/tet/TetGeometry';
-import {CoreEntity} from './Entity';
+import {CoreEntity} from './CoreEntity';
 
 export enum CoreObjectType {
 	THREEJS = 'Object3D',

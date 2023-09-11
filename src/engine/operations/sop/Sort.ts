@@ -1,6 +1,5 @@
 import {CoreMath} from './../../../core/math/_Module';
 import {BaseCoreObject} from './../../../core/geometry/entities/object/BaseCoreObject';
-import {CoreObject} from './../../../core/geometry/modules/three/CoreObject';
 import {TypeAssert} from './../../poly/Assert';
 import {AttribClass} from './../../../core/geometry/Constant';
 import {BaseSopOperation} from './_Base';
@@ -15,6 +14,7 @@ import {CoreObjectType, ObjectContent} from '../../../core/geometry/ObjectConten
 import {isBooleanTrue} from '../../../core/Type';
 import {setToArray} from '../../../core/SetUtils';
 import {isNumber} from '../../../core/Type';
+import { pointsFromObject } from '../../../core/geometry/entities/point/CorePointUtils';
 
 const tmpPos = new Vector3();
 
@@ -244,8 +244,7 @@ export class SortSopOperation extends BaseSopOperation {
 		}
 	}
 	private _sortPointsForObject(object: Object3DWithGeometry, params: SortSopParams) {
-		const coreObject = new CoreObject(object, 0);
-		const points = coreObject.points();
+		const points = pointsFromObject(object)
 
 		const oldIndexAttribute = object.geometry.getIndex();
 		if (!oldIndexAttribute) {

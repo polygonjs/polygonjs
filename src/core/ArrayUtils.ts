@@ -49,6 +49,33 @@ export function sample<T>(array: Array<T>, seed: number): T | undefined {
 export function spliceSample<T>(array: Array<T>, seed: number): T | undefined {
 	return array.splice(sampleIndex(array, seed), 1)[0];
 }
+export function uniqWithoutPreservingOrder<T>(array: Array<T>): Array<T> {
+	return SetUtils.toArray(SetUtils.fromArray(array));
+
+	// for (let elem of array) {
+	// 	tmpSet.add(elem);
+	// }
+
+	// const newArray: Array<T> = new Array(tmpSet.size);
+	// let i = 0;
+	// tmpSet.forEach((elem) => {
+	// 	newArray[i] = elem;
+	// 	i++;
+	// });
+
+	// return newArray;
+}
+export function arrayCompact<T>(array: Array<T | null | undefined>): Array<T> {
+	const newArray: Array<T> = [];
+
+	for (let elem of array) {
+		if (elem != null) {
+			newArray.push(elem);
+		}
+	}
+
+	return newArray;
+}
 
 export class ArrayUtils {
 	static shallowClone<T>(array: Array<T>): Array<T> {
@@ -80,34 +107,9 @@ export class ArrayUtils {
 		}
 		return sum;
 	}
-	static compact<T>(array: Array<T | null | undefined>): Array<T> {
-		const newArray: Array<T> = [];
-
-		for (let elem of array) {
-			if (elem != null) {
-				newArray.push(elem);
-			}
-		}
-
-		return newArray;
-	}
+	static compact = arrayCompact;
 	static uniq = arrayUniq;
-	static uniqWithoutPreservingOrder<T>(array: Array<T>): Array<T> {
-		return SetUtils.toArray(SetUtils.fromArray(array));
-
-		// for (let elem of array) {
-		// 	tmpSet.add(elem);
-		// }
-
-		// const newArray: Array<T> = new Array(tmpSet.size);
-		// let i = 0;
-		// tmpSet.forEach((elem) => {
-		// 	newArray[i] = elem;
-		// 	i++;
-		// });
-
-		// return newArray;
-	}
+	static uniqWithoutPreservingOrder = uniqWithoutPreservingOrder;
 	static chunk<T extends number | string>(array: Array<T>, chunkSize: number): Array<Array<T>> {
 		const newArray: Array<Array<T>> = [];
 

@@ -11,9 +11,9 @@ import {AssemblerName} from '../../poly/registers/assemblers/_BaseRegister';
 import {BasePointBuilderSopNode, BasePointBuilderSopParamsConfig} from './_BasePointBuilder';
 import {PointBuilderEvaluator} from '../js/code/assemblers/pointBuilder/PointBuilderEvaluator';
 import {InstanceContainer} from '../js/code/assemblers/instanceBuilder/InstanceBuilderAssemblerCommon';
-import {CoreGeometry} from '../../../core/geometry/Geometry';
 import {Object3DWithGeometry} from '../../../core/geometry/Group';
 import {InstanceAttrib} from '../../../core/geometry/Instancer';
+import {pointsCountFromObject} from '../../../core/geometry/entities/point/CorePointUtils';
 
 const ParamsConfig = new BasePointBuilderSopParamsConfig();
 export class InstanceBuilderSopNode extends BasePointBuilderSopNode<BasePointBuilderSopParamsConfig> {
@@ -38,15 +38,15 @@ export class InstanceBuilderSopNode extends BasePointBuilderSopNode<BasePointBui
 	protected _processObject(inputObject: Object3DWithGeometry, objnum: number, evaluator: PointBuilderEvaluator) {
 		this._pointContainer.objnum = objnum;
 		const geometry = inputObject.geometry;
-		const readAttributeOptions = this._checkRequiredReadAttributes(geometry);
-		const writeAttributeOptions = this._checkRequiredWriteAttributes(geometry);
+		const readAttributeOptions = this._checkRequiredReadAttributes(inputObject);
+		const writeAttributeOptions = this._checkRequiredWriteAttributes(inputObject);
 		const readAttribNames = readAttributeOptions ? readAttributeOptions.attribNames : [];
 		const readAttributeByName = readAttributeOptions ? readAttributeOptions.attributeByName : new Map();
 		const attribTypeByName = readAttributeOptions ? readAttributeOptions.attribTypeByName : new Map();
 		const writeAttribNames = writeAttributeOptions ? writeAttributeOptions.attribNames : [];
 		const writeAttributeByName = writeAttributeOptions ? writeAttributeOptions.attributeByName : new Map();
 		this._resetRequiredAttributes();
-		const pointsCount = CoreGeometry.pointsCount(geometry);
+		const pointsCount = pointsCountFromObject(inputObject);
 		const positionAttrib = geometry.getAttribute(InstanceAttrib.POSITION) as BufferAttribute;
 		const quaternionAttrib = geometry.getAttribute(InstanceAttrib.QUATERNION) as BufferAttribute;
 		const scaleAttrib = geometry.getAttribute(InstanceAttrib.SCALE) as BufferAttribute;

@@ -3,6 +3,7 @@ import {Object3DWithGeometry} from './Group';
 import {ObjectContent, CoreObjectType, isObject3D} from './ObjectContent';
 import type {QuadObject} from './modules/quad/QuadObject';
 import {isQuadObject} from './modules/quad/QuadCoreType';
+import {InstanceAttrib} from './Instancer';
 
 export function bufferGeometryMaxGroupEnd(geometry: BufferGeometry): number {
 	const groups = geometry.groups;
@@ -42,4 +43,8 @@ export function objectContentHasGeometry(o: ObjectContent<CoreObjectType>): o is
 		return (o as Mesh).geometry != null;
 	}
 	return false;
+}
+
+export function markedAsInstance(geometry: BufferGeometry): boolean {
+	return geometry.getAttribute(InstanceAttrib.POSITION) != null; //geometry.userData[IS_INSTANCE_KEY] === true;
 }

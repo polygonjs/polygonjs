@@ -24,6 +24,8 @@ import {rotateGeometry} from '../../../core/Transform';
 import {CoreGeometry} from '../../../core/geometry/Geometry';
 import {CoreGeometryBuilderMesh} from '../../../core/geometry/modules/three/builders/Mesh';
 import {ObjectUtils} from '../../../core/ObjectUtils';
+import {corePointClassFactory} from '../../../core/geometry/CoreObjectFactory';
+import {pointsFromObject} from '../../../core/geometry/entities/point/CorePointUtils';
 
 interface ClipSopParams extends DefaultOperationParams {
 	origin: Vector3;
@@ -115,11 +117,11 @@ function _processObjectClipped(object: Object3D, params: ClipSopParams, newObjec
 }
 function _createClipped(mesh: Mesh, box: Mesh) {
 	const csgEvaluator = new Evaluator();
+	const corePointClass = corePointClassFactory(mesh);
 
 	// add keep attribute for mesh (value=1)
 	function _addKeepAttribute(object: Mesh, value: number) {
-		const coreGeometry = new CoreGeometry(object.geometry);
-		coreGeometry.addNumericAttrib(TMP_KEEP_ATTRIBUTE_NAME, TMP_KEEP_ATTRIBUTE_SIZE, value);
+		corePointClass.addNumericAttrib(object, TMP_KEEP_ATTRIBUTE_NAME, TMP_KEEP_ATTRIBUTE_SIZE, value);
 	}
 	_addKeepAttribute(mesh, 1);
 	_addKeepAttribute(box, 0);
@@ -135,11 +137,11 @@ function _createClipped(mesh: Mesh, box: Mesh) {
 	BaseSopOperation.createIndexIfNone(output.geometry);
 
 	// delete attributes where keep attribute == 0
-	const outCoreGeometry = new CoreGeometry(output.geometry);
-	const points = outCoreGeometry.pointsFromGeometry();
+	// const outCoreGeometry = new CoreGeometry(output.geometry);
+	const points = pointsFromObject(output);
 	const keptPoints = points.filter((p) => p.attribValue(TMP_KEEP_ATTRIBUTE_NAME) == 1);
 	const builder = new CoreGeometryBuilderMesh();
-	const newGeometry = builder.fromPoints(keptPoints);
+	const newGeometry = builder.fromPoints(output, keptPoints);
 
 	const object = BaseSopOperation.createObject(newGeometry, ObjectType.MESH);
 	return object;

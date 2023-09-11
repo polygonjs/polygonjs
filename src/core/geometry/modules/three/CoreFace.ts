@@ -1,6 +1,6 @@
 import {AttribValue, Number3, NumericAttribValue} from '../../../../types/GlobalTypes';
-import {BufferAttribute, BufferGeometry, Triangle, Vector2, Vector3} from 'three';
-import {CorePoint} from '../../entities/point/CorePoint';
+import {BufferAttribute, BufferGeometry, Triangle, Vector2, Vector3, Mesh} from 'three';
+import {CoreThreejsPoint} from '../../modules/three/CoreThreejsPoint';
 import {CoreMath} from '../../../math/_Module';
 import {ArrayUtils} from '../../../ArrayUtils';
 
@@ -10,11 +10,16 @@ interface FaceLike {
 	c: number;
 }
 
-export type CorePointArray3 = [CorePoint, CorePoint, CorePoint];
+const dummyMesh = new Mesh();
+export type CorePointArray3 = [CoreThreejsPoint, CoreThreejsPoint, CoreThreejsPoint];
 type Vector3Array2 = [Vector3, Vector3];
 type Vector3Array3 = [Vector3, Vector3, Vector3];
-const _corePoint = new CorePoint();
-const _points: CorePointArray3 = [new CorePoint(), new CorePoint(), new CorePoint()];
+const _corePoint = new CoreThreejsPoint(dummyMesh, 0);
+const _points: CorePointArray3 = [
+	new CoreThreejsPoint(dummyMesh, 0),
+	new CoreThreejsPoint(dummyMesh, 0),
+	new CoreThreejsPoint(dummyMesh, 0),
+];
 const _positions: Vector3Array3 = [new Vector3(), new Vector3(), new Vector3()];
 const _deltas: Vector3Array2 = [new Vector3(), new Vector3()];
 const _triangle = new Triangle();
@@ -55,9 +60,10 @@ export class CoreFace {
 		}
 		const indexArray = this._geometry.index?.array || [];
 		const start = this._index * 3;
-		points[0].setGeometry(this._geometry).setIndex(indexArray[start + 0]);
-		points[1].setGeometry(this._geometry).setIndex(indexArray[start + 1]);
-		points[2].setGeometry(this._geometry).setIndex(indexArray[start + 2]);
+		dummyMesh.geometry = this._geometry;
+		points[0].setIndex(indexArray[start + 0], dummyMesh);
+		points[1].setIndex(indexArray[start + 1], dummyMesh);
+		points[2].setIndex(indexArray[start + 2], dummyMesh);
 	}
 	// positions() {
 	// 	return (this._positions = this._positions || this._getPositions());
@@ -66,9 +72,10 @@ export class CoreFace {
 		if (!this._geometry) {
 			return;
 		}
-		_corePoint.setIndex(this._index * 3 + 0, this._geometry).position(target[0]);
-		_corePoint.setIndex(this._index * 3 + 1, this._geometry).position(target[1]);
-		_corePoint.setIndex(this._index * 3 + 2, this._geometry).position(target[2]);
+		dummyMesh.geometry = this._geometry;
+		_corePoint.setIndex(this._index * 3 + 0, dummyMesh).position(target[0]);
+		_corePoint.setIndex(this._index * 3 + 1, dummyMesh).position(target[1]);
+		_corePoint.setIndex(this._index * 3 + 2, dummyMesh).position(target[2]);
 	}
 	triangle(target: Triangle) {
 		this.positions(_positions);

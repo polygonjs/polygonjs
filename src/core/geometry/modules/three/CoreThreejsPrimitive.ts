@@ -10,20 +10,20 @@ export interface BufferGeometryWithPrimitiveAttributes extends BufferGeometry {
 
 export abstract class CoreThreejsPrimitive extends CorePrimitive<CoreObjectType.THREEJS> {
 	protected _geometry?: BufferGeometry;
-	constructor(public object: Object3D, index: number) {
+	constructor(object: Object3D, index: number) {
 		super(object, index);
 		this._updateGeometry();
 	}
 	override setIndex(index: number, object?: Object3D) {
 		this._index = index;
 		if (object) {
-			this.object = object;
+			this._object = object;
 			this._updateGeometry();
 		}
 		return this;
 	}
 	private _updateGeometry() {
-		const geometry = (this.object as Mesh).geometry as BufferGeometryWithPrimitiveAttributes | undefined;
+		const geometry = (this._object as Mesh).geometry as BufferGeometryWithPrimitiveAttributes | undefined;
 		if (geometry) {
 			this._geometry = geometry;
 		}

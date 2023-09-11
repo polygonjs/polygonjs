@@ -6,7 +6,7 @@ import {CadGeometryType} from './CadCommon';
 
 export class CadPrimitive<T extends CadGeometryType> extends CorePrimitive<CoreObjectType.CAD> {
 	// public override _geometry?: QuadGeometryWithPrimitiveAttributes;
-	constructor(public object: CadObject<T>, index: number) {
+	constructor(object: CadObject<T>, index: number) {
 		super(object, index);
 		// this._geometry = object.geometry as QuadGeometryWithPrimitiveAttributes;
 	}
@@ -14,7 +14,7 @@ export class CadPrimitive<T extends CadGeometryType> extends CorePrimitive<CoreO
 		return 0;
 	}
 	geometry() {
-		return this.object.geometry;
+		return (this._object as CadObject<CadGeometryType>).geometry;
 	}
 	position(target: Vector3) {
 		console.warn('CadPrimitive.position not implemented');

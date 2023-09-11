@@ -1,12 +1,12 @@
 import {Vector3, Matrix4, LinearInterpolant, Group, Object3D, BufferGeometry, Mesh, Box3} from 'three';
 import {CoreGroup} from '../../geometry/Group';
-import {CoreGeometry} from '../../geometry/Geometry';
-// import {Constants} from './Constants'
 import {CoreMapboxUtils} from './Utils';
-// import {MapboxCameraObjNode} from '../../engine/nodes/obj/MapboxCamera';
 import mapboxgl from 'mapbox-gl';
 import {PolyDictionary} from '../../../types/GlobalTypes';
 import {LngLat} from './Common';
+import {pointsFromObject} from '../../geometry/entities/point/CorePointUtils';
+
+const dummyMesh = new Mesh();
 const tmpBox = new Box3();
 const tmpCenter = new Vector3();
 const tmpSize = new Vector3();
@@ -159,26 +159,26 @@ export class CoreMapboxTransform {
 	// 	})
 	// }
 	private transform_geometry3(geometry: BufferGeometry) {
-		const core_geometry = new CoreGeometry(geometry);
-		const points = core_geometry.points();
-		points.forEach((point) => {
+		dummyMesh.geometry = geometry;
+		const points = pointsFromObject(dummyMesh);
+		for (const point of points) {
 			point.position(_position);
 			this.transform_position_FINAL(_position);
 			point.setAttribValue(POSITION_ATTRIB_NAME, _position);
-		});
+		}
 
 		// geometry.applyMatrix(MAT_RX);
 		// geometry.computeVertexNormals(); // this messes up when transforming points
 	}
 
 	private transform_geometry_with_max_ratio(geometry: BufferGeometry, max_ratio: number) {
-		const core_geometry = new CoreGeometry(geometry);
-		const points = core_geometry.points();
-		points.forEach((point) => {
+		dummyMesh.geometry = geometry;
+		const points = pointsFromObject(dummyMesh);
+		for (const point of points) {
 			point.position(_position);
 			this.transform_position_with_max_ratio(_position, max_ratio);
 			point.setAttribValue(POSITION_ATTRIB_NAME, _position);
-		});
+		}
 
 		geometry.applyMatrix4(MAT_RX);
 		if (geometry.attributes.normal) {

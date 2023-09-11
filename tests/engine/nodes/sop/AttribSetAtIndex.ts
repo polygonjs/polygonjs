@@ -3,7 +3,7 @@ import {Vector4} from 'three';
 import {Vector2} from 'three';
 import {Vector3} from 'three';
 import {AttribType, AttribClass, AttribSize} from '../../../../src/core/geometry/Constant';
-import {CoreEntity} from '../../../../src/core/geometry/Entity';
+import {CoreEntity} from '../../../../src/core/geometry/CoreEntity';
 import {CoreType} from '../../../../src/core/Type';
 import {AttribCreateSopNode} from '../../../../src/engine/nodes/sop/AttribCreate';
 import {AttribSetAtIndexSopNode} from '../../../../src/engine/nodes/sop/AttribSetAtIndex';

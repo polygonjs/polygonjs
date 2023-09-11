@@ -5,12 +5,12 @@ import {TetObject} from './TetObject';
 
 export class TetPrimitive extends CorePrimitive<CoreObjectType.TET> {
 	// public override _geometry?: QuadGeometryWithPrimitiveAttributes;
-	constructor(public object: TetObject, index: number) {
+	constructor( object: TetObject, index: number) {
 		super(object, index);
 		// this._geometry = object.geometry as QuadGeometryWithPrimitiveAttributes;
 	}
 	geometry() {
-		return this.object.geometry;
+		return (this._object as TetObject).geometry;
 	}
 	static override primitivesCount<T extends CoreObjectType>(object: ObjectContent<T>) {
 		return 0;

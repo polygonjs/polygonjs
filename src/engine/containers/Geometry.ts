@@ -2,7 +2,7 @@ import {AttribValue} from './../../types/GlobalTypes';
 import {Mesh, Box3, BufferGeometry} from 'three';
 import {TypedContainer} from './_Base';
 import type {CoreGroup} from '../../core/geometry/Group';
-import {CoreGeometry} from '../../core/geometry/Geometry';
+// import {CoreGeometry} from '../../core/geometry/Geometry';
 import {ContainableMap} from './utils/ContainableMap';
 import {AttribSize, AttribType, ObjectData} from '../../core/geometry/Constant';
 import {CoreObject} from '../../core/geometry/modules/three/CoreObject';
@@ -15,6 +15,7 @@ import {
 	coreObjectsAttribSizesByName,
 	coreObjectAttributeTypesByName,
 } from '../../core/geometry/entities/object/BaseCoreObjectUtils';
+import {corePointClassFactory} from '../../core/geometry/CoreObjectFactory';
 
 export class GeometryContainer extends TypedContainer<NodeContext.SOP> {
 	// set_objects(objects: Object3D[]) {}
@@ -158,16 +159,32 @@ export class GeometryContainer extends TypedContainer<NodeContext.SOP> {
 		}
 		return sizes_by_name;
 	}
-	pointAttributeTypesByName() {
-		let types_by_name: PolyDictionary<AttribType> = {};
-		const geometry = this.firstGeometry();
-		if (geometry) {
-			const core_geo = new CoreGeometry(geometry);
-			Object.keys(geometry.attributes).forEach((attrib_name) => {
-				types_by_name[attrib_name] = core_geo.attribType(attrib_name);
-			});
+	pointAttributeTypesByName(): PolyDictionary<AttribType> {
+		const typesByName: PolyDictionary<AttribType> = {};
+		const object = this._firstObject();
+		if (!object) {
+			return typesByName;
 		}
-		return types_by_name;
+		const corePointClass = corePointClassFactory(object);
+		const attributes = corePointClass.attributes(object);
+		if (!attributes) {
+			return typesByName;
+		}
+		const attribNames = Object.keys(attributes);
+		for (const attribName of attribNames) {
+			const attribType = corePointClass.attribType(object, attribName);
+			typesByName[attribName] = attribType;
+		}
+
+		// let types_by_name: PolyDictionary<AttribType> = {};
+		// const geometry = this.firstGeometry();
+		// if (geometry) {
+		// 	const core_geo = new CoreGeometry(geometry);
+		// 	Object.keys(geometry.attributes).forEach((attrib_name) => {
+		// 		types_by_name[attrib_name] = core_geo.attribType(attrib_name);
+		// 	});
+		// }
+		return typesByName;
 	}
 	objectAttributeTypesByName(): PolyDictionary<AttribType[]> {
 		return coreObjectAttributeTypesByName(this._content.allCoreObjects());

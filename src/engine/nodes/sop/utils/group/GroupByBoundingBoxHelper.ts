@@ -1,6 +1,6 @@
 import {CADGroupSopNode} from '../../CADGroup';
 import {Box3, Vector3} from 'three';
-import {CoreEntity} from '../../../../../core/geometry/Entity';
+import {CoreEntity} from '../../../../../core/geometry/CoreEntity';
 import {CoreEntitySelectionState, updateSelectionState} from './GroupCommon';
 
 const bbox = new Box3();

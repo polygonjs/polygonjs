@@ -8,7 +8,7 @@ import {
 } from '../../../../types/GlobalTypes';
 import {Vector4, Vector3, Vector2} from 'three';
 import {Attribute, CoreAttribute} from '../../Attribute';
-import {CoreEntity} from '../../Entity';
+import {CoreEntity} from '../../CoreEntity';
 import {CoreType} from '../../../Type';
 import {BasePrimitiveAttribute} from './PrimitiveAttribute';
 import {DOT, ComponentName, COMPONENT_INDICES} from '../../Constant';
@@ -20,6 +20,9 @@ export abstract class CorePrimitive<T extends CoreObjectType> extends CoreEntity
 	constructor(object?: ObjectContent<T>, index?: number) {
 		super(object, index);
 		this._object = object;
+	}
+	object() {
+		return this._object;
 	}
 	builder<T extends CoreObjectType>(): ObjectBuilder<T> | undefined {
 		return undefined;
@@ -61,6 +64,18 @@ export abstract class CorePrimitive<T extends CoreObjectType> extends CoreEntity
 			return;
 		}
 		return (this.constructor as typeof CorePrimitive<T>).attribute(this._object, attribName);
+	}
+	static renameAttrib<T extends CoreObjectType>(object: ObjectContent<T>, oldName: string, newName: string) {
+		const attributes = this.attributes(object);
+		if (!attributes) {
+			return;
+		}
+		const attribute = this.attribute(object, oldName);
+		if (!attribute) {
+			return;
+		}
+		attributes[newName] = attribute;
+		delete attributes[oldName];
 	}
 	static attribSize<T extends CoreObjectType>(object: ObjectContent<T>, attribName: string): number {
 		const attributes = this.attributes(object);

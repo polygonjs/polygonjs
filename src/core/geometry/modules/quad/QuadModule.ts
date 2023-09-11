@@ -4,6 +4,8 @@ import {SpecializedChildrenHook} from '../../../../engine/poly/PolySpecializedCh
 import {
 	registerFactoryFunctions,
 	CoreFactoryFunctions,
+	CorePointClassFactoryCheckFunction,
+	CorePointInstanceFactoryCheckFunction,
 	CoreVertexClassFactoryCheckFunction,
 	CoreVertexInstanceFactoryCheckFunction,
 	CorePrimitiveClassFactoryCheckFunction,
@@ -17,6 +19,7 @@ import {QuadCoreObject} from './QuadCoreObject';
 import {BaseSopNodeType} from '../../../../engine/nodes/sop/_Base';
 import {CoreGroup} from '../../Group';
 import {isArray} from '../../../Type';
+import {QuadPoint} from './QuadPoint';
 import {QuadVertex} from './QuadVertex';
 import {QuadPrimitive} from './QuadPrimitive';
 import {QuadObject} from './QuadObject';
@@ -60,6 +63,21 @@ export function onQuadModuleRegister(poly: PolyEngine) {
 	// CORE OBJECT CHECKS
 	//
 	//
+
+	// point methods
+	const pointClassFactory: CorePointClassFactoryCheckFunction = (object: ObjectContent<CoreObjectType>) => {
+		if (QUAD_OBJECT_TYPES_SET.has(object.type as QUADObjectType)) {
+			return QuadPoint;
+		}
+	};
+	const pointInstanceFactory: CorePointInstanceFactoryCheckFunction = (
+		object: ObjectContent<CoreObjectType>,
+		index = 0
+	) => {
+		if (QUAD_OBJECT_TYPES_SET.has(object.type as QUADObjectType)) {
+			return new QuadPoint(object as QuadObject, index);
+		}
+	};
 	// vertex methods
 	const vertexClassFactory: CoreVertexClassFactoryCheckFunction = (object: ObjectContent<CoreObjectType>) => {
 		if (QUAD_OBJECT_TYPES_SET.has(object.type as QUADObjectType)) {
@@ -105,6 +123,8 @@ export function onQuadModuleRegister(poly: PolyEngine) {
 	};
 
 	const factoryFunction: CoreFactoryFunctions = {
+		pointClass: pointClassFactory,
+		pointInstance: pointInstanceFactory,
 		vertexClass: vertexClassFactory,
 		vertexInstance: vertexInstanceFactory,
 		primitiveClass: primitiveClassFactory,

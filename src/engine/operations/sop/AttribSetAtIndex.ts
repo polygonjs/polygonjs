@@ -5,10 +5,11 @@ import {ATTRIBUTE_CLASSES, AttribClass, AttribType, ATTRIBUTE_TYPES} from '../..
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {TypeAssert} from '../../../engine/poly/Assert';
 import {BaseCoreObject} from '../../../core/geometry/entities/object/BaseCoreObject';
-import {CoreObject} from '../../../core/geometry/modules/three/CoreObject';
 import {CoreAttribute} from '../../../core/geometry/Attribute';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
-import {CoreObjectType} from '../../../core/geometry/ObjectContent';
+import {CoreObjectType, ObjectContent} from '../../../core/geometry/ObjectContent';
+import {corePointClassFactory} from '../../../core/geometry/CoreObjectFactory';
+import {pointsFromObject} from '../../../core/geometry/entities/point/CorePointUtils';
 
 interface AttribSetAtIndexSopParams extends DefaultOperationParams {
 	index: number;
@@ -74,17 +75,17 @@ export class AttribSetAtIndexSopOperation extends BaseSopOperation {
 	}
 
 	private _addPointAttribute(attribType: AttribType, coreGroup: CoreGroup, params: AttribSetAtIndexSopParams) {
-		const coreObjects = coreGroup.threejsCoreObjects();
+		const objects = coreGroup.allObjects();
 		switch (attribType) {
 			case AttribType.NUMERIC: {
-				for (let coreObject of coreObjects) {
-					this._addNumericAttributeToPoints(coreObject, params);
+				for (let object of objects) {
+					this._addNumericAttributeToPoints(object, params);
 				}
 				return;
 			}
 			case AttribType.STRING: {
-				for (let coreObject of coreObjects) {
-					this._addStringAttributeToPoints(coreObject, params);
+				for (let object of objects) {
+					this._addStringAttributeToPoints(object, params);
 				}
 				return;
 			}
@@ -130,17 +131,17 @@ export class AttribSetAtIndexSopOperation extends BaseSopOperation {
 		TypeAssert.unreachable(attribType);
 	}
 
-	private _addNumericAttributeToPoints(coreObject: CoreObject, params: AttribSetAtIndexSopParams) {
-		const coreGeometry = coreObject.coreGeometry();
-		if (!coreGeometry) {
-			return;
-		}
+	private _addNumericAttributeToPoints<T extends CoreObjectType>(
+		object: ObjectContent<T>,
+		params: AttribSetAtIndexSopParams
+	) {
+		const corePointClass = corePointClassFactory(object);
 		const attribName = CoreAttribute.remapName(params.name);
-		if (!coreGeometry.hasAttrib(attribName)) {
-			coreGeometry.addNumericAttrib(attribName, params.size, 0);
+		if (!corePointClass.hasAttrib(object, attribName)) {
+			corePointClass.addNumericAttrib(object, attribName, params.size, 0);
 		}
 
-		const attrib = coreGeometry.geometry().attributes[attribName] as BufferAttribute;
+		const attrib = corePointClass.attribute(object, attribName) as BufferAttribute;
 		const array = attrib.array as number[];
 		const {index, size} = params;
 		switch (size) {
@@ -192,30 +193,30 @@ export class AttribSetAtIndexSopOperation extends BaseSopOperation {
 		coreGroup.setAttribValue(attribName, value);
 	}
 
-	private _addStringAttributeToPoints(coreObject: CoreObject, params: AttribSetAtIndexSopParams) {
-		const coreGeometry = coreObject.coreGeometry();
-		if (!coreGeometry) {
-			return;
-		}
+	private _addStringAttributeToPoints<T extends CoreObjectType>(
+		object: ObjectContent<T>,
+		params: AttribSetAtIndexSopParams
+	) {
+		const corePointClass = corePointClassFactory(object);
 
 		const attribName = params.name;
 		// create attrib if non existent
-		if (!coreGeometry.hasAttrib(attribName)) {
+		if (!corePointClass.hasAttrib(object, attribName)) {
 			const tmpIndexData = CoreAttribute.arrayToIndexedArrays(['']);
-			coreGeometry.setIndexedAttribute(attribName, tmpIndexData['values'], tmpIndexData['indices']);
+			corePointClass.setIndexedAttribute(object, attribName, tmpIndexData['values'], tmpIndexData['indices']);
 		}
 
 		const value = params.string;
 
-		const points = coreObject.points();
+		const points = pointsFromObject(object);
 		const indexPoint = points[params.index];
 		let stringValues: string[] = new Array(points.length);
 
 		// We prefill the existing stringValues
-		const allPoints = coreObject.points();
-		stringValues = stringValues.length != allPoints.length ? new Array(allPoints.length) : stringValues;
+		// const allPoints = coreObject.points();
+		stringValues = stringValues.length != points.length ? new Array(points.length) : stringValues;
 
-		for (let point of allPoints) {
+		for (let point of points) {
 			let currentValue = point.stringAttribValue(attribName);
 			if (currentValue == null) {
 				currentValue = '';
@@ -229,7 +230,7 @@ export class AttribSetAtIndexSopOperation extends BaseSopOperation {
 
 		const indexData = CoreAttribute.arrayToIndexedArrays(stringValues);
 
-		coreGeometry.setIndexedAttribute(attribName, indexData['values'], indexData['indices']);
+		corePointClass.setIndexedAttribute(object, attribName, indexData['values'], indexData['indices']);
 	}
 
 	private _addStringAttributeToObject(coreObject: BaseCoreObject<CoreObjectType>, params: AttribSetAtIndexSopParams) {

@@ -1,6 +1,8 @@
 import type {Mesh, LineSegments, Points} from 'three';
 import {
 	CoreFactoryFunctions,
+	CorePointClassFactoryCheckFunction,
+	CorePointInstanceFactoryCheckFunction,
 	CoreVertexClassFactoryCheckFunction,
 	CoreVertexInstanceFactoryCheckFunction,
 	CorePrimitiveClassFactoryCheckFunction,
@@ -9,13 +11,28 @@ import {
 	CoreObjectInstanceFactoryCheckFunction,
 } from '../../CoreObjectFactory';
 import {CoreObjectType, ObjectContent, isObject3D} from '../../ObjectContent';
-import {CoreObject} from './CoreObject';
 import {LineSegmentPrimitive} from './LineSegmentPrimitive';
 import {PointPrimitive} from './PointPrimitive';
 import {TrianglePrimitive} from './TrianglePrimitive';
+import {CoreThreejsPoint} from './CoreThreejsPoint';
 import {CoreThreejsVertex} from './CoreThreejsVertex';
+import {CoreObject} from './CoreObject';
 
-// primitive methods
+// point methods
+const pointClassFactory: CorePointClassFactoryCheckFunction = (object: ObjectContent<CoreObjectType>) => {
+	if (isObject3D(object)) {
+		return CoreThreejsPoint;
+	}
+};
+const pointInstanceFactory: CorePointInstanceFactoryCheckFunction = (
+	object: ObjectContent<CoreObjectType>,
+	index = 0
+) => {
+	if (isObject3D(object)) {
+		return new CoreThreejsPoint(object, index);
+	}
+};
+// vertex methods
 const vertexClassFactory: CoreVertexClassFactoryCheckFunction = (object: ObjectContent<CoreObjectType>) => {
 	if (isObject3D(object)) {
 		return CoreThreejsVertex;
@@ -76,6 +93,8 @@ const objectInstanceFactory: CoreObjectInstanceFactoryCheckFunction = (
 
 //
 export const object3DFactory: CoreFactoryFunctions = {
+	pointClass: pointClassFactory,
+	pointInstance: pointInstanceFactory,
 	vertexClass: vertexClassFactory,
 	vertexInstance: vertexInstanceFactory,
 	primitiveClass: primitiveClassFactory,

@@ -12,20 +12,20 @@ export interface QuadGeometryWithVertexAttributes extends QuadGeometry {
 
 export class QuadVertex extends CoreVertex<CoreObjectType.QUAD> {
 	protected _geometry?: QuadGeometryWithVertexAttributes;
-	constructor(public object: QuadObject, index: number) {
+	constructor(object: QuadObject, index: number) {
 		super(object, index);
 		this._geometry = object.geometry as QuadGeometryWithVertexAttributes;
 	}
 	override setIndex(index: number, object?: QuadObject) {
 		this._index = index;
 		if (object) {
-			this.object = object;
+			this._object = object;
 			this._updateGeometry();
 		}
 		return this;
 	}
 	private _updateGeometry() {
-		const geometry = (this.object as QuadObject).geometry as QuadGeometryWithVertexAttributes | undefined;
+		const geometry = (this._object as QuadObject).geometry as QuadGeometryWithVertexAttributes | undefined;
 		if (geometry) {
 			this._geometry = geometry;
 		}

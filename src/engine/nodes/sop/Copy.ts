@@ -27,6 +27,7 @@ import {CoreTransform, RotationOrder, TRANSFORM_TARGET_TYPES, TransformTargetTyp
 import {OBJECT_TRANSFORM_SPACE_MENU_ENTRIES, OBJECT_TRANSFORM_SPACES} from '../../../core/TransformSpace';
 import {CoreObjectType, ObjectContent} from '../../../core/geometry/ObjectContent';
 import {coreObjectFactory} from '../../../core/geometry/CoreObjectFactory';
+import {pointsFromObject} from '../../../core/geometry/entities/point/CorePointUtils';
 
 // export enum TransformMode {
 // 	OBJECT = 'object',
@@ -137,8 +138,8 @@ export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 			group: this.pv.templateGroup,
 		});
 		const templatePoints = templateCoreObjects
-			.map((o) => o.coreGeometry())
-			.map((g) => (g ? g.points() : []))
+			// .map((o) => o.coreGeometry())
+			.map((o) => pointsFromObject(o.object()))
 			.flat();
 
 		this._instancer.setCoreGroup(templateCoreGroup);

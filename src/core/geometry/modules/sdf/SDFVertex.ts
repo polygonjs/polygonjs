@@ -5,7 +5,7 @@ import {VertexAttributesDict} from '../../entities/vertex/Common';
 import {SDFObject} from './SDFObject';
 
 export class SDFVertex extends CoreVertex<CoreObjectType.SDF> {
-	constructor(public object: SDFObject, index: number) {
+	constructor(object: SDFObject, index: number) {
 		super(object, index);
 	}
 	geometry() {

@@ -4,7 +4,6 @@ import {
 } from '../../engine/nodes/sop/utils/group/GroupCommon';
 import {TypeAssert} from '../../engine/poly/Assert';
 import {SetUtils} from '../SetUtils';
-// import {CoreEntity} from './Entity';
 import {CoreObjectType, ObjectContent} from './ObjectContent';
 
 export enum GroupOperation {

@@ -5,12 +5,12 @@ import {SDFObject} from './SDFObject';
 
 export class SDFPrimitive extends CorePrimitive<CoreObjectType.SDF> {
 	// public override _geometry?: QuadGeometryWithPrimitiveAttributes;
-	constructor(public object: SDFObject, index: number) {
+	constructor( object: SDFObject, index: number) {
 		super(object, index);
 		// this._geometry = object.geometry as QuadGeometryWithPrimitiveAttributes;
 	}
 	geometry() {
-		return this.object.geometry;
+		return (this._object as SDFObject).geometry;
 	}
 	static override primitivesCount<T extends CoreObjectType>(object: ObjectContent<T>) {
 		return 0;

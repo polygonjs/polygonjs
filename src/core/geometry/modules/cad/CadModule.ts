@@ -8,6 +8,8 @@ import {CoreType} from '../../../Type';
 import {
 	registerFactoryFunctions,
 	CoreFactoryFunctions,
+	CorePointClassFactoryCheckFunction,
+	CorePointInstanceFactoryCheckFunction,
 	CoreVertexClassFactoryCheckFunction,
 	CoreVertexInstanceFactoryCheckFunction,
 	CorePrimitiveClassFactoryCheckFunction,
@@ -19,6 +21,7 @@ import {CoreGroup} from '../../Group';
 import {CoreObjectType, ObjectContent} from '../../ObjectContent';
 import {CAD_GEOMETRY_TYPES_SET, CadGeometryType, CADTesselationParams, CADOBJTesselationParams} from './CadCommon';
 import {CadCoreObject} from './CadCoreObject';
+import {CadPoint} from './CadPoint';
 import {CadVertex} from './CadVertex';
 import {CadPrimitive} from './CadPrimitive';
 import {CadObject} from './CadObject';
@@ -79,6 +82,20 @@ export function onCadModuleRegister(poly: PolyEngine) {
 	//
 	//
 
+	// point methods
+	const pointClassFactory: CorePointClassFactoryCheckFunction = (object: ObjectContent<CoreObjectType>) => {
+		if (CAD_GEOMETRY_TYPES_SET.has(object.type as CadGeometryType)) {
+			return CadPoint;
+		}
+	};
+	const pointInstanceFactory: CorePointInstanceFactoryCheckFunction = (
+		object: ObjectContent<CoreObjectType>,
+		index: number = 0
+	) => {
+		if (CAD_GEOMETRY_TYPES_SET.has(object.type as CadGeometryType)) {
+			return new CadPoint(object as CadObject<CadGeometryType>, index);
+		}
+	};
 	// vertex methods
 	const vertexClassFactory: CoreVertexClassFactoryCheckFunction = (object: ObjectContent<CoreObjectType>) => {
 		if (CAD_GEOMETRY_TYPES_SET.has(object.type as CadGeometryType)) {
@@ -126,6 +143,8 @@ export function onCadModuleRegister(poly: PolyEngine) {
 
 	//
 	const factoryFunctions: CoreFactoryFunctions = {
+		pointClass: pointClassFactory,
+		pointInstance: pointInstanceFactory,
 		vertexClass: vertexClassFactory,
 		vertexInstance: vertexInstanceFactory,
 		primitiveClass: primitiveClassFactory,

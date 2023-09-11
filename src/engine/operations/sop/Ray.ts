@@ -11,6 +11,7 @@ import {HitPointInfo} from 'three-mesh-bvh';
 import {BufferGeometryWithBVH} from '../../../core/geometry/bvh/three-mesh-bvh';
 import {ThreeMeshBVHHelper} from '../../../core/geometry/bvh/ThreeMeshBVHHelper';
 import {createRaycaster} from '../../../core/RaycastHelper';
+import { corePointClassFactory } from '../../../core/geometry/CoreObjectFactory';
 
 export enum RaySopMode {
 	PROJECT_RAY = 'project rays',
@@ -84,7 +85,11 @@ export class RaySopOperation extends BaseSopOperation {
 
 		if (isBooleanTrue(params.addDistAttribute)) {
 			if (!coreGroup.hasPointAttrib(DIST_ATTRIB_NAME)) {
-				coreGroup.addGeoNumericVertexAttrib(DIST_ATTRIB_NAME, 1, -1);
+				const allObjects = coreGroup.allObjects()
+				for(const object of allObjects){
+					const corePointClass= corePointClassFactory(object)
+					corePointClass.addNumericAttrib(object,DIST_ATTRIB_NAME, 1, -1);
+				}
 			}
 		}
 

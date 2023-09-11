@@ -11,6 +11,7 @@ import {isBooleanTrue} from '../../../core/Type';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 import {CoreGeometryBuilderMerge} from '../../../core/geometry/builders/Merge';
 import {addAttributesFromPoint} from '../../../core/geometry/util/addAttributesFromPoint';
+import {pointsFromObject} from '../../../core/geometry/entities/point/CorePointUtils';
 
 interface PolywireSopParams extends DefaultOperationParams {
 	radius: number;
@@ -68,8 +69,7 @@ export class PolywireSopOperation extends BaseSopOperation {
 	private _createTube(lineSegment: LineSegments, params: PolywireSopParams) {
 		const geometry = lineSegment.geometry as BufferGeometry;
 		const attributeNames = CoreGeometry.attribNamesMatchingMask(geometry, params.attributesToCopy);
-		const wrapper = new CoreGeometry(geometry);
-		const points = wrapper.points();
+		const points = pointsFromObject(lineSegment);
 		const indices = geometry.getIndex()?.array as number[];
 
 		const accumulatedCurvePointIndices = CoreGeometryUtilCurve.accumulatedCurvePointIndices(indices);

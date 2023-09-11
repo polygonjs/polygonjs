@@ -3,7 +3,7 @@ import {CoreGeometryBuilderBase} from './_Base';
 import {CorePoint} from '../../../entities/point/CorePoint';
 import {PolyDictionary} from '../../../../../types/GlobalTypes';
 import {CoreObjectType, ObjectBuilder, ObjectContent} from '../../../ObjectContent';
-import {CoreEntity} from '../../../Entity';
+import {CoreEntity} from '../../../CoreEntity';
 import {TrianglePrimitive} from '../TrianglePrimitive';
 
 export class CoreGeometryBuilderMesh extends CoreGeometryBuilderBase {

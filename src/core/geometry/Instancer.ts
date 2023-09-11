@@ -9,7 +9,7 @@ import {
 } from 'three';
 import {CorePoint} from './entities/point/CorePoint';
 import {CoreGroup} from './Group';
-import {CoreGeometry} from './Geometry';
+// import {CoreGeometry} from './Geometry';
 import {CoreType} from '../Type';
 import {Attribute} from './Attribute';
 import {PolyDictionary} from '../../types/GlobalTypes';
@@ -238,8 +238,8 @@ export class CoreInstancer {
 			geometry.setAttribute(attribName, new InstancedBufferAttribute(values, attribSize));
 		});
 
-		const coreGeometry = new CoreGeometry(geometry);
-		coreGeometry.markAsInstance();
+		// const coreGeometry = new CoreGeometry(geometry);
+		// coreGeometry.markAsInstance();
 
 		return geometry;
 	}
