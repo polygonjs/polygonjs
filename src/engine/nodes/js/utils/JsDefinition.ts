@@ -10,6 +10,7 @@ import {ArrayUtils} from '../../../../core/ArrayUtils';
 import {ActorAssemblerConstant} from '../code/assemblers/actor/ActorAssemblerCommon';
 import {Poly} from '../../../Poly';
 import {inputObject3D} from '../_BaseObject3D';
+import {FUNC_POINTS_COUNT_FROM_OBJECT} from './Common';
 
 export enum JsDefinitionType {
 	// ATTRIBUTE = 'attribute',
@@ -244,7 +245,7 @@ export class TriggeringJsDefinition extends TypedJsDefinition<JsDefinitionType.T
 			const setPointIndex = func.asString(inputObject3D(this._node, this._shaderCollectionController), 'i');
 
 			return `${methodName}(){
-				const pointsCount = CoreGeometry.pointsCount(${ActorAssemblerConstant.GEOMETRY});
+				const pointsCount = ${FUNC_POINTS_COUNT_FROM_OBJECT}(${ActorAssemblerConstant.OBJECT_3D});
 				for( let i = 0; i < pointsCount; i++ ) {
 					${setPointIndex}
 					${this._value}
