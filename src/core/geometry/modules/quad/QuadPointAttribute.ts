@@ -1,7 +1,3 @@
-export class QuadPointAttribute {
-	constructor(public array: number[], public itemSize: number) {}
+import {BufferAttribute} from 'three';
 
-	clone() {
-		return new (this.constructor as typeof QuadPointAttribute)([...this.array], this.itemSize);
-	}
-}
+export type QuadPointAttribute = BufferAttribute;

@@ -35,7 +35,7 @@ export abstract class TypedCorePoint<T extends CoreObjectType> extends CoreEntit
 		console.warn('CorePoint.addAttribute needs to be overloaded');
 	}
 
-	static pointsCount<T extends CoreObjectType>(object: ObjectContent<T>) {
+	static pointsCount<T extends CoreObjectType>(object: ObjectContent<T>): number {
 		return 0;
 	}
 

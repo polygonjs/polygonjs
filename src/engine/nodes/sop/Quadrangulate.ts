@@ -8,8 +8,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 import {QuadGeometry} from '../../../core/geometry/modules/quad/QuadGeometry';
-import {Vector3, BufferGeometry, Mesh} from 'three';
-import {QuadPointAttribute} from '../../../core/geometry/modules/quad/QuadPointAttribute';
+import {Vector3, BufferGeometry, BufferAttribute, Mesh} from 'three';
 import {Attribute} from '../../../core/geometry/Attribute';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {QuadObject} from '../../../core/geometry/modules/quad/QuadObject';
@@ -88,14 +87,16 @@ export class QuadrangulateSopNode extends QuadSopNode<QuadrangulateSopParamsConf
 		const seed = this.pv.seed;
 
 		const quadGeometry = new QuadGeometry();
-		const newPositionArray = [...(positionAttribute.array as number[])];
-		const position = new QuadPointAttribute(newPositionArray, 3);
+		const newPositionArray = new Float32Array([...(positionAttribute.array as number[])]);
+		const position = new BufferAttribute(newPositionArray, 3);
 		quadGeometry.addPointAttribute(Attribute.POSITION, position);
 		const quadIndices: number[] = [];
 
 		const graph = new TriangleGraph();
+		console.log(index.array);
 		for (let i = 0; i < polygonsCount; i++) {
 			_v3.fromArray(index.array, i * 3);
+			console.log('_v3', i, _v3.toArray());
 			graph.addTriangle(_v3.toArray() as Number3);
 		}
 
@@ -163,6 +164,7 @@ export class QuadrangulateSopNode extends QuadSopNode<QuadrangulateSopParamsConf
 				});
 			}
 
+			console.log(quadIndices);
 			quadGeometry.setIndex(quadIndices);
 			const quadObject = new QuadObject(quadGeometry);
 			return quadObject;
@@ -181,6 +183,7 @@ export class QuadrangulateSopNode extends QuadSopNode<QuadrangulateSopParamsConf
 		};
 
 		const edgeIds = graph.edgeIds();
+		console.log({edgeIds: [...edgeIds]});
 		let i = 0;
 		while (edgeIds.length > 0 /*&& quadsCount < expectedQuadsCount*/) {
 			i++;
@@ -196,6 +199,7 @@ export class QuadrangulateSopNode extends QuadSopNode<QuadrangulateSopParamsConf
 			const triangleIds = edge.triangleIds;
 			const triangle0 = graph.triangle(triangleIds[0]);
 			const triangle1 = graph.triangle(triangleIds[1]);
+			console.log({edgeId, triangleIds, triangle0, triangle1});
 			if (!triangle0 || !triangle1) {
 				continue;
 			}

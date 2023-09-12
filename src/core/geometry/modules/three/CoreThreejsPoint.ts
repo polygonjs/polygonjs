@@ -60,7 +60,7 @@ export class CoreThreejsPoint extends TypedCorePoint<CoreObjectType.THREEJS> {
 		}
 		return geometry.attributes;
 	}
-	static override pointsCount<T extends CoreObjectType>(object: ObjectContent<T>) {
+	static override pointsCount<T extends CoreObjectType>(object: ObjectContent<T>): number {
 		const geometry = (object as any as Mesh).geometry as BufferGeometry | undefined;
 		if (!geometry) {
 			return 0;
