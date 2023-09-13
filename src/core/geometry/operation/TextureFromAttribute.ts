@@ -39,7 +39,6 @@ const dummyMesh = new Mesh();
 export function textureFromAttributePointsCount(geometry: BufferGeometry): number {
 	dummyMesh.geometry = geometry;
 	return pointsCountFromObject(dummyMesh);
-	// return CoreGeometry.pointsCount(geometry);
 }
 
 export function textureSizeFromPointsCount(geometry: BufferGeometry, target: Vector2): void {

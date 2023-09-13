@@ -193,11 +193,6 @@ export class CoreInstancer {
 		attributesToCopy: string
 	) {
 		const instancePts = templateCoreGroup.points();
-		// geometry_to_instance = new BoxBufferGeometry( 2, 2, 2 )
-		// geometry = new InstancedBufferGeometry()
-		// geometry.index = geometry_to_instance.index
-		// geometry.attributes.position = geometry_to_instance.attributes.position
-		// geometry.attributes.uv = geometry_to_instance.attributes.uv
 
 		const geometry = new InstancedBufferGeometry();
 		geometry.copy(geometryToInstance as InstancedBufferGeometry);
@@ -205,7 +200,6 @@ export class CoreInstancer {
 
 		const instancesCount = instancePts.length;
 
-		// if(this._param_add_uv_offset){
 		const has_uv = templateCoreGroup.hasPointAttrib(Attribute.UV);
 		if (has_uv) {
 			const uvs = new Float32Array(instancesCount * 2);
@@ -218,7 +212,6 @@ export class CoreInstancer {
 			}
 			geometry.setAttribute(InstanceAttrib.UV, new InstancedBufferAttribute(uvs, 2));
 		}
-		// }
 		this.updateTransformInstanceAttributes(instancePts, templateCoreGroup, geometry);
 		this.updateColorInstanceAttribute(instancePts, templateCoreGroup, geometry);
 
@@ -237,9 +230,6 @@ export class CoreInstancer {
 			});
 			geometry.setAttribute(attribName, new InstancedBufferAttribute(values, attribSize));
 		});
-
-		// const coreGeometry = new CoreGeometry(geometry);
-		// coreGeometry.markAsInstance();
 
 		return geometry;
 	}

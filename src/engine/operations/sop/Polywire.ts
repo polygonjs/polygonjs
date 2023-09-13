@@ -2,7 +2,6 @@ import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {Vector3, Matrix4, LineSegments, BufferGeometry} from 'three';
 import {ObjectType} from '../../../core/geometry/Constant';
-import {CoreGeometry} from '../../../core/geometry/Geometry';
 import {CircleCreateOptions, CoreGeometryUtilCircle} from '../../../core/geometry/util/Circle';
 import {CoreGeometryUtilCurve} from '../../../core/geometry/util/Curve';
 import {CoreGeometryOperationSkin} from '../../../core/geometry/operation/Skin';
@@ -12,6 +11,7 @@ import {DefaultOperationParams} from '../../../core/operations/_Base';
 import {CoreGeometryBuilderMerge} from '../../../core/geometry/builders/Merge';
 import {addAttributesFromPoint} from '../../../core/geometry/util/addAttributesFromPoint';
 import {pointsFromObject} from '../../../core/geometry/entities/point/CorePointUtils';
+import {corePointClassFactory} from '../../../core/geometry/CoreObjectFactory';
 
 interface PolywireSopParams extends DefaultOperationParams {
 	radius: number;
@@ -68,7 +68,8 @@ export class PolywireSopOperation extends BaseSopOperation {
 
 	private _createTube(lineSegment: LineSegments, params: PolywireSopParams) {
 		const geometry = lineSegment.geometry as BufferGeometry;
-		const attributeNames = CoreGeometry.attribNamesMatchingMask(geometry, params.attributesToCopy);
+		const corePointClass = corePointClassFactory(lineSegment);
+		const attributeNames = corePointClass.attributeNamesMatchingMask(lineSegment, params.attributesToCopy);
 		const points = pointsFromObject(lineSegment);
 		const indices = geometry.getIndex()?.array as number[];
 

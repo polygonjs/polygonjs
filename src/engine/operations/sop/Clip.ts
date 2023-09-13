@@ -21,7 +21,6 @@ import {ThreeMeshBVHHelper} from '../../../core/geometry/bvh/ThreeMeshBVHHelper'
 import {isBooleanTrue} from '../../../core/Type';
 import {SUBTRACTION, Brush, Evaluator} from '../../../core/thirdParty/three-bvh-csg';
 import {rotateGeometry} from '../../../core/Transform';
-import {CoreGeometry} from '../../../core/geometry/Geometry';
 import {CoreGeometryBuilderMesh} from '../../../core/geometry/modules/three/builders/Mesh';
 import {ObjectUtils} from '../../../core/ObjectUtils';
 import {corePointClassFactory} from '../../../core/geometry/CoreObjectFactory';
@@ -129,7 +128,7 @@ function _createClipped(mesh: Mesh, box: Mesh) {
 	// perform boolean operation
 	const brush1 = new Brush(mesh.geometry, mesh.material);
 	const brush2 = new Brush(box.geometry);
-	const existingAttributes = CoreGeometry.attribNames(mesh.geometry);
+	const existingAttributes = corePointClass.attributeNames(mesh);
 	csgEvaluator.attributes = [...existingAttributes, TMP_KEEP_ATTRIBUTE_NAME];
 	const output = csgEvaluator.evaluate(brush1, brush2, SUBTRACTION);
 

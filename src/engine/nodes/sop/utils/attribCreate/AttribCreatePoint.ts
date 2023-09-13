@@ -61,7 +61,6 @@ async function _addNumericAttributeToPoints(coreObject: CoreObject, params: Attr
 			corePointClass.addNumericAttrib(object, attribName, size, param.value);
 		}
 
-		// const geometry = coreGeometry.geometry();
 		const attrib = corePointClass.attribute(object, attribName) as BufferAttribute;
 		attrib.needsUpdate = true;
 		const array = attrib.array as number[];

@@ -7,14 +7,14 @@ import {CoreGroup, Object3DWithGeometry} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {Vector3} from 'three';
 import {MapUtils} from '../../../core/MapUtils';
-import {CoreGeometry} from '../../../core/geometry/Geometry';
 import {BufferAttribute} from 'three';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 import {CoreObjectType, ObjectContent} from '../../../core/geometry/ObjectContent';
 import {isBooleanTrue} from '../../../core/Type';
 import {setToArray} from '../../../core/SetUtils';
 import {isNumber} from '../../../core/Type';
-import { pointsFromObject } from '../../../core/geometry/entities/point/CorePointUtils';
+import {pointsFromObject} from '../../../core/geometry/entities/point/CorePointUtils';
+import {corePointClassFactory} from '../../../core/geometry/CoreObjectFactory';
 
 const tmpPos = new Vector3();
 
@@ -244,7 +244,7 @@ export class SortSopOperation extends BaseSopOperation {
 		}
 	}
 	private _sortPointsForObject(object: Object3DWithGeometry, params: SortSopParams) {
-		const points = pointsFromObject(object)
+		const points = pointsFromObject(object);
 
 		const oldIndexAttribute = object.geometry.getIndex();
 		if (!oldIndexAttribute) {
@@ -313,7 +313,9 @@ export class SortSopOperation extends BaseSopOperation {
 		object.geometry.setIndex(newIndexAttrib);
 
 		// update every attribute
-		const attributeNames = CoreGeometry.attribNames(object.geometry);
+		const corePointClass = corePointClassFactory(object);
+
+		const attributeNames = corePointClass.attributeNames(object);
 		for (let attributeName of attributeNames) {
 			if (attributeName == 'id') {
 				this._debugActive = true;

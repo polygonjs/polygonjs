@@ -9,6 +9,14 @@ import {ObjectUtils} from '../ObjectUtils';
 
 const normalsComputedWithPositionAttributeVersion: Map<string, number> = new Map();
 
+export function cloneBufferGeometry(srcGeometry: BufferGeometry): BufferGeometry {
+	const clonedGeometry = srcGeometry.clone();
+	if (srcGeometry.userData) {
+		clonedGeometry.userData = ObjectUtils.cloneDeep(srcGeometry.userData);
+	}
+	return clonedGeometry;
+}
+
 export class CoreGeometry {
 	private _boundingBox: Box3 | undefined;
 

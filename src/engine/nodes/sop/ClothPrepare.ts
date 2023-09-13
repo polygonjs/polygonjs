@@ -92,7 +92,6 @@ export class ClothPrepareSopNode extends TypedSopNode<ClothPrepareSopParamsConfi
 				corePointClass.addNumericAttrib(mesh, attribName, 1, param.value);
 			}
 
-			// const geometry = coreGeometry.geometry();
 			const attrib = corePointClass.attribute(mesh, attribName) as BufferAttribute;
 			attrib.needsUpdate = true;
 			const array = attrib.array as number[];

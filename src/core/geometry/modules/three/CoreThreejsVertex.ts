@@ -1,4 +1,4 @@
-import {BufferGeometry, Object3D, Mesh, Vector3} from 'three';
+import {BufferGeometry, Object3D, Mesh, Vector3, BufferAttribute} from 'three';
 import {CoreObjectType, ObjectContent} from '../../ObjectContent';
 import {CoreVertex} from '../../entities/vertex/CoreVertex';
 import {VertexAttributesDict, UserDataWithVertexAttributes} from '../../entities/vertex/Common';
@@ -52,6 +52,25 @@ export class CoreThreejsVertex extends CoreVertex<CoreObjectType.THREEJS> {
 			return;
 		}
 		return geometry.userData.vertexAttributes;
+	}
+	static override indexAttribute<T extends CoreObjectType>(
+		object: ObjectContent<T>
+	): BufferAttribute | undefined | null {
+		const geometry = (object as any as Mesh).geometry as BufferGeometry | undefined;
+		if (!geometry) {
+			return;
+		}
+		return geometry.getIndex();
+	}
+	static override setIndexAttribute<T extends CoreObjectType>(
+		object: ObjectContent<T>,
+		index: BufferAttribute | number[]
+	): BufferAttribute | undefined {
+		const geometry = (object as any as Mesh).geometry as BufferGeometry | undefined;
+		if (!geometry) {
+			return;
+		}
+		geometry.setIndex(index);
 	}
 	static override verticesCount<T extends CoreObjectType>(object: ObjectContent<T>) {
 		const geometry = (object as any as Mesh).geometry as BufferGeometry | undefined;

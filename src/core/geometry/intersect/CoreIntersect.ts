@@ -58,12 +58,7 @@ function resolveGeometryAttributeForMesh(intersection: Intersection, attribName:
 				}
 				case AttribType.STRING: {
 					const corePointClass = corePointClassFactory(intersection.object);
-					// const coreGeometry = new CoreGeometry(geometry);
-					// const corePoint = coreGeometry.points()[0];
-					// if (corePoint) {
 					return corePointClass.stringAttribValue(intersection.object, 0, attribName);
-					// }
-					return;
 				}
 			}
 			TypeAssert.unreachable(attribType);
@@ -84,12 +79,6 @@ function resolveGeometryAttributeForPoint(intersection: Intersection, attribName
 			case AttribType.STRING: {
 				const corePointClass = corePointClassFactory(intersection.object);
 				return corePointClass.stringAttribValue(intersection.object, intersection.index, attribName);
-				// const core_geometry = new CoreGeometry(geometry);
-				// const core_point = core_geometry.points()[intersection.index];
-				// if (core_point) {
-				// 	return core_point.stringAttribValue(attribName);
-				// }
-				// return;
 			}
 		}
 		TypeAssert.unreachable(attribType);

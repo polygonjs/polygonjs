@@ -264,7 +264,7 @@ export class CoreThreejsPoint extends TypedCorePoint<CoreObjectType.THREEJS> {
 			}
 		} else {
 			console.warn(defaultValue);
-			throw `CoreGeometry.add_numeric_attrib error: no other default value allowed for now in add_numeric_attrib (default given: ${defaultValue})`;
+			throw `CoreThreejsPoint.addNumericAttrib error: no other default value allowed for now in add_numeric_attrib (default given: ${defaultValue})`;
 		}
 	}
 }

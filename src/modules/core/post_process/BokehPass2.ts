@@ -257,7 +257,7 @@
 // 	// 				// }
 // 	// 				// }
 // 	// 				// } else {
-// 	// 				// 	if (CoreGeometry.markedAsInstance(geometry)) {
+// 	// 				// 	if (markedAsInstance(geometry)) {
 // 	// 				// 		assignedMaterial = instanceMaterial as MaterialWithUniforms;
 // 	// 				// 	} else {
 // 	// 				// 		assignedMaterial = baseMaterial as MaterialWithUniforms;
@@ -269,7 +269,7 @@
 // 	// 				// 	object.material = assignedMaterial;
 // 	// 				// }
 
-// 	// 				// if( CoreGeometry.markedAsInstance(geometry) ){
+// 	// 				// if( markedAsInstance(geometry) ){
 // 	// 				// 	object.material = instance_material
 // 	// 				// } else {
 // 	// 				// 	object.material = base_material

@@ -10,7 +10,7 @@ import {BufferAttribute, Vector4, Vector3, Vector2, InterleavedBufferAttribute} 
 import {Attribute, CoreAttribute} from '../../Attribute';
 import {isArray} from '../../../Type';
 import {CoreEntity} from '../../CoreEntity';
-import {DOT, ComponentName, COMPONENT_INDICES, AttribType} from '../../Constant';
+import {DOT, ComponentName, COMPONENT_INDICES, AttribType, GroupString} from '../../Constant';
 import {ObjectContent, CoreObjectType, ObjectBuilder} from '../../ObjectContent';
 import {PointAttributesDict} from './Common';
 import {CoreAttributeData} from '../../AttributeData';
@@ -65,6 +65,7 @@ export abstract class TypedCorePoint<T extends CoreObjectType> extends CoreEntit
 		}
 		return (this.constructor as typeof TypedCorePoint<T>).attribute(this._object, attribName);
 	}
+
 	static attribSize<T extends CoreObjectType>(object: ObjectContent<T>, attribName: string): number {
 		const attributes = this.attributes(object);
 		if (!attributes) {
@@ -114,6 +115,16 @@ export abstract class TypedCorePoint<T extends CoreObjectType> extends CoreEntit
 	userDataAttrib(name: string) {
 		name = CoreAttribute.remapName(name);
 		return this.userDataAttribs()[name];
+	}
+	static attributeNames<T extends CoreObjectType>(object?: ObjectContent<T>): string[] {
+		const attributes = this.attributes(object);
+		if (!attributes) {
+			return [];
+		}
+		return Object.keys(attributes);
+	}
+	static attributeNamesMatchingMask<T extends CoreObjectType>(object: ObjectContent<T>, masksString: GroupString) {
+		return CoreAttribute.attribNamesMatchingMask(masksString, this.attributeNames(object));
 	}
 	static indexedAttributeNames<T extends CoreObjectType>(object?: ObjectContent<T>): string[] {
 		return object ? Object.keys(this.userDataAttribs(object) || {}) : [];
@@ -246,15 +257,6 @@ export abstract class TypedCorePoint<T extends CoreObjectType> extends CoreEntit
 	//
 	//
 
-	// attribSize(attribName: string): number {
-	// 	attribName = CoreAttribute.remapName(attribName);
-	// 	return this._geometry?.getAttribute(attribName).itemSize || 0;
-	// }
-
-	// hasAttrib(attribName: string): boolean {
-	// 	const remappedName = CoreAttribute.remapName(attribName);
-	// 	return this._geometry ? CoreGeometry.hasAttrib(this._geometry, remappedName) : false;
-	// }
 	static attribValue<T extends CoreObjectType>(
 		object: ObjectContent<T>,
 		index: number,

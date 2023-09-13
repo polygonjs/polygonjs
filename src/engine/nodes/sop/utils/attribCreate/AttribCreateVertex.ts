@@ -144,7 +144,6 @@ async function _addStringAttributeToVertices(
 	const attribName = params.name.value;
 
 	if (param.hasExpression() && param.expressionController) {
-		// const geometry = coreGeometry.geometry();
 		// if a group is given, we prefill the existing stringValues
 		// create attrib if non existent
 		const vertexClass = coreVertexClassFactory(object);

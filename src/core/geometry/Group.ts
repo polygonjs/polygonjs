@@ -64,26 +64,6 @@ export interface Object3DWithGeometry extends Object3D {
 	geometry: BufferGeometry;
 }
 
-// function objectData<T extends CoreObjectType>(object: ObjectContent<T>): ObjectData {
-// 	const pointsCount: number =
-// 		isObject3D(object) && (object as Mesh).geometry
-// 			? CoreGeometry.pointsCount((object as Mesh).geometry as BufferGeometry)
-// 			: 0;
-// 	const childrenCount = isObject3D(object) ? object.children.length : 0;
-// 	// if ((object as Mesh).geometry) {
-// 	// 	points_count = CoreGeometry.pointsCount((object as Mesh).geometry as BufferGeometry);
-// 	// }
-// 	const objectType = isObject3D(object) ? objectTypeFromConstructor(object.constructor) : (object.type as ObjectType);
-// 	const groupData = EntityGroupCollection.data(object);
-// 	return {
-// 		type: objectType,
-// 		name: object.name,
-// 		childrenCount,
-// 		pointsCount,
-// 		groupData,
-// 		tetrahedronsCount: 0,
-// 	};
-// }
 function objectTotalPointsCount(object: ObjectContent<CoreObjectType>) {
 	let sum = 0;
 	object.traverse((child) => {
@@ -382,69 +362,8 @@ export class CoreGroup extends CoreEntity {
 	}
 	objectAttribSizesByName(): PolyDictionary<AttribSize[]> {
 		return coreObjectsAttribSizesByName(this.allCoreObjects());
-		// const firstObject = this.coreObjects()[0];
-		// if (firstObject) {
-		// 	return firstObject.attribSizes();
-		// } else {
-		// 	return {};
-		// }
 	}
-	// addPointNumericVertexAttrib(attribName: string, size: number, defaultValue: NumericAttribValue) {
-	// 	if (defaultValue == null) {
-	// 		defaultValue = CoreAttribute.defaultValue(size);
-	// 	}
-	// 	const objects = this.allObjects()
-	// 	for(const object of objects){
-	// 		const pointClass = corePointClassFactory(object);
-	// 		pointClass.addAttribute(object,attribName, size, defaultValue);
-	// 	}
 
-	// 	// for (let coreGeometry of this.coreGeometries()) {
-	// 	// 	coreGeometry.addNumericAttrib(name, size, defaultValue);
-	// 	// }
-	// }
-
-	//
-	//
-	// attributes
-	//
-	//
-	// renameAttrib(oldName: string, newName: string, attribClass: AttribClass) {
-	// 	switch (attribClass) {
-	// 		case AttribClass.POINT:
-	// 			if (this.hasPointAttrib(old_name)) {
-	// 				const objects = this.threejsObjects();
-	// 				// if (this._objects) {
-	// 				for (let object of objects) {
-	// 					object.traverse((child) => {
-	// 						const geometry = CoreGroup.geometryFromObject(child);
-	// 						if (geometry) {
-	// 							const core_geometry = new CoreGeometry(geometry);
-	// 							core_geometry.renameAttrib(old_name, new_name);
-	// 						}
-	// 					});
-	// 				}
-	// 				// }
-	// 			}
-	// 			break;
-
-	// 		case AttribClass.OBJECT:
-	// 			// if (this.hasAttrib(old_name)) {
-	// 			// if (this._allObjects) {
-	// 			for (let object of this._allObjects) {
-	// 				if (isObject3D(object)) {
-	// 					object.traverse((child) => {
-	// 						CoreObject.renameAttrib(child, old_name, new_name);
-	// 					});
-	// 				} else {
-	// 					CoreObject.renameAttrib(object, old_name, new_name);
-	// 				}
-	// 			}
-	// 			// }
-	// 			// }
-	// 			break;
-	// 	}
-	// }
 	renameAttrib(oldName: string, newName: string) {
 		const attribValue = this.attribValue(oldName);
 		if (attribValue == null) {

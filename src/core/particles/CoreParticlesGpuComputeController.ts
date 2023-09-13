@@ -1,5 +1,4 @@
 import {DataTexture, Mesh, Vector2, Vector3, Vector4, FloatType, HalfFloatType, ShaderMaterial, Object3D} from 'three';
-import {CoreGeometry} from '../geometry/Geometry';
 import {GlConstant} from '../geometry/GlConstant';
 import {
 	GPUComputationConfigRef,
@@ -297,9 +296,9 @@ export class CoreParticlesGpuComputeController {
 
 				// const first_point = this._points[0];
 				// if (first_point) {
-				const has_attrib = CoreGeometry.hasAttrib(geometry, variable_name);
+				const has_attrib = corePointClass.hasAttrib(object, variable_name);
 				if (has_attrib) {
-					const attrib_size = CoreGeometry.attribSize(geometry, variable_name);
+					const attrib_size = corePointClass.attribSize(object, variable_name);
 					let cmptr = texture_position;
 					for (let i = 0; i < pointsCount; i++) {
 						switch (attrib_size) {

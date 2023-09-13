@@ -101,6 +101,7 @@ export class ColorSopNode extends TypedSopNode<ColorSopParamsConfig> {
 
 	_setFromAttribute(coreObject: CoreObject) {
 		const object = coreObject.object();
+		const corePointClass = corePointClassFactory(object);
 		const coreGeometry = coreObject.coreGeometry();
 		if (!coreGeometry) {
 			return;
@@ -109,8 +110,7 @@ export class ColorSopNode extends TypedSopNode<ColorSopParamsConfig> {
 		if (attribName.trim().length == 0) {
 			return;
 		}
-		const geometry = coreGeometry.geometry();
-		const srcAttrib = geometry.getAttribute(attribName) as BufferAttribute | undefined;
+		const srcAttrib = corePointClass.attribute(object,attribName) as BufferAttribute | undefined;
 		if (!srcAttrib) {
 			return;
 		}
@@ -118,9 +118,9 @@ export class ColorSopNode extends TypedSopNode<ColorSopParamsConfig> {
 		this._createInitColor(object);
 		const points = pointsFromObject(object);
 
-		const srcAttribSize = coreGeometry.attribSize(attribName);
+		const srcAttribSize = corePointClass.attribSize(object,attribName);
 		const srcArray = srcAttrib.array;
-		const destArray = (geometry.getAttribute(COLOR_ATTRIB_NAME) as BufferAttribute).array as number[];
+		const destArray = (corePointClass.attribute(object,COLOR_ATTRIB_NAME) as BufferAttribute).array as number[];
 
 		switch (srcAttribSize) {
 			case 1: {

@@ -12,7 +12,7 @@ import {
 	Object3D,
 	Matrix4,
 } from 'three';
-import {CoreGeometry} from '../../Geometry';
+import {CoreGeometry, cloneBufferGeometry} from '../../Geometry';
 import {Object3DWithGeometry} from '../../Group';
 import {dataFromConstructor, ObjectData, ObjectType} from '../../Constant';
 import {objectData} from '../../entities/object/BaseCoreObjectUtils';
@@ -81,70 +81,10 @@ export class CoreObject extends BaseCoreObject<CoreObjectType.THREEJS> {
 		// 	return null
 		// }
 	}
-	//
-	//
-	// POINTS
-	//
-	//
-	// static points(object: Object3D) {
-	// 	const geometry = (object as Mesh).geometry;
-	// 	if (geometry) {
-	// 		return CoreGeometry.points(geometry) || [];
-	// 	} else {
-	// 		return [];
-	// 	}
-	// }
-	// points() {
-	// 	return this.coreGeometry()?.points() || [];
-	// }
-	// static pointsFromGroup(object: Object3D, group: GroupString): CorePoint[] {
-	// 	if (group) {
-	// 		const indices = CoreString.indices(group);
-	// 		if (indices) {
-	// 			const points = this.points(object);
-	// 			return ArrayUtils.compact(indices.map((i) => points[i]));
-	// 		} else {
-	// 			return [];
-	// 		}
-	// 	} else {
-	// 		return this.points(object);
-	// 	}
-	// }
-	// pointsFromGroup(group: GroupString): CorePoint[] {
-	// 	if (group) {
-	// 		const indices = CoreString.indices(group);
-	// 		if (indices) {
-	// 			const points = this.points();
-	// 			return ArrayUtils.compact(indices.map((i) => points[i]));
-	// 		} else {
-	// 			return [];
-	// 		}
-	// 	} else {
-	// 		return this.points();
-	// 	}
-	// }
-
-	//
-	//
-	//
-	//
-	//
-	// addNumericPointAttrib(name: string, size: number, defaultValue: NumericAttribValue) {
-	// 	if (defaultValue == null) {
-	// 		defaultValue = CoreAttribute.defaultValue(size);
-	// 	}
-	// 	this.coreGeometry()?.addNumericAttrib(name, size, defaultValue);
-	// }
+	
 	static override objectData(object: Object3D): ObjectData {
 		const data = objectData(object);
-
 		data.pointsCount = pointsCountFromObject(object);
-		// const childrenCount = isObject3D(object) ? object.children.length : 0;
-		// if ((object as Mesh).geometry) {
-		// 	points_count = CoreGeometry.pointsCount((object as Mesh).geometry as BufferGeometry);
-		// }
-		// data.type = isObject3D(object) ? objectTypeFromConstructor(object.constructor) : ((object as any).type as ObjectType);
-		// const groupData = EntityGroupCollection.data(object);
 		return data;
 	}
 
@@ -180,8 +120,6 @@ export class CoreObject extends BaseCoreObject<CoreObjectType.THREEJS> {
 			return;
 		}
 		target.copy(computedSphere);
-		// setSphereFromObject(target, this._object, COMPUTE_PRECISE_BOUNDS);
-		// console.log('boundingSphere', target.radius);
 	}
 
 	computeVertexNormals() {
@@ -201,7 +139,7 @@ export class CoreObject extends BaseCoreObject<CoreObjectType.THREEJS> {
 
 			if (meshNode.geometry && srcNode && srcNode.geometry) {
 				const srcNodeGeometry = srcNode.geometry as BufferGeometry;
-				meshNode.geometry = CoreGeometry.clone(srcNodeGeometry);
+				meshNode.geometry = cloneBufferGeometry(srcNodeGeometry);
 				ThreeMeshBVHHelper.copyBVH(meshNode, srcNode);
 				// const mesh_node_geometry = meshNode.geometry as BufferGeometry;
 				// if (mesh_node_geometry.userData) {

@@ -43,9 +43,6 @@ export function cloneAttribValue(src: AttribValue) {
 
 export function objectData<T extends CoreObjectType>(object: ObjectContent<T>): ObjectData {
 	const childrenCount = isObject3D(object) ? object.children.length : 0;
-	// if ((object as Mesh).geometry) {
-	// 	points_count = CoreGeometry.pointsCount((object as Mesh).geometry as BufferGeometry);
-	// }
 	const objectType = isObject3D(object) ? objectTypeFromConstructor(object.constructor) : (object.type as ObjectType);
 	const groupData = EntityGroupCollection.data(object);
 	return {

@@ -265,7 +265,6 @@ export class DeleteSopNode extends TypedSopNode<DeleteSopParamsConfig> {
 				if (keptEntities.length == initEntitiesCount) {
 					newObjects.push(object);
 				} else {
-					coreGeometry.geometry().dispose();
 					if (keptEntities.length > 0) {
 						const objectType = objectTypeFromConstructor(object.constructor);
 						if (objectType) {

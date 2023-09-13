@@ -6,7 +6,7 @@ import {
 	Vector3Like,
 	Vector4Like,
 } from '../../../../types/GlobalTypes';
-import {Vector4, Vector3, Vector2} from 'three';
+import {Vector4, Vector3, Vector2, BufferAttribute} from 'three';
 import {Attribute, CoreAttribute} from '../../Attribute';
 import {CoreEntity} from '../../CoreEntity';
 import {CoreType} from '../../../Type';
@@ -65,6 +65,17 @@ export abstract class CoreVertex<T extends CoreObjectType> extends CoreEntity {
 			return;
 		}
 		return (this.constructor as typeof CoreVertex<T>).attribute(this._object, attribName);
+	}
+	static indexAttribute<T extends CoreObjectType>(object: ObjectContent<T>): BufferAttribute | undefined | null {
+		console.warn('CoreVertex.indexAttribute needs to be overloaded');
+		return;
+	}
+	static setIndexAttribute<T extends CoreObjectType>(
+		object: ObjectContent<T>,
+		index: BufferAttribute | number[]
+	): BufferAttribute | undefined {
+		console.warn('CoreVertex.setIndexAttribute needs to be overloaded');
+		return;
 	}
 	static renameAttrib<T extends CoreObjectType>(object: ObjectContent<T>, oldName: string, newName: string) {
 		const attributes = this.attributes(object);

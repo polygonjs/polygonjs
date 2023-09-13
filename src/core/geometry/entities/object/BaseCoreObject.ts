@@ -501,22 +501,6 @@ export abstract class BaseCoreObject<T extends CoreObjectType> extends CoreEntit
 
 	static objectData<T extends CoreObjectType>(object: ObjectContent<T>): ObjectData {
 		return objectData(object);
-		// const childrenCount = isObject3D(object) ? object.children.length : 0;
-		// // if ((object as Mesh).geometry) {
-		// // 	points_count = CoreGeometry.pointsCount((object as Mesh).geometry as BufferGeometry);
-		// // }
-		// const objectType = isObject3D(object)
-		// 	? objectTypeFromConstructor(object.constructor)
-		// 	: (object.type as ObjectType);
-		// const groupData = EntityGroupCollection.data(object);
-		// return {
-		// 	type: objectType,
-		// 	name: object.name,
-		// 	childrenCount,
-		// 	groupData,
-		// 	pointsCount: 0,
-		// 	tetsCount: null,
-		// };
 	}
 
 	clone(): BaseCoreObject<T> {
