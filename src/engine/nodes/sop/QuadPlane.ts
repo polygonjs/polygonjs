@@ -4,12 +4,11 @@
  *
  */
 import {QuadSopNode} from './_BaseQuad';
-import {Vector3, Matrix4} from 'three';
+import {Vector3, Matrix4, BufferAttribute} from 'three';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 import {QuadGeometry} from '../../../core/geometry/modules/quad/QuadGeometry';
-import {QuadPointAttribute} from '../../../core/geometry/modules/quad/QuadPointAttribute';
 import {Attribute} from '../../../core/geometry/Attribute';
 import {rotationMatrix} from '../../../core/Transform';
 
@@ -101,7 +100,7 @@ export class QuadPlaneSopNode extends QuadSopNode<QuadPlaneSopParamsConfig> {
 			indices[quadIndex + 3] = i2;
 		}
 
-		const position = new QuadPointAttribute(positions, 3);
+		const position = new BufferAttribute(new Float32Array(positions), 3);
 		geometry.addPointAttribute(Attribute.POSITION, position);
 		geometry.setIndex(indices);
 

@@ -3,13 +3,14 @@ import {ObjectGeometryMap, CoreObjectType, ObjectContent} from '../../ObjectCont
 import {TypedCorePoint} from '../../entities/point/CorePoint';
 import {PointAttributesDict} from '../../entities/point/Common';
 import {QuadObject} from './QuadObject';
+import {Attribute} from '../../Attribute';
 
 export class QuadPoint extends TypedCorePoint<CoreObjectType.QUAD> {
 	protected _geometry?: ObjectGeometryMap[CoreObjectType.QUAD];
-	protected override _object: QuadObject
+	protected override _object: QuadObject;
 	constructor(object: QuadObject, index: number) {
 		super(object, index);
-		this._object = object
+		this._object = object;
 		this._updateGeometry();
 	}
 	override object() {
@@ -38,16 +39,35 @@ export class QuadPoint extends TypedCorePoint<CoreObjectType.QUAD> {
 		attribute: BufferAttribute
 	) {}
 	static override attributes<T extends CoreObjectType>(object: ObjectContent<T>): PointAttributesDict | undefined {
-		return undefined;
+		const geometry = (object as any as QuadObject).geometry;
+		if (!geometry) {
+			return;
+		}
+		return geometry.attributes;
 	}
-	static override pointsCount<T extends CoreObjectType>(object: ObjectContent<T>) {
-		return 0;
+	static override pointsCount<T extends CoreObjectType>(object: ObjectContent<T>): number {
+		const positionAttribute = this.attribute(object, Attribute.POSITION);
+		if (!positionAttribute) {
+			return 0;
+		}
+		return positionAttribute.count;
 	}
 	override position(target: Vector3) {
-		return target;
+		if (!this._geometry) {
+			return target;
+		}
+		const {array} = this.attribute(Attribute.POSITION) as BufferAttribute;
+		return target.fromArray(array, this._index * 3);
 	}
 	override normal(target: Vector3) {
-		return target;
+		if (!this._geometry) {
+			return target;
+		}
+		const {array} = this.attribute(Attribute.NORMAL) as BufferAttribute;
+		return target.fromArray(array, this._index * 3);
+	}
+	static override computeNormals<T extends CoreObjectType>(object: ObjectContent<T>) {
+		console.warn('QuadPoint.computeNormals not implemented');
 	}
 
 	//

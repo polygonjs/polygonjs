@@ -8,8 +8,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 import {QuadGeometry} from '../../../core/geometry/modules/quad/QuadGeometry';
-import {Vector3, BufferGeometry, Mesh} from 'three';
-import {QuadPointAttribute} from '../../../core/geometry/modules/quad/QuadPointAttribute';
+import {Vector3, BufferGeometry, Mesh, BufferAttribute} from 'three';
 import {Attribute} from '../../../core/geometry/Attribute';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {QuadObject} from '../../../core/geometry/modules/quad/QuadObject';
@@ -88,9 +87,8 @@ export class QuadrangulateSopNode extends QuadSopNode<QuadrangulateSopParamsConf
 		const seed = this.pv.seed;
 
 		const quadGeometry = new QuadGeometry();
-		const newPositionArray = [...(positionAttribute.array as number[])];
-		const position = new QuadPointAttribute(newPositionArray, 3);
-		quadGeometry.addPointAttribute(Attribute.POSITION, position);
+		const newPositionArray = [...(positionAttribute.clone().array as number[])];
+
 		const quadIndices: number[] = [];
 
 		const graph = new TriangleGraph();
@@ -163,6 +161,8 @@ export class QuadrangulateSopNode extends QuadSopNode<QuadrangulateSopParamsConf
 				});
 			}
 
+			const position = new BufferAttribute(new Float32Array(newPositionArray), 3);
+			quadGeometry.addPointAttribute(Attribute.POSITION, position);
 			quadGeometry.setIndex(quadIndices);
 			const quadObject = new QuadObject(quadGeometry);
 			return quadObject;

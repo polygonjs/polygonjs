@@ -50,12 +50,12 @@ class QuadSmoothSopParamsConfig extends NodeParamsConfig {
 		},
 	});
 	/** @param iterations */
-	iterations = ParamConfig.INTEGER(10, {
+	iterations = ParamConfig.INTEGER(50, {
 		range: [0, 100],
 		rangeLocked: [true, false],
 	});
 	/** @param strength */
-	strength = ParamConfig.FLOAT(0.1, {
+	strength = ParamConfig.FLOAT(1, {
 		range: [0, 1],
 		rangeLocked: [true, true],
 	});
@@ -106,7 +106,7 @@ export class QuadSmoothSopNode extends QuadSopNode<QuadSmoothSopParamsConfig> {
 		if (!position) {
 			return;
 		}
-		const tmpPositionArray0 = [...position.array];
+		const tmpPositionArray0 = [...(position.array as number[])];
 		const tmpPositionArray1 = [...tmpPositionArray0];
 
 		const index = geometry.index;

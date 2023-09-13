@@ -63,7 +63,7 @@ export class WFCSolver {
 			}
 		}
 
-		this._quadPositionArray = this.quadObject.geometry.attributes[Attribute.POSITION].array;
+		this._quadPositionArray = this.quadObject.geometry.attributes[Attribute.POSITION].array as number[];
 		const quadsCount = this.quadObject.geometry.quadsCount();
 		const quadPrimitive = new QuadPrimitive(this.quadObject, 0);
 		for (let i = 0; i < quadsCount; i++) {

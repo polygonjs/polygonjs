@@ -1,18 +1,16 @@
-import {Box3, Matrix4, Vector3} from 'three';
-import {QuadPointAttribute} from './QuadPointAttribute';
-// import {QuadPrimAttribute} from './QuadPrimAttribute';
+import {Box3, Matrix4, Vector3, BufferAttribute} from 'three';
 import {Attribute} from '../../Attribute';
 import {ObjectUtils} from '../../../ObjectUtils';
 
 const _v3 = new Vector3();
 
 export class QuadGeometry {
-	public attributes: Record<string, QuadPointAttribute> = {};
+	public attributes: Record<string, BufferAttribute> = {};
 	// public primAttributes: Record<string, QuadPrimAttribute> = {};
 	public index: number[] = [];
 	userData: {[key: string]: any} = {};
 
-	addPointAttribute(attribName: string, attribute: QuadPointAttribute) {
+	addPointAttribute(attribName: string, attribute: BufferAttribute) {
 		this.attributes[attribName] = attribute;
 	}
 	// addPrimAttribute(attribName: string, attribute: QuadPrimAttribute) {
