@@ -164,7 +164,7 @@ export class ColorSopNode extends TypedSopNode<ColorSopParamsConfig> {
 	private _createInitColor<T extends CoreObjectType>(object: ObjectContent<T>) {
 		const corePointClass = corePointClassFactory(object);
 
-		if (!corePointClass.hasAttrib(object, COLOR_ATTRIB_NAME)) {
+		if (!corePointClass.hasAttribute(object, COLOR_ATTRIB_NAME)) {
 			corePointClass.addNumericAttribute(object, COLOR_ATTRIB_NAME, 3, DEFAULT_COLOR);
 		}
 	}

@@ -1,5 +1,4 @@
 import {CoreGroup} from '../../../../../core/geometry/Group';
-import {CoreObject} from '../../../../../core/geometry/modules/three/CoreObject';
 import {CoreAttribute} from '../../../../../core/geometry/Attribute';
 import {AttribCreateSopParams} from '../../AttribCreate';
 import {AttribType} from '../../../../../core/geometry/Constant';
@@ -9,19 +8,20 @@ import {
 	verticesFromObjectFromGroup,
 } from '../../../../../core/geometry/entities/vertex/CoreVertexUtils';
 import {coreVertexClassFactory} from '../../../../../core/geometry/CoreObjectFactory';
+import {CoreObjectType, ObjectContent} from '../../../../../core/geometry/ObjectContent';
 
 export function addVertexAttribute(attribType: AttribType, coreGroup: CoreGroup, params: AttribCreateSopParams) {
-	const coreObjects = coreGroup.threejsCoreObjects();
+	const objects = coreGroup.allObjects();
 	switch (attribType) {
 		case AttribType.NUMERIC: {
-			for (let coreObject of coreObjects) {
-				_addAttributeToVertices(coreObject, params, false);
+			for (let object of objects) {
+				_addAttributeToVertices(object, params, false);
 			}
 			return;
 		}
 		case AttribType.STRING: {
-			for (let coreObject of coreObjects) {
-				_addAttributeToVertices(coreObject, params, true);
+			for (let object of objects) {
+				_addAttributeToVertices(object, params, true);
 			}
 			return;
 		}
@@ -29,11 +29,11 @@ export function addVertexAttribute(attribType: AttribType, coreGroup: CoreGroup,
 	TypeAssert.unreachable(attribType);
 }
 
-function _addAttributeToVertices(coreObject: CoreObject, params: AttribCreateSopParams, isString: boolean) {
-	const object = coreObject.object();
-	if (!object) {
-		return;
-	}
+function _addAttributeToVertices<T extends CoreObjectType>(
+	object: ObjectContent<T>,
+	params: AttribCreateSopParams,
+	isString: boolean
+) {
 	const value = isString
 		? params.string
 		: [params.value1, params.value2, params.value3, params.value4][params.size - 1];
@@ -51,12 +51,12 @@ function _addAttributeToVertices(coreObject: CoreObject, params: AttribCreateSop
 
 	// set values
 	if (params.group) {
-		const vertices = verticesFromObjectFromGroup(coreObject.object(), params.group);
+		const vertices = verticesFromObjectFromGroup(object, params.group);
 		for (let vertex of vertices) {
 			vertex.setAttribValue(attribName, value);
 		}
 	} else {
-		const vertices = verticesFromObject(coreObject.object());
+		const vertices = verticesFromObject(object);
 		for (let vertex of vertices) {
 			vertex.setAttribValue(attribName, value);
 		}

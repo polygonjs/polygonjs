@@ -296,7 +296,7 @@ export class CoreParticlesGpuComputeController {
 
 				// const first_point = this._points[0];
 				// if (first_point) {
-				const has_attrib = corePointClass.hasAttrib(object, variable_name);
+				const has_attrib = corePointClass.hasAttribute(object, variable_name);
 				if (has_attrib) {
 					const attrib_size = corePointClass.attribSize(object, variable_name);
 					let cmptr = texture_position;

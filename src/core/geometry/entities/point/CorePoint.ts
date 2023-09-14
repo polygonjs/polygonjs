@@ -84,16 +84,16 @@ export abstract class TypedCorePoint<T extends CoreObjectType> extends CoreEntit
 		}
 		return (this.constructor as typeof TypedCorePoint<T>).attribSize(this._object, attribName);
 	}
-	static hasAttrib<T extends CoreObjectType>(object: ObjectContent<T>, attribName: string): boolean {
+	static hasAttribute<T extends CoreObjectType>(object: ObjectContent<T>, attribName: string): boolean {
 		const remappedName = CoreAttribute.remapName(attribName);
 		return this.attributes(object) ? this.attributes(object)![remappedName] != null : false;
 	}
 
-	hasAttrib(attribName: string): boolean {
+	hasAttribute(attribName: string): boolean {
 		if (!this._object) {
 			return false;
 		}
-		return (this.constructor as typeof TypedCorePoint<T>).hasAttrib(this._object, attribName);
+		return (this.constructor as typeof TypedCorePoint<T>).hasAttribute(this._object, attribName);
 	}
 
 	//
@@ -247,11 +247,24 @@ export abstract class TypedCorePoint<T extends CoreObjectType> extends CoreEntit
 	//
 	//
 	//
-	static renameAttrib<T extends CoreObjectType>(object: ObjectContent<T>, oldName: string, newName: string) {
-		_warnOverloadRequired('renameAttrib');
+	static renameAttribute<T extends CoreObjectType>(object: ObjectContent<T>, oldName: string, newName: string) {
+		const attributes = this.attributes(object);
+		if (!attributes) {
+			return;
+		}
+		const attribute = this.attribute(object, oldName);
+		if (!attribute) {
+			return;
+		}
+		attributes[newName] = attribute;
+		delete attributes[oldName];
 	}
 	static deleteAttribute<T extends CoreObjectType>(object: ObjectContent<T>, attribName: string) {
-		_warnOverloadRequired('deleteAttribute');
+		const attributes = this.attributes(object);
+		if (!attributes) {
+			return;
+		}
+		delete attributes[attribName];
 	}
 
 	//

@@ -99,23 +99,23 @@ export class CoreGeometry {
 	// 	return this.userDataAttribs()[name];
 	// }
 
-	static hasAttrib(geometry: BufferGeometry, attribName: string): boolean {
-		if (attribName === Attribute.POINT_INDEX) {
-			return true;
-		}
-		attribName = CoreAttribute.remapName(attribName);
-		return geometry.attributes[attribName] != null;
-	}
-	hasAttrib(attribName: string): boolean {
-		return CoreGeometry.hasAttrib(this._geometry, attribName);
-	}
-	markAttribAsNeedsUpdate(attribName: string) {
-		attribName = CoreAttribute.remapName(attribName);
-		const attrib = this._geometry.attributes[attribName];
-		if (attrib) {
-			attrib.needsUpdate = true;
-		}
-	}
+	// static hasAttribute(geometry: BufferGeometry, attribName: string): boolean {
+	// 	if (attribName === Attribute.POINT_INDEX) {
+	// 		return true;
+	// 	}
+	// 	attribName = CoreAttribute.remapName(attribName);
+	// 	return geometry.attributes[attribName] != null;
+	// }
+	// hasAttribute(attribName: string): boolean {
+	// 	return CoreGeometry.hasAttribute(this._geometry, attribName);
+	// }
+	// markAttribAsNeedsUpdate(attribName: string) {
+	// 	attribName = CoreAttribute.remapName(attribName);
+	// 	const attrib = this._geometry.attributes[attribName];
+	// 	if (attrib) {
+	// 		attrib.needsUpdate = true;
+	// 	}
+	// }
 
 	static attribNames(geometry: BufferGeometry): string[] {
 		return Object.keys(geometry.attributes);

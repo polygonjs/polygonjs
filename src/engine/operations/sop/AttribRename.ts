@@ -3,16 +3,11 @@ import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 import {AttribClass, ATTRIBUTE_CLASSES} from '../../../core/geometry/Constant';
-import {
-	corePointClassFactory,
-	coreVertexClassFactory,
-	corePrimitiveClassFactory,
-	coreObjectClassFactory,
-} from '../../../core/geometry/CoreObjectFactory';
-import {CoreObjectType, ObjectContent} from '../../../core/geometry/ObjectContent';
-import {TypeAssert} from '../../poly/Assert';
+import {ENTITY_CLASS_FACTORY} from '../../../core/geometry/CoreObjectFactory';
+import {filterObjectsFromCoreGroup} from '../../../core/geometry/Mask';
 
 interface AttribRenameSopParams extends DefaultOperationParams {
+	group: string;
 	class: number;
 	oldName: string;
 	newName: string;
@@ -20,6 +15,7 @@ interface AttribRenameSopParams extends DefaultOperationParams {
 const SPLIT_REGEX = /[ ,]+/g;
 export class AttribRenameSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: AttribRenameSopParams = {
+		group: '',
 		class: ATTRIBUTE_CLASSES.indexOf(AttribClass.POINT),
 		oldName: '',
 		newName: '',
@@ -30,85 +26,26 @@ export class AttribRenameSopOperation extends BaseSopOperation {
 	}
 	override cook(inputCoreGroups: CoreGroup[], params: AttribRenameSopParams) {
 		const coreGroup = inputCoreGroups[0];
-		const oldNames = params.oldName.split(SPLIT_REGEX);
-		const newNames = params.newName.split(SPLIT_REGEX);
-		const minCount = Math.min(oldNames.length, newNames.length);
+		const objects = filterObjectsFromCoreGroup(coreGroup, params);
 		const attribClass = ATTRIBUTE_CLASSES[params.class];
-		const objects = coreGroup.allObjects();
-
-		if (attribClass == AttribClass.CORE_GROUP) {
-			for (let i = 0; i < minCount; i++) {
-				coreGroup.renameAttrib(oldNames[i], newNames[i]);
+		const factory = ENTITY_CLASS_FACTORY[attribClass];
+		const newAttribNames = params.newName.split(SPLIT_REGEX);
+		if (factory) {
+			for (const object of objects) {
+				const entityClass = factory(object);
+				const oldAttribNames = entityClass.attributeNamesMatchingMask(object, params.oldName);
+				const minCount = Math.min(oldAttribNames.length, newAttribNames.length);
+				for (let i = 0; i < minCount; i++) {
+					entityClass.renameAttribute(object, oldAttribNames[i], newAttribNames[i]);
+				}
 			}
 		} else {
+			const oldAttribNames = coreGroup.attributeNamesMatchingMask(params.oldName);
+			const minCount = Math.min(oldAttribNames.length, newAttribNames.length);
 			for (let i = 0; i < minCount; i++) {
-				for (const object of objects) {
-					this._renameAttribute(object, oldNames[i], newNames[i], attribClass);
-				}
+				coreGroup.renameAttribute(oldAttribNames[i], newAttribNames[i]);
 			}
 		}
 		return coreGroup;
 	}
-	private _renameAttribute<T extends CoreObjectType>(
-		object: ObjectContent<T>,
-		oldName: string,
-		newName: string,
-		attribClass: AttribClass
-	) {
-		switch (attribClass) {
-			case AttribClass.POINT: {
-				return this._renamePointAttributes(object, oldName, newName);
-			}
-			case AttribClass.VERTEX: {
-				return this._renameVertexAttributes(object, oldName, newName);
-			}
-			case AttribClass.PRIMITIVE: {
-				return this._renamePrimitiveAttributes(object, oldName, newName);
-			}
-			case AttribClass.OBJECT: {
-				return this._renameObjectAttributes(object, oldName, newName);
-			}
-			case AttribClass.CORE_GROUP: {
-				return; // this._renameCoreGroupAttributes(object, oldName, newName);
-			}
-		}
-		TypeAssert.unreachable(attribClass);
-	}
-	private _renamePointAttributes<T extends CoreObjectType>(
-		object: ObjectContent<T>,
-		oldName: string,
-		newName: string
-	) {
-		const corePointClass = corePointClassFactory(object);
-		corePointClass.renameAttrib(object, oldName, newName);
-	}
-	private _renameVertexAttributes<T extends CoreObjectType>(
-		object: ObjectContent<T>,
-		oldName: string,
-		newName: string
-	) {
-		const coreVertexClass = coreVertexClassFactory(object);
-		coreVertexClass.renameAttrib(object, oldName, newName);
-	}
-	private _renamePrimitiveAttributes<T extends CoreObjectType>(
-		object: ObjectContent<T>,
-		oldName: string,
-		newName: string
-	) {
-		const corePrimitiveClass = corePrimitiveClassFactory(object);
-		corePrimitiveClass.renameAttrib(object, oldName, newName);
-	}
-	private _renameObjectAttributes<T extends CoreObjectType>(
-		object: ObjectContent<T>,
-		oldName: string,
-		newName: string
-	) {
-		const coreObjectClass = coreObjectClassFactory(object);
-		coreObjectClass.renameAttrib(object, oldName, newName);
-	}
-	// private _renameCoreGroupAttributes<T extends CoreObjectType>(
-	// 	object: ObjectContent<T>,
-	// 	oldName: string,
-	// 	newName: string
-	// ) {}
 }

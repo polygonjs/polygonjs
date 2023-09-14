@@ -16,7 +16,7 @@ export function addObjectAttribute(attribType: AttribType, coreGroup: CoreGroup,
 	const defaultValue = defaultAttribValue(params);
 	if (defaultValue != null) {
 		for (let coreObject of allCoreObjects) {
-			if (!coreObject.hasAttrib(attribName)) {
+			if (!coreObject.hasAttribute(attribName)) {
 				coreObject.setAttribValue(attribName, defaultValue);
 			}
 		}

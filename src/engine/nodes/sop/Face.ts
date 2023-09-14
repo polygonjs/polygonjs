@@ -125,7 +125,7 @@ export class FaceSopNode extends TypedSopNode<FaceSopParamsConfig> {
 			const corePointClass = corePointClassFactory(object);
 			const coreGeometry = coreObject.coreGeometry();
 			if ((object as Mesh).isMesh && coreGeometry) {
-				if (!corePointClass.hasAttrib(object, FaceAttribName.CENTER)) {
+				if (!corePointClass.hasAttribute(object, FaceAttribName.CENTER)) {
 					corePointClass.addNumericAttribute(object, FaceAttribName.CENTER, 3, -1);
 				}
 
@@ -156,7 +156,7 @@ export class FaceSopNode extends TypedSopNode<FaceSopParamsConfig> {
 				// const faces = core_geometry.faces();
 				// const points_count = core_geometry.pointsCount();
 
-				if (!corePointClass.hasAttrib(object, FaceAttribName.ID)) {
+				if (!corePointClass.hasAttribute(object, FaceAttribName.ID)) {
 					corePointClass.addNumericAttribute(object, FaceAttribName.ID, 1, -1);
 				}
 
@@ -183,7 +183,7 @@ export class FaceSopNode extends TypedSopNode<FaceSopParamsConfig> {
 			const coreGeometry = coreObject.coreGeometry();
 			if ((object as Mesh).isMesh && coreGeometry) {
 				// faces = coreGeometry.faces();
-				if (!corePointClass.hasAttrib(object, FaceAttribName.POSITION)) {
+				if (!corePointClass.hasAttribute(object, FaceAttribName.POSITION)) {
 					corePointClass.addNumericAttribute(object, FaceAttribName.POSITION, 3, -1);
 				}
 

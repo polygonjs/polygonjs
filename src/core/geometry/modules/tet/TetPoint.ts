@@ -71,16 +71,4 @@ export class TetPoint extends TypedCorePoint<CoreObjectType.TET> {
 	): number {
 		return -1;
 	}
-	//
-	//
-	//
-	//
-	//
-	static override renameAttrib<T extends CoreObjectType>(
-		object: ObjectContent<T>,
-		oldName: string,
-		newName: string
-	) {}
-
-	static override deleteAttribute<T extends CoreObjectType>(object: ObjectContent<T>, attribName: string) {}
 }

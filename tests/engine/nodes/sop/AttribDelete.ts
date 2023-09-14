@@ -21,7 +21,7 @@ export function testenginenodessopAttribDelete(qUnit: QUnit) {
 			const container = await node.compute();
 			const object = container.coreContent()!.allObjects()[0];
 			const entityClass = corePointClassFactory(object);
-			return entityClass.hasAttrib(object, 'test');
+			return entityClass.hasAttribute(object, 'test');
 		}
 
 		const inputNodes = [plane1, quadPlane1];
@@ -58,7 +58,7 @@ export function testenginenodessopAttribDelete(qUnit: QUnit) {
 			const container = await node.compute();
 			const object = container.coreContent()!.allObjects()[0];
 			const entityClass = coreVertexClassFactory(object);
-			return entityClass.hasAttrib(object, 'test');
+			return entityClass.hasAttribute(object, 'test');
 		}
 
 		const inputNodes = [plane1, quadPlane1];
@@ -93,7 +93,7 @@ export function testenginenodessopAttribDelete(qUnit: QUnit) {
 			const container = await node.compute();
 			const object = container.coreContent()!.allObjects()[0];
 			const entityClass = corePrimitiveClassFactory(object);
-			return entityClass.hasAttrib(object, 'test');
+			return entityClass.hasAttribute(object, 'test');
 		}
 
 		const inputNodes = [plane1, quadPlane1];
@@ -126,7 +126,7 @@ export function testenginenodessopAttribDelete(qUnit: QUnit) {
 			const container = await node.compute();
 			const object = container.coreContent()!.allObjects()[0];
 			const entityClass = coreObjectClassFactory(object);
-			return entityClass.hasAttrib(object, 'test');
+			return entityClass.hasAttribute(object, 'test');
 		}
 
 		const inputNodes = [plane1, quadPlane1];

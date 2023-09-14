@@ -246,12 +246,14 @@ export abstract class BaseCoreObject<T extends CoreObjectType> extends CoreEntit
 
 		return SetUtils.toArray(names);
 	}
-
-	hasAttrib(attribName: string): boolean {
-		return (this.constructor as any as typeof BaseCoreObject<CoreObjectType>).hasAttrib(this._object, attribName);
-	}
-	static hasAttrib<T extends CoreObjectType>(object: ObjectContent<T>, attribName: string) {
+	static hasAttribute<T extends CoreObjectType>(object: ObjectContent<T>, attribName: string) {
 		return attribName in this._attributesDictionary(object);
+	}
+	hasAttribute(attribName: string): boolean {
+		return (this.constructor as any as typeof BaseCoreObject<CoreObjectType>).hasAttribute(
+			this._object,
+			attribName
+		);
 	}
 	static attributeNames<T extends CoreObjectType>(object: ObjectContent<T>): string[] {
 		const attributes = this.attributes(object);
@@ -264,14 +266,14 @@ export abstract class BaseCoreObject<T extends CoreObjectType> extends CoreEntit
 		return CoreAttribute.attribNamesMatchingMask(masksString, this.attributeNames(object));
 	}
 
-	renameAttrib(oldName: string, newName: string) {
-		return (this.constructor as any as typeof BaseCoreObject<CoreObjectType>).renameAttrib(
+	renameAttribute(oldName: string, newName: string) {
+		return (this.constructor as any as typeof BaseCoreObject<CoreObjectType>).renameAttribute(
 			this._object,
 			oldName,
 			newName
 		);
 	}
-	static renameAttrib<T extends CoreObjectType>(object: ObjectContent<T>, oldName: string, newName: string) {
+	static renameAttribute<T extends CoreObjectType>(object: ObjectContent<T>, oldName: string, newName: string) {
 		const currentValue = this.attribValue(object, oldName);
 		if (currentValue != null) {
 			this.addAttribute(object, newName, currentValue);

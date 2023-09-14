@@ -65,7 +65,7 @@ export abstract class CorePrimitive<T extends CoreObjectType> extends CoreEntity
 		}
 		return (this.constructor as typeof CorePrimitive<T>).attribute(this._object, attribName);
 	}
-	static renameAttrib<T extends CoreObjectType>(object: ObjectContent<T>, oldName: string, newName: string) {
+	static renameAttribute<T extends CoreObjectType>(object: ObjectContent<T>, oldName: string, newName: string) {
 		const attributes = this.attributes(object);
 		if (!attributes) {
 			return;
@@ -99,16 +99,15 @@ export abstract class CorePrimitive<T extends CoreObjectType> extends CoreEntity
 		}
 		return (this.constructor as typeof CorePrimitive<T>).attribSize(this._object, attribName);
 	}
-	static hasAttrib<T extends CoreObjectType>(object: ObjectContent<T>, attribName: string): boolean {
+	static hasAttribute<T extends CoreObjectType>(object: ObjectContent<T>, attribName: string): boolean {
 		const remappedName = CoreAttribute.remapName(attribName);
 		return this.attributes(object) ? this.attributes(object)![remappedName] != null : false;
 	}
-
-	hasAttrib(attribName: string): boolean {
+	hasAttribute(attribName: string): boolean {
 		if (!this._object) {
 			return false;
 		}
-		return (this.constructor as typeof CorePrimitive<T>).hasAttrib(this._object, attribName);
+		return (this.constructor as typeof CorePrimitive<T>).hasAttribute(this._object, attribName);
 	}
 	static attributeNames<T extends CoreObjectType>(object?: ObjectContent<T>): string[] {
 		const attributes = this.attributes(object);

@@ -88,7 +88,7 @@ export class ClothPrepareSopNode extends TypedSopNode<ClothPrepareSopParamsConfi
 		const corePointClass = corePointClassFactory(mesh);
 		// const coreGeometry = new CoreGeometry(mesh.geometry);
 		if (param.hasExpression() && param.expressionController) {
-			if (!corePointClass.hasAttrib(mesh, attribName)) {
+			if (!corePointClass.hasAttribute(mesh, attribName)) {
 				corePointClass.addNumericAttribute(mesh, attribName, 1, param.value);
 			}
 

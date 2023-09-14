@@ -77,11 +77,4 @@ export class CadPoint extends TypedCorePoint<CoreObjectType.CAD> {
 	//
 	//
 	//
-	static override renameAttrib<T extends CoreObjectType>(
-		object: ObjectContent<T>,
-		oldName: string,
-		newName: string
-	) {}
-
-	static override deleteAttribute<T extends CoreObjectType>(object: ObjectContent<T>, attribName: string) {}
 }

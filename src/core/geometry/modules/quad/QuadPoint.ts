@@ -102,26 +102,7 @@ export class QuadPoint extends TypedCorePoint<CoreObjectType.QUAD> {
 	//
 	//
 	//
-	static override renameAttrib<T extends CoreObjectType>(object: ObjectContent<T>, oldName: string, newName: string) {
-		const attributes = this.attributes(object);
-		if (!attributes) {
-			return;
-		}
-		const attribute = this.attribute(object, oldName);
-		if (!attribute) {
-			return;
-		}
-		attributes[newName] = attribute;
-		delete attributes[oldName];
-	}
 
-	static override deleteAttribute<T extends CoreObjectType>(object: ObjectContent<T>, attribName: string) {
-		const geometry = (object as any as QuadObject).geometry;
-		if (!geometry) {
-			return;
-		}
-		delete geometry.attributes[attribName];
-	}
 	static override addNumericAttribute<T extends CoreObjectType>(
 		object: ObjectContent<T>,
 		attribName: string,

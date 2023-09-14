@@ -138,15 +138,7 @@ export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
 			return;
 		}
 
-		// const simplex = this._getSimplex();
-		// const useNormals = isBooleanTrue(this.pv.useNormals) && coreGroup.hasAttrib(ATTRIB_NORMAL);
 		const targetAttribSize = coreGroup.pointAttribSize(this.pv.attribName);
-		// const operation = OPERATIONS[this.pv.operation];
-		// const useRestAttributes: boolean = isBooleanTrue(this.pv.useRestAttributes);
-		// const baseAmplitude: number = this.pv.amplitude;
-		// const useAmplitudeAttrib: boolean = isBooleanTrue(this.pv.tamplitudeAttrib);
-
-		// let currentAttribValue: NumericAttribValue;
 
 		const firstPt = destPoints[0];
 		if (!firstPt) {

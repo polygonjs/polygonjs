@@ -1,5 +1,4 @@
 import {CorePoint} from './../../../core/geometry/entities/point/CorePoint';
-import {CoreObject} from './../../../core/geometry/modules/three/CoreObject';
 import {CoreAttribute} from './../../../core/geometry/Attribute';
 import {AttribValue, NumericAttribValue} from './../../../types/GlobalTypes';
 import {TypeAssert} from './../../poly/Assert';
@@ -13,7 +12,8 @@ import {ArrayUtils} from '../../../core/ArrayUtils';
 
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 import {pointsFromObject} from '../../../core/geometry/entities/point/CorePointUtils';
-import {corePointClassFactory} from '../../../core/geometry/CoreObjectFactory';
+import {coreObjectClassFactory, corePointClassFactory} from '../../../core/geometry/CoreObjectFactory';
+import {CoreObjectType, ObjectContent} from '../../../core/geometry/ObjectContent';
 interface AttribPromoteSopParams extends DefaultOperationParams {
 	classFrom: number;
 	classTo: number;
@@ -176,9 +176,9 @@ function promoteAttributeFromCoreGroup(coreGroup: CoreGroup, classTo: AttribClas
 function pointsToPoints(coreGroup: CoreGroup, attribName: string, params: AttribPromoteSopParams) {
 	const values = findValuesFromPoints(coreGroup.points(), attribName);
 	const value = filterValues(values, params);
-	const coreObjects = coreGroup.threejsCoreObjects();
-	for (let coreObject of coreObjects) {
-		setValuesToPoints(coreObject, attribName, value as NumericAttribValue);
+	const objects = coreGroup.allObjects();
+	for (let object of objects) {
+		setValuesToPoints(object, attribName, value as NumericAttribValue);
 	}
 }
 function pointsToObject(coreGroup: CoreGroup, attribName: string, params: AttribPromoteSopParams) {
@@ -197,13 +197,14 @@ function pointsToCoreGroup(coreGroup: CoreGroup, attribName: string, params: Att
 	coreGroup.setAttribValue(attribName, value);
 }
 function objectsToPoints(coreGroup: CoreGroup, attribName: string) {
-	const coreObjects = coreGroup.threejsCoreObjects();
-	for (let coreObject of coreObjects) {
-		const value = coreObject.attribValue(attribName);
+	const objects = coreGroup.allObjects();
+	for (let object of objects) {
+		const coreObjectClass = coreObjectClassFactory(object);
+		const value = coreObjectClass.attribValue(object, attribName);
 		if (value == null) {
 			return;
 		}
-		setValuesToPoints(coreObject, attribName, value as NumericAttribValue);
+		setValuesToPoints(object, attribName, value as NumericAttribValue);
 	}
 }
 function objectsToObjects(coreGroup: CoreGroup, attribName: string, params: AttribPromoteSopParams) {
@@ -221,9 +222,9 @@ function coreGroupToPoints(coreGroup: CoreGroup, attribName: string) {
 	if (value == null) {
 		return;
 	}
-	const coreObjects = coreGroup.threejsCoreObjects();
-	for (let coreObject of coreObjects) {
-		setValuesToPoints(coreObject, attribName, value as NumericAttribValue);
+	const objects = coreGroup.allObjects();
+	for (let object of objects) {
+		setValuesToPoints(object, attribName, value as NumericAttribValue);
 	}
 }
 function coreGroupToObjects(coreGroup: CoreGroup, attribName: string) {
@@ -269,9 +270,13 @@ function findValuesFromPoints(corePoints: CorePoint[], attribName: string) {
 	}
 	return values;
 }
-function setValuesToPoints(coreObject: CoreObject, attribName: string, newValue: NumericAttribValue) {
-	const attributeExists = coreObject.coreGeometry()?.hasAttrib(attribName);
-	const object = coreObject.object();
+function setValuesToPoints<T extends CoreObjectType>(
+	object: ObjectContent<T>,
+	attribName: string,
+	newValue: NumericAttribValue
+) {
+	const corePointClass = corePointClassFactory(object);
+	const attributeExists = corePointClass.hasAttribute(object, attribName);
 	if (!attributeExists) {
 		const attribSize = CoreAttribute.attribSizeFromValue(newValue);
 		if (attribSize) {

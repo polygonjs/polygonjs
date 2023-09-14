@@ -163,7 +163,11 @@ export class CoreThreejsPoint extends TypedCorePoint<CoreObjectType.THREEJS> {
 	//
 	//
 	//
-	static override renameAttrib<T extends CoreObjectType>(object: ObjectContent<T>, oldName: string, newName: string) {
+	static override renameAttribute<T extends CoreObjectType>(
+		object: ObjectContent<T>,
+		oldName: string,
+		newName: string
+	) {
 		const geometry = (object as any as Mesh).geometry as BufferGeometry | undefined;
 		if (!geometry) {
 			return;
@@ -174,7 +178,7 @@ export class CoreThreejsPoint extends TypedCorePoint<CoreObjectType.THREEJS> {
 		}
 
 		const oldAttrib = geometry.getAttribute(oldName) as BufferAttribute;
-		geometry.setAttribute(newName.trim(), new Float32BufferAttribute(oldAttrib.array, oldAttrib.itemSize));
+		geometry.setAttribute(newName, new Float32BufferAttribute(oldAttrib.array, oldAttrib.itemSize));
 		return geometry.deleteAttribute(oldName);
 	}
 

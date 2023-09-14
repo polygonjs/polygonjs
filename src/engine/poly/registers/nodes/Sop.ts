@@ -654,6 +654,7 @@ import {AttribAddMultSopOperation} from '../../../operations/sop/AttribAddMult';
 import {AttribCastSopOperation} from '../../../operations/sop/AttribCast';
 import {AttribCopySopOperation} from '../../../operations/sop/AttribCopy';
 import {AttribCreateSopOperation} from '../../../operations/sop/AttribCreate';
+import {AttribDeleteSopOperation} from '../../../operations/sop/AttribDelete';
 import {AttribNormalizeSopOperation} from '../../../operations/sop/AttribNormalize';
 import {AttribFromTextureSopOperation} from '../../../operations/sop/AttribFromTexture';
 import {AttribIdSopOperation} from '../../../operations/sop/AttribId';
@@ -776,6 +777,7 @@ export class SopRegister {
 		poly.registerOperation(AttribCastSopOperation);
 		poly.registerOperation(AttribCopySopOperation);
 		poly.registerOperation(AttribCreateSopOperation);
+		poly.registerOperation(AttribDeleteSopOperation);
 		poly.registerOperation(AttribNormalizeSopOperation);
 		poly.registerOperation(AttribFromTextureSopOperation);
 		poly.registerOperation(AttribIdSopOperation);

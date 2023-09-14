@@ -40,7 +40,7 @@ function _addNumericAttributeToPoints<T extends CoreObjectType>(
 	const value = [params.value1, params.value2, params.value3, params.value4][params.size - 1];
 
 	const attribName = CoreAttribute.remapName(params.name);
-	if (!corePointClass.hasAttrib(object, attribName)) {
+	if (!corePointClass.hasAttribute(object, attribName)) {
 		corePointClass.addNumericAttribute(object, attribName, params.size, 0);
 	} else {
 		corePointClass.markAttribAsNeedsUpdate(object, attribName);
@@ -76,7 +76,7 @@ function _addStringAttributeToPoints<T extends CoreObjectType>(
 		const allPoints = pointsFromObject(object);
 		stringValues = stringValues.length != allPoints.length ? new Array(allPoints.length) : stringValues;
 		// create attrib if non existent
-		if (!corePointClass.hasAttrib(object, attribName)) {
+		if (!corePointClass.hasAttribute(object, attribName)) {
 			const tmpIndexData = CoreAttribute.arrayToIndexedArrays(['']);
 			corePointClass.setIndexedAttribute(object, attribName, tmpIndexData['values'], tmpIndexData['indices']);
 		}

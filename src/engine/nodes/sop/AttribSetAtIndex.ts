@@ -155,7 +155,7 @@ export class AttribSetAtIndexSopNode extends TypedSopNode<AttribSetAtIndexSopPar
 		const defaultValue = AttribSetAtIndexSopOperation.defaultAttribValue(this.pv);
 		if (defaultValue != null) {
 			for (let coreObject of allCoreObjects) {
-				if (!coreObject.hasAttrib(attribName)) {
+				if (!coreObject.hasAttribute(attribName)) {
 					coreObject.setAttribValue(attribName, defaultValue);
 				}
 			}
@@ -193,7 +193,7 @@ export class AttribSetAtIndexSopNode extends TypedSopNode<AttribSetAtIndexSopPar
 		const corePointClass = corePointClassFactory(object);
 
 		const attribName = CoreAttribute.remapName(this.pv.name);
-		if (!corePointClass.hasAttrib(object, attribName)) {
+		if (!corePointClass.hasAttribute(object, attribName)) {
 			corePointClass.addNumericAttribute(object, attribName, this.pv.size, 0);
 		}
 		const attrib = corePointClass.attribute(object, attribName) as BufferAttribute;
@@ -259,7 +259,7 @@ export class AttribSetAtIndexSopNode extends TypedSopNode<AttribSetAtIndexSopPar
 		const corePointClass = corePointClassFactory(object);
 
 		const attribName = this.pv.name;
-		if (!corePointClass.hasAttrib(object, attribName)) {
+		if (!corePointClass.hasAttribute(object, attribName)) {
 			const tmpIndexData = CoreAttribute.arrayToIndexedArrays(['']);
 			corePointClass.setIndexedAttribute(object, attribName, tmpIndexData['values'], tmpIndexData['indices']);
 		}

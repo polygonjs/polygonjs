@@ -77,11 +77,4 @@ export class CsgPoint extends TypedCorePoint<CoreObjectType.CSG> {
 	//
 	//
 	//
-	static override renameAttrib<T extends CoreObjectType>(
-		object: ObjectContent<T>,
-		oldName: string,
-		newName: string
-	) {}
-
-	static override deleteAttribute<T extends CoreObjectType>(object: ObjectContent<T>, attribName: string) {}
 }

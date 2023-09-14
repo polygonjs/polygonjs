@@ -43,7 +43,6 @@ export class QuadVertex extends CoreVertex<CoreObjectType.QUAD> {
 			return;
 		}
 		if (!geometry.userData) {
-			console.warn('geometry has no userData');
 			return;
 		}
 		if (!geometry.userData.vertexAttributes) {

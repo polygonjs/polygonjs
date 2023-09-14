@@ -108,19 +108,6 @@ export class AttribNormalizeSopOperation extends BaseSopOperation {
 				return;
 			}
 		}
-
-		// let target_name = params.name;
-		// if (params.changeName) {
-		// 	target_name = params.newName;
-		// 	if (!core_group.hasAttrib(target_name)) {
-		// 		core_group.addNumericVertexAttrib(target_name, attrib_size, 0);
-		// 	}
-		// }
-
-		// normalized_values.forEach((normalized_value, i) => {
-		// 	const point = points[i];
-		// 	point.setAttribValue(target_name, normalized_value);
-		// });
 	}
 
 	private _vec: Vector3 = new Vector3();

@@ -59,7 +59,7 @@ async function _addNumericAttributeToPoints<T extends CoreObjectType>(
 	const param = [params.value1, params.value2, params.value3, params.value4][size - 1];
 
 	if (param.hasExpression()) {
-		if (!corePointClass.hasAttrib(object, attribName)) {
+		if (!corePointClass.hasAttribute(object, attribName)) {
 			corePointClass.addNumericAttribute(object, attribName, size, param.value);
 		}
 
@@ -145,7 +145,7 @@ async function _addStringAttributeToPoints<T extends CoreObjectType>(
 		if (hasGroupFromParams(params)) {
 			// create attrib if non existent
 
-			if (!corePointClass.hasAttrib(object, attribName)) {
+			if (!corePointClass.hasAttribute(object, attribName)) {
 				const tmpIndexData = CoreAttribute.arrayToIndexedArrays(['']);
 				corePointClass.setIndexedAttribute(object, attribName, tmpIndexData['values'], tmpIndexData['indices']);
 			}

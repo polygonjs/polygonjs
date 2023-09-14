@@ -69,7 +69,7 @@ export class AttribRemapSopNode extends TypedSopNode<AttribRemapSopParamsConfig>
 		let targetName = this.pv.name;
 		if (isBooleanTrue(this.pv.changeName)) {
 			targetName = this.pv.newName;
-			if (!corePointClass.hasAttrib(object, targetName)) {
+			if (!corePointClass.hasAttribute(object, targetName)) {
 				corePointClass.addNumericAttribute(object, targetName, attribSize, 0);
 			}
 		}

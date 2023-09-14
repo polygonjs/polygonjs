@@ -24,8 +24,8 @@ function cameraViewOffsetMax(camera: Camera, target: Vector2) {
 const _min = new Vector2();
 const _max = new Vector2();
 export function cameraSetViewOffset(camera: PerspectiveCamera | OrthographicCamera, resolution: Vector2) {
-	const hasMin = CoreObject.hasAttrib(camera, CameraAttribute.VIEW_OFFSET_MIN);
-	const hasMax = CoreObject.hasAttrib(camera, CameraAttribute.VIEW_OFFSET_MAX);
+	const hasMin = CoreObject.hasAttribute(camera, CameraAttribute.VIEW_OFFSET_MIN);
+	const hasMax = CoreObject.hasAttribute(camera, CameraAttribute.VIEW_OFFSET_MAX);
 	if (!(hasMin && hasMax)) {
 		return;
 	}

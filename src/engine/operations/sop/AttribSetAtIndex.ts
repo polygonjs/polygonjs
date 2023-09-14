@@ -100,7 +100,7 @@ export class AttribSetAtIndexSopOperation extends BaseSopOperation {
 		const defaultValue = AttribSetAtIndexSopOperation.defaultAttribValue(params);
 		if (defaultValue != null) {
 			for (let coreObject of allCoreObjects) {
-				if (!coreObject.hasAttrib(attribName)) {
+				if (!coreObject.hasAttribute(attribName)) {
 					coreObject.setAttribValue(attribName, defaultValue);
 				}
 			}
@@ -137,7 +137,7 @@ export class AttribSetAtIndexSopOperation extends BaseSopOperation {
 	) {
 		const corePointClass = corePointClassFactory(object);
 		const attribName = CoreAttribute.remapName(params.name);
-		if (!corePointClass.hasAttrib(object, attribName)) {
+		if (!corePointClass.hasAttribute(object, attribName)) {
 			corePointClass.addNumericAttribute(object, attribName, params.size, 0);
 		}
 
@@ -201,7 +201,7 @@ export class AttribSetAtIndexSopOperation extends BaseSopOperation {
 
 		const attribName = params.name;
 		// create attrib if non existent
-		if (!corePointClass.hasAttrib(object, attribName)) {
+		if (!corePointClass.hasAttribute(object, attribName)) {
 			const tmpIndexData = CoreAttribute.arrayToIndexedArrays(['']);
 			corePointClass.setIndexedAttribute(object, attribName, tmpIndexData['values'], tmpIndexData['indices']);
 		}

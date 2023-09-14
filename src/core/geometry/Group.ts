@@ -369,7 +369,7 @@ export class CoreGroup extends CoreEntity {
 	//
 	//
 	//
-	renameAttrib(oldName: string, newName: string) {
+	renameAttribute(oldName: string, newName: string) {
 		const attribValue = this.attribValue(oldName);
 		if (attribValue == null) {
 			return;
@@ -380,6 +380,9 @@ export class CoreGroup extends CoreEntity {
 
 	attribNamesMatchingMask(masksString: GroupString) {
 		return CoreAttribute.attribNamesMatchingMask(masksString, this.attribNames());
+	}
+	hasAttribute(attribName: string): boolean {
+		return this.attribValue(attribName) != null;
 	}
 
 	private _attributes: AttributeDictionary = {};

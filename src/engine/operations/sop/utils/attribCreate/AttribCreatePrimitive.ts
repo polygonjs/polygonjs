@@ -8,21 +8,20 @@ import {
 	primitivesFromObjectFromGroup,
 } from '../../../../../core/geometry/entities/primitive/CorePrimitiveUtils';
 import {corePrimitiveClassFactory} from '../../../../../core/geometry/CoreObjectFactory';
-import {BaseCoreObject} from '../../../../../core/geometry/entities/object/BaseCoreObject';
-import {CoreObjectType} from '../../../../../core/geometry/ObjectContent';
+import {CoreObjectType, ObjectContent} from '../../../../../core/geometry/ObjectContent';
 
 export function addPrimitiveAttribute(attribType: AttribType, coreGroup: CoreGroup, params: AttribCreateSopParams) {
-	const coreObjects = coreGroup.allCoreObjects();
+	const objects = coreGroup.allObjects();
 	switch (attribType) {
 		case AttribType.NUMERIC: {
-			for (let coreObject of coreObjects) {
-				_addAttributeToPrimitives(coreObject, params, false);
+			for (let object of objects) {
+				_addAttributeToPrimitives(object, params, false);
 			}
 			return;
 		}
 		case AttribType.STRING: {
-			for (let coreObject of coreObjects) {
-				_addAttributeToPrimitives(coreObject, params, true);
+			for (let object of objects) {
+				_addAttributeToPrimitives(object, params, true);
 			}
 			return;
 		}
@@ -30,13 +29,11 @@ export function addPrimitiveAttribute(attribType: AttribType, coreGroup: CoreGro
 	TypeAssert.unreachable(attribType);
 }
 
-function _addAttributeToPrimitives(
-	coreObject: BaseCoreObject<CoreObjectType>,
+function _addAttributeToPrimitives<T extends CoreObjectType>(
+	object: ObjectContent<T>,
 	params: AttribCreateSopParams,
 	isString: boolean
 ) {
-	const object = coreObject.object();
-
 	const value = isString
 		? params.string
 		: [params.value1, params.value2, params.value3, params.value4][params.size - 1];
@@ -56,12 +53,12 @@ function _addAttributeToPrimitives(
 
 	// set values
 	if (params.group) {
-		const primitives = primitivesFromObjectFromGroup(coreObject.object(), params.group);
+		const primitives = primitivesFromObjectFromGroup(object, params.group);
 		for (let primitive of primitives) {
 			primitive.setAttribValue(attribName, value);
 		}
 	} else {
-		const primitives = primitivesFromObject(coreObject.object());
+		const primitives = primitivesFromObject(object);
 		for (let primitive of primitives) {
 			primitive.setAttribValue(attribName, value);
 		}
