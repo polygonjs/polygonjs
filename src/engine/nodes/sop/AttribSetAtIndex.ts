@@ -19,14 +19,12 @@ import {
 } from '../../../core/geometry/Constant';
 import {CoreAttribute} from '../../../core/geometry/Attribute';
 import {BaseCoreObject} from '../../../core/geometry/entities/object/BaseCoreObject';
-import {CoreObject} from '../../../core/geometry/modules/three/CoreObject';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {TypeAssert} from '../../poly/Assert';
-
 import {AttribSetAtIndexSopOperation} from '../../operations/sop/AttribSetAtIndex';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {BufferAttribute} from 'three';
-import {CoreObjectType} from '../../../core/geometry/ObjectContent';
+import {CoreObjectType, ObjectContent} from '../../../core/geometry/ObjectContent';
 import {corePointClassFactory} from '../../../core/geometry/CoreObjectFactory';
 import {pointsFromObject} from '../../../core/geometry/entities/point/CorePointUtils';
 const DEFAULT = AttribSetAtIndexSopOperation.DEFAULT_PARAMS;
@@ -130,17 +128,17 @@ export class AttribSetAtIndexSopNode extends TypedSopNode<AttribSetAtIndexSopPar
 	}
 
 	private _addPointAttribute(attribType: AttribType, coreGroup: CoreGroup) {
-		const coreObjects = coreGroup.threejsCoreObjects();
+		const objects = coreGroup.allObjects();
 		switch (attribType) {
 			case AttribType.NUMERIC: {
-				for (let i = 0; i < coreObjects.length; i++) {
-					this._addNumericAttributeToPoints(coreObjects[i]);
+				for (const object of objects) {
+					this._addNumericAttributeToPoints(object);
 				}
 				return;
 			}
 			case AttribType.STRING: {
-				for (let i = 0; i < coreObjects.length; i++) {
-					this._addStringAttributeToPoints(coreObjects[i]);
+				for (const object of objects) {
+					this._addStringAttributeToPoints(object);
 				}
 				return;
 			}
@@ -188,8 +186,7 @@ export class AttribSetAtIndexSopNode extends TypedSopNode<AttribSetAtIndexSopPar
 		TypeAssert.unreachable(attribType);
 	}
 
-	private _addNumericAttributeToPoints(coreObject: CoreObject) {
-		const object = coreObject.object();
+	private _addNumericAttributeToPoints<T extends CoreObjectType>(object: ObjectContent<T>) {
 		const corePointClass = corePointClassFactory(object);
 
 		const attribName = CoreAttribute.remapName(this.pv.name);
@@ -254,8 +251,7 @@ export class AttribSetAtIndexSopNode extends TypedSopNode<AttribSetAtIndexSopPar
 		coreGroup.setAttribValue(attribName, param.value);
 	}
 
-	private _addStringAttributeToPoints(coreObject: CoreObject) {
-		const object = coreObject.object();
+	private _addStringAttributeToPoints<T extends CoreObjectType>(object: ObjectContent<T>) {
 		const corePointClass = corePointClassFactory(object);
 
 		const attribName = this.pv.name;

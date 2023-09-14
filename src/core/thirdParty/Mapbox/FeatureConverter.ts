@@ -6,7 +6,7 @@ import {ArrayUtils} from '../../ArrayUtils';
 import {CoreGeometryBuilderMerge} from '../../geometry/builders/Merge';
 import {CoreMapboxString} from './String';
 import {corePointClassFactory} from '../../geometry/CoreObjectFactory';
-import {CoreThreejsPoint} from '../../geometry/modules/three/CoreThreejsPoint';
+import {ThreejsPoint} from '../../geometry/modules/three/ThreejsPoint';
 import {pointsFromObject} from '../../geometry/entities/point/CorePointUtils';
 
 const MULTILINESTRING = 'MultiLineString';
@@ -37,7 +37,6 @@ export class FeatureConverter {
 
 		// pti
 		dummyMesh.geometry = mergedGeometry;
-		// CoreThreejsPoint.addNumericAttribute(dummyMesh, 'pti', 1, 0);
 		const points = pointsFromObject(dummyMesh);
 		const pointsCount = points.length;
 		for (let i = 0; i < pointsCount; i++) {
@@ -75,8 +74,8 @@ export class FeatureConverter {
 		dummyMesh.geometry = geometry;
 		const id_from_name = CoreMapboxString.toId(this.name) % 10000000;
 		// console.log(this.name, id_from_name)
-		CoreThreejsPoint.addNumericAttribute(dummyMesh, 'id', 1, this.id);
-		CoreThreejsPoint.addNumericAttribute(dummyMesh, 'name_id', 1, id_from_name);
+		ThreejsPoint.addNumericAttribute(dummyMesh, 'id', 1, this.id);
+		ThreejsPoint.addNumericAttribute(dummyMesh, 'name_id', 1, id_from_name);
 
 		return object;
 	}

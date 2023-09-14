@@ -1,9 +1,9 @@
 import {ParamConfig} from '../../engine/nodes/utils/params/ParamsConfig';
 import {Constructor} from '../../types/GlobalTypes';
 import {Camera} from 'three';
-import {CoreObject} from '../geometry/modules/three/CoreObject';
 import {CameraAttribute} from './CoreCamera';
 import {CameraFPSSopOperation} from '../../engine/operations/sop/CameraFPS';
+import {coreObjectClassFactory} from '../geometry/CoreObjectFactory';
 const DEFAULT = CameraFPSSopOperation.DEFAULT_PARAMS;
 
 export function CoreCameraFPSParamConfig<TBase extends Constructor>(Base: TBase) {
@@ -48,7 +48,7 @@ export class CoreCameraViewerFPSController {
 		const {camera} = options;
 
 		const _getMaxFPSIfPreset = () => {
-			return CoreObject.attribValue(camera, CameraAttribute.MAX_FPS) as number | null;
+			return coreObjectClassFactory(camera).attribValue(camera, CameraAttribute.MAX_FPS) as number | null;
 		};
 
 		const maxFPS = _getMaxFPSIfPreset();
@@ -58,7 +58,9 @@ export class CoreCameraViewerFPSController {
 
 		const _minDelta = _getMinDelta(maxFPS);
 		const allowDynamicChange =
-			(CoreObject.attribValue(camera, CameraAttribute.MAX_FPS_DYNAMIC_CHANGE) as boolean | null) || false;
+			(coreObjectClassFactory(camera).attribValue(camera, CameraAttribute.MAX_FPS_DYNAMIC_CHANGE) as
+				| boolean
+				| null) || false;
 
 		if (allowDynamicChange) {
 			const defaultMinDelta = _getMinDelta(60);

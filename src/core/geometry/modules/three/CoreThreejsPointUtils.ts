@@ -2,7 +2,7 @@ import {BufferGeometry, Mesh} from 'three';
 import {markedAsInstance} from '../../GeometryUtils';
 import {InstanceAttrib} from '../../Instancer';
 import {Attribute} from '../../Attribute';
-import {CoreThreejsPoint} from './CoreThreejsPoint';
+import {ThreejsPoint} from './ThreejsPoint';
 const dummyMesh = new Mesh();
 
 export function positionAttributeNameFromBufferGeometry(geometry: BufferGeometry) {
@@ -19,12 +19,12 @@ export function pointsCountFromBufferGeometry(geometry: BufferGeometry): number 
 	}
 	return positionAttribute.count;
 }
-export function pointsFromBufferGeometry(geometry: BufferGeometry): CoreThreejsPoint[] {
+export function pointsFromBufferGeometry(geometry: BufferGeometry): ThreejsPoint[] {
 	dummyMesh.geometry = geometry;
 	const pointsCount = pointsCountFromBufferGeometry(geometry);
-	const points: CoreThreejsPoint[] = new Array(pointsCount);
+	const points: ThreejsPoint[] = new Array(pointsCount);
 	for (let i = 0; i < pointsCount; i++) {
-		points[i] = new CoreThreejsPoint(dummyMesh, i);
+		points[i] = new ThreejsPoint(dummyMesh, i);
 	}
 	return points;
 }

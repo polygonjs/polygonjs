@@ -160,7 +160,7 @@ import {CoreString} from '../../../core/String';
 import {Poly} from '../../Poly';
 import {CoreType} from '../../../core/Type';
 import {PolyDictionary} from '../../../types/GlobalTypes';
-import {CoreThreejsPoint} from '../../../core/geometry/modules/three/CoreThreejsPoint';
+import {ThreejsPoint} from '../../../core/geometry/modules/three/ThreejsPoint';
 import {CoreGeometry} from '../../../core/geometry/Geometry';
 import {corePointClassFactory} from '../../../core/geometry/CoreObjectFactory';
 import {CoreEntity} from '../../../core/geometry/CoreEntity';
@@ -264,14 +264,14 @@ const Core = {
 // const ${VAR_ENTITIES} = param.expressionController.entities();
 function getEntitiesAttributes(entities: CoreEntity[], attribName: string) {
 	const firstEntity = entities[0];
-	if (firstEntity instanceof CoreThreejsPoint) {
+	if (firstEntity instanceof ThreejsPoint) {
 		return firstEntity.attribute(attribName);
 	} else {
 		return entities.map((e) => e.attribValue(attribName));
 	}
 }
 function getCorePointAttribValue(
-	entity: CoreThreejsPoint,
+	entity: ThreejsPoint,
 	attribName: string,
 	array: number[],
 	attributeSize: number,
@@ -294,7 +294,7 @@ function getCoreEntityAttribValue(
 	}
 }
 function getCoreEntityAttribValueFunc(entity: CoreEntity) {
-	if (entity instanceof CoreThreejsPoint) {
+	if (entity instanceof ThreejsPoint) {
 		return getCorePointAttribValue;
 	}
 	return getCoreEntityAttribValue;
@@ -302,7 +302,7 @@ function getCoreEntityAttribValueFunc(entity: CoreEntity) {
 
 const FUNCTION_ARGS_DICT = {
 	corePointClassFactory,
-	CoreThreejsPoint,
+	ThreejsPoint,
 	CoreGeometry,
 	Core,
 	CoreType,

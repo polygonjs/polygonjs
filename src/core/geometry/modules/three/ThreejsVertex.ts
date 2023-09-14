@@ -3,12 +3,15 @@ import {CoreObjectType, ObjectContent} from '../../ObjectContent';
 import {CoreVertex} from '../../entities/vertex/CoreVertex';
 import {VertexAttributesDict, UserDataWithVertexAttributes} from '../../entities/vertex/Common';
 import {BaseVertexAttribute} from '../../entities/vertex/VertexAttribute';
+import {primitiveInstanceFactory, primitiveVerticesCountFactory} from './ThreeModule';
+import type {CorePrimitive} from '../../entities/primitive/CorePrimitive';
+import type {TypedCorePoint} from '../../entities/point/CorePoint';
 
 export interface BufferGeometryWithVertexAttributes extends BufferGeometry {
 	userData: UserDataWithVertexAttributes;
 }
 
-export class CoreThreejsVertex extends CoreVertex<CoreObjectType.THREEJS> {
+export class ThreejsVertex extends CoreVertex<CoreObjectType.THREEJS> {
 	protected _geometry?: BufferGeometry;
 
 	constructor(object: Object3D, index: number) {
@@ -89,5 +92,37 @@ export class CoreThreejsVertex extends CoreVertex<CoreObjectType.THREEJS> {
 	override normal(target: Vector3): Vector3 {
 		console.warn('CoreThreejsVertex.normal not implemented');
 		return target;
+	}
+	//
+	//
+	// RELATED ENTITIES
+	//
+	//
+	override relatedPrimitives<T extends CoreObjectType>(): CorePrimitive<T>[] {
+		if (!this._object) {
+			return [];
+		}
+		const index = this._index * primitiveVerticesCountFactory(this._object);
+		const primitive = primitiveInstanceFactory(this._object, index) as CorePrimitive<T> | undefined;
+		if (!primitive) {
+			return [];
+		}
+		return [primitive];
+	}
+	override relatedPoints<T extends CoreObjectType>(): TypedCorePoint<T>[] {
+		if (!this._object) {
+			return [];
+		}
+		const geometry = (this._object as any as Mesh).geometry as BufferGeometry | undefined;
+		if (!geometry) {
+			return [];
+		}
+		const index = geometry.getIndex();
+		if (!index) {
+			return [];
+		}
+		const indexValue = index.array[this._index];
+		const point = new ThreejsVertex(this._object as any as Mesh, indexValue) as any as TypedCorePoint<T>;
+		return [point];
 	}
 }

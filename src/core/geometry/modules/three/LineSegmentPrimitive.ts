@@ -1,8 +1,8 @@
 import {LineSegments, Vector3} from 'three';
 import {CoreObjectType, ObjectContent} from '../../ObjectContent';
-import {CoreThreejsPrimitive} from './CoreThreejsPrimitive';
+import {ThreejsPrimitive} from './ThreejsPrimitive';
 
-export class LineSegmentPrimitive extends CoreThreejsPrimitive {
+export class LineSegmentPrimitive extends ThreejsPrimitive {
 	constructor(object: LineSegments, index: number) {
 		super(object, index);
 		this._geometry = object.geometry;
@@ -25,5 +25,8 @@ export class LineSegmentPrimitive extends CoreThreejsPrimitive {
 	normal(target: Vector3): Vector3 {
 		target.set(0, 0, 0);
 		return target;
+	}
+	protected override stride() {
+		return 2;
 	}
 }

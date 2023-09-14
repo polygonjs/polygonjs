@@ -12,7 +12,7 @@ import {sample, spliceSample} from '../ArrayUtils';
 import {setToArray} from '../SetUtils';
 import {NeighbourIndex, CCW_HALF_EDGE_SIDES} from '../graph/quad/QuadGraphCommon';
 import {mod} from '../math/_Module';
-import {CoreObject} from '../geometry/modules/three/CoreObject';
+import {ThreejsObject} from '../geometry/modules/three/ThreejsObject';
 import {QuadObject} from '../geometry/modules/quad/QuadObject';
 import {QuadPrimitive} from '../geometry/modules/quad/QuadPrimitive';
 
@@ -138,7 +138,7 @@ export class WFCSolver {
 		this._placeObjectOnQuad(templateTileObject, quadNode, config.rotation);
 	}
 	private _placeObjectOnQuad(object: Object3D, quadNode: QuadNode, rotation: NeighbourIndex) {
-		const tileObject = CoreObject.clone(object);
+		const tileObject = ThreejsObject.clone(object);
 		this._quadNodeCorners(quadNode, tileCorners);
 		tileCorners.height = this.height;
 		tileObject.traverse((child) => {

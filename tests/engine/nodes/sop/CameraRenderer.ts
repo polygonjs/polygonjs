@@ -1,5 +1,5 @@
 import type {QUnit} from '../../../helpers/QUnit';
-import {CoreObject} from '../../../../src/core/geometry/modules/three/CoreObject';
+import {ThreejsObject} from '../../../../src/core/geometry/modules/three/ThreejsObject';
 import {CameraAttribute} from '../../../../src/core/camera/CoreCamera';
 export function testenginenodessopCameraRenderer(qUnit: QUnit) {
 	qUnit.test('sop/cameraRenderer simple', async (assert) => {
@@ -14,7 +14,7 @@ export function testenginenodessopCameraRenderer(qUnit: QUnit) {
 		assert.equal(objects.length, 1);
 
 		assert.equal(
-			CoreObject.attribValue(objects[0], CameraAttribute.RENDERER_NODE_ID),
+			ThreejsObject.attribValue(objects[0], CameraAttribute.RENDERER_NODE_ID),
 			webGLRenderer1.graphNodeId()
 		);
 	});
@@ -32,11 +32,11 @@ export function testenginenodessopCameraRenderer(qUnit: QUnit) {
 		assert.equal(objects.length, 1);
 
 		assert.equal(
-			CoreObject.attribValue(objects[0], CameraAttribute.RENDERER_NODE_ID),
+			ThreejsObject.attribValue(objects[0], CameraAttribute.RENDERER_NODE_ID),
 			webGLRenderer1.graphNodeId()
 		);
 		assert.equal(
-			CoreObject.attribValue(objects[0].children[0], CameraAttribute.RENDERER_NODE_ID),
+			ThreejsObject.attribValue(objects[0].children[0], CameraAttribute.RENDERER_NODE_ID),
 			webGLRenderer1.graphNodeId()
 		);
 	});

@@ -1,8 +1,8 @@
 import {Vector3, Points} from 'three';
 import {CoreObjectType, ObjectContent} from '../../ObjectContent';
-import {CoreThreejsPrimitive} from './CoreThreejsPrimitive';
+import {ThreejsPrimitive} from './ThreejsPrimitive';
 
-export class PointPrimitive extends CoreThreejsPrimitive {
+export class PointPrimitive extends ThreejsPrimitive {
 	constructor(object: Points, index: number) {
 		super(object, index);
 		this._geometry = object.geometry;
@@ -25,5 +25,8 @@ export class PointPrimitive extends CoreThreejsPrimitive {
 		console.warn('PointPrimitive.normal not implemented');
 		target.set(0, 0, 0);
 		return target;
+	}
+	protected override stride() {
+		return 1;
 	}
 }

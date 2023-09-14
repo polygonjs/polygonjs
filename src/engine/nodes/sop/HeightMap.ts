@@ -10,7 +10,7 @@ import {NodeContext} from '../../poly/NodeContext';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {BaseCopNodeType} from '../cop/_Base';
 import {InputCloneMode} from '../../poly/InputCloneMode';
-import {CoreObject} from '../../../core/geometry/modules/three/CoreObject';
+import {ThreejsObject} from '../../../core/geometry/modules/three/ThreejsObject';
 import {Texture} from 'three';
 import {CoreImage} from '../../../core/Image';
 class HeightMapSopParamsConfig extends NodeParamsConfig {
@@ -61,7 +61,7 @@ export class HeightMapSopNode extends TypedSopNode<HeightMapSopParamsConfig> {
 		this.setCoreGroup(coreGroup);
 	}
 
-	private _set_position_from_data_texture(core_object: CoreObject, texture: Texture) {
+	private _set_position_from_data_texture(core_object: ThreejsObject, texture: Texture) {
 		const texture_data = this._data_from_texture(texture);
 		if (!texture_data) {
 			return;

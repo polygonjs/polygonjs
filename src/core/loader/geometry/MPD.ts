@@ -1,7 +1,7 @@
 import {Group} from 'three';
 import {LDrawLoader} from 'three/examples/jsm/loaders/LDrawLoader';
 import {BaseObject3DLoaderHandler, BaseGeoLoader} from './_BaseLoaderHandler';
-import {CoreObject} from '../../geometry/modules/three/CoreObject';
+import {ThreejsObject} from '../../geometry/modules/three/ThreejsObject';
 import {CoreType} from '../../Type';
 
 // export enum MPDAttribute {
@@ -41,12 +41,12 @@ export class MPDLoaderHandler extends BaseObject3DLoaderHandler<Group> {
 					// Maybe consider checking all objects before adding an attribute?
 
 					if (CoreType.isString(value) || CoreType.isNumber(value)) {
-						CoreObject.setAttribute(child, attribName, value);
+						ThreejsObject.setAttribute(child, attribName, value);
 					} else {
 						if (CoreType.isArray(value)) {
 							const stringElements = value.filter((item) => CoreType.isString(item));
 							const jointedStrings = stringElements.join(' ');
-							CoreObject.setAttribute(child, attribName, jointedStrings);
+							ThreejsObject.setAttribute(child, attribName, jointedStrings);
 						}
 					}
 				}

@@ -3,7 +3,7 @@ import {CoreGroup} from '../../../core/geometry/Group';
 import {TypedNodePathParamValue, NODE_PATH_DEFAULT} from '../../../core/Walker';
 import {NodeContext} from '../../../engine/poly/NodeContext';
 import {AttribFromTexture} from '../../../core/geometry/operation/AttribFromTexture';
-import {CoreObject} from '../../../core/geometry/modules/three/CoreObject';
+import {ThreejsObject} from '../../../core/geometry/modules/three/ThreejsObject';
 import {Texture} from 'three';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
@@ -47,7 +47,7 @@ export class AttribFromTextureSopOperation extends BaseSopOperation {
 		return coreGroup;
 	}
 	private _set_position_from_data_texture(
-		core_object: CoreObject,
+		core_object: ThreejsObject,
 		texture: Texture,
 		params: AttribFromTextureSopParams
 	) {

@@ -1,11 +1,11 @@
 import {Object3D, Vector4} from 'three';
 import {FaceMesh, Options, Results} from '@mediapipe/face_mesh';
-import {CoreObject} from '../../geometry/modules/three/CoreObject';
 import {CoreComputerVisionFaceAttribute} from './Common';
 import {ParamConfig} from '../../../engine/nodes/utils/params/ParamsConfig';
 import {Constructor} from '../../../types/GlobalTypes';
 import {CoreType} from '../../Type';
 import {DEFAULT_POSITION} from './Data';
+import {coreObjectClassFactory} from '../../geometry/CoreObjectFactory';
 
 interface FaceTrackingObjectAttributes {
 	selfieMode: boolean;
@@ -52,14 +52,15 @@ function locateFile(file: string) {
 	return `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}`;
 }
 function attributes(object: Object3D): FaceTrackingObjectAttributes {
-	const selfieMode = CoreObject.attribValue(object, CoreComputerVisionFaceAttribute.SELFIE_MODE);
-	const maxNumFaces = CoreObject.attribValue(object, CoreComputerVisionFaceAttribute.MAX_NUM_FACES);
-	const refineLandmarks = CoreObject.attribValue(object, CoreComputerVisionFaceAttribute.REFINE_LANDMARKS);
-	const minDetectionConfidence = CoreObject.attribValue(
+	const coreObjectClass = coreObjectClassFactory(object);
+	const selfieMode = coreObjectClass.attribValue(object, CoreComputerVisionFaceAttribute.SELFIE_MODE);
+	const maxNumFaces = coreObjectClass.attribValue(object, CoreComputerVisionFaceAttribute.MAX_NUM_FACES);
+	const refineLandmarks = coreObjectClass.attribValue(object, CoreComputerVisionFaceAttribute.REFINE_LANDMARKS);
+	const minDetectionConfidence = coreObjectClass.attribValue(
 		object,
 		CoreComputerVisionFaceAttribute.MIN_DETECTION_CONFIDENCE
 	);
-	const minTrackingConfidence = CoreObject.attribValue(
+	const minTrackingConfidence = coreObjectClass.attribValue(
 		object,
 		CoreComputerVisionFaceAttribute.MAX_TRACKING_CONFIDENCE
 	);
@@ -172,24 +173,26 @@ export class CoreComputerVisionFace {
 	}
 
 	static trackerKey(object: Object3D): string {
-		let key = CoreObject.attribValue(object, CoreComputerVisionFaceAttribute.KEY);
+		const coreObjectClass = coreObjectClassFactory(object);
+		let key = coreObjectClass.attribValue(object, CoreComputerVisionFaceAttribute.KEY);
 		if (!key || !CoreType.isString(key)) {
 			key = createKey(object);
-			CoreObject.addAttribute(object, CoreComputerVisionFaceAttribute.KEY, key);
+			coreObjectClass.addAttribute(object, CoreComputerVisionFaceAttribute.KEY, key);
 		}
 		return key;
 	}
 
 	static setAttributes(object: Object3D, options: FaceTrackingObjectAttributes) {
-		CoreObject.addAttribute(object, CoreComputerVisionFaceAttribute.SELFIE_MODE, options.selfieMode);
-		CoreObject.addAttribute(object, CoreComputerVisionFaceAttribute.MAX_NUM_FACES, options.maxNumFaces);
-		CoreObject.addAttribute(object, CoreComputerVisionFaceAttribute.REFINE_LANDMARKS, options.refineLandmarks);
-		CoreObject.addAttribute(
+		const coreObjectClass = coreObjectClassFactory(object);
+		coreObjectClass.addAttribute(object, CoreComputerVisionFaceAttribute.SELFIE_MODE, options.selfieMode);
+		coreObjectClass.addAttribute(object, CoreComputerVisionFaceAttribute.MAX_NUM_FACES, options.maxNumFaces);
+		coreObjectClass.addAttribute(object, CoreComputerVisionFaceAttribute.REFINE_LANDMARKS, options.refineLandmarks);
+		coreObjectClass.addAttribute(
 			object,
 			CoreComputerVisionFaceAttribute.MIN_DETECTION_CONFIDENCE,
 			options.minDetectionConfidence
 		);
-		CoreObject.addAttribute(
+		coreObjectClass.addAttribute(
 			object,
 			CoreComputerVisionFaceAttribute.MAX_TRACKING_CONFIDENCE,
 			options.minTrackingConfidence

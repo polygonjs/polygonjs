@@ -18,7 +18,7 @@ import {MapboxMapsController} from '../../../core/thirdParty/Mapbox/MapboxMapsCo
 import {CoreMapboxTransform} from '../../../core/thirdParty/Mapbox/Transform';
 import {TypedSopNode} from './_Base';
 import {CoreMapboxUtils} from '../../../core/thirdParty/Mapbox/Utils';
-import {CoreThreejsPoint} from '../../../core/geometry/modules/three/CoreThreejsPoint';
+import {ThreejsPoint} from '../../../core/geometry/modules/three/ThreejsPoint';
 
 const dummyMesh = new Mesh();
 // const PSCALE_ATTRIB_NAME = 'pscale'
@@ -267,7 +267,7 @@ export class MapboxPlaneSopNode extends TypedSopNode<MapboxPlaneSopParamsConfig>
 		const z_scale = [horizontal_scale, 1][0];
 		const scale: Number3 = [horizontal_scale, horizontal_scale, z_scale];
 		dummyMesh.geometry = geometry;
-		const corePointClass = CoreThreejsPoint;
+		const corePointClass = ThreejsPoint;
 		corePointClass.addNumericAttribute(dummyMesh, SCALE_ATTRIB_NAME, 3, scale);
 		corePointClass.addNumericAttribute(dummyMesh, NORMAL_ATTRIB_NAME, 3, [0, 1, 0]); // mostly important for hexagons points
 

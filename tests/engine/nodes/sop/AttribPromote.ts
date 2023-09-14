@@ -1,10 +1,11 @@
 import type {QUnit} from '../../../helpers/QUnit';
-import {AttribClass} from '../../../../src/core/geometry/Constant';
+import {ATTRIBUTE_CLASSES, AttribClass} from '../../../../src/core/geometry/Constant';
 import {AttribPromoteMode} from '../../../../src/engine/operations/sop/AttribPromote';
 import {TransformTargetType} from '../../../../src/core/Transform';
 import {BufferAttribute} from 'three';
 import {CoreObjectType} from '../../../../src/core/geometry/ObjectContent';
 import {BaseCoreObject} from '../../../../src/core/geometry/entities/object/BaseCoreObject';
+import {ENTITY_CLASS_FACTORY} from '../../../../src/core/geometry/CoreObjectFactory';
 export function testenginenodessopAttribPromote(qUnit: QUnit) {
 	qUnit.test('sop/attribPromote point to point with min', async (assert) => {
 		const geo1 = window.geo1;
@@ -236,7 +237,46 @@ export function testenginenodessopAttribPromote(qUnit: QUnit) {
 		);
 	});
 
-	qUnit.skip('attrib promote from multiple objects to vertex', (assert) => {
-		assert.equal(1, 2);
+	qUnit.test('sop/attribPromote multi', async (assert) => {
+		const geo1 = window.geo1;
+		const plane1 = geo1.createNode('plane');
+		const quadPlane1 = geo1.createNode('quadPlane');
+		const inputNodes = [plane1, quadPlane1];
+
+		const attribCreate1 = geo1.createNode('attribCreate');
+		attribCreate1.p.name.set('t');
+		attribCreate1.p.size.set(1);
+		attribCreate1.p.value1.set(1);
+
+		const attribPromote1 = geo1.createNode('attribPromote');
+		attribPromote1.setInput(0, attribCreate1);
+
+		attribPromote1.setPromoteMode(AttribPromoteMode.MAX);
+		attribPromote1.p.name.set('t');
+
+		for (const inputNode of inputNodes) {
+			for (const srcAttribClass of ATTRIBUTE_CLASSES) {
+				for (const desAttribClass of ATTRIBUTE_CLASSES) {
+					attribCreate1.setInput(0, inputNode);
+					attribCreate1.setAttribClass(srcAttribClass);
+					attribPromote1.setAttribClassFrom(srcAttribClass);
+					attribPromote1.setAttribClassTo(desAttribClass);
+
+					const container = await attribPromote1.compute();
+					const coreGroup = container.coreContent()!;
+					const object = coreGroup.allObjects()[0];
+					const factory = ENTITY_CLASS_FACTORY[desAttribClass];
+					if (factory) {
+						const entityClass = factory(object);
+						assert.ok(
+							entityClass.hasAttribute(object, 't'),
+							`has attrib  (${desAttribClass}, ${inputNode.type()})`
+						);
+					} else {
+						assert.ok(coreGroup.hasAttribute('t'), `has attrib  (${desAttribClass}, ${inputNode.type()})`);
+					}
+				}
+			}
+		}
 	});
 }

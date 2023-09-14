@@ -6,7 +6,7 @@ import {
 	PhysicsRBDHeightAttribute,
 	PhysicsRBDRadiusAttribute,
 } from './../../../../src/core/physics/PhysicsAttribute';
-import {CoreObject} from './../../../../src/core/geometry/modules/three/CoreObject';
+import {ThreejsObject} from './../../../../src/core/geometry/modules/three/ThreejsObject';
 import {PhysicsRBDColliderType} from '../../../../src/core/physics/PhysicsAttribute';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {RendererUtils} from '../../../helpers/RendererUtils';
@@ -85,7 +85,7 @@ export function testenginenodessopPhysicsRBDAttributes(qUnit: QUnit) {
 		const container = await physicsWorld1.compute();
 		const objects = container.coreContent()!.threejsObjects()[0].children;
 		const radii = objects.map(
-			(object: Object3D) => CoreObject.attribValue(object, PhysicsRBDRadiusAttribute.RADIUS) as number
+			(object: Object3D) => ThreejsObject.attribValue(object, PhysicsRBDRadiusAttribute.RADIUS) as number
 		);
 		assert.in_delta(radii[0], 0.07, 0.05);
 		assert.in_delta(radii[1], 0.075, 0.05);
@@ -131,10 +131,10 @@ export function testenginenodessopPhysicsRBDAttributes(qUnit: QUnit) {
 		const container = await physicsWorld1.compute();
 		const objects = container.coreContent()!.threejsObjects()[0].children;
 		const radii = objects.map((object: Object3D) => {
-			return CoreObject.attribValue(object, PhysicsRBDRadiusAttribute.RADIUS) as number;
+			return ThreejsObject.attribValue(object, PhysicsRBDRadiusAttribute.RADIUS) as number;
 		});
 		const heights = objects.map((object: Object3D) => {
-			return CoreObject.attribValue(object, PhysicsRBDHeightAttribute.HEIGHT) as number;
+			return ThreejsObject.attribValue(object, PhysicsRBDHeightAttribute.HEIGHT) as number;
 		});
 		assert.deepEqual(radii, [0.25, 0.25, 0.25, 0.25]);
 		assert.deepEqual(heights, [0.6, 0.6, 0.6, 0.6]);
@@ -178,10 +178,10 @@ export function testenginenodessopPhysicsRBDAttributes(qUnit: QUnit) {
 		const container = await physicsWorld1.compute();
 		const objects = container.coreContent()!.threejsObjects()[0].children;
 		const radii = objects.map((object: Object3D) => {
-			return CoreObject.attribValue(object, PhysicsRBDRadiusAttribute.RADIUS) as number;
+			return ThreejsObject.attribValue(object, PhysicsRBDRadiusAttribute.RADIUS) as number;
 		});
 		const heights = objects.map((object: Object3D) => {
-			return CoreObject.attribValue(object, PhysicsRBDHeightAttribute.HEIGHT) as number;
+			return ThreejsObject.attribValue(object, PhysicsRBDHeightAttribute.HEIGHT) as number;
 		});
 		assert.deepEqual(radii, [0.25, 0.25, 0.25, 0.25]);
 		assert.deepEqual(heights, [0.6, 0.6, 0.6, 0.6]);
@@ -264,11 +264,11 @@ export function testenginenodessopPhysicsRBDAttributes(qUnit: QUnit) {
 		const objects = container.coreContent()!.threejsObjects()[0].children;
 		const sizess = objects.map((object: Object3D) => {
 			const target = new Vector3();
-			CoreObject.attribValue(object, PhysicsRBDCuboidAttribute.SIZES, 0, target);
+			ThreejsObject.attribValue(object, PhysicsRBDCuboidAttribute.SIZES, 0, target);
 			return target;
 		});
 		const sizes = objects.map((object: Object3D) => {
-			return CoreObject.attribValue(object, PhysicsRBDCuboidAttribute.SIZE, 0) as number;
+			return ThreejsObject.attribValue(object, PhysicsRBDCuboidAttribute.SIZE, 0) as number;
 		});
 		assert.deepEqual(
 			sizess.map((size: Vector3) => size.x),
@@ -325,11 +325,11 @@ export function testenginenodessopPhysicsRBDAttributes(qUnit: QUnit) {
 		const objects = container.coreContent()!.threejsObjects()[0].children;
 		const sizess = objects.map((object: Object3D) => {
 			const target = new Vector3();
-			CoreObject.attribValue(object, PhysicsRBDCuboidAttribute.SIZES, 0, target);
+			ThreejsObject.attribValue(object, PhysicsRBDCuboidAttribute.SIZES, 0, target);
 			return target;
 		});
 		const sizes = objects.map((object: Object3D) => {
-			return CoreObject.attribValue(object, PhysicsRBDCuboidAttribute.SIZE, 0) as number;
+			return ThreejsObject.attribValue(object, PhysicsRBDCuboidAttribute.SIZE, 0) as number;
 		});
 		assert.deepEqual(
 			sizess.map((size: Vector3) => size.x),
@@ -389,11 +389,11 @@ export function testenginenodessopPhysicsRBDAttributes(qUnit: QUnit) {
 		const objects = container.coreContent()!.threejsObjects()[0].children;
 		const sizess = objects.map((object: Object3D) => {
 			const target = new Vector3();
-			CoreObject.attribValue(object, PhysicsRBDCuboidAttribute.SIZES, 0, target);
+			ThreejsObject.attribValue(object, PhysicsRBDCuboidAttribute.SIZES, 0, target);
 			return target;
 		});
 		const sizes = objects.map((object: Object3D) => {
-			return CoreObject.attribValue(object, PhysicsRBDCuboidAttribute.SIZE, 0) as number;
+			return ThreejsObject.attribValue(object, PhysicsRBDCuboidAttribute.SIZE, 0) as number;
 		});
 		const sizesx = sizess.map((size: Vector3) => size.x);
 		assert.in_delta(sizesx[0], 0.9, 0.001);
@@ -450,10 +450,10 @@ export function testenginenodessopPhysicsRBDAttributes(qUnit: QUnit) {
 		const container = await physicsWorld1.compute();
 		const objects = container.coreContent()!.threejsObjects()[0].children;
 		const radii = objects.map((object: Object3D) => {
-			return CoreObject.attribValue(object, PhysicsRBDRadiusAttribute.RADIUS) as number;
+			return ThreejsObject.attribValue(object, PhysicsRBDRadiusAttribute.RADIUS) as number;
 		});
 		const heights = objects.map((object: Object3D) => {
-			return CoreObject.attribValue(object, PhysicsRBDHeightAttribute.HEIGHT) as number;
+			return ThreejsObject.attribValue(object, PhysicsRBDHeightAttribute.HEIGHT) as number;
 		});
 		assert.deepEqual(radii, [0.25, 0.25, 0.25, 0.25]);
 		assert.deepEqual(heights, [0.6, 0.6, 0.6, 0.6]);
@@ -496,7 +496,7 @@ export function testenginenodessopPhysicsRBDAttributes(qUnit: QUnit) {
 		const container = await physicsWorld1.compute();
 		const objects = container.coreContent()!.threejsObjects()[0].children;
 		const radii = objects.map(
-			(object: Object3D) => CoreObject.attribValue(object, PhysicsRBDRadiusAttribute.RADIUS) as number
+			(object: Object3D) => ThreejsObject.attribValue(object, PhysicsRBDRadiusAttribute.RADIUS) as number
 		);
 		assert.deepEqual(radii, [0.25, 0.25, 0.25, 0.25]);
 
@@ -538,7 +538,7 @@ export function testenginenodessopPhysicsRBDAttributes(qUnit: QUnit) {
 		const container = await physicsWorld1.compute();
 		const objects = container.coreContent()!.threejsObjects()[0].children;
 		const radii = objects.map(
-			(object: Object3D) => CoreObject.attribValue(object, PhysicsRBDRadiusAttribute.RADIUS) as number
+			(object: Object3D) => ThreejsObject.attribValue(object, PhysicsRBDRadiusAttribute.RADIUS) as number
 		);
 		assert.deepEqual(radii, [0.2, 0.2, 0.2, 0.2]);
 
@@ -580,7 +580,7 @@ export function testenginenodessopPhysicsRBDAttributes(qUnit: QUnit) {
 		const container = await physicsWorld1.compute();
 		const objects = container.coreContent()!.threejsObjects()[0].children;
 		const radii = objects.map(
-			(object: Object3D) => CoreObject.attribValue(object, PhysicsRBDRadiusAttribute.RADIUS) as number
+			(object: Object3D) => ThreejsObject.attribValue(object, PhysicsRBDRadiusAttribute.RADIUS) as number
 		);
 		assert.in_delta(radii[0], 0.3, 0.001);
 		assert.in_delta(radii[1], 0.4, 0.001);
@@ -626,7 +626,7 @@ export function testenginenodessopPhysicsRBDAttributes(qUnit: QUnit) {
 		const container = await physicsWorld1.compute();
 		const objects = container.coreContent()!.threejsObjects()[0].children;
 		const radii = objects.map(
-			(object: Object3D) => CoreObject.attribValue(object, PhysicsRBDRadiusAttribute.RADIUS) as number
+			(object: Object3D) => ThreejsObject.attribValue(object, PhysicsRBDRadiusAttribute.RADIUS) as number
 		);
 		assert.in_delta(radii[0], 0.3, 0.001);
 		assert.in_delta(radii[1], 0.3, 0.001);
@@ -711,7 +711,7 @@ export function testenginenodessopPhysicsRBDAttributes(qUnit: QUnit) {
 			const objects = container.coreContent()!.threejsObjects()[0].children;
 
 			const cansleeps = objects.map((object: Object3D) => {
-				return CoreObject.attribValue(object, PhysicsCommonAttribute.CAN_SLEEP, 0) as boolean;
+				return ThreejsObject.attribValue(object, PhysicsCommonAttribute.CAN_SLEEP, 0) as boolean;
 			});
 			return cansleeps;
 		}
@@ -751,7 +751,7 @@ export function testenginenodessopPhysicsRBDAttributes(qUnit: QUnit) {
 			const objects = container.coreContent()!.threejsObjects()[0].children;
 
 			const cansleeps = objects.map((object: Object3D) => {
-				return CoreObject.attribValue(object, PhysicsCommonAttribute.CAN_SLEEP, 0) as boolean;
+				return ThreejsObject.attribValue(object, PhysicsCommonAttribute.CAN_SLEEP, 0) as boolean;
 			});
 			return cansleeps;
 		}

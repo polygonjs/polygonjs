@@ -1,6 +1,6 @@
 import type {QUnit} from '../../../helpers/QUnit';
 import {AttribClass} from '../../../../src/core/geometry/Constant';
-import {CoreObject} from '../../../../src/core/geometry/modules/three/CoreObject';
+import {ThreejsObject} from '../../../../src/core/geometry/modules/three/ThreejsObject';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Js';
 import {RendererUtils} from '../../../helpers/RendererUtils';
@@ -63,27 +63,27 @@ export function testenginenodesjsAnd(qUnit: QUnit) {
 			assert.in_delta(scene.time(), 1.0, 0.25, 'time is 1 sec');
 			assert.equal(object.position.y, 0, 'object still at 0');
 
-			new CoreObject(object.children[0], 0).setAttribValue('selected', 1);
+			new ThreejsObject(object.children[0], 0).setAttribValue('selected', 1);
 			onManualTrigger1.p.trigger.pressButton();
 			await CoreSleep.sleep(500);
 			assert.equal(object.position.y, 0, 'object still at 0');
 
-			new CoreObject(object.children[1], 0).setAttribValue('selected', 1);
+			new ThreejsObject(object.children[1], 0).setAttribValue('selected', 1);
 			onManualTrigger1.p.trigger.pressButton();
 			await CoreSleep.sleep(500);
 			assert.equal(object.position.y, 0, 'object still at 0');
 
-			new CoreObject(object.children[2], 0).setAttribValue('selected', 1);
+			new ThreejsObject(object.children[2], 0).setAttribValue('selected', 1);
 			onManualTrigger1.p.trigger.pressButton();
 			await CoreSleep.sleep(500);
 			assert.equal(object.position.y, 0, 'object still at 0');
 
-			new CoreObject(object.children[3], 0).setAttribValue('selected', 1);
+			new ThreejsObject(object.children[3], 0).setAttribValue('selected', 1);
 			onManualTrigger1.p.trigger.pressButton();
 			await CoreSleep.sleep(500);
 			assert.equal(object.position.y, 1, 'object moved');
 
-			new CoreObject(object.children[0], 0).setAttribValue('selected', 0);
+			new ThreejsObject(object.children[0], 0).setAttribValue('selected', 0);
 			onManualTrigger1.p.trigger.pressButton();
 			await CoreSleep.sleep(500);
 			assert.equal(object.position.y, 0, 'object moved back');

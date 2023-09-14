@@ -15,8 +15,8 @@ import {ParamType} from '../../poly/ParamType';
 import {IFCAttribute, getIFCModelCategories, ifcCategoryIds, ifcElementIds} from '../../../core/geometry/ifc/IFCUtils';
 import type {SubsetConfig} from 'web-ifc-three/IFC/BaseDefinitions';
 import {IFCLoaderHandler} from '../../../core/loader/geometry/IFC';
-import {CoreObject} from '../../../core/geometry/modules/three/CoreObject';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
+import { coreObjectClassFactory } from '../../../core/geometry/CoreObjectFactory';
 
 class IFCFilterCategoriesSopParamsConfig extends NodeParamsConfig {
 	/** @param get categories in the file */
@@ -47,7 +47,7 @@ export class IFCFilterCategoriesSopNode extends TypedSopNode<IFCFilterCategories
 		const ifcManager = IFCLoaderHandler.ifcManager();
 		const tmpParent = new Group();
 		for (const inputObject of inputObjects) {
-			const modelId = CoreObject.attribValue(inputObject, IFCAttribute.MODEL_ID) as number;
+			const modelId = coreObjectClassFactory(inputObject).attribValue(inputObject, IFCAttribute.MODEL_ID) as number;
 			if (ifcManager != null && modelId != null) {
 				const categoryNames = this.params.spare_names.filter((paramName) => {
 					const param = this.params.get(paramName);

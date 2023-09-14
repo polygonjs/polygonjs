@@ -9,7 +9,6 @@ import {Color} from 'three';
 import {BufferAttribute} from 'three';
 import {CoreColor} from '../../../core/Color';
 import {TypedSopNode} from './_Base';
-import {CoreObject} from '../../../core/geometry/modules/three/CoreObject';
 import {CorePoint} from '../../../core/geometry/entities/point/CorePoint';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../poly/InputCloneMode';
@@ -32,7 +31,7 @@ import {PolyDictionary} from '../../../types/GlobalTypes';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 import {pointsFromObject} from '../../../core/geometry/entities/point/CorePointUtils';
-import {CoreObjectType, ObjectContent} from '../../../core/geometry/ObjectContent';
+import {CoreObjectType, ObjectContent, isObject3D} from '../../../core/geometry/ObjectContent';
 import {corePointClassFactory} from '../../../core/geometry/CoreObjectFactory';
 const DEFAULT = ColorSopOperation.DEFAULT_PARAMS;
 class ColorSopParamsConfig extends NodeParamsConfig {
@@ -73,17 +72,17 @@ export class ColorSopNode extends TypedSopNode<ColorSopParamsConfig> {
 
 	override async cook(inputCoreGroups: CoreGroup[]) {
 		const coreGroup = inputCoreGroups[0];
-		const coreObjects = coreGroup.threejsCoreObjects();
+		const objects = coreGroup.allObjects();
 
-		for (let coreObject of coreObjects) {
+		for (let object of objects) {
 			if (isBooleanTrue(this.pv.fromAttribute)) {
-				this._setFromAttribute(coreObject);
+				this._setFromAttribute(object);
 			} else {
 				const hasExpression = this.p.color.hasExpression();
 				if (hasExpression) {
-					await this._evalExpressions(coreObject);
+					await this._evalExpressions(object);
 				} else {
-					this._evalSimpleValues(coreObject);
+					this._evalSimpleValues(object);
 				}
 			}
 		}
@@ -99,13 +98,9 @@ export class ColorSopNode extends TypedSopNode<ColorSopParamsConfig> {
 		this.setCoreGroup(coreGroup);
 	}
 
-	_setFromAttribute(coreObject: CoreObject) {
-		const object = coreObject.object();
+	_setFromAttribute<T extends CoreObjectType>(object: ObjectContent<T>) {
 		const corePointClass = corePointClassFactory(object);
-		const coreGeometry = coreObject.coreGeometry();
-		if (!coreGeometry) {
-			return;
-		}
+
 		const attribName = this.pv.attribName;
 		if (attribName.trim().length == 0) {
 			return;
@@ -169,13 +164,9 @@ export class ColorSopNode extends TypedSopNode<ColorSopParamsConfig> {
 		}
 	}
 
-	_evalSimpleValues(coreObject: CoreObject) {
-		const object = coreObject.object();
+	_evalSimpleValues<T extends CoreObjectType>(object: ObjectContent<T>) {
 		const corePointClass = corePointClassFactory(object);
-		const coreGeometry = coreObject.coreGeometry();
-		if (!coreGeometry) {
-			return;
-		}
+
 		this._createInitColor(object);
 
 		let newColor: Color;
@@ -188,9 +179,12 @@ export class ColorSopNode extends TypedSopNode<ColorSopParamsConfig> {
 		corePointClass.addNumericAttribute(object, COLOR_ATTRIB_NAME, 3, newColor);
 	}
 
-	async _evalExpressions(coreObject: CoreObject) {
-		const object = coreObject.object();
+	async _evalExpressions<T extends CoreObjectType>(object: ObjectContent<T>) {
 		const points = pointsFromObject(object);
+
+		if (!isObject3D(object)) {
+			return;
+		}
 		// const coreGeometry = core_object.coreGeometry();
 		// if (coreGeometry) {
 		this._createInitColor(object);

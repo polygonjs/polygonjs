@@ -5,7 +5,7 @@ import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/conne
 import {RendererUtils} from '../../../helpers/RendererUtils';
 import {SetObjectAttributeInputName} from '../../../../src/engine/nodes/js/SetObjectAttribute';
 import {GetChildrenPropertiesJsNodeOutputName} from '../../../../src/engine/nodes/js/GetChildrenProperties';
-import {CoreObject} from '../../../../src/core/geometry/modules/three/CoreObject';
+import {ThreejsObject} from '../../../../src/core/geometry/modules/three/ThreejsObject';
 export function testenginenodesjsDeleteObject(qUnit: QUnit) {
 	qUnit.test('js/deleteObject simple', async (assert) => {
 		const scene = window.scene;
@@ -82,7 +82,7 @@ export function testenginenodesjsDeleteObject(qUnit: QUnit) {
 		const object = container.coreContent()!.threejsObjects()[0] as Mesh;
 
 		const getChildrenCount = () => {
-			return CoreObject.attribValue(object, 'childrenCount', 0);
+			return ThreejsObject.attribValue(object, 'childrenCount', 0);
 		};
 
 		// wait to make sure objects are mounted to the scene

@@ -1,4 +1,4 @@
-// import {CoreObject} from '../../../../src/core/geometry/modules/three/CoreObject';
+// import {CoreObject} from '../../../../src/core/geometry/modules/three/ThreejsObject';
 // import {CoreSleep} from '../../../../src/core/Sleep';
 // import {OnEventObjectAttributeUpdatedActorNode} from '../../../../src/engine/nodes/actor/OnEventObjectAttributeUpdated';
 // import {TwoWaySwitchActorNodeInputName} from '../../../../src/engine/nodes/actor/TwoWaySwitch';

@@ -1,7 +1,7 @@
 import type {QUnit} from '../../../helpers/QUnit';
 import {Mesh, Vector3} from 'three';
 import {AttribClass} from '../../../../src/core/geometry/Constant';
-import {CoreObject} from '../../../../src/core/geometry/modules/three/CoreObject';
+import {ThreejsObject} from '../../../../src/core/geometry/modules/three/ThreejsObject';
 import {ASSETS_ROOT} from '../../../../src/core/loader/AssetsUtils';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {TransformTargetType} from '../../../../src/core/Transform';
@@ -142,7 +142,7 @@ export function testenginenodesjsTrackHand(qUnit: QUnit) {
 			}
 
 			// check dir
-			const dir = CoreObject.attribValue(attributeObject, attribName) as Vector3;
+			const dir = ThreejsObject.attribValue(attributeObject, attribName) as Vector3;
 			if (dir.x > dir.y && dir.x > dir.z) {
 				wasPointingXPositive = true;
 			}

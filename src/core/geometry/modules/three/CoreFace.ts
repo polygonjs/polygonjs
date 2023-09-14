@@ -1,8 +1,8 @@
 import {AttribValue, Number3, NumericAttribValue} from '../../../../types/GlobalTypes';
 import {BufferAttribute, BufferGeometry, Triangle, Vector2, Vector3, Mesh} from 'three';
-import {CoreThreejsPoint} from '../../modules/three/CoreThreejsPoint';
+import {ThreejsPoint} from '../../modules/three/ThreejsPoint';
 import {ArrayUtils} from '../../../ArrayUtils';
-import {CorePointArray3} from './Common';
+import {ThreejsPointArray3} from './Common';
 
 interface FaceLike {
 	a: number;
@@ -23,11 +23,11 @@ const barycentricCoordinatesArray: Number3 = [0, 0, 0];
 export class CoreFace {
 	private _geometry?: BufferGeometry;
 	private _index: number = 0;
-	private _corePoint = new CoreThreejsPoint(dummyMesh, 0);
-	private _points: CorePointArray3 = [
-		new CoreThreejsPoint(dummyMesh, 0),
-		new CoreThreejsPoint(dummyMesh, 0),
-		new CoreThreejsPoint(dummyMesh, 0),
+	private _corePoint = new ThreejsPoint(dummyMesh, 0);
+	private _points: ThreejsPointArray3 = [
+		new ThreejsPoint(dummyMesh, 0),
+		new ThreejsPoint(dummyMesh, 0),
+		new ThreejsPoint(dummyMesh, 0),
 	];
 	constructor() {}
 	setGeometry(geometry: BufferGeometry) {
@@ -52,7 +52,7 @@ export class CoreFace {
 	// 		point.applyMatrix4(matrix);
 	// 	}
 	// }
-	points(points: CorePointArray3) {
+	points(points: ThreejsPointArray3) {
 		if (!this._geometry) {
 			console.warn('no geometry');
 			return;

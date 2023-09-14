@@ -1,7 +1,7 @@
 import {BufferAttribute, BufferGeometry, Object3D, Vector3, Mesh} from 'three';
 import {setToArray} from '../../SetUtils';
 import {Number2} from '../../../types/GlobalTypes';
-import {CoreObject} from '../modules/three/CoreObject';
+import {ThreejsObject} from '../modules/three/ThreejsObject';
 import {textureFromAttribLookupId, textureFromAttribLookupUv} from './TextureFromAttribute';
 
 export interface Face {
@@ -249,7 +249,7 @@ export function populateAdjacency3(object: Object3D, params: PopulateAdjacencyOp
 	const attributesCount = Math.ceil(maxAdjacencyCount);
 
 	// add object adjacency count
-	CoreObject.addAttribute(object, adjacencyCountName, maxAdjacencyCount);
+	ThreejsObject.addAttribute(object, adjacencyCountName, maxAdjacencyCount);
 
 	const pointsCount = position.count;
 
@@ -289,7 +289,7 @@ export function unpackAdjacency3(object: Object3D, params: PopulateAdjacencyOpti
 	const pointsCount = indices.length;
 	const adjacencies: number[][] = [];
 
-	const adjacencyCount = CoreObject.attribValue(object, adjacencyCountName, 0) as number;
+	const adjacencyCount = ThreejsObject.attribValue(object, adjacencyCountName, 0) as number;
 	for (let i = 0; i < pointsCount; i++) {
 		const index = indices[i];
 		for (let attribIndex = 0; attribIndex < adjacencyCount; attribIndex++) {

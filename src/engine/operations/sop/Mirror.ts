@@ -8,7 +8,7 @@ import {SopType} from '../../poly/registers/nodes/types/Sop';
 import {withChildrenRemoved} from '../../../core/geometry/util/HierarchyRemoved';
 import {object3DHasGeometry} from '../../../core/geometry/GeometryUtils';
 import {CoreObjectType, ObjectContent} from '../../../core/geometry/ObjectContent';
-import {CoreObject} from '../../../core/geometry/modules/three/CoreObject';
+import {ThreejsObject} from '../../../core/geometry/modules/three/ThreejsObject';
 import {meshInverse} from '../../../core/geometry/util/MeshInverse';
 
 const _axis = new Vector3();
@@ -61,7 +61,7 @@ export class MirrorSopOperation extends BaseSopOperation {
 		newObjects: ObjectContent<CoreObjectType>[]
 	) {
 		if (params.preserveInput) {
-			const clonedObject = withChildrenRemoved<Object3D>(object, () => CoreObject.clone(object));
+			const clonedObject = withChildrenRemoved<Object3D>(object, () => ThreejsObject.clone(object));
 			this._mirrorObject(clonedObject, plane);
 			if (clonedObject) {
 				if (object.parent) {

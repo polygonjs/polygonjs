@@ -8,7 +8,7 @@ import {PERSPECTIVE_CAMERA_DEFAULT, registerPerspectiveCamera} from '../../../co
 import {CameraAttribute, CORE_CAMERA_DEFAULT, PerspectiveCameraAttribute} from '../../../core/camera/CoreCamera';
 import {isBooleanTrue} from '../../../core/Type';
 import {CameraHelper} from '../../../core/helpers/CameraHelper';
-import {CoreObject} from '../../../core/geometry/modules/three/CoreObject';
+import {ThreejsObject} from '../../../core/geometry/modules/three/ThreejsObject';
 import type {BaseNodeType} from '../../nodes/_Base';
 import {CoreSceneObjectsFactory, GeneratorName} from '../../../core/CoreSceneObjectsFactory';
 interface CreatePerspectiveCameraParams {
@@ -105,11 +105,11 @@ export class PerspectiveCameraSopOperation extends BaseSopOperation {
 			far: params.far,
 		});
 		if (nodeGenerator) {
-			CoreObject.addAttribute(camera, CameraAttribute.NODE_ID, nodeGenerator.graphNodeId());
+			ThreejsObject.addAttribute(camera, CameraAttribute.NODE_ID, nodeGenerator.graphNodeId());
 		}
 		return camera;
 	}
 	static setCameraAttributes(camera: PerspectiveCamera, options: AttributeOptions) {
-		CoreObject.addAttribute(camera, PerspectiveCameraAttribute.FOV, options.fov);
+		ThreejsObject.addAttribute(camera, PerspectiveCameraAttribute.FOV, options.fov);
 	}
 }

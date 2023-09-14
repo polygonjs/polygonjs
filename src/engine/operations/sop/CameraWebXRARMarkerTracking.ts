@@ -4,7 +4,7 @@ import {InputCloneMode} from '../../poly/InputCloneMode';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 import {CameraSopNodeType} from '../../poly/NodeContext';
 import {PolyScene} from '../../scene/PolyScene';
-import {CoreObject} from '../../../core/geometry/modules/three/CoreObject';
+import {ThreejsObject} from '../../../core/geometry/modules/three/ThreejsObject';
 import {CameraAttribute} from '../../../core/camera/CoreCamera';
 import {
 	MarkerTrackingTransformMode,
@@ -76,23 +76,31 @@ export class CameraWebXRARMarkerTrackingSopOperation extends BaseSopOperation {
 		const {objects, params, active} = options;
 
 		for (let object of objects) {
-			CoreObject.addAttribute(object, CameraAttribute.WEBXR_AR_MARKER_TRACKING, active);
+			ThreejsObject.addAttribute(object, CameraAttribute.WEBXR_AR_MARKER_TRACKING, active);
 
 			// source
 			const sourceMode = MARKER_TRACKING_SOURCE_MODES[params.sourceMode];
-			CoreObject.addAttribute(object, CameraAttribute.WEBXR_AR_MARKER_TRACKING_SOURCE_MODE, sourceMode);
-			CoreObject.addAttribute(object, CameraAttribute.WEBXR_AR_MARKER_TRACKING_SOURCE_URL, params.sourceUrl);
+			ThreejsObject.addAttribute(object, CameraAttribute.WEBXR_AR_MARKER_TRACKING_SOURCE_MODE, sourceMode);
+			ThreejsObject.addAttribute(object, CameraAttribute.WEBXR_AR_MARKER_TRACKING_SOURCE_URL, params.sourceUrl);
 
 			// transform
 			const transformMode = MARKER_TRACKING_TRANSFORM_MODES[params.transformMode];
-			CoreObject.addAttribute(object, CameraAttribute.WEBXR_AR_MARKER_TRACKING_TRANSFORM_MODE, transformMode);
+			ThreejsObject.addAttribute(object, CameraAttribute.WEBXR_AR_MARKER_TRACKING_TRANSFORM_MODE, transformMode);
 
 			// smooth
-			CoreObject.addAttribute(object, CameraAttribute.WEBXR_AR_MARKER_TRACKING_SMOOTH, params.smooth);
-			CoreObject.addAttribute(object, CameraAttribute.WEBXR_AR_MARKER_TRACKING_SMOOTH_COUNT, params.smoothCount);
+			ThreejsObject.addAttribute(object, CameraAttribute.WEBXR_AR_MARKER_TRACKING_SMOOTH, params.smooth);
+			ThreejsObject.addAttribute(
+				object,
+				CameraAttribute.WEBXR_AR_MARKER_TRACKING_SMOOTH_COUNT,
+				params.smoothCount
+			);
 
-			CoreObject.addAttribute(object, CameraAttribute.WEBXR_AR_MARKER_TRACKING_BAR_CODE_TYPE, params.barCodeType);
-			CoreObject.addAttribute(
+			ThreejsObject.addAttribute(
+				object,
+				CameraAttribute.WEBXR_AR_MARKER_TRACKING_BAR_CODE_TYPE,
+				params.barCodeType
+			);
+			ThreejsObject.addAttribute(
 				object,
 				CameraAttribute.WEBXR_AR_MARKER_TRACKING_BAR_CODE_VALUE,
 				params.barCodeValue

@@ -1,10 +1,10 @@
 import {MathUtils, PerspectiveCamera} from 'three';
 import {TypeAssert} from '../../../engine/poly/Assert';
-import {CoreObject} from '../../geometry/modules/three/CoreObject';
 import {PerspectiveCameraAttribute, UpdateProjectionOptions} from '../CoreCamera';
 import {CameraFrameMode} from '../CoreCameraFrameMode';
 import {BaseCoreCameraFrameMode} from './_BaseCoreCameraFrameMode';
 import {cameraSetViewOffset} from '../CoreCameraViewOffset';
+import {coreObjectClassFactory} from '../../geometry/CoreObjectFactory';
 
 interface CoreCameraPerspectiveFrameModeOptions {
 	camera: PerspectiveCamera;
@@ -25,7 +25,10 @@ export class CoreCameraPerspectiveFrameMode {
 		const expectedAspectRatio = BaseCoreCameraFrameMode.expectedAspectRatio(cameraWithAttributes) as
 			| number
 			| undefined;
-		const fov = CoreObject.attribValue(cameraWithAttributes, PerspectiveCameraAttribute.FOV) as number | undefined;
+		const fov = coreObjectClassFactory(cameraWithAttributes).attribValue(
+			cameraWithAttributes,
+			PerspectiveCameraAttribute.FOV
+		) as number | undefined;
 		if (fov != null && expectedAspectRatio != null) {
 			this._update({
 				mode: frameMode,

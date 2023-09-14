@@ -1,10 +1,10 @@
 import {OrthographicCamera} from 'three';
-import {CoreObject} from '../../geometry/modules/three/CoreObject';
 import {OrthographicCameraAttribute, UpdateProjectionOptions} from '../CoreCamera';
 import {CameraFrameMode} from '../CoreCameraFrameMode';
 import {ORTHOGRAPHIC_CAMERA_DEFAULT} from '../CoreOrthographicCamera';
 import {BaseCoreCameraFrameMode} from './_BaseCoreCameraFrameMode';
 import {cameraSetViewOffset} from '../CoreCameraViewOffset';
+import {coreObjectClassFactory} from '../../geometry/CoreObjectFactory';
 
 interface CoreCameraOrthographicFrameModeOptions {
 	camera: OrthographicCamera;
@@ -34,9 +34,10 @@ export class CoreCameraOrthographicFrameMode {
 		const expectedAspectRatio = BaseCoreCameraFrameMode.expectedAspectRatio(cameraWithAttributes) as
 			| number
 			| undefined;
-		const size = CoreObject.attribValue(cameraWithAttributes, OrthographicCameraAttribute.SIZE) as
-			| number
-			| undefined;
+		const size = coreObjectClassFactory(cameraWithAttributes).attribValue(
+			cameraWithAttributes,
+			OrthographicCameraAttribute.SIZE
+		) as number | undefined;
 		if (size != null) {
 			this._update({
 				mode: frameMode,

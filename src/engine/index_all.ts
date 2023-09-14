@@ -19,7 +19,7 @@ import {CoreSleep} from '../core/Sleep';
 import {CoreUserAgent} from '../core/UserAgent';
 import {CoreGeometry} from '../core/geometry/Geometry';
 import {CoreGroup} from '../core/geometry/Group';
-import {CoreObject} from '../core/geometry/modules/three/CoreObject';
+import {ThreejsObject} from '../core/geometry/modules/three/ThreejsObject';
 import {CoreFeaturesController} from '../core/FeaturesController';
 import {CoreMath, clamp, fit, randFloat, radToDeg} from '../core/math/_Module';
 import {sanitizeName} from '../core/String';
@@ -79,7 +79,7 @@ export {
 	CoreUserAgent,
 	CoreGeometry,
 	CoreGroup,
-	CoreObject,
+	ThreejsObject,
 	CoreFeaturesController,
 	CoreMath,
 	clamp,

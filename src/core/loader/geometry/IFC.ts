@@ -4,7 +4,7 @@ import {IFCSPACE} from 'web-ifc';
 import type {IFCModel} from 'web-ifc-three/IFC/components/IFCModel';
 import {BaseLoaderLoadOptions, CoreBaseLoader} from '../_Base';
 import {BaseObject3DLoaderHandler} from './_BaseLoaderHandler';
-import {CoreObject} from '../../geometry/modules/three/CoreObject';
+import {ThreejsObject} from '../../geometry/modules/three/ThreejsObject';
 import {IFCAttribute} from '../../geometry/ifc/IFCUtils';
 import {Poly} from '../../../engine/Poly';
 import {sanitizeUrl} from '../../UrlHelper';
@@ -89,7 +89,7 @@ export class IFCLoaderHandler extends BaseObject3DLoaderHandler<IFCModel> {
 				return resolve([]);
 			}
 
-			CoreObject.addAttribute(ifcModel, IFCAttribute.MODEL_ID, ifcModel.modelID);
+			ThreejsObject.addAttribute(ifcModel, IFCAttribute.MODEL_ID, ifcModel.modelID);
 
 			return resolve([ifcModel]);
 		});

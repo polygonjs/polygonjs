@@ -11,9 +11,14 @@ import {Attribute, CoreAttribute} from '../../Attribute';
 import {CoreEntity} from '../../CoreEntity';
 import {CoreType} from '../../../Type';
 import {BasePrimitiveAttribute} from './PrimitiveAttribute';
-import {DOT, ComponentName, COMPONENT_INDICES, GroupString} from '../../Constant';
+import {DOT, ComponentName, COMPONENT_INDICES, GroupString, AttribClass} from '../../Constant';
 import {PrimitiveAttributesDict} from './Common';
 import {CoreObjectType, ObjectContent, ObjectBuilder} from '../../ObjectContent';
+import {BaseCoreObject} from '../object/BaseCoreObject';
+import {TypeAssert} from '../../../../engine/poly/Assert';
+import type {CoreVertex} from '../vertex/CoreVertex';
+import {coreObjectInstanceFactory} from '../../CoreObjectFactory';
+import {uniqRelatedEntities} from '../utils/Common';
 
 export abstract class CorePrimitive<T extends CoreObjectType> extends CoreEntity {
 	protected _object?: ObjectContent<T>;
@@ -322,5 +327,41 @@ export abstract class CorePrimitive<T extends CoreObjectType> extends CoreEntity
 			return;
 		}
 		value.toArray(attrib.array as number[], this._index * 4);
+	}
+	//
+	//
+	// RELATED ENTITIES
+	//
+	//
+	relatedObjects(): BaseCoreObject<CoreObjectType>[] {
+		return this._object ? [coreObjectInstanceFactory(this._object)] : [];
+	}
+	relatedVertices(): CoreVertex<CoreObjectType>[] {
+		return [];
+	}
+	relatedPoints() {
+		return uniqRelatedEntities(this.relatedVertices(), (vertex) => vertex.relatedPoints());
+	}
+	relatedEntities(attribClass: AttribClass): CoreEntity[] {
+		switch (attribClass) {
+			case AttribClass.POINT: {
+				return this.relatedPoints();
+			}
+			case AttribClass.VERTEX: {
+				return this.relatedVertices();
+			}
+			case AttribClass.PRIMITIVE: {
+				return [this];
+			}
+			case AttribClass.OBJECT: {
+				return this.relatedObjects();
+			}
+			case AttribClass.CORE_GROUP: {
+				return this.relatedObjects()
+					.map((o) => o.relatedCoreGroups())
+					.flat();
+			}
+		}
+		TypeAssert.unreachable(attribClass);
 	}
 }

@@ -1,6 +1,5 @@
 import mapboxgl from 'mapbox-gl';
 import {Camera} from 'three';
-import {CoreObject} from '../../geometry/modules/three/CoreObject';
 import {PolyScene} from '../../../engine/scene/PolyScene';
 import {MapboxCameraAttribute} from './MapboxCameraAttribute';
 import {MapboxLayersController, LayersOptions} from './LayersController';
@@ -8,6 +7,7 @@ import {ThreejsLayerRenderFunc} from './layers/MapboxThreejsLayer';
 import {MapboxViewer} from '../../../engine/viewers/Mapbox';
 // import {NodeContext} from '../../../engine/poly/NodeContext';
 import {JsType} from '../../../engine/poly/registers/nodes/types/Js';
+import {coreObjectClassFactory} from '../../geometry/CoreObjectFactory';
 interface CreateMapboxMapOptions {
 	camera: Camera;
 	container: HTMLElement;
@@ -58,20 +58,21 @@ class MapboxMapsControllerClass {
 	createMap(options: CreateMapboxMapOptions) {
 		const {camera, container, scene, renderFunc, viewer} = options;
 		this._scene = scene;
-		const style = CoreObject.attribValue(camera, MapboxCameraAttribute.STYLE) as string;
-		const longitude = CoreObject.attribValue(camera, MapboxCameraAttribute.LONGITUDE) as number;
-		const latitude = CoreObject.attribValue(camera, MapboxCameraAttribute.LATITUDE) as number;
-		const zoom = CoreObject.attribValue(camera, MapboxCameraAttribute.ZOOM) as number;
-		const minZoom = CoreObject.attribValue(camera, MapboxCameraAttribute.MIN_ZOOM) as number;
-		const maxZoom = CoreObject.attribValue(camera, MapboxCameraAttribute.MAX_ZOOM) as number;
-		const pitch = CoreObject.attribValue(camera, MapboxCameraAttribute.PITCH) as number;
-		const bearing = CoreObject.attribValue(camera, MapboxCameraAttribute.BEARING) as number;
+		const coreObjectClass = coreObjectClassFactory(camera);
+		const style = coreObjectClass.attribValue(camera, MapboxCameraAttribute.STYLE) as string;
+		const longitude = coreObjectClass.attribValue(camera, MapboxCameraAttribute.LONGITUDE) as number;
+		const latitude = coreObjectClass.attribValue(camera, MapboxCameraAttribute.LATITUDE) as number;
+		const zoom = coreObjectClass.attribValue(camera, MapboxCameraAttribute.ZOOM) as number;
+		const minZoom = coreObjectClass.attribValue(camera, MapboxCameraAttribute.MIN_ZOOM) as number;
+		const maxZoom = coreObjectClass.attribValue(camera, MapboxCameraAttribute.MAX_ZOOM) as number;
+		const pitch = coreObjectClass.attribValue(camera, MapboxCameraAttribute.PITCH) as number;
+		const bearing = coreObjectClass.attribValue(camera, MapboxCameraAttribute.BEARING) as number;
 
-		const allowDragRotate = CoreObject.attribValue(camera, MapboxCameraAttribute.ALLOW_DRAG_ROTATE) as boolean;
-		const addZoomControl = CoreObject.attribValue(camera, MapboxCameraAttribute.ADD_ZOOM_CONTROL) as boolean;
-		const tlayerBuildings = CoreObject.attribValue(camera, MapboxCameraAttribute.LAYER_BUILDINGS) as boolean;
-		const tlayer3D = CoreObject.attribValue(camera, MapboxCameraAttribute.LAYER_3D) as boolean;
-		const tlayerSky = CoreObject.attribValue(camera, MapboxCameraAttribute.LAYER_SKY) as boolean;
+		const allowDragRotate = coreObjectClass.attribValue(camera, MapboxCameraAttribute.ALLOW_DRAG_ROTATE) as boolean;
+		const addZoomControl = coreObjectClass.attribValue(camera, MapboxCameraAttribute.ADD_ZOOM_CONTROL) as boolean;
+		const tlayerBuildings = coreObjectClass.attribValue(camera, MapboxCameraAttribute.LAYER_BUILDINGS) as boolean;
+		const tlayer3D = coreObjectClass.attribValue(camera, MapboxCameraAttribute.LAYER_3D) as boolean;
+		const tlayerSky = coreObjectClass.attribValue(camera, MapboxCameraAttribute.LAYER_SKY) as boolean;
 
 		const mapOptions: mapboxgl.MapboxOptions = {
 			style,

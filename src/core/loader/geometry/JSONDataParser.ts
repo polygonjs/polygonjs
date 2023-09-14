@@ -5,7 +5,7 @@ import {CoreAttributeData} from '../../geometry/AttributeData';
 import {Attribute, CoreAttribute} from '../../geometry/Attribute';
 import {CoreType} from '../../Type';
 import {PolyDictionary, StringOrNumber} from '../../../types/GlobalTypes';
-import {CoreThreejsPoint} from '../../geometry/modules/three/CoreThreejsPoint';
+import {ThreejsPoint} from '../../geometry/modules/three/ThreejsPoint';
 
 const DEEP_ATTRIB_SEPARATOR = ':';
 const dummyMesh = new Mesh();
@@ -64,8 +64,7 @@ export class JSONDataParser {
 	createObject() {
 		const geometry = new BufferGeometry();
 		dummyMesh.geometry = geometry;
-		// const core_geo = new CoreGeometry(geometry);
-		const corePointClass = CoreThreejsPoint;
+		const corePointClass = ThreejsPoint;
 
 		if (this._json != null) {
 			const pointsCount = this._json.length;

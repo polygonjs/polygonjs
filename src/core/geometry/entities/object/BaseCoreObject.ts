@@ -1,7 +1,7 @@
 import {AttribValue, Number3, NumericAttribValue, PolyDictionary} from '../../../../types/GlobalTypes';
 import {Box3, Color, Matrix4, Sphere, Vector2, Vector3, Vector4} from 'three';
 import {Attribute, CoreAttribute} from '../../Attribute';
-import {AttribType, AttribSize, ObjectData, GroupString} from '../../Constant';
+import {AttribType, AttribSize, ObjectData, GroupString, AttribClass} from '../../Constant';
 import {CoreEntity} from '../../CoreEntity';
 import {CoreType} from '../../../Type';
 import {SetUtils} from '../../../../core/SetUtils';
@@ -29,6 +29,10 @@ import {
 } from '../../../../engine/nodes/utils/io/connections/Js';
 import {watch} from '../../../reactivity/CoreReactivity';
 import {objectData} from './BaseCoreObjectUtils';
+import {TypeAssert} from '../../../../engine/poly/Assert';
+import {uniqRelatedEntities} from '../utils/Common';
+import type {CoreGroup} from '../../Group';
+import type {CorePrimitive} from '../primitive/CorePrimitive';
 
 enum PropertyName {
 	NAME = 'name',
@@ -296,17 +300,29 @@ export abstract class BaseCoreObject<T extends CoreObjectType> extends CoreEntit
 	position(target: Vector3) {
 		(this.constructor as typeof BaseCoreObject<CoreObjectType>).position(this._object, target);
 	}
-	boundingBox(target: Box3) {
+	static boundingBox(object: ObjectContent<CoreObjectType>, target: Box3) {
 		target.makeEmpty();
 	}
+	boundingBox(target: Box3) {
+		(this.constructor as typeof BaseCoreObject<CoreObjectType>).boundingBox(this._object, target);
+	}
+	static geometryBoundingBox(object: ObjectContent<CoreObjectType>, target: Box3) {
+		this.boundingBox(object, target);
+	}
 	geometryBoundingBox(target: Box3) {
-		this.boundingBox(target);
+		(this.constructor as typeof BaseCoreObject<CoreObjectType>).geometryBoundingBox(this._object, target);
+	}
+	static boundingSphere(object: ObjectContent<CoreObjectType>, target: Sphere) {
+		target.makeEmpty();
 	}
 	boundingSphere(target: Sphere) {
+		(this.constructor as typeof BaseCoreObject<CoreObjectType>).boundingSphere(this._object, target);
+	}
+	static geometryBoundingSphere(object: ObjectContent<CoreObjectType>, target: Sphere) {
 		target.makeEmpty();
 	}
 	geometryBoundingSphere(target: Sphere) {
-		this.boundingSphere(target);
+		(this.constructor as typeof BaseCoreObject<CoreObjectType>).geometryBoundingSphere(this._object, target);
 	}
 	static attribValue<T extends CoreObjectType>(
 		object: ObjectContent<T>,
@@ -558,26 +574,37 @@ export abstract class BaseCoreObject<T extends CoreObjectType> extends CoreEntit
 
 	//
 	//
-	// VERTICES
+	// RELATED ENTITIES
 	//
 	//
-	// vertices() {
-	// 	return verticesFromObject(this._object);
-	// }
-
-	// verticesFromGroup(group: GroupString): CoreVertex<T>[] {
-	// 	return verticesFromObjectFromGroup(this._object, group);
-	// }
-
-	// //
-	// //
-	// // PRIMITIVES
-	// //
-	// //
-	// primitives(): CorePrimitive<T>[] {
-	// 	return primitivesFromObject(this._object);
-	// }
-	// primitivesFromGroup(group: GroupString): CorePrimitive<T>[] {
-	// 	return primitivesFromObjectFromGroup(this._object, group);
-	// }
+	relatedCoreGroups(): CoreGroup[] {
+		return [];
+	}
+	 relatedPrimitives(): CorePrimitive<CoreObjectType>[] {return []}
+	relatedVertices() {
+		return uniqRelatedEntities(this.relatedPrimitives(), (primitive) => primitive.relatedVertices());
+	}
+	relatedPoints() {
+		return uniqRelatedEntities(this.relatedVertices(), (vertex) => vertex.relatedPoints());
+	}
+	relatedEntities(attribClass: AttribClass): CoreEntity[] {
+		switch (attribClass) {
+			case AttribClass.POINT: {
+				return this.relatedPoints();
+			}
+			case AttribClass.VERTEX: {
+				return this.relatedVertices();
+			}
+			case AttribClass.PRIMITIVE: {
+				return this.relatedPrimitives();
+			}
+			case AttribClass.OBJECT: {
+				return [this];
+			}
+			case AttribClass.CORE_GROUP: {
+				return this.relatedCoreGroups();
+			}
+		}
+		TypeAssert.unreachable(attribClass);
+	}
 }

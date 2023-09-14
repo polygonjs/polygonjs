@@ -3,7 +3,7 @@ import {mergeGeometries} from 'three/examples/jsm/utils/BufferGeometryUtils';
 import {CoreGeometryIndexBuilder} from '../util/IndexBuilder';
 import {PolyDictionary} from '../../../types/GlobalTypes';
 import {pointsFromBufferGeometry} from '../modules/three/CoreThreejsPointUtils';
-import {CoreThreejsPoint} from '../modules/three/CoreThreejsPoint';
+import {ThreejsPoint} from '../modules/three/ThreejsPoint';
 
 const dummyMesh = new Mesh();
 export class CoreGeometryBuilderMerge {
@@ -24,7 +24,7 @@ export class CoreGeometryBuilderMerge {
 		//
 		// const core_geometries = geometries.map((geometry) => new CoreGeometry(geometry));
 		dummyMesh.geometry = geometries[0];
-		const indexed_attribute_names = CoreThreejsPoint.indexedAttributeNames(dummyMesh);
+		const indexed_attribute_names = ThreejsPoint.indexedAttributeNames(dummyMesh);
 
 		const new_values_by_attribute_name: PolyDictionary<string[]> = {};
 		for (let indexed_attribute_name of indexed_attribute_names) {
@@ -70,7 +70,7 @@ export class CoreGeometryBuilderMerge {
 		dummyMesh.geometry = mergedGeometry;
 		Object.keys(new_values_by_attribute_name).forEach((indexed_attribute_name) => {
 			const values = new_values_by_attribute_name[indexed_attribute_name];
-			CoreThreejsPoint.setIndexedAttributeValues(dummyMesh, indexed_attribute_name, values);
+			ThreejsPoint.setIndexedAttributeValues(dummyMesh, indexed_attribute_name, values);
 		});
 
 		if (mergedGeometry) {

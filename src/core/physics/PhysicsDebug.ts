@@ -1,8 +1,8 @@
 import {CoreGraphNodeId} from '../graph/CoreGraph';
 import {LineBasicMaterial, BufferGeometry, LineSegments, BufferAttribute, Object3D} from 'three';
-import {CoreObject} from '../geometry/modules/three/CoreObject';
 import {PhysicsIdAttribute} from './PhysicsAttribute';
 import {physicsWorldFromNodeId} from './PhysicsWorld';
+import {coreObjectClassFactory} from '../geometry/CoreObjectFactory';
 // interface PhysicsDebugPair {
 // 	object: LineSegments;
 // 	world: World;
@@ -39,7 +39,9 @@ export function physicsCreateDebugObject() {
 // }
 
 export function updatePhysicsDebugObject(debugObject: Object3D) {
-	const nodeId = CoreObject.attribValue(debugObject, PhysicsIdAttribute.DEBUG_WORLD) as CoreGraphNodeId | undefined;
+	const nodeId = coreObjectClassFactory(debugObject).attribValue(debugObject, PhysicsIdAttribute.DEBUG_WORLD) as
+		| CoreGraphNodeId
+		| undefined;
 	if (nodeId == null) {
 		return;
 	}

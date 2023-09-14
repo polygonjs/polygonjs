@@ -20,7 +20,7 @@ abstract class BaseCorePrimitiveClass extends CorePrimitive<CoreObjectType> {}
 type BaseCorePrimitiveClassClass = typeof BaseCorePrimitiveClass;
 // object return types
 type BaseCoreObjectInstance = BaseCoreObject<CoreObjectType>;
-class BaseCoreObjectClass extends BaseCoreObject<CoreObjectType> {}
+export abstract class BaseCoreObjectClass extends BaseCoreObject<CoreObjectType> {}
 type BaseCoreObjectClassClass = typeof BaseCoreObjectClass;
 
 // point methods

@@ -14,14 +14,14 @@ import {CoreObjectType, ObjectContent, isObject3D} from '../../ObjectContent';
 import {LineSegmentPrimitive} from './LineSegmentPrimitive';
 import {PointPrimitive} from './PointPrimitive';
 import {TrianglePrimitive} from './TrianglePrimitive';
-import {CoreThreejsPoint} from './CoreThreejsPoint';
-import {CoreThreejsVertex} from './CoreThreejsVertex';
-import {CoreObject} from './CoreObject';
+import {ThreejsPoint} from './ThreejsPoint';
+import {ThreejsVertex} from './ThreejsVertex';
+import {ThreejsObject} from './ThreejsObject';
 
 // point methods
 const pointClassFactory: CorePointClassFactoryCheckFunction = (object: ObjectContent<CoreObjectType>) => {
 	if (isObject3D(object)) {
-		return CoreThreejsPoint;
+		return ThreejsPoint;
 	}
 };
 const pointInstanceFactory: CorePointInstanceFactoryCheckFunction = (
@@ -29,13 +29,13 @@ const pointInstanceFactory: CorePointInstanceFactoryCheckFunction = (
 	index = 0
 ) => {
 	if (isObject3D(object)) {
-		return new CoreThreejsPoint(object, index);
+		return new ThreejsPoint(object, index);
 	}
 };
 // vertex methods
 const vertexClassFactory: CoreVertexClassFactoryCheckFunction = (object: ObjectContent<CoreObjectType>) => {
 	if (isObject3D(object)) {
-		return CoreThreejsVertex;
+		return ThreejsVertex;
 	}
 };
 const vertexInstanceFactory: CoreVertexInstanceFactoryCheckFunction = (
@@ -43,11 +43,11 @@ const vertexInstanceFactory: CoreVertexInstanceFactoryCheckFunction = (
 	index = 0
 ) => {
 	if (isObject3D(object)) {
-		return new CoreThreejsVertex(object, index);
+		return new ThreejsVertex(object, index);
 	}
 };
 // primitive methods
-const primitiveClassFactory: CorePrimitiveClassFactoryCheckFunction = (object: ObjectContent<CoreObjectType>) => {
+export const primitiveClassFactoryNonAbstract = (object: ObjectContent<CoreObjectType>) => {
 	if (isObject3D(object)) {
 		if ((object as Mesh).isMesh) {
 			return TrianglePrimitive;
@@ -60,7 +60,8 @@ const primitiveClassFactory: CorePrimitiveClassFactoryCheckFunction = (object: O
 		}
 	}
 };
-const primitiveInstanceFactory: CorePrimitiveInstanceFactoryCheckFunction = (
+const primitiveClassFactory: CorePrimitiveClassFactoryCheckFunction = primitiveClassFactoryNonAbstract;
+export const primitiveInstanceFactory: CorePrimitiveInstanceFactoryCheckFunction = (
 	object: ObjectContent<CoreObjectType>,
 	index = 0
 ) => {
@@ -76,10 +77,24 @@ const primitiveInstanceFactory: CorePrimitiveInstanceFactoryCheckFunction = (
 		}
 	}
 };
+export const primitiveVerticesCountFactory = (object: ObjectContent<CoreObjectType>): number => {
+	if (isObject3D(object)) {
+		if ((object as Mesh).isMesh) {
+			return 3;
+		}
+		if ((object as LineSegments).isLineSegments) {
+			return 2;
+		}
+		if ((object as Points).isPoints) {
+			return 1;
+		}
+	}
+	return 0;
+};
 // object methods
 const objectClassFactory: CoreObjectClassFactoryCheckFunction = (object: ObjectContent<CoreObjectType>) => {
 	if (isObject3D(object)) {
-		return CoreObject;
+		return ThreejsObject;
 	}
 };
 const objectInstanceFactory: CoreObjectInstanceFactoryCheckFunction = (
@@ -87,7 +102,7 @@ const objectInstanceFactory: CoreObjectInstanceFactoryCheckFunction = (
 	index = 0
 ) => {
 	if (isObject3D(object)) {
-		return new CoreObject(object, index);
+		return new ThreejsObject(object, index);
 	}
 };
 

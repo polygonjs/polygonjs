@@ -16,11 +16,8 @@ import {CoreGeometry, cloneBufferGeometry} from '../../Geometry';
 import {Object3DWithGeometry} from '../../Group';
 import {dataFromConstructor, ObjectData, ObjectType} from '../../Constant';
 import {objectData} from '../../entities/object/BaseCoreObjectUtils';
-// import {CorePoint} from '../../entities/point/CorePoint';
 import {MaterialWithCustomMaterials, applyCustomMaterials} from '../../Material';
-// import {CoreString} from '../../../String';
 import {ObjectUtils} from '../../../ObjectUtils';
-// import {ArrayUtils} from '../../../ArrayUtils';
 import {ThreeMeshBVHHelper} from '../../bvh/ThreeMeshBVHHelper';
 import {CoreGeometryBuilderMerge} from '../../builders/Merge';
 import {CoreObjectType, MergeCompactOptions, objectContentCopyProperties} from '../../ObjectContent';
@@ -30,6 +27,8 @@ import {TypeAssert} from '../../../../engine/poly/Assert';
 import {applyTransformWithSpaceToObject, ObjectTransformMode, ObjectTransformSpace} from '../../../TransformSpace';
 import {BaseSopOperation} from '../../../../engine/operations/sop/_Base';
 import {pointsCountFromObject} from '../../entities/point/CorePointUtils';
+import {CorePrimitive} from '../../entities/primitive/CorePrimitive';
+import {primitiveClassFactoryNonAbstract} from './ThreeModule';
 
 interface Object3DWithAnimations extends Object3D {
 	animations: AnimationClip[];
@@ -40,16 +39,7 @@ interface MaterialWithColor extends Material {
 const COMPUTE_PRECISE_BOUNDS = true;
 const SPHERE_EMPTY = new Sphere(new Vector3(0, 0, 0), 0);
 
-// interface SkinnedMeshWithisSkinnedMesh extends SkinnedMesh {
-// 	readonly isSkinnedMesh: boolean;
-// }
-
-// export type AttributeDictionary = PolyDictionary<AttribValue>;
-
-// export type CoreObjectContent = Object3D|CadObject
-
-// type ThreejsCoreObjectContent =  ObjectContent<BufferGeometry>
-export class CoreObject extends BaseCoreObject<CoreObjectType.THREEJS> {
+export class ThreejsObject extends BaseCoreObject<CoreObjectType.THREEJS> {
 	protected override _object: Object3D;
 	constructor(_object: Object3D, index: number) {
 		super(_object, index);
@@ -81,7 +71,7 @@ export class CoreObject extends BaseCoreObject<CoreObjectType.THREEJS> {
 		// 	return null
 		// }
 	}
-	
+
 	static override objectData(object: Object3D): ObjectData {
 		const data = objectData(object);
 		data.pointsCount = pointsCountFromObject(object);
@@ -91,11 +81,11 @@ export class CoreObject extends BaseCoreObject<CoreObjectType.THREEJS> {
 	static override position(object: Object3D, target: Vector3) {
 		target.copy(object.position);
 	}
-	override boundingBox(target: Box3) {
-		target.setFromObject(this._object, COMPUTE_PRECISE_BOUNDS);
+	static override boundingBox(object: Object3D, target: Box3) {
+		target.setFromObject(object, COMPUTE_PRECISE_BOUNDS);
 	}
-	override geometryBoundingBox(target: Box3) {
-		const geometry = this.geometry();
+	static override geometryBoundingBox(object: Object3D, target: Box3) {
+		const geometry = (object as Mesh).geometry;
 		if (geometry) {
 			if (!geometry.boundingBox) {
 				geometry.computeBoundingBox();
@@ -107,8 +97,8 @@ export class CoreObject extends BaseCoreObject<CoreObjectType.THREEJS> {
 			target.makeEmpty();
 		}
 	}
-	override boundingSphere(target: Sphere) {
-		const geometry = (this._object as Mesh).geometry;
+	static override boundingSphere(object: Object3D, target: Sphere) {
+		const geometry = (object as Mesh).geometry;
 		if (!geometry) {
 			target.copy(SPHERE_EMPTY);
 			return;
@@ -129,7 +119,7 @@ export class CoreObject extends BaseCoreObject<CoreObjectType.THREEJS> {
 		const clonedObject = srcObject.clone();
 		var sourceLookup = new Map<Object3D, Object3D>();
 		var cloneLookup = new Map<Object3D, Object3D>();
-		CoreObject.parallelTraverse(srcObject, clonedObject, function (sourceNode: Object3D, clonedNode: Object3D) {
+		ThreejsObject.parallelTraverse(srcObject, clonedObject, function (sourceNode: Object3D, clonedNode: Object3D) {
 			sourceLookup.set(clonedNode, sourceNode);
 			cloneLookup.set(sourceNode, clonedNode);
 		});
@@ -253,5 +243,24 @@ export class CoreObject extends BaseCoreObject<CoreObjectType.THREEJS> {
 		} catch (e) {
 			onError((e as Error).message || 'unknown error');
 		}
+	}
+	//
+	//
+	// RELATED ENTITIES
+	//
+	//
+	override relatedPrimitives(): CorePrimitive<CoreObjectType>[] {
+		const _primitiveClassFactory = primitiveClassFactoryNonAbstract(this._object);
+		if (!_primitiveClassFactory) {
+			return [];
+		}
+		const primitivesCount = _primitiveClassFactory?.primitivesCount(this._object);
+		const primitives: CorePrimitive<CoreObjectType>[] = [];
+		for (let i = 0; i < primitivesCount; i++) {
+			const primitive = new _primitiveClassFactory(this._object as any, i) as CorePrimitive<CoreObjectType>;
+			primitives.push(primitive);
+		}
+		console.log('primitives', primitives);
+		return primitives;
 	}
 }

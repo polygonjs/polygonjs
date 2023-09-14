@@ -2,7 +2,7 @@ import type {QUnit} from '../../../helpers/QUnit';
 import {BufferAttribute, Color, Mesh, Object3D} from 'three';
 import {SORTED_PALETTE_NAMES} from '../../../../src/core/color/chromotomeWrapper';
 import {AttribClass} from '../../../../src/core/geometry/Constant';
-import {CoreObject} from '../../../../src/core/geometry/modules/three/CoreObject';
+import {ThreejsObject} from '../../../../src/core/geometry/modules/three/ThreejsObject';
 import {PolyScene} from '../../../../src/engine/scene/PolyScene';
 export function testenginenodessopPalette(qUnit: QUnit) {
 	const delta = 0.05;
@@ -78,7 +78,7 @@ export function testenginenodessopPalette(qUnit: QUnit) {
 		async function objectColors() {
 			const container = await palette.compute();
 			const objects = container.coreContent()?.threejsObjects() || [];
-			const colors = objects.map((object: Object3D) => CoreObject.attribValue(object, 'color') as Color);
+			const colors = objects.map((object: Object3D) => ThreejsObject.attribValue(object, 'color') as Color);
 			return colors.map((c) => c.toArray()).flat();
 		}
 		let colors = await objectColors();

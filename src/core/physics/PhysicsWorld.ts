@@ -1,16 +1,14 @@
 import {PhysicsLib, CorePhysics, CorePhysicsLoaded} from './CorePhysics';
 import {World, RigidBody, Collider, ImpulseJoint, MultibodyJoint} from '@dimforge/rapier3d-compat';
-// import {CorePhysicsUserData} from './PhysicsUserData';
 import {Object3D, Vector3} from 'three';
 import {_physicsCreateRBD, physicsUpdateRBD} from './PhysicsRBD';
 import {physicsCreateJoints} from './PhysicsJoint';
 import {CoreGraphNodeId} from '../graph/CoreGraph';
 import {BaseNodeType} from '../../engine/nodes/_Base';
-import {CoreObject} from '../geometry/modules/three/CoreObject';
 import {PhysicsIdAttribute} from './PhysicsAttribute';
-// import {updatePhysicsDebugObject} from './PhysicsDebug';
 import {clearPhysicsPlayers, createOrFindPhysicsPlayer} from './player/PhysicsPlayer';
 import {PolyScene} from '../../engine/scene/PolyScene';
+import {coreObjectClassFactory} from '../geometry/CoreObjectFactory';
 
 export const PHYSICS_GRAVITY_DEFAULT = new Vector3(0, -9.81, 0);
 
@@ -31,12 +29,16 @@ export async function createOrFindPhysicsWorld(node: BaseNodeType, worldObject: 
 	return {world, PhysicsLib};
 }
 export function physicsWorldNodeIdFromObject(worldObject: Object3D) {
-	const nodeId = CoreObject.attribValue(worldObject, PhysicsIdAttribute.WORLD) as CoreGraphNodeId | undefined;
+	const nodeId = coreObjectClassFactory(worldObject).attribValue(worldObject, PhysicsIdAttribute.WORLD) as
+		| CoreGraphNodeId
+		| undefined;
 	return nodeId;
 }
 
 export function physicsWorldFromObject(worldObject: Object3D) {
-	const nodeId = CoreObject.attribValue(worldObject, PhysicsIdAttribute.WORLD) as CoreGraphNodeId | undefined;
+	const nodeId = coreObjectClassFactory(worldObject).attribValue(worldObject, PhysicsIdAttribute.WORLD) as
+		| CoreGraphNodeId
+		| undefined;
 	if (nodeId == null) {
 		return;
 	}

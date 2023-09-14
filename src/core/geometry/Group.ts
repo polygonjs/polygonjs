@@ -1,11 +1,9 @@
 import {AttribValue} from './../../types/GlobalTypes';
 import {PolyDictionary} from '../../types/GlobalTypes';
 import {Box3, BufferGeometry, LineSegments, Mesh, Points, Object3D, Vector3} from 'three';
-import {CoreObject} from './modules/three/CoreObject';
-// import {CoreGeometry} from './Geometry';
 import {CoreAttribute} from './Attribute';
 import {CoreString} from '../String';
-import {AttribSize, ObjectData, AttribType, GroupString} from './Constant';
+import {AttribSize, ObjectData, AttribType, GroupString, AttribClass} from './Constant';
 import {CoreType} from '../Type';
 import {ArrayUtils} from '../ArrayUtils';
 import {Poly} from '../../engine/Poly';
@@ -52,6 +50,11 @@ import {isQuadObject, isQuadOrThreejsObject} from './modules/quad/QuadCoreType';
 // TET
 import {isTetObject} from './modules/tet/TetCoreType';
 import {TetObject} from './modules/tet/TetObject';
+import {TypeAssert} from '../../engine/poly/Assert';
+
+// THREEJS
+import {ThreejsObject} from './modules/three/ThreejsObject';
+import {uniqRelatedEntities} from './entities/utils/Common';
 
 type AttributeDictionary = PolyDictionary<AttribValue>;
 
@@ -256,7 +259,7 @@ export class CoreGroup extends CoreEntity {
 		return this.threejsObjects().filter(object3DHasGeometry);
 	}
 	threejsCoreObjects() {
-		return this.threejsObjects().map((o, i) => new CoreObject(o, i));
+		return this.threejsObjects().map((o, i) => new ThreejsObject(o, i));
 	}
 	geometries(): BufferGeometry[] {
 		return this.threejsObjectsWithGeo().map((o) => o.geometry);
@@ -458,6 +461,44 @@ export class CoreGroup extends CoreEntity {
 	}
 	attributeNamesMatchingMask(masksString: GroupString) {
 		return CoreAttribute.attribNamesMatchingMask(masksString, this.attributeNames());
+	}
+
+	//
+	//
+	// RELATED ENTITIES
+	//
+	//
+	relatedObjects() {
+		return this.allCoreObjects();
+	}
+	relatedPrimitives() {
+		return uniqRelatedEntities(this.relatedObjects(), (object) => object.relatedPrimitives());
+	}
+	relatedVertices() {
+		return uniqRelatedEntities(this.relatedPrimitives(), (primitive) => primitive.relatedVertices());
+	}
+	relatedPoints() {
+		return uniqRelatedEntities(this.relatedVertices(), (vertex) => vertex.relatedPoints());
+	}
+	relatedEntities(attribClass: AttribClass): CoreEntity[] {
+		switch (attribClass) {
+			case AttribClass.POINT: {
+				return this.relatedPoints();
+			}
+			case AttribClass.VERTEX: {
+				return this.relatedVertices();
+			}
+			case AttribClass.PRIMITIVE: {
+				return this.relatedPrimitives();
+			}
+			case AttribClass.OBJECT: {
+				return this.relatedObjects();
+			}
+			case AttribClass.CORE_GROUP: {
+				return [this];
+			}
+		}
+		TypeAssert.unreachable(attribClass);
 	}
 
 	//

@@ -10,10 +10,14 @@ import {BufferAttribute, Vector4, Vector3, Vector2, InterleavedBufferAttribute} 
 import {Attribute, CoreAttribute} from '../../Attribute';
 import {isArray} from '../../../Type';
 import {CoreEntity} from '../../CoreEntity';
-import {DOT, ComponentName, COMPONENT_INDICES, AttribType, GroupString} from '../../Constant';
+import {DOT, ComponentName, COMPONENT_INDICES, AttribType, GroupString, AttribClass} from '../../Constant';
 import {ObjectContent, CoreObjectType, ObjectBuilder} from '../../ObjectContent';
 import {PointAttributesDict} from './Common';
 import {CoreAttributeData} from '../../AttributeData';
+import { coreObjectInstanceFactory } from '../../CoreObjectFactory';
+import type { CoreVertex } from '../vertex/CoreVertex';
+import { TypeAssert } from '../../../../engine/poly/Assert';
+import { uniqRelatedEntities } from '../utils/Common';
 
 function _warnOverloadRequired(functionName: string) {
 	console.warn(`CorePoint.${functionName} needs to be overloaded`);
@@ -512,6 +516,33 @@ export abstract class TypedCorePoint<T extends CoreObjectType> extends CoreEntit
 	//
 	static markAttribAsNeedsUpdate<T extends CoreObjectType>(object: ObjectContent<T>, attribName: string) {
 		_warnOverloadRequired('markAttribAsNeedsUpdate');
+	}
+
+	//
+	//
+	// RELATED ENTITIES
+	//
+	//
+	 relatedVertices<T extends CoreObjectType>(): CoreVertex<T>[]{return []}
+	relatedEntities(attribClass: AttribClass): CoreEntity[] {
+		switch (attribClass) {
+			case AttribClass.POINT: {
+				return [this];
+			}
+			case AttribClass.VERTEX: {
+				return this.relatedVertices();
+			}
+			case AttribClass.PRIMITIVE: {
+				return uniqRelatedEntities(this.relatedVertices(), (vertex) => vertex.relatedPrimitives());
+			}
+			case AttribClass.OBJECT: {
+				return this._object ? [coreObjectInstanceFactory(this._object)]:[];
+			}
+			case AttribClass.CORE_GROUP: {
+				return [this];
+			}
+		}
+		TypeAssert.unreachable(attribClass);
 	}
 }
 

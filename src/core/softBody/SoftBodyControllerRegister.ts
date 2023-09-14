@@ -1,12 +1,12 @@
 import {Object3D} from 'three';
 import {CoreGraphNodeId} from '../graph/CoreGraph';
-import {CoreObject} from '../geometry/modules/three/CoreObject';
 import {CoreSoftBodyAttribute, SoftBodyIdAttribute} from './SoftBodyAttribute';
 import {SoftBodyController} from './SoftBodyController';
 import type {PolyScene} from '../../engine/scene/PolyScene';
 import type {TetSoftBodySolverSopNode} from '../../engine/nodes/sop/TetSoftBodySolver';
 import {SoftBody} from './SoftBody';
 import {TetEmbed} from './Common';
+import {coreObjectClassFactory} from '../geometry/CoreObjectFactory';
 
 const controllers: WeakMap<Object3D, SoftBodyController> = new WeakMap();
 const softBodies: WeakMap<Object3D, SoftBody> = new WeakMap();
@@ -74,9 +74,10 @@ export function createOrFindSoftBody(node: TetSoftBodySolverSopNode, tetEmbed: T
 	return {softBody};
 }
 export function softBodyControllerNodeIdFromObject(softBodyObject: Object3D) {
-	const nodeId = CoreObject.attribValue(softBodyObject, SoftBodyIdAttribute.SOLVER_NODE) as
-		| CoreGraphNodeId
-		| undefined;
+	const nodeId = coreObjectClassFactory(softBodyObject).attribValue(
+		softBodyObject,
+		SoftBodyIdAttribute.SOLVER_NODE
+	) as CoreGraphNodeId | undefined;
 	return nodeId;
 }
 

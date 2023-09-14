@@ -8,7 +8,6 @@ import {CoreEntity} from '../../../core/geometry/CoreEntity';
 import {ParamType} from '../../poly/ParamType';
 import {ParamValuesTypeMap} from '../types/ParamValuesTypeMap';
 import {BaseCoreObject} from '../../../core/geometry/entities/object/BaseCoreObject';
-import {CoreObject} from '../../../core/geometry/modules/three/CoreObject';
 import {MethodDependency} from '../../expressions/MethodDependency';
 import {CoreGraphNodeId} from '../../../core/graph/CoreGraph';
 import {CoreObjectType} from '../../../core/geometry/ObjectContent';
@@ -23,7 +22,7 @@ type PointEntityCallback<T extends ParamType> = (
 	value: ParamValuesTypeMap[T] | any /*TODO: typescript: any is used here mostly to compile*/
 ) => void;
 type ObjectEntityCallback<T extends ParamType> = (
-	entity: CoreObject,
+	entity: BaseCoreObject<CoreObjectType>,
 	value: ParamValuesTypeMap[T] | any /*TODO: typescript: any is used here mostly to compile*/
 ) => void;
 type CoreGroupEntityCallback<T extends ParamType> = (

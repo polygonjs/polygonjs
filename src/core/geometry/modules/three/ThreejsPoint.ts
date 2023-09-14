@@ -17,15 +17,16 @@ import {NumericAttribValue} from '../../../../types/GlobalTypes';
 import {markedAsInstance} from '../../GeometryUtils';
 import {pointsCountFromBufferGeometry, positionAttributeNameFromBufferGeometry} from './CoreThreejsPointUtils';
 import {pointAttributeNumericValues, PointAttributeNumericValuesOptions} from '../../entities/point/CorePointUtils';
+import {ThreejsVertex} from './ThreejsVertex';
+import type {CoreVertex} from '../../entities/vertex/CoreVertex';
 
-// const IS_INSTANCE_KEY = 'isInstance';
 const INDEX_ATTRIB_VALUES = 'indexedAttribValues';
 const target: PointAttributeNumericValuesOptions = {
 	attributeAdded: false,
 	values: [],
 };
 
-export class CoreThreejsPoint extends TypedCorePoint<CoreObjectType.THREEJS> {
+export class ThreejsPoint extends TypedCorePoint<CoreObjectType.THREEJS> {
 	protected _geometry?: BufferGeometry;
 
 	constructor(object: Object3D, index: number) {
@@ -217,5 +218,34 @@ export class CoreThreejsPoint extends TypedCorePoint<CoreObjectType.THREEJS> {
 			console.warn(defaultValue);
 			throw `CoreThreejsPoint.addNumericAttrib error: no other default value allowed for now (default given: ${defaultValue})`;
 		}
+	}
+	//
+	//
+	// RELATED ENTITIES
+	//
+	//
+	override relatedVertices<T extends CoreObjectType>(): CoreVertex<T>[] {
+		if (!this._object) {
+			return [];
+		}
+		const geometry = (this._object as any as Mesh).geometry as BufferGeometry | undefined;
+		if (!geometry) {
+			return [];
+		}
+		const index = geometry.getIndex();
+		if (!index) {
+			return [];
+		}
+		const vertices: CoreVertex<T>[] = [];
+		const indexArray = index.array as number[];
+		let i = 0;
+		for (const indexValue of indexArray) {
+			if (indexValue == this._index) {
+				const vertex = new ThreejsVertex(this._object as any as Mesh, i) as CoreVertex<T>;
+				vertices.push(vertex);
+			}
+			i++;
+		}
+		return vertices;
 	}
 }

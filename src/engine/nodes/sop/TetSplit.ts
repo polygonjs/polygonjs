@@ -8,7 +8,7 @@
 // import {CoreGroup} from '../../../core/geometry/Group';
 // import {SopType} from '../../poly/registers/nodes/types/Sop';
 // import {Vector3} from 'three';
-// import {CoreObject} from '../../../core/geometry/modules/three/CoreObject';
+// import {CoreObject} from '../../../core/geometry/modules/three/ThreejsObject';
 // import {TetObject} from '../../../core/geometry/modules/tet/TetObject';
 // import {findTetContainingPosition} from '../../../core/geometry/modules/tet/utils/findTetContainingPosition';
 // import {TetNeighbourDataWithSource} from '../../../core/geometry/modules/tet/TetCommon';

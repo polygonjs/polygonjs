@@ -1,12 +1,12 @@
 import {Object3D, Vector4} from 'three';
 import {Hands, Options, Results} from '@mediapipe/hands';
-import {CoreObject} from '../../geometry/modules/three/CoreObject';
 import {CoreComputerVisionHandAttribute} from './Common';
 import {ParamConfig} from '../../../engine/nodes/utils/params/ParamsConfig';
 import {Constructor} from '../../../types/GlobalTypes';
 import {CoreType} from '../../Type';
 import {DEFAULT_POSITION} from './Data';
 import {ComputerVisionValidSource} from '../Common';
+import {coreObjectClassFactory} from '../../geometry/CoreObjectFactory';
 
 interface HandTrackingObjectAttributes {
 	selfieMode: boolean;
@@ -51,14 +51,15 @@ function locateFile(file: string) {
 	return `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`;
 }
 function attributes(object: Object3D): HandTrackingObjectAttributes {
-	const selfieMode = CoreObject.attribValue(object, CoreComputerVisionHandAttribute.SELFIE_MODE);
-	const maxNumHands = CoreObject.attribValue(object, CoreComputerVisionHandAttribute.MAX_NUM_HANDS);
-	const modelComplexity = CoreObject.attribValue(object, CoreComputerVisionHandAttribute.MODEL_COMPLEXITY);
-	const minDetectionConfidence = CoreObject.attribValue(
+	const coreObjectClass = coreObjectClassFactory(object);
+	const selfieMode = coreObjectClass.attribValue(object, CoreComputerVisionHandAttribute.SELFIE_MODE);
+	const maxNumHands = coreObjectClass.attribValue(object, CoreComputerVisionHandAttribute.MAX_NUM_HANDS);
+	const modelComplexity = coreObjectClass.attribValue(object, CoreComputerVisionHandAttribute.MODEL_COMPLEXITY);
+	const minDetectionConfidence = coreObjectClass.attribValue(
 		object,
 		CoreComputerVisionHandAttribute.MIN_DETECTION_CONFIDENCE
 	);
-	const minTrackingConfidence = CoreObject.attribValue(
+	const minTrackingConfidence = coreObjectClass.attribValue(
 		object,
 		CoreComputerVisionHandAttribute.MAX_TRACKING_CONFIDENCE
 	);
@@ -194,24 +195,26 @@ export class CoreComputerVisionHand {
 	}
 
 	static trackerKey(object: Object3D): string {
-		let key = CoreObject.attribValue(object, CoreComputerVisionHandAttribute.KEY);
+		const coreObjectClass = coreObjectClassFactory(object);
+		let key = coreObjectClass.attribValue(object, CoreComputerVisionHandAttribute.KEY);
 		if (!key || !CoreType.isString(key)) {
 			key = createKey(object);
-			CoreObject.addAttribute(object, CoreComputerVisionHandAttribute.KEY, key);
+			coreObjectClass.addAttribute(object, CoreComputerVisionHandAttribute.KEY, key);
 		}
 		return key;
 	}
 
 	static setAttributes(object: Object3D, options: HandTrackingObjectAttributes) {
-		CoreObject.addAttribute(object, CoreComputerVisionHandAttribute.SELFIE_MODE, options.selfieMode);
-		CoreObject.addAttribute(object, CoreComputerVisionHandAttribute.MAX_NUM_HANDS, options.maxNumHands);
-		CoreObject.addAttribute(object, CoreComputerVisionHandAttribute.MODEL_COMPLEXITY, options.modelComplexity);
-		CoreObject.addAttribute(
+		const coreObjectClass = coreObjectClassFactory(object);
+		coreObjectClass.addAttribute(object, CoreComputerVisionHandAttribute.SELFIE_MODE, options.selfieMode);
+		coreObjectClass.addAttribute(object, CoreComputerVisionHandAttribute.MAX_NUM_HANDS, options.maxNumHands);
+		coreObjectClass.addAttribute(object, CoreComputerVisionHandAttribute.MODEL_COMPLEXITY, options.modelComplexity);
+		coreObjectClass.addAttribute(
 			object,
 			CoreComputerVisionHandAttribute.MIN_DETECTION_CONFIDENCE,
 			options.minDetectionConfidence
 		);
-		CoreObject.addAttribute(
+		coreObjectClass.addAttribute(
 			object,
 			CoreComputerVisionHandAttribute.MAX_TRACKING_CONFIDENCE,
 			options.minTrackingConfidence

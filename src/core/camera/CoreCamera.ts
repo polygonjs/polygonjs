@@ -1,6 +1,6 @@
 import {Camera, Vector2} from 'three';
 import {ArrayUtils} from '../ArrayUtils';
-import {CoreObject} from '../geometry/modules/three/CoreObject';
+import {coreObjectClassFactory} from '../geometry/CoreObjectFactory';
 
 export const CORE_CAMERA_DEFAULT = {
 	near: 0.1,
@@ -87,7 +87,7 @@ export function serializeCamera<C extends Camera>(camera: C, attributeNames: str
 		uuid: camera.uuid,
 		attributes: ArrayUtils.compact(
 			attributeNames.map((attribName) => {
-				const value = CoreObject.attribValue(camera, attribName);
+				const value = coreObjectClassFactory(camera).attribValue(camera, attribName);
 				if (value != null) {
 					return {[attribName]: value};
 				}

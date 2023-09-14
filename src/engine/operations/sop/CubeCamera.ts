@@ -8,7 +8,7 @@ import {CameraAttribute, CORE_CAMERA_DEFAULT} from '../../../core/camera/CoreCam
 import {CUBE_CAMERA_DEFAULT, registerCubeCamera} from '../../../core/camera/CoreCubeCamera';
 import {isBooleanTrue} from '../../../core/Type';
 import {CameraHelper} from '../../../core/helpers/CameraHelper';
-import {CoreObject} from '../../../core/geometry/modules/three/CoreObject';
+import {ThreejsObject} from '../../../core/geometry/modules/three/ThreejsObject';
 import type {BaseNodeType} from '../../nodes/_Base';
 import {DefaultObject3DConstructor, ObjectType, registerObjectType} from '../../../core/geometry/Constant';
 interface CreateCubeCameraParams {
@@ -129,7 +129,7 @@ export class CubeCameraSopOperation extends BaseSopOperation {
 		});
 		const camera = new CubeCameraExtended(params.near, params.far, cubeRenderTarget);
 		if (nodeGenerator) {
-			CoreObject.addAttribute(camera, CameraAttribute.NODE_ID, nodeGenerator.graphNodeId());
+			ThreejsObject.addAttribute(camera, CameraAttribute.NODE_ID, nodeGenerator.graphNodeId());
 		}
 		return camera;
 	}

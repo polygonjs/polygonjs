@@ -1,5 +1,5 @@
 import {Color, Object3D, Vector2, Vector3, Vector4} from 'three';
-import {CoreObject} from '../../core/geometry/modules/three/CoreObject';
+import {ThreejsObject} from '../../core/geometry/modules/three/ThreejsObject';
 import {AttribValue} from '../../types/GlobalTypes';
 import {_getObjectAttributeRef_} from '../../core/reactivity/ObjectAttributeReactivity';
 import {ObjectNamedFunction4} from './_Base';
@@ -24,13 +24,13 @@ function _lerpAndGetValue(
 			return newValue;
 		}
 		case JsConnectionPointType.COLOR: {
-			CoreObject.attribValue(object3D, attribName, 0, tmpColor);
+			ThreejsObject.attribValue(object3D, attribName, 0, tmpColor);
 			tmpColor.lerp(newValue as Color, lerp);
 			return tmpColor;
 		}
 		case JsConnectionPointType.FLOAT:
 		case JsConnectionPointType.INT: {
-			let currentValue = CoreObject.attribValue(object3D, attribName, 0) as number | undefined;
+			let currentValue = ThreejsObject.attribValue(object3D, attribName, 0) as number | undefined;
 			if (currentValue == null) {
 				currentValue = 0;
 			}
@@ -41,17 +41,17 @@ function _lerpAndGetValue(
 			return newValue;
 		}
 		case JsConnectionPointType.VECTOR2: {
-			CoreObject.attribValue(object3D, attribName, 0, tmpV2);
+			ThreejsObject.attribValue(object3D, attribName, 0, tmpV2);
 			tmpV2.lerp(newValue as Vector2, lerp);
 			return tmpV2;
 		}
 		case JsConnectionPointType.VECTOR3: {
-			CoreObject.attribValue(object3D, attribName, 0, tmpV3);
+			ThreejsObject.attribValue(object3D, attribName, 0, tmpV3);
 			tmpV3.lerp(newValue as Vector3, lerp);
 			return tmpV3;
 		}
 		case JsConnectionPointType.VECTOR4: {
-			CoreObject.attribValue(object3D, attribName, 0, tmpV4);
+			ThreejsObject.attribValue(object3D, attribName, 0, tmpV4);
 			tmpV4.lerp(newValue as Vector4, lerp);
 			return tmpV4;
 		}
@@ -86,11 +86,11 @@ export class setObjectAttribute extends ObjectNamedFunction4<[string, number, At
 		type: ParamConvertibleJsType
 	): void {
 		if (lerp >= 1) {
-			CoreObject.setAttribute(object3D, attribName, newValue);
+			ThreejsObject.setAttribute(object3D, attribName, newValue);
 			// _updateRef(object3D, attribName, newValue, type);
 		} else {
 			const lerpedValue = _lerpAndGetValue(object3D, attribName, lerp, newValue, type);
-			CoreObject.setAttribute(object3D, attribName, lerpedValue);
+			ThreejsObject.setAttribute(object3D, attribName, lerpedValue);
 			// _updateRef(object3D, attribName, lerpedValue, type);
 		}
 	}

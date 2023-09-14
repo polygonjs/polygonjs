@@ -12,10 +12,10 @@ import {EventConnectionPoint, EventConnectionPointType} from '../utils/io/connec
 import {Intersection} from 'three';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {EventContext} from '../../scene/utils/events/_BaseEventsController';
-import {CoreObject} from '../../../core/geometry/modules/three/CoreObject';
 import {CoreType} from '../../../core/Type';
 import {TypeAssert} from '../../poly/Assert';
 import {resolveIntersectGeometryAttribute} from '../../../core/geometry/intersect/CoreIntersect';
+import {coreObjectClassFactory} from '../../../core/geometry/CoreObjectFactory';
 
 export enum TargetType {
 	SCENE_GRAPH = 'scene graph',
@@ -136,7 +136,7 @@ export class IntersectDataEventNode extends TypedEventNode<IntersectDataParamsCo
 	}
 
 	static resolveObjectAttribute(intersection: Intersection, attribName: string) {
-		const value = CoreObject.attribValue(intersection.object, attribName);
+		const value = coreObjectClassFactory(intersection.object).attribValue(intersection.object, attribName);
 		if (value == null) {
 			return;
 		}

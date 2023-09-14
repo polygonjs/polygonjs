@@ -6,8 +6,7 @@ import {DefaultOperationParams} from '../../../core/operations/_Base';
 import {SORTED_PALETTE_NAMES} from '../../../core/color/chromotomeWrapper';
 import {AttribClass, ATTRIBUTE_CLASSES} from '../../../core/geometry/Constant';
 import {TypeAssert} from '../../poly/Assert';
-import {CoreObject} from '../../../core/geometry/modules/three/CoreObject';
-import {corePointClassFactory} from '../../../core/geometry/CoreObjectFactory';
+import {coreObjectClassFactory, corePointClassFactory} from '../../../core/geometry/CoreObjectFactory';
 
 interface PaletteSopParams extends DefaultOperationParams {
 	class: number;
@@ -72,7 +71,7 @@ export class PaletteSopOperation extends BaseSopOperation {
 		let i = 0;
 		for (let object of objects) {
 			const color = colors[i % params.colorsCount];
-			CoreObject.addAttribute(object, 'color', color.clone());
+			coreObjectClassFactory(object).addAttribute(object, 'color', color.clone());
 			i++;
 		}
 		return coreGroup;

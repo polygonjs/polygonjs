@@ -6,6 +6,7 @@ import {Attribute, CoreAttribute} from '../../Attribute';
 import {CadLoaderSync} from './CadLoaderSync';
 import {traverseVertices} from './CadTraverse';
 import {ObjectBuilder, CoreObjectType} from '../../ObjectContent';
+import {AttribClass} from '../../Constant';
 
 export class CadCoreEdge extends CoreEntity {
 	constructor(protected _shape: TopoDS_Shape, protected _edge: TopoDS_Edge, _index: number) {
@@ -50,5 +51,13 @@ export class CadCoreEdge extends CoreEntity {
 			verticesCount++;
 		});
 		target.divideScalar(verticesCount);
+	}
+	//
+	//
+	// RELATED ENTITIES
+	//
+	//
+	relatedEntities(attribClass: AttribClass): CoreEntity[] {
+		return [];
 	}
 }

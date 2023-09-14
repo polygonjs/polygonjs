@@ -1,7 +1,7 @@
 import type {QUnit} from '../../../helpers/QUnit';
 import {Mesh, Vector3} from 'three';
 import {AttribClass} from '../../../../src/core/geometry/Constant';
-import {CoreObject} from '../../../../src/core/geometry/modules/three/CoreObject';
+import {ThreejsObject} from '../../../../src/core/geometry/modules/three/ThreejsObject';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Js';
 import {RendererUtils} from '../../../helpers/RendererUtils';
@@ -50,11 +50,11 @@ export function testenginenodesjsGetObjectAttribute(qUnit: QUnit) {
 			assert.in_delta(scene.time(), 0.5, 0.25, 'time is 0.5 sec');
 			assert.equal(object.position.y, 0, 'object still at 0');
 
-			new CoreObject(object, 0).setAttribValue('height', 1);
+			new ThreejsObject(object, 0).setAttribValue('height', 1);
 			await CoreSleep.sleep(100);
 			assert.equal(object.position.y, 1, 'object moved to 1');
 
-			new CoreObject(object, 0).setAttribValue('height', 0.5);
+			new ThreejsObject(object, 0).setAttribValue('height', 0.5);
 			await CoreSleep.sleep(100);
 			assert.equal(object.position.y, 0.5, 'object moved to 0.5');
 		});
@@ -103,11 +103,11 @@ export function testenginenodesjsGetObjectAttribute(qUnit: QUnit) {
 			assert.in_delta(scene.time(), 0.5, 0.25, 'time is 0.5 sec');
 			assert.equal(object.position.y, -1, 'object starts at -1');
 
-			new CoreObject(object, 0).setAttribValue('height', 1);
+			new ThreejsObject(object, 0).setAttribValue('height', 1);
 			await CoreSleep.sleep(100);
 			assert.equal(object.position.y, 1, 'object moved to 1');
 
-			new CoreObject(object, 0).setAttribValue('height', 0.5);
+			new ThreejsObject(object, 0).setAttribValue('height', 0.5);
 			await CoreSleep.sleep(100);
 			assert.equal(object.position.y, 0.5, 'object moved to 0.5');
 		});
@@ -158,13 +158,13 @@ export function testenginenodesjsGetObjectAttribute(qUnit: QUnit) {
 			assert.equal(object.position.y, -2, 'object y starts at -2');
 			assert.equal(object.position.z, -3, 'object z starts at -3');
 
-			new CoreObject(object, 0).setAttribValue('height', new Vector3(1, 2, 3));
+			new ThreejsObject(object, 0).setAttribValue('height', new Vector3(1, 2, 3));
 			await CoreSleep.sleep(100);
 			assert.equal(object.position.x, 1, 'object x moved to 1');
 			assert.equal(object.position.y, 2, 'object y moved to 2');
 			assert.equal(object.position.z, 3, 'object z moved to 3');
 
-			new CoreObject(object, 0).setAttribValue('height', new Vector3(7, 4, 12));
+			new ThreejsObject(object, 0).setAttribValue('height', new Vector3(7, 4, 12));
 			await CoreSleep.sleep(100);
 			assert.equal(object.position.x, 7, 'object x moved to 7');
 			assert.equal(object.position.y, 4, 'object y moved to 4');

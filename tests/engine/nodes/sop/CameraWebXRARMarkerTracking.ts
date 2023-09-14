@@ -1,5 +1,5 @@
 import type {QUnit} from '../../../helpers/QUnit';
-import {CoreObject} from '../../../../src/core/geometry/modules/three/CoreObject';
+import {ThreejsObject} from '../../../../src/core/geometry/modules/three/ThreejsObject';
 import {CameraAttribute} from '../../../../src/core/camera/CoreCamera';
 export function testenginenodessopCameraWebXRARMarkerTracking(qUnit: QUnit) {
 	qUnit.test('sop/cameraWebXRARMArkerTracking simple', async (assert) => {
@@ -11,7 +11,7 @@ export function testenginenodessopCameraWebXRARMarkerTracking(qUnit: QUnit) {
 		const objects = container.coreContent()!.allObjects()!;
 		assert.equal(objects.length, 1);
 
-		assert.equal(CoreObject.attribValue(objects[0], CameraAttribute.WEBXR_AR_MARKER_TRACKING), undefined);
+		assert.equal(ThreejsObject.attribValue(objects[0], CameraAttribute.WEBXR_AR_MARKER_TRACKING), undefined);
 		assert.equal(
 			cameraWebXRARMarkerTracking1.states.error.message(),
 			'This node requires the plugin-marker-tracking. See [https://github.com/polygonjs/plugin-marker-tracking](https://github.com/polygonjs/plugin-marker-tracking)'
@@ -28,9 +28,9 @@ export function testenginenodessopCameraWebXRARMarkerTracking(qUnit: QUnit) {
 		const objects = container.coreContent()!.allObjects()!;
 		assert.equal(objects.length, 1);
 
-		assert.equal(CoreObject.attribValue(objects[0], CameraAttribute.WEBXR_AR_MARKER_TRACKING), undefined);
+		assert.equal(ThreejsObject.attribValue(objects[0], CameraAttribute.WEBXR_AR_MARKER_TRACKING), undefined);
 		assert.equal(
-			CoreObject.attribValue(objects[0].children[0], CameraAttribute.WEBXR_AR_MARKER_TRACKING),
+			ThreejsObject.attribValue(objects[0].children[0], CameraAttribute.WEBXR_AR_MARKER_TRACKING),
 			undefined
 		);
 

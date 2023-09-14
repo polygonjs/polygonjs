@@ -4,7 +4,7 @@ import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/conne
 import {SetObjectAttributeInputName} from '../../../../src/engine/nodes/js/SetObjectAttribute';
 import {Box3ContainsPointOutputName} from '../../../../src/engine/nodes/js/Box3ContainsPoint';
 import {GetGeometryBoundingBoxOutputName} from '../../../../src/engine/nodes/js/GetGeometryBoundingBox';
-import {CoreObject} from '../../../../src/core/geometry/modules/three/CoreObject';
+import {ThreejsObject} from '../../../../src/core/geometry/modules/three/ThreejsObject';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 import {CoreSleep} from '../../../../src/core/Sleep';
 export function testenginenodesjsBox3ContainsPoint(qUnit: QUnit) {
@@ -42,7 +42,7 @@ export function testenginenodesjsBox3ContainsPoint(qUnit: QUnit) {
 		async function getAttribValue() {
 			const container = await actor1.compute();
 			const object = container.coreContent()!.threejsObjects()[0] as Mesh;
-			return CoreObject.attribValue(object, 'inBox') as boolean;
+			return ThreejsObject.attribValue(object, 'inBox') as boolean;
 		}
 
 		assert.equal(await getAttribValue(), undefined);

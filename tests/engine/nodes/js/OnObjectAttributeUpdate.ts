@@ -1,7 +1,7 @@
 import type {QUnit} from '../../../helpers/QUnit';
 import {Mesh, Vector2, Vector3, Vector4} from 'three';
 import {AttribClass, AttribType} from '../../../../src/core/geometry/Constant';
-import {CoreObject} from '../../../../src/core/geometry/modules/three/CoreObject';
+import {ThreejsObject} from '../../../../src/core/geometry/modules/three/ThreejsObject';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {OnObjectAttributeUpdateJsNode} from '../../../../src/engine/nodes/js/OnObjectAttributeUpdate';
 import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Js';
@@ -52,11 +52,11 @@ export function testenginenodesjsOnObjectAttributeUpdate(qUnit: QUnit) {
 			assert.in_delta(scene.time(), 0.5, 0.25, 'time is 0.5 sec');
 			assert.equal(object.position.y, 0, 'object still at 0');
 
-			new CoreObject(object, 0).setAttribValue('height', 1);
+			new ThreejsObject(object, 0).setAttribValue('height', 1);
 			await CoreSleep.sleep(100);
 			assert.equal(object.position.y, 1, 'object moved to 1');
 
-			new CoreObject(object, 0).setAttribValue('height', 0.5);
+			new ThreejsObject(object, 0).setAttribValue('height', 0.5);
 			await CoreSleep.sleep(100);
 			assert.equal(object.position.y, 0.5, 'object moved to 0.5');
 		});
@@ -101,18 +101,18 @@ export function testenginenodesjsOnObjectAttributeUpdate(qUnit: QUnit) {
 		await RendererUtils.withViewer({cameraNode: perspective_camera1}, async (args) => {
 			scene.play();
 			assert.equal(scene.time(), 0);
-			assert.notOk(CoreObject.attribValue(object, 'height2'));
+			assert.notOk(ThreejsObject.attribValue(object, 'height2'));
 			await CoreSleep.sleep(500);
 			assert.in_delta(scene.time(), 0.5, 0.25, 'time is 0.5 sec');
-			assert.notOk(CoreObject.attribValue(object, 'height2'));
+			assert.notOk(ThreejsObject.attribValue(object, 'height2'));
 
-			new CoreObject(object, 0).setAttribValue('height', 'hahah');
+			new ThreejsObject(object, 0).setAttribValue('height', 'hahah');
 			await CoreSleep.sleep(100);
-			assert.equal(CoreObject.attribValue(object, 'height2'), 'hahah', 'attrib changed');
+			assert.equal(ThreejsObject.attribValue(object, 'height2'), 'hahah', 'attrib changed');
 
-			new CoreObject(object, 0).setAttribValue('height', 'hu');
+			new ThreejsObject(object, 0).setAttribValue('height', 'hu');
 			await CoreSleep.sleep(100);
-			assert.equal(CoreObject.attribValue(object, 'height2'), 'hu', 'attrib changed');
+			assert.equal(ThreejsObject.attribValue(object, 'height2'), 'hu', 'attrib changed');
 		});
 	});
 
@@ -161,13 +161,13 @@ export function testenginenodesjsOnObjectAttributeUpdate(qUnit: QUnit) {
 			assert.in_delta(scene.time(), 0.5, 0.25, 'time is 0.5 sec');
 			assert.equal(object.position.y, 0, 'object still at 0');
 
-			new CoreObject(object, 0).setAttribValue('statePos', new Vector2(3, 8));
+			new ThreejsObject(object, 0).setAttribValue('statePos', new Vector2(3, 8));
 			await CoreSleep.sleep(100);
 			assert.equal(object.position.x, 3, 'object moved to 3');
 			assert.equal(object.position.y, 8, 'object moved to 1');
 			assert.equal(object.position.z, 0, 'object moved to 0');
 
-			new CoreObject(object, 0).setAttribValue('statePos', new Vector2(5, 0.5));
+			new ThreejsObject(object, 0).setAttribValue('statePos', new Vector2(5, 0.5));
 			await CoreSleep.sleep(100);
 			assert.equal(object.position.x, 5, 'object moved to 0.5');
 			assert.equal(object.position.y, 0.5, 'object moved to 0.5');
@@ -214,13 +214,13 @@ export function testenginenodesjsOnObjectAttributeUpdate(qUnit: QUnit) {
 			assert.in_delta(scene.time(), 0.5, 0.25, 'time is 0.5 sec');
 			assert.equal(object.position.y, 0, 'object still at 0');
 
-			new CoreObject(object, 0).setAttribValue('statePos', new Vector3(3, 1, 2));
+			new ThreejsObject(object, 0).setAttribValue('statePos', new Vector3(3, 1, 2));
 			await CoreSleep.sleep(100);
 			assert.equal(object.position.x, 3, 'object moved to 1');
 			assert.equal(object.position.y, 1, 'object moved to 1');
 			assert.equal(object.position.z, 2, 'object moved to 1');
 
-			new CoreObject(object, 0).setAttribValue('statePos', new Vector3(5, 0.5, 2.5));
+			new ThreejsObject(object, 0).setAttribValue('statePos', new Vector3(5, 0.5, 2.5));
 			await CoreSleep.sleep(100);
 			assert.equal(object.position.x, 5, 'object moved to 0.5');
 			assert.equal(object.position.y, 0.5, 'object moved to 0.5');
@@ -274,13 +274,13 @@ export function testenginenodesjsOnObjectAttributeUpdate(qUnit: QUnit) {
 			assert.in_delta(scene.time(), 0.5, 0.25, 'time is 0.5 sec');
 			assert.equal(object.position.y, 0, 'object still at 0');
 
-			new CoreObject(object, 0).setAttribValue('statePos', new Vector4(3, 1, 7, 12));
+			new ThreejsObject(object, 0).setAttribValue('statePos', new Vector4(3, 1, 7, 12));
 			await CoreSleep.sleep(100);
 			assert.equal(object.position.x, 3, 'object moved to 1');
 			assert.equal(object.position.y, 1, 'object moved to 1');
 			assert.equal(object.position.z, 7, 'object moved to 1');
 
-			new CoreObject(object, 0).setAttribValue('statePos', new Vector4(5, 0.5, 8, 41));
+			new ThreejsObject(object, 0).setAttribValue('statePos', new Vector4(5, 0.5, 8, 41));
 			await CoreSleep.sleep(100);
 			assert.equal(object.position.x, 5, 'object moved to 0.5');
 			assert.equal(object.position.y, 0.5, 'object moved to 0.5');
@@ -333,7 +333,7 @@ export function testenginenodesjsOnObjectAttributeUpdate(qUnit: QUnit) {
 				assert.in_delta(scene.time(), 0.5, 0.25, 'time is 0.5 sec');
 				assert.equal(child.position.y, 0, 'object still at 0');
 
-				new CoreObject(object, 0).setAttribValue('height', 1);
+				new ThreejsObject(object, 0).setAttribValue('height', 1);
 				await CoreSleep.sleep(100);
 				assert.equal(child.position.y, 1, 'object moved to 1');
 			});

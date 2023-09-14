@@ -7,7 +7,7 @@ import {CoreType} from '../../Type';
 import {PolyDictionary} from '../../../types/GlobalTypes';
 import {BaseNodeType} from '../../../engine/nodes/_Base';
 import {CoreBaseLoader} from '../_Base';
-import {CoreThreejsPoint} from '../../geometry/modules/three/CoreThreejsPoint';
+import {ThreejsPoint} from '../../geometry/modules/three/ThreejsPoint';
 
 type CsvValue = string | number | number[];
 // const POSITION = 'position';
@@ -130,7 +130,7 @@ export class CsvLoader extends CoreBaseLoader<string> {
 		const geometry = new BufferGeometry();
 		dummyMesh.geometry = geometry;
 		// const core_geometry = new CoreGeometry(geometry);
-		const corePointClass = CoreThreejsPoint;
+		const corePointClass = ThreejsPoint;
 		for (let attribute_name of this.attribute_names) {
 			const attribute_values = this.attribute_values_by_name[attribute_name].flat();
 			const size = this.attribute_data_by_name[attribute_name].size();

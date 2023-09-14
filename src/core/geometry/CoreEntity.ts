@@ -1,6 +1,7 @@
 import {AttribValue, NumericAttribValue} from '../../types/GlobalTypes';
 import {Vector2, Vector3, Vector4} from 'three';
 import {CoreObjectType, ObjectBuilder} from './ObjectContent';
+import {AttribClass} from './Constant';
 export abstract class CoreEntity {
 	protected _index: number = 0;
 	constructor(content?: any, index?: number) {
@@ -23,4 +24,5 @@ export abstract class CoreEntity {
 	abstract attribValue(attribName: string, target?: Vector2 | Vector3 | Vector4): AttribValue | undefined;
 	abstract stringAttribValue(attribName: string): string | null;
 	abstract position(target: Vector3): void;
+	abstract relatedEntities(attribClass: AttribClass): CoreEntity[];
 }

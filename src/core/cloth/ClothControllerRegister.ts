@@ -1,10 +1,10 @@
 import {Mesh, Object3D} from 'three';
 import {CoreGraphNodeId} from '../graph/CoreGraph';
-import {CoreObject} from '../geometry/modules/three/CoreObject';
 import {ClothIdAttribute} from './ClothAttribute';
 import {ClothController} from './ClothController';
 import type {PolyScene} from '../../engine/scene/PolyScene';
 import type {ClothSolverSopNode} from '../../engine/nodes/sop/ClothSolver';
+import {coreObjectClassFactory} from '../geometry/CoreObjectFactory';
 
 const clothControllerByGraphNodeId: Map<string, ClothController> = new Map();
 export function createOrFindClothController(scene: PolyScene, node: ClothSolverSopNode, clothObject: Object3D) {
@@ -20,7 +20,9 @@ export function createOrFindClothController(scene: PolyScene, node: ClothSolverS
 	return {controller};
 }
 export function clothControllerNodeIdFromObject(clothObject: Object3D) {
-	const nodeId = CoreObject.attribValue(clothObject, ClothIdAttribute.OBJECT) as CoreGraphNodeId | undefined;
+	const nodeId = coreObjectClassFactory(clothObject).attribValue(clothObject, ClothIdAttribute.OBJECT) as
+		| CoreGraphNodeId
+		| undefined;
 	return nodeId;
 }
 

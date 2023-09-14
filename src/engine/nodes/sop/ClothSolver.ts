@@ -13,7 +13,6 @@ import {PolyScene} from '../../scene/PolyScene';
 import {CoreType} from '../../../core/Type';
 import {BaseNodeType} from '../_Base';
 import {Poly} from '../../Poly';
-import {CoreObject} from '../../../core/geometry/modules/three/CoreObject';
 import {ClothIdAttribute} from '../../../core/cloth/ClothAttribute';
 import {
 	createOrFindClothController,
@@ -32,6 +31,7 @@ import {ShaderName} from '../utils/shaders/ShaderName';
 import {GlobalsTextureHandler, GlobalsTextureHandlerPurpose} from '../gl/code/globals/Texture';
 import {GlNodeFinder} from '../gl/code/utils/NodeFinder';
 import {ClothController} from '../../../core/cloth/ClothController';
+import { coreObjectClassFactory } from '../../../core/geometry/CoreObjectFactory';
 class ClothSolverSopParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new ClothSolverSopParamsConfig();
 
@@ -104,21 +104,21 @@ export class ClothSolverSopNode extends TypedSopNode<ClothSolverSopParamsConfig>
 
 		const coreGroup = inputCoreGroups[0];
 
-		const objects = coreGroup.threejsObjects();
+		const objects = coreGroup.allObjects();
 		const object = objects[0];
 		const existingActorIds = this.scene().actorsManager.objectActorNodeIds(object);
 		if (existingActorIds == null || existingActorIds.length == 0) {
 			this.states.error.set(`the input objects requires an actor node assigned to it`);
 		}
 
-		CoreObject.addAttribute(object, ClothIdAttribute.OBJECT, this.graphNodeId());
+		coreObjectClassFactory(object).addAttribute(object, ClothIdAttribute.OBJECT, this.graphNodeId());
 		Poly.onObjectsAddRemoveHooks.assignOnAddHookHandler(object, this);
 
 		this.setObject(object);
 	}
 	public override updateObjectOnAdd(object: Object3D) {
 		//
-		const clothSolverNodeId = CoreObject.attribValue(object, ClothIdAttribute.OBJECT);
+		const clothSolverNodeId = coreObjectClassFactory(object).attribValue(object, ClothIdAttribute.OBJECT);
 		if (clothSolverNodeId != null) {
 			if (clothSolverNodeId != this.graphNodeId()) {
 				return;

@@ -8,7 +8,7 @@ import {DefaultOperationParams} from '../../../core/operations/_Base';
 import {stringToAttribNames} from '../../../core/String';
 import {ATTRIBUTE_CLASSES, AttribClass} from '../../../core/geometry/Constant';
 import {TypeAssert} from '../../../engine/poly/Assert';
-import {CoreObject} from '../../../core/geometry/modules/three/CoreObject';
+import {coreObjectClassFactory} from '../../../core/geometry/CoreObjectFactory';
 interface AttribCopySopParams extends DefaultOperationParams {
 	class: number;
 	name: string;
@@ -147,9 +147,9 @@ export class AttribCopySopOperation extends BaseSopOperation {
 			for (let i = 0; i < destObjects.length; i++) {
 				const destObject = destObjects[i];
 				const srcObject = srcObjects[i];
-				const srcAttribValue = CoreObject.attribValue(srcObject, attribName.src);
+				const srcAttribValue = coreObjectClassFactory(srcObject).attribValue(srcObject, attribName.src);
 				if (srcAttribValue != null) {
-					CoreObject.setAttribute(destObject, attribName.dest, srcAttribValue);
+					coreObjectClassFactory(destObject).setAttribute(destObject, attribName.dest, srcAttribValue);
 				}
 			}
 		}

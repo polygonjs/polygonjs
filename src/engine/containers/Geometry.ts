@@ -5,7 +5,6 @@ import type {CoreGroup} from '../../core/geometry/Group';
 // import {CoreGeometry} from '../../core/geometry/Geometry';
 import {ContainableMap} from './utils/ContainableMap';
 import {AttribSize, AttribType, ObjectData} from '../../core/geometry/Constant';
-import {CoreObject} from '../../core/geometry/modules/three/CoreObject';
 import {SetUtils} from '../../core/SetUtils';
 import {NodeContext} from '../poly/NodeContext';
 import {PolyDictionary} from '../../types/GlobalTypes';
@@ -15,7 +14,7 @@ import {
 	coreObjectsAttribSizesByName,
 	coreObjectAttributeTypesByName,
 } from '../../core/geometry/entities/object/BaseCoreObjectUtils';
-import {corePointClassFactory} from '../../core/geometry/CoreObjectFactory';
+import {coreObjectClassFactory, corePointClassFactory} from '../../core/geometry/CoreObjectFactory';
 
 export class GeometryContainer extends TypedContainer<NodeContext.SOP> {
 	// set_objects(objects: Object3D[]) {}
@@ -215,10 +214,11 @@ export class GeometryContainer extends TypedContainer<NodeContext.SOP> {
 		const _sizesByTypeByName: Map<string, Map<AttribType, Set<AttribSize>>> = new Map();
 		const objects = this._content.allObjects();
 		for (let object of objects) {
-			const objectAttriNames = CoreObject.attribNames(object);
+			const coreObjectClass = coreObjectClassFactory(object);
+			const objectAttriNames = coreObjectClass.attribNames(object);
 			for (let attribName of objectAttriNames) {
-				const attribType = CoreObject.attribType(object, attribName);
-				const attribSize = CoreObject.attribSize(object, attribName);
+				const attribType = coreObjectClass.attribType(object, attribName);
+				const attribSize = coreObjectClass.attribSize(object, attribName);
 				let mapForName = _sizesByTypeByName.get(attribName);
 				if (!mapForName) {
 					mapForName = new Map();
@@ -261,9 +261,9 @@ export class GeometryContainer extends TypedContainer<NodeContext.SOP> {
 		}
 		return valuesByName;
 	}
-	objectAttributeNames() {
-		return CoreObject.objectsAttribNames(this._content.allObjects());
-	}
+	// objectAttributeNames() {
+	// 	return CoreObject.objectsAttribNames(this._content.allObjects());
+	// }
 
 	pointsCount(): number {
 		if (this._content) {

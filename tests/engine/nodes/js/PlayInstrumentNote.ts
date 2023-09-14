@@ -1,7 +1,7 @@
 import type {QUnit} from '../../../helpers/QUnit';
 import {Object3D} from 'three';
 import {AttribClass} from '../../../../src/core/geometry/Constant';
-import {CoreObject} from '../../../../src/core/geometry/modules/three/CoreObject';
+import {ThreejsObject} from '../../../../src/core/geometry/modules/three/ThreejsObject';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {AUDIO_ATTRIB_NAME_LAST_NOTE} from '../../../../src/engine/functions/_Audio';
 import {AMSynthAudioNode} from '../../../../src/engine/nodes/audio/AMSynth';
@@ -79,11 +79,11 @@ export function testenginenodesjsPlayInstrumentNote(qUnit: QUnit) {
 		const container = await actor1.compute();
 		const objects = container.coreContent()!.threejsObjects();
 		assert.deepEqual(
-			objects.map((o: Object3D) => CoreObject.attribValue(o, 'note')),
+			objects.map((o: Object3D) => ThreejsObject.attribValue(o, 'note')),
 			['C2', 'C#2', 'D2', 'D#2', 'E2', 'F2', 'F#2', 'G2', 'G#2', 'A2']
 		);
 		function lastNote(index: number) {
-			return CoreObject.attribValue(objects[index], AUDIO_ATTRIB_NAME_LAST_NOTE) as string;
+			return ThreejsObject.attribValue(objects[index], AUDIO_ATTRIB_NAME_LAST_NOTE) as string;
 		}
 
 		// wait to make sure objects are mounted to the scene
@@ -93,15 +93,15 @@ export function testenginenodesjsPlayInstrumentNote(qUnit: QUnit) {
 			scene.play();
 			assert.equal(scene.time(), 0);
 			assert.notOk(lastNote(0));
-			CoreObject.addAttribute(objects[0], 'selected', 1);
+			ThreejsObject.addAttribute(objects[0], 'selected', 1);
 			await CoreSleep.sleep(500);
 			assert.equal(lastNote(0), 'C2');
 
-			CoreObject.addAttribute(objects[1], 'selected', 1);
+			ThreejsObject.addAttribute(objects[1], 'selected', 1);
 			await CoreSleep.sleep(500);
 			assert.equal(lastNote(1), 'C#2');
 
-			CoreObject.addAttribute(objects[5], 'selected', 1);
+			ThreejsObject.addAttribute(objects[5], 'selected', 1);
 			await CoreSleep.sleep(500);
 			assert.equal(lastNote(5), 'F2');
 		});

@@ -7,13 +7,13 @@ import {Mesh, BufferAttribute, BufferGeometry, Vector3} from 'three';
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {CoreFace} from '../../../core/geometry/modules/three/CoreFace';
-import {CorePointArray3} from '../../../core/geometry/modules/three/Common';
+import {ThreejsPointArray3} from '../../../core/geometry/modules/three/Common';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {ArrayUtils} from '../../../core/ArrayUtils';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {corePointClassFactory} from '../../../core/geometry/CoreObjectFactory';
-import {CoreThreejsPoint} from '../../../core/geometry/modules/three/CoreThreejsPoint';
+import {ThreejsPoint} from '../../../core/geometry/modules/three/ThreejsPoint';
 
 const dummyMesh = new Mesh();
 enum FaceAttribName {
@@ -59,10 +59,10 @@ export class FaceSopNode extends TypedSopNode<FaceSopParamsConfig> {
 	}
 
 	private _face = new CoreFace();
-	private _points: CorePointArray3 = [
-		new CoreThreejsPoint(dummyMesh, 0),
-		new CoreThreejsPoint(dummyMesh, 0),
-		new CoreThreejsPoint(dummyMesh, 0),
+	private _points: ThreejsPointArray3 = [
+		new ThreejsPoint(dummyMesh, 0),
+		new ThreejsPoint(dummyMesh, 0),
+		new ThreejsPoint(dummyMesh, 0),
 	];
 	override cook(input_contents: CoreGroup[]) {
 		const core_group = input_contents[0];

@@ -13,6 +13,8 @@ import {AttribPromoteSopOperation, AttribPromoteMode, ATTRIB_PROMOTE_MODES} from
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 const DEFAULT = AttribPromoteSopOperation.DEFAULT_PARAMS;
 class AttribPromoteSopParamsConfig extends NodeParamsConfig {
+	/** @param the group this applies to */
+	group = ParamConfig.STRING(DEFAULT.group);
 	/** @param class the attribute is from (object or geometry) */
 	classFrom = ParamConfig.INTEGER(DEFAULT.classFrom, {
 		menu: {

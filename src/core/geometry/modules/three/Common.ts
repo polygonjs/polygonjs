@@ -1,3 +1,3 @@
-import {CoreThreejsPoint} from '../../modules/three/CoreThreejsPoint';
+import {ThreejsPoint} from '../../modules/three/ThreejsPoint';
 
-export type CorePointArray3 = [CoreThreejsPoint, CoreThreejsPoint, CoreThreejsPoint];
+export type ThreejsPointArray3 = [ThreejsPoint, ThreejsPoint, ThreejsPoint];

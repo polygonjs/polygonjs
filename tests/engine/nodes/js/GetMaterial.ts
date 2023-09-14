@@ -2,7 +2,7 @@ import type {QUnit} from '../../../helpers/QUnit';
 import {Material} from 'three';
 import {Mesh} from 'three';
 import {AttribClass} from '../../../../src/core/geometry/Constant';
-import {CoreObject} from '../../../../src/core/geometry/modules/three/CoreObject';
+import {ThreejsObject} from '../../../../src/core/geometry/modules/three/ThreejsObject';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {OnObjectAttributeUpdateJsNode} from '../../../../src/engine/nodes/js/OnObjectAttributeUpdate';
 import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Js';
@@ -61,7 +61,7 @@ export function testenginenodesjsGetMaterial(qUnit: QUnit) {
 			assert.in_delta(scene.time(), 0.5, 0.25, 'time is 0.5 sec');
 			assert.equal((object.material as Material).uuid, initialMaterial.uuid, 'mat is same as initial');
 
-			new CoreObject(object, 0).setAttribValue('selected', 1);
+			new ThreejsObject(object, 0).setAttribValue('selected', 1);
 			await CoreSleep.sleep(100);
 			assert.notEqual((object.material as Material).uuid, initialMaterial.uuid, 'mat is not same as initial one');
 			assert.equal(
@@ -70,7 +70,7 @@ export function testenginenodesjsGetMaterial(qUnit: QUnit) {
 				'mat switched to basic1'
 			);
 
-			new CoreObject(object, 0).setAttribValue('selected', 0);
+			new ThreejsObject(object, 0).setAttribValue('selected', 0);
 			await CoreSleep.sleep(100);
 			assert.equal(
 				(object.material as Material).uuid,

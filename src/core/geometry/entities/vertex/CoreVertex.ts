@@ -11,9 +11,13 @@ import {Attribute, CoreAttribute} from '../../Attribute';
 import {CoreEntity} from '../../CoreEntity';
 import {CoreType} from '../../../Type';
 import {BaseVertexAttribute} from './VertexAttribute';
-import {DOT, ComponentName, COMPONENT_INDICES, GroupString} from '../../Constant';
+import {DOT, ComponentName, COMPONENT_INDICES, GroupString, AttribClass} from '../../Constant';
 import {VertexAttributesDict} from './Common';
 import {CoreObjectType, ObjectBuilder, ObjectContent} from '../../ObjectContent';
+import type {TypedCorePoint} from '../point/CorePoint';
+import type {CorePrimitive} from '../primitive/CorePrimitive';
+import {uniqRelatedEntities} from '../utils/Common';
+import {TypeAssert} from '../../../../engine/poly/Assert';
 
 export abstract class CoreVertex<T extends CoreObjectType> extends CoreEntity {
 	protected _object?: ObjectContent<T>;
@@ -340,5 +344,42 @@ export abstract class CoreVertex<T extends CoreObjectType> extends CoreEntity {
 			return;
 		}
 		value.toArray(attrib.array as number[], this._index * 4);
+	}
+
+	//
+	//
+	// RELATED ENTITIES
+	//
+	//
+	relatedObjects() {
+		return uniqRelatedEntities(this.relatedPrimitives(), (primitive) => primitive.relatedObjects());
+	}
+	relatedPrimitives<T extends CoreObjectType>(): CorePrimitive<T>[] {
+		return [];
+	}
+	relatedPoints<T extends CoreObjectType>(): TypedCorePoint<T>[] {
+		return [];
+	}
+	relatedEntities(attribClass: AttribClass): CoreEntity[] {
+		switch (attribClass) {
+			case AttribClass.POINT: {
+				return this.relatedPoints();
+			}
+			case AttribClass.VERTEX: {
+				return [this];
+			}
+			case AttribClass.PRIMITIVE: {
+				return [this];
+			}
+			case AttribClass.OBJECT: {
+				return this.relatedObjects();
+			}
+			case AttribClass.CORE_GROUP: {
+				return this.relatedObjects()
+					.map((o) => o.relatedCoreGroups())
+					.flat();
+			}
+		}
+		TypeAssert.unreachable(attribClass);
 	}
 }

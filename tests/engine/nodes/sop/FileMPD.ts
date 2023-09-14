@@ -1,6 +1,6 @@
 import type {QUnit} from '../../../helpers/QUnit';
 import {HierarchyMode} from '../../../../src/engine/operations/sop/Hierarchy';
-import {CoreObject} from '../../../../src/core/geometry/modules/three/CoreObject';
+import {ThreejsObject} from '../../../../src/core/geometry/modules/three/ThreejsObject';
 import {ASSETS_ROOT} from '../../../../src/core/loader/AssetsUtils';
 import {FileGLTFSopNode} from '../../../../src/engine/nodes/sop/FileGLTF';
 import {FileMPDSopNode} from '../../../../src/engine/nodes/sop/FileMPD';
@@ -36,8 +36,8 @@ export function testenginenodessopFileMPD(qUnit: QUnit) {
 
 		const objects1 = container.coreContent()?.threejsObjects()!;
 		assert.equal(objects1?.length, 1);
-		assert.equal(CoreObject.attribValue(objects1[0], 'buildingStep') as number, 0, 'buildingStep 0');
-		assert.equal(CoreObject.attribValue(objects1[0].children[0], 'buildingStep') as number, 1, 'buildingStep 1');
+		assert.equal(ThreejsObject.attribValue(objects1[0], 'buildingStep') as number, 0, 'buildingStep 0');
+		assert.equal(ThreejsObject.attribValue(objects1[0].children[0], 'buildingStep') as number, 1, 'buildingStep 1');
 	});
 
 	qUnit.test('SOP file Ldraw car', async (assert) => {
@@ -48,7 +48,7 @@ export function testenginenodessopFileMPD(qUnit: QUnit) {
 
 		const objects1 = container.coreContent()?.threejsObjects()!;
 		assert.equal(objects1.length, 1, '1 object');
-		assert.equal(CoreObject.attribValue(objects1[0], 'buildingStep') as number, 0, 'buildingStep 0');
+		assert.equal(ThreejsObject.attribValue(objects1[0], 'buildingStep') as number, 0, 'buildingStep 0');
 
 		// const objects2 = container2.coreContent()?.objects()!;
 		assert.equal(objects1[0].children?.length, 61, '61 objects');

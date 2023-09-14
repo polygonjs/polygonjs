@@ -1,10 +1,4 @@
-import {
-	VAR_OBJECT,
-	VAR_ENTITIES,
-	CLASS_CORE_POINT,
-	CLASS_CORE_THREEJS_POINT,
-	FUNC_GET_ENTITIES_ATTRIBUTE,
-} from './Common';
+import {VAR_OBJECT, VAR_ENTITIES, CLASS_CORE_POINT, CLASS_THREEJS_POINT, FUNC_GET_ENTITIES_ATTRIBUTE} from './Common';
 
 export class AttributeRequirementsController {
 	private _attributeNames: Set<string> | undefined;
@@ -87,7 +81,7 @@ export class AttributeRequirementsController {
 	private static assignArrayLine(attribName: string) {
 		const varAttribute = this._varAttribute(attribName);
 		const varArray = this._varArray(attribName);
-		const isIndexedCondition = `(${VAR_ENTITIES}[0] && ${VAR_ENTITIES}[0] instanceof ${CLASS_CORE_THREEJS_POINT} && ${CLASS_CORE_POINT}.isAttribIndexed(${VAR_OBJECT}, '${attribName}'))`;
+		const isIndexedCondition = `(${VAR_ENTITIES}[0] && ${VAR_ENTITIES}[0] instanceof ${CLASS_THREEJS_POINT} && ${CLASS_CORE_POINT}.isAttribIndexed(${VAR_OBJECT}, '${attribName}'))`;
 		const indexedArray = `${VAR_ENTITIES}.map(e=>e.indexedAttribValue('${attribName}'))`;
 		const nonIndexedArray = `${varAttribute}.array`;
 		return `const ${varArray} = ${isIndexedCondition} ? ${indexedArray} : ${nonIndexedArray};`;

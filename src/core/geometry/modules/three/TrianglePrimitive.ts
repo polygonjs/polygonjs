@@ -1,6 +1,6 @@
 import {Triangle, Vector3, Mesh, BufferAttribute} from 'three';
 import {CoreObjectType, ObjectBuilder, ObjectContent} from '../../ObjectContent';
-import {CoreThreejsPrimitive} from './CoreThreejsPrimitive';
+import {ThreejsPrimitive} from './ThreejsPrimitive';
 import {threeMeshFromPrimitives} from './builders/Mesh';
 import {Attribute} from '../../Attribute';
 
@@ -8,7 +8,7 @@ const _triangle = new Triangle();
 const _p0 = new Vector3();
 const _p1 = new Vector3();
 const _p2 = new Vector3();
-export class TrianglePrimitive extends CoreThreejsPrimitive {
+export class TrianglePrimitive extends ThreejsPrimitive {
 	constructor(object: Mesh, index: number) {
 		super(object, index);
 		this._geometry = object.geometry;
@@ -56,5 +56,8 @@ export class TrianglePrimitive extends CoreThreejsPrimitive {
 	}
 	override builder<T extends CoreObjectType>() {
 		return threeMeshFromPrimitives as any as ObjectBuilder<T>;
+	}
+	protected override stride() {
+		return 3;
 	}
 }

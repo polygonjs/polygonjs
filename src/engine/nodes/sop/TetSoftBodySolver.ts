@@ -13,7 +13,7 @@ import {PolyScene} from '../../scene/PolyScene';
 import {CoreType, isArray} from '../../../core/Type';
 import {BaseNodeType} from '../_Base';
 import {Poly} from '../../Poly';
-import {CoreObject} from '../../../core/geometry/modules/three/CoreObject';
+import {ThreejsObject} from '../../../core/geometry/modules/three/ThreejsObject';
 import {DEFAULT as DEFAULT_TESSELATION_PARAMS} from '../../../core/geometry/modules/tet/utils/TesselationParamsConfig';
 import {CoreSoftBodyAttribute, SoftBodyIdAttribute} from '../../../core/softBody/SoftBodyAttribute';
 import {
@@ -158,9 +158,9 @@ export class TetSoftBodySolverSopNode extends TetSopNode<TetSoftBodySolverSopPar
 						? threejsObjectsFromTetObject[0]
 						: threejsObjectsFromTetObject;
 					const displayedObject = highResObject ? highResObject : lowResObject;
-					CoreObject.addAttribute(displayedObject, SoftBodyIdAttribute.SOLVER_NODE, this.graphNodeId());
+					ThreejsObject.addAttribute(displayedObject, SoftBodyIdAttribute.SOLVER_NODE, this.graphNodeId());
 					const nextId = this._nextId++;
-					CoreObject.addAttribute(displayedObject, SoftBodyIdAttribute.EPHEMERAL_ID, nextId);
+					ThreejsObject.addAttribute(displayedObject, SoftBodyIdAttribute.EPHEMERAL_ID, nextId);
 
 					const tetEmbed: TetEmbed = {
 						tetObject,
@@ -200,12 +200,12 @@ export class TetSoftBodySolverSopNode extends TetSopNode<TetSoftBodySolverSopPar
 
 	public override updateObjectOnAdd(object: Object3D, parent: Object3D) {
 		//
-		const solverNodeId = CoreObject.attribValue(object, SoftBodyIdAttribute.SOLVER_NODE);
+		const solverNodeId = ThreejsObject.attribValue(object, SoftBodyIdAttribute.SOLVER_NODE);
 		if (solverNodeId != null) {
 			if (solverNodeId != this.graphNodeId()) {
 				return;
 			}
-			const ephemeralId = CoreObject.attribValue(object, SoftBodyIdAttribute.EPHEMERAL_ID) as number;
+			const ephemeralId = ThreejsObject.attribValue(object, SoftBodyIdAttribute.EPHEMERAL_ID) as number;
 			if (ephemeralId == null) {
 				console.error('no ephemeralId found on object', object);
 			}

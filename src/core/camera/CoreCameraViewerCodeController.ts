@@ -2,8 +2,8 @@ import {Camera} from 'three';
 import {ParamConfig} from '../../engine/nodes/utils/params/ParamsConfig';
 import {StringParamLanguage} from '../../engine/params/utils/OptionsController';
 import {Constructor} from '../../types/GlobalTypes';
-import {CoreObject} from '../geometry/modules/three/CoreObject';
 import {CameraAttribute} from './CoreCamera';
+import {coreObjectClassFactory} from '../geometry/CoreObjectFactory';
 
 export function CoreCameraViewerCodeParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
@@ -79,10 +79,10 @@ export class ViewerCodeConfig {
 export class CoreCameraViewerCodeController {
 	static viewerCodeConfig(options: CreateViewerCodeOptions): ViewerCodeConfig | undefined {
 		const {camera} = options;
-
-		const viewerId = CoreObject.attribValue(camera, CameraAttribute.VIEWER_ID) as string | null;
+		const coreObjectClass = coreObjectClassFactory(camera);
+		const viewerId = coreObjectClass.attribValue(camera, CameraAttribute.VIEWER_ID) as string | null;
 		// const shadowRoot = CoreObject.attribValue(camera, CameraAttribute.VIEWER_SHADOW_ROOT) as boolean | null;
-		const html = CoreObject.attribValue(camera, CameraAttribute.VIEWER_HTML) as string | null;
+		const html = coreObjectClass.attribValue(camera, CameraAttribute.VIEWER_HTML) as string | null;
 		if (viewerId == null || html == null) {
 			return;
 		}

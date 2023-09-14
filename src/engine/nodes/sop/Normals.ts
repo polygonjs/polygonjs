@@ -8,10 +8,10 @@
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../poly/InputCloneMode';
-import {CoreObject} from '../../../core/geometry/modules/three/CoreObject';
 import {Attribute} from '../../../core/geometry/Attribute';
 import {BufferGeometry, BufferAttribute, Mesh} from 'three';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {ThreejsObject} from '../../../core/geometry/modules/three/ThreejsObject';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 import {pointsFromObject} from '../../../core/geometry/entities/point/CorePointUtils';
@@ -71,7 +71,7 @@ export class NormalsSopNode extends TypedSopNode<NormalsSopParamsConfig> {
 		const coreGroup = inputCoreGroups[0];
 
 		if (isBooleanTrue(this.pv.edit)) {
-			await this._eval_expressions_for_core_group(coreGroup);
+			await this._evalExpressionsForCoreGroup(coreGroup);
 		} else {
 			if (this.pv.recompute) {
 				const objects = coreGroup.threejsObjectsWithGeo();
@@ -87,13 +87,13 @@ export class NormalsSopNode extends TypedSopNode<NormalsSopParamsConfig> {
 		this.setCoreGroup(coreGroup);
 	}
 
-	private async _eval_expressions_for_core_group(coreGroup: CoreGroup) {
-		const core_objects = coreGroup.threejsCoreObjects();
-		for (let i = 0; i < core_objects.length; i++) {
-			await this._eval_expressions_for_core_object(core_objects[i]);
+	private async _evalExpressionsForCoreGroup(coreGroup: CoreGroup) {
+		const coreObjects = coreGroup.threejsCoreObjects();
+		for (const coreObject of coreObjects) {
+			await this._evalExpressionsForCoreObject(coreObject);
 		}
 	}
-	private async _eval_expressions_for_core_object(coreObject: CoreObject) {
+	private async _evalExpressionsForCoreObject(coreObject: ThreejsObject) {
 		const object = coreObject.object();
 		const geometry = (object as Mesh).geometry as BufferGeometry;
 		const points = pointsFromObject(object);
