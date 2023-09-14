@@ -3,16 +3,16 @@
 // 	return (el = el || document.createElement('div'));
 // }
 
-function isMobile(): boolean {
+export function isMobile(): boolean {
 	return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 }
-function isIOS(): boolean {
+export function isIOS(): boolean {
 	return /(iPad|iPhone|iPod)/g.test(navigator.userAgent);
 }
-function isAndroid(): boolean {
+export function isAndroid(): boolean {
 	return /(Android)/g.test(navigator.userAgent);
 }
-function isTouchDevice(): boolean {
+export function isTouchDevice(): boolean {
 	return (
 		isMobile() ||
 		isIOS() ||
@@ -20,6 +20,12 @@ function isTouchDevice(): boolean {
 		'ontouchstart' in window ||
 		((window as any).DocumentTouch && document instanceof (window as any).DocumentTouch)
 	);
+}
+export function isChrome(): boolean {
+	return navigator && navigator.userAgent != null && navigator.userAgent.indexOf('Chrome') != -1;
+}
+export function isSafari(): boolean {
+	return /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 }
 
 export class CoreUserAgent {
@@ -29,9 +35,17 @@ export class CoreUserAgent {
 	// "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:83.0) Gecko/20100101 Firefox/83.0"
 	private static _isChrome: boolean | undefined;
 	static isChrome(): boolean {
-		return (this._isChrome =
-			this._isChrome ||
-			(navigator && navigator.userAgent != null && navigator.userAgent.indexOf('Chrome') != -1));
+		if (this._isChrome == null) {
+			this._isChrome = isChrome();
+		}
+		return this._isChrome;
+	}
+	private static _isSafari: boolean | undefined;
+	static isSafari(): boolean {
+		if (this._isSafari == null) {
+			this._isSafari = isSafari();
+		}
+		return this._isSafari;
 	}
 	private static _isMobile: boolean | undefined;
 	static isMobile(): boolean {
