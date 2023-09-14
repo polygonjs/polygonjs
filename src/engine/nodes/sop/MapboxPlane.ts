@@ -268,8 +268,8 @@ export class MapboxPlaneSopNode extends TypedSopNode<MapboxPlaneSopParamsConfig>
 		const scale: Number3 = [horizontal_scale, horizontal_scale, z_scale];
 		dummyMesh.geometry = geometry;
 		const corePointClass = CoreThreejsPoint;
-		corePointClass.addNumericAttrib(dummyMesh, SCALE_ATTRIB_NAME, 3, scale);
-		corePointClass.addNumericAttrib(dummyMesh, NORMAL_ATTRIB_NAME, 3, [0, 1, 0]); // mostly important for hexagons points
+		corePointClass.addNumericAttribute(dummyMesh, SCALE_ATTRIB_NAME, 3, scale);
+		corePointClass.addNumericAttribute(dummyMesh, NORMAL_ATTRIB_NAME, 3, [0, 1, 0]); // mostly important for hexagons points
 
 		//
 		//

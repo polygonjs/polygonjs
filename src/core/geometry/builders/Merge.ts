@@ -1,5 +1,4 @@
 import {BufferGeometry, Mesh} from 'three';
-// import {CoreGeometry} from '../Geometry';
 import {mergeGeometries} from 'three/examples/jsm/utils/BufferGeometryUtils';
 import {CoreGeometryIndexBuilder} from '../util/IndexBuilder';
 import {PolyDictionary} from '../../../types/GlobalTypes';

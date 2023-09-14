@@ -194,7 +194,7 @@ export class AttribSetAtIndexSopNode extends TypedSopNode<AttribSetAtIndexSopPar
 
 		const attribName = CoreAttribute.remapName(this.pv.name);
 		if (!corePointClass.hasAttrib(object, attribName)) {
-			corePointClass.addNumericAttrib(object, attribName, this.pv.size, 0);
+			corePointClass.addNumericAttribute(object, attribName, this.pv.size, 0);
 		}
 		const attrib = corePointClass.attribute(object, attribName) as BufferAttribute;
 		const array = attrib.array as number[];

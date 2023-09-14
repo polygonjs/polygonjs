@@ -10,7 +10,7 @@ import {CoreType} from '../Type';
 import {ArrayUtils} from '../ArrayUtils';
 import {Poly} from '../../engine/Poly';
 import {CoreObjectType, ObjectBuilder, ObjectContent, isObject3D} from './ObjectContent';
-import {coreObjectFactory, coreObjectInstanceFactory} from './CoreObjectFactory';
+import {coreObjectClassFactory, coreObjectInstanceFactory} from './CoreObjectFactory';
 import {
 	coreObjectAttributeTypesByName,
 	coreObjectsAttribNames,
@@ -364,6 +364,11 @@ export class CoreGroup extends CoreEntity {
 		return coreObjectsAttribSizesByName(this.allCoreObjects());
 	}
 
+	//
+	//
+	//
+	//
+	//
 	renameAttrib(oldName: string, newName: string) {
 		const attribValue = this.attribValue(oldName);
 		if (attribValue == null) {
@@ -379,10 +384,10 @@ export class CoreGroup extends CoreEntity {
 
 	private _attributes: AttributeDictionary = {};
 	addAttribute(attribName: string, attribValue: AttribValue) {
-		this._attributesDictionary()[attribName] = attribValue;
+		this.attributes()[attribName] = attribValue;
 	}
 	deleteAttribute(name: string) {
-		delete this._attributesDictionary()[name];
+		delete this.attributes()[name];
 	}
 	attribValue(attribName: string) {
 		return this._attributes && this._attributes[attribName];
@@ -415,7 +420,7 @@ export class CoreGroup extends CoreEntity {
 		}
 		return CoreAttribute.attribSizeFromValue(val);
 	}
-	private _attributesDictionary() {
+	attributes() {
 		return this._attributes || this._createAttributesDictionaryIfNone();
 	}
 	private _createAttributesDictionaryIfNone() {
@@ -436,10 +441,20 @@ export class CoreGroup extends CoreEntity {
 		const objectsCount = this._allObjects.length;
 		target.set(0, 0, 0);
 		for (let object of this._allObjects) {
-			coreObjectFactory(object).position(object, tmpPos);
+			coreObjectClassFactory(object).position(object, tmpPos);
 			target.add(tmpPos);
 		}
 		target.divideScalar(objectsCount);
+	}
+	attributeNames(): string[] {
+		const attributes = this.attributes();
+		if (!attributes) {
+			return [];
+		}
+		return Object.keys(attributes);
+	}
+	attributeNamesMatchingMask(masksString: GroupString) {
+		return CoreAttribute.attribNamesMatchingMask(masksString, this.attributeNames());
 	}
 
 	//
@@ -448,7 +463,7 @@ export class CoreGroup extends CoreEntity {
 	//
 	//
 	objectsData(): ObjectData[] {
-		return this._allObjects?.map((o) => coreObjectFactory(o).objectData(o)) || [];
+		return this._allObjects?.map((o) => coreObjectClassFactory(o).objectData(o)) || [];
 	}
 	boundingBox(target: Box3) {
 		target.makeEmpty();

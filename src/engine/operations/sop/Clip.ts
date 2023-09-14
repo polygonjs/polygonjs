@@ -120,7 +120,7 @@ function _createClipped(mesh: Mesh, box: Mesh) {
 
 	// add keep attribute for mesh (value=1)
 	function _addKeepAttribute(object: Mesh, value: number) {
-		corePointClass.addNumericAttrib(object, TMP_KEEP_ATTRIBUTE_NAME, TMP_KEEP_ATTRIBUTE_SIZE, value);
+		corePointClass.addNumericAttribute(object, TMP_KEEP_ATTRIBUTE_NAME, TMP_KEEP_ATTRIBUTE_SIZE, value);
 	}
 	_addKeepAttribute(mesh, 1);
 	_addKeepAttribute(box, 0);

@@ -11,7 +11,7 @@ import {
 } from '../../../core/Transform';
 
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
-import {coreObjectFactory} from '../../../core/geometry/CoreObjectFactory';
+import {coreObjectClassFactory} from '../../../core/geometry/CoreObjectFactory';
 import {MathUtils, Vector3, Object3D, Matrix4, Euler, Quaternion} from 'three';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 import {
@@ -169,7 +169,7 @@ export class TransformSopOperation extends BaseSopOperation {
 		_q.setFromEuler(_euler);
 		_s.copy(params.s).multiplyScalar(params.scale);
 		_mat4.compose(params.t, _q, _s);
-		coreObjectFactory(object).applyMatrix(
+		coreObjectClassFactory(object).applyMatrix(
 			object,
 			_mat4,
 			TRANSFORM_TARGET_TYPES[params.applyOn],

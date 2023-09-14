@@ -6,8 +6,8 @@ import {AttribType} from '../../../../../core/geometry/Constant';
 import {TypeAssert} from '../../../../poly/Assert';
 import {verticesFromObjectFromGroup} from '../../../../../core/geometry/entities/vertex/CoreVertexUtils';
 import {coreVertexClassFactory} from '../../../../../core/geometry/CoreObjectFactory';
-import {CoreObjectType} from '../../../../../core/geometry/ObjectContent';
-import {BaseCoreObject} from '../../../../../core/geometry/entities/object/BaseCoreObject';
+import {CoreObjectType, ObjectContent} from '../../../../../core/geometry/ObjectContent';
+// import {filterObjectsFromCoreGroup} from '../../../../../core/geometry/Mask';
 
 interface ArraysByObject {
 	X: ValueArrayByObject;
@@ -28,17 +28,17 @@ export async function addVertexAttribute(
 	coreGroup: CoreGroup,
 	params: AttribCreateSopNodeParams
 ) {
-	const coreObjects = coreGroup.allCoreObjects();
+	const objects = coreGroup.allObjects(); //filterObjectsFromCoreGroup(coreGroup, {group: params.group.value});
 	switch (attribType) {
 		case AttribType.NUMERIC: {
-			for (const coreObject of coreObjects) {
-				await _addNumericAttributeToVertices(coreObject, params);
+			for (const object of objects) {
+				await _addNumericAttributeToVertices(object, params);
 			}
 			return;
 		}
 		case AttribType.STRING: {
-			for (const coreObject of coreObjects) {
-				await _addStringAttributeToVertices(coreObject, params);
+			for (const object of objects) {
+				await _addStringAttributeToVertices(object, params);
 			}
 			return;
 		}
@@ -46,12 +46,10 @@ export async function addVertexAttribute(
 	TypeAssert.unreachable(attribType);
 }
 
-async function _addNumericAttributeToVertices(
-	coreObject: BaseCoreObject<CoreObjectType>,
+async function _addNumericAttributeToVertices<T extends CoreObjectType>(
+	object: ObjectContent<T>,
 	params: AttribCreateSopNodeParams
 ) {
-	const object = coreObject.object();
-
 	const vertices = verticesFromObjectFromGroup(object, params.group.value);
 	const attribName = CoreAttribute.remapName(params.name.value);
 	const size = params.size.value;
@@ -94,7 +92,7 @@ async function _addNumericAttributeToVertices(
 			for (let i = 0; i < components.length; i++) {
 				const componentParam = components[i];
 				if (componentParam.hasExpression() && componentParam.expressionController) {
-					tmpArrays[i] = initArrayIfRequired(coreObject, arraysByGeometryUuid[i], vertices.length);
+					tmpArrays[i] = initArrayIfRequired(object, arraysByGeometryUuid[i], vertices.length);
 					if (componentParam.expressionController.entitiesDependent()) {
 						await componentParam.expressionController.computeExpressionForVertices(
 							vertices,
@@ -133,12 +131,10 @@ async function _addNumericAttributeToVertices(
 	}
 }
 
-async function _addStringAttributeToVertices(
-	coreObject: BaseCoreObject<CoreObjectType>,
+async function _addStringAttributeToVertices<T extends CoreObjectType>(
+	object: ObjectContent<T>,
 	params: AttribCreateSopNodeParams
 ) {
-	const object = coreObject.object();
-
 	const vertices = verticesFromObjectFromGroup(object, params.group.value);
 	const param = params.string;
 	const attribName = params.name.value;

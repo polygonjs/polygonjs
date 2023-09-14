@@ -7,7 +7,7 @@ import {
 	corePointClassFactory,
 	coreVertexClassFactory,
 	corePrimitiveClassFactory,
-	coreObjectFactory,
+	coreObjectClassFactory,
 } from '../../../core/geometry/CoreObjectFactory';
 import {CoreObjectType, ObjectContent} from '../../../core/geometry/ObjectContent';
 import {TypeAssert} from '../../poly/Assert';
@@ -103,7 +103,7 @@ export class AttribRenameSopOperation extends BaseSopOperation {
 		oldName: string,
 		newName: string
 	) {
-		const coreObjectClass = coreObjectFactory(object);
+		const coreObjectClass = coreObjectClassFactory(object);
 		coreObjectClass.renameAttrib(object, oldName, newName);
 	}
 	// private _renameCoreGroupAttributes<T extends CoreObjectType>(

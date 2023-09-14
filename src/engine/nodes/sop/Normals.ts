@@ -101,7 +101,7 @@ export class NormalsSopNode extends TypedSopNode<NormalsSopParamsConfig> {
 
 		let attrib = geometry.getAttribute(Attribute.NORMAL) as BufferAttribute;
 		if (!attrib) {
-			corePointClass.addNumericAttrib(object, Attribute.NORMAL, 3, 0);
+			corePointClass.addNumericAttribute(object, Attribute.NORMAL, 3, 0);
 			attrib = geometry.getAttribute(Attribute.NORMAL) as BufferAttribute;
 		}
 		const array = attrib.array as number[];

@@ -4,6 +4,7 @@ import {TypedCorePoint} from './entities/point/CorePoint';
 import {CoreVertex} from './entities/vertex/CoreVertex';
 import {BaseCoreObject} from './entities/object/BaseCoreObject';
 import {CorePrimitive} from './entities/primitive/CorePrimitive';
+import {AttribClass} from './Constant';
 
 // point return types
 type BaseCorePointInstance = TypedCorePoint<CoreObjectType>;
@@ -147,7 +148,7 @@ export function corePrimitiveInstanceFactory<T extends CoreObjectType>(
 }
 
 // object creation methods
-export function coreObjectFactory(object: ObjectContent<CoreObjectType>): BaseCoreObjectClassClass {
+export function coreObjectClassFactory(object: ObjectContent<CoreObjectType>): BaseCoreObjectClassClass {
 	for (let factoryFunction of coreFactoryFunctions) {
 		const result = factoryFunction.objectClass(object);
 		if (result) {
@@ -170,3 +171,18 @@ export function coreObjectInstanceFactory<T extends CoreObjectType>(
 	return object3DFactory.objectInstance(object, index) as any as BaseCoreObject<T>;
 	// return new CoreObject(object as Object3D, index) as any as BaseCoreObject<T>;
 }
+
+export const ENTITY_CLASS_FACTORY = {
+	[AttribClass.POINT]: corePointClassFactory,
+	[AttribClass.VERTEX]: coreVertexClassFactory,
+	[AttribClass.PRIMITIVE]: corePrimitiveClassFactory,
+	[AttribClass.OBJECT]: coreObjectClassFactory,
+	[AttribClass.CORE_GROUP]: null,
+};
+export const ENTITY_INSTANCE_FACTORY = {
+	[AttribClass.POINT]: corePointInstanceFactory,
+	[AttribClass.VERTEX]: coreVertexInstanceFactory,
+	[AttribClass.PRIMITIVE]: corePrimitiveInstanceFactory,
+	[AttribClass.OBJECT]: coreObjectInstanceFactory,
+	[AttribClass.CORE_GROUP]: null,
+};

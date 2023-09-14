@@ -59,14 +59,9 @@ export class QuadVertex extends CoreVertex<CoreObjectType.QUAD> {
 	}
 	override position(target: Vector3) {
 		console.warn('QuadVertex.position not implemented');
-		// _coreFace.setIndex(this._index, this._geometry as BufferGeometry);
-		// _coreFace.center(target);
 	}
 	override normal(target: Vector3): Vector3 {
 		console.warn('QuadVertex.normal not implemented');
-		// _coreFace.setIndex(this._index, this._geometry as BufferGeometry);
-		// _coreFace.triangle(_triangle);
-		// _triangle.getNormal(target);
 		return target;
 	}
 }

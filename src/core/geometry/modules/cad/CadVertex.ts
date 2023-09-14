@@ -20,14 +20,9 @@ export class CadVertex<T extends CadGeometryType> extends CoreVertex<CoreObjectT
 	}
 	override position(target: Vector3) {
 		console.warn('CadVertex.position not implemented');
-		// _coreFace.setIndex(this._index, this._geometry as BufferGeometry);
-		// _coreFace.center(target);
 	}
 	override normal(target: Vector3): Vector3 {
 		console.warn('CadVertex.normal not implemented');
-		// _coreFace.setIndex(this._index, this._geometry as BufferGeometry);
-		// _coreFace.triangle(_triangle);
-		// _triangle.getNormal(target);
 		return target;
 	}
 }

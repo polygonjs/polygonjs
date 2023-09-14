@@ -11,7 +11,7 @@ import {Attribute, CoreAttribute} from '../../Attribute';
 import {CoreEntity} from '../../CoreEntity';
 import {CoreType} from '../../../Type';
 import {BaseVertexAttribute} from './VertexAttribute';
-import {DOT, ComponentName, COMPONENT_INDICES} from '../../Constant';
+import {DOT, ComponentName, COMPONENT_INDICES, GroupString} from '../../Constant';
 import {VertexAttributesDict} from './Common';
 import {CoreObjectType, ObjectBuilder, ObjectContent} from '../../ObjectContent';
 
@@ -89,7 +89,13 @@ export abstract class CoreVertex<T extends CoreObjectType> extends CoreEntity {
 		attributes[newName] = attribute;
 		delete attributes[oldName];
 	}
-
+	static deleteAttribute<T extends CoreObjectType>(object: ObjectContent<T>, attribName: string) {
+		const attributes = this.attributes(object);
+		if (!attributes) {
+			return;
+		}
+		delete attributes[attribName];
+	}
 	static attribSize<T extends CoreObjectType>(object: ObjectContent<T>, attribName: string): number {
 		const attributes = this.attributes(object);
 		if (!attributes) {
@@ -109,12 +115,21 @@ export abstract class CoreVertex<T extends CoreObjectType> extends CoreEntity {
 		const remappedName = CoreAttribute.remapName(attribName);
 		return this.attributes(object) ? this.attributes(object)![remappedName] != null : false;
 	}
-
 	hasAttrib(attribName: string): boolean {
 		if (!this._object) {
 			return false;
 		}
 		return (this.constructor as typeof CoreVertex<T>).hasAttrib(this._object, attribName);
+	}
+	static attributeNames<T extends CoreObjectType>(object?: ObjectContent<T>): string[] {
+		const attributes = this.attributes(object);
+		if (!attributes) {
+			return [];
+		}
+		return Object.keys(attributes);
+	}
+	static attributeNamesMatchingMask<T extends CoreObjectType>(object: ObjectContent<T>, masksString: GroupString) {
+		return CoreAttribute.attribNamesMatchingMask(masksString, this.attributeNames(object));
 	}
 	static attribValue<T extends CoreObjectType>(
 		object: ObjectContent<T>,

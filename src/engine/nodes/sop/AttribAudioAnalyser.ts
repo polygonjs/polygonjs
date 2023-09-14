@@ -132,7 +132,7 @@ export class AttribAudioAnalyserSopNode extends TypedSopNode<AttribAudioAnalyser
 		// create attrib if needed
 		if (!attrib) {
 			// const coreGeometry = new CoreGeometry(geometry);
-			corePointClass.addNumericAttrib(object, attribName, 1, 0);
+			corePointClass.addNumericAttribute(object, attribName, 1, 0);
 			attrib = corePointClass.attribute(object, attribName) as BufferAttribute;
 		}
 

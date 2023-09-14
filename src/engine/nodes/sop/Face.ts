@@ -6,7 +6,8 @@
 import {Mesh, BufferAttribute, BufferGeometry, Vector3} from 'three';
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {CorePointArray3, CoreFace} from '../../../core/geometry/modules/three/CoreFace';
+import {CoreFace} from '../../../core/geometry/modules/three/CoreFace';
+import {CorePointArray3} from '../../../core/geometry/modules/three/Common';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {ArrayUtils} from '../../../core/ArrayUtils';
@@ -23,12 +24,6 @@ enum FaceAttribName {
 const _faceCenter = new Vector3();
 const _position = new Vector3();
 const _newPosition = new Vector3();
-const _face = new CoreFace();
-const _points: CorePointArray3 = [
-	new CoreThreejsPoint(dummyMesh, 0),
-	new CoreThreejsPoint(dummyMesh, 0),
-	new CoreThreejsPoint(dummyMesh, 0),
-];
 
 class FaceSopParamsConfig extends NodeParamsConfig {
 	/** @param makes faces unique */
@@ -63,6 +58,12 @@ export class FaceSopNode extends TypedSopNode<FaceSopParamsConfig> {
 		this.io.inputs.initInputsClonedState(InputCloneMode.FROM_NODE);
 	}
 
+	private _face = new CoreFace();
+	private _points: CorePointArray3 = [
+		new CoreThreejsPoint(dummyMesh, 0),
+		new CoreThreejsPoint(dummyMesh, 0),
+		new CoreThreejsPoint(dummyMesh, 0),
+	];
 	override cook(input_contents: CoreGroup[]) {
 		const core_group = input_contents[0];
 
@@ -125,18 +126,18 @@ export class FaceSopNode extends TypedSopNode<FaceSopParamsConfig> {
 			const coreGeometry = coreObject.coreGeometry();
 			if ((object as Mesh).isMesh && coreGeometry) {
 				if (!corePointClass.hasAttrib(object, FaceAttribName.CENTER)) {
-					corePointClass.addNumericAttrib(object, FaceAttribName.CENTER, 3, -1);
+					corePointClass.addNumericAttribute(object, FaceAttribName.CENTER, 3, -1);
 				}
 
 				const facesCount = coreGeometry.facesCount();
-				_face.setGeometry(coreGeometry.geometry());
+				this._face.setGeometry(coreGeometry.geometry());
 				for (let fi = 0; fi < facesCount; fi++) {
 					// face = faces[fi];
-					_face.setIndex(fi);
-					_face.center(_faceCenter);
+					this._face.setIndex(fi);
+					this._face.center(_faceCenter);
 
-					_face.points(_points);
-					for (const point of _points) {
+					this._face.points(this._points);
+					for (const point of this._points) {
 						point.setAttribValue(FaceAttribName.CENTER, _faceCenter);
 					}
 				}
@@ -156,15 +157,15 @@ export class FaceSopNode extends TypedSopNode<FaceSopParamsConfig> {
 				// const points_count = core_geometry.pointsCount();
 
 				if (!corePointClass.hasAttrib(object, FaceAttribName.ID)) {
-					corePointClass.addNumericAttrib(object, FaceAttribName.ID, 1, -1);
+					corePointClass.addNumericAttribute(object, FaceAttribName.ID, 1, -1);
 				}
 
 				const facesCount = coreGeometry.facesCount();
-				_face.setGeometry(coreGeometry.geometry());
+				this._face.setGeometry(coreGeometry.geometry());
 				for (let i = 0; i < facesCount; i++) {
-					_face.setIndex(i);
-					_face.points(_points);
-					for (const point of _points) {
+					this._face.setIndex(i);
+					this._face.points(this._points);
+					for (const point of this._points) {
 						point.setAttribValue(FaceAttribName.ID, i);
 					}
 				}
@@ -173,10 +174,7 @@ export class FaceSopNode extends TypedSopNode<FaceSopParamsConfig> {
 	}
 
 	private _transformFaces(coreGroup: CoreGroup) {
-		// const face_center = new Vector3();
-		// const new_position = new Vector3();
 		const scale = this.pv.scale;
-		// let faces: CoreFace[], face: CoreFace, points: CorePoint[], point: CorePoint;
 
 		const coreObjects = coreGroup.threejsCoreObjects();
 		for (const coreObject of coreObjects) {
@@ -186,17 +184,17 @@ export class FaceSopNode extends TypedSopNode<FaceSopParamsConfig> {
 			if ((object as Mesh).isMesh && coreGeometry) {
 				// faces = coreGeometry.faces();
 				if (!corePointClass.hasAttrib(object, FaceAttribName.POSITION)) {
-					corePointClass.addNumericAttrib(object, FaceAttribName.POSITION, 3, -1);
+					corePointClass.addNumericAttribute(object, FaceAttribName.POSITION, 3, -1);
 				}
 
 				const facesCount = coreGeometry.facesCount();
-				_face.setGeometry(coreGeometry.geometry());
+				this._face.setGeometry(coreGeometry.geometry());
 				for (let fi = 0; fi < facesCount; fi++) {
-					_face.setIndex(fi);
-					_face.center(_faceCenter);
+					this._face.setIndex(fi);
+					this._face.center(_faceCenter);
 
-					_face.points(_points);
-					for (const point of _points) {
+					this._face.points(this._points);
+					for (const point of this._points) {
 						point.position(_position);
 						_newPosition.x = _position.x * scale + _faceCenter.x * (1 - scale);
 						_newPosition.y = _position.y * scale + _faceCenter.y * (1 - scale);

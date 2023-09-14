@@ -104,7 +104,7 @@ export class AttribTransferSopNode extends TypedSopNode<AttribTransferSopParamsC
 				const objects = this._core_group_dest.allObjects();
 				for (const object of objects) {
 					const corePointClass = corePointClassFactory(object);
-					corePointClass.addNumericAttrib(object, attrib_name, attrib_size, 0);
+					corePointClass.addNumericAttribute(object, attrib_name, attrib_size, 0);
 				}
 			}
 		}

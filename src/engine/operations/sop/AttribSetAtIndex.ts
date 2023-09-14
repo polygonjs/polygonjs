@@ -138,7 +138,7 @@ export class AttribSetAtIndexSopOperation extends BaseSopOperation {
 		const corePointClass = corePointClassFactory(object);
 		const attribName = CoreAttribute.remapName(params.name);
 		if (!corePointClass.hasAttrib(object, attribName)) {
-			corePointClass.addNumericAttrib(object, attribName, params.size, 0);
+			corePointClass.addNumericAttribute(object, attribName, params.size, 0);
 		}
 
 		const attrib = corePointClass.attribute(object, attribName) as BufferAttribute;

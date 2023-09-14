@@ -1,7 +1,7 @@
 import type {QUnit} from '../../../helpers/QUnit';
 import {CoreObject} from './../../../../src/core/geometry/modules/three/CoreObject';
 import {AttribClass} from '../../../../src/core/geometry/Constant';
-import {coreObjectFactory} from '../../../../src/core/geometry/CoreObjectFactory';
+import {coreObjectClassFactory} from '../../../../src/core/geometry/CoreObjectFactory';
 import {CoreObjectType, ObjectContent} from '../../../../src/core/geometry/ObjectContent';
 export function testengineexpressionsmethodscopy(qUnit: QUnit) {
 	qUnit.test('copy can use default value with 1 arg', async (assert) => {
@@ -30,7 +30,7 @@ export function testengineexpressionsmethodscopy(qUnit: QUnit) {
 				.coreContent()!
 				.allObjects()
 				.map((o: ObjectContent<CoreObjectType>) => {
-					const abstractCoreObject = coreObjectFactory(o);
+					const abstractCoreObject = coreObjectClassFactory(o);
 					return abstractCoreObject.attribValue(o, 'test');
 				}),
 			[0, 1, 2, 3]
@@ -62,7 +62,7 @@ export function testengineexpressionsmethodscopy(qUnit: QUnit) {
 			container
 				.coreContent()!
 				.allObjects()
-				.map((o: ObjectContent<CoreObjectType>) => coreObjectFactory(o).attribValue(o, 'test')),
+				.map((o: ObjectContent<CoreObjectType>) => coreObjectClassFactory(o).attribValue(o, 'test')),
 			[0, 1, 2, 3]
 		);
 	});
@@ -91,7 +91,7 @@ export function testengineexpressionsmethodscopy(qUnit: QUnit) {
 			container
 				.coreContent()!
 				.allObjects()
-				.map((o: ObjectContent<CoreObjectType>) => coreObjectFactory(o).attribValue(o, 'test')),
+				.map((o: ObjectContent<CoreObjectType>) => coreObjectClassFactory(o).attribValue(o, 'test')),
 			[0, 1, 2, 3]
 		);
 	});

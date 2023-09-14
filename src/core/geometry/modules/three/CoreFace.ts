@@ -1,8 +1,8 @@
 import {AttribValue, Number3, NumericAttribValue} from '../../../../types/GlobalTypes';
 import {BufferAttribute, BufferGeometry, Triangle, Vector2, Vector3, Mesh} from 'three';
 import {CoreThreejsPoint} from '../../modules/three/CoreThreejsPoint';
-import {CoreMath} from '../../../math/_Module';
 import {ArrayUtils} from '../../../ArrayUtils';
+import {CorePointArray3} from './Common';
 
 interface FaceLike {
 	a: number;
@@ -11,17 +11,11 @@ interface FaceLike {
 }
 
 const dummyMesh = new Mesh();
-export type CorePointArray3 = [CoreThreejsPoint, CoreThreejsPoint, CoreThreejsPoint];
 type Vector3Array2 = [Vector3, Vector3];
 type Vector3Array3 = [Vector3, Vector3, Vector3];
-const _corePoint = new CoreThreejsPoint(dummyMesh, 0);
-const _points: CorePointArray3 = [
-	new CoreThreejsPoint(dummyMesh, 0),
-	new CoreThreejsPoint(dummyMesh, 0),
-	new CoreThreejsPoint(dummyMesh, 0),
-];
+
 const _positions: Vector3Array3 = [new Vector3(), new Vector3(), new Vector3()];
-const _deltas: Vector3Array2 = [new Vector3(), new Vector3()];
+// const _deltas: Vector3Array2 = [new Vector3(), new Vector3()];
 const _triangle = new Triangle();
 const barycentricCoordinates = new Vector3();
 const barycentricCoordinatesArray: Number3 = [0, 0, 0];
@@ -29,7 +23,12 @@ const barycentricCoordinatesArray: Number3 = [0, 0, 0];
 export class CoreFace {
 	private _geometry?: BufferGeometry;
 	private _index: number = 0;
-
+	private _corePoint = new CoreThreejsPoint(dummyMesh, 0);
+	private _points: CorePointArray3 = [
+		new CoreThreejsPoint(dummyMesh, 0),
+		new CoreThreejsPoint(dummyMesh, 0),
+		new CoreThreejsPoint(dummyMesh, 0),
+	];
 	constructor() {}
 	setGeometry(geometry: BufferGeometry) {
 		this._geometry = geometry;
@@ -73,9 +72,9 @@ export class CoreFace {
 			return;
 		}
 		dummyMesh.geometry = this._geometry;
-		_corePoint.setIndex(this._index * 3 + 0, dummyMesh).position(target[0]);
-		_corePoint.setIndex(this._index * 3 + 1, dummyMesh).position(target[1]);
-		_corePoint.setIndex(this._index * 3 + 2, dummyMesh).position(target[2]);
+		this._corePoint.setIndex(this._index * 3 + 0, dummyMesh).position(target[0]);
+		this._corePoint.setIndex(this._index * 3 + 1, dummyMesh).position(target[1]);
+		this._corePoint.setIndex(this._index * 3 + 2, dummyMesh).position(target[2]);
 	}
 	triangle(target: Triangle) {
 		this.positions(_positions);
@@ -115,23 +114,23 @@ export class CoreFace {
 		return target;
 	}
 
-	randomPosition(seed: number, target: Vector3) {
-		let weight0 = CoreMath.randFloat(seed);
-		let weight1 = CoreMath.randFloat(seed * 6541);
-		// let weights = [, CoreMath.randFloat(seed * 6541)];
+	// randomPosition(seed: number, target: Vector3) {
+	// 	let weight0 = CoreMath.randFloat(seed);
+	// 	let weight1 = CoreMath.randFloat(seed * 6541);
+	// 	// let weights = [, CoreMath.randFloat(seed * 6541)];
 
-		if (weight0 + weight1 > 1) {
-			weight0 = 1 - weight0;
-			weight1 = 1 - weight1;
-		}
-		this.positions(_positions);
-		this.deltas(_deltas);
-		target.copy(_positions[0]).add(_deltas[0].multiplyScalar(weight0)).add(_deltas[1].multiplyScalar(weight1));
-		// return [0]
-		// 	.clone()
-		// 	.add(this.deltas()[0].clone().multiplyScalar(weights[0]))
-		// 	.add(this.deltas()[1].clone().multiplyScalar(weights[1]));
-	}
+	// 	if (weight0 + weight1 > 1) {
+	// 		weight0 = 1 - weight0;
+	// 		weight1 = 1 - weight1;
+	// 	}
+	// 	this.positions(_positions);
+	// 	this.deltas(_deltas);
+	// 	target.copy(_positions[0]).add(_deltas[0].multiplyScalar(weight0)).add(_deltas[1].multiplyScalar(weight1));
+	// 	// return [0]
+	// 	// 	.clone()
+	// 	// 	.add(this.deltas()[0].clone().multiplyScalar(weights[0]))
+	// 	// 	.add(this.deltas()[1].clone().multiplyScalar(weights[1]));
+	// }
 	// random_position(seed: number){
 	// 	let weights = [
 	// 		CoreMath.rand_float(seed),
@@ -161,8 +160,8 @@ export class CoreFace {
 
 		const attrib = this._geometry.attributes[attrib_name];
 		const attribSize = attrib.itemSize;
-		this.points(_points);
-		const pointValues = _points.map((point) => point.attribValue(attrib_name));
+		this.points(this._points);
+		const pointValues = this._points.map((point) => point.attribValue(attrib_name));
 
 		let newAttribValue: AttribValue | undefined;
 		let sum;

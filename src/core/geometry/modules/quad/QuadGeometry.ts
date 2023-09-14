@@ -10,7 +10,7 @@ export class QuadGeometry {
 	public index: number[] = [];
 	userData: {[key: string]: any} = {};
 
-	addPointAttribute(attribName: string, attribute: BufferAttribute) {
+	setAttribute(attribName: string, attribute: BufferAttribute) {
 		this.attributes[attribName] = attribute;
 	}
 	// addPrimAttribute(attribName: string, attribute: QuadPrimAttribute) {
@@ -40,7 +40,7 @@ export class QuadGeometry {
 		const pointAttributeNames = Object.keys(this.attributes);
 		// const primAttributeNames = Object.keys(this.primAttributes);
 		for (const pointAttributeName of pointAttributeNames) {
-			clonedGeometry.addPointAttribute(pointAttributeName, this.attributes[pointAttributeName].clone());
+			clonedGeometry.setAttribute(pointAttributeName, this.attributes[pointAttributeName].clone());
 		}
 		// for (const primAttributeName of primAttributeNames) {
 		// 	clonedGeometry.addPrimAttribute(primAttributeName, this.primAttributes[primAttributeName].clone());

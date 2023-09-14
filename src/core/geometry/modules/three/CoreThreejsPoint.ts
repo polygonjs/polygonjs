@@ -13,13 +13,17 @@ import {TypedCorePoint} from '../../entities/point/CorePoint';
 import {PointAttributesDict} from '../../entities/point/Common';
 import {Attribute} from '../../Attribute';
 import {ObjectUtils} from '../../../ObjectUtils';
-import {ColorLike, NumericAttribValue, Vector2Like, Vector3Like, Vector4Like} from '../../../../types/GlobalTypes';
-import {isNumber, isArray} from '../../../Type';
+import {NumericAttribValue} from '../../../../types/GlobalTypes';
 import {markedAsInstance} from '../../GeometryUtils';
 import {pointsCountFromBufferGeometry, positionAttributeNameFromBufferGeometry} from './CoreThreejsPointUtils';
+import {pointAttributeNumericValues, PointAttributeNumericValuesOptions} from '../../entities/point/CorePointUtils';
 
 // const IS_INSTANCE_KEY = 'isInstance';
 const INDEX_ATTRIB_VALUES = 'indexedAttribValues';
+const target: PointAttributeNumericValuesOptions = {
+	attributeAdded: false,
+	values: [],
+};
 
 export class CoreThreejsPoint extends TypedCorePoint<CoreObjectType.THREEJS> {
 	protected _geometry?: BufferGeometry;
@@ -73,6 +77,14 @@ export class CoreThreejsPoint extends TypedCorePoint<CoreObjectType.THREEJS> {
 			return null;
 		}
 		return positionAttributeNameFromBufferGeometry(geometry);
+	}
+	static position<T extends CoreObjectType>(object: ObjectContent<T>, index: number, target: Vector3) {
+		const geometry = (object as any as Mesh).geometry as BufferGeometry | undefined;
+		if (!geometry) {
+			return null;
+		}
+		const {array} = geometry.getAttribute(Attribute.POSITION) as BufferAttribute;
+		return target.fromArray(array, index * 3);
 	}
 	override position(target: Vector3) {
 		if (!this._geometry) {
@@ -178,7 +190,7 @@ export class CoreThreejsPoint extends TypedCorePoint<CoreObjectType.THREEJS> {
 		return geometry.deleteAttribute(attribName);
 	}
 
-	static override addNumericAttrib<T extends CoreObjectType>(
+	static override addNumericAttribute<T extends CoreObjectType>(
 		object: ObjectContent<T>,
 		attribName: string,
 		size: number = 1,
@@ -188,83 +200,18 @@ export class CoreThreejsPoint extends TypedCorePoint<CoreObjectType.THREEJS> {
 		if (!geometry) {
 			return;
 		}
-		const values = [];
-		const pointsCount = this.pointsCount(object);
+		pointAttributeNumericValues(object, size, defaultValue, target);
 
-		let attributeAdded = false;
-		if (isNumber(defaultValue)) {
-			// adding number
-			for (let i = 0; i < pointsCount; i++) {
-				for (let j = 0; j < size; j++) {
-					values.push(defaultValue);
-				}
-			}
-			attributeAdded = true;
-		} else {
-			if (size > 1) {
-				if (isArray(defaultValue)) {
-					// adding array
-					for (let i = 0; i < pointsCount; i++) {
-						for (let j = 0; j < size; j++) {
-							values.push(defaultValue[j]);
-						}
-					}
-					attributeAdded = true;
-				} else {
-					// adding Vector2
-					const vec2 = defaultValue as Vector2Like;
-					if (size == 2 && vec2.x != null && vec2.y != null) {
-						for (let i = 0; i < pointsCount; i++) {
-							values.push(vec2.x);
-							values.push(vec2.y);
-						}
-						attributeAdded = true;
-					}
-					// adding Vector3
-					const vec3 = defaultValue as Vector3Like;
-					if (size == 3 && vec3.x != null && vec3.y != null && vec3.z != null) {
-						for (let i = 0; i < pointsCount; i++) {
-							values.push(vec3.x);
-							values.push(vec3.y);
-							values.push(vec3.z);
-						}
-						attributeAdded = true;
-					}
-					// adding Color
-					const col = defaultValue as ColorLike;
-					if (size == 3 && col.r != null && col.g != null && col.b != null) {
-						for (let i = 0; i < pointsCount; i++) {
-							values.push(col.r);
-							values.push(col.g);
-							values.push(col.b);
-						}
-						attributeAdded = true;
-					}
-					// adding Vector4
-					const vec4 = defaultValue as Vector4Like;
-					if (size == 4 && vec4.x != null && vec4.y != null && vec4.z != null && vec4.w != null) {
-						for (let i = 0; i < pointsCount; i++) {
-							values.push(vec4.x);
-							values.push(vec4.y);
-							values.push(vec4.z);
-							values.push(vec4.w);
-						}
-						attributeAdded = true;
-					}
-				}
-			}
-		}
-
-		if (attributeAdded) {
+		if (target.attributeAdded) {
 			if (markedAsInstance(geometry)) {
-				const valuesAsTypedArray = new Float32Array(values);
+				const valuesAsTypedArray = new Float32Array(target.values);
 				geometry.setAttribute(attribName.trim(), new InstancedBufferAttribute(valuesAsTypedArray, size));
 			} else {
-				geometry.setAttribute(attribName.trim(), new Float32BufferAttribute(values, size));
+				geometry.setAttribute(attribName.trim(), new Float32BufferAttribute(target.values, size));
 			}
 		} else {
 			console.warn(defaultValue);
-			throw `CoreThreejsPoint.addNumericAttrib error: no other default value allowed for now in add_numeric_attrib (default given: ${defaultValue})`;
+			throw `CoreThreejsPoint.addNumericAttrib error: no other default value allowed for now (default given: ${defaultValue})`;
 		}
 	}
 }

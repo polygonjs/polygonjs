@@ -1,11 +1,6 @@
 import {LineSegments, Vector3} from 'three';
-// import {BufferGeometryWithPrimitiveAttributes} from '../primitive/Common';
-// import {CoreFace} from '../primitive/CoreFace';
 import {CoreObjectType, ObjectContent} from '../../ObjectContent';
 import {CoreThreejsPrimitive} from './CoreThreejsPrimitive';
-
-// const _coreFace = new CoreFace();
-// const _triangle = new Triangle();
 
 export class LineSegmentPrimitive extends CoreThreejsPrimitive {
 	constructor(object: LineSegments, index: number) {
@@ -26,14 +21,9 @@ export class LineSegmentPrimitive extends CoreThreejsPrimitive {
 
 	position(target: Vector3) {
 		console.warn('LineSegmentPrimitive.position not implemented');
-		// _coreFace.setIndex(this._index, this._geometry as BufferGeometryWithPrimitiveAttributes);
-		// _coreFace.center(target);
 	}
 	normal(target: Vector3): Vector3 {
 		target.set(0, 0, 0);
-		// _coreFace.setIndex(this._index, this._geometry as BufferGeometryWithPrimitiveAttributes);
-		// _coreFace.triangle(_triangle);
-		// _triangle.getNormal(target);
 		return target;
 	}
 }

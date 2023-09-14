@@ -110,7 +110,7 @@ export class ColorSopNode extends TypedSopNode<ColorSopParamsConfig> {
 		if (attribName.trim().length == 0) {
 			return;
 		}
-		const srcAttrib = corePointClass.attribute(object,attribName) as BufferAttribute | undefined;
+		const srcAttrib = corePointClass.attribute(object, attribName) as BufferAttribute | undefined;
 		if (!srcAttrib) {
 			return;
 		}
@@ -118,9 +118,9 @@ export class ColorSopNode extends TypedSopNode<ColorSopParamsConfig> {
 		this._createInitColor(object);
 		const points = pointsFromObject(object);
 
-		const srcAttribSize = corePointClass.attribSize(object,attribName);
+		const srcAttribSize = corePointClass.attribSize(object, attribName);
 		const srcArray = srcAttrib.array;
-		const destArray = (corePointClass.attribute(object,COLOR_ATTRIB_NAME) as BufferAttribute).array as number[];
+		const destArray = (corePointClass.attribute(object, COLOR_ATTRIB_NAME) as BufferAttribute).array as number[];
 
 		switch (srcAttribSize) {
 			case 1: {
@@ -165,7 +165,7 @@ export class ColorSopNode extends TypedSopNode<ColorSopParamsConfig> {
 		const corePointClass = corePointClassFactory(object);
 
 		if (!corePointClass.hasAttrib(object, COLOR_ATTRIB_NAME)) {
-			corePointClass.addNumericAttrib(object, COLOR_ATTRIB_NAME, 3, DEFAULT_COLOR);
+			corePointClass.addNumericAttribute(object, COLOR_ATTRIB_NAME, 3, DEFAULT_COLOR);
 		}
 	}
 
@@ -185,7 +185,7 @@ export class ColorSopNode extends TypedSopNode<ColorSopParamsConfig> {
 		} else {
 			newColor = this.pv.color; //.clone();
 		}
-		corePointClass.addNumericAttrib(object, COLOR_ATTRIB_NAME, 3, newColor);
+		corePointClass.addNumericAttribute(object, COLOR_ATTRIB_NAME, 3, newColor);
 	}
 
 	async _evalExpressions(coreObject: CoreObject) {

@@ -15,6 +15,9 @@ import {ObjectContent, CoreObjectType, ObjectBuilder} from '../../ObjectContent'
 import {PointAttributesDict} from './Common';
 import {CoreAttributeData} from '../../AttributeData';
 
+function _warnOverloadRequired(functionName: string) {
+	console.warn(`CorePoint.${functionName} needs to be overloaded`);
+}
 export abstract class TypedCorePoint<T extends CoreObjectType> extends CoreEntity {
 	protected _object?: ObjectContent<T>;
 	constructor(object?: ObjectContent<T>, index?: number) {
@@ -32,7 +35,7 @@ export abstract class TypedCorePoint<T extends CoreObjectType> extends CoreEntit
 		attribName: string,
 		attribute: BufferAttribute
 	) {
-		console.warn('CorePoint.addAttribute needs to be overloaded');
+		_warnOverloadRequired('addAttribute');
 	}
 
 	static pointsCount<T extends CoreObjectType>(object: ObjectContent<T>): number {
@@ -40,7 +43,7 @@ export abstract class TypedCorePoint<T extends CoreObjectType> extends CoreEntit
 	}
 
 	static attributes<T extends CoreObjectType>(object?: ObjectContent<T>): PointAttributesDict | undefined {
-		console.warn('CorePoint.attributes needs to be overloaded');
+		_warnOverloadRequired('attributes');
 		return;
 	}
 	attributes(): PointAttributesDict | undefined {
@@ -99,7 +102,7 @@ export abstract class TypedCorePoint<T extends CoreObjectType> extends CoreEntit
 	//
 	//
 	static userDataAttribs<T extends CoreObjectType>(object?: ObjectContent<T>): Record<string, string[]> {
-		console.warn('CorePoint.userDataAttribs needs to be overloaded');
+		_warnOverloadRequired('userDataAttribs');
 		return {};
 	}
 	userDataAttribs(): Record<string, string[]> {
@@ -166,7 +169,7 @@ export abstract class TypedCorePoint<T extends CoreObjectType> extends CoreEntit
 		values: string[],
 		indices: number[]
 	) {
-		console.warn('CorePoint.setIndexedAttribute needs to be overloaded');
+		_warnOverloadRequired('setIndexedAttribute');
 	}
 	setIndexedAttribute(attribName: string, values: string[], indices: number[]) {
 		return (this.constructor as any as typeof TypedCorePoint).setIndexedAttribute(
@@ -204,7 +207,7 @@ export abstract class TypedCorePoint<T extends CoreObjectType> extends CoreEntit
 		index: number,
 		attribName: string
 	): number {
-		console.warn('CorePoint.attribValueIndex needs to be overloaded');
+		_warnOverloadRequired('attribValueIndex');
 		return 0;
 	}
 	attribValueIndex(attribName: string): number {
@@ -245,10 +248,10 @@ export abstract class TypedCorePoint<T extends CoreObjectType> extends CoreEntit
 	//
 	//
 	static renameAttrib<T extends CoreObjectType>(object: ObjectContent<T>, oldName: string, newName: string) {
-		console.warn('CorePoint.renameAttrib needs to be overloaded');
+		_warnOverloadRequired('renameAttrib');
 	}
 	static deleteAttribute<T extends CoreObjectType>(object: ObjectContent<T>, attribName: string) {
-		console.warn('CorePoint.deleteAttribute needs to be overloaded');
+		_warnOverloadRequired('deleteAttribute');
 	}
 
 	//
@@ -370,7 +373,7 @@ export abstract class TypedCorePoint<T extends CoreObjectType> extends CoreEntit
 	}
 
 	position(target: Vector3): Vector3 {
-		console.warn('CorePoint.position needs to be overloaded');
+		_warnOverloadRequired('position');
 		return target;
 	}
 	setPosition(newPosition: Vector3) {
@@ -378,14 +381,14 @@ export abstract class TypedCorePoint<T extends CoreObjectType> extends CoreEntit
 	}
 
 	normal(target: Vector3): Vector3 {
-		console.warn('CorePoint.normal needs to be overloaded');
+		_warnOverloadRequired('normal');
 		return target;
 	}
 	setNormal(newNormal: Vector3) {
 		return this.setAttribValueFromVector3(Attribute.NORMAL, newNormal);
 	}
 	static computeNormals<T extends CoreObjectType>(object: ObjectContent<T>) {
-		console.warn('CorePoint.computeNormals needs to be overloaded');
+		_warnOverloadRequired('computeNormals');
 	}
 
 	setAttribValue(attribName: string, value: NumericAttribValue | string) {
@@ -482,19 +485,20 @@ export abstract class TypedCorePoint<T extends CoreObjectType> extends CoreEntit
 			case AttribType.STRING:
 				return console.log('TODO: to implement');
 			case AttribType.NUMERIC:
-				return this.addNumericAttrib(object, attribName, attribData.size());
+				return this.addNumericAttribute(object, attribName, attribData.size());
 		}
 	}
-	static addNumericAttrib<T extends CoreObjectType>(
+	static addNumericAttribute<T extends CoreObjectType>(
 		object: ObjectContent<T>,
 		attribName: string,
 		size: number = 1,
 		defaultValue: NumericAttribValue = 0
-	) {}
-
+	) {
+		_warnOverloadRequired('addNumericAttribute');
+	}
 	//
 	static markAttribAsNeedsUpdate<T extends CoreObjectType>(object: ObjectContent<T>, attribName: string) {
-		console.warn('CorePoint.markAttribAsNeedsUpdate needs to be overloaded');
+		_warnOverloadRequired('markAttribAsNeedsUpdate');
 	}
 }
 

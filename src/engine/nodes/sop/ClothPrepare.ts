@@ -89,7 +89,7 @@ export class ClothPrepareSopNode extends TypedSopNode<ClothPrepareSopParamsConfi
 		// const coreGeometry = new CoreGeometry(mesh.geometry);
 		if (param.hasExpression() && param.expressionController) {
 			if (!corePointClass.hasAttrib(mesh, attribName)) {
-				corePointClass.addNumericAttrib(mesh, attribName, 1, param.value);
+				corePointClass.addNumericAttribute(mesh, attribName, 1, param.value);
 			}
 
 			const attrib = corePointClass.attribute(mesh, attribName) as BufferAttribute;
@@ -100,7 +100,7 @@ export class ClothPrepareSopNode extends TypedSopNode<ClothPrepareSopParamsConfi
 				array[point.index()] = value;
 			});
 		} else {
-			corePointClass.addNumericAttrib(mesh, attribName, 1, param.value);
+			corePointClass.addNumericAttribute(mesh, attribName, 1, param.value);
 		}
 	}
 	private _addAdjacencyAttributes(mesh: Mesh) {

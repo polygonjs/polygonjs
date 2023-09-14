@@ -1,7 +1,7 @@
 import {AttribValue, Number3, NumericAttribValue, PolyDictionary} from '../../../../types/GlobalTypes';
 import {Box3, Color, Matrix4, Sphere, Vector2, Vector3, Vector4} from 'three';
 import {Attribute, CoreAttribute} from '../../Attribute';
-import {AttribType, AttribSize, ObjectData} from '../../Constant';
+import {AttribType, AttribSize, ObjectData, GroupString} from '../../Constant';
 import {CoreEntity} from '../../CoreEntity';
 import {CoreType} from '../../../Type';
 import {SetUtils} from '../../../../core/SetUtils';
@@ -217,6 +217,15 @@ export abstract class BaseCoreObject<T extends CoreObjectType> extends CoreEntit
 	private _attributesDictionary() {
 		return (this.constructor as typeof BaseCoreObject<CoreObjectType>)._attributesDictionary(this._object);
 	}
+	static attributes<T extends CoreObjectType>(object: ObjectContent<T>): AttributeDictionary | undefined {
+		return this._attributesDictionary(object);
+	}
+	attributes(): AttributeDictionary | undefined {
+		if (!this._object) {
+			return;
+		}
+		return (this.constructor as typeof BaseCoreObject<T>).attributes(this._object);
+	}
 	attributeNames(): string[] {
 		return this.attribNames();
 	}
@@ -243,6 +252,16 @@ export abstract class BaseCoreObject<T extends CoreObjectType> extends CoreEntit
 	}
 	static hasAttrib<T extends CoreObjectType>(object: ObjectContent<T>, attribName: string) {
 		return attribName in this._attributesDictionary(object);
+	}
+	static attributeNames<T extends CoreObjectType>(object: ObjectContent<T>): string[] {
+		const attributes = this.attributes(object);
+		if (!attributes) {
+			return [];
+		}
+		return Object.keys(attributes);
+	}
+	static attributeNamesMatchingMask<T extends CoreObjectType>(object: ObjectContent<T>, masksString: GroupString) {
+		return CoreAttribute.attribNamesMatchingMask(masksString, this.attributeNames(object));
 	}
 
 	renameAttrib(oldName: string, newName: string) {

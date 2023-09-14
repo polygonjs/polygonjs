@@ -97,7 +97,7 @@ export class PaletteSopOperation extends BaseSopOperation {
 		}
 		let colorAttrib = geometry.getAttribute('color') as BufferAttribute;
 		if (!colorAttrib) {
-			corePointClass.addNumericAttrib(object, 'color', 3, [0, 0, 0]);
+			corePointClass.addNumericAttribute(object, 'color', 3, [0, 0, 0]);
 			colorAttrib = geometry.getAttribute('color') as BufferAttribute;
 		}
 		if (!colorAttrib) {

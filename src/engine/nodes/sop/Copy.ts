@@ -26,7 +26,7 @@ import {
 import {CoreTransform, RotationOrder, TRANSFORM_TARGET_TYPES, TransformTargetType} from '../../../core/Transform';
 import {OBJECT_TRANSFORM_SPACE_MENU_ENTRIES, OBJECT_TRANSFORM_SPACES} from '../../../core/TransformSpace';
 import {CoreObjectType, ObjectContent} from '../../../core/geometry/ObjectContent';
-import {coreObjectFactory} from '../../../core/geometry/CoreObjectFactory';
+import {coreObjectClassFactory} from '../../../core/geometry/CoreObjectFactory';
 import {pointsFromObject} from '../../../core/geometry/entities/point/CorePointUtils';
 
 // export enum TransformMode {
@@ -202,7 +202,7 @@ export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 				const objects = filterObjectsWithGroup(stampedInstanceCoreGroup, {group: this.pv.srcGroup});
 				const object = objects[pointIndex];
 				if (object) {
-					return [coreObjectFactory(object).clone(object)];
+					return [coreObjectClassFactory(object).clone(object)];
 				} else {
 					return [];
 				}
@@ -328,7 +328,7 @@ export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 		this._transformAccumulatedMatrix.multiply(this._transformMatrix);
 	}
 	private _applyMatrixToObject(object: ObjectContent<CoreObjectType>, matrix: Matrix4) {
-		coreObjectFactory(object).applyMatrix(
+		coreObjectClassFactory(object).applyMatrix(
 			object,
 			matrix,
 			TRANSFORM_TARGET_TYPES[this.pv.transformMode],

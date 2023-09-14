@@ -4,11 +4,10 @@ import {ValueArrayByObject, initArrayIfRequired} from './Common';
 import {AttribCreateSopNodeParams} from '../../../../operations/sop/utils/attribCreate/Common';
 import {AttribType} from '../../../../../core/geometry/Constant';
 import {TypeAssert} from '../../../../poly/Assert';
-
 import {primitivesFromObjectFromGroup} from '../../../../../core/geometry/entities/primitive/CorePrimitiveUtils';
 import {corePrimitiveClassFactory} from '../../../../../core/geometry/CoreObjectFactory';
-import {BaseCoreObject} from '../../../../../core/geometry/entities/object/BaseCoreObject';
-import {CoreObjectType} from '../../../../../core/geometry/ObjectContent';
+import {CoreObjectType, ObjectContent} from '../../../../../core/geometry/ObjectContent';
+// import {filterObjectsFromCoreGroup} from '../../../../../core/geometry/Mask';
 
 interface ArraysByObject {
 	X: ValueArrayByObject;
@@ -29,17 +28,17 @@ export async function addPrimitiveAttribute(
 	coreGroup: CoreGroup,
 	params: AttribCreateSopNodeParams
 ) {
-	const coreObjects = coreGroup.allCoreObjects();
+	const objects = coreGroup.allObjects(); //filterObjectsFromCoreGroup(coreGroup, {group: params.group.value});
 	switch (attribType) {
 		case AttribType.NUMERIC: {
-			for (const coreObject of coreObjects) {
-				await _addNumericAttributeToPrimitives(coreObject, params);
+			for (const object of objects) {
+				await _addNumericAttributeToPrimitives(object, params);
 			}
 			return;
 		}
 		case AttribType.STRING: {
-			for (const coreObject of coreObjects) {
-				await _addStringAttributeToPrimitives(coreObject, params);
+			for (const object of objects) {
+				await _addStringAttributeToPrimitives(object, params);
 			}
 			return;
 		}
@@ -47,11 +46,10 @@ export async function addPrimitiveAttribute(
 	TypeAssert.unreachable(attribType);
 }
 
-async function _addNumericAttributeToPrimitives(
-	coreObject: BaseCoreObject<CoreObjectType>,
+async function _addNumericAttributeToPrimitives<T extends CoreObjectType>(
+	object: ObjectContent<T>,
 	params: AttribCreateSopNodeParams
 ) {
-	const object = coreObject.object();
 	const primitives = primitivesFromObjectFromGroup(object, params.group.value);
 	const attribName = CoreAttribute.remapName(params.name.value);
 	const size = params.size.value;
@@ -98,7 +96,7 @@ async function _addNumericAttributeToPrimitives(
 			for (let i = 0; i < components.length; i++) {
 				const componentParam = components[i];
 				if (componentParam.hasExpression() && componentParam.expressionController) {
-					tmpArrays[i] = initArrayIfRequired(coreObject, arraysByGeometryUuid[i], primitives.length);
+					tmpArrays[i] = initArrayIfRequired(object, arraysByGeometryUuid[i], primitives.length);
 					if (componentParam.expressionController.entitiesDependent()) {
 						await componentParam.expressionController.computeExpressionForPrimitives(
 							primitives,
@@ -137,12 +135,10 @@ async function _addNumericAttributeToPrimitives(
 	}
 }
 
-async function _addStringAttributeToPrimitives(
-	coreObject: BaseCoreObject<CoreObjectType>,
+async function _addStringAttributeToPrimitives<T extends CoreObjectType>(
+	object: ObjectContent<T>,
 	params: AttribCreateSopNodeParams
 ) {
-	const object = coreObject.object();
-
 	const primitives = primitivesFromObjectFromGroup(object, params.group.value);
 	const param = params.string;
 	const attribName = params.name.value;

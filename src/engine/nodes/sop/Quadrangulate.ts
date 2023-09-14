@@ -162,7 +162,7 @@ export class QuadrangulateSopNode extends QuadSopNode<QuadrangulateSopParamsConf
 			}
 
 			const position = new BufferAttribute(new Float32Array(newPositionArray), 3);
-			quadGeometry.addPointAttribute(Attribute.POSITION, position);
+			quadGeometry.setAttribute(Attribute.POSITION, position);
 			quadGeometry.setIndex(quadIndices);
 			const quadObject = new QuadObject(quadGeometry);
 			return quadObject;

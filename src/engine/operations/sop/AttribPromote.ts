@@ -276,7 +276,7 @@ function setValuesToPoints(coreObject: CoreObject, attribName: string, newValue:
 		const attribSize = CoreAttribute.attribSizeFromValue(newValue);
 		if (attribSize) {
 			const corePointClass = corePointClassFactory(object);
-			corePointClass.addNumericAttrib(object, attribName, attribSize, newValue);
+			corePointClass.addNumericAttribute(object, attribName, attribSize, newValue);
 		}
 	}
 

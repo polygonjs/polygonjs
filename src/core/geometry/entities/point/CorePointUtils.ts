@@ -1,4 +1,11 @@
-import {PolyDictionary} from '../../../../types/GlobalTypes';
+import {
+	ColorLike,
+	NumericAttribValue,
+	PolyDictionary,
+	Vector2Like,
+	Vector3Like,
+	Vector4Like,
+} from '../../../../types/GlobalTypes';
 import {ArrayUtils} from '../../../ArrayUtils';
 import {CoreString} from '../../../String';
 import {AttribSize, AttribType, GroupString} from '../../Constant';
@@ -6,6 +13,7 @@ import {corePointClassFactory, corePointInstanceFactory} from '../../CoreObjectF
 import {CoreGroup} from '../../Group';
 import {CoreObjectType, ObjectContent} from '../../ObjectContent';
 import {TypedCorePoint} from './CorePoint';
+import {isNumber, isArray} from '../../../Type';
 
 export function points(coreGroup: CoreGroup) {
 	return coreGroup
@@ -126,4 +134,82 @@ export function pointAttributeTypes<T extends CoreObjectType>(object: ObjectCont
 		h[attribName] = TypedCorePoint.attribType(object, attribName);
 	}
 	return h;
+}
+
+export interface PointAttributeNumericValuesOptions {
+	attributeAdded: boolean;
+	values: number[];
+}
+export function pointAttributeNumericValues<T extends CoreObjectType>(
+	object: ObjectContent<T>,
+	size: number = 1,
+	defaultValue: NumericAttribValue = 0,
+	target: PointAttributeNumericValuesOptions
+) {
+	target.values.length = 0;
+	const values = target.values;
+	const pointsCount = pointsCountFromObject(object);
+
+	if (isNumber(defaultValue)) {
+		// adding number
+		for (let i = 0; i < pointsCount; i++) {
+			for (let j = 0; j < size; j++) {
+				values.push(defaultValue);
+			}
+		}
+		target.attributeAdded = true;
+	} else {
+		if (size > 1) {
+			if (isArray(defaultValue)) {
+				// adding array
+				for (let i = 0; i < pointsCount; i++) {
+					for (let j = 0; j < size; j++) {
+						values.push(defaultValue[j]);
+					}
+				}
+				target.attributeAdded = true;
+			} else {
+				// adding Vector2
+				const vec2 = defaultValue as Vector2Like;
+				if (size == 2 && vec2.x != null && vec2.y != null) {
+					for (let i = 0; i < pointsCount; i++) {
+						values.push(vec2.x);
+						values.push(vec2.y);
+					}
+					target.attributeAdded = true;
+				}
+				// adding Vector3
+				const vec3 = defaultValue as Vector3Like;
+				if (size == 3 && vec3.x != null && vec3.y != null && vec3.z != null) {
+					for (let i = 0; i < pointsCount; i++) {
+						values.push(vec3.x);
+						values.push(vec3.y);
+						values.push(vec3.z);
+					}
+					target.attributeAdded = true;
+				}
+				// adding Color
+				const col = defaultValue as ColorLike;
+				if (size == 3 && col.r != null && col.g != null && col.b != null) {
+					for (let i = 0; i < pointsCount; i++) {
+						values.push(col.r);
+						values.push(col.g);
+						values.push(col.b);
+					}
+					target.attributeAdded = true;
+				}
+				// adding Vector4
+				const vec4 = defaultValue as Vector4Like;
+				if (size == 4 && vec4.x != null && vec4.y != null && vec4.z != null && vec4.w != null) {
+					for (let i = 0; i < pointsCount; i++) {
+						values.push(vec4.x);
+						values.push(vec4.y);
+						values.push(vec4.z);
+						values.push(vec4.w);
+					}
+					target.attributeAdded = true;
+				}
+			}
+		}
+	}
 }

@@ -1,6 +1,6 @@
 import type {QUnit} from '../../../helpers/QUnit';
 import {AttribClass} from '../../../../src/core/geometry/Constant';
-import {coreObjectFactory} from '../../../../src/core/geometry/CoreObjectFactory';
+import {coreObjectClassFactory} from '../../../../src/core/geometry/CoreObjectFactory';
 import {CoreObjectType, ObjectContent} from '../../../../src/core/geometry/ObjectContent';
 export function testenginenodesutilsCookController(qUnit: QUnit) {
 	qUnit.test('nodes/cookController bypassed input works as expected when changing node params', async (assert) => {
@@ -54,7 +54,7 @@ export function testenginenodesutilsCookController(qUnit: QUnit) {
 			const values = container
 				.coreContent()
 				?.allObjects()
-				.map((o: ObjectContent<CoreObjectType>) => coreObjectFactory(o).attribValue(o, 'bla') as number);
+				.map((o: ObjectContent<CoreObjectType>) => coreObjectClassFactory(o).attribValue(o, 'bla') as number);
 			return values;
 		}
 		function setValues(value0: number, value1: number) {

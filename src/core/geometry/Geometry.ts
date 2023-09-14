@@ -367,15 +367,9 @@ export class CoreGeometry {
 		return ArrayUtils.chunk(index, 2);
 	}
 
-	// faces(): CoreFace[] {
-	// 	return this.facesFromGeometry();
-	// }
 	facesCount(): number {
 		const indexArray = this.geometry().index?.array || [];
 		const facesCount = indexArray.length / 3;
 		return facesCount;
 	}
-	// facesFromGeometry(): CoreFace[] {
-	// 	return ArrayUtils.range(faces_count).map((i) => new CoreFace(this, i));
-	// }
 }

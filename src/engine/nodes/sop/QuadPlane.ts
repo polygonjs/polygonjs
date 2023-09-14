@@ -101,7 +101,7 @@ export class QuadPlaneSopNode extends QuadSopNode<QuadPlaneSopParamsConfig> {
 		}
 
 		const position = new BufferAttribute(new Float32Array(positions), 3);
-		geometry.addPointAttribute(Attribute.POSITION, position);
+		geometry.setAttribute(Attribute.POSITION, position);
 		geometry.setIndex(indices);
 
 		return geometry;

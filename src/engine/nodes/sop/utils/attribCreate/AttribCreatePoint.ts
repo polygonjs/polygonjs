@@ -1,14 +1,14 @@
 import {BufferAttribute} from 'three';
 import {CoreGroup} from '../../../../../core/geometry/Group';
-import {CoreObject} from '../../../../../core/geometry/modules/three/CoreObject';
 import {CoreAttribute} from '../../../../../core/geometry/Attribute';
 import {ValueArrayByObject, initArrayIfRequired} from './Common';
 import {hasGroupFromParams, AttribCreateSopNodeParams} from '../../../../operations/sop/utils/attribCreate/Common';
-
 import {AttribType} from '../../../../../core/geometry/Constant';
 import {TypeAssert} from '../../../../poly/Assert';
 import {pointsFromObject, pointsFromObjectFromGroup} from '../../../../../core/geometry/entities/point/CorePointUtils';
 import {corePointClassFactory} from '../../../../../core/geometry/CoreObjectFactory';
+import {ObjectContent, CoreObjectType} from '../../../../../core/geometry/ObjectContent';
+// import {filterObjectsFromCoreGroup} from '../../../../../core/geometry/Mask';
 
 interface ArraysByObject {
 	X: ValueArrayByObject;
@@ -28,17 +28,17 @@ export async function addPointAttribute(
 	coreGroup: CoreGroup,
 	params: AttribCreateSopNodeParams
 ) {
-	const coreObjects = coreGroup.threejsCoreObjects();
+	const objects = coreGroup.allObjects(); // filterObjectsFromCoreGroup(coreGroup, {group: params.group.value}); //coreGroup.allObjects();
 	switch (attribType) {
 		case AttribType.NUMERIC: {
-			for (const coreObject of coreObjects) {
-				await _addNumericAttributeToPoints(coreObject, params);
+			for (const object of objects) {
+				await _addNumericAttributeToPoints(object, params);
 			}
 			return;
 		}
 		case AttribType.STRING: {
-			for (const coreObject of coreObjects) {
-				await _addStringAttributeToPoints(coreObject, params);
+			for (const object of objects) {
+				await _addStringAttributeToPoints(object, params);
 			}
 			return;
 		}
@@ -46,8 +46,10 @@ export async function addPointAttribute(
 	TypeAssert.unreachable(attribType);
 }
 
-async function _addNumericAttributeToPoints(coreObject: CoreObject, params: AttribCreateSopNodeParams) {
-	const object = coreObject.object();
+async function _addNumericAttributeToPoints<T extends CoreObjectType>(
+	object: ObjectContent<T>,
+	params: AttribCreateSopNodeParams
+) {
 	const corePointClass = corePointClassFactory(object);
 
 	const points = pointsFromObjectFromGroup(object, params.group.value);
@@ -58,10 +60,13 @@ async function _addNumericAttributeToPoints(coreObject: CoreObject, params: Attr
 
 	if (param.hasExpression()) {
 		if (!corePointClass.hasAttrib(object, attribName)) {
-			corePointClass.addNumericAttrib(object, attribName, size, param.value);
+			corePointClass.addNumericAttribute(object, attribName, size, param.value);
 		}
 
 		const attrib = corePointClass.attribute(object, attribName) as BufferAttribute;
+		if (!attrib) {
+			return;
+		}
 		attrib.needsUpdate = true;
 		const array = attrib.array as number[];
 		if (size == 1) {
@@ -85,7 +90,7 @@ async function _addNumericAttributeToPoints(coreObject: CoreObject, params: Attr
 			for (let i = 0; i < components.length; i++) {
 				const componentParam = components[i];
 				if (componentParam.hasExpression() && componentParam.expressionController) {
-					tmpArrays[i] = initArrayIfRequired(coreObject, arraysByGeometryUuid[i], points.length);
+					tmpArrays[i] = initArrayIfRequired(object, arraysByGeometryUuid[i], points.length);
 					if (componentParam.expressionController.entitiesDependent()) {
 						await componentParam.expressionController.computeExpressionForPoints(
 							points,
@@ -124,8 +129,10 @@ async function _addNumericAttributeToPoints(coreObject: CoreObject, params: Attr
 	}
 }
 
-async function _addStringAttributeToPoints(coreObject: CoreObject, params: AttribCreateSopNodeParams) {
-	const object = coreObject.object();
+async function _addStringAttributeToPoints<T extends CoreObjectType>(
+	object: ObjectContent<T>,
+	params: AttribCreateSopNodeParams
+) {
 	const corePointClass = corePointClassFactory(object);
 
 	const points = pointsFromObjectFromGroup(object, params.group.value);

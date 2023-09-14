@@ -26,7 +26,7 @@ export class FeatureConverter {
 		});
 		lines.forEach((line) => {
 			const corePointClass = corePointClassFactory(line);
-			corePointClass.addNumericAttrib(line, 'perimeter', 1, perimeter);
+			corePointClass.addNumericAttribute(line, 'perimeter', 1, perimeter);
 		});
 
 		const geometries = lines.map((l) => l.geometry) as BufferGeometry[];
@@ -37,7 +37,7 @@ export class FeatureConverter {
 
 		// pti
 		dummyMesh.geometry = mergedGeometry;
-		CoreThreejsPoint.addNumericAttrib(dummyMesh, 'pti', 1, 0);
+		// CoreThreejsPoint.addNumericAttribute(dummyMesh, 'pti', 1, 0);
 		const points = pointsFromObject(dummyMesh);
 		const pointsCount = points.length;
 		for (let i = 0; i < pointsCount; i++) {
@@ -75,8 +75,8 @@ export class FeatureConverter {
 		dummyMesh.geometry = geometry;
 		const id_from_name = CoreMapboxString.toId(this.name) % 10000000;
 		// console.log(this.name, id_from_name)
-		CoreThreejsPoint.addNumericAttrib(dummyMesh, 'id', 1, this.id);
-		CoreThreejsPoint.addNumericAttrib(dummyMesh, 'name_id', 1, id_from_name);
+		CoreThreejsPoint.addNumericAttribute(dummyMesh, 'id', 1, this.id);
+		CoreThreejsPoint.addNumericAttribute(dummyMesh, 'name_id', 1, id_from_name);
 
 		return object;
 	}

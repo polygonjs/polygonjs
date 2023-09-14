@@ -41,7 +41,7 @@ function _addNumericAttributeToPoints<T extends CoreObjectType>(
 
 	const attribName = CoreAttribute.remapName(params.name);
 	if (!corePointClass.hasAttrib(object, attribName)) {
-		corePointClass.addNumericAttrib(object, attribName, params.size, 0);
+		corePointClass.addNumericAttribute(object, attribName, params.size, 0);
 	} else {
 		corePointClass.markAttribAsNeedsUpdate(object, attribName);
 	}
@@ -52,7 +52,7 @@ function _addNumericAttributeToPoints<T extends CoreObjectType>(
 			point.setAttribValue(attribName, value);
 		}
 	} else {
-		corePointClass.addNumericAttrib(object, attribName, params.size, value);
+		corePointClass.addNumericAttribute(object, attribName, params.size, value);
 	}
 }
 

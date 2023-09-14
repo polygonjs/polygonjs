@@ -4,6 +4,12 @@ import {TypedCorePoint} from '../../entities/point/CorePoint';
 import {PointAttributesDict} from '../../entities/point/Common';
 import {QuadObject} from './QuadObject';
 import {Attribute} from '../../Attribute';
+import {pointAttributeNumericValues, PointAttributeNumericValuesOptions} from '../../entities/point/CorePointUtils';
+import {NumericAttribValue} from '../../../../types/GlobalTypes';
+const target: PointAttributeNumericValuesOptions = {
+	attributeAdded: false,
+	values: [],
+};
 
 export class QuadPoint extends TypedCorePoint<CoreObjectType.QUAD> {
 	protected _geometry?: ObjectGeometryMap[CoreObjectType.QUAD];
@@ -96,11 +102,48 @@ export class QuadPoint extends TypedCorePoint<CoreObjectType.QUAD> {
 	//
 	//
 	//
-	static override renameAttrib<T extends CoreObjectType>(
-		object: ObjectContent<T>,
-		oldName: string,
-		newName: string
-	) {}
+	static override renameAttrib<T extends CoreObjectType>(object: ObjectContent<T>, oldName: string, newName: string) {
+		const attributes = this.attributes(object);
+		if (!attributes) {
+			return;
+		}
+		const attribute = this.attribute(object, oldName);
+		if (!attribute) {
+			return;
+		}
+		attributes[newName] = attribute;
+		delete attributes[oldName];
+	}
 
-	static override deleteAttribute<T extends CoreObjectType>(object: ObjectContent<T>, attribName: string) {}
+	static override deleteAttribute<T extends CoreObjectType>(object: ObjectContent<T>, attribName: string) {
+		const geometry = (object as any as QuadObject).geometry;
+		if (!geometry) {
+			return;
+		}
+		delete geometry.attributes[attribName];
+	}
+	static override addNumericAttribute<T extends CoreObjectType>(
+		object: ObjectContent<T>,
+		attribName: string,
+		size: number = 1,
+		defaultValue: NumericAttribValue = 0
+	) {
+		const geometry = (object as any as QuadObject).geometry;
+		if (!geometry) {
+			return;
+		}
+		pointAttributeNumericValues(object, size, defaultValue, target);
+
+		if (target.attributeAdded) {
+			// if (markedAsInstance(geometry)) {
+			// 	const valuesAsTypedArray = new Float32Array(target.values);
+			// 	geometry.setAttribute(attribName.trim(), new InstancedBufferAttribute(valuesAsTypedArray, size));
+			// } else {
+			geometry.setAttribute(attribName.trim(), new BufferAttribute(new Float32Array(target.values), size));
+			// }
+		} else {
+			console.warn(defaultValue);
+			throw `QuadPoint.addNumericAttrib error: no other default value allowed for now (default given: ${defaultValue})`;
+		}
+	}
 }

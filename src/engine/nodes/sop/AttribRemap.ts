@@ -70,7 +70,7 @@ export class AttribRemapSopNode extends TypedSopNode<AttribRemapSopParamsConfig>
 		if (isBooleanTrue(this.pv.changeName)) {
 			targetName = this.pv.newName;
 			if (!corePointClass.hasAttrib(object, targetName)) {
-				corePointClass.addNumericAttrib(object, targetName, attribSize, 0);
+				corePointClass.addNumericAttribute(object, targetName, attribSize, 0);
 			}
 		}
 

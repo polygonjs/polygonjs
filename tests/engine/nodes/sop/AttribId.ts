@@ -2,7 +2,7 @@ import type {QUnit} from '../../../helpers/QUnit';
 import {AttribClass} from '../../../../src/core/geometry/Constant';
 import {AttributeHelper} from '../../../helpers/AttributeHelper';
 import {BufferAttribute} from 'three';
-import {coreObjectFactory} from '../../../../src/core/geometry/CoreObjectFactory';
+import {coreObjectClassFactory} from '../../../../src/core/geometry/CoreObjectFactory';
 import {CoreObjectType, ObjectContent} from '../../../../src/core/geometry/ObjectContent';
 export function testenginenodessopAttribId(qUnit: QUnit) {
 	qUnit.test('sop/attribId simple on points', async (assert) => {
@@ -48,11 +48,11 @@ export function testenginenodessopAttribId(qUnit: QUnit) {
 		const objects = coreGroup.allObjects();
 		assert.equal(objects.length, 4);
 		assert.deepEqual(
-			objects.map((o: ObjectContent<CoreObjectType>) => coreObjectFactory(o).attribValue(o, 'id')),
+			objects.map((o: ObjectContent<CoreObjectType>) => coreObjectClassFactory(o).attribValue(o, 'id')),
 			[0, 1, 2, 3]
 		);
 		assert.deepEqual(
-			objects.map((o: ObjectContent<CoreObjectType>) => coreObjectFactory(o).attribValue(o, 'idn')),
+			objects.map((o: ObjectContent<CoreObjectType>) => coreObjectClassFactory(o).attribValue(o, 'idn')),
 			[0, 1 / 3, 2 / 3, 1]
 		);
 	});

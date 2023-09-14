@@ -6,7 +6,7 @@ import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 import {CoreObjectType, MergeCompactOptions, ObjectContent} from '../../../core/geometry/ObjectContent';
-import {coreObjectFactory} from '../../../core/geometry/CoreObjectFactory';
+import {coreObjectClassFactory} from '../../../core/geometry/CoreObjectFactory';
 import {SetUtils} from '../../../core/SetUtils';
 import {NodeErrorState} from '../../nodes/utils/states/Error';
 import {NodeContext} from '../../poly/NodeContext';
@@ -114,7 +114,7 @@ export class MergeSopOperation extends BaseSopOperation {
 						},
 					});
 				} else {
-					const coreObjectClass = coreObjectFactory(objects[0]);
+					const coreObjectClass = coreObjectClassFactory(objects[0]);
 					coreObjectClass.mergeCompact({
 						objects,
 						material,
@@ -135,7 +135,7 @@ export class MergeSopOperation extends BaseSopOperation {
 const objectsByMaterial: Map<Material, Set<ObjectContent<CoreObjectType>>> = new Map();
 function _makeCompactWithPreservedMaterials(options: MergeCompactOptions) {
 	const {objects, objectType, mergedObjects, onError} = options;
-	const coreObjectClass = coreObjectFactory(objects[0]);
+	const coreObjectClass = coreObjectClassFactory(objects[0]);
 	objectsByMaterial.clear();
 	for (let object of objects) {
 		MapUtils.addToSetAtEntry(objectsByMaterial, object.material, object);

@@ -67,15 +67,9 @@ export class QuadPrimitive extends CorePrimitive<CoreObjectType.QUAD> {
 
 	position(target: Vector3) {
 		console.warn('QuadPrimitive.position not implemented');
-		// _coreFace.setIndex(this._index, this._geometry as QuadGeometryWithPrimitiveAttributes);
-		// _coreFace.center(target);
 	}
 	normal(target: Vector3): Vector3 {
-		// target.set(0, 0, 0);
 		console.warn('QuadPrimitive.normal not implemented');
-		// _coreFace.setIndex(this._index, this._geometry as QuadGeometryWithPrimitiveAttributes);
-		// _coreFace.triangle(_triangle);
-		// _triangle.getNormal(target);
 		return target;
 	}
 }

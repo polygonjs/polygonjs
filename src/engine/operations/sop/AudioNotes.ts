@@ -85,7 +85,7 @@ export class AudioNotesSopOperation extends BaseSopOperation {
 			if (isBooleanTrue(params.toctave)) {
 				const octavesArray = values.map((v) => v.octave);
 				if (!corePointClass.hasAttrib(object, params.octaveName)) {
-					corePointClass.addNumericAttrib(object, params.octaveName, 1, 1);
+					corePointClass.addNumericAttribute(object, params.octaveName, 1, 1);
 				}
 				let i = 0;
 				for (let corePoint of corePoints) {
