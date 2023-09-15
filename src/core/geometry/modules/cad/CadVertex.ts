@@ -18,8 +18,9 @@ export class CadVertex<T extends CadGeometryType> extends CoreVertex<CoreObjectT
 	static override verticesCount<T extends CoreObjectType>(object: ObjectContent<T>) {
 		return 0;
 	}
-	override position(target: Vector3) {
+	override position(target: Vector3): Vector3 {
 		console.warn('CadVertex.position not implemented');
+		return target;
 	}
 	override normal(target: Vector3): Vector3 {
 		console.warn('CadVertex.normal not implemented');

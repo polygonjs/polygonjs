@@ -4,7 +4,7 @@ import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {AttribClass, ATTRIBUTE_CLASSES} from '../../../core/geometry/Constant';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
-import {coreObjectInstanceFactory, corePointClassFactory} from '../../../core/geometry/CoreObjectFactory';
+import {coreObjectInstanceFactory} from '../../../core/geometry/CoreObjectFactory';
 import {CoreObjectType} from '../../../core/geometry/ObjectContent';
 import {filterObjectsFromCoreGroup} from '../../../core/geometry/Mask';
 import {CoreEntity} from '../../../core/geometry/CoreEntity';
@@ -60,24 +60,31 @@ export class AttribPromoteSopOperation extends BaseSopOperation {
 		const objects = filterObjectsFromCoreGroup(coreGroup, params);
 		for (const object of objects) {
 			const factoryFrom = ENTITY_CLASS_FACTORY[classFrom];
+			const factoryTo = ENTITY_CLASS_FACTORY[classTo];
 			const attribNames = factoryFrom
 				? factoryFrom(object).attributeNamesMatchingMask(object, params.name)
 				: coreGroup.attributeNamesMatchingMask(params.name);
 
-			if (classTo == AttribClass.POINT) {
-				for (const attribName of attribNames) {
-					const corePointClass = corePointClassFactory(object);
-					if (!corePointClass.hasAttribute(object, attribName)) {
-						const srcAttribSize: number | null = factoryFrom
-							? factoryFrom(object).attribSize(object, attribName)
-							: coreGroup.attribSize(attribName);
-						if (srcAttribSize != null) {
-							corePointClass.addNumericAttribute(object, attribName, srcAttribSize);
+			// add attribute if it does not exist on the dest entities
+			for (const attribName of attribNames) {
+				const hasAttribute = factoryTo
+					? factoryTo(object).hasAttribute(object, attribName)
+					: coreGroup.hasAttribute(attribName);
+				if (!hasAttribute) {
+					const srcAttribSize: number | null = factoryFrom
+						? factoryFrom(object).attribSize(object, attribName)
+						: coreGroup.attribSize(attribName);
+					if (srcAttribSize != null) {
+						if (factoryTo) {
+							factoryTo(object).addNumericAttribute(object, attribName, srcAttribSize);
+						} else {
+							coreGroup.addNumericAttribute(attribName, srcAttribSize);
 						}
 					}
 				}
 			}
 
+			// promote attribute
 			const destEntities: CoreEntity[] = [];
 			const srcEntities: CoreEntity[] = [];
 			coreObjectInstanceFactory(object).relatedEntities(classTo, coreGroup, destEntities);

@@ -37,7 +37,10 @@ export function primitiveAttribTypesFromCoreGroup(coreGroup: CoreGroup): PolyDic
 		return {};
 	}
 }
-
+export function primitivesCountFromObject<T extends CoreObjectType>(object: ObjectContent<T>): number {
+	const primitiveClass = corePrimitiveClassFactory(object);
+	return primitiveClass.primitivesCount(object);
+}
 export function primitivesFromObject<T extends CoreObjectType>(object: ObjectContent<T>): CorePrimitive<T>[] {
 	const primitiveClass = corePrimitiveClassFactory(object);
 	const primitivesCount = primitiveClass.primitivesCount(object);

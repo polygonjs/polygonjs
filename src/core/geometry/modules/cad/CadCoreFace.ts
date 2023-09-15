@@ -39,7 +39,7 @@ export class CadCoreFace extends CoreEntity {
 	stringAttribValue(attribName: string): string | null {
 		return '';
 	}
-	position(target: Vector3) {
+	position(target: Vector3): Vector3 {
 		const oc = CadLoaderSync.oc();
 		let verticesCount = 0;
 		target.set(0, 0, 0);
@@ -51,6 +51,7 @@ export class CadCoreFace extends CoreEntity {
 			verticesCount++;
 		});
 		target.divideScalar(verticesCount);
+		return target;
 	}
 	//
 	//

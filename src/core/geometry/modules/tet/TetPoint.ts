@@ -43,10 +43,10 @@ export class TetPoint extends TypedCorePoint<CoreObjectType.TET> {
 	static override pointsCount<T extends CoreObjectType>(object: ObjectContent<T>) {
 		return 0;
 	}
-	override position(target: Vector3) {
+	override position(target: Vector3): Vector3 {
 		return target;
 	}
-	override normal(target: Vector3) {
+	override normal(target: Vector3): Vector3 {
 		return target;
 	}
 

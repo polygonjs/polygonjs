@@ -5,7 +5,13 @@ import {TransformTargetType} from '../../../../src/core/Transform';
 import {BufferAttribute} from 'three';
 import {CoreObjectType} from '../../../../src/core/geometry/ObjectContent';
 import {BaseCoreObject} from '../../../../src/core/geometry/entities/object/BaseCoreObject';
-import {ENTITY_CLASS_FACTORY} from '../../../../src/core/geometry/CoreObjectFactory';
+import {
+	ENTITY_CLASS_FACTORY,
+	ENTITY_INSTANCE_FACTORY,
+	corePrimitiveClassFactory,
+	coreVertexClassFactory,
+} from '../../../../src/core/geometry/CoreObjectFactory';
+import {isNumber} from '../../../../src/core/Type';
 export function testenginenodessopAttribPromote(qUnit: QUnit) {
 	qUnit.test('sop/attribPromote point to object to point with min', async (assert) => {
 		const geo1 = window.geo1;
@@ -133,6 +139,64 @@ export function testenginenodessopAttribPromote(qUnit: QUnit) {
 		assert.deepEqual(array[0], 12);
 	});
 
+	qUnit.test('sop/attribPromote object to primitive', async (assert) => {
+		const geo1 = window.geo1;
+
+		const box1 = geo1.createNode('box');
+		const attribCreate1 = geo1.createNode('attribCreate');
+		attribCreate1.setAttribClass(AttribClass.OBJECT);
+		attribCreate1.p.name.set('test');
+		attribCreate1.p.size.set(1);
+		attribCreate1.p.value1.set('@ptnum+12');
+		attribCreate1.setInput(0, box1);
+
+		const attribPromote1 = geo1.createNode('attribPromote');
+		attribPromote1.setInput(0, attribCreate1);
+		attribPromote1.setAttribClassFrom(AttribClass.OBJECT);
+		attribPromote1.setAttribClassTo(AttribClass.PRIMITIVE);
+		attribPromote1.setPromoteMode(AttribPromoteMode.MAX); // max
+		attribPromote1.p.name.set('test');
+
+		async function getPrimitiveValue() {
+			const container = await attribPromote1.compute();
+			const coreGroup = container.coreContent()!;
+			const object = coreGroup.allObjects()[0];
+			const corePrimitiveClass = corePrimitiveClassFactory(object);
+			return corePrimitiveClass.attribValue(object, 0, 'test');
+		}
+
+		assert.equal(await getPrimitiveValue(), 12);
+	});
+
+	qUnit.test('sop/attribPromote object to vertex', async (assert) => {
+		const geo1 = window.geo1;
+
+		const box1 = geo1.createNode('box');
+		const attribCreate1 = geo1.createNode('attribCreate');
+		attribCreate1.setAttribClass(AttribClass.OBJECT);
+		attribCreate1.p.name.set('test');
+		attribCreate1.p.size.set(1);
+		attribCreate1.p.value1.set('@ptnum+12');
+		attribCreate1.setInput(0, box1);
+
+		const attribPromote1 = geo1.createNode('attribPromote');
+		attribPromote1.setInput(0, attribCreate1);
+		attribPromote1.setAttribClassFrom(AttribClass.OBJECT);
+		attribPromote1.setAttribClassTo(AttribClass.VERTEX);
+		attribPromote1.setPromoteMode(AttribPromoteMode.MAX); // max
+		attribPromote1.p.name.set('test');
+
+		async function getVertexValue() {
+			const container = await attribPromote1.compute();
+			const coreGroup = container.coreContent()!;
+			const object = coreGroup.allObjects()[0];
+			const coreVertexClass = coreVertexClassFactory(object);
+			return coreVertexClass.attribValue(object, 0, 'test');
+		}
+
+		assert.equal(await getVertexValue(), 12);
+	});
+
 	qUnit.test('sop/attribPromote multiple attributes from objects to point', async (assert) => {
 		const geo1 = window.geo1;
 
@@ -162,7 +226,7 @@ export function testenginenodessopAttribPromote(qUnit: QUnit) {
 		const coreGroup = container.coreContent()!;
 		const geometry = coreGroup.threejsObjectsWithGeo()[0].geometry;
 		assert.ok(geometry, 'geometry');
-		
+
 		const array_id = (geometry.getAttribute('id') as BufferAttribute).array;
 		assert.equal(array_id.length, container.pointsCount(), 'array length ok');
 		assert.in_delta(array_id[0], 0.1, 0.001);
@@ -293,15 +357,21 @@ export function testenginenodessopAttribPromote(qUnit: QUnit) {
 					const container = await attribPromote1.compute();
 					const coreGroup = container.coreContent()!;
 					const object = coreGroup.allObjects()[0];
-					const factory = ENTITY_CLASS_FACTORY[desAttribClass];
-					if (factory) {
-						const entityClass = factory(object);
+					const factoryClass = ENTITY_CLASS_FACTORY[desAttribClass];
+					const factoryInstance = ENTITY_INSTANCE_FACTORY[desAttribClass];
+					if (factoryClass && factoryInstance) {
+						const entityClass = factoryClass(object);
+						const entityInstance = factoryInstance(object);
 						assert.ok(
 							entityClass.hasAttribute(object, 't'),
-							`has attrib  (${desAttribClass}, ${inputNode.type()})`
+							`has attrib  (${srcAttribClass}->${desAttribClass}, ${inputNode.type()})`
 						);
+						assert.ok(isNumber(entityInstance.attribValue('t')));
 					} else {
-						assert.ok(coreGroup.hasAttribute('t'), `has attrib  (${desAttribClass}, ${inputNode.type()})`);
+						assert.ok(
+							coreGroup.hasAttribute('t'),
+							`has attrib  (${srcAttribClass}->${desAttribClass}, ${inputNode.type()})`
+						);
 					}
 				}
 			}

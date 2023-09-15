@@ -14,8 +14,9 @@ export class CadPrimitive<T extends CadGeometryType> extends CorePrimitive<CoreO
 	geometry() {
 		return (this._object as CadObject<CadGeometryType>).geometry;
 	}
-	position(target: Vector3) {
+	position(target: Vector3): Vector3 {
 		console.warn('CadPrimitive.position not implemented');
+		return target;
 	}
 	normal(target: Vector3): Vector3 {
 		console.warn('CadPrimitive.normal not implemented');

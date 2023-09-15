@@ -16,12 +16,8 @@ import {TransformTargetType} from '../../../Transform';
 import {ObjectTransformMode, ObjectTransformSpace} from '../../../TransformSpace';
 import {EntityGroupCollection} from '../../EntityGroupCollection';
 import {_updateObjectAttribRef} from '../../../reactivity/ObjectAttributeReactivityUpdateRef';
-import {
-	attribValueNonPrimitive,
-	copyAttribValue,
-	AttributeDictionary,
-	cloneAttribValue,
-} from '../../entities/object/BaseCoreObjectUtils';
+import {AttributeDictionary} from '../object/BaseCoreObjectUtils';
+import {attribValueNonPrimitive, copyAttribValue, cloneAttribValue} from '../utils/Common';
 import {getOrCreateObjectAttributeRef} from '../../../reactivity/ObjectAttributeReactivityCreateRef';
 import {
 	JsIConnectionPointTypeToDataTypeMap,
@@ -167,14 +163,31 @@ export abstract class BaseCoreObject<T extends CoreObjectType> extends CoreEntit
 		}
 		_updateObjectAttribRef(object, attribName, value);
 	}
+	static addNumericAttribute<T extends CoreObjectType>(
+		object: ObjectContent<T>,
+		attribName: string,
+		size: AttribSize = 1,
+		defaultValue: NumericAttribValue = 0
+	) {
+		this.addAttribute(object, attribName, defaultValue);
+	}
 	addAttribute(name: string, value: AttribValue) {
 		if (!this._object) {
 			return;
 		}
 		(this.constructor as any as typeof BaseCoreObject<CoreObjectType>).addAttribute(this._object, name, value);
 	}
+
 	addNumericAttrib(name: string, value: NumericAttribValue) {
-		this.addAttribute(name, value);
+		if (!this._object) {
+			return;
+		}
+		(this.constructor as any as typeof BaseCoreObject<CoreObjectType>).addNumericAttribute(
+			this._object,
+			name,
+			1,
+			value
+		);
 	}
 	setAttribValue(name: string, value: AttribValue) {
 		this.addAttribute(name, value);
@@ -298,8 +311,9 @@ export abstract class BaseCoreObject<T extends CoreObjectType> extends CoreEntit
 	static position(object: ObjectContent<CoreObjectType>, target: Vector3) {
 		target.copy(ORIGIN);
 	}
-	position(target: Vector3) {
+	position(target: Vector3): Vector3 {
 		(this.constructor as typeof BaseCoreObject<CoreObjectType>).position(this._object, target);
+		return target;
 	}
 	static boundingBox(object: ObjectContent<CoreObjectType>, target: Box3) {
 		target.makeEmpty();

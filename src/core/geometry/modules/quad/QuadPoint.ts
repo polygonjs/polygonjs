@@ -4,9 +4,13 @@ import {TypedCorePoint} from '../../entities/point/CorePoint';
 import {PointAttributesDict} from '../../entities/point/Common';
 import {QuadObject} from './QuadObject';
 import {Attribute} from '../../Attribute';
-import {pointAttributeNumericValues, PointAttributeNumericValuesOptions} from '../../entities/point/CorePointUtils';
+import {attributeNumericValues, AttributeNumericValuesOptions} from '../../entities/utils/Common';
 import {NumericAttribValue} from '../../../../types/GlobalTypes';
-const target: PointAttributeNumericValuesOptions = {
+import {pointsCountFromObject} from '../../entities/point/CorePointUtils';
+import type {CoreVertex} from '../../entities/vertex/CoreVertex';
+import {QuadVertex} from './QuadVertex';
+import {QuadGeometry} from './QuadGeometry';
+const target: AttributeNumericValuesOptions = {
 	attributeAdded: false,
 	values: [],
 };
@@ -43,7 +47,37 @@ export class QuadPoint extends TypedCorePoint<CoreObjectType.QUAD> {
 		object: ObjectContent<T>,
 		attribName: string,
 		attribute: BufferAttribute
-	) {}
+	) {
+		const attributes = this.attributes(object);
+		if (!attributes) {
+			return;
+		}
+		attributes[attribName] = attribute;
+	}
+	static override addNumericAttribute<T extends CoreObjectType>(
+		object: ObjectContent<T>,
+		attribName: string,
+		size: number = 1,
+		defaultValue: NumericAttribValue = 0
+	) {
+		const geometry = (object as any as QuadObject).geometry;
+		if (!geometry) {
+			return;
+		}
+		attributeNumericValues(object, pointsCountFromObject, size, defaultValue, target);
+
+		if (target.attributeAdded) {
+			// if (markedAsInstance(geometry)) {
+			// 	const valuesAsTypedArray = new Float32Array(target.values);
+			// 	geometry.setAttribute(attribName.trim(), new InstancedBufferAttribute(valuesAsTypedArray, size));
+			// } else {
+			geometry.setAttribute(attribName.trim(), new BufferAttribute(new Float32Array(target.values), size));
+			// }
+		} else {
+			console.warn(defaultValue);
+			throw `QuadPoint.addNumericAttrib error: no other default value allowed for now (default given: ${defaultValue})`;
+		}
+	}
 	static override attributes<T extends CoreObjectType>(object: ObjectContent<T>): PointAttributesDict | undefined {
 		const geometry = (object as any as QuadObject).geometry;
 		if (!geometry) {
@@ -58,7 +92,7 @@ export class QuadPoint extends TypedCorePoint<CoreObjectType.QUAD> {
 		}
 		return positionAttribute.count;
 	}
-	override position(target: Vector3) {
+	override position(target: Vector3): Vector3 {
 		if (!this._geometry) {
 			return target;
 		}
@@ -103,28 +137,29 @@ export class QuadPoint extends TypedCorePoint<CoreObjectType.QUAD> {
 	//
 	//
 
-	static override addNumericAttribute<T extends CoreObjectType>(
-		object: ObjectContent<T>,
-		attribName: string,
-		size: number = 1,
-		defaultValue: NumericAttribValue = 0
-	) {
-		const geometry = (object as any as QuadObject).geometry;
+	//
+	//
+	// RELATED ENTITIES
+	//
+	//
+	override relatedVertices<T extends CoreObjectType>(): CoreVertex<T>[] {
+		if (!this._object) {
+			return [];
+		}
+		const geometry = (this._object as any as QuadObject).geometry as QuadGeometry | undefined;
 		if (!geometry) {
-			return;
+			return [];
 		}
-		pointAttributeNumericValues(object, size, defaultValue, target);
-
-		if (target.attributeAdded) {
-			// if (markedAsInstance(geometry)) {
-			// 	const valuesAsTypedArray = new Float32Array(target.values);
-			// 	geometry.setAttribute(attribName.trim(), new InstancedBufferAttribute(valuesAsTypedArray, size));
-			// } else {
-			geometry.setAttribute(attribName.trim(), new BufferAttribute(new Float32Array(target.values), size));
-			// }
-		} else {
-			console.warn(defaultValue);
-			throw `QuadPoint.addNumericAttrib error: no other default value allowed for now (default given: ${defaultValue})`;
+		const indexArray = geometry.index;
+		const vertices: CoreVertex<T>[] = [];
+		let i = 0;
+		for (const indexValue of indexArray) {
+			if (indexValue == this._index) {
+				const vertex = new QuadVertex(this._object as any as QuadObject, i) as CoreVertex<T>;
+				vertices.push(vertex);
+			}
+			i++;
 		}
+		return vertices;
 	}
 }

@@ -10,7 +10,7 @@ import {BufferAttribute, Vector4, Vector3, Vector2, InterleavedBufferAttribute} 
 import {Attribute, CoreAttribute} from '../../Attribute';
 import {isArray} from '../../../Type';
 import {CoreEntity} from '../../CoreEntity';
-import {DOT, ComponentName, COMPONENT_INDICES, AttribType, GroupString, AttribClass} from '../../Constant';
+import {DOT, ComponentName, COMPONENT_INDICES, AttribType, GroupString, AttribClass, AttribSize} from '../../Constant';
 import {ObjectContent, CoreObjectType, ObjectBuilder} from '../../ObjectContent';
 import {PointAttributesDict} from './Common';
 import {CoreAttributeData} from '../../AttributeData';
@@ -511,7 +511,7 @@ export abstract class TypedCorePoint<T extends CoreObjectType> extends CoreEntit
 	static addNumericAttribute<T extends CoreObjectType>(
 		object: ObjectContent<T>,
 		attribName: string,
-		size: number = 1,
+		size: AttribSize = 1,
 		defaultValue: NumericAttribValue = 0
 	) {
 		_warnOverloadRequired('addNumericAttribute');

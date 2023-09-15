@@ -19,8 +19,9 @@ export class LineSegmentPrimitive extends ThreejsPrimitive {
 		return index.count / 2;
 	}
 
-	position(target: Vector3) {
+	position(target: Vector3): Vector3 {
 		console.warn('LineSegmentPrimitive.position not implemented');
+		return target;
 	}
 	normal(target: Vector3): Vector3 {
 		target.set(0, 0, 0);

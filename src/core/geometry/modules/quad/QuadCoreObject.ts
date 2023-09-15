@@ -5,6 +5,8 @@ import {CoreObjectType, MergeCompactOptions} from '../../ObjectContent';
 import {TransformTargetType} from '../../../Transform';
 import {ObjectTransformMode, ObjectTransformSpace} from '../../../TransformSpace';
 import {QuadGeometry} from './QuadGeometry';
+import type {CorePrimitive} from '../../entities/primitive/CorePrimitive';
+import {QuadPrimitive} from './QuadPrimitive';
 
 const _box = new Box3();
 export class QuadCoreObject extends BaseCoreObject<CoreObjectType.QUAD> {
@@ -50,5 +52,19 @@ export class QuadCoreObject extends BaseCoreObject<CoreObjectType.QUAD> {
 		if (previousGeometry) {
 			mergedObjects.push(new QuadObject(previousGeometry));
 		}
+	}
+	//
+	//
+	// RELATED ENTITIES
+	//
+	//
+	override relatedPrimitives(): CorePrimitive<CoreObjectType>[] {
+		const primitivesCount = QuadPrimitive.primitivesCount(this._object);
+		const primitives: CorePrimitive<CoreObjectType>[] = [];
+		for (let i = 0; i < primitivesCount; i++) {
+			const primitive = new QuadPrimitive(this._object as any, i) as CorePrimitive<CoreObjectType>;
+			primitives.push(primitive);
+		}
+		return primitives;
 	}
 }

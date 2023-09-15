@@ -18,8 +18,9 @@ export class PointPrimitive extends ThreejsPrimitive {
 		}
 		return index.count;
 	}
-	position(target: Vector3) {
+	position(target: Vector3): Vector3 {
 		console.warn('PointPrimitive.position not implemented');
+		return target;
 	}
 	normal(target: Vector3): Vector3 {
 		console.warn('PointPrimitive.normal not implemented');

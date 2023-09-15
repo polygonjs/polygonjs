@@ -16,12 +16,13 @@ import {ObjectUtils} from '../../../ObjectUtils';
 import {NumericAttribValue} from '../../../../types/GlobalTypes';
 import {markedAsInstance} from '../../GeometryUtils';
 import {pointsCountFromBufferGeometry, positionAttributeNameFromBufferGeometry} from './CoreThreejsPointUtils';
-import {pointAttributeNumericValues, PointAttributeNumericValuesOptions} from '../../entities/point/CorePointUtils';
+import {attributeNumericValues, AttributeNumericValuesOptions} from '../../entities/utils/Common';
 import {ThreejsVertex} from './ThreejsVertex';
 import type {CoreVertex} from '../../entities/vertex/CoreVertex';
+import {pointsCountFromObject} from '../../entities/point/CorePointUtils';
 
 const INDEX_ATTRIB_VALUES = 'indexedAttribValues';
-const target: PointAttributeNumericValuesOptions = {
+const target: AttributeNumericValuesOptions = {
 	attributeAdded: false,
 	values: [],
 };
@@ -87,7 +88,7 @@ export class ThreejsPoint extends TypedCorePoint<CoreObjectType.THREEJS> {
 		const {array} = geometry.getAttribute(Attribute.POSITION) as BufferAttribute;
 		return target.fromArray(array, index * 3);
 	}
-	override position(target: Vector3) {
+	override position(target: Vector3): Vector3 {
 		if (!this._geometry) {
 			return target;
 		}
@@ -205,7 +206,7 @@ export class ThreejsPoint extends TypedCorePoint<CoreObjectType.THREEJS> {
 		if (!geometry) {
 			return;
 		}
-		pointAttributeNumericValues(object, size, defaultValue, target);
+		attributeNumericValues(object, pointsCountFromObject, size, defaultValue, target);
 
 		if (target.attributeAdded) {
 			if (markedAsInstance(geometry)) {

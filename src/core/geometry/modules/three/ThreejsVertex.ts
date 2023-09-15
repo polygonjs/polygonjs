@@ -2,15 +2,22 @@ import {BufferGeometry, Object3D, Mesh, Vector3, BufferAttribute} from 'three';
 import {CoreObjectType, ObjectContent} from '../../ObjectContent';
 import {CoreVertex} from '../../entities/vertex/CoreVertex';
 import {VertexAttributesDict, UserDataWithVertexAttributes} from '../../entities/vertex/Common';
-import {BaseVertexAttribute} from '../../entities/vertex/VertexAttribute';
+import {BaseVertexAttribute, VertexNumberAttribute} from '../../entities/vertex/VertexAttribute';
+import {verticesCountFromObject} from '../../entities/vertex/CoreVertexUtils';
 import {primitiveInstanceFactory, primitiveVerticesCountFactory} from './ThreeModule';
 import type {CorePrimitive} from '../../entities/primitive/CorePrimitive';
 import type {TypedCorePoint} from '../../entities/point/CorePoint';
 import {ThreejsPoint} from './ThreejsPoint';
+import {NumericAttribValue} from '../../../../types/GlobalTypes';
+import {AttributeNumericValuesOptions, attributeNumericValues} from '../../entities/utils/Common';
 
 export interface BufferGeometryWithVertexAttributes extends BufferGeometry {
 	userData: UserDataWithVertexAttributes;
 }
+const target: AttributeNumericValuesOptions = {
+	attributeAdded: false,
+	values: [],
+};
 
 export class ThreejsVertex extends CoreVertex<CoreObjectType.THREEJS> {
 	protected _geometry?: BufferGeometry;
@@ -37,23 +44,36 @@ export class ThreejsVertex extends CoreVertex<CoreObjectType.THREEJS> {
 		return this._geometry;
 	}
 	static override addAttribute(object: Object3D, attribName: string, attribute: BaseVertexAttribute) {
-		const geometry = (object as Mesh).geometry as BufferGeometryWithVertexAttributes | undefined;
-		if (!geometry) {
+		const attributes = this.attributes(object);
+		if (!attributes) {
 			return;
 		}
-		if (!geometry.userData) {
-			console.warn('geometry has no userData');
-			return;
-		}
-		if (!geometry.userData.vertexAttributes) {
-			geometry.userData.vertexAttributes = {};
-		}
-		geometry.userData.vertexAttributes[attribName] = attribute;
+		attributes[attribName] = attribute;
+	}
+	static override addNumericAttribute(
+		object: Object3D,
+		attribName: string,
+		size: number = 1,
+		defaultValue: NumericAttribValue = 0
+	) {
+		const verticesCount = this.verticesCount(object);
+		target.values = new Array(verticesCount * size);
+		attributeNumericValues(object, verticesCountFromObject, size, defaultValue, target);
+
+		const attribute: VertexNumberAttribute = {
+			isString: false,
+			array: target.values,
+			itemSize: size,
+		};
+		this.addAttribute(object, attribName, attribute);
 	}
 	static override attributes<T extends CoreObjectType>(object: ObjectContent<T>): VertexAttributesDict | undefined {
 		const geometry = (object as any as Mesh).geometry as BufferGeometryWithVertexAttributes | undefined;
 		if (!geometry) {
 			return;
+		}
+		if (!geometry.userData.vertexAttributes) {
+			geometry.userData.vertexAttributes = {};
 		}
 		return geometry.userData.vertexAttributes;
 	}
@@ -87,8 +107,9 @@ export class ThreejsVertex extends CoreVertex<CoreObjectType.THREEJS> {
 		}
 		return index.count;
 	}
-	override position(target: Vector3) {
+	override position(target: Vector3): Vector3 {
 		console.warn('CoreThreejsVertex.position not implemented');
+		return target;
 	}
 	override normal(target: Vector3): Vector3 {
 		console.warn('CoreThreejsVertex.normal not implemented');
@@ -103,7 +124,7 @@ export class ThreejsVertex extends CoreVertex<CoreObjectType.THREEJS> {
 		if (!this._object) {
 			return [];
 		}
-		const index = this._index * primitiveVerticesCountFactory(this._object);
+		const index = Math.floor(this._index / primitiveVerticesCountFactory(this._object));
 		const primitive = primitiveInstanceFactory(this._object, index) as CorePrimitive<T> | undefined;
 		if (!primitive) {
 			return [];

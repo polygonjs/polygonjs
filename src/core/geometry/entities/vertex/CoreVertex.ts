@@ -11,7 +11,7 @@ import {Attribute, CoreAttribute} from '../../Attribute';
 import {CoreEntity} from '../../CoreEntity';
 import {CoreType} from '../../../Type';
 import {BaseVertexAttribute} from './VertexAttribute';
-import {DOT, ComponentName, COMPONENT_INDICES, GroupString, AttribClass} from '../../Constant';
+import {DOT, ComponentName, COMPONENT_INDICES, GroupString, AttribClass, AttribSize} from '../../Constant';
 import {VertexAttributesDict} from './Common';
 import {CoreObjectType, ObjectBuilder, ObjectContent} from '../../ObjectContent';
 import type {TypedCorePoint} from '../point/CorePoint';
@@ -21,6 +21,9 @@ import {TypeAssert} from '../../../../engine/poly/Assert';
 import {CoreGroup} from '../../Group';
 import {arrayCopy} from '../../../ArrayUtils';
 
+function _warnOverloadRequired(functionName: string) {
+	console.warn(`CoreVertex.${functionName} needs to be overloaded`);
+}
 export abstract class CoreVertex<T extends CoreObjectType> extends CoreEntity {
 	protected _object?: ObjectContent<T>;
 	constructor(object?: ObjectContent<T>, index?: number) {
@@ -39,7 +42,15 @@ export abstract class CoreVertex<T extends CoreObjectType> extends CoreEntity {
 		attribName: string,
 		attribute: BaseVertexAttribute
 	) {
-		console.warn('CoreVertex.addAttribute needs to be overloaded');
+		_warnOverloadRequired('addAttribute');
+	}
+	static addNumericAttribute<T extends CoreObjectType>(
+		object: ObjectContent<T>,
+		attribName: string,
+		size: AttribSize = 1,
+		defaultValue: NumericAttribValue = 0
+	) {
+		_warnOverloadRequired('addNumericAttribute');
 	}
 
 	static verticesCount<T extends CoreObjectType>(object: ObjectContent<T>) {
@@ -47,7 +58,7 @@ export abstract class CoreVertex<T extends CoreObjectType> extends CoreEntity {
 	}
 
 	static attributes<T extends CoreObjectType>(object?: ObjectContent<T>): VertexAttributesDict | undefined {
-		console.warn('CoreVertex.attributes needs to be overloaded');
+		_warnOverloadRequired('attributes');
 		return;
 	}
 	attributes(): VertexAttributesDict | undefined {
@@ -73,7 +84,7 @@ export abstract class CoreVertex<T extends CoreObjectType> extends CoreEntity {
 		return (this.constructor as typeof CoreVertex<T>).attribute(this._object, attribName);
 	}
 	static indexAttribute<T extends CoreObjectType>(object: ObjectContent<T>): BufferAttribute | undefined | null {
-		console.warn('CoreVertex.indexAttribute needs to be overloaded');
+		_warnOverloadRequired('indexAttribute');
 		return;
 	}
 	static setIndexAttribute<T extends CoreObjectType>(
@@ -248,15 +259,16 @@ export abstract class CoreVertex<T extends CoreObjectType> extends CoreEntity {
 		return this.attribValue(attribName) as string;
 	}
 
-	position(target: Vector3) {
-		console.warn('CoreVertex.position needs to be overloaded');
+	position(target: Vector3): Vector3 {
+		_warnOverloadRequired('position');
+		return target;
 	}
 	setPosition(newPosition: Vector3) {
 		this.setAttribValueFromVector3(Attribute.POSITION, newPosition);
 	}
 
 	normal(target: Vector3): Vector3 {
-		console.warn('CoreVertex.normal needs to be overloadedd');
+		_warnOverloadRequired('normal');
 		return target;
 	}
 	setNormal(newNormal: Vector3) {

@@ -11,7 +11,7 @@ import {Attribute, CoreAttribute} from '../../Attribute';
 import {CoreEntity} from '../../CoreEntity';
 import {CoreType} from '../../../Type';
 import {BasePrimitiveAttribute} from './PrimitiveAttribute';
-import {DOT, ComponentName, COMPONENT_INDICES, GroupString, AttribClass} from '../../Constant';
+import {DOT, ComponentName, COMPONENT_INDICES, GroupString, AttribClass, AttribSize} from '../../Constant';
 import {PrimitiveAttributesDict} from './Common';
 import {CoreObjectType, ObjectContent, ObjectBuilder} from '../../ObjectContent';
 import {BaseCoreObject} from '../object/BaseCoreObject';
@@ -22,6 +22,9 @@ import type {CoreVertex} from '../vertex/CoreVertex';
 import type {CoreGroup} from '../../Group';
 import {arrayCopy} from '../../../ArrayUtils';
 
+function _warnOverloadRequired(functionName: string) {
+	console.warn(`CorePrimitive.${functionName} needs to be overloaded`);
+}
 export abstract class CorePrimitive<T extends CoreObjectType> extends CoreEntity {
 	protected _object?: ObjectContent<T>;
 	constructor(object?: ObjectContent<T>, index?: number) {
@@ -43,11 +46,19 @@ export abstract class CorePrimitive<T extends CoreObjectType> extends CoreEntity
 		attribName: string,
 		attribute: BasePrimitiveAttribute
 	) {
-		console.warn('CorePrimitive.addAttribute needs to be overloaded');
+		_warnOverloadRequired('addAttribute');
+	}
+	static addNumericAttribute<T extends CoreObjectType>(
+		object: ObjectContent<T>,
+		attribName: string,
+		size: AttribSize = 1,
+		defaultValue: NumericAttribValue = 0
+	) {
+		_warnOverloadRequired('addNumericAttribute');
 	}
 
 	static attributes<T extends CoreObjectType>(object?: ObjectContent<T>): PrimitiveAttributesDict | undefined {
-		console.warn('CorePrimitive.attributes needs to be overloaded');
+		_warnOverloadRequired('attributes');
 		return;
 	}
 	attributes(): PrimitiveAttributesDict | undefined {
@@ -296,7 +307,7 @@ export abstract class CorePrimitive<T extends CoreObjectType> extends CoreEntity
 				array[i4 + 3] = v4.w;
 				break;
 			default:
-				console.warn(`Point.set_attrib_value does not yet allow attrib size ${attribSize}`);
+				console.warn(`CorePrimitive.setAttribValue does not yet allow attribSize ${attribSize}`);
 				throw `attrib size ${attribSize} not implemented`;
 		}
 	}

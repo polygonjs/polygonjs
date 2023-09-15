@@ -1,6 +1,6 @@
-import {AttribValue} from './../../types/GlobalTypes';
+import {AttribValue, NumericAttribValue} from './../../types/GlobalTypes';
 import {PolyDictionary} from '../../types/GlobalTypes';
-import {Box3, BufferGeometry, LineSegments, Mesh, Points, Object3D, Vector3} from 'three';
+import {Box3, BufferGeometry, LineSegments, Mesh, Points, Object3D, Vector2, Vector3, Vector4} from 'three';
 import {CoreAttribute} from './Attribute';
 import {CoreString} from '../String';
 import {AttribSize, ObjectData, AttribType, GroupString, AttribClass} from './Constant';
@@ -14,6 +14,7 @@ import {
 	coreObjectsAttribNames,
 	coreObjectsAttribSizesByName,
 } from './entities/object/BaseCoreObjectUtils';
+import {attribValueNonPrimitive, cloneAttribValue} from './entities/utils/Common';
 import {object3DHasGeometry} from './GeometryUtils';
 
 // entities
@@ -392,6 +393,38 @@ export class CoreGroup extends CoreEntity {
 	addAttribute(attribName: string, attribValue: AttribValue) {
 		this.attributes()[attribName] = attribValue;
 	}
+	addNumericAttribute<T extends CoreObjectType>(
+		attribName: string,
+		size: AttribSize = 1,
+		defaultValue: NumericAttribValue = 0
+	) {
+		const attributes = this.attributes();
+		if (defaultValue != null) {
+			if (attribValueNonPrimitive(defaultValue)) {
+				const clonedDefaultValue = cloneAttribValue(defaultValue);
+				if (clonedDefaultValue != null) {
+					attributes[attribName] = clonedDefaultValue;
+				}
+			} else {
+				attributes[attribName] = defaultValue;
+			}
+		} else {
+			switch (size) {
+				case 1: {
+					return (this.attributes()[attribName] = 0);
+				}
+				case 2: {
+					return (this.attributes()[attribName] = new Vector2(0, 0));
+				}
+				case 2: {
+					return (this.attributes()[attribName] = new Vector3(0, 0, 0));
+				}
+				case 2: {
+					return (this.attributes()[attribName] = new Vector4(0, 0, 0, 0));
+				}
+			}
+		}
+	}
 	deleteAttribute(name: string) {
 		delete this.attributes()[name];
 	}
@@ -443,7 +476,7 @@ export class CoreGroup extends CoreEntity {
 	stringAttribValue(attribName: string) {
 		return this.attribValue(attribName) as string | null;
 	}
-	position(target: Vector3) {
+	position(target: Vector3): Vector3 {
 		const objectsCount = this._allObjects.length;
 		target.set(0, 0, 0);
 		for (let object of this._allObjects) {
@@ -451,6 +484,7 @@ export class CoreGroup extends CoreEntity {
 			target.add(tmpPos);
 		}
 		target.divideScalar(objectsCount);
+		return target;
 	}
 	attributeNames(): string[] {
 		const attributes = this.attributes();
@@ -480,25 +514,24 @@ export class CoreGroup extends CoreEntity {
 	relatedPoints() {
 		return uniqRelatedEntities(this.relatedVertices(), (vertex) => vertex.relatedPoints());
 	}
-	relatedEntities(attribClass: AttribClass, coreGroup:CoreGroup,target:CoreEntity[]): void {
-		
+	relatedEntities(attribClass: AttribClass, coreGroup: CoreGroup, target: CoreEntity[]): void {
 		switch (attribClass) {
 			case AttribClass.POINT: {
-				return arrayCopy(this.relatedPoints(),target);
+				return arrayCopy(this.relatedPoints(), target);
 			}
 			case AttribClass.VERTEX: {
-				return arrayCopy(this.relatedVertices(),target);
+				return arrayCopy(this.relatedVertices(), target);
 			}
 			case AttribClass.PRIMITIVE: {
-				return arrayCopy(this.relatedPrimitives(),target);
+				return arrayCopy(this.relatedPrimitives(), target);
 			}
 			case AttribClass.OBJECT: {
-				return arrayCopy(this.relatedObjects(),target);
+				return arrayCopy(this.relatedObjects(), target);
 			}
 			case AttribClass.CORE_GROUP: {
-				target.length=1
-				target[0]=coreGroup
-				return
+				target.length = 1;
+				target[0] = coreGroup;
+				return;
 			}
 		}
 		TypeAssert.unreachable(attribClass);

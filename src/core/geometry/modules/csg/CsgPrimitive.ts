@@ -16,8 +16,9 @@ export class CsgPrimitive<T extends CsgGeometryType> extends CorePrimitive<CoreO
 	geometry() {
 		return (this._object as CsgObject<CsgGeometryType>).geometry;
 	}
-	position(target: Vector3) {
+	position(target: Vector3): Vector3 {
 		console.warn('CsgPrimitive.position not implemented');
+		return target;
 	}
 	normal(target: Vector3): Vector3 {
 		console.warn('CsgPrimitive.normal not implemented');

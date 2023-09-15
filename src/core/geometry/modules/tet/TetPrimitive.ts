@@ -15,8 +15,9 @@ export class TetPrimitive extends CorePrimitive<CoreObjectType.TET> {
 	static override primitivesCount<T extends CoreObjectType>(object: ObjectContent<T>) {
 		return 0;
 	}
-	position(target: Vector3) {
+	position(target: Vector3): Vector3 {
 		console.warn('TetPrimitive.position not implemented');
+		return target;
 	}
 	normal(target: Vector3): Vector3 {
 		console.warn('TetPrimitive.normal not implemented');

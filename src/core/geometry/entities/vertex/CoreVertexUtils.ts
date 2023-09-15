@@ -37,7 +37,10 @@ export function vertexAttribTypesFromCoreGroup(coreGroup: CoreGroup): PolyDictio
 		return {};
 	}
 }
-
+export function verticesCountFromObject<T extends CoreObjectType>(object: ObjectContent<T>): number {
+	const vertexClass = coreVertexClassFactory(object);
+	return vertexClass.verticesCount(object);
+}
 export function verticesFromObject<T extends CoreObjectType>(object: ObjectContent<T>): CoreVertex<T>[] {
 	const vertexClass = coreVertexClassFactory(object);
 	const verticesCount = vertexClass.verticesCount(object);

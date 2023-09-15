@@ -15,8 +15,9 @@ export class SDFPrimitive extends CorePrimitive<CoreObjectType.SDF> {
 	static override primitivesCount<T extends CoreObjectType>(object: ObjectContent<T>) {
 		return 0;
 	}
-	position(target: Vector3) {
+	position(target: Vector3): Vector3 {
 		console.warn('SDFPrimitive.position not implemented');
+		return target;
 	}
 	normal(target: Vector3): Vector3 {
 		console.warn('SDFPrimitive.normal not implemented');

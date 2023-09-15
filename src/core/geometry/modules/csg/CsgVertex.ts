@@ -18,8 +18,9 @@ export class CsgVertex<T extends CsgGeometryType> extends CoreVertex<CoreObjectT
 	static override verticesCount<T extends CoreObjectType>(object: ObjectContent<T>) {
 		return 0;
 	}
-	override position(target: Vector3) {
+	override position(target: Vector3): Vector3 {
 		console.warn('CsgVertex.position not implemented');
+		return target;
 	}
 	override normal(target: Vector3): Vector3 {
 		console.warn('CsgVertex.normal not implemented');
