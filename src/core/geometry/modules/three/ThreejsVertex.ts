@@ -6,6 +6,7 @@ import {BaseVertexAttribute} from '../../entities/vertex/VertexAttribute';
 import {primitiveInstanceFactory, primitiveVerticesCountFactory} from './ThreeModule';
 import type {CorePrimitive} from '../../entities/primitive/CorePrimitive';
 import type {TypedCorePoint} from '../../entities/point/CorePoint';
+import {ThreejsPoint} from './ThreejsPoint';
 
 export interface BufferGeometryWithVertexAttributes extends BufferGeometry {
 	userData: UserDataWithVertexAttributes;
@@ -122,7 +123,7 @@ export class ThreejsVertex extends CoreVertex<CoreObjectType.THREEJS> {
 			return [];
 		}
 		const indexValue = index.array[this._index];
-		const point = new ThreejsVertex(this._object as any as Mesh, indexValue) as any as TypedCorePoint<T>;
+		const point = new ThreejsPoint(this._object as any as Mesh, indexValue) as any as TypedCorePoint<T>;
 		return [point];
 	}
 }

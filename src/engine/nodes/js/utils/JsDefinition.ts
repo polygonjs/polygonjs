@@ -6,7 +6,7 @@ import {nodeMethodName} from '../code/assemblers/actor/ActorAssemblerUtils';
 import {LineType} from '../code/utils/LineType';
 import {MapUtils} from '../../../../core/MapUtils';
 import {EvaluatorMethodName} from '../code/assemblers/actor/ActorEvaluator';
-import {ArrayUtils} from '../../../../core/ArrayUtils';
+import {arrayUniq} from '../../../../core/ArrayUtils';
 import {ActorAssemblerConstant} from '../code/assemblers/actor/ActorAssemblerCommon';
 import {Poly} from '../../../Poly';
 import {inputObject3D} from '../_BaseObject3D';
@@ -273,7 +273,7 @@ export class TriggeringJsDefinition extends TypedJsDefinition<JsDefinitionType.T
 			(definition) => definition._options.triggeringMethodName
 		);
 		definitionGroups.forEach((definitions, triggeringMethodName) => {
-			const definitionMethodCalls = ArrayUtils.uniq(definitions.map((d) => `this.${d.name()}()`)).join(';');
+			const definitionMethodCalls = arrayUniq(definitions.map((d) => `this.${d.name()}()`)).join(';');
 			const line = `${triggeringMethodName}(){
 				${definitionMethodCalls}
 			}`;

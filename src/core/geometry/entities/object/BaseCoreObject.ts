@@ -33,6 +33,7 @@ import {TypeAssert} from '../../../../engine/poly/Assert';
 import {uniqRelatedEntities} from '../utils/Common';
 import type {CoreGroup} from '../../Group';
 import type {CorePrimitive} from '../primitive/CorePrimitive';
+import {arrayCopy} from '../../../ArrayUtils';
 
 enum PropertyName {
 	NAME = 'name',
@@ -577,32 +578,38 @@ export abstract class BaseCoreObject<T extends CoreObjectType> extends CoreEntit
 	// RELATED ENTITIES
 	//
 	//
-	relatedCoreGroups(): CoreGroup[] {
+	// relatedCoreGroups(): CoreGroup[] {
+	// 	return [];
+	// }
+	relatedPrimitives(): CorePrimitive<CoreObjectType>[] {
 		return [];
 	}
-	 relatedPrimitives(): CorePrimitive<CoreObjectType>[] {return []}
 	relatedVertices() {
 		return uniqRelatedEntities(this.relatedPrimitives(), (primitive) => primitive.relatedVertices());
 	}
 	relatedPoints() {
 		return uniqRelatedEntities(this.relatedVertices(), (vertex) => vertex.relatedPoints());
 	}
-	relatedEntities(attribClass: AttribClass): CoreEntity[] {
+	relatedEntities(attribClass: AttribClass, coreGroup: CoreGroup, target: CoreEntity[]): void {
 		switch (attribClass) {
 			case AttribClass.POINT: {
-				return this.relatedPoints();
+				return arrayCopy(this.relatedPoints(), target);
 			}
 			case AttribClass.VERTEX: {
-				return this.relatedVertices();
+				return arrayCopy(this.relatedVertices(), target);
 			}
 			case AttribClass.PRIMITIVE: {
-				return this.relatedPrimitives();
+				return arrayCopy(this.relatedPrimitives(), target);
 			}
 			case AttribClass.OBJECT: {
-				return [this];
+				target.length = 1;
+				target[0] = this;
+				return;
 			}
 			case AttribClass.CORE_GROUP: {
-				return this.relatedCoreGroups();
+				target.length = 1;
+				target[0] = coreGroup;
+				return;
 			}
 		}
 		TypeAssert.unreachable(attribClass);

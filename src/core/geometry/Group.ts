@@ -5,7 +5,7 @@ import {CoreAttribute} from './Attribute';
 import {CoreString} from '../String';
 import {AttribSize, ObjectData, AttribType, GroupString, AttribClass} from './Constant';
 import {CoreType} from '../Type';
-import {ArrayUtils} from '../ArrayUtils';
+import {arraySum, arrayCompact, arrayCopy} from '../ArrayUtils';
 import {Poly} from '../../engine/Poly';
 import {CoreObjectType, ObjectBuilder, ObjectContent, isObject3D} from './ObjectContent';
 import {coreObjectClassFactory, coreObjectInstanceFactory} from './CoreObjectFactory';
@@ -281,7 +281,7 @@ export class CoreGroup extends CoreEntity {
 		// .flat();
 	}
 	pointsCount() {
-		return ArrayUtils.sum(this.allObjects().map((g) => pointsCountFromObject(g)));
+		return arraySum(this.allObjects().map((g) => pointsCountFromObject(g)));
 	}
 	totalPointsCount() {
 		const threejsObjects = this.threejsObjects();
@@ -295,7 +295,7 @@ export class CoreGroup extends CoreEntity {
 		if (group) {
 			const indices = CoreString.indices(group);
 			const points = this.points();
-			return ArrayUtils.compact(indices.map((i) => points[i]));
+			return arrayCompact(indices.map((i) => points[i]));
 		} else {
 			return this.points();
 		}
@@ -480,22 +480,25 @@ export class CoreGroup extends CoreEntity {
 	relatedPoints() {
 		return uniqRelatedEntities(this.relatedVertices(), (vertex) => vertex.relatedPoints());
 	}
-	relatedEntities(attribClass: AttribClass): CoreEntity[] {
+	relatedEntities(attribClass: AttribClass, coreGroup:CoreGroup,target:CoreEntity[]): void {
+		
 		switch (attribClass) {
 			case AttribClass.POINT: {
-				return this.relatedPoints();
+				return arrayCopy(this.relatedPoints(),target);
 			}
 			case AttribClass.VERTEX: {
-				return this.relatedVertices();
+				return arrayCopy(this.relatedVertices(),target);
 			}
 			case AttribClass.PRIMITIVE: {
-				return this.relatedPrimitives();
+				return arrayCopy(this.relatedPrimitives(),target);
 			}
 			case AttribClass.OBJECT: {
-				return this.relatedObjects();
+				return arrayCopy(this.relatedObjects(),target);
 			}
 			case AttribClass.CORE_GROUP: {
-				return [this];
+				target.length=1
+				target[0]=coreGroup
+				return
 			}
 		}
 		TypeAssert.unreachable(attribClass);

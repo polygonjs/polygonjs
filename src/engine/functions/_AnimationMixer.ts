@@ -1,5 +1,5 @@
 import {Object3D, AnimationMixer, AnimationAction, AnimationClip, Event, EventListener} from 'three';
-import {ArrayUtils} from '../../core/ArrayUtils';
+import {arraySortBy} from '../../core/ArrayUtils';
 import {isBooleanTrue} from '../../core/Type';
 import {
 	NamedFunction1,
@@ -104,7 +104,7 @@ export function existingAnimationActionsFromAnimationMixer(animationMixer: Anima
 export function getMostActiveAnimationActionFromMixer(animationMixer: AnimationMixer, except?: AnimationAction) {
 	const existing = existingAnimationActionsFromAnimationMixer(animationMixer);
 	const otherActions = existing.filter((action) => action !== except);
-	const actionsSortedByWeight = ArrayUtils.sortBy(otherActions, (action) => -action.getEffectiveWeight());
+	const actionsSortedByWeight = arraySortBy(otherActions, (action) => -action.getEffectiveWeight());
 	const mostActiveAnimationAction = actionsSortedByWeight[0];
 
 	return {

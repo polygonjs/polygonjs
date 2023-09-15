@@ -2,7 +2,7 @@ import {PolyDictionary} from '../../types/GlobalTypes';
 import {Box3, BufferGeometry, BufferAttribute} from 'three';
 import {AttribSize, GroupString} from './Constant';
 import {Attribute, CoreAttribute} from './Attribute';
-import {ArrayUtils} from '../ArrayUtils';
+import {arrayChunk} from '../ArrayUtils';
 import {ObjectUtils} from '../ObjectUtils';
 // import {InstanceAttrib} from './Instancer';
 // import { markedAsInstance } from './GeometryUtils';
@@ -364,7 +364,7 @@ export class CoreGeometry {
 	//
 	segments() {
 		const index: Array<number> = (this.geometry().index?.array || []) as Array<number>;
-		return ArrayUtils.chunk(index, 2);
+		return arrayChunk(index, 2);
 	}
 
 	facesCount(): number {

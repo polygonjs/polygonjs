@@ -13,7 +13,7 @@
  *
  */
 
-import {ArrayUtils} from '../../../core/ArrayUtils';
+import {range} from '../../../core/ArrayUtils';
 import {TypedGlNode} from './_Base';
 import {
 	GlConnectionPoint,
@@ -286,7 +286,7 @@ export class NoiseGlNode extends TypedGlNode<NoiseGlParamsConfig> {
 				// } else {
 				const offset_gl_type = input_type;
 				const offset_components_count = GlConnectionPointComponentsCountMap[offset_gl_type];
-				const offset_values = ArrayUtils.range(offset_components_count)
+				const offset_values = range(offset_components_count)
 					.map((j) => ThreeToGl.float(1000 * i))
 					.join(', ');
 				const offset2 = `${offset_gl_type}(${offset_values})`;

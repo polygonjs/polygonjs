@@ -12,7 +12,7 @@ import {Poly} from '../../../Poly';
 import {ParamOptionToAdd} from '../params/ParamsController';
 import {ParamType} from '../../../poly/ParamType';
 import {PolyNodeDataRegister} from './PolyNodeDataRegister';
-import {ArrayUtils} from '../../../../core/ArrayUtils';
+import {arrayCompact} from '../../../../core/ArrayUtils';
 import {NodeInputsController} from '../io/InputsController';
 import {JsonImportDispatcher} from '../../../io/json/import/Dispatcher';
 import {createPolyObjNode} from '../../obj/utils/poly/createPolyObjNode';
@@ -128,7 +128,7 @@ export class PolyNodeController {
 	static inputsData(node: BaseNodeType): PolyNodesInputsData {
 		if (node.io.inputs.hasNamedInputs()) {
 			const inputs = node.io.inputs as NodeInputsController<NodeContext.GL>;
-			const connectionPoints = ArrayUtils.compact(inputs.namedInputConnectionPoints());
+			const connectionPoints = arrayCompact(inputs.namedInputConnectionPoints());
 			return {
 				typed: {
 					types: connectionPoints.map((cp) => {

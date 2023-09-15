@@ -111,6 +111,9 @@ export class ThreejsObject extends BaseCoreObject<CoreObjectType.THREEJS> {
 		}
 		target.copy(computedSphere);
 	}
+	static override geometryBoundingSphere(object: Object3D, target: Sphere): void {
+		this.boundingSphere(object, target);
+	}
 
 	computeVertexNormals() {
 		this.coreGeometry()?.computeVertexNormals();
@@ -260,7 +263,6 @@ export class ThreejsObject extends BaseCoreObject<CoreObjectType.THREEJS> {
 			const primitive = new _primitiveClassFactory(this._object as any, i) as CorePrimitive<CoreObjectType>;
 			primitives.push(primitive);
 		}
-		console.log('primitives', primitives);
 		return primitives;
 	}
 }

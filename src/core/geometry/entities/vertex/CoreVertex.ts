@@ -18,6 +18,8 @@ import type {TypedCorePoint} from '../point/CorePoint';
 import type {CorePrimitive} from '../primitive/CorePrimitive';
 import {uniqRelatedEntities} from '../utils/Common';
 import {TypeAssert} from '../../../../engine/poly/Assert';
+import {CoreGroup} from '../../Group';
+import {arrayCopy} from '../../../ArrayUtils';
 
 export abstract class CoreVertex<T extends CoreObjectType> extends CoreEntity {
 	protected _object?: ObjectContent<T>;
@@ -360,24 +362,26 @@ export abstract class CoreVertex<T extends CoreObjectType> extends CoreEntity {
 	relatedPoints<T extends CoreObjectType>(): TypedCorePoint<T>[] {
 		return [];
 	}
-	relatedEntities(attribClass: AttribClass): CoreEntity[] {
+	relatedEntities(attribClass: AttribClass, coreGroup: CoreGroup, target: CoreEntity[]): void {
 		switch (attribClass) {
 			case AttribClass.POINT: {
-				return this.relatedPoints();
+				return arrayCopy(this.relatedPoints(), target);
 			}
 			case AttribClass.VERTEX: {
-				return [this];
+				target.length = 1;
+				target[0] = this;
+				return;
 			}
 			case AttribClass.PRIMITIVE: {
-				return [this];
+				return arrayCopy(this.relatedPrimitives(), target);
 			}
 			case AttribClass.OBJECT: {
-				return this.relatedObjects();
+				return arrayCopy(this.relatedObjects(), target);
 			}
 			case AttribClass.CORE_GROUP: {
-				return this.relatedObjects()
-					.map((o) => o.relatedCoreGroups())
-					.flat();
+				target.length = 1;
+				target[0] = coreGroup;
+				return;
 			}
 		}
 		TypeAssert.unreachable(attribClass);

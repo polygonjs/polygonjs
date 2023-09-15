@@ -8,7 +8,7 @@ import {
 	InterleavedBufferAttribute,
 } from 'three';
 import {AttribValue, PolyDictionary} from '../../types/GlobalTypes';
-import {ArrayUtils} from '../ArrayUtils';
+import {arrayUniq} from '../ArrayUtils';
 import {stringToAttribNames, stringMatchMask} from '../String';
 import {CoreType} from '../Type';
 import {AttribSize, GroupString} from './Constant';
@@ -100,7 +100,7 @@ export class CoreAttribute {
 		}
 	}
 
-	static attribSizeFromValue(val: AttribValue): number | null {
+	static attribSizeFromValue(val: AttribValue): AttribSize | null {
 		if (CoreType.isString(val) || CoreType.isNumber(val)) {
 			return AttribSize.FLOAT;
 		}
@@ -118,7 +118,7 @@ export class CoreAttribute {
 			case Vector4:
 				return AttribSize.VECTOR4;
 		}
-		return 0;
+		return null;
 	}
 	static attribNamesMatchingMask(masksString: GroupString, existingAttribNames: string[]) {
 		const masks = stringToAttribNames(masksString);
@@ -137,7 +137,7 @@ export class CoreAttribute {
 			}
 		}
 
-		return ArrayUtils.uniq(matchingAttribNames);
+		return arrayUniq(matchingAttribNames);
 	}
 }
 

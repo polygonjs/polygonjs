@@ -1,5 +1,5 @@
 import {PolyDictionary} from '../../../../types/GlobalTypes';
-import {ArrayUtils} from '../../../ArrayUtils';
+import {arrayCompact} from '../../../ArrayUtils';
 import {CoreString} from '../../../String';
 import {AttribSize, AttribType, GroupString} from '../../Constant';
 import {coreVertexClassFactory, coreVertexInstanceFactory} from '../../CoreObjectFactory';
@@ -56,7 +56,7 @@ export function verticesFromObjectFromGroup<T extends CoreObjectType>(
 		const indices = CoreString.indices(group);
 		if (indices) {
 			const vertices = verticesFromObject(object);
-			return ArrayUtils.compact(indices.map((i) => vertices[i]));
+			return arrayCompact(indices.map((i) => vertices[i]));
 		} else {
 			return [];
 		}

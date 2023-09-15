@@ -9,7 +9,7 @@ import {TypedJsNode} from './_Base';
 import {JsConnectionPointType} from '../utils/io/connections/Js';
 import {ChannelData} from '../../../core/keyframes/KeyframeCommon';
 import {sampleData, sampleData0} from '../../../core/keyframes/KeyframeSamples';
-import {ArrayUtils} from '../../../core/ArrayUtils';
+import {range} from '../../../core/ArrayUtils';
 import {IntegerParam} from '../../params/Integer';
 import {StringParam} from '../../params/String';
 import {ConstantJsDefinition} from './utils/JsDefinition';
@@ -57,7 +57,7 @@ export const CHANNEL_SUFFIX_BY_CHANNEL_INDEX: string[] = ['x', 'y', 'z', 'w'];
 
 function visibleIfChannelsCountAtLeast(index: number) {
 	return {
-		visibleIf: ArrayUtils.range(index + 1, 10).map((i) => ({channelsCount: i})),
+		visibleIf: range(index + 1, 10).map((i) => ({channelsCount: i})),
 	};
 }
 function channelTypeParam(index: number) {
@@ -280,7 +280,7 @@ export class KeyframesJsNode extends TypedJsNode<KeyframesJsParamsConfig> {
 	protected _expectedOutputTypes() {
 		const count = this._channelsCount();
 		const params: IntegerParam[] = this.channelTypeParams();
-		return ArrayUtils.range(0, count).map((value, i) => AVAILABLE_JS_CONNECTION_POINT_TYPES[params[i].value]);
+		return range(0, count).map((value, i) => AVAILABLE_JS_CONNECTION_POINT_TYPES[params[i].value]);
 	}
 
 	protected _expectedOutputName(index: number) {

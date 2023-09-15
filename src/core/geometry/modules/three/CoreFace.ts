@@ -1,7 +1,7 @@
 import {AttribValue, Number3, NumericAttribValue} from '../../../../types/GlobalTypes';
 import {BufferAttribute, BufferGeometry, Triangle, Vector2, Vector3, Mesh} from 'three';
 import {ThreejsPoint} from '../../modules/three/ThreejsPoint';
-import {ArrayUtils} from '../../../ArrayUtils';
+import {arraySum} from '../../../ArrayUtils';
 import {ThreejsPointArray3} from './Common';
 
 interface FaceLike {
@@ -232,7 +232,7 @@ export class CoreFace {
 
 		// https://math.stackexchange.com/questions/1336386/weighted-average-distance-between-3-or-more-points
 		// TODO: replace this with Core.Math.Interpolate
-		const distanceTotal = ArrayUtils.sum([
+		const distanceTotal = arraySum([
 			distToPoints[0] * distToPoints[1],
 			distToPoints[0] * distToPoints[2],
 			distToPoints[1] * distToPoints[2],
@@ -247,7 +247,7 @@ export class CoreFace {
 		let newAttribValue;
 		switch (attribSize) {
 			case 1:
-				newAttribValue = ArrayUtils.sum(
+				newAttribValue = arraySum(
 					pointIndices.map((point_indx, i) => weights[i] * (attribValues[i] as number))
 				);
 				break;

@@ -1,5 +1,5 @@
 import {Vector3} from 'three';
-import {ArrayUtils} from '../ArrayUtils';
+import {arraySum, arrayMax} from '../ArrayUtils';
 import {CorePoint} from '../geometry/entities/point/CorePoint';
 import {CoreType} from '../Type';
 
@@ -99,7 +99,7 @@ export class CoreInterpolate {
 		const weighted_values_src = points_src.map((point_src) => {
 			return this._interpolate_with_1_point(point_dest, point_src, attrib_name, distance_threshold, blend_with);
 		});
-		return ArrayUtils.max(weighted_values_src) || 0;
+		return arrayMax(weighted_values_src) || 0;
 	}
 
 	// https://math.stackexchange.com/questions/1336386/weighted-average-distance-between-3-or-more-positions
@@ -118,7 +118,7 @@ export class CoreInterpolate {
 	static _weights_from_2(current_position: Vector3, other_positions: Vector3[]) {
 		const dist_to_positions = other_positions.map((other_position) => current_position.distanceTo(other_position));
 
-		const distance_total = ArrayUtils.sum(dist_to_positions);
+		const distance_total = arraySum(dist_to_positions);
 
 		return [dist_to_positions[1] / distance_total, dist_to_positions[0] / distance_total];
 	}
@@ -126,7 +126,7 @@ export class CoreInterpolate {
 	static _weights_from_3(current_position: Vector3, other_positions: Vector3[]) {
 		const dist_to_positions = other_positions.map((other_position) => current_position.distanceTo(other_position));
 
-		const distance_total = ArrayUtils.sum([
+		const distance_total = arraySum([
 			dist_to_positions[0] * dist_to_positions[1],
 			dist_to_positions[0] * dist_to_positions[2],
 			dist_to_positions[1] * dist_to_positions[2],

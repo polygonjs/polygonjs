@@ -16,7 +16,7 @@ import {SubnetOutputGlNode} from './SubnetOutput';
 import {ThreeToGl} from '../../../core/ThreeToGl';
 import {SubnetInputGlNode} from './SubnetInput';
 import {NodeCreateOptions} from '../utils/hierarchy/ChildrenController';
-import {ArrayUtils} from '../../../core/ArrayUtils';
+import {range} from '../../../core/ArrayUtils';
 import {IntegerParam} from '../../params/Integer';
 import {StringParam} from '../../params/String';
 import {TypedNodeTraverser} from '../utils/shaders/NodeTraverser';
@@ -33,7 +33,7 @@ export const ADD_BODY_LINES_OPTIONS: AddBodyLinesOptions = {
 
 function visibleIfInputsCountAtLeast(index: number) {
 	return {
-		visibleIf: ArrayUtils.range(index + 1, 10).map((i) => ({inputsCount: i})),
+		visibleIf: range(index + 1, 10).map((i) => ({inputsCount: i})),
 	};
 }
 
@@ -408,7 +408,7 @@ export class TypedSubnetGlNode<K extends TypedSubnetGlParamsConfig> extends Abst
 	protected override _expectedInputTypes(): GlConnectionPointType[] {
 		const count = this.pv.inputsCount;
 		const params: IntegerParam[] = this._inputTypeParams();
-		return ArrayUtils.range(0, count).map((value, i) => GL_CONNECTION_POINT_TYPES[params[i].value]);
+		return range(0, count).map((value, i) => GL_CONNECTION_POINT_TYPES[params[i].value]);
 	}
 	protected override _expectedInputName(index: number) {
 		const params: StringParam[] = this._inputNameParams();
@@ -419,7 +419,7 @@ export class TypedSubnetGlNode<K extends TypedSubnetGlParamsConfig> extends Abst
 	protected override _expectedOutputTypes() {
 		const count = this.pv.inputsCount;
 		const params: IntegerParam[] = this._inputTypeParams();
-		return ArrayUtils.range(0, count).map((value, i) => GL_CONNECTION_POINT_TYPES[params[i].value]);
+		return range(0, count).map((value, i) => GL_CONNECTION_POINT_TYPES[params[i].value]);
 	}
 
 	protected override _expectedOutputName(index: number) {

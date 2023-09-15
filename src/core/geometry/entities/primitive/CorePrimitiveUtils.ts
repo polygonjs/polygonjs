@@ -1,5 +1,5 @@
 import {PolyDictionary} from '../../../../types/GlobalTypes';
-import {ArrayUtils} from '../../../ArrayUtils';
+import {arrayCompact} from '../../../ArrayUtils';
 import {CoreString} from '../../../String';
 import {AttribSize, AttribType, GroupString} from '../../Constant';
 import {corePrimitiveClassFactory, corePrimitiveInstanceFactory} from '../../CoreObjectFactory';
@@ -55,7 +55,7 @@ export function primitivesFromObjectFromGroup<T extends CoreObjectType>(
 		const indices = CoreString.indices(group);
 		if (indices) {
 			const primitives = primitivesFromObject(object);
-			return ArrayUtils.compact(indices.map((i) => primitives[i]));
+			return arrayCompact(indices.map((i) => primitives[i]));
 		} else {
 			return [];
 		}

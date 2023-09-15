@@ -6,7 +6,7 @@ import {RootManagerNode} from '../../Root';
 import {PolyScene} from '../../../../scene/PolyScene';
 import {SetUtils} from '../../../../../core/SetUtils';
 import {Poly} from '../../../../Poly';
-import {ArrayUtils} from '../../../../../core/ArrayUtils';
+import {arrayUniq, arrayCompact} from '../../../../../core/ArrayUtils';
 import {BaseObjNodeType} from '../../../obj/_Base';
 import {GeoObjNode} from '../../../obj/Geo';
 
@@ -89,7 +89,7 @@ export class RootLoadProgressController {
 		const nodes = scene.nodesController.nodesFromMask(mask || '');
 
 		const nodeDisplayNodes = await this._loadDisplayNodes();
-		return ArrayUtils.uniq(nodes.concat(nodeDisplayNodes));
+		return arrayUniq(nodes.concat(nodeDisplayNodes));
 	}
 	private async _loadDisplayNodes() {
 		const scene = this.node.scene();
@@ -103,11 +103,11 @@ export class RootLoadProgressController {
 		if (cameraCreatorNode) {
 			nodes.push(cameraCreatorNode);
 		}
-		return ArrayUtils.uniq(nodes);
+		return arrayUniq(nodes);
 	}
 	private _displayNodes() {
 		const objNodesWithDisplayNodeController = this._objectNodesWithDisplayNodeController() as GeoObjNode[];
-		const displayNodes = ArrayUtils.compact(
+		const displayNodes = arrayCompact(
 			objNodesWithDisplayNodeController.map((node) => node.displayNodeController.firstNonBypassedDisplayNode())
 		);
 		return displayNodes;

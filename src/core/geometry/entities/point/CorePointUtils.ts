@@ -6,13 +6,13 @@ import {
 	Vector3Like,
 	Vector4Like,
 } from '../../../../types/GlobalTypes';
-import {ArrayUtils} from '../../../ArrayUtils';
+import {arrayCompact} from '../../../ArrayUtils';
 import {CoreString} from '../../../String';
 import {AttribSize, AttribType, GroupString} from '../../Constant';
 import {corePointClassFactory, corePointInstanceFactory} from '../../CoreObjectFactory';
 import {CoreGroup} from '../../Group';
 import {CoreObjectType, ObjectContent} from '../../ObjectContent';
-import {TypedCorePoint} from './CorePoint';
+import type {TypedCorePoint} from './CorePoint';
 import {isNumber, isArray} from '../../../Type';
 
 export function points(coreGroup: CoreGroup) {
@@ -68,7 +68,7 @@ export function pointsFromObjectFromGroup<T extends CoreObjectType>(
 		const indices = CoreString.indices(group);
 		if (indices) {
 			const points = pointsFromObject(object);
-			return ArrayUtils.compact(indices.map((i) => points[i]));
+			return arrayCompact(indices.map((i) => points[i]));
 		} else {
 			return [];
 		}
@@ -120,7 +120,7 @@ export function pointAttributeType<T extends CoreObjectType>(object: ObjectConte
 	if (!attributes) {
 		return AttribType.NUMERIC;
 	}
-	return TypedCorePoint.attribType(object, attribName);
+	return pointClass.attribType(object, attribName);
 }
 export function pointAttributeTypes<T extends CoreObjectType>(object: ObjectContent<T>): PolyDictionary<AttribType> {
 	const pointClass = corePointClassFactory(object);
@@ -131,7 +131,7 @@ export function pointAttributeTypes<T extends CoreObjectType>(object: ObjectCont
 	const attribNames = Object.keys(attributes);
 	const h: PolyDictionary<AttribType> = {};
 	for (const attribName of attribNames) {
-		h[attribName] = TypedCorePoint.attribType(object, attribName);
+		h[attribName] = pointClass.attribType(object, attribName);
 	}
 	return h;
 }

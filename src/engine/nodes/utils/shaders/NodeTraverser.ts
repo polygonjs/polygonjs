@@ -6,7 +6,7 @@ import {TypedNode} from '../../_Base';
 import {NodeContext, BaseNodeByContextMap, NetworkChildNodeType} from '../../../poly/NodeContext';
 // import {NodeTypeMap} from '../../../containers/utils/ContainerMap';
 import {CoreGraphNodeId} from '../../../../core/graph/CoreGraph';
-import {ArrayUtils} from '../../../../core/ArrayUtils';
+import {arrayUniq, arrayDifference, arrayCompact} from '../../../../core/ArrayUtils';
 
 // type NumberByString = Map<string, number>;
 type NumberByCoreGraphNodeId = Map<CoreGraphNodeId, number>;
@@ -218,7 +218,7 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 		}
 
 		this._outputs_by_graph_id.forEach((outputs: CoreGraphNodeId[], graph_id: CoreGraphNodeId) => {
-			this._outputs_by_graph_id.set(graph_id, ArrayUtils.uniq(outputs));
+			this._outputs_by_graph_id.set(graph_id, arrayUniq(outputs));
 		});
 	}
 	private _blockedInputNames: Map<string, string[]> | undefined;
@@ -231,8 +231,8 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 		this._graph_ids_by_shader_name.get(this._shaderName)?.set(node.graphNodeId(), true);
 
 		const inputs = this._findInputs(node) as BaseNodeByContextMap[NC][];
-		const compactInputs: BaseNodeByContextMap[NC][] = ArrayUtils.compact(inputs);
-		const inputGraphIds = ArrayUtils.uniq(compactInputs.map((n) => n.graphNodeId()));
+		const compactInputs: BaseNodeByContextMap[NC][] = arrayCompact(inputs);
+		const inputGraphIds = arrayUniq(compactInputs.map((n) => n.graphNodeId()));
 		const uniqueInputs = inputGraphIds.map((graph_id) =>
 			this._graph.nodeFromId(graph_id)
 		) as BaseNodeByContextMap[NC][];
@@ -254,7 +254,7 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 			const blockedInputNames = this._blockedInputNames.get(node.type()) as string[];
 			const inputConnectionPoints = node.io.inputs.namedInputConnectionPoints() as BaseGlConnectionPoint[];
 			const inputConnectionPointNames = inputConnectionPoints.map((c) => c.name());
-			const allowedInputNames = ArrayUtils.difference(inputConnectionPointNames, blockedInputNames);
+			const allowedInputNames = arrayDifference(inputConnectionPointNames, blockedInputNames);
 			const inputs = allowedInputNames.map((inputName) => {
 				const inputIndex = node.io.inputs.getNamedInputIndex(inputName);
 				return node.io.inputs.input(inputIndex);

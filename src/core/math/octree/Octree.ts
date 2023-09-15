@@ -1,7 +1,7 @@
 import {Box3, Sphere, Vector3} from 'three';
 import {CorePoint} from '../../geometry/entities/point/CorePoint';
 import {OctreeNode, OctreeNodeTraverseCallback} from './Node';
-import {ArrayUtils} from '../../ArrayUtils';
+import {arraySortBy} from '../../ArrayUtils';
 
 const _position = new Vector3();
 
@@ -40,7 +40,7 @@ export class CoreOctree {
 			return found_points;
 		} else {
 			if (found_points.length > max_points_count) {
-				found_points = ArrayUtils.sortBy(found_points, (point) => {
+				found_points = arraySortBy(found_points, (point) => {
 					return point.position(_position).distanceTo(position);
 				});
 

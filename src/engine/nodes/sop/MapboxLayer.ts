@@ -14,7 +14,7 @@ import {FeatureConverter} from '../../../core/thirdParty/Mapbox/FeatureConverter
 import {NodeParamsConfig, ParamConfig} from '../../nodes/utils/params/ParamsConfig';
 // import {MapboxListenerParamConfig, MapboxListenerSopNode} from './utils/MapboxListener';
 import {MapUtils} from '../../../core/MapUtils';
-import {ArrayUtils} from '../../../core/ArrayUtils';
+import {arrayChunk} from '../../../core/ArrayUtils';
 import {TypedSopNode} from './_Base';
 import {BaseNodeType} from '../_Base';
 import {MapboxMapsController} from '../../../core/thirdParty/Mapbox/MapboxMapsController';
@@ -116,7 +116,7 @@ export class MapboxLayerSopNode extends TypedSopNode<MapboxLayerSopParamsConfig>
 		const json_str = JSON.stringify(feature.geometry).replace(/{|}|"|:|\[|\]|,|\./g, '');
 		const json_str_elements = json_str.split('');
 		const letters_count = 30;
-		const chunks = ArrayUtils.chunk(json_str_elements, json_str_elements.length / letters_count);
+		const chunks = arrayChunk(json_str_elements, json_str_elements.length / letters_count);
 		const first_elements = chunks.map((c) => c[0]);
 
 		return first_elements.join('');

@@ -1,5 +1,5 @@
 import type {Object3D} from 'three';
-import {ArrayUtils} from '../ArrayUtils';
+import {arrayCompact} from '../ArrayUtils';
 import {stringMatchMask} from '../String';
 import {CoreType} from '../Type';
 import {CorePath} from './CorePath';
@@ -74,7 +74,7 @@ function filterCoreObjects<T extends CoreObjectType>(
 	}
 	const index = parseInt(groupString);
 	if (!CoreType.isNaN(index)) {
-		return ArrayUtils.compact([coreObjects[index]]);
+		return arrayCompact([coreObjects[index]]);
 	}
 
 	const selectedCoreObjects: Array<BaseCoreObject<T>> = [];

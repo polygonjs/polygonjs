@@ -1,5 +1,5 @@
 import {CoreType} from './Type';
-import {ArrayUtils} from './ArrayUtils';
+import {arrayUniq, range} from './ArrayUtils';
 
 const ATTRIB_NAMES_SEPARATOR = /[, ]/; //[',', ' ']
 
@@ -38,7 +38,7 @@ export function sanitizeName(word: string): string {
 }
 
 export function stringToAttribNames(word: string): string[] {
-	return ArrayUtils.uniq(
+	return arrayUniq(
 		word
 			.split(ATTRIB_NAMES_SEPARATOR)
 			.map((w) => w.trim())
@@ -222,7 +222,7 @@ export function stringToIndices(indicesString: string): number[] {
 	const elements = indicesString.split(INDICES_LIST_SEPARATOR);
 	if (elements.length > 1) {
 		const indices: number[] = elements.flatMap(stringToIndices);
-		return ArrayUtils.uniq(indices).sort((a, b) => a - b);
+		return arrayUniq(indices).sort((a, b) => a - b);
 	} else {
 		const element = elements[0];
 		if (element) {
@@ -233,7 +233,7 @@ export function stringToIndices(indicesString: string): number[] {
 				const rangeStartI = parseInt(rangeStart);
 				const rangeEndI = parseInt(rangeEnd);
 				if (CoreType.isNumberValid(rangeStartI) && CoreType.isNumberValid(rangeEndI)) {
-					return ArrayUtils.range(rangeStartI, rangeEndI + 1);
+					return range(rangeStartI, rangeEndI + 1);
 				} else {
 					return [];
 				}

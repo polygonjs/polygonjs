@@ -1,6 +1,6 @@
 import {Vector2, BufferGeometry, Float32BufferAttribute, Mesh} from 'three';
 import {CoreGeometry} from '../Geometry';
-import {ArrayUtils} from '../../ArrayUtils';
+import {arrayIntersection} from '../../ArrayUtils';
 import {pointsFromObject} from '../entities/point/CorePointUtils';
 
 const dummyMeshSmallest = new Mesh();
@@ -53,10 +53,7 @@ export class CoreGeometryOperationSkin {
 			points_indices.push(matched_segment[0] + smallest_points_count);
 		});
 
-		const attributes_in_common = ArrayUtils.intersection(
-			smallest_geometry.attribNames(),
-			largest_geometry.attribNames()
-		);
+		const attributes_in_common = arrayIntersection(smallest_geometry.attribNames(), largest_geometry.attribNames());
 		// const points = all_points //points_indices.map(index=> all_points[index]);
 		attributes_in_common.forEach((attrib_name) => {
 			const attrib_size = smallest_geometry.attribSize(attrib_name);

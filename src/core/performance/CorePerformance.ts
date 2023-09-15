@@ -1,7 +1,7 @@
 import {PerformanceNode} from './PerformanceNode';
 import {NodePerformanceData} from '../../engine/nodes/utils/cook/PerformanceController';
 import {BaseNodeType} from '../../engine/nodes/_Base';
-import {ArrayUtils} from '../ArrayUtils';
+import {arraySortBy,arrayUniq} from '../ArrayUtils';
 import {ObjectUtils} from '../ObjectUtils';
 import {PolyDictionary} from '../../types/GlobalTypes';
 import {Poly} from '../../engine/Poly';
@@ -81,7 +81,7 @@ export class CorePerformance {
 
 	print_node_cook_data() {
 		let performance_nodes = Object.values(this._nodes_cook_data);
-		performance_nodes = ArrayUtils.sortBy(performance_nodes, (performance_node) =>
+		performance_nodes = arraySortBy(performance_nodes, (performance_node) =>
 			performance_node.total_cook_time()
 		);
 
@@ -90,7 +90,7 @@ export class CorePerformance {
 		console.log('--------------- NODES COOK TIME -----------');
 
 		const table_entries = [];
-		const sorted_print_objects = ArrayUtils.sortBy(print_objects, (print_object) => -print_object.total_cook_time);
+		const sorted_print_objects = arraySortBy(print_objects, (print_object) => -print_object.total_cook_time);
 		for (let print_object of sorted_print_objects) {
 			table_entries.push(print_object);
 		}
@@ -118,7 +118,7 @@ export class CorePerformance {
 		}
 
 		durations.sort((a, b) => a - b);
-		const sorted_durations = ArrayUtils.uniq(durations);
+		const sorted_durations = arrayUniq(durations);
 
 		console.log('--------------- PERF RECORDINGS -----------');
 		const table_entries = [];

@@ -1,5 +1,5 @@
 import type {Vector2} from 'three';
-import {ArrayUtils} from '../../ArrayUtils';
+import {arrayMin} from '../../ArrayUtils';
 
 export class CoordinatesCollection {
 	constructor(public coordinates: Vector2[]) {}
@@ -14,7 +14,7 @@ export class CoordinatesCollection {
 		const d01 = this.first().distanceTo(features_coordinates.last());
 		const d10 = this.last().distanceTo(features_coordinates.first());
 		const d11 = this.last().distanceTo(features_coordinates.last());
-		return ArrayUtils.min([d00, d01, d10, d11]) as number;
+		return arrayMin([d00, d01, d10, d11]) as number;
 	}
 	// previous_id(features_coordinates_array: CoordinatesCollection[]): number{
 	// }

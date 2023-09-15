@@ -12,7 +12,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {MapUtils} from '../../../core/MapUtils';
 import {ObjectType, objectTypeFromConstructor} from '../../../core/geometry/Constant';
-import {ArrayUtils} from '../../../core/ArrayUtils';
+import {arrayUniq} from '../../../core/ArrayUtils';
 import {mergeFaces} from '../../../core/geometry/operation/Fuse';
 import {CoreMask} from '../../../core/geometry/Mask';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
@@ -129,7 +129,7 @@ export class FuseSopNode extends TypedSopNode<FuseSopParamsConfig> {
 			return;
 		}
 		const indexArray = index.array as number[];
-		const newIndices = ArrayUtils.uniq(indexArray).sort((a, b) => a - b);
+		const newIndices = arrayUniq(indexArray).sort((a, b) => a - b);
 		geometry.setIndex(newIndices);
 		if (newIndices.length == 0) {
 			clearAttributes(geometry);

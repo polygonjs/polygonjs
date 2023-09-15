@@ -14,7 +14,7 @@ import {
 import {AttributeGlNode} from '../../Attribute';
 import {GlobalsGlNode} from '../../Globals';
 import {OutputGlNode} from '../../Output';
-import {ArrayUtils} from '../../../../../core/ArrayUtils';
+import {arrayUniq} from '../../../../../core/ArrayUtils';
 import {PolyDictionary} from '../../../../../types/GlobalTypes';
 import {MapUtils} from '../../../../../core/MapUtils';
 import {GlType} from '../../../../poly/registers/nodes/types/Gl';
@@ -239,7 +239,7 @@ export class TextureAllocationsController {
 
 	shaderNames(): ShaderName[] {
 		const explicit_shader_names = this._writableAllocations.map((a) => a.shaderName());
-		return ArrayUtils.uniq(explicit_shader_names);
+		return arrayUniq(explicit_shader_names);
 	}
 	createShaderConfigs(): ShaderConfig[] {
 		return [

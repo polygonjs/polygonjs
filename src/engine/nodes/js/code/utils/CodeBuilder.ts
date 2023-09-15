@@ -12,7 +12,7 @@ import {JsParamConfig} from './JsParamConfig';
 import {ParamType} from '../../../../poly/ParamType';
 import {NodeContext} from '../../../../poly/NodeContext';
 import {CoreGraphNodeId} from '../../../../../core/graph/CoreGraph';
-import {ArrayUtils} from '../../../../../core/ArrayUtils';
+import {arrayUniq} from '../../../../../core/ArrayUtils';
 import {BaseJsShaderAssembler} from '../assemblers/_Base';
 // import {sanitizeName} from '../../../../../core/String';
 import {triggerableMethodCalls} from '../assemblers/actor/ActorAssemblerUtils';
@@ -143,7 +143,7 @@ export class JsCodeBuilder {
 		this.reset();
 		for (let shaderName of this.shaderNames()) {
 			let nodes = nodesByShaderName.get(shaderName) || [];
-			nodes = ArrayUtils.uniq(nodes);
+			nodes = arrayUniq(nodes);
 			this._shadersCollectionController.setCurrentShaderName(shaderName);
 			if (nodes) {
 				for (let node of nodes) {

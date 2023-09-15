@@ -14,10 +14,13 @@ import {DOT, ComponentName, COMPONENT_INDICES, AttribType, GroupString, AttribCl
 import {ObjectContent, CoreObjectType, ObjectBuilder} from '../../ObjectContent';
 import {PointAttributesDict} from './Common';
 import {CoreAttributeData} from '../../AttributeData';
-import { coreObjectInstanceFactory } from '../../CoreObjectFactory';
-import type { CoreVertex } from '../vertex/CoreVertex';
-import { TypeAssert } from '../../../../engine/poly/Assert';
-import { uniqRelatedEntities } from '../utils/Common';
+import {coreObjectInstanceFactory} from '../../CoreObjectFactory';
+import {TypeAssert} from '../../../../engine/poly/Assert';
+import {uniqRelatedEntities} from '../utils/Common';
+import {arrayCopy} from '../../../ArrayUtils';
+import type {CoreVertex} from '../vertex/CoreVertex';
+import type {CoreGroup} from '../../Group';
+import type {CorePrimitive} from '../primitive/CorePrimitive';
 
 function _warnOverloadRequired(functionName: string) {
 	console.warn(`CorePoint.${functionName} needs to be overloaded`);
@@ -523,23 +526,39 @@ export abstract class TypedCorePoint<T extends CoreObjectType> extends CoreEntit
 	// RELATED ENTITIES
 	//
 	//
-	 relatedVertices<T extends CoreObjectType>(): CoreVertex<T>[]{return []}
-	relatedEntities(attribClass: AttribClass): CoreEntity[] {
+	relatedVertices<T extends CoreObjectType>(): CoreVertex<T>[] {
+		return [];
+	}
+	relatedPrimitives<T extends CoreObjectType>(): CorePrimitive<T>[] {
+		return uniqRelatedEntities(this.relatedVertices(), (vertex) => vertex.relatedPrimitives());
+	}
+
+	relatedEntities(attribClass: AttribClass, coreGroup: CoreGroup, target: CoreEntity[]): void {
 		switch (attribClass) {
 			case AttribClass.POINT: {
-				return [this];
+				target.length = 1;
+				target[0] = this;
+				return;
 			}
 			case AttribClass.VERTEX: {
-				return this.relatedVertices();
+				return arrayCopy(this.relatedVertices(), target);
 			}
 			case AttribClass.PRIMITIVE: {
-				return uniqRelatedEntities(this.relatedVertices(), (vertex) => vertex.relatedPrimitives());
+				return arrayCopy(this.relatedPrimitives(), target);
 			}
 			case AttribClass.OBJECT: {
-				return this._object ? [coreObjectInstanceFactory(this._object)]:[];
+				if (this._object) {
+					target.length = 1;
+					target[0] = coreObjectInstanceFactory(this._object);
+				} else {
+					target.length = 0;
+				}
+				return;
 			}
 			case AttribClass.CORE_GROUP: {
-				return [this];
+				target.length = 1;
+				target[0] = coreGroup;
+				return;
 			}
 		}
 		TypeAssert.unreachable(attribClass);

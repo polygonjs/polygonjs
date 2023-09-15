@@ -10,7 +10,7 @@ import {CoreFace} from '../../../core/geometry/modules/three/CoreFace';
 import {ThreejsPointArray3} from '../../../core/geometry/modules/three/Common';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {ArrayUtils} from '../../../core/ArrayUtils';
+import {arrayChunk, range} from '../../../core/ArrayUtils';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {corePointClassFactory} from '../../../core/geometry/CoreObjectFactory';
 import {ThreejsPoint} from '../../../core/geometry/modules/three/ThreejsPoint';
@@ -92,7 +92,7 @@ export class FaceSopNode extends TypedSopNode<FaceSopParamsConfig> {
 		for (let object of objects) {
 			if ((object as Mesh).isMesh) {
 				const geometry = (object as Mesh).geometry as BufferGeometry;
-				const faces = ArrayUtils.chunk((geometry.index?.array as number[]) || [], 3);
+				const faces = arrayChunk((geometry.index?.array as number[]) || [], 3);
 				const points_count = faces.length * 3;
 				for (let attrib_name of Object.keys(geometry.attributes)) {
 					const attrib = geometry.attributes[attrib_name] as BufferAttribute;
@@ -110,7 +110,7 @@ export class FaceSopNode extends TypedSopNode<FaceSopParamsConfig> {
 					});
 					geometry.setAttribute(attrib_name, new BufferAttribute(new_values, attrib_size));
 				}
-				const new_indices = ArrayUtils.range(points_count);
+				const new_indices = range(points_count);
 				geometry.setIndex(new_indices);
 			}
 		}

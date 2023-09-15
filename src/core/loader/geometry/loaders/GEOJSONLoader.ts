@@ -32,7 +32,7 @@ import {
 import {BaseSopOperation} from '../../../../engine/operations/sop/_Base';
 import {ObjectType} from '../../../geometry/Constant';
 import {createGeometriesFromTypeFlat} from '../../../geometry/text/TextFlat';
-import {ArrayUtils} from '../../../ArrayUtils';
+import {arrayCompact} from '../../../ArrayUtils';
 import {CoreType} from '../../../Type';
 import {ThreejsObject} from '../../../geometry/modules/three/ThreejsObject';
 
@@ -223,7 +223,7 @@ export class GEOJSONLoader extends Loader {
 		if (!geometries) {
 			return;
 		}
-		return ArrayUtils.compact(geometries).map((geometry) =>
+		return arrayCompact(geometries).map((geometry) =>
 			BaseSopOperation.createObject(geometry.rotateX(-0.5 * Math.PI), ObjectType.MESH)
 		);
 	}
@@ -238,7 +238,7 @@ export class GEOJSONLoader extends Loader {
 		if (!geometries) {
 			return;
 		}
-		return ArrayUtils.compact(geometries).map((geometry) =>
+		return arrayCompact(geometries).map((geometry) =>
 			BaseSopOperation.createObject(geometry.rotateX(-0.5 * Math.PI), ObjectType.MESH)
 		);
 	}

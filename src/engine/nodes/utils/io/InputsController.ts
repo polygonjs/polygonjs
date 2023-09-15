@@ -9,7 +9,7 @@ import {ClonedStatesController} from './utils/ClonedStatesController';
 import {InputCloneMode} from '../../../poly/InputCloneMode';
 import {BaseConnectionPoint} from './connections/_Base';
 import {CoreType} from '../../../../core/Type';
-import {ArrayUtils} from '../../../../core/ArrayUtils';
+import {arrayShallowClone} from '../../../../core/ArrayUtils';
 
 type OnUpdateHook = () => void;
 type OnEvalSingleInputListen = () => Promise<void>;
@@ -103,7 +103,7 @@ export class NodeInputsController<NC extends NodeContext> {
 			this._named_input_connection_points?.filter((cp) => cp?.inNodeDefinition()) || [];
 
 		// ensure names are unique
-		const allNewConnectionPoints: ConnectionPointTypeMap[NC][] = ArrayUtils.shallowClone(connectionPointsToKeep);
+		const allNewConnectionPoints: ConnectionPointTypeMap[NC][] = arrayShallowClone(connectionPointsToKeep);
 		const currentNames: Set<string> = new Set();
 		for (let connectionPointToKeep of connectionPointsToKeep) {
 			if (connectionPointToKeep) {

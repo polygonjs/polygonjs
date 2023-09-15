@@ -1,5 +1,5 @@
 import {BufferGeometry, Object3D} from 'three';
-import {ArrayUtils} from '../../ArrayUtils';
+import {arrayCompact} from '../../ArrayUtils';
 import {ObjectType} from '../Constant';
 import {ThreejsObject} from '../modules/three/ThreejsObject';
 import {isBooleanTrue} from '../../Type';
@@ -28,7 +28,7 @@ export function textMergeLetters(params: TextMergeAllLettersOptions) {
 	const allGeometries = geometriesByLine.flat();
 	const objects = _mergeOrSplit({...params, geometries: allGeometries});
 	if (objects) {
-		return ArrayUtils.compact(objects);
+		return arrayCompact(objects);
 	}
 }
 
@@ -74,7 +74,7 @@ function _mergeOrSplit(params: TextMergeAllLettersOptions) {
 		return objects;
 	} else {
 		try {
-			const geometries = ArrayUtils.compact(params.geometries);
+			const geometries = arrayCompact(params.geometries);
 			if (geometries.length > 0) {
 				const mergedGeometry = mergeGeometries(geometries);
 				return [TypedSopNode.createObject(mergedGeometry, objectType)];

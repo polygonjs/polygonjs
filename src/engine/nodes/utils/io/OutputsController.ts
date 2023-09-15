@@ -3,7 +3,7 @@ import {NodeContext} from '../../../poly/NodeContext';
 import {ConnectionPointTypeMap} from './connections/ConnectionMap';
 import {TypedNode} from '../../_Base';
 import {CoreType} from '../../../../core/Type';
-import {ArrayUtils} from '../../../../core/ArrayUtils';
+import {arrayUniq} from '../../../../core/ArrayUtils';
 export class OutputsController<NC extends NodeContext> {
 	private _has_outputs: boolean = false;
 	private _named_output_connection_points: ConnectionPointTypeMap[NC][] | undefined;
@@ -131,7 +131,7 @@ export class OutputsController<NC extends NodeContext> {
 		if (connections_controller) {
 			const output_connections = connections_controller.outputConnections();
 			let output_indices = output_connections.map((connection) => (connection ? connection.outputIndex() : null));
-			output_indices = ArrayUtils.uniq(output_indices);
+			output_indices = arrayUniq(output_indices);
 			const used_output_indices: number[] = [];
 			output_indices.forEach((index) => {
 				if (CoreType.isNumber(index)) {

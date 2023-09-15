@@ -7,27 +7,34 @@ import {CoreObjectType} from '../../../../src/core/geometry/ObjectContent';
 import {BaseCoreObject} from '../../../../src/core/geometry/entities/object/BaseCoreObject';
 import {ENTITY_CLASS_FACTORY} from '../../../../src/core/geometry/CoreObjectFactory';
 export function testenginenodessopAttribPromote(qUnit: QUnit) {
-	qUnit.test('sop/attribPromote point to point with min', async (assert) => {
+	qUnit.test('sop/attribPromote point to object to point with min', async (assert) => {
 		const geo1 = window.geo1;
 
 		const box1 = geo1.createNode('box');
-		const attrib_create1 = geo1.createNode('attribCreate');
-		attrib_create1.p.name.set('test');
-		attrib_create1.p.size.set(1);
-		attrib_create1.p.value1.set('@ptnum');
-		attrib_create1.setInput(0, box1);
+		const attribCreate1 = geo1.createNode('attribCreate');
+		attribCreate1.p.name.set('test');
+		attribCreate1.p.size.set(1);
+		attribCreate1.p.value1.set('@ptnum');
+		attribCreate1.setInput(0, box1);
 
-		const attrib_promote1 = geo1.createNode('attribPromote');
-		attrib_promote1.setInput(0, attrib_create1);
-		attrib_promote1.setAttribClassFrom(AttribClass.POINT);
-		attrib_promote1.setAttribClassTo(AttribClass.POINT);
-		attrib_promote1.setPromoteMode(AttribPromoteMode.MIN);
-		attrib_promote1.p.name.set('test');
+		const attribPromite1 = geo1.createNode('attribPromote');
+		attribPromite1.setInput(0, attribCreate1);
+		attribPromite1.setAttribClassFrom(AttribClass.POINT);
+		attribPromite1.setAttribClassTo(AttribClass.OBJECT);
+		attribPromite1.setPromoteMode(AttribPromoteMode.MIN);
+		attribPromite1.p.name.set('test');
 
-		let container = await attrib_promote1.compute();
-		const core_group = container.coreContent()!;
-		const geometry = core_group.threejsObjectsWithGeo()[0].geometry;
-		assert.ok(core_group);
+		const attribPromite2 = geo1.createNode('attribPromote');
+		attribPromite2.setInput(0, attribPromite1);
+		attribPromite2.setAttribClassFrom(AttribClass.OBJECT);
+		attribPromite2.setAttribClassTo(AttribClass.POINT);
+		attribPromite2.setPromoteMode(AttribPromoteMode.FIRST_FOUND);
+		attribPromite2.p.name.set('test');
+
+		const container = await attribPromite2.compute();
+		const coreGroup = container.coreContent()!;
+		const geometry = coreGroup.threejsObjectsWithGeo()[0].geometry;
+		assert.ok(coreGroup);
 		assert.ok(geometry);
 
 		const {array} = geometry.getAttribute('test') as BufferAttribute;
@@ -36,27 +43,34 @@ export function testenginenodessopAttribPromote(qUnit: QUnit) {
 		assert.equal(array[5], 0);
 	});
 
-	qUnit.test('sop/attribPromote point to point with max', async (assert) => {
+	qUnit.test('sop/attribPromote point to object to point with max', async (assert) => {
 		const geo1 = window.geo1;
 
 		const box1 = geo1.createNode('box');
-		const attrib_create1 = geo1.createNode('attribCreate');
-		attrib_create1.p.name.set('test');
-		attrib_create1.p.size.set(1);
-		attrib_create1.p.value1.set('@ptnum');
-		attrib_create1.setInput(0, box1);
+		const attribCreate1 = geo1.createNode('attribCreate');
+		attribCreate1.p.name.set('test');
+		attribCreate1.p.size.set(1);
+		attribCreate1.p.value1.set('@ptnum');
+		attribCreate1.setInput(0, box1);
 
-		const attrib_promote1 = geo1.createNode('attribPromote');
-		attrib_promote1.setInput(0, attrib_create1);
-		attrib_promote1.setAttribClassFrom(AttribClass.POINT);
-		attrib_promote1.setAttribClassTo(AttribClass.POINT);
-		attrib_promote1.setPromoteMode(AttribPromoteMode.MAX); // max
-		attrib_promote1.p.name.set('test');
+		const attribPromite1 = geo1.createNode('attribPromote');
+		attribPromite1.setInput(0, attribCreate1);
+		attribPromite1.setAttribClassFrom(AttribClass.POINT);
+		attribPromite1.setAttribClassTo(AttribClass.OBJECT);
+		attribPromite1.setPromoteMode(AttribPromoteMode.MAX); // max
+		attribPromite1.p.name.set('test');
 
-		let container = await attrib_promote1.compute();
-		const core_group = container.coreContent()!;
-		const geometry = core_group.threejsObjectsWithGeo()[0].geometry;
-		assert.ok(core_group);
+		const attribPromite2 = geo1.createNode('attribPromote');
+		attribPromite2.setInput(0, attribPromite1);
+		attribPromite2.setAttribClassFrom(AttribClass.OBJECT);
+		attribPromite2.setAttribClassTo(AttribClass.POINT);
+		attribPromite2.setPromoteMode(AttribPromoteMode.FIRST_FOUND);
+		attribPromite2.p.name.set('test');
+
+		let container = await attribPromite2.compute();
+		const coreGroup = container.coreContent()!;
+		const geometry = coreGroup.threejsObjectsWithGeo()[0].geometry;
+		assert.ok(coreGroup);
 		assert.ok(geometry);
 
 		const {array} = geometry.getAttribute('test') as BufferAttribute;
@@ -69,23 +83,23 @@ export function testenginenodessopAttribPromote(qUnit: QUnit) {
 		const geo1 = window.geo1;
 
 		const box1 = geo1.createNode('box');
-		const attrib_create1 = geo1.createNode('attribCreate');
-		attrib_create1.p.name.set('test');
-		attrib_create1.p.size.set(1);
-		attrib_create1.p.value1.set('@ptnum');
-		attrib_create1.setInput(0, box1);
+		const attribCreate1 = geo1.createNode('attribCreate');
+		attribCreate1.p.name.set('test');
+		attribCreate1.p.size.set(1);
+		attribCreate1.p.value1.set('@ptnum');
+		attribCreate1.setInput(0, box1);
 
-		const attrib_promote1 = geo1.createNode('attribPromote');
-		attrib_promote1.setInput(0, attrib_create1);
-		attrib_promote1.setAttribClassFrom(AttribClass.POINT);
-		attrib_promote1.setAttribClassTo(AttribClass.OBJECT);
-		attrib_promote1.setPromoteMode(AttribPromoteMode.MAX); // max
-		attrib_promote1.p.name.set('test');
+		const attribPromite1 = geo1.createNode('attribPromote');
+		attribPromite1.setInput(0, attribCreate1);
+		attribPromite1.setAttribClassFrom(AttribClass.POINT);
+		attribPromite1.setAttribClassTo(AttribClass.OBJECT);
+		attribPromite1.setPromoteMode(AttribPromoteMode.MAX); // max
+		attribPromite1.p.name.set('test');
 
-		let container = await attrib_promote1.compute();
-		const core_group = container.coreContent()!;
-		const object = core_group.allObjects()[0];
-		assert.ok(core_group);
+		let container = await attribPromite1.compute();
+		const coreGroup = container.coreContent()!;
+		const object = coreGroup.allObjects()[0];
+		assert.ok(coreGroup);
 		assert.ok(object);
 
 		assert.deepEqual(object.userData, {attributes: {test: 23}});
@@ -123,41 +137,41 @@ export function testenginenodessopAttribPromote(qUnit: QUnit) {
 		const geo1 = window.geo1;
 
 		const box1 = geo1.createNode('box');
-		const attrib_create1 = geo1.createNode('attribCreate');
+		const attribCreate1 = geo1.createNode('attribCreate');
 		const attrib_create2 = geo1.createNode('attribCreate');
-		const attrib_promote1 = geo1.createNode('attribPromote');
-		attrib_create1.setAttribClass(AttribClass.OBJECT);
-		attrib_create1.p.name.set('id');
-		attrib_create1.p.size.set(1);
-		attrib_create1.p.value1.set(0.1);
-		attrib_create1.setInput(0, box1);
+		const attribPromite1 = geo1.createNode('attribPromote');
+		attribCreate1.setAttribClass(AttribClass.OBJECT);
+		attribCreate1.p.name.set('id');
+		attribCreate1.p.size.set(1);
+		attribCreate1.p.value1.set(0.1);
+		attribCreate1.setInput(0, box1);
 
 		attrib_create2.setAttribClass(AttribClass.OBJECT);
 		attrib_create2.p.name.set('role');
 		attrib_create2.p.size.set(1);
 		attrib_create2.p.value1.set(0.2);
-		attrib_create2.setInput(0, attrib_create1);
+		attrib_create2.setInput(0, attribCreate1);
 
-		attrib_promote1.setInput(0, attrib_create2);
-		attrib_promote1.setAttribClassFrom(AttribClass.OBJECT);
-		attrib_promote1.setAttribClassTo(AttribClass.POINT);
-		attrib_promote1.setPromoteMode(AttribPromoteMode.MAX); // max
-		attrib_promote1.p.name.set('id role');
+		attribPromite1.setInput(0, attrib_create2);
+		attribPromite1.setAttribClassFrom(AttribClass.OBJECT);
+		attribPromite1.setAttribClassTo(AttribClass.POINT);
+		attribPromite1.setPromoteMode(AttribPromoteMode.MAX); // max
+		attribPromite1.p.name.set('id role');
 
-		let container = await attrib_promote1.compute();
-		const core_group = container.coreContent()!;
-		const geometry = core_group.threejsObjectsWithGeo()[0].geometry;
-		assert.ok(geometry);
-
+		const container = await attribPromite1.compute();
+		const coreGroup = container.coreContent()!;
+		const geometry = coreGroup.threejsObjectsWithGeo()[0].geometry;
+		assert.ok(geometry, 'geometry');
+		
 		const array_id = (geometry.getAttribute('id') as BufferAttribute).array;
-		assert.equal(array_id.length, container.pointsCount());
+		assert.equal(array_id.length, container.pointsCount(), 'array length ok');
 		assert.in_delta(array_id[0], 0.1, 0.001);
 		const array_role = (geometry.getAttribute('role') as BufferAttribute).array;
 		assert.equal(array_role.length, container.pointsCount());
 		assert.in_delta(array_role[0], 0.2, 0.001);
 	});
 
-	qUnit.test('sop/attribPromote object to object with max', async (assert) => {
+	qUnit.test('sop/attribPromote object to group to object with max', async (assert) => {
 		const geo1 = window.geo1;
 
 		const box1 = geo1.createNode('box');
@@ -172,17 +186,24 @@ export function testenginenodessopAttribPromote(qUnit: QUnit) {
 		attribCreate1.setAttribClass(AttribClass.OBJECT);
 		attribCreate1.p.name.set('test');
 		attribCreate1.p.size.set(1);
-		attribCreate1.p.value1.set('@ptnum');
+		attribCreate1.p.value1.set('@objnum');
 		attribCreate1.setInput(0, merge1);
 
 		const attribPromote1 = geo1.createNode('attribPromote');
 		attribPromote1.setInput(0, attribCreate1);
 		attribPromote1.setAttribClassFrom(AttribClass.OBJECT);
-		attribPromote1.setAttribClassTo(AttribClass.OBJECT);
+		attribPromote1.setAttribClassTo(AttribClass.CORE_GROUP);
 		attribPromote1.setPromoteMode(AttribPromoteMode.MAX);
 		attribPromote1.p.name.set('test');
 
-		let container = await attribPromote1.compute();
+		const attribPromote2 = geo1.createNode('attribPromote');
+		attribPromote2.setInput(0, attribPromote1);
+		attribPromote2.setAttribClassFrom(AttribClass.CORE_GROUP);
+		attribPromote2.setAttribClassTo(AttribClass.OBJECT);
+		attribPromote2.setPromoteMode(AttribPromoteMode.FIRST_FOUND);
+		attribPromote2.p.name.set('test');
+
+		const container = await attribPromote2.compute();
 		const coreGroup = container.coreContent()!;
 		const coreObjects = coreGroup.allCoreObjects();
 		assert.equal(coreObjects.length, 3);
@@ -193,7 +214,7 @@ export function testenginenodessopAttribPromote(qUnit: QUnit) {
 		);
 	});
 
-	qUnit.test('sop/attribPromote object to object with max (2)', async (assert) => {
+	qUnit.test('sop/attribPromote object to group to object with max (2)', async (assert) => {
 		const geo1 = window.geo1;
 
 		const merge1 = geo1.createNode('merge');
@@ -216,11 +237,18 @@ export function testenginenodessopAttribPromote(qUnit: QUnit) {
 		const attribPromote1 = geo1.createNode('attribPromote');
 		attribPromote1.setInput(0, attribCreate1);
 		attribPromote1.setAttribClassFrom(AttribClass.OBJECT);
-		attribPromote1.setAttribClassTo(AttribClass.OBJECT);
+		attribPromote1.setAttribClassTo(AttribClass.CORE_GROUP);
 		attribPromote1.setPromoteMode(AttribPromoteMode.MAX);
 		attribPromote1.p.name.set('xMin');
 
-		let container = await attribPromote1.compute();
+		const attribPromote2 = geo1.createNode('attribPromote');
+		attribPromote2.setInput(0, attribPromote1);
+		attribPromote2.setAttribClassFrom(AttribClass.CORE_GROUP);
+		attribPromote2.setAttribClassTo(AttribClass.OBJECT);
+		attribPromote2.setPromoteMode(AttribPromoteMode.FIRST_FOUND);
+		attribPromote2.p.name.set('xMin');
+
+		let container = await attribPromote2.compute();
 		let coreObjects = container.coreContent()!.allCoreObjects();
 		assert.equal(coreObjects.length, 3);
 		assert.deepEqual(
@@ -229,7 +257,7 @@ export function testenginenodessopAttribPromote(qUnit: QUnit) {
 		);
 
 		attribPromote1.setPromoteMode(AttribPromoteMode.MIN);
-		container = await attribPromote1.compute();
+		container = await attribPromote2.compute();
 		coreObjects = container.coreContent()!.allCoreObjects();
 		assert.deepEqual(
 			coreObjects.map((o: BaseCoreObject<CoreObjectType>) => o.attribValue('xMin')),

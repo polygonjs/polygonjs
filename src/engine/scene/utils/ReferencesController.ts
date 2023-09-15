@@ -6,7 +6,7 @@ import {ParamType} from '../../poly/ParamType';
 import {BaseParamType} from '../../params/_Base';
 import {CoreGraphNodeId} from '../../../core/graph/CoreGraph';
 // import {OperatorPathParam} from '../../params/OperatorPath';
-import {ArrayUtils} from '../../../core/ArrayUtils';
+import {arrayShallowClone} from '../../../core/ArrayUtils';
 import {NodePathParam} from '../../params/NodePath';
 
 type BasePathParam = TypedPathParam<any>;
@@ -125,7 +125,7 @@ export class ReferencesController {
 		const referencingParams = this._referencing_params_by_all_named_node_ids.get(node.graphNodeId());
 		if (referencingParams) {
 			// make sure to do a cloned copy, since the list will change as the params are notified to rebuild
-			const referencingParamsCloned = ArrayUtils.shallowClone(referencingParams);
+			const referencingParamsCloned = arrayShallowClone(referencingParams);
 			for (let referencingParam of referencingParamsCloned) {
 				referencingParam.notifyPathRebuildRequired(node);
 			}
@@ -148,7 +148,7 @@ export class ReferencesController {
 
 		if (referencingParams) {
 			// make sure to do a cloned copy, since the list will change as the params are notified to rebuild
-			const referencingParamsCloned = ArrayUtils.shallowClone(referencingParams);
+			const referencingParamsCloned = arrayShallowClone(referencingParams);
 			for (let referencingParam of referencingParamsCloned) {
 				if (referencingParam.options.isSelectingParam()) {
 					referencingParam.notifyTargetParamOwnerParamsUpdated(node);

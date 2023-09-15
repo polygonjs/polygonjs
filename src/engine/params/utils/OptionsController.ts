@@ -6,7 +6,7 @@ import {NodeContext} from '../../poly/NodeContext';
 import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
 import {ColorConversion} from '../../../core/Color';
 import {CoreType, isFunction} from '../../../core/Type';
-import {ArrayUtils} from '../../../core/ArrayUtils';
+import {arrayDifference, arrayCompact, arrayUniq} from '../../../core/ArrayUtils';
 import {ObjectUtils} from '../../../core/ObjectUtils';
 import {PolyScene} from '../../scene/PolyScene';
 import {Boolean2, Number2, PolyDictionary} from '../../../types/GlobalTypes';
@@ -332,7 +332,7 @@ export class OptionsController {
 	overriddenOptions(): ParamOptions {
 		const overriden: ParamOptions = {};
 		const optionNames = Object.keys(this._options) as Array<keyof ParamOptions>;
-		const optionNamesToCheck = ArrayUtils.difference(optionNames, NON_OVERRIDABLE_OPTIONS);
+		const optionNamesToCheck = arrayDifference(optionNames, NON_OVERRIDABLE_OPTIONS);
 		for (let optionName of optionNamesToCheck) {
 			if (!ObjectUtils.isEqual(this._options[optionName], this._default_options[optionName])) {
 				const cloned_option = ObjectUtils.cloneDeep(this._options[optionName]);
@@ -725,12 +725,12 @@ export class OptionsController {
 		}
 		let predecessorNames: string[] = [];
 		if (CoreType.isArray(visibilityOptions)) {
-			predecessorNames = ArrayUtils.uniq(visibilityOptions.map((options) => Object.keys(options)).flat());
+			predecessorNames = arrayUniq(visibilityOptions.map((options) => Object.keys(options)).flat());
 		} else {
 			predecessorNames = Object.keys(visibilityOptions);
 		}
 		const node = this.param().node;
-		const params = ArrayUtils.compact(
+		const params = arrayCompact(
 			predecessorNames.map((name) => {
 				const param = node.params.get(name);
 				if (param) {
@@ -787,7 +787,7 @@ export class OptionsController {
 			if (CoreType.isArray(options)) {
 				for (let optionsSet of options) {
 					const optionSetParamNames = Object.keys(optionsSet);
-					const optionSetParams = ArrayUtils.compact(
+					const optionSetParams = arrayCompact(
 						optionSetParamNames.map((paramName) => node.params.get(paramName))
 					);
 					const satisfiedValues = optionSetParams.filter((param) => param.value == optionsSet[param.name()]);

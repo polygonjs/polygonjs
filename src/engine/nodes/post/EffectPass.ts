@@ -6,13 +6,13 @@
 import {TypedPostNode, TypedPostNodeContext} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {Effect, EffectPass, Pass} from 'postprocessing';
-import {ArrayUtils} from '../../../core/ArrayUtils';
+import {range, arrayCompact} from '../../../core/ArrayUtils';
 import {BaseNodeType} from '../_Base';
 import {NodeEvent} from '../../poly/NodeEvent';
 import {PostType} from '../../poly/registers/nodes/types/Post';
 
 const POSSIBLE_COMBINED_PASSES_COUNT = 5;
-export const RANGE = ArrayUtils.range(POSSIBLE_COMBINED_PASSES_COUNT);
+export const RANGE = range(POSSIBLE_COMBINED_PASSES_COUNT);
 const DEFAULT_INPUTS_COUNT = POSSIBLE_COMBINED_PASSES_COUNT + 1;
 
 class EffectPassPostParamsConfig extends NodeParamsConfig {
@@ -43,7 +43,7 @@ export class EffectPassPostNode extends TypedPostNode<EffectPass, EffectPassPost
 
 	override _setupComposerIfActive(context: TypedPostNodeContext): void {
 		const inputIndices = RANGE.map((i) => i + 1);
-		const passesToCombine: Pass[] = ArrayUtils.compact(
+		const passesToCombine: Pass[] = arrayCompact(
 			inputIndices.map((index) => {
 				const input = this.io.inputs.input(index);
 				if (input) {
@@ -54,7 +54,7 @@ export class EffectPassPostNode extends TypedPostNode<EffectPass, EffectPassPost
 			})
 		).flat();
 
-		const effects: Effect[] = ArrayUtils.compact(
+		const effects: Effect[] = arrayCompact(
 			passesToCombine.map((pass) => {
 				return (pass as any).effects as undefined | Effect[];
 			})

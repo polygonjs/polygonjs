@@ -2,7 +2,7 @@ import {BufferGeometry, Float32BufferAttribute, LineSegments, Mesh, Object3D, Ve
 import {ObjectType} from '../../geometry/Constant';
 import {BaseSopNodeType} from '../../../engine/nodes/sop/_Base';
 import {CoordinatesCollection} from './CoordinatesCollection';
-import {ArrayUtils} from '../../ArrayUtils';
+import {arraySum} from '../../ArrayUtils';
 import {CoreGeometryBuilderMerge} from '../../geometry/builders/Merge';
 import {CoreMapboxString} from './String';
 import {corePointClassFactory} from '../../geometry/CoreObjectFactory';
@@ -18,7 +18,7 @@ export class FeatureConverter {
 
 	createObject(): Object3D | undefined {
 		const coordinatesCollections = this._createAllCoordinatesCollections();
-		const perimeter: number = ArrayUtils.sum(coordinatesCollections.map((f) => f.perimeter()));
+		const perimeter: number = arraySum(coordinatesCollections.map((f) => f.perimeter()));
 		const sortedFeatures = CoordinatesCollection.sort(coordinatesCollections);
 
 		const lines = sortedFeatures.map((feature) => {

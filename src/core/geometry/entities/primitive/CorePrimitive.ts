@@ -16,9 +16,11 @@ import {PrimitiveAttributesDict} from './Common';
 import {CoreObjectType, ObjectContent, ObjectBuilder} from '../../ObjectContent';
 import {BaseCoreObject} from '../object/BaseCoreObject';
 import {TypeAssert} from '../../../../engine/poly/Assert';
-import type {CoreVertex} from '../vertex/CoreVertex';
 import {coreObjectInstanceFactory} from '../../CoreObjectFactory';
 import {uniqRelatedEntities} from '../utils/Common';
+import type {CoreVertex} from '../vertex/CoreVertex';
+import type {CoreGroup} from '../../Group';
+import {arrayCopy} from '../../../ArrayUtils';
 
 export abstract class CorePrimitive<T extends CoreObjectType> extends CoreEntity {
 	protected _object?: ObjectContent<T>;
@@ -342,24 +344,26 @@ export abstract class CorePrimitive<T extends CoreObjectType> extends CoreEntity
 	relatedPoints() {
 		return uniqRelatedEntities(this.relatedVertices(), (vertex) => vertex.relatedPoints());
 	}
-	relatedEntities(attribClass: AttribClass): CoreEntity[] {
+	relatedEntities(attribClass: AttribClass, coreGroup: CoreGroup, target: CoreEntity[]): void {
 		switch (attribClass) {
 			case AttribClass.POINT: {
-				return this.relatedPoints();
+				return arrayCopy(this.relatedPoints(), target);
 			}
 			case AttribClass.VERTEX: {
-				return this.relatedVertices();
+				return arrayCopy(this.relatedVertices(), target);
 			}
 			case AttribClass.PRIMITIVE: {
-				return [this];
+				target.length = 1;
+				target[0] = this;
+				return;
 			}
 			case AttribClass.OBJECT: {
-				return this.relatedObjects();
+				return arrayCopy(this.relatedObjects(), target);
 			}
 			case AttribClass.CORE_GROUP: {
-				return this.relatedObjects()
-					.map((o) => o.relatedCoreGroups())
-					.flat();
+				target.length = 1;
+				target[0] = coreGroup;
+				return;
 			}
 		}
 		TypeAssert.unreachable(attribClass);

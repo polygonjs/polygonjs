@@ -1,19 +1,23 @@
-// import {CorePoint} from './../../../core/geometry/entities/point/CorePoint';
-// import {CoreAttribute} from './../../../core/geometry/Attribute';
-// import {AttribValue, NumericAttribValue} from './../../../types/GlobalTypes';
-// import {TypeAssert} from './../../poly/Assert';
-// import {CoreType} from './../../../core/Type';
+import {TypeAssert} from './../../poly/Assert';
 import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {AttribClass, ATTRIBUTE_CLASSES} from '../../../core/geometry/Constant';
-// import {ArrayUtils} from '../../../core/ArrayUtils';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
-// import {pointsFromObject} from '../../../core/geometry/entities/point/CorePointUtils';
-import {coreObjectInstanceFactory} from '../../../core/geometry/CoreObjectFactory';
-import {CoreObjectType, ObjectContent} from '../../../core/geometry/ObjectContent';
+import {coreObjectInstanceFactory, corePointClassFactory} from '../../../core/geometry/CoreObjectFactory';
+import {CoreObjectType} from '../../../core/geometry/ObjectContent';
 import {filterObjectsFromCoreGroup} from '../../../core/geometry/Mask';
-// import { CoreEntity } from '../../../core/geometry/CoreEntity';
+import {CoreEntity} from '../../../core/geometry/CoreEntity';
+import {ENTITY_CLASS_FACTORY} from '../../../core/geometry/CoreObjectFactory';
+import {arrayMin, arrayMax, ArrayToItemFunction} from '../../../core/ArrayUtils';
+import {AttribValue} from '../../../types/GlobalTypes';
+import {isNumber, isString, isBoolean} from '../../../core/Type';
+import {Vector2, Vector3, Vector4, Color} from 'three';
+const _v2 = new Vector2();
+const _v3 = new Vector3();
+const _v4 = new Vector4();
+const _c = new Color();
+
 interface AttribPromoteSopParams extends DefaultOperationParams {
 	group: string;
 	classFrom: number;
@@ -51,326 +55,106 @@ export class AttribPromoteSopOperation extends BaseSopOperation {
 
 		const classFrom = ATTRIBUTE_CLASSES[params.classFrom];
 		const classTo = ATTRIBUTE_CLASSES[params.classTo];
+		const mode = ATTRIB_PROMOTE_MODES[params.mode];
 
 		const objects = filterObjectsFromCoreGroup(coreGroup, params);
 		for (const object of objects) {
-			// const coreObjectClass = coreObjectClassFactory(object);
-			// const attribNames = coreObjectClass.attributeNamesMatchingMask(object, params.name);
-			// for (const attribName of attribNames) {
-			this._promoteAttribute(coreGroup, object, classFrom, classTo, params);
-			// }
+			const factoryFrom = ENTITY_CLASS_FACTORY[classFrom];
+			const attribNames = factoryFrom
+				? factoryFrom(object).attributeNamesMatchingMask(object, params.name)
+				: coreGroup.attributeNamesMatchingMask(params.name);
+
+			if (classTo == AttribClass.POINT) {
+				for (const attribName of attribNames) {
+					const corePointClass = corePointClassFactory(object);
+					if (!corePointClass.hasAttribute(object, attribName)) {
+						const srcAttribSize: number | null = factoryFrom
+							? factoryFrom(object).attribSize(object, attribName)
+							: coreGroup.attribSize(attribName);
+						if (srcAttribSize != null) {
+							corePointClass.addNumericAttribute(object, attribName, srcAttribSize);
+						}
+					}
+				}
+			}
+
+			const destEntities: CoreEntity[] = [];
+			const srcEntities: CoreEntity[] = [];
+			coreObjectInstanceFactory(object).relatedEntities(classTo, coreGroup, destEntities);
+			for (const destEntity of destEntities) {
+				destEntity.relatedEntities(classFrom, coreGroup, srcEntities);
+				for (const attribName of attribNames) {
+					this._promoteAttribute(attribName, srcEntities, destEntity, mode);
+				}
+			}
 		}
-
-		// const attribNames = _attribNames(coreGroup, classFrom, params.name);
-
-		// for (let attribName of attribNames) {
-		// 	promoteAttribute(coreGroup, classFrom, classTo, attribName, params);
-		// }
 
 		return coreGroup;
 	}
 
 	private _promoteAttribute<T extends CoreObjectType>(
-		coreGroup: CoreGroup,
-		object: ObjectContent<T>,
-		// attribName: string,
-		classFrom: AttribClass,
-		classTo: AttribClass,
-		params: AttribPromoteSopParams
+		attribName: string,
+		srcEntities: CoreEntity[],
+		destEntity: CoreEntity,
+		mode: AttribPromoteMode
 	) {
-		const destEntities = coreObjectInstanceFactory(object).relatedEntities(classTo);
-		for (const destEntity of destEntities) {
-			const srcEntities = destEntity.relatedEntities(classFrom);
-			console.log({srcEntities, destEntity});
-		}
+		const srcValues = srcEntities.map((entity) => entity.attribValue(attribName)!);
+		const destValue = this._convertSrcValues(srcValues, mode);
+		destEntity.setAttribValue(attribName, destValue as any);
 	}
-	// private _destEntities<T extends CoreObjectType>(coreGroup:CoreGroup, object:ObjectContent<T>, classTo: AttribClass){
-	// 	switch(classTo){
-	// 		case AttribClass.POINT:{
-	// 			return coreObjectInstanceFactory(object).relatedPoints()
-	// 		}
-	// 		case AttribClass.VERTEX:{
-	// 			return coreObjectInstanceFactory(object).relatedVertices()
-	// 		}
-	// 		case AttribClass.PRIMITIVE:{
-	// 				return coreObjectInstanceFactory(object).relatedPrimitives()
-	// 		}
-	// 		case AttribClass.OBJECT:{
-	// 			return [object]
-	// 		}
-	// 		case AttribClass.CORE_GROUP:{
-	// 			return [coreGroup]
-	// 		}
-	// 	}
-	// }
-	// private _srcEntities<T extends CoreObjectType>(coreGroup:CoreGroup, entity:CoreEntity, classFrom: AttribClass){
-	// 	switch(classFrom){
-	// 		case AttribClass.POINT:{
-	// 			return entity.related()
-	// 		}
-	// 		case AttribClass.VERTEX:{
-	// 			return entity.relatedVertices()
-	// 		}
-	// 		case AttribClass.PRIMITIVE:{
-	// 				return entity.relatedVertices()
-	// 		}
-	// 		case AttribClass.OBJECT:{
-	// 			return [object]
-	// 		}
-	// 		case AttribClass.CORE_GROUP:{
-	// 			return [coreGroup]
-	// 		}
-	// 	}
-	// }
+	private _convertSrcValues(srcValues: AttribValue[], mode: AttribPromoteMode): AttribValue {
+		switch (mode) {
+			case AttribPromoteMode.MIN: {
+				return this._convertValuesMin(srcValues);
+			}
+			case AttribPromoteMode.MAX: {
+				return this._convertValuesMax(srcValues);
+			}
+			case AttribPromoteMode.FIRST_FOUND: {
+				return this._convertValuesFirstFound(srcValues);
+			}
+		}
+		TypeAssert.unreachable(mode);
+	}
+	private _convertValuesMin(srcValues: AttribValue[]): AttribValue {
+		return this._convertValuesMinMax(srcValues, arrayMin);
+	}
+	private _convertValuesMax(srcValues: AttribValue[]): AttribValue {
+		return this._convertValuesMinMax(srcValues, arrayMax);
+	}
+	private _convertValuesMinMax(srcValues: AttribValue[], arrayFunc: ArrayToItemFunction<number>): AttribValue {
+		const firstValue = srcValues[0];
+		if (isNumber(firstValue) || isString(firstValue) || isBoolean(firstValue)) {
+			return arrayFunc(srcValues as number[]);
+		}
+
+		if (firstValue instanceof Vector2) {
+			_v2.x = arrayFunc((srcValues as Vector2[]).map((v) => v.x));
+			_v2.y = arrayFunc((srcValues as Vector2[]).map((v) => v.y));
+			return _v2;
+		}
+		if (firstValue instanceof Vector3) {
+			_v3.x = arrayFunc((srcValues as Vector3[]).map((v) => v.x));
+			_v3.y = arrayFunc((srcValues as Vector3[]).map((v) => v.y));
+			_v3.z = arrayFunc((srcValues as Vector3[]).map((v) => v.z));
+			return _v3;
+		}
+		if (firstValue instanceof Color) {
+			_c.r = arrayFunc((srcValues as Color[]).map((c) => c.r));
+			_c.g = arrayFunc((srcValues as Color[]).map((c) => c.g));
+			_c.b = arrayFunc((srcValues as Color[]).map((c) => c.b));
+			return _c;
+		}
+		if (firstValue instanceof Vector4) {
+			_v4.x = arrayFunc((srcValues as Vector4[]).map((v) => v.x));
+			_v4.y = arrayFunc((srcValues as Vector4[]).map((v) => v.y));
+			_v4.z = arrayFunc((srcValues as Vector4[]).map((v) => v.z));
+			_v4.w = arrayFunc((srcValues as Vector4[]).map((v) => v.w));
+			return _v4;
+		}
+		return 0;
+	}
+	private _convertValuesFirstFound(srcValues: AttribValue[]): AttribValue {
+		return srcValues[0];
+	}
 }
-
-// function _attribNames(coreGroup: CoreGroup, attribClass: AttribClass, mask: string): string[] {
-// 	switch (attribClass) {
-// 		case AttribClass.POINT:
-// 			return coreGroup.pointAttribNamesMatchingMask(mask);
-// 		case AttribClass.VERTEX: {
-// 			console.warn('primitive not supported yet');
-// 			return [];
-// 		}
-// 		case AttribClass.PRIMITIVE: {
-// 			console.warn('primitive not supported yet');
-// 			return [];
-// 		}
-// 		case AttribClass.OBJECT:
-// 			return coreGroup.objectAttribNamesMatchingMask(mask);
-// 		case AttribClass.CORE_GROUP:
-// 			return coreGroup.attribNamesMatchingMask(mask);
-// 	}
-// 	TypeAssert.unreachable(attribClass);
-// }
-// function promoteAttribute(
-// 	coreGroup: CoreGroup,
-// 	classFrom: AttribClass,
-// 	classTo: AttribClass,
-// 	attribName: string,
-// 	params: AttribPromoteSopParams
-// ) {
-// 	switch (classFrom) {
-// 		case AttribClass.POINT:
-// 			return promoteAttributeFromPoints(coreGroup, classTo, attribName, params);
-// 		case AttribClass.VERTEX: {
-// 			console.warn('vertex not supported yet');
-// 			return;
-// 		}
-// 		case AttribClass.PRIMITIVE: {
-// 			console.warn('primitive not supported yet');
-// 			return;
-// 		}
-// 		case AttribClass.OBJECT:
-// 			return promoteAttributeFromObjects(coreGroup, classTo, attribName, params);
-// 		case AttribClass.CORE_GROUP:
-// 			return promoteAttributeFromCoreGroup(coreGroup, classTo, attribName);
-// 	}
-// 	TypeAssert.unreachable(classFrom);
-// }
-// function promoteAttributeFromPoints(
-// 	coreGroup: CoreGroup,
-// 	classTo: AttribClass,
-// 	attribName: string,
-// 	params: AttribPromoteSopParams
-// ) {
-// 	switch (classTo) {
-// 		case AttribClass.POINT:
-// 			return pointsToPoints(coreGroup, attribName, params);
-// 		case AttribClass.VERTEX: {
-// 			console.warn('vertex not supported yet');
-// 			return;
-// 		}
-// 		case AttribClass.PRIMITIVE: {
-// 			console.warn('primitive not supported yet');
-// 			return;
-// 		}
-// 		case AttribClass.OBJECT:
-// 			return pointsToObject(coreGroup, attribName, params);
-// 		case AttribClass.CORE_GROUP:
-// 			return pointsToCoreGroup(coreGroup, attribName, params);
-// 	}
-// 	TypeAssert.unreachable(classTo);
-// }
-// function promoteAttributeFromObjects(
-// 	coreGroup: CoreGroup,
-// 	classTo: AttribClass,
-// 	attribName: string,
-// 	params: AttribPromoteSopParams
-// ) {
-// 	switch (classTo) {
-// 		case AttribClass.POINT:
-// 			return objectsToPoints(coreGroup, attribName);
-// 		case AttribClass.VERTEX: {
-// 			console.warn('primitive not supported yet');
-// 			return;
-// 		}
-// 		case AttribClass.PRIMITIVE: {
-// 			console.warn('primitive not supported yet');
-// 			return;
-// 		}
-// 		case AttribClass.OBJECT:
-// 			return objectsToObjects(coreGroup, attribName, params);
-// 		case AttribClass.CORE_GROUP:
-// 			return objectsToCoreGroup(coreGroup, attribName, params);
-// 	}
-// 	TypeAssert.unreachable(classTo);
-// }
-// function promoteAttributeFromCoreGroup(coreGroup: CoreGroup, classTo: AttribClass, attribName: string) {
-// 	switch (classTo) {
-// 		case AttribClass.POINT:
-// 			return coreGroupToPoints(coreGroup, attribName);
-// 		case AttribClass.VERTEX: {
-// 			console.log('vertex not supported yet');
-// 			return;
-// 		}
-// 		case AttribClass.PRIMITIVE: {
-// 			console.log('primitive not supported yet');
-// 			return;
-// 		}
-
-// 		case AttribClass.OBJECT:
-// 			return coreGroupToObjects(coreGroup, attribName);
-// 		case AttribClass.CORE_GROUP:
-// 			// nothing can be promoted from group to group
-// 			return;
-// 	}
-// 	TypeAssert.unreachable(classTo);
-// }
-// function pointsToPoints(coreGroup: CoreGroup, attribName: string, params: AttribPromoteSopParams) {
-// 	const values = findValuesFromPoints(coreGroup.points(), attribName);
-// 	const value = filterValues(values, params);
-// 	const objects = coreGroup.allObjects();
-// 	for (let object of objects) {
-// 		setValuesToPoints(object, attribName, value as NumericAttribValue);
-// 	}
-// }
-// function pointsToObject(coreGroup: CoreGroup, attribName: string, params: AttribPromoteSopParams) {
-// 	const coreObjects = coreGroup.allCoreObjects();
-// 	for (let coreObject of coreObjects) {
-// 		const object = coreObject.object();
-// 		const points = pointsFromObject(object);
-// 		const values = findValuesFromPoints(points, attribName);
-// 		const value = filterValues(values, params);
-// 		coreObject.setAttribValue(attribName, value);
-// 	}
-// }
-// function pointsToCoreGroup(coreGroup: CoreGroup, attribName: string, params: AttribPromoteSopParams) {
-// 	const values = findValuesFromPoints(coreGroup.points(), attribName);
-// 	const value = filterValues(values, params);
-// 	coreGroup.setAttribValue(attribName, value);
-// }
-// function objectsToPoints(coreGroup: CoreGroup, attribName: string) {
-// 	const objects = coreGroup.allObjects();
-// 	for (let object of objects) {
-// 		const coreObjectClass = coreObjectClassFactory(object);
-// 		const value = coreObjectClass.attribValue(object, attribName);
-// 		if (value == null) {
-// 			return;
-// 		}
-// 		setValuesToPoints(object, attribName, value as NumericAttribValue);
-// 	}
-// }
-// function objectsToObjects(coreGroup: CoreGroup, attribName: string, params: AttribPromoteSopParams) {
-// 	const values = findValuesFromObjects(coreGroup, attribName);
-// 	const value = filterValues(values, params);
-// 	setValuesToObjects(coreGroup, attribName, value);
-// }
-// function objectsToCoreGroup(coreGroup: CoreGroup, attribName: string, params: AttribPromoteSopParams) {
-// 	const values = findValuesFromObjects(coreGroup, attribName);
-// 	const value = filterValues(values, params);
-// 	coreGroup.setAttribValue(attribName, value);
-// }
-// function coreGroupToPoints(coreGroup: CoreGroup, attribName: string) {
-// 	const value = coreGroup.attribValue(attribName);
-// 	if (value == null) {
-// 		return;
-// 	}
-// 	const objects = coreGroup.allObjects();
-// 	for (let object of objects) {
-// 		setValuesToPoints(object, attribName, value as NumericAttribValue);
-// 	}
-// }
-// function coreGroupToObjects(coreGroup: CoreGroup, attribName: string) {
-// 	const value = coreGroup.attribValue(attribName);
-// 	if (value == null) {
-// 		return;
-// 	}
-// 	setValuesToObjects(coreGroup, attribName, value);
-// }
-
-// function filterValues(values: number[], params: AttribPromoteSopParams) {
-// 	const mode = ATTRIB_PROMOTE_MODES[params.mode];
-// 	switch (mode) {
-// 		case AttribPromoteMode.MIN: {
-// 			return ArrayUtils.min(values);
-// 		}
-// 		case AttribPromoteMode.MAX: {
-// 			return ArrayUtils.max(values);
-// 		}
-// 		case AttribPromoteMode.FIRST_FOUND: {
-// 			return values[0];
-// 		}
-// 	}
-// 	TypeAssert.unreachable(mode);
-// }
-
-// //
-// //
-// // POINTS
-// //
-// //
-// function findValuesFromPoints(corePoints: CorePoint[], attribName: string) {
-// 	const values: number[] = new Array(corePoints.length);
-// 	const firstPoint = corePoints[0];
-// 	if (firstPoint) {
-// 		if (!firstPoint.isAttribIndexed(attribName)) {
-// 			let point: CorePoint;
-// 			for (let i = 0; i < corePoints.length; i++) {
-// 				point = corePoints[i];
-// 				values[i] = point.attribValue(attribName) as number;
-// 			}
-// 		}
-// 	}
-// 	return values;
-// }
-// function setValuesToPoints<T extends CoreObjectType>(
-// 	object: ObjectContent<T>,
-// 	attribName: string,
-// 	newValue: NumericAttribValue
-// ) {
-// 	const corePointClass = corePointClassFactory(object);
-// 	const attributeExists = corePointClass.hasAttribute(object, attribName);
-// 	if (!attributeExists) {
-// 		const attribSize = CoreAttribute.attribSizeFromValue(newValue);
-// 		if (attribSize) {
-// 			const corePointClass = corePointClassFactory(object);
-// 			corePointClass.addNumericAttribute(object, attribName, attribSize, newValue);
-// 		}
-// 	}
-
-// 	const points = pointsFromObject(object);
-// 	for (let point of points) {
-// 		point.setAttribValue(attribName, newValue);
-// 	}
-// }
-
-// //
-// //
-// // OBJECTS
-// //
-// //
-// function findValuesFromObjects(coreGroup: CoreGroup, attribName: string) {
-// 	const values = coreGroup.allCoreObjects().map((coreObject) => coreObject.attribValue(attribName));
-
-// 	const nonNullValues = ArrayUtils.compact(values);
-// 	const numericValues = nonNullValues.filter((value) => CoreType.isNumber(value)) as number[];
-// 	return numericValues;
-// }
-
-// function setValuesToObjects(coreGroup: CoreGroup, attribName: string, newValue: AttribValue) {
-// 	const coreObjects = coreGroup.allCoreObjects();
-// 	for (let coreObject of coreObjects) {
-// 		coreObject.setAttribValue(attribName, newValue);
-// 	}
-// }

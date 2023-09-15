@@ -1,4 +1,4 @@
-import {ArrayUtils} from './ArrayUtils';
+import {arrayIsEqual} from './ArrayUtils';
 import {CoreType} from './Type';
 import cloneDeep from 'lodash-es/cloneDeep';
 import clone from 'lodash-es/clone';
@@ -31,7 +31,7 @@ export class ObjectUtils {
 		if (CoreType.isObject(object0) && CoreType.isObject(object1)) {
 			const keys0 = Object.keys(object0);
 			const keys1 = Object.keys(object1);
-			if (!ArrayUtils.isEqual(keys0, keys1)) {
+			if (!arrayIsEqual(keys0, keys1)) {
 				return false;
 			}
 			return JSON.stringify(object0) == JSON.stringify(object1);

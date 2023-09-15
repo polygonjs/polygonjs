@@ -1,7 +1,7 @@
 import {BaseNodeType} from '../engine/nodes/_Base';
 import {NodeEvent} from '../engine/poly/NodeEvent';
 import {CoreGraphNodeId} from './graph/CoreGraph';
-import {ArrayUtils} from './ArrayUtils';
+import {arrayIsEqual, arrayUnion, arrayDifference} from './ArrayUtils';
 
 export class CoreNodeSelection {
 	private _nodeIds: CoreGraphNodeId[] = [];
@@ -23,7 +23,7 @@ export class CoreNodeSelection {
 	}
 	equals(nodes: BaseNodeType[]): boolean {
 		const node_ids = nodes.map((node) => node.graphNodeId()).sort();
-		return ArrayUtils.isEqual(node_ids, this._nodeIds);
+		return arrayIsEqual(node_ids, this._nodeIds);
 	}
 
 	clear() {
@@ -37,14 +37,14 @@ export class CoreNodeSelection {
 
 	add(nodesToAdd: BaseNodeType[]) {
 		const nodeIdsToAdd = nodesToAdd.map((node) => node.graphNodeId());
-		this._nodeIds = ArrayUtils.union(this._nodeIds, nodeIdsToAdd);
+		this._nodeIds = arrayUnion(this._nodeIds, nodeIdsToAdd);
 
 		this._sendUpdateEvent();
 	}
 
 	remove(nodesToRemove: BaseNodeType[]) {
 		const nodeIdsToRemove = nodesToRemove.map((node) => node.graphNodeId());
-		this._nodeIds = ArrayUtils.difference(this._nodeIds, nodeIdsToRemove);
+		this._nodeIds = arrayDifference(this._nodeIds, nodeIdsToRemove);
 
 		this._sendUpdateEvent();
 	}

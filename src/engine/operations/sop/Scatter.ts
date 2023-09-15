@@ -4,7 +4,7 @@ import {BufferGeometry} from 'three';
 import {BufferAttribute} from 'three';
 import {ObjectType} from '../../../core/geometry/Constant';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
-import {ArrayUtils} from '../../../core/ArrayUtils';
+import {range} from '../../../core/ArrayUtils';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {Mesh} from 'three';
 import {Vector2} from 'three';
@@ -165,7 +165,7 @@ export class ScatterSopOperation extends BaseSopOperation {
 		// add id
 		if (isBooleanTrue(params.addIdAttribute) || isBooleanTrue(params.addIdnAttribute)) {
 			const pointsCount = params.pointsCount;
-			const ids = ArrayUtils.range(pointsCount);
+			const ids = range(pointsCount);
 			if (isBooleanTrue(params.addIdAttribute)) {
 				geometry.setAttribute('id', new BufferAttribute(new Float32Array(ids), 1));
 			}
