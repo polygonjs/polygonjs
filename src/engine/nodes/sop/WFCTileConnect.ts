@@ -11,7 +11,7 @@ import {InputCloneMode} from '../../poly/InputCloneMode';
 import {Object3D, Quaternion} from 'three';
 import {WFCTileSide, rotatedSide, tileSideUnrotated, neighbourTileSideUnrotated} from '../../../core/wfc/WFCCommon';
 import {CoreWFCTileAttribute} from '../../../core/wfc/WFCAttributes';
-import { createConnectionObject } from '../../../core/wfc/WFCConnection';
+import {createConnectionObject} from '../../../core/wfc/WFCConnection';
 
 const identityQuaternion = new Quaternion();
 const _q = new Quaternion();
@@ -60,8 +60,14 @@ export class WFCTileConnectSopNode extends TypedSopNode<WFCTileConnectSopParamsC
 			x = Math.round(x);
 			y = Math.round(y);
 			z = Math.round(z);
-			templateObjectsInGrid[x] = templateObjectsInGrid[x] || [];
-			templateObjectsInGrid[x][y] = templateObjectsInGrid[x][y] || [];
+			const xs = templateObjectsInGrid[x];
+			if (!xs) {
+				return;
+			}
+			const yz = templateObjectsInGrid[x][y];
+			if (!yz) {
+				return;
+			}
 			return templateObjectsInGrid[x][y][z];
 		};
 		const _addConnectionIfNeighbourFound = (
@@ -95,8 +101,8 @@ export class WFCTileConnectSopNode extends TypedSopNode<WFCTileConnectSopParamsC
 				id1,
 				side0: currentObjectSide,
 				side1: neighbourSide,
-			})
-		
+			});
+
 			inputObjects.push(group);
 		};
 		for (const templateObject of templateObjects) {

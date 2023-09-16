@@ -56,6 +56,9 @@ export interface TileConfig {
 
 export const CLOCK_WISE_TILE_SIDES: WFCTileSide[] = ['n', 'e', 's', 'w'];
 export function rotatedSide(side: WFCTileSide, rotation: number): WFCTileSide {
+	if (side == 't' || side == 'b') {
+		return side;
+	}
 	const index = CLOCK_WISE_TILE_SIDES.indexOf(side);
 	return CLOCK_WISE_TILE_SIDES[mod(index + rotation, 4)];
 }

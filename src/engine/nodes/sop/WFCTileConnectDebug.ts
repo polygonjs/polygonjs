@@ -77,7 +77,9 @@ export class WFCTileConnectDebugSopNode extends TypedSopNode<WFCTileConnectDebug
 					const srcTileRotation = CLOCK_WISE_TILE_SIDES.indexOf(side0);
 					const destTileRotation = CLOCK_WISE_TILE_SIDES.indexOf(side1);
 					// srcTileClone.position.x = -0.5;
-					srcTileClone.rotation.y = (srcTileRotation * Math.PI) / 2;
+					if (srcTileRotation >= 0) {
+						srcTileClone.rotation.y = (srcTileRotation * Math.PI) / 2;
+					}
 					switch (side1) {
 						case 'b': {
 							destTileClone.position.y = +1;
