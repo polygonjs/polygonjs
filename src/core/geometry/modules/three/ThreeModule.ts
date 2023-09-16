@@ -11,12 +11,12 @@ import {
 	CoreObjectInstanceFactoryCheckFunction,
 } from '../../CoreObjectFactory';
 import {CoreObjectType, ObjectContent, isObject3D} from '../../ObjectContent';
-import {LineSegmentPrimitive} from './LineSegmentPrimitive';
-import {PointPrimitive} from './PointPrimitive';
-import {TrianglePrimitive} from './TrianglePrimitive';
 import {ThreejsPoint} from './ThreejsPoint';
 import {ThreejsVertex} from './ThreejsVertex';
 import {ThreejsObject} from './ThreejsObject';
+import {ThreejsPrimitiveTriangle} from './ThreejsPrimitiveTriangle';
+import {ThreejsPrimitiveLineSegment} from './ThreejsPrimitiveLineSegment';
+import {ThreejsPrimitivePoint} from './ThreejsPrimitivePoint';
 
 // point methods
 const pointClassFactory: CorePointClassFactoryCheckFunction = (object: ObjectContent<CoreObjectType>) => {
@@ -50,13 +50,13 @@ const vertexInstanceFactory: CoreVertexInstanceFactoryCheckFunction = (
 export const primitiveClassFactoryNonAbstract = (object: ObjectContent<CoreObjectType>) => {
 	if (isObject3D(object)) {
 		if ((object as Mesh).isMesh) {
-			return TrianglePrimitive;
+			return ThreejsPrimitiveTriangle;
 		}
 		if ((object as LineSegments).isLineSegments) {
-			return LineSegmentPrimitive;
+			return ThreejsPrimitiveLineSegment;
 		}
 		if ((object as Points).isPoints) {
-			return PointPrimitive;
+			return ThreejsPrimitivePoint;
 		}
 	}
 };
@@ -67,13 +67,13 @@ export const primitiveInstanceFactory: CorePrimitiveInstanceFactoryCheckFunction
 ) => {
 	if (isObject3D(object)) {
 		if ((object as Mesh).isMesh) {
-			return new TrianglePrimitive(object as Mesh, index);
+			return new ThreejsPrimitiveTriangle(object as Mesh, index);
 		}
 		if ((object as LineSegments).isLineSegments) {
-			return new LineSegmentPrimitive(object as LineSegments, index);
+			return new ThreejsPrimitiveLineSegment(object as LineSegments, index);
 		}
 		if ((object as Points).isPoints) {
-			return new PointPrimitive(object as Points, index);
+			return new ThreejsPrimitivePoint(object as Points, index);
 		}
 	}
 };

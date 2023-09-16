@@ -1,10 +1,15 @@
 import {Vector2, BufferGeometry, Float32BufferAttribute, Mesh} from 'three';
-import {CoreGeometry} from '../Geometry';
-import {arrayIntersection} from '../../ArrayUtils';
+import {arrayChunk, arrayIntersection} from '../../ArrayUtils';
 import {pointsFromObject} from '../entities/point/CorePointUtils';
+import {ThreejsPoint} from '../modules/three/ThreejsPoint';
 
 const dummyMeshSmallest = new Mesh();
 const dummyMeshLargest = new Mesh();
+
+function segments(geometry: BufferGeometry) {
+	const index: Array<number> = (geometry.index?.array || []) as Array<number>;
+	return arrayChunk(index, 2);
+}
 export class CoreGeometryOperationSkin {
 	constructor(
 		private geometry: BufferGeometry,
@@ -13,28 +18,28 @@ export class CoreGeometryOperationSkin {
 	) {}
 
 	process() {
-		const core_geometry0 = new CoreGeometry(this.geometry0);
-		const core_geometry1 = new CoreGeometry(this.geometry1);
-		const segments0 = core_geometry0.segments();
-		const segments1 = core_geometry1.segments();
+		const segments0 = segments(this.geometry0);
+		const segments1 = segments(this.geometry1);
 
 		if (segments0.length === 0 || segments1.length === 0) {
 			return;
 		}
 		// find smallest geo to iterate on its array
 		const geometries_by_segments_count =
-			segments0.length < segments1.length ? [core_geometry0, core_geometry1] : [core_geometry1, core_geometry0];
+			segments0.length < segments1.length ? [this.geometry0, this.geometry1] : [this.geometry1, this.geometry0];
 
 		const smallest_geometry = geometries_by_segments_count[0];
 		const largest_geometry = geometries_by_segments_count[1];
-		dummyMeshSmallest.geometry = smallest_geometry.geometry();
-		dummyMeshLargest.geometry = largest_geometry.geometry();
+		dummyMeshSmallest.geometry = smallest_geometry;
+		dummyMeshLargest.geometry = largest_geometry;
 
-		const smallest_segments = smallest_geometry.segments();
-		const largest_segments = largest_geometry.segments();
+		const smallest_segments = segments(smallest_geometry);
+		const largest_segments = segments(largest_geometry);
 
 		const smallest_points = pointsFromObject(dummyMeshSmallest);
 		const largest_points = pointsFromObject(dummyMeshLargest);
+		const smallestGeometryAttribNames = ThreejsPoint.attributeNames(dummyMeshSmallest);
+		const largestGeometryAttribNames = ThreejsPoint.attributeNames(dummyMeshLargest);
 		const smallest_points_count = smallest_points.length;
 		// const largest_points_count = largest_points.length;
 		const all_points = smallest_points.concat(largest_points);
@@ -53,10 +58,10 @@ export class CoreGeometryOperationSkin {
 			points_indices.push(matched_segment[0] + smallest_points_count);
 		});
 
-		const attributes_in_common = arrayIntersection(smallest_geometry.attribNames(), largest_geometry.attribNames());
+		const attributes_in_common = arrayIntersection(smallestGeometryAttribNames, largestGeometryAttribNames);
 		// const points = all_points //points_indices.map(index=> all_points[index]);
 		attributes_in_common.forEach((attrib_name) => {
-			const attrib_size = smallest_geometry.attribSize(attrib_name);
+			const attrib_size = ThreejsPoint.attribSize(dummyMeshSmallest, attrib_name);
 			let attrib_values = all_points.map((point) => point.attribValue(attrib_name));
 			let float_values: number[];
 			if (attrib_size == 1) {

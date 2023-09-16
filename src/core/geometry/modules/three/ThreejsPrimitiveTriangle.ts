@@ -1,4 +1,4 @@
-import {Triangle, Vector3, Mesh, BufferAttribute} from 'three';
+import {Triangle, Vector3, Mesh, BufferAttribute, BufferGeometry} from 'three';
 import {CoreObjectType, ObjectBuilder, ObjectContent} from '../../ObjectContent';
 import {ThreejsPrimitive} from './ThreejsPrimitive';
 import {threeMeshFromPrimitives} from './builders/Mesh';
@@ -8,7 +8,8 @@ const _triangle = new Triangle();
 const _p0 = new Vector3();
 const _p1 = new Vector3();
 const _p2 = new Vector3();
-export class TrianglePrimitive extends ThreejsPrimitive {
+const normalsComputedWithPositionAttributeVersion: Map<string, number> = new Map();
+export class ThreejsPrimitiveTriangle extends ThreejsPrimitive {
 	constructor(object: Mesh, index: number) {
 		super(object, index);
 		this._geometry = object.geometry;
@@ -53,6 +54,24 @@ export class TrianglePrimitive extends ThreejsPrimitive {
 		_triangle.c.fromArray(positionArray, this._index * 3 + 2);
 		_triangle.getNormal(target);
 		return target;
+	}
+	static override computeVertexNormalsIfAttributeVersionChanged<T extends CoreObjectType>(object: ObjectContent<T>) {
+		const geometry = (object as any as Mesh).geometry as BufferGeometry | undefined;
+		if (!geometry) {
+			return null;
+		}
+		const positionAttribute = geometry.getAttribute(Attribute.POSITION);
+		if (!positionAttribute) {
+			return;
+		}
+		if (!(positionAttribute instanceof BufferAttribute)) {
+			return;
+		}
+		let lastVersion = normalsComputedWithPositionAttributeVersion.get(geometry.uuid);
+		if (lastVersion == null || lastVersion != positionAttribute.version) {
+			geometry.computeVertexNormals();
+			normalsComputedWithPositionAttributeVersion.set(geometry.uuid, positionAttribute.version);
+		}
 	}
 	override builder<T extends CoreObjectType>() {
 		return threeMeshFromPrimitives as any as ObjectBuilder<T>;

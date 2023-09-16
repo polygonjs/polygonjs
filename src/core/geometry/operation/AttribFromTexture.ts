@@ -1,13 +1,12 @@
-import {BufferGeometry} from 'three';
-import {BufferAttribute} from 'three';
+import {DataTexture, Texture, BufferAttribute} from 'three';
 import {CoreImage} from '../../Image';
-import {Texture} from 'three';
-import {DataTexture} from 'three';
 import {CoreAttribute} from '../../geometry/Attribute';
-import {CoreMath} from '../../math/_Module';
+import {clamp} from '../../math/_Module';
+import {CoreObjectType, ObjectContent} from '../ObjectContent';
+import {corePointClassFactory} from '../CoreObjectFactory';
 
-interface AttribFromTextureParams {
-	geometry: BufferGeometry;
+interface AttribFromTextureParams<T extends CoreObjectType> {
+	object: ObjectContent<T>;
 	texture: Texture;
 	uvAttribName: string;
 	targetAttribName: string;
@@ -18,22 +17,20 @@ interface AttribFromTextureParams {
 
 export class AttribFromTexture {
 	// currently assumes we read the red channel and create a 1-dimension (float) attribute
-	set_attrib(params: AttribFromTextureParams) {
-		const geometry = params.geometry;
-		const targetAttribSize = params.targetAttribSize;
+	setAttribute<T extends CoreObjectType>(params: AttribFromTextureParams<T>) {
+		const {object, texture, uvAttribName, targetAttribName, targetAttribSize, add, mult} = params;
+		const corePointClass = corePointClassFactory(object);
 		if (targetAttribSize < 1 || targetAttribSize > 4) {
 			return;
 		}
-		const add = params.add;
-		const mult = params.mult; // / 255.0;
-		const texture_data = this._data_from_texture(params.texture);
+		const texture_data = this._dataFromTexture(texture);
 		if (!texture_data) {
 			return;
 		}
 		const {data, resx, resy} = texture_data;
 		const texture_component_size = data.length / (resx * resy);
 
-		const uv_attrib = geometry.getAttribute(params.uvAttribName) as BufferAttribute;
+		const uv_attrib = corePointClass.attribute(object, uvAttribName);
 		if (!uv_attrib) {
 			return;
 		}
@@ -51,7 +48,6 @@ export class AttribFromTexture {
 			j: number,
 			val: number,
 			c: number;
-		const clamp = CoreMath.clamp;
 
 		for (i = 0; i < points_count; i++) {
 			uv_stride = i * 2;
@@ -69,20 +65,20 @@ export class AttribFromTexture {
 			}
 		}
 
-		const attribName = CoreAttribute.remapName(params.targetAttribName);
+		const attribName = CoreAttribute.remapName(targetAttribName);
 		const array = new Float32Array(values);
-		geometry.setAttribute(attribName, new BufferAttribute(array, targetAttribSize));
+		corePointClass.addAttribute(object, attribName, new BufferAttribute(array, targetAttribSize));
 	}
 
-	private _data_from_texture(texture: Texture) {
+	private _dataFromTexture(texture: Texture) {
 		if (texture.image) {
 			if (texture.image.data) {
-				return this._data_from_data_texture(texture as DataTexture);
+				return this._dataFromDataTexture(texture as DataTexture);
 			}
-			return this._data_from_default_texture(texture);
+			return this._dataFromDefaultTexture(texture);
 		}
 	}
-	private _data_from_default_texture(texture: Texture) {
+	private _dataFromDefaultTexture(texture: Texture) {
 		const resx = texture.image.width;
 		const resy = texture.image.height;
 		const image_data = CoreImage.data_from_image(texture.image);
@@ -93,7 +89,7 @@ export class AttribFromTexture {
 			resy,
 		};
 	}
-	private _data_from_data_texture(texture: DataTexture) {
+	private _dataFromDataTexture(texture: DataTexture) {
 		const data = texture.image.data;
 		const resx = texture.image.width;
 		const resy = texture.image.height;

@@ -3,10 +3,11 @@ import {CoreGroup} from '../../../core/geometry/Group';
 import {TypedNodePathParamValue, NODE_PATH_DEFAULT} from '../../../core/Walker';
 import {NodeContext} from '../../../engine/poly/NodeContext';
 import {AttribFromTexture} from '../../../core/geometry/operation/AttribFromTexture';
-import {ThreejsObject} from '../../../core/geometry/modules/three/ThreejsObject';
 import {Texture} from 'three';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
+import {CoreObjectType, ObjectContent} from '../../../core/geometry/ObjectContent';
+import {corePointClassFactory} from '../../../core/geometry/CoreObjectFactory';
 
 interface AttribFromTextureSopParams extends DefaultOperationParams {
 	texture: TypedNodePathParamValue;
@@ -40,32 +41,29 @@ export class AttribFromTextureSopOperation extends BaseSopOperation {
 		}
 		const container = await textureNode.compute();
 		const texture = container.texture();
-		for (let core_object of coreGroup.threejsCoreObjects()) {
-			this._set_position_from_data_texture(core_object, texture, params);
+		const objects = coreGroup.allObjects();
+		for (const object of objects) {
+			this._setPositionFromDataTexture(object, texture, params);
 		}
 
 		return coreGroup;
 	}
-	private _set_position_from_data_texture(
-		core_object: ThreejsObject,
+	private _setPositionFromDataTexture<T extends CoreObjectType>(
+		object: ObjectContent<T>,
 		texture: Texture,
 		params: AttribFromTextureSopParams
 	) {
-		const geometry = core_object.coreGeometry()?.geometry();
-		if (!geometry) {
-			return;
-		}
-
-		const uvAttrib = geometry.getAttribute(params.uvAttrib);
+		const corePointClass = corePointClassFactory(object);
+		const uvAttrib = corePointClass.attribute(object, params.uvAttrib);
 
 		if (uvAttrib == null) {
 			this.states?.error.set(`param '${params.uvAttrib} not found'`);
 			return;
 		}
 		const operation = new AttribFromTexture();
-		operation.set_attrib({
-			geometry: geometry,
-			texture: texture,
+		operation.setAttribute({
+			object,
+			texture,
 			uvAttribName: params.uvAttrib,
 			targetAttribName: params.attrib,
 			targetAttribSize: params.attribSize,

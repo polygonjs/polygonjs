@@ -22,7 +22,7 @@ class QuadPlaneSopParamsConfig extends NodeParamsConfig {
 	/** @param sizes */
 	size = ParamConfig.VECTOR2([1, 1]);
 	/** @param defines if the plane resolution is sets via the number of segments or via the step size */
-	useSegmentsCount = ParamConfig.BOOLEAN(true);
+	useSegmentsCount = ParamConfig.BOOLEAN(0);
 	/** @param step size */
 	stepSize = ParamConfig.FLOAT(1, {
 		range: [0.001, 2],

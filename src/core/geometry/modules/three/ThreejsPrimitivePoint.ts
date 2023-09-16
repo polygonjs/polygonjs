@@ -2,7 +2,7 @@ import {Vector3, Points} from 'three';
 import {CoreObjectType, ObjectContent} from '../../ObjectContent';
 import {ThreejsPrimitive} from './ThreejsPrimitive';
 
-export class PointPrimitive extends ThreejsPrimitive {
+export class ThreejsPrimitivePoint extends ThreejsPrimitive {
 	constructor(object: Points, index: number) {
 		super(object, index);
 		this._geometry = object.geometry;
@@ -27,6 +27,7 @@ export class PointPrimitive extends ThreejsPrimitive {
 		target.set(0, 0, 0);
 		return target;
 	}
+	static override computeVertexNormalsIfAttributeVersionChanged<T extends CoreObjectType>(object: ObjectContent<T>) {}
 	protected override stride() {
 		return 1;
 	}

@@ -10,9 +10,11 @@ import {NodeContext} from '../../poly/NodeContext';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {BaseCopNodeType} from '../cop/_Base';
 import {InputCloneMode} from '../../poly/InputCloneMode';
-import {ThreejsObject} from '../../../core/geometry/modules/three/ThreejsObject';
 import {Texture} from 'three';
 import {CoreImage} from '../../../core/Image';
+import {CoreObjectType, ObjectContent} from '../../../core/geometry/ObjectContent';
+import {Attribute} from '../../../core/geometry/Attribute';
+import {corePointClassFactory} from '../../../core/geometry/CoreObjectFactory';
 class HeightMapSopParamsConfig extends NodeParamsConfig {
 	/** @param texture node to load the heightmap from */
 	texture = ParamConfig.NODE_PATH('', {
@@ -45,9 +47,9 @@ export class HeightMapSopNode extends TypedSopNode<HeightMapSopParamsConfig> {
 				const container = await texture_node.compute();
 				const texture = container.texture();
 
-				const objects = coreGroup.threejsCoreObjects();
-				for (let coreObject of objects) {
-					this._set_position_from_data_texture(coreObject, texture);
+				const objects = coreGroup.allObjects();
+				for (let object of objects) {
+					this._setPositionFromDataTexture(object, texture);
 				}
 			} else {
 				this.states.error.set('found node is not a texture');
@@ -61,33 +63,34 @@ export class HeightMapSopNode extends TypedSopNode<HeightMapSopParamsConfig> {
 		this.setCoreGroup(coreGroup);
 	}
 
-	private _set_position_from_data_texture(core_object: ThreejsObject, texture: Texture) {
-		const texture_data = this._data_from_texture(texture);
-		if (!texture_data) {
+	private _setPositionFromDataTexture<T extends CoreObjectType>(object: ObjectContent<T>, texture: Texture) {
+		const textureData = this._dataFromTexture(texture);
+		if (!textureData) {
 			return;
 		}
-		const {data, resx, resy} = texture_data;
+		const {data, resx, resy} = textureData;
 		const texture_component_size = data.length / (resx * resy);
 
-		const geometry = core_object.coreGeometry()?.geometry();
-		if (!geometry) {
-			return;
-		}
+		// const geometry = core_object.coreGeometry()?.geometry();
+		// if (!geometry) {
+		// 	return;
+		// }
+		const corePointClass = corePointClassFactory(object);
 
-		const positions = (geometry.getAttribute('position') as BufferAttribute).array as number[];
-		const uv_attrib = geometry.getAttribute('uv') as BufferAttribute;
-		const normal_attrib = geometry.getAttribute('normal') as BufferAttribute;
+		const positions = (corePointClass.attribute(object, Attribute.POSITION) as BufferAttribute).array as number[];
+		const uvAttrib = corePointClass.attribute(object, Attribute.UV) as BufferAttribute;
+		const normalAttrib = corePointClass.attribute(object, Attribute.NORMAL) as BufferAttribute;
 
-		if (uv_attrib == null) {
+		if (uvAttrib == null) {
 			this.states.error.set('uvs are required');
 			return;
 		}
-		if (normal_attrib == null) {
+		if (normalAttrib == null) {
 			this.states.error.set('normals are required');
 			return;
 		}
-		const uvs = uv_attrib.array;
-		const normals = normal_attrib.array;
+		const uvs = uvAttrib.array;
+		const normals = normalAttrib.array;
 
 		const points_count = positions.length / 3;
 		let uv_stride, uvx, uvy, x, y, j, val;
@@ -108,15 +111,15 @@ export class HeightMapSopNode extends TypedSopNode<HeightMapSopParamsConfig> {
 		}
 	}
 
-	private _data_from_texture(texture: Texture) {
+	private _dataFromTexture(texture: Texture) {
 		if (texture.image) {
 			if (texture.image.data) {
-				return this._data_from_data_texture(texture as DataTexture);
+				return this._dataFromDataTexture(texture as DataTexture);
 			}
-			return this._data_from_default_texture(texture);
+			return this._dataFromDefaultTexture(texture);
 		}
 	}
-	private _data_from_default_texture(texture: Texture) {
+	private _dataFromDefaultTexture(texture: Texture) {
 		const resx = texture.image.width;
 		const resy = texture.image.height;
 		const image_data = CoreImage.data_from_image(texture.image);
@@ -127,7 +130,7 @@ export class HeightMapSopNode extends TypedSopNode<HeightMapSopParamsConfig> {
 			resy,
 		};
 	}
-	private _data_from_data_texture(texture: DataTexture) {
+	private _dataFromDataTexture(texture: DataTexture) {
 		const data = texture.image.data;
 		const resx = texture.image.width;
 		const resy = texture.image.height;

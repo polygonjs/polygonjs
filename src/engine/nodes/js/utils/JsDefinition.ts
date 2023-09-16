@@ -10,7 +10,7 @@ import {arrayUniq} from '../../../../core/ArrayUtils';
 import {ActorAssemblerConstant} from '../code/assemblers/actor/ActorAssemblerCommon';
 import {Poly} from '../../../Poly';
 import {inputObject3D} from '../_BaseObject3D';
-import {FUNC_POINTS_COUNT_FROM_OBJECT} from './Common';
+import {FUNC_POINTS_COUNT_FROM_OBJECT, FUNC_CORE_PRIMITIVE_CLASS_FACTORY} from './Common';
 
 export enum JsDefinitionType {
 	// ATTRIBUTE = 'attribute',
@@ -246,12 +246,13 @@ export class TriggeringJsDefinition extends TypedJsDefinition<JsDefinitionType.T
 
 			return `${methodName}(){
 				const pointsCount = ${FUNC_POINTS_COUNT_FROM_OBJECT}(${ActorAssemblerConstant.OBJECT_3D});
+				console.log('JSDEF:', {pointsCount});
 				for( let i = 0; i < pointsCount; i++ ) {
 					${setPointIndex}
 					${this._value}
 				}
 				if( ${ActorAssemblerConstant.OBJECT_3D}.isMesh ){
-					CoreGeometry.computeVertexNormalsIfAttributeVersionChanged(${ActorAssemblerConstant.GEOMETRY});
+					${FUNC_CORE_PRIMITIVE_CLASS_FACTORY}(${ActorAssemblerConstant.OBJECT_3D}).computeVertexNormalsIfAttributeVersionChanged(${ActorAssemblerConstant.GEOMETRY});
 				}
 			}`;
 		} else {

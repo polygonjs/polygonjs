@@ -239,42 +239,39 @@ export class DeleteSopNode extends TypedSopNode<DeleteSopParamsConfig> {
 		const coreObjects = coreGroup.threejsCoreObjects();
 		const newObjects: ObjectContent<CoreObjectType>[] = [];
 		for (const coreObject of coreObjects) {
-			const coreGeometry = coreObject.coreGeometry();
-			if (coreGeometry) {
-				const object = coreObject.object() as Object3DWithGeometry;
-				const entities = pointsFromObject(object);
-				this.entitySelectionHelper.init(entities);
+			const object = coreObject.object() as Object3DWithGeometry;
+			const entities = pointsFromObject(object);
+			this.entitySelectionHelper.init(entities);
 
-				const initEntitiesCount = entities.length;
-				if (isBooleanTrue(this.pv.byExpression)) {
-					await this.byExpressionHelper.evalForEntities(entities);
-				}
-				// TODO: the helpers do not yet take into account if an entity has been selected or not.
-				// This could really speed up iterating through them, as I could skip the ones that have already been
-				if (isBooleanTrue(this.pv.byAttrib) && this.pv.attribName != '') {
-					this.byAttributeHelper.evalForEntities(entities);
-				}
-				if (isBooleanTrue(this.pv.byBbox)) {
-					this.byBboxHelper.evalForPoints(entities);
-				}
-				if (isBooleanTrue(this.pv.byBoundingObject)) {
-					this.byBoundingObjectHelper.evalForPoints(entities, core_group2);
-				}
-				const keptEntities = this.entitySelectionHelper.entitiesToKeep() as CorePoint[];
+			const initEntitiesCount = entities.length;
+			if (isBooleanTrue(this.pv.byExpression)) {
+				await this.byExpressionHelper.evalForEntities(entities);
+			}
+			// TODO: the helpers do not yet take into account if an entity has been selected or not.
+			// This could really speed up iterating through them, as I could skip the ones that have already been
+			if (isBooleanTrue(this.pv.byAttrib) && this.pv.attribName != '') {
+				this.byAttributeHelper.evalForEntities(entities);
+			}
+			if (isBooleanTrue(this.pv.byBbox)) {
+				this.byBboxHelper.evalForPoints(entities);
+			}
+			if (isBooleanTrue(this.pv.byBoundingObject)) {
+				this.byBoundingObjectHelper.evalForPoints(entities, core_group2);
+			}
+			const keptEntities = this.entitySelectionHelper.entitiesToKeep() as CorePoint[];
 
-				if (keptEntities.length == initEntitiesCount) {
-					newObjects.push(object);
-				} else {
-					if (keptEntities.length > 0) {
-						const objectType = objectTypeFromConstructor(object.constructor);
-						if (objectType) {
-							const builder = geometryBuilder(objectType);
-							if (builder) {
-								const newGeo = builder.fromPoints(object, keptEntities);
-								if (newGeo) {
-									object.geometry = newGeo;
-									newObjects.push(object);
-								}
+			if (keptEntities.length == initEntitiesCount) {
+				newObjects.push(object);
+			} else {
+				if (keptEntities.length > 0) {
+					const objectType = objectTypeFromConstructor(object.constructor);
+					if (objectType) {
+						const builder = geometryBuilder(objectType);
+						if (builder) {
+							const newGeo = builder.fromPoints(object, keptEntities);
+							if (newGeo) {
+								object.geometry = newGeo;
+								newObjects.push(object);
 							}
 						}
 					}

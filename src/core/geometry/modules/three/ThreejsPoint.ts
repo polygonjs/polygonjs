@@ -109,6 +109,7 @@ export class ThreejsPoint extends TypedCorePoint<CoreObjectType.THREEJS> {
 		}
 		geometry.computeVertexNormals();
 	}
+
 	static override markAttribAsNeedsUpdate<T extends CoreObjectType>(object: ObjectContent<T>, attribName: string) {
 		const geometry = (object as any as Mesh).geometry as BufferGeometry | undefined;
 		if (!geometry) {

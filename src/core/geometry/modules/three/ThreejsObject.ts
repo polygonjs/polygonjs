@@ -12,7 +12,7 @@ import {
 	Object3D,
 	Matrix4,
 } from 'three';
-import {CoreGeometry, cloneBufferGeometry} from '../../Geometry';
+import {cloneBufferGeometry} from '../../Geometry';
 import {Object3DWithGeometry} from '../../Group';
 import {dataFromConstructor, ObjectData, ObjectType} from '../../Constant';
 import {objectData} from '../../entities/object/BaseCoreObjectUtils';
@@ -57,20 +57,20 @@ export class ThreejsObject extends BaseCoreObject<CoreObjectType.THREEJS> {
 	// object():Object3D{
 	// 	return this._object
 	// }
-	coreGeometry(): CoreGeometry | null {
-		const geo = this.geometry();
-		if (geo) {
-			return new CoreGeometry(geo);
-		} else {
-			return null;
-		}
-		// const geo = this.geometry()
-		// if (geo) {
-		// 	return new CoreGeometry(geo)
-		// } else {
-		// 	return null
-		// }
-	}
+	// coreGeometry(): CoreGeometry | null {
+	// 	const geo = this.geometry();
+	// 	if (geo) {
+	// 		return new CoreGeometry(geo);
+	// 	} else {
+	// 		return null;
+	// 	}
+	// 	// const geo = this.geometry()
+	// 	// if (geo) {
+	// 	// 	return new CoreGeometry(geo)
+	// 	// } else {
+	// 	// 	return null
+	// 	// }
+	// }
 
 	static override objectData(object: Object3D): ObjectData {
 		const data = objectData(object);
@@ -115,9 +115,9 @@ export class ThreejsObject extends BaseCoreObject<CoreObjectType.THREEJS> {
 		this.boundingSphere(object, target);
 	}
 
-	computeVertexNormals() {
-		this.coreGeometry()?.computeVertexNormals();
-	}
+	// computeVertexNormals() {
+	// 	this.coreGeometry()?.computeVertexNormals();
+	// }
 	static override clone(srcObject: Object3D) {
 		const clonedObject = srcObject.clone();
 		var sourceLookup = new Map<Object3D, Object3D>();

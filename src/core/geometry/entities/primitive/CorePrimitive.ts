@@ -256,6 +256,9 @@ export abstract class CorePrimitive<T extends CoreObjectType> extends CoreEntity
 	setNormal(newNormal: Vector3) {
 		return this.setAttribValueFromVector3(Attribute.NORMAL, newNormal);
 	}
+	static computeVertexNormalsIfAttributeVersionChanged<T extends CoreObjectType>(object: ObjectContent<T>) {
+		_warnOverloadRequired('computeVertexNormalsIfAttributeVersionChanged');
+	}
 
 	setAttribValue(attribName: string, value: NumericAttribValue | string) {
 		const attrib = this.attribute(attribName);

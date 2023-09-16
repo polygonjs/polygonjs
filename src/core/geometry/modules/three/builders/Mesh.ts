@@ -4,7 +4,7 @@ import {CorePoint} from '../../../entities/point/CorePoint';
 import {PolyDictionary} from '../../../../../types/GlobalTypes';
 import {CoreObjectType, ObjectBuilder, ObjectContent} from '../../../ObjectContent';
 import {CoreEntity} from '../../../CoreEntity';
-import {TrianglePrimitive} from '../TrianglePrimitive';
+import type {ThreejsPrimitiveTriangle} from '../ThreejsPrimitiveTriangle';
 
 export class CoreGeometryBuilderMesh extends CoreGeometryBuilderBase {
 	protected _filterPoints(points: CorePoint[]): CorePoint[] {
@@ -97,7 +97,7 @@ export const threeMeshFromPrimitives: ObjectBuilder<CoreObjectType.THREEJS> = (
 	}
 	const oldIndexArray = oldIndex.array;
 
-	const primitives = entities as TrianglePrimitive[];
+	const primitives = entities as ThreejsPrimitiveTriangle[];
 
 	const newIndices = new Array(primitives.length * STRIDE);
 

@@ -81,7 +81,7 @@ export class NormalsSopNode extends TypedSopNode<NormalsSopParamsConfig> {
 			}
 		}
 		if (isBooleanTrue(this.pv.invert)) {
-			this._invert_normals(coreGroup);
+			this._invertNormals(coreGroup);
 		}
 
 		this.setCoreGroup(coreGroup);
@@ -153,18 +153,17 @@ export class NormalsSopNode extends TypedSopNode<NormalsSopParamsConfig> {
 		}
 	}
 
-	private _invert_normals(core_group: CoreGroup) {
-		for (let core_object of core_group.threejsCoreObjects()) {
-			const geometry = core_object.coreGeometry()?.geometry();
-			if (geometry) {
-				const normal_attrib = geometry.attributes[Attribute.NORMAL] as BufferAttribute;
-				if (normal_attrib) {
-					const array = normal_attrib.array as number[];
+	private _invertNormals(coreGroup: CoreGroup) {
+		const objects = coreGroup.allObjects()
+		for (const object of objects) {
+			const corePointClass= corePointClassFactory(object);
+				const normalAttrib = corePointClass.attribute(object,Attribute.NORMAL) as BufferAttribute|undefined;
+				if (normalAttrib) {
+					const array = normalAttrib.array as number[];
 					for (let i = 0; i < array.length; i++) {
 						array[i] *= -1;
 					}
 				}
-			}
 		}
 	}
 }

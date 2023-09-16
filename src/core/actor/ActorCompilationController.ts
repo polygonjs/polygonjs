@@ -6,16 +6,16 @@ import {computed, ref, watch} from '../reactivity/CoreReactivity';
 import {RegisterableVariable} from '../../engine/nodes/js/code/assemblers/_BaseJsPersistedConfigUtils';
 import {SetUtils} from '../SetUtils';
 import {ActorBuilderNode} from '../../engine/scene/utils/ActorsManager';
-import {CoreGeometry} from '../geometry/Geometry';
 import {Object3D} from 'three';
 import {CoreObjectType, ObjectContent} from '../geometry/ObjectContent';
-import {FUNC_POINTS_COUNT_FROM_OBJECT} from '../../engine/nodes/js/utils/Common';
+import {FUNC_POINTS_COUNT_FROM_OBJECT, FUNC_CORE_PRIMITIVE_CLASS_FACTORY} from '../../engine/nodes/js/utils/Common';
 import {pointsCountFromObject} from '../geometry/entities/point/CorePointUtils';
+import {corePrimitiveClassFactory} from '../geometry/CoreObjectFactory';
 
 const FUNCTION_ARGS_DICT = {
 	[FUNC_POINTS_COUNT_FROM_OBJECT]: pointsCountFromObject,
+	[FUNC_CORE_PRIMITIVE_CLASS_FACTORY]: corePrimitiveClassFactory,
 	ActorEvaluator,
-	CoreGeometry,
 	computed,
 	ref,
 	watch,

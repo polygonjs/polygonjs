@@ -2,7 +2,7 @@ import {LineSegments, Vector3} from 'three';
 import {CoreObjectType, ObjectContent} from '../../ObjectContent';
 import {ThreejsPrimitive} from './ThreejsPrimitive';
 
-export class LineSegmentPrimitive extends ThreejsPrimitive {
+export class ThreejsPrimitiveLineSegment extends ThreejsPrimitive {
 	constructor(object: LineSegments, index: number) {
 		super(object, index);
 		this._geometry = object.geometry;
@@ -27,6 +27,7 @@ export class LineSegmentPrimitive extends ThreejsPrimitive {
 		target.set(0, 0, 0);
 		return target;
 	}
+	static override computeVertexNormalsIfAttributeVersionChanged<T extends CoreObjectType>(object: ObjectContent<T>) {}
 	protected override stride() {
 		return 2;
 	}

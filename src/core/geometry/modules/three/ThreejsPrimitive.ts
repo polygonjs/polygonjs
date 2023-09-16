@@ -76,6 +76,7 @@ export abstract class ThreejsPrimitive extends CorePrimitive<CoreObjectType.THRE
 		}
 		return geometry.userData.primAttributes;
 	}
+
 	//
 	//
 	// RELATED ENTITIES

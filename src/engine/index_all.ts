@@ -17,7 +17,6 @@ import {addStatsToViewer} from './viewers/utils/Stats';
 // core
 import {CoreSleep} from '../core/Sleep';
 import {CoreUserAgent} from '../core/UserAgent';
-import {CoreGeometry} from '../core/geometry/Geometry';
 import {CoreGroup} from '../core/geometry/Group';
 import {ThreejsObject} from '../core/geometry/modules/three/ThreejsObject';
 import {CoreFeaturesController} from '../core/FeaturesController';
@@ -77,7 +76,6 @@ export {
 	// core
 	CoreSleep,
 	CoreUserAgent,
-	CoreGeometry,
 	CoreGroup,
 	ThreejsObject,
 	CoreFeaturesController,

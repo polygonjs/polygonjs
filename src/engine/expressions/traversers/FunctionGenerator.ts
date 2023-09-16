@@ -161,7 +161,6 @@ import {Poly} from '../../Poly';
 import {CoreType} from '../../../core/Type';
 import {PolyDictionary} from '../../../types/GlobalTypes';
 import {ThreejsPoint} from '../../../core/geometry/modules/three/ThreejsPoint';
-import {CoreGeometry} from '../../../core/geometry/Geometry';
 import {corePointClassFactory} from '../../../core/geometry/CoreObjectFactory';
 import {CoreEntity} from '../../../core/geometry/CoreEntity';
 import jsep from 'jsep';
@@ -303,7 +302,6 @@ function getCoreEntityAttribValueFunc(entity: CoreEntity) {
 const FUNCTION_ARGS_DICT = {
 	corePointClassFactory,
 	ThreejsPoint,
-	CoreGeometry,
 	Core,
 	CoreType,
 	[FUNC_GET_ENTITIES_ATTRIBUTE]: getEntitiesAttributes,
