@@ -1,11 +1,15 @@
 import {Object3D, Mesh, LineSegments, BufferGeometry, Vector4, BufferAttribute} from 'three';
 import {QuadGeometry} from '../QuadGeometry';
 import {QUADTesselationParams} from '../QuadCommon';
+import {Attribute} from '../../../Attribute';
+import {DEFAULT_MATERIALS} from '../../../Constant';
+import {ObjectType} from '../../../Constant';
 
 const _v4 = new Vector4();
 function quadToMesh(quadGeometry: QuadGeometry) {
 	const quadsCount = quadGeometry.quadsCount();
-	const positions = quadGeometry.attributes.position.array;
+	const attribNames = Object.keys(quadGeometry.attributes);
+	const normalAttribute = quadGeometry.attributes[Attribute.NORMAL];
 	// const normals = quadGeometry.attributes.normal.array;
 	// const uvs = quadGeometry.attributes.uv.array;
 	const indices = quadGeometry.index;
@@ -22,11 +26,17 @@ function quadToMesh(quadGeometry: QuadGeometry) {
 		newIndices[i * 6 + 5] = _v4.w;
 	}
 
-	geometry.setAttribute('position', new BufferAttribute(new Float32Array(positions), 3));
+	for (const attribName of attribNames) {
+		const values = quadGeometry.attributes[attribName].array;
+		geometry.setAttribute(attribName, new BufferAttribute(new Float32Array(values), 3));
+	}
 	geometry.setIndex(newIndices);
+	if (!normalAttribute) {
+		geometry.computeVertexNormals();
+	}
 	// geometry.setAttribute('normal', new Float32Array(normals), 3);
 	// geometry.setAttribute('uv', new Float32Array(uvs), 2);
-	return new Mesh(geometry);
+	return new Mesh(geometry, DEFAULT_MATERIALS[ObjectType.MESH]);
 }
 function quadToLine(quadGeometry: QuadGeometry) {
 	const quadsCount = quadGeometry.quadsCount();
@@ -54,7 +64,7 @@ function quadToLine(quadGeometry: QuadGeometry) {
 		addEdge(_v4.w, _v4.x);
 	}
 
-	geometry.setAttribute('position', new BufferAttribute(new Float32Array(positions), 3));
+	geometry.setAttribute(Attribute.POSITION, new BufferAttribute(new Float32Array(positions), 3));
 	geometry.setIndex(newIndices);
 	return new LineSegments(geometry);
 }

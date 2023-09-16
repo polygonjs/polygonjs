@@ -6,7 +6,7 @@
  *
  */
 import {TypedSopNode} from './_Base';
-import {CorePoint} from '../../../core/geometry/entities/point/CorePoint';
+import type {CorePoint} from '../../../core/geometry/entities/point/CorePoint';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {CoreInterpolate} from '../../../core/math/Interpolate';
 import {CoreOctree} from '../../../core/math/octree/Octree';
@@ -16,8 +16,11 @@ import {InputCloneMode} from '../../poly/InputCloneMode';
 import {Box3, Vector3} from 'three';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 import {corePointClassFactory} from '../../../core/geometry/CoreObjectFactory';
-const tmpBox = new Box3();
+import {CoreObjectType, ObjectContent} from '../../../core/geometry/ObjectContent';
+import {pointsFromObjectFromGroup} from '../../../core/geometry/entities/point/CorePointUtils';
+const _tmpBox = new Box3();
 const _position = new Vector3();
+const _nearestPoints: CorePoint[] = [];
 class AttribTransferSopParamsConfig extends NodeParamsConfig {
 	/** @param source group to transfer from (right input, or input 1) */
 	srcGroup = ParamConfig.STRING();
@@ -43,101 +46,86 @@ export class AttribTransferSopNode extends TypedSopNode<AttribTransferSopParamsC
 		return SopType.ATTRIB_TRANSFER;
 	}
 
-	_core_group_dest!: CoreGroup;
-	_core_group_src!: CoreGroup;
-
-	// utils
-	_attrib_names!: string[];
-	_octree_timestamp: number | undefined;
-	_prev_param_srcGroup: string | undefined;
-	_octree: CoreOctree | undefined;
-
 	override initializeNode() {
 		this.io.inputs.setCount(2);
 		this.io.inputs.initInputsClonedState([InputCloneMode.FROM_NODE, InputCloneMode.NEVER]);
 	}
 
-	override async cook(input_contents: CoreGroup[]) {
-		this._core_group_dest = input_contents[0];
-		const dest_points = this._core_group_dest.pointsFromGroup(this.pv.destGroup);
+	override async cook(inputCoreGroups: CoreGroup[]) {
+		const coreGroupDest = inputCoreGroups[0];
+		const coreGroupSrc = inputCoreGroups[1];
 
-		this._core_group_src = input_contents[1];
+		// build octree
+		const pointsSrc = coreGroupSrc.pointsFromGroup(this.pv.srcGroup);
+		coreGroupSrc.boundingBox(_tmpBox);
+		const octree = new CoreOctree(_tmpBox);
+		octree.setPoints(pointsSrc);
 
-		this._attrib_names = this._core_group_src.pointAttribNamesMatchingMask(this.pv.name);
-		this._error_if_attribute_not_found_on_second_input();
-		this._build_octree_if_required(this._core_group_src);
-		this._add_attribute_if_required();
-
-		await this._transfer_attributes(dest_points);
-		this.setCoreGroup(this._core_group_dest);
+		// transfer
+		const destObjects = coreGroupDest.allObjects();
+		const srcObjects = coreGroupSrc.allObjects();
+		let i = 0;
+		for (const destObject of destObjects) {
+			const srcObject = srcObjects[i];
+			const corePointClass = corePointClassFactory(destObject);
+			const attributeNames = corePointClass.attributeNamesMatchingMask(srcObject, this.pv.name);
+			this._addAttributeIfRequired(destObject, srcObject, attributeNames);
+			await this._transferAttributes(destObject, octree, attributeNames);
+			i++;
+		}
+		this.setCoreGroup(coreGroupDest);
 	}
 
-	_error_if_attribute_not_found_on_second_input() {
-		for (let attrib_name of this._attrib_names) {
-			if (!this._core_group_src.hasPointAttrib(attrib_name)) {
-				this.states.error.set(`attribute '${attrib_name}' not found on second input`);
+	private async _transferAttributes<T extends CoreObjectType>(
+		object: ObjectContent<T>,
+		octree: CoreOctree,
+		attribNames: string[]
+	) {
+		const callback = (destPoint: CorePoint) => {
+			this._transferAttributesForPoint(destPoint, octree, attribNames);
+		};
+		const destPoints = pointsFromObjectFromGroup(object, this.pv.destGroup);
+		const _iterator = new CoreIterator();
+
+		await _iterator.startWithArray(destPoints, callback);
+	}
+
+	private _addAttributeIfRequired<T extends CoreObjectType>(
+		destObject: ObjectContent<T>,
+		srcObject: ObjectContent<T>,
+		attribNames: string[]
+	) {
+		for (const attribName of attribNames) {
+			const corePointClass = corePointClassFactory(destObject);
+			const hasAttrib = corePointClass.hasAttribute(destObject, attribName);
+			if (!hasAttrib) {
+				const attribSize = corePointClass.attribSize(srcObject, attribName);
+				corePointClass.addNumericAttribute(destObject, attribName, attribSize, 0);
 			}
 		}
 	}
 
-	private _build_octree_if_required(core_group: CoreGroup) {
-		const second_input_changed =
-			this._octree_timestamp == null || this._octree_timestamp !== core_group.timestamp();
-		const srcGroup_changed = this._prev_param_srcGroup !== this.pv.srcGroup;
-
-		if (srcGroup_changed || second_input_changed) {
-			this._octree_timestamp = core_group.timestamp();
-			this._prev_param_srcGroup = this.pv.srcGroup;
-
-			const points_src = this._core_group_src.pointsFromGroup(this.pv.srcGroup);
-
-			this._core_group_src.boundingBox(tmpBox);
-			this._octree = new CoreOctree(tmpBox);
-			this._octree.set_points(points_src);
-		}
-	}
-
-	private _add_attribute_if_required() {
-		for (let attrib_name of this._attrib_names) {
-			if (!this._core_group_dest.hasPointAttrib(attrib_name)) {
-				const attrib_size = this._core_group_src.pointAttribSize(attrib_name);
-				const objects = this._core_group_dest.allObjects();
-				for (const object of objects) {
-					const corePointClass = corePointClassFactory(object);
-					corePointClass.addNumericAttribute(object, attrib_name, attrib_size, 0);
-				}
-			}
-		}
-	}
-
-	private async _transfer_attributes(dest_points: CorePoint[]) {
-		const iterator = new CoreIterator();
-		await iterator.startWithArray(dest_points, this._transfer_attributes_for_point.bind(this));
-	}
-	private _transfer_attributes_for_point(destPoint: CorePoint) {
+	private _transferAttributesForPoint(destPoint: CorePoint, octree: CoreOctree, attribNames: string[]) {
 		const totalDist = this.pv.distanceThreshold + this.pv.blendWidth;
 		destPoint.position(_position);
-		const nearest_points: CorePoint[] =
-			this._octree?.find_points(_position, totalDist, this.pv.maxSamplesCount) || [];
+		octree.findPoints(_position, totalDist, this.pv.maxSamplesCount, _nearestPoints);
 
-		for (let attrib_name of this._attrib_names) {
-			this._interpolate_points(destPoint, nearest_points, attrib_name);
+		for (let attribName of attribNames) {
+			this._interpolatePoints(destPoint, _nearestPoints, attribName);
 		}
 	}
 
-	private _interpolate_points(point_dest: CorePoint, src_points: CorePoint[], attrib_name: string) {
-		let new_value: number;
-
-		new_value = CoreInterpolate.perform(
-			point_dest,
-			src_points,
-			attrib_name,
+	private _interpolatePoints(pointDest: CorePoint, srcPoints: CorePoint[], attribName: string) {
+		const newValue = CoreInterpolate.perform(
+			pointDest,
+			srcPoints,
+			attribName,
 			this.pv.distanceThreshold,
 			this.pv.blendWidth
 		);
 
-		if (new_value != null) {
-			point_dest.setAttribValue(attrib_name, new_value);
+		if (newValue != null) {
+			pointDest.setAttribValue(attribName, newValue);
 		}
 	}
 }

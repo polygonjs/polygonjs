@@ -180,7 +180,6 @@ export class FaceSopNode extends TypedSopNode<FaceSopParamsConfig> {
 			const object = coreObject.object();
 			const corePointClass = corePointClassFactory(object);
 			if ((object as Mesh).isMesh) {
-				// faces = coreGeometry.faces();
 				if (!corePointClass.hasAttribute(object, FaceAttribName.POSITION)) {
 					corePointClass.addNumericAttribute(object, FaceAttribName.POSITION, 3, -1);
 				}
