@@ -9,6 +9,7 @@ import {
 
 export enum WFCQuadTileAttribute {
 	TILE_ID = 'tileId',
+	TILE_SOLVE_ALLOWED = 'tileSolveAllowed',
 }
 
 export enum WFCTileAttribute {

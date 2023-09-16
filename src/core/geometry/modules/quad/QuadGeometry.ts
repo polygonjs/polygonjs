@@ -8,7 +8,7 @@ export class QuadGeometry {
 	public attributes: Record<string, BufferAttribute> = {};
 	// public primAttributes: Record<string, QuadPrimAttribute> = {};
 	public index: number[] = [];
-	userData: {[key: string]: any} = {};
+	public userData: {[key: string]: any} = {};
 
 	setAttribute(attribName: string, attribute: BufferAttribute) {
 		this.attributes[attribName] = attribute;

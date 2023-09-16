@@ -196,7 +196,7 @@ export abstract class CorePrimitive<T extends CoreObjectType> extends CoreEntity
 				}
 				// }
 			} else {
-				const attributesDict = this.attributes() || {};
+				const attributesDict = this.attributes(object) || {};
 				const attribNames: string[] = Object.keys(attributesDict);
 				const message = `attrib ${attribName} not found. availables are: ${attribNames.join(',')}`;
 				console.warn(message);
