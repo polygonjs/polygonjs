@@ -7,7 +7,7 @@ import {
 	Box3IntersectsBox3InputName,
 } from '../../../../src/engine/nodes/js/Box3IntersectsBox3';
 import {GetGeometryBoundingBoxOutputName} from '../../../../src/engine/nodes/js/GetGeometryBoundingBox';
-import {ThreejsObject} from '../../../../src/core/geometry/modules/three/ThreejsObject';
+import {ThreejsCoreObject} from '../../../../src/core/geometry/modules/three/ThreejsCoreObject';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 import {CoreSleep} from '../../../../src/core/Sleep';
 export function testenginenodesjsBox3IntersectsBox3(qUnit: QUnit) {
@@ -47,7 +47,7 @@ export function testenginenodesjsBox3IntersectsBox3(qUnit: QUnit) {
 		async function getAttribValue() {
 			const container = await actor1.compute();
 			const object = container.coreContent()!.threejsObjects()[0] as Mesh;
-			return ThreejsObject.attribValue(object, 'inBox') as boolean;
+			return ThreejsCoreObject.attribValue(object, 'inBox') as boolean;
 		}
 
 		assert.equal(await getAttribValue(), undefined);

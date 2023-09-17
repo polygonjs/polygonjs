@@ -1,5 +1,5 @@
 import type {QUnit} from '../../../helpers/QUnit';
-import {ThreejsObject} from '../../../../src/core/geometry/modules/three/ThreejsObject';
+import {ThreejsCoreObject} from '../../../../src/core/geometry/modules/three/ThreejsCoreObject';
 import {CameraAttribute} from '../../../../src/core/camera/CoreCamera';
 import {
 	CameraViewerCodePresetName,
@@ -29,9 +29,9 @@ export function testenginenodessopCameraViewerCode(qUnit: QUnit) {
 		assert.equal(objects.length, 1);
 		const cameraObject = objects[0];
 
-		assert.equal(ThreejsObject.attribValue(cameraObject, CameraAttribute.VIEWER_ID), 'my-viewer');
+		assert.equal(ThreejsCoreObject.attribValue(cameraObject, CameraAttribute.VIEWER_ID), 'my-viewer');
 		assert.equal(
-			ThreejsObject.attribValue(cameraObject, CameraAttribute.VIEWER_HTML),
+			ThreejsCoreObject.attribValue(cameraObject, CameraAttribute.VIEWER_HTML),
 			`<div id='my-viewer'></div>
 <div id='color-bars'>
 	<div class='color-bar red'></div>

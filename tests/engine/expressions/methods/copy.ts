@@ -1,5 +1,5 @@
 import type {QUnit} from '../../../helpers/QUnit';
-import {ThreejsObject} from './../../../../src/core/geometry/modules/three/ThreejsObject';
+import {ThreejsCoreObject} from './../../../../src/core/geometry/modules/three/ThreejsCoreObject';
 import {AttribClass} from '../../../../src/core/geometry/Constant';
 import {coreObjectClassFactory} from '../../../../src/core/geometry/CoreObjectFactory';
 import {CoreObjectType, ObjectContent} from '../../../../src/core/geometry/ObjectContent';
@@ -22,7 +22,7 @@ export function testengineexpressionsmethodscopy(qUnit: QUnit) {
 		copy1.p.count.set(4);
 
 		let container = await attribCreate1.compute();
-		assert.equal(ThreejsObject.attribValue(container.coreContent()!.allObjects()[0], 'test'), 0);
+		assert.equal(ThreejsCoreObject.attribValue(container.coreContent()!.allObjects()[0], 'test'), 0);
 
 		container = await copy1.compute();
 		assert.deepEqual(
@@ -55,7 +55,7 @@ export function testengineexpressionsmethodscopy(qUnit: QUnit) {
 		copy1.p.count.set(4);
 
 		let container = await attribCreate1.compute();
-		assert.equal(ThreejsObject.attribValue(container.coreContent()!.allObjects()[0], 'test'), 2);
+		assert.equal(ThreejsCoreObject.attribValue(container.coreContent()!.allObjects()[0], 'test'), 2);
 
 		container = await copy1.compute();
 		assert.deepEqual(
@@ -84,7 +84,7 @@ export function testengineexpressionsmethodscopy(qUnit: QUnit) {
 		copy1.p.count.set(4);
 
 		let container = await attribCreate1.compute();
-		assert.equal(ThreejsObject.attribValue(container.coreContent()!.allObjects()[0], 'test'), 2);
+		assert.equal(ThreejsCoreObject.attribValue(container.coreContent()!.allObjects()[0], 'test'), 2);
 
 		container = await copy1.compute();
 		assert.deepEqual(

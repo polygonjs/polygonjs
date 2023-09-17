@@ -34,7 +34,7 @@ export class DisplayNodeController {
 		private options: DisplayNodeControllerOptions = DEFAULT_DISPLAY_NODE_CONTROLLER_OPTIONS
 	) {
 		this._graphNode = new CoreGraphNode(node.scene(), 'DisplayNodeController');
-		(this._graphNode as any).node = node;
+		// (this._graphNode as any).node = node;
 		this._onDisplayNodeRemoveCallback = callbacks.onDisplayNodeRemove;
 		this._onDisplayNodeSetCallback = callbacks.onDisplayNodeSet;
 		this._onDisplayNodeUpdateCallback = callbacks.onDisplayNodeUpdate;

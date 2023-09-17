@@ -1,5 +1,5 @@
 import type {QUnit} from '../../../helpers/QUnit';
-import {ThreejsObject} from '../../../../src/core/geometry/modules/three/ThreejsObject';
+import {ThreejsCoreObject} from '../../../../src/core/geometry/modules/three/ThreejsCoreObject';
 import {CameraAttribute} from '../../../../src/core/camera/CoreCamera';
 export function testenginenodessopCameraFPS(qUnit: QUnit) {
 	qUnit.test('sop/cameraFPS simple', async (assert) => {
@@ -13,7 +13,7 @@ export function testenginenodessopCameraFPS(qUnit: QUnit) {
 			const objects = container.coreContent()!.allObjects()!;
 			assert.equal(objects.length, 1);
 
-			return ThreejsObject.attribValue(objects[0], CameraAttribute.MAX_FPS);
+			return ThreejsCoreObject.attribValue(objects[0], CameraAttribute.MAX_FPS);
 		}
 
 		assert.equal(await getAttribute(), 60);

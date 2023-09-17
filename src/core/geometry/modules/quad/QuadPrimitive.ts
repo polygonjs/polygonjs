@@ -83,7 +83,7 @@ export class QuadPrimitive extends CorePrimitive<CoreObjectType.QUAD> {
 		this.addAttribute(object, attribName, attribute);
 	}
 	static override primitivesCount<T extends CoreObjectType>(object: ObjectContent<T>) {
-		return (object as any as QuadObject).geometry.index.length / 4;
+		return (object as any as QuadObject).geometry.quadsCount();
 	}
 	static override attributes<T extends CoreObjectType>(
 		object: ObjectContent<T>

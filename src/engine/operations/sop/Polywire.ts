@@ -8,7 +8,7 @@ import {CoreGeometryOperationSkin} from '../../../core/geometry/operation/Skin';
 import {CorePoint} from '../../../core/geometry/entities/point/CorePoint';
 import {isBooleanTrue} from '../../../core/Type';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
-import {CoreGeometryBuilderMerge} from '../../../core/geometry/builders/Merge';
+import {CoreGeometryBuilderMerge} from '../../../core/geometry/modules/three/builders/Merge';
 import {addAttributesFromPoint} from '../../../core/geometry/util/addAttributesFromPoint';
 import {pointsFromObject} from '../../../core/geometry/entities/point/CorePointUtils';
 import {corePointClassFactory} from '../../../core/geometry/CoreObjectFactory';

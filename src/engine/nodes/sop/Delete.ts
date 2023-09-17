@@ -22,7 +22,7 @@ import {
 import {CoreGroup, Object3DWithGeometry} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {CorePoint} from '../../../core/geometry/entities/point/CorePoint';
-import {ThreejsObject} from '../../../core/geometry/modules/three/ThreejsObject';
+import {ThreejsCoreObject} from '../../../core/geometry/modules/three/ThreejsCoreObject';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {EntitySelectionHelper} from './utils/delete/EntitySelectionHelper';
 import {
@@ -343,11 +343,11 @@ export class DeleteSopNode extends TypedSopNode<DeleteSopParamsConfig> {
 			this.byAttributeHelper.evalForEntities(coreObjects);
 		}
 
-		const coreObjectsToKeep = this.entitySelectionHelper.entitiesToKeep() as ThreejsObject[];
+		const coreObjectsToKeep = this.entitySelectionHelper.entitiesToKeep() as ThreejsCoreObject[];
 		const objectsToKeep = coreObjectsToKeep.map((co) => co.object());
 
 		if (isBooleanTrue(this.pv.keepPoints)) {
-			const coreObjectsToDelete = this.entitySelectionHelper.entitiesToDelete() as ThreejsObject[];
+			const coreObjectsToDelete = this.entitySelectionHelper.entitiesToDelete() as ThreejsCoreObject[];
 			for (let coreObjectToDelete of coreObjectsToDelete) {
 				const pointObject = this._pointObject(coreObjectToDelete.object());
 				if (pointObject) {

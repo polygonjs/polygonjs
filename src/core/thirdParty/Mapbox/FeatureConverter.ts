@@ -3,7 +3,7 @@ import {ObjectType} from '../../geometry/Constant';
 import {BaseSopNodeType} from '../../../engine/nodes/sop/_Base';
 import {CoordinatesCollection} from './CoordinatesCollection';
 import {arraySum} from '../../ArrayUtils';
-import {CoreGeometryBuilderMerge} from '../../geometry/builders/Merge';
+import {CoreGeometryBuilderMerge} from '../../geometry/modules/three/builders/Merge';
 import {CoreMapboxString} from './String';
 import {corePointClassFactory} from '../../geometry/CoreObjectFactory';
 import {ThreejsPoint} from '../../geometry/modules/three/ThreejsPoint';

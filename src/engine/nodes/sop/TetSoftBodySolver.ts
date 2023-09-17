@@ -13,7 +13,7 @@ import {PolyScene} from '../../scene/PolyScene';
 import {CoreType, isArray} from '../../../core/Type';
 import {BaseNodeType} from '../_Base';
 import {Poly} from '../../Poly';
-import {ThreejsObject} from '../../../core/geometry/modules/three/ThreejsObject';
+import {ThreejsCoreObject} from '../../../core/geometry/modules/three/ThreejsCoreObject';
 import {DEFAULT as DEFAULT_TESSELATION_PARAMS} from '../../../core/geometry/modules/tet/utils/TesselationParamsConfig';
 import {CoreSoftBodyAttribute, SoftBodyIdAttribute} from '../../../core/softBody/SoftBodyAttribute';
 import {
@@ -158,9 +158,13 @@ export class TetSoftBodySolverSopNode extends TetSopNode<TetSoftBodySolverSopPar
 						? threejsObjectsFromTetObject[0]
 						: threejsObjectsFromTetObject;
 					const displayedObject = highResObject ? highResObject : lowResObject;
-					ThreejsObject.addAttribute(displayedObject, SoftBodyIdAttribute.SOLVER_NODE, this.graphNodeId());
+					ThreejsCoreObject.addAttribute(
+						displayedObject,
+						SoftBodyIdAttribute.SOLVER_NODE,
+						this.graphNodeId()
+					);
 					const nextId = this._nextId++;
-					ThreejsObject.addAttribute(displayedObject, SoftBodyIdAttribute.EPHEMERAL_ID, nextId);
+					ThreejsCoreObject.addAttribute(displayedObject, SoftBodyIdAttribute.EPHEMERAL_ID, nextId);
 
 					const tetEmbed: TetEmbed = {
 						tetObject,
@@ -200,12 +204,12 @@ export class TetSoftBodySolverSopNode extends TetSopNode<TetSoftBodySolverSopPar
 
 	public override updateObjectOnAdd(object: Object3D, parent: Object3D) {
 		//
-		const solverNodeId = ThreejsObject.attribValue(object, SoftBodyIdAttribute.SOLVER_NODE);
+		const solverNodeId = ThreejsCoreObject.attribValue(object, SoftBodyIdAttribute.SOLVER_NODE);
 		if (solverNodeId != null) {
 			if (solverNodeId != this.graphNodeId()) {
 				return;
 			}
-			const ephemeralId = ThreejsObject.attribValue(object, SoftBodyIdAttribute.EPHEMERAL_ID) as number;
+			const ephemeralId = ThreejsCoreObject.attribValue(object, SoftBodyIdAttribute.EPHEMERAL_ID) as number;
 			if (ephemeralId == null) {
 				console.error('no ephemeralId found on object', object);
 			}

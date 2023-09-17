@@ -13,7 +13,7 @@ import {
 import {CoreObjectType, ObjectContent, isObject3D} from '../../ObjectContent';
 import {ThreejsPoint} from './ThreejsPoint';
 import {ThreejsVertex} from './ThreejsVertex';
-import {ThreejsObject} from './ThreejsObject';
+import {ThreejsCoreObject} from './ThreejsCoreObject';
 import {ThreejsPrimitiveTriangle} from './ThreejsPrimitiveTriangle';
 import {ThreejsPrimitiveLineSegment} from './ThreejsPrimitiveLineSegment';
 import {ThreejsPrimitivePoint} from './ThreejsPrimitivePoint';
@@ -94,7 +94,7 @@ export const primitiveVerticesCountFactory = (object: ObjectContent<CoreObjectTy
 // object methods
 const objectClassFactory: CoreObjectClassFactoryCheckFunction = (object: ObjectContent<CoreObjectType>) => {
 	if (isObject3D(object)) {
-		return ThreejsObject;
+		return ThreejsCoreObject;
 	}
 };
 const objectInstanceFactory: CoreObjectInstanceFactoryCheckFunction = (
@@ -102,7 +102,7 @@ const objectInstanceFactory: CoreObjectInstanceFactoryCheckFunction = (
 	index = 0
 ) => {
 	if (isObject3D(object)) {
-		return new ThreejsObject(object, index);
+		return new ThreejsCoreObject(object, index);
 	}
 };
 

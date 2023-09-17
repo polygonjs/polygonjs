@@ -7,7 +7,7 @@ import {CameraNodeType} from '../../poly/NodeContext';
 import {registerMapboxCamera} from '../../../core/thirdParty/Mapbox/registerMapboxCamera';
 import {MapboxPerspectiveCamera} from '../../../core/thirdParty/Mapbox/MapboxPerspectiveCamera';
 import {CameraAttribute} from '../../../core/camera/CoreCamera';
-import {ThreejsObject} from '../../../core/geometry/modules/three/ThreejsObject';
+import {ThreejsCoreObject} from '../../../core/geometry/modules/three/ThreejsCoreObject';
 import type {BaseNodeType} from '../../nodes/_Base';
 import {MapboxCameraAttribute} from '../../../core/thirdParty/Mapbox/MapboxCameraAttribute';
 import mapboxgl from 'mapbox-gl';
@@ -86,23 +86,23 @@ export class MapboxCameraSopOperation extends BaseSopOperation {
 	static createCamera(nodeGenerator?: BaseNodeType) {
 		const camera = new MapboxPerspectiveCamera();
 		if (nodeGenerator) {
-			ThreejsObject.addAttribute(camera, CameraAttribute.NODE_ID, nodeGenerator.graphNodeId());
+			ThreejsCoreObject.addAttribute(camera, CameraAttribute.NODE_ID, nodeGenerator.graphNodeId());
 		}
 		return camera;
 	}
 	static setCameraAttributes(camera: PerspectiveCamera, params: MapboxCameraSopParams) {
-		ThreejsObject.addAttribute(camera, MapboxCameraAttribute.STYLE, params.style);
-		ThreejsObject.addAttribute(camera, MapboxCameraAttribute.LONGITUDE, params.longitude);
-		ThreejsObject.addAttribute(camera, MapboxCameraAttribute.LATITUDE, params.latitude);
-		ThreejsObject.addAttribute(camera, MapboxCameraAttribute.ZOOM, params.zoom);
-		ThreejsObject.addAttribute(camera, MapboxCameraAttribute.MIN_ZOOM, params.minZoom);
-		ThreejsObject.addAttribute(camera, MapboxCameraAttribute.MAX_ZOOM, params.maxZoom);
-		ThreejsObject.addAttribute(camera, MapboxCameraAttribute.PITCH, params.pitch);
-		ThreejsObject.addAttribute(camera, MapboxCameraAttribute.BEARING, params.bearing);
-		ThreejsObject.addAttribute(camera, MapboxCameraAttribute.ALLOW_DRAG_ROTATE, params.allowDragRotate);
-		ThreejsObject.addAttribute(camera, MapboxCameraAttribute.ADD_ZOOM_CONTROL, params.addZoomControl);
-		ThreejsObject.addAttribute(camera, MapboxCameraAttribute.LAYER_BUILDINGS, params.tlayerBuildings);
-		ThreejsObject.addAttribute(camera, MapboxCameraAttribute.LAYER_3D, params.tlayer3D);
-		ThreejsObject.addAttribute(camera, MapboxCameraAttribute.LAYER_SKY, params.tlayerSky);
+		ThreejsCoreObject.addAttribute(camera, MapboxCameraAttribute.STYLE, params.style);
+		ThreejsCoreObject.addAttribute(camera, MapboxCameraAttribute.LONGITUDE, params.longitude);
+		ThreejsCoreObject.addAttribute(camera, MapboxCameraAttribute.LATITUDE, params.latitude);
+		ThreejsCoreObject.addAttribute(camera, MapboxCameraAttribute.ZOOM, params.zoom);
+		ThreejsCoreObject.addAttribute(camera, MapboxCameraAttribute.MIN_ZOOM, params.minZoom);
+		ThreejsCoreObject.addAttribute(camera, MapboxCameraAttribute.MAX_ZOOM, params.maxZoom);
+		ThreejsCoreObject.addAttribute(camera, MapboxCameraAttribute.PITCH, params.pitch);
+		ThreejsCoreObject.addAttribute(camera, MapboxCameraAttribute.BEARING, params.bearing);
+		ThreejsCoreObject.addAttribute(camera, MapboxCameraAttribute.ALLOW_DRAG_ROTATE, params.allowDragRotate);
+		ThreejsCoreObject.addAttribute(camera, MapboxCameraAttribute.ADD_ZOOM_CONTROL, params.addZoomControl);
+		ThreejsCoreObject.addAttribute(camera, MapboxCameraAttribute.LAYER_BUILDINGS, params.tlayerBuildings);
+		ThreejsCoreObject.addAttribute(camera, MapboxCameraAttribute.LAYER_3D, params.tlayer3D);
+		ThreejsCoreObject.addAttribute(camera, MapboxCameraAttribute.LAYER_SKY, params.tlayerSky);
 	}
 }

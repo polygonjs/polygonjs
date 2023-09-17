@@ -1,5 +1,5 @@
 import {Object3D} from 'three';
-import {ThreejsObject} from '../../core/geometry/modules/three/ThreejsObject';
+import {ThreejsCoreObject} from '../../core/geometry/modules/three/ThreejsCoreObject';
 import {ObjectNamedFunction3} from './_Base';
 import {_dummyReadAttributeRefVal} from '../../core/reactivity/ObjectAttributeReactivity';
 import {getOrCreateObjectAttributeRef} from '../../core/reactivity/ObjectAttributeReactivityCreateRef';
@@ -21,7 +21,7 @@ export class getChildrenAttributes extends ObjectNamedFunction3<[string, string,
 		const children = object3D.children;
 		for (let child of children) {
 			const _refs = getOrCreateObjectAttributeRef(child, attribName, type);
-			const value = ThreejsObject.attribValue(child, attribName) || _refs.current.value;
+			const value = ThreejsCoreObject.attribValue(child, attribName) || _refs.current.value;
 			_dummyReadAttributeRefVal(_refs.current.value);
 			values[i] = value;
 			i++;

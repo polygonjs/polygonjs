@@ -1,5 +1,5 @@
 import type {QUnit} from '../../../helpers/QUnit';
-import {ThreejsObject} from '../../../../src/core/geometry/modules/three/ThreejsObject';
+import {ThreejsCoreObject} from '../../../../src/core/geometry/modules/three/ThreejsCoreObject';
 import {CameraAttribute} from '../../../../src/core/camera/CoreCamera';
 import {CameraFrameMode, CAMERA_FRAME_MODES} from '../../../../src/core/camera/CoreCameraFrameMode';
 export function testenginenodessopCameraFrameMode(qUnit: QUnit) {
@@ -13,10 +13,10 @@ export function testenginenodessopCameraFrameMode(qUnit: QUnit) {
 		assert.equal(objects.length, 1);
 
 		assert.equal(
-			ThreejsObject.attribValue(objects[0], CameraAttribute.FRAME_MODE),
+			ThreejsCoreObject.attribValue(objects[0], CameraAttribute.FRAME_MODE),
 			CAMERA_FRAME_MODES.indexOf(CameraFrameMode.DEFAULT)
 		);
-		assert.equal(ThreejsObject.attribValue(objects[0], CameraAttribute.FRAME_MODE_EXPECTED_ASPECT_RATIO), 16 / 9);
+		assert.equal(ThreejsCoreObject.attribValue(objects[0], CameraAttribute.FRAME_MODE_EXPECTED_ASPECT_RATIO), 16 / 9);
 	});
 	qUnit.test('sop/cameraFrameMode applyToChildren', async (assert) => {
 		const geo1 = window.geo1;
@@ -30,16 +30,16 @@ export function testenginenodessopCameraFrameMode(qUnit: QUnit) {
 		assert.equal(objects.length, 1);
 
 		assert.equal(
-			ThreejsObject.attribValue(objects[0], CameraAttribute.FRAME_MODE),
+			ThreejsCoreObject.attribValue(objects[0], CameraAttribute.FRAME_MODE),
 			CAMERA_FRAME_MODES.indexOf(CameraFrameMode.DEFAULT)
 		);
-		assert.equal(ThreejsObject.attribValue(objects[0], CameraAttribute.FRAME_MODE_EXPECTED_ASPECT_RATIO), 16 / 9);
+		assert.equal(ThreejsCoreObject.attribValue(objects[0], CameraAttribute.FRAME_MODE_EXPECTED_ASPECT_RATIO), 16 / 9);
 		assert.equal(
-			ThreejsObject.attribValue(objects[0].children[0], CameraAttribute.FRAME_MODE),
+			ThreejsCoreObject.attribValue(objects[0].children[0], CameraAttribute.FRAME_MODE),
 			CAMERA_FRAME_MODES.indexOf(CameraFrameMode.DEFAULT)
 		);
 		assert.equal(
-			ThreejsObject.attribValue(objects[0].children[0], CameraAttribute.FRAME_MODE_EXPECTED_ASPECT_RATIO),
+			ThreejsCoreObject.attribValue(objects[0].children[0], CameraAttribute.FRAME_MODE_EXPECTED_ASPECT_RATIO),
 			16 / 9
 		);
 	});

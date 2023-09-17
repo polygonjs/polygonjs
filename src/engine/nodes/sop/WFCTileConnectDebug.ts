@@ -51,8 +51,10 @@ export class WFCTileConnectDebugSopNode extends TypedSopNode<WFCTileConnectDebug
 		let i = 0;
 		for (const srcTile of srcTiles) {
 			const srcTileId = CoreWFCTileAttribute.getTileId(srcTile);
+			let j = 0;
 			for (const destTile of destTiles) {
 				const destTileId = CoreWFCTileAttribute.getTileId(destTile);
+				// let k=0;
 				collection.traverseConnections(srcTileId, destTileId, (id0, id1, side0, side1) => {
 					side0 = id0 == EMPTY_TILE_ID && ALL_HORIZONTAL_SIDES.includes(side0) ? ALL_HORIZONTAL_SIDES : side0;
 					side1 = id1 == EMPTY_TILE_ID && ALL_HORIZONTAL_SIDES.includes(side1) ? ALL_HORIZONTAL_SIDES : side1;
@@ -66,7 +68,9 @@ export class WFCTileConnectDebugSopNode extends TypedSopNode<WFCTileConnectDebug
 					const group = new Group();
 					newObjects.push(group);
 					group.matrixAutoUpdate = false;
-					group.position.z += 2 * i;
+					// _p.z = 2 * i;
+					group.position.x = 3 * i;
+					group.position.z = 2 * j;
 					group.updateMatrix();
 					group.name = `src:${srcTileId} dest:${destTileId} side0:${side0} side1:${side1}`;
 					const srcTileClone = inverted ? destTile.clone() : srcTile.clone();
@@ -97,9 +101,11 @@ export class WFCTileConnectDebugSopNode extends TypedSopNode<WFCTileConnectDebug
 					}
 					srcTileClone.updateMatrix();
 					destTileClone.updateMatrix();
-					i++;
+					j++;
 				});
+				// j++
 			}
+			i++;
 		}
 
 		this.setObjects(newObjects);

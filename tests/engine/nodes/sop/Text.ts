@@ -1,5 +1,5 @@
 import type {QUnit} from '../../../helpers/QUnit';
-import {ThreejsObject} from '../../../../src/core/geometry/modules/three/ThreejsObject';
+import {ThreejsCoreObject} from '../../../../src/core/geometry/modules/three/ThreejsCoreObject';
 import {TextType} from '../../../../src/core/geometry/text/TextType';
 import {checkConsolePrints} from '../../../helpers/Console';
 import {Box3, Vector3} from 'three';
@@ -196,21 +196,21 @@ export function testenginenodessopText(qUnit: QUnit) {
 			container
 				.coreContent()
 				?.threejsCoreObjects()
-				.map((o: ThreejsObject) => o.attribValue('character')),
+				.map((o: ThreejsCoreObject) => o.attribValue('character')),
 			['l', 'i', 'n', 'e', '1', 'l', 'i', ' ', 'n', 'e', '2']
 		);
 		assert.deepEqual(
 			container
 				.coreContent()
 				?.threejsCoreObjects()
-				.map((o: ThreejsObject) => o.attribValue('lineId')),
+				.map((o: ThreejsCoreObject) => o.attribValue('lineId')),
 			[0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1]
 		);
 		assert.deepEqual(
 			container
 				.coreContent()
 				?.threejsCoreObjects()
-				.map((o: ThreejsObject) => o.attribValue('characterId')),
+				.map((o: ThreejsCoreObject) => o.attribValue('characterId')),
 			[0, 1, 2, 3, 4, 6, 7, 8, 9, 10, 11]
 		);
 		assert.more_than_or_equal((await getSize()).y, 2.1);
@@ -223,7 +223,7 @@ export function testenginenodessopText(qUnit: QUnit) {
 			container
 				.coreContent()
 				?.threejsCoreObjects()
-				.map((o: ThreejsObject) => o.attribValue('character')),
+				.map((o: ThreejsCoreObject) => o.attribValue('character')),
 			['l', 'i', 'n', 'e', '1', 'l', 'i', 'n', 'e', '2']
 		);
 	});

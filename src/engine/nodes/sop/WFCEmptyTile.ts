@@ -36,7 +36,6 @@ export class WFCEmptyTileSopNode extends TypedSopNode<WFCEmptyTileSopParamsConfi
 		const coreGroup1 = inputCoreGroups[1];
 		const objects = coreGroup0.threejsObjects();
 		const emptyTileObject = coreGroup1 ? coreGroup1.threejsObjects()[0] : null;
-
 		// we add the empty tile here,
 		// so that the iteration below takes it into account
 		// and connects the empty tile to itself

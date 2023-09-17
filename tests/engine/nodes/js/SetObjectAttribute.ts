@@ -1,6 +1,6 @@
 import type {QUnit} from '../../../helpers/QUnit';
 import {AttribClass} from '../../../../src/core/geometry/Constant';
-import {ThreejsObject} from '../../../../src/core/geometry/modules/three/ThreejsObject';
+import {ThreejsCoreObject} from '../../../../src/core/geometry/modules/three/ThreejsCoreObject';
 import {CoreSleep} from '../../../../src/core/Sleep';
 import {SetObjectAttributeInputName} from '../../../../src/engine/nodes/js/SetObjectAttribute';
 import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Js';
@@ -43,7 +43,7 @@ export function testenginenodesjsSetObjectAttribute(qUnit: QUnit) {
 
 		const container = await actor1.compute();
 		const object = container.coreContent()!.threejsObjects()[0];
-		const coreObject = new ThreejsObject(object, 0);
+		const coreObject = new ThreejsCoreObject(object, 0);
 
 		// wait to make sure objects are mounted to the scene
 		await CoreSleep.sleep(150);

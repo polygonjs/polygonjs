@@ -52,7 +52,7 @@ export class MergeSopOperation extends BaseSopOperation {
 			}
 		}
 		if (isBooleanTrue(params.compact)) {
-			allObjects = MergeSopOperation.makeCompact(allObjects, params);
+			allObjects = MergeSopOperation.makeCompact(allObjects, params, this.states?.error);
 		}
 
 		return this.createCoreGroupFromObjects(allObjects);

@@ -1,12 +1,12 @@
 import {Matrix4, Box3, Sphere, Vector3} from 'three';
 import {QuadObject} from './QuadObject';
 import {BaseCoreObject} from '../../entities/object/BaseCoreObject';
-import {CoreObjectType, MergeCompactOptions} from '../../ObjectContent';
+import {CoreObjectType, MergeCompactOptions, objectContentCopyProperties} from '../../ObjectContent';
 import {TransformTargetType} from '../../../Transform';
 import {ObjectTransformMode, ObjectTransformSpace} from '../../../TransformSpace';
-import {QuadGeometry} from './QuadGeometry';
 import type {CorePrimitive} from '../../entities/primitive/CorePrimitive';
 import {QuadPrimitive} from './QuadPrimitive';
+import {quadGeomeryMerge} from './builders/QuadGeometryMerge';
 
 const _box = new Box3();
 export class QuadCoreObject extends BaseCoreObject<CoreObjectType.QUAD> {
@@ -36,21 +36,25 @@ export class QuadCoreObject extends BaseCoreObject<CoreObjectType.QUAD> {
 		object.applyMatrix4(matrix);
 	}
 	static override mergeCompact(options: MergeCompactOptions) {
-		const {objects, mergedObjects} = options;
+		const {objects, mergedObjects, onError} = options;
+		const firstObject = objects[0];
+		if (!firstObject) {
+			return;
+		}
 
 		const quadObjects = objects as QuadObject[];
 
-		let previousGeometry: QuadGeometry | undefined;
-		for (let object of quadObjects) {
-			console.warn(object, 'quad merge not implemented');
-			// if (previousGeometry) {
-			// 	previousGeometry = manifold.union(previousGeometry, object.SDFGeometry());
-			// } else {
-			// 	previousGeometry = object.SDFGeometry();
-			// }
-		}
-		if (previousGeometry) {
-			mergedObjects.push(new QuadObject(previousGeometry));
+		try {
+			const mergedGeometry = quadGeomeryMerge(quadObjects);
+			if (mergedGeometry) {
+				const newObject = new QuadObject(mergedGeometry);
+				objectContentCopyProperties(firstObject, newObject);
+				mergedObjects.push(newObject as QuadObject);
+			} else {
+				onError('merge failed, check that input geometries have the same attributes');
+			}
+		} catch (e) {
+			onError((e as Error).message || 'unknown error');
 		}
 	}
 	//

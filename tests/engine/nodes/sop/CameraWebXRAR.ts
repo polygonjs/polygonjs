@@ -1,5 +1,5 @@
 import type {QUnit} from '../../../helpers/QUnit';
-import {ThreejsObject} from '../../../../src/core/geometry/modules/three/ThreejsObject';
+import {ThreejsCoreObject} from '../../../../src/core/geometry/modules/three/ThreejsCoreObject';
 import {CameraAttribute} from '../../../../src/core/camera/CoreCamera';
 export function testenginenodessopCameraWebXRAR(qUnit: QUnit) {
 	qUnit.test('sop/cameraWebXRAR simple', async (assert) => {
@@ -11,7 +11,7 @@ export function testenginenodessopCameraWebXRAR(qUnit: QUnit) {
 		const objects = container.coreContent()!.allObjects()!;
 		assert.equal(objects.length, 1);
 
-		assert.equal(ThreejsObject.attribValue(objects[0], CameraAttribute.WEBXR_AR), true);
+		assert.equal(ThreejsCoreObject.attribValue(objects[0], CameraAttribute.WEBXR_AR), true);
 	});
 	qUnit.test('sop/cameraWebXRAR applyToChildren', async (assert) => {
 		const geo1 = window.geo1;
@@ -24,7 +24,7 @@ export function testenginenodessopCameraWebXRAR(qUnit: QUnit) {
 		const objects = container.coreContent()!.allObjects()!;
 		assert.equal(objects.length, 1);
 
-		assert.equal(ThreejsObject.attribValue(objects[0], CameraAttribute.WEBXR_AR), true);
-		assert.equal(ThreejsObject.attribValue(objects[0].children[0], CameraAttribute.WEBXR_AR), true);
+		assert.equal(ThreejsCoreObject.attribValue(objects[0], CameraAttribute.WEBXR_AR), true);
+		assert.equal(ThreejsCoreObject.attribValue(objects[0].children[0], CameraAttribute.WEBXR_AR), true);
 	});
 }

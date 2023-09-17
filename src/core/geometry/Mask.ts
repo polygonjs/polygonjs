@@ -5,7 +5,7 @@ import {CoreType} from '../Type';
 import {CorePath} from './CorePath';
 import type {CoreGroup} from './Group';
 import {BaseCoreObject} from './entities/object/BaseCoreObject';
-import type {ThreejsObject} from './modules/three/ThreejsObject';
+import type {ThreejsCoreObject} from './modules/three/ThreejsCoreObject';
 import {CoreObjectType, ObjectContent} from './ObjectContent';
 import {coreObjectInstanceFactory} from './CoreObjectFactory';
 import type {QuadObject} from './modules/quad/QuadObject';
@@ -35,9 +35,9 @@ export function filterCoreObjectsFromCoreGroup<T extends CoreObjectType>(
 export function filterThreejsCoreObjectsFromCoreGroup(
 	coreGroup: CoreGroup,
 	options: CoreMaskFilterOptions,
-	coreObjects?: ThreejsObject[]
-): ThreejsObject[] {
-	return filterCoreObjects(options.group, coreObjects || coreGroup.threejsCoreObjects()) as ThreejsObject[];
+	coreObjects?: ThreejsCoreObject[]
+): ThreejsCoreObject[] {
+	return filterCoreObjects(options.group, coreObjects || coreGroup.threejsCoreObjects()) as ThreejsCoreObject[];
 }
 export function isInGroup<T extends CoreObjectType>(unSanitizedGroupString: string, coreObject: BaseCoreObject<T>) {
 	const group = unSanitizedGroupString.trim();

@@ -2,7 +2,7 @@ import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
-import {ThreejsObject} from '../../../core/geometry/modules/three/ThreejsObject';
+import {ThreejsCoreObject} from '../../../core/geometry/modules/three/ThreejsCoreObject';
 import {CameraAttribute} from '../../../core/camera/CoreCamera';
 import {CameraSopNodeType} from '../../poly/NodeContext';
 import {Camera, WebGLRenderer} from 'three';
@@ -103,16 +103,16 @@ export class CameraWebXRVRSopOperation extends BaseSopOperation {
 		const requiredFeaturesStr = requiredFeatures.join(' ');
 
 		for (let object of objects) {
-			ThreejsObject.addAttribute(object, CameraAttribute.WEBXR_VR, active);
-			ThreejsObject.addAttribute(object, CameraAttribute.WEBXR_VR_FEATURES_OPTIONAL, optionalFeaturesStr);
-			ThreejsObject.addAttribute(object, CameraAttribute.WEBXR_VR_FEATURES_REQUIRED, requiredFeaturesStr);
-			ThreejsObject.addAttribute(
+			ThreejsCoreObject.addAttribute(object, CameraAttribute.WEBXR_VR, active);
+			ThreejsCoreObject.addAttribute(object, CameraAttribute.WEBXR_VR_FEATURES_OPTIONAL, optionalFeaturesStr);
+			ThreejsCoreObject.addAttribute(object, CameraAttribute.WEBXR_VR_FEATURES_REQUIRED, requiredFeaturesStr);
+			ThreejsCoreObject.addAttribute(
 				object,
 				CameraAttribute.WEBXR_VR_OVERRIDE_REFERENCE_SPACE_TYPE,
 				isBooleanTrue(params.overrideReferenceSpaceType)
 			);
 			if (isBooleanTrue(params.overrideReferenceSpaceType)) {
-				ThreejsObject.addAttribute(
+				ThreejsCoreObject.addAttribute(
 					object,
 					CameraAttribute.WEBXR_VR_REFERENCE_SPACE_TYPE,
 					WEBXR_REFERENCE_SPACE_TYPES[params.referenceSpaceType]

@@ -13,7 +13,7 @@ import {
 	Evaluator,
 } from '../../../core/thirdParty/three-bvh-csg';
 import {ObjectType} from '../../../core/geometry/Constant';
-import {CoreGeometryBuilderMerge} from '../../../core/geometry/builders/Merge';
+import {CoreGeometryBuilderMerge} from '../../../core/geometry/modules/three/builders/Merge';
 
 export enum BooleanOperation {
 	INTERSECT = 'intersect',

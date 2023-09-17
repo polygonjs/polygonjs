@@ -1,5 +1,5 @@
 import type {QUnit} from '../../../helpers/QUnit';
-import {ThreejsObject} from './../../../../src/core/geometry/modules/three/ThreejsObject';
+import {ThreejsCoreObject} from './../../../../src/core/geometry/modules/three/ThreejsCoreObject';
 import {GeoObjNode} from '../../../../src/engine/nodes/obj/Geo';
 import {ObjectsLayoutSopNode} from '../../../../src/engine/nodes/sop/ObjectsLayout';
 export function testenginenodessopObjectsLayout(qUnit: QUnit) {
@@ -22,7 +22,7 @@ export function testenginenodessopObjectsLayout(qUnit: QUnit) {
 	async function getAttributes(objectLayout1: ObjectsLayoutSopNode, attribName: string): Promise<number[]> {
 		const container = await objectLayout1.compute();
 		const computedObjects = container.coreContent()!.threejsObjects();
-		return computedObjects.map((object) => ThreejsObject.attribValue(object, attribName) as number);
+		return computedObjects.map((object) => ThreejsCoreObject.attribValue(object, attribName) as number);
 	}
 
 	qUnit.test('sop/objectsLayout simple', async (assert) => {

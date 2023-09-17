@@ -1,9 +1,9 @@
 import {BufferGeometry, Mesh} from 'three';
 import {mergeGeometries} from 'three/examples/jsm/utils/BufferGeometryUtils';
-import {CoreGeometryIndexBuilder} from '../util/IndexBuilder';
-import {PolyDictionary} from '../../../types/GlobalTypes';
-import {pointsFromBufferGeometry} from '../modules/three/CoreThreejsPointUtils';
-import {ThreejsPoint} from '../modules/three/ThreejsPoint';
+import {CoreGeometryIndexBuilder} from '../../../util/IndexBuilder';
+import {PolyDictionary} from '../../../../../types/GlobalTypes';
+import {pointsFromBufferGeometry} from '../CoreThreejsPointUtils';
+import {ThreejsPoint} from '../ThreejsPoint';
 
 const dummyMesh = new Mesh();
 export class CoreGeometryBuilderMerge {

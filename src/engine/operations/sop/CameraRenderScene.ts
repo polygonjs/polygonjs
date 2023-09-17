@@ -3,7 +3,7 @@ import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 import {TypedNodePathParamValue} from '../../../core/Walker';
-import {ThreejsObject} from '../../../core/geometry/modules/three/ThreejsObject';
+import {ThreejsCoreObject} from '../../../core/geometry/modules/three/ThreejsCoreObject';
 import {CameraAttribute} from '../../../core/camera/CoreCamera';
 import {CameraSopNodeType} from '../../poly/NodeContext';
 import {BaseNodeType} from '../../nodes/_Base';
@@ -51,11 +51,11 @@ export class CameraRenderSceneSopOperation extends BaseSopOperation {
 			// see CameraControls for why this method of storing the node is preferable
 			const nodeId = foundNode.graphNodeId();
 			for (let object of objects) {
-				ThreejsObject.addAttribute(object, CameraAttribute.RENDER_SCENE_NODE_ID, nodeId);
+				ThreejsCoreObject.addAttribute(object, CameraAttribute.RENDER_SCENE_NODE_ID, nodeId);
 			}
 		} else {
 			for (let object of objects) {
-				ThreejsObject.deleteAttribute(object, CameraAttribute.RENDER_SCENE_NODE_ID);
+				ThreejsCoreObject.deleteAttribute(object, CameraAttribute.RENDER_SCENE_NODE_ID);
 			}
 		}
 	}

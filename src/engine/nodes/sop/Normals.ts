@@ -11,7 +11,7 @@ import {InputCloneMode} from '../../poly/InputCloneMode';
 import {Attribute} from '../../../core/geometry/Attribute';
 import {BufferGeometry, BufferAttribute, Mesh} from 'three';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {ThreejsObject} from '../../../core/geometry/modules/three/ThreejsObject';
+import type {ThreejsCoreObject} from '../../../core/geometry/modules/three/ThreejsCoreObject';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 import {pointsFromObject} from '../../../core/geometry/entities/point/CorePointUtils';
@@ -93,7 +93,7 @@ export class NormalsSopNode extends TypedSopNode<NormalsSopParamsConfig> {
 			await this._evalExpressionsForCoreObject(coreObject);
 		}
 	}
-	private async _evalExpressionsForCoreObject(coreObject: ThreejsObject) {
+	private async _evalExpressionsForCoreObject(coreObject: ThreejsCoreObject) {
 		const object = coreObject.object();
 		const geometry = (object as Mesh).geometry as BufferGeometry;
 		const points = pointsFromObject(object);
@@ -154,16 +154,16 @@ export class NormalsSopNode extends TypedSopNode<NormalsSopParamsConfig> {
 	}
 
 	private _invertNormals(coreGroup: CoreGroup) {
-		const objects = coreGroup.allObjects()
+		const objects = coreGroup.allObjects();
 		for (const object of objects) {
-			const corePointClass= corePointClassFactory(object);
-				const normalAttrib = corePointClass.attribute(object,Attribute.NORMAL) as BufferAttribute|undefined;
-				if (normalAttrib) {
-					const array = normalAttrib.array as number[];
-					for (let i = 0; i < array.length; i++) {
-						array[i] *= -1;
-					}
+			const corePointClass = corePointClassFactory(object);
+			const normalAttrib = corePointClass.attribute(object, Attribute.NORMAL) as BufferAttribute | undefined;
+			if (normalAttrib) {
+				const array = normalAttrib.array as number[];
+				for (let i = 0; i < array.length; i++) {
+					array[i] *= -1;
 				}
+			}
 		}
 	}
 }

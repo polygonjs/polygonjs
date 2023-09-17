@@ -1,6 +1,6 @@
 import type {QUnit} from '../../../helpers/QUnit';
 import {CameraAttribute, OrthographicCameraAttribute} from '../../../../src/core/camera/CoreCamera';
-import {ThreejsObject} from '../../../../src/core/geometry/modules/three/ThreejsObject';
+import {ThreejsCoreObject} from '../../../../src/core/geometry/modules/three/ThreejsCoreObject';
 export function testenginenodessopOrthographicCamera(qUnit: QUnit) {
 	qUnit.test('sop/orthographicCamera simple', async (assert) => {
 		const geo1 = window.geo1;
@@ -38,38 +38,38 @@ export function testenginenodessopOrthographicCamera(qUnit: QUnit) {
 		const object = container.coreContent()!.threejsObjects()[0];
 		assert.ok(object);
 		assert.equal(
-			ThreejsObject.attribValue(object, CameraAttribute.CONTROLS_NODE_ID),
+			ThreejsCoreObject.attribValue(object, CameraAttribute.CONTROLS_NODE_ID),
 			cameraOrbitControls1.graphNodeId(),
 			CameraAttribute.CONTROLS_NODE_ID
 		);
 		assert.equal(
-			ThreejsObject.attribValue(object, CameraAttribute.CSS_RENDERER_NODE_ID),
+			ThreejsCoreObject.attribValue(object, CameraAttribute.CSS_RENDERER_NODE_ID),
 			CSS2DRenderer1.graphNodeId(),
 			CameraAttribute.CSS_RENDERER_NODE_ID
 		);
-		assert.equal(ThreejsObject.attribValue(object, CameraAttribute.FRAME_MODE), 0, CameraAttribute.FRAME_MODE);
+		assert.equal(ThreejsCoreObject.attribValue(object, CameraAttribute.FRAME_MODE), 0, CameraAttribute.FRAME_MODE);
 		assert.equal(
-			ThreejsObject.attribValue(object, CameraAttribute.FRAME_MODE_EXPECTED_ASPECT_RATIO),
+			ThreejsCoreObject.attribValue(object, CameraAttribute.FRAME_MODE_EXPECTED_ASPECT_RATIO),
 			16 / 9,
 			CameraAttribute.FRAME_MODE_EXPECTED_ASPECT_RATIO
 		);
 		assert.equal(
-			ThreejsObject.attribValue(object, CameraAttribute.POST_PROCESS_NODE_ID),
+			ThreejsCoreObject.attribValue(object, CameraAttribute.POST_PROCESS_NODE_ID),
 			cameraPostProcess1.graphNodeId(),
 			CameraAttribute.POST_PROCESS_NODE_ID
 		);
 		assert.equal(
-			ThreejsObject.attribValue(object, CameraAttribute.RENDERER_NODE_ID),
+			ThreejsCoreObject.attribValue(object, CameraAttribute.RENDERER_NODE_ID),
 			WebGLRenderer1.graphNodeId(),
 			CameraAttribute.RENDERER_NODE_ID
 		);
 		assert.equal(
-			ThreejsObject.attribValue(object, CameraAttribute.RENDER_SCENE_NODE_ID),
+			ThreejsCoreObject.attribValue(object, CameraAttribute.RENDER_SCENE_NODE_ID),
 			sceneNode.graphNodeId(),
 			CameraAttribute.RENDER_SCENE_NODE_ID
 		);
 		assert.equal(
-			ThreejsObject.attribValue(object, OrthographicCameraAttribute.SIZE),
+			ThreejsCoreObject.attribValue(object, OrthographicCameraAttribute.SIZE),
 			2.5,
 			OrthographicCameraAttribute.SIZE
 		);

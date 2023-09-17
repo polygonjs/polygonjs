@@ -4,7 +4,7 @@ import {BaseSopOperation} from '../../../../../engine/operations/sop/_Base';
 import {ObjectType} from '../../../Constant';
 import {TetTesselationParams} from '../TetCommon';
 import {SphereBuilder} from '../../../builders/SphereBuilder';
-import {CoreGeometryBuilderMerge} from '../../../builders/Merge';
+import {CoreGeometryBuilderMerge} from '../../three/builders/Merge';
 
 export function tetToSphere(tetGeometry: TetGeometry, tesselationParams: TetTesselationParams) {
 	const {tetrahedrons} = tetGeometry;

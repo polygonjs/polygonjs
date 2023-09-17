@@ -315,14 +315,14 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 	_setContainer(content: ContainableMap[NC] /*, message: string | null = null*/) {
 		// TODO: typescript: why is this a type of never
 		this.containerController.container().set_content(content as never); //, this.self.cook_eval_key());
-		if (content != null) {
-			if (!(content as any).name) {
-				(content as any).name = this.path();
-			}
-			if (!(content as any).node) {
-				(content as any).node = this;
-			}
-		}
+		// if (content != null) {
+		// 	// if (content.name==null) {
+		// 	// 	content.name = this.path();
+		// 	// }
+		// 	// if (!(content as any).node) {
+		// 	// 	(content as any).node = this;
+		// 	// }
+		// }
 		this.cookController.endCook(/*message*/);
 	}
 

@@ -2,7 +2,7 @@ import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
-import {ThreejsObject} from '../../../core/geometry/modules/three/ThreejsObject';
+import {ThreejsCoreObject} from '../../../core/geometry/modules/three/ThreejsCoreObject';
 import {CameraAttribute} from '../../../core/camera/CoreCamera';
 import {CameraSopNodeType} from '../../poly/NodeContext';
 import {CoreObjectType, ObjectContent} from '../../../core/geometry/ObjectContent';
@@ -45,8 +45,8 @@ export class CameraViewOffsetSopOperation extends BaseSopOperation {
 		const {objects, params} = options;
 
 		for (let object of objects) {
-			ThreejsObject.addAttribute(object, CameraAttribute.VIEW_OFFSET_MIN, params.min);
-			ThreejsObject.addAttribute(object, CameraAttribute.VIEW_OFFSET_MAX, params.max);
+			ThreejsCoreObject.addAttribute(object, CameraAttribute.VIEW_OFFSET_MIN, params.min);
+			ThreejsCoreObject.addAttribute(object, CameraAttribute.VIEW_OFFSET_MAX, params.max);
 		}
 	}
 }

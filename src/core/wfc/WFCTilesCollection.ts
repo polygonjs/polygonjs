@@ -60,7 +60,6 @@ export class WFCTilesCollection {
 
 		const connectionObjects = filterConnectionObjects(objects);
 		const connections = connectionObjects.filter(validConnectionObject).map(wfcConnectionFromObject);
-
 		for (const connection of connections) {
 			sortTileIds(connection.id0, connection.id1, _sortedTileIds);
 			_addConnection(connection, this._connectionsByTileId, false);
@@ -113,6 +112,7 @@ export class WFCTilesCollection {
 		callback(unconnectedSides);
 	}
 	allowedTileConfig(id0: string, side0: WFCTileSide, id1: string, side1: WFCTileSide): boolean {
+		// console.log('allowedTileConfig', {id0, side0, id1, side1});
 		sortTileIds(id0, id1, _sortedTileIds);
 		const mapForFirst = this._connectionsByTileId.get(_sortedTileIds.first);
 		if (!mapForFirst) {

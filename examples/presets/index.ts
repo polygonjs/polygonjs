@@ -68,8 +68,9 @@ import {pointSopPresetRegister} from './sop/Point';
 import {roundedBoxSopPresetRegister} from './sop/RoundedBox';
 import {scatterSopPresetRegister} from './sop/Scatter';
 import {spotLightSopPresetRegister} from './sop/SpotLight';
-import {transformSopPresetRegister} from './sop/Transform';
 import {textSopPresetRegister} from './sop/Text';
+import {transformSopPresetRegister} from './sop/Transform';
+import {WFCTileConnectDebugSopPresetRegister} from './sop/WFCTileConnectDebug';
 
 import {PresetRegister} from './BasePreset';
 import {BaseNodeClass, BaseNodeType} from '../../src/engine/nodes/_Base';
@@ -145,6 +146,7 @@ class PresetLibraryClass {
 		this._registerPreset(spotLightSopPresetRegister);
 		this._registerPreset(textSopPresetRegister);
 		this._registerPreset(transformSopPresetRegister);
+		this._registerPreset(WFCTileConnectDebugSopPresetRegister);
 	}
 
 	private _registerPreset<N extends typeof BaseNodeClass, NI extends BaseNodeClass>(register: PresetRegister<N, NI>) {

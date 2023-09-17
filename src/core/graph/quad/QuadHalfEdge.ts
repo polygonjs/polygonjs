@@ -7,7 +7,6 @@ export interface QuadHalfEdgeOptions {
 }
 
 export class QuadHalfEdge {
-	// private _side: QuadHalfEdgeSide | undefined;
 	public readonly quadId: number;
 	public readonly index0: number;
 	public readonly index1: number;
@@ -18,11 +17,4 @@ export class QuadHalfEdge {
 		this.index1 = options.index1;
 		this.sideIndex = options.sideIndex;
 	}
-	// setSide(side: QuadHalfEdgeSide) {
-	// 	this._side = side;
-	// 	// console.log('set cardinality', this._cardinality, this.index0, this.index1);
-	// }
-	// side() {
-	// 	return this._side;
-	// }
 }

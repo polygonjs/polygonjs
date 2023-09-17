@@ -19,7 +19,7 @@ import {objectData} from '../../entities/object/BaseCoreObjectUtils';
 import {MaterialWithCustomMaterials, applyCustomMaterials} from '../../Material';
 import {ObjectUtils} from '../../../ObjectUtils';
 import {ThreeMeshBVHHelper} from '../../bvh/ThreeMeshBVHHelper';
-import {CoreGeometryBuilderMerge} from '../../builders/Merge';
+import {CoreGeometryBuilderMerge} from './builders/Merge';
 import {CoreObjectType, MergeCompactOptions, objectContentCopyProperties} from '../../ObjectContent';
 import {BaseCoreObject} from '../../entities/object/BaseCoreObject';
 import {TransformTargetType} from '../../../Transform';
@@ -39,7 +39,7 @@ interface MaterialWithColor extends Material {
 const COMPUTE_PRECISE_BOUNDS = true;
 const SPHERE_EMPTY = new Sphere(new Vector3(0, 0, 0), 0);
 
-export class ThreejsObject extends BaseCoreObject<CoreObjectType.THREEJS> {
+export class ThreejsCoreObject extends BaseCoreObject<CoreObjectType.THREEJS> {
 	protected override _object: Object3D;
 	constructor(_object: Object3D, index: number) {
 		super(_object, index);
@@ -122,10 +122,14 @@ export class ThreejsObject extends BaseCoreObject<CoreObjectType.THREEJS> {
 		const clonedObject = srcObject.clone();
 		var sourceLookup = new Map<Object3D, Object3D>();
 		var cloneLookup = new Map<Object3D, Object3D>();
-		ThreejsObject.parallelTraverse(srcObject, clonedObject, function (sourceNode: Object3D, clonedNode: Object3D) {
-			sourceLookup.set(clonedNode, sourceNode);
-			cloneLookup.set(sourceNode, clonedNode);
-		});
+		ThreejsCoreObject.parallelTraverse(
+			srcObject,
+			clonedObject,
+			function (sourceNode: Object3D, clonedNode: Object3D) {
+				sourceLookup.set(clonedNode, sourceNode);
+				cloneLookup.set(sourceNode, clonedNode);
+			}
+		);
 		clonedObject.traverse(function (node) {
 			const srcNode = sourceLookup.get(node) as SkinnedMesh | undefined;
 			const meshNode = node as Mesh;

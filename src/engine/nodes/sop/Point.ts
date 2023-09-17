@@ -8,7 +8,7 @@
 import {BufferGeometry} from 'three';
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {ThreejsObject} from '../../../core/geometry/modules/three/ThreejsObject';
+import type {ThreejsCoreObject} from '../../../core/geometry/modules/three/ThreejsCoreObject';
 import {CorePoint} from '../../../core/geometry/entities/point/CorePoint';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {BufferAttribute} from 'three';
@@ -104,7 +104,7 @@ export class PointSopNode extends TypedSopNode<PointSopParamsConfig> {
 
 		this.setCoreGroup(coreGroup);
 	}
-	async _evalExpressionsForCoreObject(coreObject: ThreejsObject) {
+	async _evalExpressionsForCoreObject(coreObject: ThreejsCoreObject) {
 		const object = coreObject.object();
 		const geometry = (object as Mesh).geometry as BufferGeometry;
 		const points = pointsFromObject(object);

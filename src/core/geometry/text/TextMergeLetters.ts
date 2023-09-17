@@ -1,7 +1,7 @@
 import {BufferGeometry, Object3D} from 'three';
 import {arrayCompact} from '../../ArrayUtils';
 import {ObjectType} from '../Constant';
-import {ThreejsObject} from '../modules/three/ThreejsObject';
+import {ThreejsCoreObject} from '../modules/three/ThreejsCoreObject';
 import {isBooleanTrue} from '../../Type';
 import {mergeGeometries} from 'three/examples/jsm/utils/BufferGeometryUtils';
 import {TransformResetSopOperation} from '../../../engine/operations/sop/TransformReset';
@@ -56,7 +56,7 @@ function _mergeOrSplit(params: TextMergeAllLettersOptions) {
 
 			const object = TypedSopNode.createObject(geo || new BufferGeometry(), objectType); //this.createObject(geo, objectType);
 			TransformResetSopOperation.centerObject(object, {applyMatrixToObject: true});
-			const coreObject = new ThreejsObject(object, characterIndex);
+			const coreObject = new ThreejsCoreObject(object, characterIndex);
 			coreObject.addAttribute('character', character);
 			object.name = character;
 			coreObject.addAttribute('characterId', characterIndex);

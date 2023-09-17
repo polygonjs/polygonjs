@@ -7,9 +7,11 @@ import {
 	setObjectNumber,
 } from '../geometry/AttributeUtils';
 
-export enum WFCQuadTileAttribute {
+export enum WFCQuadAttribute {
+	QUAD_ID='quadId',
+	FLOOR_INDEX='floorIndex',
 	TILE_ID = 'tileId',
-	TILE_SOLVE_ALLOWED = 'tileSolveAllowed',
+	SOLVE_ALLOWED = 'solveAllowed',
 }
 
 export enum WFCTileAttribute {

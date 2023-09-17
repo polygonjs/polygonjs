@@ -71,12 +71,15 @@ export class WFCSolverSopNode extends TypedSopNode<WFCSolverSopParamsConfig> {
 		const {stepsCount, quadSeed, configSeed, tileHeight} = this.pv;
 		const newObjects: Object3D[] = [];
 
-		for (let quadObject of quadObjects) {
+		// console.log('************************');
+		// console.log('************************');
+		// console.log('************************');
+		for (const quadObject of quadObjects) {
 			const solver = new WFCSolver(tileAndConnectionObjects, quadObject, tileHeight);
 			for (let i = 0; i < stepsCount; i++) {
 				solver.step(quadSeed, configSeed);
 			}
-			solver.addUnresolvedTileObjects();
+			// solver.addUnresolvedTileObjects();
 			newObjects.push(...solver.objects());
 		}
 

@@ -4,7 +4,7 @@ import {CoreSleep} from '../../../../src/core/Sleep';
 import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Js';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 import {SetObjectAttributeInputName} from '../../../../src/engine/nodes/js/SetObjectAttribute';
-import {ThreejsObject} from '../../../../src/core/geometry/modules/three/ThreejsObject';
+import {ThreejsCoreObject} from '../../../../src/core/geometry/modules/three/ThreejsCoreObject';
 import {ObjectEvent} from '../../../../src/core/geometry/Event';
 export function testenginenodesjsOnObjectBeforeDelete(qUnit: QUnit) {
 	qUnit.test('js/onObjectBeforeDelete simple', async (assert) => {
@@ -41,7 +41,7 @@ export function testenginenodesjsOnObjectBeforeDelete(qUnit: QUnit) {
 		assert.ok(parent);
 
 		const getChildDeleted = () => {
-			return ThreejsObject.attribValue(parent, 'childDeleted', 0);
+			return ThreejsCoreObject.attribValue(parent, 'childDeleted', 0);
 		};
 		const onBeforeDeleteListeners = (object: Object3D) => {
 			return (object as any)._listeners[ObjectEvent.BEFORE_DELETE] as Function[];

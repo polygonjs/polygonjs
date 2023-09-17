@@ -34,7 +34,7 @@ import {ObjectType} from '../../../geometry/Constant';
 import {createGeometriesFromTypeFlat} from '../../../geometry/text/TextFlat';
 import {arrayCompact} from '../../../ArrayUtils';
 import {CoreType} from '../../../Type';
-import {ThreejsObject} from '../../../geometry/modules/three/ThreejsObject';
+import {ThreejsCoreObject} from '../../../geometry/modules/three/ThreejsCoreObject';
 
 export class GEOJSONLoader extends Loader {
 	constructor(manager: LoadingManager) {
@@ -135,7 +135,7 @@ export class GEOJSONLoader extends Loader {
 		const propertyNames = Object.keys(feature.properties);
 		for (let propertyName of propertyNames) {
 			const value = feature.properties[propertyName];
-			ThreejsObject.addAttribute(object, propertyName, value);
+			ThreejsCoreObject.addAttribute(object, propertyName, value);
 		}
 	}
 

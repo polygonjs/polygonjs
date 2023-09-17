@@ -54,7 +54,7 @@ import {TetObject} from './modules/tet/TetObject';
 import {TypeAssert} from '../../engine/poly/Assert';
 
 // THREEJS
-import {ThreejsObject} from './modules/three/ThreejsObject';
+import {ThreejsCoreObject} from './modules/three/ThreejsCoreObject';
 import {uniqRelatedEntities} from './entities/utils/Common';
 
 type AttributeDictionary = PolyDictionary<AttribValue>;
@@ -260,7 +260,7 @@ export class CoreGroup extends CoreEntity {
 		return this.threejsObjects().filter(object3DHasGeometry);
 	}
 	threejsCoreObjects() {
-		return this.threejsObjects().map((o, i) => new ThreejsObject(o, i));
+		return this.threejsObjects().map((o, i) => new ThreejsCoreObject(o, i));
 	}
 	geometries(): BufferGeometry[] {
 		return this.threejsObjectsWithGeo().map((o) => o.geometry);

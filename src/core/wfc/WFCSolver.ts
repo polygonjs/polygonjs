@@ -1,19 +1,20 @@
 import {WFCTilesCollection} from './WFCTilesCollection';
 import {TileCorners, TileConfig, EMPTY_TILE_ID, configTilesStats, TileConfigStats, solidTilesStats} from './WFCCommon';
-import {CoreWFCTileAttribute, WFCQuadTileAttribute} from './WFCAttributes';
+import {CoreWFCTileAttribute} from './WFCAttributes';
 import {tileCubeLatticeDeform} from './WFCTileDeform';
-import {Object3D, Vector3, Vector4, Mesh} from 'three';
-import {QuadGraph, NeighbourData} from '../graph/quad/QuadGraph';
+import {Object3D, Vector3, Mesh} from 'three';
+import {NeighbourData} from '../graph/quad/QuadGraph';
 import {QuadNode} from '../graph/quad/QuadNode';
 import {Attribute} from '../geometry/Attribute';
-import {pushOnArrayAtEntry, popFromArrayAtEntry} from '../MapUtils';
-import {Number4} from '../../types/GlobalTypes';
+import {pushOnArrayAtEntry, popFromArrayAtEntry, addToSetAtEntry} from '../MapUtils';
 import {sample, spliceSample} from '../ArrayUtils';
 import {setToArray} from '../SetUtils';
 import {NeighbourIndex, CCW_HALF_EDGE_SIDES} from '../graph/quad/QuadGraphCommon';
 import {mod} from '../math/_Module';
-import {ThreejsObject} from '../geometry/modules/three/ThreejsObject';
+import {ThreejsCoreObject} from '../geometry/modules/three/ThreejsCoreObject';
 import {QuadObject} from '../geometry/modules/quad/QuadObject';
+import {WFCFloorGraph} from './WFCFloorGraph';
+import {isQuadNodeSolveAllowed, quadPrimitiveFloorIndex} from './WFCUtils';
 import {QuadPrimitive} from '../geometry/modules/quad/QuadPrimitive';
 
 const tileCorners: TileCorners = {
@@ -32,22 +33,25 @@ const _configStats: TileConfigStats = {
 	empty: 0,
 };
 
-const _v4 = new Vector4();
 export class WFCSolver {
 	private _stepsCount: number = 0;
 	private _objects: Object3D[] = [];
 	private _tilesCollection: WFCTilesCollection;
-	private _quadPositionArray: number[];
-	private _quadGraph: QuadGraph = new QuadGraph();
+	private _quadPositionArrays: number[][] = [];
+	// private _quadGraph: QuadGraph = new QuadGraph();
 	private _lowestEntropy: number = Number.POSITIVE_INFINITY;
 	private _quadNodeByEntropy: Map<number, QuadNode[]> = new Map();
-	private _allowedTileConfigsByQuadId: Map<number, TileConfig[]> = new Map();
+	// private _allowedTileConfigsByQuadId: Map<number, TileConfig[]> = new Map();
+	private _floorGraphs: WFCFloorGraph[] = [];
+	private _quadIndicesByFloorIndex: Map<number, Set<number>> = new Map();
+	private _floorGraphIndexByQuadNode: Map<QuadNode, number> = new Map();
 	//
 	constructor(
 		tileAndConnectionObjects: Object3D[],
 		public readonly quadObject: QuadObject,
 		public readonly height: number
 	) {
+		// get tile configs
 		this._tilesCollection = new WFCTilesCollection(tileAndConnectionObjects);
 		const tiles = this._tilesCollection.tiles();
 		const allTileConfigs: TileConfig[] = [];
@@ -63,33 +67,35 @@ export class WFCSolver {
 			}
 		}
 
-		this._quadPositionArray = this.quadObject.geometry.attributes[Attribute.POSITION].array as number[];
-		const quadsCount = this.quadObject.geometry.quadsCount();
-		for (let i = 0; i < quadsCount; i++) {
-			this._setupQuadNode(i, allTileConfigs);
+		// get floors count
+		const primitivesCount = QuadPrimitive.primitivesCount(this.quadObject);
+		for (let i = 0; i < primitivesCount; i++) {
+			const floorIndex = quadPrimitiveFloorIndex(quadObject, i);
+			addToSetAtEntry(this._quadIndicesByFloorIndex, floorIndex, i);
+			// console.log('floorIndex', {i, floorIndex});
 		}
+
+		// create graphs
+		this._quadIndicesByFloorIndex.forEach((quadIndices, floorIndex) => {
+			this._quadPositionArrays[floorIndex] = quadObject.geometry.attributes[Attribute.POSITION].array as number[];
+			const floorGraph = new WFCFloorGraph(quadObject, floorIndex);
+			this._floorGraphs.push(floorGraph);
+			for (const quadIndex of quadIndices) {
+				this._setupQuadNode(floorGraph, quadIndex, allTileConfigs);
+			}
+		});
 	}
 	objects(): Object3D[] {
 		return this._objects;
 	}
-	private _setupQuadNode(index: number, allTileConfigs: TileConfig[]) {
-		if (!this._isQuadNodeSolveAllowed(index)) {
+	private _setupQuadNode(floorGraph: WFCFloorGraph, quadIndex: number, allTileConfigs: TileConfig[]) {
+		if (!isQuadNodeSolveAllowed(floorGraph.quadObject, quadIndex)) {
 			return;
 		}
 
-		const tileId: string =
-			(QuadPrimitive.attribValue(this.quadObject, index, WFCQuadTileAttribute.TILE_ID) as string | undefined) ||
-			'';
-
-		const tileIds = tileId.trim().length > 0 ? tileId.split(' ') : [];
-		const tileIdsSet = new Set<string>(tileIds);
-		const indices = this.quadObject.geometry.index;
-		_v4.fromArray(indices, index * 4);
-		const quadNode = this._quadGraph.addQuad(index, _v4.toArray() as Number4);
-		const quadTileConfigs =
-			tileIds.length > 0 ? allTileConfigs.filter((c) => tileIdsSet.has(c.tileId)) : [...allTileConfigs];
+		const {quadNode, quadTileConfigs} = floorGraph.setupQuadNode(quadIndex, allTileConfigs);
+		this._floorGraphIndexByQuadNode.set(quadNode, floorGraph.floorIndex);
 		const entropy = quadTileConfigs.length;
-		this._allowedTileConfigsByQuadId.set(index, quadTileConfigs);
 		pushOnArrayAtEntry(this._quadNodeByEntropy, entropy, quadNode);
 		if (entropy < this._lowestEntropy) {
 			this._lowestEntropy = entropy;
@@ -103,7 +109,8 @@ export class WFCSolver {
 			// console.warn('no quad left');
 			return;
 		}
-		const allowedConfigs = this._allowedTileConfigsByQuadId.get(quadNode.id);
+		const floorGraph = this._floorGraph(quadNode);
+		const allowedConfigs = floorGraph.allowedTileConfigsForQuadNode(quadNode); //this._allowedTileConfigsByQuadId.get(quadNode.id);
 		if (!(allowedConfigs && allowedConfigs.length > 0)) {
 			console.warn('no allowed config for quad', quadNode.id);
 			return;
@@ -114,7 +121,7 @@ export class WFCSolver {
 			_configStats.solid == 0
 				? allowedConfigs[0]
 				: sample(solidTilesStats(allowedConfigs), configSeed + this._stepsCount)!;
-		this._allowedTileConfigsByQuadId.set(quadNode.id, [config]);
+		floorGraph.setAllowedTileConfigsForQuadNode(quadNode, [config]); //this._allowedTileConfigsByQuadId.set(quadNode.id, [config]);
 		this._approveConfigForQuad(config, quadNode);
 		this._updateNeighboursEntropy(quadNode);
 	}
@@ -143,7 +150,7 @@ export class WFCSolver {
 		this._placeObjectOnQuad(templateTileObject, quadNode, config.rotation);
 	}
 	private _placeObjectOnQuad(object: Object3D, quadNode: QuadNode, rotation: NeighbourIndex) {
-		const tileObject = ThreejsObject.clone(object);
+		const tileObject = ThreejsCoreObject.clone(object);
 		this._quadNodeCorners(quadNode, tileCorners);
 		tileCorners.height = this.height;
 		tileObject.traverse((child) => {
@@ -157,28 +164,61 @@ export class WFCSolver {
 		return tileObject;
 	}
 
-	private _updateNeighboursEntropy(quadNode: QuadNode) {
-		const stack: QuadNode[] = [quadNode];
+	private _updateNeighboursEntropy(startQuadNode: QuadNode) {
+		const stack: QuadNode[] = [startQuadNode];
+
 		while (stack.length > 0) {
 			const currentQuad = stack.pop()!;
+			const floorIndex = this._floorGraphIndexByQuadNode.get(currentQuad)!;
+			const floorGraph = this._floorGraphs[floorIndex];
+
+			// update horizontal neighbours
 			for (let i: NeighbourIndex = 0; i < 4; i++) {
-				this._quadGraph.neighbourData(currentQuad.id, i as NeighbourIndex, _neighbourData);
+				floorGraph.neighbourData(currentQuad.id, i as NeighbourIndex, _neighbourData);
 				if (
 					_neighbourData.quadNode &&
-					this._allowedTileConfigsByQuadId.get(_neighbourData.quadNode.id)!.length > 1
+					floorGraph.allowedTileConfigsForQuadNode(_neighbourData.quadNode)!.length > 1
 				) {
 					this._updateQuadEntropy(_neighbourData.quadNode, stack);
+				}
+			}
+			// update above
+			const floorGraphAbove = this._floorGraphs[floorIndex + 1];
+			if (floorGraphAbove) {
+				const aboveQuad = floorGraphAbove.quadNode(currentQuad);
+				if (aboveQuad) {
+					if (floorGraphAbove.allowedTileConfigsForQuadNode(aboveQuad)!.length > 1) {
+						this._updateQuadEntropy(aboveQuad, stack);
+					}
+				}
+			}
+			// update below
+			const floorGraphBelow = this._floorGraphs[floorIndex - 1];
+			if (floorGraphBelow) {
+				const belowQuad = floorGraphBelow.quadNode(currentQuad);
+				if (belowQuad) {
+					if (floorGraphBelow.allowedTileConfigsForQuadNode(belowQuad)!.length > 1) {
+						this._updateQuadEntropy(belowQuad, stack);
+					}
 				}
 			}
 		}
 	}
 	private _updateQuadEntropy(quadNode: QuadNode, stack: QuadNode[]) {
-		const allowedTileConfigs = this._allowedTileConfigsByQuadId.get(quadNode.id)!;
-
+		const floorGraph = this._floorGraph(quadNode);
+		const allowedTileConfigs = floorGraph.allowedTileConfigsForQuadNode(quadNode)!;
+		// console.log('_updateQuadEntropy START', `${this._floorGraphIndexByQuadNode.get(quadNode)}:${quadNode.id}`, [
+		// 	...allowedTileConfigs,
+		// ]);
 		const previousEntropy: number = allowedTileConfigs.length;
 		this._reduceEntropy(quadNode, allowedTileConfigs);
 		const updatedEntropy: number = allowedTileConfigs.length;
 
+		// console.log(
+		// 	'_updateQuadEntropy DONE',
+		// 	`${this._floorGraphIndexByQuadNode.get(quadNode)}:${quadNode.id}`,
+		// 	`${previousEntropy} -> ${updatedEntropy}`
+		// );
 		if (updatedEntropy == previousEntropy) {
 			return;
 		}
@@ -210,7 +250,7 @@ export class WFCSolver {
 	private _reduceEntropy(quadNode: QuadNode, allowedTileConfigs: TileConfig[]) {
 		let i = 0;
 		while (i < allowedTileConfigs.length) {
-			const allowed = this._checkConfigAgainstNeighbours(quadNode.id, allowedTileConfigs[i]);
+			const allowed = this._checkConfigAgainstNeighbours(quadNode, allowedTileConfigs[i]);
 			if (allowed) {
 				i++;
 			} else {
@@ -245,33 +285,47 @@ export class WFCSolver {
 			}
 		}
 	}
-	private _checkConfigAgainstNeighbours(quadNodeId: number, tileConfig: TileConfig): boolean {
-		if (!this._isConfigAllowedWithNeighbour(quadNodeId, tileConfig, 0)) {
+	private _checkConfigAgainstNeighbours(quadNode: QuadNode, tileConfig: TileConfig): boolean {
+		// const id = `${this._floorGraphIndexByQuadNode.get(quadNode)}:${quadNode.id}`;
+		if (!this._isConfigAllowedWithNeighbour(quadNode, tileConfig, 0)) {
+			// console.log('_checkConfigAgainstNeighbours 0', id, false);
 			return false;
 		}
-		if (!this._isConfigAllowedWithNeighbour(quadNodeId, tileConfig, 1)) {
+		if (!this._isConfigAllowedWithNeighbour(quadNode, tileConfig, 1)) {
+			// console.log('_checkConfigAgainstNeighbours 1', id, false);
 			return false;
 		}
-		if (!this._isConfigAllowedWithNeighbour(quadNodeId, tileConfig, 2)) {
+		if (!this._isConfigAllowedWithNeighbour(quadNode, tileConfig, 2)) {
+			// console.log('_checkConfigAgainstNeighbours 2', id, false);
 			return false;
 		}
-		if (!this._isConfigAllowedWithNeighbour(quadNodeId, tileConfig, 3)) {
+		if (!this._isConfigAllowedWithNeighbour(quadNode, tileConfig, 3)) {
+			// console.log('_checkConfigAgainstNeighbours 3', id, false);
 			return false;
 		}
-
+		if (!this._isConfigAllowedWithVerticalNeighbour(quadNode, tileConfig, -1)) {
+			// console.log('_checkConfigAgainstNeighbours BELOW', id, false);
+			return false;
+		}
+		if (!this._isConfigAllowedWithVerticalNeighbour(quadNode, tileConfig, +1)) {
+			// console.log('_checkConfigAgainstNeighbours ABOVE', id, false);
+			return false;
+		}
+		// console.log('_checkConfigAgainstNeighbours C', id, true);
 		return true;
 	}
-	private _isConfigAllowedWithNeighbour(
-		quadNodeId: number,
+	protected _isConfigAllowedWithNeighbour(
+		quadNode: QuadNode,
 		tileConfig: TileConfig,
 		neighbourIndex: NeighbourIndex
 	): boolean {
-		this._quadGraph.neighbourData(quadNodeId, neighbourIndex, _neighbourData);
+		const floorGraph = this._floorGraph(quadNode);
+		floorGraph.neighbourData(quadNode.id, neighbourIndex, _neighbourData);
 		if (!_neighbourData.quadNode || _neighbourData.neighbourIndex == null) {
 			return true;
 		}
 		const presentedSide0 = CCW_HALF_EDGE_SIDES[mod(neighbourIndex - tileConfig.rotation, 4)];
-		const neighbourConfigs = this._allowedTileConfigsByQuadId.get(_neighbourData.quadNode.id)!;
+		const neighbourConfigs = floorGraph.allowedTileConfigsForQuadNode(_neighbourData.quadNode)!;
 		if (neighbourConfigs.length == 0) {
 			// if neighbour has no config, it is empty, so the config is allowed
 			return true;
@@ -287,6 +341,56 @@ export class WFCSolver {
 			);
 			if (isAllowed) {
 				return true;
+			}
+		}
+		return false;
+	}
+	private _isConfigAllowedWithVerticalNeighbour(
+		quadNode: QuadNode,
+		tileConfig: TileConfig,
+		floorOffset: 1 | -1
+	): boolean {
+		const floorIndex = this._floorGraphIndexByQuadNode.get(quadNode)!;
+		const neighbourFloorIndex = floorIndex + floorOffset;
+		const neighbourFloorGraph = this._floorGraphs[neighbourFloorIndex];
+		if (!neighbourFloorGraph) {
+			return true;
+		}
+		const neighbourQuadNode = neighbourFloorGraph.quadNode(quadNode);
+		if (!neighbourQuadNode) {
+			return true;
+		}
+
+		const neighbourConfigs = neighbourFloorGraph.allowedTileConfigsForQuadNode(neighbourQuadNode)!;
+		if (neighbourConfigs.length == 0) {
+			// if neighbour has no config, it is empty, so the config is allowed
+			return true;
+		}
+		// console.log('neighbourConfigs', neighbourConfigs, tileConfig);
+		for (const neighbourConfig of neighbourConfigs) {
+			const presentedSide0 = floorOffset > 0 ? 't' : 'b';
+			const presentedSide1 = floorOffset > 0 ? 'b' : 't';
+			const isAllowed = this._tilesCollection.allowedTileConfig(
+				tileConfig.tileId,
+				presentedSide0,
+				neighbourConfig.tileId,
+				presentedSide1
+			);
+			// console.log(isAllowed, {
+			// 	tileId0: tileConfig.tileId,
+			// 	presentedSide0,
+			// 	tileId1: neighbourConfig.tileId,
+			// 	presentedSide1,
+			// });
+			if (isAllowed) {
+				// if the connection is allowed, and since we are only testing vertical connection,
+				// we only take a config if it has the same rotation,
+				// OR if one of the tiles is the empty tile
+				return (
+					neighbourConfig.tileId == EMPTY_TILE_ID ||
+					tileConfig.tileId == EMPTY_TILE_ID ||
+					neighbourConfig.rotation == tileConfig.rotation
+				);
 			}
 		}
 		return false;
@@ -322,30 +426,18 @@ export class WFCSolver {
 		return quadNode;
 	}
 	private _quadNodeCorners(quadNode: QuadNode, target: TileCorners) {
-		target.p0.fromArray(this._quadPositionArray, quadNode.indices[0] * 3);
-		target.p1.fromArray(this._quadPositionArray, quadNode.indices[3] * 3);
-		target.p2.fromArray(this._quadPositionArray, quadNode.indices[2] * 3);
-		target.p3.fromArray(this._quadPositionArray, quadNode.indices[1] * 3);
+		const floorIndex = this._floorGraphIndexByQuadNode.get(quadNode)!;
+		const array = this._quadPositionArrays[floorIndex];
+		target.p0.fromArray(array, quadNode.indices[0] * 3);
+		target.p1.fromArray(array, quadNode.indices[3] * 3);
+		target.p2.fromArray(array, quadNode.indices[2] * 3);
+		target.p3.fromArray(array, quadNode.indices[1] * 3);
 	}
-	private _isQuadNodeSolveAllowed(index: number): boolean {
-		const hasSolveAllowedAttribute = QuadPrimitive.hasAttribute(
-			this.quadObject,
-			WFCQuadTileAttribute.TILE_SOLVE_ALLOWED
-		);
-		if (!hasSolveAllowedAttribute) {
-			// if the solveAllowed attribute is not found,
-			// the quadNode is considered solveAllowed==true
-			return true;
-		}
-
-		const solveAllowed: boolean | undefined = QuadPrimitive.attribValue(
-			this.quadObject,
-			index,
-			WFCQuadTileAttribute.TILE_SOLVE_ALLOWED
-		) as boolean | undefined;
-		if (solveAllowed == null) {
-			return true;
-		}
-		return solveAllowed;
+	private _floorGraph(quadNode: QuadNode): WFCFloorGraph {
+		const floorIndex = this._floorGraphIndexByQuadNode.get(quadNode)!;
+		// if(floorIndex==null){
+		// 	return
+		// }
+		return this._floorGraphs[floorIndex];
 	}
 }
