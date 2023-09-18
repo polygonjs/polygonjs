@@ -159,7 +159,7 @@ export class QuadSmoothSopNode extends QuadSopNode<QuadSmoothSopParamsConfig> {
 		}
 		const adjacentIdByIndex = new Map<number, number[]>();
 		adjacentIdByIndexWithSets.forEach((adjacentIds, index) => {
-			adjacentIdByIndex.set(index, setToArray(adjacentIds));
+			adjacentIdByIndex.set(index, setToArray(adjacentIds,[]));
 		});
 		adjacentIdByIndexWithSets.clear();
 

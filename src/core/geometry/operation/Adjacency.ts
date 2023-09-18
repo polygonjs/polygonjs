@@ -164,7 +164,8 @@ function filterAjacency(indexPairs: Number2[]): Number2[] {
 	return result;
 }
 
-const pointSet: Set<Number2> = new Set();
+const _pointSet: Set<Number2> = new Set();
+const _pointArray: Number2[] = [];
 export function populateAdjacency2(faces: Face[][], vertices: Vector3[]) {
 	const adjacency: Number2[][] = Array.from({length: vertices.length}, () => new Array());
 
@@ -174,25 +175,26 @@ export function populateAdjacency2(faces: Face[][], vertices: Vector3[]) {
 			console.warn(`point ${r} has no face`);
 		}
 
-		pointSet.clear();
+		_pointSet.clear();
 
 		for (const pointFace of pointFaces) {
 			switch (r) {
 				case pointFace.a: {
-					pointSet.add([pointFace.b, pointFace.c]);
+					_pointSet.add([pointFace.b, pointFace.c]);
 					break;
 				}
 				case pointFace.b: {
-					pointSet.add([pointFace.c, pointFace.a]);
+					_pointSet.add([pointFace.c, pointFace.a]);
 					break;
 				}
 				case pointFace.c: {
-					pointSet.add([pointFace.a, pointFace.b]);
+					_pointSet.add([pointFace.a, pointFace.b]);
 					break;
 				}
 			}
 		}
-		adjacency[r] = filterAjacency(setToArray(pointSet));
+		setToArray(_pointSet, _pointArray);
+		adjacency[r] = filterAjacency(_pointArray);
 	}
 	return adjacency;
 }

@@ -15,6 +15,8 @@ interface StructureItem {
 	children?: StructureItem[];
 }
 type StructureCallback = (structure: StructureItem) => void;
+const _numberSet: Set<number> = new Set();
+const _stringSet: Set<string> = new Set();
 
 export async function getIFCModelCategories(object: Object3D) {
 	const modelId = (object as IFCModel).modelID;
@@ -38,28 +40,29 @@ export function ifcCategoryIds(categoryNames: string[]): number[] {
 	}
 	return cagegoryIds;
 }
+
 export async function ifcElementIds(ifcManager: IFCManager, modelId: number, categoryIds: number[]): Promise<number[]> {
 	const promises = categoryIds.map(
 		(categoryId) => ifcManager.getAllItemsOfType(modelId, categoryId, false) as Promise<number[]>
 	);
 	const results = await Promise.all(promises);
 
-	const ids: Set<number> = new Set();
+	_numberSet.clear();
 	for (let result of results) {
 		for (let id of result) {
-			ids.add(id);
+			_numberSet.add(id);
 		}
 	}
-	return SetUtils.toArray(ids);
+	return SetUtils.toArray(_numberSet, []);
 }
 
 export async function ifcCategoriesNames(ifcManager: IFCManager, modelID: number): Promise<string[]> {
 	const root: StructureItem = await ifcManager.getSpatialStructure(modelID, false);
-	const types: Set<string> = new Set();
+	_stringSet.clear();
 	traverseStructure(root, (item) => {
-		types.add(item.type);
+		_stringSet.add(item.type);
 	});
-	const categoryNames = SetUtils.toArray(types);
+	const categoryNames = SetUtils.toArray(_stringSet, []);
 
 	return categoryNames;
 }

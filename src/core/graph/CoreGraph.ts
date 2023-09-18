@@ -1,17 +1,28 @@
 import {PolyScene} from '../../engine/scene/PolyScene';
-import {SetUtils} from '../SetUtils';
 import {CallbacksTriggerController} from './CallbacksTriggerController';
 import {CoreGraphNode} from './CoreGraphNode';
+import {isArray} from '../Type';
+import {addToSetAtEntry} from '../MapUtils';
 
 export type CoreGraphNodeId = number;
+interface NodesData {
+	idsSet: Set<number>;
+	idsArray: number[];
+	nodes: CoreGraphNode[];
+}
 
-type TraverseCallback = (id: CoreGraphNodeId) => CoreGraphNodeId[];
+type TraverseCallback = (id: CoreGraphNodeId) => CoreGraphNodeId[] | undefined;
+// const _graphNodes: CoreGraphNode[] = [];
+const _idStack: number[] = [];
+const _idsSet: Set<number> = new Set();
 export class CoreGraph {
 	private _nextId: CoreGraphNodeId = 0;
 	private _scene: PolyScene | undefined;
-	private _successors: Map<CoreGraphNodeId, Set<CoreGraphNodeId>> = new Map();
-	private _predecessors: Map<CoreGraphNodeId, Set<CoreGraphNodeId>> = new Map();
+	private _successors: Map<CoreGraphNodeId, NodesData> = new Map();
+	private _predecessors: Map<CoreGraphNodeId, NodesData> = new Map();
 	private _nodesById: Map<number, CoreGraphNode> = new Map();
+	private _forbiddenTriggerNodeIds: Map<CoreGraphNodeId, Set<CoreGraphNodeId>> = new Map();
+	private _selfDirtyForbidden: Set<CoreGraphNodeId> = new Set();
 	private _nodesCount = 0;
 	public readonly callbacksTriggerController = new CallbacksTriggerController(this);
 
@@ -41,15 +52,14 @@ export class CoreGraph {
 		return this._nextId;
 	}
 
-	nodesFromIds(ids: number[]) {
-		const nodes: CoreGraphNode[] = [];
-		for (let id of ids) {
+	nodesFromIds(ids: number[], target: CoreGraphNode[]): void {
+		target.length = 0;
+		for (const id of ids) {
 			const node = this.nodeFromId(id);
 			if (node) {
-				nodes.push(node);
+				target.push(node);
 			}
 		}
-		return nodes;
 	}
 	nodeFromId(id: number): CoreGraphNode | undefined {
 		return this._nodesById.get(id);
@@ -65,13 +75,24 @@ export class CoreGraph {
 		}
 	}
 	removeNode(node: CoreGraphNode) {
-		this._nodesById.delete(node.graphNodeId());
-		this._successors.delete(node.graphNodeId());
-		this._predecessors.delete(node.graphNodeId());
+		this.disconnectPredecessors(node);
+		this.disconnectSuccessors(node);
+		const nodeId = node.graphNodeId();
+		this._nodesById.delete(nodeId);
+		this._successors.delete(nodeId);
+		this._predecessors.delete(nodeId);
 		this._nodesCount -= 1;
 
+		this._forbiddenTriggerNodeIds.delete(nodeId);
+		this._forbiddenTriggerNodeIds.forEach((set, nodeId) => {
+			if (set.has(nodeId)) {
+				set.delete(nodeId);
+			}
+		});
+		this._selfDirtyForbidden.delete(nodeId);
+
 		if (this._debugging) {
-			this._addedNodesDuringDebugging.delete(node.graphNodeId());
+			this._addedNodesDuringDebugging.delete(nodeId);
 		}
 	}
 	nodesCount() {
@@ -81,201 +102,304 @@ export class CoreGraph {
 		const srcId = src.graphNodeId();
 		const destId = dest.graphNodeId();
 
-		if (this.hasNode(src) && this.hasNode(dest)) {
-			// if checkCycle is passed as false, that means we never check.
-			// this can be useful when we know that the connection will not create a cycle,
-			// such as when connecting params or inputs to a node
-			if (checkCycle) {
-				const sceneLoading = this._scene ? this._scene.loadingController.isLoading() : true;
-				checkCycle = !sceneLoading;
-			}
-			let graphWouldHaveCycle = false;
-			if (checkCycle) {
-				// graph_has_cycle = !alg.isAcyclic(this._graph);
-				graphWouldHaveCycle = this._hasPredecessor(srcId, destId);
-			}
-
-			if (graphWouldHaveCycle) {
-				return false;
-			} else {
-				this._createConnection(srcId, destId);
-				src.dirtyController.clearSuccessorsCacheWithPredecessors();
-
-				return true;
-			}
-		} else {
+		if (!(this.hasNode(src) && this.hasNode(dest))) {
 			console.warn(`attempt to connect non existing node ${srcId} or ${destId}`);
 			return false;
+		}
+
+		// if checkCycle is passed as false, that means we never check.
+		// this can be useful when we know that the connection will not create a cycle,
+		// such as when connecting params or inputs to a node
+		if (checkCycle) {
+			const sceneLoading = this._scene ? this._scene.loadingController.isLoading() : true;
+			checkCycle = !sceneLoading;
+		}
+		const graphWouldHaveCycle = checkCycle ? src.hasPredecessor(dest) : false;
+		// if (checkCycle) {
+		// 	graphWouldHaveCycle = this._hasPredecessor(srcId, destId);
+		// }
+
+		if (graphWouldHaveCycle) {
+			return false;
+		} else {
+			this._createConnection(srcId, destId);
+			src.clearCachesWithPredecessorsAndSuccessors();
+
+			return true;
 		}
 	}
 
 	disconnect(src: CoreGraphNode, dest: CoreGraphNode) {
-		// const src_id_s = src.graphNodeId();
-		// const dest_id_s = dest.graphNodeId();
-		// this._graph.removeEdge(src_id_s, dest_id_s);
 		this._removeConnection(src.graphNodeId(), dest.graphNodeId());
 
-		src.dirtyController.clearSuccessorsCacheWithPredecessors();
+		src.clearCachesWithPredecessorsAndSuccessors();
+		dest.clearCachesWithPredecessorsAndSuccessors();
 	}
 	disconnectPredecessors(node: CoreGraphNode) {
 		const predecessors = this.predecessors(node);
-		for (let predecessor of predecessors) {
+		if (!predecessors) {
+			return;
+		}
+		for (const predecessor of predecessors) {
 			this.disconnect(predecessor, node);
 		}
 	}
 	disconnectSuccessors(node: CoreGraphNode) {
 		const successors = this.successors(node);
-		for (let successor of successors) {
+		if (!successors) {
+			return;
+		}
+		for (const successor of successors) {
 			this.disconnect(node, successor);
 		}
 	}
 
-	predecessorIds(id: CoreGraphNodeId): CoreGraphNodeId[] {
-		const map = this._predecessors.get(id);
-		if (map) {
-			const ids: CoreGraphNodeId[] = [];
-			map.forEach((bool, id) => {
-				ids.push(id);
-			});
-			return ids;
-		}
-		return [];
+	predecessorIds(id: CoreGraphNodeId): CoreGraphNodeId[] | undefined {
+		return this._predecessors.get(id)?.idsArray;
 	}
-
-	predecessors(node: CoreGraphNode) {
-		const ids = this.predecessorIds(node.graphNodeId());
-		return this.nodesFromIds(ids);
+	predecessors(node: CoreGraphNode): CoreGraphNode[] | undefined {
+		return this._predecessors.get(node.graphNodeId())?.nodes;
 	}
-	successorIds(id: CoreGraphNodeId): CoreGraphNodeId[] {
-		const map = this._successors.get(id);
-		if (map) {
-			const ids: CoreGraphNodeId[] = [];
-
-			map.forEach((bool, successorId) => {
-				ids.push(successorId);
-			});
-			return ids;
-		}
-		return [];
+	successorIds(id: CoreGraphNodeId): CoreGraphNodeId[] | undefined {
+		return this._successors.get(id)?.idsArray;
 	}
-	successors(node: CoreGraphNode): CoreGraphNode[] {
-		const ids = this.successorIds(node.graphNodeId()) || [];
-		return this.nodesFromIds(ids);
+	successors(node: CoreGraphNode): CoreGraphNode[] | undefined {
+		return this._successors.get(node.graphNodeId())?.nodes;
 	}
 	private _boundPredecessorIds: TraverseCallback = this.predecessorIds.bind(this);
 	private _boundSuccessorIds: TraverseCallback = this.successorIds.bind(this);
-	allPredecessorIds(node: CoreGraphNode): CoreGraphNodeId[] {
-		const method = this._boundPredecessorIds;
-		const ids: Set<CoreGraphNodeId> = new Set();
-		let nextIds = method(node.graphNodeId());
+	// private _allNodeIds(node: CoreGraphNode, method: TraverseCallback, target: CoreGraphNodeId[]): void {
+	// 	target.length = 0;
+	// 	_idsSet.clear();
+	// 	_idStack.length = 1;
+	// 	_idStack[0] = node.graphNodeId();
+	// 	const forbiddenIds = this._forbiddenTriggerNodeIds.get(node.graphNodeId())
 
-		while (nextIds.length > 0) {
-			const nextNextIds: number[] = [];
-			for (let nextId of nextIds) {
-				ids.add(nextId);
+	// 	while (_idStack.length > 0) {
+	// 		const currentId = _idStack.pop()!;
+	// 		const ids = method(currentId);
+	// 		if (ids) {
+	// 			for (const id of ids) {
+	// 				if (!_idsSet.has(id)) {
+	// 					_idsSet.add(id);
+	// 					target.push(id);
+	// 					_idStack.push(id);
+	// 				}
+	// 			}
+	// 		}
+	// 	}
+	// }
+	allPredecessorIds(node: CoreGraphNode, target: CoreGraphNodeId[]): void {
+		// this._allNodeIds(node, this._boundPredecessorIds, target);
+		target.length = 0;
+		_idsSet.clear();
+		_idStack.length = 1;
+		_idStack[0] = node.graphNodeId();
 
-				for (let nextNextId of method(nextId)) {
-					nextNextIds.push(nextNextId);
-				}
-			}
-
-			nextIds = nextNextIds;
-		}
-
-		return SetUtils.toArray(ids);
-	}
-	allSuccessorIds(node: CoreGraphNode): CoreGraphNodeId[] {
-		const method = this._boundSuccessorIds;
-		// const ids: Set<CoreGraphNodeId> = new Set();
-		const ids: Array<CoreGraphNodeId> = [];
-		let nextIds = method(node.graphNodeId());
-
-		while (nextIds.length > 0) {
-			const nextNextIds: number[] = [];
-			for (let nextId of nextIds) {
-				const nextNode = this.nodeFromId(nextId);
-				if (nextNode && !nextNode.dirtyController.isForbiddenTriggerNodeId(node.graphNodeId())) {
-					// if the ids has already been encountered, we need to remove it and add it again.
-					// This is important, otherwise a node may receive a dirty event before all its dependencies have
-					// which currently leads to bad cooks
-					const currentIndex = ids.indexOf(nextId);
-					if (currentIndex >= 0) {
-						ids.splice(currentIndex, 1);
-					}
-					ids.push(nextId);
-					for (let nextNextId of method(nextId)) {
-						nextNextIds.push(nextNextId);
+		while (_idStack.length > 0) {
+			const currentId = _idStack.pop()!;
+			const ids = this._boundPredecessorIds(currentId);
+			if (ids) {
+				for (const id of ids) {
+					if (!_idsSet.has(id)) {
+						_idsSet.add(id);
+						target.push(id);
+						_idStack.push(id);
 					}
 				}
 			}
-
-			nextIds = nextNextIds;
 		}
+	}
+	allSuccessorIds(node: CoreGraphNode, target: CoreGraphNodeId[]): void {
+		// this._allNodeIds(node, this._boundSuccessorIds, target);
+		target.length = 0;
+		_idsSet.clear();
+		_idStack.length = 1;
+		_idStack[0] = node.graphNodeId();
+		const forbiddenIds = this._forbiddenTriggerNodeIds.get(node.graphNodeId());
 
-		return ids;
+		while (_idStack.length > 0) {
+			const currentId = _idStack.pop()!;
+			const ids = this._boundSuccessorIds(currentId);
+			if (ids) {
+				for (const id of ids) {
+					if (!_idsSet.has(id)) {
+						_idsSet.add(id);
+						if (forbiddenIds == null || !forbiddenIds.has(id)) {
+							target.push(id);
+							_idStack.push(id);
+						}
+					}
+				}
+			}
+		}
 	}
-	allPredecessors(node: CoreGraphNode): CoreGraphNode[] {
-		const ids = this.allPredecessorIds(node);
-		return this.nodesFromIds(ids);
+	// private _allNodes(node: CoreGraphNode, method: TraverseCallback, target: CoreGraphNode[]): void {
+	// 	target.length = 0;
+	// 	_idsSet.clear();
+	// 	_idStack.length = 1;
+	// 	_idStack[0] = node.graphNodeId();
+
+	// 	while (_idStack.length > 0) {
+	// 		const currentId = _idStack.pop()!;
+	// 		const ids = method(currentId);
+	// 		if (ids) {
+	// 			for (const id of ids) {
+	// 				if (!_idsSet.has(id)) {
+	// 					_idsSet.add(id);
+	// 					const otherNode = this._nodesById.get(id);
+	// 					if (otherNode) {
+	// 						target.push(otherNode);
+	// 					}
+	// 					_idStack.push(id);
+	// 				}
+	// 			}
+	// 		}
+	// 	}
+	// }
+	allPredecessors(node: CoreGraphNode, target: CoreGraphNode[]): void {
+		// this._allNodes(node, this._boundPredecessorIds, target);
+		target.length = 0;
+		_idsSet.clear();
+		_idStack.length = 1;
+		_idStack[0] = node.graphNodeId();
+
+		while (_idStack.length > 0) {
+			const currentId = _idStack.pop()!;
+			const ids = this._boundPredecessorIds(currentId);
+			if (ids) {
+				for (const id of ids) {
+					if (!_idsSet.has(id)) {
+						_idsSet.add(id);
+						const otherNode = this._nodesById.get(id);
+						if (otherNode) {
+							target.push(otherNode);
+						}
+						_idStack.push(id);
+					}
+				}
+			}
+		}
 	}
-	allSuccessors(node: CoreGraphNode): CoreGraphNode[] {
-		const ids = this.allSuccessorIds(node);
-		return this.nodesFromIds(ids);
+	allSuccessors(node: CoreGraphNode, target: CoreGraphNode[]): void {
+		// this._allNodes(node, this._boundSuccessorIds, target);
+		target.length = 0;
+		_idsSet.clear();
+		_idStack.length = 1;
+		_idStack[0] = node.graphNodeId();
+		const forbiddenIds = this._forbiddenTriggerNodeIds.get(node.graphNodeId());
+
+		while (_idStack.length > 0) {
+			const currentId = _idStack.pop()!;
+			const ids = this._boundSuccessorIds(currentId);
+			if (ids) {
+				for (const id of ids) {
+					if (!_idsSet.has(id)) {
+						_idsSet.add(id);
+						if (forbiddenIds == null || !forbiddenIds.has(id)) {
+							const otherNode = this._nodesById.get(id);
+							if (otherNode) {
+								target.push(otherNode);
+							}
+							_idStack.push(id);
+						}
+					}
+				}
+			}
+		}
 	}
 	private _createConnection(srcId: CoreGraphNodeId, destId: CoreGraphNodeId) {
-		// set successors
-		let successors = this._successors.get(srcId);
-		if (!successors) {
-			successors = new Set();
-			this._successors.set(srcId, successors);
-		}
-		if (successors.has(destId)) {
-			return;
-		}
-		successors.add(destId);
+		let successorsData = this._successors.get(srcId);
+		let predecessorsData = this._predecessors.get(destId);
 
-		// set predecessors
-		let predecessors = this._predecessors.get(destId);
-		if (!predecessors) {
-			predecessors = new Set();
-			this._predecessors.set(destId, predecessors);
+		// add data if not present
+		if (!successorsData) {
+			successorsData = {idsSet: new Set(), idsArray: [], nodes: []};
+			this._successors.set(srcId, successorsData);
 		}
-		predecessors.add(srcId);
+		if (!predecessorsData) {
+			predecessorsData = {idsSet: new Set(), idsArray: [], nodes: []};
+			this._predecessors.set(destId, predecessorsData);
+		}
+
+		// successor
+		if (!successorsData.idsSet.has(destId)) {
+			successorsData.idsSet.add(destId);
+			successorsData.idsArray.push(destId);
+			const destNode = this._nodesById.get(destId);
+			if (destNode) {
+				successorsData.nodes.push(destNode);
+			} else {
+				throw new Error(`creating connection with node not in graph ${destId}`);
+			}
+		}
+
+		// predecessor
+		if (!predecessorsData.idsSet.has(srcId)) {
+			predecessorsData.idsSet.add(srcId);
+			predecessorsData.idsArray.push(srcId);
+			const srcNode = this._nodesById.get(srcId);
+			if (srcNode) {
+				predecessorsData.nodes.push(srcNode);
+			} else {
+				throw new Error(`creating connection with node not in graph ${srcId}`);
+			}
+		}
 	}
 	private _removeConnection(srcId: CoreGraphNodeId, destId: CoreGraphNodeId) {
 		// remove successors
-		let successors = this._successors.get(srcId);
-		if (successors) {
-			successors.delete(destId);
-			if (successors.size == 0) {
-				this._successors.delete(srcId);
+		const successorsData = this._successors.get(srcId);
+		if (successorsData && successorsData.idsSet.has(destId)) {
+			successorsData.idsSet.delete(destId);
+			const idIndex = successorsData.idsArray.indexOf(destId);
+			if (idIndex >= 0) {
+				successorsData.idsArray.splice(idIndex, 1);
+				successorsData.nodes.splice(idIndex, 1);
+			} else {
+				console.warn(`could not find id ${destId} in successorsData.idsArray`, successorsData.idsArray);
 			}
 		}
 		// remove predecessors
-		let predecessors = this._predecessors.get(destId);
-		if (predecessors) {
-			predecessors.delete(srcId);
-			if (predecessors.size == 0) {
-				this._predecessors.delete(destId);
+		const predecessorsData = this._predecessors.get(destId);
+		if (predecessorsData && predecessorsData.idsSet.has(srcId)) {
+			predecessorsData.idsSet.delete(srcId);
+			const idIndex = predecessorsData.idsArray.indexOf(srcId);
+			if (idIndex >= 0) {
+				predecessorsData.idsArray.splice(idIndex, 1);
+				predecessorsData.nodes.splice(idIndex, 1);
+			} else {
+				console.warn(`could not find id ${srcId} in predecessorsData.idsArray`, predecessorsData.idsArray);
 			}
 		}
 	}
-
-	private _hasPredecessor(srcId: CoreGraphNodeId, destId: CoreGraphNodeId): boolean {
-		const ids = this.predecessorIds(srcId);
-
-		if (ids) {
-			if (ids.includes(destId)) {
-				return true;
-			} else {
-				for (let id of ids) {
-					if (this._hasPredecessor(id, destId)) {
-						return true;
-					}
-				}
+	setForbiddenTriggerNodes(src: CoreGraphNode, dest: CoreGraphNode | CoreGraphNode[]) {
+		// if (this._forbiddenTriggerNodeIds) {
+		this._forbiddenTriggerNodeIds.get(src.graphNodeId())?.clear();
+		// } else {
+		// this._forbiddenTriggerNodeIds = new Set();
+		// }
+		if (isArray(dest)) {
+			for (const destNode of dest) {
+				addToSetAtEntry(this._forbiddenTriggerNodeIds, src.graphNodeId(), destNode.graphNodeId());
+				// this._forbiddenTriggerNodeIds.add(node.graphNodeId());
+				// node.clearCachesWithPredecessorsAndSuccessors();
 			}
+		} else {
+			addToSetAtEntry(this._forbiddenTriggerNodeIds, src.graphNodeId(), dest.graphNodeId());
+			// this._forbiddenTriggerNodeIds.add(nodes.graphNodeId());
 		}
-
-		return false;
+	}
+	clearForbiddenTriggerNodes(src: CoreGraphNode) {
+		this._forbiddenTriggerNodeIds.delete(src.graphNodeId());
+	}
+	setSelfDirtyForbidden(node: CoreGraphNode, state: boolean) {
+		if (state) {
+			this._selfDirtyForbidden.add(node.graphNodeId());
+		} else {
+			this._selfDirtyForbidden.delete(node.graphNodeId());
+		}
+	}
+	selfDirtyForbidden(node: CoreGraphNode): boolean {
+		return this._selfDirtyForbidden.has(node.graphNodeId());
 	}
 }

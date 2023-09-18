@@ -130,7 +130,7 @@ export class EntityGroupCollection {
 				groupsByName = {};
 				dict[type] = groupsByName;
 			}
-			groupsByName[groupName] = SetUtils.toArray(newIndicesSet);
+			groupsByName[groupName] = SetUtils.toArray(newIndicesSet,[]);
 		};
 		this.selectedIndices.clear();
 		selectedIndicesFromSelectionStates(selectionStates, this.selectedIndices, invert);

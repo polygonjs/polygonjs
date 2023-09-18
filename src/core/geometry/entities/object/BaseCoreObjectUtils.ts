@@ -36,7 +36,7 @@ export function coreObjectsAttribSizesByName<T extends CoreObjectType>(
 
 	const sizesByName: PolyDictionary<AttribSize[]> = {};
 	_sizesByName.forEach((attribSizes, attribName) => {
-		sizesByName[attribName] = setToArray(attribSizes);
+		sizesByName[attribName] = setToArray(attribSizes,[]);
 	});
 	return sizesByName;
 }
@@ -54,7 +54,7 @@ export function coreObjectAttributeTypesByName<T extends CoreObjectType>(
 
 	const typesByName: PolyDictionary<AttribType[]> = {};
 	_typesByName.forEach((attribTypes, attribName) => {
-		typesByName[attribName] = setToArray(attribTypes);
+		typesByName[attribName] = setToArray(attribTypes,[]);
 	});
 	return typesByName;
 	// const core_object = this.firstCoreObject();
@@ -74,5 +74,5 @@ export function coreObjectsAttribNames<T extends CoreObjectType>(coreObjects: Ba
 		}
 	}
 
-	return setToArray(names);
+	return setToArray(names,[]);
 }

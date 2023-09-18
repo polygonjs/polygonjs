@@ -180,7 +180,7 @@ export class QuadrangulateSopNode extends QuadSopNode<QuadrangulateSopParamsConf
 			return edgeId;
 		};
 
-		const edgeIds = graph.edgeIds();
+		const edgeIds = graph.edgeIds([]);
 		let i = 0;
 		while (edgeIds.length > 0 /*&& quadsCount < expectedQuadsCount*/) {
 			i++;

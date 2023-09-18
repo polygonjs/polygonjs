@@ -15,7 +15,9 @@ export class CoreNodeSelection {
 	}
 
 	nodes(): BaseNodeType[] {
-		return this._node.scene().graph.nodesFromIds(this._nodeIds) as BaseNodeType[];
+		const target: BaseNodeType[] = [];
+		this._node.scene().graph.nodesFromIds(this._nodeIds, target);
+		return target;
 	}
 
 	contains(node: BaseNodeType): boolean {

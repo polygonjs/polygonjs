@@ -5,7 +5,7 @@ import {MapUtils} from '../../../../core/MapUtils';
 import {PolyScene} from '../../PolyScene';
 import {CoreWalker} from '../../../../core/Walker';
 import {CoreGraphNodeId} from '../../../../core/graph/CoreGraph';
-import {SetUtils} from '../../../../core/SetUtils';
+import {setToArray} from '../../../../core/SetUtils';
 import jsep from 'jsep';
 
 export class MissingReferencesController {
@@ -97,7 +97,7 @@ export class MissingReferencesController {
 		const missingReferences = MapUtils.arrayFromValues(this.references);
 		for (let missingReference of missingReferences) {
 			let matchFound = false;
-			const list = SetUtils.toArray(missingReference);
+			const list = setToArray(missingReference, []);
 			for (let ref of list) {
 				if (ref.matchesPath(node.path())) {
 					matchFound = true;
@@ -115,7 +115,7 @@ export class MissingReferencesController {
 		const missingReferences = MapUtils.arrayFromValues(this.references);
 		for (let missingReference of missingReferences) {
 			let matchFound = false;
-			const list = SetUtils.toArray(missingReference);
+			const list = setToArray(missingReference, []);
 			for (let ref of list) {
 				if (ref.matchesPath(param.path())) {
 					matchFound = true;

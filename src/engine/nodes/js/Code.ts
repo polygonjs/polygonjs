@@ -155,7 +155,6 @@ export class CodeJsNode extends TypedJsNode<CodeJsParamsConfig> {
 	compile(options: CompileOptions) {
 		const content = TranspiledFilter.filter(this.pv.codeJavascript);
 		if (this._lastCompiledCode == content) {
-			console.log('compile not needed');
 			return;
 		}
 
@@ -166,11 +165,15 @@ export class CodeJsNode extends TypedJsNode<CodeJsParamsConfig> {
 
 		const _preventSelfCompilation = () => {
 			this._setFunctionNodeToRecompileAllowed(false);
-			this.dirtyController.setForbiddenTriggerNodes([this, this.io.inputs.graphNode()]);
+			// this.dirtyController.setForbiddenTriggerNodes([this, this.io.inputs.graphNode()]);
+			this.setSelfDirtyForbidden(true);
+			this.io.inputs.graphNode().setForbiddenTriggerNodes(this);
 		};
 		const _restore = () => {
 			this._setFunctionNodeToRecompileAllowed(true);
-			this.dirtyController.setForbiddenTriggerNodes([]);
+			// this.dirtyController.setForbiddenTriggerNodes([]);
+			this.setSelfDirtyForbidden(false);
+			this.io.inputs.graphNode().clearForbiddenTriggerNodes();
 		};
 
 		try {

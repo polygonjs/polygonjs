@@ -7,9 +7,9 @@ export class NodeTimeDependentState<NC extends NodeContext> extends NodeBaseStat
 	}
 
 	paramsTimeDependent(): boolean {
-		const param_names = this.node.params.names;
-		for (let param_name of param_names) {
-			const param = this.node.params.get(param_name);
+		const paramNames = this.node.params.names;
+		for (const paramName of paramNames) {
+			const param = this.node.params.get(paramName);
 			if (param && param.states.timeDependent.active()) {
 				return true;
 			}
@@ -28,14 +28,14 @@ export class NodeTimeDependentState<NC extends NodeContext> extends NodeBaseStat
 	}
 
 	forceTimeDependent() {
-		const predecessor_ids = this.node.graphPredecessors().map((n) => n.graphNodeId());
-		const frame_node = this.node.scene().timeController.graphNode;
-		if (!predecessor_ids.includes(frame_node.graphNodeId())) {
-			this.node.addGraphInput(frame_node, false);
+		const predecessorIds = this.node.graphPredecessorIds();
+		const frameNode = this.node.scene().timeController.graphNode;
+		if (predecessorIds == null || !predecessorIds.includes(frameNode.graphNodeId())) {
+			this.node.addGraphInput(frameNode, false);
 		}
 	}
 	unforceTimeDependent() {
-		const frame_node = this.node.scene().timeController.graphNode;
-		this.node.removeGraphInput(frame_node);
+		const frameNode = this.node.scene().timeController.graphNode;
+		this.node.removeGraphInput(frameNode);
 	}
 }

@@ -73,19 +73,23 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 		// if any direct predecessor is a MethodDependency,
 		// it must be disposed here
 		const predecessors = this.graphPredecessors();
-		for (let predecessor of predecessors) {
-			if (predecessor instanceof MethodDependency) {
-				predecessor.dispose();
+		if (predecessors) {
+			for (let predecessor of predecessors) {
+				if (predecessor instanceof MethodDependency) {
+					predecessor.dispose();
+				}
 			}
 		}
 		const successors = this.graphSuccessors();
-		for (let successor of successors) {
-			if (successor instanceof TypedParam) {
-				const input = successor.rawInputSerialized();
-				successor.set(successor.defaultValue());
-				successor.set(input);
-			} else {
-				successor.setDirty();
+		if (successors) {
+			for (let successor of successors) {
+				if (successor instanceof TypedParam) {
+					const input = successor.rawInputSerialized();
+					successor.set(successor.defaultValue());
+					successor.set(input);
+				} else {
+					successor.setDirty();
+				}
 			}
 		}
 

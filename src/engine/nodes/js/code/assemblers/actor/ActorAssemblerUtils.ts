@@ -215,24 +215,26 @@ export function connectedTriggerableNodes(options: ConnectedTriggerableNodesOpti
 	});
 }
 
+const _nonTriggerInputNodes: Set<BaseJsNodeType> = new Set();
+const _nonTriggerInputIndices: number[] = [];
 export function inputNodesFromConnectionWithCallback(node: BaseJsNodeType, callback: ConnectionPointCallback) {
-	const nonTriggerInputNodes: Set<BaseJsNodeType> = new Set();
-	let nonTriggerInputIndices: number[] = [];
+	_nonTriggerInputNodes.clear();
+	_nonTriggerInputIndices.length = 0;
 	const inputConnectionPoints = node.io.inputs.namedInputConnectionPoints();
 	let i = 0;
 	for (let outputConnectionPoint of inputConnectionPoints) {
 		if (callback(outputConnectionPoint)) {
-			nonTriggerInputIndices.push(i);
+			_nonTriggerInputIndices.push(i);
 		}
 		i++;
 	}
-	for (let nonTriggerInputIndex of nonTriggerInputIndices) {
+	for (let nonTriggerInputIndex of _nonTriggerInputIndices) {
 		const connection = node.io.connections.inputConnection(nonTriggerInputIndex);
 		if (connection) {
-			nonTriggerInputNodes.add(connection.nodeSrc());
+			_nonTriggerInputNodes.add(connection.nodeSrc());
 		}
 	}
-	return SetUtils.toArray(nonTriggerInputNodes);
+	return SetUtils.toArray(_nonTriggerInputNodes, []);
 }
 export function inputNodesExceptTrigger(node: BaseJsNodeType) {
 	// return inputNodesFromConnectionWithCallback(node, (c) => c.type() != JsConnectionPointType.TRIGGER);
@@ -261,14 +263,16 @@ export function triggerInputIndex(triggeringNode: BaseJsNodeType, triggeredNode:
 	return index;
 }
 
+const _triggerableNodesSet = new Set<BaseJsNodeType>();
+const _triggerableNodes: BaseJsNodeType[] = [];
 export function triggerableMethodCalls(triggeringNode: BaseJsNodeType) {
-	const triggerableNodesSet = new Set<BaseJsNodeType>();
+	_triggerableNodesSet.clear();
 	connectedTriggerableNodes({
 		triggeringNodes: new Set([triggeringNode]),
-		triggerableNodes: triggerableNodesSet,
+		triggerableNodes: _triggerableNodesSet,
 		recursive: false,
 	});
-	const triggerableNodes = SetUtils.toArray(triggerableNodesSet);
+	SetUtils.toArray(_triggerableNodesSet, _triggerableNodes);
 	// const triggerableMethodNames = SetUtils.toArray(currentTriggerableNodes).map((n) =>
 	// 	nodeMethodName(n)
 	// );
@@ -276,7 +280,7 @@ export function triggerableMethodCalls(triggeringNode: BaseJsNodeType) {
 	// 	nodeMethodName(n)
 	// );
 	const methodCalls: string[] = [];
-	for (let triggerableNode of triggerableNodes) {
+	for (let triggerableNode of _triggerableNodes) {
 		const methodName = nodeMethodName(triggerableNode);
 		const argIndex = triggerInputIndex(triggeringNode, triggerableNode);
 		// argIndex is used to highlight the connection

@@ -151,7 +151,7 @@ export class ConnectionPointsController<NC extends NodeContext> {
 
 	// used when a node changes its signature, adn the output nodes need to adapt their own signatures
 	private make_successors_update_signatures() {
-		const successors = this.node.graphAllSuccessors();
+		const successors: CoreGraphNode[] = this.node.graphAllSuccessors();
 		if (this.node.childrenAllowed()) {
 			const subnet_inputs = this.node.nodesByType(NetworkChildNodeType.INPUT);
 			const subnet_outputs = this.node.nodesByType(NetworkChildNodeType.OUTPUT);

@@ -109,6 +109,8 @@ interface FinalizeOptions {
 	deleteOutsideTets: boolean;
 	minQuality: number;
 }
+const _tetIds: number[] = [];
+
 function finalize(options: FinalizeOptions): TetGeometry {
 	const {tetGeometry, mesh, deleteOutsideTets, minQuality} = options;
 
@@ -129,7 +131,8 @@ function finalize(options: FinalizeOptions): TetGeometry {
 			}
 		});
 	}
-	tetGeometry.removeTets(setToArray(idsToDelete));
+	setToArray(idsToDelete, _tetIds);
+	tetGeometry.removeTets(_tetIds);
 	return tetRemoveUnusedPoints(tetGeometry);
 }
 

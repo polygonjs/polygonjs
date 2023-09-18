@@ -26,10 +26,13 @@ const EDGE_INDICES: Number2[] = [
 	[1, 3],
 	[2, 3],
 ];
+const _startIdsSet: Set<number> = new Set();
+const _startIds: number[] = [];
+const _endIds: number[] = [];
 export function buildTetEdgeIds(tetGeometry: TetGeometry, newOrderByPoint: Map<number, number>) {
 	const edgeEndsByStart: Map<number, Set<number>> = new Map();
 	let edgesCount = 0;
-	const startIds: Set<number> = new Set();
+	_startIdsSet.clear();
 	tetGeometry.tetrahedrons.forEach((tet) => {
 		for (const edgeIndices of EDGE_INDICES) {
 			const id0 = tet.pointIds[edgeIndices[0]];
@@ -46,7 +49,7 @@ export function buildTetEdgeIds(tetGeometry: TetGeometry, newOrderByPoint: Map<n
 			if (!edgeEnds) {
 				edgeEnds = new Set();
 				edgeEndsByStart.set(minIndex, edgeEnds);
-				startIds.add(minIndex);
+				_startIdsSet.add(minIndex);
 			}
 			if (!edgeEnds.has(maxIndex)) {
 				edgeEnds.add(maxIndex);
@@ -54,12 +57,13 @@ export function buildTetEdgeIds(tetGeometry: TetGeometry, newOrderByPoint: Map<n
 			}
 		}
 	});
-	const startIdsSorted = setToArray(startIds).sort((a, b) => a - b);
+	setToArray(_startIdsSet, _startIds);
+	const startIdsSorted = _startIds.sort((a, b) => a - b);
 	const edgeIds: number[] = new Array<number>(edgesCount * 2);
 	let i = 0;
 	for (const startId of startIdsSorted) {
 		const endIds = edgeEndsByStart.get(startId)!;
-		const endIdsSorted = setToArray(endIds).sort((a, b) => a - b);
+		const endIdsSorted = setToArray(endIds, _endIds).sort((a, b) => a - b);
 		for (const endId of endIdsSorted) {
 			edgeIds[i] = startId;
 			edgeIds[i + 1] = endId;

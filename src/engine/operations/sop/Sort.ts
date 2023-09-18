@@ -118,7 +118,7 @@ export class SortSopOperation extends BaseSopOperation {
 		}
 
 		// sort
-		let sortedPositions: number[] = setToArray(positions).sort((a, b) => a - b);
+		let sortedPositions: number[] = setToArray(positions, []).sort((a, b) => a - b);
 		if (isBooleanTrue(params.invert)) {
 			sortedPositions.reverse();
 		}

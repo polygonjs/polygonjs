@@ -4,7 +4,7 @@
  *
  *
  */
-import {SetUtils} from '../../../core/SetUtils';
+import {setToArray} from '../../../core/SetUtils';
 import {Poly} from '../../Poly';
 import {JsConnectionPoint, JsConnectionPointType, JS_CONNECTION_POINT_IN_NODE_DEF} from '../utils/io/connections/Js';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
@@ -77,7 +77,7 @@ function triggerMethod(node: TriggerSwitchJsNode, outputName: string): string {
 		triggerableNodes,
 		recursive: false,
 	});
-	const triggerableMethodNames = SetUtils.toArray(triggerableNodes).map((triggerableNode) => {
+	const triggerableMethodNames = setToArray(triggerableNodes,[]).map((triggerableNode) => {
 		const argIndex = triggerInputIndex(node, triggerableNode);
 		const m = nodeMethodName(triggerableNode);
 		return `this.${m}(${argIndex})`;

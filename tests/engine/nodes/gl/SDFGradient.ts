@@ -1,7 +1,6 @@
 import type {QUnit} from '../../../helpers/QUnit';
 import {GlConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Gl';
 import {SDFGradientGlNode} from '../../../../src/engine/nodes/gl/SDFGradient';
-
 import DEFAULT_FRAGMENT from './SDFGradient/default.frag.glsl';
 import NO_INPUT_EMPTY_VERTEX from './SDFGradient/noInput.vert.glsl';
 import NO_INPUT_BASIC_VERTEX from './SDFGradient/noInputBasic.vert.glsl';
@@ -10,6 +9,7 @@ import TWO_INPUTS_BASIC_VERTEX from './SDFGradient/twoInputsBasic.vert.glsl';
 import ALPHA_FRAGMENT from './SDFGradient/alpha.frag.glsl';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 import {GLSLHelper} from '../../../helpers/GLSLHelper';
+
 export function createRequiredNodesForSDFGradientGlNode(node: SDFGradientGlNode) {
 	const subnetOutput1 = node.createNode('subnetOutput');
 	const subnetInput1 = node.createNode('subnetInput');

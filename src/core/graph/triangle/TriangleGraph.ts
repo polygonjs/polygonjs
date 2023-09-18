@@ -75,8 +75,8 @@ export class TriangleGraph {
 	triangle(triangleId: number) {
 		return this._trianglesById.get(triangleId);
 	}
-	edgeIds() {
-		return setToArray(this._edgeIds);
+	edgeIds(target: string[]) {
+		return setToArray(this._edgeIds, target);
 	}
 	edge(edgeId: string) {
 		return this._edgesById.get(edgeId);

@@ -51,8 +51,10 @@ export function sample<T>(array: Array<T>, seed: number): T | undefined {
 export function spliceSample<T>(array: Array<T>, seed: number): T | undefined {
 	return array.splice(sampleIndex(array, seed), 1)[0];
 }
+const tmpSet: Set<any> = new Set();
 export function uniqWithoutPreservingOrder<T>(array: Array<T>): Array<T> {
-	return SetUtils.toArray(SetUtils.fromArray(array));
+	SetUtils.fromArray(array, tmpSet);
+	return SetUtils.toArray(tmpSet, []);
 
 	// for (let elem of array) {
 	// 	tmpSet.add(elem);

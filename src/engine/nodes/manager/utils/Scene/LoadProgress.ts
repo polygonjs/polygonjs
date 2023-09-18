@@ -4,7 +4,7 @@ import {BaseNodeType} from '../../../_Base';
 import {ParamConfig} from '../../../utils/params/ParamsConfig';
 import {RootManagerNode} from '../../Root';
 import {PolyScene} from '../../../../scene/PolyScene';
-import {SetUtils} from '../../../../../core/SetUtils';
+import {setFromArray, setToArray} from '../../../../../core/SetUtils';
 import {Poly} from '../../../../Poly';
 import {arrayUniq, arrayCompact} from '../../../../../core/ArrayUtils';
 import {BaseObjNodeType} from '../../../obj/_Base';
@@ -20,15 +20,15 @@ class NodeGroup {
 		}
 		this.totalCount = nodes.length;
 		this._processed = new Set();
-		this._remaining = SetUtils.fromArray(nodes);
+		this._remaining = setFromArray(nodes, new Set());
 	}
 	markNodeAsProcessed(node: BaseNodeType) {
 		this._processed.add(node);
 		this._remaining.delete(node);
 		if (CoreFeaturesController.debugLoadProgress()) {
 			console.log('markNodeAsProcessed', node.path(), {
-				processed: SetUtils.toArray(this._processed).map((n) => n.path()),
-				remaining: SetUtils.toArray(this._remaining).map((n) => n.path()),
+				processed: setToArray(this._processed, []).map((n) => n.path()),
+				remaining: setToArray(this._remaining, []).map((n) => n.path()),
 			});
 		}
 	}

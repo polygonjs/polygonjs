@@ -59,7 +59,8 @@ export class SolverSopNode extends SubnetSopNodeLike<SolverSopParamsConfig> {
 	}
 	private _createStampNode() {
 		const stampNode = new SolverIterationStamp(this.scene());
-		this.dirtyController.setForbiddenTriggerNodes([stampNode]);
+		// this.dirtyController.setForbiddenTriggerNodes([stampNode]);
+		stampNode.setForbiddenTriggerNodes(this);
 		return stampNode;
 	}
 

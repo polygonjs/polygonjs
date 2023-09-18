@@ -120,7 +120,7 @@ export class JsAssemblerActor extends BaseJsShaderAssembler {
 					rootNodesSet.add(rootNode);
 				}
 			});
-			const rootNodes = SetUtils.toArray(rootNodesSet).concat(additionalRootNodes);
+			const rootNodes = SetUtils.toArray(rootNodesSet, []).concat(additionalRootNodes);
 			this.set_root_nodes(rootNodes);
 			this.buildCodeFromNodes(this._root_nodes, {
 				actor: {

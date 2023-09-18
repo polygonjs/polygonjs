@@ -301,7 +301,8 @@ export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 	}
 	private _createStampNode() {
 		const stampNode = new SopCopyStamp(this.scene());
-		this.dirtyController.setForbiddenTriggerNodes([stampNode]);
+		// this.dirtyController.setForbiddenTriggerNodes([stampNode]);
+		stampNode.setForbiddenTriggerNodes(this);
 		return stampNode;
 	}
 	override dispose() {

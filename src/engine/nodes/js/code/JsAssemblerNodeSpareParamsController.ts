@@ -178,7 +178,8 @@ export class JsAssemblerNodeSpareParamsController {
 		const spareParamsWithSameNameAsParams = SetUtils.intersection(spare_param_names_to_add, currentParamNames);
 		if (spareParamsWithSameNameAsParams.size > 0) {
 			const error_message = `${this._node.path()} attempts to create spare params called '${SetUtils.toArray(
-				spareParamsWithSameNameAsParams
+				spareParamsWithSameNameAsParams,
+				[]
 			).join(', ')}' with same name as params`;
 			this._node.states.error.set(error_message);
 			return false;

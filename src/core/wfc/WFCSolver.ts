@@ -32,7 +32,8 @@ const _configStats: TileConfigStats = {
 	solid: 0,
 	empty: 0,
 };
-
+const _entropiesSet: Set<number> = new Set();
+const _sortedEntropies: number[] = [];
 export class WFCSolver {
 	private _stepsCount: number = 0;
 	private _objects: Object3D[] = [];
@@ -402,11 +403,12 @@ export class WFCSolver {
 		// update lowest entropy if needed
 		while (quadNodes && quadNodes.length == 0) {
 			this._quadNodeByEntropy.delete(this._lowestEntropy);
-			const entropiesSet: Set<number> = new Set();
+			_entropiesSet.clear();
 			this._quadNodeByEntropy.forEach((quadNodes, entropy) => {
-				entropiesSet.add(entropy);
+				_entropiesSet.add(entropy);
 			});
-			const sortedEntropies = setToArray(entropiesSet).sort((a, b) => a - b);
+			setToArray(_entropiesSet, _sortedEntropies);
+			const sortedEntropies = _sortedEntropies.sort((a, b) => a - b);
 			if (sortedEntropies.length == 0) {
 				return;
 			}

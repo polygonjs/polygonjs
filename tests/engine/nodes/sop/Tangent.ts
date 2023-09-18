@@ -17,7 +17,6 @@ export function testenginenodessopTangent(qUnit: QUnit) {
 		assert.ok(geo.getAttribute('tangent'));
 		assert.ok(geo.getAttribute('tangent'));
 		let array = (geo.getAttribute('tangent') as BufferAttribute).array;
-		console.log(array[100], array[101], array[102], array[103], array[104], array[105]);
 		assert.in_delta(array[100], -0.809, 0.01);
 		assert.in_delta(array[101], 0, 0.01);
 		assert.in_delta(array[102], 0.587, 0.01);

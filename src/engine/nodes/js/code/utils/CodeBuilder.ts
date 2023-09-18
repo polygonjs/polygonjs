@@ -109,9 +109,14 @@ export class JsCodeBuilder {
 		for (let node of codeNodes) {
 			if (!node.compiled()) {
 				// try {
-				node.functionNode()?.dirtyController.setForbiddenTriggerNodes([node]);
+				// node.functionNode()?.dirtyController.setForbiddenTriggerNodes([node]);
+				const functionNode = node.functionNode();
+				if (functionNode) {
+					node.setForbiddenTriggerNodes(functionNode);
+				}
 				node.compile({triggerFunctionNode: false});
-				node.functionNode()?.dirtyController.setForbiddenTriggerNodes([]);
+				node.clearForbiddenTriggerNodes();
+				// node.functionNode()?.dirtyController.setForbiddenTriggerNodes([]);
 				if (node.states.error.active() || !node.compiled()) {
 					const message = `failed to generated code (see node ${node.path()})`;
 					// node.functionNode()?.states.error.set(message);
@@ -334,8 +339,8 @@ export class JsCodeBuilder {
 		const allNodes =
 			options && options.actor
 				? nodes
-						.concat(SetUtils.toArray(options.actor.triggeringNodes))
-						.concat(SetUtils.toArray(options.actor.triggerableNodes))
+						.concat(SetUtils.toArray(options.actor.triggeringNodes, []))
+						.concat(SetUtils.toArray(options.actor.triggerableNodes, []))
 				: nodes;
 
 		this.addDefinitions(nodes, shaderName, JsDefinitionType.LOCAL_FUNCTION, LineType.DEFINE, additionalDefinitions);
@@ -372,7 +377,7 @@ export class JsCodeBuilder {
 		}
 		if (options?.actor.triggerableNodes) {
 			this.addDefinitions(
-				SetUtils.toArray(options.actor.triggerableNodes),
+				SetUtils.toArray(options.actor.triggerableNodes, []),
 				shaderName,
 				JsDefinitionType.TRIGGERABLE,
 				LineType.BODY,

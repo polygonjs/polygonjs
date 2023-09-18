@@ -233,7 +233,7 @@ export class GeometryContainer extends TypedContainer<NodeContext.SOP> {
 			// typesByName[attribName] = SetUtils.toArray(attribTypes);
 			sizesByTypeByName[attribName] = {[AttribType.NUMERIC]: [], [AttribType.STRING]: []};
 			mapForName.forEach((attribSizes, attribType) => {
-				sizesByTypeByName[attribName][attribType] = SetUtils.toArray(attribSizes);
+				sizesByTypeByName[attribName][attribType] = SetUtils.toArray(attribSizes, []);
 			});
 		});
 		return sizesByTypeByName;

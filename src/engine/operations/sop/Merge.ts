@@ -142,7 +142,7 @@ function _makeCompactWithPreservedMaterials(options: MergeCompactOptions) {
 	}
 	objectsByMaterial.forEach((objectSet, material) => {
 		coreObjectClass.mergeCompact({
-			objects: SetUtils.toArray(objectSet),
+			objects: SetUtils.toArray(objectSet,[]),
 			material,
 			objectType,
 			mergedObjects,
