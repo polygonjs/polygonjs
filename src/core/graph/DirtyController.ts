@@ -1,24 +1,23 @@
 import {CoreGraphNode} from './CoreGraphNode';
-// import {CoreGraphNodeId} from './CoreGraph';
 import {Poly} from '../../engine/Poly';
+import {Cooker} from '../../engine/scene/utils/Cooker';
 
 export type PostDirtyHook = (caller?: CoreGraphNode) => void;
 
 export class DirtyController {
-	_dirtyCount: number = 0;
-	_dirty: boolean = true;
-	_dirtyTimestamp: number | undefined;
-	// _cachedSuccessors: CoreGraphNode[] | undefined;
-	// _forbiddenTriggerNodeIds: Set<CoreGraphNodeId> | undefined;
-
+	private _dirtyCount: number = 0;
+	private _dirty: boolean = true;
+	private _dirtyTimestamp: number | undefined;
+	private _cooker: Cooker;
 	// hooks
-	_postDirtyHooks: PostDirtyHook[] | undefined;
-	_postDirtyHookNames: string[] | undefined;
+	private _postDirtyHooks: PostDirtyHook[] | undefined;
+	private _postDirtyHookNames: string[] | undefined;
 
-	constructor(private node: CoreGraphNode) {}
+	constructor(private node: CoreGraphNode) {
+		this._cooker = node.scene().cooker;
+	}
 
 	dispose() {
-		// this._cachedSuccessors = undefined;
 		this._postDirtyHooks = undefined;
 		this._postDirtyHookNames = undefined;
 	}
@@ -62,37 +61,14 @@ export class DirtyController {
 	removeDirtyState(): void {
 		this._dirty = false;
 	}
-	// setForbiddenTriggerNodes(nodes: CoreGraphNode[]) {
-	// 	if (this._forbiddenTriggerNodeIds) {
-	// 		this._forbiddenTriggerNodeIds.clear();
-	// 	} else {
-	// 		this._forbiddenTriggerNodeIds = new Set();
-	// 	}
-	// 	for (const node of nodes) {
-	// 		this._forbiddenTriggerNodeIds.add(node.graphNodeId());
-	// 		node.clearCachesWithPredecessorsAndSuccessors();
-	// 	}
-	// }
-	// isForbiddenTriggerNodeId(nodeId: CoreGraphNodeId) {
-	// 	return this._forbiddenTriggerNodeIds != null && this._forbiddenTriggerNodeIds.has(nodeId);
-	// }
 
 	setDirty(originalTriggerGraphNode?: CoreGraphNode | null, propagate: boolean = true): void {
-		// if (propagate == null) {
-		// 	propagate = true;
-		// }
-		// if (originalTriggerGraphNode && this.isForbiddenTriggerNodeId(originalTriggerGraphNode.graphNodeId())) {
-		// 	console.log('is forbidden', this.node, originalTriggerGraphNode);
-		// 	return;
-		// }
-
 		if (originalTriggerGraphNode == null) {
 			originalTriggerGraphNode = this.node;
 		}
 		if (originalTriggerGraphNode == this.node && this.node.selfDirtyForbidden()) {
 			return;
 		}
-
 		this._dirty = true;
 		this._dirtyTimestamp = Poly.performance.performanceManager().now();
 		this._dirtyCount += 1;
@@ -108,9 +84,8 @@ export class DirtyController {
 		if (this._postDirtyHooks == null || this._postDirtyHooks.length == 0) {
 			return;
 		}
-		const cooker = this.node.scene().graph.callbacksTriggerController;
-		if (cooker.blocked()) {
-			cooker.enqueue(this.node, originalTriggerGraphNode);
+		if (this._cooker.blocked()) {
+			this._cooker.enqueue(this.node, originalTriggerGraphNode);
 		} else {
 			for (const hook of this._postDirtyHooks) {
 				hook(originalTriggerGraphNode);
@@ -123,12 +98,12 @@ export class DirtyController {
 			originalTriggerGraphNode = this.node;
 		}
 
-		this.node.scene().graph.callbacksTriggerController.block();
+		this._cooker.block();
 
 		const allSuccessors = this.node.graphAllSuccessors();
 		for (const successor of allSuccessors) {
 			successor.dirtyController.setDirty(originalTriggerGraphNode, false);
 		}
-		this.node.scene().graph.callbacksTriggerController.unblock();
+		this._cooker.unblock();
 	}
 }

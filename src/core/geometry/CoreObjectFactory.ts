@@ -1,6 +1,6 @@
 import type {CoreObjectType, ObjectContent} from './ObjectContent';
 import {object3DFactory} from './modules/three/ThreeModule';
-import {TypedCorePoint} from './entities/point/CorePoint';
+import type {TypedCorePoint} from './entities/point/CorePoint';
 import {CoreVertex} from './entities/vertex/CoreVertex';
 import {BaseCoreObject} from './entities/object/BaseCoreObject';
 import {CorePrimitive} from './entities/primitive/CorePrimitive';
@@ -8,20 +8,16 @@ import {AttribClass} from './Constant';
 
 // point return types
 type BaseCorePointInstance = TypedCorePoint<CoreObjectType>;
-abstract class BaseCorePointClass extends TypedCorePoint<CoreObjectType> {}
-type BaseCorePointClassClass = typeof BaseCorePointClass;
+type BaseCorePointClassClass = typeof TypedCorePoint<CoreObjectType>;
 // vertex return types
 type BaseCoreVertexInstance = CoreVertex<CoreObjectType>;
-abstract class BaseCoreVertexClass extends CoreVertex<CoreObjectType> {}
-type BaseCoreVertexClassClass = typeof BaseCoreVertexClass;
+type BaseCoreVertexClassClass = typeof CoreVertex<CoreObjectType>;
 // primitive return types
 type BaseCorePrimitiveInstance = CorePrimitive<CoreObjectType>;
-abstract class BaseCorePrimitiveClass extends CorePrimitive<CoreObjectType> {}
-type BaseCorePrimitiveClassClass = typeof BaseCorePrimitiveClass;
+type BaseCorePrimitiveClassClass = typeof CorePrimitive<CoreObjectType>;
 // object return types
 type BaseCoreObjectInstance = BaseCoreObject<CoreObjectType>;
-export abstract class BaseCoreObjectClass extends BaseCoreObject<CoreObjectType> {}
-type BaseCoreObjectClassClass = typeof BaseCoreObjectClass;
+type BaseCoreObjectClassClass = typeof BaseCoreObject<CoreObjectType>;
 
 // point methods
 export type CorePointClassFactoryCheckFunction = (

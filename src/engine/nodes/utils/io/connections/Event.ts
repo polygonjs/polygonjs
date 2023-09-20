@@ -82,9 +82,9 @@ export class EventConnectionPoint<T extends EventConnectionPointType> extends Ba
 	// }
 
 	override toJSON(): EventConnectionPointData<T> {
-		return (this._json = this._json || this._create_json());
+		return (this._json = this._json || this._createJSON());
 	}
-	protected override _create_json(): EventConnectionPointData<T> {
+	protected override _createJSON(): EventConnectionPointData<T> {
 		return {
 			name: this._name,
 			type: this._type,

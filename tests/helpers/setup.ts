@@ -6,6 +6,8 @@ import type {GeoObjNode} from '../../src/engine/nodes/obj/Geo';
 import type {MaterialsNetworkObjNode} from '../../src/engine/nodes/obj/MaterialsNetwork';
 import type {PostProcessNetworkObjNode} from '../../src/engine/nodes/obj/PostProcessNetwork';
 import type {CopNetworkObjNode} from '../../src/engine/nodes/obj/CopNetwork';
+import {CoreNodeSerializer} from '../../src/engine/nodes/utils/CoreNodeSerializer';
+import {CoreParamSerializer} from '../../src/engine/params/utils/CoreParamSerializer';
 import {addQUnitAssertions} from './assertions';
 
 import {Poly} from '../../src/engine/Poly';
@@ -61,7 +63,10 @@ export function setupQUnit(qunit: QUnit) {
 		Poly.blobs.clear();
 		// GLTFLoaderHandler.reset();
 		// return new Promise(async (resolve, reject) => {
-		window.scene = new PolyScene();
+		window.scene = new PolyScene({
+			root: {serializerClass: CoreNodeSerializer},
+			paramsSerializerClass: CoreParamSerializer,
+		});
 		window.scene.setName(QUnit.config.current.testName);
 		window.scene.setUuid(QUnit.config.current.testName);
 		Poly.setEnv('test');

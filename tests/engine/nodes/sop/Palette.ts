@@ -3,11 +3,10 @@ import {BufferAttribute, Color, Mesh, Object3D} from 'three';
 import {SORTED_PALETTE_NAMES} from '../../../../src/core/color/chromotomeWrapper';
 import {AttribClass} from '../../../../src/core/geometry/Constant';
 import {ThreejsCoreObject} from '../../../../src/core/geometry/modules/three/ThreejsCoreObject';
-import {PolyScene} from '../../../../src/engine/scene/PolyScene';
 export function testenginenodessopPalette(qUnit: QUnit) {
 	const delta = 0.05;
 	qUnit.test('sop/palette simple vertex', async (assert) => {
-		const scene = new PolyScene();
+		const scene = window.scene
 		const geo1 = scene.root().createNode('geo');
 
 		const plane = geo1.createNode('plane');
@@ -59,7 +58,7 @@ export function testenginenodessopPalette(qUnit: QUnit) {
 	});
 
 	qUnit.test('sop/palette simple object', async (assert) => {
-		const scene = new PolyScene();
+		const scene = window.scene
 		const geo1 = scene.root().createNode('geo');
 
 		const plane = geo1.createNode('plane');

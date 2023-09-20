@@ -1,5 +1,4 @@
 import {PolyScene} from '../../engine/scene/PolyScene';
-import {CallbacksTriggerController} from './CallbacksTriggerController';
 import {CoreGraphNode} from './CoreGraphNode';
 import {isArray} from '../Type';
 import {addToSetAtEntry} from '../MapUtils';
@@ -24,7 +23,6 @@ export class CoreGraph {
 	private _forbiddenTriggerNodeIds: Map<CoreGraphNodeId, Set<CoreGraphNodeId>> = new Map();
 	private _selfDirtyForbidden: Set<CoreGraphNodeId> = new Set();
 	private _nodesCount = 0;
-	public readonly callbacksTriggerController = new CallbacksTriggerController(this);
 
 	private _debugging = false;
 	private _addedNodesDuringDebugging: Map<CoreGraphNodeId, CoreGraphNode> = new Map();

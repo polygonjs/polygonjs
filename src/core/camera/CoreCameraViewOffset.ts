@@ -2,7 +2,9 @@ import {ParamConfig} from '../../engine/nodes/utils/params/ParamsConfig';
 import {Constructor} from '../../types/GlobalTypes';
 import {Camera, Vector2, PerspectiveCamera, OrthographicCamera} from 'three';
 import {CameraAttribute} from './CoreCamera';
-import {coreObjectClassFactory, BaseCoreObjectClass} from '../geometry/CoreObjectFactory';
+import {coreObjectClassFactory} from '../geometry/CoreObjectFactory';
+import {CoreObjectType} from '../geometry/ObjectContent';
+import type {BaseCoreObject} from '../geometry/entities/object/BaseCoreObject';
 
 export function CoreCameraViewOffsetParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
@@ -13,11 +15,19 @@ export function CoreCameraViewOffsetParamConfig<TBase extends Constructor>(Base:
 	};
 }
 
-function cameraViewOffsetMin(coreObjectClass: typeof BaseCoreObjectClass, camera: Camera, target: Vector2) {
+function cameraViewOffsetMin<T extends CoreObjectType>(
+	coreObjectClass: typeof BaseCoreObject<T>,
+	camera: Camera,
+	target: Vector2
+) {
 	target.set(0, 0);
 	coreObjectClass.attribValue(camera, CameraAttribute.VIEW_OFFSET_MIN, 0, target);
 }
-function cameraViewOffsetMax(coreObjectClass: typeof BaseCoreObjectClass, camera: Camera, target: Vector2) {
+function cameraViewOffsetMax<T extends CoreObjectType>(
+	coreObjectClass: typeof BaseCoreObject<T>,
+	camera: Camera,
+	target: Vector2
+) {
 	target.set(1, 1);
 	coreObjectClass.attribValue(camera, CameraAttribute.VIEW_OFFSET_MAX, 0, target);
 }

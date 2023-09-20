@@ -4,7 +4,7 @@ import {BaseNodeType} from '../nodes/_Base';
 import {OptionsController} from './utils/OptionsController';
 import {ExpressionController} from './utils/ExpressionController';
 import {EmitController} from './utils/EmitController';
-import {ParamSerializer} from './utils/Serializer';
+import {CoreParamSerializer} from './utils/CoreParamSerializer';
 import {ParamStatesController} from './utils/StatesController';
 import {TypedMultipleParam} from './_Multiple';
 import {FloatParam} from './Float';
@@ -25,6 +25,9 @@ type ComputeCallback = (value: void) => void;
 const TYPED_PARAM_DEFAULT_COMPONENT_NAMES: Readonly<string[]> = [];
 
 type OnDisposeCallback = () => void;
+export interface ParamOptions<T extends ParamType> {
+	serializerClass?: typeof CoreParamSerializer<T>;
+}
 
 export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 	protected _default_value!: ParamInitValuesTypeMap[T];
@@ -45,15 +48,14 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 	}
 	protected _expression_controller: ExpressionController<T> | undefined;
 	get expressionController(): ExpressionController<T> | undefined {
-		return this._expression_controller; // =
-		//this._expression_controller || new ExpressionController(this);
+		return this._expression_controller;
 	}
 	expressionParsedAsString() {
 		return false;
 	}
-	private _serializer: ParamSerializer<T> | undefined;
-	get serializer(): ParamSerializer<T> {
-		return (this._serializer = this._serializer || new ParamSerializer(this));
+	protected _serializer: CoreParamSerializer<T> | undefined;
+	get serializer(): CoreParamSerializer<T> | undefined {
+		return this._serializer;
 	}
 	private _states: ParamStatesController | undefined;
 	get states(): ParamStatesController {
@@ -64,8 +66,11 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 	// 	return (this._ui_data = this._ui_data || new UIData(this.scene, this));
 	// }
 
-	constructor(scene: PolyScene, node: BaseNodeType) {
+	constructor(scene: PolyScene, node: BaseNodeType, options: ParamOptions<T>) {
 		super(scene, 'BaseParam');
+		if (options.serializerClass) {
+			this._serializer = new options.serializerClass(this);
+		}
 		this._node = node;
 		this._initializeParam();
 	}
@@ -339,7 +344,10 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 
 	// serialize
 	toJSON() {
-		return this.serializer.toJSON();
+		if (!this._serializer) {
+			return;
+		}
+		return this._serializer.toJSON();
 	}
 
 	// dispose callbacks

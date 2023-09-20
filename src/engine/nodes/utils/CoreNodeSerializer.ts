@@ -12,10 +12,10 @@ export interface NodeSerializerData {
 	error_message: string | undefined;
 	children: CoreGraphNodeId[];
 	maxInputsCount: number;
-	inputs: Array<CoreGraphNodeId | undefined>;
-	input_connection_output_indices: Array<number | undefined> | undefined;
-	named_input_connection_points: BaseConnectionPointData[];
-	named_output_connection_points: BaseConnectionPointData[];
+	inputs: Readonly<Array<CoreGraphNodeId | undefined>>;
+	input_connection_output_indices: Readonly<Array<number | undefined>> | undefined;
+	named_input_connection_points: Readonly<BaseConnectionPointData[]>;
+	named_output_connection_points: Readonly<BaseConnectionPointData[]>;
 	param_ids: CoreGraphNodeId[];
 	// spare_params: PolyDictionary<string>;
 	override_cloned_state_allowed: boolean;
@@ -32,12 +32,12 @@ export interface NodeSerializerData {
 	};
 }
 
-export class NodeSerializer {
-	constructor(private node: BaseNodeType) {}
+export class CoreNodeSerializer {
+	constructor(protected node: BaseNodeType) {}
 
 	dispose() {}
 
-	toJSON(include_param_components: boolean = false): NodeSerializerData {
+	toJSON(includeParamComponents: boolean = false): NodeSerializerData {
 		const data: NodeSerializerData = {
 			name: this.node.name(),
 			type: this.node.type(),
@@ -51,7 +51,7 @@ export class NodeSerializer {
 			input_connection_output_indices: this.inputConnectionOutputIndices(),
 			named_input_connection_points: this.namedInputConnectionPoints(),
 			named_output_connection_points: this.namedOutputConnectionPoints(),
-			param_ids: this.to_json_params(include_param_components),
+			param_ids: this.to_json_params(includeParamComponents),
 			// spare_params: this.to_json_spare_params(include_param_components),
 			override_cloned_state_allowed: this.node.io.inputs.overrideClonedStateAllowed(),
 			inputs_clone_required_states: this.node.io.inputs.cloneRequiredStates(),
@@ -84,19 +84,19 @@ export class NodeSerializer {
 		return this.node.io.inputs.maxInputsCount();
 	}
 
-	inputIds(): (CoreGraphNodeId | undefined)[] {
+	inputIds(): Readonly<(CoreGraphNodeId | undefined)[]> {
 		return this.node.io.inputs.inputs().map((node) => (node != null ? node.graphNodeId() : undefined));
 	}
 
-	inputConnectionOutputIndices() {
+	inputConnectionOutputIndices(): Readonly<(number | undefined)[]> | undefined {
 		return this.node.io.connections
 			.inputConnections()
 			?.map((connection) => (connection != null ? connection.outputIndex() : undefined));
 	}
-	namedInputConnectionPoints() {
+	namedInputConnectionPoints(): Readonly<BaseConnectionPointData[]> {
 		return this.node.io.inputs.namedInputConnectionPoints().map((i) => i.toJSON());
 	}
-	namedOutputConnectionPoints() {
+	namedOutputConnectionPoints(): Readonly<BaseConnectionPointData[]> {
 		return this.node.io.outputs.namedOutputConnectionPoints().map((o) => o.toJSON());
 	}
 

@@ -11,7 +11,7 @@ import {LoadingController} from './utils/LoadingController';
 import {MissingReferencesController} from './utils/missingReferences/MissingReferencesController';
 import {GraphNodesController} from './utils/GraphNodesController';
 import {NodesController} from './utils/NodesController';
-import {PolySceneSerializer} from './utils/Serializer';
+// import {PolySceneSerializer} from './utils/Serializer';
 import {SceneEventsDispatcher} from './utils/events/EventsDispatcher';
 import {ObjectsController} from './utils/ObjectsController';
 import {ScenePerformanceMonitor} from './utils/ScenePerformanceMonitor';
@@ -30,7 +30,6 @@ import {SceneAssetsController} from './utils/AssetsController';
 import {SceneTraverserController} from './utils/SceneTraverser';
 import {BaseNodeType} from '../nodes/_Base';
 import {ObjNodeChildrenMap} from '../poly/registers/nodes/Obj';
-import {ParamsInitData} from '../nodes/utils/io/IOController';
 import {Constructor, valueof} from '../../types/GlobalTypes';
 import {Raycaster, Scene, WebGLRenderer} from 'three';
 import {CoreString} from '../../core/String';
@@ -39,9 +38,12 @@ import {Poly} from '../Poly';
 import {NodeCreateOptions} from '../nodes/utils/hierarchy/ChildrenController';
 import {SceneWebXRController} from './utils/WebXREventsController';
 import {CoreObjectType, ObjectContent} from '../../core/geometry/ObjectContent';
+import {CoreParamSerializer} from '../params/utils/CoreParamSerializer';
+import type {ParamType} from '../poly/ParamType';
 
 interface PolySceneCreateOptions {
 	root: NodeCreateOptions;
+	paramsSerializerClass?: typeof CoreParamSerializer<ParamType>;
 }
 
 type SceneBatchUpdateCallback = () => void | Promise<void>;
@@ -115,9 +117,9 @@ export class PolyScene {
 		return (this._actorsManager = this._actorsManager || new ActorsManager(this));
 	}
 
-	private _assets_controller: SceneAssetsController | undefined;
+	private _assetsController: SceneAssetsController | undefined;
 	get assets() {
-		return (this._assets_controller = this._assets_controller || new SceneAssetsController());
+		return (this._assetsController = this._assetsController || new SceneAssetsController());
 	}
 
 	public readonly cookController = new SceneCookController();
@@ -165,11 +167,9 @@ export class PolyScene {
 		return (this._loadingController = this._loadingController || new LoadingController(this));
 	}
 
-	private _missing_expression_references_controller: MissingReferencesController = new MissingReferencesController(
-		this
-	);
+	private _missingExpressionReferencesController: MissingReferencesController = new MissingReferencesController(this);
 	get missingExpressionReferencesController() {
-		return this._missing_expression_references_controller;
+		return this._missingExpressionReferencesController;
 	}
 	private _expressions_controller: ExpressionsController = new ExpressionsController();
 	get expressionsController() {
@@ -195,19 +195,10 @@ export class PolyScene {
 	 * - polyScene.createNode(boxSopNode): returns a BoxSopNode
 	 *
 	 */
-	createNode<S extends keyof ObjNodeChildrenMap>(
-		nodeClass: S,
-		paramsInitValueOverrides?: ParamsInitData
-	): ObjNodeChildrenMap[S];
-	createNode<K extends valueof<ObjNodeChildrenMap>>(
-		nodeClass: Constructor<K>,
-		paramsInitValueOverrides?: ParamsInitData
-	): K;
-	createNode<K extends valueof<ObjNodeChildrenMap>>(
-		nodeClass: Constructor<K>,
-		paramsInitValueOverrides?: ParamsInitData
-	): K {
-		return this.root().createNode(nodeClass, paramsInitValueOverrides) as K;
+	createNode<S extends keyof ObjNodeChildrenMap>(nodeClass: S, options?: NodeCreateOptions): ObjNodeChildrenMap[S];
+	createNode<K extends valueof<ObjNodeChildrenMap>>(nodeClass: Constructor<K>, options?: NodeCreateOptions): K;
+	createNode<K extends valueof<ObjNodeChildrenMap>>(nodeClass: Constructor<K>, options?: NodeCreateOptions): K {
+		return this.root().createNode(nodeClass, options) as K;
 	}
 	/**
 	 * returns all nodes with a given type
@@ -236,9 +227,9 @@ export class PolyScene {
 		return this._objectsController.objectsByMask(mask, parent);
 	}
 
-	protected _references_controller = new ReferencesController(this);
+	protected _referencesController = new ReferencesController(this);
 	get referencesController() {
-		return this._references_controller;
+		return this._referencesController;
 	}
 
 	protected _performance: CorePerformance | undefined;
@@ -247,9 +238,9 @@ export class PolyScene {
 	}
 	public readonly perfMonitor = new ScenePerformanceMonitor(this);
 
-	protected _viewers_register: ViewersRegister | undefined;
+	protected _viewersRegister: ViewersRegister | undefined;
 	get viewersRegister() {
-		return (this._viewers_register = this._viewers_register || new ViewersRegister(this));
+		return (this._viewersRegister = this._viewersRegister || new ViewersRegister(this));
 	}
 	public readonly sceneTraverser = new SceneTraverserController(this);
 	/**
@@ -270,10 +261,7 @@ export class PolyScene {
 	// time
 	//
 	//
-	protected _time_controller = new TimeController(this);
-	get timeController() {
-		return this._time_controller;
-	}
+	readonly timeController = new TimeController(this);
 	/**
 	 * sets the current frame
 	 *
@@ -342,13 +330,13 @@ export class PolyScene {
 	// serializer
 	//
 	//
-	private _serializer: PolySceneSerializer | undefined;
-	private get serializer() {
-		return (this._serializer = this._serializer || new PolySceneSerializer(this));
-	}
-	toJSON() {
-		return this.serializer.toJSON();
-	}
+	// private _serializer: PolySceneSerializer | undefined;
+	// private get serializer() {
+	// 	return (this._serializer = this._serializer || new PolySceneSerializer(this));
+	// }
+	// toJSON() {
+	// 	return this.serializer.toJSON();
+	// }
 
 	//
 	//
@@ -365,9 +353,9 @@ export class PolyScene {
 	// webgl
 	//
 	//
-	private _webgl_controller: SceneWebGLController | undefined;
+	private _webglController: SceneWebGLController | undefined;
 	get webgl_controller() {
-		return (this._webgl_controller = this._webgl_controller || new SceneWebGLController());
+		return (this._webglController = this._webglController || new SceneWebGLController());
 	}
 
 	//
@@ -387,6 +375,7 @@ export class PolyScene {
 	//
 	constructor(options?: PolySceneCreateOptions) {
 		this._graph.setScene(this);
+		this._paramSerializerClass = options?.paramsSerializerClass;
 		this.nodesController.createRoot(options?.root);
 		Poly.scenesRegister.registerScene(this);
 	}
@@ -405,6 +394,11 @@ export class PolyScene {
 		this._windowController?.dispose();
 		this.renderersRegister.dispose();
 		Poly.scenesRegister.deregisterScene(this);
+	}
+
+	private _paramSerializerClass: typeof CoreParamSerializer<ParamType> | undefined;
+	paramSerializerClass() {
+		return this._paramSerializerClass;
 	}
 
 	//

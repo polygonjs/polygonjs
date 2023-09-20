@@ -52,9 +52,6 @@ export class CoreGraphNode {
 	scene(): PolyScene {
 		return this._scene;
 	}
-	// graph() {
-	// 	return this._graph;
-	// }
 	/**
 	 * returns the id, which is unique for the scene
 	 *
@@ -131,13 +128,16 @@ export class CoreGraphNode {
 		this._graph.disconnectSuccessors(this);
 	}
 
-	graphPredecessorIds(): CoreGraphNodeId[] | undefined {
+	graphPredecessorIds(): Readonly<CoreGraphNodeId[]> | undefined {
 		return this._graph.predecessorIds(this._graphNodeId);
 	}
-	graphPredecessors(): CoreGraphNode[] | undefined {
+	graphPredecessors(): Readonly<CoreGraphNode[]> | undefined {
 		return this._graph.predecessors(this);
 	}
-	graphSuccessors(): CoreGraphNode[] | undefined {
+	graphSuccessorIds(): Readonly<CoreGraphNodeId[]> | undefined {
+		return this._graph.successorIds(this._graphNodeId);
+	}
+	graphSuccessors(): Readonly<CoreGraphNode[]> | undefined {
 		return this._graph.successors(this);
 	}
 	private _clearAllPredecessors() {
@@ -146,19 +146,21 @@ export class CoreGraphNode {
 	private _clearAllSuccessors() {
 		this._allSuccessorsDirty = true;
 	}
-	graphAllPredecessors(): CoreGraphNode[] {
+	graphAllPredecessors(): Readonly<CoreGraphNode[]> {
 		if (this._allPredecessorsDirty) {
 			this._graph.allPredecessors(this, this._allPredecessors);
 			this._allPredecessorsDirty = false;
 		}
 		return this._allPredecessors;
+		// return Object.freeze([...this._allPredecessors]);
 	}
-	graphAllSuccessors(): CoreGraphNode[] {
+	graphAllSuccessors(): Readonly<CoreGraphNode[]> {
 		if (this._allSuccessorsDirty) {
 			this._graph.allSuccessors(this, this._allSuccessors);
 			this._allSuccessorsDirty = false;
 		}
 		return this._allSuccessors;
+		// return Object.freeze([...this._allSuccessors]);
 	}
 	hasPredecessor(node: CoreGraphNode): boolean {
 		return this.graphAllPredecessors().includes(node);

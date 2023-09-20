@@ -9,7 +9,7 @@ import {BaseVertexAttribute, VertexNumberAttribute} from '../../entities/vertex/
 import {AttributeNumericValuesOptions, attributeNumericValues} from '../../entities/utils/Common';
 import {NumericAttribValue} from '../../../../types/GlobalTypes';
 import {CorePrimitive} from '../../entities/primitive/CorePrimitive';
-import {TypedCorePoint} from '../../entities/point/CorePoint';
+import type {TypedCorePoint} from '../../entities/point/CorePoint';
 import {QuadPoint} from './QuadPoint';
 import {QuadPrimitive} from './QuadPrimitive';
 

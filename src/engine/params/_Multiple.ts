@@ -6,10 +6,12 @@ import {ParamEvent} from '../poly/ParamEvent';
 import {ParamInitValueSerializedTypeMap} from './types/ParamInitValueSerializedTypeMap';
 import {ParamInitValuesTypeMap} from './types/ParamInitValuesTypeMap';
 import {CoreType} from '../../core/Type';
+import {CoreParamSerializer} from './utils/CoreParamSerializer';
 
 export abstract class TypedMultipleParam<T extends ParamType> extends TypedParam<T> {
 	private _components_contructor = FloatParam;
 	protected override _components!: FloatParam[];
+	private _componentsCount = 0;
 	override get components() {
 		return this._components;
 	}
@@ -45,7 +47,9 @@ export abstract class TypedMultipleParam<T extends ParamType> extends TypedParam
 		let index = 0;
 		this._components = new Array(this.componentNames().length);
 		for (let componentName of this.componentNames()) {
-			const component = new this._components_contructor(this.scene(), this.node); //, `${this.name}${name}`);
+			const component = new this._components_contructor(this.scene(), this.node, {
+				serializerClass: this._serializer?.constructor as typeof CoreParamSerializer<any> | undefined,
+			}); //, `${this.name}${name}`);
 			let default_val;
 			if (CoreType.isArray(this._default_value)) {
 				default_val = this._default_value[index];
@@ -64,6 +68,7 @@ export abstract class TypedMultipleParam<T extends ParamType> extends TypedParam
 			this._components[index] = component;
 			index++;
 		}
+		this._componentsCount = this._components.length;
 		// this.compute();
 	}
 
@@ -76,7 +81,7 @@ export abstract class TypedMultipleParam<T extends ParamType> extends TypedParam
 	// set_raw_input_from_components() {}
 
 	override hasExpression() {
-		for (let c of this.components) {
+		for (const c of this.components) {
 			if (c.expressionController?.active()) {
 				return true;
 			}
@@ -87,7 +92,7 @@ export abstract class TypedMultipleParam<T extends ParamType> extends TypedParam
 	private async compute_components() {
 		const components = this.components;
 		const promises = [];
-		for (let c of components) {
+		for (const c of components) {
 			if (c.isDirty()) {
 				promises.push(c.compute());
 			}
@@ -109,33 +114,33 @@ export abstract class TypedMultipleParam<T extends ParamType> extends TypedParam
 		const cooker = this.scene().cooker;
 		cooker.block();
 		const components = this.components;
-		for (let c of components) {
+		for (const c of components) {
 			c.emitController.blockParentEmit();
 		}
 
 		// if (CoreType.isArray(values)) {
 		const value = this._raw_input;
-		let prev_value: number = 0;
+		let prevValue: number = 0;
 		if (CoreType.isArray(value)) {
-			for (let i = 0; i < components.length; i++) {
-				let component_value = (value as any)[i];
+			for (let i = 0; i < this._componentsCount; i++) {
+				let componentValue = (value as any)[i];
 				// use the prev value, in case we give an array that is too short
-				if (component_value == null) {
-					component_value = prev_value;
+				if (componentValue == null) {
+					componentValue = prevValue;
 				}
-				components[i].set(component_value);
-				prev_value = component_value;
+				components[i].set(componentValue);
+				prevValue = componentValue;
 			}
 		} else {
-			for (let i = 0; i < components.length; i++) {
-				const component_name = this.componentNames()[i];
-				let component_value = (value as any)[component_name];
+			for (let i = 0; i < this._componentsCount; i++) {
+				const componentName = this.componentNames()[i];
+				let componentValue = (value as any)[componentName];
 				// use the prev value, in case we give a vec2 instead of vec3
-				if (component_value == null) {
-					component_value = prev_value;
+				if (componentValue == null) {
+					componentValue = prevValue;
 				}
-				components[i].set(component_value);
-				prev_value = component_value;
+				components[i].set(componentValue);
+				prevValue = componentValue;
 			}
 		}
 		// } else {
@@ -147,8 +152,8 @@ export abstract class TypedMultipleParam<T extends ParamType> extends TypedParam
 
 		cooker.unblock();
 
-		for (let i = 0; i < components.length; i++) {
-			components[i].emitController.unblockParentEmit();
+		for (const component of this.components) {
+			component.emitController.unblockParentEmit();
 		}
 		// this.emit(ParamEvent.UPDATED);
 

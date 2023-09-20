@@ -820,9 +820,9 @@ export class JsConnectionPoint<T extends JsConnectionPointType> extends BaseConn
 	}
 
 	override toJSON(): JsConnectionPointData<T> {
-		return (this._json = this._json || this._create_json());
+		return (this._json = this._json || this._createJSON());
 	}
-	protected override _create_json(): JsConnectionPointData<T> {
+	protected override _createJSON(): JsConnectionPointData<T> {
 		return {
 			name: this._name,
 			type: this._type,

@@ -9,7 +9,7 @@ import {NodeLifeCycleController} from './utils/LifeCycleController';
 import {TypedContainerController} from './utils/ContainerController';
 import {NodeCookController, OnCookCompleteHook} from './utils/CookController';
 import {NameController} from './utils/NameController';
-import {NodeSerializer, NodeSerializerData} from './utils/Serializer';
+import {CoreNodeSerializer, NodeSerializerData} from './utils/CoreNodeSerializer';
 import {ParamsController} from './utils/params/ParamsController';
 import {ParamConstructorMap} from '../params/types/ParamConstructorMap';
 import {ParamInitValuesTypeMap} from '../params/types/ParamInitValuesTypeMap';
@@ -76,7 +76,7 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 
 	private _states: NodeStatesController<NC> | undefined;
 	private _lifecycle: NodeLifeCycleController | undefined;
-	private _serializer: NodeSerializer | undefined;
+	private _serializer: CoreNodeSerializer | undefined;
 	private _cookController: NodeCookController<NC> | undefined;
 	public readonly flags: FlagsController | undefined;
 	public readonly displayNodeController: DisplayNodeController | undefined;
@@ -141,8 +141,9 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 	get lifecycle(): NodeLifeCycleController {
 		return (this._lifecycle = this._lifecycle || new NodeLifeCycleController(this));
 	}
-	get serializer(): NodeSerializer {
-		return (this._serializer = this._serializer || new NodeSerializer(this));
+
+	get serializer(): CoreNodeSerializer | undefined {
+		return this._serializer;
 	}
 
 	get cookController(): NodeCookController<NC> {
@@ -175,6 +176,10 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 
 	constructor(scene: PolyScene, nodeName: string = 'BaseNode', public createOptions?: NodeCreateOptions) {
 		super(scene, nodeName);
+		const serializerClass = createOptions?.serializerClass;
+		if (serializerClass) {
+			this._serializer = new serializerClass(this);
+		}
 	}
 
 	private _initialized: boolean = false;
@@ -468,8 +473,11 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 	}
 
 	// serializer
-	toJSON(include_param_components: boolean = false) {
-		return this.serializer.toJSON(include_param_components);
+	toJSON(includeParamComponents: boolean = false) {
+		if (!this._serializer) {
+			return;
+		}
+		return this._serializer.toJSON(includeParamComponents);
 	}
 
 	// modules

@@ -148,25 +148,24 @@ export class RootManagerNode extends TypedBaseManagerNode<ObjectsManagerParamsCo
 	processQueue() {
 		this._updateScene();
 
-		const queued_nodes_by_path: Map<string, BaseObjNodeType> = new Map();
+		const queuedNodesByPath: Map<string, BaseObjNodeType> = new Map();
 		const paths: string[] = [];
 		this._queuedNodesById.forEach((node, id) => {
 			const fullPath = `_____${node.renderOrder}__${node.path()}`;
 			paths.push(fullPath);
-			queued_nodes_by_path.set(fullPath, node);
+			queuedNodesByPath.set(fullPath, node);
 		});
 		this._queuedNodesById.clear();
 
 		// const promises = [];
 		for (let path_id of paths) {
-			const node = queued_nodes_by_path.get(path_id);
+			const node = queuedNodesByPath.get(path_id);
 			if (node) {
-				queued_nodes_by_path.delete(path_id);
+				queuedNodesByPath.delete(path_id);
 				this._addToScene(node);
 				// promises.push();
 			}
 		}
-
 		// this._expected_geo_nodes = this._expected_geo_nodes || (await this.expected_loading_geo_nodes_by_id());
 
 		// this._process_queue_start = performance.now();

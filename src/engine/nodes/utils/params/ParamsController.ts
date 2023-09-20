@@ -408,7 +408,9 @@ export class ParamsController {
 					Poly.warn(`a param named ${paramName} already exists`, this.node);
 				}
 			}
-			const param: ParamConstructorMap[T] = new constructor(this.node.scene(), this.node);
+			const param: ParamConstructorMap[T] = new constructor(this.node.scene(), this.node, {
+				serializerClass: this.node.scene().paramSerializerClass(),
+			});
 			param.options.set(options);
 
 			param.setName(paramName);
@@ -420,12 +422,13 @@ export class ParamsController {
 			if (initData == null) {
 				param.set(defaultValue as never);
 			} else {
-				// If is_expression_for_entities is true, we need to call param.set with default_value first, such as for attrib_create.
+				// If is_expression_for_entities is true, we need to call param.set with default_value first, such as for attribCreate.
 				// Otherwise, as it would fail if the attribute was a vector
 				// since that attribute would have .value equal to {x: undefined, y: undefined, z:undefined}
 				if (param.options.isExpressionForEntities()) {
 					param.set(defaultValue as never);
 				}
+
 				if (initData.raw_input != null) {
 					param.set(initData.raw_input as never);
 				} else {

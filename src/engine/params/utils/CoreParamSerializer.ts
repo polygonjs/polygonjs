@@ -20,11 +20,11 @@ export interface ParamSerializerData<T extends ParamType> {
 	is_visible: boolean;
 	editable: boolean;
 	folder_name?: string;
-	components?: CoreGraphNodeId[];
+	components?: Readonly<CoreGraphNodeId[]>;
 }
 
-export class ParamSerializer<T extends ParamType> {
-	constructor(protected param: TypedParam<T>) {}
+export class CoreParamSerializer<T extends ParamType> {
+	constructor(public readonly param: TypedParam<T>) {}
 
 	toJSON(): ParamSerializerData<T> {
 		const data: ParamSerializerData<T> = {

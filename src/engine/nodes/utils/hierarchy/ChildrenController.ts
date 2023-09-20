@@ -12,6 +12,7 @@ import {SopOperationContainer} from '../../../operations/container/sop';
 import {BaseSopOperation} from '../../../operations/sop/_Base';
 import {MapUtils} from '../../../../core/MapUtils';
 import {NameController} from '../NameController';
+import {CoreNodeSerializer} from '../CoreNodeSerializer';
 
 type OutputNodeFindMethod = (() => BaseNodeType) | undefined;
 type TraverseNodeCallback = (node: BaseNodeType) => void;
@@ -20,6 +21,7 @@ type TraverseNodeConditionCallback = (node: BaseNodeType) => boolean;
 export interface NodeCreateOptions {
 	paramsInitValueOverrides?: ParamsInitData;
 	nodeName?: string;
+	serializerClass?: typeof CoreNodeSerializer;
 }
 
 export class HierarchyChildrenController {
@@ -160,7 +162,10 @@ export class HierarchyChildrenController {
 		const requestedNodeName =
 			options?.nodeName || NameController.baseName((<unknown>nodeClass) as typeof BaseNodeClass);
 		const nodeName = this._nextAvailableChildName(requestedNodeName);
-		const childNode = new nodeClass(this.node.scene(), nodeName, options);
+		const childNode = new nodeClass(this.node.scene(), nodeName, {
+			...options,
+			serializerClass: this.node.serializer?.constructor,
+		});
 		childNode.initializeBaseAndNode();
 		this._addNode(childNode);
 		childNode.lifecycle.setCreationCompleted();
@@ -179,52 +184,57 @@ export class HierarchyChildrenController {
 		return nodeClass;
 	}
 	createOperationContainer(
-		operation_type: string,
-		operation_container_name: string,
+		operationType: string,
+		operationContainerName: string,
 		options?: NodeCreateOptions
 	): BaseOperationContainer<any> {
-		const operation_class = Poly.registeredOperation(this._context, operation_type);
+		const operationClass = Poly.registeredOperation(this._context, operationType);
 
-		if (operation_class == null) {
-			const message = `no operation found with context ${this._context}/${operation_type}`;
+		if (operationClass == null) {
+			const message = `no operation found with context ${this._context}/${operationType}`;
 			console.error(message);
 			throw message;
 		} else {
-			const operation = new operation_class(this.node.scene()) as BaseSopOperation;
+			const operation = new operationClass(this.node.scene()) as BaseSopOperation;
 			const operation_container = new SopOperationContainer(
 				operation,
-				operation_container_name,
+				operationContainerName,
 				options?.paramsInitValueOverrides || {}
 			);
 			return operation_container;
 		}
 	}
 
-	private _addNode(child_node: BaseNodeType) {
-		child_node.setParent(this.node);
-		this._addToNodesByType(child_node);
-		child_node.params.init();
-		child_node.parentController.onSetParent();
-		child_node.nameController.runPostSetFullPathHooks();
-		if (child_node.childrenAllowed() && child_node.childrenController) {
-			for (let child of child_node.childrenController.children()) {
+	private _addNode(childNode: BaseNodeType) {
+		childNode.setParent(this.node);
+		this._addToNodesByType(childNode);
+		childNode.params.init();
+		childNode.parentController.onSetParent();
+		childNode.nameController.runPostSetFullPathHooks();
+		if (childNode.childrenAllowed() && childNode.childrenController) {
+			for (const child of childNode.childrenController.children()) {
 				child.nameController.runPostSetFullPathHooks();
 			}
 		}
-		this.node.emit(NodeEvent.CREATED, {child_node_json: child_node.toJSON()});
-		if (this.node.scene().lifecycleController.onAfterCreatedCallbackAllowed()) {
-			child_node.lifecycle.runOnAfterCreatedCallbacks();
+		if (this.node.serializer) {
+			const childNodeJSON = childNode.toJSON();
+			if (childNodeJSON) {
+				this.node.emit(NodeEvent.CREATED, {child_node_json: childNodeJSON});
+			}
 		}
-		child_node.lifecycle.runOnAfterAddedCallbacks();
-		this.node.lifecycle.runOnChildAddCallbacks(child_node);
+		if (this.node.scene().lifecycleController.onAfterCreatedCallbackAllowed()) {
+			childNode.lifecycle.runOnAfterCreatedCallbacks();
+		}
+		childNode.lifecycle.runOnAfterAddedCallbacks();
+		this.node.lifecycle.runOnChildAddCallbacks(childNode);
 
-		if (child_node.require_webgl2()) {
+		if (childNode.require_webgl2()) {
 			this.node.scene().webgl_controller.set_require_webgl2();
 		}
 
-		this.node.scene().missingExpressionReferencesController.checkForMissingNodeReferences(child_node);
+		this.node.scene().missingExpressionReferencesController.checkForMissingNodeReferences(childNode);
 
-		return child_node;
+		return childNode;
 	}
 
 	removeNode(childNode: BaseNodeType): void {

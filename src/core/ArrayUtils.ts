@@ -69,7 +69,7 @@ export function uniqWithoutPreservingOrder<T>(array: Array<T>): Array<T> {
 
 	// return newArray;
 }
-export function arrayCompact<T>(array: Array<T | null | undefined>): Array<T> {
+export function arrayCompact<T>(array: Readonly<Array<T | null | undefined>>): Array<T> {
 	const newArray: Array<T> = [];
 
 	for (let elem of array) {

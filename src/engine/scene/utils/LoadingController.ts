@@ -4,8 +4,8 @@ import {SCENE_EVENT_CREATED_EVENT_CONTEXT, SCENE_EVENT_READY_EVENT_CONTEXT} from
 export class LoadingController {
 	constructor(private scene: PolyScene) {}
 
-	private _loadingState: boolean = false;
-	private _autoUpdating: boolean = true;
+	private _loadingState: boolean = true;
+	private _autoUpdating: boolean = false;
 
 	markAsLoading() {
 		this._setLoadingState(true);
@@ -30,6 +30,7 @@ export class LoadingController {
 	private _setLoadingState(state: boolean) {
 		this._loadingState = state;
 		this.setAutoUpdate(!this._loadingState);
+		this.scene.cooker.unblock();
 	}
 	isLoading() {
 		return this._loadingState;

@@ -13,14 +13,22 @@ import {TimeController} from '../../../scene/utils/TimeController';
 import {ParamJsonImporter} from './Param';
 import {NodeCreateOptions} from '../../../nodes/utils/hierarchy/ChildrenController';
 import {ROOT_NODE_NAME} from '../../../nodes/manager/Root';
+import {CoreNodeSerializer} from '../../../nodes/utils/CoreNodeSerializer';
+import {CoreParamSerializer} from '../../../params/utils/CoreParamSerializer';
+import type {ParamType} from '../../../poly/ParamType';
 export type ConfigureSceneCallback = (scene: PolyScene) => void;
 export type NodeCookWatchCallback = (scene: PolyScene) => void;
 
+export interface SerializerOptions {
+	nodeSerializerClass: typeof CoreNodeSerializer;
+	paramsSerializerClass: typeof CoreParamSerializer<ParamType>;
+}
 interface SceneJSONImporterOptions {
 	sceneName?: string;
 	configureScene?: ConfigureSceneCallback;
 	nodeCookWatcher?: NodeCookWatchCallback;
 	measurePerformanceOnLoad?: boolean;
+	serializers?: SerializerOptions;
 }
 
 interface MigrateHelper {
@@ -36,7 +44,7 @@ export class SceneJsonImporter {
 
 	static async loadData(data: SceneJsonExporterData, options?: SceneJSONImporterOptions) {
 		const importer = new SceneJsonImporter(data, options);
-		return await importer.scene();
+		return await importer.scene(options?.serializers);
 	}
 	private _migrateHelper: MigrateHelper | undefined;
 	setMigrateHelper(migrateHelper: MigrateHelper) {
@@ -52,7 +60,7 @@ export class SceneJsonImporter {
 		}
 	}
 
-	scene(): PolyScene {
+	scene(options?: SerializerOptions): PolyScene {
 		if (this._migrateHelper) {
 			this._data = this._migrateHelper.migrateData(this._data);
 		}
@@ -65,6 +73,7 @@ export class SceneJsonImporter {
 		const nodeCreateOptions: NodeCreateOptions = {
 			paramsInitValueOverrides,
 			nodeName: ROOT_NODE_NAME,
+			serializerClass: options?.nodeSerializerClass,
 		};
 
 		const embeddedPolyNodes = this._data.embeddedPolyNodes;
@@ -79,7 +88,7 @@ export class SceneJsonImporter {
 			}
 		}
 
-		const scene = new PolyScene({root: nodeCreateOptions});
+		const scene = new PolyScene({root: nodeCreateOptions, paramsSerializerClass: options?.paramsSerializerClass});
 		if (this._options) {
 			if (this._options.sceneName) {
 				scene.setName(this._options.sceneName);
