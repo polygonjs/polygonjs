@@ -5,7 +5,7 @@ import {IntegerParam} from '../../engine/params/Integer';
 import {Vector2Param} from '../../engine/params/Vector2';
 import {Vector3Param} from '../../engine/params/Vector3';
 import {Vector4Param} from '../../engine/params/Vector4';
-import {TimelineData} from '../thirdParty/gsap';
+import {TimelineData} from '../thirdParty/gsap/gsap';
 
 interface SceneGraphProperty {
 	object: Object3D;

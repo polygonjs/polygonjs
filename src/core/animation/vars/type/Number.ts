@@ -1,7 +1,7 @@
 import {FloatParam} from '../../../../engine/params/Float';
 import {IntegerParam} from '../../../../engine/params/Integer';
 import {Poly} from '../../../../engine/Poly';
-import {GsapTweenVars} from '../../../thirdParty/gsap';
+import {GsapTweenVars} from '../../../thirdParty/gsap/gsapFactory';
 import {CoreType} from '../../../Type';
 import {NodeParamProxiesRegister} from '../../NodeParamProxiesRegister';
 import {FloatParamProxy, IntegerParamProxy} from '../../ParamProxy';

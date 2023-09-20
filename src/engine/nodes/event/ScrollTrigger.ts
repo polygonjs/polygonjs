@@ -46,7 +46,8 @@ import {VisibleIfParamOptions} from '../../params/utils/OptionsController';
 
 import ScrollTrigger from 'gsap/ScrollTrigger';
 import {BaseNodeType} from '../_Base';
-import {gsap} from '../../../core/thirdParty/gsap';
+import {gsap} from '../../../core/thirdParty/gsap/gsap';
+import {ModuleName} from '../../poly/registers/modules/Common';
 gsap.registerPlugin(ScrollTrigger);
 
 enum ScrollTriggerNodeInput {
@@ -136,6 +137,9 @@ export class ScrollTriggerEventNode extends TypedEventNode<ScrollTriggerParamsCo
 	public ScrollTrigger = ScrollTrigger; // give access to ScrollTrigger to external scripts
 	static override type() {
 		return 'scrollTrigger';
+	}
+	override requiredModules() {
+		return [ModuleName.GSAP];
 	}
 
 	override dispose() {

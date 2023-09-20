@@ -1,5 +1,5 @@
 import {Quaternion} from 'three';
-import {GsapTweenVars} from '../../../thirdParty/gsap';
+import {GsapTweenVars} from '../../../thirdParty/gsap/gsapFactory';
 
 interface PopulateVarsForVector {
 	vars: GsapTweenVars;

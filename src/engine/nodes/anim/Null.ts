@@ -8,7 +8,7 @@ import {BaseNodeType} from '../_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {Poly} from '../../Poly';
-import {gsapTimeline, GsapCoreTimeline} from '../../../core/thirdParty/gsap';
+import {gsapTimeline, GsapCoreTimeline} from '../../../core/thirdParty/gsap/gsapFactory';
 
 class NullAnimParamsConfig extends NodeParamsConfig {
 	/** @param play the animations */
@@ -80,6 +80,9 @@ export class NullAnimNode extends TypedAnimNode<NullAnimParamsConfig> {
 				return;
 			}
 			this._timeline = gsapTimeline({onComplete: resolveOnce});
+			if (!this._timeline) {
+				return;
+			}
 			timelineBuilder.populate(this._timeline, {registerproperties: true});
 			// if the timeline is empty, we resolve the promise now
 			// not needed since gsap 3.7.0 ( https://github.com/greensock/GSAP/issues/448 )

@@ -26,7 +26,7 @@ import {populateVarsForNumber, populateVarsForSingleNumber} from './vars/type/Nu
 import {populateVarsForVector} from './vars/type/Vector';
 import {populateVarsAndCreateProxyForQuaternion} from './vars/type/Quaternion';
 import {populateVarsForEuler} from './vars/type/Euler';
-import {GsapTweenVars} from '../thirdParty/gsap';
+import type {GsapTweenVars} from '../thirdParty/gsap/gsapFactory';
 
 export type AnimPropertyTargetValue = number | Vector2 | Vector3 | Color | Vector4 | Quaternion;
 

@@ -11,6 +11,7 @@ import {NodeContext} from '../../poly/NodeContext';
 import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {inputObject3D} from './_BaseObject3D';
 import {Poly} from '../../Poly';
+import {ModuleName} from '../../poly/registers/modules/Common';
 
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
 export enum AnimationJsOutput {
@@ -31,6 +32,9 @@ export class PlayAnimationJsNode extends TypedJsNode<PlayAnimationJsParamsConfig
 	override readonly paramsConfig = ParamsConfig;
 	static override type() {
 		return 'playAnimation';
+	}
+	override requiredModules() {
+		return [ModuleName.GSAP];
 	}
 
 	override initializeNode() {

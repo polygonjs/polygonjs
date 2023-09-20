@@ -9,7 +9,10 @@ import {EventConnectionPoint, EventConnectionPointType} from '../utils/io/connec
 import {BaseNodeType} from '../_Base';
 import {NodeContext} from '../../poly/NodeContext';
 import {TimelineBuilder} from '../../../core/animation/TimelineBuilder';
-import {gsapTimeline} from '../../../core/thirdParty/gsap';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {isBooleanTrue} from '../../../core/Type';
+import {GsapCoreTimeline, gsapTimeline} from '../../../core/thirdParty/gsap/gsapFactory';
+import {ModuleName} from '../../poly/registers/modules/Common';
 
 enum AnimationEventInput {
 	START = 'start',
@@ -21,9 +24,6 @@ export enum AnimationEventOutput {
 	COMPLETE = 'completed',
 }
 
-import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {isBooleanTrue} from '../../../core/Type';
-import {GsapCoreTimeline} from '../../../core/thirdParty/gsap';
 class AnimationEventParamsConfig extends NodeParamsConfig {
 	/** @parm animation node */
 	animation = ParamConfig.NODE_PATH('', {
@@ -51,6 +51,9 @@ export class AnimationEventNode extends TypedEventNode<AnimationEventParamsConfi
 	override paramsConfig = ParamsConfig;
 	static override type() {
 		return 'animation';
+	}
+	override requiredModules() {
+		return [ModuleName.GSAP];
 	}
 
 	private _timelineBuilder: TimelineBuilder | undefined;
@@ -100,6 +103,9 @@ export class AnimationEventNode extends TypedEventNode<AnimationEventParamsConfi
 			this._timeline.kill();
 		}
 		this._timeline = gsapTimeline();
+		if (!this._timeline) {
+			return;
+		}
 
 		this._timelineBuilder.populate(this._timeline, {registerproperties: true});
 		this._timeline.vars.onStart = () => {

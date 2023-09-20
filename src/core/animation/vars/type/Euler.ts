@@ -1,5 +1,5 @@
 import {Euler, Vector3} from 'three';
-import {GsapTweenVars} from '../../../thirdParty/gsap';
+import {GsapTweenVars} from '../../../thirdParty/gsap/gsapFactory';
 import {Operation} from '../AnimBuilderTypes';
 import {AnimBuilderWithOp} from '../WithOp';
 

@@ -1,4 +1,4 @@
-import {GsapTweenVars, GsapCoreTimeline} from '../../thirdParty/gsap';
+import type {GsapTweenVars, GsapCoreTimeline} from '../../thirdParty/gsap/gsapFactory';
 import {RegisterableProperty} from '../AnimatedPropertiesRegister';
 import {AnimPropertyTarget} from '../PropertyTarget';
 import {TimelineBuilder} from '../TimelineBuilder';

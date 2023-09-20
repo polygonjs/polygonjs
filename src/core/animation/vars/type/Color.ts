@@ -9,7 +9,7 @@ import {animBuilderCommonVars} from '../Common';
 import {animBuilderStartTimeline} from '../StartTimeline';
 import {AnimBuilderWithOp} from '../WithOp';
 import {Operation} from '../AnimBuilderTypes';
-import {GsapTweenVars} from '../../../thirdParty/gsap';
+import {GsapTweenVars} from '../../../thirdParty/gsap/gsapFactory';
 
 export function populateVarsForParamColor(
 	param: ColorParam,

@@ -8,7 +8,7 @@ import {BaseJsNodeType, TypedJsNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {JsConnectionPoint, JsConnectionPointType, JS_CONNECTION_POINT_IN_NODE_DEF} from '../utils/io/connections/Js';
 import {JsType} from '../../poly/registers/nodes/types/Js';
-import {SCROLL_EVENTS, ScrollEvent, CreateScrollTriggerOptionsSerialized} from '../../functions/_Scroll';
+import {SCROLL_EVENTS, ScrollEvent, CreateScrollTriggerOptionsSerialized} from '../../../core/scroll/Common';
 import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 import {InitFunctionJsDefinition, RefJsDefinition, TriggeringJsDefinition} from './utils/JsDefinition';
 import {Poly} from '../../Poly';
@@ -20,6 +20,7 @@ import {
 } from './code/assemblers/actor/ActorAssemblerUtils';
 import {setToArray} from '../../../core/SetUtils';
 import {EvaluatorMethodName} from './code/assemblers/actor/ActorEvaluator';
+import {ModuleName} from '../../poly/registers/modules/Common';
 
 export enum OnScrollInputName {
 	attribName = 'attribName',
@@ -45,6 +46,9 @@ export class OnScrollJsNode extends TypedJsNode<OnScrollJsParamsConfig> {
 	override readonly paramsConfig = ParamsConfig;
 	static override type() {
 		return JsType.ON_SCROLL;
+	}
+	override requiredModules() {
+		return [ModuleName.GSAP];
 	}
 	override isTriggering() {
 		return true;

@@ -3,6 +3,7 @@ import {NodeContext} from '../../poly/NodeContext';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {FlagsControllerB} from '../utils/FlagsController';
 import {TimelineBuilder} from '../../../core/animation/TimelineBuilder';
+import {ModuleName} from '../../poly/registers/modules/Common';
 
 /**
  *
@@ -15,6 +16,9 @@ export class TypedAnimNode<K extends NodeParamsConfig> extends TypedNode<NodeCon
 
 	static override context(): NodeContext {
 		return NodeContext.ANIM;
+	}
+	override requiredModules() {
+		return [ModuleName.GSAP];
 	}
 
 	override initializeBaseNode() {
