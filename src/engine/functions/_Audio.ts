@@ -1,12 +1,12 @@
 import {Object3D} from 'three';
-import {BaseAudioNodeType} from '../nodes/audio/_Base';
+import type {BaseAudioNodeType} from '../nodes/audio/_Base';
 import {NodeContext} from '../poly/NodeContext';
-import {PolyScene} from '../scene/PolyScene';
+import type {PolyScene} from '../scene/PolyScene';
 import {NamedFunction3, ObjectNamedFunction1, ObjectNamedFunction3} from './_Base';
 import {Player} from 'tone/build/esm/source/buffer/Player';
 import {AudioPlayerCallbacksManager} from '../../core/audio/PlayerCallbacksManager';
 import {ThreejsCoreObject} from '../../core/geometry/modules/three/ThreejsCoreObject';
-import {ActorEvaluator} from '../nodes/js/code/assemblers/actor/ActorEvaluator';
+import type {ActorEvaluator} from '../nodes/js/code/assemblers/actor/ActorEvaluator';
 
 // const AUDIO_COMPLETED_EVENT_NAME = 'onAudioCompleted';
 // const EVENT_AUDIO_COMPLETED = {type: AUDIO_COMPLETED_EVENT_NAME};
