@@ -116,8 +116,10 @@ export interface ObjectData {
 	name: string | null;
 	childrenCount: number;
 	groupData: GroupCollectionData;
+	verticesCount: number;
 	pointsCount: number;
-	tetsCount: number | null;
+	primitivesCount: number;
+	primitiveName: string;
 }
 
 // Zexport interface ObjectConstructorByObjectType {

@@ -11,6 +11,7 @@ import {SopType} from '../../poly/registers/nodes/types/Sop';
 import {QuadGeometry} from '../../../core/geometry/modules/quad/QuadGeometry';
 import {Attribute} from '../../../core/geometry/Attribute';
 import {rotationMatrix} from '../../../core/Transform';
+import {QuadObject} from '../../../core/geometry/modules/quad/QuadObject';
 
 const _v3 = new Vector3();
 const _m4R = new Matrix4();
@@ -52,7 +53,9 @@ export class QuadPlaneSopNode extends QuadSopNode<QuadPlaneSopParamsConfig> {
 		_m4T.makeTranslation(center.x, center.y, center.z);
 		_m4.multiplyMatrices(_m4T, _m4R);
 		geometry.applyMatrix(_m4);
-		this.setQuadGeometry(geometry);
+		const object = new QuadObject(geometry);
+		object.name = this.name();
+		this.setQuadObject(object);
 	}
 	private _createWithStepSize() {
 		const {size, stepSize} = this.pv;

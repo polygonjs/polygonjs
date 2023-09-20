@@ -26,9 +26,10 @@ import {TransformTargetType} from '../../../Transform';
 import {TypeAssert} from '../../../../engine/poly/Assert';
 import {applyTransformWithSpaceToObject, ObjectTransformMode, ObjectTransformSpace} from '../../../TransformSpace';
 import {BaseSopOperation} from '../../../../engine/operations/sop/_Base';
-import {pointsCountFromObject} from '../../entities/point/CorePointUtils';
 import {CorePrimitive} from '../../entities/primitive/CorePrimitive';
 import {primitiveClassFactoryNonAbstract} from './ThreeModule';
+import {ThreejsVertex} from './ThreejsVertex';
+import {ThreejsPoint} from './ThreejsPoint';
 
 interface Object3DWithAnimations extends Object3D {
 	animations: AnimationClip[];
@@ -74,7 +75,10 @@ export class ThreejsCoreObject extends BaseCoreObject<CoreObjectType.THREEJS> {
 
 	static override objectData(object: Object3D): ObjectData {
 		const data = objectData(object);
-		data.pointsCount = pointsCountFromObject(object);
+		data.verticesCount = ThreejsVertex.verticesCount(object);
+		data.pointsCount = ThreejsPoint.pointsCount(object);
+		data.primitivesCount = primitiveClassFactoryNonAbstract(object)?.primitivesCount(object) || 0;
+		data.primitiveName = primitiveClassFactoryNonAbstract(object)?.primitiveName() || '';
 		return data;
 	}
 

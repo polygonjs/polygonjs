@@ -1,12 +1,16 @@
 import {Matrix4, Box3, Sphere, Vector3} from 'three';
 import {QuadObject} from './QuadObject';
 import {BaseCoreObject} from '../../entities/object/BaseCoreObject';
-import {CoreObjectType, MergeCompactOptions, objectContentCopyProperties} from '../../ObjectContent';
+import {CoreObjectType, MergeCompactOptions, ObjectContent, objectContentCopyProperties} from '../../ObjectContent';
 import {TransformTargetType} from '../../../Transform';
 import {ObjectTransformMode, ObjectTransformSpace} from '../../../TransformSpace';
 import type {CorePrimitive} from '../../entities/primitive/CorePrimitive';
 import {QuadPrimitive} from './QuadPrimitive';
 import {quadGeomeryMerge} from './builders/QuadGeometryMerge';
+import {objectData} from '../../entities/object/BaseCoreObjectUtils';
+import {QuadPoint} from './QuadPoint';
+import {QuadVertex} from './QuadVertex';
+import {ObjectData} from '../../Constant';
 
 const _box = new Box3();
 export class QuadCoreObject extends BaseCoreObject<CoreObjectType.QUAD> {
@@ -24,6 +28,16 @@ export class QuadCoreObject extends BaseCoreObject<CoreObjectType.QUAD> {
 	}
 	override boundingSphere(target: Sphere) {
 		this._object.boundingSphere(target);
+	}
+	static override objectData<T extends CoreObjectType>(object: ObjectContent<T>): ObjectData {
+		const data = objectData(object);
+
+		data.pointsCount = QuadPoint.pointsCount(object);
+		data.verticesCount = QuadVertex.verticesCount(object);
+		data.primitivesCount = QuadPrimitive.primitivesCount(object);
+		data.primitiveName = 'quad';
+
+		return data;
 	}
 
 	static override applyMatrix(

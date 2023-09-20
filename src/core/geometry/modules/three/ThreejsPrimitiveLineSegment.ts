@@ -7,6 +7,10 @@ export class ThreejsPrimitiveLineSegment extends ThreejsPrimitive {
 		super(object, index);
 		this._geometry = object.geometry;
 	}
+	static primitiveName() {
+		return 'lines';
+	}
+
 	static override primitivesCount<T extends CoreObjectType>(object: ObjectContent<T>) {
 		const geometry = (object as any as LineSegments).geometry;
 		if (!geometry) {

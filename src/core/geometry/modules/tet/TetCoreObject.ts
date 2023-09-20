@@ -4,6 +4,7 @@ import {CoreObjectType, MergeCompactOptions, ObjectContent} from '../../ObjectCo
 import {TransformTargetType} from '../../../Transform';
 import {ObjectTransformMode, ObjectTransformSpace} from '../../../TransformSpace';
 import {TetObject} from './TetObject';
+import {TetVertex} from './TetVertex';
 import {ObjectData} from '../../Constant';
 import {objectData} from '../../entities/object/BaseCoreObjectUtils';
 
@@ -29,8 +30,10 @@ export class TetCoreObject extends BaseCoreObject<CoreObjectType.TET> {
 		const data = objectData(object);
 
 		const tetObject = object as any as TetObject;
-		data.tetsCount = tetObject.geometry.tetsCount();
 		data.pointsCount = tetObject.geometry.pointsCount();
+		data.verticesCount = TetVertex.verticesCount(object);
+		data.primitivesCount = tetObject.geometry.tetsCount();
+		data.primitiveName = 'tetrahedrons';
 
 		return data;
 	}
