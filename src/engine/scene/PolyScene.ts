@@ -325,18 +325,6 @@ export class PolyScene {
 	registerRenderer(renderer: WebGLRenderer, options?: RegisterRendererOptions) {
 		return this.renderersRegister.registerRenderer(renderer, options);
 	}
-	//
-	//
-	// serializer
-	//
-	//
-	// private _serializer: PolySceneSerializer | undefined;
-	// private get serializer() {
-	// 	return (this._serializer = this._serializer || new PolySceneSerializer(this));
-	// }
-	// toJSON() {
-	// 	return this.serializer.toJSON();
-	// }
 
 	//
 	//
