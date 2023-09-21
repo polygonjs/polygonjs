@@ -17,11 +17,16 @@ import {
 } from './CadCommon';
 import {BaseCoreObject} from '../../entities/object/BaseCoreObject';
 import {CadObject} from './CadObject';
-import {CoreObjectType, MergeCompactOptions, objectContentCopyProperties} from '../../ObjectContent';
+import {CoreObjectType, MergeCompactOptions, ObjectContent, objectContentCopyProperties} from '../../ObjectContent';
 import {Box3, Matrix4, Sphere, Vector3} from 'three';
 import {TransformTargetType} from '../../../Transform';
 import {ObjectTransformMode, ObjectTransformSpace} from '../../../TransformSpace';
 import {cadMergeCompact} from './utils/CadMerge';
+import {objectData} from '../../entities/object/BaseCoreObjectUtils';
+import {ObjectData} from '../../Constant';
+import {CadPoint} from './CadPoint';
+import {CadVertex} from './CadVertex';
+import {primitiveClassFactoryNonAbstract} from './CadModule';
 
 const _bbox = new Box3();
 const _bboxSize = new Vector3();
@@ -60,6 +65,17 @@ export class CadCoreObject<T extends CadGeometryType> extends BaseCoreObject<Cor
 		_bbox.getCenter(target.center);
 		const diameter = Math.max(_bboxSize.x, _bboxSize.y, _bboxSize.z);
 		target.radius = diameter * 0.5;
+	}
+	static override objectData<T extends CoreObjectType>(object: ObjectContent<T>): ObjectData {
+		const data = objectData(object);
+
+		data.pointsCount = CadPoint.pointsCount(object);
+		data.verticesCount = CadVertex.verticesCount(object);
+		const primitiveClass = primitiveClassFactoryNonAbstract(object);
+		data.primitivesCount = primitiveClass?.primitivesCount(object) || 0;
+		data.primitiveName = primitiveClass?.primitiveName() || '';
+
+		return data;
 	}
 
 	static override applyMatrix<T extends CadGeometryType>(

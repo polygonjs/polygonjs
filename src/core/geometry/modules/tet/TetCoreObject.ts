@@ -33,7 +33,7 @@ export class TetCoreObject extends BaseCoreObject<CoreObjectType.TET> {
 		data.pointsCount = tetObject.geometry.pointsCount();
 		data.verticesCount = TetVertex.verticesCount(object);
 		data.primitivesCount = tetObject.geometry.tetsCount();
-		data.primitiveName = 'tetrahedrons';
+		data.primitiveName = 'tetrahedron';
 
 		return data;
 	}

@@ -23,8 +23,15 @@ import {CAD_GEOMETRY_TYPES_SET, CadGeometryType, CADTesselationParams, CADOBJTes
 import {CadCoreObject} from './CadCoreObject';
 import {CadPoint} from './CadPoint';
 import {CadVertex} from './CadVertex';
-import {CadPrimitive} from './CadPrimitive';
 import {CadObject} from './CadObject';
+import {TypeAssert} from '../../../../engine/poly/Assert';
+import {CadPrimitiveCompound} from './CadPrimitiveCompound';
+import {CadPrimitiveCompSolid} from './CadPrimitiveCompSolid';
+import {CadPrimitiveEdge} from './CadPrimitiveEdge';
+import {CadPrimitiveWire} from './CadPrimitiveWire';
+import {CadPrimitiveFace} from './CadPrimitiveFace';
+import {CadPrimitiveShell} from './CadPrimitiveShell';
+import {CadPrimitiveSolid} from './CadPrimitiveSolid';
 
 const CAD_TESSELATION_PARAMS: CADTesselationParams = {
 	linearTolerance: 0,
@@ -75,6 +82,46 @@ const onAddSpecializedChildren: SpecializedChildrenHook = (
 	return newObjectsAreDifferent;
 };
 
+// primitive methods
+export const primitiveClassFactoryNonAbstract = (object: ObjectContent<CoreObjectType>) => {
+	if (CAD_GEOMETRY_TYPES_SET.has(object.type as CadGeometryType)) {
+		const type = object.type as CadGeometryType;
+		switch (type) {
+			case CadGeometryType.POINT_2D: {
+				return;
+			}
+			case CadGeometryType.CURVE_2D: {
+				return;
+			}
+			case CadGeometryType.VERTEX: {
+				return;
+			}
+			case CadGeometryType.EDGE: {
+				return CadPrimitiveEdge;
+			}
+			case CadGeometryType.WIRE: {
+				return CadPrimitiveWire;
+			}
+			case CadGeometryType.FACE: {
+				return CadPrimitiveFace;
+			}
+			case CadGeometryType.SHELL: {
+				return CadPrimitiveShell;
+			}
+			case CadGeometryType.SOLID: {
+				return CadPrimitiveSolid;
+			}
+			case CadGeometryType.COMPSOLID: {
+				return CadPrimitiveCompSolid;
+			}
+			case CadGeometryType.COMPOUND: {
+				return CadPrimitiveCompound;
+			}
+		}
+		TypeAssert.unreachable(type);
+	}
+};
+
 export function onCadModuleRegister(poly: PolyEngine) {
 	//
 	//
@@ -112,17 +159,46 @@ export function onCadModuleRegister(poly: PolyEngine) {
 	};
 
 	// primitive methods
-	const primitiveClassFactory: CorePrimitiveClassFactoryCheckFunction = (object: ObjectContent<CoreObjectType>) => {
-		if (CAD_GEOMETRY_TYPES_SET.has(object.type as CadGeometryType)) {
-			return CadPrimitive;
-		}
-	};
+	const primitiveClassFactory: CorePrimitiveClassFactoryCheckFunction = primitiveClassFactoryNonAbstract;
 	const primitiveInstanceFactory: CorePrimitiveInstanceFactoryCheckFunction = (
 		object: ObjectContent<CoreObjectType>,
 		index: number = 0
 	) => {
 		if (CAD_GEOMETRY_TYPES_SET.has(object.type as CadGeometryType)) {
-			return new CadPrimitive(object as CadObject<CadGeometryType>, index);
+			const type = object.type as CadGeometryType;
+			switch (type) {
+				case CadGeometryType.POINT_2D: {
+					return;
+				}
+				case CadGeometryType.CURVE_2D: {
+					return;
+				}
+				case CadGeometryType.VERTEX: {
+					return;
+				}
+				case CadGeometryType.EDGE: {
+					return new CadPrimitiveEdge(object as CadObject<CadGeometryType.EDGE>, index);
+				}
+				case CadGeometryType.WIRE: {
+					return new CadPrimitiveWire(object as CadObject<CadGeometryType.WIRE>, index);
+				}
+				case CadGeometryType.FACE: {
+					return new CadPrimitiveFace(object as CadObject<CadGeometryType.FACE>, index);
+				}
+				case CadGeometryType.SHELL: {
+					return new CadPrimitiveShell(object as CadObject<CadGeometryType.SHELL>, index);
+				}
+				case CadGeometryType.SOLID: {
+					return new CadPrimitiveSolid(object as CadObject<CadGeometryType.SOLID>, index);
+				}
+				case CadGeometryType.COMPSOLID: {
+					return new CadPrimitiveCompSolid(object as CadObject<CadGeometryType.COMPSOLID>, index);
+				}
+				case CadGeometryType.COMPOUND: {
+					return new CadPrimitiveCompound(object as CadObject<CadGeometryType.COMPOUND>, index);
+				}
+			}
+			TypeAssert.unreachable(type);
 		}
 	};
 

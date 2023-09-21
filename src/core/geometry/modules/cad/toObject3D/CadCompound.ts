@@ -39,3 +39,16 @@ export function cadCompoundToObject3D(
 	const newObjects = MergeSopOperation.makeCompact(iteratedObjects, {preserveMaterials: false}).filter(isObject3D);
 	return newObjects;
 }
+export function cadCompoundSubObjectsCount(cadObject: CadObject<CadGeometryType.COMPOUND>): number {
+	const oc = CadLoaderSync.oc();
+	const compound = cadObject.cadGeometry();
+	let count = 0;
+	const iterator = new oc.TopoDS_Iterator_2(compound, true, true);
+	while (iterator.More()) {
+		count++;
+
+		iterator.Next();
+	}
+	iterator.delete();
+	return count;
+}

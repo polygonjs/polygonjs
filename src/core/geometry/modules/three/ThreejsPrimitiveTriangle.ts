@@ -15,7 +15,7 @@ export class ThreejsPrimitiveTriangle extends ThreejsPrimitive {
 		this._geometry = object.geometry;
 	}
 	static primitiveName() {
-		return 'triangles';
+		return 'triangle';
 	}
 
 	static override primitivesCount<T extends CoreObjectType>(object: ObjectContent<T>) {

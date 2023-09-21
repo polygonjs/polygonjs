@@ -8,7 +8,7 @@ export class ThreejsPrimitivePoint extends ThreejsPrimitive {
 		this._geometry = object.geometry;
 	}
 	static primitiveName() {
-		return 'points';
+		return 'point';
 	}
 	static override primitivesCount<T extends CoreObjectType>(object: ObjectContent<T>) {
 		const geometry = (object as any as Points).geometry;

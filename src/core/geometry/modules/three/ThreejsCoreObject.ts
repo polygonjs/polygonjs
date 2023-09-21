@@ -77,8 +77,9 @@ export class ThreejsCoreObject extends BaseCoreObject<CoreObjectType.THREEJS> {
 		const data = objectData(object);
 		data.verticesCount = ThreejsVertex.verticesCount(object);
 		data.pointsCount = ThreejsPoint.pointsCount(object);
-		data.primitivesCount = primitiveClassFactoryNonAbstract(object)?.primitivesCount(object) || 0;
-		data.primitiveName = primitiveClassFactoryNonAbstract(object)?.primitiveName() || '';
+		const primitiveClass = primitiveClassFactoryNonAbstract(object);
+		data.primitivesCount = primitiveClass?.primitivesCount(object) || 0;
+		data.primitiveName = primitiveClass?.primitiveName() || '';
 		return data;
 	}
 

@@ -21,8 +21,11 @@ import {CSG_GEOMETRY_TYPES_SET, CsgGeometryType, CSGTesselationParams, CSGOBJTes
 import {CsgCoreObject} from './CsgCoreObject';
 import {CsgPoint} from './CsgPoint';
 import {CsgVertex} from './CsgVertex';
-import {CsgPrimitive} from './CsgPrimitive';
 import {CsgObject} from './CsgObject';
+import {TypeAssert} from '../../../../engine/poly/Assert';
+import {CsgPrimitivePath2} from './CsgPrimitivePath2';
+import {CsgPrimitiveGeom2} from './CsgPrimitiveGeom2';
+import {CsgPrimitiveGeom3} from './CsgPrimitiveGeom3';
 
 const CSG_TESSELATION_PARAMS: CSGTesselationParams = {
 	facetAngle: 0,
@@ -61,6 +64,25 @@ const onAddSpecializedChildren: SpecializedChildrenHook = (
 	return newObjectsAreDifferent;
 };
 
+export const primitiveClassFactoryNonAbstract = (object: ObjectContent<CoreObjectType>) => {
+	if (CSG_GEOMETRY_TYPES_SET.has(object.type as CsgGeometryType)) {
+		// return CsgPrimitive;
+		const type = object.type as CsgGeometryType;
+		switch (type) {
+			case CsgGeometryType.PATH2: {
+				return CsgPrimitivePath2;
+			}
+			case CsgGeometryType.GEOM2: {
+				return CsgPrimitiveGeom2;
+			}
+			case CsgGeometryType.GEOM3: {
+				return CsgPrimitiveGeom3;
+			}
+		}
+		TypeAssert.unreachable(type);
+	}
+};
+
 export function onCsgModuleRegister(poly: PolyEngine) {
 	//
 	//
@@ -97,17 +119,26 @@ export function onCsgModuleRegister(poly: PolyEngine) {
 		}
 	};
 	// primitive methods
-	const primitiveClassFactory: CorePrimitiveClassFactoryCheckFunction = (object: ObjectContent<CoreObjectType>) => {
-		if (CSG_GEOMETRY_TYPES_SET.has(object.type as CsgGeometryType)) {
-			return CsgPrimitive;
-		}
-	};
+	const primitiveClassFactory: CorePrimitiveClassFactoryCheckFunction = primitiveClassFactoryNonAbstract;
 	const primitiveInstanceFactory: CorePrimitiveInstanceFactoryCheckFunction = (
 		object: ObjectContent<CoreObjectType>,
 		index: number = 0
 	) => {
 		if (CSG_GEOMETRY_TYPES_SET.has(object.type as CsgGeometryType)) {
-			return new CsgPrimitive(object as CsgObject<CsgGeometryType>, index);
+			// return new CsgPrimitive(object as CsgObject<CsgGeometryType>, index);
+			const type = object.type as CsgGeometryType;
+			switch (type) {
+				case CsgGeometryType.PATH2: {
+					return new CsgPrimitivePath2(object as CsgObject<CsgGeometryType.PATH2>, index);
+				}
+				case CsgGeometryType.GEOM2: {
+					return new CsgPrimitiveGeom2(object as CsgObject<CsgGeometryType.GEOM2>, index);
+				}
+				case CsgGeometryType.GEOM3: {
+					return new CsgPrimitiveGeom3(object as CsgObject<CsgGeometryType.GEOM3>, index);
+				}
+			}
+			TypeAssert.unreachable(type);
 		}
 	};
 

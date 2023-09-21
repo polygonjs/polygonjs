@@ -1,0 +1,12 @@
+import {CoreObjectType, ObjectContent} from '../../ObjectContent';
+import {CadGeometryType} from './CadCommon';
+import {CadPrimitive} from './CadPrimitive';
+
+export class CadPrimitiveShell extends CadPrimitive<CadGeometryType.SHELL> {
+	static primitiveName() {
+		return 'shell';
+	}
+	static override primitivesCount<T extends CoreObjectType>(object: ObjectContent<T>) {
+		return 0;
+	}
+}

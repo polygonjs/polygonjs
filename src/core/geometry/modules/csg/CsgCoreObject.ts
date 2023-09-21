@@ -3,12 +3,17 @@ import {CsgObject} from './CsgObject';
 import {CsgGeometryType} from './CsgCommon';
 import {csgIsGeom2, csgIsGeom3} from './CsgCoreType';
 import {BaseCoreObject} from '../../entities/object/BaseCoreObject';
-import {CoreObjectType, MergeCompactOptions, objectContentCopyProperties} from '../../ObjectContent';
+import {CoreObjectType, MergeCompactOptions, ObjectContent, objectContentCopyProperties} from '../../ObjectContent';
 import {TransformTargetType} from '../../../Transform';
 import {ObjectTransformMode, ObjectTransformSpace} from '../../../TransformSpace';
 import {TypeAssert} from '../../../../engine/poly/Assert';
 import {csgApplyTransform, csgApplyMatrix4} from './math/CsgMat4';
 import {booleans, geometries} from '@jscad/modeling';
+import {objectData} from '../../entities/object/BaseCoreObjectUtils';
+import {CsgPoint} from './CsgPoint';
+import {CsgVertex} from './CsgVertex';
+import {ObjectData} from '../../Constant';
+import {primitiveClassFactoryNonAbstract} from './CsgModule';
 const {union} = booleans;
 
 const _bbox = new Box3();
@@ -25,6 +30,17 @@ export class CsgCoreObject<T extends CsgGeometryType> extends BaseCoreObject<Cor
 	}
 	override boundingSphere(target: Sphere) {
 		this._object.boundingSphere(target);
+	}
+	static override objectData<T extends CoreObjectType>(object: ObjectContent<T>): ObjectData {
+		const data = objectData(object);
+
+		data.pointsCount = CsgPoint.pointsCount(object);
+		data.verticesCount = CsgVertex.verticesCount(object);
+		const primitiveClass = primitiveClassFactoryNonAbstract(object);
+		data.primitivesCount = primitiveClass?.primitivesCount(object) || 0;
+		data.primitiveName = primitiveClass?.primitiveName() || '';
+
+		return data;
 	}
 
 	static override applyMatrix<T extends CsgGeometryType>(

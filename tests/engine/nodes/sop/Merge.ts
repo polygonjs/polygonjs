@@ -285,4 +285,35 @@ export function testenginenodessopMerge(qUnit: QUnit) {
 		assert.equal((await getObjectsCount()).count, 1);
 		assert.deepEqual((await getObjectsCount()).types, ['CADWire']);
 	});
+
+	qUnit.test('sop/merge quad', async (assert) => {
+		const geo1 = window.geo1;
+		const quadPlane1 = geo1.createNode('quadPlane');
+		const quadPlane2 = geo1.createNode('quadPlane');
+		const transform1 = geo1.createNode('transform');
+		const merge1 = geo1.createNode('merge');
+
+		transform1.setInput(0, quadPlane2);
+		merge1.setInput(0, quadPlane1);
+		merge1.setInput(1, transform1);
+
+		transform1.p.t.y.set(1);
+
+		async function compute() {
+			const container = await merge1.compute();
+			const objects = container.coreContent()?.quadObjects()!;
+			const firstObject = objects[0];
+			const firstGeometry = firstObject.geometry;
+			return {objects, firstGeometry};
+		}
+		assert.equal((await compute()).objects.length, 2, '2 objects');
+		assert.deepEqual((await compute()).firstGeometry.index, [0, 1, 3, 2]);
+		assert.equal((await compute()).firstGeometry.attributes['position'].array.length, 4 * 3);
+
+		merge1.p.compact.set(true);
+		assert.equal((await compute()).objects.length, 1, '1 merged object');
+		assert.deepEqual((await compute()).firstGeometry.index, [0, 1, 3, 2, 4, 5, 7, 6]);
+		assert.equal((await compute()).firstGeometry.attributes['position'].array.length, 8 * 3);
+		assert.equal((await compute()).firstGeometry.attributes['position'].array[5 * 3 + 1], 1);
+	});
 }
