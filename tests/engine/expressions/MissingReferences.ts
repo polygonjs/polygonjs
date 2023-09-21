@@ -79,7 +79,9 @@ export function testengineexpressionsMissingReferences(qUnit: QUnit) {
 		transform1.p.t.x.set("ch('../transform2/tx')");
 		await transform1.compute();
 
-		assert.includes(transform1.p.t.x.graphPredecessors(), transform2.p.t.x);
+		const predecessors = transform1.p.t.x.graphPredecessors()!;
+		assert.ok(predecessors);
+		assert.includes(predecessors as any[], transform2.p.t.x);
 
 		assert.equal(transform1.p.t.x.rawInput(), "ch('../transform2/tx')");
 		transform2.setName('transform_RENAMED_TO TEST');
