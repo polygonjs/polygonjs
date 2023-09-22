@@ -168,8 +168,8 @@ export class NodeInputsController<NC extends NodeContext> {
 	hasNamedInputs() {
 		return this._has_named_inputs;
 	}
-	namedInputConnectionPoints(): ConnectionPointTypeMap[NC][] {
-		return this._named_input_connection_points || [];
+	namedInputConnectionPoints(): ConnectionPointTypeMap[NC][] | undefined {
+		return this._named_input_connection_points;
 	}
 	private _initGraphNodeInputs() {
 		for (let i = 0; i < this._maxInputsCount; i++) {
@@ -433,8 +433,10 @@ export class NodeInputsController<NC extends NodeContext> {
 			if (node.io.outputs.hasNamedOutputs()) {
 				outputIndex = node.io.outputs.getOutputIndex(outputIndexOrName);
 				if (outputIndex == null || outputIndex < 0) {
-					const connection_points = node.io.outputs.namedOutputConnectionPoints() as BaseConnectionPoint[];
-					const names = connection_points.map((cp) => cp.name());
+					const connection_points = node.io.outputs.namedOutputConnectionPoints() as
+						| BaseConnectionPoint[]
+						| undefined;
+					const names: string[] = connection_points ? connection_points.map((cp) => cp.name()) : [];
 					console.warn(
 						`node ${node.path()} does not have an output named ${outputIndexOrName}. inputs are: ${names.join(
 							', '

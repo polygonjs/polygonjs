@@ -41,12 +41,13 @@ declare global {
 	}
 }
 
+let count = 0;
 // export {QUnit};
 export function setupQUnit(qunit: QUnit) {
 	addQUnitAssertions(qunit);
 
 	qunit.testStart(async () => {
-		console.log(`%c ^^^^ ${QUnit.config.current.testName}`, 'background: #222; color: #da5555');
+		console.log(`%c ^^^^ ${count} ${QUnit.config.current.testName}`, 'background: #222; color: #da5555');
 
 		await waitForUserInteraction();
 
@@ -95,6 +96,7 @@ export function setupQUnit(qunit: QUnit) {
 		Poly.dispose();
 		// it's preferable to not display anything
 		// so that we can correctly display non-blocking crashing tests
-		console.log(`%c ✓ ${QUnit.config.current.testName}`, 'background: #222; color: #bada55');
+		console.log(`%c ✓ ${count} ${QUnit.config.current.testName}`, 'background: #222; color: #bada55');
+		count++;
 	});
 }

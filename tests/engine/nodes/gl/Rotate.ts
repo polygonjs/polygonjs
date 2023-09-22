@@ -13,12 +13,12 @@ export function testenginenodesglRotate(qUnit: QUnit) {
 		const rotate1 = material_basic_builder1.createNode('rotate');
 
 		rotate1.setSignature(GlRotateMode.AXIS);
-		assert.equal(rotate1.io.inputs.namedInputConnectionPoints().length, 3);
+		assert.equal(rotate1.io.inputs.namedInputConnectionPoints()!.length, 3);
 		rotate1.setSignature(GlRotateMode.QUAT);
-		assert.equal(rotate1.io.inputs.namedInputConnectionPoints().length, 2);
+		assert.equal(rotate1.io.inputs.namedInputConnectionPoints()!.length, 2);
 
 		rotate1.setSignature(GlRotateMode.AXIS);
-		assert.equal(rotate1.io.inputs.namedInputConnectionPoints().length, 3);
+		assert.equal(rotate1.io.inputs.namedInputConnectionPoints()!.length, 3);
 
 		rotate1.setInput(2, constant1);
 		assert.ok(rotate1.io.inputs.input(2));

@@ -62,6 +62,9 @@ export class IfThenGlNode extends TypedSubnetGlNode<IfThenGlParamsConfig> {
 	protected override _setLinesPreBlock(shadersCollectionController: ShadersCollectionController) {
 		const body_lines: string[] = [];
 		const connectionPoints = this.io.inputs.namedInputConnectionPoints();
+		if (!connectionPoints) {
+			return;
+		}
 		for (let i = 0; i < connectionPoints.length; i++) {
 			const connectionPoint = connectionPoints[i];
 			const connectionPointName = connectionPoint.name();
@@ -88,13 +91,15 @@ export class IfThenGlNode extends TypedSubnetGlNode<IfThenGlParamsConfig> {
 		for (let connection of connections) {
 			if (connection) {
 				const connectionPoint = connection.destConnectionPoint();
-				const connectionPointName = connectionPoint.name();
-				if (connectionPointName != CONDITION_INPUT_NAME) {
-					const in_value = ThreeToGl.any(this.variableForInput(connectionPointName));
-					const gl_type = connectionPoint.type();
-					const out = childNode.glVarName(connectionPointName);
-					const body_line = `	${gl_type} ${out} = ${in_value}`;
-					body_lines.push(body_line);
+				if (connectionPoint) {
+					const connectionPointName = connectionPoint.name();
+					if (connectionPointName != CONDITION_INPUT_NAME) {
+						const in_value = ThreeToGl.any(this.variableForInput(connectionPointName));
+						const gl_type = connectionPoint.type();
+						const out = childNode.glVarName(connectionPointName);
+						const body_line = `	${gl_type} ${out} = ${in_value}`;
+						body_lines.push(body_line);
+					}
 				}
 			}
 		}

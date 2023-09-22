@@ -516,7 +516,7 @@ export abstract class BaseJsShaderAssembler extends TypedAssembler<NodeContext.J
 		// we just return all the input names
 		// if we are in JsFunctionName.MAIN
 		if (shaderName == JsFunctionName.MAIN) {
-			return rootNode.io.inputs.namedInputConnectionPoints().map((c) => c.name()); //this.shader_config(shader_name)?.input_names() || [];
+			return (rootNode.io.inputs.namedInputConnectionPoints() || []).map((c) => c.name()); //this.shader_config(shader_name)?.input_names() || [];
 		} else {
 			return this.shader_config(shaderName)?.input_names() || [];
 		}

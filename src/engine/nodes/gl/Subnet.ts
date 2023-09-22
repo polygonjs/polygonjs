@@ -166,6 +166,9 @@ export class AbstractTypedSubnetGlNode<K extends NodeParamsConfig> extends Typed
 	protected _setLinesPreBlock(shadersCollectionController: ShadersCollectionController) {
 		const bodyLines: string[] = [];
 		const connection_points = this.io.inputs.namedInputConnectionPoints();
+		if (!connection_points) {
+			return;
+		}
 		for (let i = 0; i < connection_points.length; i++) {
 			const connection_point = connection_points[i];
 			const gl_type = connection_point.type();
@@ -192,11 +195,13 @@ export class AbstractTypedSubnetGlNode<K extends NodeParamsConfig> extends Typed
 		for (const connection of connections) {
 			if (connection) {
 				const connection_point = connection.destConnectionPoint();
-				const in_value = ThreeToGl.any(this.variableForInput(connection_point.name()));
-				const gl_type = connection_point.type();
-				const out = childNode.glVarName(connection_point.name());
-				const body_line = `	${gl_type} ${out} = ${in_value}`;
-				bodyLines.push(body_line);
+				if (connection_point) {
+					const in_value = ThreeToGl.any(this.variableForInput(connection_point.name()));
+					const gl_type = connection_point.type();
+					const out = childNode.glVarName(connection_point.name());
+					const body_line = `	${gl_type} ${out} = ${in_value}`;
+					bodyLines.push(body_line);
+				}
 			}
 		}
 		shadersCollectionController.addBodyLines(childNode, bodyLines, undefined, ADD_BODY_LINES_OPTIONS);
@@ -211,13 +216,14 @@ export class AbstractTypedSubnetGlNode<K extends NodeParamsConfig> extends Typed
 		for (const connection of connections) {
 			if (connection) {
 				const connectionPoint = connection.destConnectionPoint();
-
-				const in_value = ThreeToGl.any(childNode.variableForInput(connectionPoint.name()));
-				const out = this.glVarName(connectionPoint.name());
-				// const body_line = `${gl_type} ${out} = ${in_value}`;
-				// do not use the type, to avoid re-defining a variable that should be defined in the parent node
-				const bodyLine = `	${out} = ${in_value}`;
-				bodyLines.push(bodyLine);
+				if (connectionPoint) {
+					const in_value = ThreeToGl.any(childNode.variableForInput(connectionPoint.name()));
+					const out = this.glVarName(connectionPoint.name());
+					// const body_line = `${gl_type} ${out} = ${in_value}`;
+					// do not use the type, to avoid re-defining a variable that should be defined in the parent node
+					const bodyLine = `	${out} = ${in_value}`;
+					bodyLines.push(bodyLine);
+				}
 			}
 		}
 		return bodyLines;
@@ -268,7 +274,11 @@ export class AbstractTypedSubnetGlNode<K extends NodeParamsConfig> extends Typed
 			matNode.states.error.set(`${this.path()}:only one output node allowed`);
 		}
 		const subnetOutput = outputNodes[0];
-		const subnetOutputInputNames = subnetOutput.io.inputs.namedInputConnectionPoints().map((cp) => cp.name());
+		const subnetOutputInputConnectionPoints = subnetOutput.io.inputs.namedInputConnectionPoints();
+
+		const subnetOutputInputNames = subnetOutputInputConnectionPoints
+			? subnetOutputInputConnectionPoints.map((cp) => cp.name())
+			: [];
 
 		const assembler = shadersCollectionController.assembler();
 

@@ -20,7 +20,7 @@ export function testenginenodesglMult(qUnit: QUnit) {
 		const constant2 = material_basic_builder1.createNode('constant');
 
 		assert.deepEqual(
-			mult1.io.inputs.namedInputConnectionPoints().map((c: BaseGlConnectionPoint) => c.type()),
+			mult1.io.inputs.namedInputConnectionPoints()!.map((c: BaseGlConnectionPoint) => c.type()),
 			[GlConnectionPointType.FLOAT, GlConnectionPointType.FLOAT]
 		);
 
@@ -30,33 +30,33 @@ export function testenginenodesglMult(qUnit: QUnit) {
 		// float only
 		mult1.setInput(0, constant1);
 		assert.deepEqual(
-			mult1.io.inputs.namedInputConnectionPoints().map((c: BaseGlConnectionPoint) => c.type()),
+			mult1.io.inputs.namedInputConnectionPoints()!.map((c: BaseGlConnectionPoint) => c.type()),
 			[GlConnectionPointType.FLOAT, GlConnectionPointType.FLOAT]
 		);
 		assert.deepEqual(
-			mult1.io.outputs.namedOutputConnectionPoints().map((c: BaseGlConnectionPoint) => c.type()),
+			mult1.io.outputs.namedOutputConnectionPoints()!.map((c: BaseGlConnectionPoint) => c.type()),
 			[GlConnectionPointType.FLOAT]
 		);
 
 		// float * float
 		mult1.setInput(1, constant2);
 		assert.deepEqual(
-			mult1.io.inputs.namedInputConnectionPoints().map((c: BaseGlConnectionPoint) => c.type()),
+			mult1.io.inputs.namedInputConnectionPoints()!.map((c: BaseGlConnectionPoint) => c.type()),
 			[GlConnectionPointType.FLOAT, GlConnectionPointType.FLOAT, GlConnectionPointType.FLOAT]
 		);
 		assert.deepEqual(
-			mult1.io.outputs.namedOutputConnectionPoints().map((c: BaseGlConnectionPoint) => c.type()),
+			mult1.io.outputs.namedOutputConnectionPoints()!.map((c: BaseGlConnectionPoint) => c.type()),
 			[GlConnectionPointType.FLOAT]
 		);
 
 		// float * vec3
 		constant2.setGlType(GlConnectionPointType.VEC3);
 		assert.deepEqual(
-			mult1.io.inputs.namedInputConnectionPoints().map((c: BaseGlConnectionPoint) => c.type()),
+			mult1.io.inputs.namedInputConnectionPoints()!.map((c: BaseGlConnectionPoint) => c.type()),
 			[GlConnectionPointType.FLOAT, GlConnectionPointType.VEC3]
 		);
 		assert.deepEqual(
-			mult1.io.outputs.namedOutputConnectionPoints().map((c: BaseGlConnectionPoint) => c.type()),
+			mult1.io.outputs.namedOutputConnectionPoints()!.map((c: BaseGlConnectionPoint) => c.type()),
 			[GlConnectionPointType.VEC3]
 		);
 	});
@@ -73,7 +73,7 @@ export function testenginenodesglMult(qUnit: QUnit) {
 		const constant2 = material_basic_builder1.createNode('constant');
 
 		assert.deepEqual(
-			mult1.io.inputs.namedInputConnectionPoints().map((c: BaseGlConnectionPoint) => c.type()),
+			mult1.io.inputs.namedInputConnectionPoints()!.map((c: BaseGlConnectionPoint) => c.type()),
 			[GlConnectionPointType.FLOAT, GlConnectionPointType.FLOAT]
 		);
 
@@ -81,7 +81,7 @@ export function testenginenodesglMult(qUnit: QUnit) {
 		constant2.p.type.set(GL_CONNECTION_POINT_TYPES.indexOf(GlConnectionPointType.FLOAT));
 		mult1.setInput(1, constant1);
 		assert.deepEqual(
-			mult1.io.inputs.namedInputConnectionPoints().map((c: BaseGlConnectionPoint) => c.type()),
+			mult1.io.inputs.namedInputConnectionPoints()!.map((c: BaseGlConnectionPoint) => c.type()),
 			[GlConnectionPointType.FLOAT, GlConnectionPointType.FLOAT]
 		);
 	});
@@ -117,10 +117,10 @@ export function testenginenodesglMult(qUnit: QUnit) {
 		assert.ok(material_basic_builder2);
 		assert.equal(material_basic_builder2.children().length, 4, 'new mat has 4 children');
 		const mult2 = material_basic_builder2.node('mult1')!;
-		assert.equal(mult2.io.inputs.namedInputConnectionPoints().length, 3);
+		assert.equal(mult2.io.inputs.namedInputConnectionPoints()!.length, 3);
 		assert.equal(mult2.io.connections.inputConnections()!.length, 2);
 
-		assert.equal(mult2.io.inputs.namedInputConnectionPoints()[0].type(), GlConnectionPointType.VEC2);
+		assert.equal(mult2.io.inputs.namedInputConnectionPoints()![0].type(), GlConnectionPointType.VEC2);
 		assert.deepEqual(mult2.params.get('mult1')?.valueSerialized(), [1, 2]);
 	});
 }

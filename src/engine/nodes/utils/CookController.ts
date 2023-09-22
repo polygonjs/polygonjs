@@ -14,6 +14,7 @@ enum ErrorType {
 }
 
 export type OnCookCompleteHook = () => void;
+
 export class NodeCookController<NC extends NodeContext> {
 	private _corePerformance: CorePerformance;
 	private _cooking: boolean = false;
@@ -23,6 +24,7 @@ export class NodeCookController<NC extends NodeContext> {
 	);
 	private _inputContainers: Array<ContainerMap[NC] | null> = [];
 	private _inputContents: ContainableMap[NC][] = [];
+	private _EMPTY_ARRAY: ContainableMap[NC][] = [];
 
 	constructor(private node: BaseNodeType) {
 		this._corePerformance = this.node.scene().performance;
@@ -46,7 +48,7 @@ export class NodeCookController<NC extends NodeContext> {
 		return this._cooking === true;
 	}
 
-	private _startCookIfNoErrors(inputContents?: ContainableMap[NC][]) {
+	private _startCookIfNoErrors(inputContents: ContainableMap[NC][]) {
 		if (this.node.states.error.active() || this.node.disposed() == true) {
 			this.endCook();
 		} else {
@@ -54,7 +56,7 @@ export class NodeCookController<NC extends NodeContext> {
 				this._performanceController.recordCookStart();
 				// make sure we treat rejected promise
 				// if cook is async
-				const promise = this.node.cook(inputContents || []);
+				const promise = this.node.cook(inputContents);
 				if (promise != null) {
 					promise.catch((e: any) => {
 						this._onError(e, ErrorType.INTERNAL, false);
@@ -123,7 +125,7 @@ export class NodeCookController<NC extends NodeContext> {
 		if (this.node.params.paramsEvalRequired()) {
 			await this._evaluateParams();
 		}
-		this._startCookIfNoErrors(undefined);
+		this._startCookIfNoErrors(this._EMPTY_ARRAY);
 	}
 
 	endCook(/*message?: string | null*/) {

@@ -61,11 +61,15 @@ export class SmootherstepJsNode extends MathFunctionArg3OperationFactory('smooth
 
 	protected override _expectedInputTypes() {
 		let first_input_type = this.io.connection_points.first_input_connection_type();
+		const inputConnectionPoints = this.io.inputs.namedInputConnectionPoints();
+		if (!inputConnectionPoints) {
+			return [];
+		}
 		if (first_input_type) {
 			if (!DEFAULT_ALLOWED_TYPES.includes(first_input_type)) {
 				// if the first input type is not allowed, either leave the connection point as is,
 				// or use the default if there is none
-				const first_connection = this.io.inputs.namedInputConnectionPoints()[0];
+				const first_connection = inputConnectionPoints[0];
 				if (first_connection) {
 					first_input_type = first_connection.type();
 				}

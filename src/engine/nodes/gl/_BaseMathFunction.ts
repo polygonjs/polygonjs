@@ -4,7 +4,7 @@ import {ShadersCollectionController} from './code/utils/ShadersCollectionControl
 import {GlConnectionPointType} from '../utils/io/connections/Gl';
 import {GLDefinitionType, TypedGLDefinition} from './utils/GLDefinition';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
-import {arrayCompact,range} from '../../../core/ArrayUtils';
+import {arrayCompact, range} from '../../../core/ArrayUtils';
 
 export class BaseGlMathFunctionParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new BaseGlMathFunctionParamsConfig();
@@ -47,8 +47,17 @@ export abstract class BaseGlMathFunctionGlNode extends TypedGlNode<BaseGlMathFun
 	}
 
 	override setLines(shaders_collection_controller: ShadersCollectionController) {
-		const var_type: GlConnectionPointType = this.io.outputs.namedOutputConnectionPoints()[0].type();
-		const args = this.io.inputs.namedInputConnectionPoints().map((connection, i) => {
+		const inputConnectionPoints = this.io.inputs.namedInputConnectionPoints();
+		const outputConnectionPoints = this.io.outputs.namedOutputConnectionPoints();
+		if (!(inputConnectionPoints && outputConnectionPoints)) {
+			return;
+		}
+		const firstConnectionPoint = outputConnectionPoints[0];
+		if (!firstConnectionPoint) {
+			return;
+		}
+		const var_type: GlConnectionPointType = firstConnectionPoint.type();
+		const args = inputConnectionPoints.map((connection, i) => {
 			const name = connection.name();
 			return ThreeToGl.any(this.variableForInput(name));
 		});

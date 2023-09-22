@@ -67,7 +67,9 @@ export class IsInfOrNanGlNode extends TypedGlNode<IsInfOrNanGlParamsConfig> {
 	}
 	private _functionCalls() {
 		const inValue = ThreeToGl.any(this.variableForInput(IsInfOrNanGlNode.INPUT));
-		const glInType = this.io.inputs.namedInputConnectionPoints()[0].type();
+		const connectionPoints = this.io.inputs.namedInputConnectionPoints()
+		if(!connectionPoints){return}
+		const glInType = connectionPoints[0].type();
 
 		const testFunction = (inputVal: string) => {
 			const functions: string[] = [];

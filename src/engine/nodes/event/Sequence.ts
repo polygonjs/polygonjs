@@ -54,10 +54,12 @@ export class SequenceEventNode extends TypedEventNode<PassEventParamsConfig> {
 	}
 
 	override processEvent(event_context: EventContext<Event>) {
-		const count = this.pv.outputsCount;
-		for (let i = 0; i < count; i++) {
-			const connection_point = this.io.outputs.namedOutputConnectionPoints()[i];
-			this.dispatchEventToOutput(connection_point.name(), event_context);
+		const connectionPoints = this.io.outputs.namedOutputConnectionPoints();
+		if (!connectionPoints) {
+			return;
+		}
+		for (const connectionPoint of connectionPoints) {
+			this.dispatchEventToOutput(connectionPoint.name(), event_context);
 		}
 	}
 }

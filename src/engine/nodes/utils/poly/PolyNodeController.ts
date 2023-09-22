@@ -128,7 +128,7 @@ export class PolyNodeController {
 	static inputsData(node: BaseNodeType): PolyNodesInputsData {
 		if (node.io.inputs.hasNamedInputs()) {
 			const inputs = node.io.inputs as NodeInputsController<NodeContext.GL>;
-			const connectionPoints = arrayCompact(inputs.namedInputConnectionPoints());
+			const connectionPoints = arrayCompact(inputs.namedInputConnectionPoints() || []);
 			return {
 				typed: {
 					types: connectionPoints.map((cp) => {

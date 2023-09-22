@@ -295,7 +295,7 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 	}
 
 	// cook
-	cook(input_contents: any[]): any {
+	cook(inputContents: any[]): any {
 		return null;
 	}
 	/**

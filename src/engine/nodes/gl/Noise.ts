@@ -380,7 +380,10 @@ float ${this.fbmMethodName()}(in ${inputType} st) {
 			return `float ${noise}${output_name_suffix} = (${rightHand}).${component}`;
 		} else {
 			// it looks like we never go here with the current set of noises
-			const outputType = this.io.outputs.namedOutputConnectionPoints()[0].type();
+			const namedOutputConnectionPoints = this.io.outputs.namedOutputConnectionPoints();
+			const outputType = namedOutputConnectionPoints
+				? namedOutputConnectionPoints[0].type()
+				: GlConnectionPointType.FLOAT;
 			return `${outputType} ${noise} = ${rightHand}`;
 		}
 	}

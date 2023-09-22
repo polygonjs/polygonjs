@@ -30,8 +30,8 @@ export function testenginenodesglSDFGradient(qUnit: QUnit) {
 		const SDFGradient1 = materialBasicBuilder1.createNode('SDFGradient');
 		SDFGradient1.p.inputsCount.set(0);
 		const {subnetInput1, subnetOutput1} = createRequiredNodesForSDFGradientGlNode(SDFGradient1);
-		assert.equal(SDFGradient1.io.outputs.namedOutputConnectionPoints().length, 2);
-		assert.equal(SDFGradient1.io.inputs.namedInputConnectionPoints().length, 1);
+		assert.equal(SDFGradient1.io.outputs.namedOutputConnectionPoints()!.length, 2);
+		assert.equal(SDFGradient1.io.inputs.namedInputConnectionPoints()!.length, 1);
 
 		output1.setInput(0, SDFGradient1, 'gradient');
 

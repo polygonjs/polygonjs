@@ -208,6 +208,9 @@ export class ConnectionPointsController<NC extends NodeContext> {
 	protected _inputsOutputsMatchExpectations(): boolean {
 		const namedInputConnections = this.node.io.inputs.namedInputConnectionPoints();
 		const namedOutputConnections = this.node.io.outputs.namedOutputConnectionPoints();
+		if (!(namedInputConnections && namedOutputConnections)) {
+			return false;
+		}
 		const inputTypesMatch = arraysMatch(
 			// make sure to test the expected ones against all except the inNodeDefinition ones
 			namedInputConnections.filter((c) => !c?.inNodeDefinition()).map((c) => c?.type()),

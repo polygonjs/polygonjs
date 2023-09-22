@@ -47,8 +47,7 @@ export class JsAssemblerActor extends BaseJsShaderAssembler {
 		};
 	}
 	override inputNamesForShaderName(rootNode: BaseJsNodeType, shaderName: JsFunctionName) {
-		return rootNode.io.inputs
-			.namedInputConnectionPoints()
+		return (rootNode.io.inputs.namedInputConnectionPoints() || [])
 			.filter((cp) => cp.type() != JsConnectionPointType.TRIGGER)
 			.map((cp) => cp.name());
 	}

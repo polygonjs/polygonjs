@@ -72,7 +72,11 @@ export class SwitchGlNode extends TypedGlNode<SwitchParamsConfig> {
 	}
 
 	override setLines(shaders_collection_controller: ShadersCollectionController) {
-		const var_type: GlConnectionPointType = this.io.outputs.namedOutputConnectionPoints()[0].type();
+		const namedOutputConnectionPoints = this.io.outputs.namedOutputConnectionPoints();
+		if (!namedOutputConnectionPoints) {
+			return;
+		}
+		const var_type: GlConnectionPointType = namedOutputConnectionPoints[0].type();
 		const out = this.glVarName(this.io.connection_points.output_name(0));
 		const index_point_name = this.io.connection_points.input_name(0);
 

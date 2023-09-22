@@ -286,16 +286,20 @@ export class NodeJsonExporter<T extends BaseNodeTypeWithIO> {
 			if (input) {
 				const connection = this._node.io.connections.inputConnection(input_index)!;
 				if (this._node.io.inputs.hasNamedInputs()) {
-					const inputName = this._node.io.inputs.namedInputConnectionPoints()[input_index]?.name();
-					const output_index = connection.outputIndex();
-					const output_name = input.io.outputs.namedOutputConnectionPoints()[output_index]?.name();
-					if (output_name) {
-						data[input_index] = {
-							index: input_index,
-							inputName: inputName,
-							node: input.name(),
-							output: output_name,
-						};
+					const inputConnectionPoints = this._node.io.inputs.namedInputConnectionPoints();
+					const outputConnectionPoints = input.io.outputs.namedOutputConnectionPoints();
+					if (inputConnectionPoints && outputConnectionPoints) {
+						const inputName = inputConnectionPoints[input_index]?.name();
+						const output_index = connection.outputIndex();
+						const output_name = outputConnectionPoints[output_index]?.name();
+						if (output_name) {
+							data[input_index] = {
+								index: input_index,
+								inputName: inputName,
+								node: input.name(),
+								output: output_name,
+							};
+						}
 					}
 				} else {
 					data[input_index] = input.name();
@@ -318,17 +322,23 @@ export class NodeJsonExporter<T extends BaseNodeTypeWithIO> {
 			const data: IoConnectionPointsData = {};
 			if (this._node.io.inputs.hasNamedInputs()) {
 				data['in'] = [];
-				for (let cp of this._node.io.inputs.namedInputConnectionPoints()) {
-					if (cp) {
-						data['in'].push(cp.toJSON());
+				const connectionPoints = this._node.io.inputs.namedInputConnectionPoints();
+				if (connectionPoints) {
+					for (let cp of connectionPoints) {
+						if (cp) {
+							data['in'].push(cp.toJSON());
+						}
 					}
 				}
 			}
 			if (this._node.io.outputs.hasNamedOutputs()) {
 				data['out'] = [];
-				for (let cp of this._node.io.outputs.namedOutputConnectionPoints()) {
-					if (cp) {
-						data['out'].push(cp.toJSON());
+				const connectionPoints = this._node.io.outputs.namedOutputConnectionPoints();
+				if (connectionPoints) {
+					for (let cp of connectionPoints) {
+						if (cp) {
+							data['out'].push(cp.toJSON());
+						}
 					}
 				}
 			}

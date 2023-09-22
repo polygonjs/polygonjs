@@ -72,17 +72,20 @@ export class TextureAllocationsController {
 			const node_id = node.graphNodeId();
 			switch (node.type()) {
 				case OutputGlNode.type(): {
-					for (const connection_point of node.io.inputs.namedInputConnectionPoints()) {
-						const input = node.io.inputs.named_input(connection_point.name());
-						if (input) {
-							// connections_by_node_id[node_id] = connections_by_node_id[node_id] || []
-							// connections_by_node_id[node_id].push(named_input)
-							const variable = new TextureVariable(
-								connection_point.name(),
-								GlConnectionPointComponentsCountMap[connection_point.type()]
-							);
-							variable.addGraphNodeId(node_id);
-							variables.push(variable);
+					const connectionPoints = node.io.inputs.namedInputConnectionPoints();
+					if (connectionPoints) {
+						for (const connection_point of connectionPoints) {
+							const input = node.io.inputs.named_input(connection_point.name());
+							if (input) {
+								// connections_by_node_id[node_id] = connections_by_node_id[node_id] || []
+								// connections_by_node_id[node_id].push(named_input)
+								const variable = new TextureVariable(
+									connection_point.name(),
+									GlConnectionPointComponentsCountMap[connection_point.type()]
+								);
+								variable.addGraphNodeId(node_id);
+								variables.push(variable);
+							}
 						}
 					}
 					break;

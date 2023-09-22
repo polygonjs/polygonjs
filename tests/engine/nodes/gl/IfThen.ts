@@ -22,53 +22,53 @@ export function testenginenodesglIfThen(qUnit: QUnit) {
 		// const constant1 = material_basic_builder1.createNode('constant');
 		const ifThen1 = material_basic_builder1.createNode('ifThen');
 		const {subnetInput1, subnetOutput1} = create_required_nodes_for_ifThen_gl_node(ifThen1);
-		assert.equal(ifThen1.io.outputs.namedOutputConnectionPoints().length, 1);
+		assert.equal(ifThen1.io.outputs.namedOutputConnectionPoints()!.length, 1);
 
 		assert.equal(ifThen1.children().length, 2);
 		assert.equal(
-			subnetInput1.io.outputs.namedOutputConnectionPoints().length,
+			subnetInput1.io.outputs.namedOutputConnectionPoints()!.length,
 			1,
 			'inputs count has not yet been updated'
 		);
-		assert.equal(subnetOutput1.io.inputs.namedInputConnectionPoints().length, 1);
+		assert.equal(subnetOutput1.io.inputs.namedInputConnectionPoints()!.length, 1);
 
 		// the subnetInput does not update its input if we only connect to input 1, and not yet to 0
 		// ifThen1.setInput(1, constant1);
 		// ifThen1.p.inputsCount.set(1)
-		assert.equal(subnetInput1.io.outputs.namedOutputConnectionPoints().length, 1, '2 inputs max only');
-		assert.equal(subnetOutput1.io.inputs.namedInputConnectionPoints().length, 1, 'subnetOutput has 1 input');
-		assert.equal(ifThen1.io.inputs.namedInputConnectionPoints().length, 2, 'ifThen has 2 inputs');
-		assert.equal(ifThen1.io.outputs.namedOutputConnectionPoints().length, 1, 'ifThen has 1 output');
+		assert.equal(subnetInput1.io.outputs.namedOutputConnectionPoints()!.length, 1, '2 inputs max only');
+		assert.equal(subnetOutput1.io.inputs.namedInputConnectionPoints()!.length, 1, 'subnetOutput has 1 input');
+		assert.equal(ifThen1.io.inputs.namedInputConnectionPoints()!.length, 2, 'ifThen has 2 inputs');
+		assert.equal(ifThen1.io.outputs.namedOutputConnectionPoints()!.length, 1, 'ifThen has 1 output');
 
 		// but when we add an input 0, the number of inputs updates
 		// ifThen1.setInput(0, constantCondition);
 		ifThen1.p.inputsCount.set(2);
 		// ifThen1.p.outputsCount.set(2);
-		assert.equal(subnetInput1.io.outputs.namedOutputConnectionPoints().length, 2, 'subnetInput has 2 outputs');
-		assert.equal(subnetOutput1.io.inputs.namedInputConnectionPoints().length, 2, 'subnetOutput has 2 inputs');
-		assert.equal(ifThen1.io.inputs.namedInputConnectionPoints().length, 3, 'ifThen has 3 inputs');
-		assert.equal(ifThen1.io.outputs.namedOutputConnectionPoints().length, 2, 'ifThen has 2 outputs');
+		assert.equal(subnetInput1.io.outputs.namedOutputConnectionPoints()!.length, 2, 'subnetInput has 2 outputs');
+		assert.equal(subnetOutput1.io.inputs.namedInputConnectionPoints()!.length, 2, 'subnetOutput has 2 inputs');
+		assert.equal(ifThen1.io.inputs.namedInputConnectionPoints()!.length, 3, 'ifThen has 3 inputs');
+		assert.equal(ifThen1.io.outputs.namedOutputConnectionPoints()!.length, 2, 'ifThen has 2 outputs');
 
 		// the if has an output connection point if we connect the subnetOutput
 		ifThen1.p.inputsCount.set(3);
 		// ifThen1.p.outputsCount.set(3);
 		assert.equal(
-			subnetInput1.io.outputs.namedOutputConnectionPoints().length,
+			subnetInput1.io.outputs.namedOutputConnectionPoints()!.length,
 			3,
 			'set inputsCount and outputsCount to 3'
 		);
-		assert.equal(subnetOutput1.io.inputs.namedInputConnectionPoints().length, 3, 'subnetOutput has 3 inputs');
-		assert.equal(ifThen1.io.inputs.namedInputConnectionPoints().length, 4);
-		assert.equal(ifThen1.io.outputs.namedOutputConnectionPoints().length, 3);
+		assert.equal(subnetOutput1.io.inputs.namedInputConnectionPoints()!.length, 3, 'subnetOutput has 3 inputs');
+		assert.equal(ifThen1.io.inputs.namedInputConnectionPoints()!.length, 4);
+		assert.equal(ifThen1.io.outputs.namedOutputConnectionPoints()!.length, 3);
 
 		// and if we disconnect the ifThen inputs, they all update
 		// ifThen1.setInput(1, null);
 		ifThen1.p.inputsCount.set(1);
 		// ifThen1.p.outputsCount.set(1);
-		assert.equal(subnetInput1.io.outputs.namedOutputConnectionPoints().length, 1);
-		assert.equal(subnetOutput1.io.inputs.namedInputConnectionPoints().length, 1);
-		assert.equal(ifThen1.io.inputs.namedInputConnectionPoints().length, 2);
-		assert.equal(ifThen1.io.outputs.namedOutputConnectionPoints().length, 1);
+		assert.equal(subnetInput1.io.outputs.namedOutputConnectionPoints()!.length, 1);
+		assert.equal(subnetOutput1.io.inputs.namedInputConnectionPoints()!.length, 1);
+		assert.equal(ifThen1.io.inputs.namedInputConnectionPoints()!.length, 2);
+		assert.equal(ifThen1.io.outputs.namedOutputConnectionPoints()!.length, 1);
 	});
 
 	qUnit.test('gl IfThen can be saved and loaded and has the same number of inputs', async (assert) => {
@@ -82,7 +82,7 @@ export function testenginenodesglIfThen(qUnit: QUnit) {
 		material_basic_builder1.createNode('constant');
 		const ifThen1 = material_basic_builder1.createNode('ifThen');
 		create_required_nodes_for_ifThen_gl_node(ifThen1);
-		assert.equal(ifThen1.io.outputs.namedOutputConnectionPoints().length, 1);
+		assert.equal(ifThen1.io.outputs.namedOutputConnectionPoints()!.length, 1);
 
 		const constant1 = material_basic_builder1.createNode('constant');
 		constant1.setGlType(GlConnectionPointType.BOOL);

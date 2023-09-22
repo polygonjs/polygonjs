@@ -77,7 +77,11 @@ export class VaryingWriteGlNode extends TypedGlNode<VaryingWriteGlParamsConfig> 
 		return this.pv.name.trim();
 	}
 	glType(): GlConnectionPointType | undefined {
-		const connection_point = this.io.inputs.namedInputConnectionPoints()[0];
+		const connectionPoints = this.io.inputs.namedInputConnectionPoints();
+		if (!connectionPoints) {
+			return;
+		}
+		const connection_point = connectionPoints[0];
 		if (connection_point) {
 			return connection_point.type();
 		}

@@ -49,8 +49,8 @@ export class CoreNodeSerializer {
 			maxInputsCount: this.maxInputsCount(),
 			inputs: this.inputIds(),
 			input_connection_output_indices: this.inputConnectionOutputIndices(),
-			named_input_connection_points: this.namedInputConnectionPoints(),
-			named_output_connection_points: this.namedOutputConnectionPoints(),
+			named_input_connection_points: this.namedInputConnectionPoints()||[],
+			named_output_connection_points: this.namedOutputConnectionPoints()||[],
 			param_ids: this.to_json_params(includeParamComponents),
 			// spare_params: this.to_json_spare_params(include_param_components),
 			override_cloned_state_allowed: this.node.io.inputs.overrideClonedStateAllowed(),
@@ -94,10 +94,10 @@ export class CoreNodeSerializer {
 			?.map((connection) => (connection != null ? connection.outputIndex() : undefined));
 	}
 	namedInputConnectionPoints(): Readonly<BaseConnectionPointData[]> {
-		return this.node.io.inputs.namedInputConnectionPoints().map((i) => i.toJSON());
+		return (this.node.io.inputs.namedInputConnectionPoints()||[]).map((i) => i.toJSON());
 	}
 	namedOutputConnectionPoints(): Readonly<BaseConnectionPointData[]> {
-		return this.node.io.outputs.namedOutputConnectionPoints().map((o) => o.toJSON());
+		return (this.node.io.outputs.namedOutputConnectionPoints()||[]).map((o) => o.toJSON());
 	}
 
 	to_json_params_from_names(param_names: string[], include_components: boolean = false) {

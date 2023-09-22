@@ -59,13 +59,15 @@ function isTriggeringNode(node: BaseJsNodeType): boolean {
 }
 function _hasTriggerOutputConnected(node: BaseJsNodeType): boolean {
 	const outputConnectionPoints = node.io.outputs.namedOutputConnectionPoints();
-	let i = 0;
 	let triggerOutputIndices: number[] = [];
-	for (const outputConnectionPoint of outputConnectionPoints) {
-		if (outputConnectionPoint.type() == JsConnectionPointType.TRIGGER) {
-			triggerOutputIndices.push(i);
+	let i = 0;
+	if (outputConnectionPoints) {
+		for (const outputConnectionPoint of outputConnectionPoints) {
+			if (outputConnectionPoint.type() == JsConnectionPointType.TRIGGER) {
+				triggerOutputIndices.push(i);
+			}
+			i++;
 		}
-		i++;
 	}
 	for (const triggerOutputIndex of triggerOutputIndices) {
 		const triggerConnections = node.io.connections.outputConnectionsByOutputIndex(triggerOutputIndex);
@@ -129,24 +131,28 @@ export function groupNodesByType(nodes: Set<BaseJsNodeType>, nodesByType: Map<st
 export function getOutputIndices(node: BaseJsNodeType, callback: ConnectionPointCallback) {
 	let triggerOutputIndices: number[] = [];
 	const outputConnectionPoints = node.io.outputs.namedOutputConnectionPoints();
-	let i = 0;
-	for (const outputConnectionPoint of outputConnectionPoints) {
-		if (callback(outputConnectionPoint) == true) {
-			triggerOutputIndices.push(i);
+	if (outputConnectionPoints) {
+		let i = 0;
+		for (const outputConnectionPoint of outputConnectionPoints) {
+			if (callback(outputConnectionPoint) == true) {
+				triggerOutputIndices.push(i);
+			}
+			i++;
 		}
-		i++;
 	}
 	return triggerOutputIndices;
 }
 export function getInputIndices(node: BaseJsNodeType, callback: ConnectionPointCallback) {
 	let triggerInputIndices: number[] = [];
 	const inputConnectionPoints = node.io.inputs.namedInputConnectionPoints();
-	let i = 0;
-	for (const inputConnectionPoint of inputConnectionPoints) {
-		if (callback(inputConnectionPoint) == true) {
-			triggerInputIndices.push(i);
+	if (inputConnectionPoints) {
+		let i = 0;
+		for (const inputConnectionPoint of inputConnectionPoints) {
+			if (callback(inputConnectionPoint) == true) {
+				triggerInputIndices.push(i);
+			}
+			i++;
 		}
-		i++;
 	}
 	return triggerInputIndices;
 }
@@ -221,12 +227,14 @@ export function inputNodesFromConnectionWithCallback(node: BaseJsNodeType, callb
 	_nonTriggerInputNodes.clear();
 	_nonTriggerInputIndices.length = 0;
 	const inputConnectionPoints = node.io.inputs.namedInputConnectionPoints();
-	let i = 0;
-	for (const outputConnectionPoint of inputConnectionPoints) {
-		if (callback(outputConnectionPoint)) {
-			_nonTriggerInputIndices.push(i);
+	if (inputConnectionPoints) {
+		let i = 0;
+		for (const outputConnectionPoint of inputConnectionPoints) {
+			if (callback(outputConnectionPoint)) {
+				_nonTriggerInputIndices.push(i);
+			}
+			i++;
 		}
-		i++;
 	}
 	for (const nonTriggerInputIndex of _nonTriggerInputIndices) {
 		const connection = node.io.connections.inputConnection(nonTriggerInputIndex);

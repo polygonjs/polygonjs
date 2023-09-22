@@ -122,7 +122,11 @@ export class CompareGlNode extends TypedGlNode<CompareGlParamsConfig> {
 		const value0 = ThreeToGl.any(this.variableForInput(this._gl_input_name(0)));
 		const value1 = ThreeToGl.any(this.variableForInput(this._gl_input_name(1)));
 
-		const first_connection = this.io.inputs.namedInputConnectionPoints()[0];
+		const connectionPoints = this.io.inputs.namedInputConnectionPoints();
+		if (!connectionPoints) {
+			return;
+		}
+		const first_connection = connectionPoints[0];
 		let components_count = 1;
 		if (first_connection) {
 			components_count = GlConnectionPointComponentsCountMap[first_connection.type()] || 1;
