@@ -50,7 +50,7 @@ export class CSGExtrudeLinearSopNode extends CSGSopNode<CSGExtrudeLinearSopParam
 				twistSteps: this.pv.twistSteps,
 			};
 			const newGeometries: CsgGeometry[] = [];
-			for (let inputObject of inputObjects) {
+			for (const inputObject of inputObjects) {
 				const inputGeometry = inputObject.csgGeometry();
 				if (csgIsPath2(inputGeometry) || csgIsGeom2(inputGeometry)) {
 					newGeometries.push(extrudeLinear(options, inputGeometry));

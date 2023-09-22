@@ -60,7 +60,7 @@ export class CADConvertDimensionSopNode extends CADSopNode<CADConvertDimensionSo
 		if (inputObjects) {
 			switch (mode) {
 				case ConversionMode.TO_2D: {
-					for (let inputObject of inputObjects) {
+					for (const inputObject of inputObjects) {
 						const type = inputObject.type;
 						switch (type) {
 							case CadGeometryType.VERTEX: {
@@ -83,7 +83,7 @@ export class CADConvertDimensionSopNode extends CADSopNode<CADConvertDimensionSo
 					break;
 				}
 				case ConversionMode.TO_3D: {
-					for (let inputObject of inputObjects) {
+					for (const inputObject of inputObjects) {
 						const type = inputObject.type;
 						switch (type) {
 							case CadGeometryType.POINT_2D: {

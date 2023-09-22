@@ -76,7 +76,7 @@ export class PolyNodeController {
 		if (!data.params) {
 			return;
 		}
-		for (let paramData of data.params) {
+		for (const paramData of data.params) {
 			const paramName = paramData.name;
 			const paramType = paramData.type;
 			const initValue = paramData.initValue;

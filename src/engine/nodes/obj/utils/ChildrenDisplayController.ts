@@ -155,7 +155,7 @@ export class ChildrenDisplayController {
 					if (objectsCountChanged) {
 						return true;
 					}
-					for (let object of newObjects) {
+					for (const object of newObjects) {
 						if (!this._childrenUuids.has(object.uuid)) {
 							return true;
 						}
@@ -175,10 +175,10 @@ export class ChildrenDisplayController {
 						object.updateMatrix();
 						this._childrenUuids.add(object.uuid);
 					};
-					for (let object of newObjects) {
+					for (const object of newObjects) {
 						addObject(object);
 					}
-					for (let object of this._newSpecializedObjects) {
+					for (const object of this._newSpecializedObjects) {
 						addObject(object);
 					}
 				}
@@ -219,7 +219,7 @@ export class ChildrenDisplayController {
 		if (!this._onSopGroupUpdatedHookNames || !this._onSopGroupUpdatedHooks) {
 			return;
 		}
-		for (let hookName of this._onSopGroupUpdatedHookNames) {
+		for (const hookName of this._onSopGroupUpdatedHookNames) {
 			this.deregisterOnSopGroupUpdated(hookName);
 		}
 	}
@@ -240,7 +240,7 @@ export class ChildrenDisplayController {
 	private _runOnSopGroupUpdatedHooks() {
 		if (this._onSopGroupUpdatedHooks) {
 			const hooks = [...this._onSopGroupUpdatedHooks];
-			for (let hook of hooks) {
+			for (const hook of hooks) {
 				hook();
 			}
 		}

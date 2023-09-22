@@ -12,7 +12,7 @@ export class AttributeRequirementsController {
 	assignAttributesLines(): string {
 		if (this._attributeNames) {
 			const lines: string[] = [];
-			for (let attribName of this._attributeNames) {
+			for (const attribName of this._attributeNames) {
 				lines.push(AttributeRequirementsController.assignAttributeLine(attribName));
 			}
 			return lines.join(';\n');
@@ -27,7 +27,7 @@ export class AttributeRequirementsController {
 				const objectLine = `const ${VAR_OBJECT} = entities[0].object();`;
 				lines.push(objectLine);
 			}
-			for (let attribName of this._attributeNames) {
+			for (const attribName of this._attributeNames) {
 				lines.push(AttributeRequirementsController.assignItemSizeLine(attribName));
 				lines.push(AttributeRequirementsController.assignArrayLine(attribName));
 			}
@@ -39,7 +39,7 @@ export class AttributeRequirementsController {
 	attributePresenceCheckLine(): string {
 		if (this._attributeNames) {
 			const varNames: string[] = [];
-			for (let attribName of this._attributeNames) {
+			for (const attribName of this._attributeNames) {
 				const varName = AttributeRequirementsController._varAttribute(attribName);
 				varNames.push(varName);
 			}
@@ -53,7 +53,7 @@ export class AttributeRequirementsController {
 	missingAttributesLine(): string {
 		if (this._attributeNames) {
 			let lineElements: string[] = ['(()=>{', 'const missingAttributes = [];'];
-			for (let attribName of this._attributeNames) {
+			for (const attribName of this._attributeNames) {
 				const varName = AttributeRequirementsController._varAttribute(attribName);
 				lineElements.push(`if( !${varName} ) {	missingAttributes.push('${attribName}'); }`);
 			}

@@ -54,7 +54,7 @@ export class TetrahedralizeSopNode extends TetSopNode<TetrahedralizeSopParamsCon
 		const coreGroup = inputCoreGroups[0];
 		const inputMeshes = coreGroup.threejsObjectsWithGeo() as Mesh[];
 
-		for (let inputMesh of inputMeshes) {
+		for (const inputMesh of inputMeshes) {
 			mergeFaces(inputMesh.geometry, this.pv.fuseDist);
 		}
 		jitterPositions(coreGroup, {
@@ -64,7 +64,7 @@ export class TetrahedralizeSopNode extends TetSopNode<TetrahedralizeSopParamsCon
 		});
 
 		const tetGeometries: TetGeometry[] = [];
-		for (let inputMesh of inputMeshes) {
+		for (const inputMesh of inputMeshes) {
 			ThreeMeshBVHHelper.assignDefaultBVHIfNone(inputMesh);
 			const tetGeometry = tetrahedralize({
 				mesh: inputMesh as MeshWithBVHGeometry,

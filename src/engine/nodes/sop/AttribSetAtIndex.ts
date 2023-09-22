@@ -152,7 +152,7 @@ export class AttribSetAtIndexSopNode extends TypedSopNode<AttribSetAtIndexSopPar
 		const attribName = this.pv.name;
 		const defaultValue = AttribSetAtIndexSopOperation.defaultAttribValue(this.pv);
 		if (defaultValue != null) {
-			for (let coreObject of allCoreObjects) {
+			for (const coreObject of allCoreObjects) {
 				if (!coreObject.hasAttribute(attribName)) {
 					coreObject.setAttribValue(attribName, defaultValue);
 				}
@@ -265,7 +265,7 @@ export class AttribSetAtIndexSopNode extends TypedSopNode<AttribSetAtIndexSopPar
 		const param = this.p.string;
 
 		const stringValues: string[] = new Array(allPoints.length);
-		for (let point of allPoints) {
+		for (const point of allPoints) {
 			let currentValue = point.stringAttribValue(attribName);
 			if (currentValue == null) {
 				currentValue = '';

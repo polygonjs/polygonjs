@@ -8,6 +8,7 @@ import {
 import {TypedNode} from '../../_Base';
 import {ConnectionPointsSpareParamsController} from './ConnectionPointsSpareParamsController';
 import {NodeContext, NetworkChildNodeType} from '../../../poly/NodeContext';
+import {arrayCopy} from '../../../../core/ArrayUtils';
 
 type IONameFunction = (index: number) => string;
 type ExpectedConnectionTypesFunction<NC extends NodeContext> = () => ConnectionPointEnumMap[NC][];
@@ -136,7 +137,7 @@ export class ConnectionPointsController<NC extends NodeContext> {
 		return this._spare_params_controller;
 	}
 
-	update_signature_if_required(dirty_trigger?: CoreGraphNode) {
+	update_signature_if_required() {
 		if (!this.node.lifecycle.creationCompleted() || !this._inputsOutputsMatchExpectations()) {
 			this.update_connection_types();
 			this.node.removeDirtyState();
@@ -150,25 +151,26 @@ export class ConnectionPointsController<NC extends NodeContext> {
 	}
 
 	// used when a node changes its signature, adn the output nodes need to adapt their own signatures
+	private _successorsCopy: CoreGraphNode[] = [];
 	private make_successors_update_signatures() {
 		const successors = this.node.graphAllSuccessors();
-		const successorsCopy = [...successors];
+		arrayCopy(successors, this._successorsCopy);
 		if (this.node.childrenAllowed()) {
 			const subnet_inputs = this.node.nodesByType(NetworkChildNodeType.INPUT);
 			const subnet_outputs = this.node.nodesByType(NetworkChildNodeType.OUTPUT);
-			for (let subnet_input of subnet_inputs) {
-				successorsCopy.push(subnet_input);
+			for (const subnet_input of subnet_inputs) {
+				this._successorsCopy.push(subnet_input);
 			}
-			for (let subnet_output of subnet_outputs) {
-				successorsCopy.push(subnet_output);
+			for (const subnet_output of subnet_outputs) {
+				this._successorsCopy.push(subnet_output);
 			}
 		}
 
-		for (let graphNode of successorsCopy) {
+		for (const graphNode of this._successorsCopy) {
 			const node = graphNode as TypedNode<NC, any>;
 			// we need to check if node.io exists to be sure it is a node, not just a graph_node
 			if (node.io && node.io.has_connection_points_controller && node.io.connection_points.initialized()) {
-				node.io.connection_points.update_signature_if_required(this.node);
+				node.io.connection_points.update_signature_if_required();
 			}
 		}
 		// we also need to have subnet_output nodes update their parents

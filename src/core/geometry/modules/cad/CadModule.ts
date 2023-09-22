@@ -67,7 +67,7 @@ const onAddSpecializedChildren: SpecializedChildrenHook = (
 	const newCadObjects = coreGroup.cadObjects();
 	if (newCadObjects && newCadObjects.length != 0) {
 		updateCADTesselationParams(params);
-		for (let cadObject of newCadObjects) {
+		for (const cadObject of newCadObjects) {
 			const newObject3D = cadObject.toObject3D(CAD_TESSELATION_PARAMS, displayNode);
 			if (newObject3D) {
 				newObjectsAreDifferent = true;

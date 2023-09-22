@@ -57,11 +57,11 @@ export class UniformsController {
 			resolutionDependent,
 			raymarchingLightsWorldCoordsDependent,
 		} = options;
-		for (let paramConfig of paramConfigs) {
+		for (const paramConfig of paramConfigs) {
 			uniforms[paramConfig.uniformName()] = paramConfig.uniform();
 		}
 		const additionalUniformNames = Object.keys(additionalTextureUniforms);
-		for (let uniformName of additionalUniformNames) {
+		for (const uniformName of additionalUniformNames) {
 			const uniformValue = additionalTextureUniforms[uniformName];
 			uniforms[uniformName] = uniformValue;
 		}
@@ -102,13 +102,14 @@ export class UniformsController {
 	removeResolutionUniform(uniforms: IUniforms) {
 		delete uniforms[UniformName.RESOLUTION];
 	}
-	// private _updateResolutionDependentUniformsCache() {
-	// 	this._resolutionDependentUniforms.splice(0, this._resolutionDependentUniforms.length);
-	// 	this._resolutionDependentUniformsMap.forEach((uniforms) => {
-	// 		this._resolutionDependentUniforms.push(uniforms);
-	// 	});
-	// }
-	// resolution
+	updateResolution(resolution: Vector2, pixelRatio: number) {
+		GLOBAL_UNIFORMS[UniformName.RESOLUTION].value.copy(resolution).multiplyScalar(pixelRatio);
+		// for (let uniforms of this._resolutionDependentUniforms) {
+		// 	this.updateResolutionDependentUniforms(uniforms);
+		// }
+	}
+
+	// raymarching
 	addRaymarchingUniforms(uniforms: IUniforms) {
 		this.scene.sceneTraverser.addLightsRayMarchingUniform(uniforms);
 	}
@@ -116,12 +117,6 @@ export class UniformsController {
 		this.scene.sceneTraverser.removeLightsRayMarchingUniform(uniforms);
 	}
 
-	updateResolution(resolution: Vector2, pixelRatio: number) {
-		GLOBAL_UNIFORMS[UniformName.RESOLUTION].value.copy(resolution).multiplyScalar(pixelRatio);
-		// for (let uniforms of this._resolutionDependentUniforms) {
-		// 	this.updateResolutionDependentUniforms(uniforms);
-		// }
-	}
 	// updateResolutionDependentUniforms(uniforms: IUniformsWithResolutionOnly) {
 	// 	const resolutionUniform = uniforms[UniformName.RESOLUTION];
 	// 	resolutionUniform.value.x = this._resolution.x; // * window.devicePixelRatio;

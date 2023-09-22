@@ -5,11 +5,10 @@
 import {TypedAnimNode} from './_Base';
 import {TimelineBuilder} from '../../../core/animation/TimelineBuilder';
 import {BaseNodeType} from '../_Base';
-
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {Poly} from '../../Poly';
-import {GsapCoreTimeline, gsapTimeline} from '../../../core/thirdParty/gsap/gsapFactory';
+import {GsapCoreTimeline, gsapLib, gsapTimeline} from '../../../core/thirdParty/gsap/gsapFactory';
 import {AnimType} from '../../poly/registers/nodes/types/Anim';
 
 class PlayAnimParamsConfig extends NodeParamsConfig {
@@ -53,7 +52,7 @@ const ParamsConfig = new PlayAnimParamsConfig();
 
 export class PlayAnimNode extends TypedAnimNode<PlayAnimParamsConfig> {
 	override paramsConfig = ParamsConfig;
-	public gsap = gsap; // give access to gsap to external scripts
+	public gsap = gsapLib(); // give access to gsap to external scripts
 	static override type() {
 		return AnimType.PLAY;
 	}

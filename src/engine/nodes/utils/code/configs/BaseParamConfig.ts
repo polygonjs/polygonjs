@@ -52,7 +52,7 @@ export class BaseParamConfig<T extends ParamType> {
 		}
 		const additionalOptions = this.paramOptions();
 		const additionalOptionNames = Object.keys(additionalOptions) as Array<keyof ParamOptions>;
-		for (let optionName of additionalOptionNames) {
+		for (const optionName of additionalOptionNames) {
 			param.options.setOption(optionName, additionalOptions[optionName]);
 		}
 

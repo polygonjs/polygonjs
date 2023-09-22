@@ -117,7 +117,7 @@ export class SDFObject implements ObjectContent<CoreObjectType.SDF> {
 		const object = SDFGeometryToObject3D(this.geometry, tesselationParams);
 		if (object) {
 			if (CoreType.isArray(object)) {
-				for (let element of object) {
+				for (const element of object) {
 					objectContentCopyProperties(this, element);
 				}
 			} else {

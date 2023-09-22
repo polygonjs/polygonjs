@@ -49,7 +49,7 @@ const onAddSpecializedChildren: SpecializedChildrenHook = (
 	const newCsgObjects = coreGroup.csgObjects();
 	if (newCsgObjects && newCsgObjects.length != 0) {
 		updateCSGTesselationParams(params);
-		for (let csgObject of newCsgObjects) {
+		for (const csgObject of newCsgObjects) {
 			const newObject3D = csgObject.toObject3D(CSG_TESSELATION_PARAMS);
 			if (newObject3D) {
 				newObjectsAreDifferent = true;

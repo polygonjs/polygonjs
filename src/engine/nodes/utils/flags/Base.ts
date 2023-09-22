@@ -36,7 +36,7 @@ export class BaseFlag {
 	}
 	private runHooks() {
 		if (this._hooks) {
-			for (let hook of this._hooks) {
+			for (const hook of this._hooks) {
 				hook();
 			}
 		}

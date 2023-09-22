@@ -65,7 +65,7 @@ export class MapboxPlaneFrustumController<T extends CoreObjectType> {
 		expandTriangle(this._triangle_a, margin);
 		expandTriangle(this._triangle_b, margin);
 		const kept_points: CorePoint[] = [];
-		for (let point of points) {
+		for (const point of points) {
 			point.position(this._point_pos);
 			if (
 				// this._triangle_a.containsPoint(this._point_pos) ||

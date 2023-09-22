@@ -101,7 +101,7 @@ export function CSSObjectElementCopyObjectAttributes(element: HTMLElement, optio
 
 	if (copyAttributes == true) {
 		const coreObjectClass = coreObjectClassFactory(object);
-		for (let attribName of attributesToCopy) {
+		for (const attribName of attributesToCopy) {
 			const attribValue = coreObjectClass.attribValue(object, attribName);
 			if (isString(attribValue)) {
 				element.setAttribute(attribName, attribValue);

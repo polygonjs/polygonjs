@@ -77,7 +77,7 @@ export class Channel {
 				return target;
 			});
 		let i = 0;
-		for (let keyframe of sortedKeyframes) {
+		for (const keyframe of sortedKeyframes) {
 			copyKeyframeData(keyframe, data.keyframes[i]);
 			i++;
 		}

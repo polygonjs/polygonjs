@@ -124,13 +124,12 @@ export class ConnectionsController<NC extends NodeContext> {
 		return this._outputConnections.get(outputIndex);
 	}
 
-	outputConnections() {
-		let list: TypedNodeConnection<NC>[] = [];
-
+	outputConnections(target: TypedNodeConnection<NC>[]) {
+		target.length = 0;
 		this._outputConnections.forEach((connections_by_id, output_index) => {
 			connections_by_id.forEach((connection, id) => {
 				if (connection) {
-					list.push(connection);
+					target.push(connection);
 				}
 			});
 		});
@@ -140,6 +139,6 @@ export class ConnectionsController<NC extends NodeContext> {
 		// 		list.push(connections_for_index[id]);
 		// 	});
 		// });
-		return list;
+		return target;
 	}
 }

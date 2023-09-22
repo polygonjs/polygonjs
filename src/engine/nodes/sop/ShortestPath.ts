@@ -80,7 +80,7 @@ export class ShortestPathSopNode extends TypedSopNode<ShortestPathSopParamsConfi
 		const selectedObjects = CoreMask.filterThreejsObjects(inputCoreGroup, this.pv);
 
 		const newObjects: Object3D[] = [];
-		for (let object of selectedObjects) {
+		for (const object of selectedObjects) {
 			this._createShortestPath(object, newObjects);
 		}
 		this.setObjects(newObjects);
@@ -107,7 +107,7 @@ export class ShortestPathSopNode extends TypedSopNode<ShortestPathSopParamsConfi
 			graph.addNode(node);
 		}
 		for (let i = 0; i < facesCount; i++) {
-			for (let edgeIndices of EDGES) {
+			for (const edgeIndices of EDGES) {
 				const i0 = indices[i * 3 + edgeIndices[0]];
 				const i1 = indices[i * 3 + edgeIndices[1]];
 				let endPts0 = endPtBySrcPt.get(i0);

@@ -172,7 +172,7 @@ export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 
 		const movedObjects = await this._getMovedObjectsForTemplatePoint(instanceCoreGroup, point_index);
 
-		for (let movedObject of movedObjects) {
+		for (const movedObject of movedObjects) {
 			if (isBooleanTrue(this.pv.copyAttributes)) {
 				this._copyAttributesGromTemplate(movedObject, templatePoint);
 			}

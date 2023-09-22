@@ -34,7 +34,7 @@ export class CSGHullSopNode extends CSGSopNode<CSGHullSopParamsConfig> {
 		const path2: geometries.path2.Path2[] = [];
 		const objects = inputCoreGroups[0].csgObjects();
 		if (objects) {
-			for (let object of objects) {
+			for (const object of objects) {
 				const geometry = object.csgGeometry();
 				if (csgIsGeom3(geometry)) {
 					geom3.push(geometry);

@@ -210,7 +210,7 @@ export abstract class BaseJsShaderAssembler extends TypedAssembler<NodeContext.J
 	// 	return undefined;
 	// }
 	protected _buildLines() {
-		for (let shaderName of this.shaderNames()) {
+		for (const shaderName of this.shaderNames()) {
 			const template = this._template_shader_for_shader_name(shaderName);
 			if (template) {
 				this._replaceTemplate(template, shaderName);
@@ -266,7 +266,7 @@ export abstract class BaseJsShaderAssembler extends TypedAssembler<NodeContext.J
 	rootNodesByShaderName(shaderName: JsFunctionName, rootNodes: BaseJsNodeType[]): BaseJsNodeType[] {
 		// return this._root_nodes
 		const list = [];
-		for (let node of rootNodes) {
+		for (const node of rootNodes) {
 			switch (node.type()) {
 				// case VaryingWriteGlNode.type():
 				// case ParamGlNode.type():
@@ -612,7 +612,7 @@ export abstract class BaseJsShaderAssembler extends TypedAssembler<NodeContext.J
 		let lineBeforeBodyFoundOnPreviousLine = false;
 		let lineBeforeBodyFound = false;
 
-		for (let templateLine of templateLines) {
+		for (const templateLine of templateLines) {
 			if (lineBeforeMemberFound == true) {
 				if (memberLines) {
 					this._insertLines(newLines, memberLines);
@@ -654,7 +654,7 @@ export abstract class BaseJsShaderAssembler extends TypedAssembler<NodeContext.J
 			let line_remove_required = false;
 
 			if (linesToRemove) {
-				for (let line_to_remove of linesToRemove) {
+				for (const line_to_remove of linesToRemove) {
 					if (templateLine.indexOf(line_to_remove) >= 0) {
 						line_remove_required = true;
 					}
@@ -722,7 +722,7 @@ export abstract class BaseJsShaderAssembler extends TypedAssembler<NodeContext.J
 		for (let i = 0; i < SPACED_LINES; i++) {
 			newLines.push('');
 		}
-		for (let lineToAdd of linesToAdd) {
+		for (const lineToAdd of linesToAdd) {
 			newLines.push(lineToAdd);
 		}
 		for (let i = 0; i < SPACED_LINES; i++) {

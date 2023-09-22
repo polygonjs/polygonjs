@@ -112,7 +112,7 @@ async function _addNumericAttributeToPrimitives<T extends CoreObjectType>(
 					}
 				} else {
 					const value = componentParam.value;
-					for (let primitive of primitives) {
+					for (const primitive of primitives) {
 						array[primitive.index() * size + i] = value;
 					}
 				}

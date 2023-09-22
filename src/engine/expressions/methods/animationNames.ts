@@ -61,7 +61,7 @@ export class AnimationNamesExpression extends BaseMethod {
 							}
 							const animationNames = new Array(animations.length);
 							let i = 0;
-							for (let animation of animations) {
+							for (const animation of animations) {
 								animationNames[i] = animation.name;
 								i++;
 							}

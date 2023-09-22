@@ -1,13 +1,16 @@
 import {BaseNodeType} from '../../../nodes/_Base';
 import {BaseParamType} from '../../../params/_Base';
 import {MissingReference} from './MissingReference';
-import {MapUtils} from '../../../../core/MapUtils';
+import {addToSetAtEntry, mapValuesToArray} from '../../../../core/MapUtils';
 import {PolyScene} from '../../PolyScene';
 import {CoreWalker} from '../../../../core/Walker';
 import {CoreGraphNodeId} from '../../../../core/graph/CoreGraph';
 import {setToArray} from '../../../../core/SetUtils';
 import jsep from 'jsep';
 
+const _resolvedReferences: MissingReference[] = [];
+const _missingReferences: MissingReference[] = [];
+const _missingReferencesSet: Set<MissingReference>[] = [];
 export class MissingReferencesController {
 	private references: Map<CoreGraphNodeId, Set<MissingReference>> = new Map();
 	private _toIgnore: WeakMap<jsep.Expression, boolean> = new WeakMap();
@@ -20,7 +23,7 @@ export class MissingReferencesController {
 		}
 
 		const missingReference = new MissingReference(param, path);
-		MapUtils.addToSetAtEntry(this.references, param.graphNodeId(), missingReference);
+		addToSetAtEntry(this.references, param.graphNodeId(), missingReference);
 
 		return missingReference;
 	}
@@ -38,15 +41,15 @@ export class MissingReferencesController {
 	//
 	//
 	resolveMissingReferences() {
-		const resolvedReferences: MissingReference[] = [];
+		_resolvedReferences.length = 0;
 		this.references.forEach((references) => {
 			references.forEach((reference) => {
 				if (this._isReferenceResolvable(reference)) {
-					resolvedReferences.push(reference);
+					_resolvedReferences.push(reference);
 				}
 			});
 		});
-		for (let reference of resolvedReferences) {
+		for (const reference of _resolvedReferences) {
 			reference.resolveMissingDependencies();
 		}
 	}
@@ -80,7 +83,7 @@ export class MissingReferencesController {
 		}
 
 		this._checkForMissingReferencesForNode(node);
-		for (let param of node.params.all) {
+		for (const param of node.params.all) {
 			this._checkForMissingReferencesForParam(param);
 		}
 	}
@@ -94,11 +97,11 @@ export class MissingReferencesController {
 	private _checkForMissingReferencesForNode(node: BaseNodeType) {
 		const id = node.graphNodeId();
 
-		const missingReferences = MapUtils.arrayFromValues(this.references);
-		for (let missingReference of missingReferences) {
+		mapValuesToArray(this.references, _missingReferencesSet);
+		for (const missingReferenceSet of _missingReferencesSet) {
 			let matchFound = false;
-			const list = setToArray(missingReference, []);
-			for (let ref of list) {
+			setToArray(missingReferenceSet, _missingReferences);
+			for (const ref of _missingReferences) {
 				if (ref.matchesPath(node.path())) {
 					matchFound = true;
 					ref.resolveMissingDependencies();
@@ -112,11 +115,11 @@ export class MissingReferencesController {
 	private _checkForMissingReferencesForParam(param: BaseParamType) {
 		const id = param.graphNodeId();
 
-		const missingReferences = MapUtils.arrayFromValues(this.references);
-		for (let missingReference of missingReferences) {
+		mapValuesToArray(this.references, _missingReferencesSet);
+		for (const missingReferenceSet of _missingReferencesSet) {
 			let matchFound = false;
-			const list = setToArray(missingReference, []);
-			for (let ref of list) {
+			setToArray(missingReferenceSet, _missingReferences);
+			for (const ref of _missingReferences) {
 				if (ref.matchesPath(param.path())) {
 					matchFound = true;
 					ref.resolveMissingDependencies();

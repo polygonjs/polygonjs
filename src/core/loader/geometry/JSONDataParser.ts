@@ -75,7 +75,7 @@ export class JSONDataParser {
 			const convert_to_numeric_masks = stringToAttribNames(this._options.convertToNumeric || '');
 
 			// set values
-			for (let attrib_name of Object.keys(this._attribute_datas_by_name)) {
+			for (const attrib_name of Object.keys(this._attribute_datas_by_name)) {
 				const geo_attrib_name = CoreAttribute.remapName(attrib_name);
 				let attrib_values = this._attribute_values_for_name(attrib_name).flat();
 
@@ -120,11 +120,12 @@ export class JSONDataParser {
 
 		if (this._json) {
 			if ((first_pt = this._json[0]) != null) {
-				for (let attrib_name of Object.keys(first_pt)) {
+				for (const attrib_name of Object.keys(first_pt)) {
 					const attrib_value = first_pt[attrib_name];
 
 					if (this._value_has_subentries(attrib_value)) {
-						for (let key of Object.keys(attrib_value)) {
+						const keys = Object.keys(attrib_value);
+						for (const key of keys) {
 							const deep_attrib_name = [attrib_name, key].join(DEEP_ATTRIB_SEPARATOR);
 							const deep_attrib_value = attrib_value[attrib_name];
 

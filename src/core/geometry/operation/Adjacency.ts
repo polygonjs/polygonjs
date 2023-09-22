@@ -242,7 +242,7 @@ export function populateAdjacency3(object: Object3D, params: PopulateAdjacencyOp
 
 	// build attributes
 	let maxAdjacencyCount = -1;
-	for (let arr of adjacency) {
+	for (const arr of adjacency) {
 		if (arr.length > maxAdjacencyCount) {
 			maxAdjacencyCount = arr.length;
 		}

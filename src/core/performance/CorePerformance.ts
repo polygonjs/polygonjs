@@ -1,7 +1,7 @@
 import {PerformanceNode} from './PerformanceNode';
 import {NodePerformanceData} from '../../engine/nodes/utils/cook/PerformanceController';
 import {BaseNodeType} from '../../engine/nodes/_Base';
-import {arraySortBy,arrayUniq} from '../ArrayUtils';
+import {arraySortBy, arrayUniq} from '../ArrayUtils';
 import {ObjectUtils} from '../ObjectUtils';
 import {PolyDictionary} from '../../types/GlobalTypes';
 import {Poly} from '../../engine/Poly';
@@ -81,9 +81,7 @@ export class CorePerformance {
 
 	print_node_cook_data() {
 		let performance_nodes = Object.values(this._nodes_cook_data);
-		performance_nodes = arraySortBy(performance_nodes, (performance_node) =>
-			performance_node.total_cook_time()
-		);
+		performance_nodes = arraySortBy(performance_nodes, (performance_node) => performance_node.total_cook_time());
 
 		const print_objects = performance_nodes.map((performance_node) => performance_node.print_object());
 
@@ -91,7 +89,7 @@ export class CorePerformance {
 
 		const table_entries = [];
 		const sorted_print_objects = arraySortBy(print_objects, (print_object) => -print_object.total_cook_time);
-		for (let print_object of sorted_print_objects) {
+		for (const print_object of sorted_print_objects) {
 			table_entries.push(print_object);
 		}
 
@@ -107,7 +105,7 @@ export class CorePerformance {
 		const durations = [];
 		const names_by_duration: PolyDictionary<string[]> = {};
 
-		for (let name of Object.keys(durations_by_name)) {
+		for (const name of Object.keys(durations_by_name)) {
 			const duration = durations_by_name[name];
 
 			durations.push(duration);
@@ -122,9 +120,9 @@ export class CorePerformance {
 
 		console.log('--------------- PERF RECORDINGS -----------');
 		const table_entries = [];
-		for (let duration of sorted_durations) {
+		for (const duration of sorted_durations) {
 			const names = names_by_duration[duration];
-			for (let name of names) {
+			for (const name of names) {
 				const count = durations_count_by_name[name];
 				const duration_per_iteration = duration / count;
 

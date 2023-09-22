@@ -13,7 +13,7 @@ export class GroupByBoundingObjectHelper {
 		boundingCoreGroup: CoreGroup
 	) {
 		boundingCoreGroup.boundingBox(bbox);
-		for (let entity of allEntities) {
+		for (const entity of allEntities) {
 			entity.position(tmpPosition);
 			updateSelectionState(selectionStates, entity, bbox.containsPoint(tmpPosition));
 		}

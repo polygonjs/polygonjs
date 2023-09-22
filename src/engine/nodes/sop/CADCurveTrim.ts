@@ -55,7 +55,7 @@ export class CADCurveTrimSopNode extends CADSopNode<CADCurveTrimSopParamsConfig>
 		const newObjects: CadObject<CadGeometryType>[] = [];
 		if (inputObjects) {
 			CadGC.withGC((r) => {
-				for (let inputObject of inputObjects) {
+				for (const inputObject of inputObjects) {
 					if (CoreCadType.isGeom2dCurve(inputObject)) {
 						const curve = inputObject.cadGeometry();
 						const handle = r(new oc.Handle_Geom2d_Curve_2(curve));

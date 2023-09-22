@@ -371,7 +371,7 @@ export class WebGLRendererRopNode extends TypedRopNode<WebGLRendererRopParamsCon
 				const material = (object as Mesh).material;
 				if (material) {
 					if (CoreType.isArray(material)) {
-						for (let mat of material) {
+						for (const mat of material) {
 							mat.needsUpdate = true;
 						}
 					} else {

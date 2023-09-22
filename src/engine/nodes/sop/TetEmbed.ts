@@ -42,7 +42,7 @@ export class TetEmbedSopNode extends TetSopNode<TetEmbedSopParamsConfig> {
 			return;
 		}
 		if (tetObjects) {
-			for (let tetObject of tetObjects) {
+			for (const tetObject of tetObjects) {
 				CoreSoftBodyAttribute.setTetEmbedHighResNodeId(tetObject, highResNodeId);
 				CoreSoftBodyAttribute.setHighResSkinningLookupSpacing(tetObject, this.pv.spacing);
 				CoreSoftBodyAttribute.setHighResSkinningLookupPadding(tetObject, this.pv.padding);

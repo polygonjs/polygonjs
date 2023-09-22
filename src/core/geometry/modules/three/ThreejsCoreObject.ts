@@ -235,7 +235,7 @@ export class ThreejsCoreObject extends BaseCoreObject<CoreObjectType.THREEJS> {
 			return;
 		}
 		const geometries: BufferGeometry[] = [];
-		for (let object of objects) {
+		for (const object of objects) {
 			const geometry = (object as Mesh).geometry;
 			if (geometry) {
 				geometry.applyMatrix4((object as Mesh).matrix);

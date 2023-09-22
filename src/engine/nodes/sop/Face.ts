@@ -90,12 +90,12 @@ export class FaceSopNode extends TypedSopNode<FaceSopParamsConfig> {
 
 	private _makeFacesUnique(core_group: CoreGroup) {
 		const objects = core_group.threejsObjects();
-		for (let object of objects) {
+		for (const object of objects) {
 			if ((object as Mesh).isMesh) {
 				const geometry = (object as Mesh).geometry as BufferGeometry;
 				const faces = arrayChunk((geometry.index?.array as number[]) || [], 3);
 				const points_count = faces.length * 3;
-				for (let attrib_name of Object.keys(geometry.attributes)) {
+				for (const attrib_name of Object.keys(geometry.attributes)) {
 					const attrib = geometry.attributes[attrib_name] as BufferAttribute;
 					const attrib_size = attrib.itemSize;
 					const new_values = new Float32Array(points_count * attrib_size);

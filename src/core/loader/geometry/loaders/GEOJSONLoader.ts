@@ -113,11 +113,11 @@ export class GEOJSONLoader extends Loader {
 	}
 
 	private _parseFeatureCollection(group: Group, features: Array<Feature<Geometry, GeoJsonProperties>>) {
-		for (let feature of features) {
+		for (const feature of features) {
 			const objects = this._parseFeature(feature);
 			if (objects) {
 				if (CoreType.isArray(objects)) {
-					for (let object of objects) {
+					for (const object of objects) {
 						this._addAttributes(object, feature);
 						group.add(object);
 					}

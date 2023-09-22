@@ -66,7 +66,7 @@ export function textureSizeFromPointsCount(geometry: BufferGeometry, target: Vec
 export function textureFromAttributesMissingAttributes(geometry: BufferGeometry, attribNames: string[]): string[] {
 	const missingAttributes: string[] = [];
 
-	for (let attribName of attribNames) {
+	for (const attribName of attribNames) {
 		const attributeName = CoreAttribute.remapName(attribName);
 		const attribute = geometry.getAttribute(attributeName) as BufferAttribute;
 		if (!attribute) {
@@ -78,7 +78,7 @@ export function textureFromAttributesMissingAttributes(geometry: BufferGeometry,
 export function textureFromAttributesTotalAttribSizes(geometry: BufferGeometry, attribNames: string[]) {
 	let currentSize = 0;
 
-	for (let attribName of attribNames) {
+	for (const attribName of attribNames) {
 		const attributeName = CoreAttribute.remapName(attribName);
 		const attribute = geometry.getAttribute(attributeName) as BufferAttribute;
 		if (attribute) {

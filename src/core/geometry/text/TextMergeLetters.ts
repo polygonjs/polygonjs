@@ -21,7 +21,7 @@ interface TextMergeAllLettersOptions extends TextJustifiyParams, TextLineHeightP
 export function textMergeLetters(params: TextMergeAllLettersOptions) {
 	const geometriesByLine = _geometriesByLine(params);
 
-	for (let geometriesForLine of geometriesByLine) {
+	for (const geometriesForLine of geometriesByLine) {
 		applyJustifyModeToGeometries(geometriesForLine, params);
 		applyTextLineHeight(geometriesForLine, params);
 	}
@@ -94,7 +94,7 @@ function _geometriesByLine(params: GeometriesByLineParams): Array<Array<BufferGe
 	const chars = Array.from(params.text);
 	let characterIndex = 0;
 	let lineIndex = 0;
-	for (let geometry of params.geometries) {
+	for (const geometry of params.geometries) {
 		let character = chars[characterIndex];
 		if (character === '\n') {
 			lineIndex++;

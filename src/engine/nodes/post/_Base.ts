@@ -76,7 +76,7 @@ export class TypedPostNode<P extends Pass, K extends NodeParamsConfig> extends T
 		const pass = this.createPassForContext(context);
 		if (pass) {
 			const array = CoreType.isArray(pass) ? pass : [pass];
-			for (let p of array) {
+			for (const p of array) {
 				context.composerController.addPassByNodeInBuildPassesProcess(this, p, context.composer);
 			}
 		}
@@ -111,7 +111,7 @@ export class TypedPostNode<P extends Pass, K extends NodeParamsConfig> extends T
 	protected _updatePasses() {
 		this._passesByEffectsComposer.forEach((passOrPasses) => {
 			const passes = CoreType.isArray(passOrPasses) ? passOrPasses : [passOrPasses];
-			for (let pass of passes) {
+			for (const pass of passes) {
 				this.updatePass(pass);
 			}
 		});

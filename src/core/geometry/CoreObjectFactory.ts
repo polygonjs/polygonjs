@@ -75,7 +75,7 @@ export function registerFactoryFunctions(checkFunctions: CoreFactoryFunctions) {
 
 // point creation methods
 export function corePointClassFactory(object: ObjectContent<CoreObjectType>): BaseCorePointClassClass {
-	for (let factoryFunction of coreFactoryFunctions) {
+	for (const factoryFunction of coreFactoryFunctions) {
 		const result = factoryFunction.pointClass(object);
 		if (result) {
 			return result;
@@ -88,7 +88,7 @@ export function corePointInstanceFactory<T extends CoreObjectType>(
 	object: ObjectContent<T>,
 	index = 0
 ): TypedCorePoint<T> {
-	for (let factoryFunction of coreFactoryFunctions) {
+	for (const factoryFunction of coreFactoryFunctions) {
 		const result = factoryFunction.pointInstance(object, index);
 		if (result) {
 			return result as TypedCorePoint<T>;
@@ -98,7 +98,7 @@ export function corePointInstanceFactory<T extends CoreObjectType>(
 }
 // vertex creation methods
 export function coreVertexClassFactory(object: ObjectContent<CoreObjectType>): BaseCoreVertexClassClass {
-	for (let factoryFunction of coreFactoryFunctions) {
+	for (const factoryFunction of coreFactoryFunctions) {
 		const result = factoryFunction.vertexClass(object);
 		if (result) {
 			return result;
@@ -111,7 +111,7 @@ export function coreVertexInstanceFactory<T extends CoreObjectType>(
 	object: ObjectContent<T>,
 	index = 0
 ): CoreVertex<T> {
-	for (let factoryFunction of coreFactoryFunctions) {
+	for (const factoryFunction of coreFactoryFunctions) {
 		const result = factoryFunction.vertexInstance(object, index);
 		if (result) {
 			return result as CoreVertex<T>;
@@ -121,7 +121,7 @@ export function coreVertexInstanceFactory<T extends CoreObjectType>(
 }
 // primitive creation methods
 export function corePrimitiveClassFactory(object: ObjectContent<CoreObjectType>): BaseCorePrimitiveClassClass {
-	for (let factoryFunction of coreFactoryFunctions) {
+	for (const factoryFunction of coreFactoryFunctions) {
 		const result = factoryFunction.primitiveClass(object);
 		if (result) {
 			return result;
@@ -134,7 +134,7 @@ export function corePrimitiveInstanceFactory<T extends CoreObjectType>(
 	object: ObjectContent<T>,
 	index = 0
 ): CorePrimitive<T> {
-	for (let factoryFunction of coreFactoryFunctions) {
+	for (const factoryFunction of coreFactoryFunctions) {
 		const result = factoryFunction.primitiveInstance(object, index);
 		if (result) {
 			return result as CorePrimitive<T>;
@@ -145,7 +145,7 @@ export function corePrimitiveInstanceFactory<T extends CoreObjectType>(
 
 // object creation methods
 export function coreObjectClassFactory(object: ObjectContent<CoreObjectType>): BaseCoreObjectClassClass {
-	for (let factoryFunction of coreFactoryFunctions) {
+	for (const factoryFunction of coreFactoryFunctions) {
 		const result = factoryFunction.objectClass(object);
 		if (result) {
 			return result;
@@ -158,7 +158,7 @@ export function coreObjectInstanceFactory<T extends CoreObjectType>(
 	object: ObjectContent<T>,
 	index = 0
 ): BaseCoreObject<T> {
-	for (let factoryFunction of coreFactoryFunctions) {
+	for (const factoryFunction of coreFactoryFunctions) {
 		const result = factoryFunction.objectInstance(object, index);
 		if (result) {
 			return result as BaseCoreObject<T>;

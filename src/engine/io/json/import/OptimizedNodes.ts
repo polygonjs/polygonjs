@@ -10,6 +10,7 @@ import {OPERATIONS_COMPOSER_NODE_TYPE} from '../../../operations/_Base';
 import {CoreType} from '../../../../core/Type';
 import {PolyDictionary} from '../../../../types/GlobalTypes';
 import {NodeCreateOptions} from '../../../nodes/utils/hierarchy/ChildrenController';
+import {TypedNodeConnection} from '../../../nodes/utils/io/NodeConnection';
 
 type BaseNodeTypeWithIO = TypedNode<NodeContext, any>;
 
@@ -236,15 +237,17 @@ export class OptimizedNodesJsonImporter<T extends BaseNodeTypeWithIO> {
 			return false;
 		}
 
-		const output_nodes = node.io.connections.outputConnections().map((c) => c.nodeDest());
+		const outputConnections: TypedNodeConnection<NC>[] = [];
+		node.io.connections.outputConnections(outputConnections);
+		const outputNodes = outputConnections.map((c) => c.nodeDest());
 		let non_optimized_count = 0;
-		for (let output_node of output_nodes) {
+		for (let output_node of outputNodes) {
 			if (!output_node.flags?.optimize?.active()) {
 				non_optimized_count++;
 			}
 		}
 		return this.is_optimized_root_node_generic({
-			outputs_count: output_nodes.length,
+			outputs_count: outputNodes.length,
 			non_optimized_count: non_optimized_count,
 		});
 	}

@@ -295,7 +295,7 @@ export class OptionsController {
 
 		this._options[optionName] = value;
 		if (this._param.components) {
-			for (let component of this._param.components) {
+			for (const component of this._param.components) {
 				component.options.setOption(optionName, value);
 			}
 		}
@@ -333,7 +333,7 @@ export class OptionsController {
 		const overriden: ParamOptions = {};
 		const optionNames = Object.keys(this._options) as Array<keyof ParamOptions>;
 		const optionNamesToCheck = arrayDifference(optionNames, NON_OVERRIDABLE_OPTIONS);
-		for (let optionName of optionNamesToCheck) {
+		for (const optionName of optionNamesToCheck) {
 			if (!ObjectUtils.isEqual(this._options[optionName], this._default_options[optionName])) {
 				const cloned_option = ObjectUtils.cloneDeep(this._options[optionName]);
 				Object.assign(overriden, {[optionName]: cloned_option});
@@ -481,7 +481,7 @@ export class OptionsController {
 			param.emit(ParamEvent.EDITABLE_UPDATED);
 		}
 		if (param.components) {
-			for (let component of param.components) {
+			for (const component of param.components) {
 				component.options.setEditableState(state);
 			}
 		}
@@ -539,7 +539,7 @@ export class OptionsController {
 		if (entries.length == 0) {
 			return value;
 		}
-		for (let entry of entries) {
+		for (const entry of entries) {
 			if (value == entry.value) {
 				return value;
 			}
@@ -758,7 +758,7 @@ export class OptionsController {
 		const predecessors = this.visibilityPredecessors();
 		if (predecessors.length > 0) {
 			this._visibility_graph_node = new CoreGraphNode(this.param().scene(), 'param_visibility');
-			for (let predecessor of predecessors) {
+			for (const predecessor of predecessors) {
 				this._visibility_graph_node.addGraphInput(predecessor);
 			}
 			this._visibility_graph_node.addPostDirtyHook(
@@ -785,7 +785,7 @@ export class OptionsController {
 			this._programaticVisibleState = false;
 			await Promise.all(promises);
 			if (CoreType.isArray(options)) {
-				for (let optionsSet of options) {
+				for (const optionsSet of options) {
 					const optionSetParamNames = Object.keys(optionsSet);
 					const optionSetParams = arrayCompact(
 						optionSetParamNames.map((paramName) => node.params.get(paramName))

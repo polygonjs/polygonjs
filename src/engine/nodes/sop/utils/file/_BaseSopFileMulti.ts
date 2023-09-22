@@ -125,7 +125,7 @@ export abstract class BaseFileMultiSopNode<
 		await Promise.all(promises);
 		// move each loaded result and transform it according to its template point
 		this._instancer.setCoreGroup(inputCoreGroup);
-		for (let point of points) {
+		for (const point of points) {
 			const index = point.index();
 			const url = urlByIndex.get(index) || this.pv.url;
 
@@ -159,7 +159,7 @@ export abstract class BaseFileMultiSopNode<
 			const parent = new Group();
 			parent.matrixAutoUpdate = false;
 			parent.name = url;
-			for (let object of objects) {
+			for (const object of objects) {
 				parent.add(object);
 			}
 			loadedResultByUrl.set(url, parent);

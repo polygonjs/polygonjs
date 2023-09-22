@@ -11,7 +11,7 @@ export function tetsSharedFace(tetGeometry: TetGeometry, tetId0: number, tetId1:
 	if (!tet0 || !tet1) {
 		return;
 	}
-	for (let neighbourData of tet0.neighbours) {
+	for (const neighbourData of tet0.neighbours) {
 		if (neighbourData) {
 			if (neighbourData.id == tetId1) {
 				const faceIndex0 = neighbourData.faceIndex;
@@ -31,7 +31,7 @@ export function tetsShareFace(tetGeometry: TetGeometry, tetId0: number, tetId1: 
 	if (!tet0) {
 		return false;
 	}
-	for (let neighbourData of tet0.neighbours) {
+	for (const neighbourData of tet0.neighbours) {
 		if (neighbourData) {
 			if (neighbourData.id == tetId1) {
 				return true;

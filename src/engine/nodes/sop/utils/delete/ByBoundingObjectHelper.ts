@@ -33,7 +33,7 @@ export class ByBoundingObjectHelper {
 		geo.computeBoundingBox();
 		const bbox = geo.boundingBox!;
 
-		for (let point of points) {
+		for (const point of points) {
 			point.position(_pointPosition);
 
 			if (bbox.containsPoint(_pointPosition)) {

@@ -179,9 +179,9 @@ export class TransformMultiSopNode extends TypedSopNode<TransformMultiSopParamCo
 			if (src_geometry) {
 				const attributes_to_copy = [Attribute.POSITION, Attribute.NORMAL, Attribute.TANGENT];
 
-				for (let attrib_name of attributes_to_copy) {
+				for (const attrib_name of attributes_to_copy) {
 					const src = src_geometry.attributes[attrib_name] as BufferAttribute | null;
-					for (let object of objects) {
+					for (const object of objects) {
 						const geometry = object.geometry;
 						const dest = geometry.attributes[attrib_name] as BufferAttribute | null;
 						if (src && dest) {
@@ -196,7 +196,7 @@ export class TransformMultiSopNode extends TypedSopNode<TransformMultiSopParamCo
 		for (let i = 0; i < this.pv.count; i++) {
 			pair = this._rotAndIndexPairs()[i];
 			const matrix = this._matrix(pair[0].value, pair[1].value);
-			for (let object of objects) {
+			for (const object of objects) {
 				object.geometry.applyMatrix4(matrix);
 			}
 		}
@@ -204,7 +204,7 @@ export class TransformMultiSopNode extends TypedSopNode<TransformMultiSopParamCo
 
 	private _apply_matrix_to_objects(objects: Object3D[], src_object: Object3D | undefined) {
 		if (src_object) {
-			for (let object of objects) {
+			for (const object of objects) {
 				object.matrix.copy(src_object.matrix);
 				// TODO: This would not be required if objects generated in SOP has matrixAutoUpdate=false
 				object.matrix.decompose(object.position, object.quaternion, object.scale);
@@ -215,7 +215,7 @@ export class TransformMultiSopNode extends TypedSopNode<TransformMultiSopParamCo
 		for (let i = 0; i < this.pv.count; i++) {
 			pair = this._rotAndIndexPairs()[i];
 			const matrix = this._matrix(pair[0].value, pair[1].value);
-			for (let object of objects) {
+			for (const object of objects) {
 				object.applyMatrix4(matrix);
 			}
 		}

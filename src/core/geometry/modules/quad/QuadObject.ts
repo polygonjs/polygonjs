@@ -55,7 +55,7 @@ export class QuadObject implements ObjectContent<CoreObjectType.QUAD> {
 		const object = quadToObject3D(this.geometry, tesselationParams);
 		if (object) {
 			if (CoreType.isArray(object)) {
-				for (let element of object) {
+				for (const element of object) {
 					objectContentCopyProperties(this, element);
 				}
 			} else {

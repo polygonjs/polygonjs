@@ -112,7 +112,7 @@ export class TimelineBuilderProperty {
 		const operation = timelineBuilder.operation();
 		const updateCallback = timelineBuilder.updateCallback();
 
-		for (let object3d of objects) {
+		for (const object3d of objects) {
 			// const target_property = (object3d as any)[this._property_name as any] as TargetValue;
 			// let to_target: object | null = null;
 			const props = this._sceneGraphProps(object3d, this._propertyName);

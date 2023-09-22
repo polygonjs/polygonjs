@@ -6,6 +6,7 @@ import {ContainerMap} from '../../containers/utils/ContainerMap';
 import {NodeContext} from '../../poly/NodeContext';
 import {ContainableMap} from '../../containers/utils/ContainableMap';
 import {touchNodeRef} from '../../../core/reactivity/NodeReactivity';
+import {NodeInputsController} from './io/InputsController';
 
 enum ErrorType {
 	FROM_INPUTS = 'node inputs error',
@@ -20,6 +21,8 @@ export class NodeCookController<NC extends NodeContext> {
 	private _performanceController: NodeCookPerformanceformanceController = new NodeCookPerformanceformanceController(
 		this
 	);
+	private _inputContainers: Array<ContainerMap[NC] | null> = [];
+	private _inputContents: ContainableMap[NC][] = [];
 
 	constructor(private node: BaseNodeType) {
 		this._corePerformance = this.node.scene().performance;
@@ -79,13 +82,18 @@ export class NodeCookController<NC extends NodeContext> {
 			// we need to try/catch inputs fetching,
 			// as some nodes like the sop/normalsHelper
 			// currently fail when being cloned
-			const inputContents: ContainableMap[NC][] | undefined = this._inputsEvaluationRequired
-				? await this._evaluateInputs()
-				: undefined;
+			// const inputContents: ContainableMap[NC][] | undefined = this._inputsEvaluationRequired
+			// 	? await this._evaluateInputs()
+			// 	: undefined;
+			this._inputContents.length = 0;
+			if (this._inputsEvaluationRequired) {
+				await this._evaluateInputs(this._inputContents);
+			}
+
 			if (this.node.params.paramsEvalRequired()) {
 				await this._evaluateParams();
 			}
-			this._startCookIfNoErrors(inputContents);
+			this._startCookIfNoErrors(this._inputContents);
 		} catch (e) {
 			this._onError(e, ErrorType.FROM_INPUTS);
 		}
@@ -165,22 +173,31 @@ export class NodeCookController<NC extends NodeContext> {
 		}
 	}
 
-	private async _evaluateInputs(): Promise<ContainableMap[NC][]> {
+	private async _evaluateInputs(inputContents: ContainableMap[NC][]): Promise<ContainableMap[NC][]> {
 		this._performanceController.recordInputsStart();
 
-		const ioOnputs = this.node.io.inputs;
+		const ioOnputs: NodeInputsController<NC> = this.node.io.inputs;
 
-		const inputContainers: (ContainerMap[NC] | null)[] = this._inputsEvaluationRequired
-			? ioOnputs.isGraphNodeDirty()
-				? await ioOnputs.evalRequiredInputs()
-				: ioOnputs.containersWithoutEvaluation()
-			: [];
+		// const inputContainers: (ContainerMap[NC] | null)[] = this._inputsEvaluationRequired
+		// 	? ioOnputs.isGraphNodeDirty()
+		// 		? await ioOnputs.evalRequiredInputs()
+		// 		: ioOnputs.containersWithoutEvaluation()
+		// 	: [];
+
+		this._inputContainers.length = 0;
+		if (this._inputsEvaluationRequired) {
+			if (ioOnputs.isGraphNodeDirty()) {
+				await ioOnputs.evalRequiredInputs(this._inputContainers);
+			} else {
+				ioOnputs.containersWithoutEvaluation(this._inputContainers);
+			}
+		}
 
 		const inputs = ioOnputs.inputs();
-		const inputContents: ContainableMap[NC][] = [];
+		// const inputContents: ContainableMap[NC][] = [];
 		let inputContainer: ContainerMap[NC] | null;
 		for (let i = 0; i < inputs.length; i++) {
-			inputContainer = inputContainers[i];
+			inputContainer = this._inputContainers[i];
 			if (inputContainer) {
 				if (ioOnputs.cloneRequired(i)) {
 					inputContents[i] = inputContainer.coreContentCloned() as ContainableMap[NC];
@@ -236,7 +253,7 @@ export class NodeCookController<NC extends NodeContext> {
 		if (!this._onCookCompleteHookNames || !this._onCookCompleteHooks) {
 			return;
 		}
-		for (let hookName of this._onCookCompleteHookNames) {
+		for (const hookName of this._onCookCompleteHookNames) {
 			this.deregisterOnCookEnd(hookName);
 		}
 	}

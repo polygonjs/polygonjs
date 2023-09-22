@@ -235,7 +235,7 @@ export class MaterialPersistedConfig extends BasePersistedConfig {
 		this._material.customMaterials = this._material.customMaterials || {};
 		if (data.customMaterials) {
 			const customMatNames: CustomMaterialName[] = Object.keys(data.customMaterials) as CustomMaterialName[];
-			for (let customMatName of customMatNames) {
+			for (const customMatName of customMatNames) {
 				const customMatData = data.customMaterials[customMatName];
 				const customMat = this._loadMaterial(customMatData.material);
 				if (customMat) {

@@ -103,7 +103,7 @@ function _createSegmentsFromAllVertices(
 	newObjects: CadObject<CadGeometryType>[]
 ) {
 	let previousVertexObject: CadObject<CadGeometryType.VERTEX> | undefined;
-	for (let inputObject of coreObjects) {
+	for (const inputObject of coreObjects) {
 		if (previousVertexObject) {
 			newObjects.push(_createSegment(oc, previousVertexObject.cadGeometry(), inputObject.cadGeometry()));
 		}
@@ -116,7 +116,7 @@ function _createSegmentsFromAllPoint2D(
 	newObjects: CadObject<CadGeometryType>[]
 ) {
 	let previousPoint2DObject: CadObject<CadGeometryType.POINT_2D> | undefined;
-	for (let inputObject of coreObjects) {
+	for (const inputObject of coreObjects) {
 		if (previousPoint2DObject) {
 			newObjects.push(_createSegment2d(oc, previousPoint2DObject.cadGeometry(), inputObject.cadGeometry()));
 		}

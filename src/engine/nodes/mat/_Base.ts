@@ -69,12 +69,12 @@ export abstract class PrimitiveMatNode<M extends Material, K extends NodeParamsC
 		super.setMaterial(material);
 	}
 	getTextures(material: M, record: MaterialTexturesRecord) {
-		for (let controller of this.controllersList) {
+		for (const controller of this.controllersList) {
 			controller.getTextures(material, record);
 		}
 	}
 	setParamsFromMaterial(material: M, record: SetParamsTextureNodesRecord) {
-		for (let controller of this.controllersList) {
+		for (const controller of this.controllersList) {
 			controller.setParamsFromMaterial(material, record);
 		}
 	}
@@ -85,7 +85,7 @@ export abstract class PrimitiveMatNode<M extends Material, K extends NodeParamsC
 	}
 	override initializeNode() {
 		this.params.onParamsCreated('init controllers', () => {
-			for (let controller of this.controllersList) {
+			for (const controller of this.controllersList) {
 				controller.initializeNode();
 			}
 		});

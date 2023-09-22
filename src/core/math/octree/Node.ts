@@ -57,7 +57,7 @@ export class OctreeNode {
 
 	setPoints(points: CorePoint[]) {
 		this._pointsByOctantId = {};
-		for (let point of points) {
+		for (const point of points) {
 			this.addPoint(point);
 		}
 
@@ -137,7 +137,7 @@ export class OctreeNode {
 		this._bboxCenter(1, 1, 1, bboxCenters[7]);
 
 		const bboxSizeQuarter = this._bbox.max.clone().sub(this._bbox.min).multiplyScalar(0.25);
-		for (let bboxCenter of bboxCenters) {
+		for (const bboxCenter of bboxCenters) {
 			const octantId = this._octantId(bboxCenter);
 			const bbox = new Box3(bboxCenter.clone().sub(bboxSizeQuarter), bboxCenter.clone().add(bboxSizeQuarter));
 			this._boundingBoxesByOctant[octantId] = bbox;

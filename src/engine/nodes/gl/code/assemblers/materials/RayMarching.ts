@@ -56,7 +56,7 @@ export class ShaderAssemblerRayMarching extends BaseShaderAssemblerRayMarchingRe
 			const materialUniforms = material.uniforms as any as RayMarchingUniforms;
 			const customMaterials = (material as any as MaterialWithCustomMaterials).customMaterials;
 			const customNames = Object.keys(customMaterials) as CustomMaterialName[];
-			for (let customMaterialName of customNames) {
+			for (const customMaterialName of customNames) {
 				const customMaterial = customMaterials[customMaterialName];
 				if (customMaterial) {
 					const uniforms = (customMaterial as ShaderMaterial).uniforms as any as RayMarchingUniforms;

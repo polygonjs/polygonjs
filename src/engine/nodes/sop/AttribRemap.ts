@@ -75,7 +75,7 @@ export class AttribRemapSopNode extends TypedSopNode<AttribRemapSopParamsConfig>
 		}
 
 		let i = 0;
-		for (let normalized_value of remaped_values) {
+		for (const normalized_value of remaped_values) {
 			const point = points[i];
 			point.setAttribValue(targetName, normalized_value);
 			i++;

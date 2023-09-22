@@ -28,7 +28,7 @@ export interface SingleBodyPersistedConfigBaseJsData extends PersistedConfigBase
 export function serializedVariablesFromFunctionData(functionData: BaseFunctionData) {
 	const {variableNames, variablesByName} = functionData;
 	const serializedVariables: SerializedVariable<SerializedVariableType>[] = [];
-	for (let variableName of variableNames) {
+	for (const variableName of variableNames) {
 		const variable = variablesByName[variableName];
 		if (variable != null && isVariableSerializable(variable)) {
 			const serialized = serializeVariable(variable);
@@ -41,7 +41,7 @@ export function variablesByNameFromPersistedConfigData(data: PersistedConfigBase
 	const {variableNames, variables} = data;
 	const variablesByName: Record<string, RegisterableVariable> = {};
 	let i = 0;
-	for (let variableName of variableNames) {
+	for (const variableName of variableNames) {
 		const serialized = variables[i];
 		const deserialized = deserializeVariable(serialized);
 		variablesByName[variableName] = deserialized;
@@ -56,7 +56,7 @@ export function functionsByNameFromPersistedConfigData(
 	const {functionNames} = data;
 	const functionsByName: Record<string, Function> = {};
 	// let i = 0;
-	for (let functionName of functionNames) {
+	for (const functionName of functionNames) {
 		const namedFunction = Poly.namedFunctionsRegister.getFunction(functionName, node);
 		if (namedFunction) {
 			functionsByName[functionName] = namedFunction.func.bind(namedFunction);

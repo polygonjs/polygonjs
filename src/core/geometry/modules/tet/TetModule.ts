@@ -56,7 +56,7 @@ const onAddSpecializedChildren: SpecializedChildrenHook = (
 	const newTetObjects = coreGroup.tetObjects();
 	if (newTetObjects && newTetObjects.length != 0) {
 		updateTetTesselationParams(params);
-		for (let tetObject of newTetObjects) {
+		for (const tetObject of newTetObjects) {
 			const newObject3D = tetObject.toObject3D(TET_TESSELATION_PARAMS);
 			if (newObject3D) {
 				newObjectsAreDifferent = true;

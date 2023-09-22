@@ -51,35 +51,35 @@ export class CodeBuilder {
 		this._nodeTraverser.traverse(rootNodes);
 
 		const nodesByShaderName: Map<ShaderName, BaseGlNodeType[]> = new Map();
-		for (let shaderName of this.shaderNames()) {
+		for (const shaderName of this.shaderNames()) {
 			const nodes = this._nodeTraverser.nodesForShaderName(shaderName);
 			nodesByShaderName.set(shaderName, nodes);
 		}
 		const sortedNodes = this._nodeTraverser.sortedNodes();
-		for (let shaderName of this.shaderNames()) {
+		for (const shaderName of this.shaderNames()) {
 			const rootNodesForShader = this._root_nodes_for_shader_method(shaderName, rootNodes);
 
-			for (let rootNode of rootNodesForShader) {
+			for (const rootNode of rootNodesForShader) {
 				MapUtils.pushOnArrayAtEntry(nodesByShaderName, shaderName, rootNode);
 			}
 		}
 
 		// ensure nodes are not added if already present
 		const sorted_node_ids: Map<CoreGraphNodeId, boolean> = new Map();
-		for (let node of sortedNodes) {
+		for (const node of sortedNodes) {
 			sorted_node_ids.set(node.graphNodeId(), true);
 		}
 
-		for (let rootNode of rootNodes) {
+		for (const rootNode of rootNodes) {
 			if (!sorted_node_ids.get(rootNode.graphNodeId())) {
 				sortedNodes.push(rootNode);
 				sorted_node_ids.set(rootNode.graphNodeId(), true);
 			}
 		}
-		for (let node of sortedNodes) {
+		for (const node of sortedNodes) {
 			node.reset_code();
 		}
-		for (let node of paramNodes) {
+		for (const node of paramNodes) {
 			node.reset_code();
 		}
 		// for (let node of sorted_nodes) {
@@ -97,20 +97,20 @@ export class CodeBuilder {
 			this._assembler
 		);
 		this.reset();
-		for (let shaderName of this.shaderNames()) {
+		for (const shaderName of this.shaderNames()) {
 			let nodes = nodesByShaderName.get(shaderName) || [];
 			nodes = arrayUniq(nodes);
 
 			this._shadersCollectionController.setCurrentShaderName(shaderName);
 			if (nodes) {
-				for (let node of nodes) {
+				for (const node of nodes) {
 					node.setLines(this._shadersCollectionController);
 				}
 			}
 		}
 		// set param configs
 		if (this._param_configs_set_allowed) {
-			for (let param_node of paramNodes) {
+			for (const param_node of paramNodes) {
 				try {
 					param_node.states.error.clear();
 					param_node.setParamConfigs();
@@ -139,7 +139,7 @@ export class CodeBuilder {
 	}
 
 	private reset() {
-		for (let shader_name of this.shaderNames()) {
+		for (const shader_name of this.shaderNames()) {
 			const lines_map = new Map();
 			// for (let line_type of LINE_TYPES) {
 			// 	lines_map.set(line_type, []);
@@ -161,10 +161,10 @@ export class CodeBuilder {
 
 	setParamConfigs(nodes: BaseGlNodeType[]) {
 		this._param_configs_controller.reset();
-		for (let node of nodes) {
+		for (const node of nodes) {
 			const param_configs = node.param_configs();
 			if (param_configs) {
-				for (let param_config of param_configs) {
+				for (const param_config of param_configs) {
 					this._param_configs_controller.push(param_config);
 				}
 			}
@@ -172,7 +172,7 @@ export class CodeBuilder {
 	}
 
 	private _setCodeLines(nodes: BaseGlNodeType[], options?: CodeBuilderSetCodeLinesOptions) {
-		for (let shaderName of this.shaderNames()) {
+		for (const shaderName of this.shaderNames()) {
 			const additionalDefinitions: BaseGLDefinition[] = [];
 			if (shaderName == ShaderName.FRAGMENT) {
 				if (this._shadersCollectionController && options && options.otherFragmentShaderCollectionController) {
@@ -219,11 +219,11 @@ export class CodeBuilder {
 			return;
 		}
 		const definitions: BaseGLDefinition[] = [];
-		for (let node of nodes) {
+		for (const node of nodes) {
 			let nodeDefinitions = this._shadersCollectionController.definitions(shaderName, node);
 			if (nodeDefinitions) {
 				nodeDefinitions = nodeDefinitions.filter((d) => d.definition_type == definitionType);
-				for (let definition of nodeDefinitions) {
+				for (const definition of nodeDefinitions) {
 					definitions.push(definition);
 				}
 			}
@@ -232,7 +232,7 @@ export class CodeBuilder {
 			const filteredAdditionalDefinitions = additionalDefinitions.filter(
 				(d) => d.definition_type == definitionType
 			);
-			for (let definition of filteredAdditionalDefinitions) {
+			for (const definition of filteredAdditionalDefinitions) {
 				definitions.push(definition);
 			}
 		}
@@ -247,7 +247,7 @@ export class CodeBuilder {
 
 			const definitions_by_node_id: Map<CoreGraphNodeId, BaseGLDefinition[]> = new Map();
 			const nodeIds: Map<CoreGraphNodeId, boolean> = new Map();
-			for (let definition of uniqDefinitions) {
+			for (const definition of uniqDefinitions) {
 				const nodeId = definition.node.graphNodeId();
 				if (!nodeIds.has(nodeId)) {
 					nodeIds.set(nodeId, true);
@@ -264,7 +264,7 @@ export class CodeBuilder {
 						const comment = CodeFormatter.nodeComment(first_definition.node, lineType);
 						MapUtils.pushOnArrayAtEntry(lines_for_shader, lineType, comment);
 
-						for (let definition of definitions) {
+						for (const definition of definitions) {
 							const line = CodeFormatter.lineWrap(first_definition.node, definition.line, lineType);
 							MapUtils.pushOnArrayAtEntry(lines_for_shader, lineType, line);
 						}

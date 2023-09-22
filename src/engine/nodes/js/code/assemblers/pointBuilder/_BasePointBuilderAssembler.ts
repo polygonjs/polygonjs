@@ -137,7 +137,7 @@ export class JsAssemblerBasePointBuilder extends BaseJsShaderAssembler {
 			this._buildLines();
 		}
 
-		for (let shaderName of shaderNames) {
+		for (const shaderName of shaderNames) {
 			const lines = this._lines.get(shaderName);
 			if (lines) {
 				this._shaders_by_name.set(shaderName, lines.join('\n'));

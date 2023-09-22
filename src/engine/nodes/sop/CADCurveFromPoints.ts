@@ -30,7 +30,7 @@ export class CADCurveFromPointsSopNode extends CADSopNode<CADCurveFromPointsSopP
 
 		const vertices: TopoDS_Shape[] = [];
 		if (objects) {
-			for (let object of objects) {
+			for (const object of objects) {
 				if (CoreCadType.isVertex(object)) {
 					vertices.push(object.cadGeometry());
 				}
@@ -43,7 +43,7 @@ export class CADCurveFromPointsSopNode extends CADSopNode<CADCurveFromPointsSopP
 				const positions = r(new oc.TColgp_Array1OfPnt_2(0, vertices.length - 1));
 				const points: gp_Pnt[] = [];
 				let index = 0;
-				for (let vertex of vertices) {
+				for (const vertex of vertices) {
 					const point = oc.BRep_Tool.Pnt(vertex);
 					points.push(point);
 					positions.SetValue(index, point);
@@ -80,7 +80,7 @@ export class CADCurveFromPointsSopNode extends CADSopNode<CADCurveFromPointsSopP
 				const createFunction = _createBezier;
 				const edge = createFunction();
 
-				for (let point of points) {
+				for (const point of points) {
 					point.delete();
 				}
 

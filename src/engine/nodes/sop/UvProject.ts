@@ -72,7 +72,7 @@ export class UvProjectSopNode extends TypedSopNode<UvProjectSopParamsConfig> {
 		if (this._processed_core_group && parent) {
 			const points = this._processed_core_group.points();
 			const obj_world_matrix = (parent as BaseObjNodeType).object.matrixWorld;
-			for (let point of points) {
+			for (const point of points) {
 				point.position(_position);
 				const uvw = this._vectorInCameraSpace(_position, obj_world_matrix);
 				if (uvw) {

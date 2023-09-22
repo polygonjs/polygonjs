@@ -52,7 +52,7 @@ export class CSGExtrudeRotateSopNode extends CSGSopNode<CSGExtrudeRotateSopParam
 				segments: this.pv.segments * 4,
 			};
 			const newGeometries: CsgGeometry[] = [];
-			for (let inputObject of inputObjects) {
+			for (const inputObject of inputObjects) {
 				const inputGeometry = inputObject.csgGeometry();
 				if (csgIsGeom2(inputGeometry)) {
 					newGeometries.push(extrudeRotate(options, inputGeometry));

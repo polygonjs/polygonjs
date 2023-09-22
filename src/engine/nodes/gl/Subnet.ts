@@ -189,7 +189,7 @@ export class AbstractTypedSubnetGlNode<K extends NodeParamsConfig> extends Typed
 			return;
 		}
 		const bodyLines: string[] = [];
-		for (let connection of connections) {
+		for (const connection of connections) {
 			if (connection) {
 				const connection_point = connection.destConnectionPoint();
 				const in_value = ThreeToGl.any(this.variableForInput(connection_point.name()));
@@ -208,16 +208,16 @@ export class AbstractTypedSubnetGlNode<K extends NodeParamsConfig> extends Typed
 		}
 		const bodyLines: string[] = [];
 
-		for (let connection of connections) {
+		for (const connection of connections) {
 			if (connection) {
-				const connection_point = connection.destConnectionPoint();
+				const connectionPoint = connection.destConnectionPoint();
 
-				const in_value = ThreeToGl.any(childNode.variableForInput(connection_point.name()));
-				const out = this.glVarName(connection_point.name());
+				const in_value = ThreeToGl.any(childNode.variableForInput(connectionPoint.name()));
+				const out = this.glVarName(connectionPoint.name());
 				// const body_line = `${gl_type} ${out} = ${in_value}`;
 				// do not use the type, to avoid re-defining a variable that should be defined in the parent node
-				const body_line = `	${out} = ${in_value}`;
-				bodyLines.push(body_line);
+				const bodyLine = `	${out} = ${in_value}`;
+				bodyLines.push(bodyLine);
 			}
 		}
 		return bodyLines;
@@ -305,7 +305,7 @@ export class AbstractTypedSubnetGlNode<K extends NodeParamsConfig> extends Typed
 
 		// 1- add all definitions for each shaderName
 		const shaderNames = shadersCollectionController.shaderNames();
-		for (let shaderName of shaderNames) {
+		for (const shaderName of shaderNames) {
 			const definitions: BaseGLDefinition[] = [];
 			internalShadersCollectionController.traverseDefinitions(shaderName, (definition) => {
 				// only add function if it is for the current shader
@@ -321,7 +321,7 @@ export class AbstractTypedSubnetGlNode<K extends NodeParamsConfig> extends Typed
 		if (currentShaderName != ShaderName.VERTEX) {
 			const attribNodes = this.nodesByType(GlType.ATTRIBUTE);
 			const bodyLines: string[] = [];
-			for (let attribNode of attribNodes) {
+			for (const attribNode of attribNodes) {
 				const linesForNode = internalShadersCollectionController.bodyLines(ShaderName.VERTEX, attribNode);
 				if (linesForNode) {
 					bodyLines.push(...linesForNode);

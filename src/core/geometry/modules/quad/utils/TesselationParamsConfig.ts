@@ -25,7 +25,7 @@ export const TESSELATION_PARAM_NAMES = new Set<string>(['QUADTriangles', 'QUADWi
 export function addQUADTesselationParamsCallback(node: BaseNodeType, callback: () => void) {
 	node.params.onParamsCreated('QUADtesselationParamsHooks', () => {
 		const params = node.params.all;
-		for (let param of params) {
+		for (const param of params) {
 			if (TESSELATION_PARAM_NAMES.has(param.name())) {
 				param.options.setOption('callback', callback);
 			}

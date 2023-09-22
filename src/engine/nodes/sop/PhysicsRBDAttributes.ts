@@ -243,7 +243,7 @@ export class PhysicsRBDAttributesSopNode extends TypedSopNode<PhysicsRBDAttribut
 		const colliderType = this.colliderType();
 		const sizeMethod = this.sizeMethod();
 		const coreObjects = coreGroup.allCoreObjects();
-		for (let coreObject of coreObjects) {
+		for (const coreObject of coreObjects) {
 			CorePhysicsAttribute.setRBDType(coreObject.object(), RBDType);
 
 			CorePhysicsAttribute.setColliderType(coreObject.object(), colliderType);
@@ -350,7 +350,7 @@ export class PhysicsRBDAttributesSopNode extends TypedSopNode<PhysicsRBDAttribut
 			case PhysicsRBDColliderType.CUBOID: {
 				switch (sizeMethod) {
 					case SizeComputationMethod.AUTO: {
-						for (let coreObject of coreObjects) {
+						for (const coreObject of coreObjects) {
 							coreObject.geometryBoundingBox(tmpBox);
 							tmpBox.getSize(tmpV3);
 							CorePhysicsAttribute.setCuboidSizes(coreObject.object(), tmpV3);
@@ -382,7 +382,7 @@ export class PhysicsRBDAttributesSopNode extends TypedSopNode<PhysicsRBDAttribut
 			case PhysicsRBDColliderType.SPHERE: {
 				switch (sizeMethod) {
 					case SizeComputationMethod.AUTO: {
-						for (let coreObject of coreObjects) {
+						for (const coreObject of coreObjects) {
 							coreObject.geometryBoundingSphere(tmpSphere);
 							const radius = tmpSphere.radius;
 							CorePhysicsAttribute.setRadius(coreObject.object(), radius);
@@ -406,7 +406,7 @@ export class PhysicsRBDAttributesSopNode extends TypedSopNode<PhysicsRBDAttribut
 			case PhysicsRBDColliderType.CAPSULE: {
 				switch (sizeMethod) {
 					case SizeComputationMethod.AUTO: {
-						for (let coreObject of coreObjects) {
+						for (const coreObject of coreObjects) {
 							coreObject.geometryBoundingBox(tmpBox);
 							tmpBox.getSize(tmpV3);
 							const radius = 0.5 * tmpV3.x;
@@ -441,7 +441,7 @@ export class PhysicsRBDAttributesSopNode extends TypedSopNode<PhysicsRBDAttribut
 			case PhysicsRBDColliderType.CYLINDER: {
 				switch (sizeMethod) {
 					case SizeComputationMethod.AUTO: {
-						for (let coreObject of coreObjects) {
+						for (const coreObject of coreObjects) {
 							coreObject.geometryBoundingBox(tmpBox);
 							tmpBox.getSize(tmpV3);
 							CorePhysicsAttribute.setHeight(coreObject.object(), tmpV3.y);
@@ -505,7 +505,7 @@ export class PhysicsRBDAttributesSopNode extends TypedSopNode<PhysicsRBDAttribut
 				applyMethod(coreObject.object(), value);
 			});
 		} else {
-			for (let coreObject of coreObjects) {
+			for (const coreObject of coreObjects) {
 				applyMethod(coreObject.object(), param.value);
 			}
 		}
@@ -531,7 +531,7 @@ export class PhysicsRBDAttributesSopNode extends TypedSopNode<PhysicsRBDAttribut
 		// }
 		// const initVector = this._vectorByAttribSize(this.pv.size);
 		// if (initVector) {
-		for (let coreObject of coreObjects) {
+		for (const coreObject of coreObjects) {
 			valuesByCoreObjectIndex.set(coreObject.index(), new Vector3());
 		}
 		for (let componentIndex = 0; componentIndex < components.length; componentIndex++) {
@@ -552,7 +552,7 @@ export class PhysicsRBDAttributesSopNode extends TypedSopNode<PhysicsRBDAttribut
 					}
 				);
 			} else {
-				for (let coreObject of coreObjects) {
+				for (const coreObject of coreObjects) {
 					const vector = valuesByCoreObjectIndex.get(coreObject.index());
 					if (vector) {
 						vector[component_name] = component_param.value;
@@ -579,7 +579,7 @@ export class PhysicsRBDAttributesSopNode extends TypedSopNode<PhysicsRBDAttribut
 				applyMethod(coreObject.object(), value);
 			});
 		} else {
-			for (let coreObject of coreObjects) {
+			for (const coreObject of coreObjects) {
 				applyMethod(coreObject.object(), param.value);
 			}
 		}
@@ -594,7 +594,7 @@ export class PhysicsRBDAttributesSopNode extends TypedSopNode<PhysicsRBDAttribut
 				applyMethod(coreObject.object(), value);
 			});
 		} else {
-			for (let coreObject of coreObjects) {
+			for (const coreObject of coreObjects) {
 				applyMethod(coreObject.object(), param.value);
 			}
 		}

@@ -258,7 +258,7 @@ export class CoreMapboxTransform {
 			.map((p) => parseFloat(p))
 			.sort();
 		const values = [];
-		for (let position of positions) {
+		for (const position of positions) {
 			values.push(STEP_SIZE_BY_ZOOM[position]);
 		}
 

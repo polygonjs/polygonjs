@@ -19,7 +19,7 @@ export abstract class TypedMultipleParam<T extends ParamType> extends TypedParam
 		return true;
 	}
 	override isDefault() {
-		for (let c of this.components) {
+		for (const c of this.components) {
 			if (!c.isDefault()) {
 				return false;
 			}
@@ -46,7 +46,7 @@ export abstract class TypedMultipleParam<T extends ParamType> extends TypedParam
 		}
 		let index = 0;
 		this._components = new Array(this.componentNames().length);
-		for (let componentName of this.componentNames()) {
+		for (const componentName of this.componentNames()) {
 			const component = new this._components_contructor(this.scene(), this.node, {
 				serializerClass: this._serializer?.constructor as typeof CoreParamSerializer<any> | undefined,
 			}); //, `${this.name}${name}`);
@@ -73,7 +73,7 @@ export abstract class TypedMultipleParam<T extends ParamType> extends TypedParam
 	}
 
 	protected override async processComputation(): Promise<void> {
-		await this.compute_components();
+		await this.computeComponents();
 		this.setValueFromComponents();
 	}
 
@@ -89,21 +89,28 @@ export abstract class TypedMultipleParam<T extends ParamType> extends TypedParam
 		return false;
 	}
 
-	private async compute_components() {
+	// private _promises:Promise<void>[] = [];
+	private async computeComponents() {
 		const components = this.components;
-		const promises = [];
+		// _promises.length = 0;
+		// in order to avoid having to allocate an array
+		// which could allow us to use Promise.all()
+		// we use a for loop instead,
+		// even if it means that the rare case where more than 1 component has an expression
+		// this would be slower
 		for (const c of components) {
 			if (c.isDirty()) {
-				promises.push(c.compute());
+				await c.compute();
+				// _promises.push(c.compute());
 			}
 		}
-		await Promise.all(promises);
+		// await Promise.all(_promises);
 		this.removeDirtyState();
 	}
 	protected override _prefilterInvalidRawInput(raw_input: any): ParamInitValuesTypeMap[T] {
 		if (!CoreType.isArray(raw_input)) {
-			const number_or_string = raw_input as number | string;
-			const raw_input_wrapped_in_array: StringOrNumber[] = this.componentNames().map(() => number_or_string);
+			const numberOrString = raw_input as number | string;
+			const raw_input_wrapped_in_array: StringOrNumber[] = this.componentNames().map(() => numberOrString);
 			return raw_input_wrapped_in_array as ParamInitValuesTypeMap[T];
 		} else {
 			return raw_input as ParamInitValuesTypeMap[T];

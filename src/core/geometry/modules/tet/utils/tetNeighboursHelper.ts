@@ -11,7 +11,7 @@ export function updateTetNeighboursFromNewTet(tetGeometry: TetGeometry, tet: Tet
 		const sharedPoint = tet.pointIds[id0];
 		const tetsSharingPoint = tetGeometry.tetrahedronsByPointId.get(sharedPoint);
 		let faceIndex = 0;
-		for (let facePointIndices of TET_FACE_POINT_INDICES) {
+		for (const facePointIndices of TET_FACE_POINT_INDICES) {
 			if (!tetsSharingPoint) {
 				continue;
 			}
@@ -31,7 +31,7 @@ export function updateTetNeighboursFromNewTet(tetGeometry: TetGeometry, tet: Tet
 					return;
 				}
 				let faceIndexNeighbour = 0;
-				for (let facePointIndicesNeighbour of TET_FACE_POINT_INDICES) {
+				for (const facePointIndicesNeighbour of TET_FACE_POINT_INDICES) {
 					sortedNumber3(
 						tetSharingPoint.pointIds[facePointIndicesNeighbour[0]],
 						tetSharingPoint.pointIds[facePointIndicesNeighbour[1]],

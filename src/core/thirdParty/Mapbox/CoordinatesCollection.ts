@@ -22,7 +22,7 @@ export class CoordinatesCollection {
 		let nearest_id = -1;
 		let dist = -1;
 		let i = 0;
-		for (let features_coordinates of features_coordinates_array) {
+		for (const features_coordinates of features_coordinates_array) {
 			const current_dist = this.distanceTo(features_coordinates);
 			if (dist == -1 || current_dist < dist) {
 				dist = current_dist;
@@ -35,7 +35,7 @@ export class CoordinatesCollection {
 	perimeter(): number {
 		let perimeter = 0;
 		let prev_coordinate = this.coordinates[0];
-		for (let coordinate of this.coordinates) {
+		for (const coordinate of this.coordinates) {
 			perimeter += coordinate.distanceTo(prev_coordinate);
 			prev_coordinate = coordinate;
 		}

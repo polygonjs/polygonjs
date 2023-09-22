@@ -50,17 +50,17 @@ export class DecomposedPath {
 	namedGraphNodes() {
 		return this._namedNodes;
 	}
-	namedNodes() {
-		const nodes: BaseNodeType[] = [];
+	namedNodes(target: BaseNodeType[]) {
+		target.length = 0;
 		for (const namedNode of this._namedNodes) {
 			if (namedNode) {
 				const node = namedNode.node as BaseNodeType;
 				if (node.nameController) {
-					nodes.push(node);
+					target.push(node);
 				}
 			}
 		}
-		return nodes;
+		return target;
 	}
 
 	updateFromNameChange(node: NodeOrParam) {

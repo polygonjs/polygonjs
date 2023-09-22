@@ -47,7 +47,7 @@ export class MapboxLayersController {
 		}
 
 		let label_layer_id = null;
-		for (let layer of layers) {
+		for (const layer of layers) {
 			if (layer.type == 'symbol' && (layer.layout as mapboxgl.SymbolLayout)['text-field']) {
 				label_layer_id = layer.id;
 			}

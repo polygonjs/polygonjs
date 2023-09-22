@@ -149,7 +149,7 @@ export class TypedEventNode<K extends NodeParamsConfig> extends TypedNode<NodeCo
 		if (this._on_dispatch_hooks_by_output_name) {
 			const hooks = this._on_dispatch_hooks_by_output_name.get(output_name);
 			if (hooks) {
-				for (let hook of hooks) {
+				for (const hook of hooks) {
 					hook(event_context);
 				}
 			}

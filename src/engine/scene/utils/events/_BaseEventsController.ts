@@ -148,7 +148,7 @@ export abstract class BaseSceneEventsController<
 			});
 			const eventDatas: EventData[] = [];
 			eventTypeByEmitter.forEach((eventNames, emitter) => {
-				for (let eventName of eventNames) {
+				for (const eventName of eventNames) {
 					const eventData: EventData = {
 						type: eventName,
 						emitter,
@@ -162,7 +162,7 @@ export abstract class BaseSceneEventsController<
 		const _updateActorNodesEventData = () => {
 			const actorEventDatas = _actorEventDatas();
 			if (actorEventDatas) {
-				for (let data of actorEventDatas) {
+				for (const data of actorEventDatas) {
 					_storeEventData(data);
 				}
 			}
@@ -173,7 +173,7 @@ export abstract class BaseSceneEventsController<
 			this._eventNodes.forEach((node) => {
 				if (node.parent()) {
 					const nodeActiveEventDatas = node.activeEventDatas();
-					for (let data of nodeActiveEventDatas) {
+					for (const data of nodeActiveEventDatas) {
 						activeNodeEventTypesState.add(data);
 					}
 				}

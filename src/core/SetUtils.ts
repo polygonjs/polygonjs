@@ -1,5 +1,5 @@
 export function setFirstValue<K>(set: Set<K>): K | undefined {
-	for (let k of set) {
+	for (const k of set) {
 		return k;
 	}
 }
@@ -20,7 +20,7 @@ export function setFromArray<T>(array: T[], target?: Set<T>): Set<T> {
 	} else {
 		target = new Set<T>();
 	}
-	for (let element of array) {
+	for (const element of array) {
 		target.add(element);
 	}
 	return target;

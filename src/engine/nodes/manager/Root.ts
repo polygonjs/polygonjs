@@ -158,7 +158,7 @@ export class RootManagerNode extends TypedBaseManagerNode<ObjectsManagerParamsCo
 		this._queuedNodesById.clear();
 
 		// const promises = [];
-		for (let path_id of paths) {
+		for (const path_id of paths) {
 			const node = queuedNodesByPath.get(path_id);
 			if (node) {
 				queuedNodesByPath.delete(path_id);
@@ -263,7 +263,7 @@ export class RootManagerNode extends TypedBaseManagerNode<ObjectsManagerParamsCo
 	}
 	areChildrenCooking(): boolean {
 		const children = this.children();
-		for (let child of children) {
+		for (const child of children) {
 			if (child.cookController.isCooking() || child.isDisplayNodeCooking()) {
 				return true;
 			}

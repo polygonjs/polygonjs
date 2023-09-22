@@ -23,7 +23,7 @@ const vector4 = new Vector4();
 
 function clearAttributes(geometry: BufferGeometry) {
 	const attributeNames = Object.keys(geometry.attributes);
-	for (let attributeName of attributeNames) {
+	for (const attributeName of attributeNames) {
 		const attribute = geometry.getAttribute(attributeName);
 		if (attribute instanceof BufferAttribute) {
 			const newAttribValues: number[] = [];
@@ -67,7 +67,7 @@ export class FuseSopNode extends TypedSopNode<FuseSopParamsConfig> {
 
 		const selectedObjects = CoreMask.filterThreejsObjects(inputCoreGroup, this.pv);
 
-		for (let object of selectedObjects) {
+		for (const object of selectedObjects) {
 			this._filterObject(object);
 		}
 		this.setCoreGroup(inputCoreGroup);
@@ -213,7 +213,7 @@ export class FuseSopNode extends TypedSopNode<FuseSopParamsConfig> {
 		}
 
 		const attributeNames = Object.keys(geometry.attributes);
-		for (let attributeName of attributeNames) {
+		for (const attributeName of attributeNames) {
 			const attribute = geometry.getAttribute(attributeName);
 			if (attribute instanceof BufferAttribute) {
 				const itemSize = attribute.itemSize;

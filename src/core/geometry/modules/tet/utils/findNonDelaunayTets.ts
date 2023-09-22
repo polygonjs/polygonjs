@@ -29,7 +29,7 @@ export function findNonDelaunayTetsFromSinglePointCheck(
 		}
 		invalidTets.push(tetId);
 
-		for (let neighbourData of tet.neighbours) {
+		for (const neighbourData of tet.neighbours) {
 			if (neighbourData) {
 				if (!visitedTets.has(neighbourData.id)) {
 					// delaunay check

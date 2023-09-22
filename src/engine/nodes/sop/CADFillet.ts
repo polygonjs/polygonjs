@@ -64,7 +64,7 @@ export class CADFilletSopNode extends CADSopNode<CADFilletSopParamsConfig> {
 		const inputObjects = inputCoreGroup.cadObjects();
 		if (inputObjects) {
 			const groupName = this.pv.group;
-			for (let object of inputObjects) {
+			for (const object of inputObjects) {
 				if (CoreCadType.isShape(object)) {
 					const shape = object.cadGeometry();
 					const api = _getApi(oc, mode, shape);

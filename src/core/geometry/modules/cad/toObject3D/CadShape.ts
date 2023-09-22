@@ -199,7 +199,7 @@ function _createMeshFromFaces(
 		const normals: number[] = [];
 		const indices: number[] = [];
 		const buffers: MeshBuffers = {positions, normals, indices};
-		for (let face of faces) {
+		for (const face of faces) {
 			_updateBufferFromFace(oc, face, buffers);
 		}
 		mesher.delete();

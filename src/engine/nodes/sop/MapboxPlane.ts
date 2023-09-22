@@ -137,11 +137,11 @@ export class MapboxPlaneSopNode extends TypedSopNode<MapboxPlaneSopParamsConfig>
 		//
 		const mirrored_near_lng_lat_points = lng_lat_points.map((p) => this._mirrorLngLat(p, center));
 		lng_lat_points.push(center);
-		for (let p of mirrored_near_lng_lat_points) {
+		for (const p of mirrored_near_lng_lat_points) {
 			lng_lat_points.push(p);
 		}
 		const box = new Box2();
-		for (let p of lng_lat_points) {
+		for (const p of lng_lat_points) {
 			box.expandByPoint(new Vector2(p.lng, p.lat));
 		}
 
@@ -151,7 +151,7 @@ export class MapboxPlaneSopNode extends TypedSopNode<MapboxPlaneSopParamsConfig>
 		//
 		//
 		const mapbox_box = new Box2();
-		for (let p of lng_lat_points) {
+		for (const p of lng_lat_points) {
 			const pt3d = new Vector3(p.lng, 0, p.lat);
 			this.transformer.transform_position_FINAL(pt3d);
 			mapbox_box.expandByPoint(new Vector2(pt3d.x, pt3d.z));
@@ -212,7 +212,7 @@ export class MapboxPlaneSopNode extends TypedSopNode<MapboxPlaneSopParamsConfig>
 			_mapCenter2D.clone().add(mapbox_dimensions.clone().multiplyScalar(0.5)),
 			_mapCenter2D.clone().add(mapbox_dimensions.clone().multiplyScalar(-0.5)),
 		];
-		for (let p of mapbox_corners) {
+		for (const p of mapbox_corners) {
 			const untransformed_3d = this.transformer.untransform_position_FINAL(new Vector3(p.x, 0, p.y));
 			const untransformed = new Vector2(untransformed_3d.x, untransformed_3d.z);
 			// const retransformed = transformer.transform_position_FINAL(new Vector3(untransformed.x, 0, untransformed.y))

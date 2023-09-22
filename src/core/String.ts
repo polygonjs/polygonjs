@@ -173,7 +173,7 @@ export function stringMatchMask(word: string, mask: string) {
 	const exclusionFilters = elements
 		.filter((element) => element.startsWith('^'))
 		.map((element) => element.substring(1));
-	for (let exclusionFilter of exclusionFilters) {
+	for (const exclusionFilter of exclusionFilters) {
 		const match = stringMatchMask(word, exclusionFilter);
 		if (match) {
 			return false;
@@ -181,7 +181,7 @@ export function stringMatchMask(word: string, mask: string) {
 	}
 
 	if (elements.length > 1) {
-		for (let element of elements) {
+		for (const element of elements) {
 			const match = stringMatchMask(word, element);
 			if (match) {
 				return true;
@@ -211,7 +211,7 @@ export function stringMatchMask(word: string, mask: string) {
 }
 export function stringMatchesOneMask(word: string, masks: string[]): boolean {
 	let matches_one_mask = false;
-	for (let mask of masks) {
+	for (const mask of masks) {
 		if (stringMatchMask(word, mask)) {
 			matches_one_mask = true;
 		}

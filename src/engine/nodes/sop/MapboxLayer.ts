@@ -58,7 +58,7 @@ export class MapboxLayerSopNode extends TypedSopNode<MapboxLayerSopParamsConfig>
 		// const layerNames = CoreString.attribNames(this.pv.layers);
 		const existingLayerNames: string[] = [];
 
-		for (let layerName of layerNames) {
+		for (const layerName of layerNames) {
 			if (map.getLayer(layerName)) {
 				existingLayerNames.push(layerName);
 			} else {
@@ -92,7 +92,7 @@ export class MapboxLayerSopNode extends TypedSopNode<MapboxLayerSopParamsConfig>
 		features: mapboxgl.MapboxGeoJSONFeature[]
 	): Map<string, mapboxgl.MapboxGeoJSONFeature[]> {
 		this._featuresByName.clear();
-		for (let feature of features) {
+		for (const feature of features) {
 			const name = this._feature_name(feature);
 			if (name) {
 				MapUtils.pushOnArrayAtEntry(this._featuresByName, name, feature);
@@ -131,7 +131,7 @@ export class MapboxLayerSopNode extends TypedSopNode<MapboxLayerSopParamsConfig>
 		const layerNames = layers.map((layer) => layer.id).sort();
 		const currentSpareParams = this.params.spare;
 		const currentValuesByName: Map<string, boolean> = new Map();
-		for (let spareParam of currentSpareParams) {
+		for (const spareParam of currentSpareParams) {
 			const value = spareParam.value;
 			if (CoreType.isBoolean(value)) {
 				currentValuesByName.set(spareParam.name(), value);

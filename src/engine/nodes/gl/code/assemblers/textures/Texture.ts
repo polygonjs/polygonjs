@@ -36,7 +36,7 @@ export class ShaderAssemblerTexture extends BaseGlShaderAssembler {
 	updateFragmentShader() {
 		this._lines = new Map();
 		this._shaders_by_name = new Map();
-		for (let shader_name of this.shaderNames()) {
+		for (const shader_name of this.shaderNames()) {
 			if (shader_name == ShaderName.FRAGMENT) {
 				const template = this.templateShader().fragmentShader;
 				this._lines.set(shader_name, template.split('\n'));
@@ -56,7 +56,7 @@ export class ShaderAssemblerTexture extends BaseGlShaderAssembler {
 			raymarchingLightsWorldCoordsDependent: this._raymarchingLightsWorldCoordsDependent(),
 		});
 
-		for (let shader_name of this.shaderNames()) {
+		for (const shader_name of this.shaderNames()) {
 			const lines = this._lines.get(shader_name);
 			if (lines) {
 				this._shaders_by_name.set(shader_name, lines.join('\n'));
@@ -155,7 +155,7 @@ export class ShaderAssemblerTexture extends BaseGlShaderAssembler {
 			shaders_collection_controller.currentShaderName()
 		);
 		if (input_names) {
-			for (let input_name of input_names) {
+			for (const input_name of input_names) {
 				const input = output_node.io.inputs.named_input(input_name);
 
 				if (input) {
@@ -188,7 +188,7 @@ export class ShaderAssemblerTexture extends BaseGlShaderAssembler {
 		const body_lines: string[] = [];
 		const definitions: UniformGLDefinition[] = [];
 
-		for (let output_name of globals_node.io.outputs.used_output_names()) {
+		for (const output_name of globals_node.io.outputs.used_output_names()) {
 			const var_name = globals_node.glVarName(output_name);
 
 			switch (output_name) {

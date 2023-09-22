@@ -95,7 +95,7 @@ export class WFCTilePropertiesSopNode extends TypedSopNode<WFCTilePropertiesSopP
 				applyMethod(coreObject.object(), value);
 			});
 		} else {
-			for (let coreObject of coreObjects) {
+			for (const coreObject of coreObjects) {
 				applyMethod(coreObject.object(), param.value);
 			}
 		}
@@ -110,7 +110,7 @@ export class WFCTilePropertiesSopNode extends TypedSopNode<WFCTilePropertiesSopP
 				applyMethod(coreObject.object(), value);
 			});
 		} else {
-			for (let coreObject of coreObjects) {
+			for (const coreObject of coreObjects) {
 				applyMethod(coreObject.object(), param.value);
 			}
 		}

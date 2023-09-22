@@ -44,7 +44,7 @@ export class SubnetOutputJsNode extends TypedJsNode<SubnetOutputJsParamsConfig> 
 		let i = 0;
 
 		const subnetParent = this.parent() as SubnetJsNode;
-		for (let _ of inputTypes) {
+		for (const _ of inputTypes) {
 			const inputName = this._expectedInputName(i);
 			const inputValue = this.variableForInput(shadersCollectionController, inputName);
 			const dataType = this._expectedInputTypes()[0];

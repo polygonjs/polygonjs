@@ -37,7 +37,7 @@ export class CADCurve2DToSurfaceSopNode extends CADSopNode<CADCurve2DToSurfaceSo
 		if (inputCurves && inputSurfaces) {
 			let i = 0;
 			CadGC.withGC((r) => {
-				for (let inputCurve of inputCurves) {
+				for (const inputCurve of inputCurves) {
 					const inputFaceObject = inputSurfaces[i] || inputSurfaces[inputSurfaces.length - 1];
 					const shape = inputFaceObject.cadGeometry() as TopoDS_Shape;
 					const curve = inputCurve.cadGeometry();

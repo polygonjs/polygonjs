@@ -42,7 +42,7 @@ export async function CorePhysics(): Promise<PhysicsLib> {
 				physics = RAPIER;
 				resolve(physics);
 				if (_resolves.length > 0) {
-					for (let _resolve of _resolves) {
+					for (const _resolve of _resolves) {
 						_resolve(physics);
 					}
 				}

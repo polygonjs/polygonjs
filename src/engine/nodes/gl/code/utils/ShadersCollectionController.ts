@@ -13,7 +13,7 @@ export class ShadersCollectionController {
 		private _currentShaderName: ShaderName,
 		private _assembler: TypedAssembler<NodeContext.GL>
 	) {
-		for (let shaderName of this._shaderNames) {
+		for (const shaderName of this._shaderNames) {
 			this._linesControllerByShaderName.set(shaderName, new LinesController(shaderName));
 		}
 	}

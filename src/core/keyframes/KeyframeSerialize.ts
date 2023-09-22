@@ -11,13 +11,13 @@ export function channelDataFromString(content: string, target: ChannelData[]) {
 		let json = JSON.parse(content);
 		if (isArray(json)) {
 			let i = 0;
-			for (let targetSubElement of target) {
+			for (const targetSubElement of target) {
 				const jsonElement = json[i] || json[0];
 				copyChannelData(jsonElement, targetSubElement);
 				i++;
 			}
 		} else {
-			for (let targetSubElement of target) {
+			for (const targetSubElement of target) {
 				copyChannelData(json, targetSubElement);
 			}
 		}

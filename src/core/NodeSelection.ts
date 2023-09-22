@@ -57,7 +57,7 @@ export class CoreNodeSelection {
 			console.error('selection invalid: at least one node is not part of the graph');
 			return;
 		}
-		for (let node of nodes) {
+		for (const node of nodes) {
 			if (node.parent() != this._node) {
 				console.error('selection invalid: at least one node is not has another parent');
 			}

@@ -32,7 +32,7 @@ function getFeatures<F extends WebXRARFeature | WebXRVRFeature>(
 	const featuresStr = coreObjectClassFactory(camera).attribValue(camera, attribName) as string | null;
 	const featuresStrings = featuresStr?.split(' ');
 	if (featuresStrings) {
-		for (let featuresString of featuresStrings) {
+		for (const featuresString of featuresStrings) {
 			if (existingFeatures.includes(featuresString as F)) {
 				features.push(featuresString as F);
 			}
@@ -85,12 +85,12 @@ export class CoreCameraWebXRController {
 		const subMountFunctions: WebXRControllerMountFunction[] = [];
 		const subUnmountFunctions: WebXRControllerUnmountFunction[] = [];
 		const mountFunction: WebXRControllerMountFunction = () => {
-			for (let subFunc of subMountFunctions) {
+			for (const subFunc of subMountFunctions) {
 				subFunc();
 			}
 		};
 		const unmountFunction: WebXRControllerUnmountFunction = () => {
-			for (let subFunc of subUnmountFunctions) {
+			for (const subFunc of subUnmountFunctions) {
 				subFunc();
 			}
 		};
@@ -161,7 +161,7 @@ export class CoreCameraWebXRController {
 		//
 		//
 		//
-		for (let controller of controllers) {
+		for (const controller of controllers) {
 			subMountFunctions.push(() => controller.mount());
 			subUnmountFunctions.push(() => controller.unmount());
 		}

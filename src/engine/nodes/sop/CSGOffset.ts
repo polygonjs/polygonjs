@@ -49,7 +49,7 @@ export class CSGOffsetSopNode extends CSGSopNode<CSGOffsetSopParamsConfig> {
 				segments: this.pv.segments * 4,
 			};
 			const newGeometries: CsgGeometry[] = [];
-			for (let inputObject of inputObjects) {
+			for (const inputObject of inputObjects) {
 				const inputGeometry = inputObject.csgGeometry();
 				if (csgIsGeom2(inputGeometry) || csgIsPath2(inputGeometry)) {
 					newGeometries.push(offset(options, inputGeometry));

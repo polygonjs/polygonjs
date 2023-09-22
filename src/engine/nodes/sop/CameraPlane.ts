@@ -108,7 +108,7 @@ export class CameraPlaneSopNode extends TypedSopNode<CameraPlaneSopParamsConfig>
 
 		let i = 0;
 		this._planeCenter.set(0, 0, 0);
-		for (let corner of SCREEN_CORNERS) {
+		for (const corner of SCREEN_CORNERS) {
 			this._raycaster.setFromCamera(corner, camera);
 			const targetCorner = this._planeCorners[i];
 			this._raycaster.ray.intersectPlane(this._plane, targetCorner);

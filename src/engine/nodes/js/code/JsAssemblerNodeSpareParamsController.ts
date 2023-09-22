@@ -102,7 +102,7 @@ export class JsAssemblerNodeSpareParamsController {
 		// 	}
 		// });
 
-		for (let currentSpareParam of currentSpareParams) {
+		for (const currentSpareParam of currentSpareParams) {
 			const paramConfigsWithName = paramConfigsByName.get(currentSpareParam.name());
 			if (paramConfigsWithName) {
 				const firstParamConfig = paramConfigsWithName[0];
@@ -134,7 +134,7 @@ export class JsAssemblerNodeSpareParamsController {
 		});
 
 		// this.within_param_folder('spare_params', () => {
-		for (let paramConfig of paramConfigs) {
+		for (const paramConfig of paramConfigs) {
 			if (spare_param_names_to_add.has(paramConfig.name())) {
 				const type = paramConfig.type();
 				// const config_options = ObjectUtils.clone(paramConfig.paramOptions());
@@ -167,7 +167,7 @@ export class JsAssemblerNodeSpareParamsController {
 		this._node.params.updateParams(paramsUpdateOptions);
 		// this._createdSpareParamNames = SetUtils.fromArray(paramConfigs.map((c) => c.name()));
 
-		for (let paramConfig of paramConfigs) {
+		for (const paramConfig of paramConfigs) {
 			paramConfig.applyToNode(this._node);
 		}
 	}

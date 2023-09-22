@@ -15,7 +15,7 @@ export class CoreGeometryBuilderMerge {
 		//
 		// 1/4. add indices if none
 		//
-		for (let geometry of geometries) {
+		for (const geometry of geometries) {
 			CoreGeometryIndexBuilder.createIndexIfNone(geometry);
 		}
 
@@ -27,12 +27,12 @@ export class CoreGeometryBuilderMerge {
 		const indexed_attribute_names = ThreejsPoint.indexedAttributeNames(dummyMesh);
 
 		const new_values_by_attribute_name: PolyDictionary<string[]> = {};
-		for (let indexed_attribute_name of indexed_attribute_names) {
+		for (const indexed_attribute_name of indexed_attribute_names) {
 			const index_by_values: PolyDictionary<number> = {};
 			const all_geometries_points = [];
-			for (let geometry of geometries) {
+			for (const geometry of geometries) {
 				const points = pointsFromBufferGeometry(geometry);
-				for (let point of points) {
+				for (const point of points) {
 					all_geometries_points.push(point);
 					const value: string | null = point.indexedAttribValue(indexed_attribute_name);
 					//value_index = point.attribValueIndex(indexed_attribute_name)
@@ -46,7 +46,7 @@ export class CoreGeometryBuilderMerge {
 			}
 
 			const values = Object.keys(index_by_values);
-			for (let point of all_geometries_points) {
+			for (const point of all_geometries_points) {
 				const value = point.indexedAttribValue(indexed_attribute_name);
 				if (value) {
 					const new_index = index_by_values[value];

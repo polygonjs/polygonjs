@@ -1,12 +1,12 @@
 import {Object3D} from 'three';
 import {Ref} from '@vue/reactivity';
 import {incrementRefSafely, ref} from '../../core/reactivity/CoreReactivity';
-import { TimeController } from '../../engine/scene/utils/TimeController';
+import {TimeController} from '../../engine/scene/utils/TimeController';
 
 const refByRBDObjectUuidByPropertyName: Map<string, Map<string, Ref<number>>> = new Map();
 
-export function getOrCreatePropertyRef(timeController:TimeController,object3D: Object3D, propertyName: string) {
-	return getRBDPropertyRef(timeController,object3D, propertyName) || createRBDPropertyRef(object3D, propertyName);
+export function getOrCreatePropertyRef(timeController: TimeController, object3D: Object3D, propertyName: string) {
+	return getRBDPropertyRef(timeController, object3D, propertyName) || createRBDPropertyRef(object3D, propertyName);
 }
 function createRBDPropertyRef(object3D: Object3D, propertyName: string) {
 	let mapForObject = refByRBDObjectUuidByPropertyName.get(object3D.uuid);
@@ -21,8 +21,8 @@ function createRBDPropertyRef(object3D: Object3D, propertyName: string) {
 	}
 	return refForProperty;
 }
-function getRBDPropertyRef(timeController:TimeController, object3D: Object3D, propertyName: string) {
-	return timeController.timeUniform() 
+function getRBDPropertyRef(timeController: TimeController, object3D: Object3D, propertyName: string) {
+	return timeController.timeUniform();
 	// return refByRBDObjectUuidByPropertyName.get(object3D.uuid)?.get(propertyName);
 }
 
@@ -31,7 +31,7 @@ export function touchRBDProperties(object3D: Object3D, propertyNames: string[]) 
 	if (!map) {
 		return;
 	}
-	for (let propertyName of propertyNames) {
+	for (const propertyName of propertyNames) {
 		const _ref = map.get(propertyName);
 		if (_ref) {
 			incrementRefSafely(_ref);

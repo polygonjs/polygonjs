@@ -99,7 +99,7 @@ export class GlAssemblerNodeSpareParamsController {
 		// 	}
 		// });
 
-		for (let currentSpareParam of currentSpareParams) {
+		for (const currentSpareParam of currentSpareParams) {
 			const paramConfigsWithName = paramConfigsByName.get(currentSpareParam.name());
 			if (paramConfigsWithName) {
 				const firstParamConfig = paramConfigsWithName[0];
@@ -131,7 +131,7 @@ export class GlAssemblerNodeSpareParamsController {
 		});
 
 		// this.within_param_folder('spare_params', () => {
-		for (let paramConfig of paramConfigs) {
+		for (const paramConfig of paramConfigs) {
 			if (spare_param_names_to_add.has(paramConfig.name())) {
 				// const config_options = ObjectUtils.clone(paramConfig.paramOptions());
 				const options: ParamOptions = {
@@ -168,7 +168,7 @@ export class GlAssemblerNodeSpareParamsController {
 		this._node.params.updateParams(paramsUpdateOptions);
 		// this._createdSpareParamNames = SetUtils.fromArray(paramConfigs.map((c) => c.name()));
 
-		for (let paramConfig of paramConfigs) {
+		for (const paramConfig of paramConfigs) {
 			paramConfig.applyToNode(this._node);
 		}
 	}

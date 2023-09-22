@@ -63,35 +63,35 @@ export class JsCodeBuilder {
 		this._nodeTraverser.traverse(rootNodes);
 
 		const nodesByShaderName: Map<JsFunctionName, BaseJsNodeType[]> = new Map();
-		for (let shaderName of this.shaderNames()) {
+		for (const shaderName of this.shaderNames()) {
 			const nodes = this._nodeTraverser.nodesForShaderName(shaderName);
 			nodesByShaderName.set(shaderName, nodes);
 		}
 		const sortedNodes = this._nodeTraverser.sortedNodes();
-		for (let shaderName of this.shaderNames()) {
+		for (const shaderName of this.shaderNames()) {
 			const rootNodesForShader = this._rootNodesByShaderName(shaderName, rootNodes);
 
-			for (let rootNode of rootNodesForShader) {
+			for (const rootNode of rootNodesForShader) {
 				MapUtils.pushOnArrayAtEntry(nodesByShaderName, shaderName, rootNode);
 			}
 		}
 
 		// ensure nodes are not added if already present
 		const sorted_node_ids: Map<CoreGraphNodeId, boolean> = new Map();
-		for (let node of sortedNodes) {
+		for (const node of sortedNodes) {
 			sorted_node_ids.set(node.graphNodeId(), true);
 		}
 
-		for (let rootNode of rootNodes) {
+		for (const rootNode of rootNodes) {
 			if (!sorted_node_ids.get(rootNode.graphNodeId())) {
 				sortedNodes.push(rootNode);
 				sorted_node_ids.set(rootNode.graphNodeId(), true);
 			}
 		}
-		for (let node of sortedNodes) {
+		for (const node of sortedNodes) {
 			node.reset_code();
 		}
-		for (let node of paramNodes) {
+		for (const node of paramNodes) {
 			node.reset_code();
 		}
 
@@ -106,7 +106,7 @@ export class JsCodeBuilder {
 			nodesToBeComputed.push(...triggeringNodes, ...triggerableNodes);
 		}
 		const codeNodes = nodesToBeComputed.filter((n) => n.type() == JsType.CODE) as CodeJsNode[];
-		for (let node of codeNodes) {
+		for (const node of codeNodes) {
 			if (!node.compiled()) {
 				// try {
 				// node.functionNode()?.dirtyController.setForbiddenTriggerNodes([node]);
@@ -146,19 +146,19 @@ export class JsCodeBuilder {
 		);
 
 		this.reset();
-		for (let shaderName of this.shaderNames()) {
+		for (const shaderName of this.shaderNames()) {
 			let nodes = nodesByShaderName.get(shaderName) || [];
 			nodes = arrayUniq(nodes);
 			this._shadersCollectionController.setCurrentShaderName(shaderName);
 			if (nodes) {
-				for (let node of nodes) {
+				for (const node of nodes) {
 					node.setLines(this._shadersCollectionController);
 				}
 			}
 			if (setCodeLinesOptions?.actor) {
 				const {triggeringNodes, triggerableNodes} = setCodeLinesOptions.actor;
 				// triggering nodes
-				for (let triggeringNode of triggeringNodes) {
+				for (const triggeringNode of triggeringNodes) {
 					// const currentTriggerableNodes = new Set<BaseJsNodeType>();
 					// connectedTriggerableNodes({
 					// 	triggeringNodes: new Set([triggeringNode]),
@@ -175,7 +175,7 @@ export class JsCodeBuilder {
 					triggeringNode.setTriggeringLines(this._shadersCollectionController, _triggerableMethodCalls);
 				}
 				// triggerable nodes
-				for (let triggerableNode of triggerableNodes) {
+				for (const triggerableNode of triggerableNodes) {
 					try {
 						triggerableNode.setTriggerableLines(this._shadersCollectionController);
 					} catch (err) {
@@ -236,7 +236,7 @@ export class JsCodeBuilder {
 
 		// set param configs
 		if (this._param_configs_set_allowed) {
-			for (let param_node of paramNodes) {
+			for (const param_node of paramNodes) {
 				try {
 					param_node.states.error.clear();
 					param_node.setParamConfigs();
@@ -287,10 +287,10 @@ export class JsCodeBuilder {
 
 	setParamConfigs(nodes: BaseJsNodeType[]) {
 		this._param_configs_controller.reset();
-		for (let node of nodes) {
+		for (const node of nodes) {
 			const param_configs = node.param_configs();
 			if (param_configs) {
-				for (let param_config of param_configs) {
+				for (const param_config of param_configs) {
 					this._param_configs_controller.push(param_config);
 				}
 			}
@@ -298,11 +298,11 @@ export class JsCodeBuilder {
 	}
 
 	private _setCodeLines(nodes: BaseJsNodeType[], options?: CodeBuilderSetCodeLinesOptions) {
-		for (let shaderName of this.shaderNames()) {
+		for (const shaderName of this.shaderNames()) {
 			const additionalDefinitions: BaseJsDefinition[] = [];
 			// if (shaderName == JsFunctionName.MAIN) {
 			if (this._shadersCollectionController && options && options.otherFragmentShaderCollectionController) {
-				// for (let shaderName of options.otherShadersCollectionController.shaderNames()) {
+				// for (const shaderName of options.otherShadersCollectionController.shaderNames()) {
 				// this._linesControllerByShaderName.set(shaderName, new LinesController(shaderName));
 				options.otherFragmentShaderCollectionController.traverseDefinitions(
 					shaderName,
@@ -399,11 +399,11 @@ export class JsCodeBuilder {
 			return;
 		}
 		const definitions: TypedJsDefinition<JsDefinitionType>[] = [];
-		for (let node of nodes) {
+		for (const node of nodes) {
 			let nodeDefinitions = this._shadersCollectionController.definitions(shaderName, node);
 			if (nodeDefinitions) {
 				nodeDefinitions = nodeDefinitions.filter((d) => d.definitionType() == definitionType);
-				for (let definition of nodeDefinitions) {
+				for (const definition of nodeDefinitions) {
 					definitions.push(definition);
 				}
 			}
@@ -412,7 +412,7 @@ export class JsCodeBuilder {
 			const filteredAdditionalDefinitions = additionalDefinitions.filter(
 				(d) => d.definitionType() == definitionType
 			);
-			for (let definition of filteredAdditionalDefinitions) {
+			for (const definition of filteredAdditionalDefinitions) {
 				definitions.push(definition);
 			}
 		}
@@ -429,7 +429,7 @@ export class JsCodeBuilder {
 
 		const definitions_by_node_id: Map<CoreGraphNodeId, BaseJsDefinition[]> = new Map();
 		const nodeIds: Map<CoreGraphNodeId, boolean> = new Map();
-		for (let definition of uniqDefinitions) {
+		for (const definition of uniqDefinitions) {
 			const nodeId = definition.node().graphNodeId();
 			if (!nodeIds.has(nodeId)) {
 				nodeIds.set(nodeId, true);
@@ -452,7 +452,7 @@ export class JsCodeBuilder {
 					const comment = CodeFormatter.nodeComment(first_definition.node(), lineType);
 					MapUtils.pushOnArrayAtEntry(lines_for_shader, lineType, comment);
 
-					for (let definition of definitions) {
+					for (const definition of definitions) {
 						const line = CodeFormatter.lineWrap(first_definition.node(), definition.line(), lineType);
 						MapUtils.pushOnArrayAtEntry(lines_for_shader, lineType, line);
 					}

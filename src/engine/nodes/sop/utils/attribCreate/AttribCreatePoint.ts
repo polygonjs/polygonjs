@@ -106,7 +106,7 @@ async function _addNumericAttributeToPoints<T extends CoreObjectType>(
 					}
 				} else {
 					const value = componentParam.value;
-					for (let point of points) {
+					for (const point of points) {
 						array[point.index() * size + i] = value;
 					}
 				}
@@ -151,7 +151,7 @@ async function _addStringAttributeToPoints<T extends CoreObjectType>(
 			}
 			const allPoints = pointsFromObject(object);
 			stringValues = stringValues.length != allPoints.length ? new Array(allPoints.length) : stringValues;
-			for (let point of allPoints) {
+			for (const point of allPoints) {
 				let currentValue = point.stringAttribValue(attribName);
 				if (currentValue == null) {
 					currentValue = '';

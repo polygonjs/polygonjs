@@ -141,7 +141,7 @@ export class AdjacentPointsAttribSmoothGlNode extends TypedGlNode<AdjacentPoints
 				linesController.addDefinitions(this, [new FunctionGLDefinition(this, GET_UV)]);
 				linesController.addDefinitions(this, [new FunctionGLDefinition(this, functionDeclaration)]);
 
-				for (let textureData of adjacencyTextureDatas) {
+				for (const textureData of adjacencyTextureDatas) {
 					if (textureData) {
 						linesController.addDefinitions(this, [
 							new UniformGLDefinition(this, GlConnectionPointType.SAMPLER_2D, textureData.textureName),
@@ -177,7 +177,7 @@ export class AdjacentPointsAttribSmoothGlNode extends TypedGlNode<AdjacentPoints
 		const adjacencyTextureRead: string[] = [];
 		const textureNames: string[] = [];
 		let i = 0;
-		for (let textureData of options.adjacencyTextureDatas) {
+		for (const textureData of options.adjacencyTextureDatas) {
 			if (textureData) {
 				const {textureName, uvName, component} = textureData;
 				const varName = adjacencyAttribName(this.pv.adjacencyBaseName, i);

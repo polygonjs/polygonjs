@@ -75,7 +75,7 @@ export class CsgObject<T extends CsgGeometryType> implements ObjectContent<CoreO
 		const object = CsgObject.toObject3D(this, this.type, tesselationParams);
 		if (object) {
 			if (CoreType.isArray(object)) {
-				for (let element of object) {
+				for (const element of object) {
 					objectContentCopyProperties(this, element);
 				}
 			} else {

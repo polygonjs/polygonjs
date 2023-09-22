@@ -12,7 +12,7 @@ interface PopulateVarsForVector {
 }
 export function populateVarsForEuler(options: PopulateVarsForVector) {
 	const {vars, targetValue, targetProperty, propertyNames, operation} = options;
-	for (let propertyName of propertyNames) {
+	for (const propertyName of propertyNames) {
 		vars[propertyName] = AnimBuilderWithOp(
 			targetProperty[propertyName as 'x'],
 			targetValue[propertyName as 'x'],

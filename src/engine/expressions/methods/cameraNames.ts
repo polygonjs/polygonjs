@@ -49,7 +49,7 @@ export class CameraNamesExpression extends BaseMethod {
 							.filter((object) => Poly.camerasRegister.objectRegistered(object));
 						const list: string[] = new Array(objects.length);
 						let i = 0;
-						for (let object of objects) {
+						for (const object of objects) {
 							list[i] = object.name;
 							i++;
 						}

@@ -50,7 +50,7 @@ export class ConnectionPointsSpareParamsController<NC extends NodeContext> {
 		}
 
 		const connectionPoints: ConnectionPointTypeMap[NC][] = [];
-		for (let paramName of this.node.params.names) {
+		for (const paramName of this.node.params.names) {
 			let addInput = true;
 			if (
 				this._inputlessParamNames &&
@@ -96,7 +96,7 @@ export class ConnectionPointsSpareParamsController<NC extends NodeContext> {
 		const current_param_names: string[] = this.node.params.spare_names;
 		const params_update_options: ParamsUpdateOptions = {};
 
-		for (let param_name of current_param_names) {
+		for (const param_name of current_param_names) {
 			if (this.node.params.has(param_name)) {
 				const param = this.node.params.get(param_name);
 				if (param) {
@@ -110,7 +110,7 @@ export class ConnectionPointsSpareParamsController<NC extends NodeContext> {
 
 		let i = 0;
 
-		for (let connection_point of this.node.io.inputs.namedInputConnectionPoints()) {
+		for (const connection_point of this.node.io.inputs.namedInputConnectionPoints()) {
 			if (connection_point) {
 				const isConnected = this.node.io.inputs.input(i) != null;
 				const param_name = connection_point.name();
@@ -182,7 +182,7 @@ export class ConnectionPointsSpareParamsController<NC extends NodeContext> {
 		// if (!this.node.scene.loading_controller.isLoading()) {
 		this.node.params.updateParams(params_update_options);
 
-		for (let spare_param of this.node.params.spare) {
+		for (const spare_param of this.node.params.spare) {
 			if (!spare_param.parentParam()) {
 				const raw_input = this._raw_input_serialized_by_param_name.get(spare_param.name());
 				if (raw_input) {

@@ -42,7 +42,7 @@ export class CacheSopNode extends TypedSopNode<CacheSopParamsConfig> {
 
 		function toJSON() {
 			const json = [];
-			for (let object of coreGroup.threejsObjects()) {
+			for (const object of coreGroup.threejsObjects()) {
 				json.push(object.toJSON());
 			}
 			return JSON.stringify(json);
@@ -51,7 +51,7 @@ export class CacheSopNode extends TypedSopNode<CacheSopParamsConfig> {
 			const objLoader = new ObjectLoader();
 			const jsons = JSON.parse(json);
 			const allObjects: Object3D[] = [];
-			for (let json of jsons) {
+			for (const json of jsons) {
 				const parent = objLoader.parse(json);
 				allObjects.push(parent);
 			}

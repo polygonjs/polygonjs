@@ -102,7 +102,7 @@ export class AttribAudioAnalyserSopNode extends TypedSopNode<AttribAudioAnalyser
 		// }
 
 		const objects = coreGroup.allObjects();
-		for (let object of objects) {
+		for (const object of objects) {
 			this._updateGeometry(object);
 		}
 

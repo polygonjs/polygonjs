@@ -169,7 +169,7 @@ export class CoreFace {
 		switch (attribSize) {
 			case 1: {
 				sum = 0;
-				for (let pointValue of pointValues as number[]) {
+				for (const pointValue of pointValues as number[]) {
 					sum += pointValue * weights[index];
 					index++;
 				}
@@ -177,7 +177,7 @@ export class CoreFace {
 				break;
 			}
 			default: {
-				for (let pointValue of pointValues as Vector3[]) {
+				for (const pointValue of pointValues as Vector3[]) {
 					const weightedValue = pointValue.multiplyScalar(weights[index]);
 					if (sum) {
 						sum.add(weightedValue);
@@ -256,7 +256,7 @@ export class CoreFace {
 					(attribValues[i] as Vector3).multiplyScalar(weights[i])
 				);
 				newAttribValue = null;
-				for (let value of values) {
+				for (const value of values) {
 					if (newAttribValue) {
 						newAttribValue.add(value);
 					} else {

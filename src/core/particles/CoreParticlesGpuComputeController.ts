@@ -194,7 +194,7 @@ export class CoreParticlesGpuComputeController {
 			all_materials.push(variable.material);
 		});
 		const readonlyAllocations = this._readonlyAllocations();
-		for (let material of all_materials) {
+		for (const material of all_materials) {
 			material.uniforms[GlConstant.TIME] = this.mainController.scene.timeController.timeUniform();
 			material.uniforms[GlConstant.DELTA_TIME] = this.mainController.scene.timeController.timeDeltaUniform();
 			// and we add the readonly textures
@@ -204,8 +204,8 @@ export class CoreParticlesGpuComputeController {
 		}
 
 		if (assembler) {
-			for (let material of all_materials) {
-				for (let param_config of assembler.param_configs()) {
+			for (const material of all_materials) {
+				for (const param_config of assembler.param_configs()) {
 					material.uniforms[param_config.uniformName()] = param_config.uniform();
 				}
 			}
@@ -215,12 +215,12 @@ export class CoreParticlesGpuComputeController {
 				const persisted_uniforms = node.persisted_config.uniforms();
 				if (persisted_uniforms) {
 					const param_uniform_pairs = persisted_data.param_uniform_pairs;
-					for (let pair of param_uniform_pairs) {
+					for (const pair of param_uniform_pairs) {
 						const param_name = pair[0];
 						const uniform_name = pair[1];
 						const param = node.params.get(param_name);
 						const uniform = persisted_uniforms[uniform_name];
-						for (let material of all_materials) {
+						for (const material of all_materials) {
 							material.uniforms[uniform_name] = uniform;
 							if (readonlyAllocations) {
 								this._assignReadonlyTextures(material, readonlyAllocations);
@@ -228,7 +228,7 @@ export class CoreParticlesGpuComputeController {
 						}
 						if (param && uniform) {
 							const callback = () => {
-								for (let material of all_materials) {
+								for (const material of all_materials) {
 									GlParamConfig.callback(param, material.uniforms[uniform_name]);
 								}
 							};
@@ -244,7 +244,7 @@ export class CoreParticlesGpuComputeController {
 		}
 	}
 	private _assignReadonlyTextures(material: ShaderMaterial, readonlyAllocations: TextureAllocation[]) {
-		for (let allocation of readonlyAllocations) {
+		for (const allocation of readonlyAllocations) {
 			const shaderName = allocation.shaderName();
 			const texture = this._createdTexturesByName.get(shaderName);
 			if (texture) {
@@ -255,7 +255,7 @@ export class CoreParticlesGpuComputeController {
 	}
 
 	private _updateSimulationMaterialUniforms(delta: number) {
-		for (let variable of this._allVariables) {
+		for (const variable of this._allVariables) {
 			variable.material.uniforms[GlConstant.TIME].value += delta;
 			variable.material.uniforms[GlConstant.DELTA_TIME].value = delta;
 		}
@@ -290,7 +290,7 @@ export class CoreParticlesGpuComputeController {
 
 			const array = texture.image.data;
 
-			for (let texture_variable of texture_variables) {
+			for (const texture_variable of texture_variables) {
 				const texture_position = texture_variable.position();
 				let variable_name = texture_variable.name();
 
@@ -357,7 +357,7 @@ export class CoreParticlesGpuComputeController {
 		// we also need to create textures for readonly variables
 		const readonlyAllocations = this._readonlyAllocations();
 		if (readonlyAllocations && this._gpuCompute) {
-			for (let readonlyAllocation of readonlyAllocations) {
+			for (const readonlyAllocation of readonlyAllocations) {
 				this._createdTexturesByName.set(readonlyAllocation.shaderName(), this._gpuCompute.createTexture());
 			}
 		}

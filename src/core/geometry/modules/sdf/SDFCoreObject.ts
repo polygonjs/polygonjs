@@ -41,7 +41,7 @@ export class SDFCoreObject extends BaseCoreObject<CoreObjectType.SDF> {
 		const sdfObjects = objects as SDFObject[];
 
 		let previousGeometry: SDFGeometry | undefined;
-		for (let object of sdfObjects) {
+		for (const object of sdfObjects) {
 			if (previousGeometry) {
 				previousGeometry = manifold.union(previousGeometry, object.SDFGeometry());
 			} else {

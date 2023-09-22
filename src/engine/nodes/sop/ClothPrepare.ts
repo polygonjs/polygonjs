@@ -47,7 +47,7 @@ export class ClothPrepareSopNode extends TypedSopNode<ClothPrepareSopParamsConfi
 		const coreGroup = inputCoreGroups[0];
 		const inputMeshes = coreGroup.threejsObjectsWithGeo() as Mesh[];
 
-		for (let inputMesh of inputMeshes) {
+		for (const inputMesh of inputMeshes) {
 			const geometry = inputMesh.geometry;
 			if (!geometry) {
 				return;

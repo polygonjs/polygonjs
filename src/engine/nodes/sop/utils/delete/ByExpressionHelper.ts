@@ -32,7 +32,7 @@ export class ByExpressionHelper {
 	private _evalExpressionsWithoutEntityDependentExpression(entities: CoreEntity[]) {
 		const value = isBooleanTrue(this.node.pv.expression);
 		if (value) {
-			for (let entity of entities) {
+			for (const entity of entities) {
 				this.node.entitySelectionHelper.select(entity);
 			}
 		}

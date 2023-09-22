@@ -50,7 +50,7 @@ export class ClothController {
 	}
 	assignReadonlyTextures(material: ShaderMaterial, texturesByName: Record<string, Texture>) {
 		const textureNames = Object.keys(texturesByName);
-		for (let textureName of textureNames) {
+		for (const textureName of textureNames) {
 			const texture = texturesByName[textureName];
 			const uniformName = textureName;
 			material.uniforms[uniformName] = {value: texture};
@@ -62,7 +62,7 @@ export class ClothController {
 		const assembler = node.assemblerController()?.assembler;
 		if (assembler) {
 			// for (let material of all_materials) {
-			for (let param_config of assembler.param_configs()) {
+			for (const param_config of assembler.param_configs()) {
 				material.uniforms[param_config.uniformName()] = param_config.uniform();
 			}
 			// }
@@ -72,7 +72,7 @@ export class ClothController {
 				const persisted_uniforms = node.persisted_config.uniforms();
 				if (persisted_uniforms) {
 					const param_uniform_pairs = persisted_data.param_uniform_pairs;
-					for (let pair of param_uniform_pairs) {
+					for (const pair of param_uniform_pairs) {
 						const param_name = pair[0];
 						const uniform_name = pair[1];
 						const param = node.params.get(param_name);

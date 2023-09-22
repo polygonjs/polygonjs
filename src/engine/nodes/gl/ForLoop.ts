@@ -202,7 +202,7 @@ export class ForLoopGlNode extends TypedSubnetGlNode<ForLoopGlParamsConfig> {
 
 		const connections = this.io.connections.inputConnections();
 		if (connections) {
-			for (let connection of connections) {
+			for (const connection of connections) {
 				if (connection) {
 					if (connection.inputIndex() >= OFFSET) {
 						const connection_point = connection.destConnectionPoint();

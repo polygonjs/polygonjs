@@ -49,10 +49,10 @@ export class TextureAllocationsController {
 		// could override one another if they have the same name
 		const nonOutputNodeNames = nonOutputNodes.map((n) => n.path()).sort();
 		const nonOutputNodesByName: Map<string, BaseGlNodeType> = new Map();
-		for (let node of nonOutputNodes) {
+		for (const node of nonOutputNodes) {
 			nonOutputNodesByName.set(node.path(), node);
 		}
-		for (let nodeName of nonOutputNodeNames) {
+		for (const nodeName of nonOutputNodeNames) {
 			const node = nonOutputNodesByName.get(nodeName);
 			if (node) {
 				sortedRootNodes.push(node);
@@ -68,11 +68,11 @@ export class TextureAllocationsController {
 		rootNodes = TextureAllocationsController._sortNodes(rootNodes);
 		leafNodes = TextureAllocationsController._sortNodes(leafNodes);
 
-		for (let node of rootNodes) {
+		for (const node of rootNodes) {
 			const node_id = node.graphNodeId();
 			switch (node.type()) {
 				case OutputGlNode.type(): {
-					for (let connection_point of node.io.inputs.namedInputConnectionPoints()) {
+					for (const connection_point of node.io.inputs.namedInputConnectionPoints()) {
 						const input = node.io.inputs.named_input(connection_point.name());
 						if (input) {
 							// connections_by_node_id[node_id] = connections_by_node_id[node_id] || []
@@ -107,7 +107,7 @@ export class TextureAllocationsController {
 				case GlType.ADJACENT_POINTS_ATTRIB_SMOOTH: {
 					const adjacentPointsAttribSmoothNode = node as AdjacentPointsAttribSmoothGlNode;
 					const data = adjacentPointsAttribSmoothNode.textureAllocationData();
-					for (let attribName of data) {
+					for (const attribName of data) {
 						const variable = new TextureVariable(
 							attribName,
 							GlConnectionPointComponentsCountMap[GlConnectionPointType.VEC2]
@@ -120,13 +120,13 @@ export class TextureAllocationsController {
 				}
 			}
 		}
-		for (let node of leafNodes) {
+		for (const node of leafNodes) {
 			const node_id = node.graphNodeId();
 			switch (node.type()) {
 				case GlobalsGlNode.type(): {
 					const globals_node = node as GlobalsGlNode;
 					// const output_names_not_attributes = ['frame', 'gl_FragCoord', 'gl_PointCoord'];
-					for (let output_name of globals_node.io.outputs.used_output_names()) {
+					for (const output_name of globals_node.io.outputs.used_output_names()) {
 						// is_attribute, as opposed to frame, gl_FragCoord and gl_PointCoord which are either uniforms or provided by the renderer
 						const is_attribute = OUTPUT_NAME_ATTRIBUTES.includes(output_name);
 
@@ -177,7 +177,7 @@ export class TextureAllocationsController {
 			return v0.size() < v1.size() ? 1 : -1;
 		});
 
-		for (let variable of variablesBySizeInverse) {
+		for (const variable of variablesBySizeInverse) {
 			if (variable.readonly()) {
 				this._allocateVariable(variable, this._readonlyAllocations);
 			} else {
@@ -187,7 +187,7 @@ export class TextureAllocationsController {
 	}
 	private _ensureVariablesAreUnique(variables: TextureVariable[]) {
 		const variableByName: Map<string, TextureVariable[]> = new Map();
-		for (let variable of variables) {
+		for (const variable of variables) {
 			MapUtils.pushOnArrayAtEntry(variableByName, variable.name(), variable);
 		}
 		const uniqVariables: TextureVariable[] = [];
@@ -208,7 +208,7 @@ export class TextureAllocationsController {
 			// const allocated_variable = this.variables().filter((v) => v.name() == new_variable.name())[0];
 			// allocated_variable.merge(new_variable);
 		} else {
-			for (let allocation of allocations) {
+			for (const allocation of allocations) {
 				if (!isAllocated && allocation.hasSpaceForVariable(newVariable)) {
 					allocation.addVariable(newVariable);
 					isAllocated = true;
@@ -267,13 +267,13 @@ export class TextureAllocationsController {
 	// 	}
 	// }
 	variable(variable_name: string): TextureVariable | undefined {
-		for (let allocation of this._writableAllocations) {
+		for (const allocation of this._writableAllocations) {
 			const variable = allocation.variable(variable_name);
 			if (variable) {
 				return variable;
 			}
 		}
-		for (let allocation of this._readonlyAllocations) {
+		for (const allocation of this._readonlyAllocations) {
 			const variable = allocation.variable(variable_name);
 			if (variable) {
 				return variable;
@@ -292,13 +292,13 @@ export class TextureAllocationsController {
 
 	static fromJSON(data: TextureAllocationsControllerData): TextureAllocationsController {
 		const controller = new TextureAllocationsController();
-		for (let datum of data.writable) {
+		for (const datum of data.writable) {
 			const shader_name = Object.keys(datum)[0] as ShaderName;
 			const allocation_data = datum[shader_name];
 			const new_allocation = TextureAllocation.fromJSON(allocation_data);
 			controller._addWritableAllocation(new_allocation);
 		}
-		for (let datum of data.readonly) {
+		for (const datum of data.readonly) {
 			const shader_name = Object.keys(datum)[0] as ShaderName;
 			const allocation_data = datum[shader_name];
 			const new_allocation = TextureAllocation.fromJSON(allocation_data);

@@ -76,7 +76,7 @@ export class CADExtrudeSopNode extends CADSopNode<CADExtrudeSopParamsConfig> {
 					newObjects,
 					extrudeDir,
 				};
-				for (let object of inputObjects) {
+				for (const object of inputObjects) {
 					this._processObject(object, options);
 				}
 			});
@@ -147,7 +147,7 @@ export class CADExtrudeSopNode extends CADSopNode<CADExtrudeSopParamsConfig> {
 		// 	addCap(api.FirstShape(), true);
 		// 	addCap(api.LastShape(), false);
 		// }
-		for (let shape of shapes) {
+		for (const shape of shapes) {
 			const type = cadGeometryTypeFromShape(oc, shape);
 			if (type) {
 				const newObject = new CadObject(shape, type);
@@ -195,7 +195,7 @@ export class CADExtrudeSopNode extends CADSopNode<CADExtrudeSopParamsConfig> {
 			addCap(api.FirstShape(), false);
 			addCap(api.LastShape(), true);
 		}
-		for (let shape of shapes) {
+		for (const shape of shapes) {
 			const type = cadGeometryTypeFromShape(oc, shape);
 			if (type) {
 				const newObject = new CadObject(shape, type);
@@ -237,7 +237,7 @@ export class CADExtrudeSopNode extends CADSopNode<CADExtrudeSopParamsConfig> {
 		// 	addCap(api.FirstShape(), true);
 		// 	addCap(api.LastShape(), false);
 		// }
-		for (let shape of shapes) {
+		for (const shape of shapes) {
 			const type = cadGeometryTypeFromShape(oc, shape);
 			if (type) {
 				const newObject = new CadObject(shape, type);

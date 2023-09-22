@@ -116,7 +116,7 @@ export class JsAssemblerActor extends BaseJsShaderAssembler {
 			const rootNodesSet: Set<BaseJsNodeType> = new Set();
 			triggerableNodes.forEach((trigerrableNode) => {
 				const rootNodes = inputNodesExceptTrigger(trigerrableNode);
-				for (let rootNode of rootNodes) {
+				for (const rootNode of rootNodes) {
 					rootNodesSet.add(rootNode);
 				}
 			});
@@ -131,7 +131,7 @@ export class JsAssemblerActor extends BaseJsShaderAssembler {
 			});
 
 			this._buildLines();
-			for (let shaderName of shaderNames) {
+			for (const shaderName of shaderNames) {
 				const lines = this._lines.get(shaderName);
 				if (lines) {
 					this._shaders_by_name.set(shaderName, lines.join('\n'));

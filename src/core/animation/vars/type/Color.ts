@@ -50,7 +50,7 @@ interface PopulateVarsForVector {
 }
 export function populateVarsForColor(options: PopulateVarsForVector) {
 	const {vars, targetValue, targetProperty, propertyNames, operation} = options;
-	for (let propertyName of propertyNames) {
+	for (const propertyName of propertyNames) {
 		vars[propertyName] = AnimBuilderWithOp(
 			targetProperty[propertyName as 'r'],
 			targetValue[propertyName as 'r'],

@@ -25,7 +25,7 @@ export class CoreGeometryBuilderMesh extends CoreGeometryBuilderBase {
 		}
 
 		const points_by_index: PolyDictionary<CorePoint> = {};
-		for (let point of points) {
+		for (const point of points) {
 			points_by_index[point.index()] = point;
 		}
 		const filteredPoints: CorePoint[] = [];

@@ -44,18 +44,14 @@ export class Cooker {
 			nodes.push(node);
 			nodeIds.push(nodeId);
 		});
-		// if (nodes.length) {
-		// 	console.warn('scene process queue START', this._blockLevel, nodes);
-		// }
+
 		this._queue.clear();
-		for (let i = 0; i < nodes.length; i++) {
-			const node = nodes[i];
+		let i = 0;
+		for (const node of nodes) {
 			const nodeId = nodeIds[i];
 			this._processItem(node, nodeId);
+			i++;
 		}
-		// if (nodes.length) {
-		// 	console.log('scene process queue DONE');
-		// }
 	}
 	private _processItem(originalTriggerGraphNode: CoreGraphNode | undefined, id: CoreGraphNodeId) {
 		const node = this._scene.graph.nodeFromId(id);

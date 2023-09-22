@@ -1,7 +1,7 @@
 type GroupByCallback<T, K> = (arg: T) => K;
 
 export function mapFirstKey<K>(map: Map<K, any>): K | undefined {
-	for (let [k] of map) {
+	for (const [k] of map) {
 		return k;
 	}
 }
@@ -48,12 +48,12 @@ export function getMapElementAtEntry<K0, K1, V>(map: Map<K0, Map<K1, V>>, key0: 
 	}
 	return subMap.get(key1);
 }
-export function mapValuesToArray<K, V>(map: Map<K, V>): Array<V> {
-	const array: Array<V> = [];
+export function mapValuesToArray<K, V>(map: Map<K, V>, target: Array<V>): Array<V> {
+	target.length = 0;
 	map.forEach((v) => {
-		array.push(v);
+		target.push(v);
 	});
-	return array;
+	return target;
 }
 export function removeFromSetAtEntry<K, V>(map: Map<K, Set<V>>, key: K, elementToRemove: V) {
 	if (map.has(key)) {
@@ -74,26 +74,26 @@ export function unshiftOnArrayAtEntry<K, V>(map: Map<K, V[]>, key: K, newElement
 export function concatOnArrayAtEntry<K, V>(map: Map<K, V[]>, key: K, newElements: V[]) {
 	if (map.has(key)) {
 		let array: V[] = map.get(key)!;
-		for (let element of newElements) {
+		for (const element of newElements) {
 			array.push(element);
 		}
 	} else {
 		map.set(key, newElements);
 	}
 }
-export async function mapForEachSync<K, V>(map: Map<K, V>, callback: (v: V, k: K) => Promise<void>) {
-	const values: V[] = [];
-	const keys: K[] = [];
-	map.forEach((value, key) => {
-		values.push(value);
-		keys.push(key);
-	});
-	for (let i = 0; i < values.length; i++) {
-		const key = keys[i];
-		const value = values[i];
-		await callback(value, key);
-	}
-}
+// export async function mapForEachSync<K, V>(map: Map<K, V>, callback: (v: V, k: K) => Promise<void>) {
+// 	const values: V[] = [];
+// 	const keys: K[] = [];
+// 	map.forEach((value, key) => {
+// 		values.push(value);
+// 		keys.push(key);
+// 	});
+// 	for (let i = 0; i < values.length; i++) {
+// 		const key = keys[i];
+// 		const value = values[i];
+// 		await callback(value, key);
+// 	}
+// }
 export function mapGroupBy<T, K>(array: readonly T[], callback: GroupByCallback<T, K>): Map<K, T[]> {
 	const map = new Map<K, T[]>();
 	array.forEach((element: T) => {
@@ -119,14 +119,14 @@ export function mapEntriesCount<K, V>(map: Map<K, V>): number {
 	return count;
 }
 export class MapUtils {
-	static arrayFromValues = mapValuesToArray;
+	// static arrayFromValues = mapValuesToArray;
 	static pushOnArrayAtEntry = pushOnArrayAtEntry;
 	static addToSetAtEntry = addToSetAtEntry;
 	static popFromArrayAtEntry = popFromArrayAtEntry;
 	static removeFromSetAtEntry = removeFromSetAtEntry;
 	static unshiftOnArrayAtEntry = unshiftOnArrayAtEntry;
 	static concatOnArrayAtEntry = concatOnArrayAtEntry;
-	static forEachSync = mapForEachSync;
+	// static forEachSync = mapForEachSync;
 	static groupBy = mapGroupBy;
 	static incrementAtEntry = mapIncrementAtEntry;
 	static firstKey = mapFirstKey;

@@ -28,9 +28,9 @@ export function coreObjectsAttribSizesByName<T extends CoreObjectType>(
 	coreObjects: BaseCoreObject<T>[]
 ): PolyDictionary<AttribSize[]> {
 	const _sizesByName: Map<string, Set<AttribSize>> = new Map();
-	for (let coreObject of coreObjects) {
+	for (const coreObject of coreObjects) {
 		const objectAttriNames = coreObject.attribNames();
-		for (let attribName of objectAttriNames) {
+		for (const attribName of objectAttriNames) {
 			const attribSize = coreObject.attribSize(attribName);
 			addToSetAtEntry(_sizesByName, attribName, attribSize);
 		}
@@ -46,9 +46,9 @@ export function coreObjectAttributeTypesByName<T extends CoreObjectType>(
 	coreObjects: BaseCoreObject<T>[]
 ): PolyDictionary<AttribType[]> {
 	const _typesByName: Map<string, Set<AttribType>> = new Map();
-	for (let coreObject of coreObjects) {
+	for (const coreObject of coreObjects) {
 		const objectAttriNames = coreObject.attribNames();
-		for (let attribName of objectAttriNames) {
+		for (const attribName of objectAttriNames) {
 			const attribType = coreObject.attribType(attribName);
 			addToSetAtEntry(_typesByName, attribName, attribType);
 		}
@@ -69,9 +69,9 @@ export function coreObjectAttributeTypesByName<T extends CoreObjectType>(
 }
 export function coreObjectsAttribNames<T extends CoreObjectType>(coreObjects: BaseCoreObject<T>[]) {
 	const names: Set<string> = new Set();
-	for (let coreObject of coreObjects) {
+	for (const coreObject of coreObjects) {
 		const objectAttriNames = coreObject.attribNames();
-		for (let attribName of objectAttriNames) {
+		for (const attribName of objectAttriNames) {
 			names.add(attribName);
 		}
 	}

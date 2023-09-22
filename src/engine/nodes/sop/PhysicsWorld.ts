@@ -66,7 +66,7 @@ export class PhysicsWorldSopNode extends TypedActorSopNode<PhysicsWorldSopParams
 		ThreejsCoreObject.addAttribute(worldObject, PhysicsIdAttribute.WORLD, this.graphNodeId());
 
 		const inputObjects = coreGroup.threejsObjects();
-		for (let inputObject of inputObjects) {
+		for (const inputObject of inputObjects) {
 			worldObject.add(inputObject);
 		}
 		setJointDataListForWorldObject(this.scene(), worldObject);

@@ -59,7 +59,7 @@ export class TetObject implements ObjectContent<CoreObjectType.TET> {
 		const object = TetObject.toObject3D(this, tesselationParams);
 		if (object) {
 			if (CoreType.isArray(object)) {
-				for (let element of object) {
+				for (const element of object) {
 					objectContentCopyProperties(this, element);
 				}
 			} else {

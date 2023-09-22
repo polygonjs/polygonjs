@@ -47,9 +47,9 @@ export class Font {
 		const allShapes: Array<Shape[]> = [];
 		const allPaths = createPaths(text, options.size, this.data);
 
-		for (let pathsForChar of allPaths) {
+		for (const pathsForChar of allPaths) {
 			const shapesForChar: Shape[] = [];
-			for (let path of pathsForChar) {
+			for (const path of pathsForChar) {
 				const shapes = path.toShapes(options.isCCW);
 				shapesForChar.push(...shapes);
 			}

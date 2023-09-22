@@ -33,7 +33,7 @@ export class MPDLoaderHandler extends BaseObject3DLoaderHandler<Group> {
 
 		o.traverse((child) => {
 			const attribNames = Object.keys(child.userData);
-			for (let attribName of attribNames) {
+			for (const attribName of attribNames) {
 				const value = child.userData[attribName];
 				if (value != null) {
 					// attribute is currently not added if its value is null,

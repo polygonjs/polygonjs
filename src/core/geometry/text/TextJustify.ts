@@ -34,7 +34,7 @@ export function applyJustifyModeToGeometries(
 	// 	}
 	// }
 	let totalBoundingBox: Box3 | null = null;
-	for (let geometry of geometries) {
+	for (const geometry of geometries) {
 		if (!geometry) continue;
 		geometry.computeBoundingBox();
 		if (geometry.boundingBox) {
@@ -67,14 +67,14 @@ function applyJustifyModeToGeometry(
 		}
 		case TextSopJustifiyMode.CENTER: {
 			const currentCenter = 0.5 * (totalBoundingBox.min.x + totalBoundingBox.max.x);
-			for (let geometry of geometries) {
+			for (const geometry of geometries) {
 				geometry?.translate(-currentCenter, 0, 0);
 			}
 			return;
 		}
 		case TextSopJustifiyMode.RIGHT: {
 			const currentRight = totalBoundingBox.max.x;
-			for (let geometry of geometries) {
+			for (const geometry of geometries) {
 				geometry?.translate(-currentRight, 0, 0);
 			}
 			return;

@@ -25,7 +25,7 @@ export function path2ToBufferGeometry(csg: geometries.path2.Path2) {
 	const points2D = csg.points;
 	// const color = csg.color || [1, 1, 1];
 	let i = 0;
-	for (let point of points2D) {
+	for (const point of points2D) {
 		vertices.push(point[0], 0, point[1]);
 		// colors.push(...color);
 		if (i != 0) {
@@ -53,7 +53,7 @@ export function path2Positions(csg: geometries.path2.Path2): Vector3[] {
 	const points = csg.points;
 	const vectors: Vector3[] = new Array(points.length);
 	let i = 0;
-	for (let pt of points) {
+	for (const pt of points) {
 		const vec = new Vector3();
 		vec.x = pt[0];
 		vec.y = 0;

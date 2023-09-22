@@ -36,7 +36,7 @@ export class ShaderAssemblerParticles extends BaseGlShaderAssembler {
 	override rootNodesByShaderName(shader_name: ShaderName, rootNodes: BaseGlNodeType[]): BaseGlNodeType[] {
 		// return this._root_nodes
 		const list = [];
-		for (let node of rootNodes) {
+		for (const node of rootNodes) {
 			switch (node.type()) {
 				case SubnetOutputGlNode.type():
 				case OutputGlNode.type(): {
@@ -140,7 +140,7 @@ export class ShaderAssemblerParticles extends BaseGlShaderAssembler {
 	private _updateShaders() {
 		this._shaders_by_name.clear();
 		this._lines.clear();
-		for (let shader_name of this.shaderNames()) {
+		for (const shader_name of this.shaderNames()) {
 			const template = this._template_shader_for_shader_name(shader_name);
 			this._lines.set(shader_name, template.split('\n'));
 		}
@@ -153,7 +153,7 @@ export class ShaderAssemblerParticles extends BaseGlShaderAssembler {
 			this._buildLines();
 		}
 		// this._material.uniforms = this.build_uniforms(template_shader)
-		for (let shader_name of this.shaderNames()) {
+		for (const shader_name of this.shaderNames()) {
 			const lines = this._lines.get(shader_name);
 			if (lines) {
 				this._shaders_by_name.set(shader_name, lines.join('\n'));
@@ -271,7 +271,7 @@ export class ShaderAssemblerParticles extends BaseGlShaderAssembler {
 		const shader_name = shaders_collection_controller.currentShaderName();
 		const input_names = this.textureAllocationsController().inputNamesForShaderName(output_node, shader_name);
 		if (input_names) {
-			for (let input_name of input_names) {
+			for (const input_name of input_names) {
 				const input = output_node.io.inputs.named_input(input_name);
 
 				if (input) {
@@ -348,7 +348,7 @@ export class ShaderAssemblerParticles extends BaseGlShaderAssembler {
 		globals_node: GlobalsGlNode,
 		shaders_collection_controller: ShadersCollectionController
 	) {
-		for (let output_name of globals_node.io.outputs.used_output_names()) {
+		for (const output_name of globals_node.io.outputs.used_output_names()) {
 			switch (output_name) {
 				case 'time':
 					this._handle_globals_time(globals_node, output_name, shaders_collection_controller);

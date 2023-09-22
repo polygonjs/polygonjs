@@ -48,6 +48,7 @@ import ScrollTrigger from 'gsap/ScrollTrigger';
 import {BaseNodeType} from '../_Base';
 import {gsap} from '../../../core/thirdParty/gsap/gsap';
 import {ModuleName} from '../../poly/registers/modules/Common';
+import {gsapLib} from '../../../core/thirdParty/gsap/gsapFactory';
 gsap.registerPlugin(ScrollTrigger);
 
 enum ScrollTriggerNodeInput {
@@ -133,7 +134,7 @@ const ParamsConfig = new ScrollTriggerParamsConfig();
 
 export class ScrollTriggerEventNode extends TypedEventNode<ScrollTriggerParamsConfig> {
 	override paramsConfig = ParamsConfig;
-	public gsap = gsap; // give access to gsap to external scripts
+	public gsap = gsapLib(); // give access to gsap to external scripts
 	public ScrollTrigger = ScrollTrigger; // give access to ScrollTrigger to external scripts
 	static override type() {
 		return 'scrollTrigger';
@@ -216,7 +217,7 @@ export class ScrollTriggerEventNode extends TypedEventNode<ScrollTriggerParamsCo
 				functions.push(dispatchOnToggle);
 			}
 			options.onToggle = (scrollTrigger) => {
-				for (let func of functions) {
+				for (const func of functions) {
 					func(scrollTrigger);
 				}
 			};

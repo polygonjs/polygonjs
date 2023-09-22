@@ -56,7 +56,7 @@ export class SwitchJsNode extends ParamlessTypedJsNode {
 		const currentConnections = this.io.connections.inputConnections() || [];
 		let lastValidConnectionIndex = 1;
 		let i = 0;
-		for (let connection of currentConnections) {
+		for (const connection of currentConnections) {
 			if (connection) {
 				lastValidConnectionIndex = i;
 			}

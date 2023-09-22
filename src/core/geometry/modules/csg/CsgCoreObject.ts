@@ -71,7 +71,7 @@ export class CsgCoreObject<T extends CsgGeometryType> extends BaseCoreObject<Cor
 			const geometries = csgObjects.map((o) => o.csgGeometry());
 			const geom2s: geometries.geom2.Geom2[] = [];
 			const geom3s: geometries.geom3.Geom3[] = [];
-			for (let geometry of geometries) {
+			for (const geometry of geometries) {
 				if (csgIsGeom2(geometry)) {
 					geom2s.push(geometry);
 				}

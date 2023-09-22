@@ -36,7 +36,7 @@ export class InstancesCountSopNode extends TypedSopNode<InstancesCountSopParamsC
 	override cook(input_contents: CoreGroup[]) {
 		const core_group = input_contents[0];
 		const objects = core_group.threejsObjectsWithGeo();
-		for (let object of objects) {
+		for (const object of objects) {
 			const geometry = object.geometry;
 			if (geometry) {
 				if (geometry instanceof InstancedBufferGeometry) {

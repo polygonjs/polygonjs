@@ -4,7 +4,7 @@ import {PolyNodeDefinition} from './PolyNodeDefinition';
 export class PolyNodeParamsConfig {
 	static ParamsConfig(data: PolyNodeDefinition, paramsConfig: NodeParamsConfig = new NodeParamsConfig()) {
 		if (data.params) {
-			for (let paramData of data.params) {
+			for (const paramData of data.params) {
 				const paramName = paramData.name;
 				const paramType = paramData.type;
 				const initValue = paramData.initValue;

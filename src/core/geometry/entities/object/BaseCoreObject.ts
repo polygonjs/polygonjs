@@ -508,7 +508,7 @@ export abstract class BaseCoreObject<T extends CoreObjectType> extends CoreEntit
 	}
 	attribTypes() {
 		const h: PolyDictionary<AttribType> = {};
-		for (let attrib_name of this.attribNames()) {
+		for (const attrib_name of this.attribNames()) {
 			const type = this.attribType(attrib_name);
 			if (type != null) {
 				h[attrib_name] = type;
@@ -531,7 +531,7 @@ export abstract class BaseCoreObject<T extends CoreObjectType> extends CoreEntit
 	attribSizes() {
 		const h: PolyDictionary<AttribSize> = {};
 		const attribNames = this.attribNames();
-		for (let attribName of attribNames) {
+		for (const attribName of attribNames) {
 			const size = this.attribSize(attribName);
 			if (size != null) {
 				h[attribName] = size;

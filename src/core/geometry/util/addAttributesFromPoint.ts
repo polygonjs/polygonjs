@@ -4,7 +4,7 @@ import {CorePoint} from '../entities/point/CorePoint';
 
 export function addAttributesFromPoint(geometry: BufferGeometry, point: CorePoint, attributeNames: string[]) {
 	const pointsCount = geometry.getAttribute('position').count;
-	for (let attributeName of attributeNames) {
+	for (const attributeName of attributeNames) {
 		addAttributeFromPoint(geometry, point, attributeName, pointsCount);
 	}
 }

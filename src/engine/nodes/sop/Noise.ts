@@ -182,14 +182,14 @@ export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
 			this.states.error.set(`cook failed for (${this.path()}). make sure the required attributes are present`);
 		}
 		if (!this.io.inputs.cloneRequired(0)) {
-			for (let geometry of coreGroup.geometries()) {
+			for (const geometry of coreGroup.geometries()) {
 				(geometry.getAttribute(destAttribName) as BufferAttribute).needsUpdate = true;
 			}
 		}
 
 		if (isBooleanTrue(this.pv.computeNormals)) {
 			const objects = coreGroup.threejsObjectsWithGeo();
-			for (let object of objects) {
+			for (const object of objects) {
 				object.geometry.computeVertexNormals();
 			}
 		}
@@ -204,7 +204,7 @@ export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
 		const baseAmplitude: number = this.pv.amplitude;
 		const operation = OPERATIONS[this.pv.operation];
 		const attribName = this.pv.attribName;
-		for (let destPoint of destPoints) {
+		for (const destPoint of destPoints) {
 			if (useRestAttributes) {
 				destPoint.attribValueVector3(this.pv.restP, position);
 				if (useNormals) {
@@ -240,7 +240,7 @@ export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
 		const baseAmplitude: number = this.pv.amplitude;
 		const operation = OPERATIONS[this.pv.operation];
 		const attribName = this.pv.attribName;
-		for (let destPoint of destPoints) {
+		for (const destPoint of destPoints) {
 			if (useRestAttributes) {
 				destPoint.attribValueVector3(this.pv.restP, position);
 				if (useNormals) {
@@ -277,7 +277,7 @@ export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
 		const baseAmplitude: number = this.pv.amplitude;
 		const operation = OPERATIONS[this.pv.operation];
 		const attribName = this.pv.attribName;
-		for (let destPoint of destPoints) {
+		for (const destPoint of destPoints) {
 			if (useRestAttributes) {
 				destPoint.attribValueVector3(this.pv.restP, position);
 				if (useNormals) {
@@ -313,7 +313,7 @@ export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
 		const baseAmplitude: number = this.pv.amplitude;
 		const operation = OPERATIONS[this.pv.operation];
 		const attribName = this.pv.attribName;
-		for (let destPoint of destPoints) {
+		for (const destPoint of destPoints) {
 			if (useRestAttributes) {
 				destPoint.attribValueVector3(this.pv.restP, position);
 				if (useNormals) {

@@ -30,7 +30,7 @@ export class CSGTransformResetSopNode extends CSGSopNode<CSGTransformResetSopPar
 		const objects = inputCoreGroups[0].csgObjects();
 
 		if (objects) {
-			for (let object of objects) {
+			for (const object of objects) {
 				if (this.pv.extract) {
 					csgApplyTransform(object.csgGeometry());
 				} else {

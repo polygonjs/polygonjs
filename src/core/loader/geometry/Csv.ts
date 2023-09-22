@@ -58,7 +58,7 @@ export class CsvLoader extends CoreBaseLoader<string> {
 			this.attribute_names = this.lines[0].split(CsvLoader.SEPARATOR);
 		}
 		this.attribute_names = this.attribute_names.map((name) => CoreAttribute.remapName(name));
-		for (let attribute_name of this.attribute_names) {
+		for (const attribute_name of this.attribute_names) {
 			this.attribute_values_by_name[attribute_name] = [];
 		}
 	}
@@ -131,7 +131,7 @@ export class CsvLoader extends CoreBaseLoader<string> {
 		dummyMesh.geometry = geometry;
 		// const core_geometry = new CoreGeometry(geometry);
 		const corePointClass = ThreejsPoint;
-		for (let attribute_name of this.attribute_names) {
+		for (const attribute_name of this.attribute_names) {
 			const attribute_values = this.attribute_values_by_name[attribute_name].flat();
 			const size = this.attribute_data_by_name[attribute_name].size();
 			const type = this.attribute_data_by_name[attribute_name].type();

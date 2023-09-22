@@ -66,7 +66,7 @@ export class CADPointsFromCurveSopNode extends CADSopNode<CADPointsFromCurveSopP
 		const delta = max - min;
 		if (inputObjects) {
 			CadGC.withGC((r) => {
-				for (let inputObject of inputObjects) {
+				for (const inputObject of inputObjects) {
 					if (CoreCadType.isGeom2dCurve(inputObject)) {
 						const curve = inputObject.cadGeometry();
 

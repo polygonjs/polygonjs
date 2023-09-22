@@ -21,8 +21,8 @@ export function tetToTetMesh(tetGeometry: TetGeometry, tesselationParams: TetTes
 		// get center
 		tetCenter(tetGeometry, tet.id, _center);
 
-		for (let face of TET_FACE_POINT_INDICES) {
-			for (let facePointIndex of face) {
+		for (const face of TET_FACE_POINT_INDICES) {
+			for (const facePointIndex of face) {
 				const pointId = tet.pointIds[facePointIndex];
 				const point = points.get(pointId);
 				if (point) {

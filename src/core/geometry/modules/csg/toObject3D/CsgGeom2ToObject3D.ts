@@ -25,7 +25,7 @@ export function geom2ToBufferGeometry(csg: geometries.geom2.Geom2) {
 	const sides = csg.sides;
 	// const color = csg.color || [1, 1, 1];
 	let i = 0;
-	for (let side of sides) {
+	for (const side of sides) {
 		const point0 = side[0];
 		const point1 = side[1];
 		vertices.push(point0[0], 0, point0[1]);
@@ -64,7 +64,7 @@ export function geom2Positions(csg: geometries.geom2.Geom2): Vector3[] {
 	const sides = csg.sides;
 	const vectors: Vector3[] = new Array(sides.length);
 	let i = 0;
-	for (let side of sides) {
+	for (const side of sides) {
 		const vec = new Vector3();
 		const pt = side[0];
 		vec.x = pt[0];

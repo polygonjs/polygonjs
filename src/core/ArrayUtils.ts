@@ -20,7 +20,7 @@ export function range(start: number, end?: number, step: number = 1): number[] {
 }
 export function arrayUniq<T>(array: Array<T>): Array<T> {
 	const newArray: Array<T> = [];
-	for (let element of array) {
+	for (const element of array) {
 		if (!newArray.includes(element)) {
 			newArray.push(element);
 		}
@@ -72,7 +72,7 @@ export function uniqWithoutPreservingOrder<T>(array: Array<T>): Array<T> {
 export function arrayCompact<T>(array: Readonly<Array<T | null | undefined>>): Array<T> {
 	const newArray: Array<T> = [];
 
-	for (let elem of array) {
+	for (const elem of array) {
 		if (elem != null) {
 			newArray.push(elem);
 		}
@@ -82,7 +82,7 @@ export function arrayCompact<T>(array: Readonly<Array<T | null | undefined>>): A
 }
 export function arrayMin<T>(array: Array<T>): T {
 	let min = array[0];
-	for (let element of array) {
+	for (const element of array) {
 		if (element < min) {
 			min = element;
 		}
@@ -91,7 +91,7 @@ export function arrayMin<T>(array: Array<T>): T {
 }
 export function arrayMax<T>(array: Array<T>): T {
 	let max = array[0];
-	for (let element of array) {
+	for (const element of array) {
 		if (element > max) {
 			max = element;
 		}
@@ -100,7 +100,7 @@ export function arrayMax<T>(array: Array<T>): T {
 }
 export function arraySum(array: number[]): number {
 	let sum = 0;
-	for (let element of array) {
+	for (const element of array) {
 		sum += element;
 	}
 	return sum;
@@ -143,7 +143,7 @@ export function arrayDifference<T extends number | string>(array0: Array<T>, arr
 }
 export function arrayToSet<T extends number | string>(array: Array<T>): Set<T> {
 	const set: Set<T> = new Set();
-	for (let elem of array) {
+	for (const elem of array) {
 		set.add(elem);
 	}
 	return set;
@@ -166,7 +166,7 @@ export function arraySortBy<T, K extends number | string>(array: Array<T>, callb
 	}
 	const elementsByValue: Map<K, T[]> = new Map();
 	const valuesSet: Set<K> = new Set();
-	for (let elem of array) {
+	for (const elem of array) {
 		const value: K = callback(elem);
 		valuesSet.add(value);
 		MapUtils.pushOnArrayAtEntry(elementsByValue, value, elem);
@@ -187,10 +187,10 @@ export function arraySortBy<T, K extends number | string>(array: Array<T>, callb
 
 	const sorted_elements: Array<T> = new Array(array.length);
 	i = 0;
-	for (let value of values) {
+	for (const value of values) {
 		const elements_for_value = elementsByValue.get(value);
 		if (elements_for_value) {
-			for (let element of elements_for_value) {
+			for (const element of elements_for_value) {
 				sorted_elements[i] = element;
 				i++;
 			}
@@ -222,7 +222,7 @@ export class ArrayUtils {
 }
 
 const MAX_ITEMS_LENGTH = 1024;
-export function arrayPushItems<T>(array: Array<T>, items: Array<T>) {
+export function arrayPushItems<T>(array: Array<T>, items: Readonly<Array<T>>) {
 	// we avoid the standard
 	// array.push(...items),
 	// as this can trigger an
@@ -232,13 +232,13 @@ export function arrayPushItems<T>(array: Array<T>, items: Array<T>) {
 	if (items.length <= MAX_ITEMS_LENGTH) {
 		array.push(...items);
 	} else {
-		for (let item of items) {
+		for (const item of items) {
 			array.push(item);
 		}
 	}
 }
 
-export function arrayCopy<T>(srcArray: Array<T>, targetArray: Array<T>): void {
+export function arrayCopy<T>(srcArray: Readonly<Array<T>>, targetArray: Array<T>): void {
 	targetArray.length = 0;
 	arrayPushItems(targetArray, srcArray);
 }

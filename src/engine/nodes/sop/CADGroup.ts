@@ -120,7 +120,7 @@ export class CADGroupSopNode extends CADSopNode<CADGroupSopParamsConfig> {
 
 		const inputObjects = coreGroup0.cadObjects();
 		if (inputObjects) {
-			for (let inputObject of inputObjects) {
+			for (const inputObject of inputObjects) {
 				if (CoreCadType.isShape(inputObject)) {
 					await this._evalEdges(oc, inputObject, coreGroup1);
 				}
@@ -170,7 +170,7 @@ export class CADGroupSopNode extends CADSopNode<CADGroupSopParamsConfig> {
 				await this.byBoundingObjectHelper.evalForEntities(entities, this.selectedStates, boundingCoreGroup);
 			}
 		} else {
-			for (let entity of entities) {
+			for (const entity of entities) {
 				updateSelectionState(this.selectedStates, entity, false);
 			}
 		}

@@ -47,7 +47,7 @@ export class CADFileSTEPSopNode extends CADSopNode<CADFileSTEPSopParamsConfig> {
 		const result = await loader.load({node: this});
 		if (result) {
 			const matrixAutoUpdate: boolean = this.pv.matrixAutoUpdate;
-			for (let object of result) {
+			for (const object of result) {
 				object.traverse((child) => {
 					child.matrixAutoUpdate = matrixAutoUpdate;
 				});

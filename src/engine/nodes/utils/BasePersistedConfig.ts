@@ -84,7 +84,7 @@ export abstract class BasePersistedConfig {
 		}
 		const dataWithoutShaders: DataObjectWithoutShaders = {};
 		const entryNames = Object.keys(data);
-		for (let entryName of entryNames) {
+		for (const entryName of entryNames) {
 			if (!ENTRY_NAMES_TO_REMOVE.has(entryName)) {
 				(dataWithoutShaders as any)[entryName] = (data as any)[entryName];
 			}
@@ -159,7 +159,7 @@ export abstract class BasePersistedConfig {
 		const uniforms = (material as ShaderMaterial).uniforms;
 		if (uniforms) {
 			const uniformNames = Object.keys(uniforms);
-			for (let uniformName of uniformNames) {
+			for (const uniformName of uniformNames) {
 				const value = uniforms[uniformName].value;
 				if (value && value.uuid) {
 					const texture = value as Texture;
@@ -182,7 +182,7 @@ export abstract class BasePersistedConfig {
 		// we use material.uniforms and not material.userData.uniforms
 		// since userData.uniforms are removed in ._unassignOnBeforeCompileUniforms
 		const propertyNames = Object.keys(material);
-		for (let propertyName of propertyNames) {
+		for (const propertyName of propertyNames) {
 			const value = (material as any)[propertyName] as Texture | undefined;
 			if (value && value.uuid && value instanceof Texture) {
 				textureByPropertyName.set(propertyName, value);

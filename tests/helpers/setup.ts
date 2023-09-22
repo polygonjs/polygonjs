@@ -16,6 +16,7 @@ import {Poly} from '../../src/engine/Poly';
 import {AllRegister} from '../../src/engine/poly/registers/All';
 // import {AllModulesRegister} from '../../src/engine/poly/registers/modules/All';
 import {waitForUserInteraction} from './UserInteraction';
+import {AbstractRenderer} from '../../src/engine/viewers/Common';
 // import {GLTFLoaderHandler} from '../../src/core/loader/geometry/GLTF';
 AllRegister.registerAll();
 // AllModulesRegister.run(Poly);
@@ -51,9 +52,10 @@ export function setupQUnit(qunit: QUnit) {
 
 		function deregisterAllRenderers() {
 			const scenes = Poly.scenesRegister.scenes();
-			for (let scene of scenes) {
-				const renderers = [...scene.renderersRegister.renderers()];
-				for (let renderer of renderers) {
+			for (const scene of scenes) {
+				const renderers: AbstractRenderer[] = [];
+				scene.renderersRegister.renderers(renderers);
+				for (const renderer of renderers) {
 					scene.renderersRegister.deregisterRenderer(renderer);
 				}
 			}

@@ -108,7 +108,7 @@ async function _addNumericAttributeToVertices<T extends CoreObjectType>(
 					}
 				} else {
 					const value = componentParam.value;
-					for (let vertex of vertices) {
+					for (const vertex of vertices) {
 						array[vertex.index() * size + i] = value;
 					}
 				}

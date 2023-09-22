@@ -13,7 +13,7 @@ export function applyTextLineHeight(geometries: Array<BufferGeometry | undefined
 	}
 
 	let totalBoundingBox: Box3 | null = null;
-	for (let geometry of geometries) {
+	for (const geometry of geometries) {
 		if (!geometry) continue;
 		geometry.computeBoundingBox();
 		if (geometry.boundingBox) {
@@ -29,7 +29,7 @@ export function applyTextLineHeight(geometries: Array<BufferGeometry | undefined
 	}
 	const expectedMin = totalBoundingBox.min.y * params.lineHeight;
 	const delta = expectedMin - totalBoundingBox.min.y;
-	for (let geometry of geometries) {
+	for (const geometry of geometries) {
 		geometry?.translate(0, delta, 0);
 	}
 }

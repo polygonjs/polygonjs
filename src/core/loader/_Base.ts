@@ -112,13 +112,13 @@ export class CoreBaseLoader<U extends string | Array<string>> {
 
 	protected static async _loadMultipleBlobGlobal(options: MultipleDependenciesLoadOptions) {
 		const promises: Promise<FetchBlobResponse>[] = [];
-		for (let file of options.files) {
+		for (const file of options.files) {
 			const fullUrl = file.fullUrl;
 			promises.push(Poly.blobs.fetchBlobGlobal(fullUrl));
 		}
 		const responses = await Promise.all(promises);
 		if (options.node) {
-			for (let response of responses) {
+			for (const response of responses) {
 				if (response.error) {
 					options.node.states.error.set(options.error);
 				}
@@ -135,7 +135,7 @@ export class CoreBaseLoader<U extends string | Array<string>> {
 		if (!this._onAssetLoadedCallbacks) {
 			return;
 		}
-		for (let callback of this._onAssetLoadedCallbacks) {
+		for (const callback of this._onAssetLoadedCallbacks) {
 			callback(url, asset);
 		}
 	}

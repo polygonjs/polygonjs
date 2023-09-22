@@ -10,7 +10,7 @@ export class ByBboxHelper {
 	evalForPoints(points: CorePoint[]) {
 		this._setBbox(_bbox);
 
-		for (let point of points) {
+		for (const point of points) {
 			point.position(_position);
 			const inBbox = _bbox.containsPoint(_position);
 

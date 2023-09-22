@@ -32,7 +32,7 @@ export class CADUnpackSopNode extends CADSopNode<CADUnpackSopParamsConfig> {
 		const inputObjects = inputCoreGroup.cadObjects();
 		if (inputObjects) {
 			const oc = CadLoaderSync.oc();
-			for (let inputObject of inputObjects) {
+			for (const inputObject of inputObjects) {
 				const shape = inputObject.cadGeometry();
 				if (CoreCadType.isGeometryShape(shape)) {
 					const iterator = new oc.TopoDS_Iterator_2(shape, true, true);

@@ -30,7 +30,7 @@ export class GroupByExpressionHelper {
 		selectionStates: CoreEntitySelectionState
 	) {
 		const value = isBooleanTrue(this.node.pv.expression);
-		for (let entity of allEntities) {
+		for (const entity of allEntities) {
 			updateSelectionState(selectionStates, entity, value);
 		}
 	}

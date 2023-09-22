@@ -48,7 +48,7 @@ export class HeightMapSopNode extends TypedSopNode<HeightMapSopParamsConfig> {
 				const texture = container.texture();
 
 				const objects = coreGroup.allObjects();
-				for (let object of objects) {
+				for (const object of objects) {
 					this._setPositionFromDataTexture(object, texture);
 				}
 			} else {
@@ -57,7 +57,7 @@ export class HeightMapSopNode extends TypedSopNode<HeightMapSopParamsConfig> {
 		}
 		// core_group.computeVertexNormals();
 		const objects = coreGroup.threejsObjectsWithGeo();
-		for (let object of objects) {
+		for (const object of objects) {
 			object.geometry.computeVertexNormals();
 		}
 		this.setCoreGroup(coreGroup);

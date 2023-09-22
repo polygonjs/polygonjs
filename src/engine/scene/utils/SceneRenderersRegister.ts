@@ -9,6 +9,7 @@ type SceneRenderersRegisterCallback = (value: AbstractRenderer) => void;
 export interface RegisterRendererOptions {
 	assignId: boolean;
 }
+const _renderers: AbstractRenderer[] = [];
 export class SceneRenderersRegister {
 	private _renderersById: Map<number, AbstractRenderer> = new Map();
 	private _registerTimeByRenderer: Map<AbstractRenderer, number> = new Map();
@@ -41,8 +42,8 @@ export class SceneRenderersRegister {
 		}
 	}
 	dispose() {
-		const renderers = this.renderers();
-		for (const renderer of renderers) {
+		this.renderers(_renderers);
+		for (const renderer of _renderers) {
 			this.deregisterRenderer(renderer);
 		}
 	}
@@ -61,12 +62,12 @@ export class SceneRenderersRegister {
 		return this._lastRegisteredRenderer;
 	}
 
-	renderers() {
-		const renderers: AbstractRenderer[] = [];
+	renderers(target: AbstractRenderer[]) {
+		// const renderers: AbstractRenderer[] = [];
 		this._renderersById.forEach((renderer) => {
-			renderers.push(renderer);
+			target.push(renderer);
 		});
-		return renderers;
+		return target;
 	}
 
 	private _updateCache() {
@@ -87,11 +88,11 @@ export class SceneRenderersRegister {
 
 	private _flushCallbacksWithRenderer(renderer: AbstractRenderer) {
 		const callbacks: SceneRenderersRegisterCallback[] = [];
-		for (let r of this._resolves) {
+		for (const r of this._resolves) {
 			callbacks.push(r);
 		}
 		this._resolves = [];
-		for (let c of callbacks) {
+		for (const c of callbacks) {
 			c(renderer);
 		}
 	}

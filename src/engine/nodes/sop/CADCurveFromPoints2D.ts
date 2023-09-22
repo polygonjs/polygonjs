@@ -28,7 +28,7 @@ export class CADCurveFromPoints2DSopNode extends CADSopNode<CADCurveFromPoints2D
 
 		const points: gp_Pnt2d[] = [];
 		if (cadObjects) {
-			for (let object of cadObjects) {
+			for (const object of cadObjects) {
 				if (CoreCadType.isPoint2d(object)) {
 					points.push(object.cadGeometry());
 				}
@@ -39,7 +39,7 @@ export class CADCurveFromPoints2DSopNode extends CADSopNode<CADCurveFromPoints2D
 
 			const positions = new oc.TColgp_Array1OfPnt2d_2(0, points.length - 1);
 			let index = 0;
-			for (let point of points) {
+			for (const point of points) {
 				positions.SetValue(index, point);
 				index++;
 			}

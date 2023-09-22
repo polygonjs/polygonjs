@@ -84,7 +84,7 @@ export class KeyboardEventsController extends BaseSceneEventsController<
 		if (!methodNames) {
 			return;
 		}
-		for (let methodName of methodNames) {
+		for (const methodName of methodNames) {
 			this.keyboardEventsController.addTriggeredEvaluators(evaluatorGenerators, methodName);
 		}
 		// evaluatorGenerators.forEach((evaluatorGenerator) => {

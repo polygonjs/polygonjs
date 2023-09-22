@@ -43,7 +43,7 @@ export class CADTransformSopNode extends CADSopNode<CADTransformSopParamConfig> 
 		const newObjects: CadObject<CadGeometryType>[] = [];
 		const cadObjects = coreGroup0.cadObjects();
 		if (cadObjects) {
-			for (let cadObject of cadObjects) {
+			for (const cadObject of cadObjects) {
 				// object.transform(this.pv.t, this.pv.r, tmpS);
 				cadTransform(cadObject, this.pv.t, this.pv.r, this.pv.s, this.pv.pivot);
 				newObjects.push(cadObject);

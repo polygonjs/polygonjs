@@ -89,7 +89,7 @@ export class SamplerAudioNode extends TypedAudioNode<SamplerAudioParamsConfig> {
 			const extension = this.pv.extension;
 			urlsJSON = JSON.parse(this.pv.urlsMap);
 			const noteNames = Object.keys(urlsJSON);
-			for (let noteName of noteNames) {
+			for (const noteName of noteNames) {
 				const urlFileName = urlsJSON[noteName];
 				const url = `${this.pv.baseUrl}/${urlFileName}.${extension}`;
 				urlsJSON[noteName] = sanitizeUrl(url);

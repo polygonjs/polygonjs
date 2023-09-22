@@ -37,7 +37,7 @@ export class CADExporterSTEPSopNode extends CADExporterSopNode<ExporterSTEPSopPa
 				const {cadObjects} = sceneData;
 				const mode = oc.STEPControl_StepModelType.STEPControl_AsIs;
 				const compgraph = true;
-				for (let object of cadObjects) {
+				for (const object of cadObjects) {
 					if (CoreCadType.isShape(object)) {
 						const shape = object.cadGeometry();
 						writer.Transfer(shape, mode as any, compgraph, CadLoaderSync.Message_ProgressRange);

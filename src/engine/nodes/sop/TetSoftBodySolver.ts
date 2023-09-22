@@ -146,7 +146,7 @@ export class TetSoftBodySolverSopNode extends TetSopNode<TetSoftBodySolverSopPar
 		const inputTetObjects = inputCoreGroups[0].tetObjects();
 		if (inputTetObjects) {
 			const newThreejsObjects: Object3D[] = [];
-			for (let tetObject of inputTetObjects) {
+			for (const tetObject of inputTetObjects) {
 				const highResObject = await this._highResObject(tetObject);
 				const threejsObjectsFromTetObject = tetObject.toObject3D({
 					...DEFAULT_TESSELATION_PARAMS,

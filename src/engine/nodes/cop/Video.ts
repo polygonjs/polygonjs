@@ -219,12 +219,12 @@ export class VideoCopNode extends TypedCopNode<VideoCopParamsConfig> {
 		volumechange: this._onVideoEventVolumeChange.bind(this),
 	};
 	private _addVideoEvents(video: HTMLVideoElement) {
-		for (let eventName of VIDEO_EVENTS) {
+		for (const eventName of VIDEO_EVENTS) {
 			video.addEventListener(eventName, this._videoBoundEvents[eventName]);
 		}
 	}
 	private _removeVideoEvents(video: HTMLVideoElement) {
-		for (let eventName of VIDEO_EVENTS) {
+		for (const eventName of VIDEO_EVENTS) {
 			video.removeEventListener(eventName, this._videoBoundEvents[eventName]);
 		}
 	}
@@ -409,7 +409,7 @@ export class VideoCopNode extends TypedCopNode<VideoCopParamsConfig> {
 		// this.p.url.setDirty();
 		// this.p.url.emit(ParamEvent.ASSET_RELOAD_REQUEST);
 		const urlParams = this.urlParams();
-		for (let urlParam of urlParams) {
+		for (const urlParam of urlParams) {
 			urlParam.setDirty();
 			urlParam.emit(ParamEvent.ASSET_RELOAD_REQUEST);
 		}

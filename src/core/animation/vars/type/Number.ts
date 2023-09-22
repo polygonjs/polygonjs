@@ -53,7 +53,7 @@ interface PopulateVarsForNumber {
 }
 export function populateVarsForNumber(options: PopulateVarsForNumber) {
 	const {vars, targetValue, targetProperty, propertyNames, operation} = options;
-	for (let property_name of propertyNames) {
+	for (const property_name of propertyNames) {
 		vars[property_name] = AnimBuilderWithOp(targetProperty, targetValue, operation);
 	}
 }

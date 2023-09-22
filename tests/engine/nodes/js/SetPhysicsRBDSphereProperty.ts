@@ -50,7 +50,6 @@ export function testenginenodesjsSetPhysicsRBDSphereProperty(qUnit: QUnit) {
 		// setPhysicsRBDSphereProperty1.setInput(setPhysicsRBDSphereProperty1.p.radius.name(), getPhysicsRBDSphereProperty1);
 
 		const container = await physicsWorld1.compute();
-		console.log(container.coreContent()!.threejsObjects());
 		const object = container.coreContent()!.threejsObjects()[0].children[0];
 		assert.in_delta(object.position.y, 0, 0.01);
 		await RendererUtils.withViewer({cameraNode}, async ({viewer, element}) => {

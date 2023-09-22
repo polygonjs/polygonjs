@@ -63,7 +63,7 @@ export class MergeAnimNode extends TypedAnimNode<MergeAnimParamsConfig> {
 		const mergedTimelineBuilder = new TimelineBuilder();
 
 		let i = 0;
-		for (let timelineBuilder of inputContents) {
+		for (const timelineBuilder of inputContents) {
 			if (timelineBuilder) {
 				if (i > 0) {
 					this._updateTimelineBuilder(timelineBuilder);

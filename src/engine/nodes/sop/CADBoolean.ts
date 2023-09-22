@@ -183,7 +183,7 @@ function _createBooleansAllInSequence(
 	newObjects: CadObject<CadGeometryType>[]
 ) {
 	let previousShape: TopoDS_Shape | undefined;
-	for (let shapeObject of shapeObjects) {
+	for (const shapeObject of shapeObjects) {
 		if (previousShape) {
 			const newShape = _booleanOperation(oc, operation, previousShape, shapeObject.cadGeometry());
 			previousShape = newShape;
@@ -227,9 +227,9 @@ function _createBooleansOneToMany(
 	shapeObjects1: CadObject<CadGeometryTypeShape>[],
 	newObjects: CadObject<CadGeometryType>[]
 ) {
-	for (let shapeObject0 of shapeObjects0) {
+	for (const shapeObject0 of shapeObjects0) {
 		let previousBooleanShapeResult: TopoDS_Shape = shapeObject0.cadGeometry();
-		for (let shapeObject1 of shapeObjects1) {
+		for (const shapeObject1 of shapeObjects1) {
 			previousBooleanShapeResult = _booleanOperation(
 				oc,
 				operation,

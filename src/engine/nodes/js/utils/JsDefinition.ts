@@ -246,7 +246,6 @@ export class TriggeringJsDefinition extends TypedJsDefinition<JsDefinitionType.T
 
 			return `${methodName}(){
 				const pointsCount = ${FUNC_POINTS_COUNT_FROM_OBJECT}(${ActorAssemblerConstant.OBJECT_3D});
-				console.log('JSDEF:', {pointsCount});
 				for( let i = 0; i < pointsCount; i++ ) {
 					${setPointIndex}
 					${this._value}

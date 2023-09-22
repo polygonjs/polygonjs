@@ -170,7 +170,7 @@ export class ShaderAssemblerRayMarchingApplyMaterial extends BaseShaderAssembler
 	override updateShaders() {
 		this._shaders_by_name.clear();
 		this._lines.clear();
-		for (let shaderName of this.shaderNames()) {
+		for (const shaderName of this.shaderNames()) {
 			const template = this._template_shader_for_shader_name(shaderName);
 			if (template) {
 				this._lines.set(shaderName, template.split('\n'));
@@ -183,7 +183,7 @@ export class ShaderAssemblerRayMarchingApplyMaterial extends BaseShaderAssembler
 
 			this._buildLines();
 		}
-		for (let shaderName of this.shaderNames()) {
+		for (const shaderName of this.shaderNames()) {
 			const lines = this._lines.get(shaderName);
 			if (lines) {
 				this._shaders_by_name.set(shaderName, lines.join('\n'));
@@ -203,7 +203,7 @@ export class ShaderAssemblerRayMarchingApplyMaterial extends BaseShaderAssembler
 		let inNotAllowed = false;
 		let inAllowed = false;
 
-		for (let line of lines) {
+		for (const line of lines) {
 			if (line.includes(REFLECTION_NOT_ALLOWED.START)) {
 				inNotAllowed = true;
 			}
@@ -239,7 +239,7 @@ export class ShaderAssemblerRayMarchingApplyMaterial extends BaseShaderAssembler
 		let inNotAllowed = false;
 		let inAllowed = false;
 
-		for (let line of lines) {
+		for (const line of lines) {
 			if (line.includes(REFRACTION_NOT_ALLOWED.START)) {
 				inNotAllowed = true;
 			}

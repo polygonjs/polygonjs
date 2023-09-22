@@ -68,13 +68,13 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 	traverse(rootNodes: BaseNodeByContextMap[NC][]) {
 		this.reset();
 
-		for (let shaderName of this.shaderNames()) {
+		for (const shaderName of this.shaderNames()) {
 			this._leaves_graph_id.set(shaderName, new Map());
 		}
 
-		for (let shaderName of this.shaderNames()) {
+		for (const shaderName of this.shaderNames()) {
 			this._shaderName = shaderName;
-			for (let rootNode of rootNodes) {
+			for (const rootNode of rootNodes) {
 				this._findLeavesFromRootNode(rootNode);
 				this._setNodesDepth();
 			}
@@ -124,7 +124,7 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 		depths.forEach((depth) => {
 			const graph_ids_for_depth = this._graph_id_by_depth.get(depth);
 			if (graph_ids_for_depth) {
-				for (let graph_id of graph_ids_for_depth) {
+				for (const graph_id of graph_ids_for_depth) {
 					const node = this._graph.nodeFromId(graph_id) as BaseNodeByContextMap[NC];
 					if (node) {
 						this._addNodesWithChildren(node, node_id_used_state, nodes);
@@ -208,7 +208,7 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 		//
 		const inputNames = this.inputNamesForShaderName(rootNode, this._shaderName);
 		if (inputNames) {
-			for (let inputName of inputNames) {
+			for (const inputName of inputNames) {
 				const input = rootNode.io.inputs.named_input(inputName) as BaseNodeByContextMap[NC];
 				if (input) {
 					MapUtils.pushOnArrayAtEntry(this._outputs_by_graph_id, input.graphNodeId(), rootNode.graphNodeId());
@@ -238,7 +238,7 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 		) as BaseNodeByContextMap[NC][];
 
 		if (uniqueInputs.length > 0) {
-			for (let input of uniqueInputs) {
+			for (const input of uniqueInputs) {
 				MapUtils.pushOnArrayAtEntry(this._outputs_by_graph_id, input.graphNodeId(), node.graphNodeId());
 
 				this._findLeaves(input);

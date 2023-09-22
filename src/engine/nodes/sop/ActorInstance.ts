@@ -54,7 +54,7 @@ export class ActorInstanceSopNode extends TypedActorSopNode<ActorInstanceSopPara
 		const objects = filterObjectsWithGroup(coreGroup, this.pv);
 		const actorNode = await this._findActorNode();
 		if (actorNode) {
-			for (let object of objects) {
+			for (const object of objects) {
 				this.scene().actorsManager.assignActorBuilder(object, actorNode);
 			}
 		}

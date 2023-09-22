@@ -89,7 +89,7 @@ export class CoreGroup extends CoreEntity {
 	}
 	dispose() {
 		if (this._allObjects) {
-			for (let object of this._allObjects) {
+			for (const object of this._allObjects) {
 				if (object.dispose) {
 					object.dispose();
 				}
@@ -153,7 +153,7 @@ export class CoreGroup extends CoreEntity {
 		}
 
 		const attribNames = this.attribNames();
-		for (let attribName of attribNames) {
+		for (const attribName of attribNames) {
 			const value = this.attribValue(attribName);
 			coreGroup.addAttribute(attribName, value);
 		}
@@ -287,7 +287,7 @@ export class CoreGroup extends CoreEntity {
 	totalPointsCount() {
 		const threejsObjects = this.threejsObjects();
 		let sum = 0;
-		for (let object of threejsObjects) {
+		for (const object of threejsObjects) {
 			sum += objectTotalPointsCount(object);
 		}
 		return sum;
@@ -444,7 +444,7 @@ export class CoreGroup extends CoreEntity {
 	}
 	attribSizes() {
 		const h: PolyDictionary<AttribSize> = {};
-		for (let attrib_name of this.attribNames()) {
+		for (const attrib_name of this.attribNames()) {
 			const size = this.attribSize(attrib_name);
 			if (size != null) {
 				h[attrib_name] = size;
@@ -479,7 +479,7 @@ export class CoreGroup extends CoreEntity {
 	position(target: Vector3): Vector3 {
 		const objectsCount = this._allObjects.length;
 		target.set(0, 0, 0);
-		for (let object of this._allObjects) {
+		for (const object of this._allObjects) {
 			coreObjectClassFactory(object).position(object, tmpPos);
 			target.add(tmpPos);
 		}
@@ -548,7 +548,7 @@ export class CoreGroup extends CoreEntity {
 	boundingBox(target: Box3) {
 		target.makeEmpty();
 		const coreObjects = this.allCoreObjects();
-		for (let coreObject of coreObjects) {
+		for (const coreObject of coreObjects) {
 			coreObject.boundingBox(tmpBox3);
 			target.union(tmpBox3);
 		}

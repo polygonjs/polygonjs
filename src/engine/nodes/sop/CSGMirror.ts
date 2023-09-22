@@ -47,7 +47,7 @@ export class CSGMirrorSopNode extends CSGSopNode<CSGMirrorSopParamsConfig> {
 				normal: this._normal,
 			};
 			const newGeometries: CsgGeometry[] = [];
-			for (let inputObject of inputObjects) {
+			for (const inputObject of inputObjects) {
 				const inputGeometry = inputObject.csgGeometry();
 				let newGeometry = mirror(options, inputGeometry);
 				csgApplyTransform(newGeometry);

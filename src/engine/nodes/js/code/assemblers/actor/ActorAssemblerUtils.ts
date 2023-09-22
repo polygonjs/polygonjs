@@ -61,13 +61,13 @@ function _hasTriggerOutputConnected(node: BaseJsNodeType): boolean {
 	const outputConnectionPoints = node.io.outputs.namedOutputConnectionPoints();
 	let i = 0;
 	let triggerOutputIndices: number[] = [];
-	for (let outputConnectionPoint of outputConnectionPoints) {
+	for (const outputConnectionPoint of outputConnectionPoints) {
 		if (outputConnectionPoint.type() == JsConnectionPointType.TRIGGER) {
 			triggerOutputIndices.push(i);
 		}
 		i++;
 	}
-	for (let triggerOutputIndex of triggerOutputIndices) {
+	for (const triggerOutputIndex of triggerOutputIndices) {
 		const triggerConnections = node.io.connections.outputConnectionsByOutputIndex(triggerOutputIndex);
 		if (triggerConnections != null && triggerConnections.size > 0) {
 			return true;
@@ -130,7 +130,7 @@ export function getOutputIndices(node: BaseJsNodeType, callback: ConnectionPoint
 	let triggerOutputIndices: number[] = [];
 	const outputConnectionPoints = node.io.outputs.namedOutputConnectionPoints();
 	let i = 0;
-	for (let outputConnectionPoint of outputConnectionPoints) {
+	for (const outputConnectionPoint of outputConnectionPoints) {
 		if (callback(outputConnectionPoint) == true) {
 			triggerOutputIndices.push(i);
 		}
@@ -142,7 +142,7 @@ export function getInputIndices(node: BaseJsNodeType, callback: ConnectionPointC
 	let triggerInputIndices: number[] = [];
 	const inputConnectionPoints = node.io.inputs.namedInputConnectionPoints();
 	let i = 0;
-	for (let inputConnectionPoint of inputConnectionPoints) {
+	for (const inputConnectionPoint of inputConnectionPoints) {
 		if (callback(inputConnectionPoint) == true) {
 			triggerInputIndices.push(i);
 		}
@@ -159,7 +159,7 @@ interface GetConnectedOutputNodesOptions {
 
 export function getConnectedOutputNodes(options: GetConnectedOutputNodesOptions) {
 	const {node, triggerOutputIndices, triggerableNodes, recursive} = options;
-	for (let triggerOutputIndex of triggerOutputIndices) {
+	for (const triggerOutputIndex of triggerOutputIndices) {
 		const triggerConnections = node.io.connections.outputConnectionsByOutputIndex(triggerOutputIndex);
 		if (triggerConnections) {
 			triggerConnections.forEach((triggerConnection) => {
@@ -222,13 +222,13 @@ export function inputNodesFromConnectionWithCallback(node: BaseJsNodeType, callb
 	_nonTriggerInputIndices.length = 0;
 	const inputConnectionPoints = node.io.inputs.namedInputConnectionPoints();
 	let i = 0;
-	for (let outputConnectionPoint of inputConnectionPoints) {
+	for (const outputConnectionPoint of inputConnectionPoints) {
 		if (callback(outputConnectionPoint)) {
 			_nonTriggerInputIndices.push(i);
 		}
 		i++;
 	}
-	for (let nonTriggerInputIndex of _nonTriggerInputIndices) {
+	for (const nonTriggerInputIndex of _nonTriggerInputIndices) {
 		const connection = node.io.connections.inputConnection(nonTriggerInputIndex);
 		if (connection) {
 			_nonTriggerInputNodes.add(connection.nodeSrc());
@@ -250,7 +250,7 @@ export function triggerInputIndex(triggeringNode: BaseJsNodeType, triggeredNode:
 	const triggerOutputIndices = getOutputIndices(triggeringNode, (c) => c.type() == JsConnectionPointType.TRIGGER);
 
 	let index: number | null = null;
-	for (let triggerOutputIndex of triggerOutputIndices) {
+	for (const triggerOutputIndex of triggerOutputIndices) {
 		const triggerConnections = triggeringNode.io.connections.outputConnectionsByOutputIndex(triggerOutputIndex);
 		if (triggerConnections) {
 			triggerConnections.forEach((triggerConnection) => {
@@ -280,7 +280,7 @@ export function triggerableMethodCalls(triggeringNode: BaseJsNodeType) {
 	// 	nodeMethodName(n)
 	// );
 	const methodCalls: string[] = [];
-	for (let triggerableNode of _triggerableNodes) {
+	for (const triggerableNode of _triggerableNodes) {
 		const methodName = nodeMethodName(triggerableNode);
 		const argIndex = triggerInputIndex(triggeringNode, triggerableNode);
 		// argIndex is used to highlight the connection

@@ -119,7 +119,7 @@ export const TESSELATION_PARAM_NAMES = new Set<string>([
 export function addCADTesselationParamsCallback(node: BaseNodeType, callback: () => void) {
 	node.params.onParamsCreated('CADtesselationParamsHooks', () => {
 		const params = node.params.all;
-		for (let param of params) {
+		for (const param of params) {
 			if (TESSELATION_PARAM_NAMES.has(param.name())) {
 				param.options.setOption('callback', callback);
 			}

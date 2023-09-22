@@ -386,7 +386,7 @@ export class ComputeNormalsGlNode extends TypedSubnetGlNode<ComputeNormalsGlPara
 
 		const connections = this.io.connections.inputConnections();
 		if (connections) {
-			for (let connection of connections) {
+			for (const connection of connections) {
 				if (connection) {
 					if (connection.inputIndex() >= SUBNET_INPUT_CONNECTIONS_OFFSET) {
 						const connection_point = connection.destConnectionPoint();

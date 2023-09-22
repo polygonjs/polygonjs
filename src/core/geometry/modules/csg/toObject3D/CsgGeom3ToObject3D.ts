@@ -42,11 +42,11 @@ export function geom3ToBufferGeometry(csg: geometries.geom3.Geom3, options: CSGT
 	let currentIndex = 0;
 	// const color = csg.color;
 	const indexByPosition: Map<string, number> = new Map();
-	for (let polygon of polygons) {
+	for (const polygon of polygons) {
 		const polygonjsCount = polygon.vertices.length;
 		const polygonVertices = polygon.vertices as jscadVertexWithIndex[];
 		// console.log(polygonVertices.map((v) => v.index));
-		for (let vertex of polygonVertices) {
+		for (const vertex of polygonVertices) {
 			const positionAsString = `${vertex[0]},${vertex[1]},${vertex[2]}`;
 			let index = indexByPosition.get(positionAsString);
 			if (index == null) {

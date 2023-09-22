@@ -49,7 +49,7 @@ export class SDFLoader {
 
 					resolve(manifold);
 					if (_resolves.length > 0) {
-						for (let _resolve of _resolves) {
+						for (const _resolve of _resolves) {
 							_resolve(manifold);
 						}
 						_resolves.length = 0;

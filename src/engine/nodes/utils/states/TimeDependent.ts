@@ -19,7 +19,7 @@ export class NodeTimeDependentState<NC extends NodeContext> extends NodeBaseStat
 
 	inputsTimeDependent(): boolean {
 		const inputs = this.node.io.inputs.inputs();
-		for (let input of inputs) {
+		for (const input of inputs) {
 			if (input && input.states.timeDependent.active()) {
 				return true;
 			}

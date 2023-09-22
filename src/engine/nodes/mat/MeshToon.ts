@@ -138,7 +138,7 @@ export class MeshToonMatNode extends PrimitiveMatNode<MeshToonMaterial, MeshToon
 
 	override initializeNode() {
 		this.params.onParamsCreated('init controllers', () => {
-			for (let controllerName of this.controllerNames) {
+			for (const controllerName of this.controllerNames) {
 				this.controllers[controllerName].initializeNode();
 			}
 		});

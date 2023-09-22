@@ -10,6 +10,7 @@ interface MainCameraOptions {
 	findAnyCamera?: boolean;
 	printCameraNotFoundError?: boolean;
 }
+const _cameras: Array<Camera> = [];
 
 export class SceneCamerasController {
 	private _coreGraphNode: CoreGraphNode;
@@ -29,10 +30,9 @@ export class SceneCamerasController {
 			this._onCameraObjectsUpdated();
 		}
 	}
-	cameraObjects() {
-		const objects: Array<Camera> = [];
-		this._cameraObjects(this.scene.threejsScene(), objects);
-		return objects;
+	cameraObjects(target: Array<Camera>) {
+		this._cameraObjects(this.scene.threejsScene(), target);
+		return target;
 	}
 
 	private _cameraObjects(parent: Object3D, cameraObjects: Array<Camera>) {
@@ -100,7 +100,8 @@ export class SceneCamerasController {
 	}
 
 	private _findAnyCameraObject(): Camera | null {
-		return this.cameraObjects()[0];
+		this.cameraObjects(_cameras);
+		return _cameras[0];
 	}
 
 	async createMainViewer(options?: CreateViewerOptions) {

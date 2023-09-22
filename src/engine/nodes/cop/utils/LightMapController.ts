@@ -110,7 +110,7 @@ export class LightMapController {
 	}
 	private _setLights(lights: Array<Light>) {
 		this.lights = lights;
-		for (let light of lights) {
+		for (const light of lights) {
 			this._saveLightHierarchyState(light);
 			this._scene.attach(light);
 			this._saveLightMatrixState(light);
@@ -142,7 +142,7 @@ export class LightMapController {
 	}
 	private _saveObjectsState() {
 		let i = 0;
-		for (let object of this.objectTargets) {
+		for (const object of this.objectTargets) {
 			this._objectStateByObject.set(object, {
 				frustumCulled: object.frustumCulled,
 				material: object.material,
@@ -159,7 +159,7 @@ export class LightMapController {
 	}
 	private _moveLights() {
 		const lightRadius = this._params.lightRadius;
-		for (let light of this.lights) {
+		for (const light of this.lights) {
 			const state = this._lightMatrixStateByLight.get(light);
 			if (state) {
 				const position = state.position;
@@ -175,12 +175,12 @@ export class LightMapController {
 		this.renderer.setRenderTarget(this._previousRenderTarget);
 	}
 	private _invertObjects() {
-		for (let object of this.objectTargets) {
+		for (const object of this.objectTargets) {
 			invertNormals(object);
 		}
 	}
 	private _restoreObjectsState() {
-		for (let object of this.objectTargets) {
+		for (const object of this.objectTargets) {
 			const state = this._objectStateByObject.get(object);
 			if (state) {
 				object.frustumCulled = state.frustumCulled;
@@ -195,7 +195,7 @@ export class LightMapController {
 	}
 
 	private _restoreLightsState() {
-		for (let light of this.lights) {
+		for (const light of this.lights) {
 			const stateH = this._lightHierarchyStateByLight.get(light);
 			const stateM = this._lightMatrixStateByLight.get(light);
 			if (stateH && stateM) {

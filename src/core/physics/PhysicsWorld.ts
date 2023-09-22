@@ -67,7 +67,7 @@ export function initCorePhysicsWorld(PhysicsLib: PhysicsLib, worldObject: Object
 	// we end up removing them from the hierarchy
 	const children = [...worldObject.children];
 	const newRBDIds = new Set<string>();
-	for (let child of children) {
+	for (const child of children) {
 		_physicsCreateRBD({PhysicsLib, world, rigidBodyById, objectsByRBD, object: child, newRBDIds});
 	}
 
@@ -76,7 +76,7 @@ export function initCorePhysicsWorld(PhysicsLib: PhysicsLib, worldObject: Object
 	physicsCreateJoints(PhysicsLib, world, worldObject);
 	// }
 	// create character controller
-	for (let child of children) {
+	for (const child of children) {
 		createOrFindPhysicsPlayer({scene, object: child, PhysicsLib, world, worldObject});
 	}
 }
@@ -135,16 +135,16 @@ function _clearWorld(world: World) {
 	world.multibodyJoints.forEach((multiBodyJoint) => {
 		multiBodyJoints.push(multiBodyJoint);
 	});
-	for (let body of bodies) {
+	for (const body of bodies) {
 		world.removeRigidBody(body);
 	}
-	for (let collider of colliders) {
+	for (const collider of colliders) {
 		world.removeCollider(collider, false);
 	}
-	for (let joint of joints) {
+	for (const joint of joints) {
 		world.removeImpulseJoint(joint, false);
 	}
-	for (let joint of multiBodyJoints) {
+	for (const joint of multiBodyJoints) {
 		world.removeMultibodyJoint(joint, false);
 	}
 

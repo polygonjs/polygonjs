@@ -14,7 +14,7 @@ export class GroupByBoundingBoxHelper {
 		bbox.min.copy(this.node.pv.boundingBoxCenter).sub(bboxHalfSize);
 		bbox.max.copy(this.node.pv.boundingBoxCenter).add(bboxHalfSize);
 
-		for (let entity of allEntities) {
+		for (const entity of allEntities) {
 			entity.position(entityPosition);
 			updateSelectionState(selectionStates, entity, bbox.containsPoint(entityPosition));
 		}

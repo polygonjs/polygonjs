@@ -156,7 +156,7 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 	rootNodesByShaderName(shaderName: ShaderName, rootNodes: BaseGlNodeType[]): BaseGlNodeType[] {
 		// return this._root_nodes
 		const list = [];
-		for (let node of rootNodes) {
+		for (const node of rootNodes) {
 			switch (node.type()) {
 				case VaryingWriteGlNode.type():
 				case ParamGlNode.type():
@@ -465,7 +465,7 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 		let lineBeforeBodyFoundOnPreviousLine = false;
 		let lineBeforeBodyFound = false;
 
-		for (let templateLine of templateLines) {
+		for (const templateLine of templateLines) {
 			if (lineBeforeDefineFound == true) {
 				if (functionDeclaration) {
 					this._insertLines(newLines, functionDeclaration);
@@ -486,7 +486,7 @@ export class BaseGlShaderAssembler extends TypedAssembler<NodeContext.GL> {
 			let line_remove_required = false;
 
 			if (linesToRemove) {
-				for (let line_to_remove of linesToRemove) {
+				for (const line_to_remove of linesToRemove) {
 					if (templateLine.indexOf(line_to_remove) >= 0) {
 						line_remove_required = true;
 					}

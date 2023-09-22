@@ -17,7 +17,7 @@ export class TypedGLDefinitionCollection<T extends GLDefinitionType> {
 		const definitions_by_name: Map<string, TypedGLDefinition<T>> = new Map();
 		const names: string[] = [];
 
-		for (let definition of this._definitions) {
+		for (const definition of this._definitions) {
 			if (!this._errored) {
 				const name = definition.name();
 				const existing = definitions_by_name.get(name);
@@ -39,7 +39,7 @@ export class TypedGLDefinitionCollection<T extends GLDefinitionType> {
 		}
 
 		const uniq_definitions: TypedGLDefinition<T>[] = [];
-		for (let name of names) {
+		for (const name of names) {
 			const definition = definitions_by_name.get(name);
 			if (definition) {
 				uniq_definitions.push(definition);

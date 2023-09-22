@@ -92,7 +92,7 @@ export class CADPipeSopNode extends CADSopNode<CADPipeSopParamsConfig> {
 							addCap(api.FirstShape(), true);
 							addCap(api.LastShape(), false);
 						}
-						for (let shape of shapes) {
+						for (const shape of shapes) {
 							const type = cadGeometryTypeFromShape(oc, shape);
 							if (type) {
 								const newObject = new CadObject(shape, type);

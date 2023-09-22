@@ -84,7 +84,7 @@ export class CADRevolutionSopNode extends CADSopNode<CADRevolutionSopParamsConfi
 
 		const inputObjects = coreGroup0.cadObjects();
 		if (inputObjects) {
-			for (let inputObject of inputObjects) {
+			for (const inputObject of inputObjects) {
 				const type = inputObject.type;
 				switch (type) {
 					case CadGeometryType.CURVE_2D: {

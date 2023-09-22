@@ -10,7 +10,7 @@ export class EntitySelectionHelper {
 
 	init(entities: CoreEntity[]) {
 		this.selectedState.clear();
-		for (let entity of entities) {
+		for (const entity of entities) {
 			this.selectedState.set(entity, false);
 		}
 		this._entitiesCount = entities.length;

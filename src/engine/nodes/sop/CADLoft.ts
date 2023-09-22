@@ -60,7 +60,7 @@ export class CADLoftSopNode extends CADSopNode<CADLoftSopParamsConfig> {
 				const ruled = true;
 				const precision = oc.Precision.Approximation();
 				const api = r(new oc.BRepOffsetAPI_ThruSections(isSolid, ruled, precision));
-				for (let inputObject of inputObjects) {
+				for (const inputObject of inputObjects) {
 					// const profileObject = profilesObjects[i];
 					// const pathObject = pathObjects[i];
 

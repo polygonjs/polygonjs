@@ -79,7 +79,7 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 		// it must be disposed here
 		const predecessors = this.graphPredecessors();
 		if (predecessors) {
-			for (let predecessor of predecessors) {
+			for (const predecessor of predecessors) {
 				if (predecessor instanceof MethodDependency) {
 					predecessor.dispose();
 				}
@@ -87,7 +87,7 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 		}
 		const successors = this.graphSuccessors();
 		if (successors) {
-			for (let successor of successors) {
+			for (const successor of successors) {
 				if (successor instanceof TypedParam) {
 					const input = successor.rawInputSerialized();
 					successor.set(successor.defaultValue());
@@ -220,7 +220,7 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 				if (this._computeResolves) {
 					const resolves = [...this._computeResolves];
 					this._computeResolves = undefined;
-					for (let resolve of resolves) {
+					for (const resolve of resolves) {
 						resolve();
 					}
 				}
@@ -279,7 +279,7 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 		}
 
 		if (this.components) {
-			for (let c of this.components) {
+			for (const c of this.components) {
 				c._setupNodeDependencies(node);
 			}
 		}

@@ -17,7 +17,7 @@ export function csgBoundingBoxPath2(geometry: geometries.path2.Path2, target: Bo
 	}
 
 	// compute
-	for (let vertex of points) {
+	for (const vertex of points) {
 		_min.x = Math.min(_min.x, vertex[0]);
 		_min.y = Math.min(_min.z, vertex[1]);
 		_max.x = Math.max(_max.x, vertex[0]);
@@ -43,8 +43,8 @@ export function csgBoundingBoxGeom2(geometry: geometries.geom2.Geom2, target: Bo
 	}
 
 	// compute
-	for (let side of sides) {
-		for (let vertex of side) {
+	for (const side of sides) {
+		for (const vertex of side) {
 			_min.x = Math.min(_min.x, vertex[0]);
 			_min.y = Math.min(_min.z, vertex[1]);
 			_max.x = Math.max(_max.x, vertex[0]);
@@ -74,9 +74,9 @@ export function csgBoundingBoxGeom3(geometry: geometries.geom3.Geom3, target: Bo
 	}
 
 	// compute
-	for (let polygon of polygons) {
+	for (const polygon of polygons) {
 		const vertices = polygon.vertices;
-		for (let vertex of vertices) {
+		for (const vertex of vertices) {
 			_min.x = Math.min(_min.x, vertex[0]);
 			_min.y = Math.min(_min.y, vertex[1]);
 			_min.z = Math.min(_min.z, vertex[2]);

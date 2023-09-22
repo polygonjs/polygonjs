@@ -50,7 +50,7 @@ class MapboxMapsControllerClass {
 		this._styleFlushed = true;
 		const callbacks: MapRegisterCallback[] = [...this._resolves];
 		this._resolves.length = 0;
-		for (let c of callbacks) {
+		for (const c of callbacks) {
 			c(map);
 		}
 	}

@@ -43,7 +43,7 @@ export class CSGProjectSopNode extends CSGSopNode<CSGProjectSopParamsConfig> {
 				origin: this._origin,
 			};
 			const newGeometries: CsgGeometry[] = [];
-			for (let inputObject of inputObjects) {
+			for (const inputObject of inputObjects) {
 				const inputGeometry = inputObject.csgGeometry();
 				if (csgIsGeom3(inputGeometry)) {
 					newGeometries.push(project(options, inputGeometry));

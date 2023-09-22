@@ -72,7 +72,7 @@ export class CSGExpandSopNode extends CSGSopNode<CSGExpandSopParamsConfig> {
 			};
 			const mode = EXPAND_MODES[this.pv.mode];
 			const newGeometries: CsgGeometry[] = [];
-			for (let inputObject of inputObjects) {
+			for (const inputObject of inputObjects) {
 				const inputGeometry = inputObject.csgGeometry();
 				const type = csgGeometryTypeFromGeometry(inputGeometry);
 				const is2D = type == CsgGeometryType.PATH2 || type == CsgGeometryType.GEOM2;

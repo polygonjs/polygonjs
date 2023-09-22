@@ -82,7 +82,7 @@ export class UniformsTransparencyController extends BaseController {
 		const customMaterials = (mat as ShaderMaterialWithCustomMaterials).customMaterials;
 		if (customMaterials) {
 			const customNames: CustomMaterialName[] = Object.keys(customMaterials) as CustomMaterialName[];
-			for (let customName of customNames) {
+			for (const customName of customNames) {
 				const customMaterial = customMaterials[customName];
 				if (customMaterial) {
 					this._updateCommon(customMaterial as ShaderMaterial, pv);

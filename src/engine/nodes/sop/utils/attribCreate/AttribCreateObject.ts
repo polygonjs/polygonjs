@@ -22,7 +22,7 @@ export async function addObjectAttribute(
 	const allCoreObjects = coreGroup.allCoreObjects();
 	const defaultValue = defaultAttribValue(pv);
 	if (defaultValue != null) {
-		for (let coreObject of allCoreObjects) {
+		for (const coreObject of allCoreObjects) {
 			if (!coreObject.hasAttribute(attribName)) {
 				coreObject.setAttribValue(attribName, defaultValue);
 			}
@@ -69,7 +69,7 @@ async function _addNumericAttributeToObject<T extends CoreObjectType>(
 			// }
 			const initVector = vectorByAttribSize(pv.size);
 			if (initVector) {
-				for (let coreObject of coreObjects) {
+				for (const coreObject of coreObjects) {
 					valuesByCoreObjectIndex.set(coreObject.index(), initVector.clone());
 				}
 				for (let componentIndex = 0; componentIndex < components.length; componentIndex++) {
@@ -88,7 +88,7 @@ async function _addNumericAttributeToObject<T extends CoreObjectType>(
 							}
 						);
 					} else {
-						for (let coreObject of coreObjects) {
+						for (const coreObject of coreObjects) {
 							const vector = valuesByCoreObjectIndex.get(coreObject.index()) as Vector4;
 							vector[component_name] = component_param.value;
 						}

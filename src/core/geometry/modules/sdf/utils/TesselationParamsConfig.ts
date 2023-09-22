@@ -39,7 +39,7 @@ export const TESSELATION_PARAM_NAMES = new Set<string>(['SDFFacetAngle', 'SDFMes
 export function addSDFTesselationParamsCallback(node: BaseNodeType, callback: () => void) {
 	node.params.onParamsCreated('SDFtesselationParamsHooks', () => {
 		const params = node.params.all;
-		for (let param of params) {
+		for (const param of params) {
 			if (TESSELATION_PARAM_NAMES.has(param.name())) {
 				param.options.setOption('callback', callback);
 			}

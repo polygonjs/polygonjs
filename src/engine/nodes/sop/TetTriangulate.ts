@@ -28,7 +28,7 @@ export class TetTriangulateSopNode extends TetSopNode<TetTriangulateSopParamsCon
 		const tetObjects = inputCoreGroups[0].tetObjects();
 		if (tetObjects) {
 			const newObjects: Object3D[] = [];
-			for (let tetObject of tetObjects) {
+			for (const tetObject of tetObjects) {
 				const objects = tetObject.toObject3D(this.pv);
 				if (objects) {
 					if (CoreType.isArray(objects)) {

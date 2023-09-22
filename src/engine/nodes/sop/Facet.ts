@@ -44,7 +44,7 @@ export class FacetSopNode extends TypedSopNode<FacetSopParamsConfig> {
 
 		const selectedObjects = CoreMask.filterThreejsObjects(inputCoreGroup, this.pv).filter(object3DHasGeometry);
 		const rad = degToRad(this.pv.angle);
-		for (let object of selectedObjects) {
+		for (const object of selectedObjects) {
 			object.geometry = toCreasedNormals(object.geometry, rad);
 			CoreGeometryIndexBuilder.createIndexIfNone(object.geometry);
 		}

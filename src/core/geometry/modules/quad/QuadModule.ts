@@ -42,7 +42,7 @@ const onAddSpecializedChildren: SpecializedChildrenHook = (
 	const newQuadObjects = coreGroup.quadObjects();
 	if (newQuadObjects && newQuadObjects.length != 0) {
 		updateQUADTesselationParams(params);
-		for (let quadObject of newQuadObjects) {
+		for (const quadObject of newQuadObjects) {
 			const newObject3D = quadObject.toObject3D(QUAD_TESSELATION_PARAMS);
 			if (newObject3D) {
 				newObjectsAreDifferent = true;

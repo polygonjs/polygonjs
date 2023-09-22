@@ -75,7 +75,7 @@ export class NormalsSopNode extends TypedSopNode<NormalsSopParamsConfig> {
 		} else {
 			if (this.pv.recompute) {
 				const objects = coreGroup.threejsObjectsWithGeo();
-				for (let object of objects) {
+				for (const object of objects) {
 					object.geometry.computeVertexNormals();
 				}
 			}

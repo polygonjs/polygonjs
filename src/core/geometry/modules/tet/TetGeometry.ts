@@ -80,7 +80,7 @@ export class TetGeometry {
 		this._lastAddedTetId = tetrahedron.id;
 
 		// update point keys
-		for (let p of tetrahedron.pointIds) {
+		for (const p of tetrahedron.pointIds) {
 			let tetrahedrons = this.tetrahedronsByPointId.get(p);
 			if (!tetrahedrons) {
 				tetrahedrons = new Set();
@@ -101,13 +101,13 @@ export class TetGeometry {
 			sharedFacesNeighbourData.clear();
 
 			// 1. store neighbours for future tet reconstruction
-			for (let tetId of tetIds) {
+			for (const tetId of tetIds) {
 				const tetrahedron = this.tetrahedrons.get(tetId);
 				if (!tetrahedron) {
 					continue;
 				}
 				let faceIndex = 0;
-				for (let neighbourData of tetrahedron.neighbours) {
+				for (const neighbourData of tetrahedron.neighbours) {
 					// if the neighbour is not one of the removed tets,
 					// we can add it
 					if (neighbourData == null || !tetIds.includes(neighbourData.id)) {
@@ -140,7 +140,7 @@ export class TetGeometry {
 		}
 
 		// 2. remove tets
-		for (let tetId of tetIds) {
+		for (const tetId of tetIds) {
 			const tetrahedron = this.tetrahedrons.get(tetId);
 			if (!tetrahedron) {
 				logRedBg(`tet not found:${tetId} (${tetIds})`);
@@ -149,7 +149,7 @@ export class TetGeometry {
 			}
 
 			// update point keys
-			for (let pointId of tetrahedron.pointIds) {
+			for (const pointId of tetrahedron.pointIds) {
 				const tetrahedrons = this.tetrahedronsByPointId.get(pointId);
 				if (tetrahedrons) {
 					tetrahedrons.delete(tetrahedron.id);
@@ -162,7 +162,7 @@ export class TetGeometry {
 			}
 
 			// remove neighbours
-			for (let neighbourData of tetrahedron.neighbours) {
+			for (const neighbourData of tetrahedron.neighbours) {
 				if (neighbourData != null) {
 					const neighbourTet = this.tetrahedrons.get(neighbourData.id);
 					if (neighbourTet) {

@@ -17,7 +17,7 @@ export function findObjectByMaskInObject<T extends CoreObjectType>(
 	object: ObjectContent<T>,
 	objectPath: string = ''
 ): ObjectContent<T> | undefined {
-	for (let child of object.children) {
+	for (const child of object.children) {
 		const childName = sanitizeObjectPath(child.name);
 		const path = sanitizeObjectPath(`${objectPath}/${childName}`);
 		if (stringMatchMask(path, mask)) {

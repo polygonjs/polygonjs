@@ -54,7 +54,7 @@ export class WFCTilesCollection {
 		this._errorTileObject = objects.find((o) => CoreWFCTileAttribute.getIsErrorTile(o)) || null;
 		this._unresolvedTileObject = objects.find((o) => CoreWFCTileAttribute.getIsUnresolvedTile(o)) || null;
 		this._tilesById = new Map();
-		for (let tile of this._tiles) {
+		for (const tile of this._tiles) {
 			this._tilesById.set(CoreWFCTileAttribute.getTileId(tile), tile);
 		}
 

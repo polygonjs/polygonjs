@@ -33,7 +33,7 @@ export abstract class CoreGeometryBuilderBase {
 		// attributes
 		const {attributes} = oldGeometry;
 		// const new_attributes = {}
-		for (let attribute_name of Object.keys(attributes)) {
+		for (const attribute_name of Object.keys(attributes)) {
 			const attrib_values = firstPoint.userDataAttribs()[attribute_name];
 			const is_attrib_indexed = attrib_values != null;
 
@@ -49,7 +49,7 @@ export abstract class CoreGeometryBuilderBase {
 				// const old_attrib = old_geometry.getAttribute(attribute_name)
 				// const old_attrib_array = old_attrib.array
 				const new_attrib_indices = [];
-				for (let point of points) {
+				for (const point of points) {
 					// const old_index = old_attrib_array[point.index()]
 					const oldIndex = point.indexedAttribValue(attribute_name);
 					if (oldIndex) {

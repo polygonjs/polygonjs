@@ -32,7 +32,7 @@ const initOpenCascade: InitCallback = (options) => {
 			...module,
 		}).then(async (oc: OpenCascadeInstance) => {
 			if (options.libs) {
-				for (let lib of options.libs) {
+				for (const lib of options.libs) {
 					await (oc as any).loadDynamicLibrary(lib, {
 						loadAsync: true,
 						global: true,
@@ -121,7 +121,7 @@ export class CadLoader {
 
 					resolve(oc);
 					if (_resolves.length > 0) {
-						for (let _resolve of _resolves) {
+						for (const _resolve of _resolves) {
 							_resolve(oc);
 						}
 						_resolves.length = 0;

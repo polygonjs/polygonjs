@@ -71,7 +71,7 @@ function divideOctave2(params: DivideParams) {
 
 	let currentOctaveStart = 0;
 	const sizes = [valuesCount0, valuesCount1];
-	for (let size of sizes) {
+	for (const size of sizes) {
 		let currentOctaveValue = 0;
 		for (let j = 0; j < size; j++) {
 			const currentIndex = i + j + currentOctaveStart;
@@ -100,7 +100,7 @@ function divideOctave4(params: DivideParams) {
 
 	let currentOctaveStart = 0;
 	const sizes = [valuesCount00, valuesCount01, valuesCount10, valuesCount11];
-	for (let size of sizes) {
+	for (const size of sizes) {
 		let currentOctaveValue = 0;
 		for (let j = 0; j < size; j++) {
 			const currentIndex = i + j + currentOctaveStart;

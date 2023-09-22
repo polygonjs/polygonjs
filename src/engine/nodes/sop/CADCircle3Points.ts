@@ -30,7 +30,7 @@ export class CADCircle3PointsSopNode extends CADSopNode<CADCircle3PointsSopParam
 
 		const vertices: TopoDS_Vertex[] = [];
 		if (cadObjects) {
-			for (let object of cadObjects) {
+			for (const object of cadObjects) {
 				if (CoreCadType.isVertex(object)) {
 					vertices.push(object.cadGeometry());
 				}

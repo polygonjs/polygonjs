@@ -40,7 +40,7 @@ export function computeBoundingBoxFromObject3Ds(objects: Object3D[]) {
 	let bbox: Box3 | undefined;
 	// this._geometriesWithComputedBoundingBox.clear();
 	// 1. Initialize bbox to the first found object
-	for (let object of objects) {
+	for (const object of objects) {
 		computeBoundingBoxFromObject3D(object);
 	}
 
@@ -48,7 +48,7 @@ export function computeBoundingBoxFromObject3Ds(objects: Object3D[]) {
 	// If we had not initialized it, this would have skipped objects
 	// that have no geometry, but have children that do
 	if (bbox) {
-		for (let object of objects) {
+		for (const object of objects) {
 			// const geometry = (object as Object3DWithGeometry).geometry;
 			// if (geometry) {
 			// if (!this._geometriesWithComputedBoundingBox.has(geometry)) {

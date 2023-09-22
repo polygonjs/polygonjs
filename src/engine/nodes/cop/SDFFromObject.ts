@@ -92,13 +92,13 @@ export class SDFFromObjectCopNode extends TypedCopNode<SDFFromObjectCopParamsCon
 		}
 
 		let objectWithGeo: MeshWithBVH | undefined;
-		for (let object of objects) {
+		for (const object of objects) {
 			if ((object as MeshWithBVH).geometry) {
 				objectWithGeo = objectWithGeo || (object as MeshWithBVH);
 			}
 		}
 		if (!objectWithGeo) {
-			for (let object of objects) {
+			for (const object of objects) {
 				object.traverse((childObject) => {
 					if ((childObject as MeshWithBVH).geometry) {
 						objectWithGeo = objectWithGeo || (childObject as MeshWithBVH);

@@ -13,6 +13,7 @@ import {BaseSopOperation} from '../../../operations/sop/_Base';
 import {MapUtils} from '../../../../core/MapUtils';
 import {NameController} from '../NameController';
 import {CoreNodeSerializer} from '../CoreNodeSerializer';
+import {TypedNodeConnection} from '../io/NodeConnection';
 
 type OutputNodeFindMethod = (() => BaseNodeType) | undefined;
 type TraverseNodeCallback = (node: BaseNodeType) => void;
@@ -38,7 +39,7 @@ export class HierarchyChildrenController {
 
 	dispose() {
 		const children = this.children();
-		for (let child of children) {
+		for (const child of children) {
 			this.node.removeNode(child);
 		}
 		this._selection = undefined;
@@ -261,16 +262,17 @@ export class HierarchyChildrenController {
 
 			const firstConnection = childNode.io.connections.firstInputConnection();
 			const inputConnections = childNode.io.connections.inputConnections();
-			const outputConnections = childNode.io.connections.outputConnections();
+			const outputConnections: TypedNodeConnection<NodeContext>[] = [];
+			childNode.io.connections.outputConnections(outputConnections);
 			if (inputConnections) {
-				for (let inputConnection of inputConnections) {
+				for (const inputConnection of inputConnections) {
 					if (inputConnection) {
 						inputConnection.disconnect({setInput: true});
 					}
 				}
 			}
 			if (outputConnections) {
-				for (let outputConnection of outputConnections) {
+				for (const outputConnection of outputConnections) {
 					if (outputConnection) {
 						outputConnection.disconnect({setInput: true});
 						if (firstConnection) {

@@ -43,7 +43,7 @@ export class CSGExtrudeRectangularSopNode extends CSGSopNode<CSGExtrudeRectangul
 				height: this.pv.height,
 			};
 			const newGeometries: CsgGeometry[] = [];
-			for (let inputObject of inputObjects) {
+			for (const inputObject of inputObjects) {
 				const inputGeometry = inputObject.csgGeometry();
 				if (csgIsPath2(inputGeometry) || csgIsGeom2(inputGeometry)) {
 					newGeometries.push(extrudeRectangular(options, inputGeometry));

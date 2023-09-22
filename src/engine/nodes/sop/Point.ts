@@ -81,7 +81,7 @@ export class PointSopNode extends TypedSopNode<PointSopParamsConfig> {
 
 		if (isBooleanTrue(this.pv.updateNormals)) {
 			const objects = coreGroup.threejsObjectsWithGeo();
-			for (let object of objects) {
+			for (const object of objects) {
 				if ((object as Mesh).isMesh) {
 					object.geometry.computeVertexNormals();
 				}
@@ -89,14 +89,14 @@ export class PointSopNode extends TypedSopNode<PointSopParamsConfig> {
 		}
 
 		const geometries = coreGroup.geometries();
-		for (let geometry of geometries) {
+		for (const geometry of geometries) {
 			geometry.computeBoundingBox();
 		}
 
 		// needs update required for when no cloning
 		if (!this.io.inputs.cloneRequired(0)) {
 			const geometries = coreGroup.geometries();
-			for (let geometry of geometries) {
+			for (const geometry of geometries) {
 				const attrib = geometry.getAttribute(POSITION_ATTRIB_NAME) as BufferAttribute;
 				attrib.needsUpdate = true;
 			}

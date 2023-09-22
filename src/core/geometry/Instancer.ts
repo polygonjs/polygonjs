@@ -146,7 +146,7 @@ export class CoreInstancer {
 		const quaternions = new Float32Array(instancesCount * 4);
 		const instancer = new CoreInstancer(templateCoreGroup);
 		let i = 0;
-		for (let instancePt of instancePts) {
+		for (const instancePt of instancePts) {
 			instancer.matrixFromPoint(instancePt, this._tmpMatrix);
 			const index3 = i * 3;
 			const index4 = i * 4;
@@ -176,7 +176,7 @@ export class CoreInstancer {
 		const colors = new Float32Array(instancesCount * 3);
 		const hasColor = templateCoreGroup.hasPointAttrib(Attribute.COLOR);
 		let i = 0;
-		for (let instancePt of instancePts) {
+		for (const instancePt of instancePts) {
 			const color = hasColor
 				? (instancePt.attribValue(Attribute.COLOR, this._point_color) as Vector3)
 				: DEFAULT_COLOR;
@@ -204,7 +204,7 @@ export class CoreInstancer {
 		if (has_uv) {
 			const uvs = new Float32Array(instancesCount * 2);
 			let i = 0;
-			for (let instancePt of instancePts) {
+			for (const instancePt of instancePts) {
 				const index2 = i * 2;
 				const uv = has_uv ? (instancePt.attribValue(Attribute.UV, this._point_uv) as Vector2) : DEFAULT_UV;
 				uv.toArray(uvs, index2);

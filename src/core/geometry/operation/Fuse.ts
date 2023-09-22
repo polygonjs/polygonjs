@@ -120,9 +120,9 @@ export function mergeFaces(geometry: BufferGeometry, tolerance: number) {
 
 	const remainingFaces = faces.filter((face) => !isFaceCollapsed(face));
 
-	for (let face of remainingFaces) {
+	for (const face of remainingFaces) {
 		const positions = [face.a, face.b, face.c];
-		for (let position of positions) {
+		for (const position of positions) {
 			let newIndex = newIndexBySnappedKey.get(position.snappedKey);
 			const averagePos = averagePosBySnappedKey.get(position.snappedKey)!;
 			if (newIndex == null) {

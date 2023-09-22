@@ -96,7 +96,7 @@ export class CadCoreObject<T extends CadGeometryType> extends BaseCoreObject<Cor
 			}
 			const newObjects = cadMergeCompact(objects as CadObject<CadGeometryType>[]);
 
-			for (let newObject of newObjects) {
+			for (const newObject of newObjects) {
 				objectContentCopyProperties(firstObject, newObject);
 				if (material) {
 					newObject.material = material;

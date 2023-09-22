@@ -60,7 +60,7 @@ export class CADThicknessSopNode extends CADSopNode<CADThicknessSopParamsConfig>
 
 		const inputObjects = inputCoreGroup.cadObjects();
 		if (inputObjects) {
-			for (let inputObject of inputObjects) {
+			for (const inputObject of inputObjects) {
 				if (CoreCadType.isShape(inputObject)) {
 					const newShape = this._makeSolidByJoin(oc, inputObject);
 					if (newShape) {

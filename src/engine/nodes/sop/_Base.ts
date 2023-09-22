@@ -78,7 +78,7 @@ export class TypedSopNode<K extends NodeParamsConfig> extends TypedNode<NodeCont
 	setGeometries(geometries: BufferGeometry[], type: ObjectType = ObjectType.MESH) {
 		const objects: Object3D[] = [];
 		let object;
-		for (let geometry of geometries) {
+		for (const geometry of geometries) {
 			object = this.createObject(geometry, type);
 			objects.push(object);
 		}

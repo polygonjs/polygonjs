@@ -33,9 +33,9 @@ export function geom3ApplyTransforms(geom: geometries.geom3.Geom3) {
 
 	TMP_MAT4.elements = geom.transforms;
 	const polygons = geom.polygons;
-	for (let polygon of polygons) {
+	for (const polygon of polygons) {
 		const vertices = polygon.vertices;
-		for (let vertex of vertices) {
+		for (const vertex of vertices) {
 			transformVec3(vertex, TMP_MAT4);
 		}
 	}
@@ -46,7 +46,7 @@ export function path2ApplyTransforms(geom: geometries.path2.Path2) {
 
 	TMP_MAT4.elements = geom.transforms;
 	const points = geom.points;
-	for (let point of points) {
+	for (const point of points) {
 		transformVec2(point, TMP_MAT4);
 	}
 	mat4.identity(geom.transforms);
@@ -144,7 +144,7 @@ export function geom2ApplyTransforms(geom: geometries.geom2.Geom2) {
 	// apply transforms to each side
 	const sides = geom.sides;
 	TMP_MAT4.elements = geom.transforms;
-	for (let side of sides) {
+	for (const side of sides) {
 		transformVec2(side[0], TMP_MAT4);
 		transformVec2(side[1], TMP_MAT4);
 	}

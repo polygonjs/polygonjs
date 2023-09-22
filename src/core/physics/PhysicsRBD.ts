@@ -212,7 +212,7 @@ export function _physicsCreateRBD(options: PhysicsCreateRBDOptions) {
 	});
 	if (!rigidBody) {
 		// if not rbd created, we go through the children
-		for (let child of object.children) {
+		for (const child of object.children) {
 			_physicsCreateRBD({PhysicsLib, world, rigidBodyById, objectsByRBD, object: child, newRBDIds});
 		}
 
@@ -245,7 +245,7 @@ export function _physicsCreateRBD(options: PhysicsCreateRBDOptions) {
 		// let currentParent = object.parent;
 		// currentParent?.remove(object);
 		// object.getWorldQuaternion(q1);
-		for (let childCollider of childrenColliderDesc) {
+		for (const childCollider of childrenColliderDesc) {
 			const collider = world.createCollider(childCollider.colliderDesc, rigidBody);
 
 			// t

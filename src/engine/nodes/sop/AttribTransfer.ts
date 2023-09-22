@@ -110,7 +110,7 @@ export class AttribTransferSopNode extends TypedSopNode<AttribTransferSopParamsC
 		destPoint.position(_position);
 		octree.findPoints(_position, totalDist, this.pv.maxSamplesCount, _nearestPoints);
 
-		for (let attribName of attribNames) {
+		for (const attribName of attribNames) {
 			this._interpolatePoints(destPoint, _nearestPoints, attribName);
 		}
 	}

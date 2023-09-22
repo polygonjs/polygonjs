@@ -68,7 +68,7 @@ export class SceneEventsDispatcher {
 		}
 	}
 	traverseControllers(callback: (controller: BaseSceneEventsController<Event, BaseInputEventNodeType>) => void) {
-		for (let controller of this._controllers) {
+		for (const controller of this._controllers) {
 			callback(controller);
 		}
 	}

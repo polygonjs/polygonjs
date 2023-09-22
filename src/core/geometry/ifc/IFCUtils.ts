@@ -48,8 +48,8 @@ export async function ifcElementIds(ifcManager: IFCManager, modelId: number, cat
 	const results = await Promise.all(promises);
 
 	_numberSet.clear();
-	for (let result of results) {
-		for (let id of result) {
+	for (const result of results) {
+		for (const id of result) {
 			_numberSet.add(id);
 		}
 	}

@@ -91,12 +91,12 @@ export class EntityGroupCollection {
 		const dict = this.attributesDictionary(object);
 		const types = Object.keys(dict);
 		const data: GroupCollectionData = {};
-		for (let type of types) {
+		for (const type of types) {
 			const dataForType: GroupsDataForType = [];
 			data[type] = dataForType;
 			const groupsForType = dict[type];
 			const groupNames = Object.keys(groupsForType);
-			for (let groupName of groupNames) {
+			for (const groupName of groupNames) {
 				const indices = groupsForType[groupName];
 				const groupData: GroupData = {
 					name: groupName,
@@ -130,7 +130,7 @@ export class EntityGroupCollection {
 				groupsByName = {};
 				dict[type] = groupsByName;
 			}
-			groupsByName[groupName] = SetUtils.toArray(newIndicesSet,[]);
+			groupsByName[groupName] = SetUtils.toArray(newIndicesSet, []);
 		};
 		this.selectedIndices.clear();
 		selectedIndicesFromSelectionStates(selectionStates, this.selectedIndices, invert);

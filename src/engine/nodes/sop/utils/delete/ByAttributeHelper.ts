@@ -67,7 +67,7 @@ export class ByAttributeHelper {
 	}
 	private _evalForString(entities: CoreEntity[]) {
 		let value: string | null;
-		for (let entity of entities) {
+		for (const entity of entities) {
 			value = entity.stringAttribValue(this.node.pv.attribName);
 			if (value == ensureString(this.node.pv.attribString)) {
 				this.node.entitySelectionHelper.select(entity);
@@ -99,7 +99,7 @@ export class ByAttributeHelper {
 		let value: number;
 		const comparison_operator: ComparisonOperator = COMPARISON_OPERATORS[this.node.pv.attribComparisonOperator];
 		const compare_method = COMPARE_METHOD_FLOAT[comparison_operator];
-		for (let entity of entities) {
+		for (const entity of entities) {
 			value = entity.attribValue(attribName) as number;
 			if (compare_method(value, compared_value)) {
 				this.node.entitySelectionHelper.select(entity);
@@ -110,7 +110,7 @@ export class ByAttributeHelper {
 		let attribName = this.node.pv.attribName;
 		const compared_value = this.node.pv.attribValue2;
 		let target = new Vector2();
-		for (let entity of entities) {
+		for (const entity of entities) {
 			const value = entity.attribValue(attribName, target) as Vector2;
 			if (compared_value.equals(value)) {
 				this.node.entitySelectionHelper.select(entity);
@@ -121,7 +121,7 @@ export class ByAttributeHelper {
 		let attribName = this.node.pv.attribName;
 		const compared_value = this.node.pv.attribValue3;
 		let target = new Vector3();
-		for (let entity of entities) {
+		for (const entity of entities) {
 			const value = entity.attribValue(attribName, target) as Vector3;
 			if (compared_value.equals(value)) {
 				this.node.entitySelectionHelper.select(entity);
@@ -132,7 +132,7 @@ export class ByAttributeHelper {
 		let attribName = this.node.pv.attribName;
 		const compared_value = this.node.pv.attribValue4;
 		let target = new Vector4();
-		for (let entity of entities) {
+		for (const entity of entities) {
 			const value = entity.attribValue(attribName, target) as Vector4;
 			if (compared_value.equals(value)) {
 				this.node.entitySelectionHelper.select(entity);

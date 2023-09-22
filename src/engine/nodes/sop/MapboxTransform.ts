@@ -78,12 +78,12 @@ export class MapboxTransformSopNode extends TypedSopNode<MapboxTransformSopParam
 		TypeAssert.unreachable(mode);
 	}
 	private _updateGeometries(objects: Object3D[]) {
-		for (let object of objects) {
+		for (const object of objects) {
 			this._transformer.transform_groupGeometry_FINAL(object);
 		}
 	}
 	private _updateObjects(objects: Object3D[]) {
-		for (let object of objects) {
+		for (const object of objects) {
 			this._transformer.transform_groupObject_FINAL(object);
 		}
 	}

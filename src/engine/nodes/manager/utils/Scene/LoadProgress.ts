@@ -197,7 +197,7 @@ export class RootLoadProgressController {
 			}
 		};
 
-		for (let node of nodesGroup.nodes) {
+		for (const node of nodesGroup.nodes) {
 			node.cookController.registerOnCookEnd(callbackName, () => {
 				this._debug2('nodeToCook - completed', node.path());
 				onNodeCooked(node);
@@ -227,7 +227,7 @@ export class RootLoadProgressController {
 			}
 		};
 
-		for (let node of nodesGroup.nodes) {
+		for (const node of nodesGroup.nodes) {
 			const childrenDisplayController = (node as GeoObjNode).childrenDisplayController;
 			this._debug2('nodeWithSopGroup - watch', node.path());
 			childrenDisplayController.registerOnSopGroupUpdated(callbackName, () => {

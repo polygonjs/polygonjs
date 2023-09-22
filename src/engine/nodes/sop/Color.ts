@@ -74,7 +74,7 @@ export class ColorSopNode extends TypedSopNode<ColorSopParamsConfig> {
 		const coreGroup = inputCoreGroups[0];
 		const objects = coreGroup.allObjects();
 
-		for (let object of objects) {
+		for (const object of objects) {
 			if (isBooleanTrue(this.pv.fromAttribute)) {
 				this._setFromAttribute(object);
 			} else {
@@ -90,7 +90,7 @@ export class ColorSopNode extends TypedSopNode<ColorSopParamsConfig> {
 		// needs update required for when no cloning
 		if (!this.io.inputs.cloneRequired(0)) {
 			const geometries = coreGroup.geometries();
-			for (let geometry of geometries) {
+			for (const geometry of geometries) {
 				(geometry.getAttribute(COLOR_ATTRIB_NAME) as BufferAttribute).needsUpdate = true;
 			}
 		}
@@ -212,7 +212,7 @@ export class ColorSopNode extends TypedSopNode<ColorSopParamsConfig> {
 				let current = new Color();
 				let target = new Color();
 				let index;
-				for (let point of points) {
+				for (const point of points) {
 					index = point.index() * 3;
 					current.fromArray(array, index);
 					CoreColor.setHSV(current.r, current.g, current.b, target);
@@ -286,7 +286,7 @@ export class ColorSopNode extends TypedSopNode<ColorSopParamsConfig> {
 				}
 			}
 		} else {
-			for (let point of points) {
+			for (const point of points) {
 				array[point.index() * 3 + offset] = paramValue;
 			}
 		}

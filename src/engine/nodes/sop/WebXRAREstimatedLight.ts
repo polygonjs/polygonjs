@@ -55,7 +55,7 @@ export class WebXRAREstimatedLightSopNode extends TypedSopNode<WebXRAREstimatedL
 		ThreejsCoreObject.addAttribute(defaultLightsParent, ATTRIB_NAME.IS_DEFAULT_LIGHTS_PARENT, true);
 
 		const objects = coreGroup.threejsObjects();
-		for (let object of objects) {
+		for (const object of objects) {
 			defaultLightsParent.add(object);
 		}
 

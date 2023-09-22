@@ -80,7 +80,7 @@ export class TetDeleteSopNode extends TetSopNode<TetDeleteSopParamsConfig> {
 	override async cook(inputCoreGroups: CoreGroup[]) {
 		const tetObjects = inputCoreGroups[0].tetObjects();
 		if (tetObjects) {
-			for (let tetObject of tetObjects) {
+			for (const tetObject of tetObjects) {
 				this._deleteTets(tetObject, inputCoreGroups);
 			}
 			this.setObjects(tetObjects);

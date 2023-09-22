@@ -127,7 +127,7 @@ export class Circle3PointsSopNode extends TypedSopNode<Circle3PointsSopParamsCon
 		}
 
 		let i = 0;
-		for (let object of objects) {
+		for (const object of objects) {
 			object.name = `${this.name()}-${i}`;
 			i++;
 		}
