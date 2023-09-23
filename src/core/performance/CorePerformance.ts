@@ -116,11 +116,12 @@ export class CorePerformance {
 		}
 
 		durations.sort((a, b) => a - b);
-		const sorted_durations = arrayUniq(durations);
+		const sortedDurations: number[] = [];
+		arrayUniq(durations, sortedDurations);
 
 		console.log('--------------- PERF RECORDINGS -----------');
 		const table_entries = [];
-		for (const duration of sorted_durations) {
+		for (const duration of sortedDurations) {
 			const names = names_by_duration[duration];
 			for (const name of names) {
 				const count = durations_count_by_name[name];

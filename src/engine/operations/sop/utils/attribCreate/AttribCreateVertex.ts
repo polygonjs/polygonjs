@@ -9,6 +9,7 @@ import {
 } from '../../../../../core/geometry/entities/vertex/CoreVertexUtils';
 import {coreVertexClassFactory} from '../../../../../core/geometry/CoreObjectFactory';
 import {CoreObjectType, ObjectContent} from '../../../../../core/geometry/ObjectContent';
+import {CoreVertex} from '../../../../../core/geometry/entities/vertex/CoreVertex';
 
 export function addVertexAttribute(attribType: AttribType, coreGroup: CoreGroup, params: AttribCreateSopParams) {
 	const objects = coreGroup.allObjects();
@@ -29,6 +30,7 @@ export function addVertexAttribute(attribType: AttribType, coreGroup: CoreGroup,
 	TypeAssert.unreachable(attribType);
 }
 
+const _vertices: CoreVertex<CoreObjectType>[] = [];
 function _addAttributeToVertices<T extends CoreObjectType>(
 	object: ObjectContent<T>,
 	params: AttribCreateSopParams,
@@ -51,13 +53,13 @@ function _addAttributeToVertices<T extends CoreObjectType>(
 
 	// set values
 	if (params.group) {
-		const vertices = verticesFromObjectFromGroup(object, params.group);
-		for (let vertex of vertices) {
+		verticesFromObjectFromGroup(object, params.group, _vertices);
+		for (let vertex of _vertices) {
 			vertex.setAttribValue(attribName, value);
 		}
 	} else {
-		const vertices = verticesFromObject(object);
-		for (let vertex of vertices) {
+		verticesFromObject(object, _vertices);
+		for (let vertex of _vertices) {
 			vertex.setAttribValue(attribName, value);
 		}
 	}

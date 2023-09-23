@@ -7,6 +7,7 @@ import {TypeAssert} from '../../../../poly/Assert';
 import {verticesFromObjectFromGroup} from '../../../../../core/geometry/entities/vertex/CoreVertexUtils';
 import {coreVertexClassFactory} from '../../../../../core/geometry/CoreObjectFactory';
 import {CoreObjectType, ObjectContent} from '../../../../../core/geometry/ObjectContent';
+import {CoreVertex} from '../../../../../core/geometry/entities/vertex/CoreVertex';
 // import {filterObjectsFromCoreGroup} from '../../../../../core/geometry/Mask';
 
 interface ArraysByObject {
@@ -50,7 +51,8 @@ async function _addNumericAttributeToVertices<T extends CoreObjectType>(
 	object: ObjectContent<T>,
 	params: AttribCreateSopNodeParams
 ) {
-	const vertices = verticesFromObjectFromGroup(object, params.group.value);
+	const vertices: CoreVertex<T>[] = [];
+	verticesFromObjectFromGroup(object, params.group.value, vertices);
 	const attribName = CoreAttribute.remapName(params.name.value);
 	const size = params.size.value;
 
@@ -135,7 +137,8 @@ async function _addStringAttributeToVertices<T extends CoreObjectType>(
 	object: ObjectContent<T>,
 	params: AttribCreateSopNodeParams
 ) {
-	const vertices = verticesFromObjectFromGroup(object, params.group.value);
+	const vertices: CoreVertex<T>[] = [];
+	verticesFromObjectFromGroup(object, params.group.value, vertices);
 	const param = params.string;
 	const attribName = params.name.value;
 

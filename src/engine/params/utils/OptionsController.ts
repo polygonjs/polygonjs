@@ -332,7 +332,8 @@ export class OptionsController {
 	overriddenOptions(): ParamOptions {
 		const overriden: ParamOptions = {};
 		const optionNames = Object.keys(this._options) as Array<keyof ParamOptions>;
-		const optionNamesToCheck = arrayDifference(optionNames, NON_OVERRIDABLE_OPTIONS);
+		const optionNamesToCheck: Array<keyof ParamOptions> = [];
+		arrayDifference(optionNames, NON_OVERRIDABLE_OPTIONS, optionNamesToCheck);
 		for (const optionName of optionNamesToCheck) {
 			if (!ObjectUtils.isEqual(this._options[optionName], this._default_options[optionName])) {
 				const cloned_option = ObjectUtils.cloneDeep(this._options[optionName]);
@@ -725,12 +726,13 @@ export class OptionsController {
 		}
 		let predecessorNames: string[] = [];
 		if (CoreType.isArray(visibilityOptions)) {
-			predecessorNames = arrayUniq(visibilityOptions.map((options) => Object.keys(options)).flat());
+			arrayUniq(visibilityOptions.map((options) => Object.keys(options)).flat(), predecessorNames);
 		} else {
 			predecessorNames = Object.keys(visibilityOptions);
 		}
 		const node = this.param().node;
-		const params = arrayCompact(
+		const params: BaseParamType[] = [];
+		arrayCompact(
 			predecessorNames.map((name) => {
 				const param = node.params.get(name);
 				if (param) {
@@ -740,7 +742,8 @@ export class OptionsController {
 						`param ${name} not found as visibility condition for ${this.param().name()} in node ${this.param().node.type()}`
 					);
 				}
-			})
+			}),
+			params
 		);
 
 		return params;
@@ -787,8 +790,10 @@ export class OptionsController {
 			if (CoreType.isArray(options)) {
 				for (const optionsSet of options) {
 					const optionSetParamNames = Object.keys(optionsSet);
-					const optionSetParams = arrayCompact(
-						optionSetParamNames.map((paramName) => node.params.get(paramName))
+					const optionSetParams: BaseParamType[] = [];
+					arrayCompact(
+						optionSetParamNames.map((paramName) => node.params.get(paramName)),
+						optionSetParams
 					);
 					const satisfiedValues = optionSetParams.filter((param) => param.value == optionsSet[param.name()]);
 

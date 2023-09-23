@@ -37,6 +37,8 @@ const ATTRIB_NAME_MAP: PolyDictionary<string> = {
 	N: Attribute.NORMAL,
 	Cd: Attribute.COLOR,
 };
+const _matchingAttribNames: string[] = [];
+const _masks: string[] = [];
 
 export class CoreAttribute {
 	static remapName(name: string): string {
@@ -121,23 +123,23 @@ export class CoreAttribute {
 		return null;
 	}
 	static attribNamesMatchingMask(masksString: GroupString, existingAttribNames: string[]) {
-		const masks = stringToAttribNames(masksString);
+		stringToAttribNames(masksString, _masks);
 
-		const matchingAttribNames: string[] = [];
-		for (const mask of masks) {
+		_matchingAttribNames.length = 0;
+		for (const mask of _masks) {
 			for (const attribName of existingAttribNames) {
 				if (stringMatchMask(attribName, mask)) {
-					matchingAttribNames.push(attribName);
+					_matchingAttribNames.push(attribName);
 				} else {
 					const remapped = CoreAttribute.remapName(mask);
 					if (attribName == remapped) {
-						matchingAttribNames.push(attribName);
+						_matchingAttribNames.push(attribName);
 					}
 				}
 			}
 		}
-
-		return arrayUniq(matchingAttribNames);
+		const uniqAttributeNames: string[] = [];
+		return arrayUniq(_matchingAttribNames, uniqAttributeNames);
 	}
 }
 

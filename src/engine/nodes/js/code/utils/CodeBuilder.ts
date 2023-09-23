@@ -147,8 +147,9 @@ export class JsCodeBuilder {
 
 		this.reset();
 		for (const shaderName of this.shaderNames()) {
-			let nodes = nodesByShaderName.get(shaderName) || [];
-			nodes = arrayUniq(nodes);
+			let notUniqNodes = nodesByShaderName.get(shaderName) || [];
+			const nodes:BaseJsNodeType[] = []
+			arrayUniq(notUniqNodes, nodes);
 			this._shadersCollectionController.setCurrentShaderName(shaderName);
 			if (nodes) {
 				for (const node of nodes) {

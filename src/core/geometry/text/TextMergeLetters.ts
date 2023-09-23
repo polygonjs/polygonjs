@@ -28,7 +28,8 @@ export function textMergeLetters(params: TextMergeAllLettersOptions) {
 	const allGeometries = geometriesByLine.flat();
 	const objects = _mergeOrSplit({...params, geometries: allGeometries});
 	if (objects) {
-		return arrayCompact(objects);
+		const compactObjects: Object3D[] = [];
+		return arrayCompact(objects, compactObjects);
 	}
 }
 
@@ -74,9 +75,10 @@ function _mergeOrSplit(params: TextMergeAllLettersOptions) {
 		return objects;
 	} else {
 		try {
-			const geometries = arrayCompact(params.geometries);
-			if (geometries.length > 0) {
-				const mergedGeometry = mergeGeometries(geometries);
+			const compactGeometries: BufferGeometry[] = [];
+			arrayCompact(params.geometries, compactGeometries);
+			if (compactGeometries.length > 0) {
+				const mergedGeometry = mergeGeometries(compactGeometries);
 				return [TypedSopNode.createObject(mergedGeometry, objectType)];
 			}
 		} catch (err) {

@@ -58,7 +58,8 @@ export class CoreGeometryOperationSkin {
 			points_indices.push(matched_segment[0] + smallest_points_count);
 		});
 
-		const attributes_in_common = arrayIntersection(smallestGeometryAttribNames, largestGeometryAttribNames);
+		const attributes_in_common: string[] = [];
+		arrayIntersection(smallestGeometryAttribNames, largestGeometryAttribNames, attributes_in_common);
 		// const points = all_points //points_indices.map(index=> all_points[index]);
 		attributes_in_common.forEach((attrib_name) => {
 			const attrib_size = ThreejsPoint.attribSize(dummyMeshSmallest, attrib_name);

@@ -89,7 +89,9 @@ export class RootLoadProgressController {
 		const nodes = scene.nodesController.nodesFromMask(mask || '');
 
 		const nodeDisplayNodes = await this._loadDisplayNodes();
-		return arrayUniq(nodes.concat(nodeDisplayNodes));
+		const uniqNodes: BaseNodeType[] = [];
+		arrayUniq(nodes.concat(nodeDisplayNodes), uniqNodes);
+		return uniqNodes;
 	}
 	private async _loadDisplayNodes() {
 		const scene = this.node.scene();
@@ -103,12 +105,16 @@ export class RootLoadProgressController {
 		if (cameraCreatorNode) {
 			nodes.push(cameraCreatorNode);
 		}
-		return arrayUniq(nodes);
+		const uniqNodes: BaseNodeType[] = [];
+		arrayUniq(nodes, uniqNodes);
+		return uniqNodes;
 	}
 	private _displayNodes() {
 		const objNodesWithDisplayNodeController = this._objectNodesWithDisplayNodeController() as GeoObjNode[];
-		const displayNodes = arrayCompact(
-			objNodesWithDisplayNodeController.map((node) => node.displayNodeController.firstNonBypassedDisplayNode())
+		const displayNodes: BaseNodeType[] = [];
+		arrayCompact(
+			objNodesWithDisplayNodeController.map((node) => node.displayNodeController.firstNonBypassedDisplayNode()),
+			displayNodes
 		);
 		return displayNodes;
 	}

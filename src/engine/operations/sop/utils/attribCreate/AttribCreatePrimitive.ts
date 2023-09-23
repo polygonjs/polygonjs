@@ -9,6 +9,7 @@ import {
 } from '../../../../../core/geometry/entities/primitive/CorePrimitiveUtils';
 import {corePrimitiveClassFactory} from '../../../../../core/geometry/CoreObjectFactory';
 import {CoreObjectType, ObjectContent} from '../../../../../core/geometry/ObjectContent';
+import {CorePrimitive} from '../../../../../core/geometry/entities/primitive/CorePrimitive';
 
 export function addPrimitiveAttribute(attribType: AttribType, coreGroup: CoreGroup, params: AttribCreateSopParams) {
 	const objects = coreGroup.allObjects();
@@ -29,6 +30,7 @@ export function addPrimitiveAttribute(attribType: AttribType, coreGroup: CoreGro
 	TypeAssert.unreachable(attribType);
 }
 
+const _primitives: CorePrimitive<CoreObjectType>[] = [];
 function _addAttributeToPrimitives<T extends CoreObjectType>(
 	object: ObjectContent<T>,
 	params: AttribCreateSopParams,
@@ -53,13 +55,13 @@ function _addAttributeToPrimitives<T extends CoreObjectType>(
 
 	// set values
 	if (params.group) {
-		const primitives = primitivesFromObjectFromGroup(object, params.group);
-		for (let primitive of primitives) {
+		primitivesFromObjectFromGroup(object, params.group, _primitives);
+		for (let primitive of _primitives) {
 			primitive.setAttribValue(attribName, value);
 		}
 	} else {
-		const primitives = primitivesFromObject(object);
-		for (let primitive of primitives) {
+		primitivesFromObject(object, _primitives);
+		for (let primitive of _primitives) {
 			primitive.setAttribValue(attribName, value);
 		}
 	}

@@ -17,7 +17,7 @@ export enum NormalizeMode {
 	VECTOR_TO_LENGTH_1 = 'vectors to length 1',
 }
 export const NORMALIZE_MODES: NormalizeMode[] = [NormalizeMode.MIN_MAX_TO_01, NormalizeMode.VECTOR_TO_LENGTH_1];
-
+const _attribNames:string[]=[]
 export class AttribNormalizeSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: AttribNormalizeSopParams = {
 		mode: 0,
@@ -33,22 +33,22 @@ export class AttribNormalizeSopOperation extends BaseSopOperation {
 	override cook(input_contents: CoreGroup[], params: AttribNormalizeSopParams) {
 		const core_group = input_contents[0];
 		const objects = input_contents[0].threejsObjectsWithGeo();
-		const attrib_names = stringToAttribNames(params.name);
-		for (let object of objects) {
+		stringToAttribNames(params.name,_attribNames);
+		for (const object of objects) {
 			const geometry = object.geometry;
-			for (let attrib_name of attrib_names) {
-				const src_attrib = geometry.getAttribute(attrib_name) as BufferAttribute;
-				if (src_attrib) {
-					let dest_attrib: BufferAttribute | undefined = src_attrib;
+			for (const attribName of _attribNames) {
+				const srcAttrib = geometry.getAttribute(attribName) as BufferAttribute;
+				if (srcAttrib) {
+					let destAttrib: BufferAttribute | undefined = srcAttrib;
 					if (isBooleanTrue(params.changeName) && params.newName != '') {
-						dest_attrib = geometry.getAttribute(params.newName) as BufferAttribute;
-						if (dest_attrib) {
-							dest_attrib.needsUpdate = true;
+						destAttrib = geometry.getAttribute(params.newName) as BufferAttribute;
+						if (destAttrib) {
+							destAttrib.needsUpdate = true;
 						}
 
-						dest_attrib = dest_attrib || src_attrib.clone();
+						destAttrib = destAttrib || srcAttrib.clone();
 					}
-					this._normalize_attribute(src_attrib, dest_attrib, params);
+					this._normalize_attribute(srcAttrib, destAttrib, params);
 				}
 			}
 		}

@@ -1,17 +1,27 @@
 import {PolyDictionary} from '../../../../types/GlobalTypes';
-import {arrayCompact} from '../../../ArrayUtils';
-import {CoreString} from '../../../String';
+import {arrayPushItems} from '../../../ArrayUtils';
+import {stringToIndices} from '../../../String';
 import {AttribSize, AttribType, GroupString} from '../../Constant';
 import {corePrimitiveClassFactory, corePrimitiveInstanceFactory} from '../../CoreObjectFactory';
 import {CoreGroup} from '../../Group';
 import {CoreObjectType, ObjectContent} from '../../ObjectContent';
 import {CorePrimitive} from './CorePrimitive';
 
-export function primitives(coreGroup: CoreGroup) {
-	return coreGroup
-		.allCoreObjects()
-		.map((o) => primitivesFromObject(o.object()))
-		.flat();
+const _indices: number[] = [];
+const _tmpPrimitives: CorePrimitive<CoreObjectType>[] = [];
+
+export function primitives<T extends CoreObjectType>(coreGroup: CoreGroup, target: CorePrimitive<T>[]) {
+	const allObjects = coreGroup.allObjects();
+
+	for (const object of allObjects) {
+		primitivesFromObject(object, _tmpPrimitives);
+		arrayPushItems(target, _tmpPrimitives);
+	}
+	return target;
+	// return coreGroup
+	// 	.allCoreObjects()
+	// 	.map((o) => primitivesFromObject(o.object()))
+	// 	.flat();
 }
 export function primitiveAttribNamesFromCoreGroup(coreGroup: CoreGroup): string[] {
 	const firstObject = coreGroup.allObjects()[0];
@@ -41,29 +51,35 @@ export function primitivesCountFromObject<T extends CoreObjectType>(object: Obje
 	const primitiveClass = corePrimitiveClassFactory(object);
 	return primitiveClass.primitivesCount(object);
 }
-export function primitivesFromObject<T extends CoreObjectType>(object: ObjectContent<T>): CorePrimitive<T>[] {
+export function primitivesFromObject<T extends CoreObjectType>(
+	object: ObjectContent<T>,
+	target: CorePrimitive<T>[]
+): CorePrimitive<T>[] {
 	const primitiveClass = corePrimitiveClassFactory(object);
 	const primitivesCount = primitiveClass.primitivesCount(object);
-	const primitives: CorePrimitive<T>[] = new Array(primitivesCount);
+	target.length = primitivesCount;
 	for (let i = 0; i < primitivesCount; i++) {
-		primitives[i] = corePrimitiveInstanceFactory(object, i);
+		target[i] = corePrimitiveInstanceFactory(object, i);
 	}
-	return primitives;
+	return target;
 }
 export function primitivesFromObjectFromGroup<T extends CoreObjectType>(
 	object: ObjectContent<T>,
-	group: GroupString
+	group: GroupString,
+	target: CorePrimitive<T>[]
 ): CorePrimitive<T>[] {
 	if (group) {
-		const indices = CoreString.indices(group);
-		if (indices) {
-			const primitives = primitivesFromObject(object);
-			return arrayCompact(indices.map((i) => primitives[i]));
-		} else {
-			return [];
+		stringToIndices(group, _indices);
+		primitivesFromObject(object, _tmpPrimitives);
+		for (const index of _indices) {
+			const primitive = _tmpPrimitives[index] as CorePrimitive<T> | undefined;
+			if (primitive) {
+				target.push(primitive);
+			}
 		}
+		return target;
 	} else {
-		return primitivesFromObject(object);
+		return primitivesFromObject(object, target);
 	}
 }
 export function primitiveAttributeNames<T extends CoreObjectType>(object: ObjectContent<T>): string[] {

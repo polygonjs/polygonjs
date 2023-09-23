@@ -223,7 +223,9 @@ export class GEOJSONLoader extends Loader {
 		if (!geometries) {
 			return;
 		}
-		return arrayCompact(geometries).map((geometry) =>
+		const compactGeometries: BufferGeometry[] = [];
+		arrayCompact(geometries, compactGeometries);
+		return compactGeometries.map((geometry) =>
 			BaseSopOperation.createObject(geometry.rotateX(-0.5 * Math.PI), ObjectType.MESH)
 		);
 	}
@@ -238,7 +240,9 @@ export class GEOJSONLoader extends Loader {
 		if (!geometries) {
 			return;
 		}
-		return arrayCompact(geometries).map((geometry) =>
+		const compactGeometries: BufferGeometry[] = [];
+		arrayCompact(geometries, compactGeometries);
+		return compactGeometries.map((geometry) =>
 			BaseSopOperation.createObject(geometry.rotateX(-0.5 * Math.PI), ObjectType.MESH)
 		);
 	}

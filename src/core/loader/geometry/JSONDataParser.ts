@@ -72,7 +72,10 @@ export class JSONDataParser {
 
 			this._find_attributes();
 
-			const convert_to_numeric_masks = stringToAttribNames(this._options.convertToNumeric || '');
+			const convert_to_numeric_masks:string[] = []
+			if(this._options.convertToNumeric){
+				stringToAttribNames(this._options.convertToNumeric,convert_to_numeric_masks);
+			}
 
 			// set values
 			for (const attrib_name of Object.keys(this._attribute_datas_by_name)) {
@@ -116,7 +119,10 @@ export class JSONDataParser {
 	private _find_attributes() {
 		let first_pt;
 
-		const masks = stringToAttribNames(this._options.skipEntries || '');
+		const masks:string[] = []
+		if(this._options.skipEntries){
+			stringToAttribNames(this._options.skipEntries,masks);
+		}
 
 		if (this._json) {
 			if ((first_pt = this._json[0]) != null) {

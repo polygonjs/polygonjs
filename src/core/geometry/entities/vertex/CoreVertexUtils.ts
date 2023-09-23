@@ -1,17 +1,27 @@
 import {PolyDictionary} from '../../../../types/GlobalTypes';
-import {arrayCompact} from '../../../ArrayUtils';
-import {CoreString} from '../../../String';
+import {arrayPushItems} from '../../../ArrayUtils';
+import {stringToIndices} from '../../../String';
 import {AttribSize, AttribType, GroupString} from '../../Constant';
 import {coreVertexClassFactory, coreVertexInstanceFactory} from '../../CoreObjectFactory';
 import {CoreGroup} from '../../Group';
 import {CoreObjectType, ObjectContent} from '../../ObjectContent';
 import {CoreVertex} from './CoreVertex';
 
-export function vertices(coreGroup: CoreGroup) {
-	return coreGroup
-		.allCoreObjects()
-		.map((o) => verticesFromObject(o.object()))
-		.flat();
+const _indices: number[] = [];
+const _tmpVertices: CoreVertex<CoreObjectType>[] = [];
+
+export function vertices<T extends CoreObjectType>(coreGroup: CoreGroup, target: CoreVertex<T>[]): CoreVertex<T>[] {
+	const allObjects = coreGroup.allObjects();
+
+	for (const object of allObjects) {
+		verticesFromObject(object, _tmpVertices);
+		arrayPushItems(target, _tmpVertices);
+	}
+	return target;
+	// return coreGroup
+	// 	.allCoreObjects()
+	// 	.map((o) => verticesFromObject(o.object()))
+	// 	.flat();
 }
 export function vertexAttribNamesFromCoreGroup(coreGroup: CoreGroup): string[] {
 	const firstObject = coreGroup.allObjects()[0];
@@ -41,30 +51,37 @@ export function verticesCountFromObject<T extends CoreObjectType>(object: Object
 	const vertexClass = coreVertexClassFactory(object);
 	return vertexClass.verticesCount(object);
 }
-export function verticesFromObject<T extends CoreObjectType>(object: ObjectContent<T>): CoreVertex<T>[] {
+export function verticesFromObject<T extends CoreObjectType>(
+	object: ObjectContent<T>,
+	target: CoreVertex<T>[]
+): CoreVertex<T>[] {
 	const vertexClass = coreVertexClassFactory(object);
 	const verticesCount = vertexClass.verticesCount(object);
-	const vertices: CoreVertex<T>[] = new Array(verticesCount);
+	target.length = verticesCount;
 	for (let i = 0; i < verticesCount; i++) {
-		vertices[i] = coreVertexInstanceFactory(object, i);
+		target[i] = coreVertexInstanceFactory(object, i);
 	}
-	return vertices;
+	return target;
 }
 
 export function verticesFromObjectFromGroup<T extends CoreObjectType>(
 	object: ObjectContent<T>,
-	group: GroupString
+	group: GroupString,
+	target: CoreVertex<T>[]
 ): CoreVertex<T>[] {
 	if (group) {
-		const indices = CoreString.indices(group);
-		if (indices) {
-			const vertices = verticesFromObject(object);
-			return arrayCompact(indices.map((i) => vertices[i]));
-		} else {
-			return [];
+		target.length = 0;
+		stringToIndices(group, _indices);
+		verticesFromObject(object, _tmpVertices);
+		for (const index of _indices) {
+			const vertex = _tmpVertices[index] as CoreVertex<T> | undefined;
+			if (vertex) {
+				target.push(vertex);
+			}
 		}
+		return target;
 	} else {
-		return verticesFromObject(object);
+		return verticesFromObject(object, target);
 	}
 }
 

@@ -129,7 +129,9 @@ export class FuseSopNode extends TypedSopNode<FuseSopParamsConfig> {
 			return;
 		}
 		const indexArray = index.array as number[];
-		const newIndices = arrayUniq(indexArray).sort((a, b) => a - b);
+		const newIndices:number[] =[]
+		arrayUniq(indexArray,newIndices)
+		newIndices.sort((a, b) => a - b);
 		geometry.setIndex(newIndices);
 		if (newIndices.length == 0) {
 			clearAttributes(geometry);

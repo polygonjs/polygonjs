@@ -218,7 +218,9 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 		}
 
 		this._outputs_by_graph_id.forEach((outputs: CoreGraphNodeId[], graph_id: CoreGraphNodeId) => {
-			this._outputs_by_graph_id.set(graph_id, arrayUniq(outputs));
+			const uniqIds: number[] = [];
+			arrayUniq(outputs, uniqIds);
+			this._outputs_by_graph_id.set(graph_id, uniqIds);
 		});
 	}
 	private _blockedInputNames: Map<string, string[]> | undefined;
@@ -231,8 +233,13 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 		this._graph_ids_by_shader_name.get(this._shaderName)?.set(node.graphNodeId(), true);
 
 		const inputs = this._findInputs(node) as BaseNodeByContextMap[NC][];
-		const compactInputs: BaseNodeByContextMap[NC][] = arrayCompact(inputs);
-		const inputGraphIds = arrayUniq(compactInputs.map((n) => n.graphNodeId()));
+		const compactInputs: BaseNodeByContextMap[NC][] = [];
+		arrayCompact(inputs, compactInputs);
+		const inputGraphIds: number[] = [];
+		arrayUniq(
+			compactInputs.map((n) => n.graphNodeId()),
+			inputGraphIds
+		);
 		const uniqueInputs = inputGraphIds.map((graph_id) =>
 			this._graph.nodeFromId(graph_id)
 		) as BaseNodeByContextMap[NC][];
@@ -254,7 +261,8 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 			const blockedInputNames = this._blockedInputNames.get(node.type()) as string[];
 			const inputConnectionPoints = node.io.inputs.namedInputConnectionPoints() as BaseGlConnectionPoint[];
 			const inputConnectionPointNames = inputConnectionPoints.map((c) => c.name());
-			const allowedInputNames = arrayDifference(inputConnectionPointNames, blockedInputNames);
+			const allowedInputNames: string[] = [];
+			arrayDifference(inputConnectionPointNames, blockedInputNames, allowedInputNames);
 			const inputs = allowedInputNames.map((inputName) => {
 				const inputIndex = node.io.inputs.getNamedInputIndex(inputName);
 				return node.io.inputs.input(inputIndex);

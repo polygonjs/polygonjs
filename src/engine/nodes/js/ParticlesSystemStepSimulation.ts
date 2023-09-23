@@ -12,13 +12,13 @@ import {PolyNodeParamsConfig} from '../utils/poly/PolyNodeParamsConfig';
 import {JsConnectionPointType} from '../utils/io/connections/Js';
 import {GPUComputationConfigRefString} from '../../../core/particles/gpuCompute/GPUComputationRenderer';
 import {ConstantJsDefinition} from './utils/JsDefinition';
-import {range} from '../../../core/ArrayUtils';
+import {rangeStartEnd} from '../../../core/ArrayUtils';
 import {StringParam} from '../../params/String';
 import {TEXTURE_ALLOCATION_PREFIX} from '../gl/code/utils/TextureAllocation';
 
 function visibleIfTexturessCountAtLeast(index: number) {
 	return {
-		visibleIf: range(index + 1, 10).map((i) => ({texturesCount: i})),
+		visibleIf: rangeStartEnd(index + 1, 10).map((i) => ({texturesCount: i})),
 	};
 }
 
@@ -89,7 +89,9 @@ export class ParticlesSystemStepSimulationJsNode extends TypedJsNode<ParticlesSy
 
 	private _expectedOutputTypes() {
 		const count = this.pv.texturesCount;
-		return this._expectedInputTypes().concat(range(0, count).map((value, i) => JsConnectionPointType.TEXTURE));
+		return this._expectedInputTypes().concat(
+			rangeStartEnd(0, count).map((value, i) => JsConnectionPointType.TEXTURE)
+		);
 	}
 
 	private _expectedOutputName(index: number) {
@@ -125,7 +127,7 @@ export class ParticlesSystemStepSimulationJsNode extends TypedJsNode<ParticlesSy
 	private _addRefs(linesController: JsLinesCollectionController): GPUComputationConfigRefString {
 		const count = this.pv.texturesCount;
 		const textureParams = this._textureNameParams();
-		const textureNames = range(0, count).map((value, i) => `${textureParams[i].value}`);
+		const textureNames = rangeStartEnd(0, count).map((value, i) => `${textureParams[i].value}`);
 		//
 		const varNames = textureNames.map((textureName) => this.jsVarName(textureName));
 

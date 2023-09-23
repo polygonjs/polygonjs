@@ -4,7 +4,9 @@ import {ShadersCollectionController} from './code/utils/ShadersCollectionControl
 import {GlConnectionPointType} from '../utils/io/connections/Gl';
 import {GLDefinitionType, TypedGLDefinition} from './utils/GLDefinition';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
-import {arrayCompact, range} from '../../../core/ArrayUtils';
+import {arrayCompact, rangeWithEnd} from '../../../core/ArrayUtils';
+import {NodeContext} from '../../poly/NodeContext';
+import {TypedNodeConnection} from '../utils/io/NodeConnection';
 
 export class BaseGlMathFunctionParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new BaseGlMathFunctionParamsConfig();
@@ -29,13 +31,15 @@ export abstract class BaseGlMathFunctionGlNode extends TypedGlNode<BaseGlMathFun
 		if (this.io.connections.firstInputConnection()) {
 			const connections = this.io.connections.inputConnections();
 			if (connections) {
-				let count = Math.max(arrayCompact(connections).length + 1, 2);
-				return range(count).map((i) => type);
+				const compactConnections: TypedNodeConnection<NodeContext.GL>[] = [];
+				arrayCompact(connections, compactConnections);
+				let count = Math.max(compactConnections.length + 1, 2);
+				return rangeWithEnd(count).map((i) => type);
 			} else {
 				return [];
 			}
 		} else {
-			return range(2).map((i) => type);
+			return rangeWithEnd(2).map((i) => type);
 		}
 	}
 	protected _expected_output_types() {

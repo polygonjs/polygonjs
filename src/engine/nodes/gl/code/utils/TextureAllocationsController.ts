@@ -241,8 +241,10 @@ export class TextureAllocationsController {
 	// }
 
 	shaderNames(): ShaderName[] {
-		const explicit_shader_names = this._writableAllocations.map((a) => a.shaderName());
-		return arrayUniq(explicit_shader_names);
+		const explicitShaderNames = this._writableAllocations.map((a) => a.shaderName());
+		const uniqShaderNames: ShaderName[] = [];
+		arrayUniq(explicitShaderNames, uniqShaderNames);
+		return uniqShaderNames;
 	}
 	createShaderConfigs(): ShaderConfig[] {
 		return [

@@ -10,7 +10,7 @@ import {CoreFace} from '../../../core/geometry/modules/three/CoreFace';
 import {ThreejsPointArray3} from '../../../core/geometry/modules/three/Common';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {arrayChunk, range} from '../../../core/ArrayUtils';
+import {arrayChunk,  rangeWithEnd} from '../../../core/ArrayUtils';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {corePointClassFactory} from '../../../core/geometry/CoreObjectFactory';
 import {ThreejsPoint} from '../../../core/geometry/modules/three/ThreejsPoint';
@@ -94,11 +94,11 @@ export class FaceSopNode extends TypedSopNode<FaceSopParamsConfig> {
 			if ((object as Mesh).isMesh) {
 				const geometry = (object as Mesh).geometry as BufferGeometry;
 				const faces = arrayChunk((geometry.index?.array as number[]) || [], 3);
-				const points_count = faces.length * 3;
+				const pointsCount = faces.length * 3;
 				for (const attrib_name of Object.keys(geometry.attributes)) {
 					const attrib = geometry.attributes[attrib_name] as BufferAttribute;
 					const attrib_size = attrib.itemSize;
-					const new_values = new Float32Array(points_count * attrib_size);
+					const new_values = new Float32Array(pointsCount * attrib_size);
 					let new_value_index = 0;
 					faces.forEach((face) => {
 						face.forEach((index) => {
@@ -111,8 +111,8 @@ export class FaceSopNode extends TypedSopNode<FaceSopParamsConfig> {
 					});
 					geometry.setAttribute(attrib_name, new BufferAttribute(new_values, attrib_size));
 				}
-				const new_indices = range(points_count);
-				geometry.setIndex(new_indices);
+				const newIndices = rangeWithEnd(pointsCount);
+				geometry.setIndex(newIndices);
 			}
 		}
 	}

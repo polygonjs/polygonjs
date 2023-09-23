@@ -76,12 +76,13 @@ export class CSS2DObjectSopNode extends TypedSopNode<CSS2DObjectSopParamsConfig>
 			// Even if the attributes can be redundant,
 			// they give clues that they can be changed
 			// to update the output
+			const attribNames: string[] = [];
 			const group = createCSS2DObject({
 				id: this.pv.id,
 				className: this.pv.className,
 				html: this.pv.html,
 				copyAttributes: this.pv.copyAttributes,
-				attributesToCopy: stringToAttribNames(this.pv.attributesToCopy),
+				attributesToCopy: stringToAttribNames(this.pv.attributesToCopy, attribNames),
 			});
 			group.name = this.name();
 			this._addAttributes(group);
@@ -109,13 +110,14 @@ export class CSS2DObjectSopNode extends TypedSopNode<CSS2DObjectSopParamsConfig>
 		const html = CoreCSSObjectAttribute.getElementHTML(object);
 		const copyAttributes = CoreCSSObjectAttribute.getCopyAttributes(object);
 		const attributesToCopy = CoreCSSObjectAttribute.getAttributesToCopy(object);
+		const attribNames: string[] = [];
 		const CSSObject = createCSS2DObject({
 			object,
 			id,
 			className,
 			html,
 			copyAttributes,
-			attributesToCopy: stringToAttribNames(attributesToCopy),
+			attributesToCopy: stringToAttribNames(attributesToCopy, attribNames),
 		});
 		replaceChild(parent, object, CSSObject);
 	}

@@ -28,6 +28,7 @@ import {
 	pointAttributeSizes,
 	pointAttributeSize,
 } from './entities/point/CorePointUtils';
+import type {TypedCorePoint} from './entities/point/CorePoint';
 
 // CAD
 import type {CadGeometryType, CadGeometryTypeShape} from './modules/cad/CadCommon';
@@ -63,6 +64,7 @@ type AttributeDictionary = PolyDictionary<AttribValue>;
 
 const tmpBox3 = new Box3();
 const tmpPos = new Vector3();
+const _indices:number[]=[]
 
 export interface Object3DWithGeometry extends Object3D {
 	geometry: BufferGeometry;
@@ -294,9 +296,13 @@ export class CoreGroup extends CoreEntity {
 	}
 	pointsFromGroup(group: GroupString) {
 		if (group) {
-			const indices = CoreString.indices(group);
+			CoreString.indices(group,_indices);
 			const points = this.points();
-			return arrayCompact(indices.map((i) => points[i]));
+			const compactPoints: TypedCorePoint<CoreObjectType>[] = [];
+			return arrayCompact(
+				_indices.map((i) => points[i]),
+				compactPoints
+			);
 		} else {
 			return this.points();
 		}

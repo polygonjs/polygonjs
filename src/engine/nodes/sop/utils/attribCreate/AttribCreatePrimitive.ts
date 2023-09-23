@@ -7,6 +7,7 @@ import {TypeAssert} from '../../../../poly/Assert';
 import {primitivesFromObjectFromGroup} from '../../../../../core/geometry/entities/primitive/CorePrimitiveUtils';
 import {corePrimitiveClassFactory} from '../../../../../core/geometry/CoreObjectFactory';
 import {CoreObjectType, ObjectContent} from '../../../../../core/geometry/ObjectContent';
+import {CorePrimitive} from '../../../../../core/geometry/entities/primitive/CorePrimitive';
 // import {filterObjectsFromCoreGroup} from '../../../../../core/geometry/Mask';
 
 interface ArraysByObject {
@@ -50,7 +51,8 @@ async function _addNumericAttributeToPrimitives<T extends CoreObjectType>(
 	object: ObjectContent<T>,
 	params: AttribCreateSopNodeParams
 ) {
-	const primitives = primitivesFromObjectFromGroup(object, params.group.value);
+	const primitives: CorePrimitive<CoreObjectType>[] = [];
+	primitivesFromObjectFromGroup(object, params.group.value, primitives);
 	const attribName = CoreAttribute.remapName(params.name.value);
 	const size = params.size.value;
 
@@ -139,7 +141,8 @@ async function _addStringAttributeToPrimitives<T extends CoreObjectType>(
 	object: ObjectContent<T>,
 	params: AttribCreateSopNodeParams
 ) {
-	const primitives = primitivesFromObjectFromGroup(object, params.group.value);
+	const primitives: CorePrimitive<T>[] = [];
+	primitivesFromObjectFromGroup(object, params.group.value, primitives);
 	const param = params.string;
 	const attribName = params.name.value;
 

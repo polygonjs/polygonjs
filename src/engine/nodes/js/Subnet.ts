@@ -12,13 +12,13 @@ import {NetworkNodeType, NodeContext} from '../../poly/NodeContext';
 import {JsNodeChildrenMap} from '../../poly/registers/nodes/Js';
 import {SubnetOutputJsNode} from './SubnetOutput';
 import {NodeCreateOptions} from '../utils/hierarchy/ChildrenController';
-import {range} from '../../../core/ArrayUtils';
+import {rangeStartEnd} from '../../../core/ArrayUtils';
 import {IntegerParam} from '../../params/Integer';
 import {StringParam} from '../../params/String';
 
 function visibleIfInputsCountAtLeast(index: number) {
 	return {
-		visibleIf: range(index + 1, 10).map((i) => ({inputsCount: i})),
+		visibleIf: rangeStartEnd(index + 1, 10).map((i) => ({inputsCount: i})),
 	};
 }
 
@@ -207,7 +207,7 @@ export class TypedSubnetJsNode<K extends TypedSubnetJsParamsConfig> extends Abst
 	protected override _expectedInputTypes(): JsConnectionPointType[] {
 		const count = this.pv.inputsCount;
 		const params: IntegerParam[] = this._inputTypeParams();
-		return range(0, count).map((value, i) => JS_CONNECTION_POINT_TYPES[params[i].value]);
+		return rangeStartEnd(0, count).map((value, i) => JS_CONNECTION_POINT_TYPES[params[i].value]);
 	}
 	protected override _expectedInputName(index: number) {
 		const params: StringParam[] = this._inputNameParams();
@@ -218,7 +218,7 @@ export class TypedSubnetJsNode<K extends TypedSubnetJsParamsConfig> extends Abst
 	protected override _expectedOutputTypes() {
 		const count = this.pv.inputsCount;
 		const params: IntegerParam[] = this._inputTypeParams();
-		return range(0, count).map((value, i) => JS_CONNECTION_POINT_TYPES[params[i].value]);
+		return rangeStartEnd(0, count).map((value, i) => JS_CONNECTION_POINT_TYPES[params[i].value]);
 	}
 
 	protected override _expectedOutputName(index: number) {

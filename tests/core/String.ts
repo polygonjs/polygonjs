@@ -1,5 +1,9 @@
 import type {QUnit} from '../helpers/QUnit';
 import {CoreString} from '../../src/core/String';
+
+const _numbers:number[]=[]
+const _string:string[]=[]
+
 export function testcoreString(qUnit: QUnit) {
 	// qUnit.test('string timestamp', (assert) => {
 	// 	assert.equal(CoreString.timestamp_to_seconds('2018-09-28 10:44:32'), 1538127872);
@@ -56,12 +60,12 @@ export function testcoreString(qUnit: QUnit) {
 	});
 
 	qUnit.test('string attrib_names', (assert) => {
-		assert.deepEqual(CoreString.attribNames('position, normal'), ['position', 'normal']);
-		assert.deepEqual(CoreString.attribNames('position,normal'), ['position', 'normal']);
-		assert.deepEqual(CoreString.attribNames('position,   normal'), ['position', 'normal']);
-		assert.deepEqual(CoreString.attribNames('position,		  normal'), ['position', 'normal']);
-		assert.deepEqual(CoreString.attribNames('  position  ,		  normal  '), ['position', 'normal']);
-		assert.deepEqual(CoreString.attribNames('position,normal,'), ['position', 'normal']);
+		assert.deepEqual(CoreString.attribNames('position, normal', _string), ['position', 'normal']);
+		assert.deepEqual(CoreString.attribNames('position,normal',_string), ['position', 'normal']);
+		assert.deepEqual(CoreString.attribNames('position,   normal',_string), ['position', 'normal']);
+		assert.deepEqual(CoreString.attribNames('position,		  normal',_string), ['position', 'normal']);
+		assert.deepEqual(CoreString.attribNames('  position  ,		  normal  ',_string), ['position', 'normal']);
+		assert.deepEqual(CoreString.attribNames('position,normal,',_string), ['position', 'normal']);
 	});
 
 	qUnit.test('string increment name', (assert) => {
@@ -115,9 +119,9 @@ export function testcoreString(qUnit: QUnit) {
 	});
 
 	qUnit.test('indices', (assert) => {
-		assert.deepEqual(CoreString.indices('1'), [1]);
-		assert.deepEqual(CoreString.indices('1,2'), [1, 2]);
-		assert.deepEqual(CoreString.indices('1,2 4-6'), [1, 2, 4, 5, 6]);
+		assert.deepEqual(CoreString.indices('1',_numbers), [1]);
+		assert.deepEqual(CoreString.indices('1,2',_numbers), [1, 2]);
+		assert.deepEqual(CoreString.indices('1,2 4-6',_numbers), [1, 2, 4, 5, 6]);
 	});
 
 	qUnit.test('number conversion', (assert) => {

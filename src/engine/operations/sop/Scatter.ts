@@ -1,15 +1,10 @@
 import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {BufferGeometry} from 'three';
-import {BufferAttribute} from 'three';
+import {Mesh, BufferGeometry, BufferAttribute, Vector2, Vector3, Vector4} from 'three';
 import {ObjectType} from '../../../core/geometry/Constant';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
-import {range} from '../../../core/ArrayUtils';
+import {rangeWithEnd} from '../../../core/ArrayUtils';
 import {isBooleanTrue} from '../../../core/BooleanValue';
-import {Mesh} from 'three';
-import {Vector2} from 'three';
-import {Vector3} from 'three';
-import {Vector4} from 'three';
 import {Attribute} from '../../../core/geometry/Attribute';
 import {MeshSurfaceSampler} from '../../../modules/core/math/MeshSurfaceSampler';
 import {CoreMath} from '../../../core/math/_Module';
@@ -165,7 +160,7 @@ export class ScatterSopOperation extends BaseSopOperation {
 		// add id
 		if (isBooleanTrue(params.addIdAttribute) || isBooleanTrue(params.addIdnAttribute)) {
 			const pointsCount = params.pointsCount;
-			const ids = range(pointsCount);
+			const ids: number[] = rangeWithEnd(pointsCount);
 			if (isBooleanTrue(params.addIdAttribute)) {
 				geometry.setAttribute('id', new BufferAttribute(new Float32Array(ids), 1));
 			}

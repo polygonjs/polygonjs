@@ -6,7 +6,7 @@
 import {BufferGeometry} from 'three';
 import {Mesh} from 'three';
 import {LineSegments} from 'three';
-import {TypedSopNode} from './_Base';
+import {BaseSopNodeType, TypedSopNode} from './_Base';
 import {CoreGeometryUtilCurve} from '../../../core/geometry/util/Curve';
 import {CoreGeometryOperationSkin} from '../../../core/geometry/operation/Skin';
 import {CoreGroup} from '../../../core/geometry/Group';
@@ -27,13 +27,17 @@ export class SkinSopNode extends TypedSopNode<SkinSopParamsConfig> {
 		this.io.inputs.setCount(1, 2);
 	}
 
-	override cook(input_contents: CoreGroup[]) {
-		const inputs_count = arrayCompact(this.io.inputs.inputs()).length;
-		switch (inputs_count) {
+	override cook(inputCoreGroups: CoreGroup[]) {
+		const inputs = this.io.inputs.inputs()
+		const compactInputs:BaseSopNodeType[]=[] 
+		arrayCompact(inputs,compactInputs)
+		const inputsCount = 
+		compactInputs.length;
+		switch (inputsCount) {
 			case 1:
-				return this.process_one_input(input_contents);
+				return this.process_one_input(inputCoreGroups);
 			case 2:
-				return this.process_two_inputs(input_contents);
+				return this.process_two_inputs(inputCoreGroups);
 			default:
 				return this.states.error.set('inputs count not valid');
 		}

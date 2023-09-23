@@ -7,6 +7,8 @@ import {CoreGroup} from '../../Group';
 import {CoreObjectType, ObjectContent} from '../../ObjectContent';
 import type {TypedCorePoint} from './CorePoint';
 
+const _indices: number[] = [];
+
 export function points(coreGroup: CoreGroup) {
 	return coreGroup
 		.allCoreObjects()
@@ -57,13 +59,13 @@ export function pointsFromObjectFromGroup<T extends CoreObjectType>(
 	group: GroupString
 ): TypedCorePoint<T>[] {
 	if (group) {
-		const indices = CoreString.indices(group);
-		if (indices) {
-			const points = pointsFromObject(object);
-			return arrayCompact(indices.map((i) => points[i]));
-		} else {
-			return [];
-		}
+		CoreString.indices(group, _indices);
+		const points = pointsFromObject(object);
+		const compactPoints: TypedCorePoint<T>[] = [];
+		return arrayCompact(
+			_indices.map((i) => points[i]),
+			compactPoints
+		);
 	} else {
 		return pointsFromObject(object);
 	}

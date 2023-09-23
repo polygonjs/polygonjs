@@ -6,6 +6,7 @@ import {CoreType} from '../../../../core/Type';
 import {arrayUniq} from '../../../../core/ArrayUtils';
 import {TypedNodeConnection} from './NodeConnection';
 
+const _uniqOutputIndices:number[]=[]
 const _usedOutputIndices: number[] = [];
 
 export class OutputsController<NC extends NodeContext> {
@@ -135,17 +136,18 @@ export class OutputsController<NC extends NodeContext> {
 		const connectionsController = this.node.io.connections;
 		if (connectionsController) {
 			connectionsController.outputConnections(this._connections);
-			const outputIndices = arrayUniq(
+			
+			 arrayUniq(
 				this._connections.map((connection) => (connection ? connection.outputIndex() : null))
-			);
+			,_uniqOutputIndices);
 			// outputIndices = arrayUniq(output_indices);
 			// const used_output_indices: number[] = [];
 			_usedOutputIndices.length = 0;
-			outputIndices.forEach((index) => {
+			for(const index of _uniqOutputIndices){
 				if (CoreType.isNumber(index)) {
 					_usedOutputIndices.push(index);
 				}
-			});
+			}
 			// const used_output_names: string[] = [];
 			const connectionPoints = this.namedOutputConnectionPoints();
 			if (connectionPoints) {

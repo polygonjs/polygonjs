@@ -1,7 +1,6 @@
 import {TypedNodeConnection} from './NodeConnection';
 import {NodeContext} from '../../../poly/NodeContext';
 import {TypedNode} from '../../_Base';
-import {arrayCompact} from '../../../../core/ArrayUtils';
 
 export class ConnectionsController<NC extends NodeContext> {
 	private _inputConnections: Array<TypedNodeConnection<NC> | undefined> | undefined;
@@ -72,10 +71,13 @@ export class ConnectionsController<NC extends NodeContext> {
 	}
 	firstInputConnection(): TypedNodeConnection<NC> | null {
 		if (this._inputConnections) {
-			return arrayCompact(this._inputConnections)[0];
-		} else {
-			return null;
+			for (const connection of this._inputConnections) {
+				if (connection) {
+					return connection;
+				}
+			}
 		}
+		return null;
 	}
 	inputConnections() {
 		return this._inputConnections;

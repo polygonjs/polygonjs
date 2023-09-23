@@ -285,7 +285,8 @@ export class DeleteSopNode extends TypedSopNode<DeleteSopParamsConfig> {
 		const objects = coreGroup.allObjects();
 		const newObjects: ObjectContent<CoreObjectType>[] = [];
 		for (const object of objects) {
-			const entities = primitivesFromObject(object);
+			const entities: CorePrimitive<CoreObjectType>[] = [];
+			primitivesFromObject(object, entities);
 			this.entitySelectionHelper.init(entities);
 
 			const initEntitiesCount = entities.length;

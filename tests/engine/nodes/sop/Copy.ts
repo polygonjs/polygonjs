@@ -485,8 +485,10 @@ export function testenginenodessopCopy(qUnit: QUnit) {
 			await _imageNodes.map(async (node) => (await node.compute()).texture());
 			const objectMapUuids = objects.map((object) => (object.material as MeshBasicMaterial).map!.uuid);
 			const textureUuids = textures.map((texture) => texture.uuid);
-			assert.equal(ArrayUtils.uniq(objectMapUuids).length, 3, '3 uuids');
-			assert.equal(ArrayUtils.uniq(textureUuids).length, 3, '3 uuids');
+			const uniqObjectUuids:string[]=[]
+			const uniqTextureUuids:string[]=[]
+			assert.equal(ArrayUtils.uniq(objectMapUuids,uniqObjectUuids).length, 3, '3 uuids');
+			assert.equal(ArrayUtils.uniq(textureUuids,uniqTextureUuids).length, 3, '3 uuids');
 			assert.equal(objectMapUuids[0], textureUuids[0], 'texture match');
 			assert.equal(objectMapUuids[1], textureUuids[1], 'texture match');
 			assert.equal(objectMapUuids[2], textureUuids[2], 'texture match');

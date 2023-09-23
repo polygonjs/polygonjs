@@ -1,5 +1,6 @@
 import {CoreType} from './Type';
 import {arrayUniq, range} from './ArrayUtils';
+import {arrayPushItems} from './ArrayUtils';
 
 const ATTRIB_NAMES_SEPARATOR = /[, ]/; //[',', ' ']
 
@@ -37,13 +38,18 @@ export function sanitizeName(word: string): string {
 	return word;
 }
 
-export function stringToAttribNames(word: string): string[] {
-	return arrayUniq(
-		word
-			.split(ATTRIB_NAMES_SEPARATOR)
-			.map((w) => w.trim())
-			.filter((w) => w.length > 0)
-	);
+let _tmp: string[] = [];
+export function stringToAttribNames(word: string, target: string[]): string[] {
+	const elements = word.split(ATTRIB_NAMES_SEPARATOR);
+	_tmp.length = 0;
+	for (const element of elements) {
+		const trimmed = element.trim();
+		if (trimmed.length > 0) {
+			_tmp.push(trimmed);
+		}
+	}
+	arrayUniq(_tmp, target);
+	return target;
 }
 export function stringTailDigits(word: string): number {
 	const match = word.match(TAIL_DIGIT_MATCH_REGEXP);
@@ -161,6 +167,8 @@ export function ensureInteger(num: number): string {
 	}
 }
 
+// let _elements: string[] = [];
+let _exclusionFilters: string[] = [];
 // // https://stackoverflow.com/questions/26246601/wildcard-string-comparison-in-javascript#32402438
 export function stringMatchMask(word: string, mask: string) {
 	if (mask === '*') {
@@ -170,10 +178,18 @@ export function stringMatchMask(word: string, mask: string) {
 		return true;
 	}
 	const elements = mask.split(SPACE);
-	const exclusionFilters = elements
-		.filter((element) => element.startsWith('^'))
-		.map((element) => element.substring(1));
-	for (const exclusionFilter of exclusionFilters) {
+	// const elements = _elements;
+	_exclusionFilters.length = 0;
+	for (const element of elements) {
+		if (element.startsWith('^')) {
+			_exclusionFilters.push(element.substring(1));
+		}
+	}
+	// const exclusionFilters = elements
+	// 	.filter((element) => element.startsWith('^'))
+	// 	.map((element) => element.substring(1));
+
+	for (const exclusionFilter of _exclusionFilters) {
 		const match = stringMatchMask(word, exclusionFilter);
 		if (match) {
 			return false;
@@ -210,19 +226,29 @@ export function stringMatchMask(word: string, mask: string) {
 	}
 }
 export function stringMatchesOneMask(word: string, masks: string[]): boolean {
-	let matches_one_mask = false;
 	for (const mask of masks) {
 		if (stringMatchMask(word, mask)) {
-			matches_one_mask = true;
+			return true;
 		}
 	}
-	return matches_one_mask;
+	return false;
 }
-export function stringToIndices(indicesString: string): number[] {
+
+let _indices: number[] = [];
+let _subIndices: number[] = [];
+export function stringToIndices(indicesString: string, target: number[]): number[] {
+	target.length = 0;
 	const elements = indicesString.split(INDICES_LIST_SEPARATOR);
 	if (elements.length > 1) {
-		const indices: number[] = elements.flatMap(stringToIndices);
-		return arrayUniq(indices).sort((a, b) => a - b);
+		_indices.length = 0;
+		for (const element of elements) {
+			stringToIndices(element, _subIndices);
+			arrayPushItems(_indices, _subIndices);
+		}
+		// const indices: number[] = elements.flatMap(stringToIndices);
+		// const uniqIndices: number[] = [];
+		arrayUniq(_indices, target);
+		return target.sort((a, b) => a - b);
 	} else {
 		const element = elements[0];
 		if (element) {
@@ -233,22 +259,18 @@ export function stringToIndices(indicesString: string): number[] {
 				const rangeStartI = parseInt(rangeStart);
 				const rangeEndI = parseInt(rangeEnd);
 				if (CoreType.isNumberValid(rangeStartI) && CoreType.isNumberValid(rangeEndI)) {
-					return range(rangeStartI, rangeEndI + 1);
-				} else {
-					return [];
+					return range(rangeStartI, rangeEndI + 1, 1, target);
 				}
 			} else {
 				const parsed = parseInt(element);
 				if (CoreType.isNumberValid(parsed)) {
-					return [parsed];
-				} else {
-					return [];
+					target.push(parsed);
+					return target;
 				}
 			}
-		} else {
-			return [];
 		}
 	}
+	return target;
 }
 export function stringEscapeLineBreaks(word: string): string {
 	return word.replace(/(\r\n|\n|\r)/gm, '\\n');

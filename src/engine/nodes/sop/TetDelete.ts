@@ -9,7 +9,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CoreGroup, Object3DWithGeometry} from '../../../core/geometry/Group';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 import {TetObject} from '../../../core/geometry/modules/tet/TetObject';
-import {CoreString} from '../../../core/String';
+import {stringToIndices} from '../../../core/String';
 import {isBooleanTrue} from '../../../core/Type';
 import {Vector3, Mesh} from 'three';
 import {tetCenter} from '../../../core/geometry/modules/tet/utils/tetCenter';
@@ -18,8 +18,10 @@ import {MeshWithBVHGeometry, ThreeMeshBVHHelper} from '../../../core/geometry/bv
 import {findNonDelaunayTetsFromMultiplePointsCheck} from '../../../core/geometry/modules/tet/utils/findNonDelaunayTets';
 import {tetRemoveUnusedPoints} from '../../../core/geometry/modules/tet/utils/tetRemoveUnusedPoints';
 import {tetQuality} from '../../../core/geometry/modules/tet/utils/tetQuality';
+import {arrayPushItems} from '../../../core/ArrayUtils';
 
 const _tetCenter = new Vector3();
+const _indices: number[] = [];
 
 class TetDeleteSopParamsConfig extends NodeParamsConfig {
 	byQuality = ParamConfig.BOOLEAN(0);
@@ -135,8 +137,8 @@ export class TetDeleteSopNode extends TetSopNode<TetDeleteSopParamsConfig> {
 		});
 	}
 	private _findTetsById(selectedIds: number[]) {
-		const ids = CoreString.indices(this.pv.ids);
-		selectedIds.push(...ids);
+		stringToIndices(this.pv.ids, _indices);
+		arrayPushItems(selectedIds, _indices);
 	}
 	private _findTetsByIndex(tetObject: TetObject, selectedIds: number[]) {
 		const index = this.pv.index;

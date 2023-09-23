@@ -15,6 +15,9 @@ import {StringOrNumber2, StringOrNumber3, StringOrNumber4} from '../../../../src
 import {primitivesFromObject} from '../../../../src/core/geometry/entities/primitive/CorePrimitiveUtils';
 import {verticesFromObject} from '../../../../src/core/geometry/entities/vertex/CoreVertexUtils';
 import {ENTITY_CLASS_FACTORY} from '../../../../src/core/geometry/CoreObjectFactory';
+import { CoreVertex } from '../../../../src/core/geometry/entities/vertex/CoreVertex';
+import { CoreObjectType } from '../../../../src/core/geometry/ObjectContent';
+import { CorePrimitive } from '../../../../src/core/geometry/entities/primitive/CorePrimitive';
 export function testenginenodessopAttribCreate(qUnit: QUnit) {
 	qUnit.test('sop/attribCreate simple float vertex', async (assert) => {
 		const geo1 = window.geo1;
@@ -618,7 +621,8 @@ export function testenginenodessopAttribCreate(qUnit: QUnit) {
 
 		const container = await attribCreate1.compute();
 		const object = container.coreContent()!.allObjects()[0];
-		const primitives = primitivesFromObject(object);
+		const primitives:CorePrimitive<CoreObjectType>[] = []
+		primitivesFromObject(object,primitives);
 		assert.deepEqual(
 			primitives.map((p) => p.attribValue('t')),
 			[2, 4]
@@ -639,7 +643,8 @@ export function testenginenodessopAttribCreate(qUnit: QUnit) {
 
 		const container = await attribCreate1.compute();
 		const object = container.coreContent()!.allObjects()[0];
-		const vertices = verticesFromObject(object);
+		const vertices:CoreVertex<CoreObjectType>[] =[] 
+		verticesFromObject(object,vertices);
 		assert.deepEqual(
 			vertices.map((p) => p.attribValue('t')),
 			[2, 4, 6, 8, 10, 12]

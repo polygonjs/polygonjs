@@ -1,5 +1,7 @@
 import type {QUnit} from '../../../helpers/QUnit';
 import {primitivesFromObject} from '../../../../src/core/geometry/entities/primitive/CorePrimitiveUtils';
+import { CorePrimitive } from '../../../../src/core/geometry/entities/primitive/CorePrimitive';
+import { CoreObjectType } from '../../../../src/core/geometry/ObjectContent';
 export function testenginenodessopQuadTriangulate(qUnit: QUnit) {
 	qUnit.test('sop/quadTriangulate prim count', async (assert) => {
 		const geo1 = window.geo1;
@@ -11,7 +13,8 @@ export function testenginenodessopQuadTriangulate(qUnit: QUnit) {
 		async function primsCount() {
 			const container = await quadTriangulate1.compute();
 			const object = container.coreContent()!.allObjects()[0];
-			const primitives = primitivesFromObject(object);
+			const primitives:CorePrimitive<CoreObjectType>[] = []
+			primitivesFromObject(object,primitives);
 			return primitives.length;
 		}
 

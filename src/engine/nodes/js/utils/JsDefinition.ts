@@ -273,7 +273,12 @@ export class TriggeringJsDefinition extends TypedJsDefinition<JsDefinitionType.T
 			(definition) => definition._options.triggeringMethodName
 		);
 		definitionGroups.forEach((definitions, triggeringMethodName) => {
-			const definitionMethodCalls = arrayUniq(definitions.map((d) => `this.${d.name()}()`)).join(';');
+			const uniqFunctionCalls: string[] = [];
+			arrayUniq(
+				definitions.map((d) => `this.${d.name()}()`),
+				uniqFunctionCalls
+			);
+			const definitionMethodCalls = uniqFunctionCalls.join(';');
 			const line = `${triggeringMethodName}(){
 				${definitionMethodCalls}
 			}`;

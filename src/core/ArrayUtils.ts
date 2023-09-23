@@ -5,27 +5,37 @@ import {randFloat} from './math/_Module';
 
 export type ArrayToItemFunction<T> = (array: Array<T>) => T;
 
-export function range(start: number, end?: number, step: number = 1): number[] {
+export function range(start: number, end: number, step: number, target: number[]): number[] {
 	if (end == null) {
 		end = start;
 		start = 0;
 	}
 	const length = Math.floor((end - start) / step);
-	const array: number[] = new Array(length);
+	target.length = length;
 
-	for (let i = 0; i < array.length; i++) {
-		array[i] = start + i * step;
+	for (let i = 0; i < length; i++) {
+		target[i] = start + i * step;
 	}
-	return array;
+	return target;
 }
-export function arrayUniq<T>(array: Array<T>): Array<T> {
-	const newArray: Array<T> = [];
+export function rangeWithEnd(end: number): number[] {
+	const target: number[] = [];
+	range(0, end, 1, target);
+	return target;
+}
+export function rangeStartEnd(start: number, end: number): number[] {
+	const target: number[] = [];
+	range(start, end, 1, target);
+	return target;
+}
+export function arrayUniq<T>(array: Array<T>, target: Array<T>): Array<T> {
+	target.length = 0;
 	for (const element of array) {
-		if (!newArray.includes(element)) {
-			newArray.push(element);
+		if (!target.includes(element)) {
+			target.push(element);
 		}
 	}
-	return newArray;
+	return target;
 	// if we use a set, we lose the order
 	// const tmpSet: Set<T> = new Set();
 
@@ -69,16 +79,16 @@ export function uniqWithoutPreservingOrder<T>(array: Array<T>): Array<T> {
 
 	// return newArray;
 }
-export function arrayCompact<T>(array: Readonly<Array<T | null | undefined>>): Array<T> {
-	const newArray: Array<T> = [];
+export function arrayCompact<T>(array: Readonly<Array<T | null | undefined>>, target: Array<T>): Array<T> {
+	target.length = 0;
 
 	for (const elem of array) {
 		if (elem != null) {
-			newArray.push(elem);
+			target.push(elem);
 		}
 	}
 
-	return newArray;
+	return target;
 }
 export function arrayMin<T>(array: Array<T>): T {
 	let min = array[0];
@@ -120,26 +130,34 @@ export function arrayChunk<T extends number | string>(array: Array<T>, chunkSize
 
 	return newArray;
 }
-export function arrayUnion<T extends number | string>(array0: Array<T>, array1: Array<T>): Array<T> {
-	const newArray: Array<T> = [];
+export function arrayUnion<T extends number | string>(array0: Array<T>, array1: Array<T>, target: Array<T>): Array<T> {
+	target.length = 0;
 	const unionSet = SetUtils.union(arrayToSet(array0), arrayToSet(array1));
-	unionSet.forEach((val) => newArray.push(val));
+	unionSet.forEach((val) => target.push(val));
 
-	return newArray;
+	return target;
 }
-export function arrayIntersection<T extends number | string>(array0: Array<T>, array1: Array<T>): Array<T> {
-	const newArray: Array<T> = [];
+export function arrayIntersection<T extends number | string>(
+	array0: Array<T>,
+	array1: Array<T>,
+	target: Array<T>
+): Array<T> {
+	target.length = 0;
 	const intersectionSet = SetUtils.intersection(arrayToSet(array0), arrayToSet(array1));
-	intersectionSet.forEach((val) => newArray.push(val));
+	intersectionSet.forEach((val) => target.push(val));
 
-	return newArray;
+	return target;
 }
-export function arrayDifference<T extends number | string>(array0: Array<T>, array1: Array<T>): Array<T> {
-	const newArray: Array<T> = [];
+export function arrayDifference<T extends number | string>(
+	array0: Array<T>,
+	array1: Array<T>,
+	target: Array<T>
+): Array<T> {
+	target.length = 0;
 	const differenceSet = SetUtils.difference(arrayToSet(array0), arrayToSet(array1));
-	differenceSet.forEach((val) => newArray.push(val));
+	differenceSet.forEach((val) => target.push(val));
 
-	return newArray;
+	return target;
 }
 export function arrayToSet<T extends number | string>(array: Array<T>): Set<T> {
 	const set: Set<T> = new Set();

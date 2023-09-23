@@ -98,8 +98,11 @@ export class CodeBuilder {
 		);
 		this.reset();
 		for (const shaderName of this.shaderNames()) {
-			let nodes = nodesByShaderName.get(shaderName) || [];
-			nodes = arrayUniq(nodes);
+			const nodes: BaseGlNodeType[] = [];
+			const nonUniqNodes = nodesByShaderName.get(shaderName);
+			if (nonUniqNodes) {
+				arrayUniq(nonUniqNodes, nodes);
+			}
 
 			this._shadersCollectionController.setCurrentShaderName(shaderName);
 			if (nodes) {

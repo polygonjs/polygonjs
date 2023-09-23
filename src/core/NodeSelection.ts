@@ -39,14 +39,14 @@ export class CoreNodeSelection {
 
 	add(nodesToAdd: BaseNodeType[]) {
 		const nodeIdsToAdd = nodesToAdd.map((node) => node.graphNodeId());
-		this._nodeIds = arrayUnion(this._nodeIds, nodeIdsToAdd);
+		arrayUnion(this._nodeIds, nodeIdsToAdd, this._nodeIds);
 
 		this._sendUpdateEvent();
 	}
 
 	remove(nodesToRemove: BaseNodeType[]) {
 		const nodeIdsToRemove = nodesToRemove.map((node) => node.graphNodeId());
-		this._nodeIds = arrayDifference(this._nodeIds, nodeIdsToRemove);
+		arrayDifference(this._nodeIds, nodeIdsToRemove, this._nodeIds);
 
 		this._sendUpdateEvent();
 	}

@@ -38,7 +38,8 @@ interface CopyBetweenGeometriesArgs extends CopyArgs {
 		dest: BufferGeometry;
 	};
 }
-
+const _newNames:string[]=[]
+const _attribNames:string[]=[]
 export class AttribCopySopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: AttribCopySopParams = {
 		class: ATTRIBUTE_CLASSES.indexOf(AttribClass.POINT),
@@ -57,14 +58,14 @@ export class AttribCopySopOperation extends BaseSopOperation {
 		const coreGroupDest = inputCoreGroups[0];
 		const coreGroupSrc = inputCoreGroups[1] || coreGroupDest;
 		const attribClass = ATTRIBUTE_CLASSES[params.class];
-		const newNames = stringToAttribNames(params.newName);
+		stringToAttribNames(params.newName,_newNames);
 
 		if (attribClass == AttribClass.POINT) {
 			// for geometry attributes, first iterate over the existing attributes
 			const srcAttribNames = coreGroupSrc.pointAttribNamesMatchingMask(params.name);
 			for (let i = 0; i < srcAttribNames.length; i++) {
 				const srcAttribName = srcAttribNames[i];
-				let destAttribName = isBooleanTrue(params.tnewName) ? newNames[i] : srcAttribName;
+				let destAttribName = isBooleanTrue(params.tnewName) ? _newNames[i] : srcAttribName;
 				if (!destAttribName) {
 					this.states?.error.set(`no matching new attribute name of ${srcAttribName}`);
 					return coreGroupDest;
@@ -80,12 +81,12 @@ export class AttribCopySopOperation extends BaseSopOperation {
 			}
 		} else {
 			// for object attributes, first iterate over the existing attributes
-			const attribNames = stringToAttribNames(params.name);
-			for (let i = 0; i < attribNames.length; i++) {
-				const destAttribName = isBooleanTrue(params.tnewName) ? newNames[i] : attribNames[i];
+			stringToAttribNames(params.name,_attribNames);
+			for (let i = 0; i < _attribNames.length; i++) {
+				const destAttribName = isBooleanTrue(params.tnewName) ? _newNames[i] : _attribNames[i];
 				this._copyAttributeBetweenCoreGroups(attribClass, {
 					attribName: {
-						src: attribNames[i],
+						src: _attribNames[i],
 						dest: destAttribName,
 					},
 					params,

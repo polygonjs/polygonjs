@@ -81,7 +81,10 @@ export abstract class PrimitiveMatNode<M extends Material, K extends NodeParamsC
 
 	protected controllersList: Array<BaseController> = [];
 	protected controllersPromises(material: M): Array<void | Promise<void>> {
-		return arrayCompact(this.controllersList.map((controller) => controller.updateMaterial(material)));
+		const promises = this.controllersList.map((controller) => controller.updateMaterial(material));
+		const compactPromises: Promise<void>[] = [];
+		arrayCompact(promises, compactPromises);
+		return compactPromises;
 	}
 	override initializeNode() {
 		this.params.onParamsCreated('init controllers', () => {

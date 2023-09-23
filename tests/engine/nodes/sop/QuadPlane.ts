@@ -4,6 +4,9 @@ import {primitivesFromObject} from '../../../../src/core/geometry/entities/primi
 import {verticesFromObject} from '../../../../src/core/geometry/entities/vertex/CoreVertexUtils';
 import {QuadCoreObject} from '../../../../src/core/geometry/modules/quad/QuadCoreObject';
 import {ObjectType} from '../../../../src/core/geometry/Constant';
+import {CoreVertex} from '../../../../src/core/geometry/entities/vertex/CoreVertex';
+import {CoreObjectType} from '../../../../src/core/geometry/ObjectContent';
+import { CorePrimitive } from '../../../../src/core/geometry/entities/primitive/CorePrimitive';
 export function testenginenodessopQuadPlane(qUnit: QUnit) {
 	qUnit.test('sop/quadPlane prim count', async (assert) => {
 		const geo1 = window.geo1;
@@ -14,7 +17,8 @@ export function testenginenodessopQuadPlane(qUnit: QUnit) {
 			const container = await quadPlane1.compute();
 			const object = container.coreContent()!.allObjects()[0];
 			const quadObject = container.coreContent()!.quadObjects()![0];
-			const primitives = primitivesFromObject(object);
+			const primitives:CorePrimitive<CoreObjectType>[] = []
+			primitivesFromObject(object,primitives);
 			const objectsData = QuadCoreObject.objectData(quadObject);
 			return {primitives, objectsData};
 		}
@@ -61,7 +65,8 @@ export function testenginenodessopQuadPlane(qUnit: QUnit) {
 
 		const container = await attribCreate1.compute();
 		const object = container.coreContent()!.allObjects()[0];
-		const primitives = primitivesFromObject(object);
+		const primitives:CorePrimitive<CoreObjectType>[] = []
+			primitivesFromObject(object,primitives);
 		assert.deepEqual(
 			primitives.map((p) => p.attribValue('t')),
 			[2, 4]
@@ -85,7 +90,8 @@ export function testenginenodessopQuadPlane(qUnit: QUnit) {
 
 		const container = await attribCreate1.compute();
 		const object = container.coreContent()!.allObjects()[0];
-		const vertices = verticesFromObject(object);
+		const vertices: CoreVertex<CoreObjectType>[] = [];
+		verticesFromObject(object, vertices);
 		assert.deepEqual(
 			vertices.map((p) => p.attribValue('t')),
 			[2, 4, 6, 8, 10, 12, 14, 16]

@@ -102,13 +102,14 @@ export class CSS3DObjectSopNode extends TypedSopNode<CSS3DObjectSopParamsConfig>
 		const copyAttributes = CoreCSSObjectAttribute.getCopyAttributes(object);
 		const attributesToCopy = CoreCSSObjectAttribute.getAttributesToCopy(object);
 		const scale = CoreCSSObjectAttribute.getScale(object);
+		const attribNames: string[] = [];
 		const CSSObject = createCSS3DObject({
 			object,
 			id,
 			className,
 			html,
 			copyAttributes,
-			attributesToCopy: stringToAttribNames(attributesToCopy),
+			attributesToCopy: stringToAttribNames(attributesToCopy, attribNames),
 			scale,
 		});
 		replaceChild(parent, object, CSSObject);
