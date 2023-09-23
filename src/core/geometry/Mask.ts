@@ -47,7 +47,7 @@ export function isInGroup<T extends CoreObjectType>(unSanitizedGroupString: stri
 	if (coreObject.object.name == group) {
 		return true;
 	}
-	if (stringMatchMask(group, coreObject.name())) {
+	if (stringMatchMask(coreObject.name(), group)) {
 		return true;
 	}
 

@@ -54,7 +54,7 @@ export class DeformGeometryCubeLatticeJsNode extends TypedJsNode<DeformGeometryC
 
 		const pointsStr: string[] = [p0, p1, p2, p3, p4, p5, p6, p7];
 
-		const pointsJSON = JSON.stringify(pointsStr);
+		const pointsJSON = JSON.stringify(pointsStr).replace(/"/g, '');
 
 		const func = Poly.namedFunctionsRegister.getFunction('cubeLatticeDeform', this, shadersCollectionController);
 		const bodyLine = func.asString(object3D, pointsJSON);

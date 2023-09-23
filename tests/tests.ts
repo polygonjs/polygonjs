@@ -170,6 +170,7 @@ import {testenginenodesjsCode} from './engine/nodes/js/Code';
 import {testenginenodesjsCompare} from './engine/nodes/js/Compare';
 import {testenginenodesjsComplement} from './engine/nodes/js/Complement';
 import {testenginenodesjsCross} from './engine/nodes/js/Cross';
+import {testenginenodesjsDeformGeometryCubeLattice} from './engine/nodes/js/DeformGeometryCubeLattice';
 import {testenginenodesjsDegToRad} from './engine/nodes/js/DegToRad';
 import {testenginenodesjsDeleteObject} from './engine/nodes/js/DeleteObject';
 import {testenginenodesjsDistance} from './engine/nodes/js/Distance';
@@ -461,6 +462,7 @@ import {testenginenodessopDataUrl} from './engine/nodes/sop/DataUrl';
 import {testenginenodessopDecal} from './engine/nodes/sop/Decal';
 import {testenginenodessopDelay} from './engine/nodes/sop/Delay';
 import {testenginenodessopDelete} from './engine/nodes/sop/Delete';
+import {testenginenodessopDeleteByName} from './engine/nodes/sop/DeleteByName';
 import {testenginenodessopDirectionalLight} from './engine/nodes/sop/DirectionalLight';
 import {testenginenodessopDrawRange} from './engine/nodes/sop/DrawRange';
 import {testenginenodessopEmptyObject} from './engine/nodes/sop/EmptyObject';
@@ -488,6 +490,7 @@ import {testenginenodessopInstanceBuilder} from './engine/nodes/sop/InstanceBuil
 import {testenginenodessopInstancesCount} from './engine/nodes/sop/InstancesCount';
 import {testenginenodessopInstanceUpdate} from './engine/nodes/sop/InstanceUpdate';
 import {testenginenodessopJitter} from './engine/nodes/sop/Jitter';
+import {testenginenodessopLattice} from './engine/nodes/sop/Lattice';
 import {testenginenodessopLayer} from './engine/nodes/sop/Layer';
 import {testenginenodessopLightMixer} from './engine/nodes/sop/LightMixer';
 import {testenginenodessopLightProbe} from './engine/nodes/sop/LightProbe';
@@ -749,6 +752,7 @@ export function testPolygonjs(qUnit: QUnit) {
 	testenginenodesjsCompare(qUnit);
 	testenginenodesjsComplement(qUnit);
 	testenginenodesjsCross(qUnit);
+	testenginenodesjsDeformGeometryCubeLattice(qUnit);
 	testenginenodesjsDegToRad(qUnit);
 	testenginenodesjsDeleteObject(qUnit);
 	testenginenodesjsDistance(qUnit);
@@ -1040,6 +1044,7 @@ export function testPolygonjs(qUnit: QUnit) {
 	testenginenodessopDecal(qUnit);
 	testenginenodessopDelay(qUnit);
 	testenginenodessopDelete(qUnit);
+	testenginenodessopDeleteByName(qUnit);
 	testenginenodessopDirectionalLight(qUnit);
 	testenginenodessopDrawRange(qUnit);
 	testenginenodessopEmptyObject(qUnit);
@@ -1067,6 +1072,7 @@ export function testPolygonjs(qUnit: QUnit) {
 	testenginenodessopInstancesCount(qUnit);
 	testenginenodessopInstanceUpdate(qUnit);
 	testenginenodessopJitter(qUnit);
+	testenginenodessopLattice(qUnit);
 	testenginenodessopLayer(qUnit);
 	testenginenodessopLightMixer(qUnit);
 	testenginenodessopLightProbe(qUnit);

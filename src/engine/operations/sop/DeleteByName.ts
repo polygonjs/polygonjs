@@ -30,7 +30,7 @@ export class DeleteByNameSopOperation extends BaseSopOperation {
 		for (const coreObject of coreObjects) {
 			let _toDelete = false;
 			for (const mask of masks) {
-				let _inGroup = isInGroup(`${mask}`, coreObject);
+				const _inGroup = isInGroup(mask, coreObject);
 				if ((_inGroup && !params.invert) || (!_inGroup && params.invert)) {
 					_toDelete = true;
 				}
