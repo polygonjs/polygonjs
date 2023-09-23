@@ -1,4 +1,4 @@
-import {SetUtils} from '../../../SetUtils';
+import {arrayToSet} from '../../../ArrayUtils';
 import {stringToIndices} from '../../../String';
 import {coreObjectInstanceFactory} from '../../CoreObjectFactory';
 import {EntityGroupType} from '../../EntityGroupCollection';
@@ -15,7 +15,7 @@ type TraverseEntitiesFunction<E extends YieldedEntity> = (
 ) => void;
 
 const _indicesSet: Set<number> = new Set();
-const _indices:number[] =[]
+const _indices: number[] = [];
 
 interface TraverseOptions<E extends YieldedEntity> {
 	groupName: string;
@@ -27,7 +27,6 @@ interface TraverseOptions<E extends YieldedEntity> {
 	onEntityNotInGroupTraversed?: EntityCallback<E>;
 }
 
-
 export class CadEntityGroupCollection {
 	static traverseEntitiesInGroup<E extends YieldedEntity>(options: TraverseOptions<E>) {
 		const {groupName, groupType, object, shape, traverseFunction, onEntityTraversed, onEntityNotInGroupTraversed} =
@@ -37,10 +36,10 @@ export class CadEntityGroupCollection {
 			// no group
 			traverseFunction(oc, shape, onEntityTraversed);
 		} else {
-			stringToIndices(groupName,_indices);
+			stringToIndices(groupName, _indices);
 			if (_indices.length != 0) {
 				// group by indices
-				SetUtils.fromArray(_indices, _indicesSet);
+				arrayToSet(_indices, _indicesSet);
 				traverseFunction(oc, shape, (entity, i) => {
 					if (_indicesSet.has(i)) {
 						onEntityTraversed(entity, i);

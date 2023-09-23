@@ -212,9 +212,9 @@ function _updateBufferFromFace(oc: OpenCascadeInstance, face: TopoDS_Face, buffe
 	const data = faceData(oc, face, positions.length / 3);
 
 	if (data) {
-		arrayPushItems(positions, data.positions);
-		arrayPushItems(normals, data.normals);
-		arrayPushItems(indices, data.indices);
+		arrayPushItems(data.positions, positions);
+		arrayPushItems(data.normals, normals);
+		arrayPushItems(data.indices, indices);
 	}
 }
 function _createMeshFromBuffers(buffers: MeshBuffers, tesselationParams: CADTesselationParams) {

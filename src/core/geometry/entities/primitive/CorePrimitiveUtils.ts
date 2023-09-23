@@ -15,7 +15,7 @@ export function primitives<T extends CoreObjectType>(coreGroup: CoreGroup, targe
 
 	for (const object of allObjects) {
 		primitivesFromObject(object, _tmpPrimitives);
-		arrayPushItems(target, _tmpPrimitives);
+		arrayPushItems(_tmpPrimitives, target);
 	}
 	return target;
 	// return coreGroup

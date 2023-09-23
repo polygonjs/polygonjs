@@ -243,7 +243,7 @@ export function stringToIndices(indicesString: string, target: number[]): number
 		_indices.length = 0;
 		for (const element of elements) {
 			stringToIndices(element, _subIndices);
-			arrayPushItems(_indices, _subIndices);
+			arrayPushItems(_subIndices, _indices);
 		}
 		// const indices: number[] = elements.flatMap(stringToIndices);
 		// const uniqIndices: number[] = [];

@@ -1,8 +1,10 @@
 import {BaseNodeType} from '../engine/nodes/_Base';
 import {NodeEvent} from '../engine/poly/NodeEvent';
 import {CoreGraphNodeId} from './graph/CoreGraph';
-import {arrayIsEqual, arrayUnion, arrayDifference} from './ArrayUtils';
+import {arrayIsEqual, arrayUnion, arrayDifference, arrayMap, arrayCopy} from './ArrayUtils';
 
+const _nodes: BaseNodeType[] = [];
+const _nodeIds: number[] = [];
 export class CoreNodeSelection {
 	private _nodeIds: CoreGraphNodeId[] = [];
 	constructor(private _node: BaseNodeType) {}
@@ -14,8 +16,11 @@ export class CoreNodeSelection {
 		return this._nodeIds;
 	}
 
-	nodes(): BaseNodeType[] {
-		const target: BaseNodeType[] = [];
+	nodeFromIndex(index: number): BaseNodeType | undefined {
+		this._node.scene().graph.nodesFromIds(this._nodeIds, _nodes);
+		return _nodes[index];
+	}
+	nodes(target: BaseNodeType[]): BaseNodeType[] {
 		this._node.scene().graph.nodesFromIds(this._nodeIds, target);
 		return target;
 	}
@@ -24,40 +29,41 @@ export class CoreNodeSelection {
 		return this._nodeIds.includes(node.graphNodeId());
 	}
 	equals(nodes: BaseNodeType[]): boolean {
-		const node_ids = nodes.map((node) => node.graphNodeId()).sort();
-		return arrayIsEqual(node_ids, this._nodeIds);
+		arrayMap(nodes, (node) => node.graphNodeId(), _nodeIds);
+		_nodeIds.sort();
+		return arrayIsEqual(_nodeIds, this._nodeIds);
 	}
 
 	clear() {
-		this._nodeIds = [];
+		this._nodeIds.length = 0;
 		this._sendUpdateEvent();
 	}
 	set(nodes: BaseNodeType[]) {
-		this._nodeIds = [];
+		this._nodeIds.length = 0;
 		this.add(nodes);
 	}
 
 	add(nodesToAdd: BaseNodeType[]) {
-		const nodeIdsToAdd = nodesToAdd.map((node) => node.graphNodeId());
-		arrayUnion(this._nodeIds, nodeIdsToAdd, this._nodeIds);
+		arrayMap(nodesToAdd, (node) => node.graphNodeId(), _nodeIds);
+		arrayUnion(this._nodeIds, _nodeIds, this._nodeIds);
 
 		this._sendUpdateEvent();
 	}
 
 	remove(nodesToRemove: BaseNodeType[]) {
-		const nodeIdsToRemove = nodesToRemove.map((node) => node.graphNodeId());
-		arrayDifference(this._nodeIds, nodeIdsToRemove, this._nodeIds);
+		arrayMap(nodesToRemove, (node) => node.graphNodeId(), _nodeIds);
+		arrayDifference(this._nodeIds, _nodeIds, this._nodeIds);
 
 		this._sendUpdateEvent();
 	}
 
 	private _checkValidity() {
-		const nodes = this.nodes();
-		if (nodes.length != this._nodeIds.length) {
+		this.nodes(_nodes);
+		if (_nodes.length != this._nodeIds.length) {
 			console.error('selection invalid: at least one node is not part of the graph');
 			return;
 		}
-		for (const node of nodes) {
+		for (const node of _nodes) {
 			if (node.parent() != this._node) {
 				console.error('selection invalid: at least one node is not has another parent');
 			}
@@ -69,10 +75,7 @@ export class CoreNodeSelection {
 		this._node.emit(NodeEvent.SELECTION_UPDATED);
 	}
 
-	private _json: CoreGraphNodeId[] = [];
-	toJSON() {
-		this._json = this._json || [];
-		this._json = this._nodeIds.map((id) => id);
-		return this._json;
+	toJSON(target: CoreGraphNodeId[]): void {
+		arrayCopy(this._nodeIds, target);
 	}
 }

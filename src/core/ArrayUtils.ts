@@ -1,9 +1,12 @@
 import {MapUtils} from './MapUtils';
-import {SetUtils} from './SetUtils';
+import {setUnion, setToArray, setIntersection, setDifference} from './SetUtils';
 import {CoreType} from './Type';
 import {randFloat} from './math/_Module';
 
 export type ArrayToItemFunction<T> = (array: Array<T>) => T;
+const _tmp: Set<any> = new Set();
+const _tmp0: Set<any> = new Set();
+const _tmp1: Set<any> = new Set();
 
 export function range(start: number, end: number, step: number, target: number[]): number[] {
 	if (end == null) {
@@ -61,10 +64,10 @@ export function sample<T>(array: Array<T>, seed: number): T | undefined {
 export function spliceSample<T>(array: Array<T>, seed: number): T | undefined {
 	return array.splice(sampleIndex(array, seed), 1)[0];
 }
-const tmpSet: Set<any> = new Set();
-export function uniqWithoutPreservingOrder<T>(array: Array<T>): Array<T> {
-	SetUtils.fromArray(array, tmpSet);
-	return SetUtils.toArray(tmpSet, []);
+
+export function uniqWithoutPreservingOrder<T>(array: Array<T>, target: Array<T>): Array<T> {
+	arrayToSet(array, _tmp);
+	return setToArray(_tmp, target);
 
 	// for (let elem of array) {
 	// 	tmpSet.add(elem);
@@ -130,10 +133,13 @@ export function arrayChunk<T extends number | string>(array: Array<T>, chunkSize
 
 	return newArray;
 }
+
 export function arrayUnion<T extends number | string>(array0: Array<T>, array1: Array<T>, target: Array<T>): Array<T> {
+	setUnion(arrayToSet(array0, _tmp0), arrayToSet(array1, _tmp1), _tmp);
 	target.length = 0;
-	const unionSet = SetUtils.union(arrayToSet(array0), arrayToSet(array1));
-	unionSet.forEach((val) => target.push(val));
+	for (const item of _tmp) {
+		target.push(item);
+	}
 
 	return target;
 }
@@ -142,9 +148,11 @@ export function arrayIntersection<T extends number | string>(
 	array1: Array<T>,
 	target: Array<T>
 ): Array<T> {
+	setIntersection(arrayToSet(array0, _tmp0), arrayToSet(array1, _tmp1), _tmp);
 	target.length = 0;
-	const intersectionSet = SetUtils.intersection(arrayToSet(array0), arrayToSet(array1));
-	intersectionSet.forEach((val) => target.push(val));
+	for (const item of _tmp) {
+		target.push(item);
+	}
 
 	return target;
 }
@@ -153,18 +161,20 @@ export function arrayDifference<T extends number | string>(
 	array1: Array<T>,
 	target: Array<T>
 ): Array<T> {
+	setDifference(arrayToSet(array0, _tmp0), arrayToSet(array1, _tmp1), _tmp);
 	target.length = 0;
-	const differenceSet = SetUtils.difference(arrayToSet(array0), arrayToSet(array1));
-	differenceSet.forEach((val) => target.push(val));
+	for (const item of _tmp) {
+		target.push(item);
+	}
 
 	return target;
 }
-export function arrayToSet<T extends number | string>(array: Array<T>): Set<T> {
-	const set: Set<T> = new Set();
+export function arrayToSet<T>(array: Array<T>, target: Set<T>): Set<T> {
+	target.clear();
 	for (const elem of array) {
-		set.add(elem);
+		target.add(elem);
 	}
-	return set;
+	return target;
 }
 export function arrayIsEqual<T extends number | string>(array0: Array<T>, array1: Array<T>): boolean {
 	if (array0.length != array1.length) {
@@ -220,6 +230,13 @@ export function arrayShallowClone<T>(array: Array<T>): Array<T> {
 	// https://stackoverflow.com/questions/3978492/fastest-way-to-duplicate-an-array-in-javascript-slice-vs-for-loop
 	return [...array];
 }
+export function arrayMap<T, U>(array: Array<T>, callback: (e: T) => U, target: Array<U>): Array<U> {
+	target.length = 0;
+	for (const item of array) {
+		target.push(callback(item));
+	}
+	return target;
+}
 
 export class ArrayUtils {
 	static shallowClone = arrayShallowClone;
@@ -240,23 +257,23 @@ export class ArrayUtils {
 }
 
 const MAX_ITEMS_LENGTH = 1024;
-export function arrayPushItems<T>(array: Array<T>, items: Readonly<Array<T>>) {
+export function arrayPushItems<T>(srcArray: Readonly<Array<T>>, target: Array<T>) {
 	// we avoid the standard
 	// array.push(...items),
 	// as this can trigger an
 	// 'Maximum call stack size exceeded' error
 	// on some large items array.
 	// So instead, we push them elements one by one if items.length is above a threshold
-	if (items.length <= MAX_ITEMS_LENGTH) {
-		array.push(...items);
+	if (srcArray.length <= MAX_ITEMS_LENGTH) {
+		target.push(...srcArray);
 	} else {
-		for (const item of items) {
-			array.push(item);
+		for (const item of srcArray) {
+			target.push(item);
 		}
 	}
 }
 
 export function arrayCopy<T>(srcArray: Readonly<Array<T>>, targetArray: Array<T>): void {
 	targetArray.length = 0;
-	arrayPushItems(targetArray, srcArray);
+	arrayPushItems(srcArray, targetArray);
 }

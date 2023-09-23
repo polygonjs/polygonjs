@@ -39,10 +39,12 @@ export abstract class CoreGeometryBuilderBase {
 
 			if (is_attrib_indexed) {
 				const new_values: string[] = [];
-				arrayCompact(
-					uniqWithoutPreservingOrder(points.map((point) => point.indexedAttribValue(attribute_name))),
-					new_values
+				const uniqValues: string[] = [];
+				uniqWithoutPreservingOrder(
+					points.map((point) => point.indexedAttribValue(attribute_name)),
+					uniqValues
 				);
+				arrayCompact(uniqValues, new_values);
 				const new_index_by_value: PolyDictionary<number> = {};
 				new_values.forEach((new_value, i) => (new_index_by_value[new_value] = i));
 

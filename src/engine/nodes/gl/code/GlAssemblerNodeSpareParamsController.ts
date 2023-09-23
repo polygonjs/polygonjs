@@ -4,10 +4,12 @@ import {ParamOptions} from '../../../params/utils/OptionsController';
 import {ParamType} from '../../../poly/ParamType';
 import {GlAssemblerControllerType, AssemblerGlControllerNode} from './Controller';
 import {ParamInitValueSerialized} from '../../../params/types/ParamInitValueSerialized';
-import {SetUtils} from '../../../../core/SetUtils';
+import {setToArray, setIntersection, setUnion} from '../../../../core/SetUtils';
 import {MapUtils} from '../../../../core/MapUtils';
 import {GlParamConfig} from './utils/GLParamConfig';
+import {arrayToSet} from '../../../../core/ArrayUtils';
 
+const _tmpStrings: string[] = [];
 const DEBUG = false;
 function _paramMatchesParamConfig<T extends ParamType>(param: TypedParam<T>, paramConfig: GlParamConfig<T>) {
 	if (param.type() != paramConfig.type()) {
@@ -69,7 +71,8 @@ export class GlAssemblerNodeSpareParamsController {
 		const paramConfigs = this.assembler.param_configs();
 		const paramConfigsByName = MapUtils.groupBy<GlParamConfig<ParamType>, string>(paramConfigs, (c) => c.name());
 		const assembler_param_names = paramConfigs.map((c) => c.name());
-		const spare_param_names_to_add = SetUtils.fromArray(assembler_param_names);
+		const spare_param_names_to_add: Set<string> = new Set();
+		arrayToSet(assembler_param_names, spare_param_names_to_add);
 		const validation_result = this._validateNames(spare_param_names_to_add);
 		if (validation_result == false) {
 			return;
@@ -78,10 +81,13 @@ export class GlAssemblerNodeSpareParamsController {
 		// spare_param_names_to_remove is composed of previously created params, but also spare params with the same name, which may be created when loading the scene
 		// console.log('- 1', this._createSpareParams(), spare_param_names_to_add);
 		const currentSpareParams = this._node.params.spare;
-		const spare_param_names_to_remove = SetUtils.union(
-			SetUtils.fromArray(currentSpareParams.map((p) => p.name())),
-			spare_param_names_to_add
+		const spare_param_names_to_remove: Set<string> = new Set();
+		const currentSpareParamNames: Set<string> = new Set();
+		arrayToSet(
+			currentSpareParams.map((p) => p.name()),
+			currentSpareParamNames
 		);
+		setUnion(currentSpareParamNames, spare_param_names_to_add, spare_param_names_to_remove);
 		// but if the param type has not changed, we do not need to remove it, nor add it
 		// this._createdSpareParamNames.forEach((paramName) => {
 		// 	const currentParamType = this._node.params.get(paramName)?.type();
@@ -175,12 +181,14 @@ export class GlAssemblerNodeSpareParamsController {
 
 	private _validateNames(spare_param_names_to_add: Set<string>): boolean {
 		// check that param_names_to_add does not include any currently existing param names (that are not spare)
-		const currentParamNames = SetUtils.fromArray(this._node.params.non_spare_names);
-		const spareParamsWithSameNameAsParams = SetUtils.intersection(spare_param_names_to_add, currentParamNames);
+		const currentParamNames: Set<string> = new Set();
+		arrayToSet(this._node.params.non_spare_names, currentParamNames);
+		const spareParamsWithSameNameAsParams: Set<string> = new Set();
+		setIntersection(spare_param_names_to_add, currentParamNames, spareParamsWithSameNameAsParams);
 		if (spareParamsWithSameNameAsParams.size > 0) {
-			const error_message = `${this._node.path()} attempts to create spare params called '${SetUtils.toArray(
+			const error_message = `${this._node.path()} attempts to create spare params called '${setToArray(
 				spareParamsWithSameNameAsParams,
-				[]
+				_tmpStrings
 			).join(', ')}' with same name as params`;
 			this._node.states.error.set(error_message);
 			return false;

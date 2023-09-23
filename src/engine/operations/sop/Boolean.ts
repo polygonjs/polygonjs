@@ -81,7 +81,7 @@ export class BooleanSopOperation extends BaseSopOperation {
 		}
 		if (params.additionalAttributes.trim() != '') {
 			stringToAttribNames(params.additionalAttributes, _attribNames);
-			arrayPushItems(attributes, _attribNames);
+			arrayPushItems(_attribNames, attributes);
 		}
 		csgEvaluator.attributes = attributes;
 		csgEvaluator.useGroups = params.keepMaterials || params.useInputGroups;

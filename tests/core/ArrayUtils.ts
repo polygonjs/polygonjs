@@ -28,12 +28,26 @@ export function testcoreArrayUtils(qUnit: QUnit) {
 		assert.deepEqual(ArrayUtils.uniq(['a', 'b', 'c', 'd', 'e', 'f', 'c'], _string), ['a', 'b', 'c', 'd', 'e', 'f']);
 	});
 	qUnit.test('ArrayUtils.uniqWithoutPreservingOrder', (assert) => {
-		assert.deepEqual(ArrayUtils.uniqWithoutPreservingOrder([7, 3, 7]), [7, 3]);
-		assert.deepEqual(ArrayUtils.uniqWithoutPreservingOrder(['7', '3', '7']), ['7', '3']);
-		assert.deepEqual(ArrayUtils.uniqWithoutPreservingOrder(['restP', 'pti', 'restN']), ['restP', 'pti', 'restN']);
-		assert.deepEqual(ArrayUtils.uniqWithoutPreservingOrder(['restP', 'restN', 'pti']), ['restP', 'restN', 'pti']);
-		assert.deepEqual(ArrayUtils.uniqWithoutPreservingOrder(['a', 'b', 'c', 'd', 'e']), ['a', 'b', 'c', 'd', 'e']);
-		assert.deepEqual(ArrayUtils.uniqWithoutPreservingOrder(['a', 'b', 'c', 'd', 'e', 'f', 'c']), [
+		assert.deepEqual(ArrayUtils.uniqWithoutPreservingOrder([7, 3, 7], _numbers), [7, 3]);
+		assert.deepEqual(ArrayUtils.uniqWithoutPreservingOrder(['7', '3', '7'], _string), ['7', '3']);
+		assert.deepEqual(ArrayUtils.uniqWithoutPreservingOrder(['restP', 'pti', 'restN'], _string), [
+			'restP',
+			'pti',
+			'restN',
+		]);
+		assert.deepEqual(ArrayUtils.uniqWithoutPreservingOrder(['restP', 'restN', 'pti'], _string), [
+			'restP',
+			'restN',
+			'pti',
+		]);
+		assert.deepEqual(ArrayUtils.uniqWithoutPreservingOrder(['a', 'b', 'c', 'd', 'e'], _string), [
+			'a',
+			'b',
+			'c',
+			'd',
+			'e',
+		]);
+		assert.deepEqual(ArrayUtils.uniqWithoutPreservingOrder(['a', 'b', 'c', 'd', 'e', 'f', 'c'], _string), [
 			'a',
 			'b',
 			'c',

@@ -1,6 +1,6 @@
 import {PersistedConfigWithShaders} from './../../../nodes/utils/BasePersistedConfig';
 import {Number2, PolyDictionary} from '../../../../types/GlobalTypes';
-import {TypedNode} from '../../../nodes/_Base';
+import {BaseNodeType, TypedNode} from '../../../nodes/_Base';
 import {NodeContext} from '../../../poly/NodeContext';
 import type {JsonExportDispatcher} from './Dispatcher';
 import {ParamJsonExporterData} from '../../../nodes/utils/io/IOController';
@@ -202,10 +202,12 @@ export class NodeJsonExporter<T extends BaseNodeTypeWithIO> {
 					// only save the nodes that are still present, in case the selection just got deleted
 					const selected_children: BaseNodeTypeWithIO[] = [];
 					const selected_ids: PolyDictionary<boolean> = {};
-					for (let selected_node of selection.nodes()) {
+					const selectedNodes: BaseNodeType[] = [];
+					selection.nodes(selectedNodes);
+					for (const selected_node of selectedNodes) {
 						selected_ids[selected_node.graphNodeId()] = true;
 					}
-					for (let child of this._node.children()) {
+					for (const child of this._node.children()) {
 						if (child.graphNodeId() in selected_ids) {
 							selected_children.push(child);
 						}

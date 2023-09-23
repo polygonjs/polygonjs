@@ -15,7 +15,7 @@ export function vertices<T extends CoreObjectType>(coreGroup: CoreGroup, target:
 
 	for (const object of allObjects) {
 		verticesFromObject(object, _tmpVertices);
-		arrayPushItems(target, _tmpVertices);
+		arrayPushItems(_tmpVertices, target);
 	}
 	return target;
 	// return coreGroup

@@ -14,56 +14,45 @@ export function setToArray<T>(set: Set<T>, target: T[]): T[] {
 	});
 	return target;
 }
-export function setFromArray<T>(array: T[], target?: Set<T>): Set<T> {
-	if (target) {
-		target.clear();
-	} else {
-		target = new Set<T>();
-	}
-	for (const element of array) {
-		target.add(element);
-	}
+
+export function setUnion<T extends string | number>(set0: Set<T>, set1: Set<T>, target: Set<T>): Set<T> {
+	target.clear();
+	set0.forEach((val) => target.add(val));
+	set1.forEach((val) => target.add(val));
 	return target;
 }
-export function setUnion<T extends string | number>(set0: Set<T>, set1: Set<T>): Set<T> {
-	const newSet: Set<T> = new Set();
-	set0.forEach((val) => newSet.add(val));
-	set1.forEach((val) => newSet.add(val));
-	return newSet;
-}
-export function setIntersection<T extends string | number>(set0: Set<T>, set1: Set<T>): Set<T> {
-	const newSet: Set<T> = new Set();
+export function setIntersection<T extends string | number>(set0: Set<T>, set1: Set<T>, target: Set<T>): Set<T> {
+	target.clear();
 	set0.forEach((val) => {
 		if (set1.has(val)) {
-			newSet.add(val);
+			target.add(val);
 		}
 	});
 	set1.forEach((val) => {
 		if (set0.has(val)) {
-			newSet.add(val);
+			target.add(val);
 		}
 	});
-	return newSet;
+	return target;
 }
-export function setDifference<T extends string | number>(set0: Set<T>, set1: Set<T>): Set<T> {
-	const newSet: Set<T> = new Set();
+export function setDifference<T extends string | number>(set0: Set<T>, set1: Set<T>, target: Set<T>): Set<T> {
+	target.clear();
 	set0.forEach((val) => {
 		if (!set1.has(val)) {
-			newSet.add(val);
+			target.add(val);
 		}
 	});
 	set1.forEach((val) => {
 		if (!set0.has(val)) {
-			newSet.add(val);
+			target.add(val);
 		}
 	});
-	return newSet;
+	return target;
 }
 
 export class SetUtils {
 	static setFirstValue = setFirstValue;
 	static toArray = setToArray;
-	static fromArray = setFromArray;
 	static union = setUnion;
 	static intersection = setIntersection;
 	static difference = setDifference;

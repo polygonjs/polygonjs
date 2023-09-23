@@ -138,7 +138,7 @@ export class TetDeleteSopNode extends TetSopNode<TetDeleteSopParamsConfig> {
 	}
 	private _findTetsById(selectedIds: number[]) {
 		stringToIndices(this.pv.ids, _indices);
-		arrayPushItems(selectedIds, _indices);
+		arrayPushItems(_indices, selectedIds);
 	}
 	private _findTetsByIndex(tetObject: TetObject, selectedIds: number[]) {
 		const index = this.pv.index;

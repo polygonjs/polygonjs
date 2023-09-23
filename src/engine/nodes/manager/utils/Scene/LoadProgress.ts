@@ -4,23 +4,23 @@ import {BaseNodeType} from '../../../_Base';
 import {ParamConfig} from '../../../utils/params/ParamsConfig';
 import {RootManagerNode} from '../../Root';
 import {PolyScene} from '../../../../scene/PolyScene';
-import {setFromArray, setToArray} from '../../../../../core/SetUtils';
+import {setToArray} from '../../../../../core/SetUtils';
 import {Poly} from '../../../../Poly';
-import {arrayUniq, arrayCompact} from '../../../../../core/ArrayUtils';
+import {arrayUniq, arrayCompact, arrayToSet} from '../../../../../core/ArrayUtils';
 import {BaseObjNodeType} from '../../../obj/_Base';
 import {GeoObjNode} from '../../../obj/Geo';
 
 class NodeGroup {
 	public readonly totalCount: number;
 	private _processed: Set<BaseNodeType>;
-	private _remaining: Set<BaseNodeType>;
+	private _remaining: Set<BaseNodeType> = new Set();
 	constructor(public readonly nodes: BaseNodeType[]) {
 		if (CoreFeaturesController.debugLoadProgress()) {
 			console.log(nodes);
 		}
 		this.totalCount = nodes.length;
 		this._processed = new Set();
-		this._remaining = setFromArray(nodes, new Set());
+		arrayToSet(nodes, this._remaining);
 	}
 	markNodeAsProcessed(node: BaseNodeType) {
 		this._processed.add(node);
