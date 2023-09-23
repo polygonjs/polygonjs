@@ -285,6 +285,7 @@ export class NodeInputsController<NC extends NodeContext> {
 	async evalRequiredInputs(
 		target: Array<ContainerMap[NC] | null | undefined>
 	): Promise<Array<ContainerMap[NC] | null | undefined>> {
+		target.length = 0;
 		// let containers: Array<ContainerMap[NC] | null | undefined> = [];
 		if (this.node.disposed() == true) {
 			return target;
@@ -295,45 +296,49 @@ export class NodeInputsController<NC extends NodeContext> {
 				this.node.states.error.set('inputs are missing');
 			} else {
 				if (_existingInputIndices.length > 0) {
-					const promises: Promise<ContainerMap[NC] | null>[] = [];
-					let input: BaseNodeByContextMap[NC] | null;
-
 					if (this._onEnsureListenToSingleInputIndexUpdatedCallback) {
 						await this._onEnsureListenToSingleInputIndexUpdatedCallback();
 					}
 
-					if (this._singleInputIndexListenedTo != null) {
-						promises.push(
-							this.evalRequiredInput(this._singleInputIndexListenedTo) as Promise<ContainerMap[NC]>
-						);
+					if (this._maxInputsCount == 1) {
+						const container = await this.evalRequiredInput(0);
+						target.push(container as ContainerMap[NC]);
 					} else {
-						const lastExistingInputIndex = _existingInputIndices[_existingInputIndices.length - 1];
-						for (let i = 0; i < this._inputs.length; i++) {
-							input = this._inputs[i];
-							if (input) {
-								// I tried here to only use a promise for dirty inputs,
-								// but that messes up with the order
-								// if (input.isDirty()) {
-								// 	containers.push(input.containerController.container as ContainerMap[NC]);
-								// } else {
-								promises.push(this.evalRequiredInput(i) as Promise<ContainerMap[NC]>);
-								// }
-							} else {
-								// we need to add an empty container,
-								// for non connected inputs.
-								// otherwise, if input 0 is not connected,
-								// and input 1 is, then we get only 1 container
-								// which appears to be from input 0
-								if (i <= lastExistingInputIndex) {
-									promises.push(undefined as any);
+						const promises: Promise<ContainerMap[NC] | null>[] = [];
+						if (this._singleInputIndexListenedTo != null) {
+							promises.push(
+								this.evalRequiredInput(this._singleInputIndexListenedTo) as Promise<ContainerMap[NC]>
+							);
+						} else {
+							const lastExistingInputIndex = _existingInputIndices[_existingInputIndices.length - 1];
+							// let input: BaseNodeByContextMap[NC] | null;
+							for (let i = 0; i < this._inputs.length; i++) {
+								const input = this._inputs[i];
+								if (input) {
+									// I tried here to only use a promise for dirty inputs,
+									// but that messes up with the order
+									// if (input.isDirty()) {
+									// 	containers.push(input.containerController.container as ContainerMap[NC]);
+									// } else {
+									promises.push(this.evalRequiredInput(i) as Promise<ContainerMap[NC]>);
+									// }
+								} else {
+									// we need to add an empty container,
+									// for non connected inputs.
+									// otherwise, if input 0 is not connected,
+									// and input 1 is, then we get only 1 container
+									// which appears to be from input 0
+									if (i <= lastExistingInputIndex) {
+										promises.push(undefined as any);
+									}
 								}
 							}
 						}
-					}
 
-					const results = await Promise.all(promises);
-					for (const result of results) {
-						target.push(result);
+						const results = await Promise.all(promises);
+						for (const result of results) {
+							target.push(result);
+						}
 					}
 
 					if (!this._isAnyInputDirty()) {
