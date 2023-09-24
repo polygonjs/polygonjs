@@ -46,6 +46,7 @@ export class ExpressionController<T extends ParamType> {
 	dispose() {
 		this.param.scene().expressionsController.deregisterParam(this.param);
 		this._resetMethodDependencies();
+		this._manager = undefined;
 	}
 	private _resetMethodDependencies() {
 		this._methodDependenciesByGraphNodeId?.forEach((methodDependency) => {
@@ -84,7 +85,12 @@ export class ExpressionController<T extends ParamType> {
 	// 	this._manager?.clear_error();
 	// }
 
-	setExpression(expression: string | undefined, set_dirty: boolean = true) {
+	setExpression(expression: string | undefined, setDirty: boolean = true) {
+		if (this.param.disposed()) {
+			this._resetMethodDependencies();
+			this._expression = undefined;
+			return;
+		}
 		this.param.scene().missingExpressionReferencesController.deregisterParam(this.param);
 		this.param.scene().expressionsController.deregisterParam(this.param);
 
@@ -99,7 +105,7 @@ export class ExpressionController<T extends ParamType> {
 				this._manager?.reset();
 			}
 
-			if (set_dirty) {
+			if (setDirty) {
 				this.param.setDirty();
 			}
 		}

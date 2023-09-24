@@ -5,7 +5,7 @@ import {SceneCookController} from './utils/CookController';
 import {CoreGraph} from '../../core/graph/CoreGraph';
 import {CorePerformance} from '../../core/performance/CorePerformance';
 import {DispatchController} from './utils/DispatchController';
-import {ExpressionsController} from './utils/ExpressionsController';
+import {SceneExpressionsController} from './utils/SceneExpressionsController';
 import {SceneLifeCycleController} from './utils/LifeCycleController';
 import {LoadingController} from './utils/LoadingController';
 import {MissingReferencesController} from './utils/missingReferences/MissingReferencesController';
@@ -158,33 +158,13 @@ export class PolyScene {
 		return this._graph;
 	}
 
-	private _lifecycleController: SceneLifeCycleController | undefined;
-	get lifecycleController() {
-		return (this._lifecycleController = this._lifecycleController || new SceneLifeCycleController(this));
-	}
-	private _loadingController: LoadingController | undefined;
-	get loadingController() {
-		return (this._loadingController = this._loadingController || new LoadingController(this));
-	}
-
-	private _missingExpressionReferencesController: MissingReferencesController = new MissingReferencesController(this);
-	get missingExpressionReferencesController() {
-		return this._missingExpressionReferencesController;
-	}
-	private _expressions_controller: ExpressionsController = new ExpressionsController();
-	get expressionsController() {
-		return this._expressions_controller;
-	}
-
-	protected _nodesController = new NodesController(this);
-	get nodesController() {
-		return this._nodesController;
-	}
-	protected _graphNodesController = new GraphNodesController(this);
-	get graphNodesController() {
-		return this._graphNodesController;
-	}
-
+	public readonly lifecycleController: SceneLifeCycleController = new SceneLifeCycleController(this);
+	public readonly loadingController: LoadingController = new LoadingController(this);
+	public readonly missingExpressionReferencesController: MissingReferencesController =
+		new MissingReferencesController(this);
+	public readonly expressionsController: SceneExpressionsController = new SceneExpressionsController();
+	public readonly nodesController = new NodesController(this);
+	public readonly graphNodesController = new GraphNodesController(this);
 	public readonly renderersRegister = new SceneRenderersRegister(this);
 	/**
 	 * Creates a new node.
@@ -432,7 +412,7 @@ export class PolyScene {
 	 *
 	 */
 	traverseNodes(callback: (node: BaseNodeType) => void) {
-		this._nodesController.traverseNodes(callback);
+		this.nodesController.traverseNodes(callback);
 	}
 
 	//

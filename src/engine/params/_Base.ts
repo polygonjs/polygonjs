@@ -75,6 +75,10 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 		this._initializeParam();
 	}
 	override dispose() {
+		if (this.expressionController && this.hasExpression()) {
+			this.set(this.rawInputSerialized());
+		}
+
 		// if any direct predecessor is a MethodDependency,
 		// it must be disposed here
 		const predecessors = this.graphPredecessors();

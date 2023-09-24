@@ -60,8 +60,9 @@ export class DependenciesController {
 		this._listenForNameChanges();
 	}
 
-	private _connectImmutableDependencies(function_generator: FunctionGenerator) {
-		function_generator.immutableDependencies.forEach((dependency) => {
+	private _connectImmutableDependencies(functionGenerator: FunctionGenerator) {
+		const dependendies = functionGenerator.immutableDependencies;
+		for (const dependency of dependendies) {
 			if (this._cyclicGraphDetected == false) {
 				if (this.param.addGraphInput(dependency) == false) {
 					this._cyclicGraphDetected = true;
@@ -70,7 +71,7 @@ export class DependenciesController {
 					return;
 				}
 			}
-		});
+		}
 	}
 	private _handleMethodDependencies() {
 		this.methodDependencies.forEach((methodDependency) => {
