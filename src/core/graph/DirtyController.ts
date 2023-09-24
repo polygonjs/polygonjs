@@ -31,6 +31,9 @@ export class DirtyController {
 	dirtyCount(): number {
 		return this._dirtyCount;
 	}
+	hasPostDirtyHooks(): boolean {
+		return this._postDirtyHookNames != null && this._postDirtyHookNames.length > 0;
+	}
 	addPostDirtyHook(name: string, method: PostDirtyHook) {
 		this._postDirtyHookNames = this._postDirtyHookNames || [];
 		this._postDirtyHooks = this._postDirtyHooks || [];

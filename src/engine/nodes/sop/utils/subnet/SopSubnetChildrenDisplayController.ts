@@ -101,7 +101,8 @@ export class SubnetSopNodeLike<T extends NodeParamsConfig> extends TypedSopNode<
 			}
 		}
 
-		this.outputNode()?.setDirty();
+		this.setDirty();
+		// this.outputNode()?.setDirty();
 	}
 }
 
@@ -133,6 +134,9 @@ export class SopSubnetChildrenDisplayController {
 				this.node.setDirty();
 			},
 			onDisplayNodeUpdate: () => {
+				if (this.node.isDirty()) {
+					return;
+				}
 				this.node.setDirty();
 			},
 		};
@@ -187,7 +191,7 @@ export class SopSubnetChildrenDisplayController {
 	}
 
 	private _createGraphNode() {
-		const graphNode = new CoreGraphNode(this.node.scene(), 'subnetChildrenDisplayController');
+		const graphNode = new CoreGraphNode(this.node.scene(), `subnetChildrenDisplayController-${this.node.name()}`);
 		graphNode.addPostDirtyHook('subnetChildrenDisplayController', () => {
 			this.node.setDirty();
 		});

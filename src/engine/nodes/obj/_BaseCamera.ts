@@ -7,7 +7,7 @@ import {LayersController, LayerParamConfig} from './utils/LayersController';
 // import {PostProcessController} from './utils/cameras/PostProcessController';
 import {/*RenderController,*/ CameraRenderParamConfig} from './utils/cameras/RenderController';
 import {TransformedParamConfig, TransformController} from './utils/TransformController';
-import {ChildrenDisplayController} from './utils/ChildrenDisplayController';
+import {ObjChildrenDisplayController} from './utils/ObjChildrenDisplayController';
 import {DisplayNodeController} from '../utils/DisplayNodeController';
 import {NodeContext} from '../../poly/NodeContext';
 import {ThreejsViewer} from '../../viewers/Threejs';
@@ -204,7 +204,9 @@ export class TypedThreejsCameraObjNode<
 	// }
 
 	// display_node and children_display controllers
-	public override readonly childrenDisplayController: ChildrenDisplayController = new ChildrenDisplayController(this);
+	public override readonly childrenDisplayController: ObjChildrenDisplayController = new ObjChildrenDisplayController(
+		this
+	);
 	public override readonly displayNodeController: DisplayNodeController = new DisplayNodeController(
 		this,
 		this.childrenDisplayController.displayNodeControllerCallbacks()

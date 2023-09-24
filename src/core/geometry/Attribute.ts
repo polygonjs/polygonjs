@@ -18,6 +18,7 @@ export enum Attribute {
 	VERTEX_INDEX = 'vtxnum',
 	PRIMITIVE_INDEX = 'primnum',
 	OBJECT_INDEX = 'objnum',
+	OBJECT_NAME = 'objname',
 	COLOR = 'color',
 	NORMAL = 'normal',
 	POSITION = 'position',

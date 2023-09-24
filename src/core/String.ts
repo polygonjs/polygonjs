@@ -198,8 +198,7 @@ export function stringMatchMask(word: string, mask: string) {
 
 	if (elements.length > 1) {
 		for (const element of elements) {
-			const match = stringMatchMask(word, element);
-			if (match) {
+			if (stringMatchMask(word, element)) {
 				return true;
 			}
 		}

@@ -16,7 +16,7 @@ interface BaseObjNodeClassWithDisplayNode extends BaseObjNodeClass {
 	// pv: TesselationParams;
 }
 
-export class ChildrenDisplayController {
+export class ObjChildrenDisplayController {
 	protected _childrenUuids: Set<string> = new Set();
 	protected _sopGroup = this._createSopGroup();
 	protected _newSpecializedObjects: Object3D[] = [];
@@ -58,6 +58,9 @@ export class ChildrenDisplayController {
 				}, 0);
 			},
 			onDisplayNodeUpdate: () => {
+				if (!this.node.scene().loadingController.loaded()) {
+					return;
+				}
 				this.requestDisplayNodeContainer();
 			},
 		};

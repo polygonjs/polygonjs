@@ -358,6 +358,9 @@ export abstract class BaseCoreObject<T extends CoreObjectType> extends CoreEntit
 		if (attribName === Attribute.OBJECT_INDEX) {
 			return index;
 		}
+		if (attribName === Attribute.OBJECT_NAME) {
+			return object.name;
+		}
 		if (object.userData) {
 			const val = this.attributesDictionaryEntry(object, attribName);
 			// const val = attribRef.value; //dict[attribName];

@@ -5,7 +5,7 @@
 import {BaseNodeType} from './../_Base';
 import {SolverIterationStamp} from './utils/SolverIterationStamp';
 import {NetworkNodeType} from './../../poly/NodeContext';
-import {SubnetSopNodeLike, SopSubnetChildrenDisplayController} from './utils/subnet/ChildrenDisplayController';
+import {SubnetSopNodeLike, SopSubnetChildrenDisplayController} from './utils/subnet/SopSubnetChildrenDisplayController';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CoreGroup} from '../../../core/geometry/Group';

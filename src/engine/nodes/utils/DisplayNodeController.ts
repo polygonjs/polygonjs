@@ -40,8 +40,8 @@ export class DisplayNodeController {
 		callbacks: DisplayNodeControllerCallbacks,
 		private options: DisplayNodeControllerOptions = DEFAULT_DISPLAY_NODE_CONTROLLER_OPTIONS
 	) {
-		this._graphNode = new CoreGraphNode(node.scene(), 'DisplayNodeController');
-		// (this._graphNode as any).node = node;
+		this._graphNode = new CoreGraphNode(node.scene(), `DisplayNodeController-${node.name()}`);
+
 		this._onDisplayNodeRemoveCallback = callbacks.onDisplayNodeRemove;
 		this._onDisplayNodeSetCallback = callbacks.onDisplayNodeSet;
 		this._onDisplayNodeUpdateCallback = callbacks.onDisplayNodeUpdate;
@@ -74,8 +74,8 @@ export class DisplayNodeController {
 			if (childNode.graphNodeId() == this._displayNode?.graphNodeId()) {
 				const children = this.node.children();
 				// Go through each child in reverse until one has a display flag.
-				// we can't just check the last child, as it may not have a display flag,
-				// like a network node.
+				// we should not simoly check the last child, as it may not have a display flag
+				// (like a network node).
 				for (let i = children.length - 1; i >= 0; i--) {
 					const child = children[i];
 					const displayFlag = child.flags?.display;
