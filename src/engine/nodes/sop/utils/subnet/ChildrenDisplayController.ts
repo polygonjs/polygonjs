@@ -4,13 +4,15 @@ import {CoreGraphNode} from '../../../../../core/graph/CoreGraphNode';
 import {TypedSopNode, BaseSopNodeType} from '../../_Base';
 import {NodeContext} from '../../../../poly/NodeContext';
 import {GeoNodeChildrenMap} from '../../../../poly/registers/nodes/Sop';
-
+import {GeoObjNode} from '../../../../nodes/obj/Geo';
 import {NodeParamsConfig} from '../../../utils/params/ParamsConfig';
 import {CoreGroup} from '../../../../../core/geometry/Group';
 import {Constructor, valueof} from '../../../../../types/GlobalTypes';
 import {NodeCreateOptions} from '../../../utils/hierarchy/ChildrenController';
+import {BaseNodeClassWithDisplayFlag} from '../../../_Base';
 
 export class SubnetSopNodeLike<T extends NodeParamsConfig> extends TypedSopNode<T> {
+	private _overrideOutputNode: boolean = false;
 	override initializeBaseNode() {
 		super.initializeBaseNode();
 		this.childrenDisplayController.initializeNode();
@@ -50,22 +52,56 @@ export class SubnetSopNodeLike<T extends NodeParamsConfig> extends TypedSopNode<
 	}
 
 	override async cook(inputCoreGroups: CoreGroup[]) {
-		const childOutputNode = this.childrenDisplayController.outputNode();
+		const childOutputNode = this.outputNode();
 		if (childOutputNode) {
-			const container = await childOutputNode.compute();
-			const coreContent = container.coreContent();
-			if (coreContent) {
-				this.setCoreGroup(coreContent);
+			await this._cookFromChildOutputNode(childOutputNode);
+		} else {
+			if (!this._overrideOutputNode) {
+				this.states.error.set('no output node found inside subnet');
+			}
+		}
+	}
+
+	private async _cookFromChildOutputNode(childOutputNode: SubnetOutputSopNode | BaseNodeClassWithDisplayFlag) {
+		const container = await childOutputNode.compute();
+		const coreContent = container.coreContent();
+		if (coreContent) {
+			this.setCoreGroup(coreContent);
+		} else {
+			if (childOutputNode.states.error.active()) {
+				this.states.error.set(childOutputNode.states.error.message());
 			} else {
-				if (childOutputNode.states.error.active()) {
-					this.states.error.set(childOutputNode.states.error.message());
+				this.setObjects([]);
+			}
+		}
+	}
+	outputNode(): SubnetOutputSopNode | BaseNodeClassWithDisplayFlag | undefined {
+		return this._overrideOutputNode
+			? this.displayNodeController.displayNode()
+			: this.childrenDisplayController.outputNode();
+	}
+	setOverrideOutputNode(overrideOutputNode: boolean) {
+		if (this._overrideOutputNode == overrideOutputNode) {
+			return;
+		}
+		this._overrideOutputNode = overrideOutputNode;
+		const parent = this.parent();
+		if (parent) {
+			if (parent instanceof SubnetSopNodeLike<any>) {
+				const parentSubnet = parent as SubnetSopNodeLike<any>;
+				parentSubnet.setOverrideOutputNode(overrideOutputNode);
+			}
+			if (parent instanceof GeoObjNode || parent instanceof SubnetSopNodeLike<any>) {
+				const parentGeoObjNode = parent as SubnetSopNodeLike<any> | GeoObjNode;
+				if (overrideOutputNode) {
+					parentGeoObjNode.displayNodeController.setDisplayNodeOverride(this);
 				} else {
-					this.setObjects([]);
+					parentGeoObjNode.displayNodeController.setDisplayNodeOverride(undefined);
 				}
 			}
-		} else {
-			this.states.error.set('no output node found inside subnet');
 		}
+
+		this.outputNode()?.setDirty();
 	}
 }
 

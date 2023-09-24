@@ -50,12 +50,14 @@ export class TypedPostNode<P extends Pass, K extends NodeParamsConfig> extends T
 	override initializeNode() {
 		this.flags.display.set(false);
 		this.flags.display.onUpdate(() => {
-			if (this.flags.display.active()) {
-				const parent = this.parent();
-				if (parent && parent.displayNodeController) {
-					parent.displayNodeController.setDisplayNode(this);
-				}
+			if (!this.flags.display.active()) {
+				return;
 			}
+			const parent = this.parent();
+			if (!(parent && parent.displayNodeController)) {
+				return;
+			}
+			parent.displayNodeController.setDisplayNode(this);
 		});
 
 		this.io.inputs.setCount(0, 1);
