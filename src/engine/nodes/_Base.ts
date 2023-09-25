@@ -393,7 +393,7 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 	 * returns the list of children
 	 *
 	 */
-	children() {
+	children(): Readonly<BaseNodeType[]> {
 		return this.childrenController?.children() || [];
 	}
 	/**

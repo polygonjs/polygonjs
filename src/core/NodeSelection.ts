@@ -38,19 +38,19 @@ export class CoreNodeSelection {
 		this._nodeIds.length = 0;
 		this._sendUpdateEvent();
 	}
-	set(nodes: BaseNodeType[]) {
+	set(nodes: Readonly<BaseNodeType[]>) {
 		this._nodeIds.length = 0;
 		this.add(nodes);
 	}
 
-	add(nodesToAdd: BaseNodeType[]) {
+	add(nodesToAdd: Readonly<BaseNodeType[]>) {
 		arrayMap(nodesToAdd, (node) => node.graphNodeId(), _nodeIds);
 		arrayUnion(this._nodeIds, _nodeIds, this._nodeIds);
 
 		this._sendUpdateEvent();
 	}
 
-	remove(nodesToRemove: BaseNodeType[]) {
+	remove(nodesToRemove: Readonly<BaseNodeType[]>) {
 		arrayMap(nodesToRemove, (node) => node.graphNodeId(), _nodeIds);
 		arrayDifference(this._nodeIds, _nodeIds, this._nodeIds);
 

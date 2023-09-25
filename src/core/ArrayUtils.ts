@@ -230,7 +230,7 @@ export function arrayShallowClone<T>(array: Array<T>): Array<T> {
 	// https://stackoverflow.com/questions/3978492/fastest-way-to-duplicate-an-array-in-javascript-slice-vs-for-loop
 	return [...array];
 }
-export function arrayMap<T, U>(array: Array<T>, callback: (e: T) => U, target: Array<U>): Array<U> {
+export function arrayMap<T, U>(array: Readonly<Array<T>>, callback: (e: T) => U, target: Array<U>): Array<U> {
 	target.length = 0;
 	for (const item of array) {
 		target.push(callback(item));

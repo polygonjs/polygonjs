@@ -376,7 +376,6 @@ export class HierarchyChildrenController {
 		return this._childrenAndGrandchildrenByContext.get(context) != null;
 	}
 
-	private _childrenCount: number = 0;
 	private _children: BaseNodeType[] = [];
 	private _childrenNames: string[] = [];
 	private _updateCache() {
@@ -386,27 +385,12 @@ export class HierarchyChildrenController {
 			this._children.push(node);
 			this._childrenNames.push(node.name());
 		});
-		this._childrenCount = this._childrenNames.length;
 	}
-	children(target: BaseNodeType[] = []): BaseNodeType[] {
-		target.length = 0;
-		// this._childrenByName.forEach((node) => {
-		// 	target.push(node);
-		// });
-		for (let i = 0; i < this._childrenCount; i++) {
-			target[i] = this._children[i];
-		}
-		return target;
+	children(): Readonly<BaseNodeType[]> {
+		return this._children;
 	}
-	childrenNames(target: string[] = []) {
-		target.length = 0;
-		// this._childrenByName.forEach((node, nodeName) => {
-		// 	target.push(nodeName);
-		// });
-		for (let i = 0; i < this._childrenCount; i++) {
-			target[i] = this._childrenNames[i];
-		}
-		return target;
+	childrenNames(): Readonly<string[]> {
+		return this._childrenNames;
 	}
 
 	traverseChildren(callback: TraverseNodeCallback, conditionCallback?: TraverseNodeConditionCallback) {
