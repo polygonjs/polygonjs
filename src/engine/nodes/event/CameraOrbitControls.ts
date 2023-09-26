@@ -6,7 +6,7 @@
  *
  */
 import {Number3} from '../../../types/GlobalTypes';
-import {Camera, Vector3} from 'three';
+import {Camera, Vector3, MOUSE, TOUCH} from 'three';
 import {TypedCameraControlsEventNode} from './_BaseCameraControls';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {EventConnectionPoint, EventConnectionPointType} from '../utils/io/connections/Event';
@@ -25,6 +25,41 @@ import {OrbitControls} from '../../../modules/core/controls/OrbitControls';
 const OUTPUT_START = 'start';
 const OUTPUT_CHANGE = 'change';
 const OUTPUT_END = 'end';
+const _targetArray: Number3 = [0, 0, 0];
+
+enum MouseControl {
+	ROTATE = 'rotate',
+	PAN = 'pan',
+	DOLLY = 'dolly',
+}
+const MOUSE_CONTROLS: MouseControl[] = [MouseControl.ROTATE, MouseControl.DOLLY, MouseControl.PAN];
+enum TouchControl {
+	ROTATE = 'rotate',
+	PAN = 'pan',
+	DOLLY_PAN = 'dolly + pan',
+	DOLLY_ROTATE = 'dolly + rotate',
+}
+const TOUCH_CONTROLS: TouchControl[] = [
+	TouchControl.ROTATE,
+	TouchControl.PAN,
+	TouchControl.DOLLY_PAN,
+	TouchControl.DOLLY_ROTATE,
+];
+
+type ThreeMouseControl = 0 | 1 | 2;
+type ThreeTouchControl = 0 | 1 | 2 | 3;
+
+const THREE_MOUSE_BY_MOUSE_CONTROL: Record<MouseControl, ThreeMouseControl> = {
+	[MouseControl.ROTATE]: MOUSE.ROTATE,
+	[MouseControl.DOLLY]: MOUSE.DOLLY,
+	[MouseControl.PAN]: MOUSE.PAN,
+};
+const THREE_TOUCH_BY_TOUCH_CONTROL: Record<TouchControl, ThreeTouchControl> = {
+	[TouchControl.ROTATE]: TOUCH.ROTATE,
+	[TouchControl.PAN]: TOUCH.PAN,
+	[TouchControl.DOLLY_PAN]: TOUCH.DOLLY_PAN,
+	[TouchControl.DOLLY_ROTATE]: TOUCH.DOLLY_ROTATE,
+};
 
 // enum KeysMode {
 // 	PAN = 'pan',
@@ -33,6 +68,7 @@ const OUTPUT_END = 'end';
 // const KEYS_MODES: KeysMode[] = [KeysMode.PAN, KeysMode.ROTATE];
 
 class CameraOrbitEventParamsConfig extends NodeParamsConfig {
+	main = ParamConfig.FOLDER();
 	/** @param enable/disable */
 	enabled = ParamConfig.BOOLEAN(1);
 	/** @param toggle on to allow pan */
@@ -51,6 +87,7 @@ class CameraOrbitEventParamsConfig extends NodeParamsConfig {
 	screenSpacePanning = ParamConfig.BOOLEAN(1);
 	/** @param rotation speed */
 	rotateSpeed = ParamConfig.FLOAT(0.5);
+	limits = ParamConfig.FOLDER();
 	/** @param smallest distance the camera can go to the target */
 	minDistance = ParamConfig.FLOAT(0.1, {
 		range: [0.1, 100],
@@ -69,6 +106,39 @@ class CameraOrbitEventParamsConfig extends NodeParamsConfig {
 	});
 	/** @param polar (left-right) angle range */
 	polarAngleRange = ParamConfig.VECTOR2([0, '$PI']);
+	controls = ParamConfig.FOLDER();
+	/** @param leftMouseButton */
+	leftMouseButton = ParamConfig.INTEGER(MOUSE_CONTROLS.indexOf(MouseControl.ROTATE), {
+		menu: {
+			entries: MOUSE_CONTROLS.map((name, value) => ({name, value})),
+		},
+	});
+	/** @param leftMouseButton */
+	middleMouseButton = ParamConfig.INTEGER(MOUSE_CONTROLS.indexOf(MouseControl.DOLLY), {
+		menu: {
+			entries: MOUSE_CONTROLS.map((name, value) => ({name, value})),
+		},
+	});
+	/** @param leftMouseButton */
+	rightMouseButton = ParamConfig.INTEGER(MOUSE_CONTROLS.indexOf(MouseControl.PAN), {
+		menu: {
+			entries: MOUSE_CONTROLS.map((name, value) => ({name, value})),
+		},
+	});
+	/** @param 1 finger touch */
+	oneFingerTouch = ParamConfig.INTEGER(TOUCH_CONTROLS.indexOf(TouchControl.ROTATE), {
+		menu: {
+			entries: TOUCH_CONTROLS.map((name, value) => ({name, value})),
+		},
+		separatorBefore: true,
+	});
+	/** @param 2 fingers touch */
+	twoFingersTouch = ParamConfig.INTEGER(TOUCH_CONTROLS.indexOf(TouchControl.DOLLY_PAN), {
+		menu: {
+			entries: TOUCH_CONTROLS.map((name, value) => ({name, value})),
+		},
+	});
+	misc = ParamConfig.FOLDER();
 	/** @param target position. This is updated automatically as the camera is controlled by user events */
 	target = ParamConfig.VECTOR3([0, 0, 0], {
 		cook: false,
@@ -179,6 +249,15 @@ export class CameraOrbitControlsEventNode extends TypedCameraControlsEventNode<C
 			controls.update(); // necessary if target is not 0,0,0
 		}
 
+		// overrides
+		controls.mouseButtons.LEFT = THREE_MOUSE_BY_MOUSE_CONTROL[MOUSE_CONTROLS[this.pv.leftMouseButton]];
+		controls.mouseButtons.MIDDLE = THREE_MOUSE_BY_MOUSE_CONTROL[MOUSE_CONTROLS[this.pv.middleMouseButton]];
+		controls.mouseButtons.RIGHT = THREE_MOUSE_BY_MOUSE_CONTROL[MOUSE_CONTROLS[this.pv.rightMouseButton]];
+		controls.touches.ONE = THREE_TOUCH_BY_TOUCH_CONTROL[TOUCH_CONTROLS[this.pv.oneFingerTouch]];
+		controls.touches.TWO = THREE_TOUCH_BY_TOUCH_CONTROL[TOUCH_CONTROLS[this.pv.twoFingersTouch]];
+		// controls.touches.ONE = TOUCH.ROTATE;
+		// controls.touches.TWO = TOUCH.DOLLY_PAN;
+
 		// controls.enableKeys = isBooleanTrue(this.pv.enableKeys);
 		// if (controls.enableKeys) {
 		// 	controls.keyMode = KEYS_MODES[this.pv.keysMode];
@@ -207,14 +286,13 @@ export class CameraOrbitControlsEventNode extends TypedCameraControlsEventNode<C
 	// 	console.warn('set from camera node');
 	// }
 
-	private _target_array: Number3 = [0, 0, 0];
 	private _on_controls_end(controls: OrbitControls) {
 		if (!isBooleanTrue(this.pv.allowPan)) {
 			// target should not be updated if pan is not allowed
 			return;
 		}
-		controls.target.toArray(this._target_array);
-		this.p.target.set(this._target_array);
+		controls.target.toArray(_targetArray);
+		this.p.target.set(_targetArray);
 	}
 
 	static PARAM_CALLBACK_updateTarget(node: CameraOrbitControlsEventNode) {
