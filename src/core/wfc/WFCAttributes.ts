@@ -6,10 +6,12 @@ import {
 	setObjectString,
 	setObjectNumber,
 } from '../geometry/AttributeUtils';
+import {WFCTileSide, WFC_ALL_HORIZONTAL_SIDES} from './WFCCommon';
+import {TypeAssert} from '../../engine/poly/Assert';
 
 export enum WFCQuadAttribute {
-	QUAD_ID='quadId',
-	FLOOR_INDEX='floorIndex',
+	QUAD_ID = 'quadId',
+	FLOOR_INDEX = 'floorIndex',
 	TILE_ID = 'tileId',
 	SOLVE_ALLOWED = 'solveAllowed',
 }
@@ -21,6 +23,14 @@ export enum WFCTileAttribute {
 	IS_ERROR_TILE = 'WFCTileAttribute_isErrorTile',
 	IS_UNRESOLVED_TILE = 'WFCTileAttribute_isUnresolvedTile',
 	ENTROPY = 'WFCTileAttribute_entropy',
+	// sidename
+	SIDE_NAME_S = 'WFCTileAttribute_sideNameS',
+	SIDE_NAME_N = 'WFCTileAttribute_sideNameN',
+	SIDE_NAME_W = 'WFCTileAttribute_sideNameW',
+	SIDE_NAME_E = 'WFCTileAttribute_sideNameE',
+	SIDE_NAME_H = 'WFCTileAttribute_sideNameAllHorizontalSides',
+	SIDE_NAME_B = 'WFCTileAttribute_sideNameB',
+	SIDE_NAME_T = 'WFCTileAttribute_sideNameT',
 }
 export enum WFCConnectionAttribute {
 	// IS_CONNECTION = 'WFCTileAttribute_isConnection',
@@ -28,6 +38,34 @@ export enum WFCConnectionAttribute {
 	ID1 = 'WFCTileAttribute_tileId1',
 	SIDE0 = 'WFCTileAttribute_tileSide0',
 	SIDE1 = 'WFCTileAttribute_tileSide1',
+}
+
+type WFCTileSideAttribute =
+	| WFCTileAttribute.SIDE_NAME_S
+	| WFCTileAttribute.SIDE_NAME_N
+	| WFCTileAttribute.SIDE_NAME_W
+	| WFCTileAttribute.SIDE_NAME_E
+	| WFCTileAttribute.SIDE_NAME_H
+	| WFCTileAttribute.SIDE_NAME_B
+	| WFCTileAttribute.SIDE_NAME_T;
+function _sideNameAttribute(side: WFCTileSide): WFCTileSideAttribute {
+	switch (side) {
+		case 'n':
+			return WFCTileAttribute.SIDE_NAME_N;
+		case 's':
+			return WFCTileAttribute.SIDE_NAME_S;
+		case 'w':
+			return WFCTileAttribute.SIDE_NAME_W;
+		case 'e':
+			return WFCTileAttribute.SIDE_NAME_E;
+		case WFC_ALL_HORIZONTAL_SIDES:
+			return WFCTileAttribute.SIDE_NAME_H;
+		case 'b':
+			return WFCTileAttribute.SIDE_NAME_B;
+		case 't':
+			return WFCTileAttribute.SIDE_NAME_T;
+	}
+	TypeAssert.unreachable(side);
 }
 
 export class CoreWFCTileAttribute {
@@ -63,6 +101,12 @@ export class CoreWFCTileAttribute {
 	}
 	static setEntropy(object: ObjectContent<CoreObjectType>, value: number) {
 		setObjectNumber(object, WFCTileAttribute.ENTROPY, value);
+	}
+	static getSideName(object: ObjectContent<CoreObjectType>, side: WFCTileSide): string | undefined {
+		return getObjectString(object, _sideNameAttribute(side));
+	}
+	static setSideName(object: ObjectContent<CoreObjectType>, side: WFCTileSide, value: string) {
+		setObjectString(object, _sideNameAttribute(side), value);
 	}
 }
 export class CoreWFCConnectionAttribute {

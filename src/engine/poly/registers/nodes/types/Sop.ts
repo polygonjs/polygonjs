@@ -218,6 +218,7 @@ export enum SopType {
 	WFC_TILE_CONNECT = 'WFCTileConnect',
 	WFC_TILE_CONNECT_DEBUG = 'WFCTileConnectDebug',
 	WFC_TILE_PROPERTIES = 'WFCTileProperties',
+	WFC_TILE_SIDE_NAME = 'WFCTileSideName',
 	WFC_TILE_TRANSFORM = 'WFCTileTransform',
 }
 

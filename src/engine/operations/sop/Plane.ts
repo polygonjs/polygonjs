@@ -32,7 +32,7 @@ export const DEFAULT_PARAMS: PlaneSopParams = {
 	center: new Vector3(0, 0, 0),
 	asLines: false,
 };
-
+const _segmentsCount = new Vector2(1, 1);
 export class PlaneSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS = DEFAULT_PARAMS;
 	static override readonly INPUT_CLONED_STATE = InputCloneMode.NEVER;
@@ -108,26 +108,25 @@ export class PlaneSopOperation extends BaseSopOperation {
 		return BaseSopOperation.createObject(geometry, params.asLines ? ObjectType.LINE_SEGMENTS : ObjectType.MESH);
 	}
 
-	private _segmentsCount = new Vector2(1, 1);
 	private _createPlane(size: Vector2, params: PlaneSopParams) {
 		size = size.clone();
 		if (isBooleanTrue(params.useSegmentsCount)) {
-			this._segmentsCount.x = Math.floor(params.segments.x);
-			this._segmentsCount.y = Math.floor(params.segments.y);
+			_segmentsCount.x = Math.floor(params.segments.x);
+			_segmentsCount.y = Math.floor(params.segments.y);
 		} else {
 			if (params.stepSize > 0) {
 				size.x = Math.max(size.x, params.stepSize);
 				size.y = Math.max(size.y, params.stepSize);
-				this._segmentsCount.x = Math.floor(size.x / params.stepSize);
-				this._segmentsCount.y = Math.floor(size.y / params.stepSize);
-				size.x = this._segmentsCount.x * params.stepSize;
-				size.y = this._segmentsCount.y * params.stepSize;
+				_segmentsCount.x = Math.floor(size.x / params.stepSize);
+				_segmentsCount.y = Math.floor(size.y / params.stepSize);
+				size.x = _segmentsCount.x * params.stepSize;
+				size.y = _segmentsCount.y * params.stepSize;
 			}
 		}
-		const geometry = new PlaneGeometry(size.x, size.y, this._segmentsCount.x, this._segmentsCount.y);
+		const geometry = new PlaneGeometry(size.x, size.y, _segmentsCount.x, _segmentsCount.y);
 		if (isBooleanTrue(params.asLines)) {
-			const gridX = Math.floor(this._segmentsCount.x);
-			const gridY = Math.floor(this._segmentsCount.y);
+			const gridX = Math.floor(_segmentsCount.x);
+			const gridY = Math.floor(_segmentsCount.y);
 
 			const gridX1 = gridX + 1;
 			// const gridY1 = gridY + 1;

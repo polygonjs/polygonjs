@@ -9,6 +9,7 @@ export interface TileCorners {
 	height: number;
 }
 export type WFCAllHorizontalSides = 'snwe';
+export const WFC_ALL_HORIZONTAL_SIDES: WFCAllHorizontalSides = 'snwe';
 export const ALL_HORIZONTAL_SIDES: WFCAllHorizontalSides = 'snwe';
 export type WFCTileSide = 's' | 'n' | 'w' | 'e' | 'b' | 't' | WFCAllHorizontalSides;
 export const ALL_SIDES: WFCTileSide[] = ['s', 'n', 'w', 'e', 'b', 't'];

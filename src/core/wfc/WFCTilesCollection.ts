@@ -58,6 +58,37 @@ export class WFCTilesCollection {
 			this._tilesById.set(CoreWFCTileAttribute.getTileId(tile), tile);
 		}
 
+		// create connections from tile side attributes
+		for (const tile0 of this._tiles) {
+			const tileId0 = CoreWFCTileAttribute.getTileId(tile0);
+			for (const side0 of ALL_SIDES) {
+				const sideName0 = CoreWFCTileAttribute.getSideName(tile0, side0);
+
+				if (sideName0) {
+					for (const tile1 of this._tiles) {
+						const tileId1 = CoreWFCTileAttribute.getTileId(tile1);
+						if (tileId0 != tileId1) {
+							for (const side1 of ALL_SIDES) {
+								const sideName1 = CoreWFCTileAttribute.getSideName(tile1, side1);
+								if (sideName0 == sideName1) {
+									const connection: WFCConnection = {
+										id0: tileId0,
+										side0,
+										id1: tileId1,
+										side1,
+									};
+									sortTileIds(connection.id0, connection.id1, _sortedTileIds);
+									_addConnection(connection, this._connectionsByTileId, false);
+									_addConnection(connection, this._connectionsByTileId, true);
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+		// create connections from connection objects
 		const connectionObjects = filterConnectionObjects(objects);
 		const connections = connectionObjects.filter(validConnectionObject).map(wfcConnectionFromObject);
 		for (const connection of connections) {
