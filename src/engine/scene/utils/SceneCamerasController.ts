@@ -20,6 +20,9 @@ export class SceneCamerasController {
 	coreGraphNode() {
 		return this._coreGraphNode;
 	}
+	dispose() {
+		this._coreGraphNode.dispose();
+	}
 	private _cameraObjectsRecentlyUpdated: Array<Camera> = [];
 	updateFromChangeInObject(object: Object3D) {
 		this._cameraObjects(object, this._cameraObjectsRecentlyUpdated);
@@ -62,7 +65,12 @@ export class SceneCamerasController {
 	// async mainCameraObjectPath() {
 	// 	return this._mainCameraObjectPath;
 	// }
+	private _errorMessageDisplayed: boolean = false;
 	async mainCamera(options?: MainCameraOptions): Promise<Camera | null> {
+		if (this.scene.disposed()) {
+			return null;
+		}
+
 		let printCameraNotFoundError = true;
 		if (options?.printCameraNotFoundError != null) {
 			printCameraNotFoundError = options.printCameraNotFoundError;
@@ -71,6 +79,16 @@ export class SceneCamerasController {
 		if (cameraMaskOverride != null) {
 			this.scene.root().mainCameraController.setCameraPath(cameraMaskOverride);
 		}
+
+		const _printWarningMessage = (warningMessage: string) => {
+			if (this._errorMessageDisplayed == true) {
+				return;
+			}
+			if (printCameraNotFoundError) {
+				console.error(warningMessage);
+				this._errorMessageDisplayed = true;
+			}
+		};
 
 		const camera = await this.scene.root().mainCameraController.camera();
 		if (camera) {
@@ -85,16 +103,13 @@ export class SceneCamerasController {
 		if (findAnyCamera) {
 			const firstAnyCamera = this._findAnyCameraObject();
 			if (firstAnyCamera) {
-				if (printCameraNotFoundError) {
-					console.error(warningMessage);
-				}
+				_printWarningMessage(warningMessage);
+
 				return firstAnyCamera;
 			}
 		}
 
-		if (printCameraNotFoundError) {
-			console.error(warningMessage);
-		}
+		_printWarningMessage(warningMessage);
 
 		return null;
 	}

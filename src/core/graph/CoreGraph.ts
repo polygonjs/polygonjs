@@ -37,6 +37,11 @@ export class CoreGraph {
 			console.log(nodeId, node, node.graphPredecessors(), node.graphSuccessors());
 		});
 	}
+	// print() {
+	// 	this._nodesById.forEach((node, nodeId) => {
+	// 		console.log(nodeId, node, node.graphPredecessors(), node.graphSuccessors());
+	// 	});
+	// }
 
 	setScene(scene: PolyScene) {
 		this._scene = scene;

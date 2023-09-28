@@ -62,13 +62,14 @@ type BaseNodeTypeWithIO = TypedNode<NodeContext, any>;
 
 export interface JSONExporterDataRequestOption {
 	showPolyNodesData?: boolean;
+	withPersistedConfig?: boolean;
 }
 
 export class NodeJsonExporter<T extends BaseNodeTypeWithIO> {
 	private _data: NodeJsonExporterData | undefined; // = {} as NodeJsonExporterData;
 	constructor(protected _node: T, protected dispatcher: JsonExportDispatcher) {}
 
-	async data(options: JSONExporterDataRequestOption = {}): Promise<NodeJsonExporterData> {
+	async data(options: JSONExporterDataRequestOption): Promise<NodeJsonExporterData> {
 		if (!this._isRoot()) {
 			this._node.scene().nodesController.registerNodeContextSignature(this._node);
 		}
@@ -155,13 +156,16 @@ export class NodeJsonExporter<T extends BaseNodeTypeWithIO> {
 		}
 
 		// persisted config
-		const persisted_config = this._node.persisted_config;
-		if (persisted_config) {
-			const persisted_config_data = options.showPolyNodesData
-				? await persisted_config.toData()
-				: await persisted_config.toDataWithoutShaders();
-			if (persisted_config_data) {
-				this._data.persisted_config = persisted_config_data;
+		const withPersistedConfig = options.withPersistedConfig == null ? true : options.withPersistedConfig;
+		if (withPersistedConfig == true) {
+			const persisted_config = this._node.persisted_config;
+			if (persisted_config) {
+				const persisted_config_data = options.showPolyNodesData
+					? await persisted_config.toData()
+					: await persisted_config.toDataWithoutShaders();
+				if (persisted_config_data) {
+					this._data.persisted_config = persisted_config_data;
+				}
 			}
 		}
 
@@ -171,7 +175,7 @@ export class NodeJsonExporter<T extends BaseNodeTypeWithIO> {
 		return this._data;
 	}
 
-	uiData(options: JSONExporterDataRequestOption = {}): NodeJsonExporterUIData {
+	uiData(options: JSONExporterDataRequestOption): NodeJsonExporterUIData {
 		const data: NodeJsonExporterUIData = this.ui_data_without_children();
 		const children = this._node.children();
 		if (children.length > 0) {
@@ -224,7 +228,7 @@ export class NodeJsonExporter<T extends BaseNodeTypeWithIO> {
 	async persistedConfigData(
 		shadersData: NodeJSONShadersData,
 		jsFunctionBodiesData: NodeJSONFunctionBodiesData,
-		options: JSONExporterDataRequestOption = {}
+		options: JSONExporterDataRequestOption
 	): Promise<void> {
 		const children = this._node.children();
 		if (children.length > 0) {
@@ -365,7 +369,7 @@ export class NodeJsonExporter<T extends BaseNodeTypeWithIO> {
 		return data;
 	}
 
-	protected async nodes_data(options: JSONExporterDataRequestOption = {}) {
+	protected async nodes_data(options: JSONExporterDataRequestOption) {
 		const data: PolyDictionary<NodeJsonExporterData> = {};
 		for (let child of this._node.children()) {
 			const node_exporter = this.dispatcher.dispatchNode(child); //.json_exporter()

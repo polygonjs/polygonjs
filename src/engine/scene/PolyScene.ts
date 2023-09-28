@@ -322,7 +322,7 @@ export class PolyScene {
 	//
 	//
 	private _webglController: SceneWebGLController | undefined;
-	get webgl_controller() {
+	get webglController() {
 		return (this._webglController = this._webglController || new SceneWebGLController());
 	}
 
@@ -359,9 +359,18 @@ export class PolyScene {
 				node.parent()?.removeNode(node);
 			});
 		});
-		this._windowController?.dispose();
+		if (this._windowController) {
+			this._windowController.dispose();
+			this._windowController = undefined;
+		}
+		this.timeController.dispose();
 		this.renderersRegister.dispose();
+		this.camerasController.dispose();
+		this.root().dispose();
 		Poly.scenesRegister.deregisterScene(this);
+	}
+	disposed() {
+		return this._disposed;
 	}
 
 	private _paramSerializerClass: typeof CoreParamSerializer<ParamType> | undefined;

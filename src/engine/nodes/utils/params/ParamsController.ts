@@ -14,6 +14,7 @@ import {ParamInitValueSerializedTypeMap} from '../../../params/types/ParamInitVa
 import {Poly} from '../../../Poly';
 import {ParamInitData} from '../io/IOController';
 import {PolyDictionary} from '../../../../types/GlobalTypes';
+import {arrayCopy} from '../../../../core/ArrayUtils';
 
 const NODE_SIMPLE_NAME = 'params';
 
@@ -31,6 +32,7 @@ export interface ParamsUpdateOptions {
 	namesToDelete?: string[];
 	toAdd?: ParamOptionToAdd<ParamType>[];
 }
+const _tmpAll: BaseParamType[] = [];
 
 export class ParamsController {
 	private _param_create_mode: boolean = false;
@@ -63,8 +65,8 @@ export class ParamsController {
 		}
 
 		// dispose params
-		const all = this.all;
-		for (const param of all) {
+		arrayCopy(this.all, _tmpAll);
+		for (const param of _tmpAll) {
 			param.dispose();
 		}
 

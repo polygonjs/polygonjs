@@ -2,9 +2,10 @@ import type {QUnit} from '../../../helpers/QUnit';
 export function testenginenodesutilsMemory(qUnit: QUnit) {
 	qUnit.test('nodes can dispose themselves when removed by their parents', async (assert) => {
 		const scene = window.scene;
+		const graph = scene.graph;
 
-		const startGraphNodesCount = scene.graph.nodesCount();
-		scene.graph.startDebugging();
+		const startGraphNodesCount = graph.nodesCount();
+		graph.startDebugging();
 
 		const root = scene.root();
 		const geo = root.createNode('geo');
@@ -14,14 +15,26 @@ export function testenginenodesutilsMemory(qUnit: QUnit) {
 		scatter.setInput(0, plane);
 		scatter.p.pointsCount.set(`bbox('${box.path()}')`);
 
-		const maxGraphNodesCount = scene.graph.nodesCount();
-		assert.equal(maxGraphNodesCount, startGraphNodesCount + 119);
+		const maxGraphNodesCount = graph.nodesCount();
+		assert.equal(
+			maxGraphNodesCount,
+			startGraphNodesCount + 119,
+			`119 created, started with ${startGraphNodesCount}`
+		);
 
 		root.removeNode(geo);
 
-		scene.graph.stopDebugging();
-		scene.graph.printDebug();
-		const finalGraphNodesCount = scene.graph.nodesCount();
-		assert.equal(finalGraphNodesCount, startGraphNodesCount);
+		graph.stopDebugging();
+		graph.printDebug();
+		const finalGraphNodesCount = graph.nodesCount();
+		assert.equal(
+			finalGraphNodesCount,
+			startGraphNodesCount,
+			`graph nodes count is back to ${startGraphNodesCount} (${finalGraphNodesCount})`
+		);
+
+		scene.dispose();
+		assert.equal(graph.nodesCount(), 0, `graph empty`);
+		// graph.print();
 	});
 }

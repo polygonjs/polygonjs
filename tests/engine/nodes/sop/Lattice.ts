@@ -17,18 +17,27 @@ export function testenginenodessopLattice(qUnit: QUnit) {
 		async function compute() {
 			const container = await lattice1.compute();
 			const coreGroup = container.coreContent();
-			const geometry = coreGroup?.threejsObjectsWithGeo()[0].geometry;
+			const object = coreGroup?.threejsObjectsWithGeo()[0]!;
+			const geometry = object.geometry;
 			const position = geometry?.getAttribute('position')!;
 			container.boundingBox(tmpBox);
 			tmpBox.getSize(bboxSize);
-			return {position, bboxSizeY: bboxSize.y};
+			return {position, bboxSizeY: bboxSize.y, objectPositionY: object.position.y};
 		}
+
+		lattice1.p.moveObjectPosition.set(0);
 
 		assert.equal((await compute()).position.array[13], 1);
 		assert.equal((await compute()).bboxSizeY, 1);
+		assert.equal((await compute()).objectPositionY, 0);
 
 		lattice1.p.p4.y.set(2);
 		assert.equal((await compute()).position.array[13], 2);
 		assert.equal((await compute()).bboxSizeY, 2);
+
+		lattice1.p.moveObjectPosition.set(1);
+		assert.equal((await compute()).position.array[13], 1);
+		assert.equal((await compute()).bboxSizeY, 2);
+		assert.equal((await compute()).objectPositionY, 1);
 	});
 }

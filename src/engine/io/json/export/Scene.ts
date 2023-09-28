@@ -26,19 +26,24 @@ export interface SceneJsonExporterData {
 	embeddedPolyNodes?: PolyDictionary<PolyNodeDefinition>;
 }
 
+interface SceneJsonExporterDataOptions {
+	versions?: Versions;
+	withPersistedConfig?: boolean;
+}
+
 export class SceneJsonExporter {
 	private _data: SceneJsonExporterData = {};
 	private dispatcher: JsonExportDispatcher = new JsonExportDispatcher();
 	constructor(private _scene: PolyScene) {}
 
-	async data(versions?: Versions): Promise<SceneJsonExporterData> {
+	async data(options: SceneJsonExporterDataOptions = {}): Promise<SceneJsonExporterData> {
 		this._scene.nodesController.resetNodeContextSignatures();
 		const rootExporter = this.dispatcher.dispatchNode(this._scene.root());
-		const nodesData = await rootExporter.data();
-		const uiData = rootExporter.uiData();
+		const nodesData = await rootExporter.data(options);
+		const uiData = rootExporter.uiData(options);
 		const shadersData: NodeJSONShadersData = {};
 		const jsFunctionBodiesData: NodeJSONFunctionBodiesData = {};
-		await rootExporter.persistedConfigData(shadersData, jsFunctionBodiesData);
+		await rootExporter.persistedConfigData(shadersData, jsFunctionBodiesData, options);
 
 		this._data = {
 			properties: {
@@ -47,7 +52,7 @@ export class SceneJsonExporter {
 				maxFrameLocked: this._scene.timeController.maxFrameLocked(),
 				realtimeState: this._scene.timeController.realtimeState(),
 				mainCameraPath: this._scene.camerasController.mainCameraPath(),
-				versions: versions,
+				versions: options.versions,
 			},
 			root: nodesData,
 			ui: uiData,

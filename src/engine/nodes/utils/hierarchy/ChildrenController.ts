@@ -14,6 +14,7 @@ import {MapUtils} from '../../../../core/MapUtils';
 import {NameController} from '../NameController';
 import {CoreNodeSerializer} from '../CoreNodeSerializer';
 import {TypedNodeConnection} from '../io/NodeConnection';
+import {arrayCopy} from '../../../../core/ArrayUtils';
 
 type OutputNodeFindMethod = (() => BaseNodeType) | undefined;
 type TraverseNodeCallback = (node: BaseNodeType) => void;
@@ -38,10 +39,12 @@ export class HierarchyChildrenController {
 	constructor(protected node: BaseNodeType, private _context: NodeContext) {}
 
 	dispose() {
-		const children = this.children();
-		for (const child of children) {
+		const _tmpChildren: BaseNodeType[] = [];
+		arrayCopy(this.children(), _tmpChildren);
+		for (const child of _tmpChildren) {
 			this.node.removeNode(child);
 		}
+		_tmpChildren.length = 0;
 		this._selection = undefined;
 	}
 
@@ -54,13 +57,13 @@ export class HierarchyChildrenController {
 	// OUTPUT NODE
 	//
 	//
-	private _output_node_find_method: (() => BaseNodeType) | undefined;
+	private _outputNodeFindMethod: (() => BaseNodeType) | undefined;
 	setOutputNodeFindMethod(method: OutputNodeFindMethod) {
-		this._output_node_find_method = method;
+		this._outputNodeFindMethod = method;
 	}
 	outputNode() {
-		if (this._output_node_find_method) {
-			return this._output_node_find_method();
+		if (this._outputNodeFindMethod) {
+			return this._outputNodeFindMethod();
 		}
 	}
 
@@ -229,8 +232,8 @@ export class HierarchyChildrenController {
 		childNode.lifecycle.runOnAfterAddedCallbacks();
 		this.node.lifecycle.runOnChildAddCallbacks(childNode);
 
-		if (childNode.require_webgl2()) {
-			this.node.scene().webgl_controller.set_require_webgl2();
+		if (childNode.requireWebGL2()) {
+			this.node.scene().webglController.setRequireWebGL2();
 		}
 
 		this.node.scene().missingExpressionReferencesController.checkForMissingNodeReferences(childNode);

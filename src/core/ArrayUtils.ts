@@ -256,7 +256,7 @@ export class ArrayUtils {
 	static range = range;
 }
 
-const MAX_ITEMS_LENGTH = 1024;
+// const MAX_ITEMS_LENGTH = 1024;
 export function arrayPushItems<T>(srcArray: Readonly<Array<T>>, target: Array<T>) {
 	// we avoid the standard
 	// array.push(...items),
@@ -264,13 +264,13 @@ export function arrayPushItems<T>(srcArray: Readonly<Array<T>>, target: Array<T>
 	// 'Maximum call stack size exceeded' error
 	// on some large items array.
 	// So instead, we push them elements one by one if items.length is above a threshold
-	if (srcArray.length <= MAX_ITEMS_LENGTH) {
-		target.push(...srcArray);
-	} else {
-		for (const item of srcArray) {
-			target.push(item);
-		}
+	// if (srcArray.length <= MAX_ITEMS_LENGTH) {
+	// 	target.push(...srcArray);
+	// } else {
+	for (const item of srcArray) {
+		target.push(item);
 	}
+	// }
 }
 
 export function arrayCopy<T>(srcArray: Readonly<Array<T>>, targetArray: Array<T>): void {

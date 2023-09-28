@@ -39,7 +39,7 @@ export class RenderersController {
 	// private _firstRenderer: WebGLRenderer | null = null;
 	// private _lastRenderer: WebGLRenderer | null = null;
 	private _printDebug = false;
-	private _require_webgl2: boolean = false;
+	private _requireWebGL2: boolean = false;
 	// private _resolves: Callback[] = [];
 	private _webgl2_available: boolean | undefined;
 	// private _env_maps: TextureByString = {};
@@ -59,8 +59,8 @@ export class RenderersController {
 	}
 
 	setRequireWebGL2() {
-		if (!this._require_webgl2) {
-			this._require_webgl2 = true;
+		if (!this._requireWebGL2) {
+			this._requireWebGL2 = true;
 		}
 	}
 	webGL2Available(canvas?: HTMLCanvasElement) {

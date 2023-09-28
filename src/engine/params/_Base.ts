@@ -20,6 +20,7 @@ import {
 import {ParamInitValueSerializedTypeMap} from './types/ParamInitValueSerializedTypeMap';
 import {MethodDependency} from '../expressions/MethodDependency';
 import {Poly} from '../Poly';
+import {arrayCopy} from '../../core/ArrayUtils';
 
 type ComputeCallback = (value: void) => void;
 const TYPED_PARAM_DEFAULT_COMPONENT_NAMES: Readonly<string[]> = [];
@@ -78,12 +79,14 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 		if (this.expressionController && this.hasExpression()) {
 			this.set(this.rawInputSerialized());
 		}
+		const _tmpCoreGraphNodes: CoreGraphNode[] = [];
 
 		// if any direct predecessor is a MethodDependency,
 		// it must be disposed here
 		const predecessors = this.graphPredecessors();
 		if (predecessors) {
-			for (const predecessor of predecessors) {
+			arrayCopy(predecessors, _tmpCoreGraphNodes);
+			for (const predecessor of _tmpCoreGraphNodes) {
 				if (predecessor instanceof MethodDependency) {
 					predecessor.dispose();
 				}
@@ -91,7 +94,8 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 		}
 		const successors = this.graphSuccessors();
 		if (successors) {
-			for (const successor of successors) {
+			arrayCopy(successors, _tmpCoreGraphNodes);
+			for (const successor of _tmpCoreGraphNodes) {
 				if (successor instanceof TypedParam) {
 					const input = successor.rawInputSerialized();
 					successor.set(successor.defaultValue());

@@ -70,7 +70,7 @@ export const DEFAULT_DATA_TYPE = 'default';
 export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> extends CoreGraphNode {
 	containerController: TypedContainerController<NC> = new TypedContainerController<NC>(this);
 
-	private _parent_controller: HierarchyParentController | undefined;
+	private _parentController: HierarchyParentController | undefined;
 
 	private _uiData: UIData | undefined;
 
@@ -102,7 +102,7 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 
 	private _nameController: NameController | undefined;
 	get parentController(): HierarchyParentController {
-		return (this._parent_controller = this._parent_controller || new HierarchyParentController(this));
+		return (this._parentController = this._parentController || new HierarchyParentController(this));
 	}
 	static displayedInputNames(): string[] | undefined {
 		return undefined;
@@ -226,12 +226,12 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 		return c.context();
 	}
 
-	static require_webgl2(): boolean {
+	static requireWebGL2(): boolean {
 		return false;
 	}
-	require_webgl2(): boolean {
+	requireWebGL2(): boolean {
 		const c = this.constructor as typeof BaseNodeClass;
-		return c.require_webgl2();
+		return c.requireWebGL2();
 	}
 
 	setParent(parent: BaseNodeType | null) {

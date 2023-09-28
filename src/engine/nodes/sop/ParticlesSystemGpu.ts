@@ -111,7 +111,7 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 		return this._shadersByName;
 	}
 
-	static override require_webgl2() {
+	static override requireWebGL2() {
 		return true;
 	}
 

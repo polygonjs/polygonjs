@@ -55,6 +55,11 @@ export class TimeController {
 	get graphNode() {
 		return this._graphNode;
 	}
+
+	dispose() {
+		this._graphNode.dispose();
+	}
+
 	updateClockDelta() {
 		const delta = this._clock.getDelta();
 		const clampedDelta = delta > MAX_DELTA ? MAX_DELTA : delta;
