@@ -31,6 +31,7 @@ interface LatticeSopParams extends DefaultOperationParams {
 	p7: Vector3;
 	//
 	offset: Vector3;
+	moveObjectPosition: boolean;
 }
 
 export class LatticeSopOperation extends BaseSopOperation {
@@ -45,6 +46,7 @@ export class LatticeSopOperation extends BaseSopOperation {
 		p6: DEFAULT_POSITIONS[6].clone(),
 		p7: DEFAULT_POSITIONS[7].clone(),
 		offset: new Vector3(0, 0, 0),
+		moveObjectPosition: true,
 	};
 	static override readonly INPUT_CLONED_STATE = InputCloneMode.FROM_NODE;
 	static override type(): Readonly<SopType.LATTICE> {
@@ -67,7 +69,7 @@ export class LatticeSopOperation extends BaseSopOperation {
 		for (const object of objects) {
 			const geometry = (object as Mesh).geometry;
 			if (geometry) {
-				cubeLatticeDeform(object, cubeLatticeDeformPoints, params.offset);
+				cubeLatticeDeform(object, cubeLatticeDeformPoints, params);
 			}
 		}
 

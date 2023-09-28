@@ -14,18 +14,18 @@ import {CoreWFCTileAttribute} from '../../../core/wfc/WFCAttributes';
 import {Object3D, Group} from 'three';
 import {ALL_HORIZONTAL_SIDES, CLOCK_WISE_TILE_SIDES, EMPTY_TILE_ID} from '../../../core/wfc/WFCCommon';
 
-class WFCTileConnectDebugSopParamsConfig extends NodeParamsConfig {
+class WFCDebugSopParamsConfig extends NodeParamsConfig {
 	/** @param src tile id */
 	srcTileId = ParamConfig.STRING('*');
 	/** @param dest tile id */
 	destTileId = ParamConfig.STRING('*');
 }
-const ParamsConfig = new WFCTileConnectDebugSopParamsConfig();
+const ParamsConfig = new WFCDebugSopParamsConfig();
 
-export class WFCTileConnectDebugSopNode extends TypedSopNode<WFCTileConnectDebugSopParamsConfig> {
+export class WFCDebugSopNode extends TypedSopNode<WFCDebugSopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return SopType.WFC_TILE_CONNECT_DEBUG;
+		return SopType.WFC_DEBUG;
 	}
 
 	override initializeNode() {
@@ -35,8 +35,8 @@ export class WFCTileConnectDebugSopNode extends TypedSopNode<WFCTileConnectDebug
 
 	override async cook(inputCoreGroups: CoreGroup[]) {
 		const coreGroup = inputCoreGroups[0];
-		const objects = coreGroup.threejsObjects();
-		const collection = new WFCTilesCollection(objects);
+		const tileAndRuleObjects = coreGroup.threejsObjects();
+		const collection = new WFCTilesCollection({tileAndRuleObjects});
 
 		const {srcTileId, destTileId} = this.pv;
 		const srcTiles = collection
@@ -55,7 +55,7 @@ export class WFCTileConnectDebugSopNode extends TypedSopNode<WFCTileConnectDebug
 			for (const destTile of destTiles) {
 				const destTileId = CoreWFCTileAttribute.getTileId(destTile);
 				// let k=0;
-				collection.traverseConnections(srcTileId, destTileId, (id0, id1, side0, side1) => {
+				collection.traverseRules(srcTileId, destTileId, (id0, id1, side0, side1) => {
 					side0 = id0 == EMPTY_TILE_ID && ALL_HORIZONTAL_SIDES.includes(side0) ? ALL_HORIZONTAL_SIDES : side0;
 					side1 = id1 == EMPTY_TILE_ID && ALL_HORIZONTAL_SIDES.includes(side1) ? ALL_HORIZONTAL_SIDES : side1;
 					const id = `${id0}:${side0}-${id1}:${side1}`;

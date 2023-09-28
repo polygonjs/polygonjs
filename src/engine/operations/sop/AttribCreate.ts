@@ -10,7 +10,7 @@ import {DefaultOperationParams} from '../../../core/operations/_Base';
 import {addPointAttribute} from './utils/attribCreate/AttribCreatePoint';
 import {addVertexAttribute} from './utils/attribCreate/AttribCreateVertex';
 import {addPrimitiveAttribute} from './utils/attribCreate/AttribCreatePrimitive';
-import {addObjectAttribute} from './utils/attribCreate/AttribCreateObject';
+import {addObjectAttributeWithoutExpression} from './utils/attribCreate/AttribCreateObject';
 import {addCoreGroupAttribute} from './utils/attribCreate/AttribCreateCoreGroup';
 
 export interface AttribCreateSopParams extends DefaultOperationParams {
@@ -64,7 +64,7 @@ export class AttribCreateSopOperation extends BaseSopOperation {
 			case AttribClass.PRIMITIVE:
 				return addPrimitiveAttribute(attribType, coreGroup, params);
 			case AttribClass.OBJECT:
-				return addObjectAttribute(attribType, coreGroup, params);
+				return addObjectAttributeWithoutExpression(attribType, coreGroup, params);
 			case AttribClass.CORE_GROUP:
 				return addCoreGroupAttribute(attribType, coreGroup, params);
 		}

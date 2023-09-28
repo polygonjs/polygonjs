@@ -13,13 +13,14 @@ export const WFC_ALL_HORIZONTAL_SIDES: WFCAllHorizontalSides = 'snwe';
 export const ALL_HORIZONTAL_SIDES: WFCAllHorizontalSides = 'snwe';
 export type WFCTileSide = 's' | 'n' | 'w' | 'e' | 'b' | 't' | WFCAllHorizontalSides;
 export const ALL_SIDES: WFCTileSide[] = ['s', 'n', 'w', 'e', 'b', 't'];
-export interface WFCConnection {
+export interface WFCRule {
 	readonly id0: string;
 	readonly id1: string;
 	readonly side0: WFCTileSide;
 	readonly side1: WFCTileSide;
 }
 export const EMPTY_TILE_ID = '__EMPTY_TILE__';
+export const GRID_LIMIT_ID = '__GRID_LIMIT__';
 export const ERROR_TILE_ID = '__ERROR_TILE__';
 export const UNRESOLVED_TILE_ID = '__UNRESOLVED_TILE__';
 // export enum WFCLookAtSide {

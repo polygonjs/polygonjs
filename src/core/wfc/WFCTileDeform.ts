@@ -55,5 +55,5 @@ export function tileCubeLatticeDeform(object: Object3D, tileCorners: TileCorners
 	cubeLatticeDeformPoints[6].y += tileCorners.height;
 	cubeLatticeDeformPoints[7].y += tileCorners.height;
 
-	cubeLatticeDeform(object, cubeLatticeDeformPoints, offset);
+	cubeLatticeDeform(object, cubeLatticeDeformPoints, {offset, moveObjectPosition: true});
 }

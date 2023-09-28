@@ -1,8 +1,16 @@
 import {Mesh, Object3D, Vector3} from 'three';
 import {ObjectNamedFunction1} from './_Base';
-import {cubeLatticeDeform as _cubeLatticeDeform, Vector3_8} from '../../core/geometry/operation/CubeLatticeDeform';
+import {
+	cubeLatticeDeform as _cubeLatticeDeform,
+	Vector3_8,
+	CubeLatticeDeformOptions,
+} from '../../core/geometry/operation/CubeLatticeDeform';
 
 const offset = new Vector3(0, 0, 0);
+const options: CubeLatticeDeformOptions = {
+	offset,
+	moveObjectPosition: false,
+};
 export class cubeLatticeDeform extends ObjectNamedFunction1<[Vector3_8]> {
 	static override type() {
 		return 'cubeLatticeDeform';
@@ -12,6 +20,6 @@ export class cubeLatticeDeform extends ObjectNamedFunction1<[Vector3_8]> {
 		if (!geometry) {
 			return;
 		}
-		_cubeLatticeDeform(object3D, points, offset);
+		_cubeLatticeDeform(object3D, points, options);
 	}
 }

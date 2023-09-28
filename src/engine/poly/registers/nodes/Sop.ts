@@ -303,15 +303,19 @@ import {UvProjectSopNode} from '../../../nodes/sop/UvProject';
 import {UvTransformSopNode} from '../../../nodes/sop/UvTransform';
 import {UvUnwrapSopNode} from '../../../nodes/sop/UvUnwrap';
 import {WebXRAREstimatedLightSopNode} from '../../../nodes/sop/WebXRAREstimatedLight';
+import {WFCDebugSopNode} from '../../../nodes/sop/WFCDebug';
 import {WFCSolverSopNode} from '../../../nodes/sop/WFCSolver';
-import {WFCEmptyTileSopNode} from '../../../nodes/sop/WFCEmptyTile';
-import {WFCErrorTileSopNode} from '../../../nodes/sop/WFCErrorTile';
-import {WFCTileConnectSopNode} from '../../../nodes/sop/WFCTileConnect';
-import {WFCTileConnectDebugSopNode} from '../../../nodes/sop/WFCTileConnectDebug';
+import {WFCRuleEmptyTileConnectionSopNode} from '../../../nodes/sop/WFCRuleEmptyTileConnection';
+import {WFCRuleFromProximitySopNode} from '../../../nodes/sop/WFCRuleFromProximity';
+import {WFCRuleFromSideNameSopNode} from '../../../nodes/sop/WFCRuleFromSideName';
+import {WFCRuleGridLimitConnectionSopNode} from '../../../nodes/sop/WFCRuleGridLimitConnection';
+import {WFCRuleTileWeightSopNode} from '../../../nodes/sop/WFCRuleTileWeight';
+import {WFCTileEmptyObjectSopNode} from '../../../nodes/sop/WFCTileEmptyObject';
+import {WFCTileErrorObjectSopNode} from '../../../nodes/sop/WFCTileErrorObject';
 import {WFCTilePropertiesSopNode} from '../../../nodes/sop/WFCTileProperties';
 import {WFCTileSideNameSopNode} from '../../../nodes/sop/WFCTileSideName';
 import {WFCTileTransformSopNode} from '../../../nodes/sop/WFCTileTransform';
-import {WFCUnresolvedTileSopNode} from '../../../nodes/sop/WFCUnresolvedTile';
+import {WFCTileUnresolvedObjectSopNode} from '../../../nodes/sop/WFCTileUnresolvedObject';
 // networks
 import {ActorsNetworkSopNode} from '../../../nodes/sop/ActorsNetwork';
 import {AnimationsNetworkSopNode} from '../../../nodes/sop/AnimationsNetwork';
@@ -625,15 +629,19 @@ export interface GeoNodeChildrenMap {
 	uvTransform: UvTransformSopNode;
 	uvUnwrap: UvUnwrapSopNode;
 	webXRAREstimatedLight: WebXRAREstimatedLightSopNode;
-	WFCEmptyTile: WFCEmptyTileSopNode;
-	WFCErrorTile: WFCErrorTileSopNode;
+	WFCDebug: WFCDebugSopNode;
+	WFCRuleEmptyTileConnection: WFCRuleEmptyTileConnectionSopNode;
+	WFCRuleFromProximity: WFCRuleFromProximitySopNode;
+	WFCRuleFromSideName: WFCRuleFromSideNameSopNode;
+	WFCRuleGridLimitConnection: WFCRuleGridLimitConnectionSopNode;
+	WFCRuleTileWeight: WFCRuleTileWeightSopNode;
 	WFCSolver: WFCSolverSopNode;
-	WFCTileConnect: WFCTileConnectSopNode;
-	WFCTileConnectDebug: WFCTileConnectDebugSopNode;
+	WFCTileEmptyObject: WFCTileEmptyObjectSopNode;
+	WFCTileErrorObject: WFCTileErrorObjectSopNode;
 	WFCTileProperties: WFCTilePropertiesSopNode;
 	WFCTileSideName: WFCTileSideNameSopNode;
 	WFCTileTransform: WFCTileTransformSopNode;
-	WFCUnresolvedTile: WFCUnresolvedTileSopNode;
+	WFCTileUnresolvedObject: WFCTileUnresolvedObjectSopNode;
 
 	// networks
 	actorsNetwork: ActorsNetworkSopNode;
@@ -1204,15 +1212,19 @@ export class SopRegister {
 		poly.registerNode(UvTransformSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(UvUnwrapSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(WebXRAREstimatedLightSopNode, CATEGORY_SOP.WEBXR);
-		poly.registerNode(WFCEmptyTileSopNode, CATEGORY_SOP.WFC);
-		poly.registerNode(WFCErrorTileSopNode, CATEGORY_SOP.WFC);
+		poly.registerNode(WFCDebugSopNode, CATEGORY_SOP.WFC);
+		poly.registerNode(WFCRuleEmptyTileConnectionSopNode, CATEGORY_SOP.WFC);
+		poly.registerNode(WFCRuleFromProximitySopNode, CATEGORY_SOP.WFC);
+		poly.registerNode(WFCRuleFromSideNameSopNode, CATEGORY_SOP.WFC);
+		poly.registerNode(WFCRuleGridLimitConnectionSopNode, CATEGORY_SOP.WFC);
+		poly.registerNode(WFCRuleTileWeightSopNode, CATEGORY_SOP.WFC);
 		poly.registerNode(WFCSolverSopNode, CATEGORY_SOP.WFC);
-		poly.registerNode(WFCTileConnectSopNode, CATEGORY_SOP.WFC);
-		poly.registerNode(WFCTileConnectDebugSopNode, CATEGORY_SOP.WFC);
+		poly.registerNode(WFCTileEmptyObjectSopNode, CATEGORY_SOP.WFC);
+		poly.registerNode(WFCTileErrorObjectSopNode, CATEGORY_SOP.WFC);
 		poly.registerNode(WFCTilePropertiesSopNode, CATEGORY_SOP.WFC);
 		poly.registerNode(WFCTileSideNameSopNode, CATEGORY_SOP.WFC);
 		poly.registerNode(WFCTileTransformSopNode, CATEGORY_SOP.WFC);
-		poly.registerNode(WFCUnresolvedTileSopNode, CATEGORY_SOP.WFC);
+		poly.registerNode(WFCTileUnresolvedObjectSopNode, CATEGORY_SOP.WFC);
 
 		// networks
 		poly.registerNode(ActorsNetworkSopNode, CATEGORY_SOP.NETWORK);

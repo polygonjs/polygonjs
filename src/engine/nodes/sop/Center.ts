@@ -6,10 +6,16 @@
 
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-
-import {CenterSopOperation} from '../../operations/sop/Center';
-import {NodeParamsConfig} from '../utils/params/ParamsConfig';
-class CenterSopParamsConfig extends NodeParamsConfig {}
+import {CenterSopOperation, CENTER_MODES} from '../../operations/sop/Center';
+import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+const DEFAULT = CenterSopOperation.DEFAULT_PARAMS;
+class CenterSopParamsConfig extends NodeParamsConfig {
+	mode = ParamConfig.INTEGER(DEFAULT.mode, {
+		menu: {
+			entries: CENTER_MODES.map((name, value) => ({name, value})),
+		},
+	});
+}
 const ParamsConfig = new CenterSopParamsConfig();
 
 export class CenterSopNode extends TypedSopNode<CenterSopParamsConfig> {

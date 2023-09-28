@@ -24,6 +24,7 @@ class LatticeSopParamConfig extends NodeParamsConfig {
 	p6 = ParamConfig.VECTOR3(DEFAULT.p6);
 	p7 = ParamConfig.VECTOR3(DEFAULT.p7);
 	offset = ParamConfig.VECTOR3(DEFAULT.offset);
+	moveObjectPosition = ParamConfig.BOOLEAN(DEFAULT.moveObjectPosition);
 }
 const ParamsConfig = new LatticeSopParamConfig();
 

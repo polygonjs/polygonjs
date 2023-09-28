@@ -1,33 +1,33 @@
 // import {pushOnArrayAtEntry} from '../MapUtils';
 import {CoreWFCTileAttribute} from './WFCAttributes';
-import {WFCTileSide, WFCConnection, sortTileIds, SortedTileIds, ALL_SIDES} from './WFCCommon';
-import {validConnectionObject, wfcConnectionFromObject} from './WFCConnection';
-import {filterTileObjects, filterConnectionObjects} from './WFCUtils';
+import {WFCTileSide, WFCRule, sortTileIds, SortedTileIds, ALL_SIDES} from './WFCCommon';
+import {validRuleObject, wfcRuleFromObject} from './WFCRule';
+import {filterTileObjects, filterRuleObjects} from './WFCUtils';
 import {Object3D} from 'three';
 
 const _sortedTileIds: SortedTileIds = {
 	first: '',
 	second: '',
 };
-type TraverseConnectionsCallback = (id0: string, id1: string, side0: WFCTileSide, side1: WFCTileSide) => void;
+type TraverseRulesCallback = (id0: string, id1: string, side0: WFCTileSide, side1: WFCTileSide) => void;
 type TraverseUnconnectedSidesCallback = (side: WFCTileSide[]) => void;
 
-type ConnectionsByTileId = Map<string, Map<string, Map<WFCTileSide, Set<WFCTileSide>>>>;
-function _addConnection(connection: WFCConnection, connectionsByTileId: ConnectionsByTileId, invert: boolean) {
-	sortTileIds(connection.id0, connection.id1, _sortedTileIds, invert);
-	let mapForId0 = connectionsByTileId.get(_sortedTileIds.first);
+type RulesByTileId = Map<string, Map<string, Map<WFCTileSide, Set<WFCTileSide>>>>;
+function _addRule(rule: WFCRule, rulesByTileId: RulesByTileId, invert: boolean) {
+	sortTileIds(rule.id0, rule.id1, _sortedTileIds, invert);
+	let mapForId0 = rulesByTileId.get(_sortedTileIds.first);
 	if (!mapForId0) {
 		mapForId0 = new Map();
-		connectionsByTileId.set(_sortedTileIds.first, mapForId0);
+		rulesByTileId.set(_sortedTileIds.first, mapForId0);
 	}
 	let sides = mapForId0.get(_sortedTileIds.second);
 	if (!sides) {
 		sides = new Map();
 		mapForId0.set(_sortedTileIds.second, sides);
 	}
-	let inverted = connection.id0 != _sortedTileIds.first;
-	const _side0 = inverted ? connection.side1 : connection.side0;
-	const _side1 = inverted ? connection.side0 : connection.side1;
+	let inverted = rule.id0 != _sortedTileIds.first;
+	const _side0 = inverted ? rule.side1 : rule.side0;
+	const _side1 = inverted ? rule.side0 : rule.side1;
 	const side0s = _side0.split('') as WFCTileSide[];
 	const side1s = _side1.split('') as WFCTileSide[];
 	for (const side0 of side0s) {
@@ -43,58 +43,31 @@ function _addConnection(connection: WFCConnection, connectionsByTileId: Connecti
 		}
 	}
 }
+interface WFCTilesCollectionOptions {
+	tileAndRuleObjects: Object3D[];
+}
 export class WFCTilesCollection {
 	private _tiles: Object3D[];
 	private _tilesById: Map<string, Object3D>;
-	private _connectionsByTileId: ConnectionsByTileId = new Map();
+	private _rulesByTileId: RulesByTileId = new Map();
 	private _errorTileObject: Object3D | null;
 	private _unresolvedTileObject: Object3D | null;
-	constructor(objects: Object3D[]) {
-		this._tiles = filterTileObjects(objects);
-		this._errorTileObject = objects.find((o) => CoreWFCTileAttribute.getIsErrorTile(o)) || null;
-		this._unresolvedTileObject = objects.find((o) => CoreWFCTileAttribute.getIsUnresolvedTile(o)) || null;
+	constructor(options: WFCTilesCollectionOptions) {
+		this._tiles = filterTileObjects(options.tileAndRuleObjects);
+		this._errorTileObject = this._tiles.find((o) => CoreWFCTileAttribute.getIsErrorTile(o)) || null;
+		this._unresolvedTileObject = this._tiles.find((o) => CoreWFCTileAttribute.getIsUnresolvedTile(o)) || null;
 		this._tilesById = new Map();
 		for (const tile of this._tiles) {
 			this._tilesById.set(CoreWFCTileAttribute.getTileId(tile), tile);
 		}
 
-		// create connections from tile side attributes
-		for (const tile0 of this._tiles) {
-			const tileId0 = CoreWFCTileAttribute.getTileId(tile0);
-			for (const side0 of ALL_SIDES) {
-				const sideName0 = CoreWFCTileAttribute.getSideName(tile0, side0);
-
-				if (sideName0) {
-					for (const tile1 of this._tiles) {
-						const tileId1 = CoreWFCTileAttribute.getTileId(tile1);
-						if (tileId0 != tileId1) {
-							for (const side1 of ALL_SIDES) {
-								const sideName1 = CoreWFCTileAttribute.getSideName(tile1, side1);
-								if (sideName0 == sideName1) {
-									const connection: WFCConnection = {
-										id0: tileId0,
-										side0,
-										id1: tileId1,
-										side1,
-									};
-									sortTileIds(connection.id0, connection.id1, _sortedTileIds);
-									_addConnection(connection, this._connectionsByTileId, false);
-									_addConnection(connection, this._connectionsByTileId, true);
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-
 		// create connections from connection objects
-		const connectionObjects = filterConnectionObjects(objects);
-		const connections = connectionObjects.filter(validConnectionObject).map(wfcConnectionFromObject);
-		for (const connection of connections) {
-			sortTileIds(connection.id0, connection.id1, _sortedTileIds);
-			_addConnection(connection, this._connectionsByTileId, false);
-			_addConnection(connection, this._connectionsByTileId, true);
+		const ruleObjects = filterRuleObjects(options.tileAndRuleObjects);
+		const rules = ruleObjects.filter(validRuleObject).map(wfcRuleFromObject);
+		for (const rule of rules) {
+			sortTileIds(rule.id0, rule.id1, _sortedTileIds);
+			_addRule(rule, this._rulesByTileId, false);
+			_addRule(rule, this._rulesByTileId, true);
 		}
 	}
 	tiles() {
@@ -109,9 +82,9 @@ export class WFCTilesCollection {
 	unresolvedTile() {
 		return this._unresolvedTileObject;
 	}
-	traverseConnections(id0: string, id1: string, callback: TraverseConnectionsCallback): void {
+	traverseRules(id0: string, id1: string, callback: TraverseRulesCallback): void {
 		sortTileIds(id0, id1, _sortedTileIds);
-		const mapForFirst = this._connectionsByTileId.get(_sortedTileIds.first);
+		const mapForFirst = this._rulesByTileId.get(_sortedTileIds.first);
 		if (!mapForFirst) {
 			return;
 		}
@@ -126,7 +99,7 @@ export class WFCTilesCollection {
 		});
 	}
 	traverseUnconnectedSides(id: string, callback: TraverseUnconnectedSidesCallback): void {
-		const mapForFirst = this._connectionsByTileId.get(id);
+		const mapForFirst = this._rulesByTileId.get(id);
 		if (!mapForFirst) {
 			callback(ALL_SIDES);
 			return;
@@ -145,7 +118,7 @@ export class WFCTilesCollection {
 	allowedTileConfig(id0: string, side0: WFCTileSide, id1: string, side1: WFCTileSide): boolean {
 		// console.log('allowedTileConfig', {id0, side0, id1, side1});
 		sortTileIds(id0, id1, _sortedTileIds);
-		const mapForFirst = this._connectionsByTileId.get(_sortedTileIds.first);
+		const mapForFirst = this._rulesByTileId.get(_sortedTileIds.first);
 		if (!mapForFirst) {
 			return false;
 		}

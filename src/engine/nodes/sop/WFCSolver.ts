@@ -10,7 +10,7 @@ import {CoreGroup} from '../../../core/geometry/Group';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {WFCSolver} from '../../../core/wfc/WFCSolver';
-import {filterTileObjects, filterConnectionObjects} from '../../../core/wfc/WFCUtils';
+import {filterTileObjects, filterRuleObjects} from '../../../core/wfc/WFCUtils';
 
 class WFCSolverSopParamsConfig extends NodeParamsConfig {
 	/** @param iterations */
@@ -44,7 +44,7 @@ export class WFCSolverSopNode extends TypedSopNode<WFCSolverSopParamsConfig> {
 
 	override initializeNode() {
 		this.io.inputs.setCount(2);
-		this.io.inputs.initInputsClonedState(InputCloneMode.FROM_NODE);
+		this.io.inputs.initInputsClonedState(InputCloneMode.NEVER);
 	}
 
 	override async cook(inputCoreGroups: CoreGroup[]) {
@@ -56,26 +56,23 @@ export class WFCSolverSopNode extends TypedSopNode<WFCSolverSopParamsConfig> {
 			this.states.error.set('no quad objects found');
 			return;
 		}
-		const tileAndConnectionObjects = coreGroup1.threejsObjects();
-		const tileObjects = filterTileObjects(tileAndConnectionObjects);
-		const connectionObjects = filterConnectionObjects(tileAndConnectionObjects);
+		const tileAndRuleObjects = coreGroup1.threejsObjects();
+		const tileObjects = filterTileObjects(tileAndRuleObjects);
+		const ruleObjects = filterRuleObjects(tileAndRuleObjects);
 		if (tileObjects.length == 0) {
 			this.states.error.set('no tile objects found');
 			return;
 		}
-		if (connectionObjects.length == 0) {
-			this.states.error.set('no connection objects found');
+		if (ruleObjects.length == 0) {
+			this.states.error.set('no rule objects found');
 			return;
 		}
 
 		const {stepsCount, quadSeed, configSeed, tileHeight} = this.pv;
 		const newObjects: Object3D[] = [];
 
-		// console.log('************************');
-		// console.log('************************');
-		// console.log('************************');
 		for (const quadObject of quadObjects) {
-			const solver = new WFCSolver(tileAndConnectionObjects, quadObject, tileHeight);
+			const solver = new WFCSolver({tileAndRuleObjects, quadObject, height: tileHeight});
 			for (let i = 0; i < stepsCount; i++) {
 				solver.step(quadSeed, configSeed);
 			}

@@ -9,7 +9,7 @@ import {CoreObjectType} from '../../../../../core/geometry/ObjectContent';
 import {BaseCoreObject} from '../../../../../core/geometry/entities/object/BaseCoreObject';
 import {AttribCreateSopNodeParams, defaultAttribValue} from '../../../../operations/sop/utils/attribCreate/Common';
 
-export async function addObjectAttribute(
+export async function addObjectAttributeWithExpression(
 	attribType: AttribType,
 	coreGroup: CoreGroup,
 	params: AttribCreateSopNodeParams,

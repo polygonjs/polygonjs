@@ -5,6 +5,7 @@ import {
 	getObjectString,
 	setObjectString,
 	setObjectNumber,
+	getObjectNumber,
 } from '../geometry/AttributeUtils';
 import {WFCTileSide, WFC_ALL_HORIZONTAL_SIDES} from './WFCCommon';
 import {TypeAssert} from '../../engine/poly/Assert';
@@ -20,9 +21,10 @@ export enum WFCTileAttribute {
 	// IS_TILE = 'WFCTileAttribute_isTile',
 	TILE_ID = 'WFCTileAttribute_tileId',
 	ROTATION_Y_ALLOWED = 'WFCTileAttribute_rotationYAllowed',
+	WEIGHT = 'WFCTileAttribute_weight',
 	IS_ERROR_TILE = 'WFCTileAttribute_isErrorTile',
 	IS_UNRESOLVED_TILE = 'WFCTileAttribute_isUnresolvedTile',
-	ENTROPY = 'WFCTileAttribute_entropy',
+
 	// sidename
 	SIDE_NAME_S = 'WFCTileAttribute_sideNameS',
 	SIDE_NAME_N = 'WFCTileAttribute_sideNameN',
@@ -31,6 +33,10 @@ export enum WFCTileAttribute {
 	SIDE_NAME_H = 'WFCTileAttribute_sideNameAllHorizontalSides',
 	SIDE_NAME_B = 'WFCTileAttribute_sideNameB',
 	SIDE_NAME_T = 'WFCTileAttribute_sideNameT',
+
+	// solver output
+	ENTROPY = 'WFCTileAttribute_entropy',
+	STEP = 'WFCTileAttribute_step',
 }
 export enum WFCConnectionAttribute {
 	// IS_CONNECTION = 'WFCTileAttribute_isConnection',
@@ -87,6 +93,12 @@ export class CoreWFCTileAttribute {
 	static getRotationYAllowed(object: ObjectContent<CoreObjectType>) {
 		return getObjectBoolean(object, WFCTileAttribute.ROTATION_Y_ALLOWED, false);
 	}
+	static setWeight(object: ObjectContent<CoreObjectType>, value: number) {
+		setObjectNumber(object, WFCTileAttribute.WEIGHT, value);
+	}
+	static getWeight(object: ObjectContent<CoreObjectType>) {
+		return getObjectNumber(object, WFCTileAttribute.WEIGHT, 1);
+	}
 	static setIsErrorTile(object: ObjectContent<CoreObjectType>, value: boolean) {
 		setObjectBoolean(object, WFCTileAttribute.IS_ERROR_TILE, value);
 	}
@@ -109,7 +121,7 @@ export class CoreWFCTileAttribute {
 		setObjectString(object, _sideNameAttribute(side), value);
 	}
 }
-export class CoreWFCConnectionAttribute {
+export class CoreWFCRuleAttribute {
 	// static setIsConnection(object: ObjectContent<CoreObjectType>, value: boolean) {
 	// 	setObjectBoolean(object, WFCConnectionAttribute.IS_CONNECTION, value);
 	// }

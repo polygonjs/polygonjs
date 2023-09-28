@@ -1,4 +1,4 @@
-import {Vector3, Object3D, Mesh, Line3} from 'three';
+import {Vector3, Object3D, Mesh, Line3, Box3} from 'three';
 import {Attribute} from '../Attribute';
 
 export type Vector3_8 = [Vector3, Vector3, Vector3, Vector3, Vector3, Vector3, Vector3, Vector3];
@@ -28,7 +28,17 @@ const pb = new Vector3();
 const pt = new Vector3();
 const target = new Vector3();
 
-export function cubeLatticeDeform(object: Object3D, points: Vector3_8, offset: Vector3) {
+export interface CubeLatticeDeformOptions {
+	offset: Vector3;
+	moveObjectPosition: boolean;
+}
+const _box3 = new Box3();
+const _box3Size = new Vector3();
+const _originalObjectPosition = new Vector3();
+const _positionDelta = new Vector3();
+const _positionRatio = new Vector3();
+
+export function cubeLatticeDeform(object: Object3D, points: Vector3_8, options: CubeLatticeDeformOptions) {
 	const geometry = (object as Mesh).geometry;
 	if (!geometry) {
 		return;
@@ -38,6 +48,14 @@ export function cubeLatticeDeform(object: Object3D, points: Vector3_8, offset: V
 		return;
 	}
 	const positionArray = positionAttribute.array;
+	const {offset, moveObjectPosition} = options;
+
+	if (moveObjectPosition) {
+		_box3.setFromObject(object);
+		_box3.getSize(_box3Size);
+		_originalObjectPosition.copy(object.position);
+		_positionRatio.copy(object.position).sub(_box3.min).divide(_box3Size);
+	}
 
 	lb0.start = points[0];
 	lb0.end = points[1];
@@ -55,6 +73,21 @@ export function cubeLatticeDeform(object: Object3D, points: Vector3_8, offset: V
 
 		interpolate(_v3, lb0, lb1, lt0, lt1, target);
 		target.toArray(positionArray, i * 3);
+	}
+
+	if (moveObjectPosition) {
+		geometry.computeBoundingBox();
+		_box3.setFromObject(object);
+		_box3.getCenter(_positionDelta);
+		_positionDelta.sub(_originalObjectPosition);
+		object.position.add(_positionDelta);
+		object.updateMatrix();
+
+		for (let i = 0; i < pointsCount; i++) {
+			_v3.fromArray(positionArray, i * 3);
+			_v3.sub(_positionDelta);
+			_v3.toArray(positionArray, i * 3);
+		}
 	}
 
 	positionAttribute.needsUpdate = true;

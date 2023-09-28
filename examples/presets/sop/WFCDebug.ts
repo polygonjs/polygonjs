@@ -1,10 +1,8 @@
 import {BasePreset, NodePresetsCollection, PresetRegister, PresetsCollectionFactory} from '../BasePreset';
-import {WFCTileConnectDebugSopNode} from '../../../src/engine/nodes/sop/WFCTileConnectDebug';
+import {WFCDebugSopNode} from '../../../src/engine/nodes/sop/WFCDebug';
 import {EMPTY_TILE_ID} from '../../../src/core/wfc/WFCCommon';
 
-const WFCTileConnectDebugSopNodePresetsCollectionFactory: PresetsCollectionFactory<WFCTileConnectDebugSopNode> = (
-	node: WFCTileConnectDebugSopNode
-) => {
+const WFCDebugSopNodePresetsCollectionFactory: PresetsCollectionFactory<WFCDebugSopNode> = (node: WFCDebugSopNode) => {
 	const collection = new NodePresetsCollection();
 
 	collection.addPreset(
@@ -32,10 +30,7 @@ const WFCTileConnectDebugSopNodePresetsCollectionFactory: PresetsCollectionFacto
 
 	return collection;
 };
-export const WFCTileConnectDebugSopPresetRegister: PresetRegister<
-	typeof WFCTileConnectDebugSopNode,
-	WFCTileConnectDebugSopNode
-> = {
-	nodeClass: WFCTileConnectDebugSopNode,
-	setupFunc: WFCTileConnectDebugSopNodePresetsCollectionFactory,
+export const WFCDebugSopPresetRegister: PresetRegister<typeof WFCDebugSopNode, WFCDebugSopNode> = {
+	nodeClass: WFCDebugSopNode,
+	setupFunc: WFCDebugSopNodePresetsCollectionFactory,
 };

@@ -1,31 +1,31 @@
 import {Group, Object3D} from 'three';
 import {CoreObjectType, ObjectContent} from '../geometry/ObjectContent';
-import {CoreWFCConnectionAttribute} from './WFCAttributes';
-import {WFCTileSide, WFCConnection} from './WFCCommon';
+import {CoreWFCRuleAttribute} from './WFCAttributes';
+import {WFCTileSide, WFCRule} from './WFCCommon';
 
-export function validConnectionObject(object: ObjectContent<CoreObjectType>) {
-	const id0 = CoreWFCConnectionAttribute.getId0(object) as string | undefined;
-	const id1 = CoreWFCConnectionAttribute.getId1(object) as string | undefined;
-	const side0 = CoreWFCConnectionAttribute.getSide0(object) as WFCTileSide | undefined;
-	const side1 = CoreWFCConnectionAttribute.getSide1(object) as WFCTileSide | undefined;
+export function validRuleObject(object: ObjectContent<CoreObjectType>) {
+	const id0 = CoreWFCRuleAttribute.getId0(object) as string | undefined;
+	const id1 = CoreWFCRuleAttribute.getId1(object) as string | undefined;
+	const side0 = CoreWFCRuleAttribute.getSide0(object) as WFCTileSide | undefined;
+	const side1 = CoreWFCRuleAttribute.getSide1(object) as WFCTileSide | undefined;
 	return id0 != undefined && id1 != undefined && side0 != undefined && side1 != undefined;
 }
-export function wfcConnectionFromObject(object: ObjectContent<CoreObjectType>): WFCConnection {
-	const connection: WFCConnection = {
-		id0: CoreWFCConnectionAttribute.getId0(object),
-		id1: CoreWFCConnectionAttribute.getId1(object),
-		side0: CoreWFCConnectionAttribute.getSide0(object) as WFCTileSide,
-		side1: CoreWFCConnectionAttribute.getSide1(object) as WFCTileSide,
+export function wfcRuleFromObject(object: ObjectContent<CoreObjectType>): WFCRule {
+	const connection: WFCRule = {
+		id0: CoreWFCRuleAttribute.getId0(object),
+		id1: CoreWFCRuleAttribute.getId1(object),
+		side0: CoreWFCRuleAttribute.getSide0(object) as WFCTileSide,
+		side1: CoreWFCRuleAttribute.getSide1(object) as WFCTileSide,
 	};
 	return connection;
 }
-export function createConnectionObject(connection: WFCConnection): Object3D {
+export function createRuleObject(rule: WFCRule): Object3D {
 	const group = new Group();
 	// CoreWFCConnectionAttribute.setIsConnection(group, true);
-	CoreWFCConnectionAttribute.setId0(group, connection.id0);
-	CoreWFCConnectionAttribute.setId1(group, connection.id1);
-	CoreWFCConnectionAttribute.setSide0(group, connection.side0);
-	CoreWFCConnectionAttribute.setSide1(group, connection.side1);
+	CoreWFCRuleAttribute.setId0(group, rule.id0);
+	CoreWFCRuleAttribute.setId1(group, rule.id1);
+	CoreWFCRuleAttribute.setSide0(group, rule.side0);
+	CoreWFCRuleAttribute.setSide1(group, rule.side1);
 	return group;
 }
 // export class WFCConnection {

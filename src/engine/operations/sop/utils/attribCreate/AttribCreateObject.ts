@@ -7,7 +7,11 @@ import {BaseCoreObject} from '../../../../../core/geometry/entities/object/BaseC
 import {CoreObjectType} from '../../../../../core/geometry/ObjectContent';
 import {defaultAttribValue} from './Common';
 
-export function addObjectAttribute(attribType: AttribType, coreGroup: CoreGroup, params: AttribCreateSopParams) {
+export function addObjectAttributeWithoutExpression(
+	attribType: AttribType,
+	coreGroup: CoreGroup,
+	params: AttribCreateSopParams
+) {
 	const coreObjects = CoreMask.filterCoreObjects(coreGroup, params, coreGroup.allCoreObjects());
 
 	// add attrib if non existent

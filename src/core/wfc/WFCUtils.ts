@@ -1,13 +1,13 @@
 import {CoreObjectType, ObjectContent, isObject3D} from '../geometry/ObjectContent';
 import {QuadObject} from '../geometry/modules/quad/QuadObject';
 import {QuadPrimitive} from '../geometry/modules/quad/QuadPrimitive';
-import {CoreWFCTileAttribute, CoreWFCConnectionAttribute, WFCQuadAttribute} from './WFCAttributes';
+import {CoreWFCTileAttribute, CoreWFCRuleAttribute, WFCQuadAttribute} from './WFCAttributes';
 
 export function filterTileObjects(objects: ObjectContent<CoreObjectType>[]) {
 	return objects.filter((object) => CoreWFCTileAttribute.getIsTile(object)).filter(isObject3D);
 }
-export function filterConnectionObjects(objects: ObjectContent<CoreObjectType>[]) {
-	return objects.filter((object) => CoreWFCConnectionAttribute.getIsConnection(object));
+export function filterRuleObjects(objects: ObjectContent<CoreObjectType>[]) {
+	return objects.filter((object) => CoreWFCRuleAttribute.getIsConnection(object));
 }
 
 export function isQuadNodeSolveAllowed(quadObject: QuadObject, index: number): boolean {

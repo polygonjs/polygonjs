@@ -70,7 +70,9 @@ import {scatterSopPresetRegister} from './sop/Scatter';
 import {spotLightSopPresetRegister} from './sop/SpotLight';
 import {textSopPresetRegister} from './sop/Text';
 import {transformSopPresetRegister} from './sop/Transform';
-import {WFCTileConnectDebugSopPresetRegister} from './sop/WFCTileConnectDebug';
+import {WFCDebugSopPresetRegister} from './sop/WFCDebug';
+import {WFCRuleFromSideNameSopPresetRegister} from './sop/WFCRuleFromSideName';
+import {WFCTilePropertiesSopPresetRegister} from './sop/WFCTileProperties';
 
 import {PresetRegister} from './BasePreset';
 import {BaseNodeClass, BaseNodeType} from '../../src/engine/nodes/_Base';
@@ -146,7 +148,9 @@ class PresetLibraryClass {
 		this._registerPreset(spotLightSopPresetRegister);
 		this._registerPreset(textSopPresetRegister);
 		this._registerPreset(transformSopPresetRegister);
-		this._registerPreset(WFCTileConnectDebugSopPresetRegister);
+		this._registerPreset(WFCDebugSopPresetRegister);
+		this._registerPreset(WFCRuleFromSideNameSopPresetRegister);
+		this._registerPreset(WFCTilePropertiesSopPresetRegister);
 	}
 
 	private _registerPreset<N extends typeof BaseNodeClass, NI extends BaseNodeClass>(register: PresetRegister<N, NI>) {

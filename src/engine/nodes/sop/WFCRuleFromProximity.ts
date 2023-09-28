@@ -1,5 +1,5 @@
 /**
- * connects WFC tiles
+ * creates rules used by the WFCSolver
  *
  *
  */
@@ -11,7 +11,7 @@ import {InputCloneMode} from '../../poly/InputCloneMode';
 import {Object3D, Quaternion} from 'three';
 import {WFCTileSide, rotatedSide, tileSideUnrotated, neighbourTileSideUnrotated} from '../../../core/wfc/WFCCommon';
 import {CoreWFCTileAttribute} from '../../../core/wfc/WFCAttributes';
-import {createConnectionObject} from '../../../core/wfc/WFCConnection';
+import {createRuleObject} from '../../../core/wfc/WFCRule';
 
 const identityQuaternion = new Quaternion();
 const _q = new Quaternion();
@@ -27,48 +27,49 @@ function _angleIncrement(object: Object3D) {
 	return _q.angleTo(identityQuaternion) / (Math.PI / 2);
 }
 
-class WFCTileConnectSopParamsConfig extends NodeParamsConfig {}
-const ParamsConfig = new WFCTileConnectSopParamsConfig();
+class WFCRuleFromProximitySopParamsConfig extends NodeParamsConfig {}
+const ParamsConfig = new WFCRuleFromProximitySopParamsConfig();
 
-export class WFCTileConnectSopNode extends TypedSopNode<WFCTileConnectSopParamsConfig> {
+export class WFCRuleFromProximitySopNode extends TypedSopNode<WFCRuleFromProximitySopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return SopType.WFC_TILE_CONNECT;
+		return SopType.WFC_RULE_FROM_PROXIMITY;
 	}
 
 	override initializeNode() {
 		this.io.inputs.setCount(2);
-		this.io.inputs.initInputsClonedState([InputCloneMode.FROM_NODE, InputCloneMode.NEVER]);
+		this.io.inputs.initInputsClonedState([InputCloneMode.NEVER]);
 	}
 
 	override async cook(inputCoreGroups: CoreGroup[]) {
 		const coreGroup0 = inputCoreGroups[0];
 		const coreGroup1 = inputCoreGroups[1];
-		const inputObjects = coreGroup0.allObjects();
-		const templateObjects = coreGroup1.threejsObjects();
+		const inputObjects = coreGroup0.threejsObjects();
+		const tileObjects = coreGroup1.threejsObjects();
+		const outputObjects: Object3D[] = [...inputObjects];
 
-		const templateObjectsInGrid: Object3D[][][] = []; // x/y/z
-		const _addTemplateObject = (templateObject: Object3D) => {
-			const x = Math.round(templateObject.position.x);
-			const y = Math.round(templateObject.position.y);
-			const z = Math.round(templateObject.position.z);
-			templateObjectsInGrid[x] = templateObjectsInGrid[x] || [];
-			templateObjectsInGrid[x][y] = templateObjectsInGrid[x][y] || [];
-			templateObjectsInGrid[x][y][z] = templateObject;
+		const tileObjectsInGrid: Object3D[][][] = []; // x/y/z
+		const _addTileObject = (tileObject: Object3D) => {
+			const x = Math.round(tileObject.position.x);
+			const y = Math.round(tileObject.position.y);
+			const z = Math.round(tileObject.position.z);
+			tileObjectsInGrid[x] = tileObjectsInGrid[x] || [];
+			tileObjectsInGrid[x][y] = tileObjectsInGrid[x][y] || [];
+			tileObjectsInGrid[x][y][z] = tileObject;
 		};
-		const _getTemplateObject = (x: number, y: number, z: number): Object3D | undefined => {
+		const _getTileObject = (x: number, y: number, z: number): Object3D | undefined => {
 			x = Math.round(x);
 			y = Math.round(y);
 			z = Math.round(z);
-			const xs = templateObjectsInGrid[x];
+			const xs = tileObjectsInGrid[x];
 			if (!xs) {
 				return;
 			}
-			const yz = templateObjectsInGrid[x][y];
+			const yz = tileObjectsInGrid[x][y];
 			if (!yz) {
 				return;
 			}
-			return templateObjectsInGrid[x][y][z];
+			return tileObjectsInGrid[x][y][z];
 		};
 		const _addConnectionIfNeighbourFound = (
 			currentObject: Object3D,
@@ -79,7 +80,7 @@ export class WFCTileConnectSopNode extends TypedSopNode<WFCTileConnectSopParamsC
 			const x = Math.round(currentObject.position.x);
 			const y = Math.round(currentObject.position.y);
 			const z = Math.round(currentObject.position.z);
-			const neighbour = _getTemplateObject(x + xOffset, y + yOffset, z + zOffset);
+			const neighbour = _getTileObject(x + xOffset, y + yOffset, z + zOffset);
 			if (!neighbour) {
 				return;
 			}
@@ -96,35 +97,35 @@ export class WFCTileConnectSopNode extends TypedSopNode<WFCTileConnectSopParamsC
 			// xOffset < 0 ? 'n' : xOffset > 0 ? 's' : zOffset < 0 ? 'e' : zOffset > 0 ? 'w' : yOffset < 0 ? 't' : 'b';
 			const neighbourSide = rotatedSide(neighbourSideUnrotated, Math.round(_angleIncrement(neighbour)));
 
-			const group = createConnectionObject({
+			const ruleObject = createRuleObject({
 				id0,
 				id1,
 				side0: currentObjectSide,
 				side1: neighbourSide,
 			});
 
-			inputObjects.push(group);
+			outputObjects.push(ruleObject);
 		};
-		for (const templateObject of templateObjects) {
-			const isTile = CoreWFCTileAttribute.getIsTile(templateObject);
+		for (const tileObject of tileObjects) {
+			const isTile = CoreWFCTileAttribute.getIsTile(tileObject);
 			if (!isTile) {
 				continue;
 			}
-			_addTemplateObject(templateObject);
+			_addTileObject(tileObject);
 		}
-		for (const templateObject of templateObjects) {
-			const isTile = CoreWFCTileAttribute.getIsTile(templateObject);
+		for (const tileObject of tileObjects) {
+			const isTile = CoreWFCTileAttribute.getIsTile(tileObject);
 			if (!isTile) {
 				continue;
 			}
-			_addConnectionIfNeighbourFound(templateObject, -1, 0, 0);
-			_addConnectionIfNeighbourFound(templateObject, +1, 0, 0);
-			_addConnectionIfNeighbourFound(templateObject, 0, -1, 0);
-			_addConnectionIfNeighbourFound(templateObject, 0, +1, 0);
-			_addConnectionIfNeighbourFound(templateObject, 0, 0, -1);
-			_addConnectionIfNeighbourFound(templateObject, 0, 0, +1);
+			_addConnectionIfNeighbourFound(tileObject, -1, 0, 0);
+			_addConnectionIfNeighbourFound(tileObject, +1, 0, 0);
+			_addConnectionIfNeighbourFound(tileObject, 0, -1, 0);
+			_addConnectionIfNeighbourFound(tileObject, 0, +1, 0);
+			_addConnectionIfNeighbourFound(tileObject, 0, 0, -1);
+			_addConnectionIfNeighbourFound(tileObject, 0, 0, +1);
 		}
 
-		this.setObjects(inputObjects);
+		this.setObjects(outputObjects);
 	}
 }

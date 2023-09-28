@@ -30,7 +30,7 @@ import {SopType} from '../../poly/registers/nodes/types/Sop';
 import {addPointAttribute} from './utils/attribCreate/AttribCreatePoint';
 import {addVertexAttribute} from './utils/attribCreate/AttribCreateVertex';
 import {addPrimitiveAttribute} from './utils/attribCreate/AttribCreatePrimitive';
-import {addObjectAttribute} from './utils/attribCreate/AttribCreateObject';
+import {addObjectAttributeWithExpression} from './utils/attribCreate/AttribCreateObject';
 import {addCoreGroupAttribute} from './utils/attribCreate/AttribCreateCoreGroup';
 
 const DEFAULT = AttribCreateSopOperation.DEFAULT_PARAMS;
@@ -96,14 +96,14 @@ export class AttribCreateSopNode extends TypedSopNode<AttribCreateSopParamsConfi
 	}
 
 	private _operation: AttribCreateSopOperation | undefined;
-	override cook(inputCoreGroups: CoreGroup[]) {
+	override async cook(inputCoreGroups: CoreGroup[]) {
 		// cannot yet convert to an operation, as expressions may be used in this node
 		// but we can still use one when no expression is required
 		const attribName = this.pv.name;
 
 		if (this._isUsingExpression()) {
 			if (attribName && attribName.trim() != '') {
-				this._addAttribute(ATTRIBUTE_CLASSES[this.pv.class], inputCoreGroups[0]);
+				await this._addAttribute(ATTRIBUTE_CLASSES[this.pv.class], inputCoreGroups[0]);
 			} else {
 				this.states.error.set('attribute name is not valid');
 			}
@@ -126,7 +126,7 @@ export class AttribCreateSopNode extends TypedSopNode<AttribCreateSopParamsConfi
 				await addPrimitiveAttribute(attribType, coreGroup, this.p);
 				return this.setCoreGroup(coreGroup);
 			case AttribClass.OBJECT:
-				await addObjectAttribute(attribType, coreGroup, this.p, this.pv);
+				await addObjectAttributeWithExpression(attribType, coreGroup, this.p, this.pv);
 				return this.setCoreGroup(coreGroup);
 			case AttribClass.CORE_GROUP:
 				await addCoreGroupAttribute(attribType, coreGroup, this.p, this.pv);

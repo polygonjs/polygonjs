@@ -7,7 +7,7 @@ import {NeighbourData} from '../graph/quad/QuadGraph';
 import {QuadNode} from '../graph/quad/QuadNode';
 import {Attribute} from '../geometry/Attribute';
 import {pushOnArrayAtEntry, popFromArrayAtEntry, addToSetAtEntry} from '../MapUtils';
-import {sample, spliceSample} from '../ArrayUtils';
+import {arrayUniq, sample, spliceSample} from '../ArrayUtils';
 import {setToArray} from '../SetUtils';
 import {NeighbourIndex, CCW_HALF_EDGE_SIDES} from '../graph/quad/QuadGraphCommon';
 import {mod} from '../math/_Module';
@@ -16,6 +16,7 @@ import {QuadObject} from '../geometry/modules/quad/QuadObject';
 import {WFCFloorGraph} from './WFCFloorGraph';
 import {isQuadNodeSolveAllowed, quadPrimitiveFloorIndex} from './WFCUtils';
 import {QuadPrimitive} from '../geometry/modules/quad/QuadPrimitive';
+import {WFCTileConfigSampler} from './WFCTileConfigSampler';
 
 const tileCorners: TileCorners = {
 	p0: new Vector3(),
@@ -34,7 +35,15 @@ const _configStats: TileConfigStats = {
 };
 const _entropiesSet: Set<number> = new Set();
 const _sortedEntropies: number[] = [];
+
+interface WFCSolverOptions {
+	tileAndRuleObjects: Object3D[];
+	quadObject: QuadObject;
+	height: number;
+}
+const _tileConfigSampler = new WFCTileConfigSampler();
 export class WFCSolver {
+	private _height: number;
 	private _stepsCount: number = 0;
 	private _objects: Object3D[] = [];
 	private _tilesCollection: WFCTilesCollection;
@@ -46,14 +55,13 @@ export class WFCSolver {
 	private _floorGraphs: WFCFloorGraph[] = [];
 	private _quadIndicesByFloorIndex: Map<number, Set<number>> = new Map();
 	private _floorGraphIndexByQuadNode: Map<QuadNode, number> = new Map();
+	private _samplingWithWeightRequired: boolean = false;
 	//
-	constructor(
-		tileAndConnectionObjects: Object3D[],
-		public readonly quadObject: QuadObject,
-		public readonly height: number
-	) {
+	constructor(options: WFCSolverOptions) {
+		const {quadObject} = options;
+		this._height = options.height;
 		// get tile configs
-		this._tilesCollection = new WFCTilesCollection(tileAndConnectionObjects);
+		this._tilesCollection = new WFCTilesCollection(options);
 		const tiles = this._tilesCollection.tiles();
 		const allTileConfigs: TileConfig[] = [];
 		for (const tile of tiles) {
@@ -67,9 +75,18 @@ export class WFCSolver {
 				allTileConfigs.push({tileId, rotation: 3});
 			}
 		}
+		// check if the tiles have different weights
+		const weights: number[] = [];
+		arrayUniq(
+			tiles.map((tile) => CoreWFCTileAttribute.getWeight(tile)),
+			weights
+		);
+		if (weights.length > 1) {
+			this._samplingWithWeightRequired = true;
+		}
 
 		// get floors count
-		const primitivesCount = QuadPrimitive.primitivesCount(this.quadObject);
+		const primitivesCount = QuadPrimitive.primitivesCount(quadObject);
 		for (let i = 0; i < primitivesCount; i++) {
 			const floorIndex = quadPrimitiveFloorIndex(quadObject, i);
 			addToSetAtEntry(this._quadIndicesByFloorIndex, floorIndex, i);
@@ -121,24 +138,37 @@ export class WFCSolver {
 		const config =
 			_configStats.solid == 0
 				? allowedConfigs[0]
-				: sample(solidTilesStats(allowedConfigs), configSeed + this._stepsCount)!;
+				: this._selectConfig(allowedConfigs, configSeed + this._stepsCount);
 		floorGraph.setAllowedTileConfigsForQuadNode(quadNode, [config]); //this._allowedTileConfigsByQuadId.set(quadNode.id, [config]);
 		this._approveConfigForQuad(config, quadNode);
 		this._updateNeighboursEntropy(quadNode);
 	}
-	addUnresolvedTileObjects() {
-		const unresolvedTile = this._tilesCollection.unresolvedTile();
-		if (!unresolvedTile) {
-			return;
+	private _selectConfig(allowedConfigs: TileConfig[], seed: number): TileConfig {
+		if (this._samplingWithWeightRequired) {
+			_tileConfigSampler.setItemsAndWeights(
+				allowedConfigs,
+				allowedConfigs.map((config) =>
+					CoreWFCTileAttribute.getWeight(this._tilesCollection.tile(config.tileId)!)
+				)
+			);
+			return _tileConfigSampler.sample(seed);
+		} else {
+			return sample(solidTilesStats(allowedConfigs), seed)!;
 		}
-
-		this._quadNodeByEntropy.forEach((quadNodes, entropy) => {
-			for (const quadNode of quadNodes) {
-				const clonedObject = this._placeObjectOnQuad(unresolvedTile, quadNode, 0);
-				CoreWFCTileAttribute.setEntropy(clonedObject, entropy);
-			}
-		});
 	}
+	// addUnresolvedTileObjects() {
+	// 	const unresolvedTile = this._tilesCollection.unresolvedTile();
+	// 	if (!unresolvedTile) {
+	// 		return;
+	// 	}
+
+	// 	this._quadNodeByEntropy.forEach((quadNodes, entropy) => {
+	// 		for (const quadNode of quadNodes) {
+	// 			const clonedObject = this._placeObjectOnQuad(unresolvedTile, quadNode, 0);
+	// 			CoreWFCTileAttribute.setEntropy(clonedObject, entropy);
+	// 		}
+	// 	});
+	// }
 	private _approveConfigForQuad(config: TileConfig, quadNode: QuadNode) {
 		const tileId = config.tileId;
 
@@ -153,7 +183,7 @@ export class WFCSolver {
 	private _placeObjectOnQuad(object: Object3D, quadNode: QuadNode, rotation: NeighbourIndex) {
 		const tileObject = ThreejsCoreObject.clone(object);
 		this._quadNodeCorners(quadNode, tileCorners);
-		tileCorners.height = this.height;
+		tileCorners.height = this._height;
 		tileObject.traverse((child) => {
 			const geometry = (child as Mesh).geometry;
 			if (!geometry) {
