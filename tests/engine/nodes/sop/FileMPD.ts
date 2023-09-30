@@ -30,21 +30,25 @@ export function testenginenodessopFileMPD(qUnit: QUnit) {
 
 	qUnit.test('SOP file Ldraw radar truck', async (assert) => {
 		const {container, fileNode} = await withFileMPD('models/889-1-RadarTruck.mpd_Packed.mpd');
-		assert.equal(container.pointsCount(), 0);
+		assert.equal(container.coreContent()!.pointsCount(), 0);
 		const container2 = await withHierarchy(fileNode, 3);
-		assert.equal(container2.pointsCount(), 75218);
+		assert.equal(container2.coreContent()!.pointsCount(), 75218);
 
 		const objects1 = container.coreContent()?.threejsObjects()!;
 		assert.equal(objects1?.length, 1);
 		assert.equal(ThreejsCoreObject.attribValue(objects1[0], 'buildingStep') as number, 0, 'buildingStep 0');
-		assert.equal(ThreejsCoreObject.attribValue(objects1[0].children[0], 'buildingStep') as number, 1, 'buildingStep 1');
+		assert.equal(
+			ThreejsCoreObject.attribValue(objects1[0].children[0], 'buildingStep') as number,
+			1,
+			'buildingStep 1'
+		);
 	});
 
 	qUnit.test('SOP file Ldraw car', async (assert) => {
 		const {container, fileNode} = await withFileMPD('models/ldraw/officialLibrary/models/car.ldr_Packed.mpd');
-		assert.equal(container.pointsCount(), 0);
+		assert.equal(container.coreContent()!.pointsCount(), 0);
 		const container2 = await withHierarchy(fileNode, 3);
-		assert.equal(container2.pointsCount(), 4508);
+		assert.equal(container2.coreContent()!.pointsCount(), 4508);
 
 		const objects1 = container.coreContent()?.threejsObjects()!;
 		assert.equal(objects1.length, 1, '1 object');

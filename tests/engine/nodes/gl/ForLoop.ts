@@ -19,7 +19,7 @@ QUnit.test('gl ForLoop can be saved and loaded and has the same number of inputs
 	material_basic_builder1.createNode('constant');
 	const forLoop1 = material_basic_builder1.createNode('forLoop');
 	create_required_nodes_for_forLoop_gl_node(forLoop1);
-	assert.equal(forLoop1.io.outputs.namedOutputConnectionPoints().length, 1);
+	assert.equal(forLoop1.io.outputs.namedOutputConnectionPoints()!.length, 1);
 
 	assert.equal(forLoop1.io.inputs.maxInputsCount(), 1);
 	forLoop1.p.inputsCount.set(2);

@@ -21,8 +21,6 @@ export class isDeviceTouchExpression extends BaseMethod {
 	}
 
 	override async processArguments(args: any[]): Promise<boolean> {
-		return new Promise(async (resolve, reject) => {
-			resolve(CoreUserAgent.isTouchDevice());
-		});
+		return CoreUserAgent.isTouchDevice();
 	}
 }

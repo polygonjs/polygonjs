@@ -1,17 +1,11 @@
-import {Camera} from 'three';
-import {Scene} from 'three';
-import {Mesh} from 'three';
-import {PerspectiveCamera} from 'three';
+import {Material, BoxGeometry, PerspectiveCamera, Mesh, Scene, Camera} from 'three';
 import {BaseBuilderMatNodeType} from '../../src/engine/nodes/mat/_BaseBuilder';
 import {PerspectiveCameraObjNode} from '../../src/engine/nodes/obj/PerspectiveCamera';
-// import {ThreejsViewer} from '../../src/engine/viewers/Threejs';
-import {BoxGeometry} from 'three';
-import {Material} from 'three';
 import {PolyScene} from '../../src/engine/scene/PolyScene';
 import {TypedViewer} from '../../src/engine/viewers/_Base';
 import {OrthographicCameraObjNode} from '../../src/engine/nodes/obj/OrthographicCamera';
 import {AbstractRenderer} from '../../src/engine/viewers/Common';
-// import {CoreImage} from '../../src/core/Image';
+// import {Poly} from '../../src/engine/Poly';
 
 interface RendererConfig {
 	canvas: HTMLCanvasElement;
@@ -76,6 +70,7 @@ export class RendererUtils {
 			await callback({viewer, element, canvas, renderer});
 
 			viewer.dispose();
+			// Poly.renderersController.disposeWebGLRendererForCanvas(canvas);
 		});
 	}
 

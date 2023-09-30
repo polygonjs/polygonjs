@@ -12,7 +12,7 @@ qUnit.test('sop/ring simple', async (assert) => {
 	const coreGroup = container.coreContent();
 	const geometry = coreGroup?.threejsObjectsWithGeo()[0].geometry;
 	assert.equal((geometry?.getAttribute('position') as BufferAttribute).array.length, 297);
-	container.boundingBox(tmpBox)
+	container.coreContent()!.boundingBox(tmpBox)
 	assert.equal(tmpBox.min.x, -1);
 	assert.notOk(ring1.isDirty(), 'box is dirty');
 
@@ -20,7 +20,7 @@ qUnit.test('sop/ring simple', async (assert) => {
 	assert.ok(ring1.isDirty(), 'box is dirty');
 	container = await ring1.compute();
 	assert.ok(!ring1.isDirty(), 'box is not dirty anymore');
-	container.boundingBox(tmpBox)
+	container.coreContent()!.boundingBox(tmpBox)
 	assert.equal(tmpBox.min.x, -2.0);
 });
 

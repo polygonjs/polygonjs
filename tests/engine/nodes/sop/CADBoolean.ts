@@ -35,7 +35,7 @@ export function testenginenodessopCADBoolean(qUnit: QUnit) {
 			const cadObjects = coreGroup.cadObjects()!;
 			const cadObjectsTypes = cadObjects.map((o: CadObject<CadGeometryType>) => o.type);
 
-			container.boundingBox(tmpBox);
+			container.coreContent()!.boundingBox(tmpBox);
 
 			return {cadObjectsTypes, allObjectsCount, threejsObjectsCount};
 		}
@@ -47,7 +47,7 @@ export function testenginenodessopCADBoolean(qUnit: QUnit) {
 
 			const pointsCount = coreGroup?.pointsCount();
 
-			container.boundingBox(tmpBox);
+			container.coreContent()!.boundingBox(tmpBox);
 
 			return {allObjectsCount, threejsObjectsCount, pointsCount};
 		}

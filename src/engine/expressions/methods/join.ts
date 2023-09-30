@@ -27,7 +27,6 @@ export class JoinExpression extends BaseMethod {
 	}
 
 	override async processArguments(args: any[]): Promise<string> {
-		let value = '';
 		if (args.length == 1 || args.length == 2) {
 			const arg = args[0];
 			let separator = args[1];
@@ -35,9 +34,9 @@ export class JoinExpression extends BaseMethod {
 				separator = ' ';
 			}
 			if (CoreType.isArray(arg)) {
-				value = arg.join(separator);
+				return arg.join(separator);
 			}
 		}
-		return value;
+		return '';
 	}
 }

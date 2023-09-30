@@ -3,6 +3,7 @@ import {ThreejsCoreObject} from '../../../../src/core/geometry/modules/three/Thr
 import {TextType} from '../../../../src/core/geometry/text/TextType';
 import {checkConsolePrints} from '../../../helpers/Console';
 import {Box3, Vector3} from 'three';
+import { pointsCount,objectsCount } from '../../../../src/engine/containers/utils/GeometryContainerUtils';
 export function testenginenodessopText(qUnit: QUnit) {
 	const tmpBox = new Box3();
 	const tmpSize = new Vector3();
@@ -17,7 +18,7 @@ export function testenginenodessopText(qUnit: QUnit) {
 		let geometry = core_group?.threejsObjectsWithGeo()[0]?.geometry;
 
 		assert.ok(geometry);
-		assert.equal(container.pointsCount(), 3324);
+		assert.equal(pointsCount(container), 3324);
 
 		text1.p.text.set('this is a test');
 		container = await text1.compute();
@@ -25,7 +26,7 @@ export function testenginenodessopText(qUnit: QUnit) {
 		geometry = core_group?.threejsObjectsWithGeo()[0]?.geometry;
 
 		assert.ok(geometry);
-		assert.equal(container.pointsCount(), 3792);
+		assert.equal(pointsCount(container), 3792);
 	});
 
 	qUnit.test('sop/text prints no warning', async (assert) => {
@@ -44,7 +45,7 @@ export function testenginenodessopText(qUnit: QUnit) {
 			let geometry = core_group?.threejsObjectsWithGeo()[0]?.geometry;
 
 			assert.ok(geometry);
-			assert.equal(container.pointsCount(), 3324);
+			assert.equal(pointsCount(container), 3324);
 
 			text1.p.text.set('this is a test');
 			container = await transform2.compute();
@@ -52,7 +53,7 @@ export function testenginenodessopText(qUnit: QUnit) {
 			geometry = core_group?.threejsObjectsWithGeo()[0]?.geometry;
 
 			assert.ok(geometry);
-			assert.equal(container.pointsCount(), 3792);
+			assert.equal(pointsCount(container), 3792);
 			console.log('callback end');
 		});
 		assert.equal(consoleHistory.log[0][0], 'callback start');
@@ -70,8 +71,8 @@ export function testenginenodessopText(qUnit: QUnit) {
 		text1.p.text.set('');
 
 		let container = await text1.compute();
-		assert.equal(container.pointsCount(), 0);
-		assert.equal(container.objectsCount(), 0);
+		assert.equal(pointsCount(container), 0);
+		assert.equal(objectsCount(container), 0);
 		assert.notOk(text1.states.error.active());
 		assert.notOk(text1.states.error.message());
 	});
@@ -84,8 +85,8 @@ export function testenginenodessopText(qUnit: QUnit) {
 		text1.p.text.set(' ');
 
 		let container = await text1.compute();
-		assert.equal(container.pointsCount(), 0);
-		assert.equal(container.objectsCount(), 0);
+		assert.equal(pointsCount(container), 0);
+		assert.equal(objectsCount(container), 0);
 		assert.notOk(text1.states.error.active());
 		assert.notOk(text1.states.error.message());
 	});
@@ -100,8 +101,8 @@ export function testenginenodessopText(qUnit: QUnit) {
 	`);
 
 		let container = await text1.compute();
-		assert.equal(container.pointsCount(), 0);
-		assert.equal(container.objectsCount(), 0);
+		assert.equal(pointsCount(container), 0);
+		assert.equal(objectsCount(container), 0);
 		assert.notOk(text1.states.error.active());
 		assert.notOk(text1.states.error.message());
 	});
@@ -113,7 +114,7 @@ export function testenginenodessopText(qUnit: QUnit) {
 		text1.p.font.set('/fonts/droid_sans_regular.typeface.json');
 
 		let container = await text1.compute();
-		assert.equal(container.pointsCount(), 3324);
+		assert.equal(pointsCount(container), 3324);
 	});
 
 	qUnit.test('sop/text with ttf font', async (assert) => {
@@ -123,7 +124,7 @@ export function testenginenodessopText(qUnit: QUnit) {
 		text1.p.font.set('/fonts/SourceCodePro-Regular.ttf');
 
 		let container = await text1.compute();
-		assert.equal(container.pointsCount(), 3204);
+		assert.equal(pointsCount(container), 3204);
 	});
 
 	qUnit.test('sop/text with a non existing font', async (assert) => {
@@ -138,7 +139,7 @@ export function testenginenodessopText(qUnit: QUnit) {
 			text1.states.error.message(),
 			'could not load font (/fonts/doesnotexist.ttf, reason:fetch for "http://localhost:5000/fonts/doesnotexist.ttf" responded with 406: Not Acceptable)'
 		);
-		assert.equal(container.pointsCount(), 0);
+		assert.equal(pointsCount(container), 0);
 	});
 
 	qUnit.test('sop/text with multiline', async (assert) => {
@@ -149,7 +150,7 @@ export function testenginenodessopText(qUnit: QUnit) {
 
 		async function getSize() {
 			const container = await text1.compute();
-			container.boundingBox(tmpBox);
+			container.coreContent()!.boundingBox(tmpBox);
 			tmpBox.getSize(tmpSize);
 			return tmpSize;
 		}
@@ -176,7 +177,7 @@ export function testenginenodessopText(qUnit: QUnit) {
 		text1.p.text.set('line1line2');
 		async function getSize() {
 			const container = await text1.compute();
-			container.boundingBox(tmpBox);
+			container.coreContent()!.boundingBox(tmpBox);
 			tmpBox.getSize(tmpSize);
 			return tmpSize;
 		}
@@ -242,25 +243,25 @@ export function testenginenodessopText(qUnit: QUnit) {
 		assert.ok(text1.isDirty());
 		container = await text1.compute();
 		assert.notOk(text1.isDirty());
-		assert.equal(container.pointsCount(), 4776);
+		assert.equal(pointsCount(container), 4776);
 
 		text1.setTextType(TextType.FLAT);
 		assert.ok(text1.isDirty());
 		container = await text1.compute();
 		assert.notOk(text1.isDirty());
-		assert.equal(container.pointsCount(), 3773);
+		assert.equal(pointsCount(container), 3773);
 
 		text1.setTextType(TextType.LINE);
 		assert.ok(text1.isDirty());
 		container = await text1.compute();
 		assert.notOk(text1.isDirty());
-		assert.equal(container.pointsCount(), 3792);
+		assert.equal(pointsCount(container), 3792);
 
 		text1.setTextType(TextType.STROKE);
 		assert.ok(text1.isDirty());
 		container = await text1.compute();
 		assert.notOk(text1.isDirty());
-		assert.equal(container.pointsCount(), 22746);
+		assert.equal(pointsCount(container), 22746);
 	});
 
 	qUnit.test('sop/text can recover from generation errors', async (assert) => {
@@ -279,17 +280,17 @@ export function testenginenodessopText(qUnit: QUnit) {
 		text1.p.text.set('test');
 		container = await text1.compute();
 		assert.notOk(text1.states.error.active(), 'no error');
-		assert.equal(container.pointsCount(), 4200, 'points count is 4200');
+		assert.equal(pointsCount(container), 4200, 'points count is 4200');
 
 		text1.p.text.set('ぁぃぅえおがぎぐげござじずぜぞだぢつでどなに');
 		container = await text1.compute();
 		assert.ok(text1.states.error.active(), 'error present');
 		assert.equal(text1.states.error.message(), 'failed to generate geometry. Try to remove some characters');
-		assert.equal(container.pointsCount(), 0);
+		assert.equal(pointsCount(container), 0);
 
 		text1.p.text.set('test');
 		container = await text1.compute();
 		assert.notOk(text1.states.error.active(), 'no error');
-		assert.equal(container.pointsCount(), 4200, 'points count is 4200');
+		assert.equal(pointsCount(container), 4200, 'points count is 4200');
 	});
 }

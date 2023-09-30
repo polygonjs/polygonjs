@@ -21,7 +21,7 @@ export function testenginenodessopCADFileSTEP(qUnit: QUnit) {
 			const allObjectsCount = coreGroup.allObjects().length;
 			const threejsObjectsCount = coreGroup.threejsObjects().length;
 
-			container.boundingBox(tmpBox);
+			container.coreContent()!.boundingBox(tmpBox);
 			tmpBox.getSize(tmpSize);
 
 			return {allObjectsCount, threejsObjectsCount};
@@ -34,7 +34,7 @@ export function testenginenodessopCADFileSTEP(qUnit: QUnit) {
 
 			const geometry = coreGroup?.threejsObjectsWithGeo()[0].geometry;
 
-			container.boundingBox(tmpBox);
+			container.coreContent()!.boundingBox(tmpBox);
 			tmpBox.getSize(tmpSize);
 
 			return {allObjectsCount, threejsObjectsCount, geometry};
@@ -73,7 +73,7 @@ export function testenginenodessopCADFileSTEP(qUnit: QUnit) {
 
 			const geometry = coreGroup?.threejsObjectsWithGeo()[0].geometry;
 
-			container.boundingBox(tmpBox);
+			container.coreContent()!.boundingBox(tmpBox);
 			tmpBox.getSize(tmpSize);
 
 			console.log('test log: legowhitehousejp loaded in ', performance.now() - timeStart);
@@ -117,7 +117,7 @@ export function testenginenodessopCADFileSTEP(qUnit: QUnit) {
 
 			const geometry = coreGroup?.threejsObjectsWithGeo()[0].geometry;
 
-			container.boundingBox(tmpBox);
+			container.coreContent()!.boundingBox(tmpBox);
 			tmpBox.getSize(tmpSize);
 			console.log('test log: pigsignaler loaded in ', performance.now() - timeStart);
 			return {allObjectsCount, threejsObjectsCount, geometry};

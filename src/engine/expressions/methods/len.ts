@@ -22,13 +22,12 @@ export class LenExpression extends BaseMethod {
 	}
 
 	override async processArguments(args: any[]): Promise<number> {
-		let value = 0;
 		if (args.length == 1) {
 			const arg = args[0];
 			if (CoreType.isString(arg) || CoreType.isArray(arg)) {
-				value = arg.length;
+				return arg.length;
 			}
 		}
-		return value;
+		return 0;
 	}
 }

@@ -48,28 +48,19 @@ export class BboxExpression extends BaseMethod {
 		return this.createDependencyFromIndexOrPath(args);
 	}
 
-	override processArguments(args: any[]): Promise<any> {
-		let value: number | Vector3 | Box3 = 0;
-		return new Promise(async (resolve, reject) => {
-			if (args.length >= 1) {
-				const index_or_path = args[0];
-				const vector_name: undefined | keyof BoxComponents = args[1];
-				const component_name: undefined | keyof Vector3Like = args[2];
+	override async processArguments(args: any[]): Promise<number | Vector3 | Box3> {
+		if (args.length >= 1) {
+			const index_or_path = args[0];
+			const vector_name: undefined | keyof BoxComponents = args[1];
+			const component_name: undefined | keyof Vector3Like = args[2];
 
-				let container: GeometryContainer | null = null;
-				try {
-					container = (await this.getReferencedNodeContainer(index_or_path)) as GeometryContainer;
-				} catch (e) {
-					reject(e);
-				}
-				if (container) {
-					value = this._get_value_from_container(container, vector_name, component_name);
-					resolve(value);
-				}
-			} else {
-				resolve(0);
+			const container = (await this.getReferencedNodeContainer(index_or_path)) as GeometryContainer;
+			if (container) {
+				const value = this._get_value_from_container(container, vector_name, component_name);
+				return value;
 			}
-		});
+		}
+		return 0;
 	}
 
 	private _get_value_from_container(

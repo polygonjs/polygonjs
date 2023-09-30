@@ -29,38 +29,27 @@ export class CameraNamesExpression extends BaseMethod {
 		return this.createDependencyFromIndexOrPath(args);
 	}
 
-	override processArguments(args: any[]): Promise<any> {
-		return new Promise(async (resolve, reject) => {
-			if (args.length == 1) {
-				const index_or_path = args[0];
-				let container: GeometryContainer;
-				try {
-					container = (await this.getReferencedNodeContainer(index_or_path)) as GeometryContainer;
-				} catch (e) {
-					reject(e);
-					return;
-				}
+	override async processArguments(args: any[]): Promise<string[]> {
+		if (args.length == 1) {
+			const index_or_path = args[0];
+			const container = (await this.getReferencedNodeContainer(index_or_path)) as GeometryContainer;
 
-				if (container) {
-					const coreContent = container.coreContent();
-					if (coreContent) {
-						const objects = coreContent
-							.threejsObjects()
-							.filter((object) => Poly.camerasRegister.objectRegistered(object));
-						const list: string[] = new Array(objects.length);
-						let i = 0;
-						for (const object of objects) {
-							list[i] = object.name;
-							i++;
-						}
-						resolve(list);
-					} else {
-						resolve([]);
+			if (container) {
+				const coreContent = container.coreContent();
+				if (coreContent) {
+					const objects = coreContent
+						.threejsObjects()
+						.filter((object) => Poly.camerasRegister.objectRegistered(object));
+					const list: string[] = new Array(objects.length);
+					let i = 0;
+					for (const object of objects) {
+						list[i] = object.name;
+						i++;
 					}
+					return list;
 				}
-			} else {
-				resolve([]);
 			}
-		});
+		}
+		return [];
 	}
 }

@@ -28,28 +28,19 @@ export class ObjectsCountExpression extends BaseMethod {
 		return this.createDependencyFromIndexOrPath(args);
 	}
 
-	override processArguments(args: any[]): Promise<any> {
-		return new Promise(async (resolve, reject) => {
-			if (args.length == 1) {
-				const index_or_path = args[0];
-				let container: GeometryContainer;
-				try {
-					container = (await this.getReferencedNodeContainer(index_or_path)) as GeometryContainer;
-				} catch (e) {
-					reject(e);
-					return;
-				}
+	override async processArguments(args: any[]): Promise<number> {
+		if (args.length == 1) {
+			const index_or_path = args[0];
+			const container = (await this.getReferencedNodeContainer(index_or_path)) as GeometryContainer;
 
-				if (container) {
-					const coreGroup = container.coreContent();
-					if (coreGroup) {
-						const objectsCount = coreGroup.allObjects().length;
-						resolve(objectsCount);
-					}
-					return;
+			if (container) {
+				const coreGroup = container.coreContent();
+				if (coreGroup) {
+					const objectsCount = coreGroup.allObjects().length;
+					return objectsCount;
 				}
 			}
-			resolve(0);
-		});
+		}
+		return 0;
 	}
 }

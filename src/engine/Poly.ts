@@ -107,6 +107,7 @@ export class PolyEngine {
 	}
 	dispose() {
 		this.scenesRegister.dispose();
+		this.renderersController.dispose();
 	}
 
 	registerNode(node: BaseNodeConstructor, tab_menu_category?: string | string[], options?: NodeRegisterOptions) {

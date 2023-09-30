@@ -16,11 +16,11 @@ export function testenginenodessopScatter(qUnit: QUnit) {
 		let container;
 
 		container = await scatter1.compute();
-		assert.equal(container.pointsCount(), 100);
+		assert.equal(container.coreContent()!.pointsCount(), 100);
 
 		scatter1.p.pointsCount.set(1000);
 		container = await scatter1.compute();
-		assert.equal(container.pointsCount(), 1000);
+		assert.equal(container.coreContent()!.pointsCount(), 1000);
 	});
 
 	qUnit.test('sop/scatter takes into account the transform of objects', async (assert) => {

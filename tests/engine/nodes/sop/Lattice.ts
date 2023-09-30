@@ -20,7 +20,7 @@ export function testenginenodessopLattice(qUnit: QUnit) {
 			const object = coreGroup?.threejsObjectsWithGeo()[0]!;
 			const geometry = object.geometry;
 			const position = geometry?.getAttribute('position')!;
-			container.boundingBox(tmpBox);
+			container.coreContent()!.boundingBox(tmpBox);
 			tmpBox.getSize(bboxSize);
 			return {position, bboxSizeY: bboxSize.y, objectPositionY: object.position.y};
 		}

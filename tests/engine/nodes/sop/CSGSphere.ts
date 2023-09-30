@@ -25,7 +25,7 @@ QUnit.test('sop/CSGSphere simple', async (assert) => {
 		const allObjectsCount = coreGroup.allObjects().length;
 		const threejsObjectsCount = coreGroup.threejsObjects().length;
 
-		container.boundingBox(tmpBox);
+		container.coreContent()!.boundingBox(tmpBox);
 		tmpBox.getSize(tmpSize);
 
 		return {allObjectsCount, threejsObjectsCount};
@@ -38,7 +38,7 @@ QUnit.test('sop/CSGSphere simple', async (assert) => {
 
 		const geometry = coreGroup?.threejsObjectsWithGeo()[0].geometry;
 
-		container.boundingBox(tmpBox);
+		container.coreContent()!.boundingBox(tmpBox);
 		tmpBox.getSize(tmpSize);
 
 		return {allObjectsCount, threejsObjectsCount, geometry};

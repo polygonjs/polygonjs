@@ -20,17 +20,17 @@ export function testenginenodessopDelete(qUnit: QUnit) {
 		delete1.p.byExpression.set(1);
 
 		let container = await delete1.compute();
-		assert.equal(container.pointsCount(), 3);
+		assert.equal(container.coreContent()!.pointsCount(), 3);
 
 		// the points of one face remain if deleting a single point
 		delete1.p.expression.set('@ptnum==0');
 		container = await delete1.compute();
-		assert.equal(container.pointsCount(), 3);
+		assert.equal(container.coreContent()!.pointsCount(), 3);
 
 		// all 4 points removed if deleting one 2 of them, since that deletes both faces
 		delete1.p.expression.set('@ptnum==1 || @ptnum==0');
 		container = await delete1.compute();
-		assert.equal(container.pointsCount(), 0);
+		assert.equal(container.coreContent()!.pointsCount(), 0);
 	});
 
 	qUnit.test('sop/delete: (class=points) simple box', async (assert) => {
@@ -42,15 +42,15 @@ export function testenginenodessopDelete(qUnit: QUnit) {
 		delete1.p.byExpression.set(1);
 
 		let container = await box1.compute();
-		assert.equal(container.pointsCount(), 24, 'box');
+		assert.equal(container.coreContent()!.pointsCount(), 24, 'box');
 
 		container = await delete1.compute();
-		assert.equal(container.pointsCount(), 33, 'after first delete'); // mm, I'd expect 21 instead. I could probably optimize the geometry creation from the kept points
+		assert.equal(container.coreContent()!.pointsCount(), 33, 'after first delete'); // mm, I'd expect 21 instead. I could probably optimize the geometry creation from the kept points
 
 		// only the top points remain
 		delete1.p.expression.set('@P.y<0');
 		container = await delete1.compute();
-		assert.equal(container.pointsCount(), 6, 'after expression delete');
+		assert.equal(container.coreContent()!.pointsCount(), 6, 'after expression delete');
 	});
 
 	qUnit.test('sop/delete: (class=points) simple box byExpression with and without expression', async (assert) => {
@@ -68,34 +68,34 @@ export function testenginenodessopDelete(qUnit: QUnit) {
 		delete1.p.byExpression.set(1);
 
 		let container = await merge1.compute();
-		assert.equal(container.pointsCount(), 10, '10');
+		assert.equal(container.coreContent()!.pointsCount(), 10, '10');
 
 		container = await delete1.compute();
-		assert.equal(container.pointsCount(), 9, 'after first delete'); // mm, I'd expect 21 instead. I could probably optimize the geometry creation from the kept points
+		assert.equal(container.coreContent()!.pointsCount(), 9, 'after first delete'); // mm, I'd expect 21 instead. I could probably optimize the geometry creation from the kept points
 
 		// only the top points remain
 		delete1.p.expression.set(1);
 		container = await delete1.compute();
-		assert.equal(container.pointsCount(), 0, 'after expression delete');
+		assert.equal(container.coreContent()!.pointsCount(), 0, 'after expression delete');
 
 		// non entity dependent
 		const sphere1 = geo1.createNode('sphere');
 		sphere1.p.radius.set(1);
 		delete1.p.expression.set(`ch('../${sphere1.name()}/radius')>0.5`);
 		container = await delete1.compute();
-		assert.equal(container.pointsCount(), 0, 'radius 1');
+		assert.equal(container.coreContent()!.pointsCount(), 0, 'radius 1');
 		sphere1.p.radius.set(0.4);
 		container = await delete1.compute();
-		assert.equal(container.pointsCount(), 10, 'radius 0.4');
+		assert.equal(container.coreContent()!.pointsCount(), 10, 'radius 0.4');
 
 		// entity dependent
 		delete1.p.expression.set(`ch('../${sphere1.name()}/radius')>(0.1*@ptnum)`);
 		container = await delete1.compute();
-		assert.equal(container.pointsCount(), 6, 'radius and @ptnum dependent');
+		assert.equal(container.coreContent()!.pointsCount(), 6, 'radius and @ptnum dependent');
 		sphere1.p.radius.set(0.8);
 		delete1.p.expression.set(`ch('../${sphere1.name()}/radius')<(0.1*@ptnum)`);
 		container = await delete1.compute();
-		assert.equal(container.pointsCount(), 9, 'radius and @ptnum dependent');
+		assert.equal(container.coreContent()!.pointsCount(), 9, 'radius and @ptnum dependent');
 	});
 
 	qUnit.test('sop/delete: (class=object) simple box', async (assert) => {
@@ -221,11 +221,11 @@ export function testenginenodessopDelete(qUnit: QUnit) {
 		delete1.setInput(1, sphere);
 
 		let container = await delete1.compute();
-		assert.equal(container.pointsCount(), 1210);
+		assert.equal(container.coreContent()!.pointsCount(), 1210);
 
 		delete1.p.byBoundingObject.set(1);
 		container = await delete1.compute();
-		assert.equal(container.pointsCount(), 719);
+		assert.equal(container.coreContent()!.pointsCount(), 719);
 	});
 
 	qUnit.test('sop/delete byBoundingObject 2', async (assert) => {
@@ -245,24 +245,24 @@ export function testenginenodessopDelete(qUnit: QUnit) {
 		delete1.setInput(1, transform1);
 
 		let container = await delete1.compute();
-		assert.equal(container.pointsCount(), 1110);
+		assert.equal(container.coreContent()!.pointsCount(), 1110);
 
 		delete1.p.byBoundingObject.set(1);
 		container = await delete1.compute();
-		assert.equal(container.pointsCount(), 1110);
+		assert.equal(container.coreContent()!.pointsCount(), 1110);
 
 		transform1.setApplyOn(TransformTargetType.OBJECT);
 		transform1.p.t.z.set(1);
 		container = await delete1.compute();
-		assert.equal(container.pointsCount(), 1110);
+		assert.equal(container.coreContent()!.pointsCount(), 1110);
 
 		transform1.setApplyOn(TransformTargetType.GEOMETRY);
 		container = await delete1.compute();
-		assert.equal(container.pointsCount(), 1005);
+		assert.equal(container.coreContent()!.pointsCount(), 1005);
 
 		transform1.p.s.set([2, 2, 1]);
 		container = await delete1.compute();
-		assert.equal(container.pointsCount(), 823);
+		assert.equal(container.coreContent()!.pointsCount(), 823);
 	});
 
 	qUnit.test('sop/delete primitives', async (assert) => {

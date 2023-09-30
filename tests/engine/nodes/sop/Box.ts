@@ -13,7 +13,7 @@ export function testenginenodessopBox(qUnit: QUnit) {
 		const core_group = container.coreContent();
 		const geometry = core_group?.threejsObjectsWithGeo()[0].geometry;
 		assert.equal((geometry?.getAttribute('position') as BufferAttribute).array.length, 72);
-		container.boundingBox(tmpBox);
+		container.coreContent()!.boundingBox(tmpBox);
 		assert.equal(tmpBox.min.y, -0.5);
 		assert.notOk(box1.isDirty(), 'box is dirty');
 
@@ -21,7 +21,7 @@ export function testenginenodessopBox(qUnit: QUnit) {
 		assert.ok(box1.isDirty(), 'box is dirty');
 		container = await box1.compute();
 		assert.ok(!box1.isDirty(), 'box is not dirty anymore');
-		container.boundingBox(tmpBox);
+		container.coreContent()!.boundingBox(tmpBox);
 		assert.equal(tmpBox.min.y, -1.0);
 	});
 
@@ -51,7 +51,7 @@ export function testenginenodessopBox(qUnit: QUnit) {
 		const {geometry} = group.threejsObjectsWithGeo()[0];
 
 		assert.equal((geometry.getAttribute('position') as BufferAttribute).array.length, 72);
-		container.boundingBox(tmpBox);
+		container.coreContent()!.boundingBox(tmpBox);
 		assert.equal(tmpBox.min.y, -1.5);
 	});
 
@@ -63,7 +63,7 @@ export function testenginenodessopBox(qUnit: QUnit) {
 		const box1 = geo1.createNode('box');
 		async function getBbox() {
 			const container = await box1.compute();
-			container.boundingBox(tmpBox);
+			container.coreContent()!.boundingBox(tmpBox);
 			return tmpBox;
 		}
 		assert.equal((await getBbox()).min.y, -0.5);

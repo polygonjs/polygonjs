@@ -14,11 +14,11 @@ export class GeometryContainer extends TypedContainer<NodeContext.SOP> {
 		super.set_content(content);
 	}
 
-	pointsCount(): number {
-		if (this._content) {
-			return this._content.pointsCount();
-		} else {
-			return 0;
-		}
-	}
+	// pointsCount(): number {
+	// 	if (this._content) {
+	// 		return this._content.pointsCount();
+	// 	} else {
+	// 		return 0;
+	// 	}
+	// }
 }

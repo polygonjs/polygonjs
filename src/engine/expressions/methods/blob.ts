@@ -29,11 +29,10 @@ export class BlobExpression extends BaseMethod {
 	}
 
 	override async processArguments(args: any[]): Promise<string> {
-		let val: string = '';
 		if (args.length >= 1) {
 			const url = args[0] as string;
-			val = await blobFromUrl(url);
+			return await blobFromUrl(url);
 		}
-		return val;
+		return '';
 	}
 }

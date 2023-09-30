@@ -15,9 +15,9 @@ import {StringOrNumber2, StringOrNumber3, StringOrNumber4} from '../../../../src
 import {primitivesFromObject} from '../../../../src/core/geometry/entities/primitive/CorePrimitiveUtils';
 import {verticesFromObject} from '../../../../src/core/geometry/entities/vertex/CoreVertexUtils';
 import {ENTITY_CLASS_FACTORY} from '../../../../src/core/geometry/CoreObjectFactory';
-import { CoreVertex } from '../../../../src/core/geometry/entities/vertex/CoreVertex';
-import { CoreObjectType } from '../../../../src/core/geometry/ObjectContent';
-import { CorePrimitive } from '../../../../src/core/geometry/entities/primitive/CorePrimitive';
+import {CoreVertex} from '../../../../src/core/geometry/entities/vertex/CoreVertex';
+import {CoreObjectType} from '../../../../src/core/geometry/ObjectContent';
+import {CorePrimitive} from '../../../../src/core/geometry/entities/primitive/CorePrimitive';
 export function testenginenodessopAttribCreate(qUnit: QUnit) {
 	qUnit.test('sop/attribCreate simple float vertex', async (assert) => {
 		const geo1 = window.geo1;
@@ -36,12 +36,12 @@ export function testenginenodessopAttribCreate(qUnit: QUnit) {
 		assert.ok(geometry);
 
 		const {array} = geometry.getAttribute('test') as BufferAttribute;
-		assert.equal(array.length, container.pointsCount());
+		assert.equal(array.length, container.coreContent()!.pointsCount());
 		assert.equal(array[0], 3.5);
 
 		const cloned_geo = geometry.clone();
 		const cloned_array = (cloned_geo.getAttribute('test') as BufferAttribute).array;
-		assert.equal(cloned_array.length, container.pointsCount());
+		assert.equal(cloned_array.length, container.coreContent()!.pointsCount());
 		assert.equal(cloned_array[0], 3.5);
 	});
 
@@ -62,7 +62,7 @@ export function testenginenodessopAttribCreate(qUnit: QUnit) {
 		assert.ok(geometry);
 
 		const {array} = geometry.getAttribute('test') as BufferAttribute;
-		assert.equal(array.length, container.pointsCount());
+		assert.equal(array.length, container.coreContent()!.pointsCount());
 		assert.equal(array[0], 3);
 		assert.equal(array[1], 6);
 		assert.equal(array[2], 9);
@@ -85,7 +85,7 @@ export function testenginenodessopAttribCreate(qUnit: QUnit) {
 		assert.ok(geometry);
 
 		const {array} = geometry.getAttribute('test') as BufferAttribute;
-		assert.equal(array.length, container.pointsCount());
+		assert.equal(array.length, container.coreContent()!.pointsCount());
 		assert.equal(array[0], 1);
 		assert.equal(array[1], 1);
 		assert.equal(array[2], 1);
@@ -133,7 +133,7 @@ export function testenginenodessopAttribCreate(qUnit: QUnit) {
 
 		const {array} = geometry.getAttribute('test') as BufferAttribute;
 
-		assert.equal(array.length, container.pointsCount() * 2);
+		assert.equal(array.length, container.coreContent()!.pointsCount() * 2);
 		assert.equal(array[0], 3.5);
 		assert.equal(array[1], 5);
 		assert.equal(array[2], 3.5);
@@ -160,7 +160,7 @@ export function testenginenodessopAttribCreate(qUnit: QUnit) {
 
 		const {array} = geometry.getAttribute('test') as BufferAttribute;
 
-		assert.equal(array.length, container.pointsCount() * 3);
+		assert.equal(array.length, container.coreContent()!.pointsCount() * 3);
 		assert.equal(array[0], 3.5);
 		assert.equal(array[1], 5);
 		assert.equal(array[2], 8);
@@ -186,7 +186,7 @@ export function testenginenodessopAttribCreate(qUnit: QUnit) {
 
 		let array = (geometry.getAttribute('test') as BufferAttribute).array;
 
-		assert.equal(array.length, container.pointsCount() * 3);
+		assert.equal(array.length, container.coreContent()!.pointsCount() * 3);
 		assert.equal(array[0], 0);
 		assert.equal(array[3], 1);
 		assert.equal(array[6], 2);
@@ -207,7 +207,7 @@ export function testenginenodessopAttribCreate(qUnit: QUnit) {
 
 		array = (geometry.getAttribute('test') as BufferAttribute).array;
 
-		assert.equal(array.length, container.pointsCount() * 3);
+		assert.equal(array.length, container.coreContent()!.pointsCount() * 3);
 		assert.equal(array[0], 0);
 		assert.equal(array[3], 1);
 		assert.equal(array[6], 2);
@@ -233,7 +233,7 @@ export function testenginenodessopAttribCreate(qUnit: QUnit) {
 		assert.ok(core_group);
 		assert.ok(geometry);
 
-		assert.equal(array.length, container.pointsCount() * 2);
+		assert.equal(array.length, container.coreContent()!.pointsCount() * 2);
 		assert.equal(array.join(','), [0, 2, 2, 2, 0, 0, 2, 0].join(','));
 
 		attrib_create1.p.value2.x.set('@uv.y');
@@ -413,7 +413,7 @@ export function testenginenodessopAttribCreate(qUnit: QUnit) {
 		attrib_create1.p.string.set('pt_`@ptnum*2`');
 
 		let container = await attrib_create1.compute();
-		assert.equal(container.pointsCount(), 24, 'has 24 pts');
+		assert.equal(container.coreContent()!.pointsCount(), 24, 'has 24 pts');
 		let points = container.coreContent()!.points();
 		assert.equal(points[0].attribValue('ids'), 'pt_0', 'pt 0 has pt_0');
 		assert.equal(points[1].attribValue('ids'), 'pt_2', 'pt 1 has pt_2');
@@ -447,7 +447,7 @@ export function testenginenodessopAttribCreate(qUnit: QUnit) {
 		attrib_create1.p.string.set('test');
 
 		let container = await attrib_create1.compute();
-		assert.equal(container.pointsCount(), 24, 'has 24 pts');
+		assert.equal(container.coreContent()!.pointsCount(), 24, 'has 24 pts');
 		let points = container.coreContent()!.points();
 		assert.equal(points[0].attribValue('ids'), 'test', 'pt 0 has pt_0');
 		assert.equal(points[1].attribValue('ids'), 'test', 'pt 1 has pt_2');
@@ -621,8 +621,8 @@ export function testenginenodessopAttribCreate(qUnit: QUnit) {
 
 		const container = await attribCreate1.compute();
 		const object = container.coreContent()!.allObjects()[0];
-		const primitives:CorePrimitive<CoreObjectType>[] = []
-		primitivesFromObject(object,primitives);
+		const primitives: CorePrimitive<CoreObjectType>[] = [];
+		primitivesFromObject(object, primitives);
 		assert.deepEqual(
 			primitives.map((p) => p.attribValue('t')),
 			[2, 4]
@@ -643,8 +643,8 @@ export function testenginenodessopAttribCreate(qUnit: QUnit) {
 
 		const container = await attribCreate1.compute();
 		const object = container.coreContent()!.allObjects()[0];
-		const vertices:CoreVertex<CoreObjectType>[] =[] 
-		verticesFromObject(object,vertices);
+		const vertices: CoreVertex<CoreObjectType>[] = [];
+		verticesFromObject(object, vertices);
 		assert.deepEqual(
 			vertices.map((p) => p.attribValue('t')),
 			[2, 4, 6, 8, 10, 12]

@@ -24,13 +24,12 @@ export class SmootherstepExpression extends BaseMethod {
 	}
 
 	override async processArguments(args: any[]): Promise<number> {
-		let value = 0;
 		if (args.length == 3) {
 			const x = args[0];
 			const rangeMin = args[1];
 			const rangeMax = args[2];
-			value = MathUtils.smootherstep(x, rangeMin, rangeMax);
+			return MathUtils.smootherstep(x, rangeMin, rangeMax);
 		}
-		return value;
+		return 0;
 	}
 }

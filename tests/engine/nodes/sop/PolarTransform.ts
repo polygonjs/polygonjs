@@ -20,7 +20,7 @@ export function testenginenodessopPolarTransform(qUnit: QUnit) {
 		let geometry = core_group?.threejsObjectsWithGeo()[0].geometry;
 		assert.ok(geometry);
 
-		assert.equal(container.pointsCount(), 1);
+		assert.equal(container.coreContent()!.pointsCount(), 1);
 		let points = container.coreContent()!.points();
 		assert.equal(points[0].position(_p).x, 0);
 		assert.equal(points[0].position(_p).y, 0);
@@ -33,7 +33,7 @@ export function testenginenodessopPolarTransform(qUnit: QUnit) {
 		geometry = core_group?.threejsObjectsWithGeo()[0].geometry;
 		assert.ok(geometry);
 
-		assert.equal(container.pointsCount(), 1);
+		assert.equal(container.coreContent()!.pointsCount(), 1);
 		points = container.coreContent()!.points();
 		assert.equal(points[0].position(_p).x, 0);
 		assert.in_delta(points[0].position(_p).y, 1, 0.001);

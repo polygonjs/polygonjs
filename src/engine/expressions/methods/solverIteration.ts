@@ -50,12 +50,11 @@ export class SolverIterationExpression extends BaseMethod {
 		return null;
 	}
 
-	override async processArguments(args: any[]): Promise<any> {
+	override async processArguments(args: any[]): Promise<number> {
 		const nodePath = args[0] || '..';
-		let foundSolverNode: SolverSopNode | undefined;
 		const foundNode = (await this.getReferencedNode(nodePath)) as BaseNodeType | undefined;
 		if (foundNode && isSolverNode(foundNode)) {
-			foundSolverNode = foundNode as SolverSopNode;
+			const foundSolverNode = foundNode as SolverSopNode;
 			const value = foundSolverNode.iterationStamp().iteration();
 			return value;
 		} else {

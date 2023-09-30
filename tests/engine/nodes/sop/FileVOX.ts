@@ -16,7 +16,7 @@ export function testenginenodessopFileVOX(qUnit: QUnit) {
 
 	qUnit.test('sop/fileVOX monu10', async (assert) => {
 		const {container} = await withFileVOX('models/vox/monu10.vox');
-		assert.equal(container.pointsCount(), 301584);
+		assert.equal(container.coreContent()!.pointsCount(), 301584);
 
 		const objects1 = container.coreContent()?.threejsObjects()!;
 		assert.equal(objects1?.length, 1);
@@ -24,7 +24,7 @@ export function testenginenodessopFileVOX(qUnit: QUnit) {
 
 	qUnit.test('sop/fileVOX teapot', async (assert) => {
 		const {container} = await withFileVOX('models/vox/teapot.vox');
-		assert.equal(container.pointsCount(), 335784);
+		assert.equal(container.coreContent()!.pointsCount(), 335784);
 
 		const objects1 = container.coreContent()?.threejsObjects()!;
 		assert.equal(objects1?.length, 1);
@@ -32,7 +32,7 @@ export function testenginenodessopFileVOX(qUnit: QUnit) {
 
 	qUnit.test('sop/fileVOX menger', async (assert) => {
 		const {container} = await withFileVOX('models/vox/menger.vox');
-		assert.equal(container.pointsCount(), 2018304);
+		assert.equal(container.coreContent()!.pointsCount(), 2018304);
 
 		const objects1 = container.coreContent()?.threejsObjects()!;
 		assert.equal(objects1?.length, 1);

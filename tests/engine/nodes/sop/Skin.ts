@@ -32,14 +32,14 @@ export function testenginenodessopSkin(qUnit: QUnit) {
 		let coreGroup;
 
 		container = await line1.compute();
-		assert.equal(container.pointsCount(), 2);
+		assert.equal(container.coreContent()!.pointsCount(), 2);
 		container = await line2.compute();
-		assert.equal(container.pointsCount(), 2);
+		assert.equal(container.coreContent()!.pointsCount(), 2);
 
 		container = await attrib_create1.compute();
 		coreGroup = container.coreContent()!;
 		assert.deepEqual(coreGroup.pointAttribNames().sort(), ['position', 'h'].sort());
-		assert.equal(container.pointsCount(), 4);
+		assert.equal(container.coreContent()!.pointsCount(), 4);
 		assert.equal(
 			((coreGroup.threejsObjectsWithGeo()[0].geometry.attributes['h'] as BufferAttribute).array as number[]).join(
 				''
@@ -49,12 +49,12 @@ export function testenginenodessopSkin(qUnit: QUnit) {
 
 		container = await skin1.compute();
 		coreGroup = container.coreContent()!;
-		assert.equal(container.pointsCount(), 4);
+		assert.equal(container.coreContent()!.pointsCount(), 4);
 		assert.deepEqual(coreGroup.pointAttribNames().sort(), ['normal', 'position', 'h'].sort());
 
 		container = await attrib_copy1.compute();
 		coreGroup = container.coreContent()!;
-		assert.equal(container.pointsCount(), 4);
+		assert.equal(container.coreContent()!.pointsCount(), 4);
 		assert.deepEqual(coreGroup.pointAttribNames().sort(), ['normal', 'position', 'h'].sort());
 		assert.equal(
 			((coreGroup.threejsObjectsWithGeo()[0].geometry.attributes['h'] as BufferAttribute).array as number[]).join(
@@ -80,9 +80,9 @@ export function testenginenodessopSkin(qUnit: QUnit) {
 
 		let container;
 		container = await merge1.compute();
-		assert.equal(container.pointsCount(), 6);
+		assert.equal(container.coreContent()!.pointsCount(), 6);
 
 		container = await skin1.compute();
-		assert.equal(container.pointsCount(), 8);
+		assert.equal(container.coreContent()!.pointsCount(), 8);
 	});
 }

@@ -44,7 +44,7 @@ export function testenginenodessopAttribPromote(qUnit: QUnit) {
 		assert.ok(geometry);
 
 		const {array} = geometry.getAttribute('test') as BufferAttribute;
-		assert.equal(array.length, container.pointsCount());
+		assert.equal(array.length, container.coreContent()!.pointsCount());
 		assert.equal(array[0], 0);
 		assert.equal(array[5], 0);
 	});
@@ -80,7 +80,7 @@ export function testenginenodessopAttribPromote(qUnit: QUnit) {
 		assert.ok(geometry);
 
 		const {array} = geometry.getAttribute('test') as BufferAttribute;
-		assert.equal(array.length, container.pointsCount());
+		assert.equal(array.length, container.coreContent()!.pointsCount());
 		assert.equal(array[0], 23);
 		assert.equal(array[5], 23);
 	});
@@ -135,7 +135,7 @@ export function testenginenodessopAttribPromote(qUnit: QUnit) {
 		assert.ok(geometry);
 
 		const {array} = geometry.getAttribute('test') as BufferAttribute;
-		assert.equal(array.length, container.pointsCount());
+		assert.equal(array.length, container.coreContent()!.pointsCount());
 		assert.deepEqual(array[0], 12);
 	});
 
@@ -228,10 +228,10 @@ export function testenginenodessopAttribPromote(qUnit: QUnit) {
 		assert.ok(geometry, 'geometry');
 
 		const array_id = (geometry.getAttribute('id') as BufferAttribute).array;
-		assert.equal(array_id.length, container.pointsCount(), 'array length ok');
+		assert.equal(array_id.length, container.coreContent()!.pointsCount(), 'array length ok');
 		assert.in_delta(array_id[0], 0.1, 0.001);
 		const array_role = (geometry.getAttribute('role') as BufferAttribute).array;
-		assert.equal(array_role.length, container.pointsCount());
+		assert.equal(array_role.length, container.coreContent()!.pointsCount());
 		assert.in_delta(array_role[0], 0.2, 0.001);
 	});
 

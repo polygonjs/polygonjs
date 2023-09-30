@@ -15,7 +15,7 @@ export function testenginenodessopData(qUnit: QUnit) {
 
 	qUnit.test('data default', async (assert) => {
 		const container = await with_data();
-		assert.equal(container.pointsCount(), 13);
+		assert.equal(container.coreContent()!.pointsCount(), 13);
 		assert.equal(container.coreContent()!.points()[0].attribValue('value'), -40);
 	});
 
@@ -25,7 +25,7 @@ export function testenginenodessopData(qUnit: QUnit) {
 			{value: 2, position: [-2, 0, 1]},
 		];
 		const container = await with_data(data);
-		assert.equal(container.pointsCount(), 2);
+		assert.equal(container.coreContent()!.pointsCount(), 2);
 		const points = container.coreContent()!.points();
 		assert.equal(points[0].attribValue('value'), 1);
 		assert.equal(points[1].attribValue('value'), 2);
@@ -39,7 +39,7 @@ export function testenginenodessopData(qUnit: QUnit) {
 			{value: 2, P: [-2, 0, 1]},
 		];
 		const container = await with_data(data);
-		assert.equal(container.pointsCount(), 2);
+		assert.equal(container.coreContent()!.pointsCount(), 2);
 		const points = container.coreContent()!.points();
 		assert.equal(points[0].attribValue('value'), 1);
 		assert.equal(points[1].attribValue('value'), 2);

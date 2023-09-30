@@ -20,7 +20,7 @@ export function testenginenodessopFile3DS(qUnit: QUnit) {
 	qUnit.test('sop/file3DS portalgun', async (assert) => {
 		// const cameraNode = window.perspective_camera1;
 		const {container} = await withFile3DS('models/3ds/portalgun/portalgun.3ds');
-		assert.equal(container.pointsCount(), 0);
+		assert.equal(container.coreContent()!.pointsCount(), 0);
 
 		const objects1 = container.coreContent()?.threejsObjects()!;
 		assert.equal(objects1?.length, 1);

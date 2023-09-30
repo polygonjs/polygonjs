@@ -8,6 +8,11 @@ import {withPlayerMode} from '../../../helpers/PlayerMode';
 import {FileGLTFSopNode} from '../../../../src/engine/nodes/sop/FileGLTF';
 import {FileMPDSopNode} from '../../../../src/engine/nodes/sop/FileMPD';
 import {SopTypeFile} from '../../../../src/engine/poly/registers/nodes/types/Sop';
+import {
+	objectsCount,
+	totalPointsCount,
+	objectsCountByType,
+} from '../../../../src/engine/containers/utils/GeometryContainerUtils';
 export function testenginenodessopFile(qUnit: QUnit) {
 	function _url(path: string) {
 		return `${ASSETS_ROOT}${path}`;
@@ -137,7 +142,7 @@ export function testenginenodessopFile(qUnit: QUnit) {
 		assert.ok(!file1.isDirty());
 		// let core_group = container.coreContent()!;
 		// let {geometry} = core_group.objects()[0];
-		assert.equal(container.totalPointsCount(), 15012, 'total points_count is 15012');
+		assert.equal(totalPointsCount(container), 15012, 'total points_count is 15012');
 
 		file1.p.url.set(`${ASSETS_ROOT}/models/box.obj`);
 		assert.ok(file1.isDirty());
@@ -146,7 +151,7 @@ export function testenginenodessopFile(qUnit: QUnit) {
 		assert.ok(!file1.isDirty());
 		// core_group = container.coreContent();
 		// ({geometry} = core_group.objects()[0]);
-		assert.equal(container.totalPointsCount(), 36);
+		assert.equal(totalPointsCount(container), 36);
 
 		// set error state
 		file1.p.url.set('/examplesdoesnotexist/file_sop_doesnotexist.obj');
@@ -171,15 +176,15 @@ export function testenginenodessopFile(qUnit: QUnit) {
 		core_group = container.coreContent()!;
 		//geometry = group.children[0].geometry
 		assert.ok(core_group);
-		assert.equal(container.totalPointsCount(), 36);
+		assert.equal(totalPointsCount(container), 36);
 	});
 
 	qUnit.test('SOP file obj wolf', async (assert) => {
 		const {container} = await withFileOBJ('/models/wolf.obj');
 		const core_content = container.coreContent()!;
-		assert.equal(container.objectsCount(), 1);
-		assert.equal(container.pointsCount(), 0);
-		assert.deepEqual(container.objectsCountByType(), {Group: 1});
+		assert.equal(objectsCount(container), 1);
+		assert.equal(container.coreContent()!.pointsCount(), 0);
+		assert.deepEqual(objectsCountByType(container), {Group: 1});
 		assert.equal(core_content.threejsObjects().length, 1);
 		assert.equal(core_content.pointsCount(), 0);
 		const first_object = core_content.threejsObjects()[0];
@@ -191,60 +196,60 @@ export function testenginenodessopFile(qUnit: QUnit) {
 	});
 	qUnit.test('SOP file json wolf', async (assert) => {
 		const {container} = await withFileJSON('models/wolf.json');
-		assert.equal(container.totalPointsCount(), 5352);
+		assert.equal(totalPointsCount(container), 5352);
 	});
 	qUnit.test('SOP file glb stork', async (assert) => {
 		const {container} = await withFileGLTF('models/stork.glb');
-		assert.equal(container.totalPointsCount(), 358);
+		assert.equal(totalPointsCount(container), 358);
 	});
 	qUnit.test('SOP file glb soldier', async (assert) => {
 		const {container} = await withFileGLTF('models/soldier.glb');
-		assert.equal(container.totalPointsCount(), 7434);
+		assert.equal(totalPointsCount(container), 7434);
 	});
 	qUnit.test('SOP file glb json', async (assert) => {
 		const {container} = await withFileGLTF('models/parrot.glb');
-		assert.equal(container.totalPointsCount(), 497);
+		assert.equal(totalPointsCount(container), 497);
 	});
 	qUnit.test('SOP file glb horse', async (assert) => {
 		const {container} = await withFileGLTF('models/horse.glb');
-		assert.equal(container.totalPointsCount(), 796);
+		assert.equal(totalPointsCount(container), 796);
 	});
 	qUnit.test('SOP file glb flamingo', async (assert) => {
 		const {container} = await withFileGLTF('models/flamingo.glb');
-		assert.equal(container.totalPointsCount(), 337);
+		assert.equal(totalPointsCount(container), 337);
 	});
 	qUnit.test('SOP file z3 glb with draco', async (assert) => {
 		const {container, fileNode} = await withFileGLTF('models/z3.glb');
-		assert.equal(container.pointsCount(), 0);
+		assert.equal(container.coreContent()!.pointsCount(), 0);
 		const container2 = await withHierarchy(fileNode);
-		assert.equal(container2.pointsCount(), 498800);
+		assert.equal(container2.coreContent()!.pointsCount(), 498800);
 	});
 	qUnit.test('SOP file draco bunny with format FBX', async (assert) => {
 		const {container, fileNode} = await withFileFBX('models/stanford-bunny.fbx');
-		assert.equal(container.pointsCount(), 0);
+		assert.equal(container.coreContent()!.pointsCount(), 0);
 		const container2 = await withHierarchy(fileNode);
-		assert.equal(container2.pointsCount(), 91014);
+		assert.equal(container2.coreContent()!.pointsCount(), 91014);
 	});
 	qUnit.test('SOP file draco bunny with format DRC', async (assert) => {
 		const {container} = await withFileDRC('models/bunny.drc');
-		assert.equal(container.pointsCount(), 34834);
+		assert.equal(container.coreContent()!.pointsCount(), 34834);
 	});
 	qUnit.test('SOP file format pdb', async (assert) => {
 		const {container} = await withFilePDB('models/ethanol.pdb');
-		assert.equal(container.pointsCount(), 25);
+		assert.equal(container.coreContent()!.pointsCount(), 25);
 	});
 	qUnit.test('SOP file format ply', async (assert) => {
 		const {container} = await withFilePLY('models/dolphins_be.ply');
-		assert.equal(container.pointsCount(), 855);
+		assert.equal(container.coreContent()!.pointsCount(), 855);
 	});
 	qUnit.test('SOP file format stl', async (assert) => {
 		const {container} = await withFileSTL('models/warrior.stl');
-		assert.equal(container.pointsCount(), 154059);
+		assert.equal(container.coreContent()!.pointsCount(), 154059);
 	});
 
 	qUnit.test('SOP file format usdz', async (assert) => {
 		const {container} = await withFileUSDZ('models/saeukkang.usdz');
-		assert.equal(container.pointsCount(), 75000);
+		assert.equal(container.coreContent()!.pointsCount(), 75000);
 	});
 
 	qUnit.test('SOP file draco bunny with format OBJ', async (assert) => {
@@ -253,7 +258,7 @@ export function testenginenodessopFile(qUnit: QUnit) {
 			fileNode.states.error.message(),
 			'could not load geometry from https://raw.githubusercontent.com/polygonjs/polygonjs-assets/master/models/bunny.drc (Error: THREE.FBXLoader: Cannot find the version number for the file given.)'
 		);
-		assert.equal(container.pointsCount(), 0);
+		assert.equal(container.coreContent()?.pointsCount() || 0, 0);
 	});
 
 	qUnit.test(
@@ -272,21 +277,21 @@ export function testenginenodessopFile(qUnit: QUnit) {
 				assert.notOk(data2.hierarchyNode.states.error.active());
 				assert.notOk(data3.hierarchyNode.states.error.active());
 
-				assert.equal(data1.container.pointsCount(), 153233);
-				assert.equal(data2.container.pointsCount(), 108882);
-				assert.equal(data3.container.pointsCount(), 283248);
+				assert.equal(data1.container.coreContent()!.pointsCount(), 153233);
+				assert.equal(data2.container.coreContent()!.pointsCount(), 108882);
+				assert.equal(data3.container.coreContent()!.pointsCount(), 283248);
 
 				data2.fileNode.p.url.set(_url('models/resources/threedscans.com/eagle.glb?t=2'));
 				let container = await data2.hierarchyNode.compute();
-				assert.equal(container.pointsCount(), 108882);
+				assert.equal(container.coreContent()!.pointsCount(), 108882);
 
 				data2.fileNode.p.url.set(_url('models/resources/threedscans.com/jenner.glb'));
 				container = await data2.hierarchyNode.compute();
-				assert.equal(container.pointsCount(), 153233);
+				assert.equal(container.coreContent()!.pointsCount(), 153233);
 
 				data2.fileNode.p.url.set(_url('models/resources/threedscans.com/jenner.glb?t=3'));
 				container = await data2.hierarchyNode.compute();
-				assert.equal(container.pointsCount(), 153233);
+				assert.equal(container.coreContent()!.pointsCount(), 153233);
 			});
 		}
 	);
@@ -307,21 +312,21 @@ export function testenginenodessopFile(qUnit: QUnit) {
 				assert.notOk(data2.hierarchyNode.states.error.active());
 				assert.notOk(data3.hierarchyNode.states.error.active());
 
-				assert.equal(data1.container.pointsCount(), 153233);
-				assert.equal(data2.container.pointsCount(), 108882);
-				assert.equal(data3.container.pointsCount(), 283248);
+				assert.equal(data1.container.coreContent()!.pointsCount(), 153233);
+				assert.equal(data2.container.coreContent()!.pointsCount(), 108882);
+				assert.equal(data3.container.coreContent()!.pointsCount(), 283248);
 
 				data2.fileNode.p.url.set(_url('models/resources/threedscans.com/eagle.glb?t=2'));
 				let container = await data2.hierarchyNode.compute();
-				assert.equal(container.pointsCount(), 108882);
+				assert.equal(container.coreContent()!.pointsCount(), 108882);
 
 				data2.fileNode.p.url.set(_url('models/resources/threedscans.com/jenner.glb'));
 				container = await data2.hierarchyNode.compute();
-				assert.equal(container.pointsCount(), 153233);
+				assert.equal(container.coreContent()!.pointsCount(), 153233);
 
 				data2.fileNode.p.url.set(_url('models/resources/threedscans.com/jenner.glb?t=3'));
 				container = await data2.hierarchyNode.compute();
-				assert.equal(container.pointsCount(), 153233);
+				assert.equal(container.coreContent()!.pointsCount(), 153233);
 			});
 		}
 	);
@@ -337,10 +342,10 @@ export function testenginenodessopFile(qUnit: QUnit) {
 				hierarchy1.setInput(0, fileNode);
 				hierarchy1.setMode(HierarchyMode.REMOVE_PARENT);
 				const container = await hierarchy1.compute();
-				assert.equal(container.pointsCount(), pointsCount, fileType);
+				assert.equal(container.coreContent()!.pointsCount(), pointsCount, fileType);
 			} else {
 				const container = await fileNode.compute();
-				assert.equal(container.pointsCount(), pointsCount, fileType);
+				assert.equal(container.coreContent()!.pointsCount(), pointsCount, fileType);
 			}
 		}
 

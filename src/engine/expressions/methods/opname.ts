@@ -40,20 +40,14 @@ export class OpnameExpression extends BaseMethod {
 		return null;
 	}
 
-	override processArguments(args: any[]): Promise<any> {
-		return new Promise((resolve, reject) => {
-			if (args.length == 1) {
-				const index_or_path = args[0];
-				const node = this.getReferencedNode(index_or_path);
-				if (node) {
-					const name = node.name();
-					resolve(name);
-				} else {
-					resolve(0);
-				}
-			} else {
-				resolve(0);
+	override async processArguments(args: any[]): Promise<string> {
+		if (args.length == 1) {
+			const index_or_path = args[0];
+			const node = this.getReferencedNode(index_or_path);
+			if (node) {
+				return node.name();
 			}
-		});
+		}
+		return '';
 	}
 }

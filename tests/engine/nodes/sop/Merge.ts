@@ -19,11 +19,11 @@ export function testenginenodessopMerge(qUnit: QUnit) {
 		merge1.setInput(0, box1);
 
 		let container = await merge1.compute();
-		assert.equal(container.pointsCount(), 24);
+		assert.equal(container.coreContent()!.pointsCount(), 24);
 
 		merge1.setInput(1, tube1);
 		container = await merge1.compute();
-		assert.equal(container.pointsCount(), 100);
+		assert.equal(container.coreContent()!.pointsCount(), 100);
 	});
 
 	qUnit.skip('sop/merge geos with different attributes', async (assert) => {

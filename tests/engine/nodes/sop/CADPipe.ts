@@ -57,7 +57,7 @@ export function testenginenodessopCADPipe(qUnit: QUnit) {
 			const cadObjects = coreGroup.cadObjects()!;
 			const cadObjectsTypes = cadObjects.map((o: CadObject<CadGeometryType>) => o.type);
 
-			container.boundingBox(tmpBox);
+			container.coreContent()!.boundingBox(tmpBox);
 			tmpBox.getSize(tmpSize);
 
 			return {cadObjectsTypes, allObjectsCount, threejsObjectsCount};
@@ -70,7 +70,7 @@ export function testenginenodessopCADPipe(qUnit: QUnit) {
 
 			const geometry = coreGroup?.threejsObjectsWithGeo()[0].geometry;
 
-			container.boundingBox(tmpBox);
+			container.coreContent()!.boundingBox(tmpBox);
 			tmpBox.getSize(tmpSize);
 
 			return {allObjectsCount, threejsObjectsCount, geometry};

@@ -25,7 +25,7 @@ export function testenginenodesjsRotate(qUnit: QUnit) {
 		const _compute = async () => {
 			const container = await pointBuilder1.compute();
 			const errorMessage = pointBuilder1.states.error.message();
-			const pointsCount = container.pointsCount();
+			const pointsCount = container.coreContent()!.pointsCount();
 			midNormal.fromBufferAttribute(
 				container.coreContent()!.threejsObjectsWithGeo()[0].geometry.getAttribute('normal') as BufferAttribute,
 				Math.floor(pointsCount / 2)
@@ -82,7 +82,7 @@ export function testenginenodesjsRotate(qUnit: QUnit) {
 		const _compute = async () => {
 			const container = await pointBuilder1.compute();
 			const errorMessage = pointBuilder1.states.error.message();
-			const pointsCount = container.pointsCount();
+			const pointsCount = container.coreContent()!.pointsCount();
 			midNormal.fromBufferAttribute(
 				container.coreContent()!.threejsObjectsWithGeo()[0].geometry.getAttribute('normal') as BufferAttribute,
 				Math.floor(pointsCount / 2)

@@ -173,7 +173,7 @@ export function testenginenodessopBoolean(qUnit: QUnit) {
 
 		async function pointsCount(node: DeleteSopNode | BooleanSopNode) {
 			const container = await node.compute();
-			return container.pointsCount();
+			return container.coreContent()!.pointsCount();
 		}
 
 		assert.equal(await pointsCount(boolean1), 8028);
@@ -194,7 +194,7 @@ export function testenginenodessopBoolean(qUnit: QUnit) {
 
 		async function pointsCount(node: BooleanSopNode) {
 			const container = await node.compute();
-			return container.pointsCount();
+			return container.coreContent()!.pointsCount();
 		}
 		boolean1.p.intersectionEdgesOnly.set(true);
 		assert.equal(await pointsCount(boolean1), 468);

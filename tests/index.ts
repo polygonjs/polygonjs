@@ -6,5 +6,7 @@ import {setupQUnit} from './helpers/setup';
 import {testPolygonjs} from './tests';
 
 setupQUnit(QUnit);
-testPolygonjs(QUnit);
+for (let i = 0; i < 2; i++) {
+	testPolygonjs({qUnit: QUnit, testBatchId: i});
+}
 QUnit.start();

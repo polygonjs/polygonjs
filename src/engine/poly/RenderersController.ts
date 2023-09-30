@@ -31,8 +31,6 @@ enum WebGLContext {
 	EXPERIMENTAL_WEBGL2 = 'experimental-webgl2',
 }
 let nextRendererId: number = 0;
-const webGLContextByCanvas: WeakMap<HTMLCanvasElement, WebGLRenderingContext> = new WeakMap();
-const defaultRendererByCanvas = new WeakMap<HTMLCanvasElement, WebGLRenderer>();
 
 export class RenderersController {
 	private static _nextGlContextId = 0;
@@ -44,6 +42,16 @@ export class RenderersController {
 	private _webgl2_available: boolean | undefined;
 	// private _env_maps: TextureByString = {};
 	// private _next_env_map_id: number = 0;
+	private _webGLContextByCanvas: Map<HTMLCanvasElement, WebGLRenderingContext> = new Map();
+	private _defaultRendererByCanvas = new Map<HTMLCanvasElement, WebGLRenderer>();
+
+	dispose() {
+		this._webGLContextByCanvas.clear();
+		this._defaultRendererByCanvas.forEach((renderer) => {
+			renderer.dispose();
+		});
+		this._defaultRendererByCanvas.clear();
+	}
 
 	setPrintDebug(state: boolean = true) {
 		this._printDebug = state;
@@ -74,14 +82,21 @@ export class RenderersController {
 		return (window.WebGL2RenderingContext && canvas.getContext(WebGLContext.WEBGL2)) != null;
 	}
 	defaultWebGLRendererForCanvas(canvas: HTMLCanvasElement) {
-		let renderer = defaultRendererByCanvas.get(canvas);
+		let renderer = this._defaultRendererByCanvas.get(canvas);
 		if (!renderer) {
 			const context = this.getRenderingContext(canvas)!;
 			renderer = this.createWebGLRenderer({...WEBGL_RENDERER_DEFAULT_PARAMS, canvas, context});
-			defaultRendererByCanvas.set(canvas, renderer);
+			this._defaultRendererByCanvas.set(canvas, renderer);
 		}
 		return renderer;
 	}
+	// disposeWebGLRendererForCanvas(canvas: HTMLCanvasElement) {
+	// 	const renderer = this._defaultRendererByCanvas.get(canvas);
+	// 	if (renderer) {
+	// 		renderer.dispose();
+	// 		this._defaultRendererByCanvas.delete(canvas);
+	// 	}
+	// }
 
 	createWebGLRenderer(params: WebGLRendererParameters) {
 		const renderer = new WebGLRenderer(params);
@@ -119,7 +134,7 @@ export class RenderersController {
 	}
 
 	getRenderingContext(canvas: HTMLCanvasElement): WebGLRenderingContext | null {
-		let gl: WebGLRenderingContext | undefined = webGLContextByCanvas.get(canvas);
+		let gl: WebGLRenderingContext | undefined = this._webGLContextByCanvas.get(canvas);
 		if (gl) {
 			return gl;
 		}
@@ -141,7 +156,7 @@ export class RenderersController {
 		if ((gl as CanvasContext)._polygonjsContextId == null) {
 			(gl as CanvasContext)._polygonjsContextId = RenderersController._nextGlContextId++;
 		}
-		webGLContextByCanvas.set(canvas, gl);
+		this._webGLContextByCanvas.set(canvas, gl);
 
 		// gl.getExtension('OES_standard_derivatives') // for derivative normals, but it cannot work at the moment (see node Gl/DerivativeNormals)
 		// to test data texture

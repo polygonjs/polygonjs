@@ -14,7 +14,7 @@ export function testenginenodessopDataUrl(qUnit: QUnit) {
 		let container;
 		container = await dataUrl1.compute();
 		assert.ok(!dataUrl1.isDirty());
-		assert.equal(container.pointsCount(), 2);
+		assert.equal(container.coreContent()!.pointsCount(), 2);
 
 		await window.scene.root().processQueue();
 
@@ -22,20 +22,20 @@ export function testenginenodessopDataUrl(qUnit: QUnit) {
 		container = await dataUrl1.compute();
 
 		assert.ok(!dataUrl1.isDirty());
-		assert.equal(container.pointsCount(), 8);
+		assert.equal(container.coreContent()?.pointsCount() || 0, 8);
 
 		dataUrl1.p.url.set(_dataUrlUrl('basic.json'));
 		container = await dataUrl1.compute();
 
 		assert.ok(!dataUrl1.isDirty());
-		assert.equal(container.pointsCount(), 2);
+		assert.equal(container.coreContent()!.pointsCount(), 2);
 
 		// and a non existing
 		dataUrl1.p.url.set('/dataurl_doesnotexist.json');
 		container = await dataUrl1.compute();
 
 		assert.ok(!dataUrl1.isDirty());
-		assert.equal(container.pointsCount(), 0);
+		assert.equal(container.coreContent()?.pointsCount() || 0, 0);
 		assert.equal(
 			dataUrl1.states.error.message(),
 			'could not load geometry from /dataurl_doesnotexist.json (SyntaxError: Unexpected token \'<\', "<!DOCTYPE "... is not valid JSON)'
@@ -44,7 +44,7 @@ export function testenginenodessopDataUrl(qUnit: QUnit) {
 		// restore it with a good url
 		dataUrl1.p.url.set(_dataUrlUrl('default.json'));
 		container = await dataUrl1.compute();
-		assert.equal(container.pointsCount(), 8);
+		assert.equal(container.coreContent()!.pointsCount(), 8);
 	});
 
 	qUnit.test('dataUrl csv without reading names from file', async (assert) => {
@@ -59,7 +59,7 @@ export function testenginenodessopDataUrl(qUnit: QUnit) {
 		let container;
 		container = await dataUrl1.compute();
 		assert.ok(!dataUrl1.isDirty());
-		assert.equal(container.pointsCount(), 2);
+		assert.equal(container.coreContent()!.pointsCount(), 2);
 		const core_group = container.coreContent()!;
 		const point0 = core_group.points()[0];
 		const point1 = core_group.points()[1];
@@ -86,7 +86,7 @@ export function testenginenodessopDataUrl(qUnit: QUnit) {
 
 		let container = await dataUrl1.compute();
 		assert.ok(!dataUrl1.isDirty());
-		assert.equal(container.pointsCount(), 2);
+		assert.equal(container.coreContent()!.pointsCount(), 2);
 		const core_group = container.coreContent()!;
 		const point0 = core_group.points()[0];
 		const point1 = core_group.points()[1];
@@ -116,7 +116,7 @@ export function testenginenodessopDataUrl(qUnit: QUnit) {
 
 		let container = await dataUrl1.compute();
 		assert.ok(!dataUrl1.isDirty());
-		assert.equal(container.pointsCount(), 2);
+		assert.equal(container.coreContent()!.pointsCount(), 2);
 		const core_group = container.coreContent()!;
 		const geometry = core_group.threejsObjectsWithGeo()[0].geometry;
 		assert.deepEqual((geometry.attributes.position as BufferAttribute).array.length, 6);
@@ -132,7 +132,7 @@ export function testenginenodessopDataUrl(qUnit: QUnit) {
 		async function pointsCount() {
 			let container = await dataUrl1.compute();
 			assert.ok(!dataUrl1.isDirty());
-			return container.pointsCount();
+			return container.coreContent()?.pointsCount() || 0;
 		}
 
 		window.scene.assets.setRoot('/clients/me');
