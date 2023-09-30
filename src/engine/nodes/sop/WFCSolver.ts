@@ -33,11 +33,6 @@ class WFCSolverSopParamsConfig extends NodeParamsConfig {
 		range: [-100, 100],
 		rangeLocked: [false, false],
 	});
-	// /** @param tileHeight */
-	// tileHeight = ParamConfig.FLOAT(1, {
-	// 	range: [0, 2],
-	// 	rangeLocked: [true, false],
-	// });
 }
 const ParamsConfig = new WFCSolverSopParamsConfig();
 
@@ -49,10 +44,10 @@ export class WFCSolverSopNode extends TypedSopNode<WFCSolverSopParamsConfig> {
 
 	override initializeNode() {
 		this.io.inputs.setCount(2);
-		this.io.inputs.initInputsClonedState(InputCloneMode.NEVER);
+		this.io.inputs.initInputsClonedState([InputCloneMode.FROM_NODE, InputCloneMode.NEVER]);
 	}
 
-	override async cook(inputCoreGroups: CoreGroup[]) {
+	override cook(inputCoreGroups: CoreGroup[]) {
 		const coreGroup0 = inputCoreGroups[0];
 		const coreGroup1 = inputCoreGroups[1];
 		const quadObjects = coreGroup0.quadObjects();
@@ -74,17 +69,14 @@ export class WFCSolverSopNode extends TypedSopNode<WFCSolverSopParamsConfig> {
 		}
 
 		const {maxCount} = this.pv;
-		// const newObjects: Object3D[] = [];
 
 		for (const quadObject of quadObjects) {
 			const solver = new WFCSolver({
 				tileAndRuleObjects,
 				quadObject,
-				// height: tileHeight,
 				maxResolvedQuadsCount: maxCount,
 			});
 			solver.process(this.pv);
-			// newObjects.push(...solver.objects());
 		}
 
 		this.setObjects(quadObjects);

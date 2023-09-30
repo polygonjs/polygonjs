@@ -39,7 +39,7 @@ export class WFCBuilderSopNode extends TypedSopNode<WFCBuilderSopParamsConfig> {
 		this.io.inputs.initInputsClonedState(InputCloneMode.NEVER);
 	}
 
-	override async cook(inputCoreGroups: CoreGroup[]) {
+	override cook(inputCoreGroups: CoreGroup[]) {
 		const coreGroup0 = inputCoreGroups[0];
 		const coreGroup1 = inputCoreGroups[1];
 		const quadObjects = coreGroup0.quadObjects();

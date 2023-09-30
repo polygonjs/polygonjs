@@ -574,6 +574,7 @@ import {testenginenodessopTube} from './engine/nodes/sop/Tube';
 import {testenginenodessopUvProject} from './engine/nodes/sop/UvProject';
 import {testenginenodessopUvTransform} from './engine/nodes/sop/UvTransform';
 import {testenginenodessopUvUnwrap} from './engine/nodes/sop/UvUnwrap';
+import {testenginenodessopWFCSolver} from './engine/nodes/sop/WFCSolver';
 import {testengineviewers_Base} from './engine/viewers/_Base';
 import {testengineviewersCallbacks} from './engine/viewers/Callbacks';
 import {testengineviewersControls} from './engine/viewers/Controls';
@@ -1163,6 +1164,7 @@ export function testPolygonjs(options: TestPolygonjsOptions) {
 		testenginenodessopUvProject,
 		testenginenodessopUvTransform,
 		testenginenodessopUvUnwrap,
+		testenginenodessopWFCSolver,
 		testengineviewers_Base,
 		testengineviewersCallbacks,
 		testengineviewersControls,
@@ -1170,11 +1172,16 @@ export function testPolygonjs(options: TestPolygonjsOptions) {
 		testengineviewersShadows,
 	];
 
-	console.log(testFunctions.length);
-	const batch0 = testFunctions.slice(0, 299);
-	const batch1 = testFunctions.slice(299, 600);
-	const batch = [batch0, batch1][testBatchId];
-	for (const testFunction of batch) {
-		testFunction(qUnit);
+	if (testBatchId < 0) {
+		for (const testFunction of testFunctions) {
+			testFunction(qUnit);
+		}
+	} else {
+		const batch0 = testFunctions.slice(0, 299);
+		const batch1 = testFunctions.slice(299, 600);
+		const batch = [batch0, batch1][testBatchId];
+		for (const testFunction of batch) {
+			testFunction(qUnit);
+		}
 	}
 }
