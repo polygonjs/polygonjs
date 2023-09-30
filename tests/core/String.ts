@@ -1,8 +1,8 @@
 import type {QUnit} from '../helpers/QUnit';
 import {CoreString} from '../../src/core/String';
 
-const _numbers:number[]=[]
-const _string:string[]=[]
+const _numbers: number[] = [];
+const _string: string[] = [];
 
 export function testcoreString(qUnit: QUnit) {
 	// qUnit.test('string timestamp', (assert) => {
@@ -47,6 +47,7 @@ export function testcoreString(qUnit: QUnit) {
 		assert.ok(CoreString.matchMask('abc', 'abc* ^de*'), 'abc* ^de*');
 		assert.ok(CoreString.matchMask('abcdef', 'abc* ^de*'), 'abc* ^de*');
 		assert.notOk(CoreString.matchMask('abcdef', 'abc* ^*de*'), 'abc* ^*de*');
+		assert.notOk(CoreString.matchMask('slope_full', '* ^default ^slope_full'), '* ^default ^slope_full');
 	});
 	qUnit.test('string matchMask does not break with invalid input', (assert) => {
 		assert.notOk(CoreString.matchMask('abc', '{"actor":"var nodesByRequestedName_1372 = {}\ncon'), 'abc* ^de*');
@@ -61,11 +62,11 @@ export function testcoreString(qUnit: QUnit) {
 
 	qUnit.test('string attrib_names', (assert) => {
 		assert.deepEqual(CoreString.attribNames('position, normal', _string), ['position', 'normal']);
-		assert.deepEqual(CoreString.attribNames('position,normal',_string), ['position', 'normal']);
-		assert.deepEqual(CoreString.attribNames('position,   normal',_string), ['position', 'normal']);
-		assert.deepEqual(CoreString.attribNames('position,		  normal',_string), ['position', 'normal']);
-		assert.deepEqual(CoreString.attribNames('  position  ,		  normal  ',_string), ['position', 'normal']);
-		assert.deepEqual(CoreString.attribNames('position,normal,',_string), ['position', 'normal']);
+		assert.deepEqual(CoreString.attribNames('position,normal', _string), ['position', 'normal']);
+		assert.deepEqual(CoreString.attribNames('position,   normal', _string), ['position', 'normal']);
+		assert.deepEqual(CoreString.attribNames('position,		  normal', _string), ['position', 'normal']);
+		assert.deepEqual(CoreString.attribNames('  position  ,		  normal  ', _string), ['position', 'normal']);
+		assert.deepEqual(CoreString.attribNames('position,normal,', _string), ['position', 'normal']);
 	});
 
 	qUnit.test('string increment name', (assert) => {
@@ -119,9 +120,9 @@ export function testcoreString(qUnit: QUnit) {
 	});
 
 	qUnit.test('indices', (assert) => {
-		assert.deepEqual(CoreString.indices('1',_numbers), [1]);
-		assert.deepEqual(CoreString.indices('1,2',_numbers), [1, 2]);
-		assert.deepEqual(CoreString.indices('1,2 4-6',_numbers), [1, 2, 4, 5, 6]);
+		assert.deepEqual(CoreString.indices('1', _numbers), [1]);
+		assert.deepEqual(CoreString.indices('1,2', _numbers), [1, 2]);
+		assert.deepEqual(CoreString.indices('1,2 4-6', _numbers), [1, 2, 4, 5, 6]);
 	});
 
 	qUnit.test('number conversion', (assert) => {

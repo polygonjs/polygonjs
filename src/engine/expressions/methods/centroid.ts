@@ -49,23 +49,25 @@ export class CentroidExpression extends BaseMethod {
 				}
 
 				if (container) {
-					container.boundingBox(tmpBox);
-					tmpBox.getCenter(tmpCenter);
+					const coreGroup = container.coreContent();
+					if (coreGroup) {
+						coreGroup.boundingBox(tmpBox);
+						tmpBox.getCenter(tmpCenter);
 
-					if (component_name) {
-						const value = tmpCenter[component_name];
-						if (value != null) {
-							resolve(value);
+						if (component_name) {
+							const value = tmpCenter[component_name];
+							if (value != null) {
+								return resolve(value);
+							} else {
+								return resolve(0);
+							}
 						} else {
-							resolve(0);
+							return resolve(tmpCenter);
 						}
-					} else {
-						resolve(tmpCenter);
 					}
 				}
-			} else {
-				resolve(0);
 			}
+			resolve(0);
 		});
 	}
 }

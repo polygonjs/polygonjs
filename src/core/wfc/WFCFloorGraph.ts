@@ -1,4 +1,4 @@
-import {TileConfig} from './WFCCommon';
+import {TileConfig} from './WFCTileConfig';
 import {WFCQuadAttribute} from './WFCAttributes';
 import {Vector4} from 'three';
 import {QuadGraph, NeighbourData} from '../graph/quad/QuadGraph';

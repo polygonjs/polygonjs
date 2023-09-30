@@ -1,6 +1,6 @@
 import {BasePreset, NodePresetsCollection, PresetRegister, PresetsCollectionFactory} from '../BasePreset';
 import {WFCDebugSopNode} from '../../../src/engine/nodes/sop/WFCDebug';
-import {EMPTY_TILE_ID} from '../../../src/core/wfc/WFCCommon';
+import {EMPTY_TILE_ID} from '../../../src/core/wfc/WFCConstant';
 
 const WFCDebugSopNodePresetsCollectionFactory: PresetsCollectionFactory<WFCDebugSopNode> = (node: WFCDebugSopNode) => {
 	const collection = new NodePresetsCollection();

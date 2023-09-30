@@ -12,13 +12,16 @@ import {WFCTilesCollection} from '../../../core/wfc/WFCTilesCollection';
 import {stringMatchMask} from '../../../core/String';
 import {CoreWFCTileAttribute} from '../../../core/wfc/WFCAttributes';
 import {Object3D, Group} from 'three';
-import {ALL_HORIZONTAL_SIDES, CLOCK_WISE_TILE_SIDES, EMPTY_TILE_ID} from '../../../core/wfc/WFCCommon';
+import {ALL_HORIZONTAL_SIDES, CLOCK_WISE_TILE_SIDES} from '../../../core/wfc/WFCCommon';
+import {EMPTY_TILE_ID} from '../../../core/wfc/WFCConstant';
 
 class WFCDebugSopParamsConfig extends NodeParamsConfig {
 	/** @param src tile id */
 	srcTileId = ParamConfig.STRING('*');
 	/** @param dest tile id */
 	destTileId = ParamConfig.STRING('*');
+	/** @param side name */
+	sideName = ParamConfig.STRING('*');
 }
 const ParamsConfig = new WFCDebugSopParamsConfig();
 
@@ -38,7 +41,7 @@ export class WFCDebugSopNode extends TypedSopNode<WFCDebugSopParamsConfig> {
 		const tileAndRuleObjects = coreGroup.threejsObjects();
 		const collection = new WFCTilesCollection({tileAndRuleObjects});
 
-		const {srcTileId, destTileId} = this.pv;
+		const {srcTileId, destTileId, sideName} = this.pv;
 		const srcTiles = collection
 			.tiles()
 			.filter((tileObject) => stringMatchMask(CoreWFCTileAttribute.getTileId(tileObject), srcTileId));
@@ -56,6 +59,14 @@ export class WFCDebugSopNode extends TypedSopNode<WFCDebugSopParamsConfig> {
 				const destTileId = CoreWFCTileAttribute.getTileId(destTile);
 				// let k=0;
 				collection.traverseRules(srcTileId, destTileId, (id0, id1, side0, side1) => {
+					const srcSideName = CoreWFCTileAttribute.getSideName(srcTile, side0);
+					const destSideName = CoreWFCTileAttribute.getSideName(destTile, side1);
+					if (srcSideName && destSideName) {
+						if (!(stringMatchMask(srcSideName, sideName) && stringMatchMask(destSideName, sideName))) {
+							return;
+						}
+					}
+
 					side0 = id0 == EMPTY_TILE_ID && ALL_HORIZONTAL_SIDES.includes(side0) ? ALL_HORIZONTAL_SIDES : side0;
 					side1 = id1 == EMPTY_TILE_ID && ALL_HORIZONTAL_SIDES.includes(side1) ? ALL_HORIZONTAL_SIDES : side1;
 					const id = `${id0}:${side0}-${id1}:${side1}`;
@@ -86,12 +97,12 @@ export class WFCDebugSopNode extends TypedSopNode<WFCDebugSopParamsConfig> {
 					}
 					switch (side1) {
 						case 'b': {
-							destTileClone.position.y = +1;
+							destTileClone.position.y = -1;
 							// destTileClone.rotation.y = ((destTileRotation + 2) * Math.PI) / 2;
 							break;
 						}
 						case 't': {
-							destTileClone.position.y = -1;
+							destTileClone.position.y = +1;
 							break;
 						}
 						default: {

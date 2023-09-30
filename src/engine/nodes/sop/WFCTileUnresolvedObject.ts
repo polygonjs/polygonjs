@@ -30,13 +30,13 @@ export class WFCTileUnresolvedObjectSopNode extends TypedSopNode<WFCTileUnresolv
 	override async cook(inputCoreGroups: CoreGroup[]) {
 		const coreGroup0 = inputCoreGroups[0];
 		const coreGroup1 = inputCoreGroups[1];
-		const objects = coreGroup0.threejsObjects();
+		const inputObjects = coreGroup0.allObjects();
 		const unresolvedTileObject = coreGroup1 ? coreGroup1.threejsObjects()[0] : null;
 
 		const tileObject = unresolvedTileObject != null ? unresolvedTileObject : createDefaultUnresolvedTileObject();
 		addUnresolvedTileObjectAttributes(tileObject);
-		objects.push(tileObject);
+		inputObjects.push(tileObject);
 
-		this.setObjects(objects);
+		this.setObjects(inputObjects);
 	}
 }

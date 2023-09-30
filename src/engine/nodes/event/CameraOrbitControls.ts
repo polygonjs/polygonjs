@@ -27,12 +27,12 @@ const OUTPUT_CHANGE = 'change';
 const OUTPUT_END = 'end';
 const _targetArray: Number3 = [0, 0, 0];
 
-enum MouseControl {
+export enum MouseControl {
 	ROTATE = 'rotate',
 	PAN = 'pan',
 	DOLLY = 'dolly',
 }
-const MOUSE_CONTROLS: MouseControl[] = [MouseControl.ROTATE, MouseControl.DOLLY, MouseControl.PAN];
+export const MOUSE_CONTROLS: MouseControl[] = [MouseControl.ROTATE, MouseControl.DOLLY, MouseControl.PAN];
 enum TouchControl {
 	ROTATE = 'rotate',
 	PAN = 'pan',

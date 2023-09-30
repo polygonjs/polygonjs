@@ -13,6 +13,7 @@ const _tmpVertices: CoreVertex<CoreObjectType>[] = [];
 export function vertices<T extends CoreObjectType>(coreGroup: CoreGroup, target: CoreVertex<T>[]): CoreVertex<T>[] {
 	const allObjects = coreGroup.allObjects();
 
+	target.length = 0;
 	for (const object of allObjects) {
 		verticesFromObject(object, _tmpVertices);
 		arrayPushItems(_tmpVertices, target);

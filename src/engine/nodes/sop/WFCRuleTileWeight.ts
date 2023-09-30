@@ -30,7 +30,7 @@ export class WFCRuleTileWeightSopNode extends TypedSopNode<WFCRuleTileWeightSopP
 
 	override initializeNode() {
 		this.io.inputs.setCount(1);
-		this.io.inputs.initInputsClonedState([InputCloneMode.NEVER]);
+		this.io.inputs.initInputsClonedState(InputCloneMode.FROM_NODE);
 	}
 
 	override async cook(inputCoreGroups: CoreGroup[]) {

@@ -9,6 +9,7 @@ import {CoreGroup} from '../../../core/geometry/Group';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {createDefaultEmptyTileObject, addEmptyTileObjectAttributes} from '../../../core/wfc/WFCDebugTileObjects';
+import {Object3D} from 'three';
 
 class WFCTileEmptyObjectSopParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new WFCTileEmptyObjectSopParamsConfig();
@@ -20,20 +21,17 @@ export class WFCTileEmptyObjectSopNode extends TypedSopNode<WFCTileEmptyObjectSo
 	}
 
 	override initializeNode() {
-		this.io.inputs.setCount(1, 2);
+		this.io.inputs.setCount(0, 1);
 		this.io.inputs.initInputsClonedState(InputCloneMode.FROM_NODE);
 	}
 
 	override async cook(inputCoreGroups: CoreGroup[]) {
 		const coreGroup0 = inputCoreGroups[0];
-		const coreGroup1 = inputCoreGroups[1];
-		const objects = coreGroup0.threejsObjects();
-		const emptyTileObject = coreGroup1 ? coreGroup1.threejsObjects()[0] : null;
+		const inputObject: Object3D | null = coreGroup0 ? coreGroup0.threejsObjects()[0] : null;
 
-		const tileObject = emptyTileObject != null ? emptyTileObject : createDefaultEmptyTileObject();
+		const tileObject = inputObject != null ? inputObject : createDefaultEmptyTileObject();
 		addEmptyTileObjectAttributes(tileObject);
-		objects.push(tileObject);
 
-		this.setObjects(objects);
+		this.setObjects([tileObject]);
 	}
 }

@@ -36,7 +36,7 @@ export function testenginenodessopCADUnpack(qUnit: QUnit) {
 			const cadObjects = coreGroup.cadObjects()!;
 			const cadObjectsTypes = cadObjects.map((o: CadObject<CadGeometryType>) => o.type);
 
-			container.boundingBox(tmpBox);
+			coreGroup.boundingBox(tmpBox);
 
 			return {allObjectsCount, threejsObjectsCount, cadObjectsTypes};
 		}
@@ -48,7 +48,7 @@ export function testenginenodessopCADUnpack(qUnit: QUnit) {
 
 			const geometry = coreGroup?.threejsObjectsWithGeo()[0].geometry;
 
-			container.boundingBox(tmpBox);
+			coreGroup.boundingBox(tmpBox);
 
 			return {allObjectsCount, threejsObjectsCount, geometry};
 		}

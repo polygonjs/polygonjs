@@ -41,12 +41,15 @@ export class ObjectsCountExpression extends BaseMethod {
 				}
 
 				if (container) {
-					const value = container.objectsCount();
-					resolve(value);
+					const coreGroup = container.coreContent();
+					if (coreGroup) {
+						const objectsCount = coreGroup.allObjects().length;
+						resolve(objectsCount);
+					}
+					return;
 				}
-			} else {
-				resolve(0);
 			}
+			resolve(0);
 		});
 	}
 }

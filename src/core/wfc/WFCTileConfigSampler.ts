@@ -1,6 +1,6 @@
 import {arrayCopy} from '../ArrayUtils';
 import {randFloat} from '../math/_Module';
-import {TileConfig} from './WFCCommon';
+import {TileConfig} from './WFCTileConfig';
 
 export class WFCTileConfigSampler {
 	private _cumulativeWeights: number[] = [];

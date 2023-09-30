@@ -1,6 +1,6 @@
 import {Mesh, MeshBasicMaterial, BoxGeometry, Vector3, Object3D} from 'three';
 import {CoreWFCTileAttribute} from './WFCAttributes';
-import {EMPTY_TILE_ID, ERROR_TILE_ID, UNRESOLVED_TILE_ID} from './WFCCommon';
+import {EMPTY_SIDE_NAME, EMPTY_TILE_ID, ERROR_TILE_ID, UNRESOLVED_TILE_ID} from './WFCConstant';
 import {BoxLinesSopOperation} from '../../engine/operations/sop/BoxLines';
 
 const sizes = new Vector3(1, 1, 1);
@@ -17,21 +17,29 @@ export function createDefaultEmptyTileObject() {
 	return object;
 }
 
+const SCALE = 0.8;
 export function createDefaultErrorTileObject() {
-	const geometry = new BoxGeometry(0.95, 0.95, 0.95);
+	const geometry = new BoxGeometry(SCALE, SCALE, SCALE);
 	const material = new MeshBasicMaterial({color: 0xff0000});
 	const mesh = new Mesh(geometry, material);
 	return mesh;
 }
 export function createDefaultUnresolvedTileObject() {
-	const geometry = new BoxGeometry(0.95, 0.95, 0.95);
-	const material = new MeshBasicMaterial({color: 0xff0000});
+	const geometry = new BoxGeometry(SCALE, SCALE, SCALE);
+	const material = new MeshBasicMaterial({color: 0xff00ff});
 	const mesh = new Mesh(geometry, material);
 	return mesh;
 }
 export function addEmptyTileObjectAttributes(object: Object3D) {
 	CoreWFCTileAttribute.setTileId(object, EMPTY_TILE_ID);
 	object.name = EMPTY_TILE_ID;
+	CoreWFCTileAttribute.setSideName(object, 's', EMPTY_SIDE_NAME);
+	CoreWFCTileAttribute.setSideName(object, 'n', EMPTY_SIDE_NAME);
+	CoreWFCTileAttribute.setSideName(object, 'w', EMPTY_SIDE_NAME);
+	CoreWFCTileAttribute.setSideName(object, 'e', EMPTY_SIDE_NAME);
+	CoreWFCTileAttribute.setSideName(object, 'b', EMPTY_SIDE_NAME);
+	CoreWFCTileAttribute.setSideName(object, 't', EMPTY_SIDE_NAME);
+
 	return object;
 }
 export function addErrorTileObjectAttributes(object: Object3D) {

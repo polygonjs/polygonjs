@@ -11,7 +11,7 @@ import {Attribute, CoreAttribute} from '../../Attribute';
 import {CoreEntity} from '../../CoreEntity';
 import {CoreType} from '../../../Type';
 import {BasePrimitiveAttribute} from './PrimitiveAttribute';
-import {DOT, ComponentName, COMPONENT_INDICES, GroupString, AttribClass, AttribSize} from '../../Constant';
+import {DOT, ComponentName, COMPONENT_INDICES, GroupString, AttribClass, AttribSize, AttribType} from '../../Constant';
 import {PrimitiveAttributesDict} from './Common';
 import {CoreObjectType, ObjectContent, ObjectBuilder} from '../../ObjectContent';
 import {BaseCoreObject} from '../object/BaseCoreObject';
@@ -241,7 +241,17 @@ export abstract class CorePrimitive<T extends CoreObjectType> extends CoreEntity
 		target.fromArray(attrib.array as number[], this._index * 4);
 		return target;
 	}
-
+	static attribType<T extends CoreObjectType>(object: ObjectContent<T> | undefined, attribName: string): AttribType {
+		const attribute = object ? this.attribute(object, attribName) : null;
+		if (attribute && attribute?.isString == true) {
+			return AttribType.STRING;
+		} else {
+			return AttribType.NUMERIC;
+		}
+	}
+	attribType(attribName: string): AttribType {
+		return (this.constructor as typeof CorePrimitive).attribType(this._object, attribName);
+	}
 	static stringAttribValue<T extends CoreObjectType>(object: ObjectContent<T>, index: number, attribName: string) {
 		return this.attribValue(object, index, attribName);
 	}

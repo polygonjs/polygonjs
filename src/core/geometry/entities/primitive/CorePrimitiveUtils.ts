@@ -13,6 +13,7 @@ const _tmpPrimitives: CorePrimitive<CoreObjectType>[] = [];
 export function primitives<T extends CoreObjectType>(coreGroup: CoreGroup, target: CorePrimitive<T>[]) {
 	const allObjects = coreGroup.allObjects();
 
+	target.length = 0;
 	for (const object of allObjects) {
 		primitivesFromObject(object, _tmpPrimitives);
 		arrayPushItems(_tmpPrimitives, target);

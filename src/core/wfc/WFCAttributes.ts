@@ -15,6 +15,8 @@ export enum WFCQuadAttribute {
 	FLOOR_INDEX = 'floorIndex',
 	TILE_ID = 'tileId',
 	SOLVE_ALLOWED = 'solveAllowed',
+	// solve result
+	SOLVED_TILE_CONFIGS = 'solvedTileConfigs',
 }
 
 export enum WFCTileAttribute {

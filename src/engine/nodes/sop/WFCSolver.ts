@@ -4,7 +4,6 @@
  *
  */
 import {TypedSopNode} from './_Base';
-import {Object3D} from 'three';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
@@ -14,9 +13,15 @@ import {filterTileObjects, filterRuleObjects} from '../../../core/wfc/WFCUtils';
 
 class WFCSolverSopParamsConfig extends NodeParamsConfig {
 	/** @param iterations */
-	stepsCount = ParamConfig.INTEGER(1, {
-		range: [1, 1000],
+	stepsCount = ParamConfig.INTEGER(-1, {
+		range: [-1, 1000],
 		rangeLocked: [true, false],
+	});
+	/** @param max resolved quads */
+	maxCount = ParamConfig.INTEGER(-1, {
+		range: [-1, 1000],
+		rangeLocked: [true, false],
+		separatorAfter: true,
 	});
 	/** @param quadSeed */
 	quadSeed = ParamConfig.INTEGER(0, {
@@ -28,11 +33,11 @@ class WFCSolverSopParamsConfig extends NodeParamsConfig {
 		range: [-100, 100],
 		rangeLocked: [false, false],
 	});
-	/** @param tileHeight */
-	tileHeight = ParamConfig.FLOAT(1, {
-		range: [0, 2],
-		rangeLocked: [true, false],
-	});
+	// /** @param tileHeight */
+	// tileHeight = ParamConfig.FLOAT(1, {
+	// 	range: [0, 2],
+	// 	rangeLocked: [true, false],
+	// });
 }
 const ParamsConfig = new WFCSolverSopParamsConfig();
 
@@ -68,18 +73,20 @@ export class WFCSolverSopNode extends TypedSopNode<WFCSolverSopParamsConfig> {
 			return;
 		}
 
-		const {stepsCount, quadSeed, configSeed, tileHeight} = this.pv;
-		const newObjects: Object3D[] = [];
+		const {maxCount} = this.pv;
+		// const newObjects: Object3D[] = [];
 
 		for (const quadObject of quadObjects) {
-			const solver = new WFCSolver({tileAndRuleObjects, quadObject, height: tileHeight});
-			for (let i = 0; i < stepsCount; i++) {
-				solver.step(quadSeed, configSeed);
-			}
-			// solver.addUnresolvedTileObjects();
-			newObjects.push(...solver.objects());
+			const solver = new WFCSolver({
+				tileAndRuleObjects,
+				quadObject,
+				// height: tileHeight,
+				maxResolvedQuadsCount: maxCount,
+			});
+			solver.process(this.pv);
+			// newObjects.push(...solver.objects());
 		}
 
-		this.setObjects(newObjects);
+		this.setObjects(quadObjects);
 	}
 }

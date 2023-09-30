@@ -58,6 +58,7 @@ export const primitiveClassFactoryNonAbstract = (object: ObjectContent<CoreObjec
 		if ((object as Points).isPoints) {
 			return ThreejsPrimitivePoint;
 		}
+		return ThreejsPrimitiveTriangle;
 	}
 };
 const primitiveClassFactory: CorePrimitiveClassFactoryCheckFunction = primitiveClassFactoryNonAbstract;

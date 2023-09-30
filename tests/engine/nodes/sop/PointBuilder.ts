@@ -20,7 +20,8 @@ const _v3 = new Vector3();
 export function testenginenodessopPointBuilder(qUnit: QUnit) {
 	async function _getBbox(node: PointBuilderSopNode) {
 		const container = await node.compute();
-		container.boundingBox(bbox);
+		const coreGroup = container.coreContent()!;
+		coreGroup.boundingBox(bbox);
 		bbox.getSize(size);
 		return {min: bbox.min, max: bbox.max, size};
 	}

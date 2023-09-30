@@ -1,10 +1,10 @@
 import {BasePreset, NodePresetsCollection, PresetRegister, PresetsCollectionFactory} from '../BasePreset';
-import {WFCRuleFromSideNameSopNode} from '../../../src/engine/nodes/sop/WFCRuleFromSideName';
-import {EMPTY_TILE_ID} from '../../../src/core/wfc/WFCCommon';
+import {WFCRuleConnectionFromSideNameSopNode} from '../../../src/engine/nodes/sop/WFCRuleConnectionFromSideName';
+import {EMPTY_TILE_ID} from '../../../src/core/wfc/WFCConstant';
 
-const WFCRuleFromSideNameSopNodePresetsCollectionFactory: PresetsCollectionFactory<WFCRuleFromSideNameSopNode> = (
-	node: WFCRuleFromSideNameSopNode
-) => {
+const WFCRuleConnectionFromSideNameSopNodePresetsCollectionFactory: PresetsCollectionFactory<
+	WFCRuleConnectionFromSideNameSopNode
+> = (node: WFCRuleConnectionFromSideNameSopNode) => {
 	const collection = new NodePresetsCollection();
 
 	collection.addPreset(
@@ -32,10 +32,10 @@ const WFCRuleFromSideNameSopNodePresetsCollectionFactory: PresetsCollectionFacto
 
 	return collection;
 };
-export const WFCRuleFromSideNameSopPresetRegister: PresetRegister<
-	typeof WFCRuleFromSideNameSopNode,
-	WFCRuleFromSideNameSopNode
+export const WFCRuleConnectionFromSideNameSopPresetRegister: PresetRegister<
+	typeof WFCRuleConnectionFromSideNameSopNode,
+	WFCRuleConnectionFromSideNameSopNode
 > = {
-	nodeClass: WFCRuleFromSideNameSopNode,
-	setupFunc: WFCRuleFromSideNameSopNodePresetsCollectionFactory,
+	nodeClass: WFCRuleConnectionFromSideNameSopNode,
+	setupFunc: WFCRuleConnectionFromSideNameSopNodePresetsCollectionFactory,
 };

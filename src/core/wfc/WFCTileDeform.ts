@@ -1,5 +1,6 @@
 import {Object3D, Vector3} from 'three';
-import {TileCorners, TileRotation} from './WFCCommon';
+import {TileCorners} from './WFCCommon';
+import {TileRotation} from './WFCTileConfig';
 import {Vector3_8, cubeLatticeDeform} from '../geometry/operation/CubeLatticeDeform';
 
 const cubeLatticeDeformPoints: Vector3_8 = [

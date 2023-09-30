@@ -1,6 +1,8 @@
-import {mod} from '../math/_Module';
-import {NeighbourIndex} from '../graph/quad/QuadGraphCommon';
 import {Vector3} from 'three';
+import {mod} from '../math/_Module';
+import {TileConfig} from './WFCTileConfig';
+import {EMPTY_TILE_ID} from './WFCConstant';
+
 export interface TileCorners {
 	p0: Vector3;
 	p1: Vector3;
@@ -19,10 +21,7 @@ export interface WFCRule {
 	readonly side0: WFCTileSide;
 	readonly side1: WFCTileSide;
 }
-export const EMPTY_TILE_ID = '__EMPTY_TILE__';
-export const GRID_LIMIT_ID = '__GRID_LIMIT__';
-export const ERROR_TILE_ID = '__ERROR_TILE__';
-export const UNRESOLVED_TILE_ID = '__UNRESOLVED_TILE__';
+
 // export enum WFCLookAtSide {
 // 	SOUTH = 's',
 // 	NORTH = 'n',
@@ -35,11 +34,7 @@ export const UNRESOLVED_TILE_ID = '__UNRESOLVED_TILE__';
 // 	WFCLookAtSide.SOUTH,
 // 	WFCLookAtSide.WEST,
 // ];
-export type TileRotation = NeighbourIndex;
-export interface TileConfig {
-	tileId: string;
-	rotation: TileRotation;
-}
+
 // export interface PotentialNeighbour {
 // 	id: string;
 // 	side: WFCTileSide;

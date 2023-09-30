@@ -98,21 +98,35 @@ export class QuadPrimitive extends CorePrimitive<CoreObjectType.QUAD> {
 		return geometry.userData.primAttributes;
 	}
 
-	position(target: Vector3): Vector3 {
-		if (!this._geometry) {
+	static position<T extends CoreObjectType>(
+		quadObject: ObjectContent<T> | undefined,
+		primitiveIndex: number,
+		target: Vector3
+	): Vector3 {
+		if (!(quadObject && quadObject.geometry)) {
 			return target;
 		}
-		const positionAttribute = this._geometry.attributes[Attribute.POSITION] as BufferAttribute | undefined;
+		const positionAttribute = (quadObject as any as QuadObject).geometry.attributes[Attribute.POSITION] as
+			| BufferAttribute
+			| undefined;
 		if (!positionAttribute) {
 			return target;
 		}
 		const positionArray = positionAttribute.array;
-		_p0.fromArray(positionArray, this._index * stride + 0);
-		_p1.fromArray(positionArray, this._index * stride + 1);
-		_p2.fromArray(positionArray, this._index * stride + 2);
-		_p3.fromArray(positionArray, this._index * stride + 2);
+		const i0 = primitiveIndex * stride + 0;
+		const i1 = primitiveIndex * stride + 1;
+		const i2 = primitiveIndex * stride + 2;
+		const i3 = primitiveIndex * stride + 3;
+		const index = (quadObject as any as QuadObject).geometry.index;
+		_p0.fromArray(positionArray, index[i0] * 3);
+		_p1.fromArray(positionArray, index[i1] * 3);
+		_p2.fromArray(positionArray, index[i2] * 3);
+		_p3.fromArray(positionArray, index[i3] * 3);
 		target.copy(_p0).add(_p1).add(_p2).add(_p3).divideScalar(4);
 		return target;
+	}
+	position(target: Vector3): Vector3 {
+		return (this.constructor as typeof QuadPrimitive).position(this._object, this._index, target);
 	}
 	normal(target: Vector3): Vector3 {
 		if (!this._geometry) {
@@ -123,13 +137,18 @@ export class QuadPrimitive extends CorePrimitive<CoreObjectType.QUAD> {
 			return target;
 		}
 		const positionArray = positionAttribute.array;
-		_triangle.a.fromArray(positionArray, this._index * 3 + 0);
-		_triangle.b.fromArray(positionArray, this._index * 3 + 1);
-		_triangle.c.fromArray(positionArray, this._index * 3 + 2);
+		const i0 = this._index * stride + 0;
+		const i1 = this._index * stride + 1;
+		const i2 = this._index * stride + 2;
+		const i3 = this._index * stride + 3;
+		const index = this._geometry.index;
+		_triangle.a.fromArray(positionArray, index[i0] * 3);
+		_triangle.b.fromArray(positionArray, index[i1] * 3);
+		_triangle.c.fromArray(positionArray, index[i2] * 3);
 		_triangle.getNormal(_n0);
-		_triangle.a.fromArray(positionArray, this._index * 3 + 2);
-		_triangle.b.fromArray(positionArray, this._index * 3 + 3);
-		_triangle.c.fromArray(positionArray, this._index * 3 + 0);
+		_triangle.a.fromArray(positionArray, index[i2] * 3);
+		_triangle.b.fromArray(positionArray, index[i3] * 3);
+		_triangle.c.fromArray(positionArray, index[i0] * 3);
 		_triangle.getNormal(_n1);
 		return target.copy(_n0).add(_n1).divideScalar(2);
 	}

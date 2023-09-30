@@ -77,7 +77,12 @@ export class BboxExpression extends BaseMethod {
 		vector_name: undefined | keyof BoxComponents,
 		component_name: undefined | keyof Vector3Like
 	) {
-		container.boundingBox(tmpBox);
+		const coreGroup = container.coreContent();
+		if (coreGroup) {
+			coreGroup.boundingBox(tmpBox);
+		} else {
+			tmpBox.makeEmpty();
+		}
 		if (!vector_name) {
 			return tmpBox;
 		}

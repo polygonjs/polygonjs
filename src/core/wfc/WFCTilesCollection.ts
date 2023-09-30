@@ -1,6 +1,7 @@
 // import {pushOnArrayAtEntry} from '../MapUtils';
 import {CoreWFCTileAttribute} from './WFCAttributes';
 import {WFCTileSide, WFCRule, sortTileIds, SortedTileIds, ALL_SIDES} from './WFCCommon';
+import {createDefaultErrorTileObject, createDefaultUnresolvedTileObject} from './WFCDebugTileObjects';
 import {validRuleObject, wfcRuleFromObject} from './WFCRule';
 import {filterTileObjects, filterRuleObjects} from './WFCUtils';
 import {Object3D} from 'three';
@@ -50,12 +51,19 @@ export class WFCTilesCollection {
 	private _tiles: Object3D[];
 	private _tilesById: Map<string, Object3D>;
 	private _rulesByTileId: RulesByTileId = new Map();
+	//
+	// private _emptyTileObject: Object3D | null;
 	private _errorTileObject: Object3D | null;
 	private _unresolvedTileObject: Object3D | null;
+	//
 	constructor(options: WFCTilesCollectionOptions) {
+		this._errorTileObject =
+			options.tileAndRuleObjects.find((o) => CoreWFCTileAttribute.getIsErrorTile(o)) ||
+			createDefaultErrorTileObject();
+		this._unresolvedTileObject =
+			options.tileAndRuleObjects.find((o) => CoreWFCTileAttribute.getIsUnresolvedTile(o)) ||
+			createDefaultUnresolvedTileObject();
 		this._tiles = filterTileObjects(options.tileAndRuleObjects);
-		this._errorTileObject = this._tiles.find((o) => CoreWFCTileAttribute.getIsErrorTile(o)) || null;
-		this._unresolvedTileObject = this._tiles.find((o) => CoreWFCTileAttribute.getIsUnresolvedTile(o)) || null;
 		this._tilesById = new Map();
 		for (const tile of this._tiles) {
 			this._tilesById.set(CoreWFCTileAttribute.getTileId(tile), tile);

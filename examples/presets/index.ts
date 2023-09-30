@@ -17,6 +17,8 @@ import {mapboxSatelliteCopPresetRegister} from './cop/MapboxSatellite';
 import {SDFFromUrlCopPresetRegister} from './cop/SDFFromUrl';
 import {textCopPresetRegister} from './cop/Text';
 import {videoCopPresetRegister} from './cop/Video';
+// event
+import {cameraOrbitControlsEventPresetRegister} from './event/CameraOrbitControls';
 // gl
 import {attributeGlPresetRegister} from './gl/Attribute';
 import {neighbourAttractRepulseGlPresetRegister} from './gl/NeighbourAttractRepulse';
@@ -71,7 +73,7 @@ import {spotLightSopPresetRegister} from './sop/SpotLight';
 import {textSopPresetRegister} from './sop/Text';
 import {transformSopPresetRegister} from './sop/Transform';
 import {WFCDebugSopPresetRegister} from './sop/WFCDebug';
-import {WFCRuleFromSideNameSopPresetRegister} from './sop/WFCRuleFromSideName';
+import {WFCRuleConnectionFromSideNameSopPresetRegister} from './sop/WFCRuleConnectionFromSideName';
 import {WFCTilePropertiesSopPresetRegister} from './sop/WFCTileProperties';
 
 import {PresetRegister} from './BasePreset';
@@ -98,6 +100,8 @@ class PresetLibraryClass {
 		this._registerPreset(SDFFromUrlCopPresetRegister);
 		this._registerPreset(textCopPresetRegister);
 		this._registerPreset(videoCopPresetRegister);
+		// event
+		this._registerPreset(cameraOrbitControlsEventPresetRegister);
 		// gl
 		this._registerPreset(attributeGlPresetRegister);
 		this._registerPreset(neighbourAttractRepulseGlPresetRegister);
@@ -149,7 +153,7 @@ class PresetLibraryClass {
 		this._registerPreset(textSopPresetRegister);
 		this._registerPreset(transformSopPresetRegister);
 		this._registerPreset(WFCDebugSopPresetRegister);
-		this._registerPreset(WFCRuleFromSideNameSopPresetRegister);
+		this._registerPreset(WFCRuleConnectionFromSideNameSopPresetRegister);
 		this._registerPreset(WFCTilePropertiesSopPresetRegister);
 	}
 

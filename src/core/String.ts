@@ -168,7 +168,7 @@ export function ensureInteger(num: number): string {
 }
 
 // let _elements: string[] = [];
-let _exclusionFilters: string[] = [];
+// let _inclusionFilters: string[] = [];
 // // https://stackoverflow.com/questions/26246601/wildcard-string-comparison-in-javascript#32402438
 export function stringMatchMask(word: string, mask: string) {
 	if (mask === '*') {
@@ -179,17 +179,19 @@ export function stringMatchMask(word: string, mask: string) {
 	}
 	const elements = mask.split(SPACE);
 	// const elements = _elements;
-	_exclusionFilters.length = 0;
+	const exclusionFilters: string[] = [];
+	// _inclusionFilters.length = 0;
 	for (const element of elements) {
 		if (element.startsWith('^')) {
-			_exclusionFilters.push(element.substring(1));
+			exclusionFilters.push(element.substring(1));
+		} else {
+			// _inclusionFilters.push(element);
 		}
 	}
 	// const exclusionFilters = elements
 	// 	.filter((element) => element.startsWith('^'))
 	// 	.map((element) => element.substring(1));
-
-	for (const exclusionFilter of _exclusionFilters) {
+	for (const exclusionFilter of exclusionFilters) {
 		const match = stringMatchMask(word, exclusionFilter);
 		if (match) {
 			return false;
