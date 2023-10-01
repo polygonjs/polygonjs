@@ -1,8 +1,6 @@
 import {AnimRegister, AnimNodeChildrenMap} from './Anim';
 import {AudioRegister, AudioNodeChildrenMap} from './Audio';
-// import {CadRegister, CadNodeChildrenMap} from './Cad';
 import {CopRegister, CopNodeChildrenMap} from './Cop';
-// import {CsgRegister, CsgNodeChildrenMap} from './Csg';
 import {EventRegister, EventNodeChildrenMap} from './Event';
 import {GlRegister, GlNodeChildrenMap} from './Gl';
 import {JsRegister, JsNodeChildrenMap} from './Js';

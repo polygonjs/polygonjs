@@ -1,9 +1,12 @@
 import {PolyNodeDefinition} from '../../../utils/poly/PolyNodeDefinition';
 import {PolyNodeParamsConfig} from '../../../utils/poly/PolyNodeParamsConfig';
-import type {PolyNodeController} from '../../../utils/poly/PolyNodeController';
+import {PolyNodeController} from '../../../utils/poly/PolyNodeController';
 import {BaseSubnetAnimNode} from '../../Subnet';
+import {NodeContext} from '../../../../poly/NodeContext';
+import {PolyEngine} from '../../../../Poly';
+import {ModuleName} from '../../../../poly/registers/modules/Common';
 
-export function createPolyAnimNode(
+function createPolyAnimNode(
 	nodeType: string,
 	definition: PolyNodeDefinition,
 	polyNodeControllerClass: typeof PolyNodeController
@@ -14,8 +17,15 @@ export function createPolyAnimNode(
 		static override type() {
 			return nodeType;
 		}
+		override requiredModules(): ModuleName[] {
+			return [ModuleName.POLY_ANIM];
+		}
 
 		public override readonly polyNodeController: PolyNodeController = new polyNodeControllerClass(this, definition);
 	}
 	return BasePolyAnimNode as typeof BaseSubnetAnimNode;
+}
+
+export function onPolyAnimModuleRegister(poly: PolyEngine) {
+	PolyNodeController.registerCreatePolyNodeFunctionForContext(NodeContext.ANIM, createPolyAnimNode);
 }

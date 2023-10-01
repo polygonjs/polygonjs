@@ -1,6 +1,8 @@
 import {NodeContext} from '../../../poly/NodeContext';
-import {BasePolySopNode} from '../../sop/Poly';
-import {BasePolyObjNode} from '../../obj/Poly';
+// we do not import those types as they do not seem necessary
+// and it bloats the bundle.
+// import {BasePolySopNode} from '../../sop/Poly';
+// import {BasePolyObjNode} from '../../obj/Poly';
 
 type PolyNodeClassByContextMapGeneric = {[key in NodeContext]: any};
 export interface PolyNodeClassByContext extends PolyNodeClassByContextMapGeneric {
@@ -12,7 +14,7 @@ export interface PolyNodeClassByContext extends PolyNodeClassByContextMapGeneric
 	[NodeContext.JS]: undefined;
 	[NodeContext.MANAGER]: undefined;
 	[NodeContext.MAT]: undefined;
-	[NodeContext.OBJ]: typeof BasePolyObjNode;
+	[NodeContext.OBJ]: undefined; //typeof BasePolyObjNode;
 	[NodeContext.ROP]: undefined;
-	[NodeContext.SOP]: typeof BasePolySopNode;
+	[NodeContext.SOP]: undefined; //typeof BasePolySopNode;
 }

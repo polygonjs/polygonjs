@@ -1,19 +1,21 @@
 import {TypedObjNode} from '../../_Base';
 import {Group} from 'three';
 import {DisplayNodeController} from '../../../utils/DisplayNodeController';
-import {NodeContext} from '../../../../poly/NodeContext';
 import {BaseSopNodeType} from '../../../sop/_Base';
 import {GeoNodeChildrenMap} from '../../../../poly/registers/nodes/Sop';
 import {FlagsControllerD} from '../../../utils/FlagsController';
 import {HierarchyController} from '../HierarchyController';
 import {ObjChildrenDisplayController} from '../ObjChildrenDisplayController';
-import type {PolyNodeController} from '../../../utils/poly/PolyNodeController';
+import {PolyNodeController} from '../../../utils/poly/PolyNodeController';
 import {PolyNodeDefinition} from '../../../utils/poly/PolyNodeDefinition';
 import {Constructor, valueof} from '../../../../../types/GlobalTypes';
 import {NodeCreateOptions} from '../../../utils/hierarchy/ChildrenController';
 import {PolyNodeParamsConfig} from '../../../utils/poly/PolyNodeParamsConfig';
+import {ModuleName} from '../../../../poly/registers/modules/Common';
+import {NodeContext} from '../../../../poly/NodeContext';
+import {PolyEngine} from '../../../../Poly';
 
-export function createPolyObjNode(
+function createPolyObjNode(
 	nodeType: string,
 	definition: PolyNodeDefinition,
 	polyNodeControllerClass: typeof PolyNodeController
@@ -24,6 +26,9 @@ export function createPolyObjNode(
 		override paramsConfig = ParamsConfig;
 		static override type() {
 			return nodeType;
+		}
+		override requiredModules(): ModuleName[] {
+			return [ModuleName.POLY_OBJ];
 		}
 		override readonly hierarchyController: HierarchyController = new HierarchyController(this);
 		public override readonly flags: FlagsControllerD = new FlagsControllerD(this);
@@ -97,4 +102,8 @@ export function createPolyObjNode(
 		public override readonly polyNodeController: PolyNodeController = new polyNodeControllerClass(this, definition);
 	}
 	return BasePolyObjNode as typeof TypedObjNode;
+}
+
+export function onPolyOBJModuleRegister(poly: PolyEngine) {
+	PolyNodeController.registerCreatePolyNodeFunctionForContext(NodeContext.OBJ, createPolyObjNode);
 }

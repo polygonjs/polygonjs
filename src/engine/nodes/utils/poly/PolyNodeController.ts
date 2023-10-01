@@ -4,7 +4,6 @@ import {NodeEvent} from './../../../poly/NodeEvent';
 import {NodeContext} from '../../../poly/NodeContext';
 import {SceneJsonImporter} from '../../../io/json/import/Scene';
 import {JsonExportDispatcher} from '../../../io/json/export/Dispatcher';
-import {createPolySopNode} from '../../sop/utils/poly/createPolySopNode';
 import {NodeParamsConfig, ParamTemplate} from '../params/ParamsConfig';
 import {PolyNodeDefinition, PolyNodesInputsData} from './PolyNodeDefinition';
 import {PolyNodeClassByContext} from './PolyNodeClassByContext';
@@ -15,14 +14,29 @@ import {PolyNodeDataRegister} from './PolyNodeDataRegister';
 import {arrayCompact} from '../../../../core/ArrayUtils';
 import {NodeInputsController} from '../io/InputsController';
 import {JsonImportDispatcher} from '../../../io/json/import/Dispatcher';
-import {createPolyObjNode} from '../../obj/utils/poly/createPolyObjNode';
-import {createPolyAnimNode} from '../../anim/utils/poly/createPolyAnimNode';
-import {createPolyGlNode} from '../../gl/utils/poly/createPolyGlNode';
+// import {createPolyAnimNode} from '../../anim/utils/poly/createPolyAnimNode';
+// import {createPolyGlNode} from '../../gl/utils/poly/createPolyGlNode';
+// import {createPolyObjNode} from '../../obj/utils/poly/createPolyObjNode';
+// import {createPolySopNode} from '../../sop/utils/poly/createPolySopNode';
 import {BaseGlConnectionPoint} from '../io/connections/Gl';
 
 // export const IS_POLY_NODE_BOOLEAN = 'isPolyNode';
 
+type CreatePolyNodeFunction = (
+	nodeType: string,
+	definition: PolyNodeDefinition,
+	polyNodeControllerClass: typeof PolyNodeController
+) => any;
+
 export class PolyNodeController {
+	private static _createPolyNodeFunctionByContext: Map<NodeContext, CreatePolyNodeFunction> = new Map();
+	static registerCreatePolyNodeFunctionForContext(
+		context: NodeContext,
+		createPolyNodeFunction: CreatePolyNodeFunction
+	) {
+		this._createPolyNodeFunctionByContext.set(context, createPolyNodeFunction);
+	}
+
 	private static _definitionRegister: Map<NodeContext, Map<string, PolyNodeDefinition>> = new Map();
 	private _locked = true;
 	constructor(private node: BaseNodeType, private _definition: PolyNodeDefinition) {}
@@ -195,24 +209,29 @@ export class PolyNodeController {
 		nodeType: string,
 		data: PolyNodeDefinition
 	): PolyNodeClassByContext[NC] | undefined {
-		switch (nodeContext) {
-			// actor
-			case NodeContext.ANIM:
-				return createPolyAnimNode(nodeType, data, PolyNodeController) as any;
-			// audio
-			// cop
-			// event
-			case NodeContext.GL:
-				return createPolyGlNode(nodeType, data, PolyNodeController) as any;
-			// mat
-			// obj
-			case NodeContext.OBJ:
-				return createPolyObjNode(nodeType, data, PolyNodeController) as any;
-			// post
-			// rop
-			case NodeContext.SOP:
-				return createPolySopNode(nodeType, data, PolyNodeController) as any;
+		const createFunction = this._createPolyNodeFunctionByContext.get(nodeContext);
+		if (!createFunction) {
+			return;
 		}
+		return createFunction(nodeType, data, PolyNodeController) as any;
+		// switch (nodeContext) {
+		// 	// actor
+		// 	case NodeContext.ANIM:
+		// 		return createPolyAnimNode(nodeType, data, PolyNodeController) as any;
+		// 	// audio
+		// 	// cop
+		// 	// event
+		// 	case NodeContext.GL:
+		// 		return createPolyGlNode(nodeType, data, PolyNodeController) as any;
+		// 	// mat
+		// 	// obj
+		// 	case NodeContext.OBJ:
+		// 		return createPolyObjNode(nodeType, data, PolyNodeController) as any;
+		// 	// post
+		// 	// rop
+		// 	case NodeContext.SOP:
+		// 		return createPolySopNode(nodeType, data, PolyNodeController) as any;
+		// }
 	}
 	static createNodeClassAndRegister<NC extends NodeContext>(dataRegister: PolyNodeDataRegister<NC>) {
 		const {node_context, node_type, data} = dataRegister;

@@ -1,11 +1,14 @@
 import {PolyNodeDefinition} from '../../../utils/poly/PolyNodeDefinition';
 import {PolyNodeParamsConfig} from '../../../utils/poly/PolyNodeParamsConfig';
-import type {PolyNodeController} from '../../../utils/poly/PolyNodeController';
+import {PolyNodeController} from '../../../utils/poly/PolyNodeController';
 import {AbstractTypedSubnetGlNode, TypedSubnetGlParamsConfigMixin} from '../../Subnet';
 import {NodeParamsConfig} from '../../../utils/params/ParamsConfig';
 import {GlConnectionPointType} from '../../../utils/io/connections/Gl';
+import {ModuleName} from '../../../../poly/registers/modules/Common';
+import {NodeContext} from '../../../../poly/NodeContext';
+import {PolyEngine} from '../../../../Poly';
 
-export function createPolyGlNode(
+function createPolyGlNode(
 	nodeType: string,
 	definition: PolyNodeDefinition,
 	polyNodeControllerClass: typeof PolyNodeController
@@ -16,6 +19,9 @@ export function createPolyGlNode(
 		override paramsConfig = ParamsConfig;
 		static override type() {
 			return nodeType;
+		}
+		override requiredModules(): ModuleName[] {
+			return [ModuleName.POLY_GL];
 		}
 
 		public override readonly polyNodeController: PolyNodeController = new polyNodeControllerClass(this, definition);
@@ -37,4 +43,8 @@ export function createPolyGlNode(
 		}
 	}
 	return BasePolyGlNode as typeof AbstractTypedSubnetGlNode;
+}
+
+export function onPolyGlModuleRegister(poly: PolyEngine) {
+	PolyNodeController.registerCreatePolyNodeFunctionForContext(NodeContext.GL, createPolyGlNode);
 }
