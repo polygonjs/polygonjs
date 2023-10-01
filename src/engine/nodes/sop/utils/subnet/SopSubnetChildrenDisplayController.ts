@@ -87,11 +87,11 @@ export class SubnetSopNodeLike<T extends NodeParamsConfig> extends TypedSopNode<
 		this._overrideOutputNode = overrideOutputNode;
 		const parent = this.parent();
 		if (parent) {
-			if (parent instanceof SubnetSopNodeLike<any>) {
+			if (parent instanceof SubnetSopNodeLike) {
 				const parentSubnet = parent as SubnetSopNodeLike<any>;
 				parentSubnet.setOverrideOutputNode(overrideOutputNode);
 			}
-			if (parent instanceof GeoObjNode || parent instanceof SubnetSopNodeLike<any>) {
+			if (parent instanceof GeoObjNode || parent instanceof SubnetSopNodeLike) {
 				const parentGeoObjNode = parent as SubnetSopNodeLike<any> | GeoObjNode;
 				if (overrideOutputNode) {
 					parentGeoObjNode.displayNodeController.setDisplayNodeOverride(this);
