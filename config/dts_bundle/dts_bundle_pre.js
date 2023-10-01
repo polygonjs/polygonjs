@@ -88,9 +88,9 @@ function fixGsap() {
     addTsIgnoreToGsapImport();
 }
 function fixOpencascade() {
-    // in file dist/src/core/geometry/cad/CadCommon.d.ts
+    // in file dist/src/core/geometry/modules/cad/CadCommon.d.ts
     // add @ts-ignore to lines containing 'from './build/polygonjs-occt';'
-    var filePath = path.join(common_1.polygonjsDist, 'src/core/geometry/cad/CadCommon.d.ts');
+    var filePath = path.join(common_1.polygonjsDist, 'src/core/geometry/modules/cad/CadCommon.d.ts');
     var content = fs.readFileSync(filePath, 'utf-8');
     var lines = content.split('\n');
     var newLines = [];
@@ -107,9 +107,9 @@ function fixOpencascade() {
     fs.writeFileSync(filePath, newLines.join('\n'));
 }
 function fixManifold() {
-    // in file dist/src/core/geometry/sdf/SDFCommon.d.ts
+    // in file dist/src/core/geometry/modules/sdf/SDFCommon.d.ts
     // add @ts-ignore to lines containing 'from './manifold/manifold';'
-    var filePath = path.join(common_1.polygonjsDist, 'src/core/geometry/sdf/SDFCommon.d.ts');
+    var filePath = path.join(common_1.polygonjsDist, 'src/core/geometry/modules/sdf/SDFCommon.d.ts');
     var content = fs.readFileSync(filePath, 'utf-8');
     var lines = content.split('\n');
     var newLines = [];
