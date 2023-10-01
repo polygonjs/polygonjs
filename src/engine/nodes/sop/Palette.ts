@@ -23,6 +23,7 @@ import {
 	AttribClassMenuEntriesWithoutCoreGroup,
 	ATTRIBUTE_CLASSES_WITHOUT_CORE_GROUP,
 } from '../../../core/geometry/Constant';
+import {SopType} from '../../poly/registers/nodes/types/Sop';
 
 const DEFAULT = PaletteSopOperation.DEFAULT_PARAMS;
 
@@ -90,7 +91,7 @@ const ParamsConfig = new PaletteSopParamsConfig();
 export class PaletteSopNode extends TypedSopNode<PaletteSopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'palette';
+		return SopType.PALETTE;
 	}
 	public readonly paletteController: PaletteController<NodeContext.SOP> = new PaletteController<NodeContext.SOP>(
 		this

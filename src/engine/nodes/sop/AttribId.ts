@@ -15,6 +15,7 @@ import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {AttribClass, AttribClassMenuEntriesWithoutCoreGroup} from './../../../core/geometry/Constant';
 import {AttribIdSopOperation} from '../../operations/sop/AttribId';
+import {SopType} from '../../poly/registers/nodes/types/Sop';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 const DEFAULT = AttribIdSopOperation.DEFAULT_PARAMS;
 
@@ -44,7 +45,7 @@ const ParamsConfig = new AttribIdSopParamsConfig();
 export class AttribIdSopNode extends TypedSopNode<AttribIdSopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'attribId';
+		return SopType.ATTRIB_ID;
 	}
 
 	override initializeNode() {

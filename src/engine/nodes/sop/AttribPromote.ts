@@ -11,6 +11,7 @@ import {CoreGroup} from '../../../core/geometry/Group';
 import {AttribPromoteSopOperation, AttribPromoteMode, ATTRIB_PROMOTE_MODES} from '../../operations/sop/AttribPromote';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import {SopType} from '../../poly/registers/nodes/types/Sop';
 const DEFAULT = AttribPromoteSopOperation.DEFAULT_PARAMS;
 class AttribPromoteSopParamsConfig extends NodeParamsConfig {
 	/** @param the group this applies to */
@@ -41,7 +42,7 @@ const ParamsConfig = new AttribPromoteSopParamsConfig();
 export class AttribPromoteSopNode extends TypedSopNode<AttribPromoteSopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'attribPromote';
+		return SopType.ATTRIB_PROMOTE;
 	}
 
 	override initializeNode() {
@@ -58,8 +59,14 @@ export class AttribPromoteSopNode extends TypedSopNode<AttribPromoteSopParamsCon
 	setAttribClassFrom(attribClass: AttribClass) {
 		this.p.classFrom.set(ATTRIBUTE_CLASSES.indexOf(attribClass));
 	}
+	attribClassFrom() {
+		return ATTRIBUTE_CLASSES[this.pv.classFrom];
+	}
 	setAttribClassTo(attribClass: AttribClass) {
 		this.p.classTo.set(ATTRIBUTE_CLASSES.indexOf(attribClass));
+	}
+	attribClassTo() {
+		return ATTRIBUTE_CLASSES[this.pv.classTo];
 	}
 	setPromoteMode(mode: AttribPromoteMode) {
 		this.p.mode.set(ATTRIB_PROMOTE_MODES.indexOf(mode));

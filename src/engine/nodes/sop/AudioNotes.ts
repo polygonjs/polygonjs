@@ -11,6 +11,7 @@ import {CoreGroup} from '../../../core/geometry/Group';
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {AudioNotesSopOperation, OUT_OF_RANGE_BEHAVIOR} from '../../operations/sop/AudioNotes';
+import {SopType} from '../../poly/registers/nodes/types/Sop';
 
 const DEFAULT = AudioNotesSopOperation.DEFAULT_PARAMS;
 
@@ -46,7 +47,7 @@ const ParamsConfig = new AudioNotesSopParamsConfig();
 export class AudioNotesSopNode extends TypedSopNode<AudioNotesSopParamsConfig> {
 	override paramsConfig = ParamsConfig;
 	static override type() {
-		return 'audioNotes';
+		return SopType.AUDIO_NOTES;
 	}
 
 	override initializeNode() {
@@ -66,7 +67,10 @@ export class AudioNotesSopNode extends TypedSopNode<AudioNotesSopParamsConfig> {
 	// API UTILS
 	//
 	//
-	setClass(attribClass: AttribClass) {
+	setAttribClass(attribClass: AttribClass) {
 		this.p.class.set(ATTRIBUTE_CLASSES.indexOf(attribClass));
+	}
+	attribClass() {
+		return ATTRIBUTE_CLASSES[this.pv.class];
 	}
 }

@@ -38,6 +38,9 @@ export class AttribRenameSopNode extends TypedSopNode<AttribRenameSopParamsConfi
 	setAttribClass(attribClass: AttribClass) {
 		this.p.class.set(ATTRIBUTE_CLASSES.indexOf(attribClass));
 	}
+	attribClass() {
+		return ATTRIBUTE_CLASSES[this.pv.class];
+	}
 
 	private _operation: AttribRenameSopOperation | undefined;
 	override cook(inputCoreGroups: CoreGroup[]) {
