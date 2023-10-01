@@ -96,7 +96,9 @@ export class MaterialSopOperation extends BaseSopOperation {
 		const material = container.material();
 		if (material != this._watchedMaterialNodeMaterial) {
 			this._watchedMaterialNodeMaterial = material;
-			(this._node as MaterialSopNode).p.material.setDirty();
+			if (this._node) {
+				(this._node as MaterialSopNode).p.material.setDirty();
+			}
 		}
 	}
 	private _watchHookName() {

@@ -1,5 +1,5 @@
 import {Object3D, Vector2} from 'three';
-import {CoreObject} from '../geometry/Object';
+import {coreObjectClassFactory} from '../geometry/CoreObjectFactory';
 export enum ParticlesAttribute {
 	PARTICLES_NODE_ID = 'particles_nodeId',
 	MATERIAL_NODE_ID = 'particles_materialNodeId',
@@ -12,26 +12,26 @@ export enum ParticlesAttribute {
 
 export class CoreParticlesBaseAttribute {
 	protected static _setVector2(object: Object3D, attribName: ParticlesAttribute, value: Vector2) {
-		CoreObject.addAttribute(object, attribName, value);
+		coreObjectClassFactory(object).addAttribute(object, attribName, value);
 	}
 	protected static _getVector2(object: Object3D, attribName: ParticlesAttribute, target: Vector2) {
-		CoreObject.attribValue(object, attribName, 0, target);
+		coreObjectClassFactory(object).attribValue(object, attribName, 0, target);
 	}
 	protected static _setNumber(object: Object3D, attribName: ParticlesAttribute, value: number) {
-		CoreObject.addAttribute(object, attribName, value);
+		coreObjectClassFactory(object).addAttribute(object, attribName, value);
 	}
 	protected static _setBoolean(object: Object3D, attribName: ParticlesAttribute, value: boolean) {
-		CoreObject.addAttribute(object, attribName, value);
+		coreObjectClassFactory(object).addAttribute(object, attribName, value);
 	}
 	protected static _getNumber(object: Object3D, attribName: ParticlesAttribute, defaultValue: number): number {
-		const val = CoreObject.attribValue(object, attribName, 0) as number | undefined;
+		const val = coreObjectClassFactory(object).attribValue(object, attribName, 0) as number | undefined;
 		if (val == null) {
 			return defaultValue;
 		}
 		return val;
 	}
 	protected static _getBoolean(object: Object3D, attribName: ParticlesAttribute, defaultValue: boolean): boolean {
-		const val = CoreObject.attribValue(object, attribName, 0) as boolean | undefined;
+		const val = coreObjectClassFactory(object).attribValue(object, attribName, 0) as boolean | undefined;
 		if (val == null) {
 			return defaultValue;
 		}

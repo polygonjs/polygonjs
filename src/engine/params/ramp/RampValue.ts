@@ -1,6 +1,6 @@
 import {CubicInterpolant} from 'three';
 import {MathUtils} from 'three';
-import {ArrayUtils} from '../../../core/ArrayUtils';
+import {arraySortBy} from '../../../core/ArrayUtils';
 
 export interface RampPointJson {
 	position: number;
@@ -86,12 +86,12 @@ export class RampValue {
 	}
 	static createInterpolant(rampValue: RampValue) {
 		const points = rampValue.points();
-		const sortedPoints = ArrayUtils.sortBy(points, (point) => point.position());
+		const sortedPoints = arraySortBy(points, (point) => point.position());
 		const positions = new Float32Array(sortedPoints.length);
 		const values = new Float32Array(sortedPoints.length);
 
 		let i = 0;
-		for (let sortedPoint of sortedPoints) {
+		for (const sortedPoint of sortedPoints) {
 			positions[i] = sortedPoint.position();
 			values[i] = sortedPoint.value();
 			i++;
@@ -102,7 +102,7 @@ export class RampValue {
 
 	static fromJSON(json: RampValueJson): RampValue {
 		const points = [];
-		for (let jsonPoint of json.points) {
+		for (const jsonPoint of json.points) {
 			points.push(RampPoint.fromJSON(jsonPoint));
 		}
 		let interpolation = json.interpolation;
@@ -133,7 +133,7 @@ export class RampValue {
 		}
 
 		let index = 0;
-		for (let point of ramp.points()) {
+		for (const point of ramp.points()) {
 			const currentPoint = this._points[index];
 			if (currentPoint) {
 				currentPoint.copy(point);
@@ -153,7 +153,7 @@ export class RampValue {
 			return false;
 		}
 		let index = 0;
-		for (let point of this._points) {
+		for (const point of this._points) {
 			const other_point = other_points[index];
 			if (!point.isEqual(other_point)) {
 				return false;
@@ -171,7 +171,7 @@ export class RampValue {
 			return false;
 		}
 		let index = 0;
-		for (let point of this._points) {
+		for (const point of this._points) {
 			const other_point = json.points[index];
 			if (!point.isEqualJSON(other_point)) {
 				return false;
@@ -188,7 +188,7 @@ export class RampValue {
 			return false;
 		}
 		let index = 0;
-		for (let point1 of json1.points) {
+		for (const point1 of json1.points) {
 			const point2 = json2.points[index];
 			if (!RampPoint.areEqualJSON(point1, point2)) {
 				return false;
@@ -209,7 +209,7 @@ export class RampValue {
 		}
 
 		let index = 0;
-		for (let json_point of json.points) {
+		for (const json_point of json.points) {
 			const currentPoint = this._points[index];
 			if (currentPoint) {
 				currentPoint.fromJSON(json_point);

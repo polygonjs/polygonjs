@@ -3,7 +3,7 @@ import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 import {TypedNodePathParamValue} from '../../../core/Walker';
-import {CoreObject} from '../../../core/geometry/Object';
+import {ThreejsCoreObject} from '../../../core/geometry/modules/three/ThreejsCoreObject';
 import {CameraAttribute} from '../../../core/camera/CoreCamera';
 import {CameraSopNodeType} from '../../poly/NodeContext';
 import {BaseNodeType} from '../../nodes/_Base';
@@ -62,11 +62,11 @@ export class CameraControlsSopOperation extends BaseSopOperation {
 			// Although that should really recook the camera
 			const nodeId = foundNode.graphNodeId();
 			for (let object of objects) {
-				CoreObject.addAttribute(object, CameraAttribute.CONTROLS_NODE_ID, nodeId);
+				ThreejsCoreObject.addAttribute(object, CameraAttribute.CONTROLS_NODE_ID, nodeId);
 			}
 		} else {
 			for (let object of objects) {
-				CoreObject.deleteAttribute(object, CameraAttribute.CONTROLS_NODE_ID);
+				ThreejsCoreObject.deleteAttribute(object, CameraAttribute.CONTROLS_NODE_ID);
 			}
 			if (errorIfNodeNotFound) {
 				node.states.error.set('controls node not found');

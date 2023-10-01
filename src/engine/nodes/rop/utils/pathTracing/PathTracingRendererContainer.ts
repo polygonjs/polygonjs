@@ -418,7 +418,7 @@ function prepareScene(scene: Scene) {
 		}
 		const material = (object as Mesh).material;
 		if (CoreType.isArray(material)) {
-			for (let mat of material) {
+			for (const mat of material) {
 				if (!_isValidMaterial(mat)) {
 					return false;
 				}
@@ -437,7 +437,7 @@ function prepareScene(scene: Scene) {
 			objectsToRemoveFromHierarchy.push(object);
 		}
 	});
-	for (let object of objectsToRemoveFromHierarchy) {
+	for (const object of objectsToRemoveFromHierarchy) {
 		_saveAndSetObjectState(object);
 	}
 }

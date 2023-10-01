@@ -1,4 +1,4 @@
-import {CoreObject} from '../geometry/Object';
+import {coreObjectClassFactory} from '../geometry/CoreObjectFactory';
 import {CoreObjectType, ObjectContent} from '../geometry/ObjectContent';
 import {Vector3} from 'three';
 
@@ -20,17 +20,17 @@ type SoftBodyAttribute = SoftBodyCommonAttribute | SoftBodyIdAttribute;
 
 export class CoreSoftBodyBaseAttribute {
 	protected static _setVector3(object: ObjectContent<CoreObjectType>, attribName: SoftBodyAttribute, value: Vector3) {
-		CoreObject.addAttribute(object, attribName, value);
+		coreObjectClassFactory(object).addAttribute(object, attribName, value);
 	}
 	protected static _getVector3(
 		object: ObjectContent<CoreObjectType>,
 		attribName: SoftBodyAttribute,
 		target: Vector3
 	) {
-		CoreObject.attribValue(object, attribName, 0, target);
+		coreObjectClassFactory(object).attribValue(object, attribName, 0, target);
 	}
 	protected static _setNumber(object: ObjectContent<CoreObjectType>, attribName: SoftBodyAttribute, value: number) {
-		CoreObject.addAttribute(object, attribName, value);
+		coreObjectClassFactory(object).addAttribute(object, attribName, value);
 	}
 
 	protected static _getNumber(
@@ -38,7 +38,7 @@ export class CoreSoftBodyBaseAttribute {
 		attribName: SoftBodyAttribute,
 		defaultValue: number
 	): number {
-		const val = CoreObject.attribValue(object, attribName, 0) as number | undefined;
+		const val = coreObjectClassFactory(object).attribValue(object, attribName, 0) as number | undefined;
 		if (val == null) {
 			return defaultValue;
 		}

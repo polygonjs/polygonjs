@@ -6,10 +6,12 @@
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {AttribClassMenuEntries} from '../../../core/geometry/Constant';
+import {ATTRIBUTE_CLASSES, AttribClass, AttribClassMenuEntries} from '../../../core/geometry/Constant';
 import {AttribRenameSopOperation} from '../../operations/sop/AttribRename';
 const DEFAULT = AttribRenameSopOperation.DEFAULT_PARAMS;
 class AttribRenameSopParamsConfig extends NodeParamsConfig {
+	/** @param the group this applies to */
+	group = ParamConfig.STRING(DEFAULT.group);
 	/** @param class of the attribute to rename (object or geometry) */
 	class = ParamConfig.INTEGER(DEFAULT.class, {
 		menu: {
@@ -33,11 +35,14 @@ export class AttribRenameSopNode extends TypedSopNode<AttribRenameSopParamsConfi
 		this.io.inputs.setCount(1);
 		this.io.inputs.initInputsClonedState(AttribRenameSopOperation.INPUT_CLONED_STATE);
 	}
+	setAttribClass(attribClass: AttribClass) {
+		this.p.class.set(ATTRIBUTE_CLASSES.indexOf(attribClass));
+	}
 
 	private _operation: AttribRenameSopOperation | undefined;
-	override cook(input_contents: CoreGroup[]) {
+	override cook(inputCoreGroups: CoreGroup[]) {
 		this._operation = this._operation || new AttribRenameSopOperation(this._scene, this.states);
-		const core_group = this._operation.cook(input_contents, this.pv);
-		this.setCoreGroup(core_group);
+		const coreGroup = this._operation.cook(inputCoreGroups, this.pv);
+		this.setCoreGroup(coreGroup);
 	}
 }

@@ -43,8 +43,12 @@ export class RandomGlNode extends TypedGlNode<RandomGlParamsConfig> {
 		// 	highp float sn= mod(dt,3.14);
 		// 	return fract(sin(sn) * c);
 		// }`)
+		const connectionPoints = this.io.inputs.namedInputConnectionPoints();
+		if (!connectionPoints) {
+			return;
+		}
 
-		const input_name = this.io.inputs.namedInputConnectionPoints()[0].name();
+		const input_name = connectionPoints[0].name();
 		const value = ThreeToGl.vector2(this.variableForInput(input_name));
 
 		const float = this.glVarName(OUTPUT_NAME);

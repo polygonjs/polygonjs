@@ -96,7 +96,7 @@ export class AnimationNodeParamsProxy {
 	private _map: Map<BaseParamType, AnimationParamProxy> = new Map();
 	constructor(node: BaseNodeType) {
 		const params = node.params.all;
-		for (let param of params) {
+		for (const param of params) {
 			const paramProxy = this._createParamProxy(param);
 			if (paramProxy) {
 				this._map.set(param, paramProxy);

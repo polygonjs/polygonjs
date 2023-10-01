@@ -12,6 +12,10 @@ export class CoreGraphNode {
 	private _graph: CoreGraph;
 	private _graphNodeId: CoreGraphNodeId;
 	private _dirtyController: DirtyController = new DirtyController(this);
+	private _allPredecessors: CoreGraphNode[] = [];
+	private _allSuccessors: CoreGraphNode[] = [];
+	private _allPredecessorsDirty = true;
+	private _allSuccessorsDirty = true;
 	constructor(protected _scene: PolyScene, protected _name: string) {
 		this._graphNodeId = _scene.graph.nextId();
 		_scene.graph.addNode(this);
@@ -21,6 +25,8 @@ export class CoreGraphNode {
 	private _disposed = false;
 	dispose() {
 		this._dirtyController.dispose();
+		this._allPredecessors.length = 0;
+		this._allSuccessors.length = 0;
 		this.graphRemove();
 		this._disposed = true;
 	}
@@ -46,9 +52,6 @@ export class CoreGraphNode {
 	scene(): PolyScene {
 		return this._scene;
 	}
-	// graph() {
-	// 	return this._graph;
-	// }
 	/**
 	 * returns the id, which is unique for the scene
 	 *
@@ -125,19 +128,68 @@ export class CoreGraphNode {
 		this._graph.disconnectSuccessors(this);
 	}
 
-	graphPredecessorIds(): CoreGraphNodeId[] {
-		return this._graph.predecessorIds(this._graphNodeId) || [];
+	graphPredecessorIds(): Readonly<CoreGraphNodeId[]> | undefined {
+		return this._graph.predecessorIds(this._graphNodeId);
 	}
-	graphPredecessors(): CoreGraphNode[] {
+	graphPredecessors(): Readonly<CoreGraphNode[]> | undefined {
 		return this._graph.predecessors(this);
 	}
-	graphSuccessors(): CoreGraphNode[] {
+	graphSuccessorIds(): Readonly<CoreGraphNodeId[]> | undefined {
+		return this._graph.successorIds(this._graphNodeId);
+	}
+	graphSuccessors(): Readonly<CoreGraphNode[]> | undefined {
 		return this._graph.successors(this);
 	}
-	graphAllPredecessors(): CoreGraphNode[] {
-		return this._graph.allPredecessors(this);
+	private _clearAllPredecessors() {
+		this._allPredecessorsDirty = true;
 	}
-	graphAllSuccessors(): CoreGraphNode[] {
-		return this._graph.allSuccessors(this);
+	private _clearAllSuccessors() {
+		this._allSuccessorsDirty = true;
+	}
+	graphAllPredecessors(): Readonly<CoreGraphNode[]> {
+		if (this._allPredecessorsDirty) {
+			this._graph.allPredecessors(this, this._allPredecessors);
+			this._allPredecessorsDirty = false;
+		}
+		return this._allPredecessors;
+		// return Object.freeze([...this._allPredecessors]);
+	}
+	graphAllSuccessors(): Readonly<CoreGraphNode[]> {
+		if (this._allSuccessorsDirty) {
+			this._graph.allSuccessors(this, this._allSuccessors);
+			this._allSuccessorsDirty = false;
+		}
+		return this._allSuccessors;
+		// return Object.freeze([...this._allSuccessors]);
+	}
+	hasPredecessor(node: CoreGraphNode): boolean {
+		return this.graphAllPredecessors().includes(node);
+	}
+	clearCachesWithPredecessorsAndSuccessors() {
+		const allPredecessors = this.graphAllPredecessors();
+		const allSuccessors = this.graphAllSuccessors();
+		for (const predecessor of allPredecessors) {
+			predecessor._clearAllSuccessors();
+		}
+		for (const successor of allSuccessors) {
+			successor._clearAllPredecessors();
+		}
+		this._clearAllPredecessors();
+		this._clearAllSuccessors();
+	}
+	//
+	setForbiddenTriggerNodes(nodes: CoreGraphNode | CoreGraphNode[]) {
+		this._graph.setForbiddenTriggerNodes(this, nodes);
+		this._clearAllSuccessors();
+	}
+	clearForbiddenTriggerNodes() {
+		this._graph.clearForbiddenTriggerNodes(this);
+		this._clearAllSuccessors();
+	}
+	setSelfDirtyForbidden(state: boolean) {
+		this._graph.setSelfDirtyForbidden(this, state);
+	}
+	selfDirtyForbidden(): boolean {
+		return this._graph.selfDirtyForbidden(this);
 	}
 }

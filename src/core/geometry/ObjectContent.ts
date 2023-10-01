@@ -1,14 +1,17 @@
 import {BufferGeometry, Object3D, Material, Matrix4} from 'three';
 import {ObjectUtils} from '../ObjectUtils';
-import type {CadGeometry} from './cad/CadCommon';
-import type {CsgGeometry} from './csg/CsgCommon';
-import type {SDFGeometry} from './sdf/SDFCommon';
-import type {TetGeometry} from './tet/TetGeometry';
+import type {CadGeometry} from './modules/cad/CadCommon';
+import type {CsgGeometry} from './modules/csg/CsgCommon';
+import type {QuadGeometry} from './modules/quad/QuadGeometry';
+import type {SDFGeometry} from './modules/sdf/SDFCommon';
+import type {TetGeometry} from './modules/tet/TetGeometry';
+import {CoreEntity} from './CoreEntity';
 
 export enum CoreObjectType {
 	THREEJS = 'Object3D',
 	CAD = 'CADObject',
 	CSG = 'CSGObject',
+	QUAD = 'QUADObject',
 	SDF = 'SDFObject',
 	TET = 'TetObject',
 }
@@ -17,6 +20,7 @@ export interface ObjectGeometryMap {
 	[CoreObjectType.THREEJS]: BufferGeometry;
 	[CoreObjectType.CAD]: CadGeometry;
 	[CoreObjectType.CSG]: CsgGeometry;
+	[CoreObjectType.QUAD]: QuadGeometry;
 	[CoreObjectType.SDF]: SDFGeometry;
 	[CoreObjectType.TET]: TetGeometry;
 }
@@ -68,3 +72,8 @@ export interface MergeCompactOptions {
 	objectType: string;
 	onError: (message: string) => void;
 }
+
+export type ObjectBuilder<T extends CoreObjectType> = (
+	object: ObjectContent<T>,
+	entities: CoreEntity[]
+) => ObjectContent<T> | undefined;

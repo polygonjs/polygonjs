@@ -25,7 +25,7 @@ export class AttribAddMultSopOperation extends BaseSopOperation {
 
 	override cook(inputCoreGroups: CoreGroup[], params: AttribAddMultSopParams) {
 		const coreGroup = inputCoreGroups[0];
-		const attribNames = coreGroup.geoAttribNamesMatchingMask(params.name);
+		const attribNames = coreGroup.pointAttribNamesMatchingMask(params.name);
 
 		for (let attribName of attribNames) {
 			const geometries = coreGroup.geometries();

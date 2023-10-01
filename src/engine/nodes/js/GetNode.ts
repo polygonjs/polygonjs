@@ -10,7 +10,7 @@ import {JsLinesCollectionController} from './code/utils/JsLinesCollectionControl
 import {Poly} from '../../Poly';
 import {NodePathParam} from '../../params/NodePath';
 import {JsType} from '../../poly/registers/nodes/types/Js';
-import {NodeContext} from '../../poly/NodeContext';
+// import {NodeContext} from '../../poly/NodeContext';
 
 const CONNECTION_OPTIONS = JS_CONNECTION_POINT_IN_NODE_DEF;
 
@@ -18,9 +18,9 @@ class GetNodeJsParamsConfig extends NodeParamsConfig {
 	/** @param parameter to get */
 	Node = ParamConfig.NODE_PATH('', {
 		dependentOnFoundNode: false,
-		nodeSelection: {
-			context: NodeContext.SOP,
-		},
+		// nodeSelection: {
+		// 	context: NodeContext.SOP,
+		// },
 		computeOnDirty: false,
 	});
 }

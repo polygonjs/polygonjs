@@ -5,11 +5,9 @@
 
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-// import {NodeContext} from '../../poly/NodeContext';
 import {Group} from 'three';
-import {CoreObject} from '../../../core/geometry/Object';
+import {ThreejsCoreObject} from '../../../core/geometry/modules/three/ThreejsCoreObject';
 import {CoreWebXRAREstimatedLightController} from '../../../core/webXR/webXRAR/CoreWebXRAREstimatedLightController';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 const ATTRIB_NAME = CoreWebXRAREstimatedLightController.ATTRIB_NAME;
@@ -54,10 +52,10 @@ export class WebXRAREstimatedLightSopNode extends TypedSopNode<WebXRAREstimatedL
 		const defaultLightsParent = new Group();
 		defaultLightsParent.name = `defaultLightsParent`;
 		defaultLightsParent.matrixAutoUpdate = false;
-		CoreObject.addAttribute(defaultLightsParent, ATTRIB_NAME.IS_DEFAULT_LIGHTS_PARENT, true);
+		ThreejsCoreObject.addAttribute(defaultLightsParent, ATTRIB_NAME.IS_DEFAULT_LIGHTS_PARENT, true);
 
 		const objects = coreGroup.threejsObjects();
-		for (let object of objects) {
+		for (const object of objects) {
 			defaultLightsParent.add(object);
 		}
 
@@ -65,10 +63,10 @@ export class WebXRAREstimatedLightSopNode extends TypedSopNode<WebXRAREstimatedL
 		group.name = this.path();
 		group.matrixAutoUpdate = false;
 		group.add(defaultLightsParent);
-		CoreObject.addAttribute(group, ATTRIB_NAME.IS_ESTIMATED_LIGHT, true);
-		CoreObject.addAttribute(group, ATTRIB_NAME.APPLY_ENV, this.pv.applyEnv);
-		CoreObject.addAttribute(group, ATTRIB_NAME.APPLY_LIGHT_PROBE, this.pv.applyLightProbe);
-		CoreObject.addAttribute(group, ATTRIB_NAME.APPLY_DIR_LIGHT, this.pv.applyDirectionalLight);
+		ThreejsCoreObject.addAttribute(group, ATTRIB_NAME.IS_ESTIMATED_LIGHT, true);
+		ThreejsCoreObject.addAttribute(group, ATTRIB_NAME.APPLY_ENV, this.pv.applyEnv);
+		ThreejsCoreObject.addAttribute(group, ATTRIB_NAME.APPLY_LIGHT_PROBE, this.pv.applyLightProbe);
+		ThreejsCoreObject.addAttribute(group, ATTRIB_NAME.APPLY_DIR_LIGHT, this.pv.applyDirectionalLight);
 		// CoreObject.addAttribute(group, ATTRIB_NAME.DIR_LIGHT_INTENSITY, this.pv.directionalLightIntensity);
 
 		// const node = this.pv.defaultEnvironment.nodeWithContext(NodeContext.COP);

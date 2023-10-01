@@ -7,7 +7,7 @@ import {CSGSopNode} from './_BaseCSG';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
-import {step} from '../../../core/geometry/csg/CsgConstant';
+import {step} from '../../../core/geometry/modules/csg/CsgConstant';
 import {primitives, maths} from '@jscad/modeling';
 const {torus} = primitives;
 

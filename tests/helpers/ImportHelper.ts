@@ -2,6 +2,8 @@ import {PolyScene} from '../../src/engine/scene/PolyScene';
 import {SceneJsonImporter} from '../../src/engine/io/json/import/Scene';
 import {SceneJsonExporter} from '../../src/engine/io/json/export/Scene';
 import {ScenePlayerImporter} from '../../src/engine/io/player/Scene';
+import {CoreNodeSerializer} from '../../src/engine/nodes/utils/CoreNodeSerializer';
+import {CoreParamSerializer} from '../../src/engine/params/utils/CoreParamSerializer';
 
 type SaveLoadSceneCallback = (scene: PolyScene) => Promise<void>;
 
@@ -10,7 +12,10 @@ export async function saveAndLoadScene(scene: PolyScene, callback: SaveLoadScene
 
 	// console.log('************ LOAD **************');
 	const importer = new SceneJsonImporter(data);
-	const newScene = await importer.scene();
+	const newScene = await importer.scene({
+		nodeSerializerClass: CoreNodeSerializer,
+		paramsSerializerClass: CoreParamSerializer,
+	});
 
 	await callback(newScene);
 }

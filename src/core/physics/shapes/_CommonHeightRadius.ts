@@ -8,8 +8,8 @@ import {
 	PhysicsRBDHeightAttribute,
 } from '../PhysicsAttribute';
 import {_getRBDFromObject} from '../PhysicsRBD';
-import {CoreObject} from '../../geometry/Object';
 import {touchRBDProperty} from '../../reactivity/RBDPropertyReactivity';
+import {coreObjectClassFactory} from '../../geometry/CoreObjectFactory';
 
 export enum RBDCommonProperty {
 	RADIUS = 'radius',
@@ -19,20 +19,26 @@ export enum RBDCommonProperty {
 const attributeHeightLive = physicsAttribNameLive(PhysicsRBDHeightAttribute.HEIGHT);
 const attributeRadiusLive = physicsAttribNameLive(PhysicsRBDRadiusAttribute.RADIUS);
 export function currentHeight(object: Object3D, collider: Collider) {
-	let _currentHeight: number | undefined = CoreObject.attribValue(object, attributeHeightLive) as number | undefined;
+	const coreObjectClass = coreObjectClassFactory(object);
+	let _currentHeight: number | undefined = coreObjectClass.attribValue(object, attributeHeightLive) as
+		| number
+		| undefined;
 	if (_currentHeight == null) {
 		const shape = collider.shape as Cone;
 		_currentHeight = shape.halfHeight * 2;
-		CoreObject.setAttribute(object, attributeHeightLive, _currentHeight);
+		coreObjectClass.setAttribute(object, attributeHeightLive, _currentHeight);
 	}
 	return _currentHeight;
 }
 export function currentRadius(object: Object3D, collider: Collider) {
-	let _currentRadius: number | undefined = CoreObject.attribValue(object, attributeRadiusLive) as number | undefined;
+	const coreObjectClass = coreObjectClassFactory(object);
+	let _currentRadius: number | undefined = coreObjectClass.attribValue(object, attributeRadiusLive) as
+		| number
+		| undefined;
 	if (_currentRadius == null) {
 		const shape = collider.shape as Cone;
 		_currentRadius = shape.radius;
-		CoreObject.setAttribute(object, attributeRadiusLive, _currentRadius);
+		coreObjectClass.setAttribute(object, attributeRadiusLive, _currentRadius);
 	}
 	return _currentRadius;
 }
@@ -116,8 +122,9 @@ export function setPhysicsRBDHeightRadiusProperty(
 		// update radius on shape and object
 		collider.setHalfHeight(targetHeight * 0.5);
 		collider.setRadius(targetRadius);
-		CoreObject.setAttribute(object, attributeHeightLive, targetHeight);
-		CoreObject.setAttribute(object, attributeRadiusLive, targetRadius);
+		const coreObjectClass = coreObjectClassFactory(object);
+		coreObjectClass.setAttribute(object, attributeHeightLive, targetHeight);
+		coreObjectClass.setAttribute(object, attributeRadiusLive, targetRadius);
 		touchRBDProperty(object, RBDCommonProperty.HEIGHT);
 		touchRBDProperty(object, RBDCommonProperty.RADIUS);
 		// update scale

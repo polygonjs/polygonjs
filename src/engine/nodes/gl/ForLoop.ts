@@ -202,15 +202,17 @@ export class ForLoopGlNode extends TypedSubnetGlNode<ForLoopGlParamsConfig> {
 
 		const connections = this.io.connections.inputConnections();
 		if (connections) {
-			for (let connection of connections) {
+			for (const connection of connections) {
 				if (connection) {
 					if (connection.inputIndex() >= OFFSET) {
 						const connection_point = connection.destConnectionPoint();
-						const in_value = this.glVarName(connection_point.name());
-						const gl_type = connection_point.type();
-						const out = childNode.glVarName(connection_point.name());
-						const body_line = `	${gl_type} ${out} = ${in_value}`;
-						body_lines.push(body_line);
+						if (connection_point) {
+							const in_value = this.glVarName(connection_point.name());
+							const gl_type = connection_point.type();
+							const out = childNode.glVarName(connection_point.name());
+							const body_line = `	${gl_type} ${out} = ${in_value}`;
+							body_lines.push(body_line);
+						}
 					}
 				}
 			}

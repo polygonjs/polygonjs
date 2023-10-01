@@ -1,11 +1,11 @@
 import {MapUtils} from './../../../core/MapUtils';
-import {CoreObject} from './../../../core/geometry/Object';
 import {Vector2, Vector3, Box3, Object3D} from 'three';
 import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 import {isBooleanTrue} from '../../../core/Type';
+import {coreObjectClassFactory} from '../../../core/geometry/CoreObjectFactory';
 
 interface ObjectsLayoutSopParams extends DefaultOperationParams {
 	maxLayoutWidth: number;
@@ -83,7 +83,7 @@ export class ObjectsLayoutSopOperation extends BaseSopOperation {
 				}
 
 				if (isBooleanTrue(params.addRowAttrib)) {
-					CoreObject.addAttribute(object, 'row', rowIndex);
+					coreObjectClassFactory(object).addAttribute(object, 'row', rowIndex);
 				}
 			}
 
@@ -106,7 +106,7 @@ export class ObjectsLayoutSopOperation extends BaseSopOperation {
 						const maxX = Math.max(...xs);
 						const width = maxX - minX;
 						for (let object of objects) {
-							CoreObject.addAttribute(object, 'rowWidthInner', width);
+							coreObjectClassFactory(object).addAttribute(object, 'rowWidthInner', width);
 						}
 					}
 					if (isBooleanTrue(params.addRowWidthOuter)) {
@@ -126,7 +126,7 @@ export class ObjectsLayoutSopOperation extends BaseSopOperation {
 						);
 						const width = maxX - minX;
 						for (let object of objects) {
-							CoreObject.addAttribute(object, 'rowWidthOuter', width);
+							coreObjectClassFactory(object).addAttribute(object, 'rowWidthOuter', width);
 						}
 					}
 				});

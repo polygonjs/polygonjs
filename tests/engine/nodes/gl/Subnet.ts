@@ -20,7 +20,7 @@ export function testenginenodesglSubnet(qUnit: QUnit) {
 		material_basic_builder1.createNode('constant');
 		const subnet1 = material_basic_builder1.createNode('subnet');
 		create_required_nodes_for_subnet_gl_node(subnet1);
-		assert.equal(subnet1.io.outputs.namedOutputConnectionPoints().length, 1);
+		assert.equal(subnet1.io.outputs.namedOutputConnectionPoints()!.length, 1);
 
 		assert.equal(subnet1.io.inputs.maxInputsCount(), 1);
 		subnet1.setInputType(0, GlConnectionPointType.VEC3);

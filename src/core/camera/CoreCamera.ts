@@ -1,6 +1,7 @@
 import {Camera, Vector2} from 'three';
-import {ArrayUtils} from '../ArrayUtils';
-import {CoreObject} from '../geometry/Object';
+import {arrayCompact} from '../ArrayUtils';
+import {coreObjectClassFactory} from '../geometry/CoreObjectFactory';
+import {AttribValue} from '../../types/GlobalTypes';
 
 export const CORE_CAMERA_DEFAULT = {
 	near: 0.1,
@@ -83,15 +84,20 @@ export enum OrthographicCameraAttribute {
 export const ORTHOGRAPHIC_CAMERA_ATTRIBUTES: OrthographicCameraAttribute[] = [OrthographicCameraAttribute.SIZE];
 
 export function serializeCamera<C extends Camera>(camera: C, attributeNames: string[]) {
+	const values = attributeNames.map((attribName) => {
+		const value = coreObjectClassFactory(camera).attribValue(camera, attribName);
+		if (value != null) {
+			return {[attribName]: value};
+		}
+	});
+	const attribValues: (
+		| {
+				[x: string]: AttribValue;
+		  }
+		| undefined
+	)[] = [];
 	return JSON.stringify({
 		uuid: camera.uuid,
-		attributes: ArrayUtils.compact(
-			attributeNames.map((attribName) => {
-				const value = CoreObject.attribValue(camera, attribName);
-				if (value != null) {
-					return {[attribName]: value};
-				}
-			})
-		),
+		attributes: arrayCompact(values, attribValues),
 	});
 }

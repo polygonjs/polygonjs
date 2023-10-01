@@ -9,7 +9,7 @@ import {NodeLifeCycleController} from './utils/LifeCycleController';
 import {TypedContainerController} from './utils/ContainerController';
 import {NodeCookController, OnCookCompleteHook} from './utils/CookController';
 import {NameController} from './utils/NameController';
-import {NodeSerializer, NodeSerializerData} from './utils/Serializer';
+import {CoreNodeSerializer, NodeSerializerData} from './utils/CoreNodeSerializer';
 import {ParamsController} from './utils/params/ParamsController';
 import {ParamConstructorMap} from '../params/types/ParamConstructorMap';
 import {ParamInitValuesTypeMap} from '../params/types/ParamInitValuesTypeMap';
@@ -70,13 +70,13 @@ export const DEFAULT_DATA_TYPE = 'default';
 export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> extends CoreGraphNode {
 	containerController: TypedContainerController<NC> = new TypedContainerController<NC>(this);
 
-	private _parent_controller: HierarchyParentController | undefined;
+	private _parentController: HierarchyParentController | undefined;
 
 	private _uiData: UIData | undefined;
 
 	private _states: NodeStatesController<NC> | undefined;
 	private _lifecycle: NodeLifeCycleController | undefined;
-	private _serializer: NodeSerializer | undefined;
+	private _serializer: CoreNodeSerializer | undefined;
 	private _cookController: NodeCookController<NC> | undefined;
 	public readonly flags: FlagsController | undefined;
 	public readonly displayNodeController: DisplayNodeController | undefined;
@@ -89,7 +89,7 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 	readonly p: ParamsAccessorType<K> = (<unknown>new ParamsAccessor<K>()) as ParamsAccessorType<K>;
 	copy_param_values(node: TypedNode<NC, K>) {
 		const non_spare = this.params.non_spare;
-		for (let param of non_spare) {
+		for (const param of non_spare) {
 			const other_param = node.params.get(param.name());
 			if (other_param) {
 				param.copyValue(other_param);
@@ -102,7 +102,7 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 
 	private _nameController: NameController | undefined;
 	get parentController(): HierarchyParentController {
-		return (this._parent_controller = this._parent_controller || new HierarchyParentController(this));
+		return (this._parentController = this._parentController || new HierarchyParentController(this));
 	}
 	static displayedInputNames(): string[] | undefined {
 		return undefined;
@@ -141,8 +141,9 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 	get lifecycle(): NodeLifeCycleController {
 		return (this._lifecycle = this._lifecycle || new NodeLifeCycleController(this));
 	}
-	get serializer(): NodeSerializer {
-		return (this._serializer = this._serializer || new NodeSerializer(this));
+
+	get serializer(): CoreNodeSerializer | undefined {
+		return this._serializer;
 	}
 
 	get cookController(): NodeCookController<NC> {
@@ -175,6 +176,10 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 
 	constructor(scene: PolyScene, nodeName: string = 'BaseNode', public createOptions?: NodeCreateOptions) {
 		super(scene, nodeName);
+		const serializerClass = createOptions?.serializerClass;
+		if (serializerClass) {
+			this._serializer = new serializerClass(this);
+		}
 	}
 
 	private _initialized: boolean = false;
@@ -221,12 +226,12 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 		return c.context();
 	}
 
-	static require_webgl2(): boolean {
+	static requireWebGL2(): boolean {
 		return false;
 	}
-	require_webgl2(): boolean {
+	requireWebGL2(): boolean {
 		const c = this.constructor as typeof BaseNodeClass;
-		return c.require_webgl2();
+		return c.requireWebGL2();
 	}
 
 	setParent(parent: BaseNodeType | null) {
@@ -290,7 +295,7 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 	}
 
 	// cook
-	cook(input_contents: any[]): any {
+	cook(inputContents: any[]): any {
 		return null;
 	}
 	/**
@@ -315,14 +320,14 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 	_setContainer(content: ContainableMap[NC] /*, message: string | null = null*/) {
 		// TODO: typescript: why is this a type of never
 		this.containerController.container().set_content(content as never); //, this.self.cook_eval_key());
-		if (content != null) {
-			if (!(content as any).name) {
-				(content as any).name = this.path();
-			}
-			if (!(content as any).node) {
-				(content as any).node = this;
-			}
-		}
+		// if (content != null) {
+		// 	// if (content.name==null) {
+		// 	// 	content.name = this.path();
+		// 	// }
+		// 	// if (!(content as any).node) {
+		// 	// 	(content as any).node = this;
+		// 	// }
+		// }
 		this.cookController.endCook(/*message*/);
 	}
 
@@ -388,7 +393,7 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 	 * returns the list of children
 	 *
 	 */
-	children() {
+	children(): Readonly<BaseNodeType[]> {
 		return this.childrenController?.children() || [];
 	}
 	/**
@@ -468,8 +473,11 @@ export class TypedNode<NC extends NodeContext, K extends NodeParamsConfig> exten
 	}
 
 	// serializer
-	toJSON(include_param_components: boolean = false) {
-		return this.serializer.toJSON(include_param_components);
+	toJSON(includeParamComponents: boolean = false) {
+		if (!this._serializer) {
+			return;
+		}
+		return this._serializer.toJSON(includeParamComponents);
 	}
 
 	// modules

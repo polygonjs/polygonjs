@@ -21,13 +21,10 @@ export class PadzeroExpression extends BaseMethod {
 		return [['string', 'number']];
 	}
 
-	override processArguments(args: any[]): Promise<string> {
-		return new Promise((resolve) => {
-			const pad: number = args[0] || 2;
-			const src_number: number = args[1] || 0;
-			const unpadded = `${src_number}`;
-			const padded = unpadded.padStart(pad, '0');
-			resolve(padded);
-		});
+	override async processArguments(args: any[]): Promise<string> {
+		const pad: number = args[0] || 2;
+		const srcNumber: number = args[1] || 0;
+		const unpadded = `${srcNumber}`;
+		return unpadded.padStart(pad, '0');
 	}
 }

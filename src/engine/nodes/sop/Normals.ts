@@ -8,15 +8,14 @@
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../poly/InputCloneMode';
-import {CoreObject} from '../../../core/geometry/Object';
 import {Attribute} from '../../../core/geometry/Attribute';
-import {BufferAttribute, Mesh} from 'three';
-import {BufferGeometry} from 'three';
-import {CoreGeometry} from '../../../core/geometry/Geometry';
-
+import {BufferGeometry, BufferAttribute, Mesh} from 'three';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
+import type {ThreejsCoreObject} from '../../../core/geometry/modules/three/ThreejsCoreObject';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
+import {pointsFromObject} from '../../../core/geometry/entities/point/CorePointUtils';
+import {corePointClassFactory} from '../../../core/geometry/CoreObjectFactory';
 class NormalsSopParamsConfig extends NodeParamsConfig {
 	/** @param toggle on if normals can be updated via expressions */
 	edit = ParamConfig.BOOLEAN(0);
@@ -72,37 +71,37 @@ export class NormalsSopNode extends TypedSopNode<NormalsSopParamsConfig> {
 		const coreGroup = inputCoreGroups[0];
 
 		if (isBooleanTrue(this.pv.edit)) {
-			await this._eval_expressions_for_core_group(coreGroup);
+			await this._evalExpressionsForCoreGroup(coreGroup);
 		} else {
 			if (this.pv.recompute) {
 				const objects = coreGroup.threejsObjectsWithGeo();
-				for (let object of objects) {
+				for (const object of objects) {
 					object.geometry.computeVertexNormals();
 				}
 			}
 		}
 		if (isBooleanTrue(this.pv.invert)) {
-			this._invert_normals(coreGroup);
+			this._invertNormals(coreGroup);
 		}
 
 		this.setCoreGroup(coreGroup);
 	}
 
-	private async _eval_expressions_for_core_group(core_group: CoreGroup) {
-		const core_objects = core_group.threejsCoreObjects();
-		for (let i = 0; i < core_objects.length; i++) {
-			await this._eval_expressions_for_core_object(core_objects[i]);
+	private async _evalExpressionsForCoreGroup(coreGroup: CoreGroup) {
+		const coreObjects = coreGroup.threejsCoreObjects();
+		for (const coreObject of coreObjects) {
+			await this._evalExpressionsForCoreObject(coreObject);
 		}
 	}
-	private async _eval_expressions_for_core_object(core_object: CoreObject) {
-		const object = core_object.object();
+	private async _evalExpressionsForCoreObject(coreObject: ThreejsCoreObject) {
+		const object = coreObject.object();
 		const geometry = (object as Mesh).geometry as BufferGeometry;
-		const points = core_object.points();
+		const points = pointsFromObject(object);
+		const corePointClass = corePointClassFactory(object);
 
 		let attrib = geometry.getAttribute(Attribute.NORMAL) as BufferAttribute;
 		if (!attrib) {
-			const core_geometry = new CoreGeometry(geometry);
-			core_geometry.addNumericAttrib(Attribute.NORMAL, 3, 0);
+			corePointClass.addNumericAttribute(object, Attribute.NORMAL, 3, 0);
 			attrib = geometry.getAttribute(Attribute.NORMAL) as BufferAttribute;
 		}
 		const array = attrib.array as number[];
@@ -154,16 +153,15 @@ export class NormalsSopNode extends TypedSopNode<NormalsSopParamsConfig> {
 		}
 	}
 
-	private _invert_normals(core_group: CoreGroup) {
-		for (let core_object of core_group.threejsCoreObjects()) {
-			const geometry = core_object.coreGeometry()?.geometry();
-			if (geometry) {
-				const normal_attrib = geometry.attributes[Attribute.NORMAL] as BufferAttribute;
-				if (normal_attrib) {
-					const array = normal_attrib.array as number[];
-					for (let i = 0; i < array.length; i++) {
-						array[i] *= -1;
-					}
+	private _invertNormals(coreGroup: CoreGroup) {
+		const objects = coreGroup.allObjects();
+		for (const object of objects) {
+			const corePointClass = corePointClassFactory(object);
+			const normalAttrib = corePointClass.attribute(object, Attribute.NORMAL) as BufferAttribute | undefined;
+			if (normalAttrib) {
+				const array = normalAttrib.array as number[];
+				for (let i = 0; i < array.length; i++) {
+					array[i] *= -1;
 				}
 			}
 		}

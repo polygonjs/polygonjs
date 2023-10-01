@@ -1,7 +1,9 @@
 import {TypedJsNode} from './_Base';
 import {JsConnectionPointType} from '../utils/io/connections/Js';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
-import {ArrayUtils} from '../../../core/ArrayUtils';
+import {rangeWithEnd, arrayCompact} from '../../../core/ArrayUtils';
+import {NodeContext} from '../../poly/NodeContext';
+import {TypedNodeConnection} from '../utils/io/NodeConnection';
 
 export class BaseJsMathFunctionParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new BaseJsMathFunctionParamsConfig();
@@ -20,13 +22,15 @@ export abstract class BaseMathFunctionJsNode extends TypedJsNode<BaseJsMathFunct
 		if (this.io.connections.firstInputConnection()) {
 			const connections = this.io.connections.inputConnections();
 			if (connections) {
-				let count = Math.max(ArrayUtils.compact(connections).length + 1, 2);
-				return ArrayUtils.range(count).map((i) => type);
+				const compactConnections: TypedNodeConnection<NodeContext.JS>[] = [];
+				arrayCompact(connections, compactConnections);
+				let count = Math.max(compactConnections.length + 1, 2);
+				return rangeWithEnd(count).map((i) => type);
 			} else {
 				return [];
 			}
 		} else {
-			return ArrayUtils.range(2).map((i) => type);
+			return rangeWithEnd(2).map((i) => type);
 		}
 	}
 	protected _expectedOutputTypes() {

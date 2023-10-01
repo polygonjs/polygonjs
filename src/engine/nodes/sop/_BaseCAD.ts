@@ -5,12 +5,12 @@ import {
 	cadGeometryTypeFromShape,
 	TopoDS_Shape,
 	Geom2d_Curve,
-} from '../../../core/geometry/cad/CadCommon';
-import {CadObject} from '../../../core/geometry/cad/CadObject';
+} from '../../../core/geometry/modules/cad/CadCommon';
+import {CadObject} from '../../../core/geometry/modules/cad/CadObject';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {CoreObjectType} from '../../../core/geometry/ObjectContent';
-import {CadLoaderSync} from '../../../core/geometry/cad/CadLoaderSync';
-import {cadProcessError} from '../../../core/geometry/cad/CadExceptionHandler';
+import {CadLoaderSync} from '../../../core/geometry/modules/cad/CadLoaderSync';
+import {cadProcessError} from '../../../core/geometry/modules/cad/CadExceptionHandler';
 import {ModuleName} from '../../poly/registers/modules/Common';
 
 export class CADSopNode<K extends NodeParamsConfig> extends TypedSopNode<K> {

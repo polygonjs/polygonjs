@@ -1,6 +1,6 @@
 import {Object3D} from 'three';
 import {DisplayNodeController} from '../../utils/DisplayNodeController';
-import {ChildrenDisplayController} from './ChildrenDisplayController';
+import {ObjChildrenDisplayController} from './ObjChildrenDisplayController';
 import {TesselationParamsObjNode} from './TesselationParams';
 import {CoreGroup} from '../../../../core/geometry/Group';
 import {Poly} from '../../../Poly';
@@ -10,7 +10,7 @@ interface BaseObjNodeClassWithDisplayNode extends TesselationParamsObjNode {
 	displayNodeController: DisplayNodeController;
 }
 
-export class ChildrenDisplayControllerSpecialized extends ChildrenDisplayController {
+export class ChildrenDisplayControllerSpecialized extends ObjChildrenDisplayController {
 	constructor(protected override node: BaseObjNodeClassWithDisplayNode) {
 		super(node);
 	}

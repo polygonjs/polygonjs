@@ -7,8 +7,8 @@ import {CSGSopNode} from './_BaseCSG';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
-import {CsgGeometry} from '../../../core/geometry/csg/CsgCommon';
-import {csgIsPath2, csgIsGeom2} from '../../../core/geometry/csg/CsgCoreType';
+import {CsgGeometry} from '../../../core/geometry/modules/csg/CsgCommon';
+import {csgIsPath2, csgIsGeom2} from '../../../core/geometry/modules/csg/CsgCoreType';
 import {extrusions} from '@jscad/modeling';
 const {extrudeLinear} = extrusions;
 
@@ -50,7 +50,7 @@ export class CSGExtrudeLinearSopNode extends CSGSopNode<CSGExtrudeLinearSopParam
 				twistSteps: this.pv.twistSteps,
 			};
 			const newGeometries: CsgGeometry[] = [];
-			for (let inputObject of inputObjects) {
+			for (const inputObject of inputObjects) {
 				const inputGeometry = inputObject.csgGeometry();
 				if (csgIsPath2(inputGeometry) || csgIsGeom2(inputGeometry)) {
 					newGeometries.push(extrudeLinear(options, inputGeometry));

@@ -1,7 +1,7 @@
 import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {Vector3, CylinderGeometry} from 'three';
-import {CoreTransform} from '../../../core/Transform';
+import {rotateGeometry} from '../../../core/Transform';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {isBooleanTrue} from '../../../core/Type';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
@@ -61,7 +61,7 @@ export class TubeSopOperation extends BaseSopOperation {
 					!isBooleanTrue(params.cap)
 			  );
 
-		CoreTransform.rotateGeometry(geometry, DEFAULT_UP, params.direction);
+		rotateGeometry(geometry, DEFAULT_UP, params.direction);
 		geometry.translate(params.center.x, params.center.y, params.center.z);
 		return this.createCoreGroupFromGeometry(geometry);
 	}

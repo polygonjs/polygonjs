@@ -9,10 +9,11 @@ import {ClonedStatesController} from './utils/ClonedStatesController';
 import {InputCloneMode} from '../../../poly/InputCloneMode';
 import {BaseConnectionPoint} from './connections/_Base';
 import {CoreType} from '../../../../core/Type';
-import {ArrayUtils} from '../../../../core/ArrayUtils';
+import {arrayShallowClone} from '../../../../core/ArrayUtils';
 
 type OnUpdateHook = () => void;
 type OnEvalSingleInputListen = () => Promise<void>;
+const _existingInputIndices: number[] = [];
 export interface SetInputsOptions {
 	noExceptionOnInvalidInput?: boolean;
 	ignoreLockedState?: boolean;
@@ -40,7 +41,7 @@ export class NodeInputsController<NC extends NodeContext> {
 		if (this._graphNode) {
 			this._graphNode.dispose();
 		}
-		for (let graph_node of this._graphNodeInputs) {
+		for (const graph_node of this._graphNodeInputs) {
 			if (graph_node) {
 				graph_node.dispose();
 			}
@@ -88,7 +89,7 @@ export class NodeInputsController<NC extends NodeContext> {
 
 	namedInputConnectionPointsByName(name: string): ConnectionPointTypeMap[NC] | undefined {
 		if (this._named_input_connection_points) {
-			for (let connection_point of this._named_input_connection_points) {
+			for (const connection_point of this._named_input_connection_points) {
 				if (connection_point && connection_point.name() == name) {
 					return connection_point;
 				}
@@ -103,14 +104,14 @@ export class NodeInputsController<NC extends NodeContext> {
 			this._named_input_connection_points?.filter((cp) => cp?.inNodeDefinition()) || [];
 
 		// ensure names are unique
-		const allNewConnectionPoints: ConnectionPointTypeMap[NC][] = ArrayUtils.shallowClone(connectionPointsToKeep);
+		const allNewConnectionPoints: ConnectionPointTypeMap[NC][] = arrayShallowClone(connectionPointsToKeep);
 		const currentNames: Set<string> = new Set();
-		for (let connectionPointToKeep of connectionPointsToKeep) {
+		for (const connectionPointToKeep of connectionPointsToKeep) {
 			if (connectionPointToKeep) {
 				currentNames.add(connectionPointToKeep.name());
 			}
 		}
-		for (let newConnectionPoint of newConnectionPoints) {
+		for (const newConnectionPoint of newConnectionPoints) {
 			if (newConnectionPoint) {
 				if (!currentNames.has(newConnectionPoint.name())) {
 					currentNames.add(newConnectionPoint.name());
@@ -122,7 +123,7 @@ export class NodeInputsController<NC extends NodeContext> {
 		// disconnect if the number of inputs changes
 		const connections = this.node.io.connections.inputConnections();
 		if (connections) {
-			for (let connection of connections) {
+			for (const connection of connections) {
 				if (connection) {
 					// assume we only work with indices for now, not with connection point names
 					// so we only need to check again the new max number of connection points.
@@ -167,8 +168,8 @@ export class NodeInputsController<NC extends NodeContext> {
 	hasNamedInputs() {
 		return this._has_named_inputs;
 	}
-	namedInputConnectionPoints(): ConnectionPointTypeMap[NC][] {
-		return this._named_input_connection_points || [];
+	namedInputConnectionPoints(): ConnectionPointTypeMap[NC][] | undefined {
+		return this._named_input_connection_points;
 	}
 	private _initGraphNodeInputs() {
 		for (let i = 0; i < this._maxInputsCount; i++) {
@@ -235,7 +236,7 @@ export class NodeInputsController<NC extends NodeContext> {
 	private _isAnyInputDirty() {
 		// let anyDirty=false
 		// const inputNodes = this.inputs()
-		for (let input of this._inputs) {
+		for (const input of this._inputs) {
 			if (input && input.isDirty()) {
 				return true;
 			}
@@ -251,84 +252,94 @@ export class NodeInputsController<NC extends NodeContext> {
 		// 	return false;
 		// }
 	}
-	containersWithoutEvaluation() {
-		const containers: Array<ContainerMap[NC] | undefined> = [];
+	containersWithoutEvaluation(target: Array<ContainerMap[NC] | null>) {
+		target.length = 0;
 		for (let i = 0; i < this._inputs.length; i++) {
 			const inputNode = this._inputs[i];
-			let container: ContainerMap[NC] | undefined = undefined;
+			let container: ContainerMap[NC] | null = null;
 			if (inputNode) {
 				// container = (await inputNode.compute()) as ContainerMap[NC];
 				// we do not need a promise using await here,
 				// as we know that the input node is not dirty
 				// therefore we can simply request the container
 				// and only check if it is bypassed or not
-				container = inputNode.containerController.containerUnlessBypassed() as ContainerMap[NC] | undefined;
+				container = inputNode.containerController.containerUnlessBypassed() as ContainerMap[NC] | null;
 			}
-			containers.push(container);
+			target.push(container);
 		}
-		return containers;
+		return target;
 	}
 
-	private _existingInputIndices() {
-		const existing_input_indices: number[] = [];
+	private _existingInputIndices(target: number[]) {
+		target.length = 0;
 		if (this._maxInputsCount > 0) {
 			for (let i = 0; i < this._inputs.length; i++) {
 				if (this._inputs[i]) {
-					existing_input_indices.push(i);
+					target.push(i);
 				}
 			}
 		}
-		return existing_input_indices;
+		return target;
 	}
 
-	async evalRequiredInputs(): Promise<Array<ContainerMap[NC] | null | undefined>> {
-		let containers: Array<ContainerMap[NC] | null | undefined> = [];
+	async evalRequiredInputs(
+		target: Array<ContainerMap[NC] | null | undefined>
+	): Promise<Array<ContainerMap[NC] | null | undefined>> {
+		target.length = 0;
+		// let containers: Array<ContainerMap[NC] | null | undefined> = [];
 		if (this.node.disposed() == true) {
-			return containers;
+			return target;
 		}
 		if (this._maxInputsCount > 0) {
-			const existingInputIndices = this._existingInputIndices();
-			if (existingInputIndices.length < this._minInputsCount) {
+			this._existingInputIndices(_existingInputIndices);
+			if (_existingInputIndices.length < this._minInputsCount) {
 				this.node.states.error.set('inputs are missing');
 			} else {
-				if (existingInputIndices.length > 0) {
-					const promises: Promise<ContainerMap[NC] | null>[] = [];
-					let input: BaseNodeByContextMap[NC] | null;
-
+				if (_existingInputIndices.length > 0) {
 					if (this._onEnsureListenToSingleInputIndexUpdatedCallback) {
 						await this._onEnsureListenToSingleInputIndexUpdatedCallback();
 					}
 
-					if (this._singleInputIndexListenedTo != null) {
-						promises.push(
-							this.evalRequiredInput(this._singleInputIndexListenedTo) as Promise<ContainerMap[NC]>
-						);
+					if (this._maxInputsCount == 1) {
+						const container = await this.evalRequiredInput(0);
+						target.push(container as ContainerMap[NC]);
 					} else {
-						const lastExistingInputIndex = existingInputIndices[existingInputIndices.length - 1];
-						for (let i = 0; i < this._inputs.length; i++) {
-							input = this._inputs[i];
-							if (input) {
-								// I tried here to only use a promise for dirty inputs,
-								// but that messes up with the order
-								// if (input.isDirty()) {
-								// 	containers.push(input.containerController.container as ContainerMap[NC]);
-								// } else {
-								promises.push(this.evalRequiredInput(i) as Promise<ContainerMap[NC]>);
-								// }
-							} else {
-								// we need to add an empty container,
-								// for non connected inputs.
-								// otherwise, if input 0 is not connected,
-								// and input 1 is, then we get only 1 container
-								// which appears to be from input 0
-								if (i <= lastExistingInputIndex) {
-									promises.push(undefined as any);
+						const promises: Promise<ContainerMap[NC] | null>[] = [];
+						if (this._singleInputIndexListenedTo != null) {
+							promises.push(
+								this.evalRequiredInput(this._singleInputIndexListenedTo) as Promise<ContainerMap[NC]>
+							);
+						} else {
+							const lastExistingInputIndex = _existingInputIndices[_existingInputIndices.length - 1];
+							// let input: BaseNodeByContextMap[NC] | null;
+							for (let i = 0; i < this._inputs.length; i++) {
+								const input = this._inputs[i];
+								if (input) {
+									// I tried here to only use a promise for dirty inputs,
+									// but that messes up with the order
+									// if (input.isDirty()) {
+									// 	containers.push(input.containerController.container as ContainerMap[NC]);
+									// } else {
+									promises.push(this.evalRequiredInput(i) as Promise<ContainerMap[NC]>);
+									// }
+								} else {
+									// we need to add an empty container,
+									// for non connected inputs.
+									// otherwise, if input 0 is not connected,
+									// and input 1 is, then we get only 1 container
+									// which appears to be from input 0
+									if (i <= lastExistingInputIndex) {
+										promises.push(undefined as any);
+									}
 								}
 							}
 						}
-					}
 
-					containers = await Promise.all(promises);
+						const results = await Promise.all(promises);
+						for (const result of results) {
+							target.push(result);
+						}
+					}
 
 					if (!this._isAnyInputDirty()) {
 						this._graphNode?.removeDirtyState();
@@ -336,7 +347,7 @@ export class NodeInputsController<NC extends NodeContext> {
 				}
 			}
 		}
-		return containers;
+		return target;
 	}
 
 	async evalRequiredInput(inputIndex: number) {
@@ -427,8 +438,10 @@ export class NodeInputsController<NC extends NodeContext> {
 			if (node.io.outputs.hasNamedOutputs()) {
 				outputIndex = node.io.outputs.getOutputIndex(outputIndexOrName);
 				if (outputIndex == null || outputIndex < 0) {
-					const connection_points = node.io.outputs.namedOutputConnectionPoints() as BaseConnectionPoint[];
-					const names = connection_points.map((cp) => cp.name());
+					const connection_points = node.io.outputs.namedOutputConnectionPoints() as
+						| BaseConnectionPoint[]
+						| undefined;
+					const names: string[] = connection_points ? connection_points.map((cp) => cp.name()) : [];
 					console.warn(
 						`node ${node.path()} does not have an output named ${outputIndexOrName}. inputs are: ${names.join(
 							', '
@@ -612,7 +625,7 @@ export class NodeInputsController<NC extends NodeContext> {
 	}
 	private _run_on_set_input_hooks() {
 		if (this._on_update_hooks) {
-			for (let hook of this._on_update_hooks) {
+			for (const hook of this._on_update_hooks) {
 				hook();
 			}
 		}

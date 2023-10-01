@@ -23,7 +23,11 @@ export abstract class BaseNodeGlMathFunctionArgBoolean2GlNode extends BaseNodeGl
 	}
 
 	override setLines(shaders_collection_controller: ShadersCollectionController) {
-		const args = this.io.inputs.namedInputConnectionPoints().map((named_input, i) => {
+		const connectionPoints = this.io.inputs.namedInputConnectionPoints();
+		if (!connectionPoints) {
+			return;
+		}
+		const args = connectionPoints.map((named_input, i) => {
 			const name = named_input.name();
 			return ThreeToGl.any(this.variableForInput(name));
 		});

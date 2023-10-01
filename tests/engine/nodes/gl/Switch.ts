@@ -17,12 +17,12 @@ export function testenginenodesglSwitch(qUnit: QUnit) {
 
 		material_basic_builder1.createNode('constant');
 		const switch1 = material_basic_builder1.createNode('switch');
-		assert.equal(switch1.io.inputs.namedInputConnectionPoints().length, 3, '3 inputs to start');
+		assert.equal(switch1.io.inputs.namedInputConnectionPoints()!.length, 3, '3 inputs to start');
 
 		switch1.setInput(1, globals1, 'position');
-		assert.equal(switch1.io.inputs.namedInputConnectionPoints().length, 3, 'still 3');
+		assert.equal(switch1.io.inputs.namedInputConnectionPoints()!.length, 3, 'still 3');
 		switch1.setInput(2, globals1, 'position');
-		assert.equal(switch1.io.inputs.namedInputConnectionPoints().length, 4, 'now 4');
+		assert.equal(switch1.io.inputs.namedInputConnectionPoints()!.length, 4, 'now 4');
 
 		await saveAndLoadScene(scene, async (scene2) => {
 			const switch2 = scene2.node(switch1.path()) as ForLoopGlNode;

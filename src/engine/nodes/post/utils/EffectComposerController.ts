@@ -24,7 +24,7 @@ const RENDER_TARGET_TEXTURE_TYPE_MENU_ENTRIES = Object.keys(RENDER_TARGET_TEXTUR
 	};
 });
 export function postProcessTextureTypeLabel(value: number) {
-	for (let entry of RENDER_TARGET_TEXTURE_TYPE_MENU_ENTRIES) {
+	for (const entry of RENDER_TARGET_TEXTURE_TYPE_MENU_ENTRIES) {
 		if (entry.value == value) {
 			return entry.name;
 		}

@@ -7,11 +7,11 @@
 // import {SDFSopNode} from './_BaseSDF';
 // import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 // import {SopType} from '../../poly/registers/nodes/types/Sop';
-// import {step} from '../../../core/geometry/cad/CadConstant';
+// import {step} from '../../../core/geometry/modules/cad/CadConstant';
 // import {CoreGroup} from '../../../core/geometry/Group';
-// import {SDFObject} from '../../../core/geometry/sdf/SDFObject';
-// import {SDFLoaderSync} from '../../../core/geometry/sdf/SDFLoaderSync';
-// import {Smoothness} from '../../../core/geometry/sdf/SDFCommon';
+// import {SDFObject} from '../../../core/geometry/modules/sdf/SDFObject';
+// import {SDFLoaderSync} from '../../../core/geometry/modules/sdf/SDFLoaderSync';
+// import {Smoothness} from '../../../core/geometry/modules/sdf/SDFCommon';
 
 // class SDFSmoothSopParamsConfig extends NodeParamsConfig {
 // 	/** @param smooth */

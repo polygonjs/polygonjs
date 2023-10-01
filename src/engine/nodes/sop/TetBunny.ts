@@ -7,8 +7,8 @@
 // import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 // import {CoreGroup} from '../../../core/geometry/Group';
 // import {bunnyMesh} from '../../../core/softBody/Bunny';
-// import {TetGeometry} from '../../../core/geometry/tet/TetGeometry';
-// import {tetRemoveUnusedPoints} from '../../../core/geometry/tet/utils/tetRemoveUnusedPoints';
+// import {TetGeometry} from '../../../core/geometry/modules/tet/TetGeometry';
+// import {tetRemoveUnusedPoints} from '../../../core/geometry/modules/tet/utils/tetRemoveUnusedPoints';
 
 // class TetBunnySopParamsConfig extends NodeParamsConfig {}
 // const ParamsConfig = new TetBunnySopParamsConfig();

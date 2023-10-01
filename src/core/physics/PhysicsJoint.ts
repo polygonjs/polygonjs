@@ -157,7 +157,7 @@ export function setJointDataListForWorldObject(scene: PolyScene, worldObject: Ob
 			array.push(jointData);
 		}
 	});
-	for (let child of childrenToRemove) {
+	for (const child of childrenToRemove) {
 		// child.parent?.remove(child);
 		removeFromParent(scene, child);
 	}
@@ -234,7 +234,7 @@ export function physicsCreateJoints(PhysicsLib: PhysicsLib, world: World, worldO
 	if (!jointDataList) {
 		return;
 	}
-	for (let jointData of jointDataList) {
+	for (const jointData of jointDataList) {
 		physicsCreateJointFromJointData(PhysicsLib, world, jointData);
 	}
 }

@@ -1,25 +1,19 @@
-import {BufferGeometry} from 'three';
-import {Vector2} from 'three';
-import {Vector3} from 'three';
-import {Triangle} from 'three';
-// import {CoreMapboxTransform} from '../Transform';
+import {Triangle, BufferGeometry, Vector2, Vector3} from 'three';
 import mapboxgl from 'mapbox-gl';
-import {CoreGeometry} from '../../../geometry/Geometry';
 import {expandTriangle} from '../../../math/_Module';
-import {CorePoint} from '../../../geometry/Point';
+import {CorePoint} from '../../../geometry/entities/point/CorePoint';
 import {Vector2Like} from '../../../../types/GlobalTypes';
-import {CoreGeometryBuilderMesh} from '../../..//geometry/builders/Mesh';
+import {CoreGeometryBuilderMesh} from '../../../geometry/modules/three/builders/Mesh';
 import {CoreMapboxUtils} from '../Utils';
+import {CoreObjectType, ObjectContent} from '../../../geometry/ObjectContent';
+import {pointsFromObject} from '../../../geometry/entities/point/CorePointUtils';
 
-export class MapboxPlaneFrustumController {
-	// private _core_transform = new CoreTransform();
+export class MapboxPlaneFrustumController<T extends CoreObjectType> {
 	constructor() {}
 
 	deleteOutOfView(
 		map: mapboxgl.Map,
-		// geometry: BufferGeometry,
-		core_geo: CoreGeometry,
-		// transformer: CoreMapboxTransform,
+		object: ObjectContent<T>,
 		plane_dimensions: Vector2,
 		segments_counts: Vector2Like
 	) {
@@ -46,7 +40,7 @@ export class MapboxPlaneFrustumController {
 			plane_dimensions.y / segments_counts.y
 		);
 		return this._deleteOutOfView(
-			core_geo,
+			object,
 			delete_out_of_view_bound_pts,
 			delete_out_of_view_margin * 2 // *2 just to be safe
 		);
@@ -56,11 +50,11 @@ export class MapboxPlaneFrustumController {
 	private _triangle_b = new Triangle();
 	private _point_pos = new Vector3();
 	private _deleteOutOfView(
-		core_geo: CoreGeometry,
+		object: ObjectContent<T>,
 		bound_pts: mapboxgl.LngLat[],
 		margin: number
 	): BufferGeometry | null {
-		const points = core_geo.points();
+		const points = pointsFromObject(object);
 		const positions = bound_pts.map((bound_pt) => new Vector3(bound_pt.lng, 0, bound_pt.lat));
 		this._triangle_a.a.copy(positions[0]);
 		this._triangle_a.b.copy(positions[1]);
@@ -71,8 +65,8 @@ export class MapboxPlaneFrustumController {
 		expandTriangle(this._triangle_a, margin);
 		expandTriangle(this._triangle_b, margin);
 		const kept_points: CorePoint[] = [];
-		for (let point of points) {
-			point.getPosition(this._point_pos);
+		for (const point of points) {
+			point.position(this._point_pos);
 			if (
 				// this._triangle_a.containsPoint(this._point_pos) ||
 				this._triangle_b.containsPoint(this._point_pos)
@@ -81,6 +75,6 @@ export class MapboxPlaneFrustumController {
 			}
 		}
 
-		return new CoreGeometryBuilderMesh().fromPoints(kept_points);
+		return new CoreGeometryBuilderMesh().fromPoints(object, kept_points);
 	}
 }

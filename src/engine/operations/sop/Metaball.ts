@@ -60,7 +60,7 @@ export class MetaballSopOperation extends BaseSopOperation {
 
 		const points = inputCoreGroup.points();
 		for (let point of points) {
-			point.getPosition(pos);
+			point.position(pos);
 			pos.multiplyScalar(0.5).addScalar(0.5);
 
 			let metaStrength = params.metaStrength;

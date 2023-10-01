@@ -7,41 +7,40 @@ import {RendererUtils} from '../../../helpers/RendererUtils';
 import {CorePath} from '../../../../src/core/geometry/CorePath';
 import {Camera} from 'three';
 export function testenginenodessopMapboxPlane(qUnit: QUnit) {
-async function createCameraNodes(scene: PolyScene) {
-	const cameras = scene.createNode('geo');
-	cameras.setName('cameras');
-	const mapboxCamera1 = cameras.createNode('mapboxCamera');
+	async function createCameraNodes(scene: PolyScene) {
+		const cameras = scene.createNode('geo');
+		cameras.setName('cameras');
+		const mapboxCamera1 = cameras.createNode('mapboxCamera');
 
-	const container = await mapboxCamera1.compute();
-	const camera = container.coreContent()?.threejsObjects()[0]! as Camera;
-	const objectPath = CorePath.objectPath(camera);
-	scene.root().mainCameraController.setCameraPath(objectPath);
-	scene.root().sceneBackgroundController.setMode(BackgroundMode.NONE);
-	return {camera, mapboxCamera1};
-}
+		const container = await mapboxCamera1.compute();
+		const camera = container.coreContent()?.threejsObjects()[0]! as Camera;
+		const objectPath = CorePath.objectPath(camera);
+		scene.root().mainCameraController.setCameraPath(objectPath);
+		scene.root().sceneBackgroundController.setMode(BackgroundMode.NONE);
+		return {camera, mapboxCamera1};
+	}
 
-qUnit.test('sop/mapboxPlane simple', async (assert) => {
-	const scene = window.scene;
+	qUnit.test('sop/mapboxPlane simple', async (assert) => {
+		const scene = window.scene;
 
-	const {camera, mapboxCamera1} = await createCameraNodes(scene);
-	const geo1 = window.geo1;
-	const mapboxPlane1 = geo1.createNode('mapboxPlane');
-	const mapboxTransform1 = geo1.createNode('mapboxTransform');
-	mapboxTransform1.setInput(0, mapboxPlane1);
-	mapboxTransform1.flags.display.set(true);
-	mapboxTransform1.p.longitude.set(mapboxCamera1.p.longitude.value);
-	mapboxTransform1.p.latitude.set(mapboxCamera1.p.latitude.value);
+		const {camera, mapboxCamera1} = await createCameraNodes(scene);
+		const geo1 = window.geo1;
+		const mapboxPlane1 = geo1.createNode('mapboxPlane');
+		const mapboxTransform1 = geo1.createNode('mapboxTransform');
+		mapboxTransform1.setInput(0, mapboxPlane1);
+		mapboxTransform1.flags.display.set(true);
+		mapboxTransform1.p.longitude.set(mapboxCamera1.p.longitude.value);
+		mapboxTransform1.p.latitude.set(mapboxCamera1.p.latitude.value);
 
-	const viewer = Poly.camerasRegister.createViewer({camera, scene})!;
-	assert.ok(viewer, 'viewer');
-	await RendererUtils.withViewer({viewer, mount: true}, async ({viewer, element}) => {
-		scene.play();
-		await CoreSleep.sleep(2000);
+		const viewer = Poly.camerasRegister.createViewer({camera, scene})!;
+		assert.ok(viewer, 'viewer');
+		await RendererUtils.withViewer({viewer, mount: true}, async ({viewer, element}) => {
+			scene.play();
+			await CoreSleep.sleep(2000);
 
-		const container1 = await mapboxTransform1.compute();
-		assert.ok(container1.coreContent());
-		assert.more_than(container1.totalPointsCount(), 5000);
+			const container1 = await mapboxTransform1.compute();
+			assert.ok(container1.coreContent());
+			assert.more_than(container1.coreContent()!.totalPointsCount(), 5000);
+		});
 	});
-});
-
 }

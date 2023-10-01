@@ -14,6 +14,7 @@ import {ParamInitValueSerializedTypeMap} from '../../../params/types/ParamInitVa
 import {Poly} from '../../../Poly';
 import {ParamInitData} from '../io/IOController';
 import {PolyDictionary} from '../../../../types/GlobalTypes';
+import {arrayCopy} from '../../../../core/ArrayUtils';
 
 const NODE_SIMPLE_NAME = 'params';
 
@@ -31,6 +32,7 @@ export interface ParamsUpdateOptions {
 	namesToDelete?: string[];
 	toAdd?: ParamOptionToAdd<ParamType>[];
 }
+const _tmpAll: BaseParamType[] = [];
 
 export class ParamsController {
 	private _param_create_mode: boolean = false;
@@ -63,7 +65,8 @@ export class ParamsController {
 		}
 
 		// dispose params
-		for (let param of this.all) {
+		arrayCopy(this.all, _tmpAll);
+		for (const param of _tmpAll) {
 			param.dispose();
 		}
 
@@ -125,7 +128,7 @@ export class ParamsController {
 		let hasDeletedAParam = false;
 		const addedParams: BaseParamType[] = [];
 		if (options.namesToDelete) {
-			for (let param_name of options.namesToDelete) {
+			for (const param_name of options.namesToDelete) {
 				if (this.has(param_name)) {
 					this._deleteParam(param_name);
 					hasDeletedAParam = true;
@@ -133,7 +136,7 @@ export class ParamsController {
 			}
 		}
 		if (options.toAdd) {
-			for (let paramData of options.toAdd) {
+			for (const paramData of options.toAdd) {
 				const param = this.addParam(paramData.type, paramData.name, paramData.initValue, paramData.options);
 				if (param) {
 					if (paramData.rawInput != null) {
@@ -148,7 +151,7 @@ export class ParamsController {
 		if (hasDeletedAParam || hasCreatedAParam) {
 			this.postCreateSpareParams();
 		}
-		for (let param of addedParams) {
+		for (const param of addedParams) {
 			this.node.scene().missingExpressionReferencesController.checkForMissingParamReferences(param);
 		}
 	}
@@ -158,7 +161,8 @@ export class ParamsController {
 		let init_values_used = false;
 		if (paramsConfig) {
 			const paramsInitValueOverrides = this.node.createOptions?.paramsInitValueOverrides;
-			for (let name of Object.keys(paramsConfig)) {
+			const names = Object.keys(paramsConfig);
+			for (const name of names) {
 				const config = paramsConfig[name];
 				let init_value: ParamInitData<ParamType> | undefined;
 				if (paramsInitValueOverrides) {
@@ -183,8 +187,8 @@ export class ParamsController {
 		this._removeUnneededAccessors(currentNamesInAccessor);
 		// update var after having removed accessors
 		currentNamesInAccessor = Object.getOwnPropertyNames(this.node.pv);
-
-		for (let param of this.all) {
+		const all = this.all;
+		for (const param of all) {
 			const isSpare: boolean = param.options.isSpare();
 
 			const paramNotYetInAccessors = !currentNamesInAccessor.includes(param.name());
@@ -213,13 +217,13 @@ export class ParamsController {
 	private _removeUnneededAccessors(current_names_in_accessor: string[]) {
 		const current_param_names = this._paramNames;
 		const names_to_remove = [];
-		for (let current_name_in_accessor of current_names_in_accessor) {
+		for (const current_name_in_accessor of current_names_in_accessor) {
 			if (!current_param_names.includes(current_name_in_accessor)) {
 				names_to_remove.push(current_name_in_accessor);
 			}
 		}
 
-		for (let name_to_remove of names_to_remove) {
+		for (const name_to_remove of names_to_remove) {
 			Object.defineProperty(this.node.pv, name_to_remove, {
 				get: () => {
 					return undefined;
@@ -358,7 +362,7 @@ export class ParamsController {
 			param._setupNodeDependencies(null);
 			this._paramsByName.delete(paramName);
 			if (param.isMultiple() && param.components) {
-				for (let component of param.components) {
+				for (const component of param.components) {
 					const childName = component.name();
 					this._paramsByName.delete(childName);
 				}
@@ -408,7 +412,9 @@ export class ParamsController {
 					Poly.warn(`a param named ${paramName} already exists`, this.node);
 				}
 			}
-			const param: ParamConstructorMap[T] = new constructor(this.node.scene(), this.node);
+			const param: ParamConstructorMap[T] = new constructor(this.node.scene(), this.node, {
+				serializerClass: this.node.scene().paramSerializerClass(),
+			});
 			param.options.set(options);
 
 			param.setName(paramName);
@@ -420,12 +426,13 @@ export class ParamsController {
 			if (initData == null) {
 				param.set(defaultValue as never);
 			} else {
-				// If is_expression_for_entities is true, we need to call param.set with default_value first, such as for attrib_create.
+				// If is_expression_for_entities is true, we need to call param.set with default_value first, such as for attribCreate.
 				// Otherwise, as it would fail if the attribute was a vector
 				// since that attribute would have .value equal to {x: undefined, y: undefined, z:undefined}
 				if (param.options.isExpressionForEntities()) {
 					param.set(defaultValue as never);
 				}
+
 				if (initData.raw_input != null) {
 					param.set(initData.raw_input as never);
 				} else {
@@ -442,7 +449,7 @@ export class ParamsController {
 							const overriden_options = initData.complex_data.overriden_options;
 							if (overriden_options != null) {
 								const keys = Object.keys(overriden_options);
-								for (let key of keys) {
+								for (const key of keys) {
 									param.options.setOption(key as keyof ParamOptions, overriden_options[key]);
 								}
 							}
@@ -457,7 +464,7 @@ export class ParamsController {
 
 			// we add the components, so that we can access them with expressions like ch('ty')
 			if (param.isMultiple() && param.components) {
-				for (let component of param.components) {
+				for (const component of param.components) {
 					this._paramsByName.set(component.name(), component as BaseParamType);
 				}
 			}
@@ -493,14 +500,14 @@ export class ParamsController {
 	private _promises: Promise<void>[] = [];
 	async evalParams(params: BaseParamType[]) {
 		let dirtyParamsCount = 0;
-		for (let param of params) {
+		for (const param of params) {
 			if (param.isDirty()) {
 				dirtyParamsCount += 1;
 			}
 		}
 		this._promises.length = dirtyParamsCount;
 		let i = 0;
-		for (let param of params) {
+		for (const param of params) {
 			if (param.isDirty()) {
 				this._promises[i] = this._evalParam(param);
 				i += 1;
@@ -558,14 +565,14 @@ export class ParamsController {
 	}
 	private _runPostCreateParamsHooks() {
 		if (this._post_create_params_hooks) {
-			for (let hook of this._post_create_params_hooks) {
+			for (const hook of this._post_create_params_hooks) {
 				hook();
 			}
 		}
 	}
 	runOnSceneLoadHooks() {
 		if (this._on_scene_load_hooks) {
-			for (let hook of this._on_scene_load_hooks) {
+			for (const hook of this._on_scene_load_hooks) {
 				hook();
 			}
 		}

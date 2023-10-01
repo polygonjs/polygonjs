@@ -1,4 +1,4 @@
-import {CoreEntity} from '../../../../../core/geometry/Entity';
+import {CoreEntity} from '../../../../../core/geometry/CoreEntity';
 
 export type CoreEntitySelectionState = Map<CoreEntity, boolean>;
 

@@ -1,13 +1,12 @@
 import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {Vector3} from 'three';
+import {Object3D, BufferGeometry, Vector3, BufferAttribute, Float32BufferAttribute} from 'three';
 import {ObjectType} from '../../../core/geometry/Constant';
-import {Object3D} from 'three';
-import {BufferGeometry} from 'three';
-import {BufferAttribute, Float32BufferAttribute} from 'three';
-import {CorePoint} from '../../../core/geometry/Point';
+import {CorePoint} from '../../../core/geometry/entities/point/CorePoint';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
+
+const _position = new Vector3();
 interface AddSopParams extends DefaultOperationParams {
 	// create point
 	createPoint: boolean;
@@ -94,7 +93,7 @@ export class AddSopOperation extends BaseSopOperation {
 		let point: CorePoint;
 		for (let i = 0; i < points.length; i++) {
 			point = points[i];
-			point.position().toArray(positions, i * 3);
+			point.position(_position).toArray(positions, i * 3);
 			// positions.push(point.position().toArray());
 
 			if (i > 0) {
@@ -104,7 +103,7 @@ export class AddSopOperation extends BaseSopOperation {
 		}
 
 		if (points.length > 2 && params.connectToLastPoint) {
-			points[0].position().toArray(positions, positions.length);
+			points[0].position(_position).toArray(positions, positions.length);
 			const last_index = indices[indices.length - 1];
 			indices.push(last_index);
 			indices.push(0);

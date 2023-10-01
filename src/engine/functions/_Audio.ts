@@ -1,12 +1,12 @@
 import {Object3D} from 'three';
-import {BaseAudioNodeType} from '../nodes/audio/_Base';
+import type {BaseAudioNodeType} from '../nodes/audio/_Base';
 import {NodeContext} from '../poly/NodeContext';
-import {PolyScene} from '../scene/PolyScene';
+import type {PolyScene} from '../scene/PolyScene';
 import {NamedFunction3, ObjectNamedFunction1, ObjectNamedFunction3} from './_Base';
 import {Player} from 'tone/build/esm/source/buffer/Player';
 import {AudioPlayerCallbacksManager} from '../../core/audio/PlayerCallbacksManager';
-import {CoreObject} from '../../core/geometry/Object';
-import {ActorEvaluator} from '../nodes/js/code/assemblers/actor/ActorEvaluator';
+import {ThreejsCoreObject} from '../../core/geometry/modules/three/ThreejsCoreObject';
+import type {ActorEvaluator} from '../nodes/js/code/assemblers/actor/ActorEvaluator';
 
 // const AUDIO_COMPLETED_EVENT_NAME = 'onAudioCompleted';
 // const EVENT_AUDIO_COMPLETED = {type: AUDIO_COMPLETED_EVENT_NAME};
@@ -134,8 +134,8 @@ export class playInstrumentNote extends ObjectNamedFunction3<[string, string, nu
 			const lastInstrumentType = instrument.triggerAttackRelease(note, duration);
 			// used for tests
 			const lastNote = note;
-			CoreObject.addAttribute(object3D, AUDIO_ATTRIB_NAME_LAST_INSTRUMENT_TYPE, lastInstrumentType);
-			CoreObject.addAttribute(object3D, AUDIO_ATTRIB_NAME_LAST_NOTE, lastNote);
+			ThreejsCoreObject.addAttribute(object3D, AUDIO_ATTRIB_NAME_LAST_INSTRUMENT_TYPE, lastInstrumentType);
+			ThreejsCoreObject.addAttribute(object3D, AUDIO_ATTRIB_NAME_LAST_NOTE, lastNote);
 		});
 	}
 }

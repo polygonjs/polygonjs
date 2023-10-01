@@ -5,6 +5,9 @@ export class MissingReference {
 	constructor(private param: BaseParamType, public readonly path: string) {}
 
 	absolutePath() {
+		if (!this.param.node) {
+			return;
+		}
 		return CoreWalker.makeAbsolutePath(this.param.node, this.path);
 	}
 	matchesPath(path: string): boolean {

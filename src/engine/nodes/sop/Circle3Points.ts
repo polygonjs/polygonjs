@@ -6,7 +6,7 @@
 import {TypedSopNode} from './_Base';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {CorePoint} from '../../../core/geometry/Point';
+import {CorePoint} from '../../../core/geometry/entities/point/CorePoint';
 import {Vector3} from 'three';
 import {ObjectType} from '../../../core/geometry/Constant';
 import {Object3D} from 'three';
@@ -112,9 +112,9 @@ export class Circle3PointsSopNode extends TypedSopNode<Circle3PointsSopParamsCon
 			addIdAttribute: isBooleanTrue(this.pv.addIdAttribute),
 			addIdnAttribute: isBooleanTrue(this.pv.addIdnAttribute),
 		});
-		points[0].getPosition(this.a);
-		points[1].getPosition(this.b);
-		points[2].getPosition(this.c);
+		points[0].position(this.a);
+		points[1].position(this.b);
+		points[2].position(this.c);
 		circle3points.create(this.a, this.b, this.c);
 
 		const objects: Object3D[] = [];
@@ -127,7 +127,7 @@ export class Circle3PointsSopNode extends TypedSopNode<Circle3PointsSopParamsCon
 		}
 
 		let i = 0;
-		for (let object of objects) {
+		for (const object of objects) {
 			object.name = `${this.name()}-${i}`;
 			i++;
 		}

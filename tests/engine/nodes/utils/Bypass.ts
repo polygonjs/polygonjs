@@ -301,14 +301,14 @@ export function testenginenodesutilsBypass(qUnit: QUnit) {
 
 			let points = await getPoints();
 			assert.equal(points.length, 13);
-			assert.notOk(points[0].hasAttrib('pscale'));
-			assert.notOk(points[0].hasAttrib('up'));
+			assert.notOk(points[0].hasAttribute('pscale'));
+			assert.notOk(points[0].hasAttribute('up'));
 
 			attribCreate2b.flags.bypass.set(false);
 			points = await getPoints();
 			assert.equal(points.length, 13);
-			assert.ok(points[0].hasAttrib('pscale'));
-			assert.notOk(points[0].hasAttrib('up'));
+			assert.ok(points[0].hasAttribute('pscale'));
+			assert.notOk(points[0].hasAttribute('up'));
 			assert.equal(points[0].attribValue('pscale'), 0);
 			assert.equal(points[6].attribValue('pscale'), 0.5);
 			assert.equal(points[12].attribValue('pscale'), 1);
@@ -316,8 +316,8 @@ export function testenginenodesutilsBypass(qUnit: QUnit) {
 			circle1b.p.segments.set(25);
 			points = await getPoints();
 			assert.equal(points.length, 25);
-			assert.ok(points[0].hasAttrib('pscale'));
-			assert.notOk(points[0].hasAttrib('up'));
+			assert.ok(points[0].hasAttribute('pscale'));
+			assert.notOk(points[0].hasAttribute('up'));
 			assert.equal(points[0].attribValue('pscale'), 0);
 			assert.equal(points[12].attribValue('pscale'), 0.5);
 			assert.equal(points[24].attribValue('pscale'), 1);
@@ -325,8 +325,8 @@ export function testenginenodesutilsBypass(qUnit: QUnit) {
 			attribCreate1b.flags.bypass.set(false);
 			points = await getPoints();
 			assert.equal(points.length, 25);
-			assert.ok(points[0].hasAttrib('pscale'));
-			assert.ok(points[0].hasAttrib('up'));
+			assert.ok(points[0].hasAttribute('pscale'));
+			assert.ok(points[0].hasAttribute('up'));
 			assert.deepEqual((points[0].attribValue('up') as Vector3).toArray(), [0, 1, 0]);
 			assert.deepEqual((points[1].attribValue('up') as Vector3).toArray(), [0, 1, 0]);
 			assert.deepEqual((points[2].attribValue('up') as Vector3).toArray(), [0, 1, 0]);

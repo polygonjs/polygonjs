@@ -5,12 +5,12 @@
  */
 import {CADSopNode} from './_BaseCAD';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {step} from '../../../core/geometry/cad/CadConstant';
-import {CadLoader} from '../../../core/geometry/cad/CadLoader';
-import {cadGeom2dCurveTranslate} from '../../../core/geometry/cad/toObject3D/CadGeom2dCurve';
+import {step} from '../../../core/geometry/modules/cad/CadConstant';
+import {CadLoader} from '../../../core/geometry/modules/cad/CadLoader';
+import {cadGeom2dCurveTranslate} from '../../../core/geometry/modules/cad/toObject3D/CadGeom2dCurve';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {CadGC} from '../../../core/geometry/cad/CadCommon';
+import {CadGC} from '../../../core/geometry/modules/cad/CadCommon';
 
 class CADCircle2DSopParamsConfig extends NodeParamsConfig {
 	/** @param radius */

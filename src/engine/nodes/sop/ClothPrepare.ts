@@ -11,10 +11,11 @@ import {ClothGeometryAttributeName} from '../../../core/cloth/ClothAttribute';
 import {TypedSopNode} from './_Base';
 import {mergeFaces} from '../../../core/geometry/operation/Fuse';
 import {BufferAttribute, Mesh} from 'three';
-import {CoreGeometry} from '../../../core/geometry/Geometry';
 import {FloatParam} from '../../params/Float';
 import {Attribute} from '../../../core/geometry/Attribute';
 import {populateAdjacency3, POPULATE_ADJACENCY_DEFAULT} from '../../../core/geometry/operation/Adjacency';
+import {corePointClassFactory} from '../../../core/geometry/CoreObjectFactory';
+import {pointsFromObject} from '../../../core/geometry/entities/point/CorePointUtils';
 
 class ClothPrepareSopParamsConfig extends NodeParamsConfig {
 	fuseDist = ParamConfig.FLOAT(0.001);
@@ -46,7 +47,7 @@ export class ClothPrepareSopNode extends TypedSopNode<ClothPrepareSopParamsConfi
 		const coreGroup = inputCoreGroups[0];
 		const inputMeshes = coreGroup.threejsObjectsWithGeo() as Mesh[];
 
-		for (let inputMesh of inputMeshes) {
+		for (const inputMesh of inputMeshes) {
 			const geometry = inputMesh.geometry;
 			if (!geometry) {
 				return;
@@ -84,22 +85,22 @@ export class ClothPrepareSopNode extends TypedSopNode<ClothPrepareSopParamsConfi
 		await this._addFloatAttribute(mesh, this.p.spring, ClothGeometryAttributeName.SPRING);
 	}
 	private async _addFloatAttribute(mesh: Mesh, param: FloatParam, attribName: ClothGeometryAttributeName) {
-		const coreGeometry = new CoreGeometry(mesh.geometry);
+		const corePointClass = corePointClassFactory(mesh);
+		// const coreGeometry = new CoreGeometry(mesh.geometry);
 		if (param.hasExpression() && param.expressionController) {
-			if (!coreGeometry.hasAttrib(attribName)) {
-				coreGeometry.addNumericAttrib(attribName, 1, param.value);
+			if (!corePointClass.hasAttribute(mesh, attribName)) {
+				corePointClass.addNumericAttribute(mesh, attribName, 1, param.value);
 			}
 
-			const geometry = coreGeometry.geometry();
-			const attrib = geometry.getAttribute(attribName) as BufferAttribute;
+			const attrib = corePointClass.attribute(mesh, attribName) as BufferAttribute;
 			attrib.needsUpdate = true;
 			const array = attrib.array as number[];
-			const points = coreGeometry.points();
+			const points = pointsFromObject(mesh);
 			await param.expressionController.computeExpressionForPoints(points, (point, value: number) => {
 				array[point.index()] = value;
 			});
 		} else {
-			coreGeometry.addNumericAttrib(attribName, 1, param.value);
+			corePointClass.addNumericAttribute(mesh, attribName, 1, param.value);
 		}
 	}
 	private _addAdjacencyAttributes(mesh: Mesh) {

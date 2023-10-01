@@ -8,11 +8,11 @@ import {
 	setObjectString,
 } from '../../geometry/AttributeUtils';
 import {Object3D} from 'three';
-import {CoreObject} from '../../geometry/Object';
 import {isString, isNumber} from '../../Type';
 import type {CSS2DObject} from './CSS2DObject';
 import type {CSS3DObject} from './CSS3DObject';
 import {ObjectUtils} from '../../ObjectUtils';
+import {coreObjectClassFactory} from '../../geometry/CoreObjectFactory';
 
 // export enum CSSObjectAttributeId {
 // 	NODE_ID = 'CSSObject_nodeId',
@@ -100,8 +100,9 @@ export function CSSObjectElementCopyObjectAttributes(element: HTMLElement, optio
 	CSSObject.userData = ObjectUtils.cloneDeep(object.userData);
 
 	if (copyAttributes == true) {
-		for (let attribName of attributesToCopy) {
-			const attribValue = CoreObject.attribValue(object, attribName);
+		const coreObjectClass = coreObjectClassFactory(object);
+		for (const attribName of attributesToCopy) {
+			const attribValue = coreObjectClass.attribValue(object, attribName);
 			if (isString(attribValue)) {
 				element.setAttribute(attribName, attribValue);
 			} else {

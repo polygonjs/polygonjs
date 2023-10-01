@@ -7,7 +7,6 @@ import {
 	MARKER_TRACKING_TRANSFORM_MODES,
 	MarkerTrackingTransformMode,
 } from '../../webXR/markerTracking/Common';
-import {CoreObject} from '../../geometry/Object';
 import {CameraAttribute} from '../CoreCamera';
 import {PolyScene} from '../../../engine/scene/PolyScene';
 import {CameraWebXRARMarkerTrackingSopOperation} from '../../../engine/operations/sop/CameraWebXRARMarkerTracking';
@@ -16,6 +15,7 @@ import {Camera} from 'three';
 import {Poly} from '../../../engine/Poly';
 import {EXTENSIONS_BY_NODE_TYPE_BY_CONTEXT} from '../../loader/FileExtensionRegister';
 import {CameraSopNodeType, NodeContext} from '../../../engine/poly/NodeContext';
+import {coreObjectClassFactory} from '../../geometry/CoreObjectFactory';
 
 const DEFAULT = CameraWebXRARMarkerTrackingSopOperation.DEFAULT_PARAMS;
 
@@ -86,28 +86,30 @@ interface MarkerTrackingControllerOptions {
 export class CoreCameraMarkerTrackingController {
 	static process(options: MarkerTrackingControllerOptions): MarkerTrackingControllerConfig | undefined {
 		const {canvas, scene, camera, onError} = options;
-
-		const isARjsTrackMarker = CoreObject.attribValue(camera, CameraAttribute.WEBXR_AR_MARKER_TRACKING) as
+		const coreObjectClass = coreObjectClassFactory(camera);
+		const isARjsTrackMarker = coreObjectClass.attribValue(camera, CameraAttribute.WEBXR_AR_MARKER_TRACKING) as
 			| boolean
 			| null;
 		if (!isARjsTrackMarker) {
 			return;
 		}
-		const sourceMode = CoreObject.attribValue(
+		const sourceMode = coreObjectClass.attribValue(
 			camera,
 			CameraAttribute.WEBXR_AR_MARKER_TRACKING_SOURCE_MODE
 		) as MarkerTrackingSourceMode | null;
-		const sourceUrl = CoreObject.attribValue(camera, CameraAttribute.WEBXR_AR_MARKER_TRACKING_SOURCE_URL) as
+		const sourceUrl = coreObjectClass.attribValue(camera, CameraAttribute.WEBXR_AR_MARKER_TRACKING_SOURCE_URL) as
 			| string
 			| undefined;
 
-		const barCodeType = CoreObject.attribValue(camera, CameraAttribute.WEBXR_AR_MARKER_TRACKING_BAR_CODE_TYPE) as
-			| string
-			| null;
-		const barCodeValue = CoreObject.attribValue(camera, CameraAttribute.WEBXR_AR_MARKER_TRACKING_BAR_CODE_VALUE) as
-			| number
-			| null;
-		const transformMode = CoreObject.attribValue(
+		const barCodeType = coreObjectClass.attribValue(
+			camera,
+			CameraAttribute.WEBXR_AR_MARKER_TRACKING_BAR_CODE_TYPE
+		) as string | null;
+		const barCodeValue = coreObjectClass.attribValue(
+			camera,
+			CameraAttribute.WEBXR_AR_MARKER_TRACKING_BAR_CODE_VALUE
+		) as number | null;
+		const transformMode = coreObjectClass.attribValue(
 			camera,
 			CameraAttribute.WEBXR_AR_MARKER_TRACKING_TRANSFORM_MODE
 		) as number | null;
@@ -141,11 +143,12 @@ export class CoreCameraMarkerTrackingController {
 		}
 
 		const smooth =
-			(CoreObject.attribValue(camera, CameraAttribute.WEBXR_AR_MARKER_TRACKING_SMOOTH) as boolean | null) ||
+			(coreObjectClass.attribValue(camera, CameraAttribute.WEBXR_AR_MARKER_TRACKING_SMOOTH) as boolean | null) ||
 			false;
 		const smoothCount =
-			(CoreObject.attribValue(camera, CameraAttribute.WEBXR_AR_MARKER_TRACKING_SMOOTH_COUNT) as number | null) ||
-			0;
+			(coreObjectClass.attribValue(camera, CameraAttribute.WEBXR_AR_MARKER_TRACKING_SMOOTH_COUNT) as
+				| number
+				| null) || 0;
 
 		try {
 			const controller = Poly.thirdParty.markerTracking().createController({

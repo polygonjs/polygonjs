@@ -5,11 +5,10 @@
 import {TypedAnimNode} from './_Base';
 import {TimelineBuilder} from '../../../core/animation/TimelineBuilder';
 import {BaseNodeType} from '../_Base';
-
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {Poly} from '../../Poly';
-import {GsapCoreTimeline, gsapTimeline, gsap} from '../../../core/thirdParty/gsap';
+import {GsapCoreTimeline, gsapLib, gsapTimeline} from '../../../core/thirdParty/gsap/gsapFactory';
 import {AnimType} from '../../poly/registers/nodes/types/Anim';
 
 class PlayAnimParamsConfig extends NodeParamsConfig {
@@ -53,7 +52,7 @@ const ParamsConfig = new PlayAnimParamsConfig();
 
 export class PlayAnimNode extends TypedAnimNode<PlayAnimParamsConfig> {
 	override paramsConfig = ParamsConfig;
-	public gsap = gsap; // give access to gsap to external scripts
+	public gsap = gsapLib(); // give access to gsap to external scripts
 	static override type() {
 		return AnimType.PLAY;
 	}
@@ -100,6 +99,9 @@ export class PlayAnimNode extends TypedAnimNode<PlayAnimParamsConfig> {
 				return;
 			}
 			this._timeline = gsapTimeline({onComplete: resolveOnce});
+			if (!this._timeline) {
+				return;
+			}
 			timelineBuilder.populate(this._timeline, {registerproperties: true});
 		});
 	}
@@ -128,12 +130,18 @@ export class PlayAnimNode extends TypedAnimNode<PlayAnimParamsConfig> {
 		}
 		// reset
 		const timeline0 = gsapTimeline({paused: true});
+		if (!timeline0) {
+			return;
+		}
 		timelineBuilder0.populate(timeline0, {registerproperties: false});
 		timeline0.seek(timeline0.duration());
 		timeline0.kill();
 
 		// seek
 		const timeline1 = gsapTimeline({paused: true});
+		if (!timeline1) {
+			return;
+		}
 		timelineBuilder1.populate(timeline1, {registerproperties: false});
 		timeline1.seek(this.pv.seek * timeline1.duration(), false);
 		timeline1.kill();

@@ -13,7 +13,7 @@ export const VIDEO_EVENTS: VideoEvent[] = [
 function _buildVideoEventIndices() {
 	const map: Map<VideoEvent, number> = new Map();
 	let i = 0;
-	for (let eventName of VIDEO_EVENTS) {
+	for (const eventName of VIDEO_EVENTS) {
 		map.set(eventName, i);
 		i++;
 	}

@@ -1,7 +1,7 @@
 import {BufferGeometry, Object3D} from 'three';
-import {ArrayUtils} from '../../ArrayUtils';
+import {arrayCompact} from '../../ArrayUtils';
 import {ObjectType} from '../Constant';
-import {CoreObject} from '../Object';
+import {ThreejsCoreObject} from '../modules/three/ThreejsCoreObject';
 import {isBooleanTrue} from '../../Type';
 import {mergeGeometries} from 'three/examples/jsm/utils/BufferGeometryUtils';
 import {TransformResetSopOperation} from '../../../engine/operations/sop/TransformReset';
@@ -21,14 +21,15 @@ interface TextMergeAllLettersOptions extends TextJustifiyParams, TextLineHeightP
 export function textMergeLetters(params: TextMergeAllLettersOptions) {
 	const geometriesByLine = _geometriesByLine(params);
 
-	for (let geometriesForLine of geometriesByLine) {
+	for (const geometriesForLine of geometriesByLine) {
 		applyJustifyModeToGeometries(geometriesForLine, params);
 		applyTextLineHeight(geometriesForLine, params);
 	}
 	const allGeometries = geometriesByLine.flat();
 	const objects = _mergeOrSplit({...params, geometries: allGeometries});
 	if (objects) {
-		return ArrayUtils.compact(objects);
+		const compactObjects: Object3D[] = [];
+		return arrayCompact(objects, compactObjects);
 	}
 }
 
@@ -56,7 +57,7 @@ function _mergeOrSplit(params: TextMergeAllLettersOptions) {
 
 			const object = TypedSopNode.createObject(geo || new BufferGeometry(), objectType); //this.createObject(geo, objectType);
 			TransformResetSopOperation.centerObject(object, {applyMatrixToObject: true});
-			const coreObject = new CoreObject(object, characterIndex);
+			const coreObject = new ThreejsCoreObject(object, characterIndex);
 			coreObject.addAttribute('character', character);
 			object.name = character;
 			coreObject.addAttribute('characterId', characterIndex);
@@ -74,9 +75,10 @@ function _mergeOrSplit(params: TextMergeAllLettersOptions) {
 		return objects;
 	} else {
 		try {
-			const geometries = ArrayUtils.compact(params.geometries);
-			if (geometries.length > 0) {
-				const mergedGeometry = mergeGeometries(geometries);
+			const compactGeometries: BufferGeometry[] = [];
+			arrayCompact(params.geometries, compactGeometries);
+			if (compactGeometries.length > 0) {
+				const mergedGeometry = mergeGeometries(compactGeometries);
 				return [TypedSopNode.createObject(mergedGeometry, objectType)];
 			}
 		} catch (err) {
@@ -94,7 +96,7 @@ function _geometriesByLine(params: GeometriesByLineParams): Array<Array<BufferGe
 	const chars = Array.from(params.text);
 	let characterIndex = 0;
 	let lineIndex = 0;
-	for (let geometry of params.geometries) {
+	for (const geometry of params.geometries) {
 		let character = chars[characterIndex];
 		if (character === '\n') {
 			lineIndex++;

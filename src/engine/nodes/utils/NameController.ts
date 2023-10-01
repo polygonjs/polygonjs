@@ -64,7 +64,7 @@ export class NameController {
 		if (this.node.childrenAllowed()) {
 			const children = this.node.childrenController?.children();
 			if (children) {
-				for (let child_node of children) {
+				for (const child_node of children) {
 					child_node.nameController.runPostSetFullPathHooks();
 				}
 			}
@@ -89,14 +89,14 @@ export class NameController {
 
 	private _postSetName() {
 		if (this._onSetNameHooks) {
-			for (let hook of this._onSetNameHooks) {
+			for (const hook of this._onSetNameHooks) {
 				hook();
 			}
 		}
 	}
 	runPostSetFullPathHooks() {
 		if (this._onSetFullPathHooks) {
-			for (let hook of this._onSetFullPathHooks) {
+			for (const hook of this._onSetFullPathHooks) {
 				hook();
 			}
 		}

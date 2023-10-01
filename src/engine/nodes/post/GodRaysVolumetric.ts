@@ -15,7 +15,7 @@ import {GodRaysVolumetricAcceptedLightType} from './utils/GodRaysVolumetric/util
 
 const tmpPointLight = new PointLight();
 const tmpDirectionalLight = new DirectionalLight();
-for (let l of [tmpPointLight, tmpDirectionalLight]) {
+for (const l of [tmpPointLight, tmpDirectionalLight]) {
 	l.intensity = 0.0001;
 	l.castShadow = true;
 	l.shadow.mapSize.width = 1024;
@@ -48,7 +48,7 @@ function _findLightSource(scene: PolyScene, objectMask: string, lightType: Light
 		TypeAssert.unreachable(lightType);
 	}
 
-	for (let object of objects) {
+	for (const object of objects) {
 		if (_isExpectedLightType(object)) {
 			foundLigthObject = object as PointLight;
 			break;

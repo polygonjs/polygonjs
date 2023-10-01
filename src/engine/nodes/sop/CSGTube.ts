@@ -8,7 +8,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 import {primitives, maths} from '@jscad/modeling';
-import {vector3ToCsgVec3} from '../../../core/geometry/csg/CsgVecToVector';
+import {vector3ToCsgVec3} from '../../../core/geometry/modules/csg/CsgVecToVector';
 import {CoreMath} from '../../../core/math/_Module';
 const {cylinder, roundedCylinder} = primitives;
 

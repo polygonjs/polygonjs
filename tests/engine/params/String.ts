@@ -77,7 +77,9 @@ qUnit.test('a string can have multiple expression and maintain dependencies', as
 	scene.timeController.setFrame(3);
 	await text2_param.compute();
 	assert.equal(text2_param.value, 'ok this is a test middle 81 end');
-	assert.equal(text2_param.graphPredecessors().length, 2);
+	const predecessors = text2_param.graphPredecessors()!
+	assert.ok(predecessors)
+	assert.equal(predecessors.length, 2);
 
 	// test updating the string param
 	const text3 = geo1.createNode('text');

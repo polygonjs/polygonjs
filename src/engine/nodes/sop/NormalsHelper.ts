@@ -48,7 +48,7 @@ export class NormalsHelperSopNode extends TypedSopNode<NormalsHelperSopParamsCon
 
 		const selectedObjects = CoreMask.filterThreejsObjects(inputCoreGroup, this.pv).filter(object3DHasGeometry);
 		const newObjects: Object3D[] = [];
-		for (let object of selectedObjects) {
+		for (const object of selectedObjects) {
 			const helper = new VertexNormalsHelper(object, this.pv.size);
 			if (isBooleanTrue(this.pv.keepInput)) {
 				newObjects.push(object);

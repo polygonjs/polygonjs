@@ -107,6 +107,7 @@ export class PolyEngine {
 	}
 	dispose() {
 		this.scenesRegister.dispose();
+		this.renderersController.dispose();
 	}
 
 	registerNode(node: BaseNodeConstructor, tab_menu_category?: string | string[], options?: NodeRegisterOptions) {
@@ -178,6 +179,9 @@ export class PolyEngine {
 	//
 	setLogger(logger: BaseCoreLogger | null) {
 		this._logger = logger;
+	}
+	logger() {
+		return this._logger;
 	}
 
 	log(message?: any, ...optionalParams: any[]) {

@@ -31,8 +31,17 @@ function MathFunctionArg2OperationFactory(
 			this.io.connection_points.set_expected_output_types_function(this._expected_output_types.bind(this));
 		}
 		override setLines(shaders_collection_controller: ShadersCollectionController) {
-			const var_type: GlConnectionPointType = this.io.outputs.namedOutputConnectionPoints()[0].type();
-			const args = this.io.inputs.namedInputConnectionPoints().map((connection, i) => {
+			const inputConnectionPoints = this.io.inputs.namedInputConnectionPoints();
+			const outputConnectionPoints = this.io.outputs.namedOutputConnectionPoints();
+			if (!(inputConnectionPoints && outputConnectionPoints)) {
+				return;
+			}
+			const firstConnectionPoint = outputConnectionPoints[0];
+			if (!firstConnectionPoint) {
+				return;
+			}
+			const var_type: GlConnectionPointType = firstConnectionPoint.type();
+			const args = inputConnectionPoints.map((connection, i) => {
 				const name = connection.name();
 				const variable = this.variableForInput(name);
 				if (variable) {
@@ -55,12 +64,16 @@ function MathFunctionArg2OperationFactory(
 			return operation;
 		}
 		protected override _expected_input_types() {
+			const inputConnectionPoints = this.io.inputs.namedInputConnectionPoints();
+			if (!inputConnectionPoints) {
+				return [];
+			}
 			let first_input_type = this.io.connection_points.first_input_connection_type();
 			if (first_input_type && allowed_in_types) {
 				if (!allowed_in_types.includes(first_input_type)) {
 					// if the first input type is not allowed, either leave the connection point as is,
 					// or use the default if there is none
-					const first_connection = this.io.inputs.namedInputConnectionPoints()[0];
+					const first_connection = inputConnectionPoints[0];
 					if (first_connection) {
 						first_input_type = first_connection.type();
 					}
@@ -133,8 +146,14 @@ export class MultGlNode extends MathFunctionArg2OperationFactory('mult', {
 			const first_connection = input_connections[0];
 
 			if (first_connection) {
+				const firstConnectionOutputConnectionPoints = first_connection
+					.nodeSrc()
+					.io.outputs.namedOutputConnectionPoints();
+				if (!firstConnectionOutputConnectionPoints) {
+					return [];
+				}
 				const connection_point_for_first_connection =
-					first_connection.nodeSrc().io.outputs.namedOutputConnectionPoints()[first_connection.outputIndex()];
+					firstConnectionOutputConnectionPoints[first_connection.outputIndex()];
 				// this.io.inputs.namedInputConnectionPoints()[
 				// 	first_connection.input_index
 				// ];
@@ -145,10 +164,14 @@ export class MultGlNode extends MathFunctionArg2OperationFactory('mult', {
 				if (type == GlConnectionPointType.FLOAT) {
 					const second_connection = input_connections[1];
 					if (second_connection) {
+						const secondConnectionOuputConnectionPoints = second_connection
+							.nodeSrc()
+							.io.outputs.namedOutputConnectionPoints();
+						if (!secondConnectionOuputConnectionPoints) {
+							return [];
+						}
 						const connection_point_for_second_connection =
-							second_connection.nodeSrc().io.outputs.namedOutputConnectionPoints()[
-								second_connection.outputIndex()
-							];
+							secondConnectionOuputConnectionPoints[second_connection.outputIndex()];
 						const second_type = connection_point_for_second_connection.type();
 						if (second_type == GlConnectionPointType.FLOAT) {
 							// if first 2 inputs are float: n+1 float inputs

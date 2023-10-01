@@ -71,7 +71,7 @@ export class KTX2TextureLoader extends BaseCoreImageLoader {
 			Poly.warn('texture loader found no renderer for KTX2Loader');
 		}
 
-		for (let resolve of this._resolves) {
+		for (const resolve of this._resolves) {
 			resolve(loader);
 		}
 

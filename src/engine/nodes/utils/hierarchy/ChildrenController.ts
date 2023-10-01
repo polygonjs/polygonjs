@@ -12,6 +12,9 @@ import {SopOperationContainer} from '../../../operations/container/sop';
 import {BaseSopOperation} from '../../../operations/sop/_Base';
 import {MapUtils} from '../../../../core/MapUtils';
 import {NameController} from '../NameController';
+import {CoreNodeSerializer} from '../CoreNodeSerializer';
+import {TypedNodeConnection} from '../io/NodeConnection';
+import {arrayCopy} from '../../../../core/ArrayUtils';
 
 type OutputNodeFindMethod = (() => BaseNodeType) | undefined;
 type TraverseNodeCallback = (node: BaseNodeType) => void;
@@ -20,6 +23,7 @@ type TraverseNodeConditionCallback = (node: BaseNodeType) => boolean;
 export interface NodeCreateOptions {
 	paramsInitValueOverrides?: ParamsInitData;
 	nodeName?: string;
+	serializerClass?: typeof CoreNodeSerializer;
 }
 
 export class HierarchyChildrenController {
@@ -35,10 +39,12 @@ export class HierarchyChildrenController {
 	constructor(protected node: BaseNodeType, private _context: NodeContext) {}
 
 	dispose() {
-		const children = this.children();
-		for (let child of children) {
+		const _tmpChildren: BaseNodeType[] = [];
+		arrayCopy(this.children(), _tmpChildren);
+		for (const child of _tmpChildren) {
 			this.node.removeNode(child);
 		}
+		_tmpChildren.length = 0;
 		this._selection = undefined;
 	}
 
@@ -51,13 +57,13 @@ export class HierarchyChildrenController {
 	// OUTPUT NODE
 	//
 	//
-	private _output_node_find_method: (() => BaseNodeType) | undefined;
+	private _outputNodeFindMethod: (() => BaseNodeType) | undefined;
 	setOutputNodeFindMethod(method: OutputNodeFindMethod) {
-		this._output_node_find_method = method;
+		this._outputNodeFindMethod = method;
 	}
 	outputNode() {
-		if (this._output_node_find_method) {
-			return this._output_node_find_method();
+		if (this._outputNodeFindMethod) {
+			return this._outputNodeFindMethod();
 		}
 	}
 
@@ -160,7 +166,10 @@ export class HierarchyChildrenController {
 		const requestedNodeName =
 			options?.nodeName || NameController.baseName((<unknown>nodeClass) as typeof BaseNodeClass);
 		const nodeName = this._nextAvailableChildName(requestedNodeName);
-		const childNode = new nodeClass(this.node.scene(), nodeName, options);
+		const childNode = new nodeClass(this.node.scene(), nodeName, {
+			...options,
+			serializerClass: this.node.serializer?.constructor,
+		});
 		childNode.initializeBaseAndNode();
 		this._addNode(childNode);
 		childNode.lifecycle.setCreationCompleted();
@@ -179,52 +188,57 @@ export class HierarchyChildrenController {
 		return nodeClass;
 	}
 	createOperationContainer(
-		operation_type: string,
-		operation_container_name: string,
+		operationType: string,
+		operationContainerName: string,
 		options?: NodeCreateOptions
 	): BaseOperationContainer<any> {
-		const operation_class = Poly.registeredOperation(this._context, operation_type);
+		const operationClass = Poly.registeredOperation(this._context, operationType);
 
-		if (operation_class == null) {
-			const message = `no operation found with context ${this._context}/${operation_type}`;
+		if (operationClass == null) {
+			const message = `no operation found with context ${this._context}/${operationType}`;
 			console.error(message);
 			throw message;
 		} else {
-			const operation = new operation_class(this.node.scene()) as BaseSopOperation;
+			const operation = new operationClass(this.node.scene()) as BaseSopOperation;
 			const operation_container = new SopOperationContainer(
 				operation,
-				operation_container_name,
+				operationContainerName,
 				options?.paramsInitValueOverrides || {}
 			);
 			return operation_container;
 		}
 	}
 
-	private _addNode(child_node: BaseNodeType) {
-		child_node.setParent(this.node);
-		this._addToNodesByType(child_node);
-		child_node.params.init();
-		child_node.parentController.onSetParent();
-		child_node.nameController.runPostSetFullPathHooks();
-		if (child_node.childrenAllowed() && child_node.childrenController) {
-			for (let child of child_node.childrenController.children()) {
+	private _addNode(childNode: BaseNodeType) {
+		childNode.setParent(this.node);
+		this._addToNodesByType(childNode);
+		childNode.params.init();
+		childNode.parentController.onSetParent();
+		childNode.nameController.runPostSetFullPathHooks();
+		if (childNode.childrenAllowed() && childNode.childrenController) {
+			for (const child of childNode.childrenController.children()) {
 				child.nameController.runPostSetFullPathHooks();
 			}
 		}
-		this.node.emit(NodeEvent.CREATED, {child_node_json: child_node.toJSON()});
+		if (this.node.serializer) {
+			const childNodeJSON = childNode.toJSON();
+			if (childNodeJSON) {
+				this.node.emit(NodeEvent.CREATED, {child_node_json: childNodeJSON});
+			}
+		}
 		if (this.node.scene().lifecycleController.onAfterCreatedCallbackAllowed()) {
-			child_node.lifecycle.runOnAfterCreatedCallbacks();
+			childNode.lifecycle.runOnAfterCreatedCallbacks();
 		}
-		child_node.lifecycle.runOnAfterAddedCallbacks();
-		this.node.lifecycle.runOnChildAddCallbacks(child_node);
+		childNode.lifecycle.runOnAfterAddedCallbacks();
+		this.node.lifecycle.runOnChildAddCallbacks(childNode);
 
-		if (child_node.require_webgl2()) {
-			this.node.scene().webgl_controller.set_require_webgl2();
+		if (childNode.requireWebGL2()) {
+			this.node.scene().webglController.setRequireWebGL2();
 		}
 
-		this.node.scene().missingExpressionReferencesController.checkForMissingNodeReferences(child_node);
+		this.node.scene().missingExpressionReferencesController.checkForMissingNodeReferences(childNode);
 
-		return child_node;
+		return childNode;
 	}
 
 	removeNode(childNode: BaseNodeType): void {
@@ -251,16 +265,17 @@ export class HierarchyChildrenController {
 
 			const firstConnection = childNode.io.connections.firstInputConnection();
 			const inputConnections = childNode.io.connections.inputConnections();
-			const outputConnections = childNode.io.connections.outputConnections();
+			const outputConnections: TypedNodeConnection<NodeContext>[] = [];
+			childNode.io.connections.outputConnections(outputConnections);
 			if (inputConnections) {
-				for (let inputConnection of inputConnections) {
+				for (const inputConnection of inputConnections) {
 					if (inputConnection) {
 						inputConnection.disconnect({setInput: true});
 					}
 				}
 			}
 			if (outputConnections) {
-				for (let outputConnection of outputConnections) {
+				for (const outputConnection of outputConnections) {
 					if (outputConnection) {
 						outputConnection.disconnect({setInput: true});
 						if (firstConnection) {
@@ -364,7 +379,6 @@ export class HierarchyChildrenController {
 		return this._childrenAndGrandchildrenByContext.get(context) != null;
 	}
 
-	private _childrenCount: number = 0;
 	private _children: BaseNodeType[] = [];
 	private _childrenNames: string[] = [];
 	private _updateCache() {
@@ -374,27 +388,12 @@ export class HierarchyChildrenController {
 			this._children.push(node);
 			this._childrenNames.push(node.name());
 		});
-		this._childrenCount = this._childrenNames.length;
 	}
-	children(target: BaseNodeType[] = []): BaseNodeType[] {
-		target.length = 0;
-		// this._childrenByName.forEach((node) => {
-		// 	target.push(node);
-		// });
-		for (let i = 0; i < this._childrenCount; i++) {
-			target[i] = this._children[i];
-		}
-		return target;
+	children(): Readonly<BaseNodeType[]> {
+		return this._children;
 	}
-	childrenNames(target: string[] = []) {
-		target.length = 0;
-		// this._childrenByName.forEach((node, nodeName) => {
-		// 	target.push(nodeName);
-		// });
-		for (let i = 0; i < this._childrenCount; i++) {
-			target[i] = this._childrenNames[i];
-		}
-		return target;
+	childrenNames(): Readonly<string[]> {
+		return this._childrenNames;
 	}
 
 	traverseChildren(callback: TraverseNodeCallback, conditionCallback?: TraverseNodeConditionCallback) {

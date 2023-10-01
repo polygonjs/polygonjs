@@ -8,7 +8,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 import {maths} from '@jscad/modeling';
-import {csgApplyTransform} from '../../../core/geometry/csg/math/CsgMat4';
+import {csgApplyTransform} from '../../../core/geometry/modules/csg/math/CsgMat4';
 const {mat4} = maths;
 
 class CSGTransformResetSopParamsConfig extends NodeParamsConfig {
@@ -30,7 +30,7 @@ export class CSGTransformResetSopNode extends CSGSopNode<CSGTransformResetSopPar
 		const objects = inputCoreGroups[0].csgObjects();
 
 		if (objects) {
-			for (let object of objects) {
+			for (const object of objects) {
 				if (this.pv.extract) {
 					csgApplyTransform(object.csgGeometry());
 				} else {

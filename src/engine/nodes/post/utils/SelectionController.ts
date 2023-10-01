@@ -12,7 +12,7 @@ export class SelectionController {
 		// Meaning that if foundObjects contains a node A and one of its children B,
 		// only A is given.
 		this._map.clear();
-		for (let object of foundObjects) {
+		for (const object of foundObjects) {
 			this._map.set(object.uuid, object);
 		}
 		const isAncestorNotInList = (object: Object3D) => {
@@ -26,7 +26,7 @@ export class SelectionController {
 		};
 		this._resolvedObjects = foundObjects.filter(isAncestorNotInList);
 		selection.clear();
-		for (let object of this._resolvedObjects) {
+		for (const object of this._resolvedObjects) {
 			selection.add(object);
 		}
 	}

@@ -3,14 +3,14 @@ import {ParsedTree} from './traversers/ParsedTree';
 import {FunctionGenerator} from './traversers/FunctionGenerator';
 import {ExpressionStringGenerator} from './traversers/ExpressionStringGenerator';
 import {DependenciesController} from './DependenciesController';
+import {Poly} from '../Poly';
 
 export class ExpressionManager {
 	private _parseStarted: boolean = false;
 	private _functionGenerator: FunctionGenerator;
 	private _expressionStringGenerator: ExpressionStringGenerator | undefined;
 	public dependenciesController: DependenciesController;
-	// private _error_message: string | undefined;
-	private parsedTree: ParsedTree = new ParsedTree();
+	private parsedTree: ParsedTree = new ParsedTree(this.param);
 
 	constructor(
 		public param: BaseParamType // public element_index: number=0
@@ -27,7 +27,7 @@ export class ExpressionManager {
 			throw new Error(`parse in progress for param ${this.param.path()}`);
 		}
 		this._parseStarted = true;
-		this.parsedTree = this.parsedTree || new ParsedTree();
+		this.parsedTree = this.parsedTree || new ParsedTree(this.param);
 
 		this.reset();
 		if (this.param.expressionParsedAsString()) {
@@ -37,10 +37,11 @@ export class ExpressionManager {
 		}
 		this._functionGenerator.parseTree(this.parsedTree);
 
-		if (this._functionGenerator.error_message() == null) {
+		if (this._functionGenerator.errorMessage() == null) {
 			this.dependenciesController.update(this._functionGenerator);
-			if (this.dependenciesController.error_message) {
-				this.param.states.error.set(this.dependenciesController.error_message);
+			const errorMessage = this.dependenciesController.errorMessage();
+			if (errorMessage) {
+				this.param.states.error.set(errorMessage);
 			} else {
 				this._parseStarted = false;
 			}
@@ -49,12 +50,12 @@ export class ExpressionManager {
 		//}
 	}
 	async computeFunction(): Promise<any> {
-		// this.parse_and_update_dependencies_if_not_done(expression);
 		if (this._computeAllowed()) {
 			try {
 				const newValue = await this._functionGenerator.evalFunction();
 				return newValue;
 			} catch (e) {
+				Poly.error('error while evaluating expression', e);
 				// if (this.function_generator.is_errored && this.function_generator.error_message) {
 				// 	this.set_error(this.function_generator.error_message);
 				// }
@@ -63,6 +64,7 @@ export class ExpressionManager {
 				// })
 			}
 		} else {
+			Poly.error('compute not allowed');
 			// return new Promise((resolve, reject) => {
 			// 	resolve(null);
 			// });
@@ -71,55 +73,30 @@ export class ExpressionManager {
 
 	reset() {
 		this._parseStarted = false;
-		// this._error_message = undefined;
-		// if(force){ // || this.element_index <= 1){
 		this.dependenciesController.reset();
-		// }
 		this._functionGenerator.reset();
 	}
 
-	is_errored(): boolean {
-		return this._functionGenerator.is_errored();
+	isErrored(): boolean {
+		return this._functionGenerator.isErrored();
 	}
-	error_message() {
-		return this._functionGenerator.error_message();
+	errorMessage() {
+		return this._functionGenerator.errorMessage();
 	}
 
 	private _computeAllowed(): boolean {
-		return /*this._error_message == null &&*/ this._functionGenerator.evalAllowed();
+		return this._functionGenerator.evalAllowed();
 	}
-
-	// private parse_and_update_dependencies(expression: string) {
-	// 	if (this.param.has_expression()) {
-	// 		this.parse_expression(expression);
-
-	// 		if (this.error_message != null) {
-	// 			this.param.states.error.set(`expression error: "${expression}" (${this.error_message})`);
-	// 		}
-	// 		// this.parse_completed = true
-	// 	}
-	// }
-	// private parse_and_update_dependencies_if_not_done(expression: string) {
-	// 	if (!this.parse_completed) {
-	// 		this.parse_and_update_dependencies(expression);
-	// 	}
-	// }
 
 	updateFromMethodDependencyNameChange() {
 		this._expressionStringGenerator = this._expressionStringGenerator || new ExpressionStringGenerator(this.param);
 
-		const new_expression_string = this._expressionStringGenerator.parse_tree(this.parsedTree);
+		const newExpressionString = this._expressionStringGenerator.parseTree(this.parsedTree);
 
-		if (new_expression_string) {
-			this.param.set(new_expression_string);
+		if (newExpressionString) {
+			this.param.set(newExpressionString);
 		} else {
 			console.warn('failed to regenerate expression');
 		}
-		// this.param.expressionController?.set_expression(new_expression_string);
-
-		// this.reset()
-		// if (new_expression_string) {
-		// this.parse_expression(new_expression_string);
-		// }
 	}
 }

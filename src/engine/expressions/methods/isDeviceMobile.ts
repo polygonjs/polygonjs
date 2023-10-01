@@ -21,8 +21,6 @@ export class isDeviceMobileExpression extends BaseMethod {
 	}
 
 	override async processArguments(args: any[]): Promise<boolean> {
-		return new Promise(async (resolve, reject) => {
-			resolve(CoreUserAgent.isMobile());
-		});
+		return CoreUserAgent.isMobile();
 	}
 }

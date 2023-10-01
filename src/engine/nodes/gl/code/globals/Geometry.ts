@@ -99,7 +99,7 @@ export class GlobalsGeometryHandler extends GlobalsBaseController {
 				body_lines.push(`${var_name} = ${glType}(${output_name})`);
 			}
 		}
-		for (let dependency of dependencies) {
+		for (const dependency of dependencies) {
 			// MapUtils.push_on_array_at_entry(definitions_by_shader_name, dependency, definition);
 			// MapUtils.push_on_array_at_entry(body_lines_by_shader_name, dependency, body_line);
 			shaders_collection_controller.addDefinitions(globals_node, [definition], dependency);
@@ -185,7 +185,7 @@ export class GlobalsGeometryHandler extends GlobalsBaseController {
 				const shader_config = node.materialNode()?.assemblerController()?.assembler.shader_config(shader_name);
 				if (shader_config) {
 					const dependencies = shader_config.dependencies();
-					for (let dependency of dependencies) {
+					for (const dependency of dependencies) {
 						MapUtils.pushOnArrayAtEntry(definitions_by_shader_name, dependency, varying_definition);
 						MapUtils.pushOnArrayAtEntry(body_lines_by_shader_name, dependency, set_varying_body_line);
 					}

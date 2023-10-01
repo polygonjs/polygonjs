@@ -16,7 +16,7 @@ import {SubnetOutputGlNode} from './SubnetOutput';
 import {ThreeToGl} from '../../../core/ThreeToGl';
 import {SubnetInputGlNode} from './SubnetInput';
 import {NodeCreateOptions} from '../utils/hierarchy/ChildrenController';
-import {ArrayUtils} from '../../../core/ArrayUtils';
+import {rangeStartEnd} from '../../../core/ArrayUtils';
 import {IntegerParam} from '../../params/Integer';
 import {StringParam} from '../../params/String';
 import {TypedNodeTraverser} from '../utils/shaders/NodeTraverser';
@@ -33,7 +33,7 @@ export const ADD_BODY_LINES_OPTIONS: AddBodyLinesOptions = {
 
 function visibleIfInputsCountAtLeast(index: number) {
 	return {
-		visibleIf: ArrayUtils.range(index + 1, 10).map((i) => ({inputsCount: i})),
+		visibleIf: rangeStartEnd(index + 1, 10).map((i) => ({inputsCount: i})),
 	};
 }
 
@@ -166,6 +166,9 @@ export class AbstractTypedSubnetGlNode<K extends NodeParamsConfig> extends Typed
 	protected _setLinesPreBlock(shadersCollectionController: ShadersCollectionController) {
 		const bodyLines: string[] = [];
 		const connection_points = this.io.inputs.namedInputConnectionPoints();
+		if (!connection_points) {
+			return;
+		}
 		for (let i = 0; i < connection_points.length; i++) {
 			const connection_point = connection_points[i];
 			const gl_type = connection_point.type();
@@ -189,14 +192,16 @@ export class AbstractTypedSubnetGlNode<K extends NodeParamsConfig> extends Typed
 			return;
 		}
 		const bodyLines: string[] = [];
-		for (let connection of connections) {
+		for (const connection of connections) {
 			if (connection) {
 				const connection_point = connection.destConnectionPoint();
-				const in_value = ThreeToGl.any(this.variableForInput(connection_point.name()));
-				const gl_type = connection_point.type();
-				const out = childNode.glVarName(connection_point.name());
-				const body_line = `	${gl_type} ${out} = ${in_value}`;
-				bodyLines.push(body_line);
+				if (connection_point) {
+					const in_value = ThreeToGl.any(this.variableForInput(connection_point.name()));
+					const gl_type = connection_point.type();
+					const out = childNode.glVarName(connection_point.name());
+					const body_line = `	${gl_type} ${out} = ${in_value}`;
+					bodyLines.push(body_line);
+				}
 			}
 		}
 		shadersCollectionController.addBodyLines(childNode, bodyLines, undefined, ADD_BODY_LINES_OPTIONS);
@@ -208,16 +213,17 @@ export class AbstractTypedSubnetGlNode<K extends NodeParamsConfig> extends Typed
 		}
 		const bodyLines: string[] = [];
 
-		for (let connection of connections) {
+		for (const connection of connections) {
 			if (connection) {
-				const connection_point = connection.destConnectionPoint();
-
-				const in_value = ThreeToGl.any(childNode.variableForInput(connection_point.name()));
-				const out = this.glVarName(connection_point.name());
-				// const body_line = `${gl_type} ${out} = ${in_value}`;
-				// do not use the type, to avoid re-defining a variable that should be defined in the parent node
-				const body_line = `	${out} = ${in_value}`;
-				bodyLines.push(body_line);
+				const connectionPoint = connection.destConnectionPoint();
+				if (connectionPoint) {
+					const in_value = ThreeToGl.any(childNode.variableForInput(connectionPoint.name()));
+					const out = this.glVarName(connectionPoint.name());
+					// const body_line = `${gl_type} ${out} = ${in_value}`;
+					// do not use the type, to avoid re-defining a variable that should be defined in the parent node
+					const bodyLine = `	${out} = ${in_value}`;
+					bodyLines.push(bodyLine);
+				}
 			}
 		}
 		return bodyLines;
@@ -268,7 +274,11 @@ export class AbstractTypedSubnetGlNode<K extends NodeParamsConfig> extends Typed
 			matNode.states.error.set(`${this.path()}:only one output node allowed`);
 		}
 		const subnetOutput = outputNodes[0];
-		const subnetOutputInputNames = subnetOutput.io.inputs.namedInputConnectionPoints().map((cp) => cp.name());
+		const subnetOutputInputConnectionPoints = subnetOutput.io.inputs.namedInputConnectionPoints();
+
+		const subnetOutputInputNames = subnetOutputInputConnectionPoints
+			? subnetOutputInputConnectionPoints.map((cp) => cp.name())
+			: [];
 
 		const assembler = shadersCollectionController.assembler();
 
@@ -305,7 +315,7 @@ export class AbstractTypedSubnetGlNode<K extends NodeParamsConfig> extends Typed
 
 		// 1- add all definitions for each shaderName
 		const shaderNames = shadersCollectionController.shaderNames();
-		for (let shaderName of shaderNames) {
+		for (const shaderName of shaderNames) {
 			const definitions: BaseGLDefinition[] = [];
 			internalShadersCollectionController.traverseDefinitions(shaderName, (definition) => {
 				// only add function if it is for the current shader
@@ -321,7 +331,7 @@ export class AbstractTypedSubnetGlNode<K extends NodeParamsConfig> extends Typed
 		if (currentShaderName != ShaderName.VERTEX) {
 			const attribNodes = this.nodesByType(GlType.ATTRIBUTE);
 			const bodyLines: string[] = [];
-			for (let attribNode of attribNodes) {
+			for (const attribNode of attribNodes) {
 				const linesForNode = internalShadersCollectionController.bodyLines(ShaderName.VERTEX, attribNode);
 				if (linesForNode) {
 					bodyLines.push(...linesForNode);
@@ -408,7 +418,7 @@ export class TypedSubnetGlNode<K extends TypedSubnetGlParamsConfig> extends Abst
 	protected override _expectedInputTypes(): GlConnectionPointType[] {
 		const count = this.pv.inputsCount;
 		const params: IntegerParam[] = this._inputTypeParams();
-		return ArrayUtils.range(0, count).map((value, i) => GL_CONNECTION_POINT_TYPES[params[i].value]);
+		return rangeStartEnd(0, count).map((value, i) => GL_CONNECTION_POINT_TYPES[params[i].value]);
 	}
 	protected override _expectedInputName(index: number) {
 		const params: StringParam[] = this._inputNameParams();
@@ -419,7 +429,7 @@ export class TypedSubnetGlNode<K extends TypedSubnetGlParamsConfig> extends Abst
 	protected override _expectedOutputTypes() {
 		const count = this.pv.inputsCount;
 		const params: IntegerParam[] = this._inputTypeParams();
-		return ArrayUtils.range(0, count).map((value, i) => GL_CONNECTION_POINT_TYPES[params[i].value]);
+		return rangeStartEnd(0, count).map((value, i) => GL_CONNECTION_POINT_TYPES[params[i].value]);
 	}
 
 	protected override _expectedOutputName(index: number) {

@@ -10,7 +10,7 @@ import {CoreGroup} from '../../../core/geometry/Group';
 import {Object3D} from 'three';
 import {CoreType} from '../../../core/Type';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
-import {SOPCADTesselationParamConfig} from '../../../core/geometry/cad/utils/TesselationParamsConfig';
+import {SOPCADTesselationParamConfig} from '../../../core/geometry/modules/cad/utils/TesselationParamsConfig';
 class CADTriangulateSopParamsConfig extends SOPCADTesselationParamConfig(NodeParamsConfig) {}
 const ParamsConfig = new CADTriangulateSopParamsConfig();
 
@@ -28,7 +28,7 @@ export class CADTriangulateSopNode extends CADSopNode<CADTriangulateSopParamsCon
 		const cadObjects = inputCoreGroups[0].cadObjects();
 		if (cadObjects) {
 			const newObjects: Object3D[] = [];
-			for (let cadObject of cadObjects) {
+			for (const cadObject of cadObjects) {
 				const objects = cadObject.toObject3D(this.pv, this);
 				if (objects) {
 					if (CoreType.isArray(objects)) {

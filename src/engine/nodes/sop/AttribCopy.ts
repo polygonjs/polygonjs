@@ -42,13 +42,13 @@ class AttribCopySopParamsConfig extends NodeParamsConfig {
 	srcOffset = ParamConfig.INTEGER(DEFAULT.srcOffset, {
 		range: [0, 3],
 		rangeLocked: [true, true],
-		visibleIf: {class: ATTRIBUTE_CLASSES.indexOf(AttribClass.VERTEX)},
+		visibleIf: {class: ATTRIBUTE_CLASSES.indexOf(AttribClass.POINT)},
 	});
 	/** @param this defines which component the attribute is copied to */
 	destOffset = ParamConfig.INTEGER(DEFAULT.destOffset, {
 		range: [0, 3],
 		rangeLocked: [true, true],
-		visibleIf: {class: ATTRIBUTE_CLASSES.indexOf(AttribClass.VERTEX)},
+		visibleIf: {class: ATTRIBUTE_CLASSES.indexOf(AttribClass.POINT)},
 	});
 }
 const ParamsConfig = new AttribCopySopParamsConfig();

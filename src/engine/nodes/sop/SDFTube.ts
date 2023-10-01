@@ -7,8 +7,8 @@
 // import {SDFSopNode} from './_BaseSDF';
 // import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 // import {SopType} from '../../poly/registers/nodes/types/Sop';
-// import {step} from '../../../core/geometry/sdf/SDFConstant';
-// import {SDFLoader} from '../../../core/geometry/sdf/SDFLoader';
+// import {step} from '../../../core/geometry/modules/sdf/SDFConstant';
+// import {SDFLoader} from '../../../core/geometry/modules/sdf/SDFLoader';
 // import {Number3} from '../../../types/GlobalTypes';
 
 // const _centerN3: Number3 = [0, 0, 0];

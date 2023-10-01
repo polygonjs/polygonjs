@@ -2,7 +2,7 @@
  * Decomposes the input objects into multiple geometry, material and texture nodes to allow granular updates
  *
  */
-import {SubnetSopNodeLike} from './utils/subnet/ChildrenDisplayController';
+import {SubnetSopNodeLike} from './utils/subnet/SopSubnetChildrenDisplayController';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {NetworkNodeType} from '../../poly/NodeContext';

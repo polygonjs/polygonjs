@@ -2,7 +2,7 @@ import {Vector2} from 'three';
 import {Vector3} from 'three';
 import {BufferGeometry} from 'three';
 import {CoreGeometryOperationHexagon} from '../../../geometry/operation/Hexagon';
-import {CoreTransform} from '../../../Transform';
+import {rotateGeometry} from '../../../Transform';
 import {Vector2Like} from '../../../../types/GlobalTypes';
 
 const DIR_ORIGIN = new Vector3(0, 1, 0);
@@ -38,7 +38,7 @@ export class MapboxPlaneHexagonsController {
 			true // always as points in the case of hexagons. too complicated otherwise
 		);
 		const geometry = operation.process();
-		CoreTransform.rotateGeometry(geometry, DIR_ORIGIN, DIR_DEST);
+		rotateGeometry(geometry, DIR_ORIGIN, DIR_DEST);
 		if (!mapboxTransform && hexagons_scale_compensate) {
 			geometry.scale(hexagons_scale_compensate.x, hexagons_scale_compensate.y, hexagons_scale_compensate.z);
 		}

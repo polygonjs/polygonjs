@@ -1,6 +1,6 @@
 import {PersistedConfigWithShaders} from './../../../nodes/utils/BasePersistedConfig';
 import {Number2, PolyDictionary} from '../../../../types/GlobalTypes';
-import {TypedNode} from '../../../nodes/_Base';
+import {BaseNodeType, TypedNode} from '../../../nodes/_Base';
 import {NodeContext} from '../../../poly/NodeContext';
 import type {JsonExportDispatcher} from './Dispatcher';
 import {ParamJsonExporterData} from '../../../nodes/utils/io/IOController';
@@ -62,13 +62,14 @@ type BaseNodeTypeWithIO = TypedNode<NodeContext, any>;
 
 export interface JSONExporterDataRequestOption {
 	showPolyNodesData?: boolean;
+	withPersistedConfig?: boolean;
 }
 
 export class NodeJsonExporter<T extends BaseNodeTypeWithIO> {
 	private _data: NodeJsonExporterData | undefined; // = {} as NodeJsonExporterData;
 	constructor(protected _node: T, protected dispatcher: JsonExportDispatcher) {}
 
-	async data(options: JSONExporterDataRequestOption = {}): Promise<NodeJsonExporterData> {
+	async data(options: JSONExporterDataRequestOption): Promise<NodeJsonExporterData> {
 		if (!this._isRoot()) {
 			this._node.scene().nodesController.registerNodeContextSignature(this._node);
 		}
@@ -155,13 +156,16 @@ export class NodeJsonExporter<T extends BaseNodeTypeWithIO> {
 		}
 
 		// persisted config
-		const persisted_config = this._node.persisted_config;
-		if (persisted_config) {
-			const persisted_config_data = options.showPolyNodesData
-				? await persisted_config.toData()
-				: await persisted_config.toDataWithoutShaders();
-			if (persisted_config_data) {
-				this._data.persisted_config = persisted_config_data;
+		const withPersistedConfig = options.withPersistedConfig == null ? true : options.withPersistedConfig;
+		if (withPersistedConfig == true) {
+			const persisted_config = this._node.persisted_config;
+			if (persisted_config) {
+				const persisted_config_data = options.showPolyNodesData
+					? await persisted_config.toData()
+					: await persisted_config.toDataWithoutShaders();
+				if (persisted_config_data) {
+					this._data.persisted_config = persisted_config_data;
+				}
 			}
 		}
 
@@ -171,7 +175,7 @@ export class NodeJsonExporter<T extends BaseNodeTypeWithIO> {
 		return this._data;
 	}
 
-	uiData(options: JSONExporterDataRequestOption = {}): NodeJsonExporterUIData {
+	uiData(options: JSONExporterDataRequestOption): NodeJsonExporterUIData {
 		const data: NodeJsonExporterUIData = this.ui_data_without_children();
 		const children = this._node.children();
 		if (children.length > 0) {
@@ -202,10 +206,12 @@ export class NodeJsonExporter<T extends BaseNodeTypeWithIO> {
 					// only save the nodes that are still present, in case the selection just got deleted
 					const selected_children: BaseNodeTypeWithIO[] = [];
 					const selected_ids: PolyDictionary<boolean> = {};
-					for (let selected_node of selection.nodes()) {
+					const selectedNodes: BaseNodeType[] = [];
+					selection.nodes(selectedNodes);
+					for (const selected_node of selectedNodes) {
 						selected_ids[selected_node.graphNodeId()] = true;
 					}
-					for (let child of this._node.children()) {
+					for (const child of this._node.children()) {
 						if (child.graphNodeId() in selected_ids) {
 							selected_children.push(child);
 						}
@@ -222,7 +228,7 @@ export class NodeJsonExporter<T extends BaseNodeTypeWithIO> {
 	async persistedConfigData(
 		shadersData: NodeJSONShadersData,
 		jsFunctionBodiesData: NodeJSONFunctionBodiesData,
-		options: JSONExporterDataRequestOption = {}
+		options: JSONExporterDataRequestOption
 	): Promise<void> {
 		const children = this._node.children();
 		if (children.length > 0) {
@@ -286,16 +292,20 @@ export class NodeJsonExporter<T extends BaseNodeTypeWithIO> {
 			if (input) {
 				const connection = this._node.io.connections.inputConnection(input_index)!;
 				if (this._node.io.inputs.hasNamedInputs()) {
-					const inputName = this._node.io.inputs.namedInputConnectionPoints()[input_index]?.name();
-					const output_index = connection.outputIndex();
-					const output_name = input.io.outputs.namedOutputConnectionPoints()[output_index]?.name();
-					if (output_name) {
-						data[input_index] = {
-							index: input_index,
-							inputName: inputName,
-							node: input.name(),
-							output: output_name,
-						};
+					const inputConnectionPoints = this._node.io.inputs.namedInputConnectionPoints();
+					const outputConnectionPoints = input.io.outputs.namedOutputConnectionPoints();
+					if (inputConnectionPoints && outputConnectionPoints) {
+						const inputName = inputConnectionPoints[input_index]?.name();
+						const output_index = connection.outputIndex();
+						const output_name = outputConnectionPoints[output_index]?.name();
+						if (output_name) {
+							data[input_index] = {
+								index: input_index,
+								inputName: inputName,
+								node: input.name(),
+								output: output_name,
+							};
+						}
 					}
 				} else {
 					data[input_index] = input.name();
@@ -318,17 +328,23 @@ export class NodeJsonExporter<T extends BaseNodeTypeWithIO> {
 			const data: IoConnectionPointsData = {};
 			if (this._node.io.inputs.hasNamedInputs()) {
 				data['in'] = [];
-				for (let cp of this._node.io.inputs.namedInputConnectionPoints()) {
-					if (cp) {
-						data['in'].push(cp.toJSON());
+				const connectionPoints = this._node.io.inputs.namedInputConnectionPoints();
+				if (connectionPoints) {
+					for (let cp of connectionPoints) {
+						if (cp) {
+							data['in'].push(cp.toJSON());
+						}
 					}
 				}
 			}
 			if (this._node.io.outputs.hasNamedOutputs()) {
 				data['out'] = [];
-				for (let cp of this._node.io.outputs.namedOutputConnectionPoints()) {
-					if (cp) {
-						data['out'].push(cp.toJSON());
+				const connectionPoints = this._node.io.outputs.namedOutputConnectionPoints();
+				if (connectionPoints) {
+					for (let cp of connectionPoints) {
+						if (cp) {
+							data['out'].push(cp.toJSON());
+						}
 					}
 				}
 			}
@@ -353,7 +369,7 @@ export class NodeJsonExporter<T extends BaseNodeTypeWithIO> {
 		return data;
 	}
 
-	protected async nodes_data(options: JSONExporterDataRequestOption = {}) {
+	protected async nodes_data(options: JSONExporterDataRequestOption) {
 		const data: PolyDictionary<NodeJsonExporterData> = {};
 		for (let child of this._node.children()) {
 			const node_exporter = this.dispatcher.dispatchNode(child); //.json_exporter()

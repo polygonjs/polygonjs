@@ -46,9 +46,11 @@ export class MethodDependency extends CoreGraphNode {
 
 	listen_for_name_changes() {
 		if (this.jsep_node && this.decomposedPath) {
-			for (let node_in_path of this.decomposedPath.namedNodes()) {
-				if (node_in_path) {
-					const node = node_in_path as BaseNodeType;
+			const nodes: BaseNodeType[] = [];
+			this.decomposedPath.namedNodes(nodes);
+			for (const nodeInPath of nodes) {
+				if (nodeInPath) {
+					const node = nodeInPath as BaseNodeType;
 					if (node.nameController) {
 						this.addGraphInput(node.nameController.graphNode());
 					}

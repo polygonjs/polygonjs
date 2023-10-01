@@ -91,6 +91,9 @@ export function MathFunctionArgNOperationFactory(
 		private _functionString(linesController: JsLinesCollectionController) {
 			const values: string[] = [];
 			const connectionPoints = this.io.inputs.namedInputConnectionPoints();
+			if (!connectionPoints) {
+				return;
+			}
 			for (let connectionPoint of connectionPoints) {
 				const connectionPointName = connectionPoint.name();
 				const value = this.variableForInput(linesController, connectionPointName);
@@ -133,11 +136,12 @@ export function MathFunctionArgNOperationFactory(
 
 		protected override _expectedInputTypes() {
 			let firstInputType = this.io.connection_points.first_input_connection_type();
-			if (firstInputType && allowedInTypes) {
+			const connectionPoints = this.io.inputs.namedInputConnectionPoints();
+			if (firstInputType && allowedInTypes && connectionPoints) {
 				if (!allowedInTypes.includes(firstInputType)) {
 					// if the first input type is not allowed, either leave the connection point as is,
 					// or use the default if there is none
-					const firstConnection = this.io.inputs.namedInputConnectionPoints()[0];
+					const firstConnection = connectionPoints[0];
 					if (firstConnection) {
 						firstInputType = firstConnection.type();
 					}

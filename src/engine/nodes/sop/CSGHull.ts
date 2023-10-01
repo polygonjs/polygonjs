@@ -7,9 +7,9 @@ import {CSGSopNode} from './_BaseCSG';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
-import {CsgGeometry} from '../../../core/geometry/csg/CsgCommon';
-import {csgIsPath2, csgIsGeom2, csgIsGeom3} from '../../../core/geometry/csg/CsgCoreType';
-import {geom2ApplyTransforms} from '../../../core/geometry/csg/math/CsgMat4';
+import {CsgGeometry} from '../../../core/geometry/modules/csg/CsgCommon';
+import {csgIsPath2, csgIsGeom2, csgIsGeom3} from '../../../core/geometry/modules/csg/CsgCoreType';
+import {geom2ApplyTransforms} from '../../../core/geometry/modules/csg/math/CsgMat4';
 import {hulls, geometries} from '@jscad/modeling';
 const {hull, hullChain} = hulls;
 
@@ -34,7 +34,7 @@ export class CSGHullSopNode extends CSGSopNode<CSGHullSopParamsConfig> {
 		const path2: geometries.path2.Path2[] = [];
 		const objects = inputCoreGroups[0].csgObjects();
 		if (objects) {
-			for (let object of objects) {
+			for (const object of objects) {
 				const geometry = object.csgGeometry();
 				if (csgIsGeom3(geometry)) {
 					geom3.push(geometry);

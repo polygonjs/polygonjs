@@ -68,7 +68,7 @@ export class HierarchyParentController {
 
 	onSetParent() {
 		if (this._on_set_parent_hooks) {
-			for (let hook of this._on_set_parent_hooks) {
+			for (const hook of this._on_set_parent_hooks) {
 				hook();
 			}
 		}

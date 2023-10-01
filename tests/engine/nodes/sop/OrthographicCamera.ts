@@ -1,79 +1,77 @@
 import type {QUnit} from '../../../helpers/QUnit';
 import {CameraAttribute, OrthographicCameraAttribute} from '../../../../src/core/camera/CoreCamera';
-import {CoreObject} from '../../../../src/core/geometry/Object';
+import {ThreejsCoreObject} from '../../../../src/core/geometry/modules/three/ThreejsCoreObject';
 export function testenginenodessopOrthographicCamera(qUnit: QUnit) {
+	qUnit.test('sop/orthographicCamera simple', async (assert) => {
+		const geo1 = window.geo1;
 
-qUnit.test('sop/orthographicCamera simple', async (assert) => {
-	const geo1 = window.geo1;
+		const orthographicCamera1 = geo1.createNode('orthographicCamera');
+		const cameraControls1 = geo1.createNode('cameraControls');
+		const cameraCSSRenderer1 = geo1.createNode('cameraCSSRenderer');
+		const cameraFrameMode1 = geo1.createNode('cameraFrameMode');
+		const cameraPostProcess1 = geo1.createNode('cameraPostProcess');
+		const cameraRenderer1 = geo1.createNode('cameraRenderer');
+		const cameraRenderScene1 = geo1.createNode('cameraRenderScene');
 
-	const orthographicCamera1 = geo1.createNode('orthographicCamera');
-	const cameraControls1 = geo1.createNode('cameraControls');
-	const cameraCSSRenderer1 = geo1.createNode('cameraCSSRenderer');
-	const cameraFrameMode1 = geo1.createNode('cameraFrameMode');
-	const cameraPostProcess1 = geo1.createNode('cameraPostProcess');
-	const cameraRenderer1 = geo1.createNode('cameraRenderer');
-	const cameraRenderScene1 = geo1.createNode('cameraRenderScene');
+		cameraControls1.setInput(0, orthographicCamera1);
+		cameraCSSRenderer1.setInput(0, cameraControls1);
+		cameraFrameMode1.setInput(0, cameraCSSRenderer1);
+		cameraPostProcess1.setInput(0, cameraFrameMode1);
+		cameraRenderer1.setInput(0, cameraPostProcess1);
+		cameraRenderScene1.setInput(0, cameraRenderer1);
 
-	cameraControls1.setInput(0, orthographicCamera1);
-	cameraCSSRenderer1.setInput(0, cameraControls1);
-	cameraFrameMode1.setInput(0, cameraCSSRenderer1);
-	cameraPostProcess1.setInput(0, cameraFrameMode1);
-	cameraRenderer1.setInput(0, cameraPostProcess1);
-	cameraRenderScene1.setInput(0, cameraRenderer1);
+		orthographicCamera1.p.size.set(2.5);
+		const cameraOrbitControls1 = cameraControls1.createNode('cameraOrbitControls');
+		cameraControls1.p.node.setNode(cameraOrbitControls1, {relative: true});
+		const CSS2DRenderer1 = cameraCSSRenderer1.createNode('CSS2DRenderer');
+		cameraCSSRenderer1.p.node.setNode(CSS2DRenderer1, {relative: true});
+		cameraPostProcess1.createNode('bloom');
+		cameraPostProcess1.p.useOtherNode.set(false);
+		const WebGLRenderer1 = cameraRenderer1.createNode('WebGLRenderer');
+		cameraRenderer1.p.node.setNode(WebGLRenderer1, {relative: true});
+		const sceneNode = window.scene.createNode('scene');
+		cameraRenderScene1.p.node.setNode(sceneNode);
 
-	orthographicCamera1.p.size.set(2.5);
-	const cameraOrbitControls1 = cameraControls1.createNode('cameraOrbitControls');
-	cameraControls1.p.node.setNode(cameraOrbitControls1, {relative: true});
-	const CSS2DRenderer1 = cameraCSSRenderer1.createNode('CSS2DRenderer');
-	cameraCSSRenderer1.p.node.setNode(CSS2DRenderer1, {relative: true});
-	cameraPostProcess1.createNode('bloom');
-	cameraPostProcess1.p.useOtherNode.set(false);
-	const WebGLRenderer1 = cameraRenderer1.createNode('WebGLRenderer');
-	cameraRenderer1.p.node.setNode(WebGLRenderer1, {relative: true});
-	const sceneNode = window.scene.createNode('scene');
-	cameraRenderScene1.p.node.setNode(sceneNode);
+		cameraRenderScene1.flags.display.set(true);
 
-	cameraRenderScene1.flags.display.set(true);
-
-	const container = await cameraRenderScene1.compute();
-	const object = container.coreContent()!.threejsObjects()[0];
-	assert.ok(object);
-	assert.equal(
-		CoreObject.attribValue(object, CameraAttribute.CONTROLS_NODE_ID),
-		cameraOrbitControls1.graphNodeId(),
-		CameraAttribute.CONTROLS_NODE_ID
-	);
-	assert.equal(
-		CoreObject.attribValue(object, CameraAttribute.CSS_RENDERER_NODE_ID),
-		CSS2DRenderer1.graphNodeId(),
-		CameraAttribute.CSS_RENDERER_NODE_ID
-	);
-	assert.equal(CoreObject.attribValue(object, CameraAttribute.FRAME_MODE), 0, CameraAttribute.FRAME_MODE);
-	assert.equal(
-		CoreObject.attribValue(object, CameraAttribute.FRAME_MODE_EXPECTED_ASPECT_RATIO),
-		16 / 9,
-		CameraAttribute.FRAME_MODE_EXPECTED_ASPECT_RATIO
-	);
-	assert.equal(
-		CoreObject.attribValue(object, CameraAttribute.POST_PROCESS_NODE_ID),
-		cameraPostProcess1.graphNodeId(),
-		CameraAttribute.POST_PROCESS_NODE_ID
-	);
-	assert.equal(
-		CoreObject.attribValue(object, CameraAttribute.RENDERER_NODE_ID),
-		WebGLRenderer1.graphNodeId(),
-		CameraAttribute.RENDERER_NODE_ID
-	);
-	assert.equal(
-		CoreObject.attribValue(object, CameraAttribute.RENDER_SCENE_NODE_ID),
-		sceneNode.graphNodeId(),
-		CameraAttribute.RENDER_SCENE_NODE_ID
-	);
-	assert.equal(
-		CoreObject.attribValue(object, OrthographicCameraAttribute.SIZE),
-		2.5,
-		OrthographicCameraAttribute.SIZE
-	);
-});
-
+		const container = await cameraRenderScene1.compute();
+		const object = container.coreContent()!.threejsObjects()[0];
+		assert.ok(object);
+		assert.equal(
+			ThreejsCoreObject.attribValue(object, CameraAttribute.CONTROLS_NODE_ID),
+			cameraOrbitControls1.graphNodeId(),
+			CameraAttribute.CONTROLS_NODE_ID
+		);
+		assert.equal(
+			ThreejsCoreObject.attribValue(object, CameraAttribute.CSS_RENDERER_NODE_ID),
+			CSS2DRenderer1.graphNodeId(),
+			CameraAttribute.CSS_RENDERER_NODE_ID
+		);
+		assert.equal(ThreejsCoreObject.attribValue(object, CameraAttribute.FRAME_MODE), 0, CameraAttribute.FRAME_MODE);
+		assert.equal(
+			ThreejsCoreObject.attribValue(object, CameraAttribute.FRAME_MODE_EXPECTED_ASPECT_RATIO),
+			16 / 9,
+			CameraAttribute.FRAME_MODE_EXPECTED_ASPECT_RATIO
+		);
+		assert.equal(
+			ThreejsCoreObject.attribValue(object, CameraAttribute.POST_PROCESS_NODE_ID),
+			cameraPostProcess1.graphNodeId(),
+			CameraAttribute.POST_PROCESS_NODE_ID
+		);
+		assert.equal(
+			ThreejsCoreObject.attribValue(object, CameraAttribute.RENDERER_NODE_ID),
+			WebGLRenderer1.graphNodeId(),
+			CameraAttribute.RENDERER_NODE_ID
+		);
+		assert.equal(
+			ThreejsCoreObject.attribValue(object, CameraAttribute.RENDER_SCENE_NODE_ID),
+			sceneNode.graphNodeId(),
+			CameraAttribute.RENDER_SCENE_NODE_ID
+		);
+		assert.equal(
+			ThreejsCoreObject.attribValue(object, OrthographicCameraAttribute.SIZE),
+			2.5,
+			OrthographicCameraAttribute.SIZE
+		);
+	});
 }

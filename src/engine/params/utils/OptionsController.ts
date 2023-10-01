@@ -6,7 +6,7 @@ import {NodeContext} from '../../poly/NodeContext';
 import {CoreGraphNode} from '../../../core/graph/CoreGraphNode';
 import {ColorConversion} from '../../../core/Color';
 import {CoreType, isFunction} from '../../../core/Type';
-import {ArrayUtils} from '../../../core/ArrayUtils';
+import {arrayDifference, arrayCompact, arrayUniq} from '../../../core/ArrayUtils';
 import {ObjectUtils} from '../../../core/ObjectUtils';
 import {PolyScene} from '../../scene/PolyScene';
 import {Boolean2, Number2, PolyDictionary} from '../../../types/GlobalTypes';
@@ -295,7 +295,7 @@ export class OptionsController {
 
 		this._options[optionName] = value;
 		if (this._param.components) {
-			for (let component of this._param.components) {
+			for (const component of this._param.components) {
 				component.options.setOption(optionName, value);
 			}
 		}
@@ -332,8 +332,9 @@ export class OptionsController {
 	overriddenOptions(): ParamOptions {
 		const overriden: ParamOptions = {};
 		const optionNames = Object.keys(this._options) as Array<keyof ParamOptions>;
-		const optionNamesToCheck = ArrayUtils.difference(optionNames, NON_OVERRIDABLE_OPTIONS);
-		for (let optionName of optionNamesToCheck) {
+		const optionNamesToCheck: Array<keyof ParamOptions> = [];
+		arrayDifference(optionNames, NON_OVERRIDABLE_OPTIONS, optionNamesToCheck);
+		for (const optionName of optionNamesToCheck) {
 			if (!ObjectUtils.isEqual(this._options[optionName], this._default_options[optionName])) {
 				const cloned_option = ObjectUtils.cloneDeep(this._options[optionName]);
 				Object.assign(overriden, {[optionName]: cloned_option});
@@ -481,7 +482,7 @@ export class OptionsController {
 			param.emit(ParamEvent.EDITABLE_UPDATED);
 		}
 		if (param.components) {
-			for (let component of param.components) {
+			for (const component of param.components) {
 				component.options.setEditableState(state);
 			}
 		}
@@ -539,7 +540,7 @@ export class OptionsController {
 		if (entries.length == 0) {
 			return value;
 		}
-		for (let entry of entries) {
+		for (const entry of entries) {
 			if (value == entry.value) {
 				return value;
 			}
@@ -725,12 +726,13 @@ export class OptionsController {
 		}
 		let predecessorNames: string[] = [];
 		if (CoreType.isArray(visibilityOptions)) {
-			predecessorNames = ArrayUtils.uniq(visibilityOptions.map((options) => Object.keys(options)).flat());
+			arrayUniq(visibilityOptions.map((options) => Object.keys(options)).flat(), predecessorNames);
 		} else {
 			predecessorNames = Object.keys(visibilityOptions);
 		}
 		const node = this.param().node;
-		const params = ArrayUtils.compact(
+		const params: BaseParamType[] = [];
+		arrayCompact(
 			predecessorNames.map((name) => {
 				const param = node.params.get(name);
 				if (param) {
@@ -740,7 +742,8 @@ export class OptionsController {
 						`param ${name} not found as visibility condition for ${this.param().name()} in node ${this.param().node.type()}`
 					);
 				}
-			})
+			}),
+			params
 		);
 
 		return params;
@@ -758,7 +761,7 @@ export class OptionsController {
 		const predecessors = this.visibilityPredecessors();
 		if (predecessors.length > 0) {
 			this._visibility_graph_node = new CoreGraphNode(this.param().scene(), 'param_visibility');
-			for (let predecessor of predecessors) {
+			for (const predecessor of predecessors) {
 				this._visibility_graph_node.addGraphInput(predecessor);
 			}
 			this._visibility_graph_node.addPostDirtyHook(
@@ -785,10 +788,12 @@ export class OptionsController {
 			this._programaticVisibleState = false;
 			await Promise.all(promises);
 			if (CoreType.isArray(options)) {
-				for (let optionsSet of options) {
+				for (const optionsSet of options) {
 					const optionSetParamNames = Object.keys(optionsSet);
-					const optionSetParams = ArrayUtils.compact(
-						optionSetParamNames.map((paramName) => node.params.get(paramName))
+					const optionSetParams: BaseParamType[] = [];
+					arrayCompact(
+						optionSetParamNames.map((paramName) => node.params.get(paramName)),
+						optionSetParams
 					);
 					const satisfiedValues = optionSetParams.filter((param) => param.value == optionsSet[param.name()]);
 

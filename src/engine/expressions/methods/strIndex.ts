@@ -32,12 +32,11 @@ export class StrIndexExpression extends BaseMethod {
 	// }
 
 	override async processArguments(args: any[]): Promise<number> {
-		let value = -1;
 		if (args.length == 2) {
 			const string = args[0];
 			const sub_string = args[1];
-			value = string.indexOf(sub_string);
+			return string.indexOf(sub_string);
 		}
-		return value;
+		return -1;
 	}
 }

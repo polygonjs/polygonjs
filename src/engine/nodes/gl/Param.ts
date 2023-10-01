@@ -57,8 +57,12 @@ export class ParamGlNode extends TypedGlNode<ParamGlParamsConfig> {
 	override setLines(shadersCollectionController: ShadersCollectionController) {
 		const glType = GL_CONNECTION_POINT_TYPES[this.pv.type];
 		const uniformName = this.uniformName();
+		const namedOutputConnectionPoints = this.io.outputs.namedOutputConnectionPoints();
+		if (!namedOutputConnectionPoints) {
+			return;
+		}
 
-		const output_connection_point = this.io.outputs.namedOutputConnectionPoints()[0];
+		const output_connection_point = namedOutputConnectionPoints[0];
 		if (output_connection_point) {
 			// a body is needed for each node,
 			// otherwise, if there are 2 params referencing the same uniform

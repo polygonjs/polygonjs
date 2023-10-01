@@ -4,7 +4,8 @@ import {AnimationPosition} from './Position';
 import {AnimationUpdateCallback} from './UpdateCallback';
 import {RampValue} from '../../engine/params/ramp/RampValue';
 import {AnimationRepeatParams, Operation, RegisterOptions} from './vars/AnimBuilderTypes';
-import {GsapCoreTimeline, gsap} from '../thirdParty/gsap';
+import type {GsapCoreTimeline} from '../thirdParty/gsap/gsapFactory';
+import {gsapTimeline} from '../thirdParty/gsap/gsapFactory';
 
 export class TimelineBuilder {
 	private _timelineBuilders: TimelineBuilder[] = [];
@@ -48,7 +49,7 @@ export class TimelineBuilder {
 
 	setTarget(target: AnimPropertyTarget) {
 		this._target = target;
-		for (let builder of this._timelineBuilders) {
+		for (const builder of this._timelineBuilders) {
 			builder.setTarget(target);
 		}
 	}
@@ -58,7 +59,7 @@ export class TimelineBuilder {
 	setDuration(duration: number) {
 		if (duration >= 0) {
 			this._duration = duration;
-			for (let builder of this._timelineBuilders) {
+			for (const builder of this._timelineBuilders) {
 				builder.setDuration(duration);
 			}
 		}
@@ -75,7 +76,7 @@ export class TimelineBuilder {
 
 	setEasing(easing: string) {
 		this._easing = easing;
-		for (let builder of this._timelineBuilders) {
+		for (const builder of this._timelineBuilders) {
 			builder.setEasing(easing);
 		}
 	}
@@ -84,7 +85,7 @@ export class TimelineBuilder {
 	}
 	setOperation(operation: Operation) {
 		this._operation = operation;
-		for (let builder of this._timelineBuilders) {
+		for (const builder of this._timelineBuilders) {
 			builder.setOperation(operation);
 		}
 	}
@@ -93,7 +94,7 @@ export class TimelineBuilder {
 	}
 	setRepeatParams(repeat_params: AnimationRepeatParams) {
 		this._repeatParams = repeat_params;
-		for (let builder of this._timelineBuilders) {
+		for (const builder of this._timelineBuilders) {
 			builder.setRepeatParams(repeat_params);
 		}
 	}
@@ -102,7 +103,7 @@ export class TimelineBuilder {
 	}
 	setDelay(delay: number) {
 		this._delay = delay;
-		for (let builder of this._timelineBuilders) {
+		for (const builder of this._timelineBuilders) {
 			builder.setDelay(delay);
 		}
 	}
@@ -180,7 +181,7 @@ export class TimelineBuilder {
 			newTimelineBuilder.setPosition(this._position.clone());
 		}
 		newTimelineBuilder.setStoppable(this._stoppable);
-		for (let childTimelineBuilder of this._timelineBuilders) {
+		for (const childTimelineBuilder of this._timelineBuilders) {
 			const newChildTimelineBuilder = childTimelineBuilder.clone();
 			newTimelineBuilder.addTimelineBuilder(newChildTimelineBuilder);
 		}
@@ -205,8 +206,11 @@ export class TimelineBuilder {
 
 	populate(timeline: GsapCoreTimeline, options: RegisterOptions) {
 		this._printDebug(['populate', this, timeline, this._timelineBuilders]);
-		for (let timelineBuilder of this._timelineBuilders) {
-			const subTimeline = gsap.timeline();
+		for (const timelineBuilder of this._timelineBuilders) {
+			const subTimeline = gsapTimeline();
+			if (!subTimeline) {
+				continue;
+			}
 			timelineBuilder.setDebug(this._debug);
 			timelineBuilder.populate(subTimeline, options);
 

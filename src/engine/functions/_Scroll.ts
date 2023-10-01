@@ -1,43 +1,11 @@
 import ScrollTrigger from 'gsap/ScrollTrigger';
-import {gsap} from '../../core/thirdParty/gsap';
+import {gsap} from '../../core/thirdParty/gsap/gsap';
 gsap.registerPlugin(ScrollTrigger);
 //
 import {Ref} from '@vue/reactivity';
 import {NamedFunction4} from './_Base';
 import {ActorEvaluator} from '../nodes/js/code/assemblers/actor/ActorEvaluator';
-
-export enum ScrollEvent {
-	onUpdate = 'onUpdate',
-	onToggle = 'onToggle',
-	onEnter = 'onEnter',
-	onLeave = 'onLeave',
-	onEnterBack = 'onEnterBack',
-	onLeaveBack = 'onLeaveBack',
-}
-export const SCROLL_EVENTS: ScrollEvent[] = [
-	ScrollEvent.onUpdate,
-	ScrollEvent.onToggle,
-	ScrollEvent.onEnter,
-	ScrollEvent.onLeave,
-	ScrollEvent.onEnterBack,
-	ScrollEvent.onLeaveBack,
-];
-type ScrollEventListener = () => void;
-interface CreateScrollTriggerOptions {
-	element: string;
-	useViewport: boolean;
-	scroller: string;
-	displayMarkers: boolean;
-	nodePath: string;
-}
-export interface CreateScrollTriggerOptionsSerialized {
-	element: string;
-	useViewport: string;
-	scroller: string;
-	displayMarkers: string;
-	nodePath: string;
-}
-type CallbackByScrollEvent = Record<ScrollEvent, ScrollEventListener>;
+import {ScrollEvent, SCROLL_EVENTS, CallbackByScrollEvent, CreateScrollTriggerOptions} from '../../core/scroll/Common';
 
 function _createScrollListener(
 	createOptions: CreateScrollTriggerOptions,

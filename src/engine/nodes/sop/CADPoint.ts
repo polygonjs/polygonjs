@@ -5,8 +5,8 @@
  */
 import {CADSopNode} from './_BaseCAD';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {CadLoader} from '../../../core/geometry/cad/CadLoader';
-import {cadVertexCreate} from '../../../core/geometry/cad/toObject3D/CadVertex';
+import {CadLoader} from '../../../core/geometry/modules/cad/CadLoader';
+import {cadVertexCreate} from '../../../core/geometry/modules/cad/toObject3D/CadVertex';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 import {CoreGroup} from '../../../core/geometry/Group';
 

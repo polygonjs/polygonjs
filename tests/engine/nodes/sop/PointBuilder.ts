@@ -11,12 +11,17 @@ import {AttributeJsNodeOutput} from '../../../../src/engine/nodes/js/Attribute';
 import {JsRotateMode} from '../../../../src/engine/nodes/js/Rotate';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 import {CoreSleep} from '../../../../src/core/Sleep';
+import {QuadPoint} from '../../../../src/core/geometry/modules/quad/QuadPoint';
+
+const bbox = new Box3();
+const size = new Vector3();
+const _v3 = new Vector3();
+
 export function testenginenodessopPointBuilder(qUnit: QUnit) {
-	const bbox = new Box3();
-	const size = new Vector3();
 	async function _getBbox(node: PointBuilderSopNode) {
 		const container = await node.compute();
-		container.boundingBox(bbox);
+		const coreGroup = container.coreContent()!;
+		coreGroup.boundingBox(bbox);
 		bbox.getSize(size);
 		return {min: bbox.min, max: bbox.max, size};
 	}
@@ -208,7 +213,7 @@ export function testenginenodessopPointBuilder(qUnit: QUnit) {
 			const _compute = async () => {
 				const container = await pointBuilder1.compute();
 				const errorMessage = pointBuilder1.states.error.message();
-				const pointsCount = container.pointsCount();
+				const pointsCount = container.coreContent()?.pointsCount() || 0;
 				return {errorMessage, pointsCount};
 			};
 
@@ -248,7 +253,7 @@ export function testenginenodessopPointBuilder(qUnit: QUnit) {
 		const _compute = async () => {
 			const container = await pointBuilder1.compute();
 			const errorMessage = pointBuilder1.states.error.message();
-			const pointsCount = container.pointsCount();
+			const pointsCount = container.coreContent()!.pointsCount();
 			midNormal.fromBufferAttribute(
 				container.coreContent()!.threejsObjectsWithGeo()[0].geometry.getAttribute('normal') as BufferAttribute,
 				Math.floor(pointsCount / 2)
@@ -276,6 +281,35 @@ export function testenginenodessopPointBuilder(qUnit: QUnit) {
 		constant1.p.vector3.set([0, 1, 0]);
 		output.setInput('normal', constant1);
 		assert.deepEqual((await _compute()).midNormal.toArray().map(_precision), [0, 1, 0], 'mid normal up');
+	});
+
+	qUnit.test('sop/pointBuilder on quad', async (assert) => {
+		const geo1 = window.geo1;
+		const quadPlane1 = geo1.createNode('quadPlane');
+		const pointBuilder1 = geo1.createNode('pointBuilder');
+
+		pointBuilder1.setInput(0, quadPlane1);
+
+		const globals1 = pointBuilder1.createNode('globals');
+		const output1 = pointBuilder1.createNode('output');
+		const add1 = pointBuilder1.createNode('add');
+
+		output1.setInput('position', add1);
+		add1.setInput(0, globals1, 'position');
+
+		add1.params.get('add1')!.set(0);
+
+		async function _getFirstPointY() {
+			const container = await pointBuilder1.compute();
+			const quadObject = container.coreContent()!.quadObjects()![0];
+			new QuadPoint(quadObject, 0).position(_v3);
+			return _v3.y;
+		}
+		assert.equal(await _getFirstPointY(), 0);
+		add1.params.get('add1')!.set(1);
+		assert.equal(await _getFirstPointY(), 1);
+		add1.params.get('add1')!.set(1.5);
+		assert.equal(await _getFirstPointY(), 1.5);
 	});
 
 	function _prepareForSave(pointBuilder1: PointBuilderSopNode) {

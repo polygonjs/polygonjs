@@ -1,6 +1,6 @@
 import {PolyScene} from '../PolyScene';
 import {Object3D} from 'three';
-import {CorePath, CorePathObjCallback} from '../../../core/geometry/CorePath';
+import {CorePath, objectsByMask, CorePathObjCallback} from '../../../core/geometry/CorePath';
 import {CoreObjectType, ObjectContent} from '../../../core/geometry/ObjectContent';
 
 export const ROOT_NAME = '/';
@@ -13,7 +13,7 @@ export class ObjectsController {
 	}
 
 	objectsByMask<T extends CoreObjectType>(mask: string, parent?: ObjectContent<T>): ObjectContent<T>[] {
-		return CorePath.objectsByMask(mask, parent || this.scene.threejsScene());
+		return objectsByMask(mask, parent || this.scene.threejsScene(), false);
 	}
 
 	traverseObjectsWithMask<T extends CoreObjectType>(

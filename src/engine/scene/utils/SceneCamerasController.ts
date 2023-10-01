@@ -10,6 +10,7 @@ interface MainCameraOptions {
 	findAnyCamera?: boolean;
 	printCameraNotFoundError?: boolean;
 }
+const _cameras: Array<Camera> = [];
 
 export class SceneCamerasController {
 	private _coreGraphNode: CoreGraphNode;
@@ -18,6 +19,9 @@ export class SceneCamerasController {
 	}
 	coreGraphNode() {
 		return this._coreGraphNode;
+	}
+	dispose() {
+		this._coreGraphNode.dispose();
 	}
 	private _cameraObjectsRecentlyUpdated: Array<Camera> = [];
 	updateFromChangeInObject(object: Object3D) {
@@ -29,10 +33,9 @@ export class SceneCamerasController {
 			this._onCameraObjectsUpdated();
 		}
 	}
-	cameraObjects() {
-		const objects: Array<Camera> = [];
-		this._cameraObjects(this.scene.threejsScene(), objects);
-		return objects;
+	cameraObjects(target: Array<Camera>) {
+		this._cameraObjects(this.scene.threejsScene(), target);
+		return target;
 	}
 
 	private _cameraObjects(parent: Object3D, cameraObjects: Array<Camera>) {
@@ -62,7 +65,12 @@ export class SceneCamerasController {
 	// async mainCameraObjectPath() {
 	// 	return this._mainCameraObjectPath;
 	// }
+	private _errorMessageDisplayed: boolean = false;
 	async mainCamera(options?: MainCameraOptions): Promise<Camera | null> {
+		if (this.scene.disposed()) {
+			return null;
+		}
+
 		let printCameraNotFoundError = true;
 		if (options?.printCameraNotFoundError != null) {
 			printCameraNotFoundError = options.printCameraNotFoundError;
@@ -71,6 +79,16 @@ export class SceneCamerasController {
 		if (cameraMaskOverride != null) {
 			this.scene.root().mainCameraController.setCameraPath(cameraMaskOverride);
 		}
+
+		const _printWarningMessage = (warningMessage: string) => {
+			if (this._errorMessageDisplayed == true) {
+				return;
+			}
+			if (printCameraNotFoundError) {
+				console.error(warningMessage);
+				this._errorMessageDisplayed = true;
+			}
+		};
 
 		const camera = await this.scene.root().mainCameraController.camera();
 		if (camera) {
@@ -85,22 +103,20 @@ export class SceneCamerasController {
 		if (findAnyCamera) {
 			const firstAnyCamera = this._findAnyCameraObject();
 			if (firstAnyCamera) {
-				if (printCameraNotFoundError) {
-					console.error(warningMessage);
-				}
+				_printWarningMessage(warningMessage);
+
 				return firstAnyCamera;
 			}
 		}
 
-		if (printCameraNotFoundError) {
-			console.error(warningMessage);
-		}
+		_printWarningMessage(warningMessage);
 
 		return null;
 	}
 
 	private _findAnyCameraObject(): Camera | null {
-		return this.cameraObjects()[0];
+		this.cameraObjects(_cameras);
+		return _cameras[0];
 	}
 
 	async createMainViewer(options?: CreateViewerOptions) {

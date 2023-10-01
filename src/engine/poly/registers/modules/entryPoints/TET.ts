@@ -1,4 +1,4 @@
-import {onTetModuleRegister} from '../../../../../core/geometry/tet/TetModule';
+import {onTetModuleRegister} from '../../../../../core/geometry/modules/tet/TetModule';
 import {ModuleName} from '../Common';
 import {BaseModule} from '../_BaseModule';
 

@@ -1,4 +1,4 @@
-import {GsapTweenVars} from '../../thirdParty/gsap';
+import {GsapTweenVars} from '../../thirdParty/gsap/gsapFactory';
 import {AnimNodeEasing} from '../Constant';
 import {TimelineBuilder} from '../TimelineBuilder';
 

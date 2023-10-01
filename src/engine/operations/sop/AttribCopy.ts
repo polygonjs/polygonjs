@@ -8,7 +8,7 @@ import {DefaultOperationParams} from '../../../core/operations/_Base';
 import {stringToAttribNames} from '../../../core/String';
 import {ATTRIBUTE_CLASSES, AttribClass} from '../../../core/geometry/Constant';
 import {TypeAssert} from '../../../engine/poly/Assert';
-import {CoreObject} from '../../../core/geometry/Object';
+import {coreObjectClassFactory} from '../../../core/geometry/CoreObjectFactory';
 interface AttribCopySopParams extends DefaultOperationParams {
 	class: number;
 	name: string;
@@ -38,10 +38,11 @@ interface CopyBetweenGeometriesArgs extends CopyArgs {
 		dest: BufferGeometry;
 	};
 }
-
+const _newNames:string[]=[]
+const _attribNames:string[]=[]
 export class AttribCopySopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: AttribCopySopParams = {
-		class: ATTRIBUTE_CLASSES.indexOf(AttribClass.VERTEX),
+		class: ATTRIBUTE_CLASSES.indexOf(AttribClass.POINT),
 		name: '',
 		tnewName: false,
 		newName: '',
@@ -57,14 +58,14 @@ export class AttribCopySopOperation extends BaseSopOperation {
 		const coreGroupDest = inputCoreGroups[0];
 		const coreGroupSrc = inputCoreGroups[1] || coreGroupDest;
 		const attribClass = ATTRIBUTE_CLASSES[params.class];
-		const newNames = stringToAttribNames(params.newName);
+		stringToAttribNames(params.newName,_newNames);
 
-		if (attribClass == AttribClass.VERTEX) {
+		if (attribClass == AttribClass.POINT) {
 			// for geometry attributes, first iterate over the existing attributes
-			const srcAttribNames = coreGroupSrc.geoAttribNamesMatchingMask(params.name);
+			const srcAttribNames = coreGroupSrc.pointAttribNamesMatchingMask(params.name);
 			for (let i = 0; i < srcAttribNames.length; i++) {
 				const srcAttribName = srcAttribNames[i];
-				let destAttribName = isBooleanTrue(params.tnewName) ? newNames[i] : srcAttribName;
+				let destAttribName = isBooleanTrue(params.tnewName) ? _newNames[i] : srcAttribName;
 				if (!destAttribName) {
 					this.states?.error.set(`no matching new attribute name of ${srcAttribName}`);
 					return coreGroupDest;
@@ -80,12 +81,12 @@ export class AttribCopySopOperation extends BaseSopOperation {
 			}
 		} else {
 			// for object attributes, first iterate over the existing attributes
-			const attribNames = stringToAttribNames(params.name);
-			for (let i = 0; i < attribNames.length; i++) {
-				const destAttribName = isBooleanTrue(params.tnewName) ? newNames[i] : attribNames[i];
+			stringToAttribNames(params.name,_attribNames);
+			for (let i = 0; i < _attribNames.length; i++) {
+				const destAttribName = isBooleanTrue(params.tnewName) ? _newNames[i] : _attribNames[i];
 				this._copyAttributeBetweenCoreGroups(attribClass, {
 					attribName: {
-						src: attribNames[i],
+						src: _attribNames[i],
 						dest: destAttribName,
 					},
 					params,
@@ -99,8 +100,14 @@ export class AttribCopySopOperation extends BaseSopOperation {
 
 	private _copyAttributeBetweenCoreGroups(attribClass: AttribClass, copyArgs: CopyBetweenCoreGroupsArgs) {
 		switch (attribClass) {
-			case AttribClass.VERTEX:
+			case AttribClass.POINT:
 				this._copyAttributesBetweenGeometries(copyArgs);
+				return;
+			case AttribClass.VERTEX:
+				this.states?.error.set('vertex attributes are not supported yet');
+				return;
+			case AttribClass.PRIMITIVE:
+				this.states?.error.set('primitive attributes are not supported yet');
 				return;
 			case AttribClass.OBJECT:
 				this._copyAttributesBetweenObjects(copyArgs);
@@ -141,9 +148,9 @@ export class AttribCopySopOperation extends BaseSopOperation {
 			for (let i = 0; i < destObjects.length; i++) {
 				const destObject = destObjects[i];
 				const srcObject = srcObjects[i];
-				const srcAttribValue = CoreObject.attribValue(srcObject, attribName.src);
+				const srcAttribValue = coreObjectClassFactory(srcObject).attribValue(srcObject, attribName.src);
 				if (srcAttribValue != null) {
-					CoreObject.setAttribute(destObject, attribName.dest, srcAttribValue);
+					coreObjectClassFactory(destObject).setAttribute(destObject, attribName.dest, srcAttribValue);
 				}
 			}
 		}

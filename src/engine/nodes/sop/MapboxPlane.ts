@@ -6,10 +6,9 @@
  * See [sop/mapboxCamera](/docs/nodes/sop/mapboxCamera) for info on how to setup mapbox to use with Polygonjs
  *
  */
-import {BufferGeometry, Box2, Matrix4, Vector2, Vector3, PlaneGeometry} from 'three';
+import {BufferGeometry, Box2, Mesh, Matrix4, Vector2, Vector3, PlaneGeometry} from 'three';
 import mapboxgl from 'mapbox-gl';
 import {ObjectType} from '../../../core/geometry/Constant';
-import {CoreGeometry} from '../../../core/geometry/Geometry';
 import {CoreMath} from '../../../core/math/_Module';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {MapboxPlaneHexagonsController} from '../../../core/thirdParty/Mapbox/plane/HexagonsController';
@@ -19,7 +18,9 @@ import {MapboxMapsController} from '../../../core/thirdParty/Mapbox/MapboxMapsCo
 import {CoreMapboxTransform} from '../../../core/thirdParty/Mapbox/Transform';
 import {TypedSopNode} from './_Base';
 import {CoreMapboxUtils} from '../../../core/thirdParty/Mapbox/Utils';
+import {ThreejsPoint} from '../../../core/geometry/modules/three/ThreejsPoint';
 
+const dummyMesh = new Mesh();
 // const PSCALE_ATTRIB_NAME = 'pscale'
 const SCALE_ATTRIB_NAME = 'scale';
 const NORMAL_ATTRIB_NAME = 'normal';
@@ -136,11 +137,11 @@ export class MapboxPlaneSopNode extends TypedSopNode<MapboxPlaneSopParamsConfig>
 		//
 		const mirrored_near_lng_lat_points = lng_lat_points.map((p) => this._mirrorLngLat(p, center));
 		lng_lat_points.push(center);
-		for (let p of mirrored_near_lng_lat_points) {
+		for (const p of mirrored_near_lng_lat_points) {
 			lng_lat_points.push(p);
 		}
 		const box = new Box2();
-		for (let p of lng_lat_points) {
+		for (const p of lng_lat_points) {
 			box.expandByPoint(new Vector2(p.lng, p.lat));
 		}
 
@@ -150,7 +151,7 @@ export class MapboxPlaneSopNode extends TypedSopNode<MapboxPlaneSopParamsConfig>
 		//
 		//
 		const mapbox_box = new Box2();
-		for (let p of lng_lat_points) {
+		for (const p of lng_lat_points) {
 			const pt3d = new Vector3(p.lng, 0, p.lat);
 			this.transformer.transform_position_FINAL(pt3d);
 			mapbox_box.expandByPoint(new Vector2(pt3d.x, pt3d.z));
@@ -211,7 +212,7 @@ export class MapboxPlaneSopNode extends TypedSopNode<MapboxPlaneSopParamsConfig>
 			_mapCenter2D.clone().add(mapbox_dimensions.clone().multiplyScalar(0.5)),
 			_mapCenter2D.clone().add(mapbox_dimensions.clone().multiplyScalar(-0.5)),
 		];
-		for (let p of mapbox_corners) {
+		for (const p of mapbox_corners) {
 			const untransformed_3d = this.transformer.untransform_position_FINAL(new Vector3(p.x, 0, p.y));
 			const untransformed = new Vector2(untransformed_3d.x, untransformed_3d.z);
 			// const retransformed = transformer.transform_position_FINAL(new Vector3(untransformed.x, 0, untransformed.y))
@@ -243,7 +244,6 @@ export class MapboxPlaneSopNode extends TypedSopNode<MapboxPlaneSopParamsConfig>
 		//
 		//
 		const horizontal_scale = mapbox_dimensions.x / segments_counts.x;
-		let core_geo;
 		// const plane_dimensions = this.pv.mapboxTransform ? mapbox_dimensions : world_dimensions;
 		// const rotation_matrix = this.pv.mapboxTransform ? R_MAT_MAPBOX : R_MAT_WORLD;
 		// const geometry_center = this.pv.mapboxTransform ? _mapCenter2D : world_plane_center;
@@ -264,11 +264,12 @@ export class MapboxPlaneSopNode extends TypedSopNode<MapboxPlaneSopParamsConfig>
 		geometry.translate(geometry_center.x, 0, geometry_center.y);
 
 		// add attributes scale and normal
-		core_geo = new CoreGeometry(geometry);
 		const z_scale = [horizontal_scale, 1][0];
 		const scale: Number3 = [horizontal_scale, horizontal_scale, z_scale];
-		core_geo.addNumericAttrib(SCALE_ATTRIB_NAME, 3, scale);
-		core_geo.addNumericAttrib(NORMAL_ATTRIB_NAME, 3, [0, 1, 0]); // mostly important for hexagons points
+		dummyMesh.geometry = geometry;
+		const corePointClass = ThreejsPoint;
+		corePointClass.addNumericAttribute(dummyMesh, SCALE_ATTRIB_NAME, 3, scale);
+		corePointClass.addNumericAttribute(dummyMesh, NORMAL_ATTRIB_NAME, 3, [0, 1, 0]); // mostly important for hexagons points
 
 		//
 		//

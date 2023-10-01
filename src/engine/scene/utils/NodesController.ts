@@ -32,7 +32,7 @@ export class NodesController {
 			return;
 		}
 
-		for (let node of nodes) {
+		for (const node of nodes) {
 			if (node.childrenController) {
 				this._traverseNode(node, callback);
 			}
@@ -59,7 +59,7 @@ export class NodesController {
 	// }
 	clear() {
 		const children = this.root().children();
-		for (let child of children) {
+		for (const child of children) {
 			this.root().childrenController?.removeNode(child);
 		}
 		// return children.forEach(child=> {
@@ -97,7 +97,7 @@ export class NodesController {
 	nodesFromMask(mask: string) {
 		const nodes = this.allNodes();
 		const matching_nodes: BaseNodeType[] = [];
-		for (let node of nodes) {
+		for (const node of nodes) {
 			const path = node.path();
 			if (stringMatchMask(path, mask)) {
 				matching_nodes.push(node);

@@ -95,7 +95,7 @@ export class ParamEventNode extends TypedEventNode<ParamEventParamsConfig> {
 				this.p.ramp,
 				this.p.string,
 			];
-			for (let p of previousValueParams) {
+			for (const p of previousValueParams) {
 				if (p.type() == this._resolvedParam.type()) {
 					this._previousValueParam = p;
 					await this._resolvedParam.compute();

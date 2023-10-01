@@ -36,7 +36,7 @@ interface FbmParams {
 }
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {CorePoint} from '../../../core/geometry/Point';
+import {CorePoint} from '../../../core/geometry/entities/point/CorePoint';
 import {CoreType} from '../../../core/Type';
 import {AttribValue, NumericAttribValue} from '../../../types/GlobalTypes';
 import {isBooleanTrue} from '../../../core/BooleanValue';
@@ -126,27 +126,19 @@ export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
 		const destPoints = coreGroup.points();
 		const destAttribName = this.pv.attribName;
 
-		if (!coreGroup.hasAttrib(destAttribName)) {
+		if (!coreGroup.hasPointAttrib(destAttribName)) {
 			this.states.error.set(`attribute ${destAttribName} not found`);
 			this.cookController.endCook();
 			return;
 		}
-		const attribType = coreGroup.geoAttribType(destAttribName);
+		const attribType = coreGroup.pointAttribType(destAttribName);
 		if (attribType != AttribType.NUMERIC) {
 			this.states.error.set(`attribute ${destAttribName} is not a numeric attribute`);
 			this.cookController.endCook();
 			return;
 		}
 
-		// const simplex = this._getSimplex();
-		// const useNormals = isBooleanTrue(this.pv.useNormals) && coreGroup.hasAttrib(ATTRIB_NORMAL);
-		const targetAttribSize = coreGroup.geoAttribSize(this.pv.attribName);
-		// const operation = OPERATIONS[this.pv.operation];
-		// const useRestAttributes: boolean = isBooleanTrue(this.pv.useRestAttributes);
-		// const baseAmplitude: number = this.pv.amplitude;
-		// const useAmplitudeAttrib: boolean = isBooleanTrue(this.pv.tamplitudeAttrib);
-
-		// let currentAttribValue: NumericAttribValue;
+		const targetAttribSize = coreGroup.pointAttribSize(this.pv.attribName);
 
 		const firstPt = destPoints[0];
 		if (!firstPt) {
@@ -190,14 +182,14 @@ export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
 			this.states.error.set(`cook failed for (${this.path()}). make sure the required attributes are present`);
 		}
 		if (!this.io.inputs.cloneRequired(0)) {
-			for (let geometry of coreGroup.geometries()) {
+			for (const geometry of coreGroup.geometries()) {
 				(geometry.getAttribute(destAttribName) as BufferAttribute).needsUpdate = true;
 			}
 		}
 
 		if (isBooleanTrue(this.pv.computeNormals)) {
 			const objects = coreGroup.threejsObjectsWithGeo();
-			for (let object of objects) {
+			for (const object of objects) {
 				object.geometry.computeVertexNormals();
 			}
 		}
@@ -212,7 +204,7 @@ export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
 		const baseAmplitude: number = this.pv.amplitude;
 		const operation = OPERATIONS[this.pv.operation];
 		const attribName = this.pv.attribName;
-		for (let destPoint of destPoints) {
+		for (const destPoint of destPoints) {
 			if (useRestAttributes) {
 				destPoint.attribValueVector3(this.pv.restP, position);
 				if (useNormals) {
@@ -220,7 +212,7 @@ export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
 				}
 				this._currentAttribValueF = position.x;
 			} else {
-				destPoint.getPosition(position);
+				destPoint.position(position);
 				if (useNormals) {
 					destPoint.attribValueVector3(Attribute.NORMAL, normal);
 				}
@@ -248,7 +240,7 @@ export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
 		const baseAmplitude: number = this.pv.amplitude;
 		const operation = OPERATIONS[this.pv.operation];
 		const attribName = this.pv.attribName;
-		for (let destPoint of destPoints) {
+		for (const destPoint of destPoints) {
 			if (useRestAttributes) {
 				destPoint.attribValueVector3(this.pv.restP, position);
 				if (useNormals) {
@@ -256,7 +248,7 @@ export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
 				}
 				this._currentAttribValueV2.set(position.x, position.y);
 			} else {
-				destPoint.getPosition(position);
+				destPoint.position(position);
 				if (useNormals) {
 					destPoint.attribValueVector3(Attribute.NORMAL, normal);
 				}
@@ -285,7 +277,7 @@ export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
 		const baseAmplitude: number = this.pv.amplitude;
 		const operation = OPERATIONS[this.pv.operation];
 		const attribName = this.pv.attribName;
-		for (let destPoint of destPoints) {
+		for (const destPoint of destPoints) {
 			if (useRestAttributes) {
 				destPoint.attribValueVector3(this.pv.restP, position);
 				if (useNormals) {
@@ -293,7 +285,7 @@ export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
 				}
 				this._currentAttribValueV3.copy(position);
 			} else {
-				destPoint.getPosition(position);
+				destPoint.position(position);
 				if (useNormals) {
 					destPoint.attribValueVector3(Attribute.NORMAL, normal);
 				}
@@ -321,7 +313,7 @@ export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
 		const baseAmplitude: number = this.pv.amplitude;
 		const operation = OPERATIONS[this.pv.operation];
 		const attribName = this.pv.attribName;
-		for (let destPoint of destPoints) {
+		for (const destPoint of destPoints) {
 			if (useRestAttributes) {
 				destPoint.attribValueVector3(this.pv.restP, position);
 				if (useNormals) {
@@ -329,7 +321,7 @@ export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
 				}
 				this._currentAttribValueV4.set(position.x, position.y, position.z, 0);
 			} else {
-				destPoint.getPosition(position);
+				destPoint.position(position);
 				if (useNormals) {
 					destPoint.attribValueVector3(Attribute.NORMAL, normal);
 				}

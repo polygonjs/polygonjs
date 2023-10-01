@@ -197,7 +197,7 @@ export class AudioAnalyserCopNode extends TypedCopNode<AudioAnalyserCopParamsCon
 		}
 
 		let maxSize = -1;
-		for (let channel of CHANNELS) {
+		for (const channel of CHANNELS) {
 			const values = this._valuesForChannel(channel, this._paramSetByChannel[channel]);
 
 			this._valuesByChannel[channel] = values;
@@ -221,7 +221,7 @@ export class AudioAnalyserCopNode extends TypedCopNode<AudioAnalyserCopParamsCon
 			return;
 		}
 
-		for (let channel of CHANNELS) {
+		for (const channel of CHANNELS) {
 			const values = this._valuesByChannel[channel];
 			if (values) {
 				this._updateTextureChannel(channel, this._paramSetByChannel[channel], values, this._dataTexture, delta);

@@ -19,10 +19,16 @@ export class RoundGlNode extends BaseNodeGlMathFunctionArg1GlNode {
 
 	// https://hub.jmonkeyengine.org/t/round-with-glsl/8186/6
 	override setLines(shadersCollectionController: ShadersCollectionController) {
-		const inputConnection = this.io.inputs.namedInputConnectionPoints()[0];
+		const namedInputConnectionPoints = this.io.inputs.namedInputConnectionPoints()
+		const namedOutputConnectionPoints = this.io.outputs.namedOutputConnectionPoints()
+		if(!(namedInputConnectionPoints&&namedOutputConnectionPoints)){
+			return
+		}
+
+		const inputConnection = namedInputConnectionPoints[0];
 		const value = ThreeToGl.vector2(this.variableForInput(inputConnection.name()));
 
-		const outputConnection = this.io.outputs.namedOutputConnectionPoints()[0];
+		const outputConnection = namedOutputConnectionPoints[0];
 		const outputType = outputConnection.type();
 		const varName = this.glVarName(outputConnection.name());
 

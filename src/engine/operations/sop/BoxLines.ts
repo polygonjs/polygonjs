@@ -39,7 +39,7 @@ export class BoxLinesSopOperation extends BaseSopOperation {
 		return this.createCoreGroupFromObjects([object]);
 	}
 	private _cookWithoutInput(params: BoxLinesSopParams) {
-		return this._createLines(params);
+		return BoxLinesSopOperation.createLines(params);
 	}
 
 	private _cookWithInput(coreGroup: CoreGroup, params: BoxLinesSopParams) {
@@ -47,7 +47,7 @@ export class BoxLinesSopOperation extends BaseSopOperation {
 		tmpBox.getSize(tmpSize);
 		tmpBox.getCenter(tmpCenter);
 
-		return this._createLines({
+		return BoxLinesSopOperation.createLines({
 			size: 1,
 			sizes: tmpSize,
 			divisions: params.divisions,
@@ -55,7 +55,7 @@ export class BoxLinesSopOperation extends BaseSopOperation {
 		});
 	}
 
-	private _createLines(params: BoxLinesSopParams) {
+	static createLines(params: BoxLinesSopParams) {
 		const geometry = new BoxLineGeometry(
 			params.sizes.x * params.size,
 			params.sizes.y * params.size,

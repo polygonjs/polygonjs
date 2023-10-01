@@ -30,7 +30,11 @@ export class ParamsEditableStateController<NC extends NodeContext> {
 	private _paramsMatchEditableState(): boolean {
 		let i = 0;
 		const params = this.node.params;
-		for (let connectionPoint of this.node.io.inputs.namedInputConnectionPoints()) {
+		const connectionPoints = this.node.io.inputs.namedInputConnectionPoints();
+		if (!connectionPoints) {
+			return false;
+		}
+		for (const connectionPoint of connectionPoints) {
 			if (connectionPoint) {
 				const isConnected = this.node.io.inputs.input(i) != null;
 				const paramName = connectionPoint?.name();
@@ -54,7 +58,11 @@ export class ParamsEditableStateController<NC extends NodeContext> {
 	updateParamsEditableStateIfNeeded() {
 		let i = 0;
 		const params = this.node.params;
-		for (let connectionPoint of this.node.io.inputs.namedInputConnectionPoints()) {
+		const connectionPoints = this.node.io.inputs.namedInputConnectionPoints();
+		if (!connectionPoints) {
+			return;
+		}
+		for (const connectionPoint of connectionPoints) {
 			if (connectionPoint) {
 				const isConnected = this.node.io.inputs.input(i) != null;
 				const paramName = connectionPoint?.name();

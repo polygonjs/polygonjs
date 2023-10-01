@@ -5,10 +5,10 @@
  */
 import {CSGSopNode} from './_BaseCSG';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {CsgGeometryType} from '../../../core/geometry/csg/CsgCommon';
+import {CsgGeometryType} from '../../../core/geometry/modules/csg/CsgCommon';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {CsgObject} from '../../../core/geometry/csg/CsgObject';
+import {CsgObject} from '../../../core/geometry/modules/csg/CsgObject';
 import {MathUtils, Vector3, Euler, Quaternion, Matrix4} from 'three';
 
 const _t = new Vector3();
@@ -58,7 +58,7 @@ export class CSGTransform2DSopNode extends CSGSopNode<CSGTransform2DSopParamsCon
 			_s.set(1, 1, 1).multiplyScalar(this.pv.s);
 			_mat4.compose(_t, _q, _s);
 
-			for (let csgObject of csgObjects) {
+			for (const csgObject of csgObjects) {
 				csgObject.applyMatrix4(_mat4);
 				newObjects.push(csgObject);
 			}

@@ -37,11 +37,15 @@ export class MultScalarGlNode extends BaseNodeGlMathFunctionArg2GlNode {
 	}
 
 	override setLines(shaders_collection_controller: ShadersCollectionController) {
+		const outputConnectionPoints = this.io.outputs.namedOutputConnectionPoints();
+		if(!outputConnectionPoints){
+			return
+		}
 		const value = ThreeToGl.any(this.variableForInput(MultScalarGlNodeInputName.VALUE));
 		const mult = ThreeToGl.any(this.variableForInput(MultScalarGlNodeInputName.MULT));
 
 		const gl_type = this._expected_output_types()[0];
-		const out_name = this.io.outputs.namedOutputConnectionPoints()[0].name();
+		const out_name =outputConnectionPoints[0].name();
 		const out = this.glVarName(out_name);
 		const body_line = `${gl_type} ${out} = (${mult}*${value})`;
 		shaders_collection_controller.addBodyLines(this, [body_line]);

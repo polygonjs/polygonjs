@@ -25,9 +25,13 @@ export class NegateGlNode extends BaseNodeGlMathFunctionArg1GlNode {
 	}
 
 	override setLines(shaders_collection_controller: ShadersCollectionController) {
+		const connectionPoints = this.io.inputs.namedInputConnectionPoints();
+		if (!connectionPoints) {
+			return;
+		}
 		const in_value = ThreeToGl.any(this.variableForInput(this._gl_input_name(0)));
 
-		const gl_type = this.io.inputs.namedInputConnectionPoints()[0].type();
+		const gl_type = connectionPoints[0].type();
 		const out = this.glVarName(this.io.connection_points.output_name(0));
 		const body_line = `${gl_type} ${out} = -1.0 * ${in_value}`;
 		shaders_collection_controller.addBodyLines(this, [body_line]);

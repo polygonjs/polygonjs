@@ -1,7 +1,5 @@
 import type {QUnit} from '../../../helpers/QUnit';
-// import {Vector2} from 'three';
-// import {CorePoint} from '../../../../src/core/geometry/Point';
-// import {AttribCreateSopNode} from './../../../../src/engine/nodes/sop/AttribCreate';
+
 export function testenginenodessopCurveFromPoints(qUnit: QUnit) {
 qUnit.test('sop/curveFromPoints simple', async (assert) => {
 	const geo1 = window.geo1;

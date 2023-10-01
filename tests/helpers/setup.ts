@@ -6,6 +6,8 @@ import type {GeoObjNode} from '../../src/engine/nodes/obj/Geo';
 import type {MaterialsNetworkObjNode} from '../../src/engine/nodes/obj/MaterialsNetwork';
 import type {PostProcessNetworkObjNode} from '../../src/engine/nodes/obj/PostProcessNetwork';
 import type {CopNetworkObjNode} from '../../src/engine/nodes/obj/CopNetwork';
+import {CoreNodeSerializer} from '../../src/engine/nodes/utils/CoreNodeSerializer';
+import {CoreParamSerializer} from '../../src/engine/params/utils/CoreParamSerializer';
 import {addQUnitAssertions} from './assertions';
 
 import {Poly} from '../../src/engine/Poly';
@@ -14,6 +16,7 @@ import {Poly} from '../../src/engine/Poly';
 import {AllRegister} from '../../src/engine/poly/registers/All';
 // import {AllModulesRegister} from '../../src/engine/poly/registers/modules/All';
 import {waitForUserInteraction} from './UserInteraction';
+import {AbstractRenderer} from '../../src/engine/viewers/Common';
 // import {GLTFLoaderHandler} from '../../src/core/loader/geometry/GLTF';
 AllRegister.registerAll();
 // AllModulesRegister.run(Poly);
@@ -38,20 +41,22 @@ declare global {
 	}
 }
 
+let count = 0;
 // export {QUnit};
 export function setupQUnit(qunit: QUnit) {
 	addQUnitAssertions(qunit);
 
 	qunit.testStart(async () => {
-		console.log(`%c ^^^^ ${QUnit.config.current.testName}`, 'background: #222; color: #da5555');
+		console.log(`%c ^^^^ ${count} ${QUnit.config.current.testName}`, 'background: #222; color: #da5555');
 
 		await waitForUserInteraction();
 
 		function deregisterAllRenderers() {
 			const scenes = Poly.scenesRegister.scenes();
-			for (let scene of scenes) {
-				const renderers = [...scene.renderersRegister.renderers()];
-				for (let renderer of renderers) {
+			for (const scene of scenes) {
+				const renderers: AbstractRenderer[] = [];
+				scene.renderersRegister.renderers(renderers);
+				for (const renderer of renderers) {
 					scene.renderersRegister.deregisterRenderer(renderer);
 				}
 			}
@@ -61,7 +66,10 @@ export function setupQUnit(qunit: QUnit) {
 		Poly.blobs.clear();
 		// GLTFLoaderHandler.reset();
 		// return new Promise(async (resolve, reject) => {
-		window.scene = new PolyScene();
+		window.scene = new PolyScene({
+			root: {serializerClass: CoreNodeSerializer},
+			paramsSerializerClass: CoreParamSerializer,
+		});
 		window.scene.setName(QUnit.config.current.testName);
 		window.scene.setUuid(QUnit.config.current.testName);
 		Poly.setEnv('test');
@@ -88,6 +96,7 @@ export function setupQUnit(qunit: QUnit) {
 		Poly.dispose();
 		// it's preferable to not display anything
 		// so that we can correctly display non-blocking crashing tests
-		console.log(`%c ✓ ${QUnit.config.current.testName}`, 'background: #222; color: #bada55');
+		console.log(`%c ✓ ${count} ${QUnit.config.current.testName}`, 'background: #222; color: #bada55');
+		count++;
 	});
 }

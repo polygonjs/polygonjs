@@ -21,7 +21,7 @@ import {PolyScene} from '../../scene/PolyScene';
 import {CoreType} from '../../../core/Type';
 import {BaseNodeType} from '../_Base';
 import {Poly} from '../../Poly';
-import {CoreObject} from '../../../core/geometry/Object';
+import {ThreejsCoreObject} from '../../../core/geometry/modules/three/ThreejsCoreObject';
 import {PhysicsIdAttribute} from '../../../core/physics/PhysicsAttribute';
 import {CorePhysics} from '../../../core/physics/CorePhysics';
 import {setJointDataListForWorldObject} from '../../../core/physics/PhysicsJoint';
@@ -63,10 +63,10 @@ export class PhysicsWorldSopNode extends TypedActorSopNode<PhysicsWorldSopParams
 		worldObject.name = this.name();
 		worldObject.matrixAutoUpdate = false;
 		Poly.onObjectsAddRemoveHooks.assignOnAddHookHandler(worldObject, this);
-		CoreObject.addAttribute(worldObject, PhysicsIdAttribute.WORLD, this.graphNodeId());
+		ThreejsCoreObject.addAttribute(worldObject, PhysicsIdAttribute.WORLD, this.graphNodeId());
 
 		const inputObjects = coreGroup.threejsObjects();
-		for (let inputObject of inputObjects) {
+		for (const inputObject of inputObjects) {
 			worldObject.add(inputObject);
 		}
 		setJointDataListForWorldObject(this.scene(), worldObject);
@@ -98,7 +98,7 @@ export class PhysicsWorldSopNode extends TypedActorSopNode<PhysicsWorldSopParams
 		// if (!this._PhysicsLib) {
 		// 	return;
 		// }
-		const worldNodeId = CoreObject.attribValue(object, PhysicsIdAttribute.WORLD);
+		const worldNodeId = ThreejsCoreObject.attribValue(object, PhysicsIdAttribute.WORLD);
 		if (worldNodeId != null) {
 			if (worldNodeId != this.graphNodeId()) {
 				return;
@@ -113,7 +113,7 @@ export class PhysicsWorldSopNode extends TypedActorSopNode<PhysicsWorldSopParams
 					return;
 				}
 				const debugObject = sibblings.find(
-					(sibbling) => CoreObject.attribValue(sibbling, PhysicsIdAttribute.DEBUG_WORLD) == worldNodeId //this.graphNodeId()
+					(sibbling) => ThreejsCoreObject.attribValue(sibbling, PhysicsIdAttribute.DEBUG_WORLD) == worldNodeId //this.graphNodeId()
 				);
 				if (debugObject) {
 					updatePhysicsDebugObject(debugObject);

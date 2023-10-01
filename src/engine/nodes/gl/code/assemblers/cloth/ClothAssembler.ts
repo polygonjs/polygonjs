@@ -36,7 +36,7 @@ export class ShaderAssemblerCloth extends BaseGlShaderAssembler {
 	override rootNodesByShaderName(shader_name: ShaderName, rootNodes: BaseGlNodeType[]): BaseGlNodeType[] {
 		// return this._root_nodes
 		const list = [];
-		for (let node of rootNodes) {
+		for (const node of rootNodes) {
 			switch (node.type()) {
 				case SubnetOutputGlNode.type():
 				case OutputGlNode.type(): {
@@ -136,7 +136,7 @@ export class ShaderAssemblerCloth extends BaseGlShaderAssembler {
 	private _updateShaders() {
 		this._shaders_by_name.clear();
 		this._lines.clear();
-		for (let shader_name of this.shaderNames()) {
+		for (const shader_name of this.shaderNames()) {
 			const template = this._template_shader_for_shader_name(shader_name);
 			this._lines.set(shader_name, template.split('\n'));
 		}
@@ -149,7 +149,7 @@ export class ShaderAssemblerCloth extends BaseGlShaderAssembler {
 			this._buildLines();
 		}
 		// this._material.uniforms = this.build_uniforms(template_shader)
-		for (let shader_name of this.shaderNames()) {
+		for (const shader_name of this.shaderNames()) {
 			const lines = this._lines.get(shader_name);
 			if (lines) {
 				this._shaders_by_name.set(shader_name, lines.join('\n'));

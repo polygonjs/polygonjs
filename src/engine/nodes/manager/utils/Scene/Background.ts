@@ -72,7 +72,7 @@ export class SceneBackgroundController {
 	addHooks() {
 		const p = this.node.p;
 		const params = [p.backgroundMode, p.bgColor, p.bgTexture];
-		for (let param of params) {
+		for (const param of params) {
 			param.addPostDirtyHook(CALLBACK_NAME, this._updateBound);
 		}
 	}

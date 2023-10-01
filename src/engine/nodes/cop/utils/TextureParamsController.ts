@@ -578,14 +578,14 @@ export class TextureParamsController {
 		const labels: string[] = [];
 		const pv = this.node.pv;
 		if (isBooleanTrue(pv.tcolorSpace)) {
-			for (let colorSpace of COLOR_SPACES) {
+			for (const colorSpace of COLOR_SPACES) {
 				if (colorSpace == pv.colorSpace) {
 					labels.push(`colorSpace: ${colorSpace}`);
 				}
 			}
 		}
 		if (isBooleanTrue(pv.tmapping)) {
-			for (let mapping of MAPPINGS) {
+			for (const mapping of MAPPINGS) {
 				const mappingName = Object.keys(mapping)[0];
 				const mappingValue = (mapping as any)[mappingName];
 				if (mappingValue == pv.mapping) {
@@ -595,7 +595,7 @@ export class TextureParamsController {
 		}
 		if (isBooleanTrue(pv.twrap)) {
 			function setWrapping(wrappingAxis: 'wrapS' | 'wrapT') {
-				for (let wrapping of WRAPPINGS) {
+				for (const wrapping of WRAPPINGS) {
 					const wrappingName = Object.keys(wrapping)[0];
 					const wrappingValue = (wrapping as any)[wrappingName];
 					if (wrappingValue == pv[wrappingAxis]) {
@@ -607,7 +607,7 @@ export class TextureParamsController {
 			setWrapping('wrapT');
 		}
 		if (isBooleanTrue(pv.tminFilter)) {
-			for (let minFilter of MIN_FILTERS) {
+			for (const minFilter of MIN_FILTERS) {
 				const minFilterName = Object.keys(minFilter)[0];
 				const minFilterValue = (minFilter as any)[minFilterName];
 				if (minFilterValue == pv.minFilter) {
@@ -616,7 +616,7 @@ export class TextureParamsController {
 			}
 		}
 		if (isBooleanTrue(pv.tmagFilter)) {
-			for (let magFilter of MAG_FILTERS) {
+			for (const magFilter of MAG_FILTERS) {
 				const magFilterName = Object.keys(magFilter)[0];
 				const magFilterValue = (magFilter as any)[magFilterName];
 				if (magFilterValue == pv.magFilter) {

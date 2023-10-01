@@ -17,7 +17,7 @@ export class TypedJsDefinitionCollection<T extends JsDefinitionType> {
 		const definitions_by_name: Map<string, TypedJsDefinition<T>> = new Map();
 		const names: string[] = [];
 
-		for (let definition of this._definitions) {
+		for (const definition of this._definitions) {
 			if (!this._errored) {
 				const name = definition.name();
 				const existing = definitions_by_name.get(name);
@@ -39,7 +39,7 @@ export class TypedJsDefinitionCollection<T extends JsDefinitionType> {
 		}
 
 		const uniq_definitions: TypedJsDefinition<T>[] = [];
-		for (let name of names) {
+		for (const name of names) {
 			const definition = definitions_by_name.get(name);
 			if (definition) {
 				uniq_definitions.push(definition);

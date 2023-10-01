@@ -8,7 +8,7 @@ import {CameraAttribute, CORE_CAMERA_DEFAULT, OrthographicCameraAttribute} from 
 import {isBooleanTrue} from '../../../core/Type';
 import {CameraHelper} from '../../../core/helpers/CameraHelper';
 import {ORTHOGRAPHIC_CAMERA_DEFAULT, registerOrthographicCamera} from '../../../core/camera/CoreOrthographicCamera';
-import {CoreObject} from '../../../core/geometry/Object';
+import {ThreejsCoreObject} from '../../../core/geometry/modules/three/ThreejsCoreObject';
 import type {BaseNodeType} from '../../nodes/_Base';
 import {ObjectType, registerObjectType} from '../../../core/geometry/Constant';
 interface CreateOrthographicCameraParams {
@@ -89,11 +89,11 @@ export class OrthographicCameraSopOperation extends BaseSopOperation {
 			params.far
 		);
 		if (nodeGenerator) {
-			CoreObject.addAttribute(camera, CameraAttribute.NODE_ID, nodeGenerator.graphNodeId());
+			ThreejsCoreObject.addAttribute(camera, CameraAttribute.NODE_ID, nodeGenerator.graphNodeId());
 		}
 		return camera;
 	}
 	static setCameraAttributes(camera: OrthographicCamera, options: AttributeOptions) {
-		CoreObject.addAttribute(camera, OrthographicCameraAttribute.SIZE, options.size);
+		ThreejsCoreObject.addAttribute(camera, OrthographicCameraAttribute.SIZE, options.size);
 	}
 }

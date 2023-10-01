@@ -32,7 +32,7 @@ export abstract class TypedCameraControlsEventNode<K extends NodeParamsConfig> e
 		// when inside a polyNode
 		const ensureParamsAreComputed = async () => {
 			let promises: Array<Promise<void>> | undefined;
-			for (let param of this.params.all) {
+			for (const param of this.params.all) {
 				if (param.isDirty() && !param.parentParam()) {
 					promises = promises || [];
 					promises.push(param.compute());

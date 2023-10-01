@@ -5,10 +5,10 @@
  */
 import {CADSopNode} from './_BaseCAD';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
-import type {TopoDS_Vertex} from '../../../core/geometry/cad/CadCommon';
-import {CoreCadType} from '../../../core/geometry/cad/CadCoreType';
-import {CadLoader} from '../../../core/geometry/cad/CadLoader';
-import {cadEdgeCreate} from '../../../core/geometry/cad/toObject3D/CadEdge';
+import type {TopoDS_Vertex} from '../../../core/geometry/modules/cad/CadCommon';
+import {CoreCadType} from '../../../core/geometry/modules/cad/CadCoreType';
+import {CadLoader} from '../../../core/geometry/modules/cad/CadLoader';
+import {cadEdgeCreate} from '../../../core/geometry/modules/cad/toObject3D/CadEdge';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 import {CoreGroup} from '../../../core/geometry/Group';
 
@@ -30,7 +30,7 @@ export class CADCircle3PointsSopNode extends CADSopNode<CADCircle3PointsSopParam
 
 		const vertices: TopoDS_Vertex[] = [];
 		if (cadObjects) {
-			for (let object of cadObjects) {
+			for (const object of cadObjects) {
 				if (CoreCadType.isVertex(object)) {
 					vertices.push(object.cadGeometry());
 				}

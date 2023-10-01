@@ -7,9 +7,9 @@ import {
 	Vector2,
 	Vector3,
 } from 'three';
-import {CorePoint} from './Point';
+import {CorePoint} from './entities/point/CorePoint';
 import {CoreGroup} from './Group';
-import {CoreGeometry} from './Geometry';
+// import {CoreGeometry} from './Geometry';
 import {CoreType} from '../Type';
 import {Attribute} from './Attribute';
 import {PolyDictionary} from '../../types/GlobalTypes';
@@ -23,6 +23,7 @@ const DEFAULT = {
 
 const DEFAULT_COLOR = new Vector3(1, 1, 1);
 const DEFAULT_UV = new Vector2(0, 0);
+const _position = new Vector3();
 
 export enum InstanceAttrib {
 	POSITION = 'instancePosition',
@@ -71,11 +72,11 @@ export class CoreInstancer {
 	}
 	setCoreGroup(coreGroup: CoreGroup) {
 		this._coreGroup = coreGroup;
-		this._is_pscale_present = this._coreGroup.hasAttrib(Attribute.PSCALE);
-		this._is_scale_present = this._coreGroup.hasAttrib(Attribute.SCALE);
+		this._is_pscale_present = this._coreGroup.hasPointAttrib(Attribute.PSCALE);
+		this._is_scale_present = this._coreGroup.hasPointAttrib(Attribute.SCALE);
 
-		this._is_normal_present = this._coreGroup.hasAttrib(Attribute.NORMAL);
-		this._is_up_present = this._coreGroup.hasAttrib(Attribute.UP);
+		this._is_normal_present = this._coreGroup.hasPointAttrib(Attribute.NORMAL);
+		this._is_up_present = this._coreGroup.hasPointAttrib(Attribute.UP);
 
 		this._do_rotate_matrices = this._is_normal_present; //&& this._is_up_present;
 	}
@@ -86,7 +87,7 @@ export class CoreInstancer {
 	// private _point_m = new Matrix4()
 	matrixFromPoint(point: CorePoint, targetMatrix: Matrix4) {
 		targetMatrix.identity();
-		const t = point.position();
+		point.position(_position);
 		//r = new Vector3(0,0,0)
 		if (this._is_scale_present) {
 			point.attribValue(Attribute.SCALE, this._pointScale);
@@ -105,7 +106,7 @@ export class CoreInstancer {
 		scale_matrix.makeScale(this._pointScale.x, this._pointScale.y, this._pointScale.z);
 
 		const translate_matrix = this._matrixT;
-		translate_matrix.makeTranslation(t.x, t.y, t.z);
+		translate_matrix.makeTranslation(_position.x, _position.y, _position.z);
 
 		targetMatrix.multiply(translate_matrix);
 
@@ -145,7 +146,7 @@ export class CoreInstancer {
 		const quaternions = new Float32Array(instancesCount * 4);
 		const instancer = new CoreInstancer(templateCoreGroup);
 		let i = 0;
-		for (let instancePt of instancePts) {
+		for (const instancePt of instancePts) {
 			instancer.matrixFromPoint(instancePt, this._tmpMatrix);
 			const index3 = i * 3;
 			const index4 = i * 4;
@@ -173,9 +174,9 @@ export class CoreInstancer {
 	) {
 		const instancesCount = instancePts.length;
 		const colors = new Float32Array(instancesCount * 3);
-		const hasColor = templateCoreGroup.hasAttrib(Attribute.COLOR);
+		const hasColor = templateCoreGroup.hasPointAttrib(Attribute.COLOR);
 		let i = 0;
-		for (let instancePt of instancePts) {
+		for (const instancePt of instancePts) {
 			const color = hasColor
 				? (instancePt.attribValue(Attribute.COLOR, this._point_color) as Vector3)
 				: DEFAULT_COLOR;
@@ -192,11 +193,6 @@ export class CoreInstancer {
 		attributesToCopy: string
 	) {
 		const instancePts = templateCoreGroup.points();
-		// geometry_to_instance = new BoxBufferGeometry( 2, 2, 2 )
-		// geometry = new InstancedBufferGeometry()
-		// geometry.index = geometry_to_instance.index
-		// geometry.attributes.position = geometry_to_instance.attributes.position
-		// geometry.attributes.uv = geometry_to_instance.attributes.uv
 
 		const geometry = new InstancedBufferGeometry();
 		geometry.copy(geometryToInstance as InstancedBufferGeometry);
@@ -204,12 +200,11 @@ export class CoreInstancer {
 
 		const instancesCount = instancePts.length;
 
-		// if(this._param_add_uv_offset){
-		const has_uv = templateCoreGroup.hasAttrib(Attribute.UV);
+		const has_uv = templateCoreGroup.hasPointAttrib(Attribute.UV);
 		if (has_uv) {
 			const uvs = new Float32Array(instancesCount * 2);
 			let i = 0;
-			for (let instancePt of instancePts) {
+			for (const instancePt of instancePts) {
 				const index2 = i * 2;
 				const uv = has_uv ? (instancePt.attribValue(Attribute.UV, this._point_uv) as Vector2) : DEFAULT_UV;
 				uv.toArray(uvs, index2);
@@ -217,14 +212,13 @@ export class CoreInstancer {
 			}
 			geometry.setAttribute(InstanceAttrib.UV, new InstancedBufferAttribute(uvs, 2));
 		}
-		// }
 		this.updateTransformInstanceAttributes(instancePts, templateCoreGroup, geometry);
 		this.updateColorInstanceAttribute(instancePts, templateCoreGroup, geometry);
 
-		const attribNames = templateCoreGroup.geoAttribNamesMatchingMask(attributesToCopy);
+		const attribNames = templateCoreGroup.pointAttribNamesMatchingMask(attributesToCopy);
 
 		attribNames.forEach((attribName) => {
-			const attribSize = templateCoreGroup.geoAttribSize(attribName);
+			const attribSize = templateCoreGroup.pointAttribSize(attribName);
 			const values = new Float32Array(instancesCount * attribSize);
 			instancePts.forEach((pt, i) => {
 				const value = pt.attribValue(attribName);
@@ -236,9 +230,6 @@ export class CoreInstancer {
 			});
 			geometry.setAttribute(attribName, new InstancedBufferAttribute(values, attribSize));
 		});
-
-		const coreGeometry = new CoreGeometry(geometry);
-		coreGeometry.markAsInstance();
 
 		return geometry;
 	}

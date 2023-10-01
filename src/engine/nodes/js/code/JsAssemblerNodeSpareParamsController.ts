@@ -3,10 +3,17 @@ import {ParamsUpdateOptions} from '../../utils/params/ParamsController';
 import {ParamType} from '../../../poly/ParamType';
 import {JsAssemblerControllerType, AssemblerControllerNode} from './Controller';
 import {ParamInitValueSerialized} from '../../../params/types/ParamInitValueSerialized';
-import {SetUtils} from '../../../../core/SetUtils';
+import {setUnion, setToArray, setIntersection} from '../../../../core/SetUtils';
+import {arrayToSet} from '../../../../core/ArrayUtils';
 import {MapUtils} from '../../../../core/MapUtils';
 import {JsParamConfig} from './utils/JsParamConfig';
 import {BaseJsShaderAssembler} from './assemblers/_Base';
+
+const _currentParamNames: Set<string> = new Set();
+const _spareParamNamesToAdd: Set<string> = new Set();
+const _spareParamNamesToRemove: Set<string> = new Set();
+const _spareParamsWithSameNameAsParams: Set<string> = new Set();
+const _tmp: Set<string> = new Set();
 
 const DEBUG = false;
 function _paramMatchesParamConfig<T extends ParamType>(param: TypedParam<T>, paramConfig: JsParamConfig<T>) {
@@ -72,8 +79,8 @@ export class JsAssemblerNodeSpareParamsController {
 		const paramConfigs = this.assembler.param_configs();
 		const paramConfigsByName = MapUtils.groupBy<JsParamConfig<ParamType>, string>(paramConfigs, (c) => c.name());
 		const assembler_param_names = paramConfigs.map((c) => c.name());
-		const spare_param_names_to_add = SetUtils.fromArray(assembler_param_names);
-		const validation_result = this._validateNames(spare_param_names_to_add);
+		arrayToSet(assembler_param_names, _spareParamNamesToAdd);
+		const validation_result = this._validateNames(_spareParamNamesToAdd);
 		if (validation_result == false) {
 			return;
 		}
@@ -81,10 +88,9 @@ export class JsAssemblerNodeSpareParamsController {
 		// spare_param_names_to_remove is composed of previously created params, but also spare params with the same name, which may be created when loading the scene
 		// console.log('- 1', this._createSpareParams(), spare_param_names_to_add);
 		const currentSpareParams = this._node.params.spare;
-		const spare_param_names_to_remove = SetUtils.union(
-			SetUtils.fromArray(currentSpareParams.map((p) => p.name())),
-			spare_param_names_to_add
-		);
+		const currentSpareParamNames: string[] = currentSpareParams.map((p) => p.name());
+
+		setUnion(arrayToSet(currentSpareParamNames, _tmp), _spareParamNamesToAdd, _spareParamNamesToRemove);
 		// but if the param type has not changed, we do not need to remove it, nor add it
 		// this._createdSpareParamNames.forEach((paramName) => {
 		// 	const currentParamType = this._node.params.get(paramName)?.type();
@@ -102,21 +108,21 @@ export class JsAssemblerNodeSpareParamsController {
 		// 	}
 		// });
 
-		for (let currentSpareParam of currentSpareParams) {
+		for (const currentSpareParam of currentSpareParams) {
 			const paramConfigsWithName = paramConfigsByName.get(currentSpareParam.name());
 			if (paramConfigsWithName) {
 				const firstParamConfig = paramConfigsWithName[0];
 				if (firstParamConfig) {
 					if (_paramMatchesParamConfig(currentSpareParam, firstParamConfig)) {
-						spare_param_names_to_remove.delete(currentSpareParam.name());
-						spare_param_names_to_add.delete(currentSpareParam.name());
+						_spareParamNamesToRemove.delete(currentSpareParam.name());
+						_spareParamNamesToAdd.delete(currentSpareParam.name());
 					}
 				}
 			}
 		}
 
 		// keep track of raw_inputs so we can restore them
-		spare_param_names_to_remove.forEach((param_name) => {
+		_spareParamNamesToRemove.forEach((param_name) => {
 			// store the param data, in case it gets recreated later
 			// this allows expressions to be kept in memory
 			const param = this._node.params.get(param_name);
@@ -134,8 +140,8 @@ export class JsAssemblerNodeSpareParamsController {
 		});
 
 		// this.within_param_folder('spare_params', () => {
-		for (let paramConfig of paramConfigs) {
-			if (spare_param_names_to_add.has(paramConfig.name())) {
+		for (const paramConfig of paramConfigs) {
+			if (_spareParamNamesToAdd.has(paramConfig.name())) {
 				const type = paramConfig.type();
 				// const config_options = ObjectUtils.clone(paramConfig.paramOptions());
 				const options = this.assembler.spareParamsOptions({type});
@@ -167,18 +173,20 @@ export class JsAssemblerNodeSpareParamsController {
 		this._node.params.updateParams(paramsUpdateOptions);
 		// this._createdSpareParamNames = SetUtils.fromArray(paramConfigs.map((c) => c.name()));
 
-		for (let paramConfig of paramConfigs) {
+		for (const paramConfig of paramConfigs) {
 			paramConfig.applyToNode(this._node);
 		}
 	}
 
-	private _validateNames(spare_param_names_to_add: Set<string>): boolean {
+	private _validateNames(spareParamNamesToAdd: Set<string>): boolean {
 		// check that param_names_to_add does not include any currently existing param names (that are not spare)
-		const currentParamNames = SetUtils.fromArray(this._node.params.non_spare_names);
-		const spareParamsWithSameNameAsParams = SetUtils.intersection(spare_param_names_to_add, currentParamNames);
-		if (spareParamsWithSameNameAsParams.size > 0) {
-			const error_message = `${this._node.path()} attempts to create spare params called '${SetUtils.toArray(
-				spareParamsWithSameNameAsParams
+
+		arrayToSet(this._node.params.non_spare_names, _currentParamNames);
+		setIntersection(spareParamNamesToAdd, _currentParamNames, _spareParamsWithSameNameAsParams);
+		if (_spareParamsWithSameNameAsParams.size > 0) {
+			const error_message = `${this._node.path()} attempts to create spare params called '${setToArray(
+				_spareParamsWithSameNameAsParams,
+				[]
 			).join(', ')}' with same name as params`;
 			this._node.states.error.set(error_message);
 			return false;

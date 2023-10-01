@@ -136,7 +136,7 @@ export class JsAssemblerSDF extends BaseJsShaderAssembler {
 		// 	raymarchingLightsWorldCoordsDependent: this._raymarchingLightsWorldCoordsDependent(),
 		// });
 
-		for (let shaderName of shaderNames) {
+		for (const shaderName of shaderNames) {
 			const lines = this._lines.get(shaderName);
 			if (lines) {
 				// const body = lines.join('\n');

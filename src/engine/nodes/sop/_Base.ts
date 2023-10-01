@@ -43,12 +43,14 @@ export class TypedSopNode<K extends NodeParamsConfig> extends TypedNode<NodeCont
 	override initializeBaseNode() {
 		this.flags.display.set(false);
 		this.flags.display.onUpdate(() => {
-			if (this.flags.display.active()) {
-				const parent = this.parent();
-				if (parent && parent.displayNodeController) {
-					parent.displayNodeController.setDisplayNode(this);
-				}
+			if (!this.flags.display.active()) {
+				return;
 			}
+			const parent = this.parent();
+			if (!(parent && parent.displayNodeController)) {
+				return;
+			}
+			parent.displayNodeController.setDisplayNode(this);
 		});
 		this.io.outputs.setHasOneOutput();
 	}
@@ -78,7 +80,7 @@ export class TypedSopNode<K extends NodeParamsConfig> extends TypedNode<NodeCont
 	setGeometries(geometries: BufferGeometry[], type: ObjectType = ObjectType.MESH) {
 		const objects: Object3D[] = [];
 		let object;
-		for (let geometry of geometries) {
+		for (const geometry of geometries) {
 			object = this.createObject(geometry, type);
 			objects.push(object);
 		}

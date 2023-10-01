@@ -5,13 +5,13 @@
  */
 import {CADSopNode} from './_BaseCAD';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {CadGeometryType, gp_Pnt2d, Geom2d_Curve} from '../../../core/geometry/cad/CadCommon';
-import {cadGeom2dCurveTransform} from '../../../core/geometry/cad/toObject3D/CadGeom2dCurve';
-import {cadPnt2dTransform} from '../../../core/geometry/cad/toObject3D/CadPnt2d';
+import {CadGeometryType, gp_Pnt2d, Geom2d_Curve} from '../../../core/geometry/modules/cad/CadCommon';
+import {cadGeom2dCurveTransform} from '../../../core/geometry/modules/cad/toObject3D/CadGeom2dCurve';
+import {cadPnt2dTransform} from '../../../core/geometry/modules/cad/toObject3D/CadPnt2d';
 import {Vector2} from 'three';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {CadObject} from '../../../core/geometry/cad/CadObject';
+import {CadObject} from '../../../core/geometry/modules/cad/CadObject';
 
 class CADTransform2DSopParamsConfig extends NodeParamsConfig {
 	/** @param translate */
@@ -46,7 +46,7 @@ export class CADTransform2DSopNode extends CADSopNode<CADTransform2DSopParamsCon
 		const newObjects: CadObject<CadGeometryType>[] = [];
 		const cadObjects = coreGroup0.cadObjects();
 		if (cadObjects) {
-			for (let cadObject of cadObjects) {
+			for (const cadObject of cadObjects) {
 				transform2D(cadObject, this.pv.t, this.pv.r, this.pv.s, this.pv.pivot);
 				newObjects.push(cadObject);
 			}

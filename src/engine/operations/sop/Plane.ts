@@ -1,6 +1,6 @@
 import {BaseSopOperation} from './_Base';
 import {BufferGeometry, Vector2, Vector3, PlaneGeometry, Quaternion, BoxGeometry, Box3} from 'three';
-import {CoreTransform} from '../../../core/Transform';
+import {CoreTransform, rotateGeometry} from '../../../core/Transform';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {isBooleanTrue} from '../../../core/BooleanValue';
@@ -32,7 +32,7 @@ export const DEFAULT_PARAMS: PlaneSopParams = {
 	center: new Vector3(0, 0, 0),
 	asLines: false,
 };
-
+const _segmentsCount = new Vector2(1, 1);
 export class PlaneSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS = DEFAULT_PARAMS;
 	static override readonly INPUT_CLONED_STATE = InputCloneMode.NEVER;
@@ -56,7 +56,7 @@ export class PlaneSopOperation extends BaseSopOperation {
 		// convert to buffer geo, as some render problems can occur otherwise
 		// geometry = BufferGeometryUtils.mergeGeometries([geometry])
 		// console.log(geometry, geometry.isBufferGeometry)
-		CoreTransform.rotateGeometry(geometry, DEFAULT_UP, params.direction);
+		rotateGeometry(geometry, DEFAULT_UP, params.direction);
 
 		const matrix = this._coreTransform.translationMatrix(params.center);
 		geometry.applyMatrix4(matrix);
@@ -97,7 +97,7 @@ export class PlaneSopOperation extends BaseSopOperation {
 		const size2d = new Vector2(tmpSize.x, tmpSize.y);
 		const geometry = this._createPlane(size2d, params);
 
-		CoreTransform.rotateGeometry(geometry, DEFAULT_UP, params.direction);
+		rotateGeometry(geometry, DEFAULT_UP, params.direction);
 		geometry.translate(tmpCenter.x, tmpCenter.y, tmpCenter.z);
 
 		const object = this._createPlaneObject(geometry, params);
@@ -108,26 +108,25 @@ export class PlaneSopOperation extends BaseSopOperation {
 		return BaseSopOperation.createObject(geometry, params.asLines ? ObjectType.LINE_SEGMENTS : ObjectType.MESH);
 	}
 
-	private _segmentsCount = new Vector2(1, 1);
 	private _createPlane(size: Vector2, params: PlaneSopParams) {
 		size = size.clone();
 		if (isBooleanTrue(params.useSegmentsCount)) {
-			this._segmentsCount.x = Math.floor(params.segments.x);
-			this._segmentsCount.y = Math.floor(params.segments.y);
+			_segmentsCount.x = Math.floor(params.segments.x);
+			_segmentsCount.y = Math.floor(params.segments.y);
 		} else {
 			if (params.stepSize > 0) {
 				size.x = Math.max(size.x, params.stepSize);
 				size.y = Math.max(size.y, params.stepSize);
-				this._segmentsCount.x = Math.floor(size.x / params.stepSize);
-				this._segmentsCount.y = Math.floor(size.y / params.stepSize);
-				size.x = this._segmentsCount.x * params.stepSize;
-				size.y = this._segmentsCount.y * params.stepSize;
+				_segmentsCount.x = Math.floor(size.x / params.stepSize);
+				_segmentsCount.y = Math.floor(size.y / params.stepSize);
+				size.x = _segmentsCount.x * params.stepSize;
+				size.y = _segmentsCount.y * params.stepSize;
 			}
 		}
-		const geometry = new PlaneGeometry(size.x, size.y, this._segmentsCount.x, this._segmentsCount.y);
+		const geometry = new PlaneGeometry(size.x, size.y, _segmentsCount.x, _segmentsCount.y);
 		if (isBooleanTrue(params.asLines)) {
-			const gridX = Math.floor(this._segmentsCount.x);
-			const gridY = Math.floor(this._segmentsCount.y);
+			const gridX = Math.floor(_segmentsCount.x);
+			const gridY = Math.floor(_segmentsCount.y);
 
 			const gridX1 = gridX + 1;
 			// const gridY1 = gridY + 1;

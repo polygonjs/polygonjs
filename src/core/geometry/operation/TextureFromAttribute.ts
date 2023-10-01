@@ -9,10 +9,11 @@ import {
 	DataTexture,
 	NearestFilter,
 	RepeatWrapping,
+	Mesh,
 } from 'three';
 import {nearestPower2} from '../../math/_Module';
-import {CoreGeometry} from '../Geometry';
 import {CoreAttribute} from '../Attribute';
+import {pointsCountFromObject} from '../entities/point/CorePointUtils';
 
 const _textureSize = new Vector2();
 const _v2 = new Vector2();
@@ -34,8 +35,10 @@ export enum AttribLookup {
 	UV = 'attribLookupUv',
 }
 
+const dummyMesh = new Mesh();
 export function textureFromAttributePointsCount(geometry: BufferGeometry): number {
-	return CoreGeometry.pointsCount(geometry);
+	dummyMesh.geometry = geometry;
+	return pointsCountFromObject(dummyMesh);
 }
 
 export function textureSizeFromPointsCount(geometry: BufferGeometry, target: Vector2): void {
@@ -63,7 +66,7 @@ export function textureSizeFromPointsCount(geometry: BufferGeometry, target: Vec
 export function textureFromAttributesMissingAttributes(geometry: BufferGeometry, attribNames: string[]): string[] {
 	const missingAttributes: string[] = [];
 
-	for (let attribName of attribNames) {
+	for (const attribName of attribNames) {
 		const attributeName = CoreAttribute.remapName(attribName);
 		const attribute = geometry.getAttribute(attributeName) as BufferAttribute;
 		if (!attribute) {
@@ -75,7 +78,7 @@ export function textureFromAttributesMissingAttributes(geometry: BufferGeometry,
 export function textureFromAttributesTotalAttribSizes(geometry: BufferGeometry, attribNames: string[]) {
 	let currentSize = 0;
 
-	for (let attribName of attribNames) {
+	for (const attribName of attribNames) {
 		const attributeName = CoreAttribute.remapName(attribName);
 		const attribute = geometry.getAttribute(attributeName) as BufferAttribute;
 		if (attribute) {

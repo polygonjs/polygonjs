@@ -2,7 +2,7 @@ import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
-import {CoreObject} from '../../../core/geometry/Object';
+import {ThreejsCoreObject} from '../../../core/geometry/modules/three/ThreejsCoreObject';
 import {CameraAttribute} from '../../../core/camera/CoreCamera';
 import {CameraSopNodeType} from '../../poly/NodeContext';
 import {CameraFrameMode, CAMERA_FRAME_MODES} from '../../../core/camera/CoreCameraFrameMode';
@@ -45,8 +45,8 @@ export class CameraFrameModeSopOperation extends BaseSopOperation {
 		const {objects, params} = options;
 
 		for (let object of objects) {
-			CoreObject.addAttribute(object, CameraAttribute.FRAME_MODE, params.frameMode);
-			CoreObject.addAttribute(
+			ThreejsCoreObject.addAttribute(object, CameraAttribute.FRAME_MODE, params.frameMode);
+			ThreejsCoreObject.addAttribute(
 				object,
 				CameraAttribute.FRAME_MODE_EXPECTED_ASPECT_RATIO,
 				params.expectedAspectRatio

@@ -55,6 +55,11 @@ export class TimeController {
 	get graphNode() {
 		return this._graphNode;
 	}
+
+	dispose() {
+		this._graphNode.dispose();
+	}
+
 	updateClockDelta() {
 		const delta = this._clock.getDelta();
 		const clampedDelta = delta > MAX_DELTA ? MAX_DELTA : delta;
@@ -215,7 +220,7 @@ export class TimeController {
 		this.scene.dispatchController.dispatch(this._graphNode, SceneEvent.PLAY_STATE_UPDATED);
 		this.scene.actorsManager.runOnEventScenePause();
 		this.scene.eventsDispatcher.sceneEventsController.dispatch(SCENE_EVENT_PAUSE_EVENT_CONTEXT);
-		for (let callback of this._onPlayingStateChangeCallbacks) {
+		for (const callback of this._onPlayingStateChangeCallbacks) {
 			callback();
 		}
 	}
@@ -233,7 +238,7 @@ export class TimeController {
 		this.scene.actorsManager.runOnEventScenePlay();
 		this.scene.dispatchController.dispatch(this._graphNode, SceneEvent.PLAY_STATE_UPDATED);
 		this.scene.eventsDispatcher.sceneEventsController.dispatch(SCENE_EVENT_PLAY_EVENT_CONTEXT);
-		for (let callback of this._onPlayingStateChangeCallbacks) {
+		for (const callback of this._onPlayingStateChangeCallbacks) {
 			callback();
 		}
 	}
@@ -325,11 +330,11 @@ export class TimeController {
 		this._updateCallbacks();
 	}
 	private _updateCallbacks() {
-		this._onBeforeTickCallbacks = [];
+		this._onBeforeTickCallbacks.length = 0;
 		this._onBeforeTickCallbacksMap?.forEach((callback) => {
 			this._onBeforeTickCallbacks.push(callback);
 		});
-		this._onAfterTickCallbacks = [];
+		this._onAfterTickCallbacks.length = 0;
 		this._onAfterTickCallbacksMap?.forEach((callback) => {
 			this._onAfterTickCallbacks.push(callback);
 		});

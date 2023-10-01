@@ -18,7 +18,7 @@ import {BaseMethodFindDependencyArgs} from './_Base';
 import {BaseMethod} from './_Base';
 import {BaseNodeType} from '../../nodes/_Base';
 import {MethodDependency} from '../MethodDependency';
-import {CoreString} from '../../../core/String';
+import {stringTailDigits} from '../../../core/String';
 
 export class OpdigitsExpression extends BaseMethod {
 	static override requiredArguments() {
@@ -41,21 +41,15 @@ export class OpdigitsExpression extends BaseMethod {
 		return null;
 	}
 
-	override processArguments(args: any[]): Promise<any> {
-		return new Promise((resolve, reject) => {
-			if (args.length == 1) {
-				const index_or_path = args[0];
-				const node = this.getReferencedNode(index_or_path);
-				if (node) {
-					const name = node.name();
-					const value = CoreString.tailDigits(name);
-					resolve(value);
-				} else {
-					resolve(0);
-				}
-			} else {
-				resolve(0);
+	override async processArguments(args: any[]): Promise<number> {
+		if (args.length == 1) {
+			const index_or_path = args[0];
+			const node = this.getReferencedNode(index_or_path);
+			if (node) {
+				const name = node.name();
+				return stringTailDigits(name);
 			}
-		});
+		}
+		return 0;
 	}
 }

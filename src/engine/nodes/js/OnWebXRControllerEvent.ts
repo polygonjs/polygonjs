@@ -104,7 +104,7 @@ export class OnWebXRControllerEventJsNode extends TypedJsNode<OnWebXRControllerE
 		this._listenerByObjectByControllerIndex.forEach((listenerByObject, controllerIndex) => {
 			const controller = xrController.getController(controllerIndex);
 			listenerByObject.forEach((listeners, Object3D) => {
-				for (let eventName of BASE_XR_SESSION_EVENT_NAMES) {
+				for (const eventName of BASE_XR_SESSION_EVENT_NAMES) {
 					controller.removeEventListener(eventName, listeners[eventName]);
 				}
 			});

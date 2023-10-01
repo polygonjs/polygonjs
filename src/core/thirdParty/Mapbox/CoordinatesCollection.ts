@@ -1,5 +1,5 @@
 import type {Vector2} from 'three';
-import {ArrayUtils} from '../../ArrayUtils';
+import {arrayMin} from '../../ArrayUtils';
 
 export class CoordinatesCollection {
 	constructor(public coordinates: Vector2[]) {}
@@ -14,7 +14,7 @@ export class CoordinatesCollection {
 		const d01 = this.first().distanceTo(features_coordinates.last());
 		const d10 = this.last().distanceTo(features_coordinates.first());
 		const d11 = this.last().distanceTo(features_coordinates.last());
-		return ArrayUtils.min([d00, d01, d10, d11]) as number;
+		return arrayMin([d00, d01, d10, d11]) as number;
 	}
 	// previous_id(features_coordinates_array: CoordinatesCollection[]): number{
 	// }
@@ -22,7 +22,7 @@ export class CoordinatesCollection {
 		let nearest_id = -1;
 		let dist = -1;
 		let i = 0;
-		for (let features_coordinates of features_coordinates_array) {
+		for (const features_coordinates of features_coordinates_array) {
 			const current_dist = this.distanceTo(features_coordinates);
 			if (dist == -1 || current_dist < dist) {
 				dist = current_dist;
@@ -35,7 +35,7 @@ export class CoordinatesCollection {
 	perimeter(): number {
 		let perimeter = 0;
 		let prev_coordinate = this.coordinates[0];
-		for (let coordinate of this.coordinates) {
+		for (const coordinate of this.coordinates) {
 			perimeter += coordinate.distanceTo(prev_coordinate);
 			prev_coordinate = coordinate;
 		}

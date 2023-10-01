@@ -12,12 +12,13 @@ import {Poly} from '../../../Poly';
 import {ParamOptionToAdd} from '../params/ParamsController';
 import {ParamType} from '../../../poly/ParamType';
 import {PolyNodeDataRegister} from './PolyNodeDataRegister';
-import {ArrayUtils} from '../../../../core/ArrayUtils';
+import {arrayCompact} from '../../../../core/ArrayUtils';
 import {NodeInputsController} from '../io/InputsController';
 import {JsonImportDispatcher} from '../../../io/json/import/Dispatcher';
 import {createPolyObjNode} from '../../obj/utils/poly/createPolyObjNode';
 import {createPolyAnimNode} from '../../anim/utils/poly/createPolyAnimNode';
 import {createPolyGlNode} from '../../gl/utils/poly/createPolyGlNode';
+import {BaseGlConnectionPoint} from '../io/connections/Gl';
 
 // export const IS_POLY_NODE_BOOLEAN = 'isPolyNode';
 
@@ -76,7 +77,7 @@ export class PolyNodeController {
 		if (!data.params) {
 			return;
 		}
-		for (let paramData of data.params) {
+		for (const paramData of data.params) {
 			const paramName = paramData.name;
 			const paramType = paramData.type;
 			const initValue = paramData.initValue;
@@ -128,7 +129,11 @@ export class PolyNodeController {
 	static inputsData(node: BaseNodeType): PolyNodesInputsData {
 		if (node.io.inputs.hasNamedInputs()) {
 			const inputs = node.io.inputs as NodeInputsController<NodeContext.GL>;
-			const connectionPoints = ArrayUtils.compact(inputs.namedInputConnectionPoints());
+			const connectionPoints: BaseGlConnectionPoint[] = [];
+			const namedInputConnectionPoints = inputs.namedInputConnectionPoints();
+			if (namedInputConnectionPoints) {
+				arrayCompact(namedInputConnectionPoints, connectionPoints);
+			}
 			return {
 				typed: {
 					types: connectionPoints.map((cp) => {

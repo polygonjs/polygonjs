@@ -54,7 +54,9 @@ export class OutputPointLightJsNode extends TypedJsNode<OutputPointLightJsParams
 	}
 
 	override setLines(linesController: JsLinesCollectionController) {
-		const inputNames = this.io.inputs.namedInputConnectionPoints().map((c) => c.name());
+		const connectionPoints =  this.io.inputs.namedInputConnectionPoints()
+		if(!connectionPoints){return}
+		const inputNames = connectionPoints.map((c) => c.name());
 		const bodyLines: string[] = [];
 		if (inputNames) {
 			for (const inputName of inputNames) {

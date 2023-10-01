@@ -16,7 +16,7 @@ export const BASE_XR_SESSION_EVENT_NAMES: BaseXRSessionEventName[] = [
 function _buildEventIndices() {
 	const map: Map<BaseXRSessionEventName, number> = new Map();
 	let i = 0;
-	for (let eventName of BASE_XR_SESSION_EVENT_NAMES) {
+	for (const eventName of BASE_XR_SESSION_EVENT_NAMES) {
 		map.set(eventName, i);
 		i++;
 	}

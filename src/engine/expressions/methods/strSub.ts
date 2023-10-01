@@ -48,14 +48,13 @@ export class StrSubExpression extends BaseMethod {
 	// }
 
 	override async processArguments(args: any[]): Promise<string> {
-		let value = '';
 		const string = toString(args[0]);
 		const rangeStart = toInt(args[1], 0);
 		let rangeSize = toInt(args[2], 1);
 
 		if (string) {
-			value = string.substring(rangeStart, rangeStart + rangeSize);
+			return string.substring(rangeStart, rangeStart + rangeSize);
 		}
-		return value;
+		return '';
 	}
 }

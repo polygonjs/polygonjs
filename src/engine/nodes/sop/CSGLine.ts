@@ -8,7 +8,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 import {primitives} from '@jscad/modeling';
-import {vector2ToCsgVec2} from '../../../core/geometry/csg/CsgVecToVector';
+import {vector2ToCsgVec2} from '../../../core/geometry/modules/csg/CsgVecToVector';
 import {Vector2} from 'three';
 const {line} = primitives;
 

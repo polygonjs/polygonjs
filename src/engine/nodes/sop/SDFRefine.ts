@@ -7,9 +7,9 @@
 // import {SDFSopNode} from './_BaseSDF';
 // import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 // import {SopType} from '../../poly/registers/nodes/types/Sop';
-// import {step} from '../../../core/geometry/sdf/SDFConstant';
+// import {step} from '../../../core/geometry/modules/sdf/SDFConstant';
 // import {CoreGroup} from '../../../core/geometry/Group';
-// import {SDFObject} from '../../../core/geometry/sdf/SDFObject';
+// import {SDFObject} from '../../../core/geometry/modules/sdf/SDFObject';
 
 // class SDFRefineSopParamsConfig extends NodeParamsConfig {
 // 	/** @param steps */

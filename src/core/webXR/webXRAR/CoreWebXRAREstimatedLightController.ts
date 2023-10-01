@@ -4,7 +4,7 @@ import {XREstimatedLight} from 'three/examples/jsm/webxr/XREstimatedLight';
 // import {TypedNode} from '../../../engine/nodes/_Base';
 // import {NodeContext} from '../../../engine/poly/NodeContext';
 import {PolyScene} from '../../../engine/scene/PolyScene';
-import {CoreObject} from '../../geometry/Object';
+import {coreObjectClassFactory} from '../../geometry/CoreObjectFactory';
 
 const ATTRIB_NAME = {
 	IS_ESTIMATED_LIGHT: 'CoreWebXRAREstimatedLight_isEstimatedLight',
@@ -24,7 +24,11 @@ export class CoreWebXRAREstimatedLightController {
 			if (this._estimatedLightSourceObject) {
 				return;
 			}
-			const isEstimatedLight = CoreObject.attribValue(object, ATTRIB_NAME.IS_ESTIMATED_LIGHT) as boolean | null;
+			const coreObjectClass = coreObjectClassFactory(object);
+
+			const isEstimatedLight = coreObjectClass.attribValue(object, ATTRIB_NAME.IS_ESTIMATED_LIGHT) as
+				| boolean
+				| null;
 			if (isEstimatedLight == true) {
 				this._estimatedLightSourceObject = object;
 				this._initEstimatedLight(scene, renderer);
@@ -41,9 +45,10 @@ export class CoreWebXRAREstimatedLightController {
 
 		// default lights
 		const estimatedLightSourceObject = this._estimatedLightSourceObject;
-		const defaultLightsParent = this._estimatedLightSourceObject.children.find((child) =>
-			CoreObject.attribValue(child, ATTRIB_NAME.IS_DEFAULT_LIGHTS_PARENT)
-		);
+		const defaultLightsParent = this._estimatedLightSourceObject.children.find((child) => {
+			const coreObjectClass = coreObjectClassFactory(child);
+			coreObjectClass.attribValue(child, ATTRIB_NAME.IS_DEFAULT_LIGHTS_PARENT);
+		});
 
 		// default envs
 		// const defaultEnvNodeId = CoreObject.attribValue(
@@ -61,15 +66,17 @@ export class CoreWebXRAREstimatedLightController {
 		// 	const container = await defaultEnvNode.compute();
 		// 	defaultEnvTexture = container.texture();
 		// }
+		const coreObjectClass = coreObjectClassFactory(estimatedLightSourceObject);
 
 		// lights customisation
 		const applyEnv =
-			(CoreObject.attribValue(estimatedLightSourceObject, ATTRIB_NAME.APPLY_ENV) as boolean | null) || false;
+			(coreObjectClass.attribValue(estimatedLightSourceObject, ATTRIB_NAME.APPLY_ENV) as boolean | null) || false;
 		const applyLightProbe =
-			(CoreObject.attribValue(estimatedLightSourceObject, ATTRIB_NAME.APPLY_LIGHT_PROBE) as boolean | null) ||
-			false;
+			(coreObjectClass.attribValue(estimatedLightSourceObject, ATTRIB_NAME.APPLY_LIGHT_PROBE) as
+				| boolean
+				| null) || false;
 		const applyDirLight =
-			(CoreObject.attribValue(estimatedLightSourceObject, ATTRIB_NAME.APPLY_DIR_LIGHT) as boolean | null) ||
+			(coreObjectClass.attribValue(estimatedLightSourceObject, ATTRIB_NAME.APPLY_DIR_LIGHT) as boolean | null) ||
 			false;
 		// const dirLightIntensity =
 		// 	(CoreObject.attribValue(estimatedLightSourceObject, ATTRIB_NAME.DIR_LIGHT_INTENSITY) as number | null) || 1;

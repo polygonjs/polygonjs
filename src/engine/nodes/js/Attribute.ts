@@ -93,7 +93,11 @@ export class AttributeJsNode extends TypedJsNode<AttributeJsParamsConfig> {
 		return this.pv.name.trim();
 	}
 	jsType() {
-		return this.io.outputs.namedOutputConnectionPoints()[0].type();
+		const connectionPoints = this.io.outputs.namedOutputConnectionPoints();
+		if (!connectionPoints) {
+			return JsConnectionPointType.FLOAT;
+		}
+		return connectionPoints[0].type();
 	}
 	setJsType(type: JsConnectionPointType) {
 		this.p.type.set(ATTRIBUTE_NODE_AVAILABLE_JS_TYPES.indexOf(type));

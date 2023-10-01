@@ -17,11 +17,11 @@ import {
 	TopoDS_Wire,
 	TopoDS_Face,
 	TopoDS_Shape,
-} from '../../../core/geometry/cad/CadCommon';
+} from '../../../core/geometry/modules/cad/CadCommon';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
-import {CadLoaderSync} from '../../../core/geometry/cad/CadLoaderSync';
-import {CadObject} from '../../../core/geometry/cad/CadObject';
+import {CadLoaderSync} from '../../../core/geometry/modules/cad/CadLoaderSync';
+import {CadObject} from '../../../core/geometry/modules/cad/CadObject';
 import {isBooleanTrue} from '../../../core/Type';
 
 interface CommonOptions {
@@ -76,7 +76,7 @@ export class CADExtrudeSopNode extends CADSopNode<CADExtrudeSopParamsConfig> {
 					newObjects,
 					extrudeDir,
 				};
-				for (let object of inputObjects) {
+				for (const object of inputObjects) {
 					this._processObject(object, options);
 				}
 			});
@@ -147,7 +147,7 @@ export class CADExtrudeSopNode extends CADSopNode<CADExtrudeSopParamsConfig> {
 		// 	addCap(api.FirstShape(), true);
 		// 	addCap(api.LastShape(), false);
 		// }
-		for (let shape of shapes) {
+		for (const shape of shapes) {
 			const type = cadGeometryTypeFromShape(oc, shape);
 			if (type) {
 				const newObject = new CadObject(shape, type);
@@ -195,7 +195,7 @@ export class CADExtrudeSopNode extends CADSopNode<CADExtrudeSopParamsConfig> {
 			addCap(api.FirstShape(), false);
 			addCap(api.LastShape(), true);
 		}
-		for (let shape of shapes) {
+		for (const shape of shapes) {
 			const type = cadGeometryTypeFromShape(oc, shape);
 			if (type) {
 				const newObject = new CadObject(shape, type);
@@ -237,7 +237,7 @@ export class CADExtrudeSopNode extends CADSopNode<CADExtrudeSopParamsConfig> {
 		// 	addCap(api.FirstShape(), true);
 		// 	addCap(api.LastShape(), false);
 		// }
-		for (let shape of shapes) {
+		for (const shape of shapes) {
 			const type = cadGeometryTypeFromShape(oc, shape);
 			if (type) {
 				const newObject = new CadObject(shape, type);

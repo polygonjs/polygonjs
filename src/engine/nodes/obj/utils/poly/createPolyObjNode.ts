@@ -6,7 +6,7 @@ import {BaseSopNodeType} from '../../../sop/_Base';
 import {GeoNodeChildrenMap} from '../../../../poly/registers/nodes/Sop';
 import {FlagsControllerD} from '../../../utils/FlagsController';
 import {HierarchyController} from '../HierarchyController';
-import {ChildrenDisplayController} from '../ChildrenDisplayController';
+import {ObjChildrenDisplayController} from '../ObjChildrenDisplayController';
 import type {PolyNodeController} from '../../../utils/poly/PolyNodeController';
 import {PolyNodeDefinition} from '../../../utils/poly/PolyNodeDefinition';
 import {Constructor, valueof} from '../../../../../types/GlobalTypes';
@@ -34,9 +34,8 @@ export function createPolyObjNode(
 		}
 
 		// display_node and children_display controllers
-		public override readonly childrenDisplayController: ChildrenDisplayController = new ChildrenDisplayController(
-			this
-		);
+		public override readonly childrenDisplayController: ObjChildrenDisplayController =
+			new ObjChildrenDisplayController(this);
 		public override readonly displayNodeController: DisplayNodeController = new DisplayNodeController(
 			this,
 			this.childrenDisplayController.displayNodeControllerCallbacks()

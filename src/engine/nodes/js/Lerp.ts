@@ -50,11 +50,12 @@ export class LerpJsNode extends MathFunctionArg3OperationFactory('lerp', {
 
 	protected override _expectedInputTypes() {
 		let first_input_type = this.io.connection_points.first_input_connection_type();
-		if (first_input_type) {
+		const connectionPoints = this.io.inputs.namedInputConnectionPoints();
+		if (first_input_type && connectionPoints) {
 			if (!DEFAULT_ALLOWED_TYPES.includes(first_input_type)) {
 				// if the first input type is not allowed, either leave the connection point as is,
 				// or use the default if there is none
-				const first_connection = this.io.inputs.namedInputConnectionPoints()[0];
+				const first_connection = connectionPoints[0];
 				if (first_connection) {
 					first_input_type = first_connection.type();
 				}

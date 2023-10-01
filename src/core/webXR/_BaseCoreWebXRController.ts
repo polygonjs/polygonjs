@@ -63,7 +63,7 @@ export abstract class BaseCoreWebXRController {
 	}
 	protected _addControllerEvents(controllerContainer: CoreWebXRControllerContainer, controllerIndex: number): void {}
 	process(frame?: XRFrame) {
-		for (let controllerContainer of this.controllerContainers) {
+		for (const controllerContainer of this.controllerContainers) {
 			tempMatrix.identity().extractRotation(controllerContainer.controller.matrixWorld);
 			controllerContainer.ray.origin.setFromMatrixPosition(controllerContainer.controller.matrixWorld);
 			controllerContainer.ray.direction.set(0, 0, -1).applyMatrix4(tempMatrix);
@@ -73,14 +73,14 @@ export abstract class BaseCoreWebXRController {
 	private _onSessionStartBound = this._onSessionStart.bind(this);
 	private _onSessionEndBound = this._onSessionEnd.bind(this);
 	protected _onSessionStart() {
-		for (let controllerContainer of this.controllerContainers) {
+		for (const controllerContainer of this.controllerContainers) {
 			controllerContainer.initialize(this.camera);
 		}
 		this.scene.play();
 	}
 	protected _onSessionEnd() {
 		this._removedStartEndEvents();
-		for (let controllerContainer of this.controllerContainers) {
+		for (const controllerContainer of this.controllerContainers) {
 			controllerContainer.initialize(null);
 		}
 		this.scene.pause();

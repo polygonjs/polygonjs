@@ -1,7 +1,7 @@
 import {Group} from 'three';
 import {LDrawLoader} from 'three/examples/jsm/loaders/LDrawLoader';
 import {BaseObject3DLoaderHandler, BaseGeoLoader} from './_BaseLoaderHandler';
-import {CoreObject} from '../../geometry/Object';
+import {ThreejsCoreObject} from '../../geometry/modules/three/ThreejsCoreObject';
 import {CoreType} from '../../Type';
 
 // export enum MPDAttribute {
@@ -33,7 +33,7 @@ export class MPDLoaderHandler extends BaseObject3DLoaderHandler<Group> {
 
 		o.traverse((child) => {
 			const attribNames = Object.keys(child.userData);
-			for (let attribName of attribNames) {
+			for (const attribName of attribNames) {
 				const value = child.userData[attribName];
 				if (value != null) {
 					// attribute is currently not added if its value is null,
@@ -41,12 +41,12 @@ export class MPDLoaderHandler extends BaseObject3DLoaderHandler<Group> {
 					// Maybe consider checking all objects before adding an attribute?
 
 					if (CoreType.isString(value) || CoreType.isNumber(value)) {
-						CoreObject.setAttribute(child, attribName, value);
+						ThreejsCoreObject.setAttribute(child, attribName, value);
 					} else {
 						if (CoreType.isArray(value)) {
 							const stringElements = value.filter((item) => CoreType.isString(item));
 							const jointedStrings = stringElements.join(' ');
-							CoreObject.setAttribute(child, attribName, jointedStrings);
+							ThreejsCoreObject.setAttribute(child, attribName, jointedStrings);
 						}
 					}
 				}

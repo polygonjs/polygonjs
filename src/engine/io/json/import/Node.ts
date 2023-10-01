@@ -212,22 +212,26 @@ export class NodeJsonImporter<T extends BaseNodeTypeWithIO> {
 					if (inputName != null) {
 						// If we have inputName, try and find the input index matching it.
 						// If we find nothing, we use inputIndex
-						const connectionPointIndex = this._node.io.inputs
-							.namedInputConnectionPoints()
-							.map((point) => point?.name().toLowerCase())
-							.indexOf(inputName.toLowerCase());
-						if (connectionPointIndex >= 0) {
-							inputIndex = connectionPointIndex;
+						const connectionPoints = this._node.io.inputs.namedInputConnectionPoints();
+						if (connectionPoints) {
+							const connectionPointIndex = connectionPoints
+								.map((point) => point?.name().toLowerCase())
+								.indexOf(inputName.toLowerCase());
+							if (connectionPointIndex >= 0) {
+								inputIndex = connectionPointIndex;
+							}
 						}
 					}
 					if (inputNode != null && outputName != null) {
 						// If we have outtputName, try and find the input index matching it.
 
 						const connectionPoints = inputNode.io.outputs.namedOutputConnectionPoints();
-						for (let connectionPoint of connectionPoints) {
-							if (connectionPoint) {
-								if (connectionPoint.name().toLowerCase() == outputName.toLowerCase()) {
-									outputName = connectionPoint.name();
+						if (connectionPoints) {
+							for (let connectionPoint of connectionPoints) {
+								if (connectionPoint) {
+									if (connectionPoint.name().toLowerCase() == outputName.toLowerCase()) {
+										outputName = connectionPoint.name();
+									}
 								}
 							}
 						}

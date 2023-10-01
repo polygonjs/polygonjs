@@ -5,14 +5,14 @@ import {Poly} from '../../Poly';
 export class SceneWebGLController {
 	constructor() {}
 
-	_require_webgl2: boolean = false;
+	_requireWebGL2: boolean = false;
 
-	require_webgl2() {
-		return this._require_webgl2;
+	requireWebGL2() {
+		return this._requireWebGL2;
 	}
-	set_require_webgl2() {
-		if (!this._require_webgl2) {
-			this._require_webgl2 = true;
+	setRequireWebGL2() {
+		if (!this._requireWebGL2) {
+			this._requireWebGL2 = true;
 			Poly.renderersController.setRequireWebGL2();
 		}
 	}

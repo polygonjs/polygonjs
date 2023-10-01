@@ -10,9 +10,9 @@ import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {physicsCreateDebugObject} from '../../../core/physics/PhysicsDebug';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
-import {CoreObject} from '../../../core/geometry/Object';
 import {PhysicsIdAttribute} from '../../../core/physics/PhysicsAttribute';
 import {CorePhysics} from '../../../core/physics/CorePhysics';
+import {coreObjectClassFactory} from '../../../core/geometry/CoreObjectFactory';
 class PhysicsDebugSopParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new PhysicsDebugSopParamsConfig();
 
@@ -34,13 +34,17 @@ export class PhysicsDebugSopNode extends TypedActorSopNode<PhysicsDebugSopParams
 
 		const worldObjectId = coreGroup
 			.allObjects()
-			.map((o) => CoreObject.attribValue(o, PhysicsIdAttribute.WORLD))
+			.map((o) => coreObjectClassFactory(o).attribValue(o, PhysicsIdAttribute.WORLD))
 			.find((id) => id != null);
 
 		if (worldObjectId != null) {
 			// initCorePhysicsDebug(this._PhysicsLib, worldObject, this.scene());
 			const debugObject = physicsCreateDebugObject();
-			CoreObject.addAttribute(debugObject, PhysicsIdAttribute.DEBUG_WORLD, worldObjectId);
+			coreObjectClassFactory(debugObject).addAttribute(
+				debugObject,
+				PhysicsIdAttribute.DEBUG_WORLD,
+				worldObjectId
+			);
 			debugObject.name = `${this.name()}_Debug`;
 
 			const actorNode = this._findActorNode();

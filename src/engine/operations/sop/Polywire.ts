@@ -2,15 +2,16 @@ import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {Vector3, Matrix4, LineSegments, BufferGeometry} from 'three';
 import {ObjectType} from '../../../core/geometry/Constant';
-import {CoreGeometry} from '../../../core/geometry/Geometry';
 import {CircleCreateOptions, CoreGeometryUtilCircle} from '../../../core/geometry/util/Circle';
 import {CoreGeometryUtilCurve} from '../../../core/geometry/util/Curve';
 import {CoreGeometryOperationSkin} from '../../../core/geometry/operation/Skin';
-import {CorePoint} from '../../../core/geometry/Point';
+import {CorePoint} from '../../../core/geometry/entities/point/CorePoint';
 import {isBooleanTrue} from '../../../core/Type';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
-import {CoreGeometryBuilderMerge} from '../../../core/geometry/builders/Merge';
+import {CoreGeometryBuilderMerge} from '../../../core/geometry/modules/three/builders/Merge';
 import {addAttributesFromPoint} from '../../../core/geometry/util/addAttributesFromPoint';
+import {pointsFromObject} from '../../../core/geometry/entities/point/CorePointUtils';
+import {corePointClassFactory} from '../../../core/geometry/CoreObjectFactory';
 
 interface PolywireSopParams extends DefaultOperationParams {
 	radius: number;
@@ -67,9 +68,9 @@ export class PolywireSopOperation extends BaseSopOperation {
 
 	private _createTube(lineSegment: LineSegments, params: PolywireSopParams) {
 		const geometry = lineSegment.geometry as BufferGeometry;
-		const attributeNames = CoreGeometry.attribNamesMatchingMask(geometry, params.attributesToCopy);
-		const wrapper = new CoreGeometry(geometry);
-		const points = wrapper.points();
+		const corePointClass = corePointClassFactory(lineSegment);
+		const attributeNames = corePointClass.attributeNamesMatchingMask(lineSegment, params.attributesToCopy);
+		const points = pointsFromObject(lineSegment);
 		const indices = geometry.getIndex()?.array as number[];
 
 		const accumulatedCurvePointIndices = CoreGeometryUtilCurve.accumulatedCurvePointIndices(indices);
@@ -96,23 +97,23 @@ export class PolywireSopOperation extends BaseSopOperation {
 		// const scale = 1;
 		let i = 0;
 		for (let point of points) {
-			point.getPosition(currentPos);
+			point.position(currentPos);
 			let prevPoint = points[i - 1];
 			let nextPoint = points[i + 1];
 			if (prevPoint && nextPoint) {
 				// if we have both prev and next points, the dir is a blend between the dir to the prev and to the next
-				nextPoint.getPosition(nextPos);
+				nextPoint.position(nextPos);
 				deltaNext.copy(nextPos).sub(currentPos);
-				prevPoint.getPosition(prevPos);
+				prevPoint.position(prevPos);
 				deltaPrev.copy(prevPos).sub(currentPos).multiplyScalar(-1);
 				delta.lerpVectors(deltaNext, deltaPrev, 0.5);
 			} else {
 				if (nextPoint) {
-					nextPoint.getPosition(nextPos);
+					nextPoint.position(nextPos);
 					delta.copy(nextPos).sub(currentPos);
 				} else {
 					nextPoint = points[i - 1];
-					nextPoint.getPosition(nextPos);
+					nextPoint.position(nextPos);
 					delta.copy(nextPos).sub(currentPos).multiplyScalar(-1);
 				}
 			}

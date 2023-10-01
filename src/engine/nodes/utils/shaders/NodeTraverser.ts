@@ -6,7 +6,7 @@ import {TypedNode} from '../../_Base';
 import {NodeContext, BaseNodeByContextMap, NetworkChildNodeType} from '../../../poly/NodeContext';
 // import {NodeTypeMap} from '../../../containers/utils/ContainerMap';
 import {CoreGraphNodeId} from '../../../../core/graph/CoreGraph';
-import {ArrayUtils} from '../../../../core/ArrayUtils';
+import {arrayUniq, arrayDifference, arrayCompact} from '../../../../core/ArrayUtils';
 
 // type NumberByString = Map<string, number>;
 type NumberByCoreGraphNodeId = Map<CoreGraphNodeId, number>;
@@ -68,13 +68,13 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 	traverse(rootNodes: BaseNodeByContextMap[NC][]) {
 		this.reset();
 
-		for (let shaderName of this.shaderNames()) {
+		for (const shaderName of this.shaderNames()) {
 			this._leaves_graph_id.set(shaderName, new Map());
 		}
 
-		for (let shaderName of this.shaderNames()) {
+		for (const shaderName of this.shaderNames()) {
 			this._shaderName = shaderName;
-			for (let rootNode of rootNodes) {
+			for (const rootNode of rootNodes) {
 				this._findLeavesFromRootNode(rootNode);
 				this._setNodesDepth();
 			}
@@ -124,7 +124,7 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 		depths.forEach((depth) => {
 			const graph_ids_for_depth = this._graph_id_by_depth.get(depth);
 			if (graph_ids_for_depth) {
-				for (let graph_id of graph_ids_for_depth) {
+				for (const graph_id of graph_ids_for_depth) {
 					const node = this._graph.nodeFromId(graph_id) as BaseNodeByContextMap[NC];
 					if (node) {
 						this._addNodesWithChildren(node, node_id_used_state, nodes);
@@ -208,7 +208,7 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 		//
 		const inputNames = this.inputNamesForShaderName(rootNode, this._shaderName);
 		if (inputNames) {
-			for (let inputName of inputNames) {
+			for (const inputName of inputNames) {
 				const input = rootNode.io.inputs.named_input(inputName) as BaseNodeByContextMap[NC];
 				if (input) {
 					MapUtils.pushOnArrayAtEntry(this._outputs_by_graph_id, input.graphNodeId(), rootNode.graphNodeId());
@@ -218,7 +218,9 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 		}
 
 		this._outputs_by_graph_id.forEach((outputs: CoreGraphNodeId[], graph_id: CoreGraphNodeId) => {
-			this._outputs_by_graph_id.set(graph_id, ArrayUtils.uniq(outputs));
+			const uniqIds: number[] = [];
+			arrayUniq(outputs, uniqIds);
+			this._outputs_by_graph_id.set(graph_id, uniqIds);
 		});
 	}
 	private _blockedInputNames: Map<string, string[]> | undefined;
@@ -231,14 +233,19 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 		this._graph_ids_by_shader_name.get(this._shaderName)?.set(node.graphNodeId(), true);
 
 		const inputs = this._findInputs(node) as BaseNodeByContextMap[NC][];
-		const compactInputs: BaseNodeByContextMap[NC][] = ArrayUtils.compact(inputs);
-		const inputGraphIds = ArrayUtils.uniq(compactInputs.map((n) => n.graphNodeId()));
+		const compactInputs: BaseNodeByContextMap[NC][] = [];
+		arrayCompact(inputs, compactInputs);
+		const inputGraphIds: number[] = [];
+		arrayUniq(
+			compactInputs.map((n) => n.graphNodeId()),
+			inputGraphIds
+		);
 		const uniqueInputs = inputGraphIds.map((graph_id) =>
 			this._graph.nodeFromId(graph_id)
 		) as BaseNodeByContextMap[NC][];
 
 		if (uniqueInputs.length > 0) {
-			for (let input of uniqueInputs) {
+			for (const input of uniqueInputs) {
 				MapUtils.pushOnArrayAtEntry(this._outputs_by_graph_id, input.graphNodeId(), node.graphNodeId());
 
 				this._findLeaves(input);
@@ -254,7 +261,8 @@ export class TypedNodeTraverser<NC extends NodeContext> {
 			const blockedInputNames = this._blockedInputNames.get(node.type()) as string[];
 			const inputConnectionPoints = node.io.inputs.namedInputConnectionPoints() as BaseGlConnectionPoint[];
 			const inputConnectionPointNames = inputConnectionPoints.map((c) => c.name());
-			const allowedInputNames = ArrayUtils.difference(inputConnectionPointNames, blockedInputNames);
+			const allowedInputNames: string[] = [];
+			arrayDifference(inputConnectionPointNames, blockedInputNames, allowedInputNames);
 			const inputs = allowedInputNames.map((inputName) => {
 				const inputIndex = node.io.inputs.getNamedInputIndex(inputName);
 				return node.io.inputs.input(inputIndex);

@@ -5,15 +5,20 @@
  */
 import {CADSopNode} from './_BaseCAD';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {step} from '../../../core/geometry/cad/CadConstant';
-import {CoreCadType} from '../../../core/geometry/cad/CadCoreType';
-import {CadGC, CadGeometryType, CadNumberHandle, _createCadNumberHandle} from '../../../core/geometry/cad/CadCommon';
-import {cadVertexCreate} from '../../../core/geometry/cad/toObject3D/CadVertex';
+import {step} from '../../../core/geometry/modules/cad/CadConstant';
+import {CoreCadType} from '../../../core/geometry/modules/cad/CadCoreType';
+import {
+	CadGC,
+	CadGeometryType,
+	CadNumberHandle,
+	_createCadNumberHandle,
+} from '../../../core/geometry/modules/cad/CadCommon';
+import {cadVertexCreate} from '../../../core/geometry/modules/cad/toObject3D/CadVertex';
 import {Vector3} from 'three';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
-import {CadObject} from '../../../core/geometry/cad/CadObject';
-import {CadLoaderSync} from '../../../core/geometry/cad/CadLoaderSync';
+import {CadObject} from '../../../core/geometry/modules/cad/CadObject';
+import {CadLoaderSync} from '../../../core/geometry/modules/cad/CadLoaderSync';
 
 const v0: CadNumberHandle = _createCadNumberHandle();
 const v1: CadNumberHandle = _createCadNumberHandle();
@@ -61,7 +66,7 @@ export class CADPointsFromCurveSopNode extends CADSopNode<CADPointsFromCurveSopP
 		const delta = max - min;
 		if (inputObjects) {
 			CadGC.withGC((r) => {
-				for (let inputObject of inputObjects) {
+				for (const inputObject of inputObjects) {
 					if (CoreCadType.isGeom2dCurve(inputObject)) {
 						const curve = inputObject.cadGeometry();
 

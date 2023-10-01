@@ -4,7 +4,7 @@
  *
  */
 import {TypedSopNode} from './_Base';
-import {CoreGroup, Object3DWithGeometry} from '../../../core/geometry/Group';
+import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {PointBuilderFunctionData} from '../js/code/assemblers/pointBuilder/_BasePointBuilderPersistedConfig';
@@ -29,13 +29,15 @@ import {ParamType} from '../../poly/ParamType';
 import {RegisterableVariable, createVariable} from '../js/code/assemblers/_BaseJsPersistedConfigUtils';
 import {JsNodeFinder} from '../js/code/utils/NodeFinder';
 import {CoreType, isColor, isVector, isNumber} from '../../../core/Type';
-import {BufferAttribute, BufferGeometry, Color, Vector2, Vector3, Vector4} from 'three';
+import {BufferAttribute, Color, Vector2, Vector3, Vector4} from 'three';
 import {JsConnectionPointComponentsCountMap, JsConnectionPointType} from '../utils/io/connections/Js';
 import {logBlue as _logBlue} from '../../../core/logger/Console';
 import {PointBuilderEvaluator} from '../js/code/assemblers/pointBuilder/PointBuilderEvaluator';
-import {filterThreejsObjectsWithGroup} from '../../../core/geometry/Mask';
-import {object3DHasGeometry} from '../../../core/geometry/GeometryUtils';
-import {CoreGeometry} from '../../../core/geometry/Geometry';
+
+import {pointsCountFromObject} from '../../../core/geometry/entities/point/CorePointUtils';
+import {CoreObjectType, ObjectContent} from '../../../core/geometry/ObjectContent';
+import {corePointClassFactory} from '../../../core/geometry/CoreObjectFactory';
+import {filterObjectsFromCoreGroup} from '../../../core/geometry/Mask';
 
 type PointFunction = Function; //(object:Object3D)=>Object3D
 type AttributeItem = boolean | number | string | Color | Vector2 | Vector3 | Vector4;
@@ -112,36 +114,34 @@ export abstract class BasePointBuilderSopNode<P extends BasePointBuilderSopParam
 
 			const evaluator = _func(...args) as PointBuilderEvaluator;
 
-			const inputObjects = this._getObjects(coreGroup);
+			const objects = filterObjectsFromCoreGroup(coreGroup, this.pv);
 
 			let objnum = 0;
-			for (const inputObject of inputObjects) {
-				this._processObject(inputObject, objnum, evaluator);
+			for (const object of objects) {
+				this._processObject(object, objnum, evaluator);
 
 				objnum++;
 			}
 
-			this.setObjects(inputObjects);
+			this.setObjects(objects);
 		} else {
 			this.setObjects([]);
 		}
 	}
 
-	protected abstract _processObject(
-		inputObject: Object3DWithGeometry,
+	protected abstract _processObject<T extends CoreObjectType>(
+		object: ObjectContent<T>,
 		objnum: number,
 		evaluator: PointBuilderEvaluator
 	): void;
 
-	private _getObjects(coreGroup: CoreGroup): Object3DWithGeometry[] {
-		return filterThreejsObjectsWithGroup(coreGroup, this.pv).filter(object3DHasGeometry);
-	}
 	protected _resetRequiredAttributes() {
 		this._attributesDict.clear();
 	}
-	protected _checkRequiredReadAttributes(geometry: BufferGeometry) {
+	protected _checkRequiredReadAttributes<T extends CoreObjectType>(object: ObjectContent<T>) {
 		// no need to check if there are no points in the geometry
-		const pointsCount = CoreGeometry.pointsCount(geometry);
+		const pointsCount = pointsCountFromObject(object);
+		const corePointClass = corePointClassFactory(object);
 		if (pointsCount == 0) {
 			return;
 		}
@@ -151,7 +151,7 @@ export abstract class BasePointBuilderSopNode<P extends BasePointBuilderSopParam
 			return;
 		}
 		for (const attribData of readAttributesData) {
-			const attribute = geometry.getAttribute(attribData.attribName);
+			const attribute = corePointClass.attribute(object, attribData.attribName);
 			if (!attribute) {
 				const message = `attribute ${attribData.attribName} is missing`;
 				this.states.error.set(message);
@@ -170,7 +170,7 @@ export abstract class BasePointBuilderSopNode<P extends BasePointBuilderSopParam
 		const attribTypeByName = new Map<string, JsConnectionPointType>();
 		for (const attribData of readAttributesData) {
 			const attribName = attribData.attribName;
-			const attribute = geometry.getAttribute(attribName) as BufferAttribute;
+			const attribute = corePointClass.attribute(object, attribName) as BufferAttribute;
 			if (attribute) {
 				attribNames.push(attribName);
 				attributeByName.set(attribName, attribute);
@@ -179,19 +179,20 @@ export abstract class BasePointBuilderSopNode<P extends BasePointBuilderSopParam
 		}
 		return {attribNames, attributeByName, attribTypeByName};
 	}
-	protected _checkRequiredWriteAttributes(geometry: BufferGeometry) {
+	protected _checkRequiredWriteAttributes<T extends CoreObjectType>(object: ObjectContent<T>) {
 		const writeAttributesData = this._functionData?.attributesData.write;
 		if (!writeAttributesData) {
 			return;
 		}
+		const corePointClass = corePointClassFactory(object);
 		for (const attribData of writeAttributesData) {
-			let attribute = geometry.getAttribute(attribData.attribName);
+			let attribute = corePointClass.attribute(object, attribData.attribName);
 			const expectedAttribSize = JsConnectionPointComponentsCountMap[attribData.attribType];
 			if (!attribute) {
-				const pointsCount = CoreGeometry.pointsCount(geometry);
+				const pointsCount = corePointClass.pointsCount(object);
 				const newArray: number[] = new Array(pointsCount * expectedAttribSize).fill(0);
 				attribute = new BufferAttribute(new Float32Array(newArray), expectedAttribSize);
-				geometry.setAttribute(attribData.attribName, attribute);
+				corePointClass.addAttribute(object, attribData.attribName, attribute);
 			}
 			if (attribute.itemSize != expectedAttribSize) {
 				this.states.error.set('attribute size mismatch');
@@ -203,7 +204,7 @@ export abstract class BasePointBuilderSopNode<P extends BasePointBuilderSopParam
 		const attribTypeByName = new Map<string, JsConnectionPointType>();
 		for (const attribData of writeAttributesData) {
 			const attribName = attribData.attribName;
-			const attribute = geometry.getAttribute(attribName) as BufferAttribute;
+			const attribute = corePointClass.attribute(object, attribName) as BufferAttribute;
 			if (attribute) {
 				attribNames.push(attribName);
 				attributeByName.set(attribName, attribute);

@@ -181,7 +181,7 @@ export class ActorsManager {
 			return;
 		}
 
-		for (let nodeId of nodeIds) {
+		for (const nodeId of nodeIds) {
 			// we need to test that the object has a parent,
 			// as it could have multiple actor attached,
 			// and if the first one from nodeIds triggers the object removal

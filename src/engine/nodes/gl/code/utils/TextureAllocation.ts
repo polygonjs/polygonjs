@@ -65,7 +65,7 @@ export class TextureAllocation {
 	// }
 	variable(variable_name: string) {
 		if (this._variables) {
-			for (let variable of this._variables) {
+			for (const variable of this._variables) {
 				if (variable.name() == variable_name) {
 					return variable;
 				}
@@ -75,7 +75,7 @@ export class TextureAllocation {
 
 	static fromJSON(data: TextureAllocationData): TextureAllocation {
 		const texture_allocation = new TextureAllocation();
-		for (let datum of data) {
+		for (const datum of data) {
 			const texture_variable = TextureVariable.fromJSON(datum);
 			texture_allocation.addVariable(texture_variable);
 		}

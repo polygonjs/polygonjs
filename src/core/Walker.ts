@@ -19,6 +19,8 @@ export const NODE_PATH_DEFAULT = {
 		CUBE_MAP: '/COP/cubeCamera',
 	},
 };
+const _remainingElements: string[] = [];
+const _ups: string[] = [];
 
 abstract class GraphNodePathParamValue<T extends CoreGraphNode> {
 	protected _graphNode: T | null = null;
@@ -207,11 +209,11 @@ export class CoreWalker {
 			let up = '';
 			if (distance > 0) {
 				let i = 0;
-				const ups = [];
+				_ups.length = 0;
 				while (i++ < distance) {
-					ups.push(CoreWalker.PARENT);
+					_ups.push(CoreWalker.PARENT);
 				}
-				up = ups.join(CoreWalker.SEPARATOR) + CoreWalker.SEPARATOR;
+				up = _ups.join(CoreWalker.SEPARATOR) + CoreWalker.SEPARATOR;
 			}
 
 			const parent_path_elements = parent
@@ -222,15 +224,15 @@ export class CoreWalker {
 				.path()
 				.split(CoreWalker.SEPARATOR)
 				.filter((e) => e.length > 0);
-			const remaining_elements = [];
+			_remainingElements.length = 0;
 			let cmptr = 0;
-			for (let dest_path_element of dest_path_elements) {
+			for (const dest_path_element of dest_path_elements) {
 				if (!parent_path_elements[cmptr]) {
-					remaining_elements.push(dest_path_element);
+					_remainingElements.push(dest_path_element);
 				}
 				cmptr++;
 			}
-			const down = remaining_elements.join(CoreWalker.SEPARATOR);
+			const down = _remainingElements.join(CoreWalker.SEPARATOR);
 			return this.sanitizePath(`${up}${down}`);
 		}
 	}

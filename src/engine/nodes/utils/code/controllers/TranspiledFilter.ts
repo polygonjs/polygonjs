@@ -1,13 +1,14 @@
+const _filteredLines: string[] = [];
 export class TranspiledFilter {
 	static filter(transpiled_javascript: string) {
 		const lines = transpiled_javascript.split('\n');
-		const filtered_lines: string[] = [];
+		_filteredLines.length = 0;
 		for (let line of lines) {
 			if (!line.match(/import {.*} from '.*'/)) {
 				line = line.replace('export ', 'return ');
-				filtered_lines.push(line);
+				_filteredLines.push(line);
 			}
 		}
-		return filtered_lines.join('\n');
+		return _filteredLines.join('\n');
 	}
 }

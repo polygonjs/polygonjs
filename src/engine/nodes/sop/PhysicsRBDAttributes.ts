@@ -25,14 +25,13 @@ import {
 	SIZE_COMPUTATION_METHODS,
 } from '../../operations/sop/PhysicsRBDAttributes';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {BaseCoreObject} from '../../../core/geometry/_BaseObject';
+import {BaseCoreObject} from '../../../core/geometry/entities/object/BaseCoreObject';
 import {Vector3, Box3, Sphere} from 'three';
 import {Vector3Param} from '../../params/Vector3';
 import {isBooleanTrue} from '../../../core/Type';
 import {BooleanParam} from '../../params/Boolean';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 import {CoreObjectType, ObjectContent} from '../../../core/geometry/ObjectContent';
-import {CoreObject} from '../../../core/geometry/Object';
 const tmpBox = new Box3();
 const tmpSphere = new Sphere();
 const DEFAULT = PhysicsRBDAttributesSopOperation.DEFAULT_PARAMS;
@@ -243,12 +242,11 @@ export class PhysicsRBDAttributesSopNode extends TypedSopNode<PhysicsRBDAttribut
 		const RBDType = this.RBDType();
 		const colliderType = this.colliderType();
 		const sizeMethod = this.sizeMethod();
-		const coreObjects = coreGroup.threejsCoreObjects();
-		for (let coreObject of coreObjects) {
-			const object = coreObject.object();
-			CorePhysicsAttribute.setRBDType(object, RBDType);
+		const coreObjects = coreGroup.allCoreObjects();
+		for (const coreObject of coreObjects) {
+			CorePhysicsAttribute.setRBDType(coreObject.object(), RBDType);
 
-			CorePhysicsAttribute.setColliderType(object, colliderType);
+			CorePhysicsAttribute.setColliderType(coreObject.object(), colliderType);
 		}
 		const promises: Array<Promise<void>> = [];
 		this._applyColliderType(colliderType, sizeMethod, coreObjects, promises);
@@ -342,17 +340,17 @@ export class PhysicsRBDAttributesSopNode extends TypedSopNode<PhysicsRBDAttribut
 		// const core_group = this._operation.cook(input_contents, this.pv);
 		this.setCoreGroup(coreGroup);
 	}
-	protected _applyColliderType(
+	protected _applyColliderType<T extends CoreObjectType>(
 		colliderType: PhysicsRBDColliderType,
 		sizeMethod: SizeComputationMethod,
-		coreObjects: CoreObject[], //BaseCoreObject<CoreObjectType>[],
+		coreObjects: BaseCoreObject<T>[], //BaseCoreObject<CoreObjectType>[],
 		promises: Array<Promise<void>>
 	) {
 		switch (colliderType) {
 			case PhysicsRBDColliderType.CUBOID: {
 				switch (sizeMethod) {
 					case SizeComputationMethod.AUTO: {
-						for (let coreObject of coreObjects) {
+						for (const coreObject of coreObjects) {
 							coreObject.geometryBoundingBox(tmpBox);
 							tmpBox.getSize(tmpV3);
 							CorePhysicsAttribute.setCuboidSizes(coreObject.object(), tmpV3);
@@ -384,7 +382,7 @@ export class PhysicsRBDAttributesSopNode extends TypedSopNode<PhysicsRBDAttribut
 			case PhysicsRBDColliderType.SPHERE: {
 				switch (sizeMethod) {
 					case SizeComputationMethod.AUTO: {
-						for (let coreObject of coreObjects) {
+						for (const coreObject of coreObjects) {
 							coreObject.geometryBoundingSphere(tmpSphere);
 							const radius = tmpSphere.radius;
 							CorePhysicsAttribute.setRadius(coreObject.object(), radius);
@@ -408,7 +406,7 @@ export class PhysicsRBDAttributesSopNode extends TypedSopNode<PhysicsRBDAttribut
 			case PhysicsRBDColliderType.CAPSULE: {
 				switch (sizeMethod) {
 					case SizeComputationMethod.AUTO: {
-						for (let coreObject of coreObjects) {
+						for (const coreObject of coreObjects) {
 							coreObject.geometryBoundingBox(tmpBox);
 							tmpBox.getSize(tmpV3);
 							const radius = 0.5 * tmpV3.x;
@@ -443,7 +441,7 @@ export class PhysicsRBDAttributesSopNode extends TypedSopNode<PhysicsRBDAttribut
 			case PhysicsRBDColliderType.CYLINDER: {
 				switch (sizeMethod) {
 					case SizeComputationMethod.AUTO: {
-						for (let coreObject of coreObjects) {
+						for (const coreObject of coreObjects) {
 							coreObject.geometryBoundingBox(tmpBox);
 							tmpBox.getSize(tmpV3);
 							CorePhysicsAttribute.setHeight(coreObject.object(), tmpV3.y);
@@ -497,9 +495,9 @@ export class PhysicsRBDAttributesSopNode extends TypedSopNode<PhysicsRBDAttribut
 		TypeAssert.unreachable(colliderType);
 	}
 
-	protected async _computeStringParam(
+	protected async _computeStringParam<T extends CoreObjectType>(
 		param: StringParam,
-		coreObjects: BaseCoreObject<CoreObjectType>[],
+		coreObjects: BaseCoreObject<T>[],
 		applyMethod: (object: ObjectContent<CoreObjectType>, value: string) => void
 	) {
 		if (param.expressionController && param.expressionController.entitiesDependent()) {
@@ -507,7 +505,7 @@ export class PhysicsRBDAttributesSopNode extends TypedSopNode<PhysicsRBDAttribut
 				applyMethod(coreObject.object(), value);
 			});
 		} else {
-			for (let coreObject of coreObjects) {
+			for (const coreObject of coreObjects) {
 				applyMethod(coreObject.object(), param.value);
 			}
 		}
@@ -533,7 +531,7 @@ export class PhysicsRBDAttributesSopNode extends TypedSopNode<PhysicsRBDAttribut
 		// }
 		// const initVector = this._vectorByAttribSize(this.pv.size);
 		// if (initVector) {
-		for (let coreObject of coreObjects) {
+		for (const coreObject of coreObjects) {
 			valuesByCoreObjectIndex.set(coreObject.index(), new Vector3());
 		}
 		for (let componentIndex = 0; componentIndex < components.length; componentIndex++) {
@@ -554,7 +552,7 @@ export class PhysicsRBDAttributesSopNode extends TypedSopNode<PhysicsRBDAttribut
 					}
 				);
 			} else {
-				for (let coreObject of coreObjects) {
+				for (const coreObject of coreObjects) {
 					const vector = valuesByCoreObjectIndex.get(coreObject.index());
 					if (vector) {
 						vector[component_name] = component_param.value;
@@ -566,7 +564,6 @@ export class PhysicsRBDAttributesSopNode extends TypedSopNode<PhysicsRBDAttribut
 			const coreObject = coreObjects[i];
 			const value = valuesByCoreObjectIndex.get(coreObject.index());
 			if (value != null) {
-				// coreObject.setAttribValue(attribName, value);
 				applyMethod(coreObject.object(), value);
 			}
 		}
@@ -582,7 +579,7 @@ export class PhysicsRBDAttributesSopNode extends TypedSopNode<PhysicsRBDAttribut
 				applyMethod(coreObject.object(), value);
 			});
 		} else {
-			for (let coreObject of coreObjects) {
+			for (const coreObject of coreObjects) {
 				applyMethod(coreObject.object(), param.value);
 			}
 		}
@@ -597,7 +594,7 @@ export class PhysicsRBDAttributesSopNode extends TypedSopNode<PhysicsRBDAttribut
 				applyMethod(coreObject.object(), value);
 			});
 		} else {
-			for (let coreObject of coreObjects) {
+			for (const coreObject of coreObjects) {
 				applyMethod(coreObject.object(), param.value);
 			}
 		}

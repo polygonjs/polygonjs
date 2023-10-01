@@ -36,36 +36,31 @@ export class CentroidExpression extends BaseMethod {
 		return this.createDependencyFromIndexOrPath(args);
 	}
 
-	override processArguments(args: any[]): Promise<any> {
-		return new Promise(async (resolve, reject) => {
-			if (args.length >= 1) {
-				const index_or_path = args[0];
-				const component_name: undefined | keyof Vector3Like = args[1];
-				let container: GeometryContainer | null = null;
-				try {
-					container = (await this.getReferencedNodeContainer(index_or_path)) as GeometryContainer;
-				} catch (e) {
-					reject(e);
-				}
+	override async processArguments(args: any[]): Promise<number | Vector3> {
+		if (args.length >= 1) {
+			const index_or_path = args[0];
+			const component_name: undefined | keyof Vector3Like = args[1];
+			const container = (await this.getReferencedNodeContainer(index_or_path)) as GeometryContainer;
 
-				if (container) {
-					container.boundingBox(tmpBox);
+			if (container) {
+				const coreGroup = container.coreContent();
+				if (coreGroup) {
+					coreGroup.boundingBox(tmpBox);
 					tmpBox.getCenter(tmpCenter);
 
 					if (component_name) {
 						const value = tmpCenter[component_name];
 						if (value != null) {
-							resolve(value);
+							return value;
 						} else {
-							resolve(0);
+							return 0;
 						}
 					} else {
-						resolve(tmpCenter);
+						return tmpCenter;
 					}
 				}
-			} else {
-				resolve(0);
 			}
-		});
+		}
+		return 0;
 	}
 }

@@ -4,8 +4,9 @@ import {BufferGeometry, CatmullRomCurve3, Float32BufferAttribute, Object3D, Vect
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 import {ObjectType} from '../../../core/geometry/Constant';
-import {CoreObject} from '../../../core/geometry/Object';
 import {SPLINE_CURVE_TYPES} from '../../../core/geometry/Curve';
+import {CoreObjectType, ObjectContent} from '../../../core/geometry/ObjectContent';
+import {pointsFromObject} from '../../../core/geometry/entities/point/CorePointUtils';
 
 const EPSILON = 0.001;
 
@@ -36,25 +37,24 @@ export class CurveGetPointSopOperation extends BaseSopOperation {
 	override cook(inputCoreGroups: CoreGroup[], params: CurveGetPointSopParams) {
 		const inputCoreGroup = inputCoreGroups[0];
 
-		const coreObjects = inputCoreGroup.threejsCoreObjects();
+		const objects = inputCoreGroup.allObjects();
 		const newObjects: Object3D[] = [];
-		for (let coreObject of coreObjects) {
-			const object = this._createSplineFromCoreObject(coreObject, params);
-			if (object) {
-				newObjects.push(object);
+		for (let object of objects) {
+			const newObject = this._createSplineFromCoreObject(object, params);
+			if (newObject) {
+				newObjects.push(newObject);
 			}
 		}
 
 		return this.createCoreGroupFromObjects(newObjects);
 	}
 
-	private _createSplineFromCoreObject(coreObject: CoreObject, params: CurveGetPointSopParams) {
+	private _createSplineFromCoreObject<T extends CoreObjectType>(
+		object: ObjectContent<T>,
+		params: CurveGetPointSopParams
+	) {
 		const {t, closed, curveType, tension, tTangent} = params;
-		const coreGeo = coreObject.coreGeometry();
-		if (!coreGeo) {
-			return;
-		}
-		const points = coreGeo.points().map((p) => p.getPosition(new Vector3()));
+		const points = pointsFromObject(object).map((p) => p.position(new Vector3()));
 		if (points.length < 2) {
 			return;
 		}
@@ -85,7 +85,7 @@ export class CurveGetPointSopOperation extends BaseSopOperation {
 			geometry.setAttribute(tangentName, new Float32BufferAttribute(tangents, 3));
 		}
 
-		const object = BaseSopOperation.createObject(geometry, ObjectType.POINTS);
-		return object;
+		const newObject = BaseSopOperation.createObject(geometry, ObjectType.POINTS);
+		return newObject;
 	}
 }

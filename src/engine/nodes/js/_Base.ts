@@ -169,15 +169,18 @@ export class TypedJsNode<K extends NodeParamsConfig> extends TypedNode<NodeConte
 		let outputJsVarName: string | undefined;
 		if (connection) {
 			const inputNode = (<unknown>connection.nodeSrc()) as BaseJsNodeType;
-			const outputConnectionPoint = inputNode.io.outputs.namedOutputConnectionPoints()[connection.outputIndex()];
-			if (outputConnectionPoint) {
-				const outputName = outputConnectionPoint.name();
-				outputJsVarName = inputNode.jsVarName(outputName);
-				// console.log({outputJsVarName});
-				// return outputJsVarName;
-			} else {
-				console.warn(`no output called '${inputName}' for js node ${inputNode.path()}`);
-				throw 'variable_for_input ERROR';
+			const connectionPoints = inputNode.io.outputs.namedOutputConnectionPoints();
+			if (connectionPoints) {
+				const outputConnectionPoint = connectionPoints[connection.outputIndex()];
+				if (outputConnectionPoint) {
+					const outputName = outputConnectionPoint.name();
+					outputJsVarName = inputNode.jsVarName(outputName);
+					// console.log({outputJsVarName});
+					// return outputJsVarName;
+				} else {
+					console.warn(`no output called '${inputName}' for js node ${inputNode.path()}`);
+					throw 'variable_for_input ERROR';
+				}
 			}
 		}
 
@@ -216,13 +219,17 @@ export class TypedJsNode<K extends NodeParamsConfig> extends TypedNode<NodeConte
 			if (outputJsVarName != null) {
 				return outputJsVarName;
 			}
-			const connectionPoint = this.io.inputs.namedInputConnectionPoints()[inputIndex];
-			if (!connectionPoint) {
-				console.warn(
-					`connectionPoint not created for index ${inputIndex} (inputName: '${inputName}', node: ${this.path()})`
-				);
+			const connectionPoints = this.io.inputs.namedInputConnectionPoints();
+			if (connectionPoints) {
+				const connectionPoint = connectionPoints[inputIndex];
+				if (!connectionPoint) {
+					console.warn(
+						`connectionPoint not created for index ${inputIndex} (inputName: '${inputName}', node: ${this.path()})`
+					);
+				}
+				return outputJsVarName || connectionPoint ? ThreeToJs.any(connectionPoint.init_value) : '0';
 			}
-			return outputJsVarName || connectionPoint ? ThreeToJs.any(connectionPoint.init_value) : '0';
+			throw 'variable_for_input ERROR';
 		}
 	}
 

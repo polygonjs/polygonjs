@@ -4,11 +4,24 @@ import {ActorEvaluatorGenerator} from '../../engine/nodes/js/code/assemblers/act
 import {ActorFunctionData} from '../../engine/nodes/js/code/assemblers/actor/ActorPersistedConfig';
 import {computed, ref, watch} from '../reactivity/CoreReactivity';
 import {RegisterableVariable} from '../../engine/nodes/js/code/assemblers/_BaseJsPersistedConfigUtils';
-import {SetUtils} from '../SetUtils';
 import {ActorBuilderNode} from '../../engine/scene/utils/ActorsManager';
-import {CoreGeometry} from '../geometry/Geometry';
 import {Object3D} from 'three';
 import {CoreObjectType, ObjectContent} from '../geometry/ObjectContent';
+import {FUNC_POINTS_COUNT_FROM_OBJECT, FUNC_CORE_PRIMITIVE_CLASS_FACTORY} from '../../engine/nodes/js/utils/Common';
+import {pointsCountFromObject} from '../geometry/entities/point/CorePointUtils';
+import {corePrimitiveClassFactory} from '../geometry/CoreObjectFactory';
+import {arrayToSet} from '../ArrayUtils';
+
+const FUNCTION_ARGS_DICT = {
+	[FUNC_POINTS_COUNT_FROM_OBJECT]: pointsCountFromObject,
+	[FUNC_CORE_PRIMITIVE_CLASS_FACTORY]: corePrimitiveClassFactory,
+	ActorEvaluator,
+	computed,
+	ref,
+	watch,
+};
+const FUNCTION_ARG_NAMES = Object.keys(FUNCTION_ARGS_DICT);
+const FUNCTION_ARGS = FUNCTION_ARG_NAMES.map((argName) => (FUNCTION_ARGS_DICT as any)[argName]);
 
 type OnCompilationCompletedHook = () => void;
 function _createDummyObject() {
@@ -79,11 +92,7 @@ export class ActorCompilationController {
 
 		// args & args names
 		const functionCreationArgs = [
-			'ActorEvaluator',
-			'CoreGeometry',
-			'computed',
-			'ref',
-			'watch',
+			...FUNCTION_ARG_NAMES,
 			'_setErrorFromError',
 			...variableNames,
 			...functionNames,
@@ -92,11 +101,7 @@ export class ActorCompilationController {
 			wrappedBody,
 		];
 		const functionEvalArgs = () => [
-			ActorEvaluator,
-			CoreGeometry,
-			computed,
-			ref,
-			watch,
+			...FUNCTION_ARGS,
 			_setErrorFromError,
 			// it is currently preferable to create a unique set of variables
 			// for each evaluator
@@ -124,7 +129,8 @@ export class ActorCompilationController {
 			// add inputEvents
 			//
 			//
-			evaluatorGenerator.eventDatas = SetUtils.fromArray(eventDatas);
+			evaluatorGenerator.eventDatas = evaluatorGenerator.eventDatas || new Set();
+			arrayToSet(eventDatas, evaluatorGenerator.eventDatas);
 
 			//
 			//

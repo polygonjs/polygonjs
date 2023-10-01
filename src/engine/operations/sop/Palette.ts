@@ -2,12 +2,11 @@ import {BaseSopOperation} from './_Base';
 import {CoreGroup, Object3DWithGeometry} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {BufferAttribute, Color} from 'three';
-import {CoreGeometry} from '../../../core/geometry/Geometry';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 import {SORTED_PALETTE_NAMES} from '../../../core/color/chromotomeWrapper';
 import {AttribClass, ATTRIBUTE_CLASSES} from '../../../core/geometry/Constant';
 import {TypeAssert} from '../../poly/Assert';
-import {CoreObject} from '../../../core/geometry/Object';
+import {coreObjectClassFactory, corePointClassFactory} from '../../../core/geometry/CoreObjectFactory';
 
 interface PaletteSopParams extends DefaultOperationParams {
 	class: number;
@@ -22,7 +21,7 @@ interface PaletteSopParams extends DefaultOperationParams {
 
 export class PaletteSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: PaletteSopParams = {
-		class: ATTRIBUTE_CLASSES.indexOf(AttribClass.VERTEX),
+		class: ATTRIBUTE_CLASSES.indexOf(AttribClass.POINT),
 		paletteName: SORTED_PALETTE_NAMES[0],
 		colorsCount: 0,
 		color1: new Color(1, 1, 1),
@@ -51,8 +50,14 @@ export class PaletteSopOperation extends BaseSopOperation {
 		colors: Color[]
 	) {
 		switch (attribClass) {
-			case AttribClass.VERTEX:
+			case AttribClass.POINT:
 				return await this._setVertexColor(coreGroup, params, colors);
+			case AttribClass.VERTEX:
+				this.states?.error.set('vertex not supported yet');
+				return;
+			case AttribClass.PRIMITIVE:
+				this.states?.error.set('primitive not supported yet');
+				return;
 			case AttribClass.OBJECT:
 				return await this._setObjectColor(coreGroup, params, colors);
 			case AttribClass.CORE_GROUP:
@@ -66,7 +71,7 @@ export class PaletteSopOperation extends BaseSopOperation {
 		let i = 0;
 		for (let object of objects) {
 			const color = colors[i % params.colorsCount];
-			CoreObject.addAttribute(object, 'color', color.clone());
+			coreObjectClassFactory(object).addAttribute(object, 'color', color.clone());
 			i++;
 		}
 		return coreGroup;
@@ -83,6 +88,7 @@ export class PaletteSopOperation extends BaseSopOperation {
 		if (params.colorsCount <= 0) {
 			return;
 		}
+		const corePointClass = corePointClassFactory(object);
 
 		const geometry = object.geometry;
 		if (!geometry) {
@@ -90,8 +96,7 @@ export class PaletteSopOperation extends BaseSopOperation {
 		}
 		let colorAttrib = geometry.getAttribute('color') as BufferAttribute;
 		if (!colorAttrib) {
-			const coreGeo = new CoreGeometry(geometry);
-			coreGeo.addNumericAttrib('color', 3, [0, 0, 0]);
+			corePointClass.addNumericAttribute(object, 'color', 3, [0, 0, 0]);
 			colorAttrib = geometry.getAttribute('color') as BufferAttribute;
 		}
 		if (!colorAttrib) {

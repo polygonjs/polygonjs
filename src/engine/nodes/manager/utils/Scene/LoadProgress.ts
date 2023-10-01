@@ -4,31 +4,31 @@ import {BaseNodeType} from '../../../_Base';
 import {ParamConfig} from '../../../utils/params/ParamsConfig';
 import {RootManagerNode} from '../../Root';
 import {PolyScene} from '../../../../scene/PolyScene';
-import {SetUtils} from '../../../../../core/SetUtils';
+import {setToArray} from '../../../../../core/SetUtils';
 import {Poly} from '../../../../Poly';
-import {ArrayUtils} from '../../../../../core/ArrayUtils';
+import {arrayUniq, arrayCompact, arrayToSet} from '../../../../../core/ArrayUtils';
 import {BaseObjNodeType} from '../../../obj/_Base';
 import {GeoObjNode} from '../../../obj/Geo';
 
 class NodeGroup {
 	public readonly totalCount: number;
 	private _processed: Set<BaseNodeType>;
-	private _remaining: Set<BaseNodeType>;
+	private _remaining: Set<BaseNodeType> = new Set();
 	constructor(public readonly nodes: BaseNodeType[]) {
 		if (CoreFeaturesController.debugLoadProgress()) {
 			console.log(nodes);
 		}
 		this.totalCount = nodes.length;
 		this._processed = new Set();
-		this._remaining = SetUtils.fromArray(nodes);
+		arrayToSet(nodes, this._remaining);
 	}
 	markNodeAsProcessed(node: BaseNodeType) {
 		this._processed.add(node);
 		this._remaining.delete(node);
 		if (CoreFeaturesController.debugLoadProgress()) {
 			console.log('markNodeAsProcessed', node.path(), {
-				processed: SetUtils.toArray(this._processed).map((n) => n.path()),
-				remaining: SetUtils.toArray(this._remaining).map((n) => n.path()),
+				processed: setToArray(this._processed, []).map((n) => n.path()),
+				remaining: setToArray(this._remaining, []).map((n) => n.path()),
 			});
 		}
 	}
@@ -89,7 +89,9 @@ export class RootLoadProgressController {
 		const nodes = scene.nodesController.nodesFromMask(mask || '');
 
 		const nodeDisplayNodes = await this._loadDisplayNodes();
-		return ArrayUtils.uniq(nodes.concat(nodeDisplayNodes));
+		const uniqNodes: BaseNodeType[] = [];
+		arrayUniq(nodes.concat(nodeDisplayNodes), uniqNodes);
+		return uniqNodes;
 	}
 	private async _loadDisplayNodes() {
 		const scene = this.node.scene();
@@ -103,12 +105,16 @@ export class RootLoadProgressController {
 		if (cameraCreatorNode) {
 			nodes.push(cameraCreatorNode);
 		}
-		return ArrayUtils.uniq(nodes);
+		const uniqNodes: BaseNodeType[] = [];
+		arrayUniq(nodes, uniqNodes);
+		return uniqNodes;
 	}
 	private _displayNodes() {
 		const objNodesWithDisplayNodeController = this._objectNodesWithDisplayNodeController() as GeoObjNode[];
-		const displayNodes = ArrayUtils.compact(
-			objNodesWithDisplayNodeController.map((node) => node.displayNodeController.firstNonBypassedDisplayNode())
+		const displayNodes: BaseNodeType[] = [];
+		arrayCompact(
+			objNodesWithDisplayNodeController.map((node) => node.displayNodeController.firstNonBypassedDisplayNode()),
+			displayNodes
 		);
 		return displayNodes;
 	}
@@ -197,7 +203,7 @@ export class RootLoadProgressController {
 			}
 		};
 
-		for (let node of nodesGroup.nodes) {
+		for (const node of nodesGroup.nodes) {
 			node.cookController.registerOnCookEnd(callbackName, () => {
 				this._debug2('nodeToCook - completed', node.path());
 				onNodeCooked(node);
@@ -227,7 +233,7 @@ export class RootLoadProgressController {
 			}
 		};
 
-		for (let node of nodesGroup.nodes) {
+		for (const node of nodesGroup.nodes) {
 			const childrenDisplayController = (node as GeoObjNode).childrenDisplayController;
 			this._debug2('nodeWithSopGroup - watch', node.path());
 			childrenDisplayController.registerOnSopGroupUpdated(callbackName, () => {

@@ -5,7 +5,7 @@
 import {BaseNodeType} from './../_Base';
 import {SolverIterationStamp} from './utils/SolverIterationStamp';
 import {NetworkNodeType} from './../../poly/NodeContext';
-import {SubnetSopNodeLike, SopSubnetChildrenDisplayController} from './utils/subnet/ChildrenDisplayController';
+import {SubnetSopNodeLike, SopSubnetChildrenDisplayController} from './utils/subnet/SopSubnetChildrenDisplayController';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CoreGroup} from '../../../core/geometry/Group';
@@ -59,7 +59,8 @@ export class SolverSopNode extends SubnetSopNodeLike<SolverSopParamsConfig> {
 	}
 	private _createStampNode() {
 		const stampNode = new SolverIterationStamp(this.scene());
-		this.dirtyController.setForbiddenTriggerNodes([stampNode]);
+		// this.dirtyController.setForbiddenTriggerNodes([stampNode]);
+		stampNode.setForbiddenTriggerNodes(this);
 		return stampNode;
 	}
 

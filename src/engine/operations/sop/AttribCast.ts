@@ -14,10 +14,10 @@ import {
 	Int8BufferAttribute,
 	BufferAttribute,
 } from 'three';
-import {BufferGeometry} from 'three';
-import {CoreGeometry} from '../../../core/geometry/Geometry';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
+import {CoreObjectType, ObjectContent} from '../../../core/geometry/ObjectContent';
+import {corePointClassFactory, coreVertexClassFactory} from '../../../core/geometry/CoreObjectFactory';
 
 export enum AttribType {
 	Float64BufferAttribute = 'Float64BufferAttribute',
@@ -88,52 +88,54 @@ export class AttribCastSopOperation extends BaseSopOperation {
 		return 'attribCast';
 	}
 
-	override cook(input_contents: CoreGroup[], params: AttribCastSopParams) {
-		const core_group = input_contents[0];
-		const objects = core_group.threejsObjectsWithGeo();
+	override cook(inputCoreGroups: CoreGroup[], params: AttribCastSopParams) {
+		const coreGroup = inputCoreGroups[0];
+		const objects = coreGroup.allObjects();
 		for (let object of objects) {
-			this._castGeoAttributes(object.geometry, params);
+			this._castPointAttributes(object, params);
 		}
 
-		return core_group;
+		return coreGroup;
 	}
 
-	private _castGeoAttributes(geometry: BufferGeometry, params: AttribCastSopParams) {
+	private _castPointAttributes<T extends CoreObjectType>(object: ObjectContent<T>, params: AttribCastSopParams) {
 		const type = ATTRIB_TYPES[params.type];
-		const attrib_class = ATTRIB_CLASS_BY_TYPE[type];
-		const array_class = ARRAY_CLASS_BY_TYPE[type];
+		const attribClass = ATTRIB_CLASS_BY_TYPE[type];
+		const arrayClass = ARRAY_CLASS_BY_TYPE[type];
+		const corePointClass = corePointClassFactory(object);
 
 		if (isBooleanTrue(params.castAttributes)) {
-			const attrib_names = CoreGeometry.attribNamesMatchingMask(geometry, params.mask);
-			for (let attrib_name of attrib_names) {
-				const attrib: BufferAttribute = geometry.attributes[attrib_name] as BufferAttribute;
+			const attribNames = corePointClass.attributeNamesMatchingMask(object, params.mask);
+			for (let attribName of attribNames) {
+				const attrib: BufferAttribute = corePointClass.attribute(object, attribName) as BufferAttribute;
 				const array = attrib.array;
 				const count = attrib.count;
 				const itemSize = attrib.itemSize;
-				const new_array = new array_class(count * itemSize);
+				const newArray = new arrayClass(count * itemSize);
 				for (let i = 0; i < array.length; i++) {
-					new_array[i] = array[i];
+					newArray[i] = array[i];
 				}
-				const new_attr = new attrib_class(new_array, 1);
-				geometry.setAttribute(attrib_name, new_attr);
+				const newAttribute = new attribClass(newArray, itemSize);
+				corePointClass.addAttribute(object, attribName, newAttribute);
 			}
 		}
 
 		// index
 		if (params.castIndex) {
-			const index = geometry.getIndex();
+			const coreVertexClass = coreVertexClassFactory(object);
+			const index = coreVertexClass.indexAttribute(object);
 			if (index) {
 				const array = index.array;
 				const count = index.count;
 				const itemSize = 1;
 
-				const new_array = new array_class(count * itemSize);
+				const newArray = new arrayClass(count * itemSize);
 				for (let i = 0; i < array.length; i++) {
-					new_array[i] = array[i];
+					newArray[i] = array[i];
 				}
 
-				const new_attr = new attrib_class(new_array, 1);
-				geometry.setIndex(new_attr);
+				const newAttr = new attribClass(newArray, itemSize);
+				coreVertexClass.setIndexAttribute(object, newAttr);
 			}
 		}
 	}

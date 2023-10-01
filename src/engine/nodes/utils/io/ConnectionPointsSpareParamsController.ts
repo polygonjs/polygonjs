@@ -50,7 +50,7 @@ export class ConnectionPointsSpareParamsController<NC extends NodeContext> {
 		}
 
 		const connectionPoints: ConnectionPointTypeMap[NC][] = [];
-		for (let paramName of this.node.params.names) {
+		for (const paramName of this.node.params.names) {
 			let addInput = true;
 			if (
 				this._inputlessParamNames &&
@@ -96,7 +96,7 @@ export class ConnectionPointsSpareParamsController<NC extends NodeContext> {
 		const current_param_names: string[] = this.node.params.spare_names;
 		const params_update_options: ParamsUpdateOptions = {};
 
-		for (let param_name of current_param_names) {
+		for (const param_name of current_param_names) {
 			if (this.node.params.has(param_name)) {
 				const param = this.node.params.get(param_name);
 				if (param) {
@@ -108,81 +108,84 @@ export class ConnectionPointsSpareParamsController<NC extends NodeContext> {
 			}
 		}
 
-		let i = 0;
+		const inputConnectionPoints = this.node.io.inputs.namedInputConnectionPoints();
+		if (inputConnectionPoints) {
+			let i = 0;
+			for (const connection_point of inputConnectionPoints) {
+				if (connection_point) {
+					const isConnected = this.node.io.inputs.input(i) != null;
+					const param_name = connection_point.name();
+					const paramType: ParamType | null = connection_point.param_type;
+					if (paramType) {
+						let init_value = connection_point.init_value;
 
-		for (let connection_point of this.node.io.inputs.namedInputConnectionPoints()) {
-			if (connection_point) {
-				const isConnected = this.node.io.inputs.input(i) != null;
-				const param_name = connection_point.name();
-				const paramType: ParamType | null = connection_point.param_type;
-				if (paramType) {
-					let init_value = connection_point.init_value;
+						const last_param_init_value = this._default_value_serialized_by_param_name.get(param_name);
+						let default_value_from_name = this.node.paramDefaultValue(param_name);
 
-					const last_param_init_value = this._default_value_serialized_by_param_name.get(param_name);
-					let default_value_from_name = this.node.paramDefaultValue(param_name);
-
-					if (default_value_from_name != null) {
-						init_value = default_value_from_name;
-					} else {
-						if (last_param_init_value != null) {
-							init_value = last_param_init_value;
+						if (default_value_from_name != null) {
+							init_value = default_value_from_name;
 						} else {
-							init_value = connection_point.init_value;
+							if (last_param_init_value != null) {
+								init_value = last_param_init_value;
+							} else {
+								init_value = connection_point.init_value;
+							}
 						}
-					}
-					if (CoreType.isArray(connection_point.init_value)) {
-						// if we need to use an init_value from a float to an array
-						if (CoreType.isNumber(init_value)) {
-							const array = new Array(connection_point.init_value.length) as Number2;
-							array.fill(init_value);
-							init_value = array;
-						}
-						// if we need to use an init_value from a array to an array, we need to check their length.
-						// if they are different, we need to match them.
-						else if (CoreType.isArray(init_value)) {
-							// if (init_value.length < connection_point.init_value.length) {
-							// }
-							// if (init_value.length > connection_point.init_value.length) {
-							// }
-							if (init_value.length == connection_point.init_value.length) {
-								if (last_param_init_value != null) {
-									init_value = connection_point.init_value;
+						if (CoreType.isArray(connection_point.init_value)) {
+							// if we need to use an init_value from a float to an array
+							if (CoreType.isNumber(init_value)) {
+								const array = new Array(connection_point.init_value.length) as Number2;
+								array.fill(init_value);
+								init_value = array;
+							}
+							// if we need to use an init_value from a array to an array, we need to check their length.
+							// if they are different, we need to match them.
+							else if (CoreType.isArray(init_value)) {
+								// if (init_value.length < connection_point.init_value.length) {
+								// }
+								// if (init_value.length > connection_point.init_value.length) {
+								// }
+								if (init_value.length == connection_point.init_value.length) {
+									if (last_param_init_value != null) {
+										init_value = connection_point.init_value;
+									}
 								}
 							}
 						}
-					}
 
-					if (init_value != null && paramType != ParamType.BUTTON) {
-						params_update_options.toAdd = params_update_options.toAdd || [];
-						params_update_options.toAdd.push({
-							name: param_name,
-							type: paramType,
-							// TODO: I should really treat differently init_value and raw_input here
-							initValue: ObjectUtils.clone(init_value as any),
-							rawInput: ObjectUtils.clone(init_value as any),
-							options: {
-								spare: true,
-								editable: !isConnected,
-								// computeOnDirty should be false for PARAM_PATH
-								// so that js/setParam and js/getParam can link to a parameter
-								// without having their parent node actor being recooked
-								computeOnDirty: paramType != ParamType.PARAM_PATH,
-								// dependentOnFoundParam should be false for PARAM_PATH
-								// so that js/setParam and js/getParam can link to a parameter
-								// without having their parent node actor being recooked
-								dependentOnFoundParam: false,
-								// dependentOnFoundNode: true,
-							},
-						});
+						if (init_value != null && paramType != ParamType.BUTTON) {
+							params_update_options.toAdd = params_update_options.toAdd || [];
+							params_update_options.toAdd.push({
+								name: param_name,
+								type: paramType,
+								// TODO: I should really treat differently init_value and raw_input here
+								initValue: ObjectUtils.clone(init_value as any),
+								rawInput: ObjectUtils.clone(init_value as any),
+								options: {
+									spare: true,
+									editable: !isConnected,
+									// computeOnDirty should be false for PARAM_PATH
+									// so that js/setParam and js/getParam can link to a parameter
+									// without having their parent node actor being recooked
+									computeOnDirty: paramType != ParamType.PARAM_PATH,
+									// dependentOnFoundParam should be false for PARAM_PATH
+									// so that js/setParam and js/getParam can link to a parameter
+									// without having their parent node actor being recooked
+									dependentOnFoundParam: false,
+									// dependentOnFoundNode: true,
+								},
+							});
+						}
 					}
 				}
+				i++;
 			}
-			i++;
 		}
+
 		// if (!this.node.scene.loading_controller.isLoading()) {
 		this.node.params.updateParams(params_update_options);
 
-		for (let spare_param of this.node.params.spare) {
+		for (const spare_param of this.node.params.spare) {
 			if (!spare_param.parentParam()) {
 				const raw_input = this._raw_input_serialized_by_param_name.get(spare_param.name());
 				if (raw_input) {

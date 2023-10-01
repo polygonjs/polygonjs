@@ -59,15 +59,17 @@ function isTriggeringNode(node: BaseJsNodeType): boolean {
 }
 function _hasTriggerOutputConnected(node: BaseJsNodeType): boolean {
 	const outputConnectionPoints = node.io.outputs.namedOutputConnectionPoints();
-	let i = 0;
 	let triggerOutputIndices: number[] = [];
-	for (let outputConnectionPoint of outputConnectionPoints) {
-		if (outputConnectionPoint.type() == JsConnectionPointType.TRIGGER) {
-			triggerOutputIndices.push(i);
+	let i = 0;
+	if (outputConnectionPoints) {
+		for (const outputConnectionPoint of outputConnectionPoints) {
+			if (outputConnectionPoint.type() == JsConnectionPointType.TRIGGER) {
+				triggerOutputIndices.push(i);
+			}
+			i++;
 		}
-		i++;
 	}
-	for (let triggerOutputIndex of triggerOutputIndices) {
+	for (const triggerOutputIndex of triggerOutputIndices) {
 		const triggerConnections = node.io.connections.outputConnectionsByOutputIndex(triggerOutputIndex);
 		if (triggerConnections != null && triggerConnections.size > 0) {
 			return true;
@@ -129,24 +131,28 @@ export function groupNodesByType(nodes: Set<BaseJsNodeType>, nodesByType: Map<st
 export function getOutputIndices(node: BaseJsNodeType, callback: ConnectionPointCallback) {
 	let triggerOutputIndices: number[] = [];
 	const outputConnectionPoints = node.io.outputs.namedOutputConnectionPoints();
-	let i = 0;
-	for (let outputConnectionPoint of outputConnectionPoints) {
-		if (callback(outputConnectionPoint) == true) {
-			triggerOutputIndices.push(i);
+	if (outputConnectionPoints) {
+		let i = 0;
+		for (const outputConnectionPoint of outputConnectionPoints) {
+			if (callback(outputConnectionPoint) == true) {
+				triggerOutputIndices.push(i);
+			}
+			i++;
 		}
-		i++;
 	}
 	return triggerOutputIndices;
 }
 export function getInputIndices(node: BaseJsNodeType, callback: ConnectionPointCallback) {
 	let triggerInputIndices: number[] = [];
 	const inputConnectionPoints = node.io.inputs.namedInputConnectionPoints();
-	let i = 0;
-	for (let inputConnectionPoint of inputConnectionPoints) {
-		if (callback(inputConnectionPoint) == true) {
-			triggerInputIndices.push(i);
+	if (inputConnectionPoints) {
+		let i = 0;
+		for (const inputConnectionPoint of inputConnectionPoints) {
+			if (callback(inputConnectionPoint) == true) {
+				triggerInputIndices.push(i);
+			}
+			i++;
 		}
-		i++;
 	}
 	return triggerInputIndices;
 }
@@ -159,7 +165,7 @@ interface GetConnectedOutputNodesOptions {
 
 export function getConnectedOutputNodes(options: GetConnectedOutputNodesOptions) {
 	const {node, triggerOutputIndices, triggerableNodes, recursive} = options;
-	for (let triggerOutputIndex of triggerOutputIndices) {
+	for (const triggerOutputIndex of triggerOutputIndices) {
 		const triggerConnections = node.io.connections.outputConnectionsByOutputIndex(triggerOutputIndex);
 		if (triggerConnections) {
 			triggerConnections.forEach((triggerConnection) => {
@@ -215,24 +221,28 @@ export function connectedTriggerableNodes(options: ConnectedTriggerableNodesOpti
 	});
 }
 
+const _nonTriggerInputNodes: Set<BaseJsNodeType> = new Set();
+const _nonTriggerInputIndices: number[] = [];
 export function inputNodesFromConnectionWithCallback(node: BaseJsNodeType, callback: ConnectionPointCallback) {
-	const nonTriggerInputNodes: Set<BaseJsNodeType> = new Set();
-	let nonTriggerInputIndices: number[] = [];
+	_nonTriggerInputNodes.clear();
+	_nonTriggerInputIndices.length = 0;
 	const inputConnectionPoints = node.io.inputs.namedInputConnectionPoints();
-	let i = 0;
-	for (let outputConnectionPoint of inputConnectionPoints) {
-		if (callback(outputConnectionPoint)) {
-			nonTriggerInputIndices.push(i);
+	if (inputConnectionPoints) {
+		let i = 0;
+		for (const outputConnectionPoint of inputConnectionPoints) {
+			if (callback(outputConnectionPoint)) {
+				_nonTriggerInputIndices.push(i);
+			}
+			i++;
 		}
-		i++;
 	}
-	for (let nonTriggerInputIndex of nonTriggerInputIndices) {
+	for (const nonTriggerInputIndex of _nonTriggerInputIndices) {
 		const connection = node.io.connections.inputConnection(nonTriggerInputIndex);
 		if (connection) {
-			nonTriggerInputNodes.add(connection.nodeSrc());
+			_nonTriggerInputNodes.add(connection.nodeSrc());
 		}
 	}
-	return SetUtils.toArray(nonTriggerInputNodes);
+	return SetUtils.toArray(_nonTriggerInputNodes, []);
 }
 export function inputNodesExceptTrigger(node: BaseJsNodeType) {
 	// return inputNodesFromConnectionWithCallback(node, (c) => c.type() != JsConnectionPointType.TRIGGER);
@@ -248,7 +258,7 @@ export function triggerInputIndex(triggeringNode: BaseJsNodeType, triggeredNode:
 	const triggerOutputIndices = getOutputIndices(triggeringNode, (c) => c.type() == JsConnectionPointType.TRIGGER);
 
 	let index: number | null = null;
-	for (let triggerOutputIndex of triggerOutputIndices) {
+	for (const triggerOutputIndex of triggerOutputIndices) {
 		const triggerConnections = triggeringNode.io.connections.outputConnectionsByOutputIndex(triggerOutputIndex);
 		if (triggerConnections) {
 			triggerConnections.forEach((triggerConnection) => {
@@ -261,14 +271,16 @@ export function triggerInputIndex(triggeringNode: BaseJsNodeType, triggeredNode:
 	return index;
 }
 
+const _triggerableNodesSet = new Set<BaseJsNodeType>();
+const _triggerableNodes: BaseJsNodeType[] = [];
 export function triggerableMethodCalls(triggeringNode: BaseJsNodeType) {
-	const triggerableNodesSet = new Set<BaseJsNodeType>();
+	_triggerableNodesSet.clear();
 	connectedTriggerableNodes({
 		triggeringNodes: new Set([triggeringNode]),
-		triggerableNodes: triggerableNodesSet,
+		triggerableNodes: _triggerableNodesSet,
 		recursive: false,
 	});
-	const triggerableNodes = SetUtils.toArray(triggerableNodesSet);
+	SetUtils.toArray(_triggerableNodesSet, _triggerableNodes);
 	// const triggerableMethodNames = SetUtils.toArray(currentTriggerableNodes).map((n) =>
 	// 	nodeMethodName(n)
 	// );
@@ -276,7 +288,7 @@ export function triggerableMethodCalls(triggeringNode: BaseJsNodeType) {
 	// 	nodeMethodName(n)
 	// );
 	const methodCalls: string[] = [];
-	for (let triggerableNode of triggerableNodes) {
+	for (const triggerableNode of _triggerableNodes) {
 		const methodName = nodeMethodName(triggerableNode);
 		const argIndex = triggerInputIndex(triggeringNode, triggerableNode);
 		// argIndex is used to highlight the connection

@@ -199,7 +199,7 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 	private _setAdditionalTextureUniforms(uniforms: PolyDictionary<IUniformTexture>) {
 		this.clearAdditionalTextureUniforms();
 		const uniformNames = Object.keys(uniforms);
-		for (let uniformName of uniformNames) {
+		for (const uniformName of uniformNames) {
 			this._additionalTextureUniforms[uniformName] = uniforms[uniformName];
 		}
 	}
@@ -269,7 +269,7 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 	protected updateShaders(codeBuilderOptions?: CodeBuilderSetCodeLinesOptions) {
 		this._shaders_by_name.clear();
 		this._lines.clear();
-		for (let shaderName of this.shaderNames()) {
+		for (const shaderName of this.shaderNames()) {
 			const template = this._template_shader_for_shader_name(shaderName);
 			if (template) {
 				this._lines.set(shaderName, template.split('\n'));
@@ -282,7 +282,7 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 			this._buildLines();
 		}
 		// this._material.uniforms = this.build_uniforms(template_shader)
-		for (let shader_name of this.shaderNames()) {
+		for (const shader_name of this.shaderNames()) {
 			const lines = this._lines.get(shader_name);
 			if (lines) {
 				this._shaders_by_name.set(shader_name, lines.join('\n'));
@@ -362,7 +362,7 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 		const input_names = this.shader_config(shader_name)?.input_names();
 		if (input_names) {
 			// shaders_collection_controller.set_body_lines([], shader_name);
-			for (let input_name of input_names) {
+			for (const input_name of input_names) {
 				if (output_node.io.inputs.has_named_input(input_name)) {
 					this.add_output_body_line(output_node, shadersCollectionController, input_name);
 				}
@@ -428,7 +428,7 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 		}
 
 		const body_line = `float ${options.var_name} = ${options.output_name}`;
-		for (let dependency of options.dependencies) {
+		for (const dependency of options.dependencies) {
 			MapUtils.pushOnArrayAtEntry(options.definitions_by_shader_name, dependency, definition);
 			MapUtils.pushOnArrayAtEntry(options.body_lines_by_shader_name, dependency, body_line);
 		}
@@ -448,7 +448,7 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 		if (options.globals_shader_name) {
 			MapUtils.pushOnArrayAtEntry(options.definitions_by_shader_name, options.globals_shader_name, definition);
 		}
-		for (let dependency of options.dependencies) {
+		for (const dependency of options.dependencies) {
 			MapUtils.pushOnArrayAtEntry(options.definitions_by_shader_name, dependency, definition);
 		}
 
@@ -507,7 +507,7 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 
 		const used_output_names = this.used_output_names_for_shader(globals_node, shader_name);
 
-		for (let output_name of used_output_names) {
+		for (const output_name of used_output_names) {
 			const var_name = globals_node.glVarName(output_name);
 			const globals_shader_name = shaders_collection_controller.currentShaderName();
 
@@ -539,7 +539,7 @@ export class ShaderAssemblerMaterial extends BaseGlShaderAssembler {
 	private used_output_names_for_shader(globals_node: GlobalsGlNode, shader_name: ShaderName) {
 		const used_output_names = globals_node.io.outputs.used_output_names();
 		const filtered_names: string[] = [];
-		for (let name of used_output_names) {
+		for (const name of used_output_names) {
 			if (shader_name == ShaderName.VERTEX) {
 				if (!FRAGMENT_GLOBALS_OUTPUT.includes(name as GlobalsOutput)) {
 					filtered_names.push(name);

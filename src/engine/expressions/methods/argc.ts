@@ -21,15 +21,12 @@ export class ArgcExpression extends BaseMethod {
 		return [['string', 'arguments list']];
 	}
 
-	override processArguments(args: any[]): Promise<any> {
-		return new Promise((resolve, reject) => {
-			if (args.length == 1) {
-				const argumentsList = args[0];
-				const val = argumentsList.split(' ').length;
-				resolve(val);
-			} else {
-				resolve(0);
-			}
-		});
+	override async processArguments(args: any[]): Promise<any> {
+		if (args.length == 1) {
+			const argumentsList = args[0];
+			const val = argumentsList.split(' ').length;
+			return val;
+		}
+		return 0;
 	}
 }

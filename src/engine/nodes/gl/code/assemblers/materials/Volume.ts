@@ -119,7 +119,7 @@ export class ShaderAssemblerVolume extends BaseShaderAssemblerVolume {
 
 		let definition;
 		let body_line;
-		for (let output_name of globals_node.io.outputs.used_output_names()) {
+		for (const output_name of globals_node.io.outputs.used_output_names()) {
 			const var_name = globals_node.glVarName(output_name);
 			const globals_shader_name = shaders_collection_controller.currentShaderName();
 
@@ -131,7 +131,7 @@ export class ShaderAssemblerVolume extends BaseShaderAssemblerVolume {
 					}
 
 					body_line = `float ${var_name} = ${output_name}`;
-					for (let dependency of dependencies) {
+					for (const dependency of dependencies) {
 						MapUtils.pushOnArrayAtEntry(definitions_by_shader_name, dependency, definition);
 						MapUtils.pushOnArrayAtEntry(body_lines_by_shader_name, dependency, body_line);
 					}

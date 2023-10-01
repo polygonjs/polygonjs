@@ -6,12 +6,12 @@
 import {CSGSopNode} from './_BaseCSG';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {CsgGeometryType, CsgGeometry} from '../../../core/geometry/csg/CsgCommon';
-import {csgIsGeom2, csgIsGeom3} from '../../../core/geometry/csg/CsgCoreType';
+import {CsgGeometryType, CsgGeometry} from '../../../core/geometry/modules/csg/CsgCommon';
+import {csgIsGeom2, csgIsGeom3} from '../../../core/geometry/modules/csg/CsgCoreType';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
-import {csgApplyTransform} from '../../../core/geometry/csg/math/CsgMat4';
+import {csgApplyTransform} from '../../../core/geometry/modules/csg/math/CsgMat4';
 import {booleans} from '@jscad/modeling';
-import {CsgObject} from '../../../core/geometry/csg/CsgObject';
+import {CsgObject} from '../../../core/geometry/modules/csg/CsgObject';
 const {intersect, union, subtract} = booleans;
 
 export enum BooleanCsgOperationType {

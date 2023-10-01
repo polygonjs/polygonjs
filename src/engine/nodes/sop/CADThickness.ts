@@ -5,27 +5,27 @@
  */
 import {CADSopNode} from './_BaseCAD';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {step} from '../../../core/geometry/cad/CadConstant';
-import {CoreCadType} from '../../../core/geometry/cad/CadCoreType';
+import {step} from '../../../core/geometry/modules/cad/CadConstant';
+import {CoreCadType} from '../../../core/geometry/modules/cad/CadCoreType';
 import {
 	CadGeometryType,
 	TopoDS_Shape,
 	OpenCascadeInstance,
 	cadGeometryTypeFromShape,
 	// TopTools_ListOfShape,
-} from '../../../core/geometry/cad/CadCommon';
-import {traverseFaces} from '../../../core/geometry/cad/CadTraverse';
-// import {withCadException} from '../../../core/geometry/cad/CadExceptionHandler';
+} from '../../../core/geometry/modules/cad/CadCommon';
+import {traverseFaces} from '../../../core/geometry/modules/cad/CadTraverse';
+// import {withCadException} from '../../../core/geometry/modules/cad/CadExceptionHandler';
 // import {SetUtils} from '../../../core/SetUtils';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
-import {CadObject} from '../../../core/geometry/cad/CadObject';
-import {CadLoaderSync} from '../../../core/geometry/cad/CadLoaderSync';
+import {CadObject} from '../../../core/geometry/modules/cad/CadObject';
+import {CadLoaderSync} from '../../../core/geometry/modules/cad/CadLoaderSync';
 // import {CoreString} from '../../../core/String';
-// import {CadCoreFace} from '../../../core/geometry/cad/CadCoreFace';
+// import {CadCoreFace} from '../../../core/geometry/modules/cad/CadCoreFace';
 // import {coreObjectInstanceFactory} from '../../../core/geometry/CoreObjectFactory';
 import {EntityGroupType} from '../../../core/geometry/EntityGroupCollection';
-import {CadEntityGroupCollection} from '../../../core/geometry/cad/CadEntityGroupCollection';
+import {CadEntityGroupCollection} from '../../../core/geometry/modules/cad/CadEntityGroupCollection';
 
 // TODO: find more meaningful name
 class CADThicknessSopParamsConfig extends NodeParamsConfig {
@@ -60,7 +60,7 @@ export class CADThicknessSopNode extends CADSopNode<CADThicknessSopParamsConfig>
 
 		const inputObjects = inputCoreGroup.cadObjects();
 		if (inputObjects) {
-			for (let inputObject of inputObjects) {
+			for (const inputObject of inputObjects) {
 				if (CoreCadType.isShape(inputObject)) {
 					const newShape = this._makeSolidByJoin(oc, inputObject);
 					if (newShape) {

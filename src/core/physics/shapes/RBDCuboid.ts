@@ -8,8 +8,8 @@ import {
 } from '../PhysicsAttribute';
 import {_getRBDFromObject} from '../PhysicsRBD';
 import {PhysicsLib} from '../CorePhysics';
-import {CoreObject} from '../../geometry/Object';
 import {touchRBDProperty} from '../../reactivity/RBDPropertyReactivity';
+import {coreObjectClassFactory} from '../../geometry/CoreObjectFactory';
 
 const EXPECTED_TYPE = PhysicsRBDColliderType.CUBOID;
 
@@ -54,14 +54,15 @@ export function createPhysicsCuboid(PhysicsLib: PhysicsLib, object: Object3D) {
 
 const attributeSizesLive = physicsAttribNameLive(PhysicsRBDCuboidAttribute.SIZES);
 export function currentSizes(object: Object3D, collider: Collider, target: Vector3): void {
-	let result: Vector3 | undefined = CoreObject.attribValue(object, attributeSizesLive, 0, target) as
+	const coreObjectClass = coreObjectClassFactory(object);
+	let result: Vector3 | undefined = coreObjectClass.attribValue(object, attributeSizesLive, 0, target) as
 		| Vector3
 		| undefined;
 	if (result == null) {
 		const shape = collider.shape as Cuboid;
 		const v = shape.halfExtents;
 		target.set(v.x, v.y, v.z).multiplyScalar(2);
-		CoreObject.setAttribute(object, attributeSizesLive, new Vector3().copy(target));
+		coreObjectClass.setAttribute(object, attributeSizesLive, new Vector3().copy(target));
 	}
 }
 
@@ -116,7 +117,8 @@ export function _setPhysicsRBDCuboidProperty(
 		// update radius on shape and object
 		const v = _getAttribSizeLiveByObject(object);
 		v.copy(_targetSizes);
-		CoreObject.setAttribute(object, attributeSizesLive, v);
+		const coreObjectClass = coreObjectClassFactory(object);
+		coreObjectClass.setAttribute(object, attributeSizesLive, v);
 		touchRBDProperty(object, RBDCuboidProperty.SIZES);
 		// update scale
 		object.scale.copy(_targetSizes).divide(_originalSizes);

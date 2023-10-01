@@ -7,9 +7,9 @@ import {CSGSopNode} from './_BaseCSG';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
-import {CsgGeometry} from '../../../core/geometry/csg/CsgCommon';
-import { csgIsPath2, csgIsGeom2} from '../../../core/geometry/csg/CsgCoreType';
-import {CsgCorner, CSG_CORNERS} from '../../../core/geometry/csg/operations/CsgCorner';
+import {CsgGeometry} from '../../../core/geometry/modules/csg/CsgCommon';
+import {csgIsPath2, csgIsGeom2} from '../../../core/geometry/modules/csg/CsgCoreType';
+import {CsgCorner, CSG_CORNERS} from '../../../core/geometry/modules/csg/operations/CsgCorner';
 import jscad from '@jscad/modeling';
 const {offset} = jscad.expansions;
 
@@ -49,7 +49,7 @@ export class CSGOffsetSopNode extends CSGSopNode<CSGOffsetSopParamsConfig> {
 				segments: this.pv.segments * 4,
 			};
 			const newGeometries: CsgGeometry[] = [];
-			for (let inputObject of inputObjects) {
+			for (const inputObject of inputObjects) {
 				const inputGeometry = inputObject.csgGeometry();
 				if (csgIsGeom2(inputGeometry) || csgIsPath2(inputGeometry)) {
 					newGeometries.push(offset(options, inputGeometry));

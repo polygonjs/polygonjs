@@ -60,7 +60,7 @@ export class OperationsComposerSopNode extends TypedSopNode<OperationsComposerSo
 		if (!this._operationContainersRequiringResolve) {
 			return;
 		}
-		for (let operationContainer of this._operationContainersRequiringResolve) {
+		for (const operationContainer of this._operationContainersRequiringResolve) {
 			operationContainer.resolvePathParams(this);
 		}
 	}

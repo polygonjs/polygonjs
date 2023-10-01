@@ -75,14 +75,14 @@ export function testenginenodessopCopy(qUnit: QUnit) {
 		// let core_group = container.coreContent();
 		// let { geometry } = group.children[0];
 
-		assert.equal(container.pointsCount(), 8);
+		assert.equal(container.coreContent()!.pointsCount(), 8);
 
 		copy1.p.useCopyExpr.set(1);
 		container = await copy1.compute();
 		// core_group = container.coreContent();
 		// ({geometry} = core_group.objects()[0]);
 
-		assert.equal(container.pointsCount(), 28);
+		assert.equal(container.coreContent()!.pointsCount(), 28);
 		const objects = container.coreContent()!.threejsObjectsWithGeo();
 		assert.equal(objects.length, 2);
 		assert.equal((objects[0].geometry.attributes.test as BufferAttribute).array[0], 1);
@@ -108,14 +108,14 @@ export function testenginenodessopCopy(qUnit: QUnit) {
 		// let core_group = container.coreContent();
 		// let {geometry} = core_group.objects()[0];
 
-		assert.equal(container.pointsCount(), 12);
+		assert.equal(container.coreContent()!.pointsCount(), 12);
 
 		copy1.p.useCopyExpr.set(1);
 		container = await copy1.compute();
 		// core_group = container.coreContent();
 		// ({geometry} = core_group.objects()[0]);
 
-		assert.equal(container.pointsCount(), 32);
+		assert.equal(container.coreContent()!.pointsCount(), 32);
 	});
 
 	qUnit.test('sop/copy objects with template and stamp', async (assert) => {
@@ -485,8 +485,10 @@ export function testenginenodessopCopy(qUnit: QUnit) {
 			await _imageNodes.map(async (node) => (await node.compute()).texture());
 			const objectMapUuids = objects.map((object) => (object.material as MeshBasicMaterial).map!.uuid);
 			const textureUuids = textures.map((texture) => texture.uuid);
-			assert.equal(ArrayUtils.uniq(objectMapUuids).length, 3, '3 uuids');
-			assert.equal(ArrayUtils.uniq(textureUuids).length, 3, '3 uuids');
+			const uniqObjectUuids: string[] = [];
+			const uniqTextureUuids: string[] = [];
+			assert.equal(ArrayUtils.uniq(objectMapUuids, uniqObjectUuids).length, 3, '3 uuids');
+			assert.equal(ArrayUtils.uniq(textureUuids, uniqTextureUuids).length, 3, '3 uuids');
 			assert.equal(objectMapUuids[0], textureUuids[0], 'texture match');
 			assert.equal(objectMapUuids[1], textureUuids[1], 'texture match');
 			assert.equal(objectMapUuids[2], textureUuids[2], 'texture match');

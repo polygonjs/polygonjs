@@ -8,18 +8,20 @@ import {TetSopNode} from './_BaseTet';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CoreGroup, Object3DWithGeometry} from '../../../core/geometry/Group';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
-import {TetObject} from '../../../core/geometry/tet/TetObject';
-import {CoreString} from '../../../core/String';
+import {TetObject} from '../../../core/geometry/modules/tet/TetObject';
+import {stringToIndices} from '../../../core/String';
 import {isBooleanTrue} from '../../../core/Type';
 import {Vector3, Mesh} from 'three';
-import {tetCenter} from '../../../core/geometry/tet/utils/tetCenter';
-import {isPositionInsideMesh} from '../../../core/geometry/tet/utils/tetInsideMesh';
+import {tetCenter} from '../../../core/geometry/modules/tet/utils/tetCenter';
+import {isPositionInsideMesh} from '../../../core/geometry/modules/tet/utils/tetInsideMesh';
 import {MeshWithBVHGeometry, ThreeMeshBVHHelper} from '../../../core/geometry/bvh/ThreeMeshBVHHelper';
-import {findNonDelaunayTetsFromMultiplePointsCheck} from '../../../core/geometry/tet/utils/findNonDelaunayTets';
-import {tetRemoveUnusedPoints} from '../../../core/geometry/tet/utils/tetRemoveUnusedPoints';
-import {tetQuality} from '../../../core/geometry/tet/utils/tetQuality';
+import {findNonDelaunayTetsFromMultiplePointsCheck} from '../../../core/geometry/modules/tet/utils/findNonDelaunayTets';
+import {tetRemoveUnusedPoints} from '../../../core/geometry/modules/tet/utils/tetRemoveUnusedPoints';
+import {tetQuality} from '../../../core/geometry/modules/tet/utils/tetQuality';
+import {arrayPushItems} from '../../../core/ArrayUtils';
 
 const _tetCenter = new Vector3();
+const _indices: number[] = [];
 
 class TetDeleteSopParamsConfig extends NodeParamsConfig {
 	byQuality = ParamConfig.BOOLEAN(0);
@@ -80,7 +82,7 @@ export class TetDeleteSopNode extends TetSopNode<TetDeleteSopParamsConfig> {
 	override async cook(inputCoreGroups: CoreGroup[]) {
 		const tetObjects = inputCoreGroups[0].tetObjects();
 		if (tetObjects) {
-			for (let tetObject of tetObjects) {
+			for (const tetObject of tetObjects) {
 				this._deleteTets(tetObject, inputCoreGroups);
 			}
 			this.setObjects(tetObjects);
@@ -135,8 +137,8 @@ export class TetDeleteSopNode extends TetSopNode<TetDeleteSopParamsConfig> {
 		});
 	}
 	private _findTetsById(selectedIds: number[]) {
-		const ids = CoreString.indices(this.pv.ids);
-		selectedIds.push(...ids);
+		stringToIndices(this.pv.ids, _indices);
+		arrayPushItems(_indices, selectedIds);
 	}
 	private _findTetsByIndex(tetObject: TetObject, selectedIds: number[]) {
 		const index = this.pv.index;

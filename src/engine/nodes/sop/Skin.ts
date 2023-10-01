@@ -6,13 +6,13 @@
 import {BufferGeometry} from 'three';
 import {Mesh} from 'three';
 import {LineSegments} from 'three';
-import {TypedSopNode} from './_Base';
+import {BaseSopNodeType, TypedSopNode} from './_Base';
 import {CoreGeometryUtilCurve} from '../../../core/geometry/util/Curve';
 import {CoreGeometryOperationSkin} from '../../../core/geometry/operation/Skin';
 import {CoreGroup} from '../../../core/geometry/Group';
 
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
-import {ArrayUtils} from '../../../core/ArrayUtils';
+import {arrayCompact, arraySortBy} from '../../../core/ArrayUtils';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 class SkinSopParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new SkinSopParamsConfig();
@@ -27,13 +27,17 @@ export class SkinSopNode extends TypedSopNode<SkinSopParamsConfig> {
 		this.io.inputs.setCount(1, 2);
 	}
 
-	override cook(input_contents: CoreGroup[]) {
-		const inputs_count = ArrayUtils.compact(this.io.inputs.inputs()).length;
-		switch (inputs_count) {
+	override cook(inputCoreGroups: CoreGroup[]) {
+		const inputs = this.io.inputs.inputs()
+		const compactInputs:BaseSopNodeType[]=[] 
+		arrayCompact(inputs,compactInputs)
+		const inputsCount = 
+		compactInputs.length;
+		switch (inputsCount) {
 			case 1:
-				return this.process_one_input(input_contents);
+				return this.process_one_input(inputCoreGroups);
 			case 2:
-				return this.process_two_inputs(input_contents);
+				return this.process_two_inputs(inputCoreGroups);
 			default:
 				return this.states.error.set('inputs count not valid');
 		}
@@ -47,17 +51,17 @@ export class SkinSopNode extends TypedSopNode<SkinSopParamsConfig> {
 		if (line_segments0) {
 			const first_line_segment = line_segments0[0] as Mesh;
 			if (first_line_segment) {
-				const src_geometries = CoreGeometryUtilCurve.line_segment_to_geometries(
-					first_line_segment.geometry as BufferGeometry
-				);
-				src_geometries.forEach((src_geometry, i) => {
-					if (i > 0) {
-						const prev_src_geometry = src_geometries[i - 1];
+				const src_geometries = CoreGeometryUtilCurve.line_segment_to_geometries(first_line_segment);
+				if (src_geometries) {
+					src_geometries.forEach((src_geometry, i) => {
+						if (i > 0) {
+							const prev_src_geometry = src_geometries[i - 1];
 
-						const geometry = this._skin(prev_src_geometry, src_geometry);
-						geometries.push(geometry);
-					}
-				});
+							const geometry = this._skin(prev_src_geometry, src_geometry);
+							geometries.push(geometry);
+						}
+					});
+				}
 			}
 		}
 
@@ -69,7 +73,7 @@ export class SkinSopNode extends TypedSopNode<SkinSopParamsConfig> {
 		const core_group1 = input_contents[1];
 		const line_segments0 = this._getLineSegments(core_group0);
 		const line_segments1 = this._getLineSegments(core_group1);
-		const line_segments = ArrayUtils.sortBy([line_segments0, line_segments1], (array) => -array.length);
+		const line_segments = arraySortBy([line_segments0, line_segments1], (array) => -array.length);
 		const smallest_array = line_segments[0];
 		const largest_array = line_segments[1];
 

@@ -24,7 +24,7 @@ export class JsLinesController {
 		this._addDefinitionsForNodeId(node.graphNodeId(), definitions);
 	}
 	private _addDefinitionsForNodeId(nodeId: CoreGraphNodeId, definitions: BaseJsDefinition[]) {
-		for (let definition of definitions) {
+		for (const definition of definitions) {
 			MapUtils.pushOnArrayAtEntry(this._definitionsByNodeId, nodeId, definition);
 		}
 	}
@@ -33,7 +33,7 @@ export class JsLinesController {
 	}
 	traverseDefinitions(callback: DefinitionTraverseCallback) {
 		this._definitionsByNodeId.forEach((definitions) => {
-			for (let definition of definitions) {
+			for (const definition of definitions) {
 				callback(definition);
 			}
 		});
@@ -59,7 +59,7 @@ export class JsLinesController {
 		const linesToUsed: string[] = [];
 		if (makeUniq) {
 			const currentLines = this._bodyLinesByNodeId.get(nodeId);
-			for (let line of lines) {
+			for (const line of lines) {
 				if (currentLines) {
 					if (!currentLines.includes(line)) {
 						linesToUsed.push(line);
@@ -69,12 +69,12 @@ export class JsLinesController {
 				}
 			}
 		} else {
-			for (let line of lines) {
+			for (const line of lines) {
 				linesToUsed.push(line);
 			}
 		}
 
-		for (let line of linesToUsed) {
+		for (const line of linesToUsed) {
 			MapUtils.pushOnArrayAtEntry(this._bodyLinesByNodeId, nodeId, line);
 		}
 	}

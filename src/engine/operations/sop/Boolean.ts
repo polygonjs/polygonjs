@@ -13,7 +13,8 @@ import {
 	Evaluator,
 } from '../../../core/thirdParty/three-bvh-csg';
 import {ObjectType} from '../../../core/geometry/Constant';
-import {CoreGeometryBuilderMerge} from '../../../core/geometry/builders/Merge';
+import {CoreGeometryBuilderMerge} from '../../../core/geometry/modules/three/builders/Merge';
+import {arrayPushItems} from '../../../core/ArrayUtils';
 
 export enum BooleanOperation {
 	INTERSECT = 'intersect',
@@ -44,7 +45,7 @@ interface BooleanSopParams extends DefaultOperationParams {
 	useInputGroups: boolean;
 	intersectionEdgesOnly: boolean;
 }
-
+const _attribNames: string[] = [];
 export class BooleanSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: BooleanSopParams = {
 		operation: BOOLEAN_OPERATIONS.indexOf(BooleanOperation.INTERSECT),
@@ -79,8 +80,8 @@ export class BooleanSopOperation extends BaseSopOperation {
 			attributes.push('color');
 		}
 		if (params.additionalAttributes.trim() != '') {
-			const newNames = stringToAttribNames(params.additionalAttributes);
-			attributes.push(...newNames);
+			stringToAttribNames(params.additionalAttributes, _attribNames);
+			arrayPushItems(_attribNames, attributes);
 		}
 		csgEvaluator.attributes = attributes;
 		csgEvaluator.useGroups = params.keepMaterials || params.useInputGroups;

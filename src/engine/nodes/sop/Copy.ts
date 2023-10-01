@@ -10,11 +10,11 @@ import {ObjectTransformMode, ObjectTransformSpace} from './../../../core/Transfo
 import {SopType} from './../../poly/registers/nodes/types/Sop';
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {BaseCoreObject} from '../../../core/geometry/_BaseObject';
+import {BaseCoreObject} from '../../../core/geometry/entities/object/BaseCoreObject';
 import {CoreInstancer} from '../../../core/geometry/Instancer';
 import {SopCopyStamp} from './utils/CopyStamp';
 import {Matrix4} from 'three';
-import {CorePoint} from '../../../core/geometry/Point';
+import {CorePoint} from '../../../core/geometry/entities/point/CorePoint';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {isBooleanTrue} from '../../../core/BooleanValue';
@@ -26,7 +26,8 @@ import {
 import {CoreTransform, RotationOrder, TRANSFORM_TARGET_TYPES, TransformTargetType} from '../../../core/Transform';
 import {OBJECT_TRANSFORM_SPACE_MENU_ENTRIES, OBJECT_TRANSFORM_SPACES} from '../../../core/TransformSpace';
 import {CoreObjectType, ObjectContent} from '../../../core/geometry/ObjectContent';
-import {coreObjectFactory} from '../../../core/geometry/CoreObjectFactory';
+import {coreObjectClassFactory} from '../../../core/geometry/CoreObjectFactory';
+import {pointsFromObject} from '../../../core/geometry/entities/point/CorePointUtils';
 
 // export enum TransformMode {
 // 	OBJECT = 'object',
@@ -137,13 +138,13 @@ export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 			group: this.pv.templateGroup,
 		});
 		const templatePoints = templateCoreObjects
-			.map((o) => o.coreGeometry())
-			.map((g) => (g ? g.points() : []))
+			// .map((o) => o.coreGeometry())
+			.map((o) => pointsFromObject(o.object()))
 			.flat();
 
 		this._instancer.setCoreGroup(templateCoreGroup);
 
-		this._attribNamesToCopy = templateCoreGroup.geoAttribNamesMatchingMask(this.pv.attributesToCopy);
+		this._attribNamesToCopy = templateCoreGroup.pointAttribNamesMatchingMask(this.pv.attributesToCopy);
 		await this._copyMovedObjectsOnTemplatePoints(instanceCoreGroup, templatePoints);
 		this.setObjects(this._objects);
 	}
@@ -171,7 +172,7 @@ export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 
 		const movedObjects = await this._getMovedObjectsForTemplatePoint(instanceCoreGroup, point_index);
 
-		for (let movedObject of movedObjects) {
+		for (const movedObject of movedObjects) {
 			if (isBooleanTrue(this.pv.copyAttributes)) {
 				this._copyAttributesGromTemplate(movedObject, templatePoint);
 			}
@@ -201,7 +202,7 @@ export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 				const objects = filterObjectsWithGroup(stampedInstanceCoreGroup, {group: this.pv.srcGroup});
 				const object = objects[pointIndex];
 				if (object) {
-					return [coreObjectFactory(object).clone(object)];
+					return [coreObjectClassFactory(object).clone(object)];
 				} else {
 					return [];
 				}
@@ -264,8 +265,10 @@ export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 			for (const coreObject of srcCoreObjects) {
 				// TODO: I should use the Core Group, to ensure that material.linewidth is properly cloned
 				const clonedObject = coreObject.clone().object();
-				this._applyAccumulatedTransform(clonedObject);
-				this._objects.push(clonedObject);
+				if (clonedObject) {
+					this._applyAccumulatedTransform(clonedObject);
+					this._objects.push(clonedObject);
+				}
 			}
 		}
 	}
@@ -298,7 +301,8 @@ export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 	}
 	private _createStampNode() {
 		const stampNode = new SopCopyStamp(this.scene());
-		this.dirtyController.setForbiddenTriggerNodes([stampNode]);
+		// this.dirtyController.setForbiddenTriggerNodes([stampNode]);
+		stampNode.setForbiddenTriggerNodes(this);
 		return stampNode;
 	}
 	override dispose() {
@@ -325,7 +329,7 @@ export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 		this._transformAccumulatedMatrix.multiply(this._transformMatrix);
 	}
 	private _applyMatrixToObject(object: ObjectContent<CoreObjectType>, matrix: Matrix4) {
-		coreObjectFactory(object).applyMatrix(
+		coreObjectClassFactory(object).applyMatrix(
 			object,
 			matrix,
 			TRANSFORM_TARGET_TYPES[this.pv.transformMode],

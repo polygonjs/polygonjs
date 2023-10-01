@@ -28,12 +28,12 @@ export class SceneCookController {
 			this.flush();
 		}
 	}
-	cookingNodes() {
-		const list: BaseNodeType[] = [];
+	cookingNodes(target: BaseNodeType[] = []) {
+		target.length = 0;
 		this._cookingNodesById.forEach((node, id) => {
-			list.push(node);
+			target.push(node);
 		});
-		return list;
+		return target;
 	}
 
 	allNodesHaveCookedAtLeastOnce() {

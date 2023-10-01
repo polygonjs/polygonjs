@@ -72,7 +72,7 @@ export function updateMaterialSideWithShadow(mat: Material, params: SideWithShad
 	const customMaterials = (mat as MaterialWithCustomMaterials).customMaterials;
 	if (customMaterials) {
 		const customNames: CustomMaterialName[] = Object.keys(customMaterials) as CustomMaterialName[];
-		for (let customName of customNames) {
+		for (const customName of customNames) {
 			const customMaterial = customMaterials[customName];
 			if (customMaterial) {
 				updateMaterialSideWithShadow(customMaterial, params);
@@ -108,7 +108,7 @@ export function updateNodeSideWithShadow(mat: Material, params: SideWithShadowUp
 	const customMaterials = (mat as MaterialWithCustomMaterials).customMaterials;
 	if (customMaterials) {
 		const customNames: CustomMaterialName[] = Object.keys(customMaterials) as CustomMaterialName[];
-		for (let customName of customNames) {
+		for (const customName of customNames) {
 			const customMaterial = customMaterials[customName];
 			if (customMaterial) {
 				updateNodeSideWithShadow(customMaterial, params);

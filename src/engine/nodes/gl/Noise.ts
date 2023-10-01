@@ -13,7 +13,7 @@
  *
  */
 
-import {ArrayUtils} from '../../../core/ArrayUtils';
+import {rangeWithEnd} from '../../../core/ArrayUtils';
 import {TypedGlNode} from './_Base';
 import {
 	GlConnectionPoint,
@@ -286,7 +286,7 @@ export class NoiseGlNode extends TypedGlNode<NoiseGlParamsConfig> {
 				// } else {
 				const offset_gl_type = input_type;
 				const offset_components_count = GlConnectionPointComponentsCountMap[offset_gl_type];
-				const offset_values = ArrayUtils.range(offset_components_count)
+				const offset_values = rangeWithEnd(offset_components_count)
 					.map((j) => ThreeToGl.float(1000 * i))
 					.join(', ');
 				const offset2 = `${offset_gl_type}(${offset_values})`;
@@ -380,7 +380,10 @@ float ${this.fbmMethodName()}(in ${inputType} st) {
 			return `float ${noise}${output_name_suffix} = (${rightHand}).${component}`;
 		} else {
 			// it looks like we never go here with the current set of noises
-			const outputType = this.io.outputs.namedOutputConnectionPoints()[0].type();
+			const namedOutputConnectionPoints = this.io.outputs.namedOutputConnectionPoints();
+			const outputType = namedOutputConnectionPoints
+				? namedOutputConnectionPoints[0].type()
+				: GlConnectionPointType.FLOAT;
 			return `${outputType} ${noise} = ${rightHand}`;
 		}
 	}

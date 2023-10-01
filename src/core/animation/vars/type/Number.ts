@@ -1,7 +1,7 @@
 import {FloatParam} from '../../../../engine/params/Float';
 import {IntegerParam} from '../../../../engine/params/Integer';
 import {Poly} from '../../../../engine/Poly';
-import {GsapTweenVars} from '../../../thirdParty/gsap';
+import {GsapTweenVars} from '../../../thirdParty/gsap/gsapFactory';
 import {CoreType} from '../../../Type';
 import {NodeParamProxiesRegister} from '../../NodeParamProxiesRegister';
 import {FloatParamProxy, IntegerParamProxy} from '../../ParamProxy';
@@ -53,7 +53,7 @@ interface PopulateVarsForNumber {
 }
 export function populateVarsForNumber(options: PopulateVarsForNumber) {
 	const {vars, targetValue, targetProperty, propertyNames, operation} = options;
-	for (let property_name of propertyNames) {
+	for (const property_name of propertyNames) {
 		vars[property_name] = AnimBuilderWithOp(targetProperty, targetValue, operation);
 	}
 }

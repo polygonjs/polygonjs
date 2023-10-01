@@ -81,13 +81,13 @@ export async function exporterSopPrepareScene(node: BaseSopNodeType) {
 
 	// save current parents
 	const objects = coreGroup.threejsObjects();
-	for (let object of objects) {
+	for (const object of objects) {
 		previousParentByObject.set(object, object.parent);
 	}
 
 	// add to exported scene
 	const scene = new Scene();
-	for (let object of objects) {
+	for (const object of objects) {
 		scene.add(object);
 	}
 	return {scene, objects};
@@ -108,7 +108,7 @@ export function exporterSopHandleResult(result: Result, objects: Object3D[], res
 	const blob = _createBlob(result);
 
 	// restore parents
-	for (let object of objects) {
+	for (const object of objects) {
 		const previousParent = previousParentByObject.get(object);
 		if (previousParent) {
 			previousParent.add(object);

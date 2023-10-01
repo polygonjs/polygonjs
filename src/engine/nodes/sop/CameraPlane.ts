@@ -12,7 +12,7 @@ import {Plane} from 'three';
 import {OrthographicCamera} from 'three';
 import {PerspectiveCamera} from 'three';
 import {isBooleanTrue} from '../../../core/BooleanValue';
-import {CoreTransform} from '../../../core/Transform';
+import {CoreTransform, rotateGeometry} from '../../../core/Transform';
 import {BaseNodeType} from '../_Base';
 import {createRaycaster} from '../../../core/RaycastHelper';
 
@@ -108,7 +108,7 @@ export class CameraPlaneSopNode extends TypedSopNode<CameraPlaneSopParamsConfig>
 
 		let i = 0;
 		this._planeCenter.set(0, 0, 0);
-		for (let corner of SCREEN_CORNERS) {
+		for (const corner of SCREEN_CORNERS) {
 			this._raycaster.setFromCamera(corner, camera);
 			const targetCorner = this._planeCorners[i];
 			this._raycaster.ray.intersectPlane(this._plane, targetCorner);
@@ -126,7 +126,7 @@ export class CameraPlaneSopNode extends TypedSopNode<CameraPlaneSopParamsConfig>
 		this.planeSize.set(width, height);
 		const geometry = this._createPlane(this.planeSize);
 
-		CoreTransform.rotateGeometry(geometry, DEFAULT_UP, this.pv.direction);
+		rotateGeometry(geometry, DEFAULT_UP, this.pv.direction);
 
 		const matrix = this._coreTransform.translationMatrix(this._planeCenter);
 		geometry.applyMatrix4(matrix);

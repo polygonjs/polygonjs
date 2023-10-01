@@ -8,7 +8,7 @@
  *
  */
 import {TypedCopNode} from './_Base';
-import {BufferGeometry, DataTexture, Mesh, Texture} from 'three';
+import {DataTexture, Mesh, Object3D, Texture} from 'three';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {NodeContext} from '../../poly/NodeContext';
 import {CoreMask} from '../../../core/geometry/Mask';
@@ -18,7 +18,7 @@ import {
 	textureFromAttributesTotalAttribSizes,
 } from '../../../core/geometry/operation/TextureFromAttribute';
 import {CoreAttribute} from '../../../core/geometry/Attribute';
-import {CoreGeometry} from '../../../core/geometry/Geometry';
+import {corePointClassFactory} from '../../../core/geometry/CoreObjectFactory';
 
 class GeometryAttributeCopParamsConfig extends NodeParamsConfig {
 	/** @param sop node */
@@ -63,7 +63,7 @@ export class GeometryAttributeCopNode extends TypedCopNode<GeometryAttributeCopP
 		for (const selectedObject of selectedObjects) {
 			const geometry = (selectedObject as Mesh).geometry;
 			if (geometry) {
-				texture = texture || this._textureFromGeometry(geometry);
+				texture = texture || this._textureFromGeometry(selectedObject);
 			}
 		}
 		if (!texture) {
@@ -72,9 +72,15 @@ export class GeometryAttributeCopNode extends TypedCopNode<GeometryAttributeCopP
 		}
 		this.setTexture(texture);
 	}
-	private _textureFromGeometry(geometry: BufferGeometry): DataTexture | undefined {
-		const geoAttribNames = CoreGeometry.attribNames(geometry);
+	private _textureFromGeometry(object: Object3D): DataTexture | undefined {
+		const corePointClass = corePointClassFactory(object);
+		const geoAttribNames = corePointClass.attributeNames(object);
 		const attribNames = CoreAttribute.attribNamesMatchingMask(this.pv.attribute, geoAttribNames);
+
+		const geometry = (object as Mesh).geometry;
+		if (!geometry) {
+			return;
+		}
 
 		// the missing attributes is currently not working, since we use a mask check first
 		// const missingAttributes = textureFromAttributesMissingAttributes(geometry, attribNames);

@@ -10,7 +10,7 @@ export function testenginenodessopShortestPath(qUnit: QUnit) {
 
 		const compute = async () => {
 			const container = await shortestPaths1.compute();
-			const pointsCount = container.pointsCount();
+			const pointsCount = container.coreContent()!.pointsCount();
 			return {
 				pointsCount,
 			};

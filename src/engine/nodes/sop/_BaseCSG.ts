@@ -1,7 +1,7 @@
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {TypedSopNode} from './_Base';
-import type {CsgGeometry, CsgGeometryType, CsgTypeMap} from '../../../core/geometry/csg/CsgCommon';
-import {CsgObject} from '../../../core/geometry/csg/CsgObject';
+import type {CsgGeometry, CsgGeometryType, CsgTypeMap} from '../../../core/geometry/modules/csg/CsgCommon';
+import {CsgObject} from '../../../core/geometry/modules/csg/CsgObject';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {CoreObjectType} from '../../../core/geometry/ObjectContent';
 import {ModuleName} from '../../poly/registers/modules/Common';

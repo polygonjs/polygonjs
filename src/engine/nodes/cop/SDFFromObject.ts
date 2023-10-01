@@ -10,7 +10,6 @@ import {Vector3, Ray, Texture, Data3DTexture, DoubleSide, Box3, Mesh} from 'thre
 import {NodeContext} from './../../poly/NodeContext';
 import {TypedCopNode} from './_Base';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-// import {BaseNodeType} from '../_Base';
 import {HitPointInfo} from 'three-mesh-bvh';
 import {addSDFMetadataToContainer, createSDFTexture} from '../../../core/loader/geometry/SDF';
 import {CopType} from '../../poly/registers/nodes/types/Cop';
@@ -93,13 +92,13 @@ export class SDFFromObjectCopNode extends TypedCopNode<SDFFromObjectCopParamsCon
 		}
 
 		let objectWithGeo: MeshWithBVH | undefined;
-		for (let object of objects) {
+		for (const object of objects) {
 			if ((object as MeshWithBVH).geometry) {
 				objectWithGeo = objectWithGeo || (object as MeshWithBVH);
 			}
 		}
 		if (!objectWithGeo) {
-			for (let object of objects) {
+			for (const object of objects) {
 				object.traverse((childObject) => {
 					if ((childObject as MeshWithBVH).geometry) {
 						objectWithGeo = objectWithGeo || (childObject as MeshWithBVH);

@@ -135,7 +135,7 @@ export class NodeCookEventNode extends TypedEventNode<NodeCookEventParamsConfig>
 	}
 	private async _cookNodes(nodes: BaseNodeType[]) {
 		const promises: Promise<any>[] = [];
-		for (let node of nodes) {
+		for (const node of nodes) {
 			promises.push(this._cookNode(node));
 		}
 		return await Promise.all(promises);
@@ -154,7 +154,7 @@ export class NodeCookEventNode extends TypedEventNode<NodeCookEventParamsConfig>
 		this._reset();
 
 		this._resolvedNodes = this.scene().nodesController.nodesFromMask(this.pv.mask || '');
-		for (let node of this._resolvedNodes) {
+		for (const node of this._resolvedNodes) {
 			node.cookController.registerOnCookEnd(this._callbackNameForNode(node), () => {
 				this._onNodeCookComplete(node);
 			});
@@ -171,13 +171,13 @@ export class NodeCookEventNode extends TypedEventNode<NodeCookEventParamsConfig>
 	private _reset() {
 		this._dispatchedFirstNodeCooked = false;
 		this._cookStateByNodeId.clear();
-		for (let node of this._resolvedNodes) {
+		for (const node of this._resolvedNodes) {
 			node.cookController.deregisterOnCookEnd(this._callbackNameForNode(node));
 		}
 		this._resolvedNodes = [];
 	}
 	private _allNodesHaveCooked() {
-		for (let node of this._resolvedNodes) {
+		for (const node of this._resolvedNodes) {
 			const state = this._cookStateByNodeId.get(node.graphNodeId());
 			if (!state) {
 				return false;

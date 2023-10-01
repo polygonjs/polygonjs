@@ -1,6 +1,6 @@
 import {Vector3, Box3} from 'three';
 import {CoreGroup} from '../../../../../core/geometry/Group';
-import {CoreEntity} from '../../../../../core/geometry/Entity';
+import {CoreEntity} from '../../../../../core/geometry/CoreEntity';
 import {CoreEntitySelectionState, updateSelectionState} from './GroupCommon';
 
 const bbox = new Box3();
@@ -13,7 +13,7 @@ export class GroupByBoundingObjectHelper {
 		boundingCoreGroup: CoreGroup
 	) {
 		boundingCoreGroup.boundingBox(bbox);
-		for (let entity of allEntities) {
+		for (const entity of allEntities) {
 			entity.position(tmpPosition);
 			updateSelectionState(selectionStates, entity, bbox.containsPoint(tmpPosition));
 		}

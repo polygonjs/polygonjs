@@ -1,8 +1,10 @@
 import {ParamConfig} from '../../engine/nodes/utils/params/ParamsConfig';
 import {Constructor} from '../../types/GlobalTypes';
 import {Camera, Vector2, PerspectiveCamera, OrthographicCamera} from 'three';
-import {CoreObject} from '../geometry/Object';
 import {CameraAttribute} from './CoreCamera';
+import {coreObjectClassFactory} from '../geometry/CoreObjectFactory';
+import {CoreObjectType} from '../geometry/ObjectContent';
+import type {BaseCoreObject} from '../geometry/entities/object/BaseCoreObject';
 
 export function CoreCameraViewOffsetParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
@@ -13,24 +15,33 @@ export function CoreCameraViewOffsetParamConfig<TBase extends Constructor>(Base:
 	};
 }
 
-function cameraViewOffsetMin(camera: Camera, target: Vector2) {
+function cameraViewOffsetMin<T extends CoreObjectType>(
+	coreObjectClass: typeof BaseCoreObject<T>,
+	camera: Camera,
+	target: Vector2
+) {
 	target.set(0, 0);
-	CoreObject.attribValue(camera, CameraAttribute.VIEW_OFFSET_MIN, 0, target);
+	coreObjectClass.attribValue(camera, CameraAttribute.VIEW_OFFSET_MIN, 0, target);
 }
-function cameraViewOffsetMax(camera: Camera, target: Vector2) {
+function cameraViewOffsetMax<T extends CoreObjectType>(
+	coreObjectClass: typeof BaseCoreObject<T>,
+	camera: Camera,
+	target: Vector2
+) {
 	target.set(1, 1);
-	CoreObject.attribValue(camera, CameraAttribute.VIEW_OFFSET_MAX, 0, target);
+	coreObjectClass.attribValue(camera, CameraAttribute.VIEW_OFFSET_MAX, 0, target);
 }
 const _min = new Vector2();
 const _max = new Vector2();
 export function cameraSetViewOffset(camera: PerspectiveCamera | OrthographicCamera, resolution: Vector2) {
-	const hasMin = CoreObject.hasAttrib(camera, CameraAttribute.VIEW_OFFSET_MIN);
-	const hasMax = CoreObject.hasAttrib(camera, CameraAttribute.VIEW_OFFSET_MAX);
+	const coreObjectClass = coreObjectClassFactory(camera);
+	const hasMin = coreObjectClass.hasAttribute(camera, CameraAttribute.VIEW_OFFSET_MIN);
+	const hasMax = coreObjectClass.hasAttribute(camera, CameraAttribute.VIEW_OFFSET_MAX);
 	if (!(hasMin && hasMax)) {
 		return;
 	}
-	cameraViewOffsetMin(camera, _min);
-	cameraViewOffsetMax(camera, _max);
+	cameraViewOffsetMin(coreObjectClass, camera, _min);
+	cameraViewOffsetMax(coreObjectClass, camera, _max);
 	camera.setViewOffset(
 		resolution.x,
 		resolution.y,

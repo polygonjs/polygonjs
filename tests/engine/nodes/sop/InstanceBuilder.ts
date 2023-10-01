@@ -12,12 +12,11 @@ import {FloatParam} from '../../../../src/engine/params/Float';
 import {ParamType} from '../../../../src/engine/poly/ParamType';
 import {AssemblersUtils} from '../../../helpers/AssemblersUtils';
 import {JsConnectionPointType} from '../../../../src/engine/nodes/utils/io/connections/Js';
-// import {AttributeJsNodeOutput} from '../../../../src/engine/nodes/js/Attribute';
 import {createRequiredNodes} from './Instance';
-import {CoreGeometry} from '../../../../src/core/geometry/Geometry';
 import {AttributeJsNodeOutput} from '../../../../src/engine/nodes/js/Attribute';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 import {CoreSleep} from '../../../../src/core/Sleep';
+import {pointsCountFromObject} from '../../../../src/core/geometry/entities/point/CorePointUtils';
 export function testenginenodessopInstanceBuilder(qUnit: QUnit) {
 	const _v3 = new Vector3();
 	const bbox = new Box3();
@@ -31,7 +30,7 @@ export function testenginenodessopInstanceBuilder(qUnit: QUnit) {
 		// container.boundingBox(bbox);
 
 		bbox.makeEmpty();
-		const pointsCount = CoreGeometry.pointsCount(geometry);
+		const pointsCount = pointsCountFromObject(object);
 		for (let i = 0; i < pointsCount; i++) {
 			_v3.fromBufferAttribute(instancePosition, i);
 			bbox.expandByPoint(_v3);

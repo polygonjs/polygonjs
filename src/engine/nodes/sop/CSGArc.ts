@@ -5,8 +5,8 @@
  */
 import {CSGSopNode} from './_BaseCSG';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {vector2ToCsgVec2} from '../../../core/geometry/csg/CsgVecToVector';
-import {step} from '../../../core/geometry/csg/CsgConstant';
+import {vector2ToCsgVec2} from '../../../core/geometry/modules/csg/CsgVecToVector';
+import {step} from '../../../core/geometry/modules/csg/CsgConstant';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 import type {maths} from '@jscad/modeling';

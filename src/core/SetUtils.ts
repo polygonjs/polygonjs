@@ -1,62 +1,59 @@
 export function setFirstValue<K>(set: Set<K>): K | undefined {
-	for (let k of set) {
+	for (const k of set) {
 		return k;
 	}
 }
-export function setToArray<T>(set: Set<T>) {
-	const array: Array<T> = [];
+let i = 0;
+export function setToArray<T>(set: Set<T>, target: T[]): T[] {
+	// const array: Array<T> = [];
+	target.length = set.size;
+	i = 0;
 	set.forEach((elem) => {
-		array.push(elem);
+		target[i] = elem;
+		i++;
 	});
-	return array;
+	return target;
+}
+
+export function setUnion<T extends string | number>(set0: Set<T>, set1: Set<T>, target: Set<T>): Set<T> {
+	target.clear();
+	set0.forEach((val) => target.add(val));
+	set1.forEach((val) => target.add(val));
+	return target;
+}
+export function setIntersection<T extends string | number>(set0: Set<T>, set1: Set<T>, target: Set<T>): Set<T> {
+	target.clear();
+	set0.forEach((val) => {
+		if (set1.has(val)) {
+			target.add(val);
+		}
+	});
+	set1.forEach((val) => {
+		if (set0.has(val)) {
+			target.add(val);
+		}
+	});
+	return target;
+}
+export function setDifference<T extends string | number>(set0: Set<T>, set1: Set<T>, target: Set<T>): Set<T> {
+	target.clear();
+	set0.forEach((val) => {
+		if (!set1.has(val)) {
+			target.add(val);
+		}
+	});
+	set1.forEach((val) => {
+		if (!set0.has(val)) {
+			target.add(val);
+		}
+	});
+	return target;
 }
 
 export class SetUtils {
 	static setFirstValue = setFirstValue;
 	static toArray = setToArray;
-	static fromArray<T>(array: T[], target?: Set<T>): Set<T> {
-		if (target) {
-			target.clear();
-		} else {
-			target = new Set<T>();
-		}
-		for (let element of array) {
-			target.add(element);
-		}
-		return target;
-	}
-	static union<T extends string | number>(set0: Set<T>, set1: Set<T>): Set<T> {
-		const newSet: Set<T> = new Set();
-		set0.forEach((val) => newSet.add(val));
-		set1.forEach((val) => newSet.add(val));
-		return newSet;
-	}
-	static intersection<T extends string | number>(set0: Set<T>, set1: Set<T>): Set<T> {
-		const newSet: Set<T> = new Set();
-		set0.forEach((val) => {
-			if (set1.has(val)) {
-				newSet.add(val);
-			}
-		});
-		set1.forEach((val) => {
-			if (set0.has(val)) {
-				newSet.add(val);
-			}
-		});
-		return newSet;
-	}
-	static difference<T extends string | number>(set0: Set<T>, set1: Set<T>): Set<T> {
-		const newSet: Set<T> = new Set();
-		set0.forEach((val) => {
-			if (!set1.has(val)) {
-				newSet.add(val);
-			}
-		});
-		set1.forEach((val) => {
-			if (!set0.has(val)) {
-				newSet.add(val);
-			}
-		});
-		return newSet;
-	}
+	static union = setUnion;
+	static intersection = setIntersection;
+	static difference = setDifference;
 }

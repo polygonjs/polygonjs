@@ -111,7 +111,7 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 		return this._shadersByName;
 	}
 
-	static override require_webgl2() {
+	static override requireWebGL2() {
 		return true;
 	}
 
@@ -165,7 +165,7 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 		const coreGroup = inputCoreGroups[0];
 
 		const selectedObjects = CoreMask.filterThreejsObjects(coreGroup, this.pv);
-		for (let object of selectedObjects) {
+		for (const object of selectedObjects) {
 			const existingActorIds = this.scene().actorsManager.objectActorNodeIds(object);
 			if (existingActorIds == null || existingActorIds.length == 0) {
 				this.states.error.set(`the input objects requires an actor node assigned to it`);
@@ -177,7 +177,7 @@ export class ParticlesSystemGpuSopNode extends TypedSopNode<ParticlesSystemGpuSo
 			this.states.error.set(`no renderer found`);
 			return;
 		}
-		for (let object of selectedObjects) {
+		for (const object of selectedObjects) {
 			Poly.onObjectsAddRemoveHooks.assignOnAddHookHandler(object, this);
 			setParticleRenderer(this.graphNodeId(), renderer);
 			CoreParticlesAttribute.setParticlesNodeId(object, this.graphNodeId());

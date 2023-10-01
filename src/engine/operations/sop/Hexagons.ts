@@ -1,7 +1,7 @@
 import {CoreGeometryOperationHexagon} from './../../../core/geometry/operation/Hexagon';
 import {BaseSopOperation} from './_Base';
 import {BufferGeometry, Vector2, Vector3, Quaternion, BoxGeometry, Box3} from 'three';
-import {CoreTransform} from '../../../core/Transform';
+import {rotateGeometry} from '../../../core/Transform';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {isBooleanTrue} from '../../../core/BooleanValue';
@@ -48,7 +48,7 @@ export class HexagonsSopOperation extends BaseSopOperation {
 		if (params.hexagonRadius > 0) {
 			const geometry = this._createHexagons(params.size, params);
 
-			CoreTransform.rotateGeometry(geometry, DEFAULT_UP, params.direction);
+			rotateGeometry(geometry, DEFAULT_UP, params.direction);
 
 			return this.createCoreGroupFromObjects([this._createHexagonsObjects(geometry, params)]);
 		} else {
@@ -88,7 +88,7 @@ export class HexagonsSopOperation extends BaseSopOperation {
 		const size2d = new Vector2(tmpSize.x, tmpSize.y);
 		const geometry = this._createHexagons(size2d, params);
 
-		CoreTransform.rotateGeometry(geometry, DEFAULT_UP, params.direction);
+		rotateGeometry(geometry, DEFAULT_UP, params.direction);
 		geometry.translate(tmpCenter.x, tmpCenter.y, tmpCenter.z);
 
 		const object = this._createHexagonsObjects(geometry, params);

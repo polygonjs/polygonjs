@@ -25,7 +25,7 @@ qUnit.test('sop/CADTorus simple', async (assert) => {
 		const allObjectsCount = coreGroup.allObjects().length;
 		const threejsObjectsCount = coreGroup.threejsObjects().length;
 
-		container.boundingBox(tmpBox);
+		container.coreContent()!.boundingBox(tmpBox);
 
 		return {allObjectsCount, threejsObjectsCount};
 	}
@@ -37,7 +37,7 @@ qUnit.test('sop/CADTorus simple', async (assert) => {
 
 		const geometry = coreGroup?.threejsObjectsWithGeo()[0].geometry;
 
-		container.boundingBox(tmpBox);
+		container.coreContent()!.boundingBox(tmpBox);
 
 		return {allObjectsCount, threejsObjectsCount, geometry};
 	}

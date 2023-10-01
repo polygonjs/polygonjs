@@ -118,7 +118,7 @@ export class LayerSopNode extends TypedSopNode<LayerSopParamsConfig> {
 
 		const objects = filterThreejsObjectsWithGroup(coreGroup, this.pv);
 
-		for (let object of objects) {
+		for (const object of objects) {
 			this._updateLayers(object);
 			// object.layers.set(this.pv.layer);
 		}

@@ -7,7 +7,7 @@ import {ObjectType} from './../../../core/geometry/Constant';
 import {TypedSopNode} from './_Base';
 import {Vector3} from 'three';
 import {ConeGeometry} from 'three';
-import {CoreTransform} from '../../../core/Transform';
+import {rotateGeometry} from '../../../core/Transform';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {BaseSopOperation} from '../../operations/sop/_Base';
@@ -53,7 +53,7 @@ export class ConeSopNode extends TypedSopNode<ConeSopParamsConfig> {
 			this.pv.thetaLength
 		);
 
-		CoreTransform.rotateGeometry(geometry, DEFAULT_UP, this.pv.direction);
+		rotateGeometry(geometry, DEFAULT_UP, this.pv.direction);
 		geometry.translate(this.pv.center.x, this.pv.center.y, this.pv.center.z);
 
 		const object = BaseSopOperation.createObject(geometry, ObjectType.MESH);

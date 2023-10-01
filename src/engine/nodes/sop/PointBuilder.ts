@@ -9,13 +9,14 @@ import {SopType} from '../../poly/registers/nodes/types/Sop';
 import {PointBuilderPersistedConfig} from '../js/code/assemblers/pointBuilder/PointBuilderPersistedConfig';
 import {AssemblerName} from '../../poly/registers/assemblers/_BaseRegister';
 import {BasePointBuilderSopNode, BasePointBuilderSopParamsConfig} from './_BasePointBuilder';
-import {CoreGeometry} from '../../../core/geometry/Geometry';
 import {PointBuilderEvaluator} from '../js/code/assemblers/pointBuilder/PointBuilderEvaluator';
 import {PointContainer} from '../js/code/assemblers/pointBuilder/PointBuilderAssemblerCommon';
-import {Object3DWithGeometry} from '../../../core/geometry/Group';
 import {Attribute} from '../../../core/geometry/Attribute';
 import {ParamConfig} from '../utils/params/ParamsConfig';
 import {isBooleanTrue} from '../../../core/Type';
+import {pointsCountFromObject} from '../../../core/geometry/entities/point/CorePointUtils';
+import {CoreObjectType, ObjectContent} from '../../../core/geometry/ObjectContent';
+import {corePointClassFactory} from '../../../core/geometry/CoreObjectFactory';
 
 class PointBuilderSopParamsConfig extends BasePointBuilderSopParamsConfig {
 	/** @param updateNormals */
@@ -41,21 +42,25 @@ export class PointBuilderSopNode extends BasePointBuilderSopNode<PointBuilderSop
 		normalsUpdated: false,
 	};
 
-	protected _processObject(inputObject: Object3DWithGeometry, objnum: number, evaluator: PointBuilderEvaluator) {
+	protected _processObject<T extends CoreObjectType>(
+		object: ObjectContent<T>,
+		objnum: number,
+		evaluator: PointBuilderEvaluator
+	) {
 		this._pointContainer.objnum = objnum;
 		this._pointContainer.normalsUpdated = false;
-		const geometry = inputObject.geometry;
-		const readAttributeOptions = this._checkRequiredReadAttributes(geometry);
-		const writeAttributeOptions = this._checkRequiredWriteAttributes(geometry);
+		const readAttributeOptions = this._checkRequiredReadAttributes(object);
+		const writeAttributeOptions = this._checkRequiredWriteAttributes(object);
 		const readAttribNames = readAttributeOptions ? readAttributeOptions.attribNames : [];
 		const readAttributeByName = readAttributeOptions ? readAttributeOptions.attributeByName : new Map();
 		const attribTypeByName = readAttributeOptions ? readAttributeOptions.attribTypeByName : new Map();
 		const writeAttribNames = writeAttributeOptions ? writeAttributeOptions.attribNames : [];
 		const writeAttributeByName = writeAttributeOptions ? writeAttributeOptions.attributeByName : new Map();
 		this._resetRequiredAttributes();
-		const pointsCount = CoreGeometry.pointsCount(geometry);
-		const positionAttrib = geometry.getAttribute(Attribute.POSITION) as BufferAttribute;
-		const normalAttrib = geometry.getAttribute(Attribute.NORMAL) as BufferAttribute;
+		const pointsCount = pointsCountFromObject(object);
+		const corePointClass = corePointClassFactory(object);
+		const positionAttrib = corePointClass.attribute(object, Attribute.POSITION) as BufferAttribute | undefined;
+		const normalAttrib = corePointClass.attribute(object, Attribute.NORMAL) as BufferAttribute | undefined;
 		const hasPosition = positionAttrib != null;
 		const hasNormal = normalAttrib != null;
 		if (!hasPosition) {
@@ -96,7 +101,7 @@ export class PointBuilderSopNode extends BasePointBuilderSopNode<PointBuilderSop
 			this._writeRequiredAttributes(ptnum, writeAttribNames, writeAttributeByName);
 		}
 		if (isBooleanTrue(this.pv.updateNormals) && !this._pointContainer.normalsUpdated) {
-			geometry.computeVertexNormals();
+			corePointClass.computeNormals(object);
 		}
 	}
 }

@@ -5,15 +5,15 @@
  */
 import {CADSopNode} from './_BaseCAD';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import type {TopoDS_Vertex, OpenCascadeInstance, gp_Pnt2d} from '../../../core/geometry/cad/CadCommon';
-import {CadLoader} from '../../../core/geometry/cad/CadLoader';
-import {cadEdgeCreate} from '../../../core/geometry/cad/toObject3D/CadEdge';
-import {CadGeometryType} from '../../../core/geometry/cad/CadCommon';
-import {CadObject} from '../../../core/geometry/cad/CadObject';
+import type {TopoDS_Vertex, OpenCascadeInstance, gp_Pnt2d} from '../../../core/geometry/modules/cad/CadCommon';
+import {CadLoader} from '../../../core/geometry/modules/cad/CadLoader';
+import {cadEdgeCreate} from '../../../core/geometry/modules/cad/toObject3D/CadEdge';
+import {CadGeometryType} from '../../../core/geometry/modules/cad/CadCommon';
+import {CadObject} from '../../../core/geometry/modules/cad/CadObject';
 import {TypeAssert} from '../../poly/Assert';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
-import {cadFilterObjects} from '../../../core/geometry/cad/utils/CadFilter';
+import {cadFilterObjects} from '../../../core/geometry/modules/cad/utils/CadFilter';
 
 enum SegmentMode {
 	FROM_PAIRS = 'from pairs',
@@ -103,7 +103,7 @@ function _createSegmentsFromAllVertices(
 	newObjects: CadObject<CadGeometryType>[]
 ) {
 	let previousVertexObject: CadObject<CadGeometryType.VERTEX> | undefined;
-	for (let inputObject of coreObjects) {
+	for (const inputObject of coreObjects) {
 		if (previousVertexObject) {
 			newObjects.push(_createSegment(oc, previousVertexObject.cadGeometry(), inputObject.cadGeometry()));
 		}
@@ -116,7 +116,7 @@ function _createSegmentsFromAllPoint2D(
 	newObjects: CadObject<CadGeometryType>[]
 ) {
 	let previousPoint2DObject: CadObject<CadGeometryType.POINT_2D> | undefined;
-	for (let inputObject of coreObjects) {
+	for (const inputObject of coreObjects) {
 		if (previousPoint2DObject) {
 			newObjects.push(_createSegment2d(oc, previousPoint2DObject.cadGeometry(), inputObject.cadGeometry()));
 		}

@@ -6,8 +6,8 @@
 import {CSGSopNode} from './_BaseCSG';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {Matrix4} from 'three';
-import {vector3ToCsgVec3} from '../../../core/geometry/csg/CsgVecToVector';
-import {csgApplyMatrix4} from '../../../core/geometry/csg/math/CsgMat4';
+import {vector3ToCsgVec3} from '../../../core/geometry/modules/csg/CsgVecToVector';
+import {csgApplyMatrix4} from '../../../core/geometry/modules/csg/math/CsgMat4';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 import type {maths} from '@jscad/modeling';

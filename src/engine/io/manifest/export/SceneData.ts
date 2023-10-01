@@ -55,7 +55,7 @@ export class SceneDataManifestExporter {
 		};
 
 		const exporter = new SceneJsonExporter(this.scene);
-		const sceneData = await exporter.data({polygonjs: 'ENGINE_VERSION'});
+		const sceneData = await exporter.data({versions: {polygonjs: 'ENGINE_VERSION'}, withPersistedConfig: true});
 
 		this._data = {
 			properties: sceneData.properties!,

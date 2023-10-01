@@ -75,7 +75,7 @@ export function touchObjectProperties(object3D: Object3D, propertyNames: Array<k
 	if (!map) {
 		return;
 	}
-	for (let propertyName of propertyNames) {
+	for (const propertyName of propertyNames) {
 		const _ref = map.get(propertyName);
 		if (_ref) {
 			incrementRefSafely(_ref);

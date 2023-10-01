@@ -47,7 +47,7 @@ export class TangentsHelperSopNode extends TypedSopNode<TangentsHelperSopParamsC
 
 		const selectedObjects = CoreMask.filterThreejsObjects(inputCoreGroup, this.pv).filter(object3DHasGeometry);
 		const newObjects: Object3D[] = [];
-		for (let object of selectedObjects) {
+		for (const object of selectedObjects) {
 			const geometry = (object as Mesh).geometry;
 			if (geometry) {
 				const tangentAttribute = geometry.getAttribute('tangent');

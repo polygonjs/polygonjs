@@ -27,7 +27,7 @@ export class TexturePersistedConfig extends BasePersistedConfig {
 		// params updating uniforms
 		const param_uniform_pairs: [string, string][] = [];
 		const param_configs = assemblerController.assembler.param_configs();
-		for (let param_config of param_configs) {
+		for (const param_config of param_configs) {
 			param_uniform_pairs.push([param_config.name(), param_config.uniformName()]);
 		}
 
@@ -63,7 +63,7 @@ export class TexturePersistedConfig extends BasePersistedConfig {
 			uniforms: data.uniforms as IUniformsWithTime,
 		});
 
-		for (let pair of data.param_uniform_pairs) {
+		for (const pair of data.param_uniform_pairs) {
 			const param = this.node.params.get(pair[0]);
 			const uniform = data.uniforms[pair[1]];
 			if (param && uniform) {

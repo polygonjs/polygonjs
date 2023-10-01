@@ -1,9 +1,8 @@
-import {CoreGeometry} from '../Geometry';
-import {CorePoint} from '../Point';
-import {Float32BufferAttribute} from 'three';
-import {BufferGeometry} from 'three';
-import {Vector2} from 'three';
+import {CorePoint} from '../entities/point/CorePoint';
+import {Float32BufferAttribute, Vector2, BufferGeometry, Mesh} from 'three';
 import {PolyDictionary} from '../../../types/GlobalTypes';
+import {CoreObjectType, ObjectContent, isObject3D} from '../ObjectContent';
+import {pointsFromObject, pointAttributeNames, pointAttributeSizes} from '../entities/point/CorePointUtils';
 
 export class CoreGeometryUtilCurve {
 	static accumulatedCurvePointIndices(indices: number[]) {
@@ -96,26 +95,34 @@ export class CoreGeometryUtilCurve {
 		return geometry;
 	}
 
-	static line_segment_to_geometries(geometry: BufferGeometry) {
+	static line_segment_to_geometries<T extends CoreObjectType>(object: ObjectContent<T>) {
 		const geometries: BufferGeometry[] = [];
-		const core_geometry = new CoreGeometry(geometry);
-		const attrib_names = core_geometry.attribNames();
-		const points = core_geometry.points();
+		const attrib_names = pointAttributeNames(object);
+		const points = pointsFromObject(object);
+
+		if (!isObject3D(object)) {
+			return;
+		}
+		const geometry = (object as Mesh).geometry;
+		if (!geometry) {
+			return;
+		}
+
 		const indices = (geometry.getIndex()?.array as number[]) || [];
 
 		const accumulated_curve_point_indices = this.accumulatedCurvePointIndices(indices);
 
 		if (accumulated_curve_point_indices.length > 0) {
-			const attribute_sizes_by_name = core_geometry.attribSizes();
+			const attribute_sizes_by_name = pointAttributeSizes(object);
 
 			accumulated_curve_point_indices.forEach((curve_point_indices, i) => {
-				geometry = this.create_line_segment_geometry(
+				const newGeometry = this.create_line_segment_geometry(
 					points,
 					curve_point_indices,
 					attrib_names,
 					attribute_sizes_by_name
 				);
-				geometries.push(geometry);
+				geometries.push(newGeometry);
 			});
 		}
 

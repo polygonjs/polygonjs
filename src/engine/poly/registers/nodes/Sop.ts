@@ -145,6 +145,7 @@ import {DecalSopNode} from '../../../nodes/sop/Decal';
 import {DecomposeSopNode} from '../../../nodes/sop/Decompose';
 import {DelaySopNode} from '../../../nodes/sop/Delay';
 import {DeleteSopNode} from '../../../nodes/sop/Delete';
+import {DeleteByNameSopNode} from '../../../nodes/sop/DeleteByName';
 import {DirectionalLightSopNode} from '../../../nodes/sop/DirectionalLight';
 import {DrawRangeSopNode} from '../../../nodes/sop/DrawRange';
 import {EmptyObjectSopNode} from '../../../nodes/sop/EmptyObject';
@@ -186,6 +187,7 @@ import {InstanceBuilderSopNode} from '../../../nodes/sop/InstanceBuilder';
 import {InstanceUpdateSopNode} from '../../../nodes/sop/InstanceUpdate';
 import {InstancesCountSopNode} from '../../../nodes/sop/InstancesCount';
 import {JitterSopNode} from '../../../nodes/sop/Jitter';
+import {LatticeSopNode} from '../../../nodes/sop/Lattice';
 import {LayerSopNode} from '../../../nodes/sop/Layer';
 import {LightMixerSopNode} from '../../../nodes/sop/LightMixer';
 import {LightProbeSopNode} from '../../../nodes/sop/LightProbe';
@@ -232,6 +234,12 @@ import {PointSopNode} from '../../../nodes/sop/Point';
 import {PointLightSopNode} from '../../../nodes/sop/PointLight';
 import {PolarTransformSopNode} from '../../../nodes/sop/PolarTransform';
 import {PolywireSopNode} from '../../../nodes/sop/Polywire';
+// QUAD
+import {QuadPlaneSopNode} from '../../../nodes/sop/QuadPlane';
+import {QuadSmoothSopNode} from '../../../nodes/sop/QuadSmooth';
+import {QuadTriangulateSopNode} from '../../../nodes/sop/QuadTriangulate';
+import {QuadrangulateSopNode} from '../../../nodes/sop/Quadrangulate';
+//
 import {RaySopNode} from '../../../nodes/sop/Ray';
 import {ReflectorSopNode} from '../../../nodes/sop/Reflector';
 import {ResampleSopNode} from '../../../nodes/sop/Resample';
@@ -295,6 +303,20 @@ import {UvProjectSopNode} from '../../../nodes/sop/UvProject';
 import {UvTransformSopNode} from '../../../nodes/sop/UvTransform';
 import {UvUnwrapSopNode} from '../../../nodes/sop/UvUnwrap';
 import {WebXRAREstimatedLightSopNode} from '../../../nodes/sop/WebXRAREstimatedLight';
+import {WFCBuilderSopNode} from '../../../nodes/sop/WFCBuilder';
+import {WFCDebugSopNode} from '../../../nodes/sop/WFCDebug';
+import {WFCSolverSopNode} from '../../../nodes/sop/WFCSolver';
+import {WFCRuleFromProximitySopNode} from '../../../nodes/sop/WFCRuleFromProximity';
+import {WFCRuleConnectionFromSideNameSopNode} from '../../../nodes/sop/WFCRuleConnectionFromSideName';
+// import {WFCRuleConnectionToEmptyTileSopNode} from '../../../nodes/sop/WFCRuleConnectionToEmptyTile';
+import {WFCRuleConnectionToGridBorderSopNode} from '../../../nodes/sop/WFCRuleConnectionToGridBorder';
+import {WFCRuleTileWeightSopNode} from '../../../nodes/sop/WFCRuleTileWeight';
+import {WFCTileEmptyObjectSopNode} from '../../../nodes/sop/WFCTileEmptyObject';
+import {WFCTileErrorObjectSopNode} from '../../../nodes/sop/WFCTileErrorObject';
+import {WFCTilePropertiesSopNode} from '../../../nodes/sop/WFCTileProperties';
+import {WFCTileSideNameSopNode} from '../../../nodes/sop/WFCTileSideName';
+import {WFCTileTransformSopNode} from '../../../nodes/sop/WFCTileTransform';
+import {WFCTileUnresolvedObjectSopNode} from '../../../nodes/sop/WFCTileUnresolvedObject';
 // networks
 import {ActorsNetworkSopNode} from '../../../nodes/sop/ActorsNetwork';
 import {AnimationsNetworkSopNode} from '../../../nodes/sop/AnimationsNetwork';
@@ -449,6 +471,7 @@ export interface GeoNodeChildrenMap {
 	decompose: DecomposeSopNode;
 	delay: DelaySopNode;
 	delete: DeleteSopNode;
+	deleteByName: DeleteByNameSopNode;
 	directionalLight: DirectionalLightSopNode;
 	drawRange: DrawRangeSopNode;
 	emptyObject: EmptyObjectSopNode;
@@ -491,6 +514,7 @@ export interface GeoNodeChildrenMap {
 	instancesCount: InstancesCountSopNode;
 	jitter: JitterSopNode;
 	// JSSDF: JSSDFSopNode;
+	lattice: LatticeSopNode;
 	layer: LayerSopNode;
 	lightMixer: LightMixerSopNode;
 	lightProbe: LightProbeSopNode;
@@ -537,6 +561,12 @@ export interface GeoNodeChildrenMap {
 	polarTransform: PolarTransformSopNode;
 	polywire: PolywireSopNode;
 	pointBuilder: PointBuilderSopNode;
+	// QUAD
+	quadPlane: QuadPlaneSopNode;
+	quadSmooth: QuadSmoothSopNode;
+	quadTriangulate: QuadTriangulateSopNode;
+	quadrangulate: QuadrangulateSopNode;
+	//
 	ray: RaySopNode;
 	reflector: ReflectorSopNode;
 	resample: ResampleSopNode;
@@ -600,6 +630,20 @@ export interface GeoNodeChildrenMap {
 	uvTransform: UvTransformSopNode;
 	uvUnwrap: UvUnwrapSopNode;
 	webXRAREstimatedLight: WebXRAREstimatedLightSopNode;
+	WFCBuilder: WFCBuilderSopNode;
+	WFCDebug: WFCDebugSopNode;
+	WFCRuleFromProximity: WFCRuleFromProximitySopNode;
+	WFCRuleConnectionFromSideName: WFCRuleConnectionFromSideNameSopNode;
+	// WFCRuleConnectionToEmptyTile: WFCRuleConnectionToEmptyTileSopNode;
+	WFCRuleConnectionToGridBorder: WFCRuleConnectionToGridBorderSopNode;
+	WFCRuleTileWeight: WFCRuleTileWeightSopNode;
+	WFCSolver: WFCSolverSopNode;
+	WFCTileEmptyObject: WFCTileEmptyObjectSopNode;
+	WFCTileErrorObject: WFCTileErrorObjectSopNode;
+	WFCTileProperties: WFCTilePropertiesSopNode;
+	WFCTileSideName: WFCTileSideNameSopNode;
+	WFCTileTransform: WFCTileTransformSopNode;
+	WFCTileUnresolvedObject: WFCTileUnresolvedObjectSopNode;
 
 	// networks
 	actorsNetwork: ActorsNetworkSopNode;
@@ -622,6 +666,7 @@ import {AttribAddMultSopOperation} from '../../../operations/sop/AttribAddMult';
 import {AttribCastSopOperation} from '../../../operations/sop/AttribCast';
 import {AttribCopySopOperation} from '../../../operations/sop/AttribCopy';
 import {AttribCreateSopOperation} from '../../../operations/sop/AttribCreate';
+import {AttribDeleteSopOperation} from '../../../operations/sop/AttribDelete';
 import {AttribNormalizeSopOperation} from '../../../operations/sop/AttribNormalize';
 import {AttribFromTextureSopOperation} from '../../../operations/sop/AttribFromTexture';
 import {AttribIdSopOperation} from '../../../operations/sop/AttribId';
@@ -658,6 +703,7 @@ import {CubeCameraSopOperation} from '../../../operations/sop/CubeCamera';
 import {CurveFromPointsSopOperation} from '../../../operations/sop/CurveFromPoints';
 import {CurveGetPointSopOperation} from '../../../operations/sop/CurveGetPoint';
 import {DecalSopOperation} from '../../../operations/sop/Decal';
+import {DeleteByNameSopOperation} from '../../../operations/sop/DeleteByName';
 import {DirectionalLightSopOperation} from '../../../operations/sop/DirectionalLight';
 import {EmptyObjectSopOperation} from '../../../operations/sop/EmptyObject';
 import {File3DSSopOperation} from '../../../operations/sop/File3DS';
@@ -681,6 +727,7 @@ import {IcosahedronSopOperation} from '../../../operations/sop/Icosahedron';
 import {InstanceSopOperation} from '../../../operations/sop/Instance';
 import {InstanceUpdateSopOperation} from '../../../operations/sop/InstanceUpdate';
 import {JitterSopOperation} from '../../../operations/sop/Jitter';
+import {LatticeSopOperation} from '../../../operations/sop/Lattice';
 import {LightProbeSopOperation} from '../../../operations/sop/LightProbe';
 import {LookAtSopOperation} from '../../../operations/sop/LookAt';
 import {MapboxCameraSopOperation} from '../../../operations/sop/MapboxCamera';
@@ -742,6 +789,7 @@ export class SopRegister {
 		poly.registerOperation(AttribCastSopOperation);
 		poly.registerOperation(AttribCopySopOperation);
 		poly.registerOperation(AttribCreateSopOperation);
+		poly.registerOperation(AttribDeleteSopOperation);
 		poly.registerOperation(AttribNormalizeSopOperation);
 		poly.registerOperation(AttribFromTextureSopOperation);
 		poly.registerOperation(AttribIdSopOperation);
@@ -778,6 +826,7 @@ export class SopRegister {
 		poly.registerOperation(CurveFromPointsSopOperation);
 		poly.registerOperation(CurveGetPointSopOperation);
 		poly.registerOperation(DecalSopOperation);
+		poly.registerOperation(DeleteByNameSopOperation);
 		poly.registerOperation(DirectionalLightSopOperation);
 		poly.registerOperation(EmptyObjectSopOperation);
 		poly.registerOperation(File3DSSopOperation);
@@ -801,6 +850,7 @@ export class SopRegister {
 		poly.registerOperation(InstanceSopOperation);
 		poly.registerOperation(InstanceUpdateSopOperation);
 		poly.registerOperation(JitterSopOperation);
+		poly.registerOperation(LatticeSopOperation);
 		poly.registerOperation(LightProbeSopOperation);
 		poly.registerOperation(LookAtSopOperation);
 		poly.registerOperation(MapboxCameraSopOperation);
@@ -993,6 +1043,7 @@ export class SopRegister {
 		poly.registerNode(DecomposeSopNode, CATEGORY_SOP.MISC);
 		poly.registerNode(DelaySopNode, CATEGORY_SOP.MISC);
 		poly.registerNode(DeleteSopNode, CATEGORY_SOP.MODIFIER);
+		poly.registerNode(DeleteByNameSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(DirectionalLightSopNode, CATEGORY_SOP.LIGHTS);
 		poly.registerNode(DrawRangeSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(EmptyObjectSopNode, CATEGORY_SOP.PRIMITIVES);
@@ -1033,6 +1084,7 @@ export class SopRegister {
 		poly.registerNode(InstanceUpdateSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(InstancesCountSopNode, CATEGORY_SOP.RENDER);
 		poly.registerNode(JitterSopNode, CATEGORY_SOP.MODIFIER);
+		poly.registerNode(LatticeSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(LayerSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(LightMixerSopNode, CATEGORY_SOP.LIGHTS);
 		poly.registerNode(LightProbeSopNode, CATEGORY_SOP.LIGHTS);
@@ -1079,6 +1131,12 @@ export class SopRegister {
 		poly.registerNode(PointSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(PointLightSopNode, CATEGORY_SOP.LIGHTS);
 		poly.registerNode(PolywireSopNode, CATEGORY_SOP.MODIFIER);
+		// QUAD
+		poly.registerNode(QuadPlaneSopNode, CATEGORY_SOP.QUAD);
+		poly.registerNode(QuadSmoothSopNode, CATEGORY_SOP.QUAD);
+		poly.registerNode(QuadTriangulateSopNode, CATEGORY_SOP.QUAD);
+		poly.registerNode(QuadrangulateSopNode, CATEGORY_SOP.QUAD);
+		//
 		poly.registerNode(RaySopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(ReflectorSopNode, CATEGORY_SOP.RENDER);
 		poly.registerNode(ResampleSopNode, CATEGORY_SOP.MODIFIER);
@@ -1156,6 +1214,21 @@ export class SopRegister {
 		poly.registerNode(UvTransformSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(UvUnwrapSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(WebXRAREstimatedLightSopNode, CATEGORY_SOP.WEBXR);
+		poly.registerNode(WFCBuilderSopNode, CATEGORY_SOP.WFC);
+		poly.registerNode(WFCDebugSopNode, CATEGORY_SOP.WFC);
+		poly.registerNode(WFCRuleFromProximitySopNode, CATEGORY_SOP.WFC);
+		poly.registerNode(WFCRuleConnectionFromSideNameSopNode, CATEGORY_SOP.WFC);
+		// poly.registerNode(WFCRuleConnectionToEmptyTileSopNode, CATEGORY_SOP.WFC);
+		poly.registerNode(WFCRuleConnectionToGridBorderSopNode, CATEGORY_SOP.WFC);
+		poly.registerNode(WFCRuleTileWeightSopNode, CATEGORY_SOP.WFC);
+		poly.registerNode(WFCSolverSopNode, CATEGORY_SOP.WFC);
+		poly.registerNode(WFCTileEmptyObjectSopNode, CATEGORY_SOP.WFC);
+		poly.registerNode(WFCTileErrorObjectSopNode, CATEGORY_SOP.WFC);
+		poly.registerNode(WFCTilePropertiesSopNode, CATEGORY_SOP.WFC);
+		poly.registerNode(WFCTileSideNameSopNode, CATEGORY_SOP.WFC);
+		poly.registerNode(WFCTileTransformSopNode, CATEGORY_SOP.WFC);
+		poly.registerNode(WFCTileUnresolvedObjectSopNode, CATEGORY_SOP.WFC);
+
 		// networks
 		poly.registerNode(ActorsNetworkSopNode, CATEGORY_SOP.NETWORK);
 		poly.registerNode(AnimationsNetworkSopNode, CATEGORY_SOP.NETWORK);

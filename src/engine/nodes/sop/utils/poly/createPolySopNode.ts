@@ -1,4 +1,4 @@
-import {SubnetSopNodeLike} from '../subnet/ChildrenDisplayController';
+import {SubnetSopNodeLike} from '../subnet/SopSubnetChildrenDisplayController';
 import {PolyNodeDefinition} from '../../../utils/poly/PolyNodeDefinition';
 import {PolyNodeParamsConfig} from '../../../utils/poly/PolyNodeParamsConfig';
 import type {PolyNodeController} from '../../../utils/poly/PolyNodeController';

@@ -253,13 +253,13 @@ export class SetParamEventNode extends TypedEventNode<SetParamParamsConfig> {
 
 	private async _computeParamsIfDirty(params: BaseParamType[]) {
 		const dirty_params = [];
-		for (let param of params) {
+		for (const param of params) {
 			if (param.isDirty()) {
 				dirty_params.push(param);
 			}
 		}
 		const promises: Promise<void>[] = [];
-		for (let param of dirty_params) {
+		for (const param of dirty_params) {
 			promises.push(param.compute());
 		}
 		return await Promise.all(promises);

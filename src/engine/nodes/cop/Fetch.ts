@@ -54,7 +54,7 @@ export class FetchCopNode extends TypedCopNode<FetchCopParamsConfig> {
 			const material = (selectedObject as Mesh).material;
 			if (material) {
 				if (CoreType.isArray(material)) {
-					for (let mat of material) {
+					for (const mat of material) {
 						texture = texture || this._textureFromMaterial(mat);
 					}
 				} else {

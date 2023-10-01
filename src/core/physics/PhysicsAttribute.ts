@@ -11,7 +11,7 @@ import {
 	getObjectString,
 	setObjectString,
 } from '../geometry/AttributeUtils';
-import {CoreObject} from '../geometry/Object';
+import {coreObjectClassFactory} from '../geometry/CoreObjectFactory';
 
 export enum PhysicsIdAttribute {
 	WORLD = 'PhysicsIdAttribute_worldId',
@@ -136,7 +136,7 @@ export class CorePhysicsAttribute {
 		return getObjectNumber(object, PhysicsIdAttribute.RBD_HANDLE, -1);
 	}
 	static deleteRBDHandle(object: ObjectContent<CoreObjectType>): void {
-		CoreObject.deleteAttribute(object, PhysicsIdAttribute.RBD_HANDLE);
+		coreObjectClassFactory(object).deleteAttribute(object, PhysicsIdAttribute.RBD_HANDLE);
 	}
 	// common
 	static setRBDId(object: ObjectContent<CoreObjectType>, value: string) {

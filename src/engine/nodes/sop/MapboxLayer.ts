@@ -14,7 +14,7 @@ import {FeatureConverter} from '../../../core/thirdParty/Mapbox/FeatureConverter
 import {NodeParamsConfig, ParamConfig} from '../../nodes/utils/params/ParamsConfig';
 // import {MapboxListenerParamConfig, MapboxListenerSopNode} from './utils/MapboxListener';
 import {MapUtils} from '../../../core/MapUtils';
-import {ArrayUtils} from '../../../core/ArrayUtils';
+import {arrayChunk} from '../../../core/ArrayUtils';
 import {TypedSopNode} from './_Base';
 import {BaseNodeType} from '../_Base';
 import {MapboxMapsController} from '../../../core/thirdParty/Mapbox/MapboxMapsController';
@@ -58,7 +58,7 @@ export class MapboxLayerSopNode extends TypedSopNode<MapboxLayerSopParamsConfig>
 		// const layerNames = CoreString.attribNames(this.pv.layers);
 		const existingLayerNames: string[] = [];
 
-		for (let layerName of layerNames) {
+		for (const layerName of layerNames) {
 			if (map.getLayer(layerName)) {
 				existingLayerNames.push(layerName);
 			} else {
@@ -92,7 +92,7 @@ export class MapboxLayerSopNode extends TypedSopNode<MapboxLayerSopParamsConfig>
 		features: mapboxgl.MapboxGeoJSONFeature[]
 	): Map<string, mapboxgl.MapboxGeoJSONFeature[]> {
 		this._featuresByName.clear();
-		for (let feature of features) {
+		for (const feature of features) {
 			const name = this._feature_name(feature);
 			if (name) {
 				MapUtils.pushOnArrayAtEntry(this._featuresByName, name, feature);
@@ -116,7 +116,7 @@ export class MapboxLayerSopNode extends TypedSopNode<MapboxLayerSopParamsConfig>
 		const json_str = JSON.stringify(feature.geometry).replace(/{|}|"|:|\[|\]|,|\./g, '');
 		const json_str_elements = json_str.split('');
 		const letters_count = 30;
-		const chunks = ArrayUtils.chunk(json_str_elements, json_str_elements.length / letters_count);
+		const chunks = arrayChunk(json_str_elements, json_str_elements.length / letters_count);
 		const first_elements = chunks.map((c) => c[0]);
 
 		return first_elements.join('');
@@ -131,7 +131,7 @@ export class MapboxLayerSopNode extends TypedSopNode<MapboxLayerSopParamsConfig>
 		const layerNames = layers.map((layer) => layer.id).sort();
 		const currentSpareParams = this.params.spare;
 		const currentValuesByName: Map<string, boolean> = new Map();
-		for (let spareParam of currentSpareParams) {
+		for (const spareParam of currentSpareParams) {
 			const value = spareParam.value;
 			if (CoreType.isBoolean(value)) {
 				currentValuesByName.set(spareParam.name(), value);

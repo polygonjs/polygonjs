@@ -2,55 +2,54 @@ import type {QUnit} from '../../../helpers/QUnit';
 import {BooleanCsgOperationType} from '../../../../src/engine/nodes/sop/CSGBoolean';
 import {BufferAttribute, Box3} from 'three';
 export function testenginenodessopCSGEllipsoid(qUnit: QUnit) {
-const tmpBox = new Box3();
+	const tmpBox = new Box3();
 
-qUnit.test('sop/CSGEllipsoid simple', async (assert) => {
-	const geo1 = window.geo1;
-	geo1.flags.display.set(false); // cancels geo node displayNodeController
+	qUnit.test('sop/CSGEllipsoid simple', async (assert) => {
+		const geo1 = window.geo1;
+		geo1.flags.display.set(false); // cancels geo node displayNodeController
 
-	const ellipsoid1 = geo1.createNode('CSGEllipsoid');
-	const sphere1 = geo1.createNode('CSGSphere');
-	const boolean1 = geo1.createNode('CSGBoolean');
-	const CSGTriangulate1 = geo1.createNode('CSGTriangulate');
+		const ellipsoid1 = geo1.createNode('CSGEllipsoid');
+		const sphere1 = geo1.createNode('CSGSphere');
+		const boolean1 = geo1.createNode('CSGBoolean');
+		const CSGTriangulate1 = geo1.createNode('CSGTriangulate');
 
-	boolean1.setInput(0, sphere1);
-	boolean1.setInput(1, ellipsoid1);
-	ellipsoid1.p.radius.set([2.9, 0.6, 0.6]);
-	boolean1.flags.display.set(true);
-	boolean1.setOperation(BooleanCsgOperationType.SUBTRACT);
-	CSGTriangulate1.setInput(0, boolean1);
+		boolean1.setInput(0, sphere1);
+		boolean1.setInput(1, ellipsoid1);
+		ellipsoid1.p.radius.set([2.9, 0.6, 0.6]);
+		boolean1.flags.display.set(true);
+		boolean1.setOperation(BooleanCsgOperationType.SUBTRACT);
+		CSGTriangulate1.setInput(0, boolean1);
 
-	async function computeBoolean() {
-		const container = await boolean1.compute();
-		const coreGroup = container.coreContent()!;
-		const allObjectsCount = coreGroup.allObjects().length;
-		const threejsObjectsCount = coreGroup.threejsObjects().length;
+		async function computeBoolean() {
+			const container = await boolean1.compute();
+			const coreGroup = container.coreContent()!;
+			const allObjectsCount = coreGroup.allObjects().length;
+			const threejsObjectsCount = coreGroup.threejsObjects().length;
 
-		container.boundingBox(tmpBox);
+			container.coreContent()!.boundingBox(tmpBox);
 
-		return {allObjectsCount, threejsObjectsCount};
-	}
-	async function computeTriangulate() {
-		const container = await CSGTriangulate1.compute();
-		const coreGroup = container.coreContent()!;
-		const allObjectsCount = coreGroup.allObjects().length;
-		const threejsObjectsCount = coreGroup.threejsObjects().length;
+			return {allObjectsCount, threejsObjectsCount};
+		}
+		async function computeTriangulate() {
+			const container = await CSGTriangulate1.compute();
+			const coreGroup = container.coreContent()!;
+			const allObjectsCount = coreGroup.allObjects().length;
+			const threejsObjectsCount = coreGroup.threejsObjects().length;
 
-		const geometry = coreGroup?.threejsObjectsWithGeo()[0].geometry;
+			const geometry = coreGroup?.threejsObjectsWithGeo()[0].geometry;
 
-		container.boundingBox(tmpBox);
+			container.coreContent()!.boundingBox(tmpBox);
 
-		return {allObjectsCount, threejsObjectsCount, geometry};
-	}
+			return {allObjectsCount, threejsObjectsCount, geometry};
+		}
 
-	await computeBoolean();
-	assert.in_delta(tmpBox.min.y, -1, 0.01);
+		await computeBoolean();
+		assert.in_delta(tmpBox.min.y, -1, 0.01);
 
-	assert.equal(
-		((await computeTriangulate()).geometry.getAttribute('position') as BufferAttribute).array.length,
-		7920
-	);
-	assert.in_delta(tmpBox.min.y, -1, 0.002);
-});
-
+		assert.equal(
+			((await computeTriangulate()).geometry.getAttribute('position') as BufferAttribute).array.length,
+			7920
+		);
+		assert.in_delta(tmpBox.min.y, -1, 0.002);
+	});
 }

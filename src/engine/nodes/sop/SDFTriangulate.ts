@@ -10,7 +10,7 @@
 // import {Object3D} from 'three';
 // import {CoreType} from '../../../core/Type';
 // import {SopType} from '../../poly/registers/nodes/types/Sop';
-// import {SOPSDFTesselationParamConfig} from '../../../core/geometry/sdf/utils/TesselationParamsConfig';
+// import {SOPSDFTesselationParamConfig} from '../../../core/geometry/modules/sdf/utils/TesselationParamsConfig';
 // class SDFriangulateSopParamsConfig extends SOPSDFTesselationParamConfig(NodeParamsConfig) {}
 // const ParamsConfig = new SDFriangulateSopParamsConfig();
 

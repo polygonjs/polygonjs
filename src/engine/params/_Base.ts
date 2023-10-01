@@ -4,7 +4,7 @@ import {BaseNodeType} from '../nodes/_Base';
 import {OptionsController} from './utils/OptionsController';
 import {ExpressionController} from './utils/ExpressionController';
 import {EmitController} from './utils/EmitController';
-import {ParamSerializer} from './utils/Serializer';
+import {CoreParamSerializer} from './utils/CoreParamSerializer';
 import {ParamStatesController} from './utils/StatesController';
 import {TypedMultipleParam} from './_Multiple';
 import {FloatParam} from './Float';
@@ -20,11 +20,15 @@ import {
 import {ParamInitValueSerializedTypeMap} from './types/ParamInitValueSerializedTypeMap';
 import {MethodDependency} from '../expressions/MethodDependency';
 import {Poly} from '../Poly';
+import {arrayCopy} from '../../core/ArrayUtils';
 
 type ComputeCallback = (value: void) => void;
 const TYPED_PARAM_DEFAULT_COMPONENT_NAMES: Readonly<string[]> = [];
 
 type OnDisposeCallback = () => void;
+export interface ParamOptions<T extends ParamType> {
+	serializerClass?: typeof CoreParamSerializer<T>;
+}
 
 export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 	protected _default_value!: ParamInitValuesTypeMap[T];
@@ -45,15 +49,14 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 	}
 	protected _expression_controller: ExpressionController<T> | undefined;
 	get expressionController(): ExpressionController<T> | undefined {
-		return this._expression_controller; // =
-		//this._expression_controller || new ExpressionController(this);
+		return this._expression_controller;
 	}
 	expressionParsedAsString() {
 		return false;
 	}
-	private _serializer: ParamSerializer<T> | undefined;
-	get serializer(): ParamSerializer<T> {
-		return (this._serializer = this._serializer || new ParamSerializer(this));
+	protected _serializer: CoreParamSerializer<T> | undefined;
+	get serializer(): CoreParamSerializer<T> | undefined {
+		return this._serializer;
 	}
 	private _states: ParamStatesController | undefined;
 	get states(): ParamStatesController {
@@ -64,28 +67,42 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 	// 	return (this._ui_data = this._ui_data || new UIData(this.scene, this));
 	// }
 
-	constructor(scene: PolyScene, node: BaseNodeType) {
+	constructor(scene: PolyScene, node: BaseNodeType, options: ParamOptions<T>) {
 		super(scene, 'BaseParam');
+		if (options.serializerClass) {
+			this._serializer = new options.serializerClass(this);
+		}
 		this._node = node;
 		this._initializeParam();
 	}
 	override dispose() {
+		if (this.expressionController && this.hasExpression()) {
+			this.set(this.rawInputSerialized());
+		}
+		const _tmpCoreGraphNodes: CoreGraphNode[] = [];
+
 		// if any direct predecessor is a MethodDependency,
 		// it must be disposed here
 		const predecessors = this.graphPredecessors();
-		for (let predecessor of predecessors) {
-			if (predecessor instanceof MethodDependency) {
-				predecessor.dispose();
+		if (predecessors) {
+			arrayCopy(predecessors, _tmpCoreGraphNodes);
+			for (const predecessor of _tmpCoreGraphNodes) {
+				if (predecessor instanceof MethodDependency) {
+					predecessor.dispose();
+				}
 			}
 		}
 		const successors = this.graphSuccessors();
-		for (let successor of successors) {
-			if (successor instanceof TypedParam) {
-				const input = successor.rawInputSerialized();
-				successor.set(successor.defaultValue());
-				successor.set(input);
-			} else {
-				successor.setDirty();
+		if (successors) {
+			arrayCopy(successors, _tmpCoreGraphNodes);
+			for (const successor of _tmpCoreGraphNodes) {
+				if (successor instanceof TypedParam) {
+					const input = successor.rawInputSerialized();
+					successor.set(successor.defaultValue());
+					successor.set(input);
+				} else {
+					successor.setDirty();
+				}
 			}
 		}
 
@@ -211,7 +228,7 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 				if (this._computeResolves) {
 					const resolves = [...this._computeResolves];
 					this._computeResolves = undefined;
-					for (let resolve of resolves) {
+					for (const resolve of resolves) {
 						resolve();
 					}
 				}
@@ -270,7 +287,7 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 		}
 
 		if (this.components) {
-			for (let c of this.components) {
+			for (const c of this.components) {
 				c._setupNodeDependencies(node);
 			}
 		}
@@ -327,20 +344,18 @@ export abstract class TypedParam<T extends ParamType> extends CoreGraphNode {
 	isMultiple(): boolean {
 		return this.componentNames().length > 0;
 	}
-	// create_components() {}
 	initComponents() {}
 
-	// expression
-	// set_expression(expression: string | null) {
-	// 	this.expressionController.set_expression(expression);
-	// }
 	hasExpression(): boolean {
 		return this.expressionController != null && this.expressionController.active(); // use this._expression_controller to avoid creating it
 	}
 
 	// serialize
 	toJSON() {
-		return this.serializer.toJSON();
+		if (!this._serializer) {
+			return;
+		}
+		return this._serializer.toJSON();
 	}
 
 	// dispose callbacks

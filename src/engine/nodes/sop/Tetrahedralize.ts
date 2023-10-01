@@ -8,8 +8,8 @@ import {TetSopNode} from './_BaseTet';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {tetrahedralize} from '../../../core/geometry/tet/utils/tetrahedralize';
-import {TetGeometry} from '../../../core/geometry/tet/TetGeometry';
+import {tetrahedralize} from '../../../core/geometry/modules/tet/utils/tetrahedralize';
+import {TetGeometry} from '../../../core/geometry/modules/tet/TetGeometry';
 import {MeshWithBVHGeometry, ThreeMeshBVHHelper} from '../../../core/geometry/bvh/ThreeMeshBVHHelper';
 import {Mesh, Vector3} from 'three';
 import {mergeFaces} from '../../../core/geometry/operation/Fuse';
@@ -54,7 +54,7 @@ export class TetrahedralizeSopNode extends TetSopNode<TetrahedralizeSopParamsCon
 		const coreGroup = inputCoreGroups[0];
 		const inputMeshes = coreGroup.threejsObjectsWithGeo() as Mesh[];
 
-		for (let inputMesh of inputMeshes) {
+		for (const inputMesh of inputMeshes) {
 			mergeFaces(inputMesh.geometry, this.pv.fuseDist);
 		}
 		jitterPositions(coreGroup, {
@@ -64,7 +64,7 @@ export class TetrahedralizeSopNode extends TetSopNode<TetrahedralizeSopParamsCon
 		});
 
 		const tetGeometries: TetGeometry[] = [];
-		for (let inputMesh of inputMeshes) {
+		for (const inputMesh of inputMeshes) {
 			ThreeMeshBVHHelper.assignDefaultBVHIfNone(inputMesh);
 			const tetGeometry = tetrahedralize({
 				mesh: inputMesh as MeshWithBVHGeometry,

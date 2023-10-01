@@ -116,8 +116,10 @@ export interface ObjectData {
 	name: string | null;
 	childrenCount: number;
 	groupData: GroupCollectionData;
+	verticesCount: number;
 	pointsCount: number;
-	tetsCount: number | null;
+	primitivesCount: number;
+	primitiveName: string;
 }
 
 // Zexport interface ObjectConstructorByObjectType {
@@ -301,12 +303,25 @@ export const DEFAULT_MATERIALS: MaterialsByString = {
 };
 
 export enum AttribClass {
+	POINT = 'point',
 	VERTEX = 'vertex',
+	PRIMITIVE = 'primitive',
 	OBJECT = 'object',
-	CORE_GROUP = 'container',
+	CORE_GROUP = 'coreGroup',
 }
-export const ATTRIBUTE_CLASSES: Array<AttribClass> = [AttribClass.VERTEX, AttribClass.OBJECT, AttribClass.CORE_GROUP];
-export const ATTRIBUTE_CLASSES_WITHOUT_CORE_GROUP: Array<AttribClass> = [AttribClass.VERTEX, AttribClass.OBJECT];
+export const ATTRIBUTE_CLASSES: Array<AttribClass> = [
+	AttribClass.POINT,
+	AttribClass.VERTEX,
+	AttribClass.PRIMITIVE,
+	AttribClass.OBJECT,
+	AttribClass.CORE_GROUP,
+];
+export const ATTRIBUTE_CLASSES_WITHOUT_CORE_GROUP: Array<AttribClass> = [
+	AttribClass.POINT,
+	AttribClass.VERTEX,
+	AttribClass.PRIMITIVE,
+	AttribClass.OBJECT,
+];
 export const AttribClassMenuEntries = ATTRIBUTE_CLASSES.map((name, value) => ({name, value}));
 export const AttribClassMenuEntriesWithoutCoreGroup = ATTRIBUTE_CLASSES_WITHOUT_CORE_GROUP.map((name, value) => ({
 	name,
@@ -336,7 +351,7 @@ export const ATTRIBUTE_SIZE_RANGE: Number2 = [AttribSize.FLOAT, AttribSize.VECTO
 
 // export const CoreConstant = {
 // 	ATTRIB_CLASS: {
-// 		VERTEX: AttribClass.VERTEX,
+// 		VERTEX: AttribClass.POINT,
 // 		OBJECT: AttribClass.OBJECT,
 // 	},
 
@@ -359,3 +374,25 @@ export const ATTRIBUTE_SIZE_RANGE: Number2 = [AttribSize.FLOAT, AttribSize.VECTO
 
 // 	MATERIALS: materials,
 // };
+
+export enum ComponentName {
+	x = 'x',
+	y = 'y',
+	z = 'z',
+	w = 'w',
+	r = 'r',
+	g = 'g',
+	b = 'b',
+}
+export const COMPONENT_INDICES = {
+	x: 0,
+	y: 1,
+	z: 2,
+	w: 3,
+	r: 0,
+	g: 1,
+	b: 2,
+};
+export const DOT = '.';
+
+export type GroupString = string;

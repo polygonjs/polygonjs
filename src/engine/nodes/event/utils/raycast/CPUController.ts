@@ -151,7 +151,10 @@ export class RaycastCPUController extends BaseRaycastController {
 	}
 	private _resolveIntersectAttribute(intersection: Intersection) {
 		const attribType = ATTRIBUTE_TYPES[this._node.pv.geoAttributeType];
-		let attribValue = IntersectDataEventNode.resolveObjectAttribute(intersection, this._node.pv.geoAttributeName);
+		let attribValue: string | number | null | undefined = IntersectDataEventNode.resolveObjectAttribute(
+			intersection,
+			this._node.pv.geoAttributeName
+		);
 		if (attribValue == null) {
 			attribValue = resolveIntersectGeometryAttribute(intersection, this._node.pv.geoAttributeName, attribType);
 		}

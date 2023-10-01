@@ -11,6 +11,7 @@ import {HitPointInfo} from 'three-mesh-bvh';
 import {BufferGeometryWithBVH} from '../../../core/geometry/bvh/three-mesh-bvh';
 import {ThreeMeshBVHHelper} from '../../../core/geometry/bvh/ThreeMeshBVHHelper';
 import {createRaycaster} from '../../../core/RaycastHelper';
+import {corePointClassFactory} from '../../../core/geometry/CoreObjectFactory';
 
 export enum RaySopMode {
 	PROJECT_RAY = 'project rays',
@@ -83,18 +84,22 @@ export class RaySopOperation extends BaseSopOperation {
 		this._matDoubleSideTmpSetter.setCoreGroupMaterialDoubleSided(coreGroupCollision);
 
 		if (isBooleanTrue(params.addDistAttribute)) {
-			if (!coreGroup.hasAttrib(DIST_ATTRIB_NAME)) {
-				coreGroup.addGeoNumericVertexAttrib(DIST_ATTRIB_NAME, 1, -1);
+			if (!coreGroup.hasPointAttrib(DIST_ATTRIB_NAME)) {
+				const allObjects = coreGroup.allObjects();
+				for (const object of allObjects) {
+					const corePointClass = corePointClassFactory(object);
+					corePointClass.addNumericAttribute(object, DIST_ATTRIB_NAME, 1, -1);
+				}
 			}
 		}
 
 		let direction: Vector3, firstIntersect: Intersection;
 		const points = coreGroup.points();
 		for (let point of points) {
-			point.getPosition(this._pointPos);
+			point.position(this._pointPos);
 			direction = params.direction;
 			if (isBooleanTrue(params.useNormals)) {
-				point.getNormal(this._pointNormal);
+				point.normal(this._pointNormal);
 				direction = this._pointNormal;
 			}
 			this._raycaster.set(this._pointPos, direction);
@@ -139,7 +144,7 @@ export class RaySopOperation extends BaseSopOperation {
 		const position = collisionGeometry.getAttribute('position') as BufferAttribute;
 		const points = coreGroup.points();
 		for (let point of points) {
-			point.getPosition(this._pointPos);
+			point.position(this._pointPos);
 			// apply object inverse matrix
 			this._pointPos.applyMatrix4(objectWorldMatInverse);
 			bvh.closestPointToPoint(this._pointPos, this._hitPointInfo);

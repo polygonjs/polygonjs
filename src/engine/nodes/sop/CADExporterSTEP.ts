@@ -6,10 +6,10 @@
 import {BaseExporterSopParamsConfig} from './_BaseExporter';
 import {CADExporterSopNode} from './_BaseExporterCAD';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
-import {CadLoader} from '../../../core/geometry/cad/CadLoader';
-import {CadGC} from '../../../core/geometry/cad/CadCommon';
-import {CoreCadType} from '../../../core/geometry/cad/CadCoreType';
-import {CadLoaderSync} from '../../../core/geometry/cad/CadLoaderSync';
+import {CadLoader} from '../../../core/geometry/modules/cad/CadLoader';
+import {CadGC} from '../../../core/geometry/modules/cad/CadCommon';
+import {CoreCadType} from '../../../core/geometry/modules/cad/CadCoreType';
+import {CadLoaderSync} from '../../../core/geometry/modules/cad/CadLoaderSync';
 import {MathUtils} from 'three';
 
 class ExporterSTEPSopParamsConfig extends BaseExporterSopParamsConfig {}
@@ -37,7 +37,7 @@ export class CADExporterSTEPSopNode extends CADExporterSopNode<ExporterSTEPSopPa
 				const {cadObjects} = sceneData;
 				const mode = oc.STEPControl_StepModelType.STEPControl_AsIs;
 				const compgraph = true;
-				for (let object of cadObjects) {
+				for (const object of cadObjects) {
 					if (CoreCadType.isShape(object)) {
 						const shape = object.cadGeometry();
 						writer.Transfer(shape, mode as any, compgraph, CadLoaderSync.Message_ProgressRange);

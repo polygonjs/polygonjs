@@ -1,16 +1,14 @@
 import {PhysicsLib, CorePhysics, CorePhysicsLoaded} from './CorePhysics';
 import {World, RigidBody, Collider, ImpulseJoint, MultibodyJoint} from '@dimforge/rapier3d-compat';
-// import {CorePhysicsUserData} from './PhysicsUserData';
 import {Object3D, Vector3} from 'three';
 import {_physicsCreateRBD, physicsUpdateRBD} from './PhysicsRBD';
 import {physicsCreateJoints} from './PhysicsJoint';
 import {CoreGraphNodeId} from '../graph/CoreGraph';
 import {BaseNodeType} from '../../engine/nodes/_Base';
-import {CoreObject} from '../geometry/Object';
 import {PhysicsIdAttribute} from './PhysicsAttribute';
-// import {updatePhysicsDebugObject} from './PhysicsDebug';
 import {clearPhysicsPlayers, createOrFindPhysicsPlayer} from './player/PhysicsPlayer';
 import {PolyScene} from '../../engine/scene/PolyScene';
+import {coreObjectClassFactory} from '../geometry/CoreObjectFactory';
 
 export const PHYSICS_GRAVITY_DEFAULT = new Vector3(0, -9.81, 0);
 
@@ -31,12 +29,16 @@ export async function createOrFindPhysicsWorld(node: BaseNodeType, worldObject: 
 	return {world, PhysicsLib};
 }
 export function physicsWorldNodeIdFromObject(worldObject: Object3D) {
-	const nodeId = CoreObject.attribValue(worldObject, PhysicsIdAttribute.WORLD) as CoreGraphNodeId | undefined;
+	const nodeId = coreObjectClassFactory(worldObject).attribValue(worldObject, PhysicsIdAttribute.WORLD) as
+		| CoreGraphNodeId
+		| undefined;
 	return nodeId;
 }
 
 export function physicsWorldFromObject(worldObject: Object3D) {
-	const nodeId = CoreObject.attribValue(worldObject, PhysicsIdAttribute.WORLD) as CoreGraphNodeId | undefined;
+	const nodeId = coreObjectClassFactory(worldObject).attribValue(worldObject, PhysicsIdAttribute.WORLD) as
+		| CoreGraphNodeId
+		| undefined;
 	if (nodeId == null) {
 		return;
 	}
@@ -65,7 +67,7 @@ export function initCorePhysicsWorld(PhysicsLib: PhysicsLib, worldObject: Object
 	// we end up removing them from the hierarchy
 	const children = [...worldObject.children];
 	const newRBDIds = new Set<string>();
-	for (let child of children) {
+	for (const child of children) {
 		_physicsCreateRBD({PhysicsLib, world, rigidBodyById, objectsByRBD, object: child, newRBDIds});
 	}
 
@@ -74,7 +76,7 @@ export function initCorePhysicsWorld(PhysicsLib: PhysicsLib, worldObject: Object
 	physicsCreateJoints(PhysicsLib, world, worldObject);
 	// }
 	// create character controller
-	for (let child of children) {
+	for (const child of children) {
 		createOrFindPhysicsPlayer({scene, object: child, PhysicsLib, world, worldObject});
 	}
 }
@@ -133,16 +135,16 @@ function _clearWorld(world: World) {
 	world.multibodyJoints.forEach((multiBodyJoint) => {
 		multiBodyJoints.push(multiBodyJoint);
 	});
-	for (let body of bodies) {
+	for (const body of bodies) {
 		world.removeRigidBody(body);
 	}
-	for (let collider of colliders) {
+	for (const collider of colliders) {
 		world.removeCollider(collider, false);
 	}
-	for (let joint of joints) {
+	for (const joint of joints) {
 		world.removeImpulseJoint(joint, false);
 	}
-	for (let joint of multiBodyJoints) {
+	for (const joint of multiBodyJoints) {
 		world.removeMultibodyJoint(joint, false);
 	}
 

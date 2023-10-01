@@ -13,11 +13,9 @@ import {PhysicsPlayerType} from '../../../core/physics/player/PhysicsPlayer';
 import {SphereBuilder} from '../../../core/geometry/builders/SphereBuilder';
 import {ObjectType} from '../../../core/geometry/Constant';
 import {CorePath} from '../../../core/geometry/CorePath';
-// import {CoreObject} from '../../../core/geometry/Object';
 import {BaseSopOperation} from '../../operations/sop/_Base';
 import {Vector3, Object3D} from 'three';
 import {TypedActorSopNode} from './_BaseActor';
-// import {CameraAttribute} from '../../../core/camera/CoreCamera';
 
 // Note that the default used for torque player
 // are different than the ones used for PhysicsRBDAttributes

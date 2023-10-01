@@ -7,9 +7,9 @@ import {CSGSopNode} from './_BaseCSG';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
-import {step} from '../../../core/geometry/csg/CsgConstant';
-import {CsgGeometry} from '../../../core/geometry/csg/CsgCommon';
-import {csgIsGeom2} from '../../../core/geometry/csg/CsgCoreType';
+import {step} from '../../../core/geometry/modules/csg/CsgConstant';
+import {CsgGeometry} from '../../../core/geometry/modules/csg/CsgCommon';
+import {csgIsGeom2} from '../../../core/geometry/modules/csg/CsgCoreType';
 import {extrusions} from '@jscad/modeling';
 const {extrudeRotate} = extrusions;
 
@@ -52,7 +52,7 @@ export class CSGExtrudeRotateSopNode extends CSGSopNode<CSGExtrudeRotateSopParam
 				segments: this.pv.segments * 4,
 			};
 			const newGeometries: CsgGeometry[] = [];
-			for (let inputObject of inputObjects) {
+			for (const inputObject of inputObjects) {
 				const inputGeometry = inputObject.csgGeometry();
 				if (csgIsGeom2(inputGeometry)) {
 					newGeometries.push(extrudeRotate(options, inputGeometry));

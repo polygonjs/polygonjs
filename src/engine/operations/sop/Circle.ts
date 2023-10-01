@@ -2,7 +2,7 @@ import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {CoreGeometryUtilCircle} from '../../../core/geometry/util/Circle';
 import {ObjectType} from '../../../core/geometry/Constant';
-import {CoreTransform} from '../../../core/Transform';
+import {rotateGeometry} from '../../../core/Transform';
 import {Vector3, CircleGeometry, BufferGeometry} from 'three';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
@@ -56,7 +56,7 @@ export class CircleSopOperation extends BaseSopOperation {
 		// - so that copying circles on hexagon points gives an hexagon grid immediately
 		// update: do not rotate, as it creates a poor shape when using 3, 4 or 5 sides
 		// geometry.rotateZ(degToRad(30));
-		CoreTransform.rotateGeometry(geometry, DEFAULT_UP, params.direction);
+		rotateGeometry(geometry, DEFAULT_UP, params.direction);
 		geometry.translate(params.center.x, params.center.y, params.center.z);
 	}
 }

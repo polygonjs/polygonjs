@@ -321,9 +321,9 @@ export class GlConnectionPoint<T extends GlConnectionPointType> extends BaseConn
 	}
 
 	override toJSON(): GlConnectionPointData<T> {
-		return (this._json = this._json || this._create_json());
+		return (this._json = this._json || this._createJSON());
 	}
-	protected override _create_json(): GlConnectionPointData<T> {
+	protected override _createJSON(): GlConnectionPointData<T> {
 		return {
 			name: this._name,
 			type: this._type,

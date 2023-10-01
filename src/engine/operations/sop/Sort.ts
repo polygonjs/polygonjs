@@ -1,6 +1,5 @@
 import {CoreMath} from './../../../core/math/_Module';
-import {BaseCoreObject} from './../../../core/geometry/_BaseObject';
-import {CoreObject} from './../../../core/geometry/Object';
+import {BaseCoreObject} from './../../../core/geometry/entities/object/BaseCoreObject';
 import {TypeAssert} from './../../poly/Assert';
 import {AttribClass} from './../../../core/geometry/Constant';
 import {BaseSopOperation} from './_Base';
@@ -8,13 +7,14 @@ import {CoreGroup, Object3DWithGeometry} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {Vector3} from 'three';
 import {MapUtils} from '../../../core/MapUtils';
-import {CoreGeometry} from '../../../core/geometry/Geometry';
 import {BufferAttribute} from 'three';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 import {CoreObjectType, ObjectContent} from '../../../core/geometry/ObjectContent';
 import {isBooleanTrue} from '../../../core/Type';
 import {setToArray} from '../../../core/SetUtils';
 import {isNumber} from '../../../core/Type';
+import {pointsFromObject} from '../../../core/geometry/entities/point/CorePointUtils';
+import {corePointClassFactory} from '../../../core/geometry/CoreObjectFactory';
 
 const tmpPos = new Vector3();
 
@@ -25,8 +25,8 @@ export enum SortMode {
 }
 export const SORT_MODES: SortMode[] = [SortMode.AXIS, SortMode.RANDOM, SortMode.ATTRIBUTE];
 
-export type SortTargetType = AttribClass.VERTEX | AttribClass.OBJECT;
-export const SORT_TARGET_TYPES: Array<SortTargetType> = [AttribClass.VERTEX, AttribClass.OBJECT];
+export type SortTargetType = AttribClass.POINT | AttribClass.OBJECT;
+export const SORT_TARGET_TYPES: Array<SortTargetType> = [AttribClass.POINT, AttribClass.OBJECT];
 
 export enum Axis {
 	X = 'x',
@@ -51,7 +51,7 @@ interface SortSopParams extends DefaultOperationParams {
 export class SortSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: SortSopParams = {
 		mode: SORT_MODES.indexOf(SortMode.AXIS),
-		targetType: SORT_TARGET_TYPES.indexOf(AttribClass.VERTEX),
+		targetType: SORT_TARGET_TYPES.indexOf(AttribClass.POINT),
 		seed: 0,
 		axis: AXISES.indexOf(Axis.X),
 		attribute: '',
@@ -70,7 +70,7 @@ export class SortSopOperation extends BaseSopOperation {
 	private _sort(coreGroup: CoreGroup, params: SortSopParams) {
 		const targetType = SORT_TARGET_TYPES[params.targetType];
 		switch (targetType) {
-			case AttribClass.VERTEX:
+			case AttribClass.POINT:
 				return this._sortPoints(coreGroup, params);
 			case AttribClass.OBJECT:
 				return this._sortObjects(coreGroup, params);
@@ -118,7 +118,7 @@ export class SortSopOperation extends BaseSopOperation {
 		}
 
 		// sort
-		let sortedPositions: number[] = setToArray(positions).sort((a, b) => a - b);
+		let sortedPositions: number[] = setToArray(positions, []).sort((a, b) => a - b);
 		if (isBooleanTrue(params.invert)) {
 			sortedPositions.reverse();
 		}
@@ -128,7 +128,10 @@ export class SortSopOperation extends BaseSopOperation {
 			const coreObjectsForPosition = objectsByPos.get(position);
 			if (coreObjectsForPosition) {
 				for (let coreObjectForPosition of coreObjectsForPosition) {
-					sortedObjects.push(coreObjectForPosition.object());
+					const object = coreObjectForPosition.object();
+					if (object) {
+						sortedObjects.push(object);
+					}
 				}
 			}
 		}
@@ -160,7 +163,10 @@ export class SortSopOperation extends BaseSopOperation {
 			const coreObjectsForPosition = objectsByPos.get(position);
 			if (coreObjectsForPosition) {
 				for (let coreObjectForPosition of coreObjectsForPosition) {
-					sortedObjects.push(coreObjectForPosition.object());
+					const object = coreObjectForPosition.object();
+					if (object) {
+						sortedObjects.push(object);
+					}
 				}
 			}
 		}
@@ -192,7 +198,10 @@ export class SortSopOperation extends BaseSopOperation {
 			const coreObjectsForPosition = objectsByAttribValue.get(sortedValue);
 			if (coreObjectsForPosition) {
 				for (let coreObjectForPosition of coreObjectsForPosition) {
-					sortedObjects.push(coreObjectForPosition.object());
+					const object = coreObjectForPosition.object();
+					if (object) {
+						sortedObjects.push(object);
+					}
 				}
 			}
 		}
@@ -235,8 +244,7 @@ export class SortSopOperation extends BaseSopOperation {
 		}
 	}
 	private _sortPointsForObject(object: Object3DWithGeometry, params: SortSopParams) {
-		const coreObject = new CoreObject(object, 0);
-		const points = coreObject.points();
+		const points = pointsFromObject(object);
 
 		const oldIndexAttribute = object.geometry.getIndex();
 		if (!oldIndexAttribute) {
@@ -255,7 +263,7 @@ export class SortSopOperation extends BaseSopOperation {
 		let axisValue: number = 0;
 		let i = 0;
 		for (let point of points) {
-			point.getPosition(this._pointPos);
+			point.position(this._pointPos);
 			switch (axis) {
 				case Axis.X: {
 					axisValue = this._pointPos.x;
@@ -305,7 +313,9 @@ export class SortSopOperation extends BaseSopOperation {
 		object.geometry.setIndex(newIndexAttrib);
 
 		// update every attribute
-		const attributeNames = CoreGeometry.attribNames(object.geometry);
+		const corePointClass = corePointClassFactory(object);
+
+		const attributeNames = corePointClass.attributeNames(object);
 		for (let attributeName of attributeNames) {
 			if (attributeName == 'id') {
 				this._debugActive = true;

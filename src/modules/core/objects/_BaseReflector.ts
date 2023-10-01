@@ -21,7 +21,7 @@ import {
 } from 'three';
 import {CoreRenderBlur} from '../../../core/render/Blur';
 import {isBooleanTrue} from '../../../core/Type';
-import {CoreTransform} from '../../../core/Transform';
+import {CoreTransform, rotateGeometry} from '../../../core/Transform';
 import {Poly} from '../../../engine/Poly';
 import {AbstractRenderer} from '../../../engine/viewers/Common';
 
@@ -146,7 +146,7 @@ export abstract class BaseReflector<TGeometry extends BufferGeometry, TMaterial 
 	}
 
 	static rotateGeometry(geometry: BufferGeometry, direction: Vector3) {
-		CoreTransform.rotateGeometry(geometry, direction, this.REFLECTOR_DEFAULT_UP);
+		rotateGeometry(geometry, direction, this.REFLECTOR_DEFAULT_UP);
 	}
 	static compensateGeometryRotation(object: Object3D, direction: Vector3) {
 		CoreTransform.rotateObject(object, this.REFLECTOR_DEFAULT_UP, direction);

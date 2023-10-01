@@ -1,7 +1,6 @@
 import {TypedNodeConnection} from './NodeConnection';
 import {NodeContext} from '../../../poly/NodeContext';
 import {TypedNode} from '../../_Base';
-import {ArrayUtils} from '../../../../core/ArrayUtils';
 
 export class ConnectionsController<NC extends NodeContext> {
 	private _inputConnections: Array<TypedNodeConnection<NC> | undefined> | undefined;
@@ -72,10 +71,13 @@ export class ConnectionsController<NC extends NodeContext> {
 	}
 	firstInputConnection(): TypedNodeConnection<NC> | null {
 		if (this._inputConnections) {
-			return ArrayUtils.compact(this._inputConnections)[0];
-		} else {
-			return null;
+			for (const connection of this._inputConnections) {
+				if (connection) {
+					return connection;
+				}
+			}
 		}
+		return null;
 	}
 	inputConnections() {
 		return this._inputConnections;
@@ -124,13 +126,12 @@ export class ConnectionsController<NC extends NodeContext> {
 		return this._outputConnections.get(outputIndex);
 	}
 
-	outputConnections() {
-		let list: TypedNodeConnection<NC>[] = [];
-
+	outputConnections(target: TypedNodeConnection<NC>[]) {
+		target.length = 0;
 		this._outputConnections.forEach((connections_by_id, output_index) => {
 			connections_by_id.forEach((connection, id) => {
 				if (connection) {
-					list.push(connection);
+					target.push(connection);
 				}
 			});
 		});
@@ -140,6 +141,6 @@ export class ConnectionsController<NC extends NodeContext> {
 		// 		list.push(connections_for_index[id]);
 		// 	});
 		// });
-		return list;
+		return target;
 	}
 }

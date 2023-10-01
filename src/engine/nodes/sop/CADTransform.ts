@@ -9,9 +9,9 @@ import {CoreGroup} from '../../../core/geometry/Group';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 import {InputCloneMode} from '../../poly/InputCloneMode';
-import {CadObject} from '../../../core/geometry/cad/CadObject';
-import {CadGeometryType} from '../../../core/geometry/cad/CadCommon';
-import {cadTransform} from '../../../core/geometry/cad/operations/CadTransform';
+import {CadObject} from '../../../core/geometry/modules/cad/CadObject';
+import {CadGeometryType} from '../../../core/geometry/modules/cad/CadCommon';
+import {cadTransform} from '../../../core/geometry/modules/cad/operations/CadTransform';
 class CADTransformSopParamConfig extends NodeParamsConfig {
 	/** @param translate */
 	t = ParamConfig.VECTOR3([0, 0, 0]);
@@ -43,7 +43,7 @@ export class CADTransformSopNode extends CADSopNode<CADTransformSopParamConfig> 
 		const newObjects: CadObject<CadGeometryType>[] = [];
 		const cadObjects = coreGroup0.cadObjects();
 		if (cadObjects) {
-			for (let cadObject of cadObjects) {
+			for (const cadObject of cadObjects) {
 				// object.transform(this.pv.t, this.pv.r, tmpS);
 				cadTransform(cadObject, this.pv.t, this.pv.r, this.pv.s, this.pv.pivot);
 				newObjects.push(cadObject);

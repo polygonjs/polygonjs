@@ -5,12 +5,12 @@
  */
 import {CADSopNode} from './_BaseCAD';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
-import {CadGC, CadGeometryType, TopoDS_Shape} from '../../../core/geometry/cad/CadCommon';
-import {CadObject} from '../../../core/geometry/cad/CadObject';
+import {CadGC, CadGeometryType, TopoDS_Shape} from '../../../core/geometry/modules/cad/CadCommon';
+import {CadObject} from '../../../core/geometry/modules/cad/CadObject';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
-import {cadFilterObjects, cadFilterShapes} from '../../../core/geometry/cad/utils/CadFilter';
-import {CadLoaderSync} from '../../../core/geometry/cad/CadLoaderSync';
+import {cadFilterObjects, cadFilterShapes} from '../../../core/geometry/modules/cad/utils/CadFilter';
+import {CadLoaderSync} from '../../../core/geometry/modules/cad/CadLoaderSync';
 
 class CADCurve2DToSurfaceSopParamsConfig extends NodeParamsConfig {}
 const ParamsConfig = new CADCurve2DToSurfaceSopParamsConfig();
@@ -37,7 +37,7 @@ export class CADCurve2DToSurfaceSopNode extends CADSopNode<CADCurve2DToSurfaceSo
 		if (inputCurves && inputSurfaces) {
 			let i = 0;
 			CadGC.withGC((r) => {
-				for (let inputCurve of inputCurves) {
+				for (const inputCurve of inputCurves) {
 					const inputFaceObject = inputSurfaces[i] || inputSurfaces[inputSurfaces.length - 1];
 					const shape = inputFaceObject.cadGeometry() as TopoDS_Shape;
 					const curve = inputCurve.cadGeometry();

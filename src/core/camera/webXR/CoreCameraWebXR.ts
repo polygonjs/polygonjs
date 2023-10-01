@@ -1,6 +1,5 @@
 import {Camera, WebGLRenderer} from 'three';
 import {PolyScene} from '../../../engine/scene/PolyScene';
-import {CoreObject} from '../../geometry/Object';
 import {CameraAttribute} from '../CoreCamera';
 import {
 	WebXRControllerMountFunction,
@@ -10,6 +9,7 @@ import {
 import {WebXRVRFeature, WEBXR_VR_FEATURES} from '../../webXR/webXRVR/CommonVR';
 import {BaseCoreWebXRController} from '../../webXR/_BaseCoreWebXRController';
 import {WebXRARFeature, WEBXR_AR_FEATURES} from '../../webXR/webXRAR/CommonAR';
+import {coreObjectClassFactory} from '../../geometry/CoreObjectFactory';
 
 interface WebXRControllerOptions {
 	camera: Camera;
@@ -29,10 +29,10 @@ function getFeatures<F extends WebXRARFeature | WebXRVRFeature>(
 	existingFeatures: F[]
 ): F[] {
 	const features: F[] = [];
-	const featuresStr = CoreObject.attribValue(camera, attribName) as string | null;
+	const featuresStr = coreObjectClassFactory(camera).attribValue(camera, attribName) as string | null;
 	const featuresStrings = featuresStr?.split(' ');
 	if (featuresStrings) {
-		for (let featuresString of featuresStrings) {
+		for (const featuresString of featuresStrings) {
 			if (existingFeatures.includes(featuresString as F)) {
 				features.push(featuresString as F);
 			}
@@ -62,8 +62,12 @@ interface SpaceTypeAttribNames {
 }
 function _getReferenceSpaceType(camera: Camera, options: SpaceTypeAttribNames) {
 	// referenceSpaceType
-	let overrideReferenceSpaceType = CoreObject.attribValue(camera, options.override) as boolean | null;
-	let referenceSpaceType: string | null | undefined = CoreObject.attribValue(camera, options.type) as string | null;
+	const coreObjectClass = coreObjectClassFactory(camera);
+
+	let overrideReferenceSpaceType = coreObjectClass.attribValue(camera, options.override) as boolean | null;
+	let referenceSpaceType: string | null | undefined = coreObjectClass.attribValue(camera, options.type) as
+		| string
+		| null;
 
 	if (!(referenceSpaceType && WEBXR_REFERENCE_SPACE_TYPES.includes(referenceSpaceType as XRReferenceSpaceType))) {
 		overrideReferenceSpaceType = false;
@@ -81,19 +85,20 @@ export class CoreCameraWebXRController {
 		const subMountFunctions: WebXRControllerMountFunction[] = [];
 		const subUnmountFunctions: WebXRControllerUnmountFunction[] = [];
 		const mountFunction: WebXRControllerMountFunction = () => {
-			for (let subFunc of subMountFunctions) {
+			for (const subFunc of subMountFunctions) {
 				subFunc();
 			}
 		};
 		const unmountFunction: WebXRControllerUnmountFunction = () => {
-			for (let subFunc of subUnmountFunctions) {
+			for (const subFunc of subUnmountFunctions) {
 				subFunc();
 			}
 		};
+		const coreObjectClass = coreObjectClassFactory(camera);
 		//
 		// AR
 		//
-		const isWebAR = CoreObject.attribValue(camera, CameraAttribute.WEBXR_AR) as boolean | null;
+		const isWebAR = coreObjectClass.attribValue(camera, CameraAttribute.WEBXR_AR) as boolean | null;
 		if (isWebAR == true) {
 			const createFunction = scene.webXR.ARControllerCreateFunction();
 			if (createFunction) {
@@ -124,7 +129,7 @@ export class CoreCameraWebXRController {
 		//
 		// VR
 		//
-		const isWebVR = CoreObject.attribValue(camera, CameraAttribute.WEBXR_VR) as boolean | null;
+		const isWebVR = coreObjectClass.attribValue(camera, CameraAttribute.WEBXR_VR) as boolean | null;
 		if (isWebVR == true) {
 			const createFunction = scene.webXR.VRControllerCreateFunction();
 			if (createFunction) {
@@ -156,7 +161,7 @@ export class CoreCameraWebXRController {
 		//
 		//
 		//
-		for (let controller of controllers) {
+		for (const controller of controllers) {
 			subMountFunctions.push(() => controller.mount());
 			subUnmountFunctions.push(() => controller.unmount());
 		}

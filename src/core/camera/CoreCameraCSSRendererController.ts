@@ -4,11 +4,11 @@ import type {CSS2DRendererRopNode} from '../../engine/nodes/rop/CSS2DRenderer';
 import type {CSS3DRendererRopNode} from '../../engine/nodes/rop/CSS3DRenderer';
 import type {BaseNodeType, TypedNode} from '../../engine/nodes/_Base';
 import {RopType} from '../../engine/poly/registers/nodes/types/Rop';
-import {CoreObject} from '../geometry/Object';
 import {CameraAttribute} from './CoreCamera';
 import {CoreType} from '../Type';
 import {CSS3DRenderer} from '../render/CSSRenderers/CSS3DRenderer';
 import {CSS2DRenderer} from '../render/CSSRenderers/CSS2DRenderer';
+import {coreObjectClassFactory} from '../geometry/CoreObjectFactory';
 
 interface CreateCSSRendererOptions {
 	scene: PolyScene;
@@ -31,7 +31,7 @@ export class CoreCameraCSSRendererController {
 	static cssRendererConfig(options: CreateCSSRendererOptions): CSSRendererConfig | undefined {
 		const {canvas, scene, camera} = options;
 
-		const nodeId = CoreObject.attribValue(camera, CameraAttribute.CSS_RENDERER_NODE_ID);
+		const nodeId = coreObjectClassFactory(camera).attribValue(camera, CameraAttribute.CSS_RENDERER_NODE_ID);
 		if (nodeId == null) {
 			return;
 		}

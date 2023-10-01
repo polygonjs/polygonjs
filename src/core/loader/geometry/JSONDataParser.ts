@@ -1,20 +1,32 @@
-import {Float32BufferAttribute} from 'three';
-import {BufferGeometry} from 'three';
+import {BufferGeometry, Float32BufferAttribute, Mesh} from 'three';
 import {stringMatchesOneMask, stringToAttribNames} from '../../String';
-import {CoreGeometry} from '../../geometry/Geometry';
 import {AttribType} from '../../geometry/Constant';
 import {CoreAttributeData} from '../../geometry/AttributeData';
-import {CoreAttribute} from '../../geometry/Attribute';
+import {Attribute, CoreAttribute} from '../../geometry/Attribute';
 import {CoreType} from '../../Type';
 import {PolyDictionary, StringOrNumber} from '../../../types/GlobalTypes';
+import {ThreejsPoint} from '../../geometry/modules/three/ThreejsPoint';
 
 const DEEP_ATTRIB_SEPARATOR = ':';
+const dummyMesh = new Mesh();
 
 export interface JsonDataLoaderOptions {
 	dataKeysPrefix?: string;
 	skipEntries?: string;
 	doConvert?: boolean;
 	convertToNumeric?: string;
+}
+
+function initPositionAttribute(geometry: BufferGeometry, pointsCount: number) {
+	const values: number[] = new Array(pointsCount * 3);
+
+	// for (let i = 0; i < pointsCount; i++) {
+	// 	values.push(defaultValue.x);
+	// 	values.push(defaultValue.y);
+	// 	values.push(defaultValue.z);
+	// }
+
+	return geometry.setAttribute(Attribute.POSITION, new Float32BufferAttribute(values, 3));
 }
 
 export class JSONDataParser {
@@ -51,18 +63,22 @@ export class JSONDataParser {
 
 	createObject() {
 		const geometry = new BufferGeometry();
-		const core_geo = new CoreGeometry(geometry);
+		dummyMesh.geometry = geometry;
+		const corePointClass = ThreejsPoint;
 
 		if (this._json != null) {
-			const points_count = this._json.length;
-			core_geo.initPositionAttribute(points_count);
+			const pointsCount = this._json.length;
+			initPositionAttribute(geometry, pointsCount);
 
 			this._find_attributes();
 
-			const convert_to_numeric_masks = stringToAttribNames(this._options.convertToNumeric || '');
+			const convert_to_numeric_masks:string[] = []
+			if(this._options.convertToNumeric){
+				stringToAttribNames(this._options.convertToNumeric,convert_to_numeric_masks);
+			}
 
 			// set values
-			for (let attrib_name of Object.keys(this._attribute_datas_by_name)) {
+			for (const attrib_name of Object.keys(this._attribute_datas_by_name)) {
 				const geo_attrib_name = CoreAttribute.remapName(attrib_name);
 				let attrib_values = this._attribute_values_for_name(attrib_name).flat();
 
@@ -84,7 +100,12 @@ export class JSONDataParser {
 						);
 					} else {
 						const index_data = CoreAttribute.arrayToIndexedArrays(attrib_values as string[]);
-						core_geo.setIndexedAttribute(geo_attrib_name, index_data['values'], index_data['indices']);
+						corePointClass.setIndexedAttribute(
+							dummyMesh,
+							geo_attrib_name,
+							index_data['values'],
+							index_data['indices']
+						);
 					}
 				} else {
 					const numerical_attrib_values = attrib_values as number[];
@@ -98,15 +119,19 @@ export class JSONDataParser {
 	private _find_attributes() {
 		let first_pt;
 
-		const masks = stringToAttribNames(this._options.skipEntries || '');
+		const masks:string[] = []
+		if(this._options.skipEntries){
+			stringToAttribNames(this._options.skipEntries,masks);
+		}
 
 		if (this._json) {
 			if ((first_pt = this._json[0]) != null) {
-				for (let attrib_name of Object.keys(first_pt)) {
+				for (const attrib_name of Object.keys(first_pt)) {
 					const attrib_value = first_pt[attrib_name];
 
 					if (this._value_has_subentries(attrib_value)) {
-						for (let key of Object.keys(attrib_value)) {
+						const keys = Object.keys(attrib_value);
+						for (const key of keys) {
 							const deep_attrib_name = [attrib_name, key].join(DEEP_ATTRIB_SEPARATOR);
 							const deep_attrib_value = attrib_value[attrib_name];
 

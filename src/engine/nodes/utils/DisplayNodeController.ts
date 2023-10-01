@@ -17,10 +17,17 @@ interface DisplayNodeControllerOptions {
 const DEFAULT_DISPLAY_NODE_CONTROLLER_OPTIONS: DisplayNodeControllerOptions = {
 	dependsOnDisplayNode: true,
 };
+function _warnNotInitialized(node: BaseNodeType) {
+	console.error('displayNodeController not initialized', node);
+}
+function _warnAlreadyInitialized(node: BaseNodeType) {
+	console.error('displayNodeController already initialed', node);
+}
 export class DisplayNodeController {
 	private _initialized: boolean = false;
 	private _graphNode: CoreGraphNode;
 	private _displayNode: BaseNodeClassWithDisplayFlag | undefined = undefined;
+	private _displayNodeOverride: BaseNodeClassWithDisplayFlag | undefined = undefined;
 	private _onDisplayNodeRemoveCallback: DisplayControllerCallback | undefined;
 	private _onDisplayNodeSetCallback: DisplayControllerCallback | undefined;
 	private _onDisplayNodeUpdateCallback: DisplayControllerCallback | undefined;
@@ -33,8 +40,8 @@ export class DisplayNodeController {
 		callbacks: DisplayNodeControllerCallbacks,
 		private options: DisplayNodeControllerOptions = DEFAULT_DISPLAY_NODE_CONTROLLER_OPTIONS
 	) {
-		this._graphNode = new CoreGraphNode(node.scene(), 'DisplayNodeController');
-		(this._graphNode as any).node = node;
+		this._graphNode = new CoreGraphNode(node.scene(), `DisplayNodeController-${node.name()}`);
+
 		this._onDisplayNodeRemoveCallback = callbacks.onDisplayNodeRemove;
 		this._onDisplayNodeSetCallback = callbacks.onDisplayNodeSet;
 		this._onDisplayNodeUpdateCallback = callbacks.onDisplayNodeUpdate;
@@ -45,7 +52,7 @@ export class DisplayNodeController {
 	}
 
 	displayNode() {
-		return this._displayNode;
+		return this._displayNodeOverride || this._displayNode;
 	}
 	firstNonBypassedDisplayNode() {
 		return this.displayNode()?.containerController.firstNonBypassedNode();
@@ -53,7 +60,7 @@ export class DisplayNodeController {
 
 	initializeNode() {
 		if (this._initialized) {
-			console.error('display node controller already initialed', this.node);
+			_warnAlreadyInitialized(this.node);
 			return;
 		}
 		this._initialized = true;
@@ -67,8 +74,8 @@ export class DisplayNodeController {
 			if (childNode.graphNodeId() == this._displayNode?.graphNodeId()) {
 				const children = this.node.children();
 				// Go through each child in reverse until one has a display flag.
-				// we can't just check the last child, as it may not have a display flag,
-				// like a network node.
+				// we should not simoly check the last child, as it may not have a display flag
+				// (like a network node).
 				for (let i = children.length - 1; i >= 0; i--) {
 					const child = children[i];
 					const displayFlag = child.flags?.display;
@@ -87,13 +94,47 @@ export class DisplayNodeController {
 		});
 	}
 
-	async setDisplayNode(newDisplayNode: BaseNodeClassWithDisplayFlag | undefined) {
+	setDisplayNodeOverride(newDisplayNodeOverride: BaseNodeClassWithDisplayFlag | undefined) {
 		if (!this._initialized) {
-			console.error('display node controller not initialized', this.node);
+			_warnNotInitialized(this.node);
 		}
 
-		if (this._displayNode != newDisplayNode) {
-			const oldDisplayNode = this._displayNode;
+		const currentDisplayNode = this._displayNodeOverride;
+		if (currentDisplayNode != newDisplayNodeOverride) {
+			const oldDisplayNode = currentDisplayNode;
+			if (oldDisplayNode) {
+				// oldDisplayNode.flags.display.set(false);
+				if (this.options.dependsOnDisplayNode) {
+					this._graphNode.removeGraphInput(oldDisplayNode);
+				}
+				if (this._onDisplayNodeRemoveCallback) {
+					this._onDisplayNodeRemoveCallback();
+				}
+			}
+			this._displayNodeOverride = newDisplayNodeOverride;
+			if (newDisplayNodeOverride) {
+				if (this.options.dependsOnDisplayNode) {
+					this._graphNode.addGraphInput(newDisplayNodeOverride);
+				}
+				if (this._onDisplayNodeSetCallback) {
+					this._onDisplayNodeSetCallback();
+				}
+			} else {
+				if (this._displayNode) {
+					this._commitDisplayNode(this._displayNode);
+				}
+			}
+		}
+	}
+
+	setDisplayNode(newDisplayNode: BaseNodeClassWithDisplayFlag | undefined) {
+		if (!this._initialized) {
+			_warnNotInitialized(this.node);
+		}
+
+		const currentDisplayNode = this._displayNode;
+		if (currentDisplayNode != newDisplayNode) {
+			const oldDisplayNode = currentDisplayNode;
 			if (oldDisplayNode) {
 				oldDisplayNode.flags.display.set(false);
 				if (this.options.dependsOnDisplayNode) {
@@ -104,14 +145,17 @@ export class DisplayNodeController {
 				}
 			}
 			this._displayNode = newDisplayNode;
-			if (this._displayNode) {
-				if (this.options.dependsOnDisplayNode) {
-					this._graphNode.addGraphInput(this._displayNode);
-				}
-				if (this._onDisplayNodeSetCallback) {
-					this._onDisplayNodeSetCallback();
-				}
+			if (newDisplayNode) {
+				this._commitDisplayNode(newDisplayNode);
 			}
+		}
+	}
+	private _commitDisplayNode(newDisplayNode: BaseNodeClassWithDisplayFlag) {
+		if (this.options.dependsOnDisplayNode) {
+			this._graphNode.addGraphInput(newDisplayNode);
+		}
+		if (this._onDisplayNodeSetCallback) {
+			this._onDisplayNodeSetCallback();
 		}
 	}
 }

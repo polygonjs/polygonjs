@@ -3,8 +3,11 @@ import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 import {AttribClass, ATTRIBUTE_CLASSES} from '../../../core/geometry/Constant';
+import {ENTITY_CLASS_FACTORY} from '../../../core/geometry/CoreObjectFactory';
+import {filterObjectsFromCoreGroup} from '../../../core/geometry/Mask';
 
 interface AttribRenameSopParams extends DefaultOperationParams {
+	group: string;
 	class: number;
 	oldName: string;
 	newName: string;
@@ -12,7 +15,8 @@ interface AttribRenameSopParams extends DefaultOperationParams {
 const SPLIT_REGEX = /[ ,]+/g;
 export class AttribRenameSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: AttribRenameSopParams = {
-		class: ATTRIBUTE_CLASSES.indexOf(AttribClass.VERTEX),
+		group: '',
+		class: ATTRIBUTE_CLASSES.indexOf(AttribClass.POINT),
 		oldName: '',
 		newName: '',
 	};
@@ -21,14 +25,27 @@ export class AttribRenameSopOperation extends BaseSopOperation {
 		return 'attribRename';
 	}
 	override cook(inputCoreGroups: CoreGroup[], params: AttribRenameSopParams) {
-		const inputCoreGroup = inputCoreGroups[0];
-		const oldNames = params.oldName.split(SPLIT_REGEX);
-		const newNames = params.newName.split(SPLIT_REGEX);
-		const minCount = Math.min(oldNames.length, newNames.length);
+		const coreGroup = inputCoreGroups[0];
+		const objects = filterObjectsFromCoreGroup(coreGroup, params);
 		const attribClass = ATTRIBUTE_CLASSES[params.class];
-		for (let i = 0; i < minCount; i++) {
-			inputCoreGroup.renameAttrib(oldNames[i], newNames[i], attribClass);
+		const factory = ENTITY_CLASS_FACTORY[attribClass];
+		const newAttribNames = params.newName.split(SPLIT_REGEX);
+		if (factory) {
+			for (const object of objects) {
+				const entityClass = factory(object);
+				const oldAttribNames = entityClass.attributeNamesMatchingMask(object, params.oldName);
+				const minCount = Math.min(oldAttribNames.length, newAttribNames.length);
+				for (let i = 0; i < minCount; i++) {
+					entityClass.renameAttribute(object, oldAttribNames[i], newAttribNames[i]);
+				}
+			}
+		} else {
+			const oldAttribNames = coreGroup.attributeNamesMatchingMask(params.oldName);
+			const minCount = Math.min(oldAttribNames.length, newAttribNames.length);
+			for (let i = 0; i < minCount; i++) {
+				coreGroup.renameAttribute(oldAttribNames[i], newAttribNames[i]);
+			}
 		}
-		return inputCoreGroup;
+		return coreGroup;
 	}
 }

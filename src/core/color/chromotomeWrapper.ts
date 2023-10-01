@@ -12,7 +12,7 @@ export let MAX_PALETTE_COLORS_COUNT: number = 0;
 const minColorsAllowed = 3;
 const maxColorsAllowed = 5;
 // let paletteWithMaxColors: Palette | undefined = undefined;
-for (let palette of ALL_PALETTES) {
+for (const palette of ALL_PALETTES) {
 	const colorsCount = palette.colors.length;
 	if (colorsCount >= minColorsAllowed && colorsCount <= maxColorsAllowed) {
 		PALETTES_BY_NAME.set(palette.name, palette);

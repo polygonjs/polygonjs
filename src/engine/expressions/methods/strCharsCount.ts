@@ -29,13 +29,12 @@ export class StrCharsCountExpression extends BaseMethod {
 	// }
 
 	override async processArguments(args: any[]): Promise<number> {
-		let value = 0;
 		if (args.length == 1) {
 			const string = args[0];
 			if (CoreType.isString(string)) {
-				value = string.length;
+				return string.length;
 			}
 		}
-		return value;
+		return 0;
 	}
 }

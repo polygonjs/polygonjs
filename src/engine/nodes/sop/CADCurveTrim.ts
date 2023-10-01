@@ -5,14 +5,19 @@
  */
 import {CADSopNode} from './_BaseCAD';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {step} from '../../../core/geometry/cad/CadConstant';
-import {CoreCadType} from '../../../core/geometry/cad/CadCoreType';
-import {CadGC, CadGeometryType, CadNumberHandle, _createCadNumberHandle} from '../../../core/geometry/cad/CadCommon';
-import {cadEdgeCreate} from '../../../core/geometry/cad/toObject3D/CadEdge';
+import {step} from '../../../core/geometry/modules/cad/CadConstant';
+import {CoreCadType} from '../../../core/geometry/modules/cad/CadCoreType';
+import {
+	CadGC,
+	CadGeometryType,
+	CadNumberHandle,
+	_createCadNumberHandle,
+} from '../../../core/geometry/modules/cad/CadCommon';
+import {cadEdgeCreate} from '../../../core/geometry/modules/cad/toObject3D/CadEdge';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {CadObject} from '../../../core/geometry/cad/CadObject';
+import {CadObject} from '../../../core/geometry/modules/cad/CadObject';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
-import {CadLoaderSync} from '../../../core/geometry/cad/CadLoaderSync';
+import {CadLoaderSync} from '../../../core/geometry/modules/cad/CadLoaderSync';
 
 const v0: CadNumberHandle = _createCadNumberHandle();
 const v1: CadNumberHandle = _createCadNumberHandle();
@@ -50,7 +55,7 @@ export class CADCurveTrimSopNode extends CADSopNode<CADCurveTrimSopParamsConfig>
 		const newObjects: CadObject<CadGeometryType>[] = [];
 		if (inputObjects) {
 			CadGC.withGC((r) => {
-				for (let inputObject of inputObjects) {
+				for (const inputObject of inputObjects) {
 					if (CoreCadType.isGeom2dCurve(inputObject)) {
 						const curve = inputObject.cadGeometry();
 						const handle = r(new oc.Handle_Geom2d_Curve_2(curve));

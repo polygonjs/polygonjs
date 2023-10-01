@@ -32,6 +32,9 @@ export function touchParamRef(node: BaseNodeType, paramName: string) {
 	incrementRefSafely(_ref);
 }
 export function touchParamRefFromParam(param: BaseParamType) {
+	if (!param.node) {
+		return;
+	}
 	const _ref = getParamRef(param.node, param.name());
 	if (!_ref) {
 		return;

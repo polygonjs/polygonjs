@@ -26,16 +26,13 @@ export class ArgExpression extends BaseMethod {
 		];
 	}
 
-	override processArguments(args: any[]): Promise<any> {
-		return new Promise((resolve, reject) => {
-			if (args.length == 2) {
-				const argumentsList = args[0];
-				const index = args[1];
-				const val = argumentsList.split(' ')[index];
-				resolve(val);
-			} else {
-				resolve(0);
-			}
-		});
+	override async processArguments(args: any[]): Promise<any> {
+		if (args.length == 2) {
+			const argumentsList = args[0];
+			const index = args[1];
+			const val = argumentsList.split(' ')[index];
+			return val;
+		}
+		return 0;
 	}
 }

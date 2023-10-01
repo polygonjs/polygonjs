@@ -14,7 +14,8 @@ export function testenginenodessopSDFBuilder(qUnit: QUnit) {
 	const size = new Vector3();
 	async function _getBbox(node: SDFBuilderSopNode) {
 		const container = await node.compute();
-		container.boundingBox(bbox);
+		const coreGroup = container.coreContent()!;
+		coreGroup.boundingBox(bbox);
 		bbox.getSize(size);
 		return size;
 	}

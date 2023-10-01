@@ -7,19 +7,19 @@
 import {CADSopNode} from './_BaseCAD';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
-import {CadLoader} from '../../../core/geometry/cad/CadLoader';
+import {CadLoader} from '../../../core/geometry/modules/cad/CadLoader';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {traverseEdges, traverseFaces} from '../../../core/geometry/cad/CadTraverse';
-import {CoreCadType} from '../../../core/geometry/cad/CadCoreType';
+import {traverseEdges, traverseFaces} from '../../../core/geometry/modules/cad/CadTraverse';
+import {CoreCadType} from '../../../core/geometry/modules/cad/CadCoreType';
 import {GroupByExpressionHelper} from './utils/group/GroupByExpressionHelper';
 import {GroupByBoundingBoxHelper} from './utils/group/GroupByBoundingBoxHelper';
 import {GroupByBoundingObjectHelper} from './utils/group/GroupByBoundingObjectHelper';
 import {CoreEntitySelectionState, updateSelectionState} from './/utils/group/GroupCommon';
 import {isBooleanTrue} from '../../../core/Type';
-import {CadObject} from '../../../core/geometry/cad/CadObject';
-import {OpenCascadeInstance, CadGeometryTypeShape} from '../../../core/geometry/cad/CadCommon';
-import {CadCoreEdge} from '../../../core/geometry/cad/CadCoreEdge';
+import {CadObject} from '../../../core/geometry/modules/cad/CadObject';
+import {OpenCascadeInstance, CadGeometryTypeShape} from '../../../core/geometry/modules/cad/CadCommon';
+import {CadCoreEdge} from '../../../core/geometry/modules/cad/CadCoreEdge';
 import {
 	GroupOperation,
 	GROUP_OPERATIONS,
@@ -27,8 +27,8 @@ import {
 	EntityGroupType,
 } from '../../../core/geometry/EntityGroupCollection';
 import {coreObjectInstanceFactory} from '../../../core/geometry/CoreObjectFactory';
-import {CoreEntity} from '../../../core/geometry/Entity';
-import {CadCoreFace} from '../../../core/geometry/cad/CadCoreFace';
+import {CoreEntity} from '../../../core/geometry/CoreEntity';
+import {CadCoreFace} from '../../../core/geometry/modules/cad/CadCoreFace';
 
 const GROUP_TYPES: EntityGroupType[] = [EntityGroupType.EDGE, EntityGroupType.FACE];
 
@@ -120,7 +120,7 @@ export class CADGroupSopNode extends CADSopNode<CADGroupSopParamsConfig> {
 
 		const inputObjects = coreGroup0.cadObjects();
 		if (inputObjects) {
-			for (let inputObject of inputObjects) {
+			for (const inputObject of inputObjects) {
 				if (CoreCadType.isShape(inputObject)) {
 					await this._evalEdges(oc, inputObject, coreGroup1);
 				}
@@ -170,7 +170,7 @@ export class CADGroupSopNode extends CADSopNode<CADGroupSopParamsConfig> {
 				await this.byBoundingObjectHelper.evalForEntities(entities, this.selectedStates, boundingCoreGroup);
 			}
 		} else {
-			for (let entity of entities) {
+			for (const entity of entities) {
 				updateSelectionState(this.selectedStates, entity, false);
 			}
 		}

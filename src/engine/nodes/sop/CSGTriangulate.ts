@@ -10,7 +10,7 @@ import {CoreGroup} from '../../../core/geometry/Group';
 import {Object3D} from 'three';
 import {CoreType} from '../../../core/Type';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
-import {SOPCSGTesselationParamConfig} from '../../../core/geometry/csg/utils/TesselationParamsConfig';
+import {SOPCSGTesselationParamConfig} from '../../../core/geometry/modules/csg/utils/TesselationParamsConfig';
 class CSGTriangulateSopParamsConfig extends SOPCSGTesselationParamConfig(NodeParamsConfig) {}
 const ParamsConfig = new CSGTriangulateSopParamsConfig();
 
@@ -28,7 +28,7 @@ export class CSGTriangulateSopNode extends CSGSopNode<CSGTriangulateSopParamsCon
 		const csgObjects = inputCoreGroups[0].csgObjects();
 		if (csgObjects) {
 			const newObjects: Object3D[] = [];
-			for (let cadObject of csgObjects) {
+			for (const cadObject of csgObjects) {
 				const objects = cadObject.toObject3D(this.pv);
 				if (objects) {
 					if (CoreType.isArray(objects)) {

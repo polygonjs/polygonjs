@@ -1,9 +1,5 @@
 import {BaseParamType} from '../params/_Base';
-// import {ParsedTree} from './Traverser/ParsedTree'
 import {FunctionGenerator} from './traversers/FunctionGenerator';
-// import {NodeSimple} from '../../core/graph/NodeSimple'
-// import {MissingReferencesController} from './MissingReferencesController'
-// import {NamesListener} from './NamesListener'
 import {MethodDependency} from './MethodDependency';
 import jsep from 'jsep';
 
@@ -12,20 +8,18 @@ export interface JsepsByString {
 }
 
 export class DependenciesController {
-	error_message: string | undefined;
-	// private references_controller: MissingReferencesController
+	private _errorMessage: string | undefined;
 	private _cyclicGraphDetected: boolean = false;
-	// private jsep_nodes_by_missing_paths: JsepsByString = {}
 	private methodDependencies: MethodDependency[] = [];
 
-	// private names_listeners: NamesListener[] = []
+	constructor(public param: BaseParamType) {}
 
-	constructor(public param: BaseParamType) {
-		// this.references_controller = this.param.scene().missing_expression_references_controller
+	protected setError(message: string) {
+		this._errorMessage = this._errorMessage || message;
 	}
 
-	protected set_error(message: string) {
-		this.error_message = this.error_message || message;
+	errorMessage() {
+		return this._errorMessage;
 	}
 
 	reset() {
@@ -66,17 +60,18 @@ export class DependenciesController {
 		this._listenForNameChanges();
 	}
 
-	private _connectImmutableDependencies(function_generator: FunctionGenerator) {
-		function_generator.immutableDependencies.forEach((dependency) => {
+	private _connectImmutableDependencies(functionGenerator: FunctionGenerator) {
+		const dependendies = functionGenerator.immutableDependencies;
+		for (const dependency of dependendies) {
 			if (this._cyclicGraphDetected == false) {
 				if (this.param.addGraphInput(dependency) == false) {
 					this._cyclicGraphDetected = true;
-					this.set_error('cannot create expression, infinite graph detected');
+					this.setError('cannot create expression, infinite graph detected');
 					this.reset();
 					return;
 				}
 			}
-		});
+		}
 	}
 	private _handleMethodDependencies() {
 		this.methodDependencies.forEach((methodDependency) => {
@@ -97,7 +92,7 @@ export class DependenciesController {
 
 			if (!this.param.addGraphInput(node_simple)) {
 				this._cyclicGraphDetected = true;
-				this.set_error('cannot create expression, infinite graph detected');
+				this.setError('cannot create expression, infinite graph detected');
 				this.reset();
 				return;
 			}

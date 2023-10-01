@@ -7,9 +7,9 @@ import {CSGSopNode} from './_BaseCSG';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
-import {CsgCorner, CSG_CORNERS} from '../../../core/geometry/csg/operations/CsgCorner';
-import {CsgGeometry, CsgGeometryType} from '../../../core/geometry/csg/CsgCommon';
-import {csgGeometryTypeFromGeometry} from '../../../core/geometry/csg/CsgCoreType';
+import {CsgCorner, CSG_CORNERS} from '../../../core/geometry/modules/csg/operations/CsgCorner';
+import {CsgGeometry, CsgGeometryType} from '../../../core/geometry/modules/csg/CsgCommon';
+import {csgGeometryTypeFromGeometry} from '../../../core/geometry/modules/csg/CsgCoreType';
 import {CoreType} from '../../../core/Type';
 import {expansions, maths, geometries} from '@jscad/modeling';
 const {expand} = expansions;
@@ -72,7 +72,7 @@ export class CSGExpandSopNode extends CSGSopNode<CSGExpandSopParamsConfig> {
 			};
 			const mode = EXPAND_MODES[this.pv.mode];
 			const newGeometries: CsgGeometry[] = [];
-			for (let inputObject of inputObjects) {
+			for (const inputObject of inputObjects) {
 				const inputGeometry = inputObject.csgGeometry();
 				const type = csgGeometryTypeFromGeometry(inputGeometry);
 				const is2D = type == CsgGeometryType.PATH2 || type == CsgGeometryType.GEOM2;

@@ -2,7 +2,7 @@ import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../../engine/poly/InputCloneMode';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
-import {CoreObject} from '../../../core/geometry/Object';
+import {ThreejsCoreObject} from '../../../core/geometry/modules/three/ThreejsCoreObject';
 import {CameraAttribute} from '../../../core/camera/CoreCamera';
 import {CameraSopNodeType} from '../../poly/NodeContext';
 import {CoreObjectType, ObjectContent} from '../../../core/geometry/ObjectContent';
@@ -44,8 +44,8 @@ export class CameraFPSSopOperation extends BaseSopOperation {
 		const {objects, params} = options;
 
 		for (let object of objects) {
-			CoreObject.addAttribute(object, CameraAttribute.MAX_FPS, params.maxFPS);
-			CoreObject.addAttribute(object, CameraAttribute.MAX_FPS_DYNAMIC_CHANGE, params.allowDynamicChange);
+			ThreejsCoreObject.addAttribute(object, CameraAttribute.MAX_FPS, params.maxFPS);
+			ThreejsCoreObject.addAttribute(object, CameraAttribute.MAX_FPS_DYNAMIC_CHANGE, params.allowDynamicChange);
 		}
 	}
 }

@@ -7,10 +7,10 @@
 // import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 // import {CoreGroup} from '../../../core/geometry/Group';
 // import {SopType} from '../../poly/registers/nodes/types/Sop';
-// import {TetObject} from '../../../core/geometry/tet/TetObject';
+// import {TetObject} from '../../../core/geometry/modules/tet/TetObject';
 // import {CoreString} from '../../../core/String';
-// import {tetMirrorOnPlane} from '../../../core/geometry/tet/utils/tetMirror';
-// import {tetNeighbour} from '../../../core/geometry/tet/utils/tetNeighboursHelper';
+// import {tetMirrorOnPlane} from '../../../core/geometry/modules/tet/utils/tetMirror';
+// import {tetNeighbour} from '../../../core/geometry/modules/tet/utils/tetNeighboursHelper';
 
 // class TetMirrorSopParamsConfig extends NodeParamsConfig {
 // 	/** @param group */

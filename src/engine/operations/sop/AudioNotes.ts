@@ -5,9 +5,11 @@ import {AttribClass, ATTRIBUTE_CLASSES} from '../../../core/geometry/Constant';
 import {TypeAssert} from '../../poly/Assert';
 import {NotesBuilder, NoteHolder} from '../../../core/audio/NotesBuilder';
 import {CoreAttribute} from '../../../core/geometry/Attribute';
-import {CoreEntity} from '../../../core/geometry/Entity';
+import {CoreEntity} from '../../../core/geometry/CoreEntity';
 import {isBooleanTrue} from '../../../core/Type';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
+import {pointsFromObject} from '../../../core/geometry/entities/point/CorePointUtils';
+import {corePointClassFactory} from '../../../core/geometry/CoreObjectFactory';
 
 enum OutOfRangeBehavior {
 	RESTART = 'restart',
@@ -50,8 +52,16 @@ export class AudioNotesSopOperation extends BaseSopOperation {
 	}
 	private async _addAttribute(attribClass: AttribClass, coreGroup: CoreGroup, params: AudioNotesSopParams) {
 		switch (attribClass) {
-			case AttribClass.VERTEX:
+			case AttribClass.POINT:
 				return this._addPointAttribute(coreGroup, params);
+			case AttribClass.VERTEX: {
+				this.states?.error.set('vertex not supported yet');
+				return;
+			}
+			case AttribClass.PRIMITIVE: {
+				this.states?.error.set('primitive not supported yet');
+				return;
+			}
 			case AttribClass.OBJECT:
 				return this._addObjectAttribute(coreGroup, params);
 			case AttribClass.CORE_GROUP:
@@ -61,28 +71,29 @@ export class AudioNotesSopOperation extends BaseSopOperation {
 	}
 
 	private _addPointAttribute(coreGroup: CoreGroup, params: AudioNotesSopParams) {
-		const coreObjects = coreGroup.threejsCoreObjects();
+		const objects = coreGroup.allObjects();
 
-		for (let coreObject of coreObjects) {
-			const corePoints = coreObject.points();
+		for (let object of objects) {
+			const corePoints = pointsFromObject(object);
+			const corePointClass = corePointClassFactory(object);
 			const values = this._values(corePoints, params);
 
-			const coreGeometry = coreObject.coreGeometry();
-			if (coreGeometry) {
-				const notesIndexData = CoreAttribute.arrayToIndexedArrays(values.map((v) => v.note));
-				coreGeometry.setIndexedAttribute(params.name, notesIndexData.values, notesIndexData.indices);
-				if (isBooleanTrue(params.toctave)) {
-					const octavesArray = values.map((v) => v.octave);
-					if (!coreGeometry.hasAttrib(params.octaveName)) {
-						coreGeometry.addNumericAttrib(params.octaveName, 1, 1);
-					}
-					let i = 0;
-					for (let corePoint of corePoints) {
-						corePoint.setAttribValue(params.octaveName, octavesArray[i]);
-						i++;
-					}
+			// const coreGeometry = coreObject.coreGeometry();
+			// if (coreGeometry) {
+			const notesIndexData = CoreAttribute.arrayToIndexedArrays(values.map((v) => v.note));
+			corePointClass.setIndexedAttribute(object, params.name, notesIndexData.values, notesIndexData.indices);
+			if (isBooleanTrue(params.toctave)) {
+				const octavesArray = values.map((v) => v.octave);
+				if (!corePointClass.hasAttribute(object, params.octaveName)) {
+					corePointClass.addNumericAttribute(object, params.octaveName, 1, 1);
+				}
+				let i = 0;
+				for (let corePoint of corePoints) {
+					corePoint.setAttribValue(params.octaveName, octavesArray[i]);
+					i++;
 				}
 			}
+			// }
 		}
 	}
 	private _addObjectAttribute(coreGroup: CoreGroup, params: AudioNotesSopParams) {

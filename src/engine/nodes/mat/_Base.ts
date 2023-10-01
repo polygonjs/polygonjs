@@ -5,7 +5,7 @@ import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {FlagsControllerB} from '../utils/FlagsController';
 import {BaseController, MaterialTexturesRecord, SetParamsTextureNodesRecord} from './utils/_BaseController';
-import {ArrayUtils} from '../../../core/ArrayUtils';
+import {arrayCompact} from '../../../core/ArrayUtils';
 import {Poly} from '../../Poly';
 
 /**
@@ -69,23 +69,26 @@ export abstract class PrimitiveMatNode<M extends Material, K extends NodeParamsC
 		super.setMaterial(material);
 	}
 	getTextures(material: M, record: MaterialTexturesRecord) {
-		for (let controller of this.controllersList) {
+		for (const controller of this.controllersList) {
 			controller.getTextures(material, record);
 		}
 	}
 	setParamsFromMaterial(material: M, record: SetParamsTextureNodesRecord) {
-		for (let controller of this.controllersList) {
+		for (const controller of this.controllersList) {
 			controller.setParamsFromMaterial(material, record);
 		}
 	}
 
 	protected controllersList: Array<BaseController> = [];
 	protected controllersPromises(material: M): Array<void | Promise<void>> {
-		return ArrayUtils.compact(this.controllersList.map((controller) => controller.updateMaterial(material)));
+		const promises = this.controllersList.map((controller) => controller.updateMaterial(material));
+		const compactPromises: Promise<void>[] = [];
+		arrayCompact(promises, compactPromises);
+		return compactPromises;
 	}
 	override initializeNode() {
 		this.params.onParamsCreated('init controllers', () => {
-			for (let controller of this.controllersList) {
+			for (const controller of this.controllersList) {
 				controller.initializeNode();
 			}
 		});

@@ -3,21 +3,19 @@
  *
  *
  */
-import {Camera} from 'three';
-import {Object3D} from 'three';
-import {Matrix4} from 'three';
-import {Vector3} from 'three';
+import {Camera, Vector3, Object3D, Matrix4} from 'three';
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {CameraController} from '../../../core/CameraController';
 import {BaseCameraObjNodeType} from '../obj/_BaseCamera';
-
-const UV_NAME = 'uv';
-
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {CAMERA_TYPES, NodeContext} from '../../poly/NodeContext';
 import {BaseObjNodeType} from '../obj/_Base';
+
+const UV_NAME = 'uv';
+const _position = new Vector3();
+
 class UvProjectSopParamsConfig extends NodeParamsConfig {
 	/** @param camera node to use as projection */
 	camera = ParamConfig.NODE_PATH('', {
@@ -74,9 +72,9 @@ export class UvProjectSopNode extends TypedSopNode<UvProjectSopParamsConfig> {
 		if (this._processed_core_group && parent) {
 			const points = this._processed_core_group.points();
 			const obj_world_matrix = (parent as BaseObjNodeType).object.matrixWorld;
-			for (let point of points) {
-				const position = point.position();
-				const uvw = this._vectorInCameraSpace(position, obj_world_matrix);
+			for (const point of points) {
+				point.position(_position);
+				const uvw = this._vectorInCameraSpace(_position, obj_world_matrix);
 				if (uvw) {
 					const uv = {
 						x: 1 - (uvw[0] * 0.5 + 0.5),

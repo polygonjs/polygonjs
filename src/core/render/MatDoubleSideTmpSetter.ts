@@ -13,13 +13,13 @@ export class MatDoubleSideTmpSetter {
 
 	setCoreGroupMaterialDoubleSided(core_group: CoreGroup) {
 		const objects = core_group.threejsObjects();
-		for (let object of objects) {
+		for (const object of objects) {
 			object.traverse(this._bound_setMat);
 		}
 	}
 	restoreMaterialSideProperty(core_group: CoreGroup) {
 		const objects = core_group.threejsObjects();
-		for (let object of objects) {
+		for (const object of objects) {
 			object.traverse(this._bound_restoreMat);
 		}
 	}
@@ -27,7 +27,7 @@ export class MatDoubleSideTmpSetter {
 		const mat = (object as Mesh).material;
 		if (mat) {
 			if (CoreType.isArray(mat)) {
-				for (let mati of mat) {
+				for (const mati of mat) {
 					this._setMaterialDoubleSided(mati);
 				}
 			} else {
@@ -39,7 +39,7 @@ export class MatDoubleSideTmpSetter {
 		const mat = (object as Mesh).material;
 		if (mat) {
 			if (CoreType.isArray(mat)) {
-				for (let mati of mat) {
+				for (const mati of mat) {
 					this._restoreMaterialDoubleSided(mati);
 				}
 			} else {

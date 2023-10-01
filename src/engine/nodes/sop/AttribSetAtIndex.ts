@@ -18,15 +18,15 @@ import {
 	ATTRIBUTE_TYPES,
 } from '../../../core/geometry/Constant';
 import {CoreAttribute} from '../../../core/geometry/Attribute';
-import {BaseCoreObject} from '../../../core/geometry/_BaseObject';
-import {CoreObject} from '../../../core/geometry/Object';
+import {BaseCoreObject} from '../../../core/geometry/entities/object/BaseCoreObject';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {TypeAssert} from '../../poly/Assert';
-
 import {AttribSetAtIndexSopOperation} from '../../operations/sop/AttribSetAtIndex';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {BufferAttribute} from 'three';
-import {CoreObjectType} from '../../../core/geometry/ObjectContent';
+import {CoreObjectType, ObjectContent} from '../../../core/geometry/ObjectContent';
+import {corePointClassFactory} from '../../../core/geometry/CoreObjectFactory';
+import {pointsFromObject} from '../../../core/geometry/entities/point/CorePointUtils';
 const DEFAULT = AttribSetAtIndexSopOperation.DEFAULT_PARAMS;
 class AttribSetAtIndexSopParamsConfig extends NodeParamsConfig {
 	/** @param the point or object index this applies to */
@@ -108,8 +108,14 @@ export class AttribSetAtIndexSopNode extends TypedSopNode<AttribSetAtIndexSopPar
 	private _addAttribute(attribClass: AttribClass, coreGroup: CoreGroup) {
 		const attribType = ATTRIBUTE_TYPES[this.pv.type];
 		switch (attribClass) {
-			case AttribClass.VERTEX:
+			case AttribClass.POINT:
 				this._addPointAttribute(attribType, coreGroup);
+				return this.setCoreGroup(coreGroup);
+			case AttribClass.VERTEX:
+				this.states.error.set('vertex attributes are not supported');
+				return this.setCoreGroup(coreGroup);
+			case AttribClass.PRIMITIVE:
+				this.states.error.set('primitive attributes are not supported');
 				return this.setCoreGroup(coreGroup);
 			case AttribClass.OBJECT:
 				this._addObjectAttribute(attribType, coreGroup);
@@ -122,17 +128,17 @@ export class AttribSetAtIndexSopNode extends TypedSopNode<AttribSetAtIndexSopPar
 	}
 
 	private _addPointAttribute(attribType: AttribType, coreGroup: CoreGroup) {
-		const coreObjects = coreGroup.threejsCoreObjects();
+		const objects = coreGroup.allObjects();
 		switch (attribType) {
 			case AttribType.NUMERIC: {
-				for (let i = 0; i < coreObjects.length; i++) {
-					this._addNumericAttributeToPoints(coreObjects[i]);
+				for (const object of objects) {
+					this._addNumericAttributeToPoints(object);
 				}
 				return;
 			}
 			case AttribType.STRING: {
-				for (let i = 0; i < coreObjects.length; i++) {
-					this._addStringAttributeToPoints(coreObjects[i]);
+				for (const object of objects) {
+					this._addStringAttributeToPoints(object);
 				}
 				return;
 			}
@@ -146,8 +152,8 @@ export class AttribSetAtIndexSopNode extends TypedSopNode<AttribSetAtIndexSopPar
 		const attribName = this.pv.name;
 		const defaultValue = AttribSetAtIndexSopOperation.defaultAttribValue(this.pv);
 		if (defaultValue != null) {
-			for (let coreObject of allCoreObjects) {
-				if (!coreObject.hasAttrib(attribName)) {
+			for (const coreObject of allCoreObjects) {
+				if (!coreObject.hasAttribute(attribName)) {
 					coreObject.setAttribValue(attribName, defaultValue);
 				}
 			}
@@ -180,16 +186,14 @@ export class AttribSetAtIndexSopNode extends TypedSopNode<AttribSetAtIndexSopPar
 		TypeAssert.unreachable(attribType);
 	}
 
-	private _addNumericAttributeToPoints(coreObject: CoreObject) {
-		const coreGeometry = coreObject.coreGeometry();
-		if (!coreGeometry) {
-			return;
-		}
+	private _addNumericAttributeToPoints<T extends CoreObjectType>(object: ObjectContent<T>) {
+		const corePointClass = corePointClassFactory(object);
+
 		const attribName = CoreAttribute.remapName(this.pv.name);
-		if (!coreGeometry.hasAttrib(attribName)) {
-			coreGeometry.addNumericAttrib(attribName, this.pv.size, 0);
+		if (!corePointClass.hasAttribute(object, attribName)) {
+			corePointClass.addNumericAttribute(object, attribName, this.pv.size, 0);
 		}
-		const attrib = coreGeometry.geometry().attributes[attribName] as BufferAttribute;
+		const attrib = corePointClass.attribute(object, attribName) as BufferAttribute;
 		const array = attrib.array as number[];
 		const {index, size} = this.pv;
 		switch (size) {
@@ -247,23 +251,21 @@ export class AttribSetAtIndexSopNode extends TypedSopNode<AttribSetAtIndexSopPar
 		coreGroup.setAttribValue(attribName, param.value);
 	}
 
-	private _addStringAttributeToPoints(coreObject: CoreObject) {
-		const coreGeometry = coreObject.coreGeometry();
-		if (!coreGeometry) {
-			return;
-		}
+	private _addStringAttributeToPoints<T extends CoreObjectType>(object: ObjectContent<T>) {
+		const corePointClass = corePointClassFactory(object);
+
 		const attribName = this.pv.name;
-		if (!coreGeometry.hasAttrib(attribName)) {
+		if (!corePointClass.hasAttribute(object, attribName)) {
 			const tmpIndexData = CoreAttribute.arrayToIndexedArrays(['']);
-			coreGeometry.setIndexedAttribute(attribName, tmpIndexData['values'], tmpIndexData['indices']);
+			corePointClass.setIndexedAttribute(object, attribName, tmpIndexData['values'], tmpIndexData['indices']);
 		}
 
-		const allPoints = coreObject.points();
+		const allPoints = pointsFromObject(object);
 
 		const param = this.p.string;
 
 		const stringValues: string[] = new Array(allPoints.length);
-		for (let point of allPoints) {
+		for (const point of allPoints) {
 			let currentValue = point.stringAttribValue(attribName);
 			if (currentValue == null) {
 				currentValue = '';
@@ -277,10 +279,10 @@ export class AttribSetAtIndexSopNode extends TypedSopNode<AttribSetAtIndexSopPar
 		}
 
 		const indexData = CoreAttribute.arrayToIndexedArrays(stringValues);
-		const geometry = coreObject.coreGeometry();
-		if (geometry) {
-			geometry.setIndexedAttribute(attribName, indexData['values'], indexData['indices']);
-		}
+		// const geometry = coreObject.coreGeometry();
+		// if (geometry) {
+		corePointClass.setIndexedAttribute(object, attribName, indexData['values'], indexData['indices']);
+		// }
 	}
 
 	private _addStringAttributeToObject(coreObject: BaseCoreObject<CoreObjectType>) {

@@ -9,7 +9,7 @@ import {PolyEventsDispatcher} from '../common/EventsDispatcher';
 import {PolyEventName} from '../../poly/utils/PolyEventName';
 import {PROGRESS_RATIO} from '../common/Progress';
 import {SceneJsonExporterData} from '../json/export/Scene';
-import {SceneJsonImporter, ConfigureSceneCallback} from '../json/import/Scene';
+import {SceneJsonImporter, ConfigureSceneCallback, SerializerOptions} from '../json/import/Scene';
 
 export interface LoadSceneOptions {
 	onProgress?: OnProgressUpdateCallback;
@@ -30,6 +30,7 @@ export interface SceneDataImportOptions extends ImportCommonOptions {
 	createViewer?: boolean;
 	renderer?: WebGLRenderer;
 	cameraMaskOverride?: string;
+	serializers?: SerializerOptions;
 }
 export type LoadSceneData = (options: SceneDataImportOptions) => void;
 export interface SceneDataImportOptionsOnly {
@@ -67,7 +68,7 @@ export class ScenePlayerImporter {
 
 	static async loadSceneData(options: SceneDataImportOptions): Promise<SceneLoadReturnData> {
 		const scenePlayerImporter = new ScenePlayerImporter(options);
-		const scene = await scenePlayerImporter.loadScene();
+		const scene = await scenePlayerImporter.loadScene(options.serializers);
 
 		return {
 			scene,
@@ -139,7 +140,7 @@ export class ScenePlayerImporter {
 			this._onNodesCookProgress(nodesCookProgress, args);
 		});
 	}
-	async loadScene() {
+	async loadScene(options?: SerializerOptions) {
 		const createSceneAndWaitForCameraCreatorNode: CreateScenePromiseCallback = () => {
 			return new Promise(async (resolve) => {
 				const configureScene = this.options.configureScene;
@@ -151,7 +152,7 @@ export class ScenePlayerImporter {
 					},
 				});
 
-				const scene = importer.scene();
+				const scene = importer.scene(options);
 				scene.timeController.forbidPlayUntilAllNodesCooked();
 				this._scene = scene;
 				this._dispatchEvent(PolyEventName.SCENE_CREATED);

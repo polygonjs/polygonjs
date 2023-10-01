@@ -3,7 +3,7 @@ import {TypedNode, BaseNodeType} from '../_Base';
 import {NodeContext} from '../../poly/NodeContext';
 import {NodeParamsConfig} from '../utils/params/ParamsConfig';
 import {Group} from 'three';
-import {ChildrenDisplayController} from './utils/ChildrenDisplayController';
+import {ObjChildrenDisplayController} from './utils/ObjChildrenDisplayController';
 import {TransformController} from './utils/TransformController';
 import {HierarchyController} from './utils/HierarchyController';
 import {Poly} from '../../Poly';
@@ -76,7 +76,7 @@ export class TypedObjNode<O extends Object3D, K extends NodeParamsConfig> extend
 		}
 	}
 
-	public readonly childrenDisplayController: ChildrenDisplayController | undefined;
+	public readonly childrenDisplayController: ObjChildrenDisplayController | undefined;
 	override dispose(): void {
 		super.dispose();
 		this.childrenDisplayController?.dispose();

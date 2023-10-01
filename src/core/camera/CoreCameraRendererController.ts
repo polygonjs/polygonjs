@@ -7,7 +7,6 @@ import {
 	DEFAULT_TONE_MAPPING,
 } from '../../engine/nodes/rop/WebGLRenderer';
 import {defaultPixelRatio} from '../render/defaultPixelRatio';
-import {CoreObject} from '../geometry/Object';
 import {CameraAttribute} from './CoreCamera';
 import {CoreType} from '../Type';
 import {RopType} from '../../engine/poly/registers/nodes/types/Rop';
@@ -19,6 +18,7 @@ import type {WebGLRendererRopNode} from '../../engine/nodes/rop/WebGLRenderer';
 // @ts-ignore
 import type {PathTracingRenderer} from '../../core/thirdParty/three-gpu-pathtracer';
 import {PathTracingRendererContainer} from '../../engine/nodes/rop/utils/pathTracing/PathTracingRendererContainer';
+import {coreObjectClassFactory} from '../geometry/CoreObjectFactory';
 
 const UPDATE_STYLE = false;
 const SIZE_MULT = 1;
@@ -69,7 +69,7 @@ export class CoreCameraRendererController {
 
 	static rendererNode(options: RendererRopOptions) {
 		const {scene, camera} = options;
-		const rendererROPId = CoreObject.attribValue(camera, CameraAttribute.RENDERER_NODE_ID);
+		const rendererROPId = coreObjectClassFactory(camera).attribValue(camera, CameraAttribute.RENDERER_NODE_ID);
 		if (rendererROPId && CoreType.isNumber(rendererROPId)) {
 			const rendererROP = scene.graph.nodeFromId(rendererROPId);
 			return rendererROP;

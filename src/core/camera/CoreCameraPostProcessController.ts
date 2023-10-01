@@ -3,11 +3,11 @@ import {PolyScene} from '../../engine/scene/PolyScene';
 import type {BaseNetworkPostProcessNodeType} from '../../engine/nodes/post/utils/EffectComposerController';
 import {BaseNodeType, TypedNode} from '../../engine/nodes/_Base';
 import {CameraSopNodeType, NetworkNodeType, NodeContext} from '../../engine/poly/NodeContext';
-import {CoreObject} from '../geometry/Object';
 import {CoreType} from '../Type';
 import {CameraAttribute} from './CoreCamera';
 import {BaseViewerType} from '../../engine/viewers/_Base';
 import {AbstractRenderer} from '../../engine/viewers/Common';
+import {coreObjectClassFactory} from '../geometry/CoreObjectFactory';
 
 interface CreateComposerOptions {
 	renderer: AbstractRenderer;
@@ -29,7 +29,10 @@ export class CoreCameraPostProcessController {
 		const {renderer, scene, renderScene, camera, viewer} = options;
 
 		let postProcessNode: BaseNetworkPostProcessNodeType | undefined;
-		const postProcessNodeId = CoreObject.attribValue(camera, CameraAttribute.POST_PROCESS_NODE_ID);
+		const postProcessNodeId = coreObjectClassFactory(camera).attribValue(
+			camera,
+			CameraAttribute.POST_PROCESS_NODE_ID
+		);
 		if (postProcessNodeId && CoreType.isNumber(postProcessNodeId)) {
 			const foundNode = scene.graph.nodeFromId(postProcessNodeId);
 			if (foundNode && foundNode instanceof TypedNode && this.isPostProcessNetworkNode(foundNode)) {

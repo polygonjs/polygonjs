@@ -32,9 +32,9 @@ import {
 import {BaseSopOperation} from '../../../../engine/operations/sop/_Base';
 import {ObjectType} from '../../../geometry/Constant';
 import {createGeometriesFromTypeFlat} from '../../../geometry/text/TextFlat';
-import {ArrayUtils} from '../../../ArrayUtils';
+import {arrayCompact} from '../../../ArrayUtils';
 import {CoreType} from '../../../Type';
-import {CoreObject} from '../../../geometry/Object';
+import {ThreejsCoreObject} from '../../../geometry/modules/three/ThreejsCoreObject';
 
 export class GEOJSONLoader extends Loader {
 	constructor(manager: LoadingManager) {
@@ -113,11 +113,11 @@ export class GEOJSONLoader extends Loader {
 	}
 
 	private _parseFeatureCollection(group: Group, features: Array<Feature<Geometry, GeoJsonProperties>>) {
-		for (let feature of features) {
+		for (const feature of features) {
 			const objects = this._parseFeature(feature);
 			if (objects) {
 				if (CoreType.isArray(objects)) {
-					for (let object of objects) {
+					for (const object of objects) {
 						this._addAttributes(object, feature);
 						group.add(object);
 					}
@@ -135,7 +135,7 @@ export class GEOJSONLoader extends Loader {
 		const propertyNames = Object.keys(feature.properties);
 		for (let propertyName of propertyNames) {
 			const value = feature.properties[propertyName];
-			CoreObject.addAttribute(object, propertyName, value);
+			ThreejsCoreObject.addAttribute(object, propertyName, value);
 		}
 	}
 
@@ -223,7 +223,9 @@ export class GEOJSONLoader extends Loader {
 		if (!geometries) {
 			return;
 		}
-		return ArrayUtils.compact(geometries).map((geometry) =>
+		const compactGeometries: BufferGeometry[] = [];
+		arrayCompact(geometries, compactGeometries);
+		return compactGeometries.map((geometry) =>
 			BaseSopOperation.createObject(geometry.rotateX(-0.5 * Math.PI), ObjectType.MESH)
 		);
 	}
@@ -238,7 +240,9 @@ export class GEOJSONLoader extends Loader {
 		if (!geometries) {
 			return;
 		}
-		return ArrayUtils.compact(geometries).map((geometry) =>
+		const compactGeometries: BufferGeometry[] = [];
+		arrayCompact(geometries, compactGeometries);
+		return compactGeometries.map((geometry) =>
 			BaseSopOperation.createObject(geometry.rotateX(-0.5 * Math.PI), ObjectType.MESH)
 		);
 	}

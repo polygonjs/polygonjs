@@ -9,7 +9,7 @@ import {animBuilderCommonVars} from '../Common';
 import {animBuilderStartTimeline} from '../StartTimeline';
 import {AnimBuilderWithOp} from '../WithOp';
 import {Operation} from '../AnimBuilderTypes';
-import {GsapTweenVars} from '../../../thirdParty/gsap';
+import {GsapTweenVars} from '../../../thirdParty/gsap/gsapFactory';
 
 export function populateVarsForParamColor(
 	param: ColorParam,
@@ -50,7 +50,7 @@ interface PopulateVarsForVector {
 }
 export function populateVarsForColor(options: PopulateVarsForVector) {
 	const {vars, targetValue, targetProperty, propertyNames, operation} = options;
-	for (let propertyName of propertyNames) {
+	for (const propertyName of propertyNames) {
 		vars[propertyName] = AnimBuilderWithOp(
 			targetProperty[propertyName as 'r'],
 			targetValue[propertyName as 'r'],

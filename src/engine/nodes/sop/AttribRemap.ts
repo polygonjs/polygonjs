@@ -16,6 +16,9 @@ import {TypeAssert} from '../../poly/Assert';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {AttribValue, NumericAttribValue} from '../../../types/GlobalTypes';
 import {isBooleanTrue} from '../../../core/BooleanValue';
+import {CoreObjectType, ObjectContent} from '../../../core/geometry/ObjectContent';
+import {pointsFromObject} from '../../../core/geometry/entities/point/CorePointUtils';
+import {corePointClassFactory} from '../../../core/geometry/CoreObjectFactory';
 class AttribRemapSopParamsConfig extends NodeParamsConfig {
 	/** @param name of the attribute to remap */
 	name = ParamConfig.STRING();
@@ -38,39 +41,43 @@ export class AttribRemapSopNode extends TypedSopNode<AttribRemapSopParamsConfig>
 		this.io.inputs.setCount(1);
 	}
 
-	override cook(input_contents: CoreGroup[]) {
-		const core_group = input_contents[0];
-		this._remap_attribute(core_group);
-		this.setCoreGroup(core_group);
+	override cook(inputCoreGroups: CoreGroup[]) {
+		const coreGroup = inputCoreGroups[0];
+		const objects = coreGroup.allObjects();
+		for (const object of objects) {
+			this._remapAttribute(object);
+		}
+		this.setCoreGroup(coreGroup);
 	}
 
-	private _remap_attribute(core_group: CoreGroup) {
-		const points = core_group.points();
+	private _remapAttribute<T extends CoreObjectType>(object: ObjectContent<T>) {
+		const points = pointsFromObject(object);
 		if (points.length === 0) {
 			return;
 		}
 		if (this.pv.name === '') {
 			return;
 		}
+		const corePointClass = corePointClassFactory(object);
 
-		const attrib_size = points[0].attribSize(this.pv.name);
+		const attribSize = corePointClass.attribSize(object, this.pv.name);
 		const values = points.map((point) => point.attribValue(this.pv.name));
 		// let min: NumericAttribValue, max: NumericAttribValue;
 		let remaped_values: NumericAttribValue[] = new Array(points.length);
-		this._get_remaped_values(attrib_size, values, remaped_values);
+		this._get_remaped_values(attribSize, values, remaped_values);
 
-		let target_name = this.pv.name;
+		let targetName = this.pv.name;
 		if (isBooleanTrue(this.pv.changeName)) {
-			target_name = this.pv.newName;
-			if (!core_group.hasAttrib(target_name)) {
-				core_group.addGeoNumericVertexAttrib(target_name, attrib_size, 0);
+			targetName = this.pv.newName;
+			if (!corePointClass.hasAttribute(object, targetName)) {
+				corePointClass.addNumericAttribute(object, targetName, attribSize, 0);
 			}
 		}
 
 		let i = 0;
-		for (let normalized_value of remaped_values) {
+		for (const normalized_value of remaped_values) {
 			const point = points[i];
-			point.setAttribValue(target_name, normalized_value);
+			point.setAttribValue(targetName, normalized_value);
 			i++;
 		}
 	}

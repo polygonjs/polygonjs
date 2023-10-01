@@ -1,23 +1,28 @@
-import {Object3D} from 'three';
-import {ArrayUtils} from '../ArrayUtils';
+import type {Object3D} from 'three';
 import {stringMatchMask} from '../String';
 import {CoreType} from '../Type';
 import {CorePath} from './CorePath';
-import {CoreGroup} from './Group';
-import {BaseCoreObject} from './_BaseObject';
-import {CoreObject} from './Object';
+import type {CoreGroup} from './Group';
+import {BaseCoreObject} from './entities/object/BaseCoreObject';
+import type {ThreejsCoreObject} from './modules/three/ThreejsCoreObject';
 import {CoreObjectType, ObjectContent} from './ObjectContent';
 import {coreObjectInstanceFactory} from './CoreObjectFactory';
+import type {QuadObject} from './modules/quad/QuadObject';
 interface GroupOptions {
 	group: string;
 }
-interface CoreMaskFilterOptions extends GroupOptions {}
-function filterObjectsFromCoreGroup<T extends CoreObjectType>(
+export interface CoreMaskFilterOptions extends GroupOptions {
+	invert?: boolean;
+}
+export function filterObjectsFromCoreGroup<T extends CoreObjectType>(
 	coreGroup: CoreGroup,
 	options: CoreMaskFilterOptions,
 	coreObjects?: BaseCoreObject<T>[]
 ): ObjectContent<CoreObjectType>[] {
-	return filterCoreObjects(options.group, coreObjects || coreGroup.allCoreObjects()).map((o) => o.object());
+	return filterCoreObjects(options.group, coreObjects || coreGroup.allCoreObjects()).map(
+		(o) => o.object(),
+		options.invert
+	);
 }
 export function filterCoreObjectsFromCoreGroup<T extends CoreObjectType>(
 	coreGroup: CoreGroup,
@@ -29,12 +34,12 @@ export function filterCoreObjectsFromCoreGroup<T extends CoreObjectType>(
 export function filterThreejsCoreObjectsFromCoreGroup(
 	coreGroup: CoreGroup,
 	options: CoreMaskFilterOptions,
-	coreObjects?: CoreObject[]
-): CoreObject[] {
-	return filterCoreObjects(options.group, coreObjects || coreGroup.threejsCoreObjects()) as CoreObject[];
+	coreObjects?: ThreejsCoreObject[]
+): ThreejsCoreObject[] {
+	return filterCoreObjects(options.group, coreObjects || coreGroup.threejsCoreObjects()) as ThreejsCoreObject[];
 }
-function isInGroup<T extends CoreObjectType>(groupString: string, coreObject: BaseCoreObject<T>) {
-	const group = groupString.trim();
+export function isInGroup<T extends CoreObjectType>(unSanitizedGroupString: string, coreObject: BaseCoreObject<T>) {
+	const group = unSanitizedGroupString.trim();
 	if (group.length == 0) {
 		return true;
 	}
@@ -42,7 +47,7 @@ function isInGroup<T extends CoreObjectType>(groupString: string, coreObject: Ba
 	if (coreObject.object.name == group) {
 		return true;
 	}
-	if (stringMatchMask(groupString, coreObject.name())) {
+	if (stringMatchMask(coreObject.name(), group)) {
 		return true;
 	}
 
@@ -68,7 +73,12 @@ function filterCoreObjects<T extends CoreObjectType>(
 	}
 	const index = parseInt(groupString);
 	if (!CoreType.isNaN(index)) {
-		return ArrayUtils.compact([coreObjects[index]]);
+		const coreObject = coreObjects[index];
+		if (coreObject) {
+			return [coreObject];
+		} else {
+			return [];
+		}
 	}
 
 	const selectedCoreObjects: Array<BaseCoreObject<T>> = [];
@@ -76,24 +86,30 @@ function filterCoreObjects<T extends CoreObjectType>(
 	for (const rootObject of coreObjects) {
 		let added = false;
 		const object = rootObject.object();
-		const objectsInMask = CorePath.objectsByMask(groupString, object);
-		for (const objectInMask of objectsInMask) {
-			const parent = objectInMask.parent;
-			const index = parent ? parent.children.indexOf(objectInMask) : 0;
-			const coreObject = coreObjectInstanceFactory<T>(objectInMask, index);
-			selectedCoreObjects.push(coreObject);
-			added = true;
-		}
-		const isInGroup = CoreMask.isInGroup(groupString, rootObject);
-		if (isInGroup && !added) {
-			selectedCoreObjects.push(rootObject);
+		if (object) {
+			const objectsInMask = CorePath.objectsByMask(groupString, object);
+			for (const objectInMask of objectsInMask) {
+				const parent = objectInMask.parent;
+				const index = parent ? parent.children.indexOf(objectInMask) : 0;
+				const coreObject = coreObjectInstanceFactory<T>(objectInMask, index);
+				selectedCoreObjects.push(coreObject);
+				added = true;
+			}
+			const _isInGroup = isInGroup(groupString, rootObject);
+			if (_isInGroup && !added) {
+				selectedCoreObjects.push(rootObject);
+			}
 		}
 	}
-
 	return selectedCoreObjects;
 }
 export function filterThreejsObjects(coreGroup: CoreGroup, options: CoreMaskFilterOptions) {
 	return filterObjectsFromCoreGroup(coreGroup, options, coreGroup.threejsCoreObjects()) as Object3D[];
+}
+export function filterThreejsOrQuadObjects(coreGroup: CoreGroup, options: CoreMaskFilterOptions) {
+	return filterObjectsFromCoreGroup(coreGroup, options, coreGroup.threejsOrQuadCoreObjects()) as Array<
+		Object3D | QuadObject
+	>;
 }
 export function filterObjectsWithGroup(coreGroup: CoreGroup, options: GroupOptions) {
 	return filterObjectsFromCoreGroup(coreGroup, {
@@ -102,6 +118,11 @@ export function filterObjectsWithGroup(coreGroup: CoreGroup, options: GroupOptio
 }
 export function filterThreejsObjectsWithGroup(coreGroup: CoreGroup, options: GroupOptions) {
 	return filterThreejsObjects(coreGroup, {
+		group: options.group,
+	});
+}
+export function filterThreejsOrQuadObjectsWithGroup(coreGroup: CoreGroup, options: GroupOptions) {
+	return filterThreejsOrQuadObjects(coreGroup, {
 		group: options.group,
 	});
 }

@@ -8,15 +8,17 @@ import {
 	InterleavedBufferAttribute,
 } from 'three';
 import {AttribValue, PolyDictionary} from '../../types/GlobalTypes';
-import {ArrayUtils} from '../ArrayUtils';
+import {arrayUniq} from '../ArrayUtils';
 import {stringToAttribNames, stringMatchMask} from '../String';
 import {CoreType} from '../Type';
-import {AttribSize} from './Constant';
-import {GroupString} from './Group';
+import {AttribSize, GroupString} from './Constant';
 
 export enum Attribute {
 	POINT_INDEX = 'ptnum',
+	VERTEX_INDEX = 'vtxnum',
+	PRIMITIVE_INDEX = 'primnum',
 	OBJECT_INDEX = 'objnum',
+	OBJECT_NAME = 'objname',
 	COLOR = 'color',
 	NORMAL = 'normal',
 	POSITION = 'position',
@@ -36,6 +38,8 @@ const ATTRIB_NAME_MAP: PolyDictionary<string> = {
 	N: Attribute.NORMAL,
 	Cd: Attribute.COLOR,
 };
+const _matchingAttribNames: string[] = [];
+const _masks: string[] = [];
 
 export class CoreAttribute {
 	static remapName(name: string): string {
@@ -99,7 +103,7 @@ export class CoreAttribute {
 		}
 	}
 
-	static attribSizeFromValue(val: AttribValue): number | null {
+	static attribSizeFromValue(val: AttribValue): AttribSize | null {
 		if (CoreType.isString(val) || CoreType.isNumber(val)) {
 			return AttribSize.FLOAT;
 		}
@@ -117,26 +121,26 @@ export class CoreAttribute {
 			case Vector4:
 				return AttribSize.VECTOR4;
 		}
-		return 0;
+		return null;
 	}
 	static attribNamesMatchingMask(masksString: GroupString, existingAttribNames: string[]) {
-		const masks = stringToAttribNames(masksString);
+		stringToAttribNames(masksString, _masks);
 
-		const matchingAttribNames: string[] = [];
-		for (const mask of masks) {
+		_matchingAttribNames.length = 0;
+		for (const mask of _masks) {
 			for (const attribName of existingAttribNames) {
 				if (stringMatchMask(attribName, mask)) {
-					matchingAttribNames.push(attribName);
+					_matchingAttribNames.push(attribName);
 				} else {
 					const remapped = CoreAttribute.remapName(mask);
 					if (attribName == remapped) {
-						matchingAttribNames.push(attribName);
+						_matchingAttribNames.push(attribName);
 					}
 				}
 			}
 		}
-
-		return ArrayUtils.uniq(matchingAttribNames);
+		const uniqAttributeNames: string[] = [];
+		return arrayUniq(_matchingAttribNames, uniqAttributeNames);
 	}
 }
 

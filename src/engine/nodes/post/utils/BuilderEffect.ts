@@ -26,7 +26,7 @@ export class BuilderEffect extends Effect {
 	}
 	updateUniforms(uniforms: IUniforms) {
 		const uniformNames = Object.keys(uniforms);
-		for (let uniformName of uniformNames) {
+		for (const uniformName of uniformNames) {
 			// no need to add time, as it is already there and this would actually create a conflict
 			if (uniformName != 'time') {
 				this.uniforms.set(uniformName, uniforms[uniformName] as Uniform);

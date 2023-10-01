@@ -51,9 +51,9 @@ export abstract class BaseConnectionPoint {
 	// }
 
 	toJSON(): BaseConnectionPointData {
-		return (this._json = this._json || this._create_json());
+		return (this._json = this._json || this._createJSON());
 	}
-	protected _create_json(): BaseConnectionPointData {
+	protected _createJSON(): BaseConnectionPointData {
 		return {
 			name: this._name,
 			type: this._type,

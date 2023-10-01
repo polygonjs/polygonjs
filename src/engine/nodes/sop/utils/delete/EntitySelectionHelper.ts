@@ -1,48 +1,47 @@
 import {DeleteSopNode} from '../../Delete';
-
-import {CoreEntity} from '../../../../../core/geometry/Entity';
+import {CoreEntity} from '../../../../../core/geometry/CoreEntity';
 import {isBooleanTrue} from '../../../../../core/BooleanValue';
 
 export class EntitySelectionHelper {
-	public readonly selected_state: Map<CoreEntity, boolean> = new Map();
-	private _entities_count: number = 0;
-	private _selected_entities_count: number = 0;
+	public readonly selectedState: Map<CoreEntity, boolean> = new Map();
+	private _entitiesCount: number = 0;
+	private _selectedEntitiesCount: number = 0;
 	constructor(protected node: DeleteSopNode) {}
 
 	init(entities: CoreEntity[]) {
-		this.selected_state.clear();
-		for (let entity of entities) {
-			this.selected_state.set(entity, false);
+		this.selectedState.clear();
+		for (const entity of entities) {
+			this.selectedState.set(entity, false);
 		}
-		this._entities_count = entities.length;
-		this._selected_entities_count = 0;
+		this._entitiesCount = entities.length;
+		this._selectedEntitiesCount = 0;
 	}
 	select(entity: CoreEntity) {
-		const state = this.selected_state.get(entity);
+		const state = this.selectedState.get(entity);
 		if (state != null) {
 			if (state == false) {
-				this.selected_state.set(entity, true);
-				this._selected_entities_count++;
+				this.selectedState.set(entity, true);
+				this._selectedEntitiesCount++;
 			}
 		}
 	}
-	entities_to_keep(): CoreEntity[] {
-		return this._entities_for_state(isBooleanTrue(this.node.pv.invert));
+	entitiesToKeep(): CoreEntity[] {
+		return this._entitiesForState(isBooleanTrue(this.node.pv.invert));
 	}
-	entities_to_delete(): CoreEntity[] {
-		return this._entities_for_state(!isBooleanTrue(this.node.pv.invert));
+	entitiesToDelete(): CoreEntity[] {
+		return this._entitiesForState(!isBooleanTrue(this.node.pv.invert));
 	}
-	private _entities_for_state(state: boolean): CoreEntity[] {
-		const required_state = state ? true : false;
-		const array_size = state ? this._selected_entities_count : this._entities_count - this._selected_entities_count;
+	private _entitiesForState(state: boolean): CoreEntity[] {
+		const requiredState = state ? true : false;
+		const arraySize = state ? this._selectedEntitiesCount : this._entitiesCount - this._selectedEntitiesCount;
 
-		if (array_size == 0) {
+		if (arraySize == 0) {
 			return [];
 		} else {
-			const array: CoreEntity[] = new Array(array_size);
+			const array: CoreEntity[] = new Array(arraySize);
 			let i = 0;
-			this.selected_state.forEach((state, entity) => {
-				if (state == required_state) {
+			this.selectedState.forEach((state, entity) => {
+				if (state == requiredState) {
 					array[i] = entity;
 					i++;
 				}

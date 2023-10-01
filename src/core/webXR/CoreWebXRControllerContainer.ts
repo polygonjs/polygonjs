@@ -23,7 +23,7 @@ export class CoreWebXRControllerContainer extends EventDispatcher<BaseCoreXRCont
 
 		this.controller = this.renderer.xr.getController(this.index);
 
-		for (let eventName of BASE_XR_SESSION_EVENT_NAMES) {
+		for (const eventName of BASE_XR_SESSION_EVENT_NAMES) {
 			const event: BaseCoreXRControllerEvent = {type: eventName, controllerContainer: this};
 			this.controller.addEventListener(eventName, (controllerEvent) => {
 				this.dispatchEvent(event);

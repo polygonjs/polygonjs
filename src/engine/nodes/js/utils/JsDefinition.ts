@@ -6,10 +6,11 @@ import {nodeMethodName} from '../code/assemblers/actor/ActorAssemblerUtils';
 import {LineType} from '../code/utils/LineType';
 import {MapUtils} from '../../../../core/MapUtils';
 import {EvaluatorMethodName} from '../code/assemblers/actor/ActorEvaluator';
-import {ArrayUtils} from '../../../../core/ArrayUtils';
+import {arrayUniq} from '../../../../core/ArrayUtils';
 import {ActorAssemblerConstant} from '../code/assemblers/actor/ActorAssemblerCommon';
 import {Poly} from '../../../Poly';
 import {inputObject3D} from '../_BaseObject3D';
+import {FUNC_POINTS_COUNT_FROM_OBJECT, FUNC_CORE_PRIMITIVE_CLASS_FACTORY} from './Common';
 
 export enum JsDefinitionType {
 	// ATTRIBUTE = 'attribute',
@@ -244,13 +245,13 @@ export class TriggeringJsDefinition extends TypedJsDefinition<JsDefinitionType.T
 			const setPointIndex = func.asString(inputObject3D(this._node, this._shaderCollectionController), 'i');
 
 			return `${methodName}(){
-				const pointsCount = CoreGeometry.pointsCount(${ActorAssemblerConstant.GEOMETRY});
+				const pointsCount = ${FUNC_POINTS_COUNT_FROM_OBJECT}(${ActorAssemblerConstant.OBJECT_3D});
 				for( let i = 0; i < pointsCount; i++ ) {
 					${setPointIndex}
 					${this._value}
 				}
 				if( ${ActorAssemblerConstant.OBJECT_3D}.isMesh ){
-					CoreGeometry.computeVertexNormalsIfAttributeVersionChanged(${ActorAssemblerConstant.GEOMETRY});
+					${FUNC_CORE_PRIMITIVE_CLASS_FACTORY}(${ActorAssemblerConstant.OBJECT_3D}).computeVertexNormalsIfAttributeVersionChanged(${ActorAssemblerConstant.GEOMETRY});
 				}
 			}`;
 		} else {
@@ -272,7 +273,12 @@ export class TriggeringJsDefinition extends TypedJsDefinition<JsDefinitionType.T
 			(definition) => definition._options.triggeringMethodName
 		);
 		definitionGroups.forEach((definitions, triggeringMethodName) => {
-			const definitionMethodCalls = ArrayUtils.uniq(definitions.map((d) => `this.${d.name()}()`)).join(';');
+			const uniqFunctionCalls: string[] = [];
+			arrayUniq(
+				definitions.map((d) => `this.${d.name()}()`),
+				uniqFunctionCalls
+			);
+			const definitionMethodCalls = uniqFunctionCalls.join(';');
 			const line = `${triggeringMethodName}(){
 				${definitionMethodCalls}
 			}`;

@@ -37,7 +37,7 @@ export class JsLinesCollectionController {
 		private _currentShaderName: JsFunctionName,
 		private _assembler: BaseJsShaderAssembler
 	) {
-		for (let shaderName of this._shaderNames) {
+		for (const shaderName of this._shaderNames) {
 			this._linesControllerByShaderName.set(shaderName, new JsLinesController(shaderName));
 		}
 	}

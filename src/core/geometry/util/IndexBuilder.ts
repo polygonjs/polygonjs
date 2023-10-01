@@ -1,5 +1,5 @@
 import {BufferAttribute, BufferGeometry} from 'three';
-import {ArrayUtils} from '../../ArrayUtils';
+import {rangeWithEnd} from '../../ArrayUtils';
 
 const POSITION = 'position';
 export class CoreGeometryIndexBuilder {
@@ -8,7 +8,7 @@ export class CoreGeometryIndexBuilder {
 			const position = geometry.getAttribute(POSITION) as BufferAttribute;
 			if (position) {
 				const position_array = position.array;
-				geometry.setIndex(ArrayUtils.range(position_array.length / 3));
+				geometry.setIndex(rangeWithEnd(position_array.length / 3));
 			}
 		}
 	}

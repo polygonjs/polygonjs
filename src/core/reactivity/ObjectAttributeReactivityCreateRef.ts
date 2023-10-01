@@ -6,7 +6,7 @@ import {
 	ParamConvertibleJsType,
 } from '../../engine/nodes/utils/io/connections/Js';
 import {TypeAssert} from '../../engine/poly/Assert';
-import {BaseCoreObject} from '../geometry/_BaseObject';
+import {BaseCoreObject} from '../geometry/entities/object/BaseCoreObject';
 import type {AttribValue} from '../../types/GlobalTypes';
 import {ref} from './CoreReactivity';
 import {Ref} from '@vue/reactivity';

@@ -5,18 +5,17 @@
  */
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {AUDIO_ANALYSER_NODES, NodeContext} from '../../poly/NodeContext';
 import {InputCloneMode} from '../../poly/InputCloneMode';
-import {BufferAttribute, BufferGeometry} from 'three';
-import {Mesh} from 'three';
+import {BufferAttribute} from 'three';
 import {NodePathParam} from '../../params/NodePath';
 import {BooleanParam} from '../../params/Boolean';
 import {StringParam} from '../../params/String';
 import {isBooleanTrue} from '../../../core/Type';
-import {CoreGeometry} from '../../../core/geometry/Geometry';
 import {BaseAnalyserAudioNode} from '../audio/_BaseAnalyser';
+import {CoreObjectType, ObjectContent} from '../../../core/geometry/ObjectContent';
+import {corePointClassFactory} from '../../../core/geometry/CoreObjectFactory';
 
 interface ParamSet {
 	active: BooleanParam;
@@ -102,12 +101,9 @@ export class AttribAudioAnalyserSopNode extends TypedSopNode<AttribAudioAnalyser
 		// 	this._attribIndex += 1;
 		// }
 
-		const objects = coreGroup.threejsObjects();
-		for (let object of objects) {
-			const mesh = object as Mesh;
-			if (mesh.geometry) {
-				this._updateGeometry(mesh.geometry);
-			}
+		const objects = coreGroup.allObjects();
+		for (const object of objects) {
+			this._updateGeometry(object);
 		}
 
 		this.setCoreGroup(coreGroup);
@@ -116,27 +112,28 @@ export class AttribAudioAnalyserSopNode extends TypedSopNode<AttribAudioAnalyser
 		this._unRegisterOnTickHook();
 	}
 
-	private _updateGeometry(geometry: BufferGeometry) {
-		this._updateWithParamSet(geometry, '0');
-		this._updateWithParamSet(geometry, '1');
-		this._updateWithParamSet(geometry, '2');
+	private _updateGeometry<T extends CoreObjectType>(object: ObjectContent<T>) {
+		this._updateWithParamSet(object, '0');
+		this._updateWithParamSet(object, '1');
+		this._updateWithParamSet(object, '2');
 	}
 
-	private _updateWithParamSet(geometry: BufferGeometry, paramSetIndex: ParaSetIndex) {
+	private _updateWithParamSet<T extends CoreObjectType>(object: ObjectContent<T>, paramSetIndex: ParaSetIndex) {
 		if (!this._paramSetByIndex) {
 			return;
 		}
+		const corePointClass = corePointClassFactory(object);
 		const paramSet = this._paramSetByIndex[paramSetIndex];
 		if (!isBooleanTrue(paramSet.active.value)) {
 			return;
 		}
 		const attribName = paramSet.attribName.value;
-		let attrib = geometry.getAttribute(attribName) as BufferAttribute | undefined;
+		let attrib = corePointClass.attribute(object, attribName) as BufferAttribute | undefined;
 		// create attrib if needed
 		if (!attrib) {
-			const coreGeometry = new CoreGeometry(geometry);
-			coreGeometry.addNumericAttrib(attribName, 1, 0);
-			attrib = geometry.getAttribute(attribName) as BufferAttribute;
+			// const coreGeometry = new CoreGeometry(geometry);
+			corePointClass.addNumericAttribute(object, attribName, 1, 0);
+			attrib = corePointClass.attribute(object, attribName) as BufferAttribute;
 		}
 
 		// update buffer

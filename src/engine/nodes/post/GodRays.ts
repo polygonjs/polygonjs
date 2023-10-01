@@ -24,7 +24,7 @@ function _updateLightSourceMaterial(material: Material) {
 function _findLightSource(scene: PolyScene, objectMask: string) {
 	let foundObject: Mesh | Points | undefined = undefined;
 	const objects: Object3D[] = scene.objectsByMask(objectMask) as Object3D[];
-	for (let object of objects) {
+	for (const object of objects) {
 		if ((object as Mesh).isMesh || (object as Points).isPoints) {
 			foundObject = object as Mesh;
 			break;
@@ -140,7 +140,7 @@ export class GodRaysPostNode extends TypedPostNode<EffectPass, GodRaysPostParams
 			(effect as any).lightSource = lightSource;
 			const material = lightSource.material;
 			if (CoreType.isArray(material)) {
-				for (let m of material) {
+				for (const m of material) {
 					_updateLightSourceMaterial(m);
 				}
 			} else {

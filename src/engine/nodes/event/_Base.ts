@@ -85,8 +85,11 @@ export class TypedEventNode<K extends NodeParamsConfig> extends TypedNode<NodeCo
 
 				outputConnections.forEach((connection) => {
 					destNode = connection.nodeDest();
-					const connection_point = destNode.io.inputs.namedInputConnectionPoints()[connection.inputIndex()];
-					destNode.processEventViaConnectionPoint(event_context, connection_point);
+					const destNodeConnectionPoints = destNode.io.inputs.namedInputConnectionPoints();
+					if (destNodeConnectionPoints) {
+						const connection_point = destNodeConnectionPoints[connection.inputIndex()];
+						destNode.processEventViaConnectionPoint(event_context, connection_point);
+					}
 				});
 			}
 
@@ -149,7 +152,7 @@ export class TypedEventNode<K extends NodeParamsConfig> extends TypedNode<NodeCo
 		if (this._on_dispatch_hooks_by_output_name) {
 			const hooks = this._on_dispatch_hooks_by_output_name.get(output_name);
 			if (hooks) {
-				for (let hook of hooks) {
+				for (const hook of hooks) {
 					hook(event_context);
 				}
 			}

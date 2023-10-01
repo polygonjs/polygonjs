@@ -1,5 +1,5 @@
 import {Vector2, Vector3, Vector4} from 'three';
-import { GsapTweenVars } from '../../../thirdParty/gsap';
+import {GsapTweenVars} from '../../../thirdParty/gsap/gsapFactory';
 import {Operation} from '../AnimBuilderTypes';
 import {AnimBuilderWithOp} from '../WithOp';
 
@@ -13,7 +13,7 @@ interface PopulateVarsForVector {
 }
 export function populateVarsForVector(options: PopulateVarsForVector) {
 	const {vars, targetValue, targetProperty, propertyNames, operation} = options;
-	for (let propertyName of propertyNames) {
+	for (const propertyName of propertyNames) {
 		vars[propertyName] = AnimBuilderWithOp(
 			targetProperty[propertyName as 'x'],
 			targetValue[propertyName as 'x'],

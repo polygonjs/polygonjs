@@ -6,11 +6,13 @@ import {ParamType} from '../../poly/ParamType';
 import {BaseParamType} from '../../params/_Base';
 import {CoreGraphNodeId} from '../../../core/graph/CoreGraph';
 // import {OperatorPathParam} from '../../params/OperatorPath';
-import {ArrayUtils} from '../../../core/ArrayUtils';
+import {arrayShallowClone} from '../../../core/ArrayUtils';
 import {NodePathParam} from '../../params/NodePath';
 
 type BasePathParam = TypedPathParam<any>;
+const _pathParams: BasePathParam[] = [];
 // class BasePathParam extends Typ
+const _nodes: BaseNodeType[] = [];
 
 export class ReferencesController {
 	private _referenced_nodes_by_src_param_id: Map<CoreGraphNodeId, BaseNodeType | BaseParamType> = new Map();
@@ -27,12 +29,12 @@ export class ReferencesController {
 		);
 	}
 	setNamedNodesFromParam(src_param: BasePathParam) {
-		const named_nodes: BaseNodeType[] = src_param.decomposedPath.namedNodes();
+		src_param.decomposedPath.namedNodes(_nodes);
 
-		for (let named_node of named_nodes) {
+		for (const namedNode of _nodes) {
 			MapUtils.pushOnArrayAtEntry(
 				this._referencing_params_by_all_named_node_ids,
-				named_node.graphNodeId(),
+				namedNode.graphNodeId(),
 				src_param
 			);
 		}
@@ -45,11 +47,11 @@ export class ReferencesController {
 				referenced_node.graphNodeId(),
 				src_param
 			);
-			const named_nodes: BaseNodeType[] = src_param.decomposedPath.namedNodes();
-			for (let named_node of named_nodes) {
+			src_param.decomposedPath.namedNodes(_nodes);
+			for (const namedNode of _nodes) {
 				MapUtils.popFromArrayAtEntry(
 					this._referencing_params_by_all_named_node_ids,
-					named_node.graphNodeId(),
+					namedNode.graphNodeId(),
 					src_param
 				);
 			}
@@ -61,42 +63,42 @@ export class ReferencesController {
 	referencing_params(node: BaseNodeType) {
 		return this._referencing_params_by_referenced_node_id.get(node.graphNodeId());
 	}
-	referencing_nodes(node: BaseNodeType) {
+	referencingNodes(node: BaseNodeType, target: BaseNodeType[]) {
 		const params = this._referencing_params_by_referenced_node_id.get(node.graphNodeId());
+		target.length = 0;
 		if (params) {
 			const node_by_node_id: Map<CoreGraphNodeId, BaseNodeType> = new Map();
-			for (let param of params) {
+			for (const param of params) {
 				const node = param.node;
 				node_by_node_id.set(node.graphNodeId(), node);
 			}
-			const nodes: BaseNodeType[] = [];
 			node_by_node_id.forEach((node) => {
-				nodes.push(node);
+				target.push(node);
 			});
-			return nodes;
 		}
+		return target;
 	}
-	nodes_referenced_by(node: BaseNodeType) {
+	nodesReferencedBy(node: BaseNodeType, target: BaseNodeType[]) {
 		const path_param_types: Readonly<Set<ParamType>> = new Set([ParamType.NODE_PATH]);
-		const path_params: BasePathParam[] = [];
-		for (let param of node.params.all) {
+		_pathParams.length = 0;
+		for (const param of node.params.all) {
 			if (path_param_types.has(param.type())) {
-				path_params.push(param as BasePathParam);
+				_pathParams.push(param as BasePathParam);
 			}
 		}
 		const nodes_by_id: Map<CoreGraphNodeId, BaseNodeType> = new Map();
 		const params: BaseParamType[] = [];
-		for (let path_param of path_params) {
-			this._check_param(path_param, nodes_by_id, params);
+		for (const pathParam of _pathParams) {
+			this._check_param(pathParam, nodes_by_id, params);
 		}
-		for (let param of params) {
+		for (const param of params) {
 			nodes_by_id.set(param.node.graphNodeId(), param.node);
 		}
-		const nodes: BaseNodeType[] = [];
+		target.length = 0;
 		nodes_by_id.forEach((node) => {
-			nodes.push(node);
+			target.push(node);
 		});
-		return nodes;
+		return target;
 	}
 	private _check_param(
 		param: BasePathParam,
@@ -125,8 +127,8 @@ export class ReferencesController {
 		const referencingParams = this._referencing_params_by_all_named_node_ids.get(node.graphNodeId());
 		if (referencingParams) {
 			// make sure to do a cloned copy, since the list will change as the params are notified to rebuild
-			const referencingParamsCloned = ArrayUtils.shallowClone(referencingParams);
-			for (let referencingParam of referencingParamsCloned) {
+			const referencingParamsCloned = arrayShallowClone(referencingParams);
+			for (const referencingParam of referencingParamsCloned) {
 				referencingParam.notifyPathRebuildRequired(node);
 			}
 		}
@@ -148,8 +150,8 @@ export class ReferencesController {
 
 		if (referencingParams) {
 			// make sure to do a cloned copy, since the list will change as the params are notified to rebuild
-			const referencingParamsCloned = ArrayUtils.shallowClone(referencingParams);
-			for (let referencingParam of referencingParamsCloned) {
+			const referencingParamsCloned = arrayShallowClone(referencingParams);
+			for (const referencingParam of referencingParamsCloned) {
 				if (referencingParam.options.isSelectingParam()) {
 					referencingParam.notifyTargetParamOwnerParamsUpdated(node);
 				}

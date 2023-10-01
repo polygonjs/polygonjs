@@ -1,8 +1,9 @@
-import {Constructor} from '../../../../../types/GlobalTypes';
-import {BaseNodeType} from '../../../_Base';
+import type {Constructor} from '../../../../../types/GlobalTypes';
+import type {BaseNodeType} from '../../../_Base';
 import {ParamConfig} from '../../../utils/params/ParamsConfig';
-import {RootManagerNode} from '../../Root';
+import type {RootManagerNode} from '../../Root';
 import {isBooleanTrue} from '../../../../../core/Type';
+import type {AudioListenerObjNode} from '../../../obj/AudioListener';
 
 const CallbackOptions = {
 	computeOnDirty: false,
@@ -59,8 +60,8 @@ export class RootAudioController {
 	update() {
 		this._updateViewers();
 	}
-	audioListeners() {
-		return this.node.nodesByType('audioListener');
+	audioListeners(): AudioListenerObjNode[] {
+		return this.node.nodesByType('audioListener') as AudioListenerObjNode[];
 	}
 
 	private _updateViewers() {

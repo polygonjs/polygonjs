@@ -36,7 +36,7 @@ export class SkeletonHelperSopNode extends TypedSopNode<SkeletonHelperSopParamsC
 		const inputCoreGroup = inputCoreGroups[0];
 		const objects = inputCoreGroup.threejsObjects();
 		const newObjects: Object3D[] = [];
-		for (let object of objects) {
+		for (const object of objects) {
 			const helper = new SkeletonHelper(object);
 			newObjects.push(object);
 			newObjects.push(helper);

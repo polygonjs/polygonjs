@@ -31,25 +31,18 @@ export class PointsCountExpression extends BaseMethod {
 		return this.createDependencyFromIndexOrPath(args);
 	}
 
-	override processArguments(args: any[]): Promise<any> {
-		return new Promise(async (resolve, reject) => {
-			if (args.length == 1) {
-				const indexOrPath = args[0];
-				let container: GeometryContainer;
-				try {
-					container = (await this.getReferencedNodeContainer(indexOrPath)) as GeometryContainer;
-				} catch (e) {
-					reject(e);
-					return;
-				}
+	override async processArguments(args: any[]): Promise<number> {
+		if (args.length == 1) {
+			const indexOrPath = args[0];
+			const container = (await this.getReferencedNodeContainer(indexOrPath)) as GeometryContainer;
 
-				if (container) {
-					const value = container.pointsCount();
-					resolve(value);
-					return;
+			if (container) {
+				const coreContent = container.coreContent()
+				if(coreContent){
+					return coreContent.pointsCount()
 				}
 			}
-			resolve(0);
-		});
+		}
+		return 0;
 	}
 }

@@ -6,7 +6,7 @@ import {Attribute} from '../../../core/geometry/Attribute';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 import {BufferAttribute, Object3D} from 'three';
 import {isBooleanTrue} from '../../../core/Type';
-import {BaseCoreObject} from '../../../core/geometry/_BaseObject';
+import {BaseCoreObject} from '../../../core/geometry/entities/object/BaseCoreObject';
 import {CoreObjectType} from '../../../core/geometry/ObjectContent';
 
 interface AttribIdSopParams extends DefaultOperationParams {
@@ -19,7 +19,7 @@ interface AttribIdSopParams extends DefaultOperationParams {
 
 export class AttribIdSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: AttribIdSopParams = {
-		class: ATTRIBUTE_CLASSES_WITHOUT_CORE_GROUP.indexOf(AttribClass.VERTEX),
+		class: ATTRIBUTE_CLASSES_WITHOUT_CORE_GROUP.indexOf(AttribClass.POINT),
 		id: true,
 		idName: 'id',
 		idn: true,
@@ -42,8 +42,16 @@ export class AttribIdSopOperation extends BaseSopOperation {
 	}
 	private async _addAttribute(attribClass: AttribClass, coreGroup: CoreGroup, params: AttribIdSopParams) {
 		switch (attribClass) {
-			case AttribClass.VERTEX:
+			case AttribClass.POINT:
 				return this._addPointAttributesToObjects(coreGroup.threejsObjects(), params);
+			case AttribClass.VERTEX: {
+				this.states?.error.set('primitive not supported yet');
+				return;
+			}
+			case AttribClass.PRIMITIVE: {
+				this.states?.error.set('primitive not supported yet');
+				return;
+			}
 
 			case AttribClass.OBJECT:
 				return this._addObjectAttributes(coreGroup.allCoreObjects(), params);

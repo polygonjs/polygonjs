@@ -102,7 +102,6 @@ export class CodeSopNode extends TypedSopNode<CodeSopParamsConfig> {
 			const functionBody = `try {
 				${TranspiledFilter.filter(this.pv.codeJavascript)}
 			} catch(e) {
-				console.log(states);
 				states.error.set(e);
 			}`;
 

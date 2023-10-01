@@ -30,7 +30,7 @@ export function jitterPositions(coreGroup: CoreGroup, options: JitterOptions) {
 	for (const point of points) {
 		jitterOffset(i, seed, mult, amount, _offset);
 
-		point.getPosition(_p);
+		point.position(_p);
 		_p.add(_offset);
 		point.setPosition(_p);
 		i++;

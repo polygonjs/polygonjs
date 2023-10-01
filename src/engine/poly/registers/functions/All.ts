@@ -62,6 +62,7 @@ import { createPhysicsRBDs } from "../../../functions/createPhysicsRBDs";
 import { createScrollListener } from "../../../functions/createScrollListener";
 import { crossVector2 } from "../../../functions/crossVector2";
 import { crossVector3 } from "../../../functions/crossVector3";
+import { cubeLatticeDeform } from "../../../functions/cubeLatticeDeform";
 import { cursorToUv } from "../../../functions/cursorToUv";
 import { debug } from "../../../functions/debug";
 import { degToRad } from "../../../functions/degToRad";
@@ -563,6 +564,7 @@ export interface NamedFunctionMap {
 	createScrollListener: createScrollListener;
 	crossVector2: crossVector2;
 	crossVector3: crossVector3;
+	cubeLatticeDeform: cubeLatticeDeform;
 	cursorToUv: cursorToUv;
 	debug: debug<any>;
 	degToRad: degToRad;
@@ -1067,6 +1069,7 @@ export class AllNamedFunctionRegister {
 			createScrollListener,
 			crossVector2,
 			crossVector3,
+			cubeLatticeDeform,
 			cursorToUv,
 			debug,
 			degToRad,

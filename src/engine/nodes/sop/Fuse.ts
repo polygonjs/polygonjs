@@ -12,7 +12,7 @@ import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {MapUtils} from '../../../core/MapUtils';
 import {ObjectType, objectTypeFromConstructor} from '../../../core/geometry/Constant';
-import {ArrayUtils} from '../../../core/ArrayUtils';
+import {arrayUniq} from '../../../core/ArrayUtils';
 import {mergeFaces} from '../../../core/geometry/operation/Fuse';
 import {CoreMask} from '../../../core/geometry/Mask';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
@@ -23,7 +23,7 @@ const vector4 = new Vector4();
 
 function clearAttributes(geometry: BufferGeometry) {
 	const attributeNames = Object.keys(geometry.attributes);
-	for (let attributeName of attributeNames) {
+	for (const attributeName of attributeNames) {
 		const attribute = geometry.getAttribute(attributeName);
 		if (attribute instanceof BufferAttribute) {
 			const newAttribValues: number[] = [];
@@ -67,7 +67,7 @@ export class FuseSopNode extends TypedSopNode<FuseSopParamsConfig> {
 
 		const selectedObjects = CoreMask.filterThreejsObjects(inputCoreGroup, this.pv);
 
-		for (let object of selectedObjects) {
+		for (const object of selectedObjects) {
 			this._filterObject(object);
 		}
 		this.setCoreGroup(inputCoreGroup);
@@ -129,7 +129,9 @@ export class FuseSopNode extends TypedSopNode<FuseSopParamsConfig> {
 			return;
 		}
 		const indexArray = index.array as number[];
-		const newIndices = ArrayUtils.uniq(indexArray).sort((a, b) => a - b);
+		const newIndices:number[] =[]
+		arrayUniq(indexArray,newIndices)
+		newIndices.sort((a, b) => a - b);
 		geometry.setIndex(newIndices);
 		if (newIndices.length == 0) {
 			clearAttributes(geometry);
@@ -213,7 +215,7 @@ export class FuseSopNode extends TypedSopNode<FuseSopParamsConfig> {
 		}
 
 		const attributeNames = Object.keys(geometry.attributes);
-		for (let attributeName of attributeNames) {
+		for (const attributeName of attributeNames) {
 			const attribute = geometry.getAttribute(attributeName);
 			if (attribute instanceof BufferAttribute) {
 				const itemSize = attribute.itemSize;

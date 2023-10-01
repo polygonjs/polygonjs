@@ -8,7 +8,6 @@
 import {TypedSopNode} from './_Base';
 import {
 	AttribClass,
-	AttribClassMenuEntries,
 	ObjectType,
 	objectTypeFromConstructor,
 	AttribType,
@@ -17,11 +16,13 @@ import {
 	AttribSize,
 	ATTRIBUTE_CLASSES,
 	ATTRIBUTE_SIZE_RANGE,
+	ATTRIBUTE_CLASSES_WITHOUT_CORE_GROUP,
+	AttribClassMenuEntriesWithoutCoreGroup,
 } from '../../../core/geometry/Constant';
 import {CoreGroup, Object3DWithGeometry} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../poly/InputCloneMode';
-import {CorePoint} from '../../../core/geometry/Point';
-import {CoreObject} from '../../../core/geometry/Object';
+import {CorePoint} from '../../../core/geometry/entities/point/CorePoint';
+import {ThreejsCoreObject} from '../../../core/geometry/modules/three/ThreejsCoreObject';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {EntitySelectionHelper} from './utils/delete/EntitySelectionHelper';
 import {
@@ -32,17 +33,21 @@ import {
 } from './utils/delete/ByAttributeHelper';
 import {ByExpressionHelper} from './utils/delete/ByExpressionHelper';
 import {ByBboxHelper} from './utils/delete/ByBboxHelper';
-import {Object3D} from 'three';
 import {ByObjectTypeHelper, OBJECT_TYPE_MENU_ENTRIES, OBJECT_TYPES} from './utils/delete/ByObjectTypeHelper';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {ByBoundingObjectHelper} from './utils/delete/ByBoundingObjectHelper';
-import {geometryBuilder} from '../../../core/geometry/builders/geometryBuilder';
+import {geometryBuilder} from '../../../core/geometry/modules/three/builders/geometryBuilder';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
+import {TypeAssert} from '../../poly/Assert';
+import {primitivesFromObject} from '../../../core/geometry/entities/primitive/CorePrimitiveUtils';
+import {CoreObjectType, ObjectContent} from '../../../core/geometry/ObjectContent';
+import {CorePrimitive} from '../../../core/geometry/entities/primitive/CorePrimitive';
+import {pointsFromObject} from '../../../core/geometry/entities/point/CorePointUtils';
 class DeleteSopParamsConfig extends NodeParamsConfig {
 	/** @param defines the class that should be deleted (objects or vertices) */
-	class = ParamConfig.INTEGER(ATTRIBUTE_CLASSES.indexOf(AttribClass.VERTEX), {
+	class = ParamConfig.INTEGER(ATTRIBUTE_CLASSES_WITHOUT_CORE_GROUP.indexOf(AttribClass.POINT), {
 		menu: {
-			entries: AttribClassMenuEntries,
+			entries: AttribClassMenuEntriesWithoutCoreGroup,
 		},
 	});
 	/** @param invert the selection created in the parameters below */
@@ -135,20 +140,20 @@ class DeleteSopParamsConfig extends NodeParamsConfig {
 	/** @param deletes objects that are inside a bounding box */
 	byBbox = ParamConfig.BOOLEAN(0, {
 		visibleIf: {
-			class: ATTRIBUTE_CLASSES.indexOf(AttribClass.VERTEX),
+			class: ATTRIBUTE_CLASSES.indexOf(AttribClass.POINT),
 		},
 	});
 	/** @param the bounding box size */
 	bboxSize = ParamConfig.VECTOR3([1, 1, 1], {
 		visibleIf: {
-			class: ATTRIBUTE_CLASSES.indexOf(AttribClass.VERTEX),
+			class: ATTRIBUTE_CLASSES.indexOf(AttribClass.POINT),
 			byBbox: true,
 		},
 	});
 	/** @param the bounding box center */
 	bboxCenter = ParamConfig.VECTOR3([0, 0, 0], {
 		visibleIf: {
-			class: ATTRIBUTE_CLASSES.indexOf(AttribClass.VERTEX),
+			class: ATTRIBUTE_CLASSES.indexOf(AttribClass.POINT),
 			byBbox: true,
 		},
 		separatorAfter: true,
@@ -158,7 +163,7 @@ class DeleteSopParamsConfig extends NodeParamsConfig {
 	/** @param deletes objects that are inside an object. This uses the object from the 2nd input */
 	byBoundingObject = ParamConfig.BOOLEAN(0, {
 		visibleIf: {
-			class: ATTRIBUTE_CLASSES.indexOf(AttribClass.VERTEX),
+			class: ATTRIBUTE_CLASSES.indexOf(AttribClass.POINT),
 		},
 	});
 
@@ -179,7 +184,7 @@ export class DeleteSopNode extends TypedSopNode<DeleteSopParamsConfig> {
 		return SopType.DELETE;
 	}
 
-	private _marked_for_deletion_per_object_index: Map<number, boolean> = new Map();
+	private _markedForDeletionPerObjectIndex: Map<number, boolean> = new Map();
 	public readonly entitySelectionHelper = new EntitySelectionHelper(this);
 	public readonly byExpressionHelper = new ByExpressionHelper(this);
 	public readonly byAttributeHelper = new ByAttributeHelper(this);
@@ -200,15 +205,21 @@ export class DeleteSopNode extends TypedSopNode<DeleteSopParamsConfig> {
 			this.cookController.endCook();
 			return;
 		}
-		const attribClass = ATTRIBUTE_CLASSES[this.pv.class];
+		const attribClass = ATTRIBUTE_CLASSES_WITHOUT_CORE_GROUP[this.pv.class];
 		switch (attribClass) {
+			case AttribClass.POINT:
+				return await this._evalForPoints(coreGroup0, coreGroup1);
 			case AttribClass.VERTEX:
-				await this._evalForPoints(coreGroup0, coreGroup1);
-				break;
+				this.states.error.set(`vertex not supported yet`);
+			case AttribClass.PRIMITIVE:
+				return await this._evalForPrimitives(coreGroup0, coreGroup1);
 			case AttribClass.OBJECT:
-				await this._evalForObjects(coreGroup0);
-				break;
+				return await this._evalForObjects(coreGroup0);
+			case AttribClass.CORE_GROUP:
+				this.states.error.set(`core group not supported yet`);
+				return;
 		}
+		TypeAssert.unreachable(attribClass);
 	}
 
 	setAttribClass(attribClass: AttribClass) {
@@ -224,13 +235,101 @@ export class DeleteSopNode extends TypedSopNode<DeleteSopParamsConfig> {
 		return ATTRIBUTE_TYPES[this.pv.attribType];
 	}
 
+	private async _evalForPoints(coreGroup: CoreGroup, core_group2?: CoreGroup) {
+		const coreObjects = coreGroup.threejsCoreObjects();
+		const newObjects: ObjectContent<CoreObjectType>[] = [];
+		for (const coreObject of coreObjects) {
+			const object = coreObject.object() as Object3DWithGeometry;
+			const entities = pointsFromObject(object);
+			this.entitySelectionHelper.init(entities);
+
+			const initEntitiesCount = entities.length;
+			if (isBooleanTrue(this.pv.byExpression)) {
+				await this.byExpressionHelper.evalForEntities(entities);
+			}
+			// TODO: the helpers do not yet take into account if an entity has been selected or not.
+			// This could really speed up iterating through them, as I could skip the ones that have already been
+			if (isBooleanTrue(this.pv.byAttrib) && this.pv.attribName != '') {
+				this.byAttributeHelper.evalForEntities(entities);
+			}
+			if (isBooleanTrue(this.pv.byBbox)) {
+				this.byBboxHelper.evalForPoints(entities);
+			}
+			if (isBooleanTrue(this.pv.byBoundingObject)) {
+				this.byBoundingObjectHelper.evalForPoints(entities, core_group2);
+			}
+			const keptEntities = this.entitySelectionHelper.entitiesToKeep() as CorePoint[];
+
+			if (keptEntities.length == initEntitiesCount) {
+				newObjects.push(object);
+			} else {
+				if (keptEntities.length > 0) {
+					const objectType = objectTypeFromConstructor(object.constructor);
+					if (objectType) {
+						const builder = geometryBuilder(objectType);
+						if (builder) {
+							const newGeo = builder.fromPoints(object, keptEntities);
+							if (newGeo) {
+								object.geometry = newGeo;
+								newObjects.push(object);
+							}
+						}
+					}
+				}
+			}
+		}
+		this.setObjects(newObjects);
+	}
+
+	private async _evalForPrimitives(coreGroup: CoreGroup, core_group2?: CoreGroup) {
+		const objects = coreGroup.allObjects();
+		const newObjects: ObjectContent<CoreObjectType>[] = [];
+		for (const object of objects) {
+			const entities: CorePrimitive<CoreObjectType>[] = [];
+			primitivesFromObject(object, entities);
+			this.entitySelectionHelper.init(entities);
+
+			const initEntitiesCount = entities.length;
+			if (isBooleanTrue(this.pv.byExpression)) {
+				await this.byExpressionHelper.evalForEntities(entities);
+			}
+			// TODO: the helpers do not yet take into account if an entity has been selected or not.
+			// This could really speed up iterating through them, as I could skip the ones that have already been
+			if (isBooleanTrue(this.pv.byAttrib) && this.pv.attribName != '') {
+				this.byAttributeHelper.evalForEntities(entities);
+			}
+			// if (isBooleanTrue(this.pv.byBbox)) {
+			// 	this.byBboxHelper.evalForPoints(primitives);
+			// }
+			// if (isBooleanTrue(this.pv.byBoundingObject)) {
+			// 	this.byBoundingObjectHelper.evalForPoints(primitives, core_group2);
+			// }
+			const keptEntities = this.entitySelectionHelper.entitiesToKeep() as CorePrimitive<CoreObjectType>[];
+
+			if (keptEntities.length == initEntitiesCount) {
+				newObjects.push(object);
+			} else {
+				if (keptEntities.length > 0) {
+					const builder = keptEntities[0].builder();
+					if (builder) {
+						const newObject = builder(object, keptEntities);
+						if (newObject) {
+							newObjects.push(newObject);
+						}
+					}
+				}
+			}
+		}
+		this.setObjects(newObjects);
+	}
+
 	private async _evalForObjects(coreGroup: CoreGroup) {
 		const coreObjects = coreGroup.allCoreObjects();
 		this.entitySelectionHelper.init(coreObjects);
 
-		this._marked_for_deletion_per_object_index = new Map();
-		for (let core_object of coreObjects) {
-			this._marked_for_deletion_per_object_index.set(core_object.index(), false);
+		this._markedForDeletionPerObjectIndex = new Map();
+		for (let coreObject of coreObjects) {
+			this._markedForDeletionPerObjectIndex.set(coreObject.index(), false);
 		}
 
 		if (isBooleanTrue(this.pv.byExpression)) {
@@ -245,79 +344,27 @@ export class DeleteSopNode extends TypedSopNode<DeleteSopParamsConfig> {
 			this.byAttributeHelper.evalForEntities(coreObjects);
 		}
 
-		const core_objects_to_keep = this.entitySelectionHelper.entities_to_keep() as CoreObject[];
-		const objects_to_keep = core_objects_to_keep.map((co) => co.object());
+		const coreObjectsToKeep = this.entitySelectionHelper.entitiesToKeep() as ThreejsCoreObject[];
+		const objectsToKeep = coreObjectsToKeep.map((co) => co.object());
 
 		if (isBooleanTrue(this.pv.keepPoints)) {
-			const core_objects_to_delete = this.entitySelectionHelper.entities_to_delete() as CoreObject[];
-			for (let core_object_to_delete of core_objects_to_delete) {
-				const point_object = this._pointObject(core_object_to_delete);
-				if (point_object) {
-					objects_to_keep.push(point_object);
+			const coreObjectsToDelete = this.entitySelectionHelper.entitiesToDelete() as ThreejsCoreObject[];
+			for (let coreObjectToDelete of coreObjectsToDelete) {
+				const pointObject = this._pointObject(coreObjectToDelete.object());
+				if (pointObject) {
+					objectsToKeep.push(pointObject);
 				}
 			}
 		}
 
-		this.setObjects(objects_to_keep);
+		this.setObjects(objectsToKeep);
 	}
 
-	private async _evalForPoints(core_group: CoreGroup, core_group2?: CoreGroup) {
-		const core_objects = core_group.threejsCoreObjects();
-		let core_object;
-		let objects: Object3D[] = [];
-		for (let i = 0; i < core_objects.length; i++) {
-			core_object = core_objects[i];
-			let core_geometry = core_object.coreGeometry();
-			if (core_geometry) {
-				const object = core_object.object() as Object3DWithGeometry;
-				const points = core_geometry.pointsFromGeometry();
-				this.entitySelectionHelper.init(points);
-
-				const init_points_count = points.length;
-				if (isBooleanTrue(this.pv.byExpression)) {
-					await this.byExpressionHelper.evalForEntities(points);
-				}
-				// TODO: the helpers do not yet take into account if an entity has been selected or not.
-				// This could really speed up iterating through them, as I could skip the ones that have already been
-				if (isBooleanTrue(this.pv.byAttrib) && this.pv.attribName != '') {
-					this.byAttributeHelper.evalForEntities(points);
-				}
-				if (isBooleanTrue(this.pv.byBbox)) {
-					this.byBboxHelper.evalForPoints(points);
-				}
-				if (isBooleanTrue(this.pv.byBoundingObject)) {
-					this.byBoundingObjectHelper.evalForPoints(points, core_group2);
-				}
-				const kept_points = this.entitySelectionHelper.entities_to_keep() as CorePoint[];
-
-				if (kept_points.length == init_points_count) {
-					objects.push(object);
-				} else {
-					core_geometry.geometry().dispose();
-					if (kept_points.length > 0) {
-						const objectType = objectTypeFromConstructor(object.constructor);
-						if (objectType) {
-							const builder = geometryBuilder(objectType);
-							if (builder) {
-								const new_geo = builder.fromPoints(kept_points);
-								if (new_geo) {
-									object.geometry = new_geo;
-									objects.push(object);
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-		this.setObjects(objects);
-	}
-
-	private _pointObject(core_object: CoreObject) {
-		const core_points = core_object.points();
+	private _pointObject<T extends CoreObjectType>(object: ObjectContent<T>) {
+		const points = pointsFromObject(object);
 		const builder = geometryBuilder(ObjectType.POINTS);
 		if (builder) {
-			const geometry = builder.fromPoints(core_points);
+			const geometry = builder.fromPoints(object, points);
 			if (geometry) return this.createObject(geometry, ObjectType.POINTS);
 		}
 	}

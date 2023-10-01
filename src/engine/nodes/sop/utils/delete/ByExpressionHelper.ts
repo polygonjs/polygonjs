@@ -1,5 +1,5 @@
 import {DeleteSopNode} from '../../Delete';
-import {CoreEntity} from '../../../../../core/geometry/Entity';
+import {CoreEntity} from '../../../../../core/geometry/CoreEntity';
 import {isBooleanTrue} from '../../../../../core/BooleanValue';
 import {ExpressionController} from '../../../../params/utils/ExpressionController';
 import {ParamType} from '../../../../poly/ParamType';
@@ -32,7 +32,7 @@ export class ByExpressionHelper {
 	private _evalExpressionsWithoutEntityDependentExpression(entities: CoreEntity[]) {
 		const value = isBooleanTrue(this.node.pv.expression);
 		if (value) {
-			for (let entity of entities) {
+			for (const entity of entities) {
 				this.node.entitySelectionHelper.select(entity);
 			}
 		}

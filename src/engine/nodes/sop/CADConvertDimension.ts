@@ -5,17 +5,17 @@
  */
 import {CADSopNode} from './_BaseCAD';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {CoreCadType} from '../../../core/geometry/cad/CadCoreType';
-import {cadPlaneXY} from '../../../core/geometry/cad/CadMath';
-import {OpenCascadeInstance, CadGeometryType, gp_Pln} from '../../../core/geometry/cad/CadCommon';
-import {gp_Pnt2d, Geom2d_Curve, TopoDS_Vertex, TopoDS_Edge} from '../../../core/geometry/cad/CadCommon';
-import {cadVertexCreate} from '../../../core/geometry/cad/toObject3D/CadVertex';
-import {curveDataFromEdge, cadEdgeCreate} from '../../../core/geometry/cad/toObject3D/CadEdge';
+import {CoreCadType} from '../../../core/geometry/modules/cad/CadCoreType';
+import {cadPlaneXY} from '../../../core/geometry/modules/cad/CadMath';
+import {OpenCascadeInstance, CadGeometryType, gp_Pln} from '../../../core/geometry/modules/cad/CadCommon';
+import {gp_Pnt2d, Geom2d_Curve, TopoDS_Vertex, TopoDS_Edge} from '../../../core/geometry/modules/cad/CadCommon';
+import {cadVertexCreate} from '../../../core/geometry/modules/cad/toObject3D/CadVertex';
+import {curveDataFromEdge, cadEdgeCreate} from '../../../core/geometry/modules/cad/toObject3D/CadEdge';
 import {Vector3} from 'three';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
-import {CadObject} from '../../../core/geometry/cad/CadObject';
-import {CadLoaderSync} from '../../../core/geometry/cad/CadLoaderSync';
+import {CadObject} from '../../../core/geometry/modules/cad/CadObject';
+import {CadLoaderSync} from '../../../core/geometry/modules/cad/CadLoaderSync';
 
 export enum ConversionMode {
 	TO_2D = 'to 2D',
@@ -60,7 +60,7 @@ export class CADConvertDimensionSopNode extends CADSopNode<CADConvertDimensionSo
 		if (inputObjects) {
 			switch (mode) {
 				case ConversionMode.TO_2D: {
-					for (let inputObject of inputObjects) {
+					for (const inputObject of inputObjects) {
 						const type = inputObject.type;
 						switch (type) {
 							case CadGeometryType.VERTEX: {
@@ -83,7 +83,7 @@ export class CADConvertDimensionSopNode extends CADSopNode<CADConvertDimensionSo
 					break;
 				}
 				case ConversionMode.TO_3D: {
-					for (let inputObject of inputObjects) {
+					for (const inputObject of inputObjects) {
 						const type = inputObject.type;
 						switch (type) {
 							case CadGeometryType.POINT_2D: {

@@ -47,8 +47,7 @@ export class JsAssemblerActor extends BaseJsShaderAssembler {
 		};
 	}
 	override inputNamesForShaderName(rootNode: BaseJsNodeType, shaderName: JsFunctionName) {
-		return rootNode.io.inputs
-			.namedInputConnectionPoints()
+		return (rootNode.io.inputs.namedInputConnectionPoints() || [])
 			.filter((cp) => cp.type() != JsConnectionPointType.TRIGGER)
 			.map((cp) => cp.name());
 	}
@@ -116,11 +115,11 @@ export class JsAssemblerActor extends BaseJsShaderAssembler {
 			const rootNodesSet: Set<BaseJsNodeType> = new Set();
 			triggerableNodes.forEach((trigerrableNode) => {
 				const rootNodes = inputNodesExceptTrigger(trigerrableNode);
-				for (let rootNode of rootNodes) {
+				for (const rootNode of rootNodes) {
 					rootNodesSet.add(rootNode);
 				}
 			});
-			const rootNodes = SetUtils.toArray(rootNodesSet).concat(additionalRootNodes);
+			const rootNodes = SetUtils.toArray(rootNodesSet, []).concat(additionalRootNodes);
 			this.set_root_nodes(rootNodes);
 			this.buildCodeFromNodes(this._root_nodes, {
 				actor: {
@@ -131,7 +130,7 @@ export class JsAssemblerActor extends BaseJsShaderAssembler {
 			});
 
 			this._buildLines();
-			for (let shaderName of shaderNames) {
+			for (const shaderName of shaderNames) {
 				const lines = this._lines.get(shaderName);
 				if (lines) {
 					this._shaders_by_name.set(shaderName, lines.join('\n'));

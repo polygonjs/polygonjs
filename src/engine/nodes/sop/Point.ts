@@ -8,8 +8,8 @@
 import {BufferGeometry} from 'three';
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {CoreObject} from '../../../core/geometry/Object';
-import {CorePoint} from '../../../core/geometry/Point';
+import type {ThreejsCoreObject} from '../../../core/geometry/modules/three/ThreejsCoreObject';
+import {CorePoint} from '../../../core/geometry/entities/point/CorePoint';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {BufferAttribute} from 'three';
 import {Mesh} from 'three';
@@ -24,6 +24,7 @@ type ComponentOffset = 0 | 1 | 2;
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
+import {pointsFromObject} from '../../../core/geometry/entities/point/CorePointUtils';
 class PointSopParamsConfig extends NodeParamsConfig {
 	/** @param toggle on to update the x component */
 	updateX = ParamConfig.BOOLEAN(0);
@@ -80,7 +81,7 @@ export class PointSopNode extends TypedSopNode<PointSopParamsConfig> {
 
 		if (isBooleanTrue(this.pv.updateNormals)) {
 			const objects = coreGroup.threejsObjectsWithGeo();
-			for (let object of objects) {
+			for (const object of objects) {
 				if ((object as Mesh).isMesh) {
 					object.geometry.computeVertexNormals();
 				}
@@ -88,14 +89,14 @@ export class PointSopNode extends TypedSopNode<PointSopParamsConfig> {
 		}
 
 		const geometries = coreGroup.geometries();
-		for (let geometry of geometries) {
+		for (const geometry of geometries) {
 			geometry.computeBoundingBox();
 		}
 
 		// needs update required for when no cloning
 		if (!this.io.inputs.cloneRequired(0)) {
 			const geometries = coreGroup.geometries();
-			for (let geometry of geometries) {
+			for (const geometry of geometries) {
 				const attrib = geometry.getAttribute(POSITION_ATTRIB_NAME) as BufferAttribute;
 				attrib.needsUpdate = true;
 			}
@@ -103,10 +104,10 @@ export class PointSopNode extends TypedSopNode<PointSopParamsConfig> {
 
 		this.setCoreGroup(coreGroup);
 	}
-	async _evalExpressionsForCoreObject(coreObject: CoreObject) {
+	async _evalExpressionsForCoreObject(coreObject: ThreejsCoreObject) {
 		const object = coreObject.object();
 		const geometry = (object as Mesh).geometry as BufferGeometry;
-		const points = coreObject.points();
+		const points = pointsFromObject(object);
 
 		const array = (geometry.getAttribute(POSITION_ATTRIB_NAME) as BufferAttribute).array as number[];
 

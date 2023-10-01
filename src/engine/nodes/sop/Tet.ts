@@ -7,8 +7,8 @@
 // import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 // import {CoreGroup} from '../../../core/geometry/Group';
 // import {SopType} from '../../poly/registers/nodes/types/Sop';
-// import {TetGeometry} from '../../../core/geometry/tet/TetGeometry';
-// import {TET_VERTICES_BASE} from '../../../core/geometry/tet/TetCommon';
+// import {TetGeometry} from '../../../core/geometry/modules/tet/TetGeometry';
+// import {TET_VERTICES_BASE} from '../../../core/geometry/modules/tet/TetCommon';
 // import {Vector3} from 'three';
 
 // const _p = new Vector3();

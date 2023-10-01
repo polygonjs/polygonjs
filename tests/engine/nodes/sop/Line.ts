@@ -1,14 +1,13 @@
 import type {QUnit} from '../../../helpers/QUnit';
 export function testenginenodessopLine(qUnit: QUnit) {
-qUnit.test('line simple', async (assert) => {
-	const geo1 = window.geo1;
+	qUnit.test('line simple', async (assert) => {
+		const geo1 = window.geo1;
 
-	const line1 = geo1.createNode('line');
+		const line1 = geo1.createNode('line');
 
-	let container;
+		let container;
 
-	container = await line1.compute();
-	assert.equal(container.pointsCount(), 2);
-});
-
+		container = await line1.compute();
+		assert.equal(container.coreContent()!.pointsCount(), 2);
+	});
 }

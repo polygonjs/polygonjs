@@ -7,7 +7,7 @@ import {FloatParam} from '../../../../src/engine/params/Float';
 import {ParamType} from '../../../../src/engine/poly/ParamType';
 import {AssemblersUtils} from '../../../helpers/AssemblersUtils';
 import {AttribClass} from '../../../../src/core/geometry/Constant';
-import {CoreObject} from '../../../../src/core/geometry/Object';
+import {ThreejsCoreObject} from '../../../../src/core/geometry/modules/three/ThreejsCoreObject';
 import {RendererUtils} from '../../../helpers/RendererUtils';
 import {CoreSleep} from '../../../../src/core/Sleep';
 export function testenginenodessopObjectBuilder(qUnit: QUnit) {
@@ -118,7 +118,7 @@ export function testenginenodessopObjectBuilder(qUnit: QUnit) {
 		async function getAttribValue(): Promise<number> {
 			const container = await objectBuilder1.compute();
 			const object = container.coreContent()!.threejsObjectsWithGeo()[0];
-			return CoreObject.attribValue(object, 'test') as number;
+			return ThreejsCoreObject.attribValue(object, 'test') as number;
 		}
 
 		// no addition
