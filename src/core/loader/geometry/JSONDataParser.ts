@@ -18,13 +18,7 @@ export interface JsonDataLoaderOptions {
 }
 
 function initPositionAttribute(geometry: BufferGeometry, pointsCount: number) {
-	const values: number[] = new Array(pointsCount * 3);
-
-	// for (let i = 0; i < pointsCount; i++) {
-	// 	values.push(defaultValue.x);
-	// 	values.push(defaultValue.y);
-	// 	values.push(defaultValue.z);
-	// }
+	const values: number[] = new Array(pointsCount * 3).fill(0);
 
 	return geometry.setAttribute(Attribute.POSITION, new Float32BufferAttribute(values, 3));
 }
@@ -72,9 +66,9 @@ export class JSONDataParser {
 
 			this._find_attributes();
 
-			const convert_to_numeric_masks:string[] = []
-			if(this._options.convertToNumeric){
-				stringToAttribNames(this._options.convertToNumeric,convert_to_numeric_masks);
+			const convert_to_numeric_masks: string[] = [];
+			if (this._options.convertToNumeric) {
+				stringToAttribNames(this._options.convertToNumeric, convert_to_numeric_masks);
 			}
 
 			// set values
@@ -119,9 +113,9 @@ export class JSONDataParser {
 	private _find_attributes() {
 		let first_pt;
 
-		const masks:string[] = []
-		if(this._options.skipEntries){
-			stringToAttribNames(this._options.skipEntries,masks);
+		const masks: string[] = [];
+		if (this._options.skipEntries) {
+			stringToAttribNames(this._options.skipEntries, masks);
 		}
 
 		if (this._json) {
