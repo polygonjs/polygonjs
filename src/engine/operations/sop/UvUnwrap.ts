@@ -2,23 +2,15 @@ import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
-import {
-	BufferAttribute,
-	Mesh,
-	// BufferGeometry,
-	Float32BufferAttribute,
-	// Uint32BufferAttribute,
-	Vector3,
-	Line3,
-} from 'three';
+import {BufferAttribute, Mesh, Float32BufferAttribute, Vector3, Line3} from 'three';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
-// import {Attribute} from '../../../core/geometry/Attribute';
-// import {XAtlasLoaderHandler, AddMeshStatus, XAtlasManager} from '../../../core/loader/geometry/XAtlas';
+import {XAtlasLoaderHandler} from '../../../core/loader/geometry/XAtlas';
 import {TypeAssert} from '../../poly/Assert';
 import {Potpack, PotPackBox, PotPackBoxResult} from '../../../core/libs/Potpack';
-// import {LIBRARY_INSTALL_HINT} from '../../../core/loader/common';
+import {LIBRARY_INSTALL_HINT} from '../../../core/loader/common';
 import {DEFAULT_UV_LIGHT_MAP_ATTRIB_NAME} from '../../nodes/cop/utils/lightMap/LightMapMaterial';
 import {UVUnwrapper} from 'xatlas-three';
+// import { PolyEngine } from '../../Poly';
 // import {UV_LIGHT_MAP_FLIPPED_ATTRIB_NAME} from '../../nodes/cop/utils/lightMap/LightMapMaterial';
 
 export enum UvUnwrapMethod {
@@ -104,13 +96,23 @@ export class UvUnwrapSopOperation extends BaseSopOperation {
 			rotateChartsToAxis: true,
 			texelsPerUnit: 0,
 		};
+		if (!this._node) {
+			this.states?.error.set('no node');
+			return coreGroup;
+		}
+
+		const xatlasData = await XAtlasLoaderHandler.loadWasm(this._node);
+		if (!xatlasData) {
+			this.states?.error.set(`failed to load xatlas. Make sure this is installed. ${LIBRARY_INSTALL_HINT}`);
+			return coreGroup;
+		}
 
 		await unwrapper.loadLibrary(
 			(mode, progress) => {
 				// console.log(mode, progress);
 			},
-			'https://cdn.jsdelivr.net/npm/xatlasjs@0.1.0/dist/xatlas.wasm',
-			'https://cdn.jsdelivr.net/npm/xatlasjs@0.1.0/dist/xatlas.js'
+			xatlasData.wasm, //'https://cdn.jsdelivr.net/npm/xatlasjs@0.1.0/dist/xatlas.wasm',
+			xatlasData.js //'https://cdn.jsdelivr.net/npm/xatlasjs@0.1.0/dist/xatlas.js'
 		); // Make sure to wait for the library to load before unwrapping.
 
 		const objects = coreGroup.threejsObjectsWithGeo();

@@ -64,7 +64,7 @@ type AttributeDictionary = PolyDictionary<AttribValue>;
 
 const tmpBox3 = new Box3();
 const tmpPos = new Vector3();
-const _indices:number[]=[]
+const _indices: number[] = [];
 
 export interface Object3DWithGeometry extends Object3D {
 	geometry: BufferGeometry;
@@ -296,7 +296,7 @@ export class CoreGroup extends CoreEntity {
 	}
 	pointsFromGroup(group: GroupString) {
 		if (group) {
-			CoreString.indices(group,_indices);
+			CoreString.indices(group, _indices);
 			const points = this.points();
 			const compactPoints: TypedCorePoint<CoreObjectType>[] = [];
 			return arrayCompact(
@@ -422,10 +422,10 @@ export class CoreGroup extends CoreEntity {
 				case 2: {
 					return (this.attributes()[attribName] = new Vector2(0, 0));
 				}
-				case 2: {
+				case 3: {
 					return (this.attributes()[attribName] = new Vector3(0, 0, 0));
 				}
-				case 2: {
+				case 4: {
 					return (this.attributes()[attribName] = new Vector4(0, 0, 0, 0));
 				}
 			}

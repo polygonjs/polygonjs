@@ -24,7 +24,7 @@
 	"sideEffects": false,
 	"scripts": {
 		"start": "webpack-dev-server --env NODE_ENV=development --env production=false --config config/webpack/dev.js",
-		"build": "export NODE_OPTIONS='--max-old-space-size=32768' yarn build_folder_delete && yarn build_with_webpack && yarn build_with_esbuild && yarn build_folder_remove_unneeded && yarn copy_threejs_examples_to_dist && yarn copy_occt_wasm_to_dist",
+		"build": "export NODE_OPTIONS='--max-old-space-size=32768' yarn build_folder_delete && yarn build_with_webpack && yarn build_with_esbuild && yarn build_folder_remove_unneeded && yarn copy_threejs_examples_to_dist && yarn copy_occt_wasm_to_dist && yarn copy_xatlas_wasm_to_dist",
 		"build_fast": "export NODE_OPTIONS='--max-old-space-size=32768' yarn build_folder_delete && yarn build_with_webpack_fast && yarn build_with_esbuild && yarn build_folder_remove_unneeded && yarn copy_threejs_examples_to_dist",
 		"build_with_webpack": "webpack --env NODE_ENV=production --env production --progress --config config/webpack/prod.js && yarn renameMJS",
 		"build_with_webpack_fast": "webpack --env NODE_ENV=production --env production --progress --env FAST_COMPILE=true --config config/webpack/prod.js && yarn renameMJS",
@@ -41,6 +41,7 @@
 		"build_folder_remove_unneeded": "rm -rf dist/config && rm -rf dist/tests",
 		"copy_threejs_examples_to_dist": "cp -rf src/modules/three/* dist/src/modules/three/",
 		"copy_occt_wasm_to_dist": "cp src/core/geometry/modules/cad/build/*.wasm dist/src/core/geometry/modules/cad/build/",
+		"copy_xatlas_wasm_to_dist": "cp src/core/thirdParty/xatlasjs/* dist/src/core/thirdParty/xatlasjs/",
 		"build_renameMJS": "./node_modules/typescript/bin/tsc config/common/renameMJStoJS.ts --moduleResolution node",
 		"renameMJS": "node config/common/renameMJStoJS.js",
 		"bundle_types_build": "tsc config/dts_bundle/dts_bundle_pre.ts && tsc config/dts_bundle/dts_bundle_post.ts",
