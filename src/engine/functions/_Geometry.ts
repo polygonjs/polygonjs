@@ -108,18 +108,19 @@ export class setGeometryPositions extends ObjectNamedFunction5<[Vector3[], numbe
 		if (isBooleanTrue(attributeNeedsUpdate)) {
 			markAttributeAsNeedsUpdateForFrame(positionAttribute, this.timeController.frame());
 		}
-		const normalAttribute = geometry.getAttribute(Attribute.NORMAL);
-		if (positionAttribute != null && normalAttribute != null && isBooleanTrue(computeNormals)) {
-			geometry.computeVertexNormals();
-		}
-		const uvAttribute = geometry.getAttribute(Attribute.UV);
-		const index = geometry.getIndex();
 		if (
 			positionAttribute != null &&
-			uvAttribute != null &&
-			normalAttribute != null &&
-			index != null &&
-			isBooleanTrue(computeTangents)
+			isBooleanTrue(computeNormals) &&
+			geometry.getAttribute(Attribute.NORMAL) != null
+		) {
+			geometry.computeVertexNormals();
+		}
+		if (
+			isBooleanTrue(computeTangents) &&
+			positionAttribute != null &&
+			geometry.getAttribute(Attribute.UV) != null &&
+			geometry.getAttribute(Attribute.NORMAL) != null &&
+			geometry.getIndex() != null
 		) {
 			geometry.computeTangents();
 		}

@@ -21,6 +21,7 @@ function generateThreedScans(node: FileGLTFSopNode) {
 			);
 		}
 		const fileNames = [
+			'beethoven',
 			'eagle',
 			'einstein',
 			'horse_head',

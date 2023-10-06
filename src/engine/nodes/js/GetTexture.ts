@@ -15,7 +15,7 @@ import {NodeContext} from '../../poly/NodeContext';
 import {Poly} from '../../Poly';
 import {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
 class GetTextureJsParamsConfig extends NodeParamsConfig {
-	/** @param the material node */
+	/** @param the texture node */
 	node = ParamConfig.NODE_PATH('', {
 		nodeSelection: {
 			context: NodeContext.COP,

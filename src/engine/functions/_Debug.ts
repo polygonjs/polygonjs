@@ -10,6 +10,7 @@ import {PolyScene} from '../scene/PolyScene';
 export interface ActorEvaluatorDebugOptions {
 	object3D: Object3D;
 	nodePath: string;
+	message: string;
 	value: JsDataType;
 }
 export interface DebugLine {
@@ -21,6 +22,7 @@ export interface DebugLine {
 const options: ActorEvaluatorDebugOptions = {
 	object3D: new Object3D(),
 	nodePath: '',
+	message: '',
 	value: 0,
 };
 
@@ -173,7 +175,9 @@ export class debug<T extends JsDataType> extends ObjectNamedFunction3<[string, T
 
 		if (debugOptions.bundleByObject) {
 			options.object3D = object3D;
-			options.nodePath = message;
+			// this must remain nodePath, for the debug extra UI to work
+			options.nodePath = nodePath;
+			options.message = message;
 			options.value = input;
 
 			_optionsToDebugLines(this.scene, options);

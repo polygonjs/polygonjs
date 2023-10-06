@@ -11,10 +11,23 @@ import {SopType} from '../../poly/registers/nodes/types/Sop';
 const DEFAULT = TubeSopOperation.DEFAULT_PARAMS;
 const step = 0.00001;
 class TubeSopParamsConfig extends NodeParamsConfig {
+	/** @param if true, the tube is set with a single radius. If false, it uses a top and bottom radius */
+	singleRadius = ParamConfig.BOOLEAN(DEFAULT.singleRadius);
+	/** @param  radius */
+	radius = ParamConfig.FLOAT(DEFAULT.radius, {
+		range: [0, 2],
+		visibleIf: {singleRadius: 1},
+	});
 	/** @param top radius */
-	radiusTop = ParamConfig.FLOAT(DEFAULT.radiusTop, {range: [0, 1]});
+	radiusTop = ParamConfig.FLOAT(DEFAULT.radiusTop, {
+		range: [0, 2],
+		visibleIf: {singleRadius: 0},
+	});
 	/** @param bottom radius */
-	radiusBottom = ParamConfig.FLOAT(DEFAULT.radiusBottom, {range: [0, 1]});
+	radiusBottom = ParamConfig.FLOAT(DEFAULT.radiusBottom, {
+		range: [0, 2],
+		visibleIf: {singleRadius: 0},
+	});
 	/** @param tube height */
 	height = ParamConfig.FLOAT(DEFAULT.height, {range: [0, 1]});
 	/** @param number of segments in the radial direction */

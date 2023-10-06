@@ -97,4 +97,5 @@ export enum JsType {
 	SET_SOFT_BODY_CONSTRAINT_POSITION = 'setSoftBodyConstraintPosition',
 	SET_SOFT_BODY_POSITION = 'setSoftBodyPosition',
 	SET_SOFT_BODY_VELOCITY = 'setSoftBodyVelocity',
+	// TEXTURE_SDF = 'textureSDF',
 }

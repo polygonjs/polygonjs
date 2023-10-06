@@ -230,10 +230,10 @@ export class NoiseGlNode extends TypedGlNode<NoiseGlParamsConfig> {
 	}
 
 	private _expected_input_types(): GlConnectionPointType[] {
-		const noise_name = NOISE_NAMES[this.pv.type];
-		const amplitude_type = this._expected_output_types()[0];
-		const type = INPUT_TYPES_BY_NOISE_NAME[noise_name];
-		return [amplitude_type, type, type, type];
+		const noiseName = NOISE_NAMES[this.pv.type];
+		const amplitudeType = this._expected_output_types()[0];
+		const type = INPUT_TYPES_BY_NOISE_NAME[noiseName];
+		return [amplitudeType, type, type, type];
 	}
 	private _expected_output_types(): GlConnectionPointType[] {
 		const noise_name = NOISE_NAMES[this.pv.type];

@@ -72,25 +72,14 @@ export class TransformSopOperation extends BaseSopOperation {
 	override cook(inputCoreGroups: CoreGroup[], params: TransformSopParams) {
 		const coreGroup = inputCoreGroups[0];
 
-		const selectedObjects = this._selectedObjects(coreGroup, params);
+		const selectedObjects = CoreMask.filterObjects(coreGroup, params);
 		for (let inputObject of selectedObjects) {
 			this._applyTransform(inputObject, coreGroup, params);
 		}
 		coreGroup.resetBoundingBox();
 		return coreGroup;
 	}
-	private _selectedObjects(coreGroup: CoreGroup, params: TransformSopParams) {
-		const mode = TRANSFORM_TARGET_TYPES[params.applyOn];
-		switch (mode) {
-			case TransformTargetType.GEOMETRY: {
-				return CoreMask.filterObjects(coreGroup, params);
-			}
-			case TransformTargetType.OBJECT: {
-				return CoreMask.filterObjects(coreGroup, params);
-			}
-		}
-		TypeAssert.unreachable(mode);
-	}
+
 	private _applyTransform(object: ObjectContent<CoreObjectType>, coreGroup: CoreGroup, params: TransformSopParams) {
 		if (isObject3D(object)) {
 			this._applyTransformWithTransformTargetType(object, coreGroup, params);

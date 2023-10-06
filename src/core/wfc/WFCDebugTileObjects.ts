@@ -13,7 +13,7 @@ export function createDefaultEmptyTileObject() {
 		divisions,
 		center,
 	});
-
+	object.name = EMPTY_TILE_ID;
 	return object;
 }
 
@@ -22,12 +22,14 @@ export function createDefaultErrorTileObject() {
 	const geometry = new BoxGeometry(SCALE, SCALE, SCALE);
 	const material = new MeshBasicMaterial({color: 0xff0000});
 	const mesh = new Mesh(geometry, material);
+	mesh.name = ERROR_TILE_ID;
 	return mesh;
 }
 export function createDefaultUnresolvedTileObject() {
 	const geometry = new BoxGeometry(SCALE, SCALE, SCALE);
 	const material = new MeshBasicMaterial({color: 0xff00ff});
 	const mesh = new Mesh(geometry, material);
+	mesh.name = UNRESOLVED_TILE_ID;
 	return mesh;
 }
 export function addEmptyTileObjectAttributes(object: Object3D) {

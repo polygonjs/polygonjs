@@ -22,6 +22,7 @@ let _currentSizes = new Vector3();
 let _targetSizes = new Vector3();
 let _targetHalfSizes = new Vector3();
 let _originalSizes = new Vector3();
+const SAFETY_OFFSET = 0.001;
 
 const attribSizeLiveByObject: WeakMap<Object3D, Vector3> = new WeakMap();
 function _getAttribSizeLiveByObject(object3D: Object3D) {
@@ -42,13 +43,12 @@ export function createPhysicsCuboid(PhysicsLib: PhysicsLib, object: Object3D) {
 	if (borderRadius <= 0) {
 		return PhysicsLib.ColliderDesc.cuboid(tmp.x, tmp.y, tmp.z);
 	} else {
-		// We seem to need a tiny offset.
-		// If it was 0, the RBD would not fall
-		const safetyOffset = 0.02;
-		const minDim = Math.min(tmp.x, tmp.y, tmp.z) + safetyOffset;
-		const borderRadius2 = Math.min(borderRadius, minDim);
-		tmp.subScalar(borderRadius2);
-		return PhysicsLib.ColliderDesc.roundCuboid(tmp.x, tmp.y, tmp.z, borderRadius2);
+		// We reduce the size by the border radius,
+		// but we also need to make sure that the size will not be 0
+		const minDim = Math.min(tmp.x, tmp.y, tmp.z);
+		const borderRadiusAdjusted = Math.min(borderRadius, minDim - SAFETY_OFFSET);
+		tmp.subScalar(borderRadiusAdjusted);
+		return PhysicsLib.ColliderDesc.roundCuboid(tmp.x, tmp.y, tmp.z, borderRadiusAdjusted);
 	}
 }
 

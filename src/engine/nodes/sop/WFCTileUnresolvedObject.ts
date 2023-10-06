@@ -23,14 +23,14 @@ export class WFCTileUnresolvedObjectSopNode extends TypedSopNode<WFCTileUnresolv
 	}
 
 	override initializeNode() {
-		this.io.inputs.setCount(1, 2);
+		this.io.inputs.setCount(0, 2);
 		this.io.inputs.initInputsClonedState(InputCloneMode.FROM_NODE);
 	}
 
 	override async cook(inputCoreGroups: CoreGroup[]) {
 		const coreGroup0 = inputCoreGroups[0];
 		const coreGroup1 = inputCoreGroups[1];
-		const inputObjects = coreGroup0.allObjects();
+		const inputObjects = coreGroup0 ? coreGroup0.allObjects() : [];
 		const unresolvedTileObject = coreGroup1 ? coreGroup1.threejsObjects()[0] : null;
 
 		const tileObject = unresolvedTileObject != null ? unresolvedTileObject : createDefaultUnresolvedTileObject();

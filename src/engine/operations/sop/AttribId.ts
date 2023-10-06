@@ -63,17 +63,22 @@ export class AttribIdSopOperation extends BaseSopOperation {
 	}
 
 	private _addObjectAttributes(coreObjects: BaseCoreObject<CoreObjectType>[], params: AttribIdSopParams) {
-		let i = 0;
-		let objectsCount = coreObjects.length;
-		for (const coreObject of coreObjects) {
-			if (isBooleanTrue(params.id)) {
-				coreObject.addAttribute(params.idName, i);
-			}
-			if (isBooleanTrue(params.idn)) {
-				coreObject.addAttribute(params.idnName, i / (objectsCount - 1));
-			}
+		const objectsCount = coreObjects.length;
+		if (objectsCount > 1) {
+			let i = 0;
+			for (const coreObject of coreObjects) {
+				if (isBooleanTrue(params.id)) {
+					coreObject.addAttribute(params.idName, i);
+				}
+				if (isBooleanTrue(params.idn)) {
+					coreObject.addAttribute(params.idnName, i / (objectsCount - 1));
+				}
 
-			i++;
+				i++;
+			}
+		} else {
+			coreObjects[0].addAttribute(params.idName, 0);
+			coreObjects[0].addAttribute(params.idnName, 0);
 		}
 	}
 

@@ -44,7 +44,9 @@ export class BVHVisualizerSopOperation extends BaseSopOperation {
 					} else {
 						newObjects.push(visualizer);
 					}
-					mesh.visible = false;
+					mesh.geometry.drawRange.count = 0;
+					// we don't want to hide the mesh, as it could have children
+					// mesh.visible = false;
 				}
 			});
 		}

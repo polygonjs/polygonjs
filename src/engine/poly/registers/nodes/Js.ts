@@ -330,6 +330,7 @@ import {SubnetOutputJsNode} from '../../../nodes/js/SubnetOutput';
 import {SubtractJsNode} from '../../../nodes/js/Subtract';
 import {SwitchJsNode} from '../../../nodes/js/Switch';
 import {TanJsNode} from '../../../nodes/js/Tan';
+// import {TextureSDFJsNode} from '../../../nodes/js/TextureSDF';
 import {TrackFaceJsNode} from '../../../nodes/js/TrackFace';
 import {TrackHandJsNode} from '../../../nodes/js/TrackHand';
 import {TriggerDelayJsNode} from '../../../nodes/js/TriggerDelay';
@@ -684,6 +685,7 @@ export interface JsNodeChildrenMap {
 	subtract: SubtractJsNode;
 	switch: SwitchJsNode;
 	tan: TanJsNode;
+	// textureSDF: TextureSDFJsNode;
 	trackFace: TrackFaceJsNode;
 	trackHand: TrackHandJsNode;
 	triggerDelay: TriggerDelayJsNode;
@@ -751,6 +753,7 @@ const ACTOR_OBJECTS = [
 ];
 const ACTOR_POINTS = [sopType(SopType.ACTOR_POINT)];
 const ACTOR_INSTANCES = [sopType(SopType.ACTOR_INSTANCE)];
+// const SDF_BUILDERs = [sopType(SopType.SDF_BUILDER)];
 const ONLY_ACTOR = {
 	only: ACTOR_OBJECTS,
 };
@@ -763,6 +766,9 @@ const ONLY_ACTOR_INSTANCE = {
 const ONLY_ACTOR_AND_POINT = {
 	only: [...ACTOR_OBJECTS, ...ACTOR_POINTS, ...ACTOR_INSTANCES],
 };
+// const ONLY_ACTOR_AND_SDF = {
+// 	only: [...ACTOR_OBJECTS, ...SDF_BUILDERs],
+// };
 export class JsRegister {
 	static run(poly: PolyEngine) {
 		poly.registerNode(AttributeJsNode, CATEGORY_JS.GLOBALS, ONLY_POINT_OR_OBJECT_BUILDER);
@@ -1095,6 +1101,7 @@ export class JsRegister {
 		poly.registerNode(SubtractJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(SwitchJsNode, CATEGORY_JS.LOGIC);
 		poly.registerNode(TanJsNode, CATEGORY_JS.MATH);
+		// poly.registerNode(TextureSDFJsNode, CATEGORY_JS.SDF_PRIMITIVES);
 		poly.registerNode(TrackFaceJsNode, CATEGORY_JS.COMPUTER_VISION);
 		poly.registerNode(TrackHandJsNode, CATEGORY_JS.COMPUTER_VISION);
 		poly.registerNode(TriggerDelayJsNode, CATEGORY_JS.FLOW, ONLY_ACTOR);

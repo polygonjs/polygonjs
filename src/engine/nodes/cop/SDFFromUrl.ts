@@ -56,14 +56,15 @@ export class SDFFromUrlCopNode extends TypedCopNode<SDFFromUrlCopParamsConfig> {
 		loader.load(
 			(texture) => {
 				const dataContainer = texture.image as unknown as SDFDataContainer;
-				this.p.resolution.set([
-					dataContainer.resolutionx,
-					dataContainer.resolutiony,
-					dataContainer.resolutionz,
-				]);
-				this.p.boundMin.set([dataContainer.boundMinx, dataContainer.boundMiny, dataContainer.boundMinz]);
-				this.p.boundMax.set([dataContainer.boundMaxx, dataContainer.boundMaxy, dataContainer.boundMaxz]);
-
+				this.scene().batchUpdates(() => {
+					this.p.resolution.set([
+						dataContainer.resolutionx,
+						dataContainer.resolutiony,
+						dataContainer.resolutionz,
+					]);
+					this.p.boundMin.set([dataContainer.boundMinx, dataContainer.boundMiny, dataContainer.boundMinz]);
+					this.p.boundMax.set([dataContainer.boundMaxx, dataContainer.boundMaxy, dataContainer.boundMaxz]);
+				});
 				this.setTexture(texture);
 			},
 			() => {},

@@ -35,16 +35,16 @@ export class SDFBoxJsNode extends BaseSDFJsNode<SDFBoxJsParamsConfig> {
 		]);
 	}
 
-	override setLines(shadersCollectionController: JsLinesCollectionController) {
-		const position = this.position(shadersCollectionController);
-		const center = this.variableForInputParam(shadersCollectionController, this.p.center);
-		const size = this.variableForInputParam(shadersCollectionController, this.p.size);
-		const sizes = this.variableForInputParam(shadersCollectionController, this.p.sizes);
+	override setLines(linesController: JsLinesCollectionController) {
+		const position = this.position(linesController);
+		const center = this.variableForInputParam(linesController, this.p.center);
+		const size = this.variableForInputParam(linesController, this.p.size);
+		const sizes = this.variableForInputParam(linesController, this.p.sizes);
 
 		const float = this.jsVarName(OUTPUT_NAME);
-		const func = Poly.namedFunctionsRegister.getFunction('SDFBox', this, shadersCollectionController);
+		const func = Poly.namedFunctionsRegister.getFunction('SDFBox', this, linesController);
 		// const bodyLine = `const ${float} = ${func.asString(position, center, sizes, size)}`;
-		shadersCollectionController.addBodyOrComputed(this, [
+		linesController.addBodyOrComputed(this, [
 			{
 				dataType: JsConnectionPointType.FLOAT,
 				varName: float,

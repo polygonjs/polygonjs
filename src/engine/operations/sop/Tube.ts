@@ -9,6 +9,8 @@ import {DefaultOperationParams} from '../../../core/operations/_Base';
 const DEFAULT_UP = new Vector3(0, 1, 0);
 
 interface TubeSopParams extends DefaultOperationParams {
+	singleRadius: boolean;
+	radius: number;
 	radiusTop: number;
 	radiusBottom: number;
 	height: number;
@@ -24,6 +26,8 @@ interface TubeSopParams extends DefaultOperationParams {
 
 export class TubeSopOperation extends BaseSopOperation {
 	static override readonly DEFAULT_PARAMS: TubeSopParams = {
+		singleRadius: true,
+		radius: 1,
 		radiusTop: 1,
 		radiusBottom: 1,
 		height: 1,
@@ -40,11 +44,13 @@ export class TubeSopOperation extends BaseSopOperation {
 	static override type(): Readonly<'tube'> {
 		return 'tube';
 	}
-	override cook(input_contents: CoreGroup[], params: TubeSopParams) {
+	override cook(inputCoreGroups: CoreGroup[], params: TubeSopParams) {
+		const radiusTop = params.singleRadius ? params.radius : params.radiusTop;
+		const radiusBottom = params.singleRadius ? params.radius : params.radiusBottom;
 		const geometry = isBooleanTrue(params.open)
 			? new CylinderGeometry(
-					params.radiusTop,
-					params.radiusBottom,
+					radiusTop,
+					radiusBottom,
 					params.height,
 					params.segmentsRadial,
 					params.segmentsHeight,
@@ -53,8 +59,8 @@ export class TubeSopOperation extends BaseSopOperation {
 					params.thetaLength
 			  )
 			: new CylinderGeometry(
-					params.radiusTop,
-					params.radiusBottom,
+					radiusTop,
+					radiusBottom,
 					params.height,
 					params.segmentsRadial,
 					params.segmentsHeight,

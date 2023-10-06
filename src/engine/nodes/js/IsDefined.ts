@@ -18,6 +18,7 @@ const ALLOWED_TYPES = [
 	JsConnectionPointType.INT,
 	JsConnectionPointType.COLOR,
 	JsConnectionPointType.FLOAT,
+	JsConnectionPointType.INTERSECTION,
 	JsConnectionPointType.MATERIAL,
 	JsConnectionPointType.OBJECT_3D,
 	JsConnectionPointType.STRING,
@@ -53,8 +54,8 @@ export class IsDefinedJsNode extends TypedJsNode<IsDefinedJsParamsConfig> {
 	}
 	protected _expectedInputTypes() {
 		let first_input_type = this.io.connection_points.first_input_connection_type();
-		const connectionPoints =  this.io.inputs.namedInputConnectionPoints()
-		if (first_input_type&&connectionPoints) {
+		const connectionPoints = this.io.inputs.namedInputConnectionPoints();
+		if (first_input_type && connectionPoints) {
 			if (!ALLOWED_TYPES.includes(first_input_type)) {
 				// if the first input type is not allowed, either leave the connection point as is,
 				// or use the default if there is none
