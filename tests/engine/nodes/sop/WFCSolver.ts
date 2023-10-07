@@ -10,6 +10,7 @@ import {AttribClass} from '../../../../src/core/geometry/Constant';
 import {WFCTileSide} from '../../../../src/core/wfc/WFCCommon';
 import {WFCQuadAttribute} from '../../../../src/core/wfc/WFCAttributes';
 import {CoreObjectType, ObjectContent} from '../../../../src/core/geometry/ObjectContent';
+import {WFCBuilderSopNode} from '../../../../src/engine/nodes/sop/WFCBuilder';
 // import {CoreSleep} from '../../../../src/core/Sleep';
 
 enum TileName {
@@ -224,7 +225,7 @@ export function testenginenodessopWFCSolver(qUnit: QUnit) {
 		return {merge1, attribPromote1, attribCreate2, copy1, attribCreate1, quadPlane1};
 	}
 
-	qUnit.test('sop/WFCSolver ', async (assert) => {
+	qUnit.test('sop/WFCSolver simple', async (assert) => {
 		const perspective_camera1 = window.perspective_camera1;
 		perspective_camera1.p.t.z.set(5);
 
@@ -376,5 +377,39 @@ export function testenginenodessopWFCSolver(qUnit: QUnit) {
 				'4x4x2'
 			);
 		});
+	});
+
+	qUnit.test('sop/WFCSolver compute flow', async (assert) => {
+		const perspective_camera1 = window.perspective_camera1;
+		perspective_camera1.p.t.z.set(5);
+
+		await window.scene.waitForCooksCompleted();
+
+		const geo1 = window.geo1;
+		let WFCSolver1!: WFCSolverSopNode;
+		let WFCBuilder1!: WFCBuilderSopNode;
+		window.scene.batchUpdates(() => {
+			WFCSolver1 = geo1.createNode('WFCSolver');
+			const quadNodes = createQuadNodes(WFCSolver1);
+			const {WFCRuleConnectionToGridBorder1} = createTileNodes(WFCSolver1);
+			WFCSolver1.setInput(0, quadNodes.merge1);
+			WFCSolver1.setInput(1, WFCRuleConnectionToGridBorder1);
+
+			WFCBuilder1 = geo1.createNode('WFCBuilder');
+			WFCBuilder1.setInput(0, WFCSolver1);
+			WFCBuilder1.setInput(1, WFCRuleConnectionToGridBorder1);
+			WFCBuilder1.flags.display.set(true);
+		});
+		assert.ok(WFCBuilder1, 'WFCBuilder1 ok');
+
+		async function compute() {
+			const container = await WFCBuilder1.compute();
+			const objects = container.coreContent()?.allObjects();
+			const objectNames = objects?.map((o: ObjectContent<CoreObjectType>) => o.name);
+			return {objectNames};
+		}
+		await compute();
+
+		assert.notOk(WFCSolver1.states.error.message(), 'no WFCSolver1 error');
 	});
 }
