@@ -12,7 +12,8 @@ import {WithPolyId} from '../../../poly/RenderersController';
 
 export interface POLYEffectComposer extends EffectComposer, WithPolyId {}
 
-const RENDER_TARGET_TEXTURE_TYPE_OPTIONS: PolyDictionary<number> = {
+export type PostProcessingTextureType = typeof UnsignedByteType | typeof HalfFloatType | typeof FloatType;
+const RENDER_TARGET_TEXTURE_TYPE_OPTIONS: PolyDictionary<PostProcessingTextureType> = {
 	UnsignedByteType: UnsignedByteType,
 	HalfFloatType: HalfFloatType,
 	FloatType: FloatType,
@@ -114,7 +115,6 @@ export class EffectComposerController {
 			frameBufferType: isBooleanTrue(pv.tTextureType) ? pv.textureType : undefined,
 		});
 		(composer as POLYEffectComposer)._polygonId = this._nextId++;
-
 		return composer;
 	}
 

@@ -13,7 +13,11 @@ import {PostNodeChildrenMap} from '../../poly/registers/nodes/Post';
 import {NodeCreateOptions} from '../utils/hierarchy/ChildrenController';
 import {Constructor, valueof} from '../../../types/GlobalTypes';
 import {BasePostProcessNodeType} from '../post/_Base';
-import {EffectComposerController, PostProcessNetworkParamsConfigMixin} from '../post/utils/EffectComposerController';
+import {
+	EffectComposerController,
+	PostProcessNetworkParamsConfigMixin,
+	PostProcessingTextureType,
+} from '../post/utils/EffectComposerController';
 import {DisplayNodeController} from '../utils/DisplayNodeController';
 const DEFAULT = CameraPostProcessSopOperation.DEFAULT_PARAMS;
 
@@ -52,9 +56,15 @@ export class CameraPostProcessSopNode extends TypedSopNode<CameraPostProcessSopP
 	private _operation: CameraPostProcessSopOperation | undefined;
 	override cook(inputCoreGroups: CoreGroup[]) {
 		this._operation = this._operation || new CameraPostProcessSopOperation(this._scene, this.states, this);
-		const core_group = this._operation.cook(inputCoreGroups, this.pv);
-		this.setCoreGroup(core_group);
+		const coreGroup = this._operation.cook(inputCoreGroups, this.pv);
+		this.setCoreGroup(coreGroup);
 	}
+
+	setTextureType(textureType: PostProcessingTextureType) {
+		this.p.tTextureType.set(1);
+		this.p.textureType.set(textureType);
+	}
+
 	/*
 	children
 	*/

@@ -41,7 +41,7 @@ class BloomPostParamsConfig extends NodeParamsConfig {
 		...PostParamOptions,
 	});
 	/** @param effect threshold */
-	threshold = ParamConfig.FLOAT(0.4, {
+	threshold = ParamConfig.FLOAT(1, {
 		...PostParamOptions,
 	});
 	/** @param effect scale */

@@ -36,6 +36,7 @@ import {ScreenSpaceAmbientOcclusionPostNode} from '../../../nodes/post/ScreenSpa
 import {SepiaPostNode} from '../../../nodes/post/Sepia';
 import {SequencePostNode} from '../../../nodes/post/Sequence';
 import {TexturePostNode} from '../../../nodes/post/Texture';
+import {ToneMappingPostNode} from '../../../nodes/post/ToneMapping';
 import {UpdateScenePostNode} from '../../../nodes/post/UpdateScene';
 import {VignettePostNode} from '../../../nodes/post/Vignette';
 // networks../../../nodes/post/Blur
@@ -85,6 +86,7 @@ export interface PostNodeChildrenMap {
 	sepia: SepiaPostNode;
 	sequence: SequencePostNode;
 	texture: TexturePostNode;
+	toneMapping: ToneMappingPostNode;
 	updateScene: UpdateScenePostNode;
 	vignette: VignettePostNode;
 	// networks
@@ -137,6 +139,7 @@ export class PostRegister {
 		poly.registerNode(SepiaPostNode, CATEGORY_POST.COLOR);
 		poly.registerNode(SequencePostNode, CATEGORY_POST.MISC);
 		poly.registerNode(TexturePostNode, CATEGORY_POST.MISC);
+		poly.registerNode(ToneMappingPostNode, CATEGORY_POST.EFFECT);
 		poly.registerNode(UpdateScenePostNode, CATEGORY_POST.ADVANCED);
 		poly.registerNode(VignettePostNode, CATEGORY_POST.EFFECT);
 		// netwoks

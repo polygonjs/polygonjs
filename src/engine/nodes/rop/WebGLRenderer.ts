@@ -453,4 +453,7 @@ export class WebGLRendererRopNode extends TypedRopNode<WebGLRendererRopParamsCon
 		}
 		renderer.setPixelRatio(pixelRatio);
 	}
+	setToneMapping(toneMapping: ToneMapping) {
+		this.p.toneMapping.set(toneMapping);
+	}
 }
