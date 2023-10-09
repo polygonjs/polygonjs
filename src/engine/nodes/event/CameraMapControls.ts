@@ -12,7 +12,7 @@ import {CameraOrbitControlsEventNode} from './CameraOrbitControls';
 
 // see note in orbitControls
 // regarding where to import the module from
-import {MapControls} from '../../../modules/core/controls/OrbitControls';
+import {MapControls} from '../../../modules/core/controls/MapControls';
 // import {MapControls} from 'three/examples/jsm/controls/OrbitControls';
 
 export class CameraMapControlsEventNode extends CameraOrbitControlsEventNode {

@@ -30,6 +30,7 @@ export class OrbitControls {
 
 	enableZoom: boolean;
 	zoomSpeed: number;
+	zoomToCursor: boolean;
 
 	enableRotate: boolean;
 	rotateSpeed: number;
@@ -72,8 +73,4 @@ export class OrbitControls {
 	removeEventListener(type: string, listener: (event: any) => void): void;
 
 	dispatchEvent(event: {type: string; target: any}): void;
-}
-
-export class MapControls extends OrbitControls {
-	constructor(object: Camera, domElement?: HTMLElement);
 }

@@ -77,6 +77,20 @@ class CameraOrbitEventParamsConfig extends NodeParamsConfig {
 	allowRotate = ParamConfig.BOOLEAN(1);
 	/** @param toggle on to allow zoom */
 	allowZoom = ParamConfig.BOOLEAN(1);
+	/** @param zoom speed */
+	zoomSpeed = ParamConfig.FLOAT(1, {
+		range: [0, 2],
+		rangeLocked: [true, false],
+		visibleIf: {
+			allowZoom: 1,
+		},
+	});
+	/** @param zoom to cursor */
+	zoomToCursor = ParamConfig.BOOLEAN(1, {
+		visibleIf: {
+			allowZoom: 1,
+		},
+	});
 	/** @param toggle on to have damping */
 	tdamping = ParamConfig.BOOLEAN(1);
 	/** @param damping value */
@@ -230,6 +244,8 @@ export class CameraOrbitControlsEventNode extends TypedCameraControlsEventNode<C
 		controls.enablePan = isBooleanTrue(this.pv.allowPan);
 		controls.enableRotate = isBooleanTrue(this.pv.allowRotate);
 		controls.enableZoom = isBooleanTrue(this.pv.allowZoom);
+		controls.zoomSpeed = this.pv.zoomSpeed;
+		controls.zoomToCursor = isBooleanTrue(this.pv.zoomToCursor);
 
 		controls.enableDamping = isBooleanTrue(this.pv.tdamping);
 		controls.dampingFactor = this.pv.damping;
