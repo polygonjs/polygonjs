@@ -45,7 +45,7 @@ export class BVHSopNode extends TypedSopNode<BVHSopParamsConfig> {
 
 	private _operation: BVHSopOperation | undefined;
 	override cook(input_contents: CoreGroup[]) {
-		this._operation = this._operation || new BVHSopOperation(this._scene, this.states);
+		this._operation = this._operation || new BVHSopOperation(this._scene, this.states, this);
 		const core_group = this._operation.cook(input_contents, this.pv);
 		this.setCoreGroup(core_group);
 	}

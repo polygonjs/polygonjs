@@ -41,7 +41,7 @@ export class LatticeSopNode extends TypedSopNode<LatticeSopParamConfig> {
 
 	private _operation: LatticeSopOperation | undefined;
 	override cook(inputCoreGroups: CoreGroup[]) {
-		this._operation = this._operation || new LatticeSopOperation(this.scene(), this.states);
+		this._operation = this._operation || new LatticeSopOperation(this.scene(), this.states, this);
 		const coreGroup = this._operation.cook(inputCoreGroups, this.pv);
 		this.setCoreGroup(coreGroup);
 	}

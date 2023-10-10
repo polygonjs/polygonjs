@@ -39,7 +39,7 @@ export class PolywireSopNode extends TypedSopNode<PolywireSopParamsConfig> {
 
 	private _operation: PolywireSopOperation | undefined;
 	override cook(inputCoreGroups: CoreGroup[]) {
-		this._operation = this._operation || new PolywireSopOperation(this._scene, this.states);
+		this._operation = this._operation || new PolywireSopOperation(this._scene, this.states, this);
 		const coreGroup = this._operation.cook(inputCoreGroups, this.pv);
 		this.setCoreGroup(coreGroup);
 	}

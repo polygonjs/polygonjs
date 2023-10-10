@@ -45,7 +45,7 @@ export class InstanceSopNode extends TypedSopNode<InstanceSopParamsConfig> {
 
 	private _operation: InstanceSopOperation | undefined;
 	override async cook(inputCoreGroups: CoreGroup[]) {
-		this._operation = this._operation || new InstanceSopOperation(this.scene(), this.states);
+		this._operation = this._operation || new InstanceSopOperation(this.scene(), this.states, this);
 		const coreGroup = await this._operation.cook(inputCoreGroups, this.pv);
 		this.setCoreGroup(coreGroup);
 	}

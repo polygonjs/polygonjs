@@ -57,7 +57,7 @@ export class InstanceUpdateSopNode extends TypedSopNode<InstanceUpdateSopParamsC
 
 	private _operation: InstanceUpdateSopOperation | undefined;
 	override cook(input_contents: CoreGroup[]) {
-		this._operation = this._operation || new InstanceUpdateSopOperation(this.scene(), this.states);
+		this._operation = this._operation || new InstanceUpdateSopOperation(this.scene(), this.states, this);
 		const core_group = this._operation.cook(input_contents, this.pv);
 		this.setCoreGroup(core_group);
 	}

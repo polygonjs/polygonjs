@@ -37,16 +37,29 @@ export class QuadGeometry {
 	}
 	clone() {
 		const clonedGeometry = new (this.constructor as typeof QuadGeometry)();
+		// point attributes
 		const pointAttributeNames = Object.keys(this.attributes);
-		// const primAttributeNames = Object.keys(this.primAttributes);
-		for (const pointAttributeName of pointAttributeNames) {
-			clonedGeometry.setAttribute(pointAttributeName, this.attributes[pointAttributeName].clone());
+		for (const attributeName of pointAttributeNames) {
+			clonedGeometry.setAttribute(attributeName, this.attributes[attributeName].clone());
 		}
-		// for (const primAttributeName of primAttributeNames) {
-		// 	clonedGeometry.addPrimAttribute(primAttributeName, this.primAttributes[primAttributeName].clone());
-		// }
 		clonedGeometry.setIndex([...this.index]);
 		clonedGeometry.userData = ObjectUtils.cloneDeep(this.userData);
+		// prim attributes
+		// const primAttributes = QuadPrimitive.attributesFromGeometry(this);
+		// if (primAttributes) {
+		// 	const primAttributeNames = Object.keys(primAttributes);
+		// 	for (const attributeName of primAttributeNames) {
+		// 		const srcAttribute = primAttributes[attributeName];
+		// 		const clonedAttribute: BasePrimitiveAttribute = {
+		// 			isString: srcAttribute.isString,
+		// 			array: srcAttribute.array.slice(),
+		// 			itemSize: srcAttribute.itemSize,
+		// 		};
+		// 		QuadPrimitive.addAttributeToGeometry(clonedGeometry, attributeName, clonedAttribute);
+		// 	}
+		// }
+
+		//
 		return clonedGeometry;
 	}
 	boundingBox(target: Box3) {

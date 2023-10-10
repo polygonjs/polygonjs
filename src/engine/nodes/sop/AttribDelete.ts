@@ -45,7 +45,7 @@ export class AttribDeleteSopNode extends TypedSopNode<AttribDeleteSopParamsConfi
 
 	private _operation: AttribDeleteSopOperation | undefined;
 	override cook(inputCoreGroups: CoreGroup[]) {
-		this._operation = this._operation || new AttribDeleteSopOperation(this._scene, this.states);
+		this._operation = this._operation || new AttribDeleteSopOperation(this._scene, this.states, this);
 		const coreGroup = this._operation.cook(inputCoreGroups, this.pv);
 		this.setCoreGroup(coreGroup);
 	}

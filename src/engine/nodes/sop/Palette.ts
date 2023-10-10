@@ -107,7 +107,7 @@ export class PaletteSopNode extends TypedSopNode<PaletteSopParamsConfig> {
 
 	private _operation: PaletteSopOperation | undefined;
 	override cook(input_contents: CoreGroup[]) {
-		this._operation = this._operation || new PaletteSopOperation(this._scene, this.states);
+		this._operation = this._operation || new PaletteSopOperation(this._scene, this.states, this);
 		const core_group = this._operation.cook(input_contents, this.pv);
 		this.setCoreGroup(core_group);
 	}

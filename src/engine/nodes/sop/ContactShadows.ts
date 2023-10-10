@@ -77,7 +77,7 @@ export class ContactShadowsSopNode extends TypedSopNode<ContactShadowsSopParamsC
 		this.setCoreGroup(coreGroup);
 	}
 	private _defaultCoreGroup() {
-		this._planeOperation = this._planeOperation || new PlaneSopOperation(this.scene(), this.states);
+		this._planeOperation = this._planeOperation || new PlaneSopOperation(this.scene(), this.states, this);
 		const coreGroup = this._planeOperation.cook([], {
 			...DEFAULT_PLANE_PARAMS,
 			size: DEFAULT_PLANE_SIZE,

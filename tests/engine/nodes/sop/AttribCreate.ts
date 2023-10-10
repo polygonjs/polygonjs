@@ -14,7 +14,7 @@ import {Vector4Param} from '../../../../src/engine/params/Vector4';
 import {StringOrNumber2, StringOrNumber3, StringOrNumber4} from '../../../../src/types/GlobalTypes';
 import {primitivesFromObject} from '../../../../src/core/geometry/entities/primitive/CorePrimitiveUtils';
 import {verticesFromObject} from '../../../../src/core/geometry/entities/vertex/CoreVertexUtils';
-import {ENTITY_CLASS_FACTORY} from '../../../../src/core/geometry/CoreObjectFactory';
+import {ENTITY_CLASS_FACTORY, coreObjectInstanceFactory} from '../../../../src/core/geometry/CoreObjectFactory';
 import {CoreVertex} from '../../../../src/core/geometry/entities/vertex/CoreVertex';
 import {CoreObjectType} from '../../../../src/core/geometry/ObjectContent';
 import {CorePrimitive} from '../../../../src/core/geometry/entities/primitive/CorePrimitive';
@@ -689,6 +689,48 @@ export function testenginenodessopAttribCreate(qUnit: QUnit) {
 				}
 			}
 		}
+	});
+	qUnit.test('sop/attribCreate with quad and group', async (assert) => {
+		const geo1 = window.geo1;
+
+		const quadPlane1 = geo1.createNode('quadPlane');
+		const attribCreate1 = geo1.createNode('attribCreate');
+		const attribCreate2 = geo1.createNode('attribCreate');
+
+		attribCreate1.setInput(0, quadPlane1);
+		attribCreate2.setInput(0, attribCreate1);
+
+		quadPlane1.p.size.set([2, 2]);
+
+		attribCreate1.setAttribClass(AttribClass.PRIMITIVE);
+		attribCreate1.p.name.set('t');
+		attribCreate1.p.size.set(1);
+		attribCreate1.p.value1.set(0);
+
+		attribCreate2.setAttribClass(AttribClass.PRIMITIVE);
+		attribCreate2.p.name.set('t');
+		attribCreate2.p.size.set(1);
+		attribCreate2.p.value1.set(1);
+
+		async function _getAttribValue(_attribCreate: AttribCreateSopNode) {
+			const container = await _attribCreate.compute();
+			const coreGroup = container.coreContent()!;
+			const object = coreGroup.quadObjects()![0];
+			const coreObject = coreObjectInstanceFactory(object);
+			const primitives = coreObject.relatedPrimitives();
+			return primitives.map((p) => p.attribValue('t'));
+		}
+		assert.deepEqual(await _getAttribValue(attribCreate1), [0, 0, 0, 0]);
+		assert.deepEqual(await _getAttribValue(attribCreate2), [1, 1, 1, 1]);
+		attribCreate2.p.group.set('0');
+		assert.deepEqual(await _getAttribValue(attribCreate1), [0, 0, 0, 0]);
+		assert.deepEqual(await _getAttribValue(attribCreate2), [1, 0, 0, 0]);
+		attribCreate2.p.group.set('1');
+		assert.deepEqual(await _getAttribValue(attribCreate1), [0, 0, 0, 0]);
+		assert.deepEqual(await _getAttribValue(attribCreate2), [0, 1, 0, 0]);
+		attribCreate2.p.group.set('0-2');
+		assert.deepEqual(await _getAttribValue(attribCreate1), [0, 0, 0, 0]);
+		assert.deepEqual(await _getAttribValue(attribCreate2), [1, 1, 1, 0]);
 	});
 
 	interface MultiTestOptions {

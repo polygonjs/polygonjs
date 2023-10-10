@@ -54,6 +54,17 @@ export class QuadPrimitive extends CorePrimitive<CoreObjectType.QUAD> {
 	override builder<T extends CoreObjectType>() {
 		return quadObjectFromPrimitives as any as ObjectBuilder<T>;
 	}
+	// static  addAttributeToGeometry(
+	// 	geometry: QuadGeometry,
+	// 	attribName: string,
+	// 	attribute: BasePrimitiveAttribute
+	// ) {
+	// 	const attributes = this.attributesFromGeometry(geometry);
+	// 	if (!attributes) {
+	// 		return;
+	// 	}
+	// 	attributes[attribName] = attribute;
+	// }
 	static override addAttribute<T extends CoreObjectType>(
 		object: ObjectContent<T>,
 		attribName: string,
@@ -85,6 +96,12 @@ export class QuadPrimitive extends CorePrimitive<CoreObjectType.QUAD> {
 	static override primitivesCount<T extends CoreObjectType>(object: ObjectContent<T>) {
 		return (object as any as QuadObject).geometry.quadsCount();
 	}
+	static attributesFromGeometry(geometry: QuadGeometry): PrimitiveAttributesDict | undefined {
+		if (!geometry.userData.primAttributes) {
+			geometry.userData.primAttributes = {};
+		}
+		return geometry.userData.primAttributes;
+	}
 	static override attributes<T extends CoreObjectType>(
 		object: ObjectContent<T>
 	): PrimitiveAttributesDict | undefined {
@@ -92,10 +109,7 @@ export class QuadPrimitive extends CorePrimitive<CoreObjectType.QUAD> {
 		if (!geometry) {
 			return;
 		}
-		if (!geometry.userData.primAttributes) {
-			geometry.userData.primAttributes = {};
-		}
-		return geometry.userData.primAttributes;
+		return this.attributesFromGeometry(geometry);
 	}
 
 	static position<T extends CoreObjectType>(

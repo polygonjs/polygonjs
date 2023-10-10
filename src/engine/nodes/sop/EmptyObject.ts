@@ -40,7 +40,7 @@ export class EmptyObjectSopNode extends TypedSopNode<EmptyObjectSopParamsConfig>
 
 	private _operation: EmptyObjectSopOperation | undefined;
 	override cook(input_contents: CoreGroup[]) {
-		this._operation = this._operation || new EmptyObjectSopOperation(this._scene, this.states);
+		this._operation = this._operation || new EmptyObjectSopOperation(this._scene, this.states, this);
 		const type = this.pv.type as ObjectType;
 		const coreGroup = this._operation.cook(input_contents, {type});
 		this.setCoreGroup(coreGroup);

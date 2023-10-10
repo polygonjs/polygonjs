@@ -38,7 +38,7 @@ export class MirrorSopNode extends TypedSopNode<MirrorSopParamConfig> {
 
 	private _operation: MirrorSopOperation | undefined;
 	override cook(inputCoreGroups: CoreGroup[]) {
-		this._operation = this._operation || new MirrorSopOperation(this.scene(), this.states);
+		this._operation = this._operation || new MirrorSopOperation(this.scene(), this.states, this);
 		const coreGroup = this._operation.cook(inputCoreGroups, this.pv);
 		this.setCoreGroup(coreGroup);
 	}

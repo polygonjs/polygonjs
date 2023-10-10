@@ -72,6 +72,7 @@ export function primitivesFromObjectFromGroup<T extends CoreObjectType>(
 	if (group) {
 		stringToIndices(group, _indices);
 		primitivesFromObject(object, _tmpPrimitives);
+		target.length = 0;
 		for (const index of _indices) {
 			const primitive = _tmpPrimitives[index] as CorePrimitive<T> | undefined;
 			if (primitive) {

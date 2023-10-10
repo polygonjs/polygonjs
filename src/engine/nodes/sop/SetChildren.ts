@@ -26,7 +26,7 @@ export class SetChildrenSopNode extends TypedSopNode<SetChildrenSopParamsConfig>
 
 	private _operation: SetChildrenSopOperation | undefined;
 	override cook(inputCoreGroups: CoreGroup[]) {
-		this._operation = this._operation || new SetChildrenSopOperation(this._scene, this.states);
+		this._operation = this._operation || new SetChildrenSopOperation(this._scene, this.states, this);
 		const core_group = this._operation.cook(inputCoreGroups, this.pv);
 		this.setCoreGroup(core_group);
 	}

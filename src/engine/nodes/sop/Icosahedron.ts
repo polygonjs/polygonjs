@@ -33,7 +33,7 @@ export class IcosahedronSopNode extends TypedSopNode<IcosahedronSopParamsConfig>
 
 	private _operation: IcosahedronSopOperation | undefined;
 	override cook() {
-		this._operation = this._operation || new IcosahedronSopOperation(this._scene, this.states);
+		this._operation = this._operation || new IcosahedronSopOperation(this._scene, this.states, this);
 		const core_group = this._operation.cook([], this.pv);
 		this.setCoreGroup(core_group);
 	}

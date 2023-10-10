@@ -61,7 +61,7 @@ export class MaterialPropertiesSopNode extends TypedSopNode<MaterialPropertiesSo
 
 	private _operation: MaterialPropertiesSopOperation | undefined;
 	override cook(inputCoreGroups: CoreGroup[]) {
-		this._operation = this._operation || new MaterialPropertiesSopOperation(this.scene(), this.states);
+		this._operation = this._operation || new MaterialPropertiesSopOperation(this.scene(), this.states, this);
 		const coreGroup = this._operation.cook(inputCoreGroups, this.pv);
 		this.setCoreGroup(coreGroup);
 	}

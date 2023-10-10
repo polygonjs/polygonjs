@@ -34,7 +34,7 @@ export class SetGeometrySopNode extends TypedSopNode<SetGeometrySopParamsConfig>
 
 	private _operation: SetGeometrySopOperation | undefined;
 	override cook(inputCoreGroups: CoreGroup[]) {
-		this._operation = this._operation || new SetGeometrySopOperation(this.scene(), this.states);
+		this._operation = this._operation || new SetGeometrySopOperation(this.scene(), this.states, this);
 		const coreGroup = this._operation.cook(inputCoreGroups, this.pv);
 		this.setCoreGroup(coreGroup);
 	}

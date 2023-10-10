@@ -29,7 +29,7 @@ export class CameraProjectSopNode extends TypedSopNode<CameraProjectSopParamsCon
 
 	private _operation: CameraProjectSopOperation | undefined;
 	override cook(input_contents: CoreGroup[]) {
-		this._operation = this._operation || new CameraProjectSopOperation(this._scene, this.states);
+		this._operation = this._operation || new CameraProjectSopOperation(this._scene, this.states, this);
 		const coreGroup = this._operation.cook(input_contents, this.pv);
 		this.setCoreGroup(coreGroup);
 	}

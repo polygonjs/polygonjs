@@ -38,7 +38,7 @@ export class LookAtSopNode extends TypedSopNode<LookAtSopParamConfig> {
 
 	private _operation: LookAtSopOperation | undefined;
 	override cook(inputCoreGroups: CoreGroup[]) {
-		this._operation = this._operation || new LookAtSopOperation(this.scene(), this.states);
+		this._operation = this._operation || new LookAtSopOperation(this.scene(), this.states, this);
 		const coreGroup = this._operation.cook(inputCoreGroups, this.pv);
 		this.setCoreGroup(coreGroup);
 	}

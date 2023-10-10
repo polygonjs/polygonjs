@@ -36,7 +36,7 @@ export class AdjacencySopNode extends TypedSopNode<AdjacencySopParamsConfig> {
 
 	private _operation: AdjacencySopOperation | undefined;
 	override cook(inputCoreGroups: CoreGroup[]) {
-		this._operation = this._operation || new AdjacencySopOperation(this.scene(), this.states);
+		this._operation = this._operation || new AdjacencySopOperation(this.scene(), this.states, this);
 		const coreGroup = this._operation.cook(inputCoreGroups, this.pv);
 		this.setCoreGroup(coreGroup);
 	}

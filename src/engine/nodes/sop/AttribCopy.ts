@@ -67,7 +67,7 @@ export class AttribCopySopNode extends TypedSopNode<AttribCopySopParamsConfig> {
 
 	private _operation: AttribCopySopOperation | undefined;
 	override cook(input_contents: CoreGroup[]) {
-		this._operation = this._operation || new AttribCopySopOperation(this.scene(), this.states);
+		this._operation = this._operation || new AttribCopySopOperation(this.scene(), this.states, this);
 		const core_group = this._operation.cook(input_contents, this.pv);
 		this.setCoreGroup(core_group);
 	}

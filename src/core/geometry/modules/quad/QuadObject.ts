@@ -31,7 +31,7 @@ export class QuadObject implements ObjectContent<CoreObjectType.QUAD> {
 		this._type = QUADObjectType.DEFAULT;
 	}
 
-	SDFGeometry() {
+	quadGeometry() {
 		return this.geometry! as QuadGeometry;
 	}
 	dispose() {}

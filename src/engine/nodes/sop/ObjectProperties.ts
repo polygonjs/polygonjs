@@ -104,7 +104,7 @@ export class ObjectPropertiesSopNode extends TypedSopNode<ObjectPropertiesSopPar
 
 	private _operation: ObjectPropertiesSopOperation | undefined;
 	override async cook(inputCoreGroups: CoreGroup[]) {
-		this._operation = this._operation || new ObjectPropertiesSopOperation(this.scene(), this.states);
+		this._operation = this._operation || new ObjectPropertiesSopOperation(this.scene(), this.states, this);
 
 		// first check that any param has an expression
 		const paramWithExpression = this.params.all.find((param) => param.hasExpression());

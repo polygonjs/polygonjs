@@ -46,7 +46,7 @@ export class CapsuleSopNode extends TypedSopNode<CapsuleSopParamsConfig> {
 
 	private _operation: CapsuleSopOperation | undefined;
 	override cook(inputCoreGroups: CoreGroup[]) {
-		this._operation = this._operation || new CapsuleSopOperation(this._scene, this.states);
+		this._operation = this._operation || new CapsuleSopOperation(this._scene, this.states, this);
 		const coreGroup = this._operation.cook(inputCoreGroups, this.pv);
 		this.setCoreGroup(coreGroup);
 	}

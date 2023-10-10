@@ -38,7 +38,7 @@ export class HexagonsSopNode extends TypedSopNode<HexagonsSopParamsConfig> {
 
 	private _operation: HexagonsSopOperation | undefined;
 	override cook(input_contents: CoreGroup[]) {
-		this._operation = this._operation || new HexagonsSopOperation(this.scene(), this.states);
+		this._operation = this._operation || new HexagonsSopOperation(this.scene(), this.states, this);
 		const core_group = this._operation.cook(input_contents, this.pv);
 		this.setCoreGroup(core_group);
 	}

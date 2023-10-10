@@ -56,12 +56,12 @@ function _addAttributeToPrimitives<T extends CoreObjectType>(
 	// set values
 	if (params.group) {
 		primitivesFromObjectFromGroup(object, params.group, _primitives);
-		for (let primitive of _primitives) {
+		for (const primitive of _primitives) {
 			primitive.setAttribValue(attribName, value);
 		}
 	} else {
 		primitivesFromObject(object, _primitives);
-		for (let primitive of _primitives) {
+		for (const primitive of _primitives) {
 			primitive.setAttribValue(attribName, value);
 		}
 	}

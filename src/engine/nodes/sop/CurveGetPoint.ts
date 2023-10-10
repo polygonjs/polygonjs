@@ -52,7 +52,7 @@ export class CurveGetPointSopNode extends TypedSopNode<CurveGetPointSopParamsCon
 
 	private _operation: CurveGetPointSopOperation | undefined;
 	override cook(inputCoreGroups: CoreGroup[]) {
-		this._operation = this._operation || new CurveGetPointSopOperation(this._scene, this.states);
+		this._operation = this._operation || new CurveGetPointSopOperation(this._scene, this.states, this);
 		const coreGroup = this._operation.cook(inputCoreGroups, this.pv);
 		this.setCoreGroup(coreGroup);
 	}

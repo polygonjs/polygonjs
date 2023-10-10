@@ -108,7 +108,7 @@ export class AttribCreateSopNode extends TypedSopNode<AttribCreateSopParamsConfi
 				this.states.error.set('attribute name is not valid');
 			}
 		} else {
-			this._operation = this._operation || new AttribCreateSopOperation(this.scene(), this.states);
+			this._operation = this._operation || new AttribCreateSopOperation(this.scene(), this.states, this);
 			const coreGroup = this._operation.cook(inputCoreGroups, this.pv);
 			this.setCoreGroup(coreGroup);
 		}
