@@ -8,8 +8,10 @@ export const QUAD_OBJECT_TYPES_SET: Set<QUADObjectType> = new Set(QUAD_OBJECT_TY
 export interface QUADTesselationParams {
 	triangles: boolean;
 	wireframe: boolean;
+	center: boolean;
 }
 export interface QUADOBJTesselationParams {
 	QUADTriangles: boolean;
 	QUADWireframe: boolean;
+	QUADCenter: boolean;
 }

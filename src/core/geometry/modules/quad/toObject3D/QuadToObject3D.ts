@@ -1,21 +1,28 @@
-import {Object3D, Mesh, LineSegments, BufferGeometry, Vector4, BufferAttribute} from 'three';
-import {QuadGeometry} from '../QuadGeometry';
+import {Object3D, Mesh, LineSegments, BufferGeometry, Vector3, Vector4, BufferAttribute, Points} from 'three';
+import {QuadObject} from '../QuadObject';
 import {QUADTesselationParams} from '../QuadCommon';
 import {Attribute} from '../../../Attribute';
 import {DEFAULT_MATERIALS} from '../../../Constant';
 import {ObjectType} from '../../../Constant';
+import {QuadPrimitive} from '../QuadPrimitive';
+import {ThreejsPrimitiveTriangle} from '../../three/ThreejsPrimitiveTriangle';
 
 const _v4 = new Vector4();
-function quadToMesh(quadGeometry: QuadGeometry) {
+const _p0 = new Vector3();
+const _p1 = new Vector3();
+const _p2 = new Vector3();
+const _p3 = new Vector3();
+const _center = new Vector3();
+
+function quadToMesh(quadObject: QuadObject) {
+	const quadGeometry = quadObject.geometry;
 	const quadsCount = quadGeometry.quadsCount();
-	const attribNames = Object.keys(quadGeometry.attributes);
-	const normalAttribute = quadGeometry.attributes[Attribute.NORMAL];
-	// const normals = quadGeometry.attributes.normal.array;
-	// const uvs = quadGeometry.attributes.uv.array;
+	const geometry = new BufferGeometry();
+	const mesh = new Mesh(geometry, DEFAULT_MATERIALS[ObjectType.MESH]);
+
+	// indices
 	const indices = quadGeometry.index;
 	const newIndices = new Array(quadsCount * 6);
-	const geometry = new BufferGeometry();
-
 	for (let i = 0; i < quadsCount; i++) {
 		_v4.fromArray(indices, i * 4);
 		newIndices[i * 6 + 0] = _v4.x;
@@ -25,23 +32,55 @@ function quadToMesh(quadGeometry: QuadGeometry) {
 		newIndices[i * 6 + 4] = _v4.z;
 		newIndices[i * 6 + 5] = _v4.w;
 	}
+	geometry.setIndex(newIndices);
 
-	for (const attribName of attribNames) {
+	// point attributes
+	const pointAttributeNames = Object.keys(quadGeometry.attributes);
+	for (const attribName of pointAttributeNames) {
 		const values = quadGeometry.attributes[attribName].array;
 		geometry.setAttribute(attribName, new BufferAttribute(new Float32Array(values), 3));
 	}
-	geometry.setIndex(newIndices);
+
+	// update normals if not provided
+	const normalAttribute = quadGeometry.attributes[Attribute.NORMAL];
 	if (!normalAttribute) {
 		geometry.computeVertexNormals();
 	}
-	// geometry.setAttribute('normal', new Float32Array(normals), 3);
-	// geometry.setAttribute('uv', new Float32Array(uvs), 2);
-	return new Mesh(geometry, DEFAULT_MATERIALS[ObjectType.MESH]);
+
+	// primitive attributes
+	const primitiveAttributes = QuadPrimitive.attributesFromGeometry(quadGeometry);
+	if (primitiveAttributes) {
+		const primitiveAttributeNames = Object.keys(primitiveAttributes);
+		for (const primitiveAttributeName of primitiveAttributeNames) {
+			const srcAttribute = primitiveAttributes[primitiveAttributeName];
+			const destPrimitivesCount = quadsCount * 2;
+			const destAttribute = {
+				itemSize: srcAttribute.itemSize,
+				isString: srcAttribute.isString,
+				array: new Array(destPrimitivesCount * srcAttribute.itemSize),
+			};
+			ThreejsPrimitiveTriangle.addAttribute(mesh, primitiveAttributeName, destAttribute);
+			const srcArray = srcAttribute.array;
+			const destArray = destAttribute.array;
+			const srcArraySize = srcArray.length;
+			let j = 0;
+			for (let i = 0; i < srcArraySize; i++) {
+				// 1 quad -> 2 triangles
+				destArray[j] = srcArray[i];
+				destArray[j + 1] = srcArray[i];
+
+				j += 2;
+			}
+		}
+	}
+
+	return mesh;
 }
-function quadToLine(quadGeometry: QuadGeometry) {
+function quadToLine(quadObject: QuadObject) {
+	const quadGeometry = quadObject.geometry;
 	const quadsCount = quadGeometry.quadsCount();
 	const indices = quadGeometry.index;
-	const positions = quadGeometry.attributes.position.array;
+	const srcPositions = quadGeometry.attributes.position.array;
 
 	const newIndices = new Array();
 	const geometry = new BufferGeometry();
@@ -64,18 +103,63 @@ function quadToLine(quadGeometry: QuadGeometry) {
 		addEdge(_v4.w, _v4.x);
 	}
 
+	const positions = [...(srcPositions as number[])];
 	geometry.setAttribute(Attribute.POSITION, new BufferAttribute(new Float32Array(positions), 3));
 	geometry.setIndex(newIndices);
-	return new LineSegments(geometry);
+	return new LineSegments(geometry, DEFAULT_MATERIALS[ObjectType.LINE_SEGMENTS]);
+}
+function quadToCenter(quadObject: QuadObject) {
+	const quadGeometry = quadObject.geometry;
+	const quadsCount = quadGeometry.quadsCount();
+	const indices = quadGeometry.index;
+	const srcPositions = quadGeometry.attributes.position.array;
+
+	const geometry = new BufferGeometry();
+	const newIndices = new Array(quadsCount);
+	const positions = new Array(quadsCount * 3);
+	for (let i = 0; i < quadsCount; i++) {
+		_v4.fromArray(indices, i * 4);
+		_p0.fromArray(srcPositions, _v4.x * 3);
+		_p1.fromArray(srcPositions, _v4.y * 3);
+		_p2.fromArray(srcPositions, _v4.z * 3);
+		_p3.fromArray(srcPositions, _v4.w * 3);
+		_center.copy(_p0).add(_p1).add(_p2).add(_p3).multiplyScalar(0.25);
+		_center.toArray(positions, i * 3);
+
+		newIndices[i] = i;
+	}
+
+	geometry.setAttribute(Attribute.POSITION, new BufferAttribute(new Float32Array(positions), 3));
+	geometry.setIndex(newIndices);
+	const points = new Points(geometry, DEFAULT_MATERIALS[ObjectType.POINTS]);
+
+	// copy quad primitive attributes to new point attributes
+	const primitiveAttributes = QuadPrimitive.attributesFromGeometry(quadGeometry);
+	if (primitiveAttributes) {
+		const primitiveAttributeNames = Object.keys(primitiveAttributes);
+		for (const primitiveAttributeName of primitiveAttributeNames) {
+			const srcAttribute = primitiveAttributes[primitiveAttributeName];
+			if (srcAttribute.isString == false) {
+				const destArray: number[] = [...(srcAttribute.array as number[])];
+				const destAttribute = new BufferAttribute(new Float32Array(destArray), srcAttribute.itemSize);
+				geometry.setAttribute(primitiveAttributeName, destAttribute);
+			}
+		}
+	}
+
+	return points;
 }
 
-export function quadToObject3D(quadGeometry: QuadGeometry, options: QUADTesselationParams): Object3D[] | undefined {
+export function quadToObject3D(quadObject: QuadObject, options: QUADTesselationParams): Object3D[] | undefined {
 	const objects: Object3D[] = [];
 	if (options.triangles) {
-		objects.push(quadToMesh(quadGeometry));
+		objects.push(quadToMesh(quadObject));
 	}
 	if (options.wireframe) {
-		objects.push(quadToLine(quadGeometry));
+		objects.push(quadToLine(quadObject));
+	}
+	if (options.center) {
+		objects.push(quadToCenter(quadObject));
 	}
 	return objects;
 }

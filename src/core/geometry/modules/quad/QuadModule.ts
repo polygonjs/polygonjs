@@ -27,10 +27,12 @@ import {QuadObject} from './QuadObject';
 const QUAD_TESSELATION_PARAMS: QUADTesselationParams = {
 	triangles: true,
 	wireframe: false,
+	center: false,
 };
 function updateQUADTesselationParams(params: QUADOBJTesselationParams) {
 	QUAD_TESSELATION_PARAMS.triangles = params.QUADTriangles;
 	QUAD_TESSELATION_PARAMS.wireframe = params.QUADWireframe;
+	QUAD_TESSELATION_PARAMS.center = params.QUADCenter;
 }
 const onAddSpecializedChildren: SpecializedChildrenHook = (
 	displayNode: BaseSopNodeType,

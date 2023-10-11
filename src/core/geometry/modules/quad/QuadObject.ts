@@ -52,7 +52,7 @@ export class QuadObject implements ObjectContent<CoreObjectType.QUAD> {
 		return clone;
 	}
 	toObject3D(tesselationParams: QUADTesselationParams): Object3D | Object3D[] | undefined {
-		const object = quadToObject3D(this.geometry, tesselationParams);
+		const object = quadToObject3D(this, tesselationParams);
 		if (object) {
 			if (CoreType.isArray(object)) {
 				for (const element of object) {

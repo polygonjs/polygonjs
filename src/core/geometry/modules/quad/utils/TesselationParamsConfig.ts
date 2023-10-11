@@ -8,6 +8,8 @@ export function SOPQUADTesselationParamConfig<TBase extends Constructor>(Base: T
 		triangles = ParamConfig.BOOLEAN(false);
 		/** @param wireframe */
 		wireframe = ParamConfig.BOOLEAN(true);
+		/** @param center */
+		center = ParamConfig.BOOLEAN(false);
 	};
 }
 
@@ -17,6 +19,8 @@ export function OBJQUADTesselationParamConfig<TBase extends Constructor>(Base: T
 		QUADTriangles = ParamConfig.BOOLEAN(false);
 		/** @param wireframe */
 		QUADWireframe = ParamConfig.BOOLEAN(true);
+		/** @param center */
+		QUADCenter = ParamConfig.BOOLEAN(false);
 	};
 }
 
