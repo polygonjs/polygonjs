@@ -110,7 +110,6 @@ export class XAtlasLoaderHandler extends CoreBaseLoader<string> {
 					fullUrl: `${decoderPath}${fileName}`,
 				};
 			});
-			console.log(fullUrls);
 			await this._loadMultipleBlobGlobal({
 				files: fullUrls,
 				node,
@@ -123,9 +122,17 @@ export class XAtlasLoaderHandler extends CoreBaseLoader<string> {
 			// });
 
 			// this._wasmUrl = modifyUrl(fullUrl);
+			const _addOrigin = (url: string) => {
+				// it seems that if we do not have the origin, the wasm file is not found
+				if (!url.startsWith('http')) {
+					return `${window.location.origin}/${url}`;
+				}
+				return url;
+			};
+
 			return {
-				wasm: modifyUrl(fullUrls[0].fullUrl),
-				js: modifyUrl(fullUrls[1].fullUrl),
+				wasm: _addOrigin(modifyUrl(fullUrls[0].fullUrl)),
+				js: _addOrigin(modifyUrl(fullUrls[1].fullUrl)),
 			};
 		}
 	}

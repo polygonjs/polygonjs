@@ -50,14 +50,14 @@ export function primitiveAttribTypesFromCoreGroup(coreGroup: CoreGroup): PolyDic
 }
 export function primitivesCountFromObject<T extends CoreObjectType>(object: ObjectContent<T>): number {
 	const primitiveClass = corePrimitiveClassFactory(object);
-	return primitiveClass.primitivesCount(object);
+	return primitiveClass.entitiesCount(object);
 }
 export function primitivesFromObject<T extends CoreObjectType>(
 	object: ObjectContent<T>,
 	target: CorePrimitive<T>[]
 ): CorePrimitive<T>[] {
 	const primitiveClass = corePrimitiveClassFactory(object);
-	const primitivesCount = primitiveClass.primitivesCount(object);
+	const primitivesCount = primitiveClass.entitiesCount(object);
 	target.length = primitivesCount;
 	for (let i = 0; i < primitivesCount; i++) {
 		target[i] = corePrimitiveInstanceFactory(object, i);

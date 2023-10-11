@@ -69,10 +69,10 @@ export class CadCoreObject<T extends CadGeometryType> extends BaseCoreObject<Cor
 	static override objectData<T extends CoreObjectType>(object: ObjectContent<T>): ObjectData {
 		const data = objectData(object);
 
-		data.pointsCount = CadPoint.pointsCount(object);
-		data.verticesCount = CadVertex.verticesCount(object);
+		data.pointsCount = CadPoint.entitiesCount(object);
+		data.verticesCount = CadVertex.entitiesCount(object);
 		const primitiveClass = primitiveClassFactoryNonAbstract(object);
-		data.primitivesCount = primitiveClass?.primitivesCount(object) || 0;
+		data.primitivesCount = primitiveClass?.entitiesCount(object) || 0;
 		data.primitiveName = primitiveClass?.primitiveName() || '';
 
 		return data;

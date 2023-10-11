@@ -12,7 +12,7 @@ export class CsgPrimitiveGeom2 extends CsgPrimitive<CsgGeometryType.GEOM2> {
 		return 'side';
 	}
 
-	static override primitivesCount<T extends CoreObjectType>(object: ObjectContent<T>) {
+	static override entitiesCount<T extends CoreObjectType>(object: ObjectContent<T>) {
 		const csgOobject = object as any as CsgObject<CsgGeometryType.GEOM2>;
 		const geometry = csgOobject.geometry as CsgTypeMap[CsgGeometryType.GEOM2];
 		return geometry.sides.length;

@@ -31,7 +31,7 @@ export class TetCoreObject extends BaseCoreObject<CoreObjectType.TET> {
 
 		const tetObject = object as any as TetObject;
 		data.pointsCount = tetObject.geometry.pointsCount();
-		data.verticesCount = TetVertex.verticesCount(object);
+		data.verticesCount = TetVertex.entitiesCount(object);
 		data.primitivesCount = tetObject.geometry.tetsCount();
 		data.primitiveName = 'tetrahedron';
 

@@ -48,7 +48,7 @@ export class ConstantJsNode extends TypedJsNode<ConstantJsParamsConfig> {
 		this.io.connection_points.set_expected_output_types_function(() => [this._currentConnectionType()]);
 	}
 
-	override setLines(shadersCollectionController: JsLinesCollectionController) {
+	override setLines(linesController: JsLinesCollectionController) {
 		const param = this.currentParam();
 		if (!param) {
 			console.warn(`no param found for constant node for type '${this.pv.type}'`);
@@ -61,10 +61,10 @@ export class ConstantJsNode extends TypedJsNode<ConstantJsParamsConfig> {
 		}
 
 		const out = this.jsVarName(ConstantJsNode.OUTPUT_NAME);
-		const varName = this.variableForInputParam(shadersCollectionController, param);
+		const varName = this.variableForInputParam(linesController, param);
 
-		shadersCollectionController.addDefinitions(this, [
-			new ConstantJsDefinition(this, shadersCollectionController, this._currentConnectionType(), out, varName),
+		linesController.addDefinitions(this, [
+			new ConstantJsDefinition(this, linesController, this._currentConnectionType(), out, varName),
 		]);
 	}
 

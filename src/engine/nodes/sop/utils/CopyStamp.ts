@@ -1,15 +1,15 @@
 import {BaseCopyStamp} from '../../utils/BaseCopyStamp';
-import {CorePoint} from '../../../../core/geometry/entities/point/CorePoint';
+import {BaseCorePoint} from '../../../../core/geometry/entities/point/CorePoint';
 
 export class SopCopyStamp extends BaseCopyStamp {
-	protected _point: CorePoint | undefined;
+	protected _point: BaseCorePoint | undefined;
 
 	override reset() {
 		super.reset();
 		this.setPoint(undefined);
 	}
 
-	setPoint(point?: CorePoint) {
+	setPoint(point?: BaseCorePoint) {
 		const oldPoint = this._point;
 		this._point = point;
 		if (oldPoint != this._point) {

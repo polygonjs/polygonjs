@@ -2,7 +2,7 @@ import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {Object3D, BufferGeometry, Vector3, BufferAttribute, Float32BufferAttribute} from 'three';
 import {ObjectType} from '../../../core/geometry/Constant';
-import {CorePoint} from '../../../core/geometry/entities/point/CorePoint';
+import {BaseCorePoint} from '../../../core/geometry/entities/point/CorePoint';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 
@@ -90,7 +90,7 @@ export class AddSopOperation extends BaseSopOperation {
 
 		let positions: number[] = [];
 		const indices: number[] = [];
-		let point: CorePoint;
+		let point: BaseCorePoint;
 		for (let i = 0; i < points.length; i++) {
 			point = points[i];
 			point.position(_position).toArray(positions, i * 3);

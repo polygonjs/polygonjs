@@ -1,5 +1,5 @@
 /**
- * created a sphere
+ * create a sphere
  *
  * @remarks
  *

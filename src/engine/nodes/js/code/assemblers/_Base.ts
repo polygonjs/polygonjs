@@ -4,31 +4,20 @@ import {VariableConfig} from '../configs/VariableConfig';
 import {JsCodeBuilder, CodeBuilderSetCodeLinesOptions} from '../utils/CodeBuilder';
 import {BaseJsNodeType, TypedJsNode} from '../../_Base';
 import {JsShaderConfig} from '../configs/ShaderConfig';
-// import {GlobalsGeometryHandler} from '../globals/Geometry';
 import {TypedAssembler} from '../../../utils/shaders/BaseAssembler';
 import {JsFunctionName} from '../../../utils/shaders/ShaderName';
 import {OutputJsNode} from '../../Output';
-// import {ParamType} from '../../../../poly/ParamType';
 import {JsConnectionPoint, JsConnectionPointType} from '../../../utils/io/connections/Js';
 import {GlobalsJsNode} from '../../Globals';
 import {AttributeJsNode} from '../../Attribute';
 import {AssemblerControllerNode} from '../Controller';
 import {GlobalsJsBaseController} from '../globals/_Base';
 import {JsLinesCollectionController} from '../utils/JsLinesCollectionController';
-// import {IUniforms} from '../../../../../core/geometry/Material';
-// import {ParamJsNode} from '../../Param';
 import {NodeContext} from '../../../../poly/NodeContext';
-// import {ShaderChunk} from 'three';
 import {TypedNodeTraverser} from '../../../utils/shaders/NodeTraverser';
 import {JsNodeFinder} from '../utils/NodeFinder';
 import {JsType} from '../../../../poly/registers/nodes/types/Js';
-// import {VaryingWriteGlNode} from '../../VaryingWrite';
-// import {SubnetOutputGlNode} from '../../SubnetOutput';
-// import {GlobalsOutput} from './common/GlobalsOutput';
-// import {JsParamConfig} from '../utils/JsParamConfig';
-// import {ParamType} from '../../../../poly/ParamType';
 import {BaseNamedFunction} from '../../../../functions/_Base';
-// import {CoreString} from '../../../../../core/String';
 import {RegisterableVariable} from './_BaseJsPersistedConfigUtils';
 import {NamedFunctionMap} from '../../../../poly/registers/functions/All';
 import {JsParamConfig} from '../utils/JsParamConfig';
@@ -172,9 +161,10 @@ export abstract class BaseJsShaderAssembler extends TypedAssembler<NodeContext.J
 
 	compile() {}
 
-	abstract defaultObject3DVariable(): string;
+	abstract defaultObjectVariable(): string;
 	abstract defaultObject3DMaterialVariable(): string;
-	abstract defaultPointIndexVariable(): string;
+	abstract defaultPrimitiveGraph(): string;
+	// abstract defaultEntityIndexVariable(): string;
 
 	// private get material() {
 	// 	return (this._material = this._material || this._createMaterial());
@@ -334,13 +324,22 @@ export abstract class BaseJsShaderAssembler extends TypedAssembler<NodeContext.J
 	}
 
 	private _createCodeBuilder() {
+		const computedVariablesAllowed = this._jsParentNode
+			.assemblerController()
+			?.assembler?.computedVariablesAllowed();
+
 		const nodeTraverser = new TypedNodeTraverser<NodeContext.JS>(
 			this.currentJsParentNode(),
 			this.shaderNames(),
 			(rootNode, shaderName) => {
 				return this.inputNamesForShaderName(rootNode, shaderName);
 			},
-			{traverseChildren: true}
+			{
+				// we do traverse children if computed(()=>{}) is used.
+				// If not, we don't need to traverse children,
+				// and the code is handled by the subnet internal code builder
+				traverseChildren: computedVariablesAllowed == true ? true : false,
+			}
 		);
 		return new JsCodeBuilder(
 			nodeTraverser,

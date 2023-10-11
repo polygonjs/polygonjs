@@ -1,11 +1,11 @@
 import {Vector3, BufferAttribute} from 'three';
 import {ObjectGeometryMap, CoreObjectType, ObjectContent} from '../../ObjectContent';
-import {TypedCorePoint} from '../../entities/point/CorePoint';
+import {CorePoint} from '../../entities/point/CorePoint';
 import {PointAttributesDict} from '../../entities/point/Common';
 import {CsgObject} from './CsgObject';
 import {CsgGeometryType} from './CsgCommon';
 
-export class CsgPoint extends TypedCorePoint<CoreObjectType.CSG> {
+export class CsgPoint extends CorePoint<CoreObjectType.CSG> {
 	protected _geometry?: ObjectGeometryMap[CoreObjectType.CSG];
 	protected override _object: CsgObject<CsgGeometryType>;
 	constructor(object: CsgObject<CsgGeometryType>, index: number) {
@@ -41,7 +41,7 @@ export class CsgPoint extends TypedCorePoint<CoreObjectType.CSG> {
 	static override attributes<T extends CoreObjectType>(object: ObjectContent<T>): PointAttributesDict | undefined {
 		return undefined;
 	}
-	static override pointsCount<T extends CoreObjectType>(object: ObjectContent<T>) {
+	static override entitiesCount<T extends CoreObjectType>(object: ObjectContent<T>) {
 		return 0;
 	}
 	override position(target: Vector3): Vector3 {

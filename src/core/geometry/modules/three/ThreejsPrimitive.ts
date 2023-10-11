@@ -53,7 +53,7 @@ export abstract class ThreejsPrimitive extends CorePrimitive<CoreObjectType.THRE
 		size: number = 1,
 		defaultValue: NumericAttribValue = 0
 	) {
-		const primitivesCount = this.primitivesCount(object);
+		const primitivesCount = this.entitiesCount(object);
 		target.values = new Array(primitivesCount * size);
 		attributeNumericValues(object, primitivesCountFromObject, size, defaultValue, target);
 

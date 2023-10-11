@@ -5,7 +5,7 @@ import {AttribSize, AttribType, GroupString} from '../../Constant';
 import {corePointClassFactory, corePointInstanceFactory} from '../../CoreObjectFactory';
 import {CoreGroup} from '../../Group';
 import {CoreObjectType, ObjectContent} from '../../ObjectContent';
-import type {TypedCorePoint} from './CorePoint';
+import type {CorePoint} from './CorePoint';
 
 const _indices: number[] = [];
 
@@ -42,12 +42,12 @@ export function pointAttribTypesFromCoreGroup(coreGroup: CoreGroup): PolyDiction
 
 export function pointsCountFromObject<T extends CoreObjectType>(object: ObjectContent<T>): number {
 	const pointClass = corePointClassFactory(object);
-	return pointClass.pointsCount(object);
+	return pointClass.entitiesCount(object);
 }
-export function pointsFromObject<T extends CoreObjectType>(object: ObjectContent<T>): TypedCorePoint<T>[] {
+export function pointsFromObject<T extends CoreObjectType>(object: ObjectContent<T>): CorePoint<T>[] {
 	const pointClass = corePointClassFactory(object);
-	const pointsCount = pointClass.pointsCount(object);
-	const points: TypedCorePoint<T>[] = new Array(pointsCount);
+	const pointsCount = pointClass.entitiesCount(object);
+	const points: CorePoint<T>[] = new Array(pointsCount);
 	for (let i = 0; i < pointsCount; i++) {
 		points[i] = corePointInstanceFactory(object, i);
 	}
@@ -57,11 +57,11 @@ export function pointsFromObject<T extends CoreObjectType>(object: ObjectContent
 export function pointsFromObjectFromGroup<T extends CoreObjectType>(
 	object: ObjectContent<T>,
 	group: GroupString
-): TypedCorePoint<T>[] {
+): CorePoint<T>[] {
 	if (group) {
 		CoreString.indices(group, _indices);
 		const points = pointsFromObject(object);
-		const compactPoints: TypedCorePoint<T>[] = [];
+		const compactPoints: CorePoint<T>[] = [];
 		return arrayCompact(
 			_indices.map((i) => points[i]),
 			compactPoints

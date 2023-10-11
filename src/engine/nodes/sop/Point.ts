@@ -9,7 +9,7 @@ import {BufferGeometry} from 'three';
 import {TypedSopNode} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
 import type {ThreejsCoreObject} from '../../../core/geometry/modules/three/ThreejsCoreObject';
-import {CorePoint} from '../../../core/geometry/entities/point/CorePoint';
+import {BaseCorePoint} from '../../../core/geometry/entities/point/CorePoint';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {BufferAttribute} from 'three';
 import {Mesh} from 'three';
@@ -152,7 +152,7 @@ export class PointSopNode extends TypedSopNode<PointSopParamsConfig> {
 
 	private async _updateFromParam(
 		geometry: BufferGeometry,
-		points: CorePoint[],
+		points: BaseCorePoint[],
 		do_update_param: BooleanParam,
 		value_param: FloatParam,
 		param_value: number,

@@ -5,18 +5,18 @@ import {Constructor} from '../../../../../types/GlobalTypes';
 export function SOPQUADTesselationParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		/** @param triangles */
-		triangles = ParamConfig.BOOLEAN(true);
+		triangles = ParamConfig.BOOLEAN(false);
 		/** @param wireframe */
-		wireframe = ParamConfig.BOOLEAN(false);
+		wireframe = ParamConfig.BOOLEAN(true);
 	};
 }
 
 export function OBJQUADTesselationParamConfig<TBase extends Constructor>(Base: TBase) {
 	return class Mixin extends Base {
 		/** @param wireframe */
-		QUADTriangles = ParamConfig.BOOLEAN(true);
+		QUADTriangles = ParamConfig.BOOLEAN(false);
 		/** @param wireframe */
-		QUADWireframe = ParamConfig.BOOLEAN(false);
+		QUADWireframe = ParamConfig.BOOLEAN(true);
 	};
 }
 

@@ -35,7 +35,7 @@ export class TetVertex extends CoreVertex<CoreObjectType.TET> {
 	static override attributes<T extends CoreObjectType>(object: ObjectContent<T>): VertexAttributesDict | undefined {
 		return;
 	}
-	static override verticesCount<T extends CoreObjectType>(object: ObjectContent<T>) {
+	static override entitiesCount<T extends CoreObjectType>(object: ObjectContent<T>) {
 		return 0;
 	}
 	override position(target: Vector3): Vector3 {

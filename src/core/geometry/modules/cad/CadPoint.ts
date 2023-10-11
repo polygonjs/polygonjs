@@ -1,11 +1,11 @@
 import {Vector3, BufferAttribute} from 'three';
 import {ObjectGeometryMap, CoreObjectType, ObjectContent} from '../../ObjectContent';
-import {TypedCorePoint} from '../../entities/point/CorePoint';
+import {CorePoint} from '../../entities/point/CorePoint';
 import {PointAttributesDict} from '../../entities/point/Common';
 import {CadObject} from './CadObject';
 import {CadGeometryType} from './CadCommon';
 
-export class CadPoint extends TypedCorePoint<CoreObjectType.CAD> {
+export class CadPoint extends CorePoint<CoreObjectType.CAD> {
 	protected _geometry?: ObjectGeometryMap[CoreObjectType.CAD];
 	protected override _object: CadObject<CadGeometryType>;
 	constructor(object: CadObject<CadGeometryType>, index: number) {
@@ -41,7 +41,7 @@ export class CadPoint extends TypedCorePoint<CoreObjectType.CAD> {
 	static override attributes<T extends CoreObjectType>(object: ObjectContent<T>): PointAttributesDict | undefined {
 		return undefined;
 	}
-	static override pointsCount<T extends CoreObjectType>(object: ObjectContent<T>) {
+	static override entitiesCount<T extends CoreObjectType>(object: ObjectContent<T>) {
 		return 0;
 	}
 	override position(target: Vector3): Vector3 {

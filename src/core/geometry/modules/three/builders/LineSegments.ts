@@ -1,10 +1,10 @@
 import {BufferGeometry} from 'three';
 import {CoreGeometryBuilderBase} from './_Base';
-import {CorePoint} from '../../../entities/point/CorePoint';
+import {BaseCorePoint} from '../../../entities/point/CorePoint';
 import {PolyDictionary} from '../../../../../types/GlobalTypes';
 
 export class CoreGeometryBuilderLineSegments extends CoreGeometryBuilderBase {
-	protected _filterPoints(points: CorePoint[]): CorePoint[] {
+	protected _filterPoints(points: BaseCorePoint[]): BaseCorePoint[] {
 		// ensures we only keep points that form a full segment.
 		// if a single point from a segment is discarded, we remove both
 
@@ -21,11 +21,11 @@ export class CoreGeometryBuilderLineSegments extends CoreGeometryBuilderBase {
 			return [];
 		}
 
-		const points_by_index: PolyDictionary<CorePoint> = {};
+		const points_by_index: PolyDictionary<BaseCorePoint> = {};
 		for (const point of points) {
 			points_by_index[point.index()] = point;
 		}
-		const filteredPoints: CorePoint[] = [];
+		const filteredPoints: BaseCorePoint[] = [];
 
 		const index_length = indices.length;
 		for (let i = 0; i < index_length; i += 2) {

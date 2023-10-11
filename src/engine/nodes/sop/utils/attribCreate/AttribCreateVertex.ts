@@ -62,7 +62,7 @@ async function _addNumericAttributeToVertices<T extends CoreObjectType>(
 		const vertexClass = coreVertexClassFactory(object);
 		let attribute = vertexClass.attribute(object, attribName);
 		if (!attribute) {
-			const verticesCount = vertexClass.verticesCount(object);
+			const verticesCount = vertexClass.entitiesCount(object);
 			const values = new Array(verticesCount * size).fill(0);
 			attribute = {array: values, itemSize: size, isString: false};
 			vertexClass.addAttribute(object, attribName, attribute);
@@ -146,7 +146,7 @@ async function _addStringAttributeToVertices<T extends CoreObjectType>(
 		// if a group is given, we prefill the existing stringValues
 		// create attrib if non existent
 		const vertexClass = coreVertexClassFactory(object);
-		const verticesCount = vertexClass.verticesCount(object);
+		const verticesCount = vertexClass.entitiesCount(object);
 		const values = new Array(verticesCount).fill('');
 		let attribute = vertexClass.attribute(object, attribName);
 		if (!attribute) {

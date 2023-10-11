@@ -10,7 +10,7 @@ import {CoreFace} from '../../../core/geometry/modules/three/CoreFace';
 import {ThreejsPointArray3} from '../../../core/geometry/modules/three/Common';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {arrayChunk,  rangeWithEnd} from '../../../core/ArrayUtils';
+import {arrayChunk, rangeWithEnd} from '../../../core/ArrayUtils';
 import {isBooleanTrue} from '../../../core/BooleanValue';
 import {corePointClassFactory} from '../../../core/geometry/CoreObjectFactory';
 import {ThreejsPoint} from '../../../core/geometry/modules/three/ThreejsPoint';
@@ -129,7 +129,7 @@ export class FaceSopNode extends TypedSopNode<FaceSopParamsConfig> {
 					corePointClass.addNumericAttribute(object, FaceAttribName.CENTER, 3, -1);
 				}
 
-				const facesCount = ThreejsPrimitiveTriangle.primitivesCount(object);
+				const facesCount = ThreejsPrimitiveTriangle.entitiesCount(object);
 				this._face.setGeometry((object as Mesh).geometry);
 				for (let fi = 0; fi < facesCount; fi++) {
 					// face = faces[fi];
@@ -159,7 +159,7 @@ export class FaceSopNode extends TypedSopNode<FaceSopParamsConfig> {
 					corePointClass.addNumericAttribute(object, FaceAttribName.ID, 1, -1);
 				}
 
-				const facesCount = ThreejsPrimitiveTriangle.primitivesCount(object);
+				const facesCount = ThreejsPrimitiveTriangle.entitiesCount(object);
 				this._face.setGeometry((object as Mesh).geometry);
 				for (let i = 0; i < facesCount; i++) {
 					this._face.setIndex(i);
@@ -184,7 +184,7 @@ export class FaceSopNode extends TypedSopNode<FaceSopParamsConfig> {
 					corePointClass.addNumericAttribute(object, FaceAttribName.POSITION, 3, -1);
 				}
 
-				const facesCount = ThreejsPrimitiveTriangle.primitivesCount(object);
+				const facesCount = ThreejsPrimitiveTriangle.entitiesCount(object);
 				this._face.setGeometry((object as Mesh).geometry);
 				for (let fi = 0; fi < facesCount; fi++) {
 					this._face.setIndex(fi);

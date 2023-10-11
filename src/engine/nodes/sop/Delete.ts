@@ -21,7 +21,7 @@ import {
 } from '../../../core/geometry/Constant';
 import {CoreGroup, Object3DWithGeometry} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../poly/InputCloneMode';
-import {CorePoint} from '../../../core/geometry/entities/point/CorePoint';
+import {BaseCorePoint} from '../../../core/geometry/entities/point/CorePoint';
 import {ThreejsCoreObject} from '../../../core/geometry/modules/three/ThreejsCoreObject';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {EntitySelectionHelper} from './utils/delete/EntitySelectionHelper';
@@ -258,7 +258,7 @@ export class DeleteSopNode extends TypedSopNode<DeleteSopParamsConfig> {
 			if (isBooleanTrue(this.pv.byBoundingObject)) {
 				this.byBoundingObjectHelper.evalForPoints(entities, core_group2);
 			}
-			const keptEntities = this.entitySelectionHelper.entitiesToKeep() as CorePoint[];
+			const keptEntities = this.entitySelectionHelper.entitiesToKeep() as BaseCorePoint[];
 
 			if (keptEntities.length == initEntitiesCount) {
 				newObjects.push(object);

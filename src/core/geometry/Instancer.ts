@@ -7,7 +7,7 @@ import {
 	Vector2,
 	Vector3,
 } from 'three';
-import {CorePoint} from './entities/point/CorePoint';
+import {BaseCorePoint} from './entities/point/CorePoint';
 import {CoreGroup} from './Group';
 // import {CoreGeometry} from './Geometry';
 import {CoreType} from '../Type';
@@ -85,7 +85,7 @@ export class CoreInstancer {
 	private _pointNormal = new Vector3();
 	private _pointUp = new Vector3();
 	// private _point_m = new Matrix4()
-	matrixFromPoint(point: CorePoint, targetMatrix: Matrix4) {
+	matrixFromPoint(point: BaseCorePoint, targetMatrix: Matrix4) {
 		targetMatrix.identity();
 		point.position(_position);
 		//r = new Vector3(0,0,0)
@@ -136,7 +136,7 @@ export class CoreInstancer {
 	private static _scale = new Vector3(1, 1, 1);
 	private static _tmpMatrix = new Matrix4();
 	static updateTransformInstanceAttributes(
-		instancePts: CorePoint[],
+		instancePts: BaseCorePoint[],
 		templateCoreGroup: CoreGroup,
 		geometry: InstancedBufferGeometry
 	) {
@@ -168,7 +168,7 @@ export class CoreInstancer {
 	}
 
 	static updateColorInstanceAttribute(
-		instancePts: CorePoint[],
+		instancePts: BaseCorePoint[],
 		templateCoreGroup: CoreGroup,
 		geometry: InstancedBufferGeometry
 	) {

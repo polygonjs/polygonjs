@@ -21,6 +21,7 @@ import {uniqRelatedEntities} from '../utils/Common';
 import type {CoreVertex} from '../vertex/CoreVertex';
 import type {CoreGroup} from '../../Group';
 import {arrayCopy} from '../../../ArrayUtils';
+import type {PrimitiveGraph} from './PrimitiveGraph';
 
 function _warnOverloadRequired(functionName: string) {
 	console.warn(`CorePrimitive.${functionName} needs to be overloaded`);
@@ -37,7 +38,7 @@ export abstract class CorePrimitive<T extends CoreObjectType> extends CoreEntity
 	builder<T extends CoreObjectType>(): ObjectBuilder<T> | undefined {
 		return undefined;
 	}
-	static primitivesCount<T extends CoreObjectType>(object: ObjectContent<T>) {
+	static entitiesCount<T extends CoreObjectType>(object: ObjectContent<T>) {
 		return 0;
 	}
 
@@ -391,5 +392,13 @@ export abstract class CorePrimitive<T extends CoreObjectType> extends CoreEntity
 			}
 		}
 		TypeAssert.unreachable(attribClass);
+	}
+	static graph(object: ObjectContent<CoreObjectType>): PrimitiveGraph | undefined {
+		console.warn('CorePrimitive.graph needs to be override');
+		return undefined;
+	}
+	static neighboursCount(object: ObjectContent<CoreObjectType>, index: number, sharedEdgeOnly: boolean): number {
+		console.warn('CorePrimitive.neighboursCount needs to be override');
+		return 0;
 	}
 }

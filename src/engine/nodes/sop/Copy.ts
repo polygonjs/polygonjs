@@ -14,7 +14,7 @@ import {BaseCoreObject} from '../../../core/geometry/entities/object/BaseCoreObj
 import {CoreInstancer} from '../../../core/geometry/Instancer';
 import {SopCopyStamp} from './utils/CopyStamp';
 import {Matrix4} from 'three';
-import {CorePoint} from '../../../core/geometry/entities/point/CorePoint';
+import {BaseCorePoint} from '../../../core/geometry/entities/point/CorePoint';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {isBooleanTrue} from '../../../core/BooleanValue';
@@ -150,7 +150,7 @@ export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 	}
 
 	// https://stackoverflow.com/questions/24586110/resolve-promises-one-after-another-i-e-in-sequence
-	private async _copyMovedObjectsOnTemplatePoints(instanceCoreGroup: CoreGroup, templatePoints: CorePoint[]) {
+	private async _copyMovedObjectsOnTemplatePoints(instanceCoreGroup: CoreGroup, templatePoints: BaseCorePoint[]) {
 		this._initAccumulatedTransform();
 		for (let pointIndex = 0; pointIndex < templatePoints.length; pointIndex++) {
 			await this._copyMovedObjectOnTemplatePoint(instanceCoreGroup, templatePoints, pointIndex);
@@ -161,7 +161,7 @@ export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 	private _instanceMatrix = new Matrix4();
 	private async _copyMovedObjectOnTemplatePoint(
 		instanceCoreGroup: CoreGroup,
-		templatePoints: CorePoint[],
+		templatePoints: BaseCorePoint[],
 		point_index: number
 	) {
 		this._instancer.matrixFromPoint(templatePoints[point_index], this._instanceMatrix);
@@ -281,7 +281,7 @@ export class CopySopNode extends TypedSopNode<CopySopParamsConfig> {
 		this.setObjects(this._objects);
 	}
 
-	private _copyAttributesGromTemplate(object: ObjectContent<CoreObjectType>, templatePoint: CorePoint) {
+	private _copyAttributesGromTemplate(object: ObjectContent<CoreObjectType>, templatePoint: BaseCorePoint) {
 		this._attribNamesToCopy.forEach((attribName, i) => {
 			const attribValue = templatePoint.attribValue(attribName);
 			BaseCoreObject.addAttribute(object, attribName, attribValue);

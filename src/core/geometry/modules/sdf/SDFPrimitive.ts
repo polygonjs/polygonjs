@@ -12,7 +12,7 @@ export class SDFPrimitive extends CorePrimitive<CoreObjectType.SDF> {
 	geometry() {
 		return (this._object as SDFObject).geometry;
 	}
-	static override primitivesCount<T extends CoreObjectType>(object: ObjectContent<T>) {
+	static override entitiesCount<T extends CoreObjectType>(object: ObjectContent<T>) {
 		return 0;
 	}
 	position(target: Vector3): Vector3 {

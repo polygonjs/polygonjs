@@ -1,4 +1,4 @@
-import {Number4} from '../../../types/GlobalTypes';
+import {Number4} from '../../../../../types/GlobalTypes';
 
 export type QuadHalfEdgeSide = 's' | 'n' | 'w' | 'e';
 export const QUAD_HALF_EDGE_SIDES: QuadHalfEdgeSide[] = ['s', 'n', 'w', 'e'];
@@ -9,6 +9,7 @@ export interface HalfEdgeIndices {
 	index1: number;
 }
 export type NeighbourIndex = 0 | 1 | 2 | 3;
+export const NEIGHBOUR_INDICES: NeighbourIndex[] = [0, 1, 2, 3];
 export type NeighbourSides = [
 	QuadHalfEdgeSide | null,
 	QuadHalfEdgeSide | null,

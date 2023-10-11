@@ -14,7 +14,7 @@ import {BaseVertexAttribute} from './VertexAttribute';
 import {DOT, ComponentName, COMPONENT_INDICES, GroupString, AttribClass, AttribSize, AttribType} from '../../Constant';
 import {VertexAttributesDict} from './Common';
 import {CoreObjectType, ObjectBuilder, ObjectContent} from '../../ObjectContent';
-import type {TypedCorePoint} from '../point/CorePoint';
+import type {CorePoint} from '../point/CorePoint';
 import type {CorePrimitive} from '../primitive/CorePrimitive';
 import {uniqRelatedEntities} from '../utils/Common';
 import {TypeAssert} from '../../../../engine/poly/Assert';
@@ -53,7 +53,7 @@ export abstract class CoreVertex<T extends CoreObjectType> extends CoreEntity {
 		_warnOverloadRequired('addNumericAttribute');
 	}
 
-	static verticesCount<T extends CoreObjectType>(object: ObjectContent<T>) {
+	static entitiesCount<T extends CoreObjectType>(object: ObjectContent<T>) {
 		return 0;
 	}
 
@@ -381,7 +381,7 @@ export abstract class CoreVertex<T extends CoreObjectType> extends CoreEntity {
 	relatedPrimitives<T extends CoreObjectType>(): CorePrimitive<T>[] {
 		return [];
 	}
-	relatedPoints<T extends CoreObjectType>(): TypedCorePoint<T>[] {
+	relatedPoints<T extends CoreObjectType>(): CorePoint<T>[] {
 		return [];
 	}
 	relatedEntities(attribClass: AttribClass, coreGroup: CoreGroup, target: CoreEntity[]): void {

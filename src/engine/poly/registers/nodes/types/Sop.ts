@@ -110,6 +110,7 @@ export enum SopType {
 	DECAL = 'decal',
 	DELETE = 'delete',
 	DELETE_BY_NAME = 'deleteByName',
+	ENTITY_BUILDER = 'entityBuilder',
 	FACET = 'facet',
 	FUSE = 'fuse',
 	GROUND_PROJECTED_SKYBOX = 'groundProjectedSkybox',

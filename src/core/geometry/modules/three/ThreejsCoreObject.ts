@@ -75,10 +75,10 @@ export class ThreejsCoreObject extends BaseCoreObject<CoreObjectType.THREEJS> {
 
 	static override objectData(object: Object3D): ObjectData {
 		const data = objectData(object);
-		data.verticesCount = ThreejsVertex.verticesCount(object);
-		data.pointsCount = ThreejsPoint.pointsCount(object);
+		data.verticesCount = ThreejsVertex.entitiesCount(object);
+		data.pointsCount = ThreejsPoint.entitiesCount(object);
 		const primitiveClass = primitiveClassFactoryNonAbstract(object);
-		data.primitivesCount = primitiveClass?.primitivesCount(object) || 0;
+		data.primitivesCount = primitiveClass?.entitiesCount(object) || 0;
 		data.primitiveName = primitiveClass?.primitiveName() || '';
 		return data;
 	}
@@ -266,7 +266,7 @@ export class ThreejsCoreObject extends BaseCoreObject<CoreObjectType.THREEJS> {
 		if (!_primitiveClassFactory) {
 			return [];
 		}
-		const primitivesCount = _primitiveClassFactory?.primitivesCount(this._object);
+		const primitivesCount = _primitiveClassFactory?.entitiesCount(this._object);
 		const primitives: CorePrimitive<CoreObjectType>[] = [];
 		for (let i = 0; i < primitivesCount; i++) {
 			const primitive = new _primitiveClassFactory(this._object as any, i) as CorePrimitive<CoreObjectType>;

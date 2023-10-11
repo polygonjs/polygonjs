@@ -1,4 +1,4 @@
-import {CorePoint} from '../entities/point/CorePoint';
+import {BaseCorePoint} from '../entities/point/CorePoint';
 import {Float32BufferAttribute, Vector2, BufferGeometry, Mesh} from 'three';
 import {PolyDictionary} from '../../../types/GlobalTypes';
 import {CoreObjectType, ObjectContent, isObject3D} from '../ObjectContent';
@@ -46,7 +46,7 @@ export class CoreGeometryUtilCurve {
 	}
 
 	static create_line_segment_geometry(
-		points: CorePoint[],
+		points: BaseCorePoint[],
 		indices: number[],
 		attrib_names: string[],
 		attrib_sizes_by_name: PolyDictionary<number>

@@ -1,5 +1,5 @@
 import {DeleteSopNode} from '../../Delete';
-import {CorePoint} from '../../../../../core/geometry/entities/point/CorePoint';
+import {BaseCorePoint} from '../../../../../core/geometry/entities/point/CorePoint';
 import {Mesh, Vector3, Raycaster, Intersection} from 'three';
 import {CoreGroup} from '../../../../../core/geometry/Group';
 import {MatDoubleSideTmpSetter} from '../../../../../core/render/MatDoubleSideTmpSetter';
@@ -15,7 +15,7 @@ export class ByBoundingObjectHelper {
 	private _intersections: Intersection[] = [];
 
 	constructor(private node: DeleteSopNode) {}
-	evalForPoints(points: CorePoint[], core_group2?: CoreGroup) {
+	evalForPoints(points: BaseCorePoint[], core_group2?: CoreGroup) {
 		if (!core_group2) {
 			return;
 		}

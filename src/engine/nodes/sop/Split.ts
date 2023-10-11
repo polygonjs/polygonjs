@@ -18,7 +18,7 @@ import {CoreGroup} from '../../../core/geometry/Group';
 import {Object3D} from 'three';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {ThreejsCoreObject} from '../../../core/geometry/modules/three/ThreejsCoreObject';
-import {CorePoint} from '../../../core/geometry/entities/point/CorePoint';
+import {BaseCorePoint} from '../../../core/geometry/entities/point/CorePoint';
 import {MapUtils} from '../../../core/MapUtils';
 import {geometryBuilder} from '../../../core/geometry/modules/three/builders/geometryBuilder';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
@@ -67,7 +67,7 @@ export class SplitSopNode extends TypedSopNode<SplitSopParamsConfig> {
 	private _split_core_object(coreObject: ThreejsCoreObject) {
 		const object = coreObject.object();
 		let attribName: string = this.pv.attribName;
-		let points_by_value: Map<string | number, CorePoint[]> = new Map();
+		let points_by_value: Map<string | number, BaseCorePoint[]> = new Map();
 		// if (core_geometry) {
 		// const object = core_object.object() as Object3DWithGeometry;
 		const points = pointsFromObject(object);

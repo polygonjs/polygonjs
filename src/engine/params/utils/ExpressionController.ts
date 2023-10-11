@@ -18,7 +18,7 @@ type EntityCallback<T extends ParamType> = (
 	value: ParamValuesTypeMap[T] | any /*TODO: typescript: any is used here mostly to compile*/
 ) => void;
 type PointEntityCallback<T extends ParamType> = (
-	entity: CorePoint,
+	entity: CorePoint<CoreObjectType>,
 	value: ParamValuesTypeMap[T] | any /*TODO: typescript: any is used here mostly to compile*/
 ) => void;
 type ObjectEntityCallback<T extends ParamType> = (
@@ -132,7 +132,7 @@ export class ExpressionController<T extends ParamType> {
 
 		this._resetEntities();
 	}
-	computeExpressionForPoints(entities: CorePoint[], callback: PointEntityCallback<T>) {
+	computeExpressionForPoints(entities: CorePoint<CoreObjectType>[], callback: PointEntityCallback<T>) {
 		return this.computeExpressionForEntities(entities, callback as EntityCallback<T>);
 	}
 	computeExpressionForVertices(entities: CoreVertex<CoreObjectType>[], callback: PointEntityCallback<T>) {

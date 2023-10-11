@@ -6,7 +6,7 @@
  *
  */
 import {TypedSopNode} from './_Base';
-import type {CorePoint} from '../../../core/geometry/entities/point/CorePoint';
+import type {BaseCorePoint} from '../../../core/geometry/entities/point/CorePoint';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {CoreInterpolate} from '../../../core/math/Interpolate';
 import {CoreOctree} from '../../../core/math/octree/Octree';
@@ -20,7 +20,7 @@ import {CoreObjectType, ObjectContent} from '../../../core/geometry/ObjectConten
 import {pointsFromObjectFromGroup} from '../../../core/geometry/entities/point/CorePointUtils';
 const _tmpBox = new Box3();
 const _position = new Vector3();
-const _nearestPoints: CorePoint[] = [];
+const _nearestPoints: BaseCorePoint[] = [];
 class AttribTransferSopParamsConfig extends NodeParamsConfig {
 	/** @param source group to transfer from (right input, or input 1) */
 	srcGroup = ParamConfig.STRING();
@@ -81,7 +81,7 @@ export class AttribTransferSopNode extends TypedSopNode<AttribTransferSopParamsC
 		octree: CoreOctree,
 		attribNames: string[]
 	) {
-		const callback = (destPoint: CorePoint) => {
+		const callback = (destPoint: BaseCorePoint) => {
 			this._transferAttributesForPoint(destPoint, octree, attribNames);
 		};
 		const destPoints = pointsFromObjectFromGroup(object, this.pv.destGroup);
@@ -105,7 +105,7 @@ export class AttribTransferSopNode extends TypedSopNode<AttribTransferSopParamsC
 		}
 	}
 
-	private _transferAttributesForPoint(destPoint: CorePoint, octree: CoreOctree, attribNames: string[]) {
+	private _transferAttributesForPoint(destPoint: BaseCorePoint, octree: CoreOctree, attribNames: string[]) {
 		const totalDist = this.pv.distanceThreshold + this.pv.blendWidth;
 		destPoint.position(_position);
 		octree.findPoints(_position, totalDist, this.pv.maxSamplesCount, _nearestPoints);
@@ -115,7 +115,7 @@ export class AttribTransferSopNode extends TypedSopNode<AttribTransferSopParamsC
 		}
 	}
 
-	private _interpolatePoints(pointDest: CorePoint, srcPoints: CorePoint[], attribName: string) {
+	private _interpolatePoints(pointDest: BaseCorePoint, srcPoints: BaseCorePoint[], attribName: string) {
 		const newValue = CoreInterpolate.perform(
 			pointDest,
 			srcPoints,

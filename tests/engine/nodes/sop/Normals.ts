@@ -1,5 +1,5 @@
 import type {QUnit} from '../../../helpers/QUnit';
-import {CorePoint} from '../../../../src/core/geometry/entities/point/CorePoint';
+import {BaseCorePoint} from '../../../../src/core/geometry/entities/point/CorePoint';
 import {Vector3} from 'three';
 const _normal = new Vector3();
 
@@ -83,7 +83,7 @@ export function testenginenodessopNormals(qUnit: QUnit) {
 			return container
 				.coreContent()!
 				.points()
-				.map((p: CorePoint) => p.normal(_normal).clone());
+				.map((p: BaseCorePoint) => p.normal(_normal).clone());
 		}
 
 		normals1.p.edit.set(true);

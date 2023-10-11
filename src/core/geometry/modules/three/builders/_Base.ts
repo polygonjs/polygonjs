@@ -1,11 +1,11 @@
 import {Vector3, BufferGeometry, Float32BufferAttribute} from 'three';
-import {CorePoint} from '../../../entities/point/CorePoint';
+import {BaseCorePoint} from '../../../entities/point/CorePoint';
 import {uniqWithoutPreservingOrder, arrayCompact} from '../../../../ArrayUtils';
 import {PolyDictionary} from '../../../../../types/GlobalTypes';
 import {CoreObjectType, ObjectContent} from '../../../ObjectContent';
 
 export abstract class CoreGeometryBuilderBase {
-	fromPoints<T extends CoreObjectType>(object: ObjectContent<T>, points: CorePoint[]): BufferGeometry {
+	fromPoints<T extends CoreObjectType>(object: ObjectContent<T>, points: BaseCorePoint[]): BufferGeometry {
 		points = this._filterPoints(points);
 		const geometry = new BufferGeometry();
 		// const coreGeometry = new CoreGeometry(geometry);
@@ -87,7 +87,7 @@ export abstract class CoreGeometryBuilderBase {
 		return geometry;
 	}
 
-	protected abstract _filterPoints(points: CorePoint[]): CorePoint[];
+	protected abstract _filterPoints(points: BaseCorePoint[]): BaseCorePoint[];
 	protected abstract _indicesFromPoints(
 		new_index_by_old_index: PolyDictionary<number>,
 		old_geometry: BufferGeometry

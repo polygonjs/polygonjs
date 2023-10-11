@@ -4,15 +4,14 @@ import {EMPTY_TILE_ID, GRID_BORDER_ID, GRID_BORDER_SIDE_NAME} from './WFCConstan
 import {TileConfig, tileConfigToString, ERRORED_TILE_CONFIG, tileConfigsToString} from './WFCTileConfig';
 import {CoreWFCTileAttribute, WFCQuadAttribute} from './WFCAttributes';
 import {Object3D} from 'three';
-import {NeighbourData} from '../graph/quad/QuadGraph';
-import {QuadNode} from '../graph/quad/QuadNode';
+import {NeighbourData} from '../geometry/modules/quad/graph/QuadGraph';
+import {QuadNode} from '../geometry/modules/quad/graph/QuadNode';
 import {Attribute} from '../geometry/Attribute';
 import {pushOnArrayAtEntry, popFromArrayAtEntry, addToSetAtEntry} from '../MapUtils';
 import {arrayUniq, sample, spliceSample} from '../ArrayUtils';
 import {setToArray} from '../SetUtils';
-import {NeighbourIndex, CCW_HALF_EDGE_SIDES} from '../graph/quad/QuadGraphCommon';
+import {NeighbourIndex, CCW_HALF_EDGE_SIDES} from '../geometry/modules/quad/graph/QuadGraphCommon';
 import {mod} from '../math/_Module';
-// import {ThreejsCoreObject} from '../geometry/modules/three/ThreejsCoreObject';
 import {QuadObject} from '../geometry/modules/quad/QuadObject';
 import {WFCFloorGraph} from './WFCFloorGraph';
 import {isQuadNodeSolveAllowed, quadPrimitiveFloorIndex} from './WFCUtils';
@@ -45,17 +44,13 @@ interface WFCSolverProcessOptions {
 }
 const _tileConfigSampler = new WFCTileConfigSampler();
 export class WFCSolver {
-	// private _height: number;
 	private _resolvedQuadsCount: number = 0;
 	private _maxResolvedQuadsCount: number;
 	private _stepsCount: number = 0;
-	// private _objects: Object3D[] = [];
 	private _tilesCollection: WFCTilesCollection;
 	private _quadPositionArrays: number[][] = [];
-	// private _quadGraph: QuadGraph = new QuadGraph();
 	private _lowestEntropy: number = Number.POSITIVE_INFINITY;
 	private _quadNodeByEntropy: Map<number, QuadNode[]> = new Map();
-	// private _allowedTileConfigsByQuadId: Map<number, TileConfig[]> = new Map();
 	private _floorGraphs: WFCFloorGraph[] = [];
 	private _quadIndicesByFloorIndex: Map<number, Set<number>> = new Map();
 	private _floorGraphIndexByQuadNode: Map<QuadNode, number> = new Map();
@@ -92,7 +87,7 @@ export class WFCSolver {
 		}
 
 		// get floors count
-		const primitivesCount = QuadPrimitive.primitivesCount(quadObject);
+		const primitivesCount = QuadPrimitive.entitiesCount(quadObject);
 		for (let i = 0; i < primitivesCount; i++) {
 			const floorIndex = quadPrimitiveFloorIndex(quadObject, i);
 			addToSetAtEntry(this._quadIndicesByFloorIndex, floorIndex, i);

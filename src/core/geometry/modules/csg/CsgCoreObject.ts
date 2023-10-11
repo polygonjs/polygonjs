@@ -34,10 +34,10 @@ export class CsgCoreObject<T extends CsgGeometryType> extends BaseCoreObject<Cor
 	static override objectData<T extends CoreObjectType>(object: ObjectContent<T>): ObjectData {
 		const data = objectData(object);
 
-		data.pointsCount = CsgPoint.pointsCount(object);
-		data.verticesCount = CsgVertex.verticesCount(object);
+		data.pointsCount = CsgPoint.entitiesCount(object);
+		data.verticesCount = CsgVertex.entitiesCount(object);
 		const primitiveClass = primitiveClassFactoryNonAbstract(object);
-		data.primitivesCount = primitiveClass?.primitivesCount(object) || 0;
+		data.primitivesCount = primitiveClass?.entitiesCount(object) || 0;
 		data.primitiveName = primitiveClass?.primitiveName() || '';
 
 		return data;

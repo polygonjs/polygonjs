@@ -1,10 +1,10 @@
 import {Vector3, BufferAttribute} from 'three';
 import {ObjectGeometryMap, CoreObjectType, ObjectContent} from '../../ObjectContent';
-import {TypedCorePoint} from '../../entities/point/CorePoint';
+import {CorePoint} from '../../entities/point/CorePoint';
 import {PointAttributesDict} from '../../entities/point/Common';
 import {TetObject} from './TetObject';
 
-export class TetPoint extends TypedCorePoint<CoreObjectType.TET> {
+export class TetPoint extends CorePoint<CoreObjectType.TET> {
 	protected _geometry?: ObjectGeometryMap[CoreObjectType.TET];
 	protected override _object: TetObject;
 	constructor(object: TetObject, index: number) {
@@ -40,7 +40,7 @@ export class TetPoint extends TypedCorePoint<CoreObjectType.TET> {
 	static override attributes<T extends CoreObjectType>(object: ObjectContent<T>): PointAttributesDict | undefined {
 		return undefined;
 	}
-	static override pointsCount<T extends CoreObjectType>(object: ObjectContent<T>) {
+	static override entitiesCount<T extends CoreObjectType>(object: ObjectContent<T>) {
 		return 0;
 	}
 	override position(target: Vector3): Vector3 {

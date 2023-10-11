@@ -62,7 +62,7 @@ async function _addNumericAttributeToPrimitives<T extends CoreObjectType>(
 		const primitiveClass = corePrimitiveClassFactory(object);
 		let attribute = primitiveClass.attribute(object, attribName);
 		if (!attribute) {
-			const primitivesCount = primitiveClass.primitivesCount(object);
+			const primitivesCount = primitiveClass.entitiesCount(object);
 			const values = new Array(primitivesCount * size).fill(0);
 			attribute = {
 				array: values,
@@ -150,7 +150,7 @@ async function _addStringAttributeToPrimitives<T extends CoreObjectType>(
 		// if a group is given, we prefill the existing stringValues
 		// create attrib if non existent
 		const primitiveClass = corePrimitiveClassFactory(object);
-		const primitivesCount = primitiveClass.primitivesCount(object);
+		const primitivesCount = primitiveClass.entitiesCount(object);
 		const values = new Array(primitivesCount).fill('');
 		let attribute = primitiveClass.attribute(object, attribName);
 		if (!attribute) {

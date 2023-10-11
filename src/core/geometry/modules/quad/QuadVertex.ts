@@ -9,7 +9,7 @@ import {BaseVertexAttribute, VertexNumberAttribute} from '../../entities/vertex/
 import {AttributeNumericValuesOptions, attributeNumericValues} from '../../entities/utils/Common';
 import {NumericAttribValue} from '../../../../types/GlobalTypes';
 import {CorePrimitive} from '../../entities/primitive/CorePrimitive';
-import type {TypedCorePoint} from '../../entities/point/CorePoint';
+import type {CorePoint} from '../../entities/point/CorePoint';
 import {QuadPoint} from './QuadPoint';
 import {QuadPrimitive} from './QuadPrimitive';
 
@@ -61,7 +61,7 @@ export class QuadVertex extends CoreVertex<CoreObjectType.QUAD> {
 		size: number = 1,
 		defaultValue: NumericAttribValue = 0
 	) {
-		const verticesCount = this.verticesCount(object);
+		const verticesCount = this.entitiesCount(object);
 		target.values = new Array(verticesCount * size);
 		attributeNumericValues(object, verticesCountFromObject, size, defaultValue, target);
 
@@ -72,7 +72,7 @@ export class QuadVertex extends CoreVertex<CoreObjectType.QUAD> {
 		};
 		this.addAttribute(object, attribName, attribute);
 	}
-	static override verticesCount<T extends CoreObjectType>(object: ObjectContent<T>) {
+	static override entitiesCount<T extends CoreObjectType>(object: ObjectContent<T>) {
 		return (object as any as QuadObject).geometry.index.length;
 	}
 	static override attributes<T extends CoreObjectType>(object: ObjectContent<T>): VertexAttributesDict | undefined {
@@ -109,7 +109,7 @@ export class QuadVertex extends CoreVertex<CoreObjectType.QUAD> {
 		}
 		return [primitive];
 	}
-	override relatedPoints<T extends CoreObjectType>(): TypedCorePoint<T>[] {
+	override relatedPoints<T extends CoreObjectType>(): CorePoint<T>[] {
 		if (!this._object) {
 			return [];
 		}
@@ -119,7 +119,7 @@ export class QuadVertex extends CoreVertex<CoreObjectType.QUAD> {
 		}
 		const indexArray = geometry.index;
 		const indexValue = indexArray[this._index];
-		const point = new QuadPoint(this._object as any as QuadObject, indexValue) as any as TypedCorePoint<T>;
+		const point = new QuadPoint(this._object as any as QuadObject, indexValue) as any as CorePoint<T>;
 		return [point];
 	}
 }

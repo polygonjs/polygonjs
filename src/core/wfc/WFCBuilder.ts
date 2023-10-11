@@ -3,7 +3,7 @@ import {tileCubeLatticeDeform} from './WFCTileDeform';
 import {TileCorners} from './WFCCommon';
 import {QuadObject} from '../geometry/modules/quad/QuadObject';
 import {Attribute} from '../geometry/Attribute';
-import {NeighbourIndex} from '../graph/quad/QuadGraphCommon';
+import {NeighbourIndex} from '../geometry/modules/quad/graph/QuadGraphCommon';
 import {ThreejsCoreObject} from '../../engine/index_all';
 
 const tileCorners: TileCorners = {

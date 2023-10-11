@@ -56,7 +56,7 @@ export class WFCBuilderSopNode extends TypedSopNode<WFCBuilderSopParamsConfig> {
 
 		for (const quadObject of quadObjects) {
 			const tilesCollection = new WFCTilesCollection({tileAndRuleObjects});
-			const primitivesCount = QuadPrimitive.primitivesCount(quadObject);
+			const primitivesCount = QuadPrimitive.entitiesCount(quadObject);
 			const hasAttribute = QuadPrimitive.hasAttribute(quadObject, WFCQuadAttribute.SOLVED_TILE_CONFIGS);
 			if (!hasAttribute) {
 				this.states.error.set(`attribute not found: ${WFCQuadAttribute.SOLVED_TILE_CONFIGS}`);

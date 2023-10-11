@@ -1,10 +1,10 @@
 import {TileConfig} from './WFCTileConfig';
 import {WFCQuadAttribute} from './WFCAttributes';
 import {Vector4} from 'three';
-import {QuadGraph, NeighbourData} from '../graph/quad/QuadGraph';
-import {QuadNode} from '../graph/quad/QuadNode';
+import {QuadGraph, NeighbourData} from '../geometry/modules/quad/graph/QuadGraph';
+import {QuadNode} from '../geometry/modules/quad/graph/QuadNode';
 import {Number4} from '../../types/GlobalTypes';
-import {NeighbourIndex} from '../graph/quad/QuadGraphCommon';
+import {NeighbourIndex} from '../geometry/modules/quad/graph/QuadGraphCommon';
 import {QuadObject} from '../geometry/modules/quad/QuadObject';
 import {QuadPrimitive} from '../geometry/modules/quad/QuadPrimitive';
 import {quadId} from './WFCUtils';

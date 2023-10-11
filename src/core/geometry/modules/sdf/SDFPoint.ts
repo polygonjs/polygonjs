@@ -1,10 +1,10 @@
 import {Vector3, BufferAttribute} from 'three';
 import {ObjectGeometryMap, CoreObjectType, ObjectContent} from '../../ObjectContent';
-import {TypedCorePoint} from '../../entities/point/CorePoint';
+import {CorePoint} from '../../entities/point/CorePoint';
 import {PointAttributesDict} from '../../entities/point/Common';
 import {SDFObject} from './SDFObject';
 
-export class SDFPoint extends TypedCorePoint<CoreObjectType.SDF> {
+export class SDFPoint extends CorePoint<CoreObjectType.SDF> {
 	protected _geometry?: ObjectGeometryMap[CoreObjectType.SDF];
 	protected override _object: SDFObject;
 	constructor(object: SDFObject, index: number) {
@@ -40,7 +40,7 @@ export class SDFPoint extends TypedCorePoint<CoreObjectType.SDF> {
 	static override attributes<T extends CoreObjectType>(object: ObjectContent<T>): PointAttributesDict | undefined {
 		return undefined;
 	}
-	static override pointsCount<T extends CoreObjectType>(object: ObjectContent<T>) {
+	static override entitiesCount<T extends CoreObjectType>(object: ObjectContent<T>) {
 		return 0;
 	}
 	override position(target: Vector3): Vector3 {

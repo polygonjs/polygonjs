@@ -11,7 +11,7 @@ export class CsgPrimitivePath2 extends CsgPrimitive<CsgGeometryType.PATH2> {
 		return 'point';
 	}
 
-	static override primitivesCount<T extends CoreObjectType>(object: ObjectContent<T>) {
+	static override entitiesCount<T extends CoreObjectType>(object: ObjectContent<T>) {
 		const csgOobject = object as any as CsgObject<CsgGeometryType.PATH2>;
 		const geometry = csgOobject.geometry as CsgTypeMap[CsgGeometryType.PATH2];
 		return geometry.points.length;

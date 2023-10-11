@@ -10,7 +10,7 @@ export class CadPrimitiveSolid extends CadPrimitive<CadGeometryType.SOLID> {
 	static primitiveName() {
 		return 'face';
 	}
-	static override primitivesCount<T extends CoreObjectType>(object: ObjectContent<T>) {
+	static override entitiesCount<T extends CoreObjectType>(object: ObjectContent<T>) {
 		const oc = CadLoaderSync.oc();
 		const cadOobject = object as any as CadObject<CadGeometryType.SOLID>;
 		let count = 0;

@@ -54,15 +54,16 @@ export class JsAssemblerSoftBody extends BaseJsShaderAssembler {
 	makeFunctionNodeDirtyOnChange() {
 		return true;
 	}
-	defaultObject3DVariable(): string {
+	defaultObjectVariable(): string {
 		return 'null';
 	}
 	defaultObject3DMaterialVariable(): string {
 		return 'null';
 	}
-	defaultPointIndexVariable(): string {
+	defaultPrimitiveGraph(): string {
 		return 'null';
 	}
+
 	override templateShader() {
 		return {
 			velocity: TEMPLATE_VELOCITY,

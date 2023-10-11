@@ -4,5 +4,5 @@ export function jsFunctionName(prefix: string, type: JsConnectionPointType): str
 	return `${prefix}_${type}`.replace('[]', '_Array');
 }
 export function sanitizeJsVarName(varName: string): string {
-	return varName.replace(/\[\]$/g, '');
+	return varName.replace(/\[\]$/g, '').replace(/[^a-zA-Z0-9_]/g, '_');
 }

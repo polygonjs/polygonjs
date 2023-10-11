@@ -7,7 +7,7 @@ import {
 	AttribType,
 	ATTRIBUTE_TYPES,
 } from '../../../../src/core/geometry/Constant';
-import {CorePoint} from '../../../../src/core/geometry/entities/point/CorePoint';
+import {BaseCorePoint} from '../../../../src/core/geometry/entities/point/CorePoint';
 import {TransformTargetType} from '../../../../src/core/Transform';
 import {QuadObject} from '../../../../src/core/geometry/modules/quad/QuadObject';
 export function testenginenodessopDelete(qUnit: QUnit) {
@@ -198,13 +198,13 @@ export function testenginenodessopDelete(qUnit: QUnit) {
 
 		delete1.p.attribString.set('mountain');
 		assert.deepEqual(
-			(await getPoints()).map((p: CorePoint) => p.stringAttribValue('name')),
+			(await getPoints()).map((p: BaseCorePoint) => p.stringAttribValue('name')),
 			[]
 		);
 
 		delete1.p.invert.set(false);
 		assert.deepEqual(
-			(await getPoints()).map((p: CorePoint) => p.stringAttribValue('name')),
+			(await getPoints()).map((p: BaseCorePoint) => p.stringAttribValue('name')),
 			['beaver', 'eagle']
 		);
 	});
@@ -326,4 +326,44 @@ export function testenginenodessopDelete(qUnit: QUnit) {
 		delete1.p.invert.set(1);
 		assert.deepEqual(await compute(), [4, 5, 9, 8]);
 	});
+
+	qUnit.test(
+		'sop/delete primitives with quadObject can recook after requesting a non existing attribute',
+		async (assert) => {
+			const geo1 = window.geo1;
+
+			const quadPlane1 = geo1.createNode('quadPlane');
+			const attribCreate1 = geo1.createNode('attribCreate');
+			const delete1 = geo1.createNode('delete');
+			attribCreate1.setInput(0, quadPlane1);
+			delete1.setInput(0, attribCreate1);
+
+			attribCreate1.setAttribClass(AttribClass.PRIMITIVE);
+			attribCreate1.p.name.set('test');
+			attribCreate1.p.value1.set(1);
+
+			delete1.setAttribClass(AttribClass.PRIMITIVE);
+			delete1.p.byExpression.set(1);
+			delete1.p.expression.set('@donotexist==0');
+
+			async function compute() {
+				const container = await delete1.compute();
+				const coreGroup = container.coreContent();
+				const quadObjects = coreGroup?.quadObjects();
+				const objectExists = quadObjects ? quadObjects[0] != null : false;
+				const errorMessage = delete1.states.error.message();
+				return {objectExists, errorMessage};
+			}
+
+			assert.equal((await compute()).objectExists, false);
+			assert.equal(
+				(await compute()).errorMessage,
+				'expression evaluation error: attrib donotexist not found. availables are: test'
+			);
+
+			delete1.p.expression.set('@test==0');
+			assert.equal((await compute()).objectExists, true);
+			assert.notOk((await compute()).errorMessage);
+		}
+	);
 }

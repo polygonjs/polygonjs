@@ -6,7 +6,7 @@ export class CadPrimitiveWire extends CadPrimitive<CadGeometryType.WIRE> {
 	static primitiveName() {
 		return 'wire';
 	}
-	static override primitivesCount<T extends CoreObjectType>(object: ObjectContent<T>) {
+	static override entitiesCount<T extends CoreObjectType>(object: ObjectContent<T>) {
 		return 0;
 	}
 }

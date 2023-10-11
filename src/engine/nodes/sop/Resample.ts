@@ -19,7 +19,7 @@ export const METHODS = [METHOD.POINTS_COUNT, METHOD.SEGMENT_LENGTH];
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {CorePoint} from '../../../core/geometry/entities/point/CorePoint';
+import {BaseCorePoint} from '../../../core/geometry/entities/point/CorePoint';
 import {TypeAssert} from '../../poly/Assert';
 import {Vector3} from 'three';
 import {SplineCurveType, SPLINE_CURVE_TYPES} from '../../../core/geometry/Curve';
@@ -123,7 +123,7 @@ export class ResampleSopNode extends TypedSopNode<ResampleSopParamsConfig> {
 		return object;
 	}
 
-	_create_curve_from_points(points: CorePoint[]) {
+	_create_curve_from_points(points: BaseCorePoint[]) {
 		if (points.length <= 1) {
 			return;
 		}

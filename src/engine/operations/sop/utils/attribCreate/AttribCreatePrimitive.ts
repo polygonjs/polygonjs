@@ -45,7 +45,7 @@ function _addAttributeToPrimitives<T extends CoreObjectType>(
 	const primitiveClass = corePrimitiveClassFactory(object);
 	let attribute = primitiveClass.attribute(object, attribName);
 	if (!attribute) {
-		const primitivesCount = primitiveClass.primitivesCount(object);
+		const primitivesCount = primitiveClass.entitiesCount(object);
 		const values = new Array(primitivesCount * params.size).fill(value);
 		attribute = isString
 			? {array: values, itemSize: 1, isString}

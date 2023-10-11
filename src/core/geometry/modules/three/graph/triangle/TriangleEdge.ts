@@ -1,4 +1,4 @@
-import {Number2} from '../../../types/GlobalTypes';
+import {Number2} from '../../../../../../types/GlobalTypes';
 export class TriangleEdge {
 	public triangleIds: number[] = [];
 	constructor(public readonly id: string, public readonly indices: Number2) {}

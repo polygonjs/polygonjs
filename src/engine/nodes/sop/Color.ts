@@ -9,7 +9,7 @@ import {Color} from 'three';
 import {BufferAttribute} from 'three';
 import {CoreColor} from '../../../core/Color';
 import {TypedSopNode} from './_Base';
-import {CorePoint} from '../../../core/geometry/entities/point/CorePoint';
+import {BaseCorePoint} from '../../../core/geometry/entities/point/CorePoint';
 import {CoreGroup} from '../../../core/geometry/Group';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {BufferGeometry} from 'three';
@@ -260,7 +260,7 @@ export class ColorSopNode extends TypedSopNode<ColorSopParamsConfig> {
 	private async _updateFromParam(
 		geometry: BufferGeometry,
 		array: number[],
-		points: CorePoint[],
+		points: BaseCorePoint[],
 		offset: number
 	): Promise<number[] | undefined> {
 		// const component_name = ['r', 'g', 'b'][offset];

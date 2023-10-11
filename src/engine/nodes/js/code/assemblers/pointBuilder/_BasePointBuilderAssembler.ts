@@ -56,14 +56,14 @@ export class JsAssemblerBasePointBuilder extends BaseJsShaderAssembler {
 		};
 		return _options;
 	}
-	defaultObject3DVariable(): string {
+	defaultObjectVariable(): string {
 		return PointBuilderAssemblerConstant.OBJECT_3D;
 	}
 	defaultObject3DMaterialVariable(): string {
 		return PointBuilderAssemblerConstant.MATERIAL;
 	}
-	defaultPointIndexVariable(): string {
-		return PointBuilderAssemblerConstant.PTNUM;
+	defaultPrimitiveGraph(): string {
+		return PointBuilderAssemblerConstant.PRIMITIVE_GRAPH;
 	}
 
 	functionData(): PointBuilderFunctionData | undefined {

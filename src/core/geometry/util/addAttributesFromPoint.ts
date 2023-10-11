@@ -1,15 +1,20 @@
 import {BufferAttribute, BufferGeometry, Vector3} from 'three';
 import {CoreType} from '../../Type';
-import {CorePoint} from '../entities/point/CorePoint';
+import {BaseCorePoint} from '../entities/point/CorePoint';
 
-export function addAttributesFromPoint(geometry: BufferGeometry, point: CorePoint, attributeNames: string[]) {
+export function addAttributesFromPoint(geometry: BufferGeometry, point: BaseCorePoint, attributeNames: string[]) {
 	const pointsCount = geometry.getAttribute('position').count;
 	for (const attributeName of attributeNames) {
 		addAttributeFromPoint(geometry, point, attributeName, pointsCount);
 	}
 }
 
-function addAttributeFromPoint(geometry: BufferGeometry, point: CorePoint, attributeName: string, pointsCount: number) {
+function addAttributeFromPoint(
+	geometry: BufferGeometry,
+	point: BaseCorePoint,
+	attributeName: string,
+	pointsCount: number
+) {
 	const value = point.attribValue(attributeName);
 
 	if (!CoreType.isString(value)) {

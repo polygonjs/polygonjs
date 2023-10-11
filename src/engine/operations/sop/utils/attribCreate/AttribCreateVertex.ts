@@ -45,7 +45,7 @@ function _addAttributeToVertices<T extends CoreObjectType>(
 	const vertexClass = coreVertexClassFactory(object);
 	let attribute = vertexClass.attribute(object, attribName);
 	if (!attribute) {
-		const verticesCount = vertexClass.verticesCount(object);
+		const verticesCount = vertexClass.entitiesCount(object);
 		const values = new Array(verticesCount * params.size).fill(value);
 		attribute = {array: values, itemSize: params.size, isString: isString};
 		vertexClass.addAttribute(object, attribName, attribute);

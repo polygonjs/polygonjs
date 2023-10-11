@@ -1,4 +1,4 @@
-import {NeighbourIndex} from '../graph/quad/QuadGraphCommon';
+import {NeighbourIndex} from '../geometry/modules/quad/graph/QuadGraphCommon';
 import {ERROR_TILE_ID, UNRESOLVED_TILE_ID} from './WFCConstant';
 export type TileRotation = NeighbourIndex;
 export interface TileConfig {

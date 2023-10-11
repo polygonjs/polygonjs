@@ -25,7 +25,7 @@ import type {CorePrimitive} from '../primitive/CorePrimitive';
 function _warnOverloadRequired(functionName: string) {
 	console.warn(`CorePoint.${functionName} needs to be overloaded`);
 }
-export abstract class TypedCorePoint<T extends CoreObjectType> extends CoreEntity {
+export abstract class CorePoint<T extends CoreObjectType> extends CoreEntity {
 	protected _object?: ObjectContent<T>;
 	constructor(object?: ObjectContent<T>, index?: number) {
 		super(object, index);
@@ -45,7 +45,7 @@ export abstract class TypedCorePoint<T extends CoreObjectType> extends CoreEntit
 		_warnOverloadRequired('addAttribute');
 	}
 
-	static pointsCount<T extends CoreObjectType>(object: ObjectContent<T>): number {
+	static entitiesCount<T extends CoreObjectType>(object: ObjectContent<T>): number {
 		return 0;
 	}
 
@@ -57,7 +57,7 @@ export abstract class TypedCorePoint<T extends CoreObjectType> extends CoreEntit
 		if (!this._object) {
 			return;
 		}
-		return (this.constructor as typeof TypedCorePoint<T>).attributes(this._object);
+		return (this.constructor as typeof CorePoint<T>).attributes(this._object);
 	}
 	static attribute<T extends CoreObjectType>(
 		object: ObjectContent<T>,
@@ -73,7 +73,7 @@ export abstract class TypedCorePoint<T extends CoreObjectType> extends CoreEntit
 		if (!this._object) {
 			return;
 		}
-		return (this.constructor as typeof TypedCorePoint<T>).attribute(this._object, attribName);
+		return (this.constructor as typeof CorePoint<T>).attribute(this._object, attribName);
 	}
 
 	static attribSize<T extends CoreObjectType>(object: ObjectContent<T>, attribName: string): number {
@@ -89,7 +89,7 @@ export abstract class TypedCorePoint<T extends CoreObjectType> extends CoreEntit
 		if (!this._object) {
 			return 0;
 		}
-		return (this.constructor as typeof TypedCorePoint<T>).attribSize(this._object, attribName);
+		return (this.constructor as typeof CorePoint<T>).attribSize(this._object, attribName);
 	}
 	static hasAttribute<T extends CoreObjectType>(object: ObjectContent<T>, attribName: string): boolean {
 		const remappedName = CoreAttribute.remapName(attribName);
@@ -100,7 +100,7 @@ export abstract class TypedCorePoint<T extends CoreObjectType> extends CoreEntit
 		if (!this._object) {
 			return false;
 		}
-		return (this.constructor as typeof TypedCorePoint<T>).hasAttribute(this._object, attribName);
+		return (this.constructor as typeof CorePoint<T>).hasAttribute(this._object, attribName);
 	}
 
 	//
@@ -113,7 +113,7 @@ export abstract class TypedCorePoint<T extends CoreObjectType> extends CoreEntit
 		return {};
 	}
 	userDataAttribs(): Record<string, string[]> {
-		return this._object ? (this.constructor as typeof TypedCorePoint).userDataAttribs(this._object) : {};
+		return this._object ? (this.constructor as typeof CorePoint).userDataAttribs(this._object) : {};
 	}
 	static userDataAttrib<T extends CoreObjectType>(
 		object: ObjectContent<T> | undefined,
@@ -140,7 +140,7 @@ export abstract class TypedCorePoint<T extends CoreObjectType> extends CoreEntit
 		return object ? Object.keys(this.userDataAttribs(object) || {}) : [];
 	}
 	indexedAttributeNames(): string[] {
-		return this._object ? (this.constructor as typeof TypedCorePoint).indexedAttributeNames(this._object) : [];
+		return this._object ? (this.constructor as typeof CorePoint).indexedAttributeNames(this._object) : [];
 		// return Object.keys(this.userDataAttribs() || {});
 	}
 	static isAttribIndexed<T extends CoreObjectType>(
@@ -162,7 +162,7 @@ export abstract class TypedCorePoint<T extends CoreObjectType> extends CoreEntit
 		this.userDataAttribs(object)[attribName] = values;
 	}
 	setIndexedAttributeValues(attribName: string, values: string[]) {
-		return (this.constructor as typeof TypedCorePoint).setIndexedAttributeValues(this._object, attribName, values);
+		return (this.constructor as typeof CorePoint).setIndexedAttributeValues(this._object, attribName, values);
 	}
 	static setIndexedAttribute<T extends CoreObjectType>(
 		object: ObjectContent<T> | undefined,
@@ -173,12 +173,7 @@ export abstract class TypedCorePoint<T extends CoreObjectType> extends CoreEntit
 		_warnOverloadRequired('setIndexedAttribute');
 	}
 	setIndexedAttribute(attribName: string, values: string[], indices: number[]) {
-		return (this.constructor as typeof TypedCorePoint).setIndexedAttribute(
-			this._object,
-			attribName,
-			values,
-			indices
-		);
+		return (this.constructor as typeof CorePoint).setIndexedAttribute(this._object, attribName, values, indices);
 	}
 	//
 	static indexedAttribValue<T extends CoreObjectType>(
@@ -191,7 +186,7 @@ export abstract class TypedCorePoint<T extends CoreObjectType> extends CoreEntit
 		return values ? values[valueIndex] : null;
 	}
 	indexedAttribValue(attribName: string): string | null {
-		return (this.constructor as typeof TypedCorePoint).indexedAttribValue(this._object, this._index, attribName);
+		return (this.constructor as typeof CorePoint).indexedAttribValue(this._object, this._index, attribName);
 	}
 	static stringAttribValue<T extends CoreObjectType>(object: ObjectContent<T>, index: number, attribName: string) {
 		return this.indexedAttribValue(object, index, attribName);
@@ -208,7 +203,7 @@ export abstract class TypedCorePoint<T extends CoreObjectType> extends CoreEntit
 		return 0;
 	}
 	attribValueIndex(attribName: string): number {
-		return (this.constructor as typeof TypedCorePoint).attribValueIndex(this._object, this._index, attribName);
+		return (this.constructor as typeof CorePoint).attribValueIndex(this._object, this._index, attribName);
 	}
 	static attribType<T extends CoreObjectType>(object: ObjectContent<T> | undefined, attribName: string): AttribType {
 		if (this.isAttribIndexed(object, attribName)) {
@@ -218,7 +213,7 @@ export abstract class TypedCorePoint<T extends CoreObjectType> extends CoreEntit
 		}
 	}
 	attribType(attribName: string): AttribType {
-		return (this.constructor as typeof TypedCorePoint).attribType(this._object, attribName);
+		return (this.constructor as typeof CorePoint).attribType(this._object, attribName);
 	}
 	isStringAttribute(attribName: string): boolean {
 		return this.attribType(attribName) == AttribType.STRING;
@@ -339,12 +334,7 @@ export abstract class TypedCorePoint<T extends CoreObjectType> extends CoreEntit
 		if (!this._object) {
 			return 0;
 		}
-		return (this.constructor as typeof TypedCorePoint<T>).attribValue(
-			this._object,
-			this._index,
-			attribName,
-			target
-		);
+		return (this.constructor as typeof CorePoint<T>).attribValue(this._object, this._index, attribName, target);
 	}
 	attribValueNumber(attribName: string) {
 		const attrib = this.attribute(attribName);
@@ -551,4 +541,4 @@ export abstract class TypedCorePoint<T extends CoreObjectType> extends CoreEntit
 	}
 }
 
-export type CorePoint = TypedCorePoint<CoreObjectType>;
+export type BaseCorePoint = CorePoint<CoreObjectType>;

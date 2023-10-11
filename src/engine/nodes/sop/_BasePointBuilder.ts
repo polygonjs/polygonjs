@@ -32,8 +32,7 @@ import {CoreType, isColor, isVector, isNumber} from '../../../core/Type';
 import {BufferAttribute, Color, Vector2, Vector3, Vector4} from 'three';
 import {JsConnectionPointComponentsCountMap, JsConnectionPointType} from '../utils/io/connections/Js';
 import {logBlue as _logBlue} from '../../../core/logger/Console';
-import {PointBuilderEvaluator} from '../js/code/assemblers/pointBuilder/PointBuilderEvaluator';
-
+import type {PointBuilderEvaluator} from '../js/code/assemblers/pointBuilder/PointBuilderEvaluator';
 import {pointsCountFromObject} from '../../../core/geometry/entities/point/CorePointUtils';
 import {CoreObjectType, ObjectContent} from '../../../core/geometry/ObjectContent';
 import {corePointClassFactory} from '../../../core/geometry/CoreObjectFactory';
@@ -141,10 +140,10 @@ export abstract class BasePointBuilderSopNode<P extends BasePointBuilderSopParam
 	protected _checkRequiredReadAttributes<T extends CoreObjectType>(object: ObjectContent<T>) {
 		// no need to check if there are no points in the geometry
 		const pointsCount = pointsCountFromObject(object);
-		const corePointClass = corePointClassFactory(object);
 		if (pointsCount == 0) {
 			return;
 		}
+		const corePointClass = corePointClassFactory(object);
 
 		const readAttributesData = this._functionData?.attributesData.read;
 		if (!readAttributesData) {
@@ -189,7 +188,7 @@ export abstract class BasePointBuilderSopNode<P extends BasePointBuilderSopParam
 			let attribute = corePointClass.attribute(object, attribData.attribName);
 			const expectedAttribSize = JsConnectionPointComponentsCountMap[attribData.attribType];
 			if (!attribute) {
-				const pointsCount = corePointClass.pointsCount(object);
+				const pointsCount = corePointClass.entitiesCount(object);
 				const newArray: number[] = new Array(pointsCount * expectedAttribSize).fill(0);
 				attribute = new BufferAttribute(new Float32Array(newArray), expectedAttribSize);
 				corePointClass.addAttribute(object, attribData.attribName, attribute);

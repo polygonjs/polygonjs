@@ -9,7 +9,7 @@ import {
 	InstancedBufferAttribute,
 } from 'three';
 import {CoreObjectType, ObjectContent} from '../../ObjectContent';
-import {TypedCorePoint} from '../../entities/point/CorePoint';
+import {CorePoint} from '../../entities/point/CorePoint';
 import {PointAttributesDict} from '../../entities/point/Common';
 import {Attribute} from '../../Attribute';
 import {ObjectUtils} from '../../../ObjectUtils';
@@ -27,7 +27,7 @@ const target: AttributeNumericValuesOptions = {
 	values: [],
 };
 
-export class ThreejsPoint extends TypedCorePoint<CoreObjectType.THREEJS> {
+export class ThreejsPoint extends CorePoint<CoreObjectType.THREEJS> {
 	protected _geometry?: BufferGeometry;
 
 	constructor(object: Object3D, index: number) {
@@ -66,7 +66,7 @@ export class ThreejsPoint extends TypedCorePoint<CoreObjectType.THREEJS> {
 		}
 		return geometry.attributes;
 	}
-	static override pointsCount<T extends CoreObjectType>(object: ObjectContent<T>) {
+	static override entitiesCount<T extends CoreObjectType>(object: ObjectContent<T>) {
 		const geometry = (object as any as Mesh).geometry as BufferGeometry | undefined;
 		if (!geometry) {
 			return 0;

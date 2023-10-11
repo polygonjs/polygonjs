@@ -69,14 +69,14 @@ export class JsAssemblerActor extends BaseJsShaderAssembler {
 		};
 		return _options;
 	}
-	defaultObject3DVariable(): string {
+	defaultObjectVariable(): string {
 		return ActorAssemblerConstant.OBJECT_3D;
 	}
 	defaultObject3DMaterialVariable(): string {
 		return ActorAssemblerConstant.MATERIAL;
 	}
-	defaultPointIndexVariable(): string {
-		return ActorAssemblerConstant.PTNUM;
+	defaultPrimitiveGraph(): string {
+		return ActorAssemblerConstant.PRIMITIVE_GRAPH;
 	}
 
 	createFunctionData(additionalRootNodes: BaseJsNodeType[]): ActorFunctionData | undefined {

@@ -28,7 +28,7 @@ import {
 	pointAttributeSizes,
 	pointAttributeSize,
 } from './entities/point/CorePointUtils';
-import type {TypedCorePoint} from './entities/point/CorePoint';
+import type {CorePoint} from './entities/point/CorePoint';
 
 // CAD
 import type {CadGeometryType, CadGeometryTypeShape} from './modules/cad/CadCommon';
@@ -298,7 +298,7 @@ export class CoreGroup extends CoreEntity {
 		if (group) {
 			CoreString.indices(group, _indices);
 			const points = this.points();
-			const compactPoints: TypedCorePoint<CoreObjectType>[] = [];
+			const compactPoints: CorePoint<CoreObjectType>[] = [];
 			return arrayCompact(
 				_indices.map((i) => points[i]),
 				compactPoints

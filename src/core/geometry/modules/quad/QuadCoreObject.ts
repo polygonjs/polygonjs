@@ -32,9 +32,9 @@ export class QuadCoreObject extends BaseCoreObject<CoreObjectType.QUAD> {
 	static override objectData<T extends CoreObjectType>(object: ObjectContent<T>): ObjectData {
 		const data = objectData(object);
 
-		data.pointsCount = QuadPoint.pointsCount(object);
-		data.verticesCount = QuadVertex.verticesCount(object);
-		data.primitivesCount = QuadPrimitive.primitivesCount(object);
+		data.pointsCount = QuadPoint.entitiesCount(object);
+		data.verticesCount = QuadVertex.entitiesCount(object);
+		data.primitivesCount = QuadPrimitive.entitiesCount(object);
 		data.primitiveName = 'quad';
 
 		return data;
@@ -77,7 +77,7 @@ export class QuadCoreObject extends BaseCoreObject<CoreObjectType.QUAD> {
 	//
 	//
 	override relatedPrimitives(): CorePrimitive<CoreObjectType>[] {
-		const primitivesCount = QuadPrimitive.primitivesCount(this._object);
+		const primitivesCount = QuadPrimitive.entitiesCount(this._object);
 		const primitives: CorePrimitive<CoreObjectType>[] = [];
 		for (let i = 0; i < primitivesCount; i++) {
 			const primitive = new QuadPrimitive(this._object as any, i) as CorePrimitive<CoreObjectType>;

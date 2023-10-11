@@ -22,7 +22,7 @@ export class SubnetInputJsNode extends TypedJsNode<SubnetInputJsParamsConfig> {
 	override initializeNode() {
 		this.io.connection_points.set_output_name_function(this._expectedOutputNames.bind(this));
 		this.io.connection_points.set_expected_input_types_function(() => []);
-		this.io.connection_points.set_expected_output_types_function(this._expectedOutputTypes.bind(this));
+		this.io.connection_points.set_expected_output_types_function(this.expectedOutputTypes.bind(this));
 
 		// this.lifecycle.onAfterAdded(() => {
 		// 	this._connect_to_parent_connections_controller();
@@ -38,29 +38,31 @@ export class SubnetInputJsNode extends TypedJsNode<SubnetInputJsParamsConfig> {
 		return parent?.childExpectedInputConnectionPointName(index) || `out${index}`;
 	}
 
-	protected _expectedOutputTypes() {
+	expectedOutputTypes() {
 		const parent = this.parent();
 		return parent?.childExpectedInputConnectionPointTypes() || [];
 	}
 	override setLines(shadersCollectionController: JsLinesCollectionController) {
-		const subnetParent = this.parent() as SubnetJsNode;
-		const outputTypes = this._expectedOutputTypes();
-		let i = 0;
+		const parent = this.parent();
+		parent?.setSubnetInputLines(shadersCollectionController, this);
+		// const subnetParent = this.parent() as SubnetJsNode;
+		// const outputTypes = this._expectedOutputTypes();
+		// let i = 0;
 
-		for (const _ of outputTypes) {
-			const inputName = subnetParent.inputNameForSubnetInput(i);
-			const inputValue = subnetParent.variableForInput(shadersCollectionController, inputName);
-			const dataType = this._expectedOutputTypes()[0];
-			const varName = this.jsVarName(inputName);
-			shadersCollectionController.addBodyOrComputed(this, [
-				{
-					dataType,
-					varName,
-					value: inputValue,
-				},
-			]);
-			i++;
-		}
+		// for (const _ of outputTypes) {
+		// 	const inputName = subnetParent.inputNameForSubnetInput(i);
+		// 	const inputValue = subnetParent.variableForInput(shadersCollectionController, inputName);
+		// 	const dataType = this._expectedOutputTypes()[0];
+		// 	const varName = this.jsVarName(inputName);
+		// 	shadersCollectionController.addBodyOrComputed(this, [
+		// 		{
+		// 			dataType,
+		// 			varName,
+		// 			value: inputValue,
+		// 		},
+		// 	]);
+		// 	i++;
+		// }
 	}
 
 	// public override outputValue(context: JsNodeTriggerContext, outputName: string) {

@@ -1,6 +1,6 @@
 import {Vector3} from 'three';
 import {arraySum, arrayMax} from '../ArrayUtils';
-import {CorePoint} from '../geometry/entities/point/CorePoint';
+import {BaseCorePoint} from '../geometry/entities/point/CorePoint';
 import {CoreType} from '../Type';
 
 const _positionSrc = new Vector3();
@@ -8,8 +8,8 @@ const _positionDest = new Vector3();
 
 export class CoreInterpolate {
 	static perform(
-		point_dest: CorePoint,
-		points_src: CorePoint[],
+		point_dest: BaseCorePoint,
+		points_src: BaseCorePoint[],
 		attrib_name: string,
 		distance_threshold: number,
 		blend_with: number
@@ -37,8 +37,8 @@ export class CoreInterpolate {
 	}
 
 	static _interpolate_with_1_point(
-		point_dest: CorePoint,
-		point_src: CorePoint,
+		point_dest: BaseCorePoint,
+		point_src: BaseCorePoint,
 		attrib_name: string,
 		distance_threshold: number,
 		blend_with: number
@@ -68,7 +68,7 @@ export class CoreInterpolate {
 	}
 
 	static _weighted_value_from_distance(
-		point_dest: CorePoint,
+		point_dest: BaseCorePoint,
 		value_src: number,
 		attrib_name: string,
 		distance: number,
@@ -90,8 +90,8 @@ export class CoreInterpolate {
 	}
 
 	static _interpolate_with_multiple_points(
-		point_dest: CorePoint,
-		points_src: CorePoint[],
+		point_dest: BaseCorePoint,
+		points_src: BaseCorePoint[],
 		attrib_name: string,
 		distance_threshold: number,
 		blend_with: number

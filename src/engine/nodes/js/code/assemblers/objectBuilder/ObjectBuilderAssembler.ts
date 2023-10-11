@@ -108,14 +108,14 @@ export class JsAssemblerObjectBuilder extends BaseJsShaderAssembler {
 	// 		return this._function(position);
 	// 	}
 	// }
-	defaultObject3DVariable(): string {
+	defaultObjectVariable(): string {
 		return ObjectBuilderAssemblerConstant.OBJECT_3D;
 	}
 	defaultObject3DMaterialVariable(): string {
 		return ObjectBuilderAssemblerConstant.MATERIAL;
 	}
-	defaultPointIndexVariable(): string {
-		return ObjectBuilderAssemblerConstant.PTNUM;
+	defaultPrimitiveGraph(): string {
+		return ObjectBuilderAssemblerConstant.PRIMITIVE_GRAPH;
 	}
 
 	override updateFunction() {

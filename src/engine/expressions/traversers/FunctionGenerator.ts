@@ -260,7 +260,6 @@ const Core = {
 	String: CoreString,
 };
 
-// const ${VAR_ENTITIES} = param.expressionController.entities();
 function getEntitiesAttributes(entities: CoreEntity[], attribName: string) {
 	const firstEntity = entities[0];
 	if (firstEntity instanceof ThreejsPoint) {
@@ -403,25 +402,30 @@ export class FunctionGenerator extends BaseTraverser {
 			
 			if(${VAR_ENTITIES}){
 				return new Promise( async (resolve, reject)=>{
-					const entityCallback = param.expressionController.entityCallback();
-					// assign_attributes_lines
-					${this._attribute_requirements_controller.assignAttributesLines()}
-					// check if attributes are present
-					if( ${this._attribute_requirements_controller.attributePresenceCheckLine()} ){
-						// assign function
-						const ${FUNC_GET_ENTITY_ATTRIBUTE_VALUE} = ${FUNC_GET_ENTITY_ATTRIBUTE_VALUE_FUNC}(entities[0]);
-						// assign_arrays_lines
-						${this._attribute_requirements_controller.assignArraysLines()}
-						for(const ${VAR_ENTITY} of ${VAR_ENTITIES}){
-							result = ${this.function_main_string};
-							entityCallback(${VAR_ENTITY}, result);
+					try {
+						const entityCallback = param.expressionController.entityCallback();
+						// assign_attributes_lines
+						${this._attribute_requirements_controller.assignAttributesLines()}
+						// check if attributes are present
+						if( ${this._attribute_requirements_controller.attributePresenceCheckLine()} ){
+							// assign function
+							const ${FUNC_GET_ENTITY_ATTRIBUTE_VALUE} = ${FUNC_GET_ENTITY_ATTRIBUTE_VALUE_FUNC}(entities[0]);
+							// assign_arrays_lines
+							${this._attribute_requirements_controller.assignArraysLines()}
+							for(const ${VAR_ENTITY} of ${VAR_ENTITIES}){
+								result = ${this.function_main_string};
+								entityCallback(${VAR_ENTITY}, result);
+							}
+							resolve()
+						} else {
+							const missingAttributes = ${this._attribute_requirements_controller.missingAttributesLine()}().join(', ');
+							const error = new Error('attribute ' + missingAttributes + ' not found')
+							_set_error_from_error(error)
+							reject(error)
 						}
-						resolve()
-					} else {
-						const missingAttributes = ${this._attribute_requirements_controller.missingAttributesLine()}().join(', ');
-						const error = new Error('attribute ' + missingAttributes + ' not found')
-						_set_error_from_error(error)
-						reject(error)
+					}catch(e){
+						_set_error_from_error(e)
+						reject(e)
 					}
 				})
 			}
@@ -449,7 +453,6 @@ export class FunctionGenerator extends BaseTraverser {
 			this.clearError();
 
 			const result = this.function(...FUNCTION_ARGS, this.param, this.methods, this._set_error_from_error_bound);
-
 			return result;
 		}
 	}

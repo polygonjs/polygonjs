@@ -14,11 +14,14 @@ import {Attribute} from '../../../core/geometry/Attribute';
 import {ParamPathParam} from '../../params/ParamPath';
 import {NodePathParam} from '../../params/NodePath';
 
-function _defaultObject3D(linesController: JsLinesCollectionController): string {
-	return linesController.assembler().defaultObject3DVariable();
+export function defaultObject(linesController: JsLinesCollectionController): string {
+	return linesController.assembler().defaultObjectVariable();
 }
 function _defaultObject3DMaterial(linesController: JsLinesCollectionController): string {
 	return linesController.assembler().defaultObject3DMaterialVariable();
+}
+export function defaultPrimitiveGraph(linesController: JsLinesCollectionController): string {
+	return linesController.assembler().defaultPrimitiveGraph();
 }
 function _defaultPointIndex(node: BaseJsNodeType, linesController: JsLinesCollectionController): string {
 	// return linesController.assembler().defaultPointIndexVariable();
@@ -30,7 +33,7 @@ export function inputObject3D(node: BaseJsNodeType, linesController: JsLinesColl
 	const inputObject3D = node.io.inputs.named_input(JsConnectionPointType.OBJECT_3D);
 	const object3D = inputObject3D
 		? node.variableForInput(linesController, JsConnectionPointType.OBJECT_3D)
-		: _defaultObject3D(linesController);
+		: defaultObject(linesController);
 	return object3D;
 }
 

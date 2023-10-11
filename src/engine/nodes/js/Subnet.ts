@@ -8,13 +8,24 @@ import {Constructor, valueof} from '../../../types/GlobalTypes';
 import {TypedJsNode, BaseJsNodeType} from './_Base';
 import {JsConnectionPointType, JS_CONNECTION_POINT_TYPES} from '../utils/io/connections/Js';
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {NetworkNodeType, NodeContext} from '../../poly/NodeContext';
+import {NetworkChildNodeType, NetworkNodeType, NodeContext} from '../../poly/NodeContext';
 import {JsNodeChildrenMap} from '../../poly/registers/nodes/Js';
+import {SubnetInputJsNode} from './SubnetInput';
 import {SubnetOutputJsNode} from './SubnetOutput';
 import {NodeCreateOptions} from '../utils/hierarchy/ChildrenController';
 import {rangeStartEnd} from '../../../core/ArrayUtils';
 import {IntegerParam} from '../../params/Integer';
 import {StringParam} from '../../params/String';
+import type {JsLinesCollectionController} from './code/utils/JsLinesCollectionController';
+import {LineType} from './code/utils/LineType';
+import {TypedNodeTraverser} from '../utils/shaders/NodeTraverser';
+import {JsCodeBuilder} from './code/utils/CodeBuilder';
+import {BaseJsDefinition} from './utils/JsDefinition';
+import {AddBodyLinesOptions} from './code/utils/LinesController';
+
+export const ADD_BODY_LINES_OPTIONS: AddBodyLinesOptions = {
+	makeUniq: false,
+};
 
 function visibleIfInputsCountAtLeast(index: number) {
 	return {
@@ -226,6 +237,219 @@ export class TypedSubnetJsNode<K extends TypedSubnetJsParamsConfig> extends Abst
 		const params: StringParam[] = this._inputNameParams();
 		return params[index].value;
 	}
+	override setLines(linesController: JsLinesCollectionController) {
+		this._setLinesPreBlock(linesController);
+		this.setLinesBlockStart(linesController);
+		this._setLinesBlockContent(linesController);
+		this.setLinesBlockEnd(linesController);
+	}
+	protected linesBlockContent(linesController: JsLinesCollectionController) {
+		const codeBuilder = this._runCodeBuilder(linesController);
+		if (!codeBuilder) {
+			return;
+		}
+		const shadername = linesController.currentShaderName();
+		const bodyLines = codeBuilder.lines(shadername, LineType.BODY);
+		return this._sanitizeBodyLines(bodyLines);
+	}
+	protected _setLinesPreBlock(linesController: JsLinesCollectionController) {
+		if (this._traverseChildren(linesController)) {
+			return;
+		}
+		const bodyLines: string[] = [];
+		const connection_points = this.io.inputs.namedInputConnectionPoints();
+		if (!connection_points) {
+			return;
+		}
+		for (let i = 0; i < connection_points.length; i++) {
+			const connection_point = connection_points[i];
+			// const gl_type = connection_point.type();
+			const out = this.jsVarName(connection_point.name());
+			const in_value = this.variableForInput(linesController, connection_point.name());
+			const body_line = `let ${out} = ${in_value}`;
+			bodyLines.push(body_line);
+		}
+
+		linesController._addBodyLines(this, bodyLines);
+	}
+	protected setLinesBlockStart(linesController: JsLinesCollectionController) {
+		if (this._traverseChildren(linesController)) {
+			return;
+		}
+		linesController._addBodyLines(this, [`if(true){`]);
+	}
+	protected _setLinesBlockContent(linesController: JsLinesCollectionController) {
+		const bodyLines = this.linesBlockContent(linesController);
+		if (!bodyLines) {
+			return;
+		}
+		linesController._addBodyLines(this, bodyLines, undefined, ADD_BODY_LINES_OPTIONS);
+	}
+	protected setLinesBlockEnd(linesController: JsLinesCollectionController) {
+		if (this._traverseChildren(linesController)) {
+			return;
+		}
+		linesController._addBodyLines(this, [`}`]);
+	}
+
+	protected _runCodeBuilder(linesController: JsLinesCollectionController) {
+		// I potentially could look for attribute nodes to use as output,
+		// but for now, I'll enforce a rule that attribute nodes must be at the top level
+		const outputNodes: SubnetOutputJsNode[] = this.nodesByType(NetworkChildNodeType.OUTPUT);
+		const functionNode = this.functionNode();
+		if (!functionNode) {
+			return;
+		}
+		if (outputNodes.length == 0) {
+			functionNode.states.error.set(`${this.path()}:one output node is required`);
+		}
+		if (outputNodes.length > 1) {
+			functionNode.states.error.set(`${this.path()}:only one output node allowed`);
+		}
+		const subnetOutput = outputNodes[0];
+		const subnetOutputInputConnectionPoints = subnetOutput.io.inputs.namedInputConnectionPoints();
+
+		const subnetOutputInputNames = subnetOutputInputConnectionPoints
+			? subnetOutputInputConnectionPoints.map((cp) => cp.name())
+			: [];
+
+		const assembler = linesController.assembler();
+
+		const nodeTraverser = new TypedNodeTraverser<NodeContext.JS>(
+			this,
+			linesController.shaderNames(),
+			(rootNode, shaderName) => {
+				return subnetOutputInputNames;
+			}
+		);
+		const codeBuilder = new JsCodeBuilder(
+			nodeTraverser,
+			(shaderName, rootNodes) => {
+				// return [subnetOutput];
+				return assembler.rootNodesByShaderName(shaderName, rootNodes);
+			},
+			assembler
+		);
+		const paramNodes: BaseJsNodeType[] = [];
+		codeBuilder.buildFromNodes(outputNodes, paramNodes);
+		this._addCodeBuilderDefinition(codeBuilder, linesController);
+		return codeBuilder;
+	}
+	private _addCodeBuilderDefinition(codeBuilder: JsCodeBuilder, linesController: JsLinesCollectionController) {
+		const internalShadersCollectionController = codeBuilder.shadersCollectionController();
+		if (!internalShadersCollectionController) {
+			return;
+		}
+		const currentShaderName = linesController.currentShaderName();
+		internalShadersCollectionController.setCurrentShaderName(currentShaderName);
+
+		// 1- add all definitions for each shaderName
+		const shaderNames = linesController.shaderNames();
+		for (const shaderName of shaderNames) {
+			const definitions: BaseJsDefinition[] = [];
+			internalShadersCollectionController.traverseDefinitions(shaderName, (definition) => {
+				// only add function if it is for the current shader
+				const isNotFunction = true; //!(definition instanceof FunctionGLDefinition);
+				const isCurrentShader = shaderName == currentShaderName;
+				if (isNotFunction || isCurrentShader) {
+					definitions.push(definition);
+				}
+			});
+			linesController.addDefinitions(this, definitions, shaderName);
+		}
+		// 2- add vertex body lines if current shader name is fragment
+		// if (currentShaderName != JsFunctionName.VERTEX) {
+		// 	const attribNodes = this.nodesByType(GlType.ATTRIBUTE);
+		// 	const bodyLines: string[] = [];
+		// 	for (const attribNode of attribNodes) {
+		// 		const linesForNode = internalShadersCollectionController.bodyLines(ShaderName.VERTEX, attribNode);
+		// 		if (linesForNode) {
+		// 			bodyLines.push(...linesForNode);
+		// 		}
+		// 	}
+		// 	linesController.addBodyLines(this, bodyLines, ShaderName.VERTEX, ADD_BODY_LINES_OPTIONS);
+		// }
+	}
+	setSubnetInputLines(linesController: JsLinesCollectionController, childNode: SubnetInputJsNode) {
+		const outputTypes = childNode.expectedOutputTypes();
+		let i = 0;
+
+		for (const _ of outputTypes) {
+			const inputName = this.inputNameForSubnetInput(i);
+			const inputValue = this.variableForInput(linesController, inputName);
+			const dataType = outputTypes[0];
+			const varName = childNode.jsVarName(inputName);
+			linesController.addBodyOrComputed(childNode, [
+				{
+					dataType,
+					varName,
+					value: inputValue,
+				},
+			]);
+			i++;
+		}
+	}
+	setSubnetOutputLines(linesController: JsLinesCollectionController, childNode: SubnetOutputJsNode) {
+		// const bodyLines: string[] = this.subnetOutputLines(childNode);
+		// shadersCollectionController.addBodyLines(childNode, bodyLines, undefined, ADD_BODY_LINES_OPTIONS);
+		const inputTypes = childNode.expectedInputTypes();
+		let i = 0;
+
+		const addLineIfNotConnected = this._traverseChildren(linesController);
+
+		for (const _ of inputTypes) {
+			const inputName = childNode.expectedInputName(i);
+			const inputValue = childNode.variableForInput(linesController, inputName);
+			const dataType = inputTypes[0];
+			const varName = this.jsVarName(this.outputNameForSubnetOutput(i) || '');
+
+			const isInputConnected = childNode.io.inputs.named_input(inputName);
+			const addLine = isInputConnected || addLineIfNotConnected;
+
+			if (addLine) {
+				linesController.addBodyOrComputed(
+					childNode,
+					[
+						{
+							dataType,
+							varName,
+							value: inputValue,
+						},
+					],
+					{
+						constPrefix: false,
+					}
+				);
+			}
+
+			i++;
+		}
+	}
+	private _traverseChildren(linesController: JsLinesCollectionController) {
+		return linesController.assembler().computedVariablesAllowed();
+	}
+	inputNameForSubnetInput(index: number) {
+		return this._expectedInputName(index);
+	}
+	outputNameForSubnetOutput(index: number) {
+		return this._expectedOutputName(index);
+	}
+
+	// align with the right number of tabs
+	protected _sanitizeBodyLines(lines: string[]): string[] {
+		return lines;
+		// const level = CodeFormatter.nodeDistanceToMaterial(this);
+		// const prefix = `\t`.repeat(level);
+
+		// return lines.map((line) => {
+		// 	const trimmed = line.trim();
+		// 	if (trimmed.length == 0) {
+		// 		return '';
+		// 	} else {
+		// 		return `${prefix}${trimmed}`;
+		// 	}
+		// });
+	}
 }
 
 class SubnetJsParamsConfig extends TypedSubnetJsParamsConfigMixin(NodeParamsConfig) {}
@@ -248,10 +472,10 @@ export class SubnetJsNode extends TypedSubnetJsNode<SubnetJsParamsConfig> {
 	// inputValueForSubnetInput(context: JsNodeTriggerContext, outputName: string) {
 	// 	return this._inputValue<JsConnectionPointType>(outputName, context) || 0;
 	// }
-	inputNameForSubnetInput(index: number) {
-		return this._expectedInputName(index);
-	}
-	outputNameForSubnetOutput(index: number) {
-		return this._expectedOutputName(index);
-	}
+	// override inputNameForSubnetInput(index: number) {
+	// 	return this._expectedInputName(index);
+	// }
+	// override outputNameForSubnetOutput(index: number) {
+	// 	return this._expectedOutputName(index);
+	// }
 }

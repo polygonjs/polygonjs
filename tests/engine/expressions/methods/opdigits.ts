@@ -1,5 +1,5 @@
 import type {QUnit} from '../../../helpers/QUnit';
-import type {CorePoint} from '../../../../src/core/geometry/entities/point/CorePoint';
+import type {BaseCorePoint} from '../../../../src/core/geometry/entities/point/CorePoint';
 export function testengineexpressionsmethodsopdigits(qUnit: QUnit) {
 	qUnit.test('expression opdigits works', async (assert) => {
 		const geo1 = window.geo1;
@@ -15,7 +15,7 @@ export function testengineexpressionsmethodsopdigits(qUnit: QUnit) {
 			container
 				.coreContent()!
 				.points()
-				.map((p: CorePoint) => p.attribValue('ptid')),
+				.map((p: BaseCorePoint) => p.attribValue('ptid')),
 			[1, 1]
 		);
 
@@ -25,7 +25,7 @@ export function testengineexpressionsmethodsopdigits(qUnit: QUnit) {
 			container
 				.coreContent()!
 				.points()
-				.map((p: CorePoint) => p.attribValue('ptid')),
+				.map((p: BaseCorePoint) => p.attribValue('ptid')),
 			[12, 12]
 		);
 	});

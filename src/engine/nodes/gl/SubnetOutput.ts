@@ -45,6 +45,6 @@ export class SubnetOutputGlNode extends TypedGlNode<SubnetOutputGlParamsConfig> 
 
 	override setLines(shadersCollectionController: ShadersCollectionController) {
 		const parent = this.parent();
-		return parent?.setSubnetOutputLines(shadersCollectionController, this) || [];
+		parent?.setSubnetOutputLines(shadersCollectionController, this);
 	}
 }

@@ -206,7 +206,7 @@ export class AbstractTypedSubnetGlNode<K extends NodeParamsConfig> extends Typed
 		}
 		shadersCollectionController.addBodyLines(childNode, bodyLines, undefined, ADD_BODY_LINES_OPTIONS);
 	}
-	protected subnetOutputLines(childNode: SubnetOutputGlNode): string[] {
+	private subnetOutputLines(childNode: SubnetOutputGlNode): string[] {
 		const connections = childNode.io.connections.inputConnections();
 		if (!connections) {
 			return [];

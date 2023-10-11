@@ -131,7 +131,15 @@ export class TypedJsNode<K extends NodeParamsConfig> extends TypedNode<NodeConte
 	// //
 	// //
 	jsVarName(name: string) {
-		return sanitizeJsVarName(`v_POLY_${this.name()}_${name}`);
+		const functionNode = this.functionNode();
+		const fullPathWithFunctionNodeRemoved = (_functionNode: AssemblerControllerNode<BaseJsShaderAssembler>) => {
+			const functionNodePath = _functionNode.path();
+			const path = this.path();
+			return path.slice(functionNodePath.length + 1);
+		};
+		const baseName = functionNode ? fullPathWithFunctionNodeRemoved(functionNode) : this.name();
+
+		return sanitizeJsVarName(`v_POLY_${baseName}_${name}`);
 	}
 	inputVarName(inputName: string): string {
 		return TypedJsNode.inputVarName(this, inputName);

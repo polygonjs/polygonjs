@@ -11,7 +11,7 @@ import {Matrix4} from 'three';
 import {Poly} from '../../../../Poly';
 import type {BaseGeoLoaderOutput} from '../../../../../core/loader/geometry/Common';
 import {BaseObject3DLoaderHandler} from '../../../../../core/loader/geometry/_BaseLoaderHandler';
-import {CorePoint} from '../../../../../core/geometry/entities/point/CorePoint';
+import {BaseCorePoint} from '../../../../../core/geometry/entities/point/CorePoint';
 // import { Constructor } from 'vue/types/options';
 
 // interface FileMultSopNodeParamConfigOptions {
@@ -92,7 +92,7 @@ export abstract class BaseFileMultiSopNode<
 		// gather all unique urls
 		if (param.hasExpression() && param.expressionController) {
 			const uniqueUrls: Set<string> = new Set();
-			const _applyUrlToPoint = (point: CorePoint, url: string) => {
+			const _applyUrlToPoint = (point: BaseCorePoint, url: string) => {
 				// check that this index was not already set
 				const index = point.index();
 				if (urlByIndex.has(index)) {

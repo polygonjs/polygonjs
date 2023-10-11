@@ -466,6 +466,7 @@ import {testenginenodessopDeleteByName} from './engine/nodes/sop/DeleteByName';
 import {testenginenodessopDirectionalLight} from './engine/nodes/sop/DirectionalLight';
 import {testenginenodessopDrawRange} from './engine/nodes/sop/DrawRange';
 import {testenginenodessopEmptyObject} from './engine/nodes/sop/EmptyObject';
+import {testenginenodessopEntityBuilder} from './engine/nodes/sop/EntityBuilder';
 import {testenginenodessopFace} from './engine/nodes/sop/Face';
 import {testenginenodessopFile} from './engine/nodes/sop/File';
 import {testenginenodessopFile3DS} from './engine/nodes/sop/File3DS';
@@ -1056,6 +1057,7 @@ export function testPolygonjs(options: TestPolygonjsOptions) {
 		testenginenodessopDirectionalLight,
 		testenginenodessopDrawRange,
 		testenginenodessopEmptyObject,
+		testenginenodessopEntityBuilder,
 		testenginenodessopFace,
 		testenginenodessopFile,
 		testenginenodessopFile3DS,

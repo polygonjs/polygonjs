@@ -11,7 +11,7 @@ export class ThreejsPrimitiveLineSegment extends ThreejsPrimitive {
 		return 'line';
 	}
 
-	static override primitivesCount<T extends CoreObjectType>(object: ObjectContent<T>) {
+	static override entitiesCount<T extends CoreObjectType>(object: ObjectContent<T>) {
 		const geometry = (object as any as LineSegments).geometry;
 		if (!geometry) {
 			return 0;

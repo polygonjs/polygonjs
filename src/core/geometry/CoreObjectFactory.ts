@@ -1,14 +1,14 @@
 import type {CoreObjectType, ObjectContent} from './ObjectContent';
 import {object3DFactory} from './modules/three/ThreeModule';
-import type {TypedCorePoint} from './entities/point/CorePoint';
-import {CoreVertex} from './entities/vertex/CoreVertex';
-import {BaseCoreObject} from './entities/object/BaseCoreObject';
-import {CorePrimitive} from './entities/primitive/CorePrimitive';
+import type {CorePoint} from './entities/point/CorePoint';
+import type {CoreVertex} from './entities/vertex/CoreVertex';
+import type {BaseCoreObject} from './entities/object/BaseCoreObject';
+import type {CorePrimitive} from './entities/primitive/CorePrimitive';
 import {AttribClass} from './Constant';
 
 // point return types
-type BaseCorePointInstance = TypedCorePoint<CoreObjectType>;
-type BaseCorePointClassClass = typeof TypedCorePoint<CoreObjectType>;
+type BaseCorePointInstance = CorePoint<CoreObjectType>;
+type BaseCorePointClassClass = typeof CorePoint<CoreObjectType>;
 // vertex return types
 type BaseCoreVertexInstance = CoreVertex<CoreObjectType>;
 type BaseCoreVertexClassClass = typeof CoreVertex<CoreObjectType>;
@@ -84,17 +84,14 @@ export function corePointClassFactory(object: ObjectContent<CoreObjectType>): Ba
 	return object3DFactory.pointClass(object) as BaseCorePointClassClass;
 }
 
-export function corePointInstanceFactory<T extends CoreObjectType>(
-	object: ObjectContent<T>,
-	index = 0
-): TypedCorePoint<T> {
+export function corePointInstanceFactory<T extends CoreObjectType>(object: ObjectContent<T>, index = 0): CorePoint<T> {
 	for (const factoryFunction of coreFactoryFunctions) {
 		const result = factoryFunction.pointInstance(object, index);
 		if (result) {
-			return result as TypedCorePoint<T>;
+			return result as CorePoint<T>;
 		}
 	}
-	return object3DFactory.pointInstance(object, index) as TypedCorePoint<T>;
+	return object3DFactory.pointInstance(object, index) as CorePoint<T>;
 }
 // vertex creation methods
 export function coreVertexClassFactory(object: ObjectContent<CoreObjectType>): BaseCoreVertexClassClass {

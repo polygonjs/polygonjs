@@ -6,7 +6,7 @@ export class CadPrimitiveFace extends CadPrimitive<CadGeometryType.FACE> {
 	static primitiveName() {
 		return 'face';
 	}
-	static override primitivesCount<T extends CoreObjectType>(object: ObjectContent<T>) {
+	static override entitiesCount<T extends CoreObjectType>(object: ObjectContent<T>) {
 		return 0;
 	}
 }

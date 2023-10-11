@@ -56,18 +56,9 @@ export class ExpressionManager {
 				return newValue;
 			} catch (e) {
 				Poly.error('error while evaluating expression', e);
-				// if (this.function_generator.is_errored && this.function_generator.error_message) {
-				// 	this.set_error(this.function_generator.error_message);
-				// }
-				// return new Promise((resolve, reject) => {
-				// 	resolve(null);
-				// })
 			}
 		} else {
 			Poly.error('compute not allowed');
-			// return new Promise((resolve, reject) => {
-			// 	resolve(null);
-			// });
 		}
 	}
 

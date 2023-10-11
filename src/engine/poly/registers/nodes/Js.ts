@@ -71,6 +71,7 @@ import {FloatToVec2JsNode} from '../../../nodes/js/FloatToVec2';
 import {FloatToVec3JsNode} from '../../../nodes/js/FloatToVec3';
 import {FloatToVec4JsNode} from '../../../nodes/js/FloatToVec4';
 import {FloorJsNode} from '../../../nodes/js/Floor';
+import {ForLoopJsNode} from '../../../nodes/js/ForLoop';
 import {GeolocationCurrentPositionJsNode} from '../../../nodes/js/GeolocationCurrentPosition';
 import {GetBox3PropertyJsNode} from '../../../nodes/js/GetBox3Property';
 import {GetChildrenAttributesJsNode} from '../../../nodes/js/GetChildrenAttributes';
@@ -121,6 +122,7 @@ import {GlobalsHemisphereLightJsNode} from '../../../nodes/js/GlobalsHemisphereL
 import {GlobalsPointLightJsNode} from '../../../nodes/js/GlobalsPointLight';
 import {GlobalsSpotLightJsNode} from '../../../nodes/js/GlobalsSpotLight';
 import {HsvToRgbJsNode} from '../../../nodes/js/HsvToRgb';
+import {ImportAttributeJsNode} from '../../../nodes/js/ImportAttribute';
 import {IntToBoolJsNode} from '../../../nodes/js/IntToBool';
 import {IntToFloatJsNode} from '../../../nodes/js/IntToFloat';
 import {IsDefinedJsNode} from '../../../nodes/js/IsDefined';
@@ -216,6 +218,8 @@ import {PolarTransformJsNode} from '../../../nodes/js/PolarTransform';
 import {PowJsNode} from '../../../nodes/js/Pow';
 import {PressButtonParamJsNode} from '../../../nodes/js/PressButtonParam';
 import {PreviousValueJsNode} from '../../../nodes/js/PreviousValue';
+import {PrimitiveNeighbourIndexJsNode} from '../../../nodes/js/PrimitiveNeighbourIndex';
+import {PrimitiveNeighboursCountJsNode} from '../../../nodes/js/PrimitiveNeighboursCount';
 import {QuaternionJsNode} from '../../../nodes/js/Quaternion';
 import {QuaternionAngleToJsNode} from '../../../nodes/js/QuaternionAngleTo';
 import {QuaternionSlerpJsNode} from '../../../nodes/js/QuaternionSlerp';
@@ -426,6 +430,7 @@ export interface JsNodeChildrenMap {
 	floatToVec3: FloatToVec3JsNode;
 	floatToVec4: FloatToVec4JsNode;
 	floor: FloorJsNode;
+	forLoop: ForLoopJsNode;
 	geolocationCurrentPosition: GeolocationCurrentPositionJsNode;
 	getBox3Property: GetBox3PropertyJsNode;
 	getChildrenAttributes: GetChildrenAttributesJsNode;
@@ -476,6 +481,7 @@ export interface JsNodeChildrenMap {
 	globalsPointLight: GlobalsPointLightJsNode;
 	globalsSpotLight: GlobalsSpotLightJsNode;
 	hsvToRgb: HsvToRgbJsNode;
+	importAttribute: ImportAttributeJsNode;
 	intToBool: IntToBoolJsNode;
 	intToFloat: IntToFloatJsNode;
 	isDefined: IsDefinedJsNode;
@@ -571,6 +577,8 @@ export interface JsNodeChildrenMap {
 	pow: PowJsNode;
 	pressButtonParam: PressButtonParamJsNode;
 	previousValue: PreviousValueJsNode;
+	primitiveNeighbourIndex: PrimitiveNeighbourIndexJsNode;
+	primitiveNeighboursCount: PrimitiveNeighboursCountJsNode;
 	quaternion: QuaternionJsNode;
 	quaternionAngleTo: QuaternionAngleToJsNode;
 	quaternionSlerp: QuaternionSlerpJsNode;
@@ -713,12 +721,19 @@ export interface JsNodeChildrenMap {
 import {PolyEngine} from '../../../Poly';
 import {SopType} from './types/Sop';
 import {NetworkNodeType, NodeContext} from '../../NodeContext';
-const SUBNET_CHILD_OPTION = {
-	only: [`${SubnetJsNode.context()}/${SubnetJsNode.type()}`],
-};
+import {JsType} from './types/Js';
+
 const sopType = (type: SopType) => `${NodeContext.SOP}/${type}`;
+const jsType = (type: JsType | NetworkNodeType) => `${NodeContext.JS}/${type}`;
+const JS_SUBNET_TYPE = jsType(NetworkNodeType.SUBNET);
+const JS_FOR_LOOP_TYPE = jsType(JsType.FOR_LOOP);
+const JS_SUBNET_TYPES = [JS_SUBNET_TYPE, JS_FOR_LOOP_TYPE];
+const SUBNET_CHILD_OPTION = {
+	only: JS_SUBNET_TYPES,
+};
 const ONLY_WITH_GLOBALS = {
 	only: [
+		sopType(SopType.ENTITY_BUILDER),
 		sopType(SopType.INSTANCE_BUILDER),
 		sopType(SopType.OBJECT_BUILDER),
 		sopType(SopType.POINT_BUILDER),
@@ -727,10 +742,19 @@ const ONLY_WITH_GLOBALS = {
 	],
 };
 const ONLY_OBJECT_BUILDER = {
-	only: [sopType(SopType.OBJECT_BUILDER)],
+	only: [sopType(SopType.OBJECT_BUILDER), ...JS_SUBNET_TYPES],
 };
-const ONLY_POINT_OR_OBJECT_BUILDER = {
-	only: [sopType(SopType.INSTANCE_BUILDER), sopType(SopType.OBJECT_BUILDER), sopType(SopType.POINT_BUILDER)],
+const ONLY_ENTITY_BUILDERS = {
+	only: [
+		sopType(SopType.ENTITY_BUILDER),
+		sopType(SopType.INSTANCE_BUILDER),
+		sopType(SopType.OBJECT_BUILDER),
+		sopType(SopType.POINT_BUILDER),
+		...JS_SUBNET_TYPES,
+	],
+};
+const ONLY_ENTITY_BUILDER = {
+	only: [sopType(SopType.ENTITY_BUILDER), ...JS_SUBNET_TYPES],
 };
 
 const ACTOR_OBJECTS = [
@@ -771,7 +795,7 @@ const ONLY_ACTOR_AND_POINT = {
 // };
 export class JsRegister {
 	static run(poly: PolyEngine) {
-		poly.registerNode(AttributeJsNode, CATEGORY_JS.GLOBALS, ONLY_POINT_OR_OBJECT_BUILDER);
+		poly.registerNode(AttributeJsNode, CATEGORY_JS.GLOBALS, ONLY_ENTITY_BUILDERS);
 		poly.registerNode(AbsJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(AcosJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(AddJsNode, CATEGORY_JS.MATH);
@@ -820,12 +844,12 @@ export class JsRegister {
 		poly.registerNode(CursorToUvJsNode, CATEGORY_JS.INPUTS);
 		poly.registerNode(DebugJsNode, CATEGORY_JS.FLOW, ONLY_ACTOR);
 		poly.registerNode(DeformGeometryCubeLatticeJsNode, CATEGORY_JS.GEOMETRY, ONLY_ACTOR);
-		poly.registerNode(DeleteClothConstraintJsNode, CATEGORY_JS.ACTION);
-		poly.registerNode(DeleteObjectJsNode, CATEGORY_JS.ACTION);
-		poly.registerNode(DeletePhysicsRBDJsNode, CATEGORY_JS.ACTION);
-		poly.registerNode(DeletePhysicsRBDKinematicConstraintJsNode, CATEGORY_JS.ACTION);
-		poly.registerNode(DeletePhysicsRBDConstraintsJsNode, CATEGORY_JS.ACTION);
-		poly.registerNode(DeleteSoftBodyConstraintJsNode, CATEGORY_JS.ACTION);
+		poly.registerNode(DeleteClothConstraintJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR);
+		poly.registerNode(DeleteObjectJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR);
+		poly.registerNode(DeletePhysicsRBDJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR);
+		poly.registerNode(DeletePhysicsRBDKinematicConstraintJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR);
+		poly.registerNode(DeletePhysicsRBDConstraintsJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR);
+		poly.registerNode(DeleteSoftBodyConstraintJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR);
 		poly.registerNode(DegToRadJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(DeviceOrientationJsNode, CATEGORY_JS.GLOBALS, ONLY_ACTOR);
 		poly.registerNode(DistanceJsNode, CATEGORY_JS.MATH);
@@ -842,6 +866,7 @@ export class JsRegister {
 		poly.registerNode(FloatToVec3JsNode, CATEGORY_JS.CONVERSION);
 		poly.registerNode(FloatToVec4JsNode, CATEGORY_JS.CONVERSION);
 		poly.registerNode(FloorJsNode, CATEGORY_JS.MATH);
+		poly.registerNode(ForLoopJsNode, CATEGORY_JS.FLOW, ONLY_ENTITY_BUILDER);
 		poly.registerNode(GeolocationCurrentPositionJsNode, CATEGORY_JS.GLOBALS, ONLY_ACTOR);
 		poly.registerNode(GetBox3PropertyJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(GetChildrenAttributesJsNode, CATEGORY_JS.GET, ONLY_ACTOR);
@@ -892,6 +917,7 @@ export class JsRegister {
 		poly.registerNode(GlobalsPointLightJsNode, CATEGORY_JS.GLOBALS, ONLY_OBJECT_BUILDER);
 		poly.registerNode(GlobalsSpotLightJsNode, CATEGORY_JS.GLOBALS, ONLY_OBJECT_BUILDER);
 		poly.registerNode(HsvToRgbJsNode, CATEGORY_JS.CONVERSION);
+		poly.registerNode(ImportAttributeJsNode, CATEGORY_JS.GLOBALS, ONLY_ENTITY_BUILDER);
 		poly.registerNode(IntToBoolJsNode, CATEGORY_JS.CONVERSION);
 		poly.registerNode(IntToFloatJsNode, CATEGORY_JS.CONVERSION);
 		poly.registerNode(IsDefinedJsNode, CATEGORY_JS.FLOW);
@@ -987,6 +1013,8 @@ export class JsRegister {
 		poly.registerNode(PowJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(PressButtonParamJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR);
 		poly.registerNode(PreviousValueJsNode, CATEGORY_JS.ADVANCED, ONLY_ACTOR);
+		poly.registerNode(PrimitiveNeighbourIndexJsNode, CATEGORY_JS.ADVANCED, ONLY_ENTITY_BUILDER);
+		poly.registerNode(PrimitiveNeighboursCountJsNode, CATEGORY_JS.ADVANCED, ONLY_ENTITY_BUILDER);
 		poly.registerNode(QuaternionJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(QuaternionAngleToJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(QuaternionSlerpJsNode, CATEGORY_JS.MATH);
@@ -1096,7 +1124,7 @@ export class JsRegister {
 		poly.registerNode(SphereJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(SqrtJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(SubnetJsNode, CATEGORY_JS.LOGIC);
-		poly.registerNode(SubnetInputJsNode, CATEGORY_JS.LOGIC);
+		poly.registerNode(SubnetInputJsNode, CATEGORY_JS.LOGIC, SUBNET_CHILD_OPTION);
 		poly.registerNode(SubnetOutputJsNode, CATEGORY_JS.LOGIC, SUBNET_CHILD_OPTION);
 		poly.registerNode(SubtractJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(SwitchJsNode, CATEGORY_JS.LOGIC);

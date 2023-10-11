@@ -6,7 +6,7 @@ import {BaseVertexAttribute, VertexNumberAttribute} from '../../entities/vertex/
 import {verticesCountFromObject} from '../../entities/vertex/CoreVertexUtils';
 import {primitiveInstanceFactory, primitiveVerticesCountFactory} from './ThreeModule';
 import type {CorePrimitive} from '../../entities/primitive/CorePrimitive';
-import type {TypedCorePoint} from '../../entities/point/CorePoint';
+import type {CorePoint} from '../../entities/point/CorePoint';
 import {ThreejsPoint} from './ThreejsPoint';
 import {NumericAttribValue} from '../../../../types/GlobalTypes';
 import {AttributeNumericValuesOptions, attributeNumericValues} from '../../entities/utils/Common';
@@ -56,7 +56,7 @@ export class ThreejsVertex extends CoreVertex<CoreObjectType.THREEJS> {
 		size: number = 1,
 		defaultValue: NumericAttribValue = 0
 	) {
-		const verticesCount = this.verticesCount(object);
+		const verticesCount = this.entitiesCount(object);
 		target.values = new Array(verticesCount * size);
 		attributeNumericValues(object, verticesCountFromObject, size, defaultValue, target);
 
@@ -96,7 +96,7 @@ export class ThreejsVertex extends CoreVertex<CoreObjectType.THREEJS> {
 		}
 		geometry.setIndex(index);
 	}
-	static override verticesCount<T extends CoreObjectType>(object: ObjectContent<T>) {
+	static override entitiesCount<T extends CoreObjectType>(object: ObjectContent<T>) {
 		const geometry = (object as any as Mesh).geometry as BufferGeometry | undefined;
 		if (!geometry) {
 			return 0;
@@ -131,7 +131,7 @@ export class ThreejsVertex extends CoreVertex<CoreObjectType.THREEJS> {
 		}
 		return [primitive];
 	}
-	override relatedPoints<T extends CoreObjectType>(): TypedCorePoint<T>[] {
+	override relatedPoints<T extends CoreObjectType>(): CorePoint<T>[] {
 		if (!this._object) {
 			return [];
 		}
@@ -144,7 +144,7 @@ export class ThreejsVertex extends CoreVertex<CoreObjectType.THREEJS> {
 			return [];
 		}
 		const indexValue = index.array[this._index];
-		const point = new ThreejsPoint(this._object as any as Mesh, indexValue) as any as TypedCorePoint<T>;
+		const point = new ThreejsPoint(this._object as any as Mesh, indexValue) as any as CorePoint<T>;
 		return [point];
 	}
 }

@@ -1,6 +1,6 @@
 import {Vector3, BufferAttribute} from 'three';
 import {ObjectGeometryMap, CoreObjectType, ObjectContent} from '../../ObjectContent';
-import {TypedCorePoint} from '../../entities/point/CorePoint';
+import {CorePoint} from '../../entities/point/CorePoint';
 import {PointAttributesDict} from '../../entities/point/Common';
 import {QuadObject} from './QuadObject';
 import {Attribute} from '../../Attribute';
@@ -15,7 +15,7 @@ const target: AttributeNumericValuesOptions = {
 	values: [],
 };
 
-export class QuadPoint extends TypedCorePoint<CoreObjectType.QUAD> {
+export class QuadPoint extends CorePoint<CoreObjectType.QUAD> {
 	protected _geometry?: ObjectGeometryMap[CoreObjectType.QUAD];
 	protected override _object: QuadObject;
 	constructor(object: QuadObject, index: number) {
@@ -85,7 +85,7 @@ export class QuadPoint extends TypedCorePoint<CoreObjectType.QUAD> {
 		}
 		return geometry.attributes;
 	}
-	static override pointsCount<T extends CoreObjectType>(object: ObjectContent<T>): number {
+	static override entitiesCount<T extends CoreObjectType>(object: ObjectContent<T>): number {
 		const positionAttribute = this.attribute(object, Attribute.POSITION);
 		if (!positionAttribute) {
 			return 0;

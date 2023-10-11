@@ -1,4 +1,4 @@
-import {Number2, Number3} from '../../../types/GlobalTypes';
+import {Number2, Number3} from '../../../../../../types/GlobalTypes';
 const EDGES: [Number2, Number2, Number2] = [
 	[0, 1],
 	[1, 2],

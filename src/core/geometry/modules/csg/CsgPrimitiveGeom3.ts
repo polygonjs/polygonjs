@@ -11,7 +11,7 @@ export class CsgPrimitiveGeom3 extends CsgPrimitive<CsgGeometryType.GEOM3> {
 		return 'polygon';
 	}
 
-	static override primitivesCount<T extends CoreObjectType>(object: ObjectContent<T>) {
+	static override entitiesCount<T extends CoreObjectType>(object: ObjectContent<T>) {
 		const csgOobject = object as any as CsgObject<CsgGeometryType.GEOM3>;
 		const geometry = csgOobject.geometry as CsgTypeMap[CsgGeometryType.GEOM3];
 		return geometry.polygons.length;

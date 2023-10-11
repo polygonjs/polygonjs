@@ -36,7 +36,7 @@ interface FbmParams {
 }
 
 import {NodeParamsConfig, ParamConfig} from '../utils/params/ParamsConfig';
-import {CorePoint} from '../../../core/geometry/entities/point/CorePoint';
+import {BaseCorePoint} from '../../../core/geometry/entities/point/CorePoint';
 import {CoreType} from '../../../core/Type';
 import {AttribValue, NumericAttribValue} from '../../../types/GlobalTypes';
 import {isBooleanTrue} from '../../../core/BooleanValue';
@@ -196,7 +196,7 @@ export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
 		this.setCoreGroup(coreGroup);
 	}
 
-	private _cookForFloat(destPoints: CorePoint[], fbmParams: FbmParams) {
+	private _cookForFloat(destPoints: BaseCorePoint[], fbmParams: FbmParams) {
 		const simplex = this._getSimplex();
 		const useRestAttributes = isBooleanTrue(this.pv.useRestAttributes);
 		const useNormals = isBooleanTrue(this.pv.useNormals);
@@ -232,7 +232,7 @@ export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
 			destPoint.setAttribValueFromNumber(attribName, newAttribValueF);
 		}
 	}
-	private _cookForV2(destPoints: CorePoint[], fbmParams: FbmParams) {
+	private _cookForV2(destPoints: BaseCorePoint[], fbmParams: FbmParams) {
 		const simplex = this._getSimplex();
 		const useRestAttributes = isBooleanTrue(this.pv.useRestAttributes);
 		const useNormals = isBooleanTrue(this.pv.useNormals);
@@ -269,7 +269,7 @@ export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
 			destPoint.setAttribValueFromVector2(attribName, newAttribValueV);
 		}
 	}
-	private _cookForV3(destPoints: CorePoint[], fbmParams: FbmParams) {
+	private _cookForV3(destPoints: BaseCorePoint[], fbmParams: FbmParams) {
 		const simplex = this._getSimplex();
 		const useRestAttributes = isBooleanTrue(this.pv.useRestAttributes);
 		const useNormals = isBooleanTrue(this.pv.useNormals);
@@ -305,7 +305,7 @@ export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
 			destPoint.setAttribValueFromVector3(attribName, newAttribValueV);
 		}
 	}
-	private _cookForV4(destPoints: CorePoint[], fbmParams: FbmParams) {
+	private _cookForV4(destPoints: BaseCorePoint[], fbmParams: FbmParams) {
 		const simplex = this._getSimplex();
 		const useRestAttributes = isBooleanTrue(this.pv.useRestAttributes);
 		const useNormals = isBooleanTrue(this.pv.useNormals);
@@ -466,7 +466,7 @@ export class NoiseSopNode extends TypedSopNode<NoiseSopParamsConfig> {
 		TypeAssert.unreachable(operation);
 	}
 
-	private _amplitudeFromAttrib(point: CorePoint, base_amplitude: number): number {
+	private _amplitudeFromAttrib(point: BaseCorePoint, base_amplitude: number): number {
 		const attrib_value = point.attribValue(this.pv.amplitudeAttrib) as NumericAttribValue;
 
 		if (CoreType.isNumber(attrib_value)) {

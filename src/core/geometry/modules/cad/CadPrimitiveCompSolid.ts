@@ -6,7 +6,7 @@ export class CadPrimitiveCompSolid extends CadPrimitive<CadGeometryType.COMPSOLI
 	static primitiveName() {
 		return 'compSolid';
 	}
-	static override primitivesCount<T extends CoreObjectType>(object: ObjectContent<T>) {
+	static override entitiesCount<T extends CoreObjectType>(object: ObjectContent<T>) {
 		return 0;
 	}
 }

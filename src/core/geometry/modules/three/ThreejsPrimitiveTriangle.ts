@@ -18,7 +18,7 @@ export class ThreejsPrimitiveTriangle extends ThreejsPrimitive {
 		return 'triangle';
 	}
 
-	static override primitivesCount<T extends CoreObjectType>(object: ObjectContent<T>) {
+	static override entitiesCount<T extends CoreObjectType>(object: ObjectContent<T>) {
 		const geometry = (object as any as Mesh).geometry;
 		if (!geometry) {
 			return 0;

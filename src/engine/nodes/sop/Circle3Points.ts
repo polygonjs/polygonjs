@@ -6,7 +6,7 @@
 import {TypedSopNode} from './_Base';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {CorePoint} from '../../../core/geometry/entities/point/CorePoint';
+import {BaseCorePoint} from '../../../core/geometry/entities/point/CorePoint';
 import {Vector3} from 'three';
 import {ObjectType} from '../../../core/geometry/Constant';
 import {Object3D} from 'three';
@@ -100,7 +100,7 @@ export class Circle3PointsSopNode extends TypedSopNode<Circle3PointsSopParamsCon
 	private b: Vector3 = new Vector3();
 	private c: Vector3 = new Vector3();
 
-	private _create_circle(points: CorePoint[]) {
+	private _create_circle(points: BaseCorePoint[]) {
 		const circle3points = new Circle3Points({
 			arc: isBooleanTrue(this.pv.arc),
 			center: isBooleanTrue(this.pv.center),

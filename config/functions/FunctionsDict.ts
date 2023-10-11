@@ -22,6 +22,7 @@ export const FUNCTION_NAME_BY_FILE_NAME: Record<string, string[]> = {
 		'arrayShiftPrimitive',
 		'arrayShiftVector',
 	],
+	Attribute: ['importPrimitiveAttributeNumber'],
 	Audio: ['addAudioStopEventListener', 'playAudioSource', 'pauseAudioSource', 'playInstrumentNote'],
 	Box3: [
 		'box3ContainsPoint',
@@ -264,6 +265,7 @@ export const FUNCTION_NAME_BY_FILE_NAME: Record<string, string[]> = {
 		'multScalarVectorArray',
 	],
 	NearestPosition: ['nearestPosition'],
+	Neighbours: ['primitiveNeighboursCount', 'primitiveNeighbourIndex'],
 	Node: ['getNode'],
 	NoiseSimplex: ['noiseSimplexVector2', 'noiseSimplexVector3', 'noiseSimplexVector4'],
 	NoiseImproved: ['noiseImprovedVector3'],

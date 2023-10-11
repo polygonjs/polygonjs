@@ -12,7 +12,7 @@ export class CsgPrimitive<T extends CsgGeometryType> extends CorePrimitive<CoreO
 		this._geometry = object.geometry as CsgTypeMap[T];
 		// this._geometry = object.geometry as QuadGeometryWithPrimitiveAttributes;
 	}
-	// static override primitivesCount<T extends CoreObjectType>(object: ObjectContent<T>) {
+	// static override entitiesCount<T extends CoreObjectType>(object: ObjectContent<T>) {
 	// 	(object as any as CsgObject<CsgGeometryType>).geometry.
 	// 	return 0;
 	// }

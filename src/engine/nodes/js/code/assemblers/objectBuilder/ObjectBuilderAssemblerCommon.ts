@@ -1,4 +1,4 @@
-import {Object3D} from 'three';
+import type {Object3D} from 'three';
 
 export enum ObjectBuilderAssemblerConstant {
 	OBJECT_CONTAINER = 'objectContainer',
@@ -6,6 +6,7 @@ export enum ObjectBuilderAssemblerConstant {
 	OBJ_NUM = 'objectContainer.objnum',
 	MATERIAL = 'objectContainer.Object3D.material',
 	PTNUM = 'null', // not available in this assembler
+	PRIMITIVE_GRAPH = 'null',
 }
 
 export interface ObjectContainer {

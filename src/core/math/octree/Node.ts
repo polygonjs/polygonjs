@@ -1,5 +1,5 @@
 import {Box3, Vector3, Sphere} from 'three';
-import {CorePoint} from '../../geometry/entities/point/CorePoint';
+import {BaseCorePoint} from '../../geometry/entities/point/CorePoint';
 import {PolyDictionary} from '../../../types/GlobalTypes';
 
 const _position = new Vector3();
@@ -8,7 +8,7 @@ export type OctreeNodeTraverseCallback = (node: OctreeNode) => void;
 
 export class OctreeNode {
 	private _leavesByOctant: PolyDictionary<OctreeNode> = {};
-	private _pointsByOctantId: PolyDictionary<CorePoint[]> = {};
+	private _pointsByOctantId: PolyDictionary<BaseCorePoint[]> = {};
 	private _leaves: OctreeNode[] = [];
 	private _center: Vector3;
 	private _boundingBoxesByOctant: PolyDictionary<Box3> = {};
@@ -37,7 +37,7 @@ export class OctreeNode {
 		return false;
 	}
 
-	pointsInSphere(sphere: Sphere, accumulatedPoints: CorePoint[]): void {
+	pointsInSphere(sphere: Sphere, accumulatedPoints: BaseCorePoint[]): void {
 		if (this._leaves.length == 0) {
 			const foundPoints = Object.values(this._pointsByOctantId).flat();
 			const selectedPoints = foundPoints.filter((point) => sphere.containsPoint(point.position(_position)));
@@ -55,7 +55,7 @@ export class OctreeNode {
 		return this._bbox;
 	}
 
-	setPoints(points: CorePoint[]) {
+	setPoints(points: BaseCorePoint[]) {
 		this._pointsByOctantId = {};
 		for (const point of points) {
 			this.addPoint(point);
@@ -78,7 +78,7 @@ export class OctreeNode {
 		leaf.setPoints(this._pointsByOctantId[octantId]);
 	}
 
-	addPoint(point: CorePoint) {
+	addPoint(point: BaseCorePoint) {
 		const octantId = this._octantId(point.position(_position));
 		if (this._pointsByOctantId[octantId] == null) {
 			this._pointsByOctantId[octantId] = [];

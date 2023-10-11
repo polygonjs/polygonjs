@@ -1,10 +1,11 @@
 import {TriangleEdge} from './TriangleEdge';
 import {TriangleNode} from './TriangleNode';
-import {Number3} from '../../../types/GlobalTypes';
+import {Number3} from '../../../../../../types/GlobalTypes';
 import {triangleEdge, edgeId} from './TriangleGraphCommon';
-import {setToArray} from '../../../core/SetUtils';
+import {setToArray} from '../../../../../../core/SetUtils';
+import {PrimitiveGraph} from '../../../../entities/primitive/PrimitiveGraph';
 
-export class TriangleGraph {
+export class TriangleGraph extends PrimitiveGraph {
 	private _nextTriangleId = -1;
 	private _trianglesById: Map<number, TriangleNode> = new Map();
 	private _edgesByTriangleId: Map<number, TriangleEdge[]> = new Map();
@@ -80,5 +81,13 @@ export class TriangleGraph {
 	}
 	edge(edgeId: string) {
 		return this._edgesById.get(edgeId);
+	}
+	override neighbourIndex(primitiveIndex: number, neighbourIndex: number, withSharedEdge: boolean): number {
+		console.warn('not implemented');
+		return 0;
+	}
+	override neighboursCount(primitiveIndex: number, withSharedEdge: boolean): number {
+		console.warn('not implemented');
+		return 0;
 	}
 }

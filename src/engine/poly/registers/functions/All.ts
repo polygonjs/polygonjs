@@ -231,6 +231,7 @@ import { globalsRayFromCursor } from "../../../functions/globalsRayFromCursor";
 import { globalsTime } from "../../../functions/globalsTime";
 import { globalsTimeDelta } from "../../../functions/globalsTimeDelta";
 import { hsvToRgb } from "../../../functions/hsvToRgb";
+import { importPrimitiveAttributeNumber } from "../../../functions/importPrimitiveAttributeNumber";
 import { intToBool } from "../../../functions/intToBool";
 import { intToFloat } from "../../../functions/intToFloat";
 import { isTouchDevice } from "../../../functions/isTouchDevice";
@@ -352,6 +353,8 @@ import { previousValuePrimitive } from "../../../functions/previousValuePrimitiv
 import { previousValueVector2 } from "../../../functions/previousValueVector2";
 import { previousValueVector3 } from "../../../functions/previousValueVector3";
 import { previousValueVector4 } from "../../../functions/previousValueVector4";
+import { primitiveNeighbourIndex } from "../../../functions/primitiveNeighbourIndex";
+import { primitiveNeighboursCount } from "../../../functions/primitiveNeighboursCount";
 import { quaternionAngleTo } from "../../../functions/quaternionAngleTo";
 import { quaternionSetFromAxisAngle } from "../../../functions/quaternionSetFromAxisAngle";
 import { quaternionSetFromEuler } from "../../../functions/quaternionSetFromEuler";
@@ -733,6 +736,7 @@ export interface NamedFunctionMap {
 	globalsTime: globalsTime;
 	globalsTimeDelta: globalsTimeDelta;
 	hsvToRgb: hsvToRgb;
+	importPrimitiveAttributeNumber: importPrimitiveAttributeNumber;
 	intToBool: intToBool;
 	intToFloat: intToFloat;
 	isTouchDevice: isTouchDevice;
@@ -854,6 +858,8 @@ export interface NamedFunctionMap {
 	previousValueVector2: previousValueVector2;
 	previousValueVector3: previousValueVector3;
 	previousValueVector4: previousValueVector4;
+	primitiveNeighbourIndex: primitiveNeighbourIndex;
+	primitiveNeighboursCount: primitiveNeighboursCount;
 	quaternionAngleTo: quaternionAngleTo;
 	quaternionSetFromAxisAngle: quaternionSetFromAxisAngle;
 	quaternionSetFromEuler: quaternionSetFromEuler;
@@ -1238,6 +1244,7 @@ export class AllNamedFunctionRegister {
 			globalsTime,
 			globalsTimeDelta,
 			hsvToRgb,
+			importPrimitiveAttributeNumber,
 			intToBool,
 			intToFloat,
 			isTouchDevice,
@@ -1359,6 +1366,8 @@ export class AllNamedFunctionRegister {
 			previousValueVector2,
 			previousValueVector3,
 			previousValueVector4,
+			primitiveNeighbourIndex,
+			primitiveNeighboursCount,
 			quaternionAngleTo,
 			quaternionSetFromAxisAngle,
 			quaternionSetFromEuler,

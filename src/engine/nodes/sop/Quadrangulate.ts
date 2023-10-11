@@ -14,7 +14,7 @@ import {InputCloneMode} from '../../poly/InputCloneMode';
 import {QuadObject} from '../../../core/geometry/modules/quad/QuadObject';
 import {Number3} from '../../../types/GlobalTypes';
 import {sample} from '../../../core/ArrayUtils';
-import {TriangleGraph} from '../../../core/graph/triangle/TriangleGraph';
+import {TriangleGraph} from '../../../core/geometry/modules/three/graph/triangle/TriangleGraph';
 
 const _v3 = new Vector3();
 const _p0 = new Vector3();

@@ -1,13 +1,13 @@
 import {BufferGeometry, Mesh, Vector3} from 'three';
 import {CoreGeometryBuilderBase} from './_Base';
-import {CorePoint} from '../../../entities/point/CorePoint';
+import {BaseCorePoint} from '../../../entities/point/CorePoint';
 import {PolyDictionary} from '../../../../../types/GlobalTypes';
 import {CoreObjectType, ObjectBuilder, ObjectContent} from '../../../ObjectContent';
 import {CoreEntity} from '../../../CoreEntity';
 import type {ThreejsPrimitiveTriangle} from '../ThreejsPrimitiveTriangle';
 
 export class CoreGeometryBuilderMesh extends CoreGeometryBuilderBase {
-	protected _filterPoints(points: CorePoint[]): CorePoint[] {
+	protected _filterPoints(points: BaseCorePoint[]): BaseCorePoint[] {
 		// ensures we only keep points that form a full face.
 		// if a single point from a face is discarded, we remove all 3
 
@@ -24,16 +24,16 @@ export class CoreGeometryBuilderMesh extends CoreGeometryBuilderBase {
 			return [];
 		}
 
-		const points_by_index: PolyDictionary<CorePoint> = {};
+		const points_by_index: PolyDictionary<BaseCorePoint> = {};
 		for (const point of points) {
 			points_by_index[point.index()] = point;
 		}
-		const filteredPoints: CorePoint[] = [];
+		const filteredPoints: BaseCorePoint[] = [];
 
 		const index_length = indices.length;
-		let pt0: CorePoint;
-		let pt1: CorePoint;
-		let pt2: CorePoint;
+		let pt0: BaseCorePoint;
+		let pt1: BaseCorePoint;
+		let pt2: BaseCorePoint;
 		for (let i = 0; i < index_length; i += 3) {
 			pt0 = points_by_index[indices[i + 0]];
 			pt1 = points_by_index[indices[i + 1]];

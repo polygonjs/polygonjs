@@ -28,6 +28,9 @@ interface TriggeringJsDefinitionOptionsExtended {
 interface TriggerableJsDefinitionOptionsExtended extends TriggerableJsDefinitionOptions {
 	addTriggeredLines?: boolean;
 }
+interface AddBodyOrComputedOptions {
+	constPrefix?: boolean;
+}
 
 export class JsLinesCollectionController {
 	private _linesControllerByShaderName: Map<JsFunctionName, JsLinesController> = new Map();
@@ -154,15 +157,20 @@ export class JsLinesCollectionController {
 	registeredAsComputed(varName: string): boolean {
 		return this._assembler.registeredAsComputed(varName);
 	}
-	addBodyOrComputed(node: BaseJsNodeType, linesData: ComputedValueJsDefinitionData[]) {
+	addBodyOrComputed(
+		node: BaseJsNodeType,
+		linesData: ComputedValueJsDefinitionData[],
+		options?: AddBodyOrComputedOptions
+	) {
 		if (this._assembler.computedVariablesAllowed()) {
 			this.addComputed(node, linesData);
 		} else {
+			const constPrefix = options?.constPrefix != null ? options.constPrefix : true;
 			this._addBodyLines(
 				node,
 				linesData.map((lineData) => {
 					const {varName, value} = lineData;
-					const bodyLine = `const ${varName} = ${value}`;
+					const bodyLine = `${constPrefix ? 'const' : ''} ${varName} = ${value}`;
 					return bodyLine;
 				})
 			);

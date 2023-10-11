@@ -1,5 +1,5 @@
 import {Box3, Sphere, Vector3} from 'three';
-import {CorePoint} from '../../geometry/entities/point/CorePoint';
+import {BaseCorePoint} from '../../geometry/entities/point/CorePoint';
 import {OctreeNode, OctreeNodeTraverseCallback} from './Node';
 import {arraySortBy} from '../../ArrayUtils';
 
@@ -12,7 +12,7 @@ export class CoreOctree {
 		this._root = new OctreeNode(bbox);
 	}
 
-	setPoints(points: CorePoint[]) {
+	setPoints(points: BaseCorePoint[]) {
 		this._root.setPoints(points);
 	}
 
@@ -24,7 +24,7 @@ export class CoreOctree {
 	// the ones currently seen already have the required number of points.
 	// but that probably doesn't work as those points may end up being further
 	// than the ones from the following leaf
-	findPoints(position: Vector3, distance: number, maxPointsCount: number | null, target: CorePoint[]): void {
+	findPoints(position: Vector3, distance: number, maxPointsCount: number | null, target: BaseCorePoint[]): void {
 		const sphere = new Sphere(position, distance);
 
 		if (this._root.intersectsSphere(sphere)) {

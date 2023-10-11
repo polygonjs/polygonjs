@@ -149,6 +149,7 @@ import {DeleteByNameSopNode} from '../../../nodes/sop/DeleteByName';
 import {DirectionalLightSopNode} from '../../../nodes/sop/DirectionalLight';
 import {DrawRangeSopNode} from '../../../nodes/sop/DrawRange';
 import {EmptyObjectSopNode} from '../../../nodes/sop/EmptyObject';
+import {EntityBuilderSopNode} from '../../../nodes/sop/EntityBuilder';
 import {ExporterGLTFSopNode} from '../../../nodes/sop/ExporterGLTF';
 import {ExporterOBJSopNode} from '../../../nodes/sop/ExporterOBJ';
 import {ExporterPLYSopNode} from '../../../nodes/sop/ExporterPLY';
@@ -475,6 +476,7 @@ export interface GeoNodeChildrenMap {
 	directionalLight: DirectionalLightSopNode;
 	drawRange: DrawRangeSopNode;
 	emptyObject: EmptyObjectSopNode;
+	entityBuilder: EntityBuilderSopNode;
 	exporterGLTF: ExporterGLTFSopNode;
 	exporterOBJ: ExporterOBJSopNode;
 	exporterPLY: ExporterPLYSopNode;
@@ -1047,6 +1049,7 @@ export class SopRegister {
 		poly.registerNode(DirectionalLightSopNode, CATEGORY_SOP.LIGHTS);
 		poly.registerNode(DrawRangeSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(EmptyObjectSopNode, CATEGORY_SOP.PRIMITIVES);
+		poly.registerNode(EntityBuilderSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(ExporterGLTFSopNode, CATEGORY_SOP.OUTPUT);
 		poly.registerNode(ExporterOBJSopNode, CATEGORY_SOP.OUTPUT);
 		poly.registerNode(ExporterPLYSopNode, CATEGORY_SOP.OUTPUT);
@@ -1080,7 +1083,7 @@ export class SopRegister {
 		poly.registerNode(IcosahedronSopNode, CATEGORY_SOP.PRIMITIVES);
 		poly.registerNode(IFCFilterCategoriesSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(InstanceSopNode, CATEGORY_SOP.RENDER);
-		poly.registerNode(InstanceBuilderSopNode, CATEGORY_SOP.RENDER);
+		poly.registerNode(InstanceBuilderSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(InstanceUpdateSopNode, CATEGORY_SOP.MODIFIER);
 		poly.registerNode(InstancesCountSopNode, CATEGORY_SOP.RENDER);
 		poly.registerNode(JitterSopNode, CATEGORY_SOP.MODIFIER);

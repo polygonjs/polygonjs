@@ -5,7 +5,7 @@ import {ObjectType} from '../../../core/geometry/Constant';
 import {CircleCreateOptions, CoreGeometryUtilCircle} from '../../../core/geometry/util/Circle';
 import {CoreGeometryUtilCurve} from '../../../core/geometry/util/Curve';
 import {CoreGeometryOperationSkin} from '../../../core/geometry/operation/Skin';
-import {CorePoint} from '../../../core/geometry/entities/point/CorePoint';
+import {BaseCorePoint} from '../../../core/geometry/entities/point/CorePoint';
 import {isBooleanTrue} from '../../../core/Type';
 import {DefaultOperationParams} from '../../../core/operations/_Base';
 import {CoreGeometryBuilderMerge} from '../../../core/geometry/modules/three/builders/Merge';
@@ -81,7 +81,7 @@ export class PolywireSopOperation extends BaseSopOperation {
 		}
 	}
 
-	private _createTubeFromPoints(points: CorePoint[], attributeNames: string[], params: PolywireSopParams) {
+	private _createTubeFromPoints(points: BaseCorePoint[], attributeNames: string[], params: PolywireSopParams) {
 		if (points.length <= 1) {
 			return;
 		}

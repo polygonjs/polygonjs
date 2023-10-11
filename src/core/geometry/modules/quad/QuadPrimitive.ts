@@ -12,6 +12,7 @@ import {QuadVertex} from './QuadVertex';
 import {NumericAttribValue} from '../../../../types/GlobalTypes';
 import {primitivesCountFromObject} from '../../entities/primitive/CorePrimitiveUtils';
 import {Attribute} from '../../Attribute';
+import {quadGraphFromQuadObject} from './graph/QuadGraphUtils';
 const _triangle = new Triangle();
 const _p0 = new Vector3();
 const _p1 = new Vector3();
@@ -82,7 +83,7 @@ export class QuadPrimitive extends CorePrimitive<CoreObjectType.QUAD> {
 		size: number = 1,
 		defaultValue: NumericAttribValue = 0
 	) {
-		const verticesCount = this.primitivesCount(object);
+		const verticesCount = this.entitiesCount(object);
 		target.values = new Array(verticesCount * size);
 		attributeNumericValues(object, primitivesCountFromObject, size, defaultValue, target);
 
@@ -93,7 +94,7 @@ export class QuadPrimitive extends CorePrimitive<CoreObjectType.QUAD> {
 		};
 		this.addAttribute(object, attribName, attribute);
 	}
-	static override primitivesCount<T extends CoreObjectType>(object: ObjectContent<T>) {
+	static override entitiesCount<T extends CoreObjectType>(object: ObjectContent<T>) {
 		return (object as any as QuadObject).geometry.quadsCount();
 	}
 	static attributesFromGeometry(geometry: QuadGeometry): PrimitiveAttributesDict | undefined {
@@ -186,5 +187,16 @@ export class QuadPrimitive extends CorePrimitive<CoreObjectType.QUAD> {
 			vertices.push(vertex);
 		}
 		return vertices;
+	}
+	static override graph(object: ObjectContent<CoreObjectType>) {
+		return quadGraphFromQuadObject(object as QuadObject);
+	}
+
+	static override neighboursCount(
+		object: ObjectContent<CoreObjectType>,
+		index: number,
+		sharedEdgeOnly: boolean
+	): number {
+		return 0;
 	}
 }
