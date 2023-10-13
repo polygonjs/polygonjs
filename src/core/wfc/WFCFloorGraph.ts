@@ -19,6 +19,31 @@ export class WFCFloorGraph {
 	constructor(public readonly quadObject: QuadObject, public readonly floorIndex: number) {}
 
 	setupQuadNode(index: number, allTileConfigs: TileConfig[]) {
+		// const _quadId = quadId(this.quadObject, index);
+
+		// if (_quadId == null) {
+		// 	throw new Error(`attribute ${WFCQuadAttribute.QUAD_ID} not found`);
+		// }
+
+		// const tileId: string = QuadPrimitive.hasAttribute(this.quadObject, WFCQuadAttribute.TILE_ID)
+		// 	? (QuadPrimitive.attribValue(this.quadObject, index, WFCQuadAttribute.TILE_ID) as string | undefined) ||
+		// 	  DEFAULT_TILE_ID
+		// 	: DEFAULT_TILE_ID;
+
+		// const tileIds = tileId.trim().length > 0 ? tileId.split(' ') : [];
+		// const tileIdsSet = new Set<string>(tileIds);
+		const indices = this.quadObject.geometry.index;
+		_v4.fromArray(indices, index * 4);
+		const quadNode = this._quadGraph.addQuad(index, _v4.toArray() as Number4);
+		// const quadTileConfigs =
+		// 	tileIds.length > 0 ? allTileConfigs.filter((c) => tileIdsSet.has(c.tileId)) : [...allTileConfigs];
+		// this._allowedTileConfigsByQuadId.set(index, quadTileConfigs);
+		// this._quadNodeByQuadId.set(_quadId, quadNode);
+		const {quadTileConfigs} = this.resetQuadNode(quadNode, allTileConfigs);
+		return {quadNode, quadTileConfigs};
+	}
+	resetQuadNode(quadNode: QuadNode, allTileConfigs: TileConfig[]) {
+		const index = quadNode.id;
 		const _quadId = quadId(this.quadObject, index);
 
 		if (_quadId == null) {
@@ -32,16 +57,18 @@ export class WFCFloorGraph {
 
 		const tileIds = tileId.trim().length > 0 ? tileId.split(' ') : [];
 		const tileIdsSet = new Set<string>(tileIds);
-		const indices = this.quadObject.geometry.index;
-		_v4.fromArray(indices, index * 4);
-		const quadNode = this._quadGraph.addQuad(index, _v4.toArray() as Number4);
+
 		const quadTileConfigs =
 			tileIds.length > 0 ? allTileConfigs.filter((c) => tileIdsSet.has(c.tileId)) : [...allTileConfigs];
 		this._allowedTileConfigsByQuadId.set(index, quadTileConfigs);
 		this._quadNodeByQuadId.set(_quadId, quadNode);
-		return {quadNode, quadTileConfigs};
+
+		return {quadTileConfigs};
 	}
-	quadNode(otherGraphQuadNode: QuadNode) {
+	quadNodeFromId(quadId: number) {
+		return this._quadNodeByQuadId.get(quadId);
+	}
+	quadNodeFromOtherQuadNode(otherGraphQuadNode: QuadNode) {
 		const _quadId = quadId(this.quadObject, otherGraphQuadNode.id);
 		return this._quadNodeByQuadId.get(_quadId);
 	}

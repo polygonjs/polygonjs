@@ -121,6 +121,7 @@ export const CATEGORY_JS = {
 	UTIL: 'util',
 	INSTANCE: 'instance',
 	WEBXR: 'webXR',
+	WFC: 'WFC',
 };
 export const CATEGORY_MAT = {
 	ADVANCED: 'advanced',

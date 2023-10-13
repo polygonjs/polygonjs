@@ -28,16 +28,14 @@ export class RoundedBoxSopOperation extends BaseSopOperation {
 	static override type(): Readonly<'roundedBox'> {
 		return 'roundedBox';
 	}
-	private _core_transform = new CoreTransform();
-	override cook(input_contents: CoreGroup[], params: RoundedBoxSopParams) {
-		const input_core_group = input_contents[0];
-		const geometry = input_core_group
-			? this._cook_with_input(input_core_group, params)
-			: this._cook_without_input(params);
+	private _coreTransform = new CoreTransform();
+	override cook(inputCoreGroups: CoreGroup[], params: RoundedBoxSopParams) {
+		const coreGroup = inputCoreGroups[0];
+		const geometry = coreGroup ? this._cookWithInput(coreGroup, params) : this._cookWithoutInput(params);
 
 		return this.createCoreGroupFromGeometry(geometry);
 	}
-	private _cook_without_input(params: RoundedBoxSopParams) {
+	private _cookWithoutInput(params: RoundedBoxSopParams) {
 		const {sizes, size} = params;
 		const geometry = new RoundedBoxGeometry(
 			sizes.x * size,
@@ -51,13 +49,13 @@ export class RoundedBoxSopOperation extends BaseSopOperation {
 		return geometry;
 	}
 
-	private _cook_with_input(coreGroup: CoreGroup, params: RoundedBoxSopParams) {
+	private _cookWithInput(coreGroup: CoreGroup, params: RoundedBoxSopParams) {
 		coreGroup.boundingBox(tmpBox);
 		tmpBox.getSize(tmpSize);
 		tmpBox.getCenter(tmpCenter);
 
 		const geometry = new RoundedBoxGeometry(tmpSize.x, tmpSize.y, tmpSize.z, params.divisions, params.bevel);
-		const matrix = this._core_transform.translationMatrix(tmpCenter);
+		const matrix = this._coreTransform.translationMatrix(tmpCenter);
 		geometry.applyMatrix4(matrix);
 		return geometry;
 	}

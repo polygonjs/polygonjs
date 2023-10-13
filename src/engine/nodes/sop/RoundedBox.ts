@@ -16,7 +16,7 @@ class RoundedBoxSopParamsConfig extends NodeParamsConfig {
 	sizes = ParamConfig.VECTOR3(DEFAULT.sizes);
 	/** @param divisions count */
 	divisions = ParamConfig.INTEGER(DEFAULT.divisions, {
-		range: [1, 10],
+		range: [0, 10],
 		rangeLocked: [true, false],
 	});
 	/** @param bevel size */
@@ -43,7 +43,7 @@ export class RoundedBoxSopNode extends TypedSopNode<RoundedBoxSopParamsConfig> {
 	private _operation: RoundedBoxSopOperation | undefined;
 	override cook(inputCoreGroups: CoreGroup[]) {
 		this._operation = this._operation || new RoundedBoxSopOperation(this._scene, this.states, this);
-		const core_group = this._operation.cook(inputCoreGroups, this.pv);
-		this.setCoreGroup(core_group);
+		const coreGroup = this._operation.cook(inputCoreGroups, this.pv);
+		this.setCoreGroup(coreGroup);
 	}
 }

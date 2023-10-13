@@ -84,7 +84,7 @@ export class QuadGraph extends PrimitiveGraph {
 	// 	const halfEdge = getMapElementAtEntry(this._edgesByIndex, _indices.index0, _indices.index1)!;
 	// 	return this._halfEdgeByHalfEdge.has(halfEdge);
 	// }
-	private _neighbourIdsSharingEdge(quadId: number, target: number[]): void {
+	neighbourIdsSharingEdge(quadId: number, target: number[]): void {
 		const quadNode = this._quadsById.get(quadId);
 		if (!quadNode) {
 			return;
@@ -101,7 +101,7 @@ export class QuadGraph extends PrimitiveGraph {
 		}
 		setToArray(_neighbourIdsSet, target);
 	}
-	private _neighbourIdsSharingPoint(quadId: number, target: number[]): void {
+	neighbourIdsSharingPoint(quadId: number, target: number[]): void {
 		_neighbourIdsSet.clear();
 
 		const quadNode = this._quadsById.get(quadId);
@@ -124,9 +124,9 @@ export class QuadGraph extends PrimitiveGraph {
 	}
 	override neighbourIndex(quadId: number, neighbourIndex: number, withSharedEdge: boolean): number {
 		if (withSharedEdge == true) {
-			this._neighbourIdsSharingEdge(quadId, _neighbourIdsArray);
+			this.neighbourIdsSharingEdge(quadId, _neighbourIdsArray);
 		} else {
-			this._neighbourIdsSharingPoint(quadId, _neighbourIdsArray);
+			this.neighbourIdsSharingPoint(quadId, _neighbourIdsArray);
 		}
 		const neighbourId = _neighbourIdsArray[neighbourIndex];
 		if (neighbourId != null) {
@@ -136,9 +136,9 @@ export class QuadGraph extends PrimitiveGraph {
 	}
 	override neighboursCount(quadId: number, withSharedEdge: boolean): number {
 		if (withSharedEdge == true) {
-			this._neighbourIdsSharingEdge(quadId, _neighbourIdsArray);
+			this.neighbourIdsSharingEdge(quadId, _neighbourIdsArray);
 		} else {
-			this._neighbourIdsSharingPoint(quadId, _neighbourIdsArray);
+			this.neighbourIdsSharingPoint(quadId, _neighbourIdsArray);
 		}
 		return _neighbourIdsArray.length;
 	}

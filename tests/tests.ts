@@ -468,6 +468,7 @@ import {testenginenodessopDrawRange} from './engine/nodes/sop/DrawRange';
 import {testenginenodessopEmptyObject} from './engine/nodes/sop/EmptyObject';
 import {testenginenodessopEntityBuilder} from './engine/nodes/sop/EntityBuilder';
 import {testenginenodessopFace} from './engine/nodes/sop/Face';
+import {testenginenodessopFacet} from './engine/nodes/sop/Facet';
 import {testenginenodessopFile} from './engine/nodes/sop/File';
 import {testenginenodessopFile3DS} from './engine/nodes/sop/File3DS';
 import {testenginenodessopFileGEOJSON} from './engine/nodes/sop/FileGEOJSON';
@@ -1059,6 +1060,7 @@ export function testPolygonjs(options: TestPolygonjsOptions) {
 		testenginenodessopEmptyObject,
 		testenginenodessopEntityBuilder,
 		testenginenodessopFace,
+		testenginenodessopFacet,
 		testenginenodessopFile,
 		testenginenodessopFile3DS,
 		testenginenodessopFileGEOJSON,

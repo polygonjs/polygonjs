@@ -1,6 +1,6 @@
 import {BaseSopOperation} from './_Base';
 import {CoreGroup} from '../../../core/geometry/Group';
-import {Vector3, Matrix4, LineSegments, BufferGeometry} from 'three';
+import {Vector3, Matrix4, LineSegments, BufferGeometry, Object3D} from 'three';
 import {ObjectType} from '../../../core/geometry/Constant';
 import {CircleCreateOptions, CoreGeometryUtilCircle} from '../../../core/geometry/util/Circle';
 import {CoreGeometryUtilCurve} from '../../../core/geometry/util/Curve';
@@ -12,6 +12,7 @@ import {CoreGeometryBuilderMerge} from '../../../core/geometry/modules/three/bui
 import {addAttributesFromPoint} from '../../../core/geometry/util/addAttributesFromPoint';
 import {pointsFromObject} from '../../../core/geometry/entities/point/CorePointUtils';
 import {corePointClassFactory} from '../../../core/geometry/CoreObjectFactory';
+import {copyObject3DProperties} from '../../../core/geometry/modules/three/ThreejsObjectUtils';
 
 interface PolywireSopParams extends DefaultOperationParams {
 	radius: number;
@@ -42,31 +43,37 @@ export class PolywireSopOperation extends BaseSopOperation {
 		return 'polywire';
 	}
 
-	// private _coreTransform = new CoreTransform();
-	private _geometries: BufferGeometry[] = [];
 	override cook(inputCoreGroups: CoreGroup[], params: PolywireSopParams) {
 		const coreGroup = inputCoreGroups[0];
+		const inputObjects = coreGroup.threejsObjects();
 
-		this._geometries = [];
-		for (let object of coreGroup.threejsObjects()) {
-			if (object instanceof LineSegments) {
-				this._createTube(object, params);
+		const newObjects: Object3D[] = [];
+		for (const inputObject of inputObjects) {
+			const geometries: BufferGeometry[] = [];
+			if (inputObject instanceof LineSegments) {
+				this._createTube(inputObject, params, geometries);
+			}
+			const mergedGeometry = CoreGeometryBuilderMerge.merge(geometries);
+			if (mergedGeometry) {
+				const newObject = this.createObject(mergedGeometry, ObjectType.MESH);
+				copyObject3DProperties(inputObject, newObject);
+				newObjects.push(newObject);
 			}
 		}
 
-		const mergedGeometry = CoreGeometryBuilderMerge.merge(this._geometries);
-		for (let geometry of this._geometries) {
-			geometry.dispose();
-		}
-		if (mergedGeometry) {
-			const object = this.createObject(mergedGeometry, ObjectType.MESH);
-			return this.createCoreGroupFromObjects([object]);
-		} else {
-			return this.createCoreGroupFromObjects([]);
-		}
+		// const mergedGeometry = CoreGeometryBuilderMerge.merge(geometries);
+		// for (const geometry of geometries) {
+		// 	geometry.dispose();
+		// }
+		// if (mergedGeometry) {
+		// 	const object = this.createObject(mergedGeometry, ObjectType.MESH);
+		return this.createCoreGroupFromObjects(newObjects);
+		// } else {
+		// 	return this.createCoreGroupFromObjects([]);
+		// }
 	}
 
-	private _createTube(lineSegment: LineSegments, params: PolywireSopParams) {
+	private _createTube(lineSegment: LineSegments, params: PolywireSopParams, geometries: BufferGeometry[]) {
 		const geometry = lineSegment.geometry as BufferGeometry;
 		const corePointClass = corePointClassFactory(lineSegment);
 		const attributeNames = corePointClass.attributeNamesMatchingMask(lineSegment, params.attributesToCopy);
@@ -77,11 +84,16 @@ export class PolywireSopOperation extends BaseSopOperation {
 
 		for (let curvePointIndices of accumulatedCurvePointIndices) {
 			const currentPoints = curvePointIndices.map((index) => points[index]);
-			this._createTubeFromPoints(currentPoints, attributeNames, params);
+			this._createTubeFromPoints(currentPoints, attributeNames, params, geometries);
 		}
 	}
 
-	private _createTubeFromPoints(points: BaseCorePoint[], attributeNames: string[], params: PolywireSopParams) {
+	private _createTubeFromPoints(
+		points: BaseCorePoint[],
+		attributeNames: string[],
+		params: PolywireSopParams,
+		geometries: BufferGeometry[]
+	) {
 		if (points.length <= 1) {
 			return;
 		}
@@ -144,7 +156,7 @@ export class PolywireSopOperation extends BaseSopOperation {
 				const prevCircle = circles[i - 1];
 
 				const geometry = this._skin(prevCircle, circle);
-				this._geometries.push(geometry);
+				geometries.push(geometry);
 			}
 		}
 		if (isBooleanTrue(params.closed)) {
@@ -152,7 +164,7 @@ export class PolywireSopOperation extends BaseSopOperation {
 			const prevCircle = circles[circles.length - 1];
 
 			const geometry = this._skin(prevCircle, circle);
-			this._geometries.push(geometry);
+			geometries.push(geometry);
 		}
 	}
 

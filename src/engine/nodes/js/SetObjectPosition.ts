@@ -45,14 +45,14 @@ export class SetObjectPositionJsNode extends BaseTriggerAndObjectJsNode<SetObjec
 		booleanOutputFromParam(this, this.p.updateMatrix, linesController);
 	}
 
-	override setTriggerableLines(shadersCollectionController: JsLinesCollectionController) {
-		const object3D = inputObject3D(this, shadersCollectionController);
-		const position = this.variableForInputParam(shadersCollectionController, this.p.position);
-		const lerp = this.variableForInputParam(shadersCollectionController, this.p.lerp);
-		const updateMatrix = this.variableForInputParam(shadersCollectionController, this.p.updateMatrix);
+	override setTriggerableLines(linesController: JsLinesCollectionController) {
+		const object3D = inputObject3D(this, linesController);
+		const position = this.variableForInputParam(linesController, this.p.position);
+		const lerp = this.variableForInputParam(linesController, this.p.lerp);
+		const updateMatrix = this.variableForInputParam(linesController, this.p.updateMatrix);
 
-		const func = Poly.namedFunctionsRegister.getFunction('setObjectPosition', this, shadersCollectionController);
+		const func = Poly.namedFunctionsRegister.getFunction('setObjectPosition', this, linesController);
 		const bodyLine = func.asString(object3D, position, lerp, updateMatrix);
-		shadersCollectionController.addTriggerableLines(this, [bodyLine]);
+		linesController.addTriggerableLines(this, [bodyLine]);
 	}
 }

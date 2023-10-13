@@ -99,5 +99,7 @@ export enum JsType {
 	SET_SOFT_BODY_CONSTRAINT_POSITION = 'setSoftBodyConstraintPosition',
 	SET_SOFT_BODY_POSITION = 'setSoftBodyPosition',
 	SET_SOFT_BODY_VELOCITY = 'setSoftBodyVelocity',
+	SET_WFC_SOFT_CONSTRAINT = 'setWFCSoftConstraint',
 	// TEXTURE_SDF = 'textureSDF',
+	WFC_BUILD = 'WFCBuild',
 }

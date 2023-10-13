@@ -477,6 +477,7 @@ import { setPointPosition } from "../../../functions/setPointPosition";
 import { setSpotLightIntensity } from "../../../functions/setSpotLightIntensity";
 import { setViewer } from "../../../functions/setViewer";
 import { setViewerControls } from "../../../functions/setViewerControls";
+import { setWFCSoftConstraint } from "../../../functions/setWFCSoftConstraint";
 import { sizzleVec3XY } from "../../../functions/sizzleVec3XY";
 import { sizzleVec3XZ } from "../../../functions/sizzleVec3XZ";
 import { sizzleVec3YZ } from "../../../functions/sizzleVec3YZ";
@@ -511,6 +512,7 @@ import { vector3AngleTo } from "../../../functions/vector3AngleTo";
 import { vector3Project } from "../../../functions/vector3Project";
 import { vector3ProjectOnPlane } from "../../../functions/vector3ProjectOnPlane";
 import { vector3Unproject } from "../../../functions/vector3Unproject";
+import { WFCBuild } from "../../../functions/WFCBuild";
 
 export interface NamedFunctionMap {
 	addAudioStopEventListener: addAudioStopEventListener;
@@ -982,6 +984,7 @@ export interface NamedFunctionMap {
 	setSpotLightIntensity: setSpotLightIntensity;
 	setViewer: setViewer;
 	setViewerControls: setViewerControls;
+	setWFCSoftConstraint: setWFCSoftConstraint;
 	sizzleVec3XY: sizzleVec3XY;
 	sizzleVec3XZ: sizzleVec3XZ;
 	sizzleVec3YZ: sizzleVec3YZ;
@@ -1016,6 +1019,7 @@ export interface NamedFunctionMap {
 	vector3Project: vector3Project;
 	vector3ProjectOnPlane: vector3ProjectOnPlane;
 	vector3Unproject: vector3Unproject;
+	WFCBuild: WFCBuild;
 }
 
 export class AllNamedFunctionRegister {
@@ -1490,6 +1494,7 @@ export class AllNamedFunctionRegister {
 			setSpotLightIntensity,
 			setViewer,
 			setViewerControls,
+			setWFCSoftConstraint,
 			sizzleVec3XY,
 			sizzleVec3XZ,
 			sizzleVec3YZ,
@@ -1524,6 +1529,7 @@ export class AllNamedFunctionRegister {
 			vector3Project,
 			vector3ProjectOnPlane,
 			vector3Unproject,
+			WFCBuild,
 		].forEach((f) => poly.registerNamedFunction(f));
 	}
 }

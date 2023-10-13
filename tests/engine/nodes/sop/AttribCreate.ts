@@ -733,6 +733,40 @@ export function testenginenodessopAttribCreate(qUnit: QUnit) {
 		assert.deepEqual(await _getAttribValue(attribCreate2), [1, 1, 1, 0]);
 	});
 
+	qUnit.test('sop/attribCreate with quad and rand expression', async (assert) => {
+		const geo1 = window.geo1;
+
+		const quadPlane1 = geo1.createNode('quadPlane');
+		const attribCreate1 = geo1.createNode('attribCreate');
+
+		attribCreate1.setInput(0, quadPlane1);
+
+		quadPlane1.p.size.set([2, 2]);
+		attribCreate1.setAttribClass(AttribClass.PRIMITIVE);
+		attribCreate1.p.name.set('t');
+		attribCreate1.p.size.set(1);
+		attribCreate1.p.value1.set('if( rand(@primnum)>0.5, 1, 0 )');
+
+		async function _getAttribValue(_attribCreate: AttribCreateSopNode) {
+			const container = await _attribCreate.compute();
+			const coreGroup = container.coreContent()!;
+			const object = coreGroup.quadObjects()![0];
+			const coreObject = coreObjectInstanceFactory(object);
+			const primitives = coreObject.relatedPrimitives();
+			return primitives.map((p) => p.attribValue('t'));
+		}
+		assert.deepEqual(await _getAttribValue(attribCreate1), [0, 0, 1, 1]);
+
+		attribCreate1.p.value1.set('if( rand(@primnum)>0.25, 1, 0 )');
+		assert.deepEqual(await _getAttribValue(attribCreate1), [0, 0, 1, 1]);
+		attribCreate1.p.value1.set('if( rand(@primnum)>0.125, 1, 0 )');
+		assert.deepEqual(await _getAttribValue(attribCreate1), [0, 0, 1, 1]);
+		attribCreate1.p.value1.set('if( rand(@primnum)>0.0125, 1, 0 )');
+		assert.deepEqual(await _getAttribValue(attribCreate1), [1, 1, 1, 1]);
+		attribCreate1.p.value1.set('if( rand(@primnum)>0.77, 1, 0 )');
+		assert.deepEqual(await _getAttribValue(attribCreate1), [0, 0, 1, 0]);
+	});
+
 	interface MultiTestOptions {
 		existingAttrib: boolean;
 		attribClass: AttribClass;

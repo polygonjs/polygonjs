@@ -10,6 +10,7 @@ import {SopType} from '../../poly/registers/nodes/types/Sop';
 import {InputCloneMode} from '../../poly/InputCloneMode';
 import {WFCSolver} from '../../../core/wfc/WFCSolver';
 import {filterTileObjects, filterRuleObjects} from '../../../core/wfc/WFCUtils';
+import {registerWFCSolver} from '../../../core/wfc/WFCRegister';
 
 class WFCSolverSopParamsConfig extends NodeParamsConfig {
 	/** @param iterations */
@@ -71,14 +72,21 @@ export class WFCSolverSopNode extends TypedSopNode<WFCSolverSopParamsConfig> {
 		const {maxCount} = this.pv;
 
 		for (const quadObject of quadObjects) {
+			// Poly.onObjectsAddRemoveHooks.assignOnAddHookHandler(quadObject, this);
 			const solver = new WFCSolver({
 				tileAndRuleObjects,
 				quadObject,
 				maxResolvedQuadsCount: maxCount,
 			});
+			registerWFCSolver(solver, quadObject);
 			solver.process(this.pv);
 		}
 
 		this.setObjects(quadObjects);
 	}
+
+	// public override updateObjectOnAdd(object: Object3D) {
+	// 	console.log('updateObjectOnAdd', object);
+	// 	console.log(getWFCsolver(object));
+	// }
 }

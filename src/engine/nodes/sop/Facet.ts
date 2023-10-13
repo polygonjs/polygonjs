@@ -13,6 +13,7 @@ import {CoreMask} from '../../../core/geometry/Mask';
 import {object3DHasGeometry} from '../../../core/geometry/GeometryUtils';
 import {SopType} from '../../poly/registers/nodes/types/Sop';
 import {CoreGeometryIndexBuilder} from '../../../core/geometry/util/IndexBuilder';
+import {corePrimitiveClassFactory} from '../../../core/geometry/CoreObjectFactory';
 const {degToRad} = MathUtils;
 
 class FacetSopParamsConfig extends NodeParamsConfig {
@@ -45,8 +46,20 @@ export class FacetSopNode extends TypedSopNode<FacetSopParamsConfig> {
 		const selectedObjects = CoreMask.filterThreejsObjects(inputCoreGroup, this.pv).filter(object3DHasGeometry);
 		const rad = degToRad(this.pv.angle);
 		for (const object of selectedObjects) {
+			// we fetch the primitive attributes before the geometry is modified
+			const primitiveAttributes = corePrimitiveClassFactory(object).attributes(object);
 			object.geometry = toCreasedNormals(object.geometry, rad);
+
 			CoreGeometryIndexBuilder.createIndexIfNone(object.geometry);
+
+			// ensure primitive attributes are kept
+			if (primitiveAttributes) {
+				const primitiveAttributeNames = Object.keys(primitiveAttributes);
+				for (const attribName of primitiveAttributeNames) {
+					const attrib = primitiveAttributes[attribName];
+					corePrimitiveClassFactory(object).addAttribute(object, attribName, attrib);
+				}
+			}
 		}
 		this.setCoreGroup(inputCoreGroup);
 	}

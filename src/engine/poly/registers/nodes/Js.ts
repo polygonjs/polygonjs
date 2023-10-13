@@ -321,6 +321,7 @@ import {SetSoftBodyConstraintPositionJsNode} from '../../../nodes/js/SetSoftBody
 import {SetSpotLightIntensityJsNode} from '../../../nodes/js/SetSpotLightIntensity';
 import {SetViewerJsNode} from '../../../nodes/js/SetViewer';
 import {SetViewerControlsJsNode} from '../../../nodes/js/SetViewerControls';
+import {SetWFCSoftConstraintJsNode} from '../../../nodes/js/SetWFCSoftConstraint';
 import {SignJsNode} from '../../../nodes/js/Sign';
 import {SinJsNode} from '../../../nodes/js/Sin';
 import {SmoothstepJsNode} from '../../../nodes/js/Smoothstep';
@@ -357,6 +358,7 @@ import {Vec4ToVec3JsNode} from '../../../nodes/js/Vec4ToVec3';
 import {Vector2JsNode} from '../../../nodes/js/Vector2';
 import {Vector3JsNode} from '../../../nodes/js/Vector3';
 import {Vector4JsNode} from '../../../nodes/js/Vector4';
+import {WFCBuildJsNode} from '../../../nodes/js/WFCBuild';
 
 export interface JsNodeChildrenMap {
 	abs: AbsJsNode;
@@ -680,6 +682,7 @@ export interface JsNodeChildrenMap {
 	setSpotLightIntensity: SetSpotLightIntensityJsNode;
 	setViewer: SetViewerJsNode;
 	setViewerControls: SetViewerControlsJsNode;
+	SetWFCSoftConstraint: SetWFCSoftConstraintJsNode;
 	sign: SignJsNode;
 	sin: SinJsNode;
 	smoothstep: SmoothstepJsNode;
@@ -716,6 +719,7 @@ export interface JsNodeChildrenMap {
 	vector2: Vector2JsNode;
 	vector3: Vector3JsNode;
 	vector4: Vector4JsNode;
+	WFCBuild: WFCBuildJsNode;
 }
 
 import {PolyEngine} from '../../../Poly';
@@ -1116,6 +1120,9 @@ export class JsRegister {
 		poly.registerNode(SetSpotLightIntensityJsNode, CATEGORY_JS.PHYSICS, ONLY_ACTOR);
 		poly.registerNode(SetViewerJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR);
 		poly.registerNode(SetViewerControlsJsNode, CATEGORY_JS.ACTION, ONLY_ACTOR);
+		if (process.env.NODE_ENV == 'development') {
+			poly.registerNode(SetWFCSoftConstraintJsNode, CATEGORY_JS.WFC, ONLY_ACTOR);
+		}
 		poly.registerNode(SignJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(SinJsNode, CATEGORY_JS.MATH);
 		poly.registerNode(SmoothstepJsNode, CATEGORY_JS.MATH);
@@ -1152,5 +1159,8 @@ export class JsRegister {
 		poly.registerNode(Vector2JsNode, CATEGORY_JS.MATH);
 		poly.registerNode(Vector3JsNode, CATEGORY_JS.MATH);
 		poly.registerNode(Vector4JsNode, CATEGORY_JS.MATH);
+		if (process.env.NODE_ENV == 'development') {
+			poly.registerNode(WFCBuildJsNode, CATEGORY_JS.WFC);
+		}
 	}
 }

@@ -15,7 +15,7 @@ export enum WFCQuadAttribute {
 	FLOOR_INDEX = 'floorIndex',
 	TILE_ID = 'tileId',
 	SOLVE_ALLOWED = 'solveAllowed',
-	// solve result
+	// solver output
 	SOLVED_TILE_CONFIGS = 'solvedTileConfigs',
 }
 
@@ -37,8 +37,8 @@ export enum WFCTileAttribute {
 	SIDE_NAME_T = 'WFCTileAttribute_sideNameT',
 
 	// solver output
-	ENTROPY = 'WFCTileAttribute_entropy',
-	STEP = 'WFCTileAttribute_step',
+	// ENTROPY = 'WFCTileAttribute_entropy',
+	// STEP = 'WFCTileAttribute_step',
 }
 export enum WFCConnectionAttribute {
 	// IS_CONNECTION = 'WFCTileAttribute_isConnection',
@@ -113,9 +113,9 @@ export class CoreWFCTileAttribute {
 	static getIsUnresolvedTile(object: ObjectContent<CoreObjectType>): boolean {
 		return getObjectBoolean(object, WFCTileAttribute.IS_UNRESOLVED_TILE, false) as boolean;
 	}
-	static setEntropy(object: ObjectContent<CoreObjectType>, value: number) {
-		setObjectNumber(object, WFCTileAttribute.ENTROPY, value);
-	}
+	// static setEntropy(object: ObjectContent<CoreObjectType>, value: number) {
+	// 	setObjectNumber(object, WFCTileAttribute.ENTROPY, value);
+	// }
 	static getSideName(object: ObjectContent<CoreObjectType>, side: WFCTileSide): string | undefined {
 		return getObjectString(object, _sideNameAttribute(side));
 	}

@@ -499,4 +499,5 @@ export const FUNCTION_NAME_BY_FILE_NAME: Record<string, string[]> = {
 		'getWebXRControllerAngularVelocity',
 		'getWebXRTrackedMarkerMatrix',
 	],
+	WFC: ['setWFCSoftConstraint', 'WFCBuild'],
 };
