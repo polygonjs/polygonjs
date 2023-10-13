@@ -137,6 +137,7 @@ export class SceneEventsDispatcher {
 		switch (jsType) {
 			case JsType.CURSOR:
 			case JsType.ON_OBJECT_CLICK:
+			case JsType.ON_OBJECT_CONTEXT_MENU:
 			case JsType.ON_OBJECT_HOVER:
 			case JsType.ON_OBJECT_POINTERDOWN:
 			case JsType.ON_OBJECT_POINTERUP:

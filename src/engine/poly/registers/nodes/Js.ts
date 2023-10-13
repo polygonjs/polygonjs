@@ -165,6 +165,7 @@ import {OnMapboxCameraMoveStartJsNode} from '../../../nodes/js/OnMapboxCameraMov
 import {OnObjectAttributeUpdateJsNode} from '../../../nodes/js/OnObjectAttributeUpdate';
 import {OnObjectBeforeDeleteJsNode} from '../../../nodes/js/OnObjectBeforeDelete';
 import {OnObjectClickJsNode} from '../../../nodes/js/OnObjectClick';
+import {OnObjectContextMenuJsNode} from '../../../nodes/js/OnObjectContextMenu';
 import {OnObjectDispatchEventJsNode} from '../../../nodes/js/OnObjectDispatchEvent';
 import {OnObjectHoverJsNode} from '../../../nodes/js/OnObjectHover';
 import {OnObjectPointerdownJsNode} from '../../../nodes/js/OnObjectPointerdown';
@@ -526,6 +527,7 @@ export interface JsNodeChildrenMap {
 	onObjectAttributeUpdate: OnObjectAttributeUpdateJsNode;
 	onObjectBeforeDelete: OnObjectBeforeDeleteJsNode;
 	onObjectClick: OnObjectClickJsNode;
+	onObjectContextMenu: OnObjectContextMenuJsNode;
 	onObjectDispatchEvent: OnObjectDispatchEventJsNode;
 	onObjectHover: OnObjectHoverJsNode;
 	onObjectPointerdown: OnObjectPointerdownJsNode;
@@ -964,6 +966,7 @@ export class JsRegister {
 		poly.registerNode(OnObjectAttributeUpdateJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
 		poly.registerNode(OnObjectBeforeDeleteJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
 		poly.registerNode(OnObjectClickJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
+		poly.registerNode(OnObjectContextMenuJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
 		poly.registerNode(OnObjectDispatchEventJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
 		poly.registerNode(OnObjectHoverJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);
 		poly.registerNode(OnObjectPointerdownJsNode, CATEGORY_JS.EVENTS, ONLY_ACTOR);

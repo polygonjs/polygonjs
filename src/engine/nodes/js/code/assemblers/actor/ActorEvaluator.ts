@@ -78,6 +78,7 @@ export type EvaluatorKeyboardMethod = JsType.ON_KEY | JsType.ON_KEYDOWN | JsType
 export type EvaluatorPointerMethod =
 	// | JsType.ON_OBJECT_CLICK
 	| 'onClick'
+	| 'onContextMenu'
 	// | JsType.ON_OBJECT_HOVER
 	// | 'onPointerdown'
 	| 'onPointermove'
@@ -99,6 +100,7 @@ export type EvaluatorMethodName =
 	| JsType.ON_OBJECT_ATTRIBUTE_UPDATE
 	// | JsType.ON_OBJECT_CLICK
 	| 'onClick'
+	| 'onContextMenu'
 	| JsType.ON_OBJECT_DISPATCH_EVENT
 	// | JsType.ON_OBJECT_HOVER
 	// | JsType.ON_OBJECT_POINTERDOWN
